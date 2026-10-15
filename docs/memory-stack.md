@@ -1,127 +1,148 @@
 # Memory's tech stack
 
-What the game's design needs to know about how Memory is built. Read from `Pvaiun/memoryapp` at commit `7bb5a22` (main, Oct 15, 2026), read-only. File paths are in that repo unless they say otherwise.
+What the game needs to know about how Memory is built, and how the game fits into it. Memory (`Pvaiun/memoryapp`) was read at commit `7bb5a22`, then rechecked at `9331f40` after the director's TypeScript 7 upgrade (Oct 15, 2026). The director reviewed this doc, and its decisions are in `DECISIONS.md`. File paths are in memoryapp unless they say otherwise.
 
-## What this changes in the design
+## How the game fits into Memory
 
-1. **The engine can't rely on zod when it runs.** Memory doesn't use zod. It checks data by hand: `validateCurationPlan` in `src/worker/brain.ts`, and `typeof` checks in `src/worker/index.ts`. zod stays this repo's design tool. Content gets checked here before it ships, and the engine takes plain typed data (`import type` only). Shipping zod would add at least 25 KB gzipped, and Memory's whole app is 77 KB.
-2. **Fights should run in the Worker, from pure shared code.** Game state, rewards and the event log all live in D1 behind the Worker, so running fights there keeps a single source of truth, and the phone just plays back the fight log. Because the engine stays pure, the browser can still run it later for previews or replays. Mass simulation stays in this repo and never runs in Memory. Step 2 should report the CPU time per fight and the size of a fight log.
-3. **Some quest kinds have no Memory event that completes them.** This affects steps 17 to 19:
-   - **Review:** "keep" leaves no trace, and Memory has no "skip a recurrence" action. Either Memory gains those events, or the game tab records the decision itself.
-   - **Want:** "a goal created" only matches recurring items. Memory labels an item a Goal only when it recurs and has no hard deadline (`src/shared/flavour.ts`), so a one-off want like "try bouldering" counts as a Task.
-   - **Events can't be completed.** An event closes on its own as `passed`, or the user marks it `missed`. Attending leaves no trace (`completeItem`, `src/worker/items.ts`), so no quest can pay out for attending something.
-   - **Undo is everyday.** A second tap on a habit already done today unticks it and logs `completion_reverted`. So step 19's undo path is common, not an edge case.
-   - **Notice edge cases:** a first step added from a Now card creates an item without a `created` event. Undoing a recapture creates the item later, at undo time.
-4. **The day starts at 5am, in the user's time zone.** Memory's day boundary is its "sleep day" (`sleepDayKey`, `src/shared/dates.ts`). The weekly board and "this week" quests should use the same boundary, or they'll disagree with the Now map around midnight.
-5. **There's no staging environment.** There's local, and there's production. Deploys and migrations are run by hand, and the production database is the director's real memory. Game tables must be additive, and each migration needs a backup first.
+1. **The game is built like a game, and meets Memory only where it has to.** To the user it's part of Memory. Underneath, it's free to work the way a game works.
+   - **Fixed:**
+     - the same web app and build (React, Vite, the installable app)
+     - a tab in Memory's tab bar
+     - the same TypeScript version
+     - reading and creating items through Memory's code
+     - the quest board on Memory's timer, with a rule-based fallback if the AI fails, like the Brain's
+     - game data synced through Memory's server
+   - **Free:**
+     - the engine running in the browser
+     - the game's own state handling and animation loop
+     - zod
+     - save documents instead of tables
+     - content shipped as data alongside the game's code
+2. **Fights run in the browser.** A fight is seeded, so the seed, party, content and engine version rebuild its log exactly. No combat log is stored anywhere. The game saves on the device during play and syncs to the server in the background, for other devices and for backup. The server keeps that save, plus a short summary of each run: its seed, outcome and loot. This means no waiting on the network during a run, and Cloudflare's server limits don't apply to fights. The same engine runs in Node for simulations, and it could run on the server later if a design ever needs fights while the app is closed.
+3. **zod is allowed in the game's running code.** The cost is 25 to 50 KB, and it only loads with the game tab. It gives one definition of the game's data that both checks the data and supplies its types. It's most useful for checking anything that comes from outside the game's own code: the quest board's AI replies, and saves coming back from the server. Check content once, when it loads, not inside every fight.
+4. **The quest board reads item state, not Memory's event log.** Quest kinds are the board's own vocabulary, with no link to Memory's item types. Each quest either points at an existing item of any type, or asks the user to make a new one. Memory only answers "is this item done?" (see "What the quest board reads" below). Rewards are claimed by hand on the board. If an item is unticked before its claim, the quest shows as incomplete again; once claimed, nothing rolls back. An event counts as done once its time passes, unless the user marks it missed. So Memory needs no new events and no changes for the board.
+5. **The game's data lives apart from Memory's.**
+   - **Its own database.** The game gets its own D1 database, bound next to Memory's. A broken game change can't touch the director's real memory, and wiping the game is always safe.
+   - **Save documents.** Game state is a few JSON documents (the save, the boards), not many tables, so changing their format is a code change, not a migration.
+   - **A reset button.** A "reset game" button in debug settings replaces test data. The live app is the test environment, so there's no staging and no test tables.
+   - **No manual backups.** D1 keeps 30 days of restorable history automatically ("Time Travel"). Restores work per database, which is another reason to keep the game's separate.
+   - **Out of Memory's log.** Game events stay out of Memory's permanent event log, at least during development, because that log is never edited.
+6. **The game's day starts at 5am in the user's time zone, like Memory's.** Memory calls this the "sleep day" (`sleepDayKey`, `src/shared/dates.ts`). The weekly board should roll over on the same boundary, or it'll disagree with the Now map around midnight.
 
-**Needs the director:** which Cloudflare Workers plan Memory runs on. See section 7.
+## For step 2, the engine
 
-## 1. Language and tooling
+- **Location:** put it in `memory-dungeon/src/engine/`, which `tsconfig.core.json` covers, so a Node-only API fails the typecheck. Put its tests next to it.
+- **Randomness:** use a seeded random-number generator inside the engine. Never `Math.random` or the clock.
+- **The same seed, the same fight, on every device.** Basic arithmetic (+ − × ÷) and rounding give identical results in every browser. `Math.pow`, `Math.exp`, `Math.log` and the trig functions can differ in the last digit between browsers, such as Chrome and Safari, and over a whole fight that can change who wins. Keep combat math to the basic operations, or a run resumed on another device could play out differently.
+- **Measure:** the time to compute one fight and one whole run, and the size of a fight log. The log is held in memory while it plays back, and it's never stored.
+
+## Integration checklist (Phase 4 onward)
+
+Steps that will go wrong if they're forgotten. This repo never changes Memory, so these are for whoever integrates the game.
+
+- [ ] **Add zod 4 to Memory's own dependencies** (`npm install zod@^4` in memoryapp) before any game code that imports zod goes in. Memory doesn't list zod today. But Wrangler's dev tooling brings zod 3.22.3 into `node_modules/zod`, so a bare `import 'zod'` silently picks up that old version, and the Worker build would ship it. Afterwards, `npm ls zod` should show 4.x at the top level.
+- [ ] **Match TypeScript versions.** Keep both repos on the same TypeScript major version. Both are on 7.0.2 today.
+- [ ] **Create the game's database.** Run `wrangler d1 create`, add a second entry to `d1_databases` in `wrangler.jsonc`, and give it its own migrations folder.
+- [ ] **Lazy-load the tab.** Load the game tab with `React.lazy`, so its code and content only load when the tab opens.
+- [ ] **Hide the game behind a switch.** Make the on/off switch a server-side `app_state` key, toggled in the Settings sheet, so it applies on every device.
+- [ ] **Isolate the quest board's job.** Hook the weekly board build into the existing 5-minute `scheduled()` handler (`src/worker/index.ts`), wrapped so a failure can't stop the push scan. `morningRebuild` already works this way.
+- [ ] **Keep game events out of Memory's log** (`events` table) while the game is in development.
+- [ ] **Reformat moved code** to Memory's style: single quotes, and imports without file extensions.
+
+## What the quest board reads
+
+The game runs in the same app as Memory, so it can use Memory's own data and code: `GET /api/items` (each item as an `ItemView`), and the shared code in `src/shared/`.
+
+- **One-off items:** an item is done when `status` is `completed`. Unticking it sets it back to `active`.
+- **Habits** (recurring items) stay `active`. Each tick-off raises `completionCount` and sets `lastCompletedAt`, and an untick reverses both. "Every occurrence this week" means comparing the rise in `completionCount` since the board was dealt with how many times the habit came up that week. Memory's recurrence code works that out (`src/shared/cadence.ts`).
+- **Events** have `eventAt` and `eventEnd`. Memory only marks a past event `passed` in the next morning's sweep, so the board should compare the time itself, and treat the event as done unless its `status` is `missed`.
+- **Repeating events** can't be marked missed in Memory; only one-off events can (`missItem`, `src/worker/items.ts`). On the board, the user simply doesn't claim a missed occurrence, which fits the trust model. A repeating event moves to its next date the morning after it happens (`event_rolled`), so the board should note which occurrence a quest means.
+- **New items** carry `createdAt`, so "made since the board was dealt" is a plain filter.
+- **Dismissed and snoozed items** have `status` `dismissed`, or a future `snoozedUntil`. These are decisions, not completions. Quest cards that ask for a decision can call Memory's existing endpoints (`/api/items/:id/dismiss`, `/snooze`, `/complete`).
+
+## Memory's stack, for reference
+
+### Language and tooling
 
 | | Memory | Evidence |
 | --- | --- | --- |
-| TypeScript | 5.9.3 (`^5.6.0`), `strict`, `isolatedModules`. Typechecked with Workers and Vite types, no Node types. | `package.json`, `package-lock.json`, `tsconfig.json` |
-| Modules | ES modules, `moduleResolution: bundler`, relative imports without extensions | `package.json`, `tsconfig.json` |
-| Package manager | npm (lockfile v3). No Node version pinned. | `package-lock.json` |
-| Build | Vite 5.4 builds the app. Wrangler 3.114 bundles the Worker. | `vite.config.ts`, `wrangler.jsonc` |
-| Tests | Vitest 2.1.9 (`vitest run`), with tests beside the code as `*.test.ts`. 362 tests pass. | `package.json`, `src/**/*.test.ts` |
-| Linter, formatter | None. The style is by convention: 2 spaces, single quotes, semicolons. | No config files |
-| Validation | None. zod appears only inside Wrangler's own dev tooling (3.22.3, pulled in by miniflare). | `package-lock.json` |
-| Monorepo | No. It's one package with three source folders: `src/shared` (pure logic both sides use), `src/worker` and `src/app`. | Repo layout, `README.md` |
+| TypeScript | 7.0.2, with `strict` and `isolatedModules`. Typechecked with Workers and Vite types, and no Node types. | `package.json`, `tsconfig.json` |
+| Modules | ES modules, with `moduleResolution: bundler` and relative imports without file extensions | `package.json`, `tsconfig.json` |
+| Package manager | npm, with lockfile v3. No Node version is pinned. | `package-lock.json` |
+| Build | Vite 5.4 builds the app, and Wrangler 3.114 bundles the Worker. Neither uses the TypeScript compiler; only `npm run check` does. | `vite.config.ts`, `wrangler.jsonc` |
+| Tests | Vitest 2.1.9, with tests next to the code. | `src/**/*.test.ts` |
+| Linter, formatter | None. The style is by convention: 2 spaces, single quotes and semicolons. | No config files |
+| Validation | Hand-written checks. Memory has no zod of its own (see the checklist). | `src/worker/brain.ts` (`validateCurationPlan`) |
+| Repo layout | One package, not a monorepo: `src/shared` holds pure logic both sides use, plus `src/worker` and `src/app`. | `README.md` |
 
-## 2. Where code runs
+### Where code runs
 
-- **Worker:** a single Cloudflare Worker using Hono (`src/worker/index.ts`). It serves the JSON API under `/api/*`, serves the built app as static assets, and runs the cron. All D1 access, AI calls and push sending happen here. There's no `nodejs_compat` flag, so Node built-ins aren't available (`wrangler.jsonc`).
-- **Browser:** a React 18 single-page app built by Vite, installable as a PWA. The service worker caches only the app shell (`public/sw.js`). All data comes from the API, so Memory doesn't work offline.
-- **Shared pure code** lives in `src/shared/` (dates, cadence, flavour, priority). The Descent renderer (`src/app/components/descent/engine.ts`) is a pure, deterministic, unit-tested module that React drives every frame. It's a good model for where a game engine would sit.
-- **State management:** plain `useState` in `src/app/App.tsx`, passed down as props. There's no router, no Redux and no Context. Per-device preferences and a cached map go in `localStorage`. API calls go through `src/app/api.ts`.
-- **Adding a tab:** in `src/app/App.tsx`, extend `type Tab`, add a render branch inside `<main>`, and add an entry to the tab-bar list. The view goes in `src/app/views/`. The bottom bar has four tabs today (Now, Browse, Calendar, Find). The capture box sits above the tab bar on every tab, so a game tab shares the screen with it unless it's hidden there.
-- **Size and performance:** no budget is configured. Today the app is one script of 236 KB (77 KB gzipped) plus 36 KB of CSS, with no code splitting. The Worker uploads at 344 KB (86 KB gzipped). Both were measured by building a scratch copy. The game tab should load lazily (`React.lazy`) so the rest of Memory doesn't carry it. The UI smoke test uses a 390×844 phone screen (`scripts/ui-smoke.mjs`).
+- **Worker:** a single Cloudflare Worker using Hono (`src/worker/index.ts`). It serves the API under `/api/*`, serves the built app as static files, and runs the cron. All database and AI access happens here. Node built-ins aren't available, because there's no `nodejs_compat` flag.
+- **Browser:** a React 18 single-page app. The service worker caches only the app shell (`public/sw.js`), and all of Memory's data comes from the API.
+- **App state:** plain `useState` in `src/app/App.tsx`, passed down as props. There's no router and no global store. Per-device preferences go in `localStorage`.
+- **Adding a tab:** in `App.tsx`, extend `type Tab`, add a render branch in `<main>`, and add an entry to the tab-bar list. Views live in `src/app/views/`. There are four tabs today (Now, Browse, Calendar, Find). The capture box sits above the tab bar on every tab.
+- **Precedent for a game engine:** the Descent renderer (`src/app/components/descent/engine.ts`) is a pure, deterministic, unit-tested module that React drives every frame.
+- **Size:** there's no budget. The app is one 236 KB script (77 KB gzipped), and the Worker is 344 KB (86 KB gzipped).
 
-## 3. Data
+### Data
 
-- **Storage:** one D1 (SQLite) database, `memory-db`, bound as `DB`. There's no KV, Durable Objects, R2 or Queues. The Workers AI binding is used only for embeddings, with a crude local fallback (`src/worker/embeddings.ts`).
-- **Single user:** one database is one person's memory. Nothing has a user ID, so game tables won't need one either.
-- **Migrations:** numbered SQL files in `migrations/` (`0001_init.sql` to `0009_surfaced_days.sql`). They're applied by hand with `npm run db:migrate:local` and `npm run db:migrate:remote`, which run `wrangler d1 migrations apply`. There are no down migrations.
+- **Database:** one D1 (SQLite) database, `memory-db`, bound as `DB`. There's no KV, Durable Objects or R2. Memory is single-user, so nothing has a user ID.
+- **Migrations:** numbered SQL files in `migrations/`, applied by hand (`npm run db:migrate:local` and `npm run db:migrate:remote`). There are no down migrations.
 - **Conventions:**
-  - Each migration opens with a comment saying why.
-  - New columns use `ALTER TABLE … ADD COLUMN`. A changed CHECK constraint means rebuilding the table (`0004`), and backfills go in the same file.
-  - IDs are `crypto.randomUUID()` text, times are ISO strings, JSON is stored as TEXT, and enums are CHECK constraints.
-  - Columns are snake_case, mapped to camelCase in `src/worker/db.ts`.
-  - Queries are raw SQL through `db.prepare().bind()`, with no ORM.
-  - Singletons and settings go in the `app_state` key/value table.
-- **Event log:** the `events` table, with an ID, a timestamp, an actor (`user`, `ai` or `system`), a type, an item ID, a bubble ID and a JSON payload. It's append-only, it's written only through `logEvent()` in `src/worker/db.ts`, and corrections are new events. Because `type` is free text, new game event types need no migration. The types in use today:
-  - **user:** `captured`, `completed`, `completion_reverted`, `dismissed`, `edited`, `first_step_added`, `missed`, `re_themed`, `recapture_undone`, `rejected`, `reopened`, `snoozed`, `unsnoozed`
-  - **ai:** `created`, `recaptured`, `recapture_refused`, `theme_merged`, `theme_renamed`
-  - **system:** `deadline_rolled`, `event_rolled`, `map_rebuilt`, `passed`, `push_sent`, `snooze_expired`
+  - IDs come from `crypto.randomUUID()`, times are ISO strings, and JSON is stored as text.
+  - Queries are raw SQL, with no ORM.
+  - Settings and singletons go in the `app_state` key/value table.
+- **Event log (background only):** the `events` table, with an actor (`user`, `ai` or `system`), a free-text type, an item, and a JSON payload. It's append-only and written through `logEvent()` (`src/worker/db.ts`). The types in use today:
+  - **user:** captured, completed, completion_reverted, dismissed, edited, first_step_added, missed, re_themed, recapture_undone, rejected, reopened, snoozed, unsnoozed
+  - **ai:** created, recaptured, recapture_refused, theme_merged, theme_renamed
+  - **system:** deadline_rolled, event_rolled, map_rebuilt, passed, push_sent, snooze_expired
 
-  The profile reads only the types on an allow-list (`PROFILE_EVENT_TYPES`, `src/worker/brain.ts`), so game events stay out of it unless someone adds them on purpose. The backup (`/api/export`) includes every event, so game events would be backed up too.
-- **Counters:** these are columns on `items`, not a separate table: `completion_count`, `streak`, `last_completed_at`, `surfaced_count`, `last_surfaced_at`, `created_at`, `last_touched_at` and the priority boost. Undo restores them from the `completed` event's before-snapshot (`uncompleteItem`, `src/worker/items.ts`). "Neglected", "done today" and an item's flavour are computed when needed and never stored (`toItemView`, `src/worker/db.ts`).
-- **Profile:** written once a day during the Brain's run, from 30 days of events, using the capture model. Past profiles are kept in `profiles` (one row per day), and the current text is in `app_state.profile_text`.
+  Memory's design spec deliberately leaves this list open.
+- **Counters:** columns on `items` (`completion_count`, `streak`, `last_completed_at` and others). Undo restores them.
+- **Profile:** written daily from 30 days of events. The current text is in `app_state.profile_text`. The profile reads only an allow-list of event types, so game events wouldn't reach it.
 
-## 4. AI and scheduling
+### AI and scheduling (the quest board copies this)
 
-- **Schedule:** one cron, every 5 minutes (`wrangler.jsonc`). Each tick runs the push scan and `morningRebuild` (`src/worker/index.ts`, `src/worker/brain.ts`).
-- **Gate:** `morningRebuild` works out the user's 5am from the time-zone offset their phone last reported (`app_state.tz_offset_minutes`). It then asks a pure function, `shouldMorningRebuild`, whether to build. The answer is no if today's map already exists, if the app hasn't been opened for 14 days, or if another tick started a build in the last 10 minutes. The timestamps it checks live in `app_state`.
-- **Backstop:** if the cron missed, the first open of the day rebuilds the map on demand (`POST /api/map/rebuild`).
-- **Provider:** the Anthropic Messages API, called with plain `fetch` and no SDK (`src/worker/ai.ts`). The key is the `ANTHROPIC_API_KEY` secret. The models are set in `wrangler.jsonc` vars: `CAPTURE_MODEL` (claude-sonnet-5-5) for capture and the profile, and `BRAIN_MODEL` (claude-opus-5-5) for the Brain.
-- **Prompts** are template strings in the code (`brain.ts`, `capture.ts`). From the Settings sheet, the director can add to a prompt or replace it, and those edits are stored in `app_state`.
-- **Model output is never trusted.** JSON is pulled out of the reply leniently (`extractJson`), then checked by hand (`validateCurationPlan`). Code enforces the guarantees, such as minimum bubble prominence, whatever the model says.
-- **Fallback:** with no key, an error or a bad reply, Memory builds a rule-based map instead (`fallbackBubbles`) and shows a banner with a one-tap retry. There are no retries and no fallback model; a safety refusal is shown to the user (`ModelDeclinedError`). If the profile or the librarian fails, the map still gets built.
-- **Debug:** `GET /api/debug/brain` returns what the Brain saw and what it built.
-- **The quest board's version of this pattern:** run on the same tick, behind a pure `shouldBuildBoard` gate with timestamps in `app_state`. Back it up with a build on first open, check the AI's output by hand, fall back to a rule-based board with a banner, and add a debug snapshot.
+- **Timer:** one cron runs every 5 minutes (`wrangler.jsonc`). Each tick runs the push scan and `morningRebuild`.
+- **Gate:** a pure function, `shouldMorningRebuild`, decides whether to build. It works out the user's 5am from the time-zone offset their phone last reported, and skips the build if today's map exists, if the app hasn't been opened for 14 days, or if another build started in the last 10 minutes. Its timestamps live in `app_state`.
+- **Backstop:** if the cron missed, the first open of the day builds the map.
+- **Provider:** the Anthropic Messages API, called with plain `fetch` (`src/worker/ai.ts`). Model names are in `wrangler.jsonc` vars, and prompts are in the code. The Settings sheet can add to or replace a prompt.
+- **Checking:** model replies are parsed leniently, then checked by code, and code enforces the guarantees.
+- **Fallback:** if the AI fails, Memory builds a rule-based map and shows a banner with a retry. There are no retries and no fallback model. A safety refusal is shown to the user.
+- **Debug:** a snapshot endpoint (`/api/debug/brain`) shows what the Brain saw and built.
 
-## 5. Settings and flags
+### Settings and flags
 
-Memory has no feature-flag system. It uses two informal mechanisms instead:
+Memory has no feature-flag system. Server-side settings are `app_state` keys, set through `/api/settings/*`, and every device sees them. Per-device settings are `localStorage` keys. The Settings sheet (`src/app/components/SettingsSheet.tsx`) already holds the director's debug tools, which makes it the place for the game's on/off switch and its debug buttons.
 
-- **Server-side** `app_state` keys, set through `/api/settings/*` (for example `brain_prompt_variant`). Every device sees them.
-- **Per-device** `localStorage` keys (`memory.nowView`, `memory.fallSpeed`), in `src/app/App.tsx`.
+### Environments
 
-The Settings sheet (`src/app/components/SettingsSheet.tsx`) already holds the director's workshop and debug buttons. A game on/off switch fits there as an `app_state` key, which would hide the tab on every device. Game debug tools fit in the same sheet.
+There's local development (`npm run dev`, with a local SQLite file under `.wrangler/` and secrets in `.dev.vars`) and production. Deploys and migrations are run by hand, and there's no staging and no CI. Without an API key, Memory runs on its rule-based parser and map.
 
-## 6. Environments
+### Limits
 
-- **Local:** run `npm run db:migrate:local`, then `npm run dev`, which builds with Vite and starts `wrangler dev` on port 8787. The local database is a SQLite file under `.wrangler/`. Secrets go in `.dev.vars`. Without an API key, the app runs on its rule-based parser and map. `npm run dev:app` gives hot reload against a running `wrangler dev`.
-- **Production:** one Worker and one D1 database (its ID is in `wrangler.jsonc`). Deploys are by hand with `npm run deploy`, and migrations are by hand with `npm run db:migrate:remote`.
-- **Missing:** there's no staging or preview environment, and no CI (there's no `.github/` folder).
+Memory is on Cloudflare's Workers Paid plan. These limits only matter for server work, such as building the quest board, not for fights:
 
-## 7. Limits that matter
+- 30 s of CPU per cron run, and 30 s by default per request. Waiting on the AI or the database doesn't count.
+- 128 MB of memory.
+- 1,000 database queries per invocation.
+- 10 GB per database.
 
-Cloudflare's published limits, checked Oct 2026 ([Workers](https://developers.cloudflare.com/workers/platform/limits/), [D1](https://developers.cloudflare.com/d1/platform/limits/)):
+Source: [Workers limits](https://developers.cloudflare.com/workers/platform/limits/), [D1 limits](https://developers.cloudflare.com/d1/platform/limits/), [D1 Time Travel](https://developers.cloudflare.com/d1/reference/time-travel/).
 
-| | Free plan | Paid plan |
+### Memory's design spec
+
+It's copied word for word into `memory-dungeon/docs/memory-design-spec.md`, from commit `7bb5a22`. The TypeScript upgrade didn't change it.
+
+## How this repo's tooling lines up
+
+| This repo | Memory | Status |
 | --- | --- | --- |
-| CPU time per request | 10 ms | 30 s by default, up to 5 min |
-| CPU time per cron run | 10 ms | 30 s (Memory's cron runs every 5 minutes) |
-| Memory | 128 MB | 128 MB |
-| D1 queries per invocation | 50 | 1,000 |
-| D1 database size | 500 MB | 10 GB |
-
-Time spent waiting on `fetch` or D1 doesn't count as CPU time.
-
-- **The plan isn't recorded in the repo.** It's probably Paid: a map build runs one or two D1 queries per item on the map, plus dozens of others, which passes the Free plan's 50-query cap. The director should confirm.
-- **One fight should fit either plan.** It's plain arithmetic over a handful of units, with no I/O. Step 2 will measure it.
-- **Mass simulation** (thousands of fights) doesn't belong in Memory. It runs here, in Node.
-- **Running fights in the browser wouldn't be simpler.** The Worker still has to write rewards, game state and log events, and Memory doesn't work offline. A fight run in the browser would therefore still need the Worker to check and record it. Running it in the Worker keeps one path, and a pure engine leaves the browser available for previews and replays.
-
-## 8. Memory's design spec
-
-It's copied word for word into `docs/memory-design-spec.md`, from commit `7bb5a22`. One gap: the spec deliberately doesn't fix a list of event types (§7.1, "a fixed list of event types is deliberately *not* committed"). Step 17 should use the list from the code in section 3 above.
-
-## Mismatches with this repo's tooling
-
-| This repo had | Memory | Recommendation | Done here? |
-| --- | --- | --- | --- |
-| TypeScript 7.0.2 | 5.9.3 | Match Memory, so code that moves still compiles there. Everything here already typechecks under 5.9 and under Memory's own `tsconfig.json`. | Yes: `typescript ^5.9.3` |
-| node:test, run through tsx | Vitest 2.1.9 | Switch, so tests can move into Memory as they are. Vitest's snapshots also suit fight logs. | Yes: `npm test` runs `vitest run`, and all 93 tests pass. The existing tests keep `node:assert`, which Vitest runs fine. New tests can use `expect`, as Memory's do. |
-| No `isolatedModules` | `isolatedModules: true` | Match it, because Vite and esbuild compile files one at a time. | Yes |
-| Node types visible to all code | No Node types; Workers types instead | Add a guard so game logic can't use a Node-only API. | Yes: `tsconfig.core.json`, part of `npm run typecheck`, covers `src/schema.ts`, `src/validate.ts` and the future `src/engine/`, minus test files. A test file that used `process` and `node:fs` failed it as expected. |
-| zod 4, imported as `{ z }` | No zod | Keep zod as design tooling, and keep it out of the engine (see the top of this doc). Import it as `* as z`: that form cuts zod's bundled size from about 93 KB to 25 KB gzipped, and this repo's schema plus validator from 112 KB to 48 KB. | Yes, the import changed. The exported JSON Schema is identical. |
-| tsx for the CLI scripts | No equivalent; scripts are `.mjs` | Keep it. It's dev-only and never ships. | No change |
-| Double quotes, `.js` import extensions | Single quotes, no extensions | Both build fine with Memory's bundler. Reformat the code when it moves into Memory; it isn't worth churning now. | No change |
-| Tests in `tests/` | Tests next to the code | Either works with Vitest. Put engine tests next to the engine from step 2 onward, so they move with it. | No change |
-| ES modules, npm | Same | Nothing to do | — |
-
-**Proposed, not done (Phase 4):** where the game code lives in Memory. It could go in `src/shared/game/` for the engine plus `src/worker/game.ts` for the API, or it could be a package. Either way, Memory has to install zod 4 directly if it ever wants zod. Today a bare `import 'zod'` there would quietly resolve to the dev-only 3.22.3.
+| TypeScript 7.0.2 | 7.0.2 | Same. |
+| Vitest 2.1.9, replacing node:test | Vitest 2.1.9 | Same. The existing tests keep `node:assert`, which Vitest runs fine. |
+| `isolatedModules` | `isolatedModules` | Same. |
+| `tsconfig.core.json`: game logic typechecked without Node types | No Node types | Same effect. It's part of `npm run typecheck`. |
+| zod 4, imported as `* as z` | No zod yet | zod is allowed. That import form bundles about 4 times smaller. Memory adds zod 4 at integration (see the checklist). |
+| tsx for the CLI scripts | Scripts are `.mjs` | Keep tsx. It's dev-only and never ships. |
+| Double quotes and `.js` import extensions | Single quotes, no extensions | Reformat at integration. |
+| Tests in `tests/` | Tests next to the code | Engine tests go next to the engine from step 2. |
