@@ -25,7 +25,7 @@ It's also a test of a way of making games. The director sets the vision. AI desi
 - **Trust by sample.** The director reviews rules, samples and the intent map, not the full volume. Show what you're least sure about, not just your best work.
 - **Flag, don't guess.** When the concept spec is inconsistent or underspecified, say so. If a step can't wait, state the assumption plainly and continue.
 - **Design before implementation.** Don't integrate anything into Memory until the design steps are done. Code here (engine, harness) serves the design, so keep it small and don't polish it.
-- **Placeholders.** Everything in `fixtures/` is placeholder, as are the `design` block's numbers. Don't present them as decided.
+- **Placeholders.** Everything in `fixtures/` is placeholder, as are the `design` block's numbers. So are the rule language's building blocks (the effects, triggers, flags and other primitives in `PRIMITIVES.md`): the director approved the schema's shape, but hasn't had input on these concepts. Steps 4 to 11 shape them. Don't present any of these as decided.
 
 ## Status
 
