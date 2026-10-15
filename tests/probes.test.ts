@@ -3,7 +3,7 @@
  * written as data against the worked example. Each probe must validate with no
  * errors. Verb warnings are allowed and reported: tuning the verb list is step 5.
  */
-import { test } from "node:test";
+import { test } from "vitest";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { validatePack, type Issue } from "../src/validate.js";

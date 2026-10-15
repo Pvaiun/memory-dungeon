@@ -15,7 +15,7 @@
  * patterns over the numerical systems (stats, statuses, damage types, flags,
  * targeting) that the validator checks against the data.
  */
-import { z } from "zod";
+import * as z from "zod";
 
 export const SCHEMA_VERSION = "0.3" as const;
 

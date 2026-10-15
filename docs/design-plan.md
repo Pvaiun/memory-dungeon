@@ -4,7 +4,8 @@ The ordered design work needed to take the concept spec to a buildable game. Eac
 
 **Inputs:**
 - *Memory Dungeon Game: Concept Spec*: what the game is and why.
-- `APP_OVERVIEW.md`: a summary of how Memory works today.
+- `memory-app-overview.md`: a summary of how Memory works today.
+- `memory-stack.md`: how Memory is built, and what that means for the game.
 - `memory-design-spec.md`: Memory's official design spec, with full detail and rationale.
 
 The overview is enough for phases 1 to 3. Wherever a step touches Memory's own systems (the event log, counters, catalog, profile, the Brain), work from the official spec.
@@ -147,7 +148,7 @@ Every step here weighs competing variants: simulation chooses between them on nu
 These steps connect the game to Memory itself, so they work from `memory-design-spec.md` rather than the overview.
 
 ### 17. Quest completion rules
-- **Designs:** which Memory events complete each quest kind, using the event types defined in `memory-design-spec.md`.
+- **Designs:** which Memory events complete each quest kind, using the event types Memory actually logs. They're listed in `memory-stack.md`, because the spec deliberately leaves the list open.
   - **Notice:** a new item from a capture, not a recapture.
   - **Notice and do:** that new item, completed the same week.
   - **Want:** a goal created.
