@@ -114,7 +114,7 @@ Quests give keys, and play gives efficacy. Efficacy can partly substitute for ke
 
 ## Validated by simulation
 
-The game plays itself through menus and numbers, so thousands of versions of it can be built and tested. Simulation is the main design method, from combat rules and class power to pacing. The AI proposes variants, simulates them, and reports data plus its impression; the director judges the results rather than designing every system by hand.
+The game plays itself through menus and numbers, so thousands of versions of it can be built and tested. Simulation is the main design method, from combat rules and class power to pacing. The director gives intent for each step: references, preferences, ideas. The AI designs from it as a designer would, pushing back on direction that doesn't fit, then builds, simulates and tunes the design, and reports data plus its impression. The director sets the vision and judges the results rather than designing every system by hand. `method.md` has the full method.
 
 - **Combat.** A combat engine with no UI builds and tests many versions of the mechanics: combat rules and whether the system holds up, class power and variance, formations, keys and keyholes, and the 75%-of-best-in-class tuning.
 - **Progression.** Simulated players with different quest rates and decision quality play through all of version 1, week by week. Quest rates can be modelled on real data from Memory's event log.
