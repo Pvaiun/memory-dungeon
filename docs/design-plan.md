@@ -31,7 +31,7 @@ Each step lists what it designs; what to **ask the director**, which seeds the i
 
 ### 2. Headless engine
 - **Designs:** the combat and run engine: game logic with no UI, seeded randomness, and exact replay of any run. It starts from a rough first-draft combat model, which phase 2 replaces piece by piece.
-- **Ask the director:** little, since it's infrastructure. What they want to see when they read a fight log.
+- **Ask the director:** nothing beyond confirming that the engineering is the designer's call, and any thoughts they have. Fight logs are for the AI to measure combat with, and for debugging; the director doesn't read them.
 - **Tested by:** exact replay from a seed, and the worked example running end to end.
 - **Produces:** an engine spec and a working prototype.
 - **Done when:** content data plus a seed goes in, and a complete fight log comes out.
@@ -41,7 +41,7 @@ Each step lists what it designs; what to **ask the director**, which seeds the i
   - **Combat level:** many builds against many encounters, measuring win rates, fight length, swinginess, which units and abilities matter, and how outcomes vary between builds.
   - **Progression level:** simulated players playing through the content week by week. Quest rates are modelled on Memory's event log (see `memory-design-spec.md`), with several levels of decision quality. It measures rewards per week, time stuck at walls, when party choices become meaningful, and how often perks change outcomes.
   - **Feel checks:** an AI reads fight logs with enemy stats hidden, and reports what it can tell about the enemies and what read as flat. Every later step uses these, and they're the main test for steps 11 and 21.
-- **Ask the director:** what they want reports to show them, how they want to read fights, and which kinds of player to simulate (casual, optimizer, someone who only does quests…).
+- **Ask the director:** what they want reports to show them, and which kinds of player to simulate (casual, optimizer, someone who only does quests…).
 - **Tested by:** the director reads a sample report at each level and says whether it tells them what they need.
 - **Produces:** a harness spec and report format.
 - **Done when:** a test run at each level produces a readable report.

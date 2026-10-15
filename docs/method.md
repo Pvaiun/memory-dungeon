@@ -86,7 +86,7 @@ Rules for simulation:
 - **Don't overfit.** Hold some builds and encounters out of tuning, and check the final result on them.
 - **Check it holds** across seeds, and across simulated player skill levels where those matter.
 - **Say how sure.** Every conclusion says how solid it is: "holds across all 20 seeds", "only for skilled players".
-- **Balance isn't fun.** Pair the numbers with feel checks: an AI reads fight logs with enemy stats hidden, and says what it can tell about the enemies and what felt flat. Pick 2 or 3 fight logs or samples for the director to read.
+- **Balance isn't fun.** Pair the numbers with feel checks: an AI reads fight logs with enemy stats hidden, and says what it can tell about the enemies and what felt flat. Pick 2 or 3 samples for the director, in plain words: a fight retold in a few lines, never a raw log. Fight logs are dense; they're for the AI and for debugging.
 
 **Gate:** the director signs off on `report.md`.
 
@@ -97,7 +97,7 @@ Rules for simulation:
 1. **Decisions needed:** challenges (with both versions' numbers) and open questions.
 2. **What was built,** and what changed from the approved design.
 3. **What the numbers say,** in words, with how sure.
-4. **Feel:** what read as flat or unclear, and the fight logs or samples worth reading.
+4. **Feel:** what read as flat or unclear, and the samples worth reading.
 5. **Method notes:** a line or two on what worked or didn't in this method. The method is part of what's being tested, so update this doc from these notes.
 
 After sign-off, add the step's decisions to `DECISIONS.md`, update the Status section in `CLAUDE.md`, commit and stop.
@@ -147,7 +147,8 @@ Every step runs the loop, but not at the same weight. Each step in the design pl
 
 | Steps | Intent | Tested by |
 | --- | --- | --- |
-| 2–3, engine and harness | Light: mostly what the director wants to see | Working, and producing a readable report |
+| 2, engine | Almost none: confirm the engineering is the designer's call, and take any thoughts. Don't write a brief of questions for the sake of it. | Working |
+| 3, harness | Light: what reports should show, and which players to simulate | Producing a readable report |
 | 4–11, core mechanics | References, feel, how it should play | Simulation and feel checks |
 | 12–15, content | Heavy: names, phrases and gimmicks, often by input page | Simulation at volume; the director reviews samples and rules |
 | 16, AI playtests | What a playtester should report on | It is the test |

@@ -1,5 +1,7 @@
 # Step 2 brief: headless engine
 
+> **Withdrawn, Oct 15, 2026.** The director answered in the step's session instead, and the questions below were dropped: they were about how a fight log reads, which doesn't shape the engine. The director doesn't expect to read fight logs, which are for the AI and for debugging. See `intent.md`. This file is kept as the record of what was asked.
+
 For the director to answer. You can answer it in the step's session, run `/intent 2` in a fresh session on this repo, or paste this whole file into any chat and bring back the `intent.md` it produces.
 
 ## The game, and this step
