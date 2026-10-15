@@ -21,7 +21,16 @@ Design work for an optional game tab in Memory, the director's personal ADHD mem
 ## Status
 
 - **Step 1, content schema:** done and approved (schema 0.3). See SCHEMA.md.
-- **Next, step 2:** headless engine. Content data plus a seed goes in, and a complete fight log comes out.
+- **Next, the tech-stack brief:** see `docs/tasks/memory-stack-brief.md`. Read Memory read-only and align this repo's tooling.
+- **Then step 2:** headless engine. Content data plus a seed goes in, and a complete fight log comes out.
+- **Session pattern:** one fresh session per step. Each ends by updating this Status section, committing, and stopping for review.
+
+## The director's preferences
+
+- Short, plain-language write-ups. Lead with decisions, open questions and anything that changes the design. They won't read data files, so summarize what they need to judge.
+- Design before code. Code that serves the design stays small; avoid bug-fixing spirals.
+- Mechanics map onto a few numerical systems (stats, statuses, damage types, flags, targeting). No bespoke words acting as locks, and no complexity that eats the player's brainpower, such as positional targeting.
+- Content will come from human-given phrases and gimmicks, which AI interprets, filters and number-crunches through simulation. The pipeline gets designed later.
 
 ## Key decisions so far
 
