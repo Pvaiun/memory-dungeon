@@ -8,6 +8,21 @@ Decisions are direction like any other (see `docs/method.md`): a designer can ch
 
 - **Method (Oct 15, 2026):** every design step runs intent, then design, then build and tune, as `docs/method.md` sets out. Direction is guidance: the AI challenges what doesn't fit, with evidence, and never changes it silently.
 
+## Tech-stack brief
+
+Reviewed with the director Oct 15, 2026. Full record: `docs/memory-stack.md`.
+
+- **Build it like a game.** The game is part of Memory to the user, but its tech is free to work like a game. It meets Memory only at fixed points: the same web app and build, a tab, the same TypeScript, reading and creating items through Memory's code, the quest board on Memory's timer, and data synced through Memory's server.
+- **Fights run in the browser.** Fights are seeded, so no combat log is stored. The server keeps the game's save and a short summary of each run: its seed, outcome and loot.
+- **zod is allowed** in the game's running code.
+- **Tooling:** TypeScript 7.0 and Vitest, matching Memory.
+- **Game data:** in its own D1 database, as save documents rather than many tables. A debug "reset game" button replaces test data. The live app is the test environment, so there's no staging and no manual backups. Game events stay out of Memory's permanent log during development.
+- **Quest board and Memory (for steps 17 to 19):**
+  - Quest kinds are the board's own, unrelated to Memory's item types. A Want asks the user to create any kind of item.
+  - Memory only reports whether an item is done, from its current state.
+  - Rewards are claimed by hand on the board. An item unticked before its claim shows as incomplete again, and nothing rolls back after a claim. The user is trusted.
+  - An event counts as done once its time passes, unless the user marks it missed.
+
 ## Step 1: content schema
 
 Schema 0.3, approved Oct 15, 2026, before the method existed. Full record: `SCHEMA.md`.

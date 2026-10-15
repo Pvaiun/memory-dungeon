@@ -13,6 +13,8 @@ It's also a test of a way of making games. The director sets the vision. AI desi
 - `steps/`: one folder per step, holding its brief, intent, design, tuning log and report.
 - `SCHEMA.md`: step 1's report, with the schema's full decision record.
 - `docs/memory-app-overview.md`: how Memory works today.
+- `docs/memory-stack.md`: how Memory is built (stack, data, AI pattern, limits) and what that means for the game.
+- `docs/memory-design-spec.md`: Memory's own design spec, copied from `Pvaiun/memoryapp`. Phase 4 works from it.
 - Memory's code lives in `Pvaiun/memoryapp`. Never change it from here. Read it only to check that the design fits its tech stack.
 
 ## How to work
@@ -29,8 +31,8 @@ It's also a test of a way of making games. The director sets the vision. AI desi
 
 - **Step 1, content schema:** done and approved (schema 0.3). It predates the method; its record is SCHEMA.md.
 - **Method:** adopted (`docs/method.md`). Steps 2 onward follow it.
-- **Next, the tech-stack brief:** see `docs/tasks/memory-stack-brief.md`. It's research, not a design step, so it skips the loop. Read Memory read-only and align this repo's tooling.
-- **Then step 2:** headless engine, starting with a light intent brief. Content data plus a seed goes in, and a complete fight log comes out.
+- **Tech-stack brief:** done and reviewed by the director (Oct 15, 2026). The write-up is `docs/memory-stack.md`, and its decisions are in `DECISIONS.md`. Tooling matches Memory: TypeScript 7.0, Vitest, `isolatedModules`, and a typecheck guard that keeps game logic free of Node APIs.
+- **Next, step 2:** headless engine, starting with a light intent brief. Content data plus a seed goes in, and a complete fight log comes out. Fights will run in the browser, so read "For step 2" in `docs/memory-stack.md` first. In short: put the engine in `src/engine/` with its tests beside it; use a seeded random-number generator; keep combat math to basic arithmetic so a seed replays the same on every device; and report the time per fight and per run, and the size of a fight log.
 - **Session pattern:** a step can take one session or several; its `steps/` folder is the handoff. Each session ends at a gate by updating this Status section, committing, and stopping for the director.
 
 ## The director's preferences
@@ -43,13 +45,16 @@ It's also a test of a way of making games. The director sets the vision. AI desi
 
 ## Tech
 
-This is TypeScript with zod. The schema is in `src/schema.ts` and the validator in `src/validate.ts`.
+This is TypeScript 7.0, tested with Vitest, both at Memory's versions (`docs/memory-stack.md`). The schema uses zod 4, which is allowed in the game's running code too. The schema is in `src/schema.ts` and the validator in `src/validate.ts`.
 
-Keep game logic pure TypeScript with no Node-only APIs, so it can later run in a Cloudflare Worker or the browser, wherever Memory needs it. Match Memory's stack (see `docs/memory-stack.md` once written).
+Keep game logic pure TypeScript with no Node-only APIs, so it can run in the browser (where fights will run) and in a Cloudflare Worker. `tsconfig.core.json` enforces this for the files it lists, so add new game-logic folders there.
+
+Before anything goes into Memory, work through the integration checklist in `docs/memory-stack.md`. Among other things, it makes sure Memory lists zod 4 as its own dependency, so a bare `import 'zod'` doesn't silently pick up the old zod 3 that comes with Wrangler.
 
 ```
 npm install
-npm test
+npm test            # vitest run
+npm run typecheck   # whole repo, plus the no-Node guard on game logic
 npm run validate
 ```
 

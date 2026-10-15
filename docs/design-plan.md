@@ -4,7 +4,8 @@ The ordered design work needed to take the concept spec to a buildable game. Eac
 
 **Inputs:**
 - *Memory Dungeon Game: Concept Spec*: what the game is and why.
-- `APP_OVERVIEW.md`: a summary of how Memory works today.
+- `memory-app-overview.md`: a summary of how Memory works today.
+- `memory-stack.md`: how Memory is built, and what that means for the game.
 - `memory-design-spec.md`: Memory's official design spec, with full detail and rationale.
 
 The overview is enough for phases 1 to 3. Wherever a step touches Memory's own systems (the event log, counters, catalog, profile, the Brain), work from the official spec.
@@ -144,13 +145,13 @@ Every step here weighs competing variants: simulation chooses between them on nu
 
 ## Phase 4: Quest board (can run in parallel)
 
-These steps connect the game to Memory itself, so they work from `memory-design-spec.md` rather than the overview.
+These steps connect the game to Memory itself, so they work from `memory-design-spec.md` rather than the overview, and from `memory-stack.md` for how the game plugs in. Before any code goes into Memory, work through the integration checklist in `memory-stack.md`.
 
 ### 17. Quest completion rules
-- **Designs:** which Memory events complete each quest kind, using the event types defined in `memory-design-spec.md`.
+- **Designs:** what completes each quest kind. Quest kinds are the board's own, not Memory's item types, and the board reads each item's current state, not Memory's event log (see "What the quest board reads" in `memory-stack.md`).
   - **Notice:** a new item from a capture, not a recapture.
   - **Notice and do:** that new item, completed the same week.
-  - **Want:** a goal created.
+  - **Want:** a new item created, of any type.
   - **Review:** a keep, dismiss, snooze, skip or "got it" decision on the offered item.
   - **Tackle:** the offered item completed.
   - **Keep:** every occurrence of the habit that week completed.
