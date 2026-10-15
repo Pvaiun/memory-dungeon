@@ -9,7 +9,7 @@ Design plan step 1 · schema 0.3 · Oct 15, 2026 · second revision after the di
 | `src/schema.ts` | The schema, in TypeScript with zod. The source of truth. |
 | `schema/content-pack.schema.json`, `schema/party.schema.json` | The same schema as JSON Schema, for any other tool or language. |
 | `fixtures/hollow.pack.json` | The worked example: one small pack with every type in it. **Placeholder content**, not game design (see below). |
-| `fixtures/by-type/` | A few examples of each type, pulled from the pack. |
+| `fixtures/by-type/` | A few examples of each type, pulled from the pack by `npm run examples` (generated, not committed). |
 | `fixtures/party.json` | An example party loadout, the engine's input. |
 | `src/validate.ts`, `src/cli.ts` | The validator. |
 | `PRIMITIVES.md` | The engine primitives and what each means, generated from the schema. |

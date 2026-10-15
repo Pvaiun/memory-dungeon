@@ -8,4 +8,4 @@ Nothing in this folder is game design. These files exist to:
 
 Every class, number, name, enemy and formula here is disposable. The `design` block's numbers come from the concept spec, which was bullish on them, so treat those as placeholders too. Real content comes from design plan steps 12 to 15, generated and tuned by simulation.
 
-`by-type/` is generated from `hollow.pack.json` by `npm run examples`.
+`npm run examples` writes `by-type/`, with a few examples of each type pulled from `hollow.pack.json`. It's generated, so it isn't committed.
