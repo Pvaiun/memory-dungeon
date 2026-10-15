@@ -46,7 +46,7 @@ A party-based JRPG dungeon crawler with automatic combat, where preparation is t
 
 **Core loop.** Quests give keys, dungeons give gear, and the build joins them:
 
-1. **Real-life quests** (Notice, Want, Review, Tackle, Keep) pay keys.
+1. **Real-life quests** (Notice, Notice and Do, Want, Review, Tackle, Keep) pay keys.
 2. Keys go into **building a party**: specialization, abilities, gear, formation.
 3. The party **runs a dungeon**: automatic fights, perk picks, a boss.
 4. Clearing it drops **dungeon loot**: efficacy gear, from first clears and replays, which goes back into the build.
