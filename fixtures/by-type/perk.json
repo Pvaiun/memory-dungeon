@@ -1,0 +1,65 @@
+[
+  {
+    "id": "red_riposte",
+    "name": "Red Riposte",
+    "text": "Ranger's counterattack also applies bleed.",
+    "family": "blood",
+    "rarity": "regular",
+    "requires": {
+      "hasAbility": "riposte",
+      "of": "self"
+    },
+    "patches": [
+      {
+        "op": "patch_ability",
+        "ability": "riposte",
+        "rule": "counter",
+        "addEffects": [
+          {
+            "op": "apply_status",
+            "status": "bleed",
+            "target": {
+              "from": "event_source"
+            }
+          }
+        ]
+      }
+    ],
+    "verbs": [
+      "damage_over_time"
+    ],
+    "note": "The concept spec's own example of a perk that modifies an equipped ability."
+  },
+  {
+    "id": "haemorrhage",
+    "name": "Haemorrhage",
+    "text": "Ranger's counterattack applies heavy bleeding.",
+    "family": "blood",
+    "rarity": "premium",
+    "upgradeOf": "red_riposte",
+    "requires": {
+      "hasAbility": "riposte",
+      "of": "self"
+    },
+    "patches": [
+      {
+        "op": "patch_ability",
+        "ability": "riposte",
+        "rule": "counter",
+        "addEffects": [
+          {
+            "op": "apply_status",
+            "status": "bleed",
+            "target": {
+              "from": "event_source"
+            },
+            "stacks": 3
+          }
+        ]
+      }
+    ],
+    "verbs": [
+      "damage_over_time"
+    ]
+  }
+]

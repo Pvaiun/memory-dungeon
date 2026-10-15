@@ -1,0 +1,3573 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "0.3"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "title": {
+      "type": "string"
+    },
+    "note": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Designer note. Never shown to players and never read by the engine."
+    },
+    "design": {
+      "type": "object",
+      "properties": {
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Designer note. Never shown to players and never read by the engine."
+        },
+        "formationPositions": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "partySize": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "abilitiesPerSpec": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "abilitiesEquipped": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "perkPicksPerRun": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "perkPoolSize": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "perkOptionsPerPick": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "keyholesPerBoss": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "rules": {
+          "type": "object",
+          "properties": {
+            "abilitiesAreBehaviour": {
+              "type": "boolean",
+              "description": "An ability must do more than change stats."
+            },
+            "efficacyGearSimple": {
+              "type": "boolean",
+              "description": "Efficacy gear carries stat modifiers, each with at most one simple condition, and no rules or actives."
+            }
+          },
+          "required": [
+            "abilitiesAreBehaviour",
+            "efficacyGearSimple"
+          ],
+          "additionalProperties": false
+        },
+        "complete": {
+          "type": "object",
+          "properties": {
+            "classes": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "specsPerClass": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "verbs": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "maxStatusShare": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Most specializations whose own kit applies a given status to other units, as a share of all specializations."
+            }
+          },
+          "required": [
+            "classes",
+            "specsPerClass",
+            "verbs",
+            "maxStatusShare"
+          ],
+          "additionalProperties": false,
+          "description": "Totals checked only with --complete, for a full content set."
+        }
+      },
+      "required": [
+        "formationPositions",
+        "partySize",
+        "abilitiesPerSpec",
+        "abilitiesEquipped",
+        "perkPicksPerRun",
+        "perkPoolSize",
+        "perkOptionsPerPick",
+        "keyholesPerBoss",
+        "rules",
+        "complete"
+      ],
+      "additionalProperties": false,
+      "description": "Target numbers the validator enforces. Placeholders from the concept spec, which was bullish on them: expect them to change."
+    },
+    "ruleset": {
+      "type": "object",
+      "properties": {
+        "turnOrder": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "const": "by_stat"
+                },
+                "stat": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]*$"
+                },
+                "ties": {
+                  "type": "string",
+                  "enum": [
+                    "random",
+                    "party_first"
+                  ]
+                }
+              },
+              "required": [
+                "kind",
+                "stat",
+                "ties"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "actionsPerTurn": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "defaultModes": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "when": {
+                "$ref": "#/$defs/Condition"
+              },
+              "use": {
+                "type": "string",
+                "enum": [
+                  "ability",
+                  "basic"
+                ]
+              }
+            },
+            "required": [
+              "use"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Modes for behaviours that don't list their own."
+        },
+        "defaultBehaviour": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "description": "The behaviour for units that don't name one."
+        },
+        "maxRounds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "onTimeout": {
+          "type": "string",
+          "enum": [
+            "loss"
+          ]
+        },
+        "defeat": {
+          "type": "object",
+          "properties": {
+            "stat": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            },
+            "atOrBelow": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "stat",
+            "atOrBelow"
+          ],
+          "additionalProperties": false
+        },
+        "damagePipeline": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "hit",
+              "crit",
+              "block",
+              "scale",
+              "mitigate",
+              "floor"
+            ]
+          }
+        },
+        "formulas": {
+          "type": "object",
+          "properties": {
+            "hitChance": {
+              "$ref": "#/$defs/Expr"
+            },
+            "critChance": {
+              "$ref": "#/$defs/Expr"
+            },
+            "critMultiplier": {
+              "$ref": "#/$defs/Expr"
+            },
+            "blockChance": {
+              "$ref": "#/$defs/Expr"
+            },
+            "blockMultiplier": {
+              "$ref": "#/$defs/Expr"
+            },
+            "damageScale": {
+              "$ref": "#/$defs/Expr"
+            },
+            "minDamage": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "hitChance",
+            "critChance",
+            "critMultiplier",
+            "blockChance",
+            "blockMultiplier",
+            "damageScale",
+            "minDamage"
+          ],
+          "additionalProperties": false
+        },
+        "modifierStacking": {
+          "type": "string",
+          "enum": [
+            "add_then_multiply",
+            "multiply_then_add"
+          ]
+        },
+        "targeting": {
+          "type": "object",
+          "properties": {
+            "weightStat": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$",
+              "description": "The stat `weighted` picks use: a unit's chance to be picked is proportional to it."
+            }
+          },
+          "required": [
+            "weightStat"
+          ],
+          "additionalProperties": false
+        },
+        "maxEnemies": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991,
+          "description": "Most enemies on the field at once, including summons."
+        },
+        "run": {
+          "type": "object",
+          "properties": {
+            "betweenFights": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/InstantEffect"
+              },
+              "description": "Applied to each living party unit after each won fight; `self` is that unit."
+            },
+            "defeatedUnits": {
+              "type": "string",
+              "enum": [
+                "stay_down",
+                "revive"
+              ]
+            },
+            "statusesClearAtFightEnd": {
+              "type": "boolean"
+            },
+            "cooldownsResetEachFight": {
+              "type": "boolean"
+            },
+            "perkOffer": {
+              "type": "object",
+              "properties": {
+                "options": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "premiumChance": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1,
+                  "description": "Chance each offered slot rolls a premium perk, if one is available."
+                },
+                "repeatPicked": {
+                  "type": "boolean",
+                  "description": "Can a perk already picked this run be offered again?"
+                },
+                "offerInapplicable": {
+                  "type": "boolean",
+                  "description": "Can a perk whose `requires` no party unit meets be offered?"
+                }
+              },
+              "required": [
+                "options",
+                "premiumChance",
+                "repeatPicked",
+                "offerInapplicable"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "betweenFights",
+            "defeatedUnits",
+            "statusesClearAtFightEnd",
+            "cooldownsResetEachFight",
+            "perkOffer"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "turnOrder",
+        "actionsPerTurn",
+        "defaultModes",
+        "defaultBehaviour",
+        "maxRounds",
+        "onTimeout",
+        "defeat",
+        "damagePipeline",
+        "formulas",
+        "modifierStacking",
+        "targeting",
+        "maxEnemies",
+        "run"
+      ],
+      "additionalProperties": false
+    },
+    "stats": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Player-facing text. The engine never reads it."
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "attribute",
+              "resource"
+            ]
+          },
+          "default": {
+            "type": "number"
+          },
+          "min": {
+            "type": "number"
+          },
+          "max": {
+            "type": "number"
+          },
+          "maxStat": {
+            "description": "Resources only: the stat that caps it. A resource starts each run at its cap.",
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "formula": {
+            "description": "Attributes only: a derived stat, computed from `self`'s other stats. Modifiers apply on top.",
+            "$ref": "#/$defs/Expr"
+          },
+          "persistence": {
+            "description": "Resources only: refilled every fight, or carried across the run.",
+            "type": "string",
+            "enum": [
+              "fight",
+              "run"
+            ]
+          },
+          "note": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Designer note. Never shown to players and never read by the engine."
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "kind",
+          "default"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "damageTypes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Player-facing text. The engine never reads it."
+          },
+          "mitigation": {
+            "description": "Final damage. `raw`, `attacker` and `defender` are in scope.",
+            "$ref": "#/$defs/Expr"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "mitigation"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "statuses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The word shown in combat, e.g. BLEED."
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Player-facing text. The engine never reads it."
+          },
+          "on": {
+            "type": "string",
+            "enum": [
+              "self",
+              "others",
+              "any"
+            ]
+          },
+          "flags": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "acts_first",
+                "draws_support",
+                "skip_turn",
+                "untargetable",
+                "cannot_evade",
+                "cannot_block"
+              ]
+            }
+          },
+          "stacking": {
+            "type": "string",
+            "enum": [
+              "refresh",
+              "stack",
+              "independent"
+            ]
+          },
+          "maxStacks": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "defaultTurns": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "rules": {
+            "description": "Owned by the bearer: `self` is the unit carrying the status.",
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/Rule"
+            }
+          },
+          "note": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Designer note. Never shown to players and never read by the engine."
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "text",
+          "on",
+          "stacking"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "verbs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Internal label. Verbs are never shown to players."
+          },
+          "note": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Definition, in terms of the numerical systems."
+          },
+          "signals": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "op": {
+                  "type": "string"
+                },
+                "damageType": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]*$"
+                },
+                "statusFlag": {
+                  "type": "string",
+                  "enum": [
+                    "acts_first",
+                    "draws_support",
+                    "skip_turn",
+                    "untargetable",
+                    "cannot_evade",
+                    "cannot_block"
+                  ]
+                },
+                "statusTicks": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "statusDebuff": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "stat": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]*$"
+                },
+                "sign": {
+                  "type": "string",
+                  "enum": [
+                    "positive",
+                    "negative"
+                  ]
+                },
+                "flag": {
+                  "type": "string",
+                  "enum": [
+                    "acts_first",
+                    "draws_support",
+                    "skip_turn",
+                    "untargetable",
+                    "cannot_evade",
+                    "cannot_block"
+                  ]
+                },
+                "from": {
+                  "type": "string",
+                  "enum": [
+                    "self",
+                    "allies",
+                    "allies_and_self",
+                    "enemies",
+                    "everyone",
+                    "event_source",
+                    "event_target",
+                    "action_target",
+                    "action_target_allies",
+                    "event_target_allies"
+                  ]
+                },
+                "pick": {
+                  "type": "string",
+                  "enum": [
+                    "all",
+                    "random",
+                    "weighted",
+                    "lowest",
+                    "highest"
+                  ]
+                },
+                "multiHit": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "amountUp": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "performs": {
+                  "type": "string",
+                  "enum": [
+                    "counter",
+                    "extra"
+                  ]
+                },
+                "trigger": {
+                  "type": "string",
+                  "enum": [
+                    "fight_start",
+                    "fight_end",
+                    "round_start",
+                    "turn_start",
+                    "turn_end",
+                    "attack_hit",
+                    "attack_missed",
+                    "crit",
+                    "kill",
+                    "evade",
+                    "block",
+                    "damaged",
+                    "healed",
+                    "hp_below",
+                    "defeated",
+                    "status_applied"
+                  ]
+                },
+                "conditionAlive": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "statAtLeast": {
+                  "type": "object",
+                  "properties": {
+                    "stat": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_]*$"
+                    },
+                    "value": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "stat",
+                    "value"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "additionalProperties": false,
+              "description": "A pattern in an entity's data that shows this verb. Every listed field must match one fact."
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "note",
+          "signals"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "traits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "word": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The fixed player-facing word or phrase. Its meaning never varies."
+          },
+          "forms": {
+            "description": "Inflections that count as the same word in enemy text.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Player-facing text. The engine never reads it."
+            }
+          },
+          "verbs": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            },
+            "description": "The verb profile this word stands for."
+          },
+          "note": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Designer note. Never shown to players and never read by the engine."
+          }
+        },
+        "required": [
+          "id",
+          "word",
+          "verbs"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "slots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Player-facing text. The engine never reads it."
+          },
+          "class": {
+            "description": "Absent: a generic slot every unit has.",
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Shown in the combat log."
+          },
+          "target": {
+            "description": "Required for every action except basic actions, which take their target from the unit's behaviour.",
+            "$ref": "#/$defs/Selector"
+          },
+          "hits": {
+            "description": "Times `do` repeats per use. Default 1.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "do": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/InstantEffect"
+            }
+          },
+          "verbs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            }
+          },
+          "note": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Designer note. Never shown to players and never read by the engine."
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "do",
+          "verbs"
+        ],
+        "additionalProperties": false,
+        "description": "Each use, the target is picked, then `do` runs once (× hits). Each effect picks its own units; action_target means every unit the target picked."
+      }
+    },
+    "behaviours": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "note": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Behaviours are never shown to players."
+          },
+          "basicTarget": {
+            "description": "How the basic action picks its target.",
+            "$ref": "#/$defs/Selector"
+          },
+          "modes": {
+            "description": "Absent: ruleset.defaultModes. The last mode must have no `when`.",
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "when": {
+                  "$ref": "#/$defs/Condition"
+                },
+                "use": {
+                  "type": "string",
+                  "enum": [
+                    "ability",
+                    "basic"
+                  ]
+                }
+              },
+              "required": [
+                "use"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "id",
+          "note",
+          "basicTarget"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "classes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Player-facing text. The engine never reads it."
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Player-facing text. The engine never reads it."
+          },
+          "slots": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            },
+            "description": "Class-specific gear slots, on top of the generic ones."
+          },
+          "stats": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            },
+            "additionalProperties": {
+              "type": "number"
+            },
+            "description": "Base stats every specialization of the class starts from."
+          },
+          "note": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Designer note. Never shown to players and never read by the engine."
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "text",
+          "slots",
+          "stats"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "specializations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "class": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Shown as \"Class: Specialization\", e.g. \"Ranger: Duelist\"."
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Player-facing text. The engine never reads it."
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "starter",
+              "unlock"
+            ],
+            "description": "starter: owned from the start. unlock: a reward from a real-life quest."
+          },
+          "stats": {
+            "description": "Overrides the class's base stats.",
+            "type": "object",
+            "propertyNames": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            },
+            "additionalProperties": {
+              "type": "number"
+            }
+          },
+          "basicAction": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "behaviour": {
+            "description": "Absent: ruleset.defaultBehaviour.",
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "abilities": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            }
+          },
+          "verbs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            },
+            "description": "Verbs this unit can reach. Checked against its actions, behaviour, abilities and stats."
+          },
+          "note": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Designer note. Never shown to players and never read by the engine."
+          }
+        },
+        "required": [
+          "id",
+          "class",
+          "name",
+          "text",
+          "source",
+          "basicAction",
+          "abilities",
+          "verbs"
+        ],
+        "additionalProperties": false,
+        "description": "A unit. The player owns at most one of each and can field it once per party."
+      }
+    },
+    "abilities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "class": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$",
+            "description": "Owning class. Only that class's specializations may list it."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Player-facing text. The engine never reads it."
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Player-facing text. The engine never reads it."
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/Rule"
+            }
+          },
+          "active": {
+            "type": "object",
+            "properties": {
+              "action": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*$",
+                "description": "The action used. It must carry its own target."
+              },
+              "cooldown": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Own turns before it's ready again after use."
+              },
+              "initialCooldown": {
+                "description": "Own turns before first use each fight. Default 0.",
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "useWhen": {
+                "description": "Extra condition for using it, on top of the action finding a target.",
+                "$ref": "#/$defs/Condition"
+              },
+              "priority": {
+                "description": "Higher goes first when several are ready. Default 0.",
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "limit": {
+                "type": "object",
+                "properties": {
+                  "times": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "per": {
+                    "type": "string",
+                    "enum": [
+                      "turn",
+                      "round",
+                      "fight",
+                      "run"
+                    ]
+                  }
+                },
+                "required": [
+                  "times",
+                  "per"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "action",
+              "cooldown"
+            ],
+            "additionalProperties": false,
+            "description": "An ability the unit uses on its own when it's ready. See TURN."
+          },
+          "verbs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            }
+          },
+          "note": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Designer note. Never shown to players and never read by the engine."
+          }
+        },
+        "required": [
+          "id",
+          "class",
+          "name",
+          "text",
+          "verbs"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "gear": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Player-facing text. The engine never reads it."
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Player-facing text. The engine never reads it."
+          },
+          "slot": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "tier": {
+            "type": "string",
+            "enum": [
+              "efficacy",
+              "powerful",
+              "capstone"
+            ]
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "starter",
+              "loot",
+              "unlock"
+            ]
+          },
+          "class": {
+            "description": "Classes that can equip it. Absent: any class.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            }
+          },
+          "rank": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991,
+            "description": "Progression band, for gear curves and loot tables."
+          },
+          "stats": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "stat": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]*$"
+                },
+                "mode": {
+                  "type": "string",
+                  "enum": [
+                    "add",
+                    "mul"
+                  ],
+                  "description": "add: +value. mul: ×value. Stacking order is ruleset.modifierStacking."
+                },
+                "value": {
+                  "type": "number"
+                },
+                "if": {
+                  "description": "The modifier holds only while this is true. `self` is the wearer.",
+                  "$ref": "#/$defs/Condition"
+                }
+              },
+              "required": [
+                "stat",
+                "mode",
+                "value"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/Rule"
+            }
+          },
+          "active": {
+            "type": "object",
+            "properties": {
+              "action": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*$",
+                "description": "The action used. It must carry its own target."
+              },
+              "cooldown": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Own turns before it's ready again after use."
+              },
+              "initialCooldown": {
+                "description": "Own turns before first use each fight. Default 0.",
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "useWhen": {
+                "description": "Extra condition for using it, on top of the action finding a target.",
+                "$ref": "#/$defs/Condition"
+              },
+              "priority": {
+                "description": "Higher goes first when several are ready. Default 0.",
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "limit": {
+                "type": "object",
+                "properties": {
+                  "times": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "per": {
+                    "type": "string",
+                    "enum": [
+                      "turn",
+                      "round",
+                      "fight",
+                      "run"
+                    ]
+                  }
+                },
+                "required": [
+                  "times",
+                  "per"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "action",
+              "cooldown"
+            ],
+            "additionalProperties": false,
+            "description": "An ability the unit uses on its own when it's ready. See TURN."
+          },
+          "verbs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            }
+          },
+          "note": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Designer note. Never shown to players and never read by the engine."
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "text",
+          "slot",
+          "tier",
+          "source",
+          "rank",
+          "stats",
+          "verbs"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "formations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Player-facing text. The engine never reads it."
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Player-facing text. The engine never reads it."
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "starter",
+              "unlock"
+            ],
+            "description": "starter: owned from the start. unlock: a reward from a real-life quest."
+          },
+          "positions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]*$"
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Player-facing text. The engine never reads it."
+                },
+                "text": {
+                  "description": "What the slot does, as the player sees it.",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "layout": {
+                  "type": "object",
+                  "properties": {
+                    "line": {
+                      "type": "string",
+                      "enum": [
+                        "front",
+                        "middle",
+                        "back"
+                      ]
+                    },
+                    "column": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [
+                    "line",
+                    "column"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Where the slot is drawn. Cosmetic: the engine never reads it."
+                },
+                "rules": {
+                  "description": "Apply to the unit in this slot; `self` is that unit. Absent: an empty slot.",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/Rule"
+                  }
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "layout"
+              ],
+              "additionalProperties": false,
+              "description": "A formation slot: its own bespoke effects, open to any unit."
+            }
+          },
+          "rules": {
+            "description": "Party-wide: apply to every unit in the formation.",
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/Rule"
+            }
+          },
+          "verbs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            }
+          },
+          "note": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Designer note. Never shown to players and never read by the engine."
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "text",
+          "source",
+          "positions",
+          "verbs"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "enemies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Player-facing text. The engine never reads it."
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Short description of how it behaves. Must use each trait's word, never say what beats it."
+          },
+          "rank": {
+            "type": "string",
+            "enum": [
+              "minion",
+              "elite",
+              "boss"
+            ]
+          },
+          "traits": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            }
+          },
+          "stats": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            },
+            "additionalProperties": {
+              "type": "number"
+            },
+            "description": "Hidden from the player."
+          },
+          "basicAction": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "behaviour": {
+            "description": "Absent: ruleset.defaultBehaviour.",
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "actives": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "action": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]*$",
+                  "description": "The action used. It must carry its own target."
+                },
+                "cooldown": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Own turns before it's ready again after use."
+                },
+                "initialCooldown": {
+                  "description": "Own turns before first use each fight. Default 0.",
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "useWhen": {
+                  "description": "Extra condition for using it, on top of the action finding a target.",
+                  "$ref": "#/$defs/Condition"
+                },
+                "priority": {
+                  "description": "Higher goes first when several are ready. Default 0.",
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "limit": {
+                  "type": "object",
+                  "properties": {
+                    "times": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 9007199254740991
+                    },
+                    "per": {
+                      "type": "string",
+                      "enum": [
+                        "turn",
+                        "round",
+                        "fight",
+                        "run"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "times",
+                    "per"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "action",
+                "cooldown"
+              ],
+              "additionalProperties": false,
+              "description": "An ability the unit uses on its own when it's ready. See TURN."
+            }
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/Rule"
+            }
+          },
+          "keyholes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]*$"
+                },
+                "from": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]*$",
+                  "description": "The enemy's own verb this keyhole comes from. It must show in the enemy's data."
+                },
+                "mechanic": {
+                  "description": "The enemy mechanic it comes from: one of its rule ids, an active's action, or its basic action. It must show `from`. Absent: base stats.",
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]*$"
+                },
+                "counteredBy": {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_]*$"
+                  },
+                  "description": "Verbs that work well against it. Any of them helps; none of them wins alone."
+                },
+                "strongAgainst": {
+                  "description": "Verbs it blunts.",
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_]*$"
+                  }
+                },
+                "note": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Designer note. Never shown to players and never read by the engine."
+                }
+              },
+              "required": [
+                "id",
+                "from",
+                "counteredBy",
+                "note"
+              ],
+              "additionalProperties": false,
+              "description": "Design intent only, for difficulty prediction (step 11). Never shown to players, never read by the engine."
+            }
+          },
+          "verbs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            }
+          },
+          "note": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Designer note. Never shown to players and never read by the engine."
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "text",
+          "rank",
+          "traits",
+          "stats",
+          "basicAction",
+          "verbs"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "perkFamilies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Player-facing text. The engine never reads it."
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Player-facing text. The engine never reads it."
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "text"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "perks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Player-facing text. The engine never reads it."
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Player-facing text. The engine never reads it."
+          },
+          "family": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "rarity": {
+            "type": "string",
+            "enum": [
+              "regular",
+              "premium"
+            ]
+          },
+          "upgradeOf": {
+            "description": "Premium only: the regular perk this is a stronger version of.",
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "requires": {
+            "description": "Applicable if at least one party unit (as `self`) meets it.",
+            "$ref": "#/$defs/Condition"
+          },
+          "appliesTo": {
+            "description": "Which party units receive `rules` (as `self`). Absent: all.",
+            "$ref": "#/$defs/Condition"
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/Rule"
+            }
+          },
+          "patches": {
+            "description": "For this run, change an ability on every unit that has it equipped.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "op": {
+                  "type": "string",
+                  "const": "patch_ability"
+                },
+                "ability": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]*$"
+                },
+                "rule": {
+                  "description": "The rule to patch. Absent: the ability's active.",
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]*$"
+                },
+                "addEffects": {
+                  "description": "Triggered rules only.",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/InstantEffect"
+                  }
+                },
+                "amountMul": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "chanceAdd": {
+                  "description": "Triggered rules only.",
+                  "type": "number"
+                },
+                "cooldownAdd": {
+                  "description": "Actives only.",
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                }
+              },
+              "required": [
+                "op",
+                "ability"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "verbs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            }
+          },
+          "note": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Designer note. Never shown to players and never read by the engine."
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "text",
+          "family",
+          "rarity",
+          "verbs"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "dungeons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Player-facing text. The engine never reads it."
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Player-facing text. The engine never reads it."
+          },
+          "partySize": {
+            "type": "object",
+            "properties": {
+              "max": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "max"
+            ],
+            "additionalProperties": false
+          },
+          "perkPool": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            }
+          },
+          "stages": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "const": "fight"
+                    },
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_]*$"
+                    },
+                    "boss": {
+                      "type": "boolean"
+                    },
+                    "enemies": {
+                      "minItems": 1,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-z0-9_]*$"
+                      },
+                      "description": "Enemy ids, in display order. Enemies have no formation."
+                    },
+                    "note": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Designer note. Never shown to players and never read by the engine."
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "id",
+                    "enemies"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "const": "perk_pick"
+                    },
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_]*$"
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "id"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "loot": {
+            "type": "object",
+            "properties": {
+              "firstClear": {
+                "type": "object",
+                "properties": {
+                  "guaranteed": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_]*$"
+                    }
+                  },
+                  "rolls": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "table": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "gear": {
+                          "type": "string",
+                          "pattern": "^[a-z][a-z0-9_]*$"
+                        },
+                        "weight": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        }
+                      },
+                      "required": [
+                        "gear",
+                        "weight"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "additionalProperties": false
+              },
+              "replay": {
+                "type": "object",
+                "properties": {
+                  "guaranteed": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_]*$"
+                    }
+                  },
+                  "rolls": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "table": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "gear": {
+                          "type": "string",
+                          "pattern": "^[a-z][a-z0-9_]*$"
+                        },
+                        "weight": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        }
+                      },
+                      "required": [
+                        "gear",
+                        "weight"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "firstClear",
+              "replay"
+            ],
+            "additionalProperties": false
+          },
+          "challenges": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]*$"
+                },
+                "text": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Player-facing text. The engine never reads it."
+                },
+                "constraints": {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "partySize": {
+                            "type": "object",
+                            "properties": {
+                              "min": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 9007199254740991
+                              },
+                              "max": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "partySize"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "classCount": {
+                            "type": "object",
+                            "properties": {
+                              "class": {
+                                "type": "string",
+                                "pattern": "^[a-z][a-z0-9_]*$"
+                              },
+                              "min": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "max": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "required": [
+                              "class"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "classCount"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "includesSpec": {
+                            "type": "string",
+                            "pattern": "^[a-z][a-z0-9_]*$"
+                          }
+                        },
+                        "required": [
+                          "includesSpec"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "excludesSpec": {
+                            "type": "string",
+                            "pattern": "^[a-z][a-z0-9_]*$"
+                          }
+                        },
+                        "required": [
+                          "excludesSpec"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "excludesClass": {
+                            "type": "string",
+                            "pattern": "^[a-z][a-z0-9_]*$"
+                          }
+                        },
+                        "required": [
+                          "excludesClass"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "formation": {
+                            "type": "string",
+                            "pattern": "^[a-z][a-z0-9_]*$"
+                          }
+                        },
+                        "required": [
+                          "formation"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  "description": "Only things the player can see: party size, classes, specializations, formation."
+                },
+                "loot": {
+                  "type": "object",
+                  "properties": {
+                    "guaranteed": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-z0-9_]*$"
+                      }
+                    },
+                    "rolls": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "table": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "gear": {
+                            "type": "string",
+                            "pattern": "^[a-z][a-z0-9_]*$"
+                          },
+                          "weight": {
+                            "type": "number",
+                            "exclusiveMinimum": 0
+                          }
+                        },
+                        "required": [
+                          "gear",
+                          "weight"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "note": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Designer note. Never shown to players and never read by the engine."
+                }
+              },
+              "required": [
+                "id",
+                "text",
+                "constraints",
+                "loot"
+              ],
+              "additionalProperties": false
+            },
+            "description": "Fixed sequence. Clearing one reveals the next."
+          },
+          "note": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Designer note. Never shown to players and never read by the engine."
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "text",
+          "partySize",
+          "perkPool",
+          "stages",
+          "loot",
+          "challenges"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "starter": {
+      "type": "object",
+      "properties": {
+        "specializations": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          }
+        },
+        "formations": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          }
+        },
+        "gear": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          }
+        }
+      },
+      "required": [
+        "specializations",
+        "formations",
+        "gear"
+      ],
+      "additionalProperties": false
+    },
+    "progression": {
+      "type": "object",
+      "properties": {
+        "dungeonOrder": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          }
+        }
+      },
+      "required": [
+        "dungeonOrder"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "id",
+    "design",
+    "ruleset",
+    "stats",
+    "damageTypes",
+    "statuses",
+    "verbs",
+    "traits",
+    "slots",
+    "actions",
+    "behaviours",
+    "classes",
+    "specializations",
+    "abilities",
+    "gear",
+    "formations",
+    "enemies",
+    "perkFamilies",
+    "perks",
+    "dungeons",
+    "starter",
+    "progression"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "Condition": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "all": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Condition"
+              }
+            }
+          },
+          "required": [
+            "all"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "any": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Condition"
+              }
+            }
+          },
+          "required": [
+            "any"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "not": {
+              "$ref": "#/$defs/Condition"
+            }
+          },
+          "required": [
+            "not"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "hpBelow": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "of": {
+              "type": "string",
+              "enum": [
+                "self",
+                "target",
+                "event_source",
+                "event_target",
+                "candidate",
+                "attacker",
+                "defender"
+              ]
+            }
+          },
+          "required": [
+            "hpBelow"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "hpAtLeast": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "of": {
+              "type": "string",
+              "enum": [
+                "self",
+                "target",
+                "event_source",
+                "event_target",
+                "candidate",
+                "attacker",
+                "defender"
+              ]
+            }
+          },
+          "required": [
+            "hpAtLeast"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "hasStatus": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            },
+            "of": {
+              "type": "string",
+              "enum": [
+                "self",
+                "target",
+                "event_source",
+                "event_target",
+                "candidate",
+                "attacker",
+                "defender"
+              ]
+            }
+          },
+          "required": [
+            "hasStatus"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "isClass": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*$"
+              }
+            },
+            "of": {
+              "type": "string",
+              "enum": [
+                "self",
+                "target",
+                "event_source",
+                "event_target",
+                "candidate",
+                "attacker",
+                "defender"
+              ]
+            }
+          },
+          "required": [
+            "isClass"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "isSpec": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*$"
+              }
+            },
+            "of": {
+              "type": "string",
+              "enum": [
+                "self",
+                "target",
+                "event_source",
+                "event_target",
+                "candidate",
+                "attacker",
+                "defender"
+              ]
+            }
+          },
+          "required": [
+            "isSpec"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "hasAbility": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            },
+            "of": {
+              "type": "string",
+              "enum": [
+                "self",
+                "target",
+                "event_source",
+                "event_target",
+                "candidate",
+                "attacker",
+                "defender"
+              ]
+            }
+          },
+          "required": [
+            "hasAbility"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "round": {
+              "type": "object",
+              "properties": {
+                "is": {
+                  "type": "string",
+                  "enum": [
+                    "lt",
+                    "lte",
+                    "eq",
+                    "gte",
+                    "gt"
+                  ]
+                },
+                "n": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                }
+              },
+              "required": [
+                "is",
+                "n"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "round"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "alive": {
+              "type": "object",
+              "properties": {
+                "side": {
+                  "type": "string",
+                  "enum": [
+                    "allies",
+                    "enemies"
+                  ]
+                },
+                "is": {
+                  "type": "string",
+                  "enum": [
+                    "lt",
+                    "lte",
+                    "eq",
+                    "gte",
+                    "gt"
+                  ]
+                },
+                "n": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                }
+              },
+              "required": [
+                "side",
+                "is",
+                "n"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "alive"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "compare": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "$ref": "#/$defs/Expr"
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "lt",
+                    "lte",
+                    "eq",
+                    "gte",
+                    "gt"
+                  ]
+                },
+                {
+                  "$ref": "#/$defs/Expr"
+                }
+              ],
+              "items": false,
+              "minItems": 3,
+              "maxItems": 3
+            }
+          },
+          "required": [
+            "compare"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "Expr": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "stat": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            },
+            "of": {
+              "type": "string",
+              "enum": [
+                "self",
+                "target",
+                "event_source",
+                "event_target",
+                "candidate",
+                "attacker",
+                "defender"
+              ]
+            }
+          },
+          "required": [
+            "stat"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "stacks": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            },
+            "of": {
+              "type": "string",
+              "enum": [
+                "self",
+                "target",
+                "event_source",
+                "event_target",
+                "candidate",
+                "attacker",
+                "defender"
+              ]
+            }
+          },
+          "required": [
+            "stacks"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "var": {
+              "type": "string",
+              "enum": [
+                "raw",
+                "amount",
+                "round"
+              ]
+            }
+          },
+          "required": [
+            "var"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "count": {
+              "$ref": "#/$defs/Selector"
+            }
+          },
+          "required": [
+            "count"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "add": {
+              "minItems": 2,
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Expr"
+              }
+            }
+          },
+          "required": [
+            "add"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "mul": {
+              "minItems": 2,
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Expr"
+              }
+            }
+          },
+          "required": [
+            "mul"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "min": {
+              "minItems": 2,
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Expr"
+              }
+            }
+          },
+          "required": [
+            "min"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "max": {
+              "minItems": 2,
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Expr"
+              }
+            }
+          },
+          "required": [
+            "max"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "sub": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "$ref": "#/$defs/Expr"
+                },
+                {
+                  "$ref": "#/$defs/Expr"
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "required": [
+            "sub"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "div": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "$ref": "#/$defs/Expr"
+                },
+                {
+                  "$ref": "#/$defs/Expr"
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "required": [
+            "div"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "mod": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "$ref": "#/$defs/Expr"
+                },
+                {
+                  "$ref": "#/$defs/Expr"
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "required": [
+            "mod"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "clamp": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "$ref": "#/$defs/Expr"
+                },
+                {
+                  "$ref": "#/$defs/Expr"
+                },
+                {
+                  "$ref": "#/$defs/Expr"
+                }
+              ],
+              "items": false,
+              "minItems": 3,
+              "maxItems": 3
+            }
+          },
+          "required": [
+            "clamp"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "Selector": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "type": "string",
+          "enum": [
+            "self",
+            "allies",
+            "allies_and_self",
+            "enemies",
+            "everyone",
+            "event_source",
+            "event_target",
+            "action_target",
+            "action_target_allies",
+            "event_target_allies"
+          ]
+        },
+        "where": {
+          "description": "Filter. `candidate` is the unit being considered.",
+          "$ref": "#/$defs/Condition"
+        },
+        "prefer": {
+          "description": "Pick from units passing this first; fall back to the rest if none do.",
+          "$ref": "#/$defs/Condition"
+        },
+        "pick": {
+          "type": "string",
+          "enum": [
+            "all",
+            "random",
+            "weighted",
+            "lowest",
+            "highest"
+          ]
+        },
+        "by": {
+          "description": "Required for pick lowest/highest. `candidate` is in scope.",
+          "$ref": "#/$defs/Expr"
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "from"
+      ],
+      "additionalProperties": false
+    },
+    "InstantEffect": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "damage"
+            },
+            "type": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$",
+              "description": "A damageTypes id."
+            },
+            "amount": {
+              "$ref": "#/$defs/Expr"
+            },
+            "target": {
+              "$ref": "#/$defs/Selector"
+            },
+            "hit": {
+              "description": "Which damagePipeline rolls apply. All default to true.",
+              "type": "object",
+              "properties": {
+                "canMiss": {
+                  "type": "boolean"
+                },
+                "canCrit": {
+                  "type": "boolean"
+                },
+                "canBlock": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "op",
+            "type",
+            "amount",
+            "target"
+          ],
+          "additionalProperties": false,
+          "description": "Deals `amount` of `type` damage to each target through ruleset.damagePipeline (`hit` switches the rolls off). Damage from an action is an attack and fires attack_hit, attack_missed, evade, block, crit and kill; damage from rules and statuses fires only damaged and defeated."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "heal"
+            },
+            "amount": {
+              "$ref": "#/$defs/Expr"
+            },
+            "target": {
+              "$ref": "#/$defs/Selector"
+            }
+          },
+          "required": [
+            "op",
+            "amount",
+            "target"
+          ],
+          "additionalProperties": false,
+          "description": "Restores `amount` HP to each target, up to its cap. Fires healed."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "apply_status"
+            },
+            "status": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            },
+            "target": {
+              "$ref": "#/$defs/Selector"
+            },
+            "turns": {
+              "description": "Defaults to the status's defaultTurns; if neither, it lasts the fight.",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "stacks": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "op",
+            "status",
+            "target"
+          ],
+          "additionalProperties": false,
+          "description": "Applies `status` to each target under its stacking rule. Fires status_applied."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "remove_status"
+            },
+            "status": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            },
+            "target": {
+              "$ref": "#/$defs/Selector"
+            },
+            "stacks": {
+              "description": "Stacks to remove. Absent: all of them.",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "op",
+            "status",
+            "target"
+          ],
+          "additionalProperties": false,
+          "description": "Removes stacks of `status` from each target. With self-built stacks, this is how a unit spends them."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "buff"
+            },
+            "stat": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            },
+            "mode": {
+              "type": "string",
+              "enum": [
+                "add",
+                "mul"
+              ],
+              "description": "add: +value. mul: ×value. Stacking order is ruleset.modifierStacking."
+            },
+            "value": {
+              "type": "number"
+            },
+            "target": {
+              "$ref": "#/$defs/Selector"
+            },
+            "turns": {
+              "description": "Turns of the target. Absent: until the fight ends.",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "op",
+            "stat",
+            "mode",
+            "value",
+            "target"
+          ],
+          "additionalProperties": false,
+          "description": "Temporarily changes a stat on each target."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "perform_action"
+            },
+            "action": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$",
+              "description": "An action id, or \"basic\" for the unit's own basic action."
+            },
+            "target": {
+              "description": "Overrides the action's target (for basic: the behaviour's basicTarget).",
+              "$ref": "#/$defs/Selector"
+            }
+          },
+          "required": [
+            "op",
+            "action"
+          ],
+          "additionalProperties": false,
+          "description": "The owner uses an action at once, outside its turn (via reaction). Its damage is an attack."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "adjust"
+            },
+            "stat": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$",
+              "description": "A resource stat other than the defeat stat."
+            },
+            "amount": {
+              "description": "Negative to spend, positive to restore.",
+              "$ref": "#/$defs/Expr"
+            },
+            "target": {
+              "$ref": "#/$defs/Selector"
+            }
+          },
+          "required": [
+            "op",
+            "stat",
+            "amount",
+            "target"
+          ],
+          "additionalProperties": false,
+          "description": "Changes a resource (not HP) on each target by `amount`, clamped between the stat's min and its cap."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "grant_flag"
+            },
+            "flag": {
+              "type": "string",
+              "enum": [
+                "acts_first",
+                "draws_support",
+                "skip_turn",
+                "untargetable",
+                "cannot_evade",
+                "cannot_block"
+              ]
+            },
+            "target": {
+              "$ref": "#/$defs/Selector"
+            },
+            "turns": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "op",
+            "flag",
+            "target",
+            "turns"
+          ],
+          "additionalProperties": false,
+          "description": "Gives each target a flag for `turns` of its turns."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "summon"
+            },
+            "enemy": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            },
+            "count": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "op",
+            "enemy"
+          ],
+          "additionalProperties": false,
+          "description": "Adds `count` (default 1) copies of `enemy` to the owner's side, up to ruleset.maxEnemies."
+        }
+      ]
+    },
+    "Rule": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            },
+            "kind": {
+              "type": "string",
+              "const": "passive"
+            },
+            "if": {
+              "description": "Re-checked continuously.",
+              "$ref": "#/$defs/Condition"
+            },
+            "do": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/PassiveEffect"
+              }
+            },
+            "note": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Designer note. Never shown to players and never read by the engine."
+            }
+          },
+          "required": [
+            "id",
+            "kind",
+            "do"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            },
+            "kind": {
+              "type": "string",
+              "const": "triggered"
+            },
+            "when": {
+              "type": "object",
+              "properties": {
+                "on": {
+                  "type": "string",
+                  "enum": [
+                    "fight_start",
+                    "fight_end",
+                    "round_start",
+                    "turn_start",
+                    "turn_end",
+                    "attack_hit",
+                    "attack_missed",
+                    "crit",
+                    "kill",
+                    "evade",
+                    "block",
+                    "damaged",
+                    "healed",
+                    "hp_below",
+                    "defeated",
+                    "status_applied"
+                  ]
+                },
+                "who": {
+                  "description": "Whose event this is, relative to the owner. Default self.",
+                  "type": "string",
+                  "enum": [
+                    "self",
+                    "ally",
+                    "self_or_ally",
+                    "enemy",
+                    "anyone"
+                  ]
+                },
+                "below": {
+                  "description": "hp_below only: the threshold fraction of max HP.",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "action": {
+                  "description": "Only events caused by an action that matches.",
+                  "type": "object",
+                  "properties": {
+                    "via": {
+                      "minItems": 1,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "basic",
+                          "ability",
+                          "reaction"
+                        ]
+                      },
+                      "description": "How the action was used."
+                    }
+                  },
+                  "required": [
+                    "via"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "on"
+              ],
+              "additionalProperties": false
+            },
+            "if": {
+              "$ref": "#/$defs/Condition"
+            },
+            "chance": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "limit": {
+              "type": "object",
+              "properties": {
+                "times": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "per": {
+                  "type": "string",
+                  "enum": [
+                    "turn",
+                    "round",
+                    "fight",
+                    "run"
+                  ]
+                }
+              },
+              "required": [
+                "times",
+                "per"
+              ],
+              "additionalProperties": false
+            },
+            "do": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/InstantEffect"
+              }
+            },
+            "note": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Designer note. Never shown to players and never read by the engine."
+            }
+          },
+          "required": [
+            "id",
+            "kind",
+            "when",
+            "do"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "PassiveEffect": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "stat"
+            },
+            "stat": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            },
+            "mode": {
+              "type": "string",
+              "enum": [
+                "add",
+                "mul"
+              ],
+              "description": "add: +value. mul: ×value. Stacking order is ruleset.modifierStacking."
+            },
+            "value": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "$ref": "#/$defs/Expr"
+                }
+              ],
+              "description": "A number, or an expression (e.g. per stack of a status). Expressions may not read stats."
+            }
+          },
+          "required": [
+            "op",
+            "stat",
+            "mode",
+            "value"
+          ],
+          "additionalProperties": false,
+          "description": "Changes one of self's stats while the source is active."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "flag"
+            },
+            "flag": {
+              "type": "string",
+              "enum": [
+                "acts_first",
+                "draws_support",
+                "skip_turn",
+                "untargetable",
+                "cannot_evade",
+                "cannot_block"
+              ]
+            }
+          },
+          "required": [
+            "op",
+            "flag"
+          ],
+          "additionalProperties": false,
+          "description": "Gives self a flag while the source is active."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "modify_action"
+            },
+            "action": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$",
+              "description": "An action id, or \"basic\" for the unit's own basic action."
+            },
+            "if": {
+              "description": "Checked per use; `target` is the action's target.",
+              "$ref": "#/$defs/Condition"
+            },
+            "target": {
+              "description": "Replaces how the action picks its target.",
+              "$ref": "#/$defs/Selector"
+            },
+            "hits": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "amountMul": {
+              "description": "Multiplies every damage and heal amount in the action.",
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "addEffects": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/InstantEffect"
+              }
+            }
+          },
+          "required": [
+            "op",
+            "action"
+          ],
+          "additionalProperties": false,
+          "description": "Changes every use of an action by self, however it's used: retarget it, repeat it (`hits`), scale it, or add effects that run after its own."
+        }
+      ]
+    }
+  }
+}

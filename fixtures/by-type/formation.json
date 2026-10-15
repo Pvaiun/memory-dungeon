@@ -1,0 +1,387 @@
+[
+  {
+    "id": "open_order",
+    "name": "Open Order",
+    "text": "Everyone finds a spot. No tricks.",
+    "source": "starter",
+    "positions": [
+      {
+        "id": "a",
+        "name": "Front Left",
+        "layout": {
+          "line": "front",
+          "column": 0
+        }
+      },
+      {
+        "id": "b",
+        "name": "Front Right",
+        "layout": {
+          "line": "front",
+          "column": 2
+        }
+      },
+      {
+        "id": "c",
+        "name": "Centre",
+        "layout": {
+          "line": "middle",
+          "column": 1
+        }
+      },
+      {
+        "id": "d",
+        "name": "Rear Left",
+        "layout": {
+          "line": "back",
+          "column": 0
+        }
+      },
+      {
+        "id": "e",
+        "name": "Rear Right",
+        "layout": {
+          "line": "back",
+          "column": 2
+        }
+      }
+    ],
+    "verbs": [],
+    "note": "The starter formation: five empty slots."
+  },
+  {
+    "id": "hearth_guard",
+    "name": "Hearth Guard",
+    "text": "One shield out front draws every blow, so the hunters behind it can work.",
+    "source": "unlock",
+    "positions": [
+      {
+        "id": "shield",
+        "name": "Shield",
+        "text": "Much easier to target. Tougher.",
+        "layout": {
+          "line": "front",
+          "column": 1
+        },
+        "rules": [
+          {
+            "id": "hold",
+            "kind": "passive",
+            "do": [
+              {
+                "op": "stat",
+                "stat": "aggro",
+                "mode": "mul",
+                "value": 3
+              },
+              {
+                "op": "stat",
+                "stat": "defence",
+                "mode": "mul",
+                "value": 1.5
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "left_flank",
+        "name": "Left Flank",
+        "layout": {
+          "line": "middle",
+          "column": 0
+        }
+      },
+      {
+        "id": "right_flank",
+        "name": "Right Flank",
+        "layout": {
+          "line": "middle",
+          "column": 2
+        }
+      },
+      {
+        "id": "left_hunter",
+        "name": "Left Hunter",
+        "text": "Faster. Hits harder.",
+        "layout": {
+          "line": "back",
+          "column": 0
+        },
+        "rules": [
+          {
+            "id": "hunt",
+            "kind": "passive",
+            "do": [
+              {
+                "op": "stat",
+                "stat": "speed",
+                "mode": "add",
+                "value": 3
+              },
+              {
+                "op": "stat",
+                "stat": "damage_dealt",
+                "mode": "mul",
+                "value": 1.15
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "right_hunter",
+        "name": "Right Hunter",
+        "text": "Faster. Hits harder.",
+        "layout": {
+          "line": "back",
+          "column": 2
+        },
+        "rules": [
+          {
+            "id": "hunt",
+            "kind": "passive",
+            "do": [
+              {
+                "op": "stat",
+                "stat": "speed",
+                "mode": "add",
+                "value": 3
+              },
+              {
+                "op": "stat",
+                "stat": "damage_dealt",
+                "mode": "mul",
+                "value": 1.15
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "verbs": [
+      "protect",
+      "armour",
+      "initiative",
+      "burst"
+    ],
+    "note": "The director's SaGa example: one front slot with high aggro and defence, two empty middle slots, two back slots with speed and damage."
+  },
+  {
+    "id": "hunting_party",
+    "name": "Hunting Party",
+    "text": "A headsman for the big blow, flankers to run down the wounded, and a sanctuary for whoever needs it.",
+    "source": "unlock",
+    "positions": [
+      {
+        "id": "headsman",
+        "name": "Headsman",
+        "text": "Much slower. Hits half again as hard.",
+        "layout": {
+          "line": "front",
+          "column": 1
+        },
+        "rules": [
+          {
+            "id": "heavy",
+            "kind": "passive",
+            "do": [
+              {
+                "op": "stat",
+                "stat": "speed",
+                "mode": "add",
+                "value": -5
+              },
+              {
+                "op": "stat",
+                "stat": "damage_dealt",
+                "mode": "mul",
+                "value": 1.5
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "left_flank",
+        "name": "Left Flank",
+        "text": "Basic attacks go for the most wounded enemy.",
+        "layout": {
+          "line": "middle",
+          "column": 0
+        },
+        "rules": [
+          {
+            "id": "run_down",
+            "kind": "passive",
+            "do": [
+              {
+                "op": "modify_action",
+                "action": "basic",
+                "target": {
+                  "from": "enemies",
+                  "pick": "lowest",
+                  "by": {
+                    "div": [
+                      {
+                        "stat": "hp",
+                        "of": "candidate"
+                      },
+                      {
+                        "stat": "max_hp",
+                        "of": "candidate"
+                      }
+                    ]
+                  },
+                  "count": 1
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "right_flank",
+        "name": "Right Flank",
+        "text": "Basic attacks go for the most wounded enemy.",
+        "layout": {
+          "line": "middle",
+          "column": 2
+        },
+        "rules": [
+          {
+            "id": "run_down",
+            "kind": "passive",
+            "do": [
+              {
+                "op": "modify_action",
+                "action": "basic",
+                "target": {
+                  "from": "enemies",
+                  "pick": "lowest",
+                  "by": {
+                    "div": [
+                      {
+                        "stat": "hp",
+                        "of": "candidate"
+                      },
+                      {
+                        "stat": "max_hp",
+                        "of": "candidate"
+                      }
+                    ]
+                  },
+                  "count": 1
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "sanctuary",
+        "name": "Sanctuary",
+        "text": "Single-target heals and buffs land here first.",
+        "layout": {
+          "line": "back",
+          "column": 1
+        },
+        "rules": [
+          {
+            "id": "drawn",
+            "kind": "passive",
+            "do": [
+              {
+                "op": "flag",
+                "flag": "draws_support"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "rear",
+        "name": "Rear",
+        "layout": {
+          "line": "back",
+          "column": 0
+        }
+      }
+    ],
+    "verbs": [
+      "burst",
+      "execute"
+    ],
+    "note": "Headsman is the big-hit key: bad in general, strong against high-defence enemies. Any damage dealer fits."
+  },
+  {
+    "id": "flash_flood",
+    "name": "Flash Flood",
+    "text": "Everyone charges at once: the whole party acts before the enemy, but nobody watches their flank.",
+    "source": "unlock",
+    "positions": [
+      {
+        "id": "a",
+        "name": "Wave",
+        "layout": {
+          "line": "front",
+          "column": 0
+        }
+      },
+      {
+        "id": "b",
+        "name": "Wave",
+        "layout": {
+          "line": "front",
+          "column": 1
+        }
+      },
+      {
+        "id": "c",
+        "name": "Wave",
+        "layout": {
+          "line": "front",
+          "column": 2
+        }
+      },
+      {
+        "id": "d",
+        "name": "Wake",
+        "layout": {
+          "line": "middle",
+          "column": 0
+        }
+      },
+      {
+        "id": "e",
+        "name": "Wake",
+        "layout": {
+          "line": "middle",
+          "column": 2
+        }
+      }
+    ],
+    "rules": [
+      {
+        "id": "surge",
+        "kind": "passive",
+        "do": [
+          {
+            "op": "flag",
+            "flag": "acts_first"
+          },
+          {
+            "op": "stat",
+            "stat": "evasion",
+            "mode": "add",
+            "value": -0.05
+          }
+        ]
+      }
+    ],
+    "verbs": [
+      "initiative"
+    ],
+    "note": "A party-wide formation effect, like SaGa's Rapid Stream."
+  }
+]

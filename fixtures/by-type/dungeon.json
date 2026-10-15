@@ -1,0 +1,182 @@
+{
+  "id": "hollow_of_the_grey_mother",
+  "name": "Hollow of the Grey Mother",
+  "text": "A wolf den under the roots of an old ash. Something big sleeps at the bottom.",
+  "partySize": {
+    "max": 3
+  },
+  "perkPool": [
+    "keen_eyes",
+    "go_for_the_throat",
+    "swift_feet",
+    "battle_rhythm",
+    "wolfs_blood",
+    "red_riposte",
+    "serrated_heads",
+    "haemorrhage",
+    "iron_skin",
+    "braced_shields",
+    "second_breath",
+    "stand_fast"
+  ],
+  "stages": [
+    {
+      "kind": "fight",
+      "id": "den_mouth",
+      "enemies": [
+        "ash_wolf",
+        "ash_wolf"
+      ]
+    },
+    {
+      "kind": "perk_pick",
+      "id": "pick_1"
+    },
+    {
+      "kind": "fight",
+      "id": "drowned_path",
+      "enemies": [
+        "ash_wolf",
+        "ash_wolf",
+        "bog_wight"
+      ]
+    },
+    {
+      "kind": "perk_pick",
+      "id": "pick_2"
+    },
+    {
+      "kind": "fight",
+      "id": "wight_pool",
+      "enemies": [
+        "ash_wolf",
+        "bog_wight",
+        "bog_wight"
+      ]
+    },
+    {
+      "kind": "perk_pick",
+      "id": "pick_3"
+    },
+    {
+      "kind": "fight",
+      "id": "the_den",
+      "boss": true,
+      "enemies": [
+        "grey_mother"
+      ]
+    }
+  ],
+  "loot": {
+    "firstClear": {
+      "guaranteed": [
+        "studded_jerkin"
+      ],
+      "rolls": 1,
+      "table": [
+        {
+          "gear": "notched_blade",
+          "weight": 1
+        },
+        {
+          "gear": "hunters_shortbow",
+          "weight": 1
+        },
+        {
+          "gear": "ash_staff",
+          "weight": 1
+        },
+        {
+          "gear": "bone_charm",
+          "weight": 1
+        }
+      ]
+    },
+    "replay": {
+      "rolls": 1,
+      "table": [
+        {
+          "gear": "notched_blade",
+          "weight": 2
+        },
+        {
+          "gear": "hunters_shortbow",
+          "weight": 2
+        },
+        {
+          "gear": "ash_staff",
+          "weight": 2
+        },
+        {
+          "gear": "bone_charm",
+          "weight": 2
+        },
+        {
+          "gear": "wolfhide_cloak",
+          "weight": 1
+        }
+      ]
+    }
+  },
+  "challenges": [
+    {
+      "id": "two_rangers",
+      "text": "Beat it with two Rangers.",
+      "constraints": [
+        {
+          "classCount": {
+            "class": "ranger",
+            "min": 2
+          }
+        }
+      ],
+      "loot": {
+        "guaranteed": [
+          "wolfhide_cloak"
+        ]
+      }
+    },
+    {
+      "id": "two_units",
+      "text": "Beat it with only two units.",
+      "constraints": [
+        {
+          "partySize": {
+            "max": 2
+          }
+        }
+      ],
+      "loot": {
+        "rolls": 1,
+        "table": [
+          {
+            "gear": "notched_blade",
+            "weight": 1
+          },
+          {
+            "gear": "hunters_shortbow",
+            "weight": 1
+          },
+          {
+            "gear": "ash_staff",
+            "weight": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "in_phalanx",
+      "text": "Beat it in the Phalanx.",
+      "constraints": [
+        {
+          "formation": "phalanx"
+        }
+      ],
+      "loot": {
+        "guaranteed": [
+          "bone_charm"
+        ]
+      }
+    }
+  ]
+}

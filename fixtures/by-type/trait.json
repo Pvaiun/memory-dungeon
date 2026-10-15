@@ -1,0 +1,16 @@
+[
+  {
+    "id": "agile",
+    "word": "agile",
+    "verbs": [
+      "evasion"
+    ]
+  },
+  {
+    "id": "strikes_many_times",
+    "word": "strikes many times a turn",
+    "verbs": [
+      "multi_hit"
+    ]
+  }
+]

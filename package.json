@@ -1,0 +1,30 @@
+{
+  "name": "dungeon-content",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "validate": "tsx src/cli.ts fixtures/hollow.pack.json",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "typecheck": "tsc -p .",
+    "build:schema": "tsx src/export-json-schema.ts",
+    "docs": "tsx src/primitives-doc.ts > PRIMITIVES.md",
+    "examples": "tsx src/extract-examples.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "ajv": "^8.20.0",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  },
+  "type": "module"
+}

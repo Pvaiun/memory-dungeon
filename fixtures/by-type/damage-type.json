@@ -1,0 +1,29 @@
+[
+  {
+    "id": "physical",
+    "name": "Physical",
+    "mitigation": {
+      "max": [
+        {
+          "sub": [
+            {
+              "var": "raw"
+            },
+            {
+              "stat": "defence",
+              "of": "defender"
+            }
+          ]
+        },
+        {
+          "mul": [
+            0.25,
+            {
+              "var": "raw"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

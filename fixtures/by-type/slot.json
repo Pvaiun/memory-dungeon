@@ -1,0 +1,11 @@
+[
+  {
+    "id": "ranger_weapon",
+    "name": "Ranger's weapon",
+    "class": "ranger"
+  },
+  {
+    "id": "charm",
+    "name": "Charm"
+  }
+]
