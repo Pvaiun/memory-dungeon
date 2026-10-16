@@ -5,7 +5,7 @@
 > - **Agreed:** this step, with its objective (the bones of the combat system); already decided (the director reopened fully automatic fights on Oct 16, and refined "no locks"); how the interview runs; why it's hard; round 1's questions; what the designer will decide.
 > - **Done:** round 1 of the interview (Oct 16). Its intent is in `intent.md`, confirmed at the read-back.
 > - **Dropped:** round 2, agreed with the director after round 1's read-back. Round 1 is the step's whole intent, and the design opens with sketches instead (see `intent.md`, "How the design stage runs").
-> - **Now:** stage 2, design.
+> - **Now:** stage 2, design. The sketches are in `sketches.md`, waiting on the director's reaction.
 
 For the director to answer: in the step's session, with `/intent 4` in a fresh session, or by pasting `pack.md` into any chat.
 
@@ -117,7 +117,7 @@ To close: anything about how fights should be that these questions didn't reach.
 
 ### Round 2
 
-Dropped after round 1's read-back, Oct 16. It would have covered which concepts are in or out, and how much of the schema's rule language to keep. Those come out of a design, so the design stage opens with two or three sketches of the bones for the director to react to instead. `intent.md` has how.
+Dropped after round 1's read-back, Oct 16. It would have covered which concepts are in or out, and how much of the schema's rule language to keep. Those come out of a design, so the design stage opens with a few sketches of the bones for the director to react to instead. `intent.md` has how.
 
 ## What the designer will decide
 

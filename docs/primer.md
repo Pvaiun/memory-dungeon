@@ -90,7 +90,7 @@ Direction is guidance, not law. "Firm" means bend it only with evidence and the 
 - Enemy HP needn't be shown, as long as the player can sense over a few tries how close they came, as in Dragon Quest. The player sees their own party's health and stats.
 - Party size, including a single unit, is the designer's to propose, though everything so far assumes a party.
 
-The design opens with two or three rough sketches of the bones, each one hanging together on its own, for the director to react to before the full design. Which concepts are in comes out of the design, not out of the interview.
+The design opens with a few rough sketches of the bones, each one hanging together on its own, for the director to react to before the full design. Which concepts are in comes out of the design, not out of the interview. Three sketches are with the director now: fully automatic Dragon Quest-style fights, Dragon Quest Monsters-style orders for each unit, and a visible timeline with one party-wide dial. None is decided.
 
 ## What's ahead
 
