@@ -130,7 +130,7 @@ Steps 4 to 6 choose what combat is made of and check that it works; there's too 
 - **Done when:** simulations land every archetype inside the win-rate bands this step defines, fights inside its length and swinginess ranges, with no dominant approach.
 
 ### 15. Progression pacing
-- **Designs:** whether 3 to 5 quest rewards a week is enough, and which fix works if not (the candidate fixes listed under Open questions in the concept spec, or something else); the mix of specializations, formations and powerful gear that quests pay; where walls fall; how fast party choices become meaningful.
+- **Designs:** whether 4 to 7 quest rewards a week (`DECISIONS.md`) is enough, and which fix works if not (the candidate fixes listed under Open questions in the concept spec, or something else); the mix of specializations, formations and powerful gear that quests pay; where walls fall; how fast party choices become meaningful.
 - **Ask the director:** how often a new toy should arrive, how long being stuck feels fine, and how many quests a week they expect to do themselves.
 - **Tested by:** progression simulation, with quest rates modelled on Memory's event log.
 - **Produces:** a pacing model and recommendation, with the simulation data behind it.
