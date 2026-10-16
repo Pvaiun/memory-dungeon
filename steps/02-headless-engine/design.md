@@ -1,16 +1,15 @@
 # Step 2 design: headless engine
 
-For the director's approval. Second draft, Oct 16, 2026, built from `intent.md`.
+Approved by the director, Oct 16, 2026 (second draft). Built from `intent.md`.
 
 ## What changed from the first draft
 
-- **Step 2 no longer builds the battle system.** The first draft ran the schema's whole rule language, and picked rules for things like when a counterattack lands. That was designing step 4's battle system before your input on it. This draft builds only the machinery any battle system needs, and tests it with a deliberately crude stand-in fight. Step 4 designs the real combat, starting from your intent, and builds it into this machinery.
+- **Step 2 no longer builds the battle system.** The first draft ran the schema's whole rule language, and picked rules for how combat plays out. That was designing step 4's battle system before your input on it. This draft builds only the machinery any battle system needs, and tests it with a deliberately crude stand-in fight. Step 4 designs the real combat, starting from your intent, and builds it into this machinery.
 - **Inputs are general.** Any point in a run can stop and ask for a decision. Perk picks are the first kind of decision, not the only one.
 
-## Needs you
+## Approval
 
-- **Approve the split.** It changes how the design plan describes steps 2 and 4. The proposed wording is at the end.
-- **One gap to look at,** under Challenges: to replay a run, the server's summary of it needs more than the seed, outcome and loot.
+The director approved the split and the fuller run summary under Challenges on Oct 16. The design plan wording at the end is applied.
 
 ## What step 2 builds: the machinery
 
@@ -46,22 +45,7 @@ The machinery can't be tested without fights to run. The stand-in is crude on pu
 ## What step 4 inherits
 
 - **The machinery above.** Step 4 builds its combat rules into it and replaces the stand-in.
-- **The schema's rule language** (statuses, triggers, passives and the rest), as a starting vocabulary to keep, change or drop. It isn't a given.
-- **The questions any combat design here has to answer.** I hit these while drafting the first version:
-  - When does a reaction like a counterattack land: at once, in the middle of the attack that caused it, or after?
-  - What does "once per turn" reset on?
-  - Is turn order fixed for a round, or does a speed change take effect mid-round?
-  - If a multi-hit attack's target falls, are the remaining hits lost or redirected?
-  - When does a fight end, and what if both sides fall together?
-  - How do stacks of a status from two different units combine?
-  - Does a stunned unit's turn still count for its timers and damage over time?
-  - What carries between fights: HP, statuses, cooldowns?
-- **Your reaction to five of them.** The first draft answered the first five questions, and you thought those answers were right. Step 4 can start from them, marked as picked from my options rather than given by you:
-  1. A counter lands at once.
-  2. "Once per turn" resets on every unit's turn.
-  3. Turn order is fixed for each round.
-  4. Remaining hits on a fallen target are lost.
-  5. A fight ends the moment a side is wiped out, and a double wipe is a loss.
+- **The schema's rule language** (statuses, triggers, passives and the rest), as a starting point and nothing more. Step 4 can keep it, change it, drop parts of it, or start over altogether.
 
 ## Intent map
 
@@ -69,7 +53,7 @@ The machinery can't be tested without fights to run. The stand-in is crude on pu
 | --- | --- | --- |
 | [lean] Fight logs are mostly for the AI and for debugging | Used | The log is data for code to count, plus a printout for debugging. |
 | [idea] Players may eventually see logs | Used | Entries are marked player-visible or hidden, so a player's log is a filter. |
-| [firm] The building blocks are placeholders | Used | Step 2 builds none of them. Step 4 takes them up as a vocabulary to react to. |
+| [firm] The building blocks are placeholders | Used | Step 2 builds none of them. Step 4 can keep, change or drop them, or start over altogether. |
 | [firm] Input at the start of the battle system | Used | That's the reason for the split. The battle system starts at step 4's intent. |
 | [lean] Perk picks are the only in-run choice, for now | Used | They're the only decision the worked example asks for. |
 | [lean] Don't make perks the only input | Used | Decision points are general, and can come between stages or between turns. |
@@ -79,7 +63,7 @@ The machinery can't be tested without fights to run. The stand-in is crude on pu
 
 ## Challenges
 
-1. **A run summary needs more to be replayable.** `DECISIONS.md` has the server keeping each run's seed, outcome and loot. Rebuilding a run also needs the party loadout, every decision made, and the content and engine versions. I'll treat those as part of the summary unless you object. Step 19 settles the save format.
+1. **A run summary needs more to be replayable.** `DECISIONS.md` has the server keeping each run's seed, outcome and loot. Rebuilding a run also needs the party loadout, every decision made, and the content and engine versions. Agreed by the director, Oct 16. Step 19 settles the save format.
 2. **Replays only hold within a version.** Once the engine or content changes, an old seed plays out differently, and with no stored logs, past fights can't be watched again. If a player-facing log ever shows past fights, it will have to store what it shows. This is a note for that feature.
 
 ## Predictions
@@ -106,9 +90,9 @@ There's no tuning in this step, since the stand-in's numbers don't matter. If th
 - **Perk offers (step 10).** How premium perks are offered, and whether one replaces its regular version.
 - **Challenge loot (step 9 or 10).** Does clearing a challenge also pay the dungeon's replay loot?
 
-## Proposed design plan wording
+## Design plan wording
 
-This applies once the design is approved.
+Applied to `docs/design-plan.md` on approval:
 
 - **Step 2, Designs:** "The machinery under combat and runs: seeded randomness, runs as savable data, decision points, exact replay and logging. It's tested with a throwaway stand-in fight; step 4 builds the real combat into it."
-- **Step 4, Designs:** add "Starts from the director's intent, with the schema's rule language as a vocabulary to keep, change or drop, and builds the combat system into the engine, replacing step 2's stand-in."
+- **Step 4, Designs:** add "Starts from the director's intent. The schema's rule language is only a starting point: keep it, change it, drop parts of it, or start over altogether. Builds the combat system into the engine, replacing step 2's stand-in."

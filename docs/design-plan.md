@@ -30,7 +30,7 @@ Each step lists what it designs; what to **ask the director**, which seeds the i
 - **Done when:** any rule a later step designs can be expressed as data, with no rules hiding in prose.
 
 ### 2. Headless engine
-- **Designs:** the combat and run engine: game logic with no UI, seeded randomness, and exact replay of any run. It starts from a rough first-draft combat model, which phase 2 replaces piece by piece.
+- **Designs:** the machinery under combat and runs: game logic with no UI, seeded randomness, runs as savable data, decision points, exact replay and logging. It's tested with a throwaway stand-in fight; step 4 builds the real combat into it.
 - **Ask the director:** nothing beyond confirming that the engineering is the designer's call, and any thoughts they have. Fight logs are for the AI to measure combat with, and for debugging; the director doesn't read them.
 - **Tested by:** exact replay from a seed, and the worked example running end to end.
 - **Produces:** an engine spec and a working prototype.
@@ -51,8 +51,8 @@ Each step lists what it designs; what to **ask the director**, which seeds the i
 Every step here weighs competing variants: simulation chooses between them on numbers, and the director on feel.
 
 ### 4. Combat rules
-- **Designs:** turn order and action economy, hit and miss, crits, the damage formula, physical and magic damage, how blocking and evasion work, status effects, and when a unit is defeated.
-- **Ask the director:** games whose fights they like, and why; how long and how swingy a fight should feel; how much luck (misses, crits) they want; what a loss should look like.
+- **Designs:** turn order and action economy, hit and miss, crits, the damage formula, physical and magic damage, how blocking and evasion work, status effects, and when a unit is defeated. Starts from the director's intent. The schema's rule language is only a starting point: keep it, change it, drop parts of it, or start over altogether. Builds the combat system into the engine, replacing step 2's stand-in.
+- **Ask the director:** games whose fights they like, and why; how long and how swingy a fight should feel; how much luck (misses, crits) they want; what a loss should look like; and how much of the schema's rule language, if any, to keep.
 - **Simulates:** whether the system holds up: varied fights, no single dominant approach, and sensible fight length and swinginess.
 - **Produces:** a combat rules document, implemented in the engine.
 - **Done when:** simulations show no dominant strategy, and fight length and swinginess land in ranges this step defines.
