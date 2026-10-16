@@ -8,9 +8,8 @@ Gathered with `/intent 3` in a fresh session, Oct 16, 2026: the director's answe
 
 ## What the harness measures
 
-- [firm] The game is about build-making. The skill is party composition and trial and error, not performing with a given tool. Running back the same party should give a very similar result.
-- [lean] Perk picks are light. They shouldn't sway the outcome much.
-- [lean, partly picked from options] The numbers are mainly for the AI: how close losses were, how many tries a wall takes, the spread, how much perks matter, how classes compare in different situations, and broken synergies. The AI uses them to keep balancing, propose design changes, and ask the director plain-language questions about subjective calls.
+- [firm] The game is about build-making. The skill is party composition and trial and error, not performing with a given tool.
+- [lean, partly picked from options] The numbers are mainly for the AI: how close losses were, how many tries a wall takes, the spread, how much a run with the same party varies, what impact perks had, how classes compare in different situations, and broken synergies. The AI uses them to keep balancing, propose design changes, and ask the director plain-language questions about subjective calls.
 - [lean] The director's input is on the macro questions: pacing over weeks, how often a player has to wait to keep playing, and how strict build-making is.
 - [firm] Strictness isn't "what share of all builds win". The AI works out how custom a party has to be for a challenge, in colour-space terms: in the right colour space and tweaking, or in the wrong one.
 
