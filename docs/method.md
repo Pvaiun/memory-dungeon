@@ -32,18 +32,13 @@ Every design step runs three stages, and each ends with the director.
 
 ### 1. Intent: what the director wants, before the AI proposes anything
 
-1. The step's session writes `brief.md` (see Files), starting from the step's **Ask the director** line in the design plan.
-2. The director answers it in one of three ways: in the step's session; in a fresh session on this repo with `/intent N`; or by pasting the brief into any other chat and bringing back the result. When the input is a list (names, phrases, gimmicks, reference monsters), offer a small input page the director can fill in on their phone instead of a conversation.
+1. The step's session writes `brief.md` (see Files), starting from the step's **Ask the director** line in the design plan, then builds the step's context pack with `npm run pack -- N`.
+2. The director answers it in one of three ways: in the step's session; in a fresh session on this repo with `/intent N`; or by pasting `pack.md` into any other chat and bringing back the result. When the input is a list (names, phrases, gimmicks, reference monsters), offer a small input page the director can fill in on their phone instead of a conversation.
 3. The interviewer writes `intent.md`, reads it back as a short list, and fixes whatever the director corrects. That read-back is the gate.
 
-Rules for the interviewer:
+The interviewer's rules and the `intent.md` format are in `docs/interviewer.md`, which every pack includes. In short: ask, don't design; keep it short; record the director's words, not yours; tag every item; and don't re-ask what's settled.
 
-- **Ask, don't design.** Where an open question is hard to answer cold, offer options to react to, but hold back the AI's own design until stage 2.
-- **Keep it short.** One sitting and a handful of questions. Follow up only where an answer is ambiguous.
-- **Their words, not yours.** Record what the director said, lightly cleaned. Mark the items that were picks from the AI's options, so the AI doesn't end up quietly writing the vision.
-- **Tag every item** as firm, lean, reference (with what to take from it) or idea (take it or leave it).
-- **"I don't mind" is an answer.** Record it as the designer's call.
-- **Don't re-ask what's settled** in `DECISIONS.md` or earlier steps, unless the director reopens it.
+If the intent lists **gaps** (things the interviewer had to ask for that the pack didn't give it), the step's session decides where each belongs: the primer if it's game-wide, or a lesson for the next brief if it's about the step.
 
 ### 2. Design: a design that serves the intent, agreed with the director
 
@@ -100,7 +95,7 @@ Rules for simulation:
 4. **Feel:** what read as flat or unclear, and the samples worth reading.
 5. **Method notes:** a line or two on what worked or didn't in this method. The method is part of what's being tested, so update this doc from these notes.
 
-After sign-off, add the step's decisions to `DECISIONS.md`, update the Status section in `CLAUDE.md`, commit and stop.
+After sign-off, add the step's decisions to `DECISIONS.md`, update the primer and the Status section in `CLAUDE.md`, commit and stop.
 
 ## Files
 
@@ -109,37 +104,29 @@ Each step gets a folder, `steps/NN-slug/` (for example `steps/04-combat-rules/`)
 | File | Stage | Written by | The director |
 | --- | --- | --- | --- |
 | `brief.md` | 1 | The step's session | Answers it, here or elsewhere |
+| `pack.md` | 1 | `npm run pack -- N` | Pastes it into another chat, if answering there |
 | `intent.md` | 1 | The interviewer | Confirms the read-back |
 | `design.md` | 2 | The designer | Workshops it and approves |
 | `tuning.md` | 3 | The tuner | Doesn't read it; it's the trail for later sessions |
 | `report.md` | 3 | The tuner | Signs off |
 
-Code and content data go where they live (`src/`, `fixtures/` or later content folders), not in the step folder.
+`pack.md` is generated from the brief, not written. Code and content data go where they live (`src/`, `fixtures/` or later content folders), not in the step folder.
 
-**`brief.md`** has to work when pasted into any chat, so it's self-contained:
+**`brief.md`** is about the step alone. The game-wide context comes from the primer, and the interviewer's rules and output format from `docs/interviewer.md`; the pack joins them. So a brief doesn't re-explain the game, and holds:
 
-- A paragraph on the game and on this step, for a reader with no context.
-- What's already decided, so it isn't asked again.
-- 4 to 6 questions, with options to react to where they help.
-- The interviewer rules above, and the `intent.md` format below, so the other chat's output can be saved as it is.
+- **This step:** a paragraph on what the step designs and what it feeds.
+- **Why it's hard:** the tensions the step has to resolve, what's at stake, and what a wrong call costs later steps. This is what lets an interviewer with no repo access follow up well.
+- **Already decided:** what's settled that bears on this step, so it isn't asked again. Point at the primer rather than repeating it.
+- **Questions:** 4 to 6, with options to react to where they help.
+- **What the designer will decide,** so the director can claim any of it.
 
-**`intent.md`:**
+**`intent.md`:** the format is in `docs/interviewer.md`.
 
-```
-# Step N intent
+## The primer
 
-How it was gathered (this session, /intent or another chat) and the date.
+`docs/primer.md` is the one place the game is explained to an outsider: what it is, how it's made, the director's preferences, and where each step stands. It describes the current state, not the history, and it decides nothing. It names placeholders as placeholders and the concept's numbers as starting guesses, and it gives the director's words for their direction rather than a paraphrase that hardens it.
 
-- [firm] ...
-- [lean] ...
-- [lean, picked from options] ...
-- [reference] Game or work: what to take from it.
-- [idea] ...
-
-## Left to the designer
-
-- ...
-```
+Keep it current: **whenever `DECISIONS.md` changes, or a step's intent lands, update the primer to match** in the same commit. Keep it to about 2,000 words; as steps finish, compress what they settled rather than adding to it.
 
 ## How steps vary
 

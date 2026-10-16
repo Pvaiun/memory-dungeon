@@ -6,6 +6,7 @@ Design work for an optional game tab in Memory, the director's personal ADHD mem
 
 It's also a test of a way of making games. The director sets the vision. AI designs, generates content and tunes it, using simulation in place of most playtest rounds. `docs/method.md` is that method, and every design step follows it.
 
+- `docs/primer.md`: the game and where it stands, for a reader with no repo access. Keep it current (see the method).
 - `docs/method.md`: how every step is done. **Read it before starting or resuming a step.**
 - `docs/design-plan.md`: the 24 ordered design steps, each with what to ask the director and how it's tested. **Work through them one at a time.**
 - `DECISIONS.md`: what's been decided, step by step. Where it differs from the concept spec, it wins; the director will update the spec.
@@ -34,6 +35,7 @@ It's also a test of a way of making games. The director sets the vision. AI desi
 - **Tech-stack brief:** done and reviewed by the director (Oct 15, 2026). The write-up is `docs/memory-stack.md`, and its decisions are in `DECISIONS.md`. Tooling matches Memory: TypeScript 7.0, Vitest, `isolatedModules`, and a typecheck guard that keeps game logic free of Node APIs.
 - **Step 2, headless engine:** done and signed off (Oct 16, 2026). The machinery is in `src/engine/` (seeded dice, runs as plain data, decision points, the explorer, the log), with a crude stand-in fight behind the `Rules` interface that step 4 replaces. Its record is `steps/02-headless-engine/`, and its decisions are in `DECISIONS.md`. The report's "For later steps" notes are for steps 3, 4 and 6; when step 4 brings in real combat, rerun `bun src/dungeon.ts --digest` against `npm run dungeon -- --digest` to recheck that Chrome's and Safari's engines agree.
 - **Step 3, simulation harness:** stage 1, intent, is done. `steps/03-simulation-harness/intent.md` was recorded with the director and read back (Oct 16, 2026). It's kept to step 3's scope: the simulation and report process, with a placeholder, generic report until there's a design. The director's direction on endless grinding is in `DECISIONS.md`. Next: stage 2, design.
+- **Context packs:** adopted Oct 16, 2026, for steps after 3's intent. A brief covers its step only. `npm run pack -- N` joins it with the primer, the interviewer guide (`docs/interviewer.md`) and the step's plan entry into `steps/NN-slug/pack.md`, which the director can paste into any chat.
 - **Session pattern:** a step can take one session or several; its `steps/` folder is the handoff. Each session ends at a gate by updating this Status section, committing, and stopping for the director.
 
 ## The director's preferences
