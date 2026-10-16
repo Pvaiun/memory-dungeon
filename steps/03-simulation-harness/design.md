@@ -189,12 +189,9 @@ What I'm least sure about:
 - **Colour** is the broad kind of party, with the caveats under Strictness.
 - **Quests a week:** 4 to 7 for the first version, and the board uses the same range. In `DECISIONS.md`.
 - **Replays are challenges only,** replacing "repetition yes, endless grinding no". In `DECISIONS.md`.
+- **The hard cap** (the second draft's open question): a dungeon's first clear and each of its challenges pay loot once. Nothing already beaten pays again, and anything not yet beaten can be retried as often as the player likes. So everything play can earn is countable. In `DECISIONS.md`.
 
-There are no new challenges.
-
-## Open question
-
-1. **The hard cap.** I've read it as: a dungeon's first clear pays loot, each challenge pays its loot once, and so everything play can earn is countable. Retries on anything not yet beaten stay unlimited, as the concept spec has them. Is that what you meant?
+There are no new challenges, and no open questions.
 
 ## Predictions
 

@@ -79,7 +79,7 @@ Direction is guidance, not law. "Firm" means bend it only with evidence and the 
 - Most numbers are for the AI, which uses them to balance and to bring the director plain-language questions. The director's own input is on the big questions: pacing over weeks, how long a player waits, and how strict building a party should be.
 - Strictness isn't "the share of all builds that win". In the director's terms, it's how custom a party has to be: in the right colour space and tweaking, or in the wrong one.
 - Tune for the optimizer: a player who does most quests and homes in on building. Requirements can be quite strict.
-- Replays are challenges only. A cleared dungeon can only be replayed through its challenges, each of which pays loot. There are many, but a hard cap, so there's no endless grinding. A player who has beaten every challenge they can only moves on through quest unlocks. How often a player is walled by quests versus by play is measured, and has to be agreed.
+- Replays are challenges only. A cleared dungeon can only be replayed through its challenges, each of which pays loot. There are many, but a hard cap: nothing already beaten pays again, though anything not yet beaten can be retried freely. So there's no endless grinding. A player who has beaten every challenge they can only moves on through quest unlocks. How often a player is walled by quests versus by play is measured, and has to be agreed.
 - Feel checks, where an AI reads fights with enemy stats hidden, mainly test that information is clear: could you tell why a fight was lost, well enough to guess at a new strategy?
 
 ## What's ahead
