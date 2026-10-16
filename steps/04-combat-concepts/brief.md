@@ -2,8 +2,9 @@
 
 > **Being built with the director, a piece at a time** (started Oct 16, 2026). This is the most creative step so far, so the brief isn't written in one go. Each piece is agreed before the next is written, so no question starts from a frame the director didn't want.
 >
-> - **Written:** this step, already decided (revised Oct 16, after the director reopened hidden enemy stats: it now separates what's decided from starting points).
-> - **Next:** how the interview runs, why it's hard, the questions, what the designer will decide.
+> - **Agreed:** this step, already decided, how the interview runs.
+> - **Written, for the director to correct:** why it's hard.
+> - **Next:** round 1's questions, and what the designer will decide. Round 2's questions are written after round 1.
 
 For the director to answer: in the step's session, with `/intent 4` in a fresh session, or by pasting `pack.md` into any chat.
 
@@ -13,7 +14,7 @@ Step 4 chooses what a fight is made of: the concepts combat has at all, and the 
 
 Everything after builds on this. Step 5's hidden verbs are defined in these concepts, step 6's mechanics are built on them, step 7's trait words describe what they make enemies do, and step 22 has to show each of them on a phone.
 
-**Where the line falls** (a draft, for the director to check):
+**Where the line falls.** The director agreed step 4's line on Oct 16. The other steps' edges get settled when those steps are reached.
 
 - **Step 4:** which concepts exist, and how each basically works. For example, whether damage over time exists at all, and roughly how it ticks.
 - **Step 5:** the role fantasies (a summoner? a gambler?), and the verbs that describe them.
@@ -47,15 +48,32 @@ The primer has the game. What bears on this step comes in three kinds, because t
 **Open in this step,** though earlier documents assumed an answer:
 
 - **How turns work,** including whether active abilities fire on their own when ready, as step 1's schema has them.
-- **Whether enemy stats are hidden.** The concept spec hides them, as in classic Dragon Quest, and gives enemies trait words instead, but nothing has decided it. The director reopened it on Oct 16: "I don't think we've agreed on that yet." Step 3's feel checks and step 7's trait words were planned around hidden stats, so the answer reaches them too.
+- **How much of the enemies' numbers the player sees.** The concept spec hides enemy stats, as in classic Dragon Quest, and gives enemies trait words instead, but nothing has decided it. The director reopened it on Oct 16: "I don't think we've agreed on that yet." It isn't all or nothing. Showing basic stats like HP needn't break trait words: "It really just depends on the granularity of what you're showing." They don't want to say yet that it's "100% obfuscated". Step 3's feel checks and step 7's trait words were planned around hidden stats, so the answer reaches them too.
+
+## How the interview runs
+
+Agreed with the director, Oct 16. This replaces the interviewer guide's "one sitting" for this step.
+
+- **Two rounds.** Round 1 is open: reference games and how fights should feel. Round 2 gets specific, such as which concepts are in or out. Its questions are written from round 1's answers once round 1's read-back is done, and agreed with the director before round 2 starts.
+- **A round isn't one turn.** A round takes as many exchanges as it needs, in one sitting or several. What matters is that the interview runs in rounds: round 2 doesn't start until round 1 is done.
+- **Open questions, not lists of answers.** Round 1 offers no answers to pick from. In round 2, a list can come only after an open question, as a check for anything not yet mentioned, and it holds only concepts the design plan or schema already name.
+- **One intent.** Both rounds go into one `intent.md`, with a section for each round, and each round ends with a read-back.
 
 ## Why it's hard
 
-*Next piece, after the director has answered how the interview runs.*
+A draft for the director to correct.
+
+- **The player only watches.** Nobody acts during a fight, so a concept adds depth only if it shows up in preparation, as something a party is built toward or against. A concept that's rich when you act each turn, like timing a block, can turn into noise when you only watch it.
+- **Luck against learning.** The player learns by losing, changing the party and trying again. With too much luck, a loss doesn't say whether the party was wrong or just unlucky, and retrying the same party becomes the way past a wall. With too little, every fight between the same sides plays out the same, and there's no tension. Step 3's feel reader complained most about long runs of identical rounds.
+- **A loss has to teach.** Losing costs nothing, so a loss is only worth something if the player can see why it happened, well enough to guess at a new strategy. That's the bar step 3 set for feel checks. Step 3 also found that close calls are invisible when enemy HP is hidden.
+- **Enough to puzzle, few enough to learn.** Encounters are lock-and-key puzzles, so they need enough distinct things for a party to bring and an enemy to call for. With too few concepts, every dungeon is the same puzzle: more damage against more HP. With too many, a player who's watching can't tell what mattered.
+- **What the player can see.** Every concept has to show itself, through a word on screen, a number, or a stat if some stats are shown. How much is shown, and how finely, decides how much the player learns by reading and how much by watching. It shapes the trait words (step 7) and how fights look (step 22).
+- **The pull of what's already there.** Step 1's placeholder schema already holds a standard JRPG set: turns in speed order, hits and misses, crits, blocks, armour and damage types. Keeping it just because it exists would hand the game a default design nobody chose.
+- **It can't be measured yet.** With no units or content, this step's tests only show that each concept works, not whether it's fun, flat or dominant. That shows at step 8 at the earliest. Steps 5 to 8 and 22 build on what's chosen here, so dropping a concept later strands what was built on it. The call rests on judgement and references, which is why round 1 starts with references.
 
 ## Questions
 
-*Not written yet.*
+*Round 1's are next. Round 2's are written after round 1.*
 
 ## What the designer will decide
 
