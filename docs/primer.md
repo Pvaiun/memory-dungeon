@@ -90,7 +90,7 @@ Direction is guidance, not law. "Firm" means bend it only with evidence and the 
 - Enemy HP needn't be shown, as long as the player can sense over a few tries how close they came, as in Dragon Quest. The player sees their own party's health and stats.
 - Party size, including a single unit, is the designer's to propose, though everything so far assumes a party.
 
-The design opens with a few rough sketches of the bones, each one hanging together on its own, for the director to react to before the full design. Which concepts are in comes out of the design, not out of the interview. Three sketches are with the director now: fully automatic Dragon Quest-style fights, Dragon Quest Monsters-style orders for each unit, and a visible timeline with one party-wide dial. None is decided.
+The design opens with a few rough sketches of the bones, each one hanging together on its own, for the director to react to before the full design. Which concepts are in comes out of the design, not out of the interview. A first round of sketches was set aside as too contrived. A second round, built from scratch, is with the director: Grudges, where a fight turns on whom each enemy is after, with a party-wide call on how hard to push; Hearts, where units are characters with temperaments and wits, steered by attitudes they hold for long stretches; and the Ladder, a shared stagger, knock-down and crush ladder, with no input. None is decided.
 
 ## What's ahead
 

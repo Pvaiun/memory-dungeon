@@ -1,4 +1,6 @@
-# Step 4 sketches: the bones of combat
+# Step 4 sketches: the bones of combat (first pass, set aside)
+
+> **Set aside by the director, Oct 16, 2026,** as too contrived and too close to the placeholder schema. Kept for the record only; build nothing on it. The second pass, started from scratch, is `sketches-2.md`.
 
 First pass, Oct 16, 2026. The intent asks the design to open with a few rough sketches of the bones, each hanging together on its own, for you to react to before the full `design.md`. There are three. They share a core, and differ where round 1 left real choices open: whether you have an input during a fight, how turns work, where the luck comes from, and how much of the enemy you see.
 
