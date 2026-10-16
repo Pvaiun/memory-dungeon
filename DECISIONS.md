@@ -8,6 +8,8 @@ Decisions are direction like any other (see `docs/method.md`): a designer can ch
 
 - **Method (Oct 15, 2026):** every design step runs intent, then design, then build and tune, as `docs/method.md` sets out. Direction is guidance: the AI challenges what doesn't fit, with evidence, and never changes it silently.
 
+- **Context packs (Oct 16, 2026):** an interviewer outside the repo gets one generated file: the primer (`docs/primer.md`), the interviewer guide, the step's plan entry and the brief. The primer is the only place the game is explained to an outsider, and it's kept current whenever this file changes. Briefs cover their step only, and add "why it's hard".
+
 ## Tech-stack brief
 
 Reviewed with the director Oct 15, 2026. Full record: `docs/memory-stack.md`.
