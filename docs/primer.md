@@ -81,7 +81,7 @@ Direction is guidance, not law. "Firm" means bend it only with evidence and the 
 - Replays are challenges only. A cleared dungeon can only be replayed through its challenges, each of which pays loot once, though anything not yet beaten can be retried freely. So there's no endless grinding. Every week a player is stuck is sorted as walled by quests or walled by play, and the balance between them has to be agreed.
 - Feel checks mainly test that information is clear. A fresh AI reader, seeing only what a player sees, says whether it could tell why a fight was lost, well enough to guess at a new strategy.
 
-**Step 4, combat concepts (in progress).** The bones of combat: which concepts the game has at all, and how each basically works. Its intent comes in two rounds. Round 1, on references and feel, has landed. In short:
+**Step 4, combat concepts (in progress).** The bones of combat: which concepts the game has at all, and how each basically works. Its intent, on references and feel, has landed. In short:
 
 - Legibility is the principle: "you understand the choice you made and what happened." The ballpark is Crystal Project, Dragon Quest XI, and old Dragon Quest and Final Fantasy. "Having no meaningful choices during the fight is fine for us. Having no meaningful understanding of it isn't."
 - No sequencing puzzles, such as Shin Megami Tensei's press turn, or the turn banking of Bravely Default and Octopath. A unit's own stack-then-spend mechanic is fine.
@@ -90,7 +90,7 @@ Direction is guidance, not law. "Firm" means bend it only with evidence and the 
 - Enemy HP needn't be shown, as long as the player can sense over a few tries how close they came, as in Dragon Quest. The player sees their own party's health and stats.
 - Party size, including a single unit, is the designer's to propose, though everything so far assumes a party.
 
-Round 2, on which concepts are in or out, is written from these answers.
+The design opens with two or three rough sketches of the bones, each one hanging together on its own, for the director to react to before the full design. Which concepts are in comes out of the design, not out of the interview.
 
 ## What's ahead
 

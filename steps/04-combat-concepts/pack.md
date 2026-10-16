@@ -87,7 +87,7 @@ Direction is guidance, not law. "Firm" means bend it only with evidence and the 
 - Replays are challenges only. A cleared dungeon can only be replayed through its challenges, each of which pays loot once, though anything not yet beaten can be retried freely. So there's no endless grinding. Every week a player is stuck is sorted as walled by quests or walled by play, and the balance between them has to be agreed.
 - Feel checks mainly test that information is clear. A fresh AI reader, seeing only what a player sees, says whether it could tell why a fight was lost, well enough to guess at a new strategy.
 
-**Step 4, combat concepts (in progress).** The bones of combat: which concepts the game has at all, and how each basically works. Its intent comes in two rounds. Round 1, on references and feel, has landed. In short:
+**Step 4, combat concepts (in progress).** The bones of combat: which concepts the game has at all, and how each basically works. Its intent, on references and feel, has landed. In short:
 
 - Legibility is the principle: "you understand the choice you made and what happened." The ballpark is Crystal Project, Dragon Quest XI, and old Dragon Quest and Final Fantasy. "Having no meaningful choices during the fight is fine for us. Having no meaningful understanding of it isn't."
 - No sequencing puzzles, such as Shin Megami Tensei's press turn, or the turn banking of Bravely Default and Octopath. A unit's own stack-then-spend mechanic is fine.
@@ -96,7 +96,7 @@ Direction is guidance, not law. "Firm" means bend it only with evidence and the 
 - Enemy HP needn't be shown, as long as the player can sense over a few tries how close they came, as in Dragon Quest. The player sees their own party's health and stats.
 - Party size, including a single unit, is the designer's to propose, though everything so far assumes a party.
 
-Round 2, on which concepts are in or out, is written from these answers.
+The design opens with two or three rough sketches of the bones, each one hanging together on its own, for the director to react to before the full design. Which concepts are in comes out of the design, not out of the interview.
 
 ## What's ahead
 
@@ -190,7 +190,8 @@ How it was gathered (this session, /intent or another chat) and the date.
 >
 > - **Agreed:** this step, with its objective (the bones of the combat system); already decided (the director reopened fully automatic fights on Oct 16, and refined "no locks"); how the interview runs; why it's hard; round 1's questions; what the designer will decide.
 > - **Done:** round 1 of the interview (Oct 16). Its intent is in `intent.md`, confirmed at the read-back.
-> - **Now:** the step's session writes round 2's questions from round 1's intent, with the director, the same way, then rebuilds the pack.
+> - **Dropped:** round 2, agreed with the director after round 1's read-back. Round 1 is the step's whole intent, and the design opens with sketches instead (see `intent.md`, "How the design stage runs").
+> - **Now:** stage 2, design.
 
 For the director to answer: in the step's session, with `/intent 4` in a fresh session, or by pasting `pack.md` into any chat.
 
@@ -302,7 +303,7 @@ To close: anything about how fights should be that these questions didn't reach.
 
 ### Round 2
 
-Written after round 1's read-back, from the director's answers, and agreed with the director before it starts. It will cover which concepts are in or out (with a check list drawn only from the design plan and the schema, after an open question), how much of the schema's rule language to keep, and anything round 1 left unclear.
+Dropped after round 1's read-back, Oct 16. It would have covered which concepts are in or out, and how much of the schema's rule language to keep. Those come out of a design, so the design stage opens with two or three sketches of the bones for the director to react to instead. `intent.md` has how.
 
 ## What the designer will decide
 

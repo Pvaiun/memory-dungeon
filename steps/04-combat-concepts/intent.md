@@ -1,6 +1,6 @@
 # Step 4 intent
 
-Round 1 was gathered with `/intent 4` in a fresh session, Oct 16, 2026. The director wrote answers to the brief's six questions in one document, then answered three follow-ups (on bursts, party size and losing), and corrected two items at the read-back. They had nothing to add for the closing question. Round 1 offered no options, so nothing here was picked from a list. Round 2 comes next, with questions written from these answers.
+Round 1 was gathered with `/intent 4` in a fresh session, Oct 16, 2026. The director wrote answers to the brief's six questions in one document, then answered three follow-ups (on bursts, party size and losing), and corrected two items at the read-back. They had nothing to add for the closing question. Round 1 offered no options, so nothing here was picked from a list. The brief planned a round 2, but it was dropped: see "How the design stage runs".
 
 The director's framing for their examples: "This is an example of what I mean, not a decision on mechanics." References and examples are there to inspire the designer. They aren't requirements.
 
@@ -89,11 +89,19 @@ The director's framing for their examples: "This is an example of what I mean, n
 - [lean] A loss "needs to give me enough information to be able to know how badly I lost or why I lost. Not perfectly, but just enough to be able to vibes through making decisions as to what the next thing you're going to attempt is." For example: "Damn, my warrior died instantly, so I didn't have enough damage to take this fight down." (From the follow-up and question 3.)
 - [lean] The player should also "feel celebrated for a huge success or a near loss or a big comeback". (From the follow-up.)
 
-## Round 2
+## How the design stage runs
 
-Not written yet. Its questions come from round 1's answers, and are agreed with the director before it starts.
+This applies to this step only. It was agreed with the director after round 1's read-back, on Oct 16, after the director raised a worry: random questions could lock in random decisions, and leave a design that has to fit around them instead of one that hangs together. The interviewer proposed what follows, and the director agreed.
+
+- [firm] There's no round 2, so round 1 is the step's whole intent. Round 2 would have asked which concepts are in or out, and how much of the schema's rule language to keep. Those come out of a design. Asked cold, one at a time, they'd lock in picks that a design then has to fit around.
+- [firm] The design opens with a rough first pass of two or three short sketches of the bones. Each sketch hangs together on its own: it says which concepts it uses, what job each one does, and how it maps to round 1. The sketches differ where round 1 leaves real choices open. Examples are whether there's an in-fight input and what kind, where the luck comes from, how much is shown, and party size if the designer has a case for something else.
+- [firm] The director reacts to whole systems: picks one, blends them, or throws them all out. Questions about single concepts come then, in context, such as "this sketch gets its luck from crits; would you rather it came from how units behave?"
+- [lean] Then comes the full `design.md`, as the method sets out, built from the direction the director picks.
 
 ## Left to the designer
+
+- Which concepts are in, as part of a design that hangs together, offered first as sketches.
+- How much of the schema's rule language to keep. The director sees it as what was kept, and why.
 
 From round 1:
 
