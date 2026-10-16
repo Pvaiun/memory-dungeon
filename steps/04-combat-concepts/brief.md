@@ -2,9 +2,9 @@
 
 > **Being built with the director, a piece at a time** (started Oct 16, 2026). This is the most creative step so far, so the brief isn't written in one go. Each piece is agreed before the next is written, so no question starts from a frame the director didn't want.
 >
-> - **Agreed:** already decided (the director reopened fully automatic fights on Oct 16, and refined "no locks"), how the interview runs, why it's hard.
-> - **Written, for the director to correct:** this step's objective, the bones of the combat system (added Oct 16 at the director's request).
-> - **Next:** round 1's questions, and what the designer will decide. Round 2's questions are written after round 1.
+> - **Agreed:** this step, with its objective (the bones of the combat system); already decided (the director reopened fully automatic fights on Oct 16, and refined "no locks"); how the interview runs; why it's hard.
+> - **Written, for the director to correct:** round 1's questions, and what the designer will decide.
+> - **Next:** build the pack and run round 1. Round 2's questions are written after round 1's read-back.
 
 For the director to answer: in the step's session, with `/intent 4` in a fresh session, or by pasting `pack.md` into any chat.
 
@@ -84,8 +84,45 @@ A draft for the director to correct.
 
 ## Questions
 
-*Round 1's are next. Round 2's are written after round 1.*
+### Round 1: references and feel
+
+All open. Short answers are fine, and "I don't mind" is an answer too. Each question has a note on where to follow up.
+
+For the interviewer:
+- **Don't offer lists of answers or concepts.** If the director names a concept (crits, dodging, anything), record it in their words. Going through concepts one by one is round 2's job.
+- **The in-fight input idea is the director's.** Record it as they tell it. Don't develop it, improve it or suggest alternatives.
+- Record round 1 under its own heading in `intent.md`, and end with the read-back.
+
+**1. Fights you love.** Which games' fights do you love, and why? Any kind of game.
+*Follow up:* what exactly it is about each one: a system, a moment, or how it felt to watch or play.
+
+**2. Fights you don't.** Which combat systems put you off, or ask too much of you? What would you never want in this one?
+*Follow up:* where the line falls between depth you enjoy and complexity that's a chore.
+
+**3. A fight you'd love here.** Describe a fight in this game that you'd love: what happens from start to finish, and what you're doing while it plays.
+*Follow up:* how long it lasts, what you're watching for, what makes it tense, and whether a boss fight feels different from the fights before it.
+
+**4. Swaying a fight.** You have an idea for how the player might sway a fight without controlling each action. Tell it as fully or as loosely as you like.
+*Follow up:* how often it comes up, how much it should matter next to the party you built, and what it should never become.
+
+**5. What the player sees.** During a fight, what should the player be able to see and know, about their own party and about the enemies?
+*Follow up:* the granularity, in the director's word: which numbers, if any, and what's better learned by watching.
+
+**6. Luck and losing.** What part should luck play in a fight? And when a fight is lost, what should that look and feel like?
+*Follow up:* what retrying with the same party should feel like, and what a player should take away from a loss.
+
+To close: anything about how fights should be that these questions didn't reach.
+
+### Round 2
+
+Written after round 1's read-back, from the director's answers, and agreed with the director before it starts. It will cover which concepts are in or out (with a check list drawn only from the design plan and the schema, after an open question), how much of the schema's rule language to keep, and anything round 1 left unclear.
 
 ## What the designer will decide
 
-*Not written yet.*
+A draft, so the director can claim any of it. The design itself comes in stage 2, from the intent, and goes to the director for approval.
+
+- How the chosen concepts become rules and numbers: formulas, the order things happen in, and starting values.
+- How the dice are rolled. That includes whether each unit gets its own dice, which step 3 found would make comparing parties cheaper.
+- How simulated players give any in-fight input, if there is some.
+- How the engine and schema change to carry the new rules.
+- What the tests check, plus rechecking speed, log size and that Chrome's and Safari's engines agree.
