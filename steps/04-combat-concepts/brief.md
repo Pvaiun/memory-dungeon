@@ -2,15 +2,25 @@
 
 > **Being built with the director, a piece at a time** (started Oct 16, 2026). This is the most creative step so far, so the brief isn't written in one go. Each piece is agreed before the next is written, so no question starts from a frame the director didn't want.
 >
-> - **Agreed:** this step, already decided (the director reopened fully automatic fights on Oct 16), how the interview runs.
-> - **Written, for the director to correct:** why it's hard (revised Oct 16 for in-fight input and iteration).
+> - **Agreed:** already decided (the director reopened fully automatic fights on Oct 16, and refined "no locks"), how the interview runs, why it's hard.
+> - **Written, for the director to correct:** this step's objective, the bones of the combat system (added Oct 16 at the director's request).
 > - **Next:** round 1's questions, and what the designer will decide. Round 2's questions are written after round 1.
 
 For the director to answer: in the step's session, with `/intent 4` in a fresh session, or by pasting `pack.md` into any chat.
 
 ## This step
 
-Step 4 chooses what a fight is made of: the concepts combat has at all, and the basic rules for each. The design plan's examples are how turns work, dodging, crits, damage types, weaknesses and damage over time. The step also settles how much luck there is, how much depth suits the game, and what a loss looks like. Each concept is weighed by the depth it adds against what it asks of a player who only watches. The chosen concepts go into the engine, replacing step 2's stand-in fight, and tests show that each one works. There's too little content to judge balance until units exist.
+**The objective: the bones of the combat system.** Step 4 builds the skeleton that every later combat step hangs things on. It answers how a fight works at its most basic:
+- how a fight runs from start to finish
+- what a unit brings to a fight, and what it does in one
+- how units hurt and protect each other
+- what's left to chance
+- what the player sees, and what they can do
+- how a fight is won or lost
+
+Good bones keep party composition and trial and error the main skill, "first and foremost". They also leave room for later steps to build many different roles and enemies without reworking the frame.
+
+The design plan's examples, such as crits, dodging, damage types, weaknesses and damage over time, are possible pieces of that skeleton, not the goal. Some will be in and some out. Each is weighed by the depth it adds against what it asks of a player who doesn't control each action. The step also settles how much luck there is, how much depth suits the game, and what a loss looks like. The bones go into the engine, replacing step 2's stand-in fight, and tests show that each part works. There's too little content to judge balance until units exist.
 
 Everything after builds on this. Step 5's hidden verbs are defined in these concepts, step 6's mechanics are built on them, step 7's trait words describe what they make enemies do, and step 22 has to show each of them on a phone.
 
@@ -28,7 +38,7 @@ The primer has the game. What bears on this step comes in three kinds, because t
 **Decided,** in `DECISIONS.md`, a firm intent or the director's standing preferences. Not asked again unless the director reopens them:
 
 - **Preparation is the game.** The skill is building a party and learning by trial and error, not performing in a fight (step 3).
-- **Few systems, no locks.** Mechanics map onto a few numerical systems (stats, statuses, damage types, flags, targeting). No bespoke keywords that act as locks, and nothing that eats the player's brainpower.
+- **Few systems, no locks.** Mechanics map onto a few numerical systems (stats, statuses, damage types, flags, targeting), and nothing eats the player's brainpower. Custom mechanics are fine: "an enemy could have a passive that only they have." What's out is anything "ultra puzzle gamey, where one enemy has a specific weakness and there's only one specific solution to beat that specific weakness." It needs to be "a little bit more subtle" (the director, Oct 16). That matches the concept's rule that every enemy gimmick has several counters.
 - **No battlefield geometry:** no rows, reach or positional targeting (step 1's review; kept when the director was asked, Oct 16).
 - **Encounters are lock and key,** as predictions only. The engine never checks keys or keyholes (step 1's review).
 - **Losing costs nothing,** and anything not yet beaten can be retried freely (a concept-spec principle, and step 3).
@@ -46,7 +56,7 @@ The primer has the game. What bears on this step comes in three kinds, because t
 
 **Open in this step,** though earlier documents assumed an answer:
 
-- **How much the player takes part in a fight.** The director reopened this on Oct 16, replacing the concept's fully automatic fights: "Fights are not the player controlling individually every single action. But there might be some sort of swaying input that they can do." They have an idea of what that input could be, kept out of the brief on purpose, so round 1 should leave room for it. Until now, perk picks between fights were the only decision in a run (step 2), with one manual action per fight held in reserve (the concept spec). The engine can already pause for a decision between turns. Step 3's firm "the skill is party composition and trial and error, not performing with a given tool" stands, so the interview should hear how the director sees the two fitting.
+- **How much the player takes part in a fight.** The director reopened this on Oct 16, replacing the concept's fully automatic fights: "Fights are not the player controlling individually every single action. But there might be some sort of swaying input that they can do." They have an idea of what that input could be, kept out of the brief on purpose, so round 1 should leave room for it. Until now, perk picks between fights were the only decision in a run (step 2), with one manual action per fight held in reserve (the concept spec). The engine can already pause for a decision between turns. Any input sits under step 3's firm "the skill is party composition and trial and error", which the director confirmed on Oct 16 comes "first and foremost".
 - **How turns work,** which follows from the item above. That includes whether active abilities fire on their own when ready, as step 1's schema has them.
 - **How much of the enemies' numbers the player sees.** The concept spec hides enemy stats, as in classic Dragon Quest, and gives enemies trait words instead, but nothing has decided it. The director reopened it on Oct 16: "I don't think we've agreed on that yet." It isn't all or nothing. Showing basic stats like HP needn't break trait words: "It really just depends on the granularity of what you're showing." They don't want to say yet that it's "100% obfuscated". Step 3's feel checks and step 7's trait words were planned around hidden stats, so the answer reaches them too.
 
@@ -67,7 +77,7 @@ A draft for the director to correct.
 - **If the player can sway a fight,** that input has to sit with preparation being the game, and with not eating the player's brainpower. It also changes what simulation measures: simulated players need a way to give the input, and how well they give it becomes part of every result.
 - **Luck against learning.** The player learns by losing, changing the party and trying again. With too much luck, a loss doesn't say whether the party was wrong or just unlucky, and retrying the same party becomes the way past a wall. With too little, every fight between the same sides plays out the same, and there's no tension. Step 3's feel reader complained most about long runs of identical rounds.
 - **A loss has to teach.** Losing costs nothing, so a loss is only worth something if the player can see why it happened, well enough to guess at a new strategy. That's the bar step 3 set for feel checks. Step 3 also found that close calls are invisible when enemy HP is hidden.
-- **Enough to puzzle, few enough to learn.** Encounters are lock-and-key puzzles, so they need enough distinct things for a party to bring and an enemy to call for. With too few concepts, every dungeon is the same puzzle: more damage against more HP. With too many, a player who's watching can't tell what mattered.
+- **Enough to puzzle, few enough to learn.** Encounters are lock-and-key puzzles, so they need enough distinct things for a party to bring and an enemy to call for. With too few concepts, every dungeon is the same puzzle: more damage against more HP. With too many, a player who's watching can't tell what mattered. And no enemy should be so specific that it has only one answer.
 - **What the player can see.** Every concept has to show itself, through a word on screen, a number, or a stat if some stats are shown. How much is shown, and how finely, decides how much the player learns by reading and how much by watching. It shapes the trait words (step 7) and how fights look (step 22).
 - **The pull of what's already there.** Step 1's placeholder schema already holds a standard JRPG set: turns in speed order, hits and misses, crits, blocks, armour and damage types. Keeping it just because it exists would hand the game a default design nobody chose.
 - **It can't be measured yet.** With no units or content, this step's tests only show that each concept works, not whether it's fun, flat or dominant. That shows at step 8 at the earliest. Every step gets revisited after the first full pass, so this step sets the best starting point, not the final set. But steps 5 to 8 and 22 build on it in the meantime, so a starting point that's far off costs rework. The call rests on judgement and references, which is why round 1 starts with references.
