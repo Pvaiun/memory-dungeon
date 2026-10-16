@@ -32,7 +32,7 @@ It's also a test of a way of making games. The director sets the vision. AI desi
 - **Step 1, content schema:** done and approved (schema 0.3). It predates the method; its record is SCHEMA.md.
 - **Method:** adopted (`docs/method.md`). Steps 2 onward follow it.
 - **Tech-stack brief:** done and reviewed by the director (Oct 15, 2026). The write-up is `docs/memory-stack.md`, and its decisions are in `DECISIONS.md`. Tooling matches Memory: TypeScript 7.0, Vitest, `isolatedModules`, and a typecheck guard that keeps game logic free of Node APIs.
-- **Step 2, headless engine: in progress, stage 3 (build).** Intent and design are approved (`steps/02-headless-engine/`, design approved Oct 16). Step 2 builds only the machinery (dice, savable runs, general decision points, replay, logs), tested with a crude stand-in fight. It builds no combat rules and none of the schema's rule language: the real combat is built in steps 4 (combat concepts) and 6 (mechanics), from the director's intent, and either may keep, change or drop the schema's rule language, or start over. Next: build the approved design, keep `tuning.md` as the trail, then write `report.md` for sign-off. Also record in `DECISIONS.md` at sign-off that a run's server summary must hold the party, every decision and the content and engine versions, not just seed, outcome and loot (agreed Oct 16). Content data plus a seed goes in, and a complete fight log comes out. Fights will run in the browser, so read "For step 2" in `docs/memory-stack.md` first. In short: put the engine in `src/engine/` with its tests beside it; use a seeded random-number generator; keep combat math to basic arithmetic so a seed replays the same on every device; and report the time per fight and per run, and the size of a fight log.
+- **Step 2, headless engine: stage 3 done, waiting for the director's sign-off on `steps/02-headless-engine/report.md`.** The machinery is built in `src/engine/` (seeded dice, runs as plain data, decision points, the explorer, the log), with a crude stand-in fight behind the `Rules` interface. Step 4 replaces the stand-in with real combat; neither step 2 nor the stand-in builds any of the schema's rule language. Every prediction in the design held; `tuning.md` is the build log. At sign-off: add step 2's decisions to `DECISIONS.md`, including the run summary wording in the report (the record holds the engine and battle-system versions, content id and fingerprint, party, dungeon, seed, first-clear flag and every decision, plus outcome and loot); consider the method note in the report; then update this Status and stop.
 - **Session pattern:** a step can take one session or several; its `steps/` folder is the handoff. Each session ends at a gate by updating this Status section, committing, and stopping for the director.
 
 ## The director's preferences
@@ -47,7 +47,7 @@ It's also a test of a way of making games. The director sets the vision. AI desi
 
 This is TypeScript 7.0, tested with Vitest, both at Memory's versions (`docs/memory-stack.md`). The schema uses zod 4, which is allowed in the game's running code too. The schema is in `src/schema.ts` and the validator in `src/validate.ts`.
 
-Keep game logic pure TypeScript with no Node-only APIs, so it can run in the browser (where fights will run) and in a Cloudflare Worker. `tsconfig.core.json` enforces this for the files it lists, so add new game-logic folders there.
+Keep game logic pure TypeScript with no Node-only APIs, so it can run in the browser (where fights will run) and in a Cloudflare Worker. `tsconfig.core.json` enforces this for the files it lists, so add new game-logic folders there. The engine (`src/engine/`) also never uses the clock, `Math.random` or inexact maths (`Math.pow`, `exp`, `log`, trig), which `src/engine/guard.test.ts` enforces. Bump `ENGINE_VERSION` in `src/engine/run.ts` whenever a change can alter a run's outcome.
 
 Before anything goes into Memory, work through the integration checklist in `docs/memory-stack.md`. Among other things, it makes sure Memory lists zod 4 as its own dependency, so a bare `import 'zod'` doesn't silently pick up the old zod 3 that comes with Wrangler.
 
@@ -56,6 +56,7 @@ npm install
 npm test            # vitest run
 npm run typecheck   # whole repo, plus the no-Node guard on game logic
 npm run validate
+npm run dungeon     # print a run of the worked example (--seed N, --explore, --bench, --digest)
 ```
 
 When committing, follow any attribution instructions your session gives you.
