@@ -1,6 +1,6 @@
 # Step 3 report: simulation harness
 
-Built Oct 16, 2026, from the approved design, then revised the same day after the director's first read (the casual player, plain wording, perks, and the "For later steps" list). For the director's sign-off.
+Built Oct 16, 2026, from the approved design, then revised the same day after the director's first read (the casual player, plain wording, perks, and the "For later steps" list). **Signed off by the director, Oct 16, 2026.** Its decisions are in `DECISIONS.md`.
 
 ## Decisions needed
 
