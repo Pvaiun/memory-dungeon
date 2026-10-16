@@ -2,8 +2,8 @@
 
 > **Being built with the director, a piece at a time** (started Oct 16, 2026). This is the most creative step so far, so the brief isn't written in one go. Each piece is agreed before the next is written, so no question starts from a frame the director didn't want.
 >
-> - **Agreed:** this step, already decided, how the interview runs.
-> - **Written, for the director to correct:** why it's hard.
+> - **Agreed:** this step, already decided (the director reopened fully automatic fights on Oct 16), how the interview runs.
+> - **Written, for the director to correct:** why it's hard (revised Oct 16 for in-fight input and iteration).
 > - **Next:** round 1's questions, and what the designer will decide. Round 2's questions are written after round 1.
 
 For the director to answer: in the step's session, with `/intent 4` in a fresh session, or by pasting `pack.md` into any chat.
@@ -38,7 +38,6 @@ The primer has the game. What bears on this step comes in three kinds, because t
 
 **Starting points,** from the concept spec or step 1's placeholder schema. The interview builds on them and can change them:
 
-- **Fights are automatic.** No manual abilities, no programming the party's tactics, no button mashing. Perk picks between fights are the only decision in a run, though the engine leaves room for others (step 2). One manual action per fight is held in reserve, in case fights feel too passive. Kept when the director was asked, Oct 16.
 - **Units don't level up.** Abilities change behaviour rather than add stats, and units are self-contained: abilities don't chain across classes. These are mostly step 8's.
 - **Simple targeting.** Units mostly attack whoever draws attention, and a few go for the most wounded. Formation slots work through ordinary numbers like speed, defence and damage multipliers. Enemies are a plain list, and the two sides needn't work the same way.
 - **Fights read clearly:** chunky damage numbers and big words like MISS and BLOCKED, in the style of Game Boy-era JRPGs. The player learns by watching.
@@ -47,7 +46,8 @@ The primer has the game. What bears on this step comes in three kinds, because t
 
 **Open in this step,** though earlier documents assumed an answer:
 
-- **How turns work,** including whether active abilities fire on their own when ready, as step 1's schema has them.
+- **How much the player takes part in a fight.** The director reopened this on Oct 16, replacing the concept's fully automatic fights: "Fights are not the player controlling individually every single action. But there might be some sort of swaying input that they can do." They have an idea of what that input could be, kept out of the brief on purpose, so round 1 should leave room for it. Until now, perk picks between fights were the only decision in a run (step 2), with one manual action per fight held in reserve (the concept spec). The engine can already pause for a decision between turns. Step 3's firm "the skill is party composition and trial and error, not performing with a given tool" stands, so the interview should hear how the director sees the two fitting.
+- **How turns work,** which follows from the item above. That includes whether active abilities fire on their own when ready, as step 1's schema has them.
 - **How much of the enemies' numbers the player sees.** The concept spec hides enemy stats, as in classic Dragon Quest, and gives enemies trait words instead, but nothing has decided it. The director reopened it on Oct 16: "I don't think we've agreed on that yet." It isn't all or nothing. Showing basic stats like HP needn't break trait words: "It really just depends on the granularity of what you're showing." They don't want to say yet that it's "100% obfuscated". Step 3's feel checks and step 7's trait words were planned around hidden stats, so the answer reaches them too.
 
 ## How the interview runs
@@ -63,13 +63,14 @@ Agreed with the director, Oct 16. This replaces the interviewer guide's "one sit
 
 A draft for the director to correct.
 
-- **The player only watches.** Nobody acts during a fight, so a concept adds depth only if it shows up in preparation, as something a party is built toward or against. A concept that's rich when you act each turn, like timing a block, can turn into noise when you only watch it.
+- **The player doesn't control each action.** So a concept adds depth mainly if it shows up in preparation, as something a party is built toward or against, or in whatever input the player has during a fight. A concept that's rich when you choose every action, like timing a block, can turn into noise when it plays itself.
+- **If the player can sway a fight,** that input has to sit with preparation being the game, and with not eating the player's brainpower. It also changes what simulation measures: simulated players need a way to give the input, and how well they give it becomes part of every result.
 - **Luck against learning.** The player learns by losing, changing the party and trying again. With too much luck, a loss doesn't say whether the party was wrong or just unlucky, and retrying the same party becomes the way past a wall. With too little, every fight between the same sides plays out the same, and there's no tension. Step 3's feel reader complained most about long runs of identical rounds.
 - **A loss has to teach.** Losing costs nothing, so a loss is only worth something if the player can see why it happened, well enough to guess at a new strategy. That's the bar step 3 set for feel checks. Step 3 also found that close calls are invisible when enemy HP is hidden.
 - **Enough to puzzle, few enough to learn.** Encounters are lock-and-key puzzles, so they need enough distinct things for a party to bring and an enemy to call for. With too few concepts, every dungeon is the same puzzle: more damage against more HP. With too many, a player who's watching can't tell what mattered.
 - **What the player can see.** Every concept has to show itself, through a word on screen, a number, or a stat if some stats are shown. How much is shown, and how finely, decides how much the player learns by reading and how much by watching. It shapes the trait words (step 7) and how fights look (step 22).
 - **The pull of what's already there.** Step 1's placeholder schema already holds a standard JRPG set: turns in speed order, hits and misses, crits, blocks, armour and damage types. Keeping it just because it exists would hand the game a default design nobody chose.
-- **It can't be measured yet.** With no units or content, this step's tests only show that each concept works, not whether it's fun, flat or dominant. That shows at step 8 at the earliest. Steps 5 to 8 and 22 build on what's chosen here, so dropping a concept later strands what was built on it. The call rests on judgement and references, which is why round 1 starts with references.
+- **It can't be measured yet.** With no units or content, this step's tests only show that each concept works, not whether it's fun, flat or dominant. That shows at step 8 at the earliest. Every step gets revisited after the first full pass, so this step sets the best starting point, not the final set. But steps 5 to 8 and 22 build on it in the meantime, so a starting point that's far off costs rework. The call rests on judgement and references, which is why round 1 starts with references.
 
 ## Questions
 
