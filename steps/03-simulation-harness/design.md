@@ -1,6 +1,6 @@
 # Step 3 design: simulation harness
 
-Second draft, for the director's review, Oct 16, 2026. Built from `intent.md` and the director's notes on the first draft.
+Second draft, Oct 16, 2026, built from `intent.md` and the director's notes on the first draft. **Approved by the director, Oct 16, 2026.** What was built, and what changed in the building, is in `report.md`.
 
 Like step 2, this is mostly machinery. It builds the process that runs simulations and writes reports, not what the reports will say, which is your firm scope for this step.
 

@@ -1,0 +1,16 @@
+{
+  "id": "combat-sample",
+  "level": "combat",
+  "about": "Step 3's sample combat study: every party of up to 3 on the placeholder ladder, with one what-if (the Ranger with double HP).",
+  "content": { "pack": "fixtures/hollow.pack.json", "ladder": [0.3, 0.4, 0.5, 0.6, 0.7, 0.8] },
+  "variants": [
+    { "name": "as is" },
+    { "name": "Ranger with double HP", "patch": [{ "path": "classes/ranger/stats/max_hp", "mul": 2 }] }
+  ],
+  "targets": { "dungeons": "all", "challenges": true },
+  "parties": { "formations": "first" },
+  "seeds": 200,
+  "perks": "random",
+  "perkSeeds": 40,
+  "effectSeeds": 100
+}

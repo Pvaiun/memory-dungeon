@@ -14,7 +14,8 @@
     "docs": "tsx src/primitives-doc.ts > PRIMITIVES.md",
     "examples": "tsx src/extract-examples.ts",
     "dungeon": "tsx src/dungeon.ts",
-    "pack": "tsx src/pack.ts"
+    "pack": "tsx src/pack.ts",
+    "study": "tsx src/study.ts"
   },
   "keywords": [],
   "author": "",

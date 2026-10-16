@@ -2,7 +2,7 @@
 
 What the game is, how it's being made, and where it stands. It's written for a reader with no access to the design repo, such as an AI interviewing the director about one design step. It describes; it doesn't decide. Where it and a step's brief differ, the brief is newer.
 
-Updated Oct 16, 2026, during step 3's design review.
+Updated Oct 16, 2026, after step 3's sign-off.
 
 ## Memory, and why the game exists
 
@@ -72,15 +72,14 @@ Direction is guidance, not law. "Firm" means bend it only with evidence and the 
 - Perk picks are the only decision a player makes during a run, but the engine allows other kinds to be added later.
 - The battle system is one swappable piece, so step 4 replaces the stand-in without touching the rest.
 
-**Step 3, simulation harness (in progress: design in review).** The tool every later step uses to test its design, and the reports it writes. The director's direction so far:
+**Step 3, simulation harness.** The tool every later step uses to test its design. It runs thousands of simulated fights and simulated players' weeks, and says how sure each result is. What it settled for later steps:
 
-- Build the simulation and report process now. Report content waits for there to be a design.
-- Reports are words first, then stories (a simulated player's weeks, a fight retold in a few lines), then charts. The director catches wrong numbers mainly through the stories.
+- Reports to the director are words first, then one to three stories (a simulated player's weeks, or a fight retold in a few lines), then at most three simple charts. The director catches wrong numbers mainly through the stories.
 - Most numbers are for the AI, which uses them to balance and to bring the director plain-language questions. The director's own input is on the big questions: pacing over weeks, how long a player waits, and how strict building a party should be.
-- Strictness isn't "the share of all builds that win". In the director's terms, it's how custom a party has to be: in the right colour space and tweaking, or in the wrong one.
-- Tune for the optimizer: a player who does most quests and homes in on building. Requirements can be quite strict.
-- Replays are challenges only. A cleared dungeon can only be replayed through its challenges, each of which pays loot. There are many, but a hard cap: nothing already beaten pays again, though anything not yet beaten can be retried freely. So there's no endless grinding. A player who has beaten every challenge they can only moves on through quest unlocks. How often a player is walled by quests versus by play is measured, and has to be agreed.
-- Feel checks, where an AI reads fights with enemy stats hidden, mainly test that information is clear: could you tell why a fight was lost, well enough to guess at a new strategy?
+- The game is tuned for the optimizer: a player who does most quests and homes in on a build by trial and error. Requirements can be quite strict. A good-enough benchmark beside it shows whether a stuck optimizer missed a party, and a casual player is a check.
+- Strictness isn't "the share of all builds that win". In the director's terms, it's how custom a party has to be: how many colours (broad kinds of party) can win, and how many tweaks win inside them.
+- Replays are challenges only. A cleared dungeon can only be replayed through its challenges, each of which pays loot once, though anything not yet beaten can be retried freely. So there's no endless grinding. Every week a player is stuck is sorted as walled by quests or walled by play, and the balance between them has to be agreed.
+- Feel checks mainly test that information is clear. A fresh AI reader, seeing only what a player sees, says whether it could tell why a fight was lost, well enough to guess at a new strategy.
 
 ## What's ahead
 
