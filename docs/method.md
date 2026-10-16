@@ -149,11 +149,12 @@ Every step runs the loop, but not at the same weight. Each step in the design pl
 | --- | --- | --- |
 | 2, engine | Almost none: confirm the engineering is the designer's call, and take any thoughts. Don't write a brief of questions for the sake of it. | Working |
 | 3, harness | Light: what reports should show, and which players to simulate | Producing a readable report |
-| 4–11, core mechanics | References, feel, how it should play | Simulation and feel checks |
-| 12–15, content | Heavy: names, phrases and gimmicks, often by input page | Simulation at volume; the director reviews samples and rules |
-| 16, AI playtests | What a playtester should report on | It is the test |
-| 17–19, quest board | How quests should feel, and edge cases | Sample boards and walk-throughs, not combat simulation |
-| 20–22, interface | Reference screens, and how it's used on a phone | Mockups and AI playtests |
-| 23, principles review | None | A checklist |
+| 4–6, combat concepts, verbs and mechanics | References, and which concepts and roles they want | Functionality tests; there's too little content to measure balance |
+| 7–12, traits, units, formations, gear, runs, encounters | References, feel, how it should play | Simulation and feel checks |
+| 13–16, content | Heavy: names, phrases and gimmicks, often by input page | Simulation at volume; the director reviews samples and rules |
+| 17, AI playtests | What a playtester should report on | It is the test |
+| 18–20, quest board | How quests should feel, and edge cases | Sample boards and walk-throughs, not combat simulation |
+| 21–23, interface | Reference screens, and how it's used on a phone | Mockups and AI playtests |
+| 24, principles review | None | A checklist |
 
 Research tasks, like the tech-stack brief, aren't design steps and skip the loop.

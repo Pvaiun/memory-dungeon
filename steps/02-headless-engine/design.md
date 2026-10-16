@@ -42,10 +42,10 @@ The machinery can't be tested without fights to run. The stand-in is crude on pu
 - Perk offers show 3 random perks from the dungeon's pool, which exercises the decision machinery. A picked perk does nothing in the stand-in. To check that the explorer's branches really differ, the tests use a test-only decision that changes a stat.
 - Loot rolls from the dungeon's tables.
 
-## What step 4 inherits
+## What steps 4 and 6 inherit
 
-- **The machinery above.** Step 4 builds its combat rules into it and replaces the stand-in.
-- **The schema's rule language** (statuses, triggers, passives and the rest), as a starting point and nothing more. Step 4 can keep it, change it, drop parts of it, or start over altogether.
+- **The machinery above.** Step 4 (combat concepts) builds the basics of combat into it and replaces the stand-in; step 6 (mechanics) adds the rest.
+- **The schema's rule language** (statuses, triggers, passives and the rest), as a starting point and nothing more. Steps 4 and 6 can keep it, change it, drop parts of it, or start over altogether.
 
 ## Intent map
 
@@ -53,17 +53,17 @@ The machinery can't be tested without fights to run. The stand-in is crude on pu
 | --- | --- | --- |
 | [lean] Fight logs are mostly for the AI and for debugging | Used | The log is data for code to count, plus a printout for debugging. |
 | [idea] Players may eventually see logs | Used | Entries are marked player-visible or hidden, so a player's log is a filter. |
-| [firm] The building blocks are placeholders | Used | Step 2 builds none of them. Step 4 can keep, change or drop them, or start over altogether. |
+| [firm] The building blocks are placeholders | Used | Step 2 builds none of them. Steps 4 and 6 can keep, change or drop them, or start over altogether. |
 | [firm] Input at the start of the battle system | Used | That's the reason for the split. The battle system starts at step 4's intent. |
 | [lean] Perk picks are the only in-run choice, for now | Used | They're the only decision the worked example asks for. |
 | [lean] Don't make perks the only input | Used | Decision points are general, and can come between stages or between turns. |
 | [idea] Simulate every perk choice | Used | The explorer branches on every decision. See "Hindsight" under For later steps. |
-| [lean] It's hard to know the right perks without a human | Used | The explorer shows which picks win, not which are interesting to choose. Perk feel stays with you at step 10. |
+| [lean] It's hard to know the right perks without a human | Used | The explorer shows which picks win, not which are interesting to choose. Perk feel stays with you at step 11. |
 | Left to me: run flow, random-number generator, log format | Decided | As above. How much of the rule language to build is now settled by the split: none in step 2. |
 
 ## Challenges
 
-1. **A run summary needs more to be replayable.** `DECISIONS.md` has the server keeping each run's seed, outcome and loot. Rebuilding a run also needs the party loadout, every decision made, and the content and engine versions. Agreed by the director, Oct 16. Step 19 settles the save format.
+1. **A run summary needs more to be replayable.** `DECISIONS.md` has the server keeping each run's seed, outcome and loot. Rebuilding a run also needs the party loadout, every decision made, and the content and engine versions. Agreed by the director, Oct 16. Step 20 settles the save format.
 2. **Replays only hold within a version.** Once the engine or content changes, an old seed plays out differently, and with no stored logs, past fights can't be watched again. If a player-facing log ever shows past fights, it will have to store what it shows. This is a note for that feature.
 
 ## Predictions
@@ -85,14 +85,14 @@ There's no tuning in this step, since the stand-in's numbers don't matter. If th
 
 ## For later steps
 
-- **Hindsight in the explorer (steps 3 and 10).** The best path for a seed knows how every later fight's dice fall, and a player can't. So when step 10 reports how much picks matter, it should give four numbers: the hindsight best, the best without hindsight (the pick that wins most often on average), random picks, and the worst.
-- **Where a retry's seed comes from (step 10).** If every retry draws new dice and fights are swingy, a player can retry until they get lucky. That works against "repeating the same strategy rarely wins".
-- **Perk offers (step 10).** How premium perks are offered, and whether one replaces its regular version.
-- **Challenge loot (step 9 or 10).** Does clearing a challenge also pay the dungeon's replay loot?
+- **Hindsight in the explorer (steps 3 and 11).** The best path for a seed knows how every later fight's dice fall, and a player can't. So when step 11 reports how much picks matter, it should give four numbers: the hindsight best, the best without hindsight (the pick that wins most often on average), random picks, and the worst.
+- **Where a retry's seed comes from (step 11).** If every retry draws new dice and fights are swingy, a player can retry until they get lucky. That works against "repeating the same strategy rarely wins".
+- **Perk offers (step 11).** How premium perks are offered, and whether one replaces its regular version.
+- **Challenge loot (step 10 or 11).** Does clearing a challenge also pay the dungeon's replay loot?
 
 ## Design plan wording
 
 Applied to `docs/design-plan.md` on approval:
 
 - **Step 2, Designs:** "The machinery under combat and runs: seeded randomness, runs as savable data, decision points, exact replay and logging. It's tested with a throwaway stand-in fight; step 4 builds the real combat into it."
-- **Step 4, Designs:** add "Starts from the director's intent. The schema's rule language is only a starting point: keep it, change it, drop parts of it, or start over altogether. Builds the combat system into the engine, replacing step 2's stand-in."
+- **Step 4:** superseded on Oct 16, when step 4 was split into combat concepts (step 4) and mechanics (step 6). See `docs/design-plan.md`.

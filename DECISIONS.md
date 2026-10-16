@@ -17,7 +17,7 @@ Reviewed with the director Oct 15, 2026. Full record: `docs/memory-stack.md`.
 - **zod is allowed** in the game's running code.
 - **Tooling:** TypeScript 7.0 and Vitest, matching Memory.
 - **Game data:** in its own D1 database, as save documents rather than many tables. A debug "reset game" button replaces test data. The live app is the test environment, so there's no staging and no manual backups. Game events stay out of Memory's permanent log during development.
-- **Quest board and Memory (for steps 17 to 19):**
+- **Quest board and Memory (for steps 18 to 20):**
   - Quest kinds are the board's own, unrelated to Memory's item types. A Want asks the user to create any kind of item.
   - Memory only reports whether an item is done, from its current state.
   - Rewards are claimed by hand on the board. An item unticked before its claim shows as incomplete again, and nothing rolls back after a claim. The user is trusted.
