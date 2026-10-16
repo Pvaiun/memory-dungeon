@@ -112,7 +112,9 @@ Each step gets a folder, `steps/NN-slug/` (for example `steps/04-combat-rules/`)
 
 `pack.md` is generated from the brief, not written. Code and content data go where they live (`src/`, `fixtures/` or later content folders), not in the step folder.
 
-**`brief.md`** is about the step alone. The game-wide context comes from the primer, and the interviewer's rules and output format from `docs/interviewer.md`; the pack joins them. So a brief doesn't re-explain the game, and holds:
+**`brief.md`** is written from the full record, not the primer: the step's entry in the design plan, the steps around it, `DECISIONS.md`, earlier steps' intents and reports (especially their "For later steps" notes), and the concept spec. The primer is a summary for readers outside the repo, and a brief written from it inherits its gaps.
+
+The brief is about the step alone. The game-wide context comes from the primer, and the interviewer's rules and output format from `docs/interviewer.md`; the pack joins them. So a brief doesn't re-explain the game, and holds:
 
 - **This step:** a paragraph on what the step designs and what it feeds.
 - **Why it's hard:** the tensions the step has to resolve, what's at stake, and what a wrong call costs later steps. This is what lets an interviewer with no repo access follow up well.
@@ -124,7 +126,7 @@ Each step gets a folder, `steps/NN-slug/` (for example `steps/04-combat-rules/`)
 
 ## The primer
 
-`docs/primer.md` is the one place the game is explained to an outsider: what it is, how it's made, the director's preferences, and where each step stands. It describes the current state, not the history, and it decides nothing. It names placeholders as placeholders and the concept's numbers as starting guesses, and it gives the director's words for their direction rather than a paraphrase that hardens it.
+`docs/primer.md` is the one place the game is explained to an outsider, and it's only for them: sessions in the repo work from the full record. It covers what the game is, how it's made, the director's preferences, and where each step stands. It describes the current state, not the history, and it decides nothing. It names placeholders as placeholders and the concept's numbers as starting guesses, and it gives the director's words for their direction rather than a paraphrase that hardens it.
 
 Keep it current: **whenever `DECISIONS.md` changes, or a step's intent lands, update the primer to match** in the same commit. Keep it to about 2,000 words; as steps finish, compress what they settled rather than adding to it.
 

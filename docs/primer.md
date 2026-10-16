@@ -63,7 +63,7 @@ Direction is guidance, not law. "Firm" means bend it only with evidence and the 
 
 ## Where it stands
 
-**Step 1, content schema.** A data format for every kind of content, and one small worked-example dungeon, the Hollow of the Grey Mother. It came before the method, and the director treats it as inspiration at best. Its classes, numbers, formulas and rule-language building blocks are all placeholder, and later steps may keep, change or drop them. The ideas from its review that this primer already describes (no geometry, simple targeting, SaGa-style formations, keyholes as predictions) are where later steps start.
+**Step 1, content schema.** A data format for every kind of content, and one small worked-example dungeon, the Hollow of the Grey Mother. It describes a game much like the one the director wants, but it came before the method, so it's a starting point, a JRPG-style framework, rather than locked design decisions. Its classes, numbers, formulas and rule-language building blocks are all placeholder, and later steps may keep, change or drop them. The ideas from its review that this primer already describes (no geometry, simple targeting, SaGa-style formations, keyholes as predictions) are where later steps start.
 
 **Step 2, headless engine.** The machinery that plays runs with no screen: seeded dice, runs as plain data, pauses for player decisions, exact replay and logs. Combat is a crude stand-in until step 4. What it settled for later steps:
 
