@@ -2,9 +2,8 @@
 
 > **Being built with the director, a piece at a time** (started Oct 16, 2026). This is the most creative step so far, so the brief isn't written in one go. Each piece is agreed before the next is written, so no question starts from a frame the director didn't want.
 >
-> - **Agreed:** this step, with its objective (the bones of the combat system); already decided (the director reopened fully automatic fights on Oct 16, and refined "no locks"); how the interview runs; why it's hard.
-> - **Written, for the director to correct:** round 1's questions, and what the designer will decide.
-> - **Next:** build the pack and run round 1. Round 2's questions are written after round 1's read-back.
+> - **Agreed:** this step, with its objective (the bones of the combat system); already decided (the director reopened fully automatic fights on Oct 16, and refined "no locks"); how the interview runs; why it's hard; round 1's questions; what the designer will decide.
+> - **Now:** round 1 of the interview. Then the director comes back to the step's session, which writes round 2's questions from round 1's intent, with the director, the same way.
 
 For the director to answer: in the step's session, with `/intent 4` in a fresh session, or by pasting `pack.md` into any chat.
 
@@ -92,6 +91,7 @@ For the interviewer:
 - **Don't offer lists of answers or concepts.** If the director names a concept (crits, dodging, anything), record it in their words. Going through concepts one by one is round 2's job.
 - **The in-fight input idea is the director's.** Record it as they tell it. Don't develop it, improve it or suggest alternatives.
 - Record round 1 under its own heading in `intent.md`, and end with the read-back.
+- **Stop after round 1's read-back.** Round 2's questions don't exist yet. The step's session writes them from round 1's intent.
 
 **1. Fights you love.** Which games' fights do you love, and why? Any kind of game.
 *Follow up:* what exactly it is about each one: a system, a moment, or how it felt to watch or play.
@@ -119,7 +119,7 @@ Written after round 1's read-back, from the director's answers, and agreed with 
 
 ## What the designer will decide
 
-A draft, so the director can claim any of it. The design itself comes in stage 2, from the intent, and goes to the director for approval.
+A draft, so the director can claim any of it. The design itself comes after the intent, in the method's design stage, and goes to the director for approval.
 
 - How the chosen concepts become rules and numbers: formulas, the order things happen in, and starting values.
 - How the dice are rolled. That includes whether each unit gets its own dice, which step 3 found would make comparing parties cheaper.
