@@ -3,7 +3,8 @@
 > **Being built with the director, a piece at a time** (started Oct 16, 2026). This is the most creative step so far, so the brief isn't written in one go. Each piece is agreed before the next is written, so no question starts from a frame the director didn't want.
 >
 > - **Agreed:** this step, with its objective (the bones of the combat system); already decided (the director reopened fully automatic fights on Oct 16, and refined "no locks"); how the interview runs; why it's hard; round 1's questions; what the designer will decide.
-> - **Now:** round 1 of the interview. Then the director comes back to the step's session, which writes round 2's questions from round 1's intent, with the director, the same way.
+> - **Done:** round 1 of the interview (Oct 16). Its intent is in `intent.md`, confirmed at the read-back.
+> - **Now:** the step's session writes round 2's questions from round 1's intent, with the director, the same way, then rebuilds the pack.
 
 For the director to answer: in the step's session, with `/intent 4` in a fresh session, or by pasting `pack.md` into any chat.
 
