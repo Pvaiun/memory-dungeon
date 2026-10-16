@@ -46,3 +46,9 @@ Signed off by the director, Oct 16, 2026. Full record: `steps/02-headless-engine
 - **Decisions are general.** A run pauses for a decision between stages or between turns, and adding a new kind of decision doesn't change the engine. Perk picks are the only kind the worked example asks for.
 - **Logs** are data for code to count. Each entry is marked player-visible or hidden, so a player's log is a filter. Logs are off for bulk runs, and nothing is stored.
 - **Run summary** (agreed Oct 16, replacing seed, outcome and loot): the server keeps each run's replay record, plus its outcome and loot. The record holds the engine and battle-system versions, the content's id and fingerprint, the party, dungeon, seed, whether it was a first clear, and every decision. It's about 0.8 KB. A record only replays on the same versions, so the engine version is bumped whenever a change can alter a run's outcome. Step 20 settles the save format.
+
+## Step 3: simulation harness
+
+In progress. Direction the director gave in the intent interview (`steps/03-simulation-harness/intent.md`), Oct 16, 2026:
+
+- **Repetition yes, endless grinding no** (refines the concept spec's "grinding is intended"). Endlessly repeatable content with no variation is never a main way to win. Replaying earlier dungeons for their unique challenges is part of the game, even when that's a lot of runs. Repeating the same finished content pays nothing or very little. A player who has done every challenge they can and still loses should need a new strategy from quest rewards, not small gear gains. How rewards achieve this is for the gear, runs and pacing steps.
