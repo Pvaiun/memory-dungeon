@@ -8,6 +8,6 @@
     "lib": ["ES2022", "DOM"],
     "types": []
   },
-  "include": ["src/schema.ts", "src/validate.ts", "src/engine"],
+  "include": ["src/schema.ts", "src/validate.ts", "src/engine", "src/sim"],
   "exclude": ["**/*.test.ts"]
 }

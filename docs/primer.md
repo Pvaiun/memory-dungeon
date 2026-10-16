@@ -2,7 +2,7 @@
 
 What the game is, how it's being made, and where it stands. It's written for a reader with no access to the design repo, such as an AI interviewing the director about one design step. It describes; it doesn't decide. Where it and a step's brief differ, the brief is newer.
 
-Updated Oct 16, 2026, during step 3's design review.
+Updated Oct 16, 2026, after step 3's build.
 
 ## Memory, and why the game exists
 
@@ -72,7 +72,7 @@ Direction is guidance, not law. "Firm" means bend it only with evidence and the 
 - Perk picks are the only decision a player makes during a run, but the engine allows other kinds to be added later.
 - The battle system is one swappable piece, so step 4 replaces the stand-in without touching the rest.
 
-**Step 3, simulation harness (in progress: design in review).** The tool every later step uses to test its design, and the reports it writes. The director's direction so far:
+**Step 3, simulation harness (built, waiting on the director's sign-off).** The tool every later step uses to test its design, and the reports it writes. It runs thousands of simulated fights and simulated players' weeks, says how sure each result is, and drafts reports in the order below. Its sample reports run on placeholder content, so their numbers mean nothing yet. The director's direction:
 
 - Build the simulation and report process now. Report content waits for there to be a design.
 - Reports are words first, then stories (a simulated player's weeks, a fight retold in a few lines), then charts. The director catches wrong numbers mainly through the stories.
