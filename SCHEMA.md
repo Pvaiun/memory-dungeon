@@ -2,6 +2,8 @@
 
 Design plan step 1 · schema 0.3 · Oct 15, 2026 · second revision after the director's review
 
+> **Step numbers here are from the design plan as it stood on Oct 15.** On Oct 16, step 4 became combat concepts and a mechanics step was added as step 6, so traits, units, formations, gear, runs and encounters are now steps 7 to 12.
+
 ## What this step produces
 
 | File | What it is |
