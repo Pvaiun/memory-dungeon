@@ -147,7 +147,7 @@ Every step runs the loop, but not at the same weight. Each step in the design pl
 
 | Steps | Intent | Tested by |
 | --- | --- | --- |
-| 2, engine | Almost none: confirm the engineering is the designer's call, and take any thoughts. Don't write a brief of questions for the sake of it. | Working |
+| 2, engine | Almost none: confirm the engineering is the designer's call, and take any thoughts. Don't write a brief of questions for the sake of it. | Working. With no tuning, the design's predictions are the acceptance checklist, the round budget is a time budget, and `tuning.md` is a build log. |
 | 3, harness | Light: what reports should show, and which players to simulate | Producing a readable report |
 | 4–6, combat concepts, verbs and mechanics | References, and which concepts and roles they want | Functionality tests; there's too little content to measure balance |
 | 7–12, traits, units, formations, gear, runs, encounters | References, feel, how it should play | Simulation and feel checks |

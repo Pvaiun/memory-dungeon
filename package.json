@@ -12,7 +12,8 @@
     "typecheck": "tsc -p . && tsc -p tsconfig.core.json",
     "build:schema": "tsx src/export-json-schema.ts",
     "docs": "tsx src/primitives-doc.ts > PRIMITIVES.md",
-    "examples": "tsx src/extract-examples.ts"
+    "examples": "tsx src/extract-examples.ts",
+    "dungeon": "tsx src/dungeon.ts"
   },
   "keywords": [],
   "author": "",
