@@ -122,7 +122,7 @@ export function progressionDigest(r: ProgressionResults, ms: number, engine: str
     const n = s.players * s.weeks;
     L.push(`${k.kind}: stuck ${k.stuckWeeks} of ${n} weeks: by quests ${k.byQuests}, by play ${k.byPlay.total} (owns a winner ${k.byPlay.ownsWinner}, challenges left ${k.byPlay.challengesLeft})`);
     L.push(`  walls ${k.walls.count}, ${rangeNum(k.walls.weeks)} weeks, longest ${k.walls.longest}; sorted → ended: ${Object.entries(k.walls.sortedThenEnded).sort((a, b) => b[1] - a[1]).map(([b, x]) => `${b} ${x}`).join("; ") || "–"}`);
-    L.push(`  choices matter for ${k.matters.players} players, median week ${k.matters.median ?? "–"}${k.perksChange !== null ? `; perks change the result at walls on ${pct(k.perksChange)} of seeds` : ""}`);
+    L.push(`  board ran dry for ${k.dry.players} players, median week ${k.dry.median ?? "–"}; choices matter for ${k.matters.players} players, median week ${k.matters.median ?? "–"}${k.perksChange !== null ? `; perks change the result at walls on ${pct(k.perksChange)} of seeds` : ""}`);
   }
   L.push(`Optimizer vs casual, dungeon-weeks: ${said(r.optimizerVsCasual)}. Benchmark behind the optimizer: ${r.benchmarkBehind} player-weeks`);
   L.push(`Benchmark: ${r.bench.questions.toLocaleString("en")} questions, ${r.bench.runs.toLocaleString("en")} runs, at most ${r.bench.maxRuns} each (budget ${s.benchmark.budget}); ran out ${r.bench.budgetOut} times`);
@@ -237,7 +237,7 @@ function diary(p: PlayerLog, names: Map<string, string>): string[] {
       continue;
     }
     const losses = Object.entries(w.losses).map(([d, l]) => `Lost ${names.get(d)} ${s(l.n, "time")} (best: ${l.best.party}, out in ${l.best.lostIn.replace(/_/g, " ")} with the enemy on ${pct(l.best.enemyLeft)})`);
-    const cleared = w.cleared.filter((k) => !k.includes(":")).map((k) => names.get(k));
+    const cleared = w.cleared.filter((k) => !k.includes(":")).map((k) => `${names.get(k)} (${w.winners[k]?.replace(/ \(.*\)$/, "")})`);
     const chs = w.cleared.filter((k) => k.includes(":")).length;
     out.push(`- Week ${w.week}: ${w.quests} of ${s(w.board, "quest")}${w.unlocks.length ? `, got ${w.unlocks.join(", ")}` : ""}. ${s(w.tries, "run")}.${cleared.length ? ` Cleared ${cleared.join(", ")}.` : ""}${chs ? ` ${s(chs, "challenge")} won.` : ""}${w.challengeLosses ? ` ${s(w.challengeLosses, "challenge")} lost.` : ""}${losses.length ? ` ${losses.join("; ")}.` : ""}${w.wall ? ` Stuck: walled by ${w.wall}${w.why ? ` (${w.why})` : ""}.` : ""}${w.benchmark !== undefined ? ` Benchmark: ${w.benchmark} dungeons.` : ""}`);
   }

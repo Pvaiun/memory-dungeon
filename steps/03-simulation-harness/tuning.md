@@ -47,9 +47,19 @@ Step 3 is machinery, like step 2: the design's predictions are the acceptance ch
 | Optimizer vs casual, dungeon-weeks | Higher in 20 of 20 blocks |
 | Walls | Every stuck week sorted. No wall ended by loot. Sorted then ended: owns a winner → play 18 (casual) and 2 (optimizer); challenges left → unlock 17; quests → unlock 1; still walled 10 |
 | Reader, 7 packs | Honest (called it flat; named no hidden stats). Colour guess right in 2 of 3 losses |
-| Digest size | Combat 22 lines, progression 31 |
+| Digest size | Combat 19 lines, progression 28 (longest line 186 characters) |
 | Speed (Node 22, dev container) | Combat sample: 205,800 runs in 35 s. Progression sample: 60,540 runs in 44 s (about 0.7 ms per run, most of it party search and checks, not fights) |
 | Whole suite | 130 tests (9 new) pass in 27 s; both typechecks clean |
+
+## After the director's first read (Oct 16)
+
+The director was happy with the build, and raised four points. Changes:
+
+- **The casual player's rule measured itself.** It kept its first full party forever, so most of its stuck weeks (153 of 184 "owns a winner") were the rule, not the game. Now it puts each new unit straight in (in place of a random unit if the party is full), and after two losses in a row swaps one unit, preferring one it hasn't taken into that dungeon yet. Result: stuck 81 of 600 weeks (was 184), walls 2.0 weeks (1.5 to 2.4, was 4.1), longest 7 (was 10), and nobody stuck at week 12 (was 10). The optimizer still beats it in 20 of 20 blocks, and no wall ends by loot.
+- **"Ladder", "rung" and "80% strength" read as jargon.** The samples and report now say "six copies of the dungeon with weakened monsters: 30% of their normal HP and attack in the first, up to 80% in the sixth".
+- **The "For later steps" list carried placeholder design forward** (descriptions shown in fights, a count of unlocks for content). It's now limited to notes on the simulation system, plus one feel-check lesson for step 22 that holds for any combat that shows exact damage and hides HP. Added: the benchmark picks perks at random, so step 11 should give it the learned list once perks matter.
+- **Perks** were explained in the report: how each study picks them, the four numbers, and how the optimizer learns them.
+- **New in the digest:** the week each kind of player's board runs dry, so empty weeks aren't read as a finding. **New in the week log:** the party that cleared each dungeon, for the diary.
 
 ## Known gaps
 

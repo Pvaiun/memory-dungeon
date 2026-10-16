@@ -9,8 +9,10 @@
  *   far it got), never hidden stats, and stops searching once something wins.
  * - The benchmark, beside it: the strongest party the harness finds with what
  *   the player owns, seeing everything, within a fixed budget.
- * - The casual player, as a check: a few quests and runs, keeps its party
- *   unless a new unit fits, and picks perks at random.
+ * - The casual player, as a check: a few quests and runs. It puts each new
+ *   unit straight into its party, and after two losses in a row swaps one
+ *   unit, preferring one it hasn't tried there yet. It never changes
+ *   formation, gear or abilities, and picks perks at random.
  */
 import { hash32, int, next, rngFor, shuffle, type Rng } from "../engine/rng.js";
 import { randomPicker, type Content, type Picker, type Rules } from "../engine/run.js";
@@ -30,8 +32,9 @@ export type Week = {
   board: number;
   quests: number;
   unlocks: string[];
-  /** Dungeons and challenges cleared this week, by key. */
+  /** Dungeons and challenges cleared this week, by key, and the party that cleared each dungeon. */
   cleared: string[];
+  winners: Record<string, string>;
   /** Totals so far. */
   dungeons: number;
   challenges: number;
@@ -62,6 +65,8 @@ export type KindSummary = {
   byPlay: { total: number; ownsWinner: number; challengesLeft: number };
   walls: { count: number; weeks: Range; longest: number; brokeBy: Record<string, number>; sortedThenEnded: Record<string, number> };
   matters: { players: number; median: number | null };
+  /** The first week the board had nothing left to offer: players it happened to, and the median week. */
+  dry: { players: number; median: number | null };
   perksChange: number | null;
   /** Total dungeon-weeks per player, the comparison measure. */
   score: number[];
@@ -234,6 +239,9 @@ export function runProgression(s: ProgressionStudy, raw: unknown, rules: Rules, 
     const memory = new Map<string, Map<string, Tried>>();
     const perkValue = new Map<string, { n: number; sum: number }>();
     let party = make(c, owned, owned.specs, owned.formations[0]);
+    /** The casual player's losses in a row with its current party, and the units it has taken into each dungeon. */
+    let streak = 0;
+    const triedIn = new Map<string, Set<string>>();
     const weeks: Week[] = [];
     const walls: (Wall & { owned: Owned })[] = [];
     /** The party that cleared each dungeon, and what the player owned at that moment, before the clear's loot. */
@@ -291,7 +299,7 @@ export function runProgression(s: ProgressionStudy, raw: unknown, rules: Rules, 
       }
       if (t.challenge && !r.won) w.challengeLosses++;
       if (!r.won) return false;
-      if (!t.challenge) clearedWith.set(t.key, { owned: structuredClone(owned), party: p });
+      if (!t.challenge) clearedWith.set(t.key, { owned: structuredClone(owned), party: p }), (w.winners[t.key] = label(c, p));
       cleared.add(t.key);
       w.cleared.push(t.key);
       const got = t.challenge ? rollLoot(c.dungeons.get(t.dungeon)!.challenges.find((ch) => ch.id === t.challenge)!.loot, rngFor(seed, `${kind}:loot:${t.key}`)) : r.loot;
@@ -300,7 +308,7 @@ export function runProgression(s: ProgressionStudy, raw: unknown, rules: Rules, 
     }
 
     for (let week = 1; week <= s.weeks; week++) {
-      const w: Week = { week, board: 0, quests: 0, unlocks: [], cleared: [], dungeons: 0, challenges: 0, owned: 0, tries: 0, next: null, losses: {}, challengeLosses: 0 };
+      const w: Week = { week, board: 0, quests: 0, unlocks: [], cleared: [], winners: {}, dungeons: 0, challenges: 0, owned: 0, tries: 0, next: null, losses: {}, challengeLosses: 0 };
       // The board, then the quests this player does.
       const brng = rngFor(seed, `board:${week}`);
       const board = shuffle(brng, pool.filter((u) => !owns(owned, u))).slice(0, s.board[0] + int(brng, s.board[1] - s.board[0] + 1));
@@ -310,12 +318,18 @@ export function runProgression(s: ProgressionStudy, raw: unknown, rules: Rules, 
       w.quests = done.length;
       for (const u of done) give(owned, u), w.unlocks.push(u.name);
       if (shadow) shadow.push(structuredClone(owned));
-      // The casual player adds a new unit if it fits.
+      // The casual player puts each new unit straight in: into a free place, or in place of a unit picked at random.
       const nd = nextOf(cleared);
       if (kind === "casual" && nd) {
         const cap = c.dungeons.get(nd)!.partySize.max;
-        const fresh = owned.specs.filter((sp) => !party.units.some((u) => u.spec === sp));
-        if (fresh.length && party.units.length < cap) party = make(c, owned, [...party.units.map((u) => u.spec), ...fresh].slice(0, cap), party.formation, party);
+        const prng = rngFor(seed, `casual:party:${week}`);
+        for (const u of done.filter((x) => x.kind === "specs")) {
+          const specs = party.units.map((x) => x.spec);
+          if (specs.length < cap) specs.push(u.id);
+          else specs[int(prng, specs.length)] = u.id;
+          party = make(c, owned, specs, party.formation, party);
+          streak = 0;
+        }
       }
       // Runs.
       const rng = rngFor(seed, `${kind}:choose:${week}`);
@@ -324,7 +338,18 @@ export function runProgression(s: ProgressionStudy, raw: unknown, rules: Rules, 
         for (let i = 0; i < n; i++) {
           const d = nextOf(cleared);
           if (!d) break;
-          attempt(asTarget(d), week, i, w, rng);
+          const tried = triedIn.get(d) ?? new Set<string>();
+          triedIn.set(d, tried);
+          if (streak >= 2) {
+            // Two losses in a row: swap one unit, preferring one it hasn't taken into this dungeon yet.
+            const swaps = tweaks(c, owned, party, c.dungeons.get(d)!.partySize.max).filter((x) => x.kind === "unit" || x.kind === "add");
+            const fresh = swaps.filter((x) => x.party.units.some((u) => !tried.has(u.spec)));
+            const pick = shuffle(rng, fresh.length ? fresh : swaps)[0];
+            if (pick) party = pick.party;
+            streak = 0;
+          }
+          for (const u of party.units) tried.add(u.spec);
+          streak = attempt(asTarget(d), week, i, w, rng) ? 0 : streak + 1;
         }
       } else {
         const budget = s.optimizer.tries;
@@ -503,6 +528,10 @@ function summarize(kind: Kind, ps: PlayerLog[], weeks: number): KindSummary {
       const k = `${how} → ${w.brokeBy}`;
       sortedThenEnded[k] = (sortedThenEnded[k] ?? 0) + 1;
     }
+  const median = (xs: (number | undefined | null)[]) => {
+    const ok = xs.filter((x): x is number => typeof x === "number").sort((a, b) => a - b);
+    return { players: ok.length, median: ok.length ? ok[Math.floor(ok.length / 2)] : null };
+  };
   const matters = ps.map((p) => p.mattersWeek).filter((x): x is number => x !== null).sort((a, b) => a - b);
   const perks = all.filter((w) => w.perksChange !== undefined).map((w) => w.perksChange!);
   return {
@@ -517,6 +546,7 @@ function summarize(kind: Kind, ps: PlayerLog[], weeks: number): KindSummary {
     },
     walls: { count: walls.length, weeks: average(walls.map((w) => w.weeks)), longest: Math.max(0, ...walls.map((w) => w.weeks)), brokeBy, sortedThenEnded },
     matters: { players: matters.length, median: matters.length ? matters[Math.floor(matters.length / 2)] : null },
+    dry: median(ps.map((p) => p.weeks.find((w) => w.board === 0)?.week)),
     perksChange: perks.length ? mean(perks) : null,
     score: ps.map((p) => p.weeks.reduce((s, w) => s + w.dungeons, 0)),
   };

@@ -1,4 +1,4 @@
-# Sample feel check: the placeholder ladder
+# Sample feel check: the placeholder dungeons
 
 *A sample for step 3. A fresh AI reader with no other context read 7 runs from the sample combat study, seeing only what a player sees. The runs were picked by rule: the closest loss, the biggest comeback, a typical win, a blowout, and one from each dungeon not yet covered. Its full answers are in `feel-answers.md`.*
 

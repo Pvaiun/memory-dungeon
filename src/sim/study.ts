@@ -55,7 +55,7 @@ export const ProgressionStudy = z.strictObject({
   board: z.tuple([z.number().int(), z.number().int()]).default([4, 7]),
   /** Does most of each board, and homes in on builds by trial and error, with a budget of tries a week. */
   optimizer: z.strictObject({ quests: z.number().min(0).max(1).default(0.8), tries: z.number().int().positive().default(30) }).default({ quests: 0.8, tries: 30 }),
-  /** Does a few quests and plays a few runs. Keeps its party unless a new unit fits, and picks perks at random. */
+  /** Does a few quests and plays a few runs. Puts new units straight in, swaps one unit after two losses in a row, and picks perks at random. */
   casual: z.strictObject({ quests: z.tuple([z.number().int(), z.number().int()]).default([1, 3]), runs: z.tuple([z.number().int(), z.number().int()]).default([2, 4]) }).default({ quests: [1, 3], runs: [2, 4] }),
   /** Sees everything, within a fixed budget of runs per question, and stops at the first party that wins `stopAt` of its tries. */
   benchmark: z.strictObject({ seeds: z.number().int().positive().default(10), budget: z.number().int().positive().default(300), stopAt: z.number().default(0.9) }).default({ seeds: 10, budget: 300, stopAt: 0.9 }),
