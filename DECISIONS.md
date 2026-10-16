@@ -51,6 +51,7 @@ Signed off by the director, Oct 16, 2026. Full record: `steps/02-headless-engine
 
 ## Step 3: simulation harness
 
-In progress. Direction the director gave in the intent interview (`steps/03-simulation-harness/intent.md`), Oct 16, 2026:
+In progress. Direction the director gave in the intent interview and the design review (`steps/03-simulation-harness/`), Oct 16, 2026:
 
-- **Repetition yes, endless grinding no** (refines the concept spec's "grinding is intended"). Endlessly repeatable content with no variation is never a main way to win. Replaying earlier dungeons for their unique challenges is part of the game, even when that's a lot of runs. Repeating the same finished content pays nothing or very little. A player who has done every challenge they can and still loses should need a new strategy from quest rewards, not small gear gains. How rewards achieve this is for the gear, runs and pacing steps.
+- **Replays are challenges only** (design review, replacing the intent interview's "repetition yes, endless grinding no" and the concept spec's "grinding is intended"). A cleared dungeon can only be replayed through its challenges. Each challenge pays loot, and there should be many per dungeon, perhaps generated later, but there's a hard cap. A dungeon's first clear and each challenge pay once: nothing already beaten pays again, and anything not yet beaten can be retried freely. A player who has beaten every challenge they can is as strong as play makes them, and only quest unlocks move them on. So there's no endless grinding to design around or simulate. How often a player is walled by quests versus walled by play is measured as the game is built, and has to be understood and agreed. Whether a challenge changes the enemies or only sets conditions for the player is open, for steps 10 and 11.
+- **Quests a week** (design review, replacing the concept spec's 3 to 5): 4 to 7 for the first version. The quest board (step 19) uses the same range.
