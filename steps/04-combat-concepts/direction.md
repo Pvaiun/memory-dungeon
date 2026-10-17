@@ -34,7 +34,15 @@ The director's model (Oct 17), replacing an earlier version where each unit pick
 - **Each class has four actives, and a unit equips two.** Six loadouts per class.
 - **No specializations.** What would have been specializations are just more classes: a crit archer and a rapid-fire archer are two classes with different passives.
 - **Unlocks:** classes, actives, formations and gear.
-- **What the player picks:** which classes, and which two actives each one brings.
+- **What the player picks:** which classes, which two actives each one brings, and its gear.
+
+## Gear: where the sharing lives
+
+The director's call (Oct 17): uniqueness at the class level, sharing at the gear level.
+
+- **Each class can use only some weapon types:** the archer bows and daggers, the necromancer swords and staves, for example. Weapon types are shared between the classes that can use them.
+- **Gear carries the shared stats, and can carry abilities.** That's where "shared rules over character gimmicks" lives: daggers that scale with speed help every class that can hold one, and each class's passive meets them differently.
+- **Considered and dropped:** shared schools of actives that many classes draw from. The director's view: if everyone can use everything, every class softens.
 
 For the bones, this sets what the base rules must carry: a basic attack defined as data that a passive can rewrite (its effect, its target, its number of hits), events a passive can hang off (a dodge, a hit, an ally dropping low), and stats a passive can multiply.
 
@@ -43,4 +51,5 @@ For the bones, this sets what the base rules must carry: a basic attack defined 
 1. **How a class's four actives arrive, and "levelling".** The designer suggests a class arrives with two, useful from day one, and earns the other two as rewards: small, frequent unlocks between the big ones. The director earlier mentioned getting abilities "through leveling it up or through rewards". The concept has no levels or XP, and quests are the fast road past a wall (step 3), so abilities earned by playing a class would shift the balance between being walled by quests and walled by play. Rewards only, or a deliberate, light class mastery from play?
 2. **Two of the same class in a party?** The designer suggests one of each class per party, so that choosing classes stays the main choice.
 3. **What an active runs on:** MP that lasts the run, cooldowns, or both. A bones question for `design.md`.
-4. **Later, for step 10:** capstone gear could grant a second passive or bend the class's own, as a home for build-defining items.
+4. **What gear abilities are.** If gear grants actives that compete with the class's two slots, the class's own actives get crowded out and classes soften after all. The designer suggests two kinds of gear: ordinary gear carries stats and at most a small effect tied to its weapon type ("daggers: hits can poison"), and powerful gear and capstones carry real abilities. That keeps the concept's split: quests pay the gear that changes how a unit plays, and dungeons mostly pay the gear that makes it stronger. Capstones could also grant a second passive or bend the class's own. The details are step 10's.
+5. **How many class actives.** The director said 2 to 4; the designer suggests four in the pool, two equipped.
