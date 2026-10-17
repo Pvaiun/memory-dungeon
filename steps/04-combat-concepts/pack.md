@@ -96,7 +96,7 @@ Direction is guidance, not law. "Firm" means bend it only with evidence and the 
 - Enemy HP needn't be shown, as long as the player can sense over a few tries how close they came, as in Dragon Quest. The player sees their own party's health and stats.
 - Party size, including a single unit, is the designer's to propose, though everything so far assumes a party.
 
-The design opens with a few rough sketches of the bones, each one hanging together on its own, for the director to react to before the full design. Which concepts are in comes out of the design, not out of the interview. A first round of sketches was set aside as too contrived. A second round, built from scratch, is with the director: Grudges, where a fight turns on whom each enemy is after, with a party-wide call on how hard to push; Hearts, where units are characters with temperaments and wits, steered by attitudes they hold for long stretches; and the Ladder, a shared stagger, knock-down and crush ladder, with no input. None is decided.
+The design opens with a few rough sketches of the bones, each one hanging together on its own, for the director to react to before the full design. Which concepts are in comes out of the design, not out of the interview. Two rounds of sketches were set aside. In discussion after them, the director chose a direction, not yet final. The base is the generic frame most JRPGs share. There's no input during a fight. Instead, before a dungeon, the player picks each unit's active and passive ability from those its class has unlocked, and units act on their own. Specializations are dropped in favour of more classes, each starting with one active and one passive and unlocking more in themed bundles. Every option is meant as a sidegrade, not an upgrade. The full design comes next.
 
 ## What's ahead
 
@@ -191,7 +191,7 @@ How it was gathered (this session, /intent or another chat) and the date.
 > - **Agreed:** this step, with its objective (the bones of the combat system); already decided (the director reopened fully automatic fights on Oct 16, and refined "no locks"); how the interview runs; why it's hard; round 1's questions; what the designer will decide.
 > - **Done:** round 1 of the interview (Oct 16). Its intent is in `intent.md`, confirmed at the read-back.
 > - **Dropped:** round 2, agreed with the director after round 1's read-back. Round 1 is the step's whole intent, and the design opens with sketches instead (see `intent.md`, "How the design stage runs").
-> - **Now:** stage 2, design. The first pass of sketches (`sketches-1.md`) was set aside; the second pass, from scratch, is `sketches-2.md`, waiting on the director's reaction.
+> - **Now:** stage 2, design. Both passes of sketches (`sketches-1.md`, `sketches-2.md`) were set aside. The direction chosen after them is in `direction.md`, and `design.md` comes next.
 
 For the director to answer: in the step's session, with `/intent 4` in a fresh session, or by pasting `pack.md` into any chat.
 
