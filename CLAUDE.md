@@ -44,7 +44,7 @@ It's also a test of a way of making games. The director sets the vision. AI desi
 - Short, plain-language write-ups. Lead with decisions, open questions and anything that changes the design. They won't read data files, so summarize what they need to judge.
 - Direction is guidance, not law. They expect a designer to push back with evidence, and would rather hear it early than after a lot of wheel-spinning.
 - Design before code. Code that serves the design stays small; avoid bug-fixing spirals.
-- Mechanics map onto a few numerical systems (stats, statuses, damage types, flags, targeting), with no complexity that eats the player's brainpower, such as positional targeting. Custom mechanics are fine (a passive only one enemy has), but nothing "ultra puzzle gamey": no enemy whose weakness has only one solution.
+- Mechanics map onto a few numerical systems (stats, statuses, damage types, flags, targeting). No bespoke words acting as locks, and no complexity that eats the player's brainpower, such as positional targeting.
 - Content will come from human-given phrases and gimmicks, which AI interprets, filters and number-crunches through simulation. That's the method applied to content; the input tooling gets built at the steps that need it (12 to 16).
 
 ## Tech

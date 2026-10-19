@@ -57,7 +57,7 @@ Direction is guidance, not law. "Firm" means bend it only with evidence and the 
 **The director's preferences.**
 
 - Short, plain-language write-ups that lead with decisions and open questions. They don't read data files or fight logs.
-- Mechanics built from a few numerical systems (stats, statuses, damage types, flags, targeting), and nothing that eats the player's brainpower. Custom mechanics are fine, such as a passive only one enemy has, but nothing "ultra puzzle gamey": no enemy whose weakness has only one solution.
+- Mechanics built from a few numerical systems (stats, statuses, damage types, flags, targeting). No bespoke keywords acting as locks, and nothing that eats the player's brainpower.
 - Design before code. Code that serves the design stays small.
 - They'd rather hear a challenge early than after a lot of wheel-spinning.
 
