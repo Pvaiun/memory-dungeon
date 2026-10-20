@@ -1,23 +1,25 @@
 /**
- * Memory Dungeon Game: content schema, v0.3 (design plan step 1, second revision).
+ * Memory Dungeon Game: content schema, v0.4 (design plan step 4, combat concepts).
  *
- * One data format for everything the engine runs on. The guiding rule is that
- * no game rule lives in prose: every mechanic is either
- *   - a value in a registry (stats, statuses, damage types, behaviours...),
- *   - a formula written in the Expr language, or
- *   - a Rule or Active built from the closed set of engine primitives below.
+ * One data format for everything the engine runs on. Step 4 replaced schema
+ * 0.3's turn-based rule language with the director's combat design
+ * (steps/04-combat-concepts/design.md): fights run on ticks, and everything
+ * that happens on an event or a timer is a status. Content is built from
+ *   - stats (a registry, plus the families resist:<element> and immune:...),
+ *   - statuses (bundles of effects with one duration, stacking mode and removal),
+ *   - actions (a weapon's basic attack, and abilities),
+ *   - targeting rules and conditions,
+ * and the closed sets below, which each need engine code.
  *
  * Text fields are split in two kinds:
  *   - `name`, `text`, `word`, `forms`: player-facing. The engine never reads them.
  *   - `note`: designer-only. Never shown, never read by the engine.
  *
- * Verbs and keyholes are design vocabulary. The engine never reads them; they are
- * patterns over the numerical systems (stats, statuses, damage types, flags,
- * targeting) that the validator checks against the data.
+ * Verbs, traits and keyholes are design vocabulary. The engine never reads them.
  */
 import * as z from "zod";
 
-export const SCHEMA_VERSION = "0.3" as const;
+export const SCHEMA_VERSION = "0.4" as const;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Primitives
@@ -34,427 +36,382 @@ export const Note = z
 const Fraction = z.number().min(0).max(1);
 const PosInt = z.number().int().min(1);
 const IntRange = z.tuple([z.number().int().min(0), z.number().int().min(0)]);
+/** Ticks. The engine counts 1,000 sub-ticks per tick, so a timing has at most 3 decimals. */
+const Ticks = z.number().min(0);
 
-/** The reserved action reference meaning "this unit's own basic action". */
-export const BASIC = "basic" as const;
+/** A stat key: a registry id, or a family member such as resist:fire or immune:status:freeze. */
+export const StatKey = z
+  .string()
+  .regex(/^[a-z][a-z0-9_]*(:[a-z0-9_]+)*$/, { message: "stat keys are lower_snake_case, with ':' between a family's parts" });
+/** A tag that boosts, damage-taken modifiers, lockouts and riders match: see TAGS. */
+export const Tag = StatKey;
 
 function keys<T extends Record<string, string>>(o: T) {
   return Object.keys(o) as [keyof T & string, ...(keyof T & string)[]];
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Engine primitives: closed sets. Each needs engine code, so adding one is a
-// schema version bump plus an engine change, never a prose rule.
-// The descriptions here are the contract and feed PRIMITIVES.md.
+// Closed sets. Each needs engine code, so adding one is a schema version bump
+// plus an engine change. The descriptions are the contract and feed PRIMITIVES.md.
 // ─────────────────────────────────────────────────────────────────────────────
 
-export const TURN = [
-  "Each turn, a unit goes down its behaviour's modes (or ruleset.defaultModes) and takes the first mode whose `when` holds and that produces an action. If none does, it waits.",
-  "A unit's statuses on itself are its states: a mode's `when` can test them with hasStatus, so a boss can switch behaviour once it is frenzied.",
-  "Active abilities come from equipped abilities, equipped gear, and an enemy's `actives`. Each has a cooldown counter. Using it sets the counter to `cooldown`; the counter drops by 1 at the end of each of the unit's own turns; it is ready at 0. Each fight it starts at `initialCooldown` (default 0) when ruleset.run.cooldownsResetEachFight, otherwise it carries over.",
-  "The basic action has no target of its own: the unit's behaviour (or ruleset.defaultBehaviour) picks it, and modify_action can change that. Every other action carries its own target.",
-  "There is no battlefield geometry. Any unit can target any unit; `weighted` picks follow ruleset.targeting.weightStat (aggro), which is how a formation slot makes a unit easier or harder to target.",
-  "A status's turns count down at the end of each of its bearer's turns. A status applied during its bearer's turn_end starts counting from the next one.",
-  "Damage dealt by a status's own rules counts the unit that applied the status as the attacker in combat formulas.",
-] as const;
+export const SUBTICKS = 1000;
 
-export const MODE_USE = {
-  ability:
-    "Use the ready active ability with the highest `priority` (ties: equipped abilities in order, then gear in slot order) whose `useWhen` holds and whose action finds a target. If there is none, go to the next mode.",
-  basic: "Use the basic action on the behaviour's basicTarget, as modified. If there is no valid target, go to the next mode.",
-} as const;
-export const ModeUse = z.enum(keys(MODE_USE));
+export const SUBTYPES = { slash: "Physical subtype.", pierce: "Physical subtype.", blunt: "Physical subtype." } as const;
+export const Subtype = z.enum(keys(SUBTYPES));
 
-export const SUBJECTS = {
-  self: "The unit that owns the rule: the gear's wearer, the ability's holder, the unit in a formation slot (or every unit, for a formation's party-wide rules), a perk's recipient, or a status's bearer.",
-  target: "The unit an effect is being applied to right now; in modify_action, the target of the action being modified.",
-  event_source: "Triggered rules only: who caused the event (the attacker, healer or applier).",
-  event_target: "Triggered rules only: who received the event (the defender or recipient).",
-  candidate: "Inside a selector's where/prefer/by: the unit being considered.",
-  attacker: "Combat formulas only: the unit dealing damage.",
-  defender: "Combat formulas only: the unit receiving damage.",
+export const TYPES = {
+  physical: "Has exactly one subtype and no element. Meets Evasion and Armor. Attack scales only physical instances.",
+  magical: "Has exactly one element and no subtype. Meets that element's Resistance. Magic scales only magical instances.",
+  none: "Typeless, like a pulse: never meets Evasion or Armor; meets Resistance only if it carries an element. Attack and Magic never scale it. Not allowed in actions; the only type for a status's own damage.",
 } as const;
-export const Subject = z.enum(keys(SUBJECTS));
-export type Subject = z.infer<typeof Subject>;
+export const DamageType = z.enum(keys(TYPES));
+
+/** Stats the engine itself reads. The registry must define each, with this kind. */
+export const ENGINE_STATS = {
+  max_hp: ["amount", "Max HP. A unit is KO'd at 0 HP."],
+  max_mp: ["amount", "Max MP. Abilities cost MP, paid when they resolve."],
+  attack: ["amount", "The default scaling source for physical instances, and the only stat that scales only them."],
+  magic: ["amount", "The default scaling source for magical instances, and the only stat that scales only them."],
+  armor: ["amount", "A flat reduction on each physical instance, down to 0 (BLOCKED)."],
+  aggro: ["amount", "Default targeting picks foes weighted by Aggro. Its floor must be above 0."],
+  resist: ["points", "General Resistance, in percent, added to every element's own resist:<element>. Negative shows WEAK, positive RESIST, 100 IMMUNE."],
+  attack_speed: ["points", "Basic attack cooldown ÷ (1 + stat/100), down to its recovery."],
+  cooldown_reduction: ["points", "Ability cooldowns ÷ (1 + stat/100)."],
+  cast_time_reduction: ["points", "Cast times ÷ (1 + stat/100)."],
+  crit_chance: ["points", "Percent chance that an action's damage or heal crits."],
+  crit_multiplier: ["points", "A crit multiplies by this percent (150 is ×1.5)."],
+  evasion: ["points", "Percent chance to evade a physical hit, after Accuracy, under its cap."],
+  accuracy: ["points", "Reduces the target's Evasion, down to 0. Negative adds to it."],
+  healing_received: ["points", "Heals received × (1 + stat/100)."],
+  forced: ["points", "Above 0: default targeting must pick this unit (with other forced units)."],
+  forbidden: ["points", "Above 0: default targeting can't pick this unit, unless every candidate is."],
+} as const;
+
+export const STAT_FAMILIES = {
+  "resist:<element>": "Resistance to one element, in percent, added to the general resist.",
+  "immune:status:<status>": "Above 0: immune to that status.",
+  "immune:kind:<kind>": "Above 0: immune to every status containing that effect kind.",
+  "immune:kind:<kind>:<tag>": "Above 0: immune to statuses containing that effect kind with that tag (a lockout's `covers`, a stat change's stat, a boost's or modifier's tag).",
+  "immune:debuffs": "Above 0: immune to every debuff.",
+  "immune:damage": "Above 0: takes no damage (IMMUNE), and so is immune to statuses that deal damage.",
+} as const;
+
+export const KINDS = {
+  stat: "A stat change. Tag: the stat.",
+  boost: "A damage or healing boost. Tag: the boost's tag.",
+  taken: "A damage-taken modifier. Tag: its tag, if any.",
+  absorb: "An absorb, such as a shield.",
+  lockout: "A lockout. Tag: what it covers.",
+  action_change: "A rider added to the holder's actions, or a change of element or subtype.",
+  pulse: "A repeating effect.",
+  reaction: "A reaction, or an Intensity event trigger.",
+} as const;
+export const Kind = z.enum(keys(KINDS));
+
+export const TAGS = {
+  basic: "Instances from basic attacks; for lockouts, basic attacks.",
+  ability: "Instances from abilities; for lockouts, abilities.",
+  physical: "Physical instances (and actions with one).",
+  magical: "Magical instances (and actions with one).",
+  "<subtype>": "slash, pierce or blunt.",
+  "<element>": "Any element in the pack.",
+  "<status>": "A status's id: reaches that status's pulses (\"+20% Burn damage\").",
+  "<status tag>": "A tag a status carries, which reaches its pulses.",
+  healing: "Boosts only: heals.",
+  all: "Lockouts only: every action.",
+} as const;
 
 export const EVENTS = {
-  fight_start: "A fight begins. Actor: every unit.",
-  fight_end: "The party wins a fight. Actor: every surviving unit.",
-  round_start: "A round begins. Actor: every unit.",
-  turn_start: "A unit's turn begins, before it acts. Actor: that unit.",
-  turn_end: "A unit's turn ends. Actor: that unit.",
-  attack_hit: "An attack lands. Actor: the attacker. Has `amount`.",
-  attack_missed: "An attack fails its hit roll. Actor: the attacker.",
-  crit: "An attack crits. Actor: the attacker. Has `amount`.",
-  kill: "An attack defeats its target. Actor: the attacker.",
-  evade: "An attack against the actor fails its hit roll. Actor: the defender.",
-  block: "The actor blocks an attack. Actor: the defender.",
-  damaged: "The actor takes damage from any source. Actor: the receiver. Has `amount`.",
-  healed: "The actor is healed. Actor: the receiver. Has `amount`.",
-  hp_below: "The actor's HP drops below the trigger's `below` fraction of its max (fires once per crossing). Actor: that unit.",
-  defeated: "The actor is defeated. Actor: the defeated unit.",
-  status_applied: "A status is applied to the actor. Actor: the receiver.",
+  fight_start: "The fight begins. Whose: every unit.",
+  action_start: "An action starts. Whose: the acting unit. Has `kind`.",
+  action_resolve: "An action resolves. Whose: the acting unit. Has `kind`.",
+  action_interrupted: "An action in cast time is canceled by an interrupting lockout. Whose: the casting unit. Has `kind`.",
+  hit_lands: "A hit lands (not evaded), riders included. Whose: the attacker; other: the target. Has `kind` and `amount`.",
+  hit_taken: "A hit lands on this unit. Whose: the target; other: the attacker. Has `kind` and `amount`.",
+  hit_evaded: "This unit evades a hit. Whose: the target; other: the attacker. Has `kind`.",
+  hit_missed: "A hit is evaded. Whose: the attacker; other: the target. Has `kind`.",
+  damage_dealt: "Damage is dealt, including what an absorb soaks. Whose: the dealer, when known; other: the receiver. Has `amount`.",
+  damage_taken: "Damage is taken, including what an absorb soaks. Whose: the receiver; other: the dealer, when known. Has `amount`.",
+  hp_lost: "HP is lost. Whose: the unit. Has `amount`.",
+  healed: "Healing is received. Whose: the healed unit; other: the healer, when known. Has `amount` (HP restored).",
+  status_gained: "A status is applied (each application, refreshes and added stacks included). Whose: the holder. Has `status`.",
+  status_triggered: "A status pulses, or an Intensity status's trigger fires. Whose: the holder. Has `status`.",
+  status_ended: "A status ends. Whose: the holder. Has `status` and `cause`.",
+  ko: "A unit is KO'd. Whose: that unit.",
 } as const;
-export const EventType = z.enum(keys(EVENTS));
-export type EventType = z.infer<typeof EventType>;
-/** Events whose payload carries an `amount` (readable as {var: "amount"}). */
-export const EVENTS_WITH_AMOUNT: EventType[] = ["attack_hit", "crit", "damaged", "healed"];
-/** Events caused by an action, so a trigger's `action` filter can test them. */
-export const EVENTS_WITH_ACTION: EventType[] = ["attack_hit", "attack_missed", "crit", "kill", "evade", "block", "damaged"];
+export const EventName = z.enum(keys(EVENTS));
 
-export const WHO = {
-  self: "The event's actor is the rule's owner. The default.",
-  ally: "The actor is another unit on the owner's side.",
-  self_or_ally: "The actor is the owner or another unit on its side.",
-  enemy: "The actor is on the other side.",
-  anyone: "Any actor.",
+export const WHOSE = {
+  holder: "The event is the holder's own. The default.",
+  ally: "The event is another unit's on the holder's side.",
+  foe: "The event is a unit's on the other side.",
+  any: "Any unit's.",
 } as const;
-export const Who = z.enum(keys(WHO));
+export const Whose = z.enum(keys(WHOSE));
 
-export const VIA = {
-  basic: "The unit's basic action, used on its turn.",
-  ability: "An active ability.",
-  reaction: "An action performed by an effect, such as a counterattack or an extra attack.",
+export const CAUSES = {
+  expired: "Its duration ran out.",
+  stacks: "Its Intensity total fell below 1 stack.",
+  removed: "An effect removed it.",
+  ko: "Its holder was KO'd, or its source (Per source statuses that end with their source).",
+  fight_end: "The fight ended.",
 } as const;
-export const Via = z.enum(keys(VIA));
+export const Cause = z.enum(keys(CAUSES));
+export type CauseT = z.infer<typeof Cause>;
 
-export const FLAGS = {
-  acts_first: "Acts before every unit without this flag, whatever the turn order says.",
-  draws_support:
-    "When a selector on this unit's side picks a single unit (count 1, any pick but all) from allies or allies_and_self, it picks this unit if it is a candidate.",
-  skip_turn: "Loses its turn.",
-  untargetable: "Enemy selectors can't pick it.",
-  cannot_evade: "Attacks against it skip the hit roll.",
-  cannot_block: "Attacks against it skip the block roll.",
+export const SCALE_OF = {
+  self: "Actions: the acting unit. The default for stats in actions.",
+  target: "Actions: the unit the effect lands on. The default for hp and stacks in actions.",
+  source: "Statuses: the unit that applied the status, read once at application. The default for stats in statuses.",
+  holder: "Statuses: the holder, read each time the number is used (stat changes: once, at application). The default for hp and stacks in statuses.",
 } as const;
-export const Flag = z.enum(keys(FLAGS));
-export type Flag = z.infer<typeof Flag>;
+export const Of = z.enum(keys(SCALE_OF));
 
-export const SELECTOR_FROM = {
-  self: "The rule's owner.",
-  allies: "Other living units on the owner's side.",
-  allies_and_self: "Every living unit on the owner's side.",
-  enemies: "Living units on the other side.",
-  everyone: "Every living unit.",
-  event_source: "Triggered rules only: the event's source.",
-  event_target: "Triggered rules only: the event's target.",
-  action_target: "Action effects and modify_action only: every unit the action's target picked.",
-  action_target_allies: "Action effects and modify_action only: units on the same side as the action's target, other than the units it picked (for splash and cleave).",
-  event_target_allies: "Triggered rules only: units on the same side as the event's target, other than it.",
+export const TO = {
+  target: "Actions: the action's targets. The default in actions.",
+  self: "The acting unit: an action's user, a reaction's actor, or, for a pulse, its holder.",
+  holder: "Statuses: the holder. The default for pulses.",
+  source: "Per source statuses: the unit that applied it.",
+  other: "Reactions: the event's other unit (the attacker for hit_taken, the target for hit_lands). Nothing if unknown.",
 } as const;
-export const SelectorFrom = z.enum(keys(SELECTOR_FROM));
-export type SelectorFrom = z.infer<typeof SelectorFrom>;
+
+export const SIDES = {
+  foes: "Living units on the other side.",
+  allies: "Living units on the unit's side, itself included.",
+  others: "Living units on the unit's side, itself excluded.",
+  self: "The unit itself.",
+} as const;
+export const Side = z.enum(keys(SIDES));
 
 export const PICKS = {
-  all: "Every unit that passes `where`. The default.",
-  random: "`count` units at random (default 1).",
-  weighted: "`count` units at random, weighted by ruleset.targeting.weightStat (aggro).",
-  lowest: "`count` units with the lowest `by` (ties random).",
-  highest: "`count` units with the highest `by` (ties random).",
+  aggro: "`count` units at random, weighted by Aggro. The default for foes.",
+  random: "`count` units at random. The default otherwise.",
+  lowest: "`count` units with the lowest `by`; ties at random.",
+  highest: "`count` units with the highest `by`; ties at random.",
+  all: "Every unit that passes `where`.",
 } as const;
 export const Pick = z.enum(keys(PICKS));
 
-export const VARS = {
-  raw: "Damage before mitigation. Only inside a damage type's mitigation formula.",
-  amount: "The triggering event's amount. Only in triggered rules on events that have one.",
-  round: "The current round, starting at 1.",
-} as const;
-export const Var = z.enum(keys(VARS));
-export type Var = z.infer<typeof Var>;
-
-export const COMPARISONS = { lt: "<", lte: "≤", eq: "=", gte: "≥", gt: ">" } as const;
-export const Comparison = z.enum(keys(COMPARISONS));
-
-export const STATUS_ON = {
-  self: "A unit's own state: stacks it builds, stances, rages. Only its bearer applies it, so apply_status must target self.",
-  others: "Applied to other units, such as bleed or a stun. Never applied to self.",
-  any: "Either.",
-} as const;
-export const StatusOn = z.enum(keys(STATUS_ON));
-
-export const Mode = z.enum(["add", "mul"]).describe("add: +value. mul: ×value. Stacking order is ruleset.modifierStacking.");
-
-export const PIPELINE = {
-  hit: "Roll formulas.hitChance; on failure the attack misses (attack_missed + evade).",
-  crit: "Roll formulas.critChance; on success multiply by formulas.critMultiplier (crit).",
-  block: "Roll formulas.blockChance; on success multiply by formulas.blockMultiplier (block).",
-  scale: "Multiply by formulas.damageScale (e.g. the attacker's damage dealt × the defender's damage taken).",
-  mitigate: "Apply the damage type's mitigation formula, with `raw` as the incoming damage.",
-  floor: "Round down, then raise to formulas.minDamage.",
-} as const;
-export const PipelineStep = z.enum(keys(PIPELINE));
-
 // ─────────────────────────────────────────────────────────────────────────────
-// Rule language: expressions, conditions, selectors (mutually recursive)
+// Numbers, conditions and targeting
 // ─────────────────────────────────────────────────────────────────────────────
 
-export type Expr =
-  | number
-  | { stat: string; of?: Subject }
-  | { stacks: string; of?: Subject }
-  | { var: Var }
-  | { count: Selector }
-  | { add: Expr[] }
-  | { mul: Expr[] }
-  | { min: Expr[] }
-  | { max: Expr[] }
-  | { sub: [Expr, Expr] }
-  | { div: [Expr, Expr] }
-  | { mod: [Expr, Expr] }
-  | { clamp: [Expr, Expr, Expr] };
+export const Scale = z
+  .strictObject({
+    ratio: z.number(),
+    stat: StatKey.optional().describe("A stat's current value."),
+    hp: z.enum(["current", "missing"]).optional().describe("Current HP, or max HP minus current."),
+    stacks: Id.optional().describe("A status's Intensity total, in stacks."),
+    amount: z.literal(true).optional().describe("Reactions only: the event's amount."),
+    of: Of.optional(),
+  })
+  .refine((s) => [s.stat, s.hp, s.stacks, s.amount].filter((x) => x !== undefined).length === 1, {
+    message: "a scale names exactly one of stat, hp, stacks or amount",
+  });
+export type ScaleT = z.infer<typeof Scale>;
 
-export type Cmp = z.infer<typeof Comparison>;
-export type Condition =
-  | { all: Condition[] }
-  | { any: Condition[] }
-  | { not: Condition }
-  | { hpBelow: number; of?: Subject }
-  | { hpAtLeast: number; of?: Subject }
-  | { hasStatus: string; of?: Subject }
-  | { isClass: string[]; of?: Subject }
-  | { isSpec: string[]; of?: Subject }
-  | { hasAbility: string; of?: Subject }
-  | { round: { is: Cmp; n: number } }
-  | { alive: { side: "allies" | "enemies"; is: Cmp; n: number } }
-  | { compare: [Expr, Cmp, Expr] };
+/** A number: base + Σ ratio × source. */
+export const Num = z.union([z.number(), z.strictObject({ base: z.number().optional(), scale: z.array(Scale).min(1) })]);
+export type NumT = z.infer<typeof Num>;
 
-export type Selector = {
-  from: SelectorFrom;
-  where?: Condition;
-  prefer?: Condition;
-  pick?: z.infer<typeof Pick>;
-  by?: Expr;
-  count?: number;
-};
+export const KindRef = z.strictObject({ kind: Kind, tag: Tag.optional() });
 
-export const Expr: z.ZodType<Expr> = z
-  .lazy(() =>
-    z.union([
-      z.number(),
-      z.strictObject({ stat: Id, of: Subject.optional() }),
-      z.strictObject({ stacks: Id, of: Subject.optional() }),
-      z.strictObject({ var: Var }),
-      z.strictObject({ count: Selector }),
-      z.strictObject({ add: z.array(Expr).min(2) }),
-      z.strictObject({ mul: z.array(Expr).min(2) }),
-      z.strictObject({ min: z.array(Expr).min(2) }),
-      z.strictObject({ max: z.array(Expr).min(2) }),
-      z.strictObject({ sub: z.tuple([Expr, Expr]) }),
-      z.strictObject({ div: z.tuple([Expr, Expr]) }),
-      z.strictObject({ mod: z.tuple([Expr, Expr]) }),
-      z.strictObject({ clamp: z.tuple([Expr, Expr, Expr]) }),
-    ]),
-  )
-  .meta({ id: "Expr" });
-
-export const Condition: z.ZodType<Condition> = z
-  .lazy(() =>
-    z.union([
-      z.strictObject({ all: z.array(Condition).min(1) }),
-      z.strictObject({ any: z.array(Condition).min(1) }),
-      z.strictObject({ not: Condition }),
-      z.strictObject({ hpBelow: Fraction, of: Subject.optional() }),
-      z.strictObject({ hpAtLeast: Fraction, of: Subject.optional() }),
-      z.strictObject({ hasStatus: Id, of: Subject.optional() }),
-      z.strictObject({ isClass: z.array(Id).min(1), of: Subject.optional() }),
-      z.strictObject({ isSpec: z.array(Id).min(1), of: Subject.optional() }),
-      z.strictObject({ hasAbility: Id, of: Subject.optional() }),
-      z.strictObject({ round: z.strictObject({ is: Comparison, n: z.number().int().min(1) }) }),
-      z.strictObject({
-        alive: z.strictObject({ side: z.enum(["allies", "enemies"]), is: Comparison, n: z.number().int().min(0) }),
-      }),
-      z.strictObject({ compare: z.tuple([Expr, Comparison, Expr]) }),
-    ]),
-  )
-  .meta({ id: "Condition" });
-
-export const Selector: z.ZodType<Selector> = z
-  .lazy(() =>
-    z.strictObject({
-      from: SelectorFrom,
-      where: Condition.optional().describe("Filter. `candidate` is the unit being considered."),
-      prefer: Condition.optional().describe("Pick from units passing this first; fall back to the rest if none do."),
-      pick: Pick.optional(),
-      by: Expr.optional().describe("Required for pick lowest/highest. `candidate` is in scope."),
-      count: PosInt.optional(),
-    }),
-  )
-  .meta({ id: "Selector" });
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Effects, rules and actives
-// ─────────────────────────────────────────────────────────────────────────────
-
-const ActionRef = Id.describe(`An action id, or "${BASIC}" for the unit's own basic action.`);
-
-const HitRules = z.strictObject({
-  canMiss: z.boolean().optional(),
-  canCrit: z.boolean().optional(),
-  canBlock: z.boolean().optional(),
+/** Tests on one unit. Every field given must hold. */
+export const UnitCond = z.strictObject({
+  hpBelow: z.number().min(0).max(100).optional().describe("HP below this percent of max HP."),
+  hpAtLeast: z.number().min(0).max(100).optional(),
+  has: Id.optional().describe("Has this status."),
+  lacks: Id.optional().describe("Doesn't have this status."),
+  buffs: z.boolean().optional().describe("true: has any buff. false: has none."),
+  debuffs: z.boolean().optional().describe("true: has any debuff. false: has none."),
+  kind: KindRef.optional().describe("Has a status containing this effect kind (narrowed by tag)."),
+  stacks: z.strictObject({ status: Id, atLeast: z.number() }).optional().describe("A status's Intensity total, in stacks."),
 });
+export type UnitCondT = z.infer<typeof UnitCond>;
 
-/** Effects that happen once: in actions, triggered rules and between fights. */
-export const InstantEffect = z
+export const Value = z.union([
+  z.enum(["hp", "hp_share", "buffs", "debuffs"]),
+  z.strictObject({ stat: StatKey }),
+  z.strictObject({ stacks: Id }),
+]);
+
+export const TargetRule = z.strictObject({
+  side: Side,
+  where: UnitCond.optional(),
+  pick: Pick.optional(),
+  by: Value.optional().describe("Required for lowest and highest."),
+  count: PosInt.optional().describe("Default 1."),
+});
+export type TargetRuleT = z.infer<typeof TargetRule>;
+
+/** True when at least `atLeast` units on `side` pass `where`. Checked when an action starts. */
+export const Condition = z.strictObject({ side: Side, where: UnitCond, atLeast: PosInt.optional() });
+export type ConditionT = z.infer<typeof Condition>;
+
+export const To = z.union([z.enum(keys(TO)), TargetRule]);
+export type ToT = z.infer<typeof To>;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Effects
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const Instance = z.strictObject({
+  type: DamageType,
+  subtype: Subtype.optional(),
+  element: Id.optional(),
+  amount: Num,
+});
+export type InstanceT = z.infer<typeof Instance>;
+
+const applyFields = {
+  status: Id,
+  stacks: Num.optional().describe("Intensity: stacks added, from the applier's scaling and boosts. Default 1."),
+  duration: z.union([Ticks, z.literal("permanent")]).optional().describe("Default: the status's own. 0 only for an instant lockout."),
+  chance: z.number().min(0).max(100).optional().describe("Percent, rolled on the applier's dice. Default: guaranteed."),
+};
+/** A status attached to a hit: applies whenever the hit occurs, even if BLOCKED; never if evaded. */
+export const HitApply = z.strictObject(applyFields);
+
+export const Effect = z
   .discriminatedUnion("op", [
     z
       .strictObject({
         op: z.literal("damage"),
-        type: Id.describe("A damageTypes id."),
-        amount: Expr,
-        target: Selector,
-        hit: HitRules.optional().describe("Which damagePipeline rolls apply. All default to true."),
+        type: DamageType,
+        subtype: Subtype.optional(),
+        element: Id.optional(),
+        amount: Num,
+        hits: PosInt.optional().describe("Actions only. Each hit resolves in order and reads the state left by the earlier ones."),
+        riders: z.array(Instance).optional().describe("Actions only: extra instances attached to each hit."),
+        apply: z.array(HitApply).optional().describe("Actions only: statuses attached to each hit."),
+        to: To.optional(),
       })
-      .describe(
-        "Deals `amount` of `type` damage to each target through ruleset.damagePipeline (`hit` switches the rolls off). Damage from an action is an attack and fires attack_hit, attack_missed, evade, block, crit and kill; damage from rules and statuses fires only damaged and defeated.",
-      ),
-    z
-      .strictObject({ op: z.literal("heal"), amount: Expr, target: Selector })
-      .describe("Restores `amount` HP to each target, up to its cap. Fires healed."),
+      .describe("Deals damage. In an action, each hit is a hit; in a pulse or reaction it is not, and fires no hit events."),
+    z.strictObject({ op: z.literal("heal"), amount: Num, to: To.optional() }).describe("Restores HP, never above max. Never mitigated."),
+    z.strictObject({ op: z.literal("mp"), amount: Num, to: To.optional() }).describe("Restores MP (positive) or drains it (negative)."),
+    z.strictObject({ op: z.literal("apply"), ...applyFields, to: To.optional() }).describe("Applies a status, by its stacking mode."),
     z
       .strictObject({
-        op: z.literal("apply_status"),
-        status: Id,
-        target: Selector,
-        turns: PosInt.optional().describe("Defaults to the status's defaultTurns; if neither, it lasts the fight."),
-        stacks: PosInt.optional(),
+        op: z.literal("remove"),
+        label: z.enum(["buff", "debuff"]),
+        status: Id.optional(),
+        kind: Kind.optional(),
+        tag: Tag.optional(),
+        count: PosInt.optional().describe("Default: all. Fewer than all removes the newest first."),
+        to: To.optional(),
       })
-      .describe("Applies `status` to each target under its stacking rule. Fires status_applied."),
-    z
-      .strictObject({
-        op: z.literal("remove_status"),
-        status: Id,
-        target: Selector,
-        stacks: PosInt.optional().describe("Stacks to remove. Absent: all of them."),
-      })
-      .describe("Removes stacks of `status` from each target. With self-built stacks, this is how a unit spends them."),
-    z
-      .strictObject({
-        op: z.literal("buff"),
-        stat: Id,
-        mode: Mode,
-        value: z.number(),
-        target: Selector,
-        turns: PosInt.optional().describe("Turns of the target. Absent: until the fight ends."),
-      })
-      .describe("Temporarily changes a stat on each target."),
-    z
-      .strictObject({
-        op: z.literal("perform_action"),
-        action: ActionRef,
-        target: Selector.optional().describe("Overrides the action's target (for basic: the behaviour's basicTarget)."),
-      })
-      .describe("The owner uses an action at once, outside its turn (via reaction). Its damage is an attack."),
-    z
-      .strictObject({
-        op: z.literal("adjust"),
-        stat: Id.describe("A resource stat other than the defeat stat."),
-        amount: Expr.describe("Negative to spend, positive to restore."),
-        target: Selector,
-      })
-      .describe("Changes a resource (not HP) on each target by `amount`, clamped between the stat's min and its cap."),
-    z
-      .strictObject({ op: z.literal("grant_flag"), flag: Flag, target: Selector, turns: PosInt })
-      .describe("Gives each target a flag for `turns` of its turns."),
-    z
-      .strictObject({
-        op: z.literal("summon"),
-        enemy: Id,
-        count: PosInt.optional(),
-      })
-      .describe("Adds `count` (default 1) copies of `enemy` to the owner's side, up to ruleset.maxEnemies."),
+      .describe("Removes buffs or debuffs, optionally narrowed to a named status or an effect kind. Unremovable statuses stay."),
   ])
-  .meta({ id: "InstantEffect" });
-export type InstantEffect = z.infer<typeof InstantEffect>;
+  .meta({ id: "Effect" });
+export type EffectT = z.infer<typeof Effect>;
+export type DamageEffectT = Extract<EffectT, { op: "damage" }>;
+export type ApplyT = z.infer<typeof HitApply>;
 
-/** Effects that hold while their source is active: passive rules only. They always act on `self`. */
-export const PassiveEffect = z
-  .discriminatedUnion("op", [
-    z
-      .strictObject({
-        op: z.literal("stat"),
-        stat: Id,
-        mode: Mode,
-        value: z.union([z.number(), Expr]).describe("A number, or an expression (e.g. per stack of a status). Expressions may not read stats."),
-      })
-      .describe("Changes one of self's stats while the source is active."),
-    z.strictObject({ op: z.literal("flag"), flag: Flag }).describe("Gives self a flag while the source is active."),
-    z
-      .strictObject({
-        op: z.literal("modify_action"),
-        action: ActionRef,
-        if: Condition.optional().describe("Checked per use; `target` is the action's target."),
-        target: Selector.optional().describe("Replaces how the action picks its target."),
-        hits: PosInt.optional(),
-        amountMul: z.number().positive().optional().describe("Multiplies every damage and heal amount in the action."),
-        addEffects: z.array(InstantEffect).optional(),
-      })
-      .describe("Changes every use of an action by self, however it's used: retarget it, repeat it (`hits`), scale it, or add effects that run after its own."),
-  ])
-  .meta({ id: "PassiveEffect" });
-export type PassiveEffect = z.infer<typeof PassiveEffect>;
+// ─────────────────────────────────────────────────────────────────────────────
+// Statuses and reactions
+// ─────────────────────────────────────────────────────────────────────────────
 
-export const ActionFilter = z.strictObject({
-  via: z.array(Via).min(1).describe("How the action was used."),
+export const StatChange = z.strictObject({ stat: StatKey, flat: Num.optional(), pct: Num.optional() });
+/** A stat change from gear, a passive, a formation or a perk. Plain numbers. */
+export const FixedStat = z.strictObject({ stat: StatKey, flat: z.number().optional(), pct: z.number().optional() });
+export type FixedStatT = z.infer<typeof FixedStat>;
+
+export const EventSpec = z.strictObject({
+  event: EventName,
+  whose: Whose.optional(),
+  kind: z.enum(["basic", "ability"]).optional().describe("Action and hit events only."),
+  status: Id.optional().describe("Status events only."),
+  cause: z.array(Cause).min(1).optional().describe("status_ended only. Default: every cause."),
+});
+export type EventSpecT = z.infer<typeof EventSpec>;
+
+export const Reaction = z.strictObject({
+  on: EventSpec,
+  actor: z.enum(["holder", "source"]).optional().describe("Who acts. source only for Per source statuses. Default holder."),
+  do: z.array(Effect).min(1).describe("Each effect states its target (`to`)."),
 });
 
-export const Trigger = z.strictObject({
-  on: EventType,
-  who: Who.optional().describe("Whose event this is, relative to the owner. Default self."),
-  below: Fraction.optional().describe("hp_below only: the threshold fraction of max HP."),
-  action: ActionFilter.optional().describe("Only events caused by an action that matches."),
+export const Status = z.strictObject({
+  id: Id,
+  name: Text.describe("Shown on its icon or sheet line, e.g. BURN."),
+  text: Text.optional(),
+  label: z.enum(["buff", "debuff"]).describe("Drives removal, conditions and the batch its pulses resolve in."),
+  show: z.enum(["icon", "sheet", "stat"]).describe("icon: on the HP bar with its total. sheet: listed on the unit sheet. stat: shown as a stat."),
+  tags: z.array(Tag).optional().describe("Tags boosts and modifiers can name to reach this status's pulses."),
+  element: Id.optional().describe("Its damage pulses meet this element's Resistance. Full Resistance makes the unit immune to it."),
+  subtype: Subtype.optional().describe("Used only for boosts on its pulses."),
+  stacking: z.enum(["refresh", "fizzle", "intensity"]),
+  perSource: z
+    .strictObject({ endsWithSource: z.boolean().optional() })
+    .optional()
+    .describe("Per source mode: each source keeps its own copy, using `stacking`."),
+  duration: Ticks.optional().describe("Absent: permanent, until the fight ends."),
+  unremovable: z.boolean().optional(),
+  survivesKO: z.boolean().optional(),
+  cap: Num.optional().describe("Intensity: the most stacks. `holder` scales read the holder."),
+  stats: z.array(StatChange).optional(),
+  boosts: z.array(z.strictObject({ tag: Tag, pct: Num })).optional().describe("The holder's outgoing damage or healing, by tag."),
+  taken: z.array(z.strictObject({ tag: Tag.optional(), pct: Num })).optional().describe("Damage-taken modifiers. No tag: all damage."),
+  absorb: z.literal(true).optional().describe("Intensity only: soaks damage after mitigation, one stack per point."),
+  lockout: z.strictObject({ covers: Tag, interrupt: z.boolean().optional() }).optional(),
+  riders: z.array(z.strictObject({ on: Tag, add: Instance })).optional().describe("Adds a rider to the holder's hits that carry `on`."),
+  convert: z.strictObject({ element: Id.optional(), subtype: Subtype.optional() }).optional().describe("Changes the element of the holder's magical instances, or the subtype of its physical ones."),
+  pulse: z.strictObject({ every: z.number().positive(), do: z.array(Effect).min(1) }).optional().describe("A repeating effect. Intensity: its trigger."),
+  trigger: z.strictObject({ on: EventSpec, do: z.array(Effect).optional() }).optional().describe("Intensity only: an event trigger."),
+  drop: z
+    .union([z.literal("all"), z.strictObject({ fraction: z.number().gt(0).max(1) }), z.strictObject({ count: z.number().positive() })])
+    .optional()
+    .describe("Intensity only: how far the total drops on each trigger."),
+  crit: z
+    .strictObject({ chance: z.number().min(0).max(100), multiplier: z.number().min(100).optional(), fromSource: z.boolean().optional() })
+    .optional()
+    .describe("Turns crits on for its pulses, a rare exception. fromSource: Per source only, the source's crit stats and dice."),
+  reactions: z.array(Reaction).optional(),
+  note: Note.optional(),
 });
+export type StatusT = z.infer<typeof Status>;
+export type ReactionT = z.infer<typeof Reaction>;
 
-export const Limit = z.strictObject({
-  times: PosInt,
-  per: z.enum(["turn", "round", "fight", "run"]),
-});
+// ─────────────────────────────────────────────────────────────────────────────
+// Actions
+// ─────────────────────────────────────────────────────────────────────────────
 
-export const Rule = z
-  .discriminatedUnion("kind", [
-    z.strictObject({
-      id: Id,
-      kind: z.literal("passive"),
-      if: Condition.optional().describe("Re-checked continuously."),
-      do: z.array(PassiveEffect).min(1),
-      note: Note.optional(),
-    }),
-    z.strictObject({
-      id: Id,
-      kind: z.literal("triggered"),
-      when: Trigger,
-      if: Condition.optional(),
-      chance: Fraction.optional(),
-      limit: Limit.optional(),
-      do: z.array(InstantEffect).min(1),
-      note: Note.optional(),
-    }),
-  ])
-  .meta({ id: "Rule" });
-export type Rule = z.infer<typeof Rule>;
-
-export const Active = z
+export const Weapon = z
   .strictObject({
-    action: Id.describe("The action used. It must carry its own target."),
-    cooldown: z.number().int().min(0).describe("Own turns before it's ready again after use."),
-    initialCooldown: z.number().int().min(0).optional().describe("Own turns before first use each fight. Default 0."),
-    useWhen: Condition.optional().describe("Extra condition for using it, on top of the action finding a target."),
-    priority: z.number().int().optional().describe("Higher goes first when several are ready. Default 0."),
-    limit: Limit.optional(),
+    type: z.enum(["physical", "magical"]),
+    subtype: Subtype.optional(),
+    element: Id.optional(),
+    hits: PosInt.optional(),
+    cooldown: z.number().positive().describe("The base cooldown, in ticks."),
+    amount: Num.optional().describe("Per hit. Default: 1 × Attack (physical) or 1 × Magic (magical)."),
+    cast: Ticks.optional().describe("Default 0."),
+    recovery: Ticks.optional().describe("Default: ruleset.basicRecovery × the base cooldown."),
+    riders: z.array(Instance).optional(),
+    apply: z.array(HitApply).optional(),
   })
-  .describe("An ability the unit uses on its own when it's ready. See TURN.");
+  .describe("Sets the basic attack.");
+export type WeaponT = z.infer<typeof Weapon>;
 
-export const StatBlock = z.record(Id, z.number()).describe("Stat id to value. Missing stats use the stat's default.");
-export const StatMod = z.strictObject({
-  stat: Id,
-  mode: Mode,
-  value: z.number(),
-  if: Condition.optional().describe("The modifier holds only while this is true. `self` is the wearer."),
-});
+export const Target = z.union([z.enum(["foe", "ally", "self"]), TargetRule]);
 
-export const BehaviourMode = z.strictObject({
-  when: Condition.optional(),
-  use: ModeUse,
+export const Ability = z.strictObject({
+  id: Id,
+  class: Id.optional().describe("Owning class. Absent: an enemy's ability."),
+  name: Text,
+  text: Text,
+  mp: z.number().min(0).optional(),
+  cast: Ticks.optional().describe("Default: ruleset.abilityCast."),
+  cooldown: Ticks,
+  recovery: Ticks.optional().describe("Default: ruleset.abilityRecovery."),
+  if: Condition.optional().describe("Checked when the action starts."),
+  target: Target.optional().describe("foe (default): a foe by Aggro, with overrides. ally: a random ally. Or a stated rule. Chosen when the action resolves."),
+  ignoresOverrides: z.boolean().optional(),
+  do: z.array(Effect).min(1),
+  verbs: z.array(Id),
+  note: Note.optional(),
 });
+export type AbilityT = z.infer<typeof Ability>;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Design constraints: the concept spec's numbers, as data the validator reads
@@ -470,59 +427,31 @@ export const Design = z.strictObject({
   perkPoolSize: IntRange,
   perkOptionsPerPick: PosInt,
   keyholesPerBoss: IntRange,
-  rules: z.strictObject({
-    abilitiesAreBehaviour: z.boolean().describe("An ability must do more than change stats."),
-    efficacyGearSimple: z.boolean().describe("Efficacy gear carries stat modifiers, each with at most one simple condition, and no rules or actives."),
-  }),
   complete: z
-    .strictObject({
-      classes: IntRange,
-      specsPerClass: IntRange,
-      verbs: IntRange,
-      maxStatusShare: Fraction.describe("Most specializations whose own kit applies a given status to other units, as a share of all specializations."),
-    })
+    .strictObject({ classes: IntRange, specsPerClass: IntRange, verbs: IntRange })
     .describe("Totals checked only with --complete, for a full content set."),
 }).describe("Target numbers the validator enforces. Placeholders from the concept spec, which was bullish on them: expect them to change.");
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Combat ruleset and registries
+// Ruleset and registries
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const PerkOffer = z.strictObject({
   options: PosInt,
   premiumChance: Fraction.describe("Chance each offered slot rolls a premium perk, if one is available."),
   repeatPicked: z.boolean().describe("Can a perk already picked this run be offered again?"),
-  offerInapplicable: z.boolean().describe("Can a perk whose `requires` no party unit meets be offered?"),
+  offerInapplicable: z.boolean().describe("Can a perk no party unit can receive be offered?"),
 });
 
 export const Ruleset = z.strictObject({
-  turnOrder: z.discriminatedUnion("kind", [
-    z.strictObject({ kind: z.literal("by_stat"), stat: Id, ties: z.enum(["random", "party_first"]) }),
-  ]),
-  actionsPerTurn: PosInt,
-  defaultModes: z.array(BehaviourMode).min(1).describe("Modes for behaviours that don't list their own."),
-  defaultBehaviour: Id.describe("The behaviour for units that don't name one."),
-  maxRounds: PosInt,
-  onTimeout: z.enum(["loss"]),
-  defeat: z.strictObject({ stat: Id, atOrBelow: z.number() }),
-  damagePipeline: z.array(PipelineStep).min(1),
-  formulas: z.strictObject({
-    hitChance: Expr,
-    critChance: Expr,
-    critMultiplier: Expr,
-    blockChance: Expr,
-    blockMultiplier: Expr,
-    damageScale: Expr,
-    minDamage: z.number().min(0),
-  }),
-  modifierStacking: z.enum(["add_then_multiply", "multiply_then_add"]),
-  targeting: z.strictObject({ weightStat: Id.describe("The stat `weighted` picks use: a unit's chance to be picked is proportional to it.") }),
-  maxEnemies: PosInt.describe("Most enemies on the field at once, including summons."),
+  basicRecovery: z.number().gt(0).max(1).describe("A basic attack's recovery, as a share of the weapon's base cooldown. Sets the Attack Speed ceiling."),
+  abilityCast: Ticks.describe("An ability's cast time unless it states one."),
+  abilityRecovery: Ticks.describe("An ability's recovery unless it states one: about a sword's."),
+  taken: z.strictObject({ floor: z.number(), cap: z.number() }).describe("Bounds on a unit's total damage-taken modifier, in percent."),
+  unarmed: Weapon.describe("The basic attack of a unit with no weapon."),
+  maxEnemies: PosInt.describe("Most enemies in a fight."),
   run: z.strictObject({
-    betweenFights: z.array(InstantEffect).describe("Applied to each living party unit after each won fight; `self` is that unit."),
-    defeatedUnits: z.enum(["stay_down", "revive"]),
-    statusesClearAtFightEnd: z.boolean(),
-    cooldownsResetEachFight: z.boolean(),
+    defeatedUnits: z.enum(["stay_down"]).describe("Recovery between fights belongs to step 11."),
     perkOffer: PerkOffer,
   }),
 });
@@ -530,62 +459,20 @@ export const Ruleset = z.strictObject({
 export const StatDef = z.strictObject({
   id: Id,
   name: Text,
-  kind: z.enum(["attribute", "resource"]),
+  kind: z.enum(["amount", "points"]).describe("amount: takes flat or percent changes. points: already in points or percent; flat changes only."),
   default: z.number(),
-  min: z.number().optional(),
-  max: z.number().optional(),
-  maxStat: Id.optional().describe("Resources only: the stat that caps it. A resource starts each run at its cap."),
-  formula: Expr.optional().describe("Attributes only: a derived stat, computed from `self`'s other stats. Modifiers apply on top."),
-  persistence: z.enum(["fight", "run"]).optional().describe("Resources only: refilled every fight, or carried across the run."),
+  floor: z.number().optional(),
+  cap: z.number().optional(),
+  brings: Id.optional().describe("A status the unit holds while the stat is above 0, for behaviour beyond hit resolution, targeting and timing."),
   note: Note.optional(),
 });
 
-export const DamageType = z.strictObject({
-  id: Id,
-  name: Text,
-  mitigation: Expr.describe("Final damage. `raw`, `attacker` and `defender` are in scope."),
-});
-
-export const StatusDef = z.strictObject({
-  id: Id,
-  name: Text.describe("The word shown in combat, e.g. BLEED."),
-  text: Text,
-  on: StatusOn,
-  flags: z.array(Flag).optional(),
-  stacking: z.enum(["refresh", "stack", "independent"]),
-  maxStacks: PosInt.optional(),
-  defaultTurns: PosInt.optional(),
-  rules: z.array(Rule).optional().describe("Owned by the bearer: `self` is the unit carrying the status."),
-  note: Note.optional(),
-});
-
-export const Signal = z
-  .strictObject({
-    op: z.string().optional(),
-    damageType: Id.optional(),
-    statusFlag: Flag.optional(),
-    statusTicks: z.literal(true).optional(),
-    statusDebuff: z.literal(true).optional(),
-    stat: Id.optional(),
-    sign: z.enum(["positive", "negative"]).optional(),
-    flag: Flag.optional(),
-    from: SelectorFrom.optional(),
-    pick: Pick.optional(),
-    multiHit: z.literal(true).optional(),
-    amountUp: z.literal(true).optional(),
-    performs: z.enum(["counter", "extra"]).optional(),
-    trigger: EventType.optional(),
-    conditionAlive: z.literal(true).optional(),
-    statAtLeast: z.strictObject({ stat: Id, value: z.number() }).optional(),
-  })
-  .refine((o) => Object.keys(o).length > 0, { message: "a signal needs at least one field" })
-  .describe("A pattern in an entity's data that shows this verb. Every listed field must match one fact.");
+export const ElementDef = z.strictObject({ id: Id, name: Text });
 
 export const VerbDef = z.strictObject({
   id: Id,
   name: z.string().min(1).describe("Internal label. Verbs are never shown to players."),
-  note: Note.describe("Definition, in terms of the numerical systems."),
-  signals: z.array(Signal).min(1),
+  note: Note.describe("Definition, in terms of the numerical systems. Step 5 defines the real list."),
 });
 
 export const TraitDef = z.strictObject({
@@ -602,30 +489,19 @@ export const SlotDef = z.strictObject({
   class: Id.optional().describe("Absent: a generic slot every unit has."),
 });
 
-export const Action = z
-  .strictObject({
-    id: Id,
-    name: Text.describe("Shown in the combat log."),
-    target: Selector.optional().describe("Required for every action except basic actions, which take their target from the unit's behaviour."),
-    hits: PosInt.optional().describe("Times `do` repeats per use. Default 1."),
-    do: z.array(InstantEffect).min(1),
-    verbs: z.array(Id),
-    note: Note.optional(),
-  })
-  .describe("Each use, the target is picked, then `do` runs once (× hits). Each effect picks its own units; action_target means every unit the target picked.");
-
-export const Behaviour = z.strictObject({
-  id: Id,
-  note: Note.describe("Behaviours are never shown to players."),
-  basicTarget: Selector.describe("How the basic action picks its target."),
-  modes: z.array(BehaviourMode).min(1).optional().describe("Absent: ruleset.defaultModes. The last mode must have no `when`."),
-});
-
 // ─────────────────────────────────────────────────────────────────────────────
 // Content
 // ─────────────────────────────────────────────────────────────────────────────
 
 const UnlockSource = z.enum(["starter", "unlock"]).describe("starter: owned from the start. unlock: a reward from a real-life quest.");
+
+export const StatBlock = z.record(StatKey, z.number()).describe("Stat key to base value. Missing stats use the registry's default.");
+
+/** What a passive, gear, a formation slot, a formation or a perk gives: stats like gear, and statuses applied at fight start. */
+const grants = {
+  stats: z.array(FixedStat).optional(),
+  statuses: z.array(Id).optional().describe("Applied to the unit at fight start; usually permanent and unremovable."),
+};
 
 export const ClassDef = z.strictObject({
   id: Id,
@@ -633,6 +509,7 @@ export const ClassDef = z.strictObject({
   text: Text,
   slots: z.array(Id).describe("Class-specific gear slots, on top of the generic ones."),
   stats: StatBlock.describe("Base stats every specialization of the class starts from."),
+  passive: z.strictObject(grants).optional().describe("The class passive. Its stat grants are stats; its reactions live in the statuses it applies at fight start."),
   note: Note.optional(),
 });
 
@@ -644,24 +521,11 @@ export const Specialization = z
     text: Text,
     source: UnlockSource,
     stats: StatBlock.optional().describe("Overrides the class's base stats."),
-    basicAction: Id,
-    behaviour: Id.optional().describe("Absent: ruleset.defaultBehaviour."),
     abilities: z.array(Id),
-    verbs: z.array(Id).describe("Verbs this unit can reach. Checked against its actions, behaviour, abilities and stats."),
+    verbs: z.array(Id),
     note: Note.optional(),
   })
   .describe("A unit. The player owns at most one of each and can field it once per party.");
-
-export const Ability = z.strictObject({
-  id: Id,
-  class: Id.describe("Owning class. Only that class's specializations may list it."),
-  name: Text,
-  text: Text,
-  rules: z.array(Rule).optional(),
-  active: Active.optional(),
-  verbs: z.array(Id),
-  note: Note.optional(),
-});
 
 export const Gear = z.strictObject({
   id: Id,
@@ -672,9 +536,8 @@ export const Gear = z.strictObject({
   source: z.enum(["starter", "loot", "unlock"]),
   class: z.array(Id).optional().describe("Classes that can equip it. Absent: any class."),
   rank: PosInt.describe("Progression band, for gear curves and loot tables."),
-  stats: z.array(StatMod),
-  rules: z.array(Rule).optional(),
-  active: Active.optional(),
+  weapon: Weapon.optional().describe("A weapon: sets the basic attack."),
+  ...grants,
   verbs: z.array(Id),
   note: Note.optional(),
 });
@@ -692,9 +555,9 @@ export const Position = z
     name: Text,
     text: Text.optional().describe("What the slot does, as the player sees it."),
     layout: Layout,
-    rules: z.array(Rule).optional().describe("Apply to the unit in this slot; `self` is that unit. Absent: an empty slot."),
+    ...grants,
   })
-  .describe("A formation slot: its own bespoke effects, open to any unit.");
+  .describe("A formation slot: its own effects, for the unit in it. Its place in the list is the unit's slot order.");
 
 export const Formation = z.strictObject({
   id: Id,
@@ -702,7 +565,7 @@ export const Formation = z.strictObject({
   text: Text,
   source: UnlockSource,
   positions: z.array(Position),
-  rules: z.array(Rule).optional().describe("Party-wide: apply to every unit in the formation."),
+  ...grants,
   verbs: z.array(Id),
   note: Note.optional(),
 });
@@ -710,15 +573,12 @@ export const Formation = z.strictObject({
 export const Keyhole = z
   .strictObject({
     id: Id,
-    from: Id.describe("The enemy's own verb this keyhole comes from. It must show in the enemy's data."),
-    mechanic: Id
-      .optional()
-      .describe("The enemy mechanic it comes from: one of its rule ids, an active's action, or its basic action. It must show `from`. Absent: base stats."),
+    from: Id.describe("The enemy's own verb this keyhole comes from."),
     counteredBy: z.array(Id).min(1).describe("Verbs that work well against it. Any of them helps; none of them wins alone."),
     strongAgainst: z.array(Id).optional().describe("Verbs it blunts."),
     note: Note,
   })
-  .describe("Design intent only, for difficulty prediction (step 11). Never shown to players, never read by the engine.");
+  .describe("Design intent only, for difficulty prediction. Never shown to players, never read by the engine.");
 
 export const Enemy = z.strictObject({
   id: Id,
@@ -726,27 +586,16 @@ export const Enemy = z.strictObject({
   text: Text.describe("Short description of how it behaves. Must use each trait's word, never say what beats it."),
   rank: z.enum(["minion", "elite", "boss"]),
   traits: z.array(Id),
-  stats: StatBlock.describe("Hidden from the player."),
-  basicAction: Id,
-  behaviour: Id.optional().describe("Absent: ruleset.defaultBehaviour."),
-  actives: z.array(Active).optional(),
-  rules: z.array(Rule).optional(),
+  stats: StatBlock.describe("Hidden from the player. Innate immunities are immune:... stats here."),
+  weapon: Weapon.optional().describe("Its basic attack. Absent: ruleset.unarmed."),
+  abilities: z.array(Id).optional().describe("Equipped, in slot order."),
+  statuses: z.array(Id).optional().describe("Applied at fight start."),
   keyholes: z.array(Keyhole).optional(),
   verbs: z.array(Id),
   note: Note.optional(),
 });
 
 export const PerkFamily = z.strictObject({ id: Id, name: Text, text: Text });
-
-export const AbilityPatch = z.strictObject({
-  op: z.literal("patch_ability"),
-  ability: Id,
-  rule: Id.optional().describe("The rule to patch. Absent: the ability's active."),
-  addEffects: z.array(InstantEffect).optional().describe("Triggered rules only."),
-  amountMul: z.number().positive().optional(),
-  chanceAdd: z.number().optional().describe("Triggered rules only."),
-  cooldownAdd: z.number().int().optional().describe("Actives only."),
-});
 
 export const Perk = z.strictObject({
   id: Id,
@@ -755,10 +604,8 @@ export const Perk = z.strictObject({
   family: Id,
   rarity: z.enum(["regular", "premium"]),
   upgradeOf: Id.optional().describe("Premium only: the regular perk this is a stronger version of."),
-  requires: Condition.optional().describe("Applicable if at least one party unit (as `self`) meets it."),
-  appliesTo: Condition.optional().describe("Which party units receive `rules` (as `self`). Absent: all."),
-  rules: z.array(Rule).optional(),
-  patches: z.array(AbilityPatch).optional().describe("For this run, change an ability on every unit that has it equipped."),
+  for: z.strictObject({ classes: z.array(Id).optional(), specs: z.array(Id).optional() }).optional().describe("Which party units receive it. Absent: all."),
+  ...grants,
   verbs: z.array(Id),
   note: Note.optional(),
 });
@@ -767,7 +614,7 @@ export const FightStage = z.strictObject({
   kind: z.literal("fight"),
   id: Id,
   boss: z.boolean().optional(),
-  enemies: z.array(Id).min(1).describe("Enemy ids, in display order. Enemies have no formation."),
+  enemies: z.array(Id).min(1).describe("Enemy ids, in slot order. Enemies have no formation."),
   note: Note.optional(),
 });
 export const PickStage = z.strictObject({ kind: z.literal("perk_pick"), id: Id });
@@ -823,13 +670,11 @@ export const ContentPack = z.strictObject({
   design: Design,
   ruleset: Ruleset,
   stats: z.array(StatDef),
-  damageTypes: z.array(DamageType),
-  statuses: z.array(StatusDef),
+  elements: z.array(ElementDef),
+  statuses: z.array(Status),
   verbs: z.array(VerbDef),
   traits: z.array(TraitDef),
   slots: z.array(SlotDef),
-  actions: z.array(Action),
-  behaviours: z.array(Behaviour),
   classes: z.array(ClassDef),
   specializations: z.array(Specialization),
   abilities: z.array(Ability),
@@ -855,7 +700,7 @@ export type ContentPack = z.infer<typeof ContentPack>;
 export const PartyUnit = z.strictObject({
   spec: Id,
   position: Id,
-  abilities: z.array(Id).describe("Equipped abilities, in order."),
+  abilities: z.array(Id).describe("Equipped abilities, in slot order."),
   gear: z.record(Id, Id).describe("Slot id to gear id."),
 });
 export const Party = z.strictObject({
@@ -868,20 +713,12 @@ export type Party = z.infer<typeof Party>;
 // Inferred types, for the engine and tooling
 // ─────────────────────────────────────────────────────────────────────────────
 
-export type TriggerT = z.infer<typeof Trigger>;
-export type ActiveT = z.infer<typeof Active>;
-export type BehaviourModeT = z.infer<typeof BehaviourMode>;
-export type BehaviourT = z.infer<typeof Behaviour>;
 export type StatDefT = z.infer<typeof StatDef>;
-export type StatusDefT = z.infer<typeof StatusDef>;
 export type VerbDefT = z.infer<typeof VerbDef>;
-export type VerbDefSignal = z.infer<typeof Signal>;
 export type TraitDefT = z.infer<typeof TraitDef>;
 export type SlotDefT = z.infer<typeof SlotDef>;
-export type ActionT = z.infer<typeof Action>;
 export type ClassDefT = z.infer<typeof ClassDef>;
 export type SpecializationT = z.infer<typeof Specialization>;
-export type AbilityT = z.infer<typeof Ability>;
 export type GearT = z.infer<typeof Gear>;
 export type FormationT = z.infer<typeof Formation>;
 export type EnemyT = z.infer<typeof Enemy>;

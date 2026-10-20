@@ -2,14 +2,16 @@
  * Validator for content packs and party loadouts.
  *
  * Three layers of checks:
- *   1. Shape: the zod schema (types, required fields, closed enums).
- *   2. Meaning: every reference resolves, and every subject, selector and
- *      variable is used only where it has a meaning (e.g. event_source only
- *      inside a triggered rule).
+ *   1. Shape: the zod schema (types, required fields, closed sets).
+ *   2. Meaning: every reference resolves, and content follows the combat
+ *      design's rules for what's valid (steps/04-combat-concepts/design.md):
+ *      a physical instance has a subtype and no element, Attack scales only
+ *      physical instances, percent changes only on amount stats, and so on.
  *   3. Design rules from the concept spec and the director's decisions, driven
- *      by the pack's `design` block, plus vocabulary honesty: the verbs an
- *      entity declares must match what its data does, and trait words must be
- *      backed by the enemy's numbers.
+ *      by the pack's `design` block.
+ *
+ * Step 4 replaced schema 0.3's rule language, and with it the checks that
+ * derived verbs from data; step 5 defines the real verbs.
  *
  * Every issue carries a stable `code`, so tests and later tooling can rely on it.
  */
@@ -17,14 +19,6 @@ import * as S from "./schema.js";
 
 export type Issue = { level: "error" | "warning"; code: string; path: string; message: string };
 export type Pack = S.ContentPack;
-
-type Rule = S.Rule;
-type Cond = S.Condition;
-type Sel = S.Selector;
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Report
-// ─────────────────────────────────────────────────────────────────────────────
 
 class Report {
   issues: Issue[] = [];
@@ -41,8 +35,8 @@ class Report {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const COLLECTIONS = [
-  "stats", "damageTypes", "statuses", "verbs", "traits", "slots", "actions", "behaviours", "classes",
-  "specializations", "abilities", "gear", "formations", "enemies", "perkFamilies", "perks", "dungeons",
+  "stats", "elements", "statuses", "verbs", "traits", "slots", "classes", "specializations", "abilities", "gear", "formations",
+  "enemies", "perkFamilies", "perks", "dungeons",
 ] as const;
 type Coll = (typeof COLLECTIONS)[number];
 
@@ -51,17 +45,15 @@ export class Index {
   readonly used = new Map<Coll, Set<string>>();
 
   constructor(readonly pack: Pack, r?: Report) {
-    const add = (coll: Coll, items: { id: string }[], path: string) => {
+    for (const coll of COLLECTIONS) {
       const m = new Map<string, any>();
-      items.forEach((it, i) => {
-        if (m.has(it.id)) r?.error("id.duplicate", `${path}[${i}]`, `duplicate ${coll} id '${it.id}'`);
-        if (it.id === S.BASIC) r?.error("id.reserved", `${path}[${i}]`, `'${S.BASIC}' is reserved for "this unit's basic action"`);
+      (pack[coll] as { id: string }[]).forEach((it, i) => {
+        if (m.has(it.id)) r?.error("id.duplicate", `${coll}[${i}]`, `duplicate ${coll} id '${it.id}'`);
         m.set(it.id, it);
       });
       this.maps.set(coll, m);
       this.used.set(coll, new Set());
-    };
-    for (const c of COLLECTIONS) add(c, pack[c] as { id: string }[], c);
+    }
   }
 
   get<T = any>(coll: Coll, id: string): T | undefined {
@@ -72,110 +64,10 @@ export class Index {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Facts: what an entity's data visibly does. Verb signals match against these.
-// ─────────────────────────────────────────────────────────────────────────────
-
-export type Fact = {
-  op?: string;
-  damageType?: string;
-  statusFlag?: string;
-  statusTicks?: true;
-  statusDebuff?: true;
-  /** apply_status only: which status (used for the roster niche check, not by signals). */
-  status?: string;
-  stat?: string;
-  sign?: "positive" | "negative";
-  flag?: string;
-  from?: string;
-  pick?: string;
-  multiHit?: true;
-  amountUp?: true;
-  performs?: "counter" | "extra";
-  trigger?: string;
-  conditionAlive?: true;
-  baseStat?: { stat: string; value: number };
-};
-
-function signOf(mode: "add" | "mul", value: number): Fact["sign"] {
-  if (mode === "add") return value > 0 ? "positive" : value < 0 ? "negative" : undefined;
-  return value > 1 ? "positive" : value < 1 ? "negative" : undefined;
-}
-
-/** Sign of a stat change written as an expression: a raise unless multiplied by a negative constant. */
-function exprSign(mode: "add" | "mul", e: S.Expr): Fact["sign"] {
-  if (typeof e === "number") return signOf(mode, e);
-  if ("mul" in e) return e.mul.filter((x) => typeof x === "number" && x < 0).length % 2 ? "negative" : "positive";
-  return "positive";
-}
-
-function readsStat(e: S.Expr): boolean {
-  if (typeof e === "number") return false;
-  if ("stat" in e) return true;
-  if ("var" in e || "stacks" in e || "count" in e) return false;
-  return (Object.values(e)[0] as S.Expr[]).some(readsStat);
-}
-
-function matches(sig: S.VerbDefSignal, f: Fact): boolean {
-  for (const [k, v] of Object.entries(sig)) {
-    if (k === "statAtLeast") {
-      const s = v as { stat: string; value: number };
-      if (!f.baseStat || f.baseStat.stat !== s.stat || f.baseStat.value < s.value) return false;
-    } else if ((f as any)[k] !== v) return false;
-  }
-  return true;
-}
-
-export function deriveVerbs(pack: Pack, facts: Fact[]): Set<string> {
-  const out = new Set<string>();
-  for (const v of pack.verbs) if (v.signals.some((s) => facts.some((f) => matches(s, f)))) out.add(v.id);
-  return out;
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Context-aware walker
-// ─────────────────────────────────────────────────────────────────────────────
-
-const GENERAL_FROMS: S.SelectorFrom[] = ["self", "allies", "allies_and_self", "enemies", "everyone"];
-const ACTION_FROMS: S.SelectorFrom[] = ["action_target", "action_target_allies"];
-const EVENT_FROMS: S.SelectorFrom[] = ["event_source", "event_target", "event_target_allies"];
-
-type Ctx = {
-  path: string;
-  subjects: Set<S.Subject>;
-  froms: Set<S.SelectorFrom>;
-  vars: Set<S.Var>;
-  /** Collector for verb facts. Absent: don't collect (e.g. "when to use" conditions). */
-  facts?: Fact[];
-  inSelector?: boolean;
-};
-type Base = { path: string; facts?: Fact[] };
-
-const ctx = (path: string, subjects: S.Subject[], froms: S.SelectorFrom[], vars: S.Var[], facts?: Fact[]): Ctx => ({
-  path,
-  subjects: new Set(subjects),
-  froms: new Set(froms),
-  vars: new Set(vars),
-  facts,
-});
-/** Context for a plain condition about one unit (`self`), e.g. useWhen, mode `when`, perk requires. */
-const unitCtx = (path: string) => ctx(path, ["self"], GENERAL_FROMS, ["round"]);
-
+/** Resolves references, marking what's used. */
 class Walker {
-  readonly statusFacts = new Map<string, Fact[]>();
-  readonly actionFacts = new Map<string, Fact[]>();
-  readonly behaviourFacts = new Map<string, Fact[]>();
-  /** Where each action is used, for the basic/active target rules. */
-  readonly basicUses = new Map<string, string>();
-  readonly targetedUses = new Map<string, string>();
-
   constructor(readonly ix: Index, readonly r: Report) {}
-
-  private get pack() {
-    return this.ix.pack;
-  }
-
-  ref(coll: Coll, id: string, path: string, what: string = coll): boolean {
+  ref(coll: Coll, id: string, path: string, what: string): boolean {
     if (!this.ix.has(coll, id)) {
       this.r.error("ref.missing", path, `unknown ${what} '${id}'`);
       return false;
@@ -183,288 +75,7 @@ class Walker {
     this.ix.used.get(coll)!.add(id);
     return true;
   }
-
-  actionRef(id: string, path: string) {
-    if (id === S.BASIC) return;
-    this.ref("actions", id, path, "action");
-  }
-
-  statusProps(id: string) {
-    const st = this.ix.get<S.StatusDefT>("statuses", id);
-    if (!st) return { ticks: false, debuff: false, flags: [] as string[] };
-    const rules = st.rules ?? [];
-    const ticks = rules.some(
-      (r) => r.kind === "triggered" && (r.when.on === "turn_start" || r.when.on === "turn_end") && r.do.some((e) => e.op === "damage"),
-    );
-    const debuff = rules.some(
-      (r) => r.kind === "passive" && r.do.some((e) => e.op === "stat" && exprSign(e.mode, e.value) === "negative"),
-    );
-    return { ticks, debuff, flags: st.flags ?? [] };
-  }
-
-  private subject(of: S.Subject | undefined, c: Ctx, path: string) {
-    const s = of ?? "self";
-    if (!c.subjects.has(s)) {
-      this.r.error("ctx.subject", path, `'${s}' has no meaning here (available: ${[...c.subjects].join(", ")})`);
-    }
-  }
-
-  private fact(c: Ctx, f: Fact) {
-    c.facts?.push(f);
-  }
-
-  expr(e: S.Expr, c: Ctx): void {
-    if (typeof e === "number") return;
-    const p = c.path;
-    if ("stat" in e) {
-      this.ref("stats", e.stat, `${p}.stat`, "stat");
-      this.subject(e.of, c, `${p}.of`);
-    } else if ("stacks" in e) {
-      this.ref("statuses", e.stacks, `${p}.stacks`, "status");
-      this.subject(e.of, c, `${p}.of`);
-    } else if ("var" in e) {
-      if (!c.vars.has(e.var)) this.r.error("ctx.var", `${p}.var`, `variable '${e.var}' has no meaning here (available: ${[...c.vars].join(", ") || "none"})`);
-    } else if ("count" in e) {
-      this.selector(e.count, { ...c, facts: undefined, path: `${p}.count` });
-    } else {
-      const [k, args] = Object.entries(e)[0] as [string, S.Expr[]];
-      args.forEach((a, i) => this.expr(a, { ...c, path: `${p}.${k}[${i}]` }));
-    }
-  }
-
-  cond(cn: Cond, c: Ctx): void {
-    const p = c.path;
-    if ("all" in cn) return cn.all.forEach((x, i) => this.cond(x, { ...c, path: `${p}.all[${i}]` }));
-    if ("any" in cn) return cn.any.forEach((x, i) => this.cond(x, { ...c, path: `${p}.any[${i}]` }));
-    if ("not" in cn) return this.cond(cn.not, { ...c, path: `${p}.not` });
-    if ("hpBelow" in cn || "hpAtLeast" in cn) return this.subject(cn.of, c, `${p}.of`);
-    if ("hasStatus" in cn) {
-      this.ref("statuses", cn.hasStatus, `${p}.hasStatus`, "status");
-      return this.subject(cn.of, c, `${p}.of`);
-    }
-    if ("isClass" in cn) {
-      cn.isClass.forEach((id, i) => this.ref("classes", id, `${p}.isClass[${i}]`, "class"));
-      return this.subject(cn.of, c, `${p}.of`);
-    }
-    if ("isSpec" in cn) {
-      cn.isSpec.forEach((id, i) => this.ref("specializations", id, `${p}.isSpec[${i}]`, "specialization"));
-      return this.subject(cn.of, c, `${p}.of`);
-    }
-    if ("hasAbility" in cn) {
-      this.ref("abilities", cn.hasAbility, `${p}.hasAbility`, "ability");
-      return this.subject(cn.of, c, `${p}.of`);
-    }
-    if ("alive" in cn) return this.fact(c, { conditionAlive: true });
-    if ("compare" in cn) {
-      this.expr(cn.compare[0], { ...c, path: `${p}.compare[0]` });
-      this.expr(cn.compare[2], { ...c, path: `${p}.compare[2]` });
-    }
-    // round: nothing to check
-  }
-
-  selector(s: Sel, c: Ctx) {
-    const p = c.path;
-    if (!c.froms.has(s.from)) {
-      this.r.error("ctx.from", `${p}.from`, `'${s.from}' has no meaning here (available: ${[...c.froms].join(", ")})`);
-    }
-    const pick = s.pick ?? "all";
-    if ((pick === "lowest" || pick === "highest") && !s.by) this.r.error("selector.by", p, `pick '${pick}' needs 'by'`);
-    if (s.by && pick !== "lowest" && pick !== "highest") this.r.warn("selector.by", `${p}.by`, `'by' is ignored unless pick is lowest or highest`);
-    if (s.count && pick === "all") this.r.warn("selector.count", `${p}.count`, `'count' is ignored when pick is all`);
-    const inner: Ctx = { ...c, subjects: new Set([...c.subjects, "candidate"]), inSelector: true };
-    if (s.where) this.cond(s.where, { ...inner, path: `${p}.where` });
-    if (s.prefer) this.cond(s.prefer, { ...inner, path: `${p}.prefer` });
-    if (s.by) this.expr(s.by, { ...inner, facts: undefined, path: `${p}.by` });
-    this.fact(c, { from: s.from, pick });
-  }
-
-  instant(e: S.InstantEffect, c: Ctx) {
-    const p = c.path;
-    const at = (seg: string): Ctx => ({ ...c, path: `${p}.${seg}` });
-    switch (e.op) {
-      case "damage":
-        this.ref("damageTypes", e.type, `${p}.type`, "damage type");
-        this.expr(e.amount, at("amount"));
-        this.selector(e.target, at("target"));
-        this.fact(c, { op: "damage", damageType: e.type, from: e.target.from });
-        break;
-      case "heal":
-        this.expr(e.amount, at("amount"));
-        this.selector(e.target, at("target"));
-        this.fact(c, { op: "heal", from: e.target.from });
-        break;
-      case "apply_status": {
-        if (this.ref("statuses", e.status, `${p}.status`, "status")) {
-          const st = this.ix.get<S.StatusDefT>("statuses", e.status)!;
-          if (st.on === "self" && e.target.from !== "self") {
-            this.r.error("status.onSelf", `${p}.target`, `'${e.status}' is a unit's own state, so only its bearer applies it (target self)`);
-          }
-          if (st.on === "others" && e.target.from === "self") {
-            this.r.error("status.onOthers", `${p}.target`, `'${e.status}' is applied to other units, never to self`);
-          }
-          const sp = this.statusProps(e.status);
-          this.fact(c, {
-            op: "apply_status",
-            status: e.status,
-            from: e.target.from,
-            ...(sp.ticks ? { statusTicks: true } : {}),
-            ...(sp.debuff ? { statusDebuff: true } : {}),
-          });
-          sp.flags.forEach((f) => this.fact(c, { op: "apply_status", statusFlag: f }));
-          (this.statusFacts.get(e.status) ?? []).forEach((f) => this.fact(c, f));
-        }
-        this.selector(e.target, at("target"));
-        break;
-      }
-      case "remove_status":
-        this.ref("statuses", e.status, `${p}.status`, "status");
-        this.selector(e.target, at("target"));
-        this.fact(c, { op: "remove_status", from: e.target.from });
-        break;
-      case "buff":
-        this.ref("stats", e.stat, `${p}.stat`, "stat");
-        this.selector(e.target, at("target"));
-        this.fact(c, { op: "buff", stat: e.stat, sign: signOf(e.mode, e.value) });
-        break;
-      case "perform_action":
-        this.actionRef(e.action, `${p}.action`);
-        if (e.action !== S.BASIC) {
-          if (!e.target) this.targetedUses.set(e.action, `${p}.action`);
-          c.facts?.push(...(this.actionFacts.get(e.action) ?? []));
-        }
-        if (e.target) this.selector(e.target, at("target"));
-        this.fact(c, { op: "perform_action", performs: e.target?.from === "event_source" ? "counter" : "extra" });
-        break;
-      case "adjust": {
-        if (this.ref("stats", e.stat, `${p}.stat`, "stat")) {
-          const st = this.ix.get<S.StatDefT>("stats", e.stat)!;
-          if (st.kind !== "resource" || e.stat === this.pack.ruleset.defeat.stat) {
-            this.r.error("effect.adjust", `${p}.stat`, `adjust changes resources other than '${this.pack.ruleset.defeat.stat}'; use damage or heal for that`);
-          }
-        }
-        this.expr(e.amount, at("amount"));
-        this.selector(e.target, at("target"));
-        const sign = typeof e.amount === "number" ? signOf("add", e.amount) : undefined;
-        this.fact(c, { op: "adjust", stat: e.stat, ...(sign ? { sign } : {}) });
-        break;
-      }
-      case "grant_flag":
-        this.selector(e.target, at("target"));
-        this.fact(c, { op: "grant_flag", flag: e.flag });
-        break;
-      case "summon":
-        this.ref("enemies", e.enemy, `${p}.enemy`, "enemy");
-        this.fact(c, { op: "summon" });
-        break;
-    }
-  }
-
-  passive(e: S.PassiveEffect, c: Ctx) {
-    const p = c.path;
-    switch (e.op) {
-      case "stat":
-        this.ref("stats", e.stat, `${p}.stat`, "stat");
-        if (typeof e.value !== "number") {
-          this.expr(e.value, { ...c, facts: undefined, path: `${p}.value` });
-          if (readsStat(e.value)) this.r.error("effect.statValue", `${p}.value`, `a stat change's value may not read stats (use a derived stat instead)`);
-        }
-        this.fact(c, { op: "stat", stat: e.stat, sign: exprSign(e.mode, e.value) });
-        break;
-      case "flag":
-        this.fact(c, { op: "flag", flag: e.flag });
-        break;
-      case "modify_action": {
-        this.actionRef(e.action, `${p}.action`);
-        const withTarget = new Set<S.Subject>([...c.subjects, "target"]);
-        if (e.if) this.cond(e.if, { ...c, subjects: withTarget, path: `${p}.if` });
-        if (e.target) this.selector(e.target, { ...c, path: `${p}.target` });
-        e.addEffects?.forEach((x, i) =>
-          this.instant(x, { ...c, subjects: withTarget, froms: new Set([...c.froms, ...ACTION_FROMS]), path: `${p}.addEffects[${i}]` }),
-        );
-        if (e.hits && e.hits > 1) this.fact(c, { multiHit: true });
-        if (e.amountMul && e.amountMul > 1) this.fact(c, { amountUp: true });
-        this.fact(c, { op: "modify_action" });
-        break;
-      }
-    }
-  }
-
-  /** Context for a triggered rule's effects, also reused by ability patches. */
-  triggeredCtx(when: S.TriggerT, base: Base): Ctx {
-    const vars: S.Var[] = ["round"];
-    if (S.EVENTS_WITH_AMOUNT.includes(when.on)) vars.push("amount");
-    return ctx(base.path, ["self", "event_source", "event_target"], [...GENERAL_FROMS, ...EVENT_FROMS], vars, base.facts);
-  }
-
-  rule(rule: Rule, base: Base) {
-    const p = base.path;
-    if (rule.kind === "passive") {
-      const c = ctx(p, ["self"], GENERAL_FROMS, ["round"], base.facts);
-      if (rule.if) this.cond(rule.if, { ...c, path: `${p}.if` });
-      rule.do.forEach((e, i) => this.passive(e, { ...c, path: `${p}.do[${i}]` }));
-      return;
-    }
-    const { when } = rule;
-    if (when.on === "hp_below" && when.below === undefined) this.r.error("trigger.below", `${p}.when`, `hp_below needs 'below'`);
-    if (when.on !== "hp_below" && when.below !== undefined) this.r.warn("trigger.below", `${p}.when.below`, `'below' only applies to hp_below`);
-    if (when.action) {
-      if (!S.EVENTS_WITH_ACTION.includes(when.on)) {
-        this.r.error("trigger.action", `${p}.when.action`, `'${when.on}' events aren't caused by an action, so an action filter can't apply`);
-      }
-    }
-    base.facts?.push({ trigger: when.on });
-    const c = this.triggeredCtx(when, base);
-    if (rule.if) this.cond(rule.if, { ...c, path: `${p}.if` });
-    const effectCtx: Ctx = { ...c, subjects: new Set([...c.subjects, "target"]) };
-    rule.do.forEach((e, i) => this.instant(e, { ...effectCtx, path: `${p}.do[${i}]` }));
-  }
-
-  rules(rules: Rule[] | undefined, base: Base) {
-    const seen = new Set<string>();
-    rules?.forEach((rule, i) => {
-      const path = `${base.path}[${i}]`;
-      if (seen.has(rule.id)) this.r.error("rule.duplicateId", path, `duplicate rule id '${rule.id}'`);
-      seen.add(rule.id);
-      this.rule(rule, { ...base, path });
-    });
-  }
-
-  active(a: S.ActiveT, base: Base) {
-    const p = base.path;
-    if (this.ref("actions", a.action, `${p}.action`, "action")) {
-      this.targetedUses.set(a.action, `${p}.action`);
-      base.facts?.push(...(this.actionFacts.get(a.action) ?? []));
-    }
-    if (a.useWhen) this.cond(a.useWhen, unitCtx(`${p}.useWhen`));
-  }
-
-  modes(list: S.BehaviourModeT[], path: string) {
-    list.forEach((m, i) => m.when && this.cond(m.when, unitCtx(`${path}[${i}].when`)));
-    if (list.length && list[list.length - 1].when) {
-      this.r.error("behaviour.fallback", `${path}[${list.length - 1}]`, `the last mode must have no 'when', so the unit always has something to try`);
-    }
-  }
-
-  stats(block: Record<string, number> | undefined, path: string) {
-    for (const k of Object.keys(block ?? {})) this.ref("stats", k, `${path}.${k}`, "stat");
-  }
-
-  basic(actionId: string, path: string, facts: Fact[]) {
-    if (this.ref("actions", actionId, path, "action")) {
-      this.basicUses.set(actionId, path);
-      facts.push(...(this.actionFacts.get(actionId) ?? []));
-    }
-  }
-
-  behaviour(id: string | undefined, path: string, facts: Fact[]) {
-    const resolved = id ?? this.pack.ruleset.defaultBehaviour;
-    if (this.ref("behaviours", resolved, id ? path : "ruleset.defaultBehaviour", "behaviour")) facts.push(...(this.behaviourFacts.get(resolved) ?? []));
-  }
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Validation entry point
-// ─────────────────────────────────────────────────────────────────────────────
 
 export type ValidateOptions = { complete?: boolean };
 export type ValidateResult = { pack?: Pack; issues: Issue[]; errors: number; warnings: number };
@@ -484,51 +95,28 @@ export function validatePack(raw: unknown, opts: ValidateOptions = {}): Validate
   const r = new Report();
   const ix = new Index(pack, r);
   const w = new Walker(ix, r);
+  const c = new Combat(pack, ix, w, r);
 
-  checkRegistries(pack, ix, w, r);
-  const units = checkUnits(pack, ix, w, r);
-  checkGear(pack, ix, w, r);
-  checkFormations(pack, ix, w, r);
-  checkEnemies(pack, ix, w, r);
-  checkPerks(pack, ix, w, r);
+  checkDesign(pack, r);
+  c.registries();
+  c.statuses();
+  c.abilities();
+  checkUnits(pack, ix, w, r, c);
+  checkGear(pack, ix, w, r, c);
+  checkFormations(pack, w, r, c);
+  checkEnemies(pack, ix, w, r, c);
+  checkPerks(pack, ix, w, r, c);
   checkDungeons(pack, ix, w, r);
   checkStarterAndProgression(pack, ix, w, r);
-  checkActionUse(pack, ix, w, r);
-  if (opts.complete) checkComplete(pack, r, units.specFacts);
+  if (opts.complete) checkComplete(pack, r);
   checkUnused(pack, ix, r);
 
   const errors = r.issues.filter((i) => i.level === "error").length;
   return { pack, issues: r.issues, errors, warnings: r.issues.length - errors };
 }
 
-function compareVerbs(pack: Pack, w: Walker, r: Report, path: string, label: string, declared: string[], facts: Fact[]) {
-  declared.forEach((v, i) => w.ref("verbs", v, `${path}.verbs[${i}]`, "verb"));
-  const derived = deriveVerbs(pack, facts);
-  for (const v of declared) {
-    if (!derived.has(v)) r.warn("verb.unsupported", `${path}.verbs`, `${label} declares '${v}', but nothing in its data shows it`);
-  }
-  for (const v of derived) {
-    if (!declared.includes(v)) r.warn("verb.undeclared", `${path}.verbs`, `${label} shows '${v}' in its data but doesn't declare it`);
-  }
-  const mechanical = facts.filter((f) => !f.baseStat && !(f.from && f.pick && Object.keys(f).length === 2));
-  if (mechanical.length && !derived.size) r.warn("verb.unmapped", `${path}.verbs`, `${label} has mechanics, but none of them map to a verb`);
-}
-
-function effectiveStats(pack: Pack, ...blocks: (Record<string, number> | undefined)[]) {
-  const out: Record<string, number> = {};
-  for (const s of pack.stats) out[s.id] = s.default;
-  for (const b of blocks) Object.assign(out, b ?? {});
-  return out;
-}
-
-const baseStatFacts = (stats: Record<string, number>): Fact[] =>
-  Object.entries(stats).map(([stat, value]) => ({ baseStat: { stat, value } }));
-
-// ─── Registries and ruleset ──────────────────────────────────────────────────
-
-function checkRegistries(pack: Pack, ix: Index, w: Walker, r: Report) {
+function checkDesign(pack: Pack, r: Report) {
   const d = pack.design;
-  const rs = pack.ruleset;
   const rangeOk = (rg: [number, number], path: string) => {
     if (rg[0] > rg[1]) r.error("design.range", path, `range [${rg[0]}, ${rg[1]}] runs backwards`);
   };
@@ -538,91 +126,401 @@ function checkRegistries(pack: Pack, ix: Index, w: Walker, r: Report) {
   rangeOk(d.keyholesPerBoss, "design.keyholesPerBoss");
   if (d.partySize[1] > d.formationPositions) r.error("design.partySize", "design.partySize", `party size can't exceed ${d.formationPositions} formation positions`);
   if (d.abilitiesEquipped > d.abilitiesPerSpec) r.error("design.abilities", "design.abilitiesEquipped", `can't equip more abilities than a specialization has`);
-
-
-  // Stats
-  pack.stats.forEach((s, i) => {
-    const p = `stats[${i}]`;
-    if (s.kind === "resource") {
-      if (!s.maxStat) r.error("stat.resource", p, `resource '${s.id}' needs maxStat`);
-      else if (w.ref("stats", s.maxStat, `${p}.maxStat`, "stat") && ix.get<S.StatDefT>("stats", s.maxStat)!.kind !== "attribute") {
-        r.error("stat.resource", `${p}.maxStat`, `maxStat must be an attribute`);
-      }
-      if (!s.persistence) r.error("stat.resource", p, `resource '${s.id}' needs persistence (fight or run)`);
-    } else if (s.maxStat || s.persistence) {
-      r.error("stat.attribute", p, `maxStat and persistence only apply to resources`);
-    }
-    if (s.min !== undefined && s.max !== undefined && s.min > s.max) r.error("stat.range", p, `min is above max`);
-    if (s.formula) {
-      if (s.kind !== "attribute") r.error("stat.formula", `${p}.formula`, `only attributes can be derived`);
-      w.expr(s.formula, ctx(`${p}.formula`, ["self"], GENERAL_FROMS, []));
-    }
-  });
-  // Derived stats must not depend on themselves, directly or through others.
-  const deps = new Map<string, string[]>();
-  const collect = (e: S.Expr, acc: string[]) => {
-    if (typeof e === "number") return;
-    if ("stat" in e) acc.push(e.stat);
-    else if (!("var" in e) && !("stacks" in e) && !("count" in e)) (Object.values(e)[0] as S.Expr[]).forEach((x) => collect(x, acc));
-  };
-  pack.stats.forEach((s) => {
-    if (!s.formula) return;
-    const acc: string[] = [];
-    collect(s.formula, acc);
-    deps.set(s.id, acc);
-  });
-  const visiting = new Set<string>();
-  const done = new Set<string>();
-  const visit = (id: string, trail: string[]): void => {
-    if (done.has(id)) return;
-    if (visiting.has(id)) return r.error("stat.cycle", "stats", `derived stats form a cycle: ${[...trail, id].join(" → ")}`);
-    visiting.add(id);
-    (deps.get(id) ?? []).forEach((dep) => visit(dep, [...trail, id]));
-    visiting.delete(id);
-    done.add(id);
-  };
-  [...deps.keys()].forEach((id) => visit(id, []));
-
-  // Formulas
-  const formulaCtx = (path: string, vars: S.Var[]) => ctx(path, ["attacker", "defender"], GENERAL_FROMS, vars);
-  pack.damageTypes.forEach((dt, i) => w.expr(dt.mitigation, formulaCtx(`damageTypes[${i}].mitigation`, ["raw", "round"])));
-  w.ref("stats", rs.turnOrder.stat, "ruleset.turnOrder.stat", "stat");
-  w.ref("stats", rs.defeat.stat, "ruleset.defeat.stat", "stat");
-  if (new Set(rs.damagePipeline).size !== rs.damagePipeline.length) r.error("ruleset.pipeline", "ruleset.damagePipeline", "a pipeline step appears twice");
-  for (const [k, e] of Object.entries(rs.formulas)) {
-    if (k !== "minDamage") w.expr(e as S.Expr, formulaCtx(`ruleset.formulas.${k}`, ["round"]));
-  }
-
-  // Turn logic and targeting
-  w.ref("stats", rs.targeting.weightStat, "ruleset.targeting.weightStat", "stat");
-  w.ref("behaviours", rs.defaultBehaviour, "ruleset.defaultBehaviour", "behaviour");
-  w.modes(rs.defaultModes, "ruleset.defaultModes");
-  rs.run.betweenFights.forEach((e, i) => w.instant(e, ctx(`ruleset.run.betweenFights[${i}]`, ["self", "target"], GENERAL_FROMS, [])));
-  if (rs.run.perkOffer.options !== d.perkOptionsPerPick) {
+  if (pack.ruleset.run.perkOffer.options !== d.perkOptionsPerPick) {
     r.error("design.perkOptions", "ruleset.run.perkOffer.options", `perk picks offer ${d.perkOptionsPerPick} options (design.perkOptionsPerPick)`);
   }
+}
 
-  // Statuses (before actions, so applying a status carries its facts)
-  pack.statuses.forEach((st, i) => {
-    const facts: Fact[] = [];
-    w.rules(st.rules, { path: `statuses[${i}].rules`, facts });
-    w.statusFacts.set(st.id, facts);
-    if (st.stacking === "stack" && !st.maxStacks) r.warn("status.maxStacks", `statuses[${i}]`, `stacking status '${st.id}' has no maxStacks`);
+// ─────────────────────────────────────────────────────────────────────────────
+// The combat rule language (design sections 3 to 8)
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Does a number read this stat? */
+const reads = (n: S.NumT, stat: string) => typeof n !== "number" && n.scale.some((s) => s.stat === stat);
+
+/** Where a number, effect or rule sits: in an action, a status's pulse or trigger, or a reaction. */
+type Where = "action" | "pulse" | "reaction";
+
+const HIT_EVENTS = ["action_start", "action_resolve", "action_interrupted", "hit_lands", "hit_taken", "hit_evaded", "hit_missed"];
+const STATUS_EVENTS = ["status_gained", "status_triggered", "status_ended"];
+const RESERVED_TAGS = ["basic", "ability", "physical", "magical", "none", "healing", "all", ...Object.keys(S.SUBTYPES)];
+
+class Combat {
+  constructor(readonly pack: Pack, readonly ix: Index, readonly w: Walker, readonly r: Report) {}
+
+  /** A stat key: a registry stat, or a family member whose parts exist. */
+  statKey(key: string, path: string): S.StatDefT | null {
+    const [head, ...rest] = key.split(":");
+    if (!rest.length) return this.w.ref("stats", key, path, "stat") ? this.ix.get<S.StatDefT>("stats", key)! : null;
+    if (head === "resist" && rest.length === 1) this.w.ref("elements", rest[0], path, "element");
+    else if (head === "immune" && rest[0] === "status" && rest.length === 2) this.w.ref("statuses", rest[1], path, "status");
+    else if (head === "immune" && rest[0] === "kind" && rest.length >= 2) {
+      if (!(rest[1] in S.KINDS)) this.r.error("stat.family", path, `'${rest[1]}' isn't an effect kind (${Object.keys(S.KINDS).join(", ")})`);
+    } else if (head !== "immune" || rest.length !== 1 || !["debuffs", "damage"].includes(rest[0])) {
+      this.r.error("stat.family", path, `'${key}' isn't a stat or a member of a stat family (${Object.keys(S.STAT_FAMILIES).join(", ")})`);
+    }
+    return null;
+  }
+
+  /** Family stats are counted in points or are binary, so they take flat changes only. */
+  statChange(ch: { stat: string; flat?: unknown; pct?: unknown }, path: string) {
+    const d = this.statKey(ch.stat, `${path}.stat`);
+    if (ch.pct !== undefined && (!d || d.kind === "points")) {
+      this.r.error("stat.pct", `${path}.pct`, `'${ch.stat}' is counted in points or percent, so it takes flat changes only`);
+    }
+    if (ch.flat === undefined && ch.pct === undefined) this.r.error("stat.empty", path, `a stat change needs flat or pct`);
+  }
+
+  ticks(t: number | undefined, path: string) {
+    if (t !== undefined && Math.abs(t * S.SUBTICKS - Math.round(t * S.SUBTICKS)) > 1e-6) {
+      this.r.error("timing.precision", path, `${t} ticks: timings count whole sub-ticks (1,000 per tick), so at most 3 decimals`);
+    }
+  }
+
+  num(n: S.NumT, path: string, where: Where, inStatus: boolean) {
+    if (typeof n === "number") return;
+    n.scale.forEach((s, i) => {
+      const p = `${path}.scale[${i}]`;
+      if (s.stat) this.statKey(s.stat, `${p}.stat`);
+      if (s.stacks) this.w.ref("statuses", s.stacks, `${p}.stacks`, "status");
+      if (s.amount && where !== "reaction") this.r.error("scale.amount", p, `only a reaction has an event amount to scale from`);
+      if (!inStatus && (s.of === "holder" || s.of === "source")) this.r.error("scale.of", `${p}.of`, `'${s.of}' only means something inside a status; in an action, use self or target`);
+      if (inStatus && s.stat && !s.of) this.r.error("scale.of", p, `in a status, say whose stat this is: source (fixed at application) or holder (read when used)`);
+    });
+  }
+
+  /** The design's rules for a damage instance (sections 5 and 7.5). */
+  instance(i: { type: string; subtype?: string; element?: string; amount: S.NumT }, path: string, where: Where, inStatus: boolean) {
+    if (i.type === "physical") {
+      if (!i.subtype) this.r.error("instance.physical", path, `every physical instance has exactly one subtype (slash, pierce or blunt)`);
+      if (i.element) this.r.error("instance.physical", `${path}.element`, `physical instances have no element`);
+    } else if (i.type === "magical") {
+      if (!i.element) this.r.error("instance.magical", path, `every magical instance has exactly one element`);
+      if (i.subtype) this.r.error("instance.magical", `${path}.subtype`, `magical instances have no subtype`);
+    } else if (where === "action") {
+      this.r.error("instance.untyped", `${path}.type`, `every damage instance an action produces is physical or magical`);
+    }
+    if (i.element) this.w.ref("elements", i.element, `${path}.element`, "element");
+    if (where === "pulse" && i.type !== "none") this.r.error("pulse.type", `${path}.type`, `a status's pulses and triggers deal typeless damage (type none)`);
+    if (reads(i.amount, "attack") && i.type !== "physical") this.r.error("instance.scaling", `${path}.amount`, `Attack scales only physical instances${i.type === "none" ? ": status damage is typeless" : ""}`);
+    if (reads(i.amount, "magic") && i.type !== "magical") this.r.error("instance.scaling", `${path}.amount`, `Magic scales only magical instances${i.type === "none" ? ": status damage is typeless" : ""}`);
+    this.num(i.amount, `${path}.amount`, where, inStatus);
+  }
+
+  unitCond(c: S.UnitCondT, path: string) {
+    if (c.has) this.w.ref("statuses", c.has, `${path}.has`, "status");
+    if (c.lacks) this.w.ref("statuses", c.lacks, `${path}.lacks`, "status");
+    if (c.stacks) this.w.ref("statuses", c.stacks.status, `${path}.stacks.status`, "status");
+  }
+
+  rule(t: S.TargetRuleT, path: string) {
+    if (t.where) this.unitCond(t.where, `${path}.where`);
+    if ((t.pick === "lowest" || t.pick === "highest") && !t.by) this.r.error("target.by", path, `pick ${t.pick} needs 'by'`);
+    if (t.by && typeof t.by === "object") {
+      if ("stat" in t.by) this.statKey(t.by.stat, `${path}.by.stat`);
+      else this.w.ref("statuses", t.by.stacks, `${path}.by.stacks`, "status");
+    }
+    if (t.side === "self" && t.count && t.count > 1) this.r.warn("target.count", path, `side self has one unit`);
+  }
+
+  apply(a: S.ApplyT, path: string, where: Where, inStatus: boolean) {
+    if (!this.w.ref("statuses", a.status, `${path}.status`, "status")) return;
+    const st = this.ix.get<S.StatusT>("statuses", a.status)!;
+    if (a.stacks !== undefined) {
+      if (st.stacking !== "intensity") this.r.error("apply.stacks", `${path}.stacks`, `'${a.status}' isn't an Intensity status, so it has no stacks to add`);
+      this.num(a.stacks, `${path}.stacks`, where, inStatus);
+      const harms = [...(st.pulse?.do ?? []), ...(st.trigger?.do ?? [])].some((e) => e.op === "damage");
+      if (harms && (reads(a.stacks, "attack") || reads(a.stacks, "magic"))) {
+        this.r.error("apply.scaling", `${path}.stacks`, `'${a.status}' deals typeless damage, so Attack and Magic can't scale its stacks either`);
+      }
+    }
+    if (a.duration === 0 && !st.lockout?.interrupt) {
+      this.r.error("apply.instant", `${path}.duration`, `only a lockout set to interrupt can be applied for 0 ticks (an instant interrupt)`);
+    }
+    if (typeof a.duration === "number") this.ticks(a.duration, `${path}.duration`);
+  }
+
+  effect(e: S.EffectT, path: string, where: Where, st: S.StatusT | null) {
+    const inStatus = !!st;
+    const to = e.to;
+    if (typeof to === "object") this.rule(to, `${path}.to`);
+    else if (to) {
+      if (where === "action" && ["holder", "source", "other"].includes(to)) this.r.error("effect.to", `${path}.to`, `'${to}' only means something inside a status`);
+      if (where !== "action" && to === "target") this.r.error("effect.to", `${path}.to`, `'target' is an action's targets; in a status, use holder, self, other or a rule`);
+      if (where === "pulse" && to === "other") this.r.error("effect.to", `${path}.to`, `a pulse has no event, so no 'other' unit`);
+      if (to === "source" && !st?.perSource) this.r.error("effect.to", `${path}.to`, `only Per source statuses remember their source`);
+    }
+    if (where === "reaction" && to === undefined) this.r.error("reaction.to", path, `a reaction's effects state their target (holder, self, other, source or a rule)`);
+    switch (e.op) {
+      case "damage":
+        this.instance(e, path, where, inStatus);
+        if (where !== "action" && (e.hits || e.riders || e.apply)) this.r.error("effect.hitOnly", path, `hits, riders and attached statuses belong to an action's hits`);
+        e.riders?.forEach((x, i) => this.instance(x, `${path}.riders[${i}]`, where, inStatus));
+        e.apply?.forEach((x, i) => this.apply(x, `${path}.apply[${i}]`, where, inStatus));
+        break;
+      case "heal":
+      case "mp":
+        this.num(e.amount, `${path}.amount`, where, inStatus);
+        break;
+      case "apply":
+        this.apply(e, path, where, inStatus);
+        break;
+      case "remove":
+        if (e.status) this.w.ref("statuses", e.status, `${path}.status`, "status");
+        if (e.tag && !e.kind) this.r.error("remove.tag", `${path}.tag`, `a tag narrows an effect kind; give the kind too`);
+        break;
+    }
+  }
+
+  event(spec: S.EventSpecT, path: string) {
+    if (spec.kind && !HIT_EVENTS.includes(spec.event)) this.r.error("event.kind", `${path}.kind`, `only action and hit events have a kind`);
+    if (spec.status) {
+      if (!STATUS_EVENTS.includes(spec.event)) this.r.error("event.status", `${path}.status`, `only status events name a status`);
+      this.w.ref("statuses", spec.status, `${path}.status`, "status");
+    }
+    if (spec.cause && spec.event !== "status_ended") this.r.error("event.cause", `${path}.cause`, `only status_ended has a cause`);
+  }
+
+  /** Tags that boosts, modifiers, lockouts and riders can name. */
+  knownTags(): Set<string> {
+    return new Set([...RESERVED_TAGS, ...this.pack.elements.map((e) => e.id), ...this.pack.statuses.flatMap((s) => [s.id, ...(s.tags ?? [])])]);
+  }
+
+  registries() {
+    const pack = this.pack;
+    const known = new Map(pack.stats.map((s) => [s.id, s]));
+    for (const [id, [kind]] of Object.entries(S.ENGINE_STATS)) {
+      const d = known.get(id);
+      if (!d) this.r.error("stat.engine", "stats", `the engine reads stat '${id}'; add it to the registry (kind ${kind})`);
+      else if (d.kind !== kind) this.r.error("stat.engine", `stats[${pack.stats.indexOf(d)}].kind`, `'${id}' is counted as ${kind}`);
+    }
+    pack.stats.forEach((s, i) => {
+      const p = `stats[${i}]`;
+      if (s.floor !== undefined && s.cap !== undefined && s.floor > s.cap) this.r.error("stat.range", p, `floor is above cap`);
+      if (s.brings) this.w.ref("statuses", s.brings, `${p}.brings`, "status");
+    });
+    const aggro = known.get("aggro");
+    if (aggro && !(aggro.floor !== undefined && aggro.floor > 0)) {
+      this.r.error("stat.aggroFloor", `stats[${pack.stats.indexOf(aggro)}].floor`, `Aggro's floor must be above 0: weighted picks fail when every candidate is at 0`);
+    }
+    const hp = known.get("max_hp");
+    if (hp && !(hp.floor !== undefined && hp.floor >= 1)) this.r.error("stat.hpFloor", `stats[${pack.stats.indexOf(hp)}].floor`, `max HP's floor must be at least 1`);
+    pack.elements.forEach((e, i) => {
+      if (RESERVED_TAGS.includes(e.id)) this.r.error("element.reserved", `elements[${i}]`, `'${e.id}' is already a tag (${RESERVED_TAGS.join(", ")})`);
+    });
+    pack.slots.forEach((s, i) => s.class && this.w.ref("classes", s.class, `slots[${i}].class`, "class"));
+    const rs = pack.ruleset;
+    this.weapon(rs.unarmed, "ruleset.unarmed");
+    this.ticks(rs.abilityCast, "ruleset.abilityCast");
+    this.ticks(rs.abilityRecovery, "ruleset.abilityRecovery");
+    if (rs.taken.floor > rs.taken.cap) this.r.error("ruleset.taken", "ruleset.taken", `floor is above cap`);
+  }
+
+  weapon(wp: S.WeaponT, path: string) {
+    this.instance({ ...wp, amount: wp.amount ?? 0 }, path, "action", false);
+    wp.riders?.forEach((x, i) => this.instance(x, `${path}.riders[${i}]`, "action", false));
+    wp.apply?.forEach((x, i) => this.apply(x, `${path}.apply[${i}]`, "action", false));
+    this.ticks(wp.cooldown, `${path}.cooldown`);
+    this.ticks(wp.cast, `${path}.cast`);
+    this.ticks(wp.recovery, `${path}.recovery`);
+  }
+
+  grants(g: { stats?: S.FixedStatT[]; statuses?: string[] } | undefined, path: string) {
+    g?.stats?.forEach((s, i) => this.statChange(s, `${path}.stats[${i}]`));
+    g?.statuses?.forEach((s, i) => this.w.ref("statuses", s, `${path}.statuses[${i}]`, "status"));
+  }
+
+  statBlock(b: Record<string, number> | undefined, path: string) {
+    for (const k of Object.keys(b ?? {})) this.statKey(k, `${path}.${k}`);
+  }
+
+  statuses() {
+    const tags = this.knownTags();
+    const tag = (t: string | undefined, path: string) => {
+      if (t !== undefined && !tags.has(t)) this.r.warn("tag.unknown", path, `no instance or status carries the tag '${t}'`);
+    };
+    this.pack.statuses.forEach((st, i) => {
+      const p = `statuses[${i}]`;
+      const intensity = st.stacking === "intensity";
+      if (st.element) this.w.ref("elements", st.element, `${p}.element`, "element");
+      this.ticks(st.duration, `${p}.duration`);
+      if (!intensity) {
+        for (const k of ["cap", "absorb", "trigger", "drop"] as const) {
+          if (st[k] !== undefined) this.r.error("status.intensity", `${p}.${k}`, `'${k}' belongs to Intensity statuses`);
+        }
+      } else {
+        if (st.pulse && st.trigger) this.r.error("status.trigger", p, `an Intensity status has one trigger: its pulse or an event`);
+        if (st.drop && !st.pulse && !st.trigger) this.r.error("status.drop", `${p}.drop`, `a drop needs a trigger: a pulse or an event`);
+        if (st.trigger && !st.drop && !st.trigger.do?.length) this.r.warn("status.trigger", `${p}.trigger`, `a trigger with no effects and no drop does nothing`);
+      }
+      if (st.perSource === undefined) {
+        if (st.reactions?.some((x) => x.actor === "source")) this.r.error("status.source", `${p}.reactions`, `only Per source statuses know their source, so only they can have it act`);
+        if (st.crit?.fromSource) this.r.error("status.source", `${p}.crit`, `only Per source statuses can use their source's crit stats`);
+      }
+      if (st.crit && !st.pulse && !st.trigger) this.r.warn("status.crit", `${p}.crit`, `crits apply to pulses and triggers; this status has neither`);
+      if (st.cap !== undefined) this.num(st.cap, `${p}.cap`, "pulse", true);
+      st.stats?.forEach((ch, j) => {
+        this.statChange(ch, `${p}.stats[${j}]`);
+        if (ch.flat !== undefined) this.num(ch.flat, `${p}.stats[${j}].flat`, "pulse", true);
+        if (ch.pct !== undefined) this.num(ch.pct, `${p}.stats[${j}].pct`, "pulse", true);
+      });
+      st.boosts?.forEach((b, j) => {
+        tag(b.tag, `${p}.boosts[${j}].tag`);
+        this.num(b.pct, `${p}.boosts[${j}].pct`, "pulse", true);
+      });
+      st.taken?.forEach((t, j) => {
+        tag(t.tag, `${p}.taken[${j}].tag`);
+        this.num(t.pct, `${p}.taken[${j}].pct`, "pulse", true);
+      });
+      if (st.lockout) tag(st.lockout.covers, `${p}.lockout.covers`);
+      st.riders?.forEach((x, j) => {
+        tag(x.on, `${p}.riders[${j}].on`);
+        this.instance(x.add, `${p}.riders[${j}].add`, "action", true);
+      });
+      if (st.convert?.element) this.w.ref("elements", st.convert.element, `${p}.convert.element`, "element");
+      if (st.pulse) {
+        this.ticks(st.pulse.every, `${p}.pulse.every`);
+        st.pulse.do.forEach((e, j) => this.effect(e, `${p}.pulse.do[${j}]`, "pulse", st));
+      }
+      if (st.trigger) {
+        this.event(st.trigger.on, `${p}.trigger.on`);
+        st.trigger.do?.forEach((e, j) => this.effect(e, `${p}.trigger.do[${j}]`, "pulse", st));
+      }
+      st.reactions?.forEach((x, j) => {
+        this.event(x.on, `${p}.reactions[${j}].on`);
+        x.do.forEach((e, k) => this.effect(e, `${p}.reactions[${j}].do[${k}]`, "reaction", st));
+      });
+      const empty = !st.stats && !st.boosts && !st.taken && !st.absorb && !st.lockout && !st.riders && !st.convert && !st.pulse && !st.trigger && !st.reactions;
+      if (empty) this.r.warn("status.empty", p, `status '${st.id}' has no effects`);
+    });
+  }
+
+  abilities() {
+    this.pack.abilities.forEach((a, i) => {
+      const p = `abilities[${i}]`;
+      if (a.class) this.w.ref("classes", a.class, `${p}.class`, "class");
+      this.ticks(a.cast, `${p}.cast`);
+      this.ticks(a.cooldown, `${p}.cooldown`);
+      this.ticks(a.recovery, `${p}.recovery`);
+      if (a.if) this.unitCond(a.if.where, `${p}.if.where`);
+      if (typeof a.target === "object") this.rule(a.target, `${p}.target`);
+      a.do.forEach((e, j) => this.effect(e, `${p}.do[${j}]`, "action", null));
+    });
+  }
+}
+
+// ─── Classes, specializations ────────────────────────────────────────────────
+
+function checkUnits(pack: Pack, ix: Index, w: Walker, r: Report, c: Combat) {
+  const d = pack.design;
+  pack.classes.forEach((cl, i) => {
+    const p = `classes[${i}]`;
+    cl.slots.forEach((s, j) => {
+      if (w.ref("slots", s, `${p}.slots[${j}]`, "slot") && ix.get<S.SlotDefT>("slots", s)!.class !== cl.id) {
+        r.error("class.slot", `${p}.slots[${j}]`, `slot '${s}' isn't marked as belonging to class '${cl.id}'`);
+      }
+    });
+    c.statBlock(cl.stats, `${p}.stats`);
+    c.grants(cl.passive, `${p}.passive`);
+    if (!pack.specializations.some((s) => s.class === cl.id)) r.warn("class.noSpecs", p, `class '${cl.id}' has no specializations, so no units`);
   });
 
-  // Verbs
-  const ops = new Set<string>([...S.InstantEffect.options.map((o) => o.shape.op.value), ...S.PassiveEffect.options.map((o) => o.shape.op.value)]);
-  pack.verbs.forEach((v, i) =>
-    v.signals.forEach((s, j) => {
-      const p = `verbs[${i}].signals[${j}]`;
-      if (s.op && !ops.has(s.op)) r.error("verb.signal", `${p}.op`, `'${s.op}' is not an effect op`);
-      if (s.damageType) w.ref("damageTypes", s.damageType, `${p}.damageType`, "damage type");
-      if (s.stat) w.ref("stats", s.stat, `${p}.stat`, "stat");
-      if (s.statAtLeast) w.ref("stats", s.statAtLeast.stat, `${p}.statAtLeast.stat`, "stat");
-    }),
-  );
+  pack.specializations.forEach((s, i) => {
+    const p = `specializations[${i}]`;
+    w.ref("classes", s.class, `${p}.class`, "class");
+    c.statBlock(s.stats, `${p}.stats`);
+    if (s.abilities.length !== d.abilitiesPerSpec) {
+      r.error("spec.abilityCount", `${p}.abilities`, `'${s.id}' has ${s.abilities.length} abilities; every specialization has ${d.abilitiesPerSpec}`);
+    }
+    if (new Set(s.abilities).size !== s.abilities.length) r.error("spec.abilityDuplicate", `${p}.abilities`, `an ability is listed twice`);
+    s.abilities.forEach((aid, j) => {
+      if (!w.ref("abilities", aid, `${p}.abilities[${j}]`, "ability")) return;
+      const a = ix.get<S.AbilityT>("abilities", aid)!;
+      if (a.class !== s.class) {
+        r.error("spec.abilityClass", `${p}.abilities[${j}]`, `ability '${aid}' belongs to class '${a.class ?? "none"}', not '${s.class}'; abilities don't cross classes`);
+      }
+    });
+    s.verbs.forEach((v, j) => w.ref("verbs", v, `${p}.verbs[${j}]`, "verb"));
+  });
 
-  // Traits
+  pack.abilities.forEach((a, i) => {
+    a.verbs.forEach((v, j) => w.ref("verbs", v, `abilities[${i}].verbs[${j}]`, "verb"));
+    const used = pack.specializations.some((s) => s.abilities.includes(a.id)) || pack.enemies.some((e) => e.abilities?.includes(a.id));
+    if (!used) r.warn("ability.unused", `abilities[${i}]`, `no specialization or enemy lists ability '${a.id}'`);
+  });
+}
+
+// ─── Gear ────────────────────────────────────────────────────────────────────
+
+function lootGear(pack: Pack): Set<string> {
+  const out = new Set<string>();
+  const add = (t: S.LootTableT) => {
+    t.guaranteed?.forEach((g) => out.add(g));
+    t.table?.forEach((e) => out.add(e.gear));
+  };
+  for (const dn of pack.dungeons) {
+    add(dn.loot.firstClear);
+    add(dn.loot.replay);
+    dn.challenges.forEach((ch) => add(ch.loot));
+  }
+  return out;
+}
+
+function checkGear(pack: Pack, ix: Index, w: Walker, r: Report, c: Combat) {
+  const inLoot = lootGear(pack);
+  pack.gear.forEach((g, i) => {
+    const p = `gear[${i}]`;
+    const slot = w.ref("slots", g.slot, `${p}.slot`, "slot") ? ix.get<S.SlotDefT>("slots", g.slot) : undefined;
+    g.class?.forEach((cl, j) => w.ref("classes", cl, `${p}.class[${j}]`, "class"));
+    if (slot?.class && (g.class?.length !== 1 || g.class[0] !== slot.class)) {
+      r.error("gear.slotClass", `${p}.class`, `slot '${g.slot}' belongs to class '${slot.class}', so the gear must be restricted to exactly that class`);
+    }
+    const okSource = g.tier === "efficacy" ? g.source === "loot" || g.source === "starter" : g.source === "unlock";
+    if (!okSource) r.error("gear.source", `${p}.source`, `${g.tier} gear can't come from '${g.source}' (efficacy: loot or starter; powerful and capstone: unlock)`);
+    if (g.tier === "powerful" && !g.class) r.error("gear.powerfulClass", `${p}.class`, `powerful pieces are class-specific; give them a class`);
+    if (g.tier === "efficacy" && g.statuses?.length) r.error("gear.simple", `${p}.statuses`, `efficacy gear changes numbers only, so it carries no statuses`);
+    if (g.source === "loot" && !inLoot.has(g.id)) r.warn("gear.unreachable", p, `loot gear '${g.id}' isn't in any loot table`);
+    if (g.weapon) c.weapon(g.weapon, `${p}.weapon`);
+    c.grants(g, p);
+    g.verbs.forEach((v, j) => w.ref("verbs", v, `${p}.verbs[${j}]`, "verb"));
+  });
+  // A unit has one weapon: no slot may hold weapons and other gear's weapon too.
+  const weaponSlots = new Set(pack.gear.filter((g) => g.weapon).map((g) => g.slot));
+  for (const cl of pack.classes) {
+    const slots = [...pack.slots.filter((s) => !s.class).map((s) => s.id), ...cl.slots].filter((s) => weaponSlots.has(s));
+    if (slots.length > 1) r.warn("gear.weaponSlots", "gear", `class '${cl.id}' can hold weapons in ${slots.join(" and ")}; only the first sets the basic attack`);
+  }
+}
+
+// ─── Formations ──────────────────────────────────────────────────────────────
+
+function checkFormations(pack: Pack, w: Walker, r: Report, c: Combat) {
+  pack.formations.forEach((f, i) => {
+    const p = `formations[${i}]`;
+    if (f.positions.length !== pack.design.formationPositions) {
+      r.error("formation.positions", `${p}.positions`, `'${f.id}' has ${f.positions.length} positions; formations always have ${pack.design.formationPositions}`);
+    }
+    const ids = new Set<string>();
+    const cells = new Set<string>();
+    f.positions.forEach((pos, j) => {
+      const pp = `${p}.positions[${j}]`;
+      if (ids.has(pos.id)) r.error("formation.positionId", pp, `duplicate position id '${pos.id}'`);
+      ids.add(pos.id);
+      const cell = `${pos.layout.line}:${pos.layout.column}`;
+      if (cells.has(cell)) r.error("formation.layout", `${pp}.layout`, `two slots are drawn in the same place (${pos.layout.line}, column ${pos.layout.column})`);
+      cells.add(cell);
+      c.grants(pos, pp);
+      if ((pos.stats?.length || pos.statuses?.length) && !pos.text) r.warn("formation.slotText", pp, `slot '${pos.id}' has effects but no text telling the player what it does`);
+    });
+    c.grants(f, p);
+    f.verbs.forEach((v, j) => w.ref("verbs", v, `${p}.verbs[${j}]`, "verb"));
+  });
+}
+
+// ─── Enemies and traits ──────────────────────────────────────────────────────
+
+function checkEnemies(pack: Pack, ix: Index, w: Walker, r: Report, c: Combat) {
+  const d = pack.design;
   const words = new Map<string, string>();
   const profiles = new Map<string, string>();
   pack.traits.forEach((t, i) => {
@@ -637,218 +535,13 @@ function checkRegistries(pack: Pack, ix: Index, w: Walker, r: Report) {
     profiles.set(key, t.id);
   });
 
-  pack.slots.forEach((s, i) => s.class && w.ref("classes", s.class, `slots[${i}].class`, "class"));
-
-  // Actions (before behaviours and units, so their facts are ready)
-  pack.actions.forEach((a, i) => {
-    const p = `actions[${i}]`;
-    const facts: Fact[] = [];
-    if (a.target) w.selector(a.target, ctx(`${p}.target`, ["self"], GENERAL_FROMS, ["round"], facts));
-    a.do.forEach((e, j) => w.instant(e, ctx(`${p}.do[${j}]`, ["self", "target"], [...GENERAL_FROMS, ...ACTION_FROMS], ["round"], facts)));
-    if (a.hits && a.hits > 1) facts.push({ multiHit: true });
-    w.actionFacts.set(a.id, facts);
-    compareVerbs(pack, w, r, p, `action '${a.id}'`, a.verbs, facts);
-  });
-
-  // Behaviours
-  pack.behaviours.forEach((b, i) => {
-    const p = `behaviours[${i}]`;
-    const facts: Fact[] = [];
-    w.selector(b.basicTarget, ctx(`${p}.basicTarget`, ["self"], GENERAL_FROMS, ["round"], facts));
-    if (b.modes) w.modes(b.modes, `${p}.modes`);
-    w.behaviourFacts.set(b.id, facts);
-  });
-}
-
-// ─── Classes, specializations, abilities ─────────────────────────────────────
-
-function checkUnits(pack: Pack, ix: Index, w: Walker, r: Report) {
-  const d = pack.design;
-  const abilityFacts = new Map<string, Fact[]>();
-
-  pack.abilities.forEach((a, i) => {
-    const p = `abilities[${i}]`;
-    w.ref("classes", a.class, `${p}.class`, "class");
-    if (!a.rules?.length && !a.active) r.error("ability.empty", p, `ability '${a.id}' has no rules and no active`);
-    const facts: Fact[] = [];
-    w.rules(a.rules, { path: `${p}.rules`, facts });
-    if (a.active) w.active(a.active, { path: `${p}.active`, facts });
-    abilityFacts.set(a.id, facts);
-    compareVerbs(pack, w, r, p, `ability '${a.id}'`, a.verbs, facts);
-    const statsOnly = !a.active && (a.rules ?? []).every((ru) => ru.kind === "passive" && ru.do.every((e) => e.op === "stat"));
-    if (d.rules.abilitiesAreBehaviour && a.rules?.length && statsOnly) {
-      r.error("ability.notBehaviour", p, `ability '${a.id}' only changes stats; abilities change behaviour, gear changes numbers`);
-    }
-  });
-
-  pack.classes.forEach((c, i) => {
-    const p = `classes[${i}]`;
-    c.slots.forEach((s, j) => {
-      if (w.ref("slots", s, `${p}.slots[${j}]`, "slot") && ix.get<S.SlotDefT>("slots", s)!.class !== c.id) {
-        r.error("class.slot", `${p}.slots[${j}]`, `slot '${s}' isn't marked as belonging to class '${c.id}'`);
-      }
-    });
-    w.stats(c.stats, `${p}.stats`);
-    if (!pack.specializations.some((s) => s.class === c.id)) r.warn("class.noSpecs", p, `class '${c.id}' has no specializations, so no units`);
-  });
-
-  const specFacts = new Map<string, Fact[]>();
-  pack.specializations.forEach((s, i) => {
-    const p = `specializations[${i}]`;
-    const cls = w.ref("classes", s.class, `${p}.class`, "class") ? ix.get<S.ClassDefT>("classes", s.class) : undefined;
-    w.stats(s.stats, `${p}.stats`);
-    const facts: Fact[] = [];
-    w.basic(s.basicAction, `${p}.basicAction`, facts);
-    w.behaviour(s.behaviour, `${p}.behaviour`, facts);
-    if (s.abilities.length !== d.abilitiesPerSpec) {
-      r.error("spec.abilityCount", `${p}.abilities`, `'${s.id}' has ${s.abilities.length} abilities; every specialization has ${d.abilitiesPerSpec}`);
-    }
-    if (new Set(s.abilities).size !== s.abilities.length) r.error("spec.abilityDuplicate", `${p}.abilities`, `an ability is listed twice`);
-    s.abilities.forEach((aid, j) => {
-      if (!w.ref("abilities", aid, `${p}.abilities[${j}]`, "ability")) return;
-      const a = ix.get<S.AbilityT>("abilities", aid)!;
-      if (a.class !== s.class) {
-        r.error("spec.abilityClass", `${p}.abilities[${j}]`, `ability '${aid}' belongs to class '${a.class}', not '${s.class}'; abilities don't cross classes`);
-      }
-      facts.push(...(abilityFacts.get(aid) ?? []));
-    });
-    facts.push(...baseStatFacts(effectiveStats(pack, cls?.stats, s.stats)));
-    specFacts.set(s.id, facts);
-    compareVerbs(pack, w, r, p, `specialization '${s.id}'`, s.verbs, facts);
-  });
-
-  pack.abilities.forEach((a, i) => {
-    if (!pack.specializations.some((s) => s.abilities.includes(a.id))) r.warn("ability.unused", `abilities[${i}]`, `no specialization lists ability '${a.id}'`);
-  });
-  return { specFacts };
-}
-
-// ─── Gear ────────────────────────────────────────────────────────────────────
-
-const SIMPLE_CONDITIONS = ["hpBelow", "hpAtLeast", "round", "alive"];
-
-function lootGear(pack: Pack): Set<string> {
-  const out = new Set<string>();
-  const add = (t: S.LootTableT) => {
-    t.guaranteed?.forEach((g) => out.add(g));
-    t.table?.forEach((e) => out.add(e.gear));
-  };
-  for (const dn of pack.dungeons) {
-    add(dn.loot.firstClear);
-    add(dn.loot.replay);
-    dn.challenges.forEach((c) => add(c.loot));
-  }
-  return out;
-}
-
-function checkGear(pack: Pack, ix: Index, w: Walker, r: Report) {
-  const simple = pack.design.rules.efficacyGearSimple;
-  const inLoot = lootGear(pack);
-  pack.gear.forEach((g, i) => {
-    const p = `gear[${i}]`;
-    const slot = w.ref("slots", g.slot, `${p}.slot`, "slot") ? ix.get<S.SlotDefT>("slots", g.slot) : undefined;
-    g.class?.forEach((c, j) => w.ref("classes", c, `${p}.class[${j}]`, "class"));
-    if (slot?.class && (g.class?.length !== 1 || g.class[0] !== slot.class)) {
-      r.error("gear.slotClass", `${p}.class`, `slot '${g.slot}' belongs to class '${slot.class}', so the gear must be restricted to exactly that class`);
-    }
-    const okSource = g.tier === "efficacy" ? g.source === "loot" || g.source === "starter" : g.source === "unlock";
-    if (!okSource) r.error("gear.source", `${p}.source`, `${g.tier} gear can't come from '${g.source}' (efficacy: loot or starter; powerful and capstone: unlock)`);
-    if (g.tier === "powerful" && !g.class) r.error("gear.powerfulClass", `${p}.class`, `powerful pieces are class-specific; give them a class`);
-    if (g.tier === "efficacy" && simple) {
-      if (g.rules?.length || g.active) r.error("gear.simple", p, `efficacy gear changes numbers only, so it carries no rules or actives`);
-      g.stats.forEach((m, j) => {
-        const cond = m.if;
-        if (cond && !SIMPLE_CONDITIONS.some((k) => k in cond)) {
-          r.error("gear.simpleCondition", `${p}.stats[${j}].if`, `efficacy gear allows one simple condition (${SIMPLE_CONDITIONS.join(", ")})`);
-        }
-      });
-    }
-    if (g.source === "loot" && !inLoot.has(g.id)) r.warn("gear.unreachable", p, `loot gear '${g.id}' isn't in any loot table`);
-    const facts: Fact[] = [];
-    g.stats.forEach((m, j) => {
-      w.ref("stats", m.stat, `${p}.stats[${j}].stat`, "stat");
-      if (m.if) w.cond(m.if, unitCtx(`${p}.stats[${j}].if`));
-      facts.push({ op: "stat", stat: m.stat, sign: signOf(m.mode, m.value) });
-    });
-    w.rules(g.rules, { path: `${p}.rules`, facts });
-    if (g.active) w.active(g.active, { path: `${p}.active`, facts });
-    compareVerbs(pack, w, r, p, `gear '${g.id}'`, g.verbs, facts);
-  });
-}
-
-// ─── Formations ──────────────────────────────────────────────────────────────
-
-function checkFormations(pack: Pack, ix: Index, w: Walker, r: Report) {
-  pack.formations.forEach((f, i) => {
-    const p = `formations[${i}]`;
-    if (f.positions.length !== pack.design.formationPositions) {
-      r.error("formation.positions", `${p}.positions`, `'${f.id}' has ${f.positions.length} positions; formations always have ${pack.design.formationPositions}`);
-    }
-    const ids = new Set<string>();
-    const cells = new Set<string>();
-    const facts: Fact[] = [];
-    f.positions.forEach((pos, j) => {
-      const pp = `${p}.positions[${j}]`;
-      if (ids.has(pos.id)) r.error("formation.positionId", pp, `duplicate position id '${pos.id}'`);
-      ids.add(pos.id);
-      const cell = `${pos.layout.line}:${pos.layout.column}`;
-      if (cells.has(cell)) r.error("formation.layout", `${pp}.layout`, `two slots are drawn in the same place (${pos.layout.line}, column ${pos.layout.column})`);
-      cells.add(cell);
-      w.rules(pos.rules, { path: `${pp}.rules`, facts });
-      if (pos.rules?.length && !pos.text) r.warn("formation.slotText", pp, `slot '${pos.id}' has effects but no text telling the player what it does`);
-    });
-    w.rules(f.rules, { path: `${p}.rules`, facts });
-    compareVerbs(pack, w, r, p, `formation '${f.id}'`, f.verbs, facts);
-  });
-}
-
-// ─── Enemies ─────────────────────────────────────────────────────────────────
-
-function partyVerbs(pack: Pack) {
-  return new Set<string>([
-    ...pack.specializations.flatMap((s) => s.verbs),
-    ...pack.gear.flatMap((g) => g.verbs),
-    ...pack.formations.flatMap((f) => f.verbs),
-    ...pack.perks.flatMap((p) => p.verbs),
-  ]);
-}
-
-function checkEnemies(pack: Pack, ix: Index, w: Walker, r: Report) {
-  const d = pack.design;
-  const available = partyVerbs(pack);
   pack.enemies.forEach((e, i) => {
     const p = `enemies[${i}]`;
-    w.stats(e.stats, `${p}.stats`);
-    // Facts per mechanic (basic action, each active, each rule), so keyholes can point at one.
-    const mechanics = new Map<string, Fact[]>();
-    const mechanic = (id: string, f: Fact[]) => mechanics.set(id, [...(mechanics.get(id) ?? []), ...f]);
-    const facts: Fact[] = [];
-    const basicFacts: Fact[] = [];
-    w.basic(e.basicAction, `${p}.basicAction`, basicFacts);
-    mechanic(e.basicAction, basicFacts);
-    facts.push(...basicFacts);
-    w.behaviour(e.behaviour, `${p}.behaviour`, facts);
-    e.actives?.forEach((a, j) => {
-      const f: Fact[] = [];
-      w.active(a, { path: `${p}.actives[${j}]`, facts: f });
-      mechanic(a.action, f);
-      facts.push(...f);
-    });
-    const ruleIds = new Set<string>();
-    e.rules?.forEach((rule, j) => {
-      const rp = `${p}.rules[${j}]`;
-      if (ruleIds.has(rule.id)) r.error("rule.duplicateId", rp, `duplicate rule id '${rule.id}'`);
-      ruleIds.add(rule.id);
-      const f: Fact[] = [];
-      w.rule(rule, { path: rp, facts: f });
-      mechanic(rule.id, f);
-      facts.push(...f);
-    });
-    facts.push(...baseStatFacts(effectiveStats(pack, e.stats)));
-    compareVerbs(pack, w, r, p, `enemy '${e.id}'`, e.verbs, facts);
-    const derived = deriveVerbs(pack, facts);
-
-    // Traits: the word is in the text, and the data backs it.
+    c.statBlock(e.stats, `${p}.stats`);
+    if (e.weapon) c.weapon(e.weapon, `${p}.weapon`);
+    e.abilities?.forEach((a, j) => w.ref("abilities", a, `${p}.abilities[${j}]`, "ability"));
+    e.statuses?.forEach((s, j) => w.ref("statuses", s, `${p}.statuses[${j}]`, "status"));
+    e.verbs.forEach((v, j) => w.ref("verbs", v, `${p}.verbs[${j}]`, "verb"));
     const text = e.text.toLowerCase();
     e.traits.forEach((tid, j) => {
       if (!w.ref("traits", tid, `${p}.traits[${j}]`, "trait")) return;
@@ -857,51 +550,30 @@ function checkEnemies(pack: Pack, ix: Index, w: Walker, r: Report) {
       if (!forms.some((f) => text.includes(f.toLowerCase()))) {
         r.error("enemy.traitText", `${p}.text`, `trait '${t.id}' isn't named in the enemy's text (expected one of: ${forms.map((f) => `"${f}"`).join(", ")})`);
       }
-      const missing = t.verbs.filter((v) => !derived.has(v));
-      if (missing.length) {
-        r.error("enemy.traitUnsupported", `${p}.traits[${j}]`, `trait '${t.id}' promises ${missing.join(", ")}, but nothing in this enemy's data shows it`);
-      }
     });
-
-    // Keyholes: design intent, grounded in the enemy's own verbs.
     const kh = e.keyholes ?? [];
     if (e.rank === "boss" && (kh.length < d.keyholesPerBoss[0] || kh.length > d.keyholesPerBoss[1])) {
       r.error("enemy.keyholes", `${p}.keyholes`, `boss has ${kh.length} keyholes; bosses have ${d.keyholesPerBoss[0]}–${d.keyholesPerBoss[1]}`);
-    }
-    if (e.rank === "boss" && kh.length && !kh.some((k) => k.mechanic)) {
-      r.warn("enemy.keyholeMechanics", `${p}.keyholes`, `every keyhole comes from base stats; bosses need gimmicks (rules, actives, states, summons) too`);
     }
     const khIds = new Set<string>();
     kh.forEach((k, m) => {
       const kp = `${p}.keyholes[${m}]`;
       if (khIds.has(k.id)) r.error("keyhole.id", kp, `duplicate keyhole id '${k.id}'`);
       khIds.add(k.id);
-      if (w.ref("verbs", k.from, `${kp}.from`, "verb")) {
-        if (k.mechanic !== undefined) {
-          const mf = mechanics.get(k.mechanic);
-          if (!mf) {
-            r.error("keyhole.mechanic", `${kp}.mechanic`, `'${e.id}' has no rule, active or basic action '${k.mechanic}'`);
-          } else if (!deriveVerbs(pack, mf).has(k.from)) {
-            r.error("keyhole.from", `${kp}.from`, `keyhole comes from '${k.from}', but mechanic '${k.mechanic}' doesn't show it`);
-          }
-        } else if (!derived.has(k.from)) {
-          r.error("keyhole.from", `${kp}.from`, `keyhole comes from '${k.from}', but nothing in this enemy's data shows it`);
-        }
+      if (w.ref("verbs", k.from, `${kp}.from`, "verb") && !e.verbs.includes(k.from)) {
+        r.error("keyhole.from", `${kp}.from`, `keyhole comes from '${k.from}', which isn't one of this enemy's verbs`);
       }
       k.counteredBy.forEach((v, n) => w.ref("verbs", v, `${kp}.counteredBy[${n}]`, "verb"));
       k.strongAgainst?.forEach((v, n) => w.ref("verbs", v, `${kp}.strongAgainst[${n}]`, "verb"));
       const both = k.counteredBy.filter((v) => k.strongAgainst?.includes(v));
       if (both.length) r.error("keyhole.contradiction", kp, `${both.join(", ")} is listed as both countering and blunted`);
-      if (!k.counteredBy.some((v) => available.has(v))) {
-        r.warn("keyhole.unanswerable", kp, `nothing on the party side of this pack brings ${k.counteredBy.join(" or ")}`);
-      }
     });
   });
 }
 
 // ─── Perks ───────────────────────────────────────────────────────────────────
 
-function checkPerks(pack: Pack, ix: Index, w: Walker, r: Report) {
+function checkPerks(pack: Pack, ix: Index, w: Walker, r: Report, c: Combat) {
   pack.perks.forEach((pk, i) => {
     const p = `perks[${i}]`;
     w.ref("perkFamilies", pk.family, `${p}.family`, "perk family");
@@ -913,44 +585,11 @@ function checkPerks(pack: Pack, ix: Index, w: Walker, r: Report) {
         if (base.family !== pk.family) r.warn("perk.upgradeFamily", `${p}.upgradeOf`, `upgrades a perk from another family`);
       }
     }
-    if (!pk.rules?.length && !pk.patches?.length) r.error("perk.empty", p, `perk '${pk.id}' has no rules and no patches`);
-    if (pk.requires) w.cond(pk.requires, unitCtx(`${p}.requires`));
-    if (pk.appliesTo) w.cond(pk.appliesTo, unitCtx(`${p}.appliesTo`));
-    const facts: Fact[] = [];
-    w.rules(pk.rules, { path: `${p}.rules`, facts });
-    pk.patches?.forEach((pt, j) => {
-      const pp = `${p}.patches[${j}]`;
-      if (!w.ref("abilities", pt.ability, `${pp}.ability`, "ability")) return;
-      const ability = ix.get<S.AbilityT>("abilities", pt.ability)!;
-      if (pt.rule === undefined) {
-        // Patching the ability's active.
-        if (!ability.active) return r.error("perk.patchActive", pp, `ability '${pt.ability}' has no active to patch; name a rule`);
-        if (pt.addEffects || pt.chanceAdd !== undefined) r.error("perk.patchActive", pp, `an active can only be patched with amountMul or cooldownAdd`);
-        // A perk that only tunes something shows that thing's verbs.
-        facts.push(...(w.actionFacts.get(ability.active.action) ?? []));
-        return;
-      }
-      const rule = ability.rules?.find((x) => x.id === pt.rule);
-      if (!rule) return r.error("perk.patchRule", `${pp}.rule`, `ability '${pt.ability}' has no rule '${pt.rule}'`);
-      if (pt.cooldownAdd !== undefined) r.error("perk.patchRule", pp, `cooldownAdd patches an active; leave out 'rule'`);
-      if (rule.kind !== "triggered") {
-        if (pt.addEffects || pt.chanceAdd !== undefined) r.error("perk.patchPassive", pp, `rule '${pt.rule}' is passive; only amountMul can patch it`);
-        return;
-      }
-      if (pt.addEffects) {
-        const c = w.triggeredCtx(rule.when, { path: `${pp}.addEffects`, facts });
-        const ec = { ...c, subjects: new Set<S.Subject>([...c.subjects, "target"]) };
-        pt.addEffects.forEach((e, k) => w.instant(e, { ...ec, path: `${pp}.addEffects[${k}]` }));
-      } else {
-        // A perk that only tunes a rule shows that rule's verbs.
-        w.rule(rule, { path: `${pp}(${pt.ability}.${pt.rule})`, facts });
-      }
-      if (pt.amountMul && pt.amountMul > 1) facts.push({ amountUp: true });
-    });
-    if (pk.patches?.length && !pk.requires) {
-      r.warn("perk.requires", p, `perk '${pk.id}' patches an ability but has no 'requires', so it can't tell whether a party can use it`);
-    }
-    compareVerbs(pack, w, r, p, `perk '${pk.id}'`, pk.verbs, facts);
+    if (!pk.stats?.length && !pk.statuses?.length) r.error("perk.empty", p, `perk '${pk.id}' gives no stats and no statuses`);
+    pk.for?.classes?.forEach((cl, j) => w.ref("classes", cl, `${p}.for.classes[${j}]`, "class"));
+    pk.for?.specs?.forEach((s, j) => w.ref("specializations", s, `${p}.for.specs[${j}]`, "specialization"));
+    c.grants(pk, p);
+    pk.verbs.forEach((v, j) => w.ref("verbs", v, `${p}.verbs[${j}]`, "verb"));
     if (!pack.dungeons.some((dn) => dn.perkPool.includes(pk.id))) r.warn("perk.unused", p, `perk '${pk.id}' isn't in any dungeon's pool`);
   });
 }
@@ -1089,23 +728,9 @@ function checkStarterAndProgression(pack: Pack, ix: Index, w: Walker, r: Report)
   });
 }
 
-// ─── Basic actions vs targeted actions ───────────────────────────────────────
-
-function checkActionUse(pack: Pack, ix: Index, w: Walker, r: Report) {
-  for (const [id, path] of w.basicUses) {
-    const a = ix.get<S.ActionT>("actions", id);
-    if (a?.target) r.error("action.basicTarget", path, `'${id}' is a basic action, so it takes its target from the unit's behaviour; remove its target`);
-    if (w.targetedUses.has(id)) r.error("action.dualUse", path, `'${id}' is used both as a basic action and as an active or reaction; split it in two`);
-  }
-  for (const [id, path] of w.targetedUses) {
-    const a = ix.get<S.ActionT>("actions", id);
-    if (a && !a.target) r.error("action.target", path, `'${id}' is used as an active or reaction, so it needs its own target`);
-  }
-}
-
 // ─── Totals for a full content set ───────────────────────────────────────────
 
-function checkComplete(pack: Pack, r: Report, specFacts: Map<string, Fact[]>) {
+function checkComplete(pack: Pack, r: Report) {
   const c = pack.design.complete;
   const inRange = (n: number, rg: [number, number]) => n >= rg[0] && n <= rg[1];
   if (!inRange(pack.classes.length, c.classes)) r.error("complete.classes", "classes", `${pack.classes.length} classes; a full set has ${c.classes[0]}–${c.classes[1]}`);
@@ -1114,21 +739,6 @@ function checkComplete(pack: Pack, r: Report, specFacts: Map<string, Fact[]>) {
     if (!inRange(n, c.specsPerClass)) r.error("complete.specsPerClass", "specializations", `class '${cl.id}' has ${n} specializations; a full set has ${c.specsPerClass[0]}–${c.specsPerClass[1]}`);
   }
   if (!inRange(pack.verbs.length, c.verbs)) r.error("complete.verbs", "verbs", `${pack.verbs.length} verbs; a full set has ${c.verbs[0]}–${c.verbs[1]}`);
-
-  // Roster niche: a status applied to other units should belong to few specializations.
-  const total = pack.specializations.length;
-  if (!total) return;
-  for (const st of pack.statuses) {
-    if (st.on === "self") continue;
-    const users = pack.specializations.filter((s) => (specFacts.get(s.id) ?? []).some((f) => f.op === "apply_status" && f.status === st.id && f.from !== "self"));
-    if (users.length / total > c.maxStatusShare) {
-      r.warn(
-        "complete.statusNiche",
-        "specializations",
-        `${users.length} of ${total} specializations apply '${st.id}' (${users.map((u) => u.id).join(", ")}); above the ${Math.round(c.maxStatusShare * 100)}% niche limit`,
-      );
-    }
-  }
 }
 
 // ─── Unused registry entries ─────────────────────────────────────────────────
@@ -1145,8 +755,6 @@ function checkUnused(pack: Pack, ix: Index, r: Report) {
   pack.verbs.forEach((v, i) => !declared.has(v.id) && r.warn("verb.unused", `verbs[${i}]`, `no content uses verb '${v.id}'`));
   const used = (c: Coll) => ix.used.get(c)!;
   pack.statuses.forEach((s, i) => !used("statuses").has(s.id) && r.warn("status.unused", `statuses[${i}]`, `nothing applies or reads status '${s.id}'`));
-  pack.actions.forEach((a, i) => !used("actions").has(a.id) && r.warn("action.unused", `actions[${i}]`, `no unit uses action '${a.id}'`));
-  pack.behaviours.forEach((b, i) => !used("behaviours").has(b.id) && r.warn("behaviour.unused", `behaviours[${i}]`, `no unit uses behaviour '${b.id}'`));
   pack.traits.forEach((t, i) => !used("traits").has(t.id) && r.warn("trait.unused", `traits[${i}]`, `no enemy uses trait '${t.id}'`));
   pack.perkFamilies.forEach((f, i) => !pack.perks.some((p) => p.family === f.id) && r.warn("perkFamily.unused", `perkFamilies[${i}]`, `family '${f.id}' has no perks`));
 }

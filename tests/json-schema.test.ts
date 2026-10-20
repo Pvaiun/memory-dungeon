@@ -16,6 +16,6 @@ test("exported JSON Schema accepts the worked example and party", () => {
 test("exported JSON Schema rejects an unknown effect op", () => {
   const pack = ajv.compile(read("../schema/content-pack.schema.json"));
   const bad = read("../fixtures/hollow.pack.json");
-  bad.abilities[0].rules[0].do[0].op = "resurrect";
+  bad.abilities[0].do[0].op = "resurrect";
   assert.equal(pack(bad), false);
 });

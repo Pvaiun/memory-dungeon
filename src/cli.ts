@@ -51,7 +51,7 @@ if (flag("--json")) {
     console.log(
       `  ${n("classes")} classes, ${n("specializations")} specializations, ${n("abilities")} abilities, ${n("gear")} gear, ` +
         `${n("formations")} formations, ${n("enemies")} enemies, ${n("perks")} perks, ${n("dungeons")} dungeons, ` +
-        `${challenges} challenges, ${n("traits")} traits, ${n("verbs")} verbs, ${n("statuses")} statuses, ${n("actions")} actions`,
+        `${challenges} challenges, ${n("traits")} traits, ${n("verbs")} verbs, ${n("statuses")} statuses, ${n("elements")} elements`,
     );
   }
   if (partyPath) console.log(`Party ${partyPath}${dungeon ? ` in ${dungeon}` : ""}`);

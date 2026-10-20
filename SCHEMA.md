@@ -2,6 +2,8 @@
 
 Design plan step 1 · schema 0.3 · Oct 15, 2026 · second revision after the director's review
 
+> **Step 4 replaced this schema's rule language (Oct 20, 2026).** Schema 0.4 carries the director's combat design: stats, statuses, actions and targeting rules instead of rules, actives, behaviours and expressions. The run-level parts (dungeons, challenges, loot, parties) are unchanged. `PRIMITIVES.md` lists the current building blocks; `steps/04-combat-concepts/` has the record. This file is step 1's record.
+
 > **Step numbers here are from the design plan as it stood on Oct 15.** On Oct 16, step 4 became combat concepts and a mechanics step was added as step 6, so traits, units, formations, gear, runs and encounters are now steps 7 to 12.
 
 ## What this step produces

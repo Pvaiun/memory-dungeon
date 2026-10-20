@@ -2,7 +2,7 @@
 
 What the game is, how it's being made, and where it stands. It's written for a reader with no access to the design repo, such as an AI interviewing the director about one design step. It describes; it doesn't decide. Where it and a step's brief differ, the brief is newer.
 
-Updated Oct 16, 2026, after step 3's sign-off.
+Updated Oct 20, 2026, after step 4's sign-off.
 
 ## Memory, and why the game exists
 
@@ -65,12 +65,12 @@ Direction is guidance, not law. "Firm" means bend it only with evidence and the 
 
 **Step 1, content schema.** A data format for every kind of content, and one small worked-example dungeon, the Hollow of the Grey Mother. It describes a game much like the one the director wants, but it came before the method, so it's a starting point, a JRPG-style framework, rather than locked design decisions. Its classes, numbers, formulas and rule-language building blocks are all placeholder, and later steps may keep, change or drop them. The ideas from its review that this primer already describes (no geometry, simple targeting, SaGa-style formations, keyholes as predictions) are where later steps start.
 
-**Step 2, headless engine.** The machinery that plays runs with no screen: seeded dice, runs as plain data, pauses for player decisions, exact replay and logs. Combat is a crude stand-in until step 4. What it settled for later steps:
+**Step 2, headless engine.** The machinery that plays runs with no screen: seeded dice, runs as plain data, pauses for player decisions, exact replay and logs. What it settled for later steps:
 
 - Fights run in the player's browser from a seed, and the same seed gives the same fight on every device. The server stores only a small replay record per run.
 - Combat maths uses only basic arithmetic (no powers, roots or logarithms), so curves are written as ratios or small tables.
 - Perk picks are the only decision a player makes during a run, but the engine allows other kinds to be added later.
-- The battle system is one swappable piece, so step 4 replaces the stand-in without touching the rest.
+- The battle system is one swappable piece, which step 4 filled with real combat without touching the rest.
 
 **Step 3, simulation harness.** The tool every later step uses to test its design. It runs thousands of simulated fights and simulated players' weeks, and says how sure each result is. What it settled for later steps:
 
@@ -81,13 +81,21 @@ Direction is guidance, not law. "Firm" means bend it only with evidence and the 
 - Replays are challenges only. A cleared dungeon can only be replayed through its challenges, each of which pays loot once, though anything not yet beaten can be retried freely. So there's no endless grinding. Every week a player is stuck is sorted as walled by quests or walled by play, and the balance between them has to be agreed.
 - Feel checks mainly test that information is clear. A fresh AI reader, seeing only what a player sees, says whether it could tell why a fight was lost, well enough to guess at a new strategy.
 
+**Step 4, combat concepts.** The director wrote this design themselves, and it's now the engine's combat. In short:
+
+- Fights are automatic and run on ticks. Every action (a weapon's basic attack, or an ability) has a cast time, a cooldown and a recovery; a unit starts its first available ability, else its basic attack. Abilities have a short default cast and a recovery about a sword's.
+- Damage is physical (slash, pierce or blunt: meets Evasion and Armor) or magical (an element: meets that element's Resistance). Attack and Magic scale hits only. Boosts, damage-taken modifiers, crits, riders and shields follow one resolution order.
+- Everything that happens on an event or a timer is a status: buffs, debuffs, damage over time, stuns and silences (lockouts), auras, and passives' reactions. A status's own damage is typeless; neither Attack nor Magic scales it. Stacking statuses (Intensity) end below 1 stack.
+- Default targeting picks foes weighted by Aggro, which taunts (Forced) and stealth (Forbidden) override; abilities can state their own targeting.
+- Content is data built from stats, statuses, actions and targeting rules. The building blocks will grow as content needs them; the numbers are placeholders.
+
 ## What's ahead
 
 Each later step owns its topic, so a question that belongs to a later step can be noted and left for it.
 
 | Steps | What they design |
 | --- | --- |
-| 4–6 | Combat: which concepts the game has at all (turns, dodging, crits, damage types…), the hidden verbs that describe roles, and the mechanics that express them |
+| 5–6 | The hidden verbs that describe roles, and the mechanics that express them on top of step 4's combat |
 | 7 | The trait words players see on enemies |
 | 8–12 | Units and specializations, formations, gear, dungeon runs and perks, encounters |
 | 13–17 | A starter slice, balance, progression pacing, version 1's content, AI playtests |

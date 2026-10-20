@@ -4,7 +4,7 @@
  */
 import { Party } from "../schema.js";
 import { loadContent, type Content, type Rules } from "./run.js";
-import { standin } from "./standin.js";
+import { combat, type Member } from "./combat/rules.js";
 import pack from "../../fixtures/hollow.pack.json" with { type: "json" };
 import fixtureParty from "../../fixtures/party.json" with { type: "json" };
 
@@ -30,25 +30,25 @@ export function parties(c: Content = content): Party[] {
 }
 
 /**
- * Test-only rules. Each perk pick adds 0 to 3 attack to the whole party
+ * Test-only rules. Each perk pick also adds 0 to 12 attack to the whole party
  * (by the perk's place in the pool). With `stance`, every fight also opens
- * with a decision between turns: "charge" gives the party +4 attack for that fight.
+ * with a decision before its first moment: "charge" gives the party +10 attack for that fight.
  */
 export function boostRules(opts: { stance?: boolean } = {}): Rules {
   return {
-    ...standin,
+    ...combat,
     id: opts.stance ? "test-stance" : "test-boost",
     beforeTurn: opts.stance
-      ? (x, f) => (f.round === 0 && f.queue.length === 0 ? { kind: "stance", at: `${f.stage}:open`, options: ["hold", "charge"] } : null)
+      ? (x, f) => (f.round === 0 && !(f as unknown as { begun: boolean }).begun ? { kind: "stance", at: `${f.stage}:open`, options: ["hold", "charge"] } : null)
       : undefined,
     apply(x, d, pick) {
       if (d.kind === "stance") {
-        if (pick === "charge") for (const u of x.run.fight!.units) if (u.side === "party") u.stats.attack += 4;
+        if (pick === "charge") for (const u of x.run.fight!.units as Member[]) if (u.side === "party") u.flat.attack = (u.flat.attack ?? 0) + 10;
         return;
       }
-      standin.apply(x, d, pick);
-      const bonus = x.c.dungeons.get(x.run.record.dungeon)!.perkPool.indexOf(pick) % 4;
-      for (const u of x.run.party) u.stats.attack += bonus;
+      combat.apply(x, d, pick);
+      const bonus = (x.c.dungeons.get(x.run.record.dungeon)!.perkPool.indexOf(pick) % 4) * 4;
+      for (const u of x.run.party as Member[]) u.flat.attack = (u.flat.attack ?? 0) + bonus;
     },
   };
 }

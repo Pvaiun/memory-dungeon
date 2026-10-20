@@ -9,15 +9,15 @@ import assert from "node:assert/strict";
 import { readdirSync, readFileSync } from "node:fs";
 import { explore } from "./explore.js";
 import { play, randomPicker } from "./run.js";
-import { standin } from "./standin.js";
+import { combat } from "./combat/rules.js";
 import { boostRules, content as c, DUNGEON, PARTY } from "./testkit.js";
 
 const SAFE_MATH = new Set(["floor", "ceil", "round", "trunc", "min", "max", "abs", "sign", "imul", "clz32", "fround"]);
 const dir = new URL("./", import.meta.url);
-const sources = readdirSync(dir).filter((f) => f.endsWith(".ts") && !f.endsWith(".test.ts"));
+const sources = (readdirSync(dir, { recursive: true }) as string[]).filter((f) => f.endsWith(".ts") && !f.endsWith(".test.ts"));
 
 test("engine source uses no clock, no Math.random and no inexact maths", () => {
-  assert.ok(sources.length >= 4);
+  assert.ok(sources.length >= 4 && sources.some((f) => f.startsWith("combat")), "the combat folder is scanned too");
   for (const file of sources) {
     const code = readFileSync(new URL(file, dir), "utf8")
       .replace(/\/\*[\s\S]*?\*\//g, "")
@@ -43,7 +43,7 @@ test("running and exploring touches none of them", () => {
     for (const k of banned) math[k] = trap(`Math.${k}`);
     globalThis.Date = new Proxy(RealDate, { construct: trap("new Date"), apply: trap("Date()"), get: (t, p) => (p === "now" ? trap("Date.now") : Reflect.get(t, p)) });
     performance.now = trap("performance.now");
-    for (let seed = 1; seed <= 50; seed++) play(c, standin, { dungeon: DUNGEON, party: PARTY, seed }, randomPicker(seed), { log: true });
+    for (let seed = 1; seed <= 50; seed++) play(c, combat, { dungeon: DUNGEON, party: PARTY, seed }, randomPicker(seed), { log: true });
     explore(c, boostRules({ stance: true }), { dungeon: DUNGEON, party: PARTY, seed: 1 });
   } finally {
     for (const [k, v] of saved) math[k] = v;
