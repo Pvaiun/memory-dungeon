@@ -91,3 +91,12 @@ The same table shows the design's "each Burn stack is worth about 2 pulses of da
 - **The ladder** (`src/sim/content.ts`) scales max HP, Attack and Magic only; fine for the samples.
 - **Speed** is fine for play and for studies of this size. Sweeping every party at volume (steps 13 to 16) will want parallel seeds.
 - **Firefox's engine** is still untested.
+
+## After sign-off (Oct 20)
+
+The director signed off with three changes, built the same day:
+
+- **Intensity ends below 1 stack.** `drop` and absorbs end a status when its total falls below 1,000 thousandths, and an application that would leave it below 1 stack doesn't create it. Absorbs soak whole stacks (they used to round up). The Burn test now pins [10, 5, 2, 1].
+- **Default ability recovery:** `ruleset.abilityRecovery` (3 ticks in the worked example, a sword's 25% of 12). Tests that used abilities only as devices state `recovery: 0`; the timing examples were updated to the new default.
+- **Typeless status damage.** Validator rules: a status's pulses and triggers deal type `none` (`pulse.type`); typeless damage can't scale from Attack or Magic (`instance.scaling`); nor can the stacks of a status that deals damage (`apply.scaling`). No engine change. The example's Rot is a flat 4.
+- `ENGINE_VERSION` 0.3. Full suite: 246 tests pass. Node and Bun agree over 10,000 runs (`5c4a907eebdfad4f`). The example party still wins about 40%, so no retune. Speed and study numbers above weren't re-measured.

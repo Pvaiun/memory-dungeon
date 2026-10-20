@@ -63,7 +63,7 @@ export const Subtype = z.enum(keys(SUBTYPES));
 export const TYPES = {
   physical: "Has exactly one subtype and no element. Meets Evasion and Armor. Attack scales only physical instances.",
   magical: "Has exactly one element and no subtype. Meets that element's Resistance. Magic scales only magical instances.",
-  none: "Untyped, like a pulse: never meets Evasion or Armor; meets Resistance only if it carries an element. Not allowed in actions.",
+  none: "Typeless, like a pulse: never meets Evasion or Armor; meets Resistance only if it carries an element. Attack and Magic never scale it. Not allowed in actions; the only type for a status's own damage.",
 } as const;
 export const DamageType = z.enum(keys(TYPES));
 
@@ -152,7 +152,7 @@ export const Whose = z.enum(keys(WHOSE));
 
 export const CAUSES = {
   expired: "Its duration ran out.",
-  stacks: "Its Intensity total reached 0.",
+  stacks: "Its Intensity total fell below 1 stack.",
   removed: "An effect removed it.",
   ko: "Its holder was KO'd, or its source (Per source statuses that end with their source).",
   fight_end: "The fight ended.",
@@ -403,7 +403,7 @@ export const Ability = z.strictObject({
   mp: z.number().min(0).optional(),
   cast: Ticks.optional().describe("Default: ruleset.abilityCast."),
   cooldown: Ticks,
-  recovery: Ticks.optional().describe("Default 0."),
+  recovery: Ticks.optional().describe("Default: ruleset.abilityRecovery."),
   if: Condition.optional().describe("Checked when the action starts."),
   target: Target.optional().describe("foe (default): a foe by Aggro, with overrides. ally: a random ally. Or a stated rule. Chosen when the action resolves."),
   ignoresOverrides: z.boolean().optional(),
@@ -446,6 +446,7 @@ export const PerkOffer = z.strictObject({
 export const Ruleset = z.strictObject({
   basicRecovery: z.number().gt(0).max(1).describe("A basic attack's recovery, as a share of the weapon's base cooldown. Sets the Attack Speed ceiling."),
   abilityCast: Ticks.describe("An ability's cast time unless it states one."),
+  abilityRecovery: Ticks.describe("An ability's recovery unless it states one: about a sword's."),
   taken: z.strictObject({ floor: z.number(), cap: z.number() }).describe("Bounds on a unit's total damage-taken modifier, in percent."),
   unarmed: Weapon.describe("The basic attack of a unit with no weapon."),
   maxEnemies: PosInt.describe("Most enemies in a fight."),

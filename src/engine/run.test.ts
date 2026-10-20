@@ -158,6 +158,6 @@ test("logging off changes nothing but the log", () => {
 
 test("pinned run: any change here means old records replay differently, so bump ENGINE_VERSION", () => {
   const run = play(c, combat, input(1), firstOption, { log: true });
-  assert.equal(ENGINE_VERSION, "0.2");
-  assert.equal(fingerprint(JSON.stringify(run.log!.slice(1))), "6a88ee0478344296");
+  assert.equal(ENGINE_VERSION, "0.3");
+  assert.equal(fingerprint(JSON.stringify(run.log!.slice(1))), "c34a7bb1b857a8f1");
 });

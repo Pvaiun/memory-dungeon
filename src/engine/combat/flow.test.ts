@@ -40,11 +40,21 @@ test("timing: a mage holding an axe casts Fire when it's off cooldown, unless it
   assert.equal(a.entries("cast")[0].at, 45_000);
 });
 
-test("timing: Meteor has cast time 30; a basic attack that comes off cooldown mid-cast waits until Meteor resolves", () => {
+test("timing: Meteor has cast time 30; a basic attack that comes off cooldown mid-cast waits until Meteor resolves, and its recovery ends", () => {
   const meteor = { id: "meteor", cast: 30, cooldown: 10, do: [dmg(1)] };
-  const a = arena({ party: [{ name: "Mage", weapon: weapons.dagger, abilities: ["meteor"] }], enemies: [BAG], abilities: [meteor] }).to(41);
+  const a = arena({ party: [{ name: "Mage", weapon: weapons.dagger, abilities: ["meteor"] }], enemies: [BAG], abilities: [meteor] }).to(43);
   assert.deepEqual(a.acts("Mage", "meteor"), [40]);
-  assert.deepEqual(a.acts("Mage", "basic"), [8, 40.001]);
+  assert.deepEqual(a.acts("Mage", "basic"), [8, 43], "abilities recover for the ruleset's 3 ticks (decided Oct 20)");
+});
+
+test("timing: abilities have a default recovery, about a sword's (3 ticks in the worked example); an ability can state its own", () => {
+  const zap = { id: "zap", cast: 0, cooldown: 100, do: [dmg(1)] }, snap = { ...zap, id: "snap", recovery: 0 };
+  const a = arena({ party: [{ name: "A", weapon: weapons.dagger, abilities: ["zap"] }, { name: "B", weapon: weapons.dagger, abilities: ["snap"] }], enemies: [BAG], abilities: [zap, snap] });
+  a.unit("A").acts[0].ready = a.unit("B").acts[0].ready = 15_000;
+  a.to(19);
+  // Both swing at 8 and use their ability at 15. The dagger is ready again at 16: B swings then; A is still recovering until 18.
+  assert.deepEqual(a.acts("A"), [8, 15, 18]);
+  assert.deepEqual(a.acts("B"), [8, 15, 16]);
 });
 
 test("timing: Slow (Attack Speed −100) doubles the dagger's cooldown from 8 to 16; its recovery stays 2", () => {
@@ -76,8 +86,8 @@ test("timing: every action starts the fight on cooldown, as if it had just resol
 
 test("timing: a ready unit starts its first available action: equipped abilities in slot order, then its basic attack", () => {
   const one = { id: "one", cast: 0, cooldown: 10, do: [dmg(1)] }, two = { id: "two", cast: 0, cooldown: 10, do: [dmg(1)] };
-  const a = arena({ party: [{ name: "A", weapon: { ...weapons.dagger, cooldown: 10 }, abilities: ["one", "two"] }], enemies: [BAG], abilities: [one, two] }).to(10.01);
-  assert.deepEqual(a.entries("act").map((e) => e.act), ["one", "two", "basic"]);
+  const a = arena({ party: [{ name: "A", weapon: { ...weapons.dagger, cooldown: 10 }, abilities: ["one", "two"] }], enemies: [BAG], abilities: [one, two] }).to(16);
+  assert.deepEqual(a.entries("act").map((e) => [e.act, (e.at as number) / 1000]), [["one", 10], ["two", 13], ["basic", 16]]);
 });
 
 test("timing: by default a basic attack has no cast time, and an ability has the ruleset's short one", () => {

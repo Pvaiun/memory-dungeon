@@ -278,7 +278,7 @@ function actDef(w: W, u: CUnit, i: number): ActDef {
     const a = src as S.AbilityT;
     d = {
       id, kind: "ability", name: a.name, mp: a.mp ?? 0, cast: sub(a.cast ?? w.c.pack.ruleset.abilityCast), cooldown: sub(a.cooldown),
-      recovery: sub(a.recovery ?? 0), if: a.if ?? null, target: a.target ?? "foe", ignores: a.ignoresOverrides ?? false, effects: a.do,
+      recovery: sub(a.recovery ?? w.c.pack.ruleset.abilityRecovery), if: a.if ?? null, target: a.target ?? "foe", ignores: a.ignoresOverrides ?? false, effects: a.do,
       tags: actTags("ability", a.do),
     };
   }
@@ -583,18 +583,18 @@ function calc(w: W, t: CUnit, p: Part, raw: number, tags: readonly string[], boo
   return { amount: x, word, crit: crit > 0 };
 }
 
-/** Steps 7 and 8: absorbs soak in the order they were first applied, one stack per point; the rest comes off HP. */
+/** Steps 7 and 8: absorbs soak in the order they were first applied, one whole stack per point; the rest comes off HP. */
 function take(w: W, t: CUnit, amount: number): { soaked: number; lost: number } {
   let left = amount, soaked = 0;
   const broken: SInst[] = [];
   for (const s of t.statuses) {
     if (!left) break;
     if (!def(w, s.id).absorb) continue;
-    const n = Math.min(left, Math.ceil(s.stacks / SUBTICKS));
+    const n = Math.min(left, Math.floor(s.stacks / SUBTICKS));
     s.stacks = Math.max(0, s.stacks - n * SUBTICKS);
     left -= n;
     soaked += n;
-    if (!s.stacks) broken.push(s);
+    if (s.stacks < SUBTICKS) broken.push(s);
   }
   const lost = Math.min(left, t.hp);
   t.hp -= lost;
@@ -603,7 +603,7 @@ function take(w: W, t: CUnit, amount: number): { soaked: number; lost: number } 
   return { soaked, lost };
 }
 
-const shield = (w: W, u: CUnit) => u.statuses.reduce((s, x) => (def(w, x.id).absorb ? s + Math.ceil(x.stacks / SUBTICKS) : s), 0);
+const shield = (w: W, u: CUnit) => u.statuses.reduce((s, x) => (def(w, x.id).absorb ? s + Math.floor(x.stacks / SUBTICKS) : s), 0);
 
 function logDamage(w: W, by: CUnit | null, t: CUnit, src: string, part: string, r: Calc, soaked: number) {
   w.log?.({ t: "dmg", vis: "player", at: w.f.now, by: by?.id ?? null, target: t.id, src, part, amount: r.amount, soaked, word: r.word, crit: r.crit, hp: t.hp, shield: shield(w, t) });
@@ -756,15 +756,16 @@ export function applyStatus(w: W, by: CUnit, to: CUnit, d: S.StatusT, o: ApplyOp
       cur.boost = Math.abs(boost) > Math.abs(cur.boost) ? boost : cur.boost;
       cur.heal = Math.abs(healBoost) > Math.abs(cur.heal) ? healBoost : cur.heal;
     } else {
-      cur.stacks = Math.min(capOf(w, d, cur, to), cur.stacks + add);
+      cur.stacks = Math.min(capOf(w, d, cur.nums, to), cur.stacks + add);
       if (dur !== "permanent") cur.end = end;
     }
     gained(w, to, d, cur);
     return;
   }
-  if (isIntensity(d) && add <= 0) return;
+  // An Intensity status exists only at 1 stack or more.
+  if (isIntensity(d) && Math.min(add, capOf(w, d, nums, to)) < SUBTICKS) return;
   const inst: SInst = { uid: f.seq++, id: d.id, src: d.perSource ? by.id : null, at: f.now, end, stacks: 0, nums, boost, heal: healBoost };
-  inst.stacks = isIntensity(d) ? Math.min(capOf(w, d, inst, to), add) : 0;
+  inst.stacks = isIntensity(d) ? Math.min(capOf(w, d, nums, to), add) : 0;
   to.statuses.push(inst);
   if (d.pulse) push(w, { k: "pulse", at: f.now + sub(d.pulse.every), b: pulseBatch(to, d), g: 0, slot: to.slot, seq: f.seq++, unit: to.id, uid: inst.uid });
   gained(w, to, d, inst);
@@ -780,10 +781,8 @@ function gained(w: W, to: CUnit, d: S.StatusT, s: SInst) {
   fire(w, ev("status_gained", to, null, { status: d.id }));
 }
 
-const capOf = (w: W, d: S.StatusT, s: SInst, holder: CUnit) => {
-  const i = compile(d).cap;
-  return i < 0 ? Number.MAX_SAFE_INTEGER : Math.floor(sval(w, { d, nums: s.nums, holder, actor: holder, amount: 0 }, d, d.cap!, null) * SUBTICKS);
-};
+const capOf = (w: W, d: S.StatusT, nums: number[], holder: CUnit) =>
+  compile(d).cap < 0 ? Number.MAX_SAFE_INTEGER : Math.floor(sval(w, { d, nums, holder, actor: holder, amount: 0 }, d, d.cap!, null) * SUBTICKS);
 
 /** A debuff's pulse resolves in the batch of the holder's foes; a buff's in its own side's (section 7.5). */
 const pulseBatch = (holder: CUnit, d: S.StatusT) => (d.label === "buff" ? batch(holder.side) : batch(foeSide(holder)));
@@ -822,12 +821,12 @@ function remove(w: W, t: CUnit, e: Extract<S.EffectT, { op: "remove" }>) {
   for (const s of hit) endStatus(w, t, s, "removed");
 }
 
-/** On each trigger the total drops by a fraction (rounding down) or a count, and the status ends at 0 (section 7.7). */
+/** On each trigger the total drops by a fraction (rounding down) or a count; the status ends below 1 stack (section 7.7, as decided Oct 20). */
 function drop(w: W, u: CUnit, s: SInst, d: S.StatusT) {
   if (!d.drop) return;
   s.stacks = d.drop === "all" ? 0 : "fraction" in d.drop ? Math.floor(s.stacks * (1 - d.drop.fraction)) : Math.max(0, s.stacks - sub(d.drop.count));
   if (d.stats) refresh(w, u);
-  if (!s.stacks) endStatus(w, u, s, "stacks");
+  if (s.stacks < SUBTICKS) endStatus(w, u, s, "stacks");
 }
 
 function pulse(w: W, it: Extract<Item, { k: "pulse" }>) {

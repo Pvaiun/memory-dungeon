@@ -10,8 +10,8 @@ const BAG = { name: "Bag", stats: { max_hp: 1_000_000 } };
 const rapid = (w: object = {}) => ({ ...weapons.dagger, cooldown: 1, ...w });
 const buff = (id: string, x: object) => ({ id, name: id.toUpperCase(), label: "buff", show: "icon", stacking: "refresh", ...x });
 const debuff = (id: string, x: object) => buff(id, { label: "debuff", ...x });
-/** An ability that applies a status, usable from `at` ticks. */
-const giver = (id: string, status: string, x: object = {}) => ({ id, cast: 0, cooldown: 1000, do: [{ op: "apply", status, ...x }] });
+/** An ability that applies a status: a test device, so it has no cast and no recovery. */
+const giver = (id: string, status: string, x: object = {}) => ({ id, cast: 0, recovery: 0, cooldown: 1000, do: [{ op: "apply", status, ...x }] });
 const at = (ticks: number) => ticks * 1000;
 /** Make an ability come off cooldown at a given tick instead of its own. */
 const readyAt = (a: ReturnType<typeof arena>, unit: string, ability: string, tick: number) => {
@@ -212,10 +212,11 @@ test("pulses: Burn triggers every 2 ticks for 1 fire damage per stack, then halv
   assert.deepEqual(a.hits("Bag").slice(0, 4).map((e) => [e.at, e.amount]), [[at(3), 10], [at(5), 5], [at(7), 2], [at(9), 1]]);
 });
 
-test("pulses: Burn counts stacks in thousandths, so it lingers: 10 stacks pulse 14 times, the last 10 for 0 damage (a finding for the report)", () => {
+test("intensity: a status ends when its total falls below 1 stack (decided Oct 20): 10 Burn stacks pulse 4 times, never for 0", () => {
   const a = burn(10);
-  assert.equal(a.hits("Bag").length, 14);
-  assert.equal(a.hits("Bag").filter((e) => e.amount === 0).length, 10);
+  assert.deepEqual(a.hits("Bag").map((e) => e.amount), [10, 5, 2, 1]);
+  assert.deepEqual(a.entries("status_end").map((e) => [e.at, e.cause]), [[at(9), "stacks"]]);
+  assert.equal(burn(0.5).entries("status").length, 0, "half a stack never exists");
 });
 
 test("pulses: at half per trigger, each Burn stack is worth about 2 pulses of damage at 300 stacks, but rounding each pulse down costs small totals (a finding)", () => {
@@ -464,9 +465,9 @@ test("duration: a status lasting 10 ticks affects everything that resolves up to
 
 test("removal: a cleanse that removes one debuff takes the newest; it can narrow to an effect kind; unremovable statuses stay", () => {
   const poison = debuff("poison", { stats: [{ stat: "armor", flat: -1 }] }), curse = debuff("curse", { unremovable: true, stats: [{ stat: "armor", flat: -1 }] });
-  const cleanse = { id: "cleanse", cast: 0, cooldown: 1000, target: "self", do: [{ op: "remove", label: "debuff", count: 1 }] };
-  const unstun = { id: "unstun", cast: 0, cooldown: 1000, target: "self", do: [{ op: "remove", label: "debuff", kind: "lockout" }] };
-  const purge = { id: "purge", cast: 0, cooldown: 1000, target: "self", do: [{ op: "remove", label: "debuff" }] };
+  const cleanse = { id: "cleanse", cast: 0, recovery: 0, cooldown: 1000, target: "self", do: [{ op: "remove", label: "debuff", count: 1 }] };
+  const unstun = { id: "unstun", cast: 0, recovery: 0, cooldown: 1000, target: "self", do: [{ op: "remove", label: "debuff", kind: "lockout" }] };
+  const purge = { id: "purge", cast: 0, recovery: 0, cooldown: 1000, target: "self", do: [{ op: "remove", label: "debuff" }] };
   const a = arena({ party: [{ name: "A", statuses: ["curse", "poison", "stun_long"], abilities: ["cleanse", "unstun", "purge"] }], enemies: [BAG], statuses: [poison, curse, { ...STUN, id: "stun_long", duration: undefined, lockout: { covers: "basic", interrupt: true } }], abilities: [cleanse, unstun, purge] });
   readyAt(a, "A", "cleanse", 1);
   a.to(1);
@@ -504,7 +505,7 @@ test("conditions: an ability with condition 'an ally has a lockout covering all 
 });
 
 test("targeting: rules can read statuses: 'a foe without Burn', 'the ally with the most debuffs'", () => {
-  const ignite = { id: "ignite", cast: 0, cooldown: 1, target: { side: "foes", where: { lacks: "burn" } }, do: [{ op: "apply", status: "burn", stacks: 100 }] };
+  const ignite = { id: "ignite", cast: 0, recovery: 0, cooldown: 1, target: { side: "foes", where: { lacks: "burn" } }, do: [{ op: "apply", status: "burn", stacks: 100 }] };
   const a = arena({ party: [{ name: "Mage", abilities: ["ignite"] }], enemies: [{ name: "E1", stats: { max_hp: 1e6 } }, { name: "E2", stats: { max_hp: 1e6 } }, { name: "E3", stats: { max_hp: 1e6 } }], statuses: [BURN], abilities: [ignite] }).to(3);
   assert.deepEqual(a.entries("status").map((e) => e.unit).sort(), ["e1", "e2", "e3"]);
   const d1 = debuff("d1", { stats: [{ stat: "armor", flat: -1 }] }), d2 = debuff("d2", { stats: [{ stat: "armor", flat: -1 }] });

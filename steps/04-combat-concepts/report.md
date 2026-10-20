@@ -1,6 +1,14 @@
 # Step 4 report: combat concepts
 
-Built Oct 20, 2026, from your design (`design.md`), which counted as the approved design. For your sign-off.
+Built Oct 20, 2026, from your design (`design.md`), which counted as the approved design. **Signed off by the director, Oct 20, 2026,** with the changes below. Its decisions are in `DECISIONS.md`.
+
+## After your read
+
+- **Intensity statuses end below 1 stack,** as challenged. A Burn now just fizzles out.
+- **Abilities have a default recovery,** about a sword's (3 ticks in the worked example), which fixes "two actions at once".
+- **Status damage is typeless** (your direction; my call on the details): Attack and Magic scale hits only, so neither scales a status's own damage, nor the stacks of a status that deals damage. Statuses keep their elements, and counterattacks, heals and shields scale as usual. Overrule the heal and shield part if I read you wrong. The example's Rot now deals a flat 4.
+- **The rest is confirmed as built:** the four choices below, and no design for a fight nobody can win until one happens.
+- The engine version is now 0.3. All 246 tests pass, and Chrome's and Safari's engines still agree.
 
 ## Decisions needed
 

@@ -135,6 +135,9 @@ function checkDesign(pack: Pack, r: Report) {
 // The combat rule language (design sections 3 to 8)
 // ─────────────────────────────────────────────────────────────────────────────
 
+/** Does a number read this stat? */
+const reads = (n: S.NumT, stat: string) => typeof n !== "number" && n.scale.some((s) => s.stat === stat);
+
 /** Where a number, effect or rule sits: in an action, a status's pulse or trigger, or a reaction. */
 type Where = "action" | "pulse" | "reaction";
 
@@ -198,9 +201,9 @@ class Combat {
       this.r.error("instance.untyped", `${path}.type`, `every damage instance an action produces is physical or magical`);
     }
     if (i.element) this.w.ref("elements", i.element, `${path}.element`, "element");
-    const reads = (stat: string) => typeof i.amount !== "number" && i.amount.scale.some((s) => s.stat === stat);
-    if (reads("attack") && i.type === "magical") this.r.error("instance.scaling", `${path}.amount`, `Attack scales only physical instances`);
-    if (reads("magic") && i.type === "physical") this.r.error("instance.scaling", `${path}.amount`, `Magic scales only magical instances`);
+    if (where === "pulse" && i.type !== "none") this.r.error("pulse.type", `${path}.type`, `a status's pulses and triggers deal typeless damage (type none)`);
+    if (reads(i.amount, "attack") && i.type !== "physical") this.r.error("instance.scaling", `${path}.amount`, `Attack scales only physical instances${i.type === "none" ? ": status damage is typeless" : ""}`);
+    if (reads(i.amount, "magic") && i.type !== "magical") this.r.error("instance.scaling", `${path}.amount`, `Magic scales only magical instances${i.type === "none" ? ": status damage is typeless" : ""}`);
     this.num(i.amount, `${path}.amount`, where, inStatus);
   }
 
@@ -226,6 +229,10 @@ class Combat {
     if (a.stacks !== undefined) {
       if (st.stacking !== "intensity") this.r.error("apply.stacks", `${path}.stacks`, `'${a.status}' isn't an Intensity status, so it has no stacks to add`);
       this.num(a.stacks, `${path}.stacks`, where, inStatus);
+      const harms = [...(st.pulse?.do ?? []), ...(st.trigger?.do ?? [])].some((e) => e.op === "damage");
+      if (harms && (reads(a.stacks, "attack") || reads(a.stacks, "magic"))) {
+        this.r.error("apply.scaling", `${path}.stacks`, `'${a.status}' deals typeless damage, so Attack and Magic can't scale its stacks either`);
+      }
     }
     if (a.duration === 0 && !st.lockout?.interrupt) {
       this.r.error("apply.instant", `${path}.duration`, `only a lockout set to interrupt can be applied for 0 ticks (an instant interrupt)`);
@@ -305,6 +312,7 @@ class Combat {
     const rs = pack.ruleset;
     this.weapon(rs.unarmed, "ruleset.unarmed");
     this.ticks(rs.abilityCast, "ruleset.abilityCast");
+    this.ticks(rs.abilityRecovery, "ruleset.abilityRecovery");
     if (rs.taken.floor > rs.taken.cap) this.r.error("ruleset.taken", "ruleset.taken", `floor is above cap`);
   }
 

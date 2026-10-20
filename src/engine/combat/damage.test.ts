@@ -119,7 +119,7 @@ test("boosts: Fire Bolt with +20% fire and +10% ability damage gets +30%, applie
 test("boosts: a +physical damage boost doesn't apply to Fire Bolt; a +blunt boost applies to Shield Bash but not to a sword's slash", () => {
   const phys = status("phys", { boosts: [{ tag: "physical", pct: 50 }] }), blunt = status("blunt", { boosts: [{ tag: "blunt", pct: 50 }] });
   assert.deepEqual(strike({ abilities: ["fire_bolt"], statuses: ["phys"] }, {}, { statuses: [phys], abilities: [FIRE_BOLT] }).map((e) => e.amount), [100]);
-  const a = arena({ party: [{ name: "A", stats: { armor: 20, attack: 30 }, weapon: weapons.sword, abilities: ["shield_bash"], statuses: ["blunt"] }], enemies: [BAG], statuses: [blunt], abilities: [SHIELD_BASH] }).to(12);
+  const a = arena({ party: [{ name: "A", stats: { armor: 20, attack: 30 }, weapon: weapons.sword, abilities: ["shield_bash"], statuses: ["blunt"] }], enemies: [BAG], statuses: [blunt], abilities: [SHIELD_BASH] }).to(13);
   assert.deepEqual(a.hits("Bag").map((e) => [e.src, e.amount]), [["shield_bash", 45], ["basic", 30]]);
 });
 
@@ -246,7 +246,7 @@ const BARRIER = status("barrier", { stacking: "intensity", absorb: true, cap: { 
 const WARD = (stacks: number, id = "ward") => ({ id, cast: 0, cooldown: 100, target: { side: "allies", pick: "lowest", by: "hp" }, do: [{ op: "apply", status: "barrier", stacks }] });
 
 test("shields: a Barrier adds 40 shield stacks to a unit with 20; its shield total is 60, shown as one value", () => {
-  const a = arena({ party: [{ name: "A", stats: { max_hp: 100 }, abilities: ["ward", "ward2"] }], enemies: [BAG], statuses: [BARRIER], abilities: [WARD(20), WARD(40, "ward2")] }).to(100.01);
+  const a = arena({ party: [{ name: "A", stats: { max_hp: 100 }, abilities: ["ward", "ward2"] }], enemies: [BAG], statuses: [BARRIER], abilities: [WARD(20), WARD(40, "ward2")] }).to(103);
   assert.equal(a.has("A", "barrier").length, 1);
   assert.equal(a.has("A", "barrier")[0].stacks, 60_000);
 });

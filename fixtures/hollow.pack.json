@@ -18,6 +18,7 @@
   "ruleset": {
               "basicRecovery": 0.25,
               "abilityCast": 1,
+              "abilityRecovery": 3,
               "taken": {"floor": -75, "cap": 100},
               "unarmed": {"type": "physical", "subtype": "blunt", "cooldown": 10, "amount": {"scale": [{"ratio": 0.5, "stat": "attack"}]}},
               "maxEnemies": 6,
@@ -123,16 +124,8 @@
                   "element": "shadow",
                   "stacking": "refresh",
                   "duration": 8,
-                  "pulse": {
-                            "every": 2,
-                            "do": [
-                                    {
-                                      "op": "damage",
-                                      "type": "none",
-                                      "amount": {"base": 2, "scale": [{"ratio": 0.2, "stat": "magic", "of": "source"}]}
-                                    }
-                                  ]
-                          }
+                  "pulse": {"every": 2, "do": [{"op": "damage", "type": "none", "amount": 4}]},
+                  "note": "Typeless: Attack and Magic never scale status damage."
                 },
                 {
                   "id": "stun",

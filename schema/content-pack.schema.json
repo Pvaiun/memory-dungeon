@@ -213,6 +213,11 @@
           "minimum": 0,
           "description": "An ability's cast time unless it states one."
         },
+        "abilityRecovery": {
+          "type": "number",
+          "minimum": 0,
+          "description": "An ability's recovery unless it states one: about a sword's."
+        },
         "taken": {
           "type": "object",
           "properties": {
@@ -609,6 +614,7 @@
       "required": [
         "basicRecovery",
         "abilityCast",
+        "abilityRecovery",
         "taken",
         "unarmed",
         "maxEnemies",
@@ -1898,7 +1904,7 @@
             "minimum": 0
           },
           "recovery": {
-            "description": "Default 0.",
+            "description": "Default: ruleset.abilityRecovery.",
             "type": "number",
             "minimum": 0
           },

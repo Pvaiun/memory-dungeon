@@ -153,6 +153,25 @@ test("statuses: event filters fit their events", () => {
   expectIssue("event.kind", status({ reactions: [{ on: { event: "status_gained", kind: "basic" }, do: [{ op: "heal", amount: 1, to: "holder" }] }] }));
   expectIssue("event.cause", status({ reactions: [{ on: { event: "hit_taken", cause: ["expired"] }, do: [{ op: "heal", amount: 1, to: "holder" }] }] }));
 });
+// Decided Oct 20: Attack and Magic scale hits only. A status's own damage is typeless, and neither stat feeds it.
+test("status damage is typeless: a status's pulses and triggers deal type none", () =>
+  expectIssue("pulse.type", (p) => (find(p.statuses, "bleed").pulse.do[0] = { op: "damage", type: "physical", subtype: "slash", amount: 3 })));
+test("status damage: neither Attack nor Magic scales it", () => {
+  expectIssue("instance.scaling", (p) => (find(p.statuses, "bleed").pulse.do[0].amount = { scale: [{ ratio: 0.3, stat: "attack", of: "source" }] }));
+  expectIssue("instance.scaling", (p) => (find(p.statuses, "rot").pulse.do[0].amount = { scale: [{ ratio: 0.3, stat: "magic", of: "source" }] }));
+});
+test("status damage: nor the stacks of a status that deals damage", () =>
+  expectIssue("apply.scaling", (p) => {
+    p.statuses.push({ id: "burn", name: "BURN", label: "debuff", show: "icon", element: "fire", stacking: "intensity", pulse: { every: 2, do: [{ op: "damage", type: "none", amount: 1 }] }, drop: { fraction: 0.5 } });
+    find(p.abilities, "radiance").do.push({ op: "apply", status: "burn", stacks: { scale: [{ ratio: 0.3, stat: "magic" }] } });
+  }));
+test("status damage: other stats still scale it; heals, shields and typed counterattacks keep their usual scaling", () => {
+  const p = clone(PACK) as any;
+  find(p.statuses, "bleed").pulse.do[0].amount = { scale: [{ ratio: 0.5, stat: "armor", of: "source" }] };
+  p.statuses.push({ id: "regen", name: "REGEN", label: "buff", show: "icon", stacking: "refresh", duration: 10, pulse: { every: 2, do: [{ op: "heal", amount: { scale: [{ ratio: 0.2, stat: "magic", of: "source" }] } }] } });
+  find(p.abilities, "mend").do.push({ op: "apply", status: "regen" });
+  assert.deepEqual(codes(validatePack(p).issues, "error"), [], "the worked example's Blessed Ward (shield stacks from Magic) and Riposte (a pierce counter from Attack) stay valid too");
+});
 test("statuses: a tag nothing carries is reported", () => expectIssue("tag.unknown", status({ boosts: [{ tag: "thunder", pct: 10 }] }), { level: "warning" }));
 test("targeting: picking the lowest or highest needs 'by'", () => expectIssue("target.by", (p) => delete find(p.abilities, "lunge").target.by));
 

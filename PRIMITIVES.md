@@ -41,7 +41,7 @@ Or a targeting rule.
 | --- | --- |
 | `physical` | Has exactly one subtype and no element. Meets Evasion and Armor. Attack scales only physical instances. |
 | `magical` | Has exactly one element and no subtype. Meets that element's Resistance. Magic scales only magical instances. |
-| `none` | Untyped, like a pulse: never meets Evasion or Armor; meets Resistance only if it carries an element. Not allowed in actions. |
+| `none` | Typeless, like a pulse: never meets Evasion or Armor; meets Resistance only if it carries an element. Attack and Magic never scale it. Not allowed in actions; the only type for a status's own damage. |
 
 Physical subtypes: `slash`, `pierce`, `blunt`. Elements are a registry in the pack.
 
@@ -147,7 +147,7 @@ A number is a plain number, or `{ base, scale: [...] }`: base + Σ ratio × sour
 | Cause | Meaning |
 | --- | --- |
 | `expired` | Its duration ran out. |
-| `stacks` | Its Intensity total reached 0. |
+| `stacks` | Its Intensity total fell below 1 stack. |
 | `removed` | An effect removed it. |
 | `ko` | Its holder was KO'd, or its source (Per source statuses that end with their source). |
 | `fight_end` | The fight ended. |
