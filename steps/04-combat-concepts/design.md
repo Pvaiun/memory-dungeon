@@ -1,7 +1,5 @@
 # Combat Design
 
-Draft, Oct 20, 2026. Combines Step 4: Combat Concepts with the statuses session. This file is the source of truth for combat rules.
-
 ---
 
 ## Part 1: Rules
