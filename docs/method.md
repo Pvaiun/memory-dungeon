@@ -60,6 +60,8 @@ The director reacts and the designer revises, for as many rounds as it takes, bu
 
 The tuner implements the design as data, plus engine changes where needed. Then it loops: pick the biggest problem, form a hypothesis, change something, simulate, read the result. Each round is one line in `tuning.md`. Set a round budget at the start; when it runs out, stop and report what's left rather than spiralling.
 
+**Run the checks the step needs, and only those.** Tests, studies, feel checks and re-runs of earlier steps' checks each cost time and tokens. Run the ones that tell the step something it needs to know, and skip the ones that don't. When unsure whether a check is needed, ask the director.
+
 What the tuner may change:
 
 | Level | What | How |

@@ -50,7 +50,7 @@ The work is 24 ordered design steps. They're a first pass: each step aims for th
 
 1. **Intent.** The director says what they want for the step, through an interview from a short brief. The answers are recorded in the director's words, each tagged firm, lean, reference or idea. The interviewer asks and doesn't design.
 2. **Design.** The AI designs from the intent, maps every intent item to the design, and challenges anything it thinks doesn't fit, with reasons. The director approves.
-3. **Build and tune.** The AI builds the design, simulates and tunes it, and reports in plain words, with how sure each conclusion is.
+3. **Build and tune.** The AI builds the design, simulates and tunes it, running the checks the step needs (and asking when unsure), and reports in plain words, with how sure each conclusion is.
 
 Direction is guidance, not law. "Firm" means bend it only with evidence and the director's agreement; "lean" means the designer may bend it, and says so. The AI is expected to push back early with evidence, and never to change a direction silently.
 
