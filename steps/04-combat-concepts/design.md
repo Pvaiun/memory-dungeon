@@ -1,5 +1,7 @@
 # Combat Design
 
+*Updated Oct 20, 2026, after sign-off, to match the step 4 decisions in `DECISIONS.md`.*
+
 ---
 
 ## Part 1: Rules
@@ -12,6 +14,7 @@
 - A unit is KO'd as soon as its HP reaches 0, and can be revived. A KO'd unit loses any action in progress, and anything it would have resolved later on the same sub-tick.
 - When a unit is KO'd, its own statuses end, except those flagged to survive a KO (section 7.9). Statuses it applied to other units remain, except Per source statuses set to end with their source (section 7.8).
 - The fight is won when every enemy is KO'd and lost when every party unit is KO'd. There is no time limit. The fight ends the moment either side is fully KO'd; nothing after that resolves.
+- A fight nobody can win isn't designed for until one happens. The engine's safety stop (a loss at 5,000 ticks) is engineering, not a rule.
 
 ### 2. Timing
 - Every action, basic attack or ability, has a cast time, a cooldown and a recovery:
@@ -28,7 +31,7 @@
 
 **Defaults**
 - **Basic attacks** have no cast time. Their recovery is a fixed fraction of the weapon's base cooldown, which sets the weapon's Attack Speed ceiling.
-- **Abilities** have a short cast time and no recovery.
+- **Abilities** have a short cast time and a default recovery, about a sword's (the ruleset's ability recovery). Any ability can state its own.
 - Any action can override these defaults.
 
 **Timing stats**
@@ -52,10 +55,11 @@
 
 ### 3. Actions
 - A unit has a basic attack, a class passive and equipped abilities. Starting value: two equipped out of four.
-- The equipped weapon sets the basic attack: its type, its subtype if physical, its element if magical, its hit count and its base cooldown. Classes restrict which weapons they can equip.
+- The equipped weapon sets the basic attack: its type, its subtype if physical, its element if magical, its hit count, its base cooldown, and its damage: a base plus whatever scaling the weapon states. The simplest weapon deals its base damage and scales from nothing; most state a scaling, usually Attack for physical weapons. A weapon's damage never affects abilities; a weapon reaches them only through the stats it grants. Classes restrict which weapons they can equip.
 - Each ability has an MP cost, a cast time, a cooldown and its effects. Some abilities also state a recovery or a condition.
 - Conditions are checked when an action starts. Targets are chosen, and MP is paid, when it resolves.
 - If the unit cannot pay the MP cost at resolution, the action fails. A failed action has no effect, and its cooldown does not start.
+- An action whose stated targeting finds nobody when it resolves fails the same way: no MP spent, no cooldown.
 
 ### 4. Stats
 - **Core stats.** Every unit has HP, MP, MP regen, Attack, Magic, Armor, one Resistance per element, Attack Speed, Cooldown Reduction, Crit chance and Aggro.
@@ -63,7 +67,7 @@
 - **Special stats.** Engine stats with neutral defaults that only matter once something sets them. Examples: Evasion, Accuracy, Cast Time Reduction, Crit multiplier, Thorns, Lifesteal, Healing received. The full set is built during class design.
 - **Immunity stats.** Binary special stats, one for each thing a unit can be immune to: a named status, an effect kind optionally narrowed by tag (such as all lockouts, or only lockouts that cover all actions), all debuffs, or all damage. Above 0 means immune. Innate immunity is part of a unit's base stats. Section 7.2 gives the rules.
 - **Targeting override stats.** Forced and Forbidden are binary special stats: above 0 means the unit is forced or forbidden as a target (section 6).
-- Any stat can be a scaling source.
+- Any stat can be a scaling source. No stat is tied to a damage type.
 - There are no stat families.
 - HP and MP carry between the fights of a run. Recovery between fights belongs to step 11.
 
@@ -78,25 +82,27 @@
 ### 5. Damage
 
 **Instances**
-- Every damage instance an action produces has one type, physical or magical, and one scaling source.
+- Every damage instance an action produces has one type, physical or magical, and states its own scaling.
 - Every physical instance has exactly one subtype: slash, pierce or blunt. Physical instances have no element.
 - Every magical instance has exactly one element.
 - Subtypes have no Resistance lines.
 - An action can produce several instances: multiple hits and riders. A **hit** is an instance an action produces directly.
 - A rider is an extra instance attached to a hit. It occurs whenever its parent hit occurs. If the parent hit is evaded, so is the rider.
 - A rider counts as part of its hit: hit events fire once per hit, riders included. Evasion and Armor still apply to a physical rider on its own.
-- Pulses from statuses are damage instances but not hits. They have no type (section 7.5).
+- Pulses from statuses are damage instances but not hits. By convention they have no type (section 7.5).
 
 **Scaling**
-- Amount = base + scaling source × ratio.
-- Attack scales only physical instances. Magic scales only magical instances. Any other stat can scale either type.
-- By default, physical instances scale from Attack and magical instances from Magic. Basic attacks use the default unless something states otherwise.
+- Every amount states its own scaling: a hit, a rider, a heal, a shield, reaction damage and the stacks an application adds. Amount = base + Σ stat × ratio. Most scale from one stat; some from several (a Shield Bash from 0.7 × Armor + 0.3 × Attack); some from none (a flat amount).
+- Nothing scales by default. A stat scales only what states it.
+- No stat is tied to a damage type. Attack and Magic are ordinary stats. By convention, physical things scale from Attack and magical things from Magic, and a content editor can fill that in, but the ratio is always tuned per action. Breaking the convention is for things meant to feel special: a Shield Bash from Armor, a legendary axe from Speed, a passive that makes basic attacks scale from Magic.
 - A status's Intensity total on the target can also be a scaling source, read when the action resolves (section 7.10).
+- The stacks an action adds scale from whatever it states, and from nothing by default. Raising Magic makes a Fireball's hit stronger, not its Burn, unless the Fireball states that its Burn stacks scale from Magic.
 
 **Boosts**
 - Every instance from an action has tags: action kind (basic attack or ability), type (physical or magical), subtype (physical only) and element (magical only).
 - A boost names one tag. One effect can carry several boosts. All boosts that match an instance add together and apply once.
-- Pulses carry no action kind or type. A boost reaches a pulse only when it names the pulse's element, its subtype, or a tag its status carries (section 7.5).
+- Boosts multiply what the scaling gives: a Fireball scaling from Magic, with +50% fire damage, deals 50% more.
+- A unit's boosts never reach a status's pulses. A boost that names a status or one of its tags adds stacks to that unit's applications of it instead (section 7.5).
 
 **Damage-taken modifiers**
 - A target can carry damage-taken modifiers, usually from statuses. A modifier names one tag, as a boost does, or no tag to apply to all damage. Modifiers add together among themselves.
@@ -128,7 +134,7 @@
 - Enemies use the same stats and rules. The one exception is that the party resolves first on a shared sub-tick (section 2).
 
 **Healing and crits**
-- Heals have no type and are never mitigated. They scale like damage and take healing boosts.
+- Heals have no type and are never mitigated. They state their own scaling, like damage, and take healing boosts.
 - The target's Healing received applies to heals as a separate multiplier, the way damage-taken modifiers apply to damage.
 - Crit applies to damage and healing from actions. Pulses don't crit unless their status turns crits on (section 7.5).
 
@@ -136,12 +142,12 @@
 - Step 7 of the resolution order reads **absorb** effects, which statuses carry. An absorb soaks up damage after mitigation and before HP, losing one stack per point it soaks. It soaks pulses too.
 - If a unit has several absorbs, they soak in the order they were first applied.
 - A shield is an ordinary Intensity status with an absorb (section 7.7). Stacks from every source add into one total, and its cap and decay are Intensity options.
-- Shields are not healing. They take no healing boosts and no Healing received, and they don't crit by default. Boosts that name the shield status are allowed.
+- Shields are not healing. They take no healing boosts and no Healing received, and they don't crit by default. Boosts that name the shield status add stacks to its applications.
 - Damage an absorb soaks counts as damage dealt and damage taken for events. It does not count as HP lost.
 
 ### 6. Targeting
 - **Default targeting:** an offensive action without its own targeting rule picks a random valid foe, weighted by Aggro. Basic attacks and most abilities use it.
-- An action aimed at allies without its own targeting rule picks a random valid ally.
+- An action aimed at allies without its own targeting rule picks a random valid ally. That can be the unit itself, so a healer can heal itself.
 - An ability can state its own targeting rule instead. Ties in a stated rule are broken at random.
 - Only explicit effects change Aggro. Damage dealt never changes it.
 - Effects can raise or lower Aggro, or override it by forcing or forbidding a unit as a target. Forced and Forbidden are binary stats (section 4), so default targeting reads only stats.
@@ -154,7 +160,7 @@
 ### 7. Statuses
 
 #### 7.1 What a status is
-- A status is a named effect on one unit, its **holder**. The unit that applies it is its **source**. Most statuses don't remember their source after application (section 7.6).
+- A status is a named effect on one unit, its **holder**. The unit that applies it is its **source**. A status with one applier at a time knows its source; a shared Intensity total doesn't (section 7.6).
 - Instant effects, such as damage, heals and interrupts, are not statuses.
 - A status bundles one or more effects. They share one duration, one stacking mode and one removal.
 - A status can contain only these kinds of effect:
@@ -176,9 +182,9 @@
 - MP regen works this way: the status it brings restores MP on a fixed interval.
 
 **Numbers**
-- A status's numbers use the usual formula: base + scaling source × ratio.
-- The source's stats are read once, at application.
-- The holder's stats are read each time the number is used: each pulse, each hit. Example: "deals 5% of the holder's remaining HP per pulse".
+- A status's numbers use the usual formula, and come from its definition: nothing about whoever applied it changes them.
+- They read the holder's stats each time the number is used: each pulse, each hit. Example: "deals 5% of the holder's remaining HP per pulse".
+- A status that knows its source can also read the source's stats, once, at application. Starting content won't.
 - Exception: a stat change that scales from the holder's stats is computed once, at application, so stats can't feed into each other.
 
 #### 7.2 Applying statuses
@@ -190,7 +196,7 @@
 - Default targeting doesn't skip units that already have, or are immune to, the status being applied. An ability that cares states its own targeting rule or condition (7.10).
 
 **Immunity**
-- If a status contains anything the unit is immune to, the whole status is blocked and the unit shows IMMUNE.
+- If a status contains anything the unit is immune to, the whole status is blocked and the unit shows IMMUNE. Immunity to all damage therefore blocks damage-over-time statuses, whose pulses damage their holder.
 - Immunity is a stat (section 4). Innate immunity is part of a unit's base stats. A status grants immunity with an ordinary stat change.
 
 **Elements on statuses**
@@ -218,7 +224,7 @@
 
 #### 7.4 Action changes
 - A status can add a rider to some of the holder's actions, chosen by tag: basic attack, ability, physical, magical, a subtype or an element. Rider rules apply as written (section 5).
-- That rider is part of the holder's action: it scales from the holder's stats and gets the holder's boosts. A status can instead name the source's stat, which is then fixed at application.
+- That rider is part of the holder's action: it scales from the holder's stats and gets the holder's boosts. A status that knows its source can instead name the source's stat, which is then fixed at application.
 - A status can change a magical instance's element or a physical instance's subtype. It never changes an instance's type.
 - A status changes the cost or timing of actions only through stats.
 - A status can't grant or replace actions, and can't change how its holder picks targets (Part 3).
@@ -231,22 +237,23 @@
 - Reapplying a status changes its end time, not its pulse rhythm.
 
 **Damage pulses**
-- A pulse is not a hit. It has no type, physical or magical, so it never meets Evasion or Armor.
-- A pulse can carry an element. It then meets that element's Resistance.
-- A pulse can carry a subtype. A pulse's subtype is used only for boosts.
+- A pulse is not a hit. By convention it is untyped and unresisted: neither physical nor magical, so it never meets Evasion or Armor, and with no element. Its strength comes from the status's own numbers and its stack count.
+- The engine also allows a typed pulse, or one with an element, which then meets that element's Resistance. Starting content won't use either.
+- A pulse can carry a subtype. A pulse's subtype is used only for damage-taken modifiers.
 - Damage-taken modifiers apply to pulses by the matching rule in section 5. Absorbs soak pulses as usual.
 
-**Boosts on pulses**
-- A boost reaches a pulse only when it names the pulse's element, its subtype, or a tag its status carries, such as the status's name ("+20% Burn damage").
-- Boosts by type or action kind never apply to pulses. There is no generic over-time boost.
+**Boosts and statuses**
+- No unit's boosts reach a pulse, so there is no generic over-time boost.
+- A boost that names a status or one of its tags ("+20% Burn") adds stacks to every application its unit makes of that status. Boosts by element or type don't: Burn isn't a property of fire damage. Starting content won't use these boosts.
 
 **Whose stats**
-- The applier's side is fixed at application: its stats and its boosts that reach the pulse set the amount. For Intensity (7.7), they set how many stacks it adds instead; each stack's effect is fixed by the status.
+- Everything the applier contributes is fixed at application. For Intensity (7.7), the application's stated scaling and the applier's boosts that name the status set how many stacks it adds. Each stack's effect is fixed by the status, and a stack is a stack, whoever applied it.
+- A status without stacks has the same strength from every applier. To let an applier scale one, make it Intensity.
 - The holder's side is read at each pulse: its stats (including Healing received), its Resistance and its damage-taken modifiers.
 
 **Crits**
 - Pulses don't crit by default. A status can turn crits on, as a rare exception.
-- When on, the crit chance and multiplier come from the status data and roll on the holder's random stream. A Per source status can use its source's crit stats and stream instead.
+- When on, the crit chance and multiplier come from the status data and roll on the holder's random stream. A status that knows its source can use its source's crit stats and stream instead.
 
 **Batch**
 - A debuff's pulse resolves in the batch of the holder's foes. A buff's pulse resolves in the batch of the holder's own side.
@@ -254,6 +261,7 @@
 
 **What pulses don't do**
 - Pulses don't trigger on-hit events, since those need hits. They do trigger other events, such as taking damage (7.11).
+- A pulse's damage belongs to the holder, not the applier: it doesn't count as the applier's damage dealt, so lifesteal-style effects don't work from it. Only Per source statuses credit their pulses to their source.
 
 #### 7.6 Stacking
 - A unit holds at most one copy of each status, whoever applied it. The only exception is the Per source mode.
@@ -264,26 +272,24 @@
 
 | Mode | On reapplication | When it ends |
 | --- | --- | --- |
-| Refresh | The duration resets to the new application's full duration; each number keeps the stronger of old and new | Its duration runs out |
+| Refresh | The new application replaces the old: its duration, its numbers and its source | Its duration runs out |
 | Fizzle | Nothing: the new application fails while the status is present | Its duration runs out |
-| Intensity | The new stacks add to the total (7.7); if the status has a duration, it resets to the new application's full duration | Its total reaches 0 |
+| Intensity | The new stacks add to the total (7.7); if the status has a duration, it resets to the new application's full duration | Its total falls below 1 stack |
 | Per source | Each source keeps its own copy, using one of the modes above | Per copy; can end with its source (7.8) |
 
-- "Stronger" means larger in size: −30 Attack Speed beats −20. Numbers are compared one at a time, so a bundle can end up with the best of both applications.
 - A refresh never adds durations together.
-- A weaker reapplication still resets the duration, so it can keep a stronger status going. This is accepted for now.
-- **Sources.** Only Per source statuses know their source. Only they can end with their source (7.8), use their source's crit stats (7.5), or have a reaction where the source acts (section 8). Per source is for rare statuses that must know who applied them, such as auras.
+- **Sources.** A status with one applier at a time knows its source: a Refresh status (its latest applier), a Fizzle status, and each Per source copy. A shared Intensity total has no single source. A status that knows its source can read its source's stats at application (7.1), use its source's crit stats (7.5), or have a reaction where the source acts (section 8). Only Per source statuses can end with their source (7.8). Examples: a single-target taunt, a curse that says "if I die, you die", an aura.
 - One action applying a status several times counts each application, in hit order. Three hits applying an Intensity status add three sets of stacks; three hits applying a Refresh status refresh it three times.
 - An Intensity total can have a cap. There's no limit on how many different statuses a unit holds.
 
 #### 7.7 Intensity
 - Stacks from every applier add into one total. The total is what's displayed and what sets the effect.
-- An application adds stacks. How many comes from the applier's scaling and matching boosts at application (7.5).
+- An application adds stacks. How many comes from the application's stated scaling and the applier's boosts that name the status, at application (7.5). With no stated scaling, it adds a flat number (default 1).
 - Each stack has a fixed effect set by the status. Ongoing effects, such as a damage-taken modifier, scale with the total at all times.
 - A status can have a trigger: its pulse interval (7.5) or an event (7.11), such as the holder being hit or basic attacking. On each trigger, the status's triggered effects fire for the current total, then the total drops by a stated fraction (such as half, or all) or a stated count (such as one).
 - For an event trigger, the drop happens immediately, before anything later in the order, including the next hit of a multi-hit action. The trigger's effects use the total from the moment it triggered, and resolve as a reaction on the next sub-tick (section 8).
 - A status with no trigger keeps its stacks until it's removed or its duration ends. Stacks beyond its cap are lost.
-- Stacks are counted in thousandths, like sub-ticks, dropping fractions. The display rounds. The status ends when its total reaches 0.
+- Stacks are counted in thousandths, like sub-ticks, dropping fractions. The display rounds. The status ends when its total falls below 1 stack, and never exists below 1 stack.
 - Charges are Intensity stacks that drop by one per trigger.
 
 #### 7.8 Duration
@@ -294,7 +300,7 @@
 - A Per source status can be set to end when its source is KO'd. Auras use this: an aura is a Per source status that ends when its giver is KO'd. It can be permanent or have a duration.
 
 #### 7.9 Removal
-- A status ends when its duration runs out, its Intensity total reaches 0, an effect removes it, its holder is KO'd, its source is KO'd (Per source statuses set to end with their source), or the fight ends.
+- A status ends when its duration runs out, its Intensity total falls below 1 stack, an effect removes it, its holder is KO'd, its source is KO'd (Per source statuses set to end with their source), or the fight ends.
 - A removal effect states what it removes: debuffs or buffs, optionally narrowed to a named status or an effect kind (such as lockouts), and how many (default all). When it removes fewer than all, it removes the newest first.
 - A status can be flagged unremovable. Boss mechanics, class drawbacks and passives' statuses use this.
 - When a unit is KO'd, its statuses end, except those flagged to survive a KO. A revived unit keeps only those.
@@ -323,8 +329,10 @@
 - A reaction responds to an event from the list in section 7.11 and can perform any instant effect.
 - A status's reactions to its own ending still resolve after it ends.
 - A reaction that deals damage defines that damage itself: typed like a hit, meeting Evasion and Armor, or untyped like a pulse (section 7.5).
+- Like any amount, a reaction's damage or healing states its own scaling, from the acting unit's stats: Thorns damage from Thorns, a Riposte from Speed or Attack, or a flat heal.
+- Reaction damage is never a hit: it fires no hit events and never crits. Two Thorns units can't bounce damage back and forth forever.
 - A reaction resolves on the sub-tick after the event that triggered it, never on the same sub-tick.
-- A reaction states who acts: the holder, or, for Per source statuses only, the source. The acting unit's side sets the batch.
+- A reaction states who acts: the holder, or, for a status that knows its source, the source. The acting unit's side sets the batch.
 - Reactions aren't actions. Lockouts don't stop them. A reaction can opt out if content needs it.
 - A status can react to its holder's own actions. "Take 10 damage when basic attacking" is a status with a reaction to its holder's basic attacks.
 
@@ -344,7 +352,7 @@
 - The unit sheet lists the unit's effects with their durations and numbers, as their presentations allow. Innate immunities show there too.
 - A unit under a lockout shows it through the icon of the status carrying it. An interrupt leaves no status, so it needs its own brief marker.
 - IMMUNE shows when a status is blocked. Nothing shows when a chance roll fails or a Fizzle status fails to reapply. Pulses show their numbers like hits do.
-- Default targeting, evasion, crits and status application chances are random. Pulse crits are random only where a status turns them on. Each unit has its own random stream.
+- Default targeting, evasion, crits and status application chances are random. Pulse crits are random only where a status turns them on. Each unit has its own random stream: party units by specialization, enemies by slot. The same seed brings the same luck to the same unit, whatever else is in the fight.
 
 ---
 
@@ -355,15 +363,19 @@ Numbers are illustrative only.
 **Ability cards**
 - Shield Bash · Physical · Blunt · scales with Armor. Valid.
 - Fire Bolt · Magical · Fire · scales with Magic. Valid.
-- Storm Ward · Magical · Lightning · scales with Armor. Valid: only Attack and Magic are type-locked.
+- Storm Ward · Magical · Lightning · scales with Armor. Valid: no stat is tied to a damage type.
 - Fire Slash · Physical · Fire. Invalid: physical instances have no element.
 - Strike · Physical · no subtype. Invalid: every physical instance has a subtype.
-- Ember Strike · Magical · Fire · scales with Attack. Invalid: Attack scales only physical instances.
+- Ember Strike · Magical · Fire · scales with Attack. Valid, though it breaks the convention, so save it for something meant to feel special.
+- Shield Bash · Physical · Blunt · scales with 0.7 × Armor + 0.3 × Attack. Valid.
 - Bolt · Magical · no element. Invalid: every magical instance has an element.
 
 **Weapons**
 - A unit swaps a sword for a fire staff. Its basic attack changes from physical slash, one hit, short cooldown, to magical fire with a longer cooldown.
-- The same staff on a unit with low Magic hits weakly. Scaling decides how well a weapon works on a unit.
+- The same staff, scaling from Magic, hits weakly on a unit with low Magic. Scaling decides how well a weapon works on a unit.
+- A bare-bones sword deals its base damage on every basic attack and scales from nothing.
+- Two swords with the same damage, scaling and cooldown: one grants +Attack and +Armor, the other +Crit and +Speed. Only the first makes the unit's Attack-scaling abilities hit harder. Neither sword's own damage touches the abilities.
+- A sword scaling from Magic is valid, and its designer picks whether it deals physical or magical damage.
 
 **Riders**
 - A flame sword: a physical slash hit scaling from Attack, plus a fire rider scaling from Magic.
@@ -457,19 +469,23 @@ Numbers are illustrative only.
 - A stunned unit's reactions still fire.
 
 **Pulses**
-- Burn: an Intensity status with a fire element, triggering every 2 ticks for 1 fire damage per stack, then halving. 10 stacks deal 10 fire damage on the first pulse; the total then drops to 5.
+- Burn: an Intensity status triggering every 2 ticks for 1 untyped damage per stack, then halving. 10 stacks deal 10 damage on the first pulse; the total then drops to 5. Burn given the fire element would also meet fire Resistance; starting content won't do that.
 - At half per trigger, each Burn stack is worth about 2 pulses of damage, whether the total is 3 or 300.
 - Two Mages each apply 6 Burn stacks to the same enemy. The enemy has one Burn with a total of 12.
 - Bleed: repeating damage with no element. Its 5-damage pulses get through Armor 8 and can't be evaded. Only damage-taken modifiers and absorbs reduce them.
-- A +physical damage boost never touches Poison. "+20% Burn damage" and "+20% fire damage" both reach Burn.
+- No boost touches a Poison's pulses. "+20% Burn" makes each of its unit's Burn applications add 20% more stacks; "+20% fire damage" doesn't.
+- A Mage gains Magic. Its Fireball hits harder, but its Burn is unchanged. A Fireball that states "Burn stacks scale from Magic" adds more Burn stacks; a Shield Slam could add Burn stacks scaling from Armor. Its damage could scale from Speed while its Burn stacks scale from Magic.
+- Regen as an Intensity status: every 5 ticks, the holder heals 4 per stack, with no drop. A heal that scales from Magic and also applies Regen stacks that scale from Armor is valid.
+- A Burn at 1 stack halves to 0.5 and ends; it doesn't keep pulsing for 0.
 - A party Mage's Burn on an enemy pulses in the party batch, even after the Mage is KO'd.
 - A reaction to being hit doesn't answer Burn pulses.
+- A unit immune to all damage is immune to Burn.
 - A Regen with interval 3 is applied at tick 0 and reapplied at tick 7. Its next pulse still comes at tick 9.
 - A Slowing field: a status whose pulse applies Slow to a random foe every 3 ticks.
 
 **Stacking**
-- Slow is a Refresh status. A unit with −20 Attack Speed for 10 ticks receives −30 for 4 ticks: it now has −30 for 4 ticks.
-- That unit then receives −20 for 10 ticks: it keeps −30, and the duration resets to 10. The weaker slow keeps the stronger one going.
+- Chilled is a Refresh status: −20 Attack Speed for 50 ticks. Reapplied by anyone, it replaces the old one: −20, for 50 ticks from now.
+- Fatigue is an Intensity status: −1 Attack Speed per stack, for 50 ticks. An application whose stacks scale from a stat adds more of them.
 - A Fizzle status reapplied while present fails, with no pop-up.
 - Two different statuses that both lower Attack Speed both apply. Haste +50 and Slow −50 net to 0.
 
@@ -530,17 +546,17 @@ Numbers are illustrative only.
 
 ## Part 3: Out of scope and open items
 
+**Still open (steps 6 and 8).**
+- Lifesteal as a stat needs a scale with a second factor ("X% per point of Y"). A number is base + ratio × one source today.
+
 **Deferred building blocks.** Add only when content needs them.
-- Targeting rules on the attacker: single-target taunt, charm, confusion. If added, a rule on the attacker beats overrides on targets, since it's more specific. A single-target taunt points at one specific unit, which no stat can hold, so it would be a Per source status whose holder must target its source.
+- Targeting rules on the attacker: single-target taunt, charm, confusion. If added, a rule on the attacker beats overrides on targets, since it's more specific. A single-target taunt points at one specific unit, which no stat can hold, so it would be a Refresh status that knows its source (its latest taunter), whose holder must target its source.
 - Granting or replacing actions, such as polymorph.
 - Spell reflect: sending an action back at its source.
 - Delay: pushing back a unit's timers.
 - Status resistance. If added, reducing Intensity is likely more interesting than reducing duration.
 - Protection against chain-stuns, if simulation shows units getting locked down.
 - A neutral status label, neither buff nor debuff.
-
-**Accepted edge cases.** Revisit only if they become a problem.
-- A weaker Refresh reapplication resets the duration and can keep a stronger status going (7.6).
 
 **Decided elsewhere**
 - Step 11: anything that lasts between fights.

@@ -136,7 +136,8 @@ function checkDesign(pack: Pack, r: Report) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** Does a number read this stat? */
-const reads = (n: S.NumT, stat: string) => typeof n !== "number" && n.scale.some((s) => s.stat === stat);
+/** An Intensity total that every applier adds into: it has no single source (section 7.6). */
+const shared = (st: S.StatusT) => st.stacking === "intensity" && !st.perSource;
 
 /** Where a number, effect or rule sits: in an action, a status's pulse or trigger, or a reaction. */
 type Where = "action" | "pulse" | "reaction";
@@ -147,6 +148,8 @@ const RESERVED_TAGS = ["basic", "ability", "physical", "magical", "none", "heali
 
 class Combat {
   constructor(readonly pack: Pack, readonly ix: Index, readonly w: Walker, readonly r: Report) {}
+  /** Set while checking a status that is a shared Intensity total. */
+  shared = false;
 
   /** A stat key: a registry stat, or a family member whose parts exist. */
   statKey(key: string, path: string): S.StatDefT | null {
@@ -186,6 +189,7 @@ class Combat {
       if (s.amount && where !== "reaction") this.r.error("scale.amount", p, `only a reaction has an event amount to scale from`);
       if (!inStatus && (s.of === "holder" || s.of === "source")) this.r.error("scale.of", `${p}.of`, `'${s.of}' only means something inside a status; in an action, use self or target`);
       if (inStatus && s.stat && !s.of) this.r.error("scale.of", p, `in a status, say whose stat this is: source (fixed at application) or holder (read when used)`);
+      if (inStatus && s.of === "source" && this.shared) this.r.error("scale.of", `${p}.of`, `a shared Intensity total has no single source; make the status Per source, or scale the stacks its applications add`);
     });
   }
 
@@ -201,9 +205,6 @@ class Combat {
       this.r.error("instance.untyped", `${path}.type`, `every damage instance an action produces is physical or magical`);
     }
     if (i.element) this.w.ref("elements", i.element, `${path}.element`, "element");
-    if (where === "pulse" && i.type !== "none") this.r.error("pulse.type", `${path}.type`, `a status's pulses and triggers deal typeless damage (type none)`);
-    if (reads(i.amount, "attack") && i.type !== "physical") this.r.error("instance.scaling", `${path}.amount`, `Attack scales only physical instances${i.type === "none" ? ": status damage is typeless" : ""}`);
-    if (reads(i.amount, "magic") && i.type !== "magical") this.r.error("instance.scaling", `${path}.amount`, `Magic scales only magical instances${i.type === "none" ? ": status damage is typeless" : ""}`);
     this.num(i.amount, `${path}.amount`, where, inStatus);
   }
 
@@ -228,11 +229,8 @@ class Combat {
     const st = this.ix.get<S.StatusT>("statuses", a.status)!;
     if (a.stacks !== undefined) {
       if (st.stacking !== "intensity") this.r.error("apply.stacks", `${path}.stacks`, `'${a.status}' isn't an Intensity status, so it has no stacks to add`);
+      // Stacks scale from whatever the applier states, Attack and Magic included; nothing scales them by default.
       this.num(a.stacks, `${path}.stacks`, where, inStatus);
-      const harms = [...(st.pulse?.do ?? []), ...(st.trigger?.do ?? [])].some((e) => e.op === "damage");
-      if (harms && (reads(a.stacks, "attack") || reads(a.stacks, "magic"))) {
-        this.r.error("apply.scaling", `${path}.stacks`, `'${a.status}' deals typeless damage, so Attack and Magic can't scale its stacks either`);
-      }
     }
     if (a.duration === 0 && !st.lockout?.interrupt) {
       this.r.error("apply.instant", `${path}.duration`, `only a lockout set to interrupt can be applied for 0 ticks (an instant interrupt)`);
@@ -248,7 +246,7 @@ class Combat {
       if (where === "action" && ["holder", "source", "other"].includes(to)) this.r.error("effect.to", `${path}.to`, `'${to}' only means something inside a status`);
       if (where !== "action" && to === "target") this.r.error("effect.to", `${path}.to`, `'target' is an action's targets; in a status, use holder, self, other or a rule`);
       if (where === "pulse" && to === "other") this.r.error("effect.to", `${path}.to`, `a pulse has no event, so no 'other' unit`);
-      if (to === "source" && !st?.perSource) this.r.error("effect.to", `${path}.to`, `only Per source statuses remember their source`);
+      if (to === "source" && (!st || shared(st))) this.r.error("effect.to", `${path}.to`, `only statuses with one applier at a time (Refresh, Fizzle, Per source) know their source`);
     }
     if (where === "reaction" && to === undefined) this.r.error("reaction.to", path, `a reaction's effects state their target (holder, self, other, source or a rule)`);
     switch (e.op) {
@@ -341,6 +339,7 @@ class Combat {
     };
     this.pack.statuses.forEach((st, i) => {
       const p = `statuses[${i}]`;
+      this.shared = shared(st);
       const intensity = st.stacking === "intensity";
       if (st.element) this.w.ref("elements", st.element, `${p}.element`, "element");
       this.ticks(st.duration, `${p}.duration`);
@@ -353,9 +352,9 @@ class Combat {
         if (st.drop && !st.pulse && !st.trigger) this.r.error("status.drop", `${p}.drop`, `a drop needs a trigger: a pulse or an event`);
         if (st.trigger && !st.drop && !st.trigger.do?.length) this.r.warn("status.trigger", `${p}.trigger`, `a trigger with no effects and no drop does nothing`);
       }
-      if (st.perSource === undefined) {
-        if (st.reactions?.some((x) => x.actor === "source")) this.r.error("status.source", `${p}.reactions`, `only Per source statuses know their source, so only they can have it act`);
-        if (st.crit?.fromSource) this.r.error("status.source", `${p}.crit`, `only Per source statuses can use their source's crit stats`);
+      if (shared(st)) {
+        if (st.reactions?.some((x) => x.actor === "source")) this.r.error("status.source", `${p}.reactions`, `a shared Intensity total has no single source to act`);
+        if (st.crit?.fromSource) this.r.error("status.source", `${p}.crit`, `a shared Intensity total has no single source's crit stats to use`);
       }
       if (st.crit && !st.pulse && !st.trigger) this.r.warn("status.crit", `${p}.crit`, `crits apply to pulses and triggers; this status has neither`);
       if (st.cap !== undefined) this.num(st.cap, `${p}.cap`, "pulse", true);
@@ -393,6 +392,7 @@ class Combat {
       const empty = !st.stats && !st.boosts && !st.taken && !st.absorb && !st.lockout && !st.riders && !st.convert && !st.pulse && !st.trigger && !st.reactions;
       if (empty) this.r.warn("status.empty", p, `status '${st.id}' has no effects`);
     });
+    this.shared = false;
   }
 
   abilities() {

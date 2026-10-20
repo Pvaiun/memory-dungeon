@@ -32,7 +32,7 @@ Or a targeting rule.
 | `target` | Actions: the action's targets. The default in actions. |
 | `self` | The acting unit: an action's user, a reaction's actor, or, for a pulse, its holder. |
 | `holder` | Statuses: the holder. The default for pulses. |
-| `source` | Per source statuses: the unit that applied it. |
+| `source` | Statuses that know their source (Refresh, Fizzle, Per source): the unit that applied it. |
 | `other` | Reactions: the event's other unit (the attacker for hit_taken, the target for hit_lands). Nothing if unknown. |
 
 ## Damage types
@@ -41,7 +41,7 @@ Or a targeting rule.
 | --- | --- |
 | `physical` | Has exactly one subtype and no element. Meets Evasion and Armor. Attack scales only physical instances. |
 | `magical` | Has exactly one element and no subtype. Meets that element's Resistance. Magic scales only magical instances. |
-| `none` | Typeless, like a pulse: never meets Evasion or Armor; meets Resistance only if it carries an element. Attack and Magic never scale it. Not allowed in actions; the only type for a status's own damage. |
+| `none` | Typeless: never meets Evasion or Armor; meets Resistance only if it carries an element. Not allowed in actions; the usual type for a status's own damage. |
 
 Physical subtypes: `slash`, `pierce`, `blunt`. Elements are a registry in the pack.
 
@@ -53,8 +53,8 @@ A number is a plain number, or `{ base, scale: [...] }`: base + Σ ratio × sour
 | --- | --- |
 | `self` | Actions: the acting unit. The default for stats in actions. |
 | `target` | Actions: the unit the effect lands on. The default for hp and stacks in actions. |
-| `source` | Statuses: the unit that applied the status, read once at application. The default for stats in statuses. |
-| `holder` | Statuses: the holder, read each time the number is used (stat changes: once, at application). The default for hp and stacks in statuses. |
+| `source` | Statuses that know their source (not a shared Intensity total): the unit that applied it, read once at application. |
+| `holder` | Statuses: the holder, read each time the number is used (stat changes: once, at application). The default for hp and stacks in statuses; stats must say whose. |
 
 ## Status fields
 
@@ -62,9 +62,9 @@ A number is a plain number, or `{ base, scale: [...] }`: base + Σ ratio × sour
 | --- | --- |
 | `label` | Drives removal, conditions and the batch its pulses resolve in. |
 | `show` | icon: on the HP bar with its total. sheet: listed on the unit sheet. stat: shown as a stat. |
-| `tags` | Tags boosts and modifiers can name to reach this status's pulses. |
+| `tags` | Tags that boosts (on its applications' stacks) and damage-taken modifiers (on its pulses) can name. |
 | `element` | Its damage pulses meet this element's Resistance. Full Resistance makes the unit immune to it. |
-| `subtype` | Used only for boosts on its pulses. |
+| `subtype` | Used only for damage-taken modifiers on its pulses. |
 | `stacking` |  |
 | `perSource` | Per source mode: each source keeps its own copy, using `stacking`. |
 | `duration` | Absent: permanent, until the fight ends. |
@@ -81,7 +81,7 @@ A number is a plain number, or `{ base, scale: [...] }`: base + Σ ratio × sour
 | `pulse` | A repeating effect. Intensity: its trigger. |
 | `trigger` | Intensity only: an event trigger. |
 | `drop` | Intensity only: how far the total drops on each trigger. |
-| `crit` | Turns crits on for its pulses, a rare exception. fromSource: Per source only, the source's crit stats and dice. |
+| `crit` | Turns crits on for its pulses, a rare exception. fromSource: statuses that know their source only, the source's crit stats and dice. |
 | `reactions` |  |
 
 ## Effect kinds (for immunity, removal and conditions)
@@ -192,8 +192,8 @@ An action's `target` is `foe` (default targeting: a foe by Aggro, with Forced an
 | --- | --- | --- |
 | `max_hp` | amount | Max HP. A unit is KO'd at 0 HP. |
 | `max_mp` | amount | Max MP. Abilities cost MP, paid when they resolve. |
-| `attack` | amount | The default scaling source for physical instances, and the only stat that scales only them. |
-| `magic` | amount | The default scaling source for magical instances, and the only stat that scales only them. |
+| `attack` | amount | Scales only what states it. By convention, physical things do. |
+| `magic` | amount | Scales only what states it. By convention, magical things do. |
 | `armor` | amount | A flat reduction on each physical instance, down to 0 (BLOCKED). |
 | `aggro` | amount | Default targeting picks foes weighted by Aggro. Its floor must be above 0. |
 | `resist` | points | General Resistance, in percent, added to every element's own resist:<element>. Negative shows WEAK, positive RESIST, 100 IMMUNE. |

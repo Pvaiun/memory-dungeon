@@ -241,21 +241,19 @@ test("pulses: Bleed is repeating damage with no element: its 5-damage pulses get
   assert.deepEqual(a.hits("T").map((e) => e.amount), [5, 5, 5, 5, 5, 5, 5, 5, 5, 5]);
 });
 
-test("pulses: a +physical boost never touches Poison; '+20% Poison damage' and '+20% shadow damage' both reach it, fixed from the applier at application", () => {
+test("pulses: no applier's boost reaches a status's own numbers: +physical, +20% Poison and +20% shadow all leave Poison at 10", () => {
   const poison = debuff("poison", { element: "shadow", duration: 10, pulse: { every: 2, do: [{ op: "damage", type: "none", amount: 10 }] } });
   const boosts = buff("boosts", { show: "sheet", boosts: [{ tag: "physical", pct: 50 }, { tag: "poison", pct: 20 }, { tag: "shadow", pct: 20 }] });
   const a = arena({ party: [{ name: "A", abilities: ["sting"], statuses: ["boosts"] }], enemies: [BAG], statuses: [poison, boosts], abilities: [giver("sting", "poison")] });
   readyAt(a, "A", "sting", 1);
-  a.to(3);
-  a.unit("A").statuses = [];
   a.to(5);
-  assert.deepEqual(a.hits("Bag").map((e) => e.amount), [14, 14], "fixed at application: removing the boosts later changes nothing");
+  assert.deepEqual(a.hits("Bag").map((e) => e.amount), [10, 10]);
 });
 
-test("pulses: for Intensity, the applier's matching boosts set how many stacks it adds: +40% to Burn turns 10 stacks into 14", () => {
+test("pulses: for Intensity, the applier's boosts that name the status add stacks; its element doesn't: +20% Burn and +20% fire turn 10 stacks into 12", () => {
   const boosts = buff("boosts", { show: "sheet", boosts: [{ tag: "burn", pct: 20 }, { tag: "fire", pct: 20 }] });
   const a = burn(10, { statuses: ["boosts"], more: [boosts] });
-  assert.equal(a.hits("Bag")[0].amount, 14);
+  assert.equal(a.hits("Bag")[0].amount, 12);
 });
 
 test("pulses: the holder's side is read at each pulse (its Resistance), while the applier's stats are fixed at application", () => {
@@ -327,7 +325,7 @@ test("pulses: pulses don't crit, even from a unit with 100% crit; a status can t
 
 const SLOW = debuff("slow", { stats: [{ stat: "attack_speed", flat: { scale: [{ ratio: -1, stat: "magic", of: "source" }] } }] });
 
-test("stacking: Refresh: −20 for 10 ticks, then −30 for 4: now −30 for 4; then −20 for 10: keeps −30, and the duration resets to 10", () => {
+test("stacking: Refresh: a reapplication replaces the old one: −20 for 10 ticks, then −30 for 4, then −20 for 10 from its first applier", () => {
   const a = arena({
     party: [{ name: "Weak", stats: { magic: 20 }, abilities: ["s1", "s3"] }, { name: "Strong", stats: { magic: 30 }, abilities: ["s2"] }],
     enemies: [BAG], statuses: [SLOW],
@@ -341,8 +339,9 @@ test("stacking: Refresh: −20 for 10 ticks, then −30 for 4: now −30 for 4; 
   a.to(2);
   assert.deepEqual([a.unit("Bag").stats.attack_speed, a.has("Bag", "slow")[0].end], [-30, at(6)]);
   a.to(3);
-  assert.deepEqual([a.unit("Bag").stats.attack_speed, a.has("Bag", "slow")[0].end], [-30, at(13)]);
+  assert.deepEqual([a.unit("Bag").stats.attack_speed, a.has("Bag", "slow")[0].end], [-20, at(13)]);
   assert.equal(a.has("Bag", "slow").length, 1, "a unit holds one copy of each status, whoever applied it");
+  assert.equal(a.has("Bag", "slow")[0].src, a.unit("Weak").id, "a Refresh status knows its latest applier");
 });
 
 test("stacking: a Fizzle status reapplied while present fails, with nothing shown", () => {
