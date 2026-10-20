@@ -23,7 +23,7 @@ import {
 // ─── State ──────────────────────────────────────────────────────────────────
 
 /** A status on a unit. `stacks` is the Intensity total in thousandths; `nums` the numbers fixed at application. */
-export type SInst = { uid: number; id: string; src: string | null; at: number; end: number; stacks: number; nums: number[]; boost: number; heal: number };
+export type SInst = { uid: number; id: string; src: string | null; at: number; end: number; stacks: number; nums: number[] };
 /** An action a unit can take: its equipped abilities in slot order, then "basic". `ready` is when its cooldown ends. */
 export type Act = { id: string; ready: number };
 
@@ -58,8 +58,6 @@ export type Item =
       /** The reaction's index, or -1 for an Intensity trigger's effects. */
       which: number;
       nums: number[];
-      boost: number;
-      heal: number;
       src: string | null;
       per: number;
       other: string | null;
@@ -267,8 +265,7 @@ function actDef(w: W, u: CUnit, i: number): ActDef {
   if (id === "basic") {
     const wp = src as S.WeaponT;
     const cooldown = sub(wp.cooldown);
-    const amount = wp.amount ?? { scale: [{ ratio: 1, stat: wp.type === "physical" ? "attack" : "magic" }] };
-    const hit: S.EffectT = { op: "damage", type: wp.type, subtype: wp.subtype, element: wp.element, amount, hits: wp.hits, riders: wp.riders, apply: wp.apply };
+    const hit: S.EffectT = { op: "damage", type: wp.type, subtype: wp.subtype, element: wp.element, amount: wp.amount, hits: wp.hits, riders: wp.riders, apply: wp.apply };
     d = {
       id, kind: "basic", name: "attack", mp: 0, cast: sub(wp.cast ?? 0), cooldown,
       recovery: wp.recovery !== undefined ? sub(wp.recovery) : Math.round(w.c.pack.ruleset.basicRecovery * cooldown),
@@ -456,14 +453,12 @@ type Ctx = {
   st: null | {
     d: S.StatusT;
     nums: number[];
-    boost: number;
-    heal: number;
     holder: CUnit;
     src: string | null;
     per: number;
     other: CUnit | null;
     amount: number;
-    /** A pulse or trigger: the applier's boosts are fixed. A reaction reads its actor's boosts now. */
+    /** A pulse or trigger: no unit's boosts reach it. A reaction reads its actor's boosts now. */
     fixedBoost: boolean;
   };
 };
@@ -682,7 +677,7 @@ function strike(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
       ? critRoll(w, from, stat(w, from, "crit_chance"), stat(w, from, "crit_multiplier"))
       : critRoll(w, st.holder, d.crit.chance, d.crit.multiplier ?? stat(w, st.holder, "crit_multiplier"));
   }
-  const r = calc(w, t, p, raw, tags, st.fixedBoost ? st.boost : boostOf(w, ctx.actor, tags), crit);
+  const r = calc(w, t, p, raw, tags, st.fixedBoost ? 0 : boostOf(w, ctx.actor, tags), crit);
   const tk = take(w, t, r.amount);
   const by = st.fixedBoost ? (d.perSource ? unit(w, st.src) : null) : ctx.actor;
   logDamage(w, by, t, d.id, st.fixedBoost ? "pulse" : "reaction", r, tk.soaked);
@@ -693,7 +688,7 @@ function strike(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
 /** Heals have no type and are never mitigated; they take healing boosts, Healing received, and crit from actions (section 5). */
 function heal(w: W, ctx: Ctx, t: CUnit, raw: number) {
   const st = ctx.st;
-  const boost = st ? (st.fixedBoost ? st.heal : boostOf(w, ctx.actor, ["healing", ...compile(st.d).tags])) : boostOf(w, ctx.actor, ["healing"]);
+  const boost = st ? (st.fixedBoost ? 0 : boostOf(w, ctx.actor, ["healing", ...compile(st.d).tags])) : boostOf(w, ctx.actor, ["healing"]);
   let x = raw * (1 + boost / 100) * (1 + stat(w, t, "healing_received") / 100);
   let crit = 0;
   if (!st) crit = critRoll(w, ctx.actor, stat(w, ctx.actor, "crit_chance"), stat(w, ctx.actor, "crit_multiplier"));
@@ -740,21 +735,17 @@ export function applyStatus(w: W, by: CUnit, to: CUnit, d: S.StatusT, o: ApplyOp
   const end = dur === "permanent" ? -1 : f.now + sub(dur);
   const cp = compile(d);
   const nums = cp.nums.map(({ n, stat: isStat }) => fixed(w, n, by, to, isStat));
-  // The applier's boosts that reach the status are fixed now: for Intensity they set how many stacks it adds,
-  // otherwise they scale its pulses (section 7.5).
-  let boost = boostOf(w, by, cp.tags);
-  let healBoost = boostOf(w, by, ["healing", d.id, ...(d.tags ?? [])]);
-  const add = isIntensity(d) ? Math.floor(o.stacks * (1 + boost / 100) * SUBTICKS) : 0;
-  if (isIntensity(d)) boost = healBoost = 0;
+  // Only the stacks an application adds can scale: from the applier's stated scaling, and its boosts that name
+  // the status or one of its tags (section 7.5). The applier's boosts never reach the status's own numbers.
+  const add = isIntensity(d) ? Math.floor(o.stacks * (1 + boostOf(w, by, [d.id, ...(d.tags ?? [])]) / 100) * SUBTICKS) : 0;
   const cur = to.statuses.find((s) => s.id === d.id && (!d.perSource || s.src === by.id));
   if (cur) {
     if (d.stacking === "fizzle") return;
     if (d.stacking === "refresh") {
-      // The duration resets, never adds; each number keeps the stronger of old and new (section 7.6).
+      // The new application replaces the old: its duration, its numbers and its source (section 7.6).
       cur.end = end;
-      cur.nums = cur.nums.map((v, i) => (Math.abs(nums[i]) > Math.abs(v) ? nums[i] : v));
-      cur.boost = Math.abs(boost) > Math.abs(cur.boost) ? boost : cur.boost;
-      cur.heal = Math.abs(healBoost) > Math.abs(cur.heal) ? healBoost : cur.heal;
+      cur.nums = nums;
+      cur.src = by.id;
     } else {
       cur.stacks = Math.min(capOf(w, d, cur.nums, to), cur.stacks + add);
       if (dur !== "permanent") cur.end = end;
@@ -764,7 +755,8 @@ export function applyStatus(w: W, by: CUnit, to: CUnit, d: S.StatusT, o: ApplyOp
   }
   // An Intensity status exists only at 1 stack or more.
   if (isIntensity(d) && Math.min(add, capOf(w, d, nums, to)) < SUBTICKS) return;
-  const inst: SInst = { uid: f.seq++, id: d.id, src: d.perSource ? by.id : null, at: f.now, end, stacks: 0, nums, boost, heal: healBoost };
+  // A status with one applier at a time knows it; a shared Intensity total has no single source (section 7.6).
+  const inst: SInst = { uid: f.seq++, id: d.id, src: d.perSource || !isIntensity(d) ? by.id : null, at: f.now, end, stacks: 0, nums };
   inst.stacks = isIntensity(d) ? Math.min(capOf(w, d, nums, to), add) : 0;
   to.statuses.push(inst);
   if (d.pulse) push(w, { k: "pulse", at: f.now + sub(d.pulse.every), b: pulseBatch(to, d), g: 0, slot: to.slot, seq: f.seq++, unit: to.id, uid: inst.uid });
@@ -839,7 +831,7 @@ function pulse(w: W, it: Extract<Item, { k: "pulse" }>) {
   push(w, { ...it, at: it.at + every, seq: w.f.seq++ });
   const ctx: Ctx = {
     actor: h, kind: null, targets: [], id: d.id,
-    st: { d, nums: s.nums, boost: s.boost, heal: s.heal, holder: h, src: s.src, per: perOf(d, s), other: null, amount: 0, fixedBoost: true },
+    st: { d, nums: s.nums, holder: h, src: s.src, per: perOf(d, s), other: null, amount: 0, fixedBoost: true },
   };
   for (const e of d.pulse!.do) {
     run(w, ctx, e);
@@ -929,7 +921,7 @@ function trigger(w: W, h: CUnit, s: SInst, d: S.StatusT, e: Ev) {
 function queueReaction(w: W, actor: CUnit, holder: CUnit, s: SInst, d: S.StatusT, which: number, per: number, e: Ev) {
   push(w, {
     k: "react", at: w.f.now + 1, b: batch(actor.side), g: 1, slot: actor.slot, seq: w.f.seq++, unit: actor.id,
-    holder: holder.id, status: d.id, which, nums: s.nums.slice(), boost: s.boost, heal: s.heal, src: s.src, per,
+    holder: holder.id, status: d.id, which, nums: s.nums.slice(), src: s.src, per,
     other: e.other?.id ?? null, amount: e.amount,
   });
 }
@@ -941,7 +933,7 @@ function react(w: W, it: Extract<Item, { k: "react" }>) {
   const effects = it.which < 0 ? d.trigger!.do! : d.reactions![it.which].do;
   const ctx: Ctx = {
     actor, kind: null, targets: [], id: d.id,
-    st: { d, nums: it.nums, boost: it.boost, heal: it.heal, holder: unit(w, it.holder)!, src: it.src, per: it.per, other: unit(w, it.other), amount: it.amount, fixedBoost: it.which < 0 },
+    st: { d, nums: it.nums, holder: unit(w, it.holder)!, src: it.src, per: it.per, other: unit(w, it.other), amount: it.amount, fixedBoost: it.which < 0 },
   };
   for (const e of effects) {
     run(w, ctx, e);

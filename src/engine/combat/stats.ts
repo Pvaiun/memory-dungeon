@@ -36,8 +36,8 @@ export const statDefault = (c: Content, key: string) => c.stats.get(key)?.defaul
 
 /**
  * Every number in a status, in a fixed order, so an instance can store the part
- * fixed at application (its source's side) as a plain array, and a Refresh can
- * keep the stronger of each.
+ * fixed at application (its source's side) as a plain array, which a Refresh
+ * replaces.
  */
 export type Compiled = {
   nums: { n: NumT; stat: boolean }[];

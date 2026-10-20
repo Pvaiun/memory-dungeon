@@ -101,3 +101,11 @@ The director signed off with three changes, built the same day:
 - **Typeless status damage.** Validator rules: a status's pulses and triggers deal type `none` (`pulse.type`); typeless damage can't scale from Attack or Magic (`instance.scaling`); nor can the stacks of a status that deals damage (`apply.scaling`). No engine change. The example's Rot is a flat 4.
 - **Stacks scale as the applier states** (director's correction, after sign-off). `apply.scaling` is removed: an applier's stacks can read any stat, Attack and Magic included. Stacks still default to a flat 1, so no stat scales them unless the applier says so. Validator only; no run changes.
 - `ENGINE_VERSION` 0.3. Full suite: 246 tests pass. Node and Bun agree over 10,000 runs (`5c4a907eebdfad4f`). The example party still wins about 40%, so no retune. Speed and study numbers above weren't re-measured.
+
+## After sign-off: scaling reset (director, Oct 20, 2026)
+
+- **No default scaling, no type locks.** Weapons must state `amount` (it was 1 × Attack or 1 × Magic by default); the worked example's five weapons that relied on the default now state it, so they hit the same. `instance.scaling` and `pulse.type` are gone: any stat can scale any instance, and a pulse can be typed as data.
+- **Statuses are fixed at application.** The applier's boosts reach only the stacks an Intensity application adds, and only boosts naming the status or one of its tags (no longer its element or subtype). Non-Intensity statuses no longer carry the applier's boosts into their pulses or heals.
+- **Refresh replaces** (duration, numbers and source) instead of keeping the stronger of each number.
+- **Sources.** Refresh and Fizzle statuses now record their applier, like Per source copies, so they can use `to: source`, `of: source`, `actor: source` and `crit.fromSource`. A shared Intensity total can't (`scale.of`, `status.source`, `effect.to`). Pulse damage is still credited to its source only for Per source statuses, as before.
+- `ENGINE_VERSION` 0.4. Worked example over 2,000 runs: 180 runs' logs differ, all from Bleed pulses losing an applier's boost (4 to 3), and no fight's result changes. The pinned run is unchanged after its header. Full suite: 246 tests pass; Node and Bun agree over 10,000 runs (`c16ce92cac3c6f41`).

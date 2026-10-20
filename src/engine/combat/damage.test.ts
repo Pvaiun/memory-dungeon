@@ -156,7 +156,8 @@ test("crits: crit comes before mitigation", () => {
 // ─── Riders ─────────────────────────────────────────────────────────────────
 
 const FLAME_SWORD = { ...weapons.sword, riders: [{ type: "magical" as const, element: "fire", amount: { scale: [{ ratio: 1, stat: "magic" }] } }] };
-const STORM_STAFF = { type: "magical" as const, element: "lightning", cooldown: 12, riders: [{ type: "physical" as const, subtype: "pierce" as const, amount: 10 }] };
+const MAG = { scale: [{ ratio: 1, stat: "magic" }] };
+const STORM_STAFF = { type: "magical" as const, element: "lightning", cooldown: 12, amount: MAG, riders: [{ type: "physical" as const, subtype: "pierce" as const, amount: 10 }] };
 
 test("riders: a flame sword is a slash hit from Attack plus a fire rider from Magic; if the target evades, MISS, and no fire", () => {
   const a = arena({ party: [{ name: "A", stats: { attack: 30, magic: 10, accuracy: -100 }, weapon: FLAME_SWORD }], enemies: [{ name: "T", stats: { max_hp: 1e9, evasion: 75 } }] }).to(1200);
@@ -198,7 +199,7 @@ test("scaling: any stat can be a scaling source: Shield Bash (physical, blunt) a
 });
 
 test("scaling: weapons decide how a unit's basic attack works: the same fire staff hits weakly on a unit with low Magic", () => {
-  const staff = { type: "magical" as const, element: "fire", cooldown: 15 };
+  const staff = { type: "magical" as const, element: "fire", cooldown: 15, amount: MAG };
   assert.deepEqual(strike({ stats: { magic: 40, attack: 40 }, weapon: staff }, {}).map((e) => e.amount), [40]);
   assert.deepEqual(strike({ stats: { magic: 5, attack: 40 }, weapon: staff }, {}).map((e) => e.amount), [5]);
 });

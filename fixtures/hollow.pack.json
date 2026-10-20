@@ -686,7 +686,7 @@
               "source": "starter",
               "class": ["warrior"],
               "rank": 1,
-              "weapon": {"type": "physical", "subtype": "slash", "cooldown": 12},
+              "weapon": {"type": "physical", "subtype": "slash", "cooldown": 12, "amount": {"scale": [{"ratio": 1, "stat": "attack"}]}},
               "stats": [{"stat": "attack", "flat": 1}],
               "verbs": []
             },
@@ -699,7 +699,7 @@
               "source": "loot",
               "class": ["warrior"],
               "rank": 1,
-              "weapon": {"type": "physical", "subtype": "slash", "cooldown": 11},
+              "weapon": {"type": "physical", "subtype": "slash", "cooldown": 11, "amount": {"scale": [{"ratio": 1, "stat": "attack"}]}},
               "stats": [{"stat": "attack", "flat": 4}],
               "verbs": []
             },
@@ -712,7 +712,7 @@
               "source": "loot",
               "class": ["ranger"],
               "rank": 1,
-              "weapon": {"type": "physical", "subtype": "pierce", "cooldown": 10},
+              "weapon": {"type": "physical", "subtype": "pierce", "cooldown": 10, "amount": {"scale": [{"ratio": 1, "stat": "attack"}]}},
               "stats": [{"stat": "attack", "flat": 2}, {"stat": "accuracy", "flat": 5}],
               "verbs": []
             },
@@ -725,7 +725,7 @@
               "source": "loot",
               "class": ["cleric"],
               "rank": 1,
-              "weapon": {"type": "magical", "element": "holy", "cooldown": 14},
+              "weapon": {"type": "magical", "element": "holy", "cooldown": 14, "amount": {"scale": [{"ratio": 1, "stat": "magic"}]}},
               "stats": [{"stat": "magic", "flat": 3}],
               "verbs": []
             },
@@ -955,7 +955,7 @@
                 "rank": "minion",
                 "traits": ["agile", "strong_in_numbers"],
                 "stats": {"max_hp": 55, "attack": 11, "armor": 1, "evasion": 20},
-                "weapon": {"type": "physical", "subtype": "pierce", "cooldown": 8},
+                "weapon": {"type": "physical", "subtype": "pierce", "cooldown": 8, "amount": {"scale": [{"ratio": 1, "stat": "attack"}]}},
                 "statuses": ["pack_fury"],
                 "verbs": ["physical_damage", "evasion", "numbers"]
               },

@@ -268,7 +268,6 @@
               "description": "The base cooldown, in ticks."
             },
             "amount": {
-              "description": "Per hit. Default: 1 × Attack (physical) or 1 × Magic (magical).",
               "anyOf": [
                 {
                   "type": "number"
@@ -333,7 +332,8 @@
                   ],
                   "additionalProperties": false
                 }
-              ]
+              ],
+              "description": "Per hit: a base, plus whatever scaling the weapon states. Nothing scales it by default."
             },
             "cast": {
               "description": "Default 0.",
@@ -455,7 +455,7 @@
                     "pattern": "^[a-z][a-z0-9_]*$"
                   },
                   "stacks": {
-                    "description": "Intensity: stacks added, from the applier's scaling and boosts. Default 1.",
+                    "description": "Intensity: stacks added, scaled only as stated here, plus the applier's boosts that name the status or its tags. Default 1.",
                     "anyOf": [
                       {
                         "type": "number"
@@ -551,7 +551,8 @@
           },
           "required": [
             "type",
-            "cooldown"
+            "cooldown",
+            "amount"
           ],
           "additionalProperties": false,
           "description": "The basic attack of a unit with no weapon."
@@ -732,7 +733,7 @@
             "description": "icon: on the HP bar with its total. sheet: listed on the unit sheet. stat: shown as a stat."
           },
           "tags": {
-            "description": "Tags boosts and modifiers can name to reach this status's pulses.",
+            "description": "Tags that boosts (on its applications' stacks) and damage-taken modifiers (on its pulses) can name.",
             "type": "array",
             "items": {
               "type": "string",
@@ -745,7 +746,7 @@
             "pattern": "^[a-z][a-z0-9_]*$"
           },
           "subtype": {
-            "description": "Used only for boosts on its pulses.",
+            "description": "Used only for damage-taken modifiers on its pulses.",
             "type": "string",
             "enum": [
               "slash",
@@ -1466,7 +1467,7 @@
             ]
           },
           "crit": {
-            "description": "Turns crits on for its pulses, a rare exception. fromSource: Per source only, the source's crit stats and dice.",
+            "description": "Turns crits on for its pulses, a rare exception. fromSource: statuses that know their source only, the source's crit stats and dice.",
             "type": "object",
             "properties": {
               "chance": {
@@ -1560,7 +1561,7 @@
                   "additionalProperties": false
                 },
                 "actor": {
-                  "description": "Who acts. source only for Per source statuses. Default holder.",
+                  "description": "Who acts. source only for statuses that know their source. Default holder.",
                   "type": "string",
                   "enum": [
                     "holder",
@@ -2301,7 +2302,6 @@
                 "description": "The base cooldown, in ticks."
               },
               "amount": {
-                "description": "Per hit. Default: 1 × Attack (physical) or 1 × Magic (magical).",
                 "anyOf": [
                   {
                     "type": "number"
@@ -2366,7 +2366,8 @@
                     ],
                     "additionalProperties": false
                   }
-                ]
+                ],
+                "description": "Per hit: a base, plus whatever scaling the weapon states. Nothing scales it by default."
               },
               "cast": {
                 "description": "Default 0.",
@@ -2488,7 +2489,7 @@
                       "pattern": "^[a-z][a-z0-9_]*$"
                     },
                     "stacks": {
-                      "description": "Intensity: stacks added, from the applier's scaling and boosts. Default 1.",
+                      "description": "Intensity: stacks added, scaled only as stated here, plus the applier's boosts that name the status or its tags. Default 1.",
                       "anyOf": [
                         {
                           "type": "number"
@@ -2584,7 +2585,8 @@
             },
             "required": [
               "type",
-              "cooldown"
+              "cooldown",
+              "amount"
             ],
             "additionalProperties": false
           },
@@ -2887,7 +2889,6 @@
                 "description": "The base cooldown, in ticks."
               },
               "amount": {
-                "description": "Per hit. Default: 1 × Attack (physical) or 1 × Magic (magical).",
                 "anyOf": [
                   {
                     "type": "number"
@@ -2952,7 +2953,8 @@
                     ],
                     "additionalProperties": false
                   }
-                ]
+                ],
+                "description": "Per hit: a base, plus whatever scaling the weapon states. Nothing scales it by default."
               },
               "cast": {
                 "description": "Default 0.",
@@ -3074,7 +3076,7 @@
                       "pattern": "^[a-z][a-z0-9_]*$"
                     },
                     "stacks": {
-                      "description": "Intensity: stacks added, from the applier's scaling and boosts. Default 1.",
+                      "description": "Intensity: stacks added, scaled only as stated here, plus the applier's boosts that name the status or its tags. Default 1.",
                       "anyOf": [
                         {
                           "type": "number"
@@ -3170,7 +3172,8 @@
             },
             "required": [
               "type",
-              "cooldown"
+              "cooldown",
+              "amount"
             ],
             "additionalProperties": false
           },
@@ -4087,7 +4090,7 @@
                     "pattern": "^[a-z][a-z0-9_]*$"
                   },
                   "stacks": {
-                    "description": "Intensity: stacks added, from the applier's scaling and boosts. Default 1.",
+                    "description": "Intensity: stacks added, scaled only as stated here, plus the applier's boosts that name the status or its tags. Default 1.",
                     "anyOf": [
                       {
                         "type": "number"
@@ -4869,7 +4872,7 @@
               "pattern": "^[a-z][a-z0-9_]*$"
             },
             "stacks": {
-              "description": "Intensity: stacks added, from the applier's scaling and boosts. Default 1.",
+              "description": "Intensity: stacks added, scaled only as stated here, plus the applier's boosts that name the status or its tags. Default 1.",
               "anyOf": [
                 {
                   "type": "number"

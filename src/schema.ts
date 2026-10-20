@@ -63,7 +63,7 @@ export const Subtype = z.enum(keys(SUBTYPES));
 export const TYPES = {
   physical: "Has exactly one subtype and no element. Meets Evasion and Armor. Attack scales only physical instances.",
   magical: "Has exactly one element and no subtype. Meets that element's Resistance. Magic scales only magical instances.",
-  none: "Typeless, like a pulse: never meets Evasion or Armor; meets Resistance only if it carries an element. Attack and Magic never scale it. Not allowed in actions; the only type for a status's own damage.",
+  none: "Typeless: never meets Evasion or Armor; meets Resistance only if it carries an element. Not allowed in actions; the usual type for a status's own damage.",
 } as const;
 export const DamageType = z.enum(keys(TYPES));
 
@@ -71,8 +71,8 @@ export const DamageType = z.enum(keys(TYPES));
 export const ENGINE_STATS = {
   max_hp: ["amount", "Max HP. A unit is KO'd at 0 HP."],
   max_mp: ["amount", "Max MP. Abilities cost MP, paid when they resolve."],
-  attack: ["amount", "The default scaling source for physical instances, and the only stat that scales only them."],
-  magic: ["amount", "The default scaling source for magical instances, and the only stat that scales only them."],
+  attack: ["amount", "Scales only what states it. By convention, physical things do."],
+  magic: ["amount", "Scales only what states it. By convention, magical things do."],
   armor: ["amount", "A flat reduction on each physical instance, down to 0 (BLOCKED)."],
   aggro: ["amount", "Default targeting picks foes weighted by Aggro. Its floor must be above 0."],
   resist: ["points", "General Resistance, in percent, added to every element's own resist:<element>. Negative shows WEAK, positive RESIST, 100 IMMUNE."],
@@ -163,8 +163,8 @@ export type CauseT = z.infer<typeof Cause>;
 export const SCALE_OF = {
   self: "Actions: the acting unit. The default for stats in actions.",
   target: "Actions: the unit the effect lands on. The default for hp and stacks in actions.",
-  source: "Statuses: the unit that applied the status, read once at application. The default for stats in statuses.",
-  holder: "Statuses: the holder, read each time the number is used (stat changes: once, at application). The default for hp and stacks in statuses.",
+  source: "Statuses that know their source (not a shared Intensity total): the unit that applied it, read once at application.",
+  holder: "Statuses: the holder, read each time the number is used (stat changes: once, at application). The default for hp and stacks in statuses; stats must say whose.",
 } as const;
 export const Of = z.enum(keys(SCALE_OF));
 
@@ -172,7 +172,7 @@ export const TO = {
   target: "Actions: the action's targets. The default in actions.",
   self: "The acting unit: an action's user, a reaction's actor, or, for a pulse, its holder.",
   holder: "Statuses: the holder. The default for pulses.",
-  source: "Per source statuses: the unit that applied it.",
+  source: "Statuses that know their source (Refresh, Fizzle, Per source): the unit that applied it.",
   other: "Reactions: the event's other unit (the attacker for hit_taken, the target for hit_lands). Nothing if unknown.",
 } as const;
 
@@ -266,7 +266,7 @@ export type InstanceT = z.infer<typeof Instance>;
 
 const applyFields = {
   status: Id,
-  stacks: Num.optional().describe("Intensity: stacks added, from the applier's scaling and boosts. Default 1."),
+  stacks: Num.optional().describe("Intensity: stacks added, scaled only as stated here, plus the applier's boosts that name the status or its tags. Default 1."),
   duration: z.union([Ticks, z.literal("permanent")]).optional().describe("Default: the status's own. 0 only for an instant lockout."),
   chance: z.number().min(0).max(100).optional().describe("Percent, rolled on the applier's dice. Default: guaranteed."),
 };
@@ -328,7 +328,7 @@ export type EventSpecT = z.infer<typeof EventSpec>;
 
 export const Reaction = z.strictObject({
   on: EventSpec,
-  actor: z.enum(["holder", "source"]).optional().describe("Who acts. source only for Per source statuses. Default holder."),
+  actor: z.enum(["holder", "source"]).optional().describe("Who acts. source only for statuses that know their source. Default holder."),
   do: z.array(Effect).min(1).describe("Each effect states its target (`to`)."),
 });
 
@@ -338,9 +338,9 @@ export const Status = z.strictObject({
   text: Text.optional(),
   label: z.enum(["buff", "debuff"]).describe("Drives removal, conditions and the batch its pulses resolve in."),
   show: z.enum(["icon", "sheet", "stat"]).describe("icon: on the HP bar with its total. sheet: listed on the unit sheet. stat: shown as a stat."),
-  tags: z.array(Tag).optional().describe("Tags boosts and modifiers can name to reach this status's pulses."),
+  tags: z.array(Tag).optional().describe("Tags that boosts (on its applications' stacks) and damage-taken modifiers (on its pulses) can name."),
   element: Id.optional().describe("Its damage pulses meet this element's Resistance. Full Resistance makes the unit immune to it."),
-  subtype: Subtype.optional().describe("Used only for boosts on its pulses."),
+  subtype: Subtype.optional().describe("Used only for damage-taken modifiers on its pulses."),
   stacking: z.enum(["refresh", "fizzle", "intensity"]),
   perSource: z
     .strictObject({ endsWithSource: z.boolean().optional() })
@@ -366,7 +366,7 @@ export const Status = z.strictObject({
   crit: z
     .strictObject({ chance: z.number().min(0).max(100), multiplier: z.number().min(100).optional(), fromSource: z.boolean().optional() })
     .optional()
-    .describe("Turns crits on for its pulses, a rare exception. fromSource: Per source only, the source's crit stats and dice."),
+    .describe("Turns crits on for its pulses, a rare exception. fromSource: statuses that know their source only, the source's crit stats and dice."),
   reactions: z.array(Reaction).optional(),
   note: Note.optional(),
 });
@@ -384,7 +384,7 @@ export const Weapon = z
     element: Id.optional(),
     hits: PosInt.optional(),
     cooldown: z.number().positive().describe("The base cooldown, in ticks."),
-    amount: Num.optional().describe("Per hit. Default: 1 × Attack (physical) or 1 × Magic (magical)."),
+    amount: Num.describe("Per hit: a base, plus whatever scaling the weapon states. Nothing scales it by default."),
     cast: Ticks.optional().describe("Default 0."),
     recovery: Ticks.optional().describe("Default: ruleset.basicRecovery × the base cooldown."),
     riders: z.array(Instance).optional(),
