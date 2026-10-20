@@ -261,6 +261,7 @@
 
 **What pulses don't do**
 - Pulses don't trigger on-hit events, since those need hits. They do trigger other events, such as taking damage (7.11).
+- A pulse's damage belongs to the holder, not the applier: it doesn't count as the applier's damage dealt, so lifesteal-style effects don't work from it. Only Per source statuses credit their pulses to their source.
 
 #### 7.6 Stacking
 - A unit holds at most one copy of each status, whoever applied it. The only exception is the Per source mode.
