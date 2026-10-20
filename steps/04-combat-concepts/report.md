@@ -7,6 +7,7 @@ Built Oct 20, 2026, from your design (`design.md`), which counted as the approve
 - **Intensity statuses end below 1 stack,** as challenged. A Burn now just fizzles out.
 - **Abilities have a default recovery,** about a sword's (3 ticks in the worked example), which fixes "two actions at once".
 - **Status damage is typeless** (your direction; my call on the details): Attack and Magic scale hits only, so neither scales a status's own damage, nor the stacks of a status that deals damage. Statuses keep their elements, and counterattacks, heals and shields scale as usual. Overrule the heal and shield part if I read you wrong. The example's Rot now deals a flat 4.
+- **Correction (director, Oct 20, 2026):** an applier's stacks scale from whatever stat it states, Attack and Magic included. The ban on Attack or Magic scaling a damaging status's stacks is gone; nothing scales stacks by default.
 - **The rest is confirmed as built:** the four choices below, and no design for a fight nobody can win until one happens.
 - The engine version is now 0.3. All 246 tests pass, and Chrome's and Safari's engines still agree.
 

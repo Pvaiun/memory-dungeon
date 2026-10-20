@@ -228,11 +228,8 @@ class Combat {
     const st = this.ix.get<S.StatusT>("statuses", a.status)!;
     if (a.stacks !== undefined) {
       if (st.stacking !== "intensity") this.r.error("apply.stacks", `${path}.stacks`, `'${a.status}' isn't an Intensity status, so it has no stacks to add`);
+      // Stacks scale from whatever the applier states, Attack and Magic included; nothing scales them by default.
       this.num(a.stacks, `${path}.stacks`, where, inStatus);
-      const harms = [...(st.pulse?.do ?? []), ...(st.trigger?.do ?? [])].some((e) => e.op === "damage");
-      if (harms && (reads(a.stacks, "attack") || reads(a.stacks, "magic"))) {
-        this.r.error("apply.scaling", `${path}.stacks`, `'${a.status}' deals typeless damage, so Attack and Magic can't scale its stacks either`);
-      }
     }
     if (a.duration === 0 && !st.lockout?.interrupt) {
       this.r.error("apply.instant", `${path}.duration`, `only a lockout set to interrupt can be applied for 0 ticks (an instant interrupt)`);

@@ -85,7 +85,7 @@ Direction is guidance, not law. "Firm" means bend it only with evidence and the 
 
 - Fights are automatic and run on ticks. Every action (a weapon's basic attack, or an ability) has a cast time, a cooldown and a recovery; a unit starts its first available ability, else its basic attack. Abilities have a short default cast and a recovery about a sword's.
 - Damage is physical (slash, pierce or blunt: meets Evasion and Armor) or magical (an element: meets that element's Resistance). Attack and Magic scale hits only. Boosts, damage-taken modifiers, crits, riders and shields follow one resolution order.
-- Everything that happens on an event or a timer is a status: buffs, debuffs, damage over time, stuns and silences (lockouts), auras, and passives' reactions. A status's own damage is typeless; neither Attack nor Magic scales it. Stacking statuses (Intensity) end below 1 stack.
+- Everything that happens on an event or a timer is a status: buffs, debuffs, damage over time, stuns and silences (lockouts), auras, and passives' reactions. A status's own damage is typeless; neither Attack nor Magic scales it. The stacks an ability adds scale only from the stat that ability names (Magic, Armor or any other), and from nothing by default. Stacking statuses (Intensity) end below 1 stack.
 - Default targeting picks foes weighted by Aggro, which taunts (Forced) and stealth (Forbidden) override; abilities can state their own targeting.
 - Content is data built from stats, statuses, actions and targeting rules. The building blocks will grow as content needs them; the numbers are placeholders.
 
