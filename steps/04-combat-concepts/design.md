@@ -133,7 +133,7 @@
 - Crit applies to damage and healing from actions. Pulses don't crit unless their status turns crits on (section 7.5).
 
 **Absorbs and shields**
-- Step 7 reads **absorb** effects, which statuses carry. An absorb soaks up damage after mitigation and before HP, losing one stack per point it soaks. It soaks pulses too.
+- Step 7 of the resolution order reads **absorb** effects, which statuses carry. An absorb soaks up damage after mitigation and before HP, losing one stack per point it soaks. It soaks pulses too.
 - If a unit has several absorbs, they soak in the order they were first applied.
 - A shield is an ordinary Intensity status with an absorb (section 7.7). Stacks from every source add into one total, and its cap and decay are Intensity options.
 - Shields are not healing. They take no healing boosts and no Healing received, and they don't crit by default. Boosts that name the shield status are allowed.
