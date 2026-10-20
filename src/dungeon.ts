@@ -1,5 +1,5 @@
 /**
- * Run a dungeon from the command line, with the step 2 engine and stand-in fight.
+ * Run a dungeon from the command line, with step 4's combat.
  *
  *   tsx src/dungeon.ts [--seed N] [--party <party.json>] [--dungeon <id>] [--pick first|random]
  *                      [--first-clear] [--player] [--json]
@@ -15,7 +15,7 @@ import { playerView, printLog } from "./engine/log.js";
 import { firstOption, loadContent, play, randomPicker, type RunInput } from "./engine/run.js";
 import { fingerprint } from "./engine/rng.js";
 import { parties } from "./engine/testkit.js";
-import { standin } from "./engine/standin.js";
+import { combat } from "./engine/combat/rules.js";
 
 const args = process.argv.slice(2);
 const opt = (name: string, def: string) => {
@@ -38,20 +38,20 @@ else if (args.includes("--digest")) {
   const ps = parties(c);
   const digests: string[] = [];
   for (let s = 1; s <= 10_000; s++) {
-    const run = play(c, standin, { ...input, party: ps[s % ps.length], seed: s }, randomPicker(s), { log: true });
+    const run = play(c, combat, { ...input, party: ps[s % ps.length], seed: s }, randomPicker(s), { log: true });
     digests.push(fingerprint(JSON.stringify(run.log)));
   }
   console.log(`10,000 runs, all parties: ${fingerprint(digests.join(""))}`);
 }
 else if (args.includes("--explore")) {
   const t0 = performance.now();
-  const ex = explore(c, standin, input);
+  const ex = explore(c, combat, input);
   const ms = performance.now() - t0;
   for (const p of ex.paths) console.log(`${p.picks.join(" → ").padEnd(50)} ${p.outcome}, ${p.hpLeft} HP left${p.loot.length ? `, loot ${p.loot.join(", ")}` : ""}`);
   console.log(`\n${ex.paths.length} paths, ${ex.fights} fights, ${ms.toFixed(2)} ms${ex.truncated ? " (truncated)" : ""}`);
 } else {
   const picker = opt("--pick", "random") === "first" ? firstOption : randomPicker(seed);
-  const run = play(c, standin, input, picker, { log: true });
+  const run = play(c, combat, input, picker, { log: true });
   if (args.includes("--json")) console.log(JSON.stringify({ record: run.record, outcome: run.outcome, loot: run.loot, log: run.log }, null, 1));
   else console.log(printLog(run.log!, { hidden: !args.includes("--player") }));
 }
@@ -68,7 +68,7 @@ function bench() {
     let ms = 0, fights = 0, entries = 0, bytes = 0, gz = 0, seen = 0, record = 0;
     for (let s = 1; s <= N; s++) {
       const t0 = performance.now();
-      const run = play(c, standin, { ...input, seed: s }, randomPicker(s), { log });
+      const run = play(c, combat, { ...input, seed: s }, randomPicker(s), { log });
       ms += performance.now() - t0;
       fights += run.fights;
       if (log) {
@@ -90,7 +90,7 @@ function bench() {
   const E = 1000;
   let paths = 0;
   const exMs = time(() => {
-    for (let s = 1; s <= E; s++) paths += explore(c, standin, { ...input, seed: s }).paths.length;
+    for (let s = 1; s <= E; s++) paths += explore(c, combat, { ...input, seed: s }).paths.length;
   });
   const us = (ms: number, n: number) => `${((ms * 1000) / n).toFixed(1)} µs`;
   console.log(`${N} runs of ${input.dungeon}, party from ${opt("--party", "fixtures/party.json")}, random picks`);

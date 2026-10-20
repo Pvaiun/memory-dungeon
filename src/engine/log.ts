@@ -12,27 +12,28 @@ export type Entry = { t: string; vis: Vis; [k: string]: unknown };
 
 export const playerView = (log: readonly Entry[]): Entry[] => log.filter((e) => e.vis === "player");
 
+/** Sub-ticks as ticks, for display: "t14.75". */
+export const tick = (at: unknown) => `t${Number(((at as number) / 1000).toFixed(3))}`;
+
 /** A plain printout for debugging. Hidden numbers are shown in brackets unless `hidden` is false. */
 export function printLog(log: readonly Entry[], opts: { hidden?: boolean } = {}): string {
   const showHidden = opts.hidden ?? true;
   const names = new Map<string, string>();
   const name = (id: unknown) => names.get(String(id)) ?? String(id);
   const out: string[] = [];
-  let pendingHidden = "";
   for (const e of log) {
     if (e.vis === "hidden") {
       if (!showHidden) continue;
-      if (e.t === "roll") pendingHidden = `  [roll ${fmt(e.roll)} vs ${fmt(e.chance)}, ${e.attack} atk vs ${e.defence} def]`;
-      else if (e.t === "run") {
+      if (e.t === "run") {
         const c = e.content as { id: string; fingerprint: string };
         out.push(`[run ${e.dungeon}, seed ${e.seed}, engine ${e.engine}, rules ${e.rules}, content ${c.id}#${c.fingerprint}]`);
       } else if (e.t === "dice") out.push(`[dice for ${e.label}]`);
-      else out.push(`[${e.t} ${JSON.stringify(strip(e))}]`);
+      else if (e.t === "roll") out.push(`      [${name(e.by)} rolls ${e.what}: ${fmt(e.roll)}${e.chance !== undefined ? ` against ${fmt(e.chance)}` : ` of ${fmt(e.of)}`}]`);
+      else if (e.t === "mp") out.push(`      [${tick(e.at)} ${name(e.target)} MP ${(e.amount as number) >= 0 ? "+" : ""}${e.amount} → ${e.mp}]`);
+      else out.push(`      [${describe(e, name, names)}]`);
       continue;
     }
-    const line = describe(e, name, names);
-    out.push(line + pendingHidden);
-    pendingHidden = "";
+    out.push(describe(e, name, names));
   }
   return out.join("\n");
 }
@@ -45,16 +46,35 @@ function describe(e: Entry, name: (id: unknown) => string, names: Map<string, st
       const side = (s: string) => units.filter((u) => u.side === s).map((u) => `${u.name} ${u.hp}/${u.max}`).join(", ");
       return `\n${e.boss ? "Boss fight" : "Fight"} ${e.stage}: ${side("party")}  vs  ${side("enemy")}`;
     }
-    case "round":
-      return `  Round ${e.n}`;
-    case "attack":
-      return e.hit
-        ? `    ${name(e.by)} hits ${name(e.target)} for ${e.dmg} (${e.hp} left)`
-        : `    ${name(e.by)} misses ${name(e.target)}`;
+    case "cast":
+      return `  ${tick(e.at)} ${name(e.by)} begins ${e.name}`;
+    case "act":
+      return `  ${tick(e.at)} ${name(e.by)} ${e.act === "basic" ? "attacks" : `uses ${e.name} on`} ${(e.targets as string[]).map(name).join(", ")}`;
+    case "fail":
+      return `  ${tick(e.at)} ${name(e.by)}'s ${e.name} fails (${e.why === "mp" ? "not enough MP" : "no target"})`;
+    case "dmg": {
+      const what = e.part === "pulse" || e.part === "reaction" ? ` from ${String(e.src).toUpperCase()}` : e.part === "rider" ? " (rider)" : "";
+      if (e.word === "MISS") return `    ${name(e.target)}: MISS${what}`;
+      const word = e.word ? ` ${e.word}` : "";
+      const soak = e.soaked ? `, ${e.soaked} soaked` : "";
+      return `    ${name(e.target)} takes ${e.crit ? "CRIT " : ""}${e.amount}${word}${what}${soak} (${e.hp} HP${e.shield ? `, ${e.shield} shield` : ""})`;
+    }
+    case "heal":
+      return `    ${name(e.target)} heals ${e.crit ? "CRIT " : ""}${e.amount} from ${name(e.by)} (${e.hp} HP)`;
+    case "status":
+      return `    ${name(e.unit)} gains ${e.name}${e.total !== null ? ` ${fmt(e.total)}` : ""}`;
+    case "status_end":
+      return `    ${name(e.unit)}'s ${e.name} ends (${e.cause})`;
+    case "immune":
+      return `    ${name(e.unit)}: IMMUNE to ${e.name}`;
+    case "interrupt":
+      return `    ${name(e.unit)} is interrupted: ${e.name} is lost`;
     case "down":
       return `    ${name(e.unit)} is down.`;
+    case "stop":
+      return `  ${tick(e.at)} the fight stops: ${e.why}`;
     case "fight_end":
-      return `${e.result === "won" ? "Won" : "Lost"} ${e.stage} after ${e.rounds} rounds.`;
+      return `${e.result === "won" ? "Won" : "Lost"} ${e.stage} at tick ${e.rounds}.`;
     case "offer":
       return `\nDecision ${e.at} (${e.kind}): ${(e.options as string[]).join(", ")}`;
     case "pick":
@@ -69,4 +89,4 @@ function describe(e: Entry, name: (id: unknown) => string, names: Map<string, st
 }
 
 const strip = ({ t: _t, vis: _v, ...rest }: Entry) => rest;
-const fmt = (n: unknown) => (typeof n === "number" ? n.toFixed(2) : String(n));
+const fmt = (n: unknown) => (typeof n === "number" ? String(Number(n.toFixed(2))) : String(n));

@@ -2,14 +2,14 @@ import { test } from "vitest";
 import assert from "node:assert/strict";
 import { explore } from "./explore.js";
 import { advance, answer, newRun, play, type Picker, type RunInput } from "./run.js";
-import { standin } from "./standin.js";
+import { combat } from "./combat/rules.js";
 import { boostRules, content as c, DUNGEON, PARTY } from "./testkit.js";
 
 const input = (seed: number): RunInput => ({ dungeon: DUNGEON, party: PARTY, seed });
 
 test("the worked example's 3 picks give 27 paths for the cost of 40 fights", () => {
   for (let seed = 1; seed <= 20; seed++) {
-    const ex = explore(c, standin, input(seed));
+    const ex = explore(c, combat, input(seed));
     // Every path reaches the boss only if nobody's wiped before it; with this party they all do.
     assert.equal(ex.paths.length, 27, `seed ${seed}`);
     assert.equal(ex.fights, 1 + 3 + 9 + 27);
@@ -65,15 +65,15 @@ test("the explorer branches on decisions inside fights too", () => {
 });
 
 test("the explorer stops at maxPaths and says so", () => {
-  const ex = explore(c, standin, input(1), { maxPaths: 5 });
+  const ex = explore(c, combat, input(1), { maxPaths: 5 });
   assert.equal(ex.paths.length, 5);
   assert.equal(ex.truncated, true);
 });
 
 test("branching leaves the parent run untouched", () => {
-  const run = advance(c, standin, newRun(c, standin, input(6)));
+  const run = advance(c, combat, newRun(c, combat, input(6)));
   const before = JSON.stringify(run);
-  explore(c, standin, input(6));
-  answer(c, standin, structuredClone(run), run.pending!.options[1]);
+  explore(c, combat, input(6));
+  answer(c, combat, structuredClone(run), run.pending!.options[1]);
   assert.equal(JSON.stringify(run), before);
 });

@@ -1,15 +1,15 @@
 /**
  * The run machinery: a run as plain data, moved forward one step at a time,
  * pausing whenever it needs a decision. None of it depends on the battle
- * system, which plugs in as `Rules` (the step 2 stand-in, until step 4).
+ * system, which plugs in as `Rules` (step 4's combat, in combat/).
  */
-import type { ClassDefT, ContentPack, DungeonT, EnemyT, Party, SpecializationT, StatDefT } from "../schema.js";
+import type { AbilityT, ClassDefT, ContentPack, DungeonT, EnemyT, FormationT, GearT, Party, PerkT, SpecializationT, StatDefT, StatusT } from "../schema.js";
 import { checkParty, validatePack } from "../validate.js";
 import { fingerprint, int, rngFor, type Rng } from "./rng.js";
 import type { Entry } from "./log.js";
 
 /** Bump on any change that can change a run's outcome: old records stop replaying. */
-export const ENGINE_VERSION = "0.1";
+export const ENGINE_VERSION = "0.2";
 
 // ─── Content, loaded and checked once ───────────────────────────────────────
 
@@ -21,6 +21,11 @@ export type Content = {
   specs: Map<string, SpecializationT>;
   classes: Map<string, ClassDefT>;
   stats: Map<string, StatDefT>;
+  statuses: Map<string, StatusT>;
+  abilities: Map<string, AbilityT>;
+  gear: Map<string, GearT>;
+  formations: Map<string, FormationT>;
+  perks: Map<string, PerkT>;
 };
 
 export function loadContent(raw: unknown): Content {
@@ -36,6 +41,11 @@ export function loadContent(raw: unknown): Content {
     specs: by(pack.specializations),
     classes: by(pack.classes),
     stats: by(pack.stats),
+    statuses: by(pack.statuses),
+    abilities: by(pack.abilities),
+    gear: by(pack.gear),
+    formations: by(pack.formations),
+    perks: by(pack.perks),
   };
 }
 
@@ -64,14 +74,13 @@ export type RunRecord = {
 
 export type Unit = { id: string; ref: string; name: string; side: "party" | "enemy"; stats: Record<string, number>; hp: number };
 
+/** What the run loop reads from a fight. The battle system keeps the rest of its state alongside, as plain data. */
 export type Fight = {
   stage: string;
   boss: boolean;
-  rng: Rng;
   units: Unit[];
+  /** How far the fight has got: in combat-1, the current tick. */
   round: number;
-  /** Unit ids still to act this round. */
-  queue: string[];
   result: "won" | "lost" | null;
   /** A decision was just answered before this turn, so don't ask again. */
   decided: boolean;
@@ -95,7 +104,7 @@ export type Run = {
 /** What the rules see. `log` is absent when logging is off, so `x.log?.({...})` costs nothing. */
 export type Ctx = { c: Content; run: Run; log?: (e: Entry) => void };
 
-/** The battle system. The stand-in implements it now; step 4 replaces it. */
+/** The battle system: combat-1 (combat/rules.ts). */
 export interface Rules {
   id: string;
   /** The party's units at the start of a run. */
@@ -103,7 +112,7 @@ export interface Rules {
   startFight(x: Ctx, stage: FightStage, rng: Rng): Fight;
   /** Called before each turn. Return a decision to pause the fight for it. */
   beforeTurn?(x: Ctx, f: Fight): Decision | null;
-  /** One turn. Sets `f.result` when the fight is over. */
+  /** One turn: in combat-1, one moment (the next sub-tick on which anything happens). Sets `f.result` when the fight is over. */
   takeTurn(x: Ctx, f: Fight): void;
   /** After a fight: carry its results back into the run. */
   endFight(x: Ctx, f: Fight): void;

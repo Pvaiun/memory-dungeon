@@ -5,7 +5,7 @@ import {
   advance, answer, ENGINE_VERSION, firstOption, loadRun, newRun, play, randomPicker, replay, saveRun,
   type Picker, type Rules, type RunInput,
 } from "./run.js";
-import { standin } from "./standin.js";
+import { combat } from "./combat/rules.js";
 import { playerView, printLog } from "./log.js";
 import { boostRules, content as c, DUNGEON, PARTY, parties } from "./testkit.js";
 
@@ -25,15 +25,15 @@ function playResumed(rules: Rules, inp: RunInput, picker: Picker) {
 test("replay: 10,000 seeded runs rebuild an identical log from their record", () => {
   const ps = parties();
   for (let seed = 1; seed <= 10_000; seed++) {
-    const run = play(c, standin, input(seed, ps[seed % ps.length]), randomPicker(seed), { log: true });
-    const again = replay(c, standin, JSON.parse(JSON.stringify(run.record)), { log: true });
+    const run = play(c, combat, input(seed, ps[seed % ps.length]), randomPicker(seed), { log: true });
+    const again = replay(c, combat, JSON.parse(JSON.stringify(run.record)), { log: true });
     assert.equal(fingerprint(logOf(again)), fingerprint(logOf(run)), `seed ${seed}`);
     assert.equal(again.outcome, run.outcome);
   }
 }, 120_000);
 
 test("resume: a run saved and loaded at every decision gives the same log as one played straight through", () => {
-  for (const rules of [standin, boostRules(), boostRules({ stance: true })]) {
+  for (const rules of [combat, boostRules(), boostRules({ stance: true })]) {
     for (let seed = 1; seed <= 300; seed++) {
       const straight = play(c, rules, input(seed), randomPicker(seed), { log: true });
       const resumed = playResumed(rules, input(seed), randomPicker(seed));
@@ -54,10 +54,10 @@ test("a decision can pause a fight between turns, and the run saves mid-fight", 
 });
 
 test("the record holds what's needed to replay: versions, content, party, dungeon, seed and every decision", () => {
-  const run = play(c, standin, input(11), randomPicker(11));
+  const run = play(c, combat, input(11), randomPicker(11));
   const r = run.record;
   assert.equal(r.engine, ENGINE_VERSION);
-  assert.equal(r.rules, standin.id);
+  assert.equal(r.rules, combat.id);
   assert.deepEqual(r.content, { id: c.pack.id, fingerprint: c.fingerprint });
   assert.deepEqual(r.party, PARTY);
   assert.equal(r.dungeon, DUNGEON);
@@ -67,22 +67,22 @@ test("the record holds what's needed to replay: versions, content, party, dungeo
 });
 
 test("replay refuses a record from another version, and one whose decisions don't fit", () => {
-  const run = play(c, standin, input(2), firstOption);
-  assert.throws(() => replay(c, standin, { ...run.record, engine: "0.0" }), /can't replay/);
-  assert.throws(() => replay(c, standin, { ...run.record, content: { ...run.record.content, fingerprint: "x" } }), /can't replay/);
+  const run = play(c, combat, input(2), firstOption);
+  assert.throws(() => replay(c, combat, { ...run.record, engine: "0.0" }), /can't replay/);
+  assert.throws(() => replay(c, combat, { ...run.record, content: { ...run.record.content, fingerprint: "x" } }), /can't replay/);
   const wrong = { ...run.record, decisions: [{ at: "pick_2", pick: "keen_eyes" }] };
-  assert.throws(() => replay(c, standin, wrong), /diverged/);
+  assert.throws(() => replay(c, combat, wrong), /diverged/);
 });
 
 test("answers must be one of the options", () => {
-  const run = advance(c, standin, newRun(c, standin, input(3)));
+  const run = advance(c, combat, newRun(c, combat, input(3)));
   assert.equal(run.pending?.kind, "perk");
-  assert.throws(() => answer(c, standin, run, "not_a_perk"), /isn't an option/);
-  assert.throws(() => answer(c, standin, newRun(c, standin, input(3)), "keen_eyes"), /no decision/);
+  assert.throws(() => answer(c, combat, run, "not_a_perk"), /isn't an option/);
+  assert.throws(() => answer(c, combat, newRun(c, combat, input(3)), "keen_eyes"), /no decision/);
 });
 
 test("a decision with no options is skipped, not asked", () => {
-  const rules: Rules = { ...standin, stage: (_x, stage) => ({ kind: "perk", at: stage.id, options: [] }) };
+  const rules: Rules = { ...combat, stage: (_x, stage) => ({ kind: "perk", at: stage.id, options: [] }) };
   const run = advance(c, rules, newRun(c, rules, input(1), { log: true }));
   assert.equal(run.pending, null);
   assert.ok(run.outcome);
@@ -90,17 +90,17 @@ test("a decision with no options is skipped, not asked", () => {
 });
 
 test("bad input is refused before the run starts", () => {
-  assert.throws(() => newRun(c, standin, { ...input(1), dungeon: "nowhere" }), /unknown dungeon/);
-  assert.throws(() => newRun(c, standin, { ...input(1), seed: 1.5 }), /whole number/);
+  assert.throws(() => newRun(c, combat, { ...input(1), dungeon: "nowhere" }), /unknown dungeon/);
+  assert.throws(() => newRun(c, combat, { ...input(1), seed: 1.5 }), /whole number/);
   const tooBig = { ...PARTY, units: [...PARTY.units, { ...PARTY.units[0], spec: "cleric_mender", position: "right_shield", abilities: ["mend", "purify"] }] };
-  assert.throws(() => newRun(c, standin, input(1, tooBig)), /invalid party/);
+  assert.throws(() => newRun(c, combat, input(1, tooBig)), /invalid party/);
 });
 
 test("end to end: every party of 1 to 3 units, in every formation, over 100 seeds", () => {
   let runs = 0;
   for (const party of parties()) {
     for (let seed = 1; seed <= 100; seed++) {
-      const run = play(c, standin, input(seed, party), randomPicker(seed));
+      const run = play(c, combat, input(seed, party), randomPicker(seed));
       assert.ok(run.outcome);
       assert.equal(run.pending, null);
       assert.equal(run.loot.length > 0, run.outcome === "won");
@@ -133,7 +133,7 @@ test("loot rolls from the first-clear table on a first clear, and the replay tab
 });
 
 test("the log marks every entry player-visible or hidden, and prints", () => {
-  const run = play(c, standin, input(1), firstOption, { log: true });
+  const run = play(c, combat, input(1), firstOption, { log: true });
   const log = run.log!;
   assert.equal(log[0].t, "run");
   assert.equal(log[0].vis, "hidden");
@@ -143,21 +143,21 @@ test("the log marks every entry player-visible or hidden, and prints", () => {
   assert.ok(seen.every((e) => !["roll", "dice", "run"].includes(e.t)));
   const text = printLog(log);
   assert.match(text, /Fight den_mouth/);
-  assert.match(text, /\[roll /);
-  assert.doesNotMatch(printLog(log, { hidden: false }), /\[roll /);
+  assert.match(text, / rolls /);
+  assert.doesNotMatch(printLog(log, { hidden: false }), / rolls /);
 });
 
 test("logging off changes nothing but the log", () => {
   for (let seed = 1; seed <= 200; seed++) {
-    const on = play(c, standin, input(seed), randomPicker(seed), { log: true });
-    const off = play(c, standin, input(seed), randomPicker(seed));
+    const on = play(c, combat, input(seed), randomPicker(seed), { log: true });
+    const off = play(c, combat, input(seed), randomPicker(seed));
     assert.equal(off.log, null);
     assert.deepEqual({ ...off, log: null }, { ...on, log: null });
   }
 });
 
 test("pinned run: any change here means old records replay differently, so bump ENGINE_VERSION", () => {
-  const run = play(c, standin, input(1), firstOption, { log: true });
-  assert.equal(ENGINE_VERSION, "0.1");
-  assert.equal(fingerprint(JSON.stringify(run.log!.slice(1))), "17d42e015beed4c8");
+  const run = play(c, combat, input(1), firstOption, { log: true });
+  assert.equal(ENGINE_VERSION, "0.2");
+  assert.equal(fingerprint(JSON.stringify(run.log!.slice(1))), "bec5f9837b38b548");
 });

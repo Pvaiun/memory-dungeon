@@ -6,7 +6,7 @@
  * guess at the next party's colour is scored against the colours that win.
  */
 import { play, randomPicker, type Content, type Rules } from "../engine/run.js";
-import { playerView, type Entry } from "../engine/log.js";
+import { playerView, tick, type Entry } from "../engine/log.js";
 import type { Party } from "../schema.js";
 import type { Kept, Target } from "./combat.js";
 import { label } from "./parties.js";
@@ -59,7 +59,10 @@ export function readingPack(c: Content, rules: Rules, r: Reading, n: number): st
   }
   out.push("", "**Enemies, as the game describes them:**", ...[...seenEnemies].map(([name, words]) => `- ${name}: ${words || "no description"}`), "", "## What happened");
   const perkName = (id: string) => c.pack.perks.find((p) => p.id === id);
+  const who = (id: unknown) => names.get(String(id)) ?? String(id);
+  const hp = (id: unknown, n: unknown, shield: unknown = 0) => (enemyIds.has(String(id)) ? "" : ` (${n} HP${shield ? `, ${shield} shield` : ""})`);
   for (const e of playerView(run.log!) as Entry[]) {
+    const t = typeof e.at === "number" ? `${tick(e.at)} ` : "";
     switch (e.t) {
       case "fight_start": {
         const units = e.units as { id: string; name: string; side: string; hp: number; max: number }[];
@@ -69,19 +72,44 @@ export function readingPack(c: Content, rules: Rules, r: Reading, n: number): st
         out.push("", `### ${e.boss ? "Boss fight" : "Fight"}: ${String(e.stage).replace(/_/g, " ")}`, `Your party: ${party}. Against: ${foes}.`);
         break;
       }
-      case "round":
-        out.push(`Round ${e.n}.`);
+      case "cast":
+        out.push(`${t}${who(e.by)} begins ${e.name}.`);
         break;
-      case "attack": {
-        const who = names.get(String(e.by)), target = names.get(String(e.target));
-        out.push(e.hit ? `  ${who} hits ${target} for ${e.dmg}${enemyIds.has(String(e.target)) ? "" : ` (${e.hp} HP left)`}.` : `  ${who} misses ${target}.`);
+      case "act":
+        out.push(`${t}${who(e.by)} ${e.act === "basic" ? "attacks" : `uses ${e.name} on`} ${(e.targets as string[]).map(who).join(", ")}.`);
+        break;
+      case "fail":
+        out.push(`${t}${who(e.by)}'s ${e.name} fails${e.why === "mp" ? " (not enough MP)" : ""}.`);
+        break;
+      case "dmg": {
+        const from = e.part === "pulse" || e.part === "reaction" ? ` from ${String(e.src).toUpperCase()}` : "";
+        if (e.word === "MISS") out.push(`  ${who(e.target)}: MISS${from}.`);
+        else out.push(`  ${who(e.target)} takes ${e.crit ? "CRIT " : ""}${e.amount}${e.word ? ` ${e.word}` : ""}${from}${e.soaked ? `, ${e.soaked} soaked by a shield` : ""}${hp(e.target, e.hp, e.shield)}.`);
         break;
       }
+      case "heal":
+        out.push(`  ${who(e.target)} is healed for ${e.crit ? "CRIT " : ""}${e.amount}${hp(e.target, e.hp)}.`);
+        break;
+      case "status":
+        out.push(`  ${who(e.unit)}: ${e.name}${e.total !== null ? ` ${Number((e.total as number).toFixed(1))}` : ""}.`);
+        break;
+      case "status_end":
+        out.push(`  ${who(e.unit)}'s ${e.name} ends.`);
+        break;
+      case "immune":
+        out.push(`  ${who(e.unit)}: IMMUNE to ${e.name}.`);
+        break;
+      case "interrupt":
+        out.push(`  ${who(e.unit)} is interrupted: ${e.name} is lost.`);
+        break;
       case "down":
-        out.push(`  ${names.get(String(e.unit))} is down.`);
+        out.push(`  ${who(e.unit)} is down.`);
+        break;
+      case "stop":
+        out.push(`The fight stops: nobody can win it.`);
         break;
       case "fight_end":
-        out.push(`${e.result === "won" ? "Won" : "Lost"} after ${e.rounds} round${e.rounds === 1 ? "" : "s"}.`);
+        out.push(`${e.result === "won" ? "Won" : "Lost"} at tick ${e.rounds}.`);
         break;
       case "offer":
         out.push("", `**Perk pick.** Offered: ${(e.options as string[]).map((id) => `${perkName(id)?.name} (${perkName(id)?.text})`).join("; ")}.`);

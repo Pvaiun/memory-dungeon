@@ -13,7 +13,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { ENGINE_VERSION } from "./engine/run.js";
-import { standin } from "./engine/standin.js";
+import { combat } from "./engine/combat/rules.js";
 import { runCombat } from "./sim/combat.js";
 import { build, ladder, patch } from "./sim/content.js";
 import { pickRuns, readingPack, scoreColours, sheet } from "./sim/feel.js";
@@ -38,7 +38,7 @@ function run(file: string | undefined) {
   const t0 = performance.now();
   if (s.level === "combat") {
     const wantRuns = args.includes("--feel") || args.includes("--report");
-    const { results, kept } = runCombat(s, raw, standin, { keep: wantRuns });
+    const { results, kept } = runCombat(s, raw, combat, { keep: wantRuns });
     const ms = performance.now() - t0;
     const digest = combatDigest(results, ms, ENGINE_VERSION, before);
     console.log(digest);
@@ -50,13 +50,13 @@ function run(file: string | undefined) {
     if (args.includes("--feel")) {
       const c = build(patch(s.content.ladder ? ladder(raw, s.content.ladder) : raw, s.variants[0].patch), s.targets.fights);
       const winning = new Map(results.variants[0].targets.map((t) => [t.target.key, t.strictness.winning]));
-      picks.forEach((p, i) => write(join(dir, "feel", `pack-${i + 1}.md`), readingPack(c, standin, p, i + 1)));
+      picks.forEach((p, i) => write(join(dir, "feel", `pack-${i + 1}.md`), readingPack(c, combat, p, i + 1)));
       write(join(dir, "feel", "sheet.md"), sheet(c, picks.length));
       write(join(dir, "feel", "key.json"), JSON.stringify({ classes: c.pack.classes.map((x) => [x.name.toLowerCase(), x.id]), packs: picks.map((p, i) => ({ pack: i + 1, why: p.why, target: p.target.key, party: p.party, seed: p.seed, won: p.won, winning: winning.get(p.target.key) ?? [] })) }, null, 1));
       console.log(`\nFeel check: ${picks.length} reading packs and the sheet in ${join(dir, "feel")}. Save the reader's answers as answers.md there, then --score it.`);
     }
   } else {
-    const { results, others, versus } = runVersions(s, raw, standin);
+    const { results, others, versus } = runVersions(s, raw, combat);
     const ms = performance.now() - t0;
     const digest = progressionDigest(results, ms, ENGINE_VERSION, before, versus);
     console.log(digest);

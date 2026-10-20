@@ -7,13 +7,9 @@ const table = (o: Record<string, string>, head = "Value") => {
   out.push(`| ${head} | Meaning |`, "| --- | --- |");
   for (const [k, v] of Object.entries(o)) out.push(`| \`${k}\` | ${v.replace(/\|/g, "\\|")} |`);
 };
-const unionKeys = (lazy: any): string[] => lazy._zod.def.getter().options.map((o: any) => (o.shape ? Object.keys(o.shape).join(", ") : "number"));
-const ops = (u: any) => {
-  out.push("| Op | Fields | Meaning |", "| --- | --- | --- |");
-  for (const o of u.options) {
-    const fields = Object.keys(o.shape).filter((k) => k !== "op");
-    out.push(`| \`${o.shape.op.value}\` | ${fields.map((f) => `\`${f}\``).join(", ")} | ${o.description ?? ""} |`);
-  }
+const fields = (o: { shape: Record<string, { description?: string }> }, skip: string[] = []) => {
+  out.push("| Field | Meaning |", "| --- | --- |");
+  for (const [k, v] of Object.entries(o.shape)) if (!skip.includes(k)) out.push(`| \`${k}\` | ${(v.description ?? "").replace(/\|/g, "\\|")} |`);
 };
 
 out.push(
@@ -21,38 +17,69 @@ out.push(
   "",
   `Generated from \`src/schema.ts\` (schema ${S.SCHEMA_VERSION}) by \`npm run docs\`. Do not edit by hand.`,
   "",
-  "These are the closed sets the rule language is built from. Each one needs engine code, so adding one is a schema version bump plus an engine change. Everything else (stats, statuses, damage types, behaviours, verbs, traits, slots) is a registry in the pack and can grow without touching the schema.",
+  "Step 4's combat design (`steps/04-combat-concepts/design.md`) is the rulebook; this is the closed set of building blocks it runs on. Each needs engine code, so adding one is a schema version bump plus an engine change. Stats, statuses, elements, abilities and everything else are registries in the pack, and grow without touching the schema. **These building blocks are placeholders** until steps 5 to 12 shape them.",
 );
-h("Instant effects (actions, triggered rules, between fights)");
-ops(S.InstantEffect);
-h("Passive effects (passive rules; always act on `self`)");
-ops(S.PassiveEffect);
-h("How a unit takes its turn");
-out.push(S.TURN.map((t) => `- ${t}`).join("\n"), "");
-table(S.MODE_USE, "Mode `use`");
-h("Events (triggers)");
-out.push("The *actor* is the unit a trigger's `who` is matched against.", "");
+
+h("How a fight runs");
+out.push(
+  [
+    `Time is counted in sub-ticks, ${S.SUBTICKS} per tick. Each moment is the next sub-tick on which anything happens:`,
+    "1. Units that are ready start their first available action: equipped abilities in slot order, then the basic attack.",
+    "2. Everything due resolves one item at a time: the party batch, then the enemy batch; within a batch, pulses, then reactions, then actions, each in slot order, then in order of creation.",
+    "3. Statuses whose last sub-tick this is end.",
+    "",
+    "A unit that becomes ready, or whose action becomes available, because of something resolved in steps 2 or 3 starts on the next sub-tick. Reactions resolve on the sub-tick after their event. A fight ends the moment either side is fully KO'd.",
+  ].join("\n"),
+);
+
+h("Effects (in actions, pulses, triggers and reactions)");
+out.push("| Op | Fields | Meaning |", "| --- | --- | --- |");
+for (const o of S.Effect.options) {
+  const f = Object.keys(o.shape).filter((k) => k !== "op");
+  out.push(`| \`${o.shape.op.value}\` | ${f.map((x) => `\`${x}\``).join(", ")} | ${o.description ?? ""} |`);
+}
+h("Effect targets (`to`)");
+out.push("Or a targeting rule.", "");
+table(S.TO, "To");
+
+h("Damage types");
+table(S.TYPES, "Type");
+out.push("", `Physical subtypes: ${Object.keys(S.SUBTYPES).map((s) => `\`${s}\``).join(", ")}. Elements are a registry in the pack.`);
+
+h("Numbers");
+out.push("A number is a plain number, or `{ base, scale: [...] }`: base + Σ ratio × source. A scale reads one of `stat`, `hp` (current or missing), `stacks` (a status's Intensity total) or `amount` (a reaction's event amount), from:", "");
+table(S.SCALE_OF, "Of");
+
+h("Status fields");
+fields(S.Status, ["id", "name", "text", "note"]);
+
+h("Effect kinds (for immunity, removal and conditions)");
+table(S.KINDS, "Kind");
+
+h("Tags (for boosts, damage-taken modifiers, lockouts and riders)");
+table(S.TAGS, "Tag");
+
+h("Events");
 table(S.EVENTS, "Event");
-h("Trigger `who`");
-table(S.WHO);
-h("Subjects (`of`)");
-table(S.SUBJECTS, "Subject");
-h("Selector `from`");
-table(S.SELECTOR_FROM, "From");
-h("Selector `pick`");
+h("Event `whose`");
+table(S.WHOSE);
+h("Status-ended causes");
+table(S.CAUSES, "Cause");
+
+h("Targeting rules");
+out.push("An action's `target` is `foe` (default targeting: a foe by Aggro, with Forced and Forbidden), `ally` (a random ally), `self`, or a rule: a side, an optional `where` filter, a pick and a count.", "");
+table(S.SIDES, "Side");
+out.push("");
 table(S.PICKS, "Pick");
-h("Flags");
-table(S.FLAGS, "Flag");
-h("Expression variables");
-table(S.VARS, "Var");
-h("Trigger `action.via`");
-table(S.VIA);
-h("Status `on`");
-table(S.STATUS_ON);
-h("Damage pipeline steps");
-table(S.PIPELINE, "Step");
-h("Condition forms");
-out.push(unionKeys(S.Condition).map((k) => `- \`{ ${k} }\``).join("\n"));
-h("Expression forms");
-out.push(unionKeys(S.Expr).map((k) => `- \`${k === "number" ? "number" : `{ ${k} }`}\``).join("\n"));
+out.push("", `\`by\` (for lowest and highest): \`hp\`, \`hp_share\`, \`buffs\`, \`debuffs\`, \`{ stat }\` or \`{ stacks }\`.`);
+
+h("Unit conditions (`where`, and an ability's `if`)");
+fields(S.UnitCond);
+
+h("Stats the engine reads");
+out.push("| Stat | Kind | Meaning |", "| --- | --- | --- |");
+for (const [k, [kind, text]] of Object.entries(S.ENGINE_STATS)) out.push(`| \`${k}\` | ${kind} | ${text} |`);
+h("Stat families");
+table(S.STAT_FAMILIES, "Key");
+
 console.log(out.join("\n"));

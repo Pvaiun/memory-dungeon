@@ -26,7 +26,7 @@
               "type": "string",
               "pattern": "^[a-z][a-z0-9_]*$"
             },
-            "description": "Equipped abilities, in order."
+            "description": "Equipped abilities, in slot order."
           },
           "gear": {
             "type": "object",

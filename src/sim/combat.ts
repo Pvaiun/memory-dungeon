@@ -242,8 +242,8 @@ function pairs(c: Content, ps: Party[], runs: RunResult[][]) {
 
 /**
  * Which tweaks change results: each party against itself with one thing
- * changed, on the same seeds. The stand-in ignores formations, gear and
- * abilities, so those should come out identical; order only reshuffles dice.
+ * changed, on the same seeds. A tweak to something that does nothing comes out
+ * identical; unit order changes slot order, which decides ties within a sub-tick.
  */
 function tweakEffects(c: Content, pr: Probe, s: CombatStudy, ts: Target[]): Effect[] {
   const owned = everything(c);

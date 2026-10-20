@@ -24,9 +24,9 @@ export const everything = (c: Content): Owned => ({
 });
 
 /**
- * A party's colour: the broad kind of party it is. FOR THIS STEP ONLY, it's
- * the set of classes in it, because that's all the stand-in fight has. Steps 5
- * and 8 to 10 replace it, likely with the party's verbs weighted by efficacy.
+ * A party's colour: the broad kind of party it is. FOR NOW, it's the set of
+ * classes in it (step 3's placeholder, kept through step 4). Steps 5 and 8 to
+ * 10 replace it, likely with the party's verbs weighted by efficacy.
  */
 export type Colour = (c: Content, p: Party) => string;
 export const classColour: Colour = (c, p) => [...new Set(p.units.map((u) => c.specs.get(u.spec)!.class))].sort().join("+");

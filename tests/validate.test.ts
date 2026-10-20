@@ -24,6 +24,18 @@ function expectIssue(code: string, mutate: (p: any) => void, opts: { level?: Iss
   );
 }
 
+/** Add an ability to the Vanguard's class and expect it to be clean, or to raise `code`. */
+function card(ability: object, code?: string) {
+  const p = clone(PACK) as any;
+  p.abilities.push({ id: "card", class: "warrior", name: "Card", text: "-", cooldown: 10, verbs: [], ...ability });
+  const { issues } = validatePack(p);
+  const errors = codes(issues, "error");
+  if (code) assert.ok(errors.includes(code), `expected '${code}', got ${JSON.stringify(errors)}`);
+  else assert.deepEqual(errors, []);
+}
+const hit = (x: object) => ({ do: [{ op: "damage", amount: 10, ...x }] });
+const scale = (stat: string) => ({ scale: [{ ratio: 1, stat }] });
+
 test("the worked example is clean", () => {
   assert.deepEqual(validatePack(PACK).issues, []);
 });
@@ -43,95 +55,125 @@ test("teasers are derived from data", () => {
   assert.equal(teaser(PACK, DUNGEON, "in_phalanx", { specializations: ["warrior_vanguard"], formations: ["open_order"] }).teased, true);
 });
 
-test("complete mode flags a pack too small to ship, and statuses spread too widely", () => {
+test("complete mode flags a pack too small to ship", () => {
   const { issues } = validatePack(PACK, { complete: true });
   assert.ok(codes(issues).includes("complete.classes"));
   assert.ok(codes(issues).includes("complete.specsPerClass"));
-  assert.ok(!codes(issues).includes("complete.verbs"), "19 verbs is inside 15–20");
-  const niche = issues.filter((i) => i.code === "complete.statusNiche").map((i) => i.message);
-  assert.ok(niche.some((m) => m.includes("'bleed'")), "1 of 4 specs is above the 20% example limit");
-  assert.ok(!niche.some((m) => m.includes("'lethality'")), "self statuses are never a niche concern");
+  assert.ok(!codes(issues).includes("complete.verbs"), "17 verbs is inside 15–20");
 });
 
 // ─── Shape and references ────────────────────────────────────────────────────
 
-test("schema: unknown fields are rejected", () => expectIssue("schema", (p) => (find(p.abilities, "cleave").cooldown = 2)));
-test("schema: unknown effect ops are rejected", () => expectIssue("schema", (p) => (find(p.abilities, "second_wind").rules[0].do[0].op = "resurrect")));
-test("schema: verb-based conditions no longer exist", () =>
-  expectIssue("schema", (p) => (find(p.formations, "phalanx").positions[3].rules[0].if = { hasVerb: "reach" })));
-test("schema: verb-based challenge constraints no longer exist", () =>
-  expectIssue("schema", (p) => p.dungeons[0].challenges[0].constraints.push({ withoutVerb: "burst" })));
-test("schema: a unit has no base flag", () => expectIssue("schema", (p) => (find(p.specializations, "ranger_archer").base = true)));
+test("schema: unknown fields are rejected", () => expectIssue("schema", (p) => (find(p.abilities, "cleave").range = 2)));
+test("schema: unknown effect ops are rejected", () => expectIssue("schema", (p) => (find(p.abilities, "mend").do[0].op = "resurrect")));
+test("schema: step 1's rule language is gone", () => expectIssue("schema", (p) => (find(p.abilities, "cleave").active = { action: "slash", cooldown: 2 })));
+test("schema: enemies have no placement", () => expectIssue("schema", (p) => (p.dungeons[0].stages[0].enemies[0] = { enemy: "ash_wolf", row: "front" })));
 test("ids are unique within a collection", () => expectIssue("id.duplicate", (p) => p.perks.push(clone(p.perks[0]))));
-test("references resolve", () => expectIssue("ref.missing", (p) => (find(p.abilities, "barbed_arrows").rules[0].do[0].status = "poison")));
+test("references resolve", () => expectIssue("ref.missing", (p) => (find(p.abilities, "barbed_arrows").do[0].apply[0].status = "poison")));
+test("elements must exist", () => expectIssue("ref.missing", (p) => (find(p.abilities, "radiance").do[0].element = "thunder")));
 
-// ─── Context: references only where they mean something ─────────────────────
+// ─── The design's Part 2 ability cards ───────────────────────────────────────
 
-test("event_source only inside triggered rules", () =>
-  expectIssue("ctx.from", (p) => (find(p.abilities, "cleave").rules[0].do[0].addEffects[0].target = { from: "event_source" })));
-test("action_target only inside actions", () =>
-  expectIssue("ctx.from", (p) => (find(p.abilities, "second_wind").rules[0].do[0].target = { from: "action_target" })));
-test("the raw variable only in mitigation formulas", () =>
-  expectIssue("ctx.var", (p) => (find(p.abilities, "second_wind").rules[0].do[0].amount = { var: "raw" })));
-test("attacker/defender only in combat formulas", () =>
-  expectIssue("ctx.subject", (p) => (find(p.abilities, "second_wind").rules[0].do[0].amount = { stat: "max_hp", of: "attacker" })));
-test("hp_below needs a threshold", () => expectIssue("trigger.below", (p) => delete find(p.abilities, "second_wind").rules[0].when.below));
-test("an action filter only on events an action causes", () =>
-  expectIssue("trigger.action", (p) => (find(p.abilities, "second_wind").rules[0].when.action = { via: ["basic"] })));
+test("cards: Shield Bash (physical, blunt, scales with Armor) is valid", () => card(hit({ type: "physical", subtype: "blunt", amount: scale("armor") })));
+test("cards: Fire Bolt (magical, fire, scales with Magic) is valid", () => card(hit({ type: "magical", element: "fire", amount: scale("magic") })));
+test("cards: Storm Ward (magical, scales with Armor) is valid: only Attack and Magic are type-locked", () => card(hit({ type: "magical", element: "holy", amount: scale("armor") })));
+test("cards: Fire Slash (physical with an element) is invalid: physical instances have no element", () =>
+  card(hit({ type: "physical", subtype: "slash", element: "fire" }), "instance.physical"));
+test("cards: Strike (physical with no subtype) is invalid: every physical instance has a subtype", () => card(hit({ type: "physical" }), "instance.physical"));
+test("cards: Ember Strike (magical, scales with Attack) is invalid: Attack scales only physical instances", () =>
+  card(hit({ type: "magical", element: "fire", amount: scale("attack") }), "instance.scaling"));
+test("cards: a physical hit scaling from Magic is invalid: Magic scales only magical instances", () =>
+  card(hit({ type: "physical", subtype: "slash", amount: scale("magic") }), "instance.scaling"));
+test("cards: Bolt (magical with no element) is invalid: every magical instance has an element", () => card(hit({ type: "magical" }), "instance.magical"));
+test("cards: an action can't produce untyped damage: only pulses and reactions can", () => card(hit({ type: "none" }), "instance.untyped"));
+test("cards: riders follow the same rules as hits", () =>
+  card(hit({ type: "physical", subtype: "slash", riders: [{ type: "physical", element: "fire", amount: 5 }] }), "instance.physical"));
+test("cards: a weapon follows them too", () => expectIssue("instance.magical", (p) => delete find(p.gear, "ash_staff").weapon.element));
 
-// ─── Units, behaviour and actives ────────────────────────────────────────────
+// ─── Stats ───────────────────────────────────────────────────────────────────
+
+test("stats: '+20 Crit chance' is a valid flat change; '+20% Crit chance' isn't, since Crit chance is already in points", () => {
+  const p = clone(PACK) as any;
+  find(p.gear, "bone_charm").stats = [{ stat: "crit_chance", flat: 20 }];
+  assert.equal(validatePack(p).errors, 0);
+  expectIssue("stat.pct", (q) => (find(q.gear, "bone_charm").stats = [{ stat: "crit_chance", pct: 20 }]));
+});
+test("stats: family members such as resist:<element> take flat changes only", () => expectIssue("stat.pct", (p) => (find(p.gear, "bone_charm").stats = [{ stat: "resist:fire", pct: 20 }])));
+test("stats: Aggro's floor must be above 0, since weighted picks fail when every candidate is at 0", () => expectIssue("stat.aggroFloor", (p) => (find(p.stats, "aggro").floor = 0)));
+test("stats: the engine's stats are in the registry, with the right kind", () => {
+  expectIssue("stat.engine", (p) => (p.stats = p.stats.filter((s: any) => s.id !== "armor")));
+  expectIssue("stat.engine", (p) => (find(p.stats, "evasion").kind = "amount"));
+});
+test("stats: a family member must name something real", () => {
+  expectIssue("ref.missing", (p) => (find(p.enemies, "bog_wight").stats["resist:thunder"] = 10));
+  expectIssue("stat.family", (p) => (find(p.enemies, "grey_mother").stats["immune:kind:sleep"] = 1));
+  expectIssue("stat.family", (p) => (find(p.enemies, "grey_mother").stats["immune:everything"] = 1));
+});
+test("stats: an element can't take a name that's already a tag", () => expectIssue("element.reserved", (p) => p.elements.push({ id: "blunt", name: "Blunt" })));
+test("timings count whole sub-ticks, so at most 3 decimals", () => expectIssue("timing.precision", (p) => (find(p.abilities, "cleave").cooldown = 12.0005)));
+
+// ─── Statuses ────────────────────────────────────────────────────────────────
+
+const status = (x: object) => (p: any) => p.statuses.push({ id: "probe", name: "PROBE", label: "buff", show: "icon", stacking: "refresh", ...x });
+
+test("statuses: absorbs, caps, triggers and drops belong to Intensity statuses", () => {
+  expectIssue("status.intensity", status({ absorb: true }));
+  expectIssue("status.intensity", status({ drop: "all", trigger: { on: { event: "hit_taken" } } }));
+});
+test("statuses: an Intensity drop needs a trigger, and an Intensity status has one trigger", () => {
+  expectIssue("status.drop", status({ stacking: "intensity", drop: "all", stats: [{ stat: "armor", flat: 1 }] }));
+  expectIssue("status.trigger", status({ stacking: "intensity", drop: "all", pulse: { every: 2, do: [{ op: "heal", amount: 1 }] }, trigger: { on: { event: "hit_taken" } } }));
+});
+test("statuses: only Per source statuses know their source", () => {
+  expectIssue("status.source", status({ reactions: [{ on: { event: "hit_taken" }, actor: "source", do: [{ op: "heal", amount: 1, to: "source" }] }] }));
+  expectIssue("effect.to", status({ reactions: [{ on: { event: "hit_taken" }, do: [{ op: "heal", amount: 1, to: "source" }] }] }));
+  const p = clone(PACK) as any;
+  status({ perSource: { endsWithSource: true }, reactions: [{ on: { event: "hit_taken" }, actor: "source", do: [{ op: "heal", amount: 1, to: "source" }] }] })(p);
+  assert.equal(codes(validatePack(p).issues, "error").length, 0);
+});
+test("statuses: a reaction's effects state their target", () => expectIssue("reaction.to", status({ reactions: [{ on: { event: "hit_taken" }, do: [{ op: "heal", amount: 1 }] }] })));
+test("statuses: 'target' belongs to actions, and holder, source and other to statuses", () => {
+  expectIssue("effect.to", status({ pulse: { every: 2, do: [{ op: "heal", amount: 1, to: "target" }] } }));
+  expectIssue("effect.to", (p) => (find(p.abilities, "mend").do[0].to = "holder"));
+  expectIssue("effect.to", status({ pulse: { every: 2, do: [{ op: "heal", amount: 1, to: "other" }] } }));
+});
+test("statuses: inside a status, a stat scale says whose stat it reads: source or holder", () => {
+  expectIssue("scale.of", status({ pulse: { every: 2, do: [{ op: "heal", amount: { scale: [{ ratio: 1, stat: "magic" }] } }] } }));
+  expectIssue("scale.of", (p) => (find(p.abilities, "mend").do[0].amount = { scale: [{ ratio: 1, stat: "magic", of: "holder" }] }));
+});
+test("statuses: only a reaction has an event amount to scale from", () =>
+  expectIssue("scale.amount", status({ pulse: { every: 2, do: [{ op: "heal", amount: { scale: [{ ratio: 1, amount: true }] } }] } })));
+test("statuses: hits, riders and attached statuses belong to an action's hits", () =>
+  expectIssue("effect.hitOnly", status({ pulse: { every: 2, do: [{ op: "damage", type: "none", amount: 1, hits: 2 }] } })));
+test("statuses: stacks are only for Intensity statuses, and a 0-tick application only for an interrupting lockout", () => {
+  expectIssue("apply.stacks", (p) => (find(p.abilities, "barbed_arrows").do[0].apply[0].stacks = 3));
+  expectIssue("apply.instant", (p) => (find(p.abilities, "barbed_arrows").do[0].apply[0].duration = 0));
+});
+test("statuses: event filters fit their events", () => {
+  expectIssue("event.kind", status({ reactions: [{ on: { event: "status_gained", kind: "basic" }, do: [{ op: "heal", amount: 1, to: "holder" }] }] }));
+  expectIssue("event.cause", status({ reactions: [{ on: { event: "hit_taken", cause: ["expired"] }, do: [{ op: "heal", amount: 1, to: "holder" }] }] }));
+});
+test("statuses: a tag nothing carries is reported", () => expectIssue("tag.unknown", status({ boosts: [{ tag: "thunder", pct: 10 }] }), { level: "warning" }));
+test("targeting: picking the lowest or highest needs 'by'", () => expectIssue("target.by", (p) => delete find(p.abilities, "lunge").target.by));
+
+// ─── Units ───────────────────────────────────────────────────────────────────
 
 test("each specialization has 4 abilities", () => expectIssue("spec.abilityCount", (p) => find(p.specializations, "warrior_vanguard").abilities.pop()));
-test("abilities don't cross classes", () =>
-  expectIssue("spec.abilityClass", (p) => (find(p.specializations, "warrior_vanguard").abilities[3] = "riposte")));
-test("abilities change behaviour, not stats", () =>
-  expectIssue("ability.notBehaviour", (p) => (find(p.abilities, "quick_draw").rules[0].do = [{ op: "stat", stat: "speed", mode: "add", value: 5 }])));
-test("an ability has rules or an active", () =>
-  expectIssue("ability.empty", (p) => {
-    delete find(p.abilities, "mend").active;
-  }));
-test("basic actions take their target from the behaviour", () =>
-  expectIssue("action.basicTarget", (p) => (find(p.actions, "slash").target = { from: "enemies", pick: "weighted", count: 1 })));
-test("actives carry their own target", () => expectIssue("action.target", (p) => delete find(p.actions, "volley").target));
-test("an action isn't both basic and active", () =>
-  expectIssue("action.dualUse", (p) => (find(p.abilities, "volley").active.action = "shoot")));
-test("behaviour modes end in a fallback", () =>
-  expectIssue("behaviour.fallback", (p) => (find(p.behaviours, "grey_mother").modes = [find(p.behaviours, "grey_mother").modes[0]])));
-test("the ruleset's default modes end in a fallback", () =>
-  expectIssue("behaviour.fallback", (p) => (p.ruleset.defaultModes = [{ when: { hpBelow: 0.5 }, use: "ability" }])));
-test("unknown behaviours are caught", () => expectIssue("ref.missing", (p) => (find(p.specializations, "ranger_archer").behaviour = "archer_ai")));
+test("abilities don't cross classes", () => expectIssue("spec.abilityClass", (p) => (find(p.specializations, "warrior_vanguard").abilities[0] = "riposte")));
 
-// ─── Statuses: self-built state vs effects on others ─────────────────────────
-
-test("a unit's own state is only applied to itself", () =>
-  expectIssue("status.onSelf", (p) => (find(p.abilities, "lunge").rules[0].do[0].target = { from: "event_source" })));
-test("a status for others is never applied to self", () =>
-  expectIssue("status.onOthers", (p) => (find(p.abilities, "barbed_arrows").rules[0].do[0].target = { from: "self" })));
-test("stat values that read stats are rejected (cycles)", () =>
-  expectIssue("effect.statValue", (p) => (find(p.statuses, "lethality").rules[0].do[0].value = { mul: [0.01, { stat: "attack", of: "self" }] })));
-
-// ─── Formations: bespoke slots, no rows ──────────────────────────────────────
+// ─── Formations ──────────────────────────────────────────────────────────────
 
 test("formations always have 5 slots", () => expectIssue("formation.positions", (p) => find(p.formations, "phalanx").positions.pop()));
 test("two slots aren't drawn in the same place", () =>
   expectIssue("formation.layout", (p) => (find(p.formations, "phalanx").positions[1].layout.column = 0)));
 test("slots with effects tell the player what they do", () =>
   expectIssue("formation.slotText", (p) => delete find(p.formations, "hunting_party").positions[0].text, { level: "warning" }));
-test("party-wide formation rules are checked", () =>
-  expectIssue("ref.missing", (p) => (find(p.formations, "flash_flood").rules[0].do[1].stat = "dodge")));
-test("schema: there are no rows to test", () => expectIssue("schema", (p) => (find(p.gear, "wolfhide_cloak").stats[1].if = { inRow: ["back"] })));
-test("schema: actions have no reach", () => expectIssue("schema", (p) => (find(p.actions, "slash").reach = "melee")));
-test("schema: enemies have no placement", () => expectIssue("schema", (p) => (p.dungeons[0].stages[0].enemies[0] = { enemy: "ash_wolf", row: "front" })));
+test("formation grants are checked", () => expectIssue("ref.missing", (p) => (find(p.formations, "flash_flood").stats[1].stat = "dodge")));
 test("fights hold at most maxEnemies", () => expectIssue("fight.size", (p) => (p.dungeons[0].stages[0].enemies = Array(7).fill("ash_wolf"))));
-test("targeting runs on a real stat", () => expectIssue("ref.missing", (p) => (p.ruleset.targeting.weightStat = "threat")));
-test("the default behaviour must exist", () => expectIssue("ref.missing", (p) => (p.ruleset.defaultBehaviour = "fight_wisely")));
 
 // ─── Gear ────────────────────────────────────────────────────────────────────
 
-test("efficacy gear carries no rules or actives", () =>
-  expectIssue("gear.simple", (p) => (find(p.gear, "bone_charm").rules = clone(find(p.gear, "yata_mirror").rules))));
-test("efficacy gear conditions stay simple", () =>
-  expectIssue("gear.simpleCondition", (p) => (find(p.gear, "wolfhide_cloak").stats[1].if = { all: [{ hpBelow: 0.5 }, { round: { is: "gte", n: 2 } }] })));
+test("efficacy gear changes numbers only: no statuses", () => expectIssue("gear.simple", (p) => (find(p.gear, "bone_charm").statuses = ["horn_call"])));
 test("powerful and capstone gear come from unlocks", () => expectIssue("gear.source", (p) => (find(p.gear, "ullrs_yew").source = "loot")));
 test("capstones may be restricted to classes", () => {
   const p = clone(PACK) as any;
@@ -156,40 +198,20 @@ test("a run ends in a boss", () => expectIssue("dungeon.boss", (p) => delete p.d
 test("a boss fight has a boss", () => expectIssue("fight.bossRank", (p) => (p.dungeons[0].stages.at(-1).enemies = ["ash_wolf"])));
 test("dungeons cap party size at 1 to 5", () => expectIssue("dungeon.partySize", (p) => (p.dungeons[0].partySize.max = 6)));
 test("perk picks offer 3 options", () => expectIssue("design.perkOptions", (p) => (p.ruleset.run.perkOffer.options = 4)));
-test("patching an active needs an active", () =>
-  expectIssue("perk.patchActive", (p) => find(p.perks, "serrated_heads").patches[0].rule === "barb" && delete find(p.perks, "serrated_heads").patches[0].rule));
+test("a perk gives something", () => expectIssue("perk.empty", (p) => delete find(p.perks, "keen_eyes").stats));
 test("challenges must be possible: two of a class needs two units of it", () =>
   expectIssue("challenge.impossible", (p) => (p.dungeons[0].challenges[0].constraints[0].classCount.min = 3)));
 test("starter content is marked as starter", () => expectIssue("starter.source", (p) => (find(p.formations, "open_order").source = "unlock")));
 test("every dungeon is in the progression", () => expectIssue("progression.missing", (p) => (p.progression.dungeonOrder = ["somewhere_else"])));
 
-// ─── Vocabulary honesty: verbs, traits and keyholes ──────────────────────────
+// ─── Traits and keyholes ─────────────────────────────────────────────────────
 
 test("traits: each word has one verb profile", () => expectIssue("trait.profile", (p) => (find(p.traits, "festering").verbs = ["evasion"])));
 test("traits: the word appears in the enemy's text", () => expectIssue("enemy.traitText", (p) => (find(p.enemies, "ash_wolf").text = "A lean grey wolf.")));
-test("traits: a trait can't promise what the enemy doesn't do", () =>
-  expectIssue("enemy.traitUnsupported", (p) => (find(p.enemies, "ash_wolf").stats.evasion = 0.05)));
 test("keyholes: bosses have 2 to 4", () => expectIssue("enemy.keyholes", (p) => (find(p.enemies, "grey_mother").keyholes = find(p.enemies, "grey_mother").keyholes.slice(0, 1))));
-test("keyholes: grounded in the enemy's own data", () =>
-  expectIssue("keyhole.from", (p) => (find(p.enemies, "grey_mother").keyholes[0].from = "evasion")));
-test("keyholes: a named mechanic must exist", () =>
-  expectIssue("keyhole.mechanic", (p) => (find(p.enemies, "grey_mother").keyholes[2].mechanic = "bite")));
-test("keyholes: a named mechanic must show the verb", () =>
-  expectIssue("keyhole.from", (p) => (find(p.enemies, "grey_mother").keyholes[2].mechanic = "rend")));
-test("keyholes: bosses need gimmicks, not just stats", () =>
-  expectIssue("enemy.keyholeMechanics", (p) => find(p.enemies, "grey_mother").keyholes.forEach((k: any) => delete k.mechanic), { level: "warning" }));
+test("keyholes: grounded in one of the enemy's own verbs", () => expectIssue("keyhole.from", (p) => (find(p.enemies, "grey_mother").keyholes[0].from = "evasion")));
 test("keyholes: a verb can't both counter and be blunted", () =>
   expectIssue("keyhole.contradiction", (p) => find(p.enemies, "grey_mother").keyholes[0].strongAgainst.push("burst")));
-test("verbs: a declared verb must show in the data", () =>
-  expectIssue("verb.unsupported", (p) => find(p.abilities, "stand_guard").verbs.push("healing"), { level: "warning" }));
-test("verbs: a verb shown in the data must be declared", () =>
-  expectIssue("verb.undeclared", (p) => (find(p.abilities, "cleave").verbs = ["area"]), { level: "warning" }));
-test("verbs: mechanics that map to no verb are reported", () =>
-  expectIssue("verb.unmapped", (p) => {
-    const pos = find(p.formations, "hunting_party").positions;
-    pos.forEach((x: any) => x.id !== "sanctuary" && delete x.rules);
-    find(p.formations, "hunting_party").verbs = [];
-  }, { level: "warning" }));
 
 // ─── Party loadouts ──────────────────────────────────────────────────────────
 

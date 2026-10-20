@@ -1,11 +1,12 @@
 /**
- * The harness, against the design's predictions: the same study gives the same
- * numbers, no made-up effects, real effects show, shared seeds pay off, and
- * reading packs don't leak stats. Progression is in progression.test.ts.
+ * The harness, against the design's predictions, on step 4's combat: the same
+ * study gives the same numbers, no made-up effects, real effects show, shared
+ * seeds pay off, and reading packs don't leak stats. Progression is in
+ * progression.test.ts.
  */
 import { test } from "vitest";
 import assert from "node:assert/strict";
-import { standin } from "../engine/standin.js";
+import { combat as rules } from "../engine/combat/rules.js";
 import { randomPicker } from "../engine/run.js";
 import pack from "../../fixtures/hollow.pack.json" with { type: "json" };
 import { runCombat } from "./combat.js";
@@ -45,65 +46,80 @@ test("ranges and comparisons", () => {
 
 test("the same study gives the same numbers", () => {
   const s = combat({ seeds: 20, perkSeeds: 0 });
-  const a = runCombat(s, pack, standin).results, b = runCombat(s, pack, standin).results;
+  const a = runCombat(s, pack, rules).results, b = runCombat(s, pack, rules).results;
   assert.deepEqual(a, b);
 });
 
-test("no made-up effects: formation, gear and abilities change nothing in the stand-in, and perk numbers match", () => {
-  const { results } = runCombat(combat({ effectSeeds: 20 }), pack, standin);
+/** The pack with formations and perks that do nothing, so tweaks to them must change nothing. */
+function neutral(raw: any) {
+  const p = structuredClone(raw);
+  for (const f of p.formations) {
+    delete f.stats;
+    delete f.statuses;
+    for (const pos of f.positions) delete pos.stats, delete pos.statuses;
+  }
+  for (const k of p.perks) (k.stats = [{ stat: "accuracy", flat: 0 }]), delete k.statuses;
+  return p;
+}
+
+test("no made-up effects: formations and perks that do nothing compare as identical, and the four perk numbers match", () => {
+  const { results } = runCombat(combat({ effectSeeds: 20, targets: { dungeons: ["hollow_of_the_grey_mother_4"], challenges: false } }), neutral(pack), rules);
   const v = results.variants[0];
-  for (const factor of ["formation", "gear", "abilities"]) assert.equal(v.tweaks.find((e) => e.factor === factor)!.comparison.verdict, "identical", factor);
-  assert.equal(v.tweaks.find((e) => e.factor === "unit order")!.comparison.verdict, "no clear difference");
+  assert.equal(v.tweaks.find((e) => e.factor === "formation")!.comparison.verdict, "identical");
   for (const p of v.targets[0].perks) {
     for (const k of ["knowable", "random", "worst"] as const) assert.ok(Math.abs(p.hindsight - p[k]) < 1e-9, `${p.party} ${k}`);
   }
 });
 
-test("real effects show: class and party size", () => {
-  const { results } = runCombat(combat(), pack, standin);
-  const t = results.variants[0].targets[0];
-  const has = (f: string) => t.classes.find((e) => e.factor === f)!.comparison;
-  assert.equal(has("has a warrior").verdict, "higher");
-  assert.equal(has("has a cleric").verdict, "lower");
+test("real effects show: formation, gear and abilities change results, and so do class and party size", () => {
+  const { results } = runCombat(combat({ effectSeeds: 20 }), pack, rules);
+  const v = results.variants[0];
+  const tweak = (f: string) => v.tweaks.find((e) => e.factor === f)!.comparison;
+  for (const f of ["formation", "gear", "abilities"]) {
+    assert.notEqual(tweak(f).verdict, "identical", f);
+    assert.notEqual(tweak(f).verdict, "no clear difference", f);
+  }
+  const t = v.targets[0];
+  assert.equal(t.classes.find((e) => e.factor === "has a cleric")!.comparison.verdict, "higher");
   for (const e of t.sizes) assert.equal(e.comparison.verdict, "higher", e.factor);
-  assert.deepEqual(t.strictness.winning, ["ranger+warrior"]);
+  assert.ok(t.strictness.winning.includes("cleric+ranger+warrior"));
 });
 
-test("shared seeds: copies of a party match exactly, and a tweak to one party needs fewer runs to judge", () => {
-  const raw = ladder(pack, LADDER);
-  const c = build(raw), tweaked = build(patch(raw, [{ path: "classes/ranger/stats/attack", add: 1 }]));
-  const pr = probe(standin);
+test("shared seeds: copies of a party match exactly; a tweak needs far fewer runs to judge, and so does another party sharing units", () => {
+  const c = build(pack), tweaked = build(patch(pack, [{ path: "classes/ranger/stats/attack", add: 1 }]));
+  const pr = probe(rules);
   const owned = everything(c);
-  const d = "hollow_of_the_grey_mother_6";
-  const A = make(c, owned, ["warrior_vanguard", "ranger_archer", "cleric_mender"], "open_order");
+  const d = "hollow_of_the_grey_mother";
+  const A = make(c, owned, ["warrior_vanguard", "ranger_archer", "ranger_duelist"], "open_order");
+  const B = make(c, owned, ["warrior_vanguard", "ranger_archer"], "open_order");
   const runs = (cc: typeof c, p: typeof A, offset: number) => Array.from({ length: 300 }, (_, i) => measure(cc, pr, { dungeon: d, party: p, seed: i + 1 + offset }, randomPicker(i + 1 + offset)).progress);
   const a = runs(c, A, 0);
   assert.equal(compare(a, runs(c, structuredClone(A), 0)).verdict, "identical");
   // Runs needed for the same certainty scale with the variance of the difference.
-  const same = runs(tweaked, A, 0), other = runs(tweaked, A, 10_000);
-  const paired = sd(a.map((x, i) => x - same[i])), apart = sd(a.map((x, i) => x - other[i]));
-  assert.ok((apart / paired) ** 2 > 4, `paired ${paired}, apart ${apart}`);
-  // Two different parties get no such saving in the stand-in: their units use the fight's dice in a different order.
+  const saving = (x: number[], y: number[], yApart: number[]) => (sd(x.map((v, i) => v - yApart[i])) / sd(x.map((v, i) => v - y[i]))) ** 2;
+  assert.ok(saving(a, runs(tweaked, A, 0), runs(tweaked, A, 10_000)) > 4, "a tweak to one party");
+  // Each unit has its own dice, so the same seed brings the same luck to the same unit whatever else is in the party.
+  assert.ok(saving(a, runs(c, B, 0), runs(c, B, 10_000)) > 1.3, "another party that shares units");
 });
 
 test("variants: a what-if runs on the same seeds and is compared to the baseline", () => {
   const s = combat({ perkSeeds: 0, variants: [{ name: "as is" }, { name: "rangers x2 HP", patch: [{ path: "classes/ranger/stats/max_hp", mul: 2 }] }] });
-  const { results } = runCombat(s, pack, standin);
-  assert.equal(results.variants[1].versus![0].wins.verdict, "higher");
+  const { results } = runCombat(s, pack, rules);
+  assert.equal(results.variants[1].versus![0].progress.verdict, "higher");
   assert.throws(() => patch(pack, [{ path: "classes/nobody/stats/max_hp", mul: 2 }]));
 });
 
 test("feel: reading packs show what a player sees, never enemy HP or stats", () => {
   const s = combat({ perkSeeds: 0, seeds: 20, targets: { dungeons: "all", challenges: false } });
-  const { results, kept } = runCombat(s, pack, standin, { keep: true });
+  const { results, kept } = runCombat(s, pack, rules, { keep: true });
   const c = build(ladder(pack, LADDER));
   const picks = pickRuns(kept);
   assert.ok(picks.length >= 4);
   assert.ok(picks.some((p) => !p.won) && picks.some((p) => p.won));
   for (const [i, p] of picks.entries()) {
-    const text = readingPack(c, standin, p, i + 1);
-    assert.doesNotMatch(text, /(Ash Wolf|Bog Wight|Grey Mother)[A-Z ]* for \d+ \(/, "enemy HP left is hidden");
-    assert.doesNotMatch(text, /\b(defence|accuracy|evasion|max_hp|attack \d)/i);
+    const text = readingPack(c, rules, p, i + 1);
+    assert.doesNotMatch(text, /(Ash Wolf|Bog Wight|Grey Mother)[A-Z ]* (takes|is healed)[^\n]*HP/, "enemy HP is hidden");
+    assert.doesNotMatch(text, /\b(max_hp|max_mp|resist:|immune:|crit_chance)|\b(armor|accuracy|evasion|attack|magic|aggro) \d/i, "no stat values");
     assert.match(text, /agile, strong in numbers/);
   }
   assert.ok(combatDigest(results, 1000, "0.1", null).split("\n").length <= 40);
