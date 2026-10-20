@@ -1,6 +1,6 @@
 # Combat Design
 
-Draft, Oct 20, 2026. Combines Step 4: Combat Concepts with the statuses session. This file is the source of truth for combat rules. The reasoning behind section 7 lives in a separate document, Step 4: Statuses — Questions and Suggested Answers; if the two ever disagree, this file wins.
+Draft, Oct 20, 2026. Combines Step 4: Combat Concepts with the statuses session. This file is the source of truth for combat rules.
 
 ---
 
