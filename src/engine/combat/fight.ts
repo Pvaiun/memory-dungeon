@@ -794,7 +794,8 @@ function endStatus(w: W, u: CUnit, s: SInst, cause: S.CauseT) {
   u.statuses.splice(i, 1);
   const d = def(w, s.id);
   w.log?.({ t: "status_end", vis: d.show === "icon" ? "player" : "hidden", at: w.f.now, unit: u.id, status: d.id, name: d.name, cause });
-  if (d.stats) refresh(w, u);
+  // A stat that brings this status puts it straight back while the stat is above 0.
+  if (d.stats || w.c.pack.stats.some((x) => x.brings === d.id)) refresh(w, u);
   fire(w, ev("status_ended", u, null, { status: d.id, cause, ending: s }));
 }
 

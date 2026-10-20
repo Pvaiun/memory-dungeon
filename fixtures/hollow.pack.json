@@ -665,12 +665,13 @@
                   "id": "howl",
                   "name": "Howl",
                   "text": "Howls, and turns savage.",
-                  "cooldown": 9999,
+                  "cooldown": 5,
                   "cast": 2,
-                  "if": {"side": "self", "where": {"hpBelow": 50}},
+                  "if": {"side": "self", "where": {"hpBelow": 50, "lacks": "frenzied"}},
                   "target": "self",
                   "do": [{"op": "apply", "status": "frenzied"}],
-                  "verbs": ["burst"]
+                  "verbs": ["burst"],
+                  "note": "Once per fight, in effect: every action starts the fight on cooldown, so a long cooldown would mean never. The condition reads the status it gives instead."
                 },
                 {
                   "id": "maul",
@@ -982,7 +983,7 @@
                 "text": "Thick-hided and grey with age, she strikes many times, shrugs off any stun, and turns savage when badly hurt.",
                 "rank": "boss",
                 "traits": ["thick_hided", "strikes_many_times"],
-                "stats": {"max_hp": 750, "attack": 22, "armor": 7, "evasion": 5, "immune:kind:lockout:all": 1},
+                "stats": {"max_hp": 650, "attack": 20, "armor": 7, "evasion": 5, "immune:kind:lockout:all": 1},
                 "weapon": {
                             "type": "physical",
                             "subtype": "slash",

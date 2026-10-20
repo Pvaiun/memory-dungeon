@@ -580,6 +580,17 @@ test("stats: a buff that raises MP regen from 0 brings the status MP regen needs
   assert.equal(a.has("A", "mp_regen").length, 0);
 });
 
+test("stats: a unit holds the status a stat brings while the stat is above 0, so a dispel can't strip it for good", () => {
+  const regen = buff("mp_regen", { show: "stat", pulse: { every: 5, do: [{ op: "mp", amount: { scale: [{ ratio: 1, stat: "mp_regen", of: "holder" }] } }] } });
+  const dispel = { id: "dispel", cast: 0, cooldown: 1000, do: [{ op: "remove", label: "buff" }] };
+  const a = arena({ party: [{ name: "A", stats: { max_mp: 100, mp_regen: 2 }, mp: 0 }], enemies: [{ name: "Foe", abilities: ["dispel"] }], statuses: [regen], abilities: [dispel] });
+  readyAt(a, "Foe", "dispel", 1);
+  a.to(1);
+  assert.deepEqual(a.entries("status_end").map((e) => [e.status, e.cause]), [["mp_regen", "removed"]]);
+  assert.equal(a.has("A", "mp_regen").length, 1);
+  assert.equal(a.has("A", "mp_regen")[0].at, at(1), "a fresh copy, with a fresh rhythm");
+});
+
 // ─── What the player sees (section 10) ──────────────────────────────────────
 
 test("display: each status declares its presentation; icon statuses show in the fight, sheet and stat ones don't; IMMUNE shows, a failed chance roll doesn't", () => {
