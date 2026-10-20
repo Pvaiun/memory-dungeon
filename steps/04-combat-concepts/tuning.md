@@ -109,3 +109,24 @@ The director signed off with three changes, built the same day:
 - **Refresh replaces** (duration, numbers and source) instead of keeping the stronger of each number.
 - **Sources.** Refresh and Fizzle statuses now record their applier, like Per source copies, so they can use `to: source`, `of: source`, `actor: source` and `crit.fromSource`. A shared Intensity total can't (`scale.of`, `status.source`, `effect.to`). Pulse damage is still credited to its source only for Per source statuses, as before; the director confirmed this (pulse damage belongs to the holder).
 - `ENGINE_VERSION` 0.4. Worked example over 2,000 runs: 180 runs' logs differ, all from Bleed pulses losing an applier's boost (4 to 3), and no fight's result changes. The pinned run is unchanged after its header. Full suite: 246 tests pass; Node and Bun agree over 10,000 runs (`c16ce92cac3c6f41`).
+
+## After sign-off: simulation speed (Oct 20, 2026)
+
+The director asked whether studies run fast enough for the method. A profile found no hot spot: the time is spread across lookups by name (stats, status definitions, event checks). Changes, each checked for identical numbers:
+
+- **`npm run study` runs one prebuilt file** (esbuild, now a dev dependency) instead of going through tsx: about 15%.
+- **Bulk runs check each party once per study,** not on every seed (`newRun`'s `checked` option, used by `measure` and `paths`): about 8%.
+- **Events that no status in the content listens to return at once:** too small to measure on this content.
+- **A combat study is split into jobs** (a target in a variant, or one tweak on one target) and shared out between worker threads, one per core by default (`--workers N`; `--workers 1` runs on one thread). Jobs put together give the same numbers in any order, which a new test checks.
+- Tried and dropped: giving every status definition the same shape (no gain).
+
+| Check | Result |
+| --- | --- |
+| Combat sample, 4 cores | 64 s (before: 307 s on the same machine, under tsx, on one thread) |
+| Combat sample numbers | `results.json` byte-identical to before |
+| A 20-seed copy of the sample, on 1 and on 4 workers | Byte-identical to before |
+| Progression sample (still one thread) | 48 s (before: 61 s); `results.json` byte-identical |
+| `--digest` over 10,000 runs | `c16ce92cac3c6f41`, unchanged |
+| Whole suite | 247 tests pass |
+
+`ENGINE_VERSION` stays 0.4, since no outcome changes.

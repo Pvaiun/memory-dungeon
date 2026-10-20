@@ -5,6 +5,7 @@
  * should plug in unchanged.
  */
 import { advance, answer, copyRun, newRun, play, type Content, type Fight, type Picker, type Rules, type Run, type RunInput } from "../engine/run.js";
+import type { Party } from "../schema.js";
 
 export type FightResult = {
   stage: string;
@@ -82,8 +83,22 @@ export function probe(rules: Rules) {
 
 export type Probe = ReturnType<typeof probe>;
 
+/** Parties already checked, by dungeon. A study plays each party on many seeds, so it checks each one once. */
+const known = new WeakMap<Content, WeakMap<Party, Set<string>>>();
+function checkedIn(c: Content, p: Party): Set<string> {
+  let parties = known.get(c);
+  if (!parties) known.set(c, (parties = new WeakMap()));
+  let dungeons = parties.get(p);
+  if (!dungeons) parties.set(p, (dungeons = new Set()));
+  return dungeons;
+}
+
 export function measure(c: Content, pr: Probe, input: RunInput, picker: Picker): RunResult {
-  return pr.result(c, play(c, pr.rules, input, picker));
+  const done = checkedIn(c, input.party);
+  // The first run checks the party, and throws if it can't play this dungeon.
+  const run = play(c, pr.rules, input, picker, { checked: done.has(input.dungeon) });
+  done.add(input.dungeon);
+  return pr.result(c, run);
 }
 
 /**
@@ -98,6 +113,9 @@ export function paths(c: Content, pr: Probe, input: RunInput, max = 2000): RunRe
     if (!run.pending) return void out.push(pr.result(c, run));
     for (const o of run.pending.options) if (out.length < max) go(answer(c, pr.rules, copyRun(run), o));
   };
-  go(newRun(c, pr.rules, input));
+  const done = checkedIn(c, input.party);
+  const first = newRun(c, pr.rules, input, { checked: done.has(input.dungeon) });
+  done.add(input.dungeon);
+  go(first);
   return out;
 }

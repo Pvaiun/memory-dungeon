@@ -6,7 +6,7 @@ import { randomPicker, type Content, type Picker, type Rules } from "../engine/r
 import type { Party } from "../schema.js";
 import { build, ladder, patch } from "./content.js";
 import { measure, paths, probe, type Probe, type RunResult } from "./measure.js";
-import { all, classColour, everything, fits, label, make, partyKey, short, type Colour } from "./parties.js";
+import { all, classColour, everything, fits, label, make, partyKey, short, type Colour, type Owned } from "./parties.js";
 import type { CombatStudy } from "./study.js";
 import { average, compare, mean, quantile, rate, type Comparison, type Range } from "./sure.js";
 
@@ -74,46 +74,82 @@ const pickerFor = (s: CombatStudy, seed: number): Picker => {
   return (d) => d.options.find((o) => list.includes(o)) ?? [...d.options].sort((a, b) => list.indexOf(a) - list.indexOf(b))[0];
 };
 
-export function runCombat(s: CombatStudy, raw: unknown, rules: Rules, opts: { colour?: Colour; keep?: boolean } = {}) {
-  const colour = opts.colour ?? classColour;
-  const seeds = Array.from({ length: s.seeds }, (_, i) => i + 1);
-  const results: CombatResults = { study: s, content: { id: "", fingerprint: "" }, rules: rules.id, runs: 0, variants: [] };
-  const kept: Kept = [];
-  const byVariant: Map<string, number[]>[] = [];
+/**
+ * A study is split into jobs, each run on its own: a target in a variant, or
+ * one tweak on one target. Jobs can run in any order, or on separate threads,
+ * and `assemble` puts them together into the same numbers.
+ */
+export type Job = { variant: number; target: string; tweak?: string };
+export type Piece = {
+  runs: number;
+  target?: { result: TargetResult; avg: [string, number[]][]; kept: Kept };
+  /** A tweak's progress per seed: each party's own, and each changed copy's. */
+  tweak?: { base: number[]; changed: number[][] }[];
+};
+type Opts = { colour?: Colour; keep?: boolean };
+
+/** The study's content, one per variant. */
+export function contents(s: CombatStudy, raw: unknown): Content[] {
   const base = s.content.ladder ? ladder(raw, s.content.ladder) : raw;
-  for (const v of s.variants) {
-    const c = build(patch(base, v.patch), s.targets.fights);
-    if (!results.content.id) results.content = { id: c.pack.id, fingerprint: c.fingerprint };
-    const pr = probe(rules);
-    const out: VariantResult = { name: v.name, targets: [], tweaks: [] };
-    const avg = new Map<string, number[]>();
-    for (const t of targets(c, s)) {
-      const ps = partiesFor(c, s, t);
-      const runs = ps.map((p) =>
-        seeds.map((seed) => {
-          const r = measure(c, pr, { dungeon: t.dungeon, party: p, seed, firstClear: true }, pickerFor(s, seed));
-          if (opts.keep && v === s.variants[0]) kept.push({ target: t, party: p, result: r });
-          return r;
-        }),
-      );
-      avg.set(t.key, seeds.map((_, i) => mean(runs.map((rs) => rs[i].progress))));
-      avg.set(`${t.key}#wins`, seeds.map((_, i) => mean(runs.map((rs) => +rs[i].won))));
-      const parties = ps.map((p, i) => summarize(c, p, runs[i], colour));
-      out.targets.push({
-        target: t,
-        parties,
-        strictness: strictness(parties, s.bar),
-        perks: t.challenge || !s.perkSeeds || v !== s.variants[0] ? [] : perkNumbers(c, pr, t, ps, parties, s.perkSeeds),
-        classes: t.challenge ? [] : classEffects(c, ps, runs),
-        sizes: t.challenge ? [] : sizeEffects(ps, runs),
-        pairs: t.challenge ? [] : pairs(c, ps, runs),
-      });
-    }
-    if (s.effectSeeds && v === s.variants[0]) out.tweaks = tweakEffects(c, pr, s, targets(c, s).filter((t) => !t.challenge));
-    byVariant.push(avg);
-    results.variants.push(out);
-    results.runs += pr.counter.runs;
+  return s.variants.map((v) => build(patch(base, v.patch), s.targets.fights));
+}
+
+export function jobs(s: CombatStudy, cs: Content[]): Job[] {
+  const out: Job[] = cs.flatMap((c, variant) => targets(c, s).map((t) => ({ variant, target: t.key })));
+  if (s.effectSeeds) for (const tweak of Object.keys(TWEAKS)) for (const t of targets(cs[0], s)) if (!t.challenge) out.push({ variant: 0, target: t.key, tweak });
+  return out;
+}
+
+export function runJob(s: CombatStudy, cs: Content[], rules: Rules, job: Job, opts: Opts = {}): Piece {
+  const c = cs[job.variant];
+  const pr = probe(rules);
+  const t = targets(c, s).find((x) => x.key === job.target)!;
+  if (job.tweak) {
+    const tweak = tweakRuns(c, pr, s, t, job.tweak);
+    return { runs: pr.counter.runs, tweak };
   }
+  const seeds = Array.from({ length: s.seeds }, (_, i) => i + 1);
+  const kept: Kept = [];
+  const ps = partiesFor(c, s, t);
+  const runs = ps.map((p) =>
+    seeds.map((seed) => {
+      const r = measure(c, pr, { dungeon: t.dungeon, party: p, seed, firstClear: true }, pickerFor(s, seed));
+      if (opts.keep && job.variant === 0) kept.push({ target: t, party: p, result: r });
+      return r;
+    }),
+  );
+  const avg: [string, number[]][] = [
+    [t.key, seeds.map((_, i) => mean(runs.map((rs) => rs[i].progress)))],
+    [`${t.key}#wins`, seeds.map((_, i) => mean(runs.map((rs) => +rs[i].won)))],
+  ];
+  const parties = ps.map((p, i) => summarize(c, p, runs[i], opts.colour ?? classColour));
+  const result: TargetResult = {
+    target: t,
+    parties,
+    strictness: strictness(parties, s.bar),
+    perks: t.challenge || !s.perkSeeds || job.variant !== 0 ? [] : perkNumbers(c, pr, t, ps, parties, s.perkSeeds),
+    classes: t.challenge ? [] : classEffects(c, ps, runs),
+    sizes: t.challenge ? [] : sizeEffects(ps, runs),
+    pairs: t.challenge ? [] : pairs(c, ps, runs),
+  };
+  return { runs: pr.counter.runs, target: { result, avg, kept } };
+}
+
+/** Puts finished jobs together. `pieces[i]` is the result of `js[i]`. */
+export function assemble(s: CombatStudy, cs: Content[], rules: Rules, js: Job[], pieces: Piece[], opts: Opts = {}) {
+  const results: CombatResults = { study: s, content: { id: cs[0].pack.id, fingerprint: cs[0].fingerprint }, rules: rules.id, runs: 0, variants: [] };
+  const kept: Kept = [];
+  const byVariant = s.variants.map(() => new Map<string, number[]>());
+  for (const v of s.variants) results.variants.push({ name: v.name, targets: [], tweaks: [] });
+  js.forEach((job, i) => {
+    const piece = pieces[i];
+    results.runs += piece.runs;
+    if (!piece.target) return;
+    results.variants[job.variant].targets.push(piece.target.result);
+    for (const [k, xs] of piece.target.avg) byVariant[job.variant].set(k, xs);
+    if (opts.keep && job.variant === 0) kept.push(...piece.target.kept);
+  });
+  if (s.effectSeeds) results.variants[0].tweaks = tweakEffects(s, js, pieces);
   // Each variant against the baseline, paired by seed: the same parties on the same seeds.
   for (let i = 1; i < results.variants.length; i++) {
     results.variants[i].versus = results.variants[0].targets.map(({ target: t }) => ({
@@ -123,6 +159,13 @@ export function runCombat(s: CombatStudy, raw: unknown, rules: Rules, opts: { co
     }));
   }
   return { results, kept };
+}
+
+/** The whole study on one thread. The study command can also share the jobs out between threads. */
+export function runCombat(s: CombatStudy, raw: unknown, rules: Rules, opts: Opts = {}) {
+  const cs = contents(s, raw);
+  const js = jobs(s, cs);
+  return assemble(s, cs, rules, js, js.map((job) => runJob(s, cs, rules, job, opts)), opts);
 }
 
 function summarize(c: Content, p: Party, runs: RunResult[], colour: Colour): PartyResult {
@@ -245,32 +288,41 @@ function pairs(c: Content, ps: Party[], runs: RunResult[][]) {
  * changed, on the same seeds. A tweak to something that does nothing comes out
  * identical; unit order changes slot order, which decides ties within a sub-tick.
  */
-function tweakEffects(c: Content, pr: Probe, s: CombatStudy, ts: Target[]): Effect[] {
-  const owned = everything(c);
-  const seeds = Array.from({ length: s.effectSeeds }, (_, i) => i + 1);
-  const changes: Record<string, (p: Party) => Party[]> = {
-    formation: (p) => owned.formations.filter((f) => f !== p.formation).map((f) => make(c, owned, p.units.map((u) => u.spec), f, p)),
-    gear: (p) => [{ ...p, units: p.units.map((u) => ({ ...u, gear: {} })) }],
-    abilities: (p) => [{ ...p, units: p.units.map((u) => ({ ...u, abilities: c.specs.get(u.spec)!.abilities.slice(2, 4) })) }],
-    "unit order": (p) => (p.units.length > 1 ? [make(c, owned, p.units.map((u) => u.spec).reverse(), p.formation, p)] : []),
-  };
-  return Object.entries(changes).map(([factor, change]) => {
-    const a = seeds.map(() => 0), b = seeds.map(() => 0);
+function tweakEffects(s: CombatStudy, js: Job[], pieces: Piece[]): Effect[] {
+  return Object.keys(TWEAKS).map((factor) => {
+    const a = Array<number>(s.effectSeeds).fill(0), b = Array<number>(s.effectSeeds).fill(0);
     let n = 0;
-    for (const t of ts) {
-      for (const p of partiesFor(c, s, t)) {
-        const qs = change(p).filter((q) => fits(c, q, t.dungeon));
-        if (!qs.length) continue;
-        const base = seeds.map((seed) => measure(c, pr, { dungeon: t.dungeon, party: p, seed, firstClear: true }, pickerFor(s, seed)).progress);
-        for (const q of qs) {
+    js.forEach((job, i) => {
+      if (job.tweak !== factor) return;
+      for (const { base, changed } of pieces[i].tweak!) {
+        for (const q of changed) {
           n++;
-          seeds.forEach((seed, i) => {
-            a[i] += measure(c, pr, { dungeon: t.dungeon, party: q, seed, firstClear: true }, pickerFor(s, seed)).progress;
-            b[i] += base[i];
+          q.forEach((x, k) => {
+            a[k] += x;
+            b[k] += base[k];
           });
         }
       }
-    }
+    });
     return { factor, comparison: compare(a.map((x) => x / (n || 1)), b.map((x) => x / (n || 1))) };
+  });
+}
+
+/** The tweaks, each as the changed copies of a party. */
+const TWEAKS: Record<string, (c: Content, owned: Owned, p: Party) => Party[]> = {
+  formation: (c, owned, p) => owned.formations.filter((f) => f !== p.formation).map((f) => make(c, owned, p.units.map((u) => u.spec), f, p)),
+  gear: (_c, _owned, p) => [{ ...p, units: p.units.map((u) => ({ ...u, gear: {} })) }],
+  abilities: (c, _owned, p) => [{ ...p, units: p.units.map((u) => ({ ...u, abilities: c.specs.get(u.spec)!.abilities.slice(2, 4) })) }],
+  "unit order": (c, owned, p) => (p.units.length > 1 ? [make(c, owned, p.units.map((u) => u.spec).reverse(), p.formation, p)] : []),
+};
+
+/** One tweak on one target: each party's progress per seed, and each changed copy's. */
+function tweakRuns(c: Content, pr: Probe, s: CombatStudy, t: Target, tweak: string): NonNullable<Piece["tweak"]> {
+  const owned = everything(c);
+  const seeds = Array.from({ length: s.effectSeeds }, (_, i) => i + 1);
+  const progress = (p: Party) => seeds.map((seed) => measure(c, pr, { dungeon: t.dungeon, party: p, seed, firstClear: true }, pickerFor(s, seed)).progress);
+  return partiesFor(c, s, t).flatMap((p) => {
+    const qs = TWEAKS[tweak](c, owned, p).filter((q) => fits(c, q, t.dungeon));
+    return qs.length ? [{ base: progress(p), changed: qs.map(progress) }] : [];
   });
 }
