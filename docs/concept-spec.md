@@ -48,8 +48,8 @@ A party-based JRPG dungeon crawler with automatic combat, where preparation is t
 
 **Core loop.** Quests give unlocks, dungeons give gear, and the build joins them:
 
-1. **Real-life quests** (Notice, Notice and Do, Want, Review, Tackle, Keep) pay unlocks: new specializations, formations and powerful gear.
-2. Unlocks go into **building a party**: specialization, abilities, gear, formation.
+1. **Real-life quests** (Notice, Notice and Do, Want, Review, Tackle, Keep) pay unlocks: new classes, formations and powerful gear.
+2. Unlocks go into **building a party**: classes, abilities, gear, formation.
 3. The party **runs a dungeon**: automatic fights, perk picks, a boss.
 4. Clearing it drops **dungeon loot**: efficacy gear, from first clears and challenges, which goes back into the build.
 5. Stuck at a wall? Challenges pay more gear, but there are only so many. Once they're beaten, only quests move the player on.
@@ -64,13 +64,13 @@ A new player starts with one unit of the starter class, such as a warrior or mer
 
 | Layer | Job | Earned from |
 | --- | --- | --- |
-| Specialization | Which verbs and numbers a unit can reach | Quests |
-| Abilities | What the unit does in combat | Come with the specialization |
+| Class | Which verbs and numbers a unit can reach | Quests |
+| Abilities | What the unit does in combat | Come with the class |
 | Gear | How well it does those things | Dungeons for most gear, quests for powerful pieces |
 | Formation | Which units get multiplied, through positions that amplify specific roles | Quests |
 
-- **Specializations.** Roughly 8 to 10 classes, each with 3 to 4 specializations (e.g. Ranger: Duelist, Ranger: Archer). Every unit is a class plus a specialization; there's no plain-class unit. Each specialization is unique: a party can hold a Ranger Duelist and a Ranger Archer, but never two Ranger Archers. A specialization arrives complete and useful from day one. Units don't level up.
-- **Abilities.** Each specialization has 4 abilities. A unit equips 2, and they can be swapped freely between runs. Abilities change behaviour rather than add stats: counterattack after a dodge, taunt when an ally drops below half health, act first, cleave a second enemy.
+- **Classes.** Roughly 8 to 10 classes, and no specializations. A class has a unique passive only it has, 4 abilities and a weapon restriction (most likely a subset of the weapon types). A class is a unit: the player owns each class once and gears it once, and a party holds at most one of each. A class arrives complete and useful from day one. Units don't level up.
+- **Abilities.** Each class has 4 abilities. A unit equips 2, and they can be swapped freely between runs. Abilities change behaviour rather than add stats: counterattack after a dodge, taunt when an ally drops below half health, act first, cleave a second enemy.
 - **Gear.** Class-specific slots plus generic slots. Rare cross-class capstones act as signposts for whole builds. Inventory is unlimited for now.
 - **Formation.** The lock-and-key multiplier, inspired by Romancing SaGa: 5 slots, each with its own effects (harder to target, acts first, hits harder). A slot that doubles defence and draws attacks makes a tank shine and is a misplay for a healer. Front, middle and back are only where a slot is drawn. The same units in a different formation can beat a different boss.
 - **No battlefield geometry.** No rows, no reach, no positional targeting: any unit can target any unit. Enemies come as a plain list, with no formation.
@@ -87,7 +87,7 @@ Dungeons are linear, about five minutes long, and fully automatic apart from per
 - **Fixed formation.** The formation can't change mid-run; solving it is part of preparation.
 - **Unlimited retries.** Losing costs nothing, and a run lost halfway earns nothing. Anything not yet beaten can be retried freely. Repeating the same strategy rarely wins.
 
-**Dungeon challenges.** Each cleared dungeon shows one next challenge, such as "beat it with two Rangers," "beat it with only two units" or "beat it with this formation." Clearing it pays gear, like a dungeon clear, and reveals the next one. The sequence is fixed, not curated by AI. A dungeon has many challenges, up to a hard cap, and each pays once: nothing already beaten pays again. Challenges turn solved dungeons into new puzzles, and give each new specialization a reason to revisit old content. A challenge that needs a specialization the player doesn't own shows as a teaser, which is a reason to do the quest that grants it. Upcoming boards favour offering a teased specialization, though not immediately every time, and other dungeons should usually be open in the meantime. Being blocked until more quests are done is fine.
+**Dungeon challenges.** Each cleared dungeon shows one next challenge, such as "beat it with a Ranger," "beat it with only two units" or "beat it with this formation." Clearing it pays gear, like a dungeon clear, and reveals the next one. The sequence is fixed, not curated by AI. A dungeon has many challenges, up to a hard cap, and each pays once: nothing already beaten pays again. Challenges turn solved dungeons into new puzzles, and give each new class a reason to revisit old content. A challenge that needs a class the player doesn't own shows as a teaser, which is a reason to do the quest that grants it. Upcoming boards favour offering a teased class, though not immediately every time, and other dungeons should usually be open in the meantime. Being blocked until more quests are done is fine.
 
 ## Encounter design (behind the scenes)
 
@@ -106,7 +106,7 @@ Quests give unlocks, and play gives efficacy. Efficacy can partly make up for a 
 
 | Reward | Source |
 | --- | --- |
-| Specializations | Quests |
+| Classes | Quests |
 | Formations | Quests |
 | Powerful gear: class-specific pieces and cross-class capstones | Quests |
 | Efficacy gear, which is most gear | First clears and dungeon challenges |
@@ -129,14 +129,14 @@ Simulation measures pacing and balance, not fun. AI impressions are a proxy; the
 **First questions for simulation.**
 
 - Are 4 to 7 quest rewards a week enough? If not, which of the candidate fixes under Open questions works best?
-- What mix of specializations, formations and powerful gear should quests pay?
+- What mix of classes, formations and powerful gear should quests pay?
 - How long until party choices become meaningful, given 5-position formations and dungeons that cap party size?
 
 ## Version 1 scope
 
 Version 1 is a deliberately narrow slice with at least three months of content. Content is AI-generated, so generate plenty, and add more when players reach the end.
 
-**Sizing content.** The pace of walls is set by quest rewards, not play time, so content is planned by expected reward count. At 4 to 7 quest rewards a week, three months is about 52 to 91 rewards. That sets how many walls version 1 needs, and how many dungeons sit between them. The mix of quest rewards (specializations, formations, powerful gear) comes from number crunching and simulation. Leave headroom in the number ranges so later tiers don't force a rebalance.
+**Sizing content.** The pace of walls is set by quest rewards, not play time, so content is planned by expected reward count. At 4 to 7 quest rewards a week, three months is about 52 to 91 rewards. That sets how many walls version 1 needs, and how many dungeons sit between them. The mix of quest rewards (classes, formations, powerful gear) comes from number crunching and simulation. Leave headroom in the number ranges so later tiers don't force a rebalance.
 
 **Deferred.**
 
@@ -150,7 +150,7 @@ Version 1 is a deliberately narrow slice with at least three months of content. 
 ## Open questions
 
 1. **Reward volume.** 4 to 7 quests a week for the first version; many more would turn the board into a second Now map. Whether that yields enough rewards for a 5-unit party is for simulation to answer. Candidate fixes:
-   - **Quest rewards as multipliers.** Each unlock opens many play rewards, such as a new specialization opening challenges across every cleared dungeon.
+   - **Quest rewards as multipliers.** Each unlock opens many play rewards, such as a new class opening challenges across every cleared dungeon.
    - **Bundled quest rewards.** Each quest pays its shown headline reward plus supporting gear.
    - **A global level.** A second progression stream alongside gear.
    - **More dungeon rewards.** Play itself pays out more.

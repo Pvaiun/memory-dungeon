@@ -25,7 +25,7 @@ Each step lists what it designs; what to **ask the director**, which seeds the i
 ## Phase 1: Simulation foundation
 
 ### 1. Content schema
-- **Designs:** one data format for classes, specializations, abilities, gear, formations, enemies, perks, dungeons, dungeon challenges and traits. It starts rough and grows with each later step.
+- **Designs:** one data format for classes, abilities, gear, formations, enemies, perks, dungeons, dungeon challenges and traits. It starts rough and grows with each later step.
 - **Produces:** schema definitions, plus a worked example of each.
 - **Done when:** any rule a later step designs can be expressed as data, with no rules hiding in prose.
 
@@ -78,12 +78,12 @@ Steps 4 to 6 choose what combat is made of and check that it works; there's too 
 - **Produces:** a trait glossary. Flavour text can vary around a trait word; the word's meaning never does.
 - **Done when:** each trait maps to one verb profile, and no two traits overlap.
 
-### 8. Units and specializations
-- **Designs:** base and derived stats; what class, specialization, abilities and gear each contribute; the ability format (triggers and behaviours, not stat boosts); 4 abilities per specialization with 2 equipped; how base specializations work.
-- **Ask the director:** classes and specializations they'd love to see, favourite JRPG jobs and what made them fun, and what a good ability feels like.
-- **Simulates:** class power and class variance. No specialization should dominate or be useless, and each should play measurably differently. Also whether each verb from step 5 measurably changes outcomes, and whether any is redundant or dominant.
-- **Produces:** a unit model and a template for defining a specialization.
-- **Done when:** a test set of specializations lands inside the power band this step defines, with distinct behaviour in simulation.
+### 8. Units and classes
+- **Designs:** base and derived stats; what the class (its unique passive and weapon restriction), abilities and gear each contribute; the ability format (triggers and behaviours, not stat boosts); 4 abilities per class with 2 equipped. There are no specializations, and a class is one unit, at most once per party (`DECISIONS.md`).
+- **Ask the director:** classes they'd love to see, favourite JRPG jobs and what made them fun, and what a good ability feels like.
+- **Simulates:** class power and class variance. No class should dominate or be useless, and each should play measurably differently. Also whether each verb from step 5 measurably changes outcomes, and whether any is redundant or dominant.
+- **Produces:** a unit model and a template for defining a class.
+- **Done when:** a test set of classes lands inside the power band this step defines, with distinct behaviour in simulation.
 
 ### 9. Formations
 - **Designs:** the 5 positions, how positional multipliers work, which roles each multiplier affects, how a formation is defined, and how a dungeon's party-size cap interacts with it.
@@ -130,14 +130,14 @@ Steps 4 to 6 choose what combat is made of and check that it works; there's too 
 - **Done when:** simulations land every archetype inside the win-rate bands this step defines, fights inside its length and swinginess ranges, with no dominant approach.
 
 ### 15. Progression pacing
-- **Designs:** whether 4 to 7 quest rewards a week (`DECISIONS.md`) is enough, and which fix works if not (the candidate fixes listed under Open questions in the concept spec, or something else); the mix of specializations, formations and powerful gear that quests pay; where walls fall; how fast party choices become meaningful.
+- **Designs:** whether 4 to 7 quest rewards a week (`DECISIONS.md`) is enough, and which fix works if not (the candidate fixes listed under Open questions in the concept spec, or something else); the mix of classes, formations and powerful gear that quests pay; where walls fall; how fast party choices become meaningful.
 - **Ask the director:** how often a new toy should arrive, how long being stuck feels fine, and how many quests a week they expect to do themselves.
 - **Tested by:** progression simulation, with quest rates modelled on Memory's event log.
 - **Produces:** a pacing model and recommendation, with the simulation data behind it.
 - **Done when:** simulated players at realistic quest rates progress without long dead stretches or trivial runs.
 
 ### 16. Version 1 content
-- **Designs:** at least three months of content: classes and specializations, dungeons, challenge sequences, perk pools and enemies. Names and writing fit the setting: generic medieval fantasy with touches of Greek, Norse and Japanese mythology.
+- **Designs:** at least three months of content: classes, dungeons, challenge sequences, perk pools and enemies. Names and writing fit the setting: generic medieval fantasy with touches of Greek, Norse and Japanese mythology.
 - **Ask the director:** names, phrases, gimmicks, jokes and mythology picks, through an input page, plus references for the humour and tone of the writing.
 - **Tested by:** full simulation at the pacing from step 15. The director reviews the generation rules and samples, not the whole set.
 - **Produces:** the full content set, as data.
@@ -168,7 +168,7 @@ These steps connect the game to Memory itself, so they work from `memory-design-
 - **Done when:** every quest kind has an unambiguous completion test against the event log.
 
 ### 19. Board generation
-- **Designs:** the weekly schedule; what the AI reads (catalog, counters, profile, and the player's game state, including teased specializations); the prompt; board size and mix; the standing focus; value tiers by AI judgement; optional suggestions for Notice quests; how rewards are attached to quests; and a rule-based fallback if the AI fails, like the Brain's. `memory-design-spec.md` describes the Brain's schedule and fallback to model these on.
+- **Designs:** the weekly schedule; what the AI reads (catalog, counters, profile, and the player's game state, including teased classes); the prompt; board size and mix; the standing focus; value tiers by AI judgement; optional suggestions for Notice quests; how rewards are attached to quests; and a rule-based fallback if the AI fails, like the Brain's. `memory-design-spec.md` describes the Brain's schedule and fallback to model these on.
 - **Ask the director:** what a good board looks like to them, quests they'd love or hate to get, and the tone of quest text.
 - **Tested by:** sample boards generated from real catalog data, reviewed by the director.
 - **Produces:** a board generation spec and prompt.

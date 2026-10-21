@@ -352,7 +352,7 @@
 - The unit sheet lists the unit's effects with their durations and numbers, as their presentations allow. Innate immunities show there too.
 - A unit under a lockout shows it through the icon of the status carrying it. An interrupt leaves no status, so it needs its own brief marker.
 - IMMUNE shows when a status is blocked. Nothing shows when a chance roll fails or a Fizzle status fails to reapply. Pulses show their numbers like hits do.
-- Default targeting, evasion, crits and status application chances are random. Pulse crits are random only where a status turns them on. Each unit has its own random stream: party units by specialization, enemies by slot. The same seed brings the same luck to the same unit, whatever else is in the fight.
+- Default targeting, evasion, crits and status application chances are random. Pulse crits are random only where a status turns them on. Each unit has its own random stream: party units by class, enemies by slot. The same seed brings the same luck to the same unit, whatever else is in the fight.
 
 ---
 
