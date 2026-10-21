@@ -79,7 +79,7 @@ Steps 4 to 6 choose what combat is made of and check that it works; there's too 
 - **Done when:** each trait maps to one verb profile, and no two traits overlap.
 
 ### 8. Units and classes
-- **Designs:** base and derived stats; what the class (its unique passive and weapon restriction), abilities and gear each contribute; the ability format (triggers and behaviours, not stat boosts); 4 abilities per class with 2 equipped. There are no specializations, and a class is one unit, at most once per party (`DECISIONS.md`).
+- **Designs:** base and derived stats; what the class (its unique passive and weapon restriction), abilities and gear each contribute; the ability format (triggers and behaviours, not stat boosts); 5 abilities per class with 3 equipped. There are no specializations, and a class is one unit, at most once per party (`DECISIONS.md`).
 - **Ask the director:** classes they'd love to see, favourite JRPG jobs and what made them fun, and what a good ability feels like.
 - **Simulates:** class power and class variance. No class should dominate or be useless, and each should play measurably differently. Also whether each verb from step 5 measurably changes outcomes, and whether any is redundant or dominant.
 - **Produces:** a unit model and a template for defining a class.
