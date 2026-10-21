@@ -52,7 +52,7 @@ export function arena(o: { party: Spec[]; enemies: Spec[]; statuses?: unknown[];
   const p = { ...base, stats: STATS, statuses, abilities, enemies, ruleset: { ...base.ruleset, ...(o.ruleset ?? {}) } };
   const by = <T extends { id: string }>(xs: T[]) => new Map(xs.map((x) => [x.id, x]));
   const c: Content = {
-    pack: p, fingerprint: "arena", dungeons: new Map(), enemies: by(enemies), specs: new Map(), classes: new Map(), stats: by(STATS),
+    pack: p, fingerprint: "arena", dungeons: new Map(), enemies: by(enemies), classes: new Map(), stats: by(STATS),
     statuses: by(statuses), abilities: by(abilities), gear: new Map(), formations: new Map(), perks: new Map(),
   };
   const seed = o.seed ?? 1;

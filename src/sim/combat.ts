@@ -54,7 +54,7 @@ export function targets(c: Content, s: CombatStudy): Target[] {
   return out;
 }
 
-/** The parties a target allows: each set of specializations once, in the first owned formation that fits. */
+/** The parties a target allows: each set of classes once, in the first owned formation that fits. */
 function partiesFor(c: Content, s: CombatStudy, t: Target): Party[] {
   if (Array.isArray(s.parties)) return s.parties.filter((p) => fits(c, p, t.dungeon, t.challenge));
   const cap = Math.min(s.parties.max ?? 99, c.dungeons.get(t.dungeon)!.partySize.max);
@@ -62,7 +62,7 @@ function partiesFor(c: Content, s: CombatStudy, t: Target): Party[] {
   if (s.parties.formations === "all") return all(c, owned, cap, "all").filter((p) => fits(c, p, t.dungeon, t.challenge));
   const out: Party[] = [];
   for (const p of all(c, owned, cap, "first")) {
-    const f = owned.formations.map((id) => make(c, owned, p.units.map((u) => u.spec), id)).find((q) => fits(c, q, t.dungeon, t.challenge));
+    const f = owned.formations.map((id) => make(c, owned, p.units.map((u) => u.class), id)).find((q) => fits(c, q, t.dungeon, t.challenge));
     if (f) out.push(f);
   }
   return out;
@@ -237,7 +237,7 @@ const seedMeans = (runs: RunResult[][], idx: number[]) => runs[0].map((_, i) => 
 
 /** Each class: parties with it against parties of the same size without it, on the same seeds. */
 function classEffects(c: Content, ps: Party[], runs: RunResult[][]): Effect[] {
-  const classOf = (p: Party) => new Set(p.units.map((u) => c.specs.get(u.spec)!.class));
+  const classOf = (p: Party) => new Set(p.units.map((u) => u.class));
   return c.pack.classes.map(({ id }) => {
     const a: number[] = [], b: number[] = [];
     for (const size of new Set(ps.map((p) => p.units.length))) {
@@ -264,18 +264,18 @@ function sizeEffects(ps: Party[], runs: RunResult[][]): Effect[] {
  * can join. A pair that stands far above the rest is flagged.
  */
 function pairs(c: Content, ps: Party[], runs: RunResult[][]) {
-  const prog = new Map(ps.map((p, j) => [p.units.map((u) => u.spec).sort().join("+"), mean(runs[j].map((r) => r.progress))]));
-  const get = (specs: string[]) => (specs.length ? prog.get([...specs].sort().join("+")) : 0);
-  const specs = [...new Set(ps.flatMap((p) => p.units.map((u) => u.spec)))];
+  const prog = new Map(ps.map((p, j) => [p.units.map((u) => u.class).sort().join("+"), mean(runs[j].map((r) => r.progress))]));
+  const get = (classes: string[]) => (classes.length ? prog.get([...classes].sort().join("+")) : 0);
+  const classes = [...new Set(ps.flatMap((p) => p.units.map((u) => u.class)))];
   const out: { pair: string; extra: number; standsOut: boolean }[] = [];
-  for (let i = 0; i < specs.length; i++)
-    for (let j = i + 1; j < specs.length; j++) {
+  for (let i = 0; i < classes.length; i++)
+    for (let j = i + 1; j < classes.length; j++) {
       const extras: number[] = [];
-      for (const rest of [[], ...specs.filter((s) => s !== specs[i] && s !== specs[j]).map((s) => [s])]) {
-        const ab = get([...rest, specs[i], specs[j]]), a = get([...rest, specs[i]]), b = get([...rest, specs[j]]), n = get(rest);
+      for (const rest of [[], ...classes.filter((s) => s !== classes[i] && s !== classes[j]).map((s) => [s])]) {
+        const ab = get([...rest, classes[i], classes[j]]), a = get([...rest, classes[i]]), b = get([...rest, classes[j]]), n = get(rest);
         if ([ab, a, b, n].every((x) => x !== undefined)) extras.push(ab! - a! - b! + n!);
       }
-      if (extras.length) out.push({ pair: `${short(c, specs[i])} + ${short(c, specs[j])}`, extra: mean(extras), standsOut: false });
+      if (extras.length) out.push({ pair: `${short(c, classes[i])} + ${short(c, classes[j])}`, extra: mean(extras), standsOut: false });
     }
   const mid = quantile(out.map((p) => p.extra), 0.5);
   const spread = quantile(out.map((p) => Math.abs(p.extra - mid)), 0.5) || 0.1;
@@ -310,10 +310,10 @@ function tweakEffects(s: CombatStudy, js: Job[], pieces: Piece[]): Effect[] {
 
 /** The tweaks, each as the changed copies of a party. */
 const TWEAKS: Record<string, (c: Content, owned: Owned, p: Party) => Party[]> = {
-  formation: (c, owned, p) => owned.formations.filter((f) => f !== p.formation).map((f) => make(c, owned, p.units.map((u) => u.spec), f, p)),
+  formation: (c, owned, p) => owned.formations.filter((f) => f !== p.formation).map((f) => make(c, owned, p.units.map((u) => u.class), f, p)),
   gear: (_c, _owned, p) => [{ ...p, units: p.units.map((u) => ({ ...u, gear: {} })) }],
-  abilities: (c, _owned, p) => [{ ...p, units: p.units.map((u) => ({ ...u, abilities: c.specs.get(u.spec)!.abilities.slice(2, 4) })) }],
-  "unit order": (c, owned, p) => (p.units.length > 1 ? [make(c, owned, p.units.map((u) => u.spec).reverse(), p.formation, p)] : []),
+  abilities: (c, _owned, p) => [{ ...p, units: p.units.map((u) => ({ ...u, abilities: c.classes.get(u.class)!.abilities.slice(2, 4) })) }],
+  "unit order": (c, owned, p) => (p.units.length > 1 ? [make(c, owned, p.units.map((u) => u.class).reverse(), p.formation, p)] : []),
 };
 
 /** One tweak on one target: each party's progress per seed, and each changed copy's. */

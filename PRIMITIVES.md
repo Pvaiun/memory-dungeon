@@ -1,6 +1,6 @@
 # Engine primitives
 
-Generated from `src/schema.ts` (schema 0.4) by `npm run docs`. Do not edit by hand.
+Generated from `src/schema.ts` (schema 0.5) by `npm run docs`. Do not edit by hand.
 
 Step 4's combat design (`steps/04-combat-concepts/design.md`) is the rulebook; this is the closed set of building blocks it runs on. Each needs engine code, so adding one is a schema version bump plus an engine change. Stats, statuses, elements, abilities and everything else are registries in the pack, and grow without touching the schema. Steps 5 to 12 will add building blocks as content needs them, and the numbers in the worked example (floors, caps, default timings) are placeholders.
 

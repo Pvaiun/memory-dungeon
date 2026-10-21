@@ -3,12 +3,12 @@
  * step 2's stand-in. The fight itself is in fight.ts; this file builds units
  * from content, carries HP and MP between fights, and runs perk offers and loot.
  *
- * - A party unit's stats are its class and specialization's, plus stat grants
- *   from its class passive, gear, formation slot, formation and perks.
+ * - A party unit's stats are its class's, plus stat grants from its class
+ *   passive, gear, formation slot, formation and perks.
  * - Statuses from those are applied at each fight start.
  * - HP and MP carry between fights. Recovery between fights belongs to step 11,
  *   so there is none yet, and KO'd units stay down.
- * - Each unit draws from its own dice: party units by specialization, enemies by
+ * - Each unit draws from its own dice: party units by class, enemies by
  *   their place in the fight. The same seed brings the same luck to the same
  *   unit, whatever else is in the fight.
  */
@@ -57,8 +57,7 @@ export const combat: Rules = {
   party(c, input) {
     const f = c.formations.get(input.party.formation)!;
     return input.party.units.map((pu, i): Member => {
-      const spec = c.specs.get(pu.spec)!;
-      const cls = c.classes.get(spec.class)!;
+      const cls = c.classes.get(pu.class)!;
       const slot = f.positions.findIndex((p) => p.id === pu.position);
       const m = { flat: {}, pct: {}, start: [] as string[] };
       grant(m, cls.passive);
@@ -66,10 +65,10 @@ export const combat: Rules = {
       for (const g of gear) grant(m, g);
       grant(m, f.positions[slot]);
       grant(m, f);
-      const base = { ...cls.stats, ...(spec.stats ?? {}) };
+      const base = { ...cls.stats };
       const stats = derive(c, { base, ...m });
       return {
-        id: `p${i + 1}`, ref: spec.id, name: spec.name, side: "party", stats, hp: stats.max_hp, mp: stats.max_mp, slot, base, ...m,
+        id: `p${i + 1}`, ref: cls.id, name: cls.name, side: "party", stats, hp: stats.max_hp, mp: stats.max_mp, slot, base, ...m,
         weapon: gear.find((g) => g.weapon)?.id ?? "unarmed", abilities: [...pu.abilities],
       };
     });
@@ -136,9 +135,7 @@ export const combat: Rules = {
     x.run.perks.push(choice);
     const perk = x.c.perks.get(choice)!;
     for (const m of x.run.party as Member[]) {
-      const spec = x.c.specs.get(m.ref)!;
-      if (perk.for?.classes && !perk.for.classes.includes(spec.class)) continue;
-      if (perk.for?.specs && !perk.for.specs.includes(spec.id)) continue;
+      if (perk.for?.classes && !perk.for.classes.includes(m.ref)) continue;
       grant(m, perk);
       restat(x.c, m);
     }

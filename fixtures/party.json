@@ -1,11 +1,11 @@
 {
   "formation": "phalanx",
   "units": [
-    { "spec": "warrior_vanguard", "position": "shield_point", "abilities": ["cleave", "stand_guard"],
+    { "class": "warrior", "position": "shield_point", "abilities": ["cleave", "stand_guard"],
       "gear": { "warrior_weapon": "notched_blade", "armour": "studded_jerkin" } },
-    { "spec": "ranger_duelist", "position": "left_shield", "abilities": ["riposte", "lunge"],
-      "gear": { "ranger_weapon": "hunters_shortbow", "charm": "yata_mirror" } },
-    { "spec": "ranger_archer", "position": "left_striker", "abilities": ["barbed_arrows", "volley"],
+    { "class": "duelist", "position": "left_shield", "abilities": ["riposte", "lunge"],
+      "gear": { "duelist_weapon": "fencers_rapier", "charm": "yata_mirror" } },
+    { "class": "ranger", "position": "left_striker", "abilities": ["barbed_arrows", "volley"],
       "gear": { "ranger_weapon": "ullrs_yew", "armour": "wolfhide_cloak" } }
   ]
 }

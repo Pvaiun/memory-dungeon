@@ -12,17 +12,17 @@ export const DUNGEON = "hollow_of_the_grey_mother";
 export const content: Content = loadContent(pack);
 export const PARTY: Party = Party.parse(fixtureParty);
 
-/** Every party of 1 to 3 specializations, in every formation, abilities and gear left simple. */
+/** Every party of 1 to 3 classes, in every formation, abilities and gear left simple. */
 export function parties(c: Content = content): Party[] {
-  const specs = c.pack.specializations;
+  const classes = c.pack.classes;
   const out: Party[] = [];
-  for (let mask = 1; mask < 1 << specs.length; mask++) {
-    const chosen = specs.filter((_, i) => mask & (1 << i));
+  for (let mask = 1; mask < 1 << classes.length; mask++) {
+    const chosen = classes.filter((_, i) => mask & (1 << i));
     if (chosen.length > 3) continue;
     for (const f of c.pack.formations) {
       out.push({
         formation: f.id,
-        units: chosen.map((s, i) => ({ spec: s.id, position: f.positions[i].id, abilities: s.abilities.slice(0, 2), gear: {} })),
+        units: chosen.map((s, i) => ({ class: s.id, position: f.positions[i].id, abilities: s.abilities.slice(0, 2), gear: {} })),
       });
     }
   }

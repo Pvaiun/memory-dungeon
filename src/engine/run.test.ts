@@ -92,7 +92,7 @@ test("a decision with no options is skipped, not asked", () => {
 test("bad input is refused before the run starts", () => {
   assert.throws(() => newRun(c, combat, { ...input(1), dungeon: "nowhere" }), /unknown dungeon/);
   assert.throws(() => newRun(c, combat, { ...input(1), seed: 1.5 }), /whole number/);
-  const tooBig = { ...PARTY, units: [...PARTY.units, { ...PARTY.units[0], spec: "cleric_mender", position: "right_shield", abilities: ["mend", "purify"] }] };
+  const tooBig = { ...PARTY, units: [...PARTY.units, { ...PARTY.units[0], class: "cleric", position: "right_shield", abilities: ["mend", "purify"] }] };
   assert.throws(() => newRun(c, combat, input(1, tooBig)), /invalid party/);
 });
 
@@ -158,6 +158,6 @@ test("logging off changes nothing but the log", () => {
 
 test("pinned run: any change here means old records replay differently, so bump ENGINE_VERSION", () => {
   const run = play(c, combat, input(1), firstOption, { log: true });
-  assert.equal(ENGINE_VERSION, "0.4");
-  assert.equal(fingerprint(JSON.stringify(run.log!.slice(1))), "c34a7bb1b857a8f1");
+  assert.equal(ENGINE_VERSION, "0.5");
+  assert.equal(fingerprint(JSON.stringify(run.log!.slice(1))), "cb3ca9fbabcbe16b");
 });

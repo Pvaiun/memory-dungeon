@@ -8,17 +8,17 @@ import type { Party } from "../schema.js";
 import { unmetConstraints } from "../validate.js";
 
 /** What a player owns. Gear is a count per item. */
-export type Owned = { specs: string[]; formations: string[]; gear: Record<string, number> };
+export type Owned = { classes: string[]; formations: string[]; gear: Record<string, number> };
 
 export const starter = (c: Content): Owned => ({
-  specs: [...c.pack.starter.specializations],
+  classes: [...c.pack.starter.classes],
   formations: [...c.pack.starter.formations],
   gear: Object.fromEntries(c.pack.starter.gear.map((g) => [g, 1])),
 });
 
 /** Everything in the content, for combat studies: as if the player owned it all. */
 export const everything = (c: Content): Owned => ({
-  specs: c.pack.specializations.map((s) => s.id),
+  classes: c.pack.classes.map((cl) => cl.id),
   formations: c.pack.formations.map((f) => f.id),
   gear: Object.fromEntries(c.pack.gear.map((g) => [g.id, 5])),
 });
@@ -29,51 +29,48 @@ export const everything = (c: Content): Owned => ({
  * 10 replace it, likely with the party's verbs weighted by efficacy.
  */
 export type Colour = (c: Content, p: Party) => string;
-export const classColour: Colour = (c, p) => [...new Set(p.units.map((u) => c.specs.get(u.spec)!.class))].sort().join("+");
+export const classColour: Colour = (c, p) => [...new Set(p.units.map((u) => u.class))].sort().join("+");
 
 /** A stable key for a party, for memory and caches. */
 export const partyKey = (p: Party) =>
-  `${p.formation}|${p.units.map((u) => `${u.spec}[${u.abilities.join(",")}]{${Object.entries(u.gear).sort().map(([s, g]) => `${s}=${g}`).join(",")}}`).join(";")}`;
+  `${p.formation}|${p.units.map((u) => `${u.class}[${u.abilities.join(",")}]{${Object.entries(u.gear).sort().map(([s, g]) => `${s}=${g}`).join(",")}}`).join(";")}`;
 
-/** "Vanguard" for "Warrior: Vanguard". */
-export const short = (c: Content, spec: string) => c.specs.get(spec)!.name.replace(/^.*?:\s*/, "");
+/** A class's display name. */
+export const short = (c: Content, cls: string) => c.classes.get(cls)!.name;
 
-/** "Vanguard, Archer, Mender (Phalanx)". */
+/** "Warrior, Ranger, Cleric (Phalanx)". */
 export function label(c: Content, p: Party): string {
   const f = c.pack.formations.find((x) => x.id === p.formation)?.name ?? p.formation;
-  return `${p.units.map((u) => short(c, u.spec)).join(", ")} (${f})`;
+  return `${p.units.map((u) => short(c, u.class)).join(", ")} (${f})`;
 }
 
-/** A party of these specializations in this order, with positions, abilities and gear filled in. */
-export function make(c: Content, owned: Owned, specs: readonly string[], formation: string, keep?: Party): Party {
+/** A party of these classes in this order, with positions, abilities and gear filled in. */
+export function make(c: Content, owned: Owned, classes: readonly string[], formation: string, keep?: Party): Party {
   const f = c.pack.formations.find((x) => x.id === formation)!;
   const left = { ...owned.gear };
-  const units = specs.map((spec, i) => {
-    const old = keep?.units.find((u) => u.spec === spec);
-    const s = c.specs.get(spec)!;
-    return { spec, position: f.positions[i].id, abilities: old?.abilities ?? s.abilities.slice(0, c.pack.design.abilitiesEquipped), gear: {} as Record<string, string> };
+  const units = classes.map((cls, i) => {
+    const old = keep?.units.find((u) => u.class === cls);
+    return { class: cls, position: f.positions[i].id, abilities: old?.abilities ?? c.classes.get(cls)!.abilities.slice(0, c.pack.design.abilitiesEquipped), gear: {} as Record<string, string> };
   });
   // Units kept from `keep` keep their gear; new units get the best-ranked owned gear left.
-  const kept = (spec: string) => keep?.units.find((v) => v.spec === spec);
-  for (const u of units) for (const [slot, g] of Object.entries(kept(u.spec)?.gear ?? {})) if ((left[g] ?? 0) > 0) (u.gear[slot] = g), left[g]--;
+  const kept = (cls: string) => keep?.units.find((v) => v.class === cls);
+  for (const u of units) for (const [slot, g] of Object.entries(kept(u.class)?.gear ?? {})) if ((left[g] ?? 0) > 0) (u.gear[slot] = g), left[g]--;
   for (const u of units) {
-    if (kept(u.spec)) continue;
-    for (const slot of slotsOf(c, u.spec)) {
-      const g = gearFor(c, u.spec, slot).find((id) => (left[id] ?? 0) > 0);
+    if (kept(u.class)) continue;
+    for (const slot of slotsOf(c, u.class)) {
+      const g = gearFor(c, u.class, slot).find((id) => (left[id] ?? 0) > 0);
       if (g) (u.gear[slot] = g), left[g]--;
     }
   }
   return { formation, units };
 }
 
-export function slotsOf(c: Content, spec: string): string[] {
-  const cls = c.specs.get(spec)!.class;
+export function slotsOf(c: Content, cls: string): string[] {
   return c.pack.slots.filter((s) => !s.class || s.class === cls).map((s) => s.id);
 }
 
-/** Gear that fits this spec's slot, best rank first. */
-export function gearFor(c: Content, spec: string, slot: string): string[] {
-  const cls = c.specs.get(spec)!.class;
+/** Gear that fits this class's slot, best rank first. */
+export function gearFor(c: Content, cls: string, slot: string): string[] {
   return c.pack.gear
     .filter((g) => g.slot === slot && (!g.class || g.class.includes(cls)))
     .sort((a, b) => (b.rank ?? 0) - (a.rank ?? 0))
@@ -83,13 +80,13 @@ export function gearFor(c: Content, spec: string, slot: string): string[] {
 export const fits = (c: Content, p: Party, dungeon: string, challenge?: string) =>
   p.units.length <= c.dungeons.get(dungeon)!.partySize.max && (!challenge || !unmetConstraints(c.pack, p, dungeon, challenge).length);
 
-/** Every set of owned specializations up to `cap`, in every owned formation (or just the first). */
+/** Every set of owned classes up to `cap`, in every owned formation (or just the first). */
 export function all(c: Content, owned: Owned, cap: number, formations: "first" | "all" = "all"): Party[] {
-  const specs = owned.specs;
+  const classes = owned.classes;
   const fs = formations === "all" ? owned.formations : owned.formations.slice(0, 1);
   const out: Party[] = [];
-  for (let mask = 1; mask < 1 << specs.length; mask++) {
-    const chosen = specs.filter((_, i) => mask & (1 << i));
+  for (let mask = 1; mask < 1 << classes.length; mask++) {
+    const chosen = classes.filter((_, i) => mask & (1 << i));
     if (chosen.length > cap) continue;
     for (const f of fs) out.push(make(c, owned, chosen, f));
   }
@@ -100,21 +97,21 @@ export type Tweak = { kind: "unit" | "add" | "drop" | "formation" | "gear" | "ab
 
 /** Every party one small change away: swap, add or drop a unit, or change the formation, a piece of gear, a unit's abilities or the order. */
 export function tweaks(c: Content, owned: Owned, p: Party, cap: number): Tweak[] {
-  const specs = p.units.map((u) => u.spec);
+  const classes = p.units.map((u) => u.class);
   const out: Tweak[] = [];
-  const spare = owned.specs.filter((s) => !specs.includes(s));
-  for (let i = 0; i < specs.length; i++) for (const s of spare) out.push({ kind: "unit", party: make(c, owned, specs.map((x, j) => (j === i ? s : x)), p.formation, p) });
-  if (specs.length < cap) for (const s of spare) out.push({ kind: "add", party: make(c, owned, [...specs, s], p.formation, p) });
-  if (specs.length > 1) for (let i = 0; i < specs.length; i++) out.push({ kind: "drop", party: make(c, owned, specs.filter((_, j) => j !== i), p.formation, p) });
-  for (const f of owned.formations) if (f !== p.formation) out.push({ kind: "formation", party: make(c, owned, specs, f, p) });
-  for (let i = 1; i < specs.length; i++) {
-    const order = [...specs];
+  const spare = owned.classes.filter((s) => !classes.includes(s));
+  for (let i = 0; i < classes.length; i++) for (const s of spare) out.push({ kind: "unit", party: make(c, owned, classes.map((x, j) => (j === i ? s : x)), p.formation, p) });
+  if (classes.length < cap) for (const s of spare) out.push({ kind: "add", party: make(c, owned, [...classes, s], p.formation, p) });
+  if (classes.length > 1) for (let i = 0; i < classes.length; i++) out.push({ kind: "drop", party: make(c, owned, classes.filter((_, j) => j !== i), p.formation, p) });
+  for (const f of owned.formations) if (f !== p.formation) out.push({ kind: "formation", party: make(c, owned, classes, f, p) });
+  for (let i = 1; i < classes.length; i++) {
+    const order = [...classes];
     [order[0], order[i]] = [order[i], order[0]];
     out.push({ kind: "order", party: make(c, owned, order, p.formation, p) });
   }
   p.units.forEach((u, i) => {
-    for (const slot of slotsOf(c, u.spec)) {
-      for (const g of [...gearFor(c, u.spec, slot), ""]) {
+    for (const slot of slotsOf(c, u.class)) {
+      for (const g of [...gearFor(c, u.class, slot), ""]) {
         if (g === (u.gear[slot] ?? "")) continue;
         if (g && (owned.gear[g] ?? 0) - p.units.filter((v) => v.gear[slot] === g).length <= 0) continue;
         const q = structuredClone(p);
@@ -123,7 +120,7 @@ export function tweaks(c: Content, owned: Owned, p: Party, cap: number): Tweak[]
         out.push({ kind: "gear", party: q });
       }
     }
-    const all = c.specs.get(u.spec)!.abilities;
+    const all = c.classes.get(u.class)!.abilities;
     for (const a of all) {
       if (u.abilities.includes(a)) continue;
       const q = structuredClone(p);
