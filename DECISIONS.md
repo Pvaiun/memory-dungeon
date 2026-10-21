@@ -31,7 +31,7 @@ Reviewed with the director Oct 15, 2026. Full record: `docs/memory-stack.md`.
 
 ## Step 1: content schema
 
-Schema 0.3, approved Oct 15, 2026, before the method existed. Since this is built before the method existed it's placeholder and considered inspiration at best. Full record: `SCHEMA.md`.
+Schema 0.3, approved Oct 15, 2026, before the method existed. Since this is built before the method existed it's placeholder and considered inspiration at best. Its old write-up was cut (it's in git history); `SCHEMA.md` is now a short historical note.
 
 - **Units:** each unit is a class plus a specialization (e.g. Ranger: Duelist). There's no plain class unit, and each specialization is one unit the player owns once.
 - **No battlefield geometry:** no rows and no reach.
