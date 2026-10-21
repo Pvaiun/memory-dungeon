@@ -129,9 +129,12 @@ const ctx = (c: Content, run: Run): Ctx => {
   return { c, run, log: log ? (e) => log.push(e) : undefined };
 };
 
-export function newRun(c: Content, rules: Rules, input: RunInput, opts: { log?: boolean } = {}): Run {
+/** `checked`: the caller has already checked this party against this dungeon, as bulk simulation does once per party. */
+export type RunOpts = { log?: boolean; checked?: boolean };
+
+export function newRun(c: Content, rules: Rules, input: RunInput, opts: RunOpts = {}): Run {
   if (!c.dungeons.has(input.dungeon)) throw new Error(`unknown dungeon '${input.dungeon}'`);
-  const errors = checkParty(c.pack, input.party, { dungeon: input.dungeon }).filter((i) => i.level === "error");
+  const errors = opts.checked ? [] : checkParty(c.pack, input.party, { dungeon: input.dungeon }).filter((i) => i.level === "error");
   if (errors.length) throw new Error(`invalid party: ${errors.map((e) => `${e.path}: ${e.message}`).join("; ")}`);
   if (!Number.isSafeInteger(input.seed)) throw new Error(`seed must be a whole number, got ${input.seed}`);
   const record: RunRecord = {
@@ -253,7 +256,7 @@ export function randomPicker(seed: number): Picker {
   return (d) => d.options[int(rng, d.options.length)];
 }
 
-export function play(c: Content, rules: Rules, input: RunInput, picker: Picker, opts: { log?: boolean } = {}): Run {
+export function play(c: Content, rules: Rules, input: RunInput, picker: Picker, opts: RunOpts = {}): Run {
   const run = advance(c, rules, newRun(c, rules, input, opts));
   while (run.pending) advance(c, rules, answer(c, rules, run, picker(run.pending, run)));
   return run;

@@ -9,7 +9,7 @@ import assert from "node:assert/strict";
 import { combat as rules } from "../engine/combat/rules.js";
 import { randomPicker } from "../engine/run.js";
 import pack from "../../fixtures/hollow.pack.json" with { type: "json" };
-import { runCombat } from "./combat.js";
+import { assemble, contents, jobs, runCombat, runJob, type Piece } from "./combat.js";
 import { build, ladder, patch } from "./content.js";
 import { pickRuns, readingPack, scoreColours } from "./feel.js";
 import { measure, probe } from "./measure.js";
@@ -48,6 +48,15 @@ test("the same study gives the same numbers", () => {
   const s = combat({ seeds: 20, perkSeeds: 0 });
   const a = runCombat(s, pack, rules).results, b = runCombat(s, pack, rules).results;
   assert.deepEqual(a, b);
+});
+
+test("a study's jobs give the same numbers in any order, as when shared out between threads", () => {
+  const s = combat({ seeds: 20, perkSeeds: 4, effectSeeds: 20, targets: { dungeons: ["hollow_of_the_grey_mother_4", "hollow_of_the_grey_mother_6"], challenges: true } });
+  const cs = contents(s, pack);
+  const js = jobs(s, cs);
+  const pieces: Piece[] = [];
+  for (const i of js.map((_, i) => i).reverse()) pieces[i] = structuredClone(runJob(s, cs, rules, js[i], { keep: true }));
+  assert.deepEqual(assemble(s, cs, rules, js, pieces, { keep: true }), runCombat(s, pack, rules, { keep: true }));
 });
 
 /** The pack with formations and perks that do nothing, so tweaks to them must change nothing. */

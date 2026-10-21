@@ -872,15 +872,21 @@ function matches(spec: S.EventSpecT, e: Ev, holder: CUnit): boolean {
   return true;
 }
 
-/** The events each status listens to, through its reactions or its Intensity trigger, by status id. */
+/** The statuses that listen to each event, through their reactions or their Intensity trigger, by event. */
 const listening = new WeakMap<Content, Map<string, Set<string>>>();
-function listens(w: W, id: string): Set<string> {
+function listeners(w: W, event: string): Set<string> | undefined {
   let m = listening.get(w.c);
   if (!m) {
-    m = new Map([...w.c.statuses.values()].map((d) => [d.id, new Set([...(d.reactions ?? []).map((r) => r.on.event), ...(d.trigger ? [d.trigger.on.event] : [])])]));
+    m = new Map();
+    for (const d of w.c.statuses.values()) {
+      for (const on of [...(d.reactions ?? []).map((r) => r.on.event), ...(d.trigger ? [d.trigger.on.event] : [])]) {
+        if (!m.has(on)) m.set(on, new Set());
+        m.get(on)!.add(d.id);
+      }
+    }
     listening.set(w.c, m);
   }
-  return m.get(id)!;
+  return m.get(event);
 }
 
 function fire(w: W, e: Ev) {
@@ -889,13 +895,16 @@ function fire(w: W, e: Ev) {
     w.log?.({ t: "stop", vis: "hidden", at: w.f.now, why: `event chain too deep at ${e.e}` });
     return;
   }
+  // Most events have no status anywhere in the content listening to them.
+  const ids = listeners(w, e.e);
+  if (!ids) return;
   w.depth++;
   for (const h of w.f.units) {
     const own = e.ending && h === e.owner;
-    if (!own && !h.statuses.some((s) => listens(w, s.id).has(e.e))) continue;
+    if (!own && !h.statuses.some((s) => ids.has(s.id))) continue;
     const list = own ? [...h.statuses, e.ending!] : h.statuses.slice();
     for (const s of list) {
-      if (!listens(w, s.id).has(e.e)) continue;
+      if (!ids.has(s.id)) continue;
       const d = def(w, s.id);
       if (d.trigger && s !== e.ending && h.statuses.includes(s) && matches(d.trigger.on, e, h)) trigger(w, h, s, d, e);
       d.reactions?.forEach((r, k) => {

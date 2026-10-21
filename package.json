@@ -15,7 +15,7 @@
     "examples": "tsx src/extract-examples.ts",
     "dungeon": "tsx src/dungeon.ts",
     "pack": "tsx src/pack.ts",
-    "study": "tsx src/study.ts"
+    "study": "esbuild src/study.ts --bundle --platform=node --format=esm --outfile=out/study.mjs --log-level=warning && node out/study.mjs"
   },
   "keywords": [],
   "author": "",
@@ -26,6 +26,7 @@
   "devDependencies": {
     "@types/node": "^26.6.5",
     "ajv": "^8.20.0",
+    "esbuild": "^0.28.2",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vitest": "^2.1.9"

@@ -12,6 +12,8 @@ Decisions are direction like any other (see `docs/method.md`): a designer can ch
 
 - **Context packs (Oct 16, 2026):** an interviewer outside the repo gets one generated file: the primer (`docs/primer.md`), the interviewer guide, the step's plan entry and the brief. The primer is the only place the game is explained to an outsider, and it's kept current whenever this file changes. Briefs cover their step only, and add "why it's hard".
 
+- **Checks sized to the need (director, Oct 20, 2026):** a step runs the tests, studies and feel checks it needs to know something, and skips the ones it doesn't. When unsure, it asks the director. There's no fixed list of checks per step.
+
 ## Tech-stack brief
 
 Reviewed with the director Oct 15, 2026. Full record: `docs/memory-stack.md`.
@@ -62,7 +64,7 @@ Signed off by the director, Oct 16, 2026. Full record: `steps/03-simulation-harn
 - **Strictness** is two numbers for each dungeon or challenge: how many colours can win at all, and inside those, how many tweaks win. A colour is the broad kind of party, and it's one swappable piece of the harness. For now it's the set of classes in the party; steps 5 and 8 to 10 define the real one, likely the party's verbs weighted by efficacy, with formations and powerful gear counting toward it. It stays two numbers, with only a handful of colours.
 - **Walls.** Every stuck week is sorted as walled by quests (only a new unlock moves the player on) or walled by play (it owns a party that wins, or has challenges left it can win). Reports give the share of each, how long walls last, what ended each wall, and how each wall was sorted against what ended it.
 - **Perks** are measured as step 2's four numbers. "The best a player could know" is a priority list learned on half the seeds and played on the other half.
-- **Feel checks** run at checkpoints, not every round. A fresh helper agent in the working session reads reading packs, so there's no API key or cost per check. A pack holds only what a player would see, plus each enemy's trait words, and never enemy stats or HP. The reader answers a fixed sheet. Its guess at the colour to try next after a loss is scored against the colours that win.
+- **Feel checks** run at checkpoints, not every round. A fresh helper agent in the working session reads reading packs, so there's no API key to set up. It uses the plan's usage like the rest of the session, a small amount per check. A pack holds only what a player would see, plus each enemy's trait words, and never enemy stats or HP. The reader answers a fixed sheet. Its guess at the colour to try next after a loss is scored against the colours that win.
 - **Placeholders, for step 14:** "can win" for strictness is half the tries. In progression, a dungeon counts as winnable at 1 try in 10. Party choices "start to matter" when the best and worst full parties differ by half their tries, or a whole fight. The benchmark's budget is 300 runs per question, which matched a full search on the sample.
 
 Direction the director gave in the intent interview and the design review, Oct 16, 2026:
@@ -91,3 +93,4 @@ Signed off by the director, Oct 20, 2026. The director wrote the design themselv
 - **A fight nobody can win isn't designed for** until it happens. The engine's 5,000-tick safety stop, counted as a loss, is engineering, not a rule.
 - **Each unit draws its own dice** (party units by specialization, enemies by slot), so the same seed brings the same luck to the same unit, whatever else is in the fight.
 - **Still open, for steps 6 and 8:** Lifesteal as a stat needs a scale with a second factor ("X% per point of Y").
+- **Simulation speed (director, Oct 20, 2026).** Fast enough for now means the combat sample runs in under 2 minutes in a cloud session, and a normal tuning study finishes inside one command. Re-check at step 13, on real content. Studies run as one prebuilt file, a combat study's jobs are shared out across every core, and each party is checked once per study rather than on every seed: the combat sample went from 307 s to 64 s with identical numbers. A study's running time costs no tokens, because a cloud session's machine isn't charged; waiting and the 10-minute command limit are the costs. When volume outgrows a cloud session, studies run in a Claude Code session on the director's PC. A deeper rewrite of the engine for speed waits until step 13 shows it's needed.
