@@ -12,7 +12,6 @@ It's also a test of a way of making games. The director sets the vision. AI desi
 - `DECISIONS.md`: what's been decided, step by step. Where it differs from the concept spec, it wins; the director will update the spec.
 - `docs/concept-spec.md`: what the game is and why. It's the game-wide intent.
 - `steps/`: one folder per step, holding its brief, intent, design, tuning log and report.
-- `SCHEMA.md`: a short historical note on step 1. Not design: it points to where the real design is.
 - `docs/memory-app-overview.md`: how Memory works today.
 - `docs/memory-stack.md`: how Memory is built (stack, data, AI pattern, limits) and what that means for the game.
 - `docs/memory-design-spec.md`: Memory's own design spec, copied from `Pvaiun/memoryapp`. Phase 4 works from it.
@@ -30,7 +29,7 @@ It's also a test of a way of making games. The director sets the vision. AI desi
 
 ## Status
 
-- **Step 1, content schema:** done and approved (schema 0.3). It predates the method and was starting context, not design; its surviving ideas are in `DECISIONS.md`, and SCHEMA.md is only a historical note.
+- **Step 1, content schema:** done and approved (schema 0.3). It predates the method and was starting context, not design; its surviving ideas are in `DECISIONS.md`.
 - **Method:** adopted (`docs/method.md`). Steps 2 onward follow it.
 - **Tech-stack brief:** done and reviewed by the director (Oct 15, 2026). The write-up is `docs/memory-stack.md`, and its decisions are in `DECISIONS.md`. Tooling matches Memory: TypeScript 7.0, Vitest, `isolatedModules`, and a typecheck guard that keeps game logic free of Node APIs.
 - **Step 2, headless engine:** done and signed off (Oct 16, 2026). The machinery is in `src/engine/` (seeded dice, runs as plain data, decision points, the explorer, the log), with the battle system behind the `Rules` interface (step 4 replaced its stand-in fight). Its record is `steps/02-headless-engine/`, and its decisions are in `DECISIONS.md`. The report's "For later steps" notes are for steps 3, 4 and 6. Step 4 reran the Chrome-against-Safari check (`bun src/dungeon.ts --digest` against `npm run dungeon -- --digest`) with real combat: identical.
