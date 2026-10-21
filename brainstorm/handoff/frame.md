@@ -19,7 +19,7 @@ It's an optional game inside a personal productivity app made for someone with A
 
 ## The combat system
 
-It's built and working. Its numbers are placeholders.
+Its numbers are placeholders.
 
 **Time and actions.**
 
@@ -68,7 +68,5 @@ It's built and working. Its numbers are placeholders.
 - A status has a duration or lasts the whole fight. It can be unremovable, or survive its holder being knocked out. Effects can remove buffs or debuffs, and units can be immune to particular statuses or kinds of effect.
 - A status's own damage has no type or element: it isn't dodged, and Armor and resistance don't reduce it. Only damage-taken modifiers and shields do.
 - A status is fixed when it's applied. The applier's stats can set how many stacks an application adds, and nothing else.
-
-**Not built yet** (each would need new engine work): targeting rules on the attacker (a taunt that names one unit, charm), granting or repeating actions, revives, resistance to statuses, summons or pets as their own units, and Lifesteal (it needs a second scaling factor).
 
 **What players see.** Only a few statuses show as icons on a unit; everything else is behind the scenes. The statuses a player meets should be few and easy to recognise.

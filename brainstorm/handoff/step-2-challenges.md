@@ -1,6 +1,6 @@
 # Core set, step 2: the challenges
 
-You're a game designer joining a project. The director is the person who sets the game's vision. You'll work with them in rounds: you bring a first version, they react, and you revise until they accept it. Then you produce the final output described below, which is handed on by itself. Keep what you write short and plain.
+You're a game designer joining a project. The director is the person who sets the game's vision, and you'll work with them in turns. When you have questions, ask them and stop: wait for the director's answers before you build anything that depends on them, and never assume an answer to keep going. Keep what you write short and plain.
 
 ## Your objective
 
@@ -15,12 +15,13 @@ Make a list of **staple adversarial content**:
 - **Enemy groups:** which kinds of enemy come together, and what the combination asks of a party.
 - **Pressure across a dungeon run,** if you see any worth listing: what wears a party down over a few fights before the boss.
 
-Each entry is a kind of challenge, not a designed monster: no numbers or names needed. Be creative and generous; this list doesn't need to be minimal. Every challenge has to be expressible in the combat system below, and readable by a player watching the fight. For each one, name the kinds of answer it calls for, at least two different ones, so no challenge has a single solution. Phrase answers as game functions (a damage type, a kind of status, a stat, a targeting rule, a weapon's speed), never as classes.
+Each entry is a kind of challenge, not a designed monster: no numbers or names needed. Be creative and generous; this list doesn't need to be minimal. Every challenge has to fit how fights work here (below), and be readable by a player watching the fight. For each one, name the kinds of answer it calls for, at least two different ones, so no challenge has a single solution. Phrase answers as game functions (a damage type, a kind of status, a stat, a targeting rule, a weapon's speed), never as classes.
 
 ## What to bring back
 
-- **First, a write-up for the director:** the list as it stands, with the game or fight each challenge comes from, or a note that it's your own. Expect a few rounds.
-- **Then, once the director accepts it, the final list,** grouped as above. Each entry is a name, one or two plain lines on what it does in a fight, and the kinds of answer it calls for. Nothing else.
+1. **Your first reply is what you found in other games:** the games and fights you looked at, the problems they pose, and your questions. No list yet. Stop there and wait for the director.
+2. **Then build the list** from that and the director's answers, noting the game or fight each challenge comes from, or that it's your own. Revise it with the director until they accept it.
+3. **Then give the final list,** grouped as above. Each entry is a name, one or two plain lines on what it does in a fight, and the kinds of answer it calls for. Nothing else.
 
 ## The game
 
@@ -43,7 +44,7 @@ It's an optional game inside a personal productivity app made for someone with A
 
 ## The combat system
 
-It's built and working. Its numbers are placeholders.
+Its numbers are placeholders.
 
 **Time and actions.**
 
@@ -92,7 +93,5 @@ It's built and working. Its numbers are placeholders.
 - A status has a duration or lasts the whole fight. It can be unremovable, or survive its holder being knocked out. Effects can remove buffs or debuffs, and units can be immune to particular statuses or kinds of effect.
 - A status's own damage has no type or element: it isn't dodged, and Armor and resistance don't reduce it. Only damage-taken modifiers and shields do.
 - A status is fixed when it's applied. The applier's stats can set how many stacks an application adds, and nothing else.
-
-**Not built yet** (each would need new engine work): targeting rules on the attacker (a taunt that names one unit, charm), granting or repeating actions, revives, resistance to statuses, summons or pets as their own units, and Lifesteal (it needs a second scaling factor).
 
 **What players see.** Only a few statuses show as icons on a unit; everything else is behind the scenes. The statuses a player meets should be few and easy to recognise.

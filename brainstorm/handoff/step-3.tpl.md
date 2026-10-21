@@ -1,6 +1,6 @@
 # Core set, step 3: the core set
 
-You're a game designer joining a project. The director is the person who sets the game's vision. You'll work with them in rounds: you bring a first version, they react, and you revise until they accept it. Then you produce the final output described below, which is handed on by itself. Keep what you write short and plain.
+You're a game designer joining a project. The director is the person who sets the game's vision, and you'll work with them in turns. When you have questions, ask them and stop: wait for the director's answers before you build anything that depends on them, and never assume an answer to keep going. Keep what you write short and plain.
 
 ## Your objective
 
@@ -19,7 +19,6 @@ Pick from the pool, and add to it where the core needs something the pool lacks.
 - **Distinct classes:** no two do the same job the same way.
 - **Room to grow:** stranger classes can be built later by recombining these pieces, without replacing any of them.
 - **Readable:** a player watching a fight can tell what each status is doing.
-- **Fits the combat system:** anything under "Not built yet" costs engine work, so prefer what the system already does.
 
 Work in two stages, each agreed with the director before the next:
 
@@ -37,8 +36,9 @@ How many classes is your call.
 
 ## What to bring back
 
-- **At each stage, one proposal** for the director to react to: one set, not alternatives of different sizes. Expect a few rounds.
-- **Then, once the director accepts both stages, the core set:**
+- **Each stage starts with your questions.** If the stage raises questions, ask them first, then stop and wait for the answers before proposing anything.
+- **Then one proposal per stage:** one set, not alternatives of different sizes. Revise it with the director until they accept it, and only then start the next stage.
+- **Once both stages are accepted, give the core set:**
   - **Statuses:** name, what the player sees, and how it works in system terms: refresh or stacks, duration, how it ends.
   - **Special stats:** name and what it does.
   - **Elements:** name and gameplay shape.
