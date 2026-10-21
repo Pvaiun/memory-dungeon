@@ -3,3 +3,7 @@
 Prompts for blind idea generators: fresh chats with no access to this repo, run in two or more different models, with memory off. They see only the frame in each prompt, which is written from `DECISIONS.md` with every named example left out (no status, class or ability names), so their lists don't echo the director's ideas or each other's through a shared source.
 
 Each prompt asks for the same lists (classes, player-facing statuses, special stats, plus elements) from a different angle: (a) the genre, (b) the system, (c) the trouble enemies cause. The director writes their own three lists separately, before reading any output. A session in the repo then merges the lists: ideas deduplicated by meaning, each counted by how many independent lists it appears in, and the director's marked as theirs.
+
+## First round (Oct 21, 2026)
+
+`lists/` holds the four lists as they came back: the director's (`yours.md`) and one run of each prompt. `board.html` is the merged board, published as a private artifact at https://claude.ai/artifact/7BSxbPisjD5x5VwbZi9iRd. The director's keep, maybe and cut picks live in the artifact's database (`picks/<card id>`, plus `board/notes`), not in this repo. Merging rules: ideas that mean the same thing share a card whatever each list called them; a status or stat that a list only used inside a class counts for that list, marked as such; kit-only statuses appear only when two or more lists use them.
