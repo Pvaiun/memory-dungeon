@@ -74,7 +74,6 @@ A new player starts with one unit of the starter class, such as a warrior or mer
 - **Gear.** Class-specific slots plus generic slots. Rare cross-class capstones act as signposts for whole builds. Inventory is unlimited for now.
 - **Formation.** The lock-and-key multiplier, inspired by Romancing SaGa: 5 slots, each with its own effects (harder to target, acts first, hits harder). A slot that doubles defence and draws attacks makes a tank shine and is a misplay for a healer. Front, middle and back are only where a slot is drawn. The same units in a different formation can beat a different boss.
 - **No battlefield geometry.** No rows, no reach, no positional targeting: any unit can target any unit. Enemies come as a plain list, with no formation.
-- **Self-contained units.** Abilities don't chain across classes. That keeps balance simulatable.
 
 ## Dungeons and combat
 
