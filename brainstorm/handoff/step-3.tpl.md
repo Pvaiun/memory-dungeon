@@ -21,16 +21,28 @@ Pick from the pool, and add to it where the core needs something the pool lacks.
 - **Readable:** a player watching a fight can tell what each status is doing.
 - **Fits the combat system:** anything under "Not built yet" costs engine work, so prefer what the system already does.
 
-How many classes is your call. Don't design full classes yet: each class's passive, abilities and weapons are designed in the next step. Here, a class is its role and the statuses, special stats and elements it uses.
+Work in two stages, each agreed with the director before the next:
+
+1. **The vocabulary.** Each challenge in Appendix B names the kinds of answer it calls for, as game functions. Choose the statuses, special stats and elements that supply those answers: every challenge gets at least two answers, and the set stays small and distinct. Show which challenges each one answers.
+2. **The classes.** Build each class as a skeleton, using only that vocabulary, the stats every unit has, and the four weapon kinds:
+   - one weapon kind (for a staff, which element);
+   - a passive;
+   - two abilities, each in a line: what it does, to whom, and roughly when it fires.
+
+   The final game will give classes more abilities and choices; this is the smallest form that's enough to test a set. Choose the classes so each answer appears in more than one class, and different parties of 3 beat different challenges.
+
+If the classes show the vocabulary is wrong (an answer no class can carry, or a status only one class uses), go back to stage 1 and say so.
+
+How many classes is your call.
 
 ## What to bring back
 
-- **First, one proposed core set** for the director to react to: one set, not alternatives of different sizes. Expect a few rounds.
-- **Then, once the director accepts it, the core set:**
-  - **Classes:** name, its role in a line or two, and the statuses, special stats and elements it uses.
+- **At each stage, one proposal** for the director to react to: one set, not alternatives of different sizes. Expect a few rounds.
+- **Then, once the director accepts both stages, the core set:**
   - **Statuses:** name, what the player sees, and how it works in system terms: refresh or stacks, duration, how it ends.
   - **Special stats:** name and what it does.
   - **Elements:** name and gameplay shape.
+  - **Classes:** name, its role in a line, and its skeleton.
   - **A pairing table:** each challenge from Appendix B, with the classes and effects that answer it.
   - Optionally, the few challenges you'd build the first encounters from.
 

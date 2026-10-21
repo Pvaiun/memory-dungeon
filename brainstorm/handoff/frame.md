@@ -5,7 +5,7 @@ A party-based dungeon crawler in the style of classic JRPGs, with fully automati
 It's an optional game inside a personal productivity app made for someone with ADHD. Completing real-life tasks pays **unlocks**: a new class, a formation or a powerful piece of gear. Dungeons pay ordinary gear. So every class is a reward the player earns one at a time, and each should be worth getting on its own.
 
 - **Units.** Every unit is a class. The player owns each class once, and a party holds at most one of each. Parties are up to 5 units; the first playable version will probably use parties of 3.
-- **A class** has a passive that only it has, four abilities of which it brings two into a fight (the player picks which, between runs), and a set of weapon types it can use. A unit's weapon sets its basic attack. Units don't level up; gear makes them stronger. Passives and abilities change how a unit behaves, rather than just adding numbers.
+- **A class** has a passive that only it has, abilities, and the weapon types it can use. A unit's weapon sets its basic attack. Units don't level up; gear makes them stronger. Passives and abilities change how a unit behaves, rather than just adding numbers.
 - **Formations.** The party stands in a formation of five slots, each with its own bonuses. A slot changes a unit's numbers, not where it is: there's no battlefield geometry.
 - **Dungeons.** A few automatic fights, then a boss, with HP and MP carrying between fights. Losing costs nothing, and retries are free.
 - **Encounters** are designed as puzzles: a party brings strengths, a boss has gimmicks that call for them, and raw power can partly make up for a missing strength. The same units in a different formation can beat a different boss.
@@ -13,10 +13,9 @@ It's an optional game inside a personal productivity app made for someone with A
 
 **Design rules.**
 
-- Everything maps onto a few numerical systems: stats, statuses, damage types and targeting. No special keywords that only one thing interacts with.
-- Nothing that asks the player to track a lot in their head, and nothing positional.
-- A player has to be able to tell what's happening by watching.
-- Elements differ from one another by gameplay shape, rhythm and utility, not mainly as a wheel of counters.
+- Elements differ from one another by gameplay shape, rhythm or utility, not mainly as a wheel of counters.
+- There's no battlefield geometry and no positioning.
+- This is an auto-battler: abilities can have targeting rules, but no mechanic can need very smart targeting or timing.
 
 ## The combat system
 
@@ -38,6 +37,8 @@ It's built and working. Its numbers are placeholders.
 - Hits can crit.
 - Every amount states what it scales from, and any stat can be a scaling source. Physical things scaling from Attack, and magical things from Magic, is only a convention.
 - Damage resolves in this order: dodge check, base amount and scaling, the attacker's boosts, the target's damage-taken modifiers, crit, mitigation (Armor or resistance), shields, then HP.
+
+**Weapons in the first playable version.** Four kinds: a fast dagger (piercing), a medium sword (slashing), a slow axe (blunt), and a staff, one for each element (magical). A class can use more than one kind.
 
 **Stats every unit has.** HP, MP, MP regeneration, Attack, Magic, Armor, a resistance to each element, Attack Speed, Cooldown Reduction, Crit chance and Aggro.
 

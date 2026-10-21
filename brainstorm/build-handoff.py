@@ -2,7 +2,7 @@ import json, re, sys
 
 # Builds the three step documents in brainstorm/handoff/:
 #   python3 brainstorm/merge.py CARDS.json && python3 brainstorm/build-handoff.py CARDS.json
-# Step 1 carries the brainstorm as a plain content list: no sources, picks or notes.
+# Step 1 carries the brainstorm with the director's picks and notes, but no sources or counts.
 
 cards = json.load(open(sys.argv[1]))
 H = 'brainstorm/handoff/'
@@ -62,12 +62,18 @@ for e in entries:
     e["al"] = [a for a in e["al"] if shared[a] == 1 and not variant(a, e["n"])]
     if e["id"] == "buffs": e["al"] = ["Might", "Weakened"]
 
-out = []
+pk = json.load(open('brainstorm/picks.json'))
+picks = {c['id']: c for c in pk['cards']}
+out = ["### The director's general notes", ""] + ["> " + x.strip() + "\n>" for x in pk['general_notes'].split("\n\n")]
+out[-1] = out[-1][:-2]
+out.append("")
 for b, title in [("class", "Classes"), ("status", "Statuses"), ("stat", "Special stats"), ("element", "Elements")]:
     es = sorted((e for e in entries if e["b"] == b), key=lambda e: e["n"].lower())
     out += [f"### {title}", ""]
     for e in es:
-        out.append(f"- **{e['n']}.** {e['ln']}" + (f" Also called: {', '.join(e['al'])}." if e["al"] else ""))
+        p = picks.get(e["id"], {})
+        out.append(f"- **{e['n']}.** {e['ln']}" + (f" Also called: {', '.join(e['al'])}." if e["al"] else "")
+                   + (f" *Pick:* {p['pick']}." if p.get("pick") else "") + (f" *Note:* \"{p['note']}\"" if p.get("note") else ""))
     out.append("")
 lst = "\n".join(out).rstrip()
 

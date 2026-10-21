@@ -18,8 +18,8 @@ All three first-round runs were Opus 5.5, and they barely differed, so the promp
 
 `handoff/` holds three documents, each for a fresh chat, run in order and validated with the director before its output moves on:
 
-1. `step-1-genre-check.md`: compare the brainstorm with the genre, add missing staples, remove what's too esoteric, sort statuses from special stats. Its output is a plain content pool, with no sources or notes. The brainstorm goes in as a plain list too: no sources, picks or notes, with the director's own ideas folded into the descriptions.
-2. `step-2-challenges.md`: the kinds of enemies, bosses and enemy groups the game's fights can pose. It doesn't see the brainstorm, so the challenges come from the genre rather than from the content they'll test; it can run alongside step 1.
-3. `step-3-core-set.md`: the core set, chosen from step 1's pool for build diversity against step 2's challenges. Its appendices are filled with those two outputs.
+1. `step-1-genre-check.md`: compare the brainstorm with the genre, add missing staples, remove what's too esoteric, sort statuses from special stats. Its output is a plain content pool, with no sources or notes. The brainstorm goes in with the director's picks and notes, weighted unevenly (a cut is a strong signal, a keep only a lean), but with no sources or counts; the director's own ideas are folded into the descriptions.
+2. `step-2-challenges.md`: the kinds of enemies, bosses and enemy groups the game's fights can pose, starting from other games, with answers phrased as game functions. It doesn't see the brainstorm, so the challenges come from the genre rather than from the content they'll test; it can run alongside step 1.
+3. `step-3-core-set.md`: the core set, in two gated stages: first the vocabulary (statuses, special stats, elements) that answers step 2's challenges, then class skeletons built from it (one weapon kind, a passive, two abilities). Its appendices are filled with steps 1 and 2's outputs.
 
-Class kits (passives, abilities, weapons) come after step 3. `frame.md` is the shared description of the game and combat system; `build-handoff.py` builds the three documents from the templates and the merge.
+Full class kits come after step 3. `frame.md` is the shared description of the game and combat system; `build-handoff.py` builds the three documents from the templates and the merge.

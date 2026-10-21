@@ -6,18 +6,20 @@ You're a game designer joining a project. The director is the person who sets th
 
 The project needs a list of the **challenges** this game's fights can pose: the kinds of enemies, bosses and enemy groups a party will face. The list will be used to test whether a set of classes and effects can handle the fights this game will have. So it should come from the genre and from what this combat system can express, not from any particular set of classes.
 
+Start from other games. Look through the regular enemies and boss fights of JRPGs and other party-based games, pick out the problems they pose, and translate those problems into this combat system. Then add your own where you see gaps.
+
 Make a list of **staple adversarial content**:
 
 - **Regular enemies:** the kinds of foe a party meets again and again.
-- **Bosses:** look through boss fights in JRPGs and other party-based games for the problems they pose, and translate those problems into this combat system.
+- **Bosses:** the problems a boss poses, from mechanics to tempo.
 - **Enemy groups:** which kinds of enemy come together, and what the combination asks of a party.
 - **Pressure across a dungeon run,** if you see any worth listing: what wears a party down over a few fights before the boss.
 
-Each entry is a kind of challenge, not a designed monster: no numbers or names needed. Be creative and generous; this list doesn't need to be minimal. Every challenge has to be expressible in the combat system below, and readable by a player watching the fight. For each one, name the kinds of answer it calls for, at least two different ones, so no challenge has a single solution.
+Each entry is a kind of challenge, not a designed monster: no numbers or names needed. Be creative and generous; this list doesn't need to be minimal. Every challenge has to be expressible in the combat system below, and readable by a player watching the fight. For each one, name the kinds of answer it calls for, at least two different ones, so no challenge has a single solution. Phrase answers as game functions (a damage type, a kind of status, a stat, a targeting rule, a weapon's speed), never as classes.
 
 ## What to bring back
 
-- **First, a write-up for the director:** the games and fights you drew on, and the list as it stands. Expect a few rounds.
+- **First, a write-up for the director:** the list as it stands, with the game or fight each challenge comes from, or a note that it's your own. Expect a few rounds.
 - **Then, once the director accepts it, the final list,** grouped as above. Each entry is a name, one or two plain lines on what it does in a fight, and the kinds of answer it calls for. Nothing else.
 
 ## The game
@@ -27,7 +29,7 @@ A party-based dungeon crawler in the style of classic JRPGs, with fully automati
 It's an optional game inside a personal productivity app made for someone with ADHD. Completing real-life tasks pays **unlocks**: a new class, a formation or a powerful piece of gear. Dungeons pay ordinary gear. So every class is a reward the player earns one at a time, and each should be worth getting on its own.
 
 - **Units.** Every unit is a class. The player owns each class once, and a party holds at most one of each. Parties are up to 5 units; the first playable version will probably use parties of 3.
-- **A class** has a passive that only it has, four abilities of which it brings two into a fight (the player picks which, between runs), and a set of weapon types it can use. A unit's weapon sets its basic attack. Units don't level up; gear makes them stronger. Passives and abilities change how a unit behaves, rather than just adding numbers.
+- **A class** has a passive that only it has, abilities, and the weapon types it can use. A unit's weapon sets its basic attack. Units don't level up; gear makes them stronger. Passives and abilities change how a unit behaves, rather than just adding numbers.
 - **Formations.** The party stands in a formation of five slots, each with its own bonuses. A slot changes a unit's numbers, not where it is: there's no battlefield geometry.
 - **Dungeons.** A few automatic fights, then a boss, with HP and MP carrying between fights. Losing costs nothing, and retries are free.
 - **Encounters** are designed as puzzles: a party brings strengths, a boss has gimmicks that call for them, and raw power can partly make up for a missing strength. The same units in a different formation can beat a different boss.
@@ -35,10 +37,9 @@ It's an optional game inside a personal productivity app made for someone with A
 
 **Design rules.**
 
-- Everything maps onto a few numerical systems: stats, statuses, damage types and targeting. No special keywords that only one thing interacts with.
-- Nothing that asks the player to track a lot in their head, and nothing positional.
-- A player has to be able to tell what's happening by watching.
-- Elements differ from one another by gameplay shape, rhythm and utility, not mainly as a wheel of counters.
+- Elements differ from one another by gameplay shape, rhythm or utility, not mainly as a wheel of counters.
+- There's no battlefield geometry and no positioning.
+- This is an auto-battler: abilities can have targeting rules, but no mechanic can need very smart targeting or timing.
 
 ## The combat system
 
@@ -60,6 +61,8 @@ It's built and working. Its numbers are placeholders.
 - Hits can crit.
 - Every amount states what it scales from, and any stat can be a scaling source. Physical things scaling from Attack, and magical things from Magic, is only a convention.
 - Damage resolves in this order: dodge check, base amount and scaling, the attacker's boosts, the target's damage-taken modifiers, crit, mitigation (Armor or resistance), shields, then HP.
+
+**Weapons in the first playable version.** Four kinds: a fast dagger (piercing), a medium sword (slashing), a slow axe (blunt), and a staff, one for each element (magical). A class can use more than one kind.
 
 **Stats every unit has.** HP, MP, MP regeneration, Attack, Magic, Armor, a resistance to each element, Attack Speed, Cooldown Reduction, Crit chance and Aggro.
 
