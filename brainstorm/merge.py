@@ -235,6 +235,60 @@ cls("engineer", "Engineer", "Deploys turrets and gadgets that attack or shield."
 cls("artillerist", "Artillerist", "Huge, slow blunt blasts; heavier gear hits harder.", dict(m="Artillerist"), ["weight", "sunder"])
 cls("mimic", "Mimic", "Copies statuses from foes and allies.", dict(d="Mimic"), ["copy", "vuln"])
 
+# What each model's version of a class uses: effect id -> the models whose version uses it.
+NEEDS = {
+ "healer": "regen:ocmkd shield:ockd overflow:od healpower:c reraise:y purity:m",
+ "paladin": "shield:ocmkd cover:od healpower:c tenacity:o enchant:o buffs:c reraise:m taunt:d overflow:d",
+ "monk": "evasion:yoc combo:mkd momentum:om stun:od doublestrike:od counter:o interrupt:o regen:yc nextcrit:k buffs:c",
+ "ranger": "mark:ockd accuracy:oc critdmg:oc armorpen:mk execute:o root:m sunder:m doublestrike:d nextcrit:k",
+ "mage": "burn:yck vuln:om onaction:yk castspeed:o echo:o mana:m stun:c slow:k",
+ "rogue": "evasion:yoc nextcrit:omk poison:om hidden:ok critdmg:o haste:o doublestrike:o onaction:c bleed:k buffs:c mana:c manaburn:o",
+ "bard": "haste:ocd buffs:yock regen:od silence:o echo:d slow:d castspeed:c berserk:d",
+ "berserker": "berserk:ockd lifesteal:ocmk rage:mk buffs:o tenacity:o onaction:c bleed:d",
+ "knight": "taunt:ocd shield:ocd guard:om block:o stun:o interrupt:o thorns:d rage:m",
+ "darkcaster": "lifesteal:okd doom:ocd poison:cd antiheal:o onaction:o buffs:o mana:c potency:c soullink:m elemdmg:m soul:m companion:k decay:k reraise:d",
+ "alchemist": "poison:ockd potency:ocm shield:cd detonate:md regen:o slow:o blind:o sunder:o splash:o burn:c weight:m vuln:d",
+ "timemage": "haste:ocmkd slow:omkd stun:ocd headstart:o buffs:o castspeed:c potency:c",
+ "hexer": "potency:cmk antiheal:om vuln:o sunder:o doom:c buffs:c soullink:m poison:k slow:k",
+ "spellblade": "enchant:ocmd vuln:ocd castspeed:o burn:c heat:m elemdmg:m echo:d",
+ "regenhealer": "regen:yock thorns:ok buffs:o poison:c healpower:c",
+ "heavy": "sunder:yod armorpen:ocd critdmg:o splash:o vuln:c mark:d",
+ "assassin": "execute:cmk nextcrit:mk critdmg:c hidden:k mark:c poison:c onaction:c accuracy:c potency:c doom:m",
+ "vampire": "lifesteal:ymkd reraise:m overflow:k bleed:d berserk:d",
+ "templar": "tenacity:oc shield:cd regen:cm purified:o purity:m silence:d thorns:d",
+ "plaguedoctor": "poison:ocmd potency:ocm onaction:oc antiheal:o regen:c enchant:c vuln:d",
+ "oracle": "shield:ocd mark:cd haste:od doom:o blink:o blind:o buffs:o vuln:c foresight:d",
+ "fencer": "taunt:oc counter:oc evasion:om armorpen:o buffs:c critdmg:c momentum:m combo:m",
+ "hoplite": "shield:om counter:ok taunt:o buffs:o block:o overflow:m cover:k guard:k",
+ "spellbreaker": "silence:omd interrupt:om soul:m",
+ "soldier": "buffs:ck vuln:c taunt:k guard:k",
+ "samurai": "nextcrit:ok critdmg:o counter:o onaction:o",
+ "beastmaster": "companion:ckd mark:cd onaction:c",
+ "bloodmage": "lifesteal:o mana:o rage:m sunder:m vuln:k",
+ "duelist": "evasion:yd critdmg:y combo:d bleed:d haste:d",
+ "pyromancer": "burn:md vuln:md heat:m nextcrit:d",
+ "valkyrie": "reraise:o haste:o buffs:o execute:o overkill:o",
+ "onmyoji": "silence:o slow:o shield:o buffs:o",
+ "illusionist": "blink:ok hidden:o mark:o",
+ "frost": "slow:om stun:o potency:o combo:m",
+ "reaper": "doom:ck soul:k berserk:c lifesteal:c execute:c",
+ "gunslinger": "sunder:m haste:m heat:k",
+ "thornstank": "thorns:yo counter:o buffs:o",
+ "ninja": "hidden:o poison:o blink:o stealth:o evasion:o",
+ "dragoon": "hidden:o interrupt:o armorpen:o",
+ "detonator": "detonate:d burn:d vuln:d mark:d stun:d",
+ "earthma": "shield:y poison:y",
+ "darkknight": "", "pegasus": "",
+ "martyr": "shield:o",
+ "gorgon": "stone:o potency:o",
+ "einherjar": "buffs:o spite:o",
+ "dancer": "buffs:o evasion:o",
+ "geomancer": "resonance:k",
+ "engineer": "companion:k",
+ "artillerist": "weight:m sunder:m",
+ "mimic": "copy:d vuln:d",
+}
+
 # ---------- Fold Opus's three runs into one model ----------
 RUN = {"g": "A", "s": "B", "f": "C"}
 out = []
@@ -253,13 +307,21 @@ for c in cards:
     st = [k for k in "yocmkd" if (k in c["st"] if k != "o" else any(r in c["st"] for r in "gsf"))]
     kit = [k for k in "yocmkd" if (k in c["kit"] if k != "o" else runs and all(r in c["kit"] for r in runs))]
     out.append(dict(b=c["b"], id=c["id"], n=c["n"], ln=c["ln"], **{"as": model}, yours=c["yours"], st=st, kit=kit,
-                    needs=c["needs"], fit=c["fit"], note=c["note"]))
+                    needs=[], fit=c["fit"], note=c["note"]))
+
+for c in out:
+    if c["b"] == C:
+        pairs = [p.split(":") for p in NEEDS[c["id"]].split()]
+        c["needs"] = sorted(([n, [k for k in "yocmkd" if k in by]] for n, by in pairs), key=lambda p: -len(p[1]))
+        for n, by in c["needs"]:
+            assert all(k in c["as"] for k in by), (c["id"], n, by)
+assert set(NEEDS) == {c["id"] for c in out if c["b"] == C}
 
 ids = [c["id"] for c in out]
 assert len(set(ids)) == len(ids), "duplicate ids"
 byid = {c["id"]: c for c in out}
 for c in out:
-    for n in c["needs"]:
+    for n, _ in c["needs"]:
         assert n in byid and byid[n]["b"] in (S, T), (c["id"], n)
     for k in c["st"] + c["kit"]:
         assert k in c["as"], (c["id"], k)

@@ -10,4 +10,4 @@ Each prompt asks for the same lists (classes, player-facing statuses, special st
 
 ## Second round (Oct 21, 2026)
 
-All three first-round runs were Opus 5.5, and they barely differed, so the prompts were rerun without the setting line in other models: ChatGPT (A), Gemini (B), DeepSeek (C) and Grok (angle not recorded). Their lists are in `lists/`. The board now counts models, not runs: Opus's three runs count once. `merge.py` is the merge itself, every list's entries placed on cards by meaning; it writes the card data embedded in `board.html`.
+All three first-round runs were Opus 5.5, and they barely differed, so the prompts were rerun without the setting line in other models: ChatGPT (A), Gemini (B), DeepSeek (C) and Grok (angle not recorded). Their lists are in `lists/`. The board now counts models, not runs: Opus's three runs count once. `merge.py` is the merge itself: every list's entries placed on cards by meaning, and for each class, which models' versions use which effects. It writes the card data, and `board.template.html` with that data in place of `__CARDS__` is `board.html`.
