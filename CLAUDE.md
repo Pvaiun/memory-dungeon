@@ -9,8 +9,8 @@ It's also a test of a way of making games. The director sets the vision. AI desi
 - `docs/primer.md`: the game and where it stands, for a reader with no repo access. Keep it current (see the method).
 - `docs/method.md`: how every step is done. **Read it before starting or resuming a step.**
 - `docs/design-plan.md`: the 24 ordered design steps, each with what to ask the director and how it's tested. **Work through them one at a time.**
-- `DECISIONS.md`: what's been decided, step by step. Where it differs from the concept spec, it wins; the director will update the spec.
-- `docs/concept-spec.md`: what the game is and why. It's the game-wide intent.
+- `DECISIONS.md`: what's been decided, step by step, with the detail and reasons. The concept spec is kept in line with it (see the method); if they ever differ, `DECISIONS.md` wins and the spec gets fixed.
+- `docs/concept-spec.md`: what the game is and why, at a high level. It's the game-wide intent, kept in line with `DECISIONS.md`.
 - `steps/`: one folder per step, holding its brief, intent, design, tuning log and report.
 - `docs/memory-app-overview.md`: how Memory works today.
 - `docs/memory-stack.md`: how Memory is built (stack, data, AI pattern, limits) and what that means for the game.

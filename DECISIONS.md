@@ -1,6 +1,6 @@
 # Decisions
 
-What has been decided, step by step. Where this differs from the concept spec, this wins; the director will update the spec. Each step's report has the full reasoning.
+What has been decided, step by step. The concept spec is the high-level version and is brought in line whenever this file changes (see `docs/method.md`); if they ever differ, this wins and the spec gets fixed. Each step's report has the full reasoning.
 
 Decisions are direction like any other (see `docs/method.md`): a designer can challenge one with evidence, and until it's changed here, it stands.
 
