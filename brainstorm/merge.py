@@ -55,13 +55,13 @@ stt("slow", "Chill", "Acts slower; some versions stack, and one freezes at 5 sta
 stt("taunt", "Taunt", "Foes are forced to attack this unit.", dict(y="Taunt", g="Taunt", s="Taunt", f="Taunted", c="Taunted", m="taunts", k="Taunt", d="Taunt"), st="ysd", kit="m",
     fit="ok", note="Builds today as a buff on the taunter. Opus's fights run and GPT made it a debuff on each foe naming who it must hit; that needs targeting rules on the attacker, which step 4 deferred.")
 stt("doom", "Doom", "A countdown that ends in one big hit, or a knockout, unless removed first.", dict(g="Doom", s="Doom", f="Fated", c="Doomed", m="Doom", k="Doom / Mark", d="Doom"), fit="ok")
-stt("vuln", "Vulnerable", "Takes more damage: of every kind, or of one element.", dict(g="Hex", f="weaker to this element", c="Vulnerable", m="Vulnerability", k="Curse", d="Vulnerable"),
+stt("vuln", "Vulnerable", "Takes more damage: of every kind, or of one element.", dict(y="Mark for death", g="Hex", f="weaker to this element", c="Vulnerable", m="Vulnerability", k="Curse", d="Vulnerable"),
     fit="ok", kit="gf")
 stt("burn", "Burn", "Damage over time that ramps up, or burns hot.", dict(y="Burn", c="Burn", m="burn", k="Burn", d="Burn"),
     yours="Ramping damage over time (your Fire: proportional to health).", st="yk", fit="ok", kit="m",
     note="Every model but Opus has Burn. GPT's also cuts healing; Grok's may lower Armor.")
 stt("mark", "Marked", "Draws fire: the other side targets it more, takes more damage, or both.",
-    dict(y="Mark for death", g="Marked", s="Hunted", f="Hunted", c="Marked", k="Mark Count", d="Mark"), fit="ok", kit="g")
+    dict(g="Marked", s="Hunted", f="Hunted", c="Marked", k="Mark Count", d="Mark"), fit="ok", kit="g")
 stt("berserk", "Berserk", "Hits harder, at a cost: weaker defences, more damage taken, or no abilities.", dict(y="Rage", g="Berserk", s="Berserk", c="Enraged", k="Berserk", d="Enrage"),
     yours="Rage: strength up, tankiness down.", fit="ok")
 stt("onaction", "Shock", "Takes damage each time it acts, so it hurts fast units most.", dict(y="Shock", g="Bleed", s="Bleed", f="Bleed", c="Bleeding"),

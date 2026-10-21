@@ -11,3 +11,7 @@ Each prompt asks for the same lists (classes, player-facing statuses, special st
 ## Second round (Oct 21, 2026)
 
 All three first-round runs were Opus 5.5, and they barely differed, so the prompts were rerun without the setting line in other models: ChatGPT (A), Gemini (B), DeepSeek (C) and Grok (angle not recorded). Their lists are in `lists/`. The board now counts models, not runs: Opus's three runs count once. `merge.py` is the merge itself: every list's entries placed on cards by meaning, and for each class, which models' versions use which effects. It writes the card data, and `board.template.html` with that data in place of `__CARDS__` is `board.html`.
+
+## Handoff (Oct 21, 2026)
+
+`picks.md` and `picks.json` export the director's picks and notes from the board. `core-set-brief.md` is the file the director gives a new design agent to start the core set (classes, statuses, special stats and elements): the task, the game, the combat system with no examples, and every brainstorm entry with its sources, the director's own wording, pick and note. `build-brief.py` builds it from `core-set-brief.template.md`, the merge and the picks. The merge now puts the director's "Mark for death" on Vulnerable, as their note there says.
