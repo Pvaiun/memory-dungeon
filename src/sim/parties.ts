@@ -123,9 +123,11 @@ export function tweaks(c: Content, owned: Owned, p: Party, cap: number): Tweak[]
     const all = c.classes.get(u.class)!.abilities;
     for (const a of all) {
       if (u.abilities.includes(a)) continue;
-      const q = structuredClone(p);
-      q.units[i].abilities = [u.abilities[0], a];
-      out.push({ kind: "abilities", party: q });
+      for (let j = 0; j < u.abilities.length; j++) {
+        const q = structuredClone(p);
+        q.units[i].abilities[j] = a;
+        out.push({ kind: "abilities", party: q });
+      }
     }
   });
   return out;

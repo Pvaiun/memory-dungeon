@@ -312,7 +312,7 @@ function tweakEffects(s: CombatStudy, js: Job[], pieces: Piece[]): Effect[] {
 const TWEAKS: Record<string, (c: Content, owned: Owned, p: Party) => Party[]> = {
   formation: (c, owned, p) => owned.formations.filter((f) => f !== p.formation).map((f) => make(c, owned, p.units.map((u) => u.class), f, p)),
   gear: (_c, _owned, p) => [{ ...p, units: p.units.map((u) => ({ ...u, gear: {} })) }],
-  abilities: (c, _owned, p) => [{ ...p, units: p.units.map((u) => ({ ...u, abilities: c.classes.get(u.class)!.abilities.slice(2, 4) })) }],
+  abilities: (c, _owned, p) => [{ ...p, units: p.units.map((u) => ({ ...u, abilities: c.classes.get(u.class)!.abilities.slice(-c.pack.design.abilitiesEquipped) })) }],
   "unit order": (c, owned, p) => (p.units.length > 1 ? [make(c, owned, p.units.map((u) => u.class).reverse(), p.formation, p)] : []),
 };
 

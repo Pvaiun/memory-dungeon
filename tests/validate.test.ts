@@ -185,7 +185,7 @@ test("targeting: picking the lowest or highest needs 'by'", () => expectIssue("t
 
 // ─── Units ───────────────────────────────────────────────────────────────────
 
-test("each class has 4 abilities", () => expectIssue("class.abilityCount", (p) => find(p.classes, "warrior").abilities.pop()));
+test("each class has 5 abilities", () => expectIssue("class.abilityCount", (p) => find(p.classes, "warrior").abilities.pop()));
 test("abilities don't cross classes", () => expectIssue("class.abilityClass", (p) => (find(p.classes, "warrior").abilities[0] = "riposte")));
 
 // ─── Formations ──────────────────────────────────────────────────────────────
@@ -252,12 +252,12 @@ function expectParty(code: string, mutate: (p: any) => void, opts: Parameters<ty
 }
 test("party: each class is one unit", () => expectParty("party.uniqueClass", (p) => (p.units[2].class = "duelist")));
 test("party: two units of the same class are fine", () => assert.deepEqual(checkParty(PACK, PARTY, { dungeon: DUNGEON }), []));
-test("party: units equip exactly 2 abilities", () => expectParty("party.abilities", (p) => p.units[0].abilities.push("second_wind")));
+test("party: units equip exactly 3 abilities", () => expectParty("party.abilities", (p) => p.units[0].abilities.push("second_wind")));
 test("party: abilities come from the unit's specialization", () => expectParty("party.abilityNotOwned", (p) => (p.units[0].abilities[1] = "riposte")));
 test("party: gear goes in a matching slot", () => expectParty("party.gearSlot", (p) => (p.units[0].gear.armour = "bone_charm")));
 test("party: class gear only on that class", () => expectParty("party.slot", (p) => (p.units[0].gear.ranger_weapon = "hunters_shortbow")));
 test("party: dungeon caps party size", () =>
-  expectParty("party.size", (p) => p.units.push({ class: "cleric", position: "right_striker", abilities: ["mend", "purify"], gear: {} })));
+  expectParty("party.size", (p) => p.units.push({ class: "cleric", position: "right_striker", abilities: ["mend", "purify", "blessed_ward"], gear: {} })));
 test("party: positions exist and are free", () => expectParty("party.position", (p) => (p.units[1].position = "shield_point")));
 test("party: ownership is checked when given", () =>
   expectParty("party.notOwned", () => {}, { dungeon: DUNGEON, owned: { classes: ["warrior", "ranger"], formations: ["phalanx"] } }));

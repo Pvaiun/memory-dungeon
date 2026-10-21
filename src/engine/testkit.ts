@@ -22,7 +22,7 @@ export function parties(c: Content = content): Party[] {
     for (const f of c.pack.formations) {
       out.push({
         formation: f.id,
-        units: chosen.map((s, i) => ({ class: s.id, position: f.positions[i].id, abilities: s.abilities.slice(0, 2), gear: {} })),
+        units: chosen.map((s, i) => ({ class: s.id, position: f.positions[i].id, abilities: s.abilities.slice(0, c.pack.design.abilitiesEquipped), gear: {} })),
       });
     }
   }

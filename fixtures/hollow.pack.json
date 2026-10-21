@@ -7,8 +7,8 @@
               "note": "Placeholder targets taken from the concept spec, which was bullish on them. Expect every number here to change.",
               "formationPositions": 5,
               "partySize": [1, 5],
-              "abilitiesPerClass": 4,
-              "abilitiesEquipped": 2,
+              "abilitiesPerClass": 5,
+              "abilitiesEquipped": 3,
               "perkPicksPerRun": [3, 4],
               "perkPoolSize": [10, 15],
               "perkOptionsPerPick": 3,
@@ -361,8 +361,8 @@
                 "slots": ["warrior_weapon"],
                 "source": "starter",
                 "stats": {"max_hp": 150, "max_mp": 30, "mp_regen": 1, "attack": 14, "armor": 5, "aggro": 20},
-                "abilities": ["cleave", "stand_guard", "shield_bash", "second_wind"],
-                "verbs": ["physical_damage", "area", "protect", "control", "healing", "blocking"]
+                "abilities": ["cleave", "stand_guard", "shield_bash", "second_wind", "rallying_cry"],
+                "verbs": ["physical_damage", "area", "protect", "control", "healing", "blocking", "initiative"]
               },
               {
                 "id": "ranger",
@@ -381,8 +381,8 @@
                           "crit_chance": 10,
                           "crit_multiplier": 175
                         },
-                "abilities": ["barbed_arrows", "volley", "quick_draw", "covering_fire"],
-                "verbs": ["physical_damage", "damage_over_time", "area", "initiative", "counter"]
+                "abilities": ["barbed_arrows", "volley", "quick_draw", "covering_fire", "aimed_shot"],
+                "verbs": ["physical_damage", "damage_over_time", "area", "initiative", "counter", "burst"]
               },
               {
                 "id": "duelist",
@@ -401,8 +401,8 @@
                           "crit_chance": 10,
                           "crit_multiplier": 175
                         },
-                "abilities": ["riposte", "flurry", "read_the_blade", "lunge"],
-                "verbs": ["physical_damage", "execute", "counter", "multi_hit", "evasion", "burst"]
+                "abilities": ["riposte", "flurry", "read_the_blade", "lunge", "hamstring"],
+                "verbs": ["physical_damage", "execute", "counter", "multi_hit", "evasion", "burst", "damage_over_time"]
               },
               {
                 "id": "cleric",
@@ -411,7 +411,7 @@
                 "slots": ["cleric_focus"],
                 "source": "unlock",
                 "stats": {"max_hp": 105, "max_mp": 60, "mp_regen": 2, "attack": 4, "magic": 14, "armor": 2, "resist": 10},
-                "abilities": ["mend", "purify", "blessed_ward", "radiance"],
+                "abilities": ["mend", "purify", "blessed_ward", "radiance", "sanctuary"],
                 "verbs": ["magic_damage", "healing", "cleanse", "armour", "area"]
               }
             ],
@@ -469,6 +469,18 @@
                   "target": "self",
                   "do": [{"op": "heal", "amount": {"scale": [{"ratio": 0.2, "stat": "max_hp"}]}}],
                   "verbs": ["healing"]
+                },
+                {
+                  "id": "rallying_cry",
+                  "class": "warrior",
+                  "name": "Rallying Cry",
+                  "text": "Roars to spur every ally on: they attack and recover faster for a while.",
+                  "mp": 12,
+                  "cast": 2,
+                  "cooldown": 40,
+                  "target": {"side": "allies", "pick": "all"},
+                  "do": [{"op": "apply", "status": "haste"}],
+                  "verbs": ["initiative"]
                 },
                 {
                   "id": "barbed_arrows",
@@ -539,6 +551,18 @@
                   "verbs": ["counter", "control"]
                 },
                 {
+                  "id": "aimed_shot",
+                  "class": "ranger",
+                  "name": "Aimed Shot",
+                  "text": "Takes careful aim at the healthiest enemy for one heavy shot.",
+                  "mp": 8,
+                  "cast": 3,
+                  "cooldown": 16,
+                  "target": {"side": "foes", "pick": "highest", "by": "hp_share"},
+                  "do": [{"op": "damage", "type": "physical", "subtype": "pierce", "amount": {"scale": [{"ratio": 1.5, "stat": "attack"}]}}],
+                  "verbs": ["burst", "physical_damage"]
+                },
+                {
                   "id": "riposte",
                   "class": "duelist",
                   "name": "Riposte",
@@ -590,6 +614,24 @@
                   "verbs": ["execute", "burst"]
                 },
                 {
+                  "id": "hamstring",
+                  "class": "duelist",
+                  "name": "Hamstring",
+                  "text": "A low cut that leaves the target bleeding and slowed.",
+                  "mp": 6,
+                  "cooldown": 16,
+                  "do": [
+                          {
+                            "op": "damage",
+                            "type": "physical",
+                            "subtype": "slash",
+                            "amount": {"scale": [{"ratio": 0.6, "stat": "attack"}]},
+                            "apply": [{"status": "bleed"}, {"status": "slow"}]
+                          }
+                        ],
+                  "verbs": ["damage_over_time", "physical_damage"]
+                },
+                {
                   "id": "mend",
                   "class": "cleric",
                   "name": "Mend",
@@ -636,6 +678,19 @@
                   "target": {"side": "foes", "pick": "all"},
                   "do": [{"op": "damage", "type": "magical", "element": "holy", "amount": {"scale": [{"ratio": 0.7, "stat": "magic"}]}}],
                   "verbs": ["magic_damage", "area"]
+                },
+                {
+                  "id": "sanctuary",
+                  "class": "cleric",
+                  "name": "Sanctuary",
+                  "text": "When the party is hurt, heals every ally a little.",
+                  "mp": 14,
+                  "cast": 3,
+                  "cooldown": 30,
+                  "if": {"side": "allies", "where": {"hpBelow": 70}},
+                  "target": {"side": "allies", "pick": "all"},
+                  "do": [{"op": "heal", "amount": {"base": 5, "scale": [{"ratio": 0.5, "stat": "magic"}]}}],
+                  "verbs": ["healing", "area"]
                 },
                 {
                   "id": "grave_rot",
