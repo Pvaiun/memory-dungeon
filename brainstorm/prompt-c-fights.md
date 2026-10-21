@@ -4,8 +4,6 @@ You're helping brainstorm content for a small video game. Below is what the game
 
 A party-based dungeon crawler in the style of classic JRPGs, with fully automatic combat. The player's skill is building a party before a fight, not acting during it: they choose which units to bring, what each one carries and where each one stands, then watch. When a party loses, the player works out why from what they saw and tries a different build. Enemy stats are hidden, so players learn everything by watching fights, which are shown mostly as text and numbers, in the style of Game Boy-era RPGs.
 
-The setting is generic medieval fantasy, with touches of Greek, Norse and Japanese mythology.
-
 ## Units
 
 - Every unit is a class. The player owns each class once, and a party holds at most one of each. Parties are small: 3 units for now, up to 5 later.
