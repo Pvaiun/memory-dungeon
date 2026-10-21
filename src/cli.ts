@@ -49,7 +49,7 @@ if (flag("--json")) {
     const challenges = p.dungeons.reduce((s, d) => s + d.challenges.length, 0);
     console.log(`Pack ${p.id} (schema ${p.schemaVersion})`);
     console.log(
-      `  ${n("classes")} classes, ${n("specializations")} specializations, ${n("abilities")} abilities, ${n("gear")} gear, ` +
+      `  ${n("classes")} classes, ${n("abilities")} abilities, ${n("gear")} gear, ` +
         `${n("formations")} formations, ${n("enemies")} enemies, ${n("perks")} perks, ${n("dungeons")} dungeons, ` +
         `${challenges} challenges, ${n("traits")} traits, ${n("verbs")} verbs, ${n("statuses")} statuses, ${n("elements")} elements`,
     );

@@ -12,7 +12,7 @@
       "items": {
         "type": "object",
         "properties": {
-          "spec": {
+          "class": {
             "type": "string",
             "pattern": "^[a-z][a-z0-9_]*$"
           },
@@ -42,7 +42,7 @@
           }
         },
         "required": [
-          "spec",
+          "class",
           "position",
           "abilities",
           "gear"

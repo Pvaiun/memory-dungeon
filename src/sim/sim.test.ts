@@ -99,8 +99,8 @@ test("shared seeds: copies of a party match exactly; a tweak needs far fewer run
   const pr = probe(rules);
   const owned = everything(c);
   const d = "hollow_of_the_grey_mother";
-  const A = make(c, owned, ["warrior_vanguard", "ranger_archer", "ranger_duelist"], "open_order");
-  const B = make(c, owned, ["warrior_vanguard", "ranger_archer"], "open_order");
+  const A = make(c, owned, ["warrior", "ranger", "duelist"], "open_order");
+  const B = make(c, owned, ["warrior", "ranger"], "open_order");
   const runs = (cc: typeof c, p: typeof A, offset: number) => Array.from({ length: 300 }, (_, i) => measure(cc, pr, { dungeon: d, party: p, seed: i + 1 + offset }, randomPicker(i + 1 + offset)).progress);
   const a = runs(c, A, 0);
   assert.equal(compare(a, runs(c, structuredClone(A), 0)).verdict, "identical");

@@ -19,7 +19,7 @@
  */
 import * as z from "zod";
 
-export const SCHEMA_VERSION = "0.4" as const;
+export const SCHEMA_VERSION = "0.5" as const;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Primitives
@@ -421,14 +421,14 @@ export const Design = z.strictObject({
   note: Note.optional(),
   formationPositions: PosInt,
   partySize: IntRange,
-  abilitiesPerSpec: PosInt,
+  abilitiesPerClass: PosInt,
   abilitiesEquipped: PosInt,
   perkPicksPerRun: IntRange,
   perkPoolSize: IntRange,
   perkOptionsPerPick: PosInt,
   keyholesPerBoss: IntRange,
   complete: z
-    .strictObject({ classes: IntRange, specsPerClass: IntRange, verbs: IntRange })
+    .strictObject({ classes: IntRange, verbs: IntRange })
     .describe("Totals checked only with --complete, for a full content set."),
 }).describe("Target numbers the validator enforces. Placeholders from the concept spec, which was bullish on them: expect them to change.");
 
@@ -508,24 +508,13 @@ export const ClassDef = z.strictObject({
   name: Text,
   text: Text,
   slots: z.array(Id).describe("Class-specific gear slots, on top of the generic ones."),
-  stats: StatBlock.describe("Base stats every specialization of the class starts from."),
+  source: UnlockSource,
+  stats: StatBlock.describe("The unit's base stats."),
   passive: z.strictObject(grants).optional().describe("The class passive. Its stat grants are stats; its reactions live in the statuses it applies at fight start."),
+  abilities: z.array(Id),
+  verbs: z.array(Id),
   note: Note.optional(),
-});
-
-export const Specialization = z
-  .strictObject({
-    id: Id,
-    class: Id,
-    name: Text.describe('Shown as "Class: Specialization", e.g. "Ranger: Duelist".'),
-    text: Text,
-    source: UnlockSource,
-    stats: StatBlock.optional().describe("Overrides the class's base stats."),
-    abilities: z.array(Id),
-    verbs: z.array(Id),
-    note: Note.optional(),
-  })
-  .describe("A unit. The player owns at most one of each and can field it once per party.");
+}).describe("A class is a unit. The player owns at most one of each and can field it once per party.");
 
 export const Gear = z.strictObject({
   id: Id,
@@ -604,7 +593,7 @@ export const Perk = z.strictObject({
   family: Id,
   rarity: z.enum(["regular", "premium"]),
   upgradeOf: Id.optional().describe("Premium only: the regular perk this is a stronger version of."),
-  for: z.strictObject({ classes: z.array(Id).optional(), specs: z.array(Id).optional() }).optional().describe("Which party units receive it. Absent: all."),
+  for: z.strictObject({ classes: z.array(Id).optional() }).optional().describe("Which party units receive it. Absent: all."),
   ...grants,
   verbs: z.array(Id),
   note: Note.optional(),
@@ -628,11 +617,7 @@ export const LootTable = z.strictObject({
 
 export const Constraint = z.union([
   z.strictObject({ partySize: z.strictObject({ min: PosInt.optional(), max: PosInt.optional() }) }),
-  z.strictObject({
-    classCount: z.strictObject({ class: Id, min: z.number().int().min(0).optional(), max: z.number().int().min(0).optional() }),
-  }),
-  z.strictObject({ includesSpec: Id }),
-  z.strictObject({ excludesSpec: Id }),
+  z.strictObject({ includesClass: Id }),
   z.strictObject({ excludesClass: Id }),
   z.strictObject({ formation: Id }),
 ]);
@@ -641,7 +626,7 @@ export type Constraint = z.infer<typeof Constraint>;
 export const Challenge = z.strictObject({
   id: Id,
   text: Text,
-  constraints: z.array(Constraint).min(1).describe("Only things the player can see: party size, classes, specializations, formation."),
+  constraints: z.array(Constraint).min(1).describe("Only things the player can see: party size, classes, formation."),
   loot: LootTable,
   note: Note.optional(),
 });
@@ -676,7 +661,6 @@ export const ContentPack = z.strictObject({
   traits: z.array(TraitDef),
   slots: z.array(SlotDef),
   classes: z.array(ClassDef),
-  specializations: z.array(Specialization),
   abilities: z.array(Ability),
   gear: z.array(Gear),
   formations: z.array(Formation),
@@ -685,7 +669,7 @@ export const ContentPack = z.strictObject({
   perks: z.array(Perk),
   dungeons: z.array(Dungeon),
   starter: z.strictObject({
-    specializations: z.array(Id).min(1),
+    classes: z.array(Id).min(1),
     formations: z.array(Id).min(1),
     gear: z.array(Id),
   }),
@@ -698,7 +682,7 @@ export type ContentPack = z.infer<typeof ContentPack>;
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const PartyUnit = z.strictObject({
-  spec: Id,
+  class: Id,
   position: Id,
   abilities: z.array(Id).describe("Equipped abilities, in slot order."),
   gear: z.record(Id, Id).describe("Slot id to gear id."),
@@ -718,7 +702,6 @@ export type VerbDefT = z.infer<typeof VerbDef>;
 export type TraitDefT = z.infer<typeof TraitDef>;
 export type SlotDefT = z.infer<typeof SlotDef>;
 export type ClassDefT = z.infer<typeof ClassDef>;
-export type SpecializationT = z.infer<typeof Specialization>;
 export type GearT = z.infer<typeof Gear>;
 export type FormationT = z.infer<typeof Formation>;
 export type EnemyT = z.infer<typeof Enemy>;

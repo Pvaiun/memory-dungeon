@@ -91,7 +91,7 @@ export type ProgressionResults = {
 type Eval = { party: Party; wins: number; n: number; progress: number };
 export type BenchAnswer = { best: Eval | null; runs: number; budgetOut: boolean; clearable: boolean };
 
-const ownedKey = (o: Owned) => `${[...o.specs].sort()}|${[...o.formations].sort()}|${Object.entries(o.gear).sort().map(([g, n]) => `${g}*${n}`)}`;
+const ownedKey = (o: Owned) => `${[...o.classes].sort()}|${[...o.formations].sort()}|${Object.entries(o.gear).sort().map(([g, n]) => `${g}*${n}`)}`;
 
 /**
  * The benchmark: searches colour by colour, tries a few tweaks of the best,
@@ -126,7 +126,7 @@ export function benchmark(c: Content, pr: Probe, cfg: ProgressionStudy["benchmar
     const cap = c.dungeons.get(t.dungeon)!.partySize.max;
     const byColour = new Map<string, Party[]>();
     for (const p of all(c, owned, cap, "first").sort((a, b) => b.units.length - a.units.length)) {
-      const q = owned.formations.map((f) => make(c, owned, p.units.map((u) => u.spec), f)).find((x) => fits(c, x, t.dungeon, t.challenge));
+      const q = owned.formations.map((f) => make(c, owned, p.units.map((u) => u.class), f)).find((x) => fits(c, x, t.dungeon, t.challenge));
       if (q) byColour.set(classColour(c, q), [...(byColour.get(classColour(c, q)) ?? []), q]);
     }
     let best: Eval | null = null, runs = 0;
@@ -167,12 +167,12 @@ export function benchmark(c: Content, pr: Probe, cfg: ProgressionStudy["benchmar
 
 // ─── Players ────────────────────────────────────────────────────────────────
 
-type Unlock = { kind: "specs" | "formations" | "gear"; id: string; name: string };
+type Unlock = { kind: "classes" | "formations" | "gear"; id: string; name: string };
 
 function unlockPool(c: Content): Unlock[] {
   const s = c.pack.starter;
   return [
-    ...c.pack.specializations.filter((x) => !s.specializations.includes(x.id)).map((x) => ({ kind: "specs" as const, id: x.id, name: x.name })),
+    ...c.pack.classes.filter((x) => !s.classes.includes(x.id)).map((x) => ({ kind: "classes" as const, id: x.id, name: x.name })),
     ...c.pack.formations.filter((x) => !s.formations.includes(x.id)).map((x) => ({ kind: "formations" as const, id: x.id, name: x.name })),
     ...c.pack.gear.filter((x) => x.source === "unlock").map((x) => ({ kind: "gear" as const, id: x.id, name: x.name })),
   ];
@@ -238,7 +238,7 @@ export function runProgression(s: ProgressionStudy, raw: unknown, rules: Rules, 
     const cleared = new Set<string>();
     const memory = new Map<string, Map<string, Tried>>();
     const perkValue = new Map<string, { n: number; sum: number }>();
-    let party = make(c, owned, owned.specs, owned.formations[0]);
+    let party = make(c, owned, owned.classes, owned.formations[0]);
     /** The casual player's losses in a row with its current party, and the units it has taken into each dungeon. */
     let streak = 0;
     const triedIn = new Map<string, Set<string>>();
@@ -259,8 +259,8 @@ export function runProgression(s: ProgressionStudy, raw: unknown, rules: Rules, 
       const ok = (p: Party) => fit(p, t);
       const mem = memory.get(t.key);
       if (!mem?.size) {
-        const extra = [...owned.specs].reverse().filter((sp) => !party.units.some((u) => u.spec === sp));
-        let p = make(c, owned, [...party.units.map((u) => u.spec), ...extra].slice(0, cap), party.formation, party);
+        const extra = [...owned.classes].reverse().filter((sp) => !party.units.some((u) => u.class === sp));
+        let p = make(c, owned, [...party.units.map((u) => u.class), ...extra].slice(0, cap), party.formation, party);
         if (!ok(p)) p = tweaks(c, owned, p, cap).map((x) => x.party).find(ok) ?? shuffle(rng, all(c, owned, cap, "all").filter(ok))[0] ?? p;
         return p;
       }
@@ -323,11 +323,11 @@ export function runProgression(s: ProgressionStudy, raw: unknown, rules: Rules, 
       if (kind === "casual" && nd) {
         const cap = c.dungeons.get(nd)!.partySize.max;
         const prng = rngFor(seed, `casual:party:${week}`);
-        for (const u of done.filter((x) => x.kind === "specs")) {
-          const specs = party.units.map((x) => x.spec);
-          if (specs.length < cap) specs.push(u.id);
-          else specs[int(prng, specs.length)] = u.id;
-          party = make(c, owned, specs, party.formation, party);
+        for (const u of done.filter((x) => x.kind === "classes")) {
+          const classes = party.units.map((x) => x.class);
+          if (classes.length < cap) classes.push(u.id);
+          else classes[int(prng, classes.length)] = u.id;
+          party = make(c, owned, classes, party.formation, party);
           streak = 0;
         }
       }
@@ -343,12 +343,12 @@ export function runProgression(s: ProgressionStudy, raw: unknown, rules: Rules, 
           if (streak >= 2) {
             // Two losses in a row: swap one unit, preferring one it hasn't taken into this dungeon yet.
             const swaps = tweaks(c, owned, party, c.dungeons.get(d)!.partySize.max).filter((x) => x.kind === "unit" || x.kind === "add");
-            const fresh = swaps.filter((x) => x.party.units.some((u) => !tried.has(u.spec)));
+            const fresh = swaps.filter((x) => x.party.units.some((u) => !tried.has(u.class)));
             const pick = shuffle(rng, fresh.length ? fresh : swaps)[0];
             if (pick) party = pick.party;
             streak = 0;
           }
-          for (const u of party.units) tried.add(u.spec);
+          for (const u of party.units) tried.add(u.class);
           streak = attempt(asTarget(d), week, i, w, rng) ? 0 : streak + 1;
         }
       } else {
@@ -376,7 +376,7 @@ export function runProgression(s: ProgressionStudy, raw: unknown, rules: Rules, 
       if (mattersWeek === null) {
         for (const d of order.filter((d) => w.losses[d] || w.cleared.includes(d))) {
           const cap = c.dungeons.get(d)!.partySize.max;
-          if (owned.specs.length <= cap) continue;
+          if (owned.classes.length <= cap) continue;
           const full = all(c, owned, cap, "first").filter((p) => p.units.length === cap).map((p) => bench.judge(p, asTarget(d)));
           const gap = (f: (e: { wins: number; n: number; progress: number }) => number) => Math.max(...full.map(f)) - Math.min(...full.map(f));
           if (gap((e) => e.wins / e.n) >= 0.5 || gap((e) => e.progress) >= 1) mattersWeek = week;
@@ -418,14 +418,14 @@ export function runProgression(s: ProgressionStudy, raw: unknown, rules: Rules, 
     const used = party.units.flatMap((u) => Object.values(u.gear));
     const isNew = (g: string) => used.filter((x) => x === g).length > (before.gear[g] ?? 0);
     const usedLoot = used.some((g) => loot.has(g) && isNew(g));
-    const usedUnlock = party.units.some((u) => !before.specs.includes(u.spec)) || !before.formations.includes(party.formation) || used.some((g) => !loot.has(g) && isNew(g));
+    const usedUnlock = party.units.some((u) => !before.classes.includes(u.class)) || !before.formations.includes(party.formation) || used.some((g) => !loot.has(g) && isNew(g));
     if (bench.ask(before, t).clearable || (!usedLoot && !usedUnlock)) return "play";
     const withLoot = structuredClone(before), withUnlocks = structuredClone(before);
     for (const [g, n] of Object.entries(after.gear)) {
       const add = n - (before.gear[g] ?? 0);
       if (add > 0) (loot.has(g) ? withLoot : withUnlocks).gear[g] = (before.gear[g] ?? 0) + add;
     }
-    withUnlocks.specs = [...after.specs];
+    withUnlocks.classes = [...after.classes];
     withUnlocks.formations = [...after.formations];
     if (usedLoot && bench.ask(withLoot, t).clearable) return "loot";
     if (usedUnlock && bench.ask(withUnlocks, t).clearable) return "unlock";
@@ -437,7 +437,7 @@ export function runProgression(s: ProgressionStudy, raw: unknown, rules: Rules, 
     const owned = starter(c);
     const cleared = new Set<string>();
     return unlocksByWeek.map((u) => {
-      owned.specs = [...u.specs];
+      owned.classes = [...u.classes];
       owned.formations = [...u.formations];
       for (const [g, n] of Object.entries(u.gear)) if (!loot.has(g)) owned.gear[g] = n;
       for (let changed = true; changed; ) {

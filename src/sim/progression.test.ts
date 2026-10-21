@@ -13,7 +13,7 @@ test("progression: the benchmark keeps up, every stuck week is sorted, and no wa
   const s = ProgressionStudy.parse({ id: "p", level: "progression", content: { pack: "fixtures/hollow.pack.json", ladder: LADDER }, players: 20, weeks: 3 });
   const r = runProgression(s, pack, rules);
   // With real combat (step 4), the optimizer sometimes clears a dungeon with a lucky win by a party the
-  // benchmark rates unwinnable (a solo Vanguard in the Phalanx). More budget or seeds didn't close it; the
+  // benchmark rates unwinnable (a solo Warrior in the Phalanx). More budget or seeds didn't close it; the
   // benchmark's search shape is for steps 14 and 15. See steps/04-combat-concepts/report.md.
   const weeks = r.players.filter((p) => p.kind === "optimizer").reduce((n, p) => n + p.weeks.length, 0);
   assert.ok(r.benchmarkBehind / weeks < 0.05, `benchmark behind in ${r.benchmarkBehind} of ${weeks} player-weeks`);

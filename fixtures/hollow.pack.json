@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "0.4",
+  "schemaVersion": "0.5",
   "id": "worked_example",
   "title": "Placeholder fixture: Hollow of the Grey Mother",
   "note": "PLACEHOLDER. Not game design. This pack exists to prove the schema can express the game's rules, to give the tests something to break, and to be the first input for the step 2 engine. Every class, number, name and enemy here is disposable; real content comes from steps 13 to 16. Rewritten for schema 0.4 (step 4's combat), keeping step 1's ids.",
@@ -7,13 +7,13 @@
               "note": "Placeholder targets taken from the concept spec, which was bullish on them. Expect every number here to change.",
               "formationPositions": 5,
               "partySize": [1, 5],
-              "abilitiesPerSpec": 4,
+              "abilitiesPerClass": 4,
               "abilitiesEquipped": 2,
               "perkPicksPerRun": [3, 4],
               "perkPoolSize": [10, 15],
               "perkOptionsPerPick": 3,
               "keyholesPerBoss": [2, 4],
-              "complete": {"classes": [8, 10], "specsPerClass": [3, 4], "verbs": [15, 20]}
+              "complete": {"classes": [8, 10], "verbs": [15, 20]}
             },
   "ruleset": {
               "basicRecovery": 0.25,
@@ -348,6 +348,7 @@
   "slots": [
             {"id": "warrior_weapon", "name": "Blade", "class": "warrior"},
             {"id": "ranger_weapon", "name": "Ranger's weapon", "class": "ranger"},
+            {"id": "duelist_weapon", "name": "Duelist's weapon", "class": "duelist"},
             {"id": "cleric_focus", "name": "Focus", "class": "cleric"},
             {"id": "armour", "name": "Armour"},
             {"id": "charm", "name": "Charm"}
@@ -356,15 +357,19 @@
               {
                 "id": "warrior",
                 "name": "Warrior",
-                "text": "Front-line fighters who hold the line.",
+                "text": "Holds the front, cleaves through crowds, and steps in when friends falter.",
                 "slots": ["warrior_weapon"],
-                "stats": {"max_hp": 150, "max_mp": 30, "mp_regen": 1, "attack": 14, "armor": 5, "aggro": 20}
+                "source": "starter",
+                "stats": {"max_hp": 150, "max_mp": 30, "mp_regen": 1, "attack": 14, "armor": 5, "aggro": 20},
+                "abilities": ["cleave", "stand_guard", "shield_bash", "second_wind"],
+                "verbs": ["physical_damage", "area", "protect", "control", "healing", "blocking"]
               },
               {
                 "id": "ranger",
                 "name": "Ranger",
-                "text": "Quick, sharp-eyed skirmishers.",
+                "text": "Shoots fast, bleeds what it hits, and covers friends in trouble.",
                 "slots": ["ranger_weapon"],
+                "source": "unlock",
                 "stats": {
                           "max_hp": 100,
                           "max_mp": 30,
@@ -375,55 +380,41 @@
                           "accuracy": 5,
                           "crit_chance": 10,
                           "crit_multiplier": 175
-                        }
+                        },
+                "abilities": ["barbed_arrows", "volley", "quick_draw", "covering_fire"],
+                "verbs": ["physical_damage", "damage_over_time", "area", "initiative", "counter"]
+              },
+              {
+                "id": "duelist",
+                "name": "Duelist",
+                "text": "Fights up close, slips every blow, and saves it all for one decisive lunge.",
+                "slots": ["duelist_weapon"],
+                "source": "unlock",
+                "stats": {
+                          "max_hp": 95,
+                          "max_mp": 30,
+                          "mp_regen": 1,
+                          "attack": 15,
+                          "armor": 2,
+                          "evasion": 25,
+                          "accuracy": 5,
+                          "crit_chance": 10,
+                          "crit_multiplier": 175
+                        },
+                "abilities": ["riposte", "flurry", "read_the_blade", "lunge"],
+                "verbs": ["physical_damage", "execute", "counter", "multi_hit", "evasion", "burst"]
               },
               {
                 "id": "cleric",
                 "name": "Cleric",
-                "text": "Keepers of the old rites, who keep everyone standing.",
+                "text": "Mends wounds, lifts curses, and smites when nobody needs her.",
                 "slots": ["cleric_focus"],
-                "stats": {"max_hp": 105, "max_mp": 60, "mp_regen": 2, "attack": 4, "magic": 14, "armor": 2, "resist": 10}
+                "source": "unlock",
+                "stats": {"max_hp": 105, "max_mp": 60, "mp_regen": 2, "attack": 4, "magic": 14, "armor": 2, "resist": 10},
+                "abilities": ["mend", "purify", "blessed_ward", "radiance"],
+                "verbs": ["magic_damage", "healing", "cleanse", "armour", "area"]
               }
             ],
-  "specializations": [
-                      {
-                        "id": "warrior_vanguard",
-                        "class": "warrior",
-                        "name": "Warrior: Vanguard",
-                        "text": "Holds the front, cleaves through crowds, and steps in when friends falter.",
-                        "source": "starter",
-                        "abilities": ["cleave", "stand_guard", "shield_bash", "second_wind"],
-                        "verbs": ["physical_damage", "area", "protect", "control", "healing", "blocking"]
-                      },
-                      {
-                        "id": "ranger_archer",
-                        "class": "ranger",
-                        "name": "Ranger: Archer",
-                        "text": "Shoots fast, bleeds what it hits, and covers friends in trouble.",
-                        "source": "unlock",
-                        "abilities": ["barbed_arrows", "volley", "quick_draw", "covering_fire"],
-                        "verbs": ["physical_damage", "damage_over_time", "area", "initiative", "counter"]
-                      },
-                      {
-                        "id": "ranger_duelist",
-                        "class": "ranger",
-                        "name": "Ranger: Duelist",
-                        "text": "Fights up close, slips every blow, and saves it all for one decisive lunge.",
-                        "source": "unlock",
-                        "stats": {"max_hp": 95, "evasion": 25},
-                        "abilities": ["riposte", "flurry", "read_the_blade", "lunge"],
-                        "verbs": ["physical_damage", "execute", "counter", "multi_hit", "evasion", "burst"]
-                      },
-                      {
-                        "id": "cleric_mender",
-                        "class": "cleric",
-                        "name": "Cleric: Mender",
-                        "text": "Mends wounds, lifts curses, and smites when nobody needs her.",
-                        "source": "unlock",
-                        "abilities": ["mend", "purify", "blessed_ward", "radiance"],
-                        "verbs": ["magic_damage", "healing", "cleanse", "armour", "area"]
-                      }
-                    ],
   "abilities": [
                 {
                   "id": "cleave",
@@ -549,7 +540,7 @@
                 },
                 {
                   "id": "riposte",
-                  "class": "ranger",
+                  "class": "duelist",
                   "name": "Riposte",
                   "text": "For a while, strikes back after every dodge.",
                   "cooldown": 30,
@@ -559,7 +550,7 @@
                 },
                 {
                   "id": "flurry",
-                  "class": "ranger",
+                  "class": "duelist",
                   "name": "Flurry",
                   "text": "Four quick, light stabs.",
                   "mp": 6,
@@ -577,7 +568,7 @@
                 },
                 {
                   "id": "read_the_blade",
-                  "class": "ranger",
+                  "class": "duelist",
                   "name": "Read the Blade",
                   "text": "Watches closely: harder to hit, and hits more surely.",
                   "mp": 5,
@@ -588,7 +579,7 @@
                 },
                 {
                   "id": "lunge",
-                  "class": "ranger",
+                  "class": "duelist",
                   "name": "Lunge",
                   "text": "Lunges at the most wounded enemy for one big hit.",
                   "mp": 10,
@@ -711,6 +702,19 @@
               "tier": "efficacy",
               "source": "loot",
               "class": ["ranger"],
+              "rank": 1,
+              "weapon": {"type": "physical", "subtype": "pierce", "cooldown": 10, "amount": {"scale": [{"ratio": 1, "stat": "attack"}]}},
+              "stats": [{"stat": "attack", "flat": 2}, {"stat": "accuracy", "flat": 5}],
+              "verbs": []
+            },
+            {
+              "id": "fencers_rapier",
+              "name": "Fencer's Rapier",
+              "text": "Thin, quick and rude.",
+              "slot": "duelist_weapon",
+              "tier": "efficacy",
+              "source": "loot",
+              "class": ["duelist"],
               "rank": 1,
               "weapon": {"type": "physical", "subtype": "pierce", "cooldown": 10, "amount": {"scale": [{"ratio": 1, "stat": "attack"}]}},
               "stats": [{"stat": "attack", "flat": 2}, {"stat": "accuracy", "flat": 5}],
@@ -1063,17 +1067,17 @@
               "text": "The Duelist leaves a bleeding wound on anyone it dodges.",
               "family": "blood",
               "rarity": "regular",
-              "for": {"specs": ["ranger_duelist"]},
+              "for": {"classes": ["duelist"]},
               "statuses": ["red_riposte"],
               "verbs": ["counter", "damage_over_time"]
             },
             {
               "id": "serrated_heads",
               "name": "Serrated Heads",
-              "text": "Rangers' basic attacks have a 50% chance to cause bleeding.",
+              "text": "Rangers' and Duelists' basic attacks have a 50% chance to cause bleeding.",
               "family": "blood",
               "rarity": "regular",
-              "for": {"classes": ["ranger"]},
+              "for": {"classes": ["ranger", "duelist"]},
               "statuses": ["serrated"],
               "verbs": ["damage_over_time"]
             },
@@ -1162,6 +1166,7 @@
                                             "table": [
                                                       {"gear": "notched_blade", "weight": 1},
                                                       {"gear": "hunters_shortbow", "weight": 1},
+                                                      {"gear": "fencers_rapier", "weight": 1},
                                                       {"gear": "ash_staff", "weight": 1},
                                                       {"gear": "bone_charm", "weight": 1}
                                                     ]
@@ -1171,6 +1176,7 @@
                                         "table": [
                                                   {"gear": "notched_blade", "weight": 2},
                                                   {"gear": "hunters_shortbow", "weight": 2},
+                                                  {"gear": "fencers_rapier", "weight": 2},
                                                   {"gear": "ash_staff", "weight": 2},
                                                   {"gear": "bone_charm", "weight": 2},
                                                   {"gear": "wolfhide_cloak", "weight": 1}
@@ -1179,9 +1185,9 @@
                           },
                   "challenges": [
                                   {
-                                    "id": "two_rangers",
-                                    "text": "Beat it with two Rangers.",
-                                    "constraints": [{"classCount": {"class": "ranger", "min": 2}}],
+                                    "id": "with_duelist",
+                                    "text": "Beat it with the Duelist in the party.",
+                                    "constraints": [{"includesClass": "duelist"}],
                                     "loot": {"guaranteed": ["wolfhide_cloak"]}
                                   },
                                   {
@@ -1193,6 +1199,7 @@
                                               "table": [
                                                         {"gear": "notched_blade", "weight": 1},
                                                         {"gear": "hunters_shortbow", "weight": 1},
+                                                        {"gear": "fencers_rapier", "weight": 1},
                                                         {"gear": "ash_staff", "weight": 1}
                                                       ]
                                             }
@@ -1206,6 +1213,6 @@
                                 ]
                 }
               ],
-  "starter": {"specializations": ["warrior_vanguard"], "formations": ["open_order"], "gear": ["rusted_sword"]},
+  "starter": {"classes": ["warrior"], "formations": ["open_order"], "gear": ["rusted_sword"]},
   "progression": {"dungeonOrder": ["hollow_of_the_grey_mother"]}
 }

@@ -48,7 +48,7 @@ export function readingPack(c: Content, rules: Rules, r: Reading, n: number): st
   const enemyIds = new Set<string>();
   const out: string[] = [`# Reading pack ${n}`, "", `**Dungeon:** ${d.name}. ${d.text ?? ""}`, "", `**Your party:** ${label(c, r.party)}.`];
   for (const u of r.party.units) {
-    const s = c.specs.get(u.spec)!;
+    const s = c.classes.get(u.class)!;
     const gear = Object.values(u.gear).map((g) => c.pack.gear.find((x) => x.id === g)!).map((g) => `${g.name} (${g.text})`);
     out.push(`- ${s.name}: ${s.text ?? ""}${gear.length ? ` Wears: ${gear.join("; ")}` : ""}`);
   }

@@ -4,7 +4,7 @@
   "properties": {
     "schemaVersion": {
       "type": "string",
-      "const": "0.4"
+      "const": "0.5"
     },
     "id": {
       "type": "string",
@@ -49,7 +49,7 @@
           "minItems": 2,
           "maxItems": 2
         },
-        "abilitiesPerSpec": {
+        "abilitiesPerClass": {
           "type": "integer",
           "minimum": 1,
           "maximum": 9007199254740991
@@ -139,24 +139,6 @@
               "minItems": 2,
               "maxItems": 2
             },
-            "specsPerClass": {
-              "type": "array",
-              "prefixItems": [
-                {
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 9007199254740991
-                },
-                {
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 9007199254740991
-                }
-              ],
-              "items": false,
-              "minItems": 2,
-              "maxItems": 2
-            },
             "verbs": {
               "type": "array",
               "prefixItems": [
@@ -178,7 +160,6 @@
           },
           "required": [
             "classes",
-            "specsPerClass",
             "verbs"
           ],
           "additionalProperties": false,
@@ -188,7 +169,7 @@
       "required": [
         "formationPositions",
         "partySize",
-        "abilitiesPerSpec",
+        "abilitiesPerClass",
         "abilitiesEquipped",
         "perkPicksPerRun",
         "perkPoolSize",
@@ -1728,6 +1709,14 @@
             },
             "description": "Class-specific gear slots, on top of the generic ones."
           },
+          "source": {
+            "type": "string",
+            "enum": [
+              "starter",
+              "unlock"
+            ],
+            "description": "starter: owned from the start. unlock: a reward from a real-life quest."
+          },
           "stats": {
             "type": "object",
             "propertyNames": {
@@ -1737,7 +1726,7 @@
             "additionalProperties": {
               "type": "number"
             },
-            "description": "Base stats every specialization of the class starts from."
+            "description": "The unit's base stats."
           },
           "passive": {
             "description": "The class passive. Its stat grants are stats; its reactions live in the statuses it applies at fight start.",
@@ -1776,64 +1765,6 @@
             },
             "additionalProperties": false
           },
-          "note": {
-            "type": "string",
-            "minLength": 1,
-            "description": "Designer note. Never shown to players and never read by the engine."
-          }
-        },
-        "required": [
-          "id",
-          "name",
-          "text",
-          "slots",
-          "stats"
-        ],
-        "additionalProperties": false
-      }
-    },
-    "specializations": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "pattern": "^[a-z][a-z0-9_]*$"
-          },
-          "class": {
-            "type": "string",
-            "pattern": "^[a-z][a-z0-9_]*$"
-          },
-          "name": {
-            "type": "string",
-            "minLength": 1,
-            "description": "Shown as \"Class: Specialization\", e.g. \"Ranger: Duelist\"."
-          },
-          "text": {
-            "type": "string",
-            "minLength": 1,
-            "description": "Player-facing text. The engine never reads it."
-          },
-          "source": {
-            "type": "string",
-            "enum": [
-              "starter",
-              "unlock"
-            ],
-            "description": "starter: owned from the start. unlock: a reward from a real-life quest."
-          },
-          "stats": {
-            "description": "Overrides the class's base stats.",
-            "type": "object",
-            "propertyNames": {
-              "type": "string",
-              "pattern": "^[a-z][a-z0-9_]*(:[a-z0-9_]+)*$"
-            },
-            "additionalProperties": {
-              "type": "number"
-            }
-          },
           "abilities": {
             "type": "array",
             "items": {
@@ -1856,15 +1787,16 @@
         },
         "required": [
           "id",
-          "class",
           "name",
           "text",
+          "slots",
           "source",
+          "stats",
           "abilities",
           "verbs"
         ],
         "additionalProperties": false,
-        "description": "A unit. The player owns at most one of each and can field it once per party."
+        "description": "A class is a unit. The player owns at most one of each and can field it once per party."
       }
     },
     "abilities": {
@@ -3338,13 +3270,6 @@
                   "type": "string",
                   "pattern": "^[a-z][a-z0-9_]*$"
                 }
-              },
-              "specs": {
-                "type": "array",
-                "items": {
-                  "type": "string",
-                  "pattern": "^[a-z][a-z0-9_]*$"
-                }
               }
             },
             "additionalProperties": false
@@ -3640,58 +3565,13 @@
                       {
                         "type": "object",
                         "properties": {
-                          "classCount": {
-                            "type": "object",
-                            "properties": {
-                              "class": {
-                                "type": "string",
-                                "pattern": "^[a-z][a-z0-9_]*$"
-                              },
-                              "min": {
-                                "type": "integer",
-                                "minimum": 0,
-                                "maximum": 9007199254740991
-                              },
-                              "max": {
-                                "type": "integer",
-                                "minimum": 0,
-                                "maximum": 9007199254740991
-                              }
-                            },
-                            "required": [
-                              "class"
-                            ],
-                            "additionalProperties": false
-                          }
-                        },
-                        "required": [
-                          "classCount"
-                        ],
-                        "additionalProperties": false
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "includesSpec": {
+                          "includesClass": {
                             "type": "string",
                             "pattern": "^[a-z][a-z0-9_]*$"
                           }
                         },
                         "required": [
-                          "includesSpec"
-                        ],
-                        "additionalProperties": false
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "excludesSpec": {
-                            "type": "string",
-                            "pattern": "^[a-z][a-z0-9_]*$"
-                          }
-                        },
-                        "required": [
-                          "excludesSpec"
+                          "includesClass"
                         ],
                         "additionalProperties": false
                       },
@@ -3723,7 +3603,7 @@
                       }
                     ]
                   },
-                  "description": "Only things the player can see: party size, classes, specializations, formation."
+                  "description": "Only things the player can see: party size, classes, formation."
                 },
                 "loot": {
                   "type": "object",
@@ -3802,7 +3682,7 @@
     "starter": {
       "type": "object",
       "properties": {
-        "specializations": {
+        "classes": {
           "minItems": 1,
           "type": "array",
           "items": {
@@ -3827,7 +3707,7 @@
         }
       },
       "required": [
-        "specializations",
+        "classes",
         "formations",
         "gear"
       ],
@@ -3863,7 +3743,6 @@
     "traits",
     "slots",
     "classes",
-    "specializations",
     "abilities",
     "gear",
     "formations",

@@ -24,7 +24,7 @@ function expectIssue(code: string, mutate: (p: any) => void, opts: { level?: Iss
   );
 }
 
-/** Add an ability to the Vanguard's class and expect it to be clean, or to raise `code`. */
+/** Add an ability to the Warrior class and expect it to be clean, or to raise `code`. */
 function card(ability: object, code?: string) {
   const p = clone(PACK) as any;
   p.abilities.push({ id: "card", class: "warrior", name: "Card", text: "-", cooldown: 10, verbs: [], ...ability });
@@ -42,23 +42,22 @@ test("the worked example is clean", () => {
 
 test("the example party is valid and eligible for the right challenges", () => {
   assert.deepEqual(checkParty(PACK, PARTY, { dungeon: DUNGEON }), []);
-  assert.deepEqual(unmetConstraints(PACK, PARTY, DUNGEON, "two_rangers"), []);
+  assert.deepEqual(unmetConstraints(PACK, PARTY, DUNGEON, "with_duelist"), []);
   assert.deepEqual(unmetConstraints(PACK, PARTY, DUNGEON, "in_phalanx"), []);
   assert.deepEqual(unmetConstraints(PACK, PARTY, DUNGEON, "two_units"), ["party size 3"]);
 });
 
 test("teasers are derived from data", () => {
-  const t = teaser(PACK, DUNGEON, "two_rangers", { specializations: ["warrior_vanguard", "ranger_archer"], formations: ["open_order"] });
+  const t = teaser(PACK, DUNGEON, "with_duelist", { classes: ["warrior", "ranger"], formations: ["open_order"] });
   assert.equal(t.teased, true);
-  assert.match(t.needs[0], /1 more ranger.*ranger_duelist/);
-  assert.equal(teaser(PACK, DUNGEON, "two_rangers", { specializations: ["ranger_archer", "ranger_duelist"] }).teased, false);
-  assert.equal(teaser(PACK, DUNGEON, "in_phalanx", { specializations: ["warrior_vanguard"], formations: ["open_order"] }).teased, true);
+  assert.deepEqual(t.needs, ["class duelist"]);
+  assert.equal(teaser(PACK, DUNGEON, "with_duelist", { classes: ["ranger", "duelist"] }).teased, false);
+  assert.equal(teaser(PACK, DUNGEON, "in_phalanx", { classes: ["warrior"], formations: ["open_order"] }).teased, true);
 });
 
 test("complete mode flags a pack too small to ship", () => {
   const { issues } = validatePack(PACK, { complete: true });
   assert.ok(codes(issues).includes("complete.classes"));
-  assert.ok(codes(issues).includes("complete.specsPerClass"));
   assert.ok(!codes(issues).includes("complete.verbs"), "17 verbs is inside 15–20");
 });
 
@@ -186,8 +185,8 @@ test("targeting: picking the lowest or highest needs 'by'", () => expectIssue("t
 
 // ─── Units ───────────────────────────────────────────────────────────────────
 
-test("each specialization has 4 abilities", () => expectIssue("spec.abilityCount", (p) => find(p.specializations, "warrior_vanguard").abilities.pop()));
-test("abilities don't cross classes", () => expectIssue("spec.abilityClass", (p) => (find(p.specializations, "warrior_vanguard").abilities[0] = "riposte")));
+test("each class has 4 abilities", () => expectIssue("class.abilityCount", (p) => find(p.classes, "warrior").abilities.pop()));
+test("abilities don't cross classes", () => expectIssue("class.abilityClass", (p) => (find(p.classes, "warrior").abilities[0] = "riposte")));
 
 // ─── Formations ──────────────────────────────────────────────────────────────
 
@@ -227,8 +226,10 @@ test("a boss fight has a boss", () => expectIssue("fight.bossRank", (p) => (p.du
 test("dungeons cap party size at 1 to 5", () => expectIssue("dungeon.partySize", (p) => (p.dungeons[0].partySize.max = 6)));
 test("perk picks offer 3 options", () => expectIssue("design.perkOptions", (p) => (p.ruleset.run.perkOffer.options = 4)));
 test("a perk gives something", () => expectIssue("perk.empty", (p) => delete find(p.perks, "keen_eyes").stats));
-test("challenges must be possible: two of a class needs two units of it", () =>
-  expectIssue("challenge.impossible", (p) => (p.dungeons[0].challenges[0].constraints[0].classCount.min = 3)));
+test("challenges must be possible: a class can't be both required and excluded", () =>
+  expectIssue("challenge.impossible", (p) => p.dungeons[0].challenges[0].constraints.push({ excludesClass: "duelist" })));
+test("challenges must be possible: required classes fit in the party", () =>
+  expectIssue("challenge.impossible", (p) => p.dungeons[0].challenges[0].constraints.push({ includesClass: "warrior" }, { partySize: { max: 1 } })));
 test("starter content is marked as starter", () => expectIssue("starter.source", (p) => (find(p.formations, "open_order").source = "unlock")));
 test("every dungeon is in the progression", () => expectIssue("progression.missing", (p) => (p.progression.dungeonOrder = ["somewhere_else"])));
 
@@ -249,22 +250,22 @@ function expectParty(code: string, mutate: (p: any) => void, opts: Parameters<ty
   const got = codes(checkParty(PACK, party, opts));
   assert.ok(got.includes(code), `expected '${code}', got ${JSON.stringify(got)}`);
 }
-test("party: each specialization is one unit", () => expectParty("party.uniqueSpec", (p) => (p.units[2].spec = "ranger_duelist")));
+test("party: each class is one unit", () => expectParty("party.uniqueClass", (p) => (p.units[2].class = "duelist")));
 test("party: two units of the same class are fine", () => assert.deepEqual(checkParty(PACK, PARTY, { dungeon: DUNGEON }), []));
 test("party: units equip exactly 2 abilities", () => expectParty("party.abilities", (p) => p.units[0].abilities.push("second_wind")));
 test("party: abilities come from the unit's specialization", () => expectParty("party.abilityNotOwned", (p) => (p.units[0].abilities[1] = "riposte")));
 test("party: gear goes in a matching slot", () => expectParty("party.gearSlot", (p) => (p.units[0].gear.armour = "bone_charm")));
 test("party: class gear only on that class", () => expectParty("party.slot", (p) => (p.units[0].gear.ranger_weapon = "hunters_shortbow")));
 test("party: dungeon caps party size", () =>
-  expectParty("party.size", (p) => p.units.push({ spec: "cleric_mender", position: "right_striker", abilities: ["mend", "purify"], gear: {} })));
+  expectParty("party.size", (p) => p.units.push({ class: "cleric", position: "right_striker", abilities: ["mend", "purify"], gear: {} })));
 test("party: positions exist and are free", () => expectParty("party.position", (p) => (p.units[1].position = "shield_point")));
 test("party: ownership is checked when given", () =>
-  expectParty("party.notOwned", () => {}, { dungeon: DUNGEON, owned: { specializations: ["warrior_vanguard", "ranger_archer"], formations: ["phalanx"] } }));
+  expectParty("party.notOwned", () => {}, { dungeon: DUNGEON, owned: { classes: ["warrior", "ranger"], formations: ["phalanx"] } }));
 test("party: copies of gear can be shared up to the count owned", () => {
   const party = clone(PARTY) as any;
   party.units[0].gear.charm = "bone_charm";
   party.units[2].gear.charm = "bone_charm";
-  const owned = (n: number) => ({ gear: { notched_blade: 1, studded_jerkin: 1, hunters_shortbow: 1, yata_mirror: 1, ullrs_yew: 1, wolfhide_cloak: 1, bone_charm: n } });
+  const owned = (n: number) => ({ gear: { notched_blade: 1, studded_jerkin: 1, fencers_rapier: 1, yata_mirror: 1, ullrs_yew: 1, wolfhide_cloak: 1, bone_charm: n } });
   assert.deepEqual(codes(checkParty(PACK, party, { dungeon: DUNGEON, owned: owned(2) })), []);
   assert.deepEqual(codes(checkParty(PACK, party, { dungeon: DUNGEON, owned: owned(1) })), ["party.gearCount"]);
 });

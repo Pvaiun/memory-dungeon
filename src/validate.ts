@@ -35,7 +35,7 @@ class Report {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const COLLECTIONS = [
-  "stats", "elements", "statuses", "verbs", "traits", "slots", "classes", "specializations", "abilities", "gear", "formations",
+  "stats", "elements", "statuses", "verbs", "traits", "slots", "classes", "abilities", "gear", "formations",
   "enemies", "perkFamilies", "perks", "dungeons",
 ] as const;
 type Coll = (typeof COLLECTIONS)[number];
@@ -125,7 +125,7 @@ function checkDesign(pack: Pack, r: Report) {
   rangeOk(d.perkPoolSize, "design.perkPoolSize");
   rangeOk(d.keyholesPerBoss, "design.keyholesPerBoss");
   if (d.partySize[1] > d.formationPositions) r.error("design.partySize", "design.partySize", `party size can't exceed ${d.formationPositions} formation positions`);
-  if (d.abilitiesEquipped > d.abilitiesPerSpec) r.error("design.abilities", "design.abilitiesEquipped", `can't equip more abilities than a specialization has`);
+  if (d.abilitiesEquipped > d.abilitiesPerClass) r.error("design.abilities", "design.abilitiesEquipped", `can't equip more abilities than a class has`);
   if (pack.ruleset.run.perkOffer.options !== d.perkOptionsPerPick) {
     r.error("design.perkOptions", "ruleset.run.perkOffer.options", `perk picks offer ${d.perkOptionsPerPick} options (design.perkOptionsPerPick)`);
   }
@@ -409,7 +409,7 @@ class Combat {
   }
 }
 
-// ─── Classes, specializations ────────────────────────────────────────────────
+// ─── Classes ─────────────────────────────────────────────────────────────────
 
 function checkUnits(pack: Pack, ix: Index, w: Walker, r: Report, c: Combat) {
   const d = pack.design;
@@ -422,31 +422,24 @@ function checkUnits(pack: Pack, ix: Index, w: Walker, r: Report, c: Combat) {
     });
     c.statBlock(cl.stats, `${p}.stats`);
     c.grants(cl.passive, `${p}.passive`);
-    if (!pack.specializations.some((s) => s.class === cl.id)) r.warn("class.noSpecs", p, `class '${cl.id}' has no specializations, so no units`);
-  });
-
-  pack.specializations.forEach((s, i) => {
-    const p = `specializations[${i}]`;
-    w.ref("classes", s.class, `${p}.class`, "class");
-    c.statBlock(s.stats, `${p}.stats`);
-    if (s.abilities.length !== d.abilitiesPerSpec) {
-      r.error("spec.abilityCount", `${p}.abilities`, `'${s.id}' has ${s.abilities.length} abilities; every specialization has ${d.abilitiesPerSpec}`);
+    if (cl.abilities.length !== d.abilitiesPerClass) {
+      r.error("class.abilityCount", `${p}.abilities`, `'${cl.id}' has ${cl.abilities.length} abilities; every class has ${d.abilitiesPerClass}`);
     }
-    if (new Set(s.abilities).size !== s.abilities.length) r.error("spec.abilityDuplicate", `${p}.abilities`, `an ability is listed twice`);
-    s.abilities.forEach((aid, j) => {
+    if (new Set(cl.abilities).size !== cl.abilities.length) r.error("class.abilityDuplicate", `${p}.abilities`, `an ability is listed twice`);
+    cl.abilities.forEach((aid, j) => {
       if (!w.ref("abilities", aid, `${p}.abilities[${j}]`, "ability")) return;
       const a = ix.get<S.AbilityT>("abilities", aid)!;
-      if (a.class !== s.class) {
-        r.error("spec.abilityClass", `${p}.abilities[${j}]`, `ability '${aid}' belongs to class '${a.class ?? "none"}', not '${s.class}'; abilities don't cross classes`);
+      if (a.class !== cl.id) {
+        r.error("class.abilityClass", `${p}.abilities[${j}]`, `ability '${aid}' belongs to class '${a.class ?? "none"}', not '${cl.id}'; abilities don't cross classes`);
       }
     });
-    s.verbs.forEach((v, j) => w.ref("verbs", v, `${p}.verbs[${j}]`, "verb"));
+    cl.verbs.forEach((v, j) => w.ref("verbs", v, `${p}.verbs[${j}]`, "verb"));
   });
 
   pack.abilities.forEach((a, i) => {
     a.verbs.forEach((v, j) => w.ref("verbs", v, `abilities[${i}].verbs[${j}]`, "verb"));
-    const used = pack.specializations.some((s) => s.abilities.includes(a.id)) || pack.enemies.some((e) => e.abilities?.includes(a.id));
-    if (!used) r.warn("ability.unused", `abilities[${i}]`, `no specialization or enemy lists ability '${a.id}'`);
+    const used = pack.classes.some((cl) => cl.abilities.includes(a.id)) || pack.enemies.some((e) => e.abilities?.includes(a.id));
+    if (!used) r.warn("ability.unused", `abilities[${i}]`, `no class or enemy lists ability '${a.id}'`);
   });
 }
 
@@ -587,7 +580,6 @@ function checkPerks(pack: Pack, ix: Index, w: Walker, r: Report, c: Combat) {
     }
     if (!pk.stats?.length && !pk.statuses?.length) r.error("perk.empty", p, `perk '${pk.id}' gives no stats and no statuses`);
     pk.for?.classes?.forEach((cl, j) => w.ref("classes", cl, `${p}.for.classes[${j}]`, "class"));
-    pk.for?.specs?.forEach((s, j) => w.ref("specializations", s, `${p}.for.specs[${j}]`, "specialization"));
     c.grants(pk, p);
     pk.verbs.forEach((v, j) => w.ref("verbs", v, `${p}.verbs[${j}]`, "verb"));
     if (!pack.dungeons.some((dn) => dn.perkPool.includes(pk.id))) r.warn("perk.unused", p, `perk '${pk.id}' isn't in any dungeon's pool`);
@@ -671,6 +663,8 @@ function checkDungeons(pack: Pack, ix: Index, w: Walker, r: Report) {
       chIds.add(ch.id);
       checkLoot(pack, ix, w, r, ch.loot, `${cp}.loot`);
       let minUnits = 0;
+      let maxUnits = cap;
+      const included = new Set<string>();
       ch.constraints.forEach((c, k) => {
         const kp = `${cp}.constraints[${k}]`;
         if ("partySize" in c) {
@@ -678,25 +672,18 @@ function checkDungeons(pack: Pack, ix: Index, w: Walker, r: Report) {
           if (min !== undefined && max !== undefined && min > max) r.error("challenge.impossible", kp, `min is above max`);
           if (min !== undefined && min > cap) r.error("challenge.impossible", kp, `needs ${min} units, but the dungeon allows ${cap}`);
           minUnits = Math.max(minUnits, min ?? 0);
-        } else if ("classCount" in c) {
-          const { class: cls, min, max } = c.classCount;
-          if (!w.ref("classes", cls, `${kp}.classCount.class`, "class")) return;
-          const owned = pack.specializations.filter((s) => s.class === cls).length;
-          if (min !== undefined && min > owned) r.error("challenge.impossible", kp, `needs ${min} '${cls}' units, but the class has ${owned} specializations and each is one unit`);
-          if (min !== undefined && min > cap) r.error("challenge.impossible", kp, `needs ${min} '${cls}' units, but the dungeon allows ${cap}`);
-          if (min !== undefined && max !== undefined && min > max) r.error("challenge.impossible", kp, `min is above max`);
-          minUnits += min ?? 0;
-        } else if ("includesSpec" in c) {
-          w.ref("specializations", c.includesSpec, `${kp}.includesSpec`, "specialization");
-        } else if ("excludesSpec" in c) {
-          w.ref("specializations", c.excludesSpec, `${kp}.excludesSpec`, "specialization");
+          maxUnits = Math.min(maxUnits, max ?? cap);
+        } else if ("includesClass" in c) {
+          if (w.ref("classes", c.includesClass, `${kp}.includesClass`, "class")) included.add(c.includesClass);
         } else if ("excludesClass" in c) {
           w.ref("classes", c.excludesClass, `${kp}.excludesClass`, "class");
         } else if ("formation" in c) {
           w.ref("formations", c.formation, `${kp}.formation`, "formation");
         }
       });
-      if (minUnits > cap) r.error("challenge.impossible", cp, `constraints need at least ${minUnits} units, but the dungeon allows ${cap}`);
+      minUnits = Math.max(minUnits, included.size);
+      if (minUnits > maxUnits) r.error("challenge.impossible", cp, `constraints need at least ${minUnits} units, but allow ${maxUnits}`);
+      for (const k of ch.constraints) if ("excludesClass" in k && included.has(k.excludesClass)) r.error("challenge.impossible", cp, `class '${k.excludesClass}' is both required and excluded`);
     });
   });
 }
@@ -706,7 +693,7 @@ function checkDungeons(pack: Pack, ix: Index, w: Walker, r: Report) {
 function checkStarterAndProgression(pack: Pack, ix: Index, w: Walker, r: Report) {
   const st = pack.starter;
   const pairs: [Coll, string[], { id: string; source: string }[], string][] = [
-    ["specializations", st.specializations, pack.specializations, "specialization"],
+    ["classes", st.classes, pack.classes, "class"],
     ["formations", st.formations, pack.formations, "formation"],
     ["gear", st.gear, pack.gear, "gear"],
   ];
@@ -734,10 +721,6 @@ function checkComplete(pack: Pack, r: Report) {
   const c = pack.design.complete;
   const inRange = (n: number, rg: [number, number]) => n >= rg[0] && n <= rg[1];
   if (!inRange(pack.classes.length, c.classes)) r.error("complete.classes", "classes", `${pack.classes.length} classes; a full set has ${c.classes[0]}–${c.classes[1]}`);
-  for (const cl of pack.classes) {
-    const n = pack.specializations.filter((s) => s.class === cl.id).length;
-    if (!inRange(n, c.specsPerClass)) r.error("complete.specsPerClass", "specializations", `class '${cl.id}' has ${n} specializations; a full set has ${c.specsPerClass[0]}–${c.specsPerClass[1]}`);
-  }
   if (!inRange(pack.verbs.length, c.verbs)) r.error("complete.verbs", "verbs", `${pack.verbs.length} verbs; a full set has ${c.verbs[0]}–${c.verbs[1]}`);
 }
 
@@ -745,7 +728,7 @@ function checkComplete(pack: Pack, r: Report) {
 
 function checkUnused(pack: Pack, ix: Index, r: Report) {
   const declared = new Set<string>([
-    ...pack.specializations.flatMap((s) => s.verbs),
+    ...pack.classes.flatMap((cl) => cl.verbs),
     ...pack.abilities.flatMap((a) => a.verbs),
     ...pack.gear.flatMap((g) => g.verbs),
     ...pack.formations.flatMap((f) => f.verbs),
@@ -764,7 +747,7 @@ function checkUnused(pack: Pack, ix: Index, r: Report) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** What a player owns. Gear is a count per item: copies can be equipped up to that count. */
-export type Owned = { specializations?: string[]; formations?: string[]; gear?: Record<string, number> };
+export type Owned = { classes?: string[]; formations?: string[]; gear?: Record<string, number> };
 
 export function checkParty(pack: Pack, raw: unknown, opts: { dungeon?: string; owned?: Owned } = {}): Issue[] {
   const parsed = S.Party.safeParse(raw);
@@ -782,16 +765,16 @@ export function checkParty(pack: Pack, raw: unknown, opts: { dungeon?: string; o
   const cap = opts.dungeon ? ix.get<S.DungeonT>("dungeons", opts.dungeon)?.partySize.max : d.partySize[1];
   if (cap !== undefined && party.units.length > cap) r.error("party.size", "units", `${party.units.length} units; this dungeon allows ${cap}`);
 
-  const specs = new Set<string>();
+  const classes = new Set<string>();
   const positions = new Set<string>();
   const gearUse = new Map<string, number>();
   party.units.forEach((u, i) => {
     const p = `units[${i}]`;
-    const spec = ix.get<S.SpecializationT>("specializations", u.spec);
-    if (!spec) return r.error("ref.missing", `${p}.spec`, `unknown specialization '${u.spec}'`);
-    if (specs.has(u.spec)) r.error("party.uniqueSpec", `${p}.spec`, `'${u.spec}' is already in the party; each specialization is one unit`);
-    specs.add(u.spec);
-    if (opts.owned?.specializations && !opts.owned.specializations.includes(u.spec)) r.error("party.notOwned", `${p}.spec`, `'${u.spec}' isn't owned`);
+    const cls = ix.get<S.ClassDefT>("classes", u.class);
+    if (!cls) return r.error("ref.missing", `${p}.class`, `unknown class '${u.class}'`);
+    if (classes.has(u.class)) r.error("party.uniqueClass", `${p}.class`, `'${u.class}' is already in the party; each class is one unit`);
+    classes.add(u.class);
+    if (opts.owned?.classes && !opts.owned.classes.includes(u.class)) r.error("party.notOwned", `${p}.class`, `'${u.class}' isn't owned`);
 
     if (formation && !formation.positions.some((x) => x.id === u.position)) r.error("party.position", `${p}.position`, `formation '${formation.id}' has no position '${u.position}'`);
     if (positions.has(u.position)) r.error("party.position", `${p}.position`, `position '${u.position}' is already taken`);
@@ -800,22 +783,21 @@ export function checkParty(pack: Pack, raw: unknown, opts: { dungeon?: string; o
     if (u.abilities.length !== d.abilitiesEquipped) r.error("party.abilities", `${p}.abilities`, `${u.abilities.length} abilities equipped; units equip ${d.abilitiesEquipped}`);
     if (new Set(u.abilities).size !== u.abilities.length) r.error("party.abilities", `${p}.abilities`, `an ability is equipped twice`);
     u.abilities.forEach((a, j) => {
-      if (!spec.abilities.includes(a)) r.error("party.abilityNotOwned", `${p}.abilities[${j}]`, `'${u.spec}' doesn't have ability '${a}'`);
+      if (!cls.abilities.includes(a)) r.error("party.abilityNotOwned", `${p}.abilities[${j}]`, `'${u.class}' doesn't have ability '${a}'`);
     });
 
-    const cls = ix.get<S.ClassDefT>("classes", spec.class);
     const generic = pack.slots.filter((s) => !s.class).map((s) => s.id);
-    const allowed = new Set([...generic, ...(cls?.slots ?? [])]);
+    const allowed = new Set([...generic, ...cls.slots]);
     for (const [slot, gid] of Object.entries(u.gear)) {
       const gp = `${p}.gear.${slot}`;
-      if (!allowed.has(slot)) r.error("party.slot", gp, `a ${spec.class} has no slot '${slot}'`);
+      if (!allowed.has(slot)) r.error("party.slot", gp, `a ${u.class} has no slot '${slot}'`);
       const g = ix.get<S.GearT>("gear", gid);
       if (!g) {
         r.error("ref.missing", gp, `unknown gear '${gid}'`);
         continue;
       }
       if (g.slot !== slot) r.error("party.gearSlot", gp, `'${gid}' goes in slot '${g.slot}', not '${slot}'`);
-      if (g.class && !g.class.includes(spec.class)) r.error("party.gearClass", gp, `'${gid}' can't be equipped by a ${spec.class}`);
+      if (g.class && !g.class.includes(u.class)) r.error("party.gearClass", gp, `'${gid}' can't be equipped by a ${u.class}`);
       gearUse.set(gid, (gearUse.get(gid) ?? 0) + 1);
     }
   });
@@ -833,21 +815,15 @@ export function unmetConstraints(pack: Pack, party: S.Party, dungeonId: string, 
   const ix = new Index(pack);
   const ch = ix.get<S.DungeonT>("dungeons", dungeonId)?.challenges.find((c) => c.id === challengeId);
   if (!ch) return [`unknown challenge '${dungeonId}/${challengeId}'`];
-  const classOf = (u: S.PartyUnitT) => ix.get<S.SpecializationT>("specializations", u.spec)?.class;
   const out: string[] = [];
   for (const c of ch.constraints) {
     if ("partySize" in c) {
       const n = party.units.length;
       if ((c.partySize.min !== undefined && n < c.partySize.min) || (c.partySize.max !== undefined && n > c.partySize.max)) out.push(`party size ${n}`);
-    } else if ("classCount" in c) {
-      const n = party.units.filter((u) => classOf(u) === c.classCount.class).length;
-      if ((c.classCount.min !== undefined && n < c.classCount.min) || (c.classCount.max !== undefined && n > c.classCount.max)) out.push(`${n} ${c.classCount.class} units`);
-    } else if ("includesSpec" in c) {
-      if (!party.units.some((u) => u.spec === c.includesSpec)) out.push(`no ${c.includesSpec}`);
-    } else if ("excludesSpec" in c) {
-      if (party.units.some((u) => u.spec === c.excludesSpec)) out.push(`includes ${c.excludesSpec}`);
+    } else if ("includesClass" in c) {
+      if (!party.units.some((u) => u.class === c.includesClass)) out.push(`no ${c.includesClass}`);
     } else if ("excludesClass" in c) {
-      if (party.units.some((u) => classOf(u) === c.excludesClass)) out.push(`includes a ${c.excludesClass}`);
+      if (party.units.some((u) => u.class === c.excludesClass)) out.push(`includes a ${c.excludesClass}`);
     } else if ("formation" in c) {
       if (party.formation !== c.formation) out.push(`formation is ${party.formation}`);
     }
@@ -862,19 +838,10 @@ export function teaser(pack: Pack, dungeonId: string, challengeId: string, owned
   const ix = new Index(pack);
   const ch = ix.get<S.DungeonT>("dungeons", dungeonId)?.challenges.find((c) => c.id === challengeId);
   if (!ch) return { teased: false, needs: [`unknown challenge '${dungeonId}/${challengeId}'`] };
-  const ownedSpecs = new Set(owned.specializations ?? []);
+  const ownedClasses = new Set(owned.classes ?? []);
   const needs: string[] = [];
   for (const c of ch.constraints) {
-    if ("includesSpec" in c && !ownedSpecs.has(c.includesSpec)) needs.push(`specialization ${c.includesSpec}`);
-    if ("classCount" in c && c.classCount.min) {
-      const ofClass = pack.specializations.filter((s) => s.class === c.classCount.class);
-      const have = ofClass.filter((s) => ownedSpecs.has(s.id)).length;
-      const short = c.classCount.min - have;
-      if (short > 0) {
-        const candidates = ofClass.filter((s) => !ownedSpecs.has(s.id)).map((s) => s.id);
-        needs.push(`${short} more ${c.classCount.class} specialization(s): any of ${candidates.join(", ")}`);
-      }
-    }
+    if ("includesClass" in c && !ownedClasses.has(c.includesClass)) needs.push(`class ${c.includesClass}`);
     if ("formation" in c && owned.formations && !owned.formations.includes(c.formation)) needs.push(`formation ${c.formation}`);
   }
   return { teased: needs.length > 0, needs };
