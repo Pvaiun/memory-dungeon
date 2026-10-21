@@ -62,6 +62,8 @@ for e in entries:
     e["al"] = [a for a in e["al"] if shared[a] == 1 and not variant(a, e["n"])]
     if e["id"] == "buffs": e["al"] = ["Might", "Weakened"]
 
+# Preferences, not decisions: words that don't name an action.
+REACTION = dict(keep='liked', maybe='unsure', cut='doubtful')
 pk = json.load(open('brainstorm/picks.json'))
 picks = {c['id']: c for c in pk['cards']}
 out = ["### The director's general notes", ""] + ["> " + x.strip() + "\n>" for x in pk['general_notes'].split("\n\n")]
@@ -73,7 +75,7 @@ for b, title in [("class", "Classes"), ("status", "Statuses"), ("stat", "Special
     for e in es:
         p = picks.get(e["id"], {})
         out.append(f"- **{e['n']}.** {e['ln']}" + (f" Also called: {', '.join(e['al'])}." if e["al"] else "")
-                   + (f" *Pick:* {p['pick']}." if p.get("pick") else "") + (f" *Note:* \"{p['note']}\"" if p.get("note") else ""))
+                   + (f" *Reaction:* {REACTION[p['pick']]}." if p.get("pick") else "") + (f" *Note:* \"{p['note']}\"" if p.get("note") else ""))
     out.append("")
 lst = "\n".join(out).rstrip()
 

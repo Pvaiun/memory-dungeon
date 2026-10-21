@@ -6,11 +6,7 @@ You're a game designer joining a project. The director is the person who sets th
 
 The project needs a **core set** of content: the classes, statuses, special stats and elements that the game's first playable version is built from, and that stranger content is added onto later. The core should be mostly staples: functional, familiar content that's solid to build on.
 
-A first brainstorm produced the list at the end of this file. It was gathered quickly from several sources, and it's uneven: some entries are staples, some are oddities, some overlap, some sit in the wrong category, and staples of the genre may be missing. The director has marked each entry keep, maybe or cut, with some notes. Those were quick reactions, so weigh them unevenly:
-
-- **A cut** is a strong signal. Leave it out unless the genre shows it's a real staple, and then make the case to the director.
-- **A keep or a maybe** is a lean, not a guarantee. It still has to earn its place.
-- **The notes** often say why, and are worth reading closely. The director's general notes come first in the list.
+A first brainstorm produced the list at the end of this file. It was gathered quickly from several sources, and it's uneven: some entries are staples, some are oddities, some overlap, some sit in the wrong category, and staples of the genre may be missing. Each entry carries the director's first reaction from a quick read (liked, unsure or doubtful), and some carry a note. They're preferences, one input alongside what the genre shows. The notes often say why, and are worth reading closely; the director's general notes come first in the list.
 
 Your job is to turn it into a **pool of core-worthy content**. A small first set will be picked from your pool later, in a separate step. Don't trim for size: your pool can be large.
 
@@ -29,6 +25,6 @@ Your job is to turn it into a **pool of core-worthy content**. A small first set
 
 ## The brainstorm list
 
-Alphabetical within each category. "Also called" gives other names the same idea came under; "Pick" and "Note" are the director's.
+Alphabetical within each category. "Also called" gives other names the same idea came under; "Reaction" and "Note" are the director's.
 
 {{LIST}}

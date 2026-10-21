@@ -6,11 +6,7 @@ You're a game designer joining a project. The director is the person who sets th
 
 The project needs a **core set** of content: the classes, statuses, special stats and elements that the game's first playable version is built from, and that stranger content is added onto later. The core should be mostly staples: functional, familiar content that's solid to build on.
 
-A first brainstorm produced the list at the end of this file. It was gathered quickly from several sources, and it's uneven: some entries are staples, some are oddities, some overlap, some sit in the wrong category, and staples of the genre may be missing. The director has marked each entry keep, maybe or cut, with some notes. Those were quick reactions, so weigh them unevenly:
-
-- **A cut** is a strong signal. Leave it out unless the genre shows it's a real staple, and then make the case to the director.
-- **A keep or a maybe** is a lean, not a guarantee. It still has to earn its place.
-- **The notes** often say why, and are worth reading closely. The director's general notes come first in the list.
+A first brainstorm produced the list at the end of this file. It was gathered quickly from several sources, and it's uneven: some entries are staples, some are oddities, some overlap, some sit in the wrong category, and staples of the genre may be missing. Each entry carries the director's first reaction from a quick read (liked, unsure or doubtful), and some carry a note. They're preferences, one input alongside what the genre shows. The notes often say why, and are worth reading closely; the director's general notes come first in the list.
 
 Your job is to turn it into a **pool of core-worthy content**. A small first set will be picked from your pool later, in a separate step. Don't trim for size: your pool can be large.
 
@@ -102,7 +98,7 @@ It's built and working. Its numbers are placeholders.
 
 ## The brainstorm list
 
-Alphabetical within each category. "Also called" gives other names the same idea came under; "Pick" and "Note" are the director's.
+Alphabetical within each category. "Also called" gives other names the same idea came under; "Reaction" and "Note" are the director's.
 
 ### The director's general notes
 
@@ -116,147 +112,147 @@ Alphabetical within each category. "Also called" gives other names the same idea
 
 ### Classes
 
-- **Alchemist.** Flasks: poisons and debuffs for foes, potions for allies. *Pick:* maybe.
-- **Artillerist.** Huge, slow blunt blasts; heavier gear hits harder. *Pick:* cut. *Note:* "Unclear fantasy and gameplay"
-- **Assassin.** A burst killer that finishes the wounded and ignores taunts. *Pick:* maybe.
-- **Bard.** Songs or dances that buff the whole party; a pure buffer. *Pick:* keep.
-- **Beastmaster.** Fights beside a pet that adds its own strikes. Also called: Summoner. *Pick:* cut.
-- **Berserker.** Stronger the nearer it gets to death. *Pick:* maybe.
-- **Blood mage.** Pays its own HP for power; losing HP restores MP. *Pick:* cut. *Note:* "Could be convinced, but doesn't seem core to me"
-- **Bramble knight.** A thorns tank: whoever hits it gets hurt. Also called: Gladiator. *Pick:* keep.
-- **Brigand.** High damage but inaccurate; heavy hits that break or pierce armor. Also called: Lancer, Sentinel, Fighter. *Pick:* keep. *Note:* "Non-magical counter to armor"
-- **Cleric.** Heals the most hurt ally, lifts debuffs and revives; fragile, with a little burst damage. Also called: Healer, White Mage. *Pick:* keep.
-- **Dancer.** An evasive dancer who debuffs foes and charms one. *Pick:* maybe. *Note:* "Doesn't necessarily need to be charm, evasive debuffer is a classic hard to make work class but satisfying"
-- **Dark knight.** An armor tank that deals magic damage. *Pick:* maybe. *Note:* "Paladin in a different color"
-- **Dragoon.** Leaps out of reach and lands one huge hit. *Pick:* maybe. *Note:* "Just a final fantasy rip-off, can find a better fantasy for this gameplay, it's basically an evasive samurai"
-- **Duelist.** Attack speed and crits, squishy and slightly evasive. *Pick:* maybe. *Note:* "Potentially too vanilla if other roles operate similarly"
-- **Earth martial artist.** A martial artist with uneven damage, plus support and debuffs. *Pick:* cut.
-- **Einherjar.** Fights hard and dies loudly; its war cry outlives it. *Pick:* maybe.
-- **Engineer.** Deploys turrets and gadgets that attack or shield. *Pick:* cut.
-- **Fencer.** Duels one foe; parries and counters. *Pick:* keep.
-- **Frostweaver.** Frost that piles up until foes freeze. Also called: Yuki-onna. *Pick:* keep.
-- **Geomancer.** Lingering elemental fields that power up later spells. *Pick:* cut. *Note:* "Earth magic caster sure why not, but not when described this way"
-- **Gorgon.** Turns the strongest foe to stone, which hurts when it cracks. *Pick:* cut. *Note:* "Target strongest foe is an ability not a whole class"
-- **Gunslinger.** Rapid-fire shots that shred armor, with reloads or overheating. *Pick:* cut. *Note:* "No reload mechanic, stick to cooldown for now"
-- **Hoplite.** A shield-bearer who makes the whole party sturdier. Also called: Knight-Captain. *Pick:* maybe.
-- **Illusionist.** Mirror images and decoys that make hits miss. *Pick:* cut.
-- **Knight.** An armored wall that draws attacks: taunts, guards, shields. Also called: Vanguard. *Pick:* keep. *Note:* "Paladin and knight might too much overlap for a core set unless one gets differentiated a bit more"
-- **Mage.** An elemental caster in a fragile shell: big hits, or damage that ramps up. *Pick:* keep. *Note:* "Potentially more than one type of mage"
-- **Martyr.** Spends its own HP to heal; its fall heals and shields the party. *Pick:* maybe.
-- **Mimic.** Copies statuses from foes and allies. *Pick:* cut.
-- **Monk.** A martial artist: many quick hits, combos, dodges and counters; or a dodging tank that heals itself. *Pick:* maybe. *Note:* "Combo does not feel like a core subset element, but dodge tank does"
-- **Necromancer.** Shadow magic: drains, curses, doom; feeds on knockouts. *Pick:* maybe. *Note:* "Gameplay seems interesting, Necromancer is a misnomer without summons, which we won't have at first."
-- **Ninja.** Starts hidden, throws poison, hard to pin down. *Pick:* maybe.
-- **Onmyoji.** Talismans that silence and seal; wards for allies. *Pick:* maybe.
-- **Oracle.** Foresight: marks or dooms foes, shields or blinks allies before the blow. *Pick:* cut.
-- **Paladin.** A holy knight who fights, shields and heals a little; a sturdy healer whose power is physical. Also called: Guardian. *Pick:* keep. *Note:* "Paladin and knight might too much overlap for a core set unless one gets differentiated a bit more"
-- **Pegasus warrior.** A resistance tank that also deals damage. *Pick:* maybe. *Note:* "I think this is"
-- **Plague doctor.** Spreads poison and sickness; it jumps when its holder falls. *Pick:* maybe. *Note:* "Plague doctor and voodoo seem like the same thing to me"
-- **Priest.** Healing over time, support and protection; fragile. Also called: Druid. *Pick:* keep.
-- **Pyromancer.** A fire specialist: stacking, spreading burns. *Pick:* keep.
-- **Ranger.** Consistent, sustained ranged damage; marks prey for the party; fragile. Also called: Archer. *Pick:* keep.
-- **Reaper.** Harvests knockouts into power and big hits. *Pick:* maybe.
-- **Rogue.** A quick, evasive blade, bursty rather than steady; its dodges turn into crits. Also called: Thief. *Pick:* keep.
-- **Samurai.** Long wind-ups that land huge, crit-heavy cuts. Also called: Ronin. *Pick:* keep.
-- **Soldier.** An all-round front-liner: a little tanky, a little offensive. *Pick:* keep.
-- **Spellblade.** Puts an element on weapons: its own, or an ally's. Also called: Runekeeper, Runesmith. *Pick:* keep.
+- **Alchemist.** Flasks: poisons and debuffs for foes, potions for allies. *Reaction:* unsure.
+- **Artillerist.** Huge, slow blunt blasts; heavier gear hits harder. *Reaction:* doubtful. *Note:* "Unclear fantasy and gameplay"
+- **Assassin.** A burst killer that finishes the wounded and ignores taunts. *Reaction:* unsure.
+- **Bard.** Songs or dances that buff the whole party; a pure buffer. *Reaction:* liked.
+- **Beastmaster.** Fights beside a pet that adds its own strikes. Also called: Summoner. *Reaction:* doubtful.
+- **Berserker.** Stronger the nearer it gets to death. *Reaction:* unsure.
+- **Blood mage.** Pays its own HP for power; losing HP restores MP. *Reaction:* doubtful. *Note:* "Could be convinced, but doesn't seem core to me"
+- **Bramble knight.** A thorns tank: whoever hits it gets hurt. Also called: Gladiator. *Reaction:* liked.
+- **Brigand.** High damage but inaccurate; heavy hits that break or pierce armor. Also called: Lancer, Sentinel, Fighter. *Reaction:* liked. *Note:* "Non-magical counter to armor"
+- **Cleric.** Heals the most hurt ally, lifts debuffs and revives; fragile, with a little burst damage. Also called: Healer, White Mage. *Reaction:* liked.
+- **Dancer.** An evasive dancer who debuffs foes and charms one. *Reaction:* unsure. *Note:* "Doesn't necessarily need to be charm, evasive debuffer is a classic hard to make work class but satisfying"
+- **Dark knight.** An armor tank that deals magic damage. *Reaction:* unsure. *Note:* "Paladin in a different color"
+- **Dragoon.** Leaps out of reach and lands one huge hit. *Reaction:* unsure. *Note:* "Just a final fantasy rip-off, can find a better fantasy for this gameplay, it's basically an evasive samurai"
+- **Duelist.** Attack speed and crits, squishy and slightly evasive. *Reaction:* unsure. *Note:* "Potentially too vanilla if other roles operate similarly"
+- **Earth martial artist.** A martial artist with uneven damage, plus support and debuffs. *Reaction:* doubtful.
+- **Einherjar.** Fights hard and dies loudly; its war cry outlives it. *Reaction:* unsure.
+- **Engineer.** Deploys turrets and gadgets that attack or shield. *Reaction:* doubtful.
+- **Fencer.** Duels one foe; parries and counters. *Reaction:* liked.
+- **Frostweaver.** Frost that piles up until foes freeze. Also called: Yuki-onna. *Reaction:* liked.
+- **Geomancer.** Lingering elemental fields that power up later spells. *Reaction:* doubtful. *Note:* "Earth magic caster sure why not, but not when described this way"
+- **Gorgon.** Turns the strongest foe to stone, which hurts when it cracks. *Reaction:* doubtful. *Note:* "Target strongest foe is an ability not a whole class"
+- **Gunslinger.** Rapid-fire shots that shred armor, with reloads or overheating. *Reaction:* doubtful. *Note:* "No reload mechanic, stick to cooldown for now"
+- **Hoplite.** A shield-bearer who makes the whole party sturdier. Also called: Knight-Captain. *Reaction:* unsure.
+- **Illusionist.** Mirror images and decoys that make hits miss. *Reaction:* doubtful.
+- **Knight.** An armored wall that draws attacks: taunts, guards, shields. Also called: Vanguard. *Reaction:* liked. *Note:* "Paladin and knight might too much overlap for a core set unless one gets differentiated a bit more"
+- **Mage.** An elemental caster in a fragile shell: big hits, or damage that ramps up. *Reaction:* liked. *Note:* "Potentially more than one type of mage"
+- **Martyr.** Spends its own HP to heal; its fall heals and shields the party. *Reaction:* unsure.
+- **Mimic.** Copies statuses from foes and allies. *Reaction:* doubtful.
+- **Monk.** A martial artist: many quick hits, combos, dodges and counters; or a dodging tank that heals itself. *Reaction:* unsure. *Note:* "Combo does not feel like a core subset element, but dodge tank does"
+- **Necromancer.** Shadow magic: drains, curses, doom; feeds on knockouts. *Reaction:* unsure. *Note:* "Gameplay seems interesting, Necromancer is a misnomer without summons, which we won't have at first."
+- **Ninja.** Starts hidden, throws poison, hard to pin down. *Reaction:* unsure.
+- **Onmyoji.** Talismans that silence and seal; wards for allies. *Reaction:* unsure.
+- **Oracle.** Foresight: marks or dooms foes, shields or blinks allies before the blow. *Reaction:* doubtful.
+- **Paladin.** A holy knight who fights, shields and heals a little; a sturdy healer whose power is physical. Also called: Guardian. *Reaction:* liked. *Note:* "Paladin and knight might too much overlap for a core set unless one gets differentiated a bit more"
+- **Pegasus warrior.** A resistance tank that also deals damage. *Reaction:* unsure. *Note:* "I think this is"
+- **Plague doctor.** Spreads poison and sickness; it jumps when its holder falls. *Reaction:* unsure. *Note:* "Plague doctor and voodoo seem like the same thing to me"
+- **Priest.** Healing over time, support and protection; fragile. Also called: Druid. *Reaction:* liked.
+- **Pyromancer.** A fire specialist: stacking, spreading burns. *Reaction:* liked.
+- **Ranger.** Consistent, sustained ranged damage; marks prey for the party; fragile. Also called: Archer. *Reaction:* liked.
+- **Reaper.** Harvests knockouts into power and big hits. *Reaction:* unsure.
+- **Rogue.** A quick, evasive blade, bursty rather than steady; its dodges turn into crits. Also called: Thief. *Reaction:* liked.
+- **Samurai.** Long wind-ups that land huge, crit-heavy cuts. Also called: Ronin. *Reaction:* liked.
+- **Soldier.** An all-round front-liner: a little tanky, a little offensive. *Reaction:* liked.
+- **Spellblade.** Puts an element on weapons: its own, or an ally's. Also called: Runekeeper, Runesmith. *Reaction:* liked.
 - **Spellbreaker.** Strips foes' buffs and shields, and silences casters. Also called: Inquisitor. *Note:* "Unsure of practical utility as main class role"
-- **Templar.** Anti-debuff: cleanses, resists, and keeps debuffs off the party. Also called: Shrine Maiden, Miko. *Pick:* maybe.
-- **Time mage.** Speeds allies, slows and stops foes. Also called: Chronosorcerer, Chronomancer. *Pick:* maybe. *Note:* "Don't hate it, but we need really spiky time abilities otherwelse it's a chill bot. Very much cool or not cool depending on specific design"
-- **Trapper.** Sets timed statuses on foes, then detonates them. *Pick:* cut. *Note:* "Wouldn't start with this, too many complex ally status effect interactions"
-- **Valkyrie.** Revives allies, and grows stronger as units fall. *Pick:* keep.
-- **Vampire.** An off-tank that lives on lifesteal. Also called: Blood Knight. *Pick:* keep.
-- **Voodoo.** Little damage, many stacking curses; a pure debuffer. Also called: Witch, Witchdoctor, Sorcerer, Hexer. *Pick:* maybe. *Note:* "Plague doctor and voodoo seem like the same thing to me"
+- **Templar.** Anti-debuff: cleanses, resists, and keeps debuffs off the party. Also called: Shrine Maiden, Miko. *Reaction:* unsure.
+- **Time mage.** Speeds allies, slows and stops foes. Also called: Chronosorcerer, Chronomancer. *Reaction:* unsure. *Note:* "Don't hate it, but we need really spiky time abilities otherwelse it's a chill bot. Very much cool or not cool depending on specific design"
+- **Trapper.** Sets timed statuses on foes, then detonates them. *Reaction:* doubtful. *Note:* "Wouldn't start with this, too many complex ally status effect interactions"
+- **Valkyrie.** Revives allies, and grows stronger as units fall. *Reaction:* liked.
+- **Vampire.** An off-tank that lives on lifesteal. Also called: Blood Knight. *Reaction:* liked.
+- **Voodoo.** Little damage, many stacking curses; a pure debuffer. Also called: Witch, Witchdoctor, Sorcerer, Hexer. *Reaction:* unsure. *Note:* "Plague doctor and voodoo seem like the same thing to me"
 
 ### Statuses
 
-- **Berserk.** Hits harder, at a cost: weaker defences, more damage taken, or no abilities. Also called: Enraged, Enrage. *Pick:* maybe.
-- **Bleed.** Damage over time with a physical feel: big but hard to keep stacked, or stacking with each hit, or worse when the holder is hit. *Pick:* keep. *Note:* "I prefer my version here, but all damage status effects need to be defined one from the others"
-- **Blind.** Its physical hits often miss. *Pick:* cut.
-- **Blink.** Each stack makes one hit miss outright. Also called: Mirror Image. *Pick:* cut.
-- **Burn.** Damage over time that ramps up, or burns hot. *Pick:* keep.
-- **Chill.** Acts slower. It can stack, can lower evasion, and at enough stacks can freeze the unit solid. Also called: Slow. *Pick:* keep.
-- **Doom.** A countdown that ends in one big hit, or a knockout, unless removed first. Also called: Fated. *Pick:* maybe. *Note:* "I worry about starting with "unless someone removes it" as a condition in an auto-battled, but the gameplay is nice"
-- **Enchant.** Its attacks carry something extra: elemental damage, a new element, or a status. Also called: Poison Coating. *Pick:* maybe. *Note:* "Very cool, need to make sure it's useful"
-- **Focus.** Its next hits are stronger, or crit chance builds until it's struck or misses. Also called: Empower, Resolve. *Pick:* maybe.
-- **Guard.** Takes less damage, or has more Armor, for a while. Also called: Protect, Fortify. *Pick:* maybe. *Note:* "For a minimum subset I'd probably try this giving resistance as well if we included it"
-- **Haste.** Acts faster: attacks, cooldowns or wind-ups. *Pick:* keep.
-- **Hidden.** Can't be targeted, or is targeted less, for a while or until it acts. Also called: Veiled. *Pick:* maybe. *Note:* "Unclear if needed when taunt exists"
-- **Marked.** Draws fire: the other side targets it more, takes more damage, or both. Also called: Hunted. *Pick:* cut. *Note:* "This feels too mechanically complex from the targeting side for a first pass"
-- **Momentum.** Builds with each hit landed; a miss drops it. *Pick:* cut. *Note:* "Is this fun or just a pass/fail win depending on foe's evasion"
-- **Poison.** Steady damage on a timer; doses stack. *Pick:* keep.
-- **Purified.** Can't gain debuffs for a while, or ignores the next few. Also called: Cleanse-ready, Immunity. *Pick:* cut.
-- **Regen.** Heals a little on a timer. *Pick:* keep.
-- **Reraise.** Comes back from a knockout once, or survives one. Also called: Unyielding Resolve, Reanimate. *Pick:* keep.
+- **Berserk.** Hits harder, at a cost: weaker defences, more damage taken, or no abilities. Also called: Enraged, Enrage. *Reaction:* unsure.
+- **Bleed.** Damage over time with a physical feel: big but hard to keep stacked, or stacking with each hit, or worse when the holder is hit. *Reaction:* liked. *Note:* "I prefer my version here, but all damage status effects need to be defined one from the others"
+- **Blind.** Its physical hits often miss. *Reaction:* doubtful.
+- **Blink.** Each stack makes one hit miss outright. Also called: Mirror Image. *Reaction:* doubtful.
+- **Burn.** Damage over time that ramps up, or burns hot. *Reaction:* liked.
+- **Chill.** Acts slower. It can stack, can lower evasion, and at enough stacks can freeze the unit solid. Also called: Slow. *Reaction:* liked.
+- **Doom.** A countdown that ends in one big hit, or a knockout, unless removed first. Also called: Fated. *Reaction:* unsure. *Note:* "I worry about starting with "unless someone removes it" as a condition in an auto-battled, but the gameplay is nice"
+- **Enchant.** Its attacks carry something extra: elemental damage, a new element, or a status. Also called: Poison Coating. *Reaction:* unsure. *Note:* "Very cool, need to make sure it's useful"
+- **Focus.** Its next hits are stronger, or crit chance builds until it's struck or misses. Also called: Empower, Resolve. *Reaction:* unsure.
+- **Guard.** Takes less damage, or has more Armor, for a while. Also called: Protect, Fortify. *Reaction:* unsure. *Note:* "For a minimum subset I'd probably try this giving resistance as well if we included it"
+- **Haste.** Acts faster: attacks, cooldowns or wind-ups. *Reaction:* liked.
+- **Hidden.** Can't be targeted, or is targeted less, for a while or until it acts. Also called: Veiled. *Reaction:* unsure. *Note:* "Unclear if needed when taunt exists"
+- **Marked.** Draws fire: the other side targets it more, takes more damage, or both. Also called: Hunted. *Reaction:* doubtful. *Note:* "This feels too mechanically complex from the targeting side for a first pass"
+- **Momentum.** Builds with each hit landed; a miss drops it. *Reaction:* doubtful. *Note:* "Is this fun or just a pass/fail win depending on foe's evasion"
+- **Poison.** Steady damage on a timer; doses stack. *Reaction:* liked.
+- **Purified.** Can't gain debuffs for a while, or ignores the next few. Also called: Cleanse-ready, Immunity. *Reaction:* doubtful.
+- **Regen.** Heals a little on a timer. *Reaction:* liked.
+- **Reraise.** Comes back from a knockout once, or survives one. Also called: Unyielding Resolve, Reanimate. *Reaction:* liked.
 - **Riposte.** A stance: after dodging an attack, it strikes back.
-- **Root.** Can't dodge: Evasion set to zero. *Pick:* maybe. *Note:* "Really depends on the enemies and which other answers exist, because right now magic hard counters dodge"
-- **Rot.** Heals do less, or partly hurt. Also called: Festering. *Pick:* cut.
-- **Shield.** Soaks a pool of damage before HP. Also called: Barrier. *Pick:* keep.
-- **Shock.** Takes damage each time it acts, so it hurts fast units most. Also called: Bleeding. *Pick:* keep.
-- **Silence.** Can't use abilities, only basic attacks. *Pick:* maybe.
-- **Soul Link.** Part of the damage it takes is passed to a linked foe. *Pick:* cut.
-- **Stat buffs and debuffs.** Plain ups and downs to stats: more Attack, less damage dealt, more Armor, more crit; auras that last while their giver stands. Also called: Might, Weakened. *Pick:* cut. *Note:* "Ideally we find thematic bundles and we're not just directly stat downing people"
-- **Stone.** Can't act, but takes almost no damage. Also called: Petrified. *Pick:* cut.
-- **Stun.** Can't act, and loses what it was winding up. *Pick:* maybe.
-- **Sunder.** Armor lowered, stacking or for good. Also called: Fragile, Armor Shred. *Pick:* maybe. *Note:* "We might not need this and armor pen in the same subset, it's all about number checks vs counters"
-- **Taunt.** Foes are forced to attack this unit. *Pick:* keep. *Note:* "This would be a buff on the taunter"
-- **Vulnerable.** Takes more damage: of every kind, or of one element. Also called: Mark for death, Vulnerability, Hex. *Pick:* maybe. *Note:* "Could be more conditional, like next hit too, this is what I meant by Mark for Death"
+- **Root.** Can't dodge: Evasion set to zero. *Reaction:* unsure. *Note:* "Really depends on the enemies and which other answers exist, because right now magic hard counters dodge"
+- **Rot.** Heals do less, or partly hurt. Also called: Festering. *Reaction:* doubtful.
+- **Shield.** Soaks a pool of damage before HP. Also called: Barrier. *Reaction:* liked.
+- **Shock.** Takes damage each time it acts, so it hurts fast units most. Also called: Bleeding. *Reaction:* liked.
+- **Silence.** Can't use abilities, only basic attacks. *Reaction:* unsure.
+- **Soul Link.** Part of the damage it takes is passed to a linked foe. *Reaction:* doubtful.
+- **Stat buffs and debuffs.** Plain ups and downs to stats: more Attack, less damage dealt, more Armor, more crit; auras that last while their giver stands. Also called: Might, Weakened. *Reaction:* doubtful. *Note:* "Ideally we find thematic bundles and we're not just directly stat downing people"
+- **Stone.** Can't act, but takes almost no damage. Also called: Petrified. *Reaction:* doubtful.
+- **Stun.** Can't act, and loses what it was winding up. *Reaction:* unsure.
+- **Sunder.** Armor lowered, stacking or for good. Also called: Fragile, Armor Shred. *Reaction:* unsure. *Note:* "We might not need this and armor pen in the same subset, it's all about number checks vs counters"
+- **Taunt.** Foes are forced to attack this unit. *Reaction:* liked. *Note:* "This would be a buff on the taunter"
+- **Vulnerable.** Takes more damage: of every kind, or of one element. Also called: Mark for death, Vulnerability, Hex. *Reaction:* unsure. *Note:* "Could be more conditional, like next hit too, this is what I meant by Mark for Death"
 
 ### Special stats
 
-- **Accuracy.** Cancels out the target's Evasion. *Pick:* cut. *Note:* "Magic counters evasion for now, unsure of necessity"
-- **Armor penetration.** Ignores some of the target's Armor on each hit. *Pick:* keep.
-- **Attack speed.** Faster basic attacks. *Pick:* keep.
-- **Block.** Chance to shrink a physical hit by a large share. *Pick:* cut. *Note:* "This just doubles up armor"
-- **Cast speed.** Shorter wind-ups on abilities. *Pick:* keep.
-- **Charge.** Fills over time; empties into one big action a fight. *Pick:* cut.
-- **Combo.** Builds with consecutive hits; empowers the next hits or ability. Also called: Momentum Velocity, Chi. *Pick:* cut. *Note:* "Definitely a class gimmick and not core set"
-- **Companion.** A pet or bond that adds extra attacks. Also called: Bond. *Pick:* cut. *Note:* "Summons aren't base set unless tech needs to start now for eventual support"
-- **Copy.** Copies a status from a foe or ally. *Pick:* cut.
-- **Counter.** Chance to strike back when hit. *Pick:* maybe. *Note:* "Overlap with thorns, maybe variety is good, maybe it's too much"
-- **Cover.** Takes hits, or part of the damage, aimed at a hurt ally. *Pick:* cut. *Note:* "Without player chosen targeting this seems like worse taunt?"
-- **Crit damage.** How much harder its crits hit. *Pick:* maybe. *Note:* "Crit build simulation tells us if we need this"
-- **Decay.** Statuses on its target run out faster. *Pick:* cut.
-- **Detonate.** Pops statuses on a foe for burst damage. *Pick:* maybe. *Note:* "Potentially cool ability effect, esoteric to start though"
-- **Double strike.** Chance a basic attack hits again. Also called: Multistrike. *Pick:* keep.
-- **Echo.** Chance an ability goes off a second time. *Pick:* maybe. *Note:* "A cool gimmick, very likely not core set"
-- **Elemental damage.** More damage of one element, a line per element. Also called: Shadow Depth. *Pick:* keep.
-- **Evasion.** Chance to dodge a physical hit. Also called: Dodge. *Pick:* keep.
-- **Execute.** More damage against low-HP targets. Also called: Finisher, Execution Threshold. *Pick:* cut. *Note:* "Classic ability effect, less compelling when represented as a stat"
-- **Foresight.** Warns of the next heavy hit and gives a short defensive window. *Pick:* cut.
-- **Head start.** Its cooldowns start the fight partway done. *Pick:* maybe. *Note:* "Cool itemization thing to prevent resource attrition through trash mobs"
-- **Healing power.** Its heals are stronger. *Pick:* maybe.
-- **Heat.** Builds as it attacks; vents a burst, or overheats into a self-debuff. *Pick:* cut.
-- **Lifesteal.** Heals for a share of the damage it deals. Also called: Bloodthirst. *Pick:* keep.
-- **Mana burn.** Its hits drain the target's MP. *Pick:* cut.
-- **Mana leech.** Restores MP from damage dealt or from acting. *Pick:* maybe.
-- **Overflow.** Healing past full HP becomes a shield. Also called: Vitality Shield, Overheal. *Pick:* cut. *Note:* "Might not pick this and explicit shields application for a first subset"
-- **Overkill.** Damage past a knockout spills onto another foe. *Pick:* maybe.
-- **Poise.** Chance to keep a wind-up when something would cancel it. *Pick:* cut.
-- **Potency.** Its statuses land better: more stacks, more often, or for longer. Also called: Status Chance, Debuff Duration, Curse Resonance. *Pick:* cut.
-- **Purity.** Takes less magic damage, until elements wear it down. *Pick:* maybe. *Note:* "No clue what until éléments wear it down means"
-- **Rage.** A meter that fills from taking (or dealing) damage and fuels power. Also called: Blood Debt, Blood. *Pick:* cut. *Note:* "Too complex for what it does for now"
-- **Resonance.** Its next spell of the same element hits harder. *Pick:* cut. *Note:* "No player choice"
-- **Soul.** Charges gained when units are knocked out, spent on big effects. Also called: Essence. *Pick:* cut.
-- **Spite.** When knocked out, damages every foe. *Pick:* maybe. *Note:* "Very cool buildmaking"
-- **Splash.** Part of each hit also lands on another foe. *Pick:* maybe. *Note:* ""Other" is too generic right now for me"
-- **Stagger.** Chance a hit cancels the target's wind-up. Also called: Interrupt. *Pick:* cut.
-- **Stealth.** Starts the fight untargetable. *Pick:* maybe.
-- **Tenacity.** Debuffs on it wear off faster, or fail to land. Also called: Status Resistance. *Pick:* cut. *Note:* "I wouldn't start with debuff resist as a stat, if we try it it's as an ability effect"
-- **Thorns.** Whoever hits it takes damage back. Also called: Spikes. *Pick:* keep.
-- **Threat.** How likely foes are to target it. Also called: Aggro. *Pick:* keep. *Note:* "This and taunt need to be rationalized together and only both included if it makes sense"
-- **Weight.** Heavier gear adds blunt damage. *Pick:* cut.
+- **Accuracy.** Cancels out the target's Evasion. *Reaction:* doubtful. *Note:* "Magic counters evasion for now, unsure of necessity"
+- **Armor penetration.** Ignores some of the target's Armor on each hit. *Reaction:* liked.
+- **Attack speed.** Faster basic attacks. *Reaction:* liked.
+- **Block.** Chance to shrink a physical hit by a large share. *Reaction:* doubtful. *Note:* "This just doubles up armor"
+- **Cast speed.** Shorter wind-ups on abilities. *Reaction:* liked.
+- **Charge.** Fills over time; empties into one big action a fight. *Reaction:* doubtful.
+- **Combo.** Builds with consecutive hits; empowers the next hits or ability. Also called: Momentum Velocity, Chi. *Reaction:* doubtful. *Note:* "Definitely a class gimmick and not core set"
+- **Companion.** A pet or bond that adds extra attacks. Also called: Bond. *Reaction:* doubtful. *Note:* "Summons aren't base set unless tech needs to start now for eventual support"
+- **Copy.** Copies a status from a foe or ally. *Reaction:* doubtful.
+- **Counter.** Chance to strike back when hit. *Reaction:* unsure. *Note:* "Overlap with thorns, maybe variety is good, maybe it's too much"
+- **Cover.** Takes hits, or part of the damage, aimed at a hurt ally. *Reaction:* doubtful. *Note:* "Without player chosen targeting this seems like worse taunt?"
+- **Crit damage.** How much harder its crits hit. *Reaction:* unsure. *Note:* "Crit build simulation tells us if we need this"
+- **Decay.** Statuses on its target run out faster. *Reaction:* doubtful.
+- **Detonate.** Pops statuses on a foe for burst damage. *Reaction:* unsure. *Note:* "Potentially cool ability effect, esoteric to start though"
+- **Double strike.** Chance a basic attack hits again. Also called: Multistrike. *Reaction:* liked.
+- **Echo.** Chance an ability goes off a second time. *Reaction:* unsure. *Note:* "A cool gimmick, very likely not core set"
+- **Elemental damage.** More damage of one element, a line per element. Also called: Shadow Depth. *Reaction:* liked.
+- **Evasion.** Chance to dodge a physical hit. Also called: Dodge. *Reaction:* liked.
+- **Execute.** More damage against low-HP targets. Also called: Finisher, Execution Threshold. *Reaction:* doubtful. *Note:* "Classic ability effect, less compelling when represented as a stat"
+- **Foresight.** Warns of the next heavy hit and gives a short defensive window. *Reaction:* doubtful.
+- **Head start.** Its cooldowns start the fight partway done. *Reaction:* unsure. *Note:* "Cool itemization thing to prevent resource attrition through trash mobs"
+- **Healing power.** Its heals are stronger. *Reaction:* unsure.
+- **Heat.** Builds as it attacks; vents a burst, or overheats into a self-debuff. *Reaction:* doubtful.
+- **Lifesteal.** Heals for a share of the damage it deals. Also called: Bloodthirst. *Reaction:* liked.
+- **Mana burn.** Its hits drain the target's MP. *Reaction:* doubtful.
+- **Mana leech.** Restores MP from damage dealt or from acting. *Reaction:* unsure.
+- **Overflow.** Healing past full HP becomes a shield. Also called: Vitality Shield, Overheal. *Reaction:* doubtful. *Note:* "Might not pick this and explicit shields application for a first subset"
+- **Overkill.** Damage past a knockout spills onto another foe. *Reaction:* unsure.
+- **Poise.** Chance to keep a wind-up when something would cancel it. *Reaction:* doubtful.
+- **Potency.** Its statuses land better: more stacks, more often, or for longer. Also called: Status Chance, Debuff Duration, Curse Resonance. *Reaction:* doubtful.
+- **Purity.** Takes less magic damage, until elements wear it down. *Reaction:* unsure. *Note:* "No clue what until éléments wear it down means"
+- **Rage.** A meter that fills from taking (or dealing) damage and fuels power. Also called: Blood Debt, Blood. *Reaction:* doubtful. *Note:* "Too complex for what it does for now"
+- **Resonance.** Its next spell of the same element hits harder. *Reaction:* doubtful. *Note:* "No player choice"
+- **Soul.** Charges gained when units are knocked out, spent on big effects. Also called: Essence. *Reaction:* doubtful.
+- **Spite.** When knocked out, damages every foe. *Reaction:* unsure. *Note:* "Very cool buildmaking"
+- **Splash.** Part of each hit also lands on another foe. *Reaction:* unsure. *Note:* ""Other" is too generic right now for me"
+- **Stagger.** Chance a hit cancels the target's wind-up. Also called: Interrupt. *Reaction:* doubtful.
+- **Stealth.** Starts the fight untargetable. *Reaction:* unsure.
+- **Tenacity.** Debuffs on it wear off faster, or fail to land. Also called: Status Resistance. *Reaction:* doubtful. *Note:* "I wouldn't start with debuff resist as a stat, if we try it it's as an ability effect"
+- **Thorns.** Whoever hits it takes damage back. Also called: Spikes. *Reaction:* liked.
+- **Threat.** How likely foes are to target it. Also called: Aggro. *Reaction:* liked. *Note:* "This and taunt need to be rationalized together and only both included if it makes sense"
+- **Weight.** Heavier gear adds blunt damage. *Reaction:* doubtful.
 
 ### Elements
 
-- **Arcane.** Raw magic: almost nothing resists it, and nothing is weak to it. Also called: Aether. *Pick:* cut.
-- **Dark.** Steady, middle-of-the-road damage, powerful but often resisted; draining and stranger effects. Also called: Shadow. *Pick:* keep. *Note:* "Curses and the grave are undefined meanings here"
-- **Earth.** Heavy and grinding: low damage with occasional big, spiky hits; shields and poison. *Pick:* keep. *Note:* "You're right, we shouldn't add spell missing here, maybe it needs a new gimmick"
-- **Fire.** Big, all-out damage that ramps up; burns that scale with health. *Pick:* keep. *Note:* "All-out damage is a bit vague no? Do they mean high mana cost?"
-- **Ice.** Consistent, reliable damage; the tempo element, which slows and weakens foes. Also called: Frost. *Pick:* keep.
-- **Light.** Holy power that mostly supports: healing, regeneration, revival and shields; rarely resisted, rarely used to attack. Also called: Holy. *Pick:* keep. *Note:* "I don't like this "the dead" thing we shouldn't worry about enemy themes here"
-- **Lightning.** Sudden strikes that jump between foes or hit them all; shocks that hurt fast units each time they act. Also called: Thunder, Storm. *Pick:* keep.
-- **Nature.** Regenerative or toxic. *Pick:* cut.
-- **Spirit.** Souls; the one thing that truly hurts ghosts. *Pick:* cut.
-- **Water.** Tides and drowning, a crushing weight. *Pick:* cut. *Note:* "This description is meaningless unfortunately"
-- **Wind.** Light, quick, many-hit cuts; crits, evasion and speed. Also called: Air. *Pick:* keep.
+- **Arcane.** Raw magic: almost nothing resists it, and nothing is weak to it. Also called: Aether. *Reaction:* doubtful.
+- **Dark.** Steady, middle-of-the-road damage, powerful but often resisted; draining and stranger effects. Also called: Shadow. *Reaction:* liked. *Note:* "Curses and the grave are undefined meanings here"
+- **Earth.** Heavy and grinding: low damage with occasional big, spiky hits; shields and poison. *Reaction:* liked. *Note:* "You're right, we shouldn't add spell missing here, maybe it needs a new gimmick"
+- **Fire.** Big, all-out damage that ramps up; burns that scale with health. *Reaction:* liked. *Note:* "All-out damage is a bit vague no? Do they mean high mana cost?"
+- **Ice.** Consistent, reliable damage; the tempo element, which slows and weakens foes. Also called: Frost. *Reaction:* liked.
+- **Light.** Holy power that mostly supports: healing, regeneration, revival and shields; rarely resisted, rarely used to attack. Also called: Holy. *Reaction:* liked. *Note:* "I don't like this "the dead" thing we shouldn't worry about enemy themes here"
+- **Lightning.** Sudden strikes that jump between foes or hit them all; shocks that hurt fast units each time they act. Also called: Thunder, Storm. *Reaction:* liked.
+- **Nature.** Regenerative or toxic. *Reaction:* doubtful.
+- **Spirit.** Souls; the one thing that truly hurts ghosts. *Reaction:* doubtful.
+- **Water.** Tides and drowning, a crushing weight. *Reaction:* doubtful. *Note:* "This description is meaningless unfortunately"
+- **Wind.** Light, quick, many-hit cuts; crits, evasion and speed. Also called: Air. *Reaction:* liked.
