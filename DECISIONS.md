@@ -1,6 +1,6 @@
 # Decisions
 
-What has been decided, step by step. Where this differs from the concept spec, this wins; the director will update the spec. Each step's report has the full reasoning.
+What has been decided, step by step. The concept spec is the high-level version and is brought in line whenever this file changes (see `docs/method.md`); if they ever differ, this wins and the spec gets fixed. Each step's report has the full reasoning.
 
 Decisions are direction like any other (see `docs/method.md`): a designer can challenge one with evidence, and until it's changed here, it stands.
 
@@ -31,7 +31,7 @@ Reviewed with the director Oct 15, 2026. Full record: `docs/memory-stack.md`.
 
 ## Step 1: content schema
 
-Schema 0.3, approved Oct 15, 2026, before the method existed. Since this is built before the method existed it's placeholder and considered inspiration at best. Full record: `SCHEMA.md`.
+Schema 0.3, approved Oct 15, 2026, before the method existed. Since this is built before the method existed it's placeholder and considered inspiration at best. Its old write-up was removed; it's in git history.
 
 - **Units:** each unit is a class plus a specialization (e.g. Ranger: Duelist). There's no plain class unit, and each specialization is one unit the player owns once.
 - **No battlefield geometry:** no rows and no reach.

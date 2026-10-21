@@ -9,10 +9,9 @@ It's also a test of a way of making games. The director sets the vision. AI desi
 - `docs/primer.md`: the game and where it stands, for a reader with no repo access. Keep it current (see the method).
 - `docs/method.md`: how every step is done. **Read it before starting or resuming a step.**
 - `docs/design-plan.md`: the 24 ordered design steps, each with what to ask the director and how it's tested. **Work through them one at a time.**
-- `DECISIONS.md`: what's been decided, step by step. Where it differs from the concept spec, it wins; the director will update the spec.
-- `docs/concept-spec.md`: what the game is and why. It's the game-wide intent.
+- `DECISIONS.md`: what's been decided, step by step, with the detail and reasons. The concept spec is kept in line with it (see the method); if they ever differ, `DECISIONS.md` wins and the spec gets fixed.
+- `docs/concept-spec.md`: what the game is and why, at a high level. It's the game-wide intent, kept in line with `DECISIONS.md`.
 - `steps/`: one folder per step, holding its brief, intent, design, tuning log and report.
-- `SCHEMA.md`: step 1's report, with the schema's full decision record.
 - `docs/memory-app-overview.md`: how Memory works today.
 - `docs/memory-stack.md`: how Memory is built (stack, data, AI pattern, limits) and what that means for the game.
 - `docs/memory-design-spec.md`: Memory's own design spec, copied from `Pvaiun/memoryapp`. Phase 4 works from it.
@@ -30,7 +29,7 @@ It's also a test of a way of making games. The director sets the vision. AI desi
 
 ## Status
 
-- **Step 1, content schema:** done and approved (schema 0.3). It predates the method; its record is SCHEMA.md.
+- **Step 1, content schema:** done and approved (schema 0.3). It predates the method and was starting context, not design; its surviving ideas are in `DECISIONS.md`.
 - **Method:** adopted (`docs/method.md`). Steps 2 onward follow it.
 - **Tech-stack brief:** done and reviewed by the director (Oct 15, 2026). The write-up is `docs/memory-stack.md`, and its decisions are in `DECISIONS.md`. Tooling matches Memory: TypeScript 7.0, Vitest, `isolatedModules`, and a typecheck guard that keeps game logic free of Node APIs.
 - **Step 2, headless engine:** done and signed off (Oct 16, 2026). The machinery is in `src/engine/` (seeded dice, runs as plain data, decision points, the explorer, the log), with the battle system behind the `Rules` interface (step 4 replaced its stand-in fight). Its record is `steps/02-headless-engine/`, and its decisions are in `DECISIONS.md`. The report's "For later steps" notes are for steps 3, 4 and 6. Step 4 reran the Chrome-against-Safari check (`bun src/dungeon.ts --digest` against `npm run dungeon -- --digest`) with real combat: identical.

@@ -22,7 +22,9 @@ How firmly the director holds an item sets how strong the case for bending it mu
 - **Firm:** bend it only with evidence and the director's agreement.
 - **Lean:** the designer may bend it, and says so in the intent map.
 
-The concept spec is the game-wide intent: its principles are firm, and the rest is lean. `DECISIONS.md` records what has been decided since. Both can be challenged like any other direction; until a decision is changed there, it stands.
+The concept spec is the game-wide intent: its principles are firm, and the rest is lean. `DECISIONS.md` records what has been decided since, with the detail and the reasons. Both can be challenged like any other direction; until a decision is changed there, it stands.
+
+The two must never disagree. The spec stays high level, but it describes the game as currently decided, not as first imagined. **Whenever `DECISIONS.md` changes, bring the concept spec in line in the same commit:** fix or remove anything it contradicts, and add a line only where a decision changes the game at the spec's level. Don't copy detail across. If they ever do differ, `DECISIONS.md` wins and the spec gets fixed. Changing a principle is still a challenge that needs the director; the spec only records what they agreed.
 
 When unsure whether something needs the director, ask: would this surprise them? If so, it's a challenge.
 
@@ -98,7 +100,7 @@ Rules for simulation:
 4. **Feel:** what read as flat or unclear, and the samples worth reading.
 5. **Method notes:** a line or two on what worked or didn't in this method. The method is part of what's being tested, so update this doc from these notes.
 
-After sign-off, add the step's decisions to `DECISIONS.md`, update the primer and the Status section in `CLAUDE.md`, commit and stop.
+After sign-off, add the step's decisions to `DECISIONS.md`, bring the concept spec and the primer in line with them, update the Status section in `CLAUDE.md`, commit and stop.
 
 ## Files
 
