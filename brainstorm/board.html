@@ -130,6 +130,7 @@ button:focus-visible, select:focus-visible, textarea:focus-visible, input:focus-
 <div class="wrap">
     <div class="tools">
       <div class="chips" id="filters"></div>
+      <label class="toggle"><input type="checkbox" id="staplesOnly"> Staples only</label>
       <label class="toggle"><input type="checkbox" id="yoursOnly"> Yours only</label>
       <select id="sort" aria-label="Sort cards">
         <option value="lists">Most models first</option>
@@ -172,7 +173,9 @@ CARDS.filter(c => c.b === 'class').forEach(c => c.needs.forEach(n => (usedBy[n] 
 
 let picks = {};
 let general = '';
-let tab = 'class', filter = 'all', yoursOnly = false, sort = 'lists';
+let tab = 'class', filter = 'all', yoursOnly = false, staplesOnly = false, sort = 'lists';
+// A staple: at least two models put it above their staples line, or it's in your core.
+const isStaple = c => c.st.includes('y') || c.st.filter(k => k !== 'y').length >= 2;
 let db = null, pending = false;
 const chains = {};
 
@@ -244,7 +247,7 @@ function aliasLine(c) {
 }
 
 function jump(id) {
-  const c = byId[id]; tab = c.b; filter = 'all'; yoursOnly = false; $('#yoursOnly').checked = false; render();
+  const c = byId[id]; tab = c.b; filter = 'all'; yoursOnly = false; staplesOnly = false; $('#yoursOnly').checked = false; $('#staplesOnly').checked = false; render();
   const node = document.getElementById('card-' + id);
   if (node) { node.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' }); node.classList.remove('flash'); void node.offsetWidth; node.classList.add('flash'); }
 }
@@ -328,6 +331,7 @@ function render() {
   renderTabs(); tally();
   let cs = CARDS.filter(c => c.b === tab);
   if (yoursOnly) cs = cs.filter(c => c.as.y);
+  if (staplesOnly && tab !== 'element') cs = cs.filter(isStaple);
   if (filter === 'open') cs = cs.filter(c => !v(c.id));
   else if (filter !== 'all') cs = cs.filter(c => v(c.id) === filter);
   cs = cs.slice().sort(sort === 'name' ? (a, b) => a.n.localeCompare(b.n)
@@ -338,6 +342,7 @@ function render() {
 }
 
 $('#yoursOnly').onchange = e => { yoursOnly = e.target.checked; render(); };
+$('#staplesOnly').onchange = e => { staplesOnly = e.target.checked; render(); };
 $('#sort').onchange = e => { sort = e.target.value; render(); };
 const gen = $('#general');
 gen.addEventListener('change', () => { general = gen.value; saveGeneral(); });
