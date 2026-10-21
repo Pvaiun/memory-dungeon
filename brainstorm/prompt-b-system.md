@@ -26,6 +26,7 @@ The setting is generic medieval fantasy, with touches of Greek, Norse and Japane
 - Physical damage is slashing, piercing or blunt. It can be dodged (Evasion), and Armor takes a flat amount off each hit, so many small hits do poorly against heavy armor.
 - Magical damage carries an element; which elements exist isn't decided. It can't be dodged, and the target's resistance to that element reduces it by a percentage. Negative resistance is a weakness.
 - Hits can crit.
+- A status's own damage has no type or element by default, so it isn't dodged or resisted.
 - Every amount states what it scales from, and any stat can be a scaling source.
 
 ## Stats every unit has
@@ -59,10 +60,11 @@ Special stats sit at zero for most units and only matter for units built around 
 
 Think from the system described above rather than from other games. Start from the statuses and special stats it can express that would be interesting to build a unit around, then list the classes that would use them.
 
-Make three lists:
+Make four lists:
 
 1. **Classes.** For each: a name, a one-line fantasy, and two or three lines in plain words on what it does in a fight, including roughly what its passive does. Then name the statuses and special stats it would need, in plain words.
 2. **Statuses a player would see.** Only ones a player would notice on a unit and learn to recognise, including ones enemies put on the party; leave out machinery. For each: a name, buff or debuff, and one line on what it does.
 3. **Special stats.** For each: a name and one line on what it does. Don't repeat the stats every unit has.
+4. **Elements.** The set you'd use for magical damage, as many as you think the game needs. For each: a name and one line on its feel.
 
-Start each list with the staples you'd expect any game like this to have, then keep going into less common ones, and draw a line where the staples end. Aim for about 25 classes, 25 statuses and 12 special stats. Keep each entry short. Don't rank them, explain your choices or shape them into a balanced set: just list.
+Start each of the first three lists with the staples you'd expect any game like this to have, then keep going into less common ones, and draw a line where the staples end. Aim for about 25 classes, 15 statuses (about 5 staples, then about 10 less common ones) and 15 special stats. Keep each entry short. Don't rank them, explain your choices or shape them into a balanced set: just list.
