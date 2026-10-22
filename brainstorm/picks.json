@@ -1,0 +1,1211 @@
+{
+ "general_notes": "I much prefer the elements as gameplay shape/rythm/utility more so than as elemental counters because then it makes more than just color matching gameplay.\n\nWe need to be careful about too many things beating armor, and magic being the answer to both armor and evasion. Need to make sure our first subset isn't too lopsided\n\nThere's a big confusion between special stats and statuses, the distinction is unclear. I didn't make that not everywhere, so I focused on effect not stat vs status effect distinction\n\nQuite a few classes overlap (various versions of voodoo/curses/disease and tanky healer/support, guardian/team cover). Mentioned it once then stopped mentioning it",
+ "cards": [
+  {
+   "id": "fire",
+   "category": "element",
+   "name": "Fire",
+   "line": "Big, hungry, all-out damage.",
+   "yours": "Ramping damage; Burn, a DoT proportional to health.",
+   "pick": "keep",
+   "note": "All-out damage is a bit vague no? Do they mean high mana cost?"
+  },
+  {
+   "id": "ice",
+   "category": "element",
+   "name": "Ice",
+   "line": "Slow and steady; it stalls and grinds foes down.",
+   "yours": "Consistent, reliable damage; the tempo debuff element: slows, weakens, etc.",
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "lightning",
+   "category": "element",
+   "name": "Lightning",
+   "line": "Sudden strikes that jump between foes.",
+   "yours": "AoE; Shock, which hurts fast units by damaging on action.",
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "earth",
+   "category": "element",
+   "name": "Earth",
+   "line": "Heavy and grinding: stone and mountains.",
+   "yours": "Low damage in general, with spiky high-damage, lower-accuracy hits; shields and poison.",
+   "pick": "keep",
+   "note": "You're right, we shouldn't add spell missing here, maybe it needs a new gimmick"
+  },
+  {
+   "id": "wind",
+   "category": "element",
+   "name": "Wind",
+   "line": "Light, quick cuts.",
+   "yours": "Multi-hit focus; crit, evasion and speed.",
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "light",
+   "category": "element",
+   "name": "Light",
+   "line": "Holy fire; heals, shields and sears the dead.",
+   "yours": "Strong spells on non-offensive classes: healing, regen and revive. Rarely resisted, but rarely used by offensive classes.",
+   "pick": "keep",
+   "note": "I don't like this \"the dead\" thing we shouldn't worry about enemy themes here"
+  },
+  {
+   "id": "dark",
+   "category": "element",
+   "name": "Dark",
+   "line": "Curses, draining and the grave.",
+   "yours": "Middle-of-the-road regular damage (dark magic as a basic attack); powerful but often resisted; esoteric effects.",
+   "pick": "keep",
+   "note": "Curses and the grave are undefined meanings here"
+  },
+  {
+   "id": "water",
+   "category": "element",
+   "name": "Water",
+   "line": "Tides and drowning, a crushing weight.",
+   "yours": null,
+   "pick": "cut",
+   "note": "This description is meaningless unfortunately"
+  },
+  {
+   "id": "neutral",
+   "category": "element",
+   "name": "Arcane",
+   "line": "Raw magic: almost nothing resists it, and nothing is weak to it.",
+   "yours": null,
+   "pick": "cut",
+   "note": null
+  },
+  {
+   "id": "nature",
+   "category": "element",
+   "name": "Nature",
+   "line": "Regenerative or toxic.",
+   "yours": null,
+   "pick": "cut",
+   "note": null
+  },
+  {
+   "id": "spirit",
+   "category": "element",
+   "name": "Spirit",
+   "line": "Souls; the one thing that truly hurts ghosts.",
+   "yours": null,
+   "pick": "cut",
+   "note": null
+  },
+  {
+   "id": "poison",
+   "category": "status",
+   "name": "Poison",
+   "line": "Steady damage on a timer; doses stack.",
+   "yours": "Consistent DoT.",
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "regen",
+   "category": "status",
+   "name": "Regen",
+   "line": "Heals a little on a timer.",
+   "yours": null,
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "haste",
+   "category": "status",
+   "name": "Haste",
+   "line": "Acts faster: attacks, cooldowns or wind-ups.",
+   "yours": null,
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "stun",
+   "category": "status",
+   "name": "Stun",
+   "line": "Can't act, and loses what it was winding up.",
+   "yours": "Freeze (stun).",
+   "pick": "maybe",
+   "note": null
+  },
+  {
+   "id": "shield",
+   "category": "status",
+   "name": "Shield",
+   "line": "Soaks a pool of damage before HP.",
+   "yours": null,
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "silence",
+   "category": "status",
+   "name": "Silence",
+   "line": "Can't use abilities, only basic attacks.",
+   "yours": null,
+   "pick": "maybe",
+   "note": null
+  },
+  {
+   "id": "slow",
+   "category": "status",
+   "name": "Chill",
+   "line": "Acts slower; some versions stack, and one freezes at 5 stacks.",
+   "yours": "Chilled: slow, and decrease evasion.",
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "taunt",
+   "category": "status",
+   "name": "Taunt",
+   "line": "Foes are forced to attack this unit.",
+   "yours": null,
+   "pick": "keep",
+   "note": "This would be a buff on the taunter"
+  },
+  {
+   "id": "doom",
+   "category": "status",
+   "name": "Doom",
+   "line": "A countdown that ends in one big hit, or a knockout, unless removed first.",
+   "yours": null,
+   "pick": "maybe",
+   "note": "I worry about starting with \"unless someone removes it\" as a condition in an auto-battled, but the gameplay is nice"
+  },
+  {
+   "id": "vuln",
+   "category": "status",
+   "name": "Vulnerable",
+   "line": "Takes more damage: of every kind, or of one element.",
+   "yours": null,
+   "pick": "maybe",
+   "note": "Could be more conditional, like next hit too, this is what I meant by Mark for Death"
+  },
+  {
+   "id": "burn",
+   "category": "status",
+   "name": "Burn",
+   "line": "Damage over time that ramps up, or burns hot.",
+   "yours": "Ramping damage over time (your Fire: proportional to health).",
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "mark",
+   "category": "status",
+   "name": "Marked",
+   "line": "Draws fire: the other side targets it more, takes more damage, or both.",
+   "yours": null,
+   "pick": "cut",
+   "note": "This feels too mechanically complex from the targeting side for a first pass"
+  },
+  {
+   "id": "berserk",
+   "category": "status",
+   "name": "Berserk",
+   "line": "Hits harder, at a cost: weaker defences, more damage taken, or no abilities.",
+   "yours": "Rage: strength up, tankiness down.",
+   "pick": "maybe",
+   "note": null
+  },
+  {
+   "id": "onaction",
+   "category": "status",
+   "name": "Shock",
+   "line": "Takes damage each time it acts, so it hurts fast units most.",
+   "yours": "Shock: damage on attack.",
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "bleed",
+   "category": "status",
+   "name": "Bleed",
+   "line": "Physical-feeling damage over time. Versions differ: bursty, stacking per hit, or worse when hit.",
+   "yours": "Big damage but hard to maintain stacks.",
+   "pick": "keep",
+   "note": "I prefer my version here, but all damage status effects need to be defined one from the others"
+  },
+  {
+   "id": "buffs",
+   "category": "status",
+   "name": "Stat buffs and debuffs",
+   "line": "Plain ups and downs: Attack (Might), damage dealt (Weakened), Armor, crit, auras.",
+   "yours": null,
+   "pick": "cut",
+   "note": "Ideally we find thematic bundles and we're not just directly stat downing people"
+  },
+  {
+   "id": "hidden",
+   "category": "status",
+   "name": "Hidden",
+   "line": "Can't be targeted, or is targeted less, for a while or until it acts.",
+   "yours": null,
+   "pick": "maybe",
+   "note": "Unclear if needed when taunt exists"
+  },
+  {
+   "id": "sunder",
+   "category": "status",
+   "name": "Sunder",
+   "line": "Armor lowered, stacking or for good.",
+   "yours": null,
+   "pick": "maybe",
+   "note": "We might not need this and armor pen in the same subset, it's all about number checks vs counters"
+  },
+  {
+   "id": "guard",
+   "category": "status",
+   "name": "Guard",
+   "line": "Takes less damage, or has more Armor, for a while.",
+   "yours": null,
+   "pick": "maybe",
+   "note": "For a minimum subset I'd probably try this giving resistance as well if we included it"
+  },
+  {
+   "id": "nextcrit",
+   "category": "status",
+   "name": "Focus",
+   "line": "Its next hits are stronger, or crit chance builds until it's struck or misses.",
+   "yours": null,
+   "pick": "maybe",
+   "note": null
+  },
+  {
+   "id": "reraise",
+   "category": "status",
+   "name": "Reraise",
+   "line": "Comes back from a knockout once, or survives one.",
+   "yours": "Your Cleric and Holy both revive.",
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "antiheal",
+   "category": "status",
+   "name": "Rot",
+   "line": "Heals do less, or partly hurt.",
+   "yours": null,
+   "pick": "cut",
+   "note": null
+  },
+  {
+   "id": "enchant",
+   "category": "status",
+   "name": "Enchant",
+   "line": "Its attacks carry something extra: elemental damage, a new element, or a status.",
+   "yours": null,
+   "pick": "maybe",
+   "note": "Very cool, need to make sure it's useful"
+  },
+  {
+   "id": "purified",
+   "category": "status",
+   "name": "Purified",
+   "line": "Can't gain debuffs for a while, or ignores the next few.",
+   "yours": null,
+   "pick": "cut",
+   "note": null
+  },
+  {
+   "id": "blind",
+   "category": "status",
+   "name": "Blind",
+   "line": "Its physical hits often miss.",
+   "yours": null,
+   "pick": "cut",
+   "note": null
+  },
+  {
+   "id": "blink",
+   "category": "status",
+   "name": "Blink",
+   "line": "Each stack makes one hit miss outright.",
+   "yours": null,
+   "pick": "cut",
+   "note": null
+  },
+  {
+   "id": "stone",
+   "category": "status",
+   "name": "Stone",
+   "line": "Can't act, but takes almost no damage.",
+   "yours": null,
+   "pick": "cut",
+   "note": null
+  },
+  {
+   "id": "momentum",
+   "category": "status",
+   "name": "Momentum",
+   "line": "Builds with each hit landed; a miss drops it.",
+   "yours": null,
+   "pick": "cut",
+   "note": "Is this fun or just a pass/fail win depending on foe's evasion"
+  },
+  {
+   "id": "root",
+   "category": "status",
+   "name": "Root",
+   "line": "Can't dodge: Evasion set to zero.",
+   "yours": null,
+   "pick": "maybe",
+   "note": "Really depends on the enemies and which other answers exist, because right now magic hard counters dodge"
+  },
+  {
+   "id": "soullink",
+   "category": "status",
+   "name": "Soul Link",
+   "line": "Part of the damage it takes is passed to a linked foe.",
+   "yours": null,
+   "pick": "cut",
+   "note": null
+  },
+  {
+   "id": "lifesteal",
+   "category": "stat",
+   "name": "Lifesteal",
+   "line": "Heals for a share of the damage it deals.",
+   "yours": null,
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "evasion",
+   "category": "stat",
+   "name": "Evasion",
+   "line": "Chance to dodge a physical hit.",
+   "yours": null,
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "armorpen",
+   "category": "stat",
+   "name": "Armor penetration",
+   "line": "Ignores some of the target's Armor on each hit.",
+   "yours": null,
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "accuracy",
+   "category": "stat",
+   "name": "Accuracy",
+   "line": "Cancels out the target's Evasion.",
+   "yours": null,
+   "pick": "cut",
+   "note": "Magic counters evasion for now, unsure of necessity"
+  },
+  {
+   "id": "critdmg",
+   "category": "stat",
+   "name": "Crit damage",
+   "line": "How much harder its crits hit.",
+   "yours": null,
+   "pick": "maybe",
+   "note": "Crit build simulation tells us if we need this"
+  },
+  {
+   "id": "thorns",
+   "category": "stat",
+   "name": "Thorns",
+   "line": "Whoever hits it takes damage back.",
+   "yours": null,
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "execute",
+   "category": "stat",
+   "name": "Execute",
+   "line": "More damage against low-HP targets.",
+   "yours": null,
+   "pick": "cut",
+   "note": "Classic ability effect, less compelling when represented as a stat"
+  },
+  {
+   "id": "counter",
+   "category": "stat",
+   "name": "Counter",
+   "line": "Chance to strike back when hit.",
+   "yours": "Riposte (a status): dodge and attack.",
+   "pick": "maybe",
+   "note": "Overlap with thorns, maybe variety is good, maybe it's too much"
+  },
+  {
+   "id": "potency",
+   "category": "stat",
+   "name": "Potency",
+   "line": "Its statuses land better: more stacks, more often, or for longer.",
+   "yours": null,
+   "pick": "cut",
+   "note": null
+  },
+  {
+   "id": "tenacity",
+   "category": "stat",
+   "name": "Tenacity",
+   "line": "Debuffs on it wear off faster, or fail to land.",
+   "yours": null,
+   "pick": "cut",
+   "note": "I wouldn't start with debuff resist as a stat, if we try it it's as an ability effect"
+  },
+  {
+   "id": "doublestrike",
+   "category": "stat",
+   "name": "Double strike",
+   "line": "Chance a basic attack hits again.",
+   "yours": "Double hit (a status).",
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "combo",
+   "category": "stat",
+   "name": "Combo",
+   "line": "Builds with consecutive hits; empowers the next hits or ability.",
+   "yours": null,
+   "pick": "cut",
+   "note": "Definitely a class gimmick and not core set"
+  },
+  {
+   "id": "echo",
+   "category": "stat",
+   "name": "Echo",
+   "line": "Chance an ability goes off a second time.",
+   "yours": null,
+   "pick": "maybe",
+   "note": "A cool gimmick, very likely not core set"
+  },
+  {
+   "id": "overflow",
+   "category": "stat",
+   "name": "Overflow",
+   "line": "Healing past full HP becomes a shield.",
+   "yours": null,
+   "pick": "cut",
+   "note": "Might not pick this and explicit shields application for a first subset"
+  },
+  {
+   "id": "castspeed",
+   "category": "stat",
+   "name": "Cast speed",
+   "line": "Shorter wind-ups on abilities.",
+   "yours": null,
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "mana",
+   "category": "stat",
+   "name": "Mana leech",
+   "line": "Restores MP from damage dealt or from acting.",
+   "yours": null,
+   "pick": "maybe",
+   "note": null
+  },
+  {
+   "id": "rage",
+   "category": "stat",
+   "name": "Rage",
+   "line": "A meter that fills from taking (or dealing) damage and fuels power.",
+   "yours": null,
+   "pick": "cut",
+   "note": "Too complex for what it does for now"
+  },
+  {
+   "id": "soul",
+   "category": "stat",
+   "name": "Soul",
+   "line": "Charges gained when units are knocked out, spent on big effects.",
+   "yours": null,
+   "pick": "cut",
+   "note": null
+  },
+  {
+   "id": "heat",
+   "category": "stat",
+   "name": "Heat",
+   "line": "Builds as it attacks; vents a burst, or overheats into a self-debuff.",
+   "yours": null,
+   "pick": "cut",
+   "note": null
+  },
+  {
+   "id": "companion",
+   "category": "stat",
+   "name": "Companion",
+   "line": "A pet or bond that adds extra attacks.",
+   "yours": null,
+   "pick": "cut",
+   "note": "Summons aren't base set unless tech needs to start now for eventual support"
+  },
+  {
+   "id": "splash",
+   "category": "stat",
+   "name": "Splash",
+   "line": "Part of each hit also lands on another foe.",
+   "yours": null,
+   "pick": "maybe",
+   "note": "\"Other\" is too generic right now for me"
+  },
+  {
+   "id": "interrupt",
+   "category": "stat",
+   "name": "Stagger",
+   "line": "Chance a hit cancels the target's wind-up.",
+   "yours": null,
+   "pick": "cut",
+   "note": null
+  },
+  {
+   "id": "stealth",
+   "category": "stat",
+   "name": "Stealth",
+   "line": "Starts the fight untargetable.",
+   "yours": null,
+   "pick": "maybe",
+   "note": null
+  },
+  {
+   "id": "block",
+   "category": "stat",
+   "name": "Block",
+   "line": "Chance to shrink a physical hit by a large share.",
+   "yours": null,
+   "pick": "cut",
+   "note": "This just doubles up armor"
+  },
+  {
+   "id": "cover",
+   "category": "stat",
+   "name": "Cover",
+   "line": "Takes hits, or part of the damage, aimed at a hurt ally.",
+   "yours": null,
+   "pick": "cut",
+   "note": "Without player chosen targeting this seems like worse taunt?"
+  },
+  {
+   "id": "elemdmg",
+   "category": "stat",
+   "name": "Elemental damage",
+   "line": "More damage of one element, a line per element.",
+   "yours": "Elemental damage (per type).",
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "healpower",
+   "category": "stat",
+   "name": "Healing power",
+   "line": "Its heals are stronger.",
+   "yours": null,
+   "pick": "maybe",
+   "note": null
+  },
+  {
+   "id": "detonate",
+   "category": "stat",
+   "name": "Detonate",
+   "line": "Pops statuses on a foe for burst damage.",
+   "yours": null,
+   "pick": "maybe",
+   "note": "Potentially cool ability effect, esoteric to start though"
+  },
+  {
+   "id": "attackspeed",
+   "category": "stat",
+   "name": "Attack speed",
+   "line": "Faster basic attacks.",
+   "yours": null,
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "threat",
+   "category": "stat",
+   "name": "Threat",
+   "line": "How likely foes are to target it.",
+   "yours": null,
+   "pick": "keep",
+   "note": "This and taunt need to be rationalized together and only both included if it makes sense"
+  },
+  {
+   "id": "purity",
+   "category": "stat",
+   "name": "Purity",
+   "line": "Takes less magic damage, until elements wear it down.",
+   "yours": null,
+   "pick": "maybe",
+   "note": "No clue what until éléments wear it down means"
+  },
+  {
+   "id": "weight",
+   "category": "stat",
+   "name": "Weight",
+   "line": "Heavier gear adds blunt damage.",
+   "yours": null,
+   "pick": "cut",
+   "note": null
+  },
+  {
+   "id": "manaburn",
+   "category": "stat",
+   "name": "Mana burn",
+   "line": "Its hits drain the target's MP.",
+   "yours": null,
+   "pick": "cut",
+   "note": null
+  },
+  {
+   "id": "charge",
+   "category": "stat",
+   "name": "Charge",
+   "line": "Fills over time; empties into one big action a fight.",
+   "yours": null,
+   "pick": "cut",
+   "note": null
+  },
+  {
+   "id": "resonance",
+   "category": "stat",
+   "name": "Resonance",
+   "line": "Its next spell of the same element hits harder.",
+   "yours": null,
+   "pick": "cut",
+   "note": "No player choice"
+  },
+  {
+   "id": "decay",
+   "category": "stat",
+   "name": "Decay",
+   "line": "Statuses on its target run out faster.",
+   "yours": null,
+   "pick": "cut",
+   "note": null
+  },
+  {
+   "id": "copy",
+   "category": "stat",
+   "name": "Copy",
+   "line": "Copies a status from a foe or ally.",
+   "yours": null,
+   "pick": "cut",
+   "note": null
+  },
+  {
+   "id": "foresight",
+   "category": "stat",
+   "name": "Foresight",
+   "line": "Warns of the next heavy hit and gives a short defensive window.",
+   "yours": null,
+   "pick": "cut",
+   "note": null
+  },
+  {
+   "id": "headstart",
+   "category": "stat",
+   "name": "Head start",
+   "line": "Its cooldowns start the fight partway done.",
+   "yours": null,
+   "pick": "maybe",
+   "note": "Cool itemization thing to prevent resource attrition through trash mobs"
+  },
+  {
+   "id": "overkill",
+   "category": "stat",
+   "name": "Overkill",
+   "line": "Damage past a knockout spills onto another foe.",
+   "yours": null,
+   "pick": "maybe",
+   "note": null
+  },
+  {
+   "id": "spite",
+   "category": "stat",
+   "name": "Spite",
+   "line": "When knocked out, damages every foe.",
+   "yours": null,
+   "pick": "maybe",
+   "note": "Very cool buildmaking"
+  },
+  {
+   "id": "poise",
+   "category": "stat",
+   "name": "Poise",
+   "line": "Chance to keep a wind-up when something would cancel it.",
+   "yours": null,
+   "pick": "cut",
+   "note": null
+  },
+  {
+   "id": "healer",
+   "category": "class",
+   "name": "Cleric",
+   "line": "Heals the most hurt ally and lifts debuffs.",
+   "yours": "Squishy, heals and revives, pocket burst damage.",
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "paladin",
+   "category": "class",
+   "name": "Paladin",
+   "line": "A holy knight who fights, shields and heals a little.",
+   "yours": "Guardian: tanky healer with physical scaling.",
+   "pick": "keep",
+   "note": "Paladin and knight might too much overlap for a core set unless one gets differentiated a bit more"
+  },
+  {
+   "id": "monk",
+   "category": "class",
+   "name": "Monk",
+   "line": "A martial artist: many quick hits, combos, dodges and counters.",
+   "yours": "Dodge tank with heals.",
+   "pick": "maybe",
+   "note": "Combo does not feel like a core subset element, but dodge tank does"
+  },
+  {
+   "id": "ranger",
+   "category": "class",
+   "name": "Ranger",
+   "line": "Steady ranged damage that marks prey for the party.",
+   "yours": "Archer: consistent high sustained damage, but squishy.",
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "mage",
+   "category": "class",
+   "name": "Mage",
+   "line": "Elemental caster: big hits, fragile.",
+   "yours": "Fire and lightning, ramping damage in a squishy shell.",
+   "pick": "keep",
+   "note": "Potentially more than one type of mage"
+  },
+  {
+   "id": "rogue",
+   "category": "class",
+   "name": "Rogue",
+   "line": "A quick, evasive blade whose dodges turn into crits.",
+   "yours": "Evasive, high burst damage but weak sustained attack.",
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "bard",
+   "category": "class",
+   "name": "Bard",
+   "line": "Songs or dances that buff the whole party.",
+   "yours": "Dancer: pure buffer.",
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "berserker",
+   "category": "class",
+   "name": "Berserker",
+   "line": "Stronger the nearer it gets to death.",
+   "yours": null,
+   "pick": "maybe",
+   "note": null
+  },
+  {
+   "id": "knight",
+   "category": "class",
+   "name": "Knight",
+   "line": "An armored wall that draws attacks: taunts, guards, shields.",
+   "yours": null,
+   "pick": "keep",
+   "note": "Paladin and knight might too much overlap for a core set unless one gets differentiated a bit more"
+  },
+  {
+   "id": "darkcaster",
+   "category": "class",
+   "name": "Necromancer",
+   "line": "Shadow magic: drains, curses, doom; feeds on knockouts.",
+   "yours": null,
+   "pick": "maybe",
+   "note": "Gameplay seems interesting, Necromancer is a misnomer without summons, which we won't have at first."
+  },
+  {
+   "id": "alchemist",
+   "category": "class",
+   "name": "Alchemist",
+   "line": "Flasks: poisons and debuffs for foes, potions for allies.",
+   "yours": null,
+   "pick": "maybe",
+   "note": null
+  },
+  {
+   "id": "timemage",
+   "category": "class",
+   "name": "Time mage",
+   "line": "Speeds allies, slows and stops foes.",
+   "yours": null,
+   "pick": "maybe",
+   "note": "Don't hate it, but we need really spiky time abilities otherwelse it's a chill bot. Very much cool or not cool depending on specific design"
+  },
+  {
+   "id": "hexer",
+   "category": "class",
+   "name": "Voodoo",
+   "line": "Little damage, many stacking curses.",
+   "yours": "Pure debuff.",
+   "pick": "maybe",
+   "note": "Plague doctor and voodoo seem like the same thing to me"
+  },
+  {
+   "id": "spellblade",
+   "category": "class",
+   "name": "Spellblade",
+   "line": "Puts an element on weapons: its own, or an ally's.",
+   "yours": null,
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "regenhealer",
+   "category": "class",
+   "name": "Priest",
+   "line": "Healing over time and protection; most lists make it a druid.",
+   "yours": "Squishy, regen, support, pocket heals.",
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "heavy",
+   "category": "class",
+   "name": "Brigand",
+   "line": "Heavy hits that break or pierce armor.",
+   "yours": "High damage, low accuracy, medium survivability, shreds armor.",
+   "pick": "keep",
+   "note": "Non-magical counter to armor"
+  },
+  {
+   "id": "assassin",
+   "category": "class",
+   "name": "Assassin",
+   "line": "A burst killer that finishes the wounded.",
+   "yours": "Taunt-ignoring burst killer.",
+   "pick": "maybe",
+   "note": null
+  },
+  {
+   "id": "vampire",
+   "category": "class",
+   "name": "Vampire",
+   "line": "An off-tank that lives on lifesteal.",
+   "yours": "Lifesteal off-tank.",
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "templar",
+   "category": "class",
+   "name": "Templar",
+   "line": "Anti-debuff: cleanses, resists, and keeps debuffs off the party.",
+   "yours": null,
+   "pick": "maybe",
+   "note": null
+  },
+  {
+   "id": "plaguedoctor",
+   "category": "class",
+   "name": "Plague doctor",
+   "line": "Spreads poison and sickness; it jumps when its holder falls.",
+   "yours": null,
+   "pick": "maybe",
+   "note": "Plague doctor and voodoo seem like the same thing to me"
+  },
+  {
+   "id": "oracle",
+   "category": "class",
+   "name": "Oracle",
+   "line": "Foresight: marks or dooms foes, shields or blinks allies before the blow.",
+   "yours": null,
+   "pick": "cut",
+   "note": null
+  },
+  {
+   "id": "fencer",
+   "category": "class",
+   "name": "Fencer",
+   "line": "Duels one foe; parries and counters.",
+   "yours": null,
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "hoplite",
+   "category": "class",
+   "name": "Hoplite",
+   "line": "A shield-bearer who makes the whole party sturdier.",
+   "yours": null,
+   "pick": "maybe",
+   "note": null
+  },
+  {
+   "id": "spellbreaker",
+   "category": "class",
+   "name": "Spellbreaker",
+   "line": "Strips foes' buffs and shields, and silences casters.",
+   "yours": null,
+   "pick": null,
+   "note": "Unsure of practical utility as main class role"
+  },
+  {
+   "id": "soldier",
+   "category": "class",
+   "name": "Soldier",
+   "line": "An all-round front-liner: a little tanky, a little offensive.",
+   "yours": "Middle-of-the-road physical class: a little tanky and a little offensive.",
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "samurai",
+   "category": "class",
+   "name": "Samurai",
+   "line": "Long wind-ups that land huge, crit-heavy cuts.",
+   "yours": null,
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "beastmaster",
+   "category": "class",
+   "name": "Beastmaster",
+   "line": "Fights beside a pet that adds its own strikes.",
+   "yours": null,
+   "pick": "cut",
+   "note": null
+  },
+  {
+   "id": "bloodmage",
+   "category": "class",
+   "name": "Blood mage",
+   "line": "Pays its own HP for power; losing HP restores MP.",
+   "yours": null,
+   "pick": "cut",
+   "note": "Could be convinced, but doesn't seem core to me"
+  },
+  {
+   "id": "duelist",
+   "category": "class",
+   "name": "Duelist",
+   "line": "Attack speed and crits, squishy and slightly evasive.",
+   "yours": "Attack speed and crit king, squishy and slightly evasive.",
+   "pick": "maybe",
+   "note": "Potentially too vanilla if other roles operate similarly"
+  },
+  {
+   "id": "pyromancer",
+   "category": "class",
+   "name": "Pyromancer",
+   "line": "A fire specialist: stacking, spreading burns.",
+   "yours": null,
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "valkyrie",
+   "category": "class",
+   "name": "Valkyrie",
+   "line": "Revives allies, and grows stronger as units fall.",
+   "yours": null,
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "onmyoji",
+   "category": "class",
+   "name": "Onmyoji",
+   "line": "Talismans that silence and seal; wards for allies.",
+   "yours": null,
+   "pick": "maybe",
+   "note": null
+  },
+  {
+   "id": "illusionist",
+   "category": "class",
+   "name": "Illusionist",
+   "line": "Mirror images and decoys that make hits miss.",
+   "yours": null,
+   "pick": "cut",
+   "note": null
+  },
+  {
+   "id": "frost",
+   "category": "class",
+   "name": "Frostweaver",
+   "line": "Frost that piles up until foes freeze.",
+   "yours": null,
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "reaper",
+   "category": "class",
+   "name": "Reaper",
+   "line": "Harvests knockouts into power and big hits.",
+   "yours": null,
+   "pick": "maybe",
+   "note": null
+  },
+  {
+   "id": "gunslinger",
+   "category": "class",
+   "name": "Gunslinger",
+   "line": "Rapid-fire shots that shred armor, with reloads or overheating.",
+   "yours": null,
+   "pick": "cut",
+   "note": "No reload mechanic, stick to cooldown for now"
+  },
+  {
+   "id": "thornstank",
+   "category": "class",
+   "name": "Bramble knight",
+   "line": "A tank that punishes whoever hits it.",
+   "yours": "Thorns tank.",
+   "pick": "keep",
+   "note": null
+  },
+  {
+   "id": "ninja",
+   "category": "class",
+   "name": "Ninja",
+   "line": "Starts hidden, throws poison, hard to pin down.",
+   "yours": null,
+   "pick": "maybe",
+   "note": null
+  },
+  {
+   "id": "dragoon",
+   "category": "class",
+   "name": "Dragoon",
+   "line": "Leaps out of reach and lands one huge hit.",
+   "yours": null,
+   "pick": "maybe",
+   "note": "Just a final fantasy rip-off, can find a better fantasy for this gameplay, it's basically an evasive samurai"
+  },
+  {
+   "id": "detonator",
+   "category": "class",
+   "name": "Trapper",
+   "line": "Sets timed statuses on foes, then detonates them.",
+   "yours": null,
+   "pick": "cut",
+   "note": "Wouldn't start with this, too many complex ally status effect interactions"
+  },
+  {
+   "id": "earthma",
+   "category": "class",
+   "name": "Earth martial artist",
+   "line": "Uneven damage, with support and debuffs.",
+   "yours": "Inconsistent DPS with support and debuff potential.",
+   "pick": "cut",
+   "note": null
+  },
+  {
+   "id": "darkknight",
+   "category": "class",
+   "name": "Dark knight",
+   "line": "An armor tank that deals magic damage.",
+   "yours": "Armor tank with magic damage.",
+   "pick": "maybe",
+   "note": "Paladin in a different color"
+  },
+  {
+   "id": "pegasus",
+   "category": "class",
+   "name": "Pegasus warrior",
+   "line": "A resistance tank that also deals damage.",
+   "yours": "Resist tank with damage.",
+   "pick": "maybe",
+   "note": "I think this is"
+  },
+  {
+   "id": "martyr",
+   "category": "class",
+   "name": "Martyr",
+   "line": "Spends its own HP to heal; its fall heals and shields the party.",
+   "yours": null,
+   "pick": "maybe",
+   "note": null
+  },
+  {
+   "id": "gorgon",
+   "category": "class",
+   "name": "Gorgon",
+   "line": "Turns the strongest foe to stone, which hurts when it cracks.",
+   "yours": null,
+   "pick": "cut",
+   "note": "Target strongest foe is an ability not a whole class"
+  },
+  {
+   "id": "einherjar",
+   "category": "class",
+   "name": "Einherjar",
+   "line": "Fights hard and dies loudly; its war cry outlives it.",
+   "yours": null,
+   "pick": "maybe",
+   "note": null
+  },
+  {
+   "id": "dancer",
+   "category": "class",
+   "name": "Dancer",
+   "line": "An evasive dancer who debuffs foes and charms one.",
+   "yours": null,
+   "pick": "maybe",
+   "note": "Doesn't necessarily need to be charm, evasive debuffer is a classic hard to make work class but satisfying"
+  },
+  {
+   "id": "geomancer",
+   "category": "class",
+   "name": "Geomancer",
+   "line": "Lingering elemental fields that power up later spells.",
+   "yours": null,
+   "pick": "cut",
+   "note": "Earth magic caster sure why not, but not when described this way"
+  },
+  {
+   "id": "engineer",
+   "category": "class",
+   "name": "Engineer",
+   "line": "Deploys turrets and gadgets that attack or shield.",
+   "yours": null,
+   "pick": "cut",
+   "note": null
+  },
+  {
+   "id": "artillerist",
+   "category": "class",
+   "name": "Artillerist",
+   "line": "Huge, slow blunt blasts; heavier gear hits harder.",
+   "yours": null,
+   "pick": "cut",
+   "note": "Unclear fantasy and gameplay"
+  },
+  {
+   "id": "mimic",
+   "category": "class",
+   "name": "Mimic",
+   "line": "Copies statuses from foes and allies.",
+   "yours": null,
+   "pick": "cut",
+   "note": null
+  }
+ ]
+}

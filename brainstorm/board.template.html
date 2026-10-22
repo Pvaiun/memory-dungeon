@@ -1,0 +1,391 @@
+<title>Memory Dungeon Brainstorm</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@500&family=Pixelify+Sans:wght@500;700&display=swap">
+<style>
+/* Layout: a sticky band of bucket tabs over one column of cards (two or three on wide screens); every card ends in the same keep / maybe / cut row. */
+:root {
+  --bg: #eef1e8;
+  --surface: #f9faf5;
+  --ink: #1d2a1b;
+  --muted: #5f6b58;
+  --line: #cfd6c4;
+  --accent: #3f6a2c;
+  --accent-soft: #dfe8d2;
+  --you: #8a4f12;
+  --you-soft: #f3e3cf;
+  --keep: #2f7a46;
+  --keep-soft: #d7ecd9;
+  --maybe: #8c6a10;
+  --maybe-soft: #f2e7c4;
+  --cut: #a8443a;
+  --cut-soft: #f2dad5;
+  --work: #9a5a12;
+  --display: "Pixelify Sans", "Courier New", monospace;
+  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111711; --surface: #192119; --ink: #e2e9da; --muted: #9aa791; --line: #2f3b2d;
+    --accent: #a9c96a; --accent-soft: #263321; --you: #e7a85e; --you-soft: #3a2a17;
+    --keep: #7cc78f; --keep-soft: #1c3424; --maybe: #e0c060; --maybe-soft: #3a3115;
+    --cut: #e58b7f; --cut-soft: #3c201c; --work: #e7a85e;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111711; --surface: #192119; --ink: #e2e9da; --muted: #9aa791; --line: #2f3b2d;
+  --accent: #a9c96a; --accent-soft: #263321; --you: #e7a85e; --you-soft: #3a2a17;
+  --keep: #7cc78f; --keep-soft: #1c3424; --maybe: #e0c060; --maybe-soft: #3a3115;
+  --cut: #e58b7f; --cut-soft: #3c201c; --work: #e7a85e;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.45 var(--body); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 1180px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header.top { padding-block: 20px 6px; }
+h1 { font: 700 26px/1.1 var(--display); letter-spacing: .02em; margin: 0 0 6px; text-wrap: balance; }
+.lede { color: var(--muted); max-width: 64ch; margin: 0; }
+.lede b { color: var(--ink); font-weight: 700; }
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); padding-block: 10px; }
+.tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+.tab { font: 600 14px var(--body); border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 6px; padding: 7px 11px; cursor: pointer; display: inline-flex; gap: 6px; align-items: baseline; }
+.tab .n { font: 500 12px var(--mono); color: var(--muted); }
+.tab[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+.tab[aria-selected="true"] .n { color: var(--surface); opacity: .8; }
+.tools { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin-top: 10px; }
+.chips { display: flex; gap: 4px; flex-wrap: wrap; }
+.chip { font: 13px var(--body); border: 1px solid var(--line); background: transparent; color: var(--ink); border-radius: 999px; padding: 4px 10px; cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.tally { font: 500 12px var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.tally .k { color: var(--keep); } .tally .m { color: var(--maybe); } .tally .c { color: var(--cut); }
+.status { font: 12px var(--body); color: var(--muted); margin-left: auto; }
+.status.err { color: var(--cut); }
+label.toggle { font-size: 13px; display: inline-flex; gap: 6px; align-items: center; cursor: pointer; }
+select { font: 13px var(--body); background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12.5px; color: var(--muted); margin: 14px 0 4px; }
+.legend span { display: inline-flex; gap: 5px; align-items: center; }
+main { padding-block: 10px 60px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 12px 10px; display: flex; flex-direction: column; gap: 7px; min-width: 0; scroll-margin-top: 140px; }
+.card.keep { border-color: var(--keep); box-shadow: inset 0 0 0 1px var(--keep); }
+.card.maybe { border-color: var(--maybe); }
+.card.cut { opacity: .55; }
+.card.flash { animation: flash 1.2s ease-out; }
+@keyframes flash { from { box-shadow: 0 0 0 3px var(--accent); } to { box-shadow: 0 0 0 0 transparent; } }
+@media (prefers-reduced-motion: reduce) { .card.flash { animation: none; outline: 2px solid var(--accent); } }
+.head { display: flex; gap: 8px; align-items: flex-start; justify-content: space-between; }
+.name { font: 700 17px/1.2 var(--body); margin: 0; text-wrap: balance; }
+.pips { display: flex; gap: 3px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
+.pip { font: 500 10.5px/1 var(--mono); min-width: 30px; padding-inline: 3px; text-align: center; padding: 4px 0; border-radius: 4px; border: 1px solid var(--line); color: var(--line); }
+.pip.on { color: var(--surface); background: var(--accent); border-color: var(--accent); }
+.pip.on.y { background: var(--you); border-color: var(--you); }
+.pip.kit { background: transparent; color: var(--accent); border: 1px dashed var(--accent); }
+.pip.kit.y { color: var(--you); border-color: var(--you); }
+.alias { font-size: 12.5px; color: var(--muted); }
+.ln { margin: 0; }
+.yours { margin: 0; font-size: 13.5px; background: var(--you-soft); border-radius: 6px; padding: 6px 8px; }
+.yours b { color: var(--you); font-weight: 700; margin-right: 4px; }
+.meta { font-size: 12.5px; color: var(--muted); }
+.meta.warn { color: var(--work); }
+.uses { display: grid; gap: 4px; }
+.uses ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.ugroup { font: 500 11px var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-top: 2px; }
+.use { display: grid; grid-template-columns: 1fr auto; gap: 1px 8px; padding: 6px 8px; border-radius: 6px; background: var(--bg); }
+.use.keep { background: var(--keep-soft); } .use.maybe { background: var(--maybe-soft); }
+.use.cut .uname { text-decoration: line-through; color: var(--muted); }
+.uname { font: 700 14px var(--body); color: var(--ink); background: none; border: 0; padding: 0; text-align: left; cursor: pointer; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+.utag { font: 500 10.5px var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); align-self: center; }
+.use.keep .utag { color: var(--keep); } .use.maybe .utag { color: var(--maybe); } .use.cut .utag { color: var(--cut); }
+.udesc { grid-column: 1 / -1; font-size: 13px; color: var(--muted); }
+.uby { color: var(--ink); opacity: .75; }
+.uhint { margin: 2px 0 0; font-size: 12.5px; color: var(--muted); font-style: italic; }
+.need { font: 12.5px var(--body); border: 1px solid var(--line); background: transparent; color: var(--ink); border-radius: 4px; padding: 2px 7px; cursor: pointer; }
+.need.k { background: var(--keep-soft); border-color: var(--keep); }
+.need.m { background: var(--maybe-soft); border-color: var(--maybe); }
+.need.x { text-decoration: line-through; color: var(--muted); border-style: dashed; }
+.need.w::after { content: " *"; color: var(--work); }
+.fit { font: 500 11px var(--mono); text-transform: uppercase; letter-spacing: .05em; }
+.fit.ok { color: var(--keep); } .fit.exists { color: var(--accent); } .fit.work { color: var(--work); }
+.staple { font: 500 11px var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.row { display: flex; gap: 6px; align-items: center; margin-top: auto; padding-top: 4px; flex-wrap: wrap; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.seg button { font: 600 13px var(--body); background: transparent; color: var(--ink); border: 0; padding: 6px 12px; cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"][data-v="keep"] { background: var(--keep); color: var(--surface); }
+.seg button[aria-pressed="true"][data-v="maybe"] { background: var(--maybe); color: var(--surface); }
+.seg button[aria-pressed="true"][data-v="cut"] { background: var(--cut); color: var(--surface); }
+.notebtn { font: 13px var(--body); background: transparent; border: 0; color: var(--muted); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+textarea { width: 100%; font: 14px/1.4 var(--body); color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 7px 8px; resize: vertical; min-height: 58px; }
+button:focus-visible, select:focus-visible, textarea:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.empty { color: var(--muted); padding: 30px 0; }
+.general { margin-top: 26px; max-width: 760px; }
+.general h2 { font: 700 18px var(--display); margin: 0 0 6px; }
+.general p { color: var(--muted); margin: 0 0 8px; font-size: 13.5px; }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <h1>Memory Dungeon Brainstorm</h1>
+    <p class="lede">Your list and seven blind AI lists from five models, merged by meaning. Opus's three runs count as one model. Each card shows which models had it and the names they used. <b>Keep, maybe or cut</b> each one; your picks save to the board, and I read them back from it. Each class lists the effects its versions use, with what each one does. <b>Keeping a class doesn't keep its effects</b>: pick those on their own tabs, where each shows which classes use it.</p>
+  </header>
+</div>
+<div class="bar">
+  <div class="wrap">
+    <div class="tabs" role="tablist" id="tabs"></div>
+  </div>
+</div>
+<div class="wrap">
+    <div class="tools">
+      <div class="chips" id="filters"></div>
+      <label class="toggle"><input type="checkbox" id="staplesOnly"> Staples only</label>
+      <label class="toggle"><input type="checkbox" id="yoursOnly"> Yours only</label>
+      <select id="sort" aria-label="Sort cards">
+        <option value="lists">Most models first</option>
+        <option value="name">A to Z</option>
+      </select>
+      <span class="tally" id="tally"></span>
+      <span class="status" id="status">Loading your picks…</span>
+    </div>
+  <div class="legend">
+    <span><span class="pip on y">You</span> your list</span>
+    <span><span class="pip on">Op</span> Opus, 3 runs</span>
+    <span><span class="pip on">GPT</span> ChatGPT</span>
+    <span><span class="pip on">Gem</span> Gemini</span>
+    <span><span class="pip on">Grk</span> Grok</span>
+    <span><span class="pip on">DS</span> DeepSeek</span>
+    <span><span class="pip kit">Gem</span> only inside a class</span>
+  </div>
+  <main>
+    <div class="grid" id="grid"></div>
+    <section class="general">
+      <h2>Notes</h2>
+      <p>Anything that isn't about one card: something missing, a merge I got wrong, a direction.</p>
+      <textarea id="general" rows="4" aria-label="General notes"></textarea>
+    </section>
+  </main>
+</div>
+
+<script id="cards" type="application/json">__CARDS__</script>
+<script>
+const CARDS = JSON.parse(document.getElementById('cards').textContent);
+const byId = Object.fromEntries(CARDS.map(c => [c.id, c]));
+const LISTS = [['y', 'You'], ['o', 'Op'], ['c', 'GPT'], ['m', 'Gem'], ['k', 'Grk'], ['d', 'DS']];
+const LIST_NAME = { y: 'you', o: 'Opus', c: 'GPT', m: 'Gemini', k: 'Grok', d: 'DeepSeek' };
+const AI = ['o', 'c', 'm', 'k', 'd'];
+const BUCKETS = [['class', 'Classes'], ['status', 'Statuses'], ['stat', 'Special stats'], ['element', 'Elements']];
+const FILTERS = [['all', 'All'], ['open', 'Undecided'], ['keep', 'Keep'], ['maybe', 'Maybe'], ['cut', 'Cut']];
+// An effect is core to a class when at least half its versions (and at least two) use it.
+const isMain = (c, by) => { const n = Object.keys(c.as).length; return n === 1 || (by.length >= 2 && by.length * 2 >= n); };
+const usedBy = {}, usedSome = {};
+CARDS.filter(c => c.b === 'class').forEach(c => c.needs.forEach(([n, by]) => ((isMain(c, by) ? usedBy : usedSome)[n] ||= []).push(c.id)));
+
+let picks = {};
+let general = '';
+let tab = 'class', filter = 'all', yoursOnly = false, staplesOnly = false, sort = 'lists';
+// A staple: at least two models put it above their staples line, or it's in your core.
+const isStaple = c => c.st.includes('y') || c.st.filter(k => k !== 'y').length >= 2;
+let db = null, pending = false;
+const chains = {};
+
+const $ = s => document.querySelector(s);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const v = id => (picks[id] && picks[id].v) || null;
+const nModels = c => AI.filter(k => c.as[k]).length;
+
+function setStatus(text, err) { const s = $('#status'); s.textContent = text; s.classList.toggle('err', !!err); }
+
+function persistLocal() {
+  try { localStorage.setItem('md-board', JSON.stringify({ picks, general })); } catch (e) {}
+}
+function loadLocal() {
+  try { const d = JSON.parse(localStorage.getItem('md-board') || 'null'); if (d) { picks = d.picks || {}; general = d.general || ''; } } catch (e) {}
+}
+
+function save(id) {
+  const p = picks[id] || {};
+  const body = { v: p.v || null, note: p.note || '' };
+  if (!db) { persistLocal(); return; }
+  setStatus('Saving…');
+  const ref = db.doc('picks/' + id);
+  chains[id] = (chains[id] || Promise.resolve())
+    .then(() => (!body.v && !body.note) ? ref.delete() : ref.set(body))
+    .then(() => setStatus('Saved'))
+    .catch(e => setStatus(e && e.code === 'invalid_argument' ? "This view can't save picks" : 'Not saved. Try again.', true));
+}
+let generalChain = Promise.resolve();
+function saveGeneral() {
+  if (!db) { persistLocal(); return; }
+  setStatus('Saving…');
+  generalChain = generalChain.then(() => db.doc('board/notes').set({ text: general }))
+    .then(() => setStatus('Saved')).catch(() => setStatus('Not saved. Try again.', true));
+}
+
+function renderTabs() {
+  const t = $('#tabs'); t.textContent = '';
+  for (const [b, label] of BUCKETS) {
+    const n = CARDS.filter(c => c.b === b).length;
+    const btn = el('button', 'tab'); btn.type = 'button'; btn.setAttribute('role', 'tab');
+    btn.setAttribute('aria-selected', String(b === tab));
+    btn.append(el('span', null, label), el('span', 'n', String(n)));
+    btn.onclick = () => { tab = b; render(); window.scrollTo({ top: 0 }); };
+    t.append(btn);
+  }
+  const f = $('#filters'); f.textContent = '';
+  for (const [k, label] of FILTERS) {
+    const b = el('button', 'chip', label); b.type = 'button'; b.setAttribute('aria-pressed', String(k === filter));
+    b.onclick = () => { filter = k; render(); };
+    f.append(b);
+  }
+}
+
+function tally() {
+  const cs = CARDS.filter(c => c.b === tab);
+  const k = cs.filter(c => v(c.id) === 'keep').length, m = cs.filter(c => v(c.id) === 'maybe').length, x = cs.filter(c => v(c.id) === 'cut').length;
+  const t = $('#tally'); t.textContent = '';
+  const add = (cls, txt) => t.append(el('span', cls, txt));
+  add('k', 'keep ' + k); t.append(' · '); add('m', 'maybe ' + m); t.append(' · '); add('c', 'cut ' + x); t.append(' · open ' + (cs.length - k - m - x));
+}
+
+function aliasLine(c) {
+  const groups = {};
+  for (const [k] of LISTS) if (c.as[k]) (groups[c.as[k]] ||= []).push(LIST_NAME[k]);
+  const names = Object.keys(groups);
+  if (names.length === 1 && names[0] === c.n) return null;
+  return 'Called ' + names.map(n => n + ' (' + groups[n].join(', ') + ')').join(' · ');
+}
+
+function jump(id) {
+  const c = byId[id]; tab = c.b; filter = 'all'; yoursOnly = false; staplesOnly = false; $('#yoursOnly').checked = false; $('#staplesOnly').checked = false; render();
+  const node = document.getElementById('card-' + id);
+  if (node) { node.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' }); node.classList.remove('flash'); void node.offsetWidth; node.classList.add('flash'); }
+}
+
+const FIT = { ok: 'Builds today', exists: 'Already in the engine', work: 'Needs engine work' };
+
+function cardEl(c) {
+  const pv = v(c.id);
+  const node = el('article', 'card' + (pv ? ' ' + pv : '')); node.id = 'card-' + c.id;
+  const head = el('div', 'head');
+  head.append(el('h3', 'name', c.n));
+  const pips = el('div', 'pips');
+  for (const [k, label] of LISTS) {
+    const on = !!c.as[k], kit = on && c.kit.includes(k);
+    const p = el('span', 'pip' + (on ? (kit ? ' kit' : ' on') : '') + (k === 'y' ? ' y' : ''), label);
+    p.title = on ? (k === 'y' ? 'Your list' : LIST_NAME[k] + (k === 'o' ? ' (runs A, B, C)' : '')) + (kit ? ', inside a class' : '') + ': ' + c.as[k] : 'Not in ' + (k === 'y' ? 'your list' : LIST_NAME[k]);
+    pips.append(p);
+  }
+  head.append(pips);
+  node.append(head);
+  const al = aliasLine(c); if (al) node.append(el('div', 'alias', al));
+  node.append(el('p', 'ln', c.ln));
+  if (c.yours) { const y = el('p', 'yours'); y.append(el('b', null, 'You:'), document.createTextNode(c.yours)); node.append(y); }
+
+  const facts = [];
+  if (c.st.length) facts.push('Staple in ' + c.st.map(k => LIST_NAME[k]).join(', '));
+  if (facts.length) node.append(el('div', 'staple', facts.join(' · ')));
+
+  if (c.b === 'class') {
+    const total = Object.keys(c.as).length;
+    const main = c.needs.filter(([n, by]) => isMain(c, by)), some = c.needs.filter(([n, by]) => !isMain(c, by));
+    const box = el('div', 'uses');
+    if (!c.needs.length) box.append(el('p', 'uhint', 'No effects named yet; its kit gets built in the next pass.'));
+    const group = (title, rows, showNames) => {
+      if (!rows.length) return;
+      box.append(el('div', 'ugroup', title));
+      const ul = el('ul');
+      for (const [nid, by] of rows) {
+        const nc = byId[nid], nv = v(nid);
+        const li = el('li', 'use' + (nv ? ' ' + nv : ''));
+        const b = el('button', 'uname', nc.n); b.type = 'button'; b.title = 'Go to ' + nc.n; b.onclick = () => jump(nid);
+        const tag = el('span', 'utag', nv === 'keep' ? 'kept' : nv === 'maybe' ? 'maybe' : nv === 'cut' ? 'cut' : (nc.b === 'stat' ? 'stat' : 'status'));
+        li.append(b, tag);
+        const d = el('span', 'udesc', nc.ln + (nc.fit === 'work' ? ' Needs engine work.' : ''));
+        if (total > 1) d.append(el('span', 'uby', showNames ? ' ' + by.map(k => k === 'y' ? 'You' : LIST_NAME[k]).join(', ') + '.' : ' ' + by.length + ' of ' + total + ' versions.'));
+        li.append(d);
+        ul.append(li);
+      }
+      box.append(ul);
+    };
+    group(total === 1 ? 'Its effects' : 'Most versions use', main, false);
+    group('Some versions add', some, true);
+    if (c.needs.length) box.append(el('p', 'uhint', 'Keeping the class keeps its role, not these effects. Pick effects on their own tabs.'));
+    node.append(box);
+  }
+  if (c.b === 'status' || c.b === 'stat') {
+    const main = usedBy[c.id] || [], some = usedSome[c.id] || [];
+    const tagged = ids => ids.map(u => byId[u].n + (v(u) === 'keep' ? ' (kept)' : v(u) === 'maybe' ? ' (maybe)' : '')).join(', ');
+    if (main.length) node.append(el('div', 'meta', 'Core to ' + main.length + (main.length === 1 ? ' class: ' : ' classes: ') + tagged(main)));
+    if (some.length) node.append(el('div', 'meta', 'In some versions of ' + some.length + ' more: ' + tagged(some)));
+    if (!main.length && !some.length) node.append(el('div', 'meta', 'No class uses it'));
+    const anyKept = CARDS.some(x => x.b === 'class' && v(x.id) === 'keep');
+    if (anyKept && main.length + some.length && ![...main, ...some].some(u => v(u) === 'keep')) node.append(el('div', 'meta warn', 'No kept class uses it'));
+  }
+  if (c.fit) {
+    const f = el('div', 'meta'); f.append(el('span', 'fit ' + c.fit, FIT[c.fit]));
+    if (c.note) f.append(document.createTextNode(' · ' + c.note));
+    node.append(f);
+  } else if (c.note) node.append(el('div', 'meta', c.note));
+
+  const row = el('div', 'row');
+  const seg = el('div', 'seg'); seg.setAttribute('role', 'group'); seg.setAttribute('aria-label', 'Pick for ' + c.n);
+  for (const [k, label] of [['keep', 'Keep'], ['maybe', 'Maybe'], ['cut', 'Cut']]) {
+    const b = el('button', null, label); b.type = 'button'; b.dataset.v = k; b.setAttribute('aria-pressed', String(pv === k));
+    b.onclick = () => { picks[c.id] = { ...(picks[c.id] || {}), v: pv === k ? null : k }; save(c.id); render(); };
+    seg.append(b);
+  }
+  row.append(seg);
+  const note = (picks[c.id] && picks[c.id].note) || '';
+  const nb = el('button', 'notebtn', note ? 'Edit note' : 'Add note'); nb.type = 'button';
+  row.append(nb);
+  node.append(row);
+  const ta = el('textarea'); ta.id = 'note-' + c.id; ta.rows = 2; ta.value = note; ta.hidden = !note; ta.setAttribute('aria-label', 'Note on ' + c.n);
+  ta.addEventListener('change', () => { picks[c.id] = { ...(picks[c.id] || {}), note: ta.value.trim() }; save(c.id); });
+  ta.addEventListener('blur', () => { if (pending) { pending = false; render(); } });
+  nb.onclick = () => { ta.hidden = false; ta.focus(); };
+  node.append(ta);
+  return node;
+}
+
+function render() {
+  if (document.activeElement && document.activeElement.tagName === 'TEXTAREA' && document.activeElement.id !== 'general') { pending = true; return; }
+  renderTabs(); tally();
+  let cs = CARDS.filter(c => c.b === tab);
+  if (yoursOnly) cs = cs.filter(c => c.as.y);
+  if (staplesOnly && tab !== 'element') cs = cs.filter(isStaple);
+  if (filter === 'open') cs = cs.filter(c => !v(c.id));
+  else if (filter !== 'all') cs = cs.filter(c => v(c.id) === filter);
+  cs = cs.slice().sort(sort === 'name' ? (a, b) => a.n.localeCompare(b.n)
+    : (a, b) => nModels(b) - nModels(a) || (b.as.y ? 1 : 0) - (a.as.y ? 1 : 0) || b.st.length - a.st.length || a.n.localeCompare(b.n));
+  const g = $('#grid'); g.textContent = '';
+  if (!cs.length) { g.append(el('p', 'empty', filter === 'all' ? 'Nothing here.' : 'No cards match this filter yet.')); return; }
+  for (const c of cs) g.append(cardEl(c));
+}
+
+$('#yoursOnly').onchange = e => { yoursOnly = e.target.checked; render(); };
+$('#staplesOnly').onchange = e => { staplesOnly = e.target.checked; render(); };
+$('#sort').onchange = e => { sort = e.target.value; render(); };
+const gen = $('#general');
+gen.addEventListener('change', () => { general = gen.value; saveGeneral(); });
+gen.addEventListener('blur', () => { if (pending) { pending = false; render(); } });
+
+render();
+
+(async () => {
+  try { db = window.claude && window.claude.use ? await window.claude.use('db') : null; } catch (e) { db = null; }
+  if (!db) { loadLocal(); gen.value = general; setStatus('Picks stay in this browser only; open the board in Claude to save them'); render(); return; }
+  setStatus('Picks save to the board');
+  db.collection('picks').onSnapshot(snap => {
+    const next = {};
+    for (const d of snap.docs) { const x = d.data() || {}; next[d.id] = { v: x.v || null, note: x.note || '' }; }
+    picks = next; render();
+  }, () => setStatus("Can't load saved picks right now", true));
+  db.doc('board/notes').onSnapshot(snap => {
+    general = (snap.exists && snap.data().text) || '';
+    if (document.activeElement !== gen) gen.value = general;
+  }, () => {});
+})();
+</script>
