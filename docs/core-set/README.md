@@ -31,7 +31,7 @@ Changes to them go through the director and are recorded in `DECISIONS.md`, as s
 - **Steps 1 to 3** (`steps/`) built the schema, the headless engine and the simulation harness. They're the machinery the core set runs on, not design.
 - **Step 4** built the director's combat design into the engine (`src/engine/combat/`, with its building blocks in `PRIMITIVES.md`). That's what the engine runs today. The core set's rules supersede that design where they differ, and building the core set will change the engine to match.
 - **Steps 5 to 12 of the design plan** (`docs/design-plan.md`) were replaced by the core set. The plan's later steps describe the full game and are revisited after the slice.
-- **Numbers.** The core set's numbers are a relative scale (stats from 1 to 5, gear steps of +1 or +2, cooldowns short to long). First values and the balance pass by simulation are part of building it.
+- **Numbers.** The core set's numbers are a relative scale (stats from 1 to 5, gear steps of +1 or +2, cooldowns short to long). First values and the balance pass by simulation are part of building it. **In the data, every number on that scale is multiplied by 1,000** (HP 2 is 2,000, a boss's HP 90 is 90,000), so percentages such as crits and Regen ticks stay whole, and the display divides it back down by a factor tuned for feel.
 
 ## Status
 
