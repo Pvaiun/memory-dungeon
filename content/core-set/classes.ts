@@ -3,7 +3,7 @@
  * Every number comes from scale.ts; the words are the documents'.
  */
 import type { AbilityT, ClassDefT, NumT, StatusT, TargetRuleT } from "../../src/schema.js";
-import { COOLDOWN, COST, HIT, REVIVE, RESIST, SPECIAL, SPECIAL_KEY, STACKS, WINDUP, crit, costly, from, pts, stacks, type HitWord, type SpecialLevel, type SpecialStat, type StackWord } from "./scale.js";
+import { COOLDOWN, COST, HIT, REVIVE, RESIST, SPECIAL, SPECIAL_KEY, STACKS, STUN_COOLDOWN, WINDUP, crit, costly, from, pts, stacks, type HitWord, type SpecialLevel, type SpecialStat, type StackWord } from "./scale.js";
 import { P } from "./vocabulary.js";
 
 type CD = keyof typeof COOLDOWN;
@@ -122,7 +122,7 @@ export const abilities: A[] = [
     do: [apply("shield", { stacks: from("max_hp", 0.3) })],
   }),
   a("knight", "shield_bash", "Shield bash", "Bashes a foe with the shield, which scales from Armor, and Stuns it.", {
-    ...timing("long", "quick"), target: lacking({ side: "foes" }, "stun", true), do: [phys("blunt", hit("armor", "normal"), { apply: [{ status: "stun" }] })],
+    ...timing(STUN_COOLDOWN, "quick"), target: lacking({ side: "foes" }, "stun", true), do: [phys("blunt", hit("armor", "normal"), { apply: [{ status: "stun" }] })],
   }),
   // Cleric
   a("cleric", "prayer", "Prayer", "Regen on every ally.", { ...timing("long", "long"), target: T.everyAlly, do: [apply("regen")] }),
@@ -176,7 +176,7 @@ export const abilities: A[] = [
     ...timing("short", "quick"), target: T.mostFoe("burn"), do: [magic("fire", hit("attack", "light"), { hits: 3, apply: [{ status: "burn", stacks: stacks("few", "attack") }] })],
   }),
   a("monk", "pressure_point", "Pressure point", "Stuns the foe with the highest Attack or Magic, past any guard.", {
-    ...timing("long", "normal"), seek: true, target: lacking(T.highestAMFoe, "stun", true), do: [phys("blunt", hit("attack", "normal"), { apply: [{ status: "stun" }] })],
+    ...timing(STUN_COOLDOWN, "normal"), seek: true, target: lacking(T.highestAMFoe, "stun", true), do: [phys("blunt", hit("attack", "normal"), { apply: [{ status: "stun" }] })],
   }),
   // Assassin
   a("assassin", "vanish", "Vanish", "Goes Hidden.", { ...timing("long", "quick"), ...waitsFor("self", { lacks: "hidden" }), target: "self", do: [apply("hidden")] }),
@@ -214,7 +214,7 @@ export const abilities: A[] = [
     do: [apply("shield", { stacks: from("armor", 0.5), to: { side: "self", where: { belowCap: "shield" } } }), apply("shield", { stacks: from("armor", 0.5), to: { ...T.otherLowestShareAlly, where: { belowCap: "shield" } } })],
   }),
   a("geomancer", "rockfall", "Rockfall", "Earth damage scaling from Armor on a random foe.", { ...timing("short", "normal"), do: [magic("earth", hit("armor", "normal"))] }),
-  a("geomancer", "tremor", "Tremor", "Earth damage on a random foe, which is Stunned.", { ...timing("long", "very_long"), target: lacking({ side: "foes" }, "stun", true), do: [magic("earth", hit("magic", "normal"), { apply: [{ status: "stun" }] })] }),
+  a("geomancer", "tremor", "Tremor", "Earth damage on a random foe, which is Stunned.", { ...timing(STUN_COOLDOWN, "very_long"), target: lacking({ side: "foes" }, "stun", true), do: [magic("earth", hit("magic", "normal"), { apply: [{ status: "stun" }] })] }),
 ];
 
 // ─── Classes ─────────────────────────────────────────────────────────────────

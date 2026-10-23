@@ -9,4 +9,6 @@ Start with `CLAUDE.md` (how to work, and where things stand), then `docs/core-se
 ```
 npm install
 npm test
+npm run content   # regenerate content/core-set.pack.json from content/core-set/
+npm run smoke     # play the core set documents' own test trios
 ```

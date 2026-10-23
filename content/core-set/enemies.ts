@@ -4,7 +4,7 @@
  * Magic, Armor, Crit, Aggro, as the document lists them.
  */
 import type { AbilityT, EnemyT, StatusT, WeaponT } from "../../src/schema.js";
-import { COOLDOWN, COST, ENEMY_HIT, ENEMY_SWING, FLAT_STACKS, HIT, RESIST, REVIVE, SPECIAL, SPEED, STATUS, WEAPON, WINDUP, crit, pts, type SwingWord } from "./scale.js";
+import { COOLDOWN, COST, ENEMY_HIT, ENEMY_SPEED_FACTOR, ENEMY_SWING, FLAT_STACKS, HIT, RESIST, REVIVE, SPECIAL, SPEED, STATUS, WINDUP, crit, pts, type SwingWord } from "./scale.js";
 import { T } from "./classes.js";
 import { speedOf } from "./vocabulary.js";
 
@@ -12,8 +12,8 @@ type CD = keyof typeof COOLDOWN;
 type WU = keyof typeof WINDUP;
 const timing = (cd: CD, wu: WU) => ({ cooldown: COOLDOWN[cd], cast: WINDUP[wu], mp: COST[cd] });
 
-/** A basic attack by kind and words: a flat swing from the words, times the kind's speed factor (see ENEMY_SWING). */
-const swing = (speed: keyof typeof SPEED, word: SwingWord) => Math.round(WEAPON.speedFactor[speed] * ENEMY_SWING[word]);
+/** A basic attack by kind and words: a flat swing from the word (see ENEMY_SWING); the kind sets how often. */
+const swing = (speed: keyof typeof SPEED, word: SwingWord) => Math.round(ENEMY_SPEED_FACTOR[speed] * ENEMY_SWING[word]);
 const basic = (kind: string, word: SwingWord = "normal", extra: Partial<WeaponT> = {}): WeaponT => ({ kind, amount: swing(speedOf(kind), word), ...extra });
 /** A basic attack with no kind of its own (a touch, a slam): type, subtype or element, and speed. */
 const touch = (p: { subtype?: "slash" | "pierce" | "blunt"; element?: string }, speed: keyof typeof SPEED, word: SwingWord = "normal", extra: Partial<WeaponT> = {}): WeaponT => ({

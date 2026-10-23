@@ -94,17 +94,17 @@ export const vocabulary: StatusT[] = [
   { id: "aegis", name: "AEGIS", text: "Blocks the next big blow.", label: "buff", show: "icon", stacking: "fizzle", block: { share: STATUS.aegis.share } },
   {
     id: "doom", name: "DOOM", text: "A countdown to a heavy blow.", label: "debuff", show: "icon", stacking: "fizzle", duration: STATUS.doom.countdown,
-    reactions: [{ on: { event: "status_ended", cause: ["expired"] }, do: [{ op: "damage", type: "none", amount: STATUS.doom.damage, to: "holder" }] }],
+    reactions: [{ on: { event: "status_ended", status: "doom", cause: ["expired"] }, do: [{ op: "damage", type: "none", amount: STATUS.doom.damage, to: "holder" }] }],
   },
   {
     id: "bulwark", name: "BULWARK", text: "Piercing and Wind hits chip it; at zero it breaks.", label: "buff", show: "icon", stacking: "intensity",
     trigger: { on: { event: "hit_taken", tags: ["pierce", "wind"] } }, drop: { count: 1 },
-    reactions: [{ on: { event: "status_ended", cause: ["stacks"] }, do: [{ op: "apply", status: "bulwark_broken", to: "holder" }] }],
+    reactions: [{ on: { event: "status_ended", status: "bulwark", cause: ["stacks"] }, do: [{ op: "apply", status: "bulwark_broken", to: "holder" }] }],
   },
   {
     id: "bulwark_broken", name: "BROKEN", text: "Stunned and takes double damage, until the Bulwark refills.", label: "debuff", show: "icon", stacking: "refresh", unremovable: true, duration: STATUS.bulwark.broken,
     lockout: { covers: "all", interrupt: true }, taken: [{ pct: STATUS.bulwark.takenPct }],
-    reactions: [{ on: { event: "status_ended", cause: ["expired"] }, do: [{ op: "apply", status: "bulwark", stacks: STATUS.bulwark.stacks, to: "holder" }] }],
+    reactions: [{ on: { event: "status_ended", status: "bulwark_broken", cause: ["expired"] }, do: [{ op: "apply", status: "bulwark", stacks: STATUS.bulwark.stacks, to: "holder" }] }],
   },
 ];
 

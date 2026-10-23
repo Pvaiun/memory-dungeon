@@ -432,6 +432,9 @@ class Combat {
       }
       st.reactions?.forEach((x, j) => {
         this.event(x.on, `${p}.reactions[${j}].on`);
+        if (x.on.event === "status_ended" && !x.on.status && (x.on.whose ?? "holder") === "holder") {
+          this.r.warn("reaction.anyEnding", `${p}.reactions[${j}].on`, `a reaction to status_ended with no status fires for every status that ends on the unit; name one (its own id, for "when I end")`);
+        }
         x.on.tags?.forEach((t, k) => tag(t, `${p}.reactions[${j}].on.tags[${k}]`));
         x.do.forEach((e, k) => this.effect(e, `${p}.reactions[${j}].do[${k}]`, "reaction", st));
       });

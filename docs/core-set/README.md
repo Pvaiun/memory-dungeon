@@ -35,4 +35,4 @@ Changes to them go through the director and are recorded in `DECISIONS.md`, as s
 
 ## Status
 
-All four documents are in (Oct 23, 2026). Nothing is implemented. The director sets the implementation order next. After the first implementation comes a visual interface, so the director can see and play the slice before more design; they'll detail that then.
+All four documents are in (Oct 23, 2026). **First implementation built (Oct 23, 2026):** every rule, class, piece of gear, formation, enemy, encounter and dungeon is in the engine and the content pack (`content/core-set.pack.json`, generated from `content/core-set/`), with first values for every number and a short ballpark tuning pass. The build's record is `steps/05-core-set/` (`report.md` for the director, `tuning.md` as the trail). The director's sign-off comes next, then the visual interface, then the balance pass by simulation.

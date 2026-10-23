@@ -23,7 +23,17 @@ export const crit = (n: number) => 5 * n;
 
 /** Weapon kinds' speeds: the basic attack's base cooldown. */
 export const SPEED = { fast: 6, medium: 10, slow: 16 } as const;
-export const COOLDOWN = { short: 8, medium: 16, long: 30 } as const;
+/**
+ * Regular fights last about 30 ticks and every action starts a fight on cooldown, so at long = 30 the Cleric's
+ * Prayer never fired in one and a boss's signature blow came once in 38 ticks. Shorter words keep the ratios.
+ */
+export const COOLDOWN = { short: 6, medium: 12, long: 22 } as const;
+/**
+ * The classes document's fallback for Stun: "a long-cooldown Stun with no timing condition may rarely catch a
+ * wind-up. The fallback is a shorter Stun on a shorter cooldown." With Shield bash and Inferno both on long
+ * cooldowns, the bash came five ticks before every Inferno wind-up, in every seed. Stuns run on this instead.
+ */
+export const STUN_COOLDOWN: keyof typeof COOLDOWN = "medium";
 export const WINDUP = { quick: 0.5, normal: 1.5, long: 4, very_long: 8 } as const;
 export const RULES = {
   basicRecovery: 0.25,
@@ -55,11 +65,18 @@ export const HIT = { light: 0.2, normal: 0.35, heavy: 0.6 } as const;
 export type HitWord = keyof typeof HIT;
 
 /**
- * An enemy's basic attack is set by its words alone (fast, weak, heavy), times the kind's speed factor: its
- * Attack and Magic feed its abilities. A boss's standout Attack would otherwise make its plain swing bigger
- * than its signature blow.
+ * An enemy's basic attack is set by its words alone (weak, normal, heavy, massive), per swing; its speed word
+ * sets how often it swings, and its Attack and Magic feed only its abilities. A boss's standout Attack would
+ * otherwise make its plain swing bigger than its signature blow. A weak swing gets through Armor 2 and is
+ * blanked by Armor 5, as the Wolf's bites are meant to be.
  */
-export const ENEMY_SWING = { weak: 300, normal: 700, heavy: 1200, massive: 1800 } as const;
+export const ENEMY_SWING = { weak: 500, normal: 700, heavy: 1100, massive: 1600 } as const;
+/**
+ * A fast swing lands for less (a Leech's bite isn't a Bandit's sword twice as often); a slow one for the same,
+ * since the slow attackers carry the big blows in their abilities (Flatten, Crush). A slow factor of 1.4 pulled
+ * run 1 from 55% to 35% for the starters in round 8.
+ */
+export const ENEMY_SPEED_FACTOR = { fast: 0.75, medium: 1, slow: 1 } as const;
 export type SwingWord = keyof typeof ENEMY_SWING;
 
 /** Enemy abilities' shares of Attack or Magic, chosen against party HP (2,000 to 5,000). */
@@ -68,18 +85,18 @@ export const ENEMY_HIT = {
   flatten: 0.4,
   /** Crush: knocks out any unguarded caster outright; a Guarded, Shielded Knight survives it. */
   crush: 0.5,
-  /** Mend: the Bone Priest's heal. */
-  mend: 0.4,
+  /** Mend: the Bone Priest's heal, about a party's damage output: a mirror until the priest is stopped. */
+  mend: 0.6,
   /** Soulfire: deletes a caster. */
   soulfire: 0.6,
   /** Brand: steady pressure. */
-  brand: 0.07,
+  brand: 0.05,
   /** Inferno: ends the run if it lands uninterrupted. */
   inferno: 0.5,
   /** Hailstorm: a raidwide the Cleric can mend. */
   hailstorm: 0.08,
   /** Tempest: a raidwide the Cleric can absorb. */
-  tempest: 0.1,
+  tempest: 0.06,
   /** Volatile: one blast behind Shields is fine; three together wipe. */
   volatile: 0.25,
 } as const;
@@ -147,8 +164,10 @@ export const STEP = P;
 // ─── Statuses: sizes and durations ───────────────────────────────────────────
 
 export const STATUS = {
-  poison: { every: 2, damage: 120, duration: 10 },
-  regen: { every: 2, share: 0.03, duration: 10 },
+  /** 90 a tick-pair: Regen on a 2-HP unit (80) nearly outruns it, as the Snake Pit's story needs. */
+  poison: { every: 2, damage: 90, duration: 10 },
+  /** 8 pulses of 4%: a Prayer heals a third of everyone's max HP over 16 ticks. */
+  regen: { every: 2, share: 0.04, duration: 16 },
   shield: { capShare: 0.5 },
   might: { perStack: 8, every: 4 },
   weaken: { pct: -30, duration: 10 },
