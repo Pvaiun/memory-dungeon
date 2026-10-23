@@ -23,7 +23,7 @@ The slice is the first version of the game, not the whole of it. The full game g
 
 The director wrote them, and they're the approved design: the core set's work starts at the method's build-and-tune stage (`docs/method.md`). They're written to stand on their own and refer to one another by title (*Core set: classes*).
 
-Changes to them go through the director and are recorded in `DECISIONS.md`, as step 4's design was. The rules the enemies document added (summoning, no unit leaving a fight alive, the Interrupt exception, enemy-only Doom and Bulwark, two enemy-only target phrases) are folded into `rules-and-vocabulary.md`, which wins where the two differ. Its known-gaps list at the end holds the open questions.
+Changes to them go through the director and are recorded in `DECISIONS.md`, as step 4's design was. The rules the enemies document added (summoning, no unit leaving a fight alive, enemy-only Doom and Bulwark, two enemy-only target phrases) are folded into `rules-and-vocabulary.md`, which wins where the two differ. Its known-gaps list at the end holds the open questions.
 
 ## How it relates to the rest of the repo
 

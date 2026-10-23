@@ -301,7 +301,6 @@ Different trios win different fights, and Burn, Chill and Shock each have more t
 | Damage race (boss) | Bard, Monk, Pyromancer | War ballad's Might, and Haste from Allegro and Flow, ramp the party; Burn comes from two sources | Hoplite: protects, but can't win a race |
 | Two states (boss) | Pyromancer, Ranger, Monk | Burn from three sources ticks through both phases; Sunder opens the Armor phase | All-physical or all-magical parties without Burn |
 | Long grind (run) | Cleric, Vampire, Frostweaver | Mercy and Prayer heal cheaply, Raise fixes knockouts, Lifesteal keeps the Vampire full, Stillness refills MP | Pyromancer: burns MP the run can't refill |
-| Interrupt check (boss), Wind breaks it | Frostweaver (Wind staff), Valkyrie, Paladin | Fast Wind basic attacks and Gale spear break the cast; Sanctuary's Ward covers a miss | Any party without Wind |
 | Executioner (boss) | Paladin, Hoplite, Valkyrie | Absolve can lift Doom, Aspis's Aegis may soak it, and Valhalla returns the victim ready | Bard, Hexer: nothing for Doom |
 | Anti-heal (boss) | Paladin, Geomancer, Knight | Absolve lifts Rot; Ward, Shields and Guard stop damage instead of healing it | Cleric, Vampire, Bramble knight: their healing is Rotted |
 

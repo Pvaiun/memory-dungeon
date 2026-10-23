@@ -72,7 +72,7 @@ Fights run in real time, in ticks, with no orders: each unit acts on its own, fr
 - Abilities cost MP. Besides its cooldown, an ability can have a trigger condition and a targeting rule.
 - An ability is ready only when it's off cooldown, its condition (if it has one) is true, and the unit has the MP to pay for it. MP is paid when the action resolves, at the end of its wind-up. If the unit no longer has enough MP then, the ability fizzles: it does nothing and no MP is spent, but it still goes on cooldown. This is unrelated to the Fizzle stacking rule.
 - Every action starts the fight on cooldown.
-- Damage doesn't interrupt a cast; only a knockout or an interrupting lockout does. The one exception is the **Interrupt exception**: a named cast can be broken by hits of a named element, as Ice hits break the Fire Giant's Inferno.
+- Damage doesn't interrupt a cast; only a knockout or an interrupting lockout does.
 - **Firing.** An ability fires as soon as it's ready. It waits only when firing would do literally nothing; reapplying a status that refreshes counts as doing something. Its description says what it waits for, and its targeting conditions are followed as written.
 - **Fizzle statuses.** An ability that applies Stun, Silence, Aegis or Doom skips targets that already have it and takes the next one its target phrase allows: Hush goes to the foe with the next-highest Attack or Magic. If every candidate already has it, an ability that only applies the status waits; one that also deals damage, like Shield bash or Tremor, fires anyway at its usual target, dealing its damage without the status. A Shield at its cap counts as already there under this rule: an ability that adds Shield skips a capped ally for the next one its target phrase allows, and waits if every candidate is capped.
 
@@ -365,12 +365,7 @@ The engine's finer rules come from step 4 (`steps/04-combat-concepts/design.md`)
 
 ### From the enemies document
 
-Found when *Core set: enemies, encounters and dungeons* came in.
+What's left after the enemies document's stat lines and fixes.
 
-- **Stats an enemy doesn't list.** Entries list only the stats that matter: bosses list no Aggro, and several enemies list no MP, Magic or Crit. Until set, an unlisted stat is zero and an unlisted Aggro is 3, the middle of the scale. A boss's Aggro matters beside its adds, since it decides how often the party's random picks find it.
-- **Scaling on enemy abilities.** Every amount states what it scales from, but enemy entries don't. Until they do, physical damage scales from Attack and magical from Magic, by the convention. The Bomb Bug shows why it matters: Volatile is a Fire blast from a unit with no Magic listed.
-- **Bulwark and Dispel.** Bulwark is a buff Dispel can remove, and the Hexer's Unravel removes one random buff. Whether removing it ends it for the fight, refills it, or counts as reaching zero, with the Stun and double damage.
-- **Split.** Whether the Lava Slime's statuses (Burn, Poison, Sunder) pass to its Mini Slimes, and whether being replaced counts as a knockout.
-- **Quiet's long Silence.** Every status has one fixed definition, but the Silent One's Quiet applies Silence "lasting long". Either that's Silence's own length, or a separate, longer status.
-- **Grave Watch.** By "the foe with the highest Attack or Magic", a Troll (Attack 6) outranks the Bone Priest (Magic 4), so Hush and Enfeeble go to a Troll, not to the priest as encounter 10 and the Bone Priest's test say.
-- **A name.** Encounter 21 says *Blazing arrow*; the Ranger's ability in *Core set: classes* is *Fire arrow*.
+- **Scaling on enemy abilities.** Volatile states its scaling; the other enemy abilities don't. Until they do, physical damage scales from Attack and magical from Magic, by the convention.
+- **Split as a knockout.** The Mini Slimes enter as new units. Whether the Lava Slime being replaced counts as a knockout, for anything that reacts to one.
