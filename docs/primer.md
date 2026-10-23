@@ -2,7 +2,7 @@
 
 What the game is, how it's being made, and where it stands. It's written for a reader with no access to the design repo, such as an AI interviewing the director about one design step. It describes; it doesn't decide. Where it and a step's brief differ, the brief is newer.
 
-Updated Oct 20, 2026, after step 4's sign-off.
+Updated Oct 23, 2026, after the director's core set.
 
 ## Memory, and why the game exists
 
@@ -23,6 +23,8 @@ The tasks stay the point, and the game is a reason to do them. These principles 
 ## The game
 
 A party-based JRPG dungeon crawler with automatic combat, where preparation is the game. The skill is building a party and learning by trial and error, not performing in a fight.
+
+**Right now, the core set.** What's being built at the moment is a vertical slice of this game, which the director designed as four documents (rules and vocabulary, classes, gear and formation lists, enemies): the game part, with none of the quest board, progression, perks or challenges. Everything is available, and combat, formations, gear and the battle system are tested freeform. The full game described below grows out of it later. Where the slice differs from the concept (parties of 3 rather than 5 in the first playable, 16 classes, three gear slots per unit, formations of three slots), the slice is what's built.
 
 **The loop.**
 
@@ -46,7 +48,7 @@ A party-based JRPG dungeon crawler with automatic combat, where preparation is t
 
 The game is also a test of a way of making games. The director sets the vision and judges the results. AI designs, generates content and tunes it, and simulation stands in for most playtesting: the game plays itself through menus and numbers, so thousands of versions can be tested. Simulation measures balance, not fun. AI reads of fights stand in for players, and the real test is a person using it.
 
-The work is 24 ordered design steps. They're a first pass: each step aims for the best starting point to iterate from, and any step can be revisited after the full pass. Each runs three stages, and each stage ends with the director:
+The work was planned as 24 ordered design steps, a first pass to iterate from. The first three built the foundation and the fourth built combat; then steps 4 to 12 proved too interlocked to design one at a time, and the director designed them together as the core set. The steps after it stand. Each step runs three stages, and each stage ends with the director:
 
 1. **Intent.** The director says what they want for the step, through an interview from a short brief. The answers are recorded in the director's words, each tagged firm, lean, reference or idea. The interviewer asks and doesn't design.
 2. **Design.** The AI designs from the intent, maps every intent item to the design, and challenges anything it thinks doesn't fit, with reasons. The director approves.
@@ -65,21 +67,9 @@ Direction is guidance, not law. "Firm" means bend it only with evidence and the 
 
 **Step 1, content schema.** A data format for every kind of content, and one small worked-example dungeon, the Hollow of the Grey Mother. It describes a game much like the one the director wants, but it came before the method, so it's a starting point, a JRPG-style framework, rather than locked design decisions. Its classes, numbers, formulas and rule-language building blocks are all placeholder, and later steps may keep, change or drop them. The ideas from its review that this primer already describes (no geometry, simple targeting, SaGa-style formations, keyholes as predictions) are where later steps start.
 
-**Step 2, headless engine.** The machinery that plays runs with no screen: seeded dice, runs as plain data, pauses for player decisions, exact replay and logs. What it settled for later steps:
+**Step 2, headless engine.** The machinery that plays runs with no screen: seeded dice, runs as plain data, pauses for player decisions, exact replay and logs. Fights run in the player's browser from a seed, and the same seed gives the same fight on every device, so the server stores only a small replay record per run. Combat maths uses only basic arithmetic (no powers, roots or logarithms), so curves are written as ratios or small tables. The battle system is one swappable piece, which step 4 filled with real combat without touching the rest.
 
-- Fights run in the player's browser from a seed, and the same seed gives the same fight on every device. The server stores only a small replay record per run.
-- Combat maths uses only basic arithmetic (no powers, roots or logarithms), so curves are written as ratios or small tables.
-- Perk picks are the only decision a player makes during a run, but the engine allows other kinds to be added later.
-- The battle system is one swappable piece, which step 4 filled with real combat without touching the rest.
-
-**Step 3, simulation harness.** The tool every later step uses to test its design. It runs thousands of simulated fights and simulated players' weeks, and says how sure each result is. What it settled for later steps:
-
-- Reports to the director are words first, then one to three stories (a simulated player's weeks, or a fight retold in a few lines), then at most three simple charts. The director catches wrong numbers mainly through the stories.
-- Most numbers are for the AI, which uses them to balance and to bring the director plain-language questions. The director's own input is on the big questions: pacing over weeks, how long a player waits, and how strict building a party should be.
-- The game is tuned for the optimizer: a player who does most quests and homes in on a build by trial and error. Requirements can be quite strict. A good-enough benchmark beside it shows whether a stuck optimizer missed a party, and a casual player is a check.
-- Strictness isn't "the share of all builds that win". In the director's terms, it's how custom a party has to be: how many colours (broad kinds of party) can win, and how many tweaks win inside them.
-- Replays are challenges only. A cleared dungeon can only be replayed through its challenges, each of which pays loot once, though anything not yet beaten can be retried freely. So there's no endless grinding. Every week a player is stuck is sorted as walled by quests or walled by play, and the balance between them has to be agreed.
-- Feel checks mainly test that information is clear. A fresh AI reader, seeing only what a player sees, says whether it could tell why a fight was lost, well enough to guess at a new strategy.
+**Step 3, simulation harness.** The tool every later step uses to test its design. It runs thousands of simulated fights and simulated players' weeks, and says how sure each result is. Reports to the director are words first, then one to three stories (a fight retold in a few lines, or a simulated player's weeks), then at most three simple charts; the director catches wrong numbers mainly through the stories. The game is tuned for the optimizer, a player who does most quests and homes in on a build by trial and error, with a good-enough benchmark beside it and a casual player as a check. Strictness is how custom a party has to be: how many colours (broad kinds of party) can win, and how many tweaks win inside them. For the full game, replays are challenges only, each paying loot once, so there's no endless grinding. Feel checks mainly test that information is clear: a fresh AI reader, seeing only what a player sees, says whether it could tell why a fight was lost.
 
 **Step 4, combat concepts.** The director wrote this design themselves, and it's now the engine's combat. In short:
 
@@ -87,24 +77,24 @@ Direction is guidance, not law. "Firm" means bend it only with evidence and the 
 - Damage is physical (slash, pierce or blunt: meets Evasion and Armor) or magical (an element: meets that element's Resistance). Every amount states its own scaling, from any stats or none; nothing scales by default, and no stat is tied to a damage type (physical things scaling from Attack is a convention). Boosts, damage-taken modifiers, crits, riders and shields follow one resolution order.
 - Everything that happens on an event or a timer is a status: buffs, debuffs, damage over time, stuns and silences (lockouts), auras, and passives' reactions. A status is fixed when applied: the application scales the stacks it adds, from whatever stats it names, and a stack is a stack whoever applied it. Status damage is untyped and unresisted by convention. A reapplied Refresh status replaces the old one. Stacking statuses (Intensity) end below 1 stack.
 - Default targeting picks foes weighted by Aggro, which taunts (Forced) and stealth (Forbidden) override; abilities can state their own targeting.
-- Content is data built from stats, statuses, actions and targeting rules. The building blocks will grow as content needs them; the numbers are placeholders.
+- Content is data built from stats, statuses, actions and targeting rules. The numbers are placeholders.
+
+Writing this step showed that the plan's steps 4 to 12 (verbs, mechanics, traits, units, formations, gear, runs, encounters) interlock too much to design one at a time, which led to the core set.
+
+**The core set.** The director's vertical slice, designed as four documents (Oct 23, 2026). Three are in. *Rules and vocabulary* has the game rules and the combat system: 22 statuses, 7 special stats and 6 effects, each with a tier (Fundamental, Specialist or Signature), 7 elements with a job each, 13 weapon kinds, and the gear and formation rules. *Classes* has 16 classes, each a passive, three abilities and a plan, with a test fight each and parties of 3 against 13 sample challenges. *Gear and formation lists* has 90 pieces and 10 formations, designed against each class's build forks, with a coverage check. The enemies document is coming and will add rules. The core set's rules supersede step 4's design where they differ, though the engine still runs step 4's. Its numbers are a relative scale (stats from 1 to 5), with first values and the balance pass still to come. Nothing is implemented yet.
 
 ## What's ahead
 
-Each later step owns its topic, so a question that belongs to a later step can be noted and left for it.
+1. **The enemies document,** which completes the core set and adds rules.
+2. **Building the core set,** in the order the director sets then: the engine, the content and the numbers, tuned by simulation.
+3. **A visual interface,** so the director can see and play the slice before more design.
+4. **The full game,** grown out of the slice: content and balance at volume, progression pacing, the quest board, screens, onboarding, and a review against the principles. The original plan's later steps are the starting point, revisited then.
 
-| Steps | What they design |
-| --- | --- |
-| 5–6 | The hidden verbs that describe roles, and the mechanics that express them on top of step 4's combat |
-| 7 | The trait words players see on enemies |
-| 8–12 | Units and classes, formations, gear, dungeon runs and perks, encounters |
-| 13–17 | A starter slice, balance, progression pacing, version 1's content, AI playtests |
-| 18–20 | The quest board: what completes a quest, how boards are dealt, how rewards are paid |
-| 21–23 | Screens, how combat reads on a phone, onboarding |
-| 24 | A review of everything against the principles |
+A question that belongs to later work can be noted and left for it.
 
 ## Words
 
+- **Core set:** the vertical slice being built now: rules, combat, classes, gear, formations and enemies, with no progression.
 - **Unlock:** a quest reward (class, formation or powerful gear).
 - **Keys and keyholes:** encounter-design terms for a party's strengths and the gimmicks that call for them. Predictions only.
 - **Verbs:** a hidden design vocabulary for roles (physical damage, healing, evasion…). The game never reads them.

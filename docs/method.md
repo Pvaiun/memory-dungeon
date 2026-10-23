@@ -22,7 +22,7 @@ How firmly the director holds an item sets how strong the case for bending it mu
 - **Firm:** bend it only with evidence and the director's agreement.
 - **Lean:** the designer may bend it, and says so in the intent map.
 
-The concept spec is the game-wide intent: its principles are firm, and the rest is lean. `DECISIONS.md` records what has been decided since, with the detail and the reasons. Both can be challenged like any other direction; until a decision is changed there, it stands.
+The concept spec is the game-wide intent: its principles are firm, and the rest is lean. `DECISIONS.md` records what has been decided since, with the detail and the reasons. Both can be challenged like any other direction; until a decision is changed there, it stands. For the slice being built now, the core set's documents are the design of record for what they cover (see The core set, below); where they and the spec differ, the slice is built as the core set says.
 
 The two must never disagree. The spec stays high level, but it describes the game as currently decided, not as first imagined. **Whenever `DECISIONS.md` changes, bring the concept spec in line in the same commit:** fix or remove anything it contradicts, and add a line only where a decision changes the game at the spec's level. Don't copy detail across. If they ever do differ, `DECISIONS.md` wins and the spec gets fixed. Changing a principle is still a challenge that needs the director; the spec only records what they agreed.
 
@@ -152,3 +152,7 @@ Every step runs the loop, but not at the same weight. Each step in the design pl
 | 24, principles review | None | A checklist |
 
 Research tasks, like the tech-stack brief, aren't design steps and skip the loop.
+
+## The core set
+
+Writing step 4 showed that steps 4 to 12 are too interlocked to design one at a time, so the director designed them together as the core set (`docs/core-set/`, Oct 23, 2026): a vertical slice with the rules, combat, classes, gear, formations and enemies, and no progression. Its documents are its approved design, so its work starts at stage 3, build and tune, under this method's rules, in an order the director sets once the enemies document lands. Everything after it runs the full loop as before.

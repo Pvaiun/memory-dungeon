@@ -14,6 +14,8 @@ Decisions are direction like any other (see `docs/method.md`): a designer can ch
 
 - **Checks sized to the need (director, Oct 20, 2026):** a step runs the tests, studies and feel checks it needs to know something, and skips the ones it doesn't. When unsure, it asks the director. There's no fixed list of checks per step.
 
+- **The core set (director, Oct 23, 2026):** steps 4 to 12 are designed together, as one vertical slice the director wrote, instead of one step at a time. See "The core set" at the end of this file.
+
 ## Tech-stack brief
 
 Reviewed with the director Oct 15, 2026. Full record: `docs/memory-stack.md`.
@@ -94,3 +96,15 @@ Signed off by the director, Oct 20, 2026. The director wrote the design themselv
 - **Each unit draws its own dice** (party units by class, enemies by slot), so the same seed brings the same luck to the same unit, whatever else is in the fight.
 - **Still open, for steps 6 and 8:** Lifesteal as a stat needs a scale with a second factor ("X% per point of Y").
 - **Simulation speed (director, Oct 20, 2026).** Fast enough for now means the combat sample runs in under 2 minutes in a cloud session, and a normal tuning study finishes inside one command. Re-check at step 13, on real content. Studies run as one prebuilt file, a combat study's jobs are shared out across every core, and each party is checked once per study rather than on every seed: the combat sample went from 307 s to 64 s with identical numbers. A study's running time costs no tokens, because a cloud session's machine isn't charged; waiting and the 10-minute command limit are the costs. When volume outgrows a cloud session, studies run in a Claude Code session on the director's PC. A deeper rewrite of the engine for speed waits until step 13 shows it's needed.
+
+## The core set
+
+The director's decision, Oct 23, 2026. The documents are in `docs/core-set/`, with a `README.md` on what's in, what's out and how it relates to the rest of the repo.
+
+- **Steps 4 to 12 are designed together.** Writing step 4 showed that combat, roles, mechanics, traits, units, formations, gear, runs and encounters interlock too much to design one step at a time; trying to work that way didn't work. The director designed them together instead, as the core set: four documents, *Rules and vocabulary*, *Classes*, *Gear and formation lists* and *Enemies*. The first three are in. *Enemies* (enemies, encounters and dungeons) is coming, and it will add core rules, so *Rules and vocabulary* changes when it lands. The documents are written to stand on their own.
+- **The core set is the development target.** It replaces the design plan's steps 5 to 12. Step 4's design is what the engine runs today; where the core set's rules differ from it, the core set is what gets built. How step 4's finer rules (sub-ticks, batch order, per-unit dice) meet the core set's is for the build to settle. The plan's steps 13 onward describe the full game and are revisited after the slice.
+- **It's a vertical slice with no progression.** The slice makes complete abstraction of the ADHD side (the quest board, reward streams, unlocks and challenges) and, in its first version, of progression altogether: everything is available, and combat, formations, gear and the battle system are tested freeform. The full game's pitch (`docs/concept-spec.md`) stands: the slice grows into it later, in ways not yet known.
+- **The method is unchanged.** Director, designer and implementer work as `docs/method.md` sets out. Steps 1 to 3 remain the implementation foundation (the schema, engine and harness), not design. The core set's documents are its approved design, so its work starts at build and tune.
+- **Order and details come with the enemies document.** Nothing is implemented until then, and the director sets the implementation order.
+- **A visual interface follows the first implementation,** so the director can see and interact with the slice before more design. The director will detail it then.
+- **Where the core set differs from earlier decisions, it wins for the slice.** Noted so far: parties of 3 in the first playable, with the tech keeping 5; formations of three slots, one per unit, with five kept in the tech; three gear slots per unit (weapon, armor, amulet), with gear fixed and never generated; and classes as skeletons with three abilities each, where the full game's rule is five with three brought. The concept spec carries a note to this effect and is brought back in line once the slice has shown what holds.
