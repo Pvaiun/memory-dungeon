@@ -218,7 +218,7 @@ export function runProgression(s: ProgressionStudy, raw: unknown, rules: Rules, 
   const bench = benchmark(c, pr, s.benchmark, s.clearBar);
   const order = c.pack.progression.dungeonOrder;
   const pool = unlockPool(c);
-  const loot = new Set(c.pack.gear.filter((g) => g.source === "loot").map((g) => g.id));
+  const loot = new Set(c.pack.gear.filter((g) => g.source === "drop").map((g) => g.id));
   // Checking a challenge's rules is slow, so each party and target is checked once.
   const fitted = new Map<string, boolean>();
   const fit = (p: Party, t: Target) => {
@@ -446,8 +446,8 @@ export function runProgression(s: ProgressionStudy, raw: unknown, rules: Rules, 
         for (const t of [...(d ? [asTarget(d)] : []), ...available(cleared)]) {
           if (!bench.ask(owned, t).clearable) continue;
           cleared.add(t.key);
-          const table = t.challenge ? c.dungeons.get(t.dungeon)!.challenges.find((ch) => ch.id === t.challenge)!.loot : c.dungeons.get(t.dungeon)!.loot.firstClear;
-          for (const g of rollLoot(table, rngFor(seed, `bench:loot:${t.key}`))) owned.gear[g] = (owned.gear[g] ?? 0) + 1;
+          const table = t.challenge ? c.dungeons.get(t.dungeon)!.challenges.find((ch) => ch.id === t.challenge)!.loot : c.dungeons.get(t.dungeon)!.loot?.firstClear;
+          if (table) for (const g of rollLoot(table, rngFor(seed, `bench:loot:${t.key}`))) owned.gear[g] = (owned.gear[g] ?? 0) + 1;
           changed = true;
         }
       }

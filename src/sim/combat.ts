@@ -57,6 +57,10 @@ export function targets(c: Content, s: CombatStudy): Target[] {
 /** The parties a target allows: each set of classes once, in the first owned formation that fits. */
 function partiesFor(c: Content, s: CombatStudy, t: Target): Party[] {
   if (Array.isArray(s.parties)) return s.parties.filter((p) => fits(c, p, t.dungeon, t.challenge));
+  if ("trios" in s.parties) {
+    const formation = s.parties.formation ?? c.pack.starter.formations[0];
+    return s.parties.trios.map((classes) => make(c, everything(c), classes, formation)).filter((p) => fits(c, p, t.dungeon, t.challenge));
+  }
   const cap = Math.min(s.parties.max ?? 99, c.dungeons.get(t.dungeon)!.partySize.max);
   const owned = everything(c);
   if (s.parties.formations === "all") return all(c, owned, cap, "all").filter((p) => fits(c, p, t.dungeon, t.challenge));

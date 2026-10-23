@@ -4,14 +4,11 @@
  * Three layers of checks:
  *   1. Shape: the zod schema (types, required fields, closed sets).
  *   2. Meaning: every reference resolves, and content follows the combat
- *      design's rules for what's valid (steps/04-combat-concepts/design.md):
- *      a physical instance has a subtype and no element, Attack scales only
- *      physical instances, percent changes only on amount stats, and so on.
- *   3. Design rules from the concept spec and the director's decisions, driven
- *      by the pack's `design` block.
- *
- * Step 4 replaced schema 0.3's rule language, and with it the checks that
- * derived verbs from data; step 5 defines the real verbs.
+ *      rules for what's valid (steps/04-combat-concepts/design.md and
+ *      docs/core-set/rules-and-vocabulary.md): a physical instance has a
+ *      subtype and no element, percent changes only on amount stats, a
+ *      weapon belongs to a kind, and so on.
+ *   3. Design rules from the core set, driven by the pack's `design` block.
  *
  * Every issue carries a stable `code`, so tests and later tooling can rely on it.
  */
@@ -35,8 +32,7 @@ class Report {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const COLLECTIONS = [
-  "stats", "elements", "statuses", "verbs", "traits", "slots", "classes", "abilities", "gear", "formations",
-  "enemies", "perkFamilies", "perks", "dungeons",
+  "stats", "elements", "weaponKinds", "statuses", "classes", "abilities", "gear", "formations", "enemies", "perkFamilies", "perks", "dungeons",
 ] as const;
 type Coll = (typeof COLLECTIONS)[number];
 
@@ -103,8 +99,8 @@ export function validatePack(raw: unknown, opts: ValidateOptions = {}): Validate
   c.abilities();
   checkUnits(pack, ix, w, r, c);
   checkGear(pack, ix, w, r, c);
-  checkFormations(pack, w, r, c);
-  checkEnemies(pack, ix, w, r, c);
+  checkFormations(pack, r, c);
+  checkEnemies(pack, w, r, c);
   checkPerks(pack, ix, w, r, c);
   checkDungeons(pack, ix, w, r);
   checkStarterAndProgression(pack, ix, w, r);
@@ -123,7 +119,6 @@ function checkDesign(pack: Pack, r: Report) {
   rangeOk(d.partySize, "design.partySize");
   rangeOk(d.perkPicksPerRun, "design.perkPicksPerRun");
   rangeOk(d.perkPoolSize, "design.perkPoolSize");
-  rangeOk(d.keyholesPerBoss, "design.keyholesPerBoss");
   if (d.partySize[1] > d.formationPositions) r.error("design.partySize", "design.partySize", `party size can't exceed ${d.formationPositions} formation positions`);
   if (d.abilitiesEquipped > d.abilitiesPerClass) r.error("design.abilities", "design.abilitiesEquipped", `can't equip more abilities than a class has`);
   if (pack.ruleset.run.perkOffer.options !== d.perkOptionsPerPick) {
@@ -132,19 +127,21 @@ function checkDesign(pack: Pack, r: Report) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// The combat rule language (design sections 3 to 8)
+// The combat rule language (design sections 3 to 8, and the core set's additions)
 // ─────────────────────────────────────────────────────────────────────────────
 
-/** Does a number read this stat? */
 /** An Intensity total that every applier adds into: it has no single source (section 7.6). */
 const shared = (st: S.StatusT) => st.stacking === "intensity" && !st.perSource;
 
 /** Where a number, effect or rule sits: in an action, a status's pulse or trigger, or a reaction. */
 type Where = "action" | "pulse" | "reaction";
 
-const HIT_EVENTS = ["action_start", "action_resolve", "action_interrupted", "hit_lands", "hit_taken", "hit_evaded", "hit_missed"];
+const ACTION_EVENTS = ["action_start", "action_resolve", "action_interrupted"];
+const HIT_EVENTS = ["hit_lands", "hit_taken", "hit_evaded", "hit_missed"];
 const STATUS_EVENTS = ["status_gained", "status_triggered", "status_ended"];
-const RESERVED_TAGS = ["basic", "ability", "physical", "magical", "none", "healing", "all", ...Object.keys(S.SUBTYPES)];
+const DAMAGE_EVENTS = ["damage_dealt", "damage_taken"];
+const RESERVED_TAGS = ["basic", "ability", "extra", "physical", "magical", "none", "healing", "all", ...Object.keys(S.SUBTYPES)];
+const WEIGHT_ORDER: Record<S.WeightT, number> = { light: 0, medium: 1, heavy: 2 };
 
 class Combat {
   constructor(readonly pack: Pack, readonly ix: Index, readonly w: Walker, readonly r: Report) {}
@@ -159,7 +156,7 @@ class Combat {
     else if (head === "immune" && rest[0] === "status" && rest.length === 2) this.w.ref("statuses", rest[1], path, "status");
     else if (head === "immune" && rest[0] === "kind" && rest.length >= 2) {
       if (!(rest[1] in S.KINDS)) this.r.error("stat.family", path, `'${rest[1]}' isn't an effect kind (${Object.keys(S.KINDS).join(", ")})`);
-    } else if (head !== "immune" || rest.length !== 1 || !["debuffs", "damage"].includes(rest[0])) {
+    } else if (head !== "immune" || rest.length !== 1 || !["debuffs", "damage", "dispel"].includes(rest[0])) {
       this.r.error("stat.family", path, `'${key}' isn't a stat or a member of a stat family (${Object.keys(S.STAT_FAMILIES).join(", ")})`);
     }
     return null;
@@ -186,10 +183,17 @@ class Combat {
       const p = `${path}.scale[${i}]`;
       if (s.stat) this.statKey(s.stat, `${p}.stat`);
       if (s.stacks) this.w.ref("statuses", s.stacks, `${p}.stacks`, "status");
+      if (s.when) this.unitCond(s.when, `${p}.when`);
       if (s.amount && where !== "reaction") this.r.error("scale.amount", p, `only a reaction has an event amount to scale from`);
       if (!inStatus && (s.of === "holder" || s.of === "source")) this.r.error("scale.of", `${p}.of`, `'${s.of}' only means something inside a status; in an action, use self or target`);
       if (inStatus && s.stat && !s.of) this.r.error("scale.of", p, `in a status, say whose stat this is: source (fixed at application) or holder (read when used)`);
       if (inStatus && s.of === "source" && this.shared) this.r.error("scale.of", `${p}.of`, `a shared Intensity total has no single source; make the status Per source, or scale the stacks its applications add`);
+      if (s.times) {
+        this.statKey(s.times.stat, `${p}.times.stat`);
+        if (s.amount && !s.times.of) this.r.error("scale.times", `${p}.times`, `an event amount has no unit of its own: say whose stat multiplies it (holder or self)`);
+        if (!inStatus && (s.times.of === "holder" || s.times.of === "source")) this.r.error("scale.of", `${p}.times.of`, `'${s.times.of}' only means something inside a status`);
+        if (inStatus && s.times.of === "source") this.r.error("scale.times", `${p}.times.of`, `a live multiplier can't read the source, which is only known at application; use holder or self`);
+      }
     });
   }
 
@@ -209,16 +213,29 @@ class Combat {
   }
 
   unitCond(c: S.UnitCondT, path: string) {
-    if (c.has) this.w.ref("statuses", c.has, `${path}.has`, "status");
-    if (c.lacks) this.w.ref("statuses", c.lacks, `${path}.lacks`, "status");
+    for (const k of ["has", "lacks"] as const) {
+      const v = c[k];
+      if (v !== undefined) (Array.isArray(v) ? v : [v]).forEach((id, i) => this.w.ref("statuses", id, Array.isArray(v) ? `${path}.${k}[${i}]` : `${path}.${k}`, "status"));
+    }
     if (c.stacks) this.w.ref("statuses", c.stacks.status, `${path}.stacks.status`, "status");
+    for (const k of ["atCap", "belowCap"] as const) {
+      const id = c[k];
+      if (id === undefined) continue;
+      if (this.w.ref("statuses", id, `${path}.${k}`, "status")) {
+        const st = this.ix.get<S.StatusT>("statuses", id)!;
+        if (st.stacking !== "intensity" || st.cap === undefined) this.r.error("cond.cap", `${path}.${k}`, `'${id}' isn't an Intensity status with a cap`);
+      }
+    }
   }
 
-  rule(t: S.TargetRuleT, path: string) {
+  rule(t: S.TargetRuleT, path: string, opts: { main?: boolean } = {}) {
     if (t.where) this.unitCond(t.where, `${path}.where`);
+    if (t.ifNone && !t.where) this.r.error("target.ifNone", `${path}.ifNone`, `ifNone only means something with a where filter`);
+    if (t.exclude && opts.main) this.r.error("target.exclude", `${path}.exclude`, `an action's own target rule has no earlier targets to exclude; use it on an effect's 'to' or a strike`);
     if ((t.pick === "lowest" || t.pick === "highest") && !t.by) this.r.error("target.by", path, `pick ${t.pick} needs 'by'`);
     if (t.by && typeof t.by === "object") {
       if ("stat" in t.by) this.statKey(t.by.stat, `${path}.by.stat`);
+      else if ("stats" in t.by) t.by.stats.forEach((k, i) => this.statKey(k, `${path}.by.stats[${i}]`));
       else this.w.ref("statuses", t.by.stacks, `${path}.by.stacks`, "status");
     }
     if (t.side === "self" && t.count && t.count > 1) this.r.warn("target.count", path, `side self has one unit`);
@@ -238,9 +255,9 @@ class Combat {
     if (typeof a.duration === "number") this.ticks(a.duration, `${path}.duration`);
   }
 
-  effect(e: S.EffectT, path: string, where: Where, st: S.StatusT | null) {
+  effect(e: S.EffectT, path: string, where: Where, st: S.StatusT | null, action?: S.AbilityT) {
     const inStatus = !!st;
-    const to = e.to;
+    const to = "to" in e ? e.to : undefined;
     if (typeof to === "object") this.rule(to, `${path}.to`);
     else if (to) {
       if (where === "action" && ["holder", "source", "other"].includes(to)) this.r.error("effect.to", `${path}.to`, `'${to}' only means something inside a status`);
@@ -248,7 +265,7 @@ class Combat {
       if (where === "pulse" && to === "other") this.r.error("effect.to", `${path}.to`, `a pulse has no event, so no 'other' unit`);
       if (to === "source" && (!st || shared(st))) this.r.error("effect.to", `${path}.to`, `only statuses with one applier at a time (Refresh, Fizzle, Per source) know their source`);
     }
-    if (where === "reaction" && to === undefined) this.r.error("reaction.to", path, `a reaction's effects state their target (holder, self, other, source or a rule)`);
+    if (where === "reaction" && to === undefined && e.op !== "summon") this.r.error("reaction.to", path, `a reaction's effects state their target (holder, self, other, source or a rule)`);
     switch (e.op) {
       case "damage":
         this.instance(e, path, where, inStatus);
@@ -267,19 +284,32 @@ class Combat {
         if (e.status) this.w.ref("statuses", e.status, `${path}.status`, "status");
         if (e.tag && !e.kind) this.r.error("remove.tag", `${path}.tag`, `a tag narrows an effect kind; give the kind too`);
         break;
+      case "revive": {
+        this.num(e.hp, `${path}.hp`, where, inStatus);
+        // Its targets must be knocked-out units: a rule asking for ko, or an action whose own target rule does.
+        const asks = (rule: unknown) => typeof rule === "object" && rule !== null && (rule as S.TargetRuleT).where?.ko === true;
+        const ok = typeof to === "object" ? asks(to) : (to === undefined || to === "target") && where === "action" && asks(action?.target);
+        if (!ok) this.r.error("revive.target", path, `a revive targets knocked-out units: its rule (or the ability's target) must ask for 'ko: true'`);
+        break;
+      }
+      case "summon":
+      case "replace":
+        this.w.ref("enemies", e.enemy, `${path}.enemy`, "enemy");
+        break;
     }
   }
 
   event(spec: S.EventSpecT, path: string) {
-    if (spec.kind && !HIT_EVENTS.includes(spec.event)) this.r.error("event.kind", `${path}.kind`, `only action and hit events have a kind`);
+    if (spec.kind && !ACTION_EVENTS.includes(spec.event) && !HIT_EVENTS.includes(spec.event)) this.r.error("event.kind", `${path}.kind`, `only action and hit events have a kind`);
+    if (spec.tags && !HIT_EVENTS.includes(spec.event)) this.r.error("event.tags", `${path}.tags`, `only hit events carry tags`);
     if (spec.status) {
-      if (!STATUS_EVENTS.includes(spec.event)) this.r.error("event.status", `${path}.status`, `only status events name a status`);
+      if (!STATUS_EVENTS.includes(spec.event) && !DAMAGE_EVENTS.includes(spec.event)) this.r.error("event.status", `${path}.status`, `only status and damage events name a status`);
       this.w.ref("statuses", spec.status, `${path}.status`, "status");
     }
     if (spec.cause && spec.event !== "status_ended") this.r.error("event.cause", `${path}.cause`, `only status_ended has a cause`);
   }
 
-  /** Tags that boosts, modifiers, lockouts and riders can name. */
+  /** Tags that boosts, modifiers, lockouts, riders and event filters can name. */
   knownTags(): Set<string> {
     return new Set([...RESERVED_TAGS, ...this.pack.elements.map((e) => e.id), ...this.pack.statuses.flatMap((s) => [s.id, ...(s.tags ?? [])])]);
   }
@@ -306,7 +336,11 @@ class Combat {
     pack.elements.forEach((e, i) => {
       if (RESERVED_TAGS.includes(e.id)) this.r.error("element.reserved", `elements[${i}]`, `'${e.id}' is already a tag (${RESERVED_TAGS.join(", ")})`);
     });
-    pack.slots.forEach((s, i) => s.class && this.w.ref("classes", s.class, `slots[${i}].class`, "class"));
+    pack.weaponKinds.forEach((k, i) => {
+      const p = `weaponKinds[${i}]`;
+      this.instance({ ...k, amount: 0 }, p, "action", false);
+      this.ticks(k.cooldown, `${p}.cooldown`);
+    });
     const rs = pack.ruleset;
     this.weapon(rs.unarmed, "ruleset.unarmed");
     this.ticks(rs.abilityCast, "ruleset.abilityCast");
@@ -314,8 +348,13 @@ class Combat {
     if (rs.taken.floor > rs.taken.cap) this.r.error("ruleset.taken", "ruleset.taken", `floor is above cap`);
   }
 
+  /** A weapon: its kind's type and cooldown, or its own. */
   weapon(wp: S.WeaponT, path: string) {
-    this.instance({ ...wp, amount: wp.amount ?? 0 }, path, "action", false);
+    const k = wp.kind && this.w.ref("weaponKinds", wp.kind, `${path}.kind`, "weapon kind") ? this.ix.get<S.WeaponKindT>("weaponKinds", wp.kind)! : undefined;
+    const type = wp.type ?? k?.type;
+    if (!type) this.r.error("weapon.kind", path, `a weapon names a kind, or states its own type and cooldown`);
+    if (wp.cooldown === undefined && !k) this.r.error("weapon.kind", path, `a weapon without a kind states its cooldown`);
+    this.instance({ type: type ?? "physical", subtype: wp.subtype ?? k?.subtype, element: wp.element ?? k?.element, amount: wp.amount }, path, "action", false);
     wp.riders?.forEach((x, i) => this.instance(x, `${path}.riders[${i}]`, "action", false));
     wp.apply?.forEach((x, i) => this.apply(x, `${path}.apply[${i}]`, "action", false));
     this.ticks(wp.cooldown, `${path}.cooldown`);
@@ -352,6 +391,7 @@ class Combat {
         if (st.drop && !st.pulse && !st.trigger) this.r.error("status.drop", `${p}.drop`, `a drop needs a trigger: a pulse or an event`);
         if (st.trigger && !st.drop && !st.trigger.do?.length) this.r.warn("status.trigger", `${p}.trigger`, `a trigger with no effects and no drop does nothing`);
       }
+      if (st.pulse && !st.pulse.do?.length && !(intensity && st.drop)) this.r.error("status.pulse", `${p}.pulse`, `a pulse with no effects is only a timer for an Intensity drop`);
       if (shared(st)) {
         if (st.reactions?.some((x) => x.actor === "source")) this.r.error("status.source", `${p}.reactions`, `a shared Intensity total has no single source to act`);
         if (st.crit?.fromSource) this.r.error("status.source", `${p}.crit`, `a shared Intensity total has no single source's crit stats to use`);
@@ -372,6 +412,11 @@ class Combat {
         this.num(t.pct, `${p}.taken[${j}].pct`, "pulse", true);
       });
       if (st.lockout) tag(st.lockout.covers, `${p}.lockout.covers`);
+      if (st.seek !== undefined && !["basic", "ability", "all"].includes(st.seek)) this.r.error("status.seek", `${p}.seek`, `seek covers basic, ability or all`);
+      if (st.strike) {
+        if (st.strike.scale) this.statKey(st.strike.scale, `${p}.strike.scale`);
+        if (typeof st.strike.to === "object") this.rule(st.strike.to, `${p}.strike.to`);
+      }
       st.riders?.forEach((x, j) => {
         tag(x.on, `${p}.riders[${j}].on`);
         this.instance(x.add, `${p}.riders[${j}].add`, "action", true);
@@ -379,7 +424,7 @@ class Combat {
       if (st.convert?.element) this.w.ref("elements", st.convert.element, `${p}.convert.element`, "element");
       if (st.pulse) {
         this.ticks(st.pulse.every, `${p}.pulse.every`);
-        st.pulse.do.forEach((e, j) => this.effect(e, `${p}.pulse.do[${j}]`, "pulse", st));
+        st.pulse.do?.forEach((e, j) => this.effect(e, `${p}.pulse.do[${j}]`, "pulse", st));
       }
       if (st.trigger) {
         this.event(st.trigger.on, `${p}.trigger.on`);
@@ -387,9 +432,10 @@ class Combat {
       }
       st.reactions?.forEach((x, j) => {
         this.event(x.on, `${p}.reactions[${j}].on`);
+        x.on.tags?.forEach((t, k) => tag(t, `${p}.reactions[${j}].on.tags[${k}]`));
         x.do.forEach((e, k) => this.effect(e, `${p}.reactions[${j}].do[${k}]`, "reaction", st));
       });
-      const empty = !st.stats && !st.boosts && !st.taken && !st.absorb && !st.lockout && !st.riders && !st.convert && !st.pulse && !st.trigger && !st.reactions;
+      const empty = !st.stats && !st.boosts && !st.taken && !st.absorb && !st.block && !st.lockout && !st.riders && !st.convert && !st.seek && !st.strike && !st.pulse && !st.trigger && !st.reactions;
       if (empty) this.r.warn("status.empty", p, `status '${st.id}' has no effects`);
     });
     this.shared = false;
@@ -403,8 +449,8 @@ class Combat {
       this.ticks(a.cooldown, `${p}.cooldown`);
       this.ticks(a.recovery, `${p}.recovery`);
       if (a.if) this.unitCond(a.if.where, `${p}.if.where`);
-      if (typeof a.target === "object") this.rule(a.target, `${p}.target`);
-      a.do.forEach((e, j) => this.effect(e, `${p}.do[${j}]`, "action", null));
+      if (typeof a.target === "object") this.rule(a.target, `${p}.target`, { main: true });
+      a.do.forEach((e, j) => this.effect(e, `${p}.do[${j}]`, "action", null, a));
     });
   }
 }
@@ -415,13 +461,10 @@ function checkUnits(pack: Pack, ix: Index, w: Walker, r: Report, c: Combat) {
   const d = pack.design;
   pack.classes.forEach((cl, i) => {
     const p = `classes[${i}]`;
-    cl.slots.forEach((s, j) => {
-      if (w.ref("slots", s, `${p}.slots[${j}]`, "slot") && ix.get<S.SlotDefT>("slots", s)!.class !== cl.id) {
-        r.error("class.slot", `${p}.slots[${j}]`, `slot '${s}' isn't marked as belonging to class '${cl.id}'`);
-      }
-    });
     c.statBlock(cl.stats, `${p}.stats`);
     c.grants(cl.passive, `${p}.passive`);
+    cl.weapons.forEach((k, j) => w.ref("weaponKinds", k, `${p}.weapons[${j}]`, "weapon kind"));
+    if (new Set(cl.weapons).size !== cl.weapons.length) r.error("class.weapons", `${p}.weapons`, `a weapon kind is listed twice`);
     if (cl.abilities.length !== d.abilitiesPerClass) {
       r.error("class.abilityCount", `${p}.abilities`, `'${cl.id}' has ${cl.abilities.length} abilities; every class has ${d.abilitiesPerClass}`);
     }
@@ -433,11 +476,9 @@ function checkUnits(pack: Pack, ix: Index, w: Walker, r: Report, c: Combat) {
         r.error("class.abilityClass", `${p}.abilities[${j}]`, `ability '${aid}' belongs to class '${a.class ?? "none"}', not '${cl.id}'; abilities don't cross classes`);
       }
     });
-    cl.verbs.forEach((v, j) => w.ref("verbs", v, `${p}.verbs[${j}]`, "verb"));
   });
 
   pack.abilities.forEach((a, i) => {
-    a.verbs.forEach((v, j) => w.ref("verbs", v, `abilities[${i}].verbs[${j}]`, "verb"));
     const used = pack.classes.some((cl) => cl.abilities.includes(a.id)) || pack.enemies.some((e) => e.abilities?.includes(a.id));
     if (!used) r.warn("ability.unused", `abilities[${i}]`, `no class or enemy lists ability '${a.id}'`);
   });
@@ -445,49 +486,36 @@ function checkUnits(pack: Pack, ix: Index, w: Walker, r: Report, c: Combat) {
 
 // ─── Gear ────────────────────────────────────────────────────────────────────
 
-function lootGear(pack: Pack): Set<string> {
-  const out = new Set<string>();
-  const add = (t: S.LootTableT) => {
-    t.guaranteed?.forEach((g) => out.add(g));
-    t.table?.forEach((e) => out.add(e.gear));
-  };
-  for (const dn of pack.dungeons) {
-    add(dn.loot.firstClear);
-    add(dn.loot.replay);
-    dn.challenges.forEach((ch) => add(ch.loot));
-  }
-  return out;
-}
-
 function checkGear(pack: Pack, ix: Index, w: Walker, r: Report, c: Combat) {
-  const inLoot = lootGear(pack);
   pack.gear.forEach((g, i) => {
     const p = `gear[${i}]`;
-    const slot = w.ref("slots", g.slot, `${p}.slot`, "slot") ? ix.get<S.SlotDefT>("slots", g.slot) : undefined;
-    g.class?.forEach((cl, j) => w.ref("classes", cl, `${p}.class[${j}]`, "class"));
-    if (slot?.class && (g.class?.length !== 1 || g.class[0] !== slot.class)) {
-      r.error("gear.slotClass", `${p}.class`, `slot '${g.slot}' belongs to class '${slot.class}', so the gear must be restricted to exactly that class`);
-    }
-    const okSource = g.tier === "efficacy" ? g.source === "loot" || g.source === "starter" : g.source === "unlock";
-    if (!okSource) r.error("gear.source", `${p}.source`, `${g.tier} gear can't come from '${g.source}' (efficacy: loot or starter; powerful and capstone: unlock)`);
-    if (g.tier === "powerful" && !g.class) r.error("gear.powerfulClass", `${p}.class`, `powerful pieces are class-specific; give them a class`);
-    if (g.tier === "efficacy" && g.statuses?.length) r.error("gear.simple", `${p}.statuses`, `efficacy gear changes numbers only, so it carries no statuses`);
-    if (g.source === "loot" && !inLoot.has(g.id)) r.warn("gear.unreachable", p, `loot gear '${g.id}' isn't in any loot table`);
+    if (g.slot === "weapon") {
+      if (!g.weapon) r.error("gear.weapon", p, `a weapon sets the basic attack: give it 'weapon'`);
+      else if (!g.weapon.kind) r.error("gear.weapon", `${p}.weapon`, `a weapon piece belongs to a kind`);
+    } else if (g.weapon) r.error("gear.weapon", `${p}.weapon`, `only the weapon slot sets a basic attack`);
+    if (g.slot === "armor") {
+      if (!g.weight) r.error("gear.weight", p, `armor has a weight (light, medium or heavy)`);
+    } else if (g.weight) r.error("gear.weight", `${p}.weight`, `only armor has a weight`);
+    const okSource = g.tier === "ordinary" ? g.source !== "unlock" : g.source === "unlock";
+    if (!okSource) r.error("gear.source", `${p}.source`, `${g.tier} gear can't come from '${g.source}' (ordinary: starter or drop; powerful: unlock)`);
     if (g.weapon) c.weapon(g.weapon, `${p}.weapon`);
     c.grants(g, p);
-    g.verbs.forEach((v, j) => w.ref("verbs", v, `${p}.verbs[${j}]`, "verb"));
   });
-  // A unit has one weapon: no slot may hold weapons and other gear's weapon too.
-  const weaponSlots = new Set(pack.gear.filter((g) => g.weapon).map((g) => g.slot));
+  const ids = new Set(pack.gear.map((g) => g.id));
   for (const cl of pack.classes) {
-    const slots = [...pack.slots.filter((s) => !s.class).map((s) => s.id), ...cl.slots].filter((s) => weaponSlots.has(s));
-    if (slots.length > 1) r.warn("gear.weaponSlots", "gear", `class '${cl.id}' can hold weapons in ${slots.join(" and ")}; only the first sets the basic attack`);
+    // Each class arrives with the plain weapon of its first kind: a starter piece of that kind must exist.
+    const plain = pack.gear.find((g) => g.slot === "weapon" && g.source === "starter" && g.weapon?.kind === cl.weapons[0]);
+    if (!plain) r.warn("gear.plain", "gear", `no starter weapon of kind '${cl.weapons[0]}' for the ${cl.id} to arrive with`);
   }
+  pack.starter.gear.forEach((id, i) => {
+    if (ids.has(id) && ix.get<S.GearT>("gear", id)!.source !== "starter") r.error("starter.source", `starter.gear[${i}]`, `'${id}' isn't starter gear`);
+  });
+  void w;
 }
 
 // ─── Formations ──────────────────────────────────────────────────────────────
 
-function checkFormations(pack: Pack, w: Walker, r: Report, c: Combat) {
+function checkFormations(pack: Pack, r: Report, c: Combat) {
   pack.formations.forEach((f, i) => {
     const p = `formations[${i}]`;
     if (f.positions.length !== pack.design.formationPositions) {
@@ -506,62 +534,20 @@ function checkFormations(pack: Pack, w: Walker, r: Report, c: Combat) {
       if ((pos.stats?.length || pos.statuses?.length) && !pos.text) r.warn("formation.slotText", pp, `slot '${pos.id}' has effects but no text telling the player what it does`);
     });
     c.grants(f, p);
-    f.verbs.forEach((v, j) => w.ref("verbs", v, `${p}.verbs[${j}]`, "verb"));
   });
 }
 
-// ─── Enemies and traits ──────────────────────────────────────────────────────
+// ─── Enemies ─────────────────────────────────────────────────────────────────
 
-function checkEnemies(pack: Pack, ix: Index, w: Walker, r: Report, c: Combat) {
-  const d = pack.design;
-  const words = new Map<string, string>();
-  const profiles = new Map<string, string>();
-  pack.traits.forEach((t, i) => {
-    const p = `traits[${i}]`;
-    t.verbs.forEach((v, j) => w.ref("verbs", v, `${p}.verbs[${j}]`, "verb"));
-    for (const word of [t.word, ...(t.forms ?? [])].map((x) => x.toLowerCase())) {
-      if (words.has(word)) r.error("trait.word", p, `the word '${word}' is already used by trait '${words.get(word)}'`);
-      words.set(word, t.id);
-    }
-    const key = [...new Set(t.verbs)].sort().join("+");
-    if (profiles.has(key)) r.error("trait.profile", `${p}.verbs`, `trait '${t.id}' has the same verb profile as '${profiles.get(key)}'`);
-    profiles.set(key, t.id);
-  });
-
+function checkEnemies(pack: Pack, w: Walker, r: Report, c: Combat) {
   pack.enemies.forEach((e, i) => {
     const p = `enemies[${i}]`;
     c.statBlock(e.stats, `${p}.stats`);
     if (e.weapon) c.weapon(e.weapon, `${p}.weapon`);
     e.abilities?.forEach((a, j) => w.ref("abilities", a, `${p}.abilities[${j}]`, "ability"));
     e.statuses?.forEach((s, j) => w.ref("statuses", s, `${p}.statuses[${j}]`, "status"));
-    e.verbs.forEach((v, j) => w.ref("verbs", v, `${p}.verbs[${j}]`, "verb"));
-    const text = e.text.toLowerCase();
-    e.traits.forEach((tid, j) => {
-      if (!w.ref("traits", tid, `${p}.traits[${j}]`, "trait")) return;
-      const t = ix.get<S.TraitDefT>("traits", tid)!;
-      const forms = [t.word, ...(t.forms ?? [])];
-      if (!forms.some((f) => text.includes(f.toLowerCase()))) {
-        r.error("enemy.traitText", `${p}.text`, `trait '${t.id}' isn't named in the enemy's text (expected one of: ${forms.map((f) => `"${f}"`).join(", ")})`);
-      }
-    });
-    const kh = e.keyholes ?? [];
-    if (e.rank === "boss" && (kh.length < d.keyholesPerBoss[0] || kh.length > d.keyholesPerBoss[1])) {
-      r.error("enemy.keyholes", `${p}.keyholes`, `boss has ${kh.length} keyholes; bosses have ${d.keyholesPerBoss[0]}–${d.keyholesPerBoss[1]}`);
-    }
-    const khIds = new Set<string>();
-    kh.forEach((k, m) => {
-      const kp = `${p}.keyholes[${m}]`;
-      if (khIds.has(k.id)) r.error("keyhole.id", kp, `duplicate keyhole id '${k.id}'`);
-      khIds.add(k.id);
-      if (w.ref("verbs", k.from, `${kp}.from`, "verb") && !e.verbs.includes(k.from)) {
-        r.error("keyhole.from", `${kp}.from`, `keyhole comes from '${k.from}', which isn't one of this enemy's verbs`);
-      }
-      k.counteredBy.forEach((v, n) => w.ref("verbs", v, `${kp}.counteredBy[${n}]`, "verb"));
-      k.strongAgainst?.forEach((v, n) => w.ref("verbs", v, `${kp}.strongAgainst[${n}]`, "verb"));
-      const both = k.counteredBy.filter((v) => k.strongAgainst?.includes(v));
-      if (both.length) r.error("keyhole.contradiction", kp, `${both.join(", ")} is listed as both countering and blunted`);
-    });
   });
+  void r;
 }
 
 // ─── Perks ───────────────────────────────────────────────────────────────────
@@ -581,7 +567,6 @@ function checkPerks(pack: Pack, ix: Index, w: Walker, r: Report, c: Combat) {
     if (!pk.stats?.length && !pk.statuses?.length) r.error("perk.empty", p, `perk '${pk.id}' gives no stats and no statuses`);
     pk.for?.classes?.forEach((cl, j) => w.ref("classes", cl, `${p}.for.classes[${j}]`, "class"));
     c.grants(pk, p);
-    pk.verbs.forEach((v, j) => w.ref("verbs", v, `${p}.verbs[${j}]`, "verb"));
     if (!pack.dungeons.some((dn) => dn.perkPool.includes(pk.id))) r.warn("perk.unused", p, `perk '${pk.id}' isn't in any dungeon's pool`);
   });
 }
@@ -593,12 +578,13 @@ function checkLoot(pack: Pack, ix: Index, w: Walker, r: Report, t: S.LootTableT,
   for (const [g, p] of ids) {
     if (!w.ref("gear", g, p, "gear")) continue;
     const gear = ix.get<S.GearT>("gear", g)!;
-    if (gear.source !== "loot") r.error("loot.source", p, `'${g}' is ${gear.source} gear; loot tables only drop loot gear`);
+    if (gear.source !== "drop") r.error("loot.source", p, `'${g}' is ${gear.source} gear; loot tables only drop 'drop' gear`);
   }
   const rolls = t.rolls ?? 0;
   if (rolls > 0 && !t.table?.length) r.error("loot.table", path, `${rolls} roll(s) but no table`);
   if (rolls === 0 && t.table?.length) r.warn("loot.table", path, `a table with no rolls never drops`);
   if (!t.guaranteed?.length && rolls === 0) r.error("loot.empty", path, `this clear must pay gear`);
+  void pack;
 }
 
 function checkDungeons(pack: Pack, ix: Index, w: Walker, r: Report) {
@@ -607,20 +593,6 @@ function checkDungeons(pack: Pack, ix: Index, w: Walker, r: Report) {
     const p = `dungeons[${i}]`;
     const cap = dn.partySize.max;
     if (cap < d.partySize[0] || cap > d.partySize[1]) r.error("dungeon.partySize", `${p}.partySize.max`, `party size ${cap} is outside ${d.partySize[0]}–${d.partySize[1]}`);
-
-    // Perk pool
-    const pool = dn.perkPool;
-    if (new Set(pool).size !== pool.length) r.error("dungeon.perkPoolDuplicate", `${p}.perkPool`, `a perk appears twice`);
-    pool.forEach((id, j) => w.ref("perks", id, `${p}.perkPool[${j}]`, "perk"));
-    if (pool.length < d.perkPoolSize[0] || pool.length > d.perkPoolSize[1]) {
-      r.error("dungeon.perkPool", `${p}.perkPool`, `pool has ${pool.length} perks; pools hold ${d.perkPoolSize[0]}–${d.perkPoolSize[1]}`);
-    }
-    const regulars = pool.filter((id) => ix.get<S.PerkT>("perks", id)?.rarity === "regular");
-    if (regulars.length < d.perkOptionsPerPick) r.error("dungeon.perkPoolRegular", `${p}.perkPool`, `fewer regular perks than options per pick`);
-    pool.forEach((id, j) => {
-      const pk = ix.get<S.PerkT>("perks", id);
-      if (pk?.upgradeOf && !pool.includes(pk.upgradeOf)) r.warn("dungeon.premiumBase", `${p}.perkPool[${j}]`, `premium '${id}' upgrades '${pk.upgradeOf}', which isn't in this pool`);
-    });
 
     // Stages
     const stageIds = new Set<string>();
@@ -651,9 +623,27 @@ function checkDungeons(pack: Pack, ix: Index, w: Walker, r: Report) {
       }
     });
 
+    // Perk pool, only where the run picks perks
+    const pool = dn.perkPool;
+    if (new Set(pool).size !== pool.length) r.error("dungeon.perkPoolDuplicate", `${p}.perkPool`, `a perk appears twice`);
+    pool.forEach((id, j) => w.ref("perks", id, `${p}.perkPool[${j}]`, "perk"));
+    if (pool.length < d.perkPoolSize[0] || pool.length > d.perkPoolSize[1]) {
+      r.error("dungeon.perkPool", `${p}.perkPool`, `pool has ${pool.length} perks; pools hold ${d.perkPoolSize[0]}–${d.perkPoolSize[1]}`);
+    }
+    if (picks > 0) {
+      const regulars = pool.filter((id) => ix.get<S.PerkT>("perks", id)?.rarity === "regular");
+      if (regulars.length < d.perkOptionsPerPick) r.error("dungeon.perkPoolRegular", `${p}.perkPool`, `fewer regular perks than options per pick`);
+    }
+    pool.forEach((id, j) => {
+      const pk = ix.get<S.PerkT>("perks", id);
+      if (pk?.upgradeOf && !pool.includes(pk.upgradeOf)) r.warn("dungeon.premiumBase", `${p}.perkPool[${j}]`, `premium '${id}' upgrades '${pk.upgradeOf}', which isn't in this pool`);
+    });
+
     // Loot
-    checkLoot(pack, ix, w, r, dn.loot.firstClear, `${p}.loot.firstClear`);
-    checkLoot(pack, ix, w, r, dn.loot.replay, `${p}.loot.replay`);
+    if (dn.loot) {
+      checkLoot(pack, ix, w, r, dn.loot.firstClear, `${p}.loot.firstClear`);
+      checkLoot(pack, ix, w, r, dn.loot.replay, `${p}.loot.replay`);
+    }
 
     // Challenges
     const chIds = new Set<string>();
@@ -721,24 +711,14 @@ function checkComplete(pack: Pack, r: Report) {
   const c = pack.design.complete;
   const inRange = (n: number, rg: [number, number]) => n >= rg[0] && n <= rg[1];
   if (!inRange(pack.classes.length, c.classes)) r.error("complete.classes", "classes", `${pack.classes.length} classes; a full set has ${c.classes[0]}–${c.classes[1]}`);
-  if (!inRange(pack.verbs.length, c.verbs)) r.error("complete.verbs", "verbs", `${pack.verbs.length} verbs; a full set has ${c.verbs[0]}–${c.verbs[1]}`);
 }
 
 // ─── Unused registry entries ─────────────────────────────────────────────────
 
 function checkUnused(pack: Pack, ix: Index, r: Report) {
-  const declared = new Set<string>([
-    ...pack.classes.flatMap((cl) => cl.verbs),
-    ...pack.abilities.flatMap((a) => a.verbs),
-    ...pack.gear.flatMap((g) => g.verbs),
-    ...pack.formations.flatMap((f) => f.verbs),
-    ...pack.enemies.flatMap((e) => e.verbs),
-    ...pack.perks.flatMap((p) => p.verbs),
-  ]);
-  pack.verbs.forEach((v, i) => !declared.has(v.id) && r.warn("verb.unused", `verbs[${i}]`, `no content uses verb '${v.id}'`));
   const used = (c: Coll) => ix.used.get(c)!;
   pack.statuses.forEach((s, i) => !used("statuses").has(s.id) && r.warn("status.unused", `statuses[${i}]`, `nothing applies or reads status '${s.id}'`));
-  pack.traits.forEach((t, i) => !used("traits").has(t.id) && r.warn("trait.unused", `traits[${i}]`, `no enemy uses trait '${t.id}'`));
+  pack.weaponKinds.forEach((k, i) => !used("weaponKinds").has(k.id) && r.warn("weaponKind.unused", `weaponKinds[${i}]`, `no class or weapon uses kind '${k.id}'`));
   pack.perkFamilies.forEach((f, i) => !pack.perks.some((p) => p.family === f.id) && r.warn("perkFamily.unused", `perkFamilies[${i}]`, `family '${f.id}' has no perks`));
 }
 
@@ -748,6 +728,13 @@ function checkUnused(pack: Pack, ix: Index, r: Report) {
 
 /** What a player owns. Gear is a count per item: copies can be equipped up to that count. */
 export type Owned = { classes?: string[]; formations?: string[]; gear?: Record<string, number> };
+
+/** Can this class equip this piece? Weapons by kind, armor by weight, amulets always. */
+export function canEquip(cls: S.ClassDefT, g: S.GearT): boolean {
+  if (g.slot === "weapon") return !!g.weapon?.kind && cls.weapons.includes(g.weapon.kind);
+  if (g.slot === "armor") return !!g.weight && WEIGHT_ORDER[g.weight] <= WEIGHT_ORDER[cls.armor];
+  return true;
+}
 
 export function checkParty(pack: Pack, raw: unknown, opts: { dungeon?: string; owned?: Owned } = {}): Issue[] {
   const parsed = S.Party.safeParse(raw);
@@ -786,18 +773,18 @@ export function checkParty(pack: Pack, raw: unknown, opts: { dungeon?: string; o
       if (!cls.abilities.includes(a)) r.error("party.abilityNotOwned", `${p}.abilities[${j}]`, `'${u.class}' doesn't have ability '${a}'`);
     });
 
-    const generic = pack.slots.filter((s) => !s.class).map((s) => s.id);
-    const allowed = new Set([...generic, ...cls.slots]);
     for (const [slot, gid] of Object.entries(u.gear)) {
       const gp = `${p}.gear.${slot}`;
-      if (!allowed.has(slot)) r.error("party.slot", gp, `a ${u.class} has no slot '${slot}'`);
+      if (!(slot in S.SLOTS)) r.error("party.slot", gp, `there's no slot '${slot}': units carry a weapon, armor and an amulet`);
       const g = ix.get<S.GearT>("gear", gid);
       if (!g) {
         r.error("ref.missing", gp, `unknown gear '${gid}'`);
         continue;
       }
       if (g.slot !== slot) r.error("party.gearSlot", gp, `'${gid}' goes in slot '${g.slot}', not '${slot}'`);
-      if (g.class && !g.class.includes(u.class)) r.error("party.gearClass", gp, `'${gid}' can't be equipped by a ${u.class}`);
+      else if (!canEquip(cls, g)) {
+        r.error("party.gearClass", gp, g.slot === "weapon" ? `a ${u.class} can't use a ${g.weapon?.kind}` : `a ${u.class} can wear ${cls.armor} armor at most, not ${g.weight}`);
+      }
       gearUse.set(gid, (gearUse.get(gid) ?? 0) + 1);
     }
   });

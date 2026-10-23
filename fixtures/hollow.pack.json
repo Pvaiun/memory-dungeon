@@ -1,1273 +1,2500 @@
 {
-  "schemaVersion": "0.5",
+  "schemaVersion": "0.6",
   "id": "worked_example",
   "title": "Placeholder fixture: Hollow of the Grey Mother",
-  "note": "PLACEHOLDER. Not game design. This pack exists to prove the schema can express the game's rules, to give the tests something to break, and to be the first input for the step 2 engine. Every class, number, name and enemy here is disposable; real content comes from steps 13 to 16. Rewritten for schema 0.4 (step 4's combat), keeping step 1's ids.",
+  "note": "PLACEHOLDER. Not game design. The step 1 worked example, kept as the machinery's test fixture (runs, decisions, replay, the harness): it's the one pack with perk picks. Real content is the core set (content/). Migrated to schema 0.6 with armorRatio 1, so its numbers behave as they did.",
   "design": {
-              "note": "Placeholder targets taken from the concept spec, which was bullish on them. Expect every number here to change.",
-              "formationPositions": 5,
-              "partySize": [1, 5],
-              "abilitiesPerClass": 5,
-              "abilitiesEquipped": 3,
-              "perkPicksPerRun": [3, 4],
-              "perkPoolSize": [10, 15],
-              "perkOptionsPerPick": 3,
-              "keyholesPerBoss": [2, 4],
-              "complete": {"classes": [8, 10], "verbs": [15, 20]}
-            },
+    "note": "Placeholder targets taken from the concept spec, which was bullish on them. Expect every number here to change.",
+    "formationPositions": 5,
+    "partySize": [
+      1,
+      5
+    ],
+    "abilitiesPerClass": 5,
+    "abilitiesEquipped": 3,
+    "perkPicksPerRun": [
+      3,
+      4
+    ],
+    "perkPoolSize": [
+      10,
+      15
+    ],
+    "perkOptionsPerPick": 3,
+    "complete": {
+      "classes": [
+        8,
+        10
+      ]
+    }
+  },
   "ruleset": {
-              "basicRecovery": 0.25,
-              "abilityCast": 1,
-              "abilityRecovery": 3,
-              "taken": {"floor": -75, "cap": 100},
-              "unarmed": {"type": "physical", "subtype": "blunt", "cooldown": 10, "amount": {"scale": [{"ratio": 0.5, "stat": "attack"}]}},
-              "maxEnemies": 6,
-              "run": {
-                      "defeatedUnits": "stay_down",
-                      "perkOffer": {"options": 3, "premiumChance": 0.08, "repeatPicked": false, "offerInapplicable": true}
-                    }
-            },
+    "basicRecovery": 0.25,
+    "abilityCast": 1,
+    "abilityRecovery": 3,
+    "armorRatio": 1,
+    "taken": {
+      "floor": -75,
+      "cap": 100
+    },
+    "unarmed": {
+      "type": "physical",
+      "subtype": "blunt",
+      "cooldown": 10,
+      "amount": {
+        "scale": [
+          {
+            "ratio": 0.5,
+            "stat": "attack"
+          }
+        ]
+      }
+    },
+    "maxEnemies": 6,
+    "run": {
+      "defeatedUnits": "stay_down",
+      "perkOffer": {
+        "options": 3,
+        "premiumChance": 0.08,
+        "repeatPicked": false,
+        "offerInapplicable": true
+      }
+    }
+  },
   "stats": [
-            {"id": "max_hp", "name": "Max HP", "kind": "amount", "default": 100, "floor": 1},
-            {"id": "max_mp", "name": "Max MP", "kind": "amount", "default": 0, "floor": 0},
-            {
-              "id": "mp_regen",
-              "name": "MP regen",
-              "kind": "amount",
-              "default": 0,
-              "floor": 0,
-              "brings": "mp_regen",
-              "note": "MP restored every 5 ticks, through the status it brings."
-            },
-            {"id": "attack", "name": "Attack", "kind": "amount", "default": 10, "floor": 0},
-            {"id": "magic", "name": "Magic", "kind": "amount", "default": 0, "floor": 0},
-            {"id": "armor", "name": "Armor", "kind": "amount", "default": 0, "floor": 0},
-            {
-              "id": "aggro",
-              "name": "Aggro",
-              "kind": "amount",
-              "default": 10,
-              "floor": 1,
-              "note": "Default targeting picks foes weighted by it. Warriors start at 20."
-            },
-            {"id": "resist", "name": "Resistance", "kind": "points", "default": 0, "floor": -100, "cap": 100},
-            {"id": "attack_speed", "name": "Attack Speed", "kind": "points", "default": 0, "floor": -100, "cap": 300},
-            {"id": "cooldown_reduction", "name": "Cooldown Reduction", "kind": "points", "default": 0, "floor": -100, "cap": 300},
-            {"id": "cast_time_reduction", "name": "Cast Time Reduction", "kind": "points", "default": 0, "floor": -100, "cap": 300},
-            {"id": "crit_chance", "name": "Crit chance", "kind": "points", "default": 5, "floor": 0, "cap": 100},
-            {"id": "crit_multiplier", "name": "Crit multiplier", "kind": "points", "default": 150, "floor": 100},
-            {"id": "evasion", "name": "Evasion", "kind": "points", "default": 0, "floor": 0, "cap": 75},
-            {"id": "accuracy", "name": "Accuracy", "kind": "points", "default": 0},
-            {"id": "healing_received", "name": "Healing received", "kind": "points", "default": 0, "floor": -100},
-            {"id": "forced", "name": "Forced", "kind": "points", "default": 0, "floor": 0},
-            {"id": "forbidden", "name": "Forbidden", "kind": "points", "default": 0, "floor": 0},
-            {
-              "id": "thorns",
-              "name": "Thorns",
-              "kind": "amount",
-              "default": 0,
-              "floor": 0,
-              "brings": "thorns",
-              "note": "Damage dealt back to whoever lands a hit, through the status it brings."
-            }
-          ],
-  "elements": [{"id": "fire", "name": "Fire"}, {"id": "ice", "name": "Ice"}, {"id": "holy", "name": "Holy"}, {"id": "shadow", "name": "Shadow"}],
+    {
+      "id": "max_hp",
+      "name": "Max HP",
+      "kind": "amount",
+      "default": 100,
+      "floor": 1
+    },
+    {
+      "id": "max_mp",
+      "name": "Max MP",
+      "kind": "amount",
+      "default": 0,
+      "floor": 0
+    },
+    {
+      "id": "mp_regen",
+      "name": "MP regen",
+      "kind": "amount",
+      "default": 0,
+      "floor": 0,
+      "brings": "mp_regen",
+      "note": "MP restored every 5 ticks, through the status it brings."
+    },
+    {
+      "id": "attack",
+      "name": "Attack",
+      "kind": "amount",
+      "default": 10,
+      "floor": 0
+    },
+    {
+      "id": "magic",
+      "name": "Magic",
+      "kind": "amount",
+      "default": 0,
+      "floor": 0
+    },
+    {
+      "id": "armor",
+      "name": "Armor",
+      "kind": "amount",
+      "default": 0,
+      "floor": 0
+    },
+    {
+      "id": "aggro",
+      "name": "Aggro",
+      "kind": "amount",
+      "default": 10,
+      "floor": 1,
+      "note": "Default targeting picks foes weighted by it. Warriors start at 20."
+    },
+    {
+      "id": "resist",
+      "name": "Resistance",
+      "kind": "points",
+      "default": 0,
+      "floor": -100,
+      "cap": 100
+    },
+    {
+      "id": "attack_speed",
+      "name": "Attack Speed",
+      "kind": "points",
+      "default": 0,
+      "floor": -100,
+      "cap": 300
+    },
+    {
+      "id": "cooldown_reduction",
+      "name": "Cooldown Reduction",
+      "kind": "points",
+      "default": 0,
+      "floor": -100,
+      "cap": 300
+    },
+    {
+      "id": "cast_time_reduction",
+      "name": "Cast Time Reduction",
+      "kind": "points",
+      "default": 0,
+      "floor": -100,
+      "cap": 300
+    },
+    {
+      "id": "crit_chance",
+      "name": "Crit chance",
+      "kind": "points",
+      "default": 5,
+      "floor": 0,
+      "cap": 100
+    },
+    {
+      "id": "crit_multiplier",
+      "name": "Crit multiplier",
+      "kind": "points",
+      "default": 150,
+      "floor": 100
+    },
+    {
+      "id": "evasion",
+      "name": "Evasion",
+      "kind": "points",
+      "default": 0,
+      "floor": 0,
+      "cap": 75
+    },
+    {
+      "id": "accuracy",
+      "name": "Accuracy",
+      "kind": "points",
+      "default": 0
+    },
+    {
+      "id": "healing_received",
+      "name": "Healing received",
+      "kind": "points",
+      "default": 0,
+      "floor": -100
+    },
+    {
+      "id": "forced",
+      "name": "Forced",
+      "kind": "points",
+      "default": 0,
+      "floor": 0
+    },
+    {
+      "id": "forbidden",
+      "name": "Forbidden",
+      "kind": "points",
+      "default": 0,
+      "floor": 0
+    },
+    {
+      "id": "thorns",
+      "name": "Thorns",
+      "kind": "amount",
+      "default": 0,
+      "floor": 0,
+      "brings": "thorns",
+      "note": "Damage dealt back to whoever lands a hit, through the status it brings."
+    }
+  ],
+  "elements": [
+    {
+      "id": "fire",
+      "name": "Fire"
+    },
+    {
+      "id": "ice",
+      "name": "Ice"
+    },
+    {
+      "id": "holy",
+      "name": "Holy"
+    },
+    {
+      "id": "shadow",
+      "name": "Shadow"
+    }
+  ],
+  "weaponKinds": [
+    {
+      "id": "sword",
+      "name": "Sword",
+      "type": "physical",
+      "subtype": "slash",
+      "cooldown": 12
+    },
+    {
+      "id": "bow",
+      "name": "Bow",
+      "type": "physical",
+      "subtype": "pierce",
+      "cooldown": 10
+    },
+    {
+      "id": "rapier",
+      "name": "Rapier",
+      "type": "physical",
+      "subtype": "pierce",
+      "cooldown": 10
+    },
+    {
+      "id": "holy_staff",
+      "name": "Holy staff",
+      "type": "magical",
+      "element": "holy",
+      "cooldown": 14
+    }
+  ],
   "statuses": [
+    {
+      "id": "mp_regen",
+      "name": "MP regen",
+      "label": "buff",
+      "show": "stat",
+      "stacking": "refresh",
+      "unremovable": true,
+      "pulse": {
+        "every": 5,
+        "do": [
+          {
+            "op": "mp",
+            "amount": {
+              "scale": [
                 {
-                  "id": "mp_regen",
-                  "name": "MP regen",
-                  "label": "buff",
-                  "show": "stat",
-                  "stacking": "refresh",
-                  "unremovable": true,
-                  "pulse": {"every": 5, "do": [{"op": "mp", "amount": {"scale": [{"ratio": 1, "stat": "mp_regen", "of": "holder"}]}}]}
-                },
-                {
-                  "id": "thorns",
-                  "name": "Thorns",
-                  "label": "buff",
-                  "show": "stat",
-                  "stacking": "refresh",
-                  "unremovable": true,
-                  "reactions": [
-                                {
-                                  "on": {"event": "hit_taken"},
-                                  "do": [
-                                          {
-                                            "op": "damage",
-                                            "type": "none",
-                                            "amount": {"scale": [{"ratio": 1, "stat": "thorns", "of": "holder"}]},
-                                            "to": "other"
-                                          }
-                                        ]
-                                }
-                              ]
-                },
-                {
-                  "id": "bleed",
-                  "name": "BLEED",
-                  "text": "Loses health every 2 ticks.",
-                  "label": "debuff",
-                  "show": "icon",
-                  "subtype": "slash",
-                  "stacking": "refresh",
-                  "duration": 6,
-                  "pulse": {"every": 2, "do": [{"op": "damage", "type": "none", "amount": 3}]},
-                  "note": "No element, so Armor and Resistance never touch it."
-                },
-                {
-                  "id": "rot",
-                  "name": "ROT",
-                  "text": "Loses health every 2 ticks.",
-                  "label": "debuff",
-                  "show": "icon",
-                  "element": "shadow",
-                  "stacking": "refresh",
-                  "duration": 8,
-                  "pulse": {"every": 2, "do": [{"op": "damage", "type": "none", "amount": 4}]},
-                  "note": "Typeless: Attack and Magic never scale status damage."
-                },
-                {
-                  "id": "stun",
-                  "name": "STUN",
-                  "text": "Can't act.",
-                  "label": "debuff",
-                  "show": "icon",
-                  "stacking": "refresh",
-                  "duration": 2,
-                  "lockout": {"covers": "all", "interrupt": true}
-                },
-                {
-                  "id": "taunt",
-                  "name": "TAUNT",
-                  "text": "Draws every attack.",
-                  "label": "buff",
-                  "show": "icon",
-                  "stacking": "refresh",
-                  "duration": 6,
-                  "stats": [{"stat": "forced", "flat": 1}]
-                },
-                {
-                  "id": "guard",
-                  "name": "GUARD",
-                  "text": "Takes 30% less damage.",
-                  "label": "buff",
-                  "show": "icon",
-                  "stacking": "refresh",
-                  "duration": 6,
-                  "taken": [{"pct": -30}]
-                },
-                {
-                  "id": "barrier",
-                  "name": "BARRIER",
-                  "text": "Soaks up damage.",
-                  "label": "buff",
-                  "show": "icon",
-                  "stacking": "intensity",
-                  "absorb": true,
-                  "cap": {"scale": [{"ratio": 0.5, "stat": "max_hp", "of": "holder"}]},
-                  "note": "A shield: an Intensity status with an absorb, capped at half the holder's max HP."
-                },
-                {
-                  "id": "slow",
-                  "name": "SLOW",
-                  "text": "Attacks more slowly.",
-                  "label": "debuff",
-                  "show": "icon",
-                  "stacking": "refresh",
-                  "duration": 6,
-                  "stats": [{"stat": "attack_speed", "flat": -30}]
-                },
-                {
-                  "id": "riposte",
-                  "name": "RIPOSTE",
-                  "text": "Strikes back after dodging.",
-                  "label": "buff",
-                  "show": "icon",
-                  "stacking": "refresh",
-                  "duration": 12,
-                  "reactions": [
-                                {
-                                  "on": {"event": "hit_evaded"},
-                                  "do": [
-                                          {
-                                            "op": "damage",
-                                            "type": "physical",
-                                            "subtype": "pierce",
-                                            "amount": {"scale": [{"ratio": 0.8, "stat": "attack", "of": "holder"}]},
-                                            "to": "other"
-                                          }
-                                        ]
-                                }
-                              ]
-                },
-                {
-                  "id": "focused",
-                  "name": "FOCUSED",
-                  "text": "Harder to hit, and hits more surely.",
-                  "label": "buff",
-                  "show": "icon",
-                  "stacking": "refresh",
-                  "duration": 8,
-                  "stats": [{"stat": "evasion", "flat": 20}, {"stat": "accuracy", "flat": 20}]
-                },
-                {
-                  "id": "frenzied",
-                  "name": "FRENZY",
-                  "text": "Hits harder and faster.",
-                  "label": "buff",
-                  "show": "icon",
-                  "stacking": "refresh",
-                  "unremovable": true,
-                  "stats": [{"stat": "attack", "pct": 30}, {"stat": "attack_speed", "flat": 30}]
-                },
-                {
-                  "id": "rabid",
-                  "name": "RABID",
-                  "text": "Attacks faster for each fallen packmate.",
-                  "label": "buff",
-                  "show": "icon",
-                  "stacking": "intensity",
-                  "cap": 3,
-                  "stats": [{"stat": "attack_speed", "flat": 25}]
-                },
-                {
-                  "id": "pack_fury",
-                  "name": "Pack fury",
-                  "label": "buff",
-                  "show": "sheet",
-                  "stacking": "refresh",
-                  "unremovable": true,
-                  "reactions": [{"on": {"event": "ko", "whose": "ally"}, "do": [{"op": "apply", "status": "rabid", "to": "holder"}]}]
-                },
-                {
-                  "id": "hunter_focus",
-                  "name": "Hunter's focus",
-                  "label": "buff",
-                  "show": "sheet",
-                  "stacking": "refresh",
-                  "unremovable": true,
-                  "boosts": [{"tag": "physical", "pct": 15}]
-                },
-                {
-                  "id": "headsman",
-                  "name": "Headsman",
-                  "label": "buff",
-                  "show": "sheet",
-                  "stacking": "refresh",
-                  "unremovable": true,
-                  "boosts": [{"tag": "physical", "pct": 50}, {"tag": "magical", "pct": 50}]
-                },
-                {
-                  "id": "haste",
-                  "name": "HASTE",
-                  "text": "Attacks and recovers abilities faster.",
-                  "label": "buff",
-                  "show": "icon",
-                  "stacking": "refresh",
-                  "duration": 10,
-                  "stats": [{"stat": "attack_speed", "flat": 40}, {"stat": "cooldown_reduction", "flat": 20}]
-                },
-                {
-                  "id": "horn_call",
-                  "name": "Horn call",
-                  "label": "buff",
-                  "show": "sheet",
-                  "stacking": "refresh",
-                  "unremovable": true,
-                  "reactions": [{"on": {"event": "fight_start"}, "do": [{"op": "apply", "status": "haste", "to": {"side": "allies", "pick": "all"}}]}]
-                },
-                {
-                  "id": "throat",
-                  "name": "Go for the throat",
-                  "label": "buff",
-                  "show": "sheet",
-                  "stacking": "refresh",
-                  "unremovable": true,
-                  "boosts": [{"tag": "basic", "pct": 15}]
-                },
-                {
-                  "id": "serrated",
-                  "name": "Serrated heads",
-                  "label": "buff",
-                  "show": "sheet",
-                  "stacking": "refresh",
-                  "unremovable": true,
-                  "reactions": [
-                                {
-                                  "on": {"event": "hit_lands", "kind": "basic"},
-                                  "do": [{"op": "apply", "status": "bleed", "chance": 50, "to": "other"}]
-                                }
-                              ]
-                },
-                {
-                  "id": "red_riposte",
-                  "name": "Red riposte",
-                  "label": "buff",
-                  "show": "sheet",
-                  "stacking": "refresh",
-                  "unremovable": true,
-                  "reactions": [{"on": {"event": "hit_evaded"}, "do": [{"op": "apply", "status": "bleed", "to": "other"}]}]
-                },
-                {
-                  "id": "haemorrhage",
-                  "name": "Haemorrhage",
-                  "label": "buff",
-                  "show": "sheet",
-                  "stacking": "refresh",
-                  "unremovable": true,
-                  "boosts": [{"tag": "bleed", "pct": 60}]
+                  "ratio": 1,
+                  "stat": "mp_regen",
+                  "of": "holder"
                 }
-              ],
-  "verbs": [
-            {"id": "physical_damage", "name": "Physical damage", "note": "Deals physical damage, or raises attack."},
-            {"id": "magic_damage", "name": "Magic damage", "note": "Deals magic damage, or raises magic."},
-            {"id": "damage_over_time", "name": "Damage over time", "note": "Applies a status that deals damage on turn_start or turn_end."},
-            {"id": "burst", "name": "Burst", "note": "Raises crit chance, crit damage or damage dealt, or multiplies an action's amount above 1."},
-            {"id": "multi_hit", "name": "Multi-hit", "note": "An action that hits more than once per use."},
-            {"id": "area", "name": "Area", "note": "Splashes onto the target's allies, or hits every enemy at once."},
-            {"id": "initiative", "name": "Initiative", "note": "Acts earlier: the acts_first flag, or more speed."},
-            {"id": "counter", "name": "Counter", "note": "Acts back at, or damages, whoever caused an event."},
-            {"id": "control", "name": "Control", "note": "Applies a status that costs the target its turn."},
-            {"id": "evasion", "name": "Evasion", "note": "High base evasion, or raises evasion."},
-            {"id": "blocking", "name": "Blocking", "note": "High base block chance, or raises it."},
-            {"id": "armour", "name": "Armour", "note": "High base defence, raises defence, or lowers damage taken."},
-            {"id": "healing", "name": "Healing", "note": "Restores HP."},
-            {"id": "protect", "name": "Protect", "note": "Draws enemy attacks away from allies: raises aggro, or has high base aggro."},
-            {"id": "numbers", "name": "Numbers", "note": "Gets stronger depending on how many allies are alive."},
-            {"id": "cleanse", "name": "Cleanse", "note": "Removes statuses from a target or an ally."},
-            {"id": "execute", "name": "Execute", "note": "Picks the weakest enemy."}
-          ],
-  "traits": [
-              {"id": "agile", "word": "agile", "verbs": ["evasion"]},
-              {"id": "strong_in_numbers", "word": "strong in numbers", "verbs": ["numbers"]},
-              {"id": "festering", "word": "festering", "forms": ["festers"], "verbs": ["damage_over_time"]},
-              {"id": "thick_hided", "word": "thick-hided", "verbs": ["armour"]},
-              {"id": "strikes_many_times", "word": "strikes many times", "verbs": ["multi_hit"]}
-            ],
-  "slots": [
-            {"id": "warrior_weapon", "name": "Blade", "class": "warrior"},
-            {"id": "ranger_weapon", "name": "Ranger's weapon", "class": "ranger"},
-            {"id": "duelist_weapon", "name": "Duelist's weapon", "class": "duelist"},
-            {"id": "cleric_focus", "name": "Focus", "class": "cleric"},
-            {"id": "armour", "name": "Armour"},
-            {"id": "charm", "name": "Charm"}
-          ],
-  "classes": [
-              {
-                "id": "warrior",
-                "name": "Warrior",
-                "text": "Holds the front, cleaves through crowds, and steps in when friends falter.",
-                "slots": ["warrior_weapon"],
-                "source": "starter",
-                "stats": {"max_hp": 150, "max_mp": 30, "mp_regen": 1, "attack": 14, "armor": 5, "aggro": 20},
-                "abilities": ["cleave", "stand_guard", "shield_bash", "second_wind", "rallying_cry"],
-                "verbs": ["physical_damage", "area", "protect", "control", "healing", "blocking", "initiative"]
-              },
-              {
-                "id": "ranger",
-                "name": "Ranger",
-                "text": "Shoots fast, bleeds what it hits, and covers friends in trouble.",
-                "slots": ["ranger_weapon"],
-                "source": "unlock",
-                "stats": {
-                          "max_hp": 100,
-                          "max_mp": 30,
-                          "mp_regen": 1,
-                          "attack": 15,
-                          "armor": 2,
-                          "evasion": 10,
-                          "accuracy": 5,
-                          "crit_chance": 10,
-                          "crit_multiplier": 175
-                        },
-                "abilities": ["barbed_arrows", "volley", "quick_draw", "covering_fire", "aimed_shot"],
-                "verbs": ["physical_damage", "damage_over_time", "area", "initiative", "counter", "burst"]
-              },
-              {
-                "id": "duelist",
-                "name": "Duelist",
-                "text": "Fights up close, slips every blow, and saves it all for one decisive lunge.",
-                "slots": ["duelist_weapon"],
-                "source": "unlock",
-                "stats": {
-                          "max_hp": 95,
-                          "max_mp": 30,
-                          "mp_regen": 1,
-                          "attack": 15,
-                          "armor": 2,
-                          "evasion": 25,
-                          "accuracy": 5,
-                          "crit_chance": 10,
-                          "crit_multiplier": 175
-                        },
-                "abilities": ["riposte", "flurry", "read_the_blade", "lunge", "hamstring"],
-                "verbs": ["physical_damage", "execute", "counter", "multi_hit", "evasion", "burst", "damage_over_time"]
-              },
-              {
-                "id": "cleric",
-                "name": "Cleric",
-                "text": "Mends wounds, lifts curses, and smites when nobody needs her.",
-                "slots": ["cleric_focus"],
-                "source": "unlock",
-                "stats": {"max_hp": 105, "max_mp": 60, "mp_regen": 2, "attack": 4, "magic": 14, "armor": 2, "resist": 10},
-                "abilities": ["mend", "purify", "blessed_ward", "radiance", "sanctuary"],
-                "verbs": ["magic_damage", "healing", "cleanse", "armour", "area"]
-              }
-            ],
-  "abilities": [
-                {
-                  "id": "cleave",
-                  "class": "warrior",
-                  "name": "Cleave",
-                  "text": "Hits every enemy for a little over half damage.",
-                  "mp": 8,
-                  "cooldown": 12,
-                  "target": {"side": "foes", "pick": "all"},
-                  "do": [{"op": "damage", "type": "physical", "subtype": "slash", "amount": {"scale": [{"ratio": 0.6, "stat": "attack"}]}}],
-                  "verbs": ["physical_damage", "area"]
-                },
-                {
-                  "id": "stand_guard",
-                  "name": "Stand Guard",
-                  "class": "warrior",
-                  "text": "When an ally drops below half health, taunts and braces.",
-                  "mp": 6,
-                  "cooldown": 20,
-                  "if": {"side": "others", "where": {"hpBelow": 50}},
-                  "target": "self",
-                  "do": [{"op": "apply", "status": "taunt"}, {"op": "apply", "status": "guard"}],
-                  "verbs": ["protect", "blocking"]
-                },
-                {
-                  "id": "shield_bash",
-                  "class": "warrior",
-                  "name": "Shield Bash",
-                  "text": "Bashes an enemy with the shield. It may be stunned.",
-                  "mp": 6,
-                  "cooldown": 15,
-                  "do": [
-                          {
-                            "op": "damage",
-                            "type": "physical",
-                            "subtype": "blunt",
-                            "amount": {"scale": [{"ratio": 1.5, "stat": "armor"}]},
-                            "apply": [{"status": "stun", "chance": 50}]
-                          }
-                        ],
-                  "verbs": ["control", "physical_damage"],
-                  "note": "Scales with Armor: only Attack and Magic are type-locked."
-                },
-                {
-                  "id": "second_wind",
-                  "class": "warrior",
-                  "name": "Second Wind",
-                  "text": "When badly hurt, recovers a fifth of its health.",
-                  "cooldown": 40,
-                  "cast": 0,
-                  "if": {"side": "self", "where": {"hpBelow": 35}},
-                  "target": "self",
-                  "do": [{"op": "heal", "amount": {"scale": [{"ratio": 0.2, "stat": "max_hp"}]}}],
-                  "verbs": ["healing"]
-                },
-                {
-                  "id": "rallying_cry",
-                  "class": "warrior",
-                  "name": "Rallying Cry",
-                  "text": "Roars to spur every ally on: they attack and recover faster for a while.",
-                  "mp": 12,
-                  "cast": 2,
-                  "cooldown": 40,
-                  "target": {"side": "allies", "pick": "all"},
-                  "do": [{"op": "apply", "status": "haste"}],
-                  "verbs": ["initiative"]
-                },
-                {
-                  "id": "barbed_arrows",
-                  "class": "ranger",
-                  "name": "Barbed Arrows",
-                  "text": "A barbed shot that leaves the target bleeding.",
-                  "mp": 6,
-                  "cooldown": 14,
-                  "do": [
-                          {
-                            "op": "damage",
-                            "type": "physical",
-                            "subtype": "pierce",
-                            "amount": {"scale": [{"ratio": 0.8, "stat": "attack"}]},
-                            "apply": [{"status": "bleed"}]
-                          }
-                        ],
-                  "verbs": ["physical_damage", "damage_over_time"]
-                },
-                {
-                  "id": "volley",
-                  "class": "ranger",
-                  "name": "Volley",
-                  "text": "Looses arrows at up to three enemies.",
-                  "mp": 10,
-                  "cast": 2,
-                  "cooldown": 18,
-                  "target": {"side": "foes", "pick": "random", "count": 3},
-                  "do": [{"op": "damage", "type": "physical", "subtype": "pierce", "amount": {"scale": [{"ratio": 0.6, "stat": "attack"}]}}],
-                  "verbs": ["area", "physical_damage"]
-                },
-                {
-                  "id": "quick_draw",
-                  "class": "ranger",
-                  "name": "Quick Draw",
-                  "text": "Two fast shots, with no wind-up.",
-                  "mp": 4,
-                  "cast": 0,
-                  "cooldown": 10,
-                  "do": [
-                          {
-                            "op": "damage",
-                            "type": "physical",
-                            "subtype": "pierce",
-                            "amount": {"scale": [{"ratio": 0.5, "stat": "attack"}]},
-                            "hits": 2
-                          }
-                        ],
-                  "verbs": ["multi_hit", "initiative"]
-                },
-                {
-                  "id": "covering_fire",
-                  "class": "ranger",
-                  "name": "Covering Fire",
-                  "text": "When an ally falls below half health, shoots to slow an enemy down.",
-                  "mp": 6,
-                  "cooldown": 16,
-                  "if": {"side": "others", "where": {"hpBelow": 50}},
-                  "do": [
-                          {
-                            "op": "damage",
-                            "type": "physical",
-                            "subtype": "pierce",
-                            "amount": {"scale": [{"ratio": 0.7, "stat": "attack"}]},
-                            "apply": [{"status": "slow"}]
-                          }
-                        ],
-                  "verbs": ["counter", "control"]
-                },
-                {
-                  "id": "aimed_shot",
-                  "class": "ranger",
-                  "name": "Aimed Shot",
-                  "text": "Takes careful aim at the healthiest enemy for one heavy shot.",
-                  "mp": 8,
-                  "cast": 3,
-                  "cooldown": 16,
-                  "target": {"side": "foes", "pick": "highest", "by": "hp_share"},
-                  "do": [{"op": "damage", "type": "physical", "subtype": "pierce", "amount": {"scale": [{"ratio": 1.5, "stat": "attack"}]}}],
-                  "verbs": ["burst", "physical_damage"]
-                },
-                {
-                  "id": "riposte",
-                  "class": "duelist",
-                  "name": "Riposte",
-                  "text": "For a while, strikes back after every dodge.",
-                  "cooldown": 30,
-                  "target": "self",
-                  "do": [{"op": "apply", "status": "riposte"}],
-                  "verbs": ["counter", "evasion"]
-                },
-                {
-                  "id": "flurry",
-                  "class": "duelist",
-                  "name": "Flurry",
-                  "text": "Four quick, light stabs.",
-                  "mp": 6,
-                  "cooldown": 12,
-                  "do": [
-                          {
-                            "op": "damage",
-                            "type": "physical",
-                            "subtype": "pierce",
-                            "amount": {"scale": [{"ratio": 0.35, "stat": "attack"}]},
-                            "hits": 4
-                          }
-                        ],
-                  "verbs": ["multi_hit", "physical_damage"]
-                },
-                {
-                  "id": "read_the_blade",
-                  "class": "duelist",
-                  "name": "Read the Blade",
-                  "text": "Watches closely: harder to hit, and hits more surely.",
-                  "mp": 5,
-                  "cooldown": 20,
-                  "target": "self",
-                  "do": [{"op": "apply", "status": "focused"}],
-                  "verbs": ["evasion"]
-                },
-                {
-                  "id": "lunge",
-                  "class": "duelist",
-                  "name": "Lunge",
-                  "text": "Lunges at the most wounded enemy for one big hit.",
-                  "mp": 10,
-                  "cast": 2,
-                  "cooldown": 18,
-                  "target": {"side": "foes", "pick": "lowest", "by": "hp_share"},
-                  "do": [{"op": "damage", "type": "physical", "subtype": "pierce", "amount": {"scale": [{"ratio": 1.6, "stat": "attack"}]}}],
-                  "verbs": ["execute", "burst"]
-                },
-                {
-                  "id": "hamstring",
-                  "class": "duelist",
-                  "name": "Hamstring",
-                  "text": "A low cut that leaves the target bleeding and slowed.",
-                  "mp": 6,
-                  "cooldown": 16,
-                  "do": [
-                          {
-                            "op": "damage",
-                            "type": "physical",
-                            "subtype": "slash",
-                            "amount": {"scale": [{"ratio": 0.6, "stat": "attack"}]},
-                            "apply": [{"status": "bleed"}, {"status": "slow"}]
-                          }
-                        ],
-                  "verbs": ["damage_over_time", "physical_damage"]
-                },
-                {
-                  "id": "mend",
-                  "class": "cleric",
-                  "name": "Mend",
-                  "text": "Heals the most wounded ally below 60% health.",
-                  "mp": 8,
-                  "cast": 2,
-                  "cooldown": 6,
-                  "if": {"side": "allies", "where": {"hpBelow": 60}},
-                  "target": {"side": "allies", "pick": "lowest", "by": "hp_share"},
-                  "do": [{"op": "heal", "amount": {"base": 10, "scale": [{"ratio": 1, "stat": "magic"}]}}],
-                  "verbs": ["healing"]
-                },
-                {
-                  "id": "purify",
-                  "class": "cleric",
-                  "name": "Purify",
-                  "text": "Lifts the newest affliction from an ally.",
-                  "mp": 6,
-                  "cooldown": 15,
-                  "if": {"side": "allies", "where": {"debuffs": true}},
-                  "target": {"side": "allies", "where": {"debuffs": true}},
-                  "do": [{"op": "remove", "label": "debuff", "count": 1}],
-                  "verbs": ["cleanse"]
-                },
-                {
-                  "id": "blessed_ward",
-                  "class": "cleric",
-                  "name": "Blessed Ward",
-                  "text": "Wraps the most wounded ally in a ward that soaks up damage.",
-                  "mp": 10,
-                  "cooldown": 20,
-                  "target": {"side": "allies", "pick": "lowest", "by": "hp_share"},
-                  "do": [{"op": "apply", "status": "barrier", "stacks": {"base": 10, "scale": [{"ratio": 1, "stat": "magic"}]}}],
-                  "verbs": ["armour"]
-                },
-                {
-                  "id": "radiance",
-                  "class": "cleric",
-                  "name": "Radiance",
-                  "text": "Burns every enemy with holy light.",
-                  "mp": 12,
-                  "cast": 3,
-                  "cooldown": 20,
-                  "target": {"side": "foes", "pick": "all"},
-                  "do": [{"op": "damage", "type": "magical", "element": "holy", "amount": {"scale": [{"ratio": 0.7, "stat": "magic"}]}}],
-                  "verbs": ["magic_damage", "area"]
-                },
-                {
-                  "id": "sanctuary",
-                  "class": "cleric",
-                  "name": "Sanctuary",
-                  "text": "When the party is hurt, heals every ally a little.",
-                  "mp": 14,
-                  "cast": 3,
-                  "cooldown": 30,
-                  "if": {"side": "allies", "where": {"hpBelow": 70}},
-                  "target": {"side": "allies", "pick": "all"},
-                  "do": [{"op": "heal", "amount": {"base": 5, "scale": [{"ratio": 0.5, "stat": "magic"}]}}],
-                  "verbs": ["healing", "area"]
-                },
-                {
-                  "id": "grave_rot",
-                  "name": "Grave Rot",
-                  "text": "Breathes rot over a foe.",
-                  "cooldown": 14,
-                  "do": [{"op": "apply", "status": "rot"}],
-                  "verbs": ["damage_over_time"]
-                },
-                {
-                  "id": "howl",
-                  "name": "Howl",
-                  "text": "Howls, and turns savage.",
-                  "cooldown": 5,
-                  "cast": 2,
-                  "if": {"side": "self", "where": {"hpBelow": 50, "lacks": "frenzied"}},
-                  "target": "self",
-                  "do": [{"op": "apply", "status": "frenzied"}],
-                  "verbs": ["burst"],
-                  "note": "Once per fight, in effect: every action starts the fight on cooldown, so a long cooldown would mean never. The condition reads the status it gives instead."
-                },
-                {
-                  "id": "maul",
-                  "name": "Maul",
-                  "text": "Rears up and mauls a foe.",
-                  "cast": 4,
-                  "cooldown": 20,
-                  "do": [{"op": "damage", "type": "physical", "subtype": "blunt", "amount": {"scale": [{"ratio": 2.2, "stat": "attack"}]}}],
-                  "verbs": ["burst", "physical_damage"]
-                }
-              ],
-  "gear": [
-            {
-              "id": "rusted_sword",
-              "name": "Rusted Sword",
-              "text": "It's seen better days. So have you.",
-              "slot": "warrior_weapon",
-              "tier": "efficacy",
-              "source": "starter",
-              "class": ["warrior"],
-              "rank": 1,
-              "weapon": {"type": "physical", "subtype": "slash", "cooldown": 12, "amount": {"scale": [{"ratio": 1, "stat": "attack"}]}},
-              "stats": [{"stat": "attack", "flat": 1}],
-              "verbs": []
-            },
-            {
-              "id": "notched_blade",
-              "name": "Notched Blade",
-              "text": "Every notch is a story. Most of them end badly for someone else.",
-              "slot": "warrior_weapon",
-              "tier": "efficacy",
-              "source": "loot",
-              "class": ["warrior"],
-              "rank": 1,
-              "weapon": {"type": "physical", "subtype": "slash", "cooldown": 11, "amount": {"scale": [{"ratio": 1, "stat": "attack"}]}},
-              "stats": [{"stat": "attack", "flat": 4}],
-              "verbs": []
-            },
-            {
-              "id": "hunters_shortbow",
-              "name": "Hunter's Shortbow",
-              "text": "Short, light and honest.",
-              "slot": "ranger_weapon",
-              "tier": "efficacy",
-              "source": "loot",
-              "class": ["ranger"],
-              "rank": 1,
-              "weapon": {"type": "physical", "subtype": "pierce", "cooldown": 10, "amount": {"scale": [{"ratio": 1, "stat": "attack"}]}},
-              "stats": [{"stat": "attack", "flat": 2}, {"stat": "accuracy", "flat": 5}],
-              "verbs": []
-            },
-            {
-              "id": "fencers_rapier",
-              "name": "Fencer's Rapier",
-              "text": "Thin, quick and rude.",
-              "slot": "duelist_weapon",
-              "tier": "efficacy",
-              "source": "loot",
-              "class": ["duelist"],
-              "rank": 1,
-              "weapon": {"type": "physical", "subtype": "pierce", "cooldown": 10, "amount": {"scale": [{"ratio": 1, "stat": "attack"}]}},
-              "stats": [{"stat": "attack", "flat": 2}, {"stat": "accuracy", "flat": 5}],
-              "verbs": []
-            },
-            {
-              "id": "ash_staff",
-              "name": "Ash Staff",
-              "text": "Cut from the old tree's lowest branch, with permission.",
-              "slot": "cleric_focus",
-              "tier": "efficacy",
-              "source": "loot",
-              "class": ["cleric"],
-              "rank": 1,
-              "weapon": {"type": "magical", "element": "holy", "cooldown": 14, "amount": {"scale": [{"ratio": 1, "stat": "magic"}]}},
-              "stats": [{"stat": "magic", "flat": 3}],
-              "verbs": []
-            },
-            {
-              "id": "studded_jerkin",
-              "name": "Studded Jerkin",
-              "text": "Leather, studs, and a faint smell of wolf.",
-              "slot": "armour",
-              "tier": "efficacy",
-              "source": "loot",
-              "rank": 1,
-              "stats": [{"stat": "armor", "flat": 3}, {"stat": "max_hp", "flat": 10}],
-              "verbs": []
-            },
-            {
-              "id": "wolfhide_cloak",
-              "name": "Wolfhide Cloak",
-              "text": "Light enough to move in. Easier still when you're running for your life.",
-              "slot": "armour",
-              "tier": "efficacy",
-              "source": "loot",
-              "rank": 2,
-              "stats": [{"stat": "armor", "flat": 2}, {"stat": "evasion", "flat": 5}],
-              "verbs": []
-            },
-            {
-              "id": "bone_charm",
-              "name": "Bone Charm",
-              "text": "Carved from something that used to bite.",
-              "slot": "charm",
-              "tier": "efficacy",
-              "source": "loot",
-              "rank": 1,
-              "stats": [{"stat": "crit_chance", "flat": 5}],
-              "verbs": []
-            },
-            {
-              "id": "ullrs_yew",
-              "name": "Ullr's Yew",
-              "text": "A bow from the hunting god's own tree. It looses two arrows at once.",
-              "slot": "ranger_weapon",
-              "tier": "powerful",
-              "source": "unlock",
-              "class": ["ranger"],
-              "rank": 3,
-              "weapon": {"type": "physical", "subtype": "pierce", "cooldown": 9, "hits": 2, "amount": {"scale": [{"ratio": 0.6, "stat": "attack"}]}},
-              "stats": [{"stat": "crit_chance", "flat": 10}],
-              "verbs": ["multi_hit", "physical_damage"]
-            },
-            {
-              "id": "yata_mirror",
-              "name": "Yata Mirror",
-              "text": "A sacred mirror. Whoever strikes its bearer is struck back.",
-              "slot": "charm",
-              "tier": "capstone",
-              "source": "unlock",
-              "rank": 3,
-              "stats": [{"stat": "thorns", "flat": 6}],
-              "verbs": ["counter"]
-            },
-            {
-              "id": "gjallarhorn",
-              "name": "Gjallarhorn",
-              "text": "The horn that will one day call the end of the world. For now, it calls the charge: the whole party starts each fight hasted.",
-              "slot": "charm",
-              "tier": "capstone",
-              "source": "unlock",
-              "rank": 3,
-              "stats": [],
-              "statuses": ["horn_call"],
-              "verbs": ["initiative"]
+              ]
             }
-          ],
-  "formations": [
+          }
+        ]
+      }
+    },
+    {
+      "id": "thorns",
+      "name": "Thorns",
+      "label": "buff",
+      "show": "stat",
+      "stacking": "refresh",
+      "unremovable": true,
+      "reactions": [
+        {
+          "on": {
+            "event": "hit_taken"
+          },
+          "do": [
+            {
+              "op": "damage",
+              "type": "none",
+              "amount": {
+                "scale": [
                   {
-                    "id": "open_order",
-                    "name": "Open Order",
-                    "text": "Everyone finds a spot. No tricks.",
-                    "source": "starter",
-                    "positions": [
-                                  {"id": "a", "name": "Front Left", "layout": {"line": "front", "column": 0}},
-                                  {"id": "b", "name": "Front Right", "layout": {"line": "front", "column": 2}},
-                                  {"id": "c", "name": "Centre", "layout": {"line": "middle", "column": 1}},
-                                  {"id": "d", "name": "Rear Left", "layout": {"line": "back", "column": 0}},
-                                  {"id": "e", "name": "Rear Right", "layout": {"line": "back", "column": 2}}
-                                ],
-                    "verbs": []
-                  },
-                  {
-                    "id": "hearth_guard",
-                    "name": "Hearth Guard",
-                    "text": "One shield out front draws every blow, so the hunters behind it can work.",
-                    "source": "unlock",
-                    "positions": [
-                                  {
-                                    "id": "shield",
-                                    "name": "Shield",
-                                    "text": "Much easier to target. Tougher.",
-                                    "layout": {"line": "front", "column": 1},
-                                    "stats": [{"stat": "aggro", "flat": 30}, {"stat": "armor", "pct": 30}]
-                                  },
-                                  {"id": "left_flank", "name": "Left Flank", "layout": {"line": "middle", "column": 0}},
-                                  {"id": "right_flank", "name": "Right Flank", "layout": {"line": "middle", "column": 2}},
-                                  {
-                                    "id": "left_hunter",
-                                    "name": "Left Hunter",
-                                    "text": "Faster. Hits harder.",
-                                    "layout": {"line": "back", "column": 0},
-                                    "stats": [{"stat": "attack_speed", "flat": 15}],
-                                    "statuses": ["hunter_focus"]
-                                  },
-                                  {
-                                    "id": "right_hunter",
-                                    "name": "Right Hunter",
-                                    "text": "Faster. Hits harder.",
-                                    "layout": {"line": "back", "column": 2},
-                                    "stats": [{"stat": "attack_speed", "flat": 15}],
-                                    "statuses": ["hunter_focus"]
-                                  }
-                                ],
-                    "verbs": ["protect", "burst"]
-                  },
-                  {
-                    "id": "phalanx",
-                    "name": "Phalanx",
-                    "text": "Three shields locked at the front, two strikers safe behind.",
-                    "source": "unlock",
-                    "positions": [
-                                  {
-                                    "id": "left_shield",
-                                    "name": "Left Shield",
-                                    "text": "Tougher.",
-                                    "layout": {"line": "front", "column": 0},
-                                    "stats": [{"stat": "armor", "flat": 3}]
-                                  },
-                                  {
-                                    "id": "shield_point",
-                                    "name": "Shield Point",
-                                    "text": "Much tougher. Easier to target.",
-                                    "layout": {"line": "front", "column": 1},
-                                    "stats": [{"stat": "aggro", "flat": 40}, {"stat": "armor", "pct": 50}]
-                                  },
-                                  {
-                                    "id": "right_shield",
-                                    "name": "Right Shield",
-                                    "text": "Tougher.",
-                                    "layout": {"line": "front", "column": 2},
-                                    "stats": [{"stat": "armor", "flat": 3}]
-                                  },
-                                  {
-                                    "id": "left_striker",
-                                    "name": "Left Striker",
-                                    "text": "Hard to target. More critical hits.",
-                                    "layout": {"line": "back", "column": 0},
-                                    "stats": [{"stat": "aggro", "flat": -5}, {"stat": "crit_chance", "flat": 10}]
-                                  },
-                                  {
-                                    "id": "right_striker",
-                                    "name": "Right Striker",
-                                    "text": "Hard to target. More critical hits.",
-                                    "layout": {"line": "back", "column": 2},
-                                    "stats": [{"stat": "aggro", "flat": -5}, {"stat": "crit_chance", "flat": 10}]
-                                  }
-                                ],
-                    "verbs": ["armour", "protect"]
-                  },
-                  {
-                    "id": "hunting_party",
-                    "name": "Hunting Party",
-                    "text": "A headsman for the big blow, flankers who find the gaps, and a sanctuary for whoever needs it.",
-                    "source": "unlock",
-                    "positions": [
-                                  {
-                                    "id": "headsman",
-                                    "name": "Headsman",
-                                    "text": "Much slower. Hits half again as hard.",
-                                    "layout": {"line": "front", "column": 1},
-                                    "stats": [{"stat": "attack_speed", "flat": -40}],
-                                    "statuses": ["headsman"]
-                                  },
-                                  {
-                                    "id": "left_flank",
-                                    "name": "Left Flank",
-                                    "text": "More critical hits.",
-                                    "layout": {"line": "middle", "column": 0},
-                                    "stats": [{"stat": "crit_chance", "flat": 10}]
-                                  },
-                                  {
-                                    "id": "right_flank",
-                                    "name": "Right Flank",
-                                    "text": "More critical hits.",
-                                    "layout": {"line": "middle", "column": 2},
-                                    "stats": [{"stat": "crit_chance", "flat": 10}]
-                                  },
-                                  {
-                                    "id": "sanctuary",
-                                    "name": "Sanctuary",
-                                    "text": "Heals land a quarter stronger here.",
-                                    "layout": {"line": "back", "column": 1},
-                                    "stats": [{"stat": "healing_received", "flat": 25}]
-                                  },
-                                  {"id": "rear", "name": "Rear", "layout": {"line": "back", "column": 0}}
-                                ],
-                    "verbs": ["burst"]
-                  },
-                  {
-                    "id": "flash_flood",
-                    "name": "Flash Flood",
-                    "text": "Everyone charges at once: the whole party moves faster, but nobody watches their flank.",
-                    "source": "unlock",
-                    "positions": [
-                                  {"id": "a", "name": "Wave", "layout": {"line": "front", "column": 0}},
-                                  {"id": "b", "name": "Wave", "layout": {"line": "front", "column": 1}},
-                                  {"id": "c", "name": "Wave", "layout": {"line": "front", "column": 2}},
-                                  {"id": "d", "name": "Wake", "layout": {"line": "middle", "column": 0}},
-                                  {"id": "e", "name": "Wake", "layout": {"line": "middle", "column": 2}}
-                                ],
-                    "stats": [{"stat": "attack_speed", "flat": 20}, {"stat": "cast_time_reduction", "flat": 20}, {"stat": "evasion", "flat": -5}],
-                    "verbs": ["initiative"]
+                    "ratio": 1,
+                    "stat": "thorns",
+                    "of": "holder"
                   }
-                ],
-  "enemies": [
-              {
-                "id": "ash_wolf",
-                "name": "Ash Wolf",
-                "text": "A lean grey wolf. Agile, and strong in numbers: it turns rabid when a packmate falls.",
-                "rank": "minion",
-                "traits": ["agile", "strong_in_numbers"],
-                "stats": {"max_hp": 55, "attack": 11, "armor": 1, "evasion": 20},
-                "weapon": {"type": "physical", "subtype": "pierce", "cooldown": 8, "amount": {"scale": [{"ratio": 1, "stat": "attack"}]}},
-                "statuses": ["pack_fury"],
-                "verbs": ["physical_damage", "evasion", "numbers"]
+                ]
               },
-              {
-                "id": "bog_wight",
-                "name": "Bog Wight",
-                "text": "A drowned thing that hangs back in the reeds, festering everything it touches.",
-                "rank": "minion",
-                "traits": ["festering"],
-                "stats": {"max_hp": 50, "attack": 3, "magic": 11, "armor": 2, "resist:shadow": 50, "resist:holy": -50, "aggro": 6},
-                "weapon": {"type": "magical", "element": "shadow", "cooldown": 12, "amount": {"scale": [{"ratio": 0.7, "stat": "magic"}]}},
-                "abilities": ["grave_rot"],
-                "verbs": ["magic_damage", "damage_over_time"]
+              "to": "other"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bleed",
+      "name": "BLEED",
+      "text": "Loses health every 2 ticks.",
+      "label": "debuff",
+      "show": "icon",
+      "subtype": "slash",
+      "stacking": "refresh",
+      "duration": 6,
+      "pulse": {
+        "every": 2,
+        "do": [
+          {
+            "op": "damage",
+            "type": "none",
+            "amount": 3
+          }
+        ]
+      },
+      "note": "No element, so Armor and Resistance never touch it."
+    },
+    {
+      "id": "rot",
+      "name": "ROT",
+      "text": "Loses health every 2 ticks.",
+      "label": "debuff",
+      "show": "icon",
+      "element": "shadow",
+      "stacking": "refresh",
+      "duration": 8,
+      "pulse": {
+        "every": 2,
+        "do": [
+          {
+            "op": "damage",
+            "type": "none",
+            "amount": 4
+          }
+        ]
+      },
+      "note": "Typeless: Attack and Magic never scale status damage."
+    },
+    {
+      "id": "stun",
+      "name": "STUN",
+      "text": "Can't act.",
+      "label": "debuff",
+      "show": "icon",
+      "stacking": "refresh",
+      "duration": 2,
+      "lockout": {
+        "covers": "all",
+        "interrupt": true
+      }
+    },
+    {
+      "id": "taunt",
+      "name": "TAUNT",
+      "text": "Draws every attack.",
+      "label": "buff",
+      "show": "icon",
+      "stacking": "refresh",
+      "duration": 6,
+      "stats": [
+        {
+          "stat": "forced",
+          "flat": 1
+        }
+      ]
+    },
+    {
+      "id": "guard",
+      "name": "GUARD",
+      "text": "Takes 30% less damage.",
+      "label": "buff",
+      "show": "icon",
+      "stacking": "refresh",
+      "duration": 6,
+      "taken": [
+        {
+          "pct": -30
+        }
+      ]
+    },
+    {
+      "id": "barrier",
+      "name": "BARRIER",
+      "text": "Soaks up damage.",
+      "label": "buff",
+      "show": "icon",
+      "stacking": "intensity",
+      "absorb": true,
+      "cap": {
+        "scale": [
+          {
+            "ratio": 0.5,
+            "stat": "max_hp",
+            "of": "holder"
+          }
+        ]
+      },
+      "note": "A shield: an Intensity status with an absorb, capped at half the holder's max HP."
+    },
+    {
+      "id": "slow",
+      "name": "SLOW",
+      "text": "Attacks more slowly.",
+      "label": "debuff",
+      "show": "icon",
+      "stacking": "refresh",
+      "duration": 6,
+      "stats": [
+        {
+          "stat": "attack_speed",
+          "flat": -30
+        }
+      ]
+    },
+    {
+      "id": "riposte",
+      "name": "RIPOSTE",
+      "text": "Strikes back after dodging.",
+      "label": "buff",
+      "show": "icon",
+      "stacking": "refresh",
+      "duration": 12,
+      "reactions": [
+        {
+          "on": {
+            "event": "hit_evaded"
+          },
+          "do": [
+            {
+              "op": "damage",
+              "type": "physical",
+              "subtype": "pierce",
+              "amount": {
+                "scale": [
+                  {
+                    "ratio": 0.8,
+                    "stat": "attack",
+                    "of": "holder"
+                  }
+                ]
               },
-              {
-                "id": "grey_mother",
-                "name": "Grey Mother",
-                "text": "Thick-hided and grey with age, she strikes many times, shrugs off any stun, and turns savage when badly hurt.",
-                "rank": "boss",
-                "traits": ["thick_hided", "strikes_many_times"],
-                "stats": {"max_hp": 650, "attack": 20, "armor": 7, "evasion": 5, "immune:kind:lockout:all": 1},
-                "weapon": {
-                            "type": "physical",
-                            "subtype": "slash",
-                            "cooldown": 10,
-                            "hits": 2,
-                            "amount": {"scale": [{"ratio": 0.6, "stat": "attack"}]},
-                            "apply": [{"status": "bleed", "chance": 25}]
-                          },
-                "abilities": ["howl", "maul"],
-                "keyholes": [
-                              {
-                                "id": "hide",
-                                "from": "armour",
-                                "counteredBy": ["magic_damage", "damage_over_time", "burst"],
-                                "strongAgainst": ["multi_hit"],
-                                "note": "Armor 7 eats small hits: flurries and double shots do little. Magic, bleeds and big hits get through."
-                              },
-                              {
-                                "id": "rend",
-                                "from": "multi_hit",
-                                "counteredBy": ["armour", "protect", "healing"],
-                                "note": "Two hits every 10 ticks, sometimes bleeding: armor and healing blunt it."
-                              }
-                            ],
-                "verbs": ["physical_damage", "multi_hit", "armour", "burst"],
-                "note": "Immune to lockouts covering all actions (no stun), but a silence would still land."
+              "to": "other"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "focused",
+      "name": "FOCUSED",
+      "text": "Harder to hit, and hits more surely.",
+      "label": "buff",
+      "show": "icon",
+      "stacking": "refresh",
+      "duration": 8,
+      "stats": [
+        {
+          "stat": "evasion",
+          "flat": 20
+        },
+        {
+          "stat": "accuracy",
+          "flat": 20
+        }
+      ]
+    },
+    {
+      "id": "frenzied",
+      "name": "FRENZY",
+      "text": "Hits harder and faster.",
+      "label": "buff",
+      "show": "icon",
+      "stacking": "refresh",
+      "unremovable": true,
+      "stats": [
+        {
+          "stat": "attack",
+          "pct": 30
+        },
+        {
+          "stat": "attack_speed",
+          "flat": 30
+        }
+      ]
+    },
+    {
+      "id": "rabid",
+      "name": "RABID",
+      "text": "Attacks faster for each fallen packmate.",
+      "label": "buff",
+      "show": "icon",
+      "stacking": "intensity",
+      "cap": 3,
+      "stats": [
+        {
+          "stat": "attack_speed",
+          "flat": 25
+        }
+      ]
+    },
+    {
+      "id": "pack_fury",
+      "name": "Pack fury",
+      "label": "buff",
+      "show": "sheet",
+      "stacking": "refresh",
+      "unremovable": true,
+      "reactions": [
+        {
+          "on": {
+            "event": "ko",
+            "whose": "ally"
+          },
+          "do": [
+            {
+              "op": "apply",
+              "status": "rabid",
+              "to": "holder"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hunter_focus",
+      "name": "Hunter's focus",
+      "label": "buff",
+      "show": "sheet",
+      "stacking": "refresh",
+      "unremovable": true,
+      "boosts": [
+        {
+          "tag": "physical",
+          "pct": 15
+        }
+      ]
+    },
+    {
+      "id": "headsman",
+      "name": "Headsman",
+      "label": "buff",
+      "show": "sheet",
+      "stacking": "refresh",
+      "unremovable": true,
+      "boosts": [
+        {
+          "tag": "physical",
+          "pct": 50
+        },
+        {
+          "tag": "magical",
+          "pct": 50
+        }
+      ]
+    },
+    {
+      "id": "haste",
+      "name": "HASTE",
+      "text": "Attacks and recovers abilities faster.",
+      "label": "buff",
+      "show": "icon",
+      "stacking": "refresh",
+      "duration": 10,
+      "stats": [
+        {
+          "stat": "attack_speed",
+          "flat": 40
+        },
+        {
+          "stat": "cooldown_reduction",
+          "flat": 20
+        }
+      ]
+    },
+    {
+      "id": "horn_call",
+      "name": "Horn call",
+      "label": "buff",
+      "show": "sheet",
+      "stacking": "refresh",
+      "unremovable": true,
+      "reactions": [
+        {
+          "on": {
+            "event": "fight_start"
+          },
+          "do": [
+            {
+              "op": "apply",
+              "status": "haste",
+              "to": {
+                "side": "allies",
+                "pick": "all"
               }
-            ],
-  "perkFamilies": [
-                    {"id": "hunt", "name": "The Hunt", "text": "Sharper strikes and finishing blows."},
-                    {"id": "blood", "name": "Blood", "text": "Bleeding and open wounds."},
-                    {"id": "iron", "name": "Iron", "text": "Toughness and blocking."}
-                  ],
-  "perks": [
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "throat",
+      "name": "Go for the throat",
+      "label": "buff",
+      "show": "sheet",
+      "stacking": "refresh",
+      "unremovable": true,
+      "boosts": [
+        {
+          "tag": "basic",
+          "pct": 15
+        }
+      ]
+    },
+    {
+      "id": "serrated",
+      "name": "Serrated heads",
+      "label": "buff",
+      "show": "sheet",
+      "stacking": "refresh",
+      "unremovable": true,
+      "reactions": [
+        {
+          "on": {
+            "event": "hit_lands",
+            "kind": "basic"
+          },
+          "do": [
             {
-              "id": "keen_eyes",
-              "name": "Keen Eyes",
-              "text": "Your whole party lands critical hits more often.",
-              "family": "hunt",
-              "rarity": "regular",
-              "stats": [{"stat": "crit_chance", "flat": 8}],
-              "verbs": ["burst"]
+              "op": "apply",
+              "status": "bleed",
+              "chance": 50,
+              "to": "other"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "red_riposte",
+      "name": "Red riposte",
+      "label": "buff",
+      "show": "sheet",
+      "stacking": "refresh",
+      "unremovable": true,
+      "reactions": [
+        {
+          "on": {
+            "event": "hit_evaded"
+          },
+          "do": [
+            {
+              "op": "apply",
+              "status": "bleed",
+              "to": "other"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "haemorrhage",
+      "name": "Haemorrhage",
+      "label": "buff",
+      "show": "sheet",
+      "stacking": "refresh",
+      "unremovable": true,
+      "boosts": [
+        {
+          "tag": "bleed",
+          "pct": 60
+        }
+      ]
+    }
+  ],
+  "classes": [
+    {
+      "id": "warrior",
+      "name": "Warrior",
+      "text": "Holds the front, cleaves through crowds, and steps in when friends falter.",
+      "source": "starter",
+      "stats": {
+        "max_hp": 150,
+        "max_mp": 30,
+        "mp_regen": 1,
+        "attack": 14,
+        "armor": 5,
+        "aggro": 20
+      },
+      "weapons": [
+        "sword"
+      ],
+      "armor": "heavy",
+      "abilities": [
+        "cleave",
+        "stand_guard",
+        "shield_bash",
+        "second_wind",
+        "rallying_cry"
+      ]
+    },
+    {
+      "id": "ranger",
+      "name": "Ranger",
+      "text": "Shoots fast, bleeds what it hits, and covers friends in trouble.",
+      "source": "unlock",
+      "stats": {
+        "max_hp": 100,
+        "max_mp": 30,
+        "mp_regen": 1,
+        "attack": 15,
+        "armor": 2,
+        "evasion": 10,
+        "accuracy": 5,
+        "crit_chance": 10,
+        "crit_multiplier": 175
+      },
+      "weapons": [
+        "bow"
+      ],
+      "armor": "medium",
+      "abilities": [
+        "barbed_arrows",
+        "volley",
+        "quick_draw",
+        "covering_fire",
+        "aimed_shot"
+      ]
+    },
+    {
+      "id": "duelist",
+      "name": "Duelist",
+      "text": "Fights up close, slips every blow, and saves it all for one decisive lunge.",
+      "source": "unlock",
+      "stats": {
+        "max_hp": 95,
+        "max_mp": 30,
+        "mp_regen": 1,
+        "attack": 15,
+        "armor": 2,
+        "evasion": 25,
+        "accuracy": 5,
+        "crit_chance": 10,
+        "crit_multiplier": 175
+      },
+      "weapons": [
+        "rapier"
+      ],
+      "armor": "medium",
+      "abilities": [
+        "riposte",
+        "flurry",
+        "read_the_blade",
+        "lunge",
+        "hamstring"
+      ]
+    },
+    {
+      "id": "cleric",
+      "name": "Cleric",
+      "text": "Mends wounds, lifts curses, and smites when nobody needs her.",
+      "source": "unlock",
+      "stats": {
+        "max_hp": 105,
+        "max_mp": 60,
+        "mp_regen": 2,
+        "attack": 4,
+        "magic": 14,
+        "armor": 2,
+        "resist": 10
+      },
+      "weapons": [
+        "holy_staff"
+      ],
+      "armor": "light",
+      "abilities": [
+        "mend",
+        "purify",
+        "blessed_ward",
+        "radiance",
+        "sanctuary"
+      ]
+    }
+  ],
+  "abilities": [
+    {
+      "id": "cleave",
+      "class": "warrior",
+      "name": "Cleave",
+      "text": "Hits every enemy for a little over half damage.",
+      "mp": 8,
+      "cooldown": 12,
+      "target": {
+        "side": "foes",
+        "pick": "all"
+      },
+      "do": [
+        {
+          "op": "damage",
+          "type": "physical",
+          "subtype": "slash",
+          "amount": {
+            "scale": [
+              {
+                "ratio": 0.6,
+                "stat": "attack"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "stand_guard",
+      "name": "Stand Guard",
+      "class": "warrior",
+      "text": "When an ally drops below half health, taunts and braces.",
+      "mp": 6,
+      "cooldown": 20,
+      "if": {
+        "side": "others",
+        "where": {
+          "hpBelow": 50
+        }
+      },
+      "target": "self",
+      "do": [
+        {
+          "op": "apply",
+          "status": "taunt"
+        },
+        {
+          "op": "apply",
+          "status": "guard"
+        }
+      ]
+    },
+    {
+      "id": "shield_bash",
+      "class": "warrior",
+      "name": "Shield Bash",
+      "text": "Bashes an enemy with the shield. It may be stunned.",
+      "mp": 6,
+      "cooldown": 15,
+      "do": [
+        {
+          "op": "damage",
+          "type": "physical",
+          "subtype": "blunt",
+          "amount": {
+            "scale": [
+              {
+                "ratio": 1.5,
+                "stat": "armor"
+              }
+            ]
+          },
+          "apply": [
+            {
+              "status": "stun",
+              "chance": 50
+            }
+          ]
+        }
+      ],
+      "note": "Scales with Armor: only Attack and Magic are type-locked."
+    },
+    {
+      "id": "second_wind",
+      "class": "warrior",
+      "name": "Second Wind",
+      "text": "When badly hurt, recovers a fifth of its health.",
+      "cooldown": 40,
+      "cast": 0,
+      "if": {
+        "side": "self",
+        "where": {
+          "hpBelow": 35
+        }
+      },
+      "target": "self",
+      "do": [
+        {
+          "op": "heal",
+          "amount": {
+            "scale": [
+              {
+                "ratio": 0.2,
+                "stat": "max_hp"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "rallying_cry",
+      "class": "warrior",
+      "name": "Rallying Cry",
+      "text": "Roars to spur every ally on: they attack and recover faster for a while.",
+      "mp": 12,
+      "cast": 2,
+      "cooldown": 40,
+      "target": {
+        "side": "allies",
+        "pick": "all"
+      },
+      "do": [
+        {
+          "op": "apply",
+          "status": "haste"
+        }
+      ]
+    },
+    {
+      "id": "barbed_arrows",
+      "class": "ranger",
+      "name": "Barbed Arrows",
+      "text": "A barbed shot that leaves the target bleeding.",
+      "mp": 6,
+      "cooldown": 14,
+      "do": [
+        {
+          "op": "damage",
+          "type": "physical",
+          "subtype": "pierce",
+          "amount": {
+            "scale": [
+              {
+                "ratio": 0.8,
+                "stat": "attack"
+              }
+            ]
+          },
+          "apply": [
+            {
+              "status": "bleed"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "volley",
+      "class": "ranger",
+      "name": "Volley",
+      "text": "Looses arrows at up to three enemies.",
+      "mp": 10,
+      "cast": 2,
+      "cooldown": 18,
+      "target": {
+        "side": "foes",
+        "pick": "random",
+        "count": 3
+      },
+      "do": [
+        {
+          "op": "damage",
+          "type": "physical",
+          "subtype": "pierce",
+          "amount": {
+            "scale": [
+              {
+                "ratio": 0.6,
+                "stat": "attack"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "quick_draw",
+      "class": "ranger",
+      "name": "Quick Draw",
+      "text": "Two fast shots, with no wind-up.",
+      "mp": 4,
+      "cast": 0,
+      "cooldown": 10,
+      "do": [
+        {
+          "op": "damage",
+          "type": "physical",
+          "subtype": "pierce",
+          "amount": {
+            "scale": [
+              {
+                "ratio": 0.5,
+                "stat": "attack"
+              }
+            ]
+          },
+          "hits": 2
+        }
+      ]
+    },
+    {
+      "id": "covering_fire",
+      "class": "ranger",
+      "name": "Covering Fire",
+      "text": "When an ally falls below half health, shoots to slow an enemy down.",
+      "mp": 6,
+      "cooldown": 16,
+      "if": {
+        "side": "others",
+        "where": {
+          "hpBelow": 50
+        }
+      },
+      "do": [
+        {
+          "op": "damage",
+          "type": "physical",
+          "subtype": "pierce",
+          "amount": {
+            "scale": [
+              {
+                "ratio": 0.7,
+                "stat": "attack"
+              }
+            ]
+          },
+          "apply": [
+            {
+              "status": "slow"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "aimed_shot",
+      "class": "ranger",
+      "name": "Aimed Shot",
+      "text": "Takes careful aim at the healthiest enemy for one heavy shot.",
+      "mp": 8,
+      "cast": 3,
+      "cooldown": 16,
+      "target": {
+        "side": "foes",
+        "pick": "highest",
+        "by": "hp_share"
+      },
+      "do": [
+        {
+          "op": "damage",
+          "type": "physical",
+          "subtype": "pierce",
+          "amount": {
+            "scale": [
+              {
+                "ratio": 1.5,
+                "stat": "attack"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "riposte",
+      "class": "duelist",
+      "name": "Riposte",
+      "text": "For a while, strikes back after every dodge.",
+      "cooldown": 30,
+      "target": "self",
+      "do": [
+        {
+          "op": "apply",
+          "status": "riposte"
+        }
+      ]
+    },
+    {
+      "id": "flurry",
+      "class": "duelist",
+      "name": "Flurry",
+      "text": "Four quick, light stabs.",
+      "mp": 6,
+      "cooldown": 12,
+      "do": [
+        {
+          "op": "damage",
+          "type": "physical",
+          "subtype": "pierce",
+          "amount": {
+            "scale": [
+              {
+                "ratio": 0.35,
+                "stat": "attack"
+              }
+            ]
+          },
+          "hits": 4
+        }
+      ]
+    },
+    {
+      "id": "read_the_blade",
+      "class": "duelist",
+      "name": "Read the Blade",
+      "text": "Watches closely: harder to hit, and hits more surely.",
+      "mp": 5,
+      "cooldown": 20,
+      "target": "self",
+      "do": [
+        {
+          "op": "apply",
+          "status": "focused"
+        }
+      ]
+    },
+    {
+      "id": "lunge",
+      "class": "duelist",
+      "name": "Lunge",
+      "text": "Lunges at the most wounded enemy for one big hit.",
+      "mp": 10,
+      "cast": 2,
+      "cooldown": 18,
+      "target": {
+        "side": "foes",
+        "pick": "lowest",
+        "by": "hp_share"
+      },
+      "do": [
+        {
+          "op": "damage",
+          "type": "physical",
+          "subtype": "pierce",
+          "amount": {
+            "scale": [
+              {
+                "ratio": 1.6,
+                "stat": "attack"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "hamstring",
+      "class": "duelist",
+      "name": "Hamstring",
+      "text": "A low cut that leaves the target bleeding and slowed.",
+      "mp": 6,
+      "cooldown": 16,
+      "do": [
+        {
+          "op": "damage",
+          "type": "physical",
+          "subtype": "slash",
+          "amount": {
+            "scale": [
+              {
+                "ratio": 0.6,
+                "stat": "attack"
+              }
+            ]
+          },
+          "apply": [
+            {
+              "status": "bleed"
             },
             {
-              "id": "go_for_the_throat",
-              "name": "Go for the Throat",
-              "text": "Basic attacks hit harder.",
-              "family": "hunt",
-              "rarity": "regular",
-              "statuses": ["throat"],
-              "verbs": ["physical_damage"]
+              "status": "slow"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mend",
+      "class": "cleric",
+      "name": "Mend",
+      "text": "Heals the most wounded ally below 60% health.",
+      "mp": 8,
+      "cast": 2,
+      "cooldown": 6,
+      "if": {
+        "side": "allies",
+        "where": {
+          "hpBelow": 60
+        }
+      },
+      "target": {
+        "side": "allies",
+        "pick": "lowest",
+        "by": "hp_share"
+      },
+      "do": [
+        {
+          "op": "heal",
+          "amount": {
+            "base": 10,
+            "scale": [
+              {
+                "ratio": 1,
+                "stat": "magic"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "purify",
+      "class": "cleric",
+      "name": "Purify",
+      "text": "Lifts the newest affliction from an ally.",
+      "mp": 6,
+      "cooldown": 15,
+      "if": {
+        "side": "allies",
+        "where": {
+          "debuffs": true
+        }
+      },
+      "target": {
+        "side": "allies",
+        "where": {
+          "debuffs": true
+        }
+      },
+      "do": [
+        {
+          "op": "remove",
+          "label": "debuff",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "blessed_ward",
+      "class": "cleric",
+      "name": "Blessed Ward",
+      "text": "Wraps the most wounded ally in a ward that soaks up damage.",
+      "mp": 10,
+      "cooldown": 20,
+      "target": {
+        "side": "allies",
+        "pick": "lowest",
+        "by": "hp_share"
+      },
+      "do": [
+        {
+          "op": "apply",
+          "status": "barrier",
+          "stacks": {
+            "base": 10,
+            "scale": [
+              {
+                "ratio": 1,
+                "stat": "magic"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "radiance",
+      "class": "cleric",
+      "name": "Radiance",
+      "text": "Burns every enemy with holy light.",
+      "mp": 12,
+      "cast": 3,
+      "cooldown": 20,
+      "target": {
+        "side": "foes",
+        "pick": "all"
+      },
+      "do": [
+        {
+          "op": "damage",
+          "type": "magical",
+          "element": "holy",
+          "amount": {
+            "scale": [
+              {
+                "ratio": 0.7,
+                "stat": "magic"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sanctuary",
+      "class": "cleric",
+      "name": "Sanctuary",
+      "text": "When the party is hurt, heals every ally a little.",
+      "mp": 14,
+      "cast": 3,
+      "cooldown": 30,
+      "if": {
+        "side": "allies",
+        "where": {
+          "hpBelow": 70
+        }
+      },
+      "target": {
+        "side": "allies",
+        "pick": "all"
+      },
+      "do": [
+        {
+          "op": "heal",
+          "amount": {
+            "base": 5,
+            "scale": [
+              {
+                "ratio": 0.5,
+                "stat": "magic"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "grave_rot",
+      "name": "Grave Rot",
+      "text": "Breathes rot over a foe.",
+      "cooldown": 14,
+      "do": [
+        {
+          "op": "apply",
+          "status": "rot"
+        }
+      ]
+    },
+    {
+      "id": "howl",
+      "name": "Howl",
+      "text": "Howls, and turns savage.",
+      "cooldown": 5,
+      "cast": 2,
+      "if": {
+        "side": "self",
+        "where": {
+          "hpBelow": 50,
+          "lacks": "frenzied"
+        }
+      },
+      "target": "self",
+      "do": [
+        {
+          "op": "apply",
+          "status": "frenzied"
+        }
+      ],
+      "note": "Once per fight, in effect: every action starts the fight on cooldown, so a long cooldown would mean never. The condition reads the status it gives instead."
+    },
+    {
+      "id": "maul",
+      "name": "Maul",
+      "text": "Rears up and mauls a foe.",
+      "cast": 4,
+      "cooldown": 20,
+      "do": [
+        {
+          "op": "damage",
+          "type": "physical",
+          "subtype": "blunt",
+          "amount": {
+            "scale": [
+              {
+                "ratio": 2.2,
+                "stat": "attack"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "gear": [
+    {
+      "id": "rusted_sword",
+      "name": "Rusted Sword",
+      "text": "It's seen better days. So have you.",
+      "slot": "weapon",
+      "tier": "ordinary",
+      "source": "starter",
+      "weapon": {
+        "kind": "sword",
+        "amount": {
+          "scale": [
+            {
+              "ratio": 1,
+              "stat": "attack"
+            }
+          ]
+        }
+      },
+      "stats": [
+        {
+          "stat": "attack",
+          "flat": 1
+        }
+      ]
+    },
+    {
+      "id": "notched_blade",
+      "name": "Notched Blade",
+      "text": "Every notch is a story. Most of them end badly for someone else.",
+      "slot": "weapon",
+      "tier": "ordinary",
+      "source": "drop",
+      "weapon": {
+        "kind": "sword",
+        "cooldown": 11,
+        "amount": {
+          "scale": [
+            {
+              "ratio": 1,
+              "stat": "attack"
+            }
+          ]
+        }
+      },
+      "stats": [
+        {
+          "stat": "attack",
+          "flat": 4
+        }
+      ]
+    },
+    {
+      "id": "hunters_shortbow",
+      "name": "Hunter's Shortbow",
+      "text": "Short, light and honest.",
+      "slot": "weapon",
+      "tier": "ordinary",
+      "source": "drop",
+      "weapon": {
+        "kind": "bow",
+        "amount": {
+          "scale": [
+            {
+              "ratio": 1,
+              "stat": "attack"
+            }
+          ]
+        }
+      },
+      "stats": [
+        {
+          "stat": "attack",
+          "flat": 2
+        },
+        {
+          "stat": "accuracy",
+          "flat": 5
+        }
+      ]
+    },
+    {
+      "id": "fencers_rapier",
+      "name": "Fencer's Rapier",
+      "text": "Thin, quick and rude.",
+      "slot": "weapon",
+      "tier": "ordinary",
+      "source": "drop",
+      "weapon": {
+        "kind": "rapier",
+        "amount": {
+          "scale": [
+            {
+              "ratio": 1,
+              "stat": "attack"
+            }
+          ]
+        }
+      },
+      "stats": [
+        {
+          "stat": "attack",
+          "flat": 2
+        },
+        {
+          "stat": "accuracy",
+          "flat": 5
+        }
+      ]
+    },
+    {
+      "id": "ash_staff",
+      "name": "Ash Staff",
+      "text": "Cut from the old tree's lowest branch, with permission.",
+      "slot": "weapon",
+      "tier": "ordinary",
+      "source": "drop",
+      "weapon": {
+        "kind": "holy_staff",
+        "amount": {
+          "scale": [
+            {
+              "ratio": 1,
+              "stat": "magic"
+            }
+          ]
+        }
+      },
+      "stats": [
+        {
+          "stat": "magic",
+          "flat": 3
+        }
+      ]
+    },
+    {
+      "id": "studded_jerkin",
+      "name": "Studded Jerkin",
+      "text": "Leather, studs, and a faint smell of wolf.",
+      "slot": "armor",
+      "tier": "ordinary",
+      "source": "drop",
+      "weight": "medium",
+      "stats": [
+        {
+          "stat": "armor",
+          "flat": 3
+        },
+        {
+          "stat": "max_hp",
+          "flat": 10
+        }
+      ]
+    },
+    {
+      "id": "wolfhide_cloak",
+      "name": "Wolfhide Cloak",
+      "text": "Light enough to move in. Easier still when you're running for your life.",
+      "slot": "armor",
+      "tier": "ordinary",
+      "source": "drop",
+      "weight": "light",
+      "stats": [
+        {
+          "stat": "armor",
+          "flat": 2
+        },
+        {
+          "stat": "evasion",
+          "flat": 5
+        }
+      ]
+    },
+    {
+      "id": "bone_charm",
+      "name": "Bone Charm",
+      "text": "Carved from something that used to bite.",
+      "slot": "amulet",
+      "tier": "ordinary",
+      "source": "drop",
+      "stats": [
+        {
+          "stat": "crit_chance",
+          "flat": 5
+        }
+      ]
+    },
+    {
+      "id": "ullrs_yew",
+      "name": "Ullr's Yew",
+      "text": "A bow from the hunting god's own tree. It looses two arrows at once.",
+      "slot": "weapon",
+      "tier": "powerful",
+      "source": "unlock",
+      "weapon": {
+        "kind": "bow",
+        "cooldown": 9,
+        "hits": 2,
+        "amount": {
+          "scale": [
+            {
+              "ratio": 0.6,
+              "stat": "attack"
+            }
+          ]
+        }
+      },
+      "stats": [
+        {
+          "stat": "crit_chance",
+          "flat": 10
+        }
+      ]
+    },
+    {
+      "id": "yata_mirror",
+      "name": "Yata Mirror",
+      "text": "A sacred mirror. Whoever strikes its bearer is struck back.",
+      "slot": "amulet",
+      "tier": "powerful",
+      "source": "unlock",
+      "stats": [
+        {
+          "stat": "thorns",
+          "flat": 6
+        }
+      ]
+    },
+    {
+      "id": "gjallarhorn",
+      "name": "Gjallarhorn",
+      "text": "The horn that will one day call the end of the world. For now, it calls the charge: the whole party starts each fight hasted.",
+      "slot": "amulet",
+      "tier": "powerful",
+      "source": "unlock",
+      "stats": [],
+      "statuses": [
+        "horn_call"
+      ]
+    }
+  ],
+  "formations": [
+    {
+      "id": "open_order",
+      "name": "Open Order",
+      "text": "Everyone finds a spot. No tricks.",
+      "source": "starter",
+      "positions": [
+        {
+          "id": "a",
+          "name": "Front Left",
+          "layout": {
+            "line": "front",
+            "column": 0
+          }
+        },
+        {
+          "id": "b",
+          "name": "Front Right",
+          "layout": {
+            "line": "front",
+            "column": 2
+          }
+        },
+        {
+          "id": "c",
+          "name": "Centre",
+          "layout": {
+            "line": "middle",
+            "column": 1
+          }
+        },
+        {
+          "id": "d",
+          "name": "Rear Left",
+          "layout": {
+            "line": "back",
+            "column": 0
+          }
+        },
+        {
+          "id": "e",
+          "name": "Rear Right",
+          "layout": {
+            "line": "back",
+            "column": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "hearth_guard",
+      "name": "Hearth Guard",
+      "text": "One shield out front draws every blow, so the hunters behind it can work.",
+      "source": "unlock",
+      "positions": [
+        {
+          "id": "shield",
+          "name": "Shield",
+          "text": "Much easier to target. Tougher.",
+          "layout": {
+            "line": "front",
+            "column": 1
+          },
+          "stats": [
+            {
+              "stat": "aggro",
+              "flat": 30
             },
             {
-              "id": "swift_feet",
-              "name": "Swift Feet",
-              "text": "Your party attacks a little quicker.",
-              "family": "hunt",
-              "rarity": "regular",
-              "stats": [{"stat": "attack_speed", "flat": 15}],
-              "verbs": ["initiative"]
-            },
+              "stat": "armor",
+              "pct": 30
+            }
+          ]
+        },
+        {
+          "id": "left_flank",
+          "name": "Left Flank",
+          "layout": {
+            "line": "middle",
+            "column": 0
+          }
+        },
+        {
+          "id": "right_flank",
+          "name": "Right Flank",
+          "layout": {
+            "line": "middle",
+            "column": 2
+          }
+        },
+        {
+          "id": "left_hunter",
+          "name": "Left Hunter",
+          "text": "Faster. Hits harder.",
+          "layout": {
+            "line": "back",
+            "column": 0
+          },
+          "stats": [
             {
-              "id": "battle_rhythm",
-              "name": "Battle Rhythm",
-              "text": "Your party attacks much quicker, and recovers abilities faster.",
-              "family": "hunt",
-              "rarity": "premium",
-              "upgradeOf": "swift_feet",
-              "stats": [{"stat": "attack_speed", "flat": 25}, {"stat": "cooldown_reduction", "flat": 15}],
-              "verbs": ["initiative"]
-            },
-            {
-              "id": "wolfs_blood",
-              "name": "Wolf's Blood",
-              "text": "Your party is a little hardier.",
-              "family": "blood",
-              "rarity": "regular",
-              "stats": [{"stat": "max_hp", "pct": 10}],
-              "verbs": ["healing"]
-            },
-            {
-              "id": "red_riposte",
-              "name": "Red Riposte",
-              "text": "The Duelist leaves a bleeding wound on anyone it dodges.",
-              "family": "blood",
-              "rarity": "regular",
-              "for": {"classes": ["duelist"]},
-              "statuses": ["red_riposte"],
-              "verbs": ["counter", "damage_over_time"]
-            },
-            {
-              "id": "serrated_heads",
-              "name": "Serrated Heads",
-              "text": "Rangers' and Duelists' basic attacks have a 50% chance to cause bleeding.",
-              "family": "blood",
-              "rarity": "regular",
-              "for": {"classes": ["ranger", "duelist"]},
-              "statuses": ["serrated"],
-              "verbs": ["damage_over_time"]
-            },
-            {
-              "id": "haemorrhage",
-              "name": "Haemorrhage",
-              "text": "Every bleed your party causes runs much deeper.",
-              "family": "blood",
-              "rarity": "premium",
-              "upgradeOf": "red_riposte",
-              "statuses": ["haemorrhage"],
-              "verbs": ["damage_over_time"]
-            },
-            {
-              "id": "iron_skin",
-              "name": "Iron Skin",
-              "text": "Your party shrugs off blows.",
-              "family": "iron",
-              "rarity": "regular",
-              "stats": [{"stat": "armor", "flat": 3}],
-              "verbs": ["armour"]
-            },
-            {
-              "id": "braced_shields",
-              "name": "Braced Shields",
-              "text": "Warriors' armor is a quarter stronger.",
-              "family": "iron",
-              "rarity": "regular",
-              "for": {"classes": ["warrior"]},
-              "stats": [{"stat": "armor", "pct": 25}],
-              "verbs": ["armour"]
-            },
-            {
-              "id": "second_breath",
-              "name": "Second Breath",
-              "text": "Every unit recovers MP a little faster.",
-              "family": "iron",
-              "rarity": "regular",
-              "stats": [{"stat": "mp_regen", "flat": 1}],
-              "verbs": ["healing"]
-            },
-            {
-              "id": "stand_fast",
-              "name": "Stand Fast",
-              "text": "Your party shrugs off blows, and magic too.",
-              "family": "iron",
-              "rarity": "premium",
-              "upgradeOf": "iron_skin",
-              "stats": [{"stat": "armor", "flat": 5}, {"stat": "resist", "flat": 10}],
-              "verbs": ["armour"]
+              "stat": "attack_speed",
+              "flat": 15
             }
           ],
+          "statuses": [
+            "hunter_focus"
+          ]
+        },
+        {
+          "id": "right_hunter",
+          "name": "Right Hunter",
+          "text": "Faster. Hits harder.",
+          "layout": {
+            "line": "back",
+            "column": 2
+          },
+          "stats": [
+            {
+              "stat": "attack_speed",
+              "flat": 15
+            }
+          ],
+          "statuses": [
+            "hunter_focus"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phalanx",
+      "name": "Phalanx",
+      "text": "Three shields locked at the front, two strikers safe behind.",
+      "source": "unlock",
+      "positions": [
+        {
+          "id": "left_shield",
+          "name": "Left Shield",
+          "text": "Tougher.",
+          "layout": {
+            "line": "front",
+            "column": 0
+          },
+          "stats": [
+            {
+              "stat": "armor",
+              "flat": 3
+            }
+          ]
+        },
+        {
+          "id": "shield_point",
+          "name": "Shield Point",
+          "text": "Much tougher. Easier to target.",
+          "layout": {
+            "line": "front",
+            "column": 1
+          },
+          "stats": [
+            {
+              "stat": "aggro",
+              "flat": 40
+            },
+            {
+              "stat": "armor",
+              "pct": 50
+            }
+          ]
+        },
+        {
+          "id": "right_shield",
+          "name": "Right Shield",
+          "text": "Tougher.",
+          "layout": {
+            "line": "front",
+            "column": 2
+          },
+          "stats": [
+            {
+              "stat": "armor",
+              "flat": 3
+            }
+          ]
+        },
+        {
+          "id": "left_striker",
+          "name": "Left Striker",
+          "text": "Hard to target. More critical hits.",
+          "layout": {
+            "line": "back",
+            "column": 0
+          },
+          "stats": [
+            {
+              "stat": "aggro",
+              "flat": -5
+            },
+            {
+              "stat": "crit_chance",
+              "flat": 10
+            }
+          ]
+        },
+        {
+          "id": "right_striker",
+          "name": "Right Striker",
+          "text": "Hard to target. More critical hits.",
+          "layout": {
+            "line": "back",
+            "column": 2
+          },
+          "stats": [
+            {
+              "stat": "aggro",
+              "flat": -5
+            },
+            {
+              "stat": "crit_chance",
+              "flat": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hunting_party",
+      "name": "Hunting Party",
+      "text": "A headsman for the big blow, flankers who find the gaps, and a sanctuary for whoever needs it.",
+      "source": "unlock",
+      "positions": [
+        {
+          "id": "headsman",
+          "name": "Headsman",
+          "text": "Much slower. Hits half again as hard.",
+          "layout": {
+            "line": "front",
+            "column": 1
+          },
+          "stats": [
+            {
+              "stat": "attack_speed",
+              "flat": -40
+            }
+          ],
+          "statuses": [
+            "headsman"
+          ]
+        },
+        {
+          "id": "left_flank",
+          "name": "Left Flank",
+          "text": "More critical hits.",
+          "layout": {
+            "line": "middle",
+            "column": 0
+          },
+          "stats": [
+            {
+              "stat": "crit_chance",
+              "flat": 10
+            }
+          ]
+        },
+        {
+          "id": "right_flank",
+          "name": "Right Flank",
+          "text": "More critical hits.",
+          "layout": {
+            "line": "middle",
+            "column": 2
+          },
+          "stats": [
+            {
+              "stat": "crit_chance",
+              "flat": 10
+            }
+          ]
+        },
+        {
+          "id": "sanctuary",
+          "name": "Sanctuary",
+          "text": "Heals land a quarter stronger here.",
+          "layout": {
+            "line": "back",
+            "column": 1
+          },
+          "stats": [
+            {
+              "stat": "healing_received",
+              "flat": 25
+            }
+          ]
+        },
+        {
+          "id": "rear",
+          "name": "Rear",
+          "layout": {
+            "line": "back",
+            "column": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "flash_flood",
+      "name": "Flash Flood",
+      "text": "Everyone charges at once: the whole party moves faster, but nobody watches their flank.",
+      "source": "unlock",
+      "positions": [
+        {
+          "id": "a",
+          "name": "Wave",
+          "layout": {
+            "line": "front",
+            "column": 0
+          }
+        },
+        {
+          "id": "b",
+          "name": "Wave",
+          "layout": {
+            "line": "front",
+            "column": 1
+          }
+        },
+        {
+          "id": "c",
+          "name": "Wave",
+          "layout": {
+            "line": "front",
+            "column": 2
+          }
+        },
+        {
+          "id": "d",
+          "name": "Wake",
+          "layout": {
+            "line": "middle",
+            "column": 0
+          }
+        },
+        {
+          "id": "e",
+          "name": "Wake",
+          "layout": {
+            "line": "middle",
+            "column": 2
+          }
+        }
+      ],
+      "stats": [
+        {
+          "stat": "attack_speed",
+          "flat": 20
+        },
+        {
+          "stat": "cast_time_reduction",
+          "flat": 20
+        },
+        {
+          "stat": "evasion",
+          "flat": -5
+        }
+      ]
+    }
+  ],
+  "enemies": [
+    {
+      "id": "ash_wolf",
+      "name": "Ash Wolf",
+      "text": "A lean grey wolf. Agile, and strong in numbers: it turns rabid when a packmate falls.",
+      "rank": "minion",
+      "stats": {
+        "max_hp": 55,
+        "attack": 11,
+        "armor": 1,
+        "evasion": 20
+      },
+      "weapon": {
+        "type": "physical",
+        "subtype": "pierce",
+        "cooldown": 8,
+        "amount": {
+          "scale": [
+            {
+              "ratio": 1,
+              "stat": "attack"
+            }
+          ]
+        }
+      },
+      "statuses": [
+        "pack_fury"
+      ]
+    },
+    {
+      "id": "bog_wight",
+      "name": "Bog Wight",
+      "text": "A drowned thing that hangs back in the reeds, festering everything it touches.",
+      "rank": "minion",
+      "stats": {
+        "max_hp": 50,
+        "attack": 3,
+        "magic": 11,
+        "armor": 2,
+        "resist:shadow": 50,
+        "resist:holy": -50,
+        "aggro": 6
+      },
+      "weapon": {
+        "type": "magical",
+        "element": "shadow",
+        "cooldown": 12,
+        "amount": {
+          "scale": [
+            {
+              "ratio": 0.7,
+              "stat": "magic"
+            }
+          ]
+        }
+      },
+      "abilities": [
+        "grave_rot"
+      ]
+    },
+    {
+      "id": "grey_mother",
+      "name": "Grey Mother",
+      "text": "Thick-hided and grey with age, she strikes many times, shrugs off any stun, and turns savage when badly hurt.",
+      "rank": "boss",
+      "stats": {
+        "max_hp": 650,
+        "attack": 20,
+        "armor": 7,
+        "evasion": 5,
+        "immune:kind:lockout:all": 1
+      },
+      "weapon": {
+        "type": "physical",
+        "subtype": "slash",
+        "cooldown": 10,
+        "hits": 2,
+        "amount": {
+          "scale": [
+            {
+              "ratio": 0.6,
+              "stat": "attack"
+            }
+          ]
+        },
+        "apply": [
+          {
+            "status": "bleed",
+            "chance": 25
+          }
+        ]
+      },
+      "abilities": [
+        "howl",
+        "maul"
+      ],
+      "note": "Immune to lockouts covering all actions (no stun), but a silence would still land."
+    }
+  ],
+  "perkFamilies": [
+    {
+      "id": "hunt",
+      "name": "The Hunt",
+      "text": "Sharper strikes and finishing blows."
+    },
+    {
+      "id": "blood",
+      "name": "Blood",
+      "text": "Bleeding and open wounds."
+    },
+    {
+      "id": "iron",
+      "name": "Iron",
+      "text": "Toughness and blocking."
+    }
+  ],
+  "perks": [
+    {
+      "id": "keen_eyes",
+      "name": "Keen Eyes",
+      "text": "Your whole party lands critical hits more often.",
+      "family": "hunt",
+      "rarity": "regular",
+      "stats": [
+        {
+          "stat": "crit_chance",
+          "flat": 8
+        }
+      ]
+    },
+    {
+      "id": "go_for_the_throat",
+      "name": "Go for the Throat",
+      "text": "Basic attacks hit harder.",
+      "family": "hunt",
+      "rarity": "regular",
+      "statuses": [
+        "throat"
+      ]
+    },
+    {
+      "id": "swift_feet",
+      "name": "Swift Feet",
+      "text": "Your party attacks a little quicker.",
+      "family": "hunt",
+      "rarity": "regular",
+      "stats": [
+        {
+          "stat": "attack_speed",
+          "flat": 15
+        }
+      ]
+    },
+    {
+      "id": "battle_rhythm",
+      "name": "Battle Rhythm",
+      "text": "Your party attacks much quicker, and recovers abilities faster.",
+      "family": "hunt",
+      "rarity": "premium",
+      "upgradeOf": "swift_feet",
+      "stats": [
+        {
+          "stat": "attack_speed",
+          "flat": 25
+        },
+        {
+          "stat": "cooldown_reduction",
+          "flat": 15
+        }
+      ]
+    },
+    {
+      "id": "wolfs_blood",
+      "name": "Wolf's Blood",
+      "text": "Your party is a little hardier.",
+      "family": "blood",
+      "rarity": "regular",
+      "stats": [
+        {
+          "stat": "max_hp",
+          "pct": 10
+        }
+      ]
+    },
+    {
+      "id": "red_riposte",
+      "name": "Red Riposte",
+      "text": "The Duelist leaves a bleeding wound on anyone it dodges.",
+      "family": "blood",
+      "rarity": "regular",
+      "for": {
+        "classes": [
+          "duelist"
+        ]
+      },
+      "statuses": [
+        "red_riposte"
+      ]
+    },
+    {
+      "id": "serrated_heads",
+      "name": "Serrated Heads",
+      "text": "Rangers' and Duelists' basic attacks have a 50% chance to cause bleeding.",
+      "family": "blood",
+      "rarity": "regular",
+      "for": {
+        "classes": [
+          "ranger",
+          "duelist"
+        ]
+      },
+      "statuses": [
+        "serrated"
+      ]
+    },
+    {
+      "id": "haemorrhage",
+      "name": "Haemorrhage",
+      "text": "Every bleed your party causes runs much deeper.",
+      "family": "blood",
+      "rarity": "premium",
+      "upgradeOf": "red_riposte",
+      "statuses": [
+        "haemorrhage"
+      ]
+    },
+    {
+      "id": "iron_skin",
+      "name": "Iron Skin",
+      "text": "Your party shrugs off blows.",
+      "family": "iron",
+      "rarity": "regular",
+      "stats": [
+        {
+          "stat": "armor",
+          "flat": 3
+        }
+      ]
+    },
+    {
+      "id": "braced_shields",
+      "name": "Braced Shields",
+      "text": "Warriors' armor is a quarter stronger.",
+      "family": "iron",
+      "rarity": "regular",
+      "for": {
+        "classes": [
+          "warrior"
+        ]
+      },
+      "stats": [
+        {
+          "stat": "armor",
+          "pct": 25
+        }
+      ]
+    },
+    {
+      "id": "second_breath",
+      "name": "Second Breath",
+      "text": "Every unit recovers MP a little faster.",
+      "family": "iron",
+      "rarity": "regular",
+      "stats": [
+        {
+          "stat": "mp_regen",
+          "flat": 1
+        }
+      ]
+    },
+    {
+      "id": "stand_fast",
+      "name": "Stand Fast",
+      "text": "Your party shrugs off blows, and magic too.",
+      "family": "iron",
+      "rarity": "premium",
+      "upgradeOf": "iron_skin",
+      "stats": [
+        {
+          "stat": "armor",
+          "flat": 5
+        },
+        {
+          "stat": "resist",
+          "flat": 10
+        }
+      ]
+    }
+  ],
   "dungeons": [
-                {
-                  "id": "hollow_of_the_grey_mother",
-                  "name": "Hollow of the Grey Mother",
-                  "text": "A wolf den under the roots of an old ash. Something big sleeps at the bottom.",
-                  "partySize": {"max": 3},
-                  "perkPool": [
-                                "keen_eyes",
-                                "go_for_the_throat",
-                                "swift_feet",
-                                "battle_rhythm",
-                                "wolfs_blood",
-                                "red_riposte",
-                                "serrated_heads",
-                                "haemorrhage",
-                                "iron_skin",
-                                "braced_shields",
-                                "second_breath",
-                                "stand_fast"
-                              ],
-                  "stages": [
-                              {"kind": "fight", "id": "den_mouth", "enemies": ["ash_wolf", "ash_wolf"]},
-                              {"kind": "perk_pick", "id": "pick_1"},
-                              {"kind": "fight", "id": "drowned_path", "enemies": ["ash_wolf", "ash_wolf", "bog_wight"]},
-                              {"kind": "perk_pick", "id": "pick_2"},
-                              {"kind": "fight", "id": "wight_pool", "enemies": ["ash_wolf", "bog_wight", "bog_wight"]},
-                              {"kind": "perk_pick", "id": "pick_3"},
-                              {"kind": "fight", "id": "the_den", "boss": true, "enemies": ["grey_mother"]}
-                            ],
-                  "loot": {
-                            "firstClear": {
-                                            "guaranteed": ["studded_jerkin"],
-                                            "rolls": 1,
-                                            "table": [
-                                                      {"gear": "notched_blade", "weight": 1},
-                                                      {"gear": "hunters_shortbow", "weight": 1},
-                                                      {"gear": "fencers_rapier", "weight": 1},
-                                                      {"gear": "ash_staff", "weight": 1},
-                                                      {"gear": "bone_charm", "weight": 1}
-                                                    ]
-                                          },
-                            "replay": {
-                                        "rolls": 1,
-                                        "table": [
-                                                  {"gear": "notched_blade", "weight": 2},
-                                                  {"gear": "hunters_shortbow", "weight": 2},
-                                                  {"gear": "fencers_rapier", "weight": 2},
-                                                  {"gear": "ash_staff", "weight": 2},
-                                                  {"gear": "bone_charm", "weight": 2},
-                                                  {"gear": "wolfhide_cloak", "weight": 1}
-                                                ]
-                                      }
-                          },
-                  "challenges": [
-                                  {
-                                    "id": "with_duelist",
-                                    "text": "Beat it with the Duelist in the party.",
-                                    "constraints": [{"includesClass": "duelist"}],
-                                    "loot": {"guaranteed": ["wolfhide_cloak"]}
-                                  },
-                                  {
-                                    "id": "two_units",
-                                    "text": "Beat it with only two units.",
-                                    "constraints": [{"partySize": {"max": 2}}],
-                                    "loot": {
-                                              "rolls": 1,
-                                              "table": [
-                                                        {"gear": "notched_blade", "weight": 1},
-                                                        {"gear": "hunters_shortbow", "weight": 1},
-                                                        {"gear": "fencers_rapier", "weight": 1},
-                                                        {"gear": "ash_staff", "weight": 1}
-                                                      ]
-                                            }
-                                  },
-                                  {
-                                    "id": "in_phalanx",
-                                    "text": "Beat it in the Phalanx.",
-                                    "constraints": [{"formation": "phalanx"}],
-                                    "loot": {"guaranteed": ["bone_charm"]}
-                                  }
-                                ]
-                }
-              ],
-  "starter": {"classes": ["warrior"], "formations": ["open_order"], "gear": ["rusted_sword"]},
-  "progression": {"dungeonOrder": ["hollow_of_the_grey_mother"]}
+    {
+      "id": "hollow_of_the_grey_mother",
+      "name": "Hollow of the Grey Mother",
+      "text": "A wolf den under the roots of an old ash. Something big sleeps at the bottom.",
+      "partySize": {
+        "max": 3
+      },
+      "perkPool": [
+        "keen_eyes",
+        "go_for_the_throat",
+        "swift_feet",
+        "battle_rhythm",
+        "wolfs_blood",
+        "red_riposte",
+        "serrated_heads",
+        "haemorrhage",
+        "iron_skin",
+        "braced_shields",
+        "second_breath",
+        "stand_fast"
+      ],
+      "stages": [
+        {
+          "kind": "fight",
+          "id": "den_mouth",
+          "enemies": [
+            "ash_wolf",
+            "ash_wolf"
+          ]
+        },
+        {
+          "kind": "perk_pick",
+          "id": "pick_1"
+        },
+        {
+          "kind": "fight",
+          "id": "drowned_path",
+          "enemies": [
+            "ash_wolf",
+            "ash_wolf",
+            "bog_wight"
+          ]
+        },
+        {
+          "kind": "perk_pick",
+          "id": "pick_2"
+        },
+        {
+          "kind": "fight",
+          "id": "wight_pool",
+          "enemies": [
+            "ash_wolf",
+            "bog_wight",
+            "bog_wight"
+          ]
+        },
+        {
+          "kind": "perk_pick",
+          "id": "pick_3"
+        },
+        {
+          "kind": "fight",
+          "id": "the_den",
+          "boss": true,
+          "enemies": [
+            "grey_mother"
+          ]
+        }
+      ],
+      "loot": {
+        "firstClear": {
+          "guaranteed": [
+            "studded_jerkin"
+          ],
+          "rolls": 1,
+          "table": [
+            {
+              "gear": "notched_blade",
+              "weight": 1
+            },
+            {
+              "gear": "hunters_shortbow",
+              "weight": 1
+            },
+            {
+              "gear": "fencers_rapier",
+              "weight": 1
+            },
+            {
+              "gear": "ash_staff",
+              "weight": 1
+            },
+            {
+              "gear": "bone_charm",
+              "weight": 1
+            }
+          ]
+        },
+        "replay": {
+          "rolls": 1,
+          "table": [
+            {
+              "gear": "notched_blade",
+              "weight": 2
+            },
+            {
+              "gear": "hunters_shortbow",
+              "weight": 2
+            },
+            {
+              "gear": "fencers_rapier",
+              "weight": 2
+            },
+            {
+              "gear": "ash_staff",
+              "weight": 2
+            },
+            {
+              "gear": "bone_charm",
+              "weight": 2
+            },
+            {
+              "gear": "wolfhide_cloak",
+              "weight": 1
+            }
+          ]
+        }
+      },
+      "challenges": [
+        {
+          "id": "with_duelist",
+          "text": "Beat it with the Duelist in the party.",
+          "constraints": [
+            {
+              "includesClass": "duelist"
+            }
+          ],
+          "loot": {
+            "guaranteed": [
+              "wolfhide_cloak"
+            ]
+          }
+        },
+        {
+          "id": "two_units",
+          "text": "Beat it with only two units.",
+          "constraints": [
+            {
+              "partySize": {
+                "max": 2
+              }
+            }
+          ],
+          "loot": {
+            "rolls": 1,
+            "table": [
+              {
+                "gear": "notched_blade",
+                "weight": 1
+              },
+              {
+                "gear": "hunters_shortbow",
+                "weight": 1
+              },
+              {
+                "gear": "fencers_rapier",
+                "weight": 1
+              },
+              {
+                "gear": "ash_staff",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "in_phalanx",
+          "text": "Beat it in the Phalanx.",
+          "constraints": [
+            {
+              "formation": "phalanx"
+            }
+          ],
+          "loot": {
+            "guaranteed": [
+              "bone_charm"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "starter": {
+    "classes": [
+      "warrior"
+    ],
+    "formations": [
+      "open_order"
+    ],
+    "gear": [
+      "rusted_sword"
+    ]
+  },
+  "progression": {
+    "dungeonOrder": [
+      "hollow_of_the_grey_mother"
+    ]
+  }
 }

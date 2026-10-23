@@ -3,13 +3,13 @@
  * pausing whenever it needs a decision. None of it depends on the battle
  * system, which plugs in as `Rules` (step 4's combat, in combat/).
  */
-import type { AbilityT, ClassDefT, ContentPack, DungeonT, EnemyT, FormationT, GearT, Party, PerkT, StatDefT, StatusT } from "../schema.js";
+import type { AbilityT, ClassDefT, ContentPack, DungeonT, EnemyT, FormationT, GearT, Party, PerkT, StatDefT, StatusT, WeaponKindT } from "../schema.js";
 import { checkParty, validatePack } from "../validate.js";
 import { fingerprint, int, rngFor, type Rng } from "./rng.js";
 import type { Entry } from "./log.js";
 
 /** Bump on any change that can change a run's outcome: old records stop replaying. */
-export const ENGINE_VERSION = "0.5";
+export const ENGINE_VERSION = "0.6";
 
 // ─── Content, loaded and checked once ───────────────────────────────────────
 
@@ -20,6 +20,7 @@ export type Content = {
   enemies: Map<string, EnemyT>;
   classes: Map<string, ClassDefT>;
   stats: Map<string, StatDefT>;
+  weaponKinds: Map<string, WeaponKindT>;
   statuses: Map<string, StatusT>;
   abilities: Map<string, AbilityT>;
   gear: Map<string, GearT>;
@@ -39,6 +40,7 @@ export function loadContent(raw: unknown): Content {
     enemies: by(pack.enemies),
     classes: by(pack.classes),
     stats: by(pack.stats),
+    weaponKinds: by(pack.weaponKinds),
     statuses: by(pack.statuses),
     abilities: by(pack.abilities),
     gear: by(pack.gear),

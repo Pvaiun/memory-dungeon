@@ -28,6 +28,7 @@ export function printLog(log: readonly Entry[], opts: { hidden?: boolean } = {})
         const c = e.content as { id: string; fingerprint: string };
         out.push(`[run ${e.dungeon}, seed ${e.seed}, engine ${e.engine}, rules ${e.rules}, content ${c.id}#${c.fingerprint}]`);
       } else if (e.t === "dice") out.push(`[dice for ${e.label}]`);
+      else if (e.t === "cap") out.push(`      [${tick(e.at)} ${name(e.by)} can't summon ${e.enemy}: the fight is full]`);
       else if (e.t === "roll") out.push(`      [${name(e.by)} rolls ${e.what}: ${fmt(e.roll)}${e.chance !== undefined ? ` against ${fmt(e.chance)}` : ` of ${fmt(e.of)}`}]`);
       else if (e.t === "mp") out.push(`      [${tick(e.at)} ${name(e.target)} MP ${(e.amount as number) >= 0 ? "+" : ""}${e.amount} → ${e.mp}]`);
       else out.push(`      [${describe(e, name, names)}]`);
@@ -46,6 +47,17 @@ function describe(e: Entry, name: (id: unknown) => string, names: Map<string, st
       const side = (s: string) => units.filter((u) => u.side === s).map((u) => `${u.name} ${u.hp}/${u.max}`).join(", ");
       return `\n${e.boss ? "Boss fight" : "Fight"} ${e.stage}: ${side("party")}  vs  ${side("enemy")}`;
     }
+    case "join": {
+      const u = e.unit as { id: string; name: string; hp: number; max: number };
+      names.set(u.id, u.name);
+      return `    ${u.name} joins the fight (${u.hp}/${u.max})`;
+    }
+    case "leave":
+      return `    ${name(e.unit)} leaves the fight`;
+    case "revive":
+      return `    ${name(e.unit)} is raised by ${name(e.by)} (${e.hp} HP${e.ready ? ", ready" : ""})`;
+    case "strike":
+      return `    ${name(e.by)} strikes again (${e.name}) at ${name(e.target)}`;
     case "cast":
       return `  ${tick(e.at)} ${name(e.by)} begins ${e.name}`;
     case "act":
@@ -53,13 +65,14 @@ function describe(e: Entry, name: (id: unknown) => string, names: Map<string, st
     case "fail":
       return `  ${tick(e.at)} ${name(e.by)}'s ${e.name} fails (${e.why === "mp" ? "not enough MP" : "no target"})`;
     case "dmg": {
-      const what = e.part === "pulse" || e.part === "reaction" ? ` from ${String(e.src).toUpperCase()}` : e.part === "rider" ? " (rider)" : "";
+      const what = e.part === "pulse" || e.part === "reaction" ? ` from ${String(e.src).toUpperCase()}` : e.part === "rider" ? " (rider)" : e.part === "extra" ? " (extra strike)" : "";
       if (e.word === "MISS") return `    ${name(e.target)}: MISS${what}`;
       const word = e.word ? ` ${e.word}` : "";
       const soak = e.soaked ? `, ${e.soaked} soaked` : "";
       return `    ${name(e.target)} takes ${e.crit ? "CRIT " : ""}${e.amount}${word}${what}${soak} (${e.hp} HP${e.shield ? `, ${e.shield} shield` : ""})`;
     }
     case "heal":
+      if (e.word === "ABSORB") return `    ${name(e.target)} ABSORBS ${name(e.by)}'s hit, healing ${e.amount} (${e.hp} HP)`;
       return `    ${name(e.target)} heals ${e.crit ? "CRIT " : ""}${e.amount} from ${name(e.by)} (${e.hp} HP)`;
     case "status":
       return `    ${name(e.unit)} gains ${e.name}${e.total !== null ? ` ${fmt(e.total)}` : ""}`;

@@ -165,14 +165,14 @@ test("order: within a batch, pulses resolve first, then reactions, then actions;
 
 // ─── Actions (section 3) ────────────────────────────────────────────────────
 
-test("actions: MP is paid when an action resolves; if the unit can't pay then, the action fails: no effect, and its cooldown doesn't start", () => {
+test("actions: MP is paid when an action resolves; if the unit can't pay then, the action fizzles: no effect, no MP spent, but the cooldown starts (the core set's rule)", () => {
   const bolt = { id: "bolt", mp: 10, cast: 5, cooldown: 10, do: [dmg(50)] };
   const drain = { id: "drain", cast: 0, cooldown: 12, do: [{ op: "mp", amount: -5 }] };
   const a = arena({ party: [{ name: "Mage", stats: { max_mp: 10 }, abilities: ["bolt"] }], enemies: [{ ...BAG, abilities: ["drain"] }], abilities: [bolt, drain] }).to(15);
   assert.deepEqual(a.entries("fail").map((e) => [e.at, e.why]), [[15_000, "mp"]]);
   assert.equal(a.hits("Bag").length, 0);
   assert.equal(a.unit("Mage").mp, 5);
-  assert.ok(a.unit("Mage").acts[0].ready <= 15_000, "no cooldown started");
+  assert.equal(a.unit("Mage").acts[0].ready, 25_000, "on cooldown as if it had resolved");
 });
 
 test("actions: out of MP, an ability is skipped as if on cooldown, and the unit only uses its basic attack", () => {
@@ -234,19 +234,25 @@ test("targeting: with every party unit forbidden, all four are tied and the pick
   near(share(targets(PARTY.map((p) => ({ ...p, stats: { ...p.stats, forbidden: 1 } }))), "Knight"), 4 / 9);
 });
 
-test("targeting: an action that ignores overrides picks by Aggro among all valid targets", () => {
-  const smash = { id: "smash", cast: 0, cooldown: 1, ignoresOverrides: true, do: [dmg(0)] };
+test("targeting: an action with Seek picks by Aggro among all valid targets, Taunt or not", () => {
+  const smash = { id: "smash", cast: 0, cooldown: 1, seek: true, do: [dmg(0)] };
   const party = PARTY.map((p) => (p.name === "Mage" ? { ...p, stats: { ...p.stats, forced: 1 } } : p));
   const a = arena({ party: party.map((p) => ({ ...p, stats: { max_hp: 1_000_000, ...p.stats } })), enemies: [{ name: "Foe", abilities: ["smash"] }], abilities: [smash] }).to(2000);
   const t = a.entries("act").map((e) => a.f.units.find((u) => u.id === (e.targets as string[])[0])!.name);
   near(share(t, "Mage"), 1 / 9);
 });
 
-test("targeting: an ability with its own targeting rule follows it, whatever the overrides", () => {
+test("targeting: an ability with its own targeting rule still obeys the core set's Taunt and Hidden rules: its pick is forced onto a Taunting foe unless it has Seek, and never lands on a Hidden one", () => {
   const snipe = { id: "snipe", cast: 0, cooldown: 1, target: { side: "foes", pick: "lowest", by: { stat: "aggro" } }, do: [dmg(0)] };
+  const seek = { ...snipe, id: "seek", seek: true };
   const party = PARTY.map((p) => (p.name === "Mage" ? { ...p, stats: { ...p.stats, forbidden: 1 } } : p.name === "Knight" ? { ...p, stats: { ...p.stats, forced: 1 } } : p));
-  const a = arena({ party, enemies: [{ name: "Foe", abilities: ["snipe"] }], abilities: [snipe] }).to(20);
-  assert.ok(a.entries("act").every((e) => (e.targets as string[])[0] === a.unit("Mage").id));
+  const a = arena({ party, enemies: [{ name: "Foe", abilities: ["snipe"] }], abilities: [snipe, seek] }).to(20);
+  assert.ok(a.entries("act").every((e) => (e.targets as string[])[0] === a.unit("Knight").id), "forced onto the Taunting Knight");
+  const b = arena({ party, enemies: [{ name: "Foe", abilities: ["seek"] }], abilities: [snipe, seek] }).to(20);
+  const visible = b.f.units.filter((u) => u.side === "party" && u.name !== "Mage");
+  const lowest = Math.min(...visible.map((u) => u.stats.aggro));
+  const low = new Set(visible.filter((u) => u.stats.aggro === lowest).map((u) => u.id));
+  assert.ok(b.entries("act").every((e) => low.has((e.targets as string[])[0])), "with Seek, the lowest-Aggro unit that isn't Hidden (ties at random)");
 });
 
 test("targeting: an enemy channels Smash; during the cast the Knight forces targeting onto itself, and Smash resolves on the Knight", () => {

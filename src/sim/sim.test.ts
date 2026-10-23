@@ -129,7 +129,7 @@ test("feel: reading packs show what a player sees, never enemy HP or stats", () 
     const text = readingPack(c, rules, p, i + 1);
     assert.doesNotMatch(text, /(Ash Wolf|Bog Wight|Grey Mother)[A-Z ]* (takes|is healed)[^\n]*HP/, "enemy HP is hidden");
     assert.doesNotMatch(text, /\b(max_hp|max_mp|resist:|immune:|crit_chance)|\b(armor|accuracy|evasion|attack|magic|aggro) \d/i, "no stat values");
-    assert.match(text, /agile, strong in numbers/);
+    assert.match(text, /Ash Wolf: A lean grey wolf\. Agile, and strong in numbers/, "each enemy is described in the game's own words");
   }
   assert.ok(combatDigest(results, 1000, "0.1", null).split("\n").length <= 40);
   const key = [{ pack: 1, won: false, winning: ["ranger+warrior"] }, { pack: 2, won: false, winning: ["cleric"] }];

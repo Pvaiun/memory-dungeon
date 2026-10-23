@@ -1,8 +1,8 @@
 # Engine primitives
 
-Generated from `src/schema.ts` (schema 0.5) by `npm run docs`. Do not edit by hand.
+Generated from `src/schema.ts` (schema 0.6) by `npm run docs`. Do not edit by hand.
 
-Step 4's combat design (`steps/04-combat-concepts/design.md`) is what the engine runs today, and this is the closed set of building blocks it runs on. Each needs engine code, so adding one is a schema version bump plus an engine change. Stats, statuses, elements, abilities and everything else are registries in the pack, and grow without touching the schema. The core set (`docs/core-set/`) is the target the engine moves to next, and its build will add and change building blocks. The numbers in the worked example (floors, caps, default timings) are placeholders.
+The engine runs the core set's combat system (`docs/core-set/rules-and-vocabulary.md`) on step 4's machinery (`steps/04-combat-concepts/design.md`), whose finer rules stand where the core set is silent. This is the closed set of building blocks it runs on. Each needs engine code, so adding one is a schema version bump plus an engine change. Stats, weapon kinds, statuses, elements, abilities and everything else are registries in the pack, and grow without touching the schema. The numbers in the content are first values, placeholders until the balance pass.
 
 ## How a fight runs
 
@@ -11,7 +11,23 @@ Time is counted in sub-ticks, 1000 per tick. Each moment is the next sub-tick on
 2. Everything due resolves one item at a time: the party batch, then the enemy batch; within a batch, pulses, then reactions, then actions, each in slot order, then in order of creation.
 3. Statuses whose last sub-tick this is end.
 
-A unit that becomes ready, or whose action becomes available, because of something resolved in steps 2 or 3 starts on the next sub-tick. Reactions resolve on the sub-tick after their event. A fight ends the moment either side is fully KO'd.
+A unit that becomes ready, or whose action becomes available, because of something resolved in steps 2 or 3 starts on the next sub-tick. Reactions resolve on the sub-tick after their event. A fight ends the moment either side is fully KO'd. Knocked-out party units join later fights knocked out, so a revive can raise them; summoned units join mid-fight with every action on cooldown.
+
+## Gear slots and armor weights
+
+| Slot | Meaning |
+| --- | --- |
+| `weapon` | Sets the basic attack through its weapon kind. A class can use only its kinds. |
+| `armor` | Light, medium or heavy. A class can wear its heaviest weight or anything lighter. |
+| `amulet` | No restrictions. |
+
+| Weight | Meaning |
+| --- | --- |
+| `light` | Anyone can wear it. |
+| `medium` | Medium and heavy classes. |
+| `heavy` | Heavy classes only. |
+
+A weapon belongs to a kind (a registry: speed, damage type and element), and a class lists the kinds it can use and the heaviest armor it can wear.
 
 ## Effects (in actions, pulses, triggers and reactions)
 
@@ -21,11 +37,14 @@ A unit that becomes ready, or whose action becomes available, because of somethi
 | `heal` | `amount`, `to` | Restores HP, never above max. Never mitigated. |
 | `mp` | `amount`, `to` | Restores MP (positive) or drains it (negative). |
 | `apply` | `status`, `stacks`, `duration`, `chance`, `to` | Applies a status, by its stacking mode. |
-| `remove` | `label`, `status`, `kind`, `tag`, `count`, `to` | Removes buffs or debuffs, optionally narrowed to a named status or an effect kind. Unremovable statuses stay. |
+| `remove` | `label`, `status`, `kind`, `tag`, `count`, `order`, `to` | Removes buffs or debuffs, optionally narrowed to a named status or an effect kind. Unremovable statuses stay, and so do the buffs of a unit with immune:dispel. |
+| `revive` | `hp`, `ready`, `to` | Raises a knocked-out unit, one knocked out in an earlier fight included. Its targets must ask for `ko: true`. |
+| `summon` | `enemy`, `count` | Brings new units into the fight on the actor's side, up to ruleset.maxEnemies living units on that side. They enter with every action on cooldown. |
+| `replace` | `enemy`, `count`, `to` | Each target leaves the fight (not a knockout: its statuses end, nothing reacts to a KO) and `count` new units take its place, up to the cap. |
 
 ## Effect targets (`to`)
 
-Or a targeting rule.
+Or a targeting rule. Extra targets after an action's first ignore Taunt.
 
 | To | Meaning |
 | --- | --- |
@@ -39,22 +58,33 @@ Or a targeting rule.
 
 | Type | Meaning |
 | --- | --- |
-| `physical` | Has exactly one subtype and no element. Meets Evasion and Armor. Attack scales only physical instances. |
-| `magical` | Has exactly one element and no subtype. Meets that element's Resistance. Magic scales only magical instances. |
-| `none` | Typeless: never meets Evasion or Armor; meets Resistance only if it carries an element. Not allowed in actions; the usual type for a status's own damage. |
+| `physical` | Has exactly one subtype and no element. Meets Evasion and Armor. |
+| `magical` | Has exactly one element and no subtype. Meets that element's Resistance: below 0 WEAK, above 0 RESIST, 100 IMMUNE, above 100 ABSORB (heals instead, and applies nothing). |
+| `none` | Untyped: never meets Evasion or Armor; meets Resistance only if it carries an element. Not allowed in actions; the usual type for a status's own damage. |
 
 Physical subtypes: `slash`, `pierce`, `blunt`. Elements are a registry in the pack.
 
 ## Numbers
 
-A number is a plain number, or `{ base, scale: [...] }`: base + Σ ratio × source. A scale reads one of `stat`, `hp` (current or missing), `stacks` (a status's Intensity total) or `amount` (a reaction's event amount), from:
+A number is a plain number, or `{ base, scale: [...] }`: base + Σ ratio × source (× times). A scale reads one of `stat`, `hp` (current or missing), `stacks` (a status's Intensity total), `amount` (a reaction's event amount) or `when` (1 if a condition holds), from:
 
 | Of | Meaning |
 | --- | --- |
 | `self` | Actions: the acting unit. The default for stats in actions. |
-| `target` | Actions: the unit the effect lands on. The default for hp and stacks in actions. |
+| `target` | Actions: the unit the effect lands on. Boosts: the unit being hit. The default for hp, stacks and conditions in actions. |
 | `source` | Statuses that know their source (not a shared Intensity total): the unit that applied it, read once at application. |
-| `holder` | Statuses: the holder, read each time the number is used (stat changes: once, at application). The default for hp and stacks in statuses; stats must say whose. |
+| `holder` | Statuses: the holder, read each time the number is used (stat changes: once, at application). The default for hp, stacks and conditions in statuses; stats must say whose. |
+
+| Field | Meaning |
+| --- | --- |
+| `ratio` |  |
+| `stat` | A stat's current value. |
+| `hp` | Current HP, or max HP minus current. |
+| `stacks` | A status's Intensity total, in stacks. |
+| `amount` | Reactions only: the event's amount. |
+| `when` | 1 if the condition holds for the unit read (`of`), else 0: scaling from a condition instead of a stat. |
+| `times` | Multiplies the term by a stat, read live: "X% per point of Y" (Lifesteal, Siphon). |
+| `of` |  |
 
 ## Status fields
 
@@ -72,12 +102,15 @@ A number is a plain number, or `{ base, scale: [...] }`: base + Σ ratio × sour
 | `survivesKO` |  |
 | `cap` | Intensity: the most stacks. `holder` scales read the holder. |
 | `stats` |  |
-| `boosts` | The holder's outgoing damage or healing, by tag. |
+| `boosts` | The holder's outgoing damage or healing, by tag. A scale `of: target` reads the unit being hit (Judgement, Brittle). |
 | `taken` | Damage-taken modifiers. No tag: all damage. |
 | `absorb` | Intensity only: soaks damage after mitigation, one stack per point. |
+| `block` | Blocks the next damage above this percent of the holder's max HP, from any source, after mitigation and before absorbs; then the status ends (Aegis). |
 | `lockout` |  |
 | `riders` | Adds a rider to the holder's hits that carry `on`. |
 | `convert` | Changes the element of the holder's magical instances, or the subtype of its physical ones. |
+| `seek` | The holder's actions carrying this tag (basic, ability or all) have Seek: their first pick ignores Taunt. |
+| `strike` | After each of the holder's basic attacks: one more hit with the weapon's damage, of kind extra, at `to`. Extra strikes don't chain. |
 | `pulse` | A repeating effect. Intensity: its trigger. |
 | `trigger` | Intensity only: an event trigger. |
 | `drop` | Intensity only: how far the total drops on each trigger. |
@@ -92,25 +125,27 @@ A number is a plain number, or `{ base, scale: [...] }`: base + Σ ratio × sour
 | `boost` | A damage or healing boost. Tag: the boost's tag. |
 | `taken` | A damage-taken modifier. Tag: its tag, if any. |
 | `absorb` | An absorb, such as a shield. |
+| `block` | A block: the next damage above a share of max HP is blocked, then the status ends (Aegis). |
 | `lockout` | A lockout. Tag: what it covers. |
-| `action_change` | A rider added to the holder's actions, or a change of element or subtype. |
+| `action_change` | A rider added to the holder's actions, a change of element or subtype, Seek, or an extra strike. |
 | `pulse` | A repeating effect. |
 | `reaction` | A reaction, or an Intensity event trigger. |
 
-## Tags (for boosts, damage-taken modifiers, lockouts and riders)
+## Tags (for boosts, damage-taken modifiers, lockouts, riders, Seek and event filters)
 
 | Tag | Meaning |
 | --- | --- |
-| `basic` | Instances from basic attacks; for lockouts, basic attacks. |
-| `ability` | Instances from abilities; for lockouts, abilities. |
-| `physical` | Physical instances (and actions with one). |
-| `magical` | Magical instances (and actions with one). |
+| `basic` | Hits from basic attacks; for lockouts and Seek, basic attacks. |
+| `ability` | Hits from abilities; for lockouts and Seek, abilities. |
+| `extra` | Hits from extra strikes (Double strike's second strike, Arc's second hit): hits, but not basic attacks. |
+| `physical` | Physical hits (and actions with one). |
+| `magical` | Magical hits (and actions with one). |
 | `<subtype>` | slash, pierce or blunt. |
 | `<element>` | Any element in the pack. |
 | `<status>` | A status's id: reaches that status's pulses ("+20% Burn damage"). |
 | `<status tag>` | A tag a status carries, which reaches its pulses. |
 | `healing` | Boosts only: heals. |
-| `all` | Lockouts only: every action. |
+| `all` | Lockouts and Seek only: every action. |
 
 ## Events
 
@@ -120,18 +155,27 @@ A number is a plain number, or `{ base, scale: [...] }`: base + Σ ratio × sour
 | `action_start` | An action starts. Whose: the acting unit. Has `kind`. |
 | `action_resolve` | An action resolves. Whose: the acting unit. Has `kind`. |
 | `action_interrupted` | An action in cast time is canceled by an interrupting lockout. Whose: the casting unit. Has `kind`. |
-| `hit_lands` | A hit lands (not evaded), riders included. Whose: the attacker; other: the target. Has `kind` and `amount`. |
-| `hit_taken` | A hit lands on this unit. Whose: the target; other: the attacker. Has `kind` and `amount`. |
-| `hit_evaded` | This unit evades a hit. Whose: the target; other: the attacker. Has `kind`. |
-| `hit_missed` | A hit is evaded. Whose: the attacker; other: the target. Has `kind`. |
-| `damage_dealt` | Damage is dealt, including what an absorb soaks. Whose: the dealer, when known; other: the receiver. Has `amount`. |
-| `damage_taken` | Damage is taken, including what an absorb soaks. Whose: the receiver; other: the dealer, when known. Has `amount`. |
+| `hit_lands` | A hit lands (not evaded or absorbed), riders included. Whose: the attacker; other: the target. Has `kind`, `tags` and `amount`. |
+| `hit_taken` | A hit lands on this unit. Whose: the target; other: the attacker. Has `kind`, `tags` and `amount`. |
+| `hit_evaded` | This unit evades a hit. Whose: the target; other: the attacker. Has `kind` and `tags`. |
+| `hit_missed` | A hit is evaded. Whose: the attacker; other: the target. Has `kind` and `tags`. |
+| `damage_dealt` | Damage is dealt, including what an absorb soaks. Whose: the dealer, when known; other: the receiver. Has `amount`, and `status` when a status's pulse or reaction dealt it. |
+| `damage_taken` | Damage is taken, including what an absorb soaks. Whose: the receiver; other: the dealer, when known. Has `amount`, and `status` when a status's pulse or reaction dealt it. |
 | `hp_lost` | HP is lost. Whose: the unit. Has `amount`. |
 | `healed` | Healing is received. Whose: the healed unit; other: the healer, when known. Has `amount` (HP restored). |
 | `status_gained` | A status is applied (each application, refreshes and added stacks included). Whose: the holder. Has `status`. |
 | `status_triggered` | A status pulses, or an Intensity status's trigger fires. Whose: the holder. Has `status`. |
 | `status_ended` | A status ends. Whose: the holder. Has `status` and `cause`. |
-| `ko` | A unit is KO'd. Whose: that unit. |
+| `ko` | A unit is KO'd. Whose: that unit. The unit's own statuses that survive a KO can still react to it. |
+| `revived` | A unit is revived. Whose: that unit; other: the reviver. |
+
+| Field | Meaning |
+| --- | --- |
+| `whose` |  |
+| `kind` | Action and hit events only. |
+| `tags` | Hit events only: the hit carries at least one of these tags (a subtype or an element). |
+| `status` | Status events, and damage events: the status whose pulse or reaction dealt the damage. |
+| `cause` | status_ended only. Default: every cause. |
 
 ## Event `whose`
 
@@ -148,13 +192,14 @@ A number is a plain number, or `{ base, scale: [...] }`: base + Σ ratio × sour
 | --- | --- |
 | `expired` | Its duration ran out. |
 | `stacks` | Its Intensity total fell below 1 stack. |
+| `spent` | Its block was used. |
 | `removed` | An effect removed it. |
-| `ko` | Its holder was KO'd, or its source (Per source statuses that end with their source). |
+| `ko` | Its holder was KO'd or replaced, or its source (Per source statuses that end with their source). |
 | `fight_end` | The fight ended. |
 
 ## Targeting rules
 
-An action's `target` is `foe` (default targeting: a foe by Aggro, with Forced and Forbidden), `ally` (a random ally), `self`, or a rule: a side, an optional `where` filter, a pick and a count.
+An action's `target` is `foe` (default targeting: a foe by Aggro, under the Hidden rule and, without Seek, the Taunt rule), `ally` (a random ally), `self`, or a rule: a side, an optional `where` filter, a pick and a count. The Taunt rule applies to an action's own rule too: without Seek, its first pick can only go to a Taunting foe, whatever the phrase asks for. Hidden foes can't be picked by any rule but `all`, unless every foe is Hidden.
 
 | Side | Meaning |
 | --- | --- |
@@ -169,22 +214,33 @@ An action's `target` is `foe` (default targeting: a foe by Aggro, with Forced an
 | `random` | `count` units at random. The default otherwise. |
 | `lowest` | `count` units with the lowest `by`; ties at random. |
 | `highest` | `count` units with the highest `by`; ties at random. |
-| `all` | Every unit that passes `where`. |
+| `all` | Every unit that passes `where`. Area: the Taunt and Hidden rules don't apply. |
 
-`by` (for lowest and highest): `hp`, `hp_share`, `buffs`, `debuffs`, `{ stat }` or `{ stacks }`.
+| Field | Meaning |
+| --- | --- |
+| `where` |  |
+| `ifNone` | When `where` leaves nobody, use the whole side instead ("if every foe is Taunting, any foe"). |
+| `exclude` | Skip the action's chosen targets ("a second, random foe", "up to three other foes"). |
+| `by` | Required for lowest and highest. |
+| `count` | Default 1. |
 
-## Unit conditions (`where`, and an ability's `if`)
+`by` (for lowest and highest): `hp`, `hp_share`, `buffs`, `debuffs`, `{ stat }`, `{ stats }` (the highest of several) or `{ stacks }`.
+
+## Unit conditions (`where`, an ability's `if`, and a scale's `when`)
 
 | Field | Meaning |
 | --- | --- |
 | `hpBelow` | HP below this percent of max HP. |
 | `hpAtLeast` |  |
-| `has` | Has this status. |
-| `lacks` | Doesn't have this status. |
+| `has` | Has this status (or every one of these). |
+| `lacks` | Doesn't have this status (or any of these). |
 | `buffs` | true: has any buff. false: has none. |
 | `debuffs` | true: has any debuff. false: has none. |
 | `kind` | Has a status containing this effect kind (narrowed by tag). |
 | `stacks` | A status's Intensity total, in stacks. |
+| `atCap` | Holds this Intensity status at its cap. |
+| `belowCap` | Doesn't hold this Intensity status at its cap (or at all). |
+| `ko` | true: knocked out, still in the fight. Sides list living units unless a rule asks for this. Default: living. |
 
 ## Stats the engine reads
 
@@ -194,19 +250,21 @@ An action's `target` is `foe` (default targeting: a foe by Aggro, with Forced an
 | `max_mp` | amount | Max MP. Abilities cost MP, paid when they resolve. |
 | `attack` | amount | Scales only what states it. By convention, physical things do. |
 | `magic` | amount | Scales only what states it. By convention, magical things do. |
-| `armor` | amount | A flat reduction on each physical instance, down to 0 (BLOCKED). |
+| `armor` | amount | A flat reduction on each physical hit: ruleset.armorRatio × Armor, down to 0 (BLOCKED). |
 | `aggro` | amount | Default targeting picks foes weighted by Aggro. Its floor must be above 0. |
-| `resist` | points | General Resistance, in percent, added to every element's own resist:<element>. Negative shows WEAK, positive RESIST, 100 IMMUNE. |
-| `attack_speed` | points | Basic attack cooldown ÷ (1 + stat/100), down to its recovery. |
+| `resist` | points | General Resistance, in percent, added to every element's own resist:<element>. Negative shows WEAK, positive RESIST, 100 IMMUNE, above 100 ABSORB. |
+| `attack_speed` | points | Basic attack cooldown ÷ (1 + stat/100), down to its recovery. Haste, Slow and Chill act through it. |
 | `cooldown_reduction` | points | Ability cooldowns ÷ (1 + stat/100). |
 | `cast_time_reduction` | points | Cast times ÷ (1 + stat/100). |
 | `crit_chance` | points | Percent chance that an action's damage or heal crits. |
-| `crit_multiplier` | points | A crit multiplies by this percent (150 is ×1.5). |
+| `crit_multiplier` | points | A crit multiplies by this percent (150 is ×1.5). Crit damage raises it. |
 | `evasion` | points | Percent chance to evade a physical hit, after Accuracy, under its cap. |
 | `accuracy` | points | Reduces the target's Evasion, down to 0. Negative adds to it. |
-| `healing_received` | points | Heals received × (1 + stat/100). |
-| `forced` | points | Above 0: default targeting must pick this unit (with other forced units). |
-| `forbidden` | points | Above 0: default targeting can't pick this unit, unless every candidate is. |
+| `healing_received` | points | Heals received × (1 + stat/100). Rot lowers it. |
+| `forced` | points | Above 0: Taunting. A foe's first pick must go to a Taunting unit unless its action has Seek. |
+| `forbidden` | points | Above 0: Hidden. Foes can't pick this unit by any targeting but `all`, unless every candidate is Hidden. |
+
+Every other stat (MP regen, Thorns, Lifesteal, Siphon, Double strike and the rest) is a registry entry that `brings` a status while it's above 0.
 
 ## Stat families
 
@@ -218,3 +276,4 @@ An action's `target` is `foe` (default targeting: a foe by Aggro, with Forced an
 | `immune:kind:<kind>:<tag>` | Above 0: immune to statuses containing that effect kind with that tag (a lockout's `covers`, a stat change's stat, a boost's or modifier's tag). |
 | `immune:debuffs` | Above 0: immune to every debuff. |
 | `immune:damage` | Above 0: takes no damage (IMMUNE), and so is immune to statuses that deal damage. |
+| `immune:dispel` | Above 0: none of its buffs can be removed. |

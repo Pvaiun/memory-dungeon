@@ -27,7 +27,7 @@ function expectIssue(code: string, mutate: (p: any) => void, opts: { level?: Iss
 /** Add an ability to the Warrior class and expect it to be clean, or to raise `code`. */
 function card(ability: object, code?: string) {
   const p = clone(PACK) as any;
-  p.abilities.push({ id: "card", class: "warrior", name: "Card", text: "-", cooldown: 10, verbs: [], ...ability });
+  p.abilities.push({ id: "card", class: "warrior", name: "Card", text: "-", cooldown: 10, ...ability });
   const { issues } = validatePack(p);
   const errors = codes(issues, "error");
   if (code) assert.ok(errors.includes(code), `expected '${code}', got ${JSON.stringify(errors)}`);
@@ -36,8 +36,10 @@ function card(ability: object, code?: string) {
 const hit = (x: object) => ({ do: [{ op: "damage", amount: 10, ...x }] });
 const scale = (stat: string) => ({ scale: [{ ratio: 1, stat }] });
 
-test("the worked example is clean", () => {
-  assert.deepEqual(validatePack(PACK).issues, []);
+test("the worked example is clean, apart from the plain weapons it never had", () => {
+  const { issues } = validatePack(PACK);
+  assert.deepEqual(codes(issues, "error"), []);
+  assert.deepEqual([...new Set(codes(issues, "warning"))], ["gear.plain"]);
 });
 
 test("the example party is valid and eligible for the right challenges", () => {
@@ -58,14 +60,17 @@ test("teasers are derived from data", () => {
 test("complete mode flags a pack too small to ship", () => {
   const { issues } = validatePack(PACK, { complete: true });
   assert.ok(codes(issues).includes("complete.classes"));
-  assert.ok(!codes(issues).includes("complete.verbs"), "17 verbs is inside 15–20");
 });
 
 // ─── Shape and references ────────────────────────────────────────────────────
 
 test("schema: unknown fields are rejected", () => expectIssue("schema", (p) => (find(p.abilities, "cleave").range = 2)));
 test("schema: unknown effect ops are rejected", () => expectIssue("schema", (p) => (find(p.abilities, "mend").do[0].op = "resurrect")));
-test("schema: step 1's rule language is gone", () => expectIssue("schema", (p) => (find(p.abilities, "cleave").active = { action: "slash", cooldown: 2 })));
+test("schema: step 1's rule language and vocabulary are gone", () => {
+  expectIssue("schema", (p) => (find(p.abilities, "cleave").active = { action: "slash", cooldown: 2 }));
+  expectIssue("schema", (p) => (find(p.abilities, "cleave").verbs = []));
+  expectIssue("schema", (p) => (find(p.enemies, "grey_mother").keyholes = []));
+});
 test("schema: enemies have no placement", () => expectIssue("schema", (p) => (p.dungeons[0].stages[0].enemies[0] = { enemy: "ash_wolf", row: "front" })));
 test("ids are unique within a collection", () => expectIssue("id.duplicate", (p) => p.perks.push(clone(p.perks[0]))));
 test("references resolve", () => expectIssue("ref.missing", (p) => (find(p.abilities, "barbed_arrows").do[0].apply[0].status = "poison")));
@@ -75,7 +80,7 @@ test("elements must exist", () => expectIssue("ref.missing", (p) => (find(p.abil
 
 test("cards: Shield Bash (physical, blunt, scales with Armor) is valid", () => card(hit({ type: "physical", subtype: "blunt", amount: scale("armor") })));
 test("cards: Fire Bolt (magical, fire, scales with Magic) is valid", () => card(hit({ type: "magical", element: "fire", amount: scale("magic") })));
-test("cards: Storm Ward (magical, scales with Armor) is valid: only Attack and Magic are type-locked", () => card(hit({ type: "magical", element: "holy", amount: scale("armor") })));
+test("cards: Storm Ward (magical, scales with Armor) is valid: no stat is tied to a damage type", () => card(hit({ type: "magical", element: "holy", amount: scale("armor") })));
 test("cards: Fire Slash (physical with an element) is invalid: physical instances have no element", () =>
   card(hit({ type: "physical", subtype: "slash", element: "fire" }), "instance.physical"));
 test("cards: Strike (physical with no subtype) is invalid: every physical instance has a subtype", () => card(hit({ type: "physical" }), "instance.physical"));
@@ -90,7 +95,67 @@ test("cards: Bolt (magical with no element) is invalid: every magical instance h
 test("cards: an action can't produce untyped damage: only pulses and reactions can", () => card(hit({ type: "none" }), "instance.untyped"));
 test("cards: riders follow the same rules as hits", () =>
   card(hit({ type: "physical", subtype: "slash", riders: [{ type: "physical", element: "fire", amount: 5 }] }), "instance.physical"));
-test("cards: a weapon follows them too", () => expectIssue("instance.magical", (p) => delete find(p.gear, "ash_staff").weapon.element));
+test("cards: a weapon follows them too, through its kind", () => expectIssue("instance.magical", (p) => delete find(p.weaponKinds, "holy_staff").element));
+
+// ─── The core set's additions ────────────────────────────────────────────────
+
+test("scales: a condition can be a source, and a live stat can multiply a term; an event amount says whose stat multiplies it", () => {
+  card(hit({ type: "physical", subtype: "slash", amount: { scale: [{ ratio: 10, when: { buffs: true }, of: "target" }] } }));
+  card(hit({ type: "physical", subtype: "slash", amount: { scale: [{ ratio: 1, stat: "attack", times: { stat: "crit_chance" } }] } }));
+  const status = (x: object) => (p: any) => p.statuses.push({ id: "probe", name: "PROBE", label: "buff", show: "icon", stacking: "refresh", ...x });
+  expectIssue("scale.times", status({ reactions: [{ on: { event: "hit_lands" }, do: [{ op: "heal", amount: { scale: [{ ratio: 0.01, amount: true, times: { stat: "attack" } }] }, to: "self" }] }] }));
+  const p = clone(PACK) as any;
+  status({ reactions: [{ on: { event: "hit_lands" }, do: [{ op: "heal", amount: { scale: [{ ratio: 0.01, amount: true, times: { stat: "attack", of: "holder" } }] }, to: "self" }] }] })(p);
+  assert.deepEqual(codes(validatePack(p).issues, "error"), []);
+});
+test("targeting: ifNone needs a where; exclude belongs to extra targets, not an action's own rule; by can be the highest of several stats", () => {
+  card({ target: { side: "foes", ifNone: "any" }, ...hit({ type: "physical", subtype: "slash" }) }, "target.ifNone");
+  card({ target: { side: "foes", exclude: "targets" }, ...hit({ type: "physical", subtype: "slash" }) }, "target.exclude");
+  card({ do: [{ op: "damage", type: "physical", subtype: "slash", amount: 1 }, { op: "damage", type: "physical", subtype: "slash", amount: 1, to: { side: "foes", exclude: "targets", count: 3 } }] });
+  card({ target: { side: "foes", pick: "highest", by: { stats: ["attack", "magic"] } }, ...hit({ type: "physical", subtype: "slash" }) });
+  card({ target: { side: "foes", pick: "highest", by: { stats: ["attack", "luck"] } }, ...hit({ type: "physical", subtype: "slash" }) }, "ref.missing");
+});
+test("revive: targets knocked-out units, through the ability's rule or its own", () => {
+  card({ target: { side: "allies", where: { ko: true } }, do: [{ op: "revive", hp: 10 }] });
+  card({ target: { side: "allies" }, do: [{ op: "revive", hp: 10 }] }, "revive.target");
+  card({ do: [{ op: "revive", hp: 10, to: { side: "allies", where: { ko: true }, pick: "random" } }] });
+});
+test("conditions: atCap and belowCap name a capped Intensity status", () => {
+  card({ target: { side: "allies", where: { belowCap: "barrier" } }, do: [{ op: "apply", status: "barrier", stacks: 5 }] });
+  card({ target: { side: "allies", where: { belowCap: "stun" } }, do: [{ op: "apply", status: "barrier", stacks: 5 }] }, "cond.cap");
+});
+test("summon and replace name an enemy", () => {
+  card({ do: [{ op: "summon", enemy: "ash_wolf", count: 2 }] });
+  card({ do: [{ op: "summon", enemy: "nobody" }] }, "ref.missing");
+});
+test("statuses: seek covers basic, ability or all; a strike's rule and stat are checked; a bare pulse is a timer for a drop", () => {
+  const status = (x: object) => (p: any) => p.statuses.push({ id: "probe", name: "PROBE", label: "buff", show: "sheet", stacking: "refresh", ...x });
+  expectIssue("status.seek", status({ seek: "fire" }));
+  expectIssue("ref.missing", status({ strike: { scale: "luck", to: "target" } }));
+  expectIssue("status.pulse", status({ pulse: { every: 3 } }));
+  const p = clone(PACK) as any;
+  status({ seek: "basic" })(p);
+  p.statuses.push({ id: "arc", name: "Arc", label: "buff", show: "sheet", stacking: "refresh", strike: { to: { side: "foes", pick: "random", exclude: "targets" } } });
+  p.statuses.push({ id: "might", name: "MIGHT", label: "buff", show: "icon", stacking: "intensity", boosts: [{ tag: "physical", pct: 10 }], pulse: { every: 3 }, drop: { count: 1 } });
+  assert.deepEqual(codes(validatePack(p).issues, "error"), []);
+});
+test("events: tags filter hit events only, and a damage event can name the status that dealt it", () => {
+  const status = (x: object) => (p: any) => p.statuses.push({ id: "probe", name: "PROBE", label: "buff", show: "sheet", stacking: "refresh", ...x });
+  expectIssue("event.tags", status({ reactions: [{ on: { event: "ko", tags: ["pierce"] }, do: [{ op: "heal", amount: 1, to: "holder" }] }] }));
+  const p = clone(PACK) as any;
+  status({ reactions: [{ on: { event: "damage_dealt", status: "thorns" }, do: [{ op: "apply", status: "bleed", to: "other" }] }, { on: { event: "hit_taken", tags: ["pierce", "holy"] }, do: [{ op: "heal", amount: 1, to: "holder" }] }] })(p);
+  assert.deepEqual(codes(validatePack(p).issues, "error"), []);
+});
+test("weapons: a piece names a kind, or an enemy's weapon states type and cooldown itself", () => {
+  expectIssue("gear.weapon", (p) => delete find(p.gear, "ash_staff").weapon.kind);
+  expectIssue("weapon.kind", (p) => delete find(p.enemies, "ash_wolf").weapon.cooldown);
+  expectIssue("ref.missing", (p) => (find(p.gear, "ash_staff").weapon.kind = "wand"));
+});
+test("stat families: immune:dispel is one", () => {
+  const p = clone(PACK) as any;
+  find(p.enemies, "grey_mother").stats["immune:dispel"] = 1;
+  assert.deepEqual(codes(validatePack(p).issues, "error"), []);
+});
 
 // ─── Stats ───────────────────────────────────────────────────────────────────
 
@@ -160,7 +225,6 @@ test("statuses: event filters fit their events", () => {
   expectIssue("event.kind", status({ reactions: [{ on: { event: "status_gained", kind: "basic" }, do: [{ op: "heal", amount: 1, to: "holder" }] }] }));
   expectIssue("event.cause", status({ reactions: [{ on: { event: "hit_taken", cause: ["expired"] }, do: [{ op: "heal", amount: 1, to: "holder" }] }] }));
 });
-// Decided Oct 20: Attack and Magic scale hits only. A status's own damage is typeless, and neither stat feeds it.
 test("status damage is untyped by convention, but a pulse can be typed, and any stat can scale it", () => {
   const p = clone(PACK) as any;
   find(p.statuses, "bleed").pulse.do[0] = { op: "damage", type: "physical", subtype: "slash", amount: { scale: [{ ratio: 0.3, stat: "attack", of: "source" }] } };
@@ -185,12 +249,13 @@ test("targeting: picking the lowest or highest needs 'by'", () => expectIssue("t
 
 // ─── Units ───────────────────────────────────────────────────────────────────
 
-test("each class has 5 abilities", () => expectIssue("class.abilityCount", (p) => find(p.classes, "warrior").abilities.pop()));
+test("each class has the design's number of abilities", () => expectIssue("class.abilityCount", (p) => find(p.classes, "warrior").abilities.pop()));
 test("abilities don't cross classes", () => expectIssue("class.abilityClass", (p) => (find(p.classes, "warrior").abilities[0] = "riposte")));
+test("a class's weapon kinds exist", () => expectIssue("ref.missing", (p) => (find(p.classes, "warrior").weapons = ["club"])));
 
 // ─── Formations ──────────────────────────────────────────────────────────────
 
-test("formations always have 5 slots", () => expectIssue("formation.positions", (p) => find(p.formations, "phalanx").positions.pop()));
+test("formations always have the design's number of slots", () => expectIssue("formation.positions", (p) => find(p.formations, "phalanx").positions.pop()));
 test("two slots aren't drawn in the same place", () =>
   expectIssue("formation.layout", (p) => (find(p.formations, "phalanx").positions[1].layout.column = 0)));
 test("slots with effects tell the player what they do", () =>
@@ -200,21 +265,29 @@ test("fights hold at most maxEnemies", () => expectIssue("fight.size", (p) => (p
 
 // ─── Gear ────────────────────────────────────────────────────────────────────
 
-test("efficacy gear changes numbers only: no statuses", () => expectIssue("gear.simple", (p) => (find(p.gear, "bone_charm").statuses = ["horn_call"])));
-test("powerful and capstone gear come from unlocks", () => expectIssue("gear.source", (p) => (find(p.gear, "ullrs_yew").source = "loot")));
-test("capstones may be restricted to classes", () => {
-  const p = clone(PACK) as any;
-  find(p.gear, "yata_mirror").class = ["ranger"];
-  assert.equal(validatePack(p).errors, 0);
+test("gear: powerful pieces come from unlocks, ordinary ones from drops or the start", () => {
+  expectIssue("gear.source", (p) => (find(p.gear, "ullrs_yew").source = "drop"));
+  expectIssue("gear.source", (p) => (find(p.gear, "bone_charm").source = "unlock"));
 });
-test("class slots take only that class's gear", () => expectIssue("gear.slotClass", (p) => delete find(p.gear, "hunters_shortbow").class));
-test("loot tables drop only loot gear", () => expectIssue("loot.source", (p) => p.dungeons[0].loot.replay.table.push({ gear: "ullrs_yew", weight: 1 })));
+test("gear: armor has a weight and nothing else does; only weapons set a basic attack", () => {
+  expectIssue("gear.weight", (p) => delete find(p.gear, "studded_jerkin").weight);
+  expectIssue("gear.weight", (p) => (find(p.gear, "bone_charm").weight = "light"));
+  expectIssue("gear.weapon", (p) => (find(p.gear, "bone_charm").weapon = { kind: "sword", amount: 1 }));
+});
+test("gear: a class without a plain weapon of its first kind is reported", () => expectIssue("gear.plain", () => {}, { level: "warning" }));
+test("loot tables drop only drop gear", () => expectIssue("loot.source", (p) => p.dungeons[0].loot.replay.table.push({ gear: "ullrs_yew", weight: 1 })));
 test("challenges pay gear", () => expectIssue("loot.empty", (p) => (p.dungeons[0].challenges[0].loot = {})));
+test("a dungeon may pay nothing at all: the core set has no progression yet", () => {
+  const p = clone(PACK) as any;
+  delete p.dungeons[0].loot;
+  p.dungeons[0].challenges = [];
+  assert.deepEqual(codes(validatePack(p).issues, "error"), []);
+});
 
 // ─── Runs ────────────────────────────────────────────────────────────────────
 
-test("perk pools hold 10 to 15 perks", () => expectIssue("dungeon.perkPool", (p) => (p.dungeons[0].perkPool = p.dungeons[0].perkPool.slice(0, 9))));
-test("runs have 3 to 4 perk picks", () =>
+test("perk pools hold the design's number of perks", () => expectIssue("dungeon.perkPool", (p) => (p.dungeons[0].perkPool = p.dungeons[0].perkPool.slice(0, 9))));
+test("runs have the design's number of perk picks", () =>
   expectIssue("dungeon.perkPicks", (p) => (p.dungeons[0].stages = p.dungeons[0].stages.filter((s: any) => s.id !== "pick_3"))));
 test("perk picks happen between fights", () =>
   expectIssue("dungeon.stageOrder", (p) => {
@@ -223,8 +296,8 @@ test("perk picks happen between fights", () =>
   }));
 test("a run ends in a boss", () => expectIssue("dungeon.boss", (p) => delete p.dungeons[0].stages.at(-1).boss));
 test("a boss fight has a boss", () => expectIssue("fight.bossRank", (p) => (p.dungeons[0].stages.at(-1).enemies = ["ash_wolf"])));
-test("dungeons cap party size at 1 to 5", () => expectIssue("dungeon.partySize", (p) => (p.dungeons[0].partySize.max = 6)));
-test("perk picks offer 3 options", () => expectIssue("design.perkOptions", (p) => (p.ruleset.run.perkOffer.options = 4)));
+test("dungeons cap party size inside the design's range", () => expectIssue("dungeon.partySize", (p) => (p.dungeons[0].partySize.max = 6)));
+test("perk picks offer the design's number of options", () => expectIssue("design.perkOptions", (p) => (p.ruleset.run.perkOffer.options = 4)));
 test("a perk gives something", () => expectIssue("perk.empty", (p) => delete find(p.perks, "keen_eyes").stats));
 test("challenges must be possible: a class can't be both required and excluded", () =>
   expectIssue("challenge.impossible", (p) => p.dungeons[0].challenges[0].constraints.push({ excludesClass: "duelist" })));
@@ -232,15 +305,6 @@ test("challenges must be possible: required classes fit in the party", () =>
   expectIssue("challenge.impossible", (p) => p.dungeons[0].challenges[0].constraints.push({ includesClass: "warrior" }, { partySize: { max: 1 } })));
 test("starter content is marked as starter", () => expectIssue("starter.source", (p) => (find(p.formations, "open_order").source = "unlock")));
 test("every dungeon is in the progression", () => expectIssue("progression.missing", (p) => (p.progression.dungeonOrder = ["somewhere_else"])));
-
-// ─── Traits and keyholes ─────────────────────────────────────────────────────
-
-test("traits: each word has one verb profile", () => expectIssue("trait.profile", (p) => (find(p.traits, "festering").verbs = ["evasion"])));
-test("traits: the word appears in the enemy's text", () => expectIssue("enemy.traitText", (p) => (find(p.enemies, "ash_wolf").text = "A lean grey wolf.")));
-test("keyholes: bosses have 2 to 4", () => expectIssue("enemy.keyholes", (p) => (find(p.enemies, "grey_mother").keyholes = find(p.enemies, "grey_mother").keyholes.slice(0, 1))));
-test("keyholes: grounded in one of the enemy's own verbs", () => expectIssue("keyhole.from", (p) => (find(p.enemies, "grey_mother").keyholes[0].from = "evasion")));
-test("keyholes: a verb can't both counter and be blunted", () =>
-  expectIssue("keyhole.contradiction", (p) => find(p.enemies, "grey_mother").keyholes[0].strongAgainst.push("burst")));
 
 // ─── Party loadouts ──────────────────────────────────────────────────────────
 
@@ -251,11 +315,16 @@ function expectParty(code: string, mutate: (p: any) => void, opts: Parameters<ty
   assert.ok(got.includes(code), `expected '${code}', got ${JSON.stringify(got)}`);
 }
 test("party: each class is one unit", () => expectParty("party.uniqueClass", (p) => (p.units[2].class = "duelist")));
-test("party: two units of the same class are fine", () => assert.deepEqual(checkParty(PACK, PARTY, { dungeon: DUNGEON }), []));
-test("party: units equip exactly 3 abilities", () => expectParty("party.abilities", (p) => p.units[0].abilities.push("second_wind")));
-test("party: abilities come from the unit's specialization", () => expectParty("party.abilityNotOwned", (p) => (p.units[0].abilities[1] = "riposte")));
-test("party: gear goes in a matching slot", () => expectParty("party.gearSlot", (p) => (p.units[0].gear.armour = "bone_charm")));
-test("party: class gear only on that class", () => expectParty("party.slot", (p) => (p.units[0].gear.ranger_weapon = "hunters_shortbow")));
+test("party: the example party is fine", () => assert.deepEqual(checkParty(PACK, PARTY, { dungeon: DUNGEON }), []));
+test("party: units equip exactly the design's number of abilities", () => expectParty("party.abilities", (p) => p.units[0].abilities.push("second_wind")));
+test("party: abilities come from the unit's class", () => expectParty("party.abilityNotOwned", (p) => (p.units[0].abilities[1] = "riposte")));
+test("party: gear goes in a matching slot", () => expectParty("party.gearSlot", (p) => (p.units[0].gear.armor = "bone_charm")));
+test("party: there are three slots", () => expectParty("party.slot", (p) => (p.units[0].gear.ring = "bone_charm")));
+test("party: a weapon's kind must be one the class can use", () => expectParty("party.gearClass", (p) => (p.units[0].gear.weapon = "hunters_shortbow")));
+test("party: armor no heavier than the class can wear", () => {
+  const cleric = { formation: "open_order", units: [{ class: "cleric", position: "a", abilities: ["mend", "purify", "blessed_ward"], gear: { armor: "studded_jerkin" } }] };
+  assert.deepEqual(codes(checkParty(PACK, cleric, { dungeon: DUNGEON })), ["party.gearClass"], "a light class in medium armor");
+});
 test("party: dungeon caps party size", () =>
   expectParty("party.size", (p) => p.units.push({ class: "cleric", position: "right_striker", abilities: ["mend", "purify", "blessed_ward"], gear: {} })));
 test("party: positions exist and are free", () => expectParty("party.position", (p) => (p.units[1].position = "shield_point")));
@@ -263,8 +332,8 @@ test("party: ownership is checked when given", () =>
   expectParty("party.notOwned", () => {}, { dungeon: DUNGEON, owned: { classes: ["warrior", "ranger"], formations: ["phalanx"] } }));
 test("party: copies of gear can be shared up to the count owned", () => {
   const party = clone(PARTY) as any;
-  party.units[0].gear.charm = "bone_charm";
-  party.units[2].gear.charm = "bone_charm";
+  party.units[0].gear.amulet = "bone_charm";
+  party.units[2].gear.amulet = "bone_charm";
   const owned = (n: number) => ({ gear: { notched_blade: 1, studded_jerkin: 1, fencers_rapier: 1, yata_mirror: 1, ullrs_yew: 1, wolfhide_cloak: 1, bone_charm: n } });
   assert.deepEqual(codes(checkParty(PACK, party, { dungeon: DUNGEON, owned: owned(2) })), []);
   assert.deepEqual(codes(checkParty(PACK, party, { dungeon: DUNGEON, owned: owned(1) })), ["party.gearCount"]);
