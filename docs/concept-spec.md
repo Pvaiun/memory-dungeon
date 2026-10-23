@@ -2,6 +2,8 @@
 
 Oct 14, 2026 · brought in line with `DECISIONS.md` Oct 21, 2026
 
+> **Where this stands (Oct 23, 2026).** This is the full game, and the pitch stands. What's being built right now is the core set (`docs/core-set/`): a vertical slice the director designed, with the rules, combat, classes, gear, formations and enemies, its progression still to be decided (starting with none), and without the quest board or reward streams. Where the core set differs from this spec (party size, class count, gear and formation slots, abilities per class), the core set is what's built, and this spec is brought back in line once the slice has shown what holds. `DECISIONS.md` has the decision.
+
 This is the game at a high level. `DECISIONS.md` holds the detail and the reasons, and this spec is kept in line with it (see `method.md`). If the two ever differ, `DECISIONS.md` wins, and this spec gets fixed.
 
 ## Purpose and principles

@@ -2,6 +2,8 @@
 
 The ordered design work needed to take the concept spec to a buildable game. Each step is design work an AI carries out with the director, following `method.md`, then records before any step that depends on it.
 
+> **Where this plan stands (Oct 23, 2026).** Phase 1 is done, and steps 2 and 3 are the engine and harness everything runs on. Step 4 was done as planned, and writing it showed that steps 4 to 12 are too interlocked to design one at a time. The director designed them together instead, as the core set (`docs/core-set/`): a vertical slice of the rules, combat, classes, gear, formations and enemies, with its progression still to be decided, starting with none. The core set replaces steps 5 to 12 and is the current target; its rules supersede step 4's design where they differ. Phases 3 to 5 describe the full game and are revisited after the slice, so they're kept here as the record of where the game is headed. The core set's implementation order isn't this plan's: the director sets it once the enemies document lands. `DECISIONS.md` has the decision.
+
 **Inputs:**
 - *Memory Dungeon Game: Concept Spec*: what the game is and why.
 - `memory-app-overview.md`: a summary of how Memory works today.
@@ -46,7 +48,7 @@ Each step lists what it designs; what to **ask the director**, which seeds the i
 - **Produces:** a harness spec and report format.
 - **Done when:** a test run at each level produces a readable report.
 
-## Phase 2: Core mechanics
+## Phase 2: Core mechanics (replaced by the core set, Oct 23, 2026)
 
 Steps 4 to 6 choose what combat is made of and check that it works; there's too little content to measure balance until units exist. After that, steps weigh competing variants: simulation chooses between them on numbers, and the director on feel.
 
