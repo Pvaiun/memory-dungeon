@@ -18,6 +18,7 @@ Everything here is binding on the content below. The combat rules themselves are
 - **No unit leaves a fight alive.** Nothing flees, fades or escapes.
 - **Doom and Bulwark are enemy-only statuses**, owned by the Reaper and the Ice Titan.
 - **Enemy-only target phrases** exist in the rules doc for Seek attackers: a random foe ignoring Aggro (Fickle), and the foe with the highest current HP that isn't Taunting (Skips the tank). No enemy in this set uses them yet.
+- **Enemy abilities scale from Attack or Magic.** Physical damage scales from Attack and magical damage from Magic, unless an ability says otherwise, as Volatile does.
 - **Passives may keep hidden state** (a counter, a timer) as long as the effect shows in the numbers: Split, Volatile, Ice Crust, Vengeance.
 - **Enemy revives** return the unit with every action on cooldown (the Ghoul's Raise). Only the Valkyrie's Einherjar overrides that rule, on the class side.
 
@@ -361,7 +362,7 @@ Cut it in half and you get two. **Challenge:** Splitter.
 
 **Stats:** HP 14, MP 0, MP regen 0, Attack 4, Magic 0, Armor 1, Crit 2, Aggro 3. **Resistances:** resists Fire, weak to Ice. **Basic attack:** slow, blunt slam.
 
-**Passive – Split.** When it falls below half HP it is replaced by two Mini Slimes (HP 7, Attack 3, otherwise the same). They count toward the 8-foe cap and don't split again. They enter as new units: the Lava Slime's statuses don't pass to them, and their basic attacks start on cooldown.
+**Passive – Split.** When it falls below half HP it is replaced by two Mini Slimes (HP 7, Attack 3, otherwise the same). They count toward the 8-foe cap and don't split again. They enter as new units: the Lava Slime's statuses don't pass to them, and their basic attacks start on cooldown. Being replaced isn't a knockout.
 
 *Beats it — Geomancer, Hoplite, Cleric:* a Bedrock crit or a Phalanx swing takes it from above half to zero, and no Mini Slimes ever exist. *Fails — Bard, Monk, Hexer:* many small hits split everything at speed; the room runs toward the cap.
 
