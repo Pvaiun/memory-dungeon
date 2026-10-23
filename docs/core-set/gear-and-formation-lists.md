@@ -74,7 +74,7 @@ The Hexer, Frostweaver and Stormcaller stay thin on purpose: Magic is their best
 | Two protectors, one carry | Tank buster, Executioner | Two defensive slots that share the hits; one boosted slot |
 | All defenders | Anti-heal | Defense across the board, damage down |
 | All offense | Damage race, Two states | Offense up, defense down; a fight-start Haste or Might |
-| No front line | Summoner, Interrupt check | Nothing touches Aggro; small bonuses everywhere |
+| No front line | Summoner | Nothing touches Aggro; small bonuses everywhere |
 | Long run | Long grind | MP regen and HP up, damage down |
 | Burst | Stalker | Crit up |
 | One unit carries | A party of one and two supports | One huge slot, two that only take |
@@ -136,7 +136,7 @@ Two to four per kind, 33 pieces. Each row repeats its kind's speed, since that's
 | Ember staff | Fire staff · slow | Medium / medium | MP regen +2 | Slow burn |
 | Storm rod | Lightning staff · fast | Medium / medium | Magic +2 | Overcharge; Inferno on the fast staff |
 | Grounding rod | Lightning staff · fast | Medium / medium | HP +1, Aggro −1 | Grounded: survives, and draws less |
-| Zephyr staff | Wind staff · fast | Medium / medium | Double strike medium, Magic +1 | Deep freeze on a Wind staff: more Brittle hits, and more Wind hits for an Interrupt check or Bulwark. On a Stormcaller, Arc doesn't fire from the second strike. |
+| Zephyr staff | Wind staff · fast | Medium / medium | Double strike medium, Magic +1 | Deep freeze on a Wind staff: more Brittle hits, and more Wind hits for Bulwark. On a Stormcaller, Arc doesn't fire from the second strike. |
 | Tailwind staff | Wind staff · fast | Medium / medium | MP regen +2 | Wellspring; Overcharge over a long dungeon |
 | Granite staff | Earth staff · medium | Medium / medium | Armor +1, Magic +1 | Stone: Rockfall and Earthen shell scale from Armor, Tremor and the staff from Magic |
 | Rootstaff | Earth staff · medium | Medium / medium | Thorns medium, HP +1 | Thornwall with a staff in hand; Deep roots |

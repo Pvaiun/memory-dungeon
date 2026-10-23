@@ -81,14 +81,13 @@ Direction is guidance, not law. "Firm" means bend it only with evidence and the 
 
 Writing this step showed that the plan's steps 4 to 12 (verbs, mechanics, traits, units, formations, gear, runs, encounters) interlock too much to design one at a time, which led to the core set.
 
-**The core set.** The director's vertical slice, designed as four documents (Oct 23, 2026). Three are in. *Rules and vocabulary* has the game rules and the combat system: 22 statuses, 7 special stats and 6 effects, each with a tier (Fundamental, Specialist or Signature), 7 elements with a job each, 13 weapon kinds, and the gear and formation rules. *Classes* has 16 classes, each a passive, three abilities and a plan, with a test fight each and parties of 3 against 13 sample challenges. *Gear and formation lists* has 90 pieces and 10 formations, designed against each class's build forks, with a coverage check. The enemies document is coming and will add rules. The core set's rules supersede step 4's design where they differ, though the engine still runs step 4's. Its numbers are a relative scale (stats from 1 to 5), with first values and the balance pass still to come. Nothing is implemented yet.
+**The core set.** The director's vertical slice, designed as four documents (Oct 23, 2026). *Rules and vocabulary* has the game rules and the combat system: 22 statuses, 7 special stats and 6 effects, each with a tier (Fundamental, Specialist or Signature), 7 elements with a job each, 13 weapon kinds, and the gear and formation rules. *Classes* has 16 classes, each a passive, three abilities and a plan, with a test fight each and parties of 3 against 12 sample challenges. *Gear and formation lists* has 90 pieces and 10 formations, designed against each class's build forks, with a coverage check. *Enemies, encounters and dungeons* has 29 enemies, 27 encounters and 7 dungeons played in order, built against 61 challenges, and adds a few rules, such as summoning and enemy-only Doom and Bulwark. The core set's rules supersede step 4's design where they differ, though the engine still runs step 4's. Its numbers are a relative scale (stats from 1 to 5), with first values and the balance pass still to come. Nothing is implemented yet.
 
 ## What's ahead
 
-1. **The enemies document,** which completes the core set and adds rules.
-2. **Building the core set,** in the order the director sets then: the engine, the content and the numbers, tuned by simulation.
-3. **A visual interface,** so the director can see and play the slice before more design.
-4. **The full game,** grown out of the slice: content and balance at volume, progression pacing, the quest board, screens, onboarding, and a review against the principles. The original plan's later steps are the starting point, revisited then.
+1. **Building the core set,** in the order the director sets: the engine, the content and the numbers, tuned by simulation.
+2. **A visual interface,** so the director can see and play the slice before more design.
+3. **The full game,** grown out of the slice: content and balance at volume, progression pacing, the quest board, screens, onboarding, and a review against the principles. The original plan's later steps are the starting point, revisited then.
 
 A question that belongs to later work can be noted and left for it.
 

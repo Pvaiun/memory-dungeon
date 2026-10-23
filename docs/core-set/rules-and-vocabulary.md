@@ -49,7 +49,9 @@ It's an optional game inside a personal productivity app made for someone with A
 
 - Encounters are designed as puzzles: a party brings strengths, a boss has gimmicks that call for them, and raw power can partly make up for a missing strength.
 - A fight holds at most 8 foes.
-- Enemies use the same rules and stats as the party, and can use the same statuses.
+- **Summoning.** A unit can bring new foes into a fight, up to the 8-foe cap; they count toward it.
+- No unit leaves a fight alive: nothing flees, fades or escapes.
+- Enemies use the same rules and stats as the party, and can use the same statuses and effects. Doom and Bulwark are enemy-only statuses.
 
 ### Design rules
 
@@ -72,7 +74,7 @@ Fights run in real time, in ticks, with no orders: each unit acts on its own, fr
 - Every action starts the fight on cooldown.
 - Damage doesn't interrupt a cast; only a knockout or an interrupting lockout does.
 - **Firing.** An ability fires as soon as it's ready. It waits only when firing would do literally nothing; reapplying a status that refreshes counts as doing something. Its description says what it waits for, and its targeting conditions are followed as written.
-- **Fizzle statuses.** An ability that applies Stun, Silence or Aegis skips targets that already have it and takes the next one its target phrase allows: Hush goes to the foe with the next-highest Attack or Magic. If every candidate already has it, an ability that only applies the status waits; one that also deals damage, like Shield bash or Tremor, fires anyway at its usual target, dealing its damage without the status. A Shield at its cap counts as already there under this rule: an ability that adds Shield skips a capped ally for the next one its target phrase allows, and waits if every candidate is capped.
+- **Fizzle statuses.** An ability that applies Stun, Silence, Aegis or Doom skips targets that already have it and takes the next one its target phrase allows: Hush goes to the foe with the next-highest Attack or Magic. If every candidate already has it, an ability that only applies the status waits; one that also deals damage, like Shield bash or Tremor, fires anyway at its usual target, dealing its damage without the status. A Shield at its cap counts as already there under this rule: an ability that adds Shield skips a capped ally for the next one its target phrase allows, and waits if every candidate is capped.
 
 ### Targeting
 
@@ -96,6 +98,8 @@ The target phrases in ability descriptions each mean exactly this, and are used 
 | A random foe with a buff | Any foe holding at least one buff, weighted by Aggro. |
 | A second, random foe (Arc) | A random foe other than the first target. The Taunt rule doesn't apply. |
 | Up to three other random foes (Chain lightning) | Up to three different random foes, none of them the first target; fewer if there aren't enough foes. The Taunt rule doesn't apply. |
+| A random foe, ignoring Aggro (Fickle) | Enemy-only, with Seek. Any foe, all equally likely. |
+| The foe with the highest current HP that isn't Taunting (Skips the tank) | Enemy-only, with Seek. The foe without Taunt whose HP is highest right now; if every foe is Taunting, the highest among them. Ties are broken at random. |
 | The ally with the lowest share of max HP | The ally whose current HP divided by max HP is lowest, the caster included. Ties are broken at random, so at full HP it's any ally. |
 | The other ally with the lowest share of max HP | The ally other than the caster whose current HP divided by max HP is lowest. Used by abilities that give something to the caster and one other ally. Ties are broken at random. |
 | The ally with the highest Attack or Magic | As for foes, the caster included. |
@@ -345,7 +349,11 @@ Shock is built up too, but it drains each time its holder acts, not over time.
 
 ## Known gaps
 
-Questions where the engine's finer rules from step 4 (`steps/04-combat-concepts/design.md`) meet this document, to be answered as the core set is developed. Each says what the engine does today, which stands as the default until the question is answered.
+Open questions in the core set, to be answered as it's developed. Each says what applies until it's answered.
+
+### Where step 4's engine meets these rules
+
+The engine's finer rules come from step 4 (`steps/04-combat-concepts/design.md`). What the engine does today stands as the default.
 
 - **Time under the hood.** The engine counts 1,000 sub-ticks per tick and does all timing maths in whole numbers; players see ticks, rounded. This document counts ticks. Whether sub-ticks stay (they let Haste, Slow and Chill rescale running timers exactly), and what the player sees.
 - **Same-moment order.** When several things resolve at the same moment, the engine resolves the party's batch before the enemies', and within a batch pulses, then reactions, then actions, each in formation slot order. This document says slot order only breaks targeting ties. Which order the core set wants, and whether slot order decides it.
