@@ -21,7 +21,7 @@ Order: weapons, armor, amulets, formations, then a coverage check against every 
 
 ## Build axes
 
-What the lists are designed against, carried over from stage 3 with the review applied. A stat is worth carrying when some kit multiplies it, and a fork is a direction a class's kit rewards; every For column and the coverage check name these forks. In the tables, **For** names the forks a piece is made for, by their names here; a piece is usually fine on others too.
+What the lists are designed against. A stat is worth carrying when some kit multiplies it, and a fork is a direction a class's kit rewards; every For column and the coverage check name these forks. In the tables, **For** names the forks a piece is made for, by their names here; a piece is usually fine on others too.
 
 ### What each stat is for
 
@@ -162,7 +162,7 @@ Each keeps its kind's speed and type, at medium damage and ratio, and scales fro
 | Glacier staff | Ice staff · medium | Max MP | Frostweaver, Hexer | Wellspring and Endurance stop being pure upkeep: the MP pool is also damage. Scales from max MP, not current, so casting doesn't shrink it. |
 | Templar staff | Light staff · medium | Armor | Paladin | A third Paladin build, staff and plate: heavy armor, Light basic attacks from Armor, Judgement doubling them. |
 
-That covers every source the stage 3 doc asked for: max HP for the Earth and Dark staffs, Armor for the axe, Crit chance for the dagger. Evasion and max MP are new, and each has a class that holds the stat high or a fork built on it. Thorns gets no weapon: Thornwall already scales Bramble lash from it and carries it on three pieces.
+That covers every source *Core set: classes* points at: max HP for the Earth and Dark staffs, Armor for the axe, Crit chance for the dagger. Evasion and max MP are new, and each has a class that holds the stat high or a fork built on it. Thorns gets no weapon: Thornwall already scales Bramble lash from it and carries it on three pieces.
 
 ## Armor
 
@@ -430,7 +430,7 @@ Ordinary pieces first; powerful ones after a semicolon.
 | Geomancer | Quake | Brand staff | Robes; Archmage's robes | Lucky coin |
 | Geomancer | Axe | Rune axe | Tracker's jerkin | Lucky coin, Serrated charm; Glass heart |
 
-The thin spots stay thin on purpose: the Hexer's Frost and the Stormcaller's Overcharge are a Magic +2 staff, Robes or Shadowsilk, and whatever survival the amulet buys, as the stage 3 doc accepted.
+The thin spots stay thin on purpose: the Hexer's Frost and the Stormcaller's Overcharge are a Magic +2 staff, Robes or Shadowsilk, and whatever survival the amulet buys.
 
 ### Every stat has a home
 

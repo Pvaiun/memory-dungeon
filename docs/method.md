@@ -155,4 +155,4 @@ Research tasks, like the tech-stack brief, aren't design steps and skip the loop
 
 ## The core set
 
-Writing step 4 showed that steps 4 to 12 are too interlocked to design one at a time, so the director designed them together as the core set (`docs/core-set/`, Oct 23, 2026): a vertical slice with the rules, combat, classes, gear, formations and enemies, and no progression. Its documents are its approved design, so its work starts at stage 3, build and tune, under this method's rules, in an order the director sets once the enemies document lands. Everything after it runs the full loop as before.
+Writing step 4 showed that steps 4 to 12 are too interlocked to design one at a time, so the director designed them together as the core set (`docs/core-set/`, Oct 23, 2026): a vertical slice with the rules, combat, classes, gear, formations and enemies, with its progression still to be decided, starting with none. Its documents are its approved design, so its work starts at stage 3, build and tune, under this method's rules, in an order the director sets once the enemies document lands. Everything after it runs the full loop as before.

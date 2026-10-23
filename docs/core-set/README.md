@@ -7,7 +7,7 @@ The core set is a vertical slice of the Memory Dungeon Game, designed by the dir
 The full game is an optional tab in Memory, the director's ADHD memory app, where real-life quests pay unlocks and dungeons pay gear (`docs/concept-spec.md`). That pitch stands. The core set takes the game part of it and sets it out in full: the rules and combat system, 16 classes, the gear and formation lists, and the enemies. It leaves the rest out, so it can be built, played and tuned on its own:
 
 - no quest board, reward streams or unlocks;
-- no progression, challenges or perks, in its first version: everything is available, and combat, formations, gear and the battle system are tested freeform;
+- progression still to be decided, starting with none: in the first version everything is available, with no challenges or perks, and combat, formations, gear and the battle system are tested freeform. Progression will most likely join the core set later, in a form not yet known;
 - nothing about Memory itself.
 
 The slice is the first version of the game, not the whole of it. The full game grows out of it later, in ways not yet known.
@@ -21,7 +21,7 @@ The slice is the first version of the game, not the whole of it. The full game g
 | `gear-and-formation-lists.md` | The build axes; the weapons, armor and amulets; the 10 formations; a coverage check; what to watch | In |
 | `enemies.md` | Enemies, encounters and dungeons | Coming. It will add core rules, so `rules-and-vocabulary.md` changes when it lands |
 
-The director wrote them, and they're the approved design: the core set's work starts at the method's build-and-tune stage (`docs/method.md`). They're written to stand on their own and refer to one another by title (*Core set: classes*). Where they mention "stage 3", that's the director's own drafting process, not this repo's steps.
+The director wrote them, and they're the approved design: the core set's work starts at the method's build-and-tune stage (`docs/method.md`). They're written to stand on their own and refer to one another by title (*Core set: classes*).
 
 Changes to them go through the director and are recorded in `DECISIONS.md`, as step 4's design was.
 

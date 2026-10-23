@@ -342,3 +342,15 @@ Shock is built up too, but it drains each time its holder acts, not over time.
 
 - Aggro has a floor above zero, so no unit becomes unpickable by numbers alone; that's Hidden's job. Every other stat floors at zero, and HP at one.
 - Evasion and Crit chance have caps, set in balancing and expected to sit far out of reach. Resistance from gear and formations stops short of full; immunity and absorption stay class and boss traits.
+
+## Known gaps
+
+Questions where the engine's finer rules from step 4 (`steps/04-combat-concepts/design.md`) meet this document, to be answered as the core set is developed. Each says what the engine does today, which stands as the default until the question is answered.
+
+- **Time under the hood.** The engine counts 1,000 sub-ticks per tick and does all timing maths in whole numbers; players see ticks, rounded. This document counts ticks. Whether sub-ticks stay (they let Haste, Slow and Chill rescale running timers exactly), and what the player sees.
+- **Same-moment order.** When several things resolve at the same moment, the engine resolves the party's batch before the enemies', and within a batch pulses, then reactions, then actions, each in formation slot order. This document says slot order only breaks targeting ties. Which order the core set wants, and whether slot order decides it.
+- **Timing stats.** The engine has Attack Speed, Cooldown Reduction and Cast Time Reduction as stats, which Haste, Slow and Chill would act through. The stat list here has none of them. Whether they stay as hidden stats behind Haste, Slow and Chill, or those statuses are defined directly.
+- **Dice.** Each unit draws its own dice, so the same seed brings the same luck to the same unit whatever else is in the fight. This document is silent; keep it unless a reason appears.
+- **An action whose target is gone when it resolves.** The engine fails it with no MP spent and no cooldown. The firing rule here starts an ability only when it would do something, and a cast that fizzles for MP goes on cooldown. Which applies when the target is knocked out during the wind-up.
+- **A fight nobody can win.** The engine stops a fight at 5,000 ticks and counts it a loss, as a safety stop. This document sets no time limit.
+- **Rounding.** The engine rounds damage down once, after mitigation, and heals after crit; shields soak whole points. The resolution order here puts Aegis and Shields after mitigation. Where rounding happens with them in the chain.

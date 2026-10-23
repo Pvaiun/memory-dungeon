@@ -24,7 +24,7 @@ The tasks stay the point, and the game is a reason to do them. These principles 
 
 A party-based JRPG dungeon crawler with automatic combat, where preparation is the game. The skill is building a party and learning by trial and error, not performing in a fight.
 
-**Right now, the core set.** What's being built at the moment is a vertical slice of this game, which the director designed as four documents (rules and vocabulary, classes, gear and formation lists, enemies): the game part, with none of the quest board, progression, perks or challenges. Everything is available, and combat, formations, gear and the battle system are tested freeform. The full game described below grows out of it later. Where the slice differs from the concept (parties of 3 rather than 5 in the first playable, 16 classes, three gear slots per unit, formations of three slots), the slice is what's built.
+**Right now, the core set.** What's being built at the moment is a vertical slice of this game, which the director designed as four documents (rules and vocabulary, classes, gear and formation lists, enemies): the game part, without the quest board or reward streams. Its progression is still to be decided, starting with none: everything is available, and combat, formations, gear and the battle system are tested freeform. The full game described below grows out of it later. Where the slice differs from the concept (parties of 3 rather than 5 in the first playable, 16 classes, three gear slots per unit, formations of three slots), the slice is what's built.
 
 **The loop.**
 
@@ -94,7 +94,7 @@ A question that belongs to later work can be noted and left for it.
 
 ## Words
 
-- **Core set:** the vertical slice being built now: rules, combat, classes, gear, formations and enemies, with no progression.
+- **Core set:** the vertical slice being built now: rules, combat, classes, gear, formations and enemies, with its progression still to be decided, starting with none.
 - **Unlock:** a quest reward (class, formation or powerful gear).
 - **Keys and keyholes:** encounter-design terms for a party's strengths and the gimmicks that call for them. Predictions only.
 - **Verbs:** a hidden design vocabulary for roles (physical damage, healing, evasion…). The game never reads them.
