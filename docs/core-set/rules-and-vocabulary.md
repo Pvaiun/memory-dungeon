@@ -49,7 +49,9 @@ It's an optional game inside a personal productivity app made for someone with A
 
 - Encounters are designed as puzzles: a party brings strengths, a boss has gimmicks that call for them, and raw power can partly make up for a missing strength.
 - A fight holds at most 8 foes.
-- Enemies use the same rules and stats as the party, and can use the same statuses.
+- **Summoning.** A unit can bring new foes into a fight, up to the 8-foe cap; they count toward it.
+- No unit leaves a fight alive: nothing flees, fades or escapes.
+- Enemies use the same rules and stats as the party, and can use the same statuses and effects. Doom and Bulwark are enemy-only statuses.
 
 ### Design rules
 
@@ -70,9 +72,9 @@ Fights run in real time, in ticks, with no orders: each unit acts on its own, fr
 - Abilities cost MP. Besides its cooldown, an ability can have a trigger condition and a targeting rule.
 - An ability is ready only when it's off cooldown, its condition (if it has one) is true, and the unit has the MP to pay for it. MP is paid when the action resolves, at the end of its wind-up. If the unit no longer has enough MP then, the ability fizzles: it does nothing and no MP is spent, but it still goes on cooldown. This is unrelated to the Fizzle stacking rule.
 - Every action starts the fight on cooldown.
-- Damage doesn't interrupt a cast; only a knockout or an interrupting lockout does.
+- Damage doesn't interrupt a cast; only a knockout or an interrupting lockout does. The one exception is the **Interrupt exception**: a named cast can be broken by hits of a named element, as Ice hits break the Fire Giant's Inferno.
 - **Firing.** An ability fires as soon as it's ready. It waits only when firing would do literally nothing; reapplying a status that refreshes counts as doing something. Its description says what it waits for, and its targeting conditions are followed as written.
-- **Fizzle statuses.** An ability that applies Stun, Silence or Aegis skips targets that already have it and takes the next one its target phrase allows: Hush goes to the foe with the next-highest Attack or Magic. If every candidate already has it, an ability that only applies the status waits; one that also deals damage, like Shield bash or Tremor, fires anyway at its usual target, dealing its damage without the status. A Shield at its cap counts as already there under this rule: an ability that adds Shield skips a capped ally for the next one its target phrase allows, and waits if every candidate is capped.
+- **Fizzle statuses.** An ability that applies Stun, Silence, Aegis or Doom skips targets that already have it and takes the next one its target phrase allows: Hush goes to the foe with the next-highest Attack or Magic. If every candidate already has it, an ability that only applies the status waits; one that also deals damage, like Shield bash or Tremor, fires anyway at its usual target, dealing its damage without the status. A Shield at its cap counts as already there under this rule: an ability that adds Shield skips a capped ally for the next one its target phrase allows, and waits if every candidate is capped.
 
 ### Targeting
 
@@ -96,6 +98,8 @@ The target phrases in ability descriptions each mean exactly this, and are used 
 | A random foe with a buff | Any foe holding at least one buff, weighted by Aggro. |
 | A second, random foe (Arc) | A random foe other than the first target. The Taunt rule doesn't apply. |
 | Up to three other random foes (Chain lightning) | Up to three different random foes, none of them the first target; fewer if there aren't enough foes. The Taunt rule doesn't apply. |
+| A random foe, ignoring Aggro (Fickle) | Enemy-only, with Seek. Any foe, all equally likely. |
+| The foe with the highest current HP that isn't Taunting (Skips the tank) | Enemy-only, with Seek. The foe without Taunt whose HP is highest right now; if every foe is Taunting, the highest among them. Ties are broken at random. |
 | The ally with the lowest share of max HP | The ally whose current HP divided by max HP is lowest, the caster included. Ties are broken at random, so at full HP it's any ally. |
 | The other ally with the lowest share of max HP | The ally other than the caster whose current HP divided by max HP is lowest. Used by abilities that give something to the caster and one other ally. Ties are broken at random. |
 | The ally with the highest Attack or Magic | As for foes, the caster included. |
@@ -345,7 +349,11 @@ Shock is built up too, but it drains each time its holder acts, not over time.
 
 ## Known gaps
 
-Questions where the engine's finer rules from step 4 (`steps/04-combat-concepts/design.md`) meet this document, to be answered as the core set is developed. Each says what the engine does today, which stands as the default until the question is answered.
+Open questions in the core set, to be answered as it's developed. Each says what applies until it's answered.
+
+### Where step 4's engine meets these rules
+
+The engine's finer rules come from step 4 (`steps/04-combat-concepts/design.md`). What the engine does today stands as the default.
 
 - **Time under the hood.** The engine counts 1,000 sub-ticks per tick and does all timing maths in whole numbers; players see ticks, rounded. This document counts ticks. Whether sub-ticks stay (they let Haste, Slow and Chill rescale running timers exactly), and what the player sees.
 - **Same-moment order.** When several things resolve at the same moment, the engine resolves the party's batch before the enemies', and within a batch pulses, then reactions, then actions, each in formation slot order. This document says slot order only breaks targeting ties. Which order the core set wants, and whether slot order decides it.
@@ -354,3 +362,15 @@ Questions where the engine's finer rules from step 4 (`steps/04-combat-concepts/
 - **An action whose target is gone when it resolves.** The engine fails it with no MP spent and no cooldown. The firing rule here starts an ability only when it would do something, and a cast that fizzles for MP goes on cooldown. Which applies when the target is knocked out during the wind-up.
 - **A fight nobody can win.** The engine stops a fight at 5,000 ticks and counts it a loss, as a safety stop. This document sets no time limit.
 - **Rounding.** The engine rounds damage down once, after mitigation, and heals after crit; shields soak whole points. The resolution order here puts Aegis and Shields after mitigation. Where rounding happens with them in the chain.
+
+### From the enemies document
+
+Found when *Core set: enemies, encounters and dungeons* came in.
+
+- **Stats an enemy doesn't list.** Entries list only the stats that matter: bosses list no Aggro, and several enemies list no MP, Magic or Crit. Until set, an unlisted stat is zero and an unlisted Aggro is 3, the middle of the scale. A boss's Aggro matters beside its adds, since it decides how often the party's random picks find it.
+- **Scaling on enemy abilities.** Every amount states what it scales from, but enemy entries don't. Until they do, physical damage scales from Attack and magical from Magic, by the convention. The Bomb Bug shows why it matters: Volatile is a Fire blast from a unit with no Magic listed.
+- **Bulwark and Dispel.** Bulwark is a buff Dispel can remove, and the Hexer's Unravel removes one random buff. Whether removing it ends it for the fight, refills it, or counts as reaching zero, with the Stun and double damage.
+- **Split.** Whether the Lava Slime's statuses (Burn, Poison, Sunder) pass to its Mini Slimes, and whether being replaced counts as a knockout.
+- **Quiet's long Silence.** Every status has one fixed definition, but the Silent One's Quiet applies Silence "lasting long". Either that's Silence's own length, or a separate, longer status.
+- **Grave Watch.** By "the foe with the highest Attack or Magic", a Troll (Attack 6) outranks the Bone Priest (Magic 4), so Hush and Enfeeble go to a Troll, not to the priest as encounter 10 and the Bone Priest's test say.
+- **A name.** Encounter 21 says *Blazing arrow*; the Ranger's ability in *Core set: classes* is *Fire arrow*.
