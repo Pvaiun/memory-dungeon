@@ -39,5 +39,31 @@ export const row = (children: Child[], onClick?: () => void, opts: { cur?: boole
     ...children);
 
 /** A screen header: ◀ and the title, tappable to go back; `right` sits at the end. */
-export const header = (title: string, onBack: (() => void) | null, right?: Child) =>
-  h("div", { class: "hdr", onClick: onBack ?? undefined }, onBack ? "◀" : null, h("span", { class: "title" }, title), right ? h("span", { class: "r" }, right) : null);
+export const header = (title: Child, onBack: (() => void) | null, right?: Child) =>
+  h("div", { class: "hdr" }, onBack ? h("span", { class: "back", onClick: onBack }, "◀") : null, h("span", { class: "title", onClick: onBack ?? undefined }, title), right ? h("span", { class: "r" }, right) : null);
+
+/** A window box. */
+export const win = (cls: string, ...children: Child[]) => h("div", { class: `win${cls ? ` ${cls}` : ""}` }, ...children);
+
+/** An HP bar: green, yellow below 50%, red below 25%; a light segment for a shield. */
+export function bar(share: number, kind: "hp" | "mp" = "hp", shieldShare = 0, thin = false): HTMLElement {
+  const fill = h("i");
+  const s = Math.max(0, Math.min(1, share));
+  fill.style.width = `${s * 100}%`;
+  if (kind === "hp") fill.className = s <= 0.25 ? "low" : s <= 0.5 ? "mid" : "";
+  const el = h("div", { class: `bar${kind === "mp" ? " mp" : ""}${thin ? " thin" : ""}` }, fill);
+  if (shieldShare > 0) {
+    const sh = h("i", { class: "sh" });
+    sh.style.left = `${s * 100}%`;
+    sh.style.width = `${Math.min(1 - s, shieldShare) * 100}%`;
+    el.append(sh);
+  }
+  return el;
+}
+
+/** A short-lived note at the bottom of the frame. */
+export function toast(frame: HTMLElement, text: string, ms = 1400) {
+  const el = h("div", { class: "toast" }, text);
+  frame.append(el);
+  setTimeout(() => el.remove(), ms);
+}

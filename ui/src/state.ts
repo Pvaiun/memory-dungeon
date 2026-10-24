@@ -6,7 +6,7 @@ import type { Party } from "../../src/schema.js";
 import { c, classes, formations } from "./content.js";
 import { plainWeapon } from "../../src/sim/parties.js";
 
-export type Settings = { tickMs: number; sound: boolean; designer: boolean; autoContinue: boolean; palette: string; bigNumbers: boolean };
+export type Settings = { speed: number; sound: boolean; designer: boolean; autoContinue: boolean; theme: string; bigNumbers: boolean };
 
 export type Setup = {
   party: string[];
@@ -17,7 +17,8 @@ export type Setup = {
   settings: Settings;
 };
 
-const KEY = "memory-dungeon.setup.v1";
+const KEY = "memory-dungeon.setup.v2";
+const OLD_KEY = "memory-dungeon.setup.v1";
 
 function fresh(): Setup {
   return {
@@ -26,7 +27,7 @@ function fresh(): Setup {
     gear: {},
     abilities: {},
     seed: 1,
-    settings: { tickMs: 500, sound: true, designer: false, autoContinue: false, palette: "field", bigNumbers: false },
+    settings: { speed: 1, sound: true, designer: false, autoContinue: false, theme: "night", bigNumbers: false },
   };
 }
 
@@ -34,10 +35,15 @@ export let setup: Setup = load();
 
 function load(): Setup {
   try {
-    const raw = localStorage.getItem(KEY);
+    const raw = localStorage.getItem(KEY) ?? localStorage.getItem(OLD_KEY);
     if (!raw) return fresh();
     const s = { ...fresh(), ...(JSON.parse(raw) as Partial<Setup>) };
-    s.settings = { ...fresh().settings, ...s.settings };
+    const old = s.settings as Partial<Settings> & { tickMs?: number; palette?: string };
+    s.settings = { ...fresh().settings, ...old };
+    if (!(s.settings.speed === 1 || s.settings.speed === 2 || s.settings.speed === 4)) s.settings.speed = 1;
+    if (s.settings.theme !== "night" && s.settings.theme !== "day") s.settings.theme = "night";
+    delete (s.settings as { tickMs?: number }).tickMs;
+    delete (s.settings as { palette?: string }).palette;
     s.party = s.party.filter((id) => c.classes.has(id)).slice(0, 3);
     if (!c.formations.has(s.formation)) s.formation = fresh().formation;
     return s;

@@ -46,11 +46,13 @@ export const gearOf = (id: string): GearT => c.gear.get(id)!;
 export const kindOf = (id: string): WeaponKindT => c.weaponKinds.get(id)!;
 export const elementName = (id: string): string => c.pack.elements.find((e) => e.id === id)?.name ?? id;
 
-// ─── Short forms, for 22 characters a line ───
+// ─── Names and codes ───
 
 const SHORT: Record<string, string> = { bramble_knight: "BRAMBLE", pyromancer: "PYRO", frostweaver: "FROST", stormcaller: "STORM", geomancer: "GEO" };
-/** A class's name in eight letters or fewer. */
+/** A class's name in eight letters or fewer, for narrow cells. */
 export const shortName = (id: string): string => SHORT[id] ?? (c.classes.get(id)?.name ?? id).toUpperCase();
+/** A class's full name, as the messages and sheets use it. */
+export const className = (id: string): string => c.classes.get(id)?.name ?? id;
 /** A run's name without its "Run N:" prefix, a fight's without its number. */
 export const runName = (d: DungeonT) => d.name.replace(/^Run \d+: /, "");
 export const fightName = (s: { name?: string; id: string }) => (s.name ?? s.id).replace(/^\d+\. /, "");
