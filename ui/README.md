@@ -35,7 +35,7 @@ Codes: stats are HP MP REG ATK MAG ARM CRT AGG (and EVA ACC CRD DBL THN LFS SPH 
 
 ## The battle screen
 
-The field: party on the left facing right, foes on the right, in the formation's lines. Foes carry a small HP bar under their feet (a Shield line above it); a wind-up bar appears over a unit's head while it winds up; a hit flashes the sprite inverted; knocked-out foes dissolve. Numbers pop over the target: the damage, "!" and double size for a crit, a word under it for WEAK, RESIST, SHIELD (part soaked) or a status tick's code; MISS, BLOCK, AEGIS, IMMUNE, DOWN, UP as words. Tap a unit for the ▼ marker and its inspect box.
+The field is two framed windows on the frame's green, as the NES Final Fantasy battle screen has them, flipped: the party's narrow one on the left, with its members on the formation's lines facing right, and the foes' wide one on the right. Each side's sprites stay inside their window. Foes carry a small HP bar under their feet (a Shield line above it); a wind-up bar appears over a unit's head while it winds up; a hit flashes the sprite inverted; knocked-out foes dissolve. Numbers pop over the target: the damage, "!" and double size for a crit, a word under it for WEAK, RESIST, SHIELD (part soaked) or a status tick's code; MISS, BLOCK, AEGIS, IMMUNE, DOWN, UP as words. Tap a unit for the ▼ marker and its inspect box.
 
 Below: a row per party member (face, name, HP bar and number, MP bar and number, status codes with stacks); the foes by kind with how many stand; a three-line message box with the fight in short lines ("WOLF A→KNIGHT 11", "KNIGHT SHIELD BASH", "→WOLF A 15", "WOLF A +PSN2", "WOLF A DOWN"), scrollable; and the controls: ◀ menu, || pause, 1 2 4 speed, >> skip, and the tick. Keys: space, 1, 2, 3, s, Escape.
 

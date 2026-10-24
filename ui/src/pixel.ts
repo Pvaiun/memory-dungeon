@@ -232,19 +232,19 @@ export const vfxPix = (strip: string): Pix => pixOf(manifest.vfx[strip]?.file ??
 export const statusPix = (id: string): Pix => pixOf(manifest.statuses[id] ?? "", 1, { dither: 0.3 });
 
 const faces = new Map<string, Pix>();
-/** A 16×16 face: the head of the class's waiting pose. */
-export function facePix(cls: string): Pix {
-  let f = faces.get(cls);
-  if (f) return f;
+const bboxes = new Map<string, { top: number; left: number; right: number; fw: number; fh: number }>();
+/** The figure's bounds in the class's waiting-pose frame, at full resolution: figures aren't centred in their frames. */
+function actorBBox(cls: string) {
+  let b = bboxes.get(cls);
+  if (b) return b;
   const sheet = image(manifest.classes[cls]);
-  if (!sheet) return { w: 16, h: 16, s: new Uint8Array(256).fill(255) };
+  if (!sheet) return { top: 0, left: 0, right: 143, fw: 144, fh: 144 };
   const fw = sheet.width / 9, fh = sheet.height / 6;
-  const sx = 3 * fw, sy = 0;
   scratch.width = fw;
   scratch.height = fh;
   const g = scratchCtx();
   g.clearRect(0, 0, fw, fh);
-  g.drawImage(sheet, sx, sy, fw, fh, 0, 0, fw, fh);
+  g.drawImage(sheet, 3 * fw, 0, fw, fh, 0, 0, fw, fh);
   const d = g.getImageData(0, 0, fw, fh).data;
   let top = fh, left = fw, right = 0;
   for (let y = 0; y < fh; y++) for (let x = 0; x < fw; x++) if (d[(y * fw + x) * 4 + 3] > 0) {
@@ -252,8 +252,24 @@ export function facePix(cls: string): Pix {
     if (x < left) left = x;
     if (x > right) right = x;
   }
-  const cx = Math.round((left + right) / 2);
-  f = quantize(sheet, 3, sx + Math.max(0, cx - 24), sy + Math.max(0, top - 2), 48, 48);
+  b = { top, left, right, fw, fh };
+  bboxes.set(cls, b);
+  return b;
+}
+/** How far right of the frame's centre the figure stands, in quantized pixels: subtract it to centre the figure. */
+export function actorCenterOffset(cls: string, k = ACTOR_K): number {
+  const b = actorBBox(cls);
+  return ((b.left + b.right) / 2 - b.fw / 2) / k;
+}
+/** A 16×16 face: the head of the class's waiting pose. */
+export function facePix(cls: string): Pix {
+  let f = faces.get(cls);
+  if (f) return f;
+  const sheet = image(manifest.classes[cls]);
+  if (!sheet) return { w: 16, h: 16, s: new Uint8Array(256).fill(255) };
+  const b = actorBBox(cls);
+  const cx = Math.round((b.left + b.right) / 2);
+  f = quantize(sheet, 3, 3 * b.fw + Math.max(0, cx - 24), Math.max(0, b.top - 2), 48, 48);
   faces.set(cls, f);
   return f;
 }

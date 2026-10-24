@@ -9,7 +9,7 @@ import { SUBTICKS } from "../../../src/schema.js";
 import type { CUnit } from "../../../src/engine/combat/fight.js";
 import { c } from "../content.js";
 import { manifest, VFX_FOR, type Pose } from "../art.js";
-import { actorFrame, actorPix, canvasOf, drawText, enemyPix, palette, paletteName, snap, vfxPix, FRAME_W, FIELD_H } from "../pixel.js";
+import { actorCenterOffset, actorFrame, actorPix, canvasOf, drawText, enemyPix, palette, paletteName, snap, vfxPix, FRAME_W, FIELD_H } from "../pixel.js";
 import type { Driver } from "./driver.js";
 
 export const W = FRAME_W, H = FIELD_H;
@@ -29,16 +29,30 @@ type Fx = { strip: string; x: number; y: number; size: number; born: number; fps
 
 // ─── Layout ───
 
-const LINE_X: Record<string, number> = { back: 22, middle: 34, front: 46 };
+/** The two windows on the field, as the NES Final Fantasy battle screen has them (flipped): the party's on the left, the foes' on the right. */
+type Box = { x: number; y: number; w: number; h: number };
+export const PARTY_BOX: Box = { x: 4, y: 4, w: 56, h: 152 };
+export const FOE_BOX: Box = { x: 64, y: 4, w: 112, h: 152 };
+const LINE_X: Record<string, number> = { back: 18, middle: 30, front: 42 };
 /** Where the party stands, by formation slot: feet positions. */
 export function partySpots(formationId: string, count: number): { x: number; y: number }[] {
   const f = c.formations.get(formationId)!;
   return Array.from({ length: count }, (_, i) => {
     const pos = f.positions[i] ?? f.positions[0];
-    return { x: LINE_X[pos.layout.line] ?? 34, y: 54 + pos.layout.column * 48 };
+    return { x: LINE_X[pos.layout.line] ?? 24, y: 52 + pos.layout.column * 48 };
   });
 }
-const rowsFor = (n: number): number[] => (n <= 1 ? [104] : n === 2 ? [72, 136] : [54, 102, 150]);
+const rowsFor = (n: number): number[] => (n <= 1 ? [98] : n === 2 ? [66, 130] : [48, 96, 144]);
+
+/** A window's 2px border with pixel-rounded corners, like the panel's boxes. */
+function drawWindow(ctx: CanvasRenderingContext2D, b: Box) {
+  ctx.fillStyle = palette[0];
+  ctx.fillRect(b.x + 2, b.y, b.w - 4, 2);
+  ctx.fillRect(b.x + 2, b.y + b.h - 2, b.w - 4, 2);
+  ctx.fillRect(b.x, b.y + 2, 2, b.h - 4);
+  ctx.fillRect(b.x + b.w - 2, b.y + 2, 2, b.h - 4);
+  for (const [cx, cy] of [[b.x + 1, b.y + 1], [b.x + b.w - 2, b.y + 1], [b.x + 1, b.y + b.h - 2], [b.x + b.w - 2, b.y + b.h - 2]]) ctx.fillRect(cx, cy, 1, 1);
+}
 
 // ─── Backdrops: a plain light field with a dithered ceiling or floor and a few specks per dungeon ───
 
@@ -96,7 +110,8 @@ export function drawActor(ctx: CanvasRenderingContext2D, ref: string, pose: Pose
   const p = actorPix(ref);
   const [sx, sy, fw, fh] = actorFrame(p, pose, frame);
   ctx.save();
-  ctx.translate(Math.round(x), Math.round(y + 2 * scale));
+  // mirrored, so the figure's offset from its frame's centre flips sign
+  ctx.translate(Math.round(x + actorCenterOffset(ref) * scale), Math.round(y + 2 * scale));
   ctx.scale(-1, 1);
   ctx.drawImage(canvasOf(p, invert), sx, sy, fw, fh, -Math.round((fw * scale) / 2), -fh * scale, fw * scale, fh * scale);
   ctx.restore();
@@ -163,18 +178,19 @@ export class Scene {
     const rest = foes.filter((u) => u !== boss);
     if (boss) {
       const v = this.units.get(boss.id)!;
-      v.x = 140;
-      v.y = Math.round(Math.min(150, 90 + v.h / 2));
+      v.x = 136;
+      v.y = Math.round(Math.min(144, 88 + v.h / 2));
     }
     const cols = rest.length <= 3 ? 1 : rest.length <= 6 ? 2 : 3;
     const perCol = Math.ceil(rest.length / cols) || 1;
-    const x0 = boss ? 84 : 150;
+    const x0 = boss ? 84 : 152;
+    const step = boss ? 24 : 36;
     for (let col = 0; col < cols; col++) {
       const group = rest.slice(col * perCol, (col + 1) * perCol);
       const rows = rowsFor(group.length);
       group.forEach((u, i) => {
         const v = this.units.get(u.id)!;
-        v.x = x0 - col * 36 + (group.length > 1 ? (i % 2 ? -4 : 4) : 0);
+        v.x = x0 - col * step + (group.length > 1 ? (i % 2 ? -4 : 4) : 0);
         v.y = rows[i];
       });
     }
@@ -249,13 +265,29 @@ export class Scene {
     this.wall = wall;
     const ctx = this.ctx;
     const units = this.driver.units();
-    ctx.drawImage(backdrop(this.theme), 0, 0);
+    ctx.fillStyle = palette[2];
+    ctx.fillRect(0, 0, W, H);
+    const back = backdrop(this.theme);
+    for (const b of [PARTY_BOX, FOE_BOX]) {
+      ctx.drawImage(back, b.x, b.y, b.w, b.h, b.x, b.y, b.w, b.h);
+      drawWindow(ctx, b);
+    }
     const order = [...this.units.values()].filter((v) => !v.gone).sort((a, b) => a.y - b.y);
-    for (const v of order) {
-      const u = units.find((x) => x.id === v.id);
-      if (!u) continue;
-      this.updateVisual(v, u);
-      this.drawUnit(v, u);
+    // each side's sprites stay inside its window, as on the old battle screens
+    for (const side of ["party", "enemy"] as const) {
+      const b = side === "party" ? PARTY_BOX : FOE_BOX;
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(b.x + 2, b.y + 2, b.w - 4, b.h - 4);
+      ctx.clip();
+      for (const v of order) {
+        if (v.side !== side) continue;
+        const u = units.find((x) => x.id === v.id);
+        if (!u) continue;
+        this.updateVisual(v, u);
+        this.drawUnit(v, u);
+      }
+      ctx.restore();
     }
     for (const v of order) {
       const u = units.find((x) => x.id === v.id);
@@ -293,7 +325,7 @@ export class Scene {
     if (v.alpha <= 0) return;
     const shaking = this.wall < v.shakeUntil ? Math.round(Math.sin(this.wall / 18) * 2) : 0;
     const lungeT = v.lungeUntil > this.wall ? 1 - (v.lungeUntil - this.wall) / 220 : 0;
-    const lunge = lungeT ? Math.round(Math.sin(lungeT * Math.PI) * 8) * (v.side === "party" ? 1 : -1) : 0;
+    const lunge = lungeT ? Math.round(Math.sin(lungeT * Math.PI) * 6) * (v.side === "party" ? 1 : -1) : 0;
     const x = v.x + shaking + lunge;
     const hidden = u.statuses.some((s) => s.id === "hidden");
     const flash = this.wall < v.flashUntil;
@@ -455,10 +487,11 @@ export class Showcase {
     const f = WAIT_FRAMES[this.tick % 4];
     if (s.kind === "party") {
       const spots = partySpots(s.formation, 3);
+      const dx = W / 2 - LINE_X.middle;
       s.party.forEach((ref, i) => {
         const sp = spots[i];
-        drawActor(ctx, ref, "wait", f, sp.x + 40, sp.y, false);
-        if (s.pick === i) drawText(ctx, "▼", sp.x + 40, sp.y - 46, 0, 3, "center");
+        drawActor(ctx, ref, "wait", f, sp.x + dx, sp.y, false);
+        if (s.pick === i) drawText(ctx, "▼", sp.x + dx, sp.y - 46, 0, 3, "center");
       });
       if (!s.party.length) drawText(ctx, "NOBODY", W / 2, H / 2 - 4, 1, null, "center");
     } else if (s.kind === "actor") {

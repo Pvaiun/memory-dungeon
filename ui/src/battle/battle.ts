@@ -585,7 +585,7 @@ export function startBattle(canvas: HTMLCanvasElement, panel: HTMLElement, args:
   if (driver.phase === "run_won" || driver.phase === "run_lost") {
     panel.append(h("div", { class: "box" }, h("div", { class: "line" }, "NOTHING TO FIGHT"), h("div", { class: "btns" }, button("MENU", () => { stop(); go("home"); }))));
   }
-  log(runName(dungeon).toUpperCase(), "fight");
+  if (!single) log(runName(dungeon).toUpperCase(), "fight");
   raf = requestAnimationFrame((t) => { lastFrame = t; frame(t); });
   return stop;
 }
