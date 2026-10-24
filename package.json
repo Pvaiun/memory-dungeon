@@ -9,7 +9,7 @@
   "scripts": {
     "validate": "tsx src/cli.ts content/core-set.pack.json && tsx src/cli.ts fixtures/hollow.pack.json",
     "test": "vitest run",
-    "typecheck": "tsc -p . && tsc -p tsconfig.core.json",
+    "typecheck": "tsc -p . && tsc -p tsconfig.core.json && tsc -p ui",
     "build:schema": "tsx src/export-json-schema.ts",
     "docs": "tsx src/primitives-doc.ts > PRIMITIVES.md",
     "examples": "tsx src/extract-examples.ts",
@@ -17,7 +17,9 @@
     "pack": "tsx src/pack.ts",
     "study": "esbuild src/study.ts --bundle --platform=node --format=esm --outfile=out/study.mjs --log-level=warning && node out/study.mjs",
     "content": "tsx content/core-set/build.ts",
-    "smoke": "tsx src/smoke.ts"
+    "smoke": "tsx src/smoke.ts",
+    "ui": "vite ui",
+    "ui:build": "vite build ui"
   },
   "keywords": [],
   "author": "",
@@ -31,6 +33,7 @@
     "esbuild": "^0.28.2",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
+    "vite": "^6.4.5",
     "vitest": "^2.1.9"
   },
   "type": "module"

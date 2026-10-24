@@ -1,0 +1,10 @@
+{
+  // The interface: browser code, checked separately from the repo's Node tooling.
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["vite/client"]
+  },
+  "include": ["src", "../src/engine", "../src/sim", "../src/schema.ts", "../src/validate.ts"],
+  "exclude": ["../src/**/*.test.ts", "../src/engine/testkit.ts"]
+}
