@@ -1,0 +1,641 @@
+{
+ "classes": {
+  "knight": "actors/knight.png",
+  "cleric": "actors/cleric.png",
+  "ranger": "actors/ranger.png",
+  "bramble_knight": "actors/bramble_knight.png",
+  "hoplite": "actors/hoplite.png",
+  "paladin": "actors/paladin.png",
+  "valkyrie": "actors/valkyrie.png",
+  "bard": "actors/bard.png",
+  "hexer": "actors/hexer.png",
+  "monk": "actors/monk.png",
+  "assassin": "actors/assassin.png",
+  "vampire": "actors/vampire.png",
+  "pyromancer": "actors/pyromancer.png",
+  "frostweaver": "actors/frostweaver.png",
+  "stormcaller": "actors/stormcaller.png",
+  "geomancer": "actors/geomancer.png"
+ },
+ "enemies": {
+  "wolf": {
+   "file": "enemies/wolf.png",
+   "w": 181,
+   "h": 171,
+   "scale": 0.7
+  },
+  "snow_wolf": {
+   "file": "enemies/snow_wolf.png",
+   "w": 181,
+   "h": 171,
+   "scale": 0.7
+  },
+  "bandit": {
+   "file": "enemies/bandit.png",
+   "w": 161,
+   "h": 126,
+   "scale": 0.9
+  },
+  "archer": {
+   "file": "enemies/archer.png",
+   "w": 161,
+   "h": 119,
+   "scale": 0.95,
+   "name": "Centaur Archer"
+  },
+  "snake": {
+   "file": "enemies/snake.png",
+   "w": 156,
+   "h": 156,
+   "scale": 0.8
+  },
+  "shieldman": {
+   "file": "enemies/shieldman.png",
+   "w": 138,
+   "h": 168,
+   "scale": 1.0,
+   "name": "Shield Knight"
+  },
+  "ogre": {
+   "file": "enemies/ogre.png",
+   "w": 183,
+   "h": 195,
+   "scale": 1.1
+  },
+  "ogre_chief": {
+   "file": "enemies/ogre_chief.png",
+   "w": 183,
+   "h": 195,
+   "scale": 1.5
+  },
+  "skeleton": {
+   "file": "enemies/skeleton.png",
+   "w": 145,
+   "h": 127,
+   "scale": 0.95
+  },
+  "bat": {
+   "file": "enemies/bat.png",
+   "w": 160,
+   "h": 187,
+   "scale": 0.8,
+   "name": "Night Wyrm"
+  },
+  "ghost": {
+   "file": "enemies/ghost.png",
+   "w": 160,
+   "h": 160,
+   "scale": 0.9
+  },
+  "ice_ghost": {
+   "file": "enemies/ice_ghost.png",
+   "w": 160,
+   "h": 160,
+   "scale": 0.9
+  },
+  "bone_priest": {
+   "file": "enemies/bone_priest.png",
+   "w": 145,
+   "h": 127,
+   "scale": 1.0
+  },
+  "witch": {
+   "file": "enemies/witch.png",
+   "w": 127,
+   "h": 132,
+   "scale": 1.0,
+   "name": "Cursed Tome"
+  },
+  "lich": {
+   "file": "enemies/lich.png",
+   "w": 145,
+   "h": 206,
+   "scale": 1.0
+  },
+  "ghoul": {
+   "file": "enemies/ghoul.png",
+   "w": 145,
+   "h": 130,
+   "scale": 0.95
+  },
+  "reaper": {
+   "file": "enemies/reaper.png",
+   "w": 268,
+   "h": 218,
+   "scale": 1.3
+  },
+  "wraith": {
+   "file": "enemies/wraith.png",
+   "w": 144,
+   "h": 187,
+   "scale": 0.95
+  },
+  "silent_one": {
+   "file": "enemies/silent_one.png",
+   "w": 145,
+   "h": 161,
+   "scale": 1.5
+  },
+  "hellhound": {
+   "file": "enemies/hellhound.png",
+   "w": 196,
+   "h": 138,
+   "scale": 0.8,
+   "name": "Hellcat"
+  },
+  "lava_slime": {
+   "file": "enemies/lava_slime.png",
+   "w": 160,
+   "h": 160,
+   "scale": 1.0
+  },
+  "mini_slime": {
+   "file": "enemies/mini_slime.png",
+   "w": 160,
+   "h": 160,
+   "scale": 0.6
+  },
+  "bomb_bug": {
+   "file": "enemies/bomb_bug.png",
+   "w": 156,
+   "h": 156,
+   "scale": 0.9
+  },
+  "fire_imp": {
+   "file": "enemies/fire_imp.png",
+   "w": 160,
+   "h": 160,
+   "scale": 0.8
+  },
+  "fire_giant": {
+   "file": "enemies/fire_giant.png",
+   "w": 160,
+   "h": 160,
+   "scale": 1.5
+  },
+  "ice_spirit": {
+   "file": "enemies/ice_spirit.png",
+   "w": 160,
+   "h": 160,
+   "scale": 0.9
+  },
+  "ice_golem": {
+   "file": "enemies/ice_golem.png",
+   "w": 160,
+   "h": 160,
+   "scale": 1.1
+  },
+  "ice_titan": {
+   "file": "enemies/ice_titan.png",
+   "w": 160,
+   "h": 160,
+   "scale": 1.5
+  },
+  "wisp": {
+   "file": "enemies/wisp.png",
+   "w": 160,
+   "h": 160,
+   "scale": 0.5
+  },
+  "leech": {
+   "file": "enemies/leech.png",
+   "w": 213,
+   "h": 197,
+   "scale": 0.8
+  },
+  "storm_queen": {
+   "file": "enemies/storm_queen.png",
+   "w": 160,
+   "h": 160,
+   "scale": 1.5
+  },
+  "drone": {
+   "file": "enemies/drone.png",
+   "w": 160,
+   "h": 160,
+   "scale": 0.6
+  },
+  "storm_king": {
+   "file": "enemies/storm_king.png",
+   "w": 209,
+   "h": 198,
+   "scale": 1.5
+  },
+  "soldier": {
+   "file": "enemies/soldier.png",
+   "w": 156,
+   "h": 156,
+   "scale": 0.75
+  },
+  "troll": {
+   "file": "enemies/troll.png",
+   "w": 183,
+   "h": 195,
+   "scale": 1.1
+  },
+  "mummy": {
+   "file": "enemies/mummy.png",
+   "w": 145,
+   "h": 145,
+   "scale": 1.0,
+   "name": "Crypt Guard"
+  }
+ },
+ "statuses": {
+  "poison": "status/poison.png",
+  "regen": "status/regen.png",
+  "shield": "status/shield.png",
+  "might": "status/might.png",
+  "weaken": "status/weaken.png",
+  "guard": "status/guard.png",
+  "stun": "status/stun.png",
+  "slow": "status/slow.png",
+  "haste": "status/haste.png",
+  "taunt": "status/taunt.png",
+  "burn": "status/burn.png",
+  "chill": "status/chill.png",
+  "shock": "status/shock.png",
+  "ward": "status/ward.png",
+  "sunder": "status/sunder.png",
+  "silence": "status/silence.png",
+  "hidden": "status/hidden.png",
+  "rot": "status/rot.png",
+  "clarity": "status/clarity.png",
+  "aegis": "status/aegis.png",
+  "doom": "status/doom.png",
+  "bulwark": "status/bulwark.png",
+  "bulwark_broken": "status/bulwark_broken.png",
+  "ice_crust": "status/ice_crust.png",
+  "shadow_strike_on": "status/shadow_strike_on.png",
+  "bloodlust_on": "status/bloodlust_on.png",
+  "bedrock_on": "status/bedrock_on.png",
+  "sworn": "status/sworn.png",
+  "mercy": "status/mercy.png",
+  "hunters_eye": "status/hunters_eye.png",
+  "briar": "status/briar.png",
+  "phalanx": "status/phalanx.png",
+  "judgement": "status/judgement.png",
+  "encore": "status/encore.png",
+  "cold_hex": "status/cold_hex.png",
+  "iron_palm": "status/iron_palm.png",
+  "shadow_strike": "status/shadow_strike.png",
+  "bloodlust": "status/bloodlust.png",
+  "kindling": "status/kindling.png",
+  "brittle": "status/brittle.png",
+  "arc": "status/arc.png",
+  "bedrock": "status/bedrock.png",
+  "blitz_charge": "status/blitz_charge.png",
+  "caravan_pace": "status/caravan_pace.png",
+  "last_stand_spur": "status/last_stand_spur.png",
+  "escort_insurance": "status/escort_insurance.png",
+  "venom": "status/venom.png",
+  "fire_bite": "status/fire_bite.png",
+  "split": "status/split.png",
+  "volatile": "status/volatile.png",
+  "rime": "status/rime.png",
+  "ice_crust_passive": "status/ice_crust_passive.png",
+  "frozen_core": "status/frozen_core.png",
+  "static": "status/static.png",
+  "vengeance": "status/vengeance.png",
+  "mp_regen": "status/mp_regen.png",
+  "thorns": "status/thorns.png",
+  "lifesteal": "status/lifesteal.png",
+  "siphon": "status/siphon.png",
+  "double_strike": "status/double_strike.png"
+ },
+ "vfx": {
+  "fire1": {
+   "file": "vfx/fire1.png",
+   "frames": 4
+  },
+  "fire2": {
+   "file": "vfx/fire2.png",
+   "frames": 6
+  },
+  "fire3": {
+   "file": "vfx/fire3.png",
+   "frames": 6
+  },
+  "fire4": {
+   "file": "vfx/fire4.png",
+   "frames": 11
+  },
+  "ice1": {
+   "file": "vfx/ice1.png",
+   "frames": 11
+  },
+  "ice2": {
+   "file": "vfx/ice2.png",
+   "frames": 13
+  },
+  "ice3": {
+   "file": "vfx/ice3.png",
+   "frames": 5
+  },
+  "ice4": {
+   "file": "vfx/ice4.png",
+   "frames": 8
+  },
+  "lightning1": {
+   "file": "vfx/lightning1.png",
+   "frames": 6
+  },
+  "lightning2": {
+   "file": "vfx/lightning2.png",
+   "frames": 6
+  },
+  "lightning3": {
+   "file": "vfx/lightning3.png",
+   "frames": 8
+  },
+  "lightning4": {
+   "file": "vfx/lightning4.png",
+   "frames": 8
+  },
+  "wind1": {
+   "file": "vfx/wind1.png",
+   "frames": 4
+  },
+  "wind2": {
+   "file": "vfx/wind2.png",
+   "frames": 6
+  },
+  "wind3": {
+   "file": "vfx/wind3.png",
+   "frames": 9
+  },
+  "wind4": {
+   "file": "vfx/wind4.png",
+   "frames": 6
+  },
+  "earth1": {
+   "file": "vfx/earth1.png",
+   "frames": 12
+  },
+  "earth2": {
+   "file": "vfx/earth2.png",
+   "frames": 15
+  },
+  "earth3": {
+   "file": "vfx/earth3.png",
+   "frames": 8
+  },
+  "earth4": {
+   "file": "vfx/earth4.png",
+   "frames": 6
+  },
+  "earth5": {
+   "file": "vfx/earth5.png",
+   "frames": 6
+  },
+  "holy1": {
+   "file": "vfx/holy1.png",
+   "frames": 9
+  },
+  "holy2": {
+   "file": "vfx/holy2.png",
+   "frames": 6
+  },
+  "holy3": {
+   "file": "vfx/holy3.png",
+   "frames": 8
+  },
+  "darkness1": {
+   "file": "vfx/darkness1.png",
+   "frames": 3
+  },
+  "darkness2": {
+   "file": "vfx/darkness2.png",
+   "frames": 10
+  },
+  "darkness3": {
+   "file": "vfx/darkness3.png",
+   "frames": 10
+  },
+  "heal1": {
+   "file": "vfx/heal1.png",
+   "frames": 9
+  },
+  "heal2": {
+   "file": "vfx/heal2.png",
+   "frames": 13
+  },
+  "heal3": {
+   "file": "vfx/heal3.png",
+   "frames": 12
+  },
+  "heal4": {
+   "file": "vfx/heal4.png",
+   "frames": 5
+  },
+  "heal5": {
+   "file": "vfx/heal5.png",
+   "frames": 10
+  },
+  "sword1": {
+   "file": "vfx/sword1.png",
+   "frames": 6
+  },
+  "sword2": {
+   "file": "vfx/sword2.png",
+   "frames": 6
+  },
+  "sword3": {
+   "file": "vfx/sword3.png",
+   "frames": 6
+  },
+  "sword4": {
+   "file": "vfx/sword4.png",
+   "frames": 6
+  },
+  "sword5": {
+   "file": "vfx/sword5.png",
+   "frames": 8
+  },
+  "impact1": {
+   "file": "vfx/impact1.png",
+   "frames": 6
+  },
+  "impact2": {
+   "file": "vfx/impact2.png",
+   "frames": 5
+  },
+  "impact3": {
+   "file": "vfx/impact3.png",
+   "frames": 6
+  },
+  "impact4": {
+   "file": "vfx/impact4.png",
+   "frames": 5
+  },
+  "impact5": {
+   "file": "vfx/impact5.png",
+   "frames": 6
+  },
+  "impact6": {
+   "file": "vfx/impact6.png",
+   "frames": 4
+  },
+  "impact7": {
+   "file": "vfx/impact7.png",
+   "frames": 8
+  },
+  "arrow1": {
+   "file": "vfx/arrow1.png",
+   "frames": 11
+  },
+  "arrow2": {
+   "file": "vfx/arrow2.png",
+   "frames": 7
+  },
+  "bite1": {
+   "file": "vfx/bite1.png",
+   "frames": 8
+  },
+  "bite2": {
+   "file": "vfx/bite2.png",
+   "frames": 8
+  },
+  "claw": {
+   "file": "vfx/claw.png",
+   "frames": 6
+  },
+  "status1": {
+   "file": "vfx/status1.png",
+   "frames": 8
+  },
+  "status2": {
+   "file": "vfx/status2.png",
+   "frames": 6
+  },
+  "status3": {
+   "file": "vfx/status3.png",
+   "frames": 6
+  },
+  "status4": {
+   "file": "vfx/status4.png",
+   "frames": 4
+  },
+  "status5": {
+   "file": "vfx/status5.png",
+   "frames": 6
+  },
+  "status6": {
+   "file": "vfx/status6.png",
+   "frames": 8
+  },
+  "status7": {
+   "file": "vfx/status7.png",
+   "frames": 8
+  },
+  "status8": {
+   "file": "vfx/status8.png",
+   "frames": 5
+  },
+  "status9": {
+   "file": "vfx/status9.png",
+   "frames": 8
+  },
+  "status10": {
+   "file": "vfx/status10.png",
+   "frames": 8
+  },
+  "smoke1": {
+   "file": "vfx/smoke1.png",
+   "frames": 6
+  },
+  "smoke2": {
+   "file": "vfx/smoke2.png",
+   "frames": 4
+  },
+  "smoke3": {
+   "file": "vfx/smoke3.png",
+   "frames": 6
+  },
+  "dust1": {
+   "file": "vfx/dust1.png",
+   "frames": 4
+  },
+  "dust2": {
+   "file": "vfx/dust2.png",
+   "frames": 4
+  },
+  "dust3": {
+   "file": "vfx/dust3.png",
+   "frames": 4
+  },
+  "explosion1": {
+   "file": "vfx/explosion1.png",
+   "frames": 10
+  },
+  "explosion2": {
+   "file": "vfx/explosion2.png",
+   "frames": 8
+  },
+  "diamond1": {
+   "file": "vfx/diamond1.png",
+   "frames": 4
+  },
+  "diamond2": {
+   "file": "vfx/diamond2.png",
+   "frames": 4
+  },
+  "water1": {
+   "file": "vfx/water1.png",
+   "frames": 11
+  },
+  "water2": {
+   "file": "vfx/water2.png",
+   "frames": 11
+  },
+  "water3": {
+   "file": "vfx/water3.png",
+   "frames": 12
+  },
+  "water4": {
+   "file": "vfx/water4.png",
+   "frames": 8
+  },
+  "water5": {
+   "file": "vfx/water5.png",
+   "frames": 7
+  },
+  "weapon1": {
+   "file": "vfx/weapon1.png",
+   "frames": 6
+  },
+  "weapon2": {
+   "file": "vfx/weapon2.png",
+   "frames": 6
+  },
+  "weapon3": {
+   "file": "vfx/weapon3.png",
+   "frames": 4
+  },
+  "weapon4": {
+   "file": "vfx/weapon4.png",
+   "frames": 6
+  },
+  "weapon5": {
+   "file": "vfx/weapon5.png",
+   "frames": 6
+  },
+  "weapon6": {
+   "file": "vfx/weapon6.png",
+   "frames": 6
+  },
+  "weapon7": {
+   "file": "vfx/weapon7.png",
+   "frames": 5
+  },
+  "weapon8": {
+   "file": "vfx/weapon8.png",
+   "frames": 2
+  },
+  "hourglass1": {
+   "file": "vfx/hourglass1.png",
+   "frames": 7
+  }
+ },
+ "frame": 64
+}

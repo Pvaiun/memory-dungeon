@@ -166,48 +166,56 @@ export function newRun(c: Content, rules: Rules, input: RunInput, opts: RunOpts 
 
 /** Play until the run ends or needs a decision. Changes `run` in place and returns it. */
 export function advance(c: Content, rules: Rules, run: Run): Run {
+  while (!run.pending && !run.outcome) advanceOnce(c, rules, run);
+  return run;
+}
+
+/**
+ * One step of the run loop: ends a finished fight, plays one turn of the current fight, starts the next
+ * stage, or ends the run. Interfaces that show a fight as it happens call this once per turn, with
+ * `run.fight` between calls; `advance` is this in a loop.
+ */
+export function advanceOnce(c: Content, rules: Rules, run: Run): void {
+  if (run.pending || run.outcome) return;
   const x = ctx(c, run);
   const { seed } = run.record;
   const stages = c.dungeons.get(run.record.dungeon)!.stages;
-  while (!run.pending && !run.outcome) {
-    const f = run.fight;
-    if (f) {
-      if (f.result) {
-        rules.endFight(x, f);
-        x.log?.({ t: "fight_end", vis: "player", stage: f.stage, result: f.result, rounds: f.round });
-        run.fight = null;
-        if (f.result === "won") run.stage++;
-        else end(x, "lost");
-      } else {
-        if (!pause(x, f.decided ? null : rules.beforeTurn?.(x, f))) {
-          f.decided = false;
-          rules.takeTurn(x, f);
-        }
-      }
-    } else if (run.stage >= stages.length) {
-      const rng = slice(x, seed, "loot");
-      run.loot = rules.loot(x, rng);
-      x.log?.({ t: "loot", vis: "player", items: run.loot });
-      end(x, "won");
+  const f = run.fight;
+  if (f) {
+    if (f.result) {
+      rules.endFight(x, f);
+      x.log?.({ t: "fight_end", vis: "player", stage: f.stage, result: f.result, rounds: f.round });
+      run.fight = null;
+      if (f.result === "won") run.stage++;
+      else end(x, "lost");
     } else {
-      const stage = stages[run.stage];
-      if (stage.kind === "fight") {
-        run.fight = rules.startFight(x, stage, slice(x, seed, `fight:${stage.id}`));
-        run.fights++;
-        x.log?.({
-          t: "fight_start",
-          vis: "player",
-          stage: stage.id,
-          boss: run.fight.boss,
-          units: run.fight.units.map((u) => ({ id: u.id, ref: u.ref, name: u.name, side: u.side, hp: u.hp, max: u.stats.max_hp })),
-        });
-      } else {
-        run.stage++;
-        pause(x, rules.stage(x, stage, slice(x, seed, `stage:${stage.id}`)));
+      if (!pause(x, f.decided ? null : rules.beforeTurn?.(x, f))) {
+        f.decided = false;
+        rules.takeTurn(x, f);
       }
     }
+  } else if (run.stage >= stages.length) {
+    const rng = slice(x, seed, "loot");
+    run.loot = rules.loot(x, rng);
+    x.log?.({ t: "loot", vis: "player", items: run.loot });
+    end(x, "won");
+  } else {
+    const stage = stages[run.stage];
+    if (stage.kind === "fight") {
+      run.fight = rules.startFight(x, stage, slice(x, seed, `fight:${stage.id}`));
+      run.fights++;
+      x.log?.({
+        t: "fight_start",
+        vis: "player",
+        stage: stage.id,
+        boss: run.fight.boss,
+        units: run.fight.units.map((u) => ({ id: u.id, ref: u.ref, name: u.name, side: u.side, hp: u.hp, max: u.stats.max_hp })),
+      });
+    } else {
+      run.stage++;
+      pause(x, rules.stage(x, stage, slice(x, seed, `stage:${stage.id}`)));
+    }
   }
-  return run;
 }
 
 /** Answer the pending decision. Call `advance` afterwards to carry on. */

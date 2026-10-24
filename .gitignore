@@ -1,3 +1,5 @@
 node_modules/
 fixtures/by-type/
 out/
+ui/dist/
+ui/node_modules/

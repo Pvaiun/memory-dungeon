@@ -86,7 +86,7 @@ Writing this step showed that the plan's steps 4 to 12 (verbs, mechanics, traits
 ## What's ahead
 
 1. **The core set's sign-off:** the director reads the build's report.
-2. **A visual interface,** so the director can see and play the slice before more design. The balance pass by simulation, which tunes the first values, comes after it.
+2. **A visual interface,** so the director can see and play the slice before more design. A first version is in (Oct 24, 2026): party, formation and gear menus, class sheets, a bestiary, and a battle screen that shows any fight as it plays, with the director's sprites. The balance pass by simulation, which tunes the first values, comes after the director has looked at it.
 3. **The full game,** grown out of the slice: content and balance at volume, progression pacing, the quest board, screens, onboarding, and a review against the principles. The original plan's later steps are the starting point, revisited then.
 
 A question that belongs to later work can be noted and left for it.
