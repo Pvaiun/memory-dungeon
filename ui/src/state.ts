@@ -6,7 +6,7 @@ import type { Party } from "../../src/schema.js";
 import { c, classes, formations } from "./content.js";
 import { plainWeapon } from "../../src/sim/parties.js";
 
-export type Settings = { tickMs: number; sound: boolean; designer: boolean; autoContinue: boolean; showEnemyNumbers: boolean };
+export type Settings = { tickMs: number; sound: boolean; designer: boolean; autoContinue: boolean; palette: string; bigNumbers: boolean };
 
 export type Setup = {
   party: string[];
@@ -26,7 +26,7 @@ function fresh(): Setup {
     gear: {},
     abilities: {},
     seed: 1,
-    settings: { tickMs: 500, sound: true, designer: true, autoContinue: false, showEnemyNumbers: true },
+    settings: { tickMs: 500, sound: true, designer: false, autoContinue: false, palette: "field", bigNumbers: false },
   };
 }
 
