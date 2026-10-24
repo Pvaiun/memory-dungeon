@@ -1,6 +1,7 @@
 /**
- * Graphics: the frame's pixel scale, sprites in colour, the iconset's cells,
- * the status glyphs, and text from the pixel font drawn on a canvas.
+ * Graphics: the frame's pixel scale, sprites in colour, weapons in hands, the
+ * faces, the iconset's cells, the status icons, and text from the pixel font
+ * drawn on a canvas.
  *
  * The frame is 270 logical pixels wide and each logical pixel is a whole
  * number of device pixels (`--u`), so nothing blurs: on a 1080-pixel-wide
@@ -15,7 +16,7 @@
  * crowded fights can shrink them further with the same filter and an outline.
  */
 import { c } from "./content.js";
-import { image, manifest, POSE, STATUS_GLYPH, STATUS_STYLE, type Pose } from "./art.js";
+import { image, manifest, POSE, STATUS_STYLE, type Pose } from "./art.js";
 
 export const FRAME_W = 270;
 export const OUTLINE = "#14141e";
@@ -216,24 +217,39 @@ export function actorBBox(cls: string): BBox {
 /** How far right of its frame's centre the figure stands, in art pixels. */
 export const actorCenterOffset = (cls: string) => (actorBBox(cls).left + actorBBox(cls).right) / 2 - FRAME / 2;
 const faces = new Map<string, HTMLCanvasElement>();
-/** A 16×16 face, facing right: the head of the class's waiting pose. */
+export const FACE = 36;
+/** The class's face from the face pack (36×36); without one, the head of its waiting pose at 16×16. */
 export function faceOf(cls: string): HTMLCanvasElement {
   let f = faces.get(cls);
   if (f) return f;
-  const sheet = actorSheet(cls);
-  const b = actorBBox(cls);
-  const [fx, fy] = actorFrame("wait", 0);
-  const cx = Math.round((b.left + b.right) / 2);
-  f = cv2d(16, 16);
-  const g = f.getContext("2d")!;
-  g.translate(16, 0);
-  g.scale(-1, 1);
-  g.drawImage(sheet, fx + Math.max(0, cx - 8), fy + Math.max(0, b.top - 1), 16, 16, 0, 0, 16, 16);
+  const img = manifest.faces[cls] ? image(manifest.faces[cls]) : undefined;
+  if (img) {
+    f = cv2d(img.width, img.height);
+    f.getContext("2d")!.drawImage(img, 0, 0);
+  } else {
+    const sheet = actorSheet(cls);
+    const b = actorBBox(cls);
+    const [fx, fy] = actorFrame("wait", 0);
+    const cx = Math.round((b.left + b.right) / 2);
+    f = cv2d(16, 16);
+    const g = f.getContext("2d")!;
+    g.translate(16, 0);
+    g.scale(-1, 1);
+    g.drawImage(sheet, fx + Math.max(0, cx - 8), fy + Math.max(0, b.top - 1), 16, 16, 0, 0, 16, 16);
+  }
   faces.set(cls, f);
   return f;
 }
-/** Draws a party member with its feet at (x, y), facing right. */
-export function drawActor(ctx: CanvasRenderingContext2D, cls: string, pose: Pose, frame: number, x: number, y: number, flash = false, scale = 1) {
+/** The weapon frame a pose shows: the attack poses run through the strip's three frames; the rest hold the weapon at rest (a bow close to the body). */
+export function weaponFrame(pose: Pose, frame: number, bow = false): number | null {
+  switch (pose) {
+    case "swing": case "thrust": case "missile": case "skill": return frame % 3;
+    case "wait": case "chant": case "guard": case "victory": case "spell": case "item": case "walk": return bow ? 1 : 2;
+    default: return null;
+  }
+}
+/** Draws a party member with its feet at (x, y), facing right, with its weapon's strip in its hand. */
+export function drawActor(ctx: CanvasRenderingContext2D, cls: string, pose: Pose, frame: number, x: number, y: number, flash = false, scale = 1, weapon?: string) {
   const sheet = actorSheet(cls);
   const [sx, sy, fw, fh] = actorFrame(pose, frame);
   const src = flash ? silhouette(sheet) : sheet;
@@ -241,32 +257,36 @@ export function drawActor(ctx: CanvasRenderingContext2D, cls: string, pose: Pose
   ctx.translate(Math.round(x + actorCenterOffset(cls) * scale), Math.round(y + 2 * scale));
   ctx.scale(-1, 1);
   ctx.drawImage(src, sx, sy, fw, fh, -Math.round((fw * scale) / 2), -fh * scale, fw * scale, fh * scale);
+  const wf = weapon ? weaponFrame(pose, frame, c.gear.get(weapon)?.weapon?.kind === "bow") : null;
+  const strip = weapon && wf !== null && manifest.weapons[weapon] ? image(manifest.weapons[weapon]) : undefined;
+  if (strip) {
+    // The pack's anchor: the 48×32 frame's bottom centre sits 12 pixels in front of the feet.
+    const w = flash ? silhouette(spriteOf(manifest.weapons[weapon!], 1)) : strip;
+    ctx.drawImage(w, wf! * 48, 0, 48, 32, -Math.round(36 * scale), -32 * scale, 48 * scale, 32 * scale);
+  }
   ctx.restore();
 }
-/** The figure of a pose as a DOM element, facing right, cut to the figure's bounds. */
-export function actorEl(cls: string, pose: Pose = "wait", scale = 1): HTMLCanvasElement {
-  const sheet = actorSheet(cls);
+/** The figure of a pose as a DOM element, facing right, with its weapon; `scale` multiplies whole pixels. */
+export function actorEl(cls: string, pose: Pose = "wait", scale = 1, weapon?: string): HTMLCanvasElement {
   const b = actorBBox(cls);
-  const [fx, fy] = actorFrame(pose, 0);
-  const w = Math.min(FRAME, b.right - b.left + 9), h = Math.min(FRAME, b.bottom - b.top + 5);
+  const w = weapon ? 56 : Math.min(FRAME, b.right - b.left + 9), h = Math.min(FRAME, b.bottom - b.top + 5);
   const cv = cv2d(w, h);
   const g = cv.getContext("2d")!;
-  g.translate(w, 0);
-  g.scale(-1, 1);
-  g.drawImage(sheet, fx + Math.max(0, b.left - 4), fy + Math.max(0, b.top - 2), w, h, 0, 0, w, h);
+  drawActor(g, cls, pose, 0, w / 2 - (weapon ? 6 : 0), h - 3, false, 1, weapon);
   return canvasEl(cv, scale);
 }
 
 // ─── Enemies ───
 
-/** The divisor an enemy sprite shrinks by: native (3) unless the fight is crowded or the sprite too tall. */
+/** The divisor an enemy sprite shrinks by: native (3), unless it's drawn as a small creature, the fight is crowded, or the sprite is too tall. */
 export function enemyK(ref: string, crowd = 1): number {
   const art = manifest.enemies[ref];
   if (!art) return 3;
   const boss = c.enemies.get(ref)?.rank === "boss";
   let k = 3;
-  if (!boss) k = crowd >= 6 ? 6 : crowd >= 4 ? 4 : 3;
-  const cap = boss ? 100 : 64;
+  if (!boss && art.scale <= 0.6) k = 5;
+  else if (!boss && crowd > 6) k = 4;
+  const cap = boss ? 100 : 72;
   while (art.h / k > cap && k < 12) k++;
   return k;
 }
@@ -300,56 +320,59 @@ export function iconOf(row: number, col: number, tint?: string): HTMLCanvasEleme
 }
 export const iconEl = (cell: readonly [number, number], scale = 1, tint?: string) => canvasEl(iconOf(cell[0], cell[1], tint), scale, "icon");
 
-// ─── Status glyphs: 8×8, drawn by hand in art.ts ───
-const glyphs = new Map<string, HTMLCanvasElement>();
-export function glyphOf(id: string): HTMLCanvasElement {
-  let cv = glyphs.get(id);
+// ─── Status icons: the pack's 16×16, recoloured per status by the asset tool ───
+export const STATUS_ICON = 16;
+const statusIcons = new Map<string, HTMLCanvasElement>();
+export function statusIconOf(id: string): HTMLCanvasElement {
+  let cv = statusIcons.get(id);
   if (cv) return cv;
-  const style = STATUS_STYLE[id] ?? { color: "#c8c8d8" };
-  const rows = STATUS_GLYPH[id] ?? STATUS_GLYPH.generic;
-  cv = cv2d(8, 8);
+  const img = manifest.statuses[id] ? image(manifest.statuses[id]) : undefined;
+  cv = cv2d(STATUS_ICON, STATUS_ICON);
   const g = cv.getContext("2d")!;
-  rows.forEach((r, y) => {
-    for (let x = 0; x < 8; x++) {
-      const ch = r[x] ?? ".";
-      if (ch === ".") continue;
-      g.fillStyle = ch === "#" ? style.color : ch === "o" ? style.light ?? "#ffffff" : OUTLINE;
-      g.fillRect(x, y, 1, 1);
-    }
-  });
-  glyphs.set(id, cv);
+  if (img) g.drawImage(img, 0, 0);
+  else {
+    // No icon in the pack: a coloured tile with the status's first letter.
+    g.fillStyle = (STATUS_STYLE[id] ?? STATUS_STYLE.generic).color;
+    g.fillRect(1, 1, 14, 14);
+    drawText(g, (c.statuses.get(id)?.name ?? id).slice(0, 1).toUpperCase(), 4, 4, OUTLINE);
+  }
+  statusIcons.set(id, cv);
   return cv;
 }
 /** 3×5 digits for stack counts. */
 const DIGITS = ["###|#.#|#.#|#.#|###", ".#.|##.|.#.|.#.|###", "###|..#|###|#..|###", "###|..#|###|..#|###", "#.#|#.#|###|..#|..#", "###|#..|###|..#|###", "###|#..|###|#.#|###", "###|..#|..#|..#|..#", "###|#.#|###|#.#|###", "###|#.#|###|..#|###"].map((s) => s.split("|"));
-export function drawDigits(ctx: CanvasRenderingContext2D, s: string, x: number, y: number, color = "#ffffff", back: string | null = OUTLINE) {
-  const w = s.length * 4 - 1;
+export function drawDigits(ctx: CanvasRenderingContext2D, s: string, x: number, y: number, color = "#ffffff", back: string | null = OUTLINE, scale = 1) {
+  const w = (s.length * 4 - 1) * scale;
   if (back) {
     ctx.fillStyle = back;
-    ctx.fillRect(x - 1, y - 1, w + 2, 7);
+    ctx.fillRect(x - scale, y - scale, w + 2 * scale, 7 * scale);
   }
   ctx.fillStyle = color;
   let cx = x;
   for (const ch of s) {
     const bm = DIGITS[Number(ch)];
-    if (bm) for (let yy = 0; yy < 5; yy++) for (let xx = 0; xx < 3; xx++) if (bm[yy][xx] === "#") ctx.fillRect(cx + xx, y + yy, 1, 1);
-    cx += 4;
+    if (bm) for (let yy = 0; yy < 5; yy++) for (let xx = 0; xx < 3; xx++) if (bm[yy][xx] === "#") ctx.fillRect(cx + xx * scale, y + yy * scale, scale, scale);
+    cx += 4 * scale;
   }
 }
-/** A status glyph with its stack count in the corner; `count` over 99 shows as 99. */
-export function drawGlyph(ctx: CanvasRenderingContext2D, id: string, x: number, y: number, count?: number | null) {
-  ctx.drawImage(glyphOf(id), x, y);
+/** A status icon with its stack count in the bottom-right corner (over 99 shows as 99). */
+export function drawStatus(ctx: CanvasRenderingContext2D, id: string, x: number, y: number, count?: number | null) {
+  ctx.drawImage(statusIconOf(id), x, y);
   if (count !== undefined && count !== null && count > 1) {
     const s = String(Math.min(99, Math.floor(count)));
-    drawDigits(ctx, s, x + 9 - (s.length * 4 - 1), y + 4);
+    const w = s.length * 4 - 1;
+    drawDigits(ctx, s, x + STATUS_ICON + 1 - w, y + STATUS_ICON - 5, "#ffffff", OUTLINE);
   }
 }
-/** The glyph as a DOM element, with its count. */
-export function glyphEl(id: string, count?: number | null, scale = 1): HTMLCanvasElement {
-  const cv = cv2d(10, 10);
-  drawGlyph(cv.getContext("2d")!, id, 0, 0, count);
-  return canvasEl(cv, scale, "glyph");
+/** The icon as a DOM element, with its count. */
+export function statusEl(id: string, count?: number | null, scale = 1): HTMLCanvasElement {
+  const cv = cv2d(STATUS_ICON + 2, STATUS_ICON + 2);
+  drawStatus(cv.getContext("2d")!, id, 0, 0, count);
+  return canvasEl(cv, scale, "sticon");
 }
+
+// ─── Backdrops: a 270×224 scene per dungeon, composed from the tilesets by the asset tool ───
+export const backdropImage = (theme: string): HTMLImageElement | undefined => (manifest.backdrops[theme] ? image(manifest.backdrops[theme]) : undefined);
 
 // ─── DOM wrappers ───
 
@@ -363,6 +386,15 @@ export function canvasEl(cv: HTMLCanvasElement, scale = 1, cls = ""): HTMLCanvas
   return el;
 }
 export const faceEl = (cls: string, scale = 1) => canvasEl(faceOf(cls), scale, "face");
+/** The weapon strip's held frame as a DOM element, for gear lists. */
+export function weaponEl(gearId: string, scale = 1): HTMLCanvasElement | null {
+  const file = manifest.weapons[gearId];
+  if (!file) return null;
+  const strip = spriteOf(file, 1);
+  const cv = cv2d(32, 32);
+  cv.getContext("2d")!.drawImage(strip, 96, 0, 48, 32, -8, 0, 48, 32);
+  return canvasEl(trimCanvas(cv), scale, "weapon");
+}
 
 // ─── Text on a canvas, from the pixel font ───
 

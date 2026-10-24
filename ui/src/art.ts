@@ -3,7 +3,8 @@
  * (ui/public/assets/manifest.json, written by ui/tools/assets.py) maps classes,
  * enemies and VFX strips to files; this file loads them and adds the actor
  * sheets' layout, the VFX choices, the iconset cells for gear and ability tags,
- * and the hand-drawn 8×8 status glyphs. pixel.ts draws them.
+ * the weapon strips, the faces, the backdrops and the status colours. pixel.ts
+ * draws them.
  */
 import type { GearT } from "../../src/schema.js";
 import { c } from "./content.js";
@@ -13,6 +14,12 @@ export type Manifest = {
   enemies: Record<string, { file: string; w: number; h: number; scale: number; name?: string }>;
   statuses: Record<string, string>;
   vfx: Record<string, { file: string; frames: number }>;
+  /** Weapon strips by gear id: three frames of 48×32, drawn in the hand of a party member. */
+  weapons: Record<string, string>;
+  /** A 36×36 face per class. */
+  faces: Record<string, string>;
+  /** A 270×224 scene per dungeon, and the home strip. */
+  backdrops: Record<string, string>;
   frame: number;
   iconset: string;
   actorFrame?: number;
@@ -24,7 +31,13 @@ const images = new Map<string, HTMLImageElement>();
 export async function loadArt(): Promise<void> {
   manifest = (await (await fetch(url("manifest.json"))).json()) as Manifest;
   manifest.iconset ??= "iconset.png";
-  const files = [...Object.values(manifest.classes), ...Object.values(manifest.enemies).map((e) => e.file), ...Object.values(manifest.vfx).map((v) => v.file), manifest.iconset];
+  manifest.weapons ??= {};
+  manifest.faces ??= {};
+  manifest.backdrops ??= {};
+  const files = [
+    ...Object.values(manifest.classes), ...Object.values(manifest.enemies).map((e) => e.file), ...Object.values(manifest.vfx).map((v) => v.file), manifest.iconset,
+    ...Object.values(manifest.statuses), ...Object.values(manifest.weapons), ...Object.values(manifest.faces), ...Object.values(manifest.backdrops),
+  ];
   await Promise.all(files.map(load));
 }
 
@@ -113,7 +126,7 @@ export const TAG_ICON: Record<string, Cell> = {
 };
 export const MISC_ICON = { skull: [10, 1], star: [9, 13], boss: [9, 3], question: [0, 12], check: [13, 9] } as const satisfies Record<string, Cell>;
 
-// ─── Status glyphs: 8×8, '#' the status's colour, 'o' its light, 'x' dark ───
+// ─── Status colours, for their names and numbers; the icons are the pack's 16px ones (assets/status/) ───
 export const STATUS_STYLE: Record<string, { color: string; light?: string }> = {
   poison: { color: "#c070f0" }, regen: { color: "#7ee07e" }, shield: { color: "#6ec8ff", light: "#e8f8ff" }, might: { color: "#ff6e5a" }, weaken: { color: "#ffa062" },
   guard: { color: "#d8dde8" }, stun: { color: "#ffe14d" }, slow: { color: "#ffa062" }, haste: { color: "#6ef0e0" }, taunt: { color: "#ff5a5a" },
@@ -121,34 +134,4 @@ export const STATUS_STYLE: Record<string, { color: string; light?: string }> = {
   silence: { color: "#b8b8c8" }, hidden: { color: "#9aa0b4", light: "#ffffff" }, rot: { color: "#a8c050" }, clarity: { color: "#86cfff", light: "#ffffff" }, aegis: { color: "#ffd54a", light: "#fff8d0" },
   doom: { color: "#ff4a6a", light: "#ffd0d8" }, bulwark: { color: "#c9d3e0" }, bulwark_broken: { color: "#ff7b6b" }, ice_crust: { color: "#8ae6ff", light: "#ffffff" },
   shadow_strike_on: { color: "#c892ff" }, bloodlust_on: { color: "#ff4a6a", light: "#ffb0b8" }, bedrock_on: { color: "#dcae6e", light: "#f8e0b0" }, generic: { color: "#c8c8d8" },
-};
-export const STATUS_GLYPH: Record<string, string[]> = {
-  poison: ["........", "..####..", ".######.", ".#x##x#.", ".######.", "..####..", "..#.#.#.", "........"],
-  regen: ["........", ".##..##.", "########", "########", ".######.", "..####..", "...##...", "........"],
-  shield: ["........", ".######.", ".#oo###.", ".#oo###.", ".######.", "..####..", "...##...", "........"],
-  might: ["...##...", "..####..", ".######.", "###..###", "...##...", "...##...", "...##...", "...##..."],
-  weaken: ["...##...", "...##...", "...##...", "...##...", "###..###", ".######.", "..####..", "...##..."],
-  guard: ["........", ".######.", ".#....#.", ".#....#.", ".#....#.", "..#..#..", "...##...", "........"],
-  stun: ["...#....", "...#....", ".#.#.#..", "..###...", "#######.", "..###...", ".#.#.#..", "...#...."],
-  slow: ["...#...#", "..#...#.", ".#...#..", "#...#...", ".#...#..", "..#...#.", "...#...#", "........"],
-  haste: ["#...#...", ".#...#..", "..#...#.", "...#...#", "..#...#.", ".#...#..", "#...#...", "........"],
-  taunt: ["..####..", ".#.##.#.", "#..##..#", "########", "########", "#..##..#", ".#.##.#.", "..####.."],
-  burn: ["...#....", "...##...", "..###.#.", ".#####..", ".#o###..", "#oo###..", "#ooo##..", ".####..."],
-  chill: ["...#....", ".#.#.#..", "..###...", "#######.", "..###...", ".#.#.#..", "...#....", "........"],
-  shock: ["....###.", "...###..", "..###...", ".######.", "....##..", "...##...", "..##....", ".#......"],
-  ward: ["...##...", "..#oo#..", ".#oooo#.", "#oooooo#", ".#oooo#.", "..#oo#..", "...##...", "........"],
-  sunder: ["........", ".######.", ".##x###.", ".###x##.", ".##x###.", "..#x##..", "...##...", "........"],
-  silence: ["..####..", ".#x..x#.", "#..xx..#", "#..xx..#", ".#x..x#.", "..####..", "........", "........"],
-  hidden: ["........", "..####..", ".#o##o#.", "#o#xx#o#", ".#o##o#.", "..####..", "........", "........"],
-  rot: ["........", ".##..##.", "###x####", "###x####", ".##x###.", "..#x##..", "...##...", "........"],
-  clarity: ["...#....", "...#....", "..###...", ".####o..", ".####o..", ".#o###..", "..###...", "........"],
-  aegis: ["........", ".######.", ".#o##o#.", ".##xx##.", ".##xx##.", "..####..", "...##...", "........"],
-  doom: [".######.", "..#oo#..", "..#oo#..", "...##...", "..#..#..", "..#o.#..", "..####..", ".######."],
-  bulwark: ["#######.", "#x##x##.", "#######.", "##x##x#.", "#######.", "#x##x##.", "#######.", "........"],
-  bulwark_broken: ["#######.", "##x####.", "###x###.", "##x####.", "###x###.", "#x#####.", "#######.", "........"],
-  ice_crust: ["..####..", ".#o####.", "#oo#####", "#o######", "########", ".######.", "..####..", "........"],
-  shadow_strike_on: ["..####..", ".##.....", "##......", "##......", "##......", ".##.....", "..####..", "........"],
-  bloodlust_on: ["...#....", "...#....", "..###...", ".#####..", ".#o###..", ".#o###..", "..###...", "........"],
-  bedrock_on: ["........", "...#....", "..###...", "..#o#...", ".#####..", ".#o####.", "#######.", "........"],
-  generic: ["...#....", "..###...", ".#####..", "#######.", ".#####..", "..###...", "...#....", "........"],
 };

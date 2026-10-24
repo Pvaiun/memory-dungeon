@@ -8,8 +8,8 @@ import { c, className, classes, cls as classOf, dungeons, enemies, fightName, fo
 import { enemyDisplayName } from "./art.js";
 import { button, h, header, row, toast, win, type Child } from "./dom.js";
 import { abilitiesFor, gearFor, reset, save, setup } from "./state.js";
-import { abilityBlock, basicLine, classSheet, codeSpans, enemySheet, gearRow, memberFor, role, specialLines, statGrid } from "./sheet.js";
-import { actorEl, enemyEl, enemyThumb, faceEl } from "./pixel.js";
+import { abilityBlock, basicLine, classHead, codeSpans, enemySheet, gearRow, memberFor, passiveBlock, role, section, specialLines, statGrid } from "./sheet.js";
+import { enemyEl, enemyThumb, faceEl } from "./pixel.js";
 import { weaponOf } from "../../src/engine/combat/fight.js";
 import { Strip, STRIP_H } from "./battle/scene.js";
 import { startBattle, type BattleArgs } from "./battle/battle.js";
@@ -60,7 +60,7 @@ const refresh = () => go(current, currentArg, true);
 function stripEl(pick: number | null = null): HTMLCanvasElement {
   const cv = h("canvas", { class: "strip" });
   cv.style.height = `${STRIP_H / 8}rem`;
-  strip = new Strip(cv, setup.party, setup.formation, pick).start();
+  strip = new Strip(cv, setup.party, setup.formation, Object.fromEntries(setup.party.map((id) => [id, gearFor(id).weapon])), pick).start();
   return cv;
 }
 const seedRow = () => h("div", { class: "line" }, h("span", { class: "dim" }, "SEED"), h("span", { class: "grow" }, String(setup.seed)), button("NEW SEED", () => { setup.seed = Math.floor(Math.random() * 100000) + 1; save(); refresh(); }, "sm"));
@@ -76,11 +76,13 @@ function home(): Child[] {
   ];
   const f = c.formations.get(setup.formation)!;
   return [
-    h("div", { class: "hdr" }, h("span", { class: "title", style: "text-align:center" }, "MEMORY DUNGEON")),
+    h("div", { class: "title-big" }, "MEMORY", h("br"), "DUNGEON"),
     stripEl(),
-    win("list", ...items.map(([s, label, sub]) => h("div", { class: "row", style: "min-height:3rem", onClick: () => go(s) }, h("span", { class: "cursor" }, "▶"), h("div", { class: "grow" }, h("div", { class: "line" }, label), h("div", { class: "text dim small trunc" }, sub))))),
-    h("div", { class: "line dim" }, h("span", { class: "trunc grow" }, setup.party.map(shortName).join(" · ") || "NO PARTY")),
-    h("div", { class: "line dim small" }, h("span", { class: "trunc grow" }, `${f.name} · SEED ${setup.seed}`)),
+    h("div", { class: "menu-wrap" },
+      win("list menu", ...items.map(([s, label, sub]) => h("div", { class: "row", onClick: () => go(s) }, h("span", { class: "cursor" }, "▶"), h("div", { class: "grow" }, h("div", { class: "line" }, label), h("div", { class: "text dim small trunc" }, sub))))),
+      h("div", { class: "line dim small", style: "margin-top:.5rem" }, h("span", { class: "trunc grow" }, setup.party.map(shortName).join(" · ") || "NO PARTY"), h("span", null, `SEED ${setup.seed}`)),
+      h("div", { class: "line dim small" }, h("span", { class: "trunc grow" }, f.name)),
+    ),
   ];
 }
 
@@ -174,7 +176,7 @@ function party(): Child[] {
     const codes = codeSpans(pos.stats);
     return h("div", { class: `win card${i === pick ? " cur" : ""}`, onClick: () => tapSlot(i) },
       h("div", { class: "slot" }, `${i + 1} ${pos.name}`),
-      id ? actorEl(id, "wait", 2) : h("div", { class: "empty" }, "EMPTY"),
+      id ? faceEl(id) : h("div", { class: "empty" }, "EMPTY"),
       h("div", { class: "name" }, id ? shortName(id) : "---"),
       h("div", { class: "codes" }, ...(codes.length ? codes : [h("span", { class: "dim" }, "no change")])),
     );
@@ -240,28 +242,21 @@ function unit(arg?: unknown): Child[] {
   };
   const sp = specialLines(member.stats);
   const back = () => { orderPick = null; go(slot >= 0 ? "party" : "classes"); };
+  const where = slot >= 0 ? h("span", { class: "hi small" }, `IN SLOT ${slot + 1}`) : setup.party.length < 3 ? button("ADD TO PARTY", () => { setup.party.push(id); pick = setup.party.length - 1; save(); go("party"); }, "sm hi") : h("span", { class: "dim small" }, "PARTY FULL");
   return [
-    header(k.name, back, role(k.text)),
-    win("", h("div", { class: "sheet-top" }, actorEl(id, "wait", 2), statGrid(member.stats, k.stats, designer)), sp.length ? h("div", { class: "text up small wrap" }, ...sp.flatMap((s, i) => (i ? [" · ", s] : [s]))) : null),
+    header(k.name, back, slot >= 0 ? button("REMOVE", () => { setup.party.splice(slot, 1); save(); go("party"); }, "sm") : null),
+    win("", classHead(id, h("div", { class: "line", style: "min-height:1.75rem" }, where))),
+    win("", statGrid(member.stats, k.stats, designer), sp.length ? h("div", { class: "text up small wrap", style: "margin-top:.25rem" }, ...sp.flatMap((s, i) => (i ? [" · ", s] : [s]))) : null),
     win("scroll",
       h("div", { class: "text dim wrap small" }, k.text),
-      h("hr", { class: "rule" }),
-      k.passive
-        ? [h("div", { class: "line" }, h("span", { class: "grow trunc hi" }, k.passive.name), h("span", { class: "dim" }, "PASSIVE")), h("div", { class: "text dim wrap small" }, k.passive.text)]
-        : null,
-      h("hr", { class: "rule" }),
-      h("div", { class: "section" }, "GEAR", h("span", { class: "r dim small text" }, "tap to change")),
+      section("PASSIVE"),
+      ...(k.passive ? passiveBlock(k.passive.name, k.passive.text, k.passive.statuses?.[0]) : passiveBlock("Einherjar", "", null)),
+      section("GEAR", "tap to change"),
       ...(["weapon", "armor", "amulet"] as const).map((s) => gearRow(g[s] ? gearOf(g[s]) : null, s, member.stats, () => go("gear", { cls: id, slot: s }))),
-      h("hr", { class: "rule" }),
-      h("div", { class: "section" }, "ABILITIES", h("span", { class: "r dim small text" }, orderPick === null ? "tap two numbers to swap" : "now tap the other")),
+      h("div", { class: "line small dim wrap" }, `CAN USE ${k.weapons.map((w) => kindOf(w).name).join(", ").toUpperCase()} · ${k.armor.toUpperCase()} ARMOR`),
+      section("ABILITIES", orderPick === null ? "tap two numbers to swap" : "now tap the other"),
       ...order.map((a, i) => abilityBlock(c.abilities.get(a)!, member.stats, designer, { n: i + 1, onN: () => onN(i), cur: orderPick === i })),
       basicLine(weaponOf(c, member.weapon), member.stats, designer),
-      h("hr", { class: "rule" }),
-      h("div", { class: "text up small wrap" }, h("span", { class: "dim" }, "WEAPONS "), k.weapons.map((w) => kindOf(w).name).join(", "), h("span", { class: "dim" }, " · ARMOR "), k.armor.toUpperCase()),
-    ),
-    h("div", { class: "btns" },
-      slot >= 0 ? h("span", { class: "hi" }, `IN SLOT ${slot + 1}`) : setup.party.length < 3 ? button("ADD TO PARTY", () => { setup.party.push(id); pick = setup.party.length - 1; save(); go("party"); }, "hi") : h("span", { class: "dim" }, "PARTY FULL"),
-      slot >= 0 ? button("REMOVE", () => { setup.party.splice(slot, 1); save(); go("party"); }, "sm") : null,
     ),
   ];
 }
@@ -300,7 +295,7 @@ function gear(arg?: unknown): Child[] {
 function classesScreen(): Child[] {
   return [
     header("CLASSES", () => go("home")),
-    win("list scroll", ...classes.map((k) => row([faceEl(k.id), h("span", { class: "w12 trunc" }, k.name), h("span", { class: "dim grow trunc" }, role(k.text))], () => { orderPick = null; go("unit", k.id); }, { cursor: false, cur: setup.party.includes(k.id) }))),
+    win("list scroll", ...classes.map((k) => row([faceEl(k.id), h("div", { class: "grow trunc" }, h("div", { class: "line" }, k.name), h("div", { class: "text dim small trunc" }, role(k.text)))], () => { orderPick = null; go("unit", k.id); }, { cursor: false, cur: setup.party.includes(k.id), cls: "tall" }))),
   ];
 }
 const rankClass = (rank: string) => (rank === "boss" ? "gold" : rank === "elite" ? "debuff" : "dim");
