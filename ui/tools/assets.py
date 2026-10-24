@@ -7,9 +7,10 @@ Builds ui/public/assets from the director's uploaded sprite packs.
 The input dir holds the five packs, each extracted into its own folder:
 Sideview_Classes, Sideview_Enemies, Icons, Status_effect_and_various_icons,
 Vfx_pack. The output is committed, so the interface runs without the packs:
-one actor sheet per class, one sprite per enemy (a chosen recolor), one
-recolored 16px icon per status, the iconset, VFX frame strips, and
-manifest.json, which maps content ids to files and holds the enemy renames.
+one actor sheet per class at its art size, one sprite per enemy (a chosen
+recolor, as drawn), one recolored 16px icon per status, the iconset, VFX frame
+strips, and manifest.json, which maps content ids to files and holds the enemy
+renames.
 """
 import json, os, sys, glob, shutil
 from PIL import Image
@@ -120,10 +121,37 @@ def ensure(d):
 
 manifest = {"classes": {}, "enemies": {}, "statuses": {}, "vfx": {}, "frame": 64}
 
+def mode_downscale(im, k, threshold=0.5):
+    """One art pixel per k×k block: the commonest opaque colour, or transparent if the block is mostly empty.
+    The packs draw at three image pixels per art pixel; this recovers the art without blending or dithering."""
+    im = im.convert("RGBA")
+    px = im.load()
+    w, h = im.width // k, im.height // k
+    out = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    op = out.load()
+    for y in range(h):
+        for x in range(w):
+            counts = {}
+            cov = 0
+            for yy in range(k):
+                for xx in range(k):
+                    r, g, b, a = px[x * k + xx, y * k + yy]
+                    if a < 128:
+                        continue
+                    cov += 1
+                    counts[(r, g, b)] = counts.get((r, g, b), 0) + 1
+            if cov < threshold * k * k:
+                continue
+            best = max(counts.items(), key=lambda kv: (kv[1], -(kv[0][0] * 299 + kv[0][1] * 587 + kv[0][2] * 114)))[0]
+            op[x, y] = best + (255,)
+    return out
+
+# Actor sheets ship at their art size (a 144px frame becomes 48px), so the interface draws them as they are.
 ensure(f"{OUT}/actors")
 for cls, sheet in CLASSES.items():
-    shutil.copyfile(f"{ACTORS}/{sheet}.png", f"{OUT}/actors/{cls}.png")
+    mode_downscale(Image.open(f"{ACTORS}/{sheet}.png"), 3).save(f"{OUT}/actors/{cls}.png")
     manifest["classes"][cls] = f"actors/{cls}.png"
+manifest["actorFrame"] = 48
 
 ensure(f"{OUT}/enemies")
 for eid, (sprite, variant, scale, rename) in ENEMY.items():
