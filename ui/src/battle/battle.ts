@@ -6,7 +6,8 @@
  * while it's read. A tap on the window finishes the beat or moves to the
  * next; LOG opens the whole fight so far. Tapping a unit pauses the fight and
  * opens what's happening to it. The speed buttons scale the typing and the
- * hold; STEP plays one beat and pauses; >> plays the rest at once.
+ * hold; STEP plays one beat and pauses, skipping the dead time before it but
+ * letting a wind-up fill at the speed set; >> plays the rest at once.
  */
 import { SUBTICKS } from "../../../src/schema.js";
 import type { CUnit } from "../../../src/engine/combat/fight.js";
@@ -16,8 +17,8 @@ import { ELEMENT_COLOR, enemyDisplayName, enemyName, STATUS_STYLE, TAG_ICON, typ
 import { bar, button, clear, h, win, type Child } from "../dom.js";
 import { party as partyLoadout, setup } from "../state.js";
 import { abilityTag, statusText, weaponInfo } from "../describe.js";
-import { faceEl, iconEl, statusEl } from "../pixel.js";
-import { classSheet, enemySheet } from "../sheet.js";
+import { iconEl, statusEl } from "../pixel.js";
+import { classSheet, enemySheet, portraitEl } from "../sheet.js";
 import { Driver, type Ev } from "./driver.js";
 import { Narrator, type Beat, type Line, type Tone } from "./narrate.js";
 import { Scene, shieldOf, shownStatuses, W, H } from "./scene.js";
@@ -97,6 +98,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   ctl.append(button("◀", () => { stop(); go("home"); }), pauseBtn, stepBtn, ...speedBtns, button(">>", () => fastForward()), button("LOG", () => openLog()));
   renderCtl();
 
+  const castingNow = () => driver.units().some((u) => !u.ko && u.cast !== null);
   /** Pulls what the engine logged into beats. */
   function pull(flush = true) {
     for (const ev of driver.pending.splice(0)) narrator.push(ev);
@@ -367,7 +369,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       const hpNum = h("span", { class: "num" }), mpNum = h("span", { class: "num mp" });
       const sts = h("span", { class: "sts" });
       const el = h("div", { class: "member", onClick: () => openInspect(u.id) },
-        faceEl(u.ref),
+        h("div", { class: "portrait" }, portraitEl(u.ref)),
         h("div", { class: "body" },
           h("div", { class: "line1" }, h("span", { class: "name trunc" }, className(u.ref)), sts),
           h("div", { class: "line2" }, h("span", { class: "lbl" }, "HP"), hp, hpNum),
@@ -516,7 +518,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     }
     if (designer && !isParty) body.append(h("div", { class: "line dim" }, `ATK${disp(u.stats.attack)} MAG${disp(u.stats.magic)} ARM${disp(u.stats.armor)}`));
     body.append(h("div", { class: "btns", style: "margin-top:.5rem" }, button("FULL SHEET", () => openSheet(u, resume), "sm"), button("CLOSE", () => closeOverlay(true), "sm")));
-    openOverlay(nameOf(u.id), body, resume, u.side === "party" ? faceEl(u.ref) : null);
+    openOverlay(nameOf(u.id), body, resume, u.side === "party" ? portraitEl(u.ref) : null);
   }
   function openLog() {
     const resume = holdClock();
@@ -675,8 +677,9 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         } else if (driver.phase === "fighting") {
           driver.advance((dt * speed * SUBTICKS) / TICK_MS);
           pull();
+          // STEP skips dead time only: with nobody winding up, jump to the next moment; a wind-up plays at the speed set, so it can be watched filling.
           let guard = 0;
-          while (stepping && !queue.length && driver.phase === "fighting" && guard++ < 400) {
+          while (stepping && !queue.length && driver.phase === "fighting" && !castingNow() && guard++ < 400) {
             driver.advance(SUBTICKS / 4);
             pull();
           }

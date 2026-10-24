@@ -24,6 +24,13 @@ export function memberFor(id: string): Member {
   return members.find((m) => m.ref === id)!;
 }
 
+/** What stands for a class in a menu: its face or its figure with its weapon, by the PORTRAITS setting; `slot` is the party screen's cards. */
+export function portraitEl(id: string, place: "slot" | "list" = "list"): HTMLCanvasElement {
+  const p = setup.settings.portraits;
+  const sprite = p === "sprites" || (p === "mixed" && place === "slot");
+  return sprite ? actorEl(id, "wait", 1, gearFor(id).weapon) : faceEl(id);
+}
+
 /** The first sentence of a class or enemy text, as its role word. */
 export const role = (text: string) => text.split(".")[0];
 

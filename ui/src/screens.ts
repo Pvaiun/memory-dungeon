@@ -8,8 +8,8 @@ import { c, className, classes, cls as classOf, dungeons, enemies, fightName, fo
 import { enemyDisplayName } from "./art.js";
 import { button, h, header, row, toast, win, type Child } from "./dom.js";
 import { abilitiesFor, gearFor, reset, save, setup } from "./state.js";
-import { abilityBlock, basicLine, classHead, codeSpans, enemySheet, gearRow, memberFor, passiveBlock, role, section, specialLines, statGrid } from "./sheet.js";
-import { enemyEl, enemyThumb, faceEl } from "./pixel.js";
+import { abilityBlock, basicLine, classHead, codeSpans, enemySheet, gearRow, memberFor, passiveBlock, portraitEl, role, section, specialLines, statGrid } from "./sheet.js";
+import { enemyEl, enemyThumb } from "./pixel.js";
 import { weaponOf } from "../../src/engine/combat/fight.js";
 import { Strip, STRIP_H } from "./battle/scene.js";
 import { startBattle, type BattleArgs } from "./battle/battle.js";
@@ -176,7 +176,7 @@ function party(): Child[] {
     const codes = codeSpans(pos.stats);
     return h("div", { class: `win card${i === pick ? " cur" : ""}`, onClick: () => tapSlot(i) },
       h("div", { class: "slot" }, `${i + 1} ${pos.name}`),
-      id ? faceEl(id) : h("div", { class: "empty" }, "EMPTY"),
+      id ? h("div", { class: "portrait" }, portraitEl(id, "slot")) : h("div", { class: "empty" }, "EMPTY"),
       h("div", { class: "name" }, id ? shortName(id) : "---"),
       h("div", { class: "codes" }, ...(codes.length ? codes : [h("span", { class: "dim" }, "no change")])),
     );
@@ -200,7 +200,7 @@ function party(): Child[] {
     ),
     win("scroll roster", h("div", { class: "grid" }, ...classes.map((k) => {
       const inParty = setup.party.includes(k.id);
-      return h("div", { class: `cell${inParty ? " in" : ""}${picked === k.id ? " cur" : ""}`, onClick: () => tapClass(k.id) }, faceEl(k.id), h("span", { class: "trunc", style: "max-width:100%" }, shortName(k.id)));
+      return h("div", { class: `cell${inParty ? " in" : ""}${picked === k.id ? " cur" : ""}`, onClick: () => tapClass(k.id) }, h("div", { class: "portrait" }, portraitEl(k.id)), h("span", { class: "trunc", style: "max-width:100%" }, shortName(k.id)));
     }))),
   ];
 }
@@ -295,7 +295,7 @@ function gear(arg?: unknown): Child[] {
 function classesScreen(): Child[] {
   return [
     header("CLASSES", () => go("home")),
-    win("list scroll", ...classes.map((k) => row([faceEl(k.id), h("div", { class: "grow trunc" }, h("div", { class: "line" }, k.name), h("div", { class: "text dim small trunc" }, role(k.text)))], () => { orderPick = null; go("unit", k.id); }, { cursor: false, cur: setup.party.includes(k.id), cls: "tall" }))),
+    win("list scroll", ...classes.map((k) => row([h("div", { class: "portrait" }, portraitEl(k.id)), h("div", { class: "grow trunc" }, h("div", { class: "line" }, k.name), h("div", { class: "text dim small trunc" }, role(k.text)))], () => { orderPick = null; go("unit", k.id); }, { cursor: false, cur: setup.party.includes(k.id), cls: "tall" }))),
   ];
 }
 const rankClass = (rank: string) => (rank === "boss" ? "gold" : rank === "elite" ? "debuff" : "dim");
@@ -335,8 +335,9 @@ function settings(): Child[] {
       toggle("AUTO NEXT", "autoContinue"),
       toggle("DESIGNER", "designer"),
       row([h("span", { class: "grow" }, "NUMBERS"), h("span", null, s.bigNumbers ? "BIG" : "SMALL")], () => { s.bigNumbers = !s.bigNumbers; setDisplayDiv(s.bigNumbers ? 10 : 100); save(); refresh(); }, { cursor: false }),
+      row([h("span", { class: "grow" }, "PORTRAITS"), h("span", null, s.portraits.toUpperCase())], () => { s.portraits = s.portraits === "faces" ? "sprites" : s.portraits === "sprites" ? "mixed" : "faces"; save(); refresh(); }, { cursor: false }),
       row([h("span", { class: "grow bad" }, "RESET ALL")], () => { reset(); setTheme(setup.settings.theme); setDisplayDiv(100); go("home"); }, { cursor: false }),
     ),
-    h("div", { class: "text dim small wrap" }, "Speed is how fast a fight is told: each message holds the clock while it's on screen. In a fight, II pauses, STEP plays one message at a time, >> skips to the end. Designer view shows hidden enemy stats and worked-out numbers. Small numbers are 10 per point of the design's 1–5 scale; big are 100."),
+    h("div", { class: "text dim small wrap" }, "Speed is how fast a fight is told: each message holds the clock while it's on screen. In a fight, II pauses, STEP plays one message at a time, >> skips to the end. Designer view shows hidden enemy stats and worked-out numbers. Small numbers are 10 per point of the design's 1–5 scale; big are 100. Portraits: faces everywhere, sprites everywhere, or mixed, with sprites in the party's slots and faces in the lists and rows."),
   ];
 }
