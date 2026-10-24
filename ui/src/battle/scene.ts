@@ -1,21 +1,20 @@
 /**
- * The field: 270×208 logical pixels, in colour. One scene, as the classic
- * battle screens have it: the party on the left facing right, the foes on the
- * right facing left, a backdrop per dungeon. Sprites are the packs at their
- * own pixel size. Over the sprites: HP bars under the foes, status glyphs with
- * their stacks under everyone, a wind-up bar over a head, damage numbers that
- * rise and fade, and the VFX strips.
+ * The field: 270×228 logical pixels, in colour. One scene, as the classic
+ * battle screens have it: the party on the left facing right, at the packs'
+ * own pixel size with their weapons in hand; the foes on the right facing
+ * left, at theirs, which is bigger; a backdrop per dungeon composed from the
+ * tilesets. Over the sprites: a foe's HP bar under its feet, the pack's 16px
+ * status icons with their stacks under everyone, a wind-up bar over a head,
+ * damage numbers that rise and fade, and the VFX strips.
  */
 import { SUBTICKS } from "../../../src/schema.js";
 import type { CUnit } from "../../../src/engine/combat/fight.js";
 import { c, disp } from "../content.js";
 import { manifest, VFX_FOR, type Pose } from "../art.js";
-import { drawActor, drawEnemy, drawGlyph, drawText, enemyK, enemySprite, FRAME_W, OUTLINE, vfxSprite } from "../pixel.js";
+import { backdropImage, drawActor, drawEnemy, drawStatus, drawText, enemyK, enemySprite, FRAME_W, OUTLINE, STATUS_ICON, statusIconOf, vfxSprite } from "../pixel.js";
 import type { Driver } from "./driver.js";
 
-export const W = FRAME_W, H = 224;
-/** Party members draw at twice their art size: the packs draw heroes half the size of monsters. */
-export const ACTOR_SCALE = 2;
+export const W = FRAME_W, H = 228;
 
 export type UV = {
   id: string; side: "party" | "enemy"; ref: string; name: string;
@@ -27,38 +26,48 @@ export type UV = {
   numberStack: number; numberAt: number;
 };
 
-export type NumOpts = { color?: string; outline?: string | null; sub?: string; subColor?: string; big?: boolean; glyph?: string; life?: number };
+export type NumOpts = { color?: string; outline?: string | null; sub?: string; subColor?: string; big?: boolean; icon?: string; life?: number };
 type Num = Required<Pick<NumOpts, "color" | "life">> & NumOpts & { x: number; y: number; text: string; born: number };
 type Fx = { strip: string; x: number; y: number; size: number; born: number; fps: number; flip: boolean };
 
 // ─── Layout ───
 
-const LINE_X: Record<string, number> = { back: 34, middle: 52, front: 70 };
-const ROWS: Record<number, number[]> = { 1: [160], 2: [120, 200], 3: [84, 148, 212] };
-const rowsFor = (n: number) => ROWS[Math.max(1, Math.min(3, n))];
+const LINE_X: Record<string, number> = { back: 26, middle: 40, front: 54 };
+const PARTY_ROWS: Record<number, number[]> = { 1: [160], 2: [124, 200], 3: [100, 152, 204] };
 /** Where the party stands, by slot: feet positions. */
 export function partySpots(formationId: string, count: number): { x: number; y: number }[] {
   const f = c.formations.get(formationId)!;
-  const rows = rowsFor(count);
+  const rows = PARTY_ROWS[Math.max(1, Math.min(3, count))];
   return Array.from({ length: count }, (_, i) => {
     const pos = f.positions[i] ?? f.positions[0];
-    return { x: LINE_X[pos.layout.line] ?? 46, y: rows[Math.min(i, rows.length - 1)] };
+    return { x: LINE_X[pos.layout.line] ?? 40, y: rows[Math.min(i, rows.length - 1)] };
   });
 }
+/** Where the foes stand: a boss in front with its followers to its left; a crowd in staggered front and back rows. */
+export function foeSpots(n: number, boss: boolean): { x: number; y: number }[] {
+  if (boss) {
+    const rows = n <= 2 ? [[], [176], [140, 204]][n] ?? [] : [124, 164, 204];
+    return [{ x: 206, y: 204 }, ...rows.slice(0, n - 1).map((y, i) => ({ x: 118 + (i % 2 ? 6 : -6), y }))];
+  }
+  if (n === 1) return [{ x: 192, y: 200 }];
+  if (n === 2) return [{ x: 156, y: 204 }, { x: 232, y: 150 }];
+  if (n === 3) return [{ x: 144, y: 204 }, { x: 206, y: 146 }, { x: 246, y: 204 }];
+  if (n <= 6) {
+    const cols = Math.ceil(n / 2);
+    const shift = Math.round((252 - (140 + (cols - 1) * 56)) / 2);
+    return Array.from({ length: n }, (_, i) => ({ x: (i % 2 ? 108 : 140) + Math.floor(i / 2) * 56 + shift, y: i % 2 ? 136 : 204 }));
+  }
+  const cols = Math.ceil(n / 3);
+  const step = Math.min(56, Math.floor(150 / Math.max(1, cols - 1)));
+  return Array.from({ length: n }, (_, i) => ({ x: 110 + Math.floor(i / 3) * step + (i % 3) * 14, y: [204, 170, 136][i % 3] }));
+}
 
-// ─── Backdrops: flat bands of colour with a horizon and a few specks per dungeon ───
+// ─── Backdrops: the asset tool's scenes, or flat bands of colour without them ───
 
-type Back = { sky: string; far: string; ground: string; floor: string; speck: string; n: number; rain?: string; stars?: boolean };
-const BACK: Record<string, Back> = {
-  old_road: { sky: "#86c0ea", far: "#4f8f4a", ground: "#8cba5c", floor: "#6f9a46", speck: "#4a7a34", n: 44 },
-  crypt: { sky: "#171724", far: "#262638", ground: "#3a3a4e", floor: "#2b2b3c", speck: "#6a6a86", n: 18 },
-  fire_mine: { sky: "#260a0a", far: "#5a1a12", ground: "#6c3222", floor: "#4a2016", speck: "#ff9a3c", n: 34 },
-  ice_pass: { sky: "#bfe2ff", far: "#86b8e0", ground: "#e6f2ff", floor: "#c4d8ee", speck: "#ffffff", n: 70 },
-  storm_tower: { sky: "#0f1738", far: "#1f2e58", ground: "#3a4460", floor: "#2a344c", speck: "#8ea6ff", n: 30, rain: "#7f98ff" },
-  deep_crypt: { sky: "#08060e", far: "#1a1226", ground: "#292036", floor: "#1a1326", speck: "#7a5aa0", n: 14 },
-  tower_top: { sky: "#283050", far: "#46587e", ground: "#5a6a8c", floor: "#46567a", speck: "#e0e8ff", n: 26, rain: "#c8d4ff", stars: true },
+const FALLBACK: Record<string, [string, string]> = {
+  old_road: ["#86c0ea", "#8cba5c"], crypt: ["#171724", "#3a3a4e"], fire_mine: ["#260a0a", "#6c3222"], ice_pass: ["#bfe2ff", "#e6f2ff"],
+  storm_tower: ["#0f1738", "#3a4460"], deep_crypt: ["#08060e", "#292036"], tower_top: ["#283050", "#5a6a8c"],
 };
-const HORIZON = 72;
 const backdrops = new Map<string, HTMLCanvasElement>();
 export function backdrop(theme: string, h = H): HTMLCanvasElement {
   const key = `${theme}|${h}`;
@@ -68,37 +77,15 @@ export function backdrop(theme: string, h = H): HTMLCanvasElement {
   cv.width = W;
   cv.height = h;
   const g = cv.getContext("2d")!;
-  const b = BACK[theme] ?? BACK.old_road;
-  const horizon = Math.round((HORIZON * h) / H);
-  g.fillStyle = b.sky;
-  g.fillRect(0, 0, W, horizon);
-  g.fillStyle = b.far;
-  g.fillRect(0, horizon - 6, W, 6);
-  g.fillStyle = b.ground;
-  g.fillRect(0, horizon, W, h - horizon);
-  g.fillStyle = b.floor;
-  g.fillRect(0, h - 10, W, 10);
-  let seed = 7;
-  for (const ch of theme) seed = (seed * 31 + ch.charCodeAt(0)) >>> 0;
-  const rnd = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
-  g.fillStyle = b.speck;
-  for (let i = 0; i < b.n; i++) {
-    const x = Math.floor(rnd() * W), y = horizon + 2 + Math.floor(rnd() * (h - horizon - 12));
-    const shape = Math.floor(rnd() * 3);
-    g.fillRect(x, y, 1, 1);
-    if (shape >= 1) g.fillRect(x + 1, y, 1, 1);
-    if (shape === 2) g.fillRect(x + 1, y - 1, 1, 1);
-  }
-  if (b.stars) {
-    g.fillStyle = "#ffffff";
-    for (let i = 0; i < 24; i++) g.fillRect(Math.floor(rnd() * W), Math.floor(rnd() * (horizon - 10)), 1, 1);
-  }
-  if (b.rain) {
-    g.fillStyle = b.rain;
-    for (let i = 0; i < 50; i++) {
-      const x = Math.floor(rnd() * W), y = Math.floor(rnd() * horizon);
-      g.fillRect(x, y, 1, 3);
-    }
+  const img = backdropImage(theme);
+  if (img) g.drawImage(img, 0, img.height - h, W, h, 0, 0, W, h);
+  else {
+    const [sky, ground] = FALLBACK[theme] ?? FALLBACK.old_road;
+    const horizon = Math.round((64 * h) / H);
+    g.fillStyle = sky;
+    g.fillRect(0, 0, W, horizon);
+    g.fillStyle = ground;
+    g.fillRect(0, horizon, W, h - horizon);
   }
   backdrops.set(key, cv);
   return cv;
@@ -133,7 +120,6 @@ export class Scene {
   numbers: Num[] = [];
   fx: Fx[] = [];
   banner: { text: string; sub: string; until: number } | null = null;
-  selected: string | null = null;
   wall = 0;
 
   constructor(public canvas: HTMLCanvasElement, public driver: Driver, public theme: string) {
@@ -144,17 +130,17 @@ export class Scene {
   }
 
   sync() {
-    for (const u of this.driver.units()) if (!this.units.has(u.id)) this.add(u);
+    const crowd = this.driver.units().filter((x) => x.side === "enemy" && !x.gone).length;
+    for (const u of this.driver.units()) if (!this.units.has(u.id)) this.add(u, crowd);
     this.layout();
   }
 
-  private add(u: CUnit) {
+  private add(u: CUnit, crowd: number) {
     const party = u.side === "party";
-    const crowd = this.driver.units().filter((x) => x.side === "enemy" && !x.gone).length;
     const k = party ? 3 : enemyK(u.ref, crowd);
     const s = party ? null : enemySprite(u.ref, k);
     this.units.set(u.id, {
-      id: u.id, side: u.side, ref: u.ref, name: u.name, x: 0, y: 0, w: s ? s.width : 22 * ACTOR_SCALE, h: s ? s.height : 30 * ACTOR_SCALE, k,
+      id: u.id, side: u.side, ref: u.ref, name: u.name, x: 0, y: 0, w: s ? s.width : 26, h: s ? s.height : 40, k,
       pose: u.ko ? "dead" : "wait", poseUntil: 0, lungeUntil: 0, shakeUntil: 0, flashUntil: 0, alpha: u.ko && !party ? 0 : 1, gone: !!u.gone,
       hpShown: u.hp, shieldShown: 0, cast: null, numberStack: 0, numberAt: 0,
     });
@@ -172,24 +158,14 @@ export class Scene {
     });
     const foes = units.filter((u) => u.side === "enemy" && !u.gone);
     const boss = foes.find((u) => c.enemies.get(u.ref)?.rank === "boss");
-    const rest = foes.filter((u) => u !== boss);
-    if (boss) {
-      const v = this.units.get(boss.id)!;
-      v.x = 198;
-      v.y = 212;
-    }
-    const cols = boss ? 1 : rest.length <= 3 ? 1 : rest.length <= 6 ? 2 : 3;
-    const perCol = Math.ceil(rest.length / cols) || 1;
-    const colX = boss ? [124] : cols === 1 ? [204] : cols === 2 ? [224, 164] : [238, 190, 142];
-    for (let col = 0; col < cols; col++) {
-      const group = rest.slice(col * perCol, (col + 1) * perCol);
-      const rows = rowsFor(group.length);
-      group.forEach((u, i) => {
-        const v = this.units.get(u.id)!;
-        v.x = colX[col] + (group.length > 1 ? (i % 2 ? -5 : 5) : 0);
-        v.y = rows[Math.min(i, rows.length - 1)];
-      });
-    }
+    const ordered = boss ? [boss, ...foes.filter((u) => u !== boss)] : foes;
+    const spots2 = foeSpots(ordered.length, !!boss);
+    ordered.forEach((u, i) => {
+      const v = this.units.get(u.id)!;
+      const s = spots2[i] ?? spots2[spots2.length - 1];
+      v.x = Math.max(v.w / 2 + 2, Math.min(W - v.w / 2 - 2, s.x));
+      v.y = s.y;
+    });
   }
 
   // ─── Reactions to events ───
@@ -245,7 +221,7 @@ export class Scene {
     else v.numberStack = 0;
     v.numberAt = this.wall;
     const side = v.numberStack ? (v.numberStack % 2 ? 1 : -1) * Math.min(2, Math.ceil(v.numberStack / 2)) * 16 : 0;
-    const half = (Math.max(text.length, o.sub?.length ?? 0) * 8 * (o.big ? 2 : 1)) / 2 + (o.glyph ? 5 : 0);
+    const half = (Math.max(text.length, o.sub?.length ?? 0) * 8 * (o.big ? 2 : 1)) / 2 + (o.icon ? 9 : 0);
     const x = Math.max(half + 1, Math.min(W - half - 1, v.x + side));
     const y = v.y - v.h - 12 - Math.floor(v.numberStack / 2) * 10;
     this.numbers.push({ ...o, color: o.color ?? "#ffffff", life: o.life ?? 1400, x, y: Math.max(2, y), text, born: this.wall });
@@ -260,7 +236,7 @@ export class Scene {
   effectFor(id: string, tag: string, big = false) {
     const strip = VFX_FOR[tag];
     const v = this.units.get(id);
-    if (strip && v) this.effect(id, strip, big || v.h >= 56 ? 64 : 32, v.side === "party");
+    if (strip && v) this.effect(id, strip, big || v.h >= 50 ? 64 : 32, v.side === "party");
   }
 
   // ─── Drawing ───
@@ -319,7 +295,7 @@ export class Scene {
     ctx.globalAlpha = v.alpha * (hidden ? 0.45 : 1);
     if (v.side === "party") {
       const f = v.pose === "dead" ? 2 : v.pose === "wait" || v.pose === "chant" || v.pose === "abnormal" ? WAIT_FRAMES[Math.floor(this.wall / 300) % 4] : Math.min(2, Math.floor((this.wall - (v.poseUntil - 400)) / 130));
-      drawActor(ctx, v.ref, v.pose, Math.max(0, f), x, v.y, flash, ACTOR_SCALE);
+      drawActor(ctx, v.ref, v.pose, Math.max(0, f), x, v.y, flash, 1, u.weapon);
     } else {
       const bob = u.ko ? 0 : Math.round(Math.sin(this.wall / 520 + v.x));
       drawEnemy(ctx, v.ref, v.k, x, v.y + bob, flash);
@@ -332,43 +308,43 @@ export class Scene {
     if (v.alpha <= 0 || (u.ko && v.side === "enemy")) return;
     const top = v.y - v.h;
     const x = Math.round(v.x);
-    let glyphY = v.y + 3;
+    let iconY = v.y + 3;
     if (v.side === "enemy") {
       // HP under the feet, in the bar's colour; a light segment for a Shield
       const max = u.stats.max_hp;
       const hp = Math.max(0, Math.min(1, v.hpShown / max));
-      const bw = Math.max(18, Math.min(36, Math.round(v.w * 0.7)));
-      const bx = x - bw / 2, by = v.y + 2;
+      const bw = Math.max(24, Math.min(48, Math.round(v.w * 0.75)));
+      const bx = x - Math.round(bw / 2), by = v.y + 2;
       ctx.fillStyle = OUTLINE;
-      ctx.fillRect(bx - 1, by - 1, bw + 2, 5);
+      ctx.fillRect(bx - 1, by - 1, bw + 2, 6);
       ctx.fillStyle = "#3a3a4a";
-      ctx.fillRect(bx, by, bw, 3);
+      ctx.fillRect(bx, by, bw, 4);
       ctx.fillStyle = hpColor(hp);
-      ctx.fillRect(bx, by, Math.round(bw * hp), 3);
+      ctx.fillRect(bx, by, Math.round(bw * hp), 4);
       const sh = Math.min(1 - hp, v.shieldShown / max);
       if (sh > 0.005) {
         ctx.fillStyle = "#a8e8ff";
-        ctx.fillRect(bx + Math.round(bw * hp), by, Math.max(1, Math.round(bw * sh)), 3);
+        ctx.fillRect(bx + Math.round(bw * hp), by, Math.max(1, Math.round(bw * sh)), 4);
       }
-      glyphY = by + 6;
+      iconY = by + 7;
     }
     if (!u.ko) {
       const sts = shownStatuses(u).slice(0, 4);
       if (sts.length) {
-        const gx = x - Math.round((sts.length * 10 - 2) / 2);
-        sts.forEach((s, i) => drawGlyph(ctx, s.id, gx + i * 10, glyphY, s.count));
+        const step = STATUS_ICON + 1;
+        const gx = Math.max(0, Math.min(W - sts.length * step, x - Math.round((sts.length * step - 1) / 2)));
+        sts.forEach((s, i) => drawStatus(ctx, s.id, gx + i * step, Math.min(H - STATUS_ICON, iconY), s.count));
       }
     }
     if (v.cast && !u.ko) {
       const p = Math.max(0, Math.min(1, (this.driver.vt - v.cast.start) / Math.max(1, v.cast.end - v.cast.start)));
       ctx.fillStyle = OUTLINE;
-      ctx.fillRect(x - 12, top - 8, 24, 5);
+      ctx.fillRect(x - 15, top - 9, 30, 6);
       ctx.fillStyle = "#3a3a4a";
-      ctx.fillRect(x - 11, top - 7, 22, 3);
+      ctx.fillRect(x - 14, top - 8, 28, 4);
       ctx.fillStyle = "#ffd54a";
-      ctx.fillRect(x - 11, top - 7, Math.round(22 * p), 3);
+      ctx.fillRect(x - 14, top - 8, Math.round(28 * p), 4);
     }
-    if (this.selected === v.id) drawText(ctx, "▼", x, top - 18 + Math.round(Math.sin(this.wall / 150)), "#ffd54a", OUTLINE, "center");
   }
 
   private drawFx() {
@@ -404,9 +380,9 @@ export class Scene {
       const scale = n.big ? 2 : 1;
       const tw = n.text.length * 8 * scale;
       let x = n.x;
-      if (n.glyph) {
-        drawGlyph(ctx, n.glyph, Math.round(x - tw / 2 - 10), Math.round(y) + (n.big ? 4 : 0));
-        x += 5;
+      if (n.icon) {
+        ctx.drawImage(statusIconOf(n.icon), Math.round(x - tw / 2 - 18), Math.round(y) + (n.big ? 0 : -4));
+        x += 9;
       }
       drawText(ctx, n.text, x, y, n.color, n.outline === undefined ? OUTLINE : n.outline, "center", scale);
       if (n.sub) drawText(ctx, n.sub, n.x, y + (n.big ? 17 : 9), n.subColor ?? "#ffd54a", OUTLINE, "center");
@@ -440,7 +416,7 @@ export class Scene {
     for (const v of this.units.values()) {
       if (v.gone || v.alpha <= 0) continue;
       const top = v.y - v.h;
-      if (px >= v.x - v.w / 2 - 6 && px <= v.x + v.w / 2 + 6 && py >= top - 10 && py <= v.y + 14) {
+      if (px >= v.x - v.w / 2 - 6 && px <= v.x + v.w / 2 + 6 && py >= top - 10 && py <= v.y + 22) {
         const d = Math.abs(px - v.x) + Math.abs(py - (v.y - v.h / 2));
         if (d < bestD) (best = v.id), (bestD = d);
       }
@@ -451,12 +427,12 @@ export class Scene {
 
 // ─── The party strip: the party standing in its formation, for the menus ───
 
-export const STRIP_H = 56;
+export const STRIP_H = 72;
 export class Strip {
   private timer = 0;
   private tick = 0;
   ctx: CanvasRenderingContext2D;
-  constructor(public canvas: HTMLCanvasElement, public party: string[], public formation: string, public pick: number | null = null) {
+  constructor(public canvas: HTMLCanvasElement, public party: string[], public formation: string, public weapons: Record<string, string | undefined>, public pick: number | null = null) {
     canvas.width = W;
     canvas.height = STRIP_H;
     this.ctx = canvas.getContext("2d")!;
@@ -475,16 +451,16 @@ export class Strip {
   }
   draw() {
     const ctx = this.ctx;
-    ctx.drawImage(backdrop("old_road", STRIP_H), 0, 0);
+    ctx.drawImage(backdrop("strip", STRIP_H), 0, 0);
     const f = WAIT_FRAMES[this.tick % 4];
     const n = this.party.length;
     const fm = c.formations.get(this.formation);
     this.party.forEach((ref, i) => {
       const line = fm?.positions[i]?.layout.line ?? "middle";
-      const dy = line === "front" ? 0 : line === "middle" ? -3 : -6;
-      const x = n === 1 ? W / 2 : 46 + (i * (W - 92)) / (n - 1);
-      drawActor(ctx, ref, "wait", f, x, STRIP_H - 6 + dy, false);
-      if (this.pick === i) drawText(ctx, "▼", x, STRIP_H - 6 + dy - 44, "#ffd54a", OUTLINE, "center");
+      const dy = line === "front" ? 0 : line === "middle" ? -4 : -8;
+      const x = n === 1 ? W / 2 : 56 + (i * (W - 112)) / (n - 1);
+      drawActor(ctx, ref, "wait", f, x, STRIP_H - 6 + dy, false, 1, this.weapons[ref]);
+      if (this.pick === i) drawText(ctx, "▼", x, STRIP_H - 6 + dy - 50, "#ffd54a", OUTLINE, "center");
     });
     if (!n) drawText(ctx, "NO PARTY", W / 2, STRIP_H / 2 - 4, "#f2f0e4", OUTLINE, "center");
   }

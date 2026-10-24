@@ -1,10 +1,12 @@
 /**
- * The battle screen: the field on top, the party's rows, the foes, the message
- * box and the controls. The fight is told in beats (narrate.ts): each beat's
- * lines appear one after another and hold the clock while they're read, so
- * what happens on the field and what the box says are the same thing at the
- * same time. The speed buttons scale the hold; pause and STEP let the director
- * tap through a fight one beat at a time; >> plays the rest at once.
+ * The battle screen: the field on top, then the message window, the party's
+ * rows, the foes, and the controls. The fight is told in beats (narrate.ts)
+ * the way Dragon Quest and Pokémon tell one: the window shows one beat at a
+ * time, its lines typed out one after another, and the engine's clock waits
+ * while it's read. A tap on the window finishes the beat or moves to the
+ * next; LOG opens the whole fight so far. Tapping a unit pauses the fight and
+ * opens what's happening to it. The speed buttons scale the typing and the
+ * hold; STEP plays one beat and pauses; >> plays the rest at once.
  */
 import { SUBTICKS } from "../../../src/schema.js";
 import type { CUnit } from "../../../src/engine/combat/fight.js";
@@ -13,8 +15,8 @@ import { c, className, disp, elementName, fightName, runName } from "../content.
 import { ELEMENT_COLOR, enemyDisplayName, enemyName, STATUS_STYLE, TAG_ICON, type Pose } from "../art.js";
 import { bar, button, clear, h, win, type Child } from "../dom.js";
 import { party as partyLoadout, setup } from "../state.js";
-import { abilityTag, weaponInfo } from "../describe.js";
-import { drawGlyph, faceEl, glyphEl, iconEl } from "../pixel.js";
+import { abilityTag, statusText, weaponInfo } from "../describe.js";
+import { faceEl, iconEl, statusEl } from "../pixel.js";
 import { classSheet, enemySheet } from "../sheet.js";
 import { Driver, type Ev } from "./driver.js";
 import { Narrator, type Beat, type Line, type Tone } from "./narrate.js";
@@ -24,9 +26,9 @@ import { go } from "../screens.js";
 
 export type BattleArgs = { dungeon: string; seed?: number };
 
-/** Engine milliseconds per tick at 1×, and the reading times a beat holds for. */
+/** Engine milliseconds per tick at 1×; the typing speed and the time a beat stays once typed. */
 const TICK_MS = 500;
-const BEAT_BASE = 420, BEAT_LINE = 380, LINE_GAP = 240;
+const CHAR_MS = 26, BEAT_BASE = 520, BEAT_LINE = 300;
 const SPEEDS = [1, 2, 4] as const;
 
 type Hist = { tick: number; text: string; tone: Tone; tag?: string };
@@ -51,15 +53,15 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   // ─── DOM ───
   const canvas = h("canvas", { class: "field", width: W, height: H });
   canvas.style.height = `${H / 8}rem`;
-  const partyEl = win("party list");
-  const foesEl = win("foes");
   const linesEl = h("div", { class: "lines" });
-  const msgEl = win("msg", linesEl);
-  const inspectEl = win("inspect", "");
-  inspectEl.style.display = "none";
+  const cursorEl = h("span", { class: "cursor-dq" }, "▼");
+  const msgEl = win("msg", linesEl, cursorEl);
+  const partyEl = win("party list");
+  const foesList = h("div", { class: "foelist" });
   const tick = h("span", { class: "tick" }, "T", h("b", null, "0"));
+  const foesEl = win("foes", foesList, tick);
   const ctl = h("div", { class: "ctl" });
-  screen.append(canvas, partyEl, foesEl, msgEl, inspectEl, ctl);
+  screen.append(canvas, msgEl, partyEl, foesEl, ctl);
   setSound(setup.settings.sound);
 
   const scene = new Scene(canvas, driver, theme);
@@ -79,7 +81,8 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   let stopped = false;
   let introUntil = 0;
   const queue: Beat[] = [];
-  type Playing = { beat: Beat; start: number; shown: number; hold: number };
+  /** The beat on screen: `shown` lines are complete, `typed` chars of the next are out, `typedAt` is when the typing ended. */
+  type Playing = { beat: Beat; shown: number; typed: number; charAt: number; lineEls: HTMLElement[]; typedAt: number | null; hold: number };
   let playing: Playing | null = null;
   const history: Hist[] = [];
 
@@ -91,7 +94,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     pauseBtn.className = paused ? "on" : "";
     speedBtns.forEach((b, i) => (b.className = SPEEDS[i] === speed ? "on" : ""));
   };
-  ctl.append(button("◀", () => { stop(); go("home"); }), pauseBtn, stepBtn, ...speedBtns, button(">>", () => fastForward()), tick);
+  ctl.append(button("◀", () => { stop(); go("home"); }), pauseBtn, stepBtn, ...speedBtns, button(">>", () => fastForward()), button("LOG", () => openLog()));
   renderCtl();
 
   /** Pulls what the engine logged into beats. */
@@ -100,42 +103,85 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     if (flush) narrator.flush();
     queue.push(...narrator.take());
   }
-  function holdFor(b: Beat) {
-    return (BEAT_BASE + BEAT_LINE * b.weight + LINE_GAP * (b.lines.length - 1)) / speed;
-  }
+  const charMs = () => (speed >= 4 ? 0 : CHAR_MS / speed);
+  const holdFor = (b: Beat) => (BEAT_BASE + BEAT_LINE * b.weight) / speed;
   function startBeat(b: Beat) {
-    for (const el of linesEl.children) el.classList.add("old");
-    playing = { beat: b, start: vwall, shown: 0, hold: holdFor(b) };
-    if (b.kind === "intro") introUntil = vwall + Math.max(1800, playing.hold);
+    clear(linesEl);
+    playing = { beat: b, shown: 0, typed: 0, charAt: vwall, lineEls: [], typedAt: null, hold: holdFor(b) };
+    if (b.kind === "intro") introUntil = vwall + Math.max(1800, playing.hold + 800);
+    cursorEl.style.visibility = "hidden";
   }
-  function stepBeat() {
-    if (!playing) return;
-    const p = playing;
-    const elapsed = vwall - p.start;
-    while (p.shown < p.beat.lines.length && elapsed >= (p.shown * LINE_GAP) / speed) {
-      showLine(p.beat.lines[p.shown], p.beat);
-      p.shown++;
-    }
-    if (p.shown >= p.beat.lines.length && elapsed >= p.hold) {
-      playing = null;
-      if (stepping) {
-        stepping = false;
-        paused = true;
-        renderCtl();
-      }
-    }
-  }
-
-  // ─── Messages ───
-  function showLine(line: Line, beat: Beat) {
-    const el = h("div", { class: `l ${line.tone}` }, line.tag && TAG_ICON[line.tag] ? iconEl(TAG_ICON[line.tag]) : null, h("span", null, line.text));
+  /** Starts a line: its element, and its events on the field. */
+  function openLine(p: Playing) {
+    const line = p.beat.lines[p.shown];
+    const el = lineEl(line, false);
+    p.lineEls.push(el);
     linesEl.append(el);
-    while (linesEl.children.length > 12) linesEl.firstChild!.remove();
-    history.push({ tick: Math.floor(beat.at / SUBTICKS), text: line.text, tone: line.tone, tag: line.tag });
+    p.typed = 0;
+    p.charAt = Math.max(p.charAt, vwall);
+    history.push({ tick: Math.floor(p.beat.at / SUBTICKS), text: line.text, tone: line.tone, tag: line.tag });
     if (history.length > 600) history.shift();
     for (const ev of line.events) show(ev);
   }
-  msgEl.addEventListener("click", () => openLog());
+  function lineEl(line: Line, full: boolean): HTMLElement {
+    return h("div", { class: `l ${line.tone}` }, line.tag && TAG_ICON[line.tag] ? iconEl(TAG_ICON[line.tag]) : null, h("span", { class: "t" }, full ? line.text : ""));
+  }
+  /** Types the beat out: a line's characters appear at the typing speed, then the next line starts. */
+  function stepBeat() {
+    if (!playing) return;
+    const p = playing;
+    const lines = p.beat.lines;
+    const cm = charMs();
+    while (p.shown < lines.length) {
+      if (p.lineEls.length <= p.shown) openLine(p);
+      const text = lines[p.shown].text;
+      const want = cm === 0 ? text.length : Math.min(text.length, Math.floor((vwall - p.charAt) / cm));
+      if (want > p.typed) {
+        p.typed = want;
+        (p.lineEls[p.shown].lastChild as HTMLElement).textContent = text.slice(0, want);
+      }
+      if (p.typed < text.length) return;
+      p.shown++;
+      if (p.shown < lines.length) {
+        // A short breath between lines.
+        p.charAt = vwall + (cm === 0 ? 0 : 90 / speed);
+        if (cm !== 0) return;
+      }
+    }
+    if (p.typedAt === null) p.typedAt = vwall;
+    cursorEl.style.visibility = Math.floor(vwall / 400) % 2 ? "hidden" : "visible";
+    if (vwall - p.typedAt >= p.hold) finishBeat();
+  }
+  function finishBeat() {
+    if (!playing) return;
+    playing = null;
+    cursorEl.style.visibility = "hidden";
+    if (stepping) {
+      stepping = false;
+      paused = true;
+      renderCtl();
+    }
+  }
+  /** A tap on the window: finish the typing, or move on to the next beat. */
+  function advance() {
+    if (playing) {
+      const p = playing;
+      if (p.shown < p.beat.lines.length) {
+        while (p.shown < p.beat.lines.length) {
+          if (p.lineEls.length <= p.shown) openLine(p);
+          (p.lineEls[p.shown].lastChild as HTMLElement).textContent = p.beat.lines[p.shown].text;
+          p.shown++;
+        }
+        p.typedAt = vwall;
+        return;
+      }
+      finishBeat();
+      if (paused) { stepping = true; renderCtl(); }
+      return;
+    }
+    if (paused) { stepping = true; renderCtl(); }
+  }
+  msgEl.addEventListener("click", () => advance());
 
   // ─── Events → visuals ───
   const lastStatusFx = new Map<string, number>();
@@ -176,14 +222,14 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         if (v) v.cast = null;
         const targets = ev.targets as string[];
         const isBasic = ev.kind === "basic";
-        const ab = isBasic ? null : c.abilities.get(String(ev.act));
         const tag = narrator.tagOf(by, String(ev.act));
-        if (v?.side === "party") scene.pose(by, poseFor(isBasic, tag), 520);
+        const unit = driver.unit(by);
+        const bow = !!unit && c.gear.get(unit.weapon)?.weapon?.kind === "bow";
+        if (v?.side === "party") scene.pose(by, poseFor(isBasic, tag, bow), 520);
         scene.lunge(by);
-        const fxTag = isBasic && tag === "pierce" && driver.unit(by) && c.gear.get(driver.unit(by)!.weapon)?.weapon?.kind === "bow" ? "arrow" : tag;
+        const fxTag = isBasic && tag === "pierce" && bow ? "arrow" : tag;
         for (const t of targets) scene.effectFor(t, fxTag, targets.length <= 2);
         if (!isBasic && ELEMENT_COLOR[tag]) sfx.magic();
-        void ab;
         break;
       }
       case "fail":
@@ -198,7 +244,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         const isStatus = c.statuses.has(src);
         if (isStatus && disp(amount) <= 0) break;
         const target = String(ev.target);
-        scene.number(target, `+${disp(amount)}`, { color: "#7ee07e", big: !isStatus, glyph: src === "regen" ? "regen" : undefined, sub: ev.word === "ABSORB" ? "ABSORB" : ev.crit ? "CRITICAL" : undefined });
+        scene.number(target, `+${disp(amount)}`, { color: "#7ee07e", big: !isStatus, icon: src === "regen" ? "regen" : undefined, sub: ev.word === "ABSORB" ? "ABSORB" : ev.crit ? "CRITICAL" : undefined });
         if (!isStatus) {
           scene.effectFor(target, "heal");
           sfx.heal();
@@ -210,7 +256,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         if (d.show !== "icon") break;
         const unit = String(ev.unit);
         const style = STATUS_STYLE[d.id] ?? STATUS_STYLE.generic;
-        scene.number(unit, d.name, { color: style.color, glyph: d.id });
+        scene.number(unit, d.name.toUpperCase(), { color: style.color, icon: d.id });
         const key = `${unit}:${d.id}`;
         if (vwall - (lastStatusFx.get(key) ?? -9999) > 700) {
           lastStatusFx.set(key, vwall);
@@ -271,10 +317,10 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     }
   }
 
-  function poseFor(isBasic: boolean, tag: string): Pose {
+  function poseFor(isBasic: boolean, tag: string, bow: boolean): Pose {
+    if (bow && (tag === "pierce" || tag === "arrow")) return "missile";
     if (isBasic) return tag === "pierce" || tag === "arrow" ? "thrust" : tag === "slash" || tag === "blunt" || tag === "bite" ? "swing" : "spell";
     if (["slash", "pierce", "blunt"].includes(tag)) return "skill";
-    if (["heal", "revive", "cleanse", "buff", "shield", "dispel", "debuff"].includes(tag)) return "item";
     return "spell";
   }
 
@@ -303,31 +349,33 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     const style = isStatus ? STATUS_STYLE[src] : null;
     const color = crit ? "#ffd54a" : style ? style.color : el ? ELEMENT_COLOR[el] : "#ffffff";
     const sub = crit ? "CRITICAL" : word === "WEAK" ? "WEAK!" : word === "RESIST" ? "RESIST" : soaked && amount ? "SHIELD" : soaked ? "SOAKED" : undefined;
-    scene.number(target, `${shown}${crit ? "!" : ""}`, { color, big: !isStatus, sub, subColor: crit ? "#ffd54a" : word === "WEAK" ? "#ff7b6b" : word === "RESIST" ? "#8e99b8" : "#a8e8ff", glyph: isStatus && STATUS_STYLE[src] ? src : undefined });
+    scene.number(target, `${shown}${crit ? "!" : ""}`, { color, big: !isStatus, sub, subColor: crit ? "#ffd54a" : word === "WEAK" ? "#ff7b6b" : word === "RESIST" ? "#8e99b8" : "#a8e8ff", icon: isStatus && c.statuses.has(src) ? src : undefined });
     if (!isStatus || amount >= 100) scene.hit(target);
     if (!isStatus) (crit ? sfx.crit : sfx.hit)();
     else sfx.status();
     if (isStatus && (src === "burn" || src === "poison" || src === "shock")) scene.effectFor(target, src);
   }
 
-  // ─── Party rows ───
-  type Row = { el: HTMLElement; hp: HTMLElement; hpNum: HTMLElement; mp: HTMLElement; mpNum: HTMLElement; glyphs: HTMLCanvasElement; key: string; bars: string };
+  // ─── Party rows: face, name and statuses, HP, MP ───
+  type Row = { el: HTMLElement; hp: HTMLElement; hpNum: HTMLElement; mp: HTMLElement; mpNum: HTMLElement; sts: HTMLElement; key: string; bars: string };
   const rows = new Map<string, Row>();
   function buildRows() {
     clear(partyEl);
     rows.clear();
     for (const u of driver.units().filter((x) => x.side === "party")) {
       const hp = bar(1, "hp"), mp = bar(1, "mp", 0, true);
-      const hpNum = h("div", { class: "num" }), mpNum = h("div", { class: "num mp" });
-      const glyphs = h("canvas", { class: "px glyphs", width: 90, height: 10 });
-      glyphs.style.width = "11.25rem";
-      glyphs.style.height = "1.25rem";
-      const el = h("div", { class: "member", onClick: () => select(scene.selected === u.id ? null : u.id) },
-        faceEl(u.ref), h("div", { class: "name" }, className(u.ref)), hp, hpNum,
-        glyphs, mp, mpNum,
+      const hpNum = h("span", { class: "num" }), mpNum = h("span", { class: "num mp" });
+      const sts = h("span", { class: "sts" });
+      const el = h("div", { class: "member", onClick: () => openInspect(u.id) },
+        faceEl(u.ref),
+        h("div", { class: "body" },
+          h("div", { class: "line1" }, h("span", { class: "name trunc" }, className(u.ref)), sts),
+          h("div", { class: "line2" }, h("span", { class: "lbl" }, "HP"), hp, hpNum),
+          h("div", { class: "line2" }, h("span", { class: "lbl mp" }, "MP"), mp, mpNum),
+        ),
       );
       partyEl.append(el);
-      rows.set(u.id, { el, hp, hpNum, mp, mpNum, glyphs, key: "", bars: "" });
+      rows.set(u.id, { el, hp, hpNum, mp, mpNum, sts, key: "", bars: "" });
     }
   }
   function updateRows() {
@@ -349,19 +397,17 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
           shEl.style.left = `${share * 100}%`;
           shEl.style.width = `${Math.min(1 - share, sh / max) * 100}%`;
         } else shEl?.remove();
-        r.hpNum.textContent = u.ko ? "KO" : String(disp(u.hp));
+        r.hpNum.textContent = u.ko ? "KO" : `${disp(u.hp)}`;
         (r.mp.firstElementChild as HTMLElement).style.width = `${Math.max(0, u.mp / Math.max(1, u.stats.max_mp)) * 100}%`;
-        r.mpNum.textContent = String(disp(u.mp));
+        r.mpNum.textContent = `${disp(u.mp)}`;
         r.el.classList.toggle("ko", u.ko);
       }
-      r.el.classList.toggle("sel", scene.selected === u.id);
       const sts = u.ko ? [] : shownStatuses(u);
       const key = sts.map((s) => `${s.id}:${s.count}`).join("|");
       if (key !== r.key) {
         r.key = key;
-        const g = r.glyphs.getContext("2d")!;
-        g.clearRect(0, 0, 90, 10);
-        sts.slice(0, 9).forEach((s, i) => drawGlyph(g, s.id, i * 10, 0, s.count));
+        clear(r.sts);
+        sts.slice(0, 5).forEach((s) => r.sts.append(statusEl(s.id, s.count)));
       }
     }
   }
@@ -370,112 +416,110 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   let foesKey = "";
   function updateFoes() {
     const foes = driver.units().filter((u) => u.side === "enemy" && !u.gone);
-    const groups = new Map<string, { alive: number; total: number; first: string | null; ids: string[]; boss: boolean }>();
+    const groups = new Map<string, { alive: number; total: number; first: string | null; boss: boolean }>();
     for (const u of foes) {
-      const g = groups.get(u.ref) ?? { alive: 0, total: 0, first: null, ids: [], boss: c.enemies.get(u.ref)?.rank === "boss" };
+      const g = groups.get(u.ref) ?? { alive: 0, total: 0, first: null, boss: c.enemies.get(u.ref)?.rank === "boss" };
       g.total++;
-      g.ids.push(u.id);
       if (!u.ko) {
         g.alive++;
         g.first ??= u.id;
       }
       groups.set(u.ref, g);
     }
-    const key = [...groups].map(([r, g]) => `${r}:${g.alive}/${g.total}`).join("|") + `|${scene.selected}`;
+    const key = [...groups].map(([r, g]) => `${r}:${g.alive}/${g.total}`).join("|");
     if (key === foesKey) return;
     foesKey = key;
-    clear(foesEl);
+    clear(foesList);
     for (const [ref, g] of groups) {
       const label = `${g.boss ? "★" : ""}${enemyDisplayName(ref)}${g.total > 1 ? ` ×${g.alive}` : ""}`;
-      const sel = scene.selected !== null && g.ids.includes(scene.selected);
-      foesEl.append(h("span", { class: `${g.alive ? "" : "dead"}${sel ? " sel" : ""}`, onClick: () => { if (g.first) select(scene.selected === g.first ? null : g.first); } }, label));
+      foesList.append(h("span", { class: g.alive ? "" : "dead", onClick: () => { if (g.first) openInspect(g.first); } }, label));
     }
-    if (!groups.size) foesEl.append(h("span", { class: "dim" }, "NO FOES"));
+    if (!groups.size) foesList.append(h("span", { class: "dim" }, "NO FOES"));
   }
 
-  // ─── Inspect ───
-  let inspectAt = 0;
-  let inspectKey = "";
-  function select(id: string | null) {
-    scene.selected = id;
-    foesKey = "";
-    inspectKey = "";
-    renderInspect(true);
+  // ─── Overlays: a unit's state, the log, a sheet ───
+  let overlay: HTMLElement | null = null;
+  let overlayDone: (() => void) | null = null;
+  /** Removes the overlay; `done` also runs what its closing should (resuming the clock). */
+  function closeOverlay(done = false) {
+    overlay?.remove();
+    overlay = null;
+    const d = overlayDone;
+    overlayDone = null;
+    if (done) d?.();
   }
-  function renderInspect(force = false) {
-    const id = scene.selected;
-    const u = id ? driver.unit(id) : undefined;
-    if (!u) {
-      inspectEl.style.display = "none";
-      msgEl.style.display = "";
-      return;
-    }
-    if (!force && vwall - inspectAt < 250) return;
-    inspectAt = vwall;
+  function openOverlay(title: Child, body: Child, onClose?: () => void, right?: Child): HTMLElement {
+    closeOverlay();
+    const box = win("scroll", body);
+    overlayDone = onClose ?? null;
+    overlay = h("div", { class: "overlay" }, h("div", { class: "hdr" }, h("span", { class: "title" }, title), right, button("×", () => closeOverlay(true), "sm")), box);
+    frame.append(overlay);
+    return box;
+  }
+  /** Pauses while an overlay is read; `done` restores the state before it. */
+  function holdClock(): () => void {
+    const wasPaused = paused, wasStepping = stepping;
+    paused = true;
+    stepping = false;
+    renderCtl();
+    return () => { paused = wasPaused; stepping = wasStepping; renderCtl(); };
+  }
+  function openInspect(id: string) {
+    const u = driver.unit(id);
+    if (!u) return;
+    const resume = holdClock();
     const vt = driver.vt;
     const isParty = u.side === "party";
     const designer = setup.settings.designer;
     const sh = shieldOf(u);
-    const key = `${u.id}|${u.hp}|${u.mp}|${u.ko}|${sh}|${u.statuses.map((s) => `${s.id}:${s.stacks}:${s.end}`).join(",")}|${u.acts.map((a) => a.ready).join(",")}|${u.cast?.act}|${Math.floor(vt / SUBTICKS)}`;
-    if (key === inspectKey) return;
-    inspectKey = key;
-    inspectEl.style.display = "";
-    msgEl.style.display = "none";
-    clear(inspectEl);
-    inspectEl.append(h("div", { class: "line" },
-      h("span", { class: "grow trunc" }, nameOf(u.id)),
-      h("span", null, u.ko ? "KO" : `♥${disp(u.hp)}/${disp(u.stats.max_hp)}`),
-      isParty || designer ? h("span", { class: "buff" }, `MP${disp(u.mp)}`) : null,
-      button("×", () => select(null), "sm"),
+    const body = h("div", { class: "inspect" });
+    body.append(h("div", { class: "line" },
+      h("span", { class: "grow" }, u.ko ? h("span", { class: "bad" }, "KNOCKED OUT") : h("span", null, "HP ", h("b", { class: shieldOf(u) ? "sh" : "" }, `${disp(u.hp)}`), h("span", { class: "dim" }, `/${disp(u.stats.max_hp)}`))),
+      sh ? h("span", { class: "buff" }, `SHIELD ${disp(sh)}`) : null,
+      isParty || designer ? h("span", { class: "mp" }, `MP ${disp(u.mp)}`) : null,
     ));
-    const sts = h("div", { class: "sts" });
+    body.append(h("div", { class: "section" }, "STATUSES"));
+    let any = false;
     for (const s of u.statuses) {
       const d = c.statuses.get(s.id)!;
       if (d.show !== "icon") continue;
+      any = true;
       const n = d.stacking === "intensity" ? (d.absorb ? disp(Math.floor(s.stacks / SUBTICKS)) : Math.floor(s.stacks / SUBTICKS)) : null;
-      const left = s.end === -1 ? "" : `${Math.max(0, Math.ceil((s.end - vt) / SUBTICKS))}T`;
-      sts.append(h("div", { class: "st" }, glyphEl(s.id, null, 2), h("span", { class: d.label === "buff" ? "buff" : "debuff" }, d.name), n !== null ? h("span", null, d.absorb ? `${n} PTS` : `×${n}`) : null, h("span", { class: "t" }, left)));
+      const left = s.end === -1 ? "FOR THE FIGHT" : `${Math.max(0, Math.ceil((s.end - vt) / SUBTICKS))}T LEFT`;
+      body.append(h("div", { class: "st" },
+        statusEl(s.id, n),
+        h("div", { class: "grow" },
+          h("div", { class: "line" }, h("span", { class: `grow trunc ${d.label === "buff" ? "buff" : "debuff"}` }, d.name.toUpperCase(), n !== null ? h("span", { class: "dim" }, d.absorb ? ` ${n} PTS` : ` ×${n}`) : null), h("span", { class: "dim" }, left)),
+          h("div", { class: "text dim small wrap" }, d.text ?? statusText(d).slice(1).join(" ")),
+        ),
+      ));
     }
-    if (!sts.children.length) sts.append(h("div", { class: "st dim" }, "NO STATUSES"));
-    inspectEl.append(sts);
-    const acts = h("div", { class: "acts" });
+    if (!any) body.append(h("div", { class: "line dim" }, "NONE"));
+    body.append(h("div", { class: "section" }, "ACTIONS"));
     if (isParty || designer) {
       u.acts.forEach((a, i) => {
         const name = a.id === "basic" ? "ATTACK" : c.abilities.get(a.id)!.name;
         const casting = u.cast?.act === i;
         const left = Math.max(0, (a.ready - vt) / SUBTICKS);
         const tag = narrator.tagOf(u.id, a.id);
-        acts.append(h("div", { class: "st" }, TAG_ICON[tag] ? iconEl(TAG_ICON[tag]) : null, h("span", { class: "trunc" }, name), h("span", { class: `t ${casting ? "hi" : left > 0 ? "" : "good"}` }, casting ? "CASTING…" : left > 0 ? `${Math.ceil(left)}T` : "READY")));
+        body.append(h("div", { class: "line" }, TAG_ICON[tag] ? iconEl(TAG_ICON[tag]) : null, h("span", { class: "grow trunc" }, name.toUpperCase()), h("span", { class: `${casting ? "hi" : left > 0 ? "dim" : "good"}` }, casting ? "CASTING…" : left > 0 ? `IN ${Math.ceil(left)}T` : "READY")));
       });
     } else {
       const e = c.enemies.get(u.ref)!;
       for (const aid of e.abilities ?? []) {
         const a = c.abilities.get(aid)!;
         const casting = u.cast !== null && u.acts[u.cast.act]?.id === aid;
-        acts.append(h("div", { class: "st" }, TAG_ICON[abilityTag(a)] ? iconEl(TAG_ICON[abilityTag(a)]) : null, h("span", { class: "trunc" }, a.name), h("span", { class: `t ${casting ? "hi" : ""}` }, casting ? "CASTING…" : "")));
+        body.append(h("div", { class: "line" }, TAG_ICON[abilityTag(a)] ? iconEl(TAG_ICON[abilityTag(a)]) : null, h("span", { class: "grow trunc" }, a.name.toUpperCase()), h("span", { class: `${casting ? "hi" : "dim"}` }, casting ? "CASTING…" : "")));
       }
       const w = weaponInfo(e.weapon ?? c.pack.ruleset.unarmed, null);
-      acts.append(h("div", { class: "st" }, TAG_ICON[w.tag] ? iconEl(TAG_ICON[w.tag]) : null, h("span", { class: "trunc" }, "ATTACK"), h("span", { class: `t ${u.cast === null && u.acts.some((a) => a.id === "basic" && a.ready <= vt) ? "good" : ""}` }, `${(w.type === "magical" ? elementName(w.element ?? "") : w.subtype ?? "").toUpperCase()} /${w.cooldown}T`)));
+      body.append(h("div", { class: "line" }, TAG_ICON[w.tag] ? iconEl(TAG_ICON[w.tag]) : null, h("span", { class: "grow trunc" }, "ATTACK"), h("span", { class: "dim" }, `${(w.type === "magical" ? elementName(w.element ?? "") : w.subtype ?? "").toUpperCase()} /${w.cooldown}T`)));
     }
-    inspectEl.append(acts);
-    if (designer && !isParty) inspectEl.append(h("div", { class: "line dim" }, `ATK${disp(u.stats.attack)} MAG${disp(u.stats.magic)} ARM${disp(u.stats.armor)}`));
-    inspectEl.append(h("div", { class: "btns", style: "margin-top:.25rem" }, button("SHEET", () => openSheet(u), "sm"), button("LOG", () => openLog(), "sm")));
-  }
-
-  // ─── Overlays: the log, a sheet ───
-  let overlay: HTMLElement | null = null;
-  function closeOverlay() {
-    overlay?.remove();
-    overlay = null;
-  }
-  function openOverlay(title: string, body: Child, onClose?: () => void): HTMLElement {
-    closeOverlay();
-    const box = win("scroll", body);
-    overlay = h("div", { class: "overlay" }, h("div", { class: "hdr" }, h("span", { class: "title" }, title), button("×", () => { closeOverlay(); onClose?.(); }, "sm")), box);
-    frame.append(overlay);
-    return box;
+    if (designer && !isParty) body.append(h("div", { class: "line dim" }, `ATK${disp(u.stats.attack)} MAG${disp(u.stats.magic)} ARM${disp(u.stats.armor)}`));
+    body.append(h("div", { class: "btns", style: "margin-top:.5rem" }, button("FULL SHEET", () => openSheet(u, resume), "sm"), button("CLOSE", () => closeOverlay(true), "sm")));
+    openOverlay(nameOf(u.id), body, resume, u.side === "party" ? faceEl(u.ref) : null);
   }
   function openLog() {
+    const resume = holdClock();
     const body = h("div", { class: "log" });
     let lastTick = -1;
     for (const l of history) {
@@ -483,15 +527,12 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       lastTick = l.tick;
     }
     if (!history.length) body.append(h("div", { class: "l dim" }, "NOTHING YET"));
-    const box = openOverlay("LOG", body);
+    const box = openOverlay("LOG", body, resume);
     box.scrollTop = box.scrollHeight;
   }
-  function openSheet(u: CUnit) {
-    const wasPaused = paused;
-    paused = true;
-    renderCtl();
+  function openSheet(u: CUnit, resume: () => void) {
     const body = u.side === "party" ? classSheet(u.ref, setup.settings.designer) : enemySheet(c.enemies.get(u.ref)!, setup.settings.designer);
-    openOverlay(nameOf(u.id), h("div", null, ...body), () => { paused = wasPaused; renderCtl(); });
+    openOverlay(nameOf(u.id), h("div", null, ...body), resume);
   }
 
   // ─── Field input ───
@@ -500,7 +541,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     const r = canvas.getBoundingClientRect();
     const x = ((e.clientX - r.left) / r.width) * W, y = ((e.clientY - r.top) / r.height) * H;
     const hit = scene.hitTest(x, y);
-    select(hit && hit === scene.selected ? null : hit);
+    if (hit) openInspect(hit);
   }
 
   // ─── Flow ───
@@ -533,7 +574,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     );
     setTimeout(() => {
       if (stopped || !ended) return;
-      for (const el of [msgEl, inspectEl, ctl]) el.style.display = "none";
+      for (const el of [msgEl, ctl]) el.style.display = "none";
       screen.append(box);
     }, 900);
     if (won && !last && setup.settings.autoContinue) setTimeout(() => { if (!stopped && ended) nextFight(); }, 2200);
@@ -563,9 +604,10 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     ended = false;
     queue.length = 0;
     playing = null;
+    clear(linesEl);
     scene.units.clear();
     scene.clearTransient();
-    select(null);
+    closeOverlay();
     driver.continueRun();
     pull();
     if (driver.phase === "run_won" || driver.phase === "run_lost") {
@@ -576,14 +618,12 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     stop();
     go("battle", { dungeon: args.dungeon, seed: newSeed });
   }
-  /** Plays the rest of the fight at once: the log gets every line, the box the last few. */
+  /** Plays the rest of the fight at once: the log gets every line, the window the last beat. */
   function fastForward() {
     if (!driver.fight || driver.fight.result) return;
     driver.startFighting();
-    if (playing) {
-      for (let i = playing.shown; i < playing.beat.lines.length; i++) showLine(playing.beat.lines[i], playing.beat);
-      playing = null;
-    }
+    if (playing) advance();
+    playing = null;
     const f = driver.fight;
     let guard = 0;
     while (!f.result && guard++ < 100000) {
@@ -602,11 +642,9 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   /** Shows queued beats without pacing or effects, keeping only what changes the field. */
   function drainQuiet() {
     for (const b of queue.splice(0)) {
-      for (const el of linesEl.children) el.classList.add("old");
+      clear(linesEl);
       for (const line of b.lines) {
-        const el = h("div", { class: `l ${line.tone} old` }, line.tag && TAG_ICON[line.tag] ? iconEl(TAG_ICON[line.tag]) : null, h("span", null, line.text));
-        linesEl.append(el);
-        while (linesEl.children.length > 12) linesEl.firstChild!.remove();
+        linesEl.append(lineEl(line, true));
         history.push({ tick: Math.floor(b.at / SUBTICKS), text: line.text, tone: line.tone, tag: line.tag });
         for (const ev of line.events) if (ev.t === "down" || ev.t === "leave" || ev.t === "join" || ev.t === "revive" || ev.t === "fight_start" || ev.t === "fight_end") show(ev);
       }
@@ -646,25 +684,24 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         }
       }
       if ((driver.phase === "won" || driver.phase === "lost") && !playing && !queue.length && !driver.pending.length) endOfFight();
-    }
+    } else if (playing && playing.typedAt !== null) cursorEl.style.visibility = Math.floor(now / 400) % 2 ? "hidden" : "visible";
     scene.frame(vwall);
     updateRows();
     updateFoes();
     (tick.lastChild as HTMLElement).textContent = String(Math.floor(driver.tick));
-    if (scene.selected) renderInspect();
     raf = requestAnimationFrame(frameStep);
   }
   const onKey = (e: KeyboardEvent) => {
     if (stopped) return;
     if ((e.target as HTMLElement)?.tagName === "INPUT") return;
     if (e.key === " ") { paused = !paused; stepping = false; renderCtl(); e.preventDefault(); }
-    else if (e.key === "n" || e.key === ".") { paused = true; stepping = true; renderCtl(); }
+    else if (e.key === "n" || e.key === "." || e.key === "Enter") { advance(); }
     else if (e.key === "1") { speed = 1; renderCtl(); }
     else if (e.key === "2") { speed = 2; renderCtl(); }
     else if (e.key === "3" || e.key === "4") { speed = 4; renderCtl(); }
     else if (e.key === "s") fastForward();
     else if (e.key === "l") openLog();
-    else if (e.key === "Escape") { if (overlay) closeOverlay(); else select(null); }
+    else if (e.key === "Escape") { if (overlay) closeOverlay(true); }
   };
   window.addEventListener("keydown", onKey);
   if (driver.phase === "run_won" || driver.phase === "run_lost") {

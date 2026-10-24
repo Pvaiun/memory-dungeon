@@ -28,13 +28,14 @@ Promise.all([loadArt(), document.fonts.load(`8px ${FONT}`)])
 
 // A gallery of every sprite as drawn, for checking the art: window.__gallery().
 import { classes, enemies } from "./content.js";
-import { actorEl, enemyEl, faceEl, glyphEl } from "./pixel.js";
-import { STATUS_GLYPH } from "./art.js";
+import { actorEl, enemyEl, faceEl, statusEl } from "./pixel.js";
+import { manifest } from "./art.js";
+import { gearFor } from "./state.js";
 (window as unknown as { __gallery: () => void }).__gallery = () => {
   const grid = h("div", { style: "display:flex;flex-wrap:wrap;gap:.5rem;align-items:flex-end;background:#8cba5c;padding:.5rem" });
-  for (const k of classes) grid.append(h("div", { style: "display:flex;flex-direction:column;align-items:center" }, actorEl(k.id), faceEl(k.id)));
+  for (const k of classes) grid.append(h("div", { style: "display:flex;flex-direction:column;align-items:center" }, actorEl(k.id, "wait", 1, gearFor(k.id).weapon), faceEl(k.id)));
   for (const e of enemies) grid.append(enemyEl(e.id));
-  for (const id of Object.keys(STATUS_GLYPH)) grid.append(glyphEl(id, 7, 2));
+  for (const id of Object.keys(manifest.statuses)) grid.append(statusEl(id, 7, 2));
   document.body.style.height = "auto";
   app.style.height = "auto";
   app.replaceChildren(h("div", { class: "frame", style: "overflow:visible;height:auto" }, grid));

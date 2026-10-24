@@ -21,7 +21,7 @@ export type Beat = { at: number; kind: BeatKind; lines: Line[]; actor?: string; 
 
 export type Lookup = { unit: (id: string) => CUnit | undefined; name: (id: string) => string };
 
-const MAX_LINES = 5;
+const MAX_LINES = 4;
 const BITERS = new Set(["wolf", "snow_wolf", "snake", "bat", "hellhound", "leech"]);
 
 export class Narrator {
