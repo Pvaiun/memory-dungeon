@@ -6,7 +6,9 @@ import type { Party } from "../../src/schema.js";
 import { c, classes, formations } from "./content.js";
 import { plainWeapon } from "../../src/sim/parties.js";
 
-export type Settings = { speed: number; sound: boolean; designer: boolean; autoContinue: boolean; theme: string; bigNumbers: boolean };
+/** `portraits`: what stands for a class in the menus. "faces" everywhere, "sprites" everywhere, or "mixed": sprites in the party's slots, faces elsewhere. */
+export type Portraits = "faces" | "sprites" | "mixed";
+export type Settings = { speed: number; sound: boolean; designer: boolean; autoContinue: boolean; theme: string; bigNumbers: boolean; portraits: Portraits };
 
 export type Setup = {
   party: string[];
@@ -27,7 +29,7 @@ function fresh(): Setup {
     gear: {},
     abilities: {},
     seed: 1,
-    settings: { speed: 1, sound: true, designer: false, autoContinue: false, theme: "night", bigNumbers: false },
+    settings: { speed: 1, sound: true, designer: false, autoContinue: false, theme: "night", bigNumbers: false, portraits: "mixed" },
   };
 }
 
@@ -42,6 +44,7 @@ function load(): Setup {
     s.settings = { ...fresh().settings, ...old };
     if (!(s.settings.speed === 1 || s.settings.speed === 2 || s.settings.speed === 4)) s.settings.speed = 1;
     if (s.settings.theme !== "night" && s.settings.theme !== "day") s.settings.theme = "night";
+    if (!["faces", "sprites", "mixed"].includes(s.settings.portraits)) s.settings.portraits = "mixed";
     delete (s.settings as { tickMs?: number }).tickMs;
     delete (s.settings as { palette?: string }).palette;
     s.party = s.party.filter((id) => c.classes.has(id)).slice(0, 3);

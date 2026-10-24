@@ -116,6 +116,7 @@ button.sm { padding: .25rem .375rem; }
 .card .name { white-space: nowrap; overflow: hidden; max-width: 100%; }
 .card .codes { color: var(--dim); white-space: normal; overflow-wrap: anywhere; line-height: 1.25rem; min-height: 2.5rem; }
 .card .empty { color: var(--dim); height: 4.5rem; display: flex; align-items: center; }
+.portrait { display: inline-flex; align-items: flex-end; justify-content: center; min-height: 4.5rem; flex: 0 0 auto; }
 .win.roster { padding-left: .125rem; padding-right: .125rem; }
 .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: .25rem 0; }
 .cell { display: flex; flex-direction: column; align-items: center; gap: .25rem; padding: .375rem 0; text-transform: uppercase; cursor: pointer; border-radius: .25rem; white-space: nowrap; overflow: hidden; }
