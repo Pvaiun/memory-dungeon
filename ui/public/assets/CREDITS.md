@@ -7,4 +7,6 @@ Sprites in this folder are a processed subset of packs the director supplied for
 - `iconset.png`: Iconset by Willibab / Monsteretrope, CC BY.
 - `vfx/`: frames from the "Pixel Animations and Effects Pack" by finalbossblues (timefantasy.net), packed into strips.
 
-Regenerate with `python3 -I ui/tools/assets.py <packs dir> ui/public/assets`.
+The font (`../fonts/`) is Press Start 2P by Cody "CodeMan38" Boisclair, SIL Open Font License 1.1 (`../fonts/OFL.txt`).
+
+Regenerate the sprites with `python3 -I ui/tools/assets.py <packs dir> ui/public/assets`.

@@ -1,16 +1,18 @@
 /**
  * The content the interface shows: the core set pack, loaded once, with the
  * single fights of every dungeon added as one-stage dungeons ("dungeon~stage"),
- * and the display scale. The data stores amounts at 1,000 per point of the
- * documents' relative scale; the interface shows them at 100 per point, so a
- * Knight has 500 HP and a sword hits for about 110.
+ * the display scale, and the short names and codes the Game Boy layout uses.
+ * The data stores amounts at 1,000 per point of the documents' relative scale;
+ * the interface shows 10 per point (a Knight has 50 HP, a sword hits for about
+ * 11), or 100 per point with the "big numbers" setting.
  */
 import raw from "../../content/core-set.pack.json";
 import { build } from "../../src/sim/content.js";
 import type { Content } from "../../src/engine/run.js";
 import type { AbilityT, ClassDefT, DungeonT, EnemyT, FormationT, GearT, StatusT, WeaponKindT } from "../../src/schema.js";
 
-export const DISPLAY_DIV = 10;
+export let DISPLAY_DIV = 100;
+export const setDisplayDiv = (d: number) => { DISPLAY_DIV = d; };
 /** An amount in the data, as shown. */
 export const disp = (n: number) => Math.round(n / DISPLAY_DIV);
 /** An amount in the data, in points of the documents' scale (HP 5 is 5,000). */
@@ -42,44 +44,56 @@ export const status = (id: string): StatusT => c.statuses.get(id)!;
 export const enemy = (id: string): EnemyT => c.enemies.get(id)!;
 export const gearOf = (id: string): GearT => c.gear.get(id)!;
 export const kindOf = (id: string): WeaponKindT => c.weaponKinds.get(id)!;
-export const statName = (key: string): string => {
-  const d = c.stats.get(key);
-  if (d) return d.name;
-  if (key.startsWith("resist:")) return `${elementName(key.slice(7))} resistance`;
-  if (key.startsWith("immune:")) return `Immune: ${key.slice(7).replace(/:/g, " ")}`;
-  return key;
-};
 export const elementName = (id: string): string => c.pack.elements.find((e) => e.id === id)?.name ?? id;
 
-/** Stats that show on a sheet, in order, with how they're displayed. */
-export type StatShow = { key: string; name: string; kind: "amount" | "percent" | "points" | "hidden" };
-export const SHEET_STATS: StatShow[] = [
-  { key: "max_hp", name: "HP", kind: "amount" },
-  { key: "max_mp", name: "MP", kind: "amount" },
-  { key: "mp_regen", name: "MP regen", kind: "amount" },
-  { key: "attack", name: "Attack", kind: "amount" },
-  { key: "magic", name: "Magic", kind: "amount" },
-  { key: "armor", name: "Armor", kind: "amount" },
-  { key: "crit_chance", name: "Crit chance", kind: "percent" },
-  { key: "aggro", name: "Aggro", kind: "amount" },
-];
-export const SPECIAL_STATS: StatShow[] = [
-  { key: "evasion", name: "Evasion", kind: "percent" },
-  { key: "accuracy", name: "Accuracy", kind: "percent" },
-  { key: "crit_multiplier", name: "Crit damage", kind: "percent" },
-  { key: "double_strike", name: "Double strike", kind: "percent" },
-  { key: "thorns", name: "Thorns", kind: "amount" },
-  { key: "lifesteal", name: "Lifesteal", kind: "percent" },
-  { key: "siphon", name: "Siphon", kind: "percent" },
-  { key: "healing_received", name: "Healing received", kind: "percent" },
-  { key: "attack_speed", name: "Attack speed", kind: "percent" },
-  { key: "cooldown_reduction", name: "Cooldown reduction", kind: "percent" },
-  { key: "cast_time_reduction", name: "Cast speed", kind: "percent" },
-];
+// ─── Short forms, for 22 characters a line ───
 
-/** A stat's value, as the sheet shows it: amounts in display units with the relative points beside. */
-export function showStat(key: string, v: number, kind: StatShow["kind"]): string {
-  if (kind === "amount") return `${disp(v)}`;
-  if (kind === "percent") return `${Math.round(v)}%`;
-  return String(v);
+const SHORT: Record<string, string> = { bramble_knight: "BRAMBLE", pyromancer: "PYRO", frostweaver: "FROST", stormcaller: "STORM", geomancer: "GEO" };
+/** A class's name in eight letters or fewer. */
+export const shortName = (id: string): string => SHORT[id] ?? (c.classes.get(id)?.name ?? id).toUpperCase();
+/** A run's name without its "Run N:" prefix, a fight's without its number. */
+export const runName = (d: DungeonT) => d.name.replace(/^Run \d+: /, "");
+export const fightName = (s: { name?: string; id: string }) => (s.name ?? s.id).replace(/^\d+\. /, "");
+
+export const STAT_CODE: Record<string, string> = {
+  max_hp: "HP", max_mp: "MP", mp_regen: "REG", attack: "ATK", magic: "MAG", armor: "ARM", crit_chance: "CRT", aggro: "AGG",
+  evasion: "EVA", accuracy: "ACC", crit_multiplier: "CRD", double_strike: "DBL", thorns: "THN", lifesteal: "LFS", siphon: "SPH",
+  healing_received: "HEAL", attack_speed: "SPD", cooldown_reduction: "CDR", cast_time_reduction: "CAST", resist: "RES",
+};
+export const ELEMENT_CODE: Record<string, string> = { fire: "FIRE", ice: "ICE", lightning: "LTNG", wind: "WIND", earth: "EARTH", light: "LIGHT", dark: "DARK" };
+export function statCode(key: string): string {
+  if (STAT_CODE[key]) return STAT_CODE[key];
+  if (key.startsWith("resist:")) return ELEMENT_CODE[key.slice(7)] ?? key.slice(7).toUpperCase();
+  if (key.startsWith("immune:")) return `NO ${key.slice(7).toUpperCase()}`;
+  return key.toUpperCase().slice(0, 4);
+}
+const STATUS_CODE: Record<string, string> = {
+  poison: "PSN", regen: "RGN", shield: "SHD", might: "MGT", weaken: "WKN", guard: "GRD", stun: "STN", slow: "SLW", haste: "HST", taunt: "TNT",
+  burn: "BRN", chill: "CHL", shock: "SHK", ward: "WRD", sunder: "SND", silence: "SIL", hidden: "HID", rot: "ROT", clarity: "CLR", aegis: "AEG",
+  doom: "DOOM", bulwark: "BLW", bulwark_broken: "BRK", ice_crust: "CRST", shadow_strike_on: "SHDW", bloodlust_on: "BLD", bedrock_on: "BED",
+};
+export const statusCode = (id: string): string => STATUS_CODE[id] ?? (c.statuses.get(id)?.name ?? id).replace(/[^a-z]/gi, "").slice(0, 4).toUpperCase();
+
+/** A stat's value as shown: amounts at the display scale, percent stats as they are. */
+export function showStat(key: string, v: number): string {
+  const def = c.stats.get(key);
+  if (key === "crit_chance" || def?.kind === "points" || key.startsWith("resist")) return `${Math.round(v)}%`;
+  return `${disp(v)}`;
+}
+/** The sheet's stats, in order. */
+export const SHEET_STATS = ["max_hp", "max_mp", "mp_regen", "attack", "magic", "armor", "crit_chance", "aggro"];
+export const SPECIAL_STATS = ["evasion", "accuracy", "crit_multiplier", "double_strike", "thorns", "lifesteal", "siphon", "healing_received", "attack_speed", "cooldown_reduction", "cast_time_reduction"];
+
+/** Stat changes as "ARM+1 HP+2": points for amount stats, percent for the rest. */
+export function changeCodes(stats: { stat: string; flat?: number; pct?: number }[] | undefined): string {
+  if (!stats?.length) return "";
+  return stats.map((s) => {
+    const def = c.stats.get(s.stat);
+    const v = s.flat ?? 0;
+    const sign = v >= 0 ? "+" : "";
+    let shown: string;
+    if (s.stat === "crit_chance" || def?.kind === "points" || s.stat.startsWith("resist")) shown = `${sign}${v}%`;
+    else shown = `${sign}${Math.round((v / 1000) * 10) / 10}`;
+    return `${statCode(s.stat)}${shown}${s.pct ? `${s.pct > 0 ? "+" : ""}${s.pct}%` : ""}`;
+  }).join(" ");
 }
