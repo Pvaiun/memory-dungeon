@@ -1,0 +1,11 @@
+{
+  "id": "core-set-starters",
+  "level": "combat",
+  "about": "The core set on the harness: a few named trios on runs 1 and 2, starting kit, neutral formation. A small study for correctness and the ballpark, not balance.",
+  "content": { "pack": "content/core-set.pack.json" },
+  "targets": { "dungeons": ["old_road", "crypt"], "challenges": false },
+  "parties": { "trios": [["knight", "cleric", "ranger"], ["hoplite", "cleric", "stormcaller"], ["ranger", "cleric", "pyromancer"], ["knight", "bard", "vampire"]] },
+  "seeds": 40,
+  "perkSeeds": 0,
+  "effectSeeds": 0
+}

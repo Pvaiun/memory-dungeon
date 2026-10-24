@@ -115,7 +115,7 @@ test("loot rolls from the first-clear table on a first clear, and the replay tab
   const pickBig: Picker = (d) => d.options.reduce((a, b) => (bonus(b) > bonus(a) ? b : a));
   const pool = c.dungeons.get(DUNGEON)!.perkPool;
   const bonus = (p: string) => pool.indexOf(p) % 4;
-  const loot = c.dungeons.get(DUNGEON)!.loot;
+  const loot = c.dungeons.get(DUNGEON)!.loot!;
   let wins = 0;
   for (let seed = 1; seed <= 200; seed++) {
     for (const firstClear of [true, false]) {
@@ -158,6 +158,6 @@ test("logging off changes nothing but the log", () => {
 
 test("pinned run: any change here means old records replay differently, so bump ENGINE_VERSION", () => {
   const run = play(c, combat, input(1), firstOption, { log: true });
-  assert.equal(ENGINE_VERSION, "0.5");
+  assert.equal(ENGINE_VERSION, "0.6");
   assert.equal(fingerprint(JSON.stringify(run.log!.slice(1))), "5156731185615c25");
 });

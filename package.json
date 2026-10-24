@@ -7,7 +7,7 @@
     "example": "examples"
   },
   "scripts": {
-    "validate": "tsx src/cli.ts fixtures/hollow.pack.json",
+    "validate": "tsx src/cli.ts content/core-set.pack.json && tsx src/cli.ts fixtures/hollow.pack.json",
     "test": "vitest run",
     "typecheck": "tsc -p . && tsc -p tsconfig.core.json",
     "build:schema": "tsx src/export-json-schema.ts",
@@ -15,7 +15,9 @@
     "examples": "tsx src/extract-examples.ts",
     "dungeon": "tsx src/dungeon.ts",
     "pack": "tsx src/pack.ts",
-    "study": "esbuild src/study.ts --bundle --platform=node --format=esm --outfile=out/study.mjs --log-level=warning && node out/study.mjs"
+    "study": "esbuild src/study.ts --bundle --platform=node --format=esm --outfile=out/study.mjs --log-level=warning && node out/study.mjs",
+    "content": "tsx content/core-set/build.ts",
+    "smoke": "tsx src/smoke.ts"
   },
   "keywords": [],
   "author": "",

@@ -70,7 +70,7 @@ export function compile(s: StatusT): Compiled {
   for (const t of s.taken ?? []) add(t, t.pct);
   for (const r of s.riders ?? []) add(r, r.add.amount);
   const effects = [...(s.pulse?.do ?? []), ...(s.trigger?.do ?? []), ...(s.reactions ?? []).flatMap((r) => r.do)];
-  for (const e of effects) add(e, e.op === "remove" ? 0 : e.op === "apply" ? (e.stacks ?? 1) : e.amount);
+  for (const e of effects) add(e, numOf(e));
   let cap = -1;
   if (s.cap !== undefined) {
     cap = nums.length;
@@ -82,8 +82,9 @@ export function compile(s: StatusT): Compiled {
   for (const b of s.boosts ?? []) kinds.push(["boost", b.tag]);
   for (const t of s.taken ?? []) kinds.push(["taken", t.tag ?? null]);
   if (s.absorb) kinds.push(["absorb", null]);
+  if (s.block) kinds.push(["block", null]);
   if (s.lockout) kinds.push(["lockout", s.lockout.covers]);
-  if (s.riders?.length || s.convert) kinds.push(["action_change", null]);
+  if (s.riders?.length || s.convert || s.seek || s.strike) kinds.push(["action_change", null]);
   if (s.pulse) kinds.push(["pulse", null]);
   if (s.reactions?.length || s.trigger) kinds.push(["reaction", null]);
   const harms = (s.pulse?.do ?? []).some((e) => e.op === "damage" && (e.to ?? "holder") === "holder");
@@ -91,6 +92,22 @@ export function compile(s: StatusT): Compiled {
   out = { nums, cap, kinds, harms, tags };
   compiled.set(s, out);
   return out;
+}
+
+/** The one number an effect carries, if any (the slot is reserved either way). */
+function numOf(e: { op: string } & Record<string, unknown>): NumT {
+  switch (e.op) {
+    case "damage":
+    case "heal":
+    case "mp":
+      return e.amount as NumT;
+    case "apply":
+      return (e.stacks as NumT | undefined) ?? 1;
+    case "revive":
+      return e.hp as NumT;
+    default:
+      return 0;
+  }
 }
 
 /** The slot of the number(s) `owner` holds in its status. */

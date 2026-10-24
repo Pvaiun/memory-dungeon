@@ -4,8 +4,8 @@
  */
 import type { Content } from "../engine/run.js";
 import { next, type Rng } from "../engine/rng.js";
-import type { Party } from "../schema.js";
-import { unmetConstraints } from "../validate.js";
+import { SLOTS, type Party } from "../schema.js";
+import { canEquip, unmetConstraints } from "../validate.js";
 
 /** What a player owns. Gear is a count per item. */
 export type Owned = { classes: string[]; formations: string[]; gear: Record<string, number> };
@@ -25,8 +25,8 @@ export const everything = (c: Content): Owned => ({
 
 /**
  * A party's colour: the broad kind of party it is. FOR NOW, it's the set of
- * classes in it (step 3's placeholder, kept through step 4). Steps 5 and 8 to
- * 10 replace it, likely with the party's verbs weighted by efficacy.
+ * classes in it (step 3's placeholder, kept through the core set's build). A
+ * later step may replace it with something that reads the party's answers.
  */
 export type Colour = (c: Content, p: Party) => string;
 export const classColour: Colour = (c, p) => [...new Set(p.units.map((u) => u.class))].sort().join("+");
@@ -52,29 +52,33 @@ export function make(c: Content, owned: Owned, classes: readonly string[], forma
     const old = keep?.units.find((u) => u.class === cls);
     return { class: cls, position: f.positions[i].id, abilities: old?.abilities ?? c.classes.get(cls)!.abilities.slice(0, c.pack.design.abilitiesEquipped), gear: {} as Record<string, string> };
   });
-  // Units kept from `keep` keep their gear; new units get the best-ranked owned gear left.
+  // Units kept from `keep` keep their gear. New units get their class's starting kit: the plain weapon of its first kind
+  // (or the first owned weapon it can use), and empty armor and amulet slots.
   const kept = (cls: string) => keep?.units.find((v) => v.class === cls);
   for (const u of units) for (const [slot, g] of Object.entries(kept(u.class)?.gear ?? {})) if ((left[g] ?? 0) > 0) (u.gear[slot] = g), left[g]--;
   for (const u of units) {
     if (kept(u.class)) continue;
-    for (const slot of slotsOf(c, u.class)) {
-      const g = gearFor(c, u.class, slot).find((id) => (left[id] ?? 0) > 0);
-      if (g) (u.gear[slot] = g), left[g]--;
-    }
+    const plain = plainWeapon(c, u.class);
+    const g = [...(plain ? [plain] : []), ...gearFor(c, u.class, "weapon")].find((id) => (left[id] ?? 0) > 0);
+    if (g) (u.gear.weapon = g), left[g]--;
   }
   return { formation, units };
 }
 
-export function slotsOf(c: Content, cls: string): string[] {
-  return c.pack.slots.filter((s) => !s.class || s.class === cls).map((s) => s.id);
+/** The plain weapon of a class's first kind, which it arrives with. */
+export function plainWeapon(c: Content, cls: string): string | undefined {
+  const kind = c.classes.get(cls)!.weapons[0];
+  return c.pack.gear.find((g) => g.slot === "weapon" && g.source === "starter" && g.weapon?.kind === kind)?.id;
 }
 
-/** Gear that fits this class's slot, best rank first. */
+export function slotsOf(_c: Content, _cls: string): string[] {
+  return Object.keys(SLOTS);
+}
+
+/** Gear that fits this class in this slot, in the pack's order. */
 export function gearFor(c: Content, cls: string, slot: string): string[] {
-  return c.pack.gear
-    .filter((g) => g.slot === slot && (!g.class || g.class.includes(cls)))
-    .sort((a, b) => (b.rank ?? 0) - (a.rank ?? 0))
-    .map((g) => g.id);
+  const def = c.classes.get(cls)!;
+  return c.pack.gear.filter((g) => g.slot === slot && canEquip(def, g)).map((g) => g.id);
 }
 
 export const fits = (c: Content, p: Party, dungeon: string, challenge?: string) =>

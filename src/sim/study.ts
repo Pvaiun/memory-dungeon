@@ -34,8 +34,12 @@ export const CombatStudy = z.strictObject({
     /** Single fights, as "dungeon/stage". */
     fights: z.array(z.string()).default([]),
   }),
-  /** Every set of classes up to `max` (in the first formation that fits, or all of them), or a fixed list. */
-  parties: z.union([z.strictObject({ max: z.number().int().positive().optional(), formations: z.enum(["first", "all"]).default("first") }), z.array(Party)]),
+  /** Every set of classes up to `max` (in the first formation that fits, or all of them), a list of class sets in one formation with their starting kit, or a fixed list. */
+  parties: z.union([
+    z.strictObject({ max: z.number().int().positive().optional(), formations: z.enum(["first", "all"]).default("first") }),
+    z.strictObject({ trios: z.array(z.array(z.string()).min(1)).min(1), formation: z.string().optional() }),
+    z.array(Party),
+  ]),
   seeds: z.number().int().min(20),
   /** How perks are picked: at random (each seed its own dice), or by a fixed priority list. */
   perks: z.union([z.literal("random"), z.strictObject({ list: z.array(z.string()) })]).default("random"),

@@ -5,6 +5,7 @@
  * progression.test.ts.
  */
 import { test } from "vitest";
+import { readFileSync } from "node:fs";
 import assert from "node:assert/strict";
 import { combat as rules } from "../engine/combat/rules.js";
 import { randomPicker } from "../engine/run.js";
@@ -129,10 +130,23 @@ test("feel: reading packs show what a player sees, never enemy HP or stats", () 
     const text = readingPack(c, rules, p, i + 1);
     assert.doesNotMatch(text, /(Ash Wolf|Bog Wight|Grey Mother)[A-Z ]* (takes|is healed)[^\n]*HP/, "enemy HP is hidden");
     assert.doesNotMatch(text, /\b(max_hp|max_mp|resist:|immune:|crit_chance)|\b(armor|accuracy|evasion|attack|magic|aggro) \d/i, "no stat values");
-    assert.match(text, /agile, strong in numbers/);
+    assert.match(text, /Ash Wolf: A lean grey wolf\. Agile, and strong in numbers/, "each enemy is described in the game's own words");
   }
   assert.ok(combatDigest(results, 1000, "0.1", null).split("\n").length <= 40);
   const key = [{ pack: 1, won: false, winning: ["ranger+warrior"] }, { pack: 2, won: false, winning: ["cleric"] }];
   const scored = scoreColours("## Pack 1\n...\nColour: Ranger, Warrior\n## Pack 2\nColour: Warrior", key, new Map([["warrior", "warrior"], ["ranger", "ranger"], ["cleric", "cleric"]]));
   assert.equal(scored.right, 1);
+});
+
+test("a study can name trios: each is built in one formation with its starting kit", () => {
+  const s = CombatStudy.parse({
+    id: "trios", level: "combat", content: { pack: "content/core-set.pack.json" }, targets: { dungeons: ["old_road"], challenges: false },
+    parties: { trios: [["knight", "cleric", "ranger"], ["knight", "bard"]] }, seeds: 20, perkSeeds: 0,
+  });
+  const raw = JSON.parse(readFileSync("content/core-set.pack.json", "utf8"));
+  const { results } = runCombat(s, raw, rules);
+  const parties = results.variants[0].targets[0].parties;
+  assert.deepEqual(parties.map((p) => p.size), [3, 2]);
+  assert.ok(parties[0].label.startsWith("Knight, Cleric, Ranger (Neutral)"));
+  assert.equal(results.runs, 40);
 });

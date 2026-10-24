@@ -52,11 +52,10 @@ export function readingPack(c: Content, rules: Rules, r: Reading, n: number): st
     const gear = Object.values(u.gear).map((g) => c.pack.gear.find((x) => x.id === g)!).map((g) => `${g.name} (${g.text})`);
     out.push(`- ${s.name}: ${s.text ?? ""}${gear.length ? ` Wears: ${gear.join("; ")}` : ""}`);
   }
-  const traits = new Map(c.pack.traits.map((t) => [t.id, t.word]));
   const seenEnemies = new Map<string, string>();
   for (const s of d.stages) if (s.kind === "fight") for (const id of s.enemies) {
     const e = c.enemies.get(id)!;
-    seenEnemies.set(e.name, (e.traits ?? []).map((t) => traits.get(t) ?? t).join(", "));
+    seenEnemies.set(e.name, e.text);
   }
   out.push("", "**Enemies, as the game describes them:**", ...[...seenEnemies].map(([name, words]) => `- ${name}: ${words || "no description"}`), "", "## What happened");
   const perkName = (id: string) => c.pack.perks.find((p) => p.id === id);
@@ -78,6 +77,22 @@ export function readingPack(c: Content, rules: Rules, r: Reading, n: number): st
         out.push("", `### ${e.boss ? "Boss fight" : "Fight"}: ${String(e.stage).replace(/_/g, " ")}`, `Your party: ${party}. Against: ${foes}.`);
         break;
       }
+      case "join": {
+        const u = e.unit as { id: string; name: string; side: string; hp: number; max: number };
+        names.set(u.id, u.name);
+        if (u.side === "enemy") enemyIds.add(u.id);
+        out.push(`${own}${u.name} joins the fight${hp(u.id, u.hp)}.`);
+        break;
+      }
+      case "leave":
+        out.push(`${own}${who(e.unit)} is gone.`);
+        break;
+      case "revive":
+        out.push(`${own}${who(e.unit)} is raised by ${who(e.by)}${hp(e.unit, e.hp)}${e.ready ? ", ready to act" : ""}.`);
+        break;
+      case "strike":
+        out.push(`${own}${who(e.by)} strikes again (${e.name}) at ${who(e.target)}.`);
+        break;
       case "cast":
         out.push(`${t}${who(e.by)} begins ${e.name}.`);
         break;
@@ -88,13 +103,14 @@ export function readingPack(c: Content, rules: Rules, r: Reading, n: number): st
         out.push(`${t}${who(e.by)}'s ${e.name} fails${e.why === "mp" ? " (not enough MP)" : ""}.`);
         break;
       case "dmg": {
-        const from = e.part === "pulse" || e.part === "reaction" ? ` from ${String(e.src).toUpperCase()}` : "";
+        const from = e.part === "pulse" || e.part === "reaction" ? ` from ${String(e.src).toUpperCase()}` : e.part === "extra" ? " (extra strike)" : "";
         if (e.word === "MISS") out.push(`${own}${who(e.target)}: MISS${from}.`);
         else out.push(`${own}${who(e.target)} takes ${e.crit ? "CRIT " : ""}${e.amount}${e.word ? ` ${e.word}` : ""}${from}${e.soaked ? `, ${e.soaked} soaked by a shield` : ""}${hp(e.target, e.hp, e.shield)}.`);
         break;
       }
       case "heal":
-        out.push(`${own}${who(e.target)} is healed for ${e.crit ? "CRIT " : ""}${e.amount}${hp(e.target, e.hp)}.`);
+        if (e.word === "ABSORB") out.push(`${own}${who(e.target)} ABSORBS it, healing ${e.amount}${hp(e.target, e.hp)}.`);
+        else out.push(`${own}${who(e.target)} is healed for ${e.crit ? "CRIT " : ""}${e.amount}${hp(e.target, e.hp)}.`);
         break;
       case "status":
         out.push(`${own}${who(e.unit)}: ${e.name}${e.total !== null ? ` ${Number((e.total as number).toFixed(1))}` : ""}.`);

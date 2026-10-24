@@ -1,21 +1,22 @@
 /**
  * The battle system, plugged into the run machinery as `Rules`. It replaces
  * step 2's stand-in. The fight itself is in fight.ts; this file builds units
- * from content, carries HP and MP between fights, and runs perk offers and loot.
+ * from content, carries HP, MP and knockouts between fights, and runs perk
+ * offers and loot (unused by the core set, which has no progression yet).
  *
  * - A party unit's stats are its class's, plus stat grants from its class
  *   passive, gear, formation slot, formation and perks.
  * - Statuses from those are applied at each fight start.
- * - HP and MP carry between fights. Recovery between fights belongs to step 11,
- *   so there is none yet, and KO'd units stay down.
+ * - HP and MP carry between fights, and nothing restores them. A knocked-out
+ *   unit joins later fights knocked out, until something revives it.
  * - Each unit draws from its own dice: party units by class, enemies by
  *   their place in the fight. The same seed brings the same luck to the same
  *   unit, whatever else is in the fight.
  */
-import type { FixedStatT, LootTableT } from "../../schema.js";
-import { next, rngFor, shuffle, type Rng } from "../rng.js";
+import { SLOTS, type FixedStatT, type LootTableT } from "../../schema.js";
+import { next, rngFor, type Rng } from "../rng.js";
 import type { Content, Rules, Unit } from "../run.js";
-import { derive, step, world, type CFight, type CUnit } from "./fight.js";
+import { derive, makeUnit, step, world, type CFight, type CUnit } from "./fight.js";
 
 /** A party unit between fights: what it brings to each fight. */
 export type Member = Unit & {
@@ -48,7 +49,7 @@ function restat(c: Content, m: Member) {
 }
 
 function fighter(base: Omit<CUnit, "ko" | "rng" | "acts" | "cast" | "busy" | "statuses">, abilities: string[], rng: Rng): CUnit {
-  return { ...base, ko: false, rng, acts: [...abilities.map((id) => ({ id, ready: 0 })), { id: "basic", ready: 0 }], cast: null, busy: 0, statuses: [] };
+  return { ...base, ko: base.hp <= 0, rng, acts: [...abilities.map((id) => ({ id, ready: 0 })), { id: "basic", ready: 0 }], cast: null, busy: 0, statuses: [] };
 }
 
 export const combat: Rules = {
@@ -61,7 +62,7 @@ export const combat: Rules = {
       const slot = f.positions.findIndex((p) => p.id === pu.position);
       const m = { flat: {}, pct: {}, start: [] as string[] };
       grant(m, cls.passive);
-      const gear = c.pack.slots.flatMap((s) => (pu.gear[s.id] ? [c.gear.get(pu.gear[s.id])!] : []));
+      const gear = Object.keys(SLOTS).flatMap((s) => (pu.gear[s] ? [c.gear.get(pu.gear[s])!] : []));
       for (const g of gear) grant(m, g);
       grant(m, f.positions[slot]);
       grant(m, f);
@@ -77,34 +78,18 @@ export const combat: Rules = {
   startFight(x, stage, _rng) {
     const seed = x.run.record.seed;
     const party = (x.run.party as Member[])
-      .filter((m) => m.hp > 0)
       .map(({ abilities, ...m }) => {
         const copy = { ...m, stats: { ...m.stats }, base: { ...m.base }, flat: { ...m.flat }, pct: { ...m.pct }, start: [...m.start] };
         return fighter(copy, abilities, rngFor(seed, `fight:${stage.id}:${m.ref}`));
       })
       .sort((a, b) => a.slot - b.slot);
+    const f: CFight = {
+      stage: stage.id, boss: stage.boss ?? false, units: party, round: 0, result: null, decided: false,
+      now: 0, seq: 0, queue: [], moments: 0, begun: false, seed,
+    };
     const count = new Map<string, number>();
     stage.enemies.forEach((id) => count.set(id, (count.get(id) ?? 0) + 1));
-    const seen = new Map<string, number>();
-    const enemies = stage.enemies.map((id, i) => {
-      const e = x.c.enemies.get(id)!;
-      const n = seen.get(id) ?? 0;
-      seen.set(id, n + 1);
-      const m = { base: { ...e.stats }, flat: {}, pct: {} };
-      const stats = derive(x.c, m);
-      return fighter(
-        {
-          id: `e${i + 1}`, ref: id, name: count.get(id)! > 1 ? `${e.name} ${"ABCDEFGH"[n]}` : e.name, side: "enemy", stats, hp: stats.max_hp, mp: stats.max_mp,
-          slot: i, ...m, start: [...(e.statuses ?? [])], weapon: e.weapon ? `enemy:${id}` : "unarmed",
-        },
-        e.abilities ?? [],
-        rngFor(seed, `fight:${stage.id}:e${i + 1}`),
-      );
-    });
-    const f: CFight = {
-      stage: stage.id, boss: stage.boss ?? false, units: [...party, ...enemies], round: 0, result: null, decided: false,
-      now: 0, seq: 0, queue: [], moments: 0, begun: false,
-    };
+    for (const id of stage.enemies) f.units.push(makeUnit(x.c, f, id, "enemy", count.get(id)! > 1));
     return f;
   },
 
@@ -112,7 +97,7 @@ export const combat: Rules = {
     step(world(x.c, f as CFight, x.log));
   },
 
-  /** Every status ends with the fight: a max HP increase that ends caps current HP, and that HP carries over. */
+  /** Every status ends with the fight: a max HP increase that ends caps current HP, and that HP carries over. A revived unit carries its HP too. */
   endFight(x, f) {
     for (const m of x.run.party as Member[]) {
       const u = (f as CFight).units.find((v) => v.id === m.id);
@@ -143,9 +128,19 @@ export const combat: Rules = {
 
   loot(x, rng) {
     const d = x.c.dungeons.get(x.run.record.dungeon)!;
+    if (!d.loot) return [];
     return roll(x.run.record.firstClear ? d.loot.firstClear : d.loot.replay, rng);
   },
 };
+
+function shuffle<T>(rng: Rng, xs: readonly T[]): T[] {
+  const out = xs.slice();
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(next(rng) * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
 
 function roll(t: LootTableT, rng: Rng): string[] {
   const out = [...(t.guaranteed ?? [])];

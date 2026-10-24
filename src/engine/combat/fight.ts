@@ -1,6 +1,8 @@
 /**
- * The fight: the director's combat design (steps/04-combat-concepts/design.md),
- * run on sub-ticks. Section numbers in comments refer to that design.
+ * The fight: the core set's combat system (docs/core-set/rules-and-vocabulary.md),
+ * on step 4's machinery (steps/04-combat-concepts/design.md), run on sub-ticks.
+ * Section numbers in comments refer to step 4's design, whose finer rules
+ * still stand where the core set is silent.
  *
  * A fight is plain data, so a run can be saved mid-fight. Each `step` plays one
  * moment, the next sub-tick on which anything happens, in this order:
@@ -14,7 +16,7 @@
  */
 import * as S from "../../schema.js";
 import type { Entry } from "../log.js";
-import { next, type Rng } from "../rng.js";
+import { next, rngFor, type Rng } from "../rng.js";
 import type { Content, Fight, Unit } from "../run.js";
 import {
   baseOf, basicSpeed, compile, finalValue, rescale, role, sameSpeed, scaled, scalesOf, slotOf, speedOf, statDefault, sub,
@@ -31,11 +33,13 @@ export type CUnit = Unit & {
   slot: number;
   mp: number;
   ko: boolean;
+  /** Replaced (Split) or otherwise out of the fight for good: KO'd, and nothing can revive it. */
+  gone?: boolean;
   rng: Rng;
   base: Record<string, number>;
   flat: Record<string, number>;
   pct: Record<string, number>;
-  /** Statuses applied at fight start: passive, gear, formation, perks, or an enemy's own. */
+  /** Statuses applied at fight start and again on revival: passive, gear, formation, perks, or an enemy's own. */
   start: string[];
   /** Where the basic attack comes from: a gear id, "enemy:<id>", or "unarmed". */
   weapon: string;
@@ -62,9 +66,11 @@ export type Item =
       per: number;
       other: string | null;
       amount: number;
+      /** The actor is KO'd and reacting to its own KO. */
+      dead: boolean;
     });
 
-export type CFight = Omit<Fight, "units"> & { units: CUnit[]; now: number; seq: number; queue: Item[]; moments: number; begun: boolean };
+export type CFight = Omit<Fight, "units"> & { units: CUnit[]; now: number; seq: number; queue: Item[]; moments: number; begun: boolean; seed: number };
 
 /** Not design rules: safety stops in case content makes a fight that can't end. Either counts as a loss. */
 export const LIMITS = { ticks: 5000, moments: 200_000 };
@@ -83,6 +89,10 @@ export const stat = (w: W, u: CUnit, key: string) => u.stats[key] ?? statDefault
 const total = (u: CUnit, status: string) => u.statuses.reduce((s, x) => (x.id === status ? s + x.stacks : s), 0);
 const isIntensity = (d: S.StatusT) => d.stacking === "intensity";
 const perOf = (d: S.StatusT, s: SInst) => (isIntensity(d) ? s.stacks / SUBTICKS : 1);
+const hidden = (w: W, x: CUnit) => stat(w, x, "forbidden") > 0;
+const taunting = (w: W, x: CUnit) => stat(w, x, "forced") > 0;
+const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+export const letter = (n: number) => (n < LETTERS.length ? LETTERS[n] : String(n + 1));
 
 function push(w: W, it: Item) {
   const q = w.f.queue;
@@ -171,28 +181,43 @@ function resistTotal(w: W, u: CUnit, element: string) {
 
 // ─── Numbers ────────────────────────────────────────────────────────────────
 
-function term(w: W, s: S.ScaleT, u: CUnit | null, amount: number): number {
-  if (s.amount) return amount * s.ratio;
-  if (!u) return 0;
-  if (s.stat) return stat(w, u, s.stat) * s.ratio;
-  if (s.hp) return (s.hp === "current" ? u.hp : u.stats.max_hp - u.hp) * s.ratio;
-  return (total(u, s.stacks!) / SUBTICKS) * s.ratio;
+type OfT = NonNullable<S.ScaleT["of"]>;
+/** Resolves a role name to a unit, in whatever context a number is read. */
+type Who = (of: OfT) => CUnit | null;
+
+/** One term of a number: the source read from `u` (or the event amount), times a live stat if the scale says so, times the ratio. */
+function term(w: W, s: S.ScaleT, u: CUnit | null, amount: number, who: Who): number {
+  let v: number;
+  if (s.amount) v = amount;
+  else if (!u) return 0;
+  else if (s.stat) v = stat(w, u, s.stat);
+  else if (s.hp) v = s.hp === "current" ? u.hp : u.stats.max_hp - u.hp;
+  else if (s.stacks) v = total(u, s.stacks) / SUBTICKS;
+  else v = passes(w, u, s.when!) ? 1 : 0;
+  if (s.times) {
+    const t = s.times.of ? who(s.times.of) : u;
+    if (!t) return 0;
+    v *= stat(w, t, s.times.stat);
+  }
+  return v * s.ratio;
 }
 
 /** A number in an action: `self` is the acting unit, `target` the unit the effect lands on. */
 function aval(w: W, n: S.NumT, self: CUnit, target: CUnit | null): number {
+  const who: Who = (of) => (of === "target" ? target : of === "self" ? self : null);
   let v = baseOf(n);
-  for (const s of scalesOf(n)) v += term(w, s, role(s, false) === "target" ? target : self, 0);
+  for (const s of scalesOf(n)) v += term(w, s, role(s, false) === "target" ? target : self, 0, who);
   return v;
 }
 
 /** At application: a status number's fixed part, from its source (and, for stat changes, its holder too). */
 function fixed(w: W, n: S.NumT, source: CUnit, holder: CUnit, isStat: boolean): number {
+  const who: Who = (of) => (of === "source" ? source : of === "holder" ? holder : null);
   let v = baseOf(n);
   for (const s of scalesOf(n)) {
     const r = role(s, true);
-    if (r === "source") v += term(w, s, source, 0);
-    else if (isStat && r !== "amount") v += term(w, s, holder, 0);
+    if (r === "source") v += term(w, s, source, 0, who);
+    else if (isStat && r !== "amount") v += term(w, s, holder, 0, who);
   }
   return v;
 }
@@ -200,22 +225,23 @@ function fixed(w: W, n: S.NumT, source: CUnit, holder: CUnit, isStat: boolean): 
 type StatusNums = { d: S.StatusT; nums: number[]; holder: CUnit | null; actor: CUnit | null; amount: number };
 /** At use: the fixed part, plus the holder's side read now. */
 function sval(w: W, x: StatusNums, owner: object, n: S.NumT, target: CUnit | null): number {
+  const who: Who = (of) => (of === "holder" ? x.holder : of === "self" ? x.actor : of === "target" ? target : null);
   let v = x.nums[slotOf(x.d, owner)];
   for (const s of scalesOf(n)) {
     const r = role(s, true);
     if (r === "source") continue;
-    v += term(w, s, r === "holder" ? x.holder : r === "self" ? x.actor : r === "target" ? target : null, x.amount);
+    v += term(w, s, r === "amount" ? null : who(r), x.amount, who);
   }
   return v;
 }
 
-/** The unit's boosts that match any of `tags`, added together (section 5). */
-function boostOf(w: W, u: CUnit, tags: readonly string[]): number {
+/** The unit's boosts that match any of `tags`, added together (section 5). A boost can read the unit being hit. */
+function boostOf(w: W, u: CUnit, tags: readonly string[], target: CUnit | null): number {
   let b = 0;
   for (const s of u.statuses) {
     const d = def(w, s.id);
     if (!d.boosts) continue;
-    for (const x of d.boosts) if (tags.includes(x.tag)) b += sval(w, { d, nums: s.nums, holder: u, actor: u, amount: 0 }, x, x.pct, null) * perOf(d, s);
+    for (const x of d.boosts) if (tags.includes(x.tag)) b += sval(w, { d, nums: s.nums, holder: u, actor: u, amount: 0 }, x, x.pct, target) * perOf(d, s);
   }
   return b;
 }
@@ -233,6 +259,7 @@ function takenOf(w: W, u: CUnit, tags: readonly string[]): number {
 
 // ─── Actions (sections 2 and 3) ─────────────────────────────────────────────
 
+type HitKind = "basic" | "ability" | "extra";
 type ActDef = {
   id: string;
   kind: "basic" | "ability";
@@ -243,7 +270,7 @@ type ActDef = {
   recovery: number;
   if: S.ConditionT | null;
   target: Target;
-  ignores: boolean;
+  seek: boolean;
   effects: S.EffectT[];
   tags: string[];
 };
@@ -257,6 +284,17 @@ export function weaponOf(c: Content, ref: string): S.WeaponT {
   return c.gear.get(ref)!.weapon!;
 }
 
+/** A weapon with its kind's type, subtype or element and cooldown filled in, unless it states its own. */
+export function resolveWeapon(c: Content, wp: S.WeaponT) {
+  const k = wp.kind ? c.weaponKinds.get(wp.kind) : undefined;
+  return {
+    type: wp.type ?? k?.type ?? "physical",
+    subtype: wp.subtype ?? k?.subtype,
+    element: wp.element ?? k?.element,
+    cooldown: wp.cooldown ?? k?.cooldown ?? 10,
+  };
+}
+
 function actDef(w: W, u: CUnit, i: number): ActDef {
   const id = u.acts[i].id;
   const src: object = id === "basic" ? weaponOf(w.c, u.weapon) : w.c.abilities.get(id)!;
@@ -264,18 +302,19 @@ function actDef(w: W, u: CUnit, i: number): ActDef {
   if (d) return d;
   if (id === "basic") {
     const wp = src as S.WeaponT;
-    const cooldown = sub(wp.cooldown);
-    const hit: S.EffectT = { op: "damage", type: wp.type, subtype: wp.subtype, element: wp.element, amount: wp.amount, hits: wp.hits, riders: wp.riders, apply: wp.apply };
+    const r = resolveWeapon(w.c, wp);
+    const cooldown = sub(r.cooldown);
+    const hit: S.EffectT = { op: "damage", type: r.type, subtype: r.subtype, element: r.element, amount: wp.amount, hits: wp.hits, riders: wp.riders, apply: wp.apply };
     d = {
       id, kind: "basic", name: "attack", mp: 0, cast: sub(wp.cast ?? 0), cooldown,
       recovery: wp.recovery !== undefined ? sub(wp.recovery) : Math.round(w.c.pack.ruleset.basicRecovery * cooldown),
-      if: null, target: "foe", ignores: false, effects: [hit], tags: actTags("basic", [hit]),
+      if: null, target: "foe", seek: false, effects: [hit], tags: actTags("basic", [hit]),
     };
   } else {
     const a = src as S.AbilityT;
     d = {
       id, kind: "ability", name: a.name, mp: a.mp ?? 0, cast: sub(a.cast ?? w.c.pack.ruleset.abilityCast), cooldown: sub(a.cooldown),
-      recovery: sub(a.recovery ?? w.c.pack.ruleset.abilityRecovery), if: a.if ?? null, target: a.target ?? "foe", ignores: a.ignoresOverrides ?? false, effects: a.do,
+      recovery: sub(a.recovery ?? w.c.pack.ruleset.abilityRecovery), if: a.if ?? null, target: a.target ?? "foe", seek: a.seek ?? false, effects: a.do,
       tags: actTags("ability", a.do),
     };
   }
@@ -283,18 +322,25 @@ function actDef(w: W, u: CUnit, i: number): ActDef {
   return d;
 }
 
-/** What a lockout can cover: the action's kind, and the type and subtype or element of each of its hits. */
+/** What a lockout or Seek can cover: the action's kind, and the type and subtype or element of each of its hits. */
 function actTags(kind: string, effects: readonly S.EffectT[]): string[] {
   const out = [kind];
   for (const e of effects) if (e.op === "damage") out.push(e.type, (e.type === "physical" ? e.subtype : e.element) ?? e.type);
   return out;
 }
 
-const covers = (lockout: string, d: ActDef) => lockout === "all" || d.tags.includes(lockout);
+const covers = (tag: string, d: ActDef) => tag === "all" || d.tags.includes(tag);
 function lockedOut(w: W, u: CUnit, d: ActDef) {
   return u.statuses.some((s) => {
     const l = def(w, s.id).lockout;
     return l && covers(l.covers, d);
+  });
+}
+/** Seek: the ability's own, or a status that gives it to the holder's actions of this kind (Hunter's eye). */
+function seeks(w: W, u: CUnit, d: ActDef) {
+  return d.seek || u.statuses.some((s) => {
+    const k = def(w, s.id).seek;
+    return k !== undefined && covers(k, d);
   });
 }
 
@@ -325,8 +371,15 @@ function resolve(w: W, u: CUnit, i: number) {
   const d = actDef(w, u, i);
   u.cast = null;
   const fail = (why: string) => w.log?.({ t: "fail", vis: "player", at: w.f.now, by: u.id, act: d.id, name: d.name, why });
-  if (u.mp < d.mp) return fail("mp");
-  const targets = choose(w, u, d.target, d.ignores);
+  if (u.mp < d.mp) {
+    // The core set's fizzle: nothing happens and no MP is spent, but the ability still goes on cooldown.
+    fail("mp");
+    u.acts[i].ready = w.f.now + cooldownOf(w, u, d);
+    u.busy = w.f.now + d.recovery;
+    return;
+  }
+  const targets = choose(w, u, d.target, seeks(w, u, d));
+  // A stated rule that finds nobody when the action resolves: no MP spent, no cooldown (step 4's rule, kept as the default).
   if (!targets.length) return fail("target");
   if (d.mp) {
     u.mp -= d.mp;
@@ -335,39 +388,85 @@ function resolve(w: W, u: CUnit, i: number) {
   w.log?.({ t: "act", vis: "player", at: w.f.now, by: u.id, act: d.id, name: d.name, kind: d.kind, targets: targets.map((x) => x.id) });
   u.acts[i].ready = w.f.now + cooldownOf(w, u, d);
   u.busy = w.f.now + d.recovery;
-  const ctx: Ctx = { actor: u, kind: d.kind, targets, id: d.id, st: null };
+  const ctx: Ctx = { actor: u, kind: d.kind, targets, id: d.id, st: null, dead: false };
   for (const e of d.effects) {
     run(w, ctx, e);
     if (w.f.result || u.ko) return;
   }
+  if (d.kind === "basic") strikes(w, u, d, targets);
+  if (w.f.result || u.ko) return;
   fire(w, ev("action_resolve", u, null, { kind: d.kind }));
 }
 
-// ─── Targeting (section 6) and conditions (section 7.10) ────────────────────
+/** Extra strikes after a basic attack (Double strike, Arc): one more hit with the weapon's damage, of kind extra, which never chains. */
+function strikes(w: W, u: CUnit, d: ActDef, targets: CUnit[]) {
+  const e = d.effects[0] as S.DamageEffectT;
+  for (const s of u.statuses.slice()) {
+    const st = def(w, s.id);
+    const k = st.strike;
+    if (!k || !u.statuses.includes(s)) continue;
+    if (w.f.result || u.ko) return;
+    const chance = (k.chance ?? (k.scale ? 0 : 100)) + (k.scale ? stat(w, u, k.scale) : 0);
+    if (chance < 100) {
+      const roll = next(u.rng) * 100;
+      w.log?.({ t: "roll", vis: "hidden", at: w.f.now, by: u.id, what: "strike", chance, roll });
+      if (roll >= chance) continue;
+    }
+    const t = k.to === "target" ? targets[0] : byRule(w, u, k.to, { seek: true, main: false, targets })[0];
+    if (!t || t.ko) continue;
+    w.log?.({ t: "strike", vis: "player", at: w.f.now, by: u.id, status: st.id, name: st.name, target: t.id });
+    hit(w, { actor: u, kind: "extra", targets: [t], id: d.id, st: null, dead: false }, t, e);
+  }
+}
+
+// ─── Targeting (section 6, and the core set's Taunt and Hidden rules) and conditions (section 7.10) ──
 
 function passes(w: W, x: CUnit, c: S.UnitCondT): boolean {
+  if (c.ko !== undefined && x.ko !== c.ko) return false;
   if (c.hpBelow !== undefined && !(x.hp * 100 < c.hpBelow * x.stats.max_hp)) return false;
   if (c.hpAtLeast !== undefined && !(x.hp * 100 >= c.hpAtLeast * x.stats.max_hp)) return false;
-  if (c.has !== undefined && !x.statuses.some((s) => s.id === c.has)) return false;
-  if (c.lacks !== undefined && x.statuses.some((s) => s.id === c.lacks)) return false;
+  if (c.has !== undefined && !ids(c.has).every((id) => x.statuses.some((s) => s.id === id))) return false;
+  if (c.lacks !== undefined && ids(c.lacks).some((id) => x.statuses.some((s) => s.id === id))) return false;
   if (c.buffs !== undefined && x.statuses.some((s) => def(w, s.id).label === "buff") !== c.buffs) return false;
   if (c.debuffs !== undefined && x.statuses.some((s) => def(w, s.id).label === "debuff") !== c.debuffs) return false;
   if (c.kind && !x.statuses.some((s) => hasKind(def(w, s.id), c.kind!.kind, c.kind!.tag))) return false;
   if (c.stacks && total(x, c.stacks.status) / SUBTICKS < c.stacks.atLeast) return false;
+  if (c.atCap !== undefined && !atCap(w, x, c.atCap)) return false;
+  if (c.belowCap !== undefined && atCap(w, x, c.belowCap)) return false;
   return true;
 }
 
+const ids = (x: string | string[]) => (Array.isArray(x) ? x : [x]);
 const hasKind = (d: S.StatusT, kind: string, tag?: string) => compile(d).kinds.some(([k, t]) => k === kind && (tag === undefined || t === tag));
 
-function sideOf(w: W, u: CUnit, side: S.TargetRuleT["side"]): CUnit[] {
-  if (side === "self") return u.ko ? [] : [u];
-  if (side === "foes") return living(w, foeSide(u));
-  const own = living(w, u.side);
+/** Holds this Intensity status at its cap (a Shield at its cap counts as already there for the Fizzle rule). */
+function atCap(w: W, x: CUnit, id: string): boolean {
+  const s = x.statuses.find((i) => i.id === id);
+  if (!s) return false;
+  const d = def(w, id);
+  return isIntensity(d) && s.stacks >= capOf(w, d, s.nums, x);
+}
+
+/** The units a rule can see on a side: living ones, or, when the rule asks for `ko: true`, the knocked-out ones still in the fight. */
+function sideOf(w: W, u: CUnit, side: S.TargetRuleT["side"], ko = false): CUnit[] {
+  const present = (x: CUnit) => (ko ? x.ko && !x.gone : !x.ko);
+  if (side === "self") return present(u) ? [u] : [];
+  if (side === "foes") return w.f.units.filter((x) => x.side !== u.side && present(x));
+  const own = w.f.units.filter((x) => x.side === u.side && present(x));
   return side === "others" ? own.filter((x) => x !== u) : own;
 }
 
+/** The foes a unit can pick: Hidden ones only when every foe is Hidden (the engine's fallback, so a fight never stalls). */
+function visibleFoes(w: W, u: CUnit): CUnit[] {
+  const all = sideOf(w, u, "foes");
+  const seen = all.filter((x) => !hidden(w, x));
+  return seen.length ? seen : all;
+}
+
 function holds(w: W, u: CUnit, c: S.ConditionT) {
-  return sideOf(w, u, c.side).filter((x) => passes(w, x, c.where)).length >= (c.atLeast ?? 1);
+  const ko = c.where.ko === true;
+  const pool = c.side === "foes" && !ko ? visibleFoes(w, u) : sideOf(w, u, c.side, ko);
+  return pool.filter((x) => passes(w, x, c.where)).length >= (c.atLeast ?? 1);
 }
 
 function value(w: W, x: CUnit, by: NonNullable<S.TargetRuleT["by"]>): number {
@@ -375,6 +474,7 @@ function value(w: W, x: CUnit, by: NonNullable<S.TargetRuleT["by"]>): number {
   if (by === "hp_share") return x.hp / x.stats.max_hp;
   if (by === "buffs" || by === "debuffs") return x.statuses.filter((s) => def(w, s.id).label === by.slice(0, -1)).length;
   if ("stat" in by) return stat(w, x, by.stat);
+  if ("stats" in by) return Math.max(...by.stats.map((k) => stat(w, x, k)));
   return total(x, by.stacks) / SUBTICKS;
 }
 
@@ -388,29 +488,52 @@ function weightedPick(w: W, u: CUnit, pool: CUnit[], what: string): CUnit {
   return pool[pool.length - 1];
 }
 
-function randomPick(w: W, u: CUnit, pool: CUnit[], what: string): CUnit {
-  const i = Math.floor(next(u.rng) * pool.length);
-  w.log?.({ t: "roll", vis: "hidden", at: w.f.now, by: u.id, what, roll: i, of: pool.length });
-  return pool[i];
+function randomIndex(w: W, u: CUnit, n: number, what: string): number {
+  const i = Math.floor(next(u.rng) * n);
+  w.log?.({ t: "roll", vis: "hidden", at: w.f.now, by: u.id, what, roll: i, of: n });
+  return i;
 }
+const randomPick = (w: W, u: CUnit, pool: CUnit[], what: string): CUnit => pool[randomIndex(w, u, pool.length, what)];
 
-/** Default targeting: a valid foe weighted by Aggro, after Forced and Forbidden. */
-function defaultFoe(w: W, u: CUnit, ignores: boolean): CUnit[] {
-  const all = living(w, foeSide(u));
-  if (!all.length) return [];
-  let pool = all;
-  if (!ignores) {
-    const forced = all.filter((x) => stat(w, x, "forced") > 0);
-    const allowed = all.filter((x) => stat(w, x, "forbidden") <= 0);
-    pool = forced.length ? forced : allowed.length ? allowed : all;
+/** Default targeting: a foe weighted by Aggro, under the Hidden rule and, without Seek, the Taunt rule. */
+function defaultFoe(w: W, u: CUnit, seek: boolean): CUnit[] {
+  let pool = visibleFoes(w, u);
+  if (!pool.length) return [];
+  if (!seek) {
+    const forced = pool.filter((x) => taunting(w, x));
+    if (forced.length) pool = forced;
   }
   return [weightedPick(w, u, pool, "target")];
 }
 
-function byRule(w: W, u: CUnit, r: S.TargetRuleT): CUnit[] {
-  let pool = sideOf(w, u, r.side).filter((x) => !r.where || passes(w, x, r.where));
-  const pick = r.pick ?? (r.side === "foes" ? "aggro" : "random");
+type PickOpts = {
+  /** The action has Seek, or this isn't an action's first pick: the Taunt rule doesn't apply. */
+  seek: boolean;
+  /** An action's own target rule: the Taunt rule applies. */
+  main: boolean;
+  /** The action's chosen targets, for `exclude`. */
+  targets: readonly CUnit[];
+};
+
+function byRule(w: W, u: CUnit, r: S.TargetRuleT, o: PickOpts): CUnit[] {
+  const ko = r.where?.ko === true;
+  // Hidden units can't be picked by any rule but `all`, unless every foe is Hidden.
+  let pool = r.side === "foes" && !ko && r.pick !== "all" ? visibleFoes(w, u) : sideOf(w, u, r.side, ko);
+  if (r.exclude === "targets") pool = pool.filter((x) => !o.targets.includes(x));
+  if (r.where) {
+    const kept = pool.filter((x) => passes(w, x, r.where!));
+    pool = kept.length || r.ifNone !== "any" ? kept : pool;
+  }
+  let pick = r.pick ?? (r.side === "foes" ? "aggro" : "random");
   if (pick === "all") return pool;
+  // The Taunt rule: an action's first pick, without Seek, can only go to a Taunting foe, whatever the phrase asks for.
+  if (r.side === "foes" && o.main && !o.seek) {
+    const forced = visibleFoes(w, u).filter((x) => taunting(w, x));
+    if (forced.length) {
+      pool = forced;
+      if (pick === "random") pick = "aggro";
+    }
+  }
   const out: CUnit[] = [];
   for (let n = r.count ?? 1; n > 0 && pool.length; n--) {
     let x: CUnit;
@@ -428,14 +551,14 @@ function byRule(w: W, u: CUnit, r: S.TargetRuleT): CUnit[] {
   return out;
 }
 
-function choose(w: W, u: CUnit, t: Target, ignores: boolean): CUnit[] {
-  if (t === "self") return [u];
+function choose(w: W, u: CUnit, t: Target, seek: boolean): CUnit[] {
+  if (t === "self") return u.ko ? [] : [u];
   if (t === "ally") {
     const own = living(w, u.side);
     return own.length ? [randomPick(w, u, own, "target")] : [];
   }
-  if (t === "foe") return defaultFoe(w, u, ignores);
-  return byRule(w, u, t);
+  if (t === "foe") return defaultFoe(w, u, seek);
+  return byRule(w, u, t, { seek, main: true, targets: [] });
 }
 
 // ─── Effects ────────────────────────────────────────────────────────────────
@@ -447,9 +570,11 @@ function choose(w: W, u: CUnit, t: Target, ignores: boolean): CUnit[] {
  */
 type Ctx = {
   actor: CUnit;
-  kind: "basic" | "ability" | null;
+  kind: HitKind | null;
   targets: CUnit[];
   id: string;
+  /** The actor is KO'd and reacting to its own KO (Volatile). */
+  dead: boolean;
   st: null | {
     d: S.StatusT;
     nums: number[];
@@ -463,8 +588,10 @@ type Ctx = {
   };
 };
 
-function targetsOf(w: W, ctx: Ctx, to: S.ToT | undefined): CUnit[] {
+/** An effect's targets. Extra targets after an action's first ignore Taunt. Revive wants knocked-out units; everything else living ones. */
+function targetsOf(w: W, ctx: Ctx, e: S.EffectT): CUnit[] {
   const st = ctx.st;
+  const to = "to" in e ? e.to : undefined;
   const t = to ?? (st ? "holder" : "target");
   let out: (CUnit | null)[];
   if (t === "target") out = ctx.targets;
@@ -472,8 +599,9 @@ function targetsOf(w: W, ctx: Ctx, to: S.ToT | undefined): CUnit[] {
   else if (t === "holder") out = [st?.holder ?? null];
   else if (t === "source") out = [unit(w, st?.src ?? null)];
   else if (t === "other") out = [st?.other ?? null];
-  else out = byRule(w, ctx.actor, t);
-  return out.filter((x): x is CUnit => !!x && !x.ko);
+  else out = byRule(w, ctx.actor, t, { seek: true, main: false, targets: ctx.targets });
+  const wantKo = e.op === "revive";
+  return out.filter((x): x is CUnit => !!x && (wantKo ? x.ko && !x.gone : !x.ko));
 }
 
 /** An effect's number, in its context, for one target. Pulses and triggers scale with the Intensity total. */
@@ -484,9 +612,13 @@ function num(w: W, ctx: Ctx, owner: object, n: S.NumT, target: CUnit): number {
 }
 
 function run(w: W, ctx: Ctx, e: S.EffectT) {
-  for (const t of targetsOf(w, ctx, e.to)) {
-    if (w.f.result || ctx.actor.ko) return;
-    if (t.ko) continue;
+  if (e.op === "summon") {
+    if (!w.f.result && (!ctx.actor.ko || ctx.dead)) summon(w, ctx.actor, ctx.actor.side, e.enemy, e.count ?? 1);
+    return;
+  }
+  for (const t of targetsOf(w, ctx, e)) {
+    if (w.f.result || (ctx.actor.ko && !ctx.dead)) return;
+    if (t.ko !== (e.op === "revive")) continue;
     switch (e.op) {
       case "damage":
         if (ctx.kind) {
@@ -506,7 +638,13 @@ function run(w: W, ctx: Ctx, e: S.EffectT) {
         applyStatus(w, ctx.actor, t, def(w, e.status), { stacks: num(w, ctx, e, e.stacks ?? 1, t), duration: e.duration, chance: e.chance, rng: ctx.actor });
         break;
       case "remove":
-        remove(w, t, e);
+        remove(w, ctx.actor, t, e);
+        break;
+      case "revive":
+        revive(w, ctx.actor, t, num(w, ctx, e, e.hp, t), e.ready ?? false);
+        break;
+      case "replace":
+        replace(w, t, e.enemy, e.count ?? 1);
         break;
     }
   }
@@ -554,32 +692,47 @@ function critRoll(w: W, rng: CUnit, chance: number, multiplier: number): number 
   return multiplier;
 }
 
-type Calc = { amount: number; word: string | null; crit: boolean };
+type Calc = { amount: number; word: string | null; crit: boolean; heal: number };
 
 /** Resolution order steps 2 to 6 (section 5): amount, boosts, damage-taken modifiers, crit, mitigation. Whole points, rounded down. */
 function calc(w: W, t: CUnit, p: Part, raw: number, tags: readonly string[], boost: number, crit: number): Calc {
   let x = raw * (1 + boost / 100) * (1 + takenOf(w, t, tags) / 100);
   if (crit) x = (x * crit) / 100;
   let word: string | null = null;
+  let heal = 0;
   if (p.type === "physical") {
-    const y = Math.max(0, x - stat(w, t, "armor"));
+    const y = Math.max(0, x - stat(w, t, "armor") * w.c.pack.ruleset.armorRatio);
     if (y <= 0 && x > 0) word = "BLOCKED";
     x = y;
   } else if (p.element) {
     const r = resistTotal(w, t, p.element);
-    if (r >= 100) (x = 0), (word = "IMMUNE");
+    if (r > 100) {
+      // Resistance past full is absorption: the damage heals instead.
+      heal = Math.max(0, Math.floor((x * (r - 100)) / 100));
+      x = 0;
+      word = "ABSORB";
+    } else if (r >= 100) (x = 0), (word = "IMMUNE");
     else {
       x = x * (1 - r / 100);
       word = r < 0 ? "WEAK" : r > 0 ? "RESIST" : null;
     }
   }
   x = Math.max(0, Math.floor(x));
-  if (stat(w, t, "immune:damage") > 0) (x = 0), (word = "IMMUNE");
-  return { amount: x, word, crit: crit > 0 };
+  if (stat(w, t, "immune:damage") > 0) (x = 0), (heal = 0), (word = "IMMUNE");
+  return { amount: x, word, crit: crit > 0, heal };
 }
 
-/** Steps 7 and 8: absorbs soak in the order they were first applied, one whole stack per point; the rest comes off HP. */
-function take(w: W, t: CUnit, amount: number): { soaked: number; lost: number } {
+/** Steps 7 and 8: a block (Aegis) stops damage above its share outright; absorbs soak in the order they were first applied; the rest comes off HP. */
+function take(w: W, t: CUnit, amount: number): { soaked: number; lost: number; blocked: boolean } {
+  if (amount > 0) {
+    for (const s of t.statuses) {
+      const b = def(w, s.id).block;
+      if (b && amount * 100 > b.share * t.stats.max_hp) {
+        endStatus(w, t, s, "spent");
+        return { soaked: 0, lost: 0, blocked: true };
+      }
+    }
+  }
   let left = amount, soaked = 0;
   const broken: SInst[] = [];
   for (const s of t.statuses) {
@@ -595,16 +748,27 @@ function take(w: W, t: CUnit, amount: number): { soaked: number; lost: number } 
   t.hp -= lost;
   if (soaked && t.statuses.some((s) => def(w, s.id).absorb && def(w, s.id).stats)) refresh(w, t);
   for (const s of broken) endStatus(w, t, s, "stacks");
-  return { soaked, lost };
+  return { soaked, lost, blocked: false };
 }
 
 const shield = (w: W, u: CUnit) => u.statuses.reduce((s, x) => (def(w, x.id).absorb ? s + Math.floor(x.stacks / SUBTICKS) : s), 0);
 
-function logDamage(w: W, by: CUnit | null, t: CUnit, src: string, part: string, r: Calc, soaked: number) {
-  w.log?.({ t: "dmg", vis: "player", at: w.f.now, by: by?.id ?? null, target: t.id, src, part, amount: r.amount, soaked, word: r.word, crit: r.crit, hp: t.hp, shield: shield(w, t) });
+function logDamage(w: W, by: CUnit | null, t: CUnit, src: string, part: string, r: Calc, tk: { soaked: number; blocked: boolean }) {
+  w.log?.({
+    t: "dmg", vis: "player", at: w.f.now, by: by?.id ?? null, target: t.id, src, part,
+    amount: tk.blocked ? 0 : r.amount, soaked: tk.soaked, word: tk.blocked ? "AEGIS" : r.word, crit: r.crit, hp: t.hp, shield: shield(w, t),
+  });
 }
 
-/** A hit from an action, with its riders and attached statuses (sections 5 and 7.2). */
+/** An absorbed hit or pulse heals its target instead, unboosted, and applies nothing. */
+function absorb(w: W, by: CUnit | null, t: CUnit, src: string, r: Calc) {
+  const got = Math.min(r.heal, t.stats.max_hp - t.hp);
+  t.hp += got;
+  w.log?.({ t: "heal", vis: "player", at: w.f.now, by: by?.id ?? null, target: t.id, src, amount: got, crit: false, hp: t.hp, word: "ABSORB" });
+  if (got > 0) fire(w, ev("healed", t, by, { amount: got }));
+}
+
+/** A hit from an action or an extra strike, with its riders and attached statuses (sections 5 and 7.2). */
 function hit(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
   const a = ctx.actor, kind = ctx.kind!;
   const main = convert(w, a, e);
@@ -621,40 +785,46 @@ function hit(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
   }
   if (main.type === "physical" && evaded(w, a, t)) {
     w.log?.({ t: "dmg", vis: "player", at: w.f.now, by: a.id, target: t.id, src: ctx.id, part: "hit", amount: 0, soaked: 0, word: "MISS", crit: false, hp: t.hp, shield: shield(w, t) });
-    fire(w, ev("hit_evaded", t, a, { kind }));
-    fire(w, ev("hit_missed", a, t, { kind }));
+    fire(w, ev("hit_evaded", t, a, { kind, tags }));
+    fire(w, ev("hit_missed", a, t, { kind, tags }));
     return;
   }
   // The hit and its riders read the same state, and share one crit roll.
   const crit = critRoll(w, a, stat(w, a, "crit_chance"), stat(w, a, "crit_multiplier"));
   const results = parts.map(({ p, raw, rider }) =>
-    rider && p.type === "physical" && evaded(w, a, t) ? null : calc(w, t, p, raw, partTags(kind, p), boostOf(w, a, partTags(kind, p)), crit),
+    rider && p.type === "physical" && evaded(w, a, t) ? null : calc(w, t, p, raw, partTags(kind, p), boostOf(w, a, partTags(kind, p), t), crit),
   );
   let dealt = 0, lost = 0;
   for (let i = 0; i < parts.length && !t.ko; i++) {
     const r = results[i];
-    const part = parts[i].rider ? "rider" : "hit";
+    const part = parts[i].rider ? "rider" : kind === "extra" ? "extra" : "hit";
     if (!r) {
       w.log?.({ t: "dmg", vis: "player", at: w.f.now, by: a.id, target: t.id, src: ctx.id, part, amount: 0, soaked: 0, word: "MISS", crit: false, hp: t.hp, shield: shield(w, t) });
       continue;
     }
+    if (r.word === "ABSORB") {
+      absorb(w, a, t, ctx.id, r);
+      continue;
+    }
     const tk = take(w, t, r.amount);
-    logDamage(w, a, t, ctx.id, part, r, tk.soaked);
-    dealt += r.amount;
+    logDamage(w, a, t, ctx.id, part, r, tk);
+    if (!tk.blocked) dealt += r.amount;
     lost += tk.lost;
     if (t.hp <= 0) ko(w, t);
   }
   if (w.f.result) return;
+  // An absorbed hit applies nothing and doesn't count as landing.
+  if (results[0]?.word === "ABSORB") return;
   if (!t.ko) for (const ap of e.apply ?? []) applyStatus(w, a, t, def(w, ap.status), { stacks: aval(w, ap.stacks ?? 1, a, t), duration: ap.duration, chance: ap.chance, rng: a });
-  fire(w, ev("hit_lands", a, t, { kind, amount: dealt }));
-  fire(w, ev("hit_taken", t, a, { kind, amount: dealt }));
-  damageEvents(w, a, t, dealt, lost);
+  fire(w, ev("hit_lands", a, t, { kind, tags, amount: dealt }));
+  fire(w, ev("hit_taken", t, a, { kind, tags, amount: dealt }));
+  damageEvents(w, a, t, dealt, lost, null);
 }
 
-function damageEvents(w: W, by: CUnit | null, t: CUnit, dealt: number, lost: number) {
+function damageEvents(w: W, by: CUnit | null, t: CUnit, dealt: number, lost: number, status: string | null) {
   if (dealt > 0) {
-    if (by) fire(w, ev("damage_dealt", by, t, { amount: dealt }));
-    fire(w, ev("damage_taken", t, by, { amount: dealt }));
+    if (by) fire(w, ev("damage_dealt", by, t, { amount: dealt, status }));
+    fire(w, ev("damage_taken", t, by, { amount: dealt, status }));
   }
   if (lost > 0) fire(w, ev("hp_lost", t, null, { amount: lost }));
 }
@@ -677,18 +847,19 @@ function strike(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
       ? critRoll(w, from, stat(w, from, "crit_chance"), stat(w, from, "crit_multiplier"))
       : critRoll(w, st.holder, d.crit.chance, d.crit.multiplier ?? stat(w, st.holder, "crit_multiplier"));
   }
-  const r = calc(w, t, p, raw, tags, st.fixedBoost ? 0 : boostOf(w, ctx.actor, tags), crit);
-  const tk = take(w, t, r.amount);
+  const r = calc(w, t, p, raw, tags, st.fixedBoost ? 0 : boostOf(w, ctx.actor, tags, t), crit);
   const by = st.fixedBoost ? (d.perSource ? unit(w, st.src) : null) : ctx.actor;
-  logDamage(w, by, t, d.id, st.fixedBoost ? "pulse" : "reaction", r, tk.soaked);
+  if (r.word === "ABSORB") return absorb(w, by, t, d.id, r);
+  const tk = take(w, t, r.amount);
+  logDamage(w, by, t, d.id, st.fixedBoost ? "pulse" : "reaction", r, tk);
   if (t.hp <= 0) ko(w, t);
-  if (!w.f.result) damageEvents(w, by, t, r.amount, tk.lost);
+  if (!w.f.result) damageEvents(w, by, t, tk.blocked ? 0 : r.amount, tk.lost, d.id);
 }
 
 /** Heals have no type and are never mitigated; they take healing boosts, Healing received, and crit from actions (section 5). */
 function heal(w: W, ctx: Ctx, t: CUnit, raw: number) {
   const st = ctx.st;
-  const boost = st ? (st.fixedBoost ? 0 : boostOf(w, ctx.actor, ["healing", ...compile(st.d).tags])) : boostOf(w, ctx.actor, ["healing"]);
+  const boost = st ? (st.fixedBoost ? 0 : boostOf(w, ctx.actor, ["healing", ...compile(st.d).tags], t)) : boostOf(w, ctx.actor, ["healing"], t);
   let x = raw * (1 + boost / 100) * (1 + stat(w, t, "healing_received") / 100);
   let crit = 0;
   if (!st) crit = critRoll(w, ctx.actor, stat(w, ctx.actor, "crit_chance"), stat(w, ctx.actor, "crit_multiplier"));
@@ -737,7 +908,7 @@ export function applyStatus(w: W, by: CUnit, to: CUnit, d: S.StatusT, o: ApplyOp
   const nums = cp.nums.map(({ n, stat: isStat }) => fixed(w, n, by, to, isStat));
   // Only the stacks an application adds can scale: from the applier's stated scaling, and its boosts that name
   // the status or one of its tags (section 7.5). The applier's boosts never reach the status's own numbers.
-  const add = isIntensity(d) ? Math.floor(o.stacks * (1 + boostOf(w, by, [d.id, ...(d.tags ?? [])]) / 100) * SUBTICKS) : 0;
+  const add = isIntensity(d) ? Math.floor(o.stacks * (1 + boostOf(w, by, [d.id, ...(d.tags ?? [])], null) / 100) * SUBTICKS) : 0;
   const cur = to.statuses.find((s) => s.id === d.id && (!d.perSource || s.src === by.id));
   if (cur) {
     if (d.stacking === "fizzle") return;
@@ -801,15 +972,25 @@ function interrupt(w: W, u: CUnit, lockout: string) {
   fire(w, ev("action_interrupted", u, null, { kind: d.kind }));
 }
 
-/** Removes buffs or debuffs, newest first, skipping unremovable ones (section 7.9). */
-function remove(w: W, t: CUnit, e: Extract<S.EffectT, { op: "remove" }>) {
-  const hit = t.statuses
-    .filter((s) => {
-      const d = def(w, s.id);
-      return d.label === e.label && !d.unremovable && (!e.status || d.id === e.status) && (!e.kind || hasKind(d, e.kind, e.tag));
-    })
-    .sort((a, b) => b.uid - a.uid)
-    .slice(0, e.count ?? Number.MAX_SAFE_INTEGER);
+/** Removes buffs or debuffs, newest first or at random, skipping unremovable ones and a dispel-immune unit's buffs (section 7.9). */
+function remove(w: W, by: CUnit, t: CUnit, e: Extract<S.EffectT, { op: "remove" }>) {
+  if (e.label === "buff" && stat(w, t, "immune:dispel") > 0) {
+    w.log?.({ t: "immune", vis: "player", at: w.f.now, unit: t.id, status: "dispel", name: "Dispel" });
+    return;
+  }
+  let pool = t.statuses.filter((s) => {
+    const d = def(w, s.id);
+    return d.label === e.label && !d.unremovable && (!e.status || d.id === e.status) && (!e.kind || hasKind(d, e.kind, e.tag));
+  });
+  const hit: SInst[] = [];
+  if ((e.order ?? "newest") === "newest") hit.push(...pool.sort((a, b) => b.uid - a.uid).slice(0, e.count ?? Number.MAX_SAFE_INTEGER));
+  else {
+    for (let n = e.count ?? pool.length; n > 0 && pool.length; n--) {
+      const s = pool[randomIndex(w, by, pool.length, "remove")];
+      hit.push(s);
+      pool = pool.filter((x) => x !== s);
+    }
+  }
   for (const s of hit) endStatus(w, t, s, "removed");
 }
 
@@ -830,10 +1011,10 @@ function pulse(w: W, it: Extract<Item, { k: "pulse" }>) {
   // Reapplying changes the end time, not the rhythm, so the next pulse is always queued; it's skipped if the status has gone.
   push(w, { ...it, at: it.at + every, seq: w.f.seq++ });
   const ctx: Ctx = {
-    actor: h, kind: null, targets: [], id: d.id,
+    actor: h, kind: null, targets: [], id: d.id, dead: false,
     st: { d, nums: s.nums, holder: h, src: s.src, per: perOf(d, s), other: null, amount: 0, fixedBoost: true },
   };
-  for (const e of d.pulse!.do) {
+  for (const e of d.pulse!.do ?? []) {
     run(w, ctx, e);
     if (w.f.result) return;
   }
@@ -848,7 +1029,10 @@ type Ev = {
   e: S.EventSpecT["event"];
   owner: CUnit;
   other: CUnit | null;
-  kind: "basic" | "ability" | null;
+  kind: HitKind | null;
+  /** Hit events: the hit's tags (kind, type, subtype or element). */
+  tags: string[];
+  /** Status events: the status. Damage events: the status whose pulse or reaction dealt it, if any. */
   status: string | null;
   cause: string | null;
   amount: number;
@@ -856,8 +1040,8 @@ type Ev = {
   ending: SInst | null;
 };
 
-const ev = (e: Ev["e"], owner: CUnit, other: CUnit | null, x: Partial<Pick<Ev, "kind" | "status" | "cause" | "amount" | "ending">> = {}): Ev => ({
-  e, owner, other, kind: x.kind ?? null, status: x.status ?? null, cause: x.cause ?? null, amount: x.amount ?? 0, ending: x.ending ?? null,
+const ev = (e: Ev["e"], owner: CUnit, other: CUnit | null, x: Partial<Pick<Ev, "kind" | "tags" | "status" | "cause" | "amount" | "ending">> = {}): Ev => ({
+  e, owner, other, kind: x.kind ?? null, tags: x.tags ?? [], status: x.status ?? null, cause: x.cause ?? null, amount: x.amount ?? 0, ending: x.ending ?? null,
 });
 
 function matches(spec: S.EventSpecT, e: Ev, holder: CUnit): boolean {
@@ -867,6 +1051,7 @@ function matches(spec: S.EventSpecT, e: Ev, holder: CUnit): boolean {
   if (whose === "ally" && (e.owner === holder || e.owner.side !== holder.side)) return false;
   if (whose === "foe" && e.owner.side === holder.side) return false;
   if (spec.kind && spec.kind !== e.kind) return false;
+  if (spec.tags && !spec.tags.some((t) => e.tags.includes(t))) return false;
   if (spec.status && spec.status !== e.status) return false;
   if (spec.cause && !spec.cause.includes(e.cause as never)) return false;
   return true;
@@ -899,7 +1084,7 @@ function fire(w: W, e: Ev) {
   const ids = listeners(w, e.e);
   if (!ids) return;
   w.depth++;
-  for (const h of w.f.units) {
+  for (const h of w.f.units.slice()) {
     const own = e.ending && h === e.owner;
     if (!own && !h.statuses.some((s) => ids.has(s.id))) continue;
     const list = own ? [...h.statuses, e.ending!] : h.statuses.slice();
@@ -910,7 +1095,10 @@ function fire(w: W, e: Ev) {
       d.reactions?.forEach((r, k) => {
         if (!matches(r.on, e, h)) return;
         const actor = unit(w, r.actor === "source" ? s.src : h.id);
-        if (actor && !actor.ko) queueReaction(w, actor, h, s, d, k, 1, e);
+        if (!actor) return;
+        // A unit's own statuses that survive its KO can react to it (Volatile); otherwise KO'd units don't act.
+        const dead = actor.ko && e.e === "ko" && actor === e.owner && actor === h;
+        if (!actor.ko || dead) queueReaction(w, actor, h, s, d, k, 1, e, dead);
       });
       if (w.f.result) break;
     }
@@ -921,36 +1109,42 @@ function fire(w: W, e: Ev) {
 
 /** An Intensity event trigger: its effects use the total from this moment and resolve next sub-tick; the drop is immediate (section 7.7). */
 function trigger(w: W, h: CUnit, s: SInst, d: S.StatusT, e: Ev) {
-  if (d.trigger!.do?.length && !h.ko) queueReaction(w, h, h, s, d, -1, s.stacks / SUBTICKS, e);
+  if (d.trigger!.do?.length && !h.ko) queueReaction(w, h, h, s, d, -1, s.stacks / SUBTICKS, e, false);
   fire(w, ev("status_triggered", h, null, { status: d.id }));
   if (h.statuses.includes(s)) drop(w, h, s, d);
 }
 
 /** A reaction resolves on the sub-tick after its event, in the acting unit's batch (section 8). */
-function queueReaction(w: W, actor: CUnit, holder: CUnit, s: SInst, d: S.StatusT, which: number, per: number, e: Ev) {
+function queueReaction(w: W, actor: CUnit, holder: CUnit, s: SInst, d: S.StatusT, which: number, per: number, e: Ev, dead: boolean) {
   push(w, {
     k: "react", at: w.f.now + 1, b: batch(actor.side), g: 1, slot: actor.slot, seq: w.f.seq++, unit: actor.id,
     holder: holder.id, status: d.id, which, nums: s.nums.slice(), src: s.src, per,
-    other: e.other?.id ?? null, amount: e.amount,
+    other: e.other?.id ?? null, amount: e.amount, dead,
   });
 }
 
 function react(w: W, it: Extract<Item, { k: "react" }>) {
   const actor = unit(w, it.unit);
-  if (!actor || actor.ko) return;
+  if (!actor || (actor.ko && !it.dead)) return;
   const d = def(w, it.status);
   const effects = it.which < 0 ? d.trigger!.do! : d.reactions![it.which].do;
   const ctx: Ctx = {
-    actor, kind: null, targets: [], id: d.id,
+    actor, kind: null, targets: [], id: d.id, dead: it.dead,
     st: { d, nums: it.nums, holder: unit(w, it.holder)!, src: it.src, per: it.per, other: unit(w, it.other), amount: it.amount, fixedBoost: it.which < 0 },
   };
   for (const e of effects) {
     run(w, ctx, e);
-    if (w.f.result || actor.ko) return;
+    if (w.f.result || (actor.ko && !it.dead)) return;
   }
 }
 
-// ─── KO and the end of the fight (section 1) ────────────────────────────────
+// ─── KO, revival, leaving and joining (section 1, and the core set's revive and summoning) ──
+
+/** Ends a unit's statuses as it leaves play, and the Per source statuses it gave that end with it. */
+function strip(w: W, u: CUnit, all: boolean) {
+  for (const s of u.statuses.slice()) if (all || !def(w, s.id).survivesKO) endStatus(w, u, s, "ko");
+  for (const o of w.f.units) for (const s of o.statuses.slice()) if (s.src === u.id && def(w, s.id).perSource?.endsWithSource) endStatus(w, o, s, "ko");
+}
 
 function ko(w: W, u: CUnit) {
   if (u.ko) return;
@@ -963,9 +1157,72 @@ function ko(w: W, u: CUnit) {
   if (!living(w, "enemy").length) w.f.result = "won";
   else if (!living(w, "party").length) w.f.result = "lost";
   if (w.f.result) return;
-  for (const s of u.statuses.slice()) if (!def(w, s.id).survivesKO) endStatus(w, u, s, "ko");
-  for (const o of w.f.units) for (const s of o.statuses.slice()) if (s.src === u.id && def(w, s.id).perSource?.endsWithSource) endStatus(w, o, s, "ko");
+  strip(w, u, false);
   fire(w, ev("ko", u, null));
+}
+
+/** Raises a knocked-out unit: its fight-start statuses come back, and every action is on cooldown as at the start of a fight, unless `ready`. */
+function revive(w: W, by: CUnit, t: CUnit, hp: number, ready: boolean) {
+  if (!t.ko || t.gone) return;
+  t.ko = false;
+  t.cast = null;
+  t.busy = w.f.now;
+  t.hp = Math.min(t.stats.max_hp, Math.max(1, Math.floor(hp)));
+  for (const id of t.start) applyStatus(w, t, t, def(w, id), { stacks: 1, rng: t });
+  refresh(w, t);
+  t.hp = Math.min(t.hp, t.stats.max_hp);
+  t.acts.forEach((a, i) => (a.ready = ready ? w.f.now : w.f.now + cooldownOf(w, t, actDef(w, t, i))));
+  w.log?.({ t: "revive", vis: "player", at: w.f.now, by: by.id, unit: t.id, hp: t.hp, ready });
+  fire(w, ev("revived", t, by));
+}
+
+/** A unit for the enemy side, from an enemy definition: at fight start or when summoned. */
+export function makeUnit(c: Content, f: Pick<CFight, "units" | "seed" | "stage">, enemyId: string, side: CUnit["side"], lettered: boolean): CUnit {
+  const e = c.enemies.get(enemyId)!;
+  const n = f.units.filter((u) => u.side === side).length + 1;
+  const same = f.units.filter((u) => u.ref === enemyId).length;
+  const id = `${side === "enemy" ? "e" : "p"}${n}`;
+  const m = { base: { ...e.stats }, flat: {}, pct: {} };
+  const stats = derive(c, m);
+  return {
+    id, ref: enemyId, name: lettered ? `${e.name} ${letter(same)}` : e.name, side, stats, hp: stats.max_hp, mp: stats.max_mp,
+    slot: n - 1, ...m, start: [...(e.statuses ?? [])], weapon: e.weapon ? `enemy:${enemyId}` : "unarmed",
+    ko: false, rng: rngFor(f.seed, `fight:${f.stage}:${id}`),
+    acts: [...(e.abilities ?? []).map((a) => ({ id: a, ready: 0 })), { id: "basic", ready: 0 }], cast: null, busy: 0, statuses: [],
+  };
+}
+
+/** Brings new units into the fight on a side, up to the cap, with every action on cooldown. */
+function summon(w: W, by: CUnit, side: CUnit["side"], enemyId: string, count: number) {
+  const f = w.f;
+  const lettered = f.units.filter((u) => u.ref === enemyId).length + count > 1;
+  for (let n = 0; n < count; n++) {
+    if (side === "enemy" && living(w, "enemy").length >= w.c.pack.ruleset.maxEnemies) {
+      w.log?.({ t: "cap", vis: "hidden", at: f.now, by: by.id, enemy: enemyId });
+      return;
+    }
+    const u = makeUnit(w.c, f, enemyId, side, lettered);
+    f.units.push(u);
+    for (const id of u.start) applyStatus(w, u, u, def(w, id), { stacks: 1, rng: u });
+    refresh(w, u);
+    u.acts.forEach((a, i) => (a.ready = f.now + cooldownOf(w, u, actDef(w, u, i))));
+    w.log?.({ t: "join", vis: "player", at: f.now, by: by.id, unit: { id: u.id, ref: u.ref, name: u.name, side: u.side, hp: u.hp, max: u.stats.max_hp } });
+  }
+}
+
+/** A unit leaves the fight without a knockout (Split) and `count` new units take its place. */
+function replace(w: W, t: CUnit, enemyId: string, count: number) {
+  if (t.ko) return;
+  t.ko = true;
+  t.gone = true;
+  t.hp = 0;
+  t.cast = null;
+  w.f.queue = w.f.queue.filter((it) => it.unit !== t.id);
+  w.log?.({ t: "leave", vis: "player", at: w.f.now, unit: t.id });
+  strip(w, t, true);
+  summon(w, t, t.side, enemyId, count);
+  if (!living(w, "enemy").length) w.f.result = "won";
+  else if (!living(w, "party").length) w.f.result = "lost";
 }
 
 // ─── The clock ──────────────────────────────────────────────────────────────
@@ -995,7 +1252,7 @@ function begin(w: W) {
     refresh(w, u);
   }
   for (const u of f.units) u.acts.forEach((a, i) => (a.ready = cooldownOf(w, u, actDef(w, u, i))));
-  for (const u of f.units) fire(w, ev("fight_start", u, null));
+  for (const u of f.units) if (!u.ko) fire(w, ev("fight_start", u, null));
   f.begun = true;
 }
 
