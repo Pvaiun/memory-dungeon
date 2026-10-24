@@ -528,10 +528,20 @@ export function startBattle(root: HTMLElement, args: BattleArgs) {
     ended = true;
     const f = driver.fight!;
     const partyUnits = driver.units().filter((u) => u.side === "party");
-    const summary = h("div", { class: "small", style: "margin-top:6px" }, ...partyUnits.map((u) => h("div", null, `${u.name}: ${u.ko ? "down" : `${disp(u.hp)}/${disp(u.stats.max_hp)} HP, ${disp(u.mp)}/${disp(u.stats.max_mp)} MP`}`)));
+    const tally = fightTally();
+    const row = (name: string, t: Tally, state: string) => h("tr", null, h("td", null, name), h("td", { class: "num" }, String(disp(t.dealt))), h("td", { class: "num" }, String(disp(t.taken))), h("td", { class: "num" }, String(disp(t.healed))), h("td", { class: "num" }, String(t.acts)), h("td", { class: "muted" }, state));
+    const foes = { dealt: 0, taken: 0, healed: 0, acts: 0 };
+    for (const u of driver.units()) if (u.side === "enemy") { const t = tally.get(u.id); if (t) (foes.dealt += t.dealt), (foes.taken += t.taken), (foes.healed += t.healed), (foes.acts += t.acts); }
+    const summary = h("table", { class: "stats small", style: "margin-top:8px" },
+      h("thead", null, h("tr", null, h("th", null, ""), h("th", null, "dealt"), h("th", null, "taken"), h("th", null, "healed"), h("th", null, "actions"), h("th", null, ""))),
+      h("tbody", null,
+        ...partyUnits.map((u) => row(u.name, tally.get(u.id) ?? { dealt: 0, taken: 0, healed: 0, acts: 0 }, u.ko ? "down" : `${disp(u.hp)}/${disp(u.stats.max_hp)} HP, ${disp(u.mp)}/${disp(u.stats.max_mp)} MP`)),
+        row("Foes together", foes, ""),
+      ),
+    );
     if (f.result === "won") {
       const last = single || driver.fightNo >= driver.fightTotal;
-      const box = h("div", { class: "box" },
+      const box = h("div", { class: "box", style: "min-width:520px" },
         h("h2", { style: "color:var(--good)" }, last ? (single ? "Fight won" : "Run cleared!") : "Victory"),
         h("div", { class: "muted" }, `Tick ${f.round}.${last ? "" : ` Fight ${driver.fightNo} of ${driver.fightTotal} done. HP and MP carry over; nothing heals between fights.`}`),
         summary,
@@ -545,7 +555,7 @@ export function startBattle(root: HTMLElement, args: BattleArgs) {
       setTimeout(() => { if (!stopped && ended) showOverlay(box); }, 1200);
       if (!last && setup.settings.autoContinue) setTimeout(() => { if (!stopped && ended) nextFight(); }, 2200);
     } else {
-      const box = h("div", { class: "box" },
+      const box = h("div", { class: "box", style: "min-width:520px" },
         h("h2", { style: "color:var(--bad)" }, "Defeated"),
         h("div", { class: "muted" }, `Tick ${f.round}. ${single ? "" : `Lost at fight ${driver.fightNo} of ${driver.fightTotal}.`} Losing costs nothing: change the build and try again.`),
         summary,
@@ -557,6 +567,26 @@ export function startBattle(root: HTMLElement, args: BattleArgs) {
       );
       setTimeout(() => { if (!stopped && ended) showOverlay(box); }, 1200);
     }
+  }
+  type Tally = { dealt: number; taken: number; healed: number; acts: number };
+  /** Damage dealt and taken, healing done and actions resolved, per unit, from this fight's log. Status ticks count for their holder's foes' side as "dealt" by nobody. */
+  function fightTally(): Map<string, Tally> {
+    const log = driver.run.log!;
+    let start = log.length - 1;
+    while (start > 0 && log[start].t !== "fight_start") start--;
+    const m = new Map<string, Tally>();
+    const get = (id: string) => { let t = m.get(id); if (!t) m.set(id, (t = { dealt: 0, taken: 0, healed: 0, acts: 0 })); return t; };
+    for (let i = start; i < log.length; i++) {
+      const e = log[i];
+      if (e.t === "dmg") {
+        const amount = (e.amount as number) || 0;
+        if (e.by) get(e.by as string).dealt += amount;
+        get(e.target as string).taken += amount;
+      } else if (e.t === "heal") {
+        if (e.by) get(e.by as string).healed += (e.amount as number) || 0;
+      } else if (e.t === "act") get(e.by as string).acts++;
+    }
+    return m;
   }
   function nextFight() {
     hideOverlay();
