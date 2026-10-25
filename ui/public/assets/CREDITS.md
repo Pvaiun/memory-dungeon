@@ -11,6 +11,8 @@ Sprites in this folder are a processed subset of packs the director supplied for
 - `backdrops/`: scenes composed from Willibab's Overworld, Dungeon and Castle tilesets, CC BY.
 - `vfx/`: frames from the "Pixel Animations and Effects Pack" by finalbossblues (timefantasy.net), packed into strips.
 
+Sound (`../audio/`): a retro sound effects pack and two music tracks ("Menu", "Battle Theme") the director supplied, converted to mono mp3. Their licence wasn't in the files; check it before anything is published beyond this design tool.
+
 The font (`../fonts/`) is Press Start 2P by Cody "CodeMan38" Boisclair, SIL Open Font License 1.1 (`../fonts/OFL.txt`).
 
 Regenerate the sprites with `python3 -I ui/tools/assets.py <packs dir> ui/public/assets`.

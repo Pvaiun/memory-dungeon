@@ -24,6 +24,8 @@ export type UV = {
   hpShown: number; shieldShown: number;
   cast: { name: string; start: number; end: number } | null;
   numberStack: number; numberAt: number;
+  /** When each status landed (for its pop) and statuses that just ended (for their fade). */
+  pops: Map<string, number>; fades: { id: string; until: number }[];
 };
 
 export type NumOpts = { color?: string; outline?: string | null; sub?: string; subColor?: string; big?: boolean; icon?: string; life?: number };
@@ -142,7 +144,7 @@ export class Scene {
     this.units.set(u.id, {
       id: u.id, side: u.side, ref: u.ref, name: u.name, x: 0, y: 0, w: s ? s.width : 26, h: s ? s.height : 40, k,
       pose: u.ko ? "dead" : "wait", poseUntil: 0, lungeUntil: 0, shakeUntil: 0, flashUntil: 0, alpha: u.ko && !party ? 0 : 1, gone: !!u.gone,
-      hpShown: u.hp, shieldShown: 0, cast: null, numberStack: 0, numberAt: 0,
+      hpShown: u.hp, shieldShown: 0, cast: null, numberStack: 0, numberAt: 0, pops: new Map(), fades: [],
     });
   }
 
@@ -210,7 +212,19 @@ export class Scene {
   clearTransient() {
     this.numbers = [];
     this.fx = [];
-    for (const v of this.units.values()) v.cast = null;
+    for (const v of this.units.values()) (v.cast = null), v.pops.clear(), (v.fades = []);
+  }
+  /** A status landed on a unit: its icon pops in. */
+  statusPop(id: string, status: string) {
+    this.units.get(id)?.pops.set(status, this.wall);
+  }
+  /** A status ended on a unit: its icon fades out. */
+  statusFade(id: string, status: string) {
+    const v = this.units.get(id);
+    if (!v) return;
+    v.pops.delete(status);
+    v.fades = v.fades.filter((f) => f.id !== status);
+    v.fades.push({ id: status, until: this.wall + 450 });
   }
 
   /** A number or word over a unit; stacked numbers on the same unit spread out. */
@@ -293,6 +307,7 @@ export class Scene {
     const flash = this.wall < v.flashUntil;
     ctx.save();
     ctx.globalAlpha = v.alpha * (hidden ? 0.45 : 1);
+    this.drawShadow(v.x + lunge, v.y, v.side === "party" ? 22 : Math.max(16, Math.min(56, Math.round(v.w * 0.7))));
     if (v.side === "party") {
       const f = v.pose === "dead" ? 2 : v.pose === "wait" || v.pose === "chant" || v.pose === "abnormal" ? WAIT_FRAMES[Math.floor(this.wall / 300) % 4] : Math.min(2, Math.floor((this.wall - (v.poseUntil - 400)) / 130));
       drawActor(ctx, v.ref, v.pose, Math.max(0, f), x, v.y, flash, 1, u.weapon);
@@ -301,6 +316,17 @@ export class Scene {
       drawEnemy(ctx, v.ref, v.k, x, v.y + bob, flash);
     }
     ctx.restore();
+  }
+
+  /** A soft pixel ellipse under a unit's feet, so it stands on the floor instead of floating over it. */
+  private drawShadow(cx: number, feet: number, w: number) {
+    const ctx = this.ctx;
+    const rx = w / 2, ry = w >= 40 ? 3 : 2;
+    ctx.fillStyle = "rgba(8, 8, 16, 0.45)";
+    for (let dy = -ry; dy <= ry; dy++) {
+      const half = Math.round(rx * Math.sqrt(1 - (dy / (ry + 0.5)) ** 2));
+      ctx.fillRect(Math.round(cx - half), Math.round(feet - 1 + dy), half * 2, 1);
+    }
   }
 
   private drawOverlay(v: UV, u: CUnit) {
@@ -314,7 +340,7 @@ export class Scene {
       const max = u.stats.max_hp;
       const hp = Math.max(0, Math.min(1, v.hpShown / max));
       const bw = Math.max(24, Math.min(48, Math.round(v.w * 0.75)));
-      const bx = x - Math.round(bw / 2), by = v.y + 2;
+      const bx = x - Math.round(bw / 2), by = v.y + 4;
       ctx.fillStyle = OUTLINE;
       ctx.fillRect(bx - 1, by - 1, bw + 2, 6);
       ctx.fillStyle = "#3a3a4a";
@@ -330,20 +356,44 @@ export class Scene {
     }
     if (!u.ko) {
       const sts = shownStatuses(u).slice(0, 4);
-      if (sts.length) {
+      v.fades = v.fades.filter((f) => f.until > this.wall);
+      const fading = v.fades.filter((f) => !sts.some((s) => s.id === f.id)).slice(0, 4 - sts.length);
+      const n = sts.length + fading.length;
+      if (n) {
         const step = STATUS_ICON + 1;
-        const gx = Math.max(0, Math.min(W - sts.length * step, x - Math.round((sts.length * step - 1) / 2)));
-        sts.forEach((s, i) => drawStatus(ctx, s.id, gx + i * step, Math.min(H - STATUS_ICON, iconY), s.count));
+        const gx = Math.max(0, Math.min(W - n * step, x - Math.round((n * step - 1) / 2)));
+        const iy = Math.min(H - STATUS_ICON, iconY);
+        sts.forEach((s, i) => {
+          const born = v.pops.get(s.id);
+          const age = born === undefined ? 1e9 : this.wall - born;
+          if (age < 260) {
+            // Landing: the icon drops in from one and a half size.
+            const sc = 1.5 - (age / 260) * 0.5;
+            const size = Math.round(STATUS_ICON * sc);
+            ctx.drawImage(statusIconOf(s.id), gx + i * step - Math.round((size - STATUS_ICON) / 2), iy - (size - STATUS_ICON), size, size);
+          } else drawStatus(ctx, s.id, gx + i * step, iy, s.count);
+        });
+        fading.forEach((f, i) => {
+          ctx.save();
+          ctx.globalAlpha = Math.max(0, (f.until - this.wall) / 450);
+          ctx.drawImage(statusIconOf(f.id), gx + (sts.length + i) * step, iy - Math.round((1 - ctx.globalAlpha) * 6));
+          ctx.restore();
+        });
       }
     }
     if (v.cast && !u.ko) {
+      // The wind-up as a vertical bar beside the figure (left of a party member, right of a foe), filling upward: it never sits where the unit above keeps its status icons.
       const p = Math.max(0, Math.min(1, (this.driver.vt - v.cast.start) / Math.max(1, v.cast.end - v.cast.start)));
+      const bh = Math.min(32, Math.max(16, v.h - 8));
+      const bx = v.side === "party" ? Math.max(1, x - Math.round(v.w / 2) - 8) : Math.min(W - 6, x + Math.round(v.w / 2) + 3);
+      const by = v.y - 2 - bh;
       ctx.fillStyle = OUTLINE;
-      ctx.fillRect(x - 15, top - 9, 30, 6);
+      ctx.fillRect(bx - 1, by - 1, 6, bh + 2);
       ctx.fillStyle = "#3a3a4a";
-      ctx.fillRect(x - 14, top - 8, 28, 4);
+      ctx.fillRect(bx, by, 4, bh);
       ctx.fillStyle = "#ffd54a";
-      ctx.fillRect(x - 14, top - 8, Math.round(28 * p), 4);
+      const fill = Math.round(bh * p);
+      ctx.fillRect(bx, by + bh - fill, 4, fill);
     }
   }
 

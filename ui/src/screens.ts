@@ -8,11 +8,12 @@ import { c, className, classes, cls as classOf, dungeons, enemies, fightName, fo
 import { enemyDisplayName } from "./art.js";
 import { button, h, header, row, toast, win, type Child } from "./dom.js";
 import { abilitiesFor, gearFor, reset, save, setup } from "./state.js";
-import { abilityBlock, basicLine, classHead, codeSpans, enemySheet, gearRow, memberFor, passiveBlock, portraitEl, role, section, specialLines, statGrid } from "./sheet.js";
+import { abilityBlock, basicLine, classHead, codeSpans, enemySheet, gearDeltas, gearRow, memberFor, passiveBlock, portraitEl, role, section, specialLines, statGrid } from "./sheet.js";
 import { enemyEl, enemyThumb } from "./pixel.js";
 import { weaponOf } from "../../src/engine/combat/fight.js";
 import { Strip, STRIP_H } from "./battle/scene.js";
 import { startBattle, type BattleArgs } from "./battle/battle.js";
+import { music, setMusic, setSound, sfx } from "./battle/audio.js";
 
 export type Screen = "home" | "fight" | "party" | "formation" | "unit" | "gear" | "classes" | "bestiary" | "enemy" | "settings" | "battle";
 
@@ -40,8 +41,10 @@ export function go(s: Screen, arg?: unknown, keepScroll = false) {
   stopBattle = null;
   strip?.stop();
   strip = null;
+  if (s !== current || !keepScroll) sfx.tap();
   current = s;
   currentArg = arg;
+  music.play(s === "battle" ? "battle" : "menu");
   frame.querySelectorAll(".overlay").forEach((o) => o.remove());
   screenEl?.remove();
   screenEl = h("div", { class: `screen ${s}${s === "battle" ? " tight" : ""}` });
@@ -72,7 +75,7 @@ function home(): Child[] {
     ["party", "PARTY", "Who goes, and what they carry"],
     ["classes", "CLASSES", "The 16 classes"],
     ["bestiary", "BESTIARY", "Every enemy"],
-    ["settings", "SETTINGS", "Theme, speed, sound"],
+    ["settings", "SETTINGS", "Theme, speed, sound, music"],
   ];
   const f = c.formations.get(setup.formation)!;
   return [
@@ -129,10 +132,8 @@ function party(): Child[] {
   const swap = (i: number, j: number) => { [setup.party[i], setup.party[j]] = [setup.party[j], setup.party[i]]; };
   const tapSlot = (i: number) => {
     if (pick === null) pick = i;
-    else if (pick === i) {
-      if (setup.party[i]) return go("unit", setup.party[i]);
-      pick = null;
-    } else {
+    else if (pick === i) pick = null;
+    else {
       if (setup.party[pick] && setup.party[i]) swap(pick, i);
       else if (setup.party[pick] && !setup.party[i]) {
         const [m] = setup.party.splice(pick, 1);
@@ -196,7 +197,7 @@ function party(): Child[] {
     h("div", { class: "btns" },
       sheetBtn,
       removeBtn,
-      h("span", { class: "dim small text", style: "margin-left:auto;text-align:right;line-height:1.25rem" }, pick === null ? "Tap a slot, then a class. Tap two slots to swap." : picked ? "Tap a class to put it here, a slot to swap, or the slot again for its sheet." : "Tap a class to put it here."),
+      h("span", { class: "dim small text", style: "margin-left:auto;text-align:right;line-height:1.25rem" }, pick === null ? "Tap a slot, then a class. Tap two slots to swap." : picked ? "Tap a class to put it here, another slot to swap, or this slot again to deselect." : "Tap a class to put it here, or the slot again to deselect."),
     ),
     win("scroll roster", h("div", { class: "grid" }, ...classes.map((k) => {
       const inParty = setup.party.includes(k.id);
@@ -279,15 +280,18 @@ function gear(arg?: unknown): Child[] {
   return [
     header(`${className(id)} · ${slot}`, () => go("unit", id)),
     win("list scroll",
-      slot !== "weapon" ? h("div", { class: `gear-row${!current ? " cur" : ""}`, onClick: () => choose(null) }, h("span", { class: "cursor" }, !current ? "▶" : ""), h("span", { class: "dim" }, "NOTHING")) : null,
+      slot !== "weapon" ? h("div", { class: `gear-row${!current ? " cur" : ""}`, onClick: () => choose(null) }, h("span", { class: "cursor" }, !current ? "▶" : ""), h("div", { class: "grow" }, h("div", { class: "line" }, h("span", { class: "dim" }, "NOTHING")), current ? h("div", { class: "line small codes" }, ...gearDeltas(id, slot, null)) : null)) : null,
       ...fits.map((gid) => {
         const r = gearRow(gearOf(gid), slot, member.stats, () => choose(gid), false);
-        if (gid === current) r.classList.add("cur");
+        if (gid === current) {
+          r.classList.add("cur");
+          r.querySelector(".grow")?.append(h("div", { class: "line small hi" }, "EQUIPPED"));
+        } else r.querySelector(".grow")?.append(h("div", { class: "line small codes" }, ...gearDeltas(id, slot, gid)));
         r.prepend(h("span", { class: "cursor" }, gid === current ? "▶" : ""));
         return r;
       }),
     ),
-    h("div", { class: "text dim small wrap" }, slot === "weapon" ? "A weapon sets the basic attack: its kind, speed and element. ★ is a powerful piece." : "Steps are +1 or +2 on the design's 1–5 scale; the numbers show 10 per point."),
+    h("div", { class: "text dim small wrap" }, "The second line is what changes against what's equipped. " + (slot === "weapon" ? "A weapon sets the basic attack: its kind, speed and element. ★ is a powerful piece." : "Steps are +1 or +2 on the design's 1–5 scale; the numbers show 10 per point.")),
   ];
 }
 
@@ -325,13 +329,14 @@ function enemy(arg?: unknown): Child[] {
 // ─── Settings ───
 function settings(): Child[] {
   const s = setup.settings;
-  const toggle = (label: string, key: "sound" | "designer" | "autoContinue") => row([h("span", { class: "grow" }, label), h("span", { class: s[key] ? "good" : "dim" }, s[key] ? "ON" : "OFF")], () => { s[key] = !s[key]; save(); refresh(); }, { cursor: false });
+  const toggle = (label: string, key: "sound" | "music" | "designer" | "autoContinue") => row([h("span", { class: "grow" }, label), h("span", { class: s[key] ? "good" : "dim" }, s[key] ? "ON" : "OFF")], () => { s[key] = !s[key]; if (key === "sound") setSound(s.sound); if (key === "music") setMusic(s.music); save(); refresh(); }, { cursor: false });
   return [
     header("SETTINGS", () => go("home")),
     win("list",
       row([h("span", { class: "grow" }, "THEME"), h("span", null, s.theme.toUpperCase())], () => { s.theme = s.theme === "night" ? "day" : "night"; setTheme(s.theme); save(); refresh(); }, { cursor: false }),
       row([h("span", { class: "grow" }, "SPEED"), h("span", null, `${s.speed}×`)], () => { s.speed = s.speed === 1 ? 2 : s.speed === 2 ? 4 : 1; save(); refresh(); }, { cursor: false }),
       toggle("SOUND", "sound"),
+      toggle("MUSIC", "music"),
       toggle("AUTO NEXT", "autoContinue"),
       toggle("DESIGNER", "designer"),
       row([h("span", { class: "grow" }, "NUMBERS"), h("span", null, s.bigNumbers ? "BIG" : "SMALL")], () => { s.bigNumbers = !s.bigNumbers; setDisplayDiv(s.bigNumbers ? 10 : 100); save(); refresh(); }, { cursor: false }),

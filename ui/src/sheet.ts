@@ -31,6 +31,43 @@ export function portraitEl(id: string, place: "slot" | "list" = "list"): HTMLCan
   return sprite ? actorEl(id, "wait", 1, gearFor(id).weapon) : faceEl(id);
 }
 
+/** The class's unit with one gear slot changed: what a piece in the picker would bring. */
+export function memberWith(id: string, slot: string, gearId: string | null): Member {
+  const inParty = setup.party.includes(id);
+  const p = inParty ? party() : soloParty(id);
+  for (const u of p.units) if (u.class === id) {
+    const g = { ...u.gear };
+    if (gearId) g[slot] = gearId;
+    else delete g[slot];
+    u.gear = g;
+  }
+  const members = combat.party(c, { dungeon: c.pack.progression.dungeonOrder[0], party: p, seed: 1 }) as Member[];
+  return members.find((m) => m.ref === id)!;
+}
+/** What a piece changes against what's equipped, as coloured codes: the basic hit for weapons, then every stat that moves. */
+export function gearDeltas(id: string, slot: string, gearId: string | null): Child[] {
+  const now = memberFor(id), then = memberWith(id, slot, gearId);
+  const out: Child[] = [];
+  const hitOf = (m: Member) => Number(weaponInfo(weaponOf(c, m.weapon), m.stats).hit.replace(/^≈ /, "").split(",")[0].replace(/[^0-9.-]/g, "")) || 0;
+  if (slot === "weapon") {
+    const d = hitOf(then) - hitOf(now);
+    if (d) out.push(h("span", { class: d > 0 ? "good" : "bad" }, `HIT${d > 0 ? "+" : ""}${d}`));
+  }
+  for (const key of [...SHEET_STATS, ...SPECIAL_STATS]) {
+    const d = (then.stats[key] ?? 0) - (now.stats[key] ?? 0);
+    if (!d) continue;
+    const pct = key === "crit_chance" || c.stats.get(key)?.kind === "points";
+    out.push(out.length ? " " : null, h("span", { class: d > 0 ? "good" : "bad" }, `${statCode(key)}${d > 0 ? "+" : ""}${pct ? `${Math.round(d)}%` : disp(d)}`));
+  }
+  for (const key of Object.keys(then.stats)) {
+    if (!key.startsWith("resist:")) continue;
+    const d = (then.stats[key] ?? 0) - (now.stats[key] ?? 0);
+    if (d) out.push(out.length ? " " : null, h("span", { class: `${d > 0 ? "good" : "bad"} ${key.slice(7)}` }, `${statCode(key)}${d > 0 ? "+" : ""}${d}%`));
+  }
+  if (!out.length) out.push(h("span", { class: "dim" }, "NO CHANGE"));
+  return out;
+}
+
 /** The first sentence of a class or enemy text, as its role word. */
 export const role = (text: string) => text.split(".")[0];
 

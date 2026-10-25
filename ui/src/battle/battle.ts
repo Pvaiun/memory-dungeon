@@ -17,12 +17,12 @@ import { ELEMENT_COLOR, enemyDisplayName, enemyName, STATUS_STYLE, TAG_ICON, typ
 import { bar, button, clear, h, win, type Child } from "../dom.js";
 import { party as partyLoadout, setup } from "../state.js";
 import { abilityTag, statusText, weaponInfo } from "../describe.js";
-import { iconEl, statusEl } from "../pixel.js";
+import { iconEl, iconOf, statusEl } from "../pixel.js";
 import { classSheet, enemySheet, portraitEl } from "../sheet.js";
 import { Driver, type Ev } from "./driver.js";
 import { Narrator, type Beat, type Line, type Tone } from "./narrate.js";
 import { Scene, shieldOf, shownStatuses, W, H } from "./scene.js";
-import { setSound, sfx } from "./audio.js";
+import { setMusic, setSound, sfx } from "./audio.js";
 import { go } from "../screens.js";
 
 export type BattleArgs = { dungeon: string; seed?: number };
@@ -64,6 +64,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   const ctl = h("div", { class: "ctl" });
   screen.append(canvas, msgEl, partyEl, foesEl, ctl);
   setSound(setup.settings.sound);
+  setMusic(setup.settings.music);
 
   const scene = new Scene(canvas, driver, theme);
   const nameOf = (id: string): string => {
@@ -95,7 +96,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     pauseBtn.className = paused ? "on" : "";
     speedBtns.forEach((b, i) => (b.className = SPEEDS[i] === speed ? "on" : ""));
   };
-  ctl.append(button("◀", () => { stop(); go("home"); }), pauseBtn, stepBtn, ...speedBtns, button(">>", () => fastForward()), button("LOG", () => openLog()));
+  ctl.append(button("◀", () => confirmLeave()), pauseBtn, stepBtn, ...speedBtns, button(">>", () => fastForward()), button("LOG", () => openLog()));
   renderCtl();
 
   const castingNow = () => driver.units().some((u) => !u.ko && u.cast !== null);
@@ -259,12 +260,18 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         const unit = String(ev.unit);
         const style = STATUS_STYLE[d.id] ?? STATUS_STYLE.generic;
         scene.number(unit, d.name.toUpperCase(), { color: style.color, icon: d.id });
+        scene.statusPop(unit, d.id);
         const key = `${unit}:${d.id}`;
         if (vwall - (lastStatusFx.get(key) ?? -9999) > 700) {
           lastStatusFx.set(key, vwall);
           scene.effectFor(unit, d.id === "shield" ? "shield" : d.label === "buff" ? "buff" : "debuff");
           sfx.status();
         }
+        break;
+      }
+      case "status_end": {
+        const d = c.statuses.get(String(ev.status));
+        if (d?.show === "icon" && ev.cause !== "ko" && ev.cause !== "fight_end") scene.statusFade(String(ev.unit), d.id);
         break;
       }
       case "immune":
@@ -359,7 +366,8 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   }
 
   // ─── Party rows: face, name and statuses, HP, MP ───
-  type Row = { el: HTMLElement; hp: HTMLElement; hpNum: HTMLElement; mp: HTMLElement; mpNum: HTMLElement; sts: HTMLElement; key: string; bars: string };
+  type Row = { el: HTMLElement; hp: HTMLElement; hpNum: HTMLElement; mp: HTMLElement; mpNum: HTMLElement; sts: HTMLElement; cds: HTMLCanvasElement; key: string; bars: string; cdKey: string };
+  const PIP = 18;
   const rows = new Map<string, Row>();
   function buildRows() {
     clear(partyEl);
@@ -368,16 +376,19 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       const hp = bar(1, "hp"), mp = bar(1, "mp", 0, true);
       const hpNum = h("span", { class: "num" }), mpNum = h("span", { class: "num mp" });
       const sts = h("span", { class: "sts" });
+      const cds = h("canvas", { class: "px cds", width: u.acts.length * PIP, height: PIP });
+      cds.style.width = `${(u.acts.length * PIP) / 8}rem`;
+      cds.style.height = `${PIP / 8}rem`;
       const el = h("div", { class: "member", onClick: () => openInspect(u.id) },
         h("div", { class: "portrait" }, portraitEl(u.ref)),
         h("div", { class: "body" },
-          h("div", { class: "line1" }, h("span", { class: "name trunc" }, className(u.ref)), sts),
+          h("div", { class: "line1" }, h("span", { class: "name trunc" }, className(u.ref)), cds, sts),
           h("div", { class: "line2" }, h("span", { class: "lbl" }, "HP"), hp, hpNum),
           h("div", { class: "line2" }, h("span", { class: "lbl mp" }, "MP"), mp, mpNum),
         ),
       );
       partyEl.append(el);
-      rows.set(u.id, { el, hp, hpNum, mp, mpNum, sts, key: "", bars: "" });
+      rows.set(u.id, { el, hp, hpNum, mp, mpNum, sts, cds, key: "", bars: "", cdKey: "" });
     }
   }
   function updateRows() {
@@ -409,9 +420,42 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       if (key !== r.key) {
         r.key = key;
         clear(r.sts);
-        sts.slice(0, 5).forEach((s) => r.sts.append(statusEl(s.id, s.count)));
+        sts.slice(0, 3).forEach((s) => r.sts.append(statusEl(s.id, s.count)));
       }
+      drawCooldowns(r, u);
     }
+  }
+  /** The unit's actions as pips: the ability's icon, shaded from the top by the cooldown left, lit when ready, blinking while it winds up. */
+  function drawCooldowns(r: Row, u: CUnit) {
+    const vt = driver.vt;
+    const parts = u.acts.map((a, i) => {
+      const total = a.id === "basic" ? weaponOf(c, u.weapon).cooldown ?? 1 : c.abilities.get(a.id)?.cooldown ?? 1;
+      const left = Math.max(0, (a.ready - vt) / SUBTICKS);
+      const share = Math.min(1, left / Math.max(1, total));
+      const casting = u.cast?.act === i;
+      return { tag: narrator.tagOf(u.id, a.id), share: Math.round(share * 16) / 16, ready: left <= 0 && !u.cast, casting };
+    });
+    const blink = Math.floor(vwall / 300) % 2;
+    const key = u.ko ? "ko" : parts.map((p) => `${p.tag}:${p.share}:${p.ready ? 1 : 0}:${p.casting ? blink : "-"}`).join("|");
+    if (key === r.cdKey) return;
+    r.cdKey = key;
+    const g = r.cds.getContext("2d")!;
+    g.clearRect(0, 0, r.cds.width, r.cds.height);
+    if (u.ko) return;
+    parts.forEach((p, i) => {
+      const x = i * PIP + 1;
+      const cell = TAG_ICON[p.tag] ?? TAG_ICON.physical;
+      g.drawImage(iconOf(cell[0], cell[1]), x, 1);
+      if (p.share > 0 && !p.casting) {
+        g.fillStyle = "rgba(10, 12, 24, 0.72)";
+        g.fillRect(x, 1, 16, Math.round(16 * p.share));
+      }
+      if (p.ready || (p.casting && blink)) {
+        g.strokeStyle = p.casting ? "#ffffff" : "#ffd54a";
+        g.lineWidth = 1;
+        g.strokeRect(x - 0.5, 0.5, 17, 17);
+      }
+    });
   }
 
   // ─── Foes ───
@@ -535,6 +579,16 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   function openSheet(u: CUnit, resume: () => void) {
     const body = u.side === "party" ? classSheet(u.ref, setup.settings.designer) : enemySheet(c.enemies.get(u.ref)!, setup.settings.designer);
     openOverlay(nameOf(u.id), h("div", null, ...body), resume);
+  }
+
+  /** Leaving mid-fight loses it: ask first. */
+  function confirmLeave() {
+    if (!driver.fight || driver.fight.result) { stop(); go("home"); return; }
+    const resume = holdClock();
+    openOverlay("LEAVE THE FIGHT?", h("div", null,
+      h("div", { class: "text dim wrap small" }, "The fight and the run are lost. The same seed plays the same fight again from the menu."),
+      h("div", { class: "btns", style: "margin-top:.75rem" }, button("LEAVE", () => { stop(); go("home"); }, "hi"), button("STAY", () => closeOverlay(true))),
+    ), resume);
   }
 
   // ─── Field input ───
