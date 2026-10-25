@@ -42,17 +42,26 @@ Two class passes went in (below). What's left, normalised for how long each clas
 
 The sustain classes lead in runs where HP carries; the fragile damage dealers trail. The playtesters agreed on the shape and added two things the simulation can't see: the Knight's Shield bash is the answer to every long wind-up (in 18 of 20 winning parties in one playtest), and the default ability orders hide each class's key move. Next would be a dedicated class pass, or decision B, which moves it more than numbers do.
 
-### D. Bosses lose to interrupts
+### D. Bosses lose to interrupts, when the Knight has MP
 
-The last playtest's loudest note. The Knight's Shield bash, the Geomancer's Tremor and the Hexer's Hush interrupt nearly every boss wind-up from node 6 on. The moves the bosses are built around (the Chief's Crush, the Giant's Inferno, the Storm King's Tempest) rarely land: Inferno landed once in four Fire Giant fights. It's also why the Knight is in nearly every winning party: 17 of 20 in the last playtest, 18 of 20 in the second, and 80 of the simulation's 175 top-10 builds.
+The last playtest's loudest note: the Knight's Shield bash interrupts nearly every boss wind-up, and the Fire Giant's Inferno landed once in four fights. The simulation disagreed (re-tuning under the documents' lost-cast rule barely moved anything), and the probe (`src/campaign-probe.ts`, which reads the logs of each node's best builds) says why. Knight builds on nodes 4 to 20 at the shipped difficulty, 12 seeds each:
 
-I checked whether my lost-cast rule (E, below) caused it, by re-tuning the whole road under the documents' rule, where an interrupted cast simply starts again. It isn't the cause. The knobs moved by 26 or less on every node, and the Knight fell only from 80 to 70 top-10 builds. The interrupt itself is the lever. The tuner answers it with more boss HP, so boss fights tend to get longer rather than more dangerous.
+| The Knight | Wins | Inferno lands | Crush lands | Shield bash interrupts |
+| --- | --- | --- | --- | --- |
+| as the simulation kits it (Heartstone) | 77% | 60% | 82% | 646 |
+| in Prayer beads, as the playtesters wore it | 85% | **2%** | 64% | 1,749 |
+| in Prayer beads, interrupts switched off | 68% | 82% | 95% | – |
+| in Prayer beads, the documents' retry rule | 84% | 3% | 66% | 1,886 |
 
-Options:
+- **MP decides it.** The Knight has 2,000 MP and regains 250 every 10 ticks; Fortify, Protect and Shield bash cost 300 each. In a Heartstone it starts the third fight with about a fifth of its MP and the bash mostly stops. In Prayer beads it never stops, and a boss with one big move is locked out of it.
+- **It decides the Fire Giant and little else.** Switching interrupts off (Knight in beads) takes Deep Freeze from 99% to 13% and Judgement from 75% to 0%, and Iron Wall (no healer allowed) from 97% to 69%. On the other nodes it changes a few points either way: the Crushes and Tempests that land are survivable. Inferno is the one move that ends a run.
+- **The lost-cast rule isn't the cause.** I adopted it overnight to settle the core set's open question (what an interrupted or target-less cast does) the way the rules already treat a cast that fizzles for MP, and to stop the Ghouls' Raise loop. That went against my own advice in the core-set report, which tested it and found it made Silence a hard counter; I should have said so. Under the documents' rule the Giant restarts at once, but it casts Brand first and Chill stretches Inferno's 8-tick wind-up past 10 ticks, so the bash is back (every 12 ticks) before it lands. The documents' rule still wins as many fights, and its target-less half is moot now that the enrage ends any loop, so reverting is cheap.
 
-1. **Keep it.** Interrupting is the skill the core set teaches, and the tuner prices it in.
-2. **A boss steadies after an interrupt:** for a few ticks after one, it can't be interrupted again (a status with an `immune` flag, like the dispel immunity the Ice Titan already has). One bash stops one big move, not every move. **My lean** for the next round, but it changes how every boss plays, so it's yours.
-3. **Fewer or slower interrupts:** a longer cooldown on Shield bash, Tremor and Hush.
+Options (you have your own; these are mine):
+
+1. **One bash per big move:** after a boss is interrupted, its next big move can't be. My earlier wording, "for a few ticks", wouldn't work: the bash is back before the boss is.
+2. **Interrupts delay, they don't cancel** (the boss keeps its wind-up progress after the Stun).
+3. **Cost:** Shield bash on a longer cooldown or a higher MP cost, so the Knight chooses between it and Protect.
 
 ### E. Rules and numbers I changed on this branch (confirm or revert)
 
