@@ -107,7 +107,7 @@ if (cmd === "show") {
   const run = play(c, combat, { dungeon: node.dungeon, party, seed, firstClear: true }, firstOption, { log: true });
   if (rest.includes("--full")) {
     console.log(readingPack(c, combat, { why: "", target: { key: node.id, dungeon: node.dungeon, name: node.name }, party, seed, won: run.outcome === "won" }, 1));
-  } else console.log(summary(playerView(run.log!) as Entry[]));
+  } else console.log(summary((run.log as Entry[]).filter((e) => e.vis === "player" || e.t === "mp")));
   console.log(run.outcome === "won" ? `\nRUN CLEARED (node ${i + 1}, seed ${seed}).` : `\nRUN LOST (node ${i + 1}, seed ${seed}).`);
 } else if (cmd === "glossary") {
   // What the interface's inspect window says about each status a fight can show.
@@ -120,6 +120,8 @@ function summary(log: Entry[]): string {
   const names = new Map<string, string>();
   const side = new Map<string, string>();
   const max = new Map<string, number>();
+  // MP shows as a bar on screen; here, what's left at each fight's end.
+  const mp = new Map<string, number>();
   let f: { dealt: Map<string, number>; taken: Map<string, number>; healed: Map<string, number>; acts: Map<string, number>; status: Map<string, number>; foeStatus: Map<string, number>; words: Map<string, number>; down: string[]; hp: Map<string, number>; n: number; name: string; boss: boolean } | null = null;
   let n = 0;
   const add = (m: Map<string, number>, k: string, v: number) => m.set(k, (m.get(k) ?? 0) + v);
@@ -161,13 +163,16 @@ function summary(log: Entry[]): string {
     else if (e.t === "down") {
       f.down.push(`${names.get(String(e.unit))} ${t(e.at)}`);
       f.hp.set(String(e.unit), 0);
-    } else if (e.t === "revive") {
+    } else if (e.t === "leave") f.hp.set(String(e.unit), 0);
+    else if (e.t === "mp" && side.get(String(e.target)) === "party") mp.set(String(e.target), e.mp as number);
+    else if (e.t === "revive") {
       out.push(`  ${t(e.at)} ${names.get(String(e.unit))} is raised by ${names.get(String(e.by))}.`);
       f.hp.set(String(e.unit), e.hp as number);
     } else if (e.t === "fight_end") {
       const foesLeft = [...f.hp].filter(([id, hp]) => side.get(id) === "enemy" && hp > 0).map(([id, hp]) => `${names.get(id)} at ${Math.round((100 * hp) / max.get(id)!)}%`);
       const party = [...f.hp].filter(([id]) => side.get(id) === "party").map(([id, hp]) => `${names.get(id)} ${hp}/${max.get(id)}`);
-      out.push(`  ${e.result === "won" ? "WON" : "LOST"} at t${e.rounds}. Party after: ${party.join(", ")}.${foesLeft.length ? ` Foes still standing: ${foesLeft.join(", ")}.` : ""}`);
+      const mpLeft = [...mp].map(([id, v]) => `${names.get(id)} ${v}`);
+      out.push(`  ${e.result === "won" ? "WON" : "LOST"} at t${e.rounds}. Party after: ${party.join(", ")}.${mpLeft.length ? ` MP left: ${mpLeft.join(", ")}.` : ""}${foesLeft.length ? ` Foes still standing: ${foesLeft.join(", ")}.` : ""}`);
       const down = f.down.filter((x) => side.get([...names].find(([, nm]) => x.startsWith(nm))?.[0] ?? "") !== "enemy");
       if (down.length) out.push(`  Knocked out: ${down.join(", ")}.`);
       const fmt = (m: Map<string, number>) => [...m].map(([k, v]) => `${k} ${v}`).join(", ");
