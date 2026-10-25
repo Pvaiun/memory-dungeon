@@ -44,7 +44,15 @@ The sustain classes lead in runs where HP carries; the fragile damage dealers tr
 
 ### D. Bosses lose to interrupts
 
-VARIANT
+The last playtest's loudest note. The Knight's Shield bash, the Geomancer's Tremor and the Hexer's Hush interrupt nearly every boss wind-up from node 6 on. The moves the bosses are built around (the Chief's Crush, the Giant's Inferno, the Storm King's Tempest) rarely land: Inferno landed once in four Fire Giant fights. It's also why the Knight is in nearly every winning party: 17 of 20 in the last playtest, 18 of 20 in the second, and 80 of the simulation's 175 top-10 builds.
+
+I checked whether my lost-cast rule (E, below) caused it, by re-tuning the whole road under the documents' rule, where an interrupted cast simply starts again. It isn't the cause. The knobs moved by 26 or less on every node, and the Knight fell only from 80 to 70 top-10 builds. The interrupt itself is the lever. The tuner answers it with more boss HP, so boss fights tend to get longer rather than more dangerous.
+
+Options:
+
+1. **Keep it.** Interrupting is the skill the core set teaches, and the tuner prices it in.
+2. **A boss steadies after an interrupt:** for a few ticks after one, it can't be interrupted again (a status with an `immune` flag, like the dispel immunity the Ice Titan already has). One bash stops one big move, not every move. **My lean** for the next round, but it changes how every boss plays, so it's yours.
+3. **Fewer or slower interrupts:** a longer cooldown on Shield bash, Tremor and Hush.
 
 ### E. Rules and numbers I changed on this branch (confirm or revert)
 
