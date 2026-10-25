@@ -4,7 +4,7 @@
  * Magic, Armor, Crit, Aggro, as the document lists them.
  */
 import type { AbilityT, EnemyT, StatusT, WeaponT } from "../../src/schema.js";
-import { COOLDOWN, COST, ENEMY_HIT, ENEMY_SPEED_FACTOR, ENEMY_SWING, FLAT_STACKS, HIT, RESIST, REVIVE, SPECIAL, SPEED, STATUS, WINDUP, crit, pts, type SwingWord } from "./scale.js";
+import { COOLDOWN, COST, ENEMY_HIT, ENEMY_SPEED_FACTOR, ENEMY_SWING, FLAT_STACKS, HIT, RESIST, REVIVE, SPECIAL, SPEED, STATUS, WINDUP, crit, jitter, pts, type SwingWord } from "./scale.js";
 import { T } from "./classes.js";
 import { speedOf } from "./vocabulary.js";
 
@@ -54,7 +54,8 @@ export const enemyStatuses: StatusT[] = [
 
 // ─── Abilities ───────────────────────────────────────────────────────────────
 
-const a = (id: string, name: string, text: string, body: Partial<AbilityT> & { do: AbilityT["do"]; cooldown: number }): AbilityT => ({ id, name, text, ...body });
+// Pacing pass: as for the classes, each ability's cooldown is moved by its id (scale.ts, jitter).
+const a = (id: string, name: string, text: string, body: Partial<AbilityT> & { do: AbilityT["do"]; cooldown: number }): AbilityT => ({ id, name, text, ...body, cooldown: jitter(body.cooldown, id) });
 const fromStat = (stat: string, ratio: number) => ({ scale: [{ ratio, stat }] });
 
 export const enemyAbilities: AbilityT[] = [

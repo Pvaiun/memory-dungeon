@@ -77,7 +77,9 @@ test("campaign: what's owned grows by each node's rewards, a new class brings it
 });
 
 test("stagger: copies of the same enemy start a fight 1.5 ticks apart, so a pack ripples instead of volleying", () => {
-  const c = loadContent(raw);
+  const pack = structuredClone(raw);
+  delete pack.ruleset.opening; // the opening roll adds to each copy's start; this test reads the stagger alone
+  const c = loadContent(pack);
   const run = newRun(c, combat, { dungeon: "old_road", party: { formation: "neutral", units: [{ class: "knight", position: "left", abilities: ["fortify", "protect", "shield_bash"], gear: { weapon: "plain_sword" } }] }, seed: 1 }, { checked: true });
   while (!run.fight) advanceOnce(c, combat, run);
   advanceOnce(c, combat, run);
@@ -109,12 +111,17 @@ test("campfire: the run pauses for a choice between two fights; REST gives back 
   assert.ok(d.stages.some((s: { kind: string }) => s.kind === "campfire"), "every campaign run has a campfire");
   assert.equal(d.stages[d.stages.length - 2].kind, "campfire", "just before the boss");
   const c = loadContent(pack);
-  const party = { formation: "neutral", units: [{ class: "knight", position: "left", abilities: ["fortify", "protect", "shield_bash"], gear: { weapon: "plain_sword" } }, { class: "cleric", position: "center", abilities: ["renew", "cure", "raise"], gear: { weapon: "plain_light_staff" } }] };
+  const party = { formation: "neutral", units: [{ class: "knight", position: "left", abilities: ["fortify", "protect", "shield_bash"], gear: { weapon: "plain_sword" } }, { class: "cleric", position: "center", abilities: ["renew", "cure", "raise"], gear: { weapon: "plain_light_staff" } }, { class: "ranger", position: "right", abilities: ["venom_arrow", "fire_arrow", "rending_arrow"], gear: { weapon: "plain_bow" } }] };
   let reached = 0;
   for (const pick of ["rest", "focus"]) {
-    const run = newRun(c, combat, { dungeon: "cmp_old_road", party, seed: 2 }, { checked: true });
-    while (!run.pending && !run.outcome) advanceOnce(c, combat, run);
-    if (run.outcome) continue; // lost before the campfire on this seed
+    // The first seed on which this party reaches the campfire.
+    let run = newRun(c, combat, { dungeon: "cmp_old_road", party, seed: 1 }, { checked: true });
+    for (let seed = 1; seed < 40; seed++) {
+      run = newRun(c, combat, { dungeon: "cmp_old_road", party, seed }, { checked: true });
+      while (!run.pending && !run.outcome) advanceOnce(c, combat, run);
+      if (run.pending) break;
+    }
+    if (run.outcome) continue;
     assert.equal(run.pending!.kind, "campfire");
     reached++;
     const m = run.party as unknown as { hp: number; mp: number; stats: Record<string, number> }[];
@@ -126,5 +133,5 @@ test("campfire: the run pauses for a choice between two fights; REST gives back 
       else assert.equal(x.mp, Math.min(x.stats.max_mp, before[i][1] + Math.floor(x.stats.max_mp * 0.4)));
     });
   }
-  assert.equal(reached, 2, "the party reaches the campfire on this seed");
+  assert.equal(reached, 2, "the party reaches the campfire on some seed");
 });

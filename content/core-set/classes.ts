@@ -3,7 +3,7 @@
  * Every number comes from scale.ts; the words are the documents'.
  */
 import type { AbilityT, ClassDefT, NumT, StatusT, TargetRuleT } from "../../src/schema.js";
-import { COOLDOWN, COST, HIT, REVIVE, RESIST, SPECIAL, SPECIAL_KEY, STACKS, STATUS, STUN_COOLDOWN, WINDUP, crit, costly, from, pts, stacks, type HitWord, type SpecialLevel, type SpecialStat, type StackWord } from "./scale.js";
+import { COOLDOWN, COST, HIT, REVIVE, RESIST, SPECIAL, SPECIAL_KEY, STACKS, STATUS, STUN_COOLDOWN, WINDUP, crit, costly, from, jitter, pts, stacks, type HitWord, type SpecialLevel, type SpecialStat, type StackWord } from "./scale.js";
 import { P } from "./vocabulary.js";
 
 type CD = keyof typeof COOLDOWN;
@@ -113,14 +113,15 @@ export const passives: StatusT[] = [
 // ─── Abilities ───────────────────────────────────────────────────────────────
 
 type A = Omit<AbilityT, "class"> & { class: string };
-const a = (cls: string, id: string, name: string, text: string, body: Partial<AbilityT> & { do: AbilityT["do"]; cooldown: number }): A => ({ id, class: cls, name, text, ...body });
+// Pacing pass: each ability's cooldown is its word's, moved by its id (scale.ts, jitter), so no two in a kit are the same.
+const a = (cls: string, id: string, name: string, text: string, body: Partial<AbilityT> & { do: AbilityT["do"]; cooldown: number }): A => ({ id, class: cls, name, text, ...body, cooldown: jitter(body.cooldown, id) });
 
 export const abilities: A[] = [
   // Knight
   a("knight", "fortify", "Fortify", "Guards the ally with the lowest share of HP.", { ...timing("medium", "quick"), target: T.lowestShareAlly, do: [apply("guard")] }),
   a("knight", "protect", "Protect", "Shields the lowest ally; the amount scales from the Knight's max HP.", {
     ...timing("medium", "normal"), ...waitsFor("allies", { belowCap: "shield" }), target: { ...T.lowestShareAlly, where: { belowCap: "shield" } },
-    do: [apply("shield", { stacks: from("max_hp", 0.3) })],
+    do: [apply("shield", { stacks: from("max_hp", 0.6) })],
   }),
   a("knight", "shield_bash", "Shield bash", "Bashes a foe with the shield, which scales from Armor, and Stuns it.", {
     ...timing(STUN_COOLDOWN, "quick"), target: lacking({ side: "foes" }, "stun", true), do: [phys("blunt", hit("armor", "normal"), { apply: [{ status: "stun" }] })],
@@ -131,13 +132,14 @@ export const abilities: A[] = [
     ...timing("medium", "normal"), target: { side: "allies", where: { debuffs: true }, ifNone: "any", pick: "lowest", by: "hp_share" }, do: [{ op: "remove", label: "debuff" }, apply("regen")],
   }),
   a("cleric", "cure", "Cure", "A quick, small heal on the lowest ally.", {
-    ...timing("short", "quick", { costly: true }), ...waitsFor("allies", { hpBelow: 100 }), target: T.lowestShareAlly, do: [{ op: "heal", amount: from("magic", 0.2) }],
+    ...timing("short", "quick", { costly: true }), ...waitsFor("allies", { hpBelow: 100 }), target: T.lowestShareAlly, do: [{ op: "heal", amount: from("magic", 0.45) }],
   }),
   a("cleric", "raise", "Raise", "Revives a random knocked-out ally with half its HP.", {
     ...timing("long", "very_long", { costly: true }), ...waitsFor("allies", { ko: true }), target: T.koAlly, do: [{ op: "revive", hp: { scale: [{ ratio: REVIVE.half, stat: "max_hp", of: "target" }] } }],
   }),
   // Ranger
-  a("ranger", "venom_arrow", "Venom arrow", "A poisoned arrow at a random foe.", { ...timing("short", "quick"), do: [phys("pierce", hit("attack", "normal"), { apply: [{ status: "poison" }] })] }),
+  // Pacing pass: a light hit (was normal); the Poison it carries is the bigger part now.
+  a("ranger", "venom_arrow", "Venom arrow", "A poisoned arrow at a foe that isn't Poisoned yet, if there is one.", { ...timing("short", "quick"), target: lacking({ side: "foes" }, "poison", true), do: [phys("pierce", hit("attack", "light"), { apply: [{ status: "poison" }] })] }),
   a("ranger", "fire_arrow", "Fire arrow", "A burning arrow at the foe with the most Burn, adding many.", {
     // Campaign pass: a heavy hit, not normal. The AI playtester never wanted the Ranger after the first node.
     ...timing("medium", "long"), target: T.mostFoe("burn"), do: [magic("fire", hit("attack", "heavy"), { apply: [{ status: "burn", stacks: stacks("many", "attack") }] })],
@@ -148,7 +150,7 @@ export const abilities: A[] = [
   // Bramble knight
   a("bramble_knight", "thicket", "Thicket", "Taunts and Guards itself.", { ...timing("medium", "quick"), target: "self", do: [apply("taunt"), apply("guard")] }),
   a("bramble_knight", "regrowth", "Regrowth", "Regen on the lowest ally.", { ...timing("medium", "normal"), target: T.lowestShareAlly, do: [apply("regen")] }),
-  a("bramble_knight", "bramble_lash", "Bramble lash", "Lashes a random foe with its thorns.", { ...timing("short", "quick"), do: [phys("pierce", { scale: [{ ratio: 4, stat: "thorns" }] })] }),
+  a("bramble_knight", "bramble_lash", "Bramble lash", "Lashes a random foe with its thorns.", { ...timing("short", "quick"), do: [phys("pierce", { scale: [{ ratio: 9, stat: "thorns" }] })] }),
   // Hoplite
   a("hoplite", "aspis", "Aspis", "Aegis on the lowest ally.", { ...timing("medium", "quick"), ...waitsFor("allies", { lacks: "aegis" }), target: lacking(T.lowestShareAlly, "aegis"), do: [apply("aegis")] }),
   a("hoplite", "paired_guard", "Paired guard", "Guards itself and the other lowest ally.", { ...timing("medium", "normal"), target: "self", do: [apply("guard"), apply("guard", { to: T.otherLowestShareAlly })] }),
@@ -162,11 +164,11 @@ export const abilities: A[] = [
   // Valkyrie
   a("valkyrie", "gale_spear", "Gale spear", "Three quick Wind hits on a foe that isn't Taunting, each adding a few Shock.", {
     // Campaign pass: 0.1 of Attack a hit, not light's 0.2. Three undodgeable hits with Seek on a short cooldown made the Valkyrie the best class on every node.
-    ...timing("short", "quick"), seek: true, target: T.notTauntingFoe, do: [magic("wind", from("attack", 0.1), { hits: 3, apply: [{ status: "shock", stacks: stacks("few", "attack") }] })],
+    ...timing("short", "quick"), seek: true, target: T.notTauntingFoe, do: [magic("wind", from("attack", 0.25), { hits: 3, apply: [{ status: "shock", stacks: stacks("few", "attack") }] })],
   }),
   a("valkyrie", "rally", "Rally", "Heals the lowest ally; the amount scales from Magic.", {
     // Campaign pass: 0.3 of Magic, not 0.6.
-    ...timing("medium", "normal"), ...waitsFor("allies", { hpBelow: 100 }), target: T.lowestShareAlly, do: [{ op: "heal", amount: from("magic", 0.3) }],
+    ...timing("medium", "normal"), ...waitsFor("allies", { hpBelow: 100 }), target: T.lowestShareAlly, do: [{ op: "heal", amount: from("magic", 0.7) }],
   }),
   a("valkyrie", "valhalla", "Valhalla", "Revives a random knocked-out ally with a tenth of its HP, every action ready.", {
     ...timing("long", "quick", { costly: true }), ...waitsFor("allies", { ko: true }), target: T.koAlly, do: [{ op: "revive", hp: { scale: [{ ratio: REVIVE.tenth, stat: "max_hp", of: "target" }] }, ready: true }],
@@ -183,7 +185,7 @@ export const abilities: A[] = [
   // Monk
   a("monk", "flow", "Flow", "Haste on itself.", { ...timing("short", "quick"), target: "self", do: [apply("haste")] }),
   a("monk", "burning_fist", "Burning fist", "Three quick Fire hits on the foe with the most Burn, each adding a few.", {
-    ...timing("short", "quick"), target: T.mostFoe("burn"), do: [magic("fire", hit("attack", "light"), { hits: 3, apply: [{ status: "burn", stacks: stacks("few", "attack") }] })],
+    ...timing("short", "quick"), target: T.mostFoe("burn"), do: [magic("fire", from("attack", 0.25), { hits: 3, apply: [{ status: "burn", stacks: stacks("few", "attack") }] })],
   }),
   a("monk", "pressure_point", "Pressure point", "Stuns the foe with the highest Attack or Magic, past any guard.", {
     ...timing(STUN_COOLDOWN, "normal"), seek: true, target: lacking(T.highestAMFoe, "stun", true), do: [phys("blunt", hit("attack", "normal"), { apply: [{ status: "stun" }] })],
@@ -201,21 +203,23 @@ export const abilities: A[] = [
   // Pyromancer
   a("pyromancer", "firebolt", "Firebolt", "Fire at the foe with the most Burn, adding several.", { ...timing("short", "normal"), target: T.mostFoe("burn"), do: [magic("fire", hit("magic", "normal"), { apply: [{ status: "burn", stacks: stacks("several", "magic") }] })] }),
   // Campaign pass: normal hits (0.35 of Magic), not light. Squishy damage dealers were in few winning builds; the run's attrition favours sustain.
-  a("pyromancer", "fireball", "Fireball", "Fire on every foe, adding a few Burn to each.", { ...timing("medium", "long"), target: T.everyFoe, do: [magic("fire", hit("magic", "normal"), { apply: [{ status: "burn", stacks: stacks("few", "magic") }] })] }),
+  // Pacing pass: a light hit on each (was normal): about one swing a foe, for every foe.
+  a("pyromancer", "fireball", "Fireball", "Fire on every foe, adding a few Burn to each.", { ...timing("medium", "long"), target: T.everyFoe, do: [magic("fire", hit("magic", "light"), { apply: [{ status: "burn", stacks: stacks("few", "magic") }] })] }),
   a("pyromancer", "pyre", "Pyre", "Heavy Fire on the foe with the most Burn, rising with each stack. The Burn stays.", {
-    ...timing("long", "very_long"), target: T.mostFoe("burn"), do: [magic("fire", { scale: [{ ratio: HIT.heavy, stat: "magic" }, { ratio: 150, stacks: "burn", of: "target" }] })],
+    ...timing("long", "very_long"), target: T.mostFoe("burn"), do: [magic("fire", { scale: [{ ratio: HIT.heavy, stat: "magic" }, { ratio: 300, stacks: "burn", of: "target" }] })],
   }),
   // Frostweaver
   a("frostweaver", "frost_lance", "Frost lance", "Ice at the foe with the most Chill, adding several.", { ...timing("short", "normal"), target: T.mostFoe("chill"), do: [magic("ice", hit("magic", "normal"), { apply: [{ status: "chill", stacks: stacks("several", "magic") }] })] }),
   // Campaign pass: 0.3 of Magic, not light's 0.2, for the same reason as Fireball.
-  a("frostweaver", "blizzard", "Blizzard", "Ice on every foe, adding a few Chill to each.", { ...timing("medium", "long"), target: T.everyFoe, do: [magic("ice", from("magic", 0.3), { apply: [{ status: "chill", stacks: stacks("few", "magic") }] })] }),
+  a("frostweaver", "blizzard", "Blizzard", "Ice on every foe, adding a few Chill to each.", { ...timing("medium", "long"), target: T.everyFoe, do: [magic("ice", hit("magic", "light"), { apply: [{ status: "chill", stacks: stacks("few", "magic") }] })] }),
   a("frostweaver", "stillness", "Stillness", "Clarity on a random ally.", { ...timing("long", "quick"), target: "ally", do: [apply("clarity")] }),
   // Stormcaller
   a("stormcaller", "chain_lightning", "Chain lightning", "Lightning at a random foe, then up to three others, adding a few Shock to each.", {
     ...timing("short", "quick"),
     do: [
-      magic("lightning", hit("magic", "normal"), { apply: [{ status: "shock", stacks: stacks("few", "magic") }] }),
-      magic("lightning", hit("magic", "light"), { apply: [{ status: "shock", stacks: stacks("few", "magic") }], to: T.threeOtherFoes }),
+      // Pacing pass: 0.6 and 0.3 of Magic (were normal and light), so four foes take about two and a half swings, not five.
+      magic("lightning", from("magic", 0.6), { apply: [{ status: "shock", stacks: stacks("few", "magic") }] }),
+      magic("lightning", from("magic", 0.3), { apply: [{ status: "shock", stacks: stacks("few", "magic") }], to: T.threeOtherFoes }),
     ],
   }),
   a("stormcaller", "thunderstorm", "Thunderstorm", "Lightning on every foe, adding a few Shock to each.", { ...timing("medium", "normal"), target: T.everyFoe, do: [magic("lightning", hit("magic", "light"), { apply: [{ status: "shock", stacks: stacks("few", "magic") }] })] }),
@@ -223,7 +227,7 @@ export const abilities: A[] = [
   // Geomancer
   a("geomancer", "earthen_shell", "Earthen shell", "Shields itself and the other lowest ally; the amount scales from Armor.", {
     ...timing("medium", "normal"), ...waitsFor("allies", { belowCap: "shield" }), target: "self",
-    do: [apply("shield", { stacks: from("armor", 0.5), to: { side: "self", where: { belowCap: "shield" } } }), apply("shield", { stacks: from("armor", 0.5), to: { ...T.otherLowestShareAlly, where: { belowCap: "shield" } } })],
+    do: [apply("shield", { stacks: from("armor", 1.0), to: { side: "self", where: { belowCap: "shield" } } }), apply("shield", { stacks: from("armor", 1.0), to: { ...T.otherLowestShareAlly, where: { belowCap: "shield" } } })],
   }),
   a("geomancer", "rockfall", "Rockfall", "Earth damage scaling from Armor on a random foe.", { ...timing("short", "normal"), do: [magic("earth", hit("armor", "normal"))] }),
   a("geomancer", "tremor", "Tremor", "Earth damage on a random foe, which is Stunned.", { ...timing(STUN_COOLDOWN, "very_long"), target: lacking({ side: "foes" }, "stun", true), do: [magic("earth", hit("magic", "normal"), { apply: [{ status: "stun" }] })] }),

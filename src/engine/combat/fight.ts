@@ -765,9 +765,9 @@ function take(w: W, t: CUnit, amount: number): { soaked: number; lost: number; b
 
 const shield = (w: W, u: CUnit) => u.statuses.reduce((s, x) => (def(w, x.id).absorb ? s + Math.floor(x.stacks / SUBTICKS) : s), 0);
 
-function logDamage(w: W, by: CUnit | null, t: CUnit, src: string, part: string, r: Calc, tk: { soaked: number; blocked: boolean }) {
+function logDamage(w: W, by: CUnit | null, t: CUnit, src: string, part: string, r: Calc, tk: { soaked: number; blocked: boolean }, from?: string | null) {
   w.log?.({
-    t: "dmg", vis: "player", at: w.f.now, by: by?.id ?? null, target: t.id, src, part,
+    t: "dmg", vis: "player", at: w.f.now, by: by?.id ?? null, target: t.id, src, part, ...(from ? { from } : {}),
     amount: tk.blocked ? 0 : r.amount, soaked: tk.soaked, word: tk.blocked ? "AEGIS" : r.word, crit: r.crit, hp: t.hp, shield: shield(w, t),
   });
 }
@@ -864,7 +864,8 @@ function strike(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
   const by = st.fixedBoost ? (d.perSource ? unit(w, st.src) : null) : ctx.actor;
   if (r.word === "ABSORB") return absorb(w, by, t, d.id, r);
   const tk = take(w, t, r.amount);
-  logDamage(w, by, t, d.id, st.fixedBoost ? "pulse" : "reaction", r, tk);
+  // `from`: who applied the status, for reading a fight's damage by source (the log only).
+  logDamage(w, by, t, d.id, st.fixedBoost ? "pulse" : "reaction", r, tk, st.src);
   if (t.hp <= 0) ko(w, t);
   if (!w.f.result) damageEvents(w, by, t, tk.blocked ? 0 : r.amount, tk.lost, d.id);
 }
@@ -934,7 +935,7 @@ export function applyStatus(w: W, by: CUnit, to: CUnit, d: S.StatusT, o: ApplyOp
       cur.stacks = Math.min(capOf(w, d, cur.nums, to), cur.stacks + add);
       if (dur !== "permanent") cur.end = end;
     }
-    gained(w, to, d, cur);
+    gained(w, to, d, cur, by);
     return;
   }
   // An Intensity status exists only at 1 stack or more.
@@ -944,12 +945,12 @@ export function applyStatus(w: W, by: CUnit, to: CUnit, d: S.StatusT, o: ApplyOp
   inst.stacks = isIntensity(d) ? Math.min(capOf(w, d, nums, to), add) : 0;
   to.statuses.push(inst);
   if (d.pulse) push(w, { k: "pulse", at: f.now + sub(d.pulse.every), b: pulseBatch(to, d), g: 0, slot: to.slot, seq: f.seq++, unit: to.id, uid: inst.uid });
-  gained(w, to, d, inst);
+  gained(w, to, d, inst, by);
 }
 
-function gained(w: W, to: CUnit, d: S.StatusT, s: SInst) {
+function gained(w: W, to: CUnit, d: S.StatusT, s: SInst, by?: CUnit) {
   w.log?.({
-    t: "status", vis: d.show === "icon" ? "player" : "hidden", at: w.f.now, unit: to.id, status: d.id, name: d.name,
+    t: "status", vis: d.show === "icon" ? "player" : "hidden", at: w.f.now, unit: to.id, status: d.id, name: d.name, ...(by ? { by: by.id } : {}),
     total: isIntensity(d) ? s.stacks / SUBTICKS : null, end: s.end,
   });
   if (d.stats) refresh(w, to);
@@ -1292,7 +1293,12 @@ function begin(w: W) {
     for (const id of u.start) applyStatus(w, u, u, def(w, id), { stacks: 1, rng: u });
     refresh(w, u);
   }
-  for (const u of f.units) u.acts.forEach((a, i) => (a.ready = cooldownOf(w, u, actDef(w, u, i))));
+  // ruleset.opening: each action starts partly charged, by its own roll, so a party's actions don't all come up together.
+  const open = w.c.pack.ruleset.opening;
+  for (const u of f.units) u.acts.forEach((a, i) => {
+    const cd = cooldownOf(w, u, actDef(w, u, i));
+    a.ready = open ? Math.round(cd * (open.min + (open.max - open.min) * next(u.rng))) : cd;
+  });
   // ruleset.stagger: the n-th copy of an enemy starts n × stagger ticks behind the first, so three Ghosts ripple rather than volley.
   const stagger = Math.round((w.c.pack.ruleset.stagger ?? 0) * SUBTICKS);
   if (stagger) {

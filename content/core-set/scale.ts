@@ -16,18 +16,42 @@ import type { NumT } from "../../src/schema.js";
 export const P = 1000;
 export const pts = (n: number) => n * P;
 
-/** A class's Crit n is 5n%. */
-export const crit = (n: number) => 5 * n;
+/** A class's Crit n is 4n% (pacing pass: was 5n%; the party critted a sixth of its hits, for a fifth of its damage). */
+export const crit = (n: number) => 4 * n;
 
 // ─── Timing, in ticks ────────────────────────────────────────────────────────
 
-/** Weapon kinds' speeds: the basic attack's base cooldown. */
-export const SPEED = { fast: 6, medium: 10, slow: 16 } as const;
+/**
+ * Pacing pass (steps/07-pacing): every weapon kind swings on its own cooldown, so a party's basic attacks don't land on one
+ * tick. They were three speeds (6, 10 and 16 ticks). A swing's size follows its cooldown (see SWING_REF), so every kind
+ * deals about the same per tick.
+ */
+export const KIND_SPEED: Record<string, number> = {
+  dagger: 5.3, fist: 5.7, wind_staff: 6.1, lightning_staff: 6.6, sword: 7.4, bow: 7.8, spear: 8.2,
+  light_staff: 8.5, dark_staff: 8.7, ice_staff: 9.0, earth_staff: 9.4, fire_staff: 9.8, axe: 10.7,
+};
+/** A swing's size is (base + ratio × stat) × its cooldown ÷ this: per tick, the old medium swing's. */
+export const SWING_REF = 10;
+/** The documents' speed words, for enemies' touches and a kind's damage word: between the kinds' cooldowns, so they don't line up either. */
+export const SPEED = { fast: 5.9, medium: 7.9, slow: 10.3 } as const;
 /**
  * Regular fights last about 30 ticks and every action starts a fight on cooldown, so at long = 30 the Cleric's
  * Prayer never fired in one and a boss's signature blow came once in 38 ticks. Shorter words keep the ratios.
  */
-export const COOLDOWN = { short: 6, medium: 12, long: 22 } as const;
+/**
+ * Pacing pass: abilities are moments in a fight, not its whole rhythm. At 6, 12 and 22 ticks, a unit with three abilities was
+ * casting nearly all the time and its basic attack came a third of its actions; the party acted twice for each foe action.
+ */
+export const COOLDOWN = { short: 30, medium: 48, long: 70 } as const;
+/**
+ * An ability's cooldown: its word's, moved up to 15% either way by its id, so no two in a kit share one and few line up with
+ * each other or with a swing. The director's ask: "you should probably never even have two that are the same".
+ */
+export function jitter(cooldown: number, id: string): number {
+  let h = 0;
+  for (const ch of id) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return Math.round(cooldown * (0.85 + 0.3 * ((h % 997) / 997)) * 10) / 10;
+}
 /**
  * The classes document's fallback for Stun: "a long-cooldown Stun with no timing condition may rarely catch a
  * wind-up. The fallback is a shorter Stun on a shorter cooldown." With Shield bash and Inferno both on long
@@ -38,7 +62,10 @@ export const WINDUP = { quick: 0.5, normal: 1.5, long: 4, very_long: 8 } as cons
 export const RULES = {
   basicRecovery: 0.25,
   abilityCast: WINDUP.normal,
-  abilityRecovery: 2.5,
+  /** Pacing pass: 1.5 (was 2.5). */
+  abilityRecovery: 1.5,
+  /** Pacing pass: each action starts a fight a third to two thirds charged, by its own roll, so nothing lines up on the first ticks. */
+  opening: { min: 0.3, max: 0.7 },
   /** Each physical hit loses this share of the target's Armor: Armor 5 takes 600 off, Armor 8 nearly blanks a sword. */
   armorRatio: 0.12,
   maxEnemies: 8,
@@ -61,9 +88,12 @@ export const RULES = {
   enrage: { after: 300, every: 30, pct: 25 },
 };
 
-/** MP cost follows the cooldown unless an ability is costly, which doubles it. */
-export const COST = { short: 150, medium: 300, long: 500 } as const;
-export const costly = (cd: keyof typeof COST) => COST[cd] * 2;
+/**
+ * MP cost follows the cooldown unless an ability is costly. Pacing pass: priced so a class with 2 MP regen spends more than it
+ * regains when all three abilities fire, and runs low over a run; the campfire's FOCUS buys it back.
+ */
+export const COST = { short: 400, medium: 650, long: 1000 } as const;
+export const costly = (cd: keyof typeof COST) => Math.round(COST[cd] * 1.6);
 /** MP regen: every `every` ticks, restore `share` × the MP regen stat (regen 3 gives 150). */
 export const MP_REGEN = { every: 4, share: 0.05 };
 
@@ -78,7 +108,8 @@ export const WEAPON = {
 export type Level = keyof typeof WEAPON.base;
 
 /** An ability's hit, as a share of its scaling stat. */
-export const HIT = { light: 0.2, normal: 0.35, heavy: 0.6 } as const;
+/** Pacing pass: each ability is rarer, so each hit is bigger (was 0.2, 0.35 and 0.6): a normal hit is about three swings. */
+export const HIT = { light: 0.43, normal: 0.75, heavy: 1.25 } as const;
 export type HitWord = keyof typeof HIT;
 
 /**
@@ -102,19 +133,19 @@ export const ENEMY_HIT = {
   flatten: 0.4,
   /** Crush: knocks out any unguarded caster outright; a Guarded, Shielded Knight survives it. */
   crush: 0.5,
-  /** Mend: the Bone Priest's heal, about a party's damage output: a mirror until the priest is stopped. */
-  mend: 0.6,
+  /** Mend: the Bone Priest's heal, about a party's damage output: a mirror until the priest is stopped. Pacing pass: 1.3 (was 0.6). */
+  mend: 1.3,
   /** Soulfire: deletes a caster. */
   soulfire: 0.6,
-  /** Brand: steady pressure. */
-  brand: 0.05,
+  /** Brand: steady pressure. Pacing pass: 0.11 (was 0.05), as it comes a third as often. */
+  brand: 0.11,
   /** Inferno: ends the run if it lands uninterrupted. */
   /** Campaign pass: 0.5 wiped every party it landed on; at 0.35 it nearly wipes, and an interrupt buys a whole cooldown. */
   inferno: 0.35,
-  /** Hailstorm: a raidwide the Cleric can mend. */
-  hailstorm: 0.08,
-  /** Tempest: a raidwide the Cleric can absorb. */
-  tempest: 0.06,
+  /** Hailstorm: a raidwide the Cleric can mend. Pacing pass: 0.18 (was 0.08), as it comes a third as often. */
+  hailstorm: 0.18,
+  /** Tempest: a raidwide the Cleric can absorb. Pacing pass: 0.13 (was 0.06). */
+  tempest: 0.13,
   /** Volatile: one blast behind Shields is fine; three together wipe. */
   volatile: 0.25,
 } as const;
@@ -134,7 +165,9 @@ export const from = (stat: string, ratio: number, base = 0): NumT => ({ ...(base
 /** Stacks an application adds, per point of the scaling stat: at stat 3 a few is about 2, several about 4, many about 7. */
 export const STACKS = { few: 0.7, several: 1.3, many: 2.3 } as const;
 export type StackWord = keyof typeof STACKS;
-export const stacks = (word: StackWord, stat: string): NumT => ({ scale: [{ ratio: STACKS[word] / P, stat }] });
+/** Pacing pass: an ability's application adds twice the word's stacks (abilities come a third as often); a passive's on basic attacks, the word's. */
+export const ABILITY_STACKS = 2;
+export const stacks = (word: StackWord, stat: string): NumT => ({ scale: [{ ratio: (ABILITY_STACKS * STACKS[word]) / P, stat }] });
 /** A flat stack count, for enemies that apply "a stack" or statuses that start with "many". */
 export const FLAT_STACKS = { one: 1, few: 2, several: 4, many: 7 } as const;
 
@@ -191,14 +224,20 @@ export const stepFor = (stat: string) => (stat === "max_hp" ? HP_STEP : STEP);
 export const STATUS = {
   /** 90 a tick-pair: Regen on a 2-HP unit (80) nearly outruns it, as the Snake Pit's story needs. */
   /** Campaign pass: 160 a pulse for 12 ticks, about a third of a caster's HP per application. At 90 it showed as 1. */
-  poison: { every: 2, damage: 160, duration: 12 },
+  /**
+   * Pacing pass: a pulse is 0.13 × the applier's Attack (it was a flat 160), five pulses over 10 ticks, so they outweigh the light hit
+   * that carries it: the director's "poison doing 2 and the attack that applies it doing 14 is wrong".
+   */
+  poison: { every: 2, ratio: 0.13, duration: 10 },
   /** 8 pulses of 4%: a Prayer heals a third of everyone's max HP over 16 ticks. */
-  regen: { every: 2, share: 0.04, duration: 16 },
+  /** Pacing pass: 12 pulses of 3% (was 8 of 4%): Renew and Regrowth come a third as often. */
+  regen: { every: 2, share: 0.03, duration: 24 },
   shield: { capShare: 0.5 },
   /** Campaign pass: a cap of 25 stacks. Uncapped, a hidden Bard stacked 123 on itself and the Storm King reached 38. */
   might: { perStack: 8, every: 4, cap: 25 },
-  weaken: { pct: -30, duration: 10 },
-  guard: { armor: pts(2), duration: 10 },
+  /** Pacing pass: buffs and debuffs from abilities last about twice as long (their abilities come a third as often). */
+  weaken: { pct: -30, duration: 20 },
+  guard: { armor: pts(2), duration: 20 },
   /**
    * Follow-up redesign (the director's): a Stun pauses a wind-up rather than cancelling it (Silence is the interrupt), and
    * lasts long enough to take a foe out of the fight for a moment. It was 2 ticks.
@@ -206,9 +245,9 @@ export const STATUS = {
   stun: { duration: 5 },
   /** The Bard's Refrain: MP a basic attack gives a random ally. */
   refrain: { mp: 100 },
-  slow: { speed: -40, duration: 10 },
-  haste: { speed: 40, duration: 10 },
-  taunt: { duration: 8 },
+  slow: { speed: -40, duration: 20 },
+  haste: { speed: 40, duration: 20 },
+  taunt: { duration: 14 },
   /**
    * Campaign pass: a tenth of the stacks go each pulse, not a quarter, so Burn builds over a fight (a Pyromancer
    * holds 15 to 25 on its target) and lingers when the burning stops. Each stack burns for 30 a pulse, so a stack's
@@ -221,12 +260,12 @@ export const STATUS = {
    * stack, not 80 (the second AI playtester's Stormcaller carried the last nine nodes).
    */
   shock: { perStack: 60, drop: 0.5, cap: 25 },
-  ward: { resist: 30, duration: 12 },
+  ward: { resist: 30, duration: 24 },
   sunder: { perStack: -600, every: 4 },
-  silence: { duration: 6 },
-  hidden: { duration: 8 },
-  rot: { healing: -60, duration: 10 },
-  clarity: { regenPct: 100, duration: 12 },
+  silence: { duration: 8 },
+  hidden: { duration: 14 },
+  rot: { healing: -60, duration: 20 },
+  clarity: { regenPct: 100, duration: 24 },
   aegis: { share: 25 },
   /** Kills anything at HP 3 or below; a Hoplite or Knight survives it. */
   doom: { countdown: 10, damage: 3500 },

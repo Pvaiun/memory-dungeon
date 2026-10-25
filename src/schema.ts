@@ -531,6 +531,10 @@ export const Ruleset = z.strictObject({
     .strictObject({ after: Ticks, every: Ticks.min(1), pct: z.number().min(0) })
     .optional()
     .describe("A fight that runs past `after` ticks: every unit, on both sides, deals pct % more damage with hits and reactions, and pct more again every `every` ticks, so no fight stalls. Absent: fights run to the safety stop."),
+  opening: z
+    .strictObject({ min: z.number().min(0).max(1), max: z.number().min(0).max(1) })
+    .optional()
+    .describe("At fight start each action is already partly charged: it's first ready after a share of its cooldown, rolled between min and max on the unit's dice for each action. Absent: every action starts a fight on its full cooldown."),
   stagger: Ticks.optional().describe("Copies of the same enemy start a fight this many ticks apart, one after another, so identical foes don't act in lockstep. Absent or 0: they start together."),
   lostCast: z
     .enum(["retry", "cooldown"])

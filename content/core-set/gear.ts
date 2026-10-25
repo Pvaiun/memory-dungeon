@@ -4,8 +4,8 @@
  * 16 ordinary and 4 powerful amulets.
  */
 import type { GearT, NumT, WeightT } from "../../src/schema.js";
-import { PER_PERCENT, RESIST, SPECIAL, SPECIAL_KEY, stepFor, WEAPON, crit, type Level, type SpecialLevel, type SpecialStat } from "./scale.js";
-import { speedOf, weaponKinds } from "./vocabulary.js";
+import { KIND_SPEED, PER_PERCENT, RESIST, SPECIAL, SPECIAL_KEY, stepFor, SWING_REF, WEAPON, crit, type Level, type SpecialLevel, type SpecialStat } from "./scale.js";
+import { weaponKinds } from "./vocabulary.js";
 
 type Change = { stat: string; flat: number };
 /** A gear step: +1 or +2 on a stat, in the data's units. */
@@ -16,7 +16,8 @@ const resists = (...elements: string[]): Change[] => elements.map((e) => ({ stat
 
 /** A weapon's hit: its kind's speed factor × (base + ratio × stat). */
 export function weaponHit(kind: string, base: Level, ratio: Level, stat: string): NumT {
-  const f = WEAPON.speedFactor[speedOf(kind)];
+  // Pacing pass: the size follows the kind's own cooldown (it was a factor for each of three speed words).
+  const f = KIND_SPEED[kind] / SWING_REF;
   return { base: Math.round(f * WEAPON.base[base]), scale: [{ ratio: f * WEAPON.ratio[ratio] * (PER_PERCENT[stat] ?? 1), stat }] };
 }
 const usual = (kind: string) => (weaponKinds.find((k) => k.id === kind)!.type === "magical" ? "magic" : "attack");

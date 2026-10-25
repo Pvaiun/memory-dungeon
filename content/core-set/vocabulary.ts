@@ -4,7 +4,7 @@
  * stats bring, the ruleset and the design block.
  */
 import type { ContentPack, StatDefT, StatusT, WeaponKindT } from "../../src/schema.js";
-import { MP_REGEN, P, RULES, SPEED, STATUS, pts } from "./scale.js";
+import { KIND_SPEED, MP_REGEN, P, RULES, SPEED, STATUS, pts } from "./scale.js";
 
 const TIMING = ["attack_speed", "cooldown_reduction", "cast_time_reduction"] as const;
 
@@ -45,24 +45,24 @@ export const elements = [
 ];
 
 export const weaponKinds: WeaponKindT[] = [
-  { id: "dagger", name: "Dagger", type: "physical", subtype: "pierce", cooldown: SPEED.fast },
-  { id: "fist", name: "Fist weapons", type: "physical", subtype: "blunt", cooldown: SPEED.fast },
-  { id: "sword", name: "Sword", type: "physical", subtype: "slash", cooldown: SPEED.medium },
-  { id: "bow", name: "Bow", type: "physical", subtype: "pierce", cooldown: SPEED.medium },
-  { id: "spear", name: "Spear", type: "physical", subtype: "pierce", cooldown: SPEED.medium },
-  { id: "axe", name: "Axe", type: "physical", subtype: "blunt", cooldown: SPEED.slow },
-  { id: "fire_staff", name: "Fire staff", type: "magical", element: "fire", cooldown: SPEED.slow },
-  { id: "lightning_staff", name: "Lightning staff", type: "magical", element: "lightning", cooldown: SPEED.fast },
-  { id: "wind_staff", name: "Wind staff", type: "magical", element: "wind", cooldown: SPEED.fast },
-  { id: "earth_staff", name: "Earth staff", type: "magical", element: "earth", cooldown: SPEED.medium },
-  { id: "ice_staff", name: "Ice staff", type: "magical", element: "ice", cooldown: SPEED.medium },
-  { id: "light_staff", name: "Light staff", type: "magical", element: "light", cooldown: SPEED.medium },
-  { id: "dark_staff", name: "Dark staff", type: "magical", element: "dark", cooldown: SPEED.medium },
+  { id: "dagger", name: "Dagger", type: "physical", subtype: "pierce", cooldown: KIND_SPEED.dagger },
+  { id: "fist", name: "Fist weapons", type: "physical", subtype: "blunt", cooldown: KIND_SPEED.fist },
+  { id: "sword", name: "Sword", type: "physical", subtype: "slash", cooldown: KIND_SPEED.sword },
+  { id: "bow", name: "Bow", type: "physical", subtype: "pierce", cooldown: KIND_SPEED.bow },
+  { id: "spear", name: "Spear", type: "physical", subtype: "pierce", cooldown: KIND_SPEED.spear },
+  { id: "axe", name: "Axe", type: "physical", subtype: "blunt", cooldown: KIND_SPEED.axe },
+  { id: "fire_staff", name: "Fire staff", type: "magical", element: "fire", cooldown: KIND_SPEED.fire_staff },
+  { id: "lightning_staff", name: "Lightning staff", type: "magical", element: "lightning", cooldown: KIND_SPEED.lightning_staff },
+  { id: "wind_staff", name: "Wind staff", type: "magical", element: "wind", cooldown: KIND_SPEED.wind_staff },
+  { id: "earth_staff", name: "Earth staff", type: "magical", element: "earth", cooldown: KIND_SPEED.earth_staff },
+  { id: "ice_staff", name: "Ice staff", type: "magical", element: "ice", cooldown: KIND_SPEED.ice_staff },
+  { id: "light_staff", name: "Light staff", type: "magical", element: "light", cooldown: KIND_SPEED.light_staff },
+  { id: "dark_staff", name: "Dark staff", type: "magical", element: "dark", cooldown: KIND_SPEED.dark_staff },
 ];
 /** The speed word of a kind, for weapon damage. */
 export const speedOf = (kind: string): "fast" | "medium" | "slow" => {
-  const cd = weaponKinds.find((k) => k.id === kind)!.cooldown;
-  return cd === SPEED.fast ? "fast" : cd === SPEED.slow ? "slow" : "medium";
+  const cd = weaponKinds.find((k) => k.id === kind)!.cooldown ?? SPEED.medium;
+  return cd < 6.8 ? "fast" : cd > 9.6 ? "slow" : "medium";
 };
 
 const timing = (n: number) => TIMING.map((stat) => ({ stat, flat: n }));
@@ -71,7 +71,7 @@ const bothKinds = (pct: number) => [{ tag: "physical", pct }, { tag: "magical", 
 /** The 22 statuses of the vocabulary. */
 export const vocabulary: StatusT[] = [
   // Fundamental
-  { id: "poison", name: "POISON", text: "Loses health over time.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.poison.duration, pulse: { every: STATUS.poison.every, do: [{ op: "damage", type: "none", amount: STATUS.poison.damage }] } },
+  { id: "poison", name: "POISON", text: "Loses health over time.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.poison.duration, pulse: { every: STATUS.poison.every, do: [{ op: "damage", type: "none", amount: { scale: [{ ratio: STATUS.poison.ratio, stat: "attack", of: "source" }] } }] } },
   { id: "regen", name: "REGEN", text: "Recovers health over time.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.regen.duration, pulse: { every: STATUS.regen.every, do: [{ op: "heal", amount: { scale: [{ ratio: STATUS.regen.share, stat: "max_hp", of: "holder" }] } }] } },
   { id: "shield", name: "SHIELD", text: "Soaks damage before health.", label: "buff", show: "icon", stacking: "intensity", absorb: true, cap: { scale: [{ ratio: STATUS.shield.capShare, stat: "max_hp", of: "holder" }] } },
   { id: "might", name: "MIGHT", text: "Deals more damage per stack.", label: "buff", show: "icon", stacking: "intensity", boosts: bothKinds(STATUS.might.perStack), cap: STATUS.might.cap, pulse: { every: STATUS.might.every }, drop: { count: 1 } },
@@ -137,6 +137,7 @@ export const ruleset: ContentPack["ruleset"] = {
   unarmed: { type: "physical", subtype: "blunt", cooldown: SPEED.medium, amount: { base: 100, scale: [{ ratio: 0.2, stat: "attack" }] } },
   maxEnemies: RULES.maxEnemies,
   lostCast: RULES.lostCast,
+  opening: RULES.opening,
   stagger: RULES.stagger,
   enrage: RULES.enrage,
   run: { defeatedUnits: "stay_down", perkOffer: { options: 1, premiumChance: 0, repeatPicked: false, offerInapplicable: false } },
