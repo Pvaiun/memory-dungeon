@@ -21,7 +21,7 @@ import { drawDigits, iconEl, iconOf, OUTLINE, statusEl } from "../pixel.js";
 import { classSheet, enemySheet, portraitEl } from "../sheet.js";
 import { Driver, type Ev } from "./driver.js";
 import { Narrator, type Beat, type Line, type Tone } from "./narrate.js";
-import { Scene, shieldOf, shownStatuses, W, H } from "./scene.js";
+import { Scene, shieldOf, W, H } from "./scene.js";
 import { setMusic, setSound, sfx } from "./audio.js";
 import { go } from "../screens.js";
 
@@ -373,21 +373,40 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     if (isStatus && (src === "burn" || src === "poison" || src === "shock")) scene.effectFor(target, src);
   }
 
-  // ─── Party rows: portrait | name, short HP and MP bars | actions' cooldowns over statuses ───
-  type Row = { el: HTMLElement; hp: HTMLElement; hpNum: HTMLElement; mp: HTMLElement; mpNum: HTMLElement; sts: HTMLElement; cds: HTMLCanvasElement; key: string; bars: string; cdKey: string };
-  const PIP = 18;
+  // ─── Party rows: portrait | name, short HP and MP bars | the actions' cooldowns, big ───
+  // Statuses show on the field under each unit, so the rows give their room to the cooldowns: the basic attack small
+  // on the left (it comes round fast), a gap, then each ability at twice its icon's size, always in the same place.
+  type Row = { el: HTMLElement; hp: HTMLElement; hpNum: HTMLElement; mp: HTMLElement; mpNum: HTMLElement; cds: HTMLCanvasElement; bars: string; cdKey: string };
+  const BIG = 32, SMALL = 16, GAP = 6, CD_H = BIG + 4;
   const rows = new Map<string, Row>();
-  const rowName = (ref: string) => (className(ref).length <= 11 ? className(ref) : shortName(ref));
+  const rowName = (ref: string) => (className(ref).length <= 9 ? className(ref) : shortName(ref));
+  /** Where each action's pip sits: the basic attack first, then the abilities in order. */
+  function pipLayout(u: CUnit): { i: number; x: number; size: number }[] {
+    const basic = u.acts.findIndex((a) => a.id === "basic");
+    const out: { i: number; x: number; size: number }[] = [];
+    let x = 2;
+    if (basic >= 0) {
+      out.push({ i: basic, x, size: SMALL });
+      x += SMALL + 2 + GAP;
+    }
+    u.acts.forEach((a, i) => {
+      if (i === basic) return;
+      out.push({ i, x, size: BIG });
+      x += BIG + 2;
+    });
+    return out;
+  }
   function buildRows() {
     clear(partyEl);
     rows.clear();
     for (const u of driver.units().filter((x) => x.side === "party")) {
       const hp = bar(1, "hp"), mp = bar(1, "mp", 0, true);
       const hpNum = h("span", { class: "num" }), mpNum = h("span", { class: "num mp" });
-      const sts = h("div", { class: "sts" });
-      const cds = h("canvas", { class: "px cds", width: u.acts.length * PIP + 2, height: PIP });
-      cds.style.width = `${(u.acts.length * PIP + 2) / 8}rem`;
-      cds.style.height = `${PIP / 8}rem`;
+      const lay = pipLayout(u);
+      const w = lay.length ? lay[lay.length - 1].x + lay[lay.length - 1].size + 2 : 2;
+      const cds = h("canvas", { class: "px cds", width: w, height: CD_H });
+      cds.style.width = `${w / 8}rem`;
+      cds.style.height = `${CD_H / 8}rem`;
       const el = h("div", { class: "member", onClick: () => openInspect(u.id) },
         h("div", { class: "portrait" }, portraitEl(u.ref)),
         h("div", { class: "stats" },
@@ -395,10 +414,10 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
           h("div", { class: "line2" }, h("span", { class: "lbl" }, "HP"), hp, hpNum),
           h("div", { class: "line2" }, h("span", { class: "lbl mp" }, "MP"), mp, mpNum),
         ),
-        h("div", { class: "side" }, cds, sts),
+        h("div", { class: "side" }, cds),
       );
       partyEl.append(el);
-      rows.set(u.id, { el, hp, hpNum, mp, mpNum, sts, cds, key: "", bars: "", cdKey: "" });
+      rows.set(u.id, { el, hp, hpNum, mp, mpNum, cds, bars: "", cdKey: "" });
     }
   }
   function updateRows() {
@@ -425,52 +444,50 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         r.mpNum.textContent = `${disp(u.mp)}`;
         r.el.classList.toggle("ko", u.ko);
       }
-      const sts = u.ko ? [] : shownStatuses(u);
-      const key = sts.map((s) => `${s.id}:${s.count}`).join("|");
-      if (key !== r.key) {
-        r.key = key;
-        clear(r.sts);
-        sts.slice(0, 6).forEach((s) => r.sts.append(statusEl(s.id, s.count)));
-      }
       drawCooldowns(r, u);
     }
   }
-  /** The unit's actions as pips: the ability's icon, shaded from the top by the cooldown left, lit when ready, blinking while it winds up. */
+  /** A colour from the theme (night or day), so outlines show on either. */
+  const themeColor = (v: string) => getComputedStyle(document.documentElement).getPropertyValue(v).trim() || "#ffd54a";
+  /** The unit's actions as pips: the action's icon, shaded from the top by the cooldown left with the ticks to go in the corner, outlined in gold when ready, blinking while it winds up. */
   function drawCooldowns(r: Row, u: CUnit) {
     const vt = driver.vt;
-    const parts = u.acts.map((a, i) => {
+    const blink = Math.floor(vwall / 300) % 2;
+    const parts = pipLayout(u).map((p) => {
+      const a = u.acts[p.i];
       const total = a.id === "basic" ? weaponOf(c, u.weapon).cooldown ?? 1 : c.abilities.get(a.id)?.cooldown ?? 1;
       const left = Math.max(0, (a.ready - vt) / SUBTICKS);
       const share = Math.min(1, left / Math.max(1, total));
-      const casting = u.cast?.act === i;
-      return { tag: narrator.tagOf(u.id, a.id), share: Math.round(share * 16) / 16, left: Math.ceil(left), ready: left <= 0 && !u.cast, casting };
+      return { ...p, tag: narrator.tagOf(u.id, a.id), share: Math.round(share * 32) / 32, left: Math.ceil(left), ready: left <= 0 && !u.cast, casting: u.cast?.act === p.i };
     });
-    const blink = Math.floor(vwall / 300) % 2;
     const key = u.ko ? "ko" : parts.map((p) => `${p.tag}:${p.share}:${p.left}:${p.ready ? 1 : 0}:${p.casting ? blink : "-"}`).join("|");
     if (key === r.cdKey) return;
     r.cdKey = key;
     const g = r.cds.getContext("2d")!;
+    g.imageSmoothingEnabled = false;
     g.clearRect(0, 0, r.cds.width, r.cds.height);
     if (u.ko) return;
-    parts.forEach((p, i) => {
-      const x = i * PIP + 1;
+    for (const p of parts) {
+      const big = p.size === BIG;
+      const y = big ? 2 : Math.round((CD_H - SMALL) / 2);
       const cell = TAG_ICON[p.tag] ?? TAG_ICON.physical;
-      g.drawImage(iconOf(cell[0], cell[1]), x, 1);
+      g.drawImage(iconOf(cell[0], cell[1]), p.x, y, p.size, p.size);
       if (p.share > 0 && !p.casting) {
         g.fillStyle = "rgba(10, 12, 24, 0.72)";
-        g.fillRect(x, 1, 16, Math.round(16 * p.share));
+        g.fillRect(p.x, y, p.size, Math.round(p.size * p.share));
       }
-      if (p.share > 0 && !p.casting && p.left > 0) {
-        // Ticks to go, in the corner.
+      if (big && p.share > 0 && !p.casting && p.left > 0) {
+        // Ticks to go, in the corner, at twice the digits' size.
         const t = String(Math.min(99, p.left));
-        drawDigits(g, t, x + 17 - (t.length * 4 - 1), 12, "#ffffff", OUTLINE);
+        drawDigits(g, t, p.x + p.size - (t.length * 4 - 1) * 2 - 2, y + p.size - 12, "#ffffff", OUTLINE, 2);
       }
       if (p.ready || (p.casting && blink)) {
-        g.strokeStyle = p.casting ? "#ffffff" : "#ffd54a";
-        g.lineWidth = 1;
-        g.strokeRect(x - 0.5, 0.5, 17, 17);
+        g.strokeStyle = p.casting ? themeColor("--ink") : themeColor("--hi");
+        g.lineWidth = big ? 2 : 1;
+        const o = big ? 1 : 0.5;
+        g.strokeRect(p.x - o, y - o, p.size + 2 * o, p.size + 2 * o);
       }
-    });
+    }
   }
 
   // ─── Foes ───

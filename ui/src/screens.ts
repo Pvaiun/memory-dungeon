@@ -6,7 +6,7 @@
 import { gearFor as gearThatFits } from "../../src/sim/parties.js";
 import { c, className, classes, cls as classOf, dungeons, enemies, fightName, formations, gearOf, kindOf, runName, setDisplayDiv, shortName } from "./content.js";
 import { enemyDisplayName } from "./art.js";
-import { button, h, header, nav, row, win, type Child } from "./dom.js";
+import { button, h, header, nav, row, settleBack, win, type Child } from "./dom.js";
 import { abilitiesFor, gearFor, reset, save, setup } from "./state.js";
 import { abilityBlock, basicLine, classHead, codeSpans, enemySheet, gearRow, memberFor, passiveBlock, portraitEl, role, section, specialLines, statGrid } from "./sheet.js";
 import { enemyEl, enemyThumb } from "./pixel.js";
@@ -59,6 +59,7 @@ export function go(s: Screen, arg?: unknown, keepScroll = false) {
   }
   const screens: Record<Exclude<Screen, "battle">, (arg?: unknown) => Child[]> = { home, fight, party, formation, unit, gear, classes: classesScreen, bestiary, enemy, settings };
   screenEl.append(...(screens[s](arg).filter(Boolean) as Node[]));
+  settleBack();
   [...screenEl.querySelectorAll(".scroll")].forEach((el, i) => { if (scrolls[i]) el.scrollTop = scrolls[i]; });
 }
 /** Re-renders the current screen after a change, keeping the lists' scroll. */

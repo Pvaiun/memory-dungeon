@@ -309,7 +309,9 @@ export class Scene {
     const flash = this.wall < v.flashUntil;
     ctx.save();
     ctx.globalAlpha = v.alpha * (hidden ? 0.45 : 1);
-    this.drawShadow(v.x + lunge, v.y, v.side === "party" ? 22 : Math.max(16, Math.min(56, Math.round(v.w * 0.7))));
+    // The shadow follows the figure: forward with a lunge, back with a wind-up's step (the pose's own bounds).
+    const poseShift = v.side === "party" && v.pose !== "dead" ? Math.round((actorSpan(v.ref, v.pose)[0] + actorSpan(v.ref, v.pose)[1]) / 2) : 0;
+    this.drawShadow(v.x + lunge + poseShift, v.y, v.side === "party" ? 22 : Math.max(16, Math.min(56, Math.round(v.w * 0.7))));
     if (v.side === "party") {
       const f = v.pose === "dead" ? 2 : v.pose === "wait" || v.pose === "chant" || v.pose === "abnormal" ? WAIT_FRAMES[Math.floor(this.wall / 300) % 4] : Math.min(2, Math.floor((this.wall - (v.poseUntil - 400)) / 130));
       drawActor(ctx, v.ref, v.pose, Math.max(0, f), x, v.y, flash, 1, u.weapon);
@@ -356,6 +358,7 @@ export class Scene {
       }
       iconY = by + 5;
     }
+    if (v.side === "party" && this.partyBars) iconY = v.y + 8;
     if (!u.ko) {
       const sts = shownStatuses(u).slice(0, 4);
       v.fades = v.fades.filter((f) => f.until > this.wall);

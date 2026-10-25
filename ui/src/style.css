@@ -163,7 +163,7 @@ button.sm { padding: .25rem .375rem; }
 .msg .l.quiet { color: var(--dim); }
 .msg .cursor-dq { position: absolute; right: .75rem; bottom: .25rem; color: var(--hi); visibility: hidden; }
 .win.party { padding: .25rem .5rem; display: flex; flex-direction: column; gap: .25rem; }
-.member { display: grid; grid-template-columns: auto 12.5rem 1fr; column-gap: .5rem; align-items: center; cursor: pointer; border-radius: .25rem; min-height: 4.5rem; }
+.member { display: grid; grid-template-columns: auto 9.5rem 1fr; column-gap: .5rem; align-items: center; cursor: pointer; border-radius: .25rem; min-height: 4.5rem; }
 .member .stats { display: flex; flex-direction: column; min-width: 0; }
 .member .name { text-transform: uppercase; line-height: 1.5rem; }
 .member .line2 { display: flex; align-items: center; gap: .375rem; min-height: 1.5rem; }
@@ -172,9 +172,8 @@ button.sm { padding: .25rem .375rem; }
 .member .bar { flex: 1 1 auto; min-width: 0; }
 .member .num { flex: 0 0 3rem; text-align: right; white-space: nowrap; }
 .member .num.mp { color: var(--mp); }
-.member .side { display: flex; flex-direction: column; gap: .25rem; align-items: flex-start; min-width: 0; }
+.member .side { display: flex; align-items: center; justify-content: flex-end; min-width: 0; }
 .member .cds { flex: 0 0 auto; }
-.member .sts { display: flex; gap: .125rem; min-height: 2.25rem; flex-wrap: nowrap; overflow: hidden; }
 .member.ko { color: var(--dim); }
 .member.ko .face { opacity: .4; }
 .win.foes { display: flex; align-items: center; gap: .5rem; min-height: 2.75rem; padding: .25rem .5rem; }

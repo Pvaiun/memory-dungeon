@@ -330,7 +330,8 @@ export function iconOf(row: number, col: number, tint?: string): HTMLCanvasEleme
 export const iconEl = (cell: readonly [number, number], scale = 1, tint?: string) => canvasEl(iconOf(cell[0], cell[1], tint), scale, "icon");
 
 // ─── Status icons: the pack's 16×16, recoloured per status by the asset tool ───
-export const STATUS_ICON = 16;
+/** The pack draws each status in the middle 14×14 of a 16×16 tile; the empty border is cut, so icons sit tighter. */
+export const STATUS_ICON = 14;
 const statusIcons = new Map<string, HTMLCanvasElement>();
 export function statusIconOf(id: string): HTMLCanvasElement {
   let cv = statusIcons.get(id);
@@ -338,12 +339,12 @@ export function statusIconOf(id: string): HTMLCanvasElement {
   const img = manifest.statuses[id] ? image(manifest.statuses[id]) : undefined;
   cv = cv2d(STATUS_ICON, STATUS_ICON);
   const g = cv.getContext("2d")!;
-  if (img) g.drawImage(img, 0, 0);
+  if (img) g.drawImage(img, 1, 1, STATUS_ICON, STATUS_ICON, 0, 0, STATUS_ICON, STATUS_ICON);
   else {
     // No icon in the pack: a coloured tile with the status's first letter.
     g.fillStyle = (STATUS_STYLE[id] ?? STATUS_STYLE.generic).color;
-    g.fillRect(1, 1, 14, 14);
-    drawText(g, (c.statuses.get(id)?.name ?? id).slice(0, 1).toUpperCase(), 4, 4, OUTLINE);
+    g.fillRect(0, 0, STATUS_ICON, STATUS_ICON);
+    drawText(g, (c.statuses.get(id)?.name ?? id).slice(0, 1).toUpperCase(), 3, 3, OUTLINE);
   }
   statusIcons.set(id, cv);
   return cv;
@@ -370,7 +371,7 @@ export function drawStatus(ctx: CanvasRenderingContext2D, id: string, x: number,
   if (count !== undefined && count !== null && count > 1) {
     const s = String(Math.min(99, Math.floor(count)));
     const w = s.length * 4 - 1;
-    drawDigits(ctx, s, x + STATUS_ICON + 1 - w, y + STATUS_ICON - 5, "#ffffff", OUTLINE);
+    drawDigits(ctx, s, x + STATUS_ICON + 1 - w, y + STATUS_ICON - 4, "#ffffff", OUTLINE);
   }
 }
 /** The icon as a DOM element, with its count. */
