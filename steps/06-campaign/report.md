@@ -25,7 +25,7 @@ Options, if you want a vertical axis past node 4:
 
 ### B. The no-rest rule makes a healer mandatory (a direction, priced)
 
-"Nothing restores HP or MP between fights" is the direction the tuning works around hardest. In the simulation's best builds, the Cleric, Valkyrie, Vampire and Knight are each in 42% to 48% of the top builds while owned (a fair share is about 30%), and the playtesters' cores were Knight and Cleric early, then Knight and Valkyrie. I priced it with a variant where a won fight gives back 30% of HP and MP (knockouts stay down), tuned the same way: the Cleric fell from 86 to 54 appearances in the top-10 builds and the Hoplite and Ranger rose; the damage casters barely moved.
+"Nothing restores HP or MP between fights" is the direction the tuning works around hardest. In the simulation's best builds, the Cleric, Vampire, Knight and Valkyrie are each in 41% to 51% of the top builds while owned (a fair share is about 30%), and the playtesters' cores were Knight and Cleric early, then Knight and Valkyrie. I priced it with a variant where a won fight gives back 30% of HP and MP (knockouts stay down), tuned the same way: the Cleric fell from 86 to 54 appearances in the top-10 builds and the Hoplite and Ranger rose; the damage casters barely moved.
 
 Options: keep it (the run as attrition is the core set's identity); give back a little after each won fight (25% to 30%); or give back MP only. I'd try 25% in your next playtest if a healer feeling mandatory bothers you. It's one setting (`ruleset.run.restore` in `content/core-set/vocabulary.ts`).
 
@@ -35,9 +35,9 @@ Two class passes went in (below). What's left, normalised for how long each clas
 
 | In the top builds while owned | Classes |
 | --- | --- |
-| 42% to 48% | Cleric, Valkyrie, Vampire, Knight |
-| 26% to 33% | Paladin, Assassin, Stormcaller, Geomancer, Hoplite, Bramble knight, Bard |
-| 15% | Ranger, Hexer, Monk, Frostweaver |
+| 41% to 51% | Cleric, Vampire, Knight, Valkyrie |
+| 24% to 37% | Paladin, Assassin, Bard, Bramble knight, Hoplite, Geomancer, Stormcaller |
+| 12% to 16% | Hexer, Monk, Ranger, Frostweaver |
 | 9% | Pyromancer |
 
 The simulation and the playtesters disagree about the Monk: low in the simulation's kits, but the first playtester's answer to everything (with lifesteal gear the simulation's kit picker doesn't favour). The rest is consistent: sustain classes lead in runs where HP carries, fragile damage dealers trail. Next would be a dedicated class pass, or decision B, which moves it more than numbers do.
@@ -46,7 +46,7 @@ The simulation and the playtesters disagree about the Monk: low in the simulatio
 
 These change the core set's documents. If you keep the campaign they go into `DECISIONS.md`; until then they live only here.
 
-- **Burn** loses a tenth of its stacks a pulse (was a quarter) at 30 a stack (was 50): it builds to 10 to 25 on a target and lingers. **Poison** 160 a pulse for 12 ticks (was 90 for 10). **Shock** stops at 25 stacks (uncapped, a slow boss gathered 100 and lost 8,000 to one swing).
+- **Burn** loses a tenth of its stacks a pulse (was a quarter) at 30 a stack (was 50): it builds to 10 to 25 on a target and lingers. **Poison** 160 a pulse for 12 ticks (was 90 for 10). **Shock** stops at 25 stacks and deals 60 a stack (was uncapped at 80: a slow boss gathered 100 and lost 8,000 to one swing, and the Stormcaller carried the end of the road).
 - **HP on gear and formations** is half a point a step (was a whole point: Heartstone doubled a caster's HP, and HP everywhere was every class's best kit).
 - **Inferno** 0.35 × Magic (was 0.5: it wiped every party it landed on).
 - **A lost cast** (the core set report's decisions A and E): an action interrupted in its wind-up goes on cooldown, so an interrupt buys a whole cooldown; one whose targets are gone costs the unit its recovery, so two Ghouls reaching for one corpse don't loop.
@@ -80,23 +80,23 @@ Per node, after the last tuning pass. **Best:** the best build the search finds,
 | 7 | The Fire Mine | −38 | 100% | 13% | 17% |
 | 8 | Deep Freeze | −20 | 90% | 21% | 78% |
 | 9 | Iron Wall | +1 | 90% | 88% | – |
-| 10 | The Ice Pass | +145 | 100% | 8% | 0% |
-| 11 | Valhalla | +141 | 100% | 9% | 94% |
-| 12 | The Wild Hunt | +93 | 94% | 8% | 50% |
-| 13 | The Storm Tower | +80 | 100% | 9% | 67% |
-| 14 | Knives Out | +57 | 92% | 8% | 39% |
-| 15 | The Long Road | +157 | 88% | 9% | 0% |
-| 16 | The Deep Crypt | +154 | 88% | 9% | 78% |
-| 17 | Blood Moon | +145 | 100% | 8% | 0% |
-| 18 | Judgement | −19 | 92% | 7% | 0% |
-| 19 | The Tower Top | +57 | 98% | 7% | 0% |
-| 20 | The Royal Court | −17 | 98% | 10% | 78% |
+| 10 | The Ice Pass | +141 | 100% | 9% | 0% |
+| 11 | Valhalla | +141 | 100% | 10% | 94% |
+| 12 | The Wild Hunt | +80 | 90% | 10% | 61% |
+| 13 | The Storm Tower | +85 | 100% | 8% | 56% |
+| 14 | Knives Out | +53 | 96% | 9% | 39% |
+| 15 | The Long Road | +155 | 90% | 9% | 0% |
+| 16 | The Deep Crypt | +154 | 94% | 9% | 67% |
+| 17 | Blood Moon | +145 | 100% | 9% | 72% |
+| 18 | Judgement | −21 | 92% | 8% | 0% |
+| 19 | The Tower Top | +66 | 98% | 4% | 0% |
+| 20 | The Royal Court | −12 | 96% | 4% | 72% |
 
 - **Every node has a build that wins 75% to 100% of first tries** (48 seeds each; holds for every node). Node 1 has no choices (three classes, one formation, no gear) and sits at 85%.
-- **Viable builds follow the ramp:** a third on node 3, an eighth to a fifth on nodes 4 to 8, about one in twelve from node 10. Iron Wall forces one party and is set by its best build alone.
+- **Viable builds follow the ramp:** a third on node 3, an eighth to a fifth on nodes 4 to 8, about one in eleven from node 10, one in 25 on the last two. Iron Wall forces one party and is set by its best build alone.
 - **The knobs are large** (foes at up to three times their written HP) because the documents' numbers were written for an ungeared party. Four nodes need weaker foes than written: the Fire Mine and Deep Freeze (the hounds' Burn wears a party down across the run, and the Fire Giant waits at the end) and Judgement and the Royal Court (bosses whose numbers were never tested in these pairings). Making the Fire Giant itself weaker didn't move the mine's knob (−43 to −48 either way), so it's the mine, not the boss.
-- **Party turnover:** the previous node's best party fails nodes 6, 10, 15, 17, 18 and 19 outright and struggles on 4, 7 and 14; it still wins about half the nodes. The two-class trials (17, 18) and the forced-party ones (6, 9) are where the party has to change.
-- **Formations** in the top-10 builds across the road: Escort 50, Vanguard 37, Caravan 30, Neutral 21, Blitz 19, Scatter 14, Tortoise 3, Ambush 1, Champion and Last stand never. A slot is worth about one gear step, as the gear document feared; the document's own fix is a bigger step on every slot.
+- **Party turnover:** the previous node's best party fails nodes 6, 10, 15, 18 and 19 outright and struggles on 4, 7 and 14; it still wins about half the nodes. The two-class trials (17, 18) and the forced-party ones (6, 9) are where the party has to change.
+- **Formations** in the top-10 builds across the road: Escort 53, Vanguard 37, Caravan 30, Neutral 21, Blitz 15, Scatter 15, Tortoise 4; Ambush, Champion and Last stand never. A slot is worth about one gear step, as the gear document feared; the document's own fix is a bigger step on every slot.
 - **How sure:** knobs and rates hold to a few points (the screen is 6 seeds a build, the best is scored on 48 fresh ones). The sampled builds are a heuristic's kits, not a player's; the playtests are the check on that (section 4).
 
 ## 4. Feel

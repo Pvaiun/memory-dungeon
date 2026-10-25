@@ -87,7 +87,8 @@ Writing this step showed that the plan's steps 4 to 12 (verbs, mechanics, traits
 
 1. **The core set's sign-off:** the director reads the build's report.
 2. **A visual interface,** so the director can see and play the slice before more design. It's in (Oct 24, 2026): a party screen (slots, formation, roster), unit sheets, a bestiary, and a battle screen that shows any fight as it plays and tells it in short English messages, with the director's sprites in colour in a retro JRPG frame, published to GitHub Pages so it runs on a phone. The balance pass by simulation, which tunes the first values, comes after the director has looked at it.
-3. **The full game,** grown out of the slice: content and balance at volume, progression pacing, the quest board, screens, onboarding, and a review against the principles. The original plan's later steps are the starting point, revisited then.
+3. **The campaign, an experiment (Oct 25, 2026).** Playing the interface, the director found everything-available overwhelming and the slice far too easy, and asked for a game to beat: start with the three starters and the first run, and unlock the rest one node at a time. A branch holds a road of 20 nodes (the seven runs, remixes, and trials that set needs on the party, such as "bring the Vampire and the Bard, pick your third"), each node's difficulty set by simulation against exactly what the player owns there, a numbers pass, and the interface's journey with celebrations for each unlock. It's waiting on the director's play; nothing of it is decided.
+4. **The full game,** grown out of the slice: content and balance at volume, progression pacing, the quest board, screens, onboarding, and a review against the principles. The original plan's later steps are the starting point, revisited then.
 
 A question that belongs to later work can be noted and left for it.
 
