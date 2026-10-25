@@ -1,5 +1,5 @@
 import { loadArt } from "./art.js";
-import { h } from "./dom.js";
+import { h, nav } from "./dom.js";
 import { buildFont, fitScale, FONT } from "./pixel.js";
 import { setDisplayDiv } from "./content.js";
 import { setup } from "./state.js";
@@ -9,6 +9,16 @@ fitScale();
 setTheme(setup.settings.theme);
 setDisplayDiv(setup.settings.bigNumbers ? 10 : 100);
 window.addEventListener("resize", fitScale);
+
+// The phone's back button: one extra history entry stands in front of the app; each back press lands on it, the app
+// handles it (an overlay closes, a screen goes back), and the entry is put back. At home with nothing open, it's let go.
+window.history.pushState({ app: 1 }, "");
+window.addEventListener("popstate", () => {
+  const act = nav.overlay ?? nav.back;
+  if (!act) return;
+  act();
+  window.history.pushState({ app: 1 }, "");
+});
 
 const app = document.getElementById("app")!;
 app.append(h("div", { class: "frame" }, h("div", { class: "screen" }, h("div", { class: "win" }, "LOADING…"))));

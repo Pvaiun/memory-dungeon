@@ -11,7 +11,7 @@ import { SUBTICKS } from "../../../src/schema.js";
 import type { CUnit } from "../../../src/engine/combat/fight.js";
 import { c, disp } from "../content.js";
 import { manifest, VFX_FOR, type Pose } from "../art.js";
-import { backdropImage, drawActor, drawEnemy, drawStatus, drawText, enemyK, enemySprite, FRAME_W, OUTLINE, STATUS_ICON, statusIconOf, vfxSprite } from "../pixel.js";
+import { actorSpan, backdropImage, drawActor, drawEnemy, drawStatus, drawText, enemyK, enemySprite, FRAME_W, OUTLINE, STATUS_ICON, statusIconOf, vfxSprite } from "../pixel.js";
 import type { Driver } from "./driver.js";
 
 export const W = FRAME_W, H = 228;
@@ -34,7 +34,7 @@ type Fx = { strip: string; x: number; y: number; size: number; born: number; fps
 
 // ─── Layout ───
 
-const LINE_X: Record<string, number> = { back: 26, middle: 40, front: 54 };
+const LINE_X: Record<string, number> = { back: 30, middle: 44, front: 58 };
 const PARTY_ROWS: Record<number, number[]> = { 1: [160], 2: [124, 200], 3: [100, 152, 204] };
 /** Where the party stands, by slot: feet positions. */
 export function partySpots(formationId: string, count: number): { x: number; y: number }[] {
@@ -122,6 +122,8 @@ export class Scene {
   numbers: Num[] = [];
   fx: Fx[] = [];
   banner: { text: string; sub: string; until: number } | null = null;
+  /** Draw thin HP bars under the party too (Settings → PARTY HP). */
+  partyBars = false;
   wall = 0;
 
   constructor(public canvas: HTMLCanvasElement, public driver: Driver, public theme: string) {
@@ -339,20 +341,20 @@ export class Scene {
       // HP under the feet, in the bar's colour; a light segment for a Shield
       const max = u.stats.max_hp;
       const hp = Math.max(0, Math.min(1, v.hpShown / max));
-      const bw = Math.max(24, Math.min(48, Math.round(v.w * 0.75)));
-      const bx = x - Math.round(bw / 2), by = v.y + 4;
+      const bw = Math.max(20, Math.min(40, Math.round(v.w * 0.6)));
+      const bx = x - Math.round(bw / 2), by = v.y + 3;
       ctx.fillStyle = OUTLINE;
-      ctx.fillRect(bx - 1, by - 1, bw + 2, 6);
+      ctx.fillRect(bx - 1, by - 1, bw + 2, 4);
       ctx.fillStyle = "#3a3a4a";
-      ctx.fillRect(bx, by, bw, 4);
+      ctx.fillRect(bx, by, bw, 2);
       ctx.fillStyle = hpColor(hp);
-      ctx.fillRect(bx, by, Math.round(bw * hp), 4);
+      ctx.fillRect(bx, by, Math.round(bw * hp), 2);
       const sh = Math.min(1 - hp, v.shieldShown / max);
       if (sh > 0.005) {
         ctx.fillStyle = "#a8e8ff";
-        ctx.fillRect(bx + Math.round(bw * hp), by, Math.max(1, Math.round(bw * sh)), 4);
+        ctx.fillRect(bx + Math.round(bw * hp), by, Math.max(1, Math.round(bw * sh)), 2);
       }
-      iconY = by + 7;
+      iconY = by + 5;
     }
     if (!u.ko) {
       const sts = shownStatuses(u).slice(0, 4);
@@ -382,18 +384,33 @@ export class Scene {
       }
     }
     if (v.cast && !u.ko) {
-      // The wind-up as a vertical bar beside the figure (left of a party member, right of a foe), filling upward: it never sits where the unit above keeps its status icons.
+      // The wind-up as a thin upright bar beside the figure, filling from the bottom: left of a party member (measured
+      // from the pose it's in, so it clears the step back a wind-up takes), right of a foe. It never sits where the
+      // unit above keeps its status icons.
       const p = Math.max(0, Math.min(1, (this.driver.vt - v.cast.start) / Math.max(1, v.cast.end - v.cast.start)));
-      const bh = Math.min(32, Math.max(16, v.h - 8));
-      const bx = v.side === "party" ? Math.max(1, x - Math.round(v.w / 2) - 8) : Math.min(W - 6, x + Math.round(v.w / 2) + 3);
+      const bh = Math.min(28, Math.max(14, v.h - 10));
+      const left = v.side === "party" ? x + Math.floor(actorSpan(v.ref, v.pose)[0]) - 4 : x + Math.round(v.w / 2) + 2;
+      const bx = Math.max(1, Math.min(W - 3, left));
       const by = v.y - 2 - bh;
       ctx.fillStyle = OUTLINE;
-      ctx.fillRect(bx - 1, by - 1, 6, bh + 2);
+      ctx.fillRect(bx - 1, by - 1, 4, bh + 2);
       ctx.fillStyle = "#3a3a4a";
-      ctx.fillRect(bx, by, 4, bh);
+      ctx.fillRect(bx, by, 2, bh);
       ctx.fillStyle = "#ffd54a";
       const fill = Math.round(bh * p);
-      ctx.fillRect(bx, by + bh - fill, 4, fill);
+      ctx.fillRect(bx, by + bh - fill, 2, fill);
+    }
+    if (v.side === "party" && !u.ko && this.partyBars) {
+      // Settings → PARTY HP: a thin HP bar under each party member too.
+      const max = u.stats.max_hp;
+      const hp = Math.max(0, Math.min(1, v.hpShown / max));
+      const bw = 20, bx = x - 10, by = v.y + 3;
+      ctx.fillStyle = OUTLINE;
+      ctx.fillRect(bx - 1, by - 1, bw + 2, 4);
+      ctx.fillStyle = "#3a3a4a";
+      ctx.fillRect(bx, by, bw, 2);
+      ctx.fillStyle = hpColor(hp);
+      ctx.fillRect(bx, by, Math.round(bw * hp), 2);
     }
   }
 

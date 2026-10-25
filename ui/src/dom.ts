@@ -39,8 +39,17 @@ export const row = (children: Child[], onClick?: () => void, opts: { cur?: boole
     ...children);
 
 /** A screen header: ◀ and the title, tappable to go back; `right` sits at the end. */
-export const header = (title: Child, onBack: (() => void) | null, right?: Child) =>
-  h("div", { class: "hdr" }, onBack ? h("span", { class: "back", onClick: onBack }, "◀") : null, h("span", { class: "title", onClick: onBack ?? undefined }, title), right ? h("span", { class: "r" }, right) : null);
+/**
+ * What the phone's back button does: close the open overlay if there is one, else the screen's own back
+ * (its header's ◀, or a fight's leave prompt). Screens and overlays set these as they open; main.ts listens.
+ */
+export const nav: { back: (() => void) | null; overlay: (() => void) | null } = { back: null, overlay: null };
+
+/** A screen header: ◀ and the title, tappable to go back (the phone's back button does the same); `right` sits at the end. */
+export function header(title: Child, onBack: (() => void) | null, right?: Child) {
+  nav.back = onBack;
+  return h("div", { class: "hdr" }, onBack ? h("span", { class: "back", onClick: onBack }, "◀") : null, h("span", { class: "title", onClick: onBack ?? undefined }, title), right ? h("span", { class: "r" }, right) : null);
+}
 
 /** A window box. */
 export const win = (cls: string, ...children: Child[]) => h("div", { class: `win${cls ? ` ${cls}` : ""}` }, ...children);

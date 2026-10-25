@@ -101,32 +101,22 @@ def frame_box(pose, f):
     x, y = ((m % 3) * 3 + f) * FRAME, (m // 3) * FRAME
     return (x, y, x + FRAME, y + FRAME)
 
-def aligned_diff(a, b):
-    """Pixels that differ between two figures, aligned on their bounding boxes' bottom-left corners."""
-    ba, bb = a.split()[3].getbbox(), b.split()[3].getbbox()
-    if not ba or not bb:
-        return 10 ** 6
-    a, b = a.crop(ba), b.crop(bb)
-    w, h = max(a.width, b.width), max(a.height, b.height)
-    A = Image.new("RGBA", (w, h)); A.paste(a, (0, h - a.height))
-    B = Image.new("RGBA", (w, h)); B.paste(b, (0, h - b.height))
-    pa, pb = A.load(), B.load()
-    return sum(1 for y in range(h) for x in range(w) if pa[x, y] != pb[x, y])
-
 def fix_sheet(sheet):
-    """The pack's "chant" pose is the figure turned around: mirror it back about its own centre.
-    Its "item" pose is a placeholder of another sprite: replace it with "spell"."""
-    wait = sheet.crop(frame_box("wait", 0))
+    """The pack's "chant" pose is drawn turned around on every Style 2 sheet (measured: each class's chant
+    frame matches its wait frame only when mirrored), so it's mirrored back, keeping the figure where the pack
+    put it: one step back from its waiting spot. Its "item" pose is a placeholder of another sprite: replaced
+    with "spell"."""
     for f in range(3):
         box = frame_box("chant", f)
         fr = sheet.crop(box)
-        if aligned_diff(fr.transpose(Image.FLIP_LEFT_RIGHT), wait) < aligned_diff(fr, wait) * 0.6:
-            bb = fr.split()[3].getbbox()
-            flipped = fr.transpose(Image.FLIP_LEFT_RIGHT)
-            fb = flipped.split()[3].getbbox()
-            fixed = Image.new("RGBA", (FRAME, FRAME), (0, 0, 0, 0))
-            fixed.paste(flipped.crop(fb), (bb[0], bb[1]))
-            sheet.paste(fixed, box)
+        bb = fr.split()[3].getbbox()
+        if not bb:
+            continue
+        flipped = fr.transpose(Image.FLIP_LEFT_RIGHT)
+        fb = flipped.split()[3].getbbox()
+        fixed = Image.new("RGBA", (FRAME, FRAME), (0, 0, 0, 0))
+        fixed.paste(flipped.crop(fb), (bb[0], bb[1]))
+        sheet.paste(fixed, box)
     for f in range(3):
         sheet.paste(sheet.crop(frame_box("spell", f)), frame_box("item", f))
     return sheet

@@ -85,17 +85,3 @@ export function showStat(key: string, v: number): string {
 /** The sheet's stats, in order. */
 export const SHEET_STATS = ["max_hp", "max_mp", "mp_regen", "attack", "magic", "armor", "crit_chance", "aggro"];
 export const SPECIAL_STATS = ["evasion", "accuracy", "crit_multiplier", "double_strike", "thorns", "lifesteal", "siphon", "healing_received", "attack_speed", "cooldown_reduction", "cast_time_reduction"];
-
-/** Stat changes as "ARM+1 HP+2": points for amount stats, percent for the rest. */
-export function changeCodes(stats: { stat: string; flat?: number; pct?: number }[] | undefined): string {
-  if (!stats?.length) return "";
-  return stats.map((s) => {
-    const def = c.stats.get(s.stat);
-    const v = s.flat ?? 0;
-    const sign = v >= 0 ? "+" : "";
-    let shown: string;
-    if (s.stat === "crit_chance" || def?.kind === "points" || s.stat.startsWith("resist")) shown = `${sign}${v}%`;
-    else shown = `${sign}${Math.round((v / 1000) * 10) / 10}`;
-    return `${statCode(s.stat)}${shown}${s.pct ? `${s.pct > 0 ? "+" : ""}${s.pct}%` : ""}`;
-  }).join(" ");
-}

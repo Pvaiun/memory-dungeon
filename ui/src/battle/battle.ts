@@ -12,12 +12,12 @@
 import { SUBTICKS } from "../../../src/schema.js";
 import type { CUnit } from "../../../src/engine/combat/fight.js";
 import { weaponOf } from "../../../src/engine/combat/fight.js";
-import { c, className, disp, elementName, fightName, runName } from "../content.js";
+import { c, className, disp, elementName, fightName, runName, shortName } from "../content.js";
 import { ELEMENT_COLOR, enemyDisplayName, enemyName, STATUS_STYLE, TAG_ICON, type Pose } from "../art.js";
-import { bar, button, clear, h, win, type Child } from "../dom.js";
-import { party as partyLoadout, setup } from "../state.js";
+import { bar, button, clear, h, nav, win, type Child } from "../dom.js";
+import { party as partyLoadout, save, setup } from "../state.js";
 import { abilityTag, statusText, weaponInfo } from "../describe.js";
-import { iconEl, iconOf, statusEl } from "../pixel.js";
+import { drawDigits, iconEl, iconOf, OUTLINE, statusEl } from "../pixel.js";
 import { classSheet, enemySheet, portraitEl } from "../sheet.js";
 import { Driver, type Ev } from "./driver.js";
 import { Narrator, type Beat, type Line, type Tone } from "./narrate.js";
@@ -67,6 +67,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   setMusic(setup.settings.music);
 
   const scene = new Scene(canvas, driver, theme);
+  scene.partyBars = setup.settings.partyBars;
   const nameOf = (id: string): string => {
     const u = driver.unit(id);
     return u ? (u.side === "party" ? className(u.ref) : enemyName(u.ref, u.name)) : id;
@@ -88,14 +89,21 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   let playing: Playing | null = null;
   const history: Hist[] = [];
 
-  const pauseBtn = button("II", () => { paused = !paused; stepping = false; renderCtl(); });
-  const stepBtn = button("STEP", () => { paused = true; stepping = true; renderCtl(); });
-  const speedBtns = SPEEDS.map((s) => button(`${s}×`, () => { speed = s; setup.settings.speed = s; renderCtl(); }));
+  // STEP is a mode, remembered across fights like the speed: on, the fight waits after every beat for a tap
+  // (STEP, the message window, Enter). ▶ leaves it; II only pauses.
+  const setStep = (on: boolean) => { if (setup.settings.step !== on) { setup.settings.step = on; save(); } };
+  const pauseBtn = button("II", () => { if (paused) { paused = false; stepping = false; setStep(false); } else paused = true; renderCtl(); });
+  const stepBtn = button("STEP", () => { paused = true; stepping = true; setStep(true); renderCtl(); });
+  const speedBtns = SPEEDS.map((s) => button(`${s}×`, () => { speed = s; setup.settings.speed = s; save(); renderCtl(); }));
   const renderCtl = () => {
     pauseBtn.textContent = paused ? "▶" : "II";
-    pauseBtn.className = paused ? "on" : "";
+    pauseBtn.className = paused && !setup.settings.step ? "on" : "";
+    stepBtn.className = setup.settings.step ? "on" : "";
     speedBtns.forEach((b, i) => (b.className = SPEEDS[i] === speed ? "on" : ""));
   };
+  /** In step mode a fight starts waiting: its first beat plays, then it waits for a tap. */
+  const enterStepMode = () => { if (setup.settings.step) { paused = true; stepping = true; } };
+  enterStepMode();
   ctl.append(button("◀", () => confirmLeave()), pauseBtn, stepBtn, ...speedBtns, button(">>", () => fastForward()), button("LOG", () => openLog()));
   renderCtl();
 
@@ -365,27 +373,29 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     if (isStatus && (src === "burn" || src === "poison" || src === "shock")) scene.effectFor(target, src);
   }
 
-  // ─── Party rows: face, name and statuses, HP, MP ───
+  // ─── Party rows: portrait | name, short HP and MP bars | actions' cooldowns over statuses ───
   type Row = { el: HTMLElement; hp: HTMLElement; hpNum: HTMLElement; mp: HTMLElement; mpNum: HTMLElement; sts: HTMLElement; cds: HTMLCanvasElement; key: string; bars: string; cdKey: string };
   const PIP = 18;
   const rows = new Map<string, Row>();
+  const rowName = (ref: string) => (className(ref).length <= 11 ? className(ref) : shortName(ref));
   function buildRows() {
     clear(partyEl);
     rows.clear();
     for (const u of driver.units().filter((x) => x.side === "party")) {
       const hp = bar(1, "hp"), mp = bar(1, "mp", 0, true);
       const hpNum = h("span", { class: "num" }), mpNum = h("span", { class: "num mp" });
-      const sts = h("span", { class: "sts" });
-      const cds = h("canvas", { class: "px cds", width: u.acts.length * PIP, height: PIP });
-      cds.style.width = `${(u.acts.length * PIP) / 8}rem`;
+      const sts = h("div", { class: "sts" });
+      const cds = h("canvas", { class: "px cds", width: u.acts.length * PIP + 2, height: PIP });
+      cds.style.width = `${(u.acts.length * PIP + 2) / 8}rem`;
       cds.style.height = `${PIP / 8}rem`;
       const el = h("div", { class: "member", onClick: () => openInspect(u.id) },
         h("div", { class: "portrait" }, portraitEl(u.ref)),
-        h("div", { class: "body" },
-          h("div", { class: "line1" }, h("span", { class: "name trunc" }, className(u.ref)), cds, sts),
+        h("div", { class: "stats" },
+          h("div", { class: "name trunc" }, rowName(u.ref)),
           h("div", { class: "line2" }, h("span", { class: "lbl" }, "HP"), hp, hpNum),
           h("div", { class: "line2" }, h("span", { class: "lbl mp" }, "MP"), mp, mpNum),
         ),
+        h("div", { class: "side" }, cds, sts),
       );
       partyEl.append(el);
       rows.set(u.id, { el, hp, hpNum, mp, mpNum, sts, cds, key: "", bars: "", cdKey: "" });
@@ -420,7 +430,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       if (key !== r.key) {
         r.key = key;
         clear(r.sts);
-        sts.slice(0, 3).forEach((s) => r.sts.append(statusEl(s.id, s.count)));
+        sts.slice(0, 6).forEach((s) => r.sts.append(statusEl(s.id, s.count)));
       }
       drawCooldowns(r, u);
     }
@@ -433,10 +443,10 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       const left = Math.max(0, (a.ready - vt) / SUBTICKS);
       const share = Math.min(1, left / Math.max(1, total));
       const casting = u.cast?.act === i;
-      return { tag: narrator.tagOf(u.id, a.id), share: Math.round(share * 16) / 16, ready: left <= 0 && !u.cast, casting };
+      return { tag: narrator.tagOf(u.id, a.id), share: Math.round(share * 16) / 16, left: Math.ceil(left), ready: left <= 0 && !u.cast, casting };
     });
     const blink = Math.floor(vwall / 300) % 2;
-    const key = u.ko ? "ko" : parts.map((p) => `${p.tag}:${p.share}:${p.ready ? 1 : 0}:${p.casting ? blink : "-"}`).join("|");
+    const key = u.ko ? "ko" : parts.map((p) => `${p.tag}:${p.share}:${p.left}:${p.ready ? 1 : 0}:${p.casting ? blink : "-"}`).join("|");
     if (key === r.cdKey) return;
     r.cdKey = key;
     const g = r.cds.getContext("2d")!;
@@ -449,6 +459,11 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       if (p.share > 0 && !p.casting) {
         g.fillStyle = "rgba(10, 12, 24, 0.72)";
         g.fillRect(x, 1, 16, Math.round(16 * p.share));
+      }
+      if (p.share > 0 && !p.casting && p.left > 0) {
+        // Ticks to go, in the corner.
+        const t = String(Math.min(99, p.left));
+        drawDigits(g, t, x + 17 - (t.length * 4 - 1), 12, "#ffffff", OUTLINE);
       }
       if (p.ready || (p.casting && blink)) {
         g.strokeStyle = p.casting ? "#ffffff" : "#ffd54a";
@@ -490,6 +505,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   function closeOverlay(done = false) {
     overlay?.remove();
     overlay = null;
+    nav.overlay = null;
     const d = overlayDone;
     overlayDone = null;
     if (done) d?.();
@@ -500,6 +516,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     overlayDone = onClose ?? null;
     overlay = h("div", { class: "overlay" }, h("div", { class: "hdr" }, h("span", { class: "title" }, title), right, button("×", () => closeOverlay(true), "sm")), box);
     frame.append(overlay);
+    nav.overlay = () => closeOverlay(true);
     return box;
   }
   /** Pauses while an overlay is read; `done` restores the state before it. */
@@ -664,6 +681,8 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     scene.units.clear();
     scene.clearTransient();
     closeOverlay();
+    enterStepMode();
+    renderCtl();
     driver.continueRun();
     pull();
     if (driver.phase === "run_won" || driver.phase === "run_lost") {
@@ -764,6 +783,8 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   if (driver.phase === "run_won" || driver.phase === "run_lost") {
     screen.append(win("", h("div", { class: "line" }, "NOTHING TO FIGHT"), h("div", { class: "btns" }, button("MENU", () => { stop(); go("home"); }))));
   }
+  // The phone's back button: closes an overlay (nav.overlay), else asks before leaving the fight.
+  nav.back = () => confirmLeave();
   // The first beats: the run's name, then the fight's opening.
   if (!single) history.push({ tick: 0, text: runName(dungeon), tone: "sys" });
   pull();

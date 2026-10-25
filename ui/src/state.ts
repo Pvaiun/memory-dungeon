@@ -8,7 +8,7 @@ import { plainWeapon } from "../../src/sim/parties.js";
 
 /** `portraits`: what stands for a class in the menus. "faces" everywhere, "sprites" everywhere, or "mixed": sprites in the party's slots, faces elsewhere. */
 export type Portraits = "faces" | "sprites" | "mixed";
-export type Settings = { speed: number; sound: boolean; music: boolean; designer: boolean; autoContinue: boolean; theme: string; bigNumbers: boolean; portraits: Portraits };
+export type Settings = { speed: number; step: boolean; partyBars: boolean; sound: boolean; music: boolean; designer: boolean; autoContinue: boolean; theme: string; bigNumbers: boolean; portraits: Portraits };
 
 export type Setup = {
   party: string[];
@@ -29,7 +29,7 @@ function fresh(): Setup {
     gear: {},
     abilities: {},
     seed: 1,
-    settings: { speed: 1, sound: true, music: true, designer: false, autoContinue: false, theme: "night", bigNumbers: false, portraits: "mixed" },
+    settings: { speed: 1, step: false, partyBars: false, sound: true, music: true, designer: false, autoContinue: false, theme: "night", bigNumbers: false, portraits: "mixed" },
   };
 }
 

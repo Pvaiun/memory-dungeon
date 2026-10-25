@@ -6,9 +6,9 @@
 import { gearFor as gearThatFits } from "../../src/sim/parties.js";
 import { c, className, classes, cls as classOf, dungeons, enemies, fightName, formations, gearOf, kindOf, runName, setDisplayDiv, shortName } from "./content.js";
 import { enemyDisplayName } from "./art.js";
-import { button, h, header, row, toast, win, type Child } from "./dom.js";
+import { button, h, header, nav, row, win, type Child } from "./dom.js";
 import { abilitiesFor, gearFor, reset, save, setup } from "./state.js";
-import { abilityBlock, basicLine, classHead, codeSpans, enemySheet, gearDeltas, gearRow, memberFor, passiveBlock, portraitEl, role, section, specialLines, statGrid } from "./sheet.js";
+import { abilityBlock, basicLine, classHead, codeSpans, enemySheet, gearRow, memberFor, passiveBlock, portraitEl, role, section, specialLines, statGrid } from "./sheet.js";
 import { enemyEl, enemyThumb } from "./pixel.js";
 import { weaponOf } from "../../src/engine/combat/fight.js";
 import { Strip, STRIP_H } from "./battle/scene.js";
@@ -42,6 +42,10 @@ export function go(s: Screen, arg?: unknown, keepScroll = false) {
   strip?.stop();
   strip = null;
   if (s !== current || !keepScroll) sfx.tap();
+  if (s === "party" && current !== "party") (pickSlot = null), (pickClass = null);
+  if (s === "unit" && (current === "party" || current === "classes")) unitFrom = current;
+  nav.back = null;
+  nav.overlay = null;
   current = s;
   currentArg = arg;
   music.play(s === "battle" ? "battle" : "menu");
@@ -124,49 +128,38 @@ function fight(arg?: unknown): Child[] {
 }
 
 // ─── Party: formation, the three slots, the roster ───
-/** The selected slot, or none: tap a slot to select it, another to swap, the same again for its sheet. */
-let pick: number | null = null;
+/**
+ * One selection at a time, a slot or a class, and every move resets to neutral:
+ * slot then class puts the class there; class then slot does the same; slot then slot swaps them;
+ * the same slot or class twice clears a slot's selection or opens the class's sheet.
+ */
+let pickSlot: number | null = null;
+let pickClass: string | null = null;
 function party(): Child[] {
-  if (pick !== null && pick > 2) pick = null;
   const f = c.formations.get(setup.formation)!;
-  const swap = (i: number, j: number) => { [setup.party[i], setup.party[j]] = [setup.party[j], setup.party[i]]; };
+  const done = () => { pickSlot = null; pickClass = null; save(); refresh(); };
+  /** Puts a class in a slot: swaps with whoever holds it if the class is already in the party; an empty slot takes it at the end. */
+  const place = (id: string, slot: number) => {
+    const j = setup.party.indexOf(id);
+    if (j >= 0) {
+      if (slot < setup.party.length) [setup.party[j], setup.party[slot]] = [setup.party[slot], setup.party[j]];
+      else setup.party.push(...setup.party.splice(j, 1));
+    } else if (slot < setup.party.length) setup.party[slot] = id;
+    else if (setup.party.length < 3) setup.party.push(id);
+  };
   const tapSlot = (i: number) => {
-    if (pick === null) pick = i;
-    else if (pick === i) pick = null;
-    else {
-      if (setup.party[pick] && setup.party[i]) swap(pick, i);
-      else if (setup.party[pick] && !setup.party[i]) {
-        const [m] = setup.party.splice(pick, 1);
-        setup.party.push(m);
-        i = setup.party.length - 1;
-      }
-      pick = i;
-      save();
-    }
-    refresh();
+    if (pickClass !== null) return place(pickClass, i), done();
+    if (pickSlot === null) return (pickSlot = i), refresh();
+    if (pickSlot === i) return (pickSlot = null), refresh();
+    const a = setup.party[pickSlot], b = setup.party[i];
+    if (a && b) [setup.party[pickSlot], setup.party[i]] = [b, a];
+    else if (a || b) place((a ?? b)!, a ? i : pickSlot);
+    done();
   };
   const tapClass = (id: string) => {
-    const j = setup.party.indexOf(id);
-    if (pick === null) {
-      if (j >= 0) pick = j;
-      else if (setup.party.length < 3) {
-        setup.party.push(id);
-        pick = setup.party.length - 1;
-        save();
-      } else return toast(frame, "TAP A SLOT FIRST");
-    } else if (j >= 0) {
-      if (j === pick) return go("unit", id);
-      if (pick < setup.party.length) swap(j, pick);
-      else pick = j;
-      save();
-    } else {
-      if (pick < setup.party.length) setup.party[pick] = id;
-      else {
-        setup.party.push(id);
-        pick = setup.party.length - 1;
-      }
-      save();
-    }
+    if (pickSlot !== null) return place(id, pickSlot), done();
+    if (pickClass === id) return (pickClass = null), go("unit", id);
+    pickClass = id;
     refresh();
   };
   const fi = formations.findIndex((x) => x.id === setup.formation);
@@ -175,18 +168,24 @@ function party(): Child[] {
     const id = setup.party[i];
     const pos = f.positions[i];
     const codes = codeSpans(pos.stats);
-    return h("div", { class: `win card${i === pick ? " cur" : ""}`, onClick: () => tapSlot(i) },
+    return h("div", { class: `win card${i === pickSlot ? " cur" : ""}`, onClick: () => tapSlot(i) },
       h("div", { class: "slot" }, `${i + 1} ${pos.name}`),
       id ? h("div", { class: "portrait" }, portraitEl(id, "slot")) : h("div", { class: "empty" }, "EMPTY"),
       h("div", { class: "name" }, id ? shortName(id) : "---"),
       h("div", { class: "codes" }, ...(codes.length ? codes : [h("span", { class: "dim" }, "no change")])),
     );
   });
-  const picked = pick === null ? undefined : setup.party[pick];
-  const sheetBtn = button("SHEET", () => { if (picked) go("unit", picked); }, "sm");
-  const removeBtn = button("REMOVE", () => { if (pick !== null && pick < setup.party.length) { setup.party.splice(pick, 1); pick = null; save(); refresh(); } }, "sm");
+  const picked = pickSlot !== null ? setup.party[pickSlot] : pickClass ?? undefined;
+  const inParty = picked !== undefined && setup.party.includes(picked);
+  const sheetBtn = button("SHEET", () => { if (picked) { const id = picked; pickSlot = pickClass = null; go("unit", id); } }, "sm");
+  const removeBtn = button("REMOVE", () => { if (picked && inParty) { setup.party.splice(setup.party.indexOf(picked), 1); done(); } }, "sm");
   sheetBtn.disabled = !picked;
-  removeBtn.disabled = !picked;
+  removeBtn.disabled = !inParty;
+  const hint = pickSlot !== null
+    ? "Tap a class to put it here, another slot to swap, or this slot again to deselect."
+    : pickClass !== null
+      ? "Tap a slot to put it there, or this class again for its sheet."
+      : "Tap a slot then a class, or a class then a slot. Tap a class twice for its sheet.";
   return [
     header("PARTY", () => go("home"), `${setup.party.length}/3`),
     win("",
@@ -197,11 +196,11 @@ function party(): Child[] {
     h("div", { class: "btns" },
       sheetBtn,
       removeBtn,
-      h("span", { class: "dim small text", style: "margin-left:auto;text-align:right;line-height:1.25rem" }, pick === null ? "Tap a slot, then a class. Tap two slots to swap." : picked ? "Tap a class to put it here, another slot to swap, or this slot again to deselect." : "Tap a class to put it here, or the slot again to deselect."),
+      h("span", { class: "dim small text", style: "margin-left:auto;text-align:right;line-height:1.25rem" }, hint),
     ),
     win("scroll roster", h("div", { class: "grid" }, ...classes.map((k) => {
-      const inParty = setup.party.includes(k.id);
-      return h("div", { class: `cell${inParty ? " in" : ""}${picked === k.id ? " cur" : ""}`, onClick: () => tapClass(k.id) }, h("div", { class: "portrait" }, portraitEl(k.id)), h("span", { class: "trunc", style: "max-width:100%" }, shortName(k.id)));
+      const inP = setup.party.includes(k.id);
+      return h("div", { class: `cell${inP ? " in" : ""}${pickClass === k.id ? " cur" : ""}`, onClick: () => tapClass(k.id) }, h("div", { class: "portrait" }, portraitEl(k.id)), h("span", { class: "trunc", style: "max-width:100%" }, shortName(k.id)));
     }))),
   ];
 }
@@ -221,6 +220,8 @@ function formation(): Child[] {
 
 // ─── Unit: a class's sheet, with its gear and ability order to change ───
 let orderPick: number | null = null;
+/** The screen a sheet was opened from, for its back: the party screen or the class list. */
+let unitFrom: Screen = "classes";
 function unit(arg?: unknown): Child[] {
   const id = String(arg);
   if (!c.classes.has(id)) return home();
@@ -242,8 +243,8 @@ function unit(arg?: unknown): Child[] {
     refresh();
   };
   const sp = specialLines(member.stats);
-  const back = () => { orderPick = null; go(slot >= 0 ? "party" : "classes"); };
-  const where = slot >= 0 ? h("span", { class: "hi small" }, `IN SLOT ${slot + 1}`) : setup.party.length < 3 ? button("ADD TO PARTY", () => { setup.party.push(id); pick = setup.party.length - 1; save(); go("party"); }, "sm hi") : h("span", { class: "dim small" }, "PARTY FULL");
+  const back = () => { orderPick = null; go(unitFrom); };
+  const where = slot >= 0 ? h("span", { class: "hi small" }, `IN SLOT ${slot + 1}`) : setup.party.length < 3 ? button("ADD TO PARTY", () => { setup.party.push(id); save(); go("party"); }, "sm hi") : h("span", { class: "dim small" }, "PARTY FULL");
   return [
     header(k.name, back, slot >= 0 ? button("REMOVE", () => { setup.party.splice(slot, 1); save(); go("party"); }, "sm") : null),
     win("", classHead(id, h("div", { class: "line", style: "min-height:1.75rem" }, where))),
@@ -280,18 +281,17 @@ function gear(arg?: unknown): Child[] {
   return [
     header(`${className(id)} · ${slot}`, () => go("unit", id)),
     win("list scroll",
-      slot !== "weapon" ? h("div", { class: `gear-row${!current ? " cur" : ""}`, onClick: () => choose(null) }, h("span", { class: "cursor" }, !current ? "▶" : ""), h("div", { class: "grow" }, h("div", { class: "line" }, h("span", { class: "dim" }, "NOTHING")), current ? h("div", { class: "line small codes" }, ...gearDeltas(id, slot, null)) : null)) : null,
+      slot !== "weapon" ? h("div", { class: `gear-row${!current ? " equipped" : ""}`, onClick: () => choose(null) }, h("span", { class: "art" }, ""), h("div", { class: "grow" }, h("div", { class: "line" }, h("span", { class: "dim grow" }, "NOTHING"), !current ? h("span", { class: "tag" }, "EQUIPPED") : null))) : null,
       ...fits.map((gid) => {
         const r = gearRow(gearOf(gid), slot, member.stats, () => choose(gid), false);
         if (gid === current) {
-          r.classList.add("cur");
-          r.querySelector(".grow")?.append(h("div", { class: "line small hi" }, "EQUIPPED"));
-        } else r.querySelector(".grow")?.append(h("div", { class: "line small codes" }, ...gearDeltas(id, slot, gid)));
-        r.prepend(h("span", { class: "cursor" }, gid === current ? "▶" : ""));
+          r.classList.add("equipped");
+          r.querySelector(".grow .line")?.append(h("span", { class: "tag" }, "EQUIPPED"));
+        }
         return r;
       }),
     ),
-    h("div", { class: "text dim small wrap" }, "The second line is what changes against what's equipped. " + (slot === "weapon" ? "A weapon sets the basic attack: its kind, speed and element. ★ is a powerful piece." : "Steps are +1 or +2 on the design's 1–5 scale; the numbers show 10 per point.")),
+    h("div", { class: "text dim small wrap" }, slot === "weapon" ? "A weapon sets the basic attack: its kind, speed and element. ★ is a powerful piece." : "The numbers are on the stat sheet's scale. ★ is a powerful piece."),
   ];
 }
 
@@ -329,7 +329,7 @@ function enemy(arg?: unknown): Child[] {
 // ─── Settings ───
 function settings(): Child[] {
   const s = setup.settings;
-  const toggle = (label: string, key: "sound" | "music" | "designer" | "autoContinue") => row([h("span", { class: "grow" }, label), h("span", { class: s[key] ? "good" : "dim" }, s[key] ? "ON" : "OFF")], () => { s[key] = !s[key]; if (key === "sound") setSound(s.sound); if (key === "music") setMusic(s.music); save(); refresh(); }, { cursor: false });
+  const toggle = (label: string, key: "sound" | "music" | "designer" | "autoContinue" | "partyBars") => row([h("span", { class: "grow" }, label), h("span", { class: s[key] ? "good" : "dim" }, s[key] ? "ON" : "OFF")], () => { s[key] = !s[key]; if (key === "sound") setSound(s.sound); if (key === "music") setMusic(s.music); save(); refresh(); }, { cursor: false });
   return [
     header("SETTINGS", () => go("home")),
     win("list",
@@ -338,11 +338,12 @@ function settings(): Child[] {
       toggle("SOUND", "sound"),
       toggle("MUSIC", "music"),
       toggle("AUTO NEXT", "autoContinue"),
+      toggle("PARTY HP ON FIELD", "partyBars"),
       toggle("DESIGNER", "designer"),
       row([h("span", { class: "grow" }, "NUMBERS"), h("span", null, s.bigNumbers ? "BIG" : "SMALL")], () => { s.bigNumbers = !s.bigNumbers; setDisplayDiv(s.bigNumbers ? 10 : 100); save(); refresh(); }, { cursor: false }),
       row([h("span", { class: "grow" }, "PORTRAITS"), h("span", null, s.portraits.toUpperCase())], () => { s.portraits = s.portraits === "faces" ? "sprites" : s.portraits === "sprites" ? "mixed" : "faces"; save(); refresh(); }, { cursor: false }),
       row([h("span", { class: "grow bad" }, "RESET ALL")], () => { reset(); setTheme(setup.settings.theme); setDisplayDiv(100); go("home"); }, { cursor: false }),
     ),
-    h("div", { class: "text dim small wrap" }, "Speed is how fast a fight is told: each message holds the clock while it's on screen. In a fight, II pauses, STEP plays one message at a time, >> skips to the end. Designer view shows hidden enemy stats and worked-out numbers. Small numbers are 10 per point of the design's 1–5 scale; big are 100. Portraits: faces everywhere, sprites everywhere, or mixed, with sprites in the party's slots and faces in the lists and rows."),
+    h("div", { class: "text dim small wrap" }, "Speed is how fast a fight is told: each message holds the clock while it's on screen. In a fight, II pauses, STEP plays one message at a time, >> skips to the end. Designer view shows hidden enemy stats and worked-out numbers. Small numbers are 10 per point of the design's 1–5 scale; big are 100. Portraits: faces everywhere, sprites everywhere, or mixed, with sprites in the party's slots and faces in the lists and rows. Party HP on field adds thin HP bars under the party in a fight, like the foes'."),
   ];
 }
