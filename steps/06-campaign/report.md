@@ -1,6 +1,6 @@
 # The campaign: report
 
-You asked for the core set as a game to beat: start with the starters and the first run, unlock everything one node at a time, with remixes and trials that set needs on the party, balanced by simulation. It's built, tuned, playtested by AI four times, and on this branch. This report leads with what needs you; `design.md` beside it has the road in full, `intent.md` your words, and `tuning.md` the trail.
+You asked for the core set as a game to beat: start with the starters and the first run, unlock everything one node at a time, with remixes and trials that set needs on the party, balanced by simulation. It's built, tuned, playtested by AI five times, and on this branch. This report leads with what needs you; `design.md` beside it has the road in full, `intent.md` your words, and `tuning.md` the trail.
 
 **To play it:** `npm install`, then `npm run ui`, and open the address it prints (on a phone on the same Wi-Fi, the Network address). GitHub Pages only publishes `main`, so the published app is still the old version. The game opens on the journey. Your old setup is kept as free play: Settings → MODE → FREE PLAY brings back the everything-available sandbox, with its own party. Settings → RESET JOURNEY starts the road over; with DESIGNER on, CLEAR NEXT skips a node. **Two tips the playtesters had to discover:** ability order matters (on a class's sheet, tap two numbers to swap; the Knight's Shield bash and the Valkyrie's Rally sit last by default and are often better first), and MP runs out across a run (watch the blue bars).
 
@@ -50,7 +50,9 @@ These change the core set's documents. If you keep the campaign they go into `DE
 - **HP on gear and formations** is half a point a step (was a whole point: Heartstone doubled a caster's HP, and HP everywhere was every class's best kit).
 - **Inferno** 0.35 × Magic (was 0.5: it wiped every party it landed on).
 - **A lost cast** (the core set report's decisions A and E): an action interrupted in its wind-up goes on cooldown, so an interrupt buys a whole cooldown; one whose targets are gone costs the unit its recovery, so two Ghouls reaching for one corpse don't loop.
-- **Copies of an enemy start a fight 1.5 ticks apart.** Starting together, three Ghosts hit one unit on one beat and twin Ogre Chiefs wound up every Crush in lockstep; now a pack ripples. New, and the one rule here no document asked about.
+- **Copies of an enemy start a fight 1.5 ticks apart.** Starting together, three Ghosts hit one unit on one beat and twin Ogre Chiefs wound up every Crush in lockstep; now a pack ripples. New: no document asked about it.
+- **An enrage.** Past 300 ticks, every unit on both sides deals 25% more damage, and 25% more again every 30 ticks; the fight announces it once ("The fight drags on: every blow lands harder!"). A playtester met a Vampire and two Bone Priests healing each other to the engine's 5,000-tick safety stop, and Ghouls raising each other for 2,600 ticks. The rules document set no time limit "until it happens"; it happened. Boss fights end in 100 to 250 ticks, so the enrage rarely touches a fight that's going somewhere.
+- **Might** stops at 25 stacks (a hidden Bard stacked 123 on itself, about +1,000% damage).
 - **Classes:** Valkyrie's Gale spear 0.1 × Attack a hit (was 0.2) and Rally 0.3 × Magic (was 0.6); War ballad many Might (was several); Fireball a normal hit (was light); Blizzard 0.3 × Magic (was 0.2); Mercy heals three quarters of a hit (was half); Fire arrow a heavy hit (was normal).
 - **Formations:** Escort's slots lose HP +1 (it was the best formation everywhere); Scatter's Decoy is Armor −1 (was −2).
 
@@ -65,7 +67,7 @@ These change the core set's documents. If you keep the campaign they go into `DE
 - **The road:** 20 nodes. The seven runs of the enemies document (nodes 1, 4, 7, 10, 13, 16, 19), two remixes (*The Road at Night*, the Old Road after dark with the chief's brother; *The Royal Court*, the Storm King and Queen together as the finale) and eleven trials with needs on the party: a new class after it's unlocked ("Bring the Pyromancer"), two at once ("Bring the Vampire and the Bard; pick your third"), a formation ("Stand in Caravan", seven fights with no rest), armor ("Everyone in heavy armor"), and one with Hasted foes. *The Ogre Brothers* is two Ogre Chiefs. A new class arrives just before the content it shines in, and the next node asks for it. Every class, formation and piece of gear is paid exactly once; the table is in `design.md`.
 - **Difficulty:** one knob per node, foes' HP and damage, set by simulation against exactly what you own there. It's enemy stats, so the game never shows it.
 - **The interface** (`ui/README.md`, "The journey"): JOURNEY is the first menu item. The road lists cleared nodes, the next one, and the rest as "???". A node's page shows its needs ticked against your party, its fights (tap one to practise), and the kind of reward. Clearing a node plays a celebration: CLEARED!, one card per unlock (a class with its face and figure; a formation with its slots; gear with who can wear it, each saying where to find it), then the next node. NEW tags mark what you haven't looked at yet, in the roster, the class list, the formation list and the gear picker, and on the menu items that lead to them. The menus only show what you own; CLASSES says how many of the 16 you've found. Free play keeps its own party.
-- **Engine 0.7:** a dungeon can change every foe (HP, damage through a new `power` stat, statuses at fight start, summons included); `ruleset.lostCast` and `ruleset.stagger` (above); `ruleset.run.restore` (decision B, off). Schema: a `campaign` block, validated (every need meetable with what's owned by then, nothing paid twice). 288 tests pass, five of them new.
+- **Engine 0.7:** a dungeon can change every foe (HP, damage through a new `power` stat, statuses at fight start, summons included); `ruleset.lostCast`, `ruleset.stagger` and `ruleset.enrage` (above); `ruleset.run.restore` (decision B, off). Schema: a `campaign` block, validated (every need meetable with what's owned by then, nothing paid twice). TESTS
 - **Tools:** `npm run campaign` searches every node's builds and tunes its knob (`--effects`, `--power`, `--feel`, `--set` for what-ifs); `src/campaign-play.ts` is the game as a command line (node pages, owned lists, a glossary, a run summary with MP and both sides' statuses), which the AI playtesters played.
 
 ## 3. What the numbers say
@@ -104,14 +106,15 @@ Per node, after the last tuning pass. **Best:** the best build the search finds,
 
 ## 4. Feel
 
-**Four AI playtests.** Each time a fresh agent played the road as a first-time player, through the game as a command line showing only what a player sees, up to 8 tries a node, then reported.
+**Five AI playtests.** Each time a fresh agent played the road as a first-time player, through the game as a command line showing only what a player sees, up to 8 tries a node, then reported.
 
 | Playtest, on | Attempts for 20 nodes | First-try clears | Stuck | What changed after it |
 | --- | --- | --- | --- | --- |
 | 1, the first tuning (a fifth of builds viable everywhere) | 28 | 17 | none | the harder target, formations spread out, class nudges |
 | 2, round two | 42 | 10 | none | Shock trimmed, the end tightened |
 | 3, round three | 47 | 9 | **node 5** | the Ossuary reworked, enemies staggered, the tuner's fresh-seed check |
-| 4, this version | ACCEPT |
+| 4, round four | 51 | 11 | **node 19** | no node narrower than one build in eleven (the finale one in twenty), a hint at the Tower Top, the enrage, the Might cap |
+| 5, this version | ACCEPT |
 
 What they agreed on:
 

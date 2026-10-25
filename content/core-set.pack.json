@@ -54,6 +54,11 @@
   "maxEnemies": 8,
   "lostCast": "cooldown",
   "stagger": 1.5,
+  "enrage": {
+   "after": 300,
+   "every": 30,
+   "pct": 25
+  },
   "run": {
    "defeatedUnits": "stay_down",
    "perkOffer": {
@@ -451,6 +456,7 @@
      "pct": 8
     }
    ],
+   "cap": 25,
    "pulse": {
     "every": 4
    },
@@ -10169,7 +10175,7 @@
     "name": "The Tower Top",
     "kind": "dungeon",
     "dungeon": "cmp_tower_top",
-    "text": "The queen again, at the top of the tower, and the king who rages when his soldiers fall.",
+    "text": "The queen again, at the top of the tower, and the king who rages when his soldiers fall. Strike past them.",
     "needs": [],
     "rewards": {
      "classes": [],

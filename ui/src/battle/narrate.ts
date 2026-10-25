@@ -120,6 +120,9 @@ export class Narrator {
       case "immune":
         this.add(ev, { text: `${this.n(ev.unit)} is immune to ${String(ev.name)}.`, tone: "sys" });
         break;
+      case "enrage":
+        this.add(ev, { text: "The fight drags on: every blow lands harder!", tone: "bad" });
+        break;
       case "interrupt":
         this.add(ev, { text: `${this.n(ev.unit)}'s ${String(ev.name)} is interrupted!`, tone: "bad" });
         break;

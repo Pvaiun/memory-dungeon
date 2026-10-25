@@ -74,6 +74,8 @@ export type CFight = Omit<Fight, "units"> & {
   units: CUnit[]; now: number; seq: number; queue: Item[]; moments: number; begun: boolean; seed: number;
   /** The dungeon's change to every foe (a campaign trial's): applied to each enemy as it's made, summons included. */
   foes?: S.FoesT;
+  /** The enrage has been announced (ruleset.enrage). */
+  enraged?: boolean;
 };
 
 /** Not design rules: safety stops in case content makes a fight that can't end. Either counts as a loss. */
@@ -801,7 +803,7 @@ function hit(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
   }
   // The hit and its riders read the same state, and share one crit roll.
   const crit = critRoll(w, a, stat(w, a, "crit_chance"), stat(w, a, "crit_multiplier"));
-  const power = stat(w, a, "power");
+  const power = stat(w, a, "power") + enrage(w);
   const results = parts.map(({ p, raw, rider }) =>
     rider && p.type === "physical" && evaded(w, a, t) ? null : calc(w, t, p, raw, partTags(kind, p), boostOf(w, a, partTags(kind, p), t) + power, crit),
   );
@@ -858,7 +860,7 @@ function strike(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
       ? critRoll(w, from, stat(w, from, "crit_chance"), stat(w, from, "crit_multiplier"))
       : critRoll(w, st.holder, d.crit.chance, d.crit.multiplier ?? stat(w, st.holder, "crit_multiplier"));
   }
-  const r = calc(w, t, p, raw, tags, st.fixedBoost ? 0 : boostOf(w, ctx.actor, tags, t) + stat(w, ctx.actor, "power"), crit);
+  const r = calc(w, t, p, raw, tags, st.fixedBoost ? 0 : boostOf(w, ctx.actor, tags, t) + stat(w, ctx.actor, "power") + enrage(w), crit);
   const by = st.fixedBoost ? (d.perSource ? unit(w, st.src) : null) : ctx.actor;
   if (r.word === "ABSORB") return absorb(w, by, t, d.id, r);
   const tk = take(w, t, r.amount);
@@ -1262,6 +1264,13 @@ export function nextTime(w: W): number {
   return t;
 }
 
+/** ruleset.enrage: the extra damage, in percent, every unit deals once a fight has run long. */
+function enrage(w: W): number {
+  const r = w.c.pack.ruleset.enrage;
+  if (!r || w.f.now <= r.after * SUBTICKS) return 0;
+  return (Math.floor((w.f.now - r.after * SUBTICKS) / (r.every * SUBTICKS)) + 1) * r.pct;
+}
+
 /** Fight start: statuses from passives, gear, formations and perks; every action on cooldown as if it had just resolved. */
 function begin(w: W) {
   const f = w.f;
@@ -1299,6 +1308,11 @@ export function step(w: W) {
     return;
   }
   f.now = t;
+  const rage = w.c.pack.ruleset.enrage;
+  if (rage && !f.enraged && t > rage.after * SUBTICKS) {
+    f.enraged = true;
+    w.log?.({ t: "enrage", vis: "player", at: t });
+  }
   for (const u of f.units) {
     if (u.ko || u.cast || u.busy > t) continue;
     const i = u.acts.findIndex((_, j) => available(w, u, j));

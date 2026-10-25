@@ -165,6 +165,7 @@ function summary(log: Entry[]): string {
       f.hp.set(String(e.unit), 0);
     } else if (e.t === "leave") f.hp.set(String(e.unit), 0);
     else if (e.t === "mp" && side.get(String(e.target)) === "party") mp.set(String(e.target), e.mp as number);
+    else if (e.t === "enrage") out.push(`  ${t(e.at)} The fight drags on: from now on every blow lands harder, and harder still as it goes.`);
     else if (e.t === "revive") {
       out.push(`  ${t(e.at)} ${names.get(String(e.unit))} is raised by ${names.get(String(e.by))}.`);
       f.hp.set(String(e.unit), e.hp as number);

@@ -85,3 +85,9 @@ test("stagger: copies of the same enemy start a fight 1.5 ticks apart, so a pack
   assert.equal(bandits.length, 3);
   assert.deepEqual(bandits.map((r) => r - bandits[0]), [0, 1500, 3000]);
 });
+
+test("enrage: past `after` ticks every hit deals pct % more, and more again every `every` ticks, on both sides", () => {
+  const a = arena({ party: [{ name: "A", weapon: { type: "physical", subtype: "pierce", cooldown: 5, amount: 100 } }], enemies: [{ name: "T", stats: { max_hp: 1e6 } }], ruleset: { enrage: { after: 10, every: 10, pct: 50 } } }).to(36);
+  assert.deepEqual(a.hits("T").map((e) => e.amount), [100, 100, 150, 200, 200, 250, 250], "100 until t10, then +50% for each 10 ticks begun");
+  assert.equal(a.entries("enrage").length, 1);
+});

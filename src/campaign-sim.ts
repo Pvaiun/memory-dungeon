@@ -440,11 +440,11 @@ async function main() {
   const target = Number(opt("--target") ?? 0.85);
   /**
    * The share of a node's builds that must win at least half their runs: a ramp, so the first three nodes teach
-   * (three in ten builds win) and the road narrows to one in twelve, one in 25 for nodes 18 and 19, and one in 33 for
-   * the finale, so it's the hardest run. At one in five everywhere, an AI playtester cleared 17 of 20 nodes on the
-   * first try. --share overrides it.
+   * (three in ten builds win), one in eight on nodes 4 to 9, one in eleven from node 10, and one in twenty for the
+   * finale. At one in five everywhere, an AI playtester cleared 17 of 20 nodes on the first try; at one in 25 for the
+   * Tower Top, one got stuck there. --share overrides it.
    */
-  const shareAt = (i: number) => (opt("--share") ? Number(opt("--share")) : i < 3 ? 0.3 : i < 9 ? 0.12 : i < 17 ? 0.08 : i < cp.nodes.length - 1 ? 0.04 : 0.03);
+  const shareAt = (i: number) => (opt("--share") ? Number(opt("--share")) : i < 3 ? 0.3 : i < 9 ? 0.12 : i < cp.nodes.length - 1 ? 0.09 : 0.05);
   const knobs: Record<string, number> = JSON.parse(readFileSync(KNOBS, "utf8"));
   const results: NodeResult[] = [];
   let carry: Party | null = null;

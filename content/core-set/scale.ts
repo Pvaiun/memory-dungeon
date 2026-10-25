@@ -53,6 +53,12 @@ export const RULES = {
    * for 3,700 and twin Ogre Chiefs wound up every Crush in lockstep, for the whole fight.
    */
   stagger: 1.5,
+  /**
+   * Past 300 ticks, everyone deals 25% more damage, and 25% more again every 30 ticks (campaign pass). An AI playtester
+   * met a Vampire and two Bone Priests healing each other to the 5,000-tick safety stop, and Ghouls raising each other
+   * for 2,600 ticks: minutes of watching nothing. Boss fights end in 100 to 250.
+   */
+  enrage: { after: 300, every: 30, pct: 25 },
 };
 
 /** MP cost follows the cooldown unless an ability is costly, which doubles it. */
@@ -189,7 +195,8 @@ export const STATUS = {
   /** 8 pulses of 4%: a Prayer heals a third of everyone's max HP over 16 ticks. */
   regen: { every: 2, share: 0.04, duration: 16 },
   shield: { capShare: 0.5 },
-  might: { perStack: 8, every: 4 },
+  /** Campaign pass: a cap of 25 stacks. Uncapped, a hidden Bard stacked 123 on itself and the Storm King reached 38. */
+  might: { perStack: 8, every: 4, cap: 25 },
   weaken: { pct: -30, duration: 10 },
   guard: { armor: pts(2), duration: 10 },
   stun: { duration: 2 },

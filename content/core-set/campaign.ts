@@ -273,7 +273,7 @@ const NODES: Node[] = [
   // ─── Act VII: the Tower Top ───────────────────────────────────────────────
   {
     id: "tower_top", name: "The Tower Top", kind: "dungeon", run: "tower_top",
-    text: "The queen again, at the top of the tower, and the king who rages when his soldiers fall.",
+    text: "The queen again, at the top of the tower, and the king who rages when his soldiers fall. Strike past them.",
     gear: ["ember_staff", "grounding_rod", "leech_staff", "splitter", "plain_axe", "mist_claws", "heartwood_staff", "archmages_robes", "thirsting_jewel"],
   },
   {
