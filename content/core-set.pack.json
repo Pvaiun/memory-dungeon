@@ -2559,7 +2559,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.75,
+        "ratio": 0.43,
         "stat": "armor"
        }
       ]
@@ -2691,7 +2691,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.43,
+        "ratio": 0.15,
         "stat": "attack"
        }
       ]
@@ -4106,9 +4106,9 @@
    "id": "crush",
    "name": "Crush",
    "text": "A massive blow.",
-   "cooldown": 70.8,
+   "cooldown": 48.6,
    "cast": 8,
-   "mp": 1000,
+   "mp": 650,
    "do": [
     {
      "op": "damage",
@@ -4240,9 +4240,9 @@
    "id": "death_bell",
    "name": "Death bell",
    "text": "Dooms a foe.",
-   "cooldown": 72.7,
+   "cooldown": 49.9,
    "cast": 4,
-   "mp": 1000,
+   "mp": 650,
    "if": {
     "side": "foes",
     "where": {
@@ -4375,9 +4375,9 @@
    "id": "inferno",
    "name": "Inferno",
    "text": "A very long cast: huge Fire on every foe, with many Burn.",
-   "cooldown": 73.6,
+   "cooldown": 50.5,
    "cast": 8,
-   "mp": 1000,
+   "mp": 650,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -4441,9 +4441,9 @@
    "id": "call_drones",
    "name": "Call drones",
    "text": "Summons two Drones.",
-   "cooldown": 67,
+   "cooldown": 45.9,
    "cast": 4,
-   "mp": 1000,
+   "mp": 650,
    "do": [
     {
      "op": "summon",
@@ -4456,9 +4456,9 @@
    "id": "tempest",
    "name": "Tempest",
    "text": "Lightning on every foe, with a stack of Shock.",
-   "cooldown": 74.6,
+   "cooldown": 51.1,
    "cast": 4,
-   "mp": 1000,
+   "mp": 650,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -4489,9 +4489,9 @@
    "id": "rally_soldiers",
    "name": "Rally",
    "text": "Summons two Soldiers.",
-   "cooldown": 71.3,
+   "cooldown": 48.9,
    "cast": 4,
-   "mp": 1000,
+   "mp": 650,
    "do": [
     {
      "op": "summon",
@@ -7242,7 +7242,7 @@
    "text": "The biggest ogre, with the biggest club.",
    "rank": "boss",
    "stats": {
-    "max_hp": 60000,
+    "max_hp": 33000,
     "max_mp": 4000,
     "mp_regen": 2000,
     "attack": 12000,
@@ -7428,7 +7428,7 @@
    "text": "Death, with a scythe and a bell.",
    "rank": "boss",
    "stats": {
-    "max_hp": 85000,
+    "max_hp": 46750,
     "max_mp": 8000,
     "mp_regen": 3000,
     "attack": 9000,
@@ -7476,7 +7476,7 @@
    "text": "Its silence falls on everyone.",
    "rank": "boss",
    "stats": {
-    "max_hp": 90000,
+    "max_hp": 49500,
     "max_mp": 10000,
     "mp_regen": 3000,
     "attack": 11000,
@@ -7626,7 +7626,7 @@
    "text": "Lord of the furnace.",
    "rank": "boss",
    "stats": {
-    "max_hp": 95000,
+    "max_hp": 52250,
     "max_mp": 10000,
     "mp_regen": 3000,
     "attack": 0,
@@ -7703,7 +7703,7 @@
    "text": "A walking glacier.",
    "rank": "boss",
    "stats": {
-    "max_hp": 110000,
+    "max_hp": 60500,
     "max_mp": 6000,
     "mp_regen": 2000,
     "attack": 14000,
@@ -7775,7 +7775,7 @@
    "text": "Queen of the storm drones.",
    "rank": "boss",
    "stats": {
-    "max_hp": 85000,
+    "max_hp": 46750,
     "max_mp": 10000,
     "mp_regen": 4000,
     "attack": 0,
@@ -7824,7 +7824,7 @@
    "text": "The Storm Queen's mate. Hurt his soldiers and he gets angry.",
    "rank": "boss",
    "stats": {
-    "max_hp": 100000,
+    "max_hp": 55000,
     "max_mp": 10000,
     "mp_regen": 4000,
     "attack": 0,
@@ -8481,8 +8481,8 @@
     }
    ],
    "foes": {
-    "hp": -42,
-    "power": -42
+    "hp": -53,
+    "power": -53
    }
   },
   {
@@ -8495,8 +8495,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": -11,
-    "power": -11
+    "hp": -22,
+    "power": -22
    },
    "stages": [
     {
@@ -8573,8 +8573,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 8,
-    "power": 4
+    "hp": -16,
+    "power": -16
    },
    "stages": [
     {
@@ -8793,8 +8793,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 60,
-    "power": 30
+    "hp": 50,
+    "power": 25
    },
    "stages": [
     {
@@ -8915,8 +8915,8 @@
     }
    ],
    "foes": {
-    "hp": -20,
-    "power": -20
+    "hp": -18,
+    "power": -18
    }
   },
   {
@@ -8929,8 +8929,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": -14,
-    "power": -14
+    "hp": -2,
+    "power": -2
    },
    "stages": [
     {
@@ -8997,8 +8997,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": -12,
-    "power": -12
+    "hp": -7,
+    "power": -7
    },
    "stages": [
     {
@@ -9122,8 +9122,8 @@
     }
    ],
    "foes": {
-    "hp": 31,
-    "power": 16
+    "hp": 39,
+    "power": 20
    }
   },
   {
@@ -9136,8 +9136,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 30,
-    "power": 15
+    "hp": 40,
+    "power": 20
    },
    "stages": [
     {
@@ -9207,8 +9207,8 @@
      "haste"
     ],
     "text": "Every foe starts each fight Hasted.",
-    "hp": 28,
-    "power": 14
+    "hp": 31,
+    "power": 16
    },
    "stages": [
     {
@@ -9339,8 +9339,8 @@
     }
    ],
    "foes": {
-    "hp": 48,
-    "power": 24
+    "hp": 53,
+    "power": 27
    }
   },
   {
@@ -9353,8 +9353,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": -3,
-    "power": -3
+    "hp": 2,
+    "power": 1
    },
    "stages": [
     {
@@ -9423,8 +9423,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 94,
-    "power": 47
+    "hp": 97,
+    "power": 49
    },
    "stages": [
     {
@@ -9571,8 +9571,8 @@
     }
    ],
    "foes": {
-    "hp": 88,
-    "power": 44
+    "hp": 91,
+    "power": 46
    }
   },
   {
@@ -9650,8 +9650,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": -23,
-    "power": -23
+    "hp": -8,
+    "power": -8
    },
    "stages": [
     {
@@ -9756,8 +9756,8 @@
     }
    ],
    "foes": {
-    "hp": 18,
-    "power": 9
+    "hp": 31,
+    "power": 16
    }
   },
   {
@@ -9770,8 +9770,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": -26,
-    "power": -26
+    "hp": -11,
+    "power": -11
    },
    "stages": [
     {
