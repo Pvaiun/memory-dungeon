@@ -71,7 +71,7 @@ const bothKinds = (pct: number) => [{ tag: "physical", pct }, { tag: "magical", 
 /** The 22 statuses of the vocabulary. */
 export const vocabulary: StatusT[] = [
   // Fundamental
-  { id: "poison", name: "POISON", text: "Loses health over time.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.poison.duration, pulse: { every: STATUS.poison.every, do: [{ op: "damage", type: "none", amount: { scale: [{ ratio: STATUS.poison.ratio, stat: "attack", of: "source" }] } }] } },
+  { id: "poison", name: "POISON", text: "Loses health over time.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.poison.duration, pulse: { every: STATUS.poison.every, do: [{ op: "damage", type: "none", amount: STATUS.poison.damage }] } },
   { id: "regen", name: "REGEN", text: "Recovers health over time.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.regen.duration, pulse: { every: STATUS.regen.every, do: [{ op: "heal", amount: { scale: [{ ratio: STATUS.regen.share, stat: "max_hp", of: "holder" }] } }] } },
   { id: "shield", name: "SHIELD", text: "Soaks damage before health.", label: "buff", show: "icon", stacking: "intensity", absorb: true, cap: { scale: [{ ratio: STATUS.shield.capShare, stat: "max_hp", of: "holder" }] } },
   { id: "might", name: "MIGHT", text: "Deals more damage per stack.", label: "buff", show: "icon", stacking: "intensity", boosts: bothKinds(STATUS.might.perStack), cap: STATUS.might.cap, pulse: { every: STATUS.might.every }, drop: { count: 1 } },

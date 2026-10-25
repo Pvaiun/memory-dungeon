@@ -46,7 +46,7 @@ The cause of problems 1 and 3 is the same: every action has its own cooldown, a 
 - Ability hits: light 0.43, normal 0.75, heavy 1.25 of the stat (were 0.2, 0.35, 0.6), about three swings for a normal hit. Explicit sizes scale with them (heals, shields, Gale spear, Burning fist, Bramble lash, Pyre's per-stack bonus).
 - An area spell is a light hit on each foe (Fireball, Blizzard; Chain lightning 0.6 and 0.3), about a swing a foe.
 - Stacks an ability adds are doubled; a passive's on basic attacks are not (basic attacks now come more often).
-- Poison is 0.13 × its applier's Attack a pulse for 10 ticks (was a flat 160 for 12), so its five pulses outweigh the light hit that carries it; Venom arrow aims at a foe that isn't Poisoned yet.
+- Poison is 400 a pulse for 10 ticks (was 160 for 12), so its five pulses are worth about the light hit that carries it; Venom arrow aims at a foe that isn't Poisoned yet. **The director's rule:** a status never scales from its applier's stats; a stackable status scales only by the stacks applied, an unstackable one (Poison refreshes) by nothing. A first cut scaled Poison from Attack; it's flat again.
 - Buffs and debuffs from abilities last about twice as long (Guard, Haste, Slow, Weaken 20 ticks; Taunt 14; Ward and Clarity 24; Silence 8), Regen 12 pulses of 3%.
 - Crit chance is 4% a point of Crit (was 5%).
 - MP: abilities cost 400, 650 and 1,000 by word (costly ×1.6), so a class with 2 MP regen spends more than it regains when its abilities all fire and runs low over a run, which the campfire's FOCUS buys back.
