@@ -609,10 +609,11 @@ function checkDungeons(pack: Pack, ix: Index, w: Walker, r: Report) {
       r.error("dungeon.perkPicks", `${p}.stages`, `${picks} perk picks; runs have ${d.perkPicksPerRun[0]}–${d.perkPicksPerRun[1]}`);
     }
     kinds.forEach((k, j) => {
-      if (k === "perk_pick" && (kinds[j - 1] !== "fight" || kinds[j + 1] !== "fight")) {
-        r.error("dungeon.stageOrder", `${p}.stages[${j}]`, `perk picks happen between two fights`);
+      if ((k === "perk_pick" || k === "campfire") && (kinds[j - 1] !== "fight" || kinds[j + 1] !== "fight")) {
+        r.error("dungeon.stageOrder", `${p}.stages[${j}]`, `${k === "campfire" ? "a campfire sits" : "perk picks happen"} between two fights`);
       }
     });
+    if (kinds.filter((k) => k === "campfire").length > 1) r.error("dungeon.campfires", `${p}.stages`, `a run has at most one campfire`);
     const bosses = dn.stages.flatMap((s, j) => (s.kind === "fight" && s.boss ? [j] : []));
     if (bosses.length !== 1 || bosses[0] !== dn.stages.length - 1) r.error("dungeon.boss", `${p}.stages`, `a run ends in exactly one boss fight, as its last stage`);
 

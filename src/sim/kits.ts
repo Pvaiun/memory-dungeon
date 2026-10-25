@@ -176,3 +176,15 @@ export function describe(c: Content, p: Party): string {
   const units = p.units.map((u) => `${c.classes.get(u.class)!.name}[${["weapon", "armor", "amulet"].map((s) => (u.gear[s] ? c.gear.get(u.gear[s])!.name : "–")).join("/")}]`);
   return `${units.join(", ")} in ${f}`;
 }
+
+/** A saved build brought up to date: a member whose abilities aren't its class's any more (a class redesign) gets the class's own order. */
+export function current(c: Content, p: Party): Party {
+  return {
+    ...p,
+    units: p.units.map((u) => {
+      const own = c.classes.get(u.class)!.abilities;
+      const same = u.abilities.length === own.length && u.abilities.every((a) => own.includes(a));
+      return same ? u : { ...u, abilities: own.slice() };
+    }),
+  };
+}

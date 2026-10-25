@@ -9,13 +9,14 @@
  *   npx tsx src/campaign-play.ts play <node> --formation vanguard \
  *       --party "knight:oathblade,plate,heartstone;cleric:plain_light_staff,robes;ranger:warbow" [--seed N] [--full]
  *       A member is class:weapon,armor,amulet (ids; leave a slot out to leave it empty). Abilities fire in the
- *       order given after a slash: "knight:oathblade,plate/protect,fortify,shield_bash".
+ *       order given after a slash: "knight:oathblade,plate/protect,fortify,shield_bash". --campfire rest|focus picks
+ *       at the campfire before the boss (HP back, or MP back); left out, whichever the party is shorter of.
  */
 import { readFileSync } from "node:fs";
-import { campaign, foesText, needText, ownedAt, rewardsOf, unmet } from "./campaign.js";
+import { campaign, foesText, needText, ownedAt, rewardsOf, simPick, unmet } from "./campaign.js";
 import { combat } from "./engine/combat/rules.js";
 import { playerView, type Entry } from "./engine/log.js";
-import { firstOption, loadContent, play } from "./engine/run.js";
+import { loadContent, play } from "./engine/run.js";
 import type { Party } from "./schema.js";
 import { readingPack } from "./sim/feel.js";
 import { checkParty } from "./validate.js";
@@ -104,7 +105,9 @@ if (cmd === "show") {
   const missing = unmet(c, node, party);
   if (missing.length) throw new Error(`can't start: ${missing.join("; ")}`);
   const seed = Number(opt("--seed") ?? 1);
-  const run = play(c, combat, { dungeon: node.dungeon, party, seed, firstClear: true }, firstOption, { log: true });
+  // The campfire before the boss: --campfire rest (HP back) or focus (MP back); left out, the simulations' choice.
+  const camp = opt("--campfire");
+  const run = play(c, combat, { dungeon: node.dungeon, party, seed, firstClear: true }, (d, r) => (d.kind === "campfire" && camp ? camp : simPick(d, r)), { log: true });
   if (rest.includes("--full")) {
     console.log(readingPack(c, combat, { why: "", target: { key: node.id, dungeon: node.dungeon, name: node.name }, party, seed, won: run.outcome === "won" }, 1));
   } else console.log(summary((run.log as Entry[]).filter((e) => e.vis === "player" || e.t === "mp")));
@@ -133,6 +136,10 @@ function summary(log: Entry[]): string {
       const us = e.units as { id: string; name: string; side: string; hp: number; max: number }[];
       for (const u of us) names.set(u.id, u.name), side.set(u.id, u.side), max.set(u.id, u.max), f.hp.set(u.id, u.hp);
       out.push("", `Fight ${n}${e.boss ? " (boss)" : ""}: ${String(e.stage).replace(/_/g, " ")}. Party: ${us.filter((u) => u.side === "party").map((u) => `${u.name} ${u.hp}/${u.max}`).join(", ")}. Foes: ${us.filter((u) => u.side === "enemy").map((u) => u.name).join(", ")}.`);
+      continue;
+    }
+    if (e.t === "pick" && e.kind === "campfire") {
+      out.push("", e.pick === "rest" ? "Campfire: you REST (everyone standing gets HP back)." : "Campfire: you FOCUS (everyone standing gets MP back).");
       continue;
     }
     if (!f) continue;

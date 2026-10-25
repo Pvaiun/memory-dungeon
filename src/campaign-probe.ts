@@ -15,12 +15,13 @@
  * doesn't start an ability it can't pay for, so running dry shows as fewer casts); and healing by source.
  */
 import { readFileSync } from "node:fs";
-import { campaign } from "./campaign.js";
+import { campaign, simPick } from "./campaign.js";
 import { combat } from "./engine/combat/rules.js";
 import type { Entry } from "./engine/log.js";
-import { firstOption, loadContent, play, type Content } from "./engine/run.js";
+import { loadContent, play, type Content } from "./engine/run.js";
 import type { Party } from "./schema.js";
 import { patch } from "./sim/content.js";
+import { current } from "./sim/kits.js";
 
 const args = process.argv.slice(2);
 const opt = (name: string) => {
@@ -82,7 +83,7 @@ for (const i of which) {
   variants.forEach((v, vi) => {
     let w = 0, n = 0;
     for (const party of cands) for (const seed of seeds) {
-      const run = play(v.c, combat, { dungeon: node.dungeon, party: regear(reorder(party, v.first), v.gear), seed, firstClear: true }, firstOption, { log: true });
+      const run = play(v.c, combat, { dungeon: node.dungeon, party: regear(reorder(current(v.c, party), v.first), v.gear), seed, firstClear: true }, simPick, { log: true });
       n++;
       if (run.outcome === "won") w++;
       tally(run.log as Entry[], vi);

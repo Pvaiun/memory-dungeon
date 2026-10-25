@@ -405,7 +405,13 @@ export const Status = z.strictObject({
     .strictObject({ share: z.number().gt(0).max(100) })
     .optional()
     .describe("Blocks the next damage above this percent of the holder's max HP, from any source, after mitigation and before absorbs; then the status ends (Aegis)."),
-  lockout: z.strictObject({ covers: Tag, interrupt: z.boolean().optional() }).optional(),
+  lockout: z
+    .strictObject({
+      covers: Tag,
+      interrupt: z.boolean().optional().describe("A cast in progress that the lockout covers is lost (see ruleset.lostCast)."),
+      pause: z.boolean().optional().describe("A cast in progress that the lockout covers is held, not lost: its wind-up resumes where it was when the lockout ends."),
+    })
+    .optional(),
   riders: z.array(z.strictObject({ on: Tag, add: Instance })).optional().describe("Adds a rider to the holder's hits that carry `on`."),
   convert: z.strictObject({ element: Id.optional(), subtype: Subtype.optional() }).optional().describe("Changes the element of the holder's magical instances, or the subtype of its physical ones."),
   seek: Tag.optional().describe("The holder's actions carrying this tag (basic, ability or all) have Seek: their first pick ignores Taunt."),
@@ -655,7 +661,15 @@ export const FightStage = z.strictObject({
   note: Note.optional(),
 });
 export const PickStage = z.strictObject({ kind: z.literal("perk_pick"), id: Id });
-export const Stage = z.discriminatedUnion("kind", [FightStage, PickStage]);
+export const CampfireStage = z
+  .strictObject({
+    kind: z.literal("campfire"),
+    id: Id,
+    hp: z.number().min(0).max(100).describe("REST: every standing member regains this % of its max HP."),
+    mp: z.number().min(0).max(100).describe("FOCUS: every standing member regains this % of its max MP."),
+  })
+  .describe("A rest between two fights where the player picks one: HP back, or MP back. Knocked-out members stay down.");
+export const Stage = z.discriminatedUnion("kind", [FightStage, PickStage, CampfireStage]);
 
 export const LootTable = z.strictObject({
   guaranteed: z.array(Id).optional(),

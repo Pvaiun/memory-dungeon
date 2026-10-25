@@ -10,6 +10,7 @@
  */
 import type { CampaignT, DungeonT, FoesT, NeedT } from "../../src/schema.js";
 import { enc, encounters as E, stage, type Fight } from "./dungeons.js";
+import { CAMPFIRE } from "./scale.js";
 import knobs from "./campaign-knobs.json" with { type: "json" };
 
 /**
@@ -295,25 +296,31 @@ const runs: Record<string, true> = { old_road: true, crypt: true, fire_mine: tru
 /** The campaign's own runs: a node's remixed fights, or a spine run with the node's foes. */
 export const campaignDungeons: DungeonT[] = [];
 /** A spine run that a node changes (foes) is copied under the node's id; otherwise the node plays it as is. */
+/**
+ * One campfire a run, just before the boss: the player picks HP back (REST) or MP back (FOCUS) for everyone standing.
+ * Before the boss, so the choice is about the fight that decides the run.
+ */
+function withCampfire(stages: DungeonT["stages"]): DungeonT["stages"] {
+  if (stages.length < 2) return stages;
+  return [...stages.slice(0, -1), { kind: "campfire", id: "campfire", hp: CAMPFIRE.hp, mp: CAMPFIRE.mp }, stages[stages.length - 1]];
+}
+
 export function campaignWith(spine: DungeonT[]): CampaignT {
   campaignDungeons.length = 0;
   const nodes = NODES.map((n) => {
     let dungeon: string;
     const foes = foesOf(n);
+    dungeon = `cmp_${n.id}`;
     if (typeof n.run === "string") {
       if (!runs[n.run]) throw new Error(`campaign: no spine run '${n.run}'`);
-      const base = spine.find((d) => d.id === n.run)!;
-      if (foes) {
-        dungeon = `cmp_${n.id}`;
-        campaignDungeons.push({ ...structuredClone(base), id: dungeon, name: n.name, foes });
-      } else dungeon = n.run;
+      const base = structuredClone(spine.find((d) => d.id === n.run)!);
+      campaignDungeons.push({ ...base, id: dungeon, name: n.name, ...(foes ? { foes } : {}), stages: withCampfire(base.stages) });
     } else {
-      dungeon = `cmp_${n.id}`;
       const fights = n.run.fights;
       campaignDungeons.push({
         id: dungeon, name: n.name, text: n.run.text, partySize: { max: 3 }, perkPool: [], challenges: [],
         ...(foes ? { foes } : {}),
-        stages: fights.map((f, i) => stage(f, i === fights.length - 1)),
+        stages: withCampfire(fights.map((f, i) => stage(f, i === fights.length - 1))),
       });
     }
     return {

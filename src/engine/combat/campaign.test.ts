@@ -91,3 +91,40 @@ test("enrage: past `after` ticks every hit deals pct % more, and more again ever
   assert.deepEqual(a.hits("T").map((e) => e.amount), [100, 100, 150, 200, 200, 250, 250], "100 until t10, then +50% for each 10 ticks begun");
   assert.equal(a.entries("enrage").length, 1);
 });
+
+test("a pausing lockout (Stun): a wind-up under way waits it out and then lands, instead of being lost", () => {
+  const stun = debuff("stun", { duration: 5, lockout: { covers: "all", pause: true } });
+  const a = arena({ party: [{ name: "A", abilities: ["bash"] }], enemies: [{ name: "Ogre", abilities: ["smash"] }], statuses: [stun], abilities: [smash, giver("bash", "stun")] });
+  a.unit("A").acts.find((x) => x.id === "bash")!.ready = at(5);
+  a.unit("Ogre").acts.find((x) => x.id === "smash")!.ready = at(1);
+  a.to(30);
+  assert.equal(a.entries("interrupt").length, 0, "nothing is interrupted");
+  assert.deepEqual(a.entries("hold").map((e) => [e.at, e.ends]), [[at(5), at(16)]], "the 10-tick wind-up started at 1 is held 5 ticks at tick 5");
+  assert.deepEqual(a.entries("act", (e) => e.act === "smash").map((e) => e.at), [at(16)], "and Smash lands at 16, not 11");
+});
+
+test("campfire: the run pauses for a choice between two fights; REST gives back HP, FOCUS MP, to everyone standing", () => {
+  const pack = structuredClone(raw);
+  const d = pack.dungeons.find((x: { id: string }) => x.id === "cmp_old_road");
+  assert.ok(d.stages.some((s: { kind: string }) => s.kind === "campfire"), "every campaign run has a campfire");
+  assert.equal(d.stages[d.stages.length - 2].kind, "campfire", "just before the boss");
+  const c = loadContent(pack);
+  const party = { formation: "neutral", units: [{ class: "knight", position: "left", abilities: ["fortify", "protect", "shield_bash"], gear: { weapon: "plain_sword" } }, { class: "cleric", position: "center", abilities: ["renew", "cure", "raise"], gear: { weapon: "plain_light_staff" } }] };
+  let reached = 0;
+  for (const pick of ["rest", "focus"]) {
+    const run = newRun(c, combat, { dungeon: "cmp_old_road", party, seed: 2 }, { checked: true });
+    while (!run.pending && !run.outcome) advanceOnce(c, combat, run);
+    if (run.outcome) continue; // lost before the campfire on this seed
+    assert.equal(run.pending!.kind, "campfire");
+    reached++;
+    const m = run.party as unknown as { hp: number; mp: number; stats: Record<string, number> }[];
+    const before = m.map((x) => [x.hp, x.mp]);
+    combat.apply({ c, run, log: undefined } as never, run.pending!, pick);
+    m.forEach((x, i) => {
+      if (before[i][0] <= 0) return assert.equal(x.hp, 0, "a knocked-out member stays down");
+      if (pick === "rest") assert.equal(x.hp, Math.min(x.stats.max_hp, before[i][0] + Math.floor(x.stats.max_hp * 0.4)));
+      else assert.equal(x.mp, Math.min(x.stats.max_mp, before[i][1] + Math.floor(x.stats.max_mp * 0.4)));
+    });
+  }
+  assert.equal(reached, 2, "the party reaches the campfire on this seed");
+});

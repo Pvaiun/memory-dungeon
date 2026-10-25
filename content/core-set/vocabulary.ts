@@ -77,7 +77,7 @@ export const vocabulary: StatusT[] = [
   { id: "might", name: "MIGHT", text: "Deals more damage per stack.", label: "buff", show: "icon", stacking: "intensity", boosts: bothKinds(STATUS.might.perStack), cap: STATUS.might.cap, pulse: { every: STATUS.might.every }, drop: { count: 1 } },
   { id: "weaken", name: "WEAKEN", text: "Deals less damage.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.weaken.duration, boosts: bothKinds(STATUS.weaken.pct) },
   { id: "guard", name: "GUARD", text: "Armor up.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.guard.duration, stats: [{ stat: "armor", flat: STATUS.guard.armor }] },
-  { id: "stun", name: "STUN", text: "Can't act.", label: "debuff", show: "icon", stacking: "fizzle", duration: STATUS.stun.duration, lockout: { covers: "all", interrupt: true } },
+  { id: "stun", name: "STUN", text: "Can't act. A wind-up already under way waits it out, then carries on.", label: "debuff", show: "icon", stacking: "fizzle", duration: STATUS.stun.duration, lockout: { covers: "all", pause: true } },
   { id: "slow", name: "SLOW", text: "Slower in everything.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.slow.duration, stats: timing(STATUS.slow.speed) },
   { id: "haste", name: "HASTE", text: "Faster in everything.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.haste.duration, stats: timing(STATUS.haste.speed) },
   { id: "taunt", name: "TAUNT", text: "Foes must pick it.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.taunt.duration, stats: [{ stat: "forced", flat: 1 }] },

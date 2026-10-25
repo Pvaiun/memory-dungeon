@@ -954,6 +954,7 @@ function gained(w: W, to: CUnit, d: S.StatusT, s: SInst) {
   });
   if (d.stats) refresh(w, to);
   if (d.lockout?.interrupt) interrupt(w, to, d.lockout.covers);
+  if (d.lockout?.pause && s.end !== -1) hold(w, to, d.lockout.covers, s.end - w.f.now);
   fire(w, ev("status_gained", to, null, { status: d.id }));
 }
 
@@ -987,6 +988,19 @@ function interrupt(w: W, u: CUnit, lockout: string) {
   u.cast = null;
   w.log?.({ t: "interrupt", vis: "player", at: w.f.now, unit: u.id, act: d.id, name: d.name });
   fire(w, ev("action_interrupted", u, null, { kind: d.kind }));
+}
+
+/** A pausing lockout (Stun): a cast in progress that it covers waits out the lockout, then carries on from where it was. */
+function hold(w: W, u: CUnit, lockout: string, ticks: number) {
+  if (!u.cast || ticks <= 0) return;
+  const d = actDef(w, u, u.cast.act);
+  if (!covers(lockout, d)) return;
+  const i = w.f.queue.findIndex((it) => it.k === "act" && it.unit === u.id);
+  if (i < 0) return;
+  const [it] = w.f.queue.splice(i, 1);
+  u.cast.end += ticks;
+  push(w, { ...it, at: u.cast.end, seq: w.f.seq++ });
+  w.log?.({ t: "hold", vis: "player", at: w.f.now, unit: u.id, act: d.id, name: d.name, ends: u.cast.end });
 }
 
 /** Removes buffs or debuffs, newest first or at random, skipping unremovable ones and a dispel-immune unit's buffs (section 7.9). */

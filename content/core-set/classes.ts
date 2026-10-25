@@ -3,7 +3,7 @@
  * Every number comes from scale.ts; the words are the documents'.
  */
 import type { AbilityT, ClassDefT, NumT, StatusT, TargetRuleT } from "../../src/schema.js";
-import { COOLDOWN, COST, HIT, REVIVE, RESIST, SPECIAL, SPECIAL_KEY, STACKS, STUN_COOLDOWN, WINDUP, crit, costly, from, pts, stacks, type HitWord, type SpecialLevel, type SpecialStat, type StackWord } from "./scale.js";
+import { COOLDOWN, COST, HIT, REVIVE, RESIST, SPECIAL, SPECIAL_KEY, STACKS, STATUS, STUN_COOLDOWN, WINDUP, crit, costly, from, pts, stacks, type HitWord, type SpecialLevel, type SpecialStat, type StackWord } from "./scale.js";
 import { P } from "./vocabulary.js";
 
 type CD = keyof typeof COOLDOWN;
@@ -59,13 +59,13 @@ const bothKinds = (pct: StatusT["boosts"] extends (infer B)[] | undefined ? (B e
 
 export const passives: StatusT[] = [
   passive("sworn", "Sworn", { text: "Taunts when an ally falls.", reactions: [{ on: { event: "ko", whose: "ally" }, do: [apply("taunt", { to: "holder" })] }] }),
-  // Campaign pass: three quarters of the damage, not half. The AI playtester stopped bringing the Cleric once the Valkyrie came.
-  passive("mercy", "Mercy", { text: "Each Light hit heals the lowest ally for three quarters of its damage.", reactions: [{ on: { event: "hit_lands", tags: ["light"] }, do: [{ op: "heal", amount: { scale: [{ ratio: 0.75, amount: true }] }, to: T.lowestShareAlly }] }] }),
   passive("hunters_eye", "Hunter's eye", { text: "Basic attacks ignore Taunt.", seek: "basic" }),
   passive("briar", "Briar", { text: "Foes its Thorns wound are Poisoned.", reactions: [{ on: { event: "damage_dealt", status: "thorns" }, do: [apply("poison", { to: "other" })] }] }),
   passive("phalanx", "Phalanx", { text: "Basic attacks a third as often, for triple damage.", stats: [{ stat: "attack_speed", flat: -200 }], boosts: [{ tag: "basic", pct: 200 }] }),
   passive("judgement", "Judgement", { text: "Hits deal double damage to foes with a buff.", boosts: bothKinds({ scale: [{ ratio: 100, when: { buffs: true }, of: "target" }] }) }),
   passive("encore", "Encore", { text: "Can't be Silenced.", stats: [{ stat: "immune:status:silence", flat: 1 }] }),
+  // Follow-up redesign (the director's): the Bard's tempo includes mana. Its old passive, Encore, went to the Cleric.
+  passive("refrain", "Refrain", { text: "Basic attacks give a random ally a little MP.", reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [{ op: "mp", amount: STATUS.refrain.mp, to: { side: "allies", pick: "random" } }] }] }),
   passive("cold_hex", "Cold hex", { text: "Basic attacks add a few Chill.", reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("chill", { stacks: own("few", "magic"), to: "other" })] }] }),
   passive("iron_palm", "Iron palm", {
     text: "Basic attacks, and Double strike's second strike, add a few Sunder.",
@@ -125,9 +125,14 @@ export const abilities: A[] = [
   a("knight", "shield_bash", "Shield bash", "Bashes a foe with the shield, which scales from Armor, and Stuns it.", {
     ...timing(STUN_COOLDOWN, "quick"), target: lacking({ side: "foes" }, "stun", true), do: [phys("blunt", hit("armor", "normal"), { apply: [{ status: "stun" }] })],
   }),
-  // Cleric
-  a("cleric", "prayer", "Prayer", "Regen on every ally.", { ...timing("long", "long"), target: T.everyAlly, do: [apply("regen")] }),
-  a("cleric", "purify", "Purify", "Cleanses a random ally with a debuff.", { ...timing("medium", "normal"), ...waitsFor("allies", { debuffs: true }), target: T.debuffedAlly, do: [{ op: "remove", label: "debuff" }] }),
+  // Cleric. Follow-up redesign (the director's): no free heal (Mercy healed three quarters of every staff hit), an active
+  // healer that spends MP. Prayer (Regen on every ally) and Purify (a cleanse) became Renew, on one ally that's never idle.
+  a("cleric", "renew", "Renew", "Cleanses an ally with a debuff and gives it Regen; with nobody debuffed, Regen on the lowest ally.", {
+    ...timing("medium", "normal"), target: { side: "allies", where: { debuffs: true }, ifNone: "any", pick: "lowest", by: "hp_share" }, do: [{ op: "remove", label: "debuff" }, apply("regen")],
+  }),
+  a("cleric", "cure", "Cure", "A quick, small heal on the lowest ally.", {
+    ...timing("short", "quick", { costly: true }), ...waitsFor("allies", { hpBelow: 100 }), target: T.lowestShareAlly, do: [{ op: "heal", amount: from("magic", 0.2) }],
+  }),
   a("cleric", "raise", "Raise", "Revives a random knocked-out ally with half its HP.", {
     ...timing("long", "very_long", { costly: true }), ...waitsFor("allies", { ko: true }), target: T.koAlly, do: [{ op: "revive", hp: { scale: [{ ratio: REVIVE.half, stat: "max_hp", of: "target" }] } }],
   }),
@@ -236,8 +241,8 @@ export const classes: ClassDefT[] = [
   cls("knight", "Knight", "Protector. Stands in front in heavy plate, Guards and Shields whoever is lowest, bashes a foe now and then, and when an ally falls, calls every foe onto itself.", {
     source: "starter", stats: stat(5, 2, 2, 3, 1, 5, 2, 5), weapons: ["sword", "axe"], armor: "heavy", passive: p("sworn", "Sworn", "When an ally is knocked out, the Knight gains Taunt."),
   }),
-  cls("cleric", "Cleric", "Healer. Keeps the party standing through a whole dungeon: its staff hits mend the lowest ally, Prayer keeps everyone regenerating, curses are lifted and the fallen raised.", {
-    source: "starter", stats: stat(2, 5, 4, 1, 4, 2, 2, 2), weapons: ["light_staff"], armor: "light", passive: p("mercy", "Mercy", "Each of its Light hits heals the ally with the lowest share of max HP for three quarters of the damage the hit dealt."),
+  cls("cleric", "Cleric", "Healer. Mends whoever is lowest with quick, small heals, lifts a curse and wraps the ally in Regen, raises the fallen, and nothing silences its prayers.", {
+    source: "starter", stats: stat(2, 5, 4, 1, 4, 2, 2, 2), weapons: ["light_staff"], armor: "light", passive: p("encore", "Encore", "It can't be Silenced."),
   }),
   cls("ranger", "Ranger", "Wears down tough targets. Looses poison, fire and armor-rending arrows at whatever stands in front, while its plain arrows fly past any guard.", {
     source: "starter", stats: { ...stat(3, 3, 3, 4, 1, 2, 3, 2), ...special("accuracy", "medium") }, weapons: ["bow", "dagger"], armor: "medium", passive: p("hunters_eye", "Hunter's eye", "Its basic attacks ignore Taunt."),
@@ -254,8 +259,8 @@ export const classes: ClassDefT[] = [
   cls("valkyrie", "Valkyrie", "Storm spear who heals and revives. A storm-borne spear that reaches past any guard and Shocks what it hits, mends the wounded, and snatches the fallen back ready to fight.", {
     stats: stat(3, 3, 3, 4, 3, 3, 3, 3), weapons: ["spear", "sword", "light_staff"], armor: "medium", passive: { name: "Einherjar", text: "Allies it revives come back with all their actions ready, instead of on cooldown." },
   }),
-  cls("bard", "Bard", "Party tempo. Plays the fight's tempo: allies faster and stronger, foes slower, and nothing stops the song.", {
-    stats: stat(2, 4, 3, 3, 3, 2, 2, 2), weapons: ["dagger", "bow"], armor: "medium", passive: p("encore", "Encore", "It can't be Silenced."),
+  cls("bard", "Bard", "Party tempo. Plays the fight's tempo: allies faster and stronger, foes slower, and every note it strikes gives an ally a little mana.", {
+    stats: stat(2, 4, 3, 3, 3, 2, 2, 2), weapons: ["dagger", "bow"], armor: "medium", passive: p("refrain", "Refrain", "Each of its basic attacks that lands gives a random ally a little MP."),
   }),
   cls("hexer", "Hexer", "Curser. Curses the most dangerous foe into a crawl, silenced, weakened, slowed and chilled, and strips foes' buffs one at a time.", {
     stats: { ...stat(2, 4, 3, 1, 4, 1, 2, 2), ...special("siphon", "medium") }, weapons: ["ice_staff", "dark_staff"], armor: "light", passive: p("cold_hex", "Cold hex", "Its basic attacks add a few Chill, whatever staff it carries; stacks scale from Magic."),

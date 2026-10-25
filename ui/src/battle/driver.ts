@@ -3,7 +3,7 @@
  * virtual clock, and turns the log into visual events as they happen. The
  * engine is untouched; the driver reads its state and its log.
  */
-import { advanceOnce, newRun, type Run, type RunInput } from "../../../src/engine/run.js";
+import { advanceOnce, answer, newRun, type Run, type RunInput } from "../../../src/engine/run.js";
 import { combat } from "../../../src/engine/combat/rules.js";
 import { nextTime, world, type CFight, type CUnit } from "../../../src/engine/combat/fight.js";
 import { SUBTICKS } from "../../../src/schema.js";
@@ -12,7 +12,7 @@ import { c } from "../content.js";
 
 export type Ev = Entry & { at?: number };
 
-export type Phase = "intro" | "fighting" | "won" | "lost" | "run_won" | "run_lost";
+export type Phase = "intro" | "fighting" | "won" | "lost" | "run_won" | "run_lost" | "campfire";
 
 export class Driver {
   run: Run;
@@ -37,6 +37,12 @@ export class Driver {
   /** Starts the next fight: runs the loop until a fight exists, then plays its first moment (setup). */
   begin() {
     while (!this.run.fight && !this.run.outcome && !this.run.pending) advanceOnce(c, combat, this.run);
+    if (this.run.pending) {
+      // A campfire: the run waits for the player's pick (choose).
+      this.phase = "campfire";
+      this.drain();
+      return;
+    }
     if (this.run.outcome) {
       this.phase = this.run.outcome === "won" ? "run_won" : "run_lost";
       this.drain();
@@ -83,6 +89,21 @@ export class Driver {
     advanceOnce(c, combat, this.run);
     this.drain();
     this.fight = null;
+    this.begin();
+  }
+
+  /** The campfire's two numbers, for its window: HP and MP back, in percent. */
+  campfire(): { hp: number; mp: number } | null {
+    const d = this.run.pending;
+    if (!d || d.kind !== "campfire") return null;
+    const st = c.dungeons.get(this.input.dungeon)!.stages.find((s) => s.id === d.at);
+    return st?.kind === "campfire" ? { hp: st.hp, mp: st.mp } : null;
+  }
+
+  /** Answers the campfire (rest or focus) and starts the next fight. */
+  choose(pick: string) {
+    if (!this.run.pending) return;
+    answer(c, combat, this.run, pick);
     this.begin();
   }
 

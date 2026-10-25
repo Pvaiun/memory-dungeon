@@ -501,14 +501,14 @@
   {
    "id": "stun",
    "name": "STUN",
-   "text": "Can't act.",
+   "text": "Can't act. A wind-up already under way waits it out, then carries on.",
    "label": "debuff",
    "show": "icon",
    "stacking": "fizzle",
-   "duration": 2,
+   "duration": 5,
    "lockout": {
     "covers": "all",
-    "interrupt": true
+    "pause": true
    }
   },
   {
@@ -1032,43 +1032,6 @@
    ]
   },
   {
-   "id": "mercy",
-   "name": "Mercy",
-   "label": "buff",
-   "show": "sheet",
-   "stacking": "refresh",
-   "unremovable": true,
-   "text": "Each Light hit heals the lowest ally for three quarters of its damage.",
-   "reactions": [
-    {
-     "on": {
-      "event": "hit_lands",
-      "tags": [
-       "light"
-      ]
-     },
-     "do": [
-      {
-       "op": "heal",
-       "amount": {
-        "scale": [
-         {
-          "ratio": 0.75,
-          "amount": true
-         }
-        ]
-       },
-       "to": {
-        "side": "allies",
-        "pick": "lowest",
-        "by": "hp_share"
-       }
-      }
-     ]
-    }
-   ]
-  },
-  {
    "id": "hunters_eye",
    "name": "Hunter's eye",
    "label": "buff",
@@ -1174,6 +1137,33 @@
     {
      "stat": "immune:status:silence",
      "flat": 1
+    }
+   ]
+  },
+  {
+   "id": "refrain",
+   "name": "Refrain",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Basic attacks give a random ally a little MP.",
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "mp",
+       "amount": 100,
+       "to": {
+        "side": "allies",
+        "pick": "random"
+       }
+      }
+     ]
     }
    ]
   },
@@ -1978,7 +1968,7 @@
   {
    "id": "cleric",
    "name": "Cleric",
-   "text": "Healer. Keeps the party standing through a whole dungeon: its staff hits mend the lowest ally, Prayer keeps everyone regenerating, curses are lifted and the fallen raised.",
+   "text": "Healer. Mends whoever is lowest with quick, small heals, lifts a curse and wraps the ally in Regen, raises the fallen, and nothing silences its prayers.",
    "source": "starter",
    "stats": {
     "max_hp": 2000,
@@ -1995,15 +1985,15 @@
    ],
    "armor": "light",
    "passive": {
-    "name": "Mercy",
-    "text": "Each of its Light hits heals the ally with the lowest share of max HP for three quarters of the damage the hit dealt.",
+    "name": "Encore",
+    "text": "It can't be Silenced.",
     "statuses": [
-     "mercy"
+     "encore"
     ]
    },
    "abilities": [
-    "prayer",
-    "purify",
+    "renew",
+    "cure",
     "raise"
    ]
   },
@@ -2177,7 +2167,7 @@
   {
    "id": "bard",
    "name": "Bard",
-   "text": "Party tempo. Plays the fight's tempo: allies faster and stronger, foes slower, and nothing stops the song.",
+   "text": "Party tempo. Plays the fight's tempo: allies faster and stronger, foes slower, and every note it strikes gives an ally a little mana.",
    "source": "unlock",
    "stats": {
     "max_hp": 2000,
@@ -2195,10 +2185,10 @@
    ],
    "armor": "medium",
    "passive": {
-    "name": "Encore",
-    "text": "It can't be Silenced.",
+    "name": "Refrain",
+    "text": "Each of its basic attacks that lands gives a random ally a little MP.",
     "statuses": [
-     "encore"
+     "refrain"
     ]
    },
    "abilities": [
@@ -2579,18 +2569,27 @@
    ]
   },
   {
-   "id": "prayer",
+   "id": "renew",
    "class": "cleric",
-   "name": "Prayer",
-   "text": "Regen on every ally.",
-   "cooldown": 22,
-   "cast": 4,
-   "mp": 500,
+   "name": "Renew",
+   "text": "Cleanses an ally with a debuff and gives it Regen; with nobody debuffed, Regen on the lowest ally.",
+   "cooldown": 12,
+   "cast": 1.5,
+   "mp": 300,
    "target": {
     "side": "allies",
-    "pick": "all"
+    "where": {
+     "debuffs": true
+    },
+    "ifNone": "any",
+    "pick": "lowest",
+    "by": "hp_share"
    },
    "do": [
+    {
+     "op": "remove",
+     "label": "debuff"
+    },
     {
      "op": "apply",
      "status": "regen"
@@ -2598,29 +2597,35 @@
    ]
   },
   {
-   "id": "purify",
+   "id": "cure",
    "class": "cleric",
-   "name": "Purify",
-   "text": "Cleanses a random ally with a debuff.",
-   "cooldown": 12,
-   "cast": 1.5,
+   "name": "Cure",
+   "text": "A quick, small heal on the lowest ally.",
+   "cooldown": 6,
+   "cast": 0.5,
    "mp": 300,
    "if": {
     "side": "allies",
     "where": {
-     "debuffs": true
+     "hpBelow": 100
     }
    },
    "target": {
     "side": "allies",
-    "where": {
-     "debuffs": true
-    }
+    "pick": "lowest",
+    "by": "hp_share"
    },
    "do": [
     {
-     "op": "remove",
-     "label": "debuff"
+     "op": "heal",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.2,
+        "stat": "magic"
+       }
+      ]
+     }
     }
    ]
   },
@@ -8447,6 +8452,12 @@
      ]
     },
     {
+     "kind": "campfire",
+     "id": "campfire",
+     "hp": 40,
+     "mp": 40
+    },
+    {
      "kind": "fight",
      "id": "ogre_chief",
      "name": "6. Ogre Chief",
@@ -8524,6 +8535,12 @@
      ]
     },
     {
+     "kind": "campfire",
+     "id": "campfire",
+     "hp": 40,
+     "mp": 40
+    },
+    {
      "kind": "fight",
      "id": "chiefs_return",
      "name": "The Chief's Return",
@@ -8589,6 +8606,12 @@
       "bandit",
       "bandit"
      ]
+    },
+    {
+     "kind": "campfire",
+     "id": "campfire",
+     "hp": 40,
+     "mp": 40
     },
     {
      "kind": "fight",
@@ -8660,6 +8683,12 @@
      ]
     },
     {
+     "kind": "campfire",
+     "id": "campfire",
+     "hp": 40,
+     "mp": 40
+    },
+    {
      "kind": "fight",
      "id": "reaper",
      "name": "13. Reaper",
@@ -8725,6 +8754,12 @@
      ]
     },
     {
+     "kind": "campfire",
+     "id": "campfire",
+     "hp": 40,
+     "mp": 40
+    },
+    {
      "kind": "fight",
      "id": "reapers_court",
      "name": "The Reaper's Court",
@@ -8781,6 +8816,12 @@
       "archer",
       "ogre"
      ]
+    },
+    {
+     "kind": "campfire",
+     "id": "campfire",
+     "hp": 40,
+     "mp": 40
     },
     {
      "kind": "fight",
@@ -8847,6 +8888,12 @@
      ]
     },
     {
+     "kind": "campfire",
+     "id": "campfire",
+     "hp": 40,
+     "mp": 40
+    },
+    {
      "kind": "fight",
      "id": "fire_giant",
      "name": "18. Fire Giant",
@@ -8911,6 +8958,12 @@
      ]
     },
     {
+     "kind": "campfire",
+     "id": "campfire",
+     "hp": 40,
+     "mp": 40
+    },
+    {
      "kind": "fight",
      "id": "giants_forge",
      "name": "The Giant's Forge",
@@ -8969,6 +9022,12 @@
       "archer",
       "archer"
      ]
+    },
+    {
+     "kind": "campfire",
+     "id": "campfire",
+     "hp": 40,
+     "mp": 40
     },
     {
      "kind": "fight",
@@ -9036,6 +9095,12 @@
      ]
     },
     {
+     "kind": "campfire",
+     "id": "campfire",
+     "hp": 40,
+     "mp": 40
+    },
+    {
      "kind": "fight",
      "id": "ice_titan",
      "name": "22. Ice Titan",
@@ -9097,6 +9162,12 @@
       "ice_ghost",
       "ice_ghost"
      ]
+    },
+    {
+     "kind": "campfire",
+     "id": "campfire",
+     "hp": 40,
+     "mp": 40
     },
     {
      "kind": "fight",
@@ -9169,6 +9240,12 @@
      ]
     },
     {
+     "kind": "campfire",
+     "id": "campfire",
+     "hp": 40,
+     "mp": 40
+    },
+    {
      "kind": "fight",
      "id": "huntmaster",
      "name": "The Huntmaster",
@@ -9231,6 +9308,12 @@
       "leech",
       "leech"
      ]
+    },
+    {
+     "kind": "campfire",
+     "id": "campfire",
+     "hp": 40,
+     "mp": 40
     },
     {
      "kind": "fight",
@@ -9297,6 +9380,12 @@
       "wisp",
       "wisp"
      ]
+    },
+    {
+     "kind": "campfire",
+     "id": "campfire",
+     "hp": 40,
+     "mp": 40
     },
     {
      "kind": "fight",
@@ -9396,6 +9485,12 @@
      ]
     },
     {
+     "kind": "campfire",
+     "id": "campfire",
+     "hp": 40,
+     "mp": 40
+    },
+    {
      "kind": "fight",
      "id": "reaper",
      "name": "Reaper",
@@ -9447,6 +9542,12 @@
       "skeleton",
       "skeleton"
      ]
+    },
+    {
+     "kind": "campfire",
+     "id": "campfire",
+     "hp": 40,
+     "mp": 40
     },
     {
      "kind": "fight",
@@ -9510,6 +9611,12 @@
      ]
     },
     {
+     "kind": "campfire",
+     "id": "campfire",
+     "hp": 40,
+     "mp": 40
+    },
+    {
      "kind": "fight",
      "id": "silent_court",
      "name": "The Silent Court",
@@ -9570,6 +9677,12 @@
      ]
     },
     {
+     "kind": "campfire",
+     "id": "campfire",
+     "hp": 40,
+     "mp": 40
+    },
+    {
      "kind": "fight",
      "id": "giants_wrath",
      "name": "The Giant's Wrath",
@@ -9614,6 +9727,12 @@
       "drone",
       "drone"
      ]
+    },
+    {
+     "kind": "campfire",
+     "id": "campfire",
+     "hp": 40,
+     "mp": 40
     },
     {
      "kind": "fight",
@@ -9669,6 +9788,12 @@
       "soldier",
       "soldier"
      ]
+    },
+    {
+     "kind": "campfire",
+     "id": "campfire",
+     "hp": 40,
+     "mp": 40
     },
     {
      "kind": "fight",

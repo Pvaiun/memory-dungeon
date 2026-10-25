@@ -13,14 +13,14 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { availableParallelism } from "node:os";
 import { Worker, isMainThread, parentPort, workerData } from "node:worker_threads";
-import { campaign, ownedAt, rewardsOf } from "./campaign.js";
+import { campaign, ownedAt, rewardsOf, simPick } from "./campaign.js";
 import { combat } from "./engine/combat/rules.js";
 import { playerView, printLog } from "./engine/log.js";
-import { firstOption, loadContent, play, type Content } from "./engine/run.js";
+import { loadContent, play, type Content } from "./engine/run.js";
 import { next, rngFor, type Rng } from "./engine/rng.js";
 import type { FoesT, Party } from "./schema.js";
 import { knobFoes } from "../content/core-set/campaign.js";
-import { combos, describe, makeBuild, seat, STYLES, trios, fitting, type Style } from "./sim/kits.js";
+import { combos, current, describe, makeBuild, seat, STYLES, trios, fitting, type Style } from "./sim/kits.js";
 import { partyKey } from "./sim/parties.js";
 import { checkParty } from "./validate.js";
 import { readingPack } from "./sim/feel.js";
@@ -45,7 +45,7 @@ function runJob(c: Content, job: Job): Out {
   let wins = 0, progress = 0, ticks = 0;
   const lost: Record<string, number> = {};
   for (const seed of job.seeds) {
-    const run = play(c, combat, { dungeon: job.dungeon, party: job.party, seed, firstClear: true }, firstOption, { checked: true });
+    const run = play(c, combat, { dungeon: job.dungeon, party: job.party, seed, firstClear: true }, simPick, { checked: true });
     if (run.outcome === "won") wins++;
     else {
       const st = stages[Math.min(run.stage, stages.length - 1)];
@@ -520,7 +520,8 @@ async function power(c: Content, pool: Pool, which: number[]) {
       const r = await rate(p, 60);
       if (r > pr) (pr = r), (pick = p);
     }
-    const best = all[cp.nodes[i].id]?.best.party;
+    const saved = all[cp.nodes[i].id]?.best.party;
+    const best = saved ? current(c, saved) : undefined;
     const a = pick ? await k50(pick) : NaN;
     const b = best?.units.length ? await k50(best) : NaN;
     console.log(`| ${i + 1} | ${cp.nodes[i].name} | ${pick ? describe(c, pick) : "–"} | ${a} | ${best ? describe(c, best) : "–"} | ${b} |`);
@@ -542,9 +543,10 @@ function logOne(c: Content, id: string) {
   const cp = campaign(c);
   const i = cp.nodes.findIndex((n) => n.id === id || String(cp.nodes.indexOf(n) + 1) === id);
   const node = cp.nodes[i];
-  const best = readAll()[node.id]?.best.party;
+  const saved = readAll()[node.id]?.best.party;
+  const best = saved ? current(c, saved) : undefined;
   if (!best) throw new Error(`no best build for ${node.id} yet: run npm run campaign first`);
-  const run = play(c, combat, { dungeon: node.dungeon, party: best, seed: Number(opt("--seed") ?? 1), firstClear: true }, firstOption, { log: true });
+  const run = play(c, combat, { dungeon: node.dungeon, party: best, seed: Number(opt("--seed") ?? 1), firstClear: true }, simPick, { log: true });
   const text = printLog(playerView(run.log!), { hidden: false });
   mkdirSync("out/campaign", { recursive: true });
   writeFileSync(`out/campaign/${node.id}.txt`, text + "\n");
@@ -571,9 +573,10 @@ function feel(c: Content, spec: string) {
   for (const id of spec.split(",")) {
     const i = cp.nodes.findIndex((x) => x.id === id);
     const node = cp.nodes[i];
-    const best = all[node.id]?.best.party;
+    const saved = all[node.id]?.best.party;
+    const best = saved ? current(c, saved) : undefined;
     if (!best) throw new Error(`no best build for ${id}`);
-    const outcomes = Array.from({ length: 30 }, (_, k) => k + 1).map((seed) => ({ seed, won: play(c, combat, { dungeon: node.dungeon, party: best, seed, firstClear: true }, firstOption, { checked: true }).outcome === "won" }));
+    const outcomes = Array.from({ length: 30 }, (_, k) => k + 1).map((seed) => ({ seed, won: play(c, combat, { dungeon: node.dungeon, party: best, seed, firstClear: true }, simPick, { checked: true }).outcome === "won" }));
     const picks = [outcomes.find((x) => !x.won), outcomes.find((x) => x.won)].filter(Boolean) as { seed: number; won: boolean }[];
     for (const p of picks) {
       n++;

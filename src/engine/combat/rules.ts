@@ -115,6 +115,7 @@ export const combat: Rules = {
   },
 
   stage(x, stage, rng) {
+    if (stage.kind === "campfire") return { kind: "campfire", at: stage.id, options: ["rest", "focus"] };
     if (stage.kind !== "perk_pick") throw new Error(`no '${stage.kind}' stage in combat-1`);
     const offer = x.c.pack.ruleset.run.perkOffer;
     const pool = x.c.dungeons.get(x.run.record.dungeon)!.perkPool.filter((p) => offer.repeatPicked || !x.run.perks.includes(p));
@@ -123,6 +124,17 @@ export const combat: Rules = {
 
   /** A picked perk gives its stat grants now, and its statuses at each later fight start, to the party units it's for. */
   apply(x, d, choice) {
+    if (d.kind === "campfire") {
+      // REST gives back a share of max HP, FOCUS a share of max MP, to every standing member.
+      const st = x.c.dungeons.get(x.run.record.dungeon)!.stages.find((s) => s.id === d.at);
+      if (st?.kind !== "campfire") throw new Error(`no campfire '${d.at}'`);
+      for (const m of x.run.party as Member[]) {
+        if (m.hp <= 0) continue;
+        if (choice === "rest") m.hp = Math.min(m.stats.max_hp, m.hp + Math.floor((m.stats.max_hp * st.hp) / 100));
+        else m.mp = Math.min(m.stats.max_mp, m.mp + Math.floor((m.stats.max_mp * st.mp) / 100));
+      }
+      return;
+    }
     if (d.kind !== "perk") throw new Error(`no '${d.kind}' decision in combat-1`);
     x.run.perks.push(choice);
     const perk = x.c.perks.get(choice)!;

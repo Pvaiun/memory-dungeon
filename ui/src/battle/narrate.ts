@@ -126,6 +126,9 @@ export class Narrator {
       case "interrupt":
         this.add(ev, { text: `${this.n(ev.unit)}'s ${String(ev.name)} is interrupted!`, tone: "bad" });
         break;
+      case "hold":
+        this.add(ev, { text: `${this.n(ev.unit)} is stunned: its ${String(ev.name)} has to wait.`, tone: "bad" });
+        break;
       case "down": {
         const party = this.L.unit(String(ev.unit))?.side === "party";
         this.add(ev, { text: party ? `${this.n(ev.unit)} is knocked out!` : `${this.n(ev.unit)} is defeated!`, tone: party ? "bad" : "good" });
@@ -214,7 +217,6 @@ export class Narrator {
     let text: string;
     if (src === "regen") text = `${t} regenerates ${n}.`;
     else if (src === "lifesteal") text = `${t} drains ${n}.`;
-    else if (src === "mercy") text = `Mercy heals ${t} for ${n}.`;
     else if (isStatus) text = `${t} recovers ${n} from ${this.sname(src)}.`;
     else text = `${ev.crit ? "Critical! " : ""}${t} recovers ${n}.`;
     this.add(ev, { text, tone: "heal" }, src === "regen" ? "tick" : "act");

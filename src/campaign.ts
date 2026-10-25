@@ -6,7 +6,7 @@
  * The data is the pack's `campaign` block; this file answers what's owned when a
  * node is reached, what a node pays, and whether a party meets a node's needs.
  */
-import type { Content } from "./engine/run.js";
+import type { Content, Picker } from "./engine/run.js";
 import type { CampaignNodeT, CampaignT, DungeonT, NeedT, Party } from "./schema.js";
 
 /** What the player owns. Gear is owned or not: any number of units can wear a piece they own. */
@@ -102,3 +102,14 @@ export function foesText(d: DungeonT): string | null {
 
 /** The index of a node by id, or -1. */
 export const nodeIndex = (c: Content, id: string) => campaign(c).nodes.findIndex((n) => n.id === id);
+
+/**
+ * The simulations' choice at a decision: at a campfire, HP back (rest) when the standing party has less of its HP
+ * left than of its MP, else MP back (focus); anything else, the first option.
+ */
+export const simPick: Picker = (d, run) => {
+  if (d.kind !== "campfire") return d.options[0];
+  const up = (run.party as unknown as { hp: number; mp: number; stats: Record<string, number> }[]).filter((m) => m.hp > 0);
+  const share = (k: "hp" | "mp") => up.reduce((a, m) => a + m[k] / Math.max(1, m.stats[`max_${k}`]), 0) / Math.max(1, up.length);
+  return share("hp") <= share("mp") ? "rest" : "focus";
+};

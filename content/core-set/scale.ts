@@ -199,7 +199,13 @@ export const STATUS = {
   might: { perStack: 8, every: 4, cap: 25 },
   weaken: { pct: -30, duration: 10 },
   guard: { armor: pts(2), duration: 10 },
-  stun: { duration: 2 },
+  /**
+   * Follow-up redesign (the director's): a Stun pauses a wind-up rather than cancelling it (Silence is the interrupt), and
+   * lasts long enough to take a foe out of the fight for a moment. It was 2 ticks.
+   */
+  stun: { duration: 5 },
+  /** The Bard's Refrain: MP a basic attack gives a random ally. */
+  refrain: { mp: 100 },
   slow: { speed: -40, duration: 10 },
   haste: { speed: 40, duration: 10 },
   taunt: { duration: 8 },
@@ -227,6 +233,9 @@ export const STATUS = {
   bulwark: { stacks: 6, broken: 5, takenPct: 100 },
   ice_crust: { perStack: pts(1), duration: 6, cap: 6 },
 } as const;
+
+/** The campfire before each campaign boss: REST gives back this % of max HP to everyone standing, FOCUS this % of max MP. */
+export const CAMPFIRE = { hp: 40, mp: 40 } as const;
 
 /** Shares of max HP a revive brings a unit back with. */
 export const REVIVE = { half: 0.5, tenth: 0.1, ghoul: 0.3 } as const;

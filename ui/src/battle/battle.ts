@@ -739,8 +739,43 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     renderCtl();
     driver.continueRun();
     pull();
+    if (driver.phase === "campfire") return showCampfire();
     if (driver.phase === "run_won" || driver.phase === "run_lost") {
       screen.append(win("", h("div", { class: "line" }, driver.phase === "run_won" ? "RUN CLEARED" : "RUN LOST"), h("div", { class: "btns" }, button(exitLabel, exit))));
+    }
+  }
+  /** The campfire before the boss: the party as it stands, and one pick, HP back or MP back. */
+  function showCampfire() {
+    const cf = driver.campfire();
+    if (!cf) return;
+    for (const el of [msgEl, ctl]) el.style.display = "none";
+    const party = driver.run.party as unknown as { ref: string; hp: number; mp: number; stats: Record<string, number> }[];
+    const box = win("summary",
+      h("div", { class: "line" }, h("span", { class: "grow hi" }, "CAMPFIRE"), h("span", { class: "dim" }, "BEFORE THE BOSS")),
+      h("div", { class: "line dim small" }, "Rest, or focus. One pick."),
+      h("table", { class: "sum" },
+        h("thead", null, h("tr", null, h("th", null, ""), h("th", null, "HP"), h("th", null, "MP"))),
+        h("tbody", null, ...party.map((m) => h("tr", null,
+          h("td", null, className(m.ref)),
+          h("td", { class: m.hp <= 0 ? "bad" : "" }, m.hp <= 0 ? "KO" : `${disp(m.hp)}/${disp(m.stats.max_hp)}`),
+          h("td", null, `${disp(m.mp)}/${disp(m.stats.max_mp)}`),
+        ))),
+      ),
+      h("div", { class: "btns", style: "margin-top:.5rem" },
+        button(`REST +${cf.hp}% HP`, () => pick("rest"), "hi"),
+        button(`FOCUS +${cf.mp}% MP`, () => pick("focus"), "hi"),
+      ),
+    );
+    screen.append(box);
+    function pick(choice: string) {
+      box.remove();
+      for (const el of [msgEl, ctl]) el.style.display = "";
+      driver.choose(choice);
+      pull();
+      renderCtl();
+      if (driver.phase === "run_won" || driver.phase === "run_lost") {
+        screen.append(win("", h("div", { class: "line" }, driver.phase === "run_won" ? "RUN CLEARED" : "RUN LOST"), h("div", { class: "btns" }, button(exitLabel, exit))));
+      }
     }
   }
   function restart(newSeed: number) {

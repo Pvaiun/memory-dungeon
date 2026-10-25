@@ -6,12 +6,13 @@
  *   npx tsx src/campaign-audit.ts [--nodes 1-20] [--seeds 8] [--best] [--set path=value]...
  */
 import { readFileSync } from "node:fs";
-import { campaign } from "./campaign.js";
+import { campaign, simPick } from "./campaign.js";
 import { combat } from "./engine/combat/rules.js";
 import type { Entry } from "./engine/log.js";
-import { firstOption, loadContent, play } from "./engine/run.js";
+import { loadContent, play } from "./engine/run.js";
 import type { Party } from "./schema.js";
 import { patch } from "./sim/content.js";
+import { current } from "./sim/kits.js";
 
 const args = process.argv.slice(2);
 const opt = (name: string) => {
@@ -67,7 +68,7 @@ for (const i of which) {
   if (!r) continue;
   const parties = args.includes("--best") ? [r.best.party] : r.cands;
   for (const party of parties) for (const seed of seeds) {
-    const run = play(c, combat, { dungeon: node.dungeon, party, seed, firstClear: true }, firstOption, { log: true });
+    const run = play(c, combat, { dungeon: node.dungeon, party: current(c, party), seed, firstClear: true }, simPick, { log: true });
     runs++;
     if (run.outcome === "won") won++;
     tally(run.log as Entry[], run.outcome === "won");
