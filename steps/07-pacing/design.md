@@ -16,7 +16,7 @@ The engine's log now names who applied a status and the source of a pulse, so a 
 - **The Cleric** loses Mercy (its staff hits healed the lowest ally for three quarters of their damage, for no MP). Its abilities are **Renew** (Prayer and Purify as one: cleanses an ally with a debuff and gives it Regen; with nobody debuffed, Regen on the lowest ally, so it's held only when nobody's standing), **Cure** (a quick, small heal on the lowest ally, costly) and Raise. Its passive is the Bard's Encore: it can't be Silenced.
 - **The Bard**'s passive is **Refrain**: each basic attack that lands gives a random ally 100 MP.
 - **Stun pauses, Silence interrupts.** A Stun holds a wind-up under way for its duration (a `pause` lockout, engine 0.8); Silence still cancels one. A Stun lasts 5 ticks (was 2).
-- **A campfire** before each campaign boss: REST gives everyone standing 40% of max HP back, FOCUS 40% of max MP. Nothing else restores between fights. Before the boss, so the choice is about the fight that decides the run. The simulations pick whichever the standing party is shorter of; the interface asks.
+- **A campfire** in the middle of each campaign run, after half its regular fights (rounded up): REST gives everyone standing 40% of max HP back, FOCUS 40% of max MP. Nothing else restores between fights. It sat before the boss for a round; in the middle, as the director asked, it splits the run's attrition in two, so each regular fight can hit harder. The simulations pick whichever the standing party is shorter of; the interface asks.
 
 ## Part 2: pacing and value
 
@@ -46,12 +46,16 @@ The cause of problems 1 and 3 is the same: every action has its own cooldown, a 
 - Ability hits: light 0.43, normal 0.75, heavy 1.25 of the stat (were 0.2, 0.35, 0.6), about three swings for a normal hit. Explicit sizes scale with them (heals, shields, Gale spear, Burning fist, Bramble lash, Pyre's per-stack bonus).
 - An area spell is a light hit on each foe (Fireball, Blizzard; Chain lightning 0.6 and 0.3), about a swing a foe.
 - Stacks an ability adds are doubled; a passive's on basic attacks are not (basic attacks now come more often).
-- Poison is 400 a pulse for 10 ticks (was 160 for 12), so its five pulses are worth about the light hit that carries it; Venom arrow aims at a foe that isn't Poisoned yet. **The director's rule:** a status never scales from its applier's stats; a stackable status scales only by the stacks applied, an unstackable one (Poison refreshes) by nothing. A first cut scaled Poison from Attack; it's flat again.
+- Poison is 250 a pulse for 10 ticks (was 160 for 12), and Venom arrow is a 0.15 tap that aims at a foe that isn't Poisoned yet, so the Poison is the arrow's damage. The Old Road's snakes set the ceiling: they Poison with every bite and the knob doesn't reach a status; at 400 they stopped the starters. **The director's rule:** a status never scales from its applier's stats; a stackable status scales only by the stacks applied, an unstackable one (Poison refreshes) by nothing. A first cut scaled Poison from Attack; it's flat again.
 - Buffs and debuffs from abilities last about twice as long (Guard, Haste, Slow, Weaken 20 ticks; Taunt 14; Ward and Clarity 24; Silence 8), Regen 12 pulses of 3%.
 - Crit chance is 4% a point of Crit (was 5%).
 - MP: abilities cost 400, 650 and 1,000 by word (costly ×1.6), so a class with 2 MP regen spends more than it regains when its abilities all fire and runs low over a run, which the campfire's FOCUS buys back.
 
-**Enemies.** Their abilities follow the same timing; their steady ones grow with it (Brand 0.11, Mend 1.3, Hailstorm 0.18, Tempest 0.13 of Magic). The big moves keep their size and come less often (Crush, Inferno, Soulfire, Flatten every 70 to 80 ticks). The mob and boss balance is the next round (`tuning.md`).
+**Enemies.** Their abilities follow the same timing; their steady ones grow with it (Brand 0.11, Mend 1.3, Hailstorm 0.18, Tempest 0.13 of Magic). Bosses have 55% of their document HP, and their signature moves (Crush, Inferno, Death bell, Tempest, Call drones, Rally) are on a medium cooldown, about 48 ticks: a boss fight about one and a half regular fights long, with its big moves landing two or three times. Other big moves (Soulfire, Flatten) keep their size and come every 70 to 80 ticks.
+
+**Armor** can't take a physical hit below a quarter of its size (`ruleset.armorFloor`): plate on a Knight blanked every weak and normal swing, so minions couldn't touch it.
+
+**Two difficulty knobs a node.** The tuner sets the regular fights first, alone (the boss left out, the campfire kept): the hardest at which two and a half times the node's share of builds win half their runs of them and the best win 95%. Then the boss, on full runs, at the node's share and 85%, with the fresh-seed check. A dungeon's `bossFoes` applies to its boss fight in place of `foes`. A knob that eases foes takes k% off their HP and k/2 % off their damage, as a hard one adds them, so an eased boss is a shorter fight, not a softer one.
 
 ### Targets the audit checks
 
