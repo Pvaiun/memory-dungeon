@@ -127,6 +127,13 @@ export const ENEMY_SWING = { weak: 500, normal: 700, heavy: 1100, massive: 1600 
 export const ENEMY_SPEED_FACTOR = { fast: 0.75, medium: 1, slow: 1 } as const;
 export type SwingWord = keyof typeof ENEMY_SWING;
 
+/**
+ * Pacing pass: a boss has this share of the HP its document line gives. At the full line a boss fight ran 3.3 times a regular
+ * one and decided most runs: "it's either a gimmick or a long attrition war". The re-tune puts the difference back into the
+ * regular fights.
+ */
+export const BOSS_HP = 0.55;
+
 /** Enemy abilities' shares of Attack or Magic, chosen against party HP (2,000 to 5,000). */
 export const ENEMY_HIT = {
   /** Flatten: a heavy blow that Stuns. Nearly kills a caster. */

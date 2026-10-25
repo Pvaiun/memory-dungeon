@@ -123,8 +123,9 @@ export const abilities: A[] = [
     ...timing("medium", "normal"), ...waitsFor("allies", { belowCap: "shield" }), target: { ...T.lowestShareAlly, where: { belowCap: "shield" } },
     do: [apply("shield", { stacks: from("max_hp", 0.6) })],
   }),
+  // Pacing pass: a light hit (was normal): at normal it was seven or eight of the Knight's swings, a tank's nuke.
   a("knight", "shield_bash", "Shield bash", "Bashes a foe with the shield, which scales from Armor, and Stuns it.", {
-    ...timing(STUN_COOLDOWN, "quick"), target: lacking({ side: "foes" }, "stun", true), do: [phys("blunt", hit("armor", "normal"), { apply: [{ status: "stun" }] })],
+    ...timing(STUN_COOLDOWN, "quick"), target: lacking({ side: "foes" }, "stun", true), do: [phys("blunt", hit("armor", "light"), { apply: [{ status: "stun" }] })],
   }),
   // Cleric. Follow-up redesign (the director's): no free heal (Mercy healed three quarters of every staff hit), an active
   // healer that spends MP. Prayer (Regen on every ally) and Purify (a cleanse) became Renew, on one ally that's never idle.
@@ -138,8 +139,8 @@ export const abilities: A[] = [
     ...timing("long", "very_long", { costly: true }), ...waitsFor("allies", { ko: true }), target: T.koAlly, do: [{ op: "revive", hp: { scale: [{ ratio: REVIVE.half, stat: "max_hp", of: "target" }] } }],
   }),
   // Ranger
-  // Pacing pass: a light hit (was normal); the Poison it carries is the bigger part now.
-  a("ranger", "venom_arrow", "Venom arrow", "A poisoned arrow at a foe that isn't Poisoned yet, if there is one.", { ...timing("short", "quick"), target: lacking({ side: "foes" }, "poison", true), do: [phys("pierce", hit("attack", "light"), { apply: [{ status: "poison" }] })] }),
+  // Pacing pass: a tap (0.15 of Attack, was normal's 0.35): the Poison it carries is the damage.
+  a("ranger", "venom_arrow", "Venom arrow", "A poisoned arrow at a foe that isn't Poisoned yet, if there is one.", { ...timing("short", "quick"), target: lacking({ side: "foes" }, "poison", true), do: [phys("pierce", from("attack", 0.15), { apply: [{ status: "poison" }] })] }),
   a("ranger", "fire_arrow", "Fire arrow", "A burning arrow at the foe with the most Burn, adding many.", {
     // Campaign pass: a heavy hit, not normal. The AI playtester never wanted the Ranger after the first node.
     ...timing("medium", "long"), target: T.mostFoe("burn"), do: [magic("fire", hit("attack", "heavy"), { apply: [{ status: "burn", stacks: stacks("many", "attack") }] })],

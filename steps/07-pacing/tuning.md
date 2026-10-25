@@ -1,0 +1,19 @@
+# Step 7 tuning trail
+
+One line a round. "Top builds" are the tuner's top 10 per node (175 across the road); the audit reads each node's best builds (up to 9) on 6 seeds at the shipped knobs.
+
+## Part 1: the director's three changes
+
+1. **Built:** the Cleric (Renew, Cure, Raise; Encore), the Bard (Refrain), Stun pauses for 5 ticks, a campfire before each campaign boss (40% HP or 40% MP). Engine 0.8.
+2. **Probe at pass 9's knobs, same builds:** wins 80% (was 78%). Cure heals about 32,000 a run where Mercy healed 24,000, and the Cleric still starts fights with 73% to 93% of its MP: a small heal on a 6-tick cooldown fired almost all the time. Crush now lands 95% of the time (was 82%; 64% against a Knight in Prayer beads), Inferno 67%: only Silence (Garrote, Hush) interrupts now.
+3. **Re-tuned on the nine Cleric-heavy nodes:** the Cleric still in 77 of 90 top builds; the Knight 30 (was 40). The knobs rose by 10 to 33 points: the party got stronger (the campfire). Stun and the campfire work; the Cleric's new kit doesn't yet.
+4. **Two Cure fixes** on five of those nodes (old pacing): Cure at 0.12 of Magic, the Cleric in 39 of 50 top builds (was 46); with its MP regen halved as well, 29 of 50. MP is what limits a healer. Superseded by Part 2, which slows every ability.
+
+## Part 2: pacing and value
+
+5. **The audit, as shipped (pass 9):** see `design.md`. The party acts twice for each foe action and casts two thirds of the time; a swing is the size of most abilities; a Poison is a fifth of its arrow; 21% of party actions share a tick and 58% of abilities chain.
+6. **First cut** (cadence per weapon kind, cooldowns 30/48/70 with a per-ability jitter, opening charge, abilities about twice as big, area spells a light hit a foe, stacks from abilities doubled, buff and debuff durations doubled, MP costs up, crit 4% a point), at pass 9's knobs: basic attacks 67% of party actions (was 32%), party to foe 1.3 to 1 (was 2), actions sharing a tick 0% (was 21%), abilities chained 23% (was 58%). The party wins 16% at the old knobs: foes act as often as it does now, and most knockouts are minions' swings.
+7. **Poison scaled from its applier's Attack** for one round. The director's rule: a status never scales from its applier; a stackable status scales by the stacks applied, an unstackable one by nothing. Poison is flat again, 400 a pulse for 10 ticks (was 160 for 12), and Venom arrow seeks a foe that isn't Poisoned.
+8. **The audit attributes statuses to their applier** (the log now names who applied a status, and a pulse's source), and shows each source's size per use against the class's own swing: the eyeball table the director asked for.
+9. **Pass 10** (the whole road re-tuned on the first cut): the knobs fell (the Crypt from +249 to +82, the Ossuary from +190 to +46): foes don't need padding to threaten a party that swings. Every node's best build 88% to 100%. The Cleric in 71 of 175 top builds (was 101 in pass 9), builds with no healer 56 (was 35); the Monk 64 (was 27: fast weapons with on-hit effects gain most when swings are most of a fight), the Knight 88 (was 80). Audit: 67% basic, 1.4 to 1 in regular fights and 1.3 to 1 in boss fights, 0% shared ticks, 20% chained; party damage 57% basic, 37% abilities, 5% statuses in regular fights; a regular fight costs the party 35% of its max HP and lasts 37 ticks, minions act about three times; a boss fight lasts 123 ticks, 3.3 times a regular one, and 179 of 248 losses are there.
+10. **Boss round:** bosses at 55% of their document HP; their signature moves on a medium cooldown (Crush, Inferno, Death bell, Tempest, Call drones, Rally); Shield bash a light hit (it was 7.7 of the Knight's swings); Venom arrow a 0.15 tap so its Poison is the damage. Re-tune (pass 11).

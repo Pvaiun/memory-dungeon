@@ -4,7 +4,7 @@
  * Magic, Armor, Crit, Aggro, as the document lists them.
  */
 import type { AbilityT, EnemyT, StatusT, WeaponT } from "../../src/schema.js";
-import { COOLDOWN, COST, ENEMY_HIT, ENEMY_SPEED_FACTOR, ENEMY_SWING, FLAT_STACKS, HIT, RESIST, REVIVE, SPECIAL, SPEED, STATUS, WINDUP, crit, jitter, pts, type SwingWord } from "./scale.js";
+import { COOLDOWN, COST, ENEMY_HIT, ENEMY_SPEED_FACTOR, ENEMY_SWING, FLAT_STACKS, HIT, RESIST, REVIVE, SPECIAL, SPEED, STATUS, WINDUP, BOSS_HP, crit, jitter, pts, type SwingWord } from "./scale.js";
 import { T } from "./classes.js";
 import { speedOf } from "./vocabulary.js";
 
@@ -26,7 +26,7 @@ const line = (hp: number, mp: number, regen: number, atk: number, mag: number, a
 const res = (element: string, kind: keyof typeof RESIST) => ({ [`resist:${element}`]: RESIST[kind] });
 
 const enemy = (id: string, name: string, text: string, rank: EnemyT["rank"], stats: Record<string, number>, weapon: WeaponT, o: { abilities?: string[]; statuses?: string[]; note?: string } = {}): EnemyT => ({
-  id, name, text, rank, stats, weapon, ...(o.abilities ? { abilities: o.abilities } : {}), ...(o.statuses ? { statuses: o.statuses } : {}), ...(o.note ? { note: o.note } : {}),
+  id, name, text, rank, stats: rank === "boss" ? { ...stats, max_hp: Math.round(stats.max_hp * BOSS_HP) } : stats, weapon, ...(o.abilities ? { abilities: o.abilities } : {}), ...(o.statuses ? { statuses: o.statuses } : {}), ...(o.note ? { note: o.note } : {}),
 });
 const reskin = (of: EnemyT, id: string, name: string, text: string): EnemyT => ({ ...of, id, name, text, note: `A reskin of the ${of.name}: the same numbers.` });
 
@@ -58,25 +58,27 @@ export const enemyStatuses: StatusT[] = [
 const a = (id: string, name: string, text: string, body: Partial<AbilityT> & { do: AbilityT["do"]; cooldown: number }): AbilityT => ({ id, name, text, ...body, cooldown: jitter(body.cooldown, id) });
 const fromStat = (stat: string, ratio: number) => ({ scale: [{ ratio, stat }] });
 
+// Pacing pass: a boss's signature move (Crush, Inferno, Death bell, Tempest, its summons) is on a medium cooldown, not long, so
+// a shorter boss fight still sees it two or three times. Its size is unchanged.
 export const enemyAbilities: AbilityT[] = [
   a("shield_up", "Shield up", "Taunts.", { ...timing("short", "quick"), target: "self", do: [apply("taunt")] }),
   a("brace", "Brace", "Guards itself.", { ...timing("medium", "quick"), target: "self", do: [apply("guard")] }),
   a("flatten", "Flatten", "A heavy blow that Stuns.", { ...timing("long", "long"), target: { side: "foes", where: { lacks: "stun" }, ifNone: "any" }, do: [{ op: "damage", type: "physical", subtype: "blunt", amount: fromStat("attack", ENEMY_HIT.flatten), apply: [{ status: "stun" }] }] }),
-  a("crush", "Crush", "A massive blow.", { ...timing("long", "very_long"), do: [{ op: "damage", type: "physical", subtype: "blunt", amount: fromStat("attack", ENEMY_HIT.crush) }] }),
+  a("crush", "Crush", "A massive blow.", { ...timing("medium", "very_long"), do: [{ op: "damage", type: "physical", subtype: "blunt", amount: fromStat("attack", ENEMY_HIT.crush) }] }),
   a("mend", "Mend", "Heals the most hurt ally.", { ...timing("short", "normal"), ...{ if: { side: "allies", where: { hpBelow: 100 } } }, target: T.lowestShareAlly, do: [{ op: "heal", amount: fromStat("magic", ENEMY_HIT.mend) }] }),
   a("curse", "Curse", "Weakens and Slows every foe.", { ...timing("long", "long"), target: T.everyFoe, do: [apply("weaken"), apply("slow")] }),
   a("soulfire", "Soulfire", "A heavy Dark spell.", { ...timing("long", "very_long"), do: [{ op: "damage", type: "magical", element: "dark", amount: fromStat("magic", ENEMY_HIT.soulfire) }] }),
   a("dig_up", "Raise", "Digs a fallen packmate back up.", { ...timing("medium", "long"), if: { side: "allies", where: { ko: true } }, target: T.koAlly, do: [{ op: "revive", hp: { scale: [{ ratio: REVIVE.ghoul, stat: "max_hp", of: "target" }] } }] }),
-  a("death_bell", "Death bell", "Dooms a foe.", { ...timing("long", "long"), if: { side: "foes", where: { lacks: "doom" } }, target: { side: "foes", where: { lacks: "doom" } }, do: [apply("doom")] }),
+  a("death_bell", "Death bell", "Dooms a foe.", { ...timing("medium", "long"), if: { side: "foes", where: { lacks: "doom" } }, target: { side: "foes", where: { lacks: "doom" } }, do: [apply("doom")] }),
   a("mute", "Mute", "Silences the foe with the highest Attack or Magic.", { ...timing("medium", "normal"), if: { side: "foes", where: { lacks: "silence" } }, target: { ...T.highestAMFoe, where: { lacks: "silence" } }, do: [apply("silence")] }),
   a("quiet", "Quiet", "Silences every foe.", { ...timing("medium", "long"), target: T.everyFoe, do: [apply("silence")] }),
   a("cheer", "Cheer", "Might and Haste on its strongest ally.", { ...timing("medium", "normal"), target: T.highestAMAlly, do: [apply("might", { stacks: FLAT_STACKS.several }), apply("haste")] }),
   a("brand", "Brand", "Fire on a foe, with a few Burn.", { ...timing("short", "quick"), do: [{ op: "damage", type: "magical", element: "fire", amount: fromStat("magic", ENEMY_HIT.brand), apply: [{ status: "burn", stacks: FLAT_STACKS.few }] }] }),
-  a("inferno", "Inferno", "A very long cast: huge Fire on every foe, with many Burn.", { ...timing("long", "very_long"), target: T.everyFoe, do: [{ op: "damage", type: "magical", element: "fire", amount: fromStat("magic", ENEMY_HIT.inferno), apply: [{ status: "burn", stacks: FLAT_STACKS.many }] }] }),
+  a("inferno", "Inferno", "A very long cast: huge Fire on every foe, with many Burn.", { ...timing("medium", "very_long"), target: T.everyFoe, do: [{ op: "damage", type: "magical", element: "fire", amount: fromStat("magic", ENEMY_HIT.inferno), apply: [{ status: "burn", stacks: FLAT_STACKS.many }] }] }),
   a("hailstorm", "Hailstorm", "Ice on every foe, with a stack of Chill.", { ...timing("medium", "normal"), target: T.everyFoe, do: [{ op: "damage", type: "magical", element: "ice", amount: fromStat("magic", ENEMY_HIT.hailstorm), apply: [{ status: "chill", stacks: FLAT_STACKS.one }] }] }),
-  a("call_drones", "Call drones", "Summons two Drones.", { ...timing("long", "long"), do: [{ op: "summon", enemy: "drone", count: 2 }] }),
-  a("tempest", "Tempest", "Lightning on every foe, with a stack of Shock.", { ...timing("long", "long"), target: T.everyFoe, do: [{ op: "damage", type: "magical", element: "lightning", amount: fromStat("magic", ENEMY_HIT.tempest), apply: [{ status: "shock", stacks: FLAT_STACKS.one }] }] }),
-  a("rally_soldiers", "Rally", "Summons two Soldiers.", { ...timing("long", "long"), do: [{ op: "summon", enemy: "soldier", count: 2 }] }),
+  a("call_drones", "Call drones", "Summons two Drones.", { ...timing("medium", "long"), do: [{ op: "summon", enemy: "drone", count: 2 }] }),
+  a("tempest", "Tempest", "Lightning on every foe, with a stack of Shock.", { ...timing("medium", "long"), target: T.everyFoe, do: [{ op: "damage", type: "magical", element: "lightning", amount: fromStat("magic", ENEMY_HIT.tempest), apply: [{ status: "shock", stacks: FLAT_STACKS.one }] }] }),
+  a("rally_soldiers", "Rally", "Summons two Soldiers.", { ...timing("medium", "long"), do: [{ op: "summon", enemy: "soldier", count: 2 }] }),
 ];
 
 // ─── Enemies ─────────────────────────────────────────────────────────────────
