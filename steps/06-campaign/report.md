@@ -25,7 +25,7 @@ Options, if you want a vertical axis past node 4:
 
 ### B. The no-rest rule makes a healer mandatory (a direction, priced)
 
-"Nothing restores HP or MP between fights" is the direction the tuning works around hardest. In the simulation's best builds, the Cleric, Vampire, Knight and Valkyrie are each in 42% to 48% of the top builds while owned (a fair share is about 30%), and every playtester's core was a Knight plus a healer. I priced it with a variant where a won fight gives back 30% of HP and MP (knockouts stay down), tuned the same way: the Cleric fell from 86 to 54 appearances in the top-10 builds and the Hoplite and Ranger rose; the damage casters barely moved.
+"Nothing restores HP or MP between fights" is the direction the tuning works around hardest. In the simulation's best builds, the Cleric, Vampire, Valkyrie and Knight are each in 40% to 51% of the top builds while owned (a fair share is about 30%), and every playtester's core was a Knight plus a healer. I priced it with a variant where a won fight gives back 30% of HP and MP (knockouts stay down), tuned the same way: the Cleric fell from 86 to 54 appearances in the top-10 builds and the Hoplite and Ranger rose; the damage casters barely moved.
 
 Options: keep it (the run as attrition is the core set's identity); give back a little after each won fight (25% to 30%); or give back MP only, since MP running dry decided several playtest losses. I'd try 25% in your next play if a healer feeling mandatory bothers you. It's one setting (`restore` under `ruleset.run`, in `content/core-set/vocabulary.ts`).
 
@@ -35,10 +35,10 @@ Two class passes went in (below). What's left, normalised for how long each clas
 
 | In the top builds while owned | Classes |
 | --- | --- |
-| 42% to 48% | Cleric, Vampire, Knight, Valkyrie |
-| 23% to 33% | Paladin, Stormcaller, Geomancer, Hoplite, Bard, Assassin, Bramble knight |
-| 14% to 17% | Frostweaver, Monk, Hexer, Ranger |
-| 9% | Pyromancer |
+| 40% to 51% | Cleric, Vampire, Valkyrie, Knight |
+| 22% to 33% | Paladin, Assassin, Stormcaller, Geomancer, Hoplite, Bramble knight, Bard |
+| 13% to 17% | Monk, Hexer, Frostweaver, Ranger |
+| 10% | Pyromancer |
 
 The sustain classes lead in runs where HP carries; the fragile damage dealers trail. The playtesters agreed on the shape and added two things the simulation can't see: the Knight's Shield bash is the answer to every long wind-up (in 18 of 20 winning parties in one playtest), and the default ability orders hide each class's key move. Next would be a dedicated class pass, or decision B, which moves it more than numbers do.
 
@@ -67,7 +67,7 @@ These change the core set's documents. If you keep the campaign they go into `DE
 - **The road:** 20 nodes. The seven runs of the enemies document (nodes 1, 4, 7, 10, 13, 16, 19), two remixes (*The Road at Night*, the Old Road after dark with the chief's brother; *The Royal Court*, the Storm King and Queen together as the finale) and eleven trials with needs on the party: a new class after it's unlocked ("Bring the Pyromancer"), two at once ("Bring the Vampire and the Bard; pick your third"), a formation ("Stand in Caravan", seven fights with no rest), armor ("Everyone in heavy armor"), and one with Hasted foes. *The Ogre Brothers* is two Ogre Chiefs. A new class arrives just before the content it shines in, and the next node asks for it. Every class, formation and piece of gear is paid exactly once; the table is in `design.md`.
 - **Difficulty:** one knob per node, foes' HP and damage, set by simulation against exactly what you own there. It's enemy stats, so the game never shows it.
 - **The interface** (`ui/README.md`, "The journey"): JOURNEY is the first menu item. The road lists cleared nodes, the next one, and the rest as "???". A node's page shows its needs ticked against your party, its fights (tap one to practise), and the kind of reward. Clearing a node plays a celebration: CLEARED!, one card per unlock (a class with its face and figure; a formation with its slots; gear with who can wear it, each saying where to find it), then the next node. NEW tags mark what you haven't looked at yet, in the roster, the class list, the formation list and the gear picker, and on the menu items that lead to them. The menus only show what you own; CLASSES says how many of the 16 you've found. Free play keeps its own party.
-- **Engine 0.7:** a dungeon can change every foe (HP, damage through a new `power` stat, statuses at fight start, summons included); `ruleset.lostCast`, `ruleset.stagger` and `ruleset.enrage` (above); `ruleset.run.restore` (decision B, off). Schema: a `campaign` block, validated (every need meetable with what's owned by then, nothing paid twice). TESTS
+- **Engine 0.7:** a dungeon can change every foe (HP, damage through a new `power` stat, statuses at fight start, summons included); `ruleset.lostCast`, `ruleset.stagger` and `ruleset.enrage` (above); `ruleset.run.restore` (decision B, off). Schema: a `campaign` block, validated (every need meetable with what's owned by then, nothing paid twice). 289 tests pass, six of them new.
 - **Tools:** `npm run campaign` searches every node's builds and tunes its knob (`--effects`, `--power`, `--feel`, `--set` for what-ifs); `src/campaign-play.ts` is the game as a command line (node pages, owned lists, a glossary, a run summary with MP and both sides' statuses), which the AI playtesters played.
 
 ## 3. What the numbers say
@@ -78,30 +78,30 @@ Per node, after the last tuning pass. **Best:** the best build the search finds,
 | --- | --- | --- | --- | --- | --- |
 | 1 | The Old Road | −8 | 90% | 100% | – |
 | 2 | The Road at Night | −4 | 88% | 100% | 61% |
-| 3 | Wildfire | +85 | 85% | 33% | 17% |
-| 4 | The Crypt | +239 | 92% | 13% | 89% |
-| 5 | The Ossuary | +182 | 88% | 14% | 0% |
-| 6 | The Ogre Brothers | +52 | 92% | 25% | 0% |
+| 3 | Wildfire | +105 | 92% | 33% | 6% |
+| 4 | The Crypt | +249 | 100% | 19% | 78% |
+| 5 | The Ossuary | +190 | 94% | 14% | 100% |
+| 6 | The Ogre Brothers | +55 | 92% | 25% | 0% |
 | 7 | The Fire Mine | −38 | 98% | 14% | 11% |
 | 8 | Deep Freeze | −17 | 88% | 13% | 44% |
 | 9 | Iron Wall | +1 | 90% | 100% | – |
-| 10 | The Ice Pass | +144 | 100% | 9% | 0% |
-| 11 | Valhalla | +156 | 100% | 9% | 0% |
-| 12 | The Wild Hunt | +97 | 83% | 14% | 61% |
-| 13 | The Storm Tower | +138 | 100% | 9% | 56% |
-| 14 | Knives Out | +68 | 100% | 8% | 61% |
-| 15 | The Long Road | +189 | 88% | 16% | 11% |
-| 16 | The Deep Crypt | +154 | 81% | 9% | 0% |
-| 17 | Blood Moon | +153 | 100% | 9% | 78% |
+| 10 | The Ice Pass | +138 | 98% | 10% | 0% |
+| 11 | Valhalla | +150 | 100% | 10% | 0% |
+| 12 | The Wild Hunt | +105 | 88% | 13% | 44% |
+| 13 | The Storm Tower | +129 | 100% | 12% | 67% |
+| 14 | Knives Out | +66 | 100% | 10% | 67% |
+| 15 | The Long Road | +212 | 96% | 9% | 6% |
+| 16 | The Deep Crypt | +152 | 83% | 9% | 33% |
+| 17 | Blood Moon | +138 | 100% | 10% | 67% |
 | 18 | Judgement | −25 | 90% | 10% | 0% |
-| 19 | The Tower Top | +69 | 85% | 4% | 0% |
-| 20 | The Royal Court | −9 | 92% | 4% | 56% |
+| 19 | The Tower Top | +52 | 100% | 11% | 0% |
+| 20 | The Royal Court | −11 | 98% | 7% | 56% |
 
-- **Every node has a build that wins 81% to 100% of first tries,** checked on 48 fresh seeds per node (the tuner eases a node until it does). Node 1 has no choices (three classes, one formation, no gear) and sits at 90%.
-- **Viable builds follow the ramp:** a third on node 3, an eighth to a quarter on nodes 4 to 8, about one in eleven from node 10, one in 25 on the last two. Iron Wall forces one party and is set by its best build alone.
+- **Every node has a build that wins 83% to 100% of first tries,** checked on 48 fresh seeds per node (the tuner eases a node until it does). Node 1 has no choices (three classes, one formation, no gear) and sits at 90%.
+- **Viable builds follow the ramp:** a third on node 3, an eighth to a quarter on nodes 4 to 8, about one in ten from node 10, one in fourteen on the finale. Iron Wall forces one party and is set by its best build alone.
 - **The knobs are large** (foes at up to three times their written HP) because the documents' numbers were written for an ungeared party. Four nodes need weaker foes than written: the Fire Mine and Deep Freeze (the hounds' Burn wears a party down across the run, with the Fire Giant at the end; weakening the Giant alone didn't move the mine's knob) and Judgement and the Royal Court (boss pairings never tested before).
-- **Party turnover:** the previous node's best party fails seven nodes outright (5, 6, 10, 11, 16, 18, 19) and wins under half on four more (3, 7, 8, 15); it still wins about a third of the road. The two-class trials and the forced-party ones are where the party has to change.
-- **Formations** in the top-10 builds across the road: Escort 61, Vanguard 32, Caravan 29, Neutral 21, Scatter 18, Blitz 10, Tortoise 2, Ambush 2; Champion and Last stand never. A slot is worth about one gear step, as the gear document feared; its own suggested fix is a bigger step on every slot.
+- **Party turnover:** the previous node's best party fails five nodes outright (6, 10, 11, 18, 19) and wins under half on six more (3, 7, 8, 12, 15, 16); it wins the rest. The two-class trials and the forced-party ones are where the party has to change.
+- **Formations** in the top-10 builds across the road: Escort 60, Vanguard 35, Caravan 29, Neutral 22, Scatter 16, Blitz 8, Tortoise 4, Ambush 1; Champion and Last stand never. A slot is worth about one gear step, as the gear document feared; its own suggested fix is a bigger step on every slot.
 - **How sure:** knobs and rates hold to a few points (6 seeds a build to screen, the best scored on 48 fresh ones). The sampled builds are a heuristic's kits, not a player's; the playtests are the check on that.
 
 ## 4. Feel
