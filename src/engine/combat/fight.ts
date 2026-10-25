@@ -383,14 +383,12 @@ function resolve(w: W, u: CUnit, i: number) {
     return;
   }
   const targets = choose(w, u, d.target, seeks(w, u, d));
-  // A stated rule that finds nobody when the action resolves: no MP spent, and by default no cooldown (step 4's rule);
-  // under ruleset.lostCast "cooldown" it goes on cooldown, as a cast that fizzles for MP does.
+  // A stated rule that finds nobody when the action resolves: no MP spent and no cooldown (step 4's rule). Under
+  // ruleset.lostCast "cooldown" the unit spends the action's recovery, so two Ghouls reaching for one corpse don't
+  // loop, but a Purify whose Stun ended mid-cast isn't locked out for a whole cooldown.
   if (!targets.length) {
     fail("target");
-    if (w.c.pack.ruleset.lostCast === "cooldown") {
-      u.acts[i].ready = w.f.now + cooldownOf(w, u, d);
-      u.busy = w.f.now + d.recovery;
-    }
+    if (w.c.pack.ruleset.lostCast === "cooldown") u.busy = w.f.now + d.recovery;
     return;
   }
   if (d.mp) {

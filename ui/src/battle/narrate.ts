@@ -166,7 +166,7 @@ export class Narrator {
     const verb = ELEMENTS.includes(tag) ? "casts" : "uses";
     const targets = ev.targets as string[];
     const first = ab?.do[0];
-    const on = targets.length === 1 && targets[0] !== by && first && first.op !== "damage" ? ` on ${this.n(targets[0])}` : "";
+    const on = targets.length === 1 && targets[0] !== by && first && first.op !== "damage" && first.op !== "summon" ? ` on ${this.n(targets[0])}` : "";
     return `${name} ${verb} ${ab?.name ?? String(ev.name)}${on}!`;
   }
 

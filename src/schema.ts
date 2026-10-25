@@ -524,9 +524,10 @@ export const Ruleset = z.strictObject({
   lostCast: z
     .enum(["retry", "cooldown"])
     .optional()
-    .describe("An action interrupted in its wind-up, or whose targets are gone when it resolves. retry (the default): no MP, no cooldown, so it can start again at once. cooldown: no MP, but it goes on cooldown, as a cast that fizzles for MP does."),
+    .describe("An action interrupted in its wind-up, or whose targets are gone when it resolves. retry (the default): no MP, no cooldown, so it can start again at once. cooldown: no MP, but an interrupted action goes on cooldown, as a cast that fizzles for MP does, and one that found no target costs the unit its recovery."),
   run: z.strictObject({
     defeatedUnits: z.enum(["stay_down"]).describe("Knocked-out units stay down between fights until something revives them."),
+    restore: z.number().min(0).max(100).optional().describe("After a won fight, every standing member regains this % of its max HP and MP. Absent or 0: nothing restores them between fights (the core set's rule)."),
     perkOffer: PerkOffer,
   }),
 });

@@ -253,7 +253,9 @@ function buildSpace(c: Content, i: number, budget: number): Party[] {
   const forced = needs.find((nd) => "formation" in nd) as { formation: string } | undefined;
   const forms = forced ? [forced.formation] : owned.formations;
   const space: { t: string[]; f: string; s: Style }[] = [];
-  for (const t of trios(owned, needs, size)) for (const f of forms) for (const s of STYLES) space.push({ t, f, s });
+  // Parties whose members can't all meet the armor or weapon needs are dropped before sampling, so a narrow need doesn't empty the sample.
+  const can = (t: string[]) => t.every((cls) => makeBuild(c, [cls], forms[0], "plain", owned, needs) !== null);
+  for (const t of trios(owned, needs, size).filter(can)) for (const f of forms) for (const s of STYLES) space.push({ t, f, s });
   const picked = space.length > budget ? shuffle(space, 4242 + i).slice(0, budget) : space;
   const seen = new Set<string>();
   const builds: Party[] = [];
@@ -430,10 +432,11 @@ async function main() {
   const tune = args.includes("--tune");
   const target = Number(opt("--target") ?? 0.85);
   /**
-   * The share of a node's builds that must win at least half their runs: a ramp, so the first act teaches (two in
-   * five builds win) and the road narrows to one in five from the Storm Tower on. --share overrides it.
+   * The share of a node's builds that must win at least half their runs: a ramp, so the first three nodes teach
+   * (three in ten builds win) and the road narrows to one in twelve, then one in sixteen for the last nodes. At one
+   * in five everywhere, an AI playtester cleared 17 of 20 nodes on the first try. --share overrides it.
    */
-  const shareAt = (i: number) => (opt("--share") ? Number(opt("--share")) : i < 6 ? 0.4 : i < 12 ? 0.3 : 0.2);
+  const shareAt = (i: number) => (opt("--share") ? Number(opt("--share")) : i < 3 ? 0.3 : i < 9 ? 0.12 : i < 17 ? 0.08 : 0.06);
   const knobs: Record<string, number> = JSON.parse(readFileSync(KNOBS, "utf8"));
   const results: NodeResult[] = [];
   let carry: Party | null = null;
@@ -457,7 +460,9 @@ async function main() {
   pool.close();
   mkdirSync("out/campaign", { recursive: true });
   const all = { ...readAll(), ...Object.fromEntries(results.map((r) => [r.id, r])) };
-  if (!args.includes("--dry")) writeFileSync("out/campaign/results.json", JSON.stringify(all, null, 1));
+  // --dry leaves the knobs and the results alone; --out writes the results somewhere else (a variant's).
+  if (opt("--out")) writeFileSync(opt("--out")!, JSON.stringify(Object.fromEntries(results.map((r) => [r.id, r])), null, 1));
+  else if (!args.includes("--dry")) writeFileSync("out/campaign/results.json", JSON.stringify(all, null, 1));
   if (args.includes("--effects")) {
     console.log("\nWhat each class and formation adds to a build's wins, node by node (with − without, in points; blank: not owned or forced):");
     const ids = [...c.pack.classes.map((x) => x.id), ...c.pack.formations.map((x) => x.id)];

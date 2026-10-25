@@ -59,7 +59,8 @@ const bothKinds = (pct: StatusT["boosts"] extends (infer B)[] | undefined ? (B e
 
 export const passives: StatusT[] = [
   passive("sworn", "Sworn", { text: "Taunts when an ally falls.", reactions: [{ on: { event: "ko", whose: "ally" }, do: [apply("taunt", { to: "holder" })] }] }),
-  passive("mercy", "Mercy", { text: "Each Light hit heals the lowest ally for half its damage.", reactions: [{ on: { event: "hit_lands", tags: ["light"] }, do: [{ op: "heal", amount: { scale: [{ ratio: 0.5, amount: true }] }, to: T.lowestShareAlly }] }] }),
+  // Campaign pass: three quarters of the damage, not half. The AI playtester stopped bringing the Cleric once the Valkyrie came.
+  passive("mercy", "Mercy", { text: "Each Light hit heals the lowest ally for three quarters of its damage.", reactions: [{ on: { event: "hit_lands", tags: ["light"] }, do: [{ op: "heal", amount: { scale: [{ ratio: 0.75, amount: true }] }, to: T.lowestShareAlly }] }] }),
   passive("hunters_eye", "Hunter's eye", { text: "Basic attacks ignore Taunt.", seek: "basic" }),
   passive("briar", "Briar", { text: "Foes its Thorns wound are Poisoned.", reactions: [{ on: { event: "damage_dealt", status: "thorns" }, do: [apply("poison", { to: "other" })] }] }),
   passive("phalanx", "Phalanx", { text: "Basic attacks a third as often, for triple damage.", stats: [{ stat: "attack_speed", flat: -200 }], boosts: [{ tag: "basic", pct: 200 }] }),
@@ -133,7 +134,8 @@ export const abilities: A[] = [
   // Ranger
   a("ranger", "venom_arrow", "Venom arrow", "A poisoned arrow at a random foe.", { ...timing("short", "quick"), do: [phys("pierce", hit("attack", "normal"), { apply: [{ status: "poison" }] })] }),
   a("ranger", "fire_arrow", "Fire arrow", "A burning arrow at the foe with the most Burn, adding many.", {
-    ...timing("medium", "long"), target: T.mostFoe("burn"), do: [magic("fire", hit("attack", "normal"), { apply: [{ status: "burn", stacks: stacks("many", "attack") }] })],
+    // Campaign pass: a heavy hit, not normal. The AI playtester never wanted the Ranger after the first node.
+    ...timing("medium", "long"), target: T.mostFoe("burn"), do: [magic("fire", hit("attack", "heavy"), { apply: [{ status: "burn", stacks: stacks("many", "attack") }] })],
   }),
   a("ranger", "rending_arrow", "Rending arrow", "An arrow at the foe with the most Sunder, adding several.", {
     ...timing("medium", "normal"), target: T.mostFoe("sunder"), do: [phys("pierce", hit("attack", "normal"), { apply: [{ status: "sunder", stacks: stacks("several", "attack") }] })],
@@ -176,8 +178,7 @@ export const abilities: A[] = [
   // Monk
   a("monk", "flow", "Flow", "Haste on itself.", { ...timing("short", "quick"), target: "self", do: [apply("haste")] }),
   a("monk", "burning_fist", "Burning fist", "Three quick Fire hits on the foe with the most Burn, each adding a few.", {
-    // Campaign pass: 0.25 of Attack a hit, not 0.2.
-    ...timing("short", "quick"), target: T.mostFoe("burn"), do: [magic("fire", from("attack", 0.25), { hits: 3, apply: [{ status: "burn", stacks: stacks("few", "attack") }] })],
+    ...timing("short", "quick"), target: T.mostFoe("burn"), do: [magic("fire", hit("attack", "light"), { hits: 3, apply: [{ status: "burn", stacks: stacks("few", "attack") }] })],
   }),
   a("monk", "pressure_point", "Pressure point", "Stuns the foe with the highest Attack or Magic, past any guard.", {
     ...timing(STUN_COOLDOWN, "normal"), seek: true, target: lacking(T.highestAMFoe, "stun", true), do: [phys("blunt", hit("attack", "normal"), { apply: [{ status: "stun" }] })],
@@ -236,7 +237,7 @@ export const classes: ClassDefT[] = [
     source: "starter", stats: stat(5, 2, 2, 3, 1, 5, 2, 5), weapons: ["sword", "axe"], armor: "heavy", passive: p("sworn", "Sworn", "When an ally is knocked out, the Knight gains Taunt."),
   }),
   cls("cleric", "Cleric", "Healer. Keeps the party standing through a whole dungeon: its staff hits mend the lowest ally, Prayer keeps everyone regenerating, curses are lifted and the fallen raised.", {
-    source: "starter", stats: stat(2, 5, 4, 1, 4, 2, 2, 2), weapons: ["light_staff"], armor: "light", passive: p("mercy", "Mercy", "Each of its Light hits heals the ally with the lowest share of max HP for half the damage the hit dealt."),
+    source: "starter", stats: stat(2, 5, 4, 1, 4, 2, 2, 2), weapons: ["light_staff"], armor: "light", passive: p("mercy", "Mercy", "Each of its Light hits heals the ally with the lowest share of max HP for three quarters of the damage the hit dealt."),
   }),
   cls("ranger", "Ranger", "Wears down tough targets. Looses poison, fire and armor-rending arrows at whatever stands in front, while its plain arrows fly past any guard.", {
     source: "starter", stats: { ...stat(3, 3, 3, 4, 1, 2, 3, 2), ...special("accuracy", "medium") }, weapons: ["bow", "dagger"], armor: "medium", passive: p("hunters_eye", "Hunter's eye", "Its basic attacks ignore Taunt."),

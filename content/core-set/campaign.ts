@@ -135,7 +135,7 @@ const NODES: Node[] = [
         enc("giants_forge", "The Giant's Forge", [1, "fire_giant"], [2, "hellhound"]),
       ],
     },
-    classes: ["geomancer"], gear: ["granite_staff", "lucky_coin", "tower_mail", "glacier_staff"],
+    classes: ["geomancer"], formations: ["blitz"], gear: ["granite_staff", "lucky_coin", "tower_mail", "glacier_staff"],
   },
   {
     id: "iron_wall", name: "Iron Wall", kind: "trial",
@@ -172,7 +172,7 @@ const NODES: Node[] = [
         enc("glacier_king", "The Glacier King", [1, "ice_titan"], [2, "snow_wolf"]),
       ],
     },
-    classes: ["stormcaller"], gear: ["storm_rod", "plain_wind_staff", "quiet_cloak", "wraith_leathers"],
+    classes: ["stormcaller"], formations: ["ambush"], gear: ["storm_rod", "plain_wind_staff", "quiet_cloak", "wraith_leathers"],
   },
   {
     id: "wild_hunt", name: "The Wild Hunt", kind: "trial",
@@ -195,7 +195,7 @@ const NODES: Node[] = [
   {
     id: "storm_tower", name: "The Storm Tower", kind: "dungeon", run: "storm_tower",
     text: "Clouds of sparks, leeches that drink mana, and a queen behind a wall of drones.",
-    classes: ["assassin"], gear: ["bodkin", "stiletto", "trackers_jerkin", "thornheart_plate"],
+    classes: ["assassin"], formations: ["tortoise"], gear: ["bodkin", "stiletto", "trackers_jerkin", "thornheart_plate"],
   },
   {
     id: "knives_out", name: "Knives Out", kind: "trial",
@@ -235,7 +235,7 @@ const NODES: Node[] = [
   {
     id: "deep_crypt", name: "The Deep Crypt", kind: "dungeon", run: "deep_crypt",
     text: "Beneath the Crypt, something takes every voice. Power that isn't an ability is the key.",
-    classes: ["vampire"], gear: ["bloodied_claws", "bloodstone", "duskhide", "plain_dark_staff", "nightstaff"],
+    classes: ["vampire"], formations: ["last_stand"], gear: ["bloodied_claws", "bloodstone", "duskhide", "plain_dark_staff", "nightstaff"],
   },
   {
     id: "blood_moon", name: "Blood Moon", kind: "trial",
@@ -250,7 +250,7 @@ const NODES: Node[] = [
         enc("silent_court", "The Silent Court", [1, "silent_one"], [2, "bone_priest"]),
       ],
     },
-    classes: ["paladin"], formations: ["blitz"], gear: ["crusader_sword", "wardens_blade", "sun_charm", "moon_charm", "vampires_tooth", "sanguine_staff"],
+    classes: ["paladin"], formations: ["champion"], gear: ["crusader_sword", "wardens_blade", "sun_charm", "moon_charm", "vampires_tooth", "sanguine_staff"],
   },
   {
     id: "judgement", name: "Judgement", kind: "trial",
@@ -265,14 +265,14 @@ const NODES: Node[] = [
         enc("giants_wrath", "The Giant's Wrath", [1, "fire_giant"], [2, "fire_imp"]),
       ],
     },
-    formations: ["ambush", "tortoise"], gear: ["dawn_staff", "scale_coat", "serrated_charm", "templar_staff", "needle"],
+    gear: ["dawn_staff", "scale_coat", "serrated_charm", "templar_staff", "needle"],
   },
 
   // ─── Act VII: the Tower Top ───────────────────────────────────────────────
   {
     id: "tower_top", name: "The Tower Top", kind: "dungeon", run: "tower_top",
     text: "The queen again, at the top of the tower, and the king who rages when his soldiers fall.",
-    formations: ["last_stand", "champion"], gear: ["ember_staff", "grounding_rod", "leech_staff", "splitter", "plain_axe", "mist_claws", "heartwood_staff", "archmages_robes", "thirsting_jewel"],
+    gear: ["ember_staff", "grounding_rod", "leech_staff", "splitter", "plain_axe", "mist_claws", "heartwood_staff", "archmages_robes", "thirsting_jewel"],
   },
   {
     id: "royal_court", name: "The Royal Court", kind: "remix",

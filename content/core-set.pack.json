@@ -622,6 +622,7 @@
    "label": "debuff",
    "show": "icon",
    "stacking": "intensity",
+   "cap": 25,
    "trigger": {
     "on": {
      "event": "action_resolve"
@@ -1030,7 +1031,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Each Light hit heals the lowest ally for half its damage.",
+   "text": "Each Light hit heals the lowest ally for three quarters of its damage.",
    "reactions": [
     {
      "on": {
@@ -1045,7 +1046,7 @@
        "amount": {
         "scale": [
          {
-          "ratio": 0.5,
+          "ratio": 0.75,
           "amount": true
          }
         ]
@@ -1988,7 +1989,7 @@
    "armor": "light",
    "passive": {
     "name": "Mercy",
-    "text": "Each of its Light hits heals the ally with the lowest share of max HP for half the damage the hit dealt.",
+    "text": "Each of its Light hits heals the ally with the lowest share of max HP for three quarters of the damage the hit dealt.",
     "statuses": [
      "mercy"
     ]
@@ -2703,7 +2704,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.35,
+        "ratio": 0.6,
         "stat": "attack"
        }
       ]
@@ -3318,7 +3319,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.25,
+        "ratio": 0.2,
         "stat": "attack"
        }
       ]
@@ -8451,8 +8452,8 @@
     }
    ],
    "foes": {
-    "hp": -16,
-    "power": -16
+    "hp": -11,
+    "power": -11
    }
   },
   {
@@ -8537,8 +8538,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 42,
-    "power": 21
+    "hp": 75,
+    "power": 38
    },
    "stages": [
     {
@@ -8664,8 +8665,8 @@
     }
    ],
    "foes": {
-    "hp": 144,
-    "power": 72
+    "hp": 224,
+    "power": 112
    }
   },
   {
@@ -8678,8 +8679,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 56,
-    "power": 28
+    "hp": 154,
+    "power": 77
    },
    "stages": [
     {
@@ -8738,8 +8739,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 40,
-    "power": 20
+    "hp": 60,
+    "power": 30
    },
    "stages": [
     {
@@ -8848,8 +8849,8 @@
     }
    ],
    "foes": {
-    "hp": -48,
-    "power": -48
+    "hp": -38,
+    "power": -38
    }
   },
   {
@@ -8862,8 +8863,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": -30,
-    "power": -30
+    "hp": -20,
+    "power": -20
    },
    "stages": [
     {
@@ -8923,6 +8924,10 @@
    },
    "perkPool": [],
    "challenges": [],
+   "foes": {
+    "hp": 1,
+    "power": 1
+   },
    "stages": [
     {
      "kind": "fight",
@@ -9033,8 +9038,8 @@
     }
    ],
    "foes": {
-    "hp": 75,
-    "power": 38
+    "hp": 145,
+    "power": 73
    }
   },
   {
@@ -9047,8 +9052,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 96,
-    "power": 48
+    "hp": 141,
+    "power": 71
    },
    "stages": [
     {
@@ -9112,8 +9117,8 @@
      "haste"
     ],
     "text": "Every foe starts each fight Hasted.",
-    "hp": 33,
-    "power": 17
+    "hp": 93,
+    "power": 47
    },
    "stages": [
     {
@@ -9232,8 +9237,8 @@
     }
    ],
    "foes": {
-    "hp": 40,
-    "power": 20
+    "hp": 80,
+    "power": 40
    }
   },
   {
@@ -9246,8 +9251,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 29,
-    "power": 15
+    "hp": 57,
+    "power": 29
    },
    "stages": [
     {
@@ -9310,8 +9315,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 124,
-    "power": 62
+    "hp": 157,
+    "power": 79
    },
    "stages": [
     {
@@ -9446,8 +9451,8 @@
     }
    ],
    "foes": {
-    "hp": 126,
-    "power": 63
+    "hp": 154,
+    "power": 77
    }
   },
   {
@@ -9460,8 +9465,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 137,
-    "power": 69
+    "hp": 145,
+    "power": 73
    },
    "stages": [
     {
@@ -9519,8 +9524,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": -34,
-    "power": -34
+    "hp": -19,
+    "power": -19
    },
    "stages": [
     {
@@ -9613,8 +9618,8 @@
     }
    ],
    "foes": {
-    "hp": 39,
-    "power": 20
+    "hp": 57,
+    "power": 29
    }
   },
   {
@@ -9627,8 +9632,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": -25,
-    "power": -25
+    "hp": -17,
+    "power": -17
    },
    "stages": [
     {
@@ -9892,7 +9897,9 @@
      "classes": [
       "geomancer"
      ],
-     "formations": [],
+     "formations": [
+      "blitz"
+     ],
      "gear": [
       "granite_staff",
       "lucky_coin",
@@ -9963,7 +9970,9 @@
      "classes": [
       "stormcaller"
      ],
-     "formations": [],
+     "formations": [
+      "ambush"
+     ],
      "gear": [
       "storm_rod",
       "plain_wind_staff",
@@ -10011,7 +10020,9 @@
      "classes": [
       "assassin"
      ],
-     "formations": [],
+     "formations": [
+      "tortoise"
+     ],
      "gear": [
       "bodkin",
       "stiletto",
@@ -10082,7 +10093,9 @@
      "classes": [
       "vampire"
      ],
-     "formations": [],
+     "formations": [
+      "last_stand"
+     ],
      "gear": [
       "bloodied_claws",
       "bloodstone",
@@ -10111,7 +10124,7 @@
       "paladin"
      ],
      "formations": [
-      "blitz"
+      "champion"
      ],
      "gear": [
       "crusader_sword",
@@ -10139,10 +10152,7 @@
     ],
     "rewards": {
      "classes": [],
-     "formations": [
-      "ambush",
-      "tortoise"
-     ],
+     "formations": [],
      "gear": [
       "dawn_staff",
       "scale_coat",
@@ -10161,10 +10171,7 @@
     "needs": [],
     "rewards": {
      "classes": [],
-     "formations": [
-      "last_stand",
-      "champion"
-     ],
+     "formations": [],
      "gear": [
       "ember_staff",
       "grounding_rod",

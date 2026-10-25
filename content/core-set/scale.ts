@@ -43,9 +43,9 @@ export const RULES = {
   armorRatio: 0.12,
   maxEnemies: 8,
   /**
-   * An interrupted cast, or one whose targets are gone, goes on cooldown (the core-set report's decisions A and E,
-   * taken on the campaign branch): a Stun that lands in Inferno's wind-up buys a whole cooldown, and two Ghouls
-   * reaching for one corpse don't loop.
+   * An interrupted cast goes on cooldown, and one whose targets are gone costs its recovery (the core-set report's
+   * decisions A and E, taken on the campaign branch): a Stun that lands in Inferno's wind-up buys a whole cooldown,
+   * and two Ghouls reaching for one corpse don't loop.
    */
   lostCast: "cooldown" as const,
 };
@@ -198,7 +198,8 @@ export const STATUS = {
    */
   burn: { every: 2, perStack: 30, drop: 0.1 },
   chill: { cap: 8, perStack: -6, every: 3, drop: 1 / 3 },
-  shock: { perStack: 80, drop: 0.5 },
+  /** Campaign pass: a cap of 25 stacks. Uncapped, a slow boss gathered 50 to 100 and took 8,000 from one swing. */
+  shock: { perStack: 80, drop: 0.5, cap: 25 },
   ward: { resist: 30, duration: 12 },
   sunder: { perStack: -600, every: 4 },
   silence: { duration: 6 },
