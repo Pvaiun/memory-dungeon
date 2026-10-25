@@ -1,4 +1,4 @@
-# Step 7 intent: the Knight and the Cleric, then a pacing and value pass
+# Step 5b intent: the Knight and the Cleric, then a pacing and value pass
 
 From the director's two messages in the session of Oct 25, 2026, after reading the campaign report's follow-up probes (the Cleric is its free Mercy heal; a Knight with MP to spare locks bosses out of their big moves; most trials ask for a handicap). Not an interview: the items are their words, lightly cleaned, tagged with how firmly each was held. Correct anything here and the design follows.
 

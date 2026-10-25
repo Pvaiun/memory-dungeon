@@ -1,4 +1,4 @@
-# Step 6 design: the campaign
+# Step 5a design: the campaign
 
 The core set as a road to walk instead of a sandbox. Written and built in one overnight session, at the director's request ("don't be afraid to make decisions"), so this design never had its own gate: the report is where the director first reacts to it. It describes the road as it stands after tuning; `tuning.md` has how it got there.
 

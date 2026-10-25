@@ -1,4 +1,4 @@
-# Step 6 intent: the campaign
+# Step 5a intent: the campaign
 
 From the director's message in the session of Oct 25, 2026, after playing the core set in the interface. Not an interview: the items are their words, lightly cleaned, and the tags are the session's reading of how firmly each was held. There was no read-back, since they asked for the work to run overnight; correct anything here and the design follows.
 

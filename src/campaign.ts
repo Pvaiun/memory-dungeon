@@ -1,6 +1,6 @@
 /**
  * The campaign: a fixed road of runs, cleared one at a time, each paying a fixed
- * reward once and revealing the next (the progression experiment, steps/06-campaign).
+ * reward once and revealing the next (the progression experiment, steps/05-core-set/5a-campaign).
  *
  * Pure TypeScript with no Node APIs: the interface and the simulations both read it.
  * The data is the pack's `campaign` block; this file answers what's owned when a

@@ -1,5 +1,5 @@
 /**
- * The campaign's engine changes (steps/06-campaign): a dungeon's change to every foe, and a lost cast going on
+ * The campaign's engine changes (steps/05-core-set/5a-campaign): a dungeon's change to every foe, and a lost cast going on
  * cooldown under ruleset.lostCast; and the campaign helpers the interface and simulations share.
  */
 import { test } from "vitest";

@@ -1,4 +1,4 @@
-# Step 7 tuning trail
+# Step 5b tuning trail
 
 One line a round. "Top builds" are the tuner's top 10 per node (175 across the road); the audit reads each node's best builds (up to 9) on 6 seeds at the shipped knobs.
 

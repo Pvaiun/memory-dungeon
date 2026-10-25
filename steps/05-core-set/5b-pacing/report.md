@@ -1,4 +1,4 @@
-# Step 7 report: the Knight and the Cleric, then pacing and value
+# Step 5b report: the Knight and the Cleric, then pacing and value
 
 You asked for three changes to test (the Cleric and Bard, Stun against Silence, a campfire) and a big pass on four problems: action economy, the relative value of actions, pacing, and mobs against bosses. All of it is built, tuned across the whole road, and on this branch. This report leads with what needs you; `design.md` has the changes in full, `intent.md` your words, `tuning.md` the 20 rounds.
 

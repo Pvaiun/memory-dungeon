@@ -1,4 +1,4 @@
-# Step 7 design: the Knight and the Cleric, then pacing and value
+# Step 5b design: the Knight and the Cleric, then pacing and value
 
 The director's direction (`intent.md`) is specific, so this design is mostly numbers: what each change is, what it's for, and the target the audit checks it against. Built in the same session as the direction, on the campaign branch; `tuning.md` has the rounds, `report.md` the results.
 

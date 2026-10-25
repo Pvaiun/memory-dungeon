@@ -1,4 +1,4 @@
-# Step 6 tuning trail
+# Step 5a tuning trail
 
 One line a round: what was wrong, what changed, what the simulation said. For later sessions; the director reads the report. Runs are first clears of a whole node (every fight of its run, HP and knockouts carried), with the simulation's best builds unless a line says otherwise. "win½" is the share of a node's sensible builds that win at least half their runs.
 

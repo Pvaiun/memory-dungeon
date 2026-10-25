@@ -1,5 +1,5 @@
 /**
- * The campaign (steps/06-campaign): the core set as a road to walk. The player starts with the
+ * The campaign (steps/05-core-set/5a-campaign): the core set as a road to walk. The player starts with the
  * Knight, Cleric and Ranger in the Neutral formation and the first run. Each node is cleared once,
  * pays a fixed reward once and reveals the next: the seven runs of the enemies document, remixes
  * built from the same enemies, and trials that set needs on the party.
