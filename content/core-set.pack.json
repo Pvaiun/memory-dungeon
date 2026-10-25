@@ -8483,11 +8483,11 @@
    ],
    "foes": {
     "hp": -40,
-    "power": -40
+    "power": -20
    },
    "bossFoes": {
     "hp": -47,
-    "power": -47
+    "power": -23
    }
   },
   {
@@ -8501,11 +8501,11 @@
    "challenges": [],
    "foes": {
     "hp": -13,
-    "power": -13
+    "power": -6
    },
    "bossFoes": {
     "hp": -27,
-    "power": -27
+    "power": -13
    },
    "stages": [
     {
@@ -8583,7 +8583,7 @@
    "challenges": [],
    "foes": {
     "hp": -2,
-    "power": -2
+    "power": -1
    },
    "bossFoes": {
     "hp": 8,
@@ -8945,7 +8945,7 @@
    },
    "bossFoes": {
     "hp": -57,
-    "power": -57
+    "power": -28
    }
   },
   {
@@ -8963,7 +8963,7 @@
    },
    "bossFoes": {
     "hp": -55,
-    "power": -55
+    "power": -27
    },
    "stages": [
     {
@@ -9031,11 +9031,11 @@
    "challenges": [],
    "foes": {
     "hp": -8,
-    "power": -8
+    "power": -4
    },
    "bossFoes": {
     "hp": -54,
-    "power": -54
+    "power": -27
    },
    "stages": [
     {
@@ -9182,7 +9182,7 @@
    },
    "bossFoes": {
     "hp": -30,
-    "power": -30
+    "power": -15
    },
    "stages": [
     {
@@ -9397,7 +9397,7 @@
    },
    "bossFoes": {
     "hp": -2,
-    "power": -2
+    "power": -1
    }
   },
   {
@@ -9415,7 +9415,7 @@
    },
    "bossFoes": {
     "hp": -62,
-    "power": -62
+    "power": -31
    },
    "stages": [
     {
@@ -9728,7 +9728,7 @@
    },
    "bossFoes": {
     "hp": -40,
-    "power": -40
+    "power": -20
    },
    "stages": [
     {
@@ -9838,7 +9838,7 @@
    },
    "bossFoes": {
     "hp": -25,
-    "power": -25
+    "power": -12
    }
   },
   {
@@ -9856,7 +9856,7 @@
    },
    "bossFoes": {
     "hp": -56,
-    "power": -56
+    "power": -28
    },
    "stages": [
     {

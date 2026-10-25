@@ -15,12 +15,12 @@ import knobs from "./campaign-knobs.json" with { type: "json" };
 
 /**
  * A node's difficulty knob, k, found by the campaign tuning (npm run campaign -- --tune) and kept in campaign-knobs.json:
- * its foes have k% more HP and deal k/2 % more damage; a negative k takes k% off both. A hard node is mostly a longer
- * one: when damage rose as fast as HP, every regular swing two-shot a 2-HP caster and the casters dropped out of the
- * winning builds.
+ * its foes have k% more HP and deal k/2 % more damage; a negative k takes k% off their HP and k/2 % off their damage.
+ * A hard node is mostly a longer one, and an easy one a shorter one: when damage rose as fast as HP, every regular swing
+ * two-shot a 2-HP caster; when it fell as fast (pacing pass), a boss eased to −55 lost its spikes as well as its length.
  */
 export const knobFoes = (k: number): Pick<FoesT, "hp" | "power"> =>
-  k > 0 ? { hp: Math.round(k), power: Math.round(k / 2) } : k < 0 ? { hp: Math.max(-80, Math.round(k)), power: Math.max(-80, Math.round(k)) } : {};
+  k > 0 ? { hp: Math.round(k), power: Math.round(k / 2) } : k < 0 ? { hp: Math.max(-80, Math.round(k)), power: Math.max(-80, Math.round(k / 2)) } : {};
 /**
  * A node's two knobs (pacing pass): one for its regular fights, one for its boss. With one knob for both, the tuner set it
  * so the boss could be beaten, and the regular fights went soft ("the bandits at the start do 2 damage to you").
