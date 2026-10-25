@@ -93,7 +93,9 @@ const NODES: Node[] = [
       text: "The Crypt's bone store.",
       fights: [
         enc("bone_wall", "Bone Wall", [5, "skeleton"]),
-        enc("haunted_hall", "Haunted Hall", [3, "ghost"]),
+        // Two Ghosts and two Skeletons: magic can't touch the one, steel can't touch the other, and the Monk's fists break the
+        // armor. Three Ghosts were a wall for the Monk the node asks for (its Burning fist is Fire, which they resist).
+        enc("haunted_hall", "Haunted Hall", [2, "ghost"], [2, "skeleton"]),
         enc("dead_watch", "The Dead Watch", [2, "skeleton"], [1, "witch"], [1, "ghost"]),
         enc("reapers_court", "The Reaper's Court", [1, "reaper"], [2, "skeleton"]),
       ],

@@ -521,6 +521,7 @@ export const Ruleset = z.strictObject({
   taken: z.strictObject({ floor: z.number(), cap: z.number() }).describe("Bounds on a unit's total damage-taken modifier, in percent."),
   unarmed: Weapon.describe("The basic attack of a unit with no weapon."),
   maxEnemies: PosInt.describe("Most living units on the enemy side, summons included."),
+  stagger: Ticks.optional().describe("Copies of the same enemy start a fight this many ticks apart, one after another, so identical foes don't act in lockstep. Absent or 0: they start together."),
   lostCast: z
     .enum(["retry", "cooldown"])
     .optional()

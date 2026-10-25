@@ -392,8 +392,15 @@ async function tuneNode(c: Content, pool: Pool, i: number, o: { builds: number; 
     if (await ok(mid)) lo = mid;
     else hi = mid;
   }
-  const k = Math.round(lo);
-  const r = await searchNode(c, pool, i, { builds: o.builds, climb: o.climb, foes: foesAt(k), carryFrom: o.carryFrom });
+  let k = Math.round(lo);
+  let r = await searchNode(c, pool, i, { builds: o.builds, climb: o.climb, foes: foesAt(k), carryFrom: o.carryFrom });
+  // The check that keeps the road passable: the best build, scored on fresh seeds, must hold the target. If it doesn't
+  // (the bisection read noisy 24-seed rates), ease the foes and search again. A playtester got stuck on a node that
+  // passed the bisection with its best build at 75%.
+  for (let n = 0; n < 5 && r.best.rate < o.target - 0.04; n++) {
+    k = Math.round(k - Math.max(8, Math.abs(k) * 0.12));
+    r = await searchNode(c, pool, i, { builds: o.builds, climb: o.climb, foes: foesAt(k), carryFrom: o.carryFrom });
+  }
   r.knob = k;
   return r;
 }

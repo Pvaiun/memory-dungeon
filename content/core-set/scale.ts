@@ -48,6 +48,11 @@ export const RULES = {
    * and two Ghouls reaching for one corpse don't loop.
    */
   lostCast: "cooldown" as const,
+  /**
+   * Copies of an enemy start 1.5 ticks apart (campaign pass). Starting together, three Ghosts hit one target on one beat
+   * for 3,700 and twin Ogre Chiefs wound up every Crush in lockstep, for the whole fight.
+   */
+  stagger: 1.5,
 };
 
 /** MP cost follows the cooldown unless an ability is costly, which doubles it. */

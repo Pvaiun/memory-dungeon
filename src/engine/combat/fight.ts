@@ -1270,6 +1270,17 @@ function begin(w: W) {
     refresh(w, u);
   }
   for (const u of f.units) u.acts.forEach((a, i) => (a.ready = cooldownOf(w, u, actDef(w, u, i))));
+  // ruleset.stagger: the n-th copy of an enemy starts n × stagger ticks behind the first, so three Ghosts ripple rather than volley.
+  const stagger = Math.round((w.c.pack.ruleset.stagger ?? 0) * SUBTICKS);
+  if (stagger) {
+    const seen = new Map<string, number>();
+    for (const u of f.units) {
+      if (u.side !== "enemy") continue;
+      const n = seen.get(u.ref) ?? 0;
+      seen.set(u.ref, n + 1);
+      if (n) for (const a of u.acts) a.ready += n * stagger;
+    }
+  }
   for (const u of f.units) if (!u.ko) fire(w, ev("fight_start", u, null));
   f.begun = true;
 }

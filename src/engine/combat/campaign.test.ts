@@ -75,3 +75,13 @@ test("campaign: what's owned grows by each node's rewards, a new class brings it
   assert.ok(meets(c, { armor: "none" }, party));
   assert.ok(!meets(c, { includes: ["cleric"] }, party));
 });
+
+test("stagger: copies of the same enemy start a fight 1.5 ticks apart, so a pack ripples instead of volleying", () => {
+  const c = loadContent(raw);
+  const run = newRun(c, combat, { dungeon: "old_road", party: { formation: "neutral", units: [{ class: "knight", position: "left", abilities: ["fortify", "protect", "shield_bash"], gear: { weapon: "plain_sword" } }] }, seed: 1 }, { checked: true });
+  while (!run.fight) advanceOnce(c, combat, run);
+  advanceOnce(c, combat, run);
+  const bandits = (run.fight as CFight).units.filter((u) => u.ref === "bandit").map((u) => u.acts.find((a) => a.id === "basic")!.ready);
+  assert.equal(bandits.length, 3);
+  assert.deepEqual(bandits.map((r) => r - bandits[0]), [0, 1500, 3000]);
+});

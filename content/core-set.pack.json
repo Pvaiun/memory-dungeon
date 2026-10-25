@@ -53,6 +53,7 @@
   },
   "maxEnemies": 8,
   "lostCast": "cooldown",
+  "stagger": 1.5,
   "run": {
    "defeatedUnits": "stay_down",
    "perkOffer": {
@@ -8452,8 +8453,8 @@
     }
    ],
    "foes": {
-    "hp": -11,
-    "power": -11
+    "hp": -8,
+    "power": -8
    }
   },
   {
@@ -8466,8 +8467,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": -7,
-    "power": -7
+    "hp": -4,
+    "power": -4
    },
    "stages": [
     {
@@ -8538,8 +8539,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 75,
-    "power": 38
+    "hp": 85,
+    "power": 43
    },
    "stages": [
     {
@@ -8665,8 +8666,8 @@
     }
    ],
    "foes": {
-    "hp": 224,
-    "power": 112
+    "hp": 239,
+    "power": 120
    }
   },
   {
@@ -8679,8 +8680,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 154,
-    "power": 77
+    "hp": 182,
+    "power": 91
    },
    "stages": [
     {
@@ -8702,7 +8703,8 @@
      "enemies": [
       "ghost",
       "ghost",
-      "ghost"
+      "skeleton",
+      "skeleton"
      ]
     },
     {
@@ -8739,8 +8741,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 60,
-    "power": 30
+    "hp": 52,
+    "power": 26
    },
    "stages": [
     {
@@ -8863,8 +8865,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": -20,
-    "power": -20
+    "hp": -17,
+    "power": -17
    },
    "stages": [
     {
@@ -9038,8 +9040,8 @@
     }
    ],
    "foes": {
-    "hp": 141,
-    "power": 71
+    "hp": 144,
+    "power": 72
    }
   },
   {
@@ -9052,8 +9054,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 141,
-    "power": 71
+    "hp": 156,
+    "power": 78
    },
    "stages": [
     {
@@ -9117,8 +9119,8 @@
      "haste"
     ],
     "text": "Every foe starts each fight Hasted.",
-    "hp": 80,
-    "power": 40
+    "hp": 97,
+    "power": 49
    },
    "stages": [
     {
@@ -9237,8 +9239,8 @@
     }
    ],
    "foes": {
-    "hp": 85,
-    "power": 43
+    "hp": 138,
+    "power": 69
    }
   },
   {
@@ -9251,8 +9253,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 53,
-    "power": 27
+    "hp": 68,
+    "power": 34
    },
    "stages": [
     {
@@ -9315,8 +9317,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 155,
-    "power": 78
+    "hp": 189,
+    "power": 95
    },
    "stages": [
     {
@@ -9465,8 +9467,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 145,
-    "power": 73
+    "hp": 153,
+    "power": 77
    },
    "stages": [
     {
@@ -9524,8 +9526,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": -21,
-    "power": -21
+    "hp": -25,
+    "power": -25
    },
    "stages": [
     {
@@ -9618,8 +9620,8 @@
     }
    ],
    "foes": {
-    "hp": 66,
-    "power": 33
+    "hp": 69,
+    "power": 35
    }
   },
   {
@@ -9632,8 +9634,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": -12,
-    "power": -12
+    "hp": -9,
+    "power": -9
    },
    "stages": [
     {

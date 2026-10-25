@@ -137,6 +137,7 @@ export const ruleset: ContentPack["ruleset"] = {
   unarmed: { type: "physical", subtype: "blunt", cooldown: SPEED.medium, amount: { base: 100, scale: [{ ratio: 0.2, stat: "attack" }] } },
   maxEnemies: RULES.maxEnemies,
   lostCast: RULES.lostCast,
+  stagger: RULES.stagger,
   run: { defeatedUnits: "stay_down", perkOffer: { options: 1, premiumChance: 0, repeatPicked: false, offerInapplicable: false } },
 };
 
