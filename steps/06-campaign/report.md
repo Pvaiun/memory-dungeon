@@ -18,16 +18,31 @@ Gear is the whole climb, and it's done by node 3 or 4: the empty armor and amule
 
 Options, if you want a vertical axis past node 4:
 
-1. **The party grows.** A fourth member mid-road (say after the Fire Mine) and a fifth late. The tech keeps parties of 5; formations would need slots 4 and 5. The most JRPG-like step, and it grows the build space just when the roster is big enough to fill it. **My recommendation** for the next experiment.
+1. **The party grows.** A fourth member mid-road (say after the Fire Mine) and a fifth late. The tech keeps parties of 5; formations would need slots 4 and 5. The most JRPG-like step, but while the Knight and Cleric are this strong, a fourth slot is a Knight, a Cleric and two free picks, which is flatter, not less flat.
 2. **Gear tiers:** later nodes pay "+1" versions of pieces you own.
 3. **Ability unlocks:** your idea, which you called going nuts for now. It fits the full game's five abilities with three brought.
 4. **Accept it:** past node 4 the game is a puzzle box, not a power curve.
 
-### B. The no-rest rule makes a healer mandatory (a direction, priced)
+**My view, after the follow-up probes:** fix B, D and E first, then decide. On a fixed road where replays pay nothing, power the player gains is power the tuner takes back at the next node, so vertical progression adds the feeling of growing, not decisions. What made the last playtest easy (34 attempts) isn't a flat power curve; it's that a Knight in Prayer beads plus a Cleric answers almost every node, so each node's puzzle was only "which third member". With that core weakened, the viable share of builds the tuner aims at starts meaning what it says. If the road still feels like "same numbers, new enemies" after that, a small vertical layer is worth a try, and the party growing is the one I'd try.
 
-"Nothing restores HP or MP between fights" is the direction the tuning works around hardest. In the simulation's best builds, the Cleric, Vampire, Valkyrie and Knight are each in 40% to 51% of the top builds while owned (a fair share is about 30%), and every playtester's core was a Knight plus a healer. I priced it with a variant where a won fight gives back 30% of HP and MP (knockouts stay down), tuned the same way: the Cleric fell from 86 to 54 appearances in the top-10 builds and the Hoplite and Ranger rose; the damage casters barely moved.
+### B. The Cleric's strength is Mercy, a free heal (and MP is the other half)
 
-Options: keep it (the run as attrition is the core set's identity); give back a little after each won fight (25% to 30%); or give back MP only, since MP running dry decided several playtest losses. I'd try 25% in your next play if a healer feeling mandatory bothers you. It's one setting (`restore` under `ruleset.run`, in `content/core-set/vocabulary.ts`).
+"Nothing restores HP or MP between fights" looked like the reason the Cleric is everywhere. The probe says it's mostly the Cleric's passive. Each node's best builds (up to 9) at the shipped difficulty, 12 seeds, all 20 nodes:
+
+| Change | Wins |
+| --- | --- |
+| as shipped | 78% |
+| **the Cleric's Mercy switched off** | **45%** |
+| 30% of MP back after each won fight | 84% |
+| 30% of HP back after each won fight | 82% |
+
+And re-tuned, so difficulty is equal, on the nine nodes where the Cleric is in 8 to 10 of the top 10 builds: the Cleric's place in those 90 top builds goes from 77 to 69 with MP back, 66 with HP back, and **30 with Mercy off** (the Valkyrie, the other healer, rises from 37 to 50, and the Knight from 40 to 50; for the same difficulty the foes have to be up to 30% weaker, at the Ossuary).
+
+- **Mercy** heals the lowest ally for three quarters of every staff hit the Cleric lands, for no MP: about 24,000 HP a run where a Cleric is in the party, the largest single heal in the game (a party takes about 59,000 damage a run). Off, the Crypt falls from 56% to 1%, the Storm Tower from 97% to 19%, Knives Out from 94% to 11%.
+- **The Cleric never runs short.** It casts well under one ability per 10 ticks and starts every fight with 97% or more of its MP. Its 5,000 MP and the best regen in the game (500 every 10 ticks) are almost unused.
+- **Everyone else's sustain costs MP, and the 2,000-MP classes run dry.** The Knight starts fight 3 with about a fifth of its MP and fight 5 with a tenth; the Hoplite is under a tenth by fight 3, the Vampire by fight 4, the Monk by fight 5, and their casts per 10 ticks fall by a quarter to a half over a run. A 2,000-MP class regains 250 every 10 ticks and its abilities cost 300 each on 12-tick cooldowns. The casters (3,000 to 5,000 MP) hold 80% to 90% through four fights; on the longest runs the Pyromancer and Stormcaller run low too.
+
+So your reading is right for half the roster: the no-rest rule drains the classes whose value is in their spells, and the Cleric's value isn't. Restoring HP or MP between fights moves the Cleric a little; Mercy moves it a lot. MP also gates decision D: a Knight with MP to spend locks bosses out of their big moves.
 
 ### C. Class balance is only partly done
 
@@ -63,7 +78,25 @@ Options (you have your own; these are mine):
 2. **Interrupts delay, they don't cancel** (the boss keeps its wind-up progress after the Stun).
 3. **Cost:** Shield bash on a longer cooldown or a higher MP cost, so the Knight chooses between it and Protect.
 
-### E. Rules and numbers I changed on this branch (confirm or revert)
+### E. Most trials ask for a handicap, not the answer (your question)
+
+Each trial after an unlock says "bring it", which reads as "here's the key". I searched the nine class trials again with their needs removed (same foes, every owned class allowed) to see whether the best builds bring the class anyway:
+
+| Trial | Asks for | In the top 10 without the need | Its effect on wins |
+| --- | --- | --- | --- |
+| Deep Freeze | Frostweaver | 8 of 10 | +10 |
+| Blood Moon | Vampire and Bard | 7 and 3 of 10 | +14 and −4 |
+| The Ogre Brothers | Knight and Hoplite | 8 and 4 of 10 | +3 and −10 |
+| Wildfire | Pyromancer | 6 of 8 (three of the four owned classes are in most parties) | −47 |
+| Valhalla | Valkyrie | 5 of 10 | +5 |
+| The Ossuary | Monk | 4 of 10 | −11 |
+| The Wild Hunt | Stormcaller | 0 of 10 | −18 |
+| Knives Out | Assassin | 0 of 10 | −17 |
+| Judgement | Paladin and Hexer | 0 of 10 | −18 and −14 |
+
+Only the Frostweaver and the Vampire are the answer to their trial. Elsewhere the class is neutral or a handicap, and the knob was tuned with it in the party, so the handicap is priced in. That's your "requirements as debuffs" already, by accident, with the wrong framing: the text sells the class as the key, the player builds around it, and it rides along (the playtesters' "passenger" complaint). The cheap version of your idea is mostly rewording ("The Paladin insists on coming. Win anyway."); the full version picks each trial's handicap on purpose, from the effect column, and pairs it with a restriction.
+
+### F. Rules and numbers I changed on this branch (confirm or revert)
 
 These change the core set's documents. If you keep the campaign they go into `DECISIONS.md`; until then they live only here.
 
@@ -77,7 +110,7 @@ These change the core set's documents. If you keep the campaign they go into `DE
 - **Classes:** Valkyrie's Gale spear 0.1 × Attack a hit (was 0.2) and Rally 0.3 × Magic (was 0.6); War ballad many Might (was several); Fireball a normal hit (was light); Blizzard 0.3 × Magic (was 0.2); Mercy heals three quarters of a hit (was half); Fire arrow a heavy hit (was normal).
 - **Formations:** Escort's slots lose HP +1 (it was the best formation everywhere); Scatter's Decoy is Armor −1 (was −2).
 
-### F. Smaller calls
+### G. Smaller calls
 
 - **Numbers on screen.** At the default SMALL numbers a Poison tick shows as 2 and a Burn tick as 3 or 4. Settings → NUMBERS → BIG shows 16 and 30 to 40, and 500 HP for the Knight. I'd make BIG the default; your call, since you set the scale.
 - **Default ability orders.** The documents' order puts the Knight's Shield bash, the Valkyrie's Rally and the Monk's Pressure point last, where low MP or short-cooldown abilities starve them. I left the documents' order; reordering the defaults would help a first-time player.
@@ -166,4 +199,4 @@ The playtest diaries and the reader's answers are session files, not in the repo
 - **The simulation's "share of builds that win" isn't the player's experience, and an AI playtester is the check.** The sampled builds include kits and formations no thinking player picks, so "a fifth of builds win" meant a thoughtful player won almost everything. Playing the game through a command line, an agent found that in 12 minutes, and later found the one node that walled a player, which the simulation had flagged (best build 75%) but nothing acted on. Worth making standard: tune by simulation, play by agent, retune, and gate on the best build's fresh-seed rate.
 - **Separate causes with a bench before tuning around them.** The casters looked weak everywhere; a small bench showed it was the difficulty knob's extra damage two-shotting 2-HP casters, plus a route mistake (Veil arriving 16 nodes after the Pyromancer that needs it). The class numbers weren't the first cause.
 - **Price the tightest direction** found the no-rest rule's cost in one run of the tuner with one setting changed. A ruleset setting per contested rule makes that cheap.
-- **What I didn't do:** ability unlocks, a bestiary filtered to foes met, new enemy art (no new enemies were needed), and decisions A to D, which are yours.
+- **What I didn't do:** ability unlocks, a bestiary filtered to foes met, new enemy art (no new enemies were needed), and decisions A to E, which are yours.
