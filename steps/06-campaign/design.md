@@ -46,7 +46,7 @@ The unlock order follows one rule: **a new class arrives just before the content
 
 Each node has one difficulty knob, **k**: its foes have k% more HP and deal k/2 % more damage (a negative k takes k% off both). Because the route is fixed, the simulation knows exactly what the player owns at every node, and the tuner sets k for each node. The knob is the designer's: it's enemy stats, so the player never sees it. It lives in `content/core-set/campaign-knobs.json`; a node's own foe changes (Hasted) sit on top of it.
 
-**The target**, per node, is two conditions at once, and k is the hardest setting that meets both: **the best builds win at least 85% of first tries**, and **a share of the node's sensible builds win at least half their runs**. The share is a ramp: 30% on nodes 1 to 3 (they teach), 12% on 4 to 9, 8% on 10 to 17, 4% on 18 and 19, 3% on the finale, so it's the hardest run. It started at a fifth everywhere; the AI playtest showed a thoughtful player always lands in the top fifth, so that was too easy (`tuning.md`, rounds 10 and 13).
+**The target**, per node, is two conditions at once, and k is the hardest setting that meets both: **the best builds win at least 85% of first tries**, and **a share of the node's sensible builds win at least half their runs**. The share is a ramp: 30% on nodes 1 to 3 (they teach), 12% on 4 to 9, 8% on 10 to 17, 4% on 18 and 19, 3% on the finale, so it's the hardest run. It started at a fifth everywhere; the AI playtest showed a thoughtful player always lands in the top fifth, so that was too easy (`tuning.md`, rounds 10 and 13). After bisecting, the tuner scores the best build on 48 fresh seeds and eases the node until it holds the target, so no node ships with its best build far under it (a playtester got stuck on one that did).
 
 The simulation (`npm run campaign`, `src/campaign-sim.ts`): for each node, every party of three the node allows from what's owned, in every owned formation (or the one it needs), each in three kit styles (plain, sturdy, sharp) picked from the owned gear by what each class's kit multiplies (`src/sim/kits.ts`), with the formation's slots handed out the same way. Up to 360 builds are screened on 6 seeds; the best 20 get 18 more; a climb of 48 small changes (swap a class, a formation, a seat, a piece of gear, an ability order) starts from the best three; the winner is scored on 48 fresh seeds. A node takes a few thousand runs and a few seconds (600 builds from node 10 on); tuning the whole road takes about 15 to 20 minutes on 4 cores.
 
@@ -62,9 +62,10 @@ The director's three complaints (too easy; Burn never stacks; Poison does 1), tw
 - **HP on gear and formations** is half a point a step (was a whole point).
 - **Inferno** hits for 0.35 × Magic (was 0.5).
 - **A lost cast:** an action interrupted in its wind-up spends no MP but goes on cooldown; one whose targets are gone costs the unit its recovery (the core-set report's decisions A and E). It's a ruleset setting (`lostCast`), so the worked example keeps the old rule.
+- **Copies of an enemy start a fight 1.5 ticks apart** (`stagger`), so identical foes ripple rather than act in lockstep.
 - **Classes:** Gale spear 0.1 × Attack a hit (was 0.2), Rally 0.3 × Magic (was 0.6), War ballad many Might (was several), Fireball a normal hit (was light), Blizzard 0.3 × Magic (was 0.2), Mercy three quarters of a hit (was half), Fire arrow a heavy hit (was normal).
 - **Formations:** Escort's two slots lose HP +1; Scatter's Decoy is Armor −1 (was −2).
-- **Engine 0.7:** a dungeon can carry a change to every foe (`foes`: HP %, damage % through a new `power` stat, statuses at fight start), applied to summons too; `ruleset.run.restore` (a share of HP and MP back after a won fight) exists for pricing the no-rest rule and is off.
+- **Engine 0.7:** a dungeon can carry a change to every foe (`foes`: HP %, damage % through a new `power` stat, statuses at fight start), applied to summons too; `ruleset.lostCast` and `ruleset.stagger` (above); `ruleset.run.restore` (a share of HP and MP back after a won fight) exists for pricing the no-rest rule and is off.
 
 ## Predictions, checked in the report
 
