@@ -109,7 +109,8 @@ test("campfire: the run pauses for a choice between two fights; REST gives back 
   const pack = structuredClone(raw);
   const d = pack.dungeons.find((x: { id: string }) => x.id === "cmp_old_road");
   assert.ok(d.stages.some((s: { kind: string }) => s.kind === "campfire"), "every campaign run has a campfire");
-  assert.equal(d.stages[d.stages.length - 2].kind, "campfire", "just before the boss");
+  const at = d.stages.findIndex((s: { kind: string }) => s.kind === "campfire");
+  assert.equal(at, Math.ceil(d.stages.filter((s: { kind: string; boss?: boolean }) => s.kind === "fight" && !s.boss).length / 2), "after half the regular fights");
   const c = loadContent(pack);
   const party = { formation: "neutral", units: [{ class: "knight", position: "left", abilities: ["fortify", "protect", "shield_bash"], gear: { weapon: "plain_sword" } }, { class: "cleric", position: "center", abilities: ["renew", "cure", "raise"], gear: { weapon: "plain_light_staff" } }, { class: "ranger", position: "right", abilities: ["venom_arrow", "fire_arrow", "rending_arrow"], gear: { weapon: "plain_bow" } }] };
   let reached = 0;

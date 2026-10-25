@@ -83,7 +83,9 @@ export const combat: Rules = {
         return fighter(copy, abilities, rngFor(seed, `fight:${stage.id}:${m.ref}`));
       })
       .sort((a, b) => a.slot - b.slot);
-    const foes = x.c.dungeons.get(x.run.record.dungeon)?.foes;
+    // A dungeon's change to its foes; a boss fight takes `bossFoes` instead when the dungeon sets one.
+    const dn = x.c.dungeons.get(x.run.record.dungeon);
+    const foes = stage.boss && dn?.bossFoes ? dn.bossFoes : dn?.foes;
     const f: CFight = {
       stage: stage.id, boss: stage.boss ?? false, units: party, round: 0, result: null, decided: false,
       now: 0, seq: 0, queue: [], moments: 0, begun: false, seed, ...(foes ? { foes } : {}),

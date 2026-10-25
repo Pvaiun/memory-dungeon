@@ -714,6 +714,7 @@ export const Dungeon = z.strictObject({
   text: Text,
   partySize: z.strictObject({ max: PosInt }),
   foes: Foes.optional(),
+  bossFoes: Foes.optional().describe("A change to the foes of the run's boss fight, in its place: the regular fights and the boss can be set apart."),
   perkPool: z.array(Id).default([]),
   stages: z.array(Stage).min(1),
   loot: z.strictObject({ firstClear: LootTable, replay: LootTable }).optional().describe("Absent: a win pays nothing. The core set has no progression yet."),

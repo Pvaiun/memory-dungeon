@@ -709,6 +709,7 @@ function checkStarterAndProgression(pack: Pack, ix: Index, w: Walker, r: Report)
     if (!order.includes(dn.id) && !inCampaign.has(dn.id)) r.error("progression.missing", "progression.dungeonOrder", `dungeon '${dn.id}' isn't in the progression order or the campaign`);
   });
   pack.dungeons.forEach((dn, i) => dn.foes?.statuses?.forEach((id, j) => w.ref("statuses", id, `dungeons[${i}].foes.statuses[${j}]`, "status")));
+  pack.dungeons.forEach((dn, i) => dn.bossFoes?.statuses?.forEach((id, j) => w.ref("statuses", id, `dungeons[${i}].bossFoes.statuses[${j}]`, "status")));
   if (pack.campaign) checkCampaign(pack, ix, w, r, pack.campaign);
 }
 

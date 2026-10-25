@@ -10,7 +10,7 @@
  *       --party "knight:oathblade,plate,heartstone;cleric:plain_light_staff,robes;ranger:warbow" [--seed N] [--full]
  *       A member is class:weapon,armor,amulet (ids; leave a slot out to leave it empty). Abilities fire in the
  *       order given after a slash: "knight:oathblade,plate/protect,fortify,shield_bash". --campfire rest|focus picks
- *       at the campfire before the boss (HP back, or MP back); left out, whichever the party is shorter of.
+ *       at the campfire halfway through the run (HP back, or MP back); left out, whichever the party is shorter of.
  */
 import { readFileSync } from "node:fs";
 import { campaign, foesText, needText, ownedAt, rewardsOf, simPick, unmet } from "./campaign.js";
@@ -105,7 +105,7 @@ if (cmd === "show") {
   const missing = unmet(c, node, party);
   if (missing.length) throw new Error(`can't start: ${missing.join("; ")}`);
   const seed = Number(opt("--seed") ?? 1);
-  // The campfire before the boss: --campfire rest (HP back) or focus (MP back); left out, the simulations' choice.
+  // The campfire halfway through: --campfire rest (HP back) or focus (MP back); left out, the simulations' choice.
   const camp = opt("--campfire");
   const run = play(c, combat, { dungeon: node.dungeon, party, seed, firstClear: true }, (d, r) => (d.kind === "campfire" && camp ? camp : simPick(d, r)), { log: true });
   if (rest.includes("--full")) {

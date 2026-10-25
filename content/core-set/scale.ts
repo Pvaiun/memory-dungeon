@@ -237,11 +237,13 @@ export const STATUS = {
   /** 90 a tick-pair: Regen on a 2-HP unit (80) nearly outruns it, as the Snake Pit's story needs. */
   /** Campaign pass: 160 a pulse for 12 ticks, about a third of a caster's HP per application. At 90 it showed as 1. */
   /**
-   * Pacing pass: 400 a pulse for 10 ticks (was 160 for 12), so its five pulses are worth about the light hit that carries it.
-   * Flat, as every status is: a status never scales from its applier; a stackable one scales by the stacks applied, an
-   * unstackable one (Poison refreshes) by nothing (the director's rule). Snakes' and Briar's Poison grows with it.
+   * Pacing pass: 250 a pulse for 10 ticks (was 160 for 12): its five pulses outweigh the tap that carries it (Venom arrow is
+   * 0.15 of Attack). Flat, as every status is: a status never scales from its applier; a stackable one scales by the stacks
+   * applied, an unstackable one (Poison refreshes) by nothing (the director's rule). At 400 the Old Road's snakes, which
+   * Poison with every bite and aren't weakened by the node's knob, stopped the starters in 35 runs of 40 at the snake pit
+   * and the fight after it; at 200, 10.
    */
-  poison: { every: 2, damage: 400, duration: 10 },
+  poison: { every: 2, damage: 250, duration: 10 },
   /** 8 pulses of 4%: a Prayer heals a third of everyone's max HP over 16 ticks. */
   /** Pacing pass: 12 pulses of 3% (was 8 of 4%): Renew and Regrowth come a third as often. */
   regen: { every: 2, share: 0.03, duration: 24 },

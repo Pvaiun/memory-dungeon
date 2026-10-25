@@ -751,7 +751,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     for (const el of [msgEl, ctl]) el.style.display = "none";
     const party = driver.run.party as unknown as { ref: string; hp: number; mp: number; stats: Record<string, number> }[];
     const box = win("summary",
-      h("div", { class: "line" }, h("span", { class: "grow hi" }, "CAMPFIRE"), h("span", { class: "dim" }, "BEFORE THE BOSS")),
+      h("div", { class: "line" }, h("span", { class: "grow hi" }, "CAMPFIRE"), h("span", { class: "dim" }, `${driver.fightNo}/${driver.fightTotal} DONE`)),
       h("div", { class: "line dim small" }, "Rest, or focus. One pick."),
       h("table", { class: "sum" },
         h("thead", null, h("tr", null, h("th", null, ""), h("th", null, "HP"), h("th", null, "MP"))),
