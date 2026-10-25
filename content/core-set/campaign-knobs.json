@@ -1,19 +1,19 @@
 {
  "old_road": {
-  "mob": -40,
-  "boss": -47
+  "mob": -46,
+  "boss": -58
  },
  "road_at_night": {
-  "mob": -13,
-  "boss": -27
+  "mob": -15,
+  "boss": -20
  },
  "wildfire": {
   "mob": -2,
-  "boss": 8
+  "boss": 6
  },
  "crypt": {
-  "mob": 64,
-  "boss": 86
+  "mob": 69,
+  "boss": 11
  },
  "ossuary": {
   "mob": 49,
