@@ -158,7 +158,7 @@ const NODES: Node[] = [
   // ─── Act IV: the Ice Pass ─────────────────────────────────────────────────
   {
     id: "ice_pass", name: "The Ice Pass", kind: "dungeon", run: "ice_pass",
-    text: "Every fight asks what kind of hit you make, and the Titan shrugs off all but one kind.",
+    text: "Every fight asks what kind of hit you make. The Titan hides behind a shield of ice and armor like a glacier.",
     formations: ["scatter"], gear: ["pike", "sentinel_spear", "tiger_claws", "feather_charm", "longbow"],
   },
   {

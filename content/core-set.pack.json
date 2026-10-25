@@ -9945,7 +9945,7 @@
     "name": "The Ice Pass",
     "kind": "dungeon",
     "dungeon": "cmp_ice_pass",
-    "text": "Every fight asks what kind of hit you make, and the Titan shrugs off all but one kind.",
+    "text": "Every fight asks what kind of hit you make. The Titan hides behind a shield of ice and armor like a glacier.",
     "needs": [],
     "rewards": {
      "classes": [],

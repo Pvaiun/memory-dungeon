@@ -42,7 +42,11 @@ Two class passes went in (below). What's left, normalised for how long each clas
 
 The sustain classes lead in runs where HP carries; the fragile damage dealers trail. The playtesters agreed on the shape and added two things the simulation can't see: the Knight's Shield bash is the answer to every long wind-up (in 18 of 20 winning parties in one playtest), and the default ability orders hide each class's key move. Next would be a dedicated class pass, or decision B, which moves it more than numbers do.
 
-### D. Rules and numbers I changed on this branch (confirm or revert)
+### D. Bosses lose to interrupts
+
+VARIANT
+
+### E. Rules and numbers I changed on this branch (confirm or revert)
 
 These change the core set's documents. If you keep the campaign they go into `DECISIONS.md`; until then they live only here.
 
@@ -56,7 +60,7 @@ These change the core set's documents. If you keep the campaign they go into `DE
 - **Classes:** Valkyrie's Gale spear 0.1 × Attack a hit (was 0.2) and Rally 0.3 × Magic (was 0.6); War ballad many Might (was several); Fireball a normal hit (was light); Blizzard 0.3 × Magic (was 0.2); Mercy heals three quarters of a hit (was half); Fire arrow a heavy hit (was normal).
 - **Formations:** Escort's slots lose HP +1 (it was the best formation everywhere); Scatter's Decoy is Armor −1 (was −2).
 
-### E. Smaller calls
+### F. Smaller calls
 
 - **Numbers on screen.** At the default SMALL numbers a Poison tick shows as 2 and a Burn tick as 3 or 4. Settings → NUMBERS → BIG shows 16 and 30 to 40, and 500 HP for the Knight. I'd make BIG the default; your call, since you set the scale.
 - **Default ability orders.** The documents' order puts the Knight's Shield bash, the Valkyrie's Rally and the Monk's Pressure point last, where low MP or short-cooldown abilities starve them. I left the documents' order; reordering the defaults would help a first-time player.
@@ -114,7 +118,7 @@ Per node, after the last tuning pass. **Best:** the best build the search finds,
 | 2, round two | 42 | 10 | none | Shock trimmed, the end tightened |
 | 3, round three | 47 | 9 | **node 5** | the Ossuary reworked, enemies staggered, the tuner's fresh-seed check |
 | 4, round four | 51 | 11 | **node 19** | no node narrower than one build in eleven (the finale one in twenty), a hint at the Tower Top, the enrage, the Might cap |
-| 5, this version | ACCEPT |
+| 5, this version | 34 | 14 | none | the Ice Pass's hint corrected; the rest is for you (decision D) |
 
 What they agreed on:
 
@@ -122,6 +126,14 @@ What they agreed on:
 - **The core rarely changes unless a node forces it:** a Knight in the wall, a healer behind, Veils on the back line, and a damage dealer chosen by the node's elements.
 - **What reads poorly:** MP (now in the summary; the interface always showed it), that some foes' hits ignore Armor and Evasion, and ability order.
 - **The finale and the late rewards don't land.** Even after tightening, the last nodes fell quickly to a strong party, and the late gear went unworn. Decision A is the real answer.
+
+What the last one found, on this version:
+
+- **The hardest stretch is the middle, not the end.** The Ice Pass took 4 tries and Valhalla 7; from node 12 on, everything but Judgement fell first try. The finale was easier than the Tower Top, as in three of the five playtests. The difficulty dial for the end is one setting (the late share); I left it at one build in eleven because one in 25 walled the playtest before.
+- **Bosses lose to interrupts** (decision D): the Fire Giant's Inferno landed once in four fights.
+- **Forced classes ride along.** In the two-class trials the class the node asked for was often a passenger: the Bard died early with no effect, the Paladin's Smite fired once or twice a fight, and Judgement was won by the third pick (a Knight for its Shield bash). Valhalla's Valkyrie is a worse healer than the Cleric it replaces there (Rally fires once or twice a fight). That's decision C's class pass.
+- **The Knight's MP:** Prayer beads on the Knight were a must from node 6, since nothing refills MP between fights (decision B).
+- **Its favourite moment** was the Ice Pass: after three losses, the Monk's Sunder stacked on the Titan and it died in 92 ticks. The node's hint had pointed it the wrong way ("the Titan shrugs off all but one kind", which isn't true of the Titan); it's corrected.
 
 **A fresh reader** (no rules, enemy stats hidden) read six runs from nodes 1, 6, 12 and 19 after the first tuning:
 
@@ -137,4 +149,4 @@ The playtest diaries and the reader's answers are session files, not in the repo
 - **The simulation's "share of builds that win" isn't the player's experience, and an AI playtester is the check.** The sampled builds include kits and formations no thinking player picks, so "a fifth of builds win" meant a thoughtful player won almost everything. Playing the game through a command line, an agent found that in 12 minutes, and later found the one node that walled a player, which the simulation had flagged (best build 75%) but nothing acted on. Worth making standard: tune by simulation, play by agent, retune, and gate on the best build's fresh-seed rate.
 - **Separate causes with a bench before tuning around them.** The casters looked weak everywhere; a small bench showed it was the difficulty knob's extra damage two-shotting 2-HP casters, plus a route mistake (Veil arriving 16 nodes after the Pyromancer that needs it). The class numbers weren't the first cause.
 - **Price the tightest direction** found the no-rest rule's cost in one run of the tuner with one setting changed. A ruleset setting per contested rule makes that cheap.
-- **What I didn't do:** ability unlocks, a bestiary filtered to foes met, new enemy art (no new enemies were needed), and decisions A to C, which are yours.
+- **What I didn't do:** ability unlocks, a bestiary filtered to foes met, new enemy art (no new enemies were needed), and decisions A to D, which are yours.
