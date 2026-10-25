@@ -1,0 +1,20 @@
+# Step 6 tuning trail
+
+One line a round: what was wrong, what changed, what the simulation said. For later sessions; the director reads the report. Runs are first clears of a whole node (every fight of its run, HP and knockouts carried), with the simulation's best builds unless a line says otherwise. "win½" is the share of a node's sensible builds that win at least half their runs.
+
+## Build
+
+- The campaign as data: schema `campaign` block (nodes, needs, rewards) and a dungeon `foes` change; engine 0.7 applies `foes` at each fight start and to summons, through a `power` stat (+% damage on hits and reactions). `ruleset.lostCast: "cooldown"` for the core set (the worked example keeps "retry"). The validator checks the campaign: references, nothing paid twice, every need meetable with what's owned by then.
+- `src/campaign.ts`: owned-at-node, rewards (a class brings its plain weapon), needs in words and checked against a party. Shared by the simulation and the interface.
+- `src/sim/kits.ts` and `src/campaign-sim.ts` (`npm run campaign`): per node, every allowed party × owned formation × three kit styles (sampled to 360), screened on 6 seeds, the best 20 on 18 more, a 48-step climb, the best on 48 fresh seeds. About 2 minutes for all 20 nodes, 43,000 runs, on 4 cores.
+
+## Rounds
+
+1. **Baseline, first numbers.** 15 of 20 nodes won 100% by the best build, and half of all builds won everywhere from node 3 on: the director's "impossible to lose". Fire Mine 23% best (the Giant, as in the core-set report). The best kit everywhere: armor plus Heartstone, which doubled a caster's HP.
+2. **Systemic numbers.** HP steps on gear and formations to half a point; Burn drops a tenth a pulse (not a quarter) at 20 a stack (not 50); Poison 160 for 12 ticks (not 90 for 10); Inferno 0.35 × Magic (not 0.5). Little change at the top (still 100% best on most nodes), more builds losing at the margin. As expected: the content was too weak for a geared party, which is what the per-node knob is for.
+3. **Tuner, target "best build wins 85%".** Knob k: foes +k% damage, +k/2 % HP. Found k from −21 (Fire Mine) to +163 (Deep Crypt). Every node's best build at 81% to 96%, but win½ fell to 0% to 17% and the median build to 0% on every node from 3 on: one right answer per node, found by a climb no player runs. On a linear road that's a wall. Kept as a comparison; target changed.
+4. **Tuner, target "a fifth of builds win half their runs, and the best wins 85%".** Knob split evenly (+k% HP and damage) so a hard node is longer and deadlier together. Every node at win½ 20% to 28%, best 75% to 100%. Knobs: Old Road −19, Road at Night −7, Wildfire +40, Crypt +103, Ossuary +55, Ogre Brothers +33, Fire Mine −41, Deep Freeze −24, Iron Wall 0, Ice Pass +80, Valhalla +85, Wild Hunt +40, Storm Tower +30, Knives Out +25, Long Road +78, Deep Crypt +83, Blood Moon +98, Judgement −15, Tower Top +33, Royal Court −21. 227,000 runs.
+   - The Fire Giant's three nodes (Fire Mine, Deep Freeze, Judgement) need weaker foes than written; the whole run gets weaker to make its boss fair, so the fights before it go soft.
+   - **Carry:** the previous node's best party, re-kitted, still wins most nodes (56% to 100% on 12 of 19). The needs make the player change one member; the other two tend to stay.
+5. **Who wins: class and formation effects** (mean screening wins of builds with a class minus without, per node). Valkyrie +25 to +71 on every node; Cleric and Knight positive almost everywhere; Pyromancer, Ranger, Hexer, Bard and Monk negative almost everywhere (−10 to −30); the Bard in none of the 171 top-10 builds. Escort the best formation on most nodes (71 of 171 top builds), Scatter and Neutral negative.
+6. **Class pass 1.** Gale spear 0.14 × Attack a hit (was 0.2), Rally 0.4 × Magic (was 0.6); War ballad many Might (was several); Burning fist 0.25 × Attack a hit (was 0.2); Burn 30 a stack (was 20: slower Burn was the same total but arrived after short fights ended, so the Pyromancer and Ranger lost by it); Escort slots lose their HP +1; Scatter's Decoy Armor −1 (was −2).

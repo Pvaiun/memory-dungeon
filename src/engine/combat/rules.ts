@@ -83,9 +83,10 @@ export const combat: Rules = {
         return fighter(copy, abilities, rngFor(seed, `fight:${stage.id}:${m.ref}`));
       })
       .sort((a, b) => a.slot - b.slot);
+    const foes = x.c.dungeons.get(x.run.record.dungeon)?.foes;
     const f: CFight = {
       stage: stage.id, boss: stage.boss ?? false, units: party, round: 0, result: null, decided: false,
-      now: 0, seq: 0, queue: [], moments: 0, begun: false, seed,
+      now: 0, seq: 0, queue: [], moments: 0, begun: false, seed, ...(foes ? { foes } : {}),
     };
     const count = new Map<string, number>();
     stage.enemies.forEach((id) => count.set(id, (count.get(id) ?? 0) + 1));

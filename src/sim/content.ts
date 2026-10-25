@@ -16,7 +16,7 @@ export function patch(raw: unknown, changes: readonly Patch[]): unknown {
     const last = keys.pop()!;
     let at: any = out;
     for (const k of keys) {
-      at = Array.isArray(at) ? at.find((x) => x?.id === k) : at?.[k];
+      at = Array.isArray(at) ? (/^\d+$/.test(k) ? at[Number(k)] : at.find((x) => x?.id === k)) : at?.[k];
       if (at === undefined) throw new Error(`patch: nothing at '${ch.path}' (stopped at '${k}')`);
     }
     if (Array.isArray(at)) throw new Error(`patch: '${ch.path}' ends in a list; name an item's field`);

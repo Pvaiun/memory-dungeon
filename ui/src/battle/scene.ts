@@ -74,6 +74,33 @@ const FALLBACK: Record<string, [string, string]> = {
   old_road: ["#86c0ea", "#8cba5c"], crypt: ["#171724", "#3a3a4e"], fire_mine: ["#260a0a", "#6c3222"], ice_pass: ["#bfe2ff", "#e6f2ff"],
   storm_tower: ["#0f1738", "#3a4460"], deep_crypt: ["#08060e", "#292036"], tower_top: ["#283050", "#5a6a8c"],
 };
+/** Backdrops for the campaign's own runs by node id, used only when their enemies don't point to one. */
+const NODE_THEME: Record<string, string> = {
+  road_at_night: "old_road", wildfire: "old_road", ossuary: "crypt", ogre_brothers: "old_road", deep_freeze: "fire_mine", iron_wall: "fire_mine", valhalla: "ice_pass",
+  wild_hunt: "old_road", knives_out: "storm_tower", long_road: "crypt", blood_moon: "deep_crypt", judgement: "deep_crypt", royal_court: "tower_top",
+};
+const themes = new Map<string, string>();
+/**
+ * The backdrop a dungeon is fought on: its own, or for a run without one (the campaign's remixes and trials), the
+ * spine run whose enemies it shares most, each foe counted per fight and a boss three times; then the table above.
+ */
+export function themeOf(dungeonId: string): string {
+  const id = dungeonId.split("~")[0];
+  if (manifest.backdrops[id]) return id;
+  let t = themes.get(id);
+  if (t) return t;
+  const d = c.dungeons.get(id);
+  let best = 0;
+  for (const sid of c.pack.progression.dungeonOrder) {
+    const spine = new Set(c.dungeons.get(sid)?.stages.flatMap((s) => (s.kind === "fight" ? s.enemies : [])) ?? []);
+    let score = 0;
+    for (const s of d?.stages ?? []) if (s.kind === "fight") for (const e of s.enemies) if (spine.has(e)) score += c.enemies.get(e)?.rank === "boss" ? 3 : 1;
+    if (score > best && manifest.backdrops[sid]) (best = score), (t = sid);
+  }
+  t ??= NODE_THEME[c.pack.campaign?.nodes.find((n) => n.dungeon === id)?.id ?? ""] ?? "old_road";
+  themes.set(id, t);
+  return t;
+}
 const backdrops = new Map<string, HTMLCanvasElement>();
 export function backdrop(theme: string, h = H): HTMLCanvasElement {
   const key = `${theme}|${h}`;

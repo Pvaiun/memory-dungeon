@@ -13,12 +13,14 @@ import type { ContentPack } from "../../src/schema.js";
 import { validatePack } from "../../src/validate.js";
 import { abilities, classes, passives } from "./classes.js";
 import { dungeons } from "./dungeons.js";
+import { campaignDungeons, campaignWith } from "./campaign.js";
 import { enemies, enemyAbilities, enemyStatuses } from "./enemies.js";
 import { effects, formations } from "./formations.js";
 import { gear } from "./gear.js";
 import { design, elements, machinery, ruleset, stats, vocabulary, weaponKinds } from "./vocabulary.js";
 
 export function buildPack(): unknown {
+  const campaign = campaignWith(dungeons);
   const pack: ContentPack = {
     schemaVersion: "0.6",
     id: "core_set",
@@ -37,13 +39,14 @@ export function buildPack(): unknown {
     enemies,
     perkFamilies: [],
     perks: [],
-    dungeons,
+    dungeons: [...dungeons, ...campaignDungeons],
     starter: {
       classes: classes.filter((c) => c.source === "starter").map((c) => c.id),
       formations: formations.filter((f) => f.source === "starter").map((f) => f.id),
       gear: gear.filter((g) => g.source === "starter").map((g) => g.id),
     },
     progression: { dungeonOrder: dungeons.map((d) => d.id) },
+    campaign,
   };
   return JSON.parse(JSON.stringify(pack));
 }

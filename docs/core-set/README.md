@@ -35,4 +35,6 @@ Changes to them go through the director and are recorded in `DECISIONS.md`, as s
 
 ## Status
 
+**The campaign (Oct 25, 2026, an experiment on its own branch):** the director asked for the slice to become a game to beat: start with the starters and the first run, and unlock everything else one node at a time. `steps/06-campaign/` holds it: a road of 20 nodes (the seven runs, remixes and trials with needs) in `content/core-set/campaign.ts`, each node's difficulty set by simulation (`npm run campaign`), and the interface's journey. It changes some of this set's numbers (Burn, Poison, HP steps on gear, a few abilities) and one rule (a lost cast goes on cooldown); the report lists them. Everything-available play stays in the interface as free play.
+
 All four documents are in (Oct 23, 2026). **First implementation built (Oct 23, 2026):** every rule, class, piece of gear, formation, enemy, encounter and dungeon is in the engine and the content pack (`content/core-set.pack.json`, generated from `content/core-set/`), with first values for every number and a short ballpark tuning pass. The build's record is `steps/05-core-set/` (`report.md` for the director, `tuning.md` as the trail). The director's sign-off comes next, then the balance pass by simulation. **A first visual interface is in (Oct 24, 2026):** `npm run ui` serves it; `ui/README.md` says what it shows.

@@ -19,7 +19,8 @@
     "content": "tsx content/core-set/build.ts",
     "smoke": "tsx src/smoke.ts",
     "ui": "vite ui",
-    "ui:build": "vite build ui"
+    "ui:build": "vite build ui",
+    "campaign": "esbuild src/campaign-sim.ts --bundle --platform=node --format=esm --outfile=out/campaign.mjs --log-level=warning && node out/campaign.mjs"
   },
   "keywords": [],
   "author": "",

@@ -1,19 +1,26 @@
 /**
  * What the player set up: party, formation, gear, ability order, seed and
- * settings. Kept in localStorage, so a reload keeps the build.
+ * settings. Kept in localStorage, so a reload keeps the build. The journey and
+ * free play each keep their own party, formation and gear (the loadout): the
+ * one in use sits in `setup`, the other in `setup.other`, so switching modes
+ * loses neither. What isn't owned is dropped on read (journey.ts says what's owned).
  */
 import type { Party } from "../../src/schema.js";
 import { c, classes, formations } from "./content.js";
 import { plainWeapon } from "../../src/sim/parties.js";
+import { mode as journeyMode, owned, ownsGear, resetJourney, setMode as setJourneyMode, type Mode } from "./journey.js";
 
 /** `portraits`: what stands for a class in the menus. "faces" everywhere, "sprites" everywhere, or "mixed": sprites in the party's slots, faces elsewhere. */
 export type Portraits = "faces" | "sprites" | "mixed";
 export type Settings = { speed: number; step: boolean; partyBars: boolean; sound: boolean; music: boolean; designer: boolean; autoContinue: boolean; theme: string; bigNumbers: boolean; portraits: Portraits };
 
-export type Setup = {
-  party: string[];
-  formation: string;
-  gear: Record<string, Record<string, string>>;
+/** Who goes, where they stand and what they carry: one per mode. */
+export type Loadout = { party: string[]; formation: string; gear: Record<string, Record<string, string>> };
+
+export type Setup = Loadout & {
+  /** The mode the loadout in use belongs to; `other` is the other mode's. An install from before the journey has none: its loadout is free play's. */
+  mode?: Mode;
+  other?: Loadout;
   abilities: Record<string, string[]>;
   seed: number;
   settings: Settings;
@@ -22,11 +29,15 @@ export type Setup = {
 const KEY = "memory-dungeon.setup.v2";
 const OLD_KEY = "memory-dungeon.setup.v1";
 
+const freshLoadout = (): Loadout => {
+  const start = c.pack.campaign?.start ?? c.pack.starter;
+  return { party: [...start.classes].slice(0, 3), formation: start.formations[0], gear: {} };
+};
+
 function fresh(): Setup {
   return {
-    party: [...c.pack.starter.classes],
-    formation: c.pack.starter.formations[0],
-    gear: {},
+    ...freshLoadout(),
+    mode: journeyMode(),
     abilities: {},
     seed: 1,
     settings: { speed: 1, step: false, partyBars: false, sound: true, music: true, designer: false, autoContinue: false, theme: "night", bigNumbers: false, portraits: "mixed" },
@@ -34,12 +45,14 @@ function fresh(): Setup {
 }
 
 export let setup: Setup = load();
+useMode(journeyMode());
 
 function load(): Setup {
   try {
     const raw = localStorage.getItem(KEY) ?? localStorage.getItem(OLD_KEY);
     if (!raw) return fresh();
-    const s = { ...fresh(), ...(JSON.parse(raw) as Partial<Setup>) };
+    const stored = JSON.parse(raw) as Partial<Setup>;
+    const s = { ...fresh(), ...stored, mode: stored.mode ?? "free" };
     const old = s.settings as Partial<Settings> & { tickMs?: number; palette?: string };
     s.settings = { ...fresh().settings, ...old };
     if (!(s.settings.speed === 1 || s.settings.speed === 2 || s.settings.speed === 4)) s.settings.speed = 1;
@@ -63,19 +76,47 @@ export function save() {
   }
 }
 
+/** Everything back to the start: settings, both loadouts, and the journey (in journey mode). */
 export function reset() {
+  resetJourney();
+  setJourneyMode("journey");
   setup = fresh();
   save();
 }
 
-/** A class's gear as set up: the plain weapon of its first kind unless the player chose otherwise. */
+/** Puts the mode's loadout in use, keeping the other one, and records the mode. */
+export function useMode(m: Mode) {
+  setJourneyMode(m);
+  if (setup.mode !== m) {
+    const { party, formation, gear } = setup;
+    Object.assign(setup, setup.other ?? freshLoadout());
+    setup.other = { party, formation, gear };
+    setup.mode = m;
+  }
+  sanitize();
+  save();
+}
+/** A fresh journey loadout, the starter party in the starter formation, whichever mode is in use. */
+export function resetJourneyLoadout() {
+  if (setup.mode === "journey") Object.assign(setup, freshLoadout());
+  else setup.other = freshLoadout();
+  save();
+}
+/** Drops party members that aren't owned, and an unowned formation for the first owned one (the journey changed under them). */
+export function sanitize() {
+  const o = owned();
+  setup.party = setup.party.filter((id) => o.classes.includes(id)).slice(0, 3);
+  if (!o.formations.includes(setup.formation)) setup.formation = o.formations[0] ?? formations[0].id;
+}
+
+/** A class's gear as set up: the plain weapon of its first kind unless the player chose otherwise. Gear that isn't owned is left out. */
 export function gearFor(cls: string): Record<string, string> {
   const g = { ...(setup.gear[cls] ?? {}) };
+  for (const slot of Object.keys(g)) if (!c.gear.has(g[slot]) || !ownsGear(g[slot])) delete g[slot];
   if (!g.weapon) {
     const plain = plainWeapon(c, cls);
     if (plain) g.weapon = plain;
   }
-  for (const slot of Object.keys(g)) if (!c.gear.has(g[slot])) delete g[slot];
   return g;
 }
 

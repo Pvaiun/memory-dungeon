@@ -154,17 +154,20 @@ export const abilities: A[] = [
   a("paladin", "smite", "Smite", "Heavy Light damage to the foe with the highest Attack or Magic.", { ...timing("long", "very_long", { costly: true }), target: T.highestAMFoe, do: [magic("light", hit("magic", "heavy"))] }),
   // Valkyrie
   a("valkyrie", "gale_spear", "Gale spear", "Three quick Wind hits on a foe that isn't Taunting, each adding a few Shock.", {
-    ...timing("short", "quick"), seek: true, target: T.notTauntingFoe, do: [magic("wind", hit("attack", "light"), { hits: 3, apply: [{ status: "shock", stacks: stacks("few", "attack") }] })],
+    // Campaign pass: 0.1 of Attack a hit, not light's 0.2. Three undodgeable hits with Seek on a short cooldown made the Valkyrie the best class on every node.
+    ...timing("short", "quick"), seek: true, target: T.notTauntingFoe, do: [magic("wind", from("attack", 0.1), { hits: 3, apply: [{ status: "shock", stacks: stacks("few", "attack") }] })],
   }),
   a("valkyrie", "rally", "Rally", "Heals the lowest ally; the amount scales from Magic.", {
-    ...timing("medium", "normal"), ...waitsFor("allies", { hpBelow: 100 }), target: T.lowestShareAlly, do: [{ op: "heal", amount: from("magic", 0.6) }],
+    // Campaign pass: 0.3 of Magic, not 0.6.
+    ...timing("medium", "normal"), ...waitsFor("allies", { hpBelow: 100 }), target: T.lowestShareAlly, do: [{ op: "heal", amount: from("magic", 0.3) }],
   }),
   a("valkyrie", "valhalla", "Valhalla", "Revives a random knocked-out ally with a tenth of its HP, every action ready.", {
     ...timing("long", "quick", { costly: true }), ...waitsFor("allies", { ko: true }), target: T.koAlly, do: [{ op: "revive", hp: { scale: [{ ratio: REVIVE.tenth, stat: "max_hp", of: "target" }] }, ready: true }],
   }),
   // Bard
   a("bard", "allegro", "Allegro", "Haste on a random ally.", { ...timing("medium", "normal"), target: "ally", do: [apply("haste")] }),
-  a("bard", "war_ballad", "War ballad", "Several Might on the ally with the highest Attack or Magic.", { ...timing("medium", "normal"), target: T.highestAMAlly, do: [apply("might", { stacks: stacks("several", "magic") })] }),
+  // Campaign pass: many Might, not several. The Bard was in no winning build on any node.
+  a("bard", "war_ballad", "War ballad", "Many Might on the ally with the highest Attack or Magic.", { ...timing("medium", "normal"), target: T.highestAMAlly, do: [apply("might", { stacks: stacks("many", "magic") })] }),
   a("bard", "lullaby", "Lullaby", "Slow on a random foe.", { ...timing("medium", "long"), do: [apply("slow")] }),
   // Hexer
   a("hexer", "hush", "Hush", "Silences the foe with the highest Attack or Magic.", { ...timing("long", "quick"), ...waitsFor("foes", { lacks: "silence" }), target: lacking(T.highestAMFoe, "silence"), do: [apply("silence")] }),
@@ -173,7 +176,8 @@ export const abilities: A[] = [
   // Monk
   a("monk", "flow", "Flow", "Haste on itself.", { ...timing("short", "quick"), target: "self", do: [apply("haste")] }),
   a("monk", "burning_fist", "Burning fist", "Three quick Fire hits on the foe with the most Burn, each adding a few.", {
-    ...timing("short", "quick"), target: T.mostFoe("burn"), do: [magic("fire", hit("attack", "light"), { hits: 3, apply: [{ status: "burn", stacks: stacks("few", "attack") }] })],
+    // Campaign pass: 0.25 of Attack a hit, not 0.2.
+    ...timing("short", "quick"), target: T.mostFoe("burn"), do: [magic("fire", from("attack", 0.25), { hits: 3, apply: [{ status: "burn", stacks: stacks("few", "attack") }] })],
   }),
   a("monk", "pressure_point", "Pressure point", "Stuns the foe with the highest Attack or Magic, past any guard.", {
     ...timing(STUN_COOLDOWN, "normal"), seek: true, target: lacking(T.highestAMFoe, "stun", true), do: [phys("blunt", hit("attack", "normal"), { apply: [{ status: "stun" }] })],
@@ -190,13 +194,15 @@ export const abilities: A[] = [
   a("vampire", "frenzy", "Frenzy", "Several Might on itself.", { ...timing("medium", "quick"), target: "self", do: [apply("might", { stacks: stacks("several", "attack") })] }),
   // Pyromancer
   a("pyromancer", "firebolt", "Firebolt", "Fire at the foe with the most Burn, adding several.", { ...timing("short", "normal"), target: T.mostFoe("burn"), do: [magic("fire", hit("magic", "normal"), { apply: [{ status: "burn", stacks: stacks("several", "magic") }] })] }),
-  a("pyromancer", "fireball", "Fireball", "Fire on every foe, adding a few Burn to each.", { ...timing("medium", "long"), target: T.everyFoe, do: [magic("fire", hit("magic", "light"), { apply: [{ status: "burn", stacks: stacks("few", "magic") }] })] }),
+  // Campaign pass: normal hits (0.35 of Magic), not light. Squishy damage dealers were in few winning builds; the run's attrition favours sustain.
+  a("pyromancer", "fireball", "Fireball", "Fire on every foe, adding a few Burn to each.", { ...timing("medium", "long"), target: T.everyFoe, do: [magic("fire", hit("magic", "normal"), { apply: [{ status: "burn", stacks: stacks("few", "magic") }] })] }),
   a("pyromancer", "pyre", "Pyre", "Heavy Fire on the foe with the most Burn, rising with each stack. The Burn stays.", {
     ...timing("long", "very_long"), target: T.mostFoe("burn"), do: [magic("fire", { scale: [{ ratio: HIT.heavy, stat: "magic" }, { ratio: 150, stacks: "burn", of: "target" }] })],
   }),
   // Frostweaver
   a("frostweaver", "frost_lance", "Frost lance", "Ice at the foe with the most Chill, adding several.", { ...timing("short", "normal"), target: T.mostFoe("chill"), do: [magic("ice", hit("magic", "normal"), { apply: [{ status: "chill", stacks: stacks("several", "magic") }] })] }),
-  a("frostweaver", "blizzard", "Blizzard", "Ice on every foe, adding a few Chill to each.", { ...timing("medium", "long"), target: T.everyFoe, do: [magic("ice", hit("magic", "light"), { apply: [{ status: "chill", stacks: stacks("few", "magic") }] })] }),
+  // Campaign pass: 0.3 of Magic, not light's 0.2, for the same reason as Fireball.
+  a("frostweaver", "blizzard", "Blizzard", "Ice on every foe, adding a few Chill to each.", { ...timing("medium", "long"), target: T.everyFoe, do: [magic("ice", from("magic", 0.3), { apply: [{ status: "chill", stacks: stacks("few", "magic") }] })] }),
   a("frostweaver", "stillness", "Stillness", "Clarity on a random ally.", { ...timing("long", "quick"), target: "ally", do: [apply("clarity")] }),
   // Stormcaller
   a("stormcaller", "chain_lightning", "Chain lightning", "Lightning at a random foe, then up to three others, adding a few Shock to each.", {

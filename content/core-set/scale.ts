@@ -42,6 +42,12 @@ export const RULES = {
   /** Each physical hit loses this share of the target's Armor: Armor 5 takes 600 off, Armor 8 nearly blanks a sword. */
   armorRatio: 0.12,
   maxEnemies: 8,
+  /**
+   * An interrupted cast, or one whose targets are gone, goes on cooldown (the core-set report's decisions A and E,
+   * taken on the campaign branch): a Stun that lands in Inferno's wind-up buys a whole cooldown, and two Ghouls
+   * reaching for one corpse don't loop.
+   */
+  lostCast: "cooldown" as const,
 };
 
 /** MP cost follows the cooldown unless an ability is costly, which doubles it. */
@@ -92,7 +98,8 @@ export const ENEMY_HIT = {
   /** Brand: steady pressure. */
   brand: 0.05,
   /** Inferno: ends the run if it lands uninterrupted. */
-  inferno: 0.5,
+  /** Campaign pass: 0.5 wiped every party it landed on; at 0.35 it nearly wipes, and an interrupt buys a whole cooldown. */
+  inferno: 0.35,
   /** Hailstorm: a raidwide the Cleric can mend. */
   hailstorm: 0.08,
   /** Tempest: a raidwide the Cleric can absorb. */
@@ -160,12 +167,20 @@ export const RESIST = {
 
 /** +1 on gear or a formation slot, for an amount stat; crit chance moves in crit() steps. */
 export const STEP = P;
+/**
+ * A gear or formation step of max HP is half a point (campaign pass). At a whole point, Heartstone doubled a caster's HP
+ * and fed its Regen and Shield cap too, so HP everywhere was every class's best kit.
+ */
+export const HP_STEP = P / 2;
+/** The step for a stat, in the data's units. */
+export const stepFor = (stat: string) => (stat === "max_hp" ? HP_STEP : STEP);
 
 // ─── Statuses: sizes and durations ───────────────────────────────────────────
 
 export const STATUS = {
   /** 90 a tick-pair: Regen on a 2-HP unit (80) nearly outruns it, as the Snake Pit's story needs. */
-  poison: { every: 2, damage: 90, duration: 10 },
+  /** Campaign pass: 160 a pulse for 12 ticks, about a third of a caster's HP per application. At 90 it showed as 1. */
+  poison: { every: 2, damage: 160, duration: 12 },
   /** 8 pulses of 4%: a Prayer heals a third of everyone's max HP over 16 ticks. */
   regen: { every: 2, share: 0.04, duration: 16 },
   shield: { capShare: 0.5 },
@@ -176,7 +191,12 @@ export const STATUS = {
   slow: { speed: -40, duration: 10 },
   haste: { speed: 40, duration: 10 },
   taunt: { duration: 8 },
-  burn: { every: 2, perStack: 50, drop: 0.25 },
+  /**
+   * Campaign pass: a tenth of the stacks go each pulse, not a quarter, so Burn builds over a fight (a Pyromancer
+   * holds 15 to 25 on its target) and lingers when the burning stops. Each stack burns for 30 a pulse, so a stack's
+   * whole Burn is 1.5 times what it was: slower Burn spends more of itself after its target is dead.
+   */
+  burn: { every: 2, perStack: 30, drop: 0.1 },
   chill: { cap: 8, perStack: -6, every: 3, drop: 1 / 3 },
   shock: { perStack: 80, drop: 0.5 },
   ward: { resist: 30, duration: 12 },

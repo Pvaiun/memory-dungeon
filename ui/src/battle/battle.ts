@@ -21,11 +21,14 @@ import { drawDigits, iconEl, iconOf, OUTLINE, statusEl } from "../pixel.js";
 import { classSheet, enemySheet, portraitEl } from "../sheet.js";
 import { Driver, type Ev } from "./driver.js";
 import { Narrator, type Beat, type Line, type Tone } from "./narrate.js";
-import { Scene, shieldOf, W, H } from "./scene.js";
+import { Scene, shieldOf, themeOf, W, H } from "./scene.js";
 import { setMusic, setSound, sfx } from "./audio.js";
 import { go } from "../screens.js";
+import { clear as clearNode, isCurrent, nodes, onJourney } from "../journey.js";
+import { celebrate } from "../celebrate.js";
 
-export type BattleArgs = { dungeon: string; seed?: number };
+/** `node`: the journey node it was started from. Winning that node's whole run, while it's the one to clear, clears it; its single fights are practice. */
+export type BattleArgs = { dungeon: string; seed?: number; node?: string };
 
 /** Engine milliseconds per tick at 1×; the typing speed and the time a beat stays once typed. */
 const TICK_MS = 500;
@@ -48,8 +51,25 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   } catch (e) {
     return fail(`The party can't enter: ${(e as Error).message}`);
   }
-  const theme = args.dungeon.split("~")[0];
+  const theme = themeOf(args.dungeon);
   const single = args.dungeon.includes("~");
+  const nodeAt = args.node ? nodes().findIndex((n) => n.id === args.node) : -1;
+  /** Does winning this run clear a node? Only the whole run of the node to clear next, in the journey. */
+  const pays = nodeAt >= 0 && !single && onJourney() && isCurrent(args.node!);
+  let clearedNow = false, celebrated = false;
+  const cheer = () => { celebrated = true; celebrate(frame, nodeAt); };
+  /** Records the clear as soon as the engine has the last fight won, before the story catches up, so a reload can't lose it. */
+  const checkClear = () => {
+    if (pays && !clearedNow && driver.phase === "won" && driver.fightNo >= driver.fightTotal) clearedNow = clearNode(nodeAt);
+  };
+  /** Out of the fight: back to the node it came from, or home. */
+  const exit = () => {
+    stop();
+    if (clearedNow && !celebrated) (go("journey"), cheer());
+    else if (args.node) go("node", args.node);
+    else go("home");
+  };
+  const exitLabel = args.node ? "JOURNEY" : "MENU";
 
   // ─── DOM ───
   const canvas = h("canvas", { class: "field", width: W, height: H });
@@ -625,11 +645,11 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
 
   /** Leaving mid-fight loses it: ask first. */
   function confirmLeave() {
-    if (!driver.fight || driver.fight.result) { stop(); go("home"); return; }
+    if (!driver.fight || driver.fight.result) return exit();
     const resume = holdClock();
     openOverlay("LEAVE THE FIGHT?", h("div", null,
       h("div", { class: "text dim wrap small" }, "The fight and the run are lost. The same seed plays the same fight again from the menu."),
-      h("div", { class: "btns", style: "margin-top:.75rem" }, button("LEAVE", () => { stop(); go("home"); }, "hi"), button("STAY", () => closeOverlay(true))),
+      h("div", { class: "btns", style: "margin-top:.75rem" }, button("LEAVE", () => exit(), "hi"), button("STAY", () => closeOverlay(true))),
     ), resume);
   }
 
@@ -648,6 +668,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   function endOfFight() {
     if (ended) return;
     ended = true;
+    checkClear();
     const f = driver.fight!;
     const partyUnits = driver.units().filter((u) => u.side === "party");
     const tally = fightTally();
@@ -662,12 +683,19 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     );
     const title = won ? (last ? (single ? "VICTORY" : "RUN CLEARED") : "VICTORY") : "DEFEAT";
     const where = single ? "" : `${driver.fightNo}/${driver.fightTotal}`;
-    const btns: Child[] = won
-      ? [last ? null : button("NEXT", () => nextFight(), "hi"), button("AGAIN", () => restart(seed)), button("NEW SEED", () => restart(Math.floor(Math.random() * 100000) + 1)), button("MENU", () => { stop(); go("home"); })]
-      : [button("RETRY", () => restart(seed), "hi"), button("NEW SEED", () => restart(Math.floor(Math.random() * 100000) + 1)), button("MENU", () => { stop(); go("home"); })];
+    const newSeed = () => restart(Math.floor(Math.random() * 100000) + 1);
+    // A node just cleared leads to the journey; a replay or practice says it paid nothing.
+    const btns: Child[] = clearedNow
+      ? [button("JOURNEY", () => { stop(); go("journey"); if (!celebrated) cheer(); }, "hi")]
+      : won
+        ? [last ? null : button("NEXT", () => nextFight(), "hi"), button("AGAIN", () => restart(seed)), button("NEW SEED", newSeed), button(exitLabel, exit)]
+        : [button("RETRY", () => restart(seed), "hi"), button("NEW SEED", newSeed), button(exitLabel, exit)];
+    const note = clearedNow ? h("div", { class: "line hi" }, "JOURNEY: CLEARED!")
+      : args.node && won && last ? h("div", { class: "line dim small" }, single ? "PRACTICE: PAYS NOTHING" : "REPLAY: PAYS NOTHING") : null;
     const box = win("summary",
       h("div", { class: "line" }, h("span", { class: `grow ${won ? "good" : "bad"}` }, title), h("span", { class: "dim" }, `${where} T${f.round}`)),
       table,
+      note,
       h("div", { class: "btns", style: "margin-top:.5rem" }, ...btns, button("LOG", () => openLog())),
     );
     setTimeout(() => {
@@ -676,6 +704,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       screen.append(box);
     }, 900);
     if (won && !last && setup.settings.autoContinue) setTimeout(() => { if (!stopped && ended) nextFight(); }, 2200);
+    if (clearedNow) setTimeout(() => { if (!stopped && !celebrated) cheer(); }, 1700);
   }
   /** Damage dealt and taken, healing done and actions resolved, per unit, from this fight's log. */
   function fightTally(): Map<string, Tally> {
@@ -711,12 +740,12 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     driver.continueRun();
     pull();
     if (driver.phase === "run_won" || driver.phase === "run_lost") {
-      screen.append(win("", h("div", { class: "line" }, driver.phase === "run_won" ? "RUN CLEARED" : "RUN LOST"), h("div", { class: "btns" }, button("MENU", () => { stop(); go("home"); }))));
+      screen.append(win("", h("div", { class: "line" }, driver.phase === "run_won" ? "RUN CLEARED" : "RUN LOST"), h("div", { class: "btns" }, button(exitLabel, exit))));
     }
   }
   function restart(newSeed: number) {
     stop();
-    go("battle", { dungeon: args.dungeon, seed: newSeed });
+    go("battle", { ...args, seed: newSeed });
   }
   /** Plays the rest of the fight at once: the log gets every line, the window the last beat. */
   function fastForward() {
@@ -785,6 +814,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
           if (queue.length) startBeat(queue.shift()!);
         }
       }
+      checkClear();
       if ((driver.phase === "won" || driver.phase === "lost") && !playing && !queue.length && !driver.pending.length) endOfFight();
     } else if (playing && playing.typedAt !== null) cursorEl.style.visibility = Math.floor(now / 400) % 2 ? "hidden" : "visible";
     scene.frame(vwall);
@@ -807,7 +837,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   };
   window.addEventListener("keydown", onKey);
   if (driver.phase === "run_won" || driver.phase === "run_lost") {
-    screen.append(win("", h("div", { class: "line" }, "NOTHING TO FIGHT"), h("div", { class: "btns" }, button("MENU", () => { stop(); go("home"); }))));
+    screen.append(win("", h("div", { class: "line" }, "NOTHING TO FIGHT"), h("div", { class: "btns" }, button(exitLabel, exit))));
   }
   // The phone's back button: closes an overlay (nav.overlay), else asks before leaving the fight.
   nav.back = () => confirmLeave();

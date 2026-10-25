@@ -4,10 +4,10 @@
  * every unit holds, reacting to the fight starting or an ally falling.
  */
 import type { FormationT, StatusT } from "../../src/schema.js";
-import { FLAT_STACKS, SPECIAL, STEP, crit } from "./scale.js";
+import { FLAT_STACKS, SPECIAL, stepFor, crit } from "./scale.js";
 
 type Change = { stat: string; flat: number };
-const st = (stat: string, n: number): Change => ({ stat, flat: n * STEP });
+const st = (stat: string, n: number): Change => ({ stat, flat: n * stepFor(stat) });
 const critStep = (n: number): Change => ({ stat: "crit_chance", flat: crit(n) });
 const lines = ["front", "middle", "back"] as const;
 
@@ -49,7 +49,8 @@ export const formations: FormationT[] = [
     slot("tucked_in", "Tucked in", "Hits much softer.", 2, [st("attack", -2), st("magic", -2)]),
   ]),
   formation("scatter", "Scatter", "Dodge, don't block.", [
-    slot("decoy", "Decoy", "Dodges, draws more, thin armor.", 0, [{ stat: "evasion", flat: SPECIAL.evasion.medium }, st("aggro", 2), st("armor", -2)]),
+    // Campaign pass: Armor −1, not −2. At −2 the Decoy lost more to Armor than it gained in Evasion, and Scatter lost on every node.
+    slot("decoy", "Decoy", "Dodges, draws more, thinner armor.", 0, [{ stat: "evasion", flat: SPECIAL.evasion.medium }, st("aggro", 2), st("armor", -1)]),
     slot("runner_a", "Runner", "Draws less.", 1, [st("aggro", -1)]),
     slot("runner_b", "Runner", "Draws less.", 2, [st("aggro", -1)]),
   ]),
@@ -69,8 +70,9 @@ export const formations: FormationT[] = [
     slot("other_b", "Other", undefined, 2, []),
   ], "last_stand_spur"),
   formation("escort", "Escort", "Two protectors, one carry. A Shield for the others when an ally falls.", [
-    slot("escort_a", "Escort", "Draws more, sturdier, armored.", 0, [st("aggro", 1), st("armor", 1), st("max_hp", 1)]),
-    slot("escort_b", "Escort", "Draws more, sturdier, armored.", 1, [st("aggro", 1), st("armor", 1), st("max_hp", 1)]),
+    // Campaign pass: no HP on the Escort slots. With it, Escort was the best formation on every node (nothing taken away, plus an effect).
+    slot("escort_a", "Escort", "Draws more, armored.", 0, [st("aggro", 1), st("armor", 1)]),
+    slot("escort_b", "Escort", "Draws more, armored.", 1, [st("aggro", 1), st("armor", 1)]),
     slot("charge", "Charge", "Draws far less, hits harder, crits more.", 2, [st("aggro", -2), st("attack", 1), st("magic", 1), critStep(1)]),
   ], "escort_insurance"),
 ];

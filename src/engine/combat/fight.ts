@@ -70,7 +70,11 @@ export type Item =
       dead: boolean;
     });
 
-export type CFight = Omit<Fight, "units"> & { units: CUnit[]; now: number; seq: number; queue: Item[]; moments: number; begun: boolean; seed: number };
+export type CFight = Omit<Fight, "units"> & {
+  units: CUnit[]; now: number; seq: number; queue: Item[]; moments: number; begun: boolean; seed: number;
+  /** The dungeon's change to every foe (a campaign trial's): applied to each enemy as it's made, summons included. */
+  foes?: S.FoesT;
+};
 
 /** Not design rules: safety stops in case content makes a fight that can't end. Either counts as a loss. */
 export const LIMITS = { ticks: 5000, moments: 200_000 };
@@ -379,8 +383,16 @@ function resolve(w: W, u: CUnit, i: number) {
     return;
   }
   const targets = choose(w, u, d.target, seeks(w, u, d));
-  // A stated rule that finds nobody when the action resolves: no MP spent, no cooldown (step 4's rule, kept as the default).
-  if (!targets.length) return fail("target");
+  // A stated rule that finds nobody when the action resolves: no MP spent, and by default no cooldown (step 4's rule);
+  // under ruleset.lostCast "cooldown" it goes on cooldown, as a cast that fizzles for MP does.
+  if (!targets.length) {
+    fail("target");
+    if (w.c.pack.ruleset.lostCast === "cooldown") {
+      u.acts[i].ready = w.f.now + cooldownOf(w, u, d);
+      u.busy = w.f.now + d.recovery;
+    }
+    return;
+  }
   if (d.mp) {
     u.mp -= d.mp;
     w.log?.({ t: "mp", vis: "hidden", at: w.f.now, target: u.id, amount: -d.mp, mp: u.mp });
@@ -791,8 +803,9 @@ function hit(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
   }
   // The hit and its riders read the same state, and share one crit roll.
   const crit = critRoll(w, a, stat(w, a, "crit_chance"), stat(w, a, "crit_multiplier"));
+  const power = stat(w, a, "power");
   const results = parts.map(({ p, raw, rider }) =>
-    rider && p.type === "physical" && evaded(w, a, t) ? null : calc(w, t, p, raw, partTags(kind, p), boostOf(w, a, partTags(kind, p), t), crit),
+    rider && p.type === "physical" && evaded(w, a, t) ? null : calc(w, t, p, raw, partTags(kind, p), boostOf(w, a, partTags(kind, p), t) + power, crit),
   );
   let dealt = 0, lost = 0;
   for (let i = 0; i < parts.length && !t.ko; i++) {
@@ -847,7 +860,7 @@ function strike(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
       ? critRoll(w, from, stat(w, from, "crit_chance"), stat(w, from, "crit_multiplier"))
       : critRoll(w, st.holder, d.crit.chance, d.crit.multiplier ?? stat(w, st.holder, "crit_multiplier"));
   }
-  const r = calc(w, t, p, raw, tags, st.fixedBoost ? 0 : boostOf(w, ctx.actor, tags, t), crit);
+  const r = calc(w, t, p, raw, tags, st.fixedBoost ? 0 : boostOf(w, ctx.actor, tags, t) + stat(w, ctx.actor, "power"), crit);
   const by = st.fixedBoost ? (d.perSource ? unit(w, st.src) : null) : ctx.actor;
   if (r.word === "ABSORB") return absorb(w, by, t, d.id, r);
   const tk = take(w, t, r.amount);
@@ -961,12 +974,16 @@ function endStatus(w: W, u: CUnit, s: SInst, cause: S.CauseT) {
   fire(w, ev("status_ended", u, null, { status: d.id, cause, ending: s }));
 }
 
-/** An interrupting lockout cancels a cast it covers, as if the unit were KO'd mid-cast: no MP spent, no cooldown (section 7.3). */
+/**
+ * An interrupting lockout cancels a cast it covers, as if the unit were KO'd mid-cast: no MP spent, and by default
+ * no cooldown (section 7.3); under ruleset.lostCast "cooldown" the action goes on cooldown.
+ */
 function interrupt(w: W, u: CUnit, lockout: string) {
   if (!u.cast) return;
   const d = actDef(w, u, u.cast.act);
   if (!covers(lockout, d)) return;
   w.f.queue = w.f.queue.filter((it) => !(it.k === "act" && it.unit === u.id));
+  if (w.c.pack.ruleset.lostCast === "cooldown") u.acts[u.cast.act].ready = w.f.now + cooldownOf(w, u, d);
   u.cast = null;
   w.log?.({ t: "interrupt", vis: "player", at: w.f.now, unit: u.id, act: d.id, name: d.name });
   fire(w, ev("action_interrupted", u, null, { kind: d.kind }));
@@ -1177,16 +1194,19 @@ function revive(w: W, by: CUnit, t: CUnit, hp: number, ready: boolean) {
 }
 
 /** A unit for the enemy side, from an enemy definition: at fight start or when summoned. */
-export function makeUnit(c: Content, f: Pick<CFight, "units" | "seed" | "stage">, enemyId: string, side: CUnit["side"], lettered: boolean): CUnit {
+export function makeUnit(c: Content, f: Pick<CFight, "units" | "seed" | "stage" | "foes">, enemyId: string, side: CUnit["side"], lettered: boolean): CUnit {
   const e = c.enemies.get(enemyId)!;
   const n = f.units.filter((u) => u.side === side).length + 1;
   const same = f.units.filter((u) => u.ref === enemyId).length;
   const id = `${side === "enemy" ? "e" : "p"}${n}`;
-  const m = { base: { ...e.stats }, flat: {}, pct: {} };
+  const foes = side === "enemy" ? f.foes : undefined;
+  const m: Pick<CUnit, "base" | "flat" | "pct"> = { base: { ...e.stats }, flat: {}, pct: {} };
+  if (foes?.power) m.flat.power = foes.power;
+  if (foes?.hp) m.pct.max_hp = foes.hp;
   const stats = derive(c, m);
   return {
     id, ref: enemyId, name: lettered ? `${e.name} ${letter(same)}` : e.name, side, stats, hp: stats.max_hp, mp: stats.max_mp,
-    slot: n - 1, ...m, start: [...(e.statuses ?? [])], weapon: e.weapon ? `enemy:${enemyId}` : "unarmed",
+    slot: n - 1, ...m, start: [...(e.statuses ?? []), ...(foes?.statuses ?? [])], weapon: e.weapon ? `enemy:${enemyId}` : "unarmed",
     ko: false, rng: rngFor(f.seed, `fight:${f.stage}:${id}`),
     acts: [...(e.abilities ?? []).map((a) => ({ id: a, ready: 0 })), { id: "basic", ready: 0 }], cast: null, busy: 0, statuses: [],
   };

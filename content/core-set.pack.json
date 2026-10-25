@@ -52,6 +52,7 @@
    }
   },
   "maxEnemies": 8,
+  "lostCast": "cooldown",
   "run": {
    "defeatedUnits": "stay_down",
    "perkOffer": {
@@ -235,6 +236,14 @@
    "floor": 0,
    "cap": 100,
    "brings": "double_strike"
+  },
+  {
+   "id": "power",
+   "name": "Power",
+   "kind": "points",
+   "default": 0,
+   "floor": -90,
+   "note": "Damage dealt by hits and reactions, +%. Only a dungeon's foes modifier sets it: how a campaign trial makes its foes hit harder."
   }
  ],
  "elements": [
@@ -368,14 +377,14 @@
    "label": "debuff",
    "show": "icon",
    "stacking": "refresh",
-   "duration": 10,
+   "duration": 12,
    "pulse": {
     "every": 2,
     "do": [
      {
       "op": "damage",
       "type": "none",
-      "amount": 90
+      "amount": 160
      }
     ]
    }
@@ -569,12 +578,12 @@
      {
       "op": "damage",
       "type": "none",
-      "amount": 50
+      "amount": 30
      }
     ]
    },
    "drop": {
-    "fraction": 0.25
+    "fraction": 0.1
    }
   },
   {
@@ -3023,7 +3032,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.2,
+        "ratio": 0.1,
         "stat": "attack"
        }
       ]
@@ -3070,7 +3079,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.6,
+        "ratio": 0.3,
         "stat": "magic"
        }
       ]
@@ -3134,7 +3143,7 @@
    "id": "war_ballad",
    "class": "bard",
    "name": "War ballad",
-   "text": "Several Might on the ally with the highest Attack or Magic.",
+   "text": "Many Might on the ally with the highest Attack or Magic.",
    "cooldown": 12,
    "cast": 1.5,
    "mp": 300,
@@ -3155,7 +3164,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 0.0013,
+        "ratio": 0.0023,
         "stat": "magic"
        }
       ]
@@ -3309,7 +3318,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.2,
+        "ratio": 0.25,
         "stat": "attack"
        }
       ]
@@ -3604,7 +3613,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.2,
+        "ratio": 0.35,
         "stat": "magic"
        }
       ]
@@ -3725,7 +3734,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.2,
+        "ratio": 0.3,
         "stat": "magic"
        }
       ]
@@ -4357,7 +4366,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.5,
+        "ratio": 0.35,
         "stat": "magic"
        }
       ]
@@ -4871,7 +4880,7 @@
     },
     {
      "stat": "max_hp",
-     "flat": 1000
+     "flat": 500
     }
    ]
   },
@@ -4957,7 +4966,7 @@
    "stats": [
     {
      "stat": "max_hp",
-     "flat": 2000
+     "flat": 1000
     }
    ]
   },
@@ -5349,7 +5358,7 @@
    "stats": [
     {
      "stat": "max_hp",
-     "flat": 1000
+     "flat": 500
     },
     {
      "stat": "aggro",
@@ -5469,7 +5478,7 @@
     },
     {
      "stat": "max_hp",
-     "flat": 1000
+     "flat": 500
     }
    ]
   },
@@ -5812,7 +5821,7 @@
     },
     {
      "stat": "max_hp",
-     "flat": 1000
+     "flat": 500
     }
    ]
   },
@@ -5842,7 +5851,7 @@
    "stats": [
     {
      "stat": "max_hp",
-     "flat": 2000
+     "flat": 1000
     }
    ]
   },
@@ -5948,7 +5957,7 @@
    "stats": [
     {
      "stat": "max_hp",
-     "flat": 1000
+     "flat": 500
     },
     {
      "stat": "armor",
@@ -5971,7 +5980,7 @@
     },
     {
      "stat": "max_hp",
-     "flat": 1000
+     "flat": 500
     }
    ]
   },
@@ -6085,7 +6094,7 @@
     },
     {
      "stat": "max_hp",
-     "flat": -1000
+     "flat": -500
     }
    ]
   },
@@ -6162,7 +6171,7 @@
     },
     {
      "stat": "max_hp",
-     "flat": 1000
+     "flat": 500
     }
    ]
   },
@@ -6276,7 +6285,7 @@
    "stats": [
     {
      "stat": "max_hp",
-     "flat": 2000
+     "flat": 1000
     }
    ]
   },
@@ -6420,7 +6429,7 @@
     },
     {
      "stat": "max_hp",
-     "flat": -1000
+     "flat": -500
     }
    ]
   },
@@ -6460,7 +6469,7 @@
     },
     {
      "stat": "max_hp",
-     "flat": -1000
+     "flat": -500
     }
    ]
   }
@@ -6572,7 +6581,7 @@
      "stats": [
       {
        "stat": "max_hp",
-       "flat": 2000
+       "flat": 1000
       },
       {
        "stat": "armor",
@@ -6664,7 +6673,7 @@
       },
       {
        "stat": "max_hp",
-       "flat": -1000
+       "flat": -500
       }
      ]
     },
@@ -6717,7 +6726,7 @@
      "stats": [
       {
        "stat": "max_hp",
-       "flat": 2000
+       "flat": 1000
       }
      ]
     },
@@ -6751,7 +6760,7 @@
     {
      "id": "decoy",
      "name": "Decoy",
-     "text": "Dodges, draws more, thin armor.",
+     "text": "Dodges, draws more, thinner armor.",
      "layout": {
       "line": "front",
       "column": 0
@@ -6767,7 +6776,7 @@
       },
       {
        "stat": "armor",
-       "flat": -2000
+       "flat": -1000
       }
      ]
     },
@@ -6828,7 +6837,7 @@
       },
       {
        "stat": "max_hp",
-       "flat": -1000
+       "flat": -500
       }
      ]
     },
@@ -6851,7 +6860,7 @@
       },
       {
        "stat": "max_hp",
-       "flat": -1000
+       "flat": -500
       }
      ]
     },
@@ -6874,7 +6883,7 @@
       },
       {
        "stat": "max_hp",
-       "flat": -1000
+       "flat": -500
       }
      ]
     }
@@ -6923,7 +6932,7 @@
      "stats": [
       {
        "stat": "max_hp",
-       "flat": 1000
+       "flat": 500
       }
      ]
     },
@@ -6938,7 +6947,7 @@
      "stats": [
       {
        "stat": "max_hp",
-       "flat": 1000
+       "flat": 500
       }
      ]
     }
@@ -6968,7 +6977,7 @@
       },
       {
        "stat": "max_hp",
-       "flat": -2000
+       "flat": -1000
       }
      ]
     },
@@ -7002,7 +7011,7 @@
     {
      "id": "escort_a",
      "name": "Escort",
-     "text": "Draws more, sturdier, armored.",
+     "text": "Draws more, armored.",
      "layout": {
       "line": "front",
       "column": 0
@@ -7015,17 +7024,13 @@
       {
        "stat": "armor",
        "flat": 1000
-      },
-      {
-       "stat": "max_hp",
-       "flat": 1000
       }
      ]
     },
     {
      "id": "escort_b",
      "name": "Escort",
-     "text": "Draws more, sturdier, armored.",
+     "text": "Draws more, armored.",
      "layout": {
       "line": "middle",
       "column": 1
@@ -7037,10 +7042,6 @@
       },
       {
        "stat": "armor",
-       "flat": 1000
-      },
-      {
-       "stat": "max_hp",
        "flat": 1000
       }
      ]
@@ -8370,6 +8371,1303 @@
      "boss": true
     }
    ]
+  },
+  {
+   "id": "cmp_old_road",
+   "name": "The Old Road",
+   "text": "A mixed gauntlet, gentle. Clearable by the ungeared starting trio.",
+   "partySize": {
+    "max": 3
+   },
+   "perkPool": [],
+   "challenges": [],
+   "stages": [
+    {
+     "kind": "fight",
+     "id": "toll_gate",
+     "name": "1. Toll Gate",
+     "enemies": [
+      "bandit",
+      "bandit",
+      "bandit"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "wolf_pack",
+     "name": "2. Wolf Pack",
+     "enemies": [
+      "wolf",
+      "wolf",
+      "wolf",
+      "wolf",
+      "wolf",
+      "wolf"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "snake_pit",
+     "name": "3. Snake Pit",
+     "enemies": [
+      "snake",
+      "snake",
+      "snake",
+      "bandit",
+      "bandit"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "bandit_camp",
+     "name": "4. Bandit Camp",
+     "enemies": [
+      "shieldman",
+      "archer",
+      "archer",
+      "bandit"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "ogre_bridge",
+     "name": "5. Ogre Bridge",
+     "enemies": [
+      "ogre",
+      "bandit",
+      "bandit"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "ogre_chief",
+     "name": "6. Ogre Chief",
+     "enemies": [
+      "ogre_chief",
+      "bandit",
+      "bandit"
+     ],
+     "boss": true
+    }
+   ],
+   "foes": {
+    "hp": -16,
+    "power": -16
+   }
+  },
+  {
+   "id": "cmp_road_at_night",
+   "name": "The Road at Night",
+   "text": "The Old Road after dark.",
+   "partySize": {
+    "max": 3
+   },
+   "perkPool": [],
+   "challenges": [],
+   "foes": {
+    "hp": -7,
+    "power": -7
+   },
+   "stages": [
+    {
+     "kind": "fight",
+     "id": "night_wolves",
+     "name": "Night Wolves",
+     "enemies": [
+      "wolf",
+      "wolf",
+      "wolf",
+      "wolf",
+      "wolf",
+      "wolf",
+      "wolf"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "snake_grass",
+     "name": "Snake Grass",
+     "enemies": [
+      "snake",
+      "snake",
+      "snake",
+      "wolf",
+      "wolf"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "archers_nest",
+     "name": "Archers' Nest",
+     "enemies": [
+      "shieldman",
+      "archer",
+      "archer",
+      "archer"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "twin_bridge",
+     "name": "The Twin Bridge",
+     "enemies": [
+      "ogre",
+      "ogre"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "chiefs_return",
+     "name": "The Chief's Return",
+     "enemies": [
+      "ogre_chief",
+      "ogre"
+     ],
+     "boss": true
+    }
+   ]
+  },
+  {
+   "id": "cmp_wildfire",
+   "name": "Wildfire",
+   "text": "Hill country, thick with packs.",
+   "partySize": {
+    "max": 3
+   },
+   "perkPool": [],
+   "challenges": [],
+   "foes": {
+    "hp": 42,
+    "power": 21
+   },
+   "stages": [
+    {
+     "kind": "fight",
+     "id": "howling",
+     "name": "The Howling",
+     "enemies": [
+      "wolf",
+      "wolf",
+      "wolf",
+      "wolf",
+      "wolf",
+      "wolf",
+      "wolf",
+      "wolf"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "viper_den",
+     "name": "Viper Den",
+     "enemies": [
+      "snake",
+      "snake",
+      "snake",
+      "snake",
+      "bandit",
+      "bandit"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "bandit_horde",
+     "name": "Bandit Horde",
+     "enemies": [
+      "bandit",
+      "bandit",
+      "bandit",
+      "bandit",
+      "bandit",
+      "bandit"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "packmaster",
+     "name": "The Packmaster",
+     "enemies": [
+      "ogre_chief",
+      "wolf",
+      "wolf",
+      "wolf",
+      "wolf",
+      "wolf"
+     ],
+     "boss": true
+    }
+   ]
+  },
+  {
+   "id": "cmp_crypt",
+   "name": "The Crypt",
+   "text": "A mixed gauntlet among the dead.",
+   "partySize": {
+    "max": 3
+   },
+   "perkPool": [],
+   "challenges": [],
+   "stages": [
+    {
+     "kind": "fight",
+     "id": "bone_yard",
+     "name": "7. Bone Yard",
+     "enemies": [
+      "skeleton",
+      "skeleton",
+      "skeleton",
+      "skeleton"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "dark_hall",
+     "name": "8. Dark Hall",
+     "enemies": [
+      "skeleton",
+      "ghost",
+      "bat",
+      "bat"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "curse_room",
+     "name": "9. Curse Room",
+     "enemies": [
+      "witch",
+      "skeleton",
+      "skeleton"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "ghoul_pit",
+     "name": "11. Ghoul Pit",
+     "enemies": [
+      "ghoul",
+      "ghoul",
+      "ghoul",
+      "ghoul"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "reaper",
+     "name": "13. Reaper",
+     "enemies": [
+      "reaper",
+      "bat",
+      "bat"
+     ],
+     "boss": true
+    }
+   ],
+   "foes": {
+    "hp": 144,
+    "power": 72
+   }
+  },
+  {
+   "id": "cmp_ossuary",
+   "name": "The Ossuary",
+   "text": "The Crypt's bone store.",
+   "partySize": {
+    "max": 3
+   },
+   "perkPool": [],
+   "challenges": [],
+   "foes": {
+    "hp": 56,
+    "power": 28
+   },
+   "stages": [
+    {
+     "kind": "fight",
+     "id": "bone_wall",
+     "name": "Bone Wall",
+     "enemies": [
+      "skeleton",
+      "skeleton",
+      "skeleton",
+      "skeleton",
+      "skeleton"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "haunted_hall",
+     "name": "Haunted Hall",
+     "enemies": [
+      "ghost",
+      "ghost",
+      "ghost"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "dead_watch",
+     "name": "The Dead Watch",
+     "enemies": [
+      "skeleton",
+      "skeleton",
+      "witch",
+      "ghost"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "reapers_court",
+     "name": "The Reaper's Court",
+     "enemies": [
+      "reaper",
+      "skeleton",
+      "skeleton"
+     ],
+     "boss": true
+    }
+   ]
+  },
+  {
+   "id": "cmp_ogre_brothers",
+   "name": "The Ogre Brothers",
+   "text": "Ogre country.",
+   "partySize": {
+    "max": 3
+   },
+   "perkPool": [],
+   "challenges": [],
+   "foes": {
+    "hp": 40,
+    "power": 20
+   },
+   "stages": [
+    {
+     "kind": "fight",
+     "id": "ogre_road",
+     "name": "Ogre Road",
+     "enemies": [
+      "ogre",
+      "bandit",
+      "bandit",
+      "bandit"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "twin_ogres",
+     "name": "Twin Ogres",
+     "enemies": [
+      "ogre",
+      "ogre"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "war_camp",
+     "name": "War Camp",
+     "enemies": [
+      "shieldman",
+      "archer",
+      "archer",
+      "ogre"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "ogre_brothers",
+     "name": "The Ogre Brothers",
+     "enemies": [
+      "ogre_chief",
+      "ogre_chief"
+     ],
+     "boss": true
+    }
+   ]
+  },
+  {
+   "id": "cmp_fire_mine",
+   "name": "The Fire Mine",
+   "text": "A long grind of Burn attrition.",
+   "partySize": {
+    "max": 3
+   },
+   "perkPool": [],
+   "challenges": [],
+   "stages": [
+    {
+     "kind": "fight",
+     "id": "hound_pack",
+     "name": "14. Hound Pack",
+     "enemies": [
+      "hellhound",
+      "hellhound",
+      "hellhound",
+      "hellhound",
+      "hellhound"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "lava_flow",
+     "name": "15. Lava Flow",
+     "enemies": [
+      "lava_slime",
+      "lava_slime"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "bomb_room",
+     "name": "16. Bomb Room",
+     "enemies": [
+      "bomb_bug",
+      "bomb_bug",
+      "bomb_bug"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "imp_kennel",
+     "name": "17. Imp Kennel",
+     "enemies": [
+      "fire_imp",
+      "hellhound",
+      "hellhound",
+      "hellhound"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "fire_giant",
+     "name": "18. Fire Giant",
+     "enemies": [
+      "fire_giant"
+     ],
+     "boss": true
+    }
+   ],
+   "foes": {
+    "hp": -48,
+    "power": -48
+   }
+  },
+  {
+   "id": "cmp_deep_freeze",
+   "name": "Deep Freeze",
+   "text": "The Fire Mine's lower halls.",
+   "partySize": {
+    "max": 3
+   },
+   "perkPool": [],
+   "challenges": [],
+   "foes": {
+    "hp": -30,
+    "power": -30
+   },
+   "stages": [
+    {
+     "kind": "fight",
+     "id": "hound_run",
+     "name": "Hound Run",
+     "enemies": [
+      "hellhound",
+      "hellhound",
+      "hellhound",
+      "hellhound",
+      "hellhound",
+      "hellhound"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "slime_pit",
+     "name": "Slime Pit",
+     "enemies": [
+      "lava_slime",
+      "lava_slime",
+      "lava_slime"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "imp_court",
+     "name": "Imp Court",
+     "enemies": [
+      "fire_imp",
+      "fire_imp",
+      "hellhound",
+      "hellhound",
+      "hellhound"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "giants_forge",
+     "name": "The Giant's Forge",
+     "enemies": [
+      "fire_giant",
+      "hellhound",
+      "hellhound"
+     ],
+     "boss": true
+    }
+   ]
+  },
+  {
+   "id": "cmp_iron_wall",
+   "name": "Iron Wall",
+   "text": "The foundry under the mine.",
+   "partySize": {
+    "max": 3
+   },
+   "perkPool": [],
+   "challenges": [],
+   "stages": [
+    {
+     "kind": "fight",
+     "id": "slag_heap",
+     "name": "Slag Heap",
+     "enemies": [
+      "lava_slime",
+      "lava_slime",
+      "hellhound",
+      "hellhound"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "powder_room",
+     "name": "Powder Room",
+     "enemies": [
+      "bomb_bug",
+      "bomb_bug",
+      "bomb_bug",
+      "ogre"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "smelters",
+     "name": "The Smelters",
+     "enemies": [
+      "troll",
+      "troll",
+      "archer",
+      "archer"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "iron_gate",
+     "name": "The Iron Gate",
+     "enemies": [
+      "ogre_chief",
+      "bomb_bug",
+      "bomb_bug"
+     ],
+     "boss": true
+    }
+   ]
+  },
+  {
+   "id": "cmp_ice_pass",
+   "name": "The Ice Pass",
+   "text": "An echo: every fight asks what kind of hit you make.",
+   "partySize": {
+    "max": 3
+   },
+   "perkPool": [],
+   "challenges": [],
+   "stages": [
+    {
+     "kind": "fight",
+     "id": "wolf_pack",
+     "name": "2. Wolf Pack (Snow Wolves)",
+     "enemies": [
+      "snow_wolf",
+      "snow_wolf",
+      "snow_wolf",
+      "snow_wolf",
+      "snow_wolf",
+      "snow_wolf"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "golem_hall",
+     "name": "19. Golem Hall",
+     "enemies": [
+      "ice_golem",
+      "ice_golem"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "ice_heart",
+     "name": "20. Ice Heart",
+     "enemies": [
+      "ice_spirit",
+      "ice_spirit",
+      "ice_spirit"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "whiteout",
+     "name": "21. Whiteout",
+     "enemies": [
+      "ice_ghost",
+      "ice_ghost",
+      "ice_spirit"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "ice_titan",
+     "name": "22. Ice Titan",
+     "enemies": [
+      "ice_titan"
+     ],
+     "boss": true
+    }
+   ],
+   "foes": {
+    "hp": 75,
+    "power": 38
+   }
+  },
+  {
+   "id": "cmp_valhalla",
+   "name": "Valhalla",
+   "text": "The frozen lake above the pass.",
+   "partySize": {
+    "max": 3
+   },
+   "perkPool": [],
+   "challenges": [],
+   "foes": {
+    "hp": 96,
+    "power": 48
+   },
+   "stages": [
+    {
+     "kind": "fight",
+     "id": "snow_pack",
+     "name": "Snow Pack",
+     "enemies": [
+      "snow_wolf",
+      "snow_wolf",
+      "snow_wolf",
+      "snow_wolf",
+      "snow_wolf",
+      "snow_wolf",
+      "snow_wolf"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "golem_gate",
+     "name": "Golem Gate",
+     "enemies": [
+      "ice_golem",
+      "ice_spirit",
+      "ice_spirit"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "ghost_lights",
+     "name": "Ghost Lights",
+     "enemies": [
+      "ice_ghost",
+      "ice_ghost",
+      "ice_ghost"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "glacier_king",
+     "name": "The Glacier King",
+     "enemies": [
+      "ice_titan",
+      "snow_wolf",
+      "snow_wolf"
+     ],
+     "boss": true
+    }
+   ]
+  },
+  {
+   "id": "cmp_wild_hunt",
+   "name": "The Wild Hunt",
+   "text": "Old hunting grounds, at a gallop.",
+   "partySize": {
+    "max": 3
+   },
+   "perkPool": [],
+   "challenges": [],
+   "foes": {
+    "statuses": [
+     "haste"
+    ],
+    "text": "Every foe starts each fight Hasted.",
+    "hp": 33,
+    "power": 17
+   },
+   "stages": [
+    {
+     "kind": "fight",
+     "id": "hunt_wolves",
+     "name": "The Pack",
+     "enemies": [
+      "wolf",
+      "wolf",
+      "wolf",
+      "wolf",
+      "wolf",
+      "wolf",
+      "wolf",
+      "wolf"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "hunt_ghouls",
+     "name": "The Hungry Dead",
+     "enemies": [
+      "ghoul",
+      "ghoul",
+      "ghoul",
+      "ghoul"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "hunt_hounds",
+     "name": "Hellhounds",
+     "enemies": [
+      "hellhound",
+      "hellhound",
+      "hellhound",
+      "hellhound",
+      "hellhound",
+      "hellhound"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "huntmaster",
+     "name": "The Huntmaster",
+     "enemies": [
+      "ogre_chief",
+      "wolf",
+      "wolf",
+      "wolf",
+      "wolf"
+     ],
+     "boss": true
+    }
+   ]
+  },
+  {
+   "id": "cmp_storm_tower",
+   "name": "The Storm Tower",
+   "text": "A long grind that drains mana.",
+   "partySize": {
+    "max": 3
+   },
+   "perkPool": [],
+   "challenges": [],
+   "stages": [
+    {
+     "kind": "fight",
+     "id": "wisp_cloud",
+     "name": "23. Wisp Cloud",
+     "enemies": [
+      "wisp",
+      "wisp",
+      "wisp",
+      "wisp",
+      "wisp",
+      "wisp",
+      "wisp",
+      "wisp"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "wisp_nest",
+     "name": "24. Wisp Nest",
+     "enemies": [
+      "wisp",
+      "wisp",
+      "wisp",
+      "wisp",
+      "leech",
+      "leech"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "leech_den",
+     "name": "25. Leech Den",
+     "enemies": [
+      "leech",
+      "leech",
+      "leech",
+      "leech"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "storm_queen",
+     "name": "26. Storm Queen",
+     "enemies": [
+      "storm_queen",
+      "drone",
+      "drone"
+     ],
+     "boss": true
+    }
+   ],
+   "foes": {
+    "hp": 40,
+    "power": 20
+   }
+  },
+  {
+   "id": "cmp_knives_out",
+   "name": "Knives Out",
+   "text": "The tower's guard rooms.",
+   "partySize": {
+    "max": 3
+   },
+   "perkPool": [],
+   "challenges": [],
+   "foes": {
+    "hp": 29,
+    "power": 15
+   },
+   "stages": [
+    {
+     "kind": "fight",
+     "id": "sniper_ridge",
+     "name": "Sniper Ridge",
+     "enemies": [
+      "shieldman",
+      "archer",
+      "archer",
+      "archer",
+      "archer"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "lich_pair",
+     "name": "Lich Pair",
+     "enemies": [
+      "mummy",
+      "lich",
+      "lich"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "drone_wall",
+     "name": "Drone Wall",
+     "enemies": [
+      "drone",
+      "drone",
+      "drone",
+      "drone",
+      "wisp",
+      "wisp"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "hive_queen",
+     "name": "The Hive Queen",
+     "enemies": [
+      "storm_queen",
+      "drone",
+      "drone",
+      "drone",
+      "drone"
+     ],
+     "boss": true
+    }
+   ]
+  },
+  {
+   "id": "cmp_long_road",
+   "name": "The Long Road",
+   "text": "Every road so far, end to end.",
+   "partySize": {
+    "max": 3
+   },
+   "perkPool": [],
+   "challenges": [],
+   "foes": {
+    "hp": 124,
+    "power": 62
+   },
+   "stages": [
+    {
+     "kind": "fight",
+     "id": "toll_gate",
+     "name": "Toll Gate",
+     "enemies": [
+      "bandit",
+      "bandit",
+      "bandit"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "bone_yard",
+     "name": "Bone Yard",
+     "enemies": [
+      "skeleton",
+      "skeleton",
+      "skeleton",
+      "skeleton"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "hound_pack",
+     "name": "Hound Pack",
+     "enemies": [
+      "hellhound",
+      "hellhound",
+      "hellhound",
+      "hellhound",
+      "hellhound"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "golem_hall",
+     "name": "Golem Hall",
+     "enemies": [
+      "ice_golem",
+      "ice_golem"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "wisp_cloud",
+     "name": "Wisp Cloud",
+     "enemies": [
+      "wisp",
+      "wisp",
+      "wisp",
+      "wisp",
+      "wisp",
+      "wisp",
+      "wisp",
+      "wisp"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "ghoul_pit",
+     "name": "Ghoul Pit",
+     "enemies": [
+      "ghoul",
+      "ghoul",
+      "ghoul",
+      "ghoul"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "reaper",
+     "name": "Reaper",
+     "enemies": [
+      "reaper",
+      "bat",
+      "bat"
+     ],
+     "boss": true
+    }
+   ]
+  },
+  {
+   "id": "cmp_deep_crypt",
+   "name": "The Deep Crypt",
+   "text": "A spike beneath the Crypt: a lock on power outside abilities.",
+   "partySize": {
+    "max": 3
+   },
+   "perkPool": [],
+   "challenges": [],
+   "stages": [
+    {
+     "kind": "fight",
+     "id": "grave_watch",
+     "name": "10. Grave Watch",
+     "enemies": [
+      "bone_priest",
+      "troll",
+      "troll"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "lich_lair",
+     "name": "12. Lich Lair",
+     "enemies": [
+      "lich",
+      "mummy"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "silent_hall",
+     "name": "27. Silent Hall",
+     "enemies": [
+      "wraith",
+      "wraith",
+      "skeleton",
+      "skeleton"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "silent_one",
+     "name": "Silent One",
+     "enemies": [
+      "silent_one"
+     ],
+     "boss": true
+    }
+   ],
+   "foes": {
+    "hp": 126,
+    "power": 63
+   }
+  },
+  {
+   "id": "cmp_blood_moon",
+   "name": "Blood Moon",
+   "text": "The Deep Crypt's chapel.",
+   "partySize": {
+    "max": 3
+   },
+   "perkPool": [],
+   "challenges": [],
+   "foes": {
+    "hp": 137,
+    "power": 69
+   },
+   "stages": [
+    {
+     "kind": "fight",
+     "id": "chapel_watch",
+     "name": "Chapel Watch",
+     "enemies": [
+      "bone_priest",
+      "bone_priest",
+      "troll"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "ghoul_feast",
+     "name": "Ghoul Feast",
+     "enemies": [
+      "ghoul",
+      "ghoul",
+      "ghoul",
+      "ghoul"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "quiet_hall",
+     "name": "Quiet Hall",
+     "enemies": [
+      "wraith",
+      "wraith",
+      "ghost",
+      "ghost"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "silent_court",
+     "name": "The Silent Court",
+     "enemies": [
+      "silent_one",
+      "bone_priest",
+      "bone_priest"
+     ],
+     "boss": true
+    }
+   ]
+  },
+  {
+   "id": "cmp_judgement",
+   "name": "Judgement",
+   "text": "The lich court.",
+   "partySize": {
+    "max": 3
+   },
+   "perkPool": [],
+   "challenges": [],
+   "foes": {
+    "hp": -34,
+    "power": -34
+   },
+   "stages": [
+    {
+     "kind": "fight",
+     "id": "lich_court",
+     "name": "Lich Court",
+     "enemies": [
+      "mummy",
+      "lich",
+      "lich",
+      "lich"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "imp_rally",
+     "name": "Imp Rally",
+     "enemies": [
+      "fire_imp",
+      "fire_imp",
+      "ogre",
+      "ogre"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "coven",
+     "name": "Coven",
+     "enemies": [
+      "witch",
+      "witch",
+      "wraith",
+      "wraith"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "giants_wrath",
+     "name": "The Giant's Wrath",
+     "enemies": [
+      "fire_giant",
+      "fire_imp",
+      "fire_imp"
+     ],
+     "boss": true
+    }
+   ]
+  },
+  {
+   "id": "cmp_tower_top",
+   "name": "The Tower Top",
+   "text": "A spike above the Storm Tower: the Seek bench, an elite mid-run and a mana drain.",
+   "partySize": {
+    "max": 3
+   },
+   "perkPool": [],
+   "challenges": [],
+   "stages": [
+    {
+     "kind": "fight",
+     "id": "wisp_nest",
+     "name": "24. Wisp Nest",
+     "enemies": [
+      "wisp",
+      "wisp",
+      "wisp",
+      "wisp",
+      "leech",
+      "leech"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "storm_queen",
+     "name": "26. Storm Queen",
+     "enemies": [
+      "storm_queen",
+      "drone",
+      "drone"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "storm_king",
+     "name": "Storm King",
+     "enemies": [
+      "storm_king"
+     ],
+     "boss": true
+    }
+   ],
+   "foes": {
+    "hp": 39,
+    "power": 20
+   }
+  },
+  {
+   "id": "cmp_royal_court",
+   "name": "The Royal Court",
+   "text": "The throne room above the storm.",
+   "partySize": {
+    "max": 3
+   },
+   "perkPool": [],
+   "challenges": [],
+   "foes": {
+    "hp": -25,
+    "power": -25
+   },
+   "stages": [
+    {
+     "kind": "fight",
+     "id": "court_wisps",
+     "name": "Court Wisps",
+     "enemies": [
+      "wisp",
+      "wisp",
+      "wisp",
+      "wisp",
+      "wisp",
+      "wisp",
+      "leech",
+      "leech"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "honour_guard",
+     "name": "Honour Guard",
+     "enemies": [
+      "soldier",
+      "soldier",
+      "soldier",
+      "soldier"
+     ]
+    },
+    {
+     "kind": "fight",
+     "id": "royal_couple",
+     "name": "The Royal Couple",
+     "enemies": [
+      "storm_king",
+      "storm_queen"
+     ],
+     "boss": true
+    }
+   ]
   }
  ],
  "starter": {
@@ -8406,6 +9704,493 @@
    "storm_tower",
    "deep_crypt",
    "tower_top"
+  ]
+ },
+ "campaign": {
+  "start": {
+   "classes": [
+    "knight",
+    "cleric",
+    "ranger"
+   ],
+   "formations": [
+    "neutral"
+   ],
+   "gear": []
+  },
+  "nodes": [
+   {
+    "id": "old_road",
+    "name": "The Old Road",
+    "kind": "dungeon",
+    "dungeon": "cmp_old_road",
+    "text": "Bandits, wolves and snakes on the road out of town, and an ogre chief at the bridge.",
+    "needs": [],
+    "rewards": {
+     "classes": [],
+     "formations": [
+      "vanguard"
+     ],
+     "gear": [
+      "plate",
+      "robes",
+      "brigandine"
+     ]
+    }
+   },
+   {
+    "id": "road_at_night",
+    "name": "The Road at Night",
+    "kind": "remix",
+    "dungeon": "cmp_road_at_night",
+    "text": "The same road after dark: more wolves, more arrows, and the chief has brought his brother.",
+    "needs": [],
+    "rewards": {
+     "classes": [
+      "pyromancer"
+     ],
+     "formations": [],
+     "gear": [
+      "brand_staff",
+      "veil",
+      "heartstone",
+      "warbow"
+     ]
+    }
+   },
+   {
+    "id": "wildfire",
+    "name": "Wildfire",
+    "kind": "trial",
+    "dungeon": "cmp_wildfire",
+    "text": "The hills are crawling. Burn them out.",
+    "needs": [
+     {
+      "includes": [
+       "pyromancer"
+      ]
+     }
+    ],
+    "rewards": {
+     "classes": [
+      "hoplite"
+     ],
+     "formations": [],
+     "gear": [
+      "oathblade",
+      "prayer_beads"
+     ]
+    }
+   },
+   {
+    "id": "crypt",
+    "name": "The Crypt",
+    "kind": "dungeon",
+    "dungeon": "cmp_crypt",
+    "text": "Armored bones, bats you can't hit, ghosts magic can't touch, and Death with a bell.",
+    "needs": [],
+    "rewards": {
+     "classes": [
+      "monk"
+     ],
+     "formations": [],
+     "gear": [
+      "sunstaff",
+      "bastion_plate",
+      "fang"
+     ]
+    }
+   },
+   {
+    "id": "ossuary",
+    "name": "The Ossuary",
+    "kind": "trial",
+    "dungeon": "cmp_ossuary",
+    "text": "Bone piled on bone. Break it.",
+    "needs": [
+     {
+      "includes": [
+       "monk"
+      ]
+     }
+    ],
+    "rewards": {
+     "classes": [],
+     "formations": [
+      "escort"
+     ],
+     "gear": [
+      "paired_cestus",
+      "scout_leathers",
+      "shadowsilk",
+      "mana_jewel"
+     ]
+    }
+   },
+   {
+    "id": "ogre_brothers",
+    "name": "The Ogre Brothers",
+    "kind": "trial",
+    "dungeon": "cmp_ogre_brothers",
+    "text": "Two chiefs, two clubs. Two walls to stand in front of them.",
+    "needs": [
+     {
+      "includes": [
+       "knight",
+       "hoplite"
+      ]
+     },
+     {
+      "formation": "escort"
+     }
+    ],
+    "rewards": {
+     "classes": [
+      "hexer"
+     ],
+     "formations": [],
+     "gear": [
+      "rime_staff",
+      "hawks_eye",
+      "vestments"
+     ]
+    }
+   },
+   {
+    "id": "fire_mine",
+    "name": "The Fire Mine",
+    "kind": "dungeon",
+    "dungeon": "cmp_fire_mine",
+    "text": "Everything here burns, and the lord of the furnace casts a fire that ends parties.",
+    "needs": [],
+    "rewards": {
+     "classes": [
+      "frostweaver"
+     ],
+     "formations": [],
+     "gear": [
+      "hoarfrost_staff",
+      "ashen_plate",
+      "mountain_charm"
+     ]
+    }
+   },
+   {
+    "id": "deep_freeze",
+    "name": "Deep Freeze",
+    "kind": "trial",
+    "dungeon": "cmp_deep_freeze",
+    "text": "Put the mine's fires out, one by one.",
+    "needs": [
+     {
+      "includes": [
+       "frostweaver"
+      ]
+     }
+    ],
+    "rewards": {
+     "classes": [
+      "geomancer"
+     ],
+     "formations": [],
+     "gear": [
+      "granite_staff",
+      "lucky_coin",
+      "tower_mail",
+      "glacier_staff"
+     ]
+    }
+   },
+   {
+    "id": "iron_wall",
+    "name": "Iron Wall",
+    "kind": "trial",
+    "dungeon": "cmp_iron_wall",
+    "text": "Only plate goes through the foundry.",
+    "needs": [
+     {
+      "armor": "heavy"
+     }
+    ],
+    "rewards": {
+     "classes": [
+      "valkyrie"
+     ],
+     "formations": [],
+     "gear": [
+      "skyspear",
+      "chapel_staff",
+      "rune_axe",
+      "cornerstone_axe"
+     ]
+    }
+   },
+   {
+    "id": "ice_pass",
+    "name": "The Ice Pass",
+    "kind": "dungeon",
+    "dungeon": "cmp_ice_pass",
+    "text": "Every fight asks what kind of hit you make, and the Titan shrugs off all but one kind.",
+    "needs": [],
+    "rewards": {
+     "classes": [],
+     "formations": [
+      "scatter"
+     ],
+     "gear": [
+      "pike",
+      "sentinel_spear",
+      "tiger_claws",
+      "feather_charm",
+      "longbow"
+     ]
+    }
+   },
+   {
+    "id": "valhalla",
+    "name": "Valhalla",
+    "kind": "trial",
+    "dungeon": "cmp_valhalla",
+    "text": "Fall, and rise ready.",
+    "needs": [
+     {
+      "includes": [
+       "valkyrie"
+      ]
+     }
+    ],
+    "rewards": {
+     "classes": [
+      "stormcaller"
+     ],
+     "formations": [],
+     "gear": [
+      "storm_rod",
+      "plain_wind_staff",
+      "quiet_cloak",
+      "wraith_leathers"
+     ]
+    }
+   },
+   {
+    "id": "wild_hunt",
+    "name": "The Wild Hunt",
+    "kind": "trial",
+    "dungeon": "cmp_wild_hunt",
+    "text": "Everything that runs in packs, running faster. Don't stand still for it.",
+    "needs": [
+     {
+      "includes": [
+       "stormcaller"
+      ]
+     },
+     {
+      "formation": "scatter"
+     }
+    ],
+    "rewards": {
+     "classes": [
+      "bramble_knight"
+     ],
+     "formations": [],
+     "gear": [
+      "rootstaff",
+      "thorn_mail",
+      "thorn_charm"
+     ]
+    }
+   },
+   {
+    "id": "storm_tower",
+    "name": "The Storm Tower",
+    "kind": "dungeon",
+    "dungeon": "cmp_storm_tower",
+    "text": "Clouds of sparks, leeches that drink mana, and a queen behind a wall of drones.",
+    "needs": [],
+    "rewards": {
+     "classes": [
+      "assassin"
+     ],
+     "formations": [],
+     "gear": [
+      "bodkin",
+      "stiletto",
+      "trackers_jerkin",
+      "thornheart_plate"
+     ]
+    }
+   },
+   {
+    "id": "knives_out",
+    "name": "Knives Out",
+    "kind": "trial",
+    "dungeon": "cmp_knives_out",
+    "text": "The weak ones hide behind the strong. Find them.",
+    "needs": [
+     {
+      "includes": [
+       "assassin"
+      ]
+     }
+    ],
+    "rewards": {
+     "classes": [],
+     "formations": [
+      "caravan"
+     ],
+     "gear": [
+      "duellists_sword",
+      "zephyr_staff",
+      "tailwind_staff",
+      "mana_leech",
+      "glass_heart"
+     ]
+    }
+   },
+   {
+    "id": "long_road",
+    "name": "The Long Road",
+    "kind": "trial",
+    "dungeon": "cmp_long_road",
+    "text": "Seven fights, no rest. Pace yourselves.",
+    "needs": [
+     {
+      "formation": "caravan"
+     }
+    ],
+    "rewards": {
+     "classes": [
+      "bard"
+     ],
+     "formations": [],
+     "gear": [
+      "minstrels_bow",
+      "twinned_charm",
+      "warhorn",
+      "twin_soul_charm"
+     ]
+    }
+   },
+   {
+    "id": "deep_crypt",
+    "name": "The Deep Crypt",
+    "kind": "dungeon",
+    "dungeon": "cmp_deep_crypt",
+    "text": "Beneath the Crypt, something takes every voice. Power that isn't an ability is the key.",
+    "needs": [],
+    "rewards": {
+     "classes": [
+      "vampire"
+     ],
+     "formations": [],
+     "gear": [
+      "bloodied_claws",
+      "bloodstone",
+      "duskhide",
+      "plain_dark_staff",
+      "nightstaff"
+     ]
+    }
+   },
+   {
+    "id": "blood_moon",
+    "name": "Blood Moon",
+    "kind": "trial",
+    "dungeon": "cmp_blood_moon",
+    "text": "The dead mend each other, and the chapel takes every voice. Drink deep, and keep singing. Pick your third.",
+    "needs": [
+     {
+      "includes": [
+       "vampire",
+       "bard"
+      ]
+     }
+    ],
+    "rewards": {
+     "classes": [
+      "paladin"
+     ],
+     "formations": [
+      "blitz"
+     ],
+     "gear": [
+      "crusader_sword",
+      "wardens_blade",
+      "sun_charm",
+      "moon_charm",
+      "vampires_tooth",
+      "sanguine_staff"
+     ]
+    }
+   },
+   {
+    "id": "judgement",
+    "name": "Judgement",
+    "kind": "trial",
+    "dungeon": "cmp_judgement",
+    "text": "Spells, curses and cheering imps. Shelter the party, silence the casters, strike what's lifted up. Pick your third.",
+    "needs": [
+     {
+      "includes": [
+       "paladin",
+       "hexer"
+      ]
+     }
+    ],
+    "rewards": {
+     "classes": [],
+     "formations": [
+      "ambush",
+      "tortoise"
+     ],
+     "gear": [
+      "dawn_staff",
+      "scale_coat",
+      "serrated_charm",
+      "templar_staff",
+      "needle"
+     ]
+    }
+   },
+   {
+    "id": "tower_top",
+    "name": "The Tower Top",
+    "kind": "dungeon",
+    "dungeon": "cmp_tower_top",
+    "text": "The queen again, at the top of the tower, and the king who rages when his soldiers fall.",
+    "needs": [],
+    "rewards": {
+     "classes": [],
+     "formations": [
+      "last_stand",
+      "champion"
+     ],
+     "gear": [
+      "ember_staff",
+      "grounding_rod",
+      "leech_staff",
+      "splitter",
+      "plain_axe",
+      "mist_claws",
+      "heartwood_staff",
+      "archmages_robes",
+      "thirsting_jewel"
+     ]
+    }
+   },
+   {
+    "id": "royal_court",
+    "name": "The Royal Court",
+    "kind": "remix",
+    "dungeon": "cmp_royal_court",
+    "text": "The king and the queen, together.",
+    "needs": [],
+    "rewards": {
+     "classes": [],
+     "formations": [],
+     "gear": []
+    }
+   }
   ]
  }
 }

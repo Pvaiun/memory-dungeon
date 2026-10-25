@@ -4,9 +4,9 @@
  */
 import type { DungeonT } from "../../src/schema.js";
 
-type Fight = { id: string; name: string; enemies: string[] };
+export type Fight = { id: string; name: string; enemies: string[] };
 const times = (n: number, id: string) => Array<string>(n).fill(id);
-const enc = (id: string, name: string, ...groups: [number, string][]): Fight => ({ id, name, enemies: groups.flatMap(([n, e]) => times(n, e)) });
+export const enc = (id: string, name: string, ...groups: [number, string][]): Fight => ({ id, name, enemies: groups.flatMap(([n, e]) => times(n, e)) });
 
 /** The encounters, by number in the document. */
 export const encounters = {
@@ -42,7 +42,7 @@ export const encounters = {
   storm_king: enc("storm_king", "Storm King", [1, "storm_king"]),
 } satisfies Record<string, Fight>;
 
-const stage = (f: Fight, boss = false) => ({ kind: "fight" as const, id: f.id, name: f.name, enemies: f.enemies, ...(boss ? { boss: true } : {}) });
+export const stage = (f: Fight, boss = false) => ({ kind: "fight" as const, id: f.id, name: f.name, enemies: f.enemies, ...(boss ? { boss: true } : {}) });
 const run = (id: string, name: string, text: string, fights: Fight[]): DungeonT => ({
   id, name, text, partySize: { max: 3 }, perkPool: [], challenges: [],
   stages: fights.map((f, i) => stage(f, i === fights.length - 1)),

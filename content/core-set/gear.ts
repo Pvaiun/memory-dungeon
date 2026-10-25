@@ -4,12 +4,12 @@
  * 16 ordinary and 4 powerful amulets.
  */
 import type { GearT, NumT, WeightT } from "../../src/schema.js";
-import { PER_PERCENT, RESIST, SPECIAL, SPECIAL_KEY, STEP, WEAPON, crit, type Level, type SpecialLevel, type SpecialStat } from "./scale.js";
+import { PER_PERCENT, RESIST, SPECIAL, SPECIAL_KEY, stepFor, WEAPON, crit, type Level, type SpecialLevel, type SpecialStat } from "./scale.js";
 import { speedOf, weaponKinds } from "./vocabulary.js";
 
 type Change = { stat: string; flat: number };
 /** A gear step: +1 or +2 on a stat, in the data's units. */
-const st = (stat: string, n: number): Change => ({ stat, flat: n * STEP });
+const st = (stat: string, n: number): Change => ({ stat, flat: n * stepFor(stat) });
 const critStep = (n: number): Change => ({ stat: "crit_chance", flat: crit(n) });
 const sp = (s: SpecialStat, level: SpecialLevel): Change => ({ stat: SPECIAL_KEY[s], flat: SPECIAL[s][level] });
 const resists = (...elements: string[]): Change[] => elements.map((e) => ({ stat: `resist:${e}`, flat: RESIST.gear }));

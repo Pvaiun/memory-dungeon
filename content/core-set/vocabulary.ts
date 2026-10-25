@@ -31,6 +31,7 @@ export const stats: StatDefT[] = [
   { id: "lifesteal", name: "Lifesteal", kind: "points", default: 0, floor: 0, brings: "lifesteal" },
   { id: "siphon", name: "Siphon", kind: "points", default: 0, floor: 0, brings: "siphon" },
   { id: "double_strike", name: "Double strike", kind: "points", default: 0, floor: 0, cap: 100, brings: "double_strike" },
+  { id: "power", name: "Power", kind: "points", default: 0, floor: -90, note: "Damage dealt by hits and reactions, +%. Only a dungeon's foes modifier sets it: how a campaign trial makes its foes hit harder." },
 ];
 
 export const elements = [
@@ -135,6 +136,7 @@ export const ruleset: ContentPack["ruleset"] = {
   taken: { floor: -75, cap: 200 },
   unarmed: { type: "physical", subtype: "blunt", cooldown: SPEED.medium, amount: { base: 100, scale: [{ ratio: 0.2, stat: "attack" }] } },
   maxEnemies: RULES.maxEnemies,
+  lostCast: RULES.lostCast,
   run: { defeatedUnits: "stay_down", perkOffer: { options: 1, premiumChance: 0, repeatPicked: false, offerInapplicable: false } },
 };
 
