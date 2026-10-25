@@ -68,7 +68,7 @@ const named: GearT[] = [
   weapon("rootstaff", "Rootstaff", "Thorns on living wood.", "earth_staff", { carries: [sp("thorns", "medium"), st("max_hp", 1)] }),
   weapon("rime_staff", "Rime staff", "Deep freeze.", "ice_staff", { carries: [st("magic", 2)] }),
   weapon("hoarfrost_staff", "Hoarfrost staff", "A wellspring of mana.", "ice_staff", { carries: [st("mp_regen", 2)] }),
-  weapon("sunstaff", "Sunstaff", "A crit heals more through Mercy.", "light_staff", { carries: [critStep(1), st("magic", 1)] }),
+  weapon("sunstaff", "Sunstaff", "Crits, and more Magic.", "light_staff", { carries: [critStep(1), st("magic", 1)] }),
   weapon("dawn_staff", "Dawn staff", "A heavy staff and nothing else: its damage is healing in a Cleric's hands.", "light_staff", { base: "high" }),
   weapon("chapel_staff", "Chapel staff", "For the pilgrim.", "light_staff", { carries: [st("mp_regen", 2)] }),
   weapon("nightstaff", "Nightstaff", "Dark, and more of it.", "dark_staff", { carries: [st("magic", 2)] }),
@@ -77,7 +77,7 @@ const named: GearT[] = [
 
 /** Powerful weapons scale from a stat other than Attack or Magic, and carry nothing: the stat is the point. */
 const powerfulWeapons: GearT[] = [
-  weapon("heartwood_staff", "Heartwood staff", "Earth hits from the HP the Deep roots fork stacks.", "earth_staff", { stat: "max_hp", tier: "powerful", source: "unlock" }),
+  weapon("heartwood_staff", "Heartwood staff", "Earth hits that scale from max HP.", "earth_staff", { stat: "max_hp", tier: "powerful", source: "unlock" }),
   weapon("sanguine_staff", "Sanguine staff", "Blood as a caster: Blood drain and basic attacks on one stat.", "dark_staff", { stat: "max_hp", tier: "powerful", source: "unlock" }),
   weapon("cornerstone_axe", "Cornerstone axe", "Stone on one stat: everything from Armor.", "axe", { stat: "armor", tier: "powerful", source: "unlock" }),
   weapon("needle", "Needle", "Backstab and basic attacks share a stat: every Crit piece raises both.", "dagger", { stat: "crit_chance", tier: "powerful", source: "unlock" }),

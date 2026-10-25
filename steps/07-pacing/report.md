@@ -79,9 +79,25 @@ Each class's damage by source, and one use against one of its own swings (from t
 
 Statuses carry a class where it's built on them (Briar, Burn, Shock), and little elsewhere. A third of Poison and Burn applications still land on a foe that dies within 4 ticks.
 
-## 4. Feel
+## 4. Feel: the sixth AI playtest
 
-A sixth AI playtest is playing this version. (Its results go here.)
+A fresh agent played the whole road as a first-time player, through the command line, seeing only what a player sees: **all 20 nodes in 51 attempts, none stuck** (the fifth playtest, on the old pacing, took 34). Node 10 fell on the 8th and last allowed try; nodes 15 and 19 took 6 and 7.
+
+On your four problems, in its words:
+
+- **Fights play out over time:** regular fights ran 15 to 50 ticks, mostly basic attacks, each unit casting 0 to 2 abilities; "nothing wiped me in one go".
+- **Statuses do real work:** Sunder stacked to 50 on the Ice Titan was node 10's answer; Burn at 30 to 40 stacks did 5,000 to 13,000 a fight; the Stormcaller's Shock 10,000 to 17,000 in long fights; Thorns' Poison 2,000 to 6,000; Chill set up WEAK hits; Rot stopped the Bone Priests' healing. Venom arrow's Poison was small (500 to 1,250).
+- **The regular fights are the threat:** 18 of its 31 losses were in regular fights, and most boss losses were attrition (arriving with someone down).
+
+What it found wrong:
+
+1. **The campfire isn't a choice yet.** REST was always right: casters ended runs with 2,000 to 5,000 MP. The audit agrees: tanks run low (the Knight starts fights 3 to 5 with a third of its MP, the Hoplite with a fifth to a quarter) but casters hold 70% to 90%. And the game's default picked FOCUS with the tank at a tenth of its HP; fixed (it rests if anyone standing is below a third). **Proposal:** MP regen down by about a third, so casters run short too, and FOCUS is the pick for a caster-heavy party.
+2. **Supports don't act in short fights.** First casts come at tick 10 to 15, so in a 15 to 25 tick fight the Cleric sometimes casts nothing. **Proposal:** the opening charge a third to nine tenths (it's a third to two thirds), so most units cast once in a short fight.
+3. **Bosses are uneven.** The Fire Giants fold (their knob is at the floor; see C), while the Long Road's Reaper (+110) and the Tower Top's mid-run Storm Queen are the walls. The same boss can be very different nodes apart: the Reaper fell in 48 ticks at node 4 and took about 100,000 damage at node 15. **Proposal:** the boss pass in C, and a cap on how far a boss's knob can rise above its regular fights'.
+4. **What doesn't show:** Bulwark's chips, Doom's countdown and blow, the Storm King's anger; "magic passes right through" a Ghost that Burn kills; Valhalla fired once in the whole playtest. Texts naming things the player can't see (Sunstaff's "Mercy", Heartwood staff's "Deep roots fork", the Long Road's "no rest") are fixed.
+5. **The Knight and the Stormcaller felt mandatory** (in 17 of its 20 clearing parties, and 8 of the 9 nodes after the Stormcaller unlocked); the late classes appeared only where a trial forced them. The class pass in D.
+
+Its favourite moment: the Ranger, benched since node 2, turned out to be the Tower Top's answer (its basic attacks ignore the Soldiers' Taunt) and finished the Storm King alone on 358 HP. The most frustrating: node 10, seven losses chasing the Bulwark the page and the glossary pointed at.
 
 ## 5. Method notes
 

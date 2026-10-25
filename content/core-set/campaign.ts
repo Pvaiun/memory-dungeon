@@ -227,7 +227,7 @@ const NODES: Node[] = [
   },
   {
     id: "long_road", name: "The Long Road", kind: "trial",
-    text: "Seven fights, no rest. Pace yourselves.",
+    text: "Seven fights and one campfire. Pace yourselves.",
     needs: [{ formation: "caravan" }],
     run: {
       text: "Every road so far, end to end.",

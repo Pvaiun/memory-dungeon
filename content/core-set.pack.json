@@ -5562,7 +5562,7 @@
   {
    "id": "sunstaff",
    "name": "Sunstaff",
-   "text": "A crit heals more through Mercy.",
+   "text": "Crits, and more Magic.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -5694,7 +5694,7 @@
   {
    "id": "heartwood_staff",
    "name": "Heartwood staff",
-   "text": "Earth hits from the HP the Deep roots fork stacks.",
+   "text": "Earth hits that scale from max HP.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -10292,7 +10292,7 @@
     "name": "The Long Road",
     "kind": "trial",
     "dungeon": "cmp_long_road",
-    "text": "Seven fights, no rest. Pace yourselves.",
+    "text": "Seven fights and one campfire. Pace yourselves.",
     "needs": [
      {
       "formation": "caravan"
