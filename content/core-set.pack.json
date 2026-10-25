@@ -8482,12 +8482,12 @@
     }
    ],
    "foes": {
-    "hp": -60,
-    "power": -60
+    "hp": -40,
+    "power": -40
    },
    "bossFoes": {
-    "hp": -60,
-    "power": -60
+    "hp": -47,
+    "power": -47
    }
   },
   {
@@ -8500,12 +8500,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": -36,
-    "power": -36
+    "hp": -13,
+    "power": -13
    },
    "bossFoes": {
-    "hp": -36,
-    "power": -36
+    "hp": -27,
+    "power": -27
    },
    "stages": [
     {
@@ -8582,12 +8582,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": -20,
-    "power": -20
+    "hp": -2,
+    "power": -2
    },
    "bossFoes": {
-    "hp": -20,
-    "power": -20
+    "hp": 8,
+    "power": 4
    },
    "stages": [
     {
@@ -8725,12 +8725,12 @@
     }
    ],
    "foes": {
-    "hp": 56,
-    "power": 28
+    "hp": 64,
+    "power": 32
    },
    "bossFoes": {
-    "hp": 56,
-    "power": 28
+    "hp": 86,
+    "power": 43
    }
   },
   {
@@ -8743,12 +8743,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 44,
-    "power": 22
+    "hp": 49,
+    "power": 25
    },
    "bossFoes": {
-    "hp": 44,
-    "power": 22
+    "hp": 30,
+    "power": 15
    },
    "stages": [
     {
@@ -8814,12 +8814,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 53,
-    "power": 27
+    "hp": 98,
+    "power": 49
    },
    "bossFoes": {
-    "hp": 53,
-    "power": 27
+    "hp": 42,
+    "power": 21
    },
    "stages": [
     {
@@ -8940,12 +8940,12 @@
     }
    ],
    "foes": {
-    "hp": -13,
-    "power": -13
+    "hp": 20,
+    "power": 10
    },
    "bossFoes": {
-    "hp": -13,
-    "power": -13
+    "hp": -57,
+    "power": -57
    }
   },
   {
@@ -8958,12 +8958,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 1,
-    "power": 1
+    "hp": 61,
+    "power": 31
    },
    "bossFoes": {
-    "hp": 1,
-    "power": 1
+    "hp": -55,
+    "power": -55
    },
    "stages": [
     {
@@ -9030,12 +9030,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": -28,
-    "power": -28
+    "hp": -8,
+    "power": -8
    },
    "bossFoes": {
-    "hp": -28,
-    "power": -28
+    "hp": -54,
+    "power": -54
    },
    "stages": [
     {
@@ -9159,12 +9159,12 @@
     }
    ],
    "foes": {
-    "hp": 32,
-    "power": 16
+    "hp": 42,
+    "power": 21
    },
    "bossFoes": {
-    "hp": 32,
-    "power": 16
+    "hp": 11,
+    "power": 6
    }
   },
   {
@@ -9177,12 +9177,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 34,
-    "power": 17
+    "hp": 64,
+    "power": 32
    },
    "bossFoes": {
-    "hp": 34,
-    "power": 17
+    "hp": -30,
+    "power": -30
    },
    "stages": [
     {
@@ -9252,16 +9252,16 @@
      "haste"
     ],
     "text": "Every foe starts each fight Hasted.",
-    "hp": 27,
-    "power": 14
+    "hp": 52,
+    "power": 26
    },
    "bossFoes": {
     "statuses": [
      "haste"
     ],
     "text": "Every foe starts each fight Hasted.",
-    "hp": 27,
-    "power": 14
+    "hp": 10,
+    "power": 5
    },
    "stages": [
     {
@@ -9392,12 +9392,12 @@
     }
    ],
    "foes": {
-    "hp": 49,
-    "power": 25
+    "hp": 94,
+    "power": 47
    },
    "bossFoes": {
-    "hp": 49,
-    "power": 25
+    "hp": -2,
+    "power": -2
    }
   },
   {
@@ -9409,6 +9409,14 @@
    },
    "perkPool": [],
    "challenges": [],
+   "foes": {
+    "hp": 28,
+    "power": 14
+   },
+   "bossFoes": {
+    "hp": -62,
+    "power": -62
+   },
    "stages": [
     {
      "kind": "fight",
@@ -9476,12 +9484,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 95,
-    "power": 48
+    "hp": 88,
+    "power": 44
    },
    "bossFoes": {
-    "hp": 95,
-    "power": 48
+    "hp": 110,
+    "power": 55
    },
    "stages": [
     {
@@ -9628,12 +9636,12 @@
     }
    ],
    "foes": {
-    "hp": 87,
-    "power": 44
+    "hp": 92,
+    "power": 46
    },
    "bossFoes": {
-    "hp": 87,
-    "power": 44
+    "hp": 85,
+    "power": 43
    }
   },
   {
@@ -9646,12 +9654,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 72,
-    "power": 36
+    "hp": 77,
+    "power": 39
    },
    "bossFoes": {
-    "hp": 72,
-    "power": 36
+    "hp": 48,
+    "power": 24
    },
    "stages": [
     {
@@ -9715,12 +9723,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": -8,
-    "power": -8
+    "hp": 22,
+    "power": 11
    },
    "bossFoes": {
-    "hp": -8,
-    "power": -8
+    "hp": -40,
+    "power": -40
    },
    "stages": [
     {
@@ -9825,12 +9833,12 @@
     }
    ],
    "foes": {
-    "hp": 29,
-    "power": 15
+    "hp": 67,
+    "power": 34
    },
    "bossFoes": {
-    "hp": 29,
-    "power": 15
+    "hp": -25,
+    "power": -25
    }
   },
   {
@@ -9843,12 +9851,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": -15,
-    "power": -15
+    "hp": 103,
+    "power": 52
    },
    "bossFoes": {
-    "hp": -15,
-    "power": -15
+    "hp": -56,
+    "power": -56
    },
    "stages": [
     {

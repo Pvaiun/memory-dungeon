@@ -36,47 +36,47 @@
   "boss": -54
  },
  "ice_pass": {
-  "mob": 32,
-  "boss": 32
+  "mob": 42,
+  "boss": 11
  },
  "valhalla": {
-  "mob": 34,
-  "boss": 34
+  "mob": 64,
+  "boss": -30
  },
  "wild_hunt": {
-  "mob": 27,
-  "boss": 27
+  "mob": 52,
+  "boss": 10
  },
  "storm_tower": {
-  "mob": 49,
-  "boss": 49
+  "mob": 94,
+  "boss": -2
  },
  "knives_out": {
-  "mob": 0,
-  "boss": 0
+  "mob": 28,
+  "boss": -62
  },
  "long_road": {
-  "mob": 95,
-  "boss": 95
+  "mob": 88,
+  "boss": 110
  },
  "deep_crypt": {
-  "mob": 87,
-  "boss": 87
+  "mob": 92,
+  "boss": 85
  },
  "blood_moon": {
-  "mob": 72,
-  "boss": 72
+  "mob": 77,
+  "boss": 48
  },
  "judgement": {
-  "mob": -8,
-  "boss": -8
+  "mob": 22,
+  "boss": -40
  },
  "tower_top": {
-  "mob": 29,
-  "boss": 29
+  "mob": 67,
+  "boss": -25
  },
  "royal_court": {
-  "mob": -15,
-  "boss": -15
+  "mob": 103,
+  "boss": -56
  }
 }
