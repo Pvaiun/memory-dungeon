@@ -68,6 +68,11 @@ export const RULES = {
   opening: { min: 0.3, max: 0.7 },
   /** Each physical hit loses this share of the target's Armor: Armor 5 takes 600 off, Armor 8 nearly blanks a sword. */
   armorRatio: 0.12,
+  /**
+   * Pacing pass: Armor can't take a hit below a quarter of its size. Plate on a Knight blanked every weak and normal swing
+   * ("wolves hit it for 0 BLOCKED"), so minions couldn't touch the wall and the Knight was in half the top builds.
+   */
+  armorFloor: 25,
   maxEnemies: 8,
   /**
    * An interrupted cast goes on cooldown, and one whose targets are gone costs its recovery (the core-set report's
@@ -254,7 +259,8 @@ export const STATUS = {
   /** The Bard's Refrain: MP a basic attack gives a random ally. */
   refrain: { mp: 100 },
   slow: { speed: -40, duration: 20 },
-  haste: { speed: 40, duration: 20 },
+  /** Pacing pass: 14 ticks, not 20. At 20 the Monk's own Flow (a 30-tick cooldown) kept it Hasted two thirds of every fight. */
+  haste: { speed: 40, duration: 14 },
   taunt: { duration: 14 },
   /**
    * Campaign pass: a tenth of the stacks go each pulse, not a quarter, so Burn builds over a fight (a Pyromancer

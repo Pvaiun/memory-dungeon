@@ -59,6 +59,7 @@ let dotApps = 0, dotWasted = 0;
 const enemyLife = new Map<string, { n: number; ticks: number; acted0: number; dmg: number }>(); // by kind
 const partyMaxHp = new Map<string, number>(), takenBy = new Map<string, number>(); // "mob|minion" etc.
 const koCause = new Map<string, number>(); // "spike|basic" ...
+const koClass = new Map<string, number>(), inFights = new Map<string, number>(); // knockouts and fights entered, by class
 const bigHit: number[] = []; // largest single hit on a party member per boss fight, as share of their max HP
 const losses = new Map<string, number>();
 const lossMp: number[] = [], lossTicks: number[] = [];
@@ -100,7 +101,7 @@ function tally(log: Entry[], wonRun: boolean) {
       for (const u of e.units as { id: string; ref: string; side: string; hp: number; max: number }[]) {
         side.set(u.id, u.side), ref.set(u.id, u.ref), max.set(u.id, u.max), born.set(u.id, 0), acted.set(u.id, 0), dealtBy.set(u.id, 0);
         if (u.side === "enemy") rank.set(u.id, c.enemies.get(u.ref)?.rank ?? "minion");
-        else add(partyMaxHp, kind, u.max);
+        else add(partyMaxHp, kind, u.max), add(inFights, u.ref);
       }
       lastTick = -1, tickActs = 0, lastPartyActAt = -1;
       dots.length = 0;
@@ -180,6 +181,7 @@ function tally(log: Entry[], wonRun: boolean) {
         }
         for (let j = dots.length - 1; j >= 0; j--) if (dots[j].unit === id) dots.splice(j, 1);
       } else if (e.t === "down") {
+        add(koClass, ref.get(id) ?? "?");
         // The blow that knocked a member out: the last damage entry on it.
         const prev = [...log.slice(Math.max(0, log.indexOf(e) - 12), log.indexOf(e))].reverse().find((x) => x.t === "dmg" && x.target === id);
         if (prev) {
@@ -277,6 +279,7 @@ for (const kd of ["mob", "boss"] as Kind[]) {
 bigHit.sort((a, b) => a - b);
 const q = (p: number) => (bigHit.length ? bigHit[Math.floor(p * (bigHit.length - 1))] : 0);
 out.push(`\nBoss fights, the biggest single hit on a party member, as a share of their max HP: median ${pct(q(0.5), 1)}, top tenth ${pct(q(0.9), 1)}.`);
+out.push(`\nKnockouts per 100 fights a class is in: ${[...inFights].map(([cl, n]) => [cl, (100 * (koClass.get(cl) ?? 0)) / n] as const).sort((a, b) => b[1] - a[1]).map(([cl, v]) => `${cl} ${f1(v)}`).join(", ")}.`);
 out.push(`\nKnockouts by the blow that did it (spike: 35% of max HP or more): ${[...koCause].sort((a, b) => b[1] - a[1]).map(([x, v]) => `${x.replace("|", " ")} ${v}`).join(", ")}.`);
 out.push(`\nLosses: ${[...losses].map(([x, v]) => `${v} in ${x} fights`).join(", ") || "none"}; mean length ${f1(lossTicks.reduce((a, b) => a + b, 0) / Math.max(1, lossTicks.length))} ticks; the party's mean MP share at the loss ${pct(lossMp.reduce((a, b) => a + b, 0) / Math.max(1, lossMp.length), 1)}; fights that reached the enrage: ${enraged}.`);
 console.log(out.join("\n"));

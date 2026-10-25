@@ -713,7 +713,8 @@ function calc(w: W, t: CUnit, p: Part, raw: number, tags: readonly string[], boo
   let word: string | null = null;
   let heal = 0;
   if (p.type === "physical") {
-    const y = Math.max(0, x - stat(w, t, "armor") * w.c.pack.ruleset.armorRatio);
+    // ruleset.armorFloor: Armor can't take a hit below this share of its size, so a wall isn't immune to small blows.
+    const y = Math.max((x * (w.c.pack.ruleset.armorFloor ?? 0)) / 100, x - stat(w, t, "armor") * w.c.pack.ruleset.armorRatio);
     if (y <= 0 && x > 0) word = "BLOCKED";
     x = y;
   } else if (p.element) {

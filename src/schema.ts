@@ -524,6 +524,7 @@ export const Ruleset = z.strictObject({
   abilityCast: Ticks.describe("An ability's cast time unless it states one."),
   abilityRecovery: Ticks.describe("An ability's recovery unless it states one: about a sword's."),
   armorRatio: z.number().min(0).describe("Each physical hit loses armorRatio × the target's Armor, as a flat amount."),
+  armorFloor: z.number().min(0).max(100).optional().describe("Armor can't take a physical hit below this % of its size. Absent or 0: enough Armor blanks a hit."),
   taken: z.strictObject({ floor: z.number(), cap: z.number() }).describe("Bounds on a unit's total damage-taken modifier, in percent."),
   unarmed: Weapon.describe("The basic attack of a unit with no weapon."),
   maxEnemies: PosInt.describe("Most living units on the enemy side, summons included."),

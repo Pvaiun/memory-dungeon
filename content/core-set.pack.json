@@ -30,6 +30,7 @@
  },
  "ruleset": {
   "basicRecovery": 0.25,
+  "armorFloor": 25,
   "abilityCast": 1.5,
   "abilityRecovery": 1.5,
   "armorRatio": 0.12,
@@ -117,7 +118,7 @@
    "kind": "amount",
    "default": 0,
    "floor": 0,
-   "note": "Each physical hit loses 0.12 × Armor."
+   "note": "Each physical hit loses 0.12 × Armor, but never more than 75% of itself."
   },
   {
    "id": "aggro",
@@ -545,7 +546,7 @@
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
-   "duration": 20,
+   "duration": 14,
    "stats": [
     {
      "stat": "attack_speed",
@@ -2848,7 +2849,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 9,
+        "ratio": 6,
         "stat": "thorns"
        }
       ]

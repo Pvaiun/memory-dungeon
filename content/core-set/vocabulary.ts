@@ -14,7 +14,7 @@ export const stats: StatDefT[] = [
   { id: "mp_regen", name: "MP regen", kind: "amount", default: 0, floor: 0, brings: "mp_regen", note: `MP restored every ${MP_REGEN.every} ticks, through the status it brings.` },
   { id: "attack", name: "Attack", kind: "amount", default: 0, floor: 0 },
   { id: "magic", name: "Magic", kind: "amount", default: 0, floor: 0 },
-  { id: "armor", name: "Armor", kind: "amount", default: 0, floor: 0, note: `Each physical hit loses ${RULES.armorRatio} × Armor.` },
+  { id: "armor", name: "Armor", kind: "amount", default: 0, floor: 0, note: `Each physical hit loses ${RULES.armorRatio} × Armor, but never more than ${100 - RULES.armorFloor}% of itself.` },
   { id: "aggro", name: "Aggro", kind: "amount", default: pts(1), floor: 100, note: "Floors above zero: no unit becomes unpickable by numbers alone." },
   { id: "resist", name: "Resistance", kind: "points", default: 0, floor: -100, cap: 200, note: "Past 100 the damage heals instead: absorption, a class and boss trait." },
   { id: "attack_speed", name: "Attack speed", kind: "points", default: 0, floor: -300, cap: 300, note: "Hidden behind Haste, Slow and Chill." },
@@ -130,6 +130,7 @@ export const machinery: StatusT[] = [
 
 export const ruleset: ContentPack["ruleset"] = {
   basicRecovery: RULES.basicRecovery,
+  armorFloor: RULES.armorFloor,
   abilityCast: RULES.abilityCast,
   abilityRecovery: RULES.abilityRecovery,
   armorRatio: RULES.armorRatio,

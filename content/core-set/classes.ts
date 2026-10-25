@@ -151,7 +151,7 @@ export const abilities: A[] = [
   // Bramble knight
   a("bramble_knight", "thicket", "Thicket", "Taunts and Guards itself.", { ...timing("medium", "quick"), target: "self", do: [apply("taunt"), apply("guard")] }),
   a("bramble_knight", "regrowth", "Regrowth", "Regen on the lowest ally.", { ...timing("medium", "normal"), target: T.lowestShareAlly, do: [apply("regen")] }),
-  a("bramble_knight", "bramble_lash", "Bramble lash", "Lashes a random foe with its thorns.", { ...timing("short", "quick"), do: [phys("pierce", { scale: [{ ratio: 9, stat: "thorns" }] })] }),
+  a("bramble_knight", "bramble_lash", "Bramble lash", "Lashes a random foe with its thorns.", { ...timing("short", "quick"), do: [phys("pierce", { scale: [{ ratio: 6, stat: "thorns" }] })] }),
   // Hoplite
   a("hoplite", "aspis", "Aspis", "Aegis on the lowest ally.", { ...timing("medium", "quick"), ...waitsFor("allies", { lacks: "aegis" }), target: lacking(T.lowestShareAlly, "aegis"), do: [apply("aegis")] }),
   a("hoplite", "paired_guard", "Paired guard", "Guards itself and the other lowest ally.", { ...timing("medium", "normal"), target: "self", do: [apply("guard"), apply("guard", { to: T.otherLowestShareAlly })] }),
