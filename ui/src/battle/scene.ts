@@ -22,6 +22,8 @@ export type UV = {
   pose: Pose; poseUntil: number; lungeUntil: number; shakeUntil: number; flashUntil: number;
   alpha: number; gone: boolean;
   hpShown: number; shieldShown: number;
+  /** HP and knockout as the messages have told them so far: the engine settles a whole moment at once, the field follows the story. */
+  hpTold: number; downTold: boolean;
   cast: { name: string; start: number; end: number } | null;
   numberStack: number; numberAt: number;
   /** When each status landed (for its pop) and statuses that just ended (for their fade). */
@@ -146,7 +148,7 @@ export class Scene {
     this.units.set(u.id, {
       id: u.id, side: u.side, ref: u.ref, name: u.name, x: 0, y: 0, w: s ? s.width : 26, h: s ? s.height : 40, k,
       pose: u.ko ? "dead" : "wait", poseUntil: 0, lungeUntil: 0, shakeUntil: 0, flashUntil: 0, alpha: u.ko && !party ? 0 : 1, gone: !!u.gone,
-      hpShown: u.hp, shieldShown: 0, cast: null, numberStack: 0, numberAt: 0, pops: new Map(), fades: [],
+      hpShown: u.hp, shieldShown: 0, hpTold: u.hp, downTold: u.ko, cast: null, numberStack: 0, numberAt: 0, pops: new Map(), fades: [],
     });
   }
 
@@ -191,9 +193,24 @@ export class Scene {
     v.flashUntil = this.wall + 110;
     if (v.side === "party" && v.pose !== "dead") this.pose(id, "damage", 380);
   }
+  /** The HP a message just told (each damage and heal event carries the HP after it). */
+  told(id: string, hp: number) {
+    const v = this.units.get(id);
+    if (v) v.hpTold = hp;
+  }
+  /** After >>: the field catches up with the engine at once. */
+  catchUp() {
+    for (const u of this.driver.units()) {
+      const v = this.units.get(u.id);
+      if (!v) continue;
+      v.hpTold = v.hpShown = u.hp;
+      v.downTold = u.ko;
+    }
+  }
   down(id: string) {
     const v = this.units.get(id);
     if (!v) return;
+    v.downTold = true;
     v.cast = null;
     if (v.side === "party") {
       v.pose = "dead";
@@ -203,6 +220,7 @@ export class Scene {
   revive(id: string) {
     const v = this.units.get(id);
     if (!v) return;
+    v.downTold = false;
     v.alpha = 1;
     v.pose = "wait";
     v.poseUntil = 0;
@@ -280,22 +298,23 @@ export class Scene {
 
   private updateVisual(v: UV, u: CUnit) {
     const dt = 1 / 60;
-    v.hpShown += (u.hp - v.hpShown) * Math.min(1, dt * 10);
-    if (Math.abs(u.hp - v.hpShown) < 1) v.hpShown = u.hp;
+    v.hpShown += (v.hpTold - v.hpShown) * Math.min(1, dt * 10);
+    if (Math.abs(v.hpTold - v.hpShown) < 1) v.hpShown = v.hpTold;
+    const ko = v.downTold;
     const sh = shieldOf(u);
     v.shieldShown += (sh - v.shieldShown) * Math.min(1, dt * 10);
     if (v.poseUntil && this.wall > v.poseUntil) {
       v.poseUntil = 0;
-      v.pose = u.ko ? "dead" : v.cast ? "chant" : "wait";
+      v.pose = ko ? "dead" : v.cast ? "chant" : "wait";
     }
-    if (!u.ko && v.pose === "dead") v.pose = "wait";
+    if (!ko && v.pose === "dead") v.pose = "wait";
     const stunned = u.statuses.some((s) => s.id === "stun" || s.id === "bulwark_broken");
-    if (!u.ko && v.pose === "wait" && stunned) v.pose = "abnormal";
-    if (!u.ko && v.pose === "abnormal" && !stunned) v.pose = "wait";
-    if (!u.ko && v.pose === "wait" && u.cast) v.pose = "chant";
-    if (!u.ko && v.pose === "chant" && !u.cast) v.pose = "wait";
-    if (u.ko && v.side === "enemy" && v.alpha > 0) v.alpha = Math.max(0, v.alpha - dt * 2.5);
-    if (!u.ko && v.alpha < 1) v.alpha = Math.min(1, v.alpha + dt * 3);
+    if (!ko && v.pose === "wait" && stunned) v.pose = "abnormal";
+    if (!ko && v.pose === "abnormal" && !stunned) v.pose = "wait";
+    if (!ko && v.pose === "wait" && u.cast) v.pose = "chant";
+    if (!ko && v.pose === "chant" && !u.cast) v.pose = "wait";
+    if (ko && v.side === "enemy" && v.alpha > 0) v.alpha = Math.max(0, v.alpha - dt * 2.5);
+    if (!ko && v.alpha < 1) v.alpha = Math.min(1, v.alpha + dt * 3);
   }
 
   private drawUnit(v: UV, u: CUnit) {
@@ -316,7 +335,7 @@ export class Scene {
       const f = v.pose === "dead" ? 2 : v.pose === "wait" || v.pose === "chant" || v.pose === "abnormal" ? WAIT_FRAMES[Math.floor(this.wall / 300) % 4] : Math.min(2, Math.floor((this.wall - (v.poseUntil - 400)) / 130));
       drawActor(ctx, v.ref, v.pose, Math.max(0, f), x, v.y, flash, 1, u.weapon);
     } else {
-      const bob = u.ko ? 0 : Math.round(Math.sin(this.wall / 520 + v.x));
+      const bob = v.downTold ? 0 : Math.round(Math.sin(this.wall / 520 + v.x));
       drawEnemy(ctx, v.ref, v.k, x, v.y + bob, flash);
     }
     ctx.restore();
@@ -335,7 +354,7 @@ export class Scene {
 
   private drawOverlay(v: UV, u: CUnit) {
     const ctx = this.ctx;
-    if (v.alpha <= 0 || (u.ko && v.side === "enemy")) return;
+    if (v.alpha <= 0 || (v.downTold && v.side === "enemy")) return;
     const top = v.y - v.h;
     const x = Math.round(v.x);
     let iconY = v.y + 3;
@@ -359,7 +378,7 @@ export class Scene {
       iconY = by + 5;
     }
     if (v.side === "party" && this.partyBars) iconY = v.y + 8;
-    if (!u.ko) {
+    if (!v.downTold) {
       const sts = shownStatuses(u).slice(0, 4);
       v.fades = v.fades.filter((f) => f.until > this.wall);
       const fading = v.fades.filter((f) => !sts.some((s) => s.id === f.id)).slice(0, 4 - sts.length);
@@ -386,7 +405,7 @@ export class Scene {
         });
       }
     }
-    if (v.cast && !u.ko) {
+    if (v.cast && !v.downTold) {
       // The wind-up as a thin upright bar beside the figure, filling from the bottom: left of a party member (measured
       // from the pose it's in, so it clears the step back a wind-up takes), right of a foe. It never sits where the
       // unit above keeps its status icons.
@@ -403,7 +422,7 @@ export class Scene {
       const fill = Math.round(bh * p);
       ctx.fillRect(bx, by + bh - fill, 2, fill);
     }
-    if (v.side === "party" && !u.ko && this.partyBars) {
+    if (v.side === "party" && !v.downTold && this.partyBars) {
       // Settings → PARTY HP: a thin HP bar under each party member too.
       const max = u.stats.max_hp;
       const hp = Math.max(0, Math.min(1, v.hpShown / max));

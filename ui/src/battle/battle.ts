@@ -68,6 +68,8 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
 
   const scene = new Scene(canvas, driver, theme);
   scene.partyBars = setup.settings.partyBars;
+  // For scripted checks: window.__scene is the field, window.__driver the engine's side.
+  Object.assign(window, { __scene: scene, __driver: driver });
   const nameOf = (id: string): string => {
     const u = driver.unit(id);
     return u ? (u.side === "party" ? className(u.ref) : enemyName(u.ref, u.name)) : id;
@@ -247,9 +249,11 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         scene.number(String(ev.by), ev.why === "mp" ? "NO MP" : "NO TARGET", { color: "#8e99b8" });
         break;
       case "dmg":
+        if (typeof ev.hp === "number") scene.told(String(ev.target), ev.hp);
         showDamage(ev);
         break;
       case "heal": {
+        if (typeof ev.hp === "number") scene.told(String(ev.target), ev.hp);
         const amount = ev.amount as number;
         const src = String(ev.src);
         const isStatus = c.statuses.has(src);
@@ -300,6 +304,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       }
       case "revive":
         scene.revive(String(ev.unit));
+        if (typeof ev.hp === "number") scene.told(String(ev.unit), ev.hp);
         scene.number(String(ev.unit), `+${disp(ev.hp as number)}`, { color: "#7ee07e", sub: "UP" });
         scene.effectFor(String(ev.unit), "revive", true);
         sfx.heal();
@@ -426,10 +431,12 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       if (!r) continue;
       const max = u.stats.max_hp;
       const sh = shieldOf(u);
-      const barsKey = `${u.hp}|${u.mp}|${sh}|${u.ko}`;
+      const v = scene.units.get(u.id);
+      const hpNow = v ? v.hpTold : u.hp, ko = v ? v.downTold : u.ko;
+      const barsKey = `${hpNow}|${u.mp}|${sh}|${ko}`;
       if (barsKey !== r.bars) {
         r.bars = barsKey;
-        const share = Math.max(0, u.hp / max);
+        const share = Math.max(0, hpNow / max);
         const fill = r.hp.firstElementChild as HTMLElement;
         fill.style.width = `${share * 100}%`;
         fill.className = share <= 0.25 ? "low" : share <= 0.5 ? "mid" : "";
@@ -439,10 +446,10 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
           shEl.style.left = `${share * 100}%`;
           shEl.style.width = `${Math.min(1 - share, sh / max) * 100}%`;
         } else shEl?.remove();
-        r.hpNum.textContent = u.ko ? "KO" : `${disp(u.hp)}`;
+        r.hpNum.textContent = ko ? "KO" : `${disp(hpNow)}`;
         (r.mp.firstElementChild as HTMLElement).style.width = `${Math.max(0, u.mp / Math.max(1, u.stats.max_mp)) * 100}%`;
         r.mpNum.textContent = `${disp(u.mp)}`;
-        r.el.classList.toggle("ko", u.ko);
+        r.el.classList.toggle("ko", ko);
       }
       drawCooldowns(r, u);
     }
@@ -460,13 +467,14 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       const share = Math.min(1, left / Math.max(1, total));
       return { ...p, tag: narrator.tagOf(u.id, a.id), share: Math.round(share * 32) / 32, left: Math.ceil(left), ready: left <= 0 && !u.cast, casting: u.cast?.act === p.i };
     });
-    const key = u.ko ? "ko" : parts.map((p) => `${p.tag}:${p.share}:${p.left}:${p.ready ? 1 : 0}:${p.casting ? blink : "-"}`).join("|");
+    const ko = scene.units.get(u.id)?.downTold ?? u.ko;
+    const key = ko ? "ko" : parts.map((p) => `${p.tag}:${p.share}:${p.left}:${p.ready ? 1 : 0}:${p.casting ? blink : "-"}`).join("|");
     if (key === r.cdKey) return;
     r.cdKey = key;
     const g = r.cds.getContext("2d")!;
     g.imageSmoothingEnabled = false;
     g.clearRect(0, 0, r.cds.width, r.cds.height);
-    if (u.ko) return;
+    if (ko) return;
     for (const p of parts) {
       const big = p.size === BIG;
       const y = big ? 2 : Math.round((CD_H - SMALL) / 2);
@@ -727,6 +735,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     drainQuiet();
     scene.clearTransient();
     scene.sync();
+    scene.catchUp();
     driver.advance(0);
     updateRows();
     endOfFight();
