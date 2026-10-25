@@ -47,6 +47,7 @@ const unitTicks = new Map<string, number>(); // "mob|party"
 const classActs = new Map<string, number>(); // "knight|basic"
 const dmg = new Map<string, number>(); // "mob|party|basic" damage dealt by that side from that source
 const dmgBy = new Map<string, number>(); // "party|<src>" (all fights): damage by source id
+const classUses = new Map<string, number>(); // "ranger|basic", "ranger|ability:venom_arrow", "ranger|status:poison": uses (swings, casts, applications)
 const classDmg = new Map<string, number>(); // "ranger|basic", "ranger|ability:venom_arrow", "ranger|status:poison": by the class that dealt or applied it
 const castsOf = new Map<string, number>(); // "party|<act id>"
 const critDmg = new Map<string, number>(); // "party" / "enemy"
@@ -116,6 +117,7 @@ function tally(log: Entry[], wonRun: boolean) {
       add(acted, by);
       if (s === "party") {
         add(classActs, `${ref.get(by)}|${a}`);
+        add(classUses, `${ref.get(by)}|${e.act === "basic" ? "basic" : `ability:${e.act}`}`);
         add(castsOf, `party|${e.act}`);
         partyActs++;
         if (at === lastPartyActAt) sameTickActs += 2; // both acts of the pair (approximate for triples)
@@ -153,7 +155,10 @@ function tally(log: Entry[], wonRun: boolean) {
     } else if (e.t === "heal" && side.get(String(e.target)) === "party") {
       add(heal, String(e.src), e.amount as number);
     } else if (e.t === "status" && side.get(String(e.unit)) === "enemy") {
-      if (e.by) lastApplier.set(`${e.unit}|${e.status}`, String(e.by));
+      if (e.by) {
+        lastApplier.set(`${e.unit}|${e.status}`, String(e.by));
+        if (side.get(String(e.by)) === "party") add(classUses, `${ref.get(String(e.by))}|status:${e.status}`);
+      }
       add(statusApps, String(e.status));
       if (e.status === "poison" || e.status === "burn") dots.push({ unit: String(e.unit), at });
     } else if (e.t === "mp") {
@@ -236,11 +241,17 @@ for (const [key, v] of [...dmgBy].filter(([x]) => x.startsWith("party|")).sort((
   out.push(`  ${src.padEnd(28)} ${pct(v, partyTotal).padStart(4)}   per use ${uses ? k(v / uses) : "–"}${cat === "status" ? ` (${uses} applications)` : ` (${uses} uses)`}`);
 }
 out.push(`\nDoT applications (Poison, Burn) on a foe that died within 4 ticks: ${pct(dotWasted, dotApps)} of ${dotApps}.`);
-out.push("\nEach class's damage by source (statuses counted for whoever applied them):\n");
+out.push("\nEach class's damage by source (statuses counted for whoever applied them), with ×: one use against one of its swings:\n");
 for (const cl of [...new Set([...classDmg.keys()].map((x) => x.split("|")[0]))].sort()) {
   const rows = [...classDmg].filter(([x]) => x.startsWith(cl + "|"));
   const tot = rows.reduce((a, [, v]) => a + v, 0);
-  out.push(`- ${cl}: ${rows.sort((a, b) => b[1] - a[1]).map(([x, v]) => `${x.split("|")[1].replace(/^(ability|status|reaction):/, "")}${x.includes("|status:") ? " (status)" : ""} ${pct(v, tot)}`).join(", ")}`);
+  // Per use, against the class's own swing: how many basic attacks one cast (or one status application) is worth.
+  const swing = (classDmg.get(`${cl}|basic`) ?? 0) / Math.max(1, classUses.get(`${cl}|basic`) ?? 1);
+  const per = (x: string, v: number) => {
+    const n = classUses.get(x);
+    return n && swing ? ` ×${(v / n / swing).toFixed(1)}` : "";
+  };
+  out.push(`- ${cl} (a swing ${k(swing)}): ${rows.sort((a, b) => b[1] - a[1]).map(([x, v]) => `${x.split("|")[1].replace(/^(ability|status|reaction):/, "")}${x.includes("|status:") ? " (status)" : ""} ${pct(v, tot)}${x.endsWith("|basic") ? "" : per(x, v)}`).join(", ")}`);
 }
 out.push("\nHealing on the party by source:");
 const ht = [...heal.values()].reduce((a, b) => a + b, 0);
