@@ -24,6 +24,8 @@ export type UV = {
   hpShown: number; shieldShown: number;
   /** HP and knockout as the messages have told them so far: the engine settles a whole moment at once, the field follows the story. */
   hpTold: number; downTold: boolean;
+  /** The statuses the messages have told it gained and not yet lost, in that order; their last stack counts. */
+  stsTold: Set<string>; stsLast: Map<string, number | null>; stsGone: Map<string, number>;
   cast: { name: string; start: number; end: number } | null;
   numberStack: number; numberAt: number;
   /** When each status landed (for its pop) and statuses that just ended (for their fade). */
@@ -148,7 +150,7 @@ export class Scene {
     this.units.set(u.id, {
       id: u.id, side: u.side, ref: u.ref, name: u.name, x: 0, y: 0, w: s ? s.width : 26, h: s ? s.height : 40, k,
       pose: u.ko ? "dead" : "wait", poseUntil: 0, lungeUntil: 0, shakeUntil: 0, flashUntil: 0, alpha: u.ko && !party ? 0 : 1, gone: !!u.gone,
-      hpShown: u.hp, shieldShown: 0, hpTold: u.hp, downTold: u.ko, cast: null, numberStack: 0, numberAt: 0, pops: new Map(), fades: [],
+      hpShown: u.hp, shieldShown: 0, hpTold: u.hp, downTold: u.ko, stsTold: new Set(shownStatuses(u).map((x) => x.id)), stsLast: new Map(), stsGone: new Map(), cast: null, numberStack: 0, numberAt: 0, pops: new Map(), fades: [],
     });
   }
 
@@ -205,6 +207,7 @@ export class Scene {
       if (!v) continue;
       v.hpTold = v.hpShown = u.hp;
       v.downTold = u.ko;
+      v.stsTold = new Set(shownStatuses(u).map((x) => x.id));
     }
   }
   down(id: string) {
@@ -236,12 +239,20 @@ export class Scene {
   }
   /** A status landed on a unit: its icon pops in. */
   statusPop(id: string, status: string) {
+    if (c.statuses.get(status)?.absorb) status = "shield";
+    this.units.get(id)?.stsTold.add(status);
     this.units.get(id)?.pops.set(status, this.wall);
   }
   /** A status ended on a unit: its icon fades out. */
   statusFade(id: string, status: string) {
     const v = this.units.get(id);
     if (!v) return;
+    if (c.statuses.get(status)?.absorb) {
+      const u = this.driver.unit(id);
+      if (u && shieldOf(u) > 0) return;
+      status = "shield";
+    }
+    v.stsTold.delete(status);
     v.pops.delete(status);
     v.fades = v.fades.filter((f) => f.id !== status);
     v.fades.push({ id: status, until: this.wall + 450 });
@@ -379,7 +390,16 @@ export class Scene {
     }
     if (v.side === "party" && this.partyBars) iconY = v.y + 8;
     if (!v.downTold) {
-      const sts = shownStatuses(u).slice(0, 4);
+      // Only what the messages have told, with the engine's live counts while the status lasts.
+      const live = new Map(shownStatuses(u).map((x) => [x.id, x.count]));
+      for (const [id, n] of live) if (v.stsTold.has(id)) v.stsLast.set(id, n);
+      // A told status the engine dropped without a message to say so goes after a moment, rather than lingering.
+      for (const id of v.stsTold) {
+        if (live.has(id)) v.stsGone.delete(id);
+        else if (!v.stsGone.has(id)) v.stsGone.set(id, this.wall);
+        else if (this.wall - v.stsGone.get(id)! > 1500) (v.stsTold.delete(id), v.stsGone.delete(id));
+      }
+      const sts = [...v.stsTold].map((id) => ({ id, count: live.has(id) ? live.get(id)! : v.stsLast.get(id) ?? null })).slice(0, 4);
       v.fades = v.fades.filter((f) => f.until > this.wall);
       const fading = v.fades.filter((f) => !sts.some((s) => s.id === f.id)).slice(0, 4 - sts.length);
       const n = sts.length + fading.length;
