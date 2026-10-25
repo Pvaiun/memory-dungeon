@@ -100,7 +100,7 @@ export const combat: Rules = {
 
   /** Every status ends with the fight: a max HP increase that ends caps current HP, and that HP carries over. A revived unit carries its HP too. */
   endFight(x, f) {
-    const restore = f.result === "won" ? (x.c.pack.ruleset.run.restore ?? 0) : 0;
+    const restore = f.result === "won" ? x.c.pack.ruleset.run.restore : undefined;
     for (const m of x.run.party as Member[]) {
       const u = (f as CFight).units.find((v) => v.id === m.id);
       if (!u) continue;
@@ -108,8 +108,8 @@ export const combat: Rules = {
       m.mp = Math.min(u.mp, m.stats.max_mp);
       // A what-if the campaign tuning priced (ruleset.run.restore); the core set restores nothing.
       if (restore && m.hp > 0) {
-        m.hp = Math.min(m.stats.max_hp, m.hp + Math.floor((m.stats.max_hp * restore) / 100));
-        m.mp = Math.min(m.stats.max_mp, m.mp + Math.floor((m.stats.max_mp * restore) / 100));
+        m.hp = Math.min(m.stats.max_hp, m.hp + Math.floor((m.stats.max_hp * (restore.hp ?? 0)) / 100));
+        m.mp = Math.min(m.stats.max_mp, m.mp + Math.floor((m.stats.max_mp * (restore.mp ?? 0)) / 100));
       }
     }
   },
