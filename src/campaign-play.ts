@@ -150,6 +150,7 @@ function summary(log: Entry[]): string {
     } else if (e.t === "act" && side.get(String(e.by)) === "enemy" && e.act !== "basic") add(f.acts, `${names.get(String(e.by))!.replace(/ [A-Z]$/, "")}: ${e.name}`, 1);
     else if (e.t === "act" && side.get(String(e.by)) === "party" && e.act !== "basic") add(f.acts, `${names.get(String(e.by))}: ${e.name}`, 1);
     else if (e.t === "interrupt") out.push(`  ${t(e.at)} ${names.get(String(e.unit))} is interrupted: ${e.name} is lost.`);
+    else if (e.t === "hold") out.push(`  ${t(e.at)} ${names.get(String(e.unit))} is stunned: ${e.name} has to wait.`);
     else if (e.t === "dmg" && typeof e.amount === "number") {
       const tg = String(e.target);
       if (e.word && e.by && side.get(String(e.by)) === "party") add(f.words, `${String(e.word)} on ${names.get(tg)!.replace(/ [A-Z]$/, "")}`, 1);
