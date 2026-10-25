@@ -101,32 +101,22 @@ def frame_box(pose, f):
     x, y = ((m % 3) * 3 + f) * FRAME, (m // 3) * FRAME
     return (x, y, x + FRAME, y + FRAME)
 
-def aligned_diff(a, b):
-    """Pixels that differ between two figures, aligned on their bounding boxes' bottom-left corners."""
-    ba, bb = a.split()[3].getbbox(), b.split()[3].getbbox()
-    if not ba or not bb:
-        return 10 ** 6
-    a, b = a.crop(ba), b.crop(bb)
-    w, h = max(a.width, b.width), max(a.height, b.height)
-    A = Image.new("RGBA", (w, h)); A.paste(a, (0, h - a.height))
-    B = Image.new("RGBA", (w, h)); B.paste(b, (0, h - b.height))
-    pa, pb = A.load(), B.load()
-    return sum(1 for y in range(h) for x in range(w) if pa[x, y] != pb[x, y])
-
 def fix_sheet(sheet):
-    """The pack's "chant" pose is the figure turned around: mirror it back about its own centre.
-    Its "item" pose is a placeholder of another sprite: replace it with "spell"."""
-    wait = sheet.crop(frame_box("wait", 0))
+    """The pack's "chant" pose is drawn turned around on every Style 2 sheet (measured: each class's chant
+    frame matches its wait frame only when mirrored), so it's mirrored back, keeping the figure where the pack
+    put it: one step back from its waiting spot. Its "item" pose is a placeholder of another sprite: replaced
+    with "spell"."""
     for f in range(3):
         box = frame_box("chant", f)
         fr = sheet.crop(box)
-        if aligned_diff(fr.transpose(Image.FLIP_LEFT_RIGHT), wait) < aligned_diff(fr, wait) * 0.6:
-            bb = fr.split()[3].getbbox()
-            flipped = fr.transpose(Image.FLIP_LEFT_RIGHT)
-            fb = flipped.split()[3].getbbox()
-            fixed = Image.new("RGBA", (FRAME, FRAME), (0, 0, 0, 0))
-            fixed.paste(flipped.crop(fb), (bb[0], bb[1]))
-            sheet.paste(fixed, box)
+        bb = fr.split()[3].getbbox()
+        if not bb:
+            continue
+        flipped = fr.transpose(Image.FLIP_LEFT_RIGHT)
+        fb = flipped.split()[3].getbbox()
+        fixed = Image.new("RGBA", (FRAME, FRAME), (0, 0, 0, 0))
+        fixed.paste(flipped.crop(fb), (bb[0], bb[1]))
+        sheet.paste(fixed, box)
     for f in range(3):
         sheet.paste(sheet.crop(frame_box("spell", f)), frame_box("item", f))
     return sheet
@@ -390,6 +380,15 @@ def stamp(dst, src, box, at):
 def fill(dst, color, area):
     dst.paste(color, area)
 
+def darken(dst, area, k=0.85):
+    """Dims a region, so the floor sits behind the sprites, bars and icons instead of competing with them."""
+    x0, y0, x1, y1 = area
+    px = dst.load()
+    for y in range(y0, y1):
+        for x in range(x0, x1):
+            r, g, b, a = px[x, y]
+            px[x, y] = (int(r * k), int(g * k), int(b * k), a)
+
 def seeded(seed):
     s = seed
     def rnd():
@@ -449,12 +448,14 @@ def backdrop_ice_pass(a2, b, c):
 def backdrop_crypt(a2, a4, b1, purple=False):
     d = Image.new("RGBA", (W, H))
     wall = (0, 208, 32, 240) if purple else (32, 48, 64, 80)
-    floor = (32, 96, 64, 144) if purple else (64, 0, 96, 48)
+    floor = (192, 96, 224, 144) if purple else (224, 0, 256, 48)      # plain floors with a few dots: calm behind sprites and icons
     fill(d, (8, 6, 14, 255) if purple else (12, 12, 20, 255), (0, 0, W, 4))
     tile(d, a4, wall, (0, 4, W, 64))
     for x in (24, 214):
         stamp(d, a4, (224, 208, 256, 240) if purple else (192, 48, 224, 80), (x, 32))   # pillars
     tile(d, a2, floor, (0, 64, W, H))
+    if not purple:
+        darken(d, (0, 64, W, H), 0.8)
     candle = (48, 80, 64, 128) if purple else (16, 80, 32, 128)
     for x in (4, 250):
         stamp(d, b1, candle, (x, 46))
@@ -468,8 +469,7 @@ def backdrop_fire_mine(a2, a4):
         stamp(d, a4, (192, 48, 224, 80), (x, 28))              # columns
     tile(d, a2, (96, 48, 128, 96), (0, 60, W, 78))             # a lava stream
     tile(d, a2, (32, 0, 64, 48), (0, 78, W, H))                # scorched rock
-    for x, y in ((90, 124), (200, 176)):
-        stamp(d, a2, (96, 48, 128, 80), (x, y))                # lava pools
+    darken(d, (0, 78, W, H), 0.55)                              # dimmed well down, so the orange field doesn't fight the sprites
     return d
 
 def backdrop_storm_tower(a2, a4, castle):
@@ -478,7 +478,8 @@ def backdrop_storm_tower(a2, a4, castle):
     tile(d, castle, (64, 64, 96, 96), (0, 4, W, 64))            # blue castle brick
     for x in (30, 208):
         stamp(d, a4, (96, 128, 128, 160), (x, 32))             # blue pillars
-    tile(d, a2, (96, 48, 128, 96), (0, 64, W, H))              # blue stone floor
+    tile(d, a2, (0, 48, 32, 96), (0, 64, W, H))                # plain blue floor
+    darken(d, (0, 64, W, H), 0.8)
     return d
 
 def backdrop_tower_top(castle, a2):
@@ -489,7 +490,8 @@ def backdrop_tower_top(castle, a2):
     tile(d, castle, (0, 64, 32, 96), (0, 44, W, 68))           # a battlement wall
     for x in range(0, W, 32):
         stamp(d, castle, (0, 64, 16, 80), (x, 30))             # crenellations
-    tile(d, castle, (0, 352, 32, 384), (0, 68, W, H))          # flagstones
+    tile(d, castle, (0, 0, 32, 48), (0, 68, W, H))             # grey stone
+    darken(d, (0, 68, W, H), 0.75)
     return d
 
 if OW and DUNGEON and CASTLE:

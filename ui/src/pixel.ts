@@ -196,12 +196,13 @@ export function actorFrame(pose: Pose, frame: number): [number, number, number, 
 }
 type BBox = { top: number; bottom: number; left: number; right: number };
 const bboxes = new Map<string, BBox>();
-/** The figure's bounds in the waiting pose: figures aren't centred in their frames. */
-export function actorBBox(cls: string): BBox {
-  let b = bboxes.get(cls);
+/** The figure's bounds in a pose's first frame, on the sheet (facing left): figures aren't centred in their frames, and some poses step. */
+export function actorBBox(cls: string, pose: Pose = "wait"): BBox {
+  const key = `${cls}|${pose}`;
+  let b = bboxes.get(key);
   if (b) return b;
   const sheet = actorSheet(cls);
-  const [fx, fy, fw, fh] = actorFrame("wait", 0);
+  const [fx, fy, fw, fh] = actorFrame(pose, 0);
   const d = sheet.getContext("2d", { willReadFrequently: true })!.getImageData(fx, fy, fw, fh).data;
   b = { top: fh, bottom: 0, left: fw, right: 0 };
   for (let y = 0; y < fh; y++) for (let x = 0; x < fw; x++) if (d[(y * fw + x) * 4 + 3] > 0) {
@@ -211,8 +212,14 @@ export function actorBBox(cls: string): BBox {
     if (x > b.right) b.right = x;
   }
   if (b.right < b.left) b = { top: 8, bottom: 44, left: 12, right: 36 };
-  bboxes.set(cls, b);
+  bboxes.set(key, b);
   return b;
+}
+/** Where a pose's figure spans on the field, relative to the x a party member is drawn at (facing right): [left, right]. */
+export function actorSpan(cls: string, pose: Pose): [number, number] {
+  const w = actorBBox(cls), b = actorBBox(cls, pose);
+  const mid = (w.left + w.right) / 2;
+  return [mid - b.right - 1, mid - b.left];
 }
 /** How far right of its frame's centre the figure stands, in art pixels. */
 export const actorCenterOffset = (cls: string) => (actorBBox(cls).left + actorBBox(cls).right) / 2 - FRAME / 2;
@@ -260,9 +267,11 @@ export function drawActor(ctx: CanvasRenderingContext2D, cls: string, pose: Pose
   const wf = weapon ? weaponFrame(pose, frame, c.gear.get(weapon)?.weapon?.kind === "bow") : null;
   const strip = weapon && wf !== null && manifest.weapons[weapon] ? image(manifest.weapons[weapon]) : undefined;
   if (strip) {
-    // The pack's anchor: the 48×32 frame's bottom centre sits 12 pixels in front of the feet.
+    // The pack's anchor: the 48×32 frame's bottom centre sits 12 pixels in front of the feet. While winding up the
+    // figure steps back, so the weapon goes with it (by how far the chant pose's figure sits from the waiting one).
     const w = flash ? silhouette(spriteOf(manifest.weapons[weapon!], 1)) : strip;
-    ctx.drawImage(w, wf! * 48, 0, 48, 32, -Math.round(36 * scale), -32 * scale, 48 * scale, 32 * scale);
+    const step = pose === "chant" ? Math.round(((actorBBox(cls, "chant").left + actorBBox(cls, "chant").right) - (actorBBox(cls).left + actorBBox(cls).right)) / 2) : 0;
+    ctx.drawImage(w, wf! * 48, 0, 48, 32, Math.round((step - 36) * scale), -32 * scale, 48 * scale, 32 * scale);
   }
   ctx.restore();
 }
@@ -321,7 +330,8 @@ export function iconOf(row: number, col: number, tint?: string): HTMLCanvasEleme
 export const iconEl = (cell: readonly [number, number], scale = 1, tint?: string) => canvasEl(iconOf(cell[0], cell[1], tint), scale, "icon");
 
 // ─── Status icons: the pack's 16×16, recoloured per status by the asset tool ───
-export const STATUS_ICON = 16;
+/** The pack draws each status in the middle 14×14 of a 16×16 tile; the empty border is cut, so icons sit tighter. */
+export const STATUS_ICON = 14;
 const statusIcons = new Map<string, HTMLCanvasElement>();
 export function statusIconOf(id: string): HTMLCanvasElement {
   let cv = statusIcons.get(id);
@@ -329,12 +339,12 @@ export function statusIconOf(id: string): HTMLCanvasElement {
   const img = manifest.statuses[id] ? image(manifest.statuses[id]) : undefined;
   cv = cv2d(STATUS_ICON, STATUS_ICON);
   const g = cv.getContext("2d")!;
-  if (img) g.drawImage(img, 0, 0);
+  if (img) g.drawImage(img, 1, 1, STATUS_ICON, STATUS_ICON, 0, 0, STATUS_ICON, STATUS_ICON);
   else {
     // No icon in the pack: a coloured tile with the status's first letter.
     g.fillStyle = (STATUS_STYLE[id] ?? STATUS_STYLE.generic).color;
-    g.fillRect(1, 1, 14, 14);
-    drawText(g, (c.statuses.get(id)?.name ?? id).slice(0, 1).toUpperCase(), 4, 4, OUTLINE);
+    g.fillRect(0, 0, STATUS_ICON, STATUS_ICON);
+    drawText(g, (c.statuses.get(id)?.name ?? id).slice(0, 1).toUpperCase(), 3, 3, OUTLINE);
   }
   statusIcons.set(id, cv);
   return cv;
@@ -361,7 +371,7 @@ export function drawStatus(ctx: CanvasRenderingContext2D, id: string, x: number,
   if (count !== undefined && count !== null && count > 1) {
     const s = String(Math.min(99, Math.floor(count)));
     const w = s.length * 4 - 1;
-    drawDigits(ctx, s, x + STATUS_ICON + 1 - w, y + STATUS_ICON - 5, "#ffffff", OUTLINE);
+    drawDigits(ctx, s, x + STATUS_ICON + 1 - w, y + STATUS_ICON - 4, "#ffffff", OUTLINE);
   }
 }
 /** The icon as a DOM element, with its count. */

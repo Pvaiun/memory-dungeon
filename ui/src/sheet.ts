@@ -80,14 +80,15 @@ export function specialLines(stats: Stats): Child[] {
   return out;
 }
 
-/** Stat changes as coloured codes: "ARM+1 HP+2", green up, red down. */
+/** Stat changes as coloured codes: "ARM+10 HP+20", green up, red down, on the stat sheet's scale. */
 export function codeSpans(stats: { stat: string; flat?: number; pct?: number }[] | undefined): Child[] {
   if (!stats?.length) return [];
   return stats.flatMap((s, i) => {
     const def = c.stats.get(s.stat);
     const v = s.flat ?? 0;
     const sign = v >= 0 ? "+" : "";
-    const shown = s.stat === "crit_chance" || def?.kind === "points" || s.stat.startsWith("resist") ? `${sign}${v}%` : `${sign}${Math.round((v / 1000) * 10) / 10}`;
+    // Amounts at the display scale, as the stat sheet shows them (a +2 step reads +20); percent stats as they are.
+    const shown = s.stat === "crit_chance" || def?.kind === "points" || s.stat.startsWith("resist") ? `${sign}${v}%` : `${sign}${disp(v)}`;
     const pct = s.pct ? `${s.pct > 0 ? "+" : ""}${s.pct}%` : "";
     const el = s.stat.startsWith("resist:") ? s.stat.slice(7) : "";
     return [i ? " " : null, h("span", { class: `${v < 0 || (s.pct ?? 0) < 0 ? "bad" : "good"}${el ? ` ${el}` : ""}` }, `${statCode(s.stat)}${shown}${pct}`)];

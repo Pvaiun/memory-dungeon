@@ -11,7 +11,7 @@ import { SUBTICKS } from "../../../src/schema.js";
 import type { CUnit } from "../../../src/engine/combat/fight.js";
 import { c, disp } from "../content.js";
 import { manifest, VFX_FOR, type Pose } from "../art.js";
-import { backdropImage, drawActor, drawEnemy, drawStatus, drawText, enemyK, enemySprite, FRAME_W, OUTLINE, STATUS_ICON, statusIconOf, vfxSprite } from "../pixel.js";
+import { actorSpan, backdropImage, drawActor, drawEnemy, drawStatus, drawText, enemyK, enemySprite, FRAME_W, OUTLINE, STATUS_ICON, statusIconOf, vfxSprite } from "../pixel.js";
 import type { Driver } from "./driver.js";
 
 export const W = FRAME_W, H = 228;
@@ -22,8 +22,14 @@ export type UV = {
   pose: Pose; poseUntil: number; lungeUntil: number; shakeUntil: number; flashUntil: number;
   alpha: number; gone: boolean;
   hpShown: number; shieldShown: number;
+  /** HP and knockout as the messages have told them so far: the engine settles a whole moment at once, the field follows the story. */
+  hpTold: number; downTold: boolean;
+  /** The statuses the messages have told it gained and not yet lost, in that order; their last stack counts. */
+  stsTold: Set<string>; stsLast: Map<string, number | null>; stsGone: Map<string, number>;
   cast: { name: string; start: number; end: number } | null;
   numberStack: number; numberAt: number;
+  /** When each status landed (for its pop) and statuses that just ended (for their fade). */
+  pops: Map<string, number>; fades: { id: string; until: number }[];
 };
 
 export type NumOpts = { color?: string; outline?: string | null; sub?: string; subColor?: string; big?: boolean; icon?: string; life?: number };
@@ -32,7 +38,7 @@ type Fx = { strip: string; x: number; y: number; size: number; born: number; fps
 
 // ─── Layout ───
 
-const LINE_X: Record<string, number> = { back: 26, middle: 40, front: 54 };
+const LINE_X: Record<string, number> = { back: 30, middle: 44, front: 58 };
 const PARTY_ROWS: Record<number, number[]> = { 1: [160], 2: [124, 200], 3: [100, 152, 204] };
 /** Where the party stands, by slot: feet positions. */
 export function partySpots(formationId: string, count: number): { x: number; y: number }[] {
@@ -120,6 +126,8 @@ export class Scene {
   numbers: Num[] = [];
   fx: Fx[] = [];
   banner: { text: string; sub: string; until: number } | null = null;
+  /** Draw thin HP bars under the party too (Settings → PARTY HP). */
+  partyBars = false;
   wall = 0;
 
   constructor(public canvas: HTMLCanvasElement, public driver: Driver, public theme: string) {
@@ -142,7 +150,7 @@ export class Scene {
     this.units.set(u.id, {
       id: u.id, side: u.side, ref: u.ref, name: u.name, x: 0, y: 0, w: s ? s.width : 26, h: s ? s.height : 40, k,
       pose: u.ko ? "dead" : "wait", poseUntil: 0, lungeUntil: 0, shakeUntil: 0, flashUntil: 0, alpha: u.ko && !party ? 0 : 1, gone: !!u.gone,
-      hpShown: u.hp, shieldShown: 0, cast: null, numberStack: 0, numberAt: 0,
+      hpShown: u.hp, shieldShown: 0, hpTold: u.hp, downTold: u.ko, stsTold: new Set(shownStatuses(u).map((x) => x.id)), stsLast: new Map(), stsGone: new Map(), cast: null, numberStack: 0, numberAt: 0, pops: new Map(), fades: [],
     });
   }
 
@@ -187,9 +195,25 @@ export class Scene {
     v.flashUntil = this.wall + 110;
     if (v.side === "party" && v.pose !== "dead") this.pose(id, "damage", 380);
   }
+  /** The HP a message just told (each damage and heal event carries the HP after it). */
+  told(id: string, hp: number) {
+    const v = this.units.get(id);
+    if (v) v.hpTold = hp;
+  }
+  /** After >>: the field catches up with the engine at once. */
+  catchUp() {
+    for (const u of this.driver.units()) {
+      const v = this.units.get(u.id);
+      if (!v) continue;
+      v.hpTold = v.hpShown = u.hp;
+      v.downTold = u.ko;
+      v.stsTold = new Set(shownStatuses(u).map((x) => x.id));
+    }
+  }
   down(id: string) {
     const v = this.units.get(id);
     if (!v) return;
+    v.downTold = true;
     v.cast = null;
     if (v.side === "party") {
       v.pose = "dead";
@@ -199,6 +223,7 @@ export class Scene {
   revive(id: string) {
     const v = this.units.get(id);
     if (!v) return;
+    v.downTold = false;
     v.alpha = 1;
     v.pose = "wait";
     v.poseUntil = 0;
@@ -210,7 +235,27 @@ export class Scene {
   clearTransient() {
     this.numbers = [];
     this.fx = [];
-    for (const v of this.units.values()) v.cast = null;
+    for (const v of this.units.values()) (v.cast = null), v.pops.clear(), (v.fades = []);
+  }
+  /** A status landed on a unit: its icon pops in. */
+  statusPop(id: string, status: string) {
+    if (c.statuses.get(status)?.absorb) status = "shield";
+    this.units.get(id)?.stsTold.add(status);
+    this.units.get(id)?.pops.set(status, this.wall);
+  }
+  /** A status ended on a unit: its icon fades out. */
+  statusFade(id: string, status: string) {
+    const v = this.units.get(id);
+    if (!v) return;
+    if (c.statuses.get(status)?.absorb) {
+      const u = this.driver.unit(id);
+      if (u && shieldOf(u) > 0) return;
+      status = "shield";
+    }
+    v.stsTold.delete(status);
+    v.pops.delete(status);
+    v.fades = v.fades.filter((f) => f.id !== status);
+    v.fades.push({ id: status, until: this.wall + 450 });
   }
 
   /** A number or word over a unit; stacked numbers on the same unit spread out. */
@@ -264,22 +309,23 @@ export class Scene {
 
   private updateVisual(v: UV, u: CUnit) {
     const dt = 1 / 60;
-    v.hpShown += (u.hp - v.hpShown) * Math.min(1, dt * 10);
-    if (Math.abs(u.hp - v.hpShown) < 1) v.hpShown = u.hp;
+    v.hpShown += (v.hpTold - v.hpShown) * Math.min(1, dt * 10);
+    if (Math.abs(v.hpTold - v.hpShown) < 1) v.hpShown = v.hpTold;
+    const ko = v.downTold;
     const sh = shieldOf(u);
     v.shieldShown += (sh - v.shieldShown) * Math.min(1, dt * 10);
     if (v.poseUntil && this.wall > v.poseUntil) {
       v.poseUntil = 0;
-      v.pose = u.ko ? "dead" : v.cast ? "chant" : "wait";
+      v.pose = ko ? "dead" : v.cast ? "chant" : "wait";
     }
-    if (!u.ko && v.pose === "dead") v.pose = "wait";
+    if (!ko && v.pose === "dead") v.pose = "wait";
     const stunned = u.statuses.some((s) => s.id === "stun" || s.id === "bulwark_broken");
-    if (!u.ko && v.pose === "wait" && stunned) v.pose = "abnormal";
-    if (!u.ko && v.pose === "abnormal" && !stunned) v.pose = "wait";
-    if (!u.ko && v.pose === "wait" && u.cast) v.pose = "chant";
-    if (!u.ko && v.pose === "chant" && !u.cast) v.pose = "wait";
-    if (u.ko && v.side === "enemy" && v.alpha > 0) v.alpha = Math.max(0, v.alpha - dt * 2.5);
-    if (!u.ko && v.alpha < 1) v.alpha = Math.min(1, v.alpha + dt * 3);
+    if (!ko && v.pose === "wait" && stunned) v.pose = "abnormal";
+    if (!ko && v.pose === "abnormal" && !stunned) v.pose = "wait";
+    if (!ko && v.pose === "wait" && u.cast) v.pose = "chant";
+    if (!ko && v.pose === "chant" && !u.cast) v.pose = "wait";
+    if (ko && v.side === "enemy" && v.alpha > 0) v.alpha = Math.max(0, v.alpha - dt * 2.5);
+    if (!ko && v.alpha < 1) v.alpha = Math.min(1, v.alpha + dt * 3);
   }
 
   private drawUnit(v: UV, u: CUnit) {
@@ -293,19 +339,33 @@ export class Scene {
     const flash = this.wall < v.flashUntil;
     ctx.save();
     ctx.globalAlpha = v.alpha * (hidden ? 0.45 : 1);
+    // The shadow follows the figure: forward with a lunge, back with a wind-up's step (the pose's own bounds).
+    const poseShift = v.side === "party" && v.pose !== "dead" ? Math.round((actorSpan(v.ref, v.pose)[0] + actorSpan(v.ref, v.pose)[1]) / 2) : 0;
+    this.drawShadow(v.x + lunge + poseShift, v.y, v.side === "party" ? 22 : Math.max(16, Math.min(56, Math.round(v.w * 0.7))));
     if (v.side === "party") {
       const f = v.pose === "dead" ? 2 : v.pose === "wait" || v.pose === "chant" || v.pose === "abnormal" ? WAIT_FRAMES[Math.floor(this.wall / 300) % 4] : Math.min(2, Math.floor((this.wall - (v.poseUntil - 400)) / 130));
       drawActor(ctx, v.ref, v.pose, Math.max(0, f), x, v.y, flash, 1, u.weapon);
     } else {
-      const bob = u.ko ? 0 : Math.round(Math.sin(this.wall / 520 + v.x));
+      const bob = v.downTold ? 0 : Math.round(Math.sin(this.wall / 520 + v.x));
       drawEnemy(ctx, v.ref, v.k, x, v.y + bob, flash);
     }
     ctx.restore();
   }
 
+  /** A soft pixel ellipse under a unit's feet, so it stands on the floor instead of floating over it. */
+  private drawShadow(cx: number, feet: number, w: number) {
+    const ctx = this.ctx;
+    const rx = w / 2, ry = w >= 40 ? 3 : 2;
+    ctx.fillStyle = "rgba(8, 8, 16, 0.45)";
+    for (let dy = -ry; dy <= ry; dy++) {
+      const half = Math.round(rx * Math.sqrt(1 - (dy / (ry + 0.5)) ** 2));
+      ctx.fillRect(Math.round(cx - half), Math.round(feet - 1 + dy), half * 2, 1);
+    }
+  }
+
   private drawOverlay(v: UV, u: CUnit) {
     const ctx = this.ctx;
-    if (v.alpha <= 0 || (u.ko && v.side === "enemy")) return;
+    if (v.alpha <= 0 || (v.downTold && v.side === "enemy")) return;
     const top = v.y - v.h;
     const x = Math.round(v.x);
     let iconY = v.y + 3;
@@ -313,37 +373,86 @@ export class Scene {
       // HP under the feet, in the bar's colour; a light segment for a Shield
       const max = u.stats.max_hp;
       const hp = Math.max(0, Math.min(1, v.hpShown / max));
-      const bw = Math.max(24, Math.min(48, Math.round(v.w * 0.75)));
-      const bx = x - Math.round(bw / 2), by = v.y + 2;
+      const bw = Math.max(20, Math.min(40, Math.round(v.w * 0.6)));
+      const bx = x - Math.round(bw / 2), by = v.y + 3;
       ctx.fillStyle = OUTLINE;
-      ctx.fillRect(bx - 1, by - 1, bw + 2, 6);
+      ctx.fillRect(bx - 1, by - 1, bw + 2, 4);
       ctx.fillStyle = "#3a3a4a";
-      ctx.fillRect(bx, by, bw, 4);
+      ctx.fillRect(bx, by, bw, 2);
       ctx.fillStyle = hpColor(hp);
-      ctx.fillRect(bx, by, Math.round(bw * hp), 4);
+      ctx.fillRect(bx, by, Math.round(bw * hp), 2);
       const sh = Math.min(1 - hp, v.shieldShown / max);
       if (sh > 0.005) {
         ctx.fillStyle = "#a8e8ff";
-        ctx.fillRect(bx + Math.round(bw * hp), by, Math.max(1, Math.round(bw * sh)), 4);
+        ctx.fillRect(bx + Math.round(bw * hp), by, Math.max(1, Math.round(bw * sh)), 2);
       }
-      iconY = by + 7;
+      iconY = by + 5;
     }
-    if (!u.ko) {
-      const sts = shownStatuses(u).slice(0, 4);
-      if (sts.length) {
+    if (v.side === "party" && this.partyBars) iconY = v.y + 8;
+    if (!v.downTold) {
+      // Only what the messages have told, with the engine's live counts while the status lasts.
+      const live = new Map(shownStatuses(u).map((x) => [x.id, x.count]));
+      for (const [id, n] of live) if (v.stsTold.has(id)) v.stsLast.set(id, n);
+      // A told status the engine dropped without a message to say so goes after a moment, rather than lingering.
+      for (const id of v.stsTold) {
+        if (live.has(id)) v.stsGone.delete(id);
+        else if (!v.stsGone.has(id)) v.stsGone.set(id, this.wall);
+        else if (this.wall - v.stsGone.get(id)! > 1500) (v.stsTold.delete(id), v.stsGone.delete(id));
+      }
+      const sts = [...v.stsTold].map((id) => ({ id, count: live.has(id) ? live.get(id)! : v.stsLast.get(id) ?? null })).slice(0, 4);
+      v.fades = v.fades.filter((f) => f.until > this.wall);
+      const fading = v.fades.filter((f) => !sts.some((s) => s.id === f.id)).slice(0, 4 - sts.length);
+      const n = sts.length + fading.length;
+      if (n) {
         const step = STATUS_ICON + 1;
-        const gx = Math.max(0, Math.min(W - sts.length * step, x - Math.round((sts.length * step - 1) / 2)));
-        sts.forEach((s, i) => drawStatus(ctx, s.id, gx + i * step, Math.min(H - STATUS_ICON, iconY), s.count));
+        const gx = Math.max(0, Math.min(W - n * step, x - Math.round((n * step - 1) / 2)));
+        const iy = Math.min(H - STATUS_ICON, iconY);
+        sts.forEach((s, i) => {
+          const born = v.pops.get(s.id);
+          const age = born === undefined ? 1e9 : this.wall - born;
+          if (age < 260) {
+            // Landing: the icon drops in from one and a half size.
+            const sc = 1.5 - (age / 260) * 0.5;
+            const size = Math.round(STATUS_ICON * sc);
+            ctx.drawImage(statusIconOf(s.id), gx + i * step - Math.round((size - STATUS_ICON) / 2), iy - (size - STATUS_ICON), size, size);
+          } else drawStatus(ctx, s.id, gx + i * step, iy, s.count);
+        });
+        fading.forEach((f, i) => {
+          ctx.save();
+          ctx.globalAlpha = Math.max(0, (f.until - this.wall) / 450);
+          ctx.drawImage(statusIconOf(f.id), gx + (sts.length + i) * step, iy - Math.round((1 - ctx.globalAlpha) * 6));
+          ctx.restore();
+        });
       }
     }
-    if (v.cast && !u.ko) {
+    if (v.cast && !v.downTold) {
+      // The wind-up as a thin upright bar beside the figure, filling from the bottom: left of a party member (measured
+      // from the pose it's in, so it clears the step back a wind-up takes), right of a foe. It never sits where the
+      // unit above keeps its status icons.
       const p = Math.max(0, Math.min(1, (this.driver.vt - v.cast.start) / Math.max(1, v.cast.end - v.cast.start)));
+      const bh = Math.min(28, Math.max(14, v.h - 10));
+      const left = v.side === "party" ? x + Math.floor(actorSpan(v.ref, v.pose)[0]) - 4 : x + Math.round(v.w / 2) + 2;
+      const bx = Math.max(1, Math.min(W - 3, left));
+      const by = v.y - 2 - bh;
       ctx.fillStyle = OUTLINE;
-      ctx.fillRect(x - 15, top - 9, 30, 6);
+      ctx.fillRect(bx - 1, by - 1, 4, bh + 2);
       ctx.fillStyle = "#3a3a4a";
-      ctx.fillRect(x - 14, top - 8, 28, 4);
+      ctx.fillRect(bx, by, 2, bh);
       ctx.fillStyle = "#ffd54a";
-      ctx.fillRect(x - 14, top - 8, Math.round(28 * p), 4);
+      const fill = Math.round(bh * p);
+      ctx.fillRect(bx, by + bh - fill, 2, fill);
+    }
+    if (v.side === "party" && !v.downTold && this.partyBars) {
+      // Settings → PARTY HP: a thin HP bar under each party member too.
+      const max = u.stats.max_hp;
+      const hp = Math.max(0, Math.min(1, v.hpShown / max));
+      const bw = 20, bx = x - 10, by = v.y + 3;
+      ctx.fillStyle = OUTLINE;
+      ctx.fillRect(bx - 1, by - 1, bw + 2, 4);
+      ctx.fillStyle = "#3a3a4a";
+      ctx.fillRect(bx, by, bw, 2);
+      ctx.fillStyle = hpColor(hp);
+      ctx.fillRect(bx, by, Math.round(bw * hp), 2);
     }
   }
 

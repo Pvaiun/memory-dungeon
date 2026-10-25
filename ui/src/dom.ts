@@ -39,8 +39,59 @@ export const row = (children: Child[], onClick?: () => void, opts: { cur?: boole
     ...children);
 
 /** A screen header: ◀ and the title, tappable to go back; `right` sits at the end. */
-export const header = (title: Child, onBack: (() => void) | null, right?: Child) =>
-  h("div", { class: "hdr" }, onBack ? h("span", { class: "back", onClick: onBack }, "◀") : null, h("span", { class: "title", onClick: onBack ?? undefined }, title), right ? h("span", { class: "r" }, right) : null);
+/**
+ * What the phone's back button does: close the open overlay if there is one, else the screen's own back
+ * (its header's ◀, or a fight's leave prompt). Screens and overlays set these as they open; main.ts listens.
+ */
+export const nav: { back: (() => void) | null; overlay: (() => void) | null } = { back: null, overlay: null };
+
+/*
+ * How the back button is caught. The app keeps one history entry above the page's own, and adds it only on a tap or a
+ * key: Chrome marks the entry below one added without the user's touch as skippable, so an entry re-added after a back
+ * press made the next back skip straight out of the app. Instead, a back press lands on the page's entry, the app does
+ * its back, and steps forward onto its kept entry again (a step, not a new entry, so nothing is marked). At home with
+ * nothing open the app stays on the page's entry, and the next back leaves.
+ */
+let armed = false;
+let ignore = 0;
+const wantsBack = () => nav.overlay !== null || nav.back !== null;
+function arm() {
+  if (armed || !wantsBack()) return;
+  window.history.pushState({ app: 1 }, "");
+  armed = true;
+}
+function onPop(e: PopStateEvent) {
+  if (ignore > 0) return void ignore--;
+  if ((e.state as { app?: number } | null)?.app) return void (armed = true);
+  armed = false;
+  const act = nav.overlay ?? nav.back;
+  if (!act) return;
+  act();
+  if (wantsBack()) {
+    ignore++;
+    armed = true;
+    window.history.forward();
+  }
+}
+/** After a screen change: at home with nothing open, step off the kept entry, so the next back leaves the app. */
+export function settleBack() {
+  if (!armed || wantsBack()) return;
+  armed = false;
+  ignore++;
+  window.history.back();
+}
+export function initBack() {
+  // After the tap's own handlers (bubbling to window), so the screen it opened is the one that's checked.
+  window.addEventListener("click", arm);
+  window.addEventListener("keydown", arm);
+  window.addEventListener("popstate", onPop);
+}
+
+/** A screen header: ◀ and the title, tappable to go back (the phone's back button does the same); `right` sits at the end. */
+export function header(title: Child, onBack: (() => void) | null, right?: Child) {
+  nav.back = onBack;
+  return h("div", { class: "hdr" }, onBack ? h("span", { class: "back", onClick: onBack }, "◀") : null, h("span", { class: "title", onClick: onBack ?? undefined }, title), right ? h("span", { class: "r" }, right) : null);
+}
 
 /** A window box. */
 export const win = (cls: string, ...children: Child[]) => h("div", { class: `win${cls ? ` ${cls}` : ""}` }, ...children);

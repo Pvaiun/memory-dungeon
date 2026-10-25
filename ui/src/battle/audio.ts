@@ -1,61 +1,90 @@
-/** Placeholder sounds: short synthesized beeps, no files. */
-let ctx: AudioContext | null = null;
-let enabled = true;
+/**
+ * Sound: the director's retro effects pack and two tracks, as small mp3s in
+ * public/audio/ (ui/README.md says which file plays for what). Effects and
+ * music have their own switches (Settings). Browsers only start audio after a
+ * tap, so music that couldn't start waits for the next tap.
+ */
+const base = () => `${import.meta.env.BASE_URL}audio/`;
+
+let sfxOn = true;
+let musicOn = true;
 
 export function setSound(on: boolean) {
-  enabled = on;
+  sfxOn = on;
+}
+export function setMusic(on: boolean) {
+  musicOn = on;
+  if (!on) music.stop();
+  else if (wanted) music.play(wanted);
 }
 
-function ac(): AudioContext | null {
-  if (!enabled) return null;
-  try {
-    ctx ??= new AudioContext();
-    if (ctx.state === "suspended") void ctx.resume();
-    return ctx;
-  } catch {
-    return null;
+// ─── Effects: a few players per sound, so quick repeats overlap ───
+const pools = new Map<string, HTMLAudioElement[]>();
+function play(name: string, volume = 0.6) {
+  if (!sfxOn) return;
+  let pool = pools.get(name);
+  if (!pool) pools.set(name, (pool = []));
+  let a = pool.find((x) => x.paused || x.ended);
+  if (!a) {
+    if (pool.length >= 4) return;
+    a = new Audio(`${base()}${name}.mp3`);
+    a.preload = "auto";
+    pool.push(a);
   }
-}
-
-function tone(freq: number, ms: number, type: OscillatorType = "square", gain = 0.05, slide = 0) {
-  const a = ac();
-  if (!a) return;
-  const o = a.createOscillator();
-  const g = a.createGain();
-  o.type = type;
-  o.frequency.setValueAtTime(freq, a.currentTime);
-  if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(30, freq + slide), a.currentTime + ms / 1000);
-  g.gain.setValueAtTime(gain, a.currentTime);
-  g.gain.exponentialRampToValueAtTime(0.0005, a.currentTime + ms / 1000);
-  o.connect(g).connect(a.destination);
-  o.start();
-  o.stop(a.currentTime + ms / 1000 + 0.02);
-}
-
-function noise(ms: number, gain = 0.06) {
-  const a = ac();
-  if (!a) return;
-  const buf = a.createBuffer(1, a.sampleRate * (ms / 1000), a.sampleRate);
-  const d = buf.getChannelData(0);
-  for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length);
-  const s = a.createBufferSource();
-  s.buffer = buf;
-  const g = a.createGain();
-  g.gain.value = gain;
-  s.connect(g).connect(a.destination);
-  s.start();
+  a.volume = volume;
+  a.currentTime = 0;
+  void a.play().catch(() => {});
 }
 
 export const sfx = {
-  hit: () => { noise(70); tone(180, 80, "square", 0.04, -100); },
-  crit: () => { noise(110, 0.08); tone(420, 120, "sawtooth", 0.05, -300); },
-  miss: () => tone(900, 60, "sine", 0.03, 300),
-  block: () => tone(120, 90, "triangle", 0.05),
-  magic: () => tone(520, 160, "triangle", 0.04, 400),
-  heal: () => { tone(660, 90, "sine", 0.04); setTimeout(() => tone(990, 140, "sine", 0.04), 90); },
-  cast: () => tone(300, 160, "sine", 0.03, 200),
-  status: () => tone(760, 50, "square", 0.025),
-  down: () => tone(220, 400, "sawtooth", 0.05, -180),
-  win: () => { [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => tone(f, 160, "square", 0.04), i * 110)); },
-  lose: () => { [392, 349, 311, 262].forEach((f, i) => setTimeout(() => tone(f, 220, "triangle", 0.05), i * 180)); },
+  tap: () => play("tap", 0.4),
+  hit: () => play("hit"),
+  crit: () => play("crit", 0.8),
+  miss: () => play("miss", 0.4),
+  block: () => play("block", 0.5),
+  magic: () => play("magic", 0.5),
+  heal: () => play("heal", 0.5),
+  cast: () => play("cast", 0.35),
+  status: () => play("status", 0.35),
+  down: () => play("down", 0.6),
+  win: () => play("win", 0.7),
+  lose: () => play("lose", 0.6),
 };
+
+// ─── Music: one looping track at a time ───
+export type Track = "menu" | "battle";
+let current: HTMLAudioElement | null = null;
+let currentTrack: Track | null = null;
+let wanted: Track | null = null;
+let pending = false;
+
+export const music = {
+  play(track: Track) {
+    wanted = track;
+    if (!musicOn) return;
+    if (currentTrack === track && current && !current.paused) return;
+    music.stop();
+    const a = new Audio(`${base()}${track}.mp3`);
+    a.loop = true;
+    a.volume = track === "battle" ? 0.45 : 0.4;
+    current = a;
+    currentTrack = track;
+    a.play().then(() => { pending = false; }).catch(() => { pending = true; });
+  },
+  stop() {
+    current?.pause();
+    current = null;
+    currentTrack = null;
+  },
+};
+
+// A tap unlocks audio: start the music that was asked for before it was allowed.
+const unlock = () => {
+  if (pending && wanted && musicOn) {
+    pending = false;
+    currentTrack = null;
+    music.play(wanted);
+  }
+};
+window.addEventListener("pointerdown", unlock, true);
+window.addEventListener("keydown", unlock, true);

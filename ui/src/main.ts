@@ -1,5 +1,5 @@
 import { loadArt } from "./art.js";
-import { h } from "./dom.js";
+import { h, initBack } from "./dom.js";
 import { buildFont, fitScale, FONT } from "./pixel.js";
 import { setDisplayDiv } from "./content.js";
 import { setup } from "./state.js";
@@ -9,6 +9,8 @@ fitScale();
 setTheme(setup.settings.theme);
 setDisplayDiv(setup.settings.bigNumbers ? 10 : 100);
 window.addEventListener("resize", fitScale);
+
+initBack();
 
 const app = document.getElementById("app")!;
 app.append(h("div", { class: "frame" }, h("div", { class: "screen" }, h("div", { class: "win" }, "LOADING…"))));
