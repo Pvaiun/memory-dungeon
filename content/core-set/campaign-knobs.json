@@ -16,8 +16,8 @@
   "boss": 11
  },
  "ossuary": {
-  "mob": 49,
-  "boss": 30
+  "mob": 59,
+  "boss": -9
  },
  "ogre_brothers": {
   "mob": 98,
@@ -25,15 +25,15 @@
  },
  "fire_mine": {
   "mob": 20,
-  "boss": -57
+  "boss": -122
  },
  "deep_freeze": {
   "mob": 61,
-  "boss": -55
+  "boss": -74
  },
  "iron_wall": {
   "mob": -8,
-  "boss": -54
+  "boss": -88
  },
  "ice_pass": {
   "mob": 42,
@@ -41,7 +41,7 @@
  },
  "valhalla": {
   "mob": 64,
-  "boss": -30
+  "boss": -39
  },
  "wild_hunt": {
   "mob": 52,
@@ -53,7 +53,7 @@
  },
  "knives_out": {
   "mob": 28,
-  "boss": -62
+  "boss": -52
  },
  "long_road": {
   "mob": 88,
@@ -69,14 +69,14 @@
  },
  "judgement": {
   "mob": 22,
-  "boss": -40
+  "boss": -51
  },
  "tower_top": {
   "mob": 67,
-  "boss": -25
+  "boss": -38
  },
  "royal_court": {
   "mob": 103,
-  "boss": -56
+  "boss": -65
  }
 }

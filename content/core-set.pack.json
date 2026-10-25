@@ -8482,12 +8482,12 @@
     }
    ],
    "foes": {
-    "hp": -40,
-    "power": -20
+    "hp": -46,
+    "power": -23
    },
    "bossFoes": {
-    "hp": -47,
-    "power": -23
+    "hp": -58,
+    "power": -29
    }
   },
   {
@@ -8500,12 +8500,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": -13,
-    "power": -6
+    "hp": -15,
+    "power": -7
    },
    "bossFoes": {
-    "hp": -27,
-    "power": -13
+    "hp": -20,
+    "power": -10
    },
    "stages": [
     {
@@ -8586,8 +8586,8 @@
     "power": -1
    },
    "bossFoes": {
-    "hp": 8,
-    "power": 4
+    "hp": 6,
+    "power": 3
    },
    "stages": [
     {
@@ -8725,12 +8725,12 @@
     }
    ],
    "foes": {
-    "hp": 64,
-    "power": 32
+    "hp": 69,
+    "power": 35
    },
    "bossFoes": {
-    "hp": 86,
-    "power": 43
+    "hp": 11,
+    "power": 6
    }
   },
   {
@@ -8743,12 +8743,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 49,
-    "power": 25
+    "hp": 59,
+    "power": 30
    },
    "bossFoes": {
-    "hp": 30,
-    "power": 15
+    "hp": -9,
+    "power": -4
    },
    "stages": [
     {
@@ -8944,8 +8944,8 @@
     "power": 10
    },
    "bossFoes": {
-    "hp": -57,
-    "power": -28
+    "hp": -80,
+    "power": -61
    }
   },
   {
@@ -8962,8 +8962,8 @@
     "power": 31
    },
    "bossFoes": {
-    "hp": -55,
-    "power": -27
+    "hp": -74,
+    "power": -37
    },
    "stages": [
     {
@@ -9034,8 +9034,8 @@
     "power": -4
    },
    "bossFoes": {
-    "hp": -54,
-    "power": -27
+    "hp": -80,
+    "power": -44
    },
    "stages": [
     {
@@ -9181,8 +9181,8 @@
     "power": 32
    },
    "bossFoes": {
-    "hp": -30,
-    "power": -15
+    "hp": -39,
+    "power": -19
    },
    "stages": [
     {
@@ -9414,8 +9414,8 @@
     "power": 14
    },
    "bossFoes": {
-    "hp": -62,
-    "power": -31
+    "hp": -52,
+    "power": -26
    },
    "stages": [
     {
@@ -9727,8 +9727,8 @@
     "power": 11
    },
    "bossFoes": {
-    "hp": -40,
-    "power": -20
+    "hp": -51,
+    "power": -25
    },
    "stages": [
     {
@@ -9837,8 +9837,8 @@
     "power": 34
    },
    "bossFoes": {
-    "hp": -25,
-    "power": -12
+    "hp": -38,
+    "power": -19
    }
   },
   {
@@ -9855,8 +9855,8 @@
     "power": 52
    },
    "bossFoes": {
-    "hp": -56,
-    "power": -28
+    "hp": -65,
+    "power": -32
    },
    "stages": [
     {
