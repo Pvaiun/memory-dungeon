@@ -5,6 +5,7 @@
  *
  *   npx tsx src/campaign-play.ts show <node>                 the node's page
  *   npx tsx src/campaign-play.ts owned <node>                what's owned on reaching it
+ *   npx tsx src/campaign-play.ts glossary 1                  what every status shown in a fight does
  *   npx tsx src/campaign-play.ts play <node> --formation vanguard \
  *       --party "knight:oathblade,plate,heartstone;cleric:plain_light_staff,robes;ranger:warbow" [--seed N] [--full]
  *       A member is class:weapon,armor,amulet (ids; leave a slot out to leave it empty). Abilities fire in the
@@ -108,7 +109,10 @@ if (cmd === "show") {
     console.log(readingPack(c, combat, { why: "", target: { key: node.id, dungeon: node.dungeon, name: node.name }, party, seed, won: run.outcome === "won" }, 1));
   } else console.log(summary(playerView(run.log!) as Entry[]));
   console.log(run.outcome === "won" ? `\nRUN CLEARED (node ${i + 1}, seed ${seed}).` : `\nRUN LOST (node ${i + 1}, seed ${seed}).`);
-} else throw new Error("commands: show <node>, owned <node>, play <node> ...");
+} else if (cmd === "glossary") {
+  // What the interface's inspect window says about each status a fight can show.
+  for (const st of c.pack.statuses) if (st.show === "icon") console.log(`${st.name}: ${st.text ?? ""}`);
+} else throw new Error("commands: show <node>, owned <node>, play <node> ..., glossary 1");
 
 /** A player's memory of a run: per fight, how it went, who fell, what the foes did, what the party dealt and took. */
 function summary(log: Entry[]): string {
@@ -116,14 +120,14 @@ function summary(log: Entry[]): string {
   const names = new Map<string, string>();
   const side = new Map<string, string>();
   const max = new Map<string, number>();
-  let f: { dealt: Map<string, number>; taken: Map<string, number>; healed: Map<string, number>; acts: Map<string, number>; status: Map<string, number>; down: string[]; hp: Map<string, number>; n: number; name: string; boss: boolean } | null = null;
+  let f: { dealt: Map<string, number>; taken: Map<string, number>; healed: Map<string, number>; acts: Map<string, number>; status: Map<string, number>; foeStatus: Map<string, number>; words: Map<string, number>; down: string[]; hp: Map<string, number>; n: number; name: string; boss: boolean } | null = null;
   let n = 0;
   const add = (m: Map<string, number>, k: string, v: number) => m.set(k, (m.get(k) ?? 0) + v);
   const t = (at: unknown) => `t${Math.round((at as number) / 1000)}`;
   for (const e of log) {
     if (e.t === "fight_start") {
       n++;
-      f = { dealt: new Map(), taken: new Map(), healed: new Map(), acts: new Map(), status: new Map(), down: [], hp: new Map(), n, name: String(e.stage), boss: !!e.boss };
+      f = { dealt: new Map(), taken: new Map(), healed: new Map(), acts: new Map(), status: new Map(), foeStatus: new Map(), words: new Map(), down: [], hp: new Map(), n, name: String(e.stage), boss: !!e.boss };
       const us = e.units as { id: string; name: string; side: string; hp: number; max: number }[];
       for (const u of us) names.set(u.id, u.name), side.set(u.id, u.side), max.set(u.id, u.max), f.hp.set(u.id, u.hp);
       out.push("", `Fight ${n}${e.boss ? " (boss)" : ""}: ${String(e.stage).replace(/_/g, " ")}. Party: ${us.filter((u) => u.side === "party").map((u) => `${u.name} ${u.hp}/${u.max}`).join(", ")}. Foes: ${us.filter((u) => u.side === "enemy").map((u) => u.name).join(", ")}.`);
@@ -139,6 +143,7 @@ function summary(log: Entry[]): string {
     else if (e.t === "interrupt") out.push(`  ${t(e.at)} ${names.get(String(e.unit))} is interrupted: ${e.name} is lost.`);
     else if (e.t === "dmg" && typeof e.amount === "number") {
       const tg = String(e.target);
+      if (e.word && e.by && side.get(String(e.by)) === "party") add(f.words, `${String(e.word)} on ${names.get(tg)!.replace(/ [A-Z]$/, "")}`, 1);
       f.hp.set(tg, e.hp as number);
       if (side.get(tg) === "party") add(f.taken, names.get(tg)!, e.amount);
       else if (e.by && side.get(String(e.by)) === "party") add(f.dealt, names.get(String(e.by))!, e.amount);
@@ -146,6 +151,9 @@ function summary(log: Entry[]): string {
     } else if (e.t === "heal") {
       f.hp.set(String(e.target), e.hp as number);
       if (side.get(String(e.target)) === "party") add(f.healed, names.get(String(e.target))!, e.amount as number);
+    } else if (e.t === "status" && side.get(String(e.unit)) === "enemy") {
+      const k = `${names.get(String(e.unit))!.replace(/ [A-Z]$/, "")}: ${e.name}`;
+      f.foeStatus.set(k, Math.max(f.foeStatus.get(k) ?? 0, typeof e.total === "number" ? (e.total as number) : 1));
     } else if (e.t === "status" && side.get(String(e.unit)) === "party" && typeof e.total === "number") {
       const k = `${e.name} on your party`;
       f.status.set(k, Math.max(f.status.get(k) ?? 0, e.total as number));
@@ -167,6 +175,8 @@ function summary(log: Entry[]): string {
       if (f.taken.size) out.push(`  Damage taken: ${fmt(f.taken)}.`);
       if (f.healed.size) out.push(`  Healing received: ${fmt(f.healed)}.`);
       if (f.acts.size) out.push(`  Abilities used: ${fmt(f.acts)}.`);
+      if (f.foeStatus.size) out.push(`  Statuses on foes (peak stacks): ${[...f.foeStatus].map(([k, v]) => `${k}${v > 1 ? ` ${Math.round(v)}` : ""}`).join(", ")}.`);
+      if (f.words.size) out.push(`  Your hits that showed a word: ${fmt(f.words)}.`);
       if (f.status.size) out.push(`  Statuses on your party (peak stacks): ${[...f.status].map(([k, v]) => `${k.replace(" on your party", "")}${v > 1 ? ` ${Math.round(v)}` : ""}`).join(", ")}.`);
     }
   }
