@@ -50,7 +50,7 @@ export const ROGUE_CONFIG: RogueConfigT = {
     lateFrom: 4,
   },
   /** Gold for a win: [min, max], plus `perAct` × (act − 1). */
-  gold: { fight: [12, 20], elite: [30, 40], boss: [90, 110], perAct: 5 },
+  gold: { fight: [12, 20], elite: [50, 65], boss: [90, 110], perAct: 5 },
   /**
    * Spoils: after a fight, pick one of `count` (or none). Each is gear unless it rolls a tome (a member learns an
    * ability) or a recruit. An elite also pays a trophy, a legendary piece won outright (Slay the Spire's elite relic). Gear rolls its rarity from the table. `usable`: the share of gear rolled from what someone
@@ -58,7 +58,7 @@ export const ROGUE_CONFIG: RogueConfigT = {
    */
   spoils: {
     fight: { count: 3, rarity: { common: 55, uncommon: 33, rare: 12, legendary: 0 }, tome: 12, recruit: 6, supply: 8 },
-    elite: { count: 3, trophy: true, rarity: { common: 0, uncommon: 50, rare: 50, legendary: 0 }, tome: 15, recruit: 10, supply: 0 },
+    elite: { count: 3, trophy: true, rarity: { common: 0, uncommon: 0, rare: 100, legendary: 0 }, tome: 15, recruit: 10, supply: 0 },
     usable: 75,
   },
   /** The boss's boon: pick one of a legendary piece, a formation and a recruit. The next act starts restored, and everyone learns. */
@@ -82,8 +82,8 @@ export const ROGUE_CONFIG: RogueConfigT = {
     { mob: 0, step: 6, elite: 0, boss: 0 },
     { mob: 0, step: 6, elite: 0, boss: 0 },
   ],
-  /** Heat: each level adds this to every knob. Won runs open the next level. */
-  heat: { per: 15, max: 10 },
+  /** Heat: each level adds this to every knob (about 6 points of the simulated player's wins a level). Won runs open the next. */
+  heat: { per: 5, max: 10 },
   /** Later floors' fights grow: from this floor, each pack of two or more may gain one more (to the cap of 8). */
   growFrom: 6,
 };

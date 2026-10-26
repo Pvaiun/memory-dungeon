@@ -787,7 +787,7 @@ const Spoils = z.strictObject({
 });
 
 export const RogueConfig = z.strictObject({
-  start: z.strictObject({ gold: z.number().int().min(0), offers: PosInt, picks: z.number().int().min(0) }).describe("Gold at the start; the draft after the leader: `picks` picks of one from `offers` classes."),
+  start: z.strictObject({ gold: z.number().int().min(0), offers: PosInt, picks: z.number().int().min(0), known: PosInt.optional().describe("Abilities a class knows on joining in act I (default 1); one more an act after.") }).describe("Gold at the start; the draft after the leader: `picks` picks of one from `offers` classes."),
   firstAbility: z.record(Id, Id).describe("The ability each class knows on joining in act I. It learns one more for each act reached."),
   party: PosInt,
   bench: z.number().int().min(0).describe("Members who can wait at camp, besides the party."),

@@ -5,7 +5,7 @@
  * Every choice goes to src/rogue.ts, is saved, and the screen redraws from the run.
  */
 import {
-  bench, canManage, choose, eventOf, equip, itemGear, itemOf, learnOptions, member, options, reachable,
+  bench, canManage, choose, eventOf, equip, itemGear, itemOf, joinKnown, learnOptions, member, options, reachable,
   rogue, seat, sellPrice, setFormation, setOrder, swap, unlearned, upgraded, upgradeOptions, useSupply, wearer, type Item, type MapNode, type Offer, type RogueRun,
 } from "../../src/rogue.js";
 import { canEquip } from "../../src/validate.js";
@@ -105,11 +105,7 @@ function offerBody(run: RogueRun, o: Offer): Child[] {
   return [h("div", { class: "line" }, iconEl(SUPPLY_ICON[o.id]), h("span", { class: "grow" }, o.id.toUpperCase())), h("div", { class: "text dim small wrap" }, SUPPLY_TEXT[o.id])];
 }
 /** What a recruit would know on joining now. */
-function rogueKnows(run: RogueRun, cls: string): string[] {
-  const all = c.classes.get(cls)!.abilities;
-  const first = rogue(c).config.firstAbility[cls] ?? all[0];
-  return [first, ...all.filter((a) => a !== first)].slice(0, Math.max(1, run.act));
-}
+const rogueKnows = (run: RogueRun, cls: string) => joinKnown(c, cls, run.act);
 
 /** The party at a glance: faces, HP and MP bars, KO; tap for the party screen. */
 function partyStrip(run: RogueRun, tap = true): HTMLElement {
@@ -280,6 +276,11 @@ function fightView(run: RogueRun): Child[] {
   const foes = kinds.map((id) => {
     const en = c.enemies.get(id)!;
     const res = Object.entries(en.stats).filter(([k]) => k.startsWith("resist:")).map(([k, v]) => h("span", { class: k.slice(7) }, `${v > 100 ? "ABSORBS" : v > 0 ? "RESISTS" : "WEAK TO"} ${k.slice(7).toUpperCase()} `));
+    // What it hits with: its attack's element (or physical), and its abilities' elements.
+    const el = (x?: string) => x ?? "physical";
+    const hits = new Set<string>([el(en.weapon?.element ?? (en.weapon?.kind ? c.weaponKinds.get(en.weapon.kind)?.element : undefined))]);
+    for (const a of en.abilities ?? []) for (const d of c.abilities.get(a)!.do) if (d.op === "damage") hits.add(d.type === "magical" ? el(d.element) : "physical");
+    res.unshift(h("span", { class: "dim" }, "HITS WITH "), ...[...hits].map((k) => h("span", { class: k }, `${k.toUpperCase()} `)));
     return h("div", { class: "line", style: "align-items:flex-start;min-height:3rem" }, h("span", { style: "width:3rem;display:inline-flex;justify-content:center" }, enemyThumb(id, 24)),
       h("div", { class: "grow" }, h("div", { class: en.rank === "boss" ? "gold" : en.rank === "elite" ? "debuff" : "" }, `${enemyDisplayName(id).toUpperCase()}${n(id) > 1 ? ` ×${n(id)}` : ""}`), h("div", { class: "text dim small wrap" }, en.text), res.length ? h("div", { class: "small" }, ...res) : null));
   });

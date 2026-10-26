@@ -268,7 +268,8 @@ export function autoFight(c: Content, run: RogueRun): Run {
 export function joinKnown(c: Content, cls: string, act: number): string[] {
   const all = c.classes.get(cls)!.abilities;
   const first = cfg(c).firstAbility[cls] ?? all[0];
-  return [first, ...all.filter((a) => a !== first)].slice(0, Math.max(1, Math.min(act, all.length)));
+  const known = (cfg(c).start.known ?? 1) + act - 1;
+  return [first, ...all.filter((a) => a !== first)].slice(0, Math.max(1, Math.min(known, all.length)));
 }
 export function plainWeapon(c: Content, cls: string): string {
   const kind = c.classes.get(cls)!.weapons[0];
