@@ -50,7 +50,7 @@ The core set as a roguelite, on Slay the Spire's structure, as the director aske
 - **Regular fights have a shape:** their foes take 80% more HP and deal 30% less a hit before the knob, so they last about 37 ticks instead of 21 to 25 at the same cost, and each ability slot fires about twice as often (the playtesters: "fights are over before the build shows"). Elites and bosses keep theirs.
 - **Every fight has its own knob** (the campaign's: HP +k%, damage +k/2 %), in `content/core-set/rogue-knobs.json`, set two ways:
   - `npm run rogue:calibrate` measures each fight against snapshots of real parties from simulated runs (made whole, MP as it was) and bisects its knob until it costs its tier's share of party HP: easy 10/11/12, regular 15/16/17, elite 22/23/24 points, by act. Bosses are measured against parties exactly as they arrive.
-  - `npm run rogue:tune` then corrects in whole runs: each boss toward beating 12%, 20% and 25% of the parties that reach it (acts I, II, III), each region's regular fights and elites toward ending 6%, 9% and 12% of the runs that enter it.
+  - `npm run rogue:tune` then corrects in whole runs: each boss toward beating 22%, 35% and 45% of the parties that reach it (acts I, II, III; 12%, 20% and 25% until the director asked for a harder heat 0), each region's regular fights and elites toward ending 6%, 9% and 12% of the runs that enter it.
 - **Bomb Bugs** come at most two to a fight: their document says three together wipe, and a roguelite party can't be built for one fight. **Snakes' packs never grow**, and act I's regular fights hold two: their Bleed doesn't shrink with a fight's knob, and the regular fights' extra HP gave them more hits (the Viper Den ended 9% of the act I runs meeting it with its knob at the floor).
 - **Heat:** a won run opens the next heat level; each adds 5 to every knob, about 5 to 9 points of the simulated player's wins (31%, 26%, 20% and 11% at heats 1, 2, 3 and 5, from 38% at heat 0). Heat 0 is the game as tuned.
 
@@ -88,7 +88,7 @@ A third MODE in Settings (journey, free play, rogue). In rogue mode the home men
 
 ## Predictions, checked in the report
 
-- The simulated player wins about a third of its runs at heat 0; bosses end more runs than anything else.
+- The simulated player wins about a third of its runs at heat 0 (the first target; the director then asked for about 20%); bosses end more runs than anything else.
 - Every decision kind is worth points of win rate when made well rather than at random.
 - Taking elites when healthy beats avoiding them; seeking every elite is riskier.
 - Gold, legendaries and rares each have a measurable value.

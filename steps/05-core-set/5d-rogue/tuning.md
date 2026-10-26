@@ -2,7 +2,7 @@
 
 One line a round. The simulated player is `src/rogue-ai.ts` (rules of thumb, no hidden information); `npm run rogue` plays whole runs with it (`src/rogue-sim.ts`), `npm run rogue:calibrate` sets each fight's own knob (`src/rogue-calibrate.ts`). Win rates are the simulated player's at heat 0, leaders Knight, Cleric and Ranger in turn. With 600 runs a rate is good to about ±2 points; 800, ±1.7.
 
-**Targets, set before tuning:** the simulated player wins about a third of its runs (a careful human should do better, and heat is the way up); bosses end more runs than anything else; a regular fight wears the party down rather than ends the run; elites pay for their risk; every decision kind (route, draft, spoils, campfire, shop) is worth points of win rate when made well rather than at random.
+**Targets, set before tuning:** (from round 36, at the director's word, about 20%: see there) the simulated player wins about a third of its runs (a careful human should do better, and heat is the way up); bosses end more runs than anything else; a regular fight wears the party down rather than ends the run; elites pay for their risk; every decision kind (route, draft, spoils, campfire, shop) is worth points of win rate when made well rather than at random.
 
 1. **First build** (120 runs, first-guess knobs): 37% won. The Fire Mine loses 82% of the runs that enter it (the Crypt 13%).
 2. **The trace** (300 runs): 28%. Attrition is weak: 77% of fights start with the party above 80% HP, a won fight costs 10 points of party HP, and deaths cluster in a few fights (the Fire Giant's three fights kill 58% to 86% of parties that meet them, the Powder Room 48%).
