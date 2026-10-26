@@ -74,7 +74,9 @@ function fitsLine(run: RogueRun, g: GearT, rarity?: string, base?: string): HTML
   const aims = base ? rogue(c).aims?.[base] : undefined;
   if (rarity === "legendary" && aims) {
     const have = (cls: string) => run.roster.some((m) => m.cls === cls);
-    return h("div", { class: "text small wrap" }, tag, h("span", { class: "dim" }, "FOR "), ...aims.flatMap((cls, i) => [i ? h("span", { class: "dim" }, ", ") : null, h("span", { class: have(cls) ? "hi" : "dim" }, shortName(cls))]), aims.some(have) ? null : h("span", { class: "debuff" }, " · NOBODY HERE YET"));
+    const wear = run.roster.filter((m) => canEquip(c.classes.get(m.cls)!, g)).map((m) => shortName(m.cls));
+    const after = aims.some(have) ? null : wear.length ? h("span", { class: "dim" }, ` · FITS ${wear.join(", ")}`) : h("span", { class: "debuff" }, " · NOBODY CAN USE IT YET");
+    return h("div", { class: "text small wrap" }, tag, h("span", { class: "dim" }, "FOR "), ...aims.flatMap((cls, i) => [i ? h("span", { class: "dim" }, ", ") : null, h("span", { class: have(cls) ? "hi" : "dim" }, shortName(cls))]), after);
   }
   const can = run.roster.filter((m) => canEquip(c.classes.get(m.cls)!, g)).map((m) => shortName(m.cls));
   if (can.length) return h("div", { class: "line small dim wrap" }, tag, `FITS ${can.join(", ")}`);
@@ -211,8 +213,8 @@ function draftView(run: RogueRun): Child[] {
     partyStrip(run, false),
     h("div", { class: "cards" }, ...p.offers.map((id) => h("div", { class: `win card${draftPick === id ? " cur" : ""}`, onClick: () => { draftPick = id; redraw(); } },
       h("div", { class: "portrait" }, faceEl(id)), h("div", { class: "name" }, shortName(id)), h("div", { class: "codes small" }, c.abilities.get(rogue(c).config.firstAbility[id])!.name)))),
-    win("scroll", classHead(draftPick), h("div", { class: "text dim small wrap" }, classOf(draftPick).text), section("STARTS WITH"), abilityBlock(c.abilities.get(rogue(c).config.firstAbility[draftPick])!, null, setup.settings.designer),
-      section("LEARNS LATER"), ...c.classes.get(draftPick)!.abilities.filter((a) => a !== rogue(c).config.firstAbility[draftPick!]).map((a) => abilityBlock(c.abilities.get(a)!, null, false)),
+    win("scroll", classHead(draftPick), h("div", { class: "text dim small wrap" }, classOf(draftPick).text), section("STARTS WITH"), abilityBlock(c.abilities.get(rogue(c).config.firstAbility[draftPick])!, classOf(draftPick).stats, setup.settings.designer),
+      section("LEARNS LATER"), ...c.classes.get(draftPick)!.abilities.filter((a) => a !== rogue(c).config.firstAbility[draftPick!]).map((a) => abilityBlock(c.abilities.get(a)!, classOf(draftPick!).stats, false)),
       section("PASSIVE"), ...(classOf(draftPick).passive ? passiveBlock(classOf(draftPick).passive!.name, classOf(draftPick).passive!.text) : passiveBlock("Einherjar", "Allies it revives come back with every action ready."))),
     h("div", { class: "btns even" }, button(`TAKE ${shortName(draftPick)}`, () => pickOrSave(run, draftPick!), "hi")),
   ];
@@ -402,7 +404,8 @@ function trainRow(run: RogueRun, cls: string, ab: string, label: string, onClick
   const a = c.abilities.get(ab)!;
   return h("div", { class: "ab" },
     h("div", { class: "head" }, faceEl(cls), h("span", { class: "grow trunc" }, `${shortName(cls)}: ${a.name.toUpperCase()}${up ? "+" : ""}`), onClick ? button(label, onClick, "sm hi") : h("span", { class: "dim small" }, label)),
-    h("div", { class: "body" }, up ? upText(ab, run, cls) : a.text, run.party.includes(cls) ? "" : " (at camp)"));
+    h("div", { class: "body" }, up ? upText(ab, run, cls) : a.text, run.party.includes(cls) ? "" : " (at camp)"),
+    up ? null : (() => { const sz = sizeWords(a, fighter(run, cls).stats); return sz ? h("div", { class: "body hi" }, sz.toUpperCase()) : null; })());
 }
 
 // ─── The campfire ──────────────────────────────────────────────────────────

@@ -127,8 +127,9 @@ function home(): Child[] {
     stripEl(),
     h("div", { class: "menu-wrap" },
       win("list menu", ...items.map(([s, label, sub, isNew]) => h("div", { class: "row", onClick: () => go(s) }, h("span", { class: "cursor" }, "▶"), h("div", { class: "grow" }, h("div", { class: "line" }, label, isNew ? newTag() : null), h("div", { class: "text dim small trunc" }, sub))))),
-      h("div", { class: "line dim small", style: "margin-top:.5rem" }, h("span", { class: "trunc grow" }, setup.party.map(shortName).join(" · ") || "NO PARTY"), h("span", null, `SEED ${setup.seed}`)),
-      h("div", { class: "line dim small" }, h("span", { class: "trunc grow" }, f.name)),
+      // Free play's loadout means nothing to a rogue run: hidden in rogue mode.
+      onRogue() ? null : h("div", { class: "line dim small", style: "margin-top:.5rem" }, h("span", { class: "trunc grow" }, setup.party.map(shortName).join(" · ") || "NO PARTY"), h("span", null, `SEED ${setup.seed}`)),
+      onRogue() ? null : h("div", { class: "line dim small" }, h("span", { class: "trunc grow" }, f.name)),
     ),
   ];
 }

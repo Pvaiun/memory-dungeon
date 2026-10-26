@@ -181,7 +181,7 @@ export function effectText(e: EffectT, stats: Stats | null, inAction = true): st
  */
 export function sizeWords(a: AbilityT, stats: Stats, dmgMult = 1): string {
   const out: string[] = [];
-  const stacksOf = (n: NumT | undefined) => (n === undefined ? 1 : Math.round(evalNum(n, stats).value * 10) / 10);
+  const stacksOf = (n: NumT | undefined) => { const v = n === undefined ? 1 : evalNum(n, stats).value; return v >= 10 ? Math.round(v) : Math.round(v * 10) / 10; };
   for (const e of a.do) {
     if (e.op === "damage") {
       const kind = e.type === "magical" ? elementName(e.element ?? "").toLowerCase() : e.element ? elementName(e.element).toLowerCase() : e.type === "physical" ? (e.subtype ?? "physical") : "damage";
