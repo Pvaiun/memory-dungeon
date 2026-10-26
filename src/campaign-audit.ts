@@ -71,6 +71,7 @@ const starved = new Map<string, number>(), alive = new Map<string, number>(); //
 const mpAt = new Map<string, number>(), mpN = new Map<string, number>(); // "cleric|3": MP share at the fight's start
 const slotCasts = new Map<string, number>(), slotFirst = new Map<string, number[]>(), slotFights = new Map<string, number>(); // "cleric|0"
 const noCast = new Map<string, number>(); // "cleric": regular fights in which it cast nothing
+const bossCasts = new Map<string, number>(), bossFights = new Map<string, number>(); // boss fights: casts by slot, fights entered standing
 const campfire = new Map<string, number>(); // the sims' picks: "rest", "focus", "raise"
 
 /** Plays a run a moment at a time, so MP starvation can be read off the fight's state between moments. */
@@ -175,6 +176,7 @@ function tally(log: Entry[], wonRun: boolean, party: Party) {
         if (at === lastPartyActAt) sameTickActs += 2; // both acts of the pair (approximate for triples)
         lastPartyActAt = at;
         if (a === "ability") {
+          if (kind === "boss") add(bossCasts, `${ref.get(by)}|${slotOf(ref.get(by)!, String(e.act))}`);
           if (kind === "mob") {
             const sl = slotOf(ref.get(by)!, String(e.act));
             add(slotCasts, `${ref.get(by)}|${sl}`);
@@ -255,6 +257,7 @@ function tally(log: Entry[], wonRun: boolean, party: Party) {
       add(fightTicks, kind, ticks);
       for (const [id, s] of side) if (s && born.has(id)) add(unitTicks, `${kind}|${s}`, Math.max(0, (died.has(id) ? died.get(id)! / T : ticks) - (born.get(id) ?? 0) / T));
       if (kind === "boss") bigHit.push(biggest);
+      if (kind === "boss") for (const [id, s] of side) if (s === "party" && born.has(id) && !startedDown.has(id)) add(bossFights, ref.get(id)!);
       if (kind === "mob") for (const [id, s] of side) {
         if (s !== "party" || !born.has(id) || startedDown.has(id)) continue;
         const cl = ref.get(id)!;
@@ -375,4 +378,6 @@ for (const cl of [...new Set([...slotFights.keys()].map((x) => x.split("|")[0]))
   };
   out.push(`| ${cl} | ${cell(0)} | ${cell(1)} | ${cell(2)} | ${pct(noCast.get(cl) ?? 0, n)} |`);
 }
+out.push("\nBoss fights a member starts standing: casts per fight by slot.\n");
+out.push([...bossFights].sort().map(([cl, n]) => `${cl} ${[0, 1, 2].map((sl) => f1((bossCasts.get(`${cl}|${sl}`) ?? 0) / n)).join(" / ")}`).join(", "));
 console.log(out.join("\n"));
