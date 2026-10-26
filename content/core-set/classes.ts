@@ -3,7 +3,7 @@
  * Every number comes from scale.ts; the words are the documents'.
  */
 import type { AbilityT, ClassDefT, NumT, StatusT, TargetRuleT } from "../../src/schema.js";
-import { BURN_STACKS, SHOCK_STACKS, COOLDOWN, HIT, REVIVE, RESIST, SPECIAL, SPECIAL_KEY, STACKS, STATUS, STUN_COOLDOWN, WINDUP, crit, from, jitter, pts, stacks, type HitWord, type SpecialLevel, type SpecialStat, type StackWord } from "./scale.js";
+import { BURN_STACKS, SHOCK_STACKS, COOLDOWN, HIT, REVIVE, RESIST, SPECIAL, SPECIAL_KEY, STACKS, STATUS, STUN_COOLDOWN, WINDUP, crit, from, jitter, aggroOf, pts, stacks, type HitWord, type SpecialLevel, type SpecialStat, type StackWord } from "./scale.js";
 import { P } from "./vocabulary.js";
 
 type CD = keyof typeof COOLDOWN;
@@ -44,7 +44,7 @@ const lacking = (rule: TargetRuleT, status: string | string[], fallback = false)
 const waitsFor = (side: TargetRuleT["side"], where: NonNullable<TargetRuleT["where"]>) => ({ if: { side, where } });
 
 const stat = (hp: number, mp: number, regen: number, atk: number, mag: number, armor: number, c: number, aggro: number) => ({
-  max_hp: pts(hp), max_mp: pts(mp), mp_regen: pts(regen), attack: pts(atk), magic: pts(mag), armor: pts(armor), crit_chance: crit(c), aggro: pts(aggro),
+  max_hp: pts(hp), max_mp: pts(mp), mp_regen: pts(regen), attack: pts(atk), magic: pts(mag), armor: pts(armor), crit_chance: crit(c), aggro: aggroOf(aggro),
 });
 const special = (s: SpecialStat, level: SpecialLevel) => ({ [SPECIAL_KEY[s]]: SPECIAL[s][level] });
 const resist = (element: string, kind: "resists" | "weak") => ({ [`resist:${element}`]: RESIST[kind] });

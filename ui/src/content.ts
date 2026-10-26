@@ -80,6 +80,8 @@ export const statusCode = (id: string): string => STATUS_CODE[id] ?? (c.statuses
 export function showStat(key: string, v: number): string {
   const def = c.stats.get(key);
   if (key === "crit_chance" || def?.kind === "points" || key.startsWith("resist")) return `${Math.round(v)}%`;
+  // Aggro is on its own scale, centred on 100 (the director's rule): shown as it is.
+  if (key === "aggro") return `${Math.round(v)}`;
   return `${disp(v)}`;
 }
 /** The sheet's stats, in order. */

@@ -35,7 +35,7 @@ export const PROFILES: Record<string, { w: Record<string, number>; basic: number
 };
 
 /** One gear step of each stat. */
-const STEP: Record<string, number> = { crit_chance: 5, evasion: 20, accuracy: 20, double_strike: 25, lifesteal: 15, siphon: 10, crit_multiplier: 50, thorns: 150 };
+const STEP: Record<string, number> = { crit_chance: 5, evasion: 20, accuracy: 20, double_strike: 25, lifesteal: 15, siphon: 10, crit_multiplier: 50, thorns: 150, aggro: 10 };
 const stepOf = (stat: string) => STEP[stat] ?? (stat.startsWith("resist") ? 30 : stat === "max_hp" ? 500 : 1000);
 
 /** A style shifts the weights: sturdy doubles HP and Armor, sharp the damage stats. */

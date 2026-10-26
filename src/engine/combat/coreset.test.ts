@@ -8,6 +8,7 @@
 import { test } from "vitest";
 import assert from "node:assert/strict";
 import { arena, weapons } from "./arena.js";
+import { drawOf } from "./fight.js";
 
 const BAG = { name: "Bag", stats: { max_hp: 1_000_000 } };
 const dmg = (amount: number, extra: object = {}) => ({ op: "damage", type: "physical", subtype: "blunt", amount, ...extra });
@@ -330,6 +331,32 @@ test("opening slots, step 5c: a party unit's abilities start charged by the orde
   assert.deepEqual(a.unit("Hero").acts.slice(0, 3).map((x) => x.ready / 1000), [15, 25, 30], "40 less 25, 15 and 10 ticks");
   const foe = a.unit("Bag").acts[0].ready / 1000;
   assert.ok(foe >= 12 && foe <= 28, `a foe's ability still rolls a third to two thirds (${foe})`);
+});
+
+test("draw, the director's Aggro rule: foes pick by draw, Aggro through a curve centred on 100, between a third and three times an ordinary unit's", () => {
+  const r = { draw: { centre: 100, k: 50, max: 3 } };
+  const table: [number, number][] = [[1, 43], [40, 48], [60, 53], [80, 64], [90, 75], [100, 100], [110, 133], [120, 157], [140, 189], [160, 209], [200, 233]];
+  for (const [aggro, want] of table) assert.equal(Math.round(drawOf(r, aggro)), want, `Aggro ${aggro}`);
+  for (const d of [5, 20, 60, 99]) assert.ok(Math.abs(drawOf(r, 100 + d) * drawOf(r, 100 - d) - 10_000) < 1e-6, `+${d} and −${d} cancel`);
+  assert.ok(drawOf(r, 100_000) < 300 && drawOf(r, 1) > 33, "never past three times, nor under a third");
+  // The rule's example party, Knight / Cleric / Ranger at 140 / 60 / 70: 63% / 18% / 19% of picks.
+  const share = (xs: number[]) => xs.map((a) => drawOf(r, a) / xs.reduce((t, b) => t + drawOf(r, b), 0));
+  assert.deepEqual(share([140, 60, 70]).map((x) => Math.round(100 * x)), [63, 18, 19]);
+  assert.equal(drawOf({}, 37), 37, "without the curve, Aggro itself");
+});
+
+test("draw in a fight: picks follow draw, so a Veiled caster is still picked about a sixth of the time beside a wall", () => {
+  const picks: string[] = [];
+  for (let seed = 1; seed <= 400; seed++) {
+    const a = arena({
+      party: [{ name: "Foe", weapon: weapons.dagger }],
+      enemies: [{ name: "Wall", stats: { aggro: 170 } }, { name: "Caster", stats: { aggro: 50 } }, { name: "Other", stats: { aggro: 50 } }],
+      ruleset: { draw: { centre: 100, k: 50, max: 3 } }, seed,
+    }).to(8);
+    picks.push(String(a.entries("act")[0].targets));
+  }
+  const caster = share(picks, "e2");
+  assert.ok(caster > 0.11 && caster < 0.21, `the caster about 16% (${caster}); in proportion to Aggro it would be 19% here, and a few percent beside a wall of 1,000`);
 });
 
 // ─── Actions ─────────────────────────────────────────────────────────────────

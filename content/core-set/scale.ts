@@ -107,6 +107,12 @@ export const RULES = {
    */
   stagger: 1.5,
   /**
+   * The director's Aggro rule (Oct 26, 2026): foes pick in proportion to draw, which comes from Aggro through a curve. An
+   * ordinary unit (Aggro 100) draws 100; none draws more than 3 times that or less than a third; +d and −d cancel. Picks
+   * in proportion to Aggro itself let a unit reach a 1% chance of being picked too easily, which broke the balance.
+   */
+  draw: { centre: 100, k: 50, max: 3 },
+  /**
    * Past 300 ticks, everyone deals 25% more damage, and 25% more again every 30 ticks (campaign pass). An AI playtester
    * met a Vampire and two Bone Priests healing each other to the 5,000-tick safety stop, and Ghouls raising each other
    * for 2,600 ticks: minutes of watching nothing. Boss fights end in 100 to 250.
@@ -255,7 +261,10 @@ export const STEP = P;
  */
 export const HP_STEP = P / 2;
 /** The step for a stat, in the data's units. */
-export const stepFor = (stat: string) => (stat === "max_hp" ? HP_STEP : STEP);
+/** Aggro is centred on 100 (the director's rule): a class's or enemy's word n is 70 + 10n, and a gear or formation step is 10. */
+export const aggroOf = (n: number) => 70 + 10 * n;
+export const AGGRO_STEP = 10;
+export const stepFor = (stat: string) => (stat === "max_hp" ? HP_STEP : stat === "aggro" ? AGGRO_STEP : STEP);
 
 // ─── Statuses: sizes and durations ───────────────────────────────────────────
 
