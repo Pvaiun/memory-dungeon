@@ -41,7 +41,7 @@ export type Pending =
   | ({ kind: "fight"; begun?: boolean } & FightSpec)
   | { kind: "spoils"; gold: number; offers: Offer[]; tier: FightTier; trophy?: Item }
   | { kind: "boon"; offers: Offer[] }
-  | { kind: "shop"; stock: ShopSlot[]; learn: boolean; upgrade: boolean }
+  | { kind: "shop"; stock: ShopSlot[]; learn: boolean; upgrade: boolean; trained?: number }
   | { kind: "campfire" }
   | { kind: "event"; id: string }
   | { kind: "treasure"; offer: Offer; gold: number }
@@ -139,7 +139,7 @@ export function upgraded(c: Content, id: string): AbilityT {
     ...structuredClone(a), id: pid, name: `${a.name}+`,
     do: amounts ? a.do.map((e) => upEffect(e, UPGRADE.amount)) : structuredClone(a.do),
     cooldown: amounts ? a.cooldown : Math.round(a.cooldown * UPGRADE.cooldown * 1000) / 1000,
-    text: amounts ? `${a.text} 40% more.` : `${a.text} Comes off cooldown a quarter sooner.`,
+    text: amounts ? `${a.text} (+) 40% more of what it deals, heals, shields or stacks.` : `${a.text} (+) Comes off cooldown a quarter sooner.`,
   };
   c.abilities.set(pid, up);
   return up;
@@ -480,6 +480,8 @@ export function foesFor(c: Content, tier: FightTier, k: number): FoesT {
   const hp = (f.hp ?? 0) + sh.hp, power = (f.power ?? 0) + sh.power;
   return { ...(hp ? { hp: Math.max(-90, hp) } : {}), ...(power ? { power: Math.max(-90, power) } : {}) };
 }
+/** The act's boss fight as it will be met: its foes' HP and damage changes (the boss screen shows its moves' sizes). */
+export const bossFoes = (c: Content, run: RogueRun): FoesT => foesFor(c, "boss", knobFor(c, run, "boss", cfg(c).map.floors + 1, run.boss));
 function fightSpec(c: Content, run: RogueRun, node: MapNode, tier: FightTier): FightSpec {
   const fight = fightFor(c, run, node, tier);
   run.met.push(fight.id);
@@ -525,7 +527,14 @@ const roomForRecruit = (c: Content, run: RogueRun) => run.roster.length < cfg(c)
 function rollRecruit(c: Content, run: RogueRun, rng: Rng, taken: string[] = []): Offer | null {
   if (!roomForRecruit(c, run)) return null;
   const pool = c.pack.classes.map((k) => k.id).filter((id) => !run.roster.some((m) => m.cls === id) && !taken.includes(id));
-  return pool.length ? { kind: "recruit", cls: pool[int(rng, pool.length)] } : null;
+  if (!pool.length) return null;
+  // A class that could wear a legendary piece nobody in the roster can is three times as likely: a piece found for a class
+  // the run doesn't have makes that class worth hoping for, and the odds answer (an AI playtester's ask).
+  const waiting = bag(run).filter((it) => it.rarity === "legendary" && !run.roster.some((m) => canEquip(c.classes.get(m.cls)!, c.gear.get(it.uid) ?? itemGear(c, it))));
+  const weight = (id: string) => (waiting.some((it) => canEquip(c.classes.get(id)!, c.gear.get(it.uid) ?? itemGear(c, it))) ? 3 : 1);
+  let x = int(rng, pool.reduce((t, id) => t + weight(id), 0));
+  for (const id of pool) if ((x -= weight(id)) < 0) return { kind: "recruit", cls: id };
+  return { kind: "recruit", cls: pool[pool.length - 1] };
 }
 function rollFormation(c: Content, run: RogueRun, rng: Rng, taken: string[] = []): Offer | null {
   const pool = c.pack.formations.map((f) => f.id).filter((id) => !run.formations.includes(id) && !taken.includes(id));
@@ -574,6 +583,13 @@ export function priceOf(c: Content, o: Offer): number {
   if (o.kind === "formation") return p.formation;
   if (o.kind === "supply") return p.supply[o.id] ?? 40;
   return p.learn;
+}
+type ShopPending = Extract<Pending, { kind: "shop" }>;
+/** A shop's training: its price, dearer by the step for each bought this visit (or once each a visit, with no step). */
+export const trainPrice = (c: Content, p: ShopPending, verb: "learn" | "upgrade") => cfg(c).prices[verb] + (cfg(c).prices.trainStep ?? 0) * (p.trained ?? 0);
+function trained(c: Content, p: ShopPending, verb: "learn" | "upgrade") {
+  p.trained = (p.trained ?? 0) + 1;
+  if (cfg(c).prices.trainStep === undefined) p[verb] = false;
 }
 export const sellPrice = (c: Content, it: Item) => Math.floor((cfg(c).prices[it.rarity] * cfg(c).prices.sell) / 100);
 function shopStock(c: Content, run: RogueRun, node: string): ShopSlot[] {
@@ -698,15 +714,25 @@ export function seat(c: Content, run: RogueRun, order: string[]): boolean {
   for (const cls of run.party) clampMax(c, run, cls);
   return true;
 }
+/** An ability order: some or all of what the member knows, each once. What's left out isn't brought to fights. */
 export function setOrder(run: RogueRun, cls: string, order: string[]): boolean {
   const m = member(run, cls);
-  if (!m || order.length !== m.known.length || !order.every((a) => m.known.includes(a))) return false;
+  if (!m || new Set(order).size !== order.length || !order.every((a) => m.known.includes(a))) return false;
   m.order = [...order];
   return true;
 }
-/** At a campfire: one of the party and one at camp trade places. Or a party member steps back with nobody to replace it, while someone stands. */
+/**
+ * At a campfire: one of the party and one at camp trade places. Or a party member steps back with nobody to replace it, while someone stands.
+ * Any time between rooms, a fallen member can trade places with one standing at camp (both AI playtests of round 2 lost a run with
+ * healthy members watching from camp).
+ */
 export function swap(c: Content, run: RogueRun, out: string, into: string | null): boolean {
-  if (run.pending.kind !== "campfire") return false;
+  if (run.pending.kind !== "campfire") {
+    const i = run.party.indexOf(out);
+    if (!betweenRooms(run) || i < 0 || !into || !member(run, out).ko || !bench(run).includes(into) || member(run, into).ko) return false;
+    run.party[i] = into;
+    return true;
+  }
   const i = run.party.indexOf(out);
   if (i < 0) {
     // A camp member into an empty seat.
@@ -782,8 +808,8 @@ export function options(c: Content, run: RogueRun): string[] {
     case "treasure": return [canTake(c, run, p.offer) ? "take" : "", "leave"].filter(Boolean);
     case "shop": {
       const out = p.stock.map((s, i) => (!s.sold && s.price <= run.gold && canTake(c, run, s.offer) ? `buy:${i}` : "")).filter(Boolean);
-      if (p.learn && run.gold >= cfg(c).prices.learn) out.push(...learnOptions(c, run).map((o) => `learn:${o}`));
-      if (p.upgrade && run.gold >= cfg(c).prices.upgrade) out.push(...upgradeOptions(run).map((o) => `upgrade:${o}`));
+      if (p.learn && run.gold >= trainPrice(c, p, "learn")) out.push(...learnOptions(c, run).map((o) => `learn:${o}`));
+      if (p.upgrade && run.gold >= trainPrice(c, p, "upgrade")) out.push(...upgradeOptions(run).map((o) => `upgrade:${o}`));
       out.push(...bag(run).map((it) => `sell:${it.uid}`));
       return [...out, "leave"];
     }
@@ -877,14 +903,16 @@ export function choose(c: Content, run: RogueRun, pick: string) {
         note(run, `Sold ${c.gear.get(arg)?.name ?? it.base} for ${price}.`);
       } else if (verb === "learn") {
         const [cls, ab] = arg.split(":");
-        learn(c, run, cls, ab);
-        spend(run, cfg(c).prices.learn);
-        p.learn = false;
+        const price = trainPrice(c, p, "learn");
+        if (!learn(c, run, cls, ab)) return;
+        spend(run, price);
+        trained(c, p, "learn");
       } else if (verb === "upgrade") {
         const [cls, ab] = arg.split(":");
-        upgrade(c, run, cls, ab);
-        spend(run, cfg(c).prices.upgrade);
-        p.upgrade = false;
+        const price = trainPrice(c, p, "upgrade");
+        if (!upgrade(c, run, cls, ab)) return;
+        spend(run, price);
+        trained(c, p, "upgrade");
       }
       return;
     }

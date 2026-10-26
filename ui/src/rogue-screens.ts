@@ -5,13 +5,14 @@
  * Every choice goes to src/rogue.ts, is saved, and the screen redraws from the run.
  */
 import {
-  bench, canManage, choose, eventOf, equip, itemGear, itemOf, joinKnown, learnOptions, member, options, reachable,
-  rogue, seat, sellPrice, setFormation, setOrder, swap, unlearned, upgraded, upgradeOptions, useSupply, wearer, type Item, type MapNode, type Offer, type RogueRun,
+  bench, bossFoes, canManage, choose, eventOf, equip, itemGear, itemOf, joinKnown, learnOptions, member, options, reachable,
+  rogue, seat, sellPrice, setFormation, setOrder, swap, trainPrice, unlearned, upgraded, upgradeOptions, useSupply, wearer, type Item, type MapNode, type Offer, type RogueRun,
 } from "../../src/rogue.js";
 import { canEquip } from "../../src/validate.js";
 import type { GearT, RogueNodeKindT } from "../../src/schema.js";
 import { c, className, cls as classOf, disp, kindOf, shortName } from "./content.js";
 import { button, bar, h, header, toast, win, type Child } from "./dom.js";
+import { sizeWords } from "./describe.js";
 import { abilityBlock, basicLine, classHead, codeSpans, gearRow, passiveBlock, role, section, specialLines, statGrid } from "./sheet.js";
 import { weaponOf } from "../../src/engine/combat/fight.js";
 import { actorEl, enemyThumb, faceEl, iconEl } from "./pixel.js";
@@ -80,9 +81,13 @@ function effectLines(g: GearT): Child[] {
   return [...out, ...(g.statuses ?? []).map((id) => c.statuses.get(id)).filter(Boolean).map((s) => h("div", { class: "text small wrap gold" }, s!.text ?? s!.name))];
 }
 /** What an upgrade does to one ability, in numbers. */
-function upText(id: string): string {
+/** What an upgrade changes, in this member's numbers where it has some ("≈ 9 pierce + Silence → ≈ 13 pierce + Silence"). */
+function upText(id: string, run?: RogueRun, cls?: string): string {
   const a = c.abilities.get(id)!, up = upgraded(c, id);
-  return up.cooldown !== a.cooldown ? `Every ${Math.round(up.cooldown)} ticks instead of ${Math.round(a.cooldown)}.` : "40% more of what it deals, heals, shields or stacks.";
+  if (up.cooldown !== a.cooldown) return `Every ${Math.round(up.cooldown)} ticks instead of ${Math.round(a.cooldown)}.`;
+  const st = run && cls ? fighter(run, cls).stats : null;
+  const was = st ? sizeWords(a, st) : "", now = st ? sizeWords(up, st) : "";
+  return was && now && was !== now ? `${was.toUpperCase()} → ${now.toUpperCase()}.` : "40% more of what it deals, heals, shields or stacks.";
 }
 /** An offer as a card's body. */
 function offerBody(run: RogueRun, o: Offer): Child[] {
@@ -248,7 +253,7 @@ function mapView(run: RogueRun): Child[] {
   const supplies = run.supplies.map((id, i) => button(h("span", null, iconEl(SUPPLY_ICON[id]), id.toUpperCase()), () => useSupplyView(run, id), "sm"));
   return [
     header(`ACT ${ROMAN[run.act]} · ${reg.name.toUpperCase()}`, () => go("home"), h("span", { class: "dim" }, run.floor ? `F${run.floor}` : "START")),
-    h("div", { class: "line small" }, iconEl(ICON.boss), h("span", { class: "dim" }, "BOSS "), h("span", { class: "gold trunc grow" }, run.boss.name.toUpperCase())),
+    h("div", { class: "line small", onClick: () => go("rboss"), style: "cursor:pointer" }, iconEl(ICON.boss), h("span", { class: "dim" }, "BOSS "), h("span", { class: "gold trunc grow" }, run.boss.name.toUpperCase()), h("span", { class: "dim" }, "LOOK ▶")),
     partyStrip(run),
     scroller,
     picked
@@ -268,12 +273,11 @@ function useSupplyView(run: RogueRun, id: "tonic" | "ether" | "phoenix") {
 
 // ─── A fight in waiting ────────────────────────────────────────────────────
 
-function fightView(run: RogueRun): Child[] {
-  const p = run.pending;
-  if (p.kind !== "fight") return [];
-  const kinds = [...new Set(p.fight.enemies)];
-  const n = (id: string) => p.fight.enemies.filter((e) => e === id).length;
-  const foes = kinds.map((id) => {
+/** A fight's foes as the preview shows them: what each is, what it does, what it hits with, what it resists. */
+function foeLines(enemies: string[], foes: { power?: number } = {}): Child[] {
+  const kinds = [...new Set(enemies)];
+  const n = (id: string) => enemies.filter((e) => e === id).length;
+  return kinds.map((id) => {
     const en = c.enemies.get(id)!;
     const res = Object.entries(en.stats).filter(([k]) => k.startsWith("resist:")).map(([k, v]) => h("span", { class: k.slice(7) }, `${v > 100 ? "ABSORBS" : v > 0 ? "RESISTS" : "WEAK TO"} ${k.slice(7).toUpperCase()} `));
     // What it hits with: its attack's element (or physical), and its abilities' elements.
@@ -281,9 +285,28 @@ function fightView(run: RogueRun): Child[] {
     const hits = new Set<string>([el(en.weapon?.element ?? (en.weapon?.kind ? c.weaponKinds.get(en.weapon.kind)?.element : undefined))]);
     for (const a of en.abilities ?? []) for (const d of c.abilities.get(a)!.do) if (d.op === "damage") hits.add(d.type === "magical" ? el(d.element) : "physical");
     res.unshift(h("span", { class: "dim" }, "HITS WITH "), ...[...hits].map((k) => h("span", { class: k }, `${k.toUpperCase()} `)));
+    // Its abilities by name and words, so a boss's big move can be planned for (the AI playtests: "let me answer what I see").
+    // Its sizes too, from its stats and this fight's knob, before the target's Armor and resistances (Slay the Spire shows intents).
+    const acts = (en.abilities ?? []).map((a) => { const ab = c.abilities.get(a)!; const size = sizeWords(ab, en.stats, 1 + (foes.power ?? 0) / 100); return h("div", { class: "text small wrap" }, h("span", { class: "hi" }, `${ab.name.toUpperCase()}: `), h("span", { class: "dim" }, ab.text), size ? h("span", { class: "dim" }, ` ${size.toUpperCase()}${/≈/.test(size) ? " BEFORE ARMOR" : ""}.`) : null); });
     return h("div", { class: "line", style: "align-items:flex-start;min-height:3rem" }, h("span", { style: "width:3rem;display:inline-flex;justify-content:center" }, enemyThumb(id, 24)),
-      h("div", { class: "grow" }, h("div", { class: en.rank === "boss" ? "gold" : en.rank === "elite" ? "debuff" : "" }, `${enemyDisplayName(id).toUpperCase()}${n(id) > 1 ? ` ×${n(id)}` : ""}`), h("div", { class: "text dim small wrap" }, en.text), res.length ? h("div", { class: "small" }, ...res) : null));
+      h("div", { class: "grow" }, h("div", { class: en.rank === "boss" ? "gold" : en.rank === "elite" ? "debuff" : "" }, `${enemyDisplayName(id).toUpperCase()}${n(id) > 1 ? ` ×${n(id)}` : ""}`), h("div", { class: "text dim small wrap" }, en.text), ...acts, res.length ? h("div", { class: "small" }, ...res) : null));
   });
+}
+/** The act's boss, from the map: known from the act's start, so the party can be built and swapped toward it. */
+export function rbossScreen(): Child[] {
+  const run = current();
+  if (!run) return rogueScreen();
+  return [
+    header("BOSS", () => go("rogue")),
+    win("scroll", h("div", { class: "line gold" }, run.boss.name.toUpperCase()), ...foeLines(run.boss.enemies, bossFoes(c, run))),
+    h("div", { class: "text dim small wrap" }, "Waiting at the top of the map. Who's in the party changes at a campfire, and the last floor is always one."),
+  ];
+}
+
+function fightView(run: RogueRun): Child[] {
+  const p = run.pending;
+  if (p.kind !== "fight") return [];
+  const foes = foeLines(p.fight.enemies, p.foes);
   return [
     header(p.tier === "boss" ? "BOSS" : p.tier === "elite" ? "ELITE" : "FIGHT", () => go("home")),
     partyStrip(run),
@@ -337,15 +360,16 @@ function shopView(run: RogueRun): Child[] {
   if (shopTab === "buy") {
     p.stock.forEach((s, i) => {
       const can = opts.includes(`buy:${i}`);
-      const el = win(`roffer${s.sold ? " dimmed" : can ? "" : " dimmed"}`, ...offerBody(run, s.offer), h("div", { class: "line" }, s.sold ? h("span", { class: "dim" }, "BOUGHT") : gold(s.price), s.sold ? null : h("span", { class: "r" }, button("BUY", () => pickOrSave(run, `buy:${i}`), can ? "hi sm" : "sm"))));
+      const el = win(`roffer${s.sold ? " dimmed" : can ? "" : " dimmed"}`, ...offerBody(run, s.offer), h("div", { class: "line" }, s.sold ? h("span", { class: "dim" }, "BOUGHT") : gold(s.price), !s.sold && s.offer.kind === "supply" && run.supplies.length >= rogue(c).config.bag ? h("span", { class: "dim small" }, " BAG FULL") : null, s.sold ? null : h("span", { class: "r" }, button("BUY", () => pickOrSave(run, `buy:${i}`), can ? "hi sm" : "sm"))));
       list.push(el);
     });
   } else if (shopTab === "train") {
     const k = rogue(c).config.prices;
-    list.push(h("div", { class: "text dim small wrap" }, `Learn an ability for ${k.learn}G, or make one better (+) for ${k.upgrade}G. Once each a visit.`));
-    if (p.learn) for (const o of learnOptions(c, run)) { const [cl, ab] = o.split(":"); list.push(trainRow(run, cl, ab, `LEARN ${k.learn}G`, opts.includes(`learn:${o}`) ? () => pickOrSave(run, `learn:${o}`) : null)); }
+    const lp = trainPrice(c, p, "learn"), up = trainPrice(c, p, "upgrade");
+    list.push(h("div", { class: "text dim small wrap" }, k.trainStep ? `Learn an ability for ${lp}G, or make one better (+) for ${up}G. As often as you like: each one bought here makes the next ${k.trainStep}G dearer.` : `Learn an ability for ${lp}G, or make one better (+) for ${up}G. Once each a visit.`));
+    if (p.learn) for (const o of learnOptions(c, run)) { const [cl, ab] = o.split(":"); list.push(trainRow(run, cl, ab, `LEARN ${lp}G`, opts.includes(`learn:${o}`) ? () => pickOrSave(run, `learn:${o}`) : null)); }
     else list.push(h("div", { class: "line dim" }, "LEARNED HERE ALREADY"));
-    if (p.upgrade) for (const o of upgradeOptions(run)) { const [cl, ab] = o.split(":"); list.push(trainRow(run, cl, ab, `+ ${k.upgrade}G`, opts.includes(`upgrade:${o}`) ? () => pickOrSave(run, `upgrade:${o}`) : null, true)); }
+    if (p.upgrade) for (const o of upgradeOptions(run)) { const [cl, ab] = o.split(":"); list.push(trainRow(run, cl, ab, `+ ${up}G`, opts.includes(`upgrade:${o}`) ? () => pickOrSave(run, `upgrade:${o}`) : null, true)); }
     else list.push(h("div", { class: "line dim" }, "UPGRADED HERE ALREADY"));
   } else {
     const items = run.items.filter((it) => !wearer(run, it.uid));
@@ -363,7 +387,7 @@ function trainRow(run: RogueRun, cls: string, ab: string, label: string, onClick
   const a = c.abilities.get(ab)!;
   return h("div", { class: "ab" },
     h("div", { class: "head" }, faceEl(cls), h("span", { class: "grow trunc" }, `${shortName(cls)}: ${a.name.toUpperCase()}${up ? "+" : ""}`), onClick ? button(label, onClick, "sm hi") : h("span", { class: "dim small" }, label)),
-    h("div", { class: "body" }, up ? upText(ab) : a.text, run.party.includes(cls) ? "" : " (at camp)"));
+    h("div", { class: "body" }, up ? upText(ab, run, cls) : a.text, run.party.includes(cls) ? "" : " (at camp)"));
 }
 
 // ─── The campfire ──────────────────────────────────────────────────────────
@@ -379,7 +403,7 @@ function campView(run: RogueRun): Child[] {
     body.push(row2("REST", `The party regains ${k.hp}% of its HP.`, () => pickOrSave(run, "rest")));
     body.push(row2("FOCUS", `The party regains ${k.mp}% of its MP.`, () => pickOrSave(run, "focus")));
     for (const o of opts.filter((x) => x.startsWith("raise:"))) body.push(row2(`RAISE ${shortName(o.slice(6))}`, `Stands up with ${k.revive}% of its HP.`, () => pickOrSave(run, o)));
-    body.push(h("div", { class: "text dim small wrap" }, "One pick, then the road. Whatever you pick, those waiting at camp get both REST and FOCUS."));
+    body.push(h("div", { class: "text dim small wrap" }, "One pick, then the road. Whatever you pick, those standing at camp get both REST and FOCUS (a fallen one needs a RAISE)."));
   } else if (campTab === "train") {
     body.push(h("div", { class: "text dim small wrap" }, "Train instead of resting: one member learns an ability, or makes one better (+)."));
     for (const o of learnOptions(c, run)) { const [cl, ab] = o.split(":"); body.push(trainRow(run, cl, ab, "LEARN", () => pickOrSave(run, `learn:${o}`))); }
@@ -387,6 +411,7 @@ function campView(run: RogueRun): Child[] {
   } else {
     const camp = bench(run);
     body.push(h("div", { class: "text dim small wrap" }, camp.length ? "Tap one of the party, then one at camp, to trade places. This doesn't use up the campfire." : "Nobody waits at camp. Recruits wait here when the party is full."));
+    body.push(h("div", { class: "line small", onClick: () => go("rboss"), style: "cursor:pointer" }, iconEl(ICON.boss), h("span", { class: "dim" }, "BOSS "), h("span", { class: "gold grow trunc" }, run.boss.name.toUpperCase()), h("span", { class: "dim" }, "LOOK ▶")));
     for (const cls of [...run.party, ...camp]) {
       const v = vitals(run, cls);
       const inParty = run.party.includes(cls);
@@ -535,14 +560,20 @@ export function rpartyScreen(): Child[] {
     );
   });
   const camp = bench(run);
+  const fallen = run.party.filter((x) => member(run, x).ko);
   return [
     header("PARTY", () => { seatPick = null; go("rogue"); }, `ACT ${ROMAN[run.act]}`),
     win("", h("div", { class: "line" }, prev, h("span", { class: "grow center hi" }, f.name), nxt), h("div", { class: "text dim small wrap" }, f.text, f.statuses?.length ? ` ${f.statuses.map((s) => c.statuses.get(s)!.text).join(" ")}` : "")),
     h("div", { class: "cards" }, ...cards),
     h("div", { class: "text dim small wrap" }, manage ? "Tap two slots to trade seats; a slot twice for its sheet. Gear changes any time; who's in the party, only at a campfire." : "In a fight: look, don't touch."),
     win("scroll",
-      camp.length ? section("AT CAMP", "swap at a campfire") : null,
-      ...camp.map((cls) => { const v = vitals(run, cls); return h("div", { class: "member", onClick: () => go("runit", cls) }, faceEl(cls), h("div", { class: "stats" }, h("div", { class: "name" }, shortName(cls)), v.ko ? h("div", { class: "bad" }, "KO") : bar(v.hp / v.maxHp)), h("div", { class: "small dim" }, `${disp(v.hp)}/${disp(v.maxHp)}`)); }),
+      camp.length ? section("AT CAMP", fallen.length ? "can stand in for the fallen" : "swap at a campfire") : null,
+      ...camp.map((cls) => {
+        const v = vitals(run, cls);
+        // Any time between rooms, one standing at camp can take a fallen member's seat.
+        const stand = manage && !v.ko && fallen.length ? button(`IN FOR ${shortName(fallen[0])}`, (e?: Event) => { e?.stopPropagation(); swap(c, run, fallen[0], cls); saveRogue(); go("rparty", undefined, true); }, "sm hi") : null;
+        return h("div", { class: "member", onClick: () => go("runit", cls) }, faceEl(cls), h("div", { class: "stats" }, h("div", { class: "name" }, shortName(cls)), v.ko ? h("div", { class: "bad" }, "KO") : bar(v.hp / v.maxHp)), stand ?? h("div", { class: "small dim" }, `${disp(v.hp)}/${disp(v.maxHp)}`));
+      }),
       section("BAG", `${run.items.filter((it) => !wearer(run, it.uid)).length} PIECES`),
       ...run.items.filter((it) => !wearer(run, it.uid)).map((it) => itemRow(run, it)),
     ),
@@ -563,9 +594,13 @@ export function runitScreen(arg?: unknown): Child[] {
   const onN = (i: number) => {
     if (!manage) return;
     if (orderPick === null) orderPick = i;
+    else if (orderPick === i) { setOrder(run, cls, m.order.filter((_, j) => j !== i)); orderPick = null; saveRogue(); }
     else { const o = [...m.order]; [o[orderPick], o[i]] = [o[i], o[orderPick]]; setOrder(run, cls, o); orderPick = null; saveRogue(); }
     go("runit", cls, true);
   };
+  // Known but left out of fights (a number tapped twice): tapped, it comes back in the last slot.
+  const out = m.known.filter((a) => !m.order.includes(a));
+  const bringBack = (a: string) => { if (!manage) return; setOrder(run, cls, [...m.order, a]); orderPick = null; saveRogue(); go("runit", cls, true); };
   const v = vitals(run, cls);
   return [
     header(k.name, () => { orderPick = null; go("rparty"); }, run.party.includes(cls) ? h("span", { class: "hi small" }, `SLOT ${run.party.indexOf(cls) + 1}`) : h("span", { class: "dim small" }, "AT CAMP")),
@@ -585,9 +620,11 @@ export function runitScreen(arg?: unknown): Child[] {
       h("div", { class: "line small dim wrap" }, `CAN USE ${k.weapons.map((w) => kindOf(w).name).join(", ").toUpperCase()} · ${k.armor.toUpperCase()} ARMOR`),
       section("PASSIVE"),
       ...(k.passive ? passiveBlock(k.passive.name, k.passive.text) : passiveBlock("Einherjar", "Allies it revives come back with every action ready.")),
-      section("ABILITIES", manage && m.order.length > 1 ? (orderPick === null ? "tap two numbers to swap" : "now tap the other") : null),
+      section("ABILITIES", manage && m.order.length ? (orderPick === null ? "tap two numbers to swap" : "the other, or the same to leave it out") : null),
       ...m.order.map((a, i) => abilityBlock(c.abilities.get(a)!, fm.stats, setup.settings.designer, { n: i + 1, onN: () => onN(i), cur: orderPick === i })),
       basicLine(weaponOf(c, fm.weapon), fm.stats, setup.settings.designer),
+      out.length ? section("LEFT OUT", manage ? "tap to bring back" : null) : null,
+      ...out.map((a) => { const el = abilityBlock(c.abilities.get(a)!, fm.stats, setup.settings.designer); el.classList.add("dimmed"); el.addEventListener("click", () => bringBack(a)); return el; }),
       locked.length ? section("NOT LEARNED YET", "campfires, tomes, the shop") : null,
       ...locked.map((a) => { const el = abilityBlock(c.abilities.get(a)!, fm.stats, false); el.classList.add("dimmed"); return el; }),
     ),

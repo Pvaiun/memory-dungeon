@@ -808,6 +808,7 @@ export const RogueConfig = z.strictObject({
   prices: z.strictObject({
     common: z.number().int().min(0), uncommon: z.number().int().min(0), rare: z.number().int().min(0), legendary: z.number().int().min(0),
     recruit: z.number().int().min(0), formation: z.number().int().min(0), learn: z.number().int().min(0), upgrade: z.number().int().min(0),
+    trainStep: z.number().int().min(0).optional().describe("A shop's training can be bought again in the same visit, each time this much dearer (learning and upgrading alike); without it, once each a visit."),
     supply: z.record(z.string(), z.number().int().min(0)), sell: Pct,
   }),
   shop: z.strictObject({ gear: RarityOdds.describe("How many pieces of each rarity."), recruits: z.number().int().min(0), formations: z.number().int().min(0), supplies: z.number().int().min(0) }),

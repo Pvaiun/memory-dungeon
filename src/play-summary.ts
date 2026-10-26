@@ -48,7 +48,9 @@ export function summary(log: Entry[], nameOf: (src: string) => string = (x) => x
       const tg = String(e.target);
       if (e.word && e.by && side.get(String(e.by)) === "party") add(f.words, `${String(e.word)} on ${names.get(tg)!.replace(/ [A-Z]$/, "")}`, 1);
       f.hp.set(tg, e.hp as number);
-      if (e.amount > 0) last.set(tg, `${e.part === "pulse" ? `${nameOf(String(e.src))}` : `${nameOf(String(e.src))} from ${e.by ? names.get(String(e.by)) ?? "?" : "?"}`}, ${e.amount}${e.kind ? ` ${e.kind}` : ""}`);
+      // A status's damage (a pulse, or a reaction such as Doom's toll) names who laid it, not its holder: "doom from Valkyrie" read as suicide.
+      const laid = e.from && names.has(String(e.from)) ? `, laid by ${names.get(String(e.from))}` : "";
+      if (e.amount > 0) last.set(tg, `${e.part === "pulse" || e.part === "reaction" ? `${nameOf(String(e.src))} (a status${laid})` : `${nameOf(String(e.src))} from ${e.by ? names.get(String(e.by)) ?? "?" : "?"}`}, ${e.amount}${e.kind ? ` ${e.kind}` : ""}`);
       if (side.get(tg) === "party") {
         add(f.taken, names.get(tg)!, e.amount);
         if (e.kind) { const k = kinds.get(names.get(tg)!) ?? new Map<string, number>(); add(k, String(e.kind), e.amount); kinds.set(names.get(tg)!, k); }
@@ -68,7 +70,7 @@ export function summary(log: Entry[], nameOf: (src: string) => string = (x) => x
       f.status.set(k, Math.max(f.status.get(k) ?? 0, e.total as number));
     } else if (e.t === "status" && side.get(String(e.unit)) === "party") f.status.set(`${e.name} on your party`, Math.max(f.status.get(`${e.name} on your party`) ?? 0, 1));
     else if (e.t === "down") {
-      f.down.push(`${names.get(String(e.unit))} ${t(e.at)}${side.get(String(e.unit)) === "party" && last.has(String(e.unit)) ? ` (last blow: ${last.get(String(e.unit))})` : ""}`);
+      f.down.push(`${names.get(String(e.unit))} ${t(e.at)}${last.has(String(e.unit)) ? ` (last blow: ${last.get(String(e.unit))})` : ""}`);
       f.hp.set(String(e.unit), 0);
     } else if (e.t === "leave") f.hp.set(String(e.unit), 0);
     else if (e.t === "mp" && side.get(String(e.target)) === "party") mp.set(String(e.target), e.mp as number);
@@ -81,8 +83,12 @@ export function summary(log: Entry[], nameOf: (src: string) => string = (x) => x
       const party = [...f.hp].filter(([id]) => side.get(id) === "party").map(([id, hp]) => `${names.get(id)} ${hp}/${max.get(id)}`);
       const mpLeft = [...mp].map(([id, v]) => `${names.get(id)} ${v}`);
       out.push(`  ${e.result === "won" ? "WON" : "LOST"} at t${e.rounds}. Party after: ${party.join(", ")}.${mpLeft.length ? ` MP left: ${mpLeft.join(", ")}.` : ""}${foesLeft.length ? ` Foes still standing: ${foesLeft.join(", ")}.` : ""}`);
-      const down = f.down.filter((x) => side.get([...names].find(([, nm]) => x.startsWith(nm))?.[0] ?? "") !== "enemy");
+      const sideOf = (x: string) => side.get([...names].find(([, nm]) => x.startsWith(`${nm} `))?.[0] ?? "");
+      const down = f.down.filter((x) => sideOf(x) !== "enemy");
       if (down.length) out.push(`  Knocked out: ${down.join(", ")}.`);
+      // How each foe fell, so a win reads as more than a tick count (an AI playtester's ask).
+      const felled = f.down.filter((x) => sideOf(x) === "enemy");
+      if (felled.length) out.push(`  Foes felled: ${felled.join(", ")}.`);
       const fmt = (m: Map<string, number>) => [...m].map(([k, v]) => `${k} ${v}`).join(", ");
       if (f.dealt.size) out.push(`  Damage dealt: ${fmt(f.dealt)}.`);
       if (f.taken.size) out.push(`  Damage taken: ${[...f.taken].map(([k, v]) => `${k} ${v}${kinds.get(k)?.size ? ` (${[...kinds.get(k)!].sort((a, b) => b[1] - a[1]).map(([kk, vv]) => `${kk} ${vv}`).join(", ")})` : ""}`).join(", ")}.`);

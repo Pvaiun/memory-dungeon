@@ -2377,7 +2377,7 @@
   {
    "id": "lg_idol",
    "name": "Stone idol",
-   "text": "Crit chance doubled while its Shield holds.",
+   "text": "The Geomancer's Bedrock, for anyone: crit chance doubled while its Shield holds.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -11458,6 +11458,7 @@
     "formation": 100,
     "learn": 60,
     "upgrade": 80,
+    "trainStep": 30,
     "supply": {
      "tonic": 35,
      "ether": 35,
@@ -13812,7 +13813,7 @@
      {
       "id": "donate",
       "label": "DONATE 40",
-      "text": "Everyone recovers 40% of max HP, and the fallen rise.",
+      "text": "Everyone recovers 40% of max HP, and one fallen member rises at half HP (with nobody down, the healer gives you a phoenix feather).",
       "gold": 40,
       "do": [
        {

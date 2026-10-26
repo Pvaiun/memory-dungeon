@@ -68,7 +68,7 @@ export const ROGUE_CONFIG: RogueConfigT = {
   /** The campfire: one pick of REST, FOCUS, RAISE or TRAIN; those at camp rest too. Swapping the party is free. */
   campfire: { hp: 40, mp: 60, revive: 40 },
   /** Prices, in gold. A piece sells for `sell` % of its price. Services are once a visit. */
-  prices: { common: 45, uncommon: 70, rare: 110, legendary: 190, recruit: 120, formation: 100, learn: 60, upgrade: 80, supply: { tonic: 35, ether: 35, phoenix: 60 }, sell: 35 },
+  prices: { common: 45, uncommon: 70, rare: 110, legendary: 190, recruit: 120, formation: 100, learn: 60, upgrade: 80, trainStep: 30, supply: { tonic: 35, ether: 35, phoenix: 60 }, sell: 35 },
   shop: { gear: { common: 2, uncommon: 2, rare: 1, legendary: 1 }, recruits: 1, formations: 1, supplies: 2 },
   /** Supplies, used between fights: the bag holds this many. */
   supplies: { tonic: { hp: 30 }, ether: { mp: 50 }, phoenix: { revive: 50 } },
@@ -221,7 +221,7 @@ export const rogueStatuses: StatusT[] = [
   relic("lg_horn", "Horn", "When the fight starts, every ally gains Regen.", { reactions: [{ on: { event: "fight_start" }, do: [apply("regen", { to: T.everyAlly })] }] }),
   relic("lg_bell", "Bell", "Can't be Silenced.", { stats: [{ stat: "immune:status:silence", flat: 1 }] }),
   relic("lg_fury", "Fury", "Below half HP, deals 50% more damage; below a quarter, double.", { boosts: both({ scale: [{ ratio: 50, when: { hpBelow: 50 } }, { ratio: 50, when: { hpBelow: 25 } }] }) }),
-  relic("lg_idol", "Stone idol", "Crit chance doubled while its Shield holds.", {
+  relic("lg_idol", "Stone idol", "The Geomancer's Bedrock, for anyone: crit chance doubled while its Shield holds.", {
     reactions: [
       { on: { event: "status_gained", status: "shield" }, do: [apply("lg_idol_on", { to: "holder" })] },
       { on: { event: "status_ended", status: "shield" }, do: [{ op: "remove", label: "buff", status: "lg_idol_on", to: "holder" }] },
@@ -417,7 +417,7 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   {
     id: "pilgrims", name: "Pilgrims", text: "A band of pilgrims with a healer among them. \"For a donation…\"",
     options: [
-      { id: "donate", label: "DONATE 40", text: "Everyone recovers 40% of max HP, and the fallen rise.", gold: 40, do: [{ op: "hp", pct: 40 }, { op: "supply", id: "phoenix" }] },
+      { id: "donate", label: "DONATE 40", text: "Everyone recovers 40% of max HP, and one fallen member rises at half HP (with nobody down, the healer gives you a phoenix feather).", gold: 40, do: [{ op: "hp", pct: 40 }, { op: "supply", id: "phoenix" }] },
       { id: "leave", label: "PASS BY", text: "Nothing happens.", do: [] },
     ],
   },

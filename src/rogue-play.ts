@@ -21,9 +21,10 @@ import { advance, loadContent, type Content } from "./engine/run.js";
 import { combat } from "./engine/combat/rules.js";
 import type { Entry } from "./engine/log.js";
 import {
-  bench, canManage, choose, endFight, equip, eventOf, itemGear, itemOf, joinKnown, maxOf, member, newRogue, options, reachable, registerGear, rogue,
-  migrate, seat, sellPrice, setFormation, setOrder, startFight, swap, unlearned, upgraded, useSupply, wearer, type Item, type Offer, type RogueRun, type Slot,
+  bench, bossFoes, canManage, choose, endFight, equip, eventOf, itemGear, itemOf, joinKnown, maxOf, member, newRogue, options, reachable, registerGear, rogue,
+  migrate, seat, sellPrice, setFormation, setOrder, startFight, swap, trainPrice, unlearned, upgraded, useSupply, wearer, type Item, type Offer, type RogueRun, type Slot,
 } from "./rogue.js";
+import type { AbilityT, NumT } from "./schema.js";
 import { summary } from "./play-summary.js";
 import { combat as rules, type Member as EngineMember } from "./engine/combat/rules.js";
 
@@ -50,8 +51,26 @@ const ROMAN = ["", "I", "II", "III"];
 const pts = (n: number) => Math.round(n / 100) / 10;
 const statWord = (stat: string, v: number) => {
   const pct = /crit|evasion|accuracy|double|lifesteal|siphon|resist/.test(stat);
-  return `${stat.replace("crit_multiplier", "crit_damage")} ${v > 0 ? "+" : ""}${pct ? `${v}%` : pts(v)}`;
+  // HP and MP in the numbers the party shows (an AI playtester read "max_hp +0.5" as half a point); the rest on the documents' 1-5 scale.
+  const real = stat === "max_hp" || stat === "max_mp";
+  return `${stat.replace("crit_multiplier", "crit_damage")} ${v > 0 ? "+" : ""}${pct ? `${v}%` : real ? v : pts(v)}`;
 };
+/** An ability's size for a unit's stats: each hit, a heal, a shield, the stacks it adds. */
+const val = (n: NumT | undefined, st: Record<string, number>) => (n === undefined ? 1 : typeof n === "number" ? n : (n.base ?? 0) + n.scale.reduce((t, x) => t + (x.stat && x.of !== "target" ? x.ratio * (st[x.stat] ?? 0) : 0), 0));
+function sizeOf(a: AbilityT, st: Record<string, number>, mult = 1): string {
+  const out: string[] = [];
+  const stacks = (id: string, n: NumT | undefined) => (c.statuses.get(id)!.stacking === "intensity" ? `${Math.round(val(n, st) * 10) / 10} ${c.statuses.get(id)!.name}` : c.statuses.get(id)!.name);
+  for (const e of a.do) {
+    if (e.op === "damage") {
+      const kind = e.element ?? (e.type === "physical" ? e.subtype ?? "physical" : "untyped");
+      const v = Math.round(val(e.amount, st) * mult);
+      out.push(`${v ? `about ${v} ` : ""}${kind}${e.hits && e.hits > 1 ? ` x${e.hits}` : ""}${(e.apply ?? []).map((x) => ` + ${x.status === "shield" ? `${Math.round(val(x.stacks, st))} shield` : stacks(x.status, x.stacks)}`).join("")}`);
+    } else if (e.op === "heal") out.push(`heals about ${Math.round(val(e.amount, st))}`);
+    else if (e.op === "apply" && e.status === "shield") out.push(`shield about ${Math.round(val(e.stacks, st))}`);
+    else if (e.op === "apply" && c.statuses.get(e.status)!.stacking === "intensity") out.push(stacks(e.status, e.stacks));
+  }
+  return out.join(" + ");
+}
 const codes = (stats: { stat: string; flat?: number }[] = []) => stats.map((s) => statWord(s.stat, s.flat ?? 0)).join(", ");
 function gearWords(g: ReturnType<typeof itemGear> | undefined): string {
   if (!g) return "nothing";
@@ -87,6 +106,7 @@ function header(run: RogueRun): string[] {
     `Act ${ROMAN[run.act]} of 3: ${reg.name}. ${reg.text} Boss at the top: ${run.boss.name}. ${run.floor > rogue(c).config.map.floors ? "At the boss." : run.floor === 0 ? `At the foot of the map: ${rogue(c).config.map.floors} floors, then the boss.` : `Floor ${run.floor} of ${rogue(c).config.map.floors}, the boss above.`}`,
     `Gold ${run.gold}. Supplies: ${run.supplies.join(", ") || "none"} (bag holds ${rogue(c).config.bag}). Formation: ${c.formations.get(run.formation)!.name}. Formations owned: ${run.formations.join(", ")}.`,
     `Party: ${run.party.map((cls) => `${cls} (${vit(run, cls)})`).join("; ")}.${bench(run).length ? ` At camp: ${bench(run).map((cls) => `${cls} (${vit(run, cls)})`).join("; ")}.` : ""}`,
+    ...(run.party.some((x) => member(run, x).ko) && bench(run).some((x) => !member(run, x).ko) ? [`Someone standing at camp can take a fallen member's seat now: swap <fallen> <at camp>.`] : []),
   ];
 }
 
@@ -105,12 +125,12 @@ function look(run: RogueRun): string {
     case "map": {
       out.push("MAP: choose the next room (pick <id>). Rooms you can reach, and where each leads:");
       for (const n of reachable(run)) out.push(`  pick ${n.id}: ${KIND_WORD[n.kind]} on floor ${n.floor}${n.next.length ? `, then ${n.next.map((id) => { const x = run.map.find((y) => y.id === id)!; return `${x.id} ${x.kind}`; }).join(" or ")}` : ""}`);
-      out.push("  (map: the whole act)");
+      out.push("  (map: the whole act; boss: what waits at the top)");
       break;
     }
     case "fight":
       out.push(`FIGHT: ${p.fight.name} (${p.tier}). Foes: ${counts(p.fight.enemies)}.`);
-      for (const e of [...new Set(p.fight.enemies)]) out.push(`  ${bestiary(e)}`);
+      for (const e of [...new Set(p.fight.enemies)]) out.push(`  ${bestiary(e, p.foes.power ?? 0)}`);
       out.push(p.begun ? "The fight has begun: pick fight to play it." : "You can still change gear, the formation, seats and ability order, and use supplies. Then: pick fight");
       break;
     case "spoils": case "boon": case "treasure": {
@@ -122,22 +142,25 @@ function look(run: RogueRun): string {
       break;
     }
     case "shop": {
-      out.push(`SHOP (you have ${run.gold} gold). Buy, train (once each a visit), sell from the bag, or leave.`);
-      p.stock.forEach((s, i) => out.push(`  ${s.sold ? "(bought) " : `pick buy:${i} `}for ${s.price}g: ${offerWords(run, s.offer)}`));
-      if (p.learn) for (const o of options(c, run).filter((x) => x.startsWith("learn:"))) out.push(`  pick ${o} for ${rogue(c).config.prices.learn}g: ${c.abilities.get(o.split(":")[2])!.name}: ${c.abilities.get(o.split(":")[2])!.text}`);
-      if (p.upgrade) for (const o of options(c, run).filter((x) => x.startsWith("upgrade:"))) out.push(`  pick ${o} for ${rogue(c).config.prices.upgrade}g: ${upText(o.split(":")[2])}`);
+      const step = rogue(c).config.prices.trainStep;
+      out.push(`SHOP (you have ${run.gold} gold). Buy, train${step ? ` (as often as you like: each training bought here makes the next ${step}g dearer)` : " (once each a visit)"}, sell from the bag, or leave.`);
+      const full = run.supplies.length >= rogue(c).config.bag;
+      p.stock.forEach((s, i) => out.push(`  ${s.sold ? "(bought) " : s.offer.kind === "supply" && full ? "(bag full) " : `pick buy:${i} `}for ${s.price}g: ${offerWords(run, s.offer)}`));
+      if (p.learn) for (const o of options(c, run).filter((x) => x.startsWith("learn:"))) out.push(`  pick ${o} for ${trainPrice(c, p, "learn")}g: ${c.abilities.get(o.split(":")[2])!.name}: ${c.abilities.get(o.split(":")[2])!.text}`);
+      if (p.upgrade) for (const o of options(c, run).filter((x) => x.startsWith("upgrade:"))) out.push(`  pick ${o} for ${trainPrice(c, p, "upgrade")}g: ${upText(o.split(":")[2], run, o.split(":")[1])}`);
       for (const it of run.items.filter((x) => !wearer(run, x.uid))) out.push(`  pick sell:${it.uid} for ${sellPrice(c, it)}g: ${itemWords(it)}`);
       out.push("  pick leave");
       break;
     }
     case "campfire": {
       const k = rogue(c).config.campfire;
-      out.push(`CAMPFIRE: one pick. Whatever you pick, those waiting at camp get both REST and FOCUS. Swapping who's in the party is free here (swap <out> <in>).`);
+      out.push(`CAMPFIRE: one pick. Whatever you pick, those waiting at camp who are standing get both REST and FOCUS (a fallen one needs a RAISE or a phoenix). Swapping who's in the party is free here (swap <out> <in>).`);
+      out.push(`  Before the boss: ${bossWords(run)}`);
       out.push(`  pick rest: the party regains ${k.hp}% of its HP.`, `  pick focus: the party regains ${k.mp}% of its MP.`);
       for (const o of options(c, run)) {
         if (o.startsWith("raise:")) out.push(`  pick ${o}: stands up with ${k.revive}% of its HP.`);
         else if (o.startsWith("learn:")) out.push(`  pick ${o}: ${c.abilities.get(o.split(":")[2])!.text}`);
-        else if (o.startsWith("upgrade:")) out.push(`  pick ${o}: ${upText(o.split(":")[2])}`);
+        else if (o.startsWith("upgrade:")) out.push(`  pick ${o}: ${upText(o.split(":")[2], run, o.split(":")[1])}`);
       }
       break;
     }
@@ -156,7 +179,7 @@ function look(run: RogueRun): string {
     case "levelup": {
       const m = member(run, p.queue[0]);
       out.push(`LEVEL UP: the ${c.classes.get(m.cls)!.name} learns a new ability, or makes a known one better (+):`);
-      for (const a of options(c, run)) out.push(`  pick ${a}: ${unlearned(c, m).includes(a) ? `learn ${c.abilities.get(a)!.name}: ${c.abilities.get(a)!.text}` : upText(a)}`);
+      for (const a of options(c, run)) out.push(`  pick ${a}: ${unlearned(c, m).includes(a) ? `learn ${c.abilities.get(a)!.name}: ${c.abilities.get(a)!.text}` : upText(a, run, m.cls)}`);
       break;
     }
     case "region":
@@ -172,18 +195,21 @@ function look(run: RogueRun): string {
   return out.join("\n");
 }
 /** An enemy as the bestiary describes it: what it does, its abilities, its resistances. Never its stats. */
-function bestiary(id: string): string {
+function bestiary(id: string, power = 0): string {
   const en = c.enemies.get(id)!;
-  const acts = (en.abilities ?? []).map((a) => `${c.abilities.get(a)!.name} (${c.abilities.get(a)!.text})`);
+  // An ability's size from the foe's stats and this fight's knob, before Armor and resistances.
+  const acts = (en.abilities ?? []).map((a) => { const sz = sizeOf(c.abilities.get(a)!, en.stats as Record<string, number>, 1 + power / 100); return `${c.abilities.get(a)!.name} (${c.abilities.get(a)!.text}${sz ? ` ${sz}${/about/.test(sz) ? ", before Armor" : ""}` : ""})`; });
   const pas = (en.statuses ?? []).map((st) => `${c.statuses.get(st)!.name}: ${c.statuses.get(st)!.text ?? ""}`);
   const res = Object.entries(en.stats).filter(([k]) => k.startsWith("resist:")).map(([k, v]) => `${v > 100 ? "absorbs" : v > 0 ? "resists" : "weak to"} ${k.slice(7)}`);
   const kind = en.weapon?.element ?? (en.weapon?.kind ? c.weaponKinds.get(en.weapon.kind)?.element ?? "physical" : en.weapon?.type ?? "physical");
   return `${en.name}${en.rank !== "minion" ? ` (${en.rank})` : ""}: ${en.text} Attacks: ${kind}.${acts.length ? ` Abilities: ${acts.join("; ")}.` : ""}${pas.length ? ` ${pas.join(" ")}` : ""}${res.length ? ` ${res.join(", ")}.` : ""}`;
 }
 /** What an upgrade does to one ability, in numbers. */
-function upText(id: string): string {
+function upText(id: string, run?: RogueRun, cls?: string): string {
   const a = c.abilities.get(id)!, up = upgraded(c, id);
-  return up.cooldown !== a.cooldown ? `${up.name}: every ${Math.round(up.cooldown)} ticks instead of ${Math.round(a.cooldown)}.` : `${up.name}: 40% more of what it deals, heals, shields or stacks.`;
+  if (up.cooldown !== a.cooldown) return `${up.name}: every ${Math.round(up.cooldown)} ticks instead of ${Math.round(a.cooldown)}.`;
+  const st = run && cls ? statsOf(run, cls) : null;
+  return `${up.name}: 40% more of what it deals, heals, shields or stacks${st ? ` (${sizeOf(a, st)} becomes ${sizeOf(up, st)})` : ""}.`;
 }
 const counts = (enemies: string[]) => {
   const m = new Map<string, number>();
@@ -191,18 +217,35 @@ const counts = (enemies: string[]) => {
   return [...m].map(([e, n]) => `${c.enemies.get(e)!.name}${n > 1 ? ` x${n}` : ""}`).join(", ");
 };
 
+/** A roster member as it would fight: its stats with gear, and its seat's if it's in the party. */
+function fighterOf(run: RogueRun, cls: string): EngineMember {
+  const f = c.formations.get(run.formation)!;
+  const m = member(run, cls);
+  const seatNo = run.party.indexOf(cls);
+  return (rules.party(c, { dungeon: "rogue_fight", party: seatNo >= 0 ? { formation: run.formation, units: run.party.map((x, i) => ({ class: x, position: f.positions[i].id, abilities: [...member(run, x).order], gear: Object.fromEntries(Object.entries(member(run, x).gear)) as Record<string, string> })) } : { formation: "neutral", units: [{ class: cls, position: "a", abilities: [...m.order], gear: Object.fromEntries(Object.entries(m.gear)) as Record<string, string> }] }, seed: 1 }) as EngineMember[]).find((x) => x.ref === cls)!;
+}
+const statsOf = (run: RogueRun, cls: string) => fighterOf(run, cls).stats as Record<string, number>;
+/** The act's boss and what it does, so the last campfire's swap can answer it. */
+const bossWords = (run: RogueRun) => `${run.boss.name}: ${[...new Set(run.boss.enemies)].map((e) => bestiary(e, bossFoes(c, run).power ?? 0)).join(" ")}`;
+/** HP and MP that moved with a change of gear, seat or formation: what's missing stays missing, so current moves with max. */
+function moved(before: Map<string, string>, run: RogueRun): string {
+  const lines = run.roster.filter((m) => before.get(m.cls) !== vit(run, m.cls)).map((m) => `  ${m.cls}: ${before.get(m.cls)} -> ${vit(run, m.cls)}`);
+  return lines.length ? `\nHP and MP moved with the max (what's missing stays missing):\n${lines.join("\n")}` : "";
+}
+const vits = (run: RogueRun) => new Map(run.roster.map((m) => [m.cls, vit(run, m.cls)]));
+
 function partyWords(run: RogueRun): string {
   const out: string[] = [];
   const f = c.formations.get(run.formation)!;
   for (const m of run.roster) {
     const k = c.classes.get(m.cls)!;
     const seatNo = run.party.indexOf(m.cls);
-    const fm = (rules.party(c, { dungeon: "rogue_fight", party: seatNo >= 0 ? { formation: run.formation, units: run.party.map((cls, i) => ({ class: cls, position: f.positions[i].id, abilities: [...member(run, cls).order], gear: Object.fromEntries(Object.entries(member(run, cls).gear)) as Record<string, string> })) } : { formation: "neutral", units: [{ class: m.cls, position: "a", abilities: [...m.order], gear: Object.fromEntries(Object.entries(m.gear)) as Record<string, string> }] }, seed: 1 }) as EngineMember[]).find((x) => x.ref === m.cls)!;
-    const s = fm.stats;
+    const s = fighterOf(run, m.cls).stats;
     out.push(`${m.cls} (${k.name})${seatNo >= 0 ? `, slot ${seatNo + 1} ${f.positions[seatNo].name}` : ", at camp"}: ${vit(run, m.cls)}. Attack ${pts(s.attack)}, Magic ${pts(s.magic)}, Armor ${pts(s.armor)}, Crit ${s.crit_chance}%, Aggro ${pts(s.aggro)}, MP regen ${pts(s.mp_regen)}.`);
     for (const slot of ["weapon", "armor", "amulet"] as Slot[]) out.push(`  ${slot}: ${m.gear[slot] ? itemWords(itemOf(run, m.gear[slot]!)!) : "nothing"}`);
     const head = c.pack.ruleset.opening?.slots ?? [];
-    out.push(`  abilities, in slot order: ${m.order.map((a, i) => `${a} (${c.abilities.get(a)!.name}, MP ${c.abilities.get(a)!.mp ?? 0}, every ${Math.round(c.abilities.get(a)!.cooldown)} ticks, first ready about t${Math.max(0, Math.round(c.abilities.get(a)!.cooldown - (head[i] ?? 0)))})`).join("; ")}${unlearned(c, m).length ? `. Not learned yet: ${unlearned(c, m).join(", ")}` : ""}.`);
+    const left = m.known.filter((a) => !m.order.includes(a));
+    out.push(`  abilities, in slot order: ${m.order.map((a, i) => `${a} (${c.abilities.get(a)!.name}, MP ${c.abilities.get(a)!.mp ?? 0}, every ${Math.round(c.abilities.get(a)!.cooldown)} ticks, first ready about t${Math.max(0, Math.round(c.abilities.get(a)!.cooldown - (head[i] ?? 0)))}; ${sizeOf(c.abilities.get(a)!, s) || "no amount"})`).join("; ") || "none"}${left.length ? `. Left out of fights: ${left.join(", ")}` : ""}${unlearned(c, m).length ? `. Not learned yet: ${unlearned(c, m).join(", ")}` : ""}.`);
     out.push(`  can use: ${k.weapons.join(", ")}; ${k.armor} armor or lighter.`);
   }
   out.push("", "Formations owned:", ...run.formations.map((id) => { const fm = c.formations.get(id)!; return `  ${id}${id === run.formation ? " (in use)" : ""}: ${fm.text}${fm.positions.map((p, k) => ` Slot ${k + 1} ${p.name}: ${codes(p.stats) || "no change"}.`).join("")}`; }));
@@ -217,7 +260,7 @@ function classWords(id: string): string {
   const st = k.stats;
   return [
     `${k.name}: ${k.text}`,
-    `Stats: HP ${pts(st.max_hp)}, MP ${pts(st.max_mp ?? 0)}, Attack ${pts(st.attack ?? 0)}, Magic ${pts(st.magic ?? 0)}, Armor ${pts(st.armor ?? 0)}, Crit ${st.crit_chance ?? 0}%, Aggro ${pts(st.aggro ?? 0)}.`,
+    `Stats: HP ${st.max_hp}, MP ${st.max_mp ?? 0}, Attack ${pts(st.attack ?? 0)}, Magic ${pts(st.magic ?? 0)}, Armor ${pts(st.armor ?? 0)}, Crit ${st.crit_chance ?? 0}%, Aggro ${pts(st.aggro ?? 0)}.`,
     `Weapons: ${k.weapons.join(", ")}. Heaviest armor: ${k.armor}. Passive: ${k.passive?.name ?? "Einherjar"}: ${k.passive?.text ?? "allies it revives come back with every action ready"}.`,
     ...k.abilities.map((a) => { const ab = c.abilities.get(a)!; return `  ${a}${a === rogue(c).config.firstAbility[id] ? " (known on joining)" : ""}: ${ab.name}, MP ${ab.mp ?? 0}, every ${Math.round(ab.cooldown)} ticks: ${ab.text}`; }),
   ].join("\n");
@@ -275,16 +318,24 @@ if (cmd === "new") {
     }
     case "equip": {
       if (!canManage(run)) throw new Error("not now");
+      const before = vits(run);
       const ok = equip(c, run, rest[0], rest[1] as Slot, rest[2] === "none" ? null : rest[2]);
-      out = ok ? `Done.\n${partyWords(run)}` : "That doesn't fit (class, slot or weight), or a weapon can't be left empty.";
+      out = ok ? `Done.${moved(before, run)}\n${partyWords(run)}` : "That doesn't fit (class, slot or weight), or a weapon can't be left empty.";
       break;
     }
-    case "formation": out = canManage(run) && setFormation(c, run, rest[0]) ? `Formation: ${rest[0]}.` : "Not owned, or not now."; break;
-    case "seat": out = canManage(run) && seat(c, run, rest[0].split(",")) ? `Seats: ${run.party.join(", ")}.` : "Name the same party members, in the new order."; break;
-    case "order": out = canManage(run) && setOrder(run, rest[0], rest[1].split(",")) ? `Order: ${rest[1]}.` : "Name every known ability once (use ids from party)."; break;
+    case "formation": { const before = vits(run); out = canManage(run) && setFormation(c, run, rest[0]) ? `Formation: ${rest[0]}.${moved(before, run)}` : "Not owned, or not now."; break; }
+    case "seat": { const before = vits(run); out = canManage(run) && seat(c, run, rest[0].split(",")) ? `Seats: ${run.party.join(", ")}.${moved(before, run)}` : "Name the same party members, in the new order."; break; }
+    case "order": {
+      // Base ids find their upgrades (sanctuary finds sanctuary_plus); "none" brings no ability at all.
+      const m = member(run, rest[0]);
+      const ids = !m || rest[1] === "none" ? [] : (rest[1] ?? "").split(",").filter(Boolean).map((a) => (m.known.includes(a) ? a : m.known.includes(`${a}_plus`) ? `${a}_plus` : a));
+      out = canManage(run) && setOrder(run, rest[0], ids) ? `Order: ${ids.join(", ") || "none"}.${m && m.known.some((a) => !ids.includes(a)) ? ` Left out of fights: ${m.known.filter((a) => !ids.includes(a)).join(", ")}.` : ""}` : "Name known abilities once each, in slot order (ids from party); any left out aren't brought to fights.";
+      break;
+    }
     case "use": out = useSupply(c, run, rest[0] as "tonic", rest[1]) ? `Used the ${rest[0]}.\n${header(run).join("\n")}` : "Can't use that now."; break;
-    case "swap": out = swap(c, run, rest[0], rest[1] ?? null) ? `Party: ${run.party.join(", ")}. At camp: ${bench(run).join(", ") || "nobody"}.` : "Only at a campfire: a party member and someone at camp."; break;
-    default: throw new Error("commands: new, look, pick, map, party, class, equip, formation, seat, order, use, swap, glossary");
+    case "swap": out = swap(c, run, rest[0], rest[1] ?? null) ? `Party: ${run.party.join(", ")}. At camp: ${bench(run).join(", ") || "nobody"}.` : "At a campfire: a party member and someone at camp. Any time between rooms: a fallen party member and someone standing at camp."; break;
+    case "boss": out = bossWords(run); break;
+    default: throw new Error("commands: new, look, pick, map, boss, party, class, equip, formation, seat, order, use, swap, glossary");
   }
   save(run);
   console.log(out);

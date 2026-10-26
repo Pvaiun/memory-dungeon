@@ -175,6 +175,31 @@ export function effectText(e: EffectT, stats: Stats | null, inAction = true): st
 }
 
 // ─── Abilities ───
+/**
+ * An ability's size for one unit, in a few numbers: what each hit deals, a heal, a shield, the stacks it adds
+ * ("≈ 9 fire + 4 Burn"). Slay the Spire prints a card's numbers; an AI playtester never knew how big a Protect was.
+ */
+export function sizeWords(a: AbilityT, stats: Stats, dmgMult = 1): string {
+  const out: string[] = [];
+  const stacksOf = (n: NumT | undefined) => (n === undefined ? 1 : Math.round(evalNum(n, stats).value * 10) / 10);
+  for (const e of a.do) {
+    if (e.op === "damage") {
+      const kind = e.type === "magical" ? elementName(e.element ?? "").toLowerCase() : e.element ? elementName(e.element).toLowerCase() : e.type === "physical" ? (e.subtype ?? "physical") : "damage";
+      const value = evalNum(e.amount, stats).value * dmgMult;
+      let w = `${value > 0 ? `≈ ${disp(value)} ` : ""}${kind}${e.hits && e.hits > 1 ? ` × ${e.hits}` : ""}`;
+      for (const ap of e.apply ?? []) w += ` + ${ap.status === "shield" ? `${disp(evalNum(ap.stacks ?? 0, stats).value)} shield` : status(ap.status).stacking === "intensity" ? `${stacksOf(ap.stacks)} ${status(ap.status).name}` : status(ap.status).name}${ap.chance !== undefined && ap.chance < 100 ? ` (${ap.chance}%)` : ""}`;
+      out.push(w);
+    } else if (e.op === "heal") out.push(`heals ≈ ${disp(evalNum(e.amount, stats).value)}`);
+    else if (e.op === "mp") out.push(`MP ≈ ${disp(evalNum(e.amount, stats).value)}`);
+    else if (e.op === "apply") {
+      const d = status(e.status);
+      if (e.status === "shield") out.push(`shield ≈ ${disp(evalNum(e.stacks ?? 0, stats).value)}`);
+      else if (d.stacking === "intensity") out.push(`${stacksOf(e.stacks)} ${d.name}`);
+    }
+  }
+  return out.join(" · ");
+}
+
 export type AbilityInfo = {
   id: string;
   name: string;

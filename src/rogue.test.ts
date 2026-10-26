@@ -3,7 +3,7 @@ import { test } from "vitest";
 import assert from "node:assert/strict";
 import { loadContent } from "./engine/run.js";
 import { rngFor } from "./engine/rng.js";
-import { autoFight, choose, finish, freshMeta, itemGear, makeMap, member, newRogue, options, reachable, recruit, rogue, upgraded, type RogueRun } from "./rogue.js";
+import { autoFight, choose, finish, freshMeta, itemGear, makeMap, member, newRogue, options, reachable, recruit, rogue, swap, upgraded, type RogueRun } from "./rogue.js";
 import { aiPlayer, playRogue } from "./rogue-ai.js";
 
 const raw = JSON.parse(readFileSync("content/core-set.pack.json", "utf8"));
@@ -80,4 +80,37 @@ test("rogue: a recruit knows one ability per act reached; a won run adds its par
   assert.deepEqual(r.unlocked, ["pyromancer"]);
   assert.ok(meta.owned.includes("pyromancer"));
   assert.equal(meta.maxHeat, 1);
+});
+
+test("rogue: a fallen member trades places with one standing at camp between rooms; a standing one only at a campfire", () => {
+  const c = loadContent(raw);
+  const run = newRogue(c, { seed: 9, leader: "knight" });
+  while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
+  recruit(c, run, "monk");
+  const [a, b] = run.party;
+  assert.ok(!run.party.includes("monk"), "a recruit waits at camp");
+  assert.equal(swap(c, run, a, "monk"), false, "a standing member stays in the party away from a campfire");
+  member(run, b).ko = true;
+  assert.equal(swap(c, run, b, "monk"), true);
+  assert.ok(run.party.includes("monk") && !run.party.includes(b));
+  member(run, b).ko = false;
+  member(run, "monk").ko = true;
+  member(run, b).ko = true;
+  assert.equal(swap(c, run, "monk", b), false, "nobody fallen comes in");
+});
+
+test("rogue: a shop's training can be bought again in a visit, each time dearer by the step", () => {
+  const c = loadContent(raw);
+  const run = newRogue(c, { seed: 9, leader: "knight" });
+  while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
+  run.gold = 1000;
+  run.pending = { kind: "shop", stock: [], learn: true, upgrade: true };
+  const k = rogue(c).config.prices;
+  const learnt = () => options(c, run).filter((o) => o.startsWith("learn:"));
+  choose(c, run, learnt()[0]);
+  assert.equal(run.gold, 1000 - k.learn);
+  choose(c, run, learnt()[0]);
+  assert.equal(run.gold, 1000 - k.learn - (k.learn + k.trainStep!));
+  choose(c, run, options(c, run).find((o) => o.startsWith("upgrade:"))!);
+  assert.equal(run.gold, 1000 - k.learn - (k.learn + k.trainStep!) - (k.upgrade + 2 * k.trainStep!));
 });

@@ -12,7 +12,7 @@ import { int, next, rngFor, type Rng } from "./engine/rng.js";
 import { PROFILES, scoreGear } from "./sim/kits.js";
 import { canEquip } from "./validate.js";
 import {
-  bench, choose, equip, itemGear, learnOptions, maxOf, member, options, registerGear, reachable, rogue, seat, setFormation, swap,
+  bench, choose, equip, trainPrice, itemGear, learnOptions, maxOf, member, options, registerGear, reachable, rogue, seat, setFormation, swap,
   useSupply, wearer, type Item, type MapNode, type Offer, type RogueRun, type Slot, SLOT_LIST,
 } from "./rogue.js";
 
@@ -25,6 +25,8 @@ export type Dials = {
   noisy: string[];
   /** Never equips anything beyond the plain weapon: prices gear. */
   noGear: boolean;
+  /** Never trades a fallen member for one at camp between rooms (the rule before round 25), to price it. */
+  noBenchSwap?: boolean;
   /** Class values, by id, in gear steps. */
   classValue: Record<string, number>;
 };
@@ -245,6 +247,11 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
   const randomOf = (xs: string[]) => xs[int(rng, xs.length)];
 
   function prepare(c: Content, run: RogueRun) {
+    // The fallen trade places with the best standing at camp, if the rules allow it here.
+    if (!d.noBenchSwap) for (const out of run.party.filter((cls) => member(run, cls).ko)) {
+      const into = bench(run).filter((x) => !member(run, x).ko).sort((a, b) => classScore(d, run, b) - classScore(d, run, a))[0];
+      if (into) swap(c, run, out, into);
+    }
     if (!d.noGear) kitUp(c, run);
     arrange(c, run);
     // Supplies before a room: HP if the party is low, MP if casters are dry, a phoenix for the fallen.
@@ -350,10 +357,10 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
         price = s.price;
       } else if (verb === "learn") {
         if (!run.party.includes(rest[0])) continue;
-        v = 4; price = rogue(c).config.prices.learn;
+        v = 4; price = trainPrice(c, p, "learn");
       } else if (verb === "upgrade") {
         if (!run.party.includes(rest[0])) continue;
-        v = 2; price = rogue(c).config.prices.upgrade;
+        v = 2; price = trainPrice(c, p, "upgrade");
       } else continue;
       // Gold has no other use than this: buy anything worth a gear step or more, the most value for the gold first.
       const ratio = v / Math.max(1, price);
