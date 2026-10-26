@@ -98,7 +98,7 @@ export const ROGUE_CONFIG: RogueConfigT = {
    */
   shape: { fight: { hp: 80, power: -30 } },
   /** Heat: each level adds this to every knob (about 6 points of the simulated player's wins a level). Won runs open the next. */
-  heat: { per: 5, max: 10 },
+  heat: { per: 4, max: 10 },
   /** Later floors' fights grow: from this floor, each pack of two or more may gain one more (to the cap of 8). */
   growFrom: 6,
 };
