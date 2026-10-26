@@ -1943,6 +1943,1022 @@
      ]
     }
    ]
+  },
+  {
+   "id": "lg_ember",
+   "name": "Ember",
+   "text": "Basic attacks add several Burn.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "burn",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0009750000000000001,
+          "stat": "attack",
+          "of": "holder"
+         },
+         {
+          "ratio": 0.0009750000000000001,
+          "stat": "magic",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lg_cleave",
+   "name": "Cleave",
+   "text": "Basic attacks also hit a second, random foe.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "strike": {
+    "to": {
+     "side": "foes",
+     "pick": "random",
+     "exclude": "targets"
+    }
+   }
+  },
+  {
+   "id": "lg_rime",
+   "name": "Rime",
+   "text": "Basic attacks add several Chill.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "chill",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.00065,
+          "stat": "attack",
+          "of": "holder"
+         },
+         {
+          "ratio": 0.00065,
+          "stat": "magic",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lg_wounds",
+   "name": "Wounds",
+   "text": "Crits add many Bleed.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "tags": [
+       "crit"
+      ]
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.00115,
+          "stat": "attack",
+          "of": "holder"
+         },
+         {
+          "ratio": 0.00115,
+          "stat": "magic",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lg_sunder",
+   "name": "Shatter",
+   "text": "Basic attacks add many Sunder.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "sunder",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.00115,
+          "stat": "attack",
+          "of": "holder"
+         },
+         {
+          "ratio": 0.00115,
+          "stat": "magic",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lg_song",
+   "name": "Song",
+   "text": "Basic attacks give a random ally some MP and a stack of Might.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "mp",
+       "amount": 300,
+       "to": {
+        "side": "allies",
+        "pick": "random"
+       }
+      },
+      {
+       "op": "apply",
+       "status": "might",
+       "stacks": 1,
+       "to": {
+        "side": "allies",
+        "pick": "random"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lg_judge",
+   "name": "Verdict",
+   "text": "Hits deal 60% more damage to foes with a buff.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 60,
+        "when": {
+         "buffs": true
+        },
+        "of": "target"
+       }
+      ]
+     }
+    },
+    {
+     "tag": "magical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 60,
+        "when": {
+         "buffs": true
+        },
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "lg_lantern",
+   "name": "Lantern",
+   "text": "When a foe falls, heals a sixth of its own max HP.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "ko",
+      "whose": "foe"
+     },
+     "do": [
+      {
+       "op": "heal",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.16,
+          "stat": "max_hp",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "self"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lg_soul",
+   "name": "Soul jar",
+   "text": "When a foe falls, every ally regains some MP and a little HP.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "ko",
+      "whose": "foe"
+     },
+     "do": [
+      {
+       "op": "mp",
+       "amount": 500,
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
+      },
+      {
+       "op": "heal",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.04,
+          "stat": "max_hp",
+          "of": "target"
+         }
+        ]
+       },
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lg_banner",
+   "name": "Banner",
+   "text": "When the fight starts, every ally gains many Might.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "might",
+       "stacks": 7,
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lg_hourglass",
+   "name": "Hourglass",
+   "text": "Hasted for the first 40 ticks of each fight.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "haste",
+       "to": "self",
+       "duration": 40
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lg_horn",
+   "name": "Horn",
+   "text": "When the fight starts, every ally gains Regen.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "regen",
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lg_bell",
+   "name": "Bell",
+   "text": "Can't be Silenced or Stunned.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "stats": [
+    {
+     "stat": "immune:status:silence",
+     "flat": 1
+    },
+    {
+     "stat": "immune:status:stun",
+     "flat": 1
+    }
+   ]
+  },
+  {
+   "id": "lg_fury",
+   "name": "Fury",
+   "text": "Below half HP, deals 75% more damage; below a quarter, two and a half times.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 75,
+        "when": {
+         "hpBelow": 50
+        }
+       },
+       {
+        "ratio": 75,
+        "when": {
+         "hpBelow": 25
+        }
+       }
+      ]
+     }
+    },
+    {
+     "tag": "magical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 75,
+        "when": {
+         "hpBelow": 50
+        }
+       },
+       {
+        "ratio": 75,
+        "when": {
+         "hpBelow": 25
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "lg_idol",
+   "name": "Stone idol",
+   "text": "The Geomancer's Bedrock, for anyone: crit chance doubled while its Shield holds. Starts each fight with a Shield of a fifth of its max HP.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "shield",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.2,
+          "stat": "max_hp",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "self"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_gained",
+      "status": "shield"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "lg_idol_on",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "shield"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "lg_idol_on",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lg_idol_on",
+   "name": "IDOL",
+   "text": "Crit chance doubled.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "fizzle",
+   "stats": [
+    {
+     "stat": "crit_chance",
+     "flat": {
+      "scale": [
+       {
+        "ratio": 1,
+        "stat": "crit_chance",
+        "of": "holder"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "lg_brittle",
+   "name": "Shard",
+   "text": "Basic attacks add a Chill; hits deal 12% more damage for each Chill stack on the target.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "chill",
+       "stacks": 1,
+       "to": "other"
+      }
+     ]
+    }
+   ],
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 12,
+        "stacks": "chill",
+        "of": "target"
+       }
+      ]
+     }
+    },
+    {
+     "tag": "magical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 12,
+        "stacks": "chill",
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "lg_coil",
+   "name": "Coil",
+   "text": "When hit, Shocks the attacker with many stacks.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_taken"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "shock",
+       "stacks": 7,
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lg_frost",
+   "name": "Frozen heart",
+   "text": "When hit, Chills the attacker with a few stacks.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_taken"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "chill",
+       "stacks": 2,
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lg_briar",
+   "name": "Briar",
+   "text": "When hit, the attacker takes several Bleed.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_taken"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "bleed",
+       "stacks": 4,
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lg_spikes",
+   "name": "Spikes",
+   "text": "Thorns equal to a twelfth of its Armor.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "stats": [
+    {
+     "stat": "thorns",
+     "flat": {
+      "scale": [
+       {
+        "ratio": 0.08,
+        "stat": "armor",
+        "of": "holder"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "lg_shade",
+   "name": "Shade",
+   "text": "Hidden for the first 24 ticks of each fight, and deals 80% more damage while Hidden.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "hidden",
+       "to": "self",
+       "duration": 24
+      }
+     ]
+    }
+   ],
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 80,
+        "when": {
+         "has": "hidden"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "tag": "magical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 80,
+        "when": {
+         "has": "hidden"
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "lg_execute",
+   "name": "Executioner",
+   "text": "Hits deal double damage to foes below half their HP.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 100,
+        "when": {
+         "hpBelow": 50
+        },
+        "of": "target"
+       }
+      ]
+     }
+    },
+    {
+     "tag": "magical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 100,
+        "when": {
+         "hpBelow": 50
+        },
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "lg_storm",
+   "name": "Storm edge",
+   "text": "Basic attacks also hit a second, random foe, and Shock both.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "strike": {
+    "to": {
+     "side": "foes",
+     "pick": "random",
+     "exclude": "targets"
+    }
+   },
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "shock",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0005249999999999999,
+          "stat": "attack",
+          "of": "holder"
+         },
+         {
+          "ratio": 0.0005249999999999999,
+          "stat": "magic",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "extra"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "shock",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0005249999999999999,
+          "stat": "attack",
+          "of": "holder"
+         },
+         {
+          "ratio": 0.0005249999999999999,
+          "stat": "magic",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lg_hunter",
+   "name": "Hunter",
+   "text": "Basic attacks add a few Bleed; hits deal 50% more damage to foes that bleed.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.00035,
+          "stat": "attack",
+          "of": "holder"
+         },
+         {
+          "ratio": 0.00035,
+          "stat": "magic",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    }
+   ],
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 50,
+        "when": {
+         "has": "bleed"
+        },
+        "of": "target"
+       }
+      ]
+     }
+    },
+    {
+     "tag": "magical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 50,
+        "when": {
+         "has": "bleed"
+        },
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "lg_grave",
+   "name": "Gravecaller",
+   "text": "When a foe falls, gains many Might.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "ko",
+      "whose": "foe"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "might",
+       "stacks": 7,
+       "to": "self"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lg_cinder",
+   "name": "Cinder",
+   "text": "Basic attacks add a few Burn; hits deal 60% more damage to foes that burn.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "burn",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0005249999999999999,
+          "stat": "attack",
+          "of": "holder"
+         },
+         {
+          "ratio": 0.0005249999999999999,
+          "stat": "magic",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    }
+   ],
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 60,
+        "when": {
+         "has": "burn"
+        },
+        "of": "target"
+       }
+      ]
+     }
+    },
+    {
+     "tag": "magical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 60,
+        "when": {
+         "has": "burn"
+        },
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ]
   }
  ],
  "classes": [
@@ -10481,6 +11497,2818 @@
      "formations": [],
      "gear": []
     }
+   }
+  ]
+ },
+ "rogue": {
+  "config": {
+   "start": {
+    "gold": 60,
+    "offers": 3,
+    "picks": 2,
+    "healer": true
+   },
+   "firstAbility": {
+    "knight": "protect",
+    "cleric": "cure",
+    "ranger": "barbed_arrow",
+    "bramble_knight": "thicket",
+    "hoplite": "aspis",
+    "paladin": "smite",
+    "valkyrie": "gale_spear",
+    "bard": "war_ballad",
+    "hexer": "enfeeble",
+    "monk": "burning_fist",
+    "assassin": "backstab",
+    "vampire": "wither",
+    "pyromancer": "firebolt",
+    "frostweaver": "frost_lance",
+    "stormcaller": "chain_lightning",
+    "geomancer": "earthen_shell"
+   },
+   "party": 3,
+   "bench": 2,
+   "map": {
+    "floors": 9,
+    "width": 5,
+    "paths": 5,
+    "fixed": {
+     "1": "fight",
+     "5": "treasure",
+     "9": "campfire"
+    },
+    "odds": {
+     "fight": 46,
+     "event": 22,
+     "elite": 12,
+     "campfire": 12,
+     "shop": 8
+    },
+    "lateFrom": 4
+   },
+   "gold": {
+    "fight": [
+     12,
+     20
+    ],
+    "elite": [
+     50,
+     65
+    ],
+    "boss": [
+     90,
+     110
+    ],
+    "perAct": 5
+   },
+   "spoils": {
+    "fight": {
+     "count": 3,
+     "rarity": {
+      "common": 55,
+      "uncommon": 33,
+      "rare": 12,
+      "legendary": 0
+     },
+     "tome": 12,
+     "recruit": 6,
+     "supply": 8
+    },
+    "elite": {
+     "count": 3,
+     "trophy": true,
+     "rarity": {
+      "common": 0,
+      "uncommon": 0,
+      "rare": 100,
+      "legendary": 0
+     },
+     "tome": 15,
+     "recruit": 10,
+     "supply": 0
+    },
+    "usable": 75
+   },
+   "boon": {
+    "count": 3
+   },
+   "treasure": {
+    "rarity": {
+     "common": 0,
+     "uncommon": 0,
+     "rare": 70,
+     "legendary": 30
+    },
+    "gold": [
+     15,
+     35
+    ]
+   },
+   "campfire": {
+    "hp": 40,
+    "mp": 60,
+    "revive": 40,
+    "camp": 50
+   },
+   "reserves": true,
+   "neverGrow": [
+    "snake"
+   ],
+   "levelGold": 40,
+   "prices": {
+    "common": 45,
+    "uncommon": 70,
+    "rare": 110,
+    "legendary": 190,
+    "recruit": 120,
+    "formation": 100,
+    "learn": 60,
+    "upgrade": 80,
+    "trainStep": 30,
+    "supply": {
+     "tonic": 35,
+     "ether": 35,
+     "phoenix": 60
+    },
+    "sell": 35
+   },
+   "shop": {
+    "gear": {
+     "common": 2,
+     "uncommon": 2,
+     "rare": 1,
+     "legendary": 1
+    },
+    "recruits": 1,
+    "formations": 1,
+    "supplies": 2
+   },
+   "supplies": {
+    "tonic": {
+     "hp": 30
+    },
+    "ether": {
+     "mp": 50
+    },
+    "phoenix": {
+     "revive": 50
+    }
+   },
+   "bag": 3,
+   "knobs": [
+    {
+     "mob": 0,
+     "step": 6,
+     "elite": 0,
+     "boss": 0
+    },
+    {
+     "mob": 0,
+     "step": 6,
+     "elite": 0,
+     "boss": 0
+    },
+    {
+     "mob": 0,
+     "step": 6,
+     "elite": 0,
+     "boss": 0
+    }
+   ],
+   "shape": {
+    "fight": {
+     "hp": 80,
+     "power": -30
+    }
+   },
+   "heat": {
+    "per": 4,
+    "max": 10
+   },
+   "growFrom": 6
+  },
+  "regions": [
+   {
+    "id": "old_road",
+    "name": "The Old Road",
+    "act": 1,
+    "knob": {
+     "mob": -2,
+     "elite": -2,
+     "boss": 0
+    },
+    "text": "Bandits, wolves and snakes on the road out of town, and ogres at the bridges.",
+    "easy": [
+     {
+      "id": "toll_gate",
+      "name": "Toll Gate",
+      "enemies": [
+       "bandit",
+       "bandit",
+       "bandit"
+      ],
+      "knob": -12
+     },
+     {
+      "id": "wolves",
+      "name": "Wolves",
+      "enemies": [
+       "wolf",
+       "wolf",
+       "wolf",
+       "wolf"
+      ],
+      "knob": 41
+     },
+     {
+      "id": "snake_grass",
+      "name": "Snake Grass",
+      "enemies": [
+       "snake",
+       "snake",
+       "snake"
+      ],
+      "knob": -42
+     },
+     {
+      "id": "road_thugs",
+      "name": "Road Thugs",
+      "enemies": [
+       "bandit",
+       "bandit",
+       "wolf",
+       "wolf"
+      ],
+      "knob": -12
+     }
+    ],
+    "normal": [
+     {
+      "id": "wolf_pack",
+      "name": "Wolf Pack",
+      "enemies": [
+       "wolf",
+       "wolf",
+       "wolf",
+       "wolf",
+       "wolf",
+       "wolf"
+      ],
+      "knob": 61
+     },
+     {
+      "id": "snake_pit",
+      "name": "Snake Pit",
+      "enemies": [
+       "snake",
+       "snake",
+       "bandit",
+       "bandit"
+      ],
+      "knob": -42
+     },
+     {
+      "id": "bandit_camp",
+      "name": "Bandit Camp",
+      "enemies": [
+       "shieldman",
+       "archer",
+       "archer",
+       "bandit"
+      ],
+      "knob": -16
+     },
+     {
+      "id": "night_wolves",
+      "name": "Night Wolves",
+      "enemies": [
+       "wolf",
+       "wolf",
+       "wolf",
+       "wolf",
+       "wolf",
+       "wolf",
+       "wolf"
+      ],
+      "knob": 49
+     },
+     {
+      "id": "archers_nest",
+      "name": "Archers' Nest",
+      "enemies": [
+       "shieldman",
+       "archer",
+       "archer",
+       "archer"
+      ],
+      "knob": -24
+     },
+     {
+      "id": "viper_den",
+      "name": "Viper Den",
+      "enemies": [
+       "snake",
+       "snake",
+       "bandit",
+       "bandit",
+       "bandit"
+      ],
+      "knob": -65
+     },
+     {
+      "id": "bandit_horde",
+      "name": "Bandit Horde",
+      "enemies": [
+       "bandit",
+       "bandit",
+       "bandit",
+       "bandit",
+       "bandit"
+      ],
+      "knob": 0
+     }
+    ],
+    "elite": [
+     {
+      "id": "ogre_bridge",
+      "name": "Ogre Bridge",
+      "enemies": [
+       "ogre",
+       "bandit",
+       "bandit"
+      ],
+      "knob": 37
+     },
+     {
+      "id": "twin_ogres",
+      "name": "Twin Ogres",
+      "enemies": [
+       "ogre",
+       "ogre"
+      ],
+      "knob": 4
+     },
+     {
+      "id": "war_camp",
+      "name": "War Camp",
+      "enemies": [
+       "shieldman",
+       "archer",
+       "archer",
+       "ogre"
+      ],
+      "knob": -24
+     }
+    ],
+    "bosses": [
+     {
+      "id": "ogre_chief",
+      "name": "The Ogre Chief",
+      "enemies": [
+       "ogre_chief",
+       "bandit",
+       "bandit"
+      ],
+      "knob": 38
+     },
+     {
+      "id": "packmaster",
+      "name": "The Packmaster",
+      "enemies": [
+       "ogre_chief",
+       "wolf",
+       "wolf",
+       "wolf",
+       "wolf"
+      ],
+      "knob": 37
+     },
+     {
+      "id": "chiefs_return",
+      "name": "The Chief's Return",
+      "enemies": [
+       "ogre_chief",
+       "ogre"
+      ],
+      "knob": 14
+     }
+    ]
+   },
+   {
+    "id": "crypt",
+    "name": "The Crypt",
+    "act": 2,
+    "knob": {
+     "mob": 11,
+     "elite": 11,
+     "boss": 0
+    },
+    "text": "Armored bones, bats you can't hit, ghosts magic can't touch, and Death with a bell.",
+    "easy": [
+     {
+      "id": "bone_pile",
+      "name": "Bone Pile",
+      "enemies": [
+       "skeleton",
+       "skeleton",
+       "skeleton"
+      ],
+      "knob": 106
+     },
+     {
+      "id": "bat_roost",
+      "name": "Bat Roost",
+      "enemies": [
+       "bat",
+       "bat",
+       "bat",
+       "bat"
+      ],
+      "knob": 147
+     },
+     {
+      "id": "wailing",
+      "name": "The Wailing",
+      "enemies": [
+       "ghost",
+       "ghost"
+      ],
+      "knob": 4
+     }
+    ],
+    "normal": [
+     {
+      "id": "bone_yard",
+      "name": "Bone Yard",
+      "enemies": [
+       "skeleton",
+       "skeleton",
+       "skeleton",
+       "skeleton"
+      ],
+      "knob": 140
+     },
+     {
+      "id": "dark_hall",
+      "name": "Dark Hall",
+      "enemies": [
+       "skeleton",
+       "ghost",
+       "bat",
+       "bat"
+      ],
+      "knob": 87
+     },
+     {
+      "id": "curse_room",
+      "name": "Curse Room",
+      "enemies": [
+       "witch",
+       "skeleton",
+       "skeleton"
+      ],
+      "knob": 140
+     },
+     {
+      "id": "haunted_hall",
+      "name": "Haunted Hall",
+      "enemies": [
+       "ghost",
+       "ghost",
+       "skeleton",
+       "skeleton"
+      ],
+      "knob": 22
+     },
+     {
+      "id": "bone_wall",
+      "name": "Bone Wall",
+      "enemies": [
+       "skeleton",
+       "skeleton",
+       "skeleton",
+       "skeleton",
+       "skeleton"
+      ],
+      "knob": 121
+     },
+     {
+      "id": "dead_watch",
+      "name": "The Dead Watch",
+      "enemies": [
+       "skeleton",
+       "skeleton",
+       "witch",
+       "ghost"
+      ],
+      "knob": 49
+     }
+    ],
+    "elite": [
+     {
+      "id": "ghoul_pit",
+      "name": "Ghoul Pit",
+      "enemies": [
+       "ghoul",
+       "ghoul",
+       "ghoul",
+       "ghoul"
+      ],
+      "knob": 76
+     },
+     {
+      "id": "lich_lair",
+      "name": "Lich Lair",
+      "enemies": [
+       "lich",
+       "mummy"
+      ],
+      "knob": 242
+     },
+     {
+      "id": "grave_watch",
+      "name": "Grave Watch",
+      "enemies": [
+       "bone_priest",
+       "troll",
+       "troll"
+      ],
+      "knob": 72
+     }
+    ],
+    "bosses": [
+     {
+      "id": "reaper",
+      "name": "The Reaper",
+      "enemies": [
+       "reaper",
+       "bat",
+       "bat"
+      ],
+      "knob": 193
+     },
+     {
+      "id": "reapers_court",
+      "name": "The Reaper's Court",
+      "enemies": [
+       "reaper",
+       "skeleton",
+       "skeleton"
+      ],
+      "knob": 151
+     }
+    ]
+   },
+   {
+    "id": "fire_mine",
+    "name": "The Fire Mine",
+    "act": 2,
+    "knob": {
+     "mob": 35,
+     "elite": 35,
+     "boss": 0
+    },
+    "text": "Everything here burns, and the lord of the furnace casts a fire that ends parties.",
+    "easy": [
+     {
+      "id": "hounds",
+      "name": "Hounds",
+      "enemies": [
+       "hellhound",
+       "hellhound",
+       "hellhound",
+       "hellhound"
+      ],
+      "knob": 72
+     },
+     {
+      "id": "fuse_room",
+      "name": "Fuse Room",
+      "enemies": [
+       "bomb_bug",
+       "hellhound",
+       "hellhound"
+      ],
+      "knob": -27
+     },
+     {
+      "id": "imp_and_hound",
+      "name": "Imp and Hounds",
+      "enemies": [
+       "fire_imp",
+       "hellhound",
+       "hellhound"
+      ],
+      "knob": 57
+     }
+    ],
+    "normal": [
+     {
+      "id": "hound_pack",
+      "name": "Hound Pack",
+      "enemies": [
+       "hellhound",
+       "hellhound",
+       "hellhound",
+       "hellhound",
+       "hellhound"
+      ],
+      "knob": 83
+     },
+     {
+      "id": "bomb_room",
+      "name": "Bomb Room",
+      "enemies": [
+       "bomb_bug",
+       "bomb_bug",
+       "hellhound",
+       "hellhound"
+      ],
+      "knob": -77
+     },
+     {
+      "id": "imp_kennel",
+      "name": "Imp Kennel",
+      "enemies": [
+       "fire_imp",
+       "hellhound",
+       "hellhound",
+       "hellhound"
+      ],
+      "knob": 98
+     },
+     {
+      "id": "hound_run",
+      "name": "Hound Run",
+      "enemies": [
+       "hellhound",
+       "hellhound",
+       "hellhound",
+       "hellhound",
+       "hellhound",
+       "hellhound"
+      ],
+      "knob": 37
+     },
+     {
+      "id": "slag_heap",
+      "name": "Slag Heap",
+      "enemies": [
+       "lava_slime",
+       "hellhound",
+       "hellhound"
+      ],
+      "knob": 197
+     },
+     {
+      "id": "miners",
+      "name": "The Miners",
+      "enemies": [
+       "bandit",
+       "bandit",
+       "bandit",
+       "bomb_bug"
+      ],
+      "knob": 7
+     }
+    ],
+    "elite": [
+     {
+      "id": "lava_flow",
+      "name": "Lava Flow",
+      "enemies": [
+       "lava_slime",
+       "lava_slime"
+      ],
+      "knob": 132
+     },
+     {
+      "id": "imp_court",
+      "name": "Imp Court",
+      "enemies": [
+       "fire_imp",
+       "fire_imp",
+       "hellhound",
+       "hellhound",
+       "hellhound"
+      ],
+      "knob": 61
+     },
+     {
+      "id": "powder_room",
+      "name": "Powder Room",
+      "enemies": [
+       "bomb_bug",
+       "bomb_bug",
+       "ogre"
+      ],
+      "knob": -81
+     }
+    ],
+    "bosses": [
+     {
+      "id": "fire_giant",
+      "name": "The Fire Giant",
+      "enemies": [
+       "fire_giant"
+      ],
+      "knob": -7
+     },
+     {
+      "id": "giants_forge",
+      "name": "The Giant's Forge",
+      "enemies": [
+       "fire_giant",
+       "hellhound",
+       "hellhound"
+      ],
+      "knob": -27
+     },
+     {
+      "id": "giants_wrath",
+      "name": "The Giant's Wrath",
+      "enemies": [
+       "fire_giant",
+       "fire_imp",
+       "fire_imp"
+      ],
+      "knob": -23
+     }
+    ]
+   },
+   {
+    "id": "ice_pass",
+    "name": "The Ice Pass",
+    "act": 2,
+    "knob": {
+     "mob": 19,
+     "elite": 19,
+     "boss": 0
+    },
+    "text": "Every fight asks what kind of hit you make, and a Titan of ice waits at the top.",
+    "easy": [
+     {
+      "id": "snow_wolves",
+      "name": "Snow Wolves",
+      "enemies": [
+       "snow_wolf",
+       "snow_wolf",
+       "snow_wolf",
+       "snow_wolf"
+      ],
+      "knob": 147
+     },
+     {
+      "id": "spirits",
+      "name": "Spirits",
+      "enemies": [
+       "ice_spirit",
+       "ice_spirit"
+      ],
+      "knob": 26
+     },
+     {
+      "id": "cold_ghosts",
+      "name": "Cold Ghosts",
+      "enemies": [
+       "ice_ghost",
+       "ice_ghost"
+      ],
+      "knob": 11
+     }
+    ],
+    "normal": [
+     {
+      "id": "snow_pack",
+      "name": "Snow Pack",
+      "enemies": [
+       "snow_wolf",
+       "snow_wolf",
+       "snow_wolf",
+       "snow_wolf",
+       "snow_wolf",
+       "snow_wolf"
+      ],
+      "knob": 155
+     },
+     {
+      "id": "ice_heart",
+      "name": "Ice Heart",
+      "enemies": [
+       "ice_spirit",
+       "ice_spirit",
+       "ice_spirit"
+      ],
+      "knob": 15
+     },
+     {
+      "id": "whiteout",
+      "name": "Whiteout",
+      "enemies": [
+       "ice_ghost",
+       "ice_ghost",
+       "ice_spirit"
+      ],
+      "knob": 4
+     },
+     {
+      "id": "ghost_lights",
+      "name": "Ghost Lights",
+      "enemies": [
+       "ice_ghost",
+       "ice_ghost",
+       "ice_ghost"
+      ],
+      "knob": -4
+     },
+     {
+      "id": "long_pack",
+      "name": "The Long Pack",
+      "enemies": [
+       "snow_wolf",
+       "snow_wolf",
+       "snow_wolf",
+       "snow_wolf",
+       "snow_wolf",
+       "snow_wolf",
+       "snow_wolf"
+      ],
+      "knob": 121
+     },
+     {
+      "id": "drift",
+      "name": "Drift",
+      "enemies": [
+       "snow_wolf",
+       "snow_wolf",
+       "ice_spirit",
+       "ice_spirit"
+      ],
+      "knob": 41
+     }
+    ],
+    "elite": [
+     {
+      "id": "golem_hall",
+      "name": "Golem Hall",
+      "enemies": [
+       "ice_golem",
+       "ice_golem"
+      ],
+      "knob": 117
+     },
+     {
+      "id": "golem_gate",
+      "name": "Golem Gate",
+      "enemies": [
+       "ice_golem",
+       "ice_spirit",
+       "ice_spirit"
+      ],
+      "knob": 45
+     },
+     {
+      "id": "frost_trolls",
+      "name": "Frost Trolls",
+      "enemies": [
+       "troll",
+       "troll",
+       "ice_spirit",
+       "ice_spirit"
+      ],
+      "knob": 4
+     }
+    ],
+    "bosses": [
+     {
+      "id": "ice_titan",
+      "name": "The Ice Titan",
+      "enemies": [
+       "ice_titan"
+      ],
+      "knob": 132
+     },
+     {
+      "id": "glacier_king",
+      "name": "The Glacier King",
+      "enemies": [
+       "ice_titan",
+       "snow_wolf",
+       "snow_wolf"
+      ],
+      "knob": 118
+     }
+    ]
+   },
+   {
+    "id": "storm_tower",
+    "name": "The Storm Tower",
+    "act": 3,
+    "knob": {
+     "mob": 28,
+     "elite": 28,
+     "boss": 0
+    },
+    "text": "Clouds of sparks, leeches that drink mana, and a queen behind a wall of drones.",
+    "easy": [
+     {
+      "id": "sparks",
+      "name": "Sparks",
+      "enemies": [
+       "wisp",
+       "wisp",
+       "wisp",
+       "wisp",
+       "wisp"
+      ],
+      "knob": 91
+     },
+     {
+      "id": "leeches",
+      "name": "Leeches",
+      "enemies": [
+       "leech",
+       "leech",
+       "wisp",
+       "wisp"
+      ],
+      "knob": 106
+     },
+     {
+      "id": "drones",
+      "name": "Drones",
+      "enemies": [
+       "drone",
+       "drone",
+       "drone"
+      ],
+      "knob": 174
+     }
+    ],
+    "normal": [
+     {
+      "id": "wisp_cloud",
+      "name": "Wisp Cloud",
+      "enemies": [
+       "wisp",
+       "wisp",
+       "wisp",
+       "wisp",
+       "wisp",
+       "wisp",
+       "wisp",
+       "wisp"
+      ],
+      "knob": 68
+     },
+     {
+      "id": "wisp_nest",
+      "name": "Wisp Nest",
+      "enemies": [
+       "wisp",
+       "wisp",
+       "wisp",
+       "wisp",
+       "leech",
+       "leech"
+      ],
+      "knob": 121
+     },
+     {
+      "id": "leech_den",
+      "name": "Leech Den",
+      "enemies": [
+       "leech",
+       "leech",
+       "leech",
+       "leech"
+      ],
+      "knob": 219
+     },
+     {
+      "id": "drone_wall",
+      "name": "Drone Wall",
+      "enemies": [
+       "drone",
+       "drone",
+       "drone",
+       "drone",
+       "wisp",
+       "wisp"
+      ],
+      "knob": 95
+     },
+     {
+      "id": "storm_front",
+      "name": "Storm Front",
+      "enemies": [
+       "drone",
+       "drone",
+       "leech",
+       "leech",
+       "wisp",
+       "wisp"
+      ],
+      "knob": 113
+     }
+    ],
+    "elite": [
+     {
+      "id": "honour_guard",
+      "name": "Honour Guard",
+      "enemies": [
+       "soldier",
+       "soldier",
+       "soldier",
+       "soldier"
+      ],
+      "knob": 91
+     },
+     {
+      "id": "sniper_ridge",
+      "name": "Sniper Ridge",
+      "enemies": [
+       "shieldman",
+       "archer",
+       "archer",
+       "archer",
+       "archer"
+      ],
+      "knob": 49
+     },
+     {
+      "id": "lich_pair",
+      "name": "Lich Pair",
+      "enemies": [
+       "mummy",
+       "lich",
+       "lich"
+      ],
+      "knob": 219
+     }
+    ],
+    "bosses": [
+     {
+      "id": "storm_queen",
+      "name": "The Storm Queen",
+      "enemies": [
+       "storm_queen",
+       "drone",
+       "drone"
+      ],
+      "knob": 172
+     },
+     {
+      "id": "hive_queen",
+      "name": "The Hive Queen",
+      "enemies": [
+       "storm_queen",
+       "drone",
+       "drone",
+       "drone",
+       "drone"
+      ],
+      "knob": 144
+     }
+    ]
+   },
+   {
+    "id": "deep_crypt",
+    "name": "The Deep Crypt",
+    "act": 3,
+    "knob": {
+     "mob": 21,
+     "elite": 21,
+     "boss": 0
+    },
+    "text": "Beneath the Crypt, something takes every voice. Power that isn't an ability is the key.",
+    "easy": [
+     {
+      "id": "crypt_guard",
+      "name": "Crypt Guard",
+      "enemies": [
+       "skeleton",
+       "skeleton",
+       "ghost"
+      ],
+      "knob": 80
+     },
+     {
+      "id": "whispers",
+      "name": "Whispers",
+      "enemies": [
+       "wraith",
+       "wraith"
+      ],
+      "knob": 182
+     },
+     {
+      "id": "diggers",
+      "name": "Diggers",
+      "enemies": [
+       "ghoul",
+       "ghoul",
+       "ghoul"
+      ],
+      "knob": 128
+     }
+    ],
+    "normal": [
+     {
+      "id": "grave_watch",
+      "name": "Grave Watch",
+      "enemies": [
+       "bone_priest",
+       "troll",
+       "troll"
+      ],
+      "knob": 125
+     },
+     {
+      "id": "lich_lair",
+      "name": "Lich Lair",
+      "enemies": [
+       "lich",
+       "mummy"
+      ],
+      "knob": 307
+     },
+     {
+      "id": "silent_hall",
+      "name": "Silent Hall",
+      "enemies": [
+       "wraith",
+       "wraith",
+       "skeleton",
+       "skeleton"
+      ],
+      "knob": 166
+     },
+     {
+      "id": "quiet_hall",
+      "name": "Quiet Hall",
+      "enemies": [
+       "wraith",
+       "wraith",
+       "ghost",
+       "ghost"
+      ],
+      "knob": 41
+     },
+     {
+      "id": "coven",
+      "name": "Coven",
+      "enemies": [
+       "witch",
+       "witch",
+       "wraith",
+       "wraith"
+      ],
+      "knob": 106
+     },
+     {
+      "id": "ghoul_feast",
+      "name": "Ghoul Feast",
+      "enemies": [
+       "ghoul",
+       "ghoul",
+       "ghoul",
+       "ghoul"
+      ],
+      "knob": 117
+     }
+    ],
+    "elite": [
+     {
+      "id": "chapel_watch",
+      "name": "Chapel Watch",
+      "enemies": [
+       "bone_priest",
+       "bone_priest",
+       "troll"
+      ],
+      "knob": 197
+     },
+     {
+      "id": "lich_court",
+      "name": "Lich Court",
+      "enemies": [
+       "mummy",
+       "lich",
+       "lich",
+       "lich"
+      ],
+      "knob": 158
+     },
+     {
+      "id": "tomb_lords",
+      "name": "Tomb Lords",
+      "enemies": [
+       "mummy",
+       "mummy",
+       "witch"
+      ],
+      "knob": 178
+     }
+    ],
+    "bosses": [
+     {
+      "id": "silent_one",
+      "name": "The Silent One",
+      "enemies": [
+       "silent_one"
+      ],
+      "knob": 388
+     },
+     {
+      "id": "silent_court",
+      "name": "The Silent Court",
+      "enemies": [
+       "silent_one",
+       "bone_priest",
+       "bone_priest"
+      ],
+      "knob": 257
+     }
+    ]
+   },
+   {
+    "id": "tower_top",
+    "name": "The Tower Top",
+    "act": 3,
+    "knob": {
+     "mob": 31,
+     "elite": 31,
+     "boss": 0
+    },
+    "text": "Above the storm: the queen's drones, the king's soldiers, and the king who rages when they fall.",
+    "easy": [
+     {
+      "id": "top_sparks",
+      "name": "Sparks",
+      "enemies": [
+       "wisp",
+       "wisp",
+       "wisp",
+       "wisp",
+       "wisp"
+      ],
+      "knob": 83
+     },
+     {
+      "id": "guard_post",
+      "name": "Guard Post",
+      "enemies": [
+       "soldier",
+       "soldier"
+      ],
+      "knob": 155
+     },
+     {
+      "id": "top_drones",
+      "name": "Drones",
+      "enemies": [
+       "drone",
+       "drone",
+       "drone"
+      ],
+      "knob": 158
+     }
+    ],
+    "normal": [
+     {
+      "id": "court_wisps",
+      "name": "Court Wisps",
+      "enemies": [
+       "wisp",
+       "wisp",
+       "wisp",
+       "wisp",
+       "wisp",
+       "wisp",
+       "leech",
+       "leech"
+      ],
+      "knob": 57
+     },
+     {
+      "id": "wisp_nest",
+      "name": "Wisp Nest",
+      "enemies": [
+       "wisp",
+       "wisp",
+       "wisp",
+       "wisp",
+       "leech",
+       "leech"
+      ],
+      "knob": 121
+     },
+     {
+      "id": "barracks",
+      "name": "Barracks",
+      "enemies": [
+       "soldier",
+       "soldier",
+       "soldier"
+      ],
+      "knob": 158
+     },
+     {
+      "id": "drone_wall",
+      "name": "Drone Wall",
+      "enemies": [
+       "drone",
+       "drone",
+       "drone",
+       "drone",
+       "wisp",
+       "wisp"
+      ],
+      "knob": 95
+     },
+     {
+      "id": "watch",
+      "name": "The Watch",
+      "enemies": [
+       "soldier",
+       "soldier",
+       "drone",
+       "drone"
+      ],
+      "knob": 136
+     }
+    ],
+    "elite": [
+     {
+      "id": "queens_guard",
+      "name": "The Queen's Guard",
+      "enemies": [
+       "storm_queen",
+       "drone",
+       "drone"
+      ],
+      "knob": 37
+     },
+     {
+      "id": "honour_guard",
+      "name": "Honour Guard",
+      "enemies": [
+       "soldier",
+       "soldier",
+       "soldier",
+       "soldier"
+      ],
+      "knob": 91
+     },
+     {
+      "id": "leech_den",
+      "name": "Leech Den",
+      "enemies": [
+       "leech",
+       "leech",
+       "leech",
+       "leech",
+       "leech"
+      ],
+      "knob": 182
+     }
+    ],
+    "bosses": [
+     {
+      "id": "storm_king",
+      "name": "The Storm King",
+      "enemies": [
+       "storm_king"
+      ],
+      "knob": 131
+     },
+     {
+      "id": "kings_guard",
+      "name": "The King's Guard",
+      "enemies": [
+       "storm_king",
+       "soldier",
+       "soldier"
+      ],
+      "knob": 68
+     }
+    ]
+   }
+  ],
+  "gear": [
+   {
+    "id": "ember_sigil",
+    "name": "Ember sigil",
+    "text": "Every basic attack sets a fire.",
+    "slot": "amulet",
+    "tier": "powerful",
+    "source": "unlock",
+    "statuses": [
+     "lg_ember"
+    ]
+   },
+   {
+    "id": "cleaving_charm",
+    "name": "Cleaving charm",
+    "text": "Every basic attack carries on into a second foe.",
+    "slot": "amulet",
+    "tier": "powerful",
+    "source": "unlock",
+    "statuses": [
+     "lg_cleave"
+    ]
+   },
+   {
+    "id": "rime_sigil",
+    "name": "Rime sigil",
+    "text": "Every basic attack leaves frost.",
+    "slot": "amulet",
+    "tier": "powerful",
+    "source": "unlock",
+    "statuses": [
+     "lg_rime"
+    ]
+   },
+   {
+    "id": "wound_sigil",
+    "name": "Wound sigil",
+    "text": "Every crit opens a wound.",
+    "slot": "amulet",
+    "tier": "powerful",
+    "source": "unlock",
+    "stats": [
+     {
+      "stat": "crit_chance",
+      "flat": 8
+     },
+     {
+      "stat": "max_hp",
+      "flat": 500
+     }
+    ],
+    "statuses": [
+     "lg_wounds"
+    ]
+   },
+   {
+    "id": "shatter_sigil",
+    "name": "Shatter sigil",
+    "text": "Every basic attack cracks armor.",
+    "slot": "amulet",
+    "tier": "powerful",
+    "source": "unlock",
+    "stats": [
+     {
+      "stat": "attack",
+      "flat": 1000
+     }
+    ],
+    "statuses": [
+     "lg_sunder"
+    ]
+   },
+   {
+    "id": "siren_shell",
+    "name": "Siren shell",
+    "text": "Every basic attack sings an ally a little mana.",
+    "slot": "amulet",
+    "tier": "powerful",
+    "source": "unlock",
+    "stats": [
+     {
+      "stat": "max_hp",
+      "flat": 500
+     }
+    ],
+    "statuses": [
+     "lg_song"
+    ]
+   },
+   {
+    "id": "crown_of_judgement",
+    "name": "Crown of judgement",
+    "text": "Strikes hardest at whatever has been lifted up.",
+    "slot": "amulet",
+    "tier": "powerful",
+    "source": "unlock",
+    "statuses": [
+     "lg_judge"
+    ]
+   },
+   {
+    "id": "grave_lantern",
+    "name": "Grave lantern",
+    "text": "Each foe that falls gives back a little life.",
+    "slot": "amulet",
+    "tier": "powerful",
+    "source": "unlock",
+    "statuses": [
+     "lg_lantern"
+    ]
+   },
+   {
+    "id": "soul_jar",
+    "name": "Soul jar",
+    "text": "Each foe that falls fills the party's mana.",
+    "slot": "amulet",
+    "tier": "powerful",
+    "source": "unlock",
+    "statuses": [
+     "lg_soul"
+    ]
+   },
+   {
+    "id": "war_banner",
+    "name": "War banner",
+    "text": "The whole party starts each fight with Might.",
+    "slot": "amulet",
+    "tier": "powerful",
+    "source": "unlock",
+    "statuses": [
+     "lg_banner"
+    ]
+   },
+   {
+    "id": "hourglass",
+    "name": "Hourglass",
+    "text": "Its wearer starts each fight Hasted.",
+    "slot": "amulet",
+    "tier": "powerful",
+    "source": "unlock",
+    "statuses": [
+     "lg_hourglass"
+    ]
+   },
+   {
+    "id": "herald_horn",
+    "name": "Herald's horn",
+    "text": "The whole party starts each fight with Regen.",
+    "slot": "amulet",
+    "tier": "powerful",
+    "source": "unlock",
+    "statuses": [
+     "lg_horn"
+    ]
+   },
+   {
+    "id": "silver_bell",
+    "name": "Silver bell",
+    "text": "Nothing silences its wearer.",
+    "slot": "amulet",
+    "tier": "powerful",
+    "source": "unlock",
+    "stats": [
+     {
+      "stat": "mp_regen",
+      "flat": 1000
+     },
+     {
+      "stat": "magic",
+      "flat": 1000
+     }
+    ],
+    "statuses": [
+     "lg_bell"
+    ]
+   },
+   {
+    "id": "berserker_torc",
+    "name": "Berserker's torc",
+    "text": "Hits harder the closer its wearer is to falling.",
+    "slot": "amulet",
+    "tier": "powerful",
+    "source": "unlock",
+    "statuses": [
+     "lg_fury"
+    ]
+   },
+   {
+    "id": "stone_idol",
+    "name": "Stone idol",
+    "text": "Crits twice as often behind a Shield.",
+    "slot": "amulet",
+    "tier": "powerful",
+    "source": "unlock",
+    "stats": [
+     {
+      "stat": "crit_chance",
+      "flat": 4
+     }
+    ],
+    "statuses": [
+     "lg_idol"
+    ]
+   },
+   {
+    "id": "frost_shard",
+    "name": "Frost shard",
+    "text": "Hits harder the colder the foe.",
+    "slot": "amulet",
+    "tier": "powerful",
+    "source": "unlock",
+    "stats": [
+     {
+      "stat": "max_hp",
+      "flat": 500
+     }
+    ],
+    "statuses": [
+     "lg_brittle"
+    ]
+   },
+   {
+    "id": "static_coil",
+    "name": "Static coil",
+    "text": "Whatever hits its wearer is shocked.",
+    "slot": "amulet",
+    "tier": "powerful",
+    "source": "unlock",
+    "stats": [
+     {
+      "stat": "max_hp",
+      "flat": 500
+     }
+    ],
+    "statuses": [
+     "lg_coil"
+    ]
+   },
+   {
+    "id": "frozen_heart",
+    "name": "Frozen heart",
+    "text": "Plate that chills whatever strikes it.",
+    "slot": "armor",
+    "tier": "powerful",
+    "source": "unlock",
+    "weight": "heavy",
+    "stats": [
+     {
+      "stat": "armor",
+      "flat": 1000
+     }
+    ],
+    "statuses": [
+     "lg_frost"
+    ]
+   },
+   {
+    "id": "briar_coat",
+    "name": "Briar coat",
+    "text": "Whatever strikes it starts to bleed.",
+    "slot": "armor",
+    "tier": "powerful",
+    "source": "unlock",
+    "weight": "medium",
+    "stats": [
+     {
+      "stat": "max_hp",
+      "flat": 500
+     }
+    ],
+    "statuses": [
+     "lg_briar"
+    ]
+   },
+   {
+    "id": "spiked_bulwark",
+    "name": "Spiked bulwark",
+    "text": "The more plate, the more spikes.",
+    "slot": "armor",
+    "tier": "powerful",
+    "source": "unlock",
+    "weight": "heavy",
+    "stats": [
+     {
+      "stat": "armor",
+      "flat": 1000
+     }
+    ],
+    "statuses": [
+     "lg_spikes"
+    ]
+   },
+   {
+    "id": "shadow_cowl",
+    "name": "Shadow cowl",
+    "text": "Its wearer starts each fight unseen.",
+    "slot": "armor",
+    "tier": "powerful",
+    "source": "unlock",
+    "weight": "medium",
+    "stats": [
+     {
+      "stat": "evasion",
+      "flat": 20
+     },
+     {
+      "stat": "max_hp",
+      "flat": 500
+     }
+    ],
+    "statuses": [
+     "lg_shade"
+    ]
+   },
+   {
+    "id": "headsman_axe",
+    "name": "Headsman's axe",
+    "text": "Finishes what's already falling.",
+    "slot": "weapon",
+    "tier": "powerful",
+    "source": "unlock",
+    "weapon": {
+     "kind": "axe",
+     "amount": {
+      "base": 214,
+      "scale": [
+       {
+        "ratio": 0.32099999999999995,
+        "stat": "attack"
+       }
+      ]
+     }
+    },
+    "statuses": [
+     "lg_execute"
+    ]
+   },
+   {
+    "id": "stormbrand",
+    "name": "Stormbrand",
+    "text": "A sword that arcs to a second foe and shocks both.",
+    "slot": "weapon",
+    "tier": "powerful",
+    "source": "unlock",
+    "weapon": {
+     "kind": "sword",
+     "amount": {
+      "base": 148,
+      "scale": [
+       {
+        "ratio": 0.222,
+        "stat": "attack"
+       }
+      ]
+     }
+    },
+    "statuses": [
+     "lg_storm"
+    ]
+   },
+   {
+    "id": "frostfang",
+    "name": "Frostfang",
+    "text": "A dagger that chills every cut.",
+    "slot": "weapon",
+    "tier": "powerful",
+    "source": "unlock",
+    "weapon": {
+     "kind": "dagger",
+     "amount": {
+      "base": 106,
+      "scale": [
+       {
+        "ratio": 0.159,
+        "stat": "attack"
+       }
+      ]
+     }
+    },
+    "statuses": [
+     "lg_rime"
+    ],
+    "stats": [
+     {
+      "stat": "attack",
+      "flat": 1000
+     }
+    ]
+   },
+   {
+    "id": "hunters_bow",
+    "name": "Hunter's bow",
+    "text": "Hits a bleeding quarry far harder.",
+    "slot": "weapon",
+    "tier": "powerful",
+    "source": "unlock",
+    "weapon": {
+     "kind": "bow",
+     "amount": {
+      "base": 156,
+      "scale": [
+       {
+        "ratio": 0.23399999999999999,
+        "stat": "attack"
+       }
+      ]
+     }
+    },
+    "statuses": [
+     "lg_hunter"
+    ],
+    "stats": [
+     {
+      "stat": "attack",
+      "flat": 1000
+     }
+    ]
+   },
+   {
+    "id": "gravecaller",
+    "name": "Gravecaller",
+    "text": "Each fall makes it stronger.",
+    "slot": "weapon",
+    "tier": "powerful",
+    "source": "unlock",
+    "weapon": {
+     "kind": "dark_staff",
+     "amount": {
+      "base": 174,
+      "scale": [
+       {
+        "ratio": 0.26099999999999995,
+        "stat": "magic"
+       }
+      ]
+     }
+    },
+    "statuses": [
+     "lg_grave"
+    ],
+    "stats": [
+     {
+      "stat": "magic",
+      "flat": 1000
+     }
+    ]
+   },
+   {
+    "id": "cinder_rod",
+    "name": "Cinder rod",
+    "text": "Lightning that hits burning foes harder.",
+    "slot": "weapon",
+    "tier": "powerful",
+    "source": "unlock",
+    "weapon": {
+     "kind": "lightning_staff",
+     "amount": {
+      "base": 132,
+      "scale": [
+       {
+        "ratio": 0.19799999999999998,
+        "stat": "magic"
+       }
+      ]
+     }
+    },
+    "statuses": [
+     "lg_cinder"
+    ],
+    "stats": [
+     {
+      "stat": "magic",
+      "flat": 1000
+     }
+    ]
+   },
+   {
+    "id": "brand_of_kings",
+    "name": "Brand of kings",
+    "text": "A spear that strikes hardest at whatever has been lifted up.",
+    "slot": "weapon",
+    "tier": "powerful",
+    "source": "unlock",
+    "weapon": {
+     "kind": "spear",
+     "amount": {
+      "base": 164,
+      "scale": [
+       {
+        "ratio": 0.24599999999999997,
+        "stat": "attack"
+       }
+      ]
+     }
+    },
+    "statuses": [
+     "lg_judge"
+    ]
+   },
+   {
+    "id": "earthshaker",
+    "name": "Earthshaker",
+    "text": "An earth staff that cracks the armor of what it strikes.",
+    "slot": "weapon",
+    "tier": "powerful",
+    "source": "unlock",
+    "weapon": {
+     "kind": "earth_staff",
+     "amount": {
+      "base": 188,
+      "scale": [
+       {
+        "ratio": 0.28200000000000003,
+        "stat": "magic"
+       }
+      ]
+     }
+    },
+    "statuses": [
+     "lg_sunder"
+    ],
+    "stats": [
+     {
+      "stat": "magic",
+      "flat": 1000
+     }
+    ]
+   }
+  ],
+  "legendaries": [
+   "heartwood_staff",
+   "sanguine_staff",
+   "cornerstone_axe",
+   "needle",
+   "mist_claws",
+   "glacier_staff",
+   "templar_staff",
+   "thornheart_plate",
+   "wraith_leathers",
+   "archmages_robes",
+   "twin_soul_charm",
+   "vampires_tooth",
+   "thirsting_jewel",
+   "glass_heart",
+   "ember_sigil",
+   "cleaving_charm",
+   "rime_sigil",
+   "wound_sigil",
+   "shatter_sigil",
+   "siren_shell",
+   "crown_of_judgement",
+   "grave_lantern",
+   "soul_jar",
+   "war_banner",
+   "hourglass",
+   "herald_horn",
+   "silver_bell",
+   "berserker_torc",
+   "stone_idol",
+   "frost_shard",
+   "static_coil",
+   "frozen_heart",
+   "briar_coat",
+   "spiked_bulwark",
+   "shadow_cowl",
+   "headsman_axe",
+   "stormbrand",
+   "frostfang",
+   "hunters_bow",
+   "gravecaller",
+   "cinder_rod",
+   "brand_of_kings",
+   "earthshaker"
+  ],
+  "aims": {
+   "heartwood_staff": [
+    "bramble_knight",
+    "geomancer"
+   ],
+   "sanguine_staff": [
+    "vampire",
+    "hexer"
+   ],
+   "cornerstone_axe": [
+    "knight",
+    "geomancer"
+   ],
+   "needle": [
+    "assassin",
+    "ranger"
+   ],
+   "mist_claws": [
+    "monk",
+    "vampire"
+   ],
+   "glacier_staff": [
+    "frostweaver",
+    "hexer"
+   ],
+   "templar_staff": [
+    "paladin",
+    "valkyrie"
+   ],
+   "thornheart_plate": [
+    "bramble_knight",
+    "knight",
+    "hoplite"
+   ],
+   "wraith_leathers": [
+    "monk",
+    "assassin",
+    "ranger"
+   ],
+   "archmages_robes": [
+    "pyromancer",
+    "frostweaver",
+    "stormcaller",
+    "cleric",
+    "hexer"
+   ],
+   "twin_soul_charm": [
+    "vampire",
+    "monk"
+   ],
+   "vampires_tooth": [
+    "vampire",
+    "monk",
+    "assassin"
+   ],
+   "thirsting_jewel": [
+    "paladin",
+    "valkyrie",
+    "geomancer",
+    "bard"
+   ],
+   "glass_heart": [
+    "assassin",
+    "ranger",
+    "geomancer"
+   ],
+   "ember_sigil": [
+    "monk",
+    "ranger",
+    "pyromancer"
+   ],
+   "cleaving_charm": [
+    "monk",
+    "ranger",
+    "assassin",
+    "knight"
+   ],
+   "rime_sigil": [
+    "frostweaver",
+    "monk",
+    "ranger"
+   ],
+   "wound_sigil": [
+    "assassin",
+    "ranger"
+   ],
+   "shatter_sigil": [
+    "monk",
+    "knight",
+    "hoplite"
+   ],
+   "siren_shell": [
+    "bard",
+    "monk"
+   ],
+   "crown_of_judgement": [
+    "paladin",
+    "assassin"
+   ],
+   "grave_lantern": [
+    "knight",
+    "bramble_knight",
+    "hoplite"
+   ],
+   "soul_jar": [
+    "cleric",
+    "pyromancer",
+    "stormcaller",
+    "geomancer"
+   ],
+   "war_banner": [
+    "knight",
+    "valkyrie",
+    "bard"
+   ],
+   "hourglass": [
+    "pyromancer",
+    "stormcaller",
+    "assassin"
+   ],
+   "herald_horn": [
+    "cleric",
+    "bard",
+    "knight"
+   ],
+   "silver_bell": [
+    "pyromancer",
+    "stormcaller",
+    "frostweaver"
+   ],
+   "berserker_torc": [
+    "vampire",
+    "monk"
+   ],
+   "stone_idol": [
+    "geomancer",
+    "knight"
+   ],
+   "frost_shard": [
+    "frostweaver",
+    "hexer"
+   ],
+   "static_coil": [
+    "knight",
+    "hoplite",
+    "bramble_knight"
+   ],
+   "frozen_heart": [
+    "knight",
+    "hoplite",
+    "bramble_knight"
+   ],
+   "briar_coat": [
+    "valkyrie",
+    "ranger",
+    "monk"
+   ],
+   "spiked_bulwark": [
+    "knight",
+    "hoplite"
+   ],
+   "shadow_cowl": [
+    "assassin",
+    "ranger",
+    "bard"
+   ],
+   "headsman_axe": [
+    "knight",
+    "geomancer"
+   ],
+   "stormbrand": [
+    "knight",
+    "valkyrie",
+    "assassin"
+   ],
+   "frostfang": [
+    "assassin",
+    "ranger",
+    "bard"
+   ],
+   "hunters_bow": [
+    "ranger",
+    "bard"
+   ],
+   "gravecaller": [
+    "hexer",
+    "vampire"
+   ],
+   "cinder_rod": [
+    "pyromancer",
+    "stormcaller"
+   ],
+   "brand_of_kings": [
+    "valkyrie",
+    "hoplite",
+    "monk"
+   ],
+   "earthshaker": [
+    "geomancer",
+    "bramble_knight"
+   ]
+  },
+  "affixes": [
+   {
+    "id": "hp",
+    "prefix": "Sturdy",
+    "suffix": "of the Bear",
+    "stats": [
+     {
+      "stat": "max_hp",
+      "flat": 500
+     }
+    ]
+   },
+   {
+    "id": "armor",
+    "prefix": "Plated",
+    "suffix": "of the Tortoise",
+    "stats": [
+     {
+      "stat": "armor",
+      "flat": 1000
+     }
+    ]
+   },
+   {
+    "id": "attack",
+    "prefix": "Keen",
+    "suffix": "of the Wolf",
+    "stats": [
+     {
+      "stat": "attack",
+      "flat": 1000
+     }
+    ]
+   },
+   {
+    "id": "magic",
+    "prefix": "Arcane",
+    "suffix": "of the Owl",
+    "stats": [
+     {
+      "stat": "magic",
+      "flat": 1000
+     }
+    ]
+   },
+   {
+    "id": "regen",
+    "prefix": "Flowing",
+    "suffix": "of the Spring",
+    "stats": [
+     {
+      "stat": "mp_regen",
+      "flat": 1000
+     }
+    ]
+   },
+   {
+    "id": "mp",
+    "prefix": "Deep",
+    "suffix": "of the Well",
+    "stats": [
+     {
+      "stat": "max_mp",
+      "flat": 1000
+     }
+    ]
+   },
+   {
+    "id": "crit",
+    "prefix": "Lucky",
+    "suffix": "of the Fox",
+    "stats": [
+     {
+      "stat": "crit_chance",
+      "flat": 4
+     }
+    ]
+   },
+   {
+    "id": "quiet",
+    "prefix": "Quiet",
+    "suffix": "of Shadows",
+    "stats": [
+     {
+      "stat": "aggro",
+      "flat": -10
+     }
+    ]
+   },
+   {
+    "id": "bold",
+    "prefix": "Bold",
+    "suffix": "of the Lion",
+    "stats": [
+     {
+      "stat": "aggro",
+      "flat": 10
+     },
+     {
+      "stat": "max_hp",
+      "flat": 500
+     }
+    ]
+   },
+   {
+    "id": "thorns",
+    "prefix": "Thorned",
+    "suffix": "of Thorns",
+    "stats": [
+     {
+      "stat": "thorns",
+      "flat": 150
+     }
+    ]
+   },
+   {
+    "id": "lifesteal",
+    "prefix": "Thirsty",
+    "suffix": "of the Leech",
+    "stats": [
+     {
+      "stat": "lifesteal",
+      "flat": 15
+     }
+    ]
+   },
+   {
+    "id": "evasion",
+    "prefix": "Nimble",
+    "suffix": "of the Cat",
+    "stats": [
+     {
+      "stat": "evasion",
+      "flat": 20
+     }
+    ]
+   },
+   {
+    "id": "accuracy",
+    "prefix": "True",
+    "suffix": "of the Hawk",
+    "stats": [
+     {
+      "stat": "accuracy",
+      "flat": 20
+     }
+    ]
+   },
+   {
+    "id": "double",
+    "prefix": "Twin",
+    "suffix": "of Echoes",
+    "stats": [
+     {
+      "stat": "double_strike",
+      "flat": 25
+     }
+    ]
+   },
+   {
+    "id": "critdmg",
+    "prefix": "Cruel",
+    "suffix": "of Ruin",
+    "stats": [
+     {
+      "stat": "crit_multiplier",
+      "flat": 50
+     }
+    ]
+   },
+   {
+    "id": "siphon",
+    "prefix": "Draining",
+    "suffix": "of the Moth",
+    "stats": [
+     {
+      "stat": "siphon",
+      "flat": 10
+     }
+    ]
+   },
+   {
+    "id": "fireproof",
+    "prefix": "Fireproof",
+    "suffix": "of Embers",
+    "stats": [
+     {
+      "stat": "resist:fire",
+      "flat": 30
+     }
+    ]
+   },
+   {
+    "id": "frostproof",
+    "prefix": "Frostproof",
+    "suffix": "of Winter",
+    "stats": [
+     {
+      "stat": "resist:ice",
+      "flat": 30
+     }
+    ]
+   },
+   {
+    "id": "stormproof",
+    "prefix": "Grounded",
+    "suffix": "of the Storm",
+    "stats": [
+     {
+      "stat": "resist:lightning",
+      "flat": 30
+     }
+    ]
+   },
+   {
+    "id": "darkproof",
+    "prefix": "Hallowed",
+    "suffix": "of Dusk",
+    "stats": [
+     {
+      "stat": "resist:dark",
+      "flat": 30
+     }
+    ]
+   }
+  ],
+  "events": [
+   {
+    "id": "wounded_traveller",
+    "name": "A Wounded Traveller",
+    "text": "Someone lies hurt by the road, a weapon still in hand. They look like they can fight.",
+    "options": [
+     {
+      "id": "take",
+      "label": "TAKE THEM IN",
+      "text": "They join you, hurt: a third of their HP.",
+      "do": [
+       {
+        "op": "recruit",
+        "hp": 33
+       }
+      ]
+     },
+     {
+      "id": "rob",
+      "label": "TAKE THEIR PURSE",
+      "text": "+40 gold.",
+      "do": [
+       {
+        "op": "gold",
+        "amount": 40
+       }
+      ]
+     },
+     {
+      "id": "leave",
+      "label": "WALK ON",
+      "text": "Nothing happens.",
+      "do": []
+     }
+    ]
+   },
+   {
+    "id": "blood_shrine",
+    "name": "A Blood Shrine",
+    "text": "An altar, a bowl, and something glinting under the stone. The shrine wants blood.",
+    "options": [
+     {
+      "id": "bleed",
+      "label": "OFFER BLOOD",
+      "text": "Everyone loses 20% of max HP. A rare piece.",
+      "do": [
+       {
+        "op": "hp",
+        "pct": -20
+       },
+       {
+        "op": "gear",
+        "rarity": "rare"
+       }
+      ]
+     },
+     {
+      "id": "pray",
+      "label": "PRAY",
+      "text": "Everyone recovers 15% of max HP.",
+      "do": [
+       {
+        "op": "hp",
+        "pct": 15
+       }
+      ]
+     },
+     {
+      "id": "leave",
+      "label": "LEAVE",
+      "text": "Nothing happens.",
+      "do": []
+     }
+    ]
+   },
+   {
+    "id": "gambler",
+    "name": "The Gambler",
+    "text": "A grinning stranger with a pair of bone dice. \"Double or nothing?\"",
+    "options": [
+     {
+      "id": "bet",
+      "label": "BET 40 GOLD",
+      "text": "Half the time, win 100 back.",
+      "gold": 40,
+      "do": [
+       {
+        "op": "chance",
+        "pct": 50,
+        "then": [
+         {
+          "op": "gold",
+          "amount": 100
+         }
+        ],
+        "else": []
+       }
+      ]
+     },
+     {
+      "id": "leave",
+      "label": "WALK AWAY",
+      "text": "Nothing happens.",
+      "do": []
+     }
+    ]
+   },
+   {
+    "id": "forge",
+    "name": "An Abandoned Forge",
+    "text": "The coals are still warm. A smith could make something better here.",
+    "options": [
+     {
+      "id": "temper",
+      "label": "TEMPER A PIECE",
+      "text": "A piece of your choice gains a rarity: common to uncommon, uncommon to rare.",
+      "do": [
+       {
+        "op": "temper"
+       }
+      ]
+     },
+     {
+      "id": "scrap",
+      "label": "SCRAP FOR GOLD",
+      "text": "+30 gold from the scrap heap.",
+      "do": [
+       {
+        "op": "gold",
+        "amount": 30
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "old_master",
+    "name": "The Old Master",
+    "text": "An old fighter sits by a fire. \"I could teach one of you something. It will hurt.\"",
+    "options": [
+     {
+      "id": "learn",
+      "label": "LEARN THE HARD WAY",
+      "text": "One member learns an ability; everyone loses 10% of max HP.",
+      "do": [
+       {
+        "op": "learn"
+       },
+       {
+        "op": "hp",
+        "pct": -10
+       }
+      ]
+     },
+     {
+      "id": "polish",
+      "label": "PAY 50 TO PRACTISE",
+      "text": "One member's ability gets better (+).",
+      "gold": 50,
+      "do": [
+       {
+        "op": "upgrade"
+       }
+      ]
+     },
+     {
+      "id": "leave",
+      "label": "LEAVE HIM BE",
+      "text": "Nothing happens.",
+      "do": []
+     }
+    ]
+   },
+   {
+    "id": "ambush",
+    "name": "Ambush!",
+    "text": "The road narrows between two rocks. Something is waiting up there.",
+    "options": [
+     {
+      "id": "fight",
+      "label": "FIGHT",
+      "text": "A hard fight, with an elite's spoils.",
+      "do": [
+       {
+        "op": "fight",
+        "tier": "elite"
+       }
+      ]
+     },
+     {
+      "id": "run",
+      "label": "RUN FOR IT",
+      "text": "Everyone loses 10% of max HP.",
+      "do": [
+       {
+        "op": "hp",
+        "pct": -10
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "spring",
+    "name": "A Clear Spring",
+    "text": "Cold water bubbles up through the stones. It tastes of mana.",
+    "options": [
+     {
+      "id": "drink",
+      "label": "DRINK",
+      "text": "Everyone recovers 50% of max MP and 10% of max HP.",
+      "do": [
+       {
+        "op": "mp",
+        "pct": 50
+       },
+       {
+        "op": "hp",
+        "pct": 10
+       }
+      ]
+     },
+     {
+      "id": "bottle",
+      "label": "BOTTLE IT",
+      "text": "An ether for later.",
+      "do": [
+       {
+        "op": "supply",
+        "id": "ether"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "strange_chest",
+    "name": "A Strange Chest",
+    "text": "A chest in the middle of the road, unlocked. Too easy?",
+    "options": [
+     {
+      "id": "open",
+      "label": "OPEN IT",
+      "text": "Two times in three, a legendary piece. Otherwise it bites: a hard fight.",
+      "do": [
+       {
+        "op": "chance",
+        "pct": 67,
+        "then": [
+         {
+          "op": "gear",
+          "rarity": "legendary"
+         }
+        ],
+        "else": [
+         {
+          "op": "fight",
+          "tier": "elite"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "id": "leave",
+      "label": "LEAVE IT",
+      "text": "Nothing happens.",
+      "do": []
+     }
+    ]
+   },
+   {
+    "id": "camp",
+    "name": "An Empty Camp",
+    "text": "Someone left in a hurry: the fire is still burning, the bedrolls still laid out.",
+    "options": [
+     {
+      "id": "camp",
+      "label": "MAKE CAMP",
+      "text": "A campfire: rest, focus, raise or train, and change the party.",
+      "do": [
+       {
+        "op": "camp"
+       }
+      ]
+     },
+     {
+      "id": "search",
+      "label": "SEARCH THE PACKS",
+      "text": "A tonic, an ether or a phoenix feather, and 20 gold.",
+      "do": [
+       {
+        "op": "gold",
+        "amount": 20
+       },
+       {
+        "op": "chance",
+        "pct": 40,
+        "then": [
+         {
+          "op": "supply",
+          "id": "tonic"
+         }
+        ],
+        "else": [
+         {
+          "op": "chance",
+          "pct": 50,
+          "then": [
+           {
+            "op": "supply",
+            "id": "ether"
+           }
+          ],
+          "else": [
+           {
+            "op": "supply",
+            "id": "phoenix"
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "pilgrims",
+    "name": "Pilgrims",
+    "text": "A band of pilgrims with a healer among them. \"For a donation…\"",
+    "options": [
+     {
+      "id": "donate",
+      "label": "DONATE 40",
+      "text": "Everyone recovers 40% of max HP, and one fallen member rises at half HP (with nobody down, the healer gives you a phoenix feather).",
+      "gold": 40,
+      "do": [
+       {
+        "op": "hp",
+        "pct": 40
+       },
+       {
+        "op": "supply",
+        "id": "phoenix"
+       }
+      ]
+     },
+     {
+      "id": "leave",
+      "label": "PASS BY",
+      "text": "Nothing happens.",
+      "do": []
+     }
+    ]
+   },
+   {
+    "id": "drill_yard",
+    "name": "A Drill Yard",
+    "text": "Veterans spar in an old courtyard. One of them could be talked into joining.",
+    "options": [
+     {
+      "id": "hire",
+      "label": "HIRE ONE FOR 70",
+      "text": "A recruit joins you.",
+      "gold": 70,
+      "do": [
+       {
+        "op": "recruit"
+       }
+      ]
+     },
+     {
+      "id": "drill",
+      "label": "DRILL",
+      "text": "One member learns an ability.",
+      "do": [
+       {
+        "op": "learn"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "standard",
+    "name": "A Fallen Standard",
+    "text": "A war banner, half-buried in the mud. Its company's drill is written on the back.",
+    "options": [
+     {
+      "id": "take",
+      "label": "TAKE THE DRILL",
+      "text": "A new formation.",
+      "do": [
+       {
+        "op": "formation"
+       }
+      ]
+     },
+     {
+      "id": "sell",
+      "label": "SELL THE BANNER",
+      "text": "+45 gold.",
+      "do": [
+       {
+        "op": "gold",
+        "amount": 45
+       }
+      ]
+     }
+    ]
    }
   ]
  }

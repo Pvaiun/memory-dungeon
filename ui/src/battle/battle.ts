@@ -26,9 +26,13 @@ import { setMusic, setSound, sfx } from "./audio.js";
 import { go } from "../screens.js";
 import { clear as clearNode, isCurrent, nodes, onJourney } from "../journey.js";
 import { celebrate } from "../celebrate.js";
+import { advanceOnce } from "../../../src/engine/run.js";
+import { combat } from "../../../src/engine/combat/rules.js";
+import { endFight as endRogueFight, FIGHT_DUNGEON, partyOf, reservesStand, startFight as startRogueFight } from "../../../src/rogue.js";
+import { current as rogueRun, saveRogue } from "../rogue-state.js";
 
 /** `node`: the journey node it was started from. Winning that node's whole run, while it's the one to clear, clears it; its single fights are practice. */
-export type BattleArgs = { dungeon: string; seed?: number; node?: string };
+export type BattleArgs = { dungeon: string; seed?: number; node?: string; rogue?: boolean };
 
 /** Engine milliseconds per tick at 1×; the typing speed and the time a beat stays once typed. */
 const TICK_MS = 500;
@@ -38,6 +42,13 @@ const SPEEDS = [1, 2, 4] as const;
 type Hist = { tick: number; text: string; tone: Tone; tag?: string };
 
 export function startBattle(frame: HTMLElement, screen: HTMLElement, args: BattleArgs): () => void {
+  // The rogue mode's fight: its run's pending fight, with the party's HP and MP carried in, played once.
+  const rogue = args.rogue ? rogueRun() : null;
+  if (args.rogue && (!rogue || rogue.pending.kind !== "fight")) { go("rogue"); return () => {}; }
+  if (rogue && rogue.pending.kind === "fight") args = { ...args, dungeon: FIGHT_DUNGEON, seed: rogue.pending.seed };
+  const prepared = rogue ? startRogueFight(c, rogue, { log: true }) : undefined;
+  // The fight has begun: the party is set from here, even across a reload.
+  if (rogue) saveRogue();
   const seed = args.seed ?? setup.seed;
   const dungeon = c.dungeons.get(args.dungeon);
   const fail = (msg: string) => {
@@ -47,12 +58,13 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   if (!dungeon) return fail(`No dungeon '${args.dungeon}'.`);
   let driver: Driver;
   try {
-    driver = new Driver({ dungeon: args.dungeon, party: partyLoadout(), seed, firstClear: true });
+    driver = new Driver({ dungeon: args.dungeon, party: rogue ? partyOf(c, rogue) : partyLoadout(), seed, firstClear: true }, prepared);
   } catch (e) {
     return fail(`The party can't enter: ${(e as Error).message}`);
   }
-  const theme = themeOf(args.dungeon);
-  const single = args.dungeon.includes("~");
+  // A rogue fight is drawn in its region (every rogue fight shares one dungeon id, which the theme cache would pin).
+  const theme = rogue ? themeOf(rogue.region) : themeOf(args.dungeon);
+  const single = args.dungeon.includes("~") || !!rogue;
   const nodeAt = args.node ? nodes().findIndex((n) => n.id === args.node) : -1;
   /** Does winning this run clear a node? Only the whole run of the node to clear next, in the journey. */
   const pays = nodeAt >= 0 && !single && onJourney() && isCurrent(args.node!);
@@ -64,12 +76,26 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   };
   /** Out of the fight: back to the node it came from, or home. */
   const exit = () => {
+    if (rogue && driver.fight?.result) return rogueOn();
     stop();
+    if (rogue) return go("rogue");
     if (clearedNow && !celebrated) (go("journey"), cheer());
     else if (args.node) go("node", args.node);
     else go("home");
   };
-  const exitLabel = args.node ? "JOURNEY" : "MENU";
+  const exitLabel = rogue ? "MAP" : args.node ? "JOURNEY" : "MENU";
+  /** The rogue mode: the fight's end goes back to the run, which moves on to its spoils or its end. */
+  let rogueDone = false;
+  const rogueOn = () => {
+    if (!rogue || rogueDone) return;
+    rogueDone = true;
+    const er = driver.run;
+    for (let i = 0; i < 10 && !er.outcome; i++) advanceOnce(c, combat, er);
+    endRogueFight(c, rogue, er);
+    saveRogue();
+    stop();
+    go("rogue");
+  };
 
   // ─── DOM ───
   const canvas = h("canvas", { class: "field", width: W, height: H });
@@ -648,7 +674,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     if (!driver.fight || driver.fight.result) return exit();
     const resume = holdClock();
     openOverlay("LEAVE THE FIGHT?", h("div", null,
-      h("div", { class: "text dim wrap small" }, "The fight and the run are lost. The same seed plays the same fight again from the menu."),
+      h("div", { class: "text dim wrap small" }, rogue ? "Coming back plays this fight again from its start, the same way: the run waits here." : "The fight and the run are lost. The same seed plays the same fight again from the menu."),
       h("div", { class: "btns", style: "margin-top:.75rem" }, button("LEAVE", () => exit(), "hi"), button("STAY", () => closeOverlay(true))),
     ), resume);
   }
@@ -685,7 +711,9 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     const where = single ? "" : `${driver.fightNo}/${driver.fightTotal}`;
     const newSeed = () => restart(Math.floor(Math.random() * 100000) + 1);
     // A node just cleared leads to the journey; a replay or practice says it paid nothing.
-    const btns: Child[] = clearedNow
+    const btns: Child[] = rogue
+      ? [button(won ? "ONWARD" : reservesStand(c, rogue) ? "THE CAMP STEPS IN" : "THE END", () => rogueOn(), "hi")]
+      : clearedNow
       ? [button("JOURNEY", () => { stop(); go("journey"); if (!celebrated) cheer(); }, "hi")]
       : won
         ? [last ? null : button("NEXT", () => nextFight(), "hi"), button("AGAIN", () => restart(seed)), button("NEW SEED", newSeed), button(exitLabel, exit)]
@@ -703,7 +731,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       for (const el of [msgEl, ctl]) el.style.display = "none";
       screen.append(box);
     }, 900);
-    if (won && !last && setup.settings.autoContinue) setTimeout(() => { if (!stopped && ended) nextFight(); }, 2200);
+    if (won && !last && !rogue && setup.settings.autoContinue) setTimeout(() => { if (!stopped && ended) nextFight(); }, 2200);
     if (clearedNow) setTimeout(() => { if (!stopped && !celebrated) cheer(); }, 1700);
   }
   /** Damage dealt and taken, healing done and actions resolved, per unit, from this fight's log. */

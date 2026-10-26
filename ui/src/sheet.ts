@@ -10,7 +10,7 @@ import type { AbilityT, EnemyT, GearT, WeaponT } from "../../src/schema.js";
 import { combat, type Member } from "../../src/engine/combat/rules.js";
 import { weaponOf } from "../../src/engine/combat/fight.js";
 import { c, cls, disp, kindOf, SHEET_STATS, SPECIAL_STATS, showStat, statCode, status, elementName } from "./content.js";
-import { abilityInfo, abilityTag, castWord, statusText, weaponInfo, type Stats } from "./describe.js";
+import { abilityInfo, abilityTag, castWord, sizeWords, statusText, weaponInfo, type Stats } from "./describe.js";
 import { ELEMENTS, gearIcon, kindIcon, SLOT_ICON, TAG_ICON } from "./art.js";
 import { h, type Child } from "./dom.js";
 import { actorEl, faceEl, iconEl, statusEl, weaponEl } from "./pixel.js";
@@ -130,6 +130,8 @@ export function abilityBlock(a: AbilityT, stats: Stats | null, designer: boolean
   const first = head0 !== undefined ? Math.max(0, Math.round(i.cooldown - head0)) : null;
   const cost = h("div", { class: "cost" }, i.mp ? h("span", { class: "mp" }, `MP ${disp(i.mp)}`) : h("span", { class: "dim" }, "NO MP"), h("span", { class: "dim" }, ` · EVERY ${i.cooldown}T`), first !== null ? h("span", { class: "dim" }, ` · FIRST ${first}T`) : null, i.cast ? h("span", { class: "dim" }, ` · ${castWord(i.cast).toUpperCase()} CAST`) : null);
   const body: Child[] = [cost, h("div", { class: "body" }, i.text)];
+  const size = stats && !designer ? sizeWords(a, stats) : "";
+  if (size) body.push(h("div", { class: "body hi" }, size.toUpperCase()));
   if (designer) {
     body.push(h("div", { class: "body" }, `Wind-up ${i.cast}t, recovery ${i.recovery}t${i.seek ? ", Seek" : ""}. Target: ${i.target}${i.waits ? `; ${i.waits}` : ""}.`));
     for (const e of i.effects) body.push(h("div", { class: "body" }, `→ ${e}`));
