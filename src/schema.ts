@@ -764,6 +764,128 @@ export const Campaign = z.strictObject({
 export type CampaignT = z.infer<typeof Campaign>;
 
 // ─────────────────────────────────────────────────────────────────────────────
+// The rogue mode: a roguelite on Slay the Spire's structure (steps/05-core-set/5d-rogue).
+// Its rules are src/rogue.ts; this is the data they read.
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const RogueNodeKind = z.enum(["fight", "elite", "event", "campfire", "shop", "treasure", "boss"]);
+export type RogueNodeKindT = z.infer<typeof RogueNodeKind>;
+export const Rarity = z.enum(["common", "uncommon", "rare", "legendary"]);
+export type RarityT = z.infer<typeof Rarity>;
+export const SupplyId = z.enum(["tonic", "ether", "phoenix"]);
+export type SupplyIdT = z.infer<typeof SupplyId>;
+const Pct = z.number().min(0).max(100);
+const RarityOdds = z.strictObject({ common: z.number().min(0), uncommon: z.number().min(0), rare: z.number().min(0), legendary: z.number().min(0) });
+const Spoils = z.strictObject({
+  count: PosInt,
+  rarity: RarityOdds,
+  tome: Pct.describe("Chance, in percent, that an offer is a tome (a member learns an ability) instead of gear."),
+  recruit: Pct.describe("Chance an offer is a recruit."),
+  supply: Pct.describe("Chance an offer is a supply."),
+  legendaries: z.number().int().min(0).optional().describe("How many of the offers are always a legendary piece."),
+  trophy: z.boolean().optional().describe("A legendary piece is won outright, on top of the pick."),
+});
+
+export const RogueConfig = z.strictObject({
+  start: z.strictObject({ gold: z.number().int().min(0), offers: PosInt, picks: z.number().int().min(0) }).describe("Gold at the start; the draft after the leader: `picks` picks of one from `offers` classes."),
+  firstAbility: z.record(Id, Id).describe("The ability each class knows on joining in act I. It learns one more for each act reached."),
+  party: PosInt,
+  bench: z.number().int().min(0).describe("Members who can wait at camp, besides the party."),
+  map: z.strictObject({
+    floors: PosInt,
+    width: PosInt,
+    paths: PosInt,
+    fixed: z.record(z.string(), RogueNodeKind).describe("Floor number to the kind every node on it has."),
+    odds: z.record(z.string(), z.number().min(0)).describe("Room odds for the other floors, by kind."),
+    lateFrom: PosInt.describe("Elites and campfires only from this floor."),
+  }),
+  gold: z.strictObject({ fight: IntRange, elite: IntRange, boss: IntRange, perAct: z.number().int().min(0) }),
+  spoils: z.strictObject({ fight: Spoils, elite: Spoils, usable: Pct.describe("Share of gear rolled from what the roster can use.") }),
+  boon: z.strictObject({ count: PosInt }),
+  treasure: z.strictObject({ rarity: RarityOdds, gold: IntRange }),
+  campfire: z.strictObject({ hp: Pct, mp: Pct, revive: Pct }),
+  prices: z.strictObject({
+    common: z.number().int().min(0), uncommon: z.number().int().min(0), rare: z.number().int().min(0), legendary: z.number().int().min(0),
+    recruit: z.number().int().min(0), formation: z.number().int().min(0), learn: z.number().int().min(0), upgrade: z.number().int().min(0),
+    supply: z.record(z.string(), z.number().int().min(0)), sell: Pct,
+  }),
+  shop: z.strictObject({ gear: RarityOdds.describe("How many pieces of each rarity."), recruits: z.number().int().min(0), formations: z.number().int().min(0), supplies: z.number().int().min(0) }),
+  supplies: z.strictObject({ tonic: z.strictObject({ hp: Pct }), ether: z.strictObject({ mp: Pct }), phoenix: z.strictObject({ revive: Pct }) }),
+  bag: z.number().int().min(0).describe("Supplies carried at most."),
+  knobs: z.array(z.strictObject({ mob: z.number(), step: z.number(), elite: z.number(), boss: z.number() })).min(1).describe("Per act, added to each fight's own knob (HP +k %, damage +k/2 %): regular fights, the rise per floor from each pool's reference floor, elites, the boss."),
+  heat: z.strictObject({ per: z.number(), max: z.number().int().min(0) }),
+  growFrom: PosInt.describe("From this floor, each pack of two or more may gain one more foe."),
+});
+export type RogueConfigT = z.infer<typeof RogueConfig>;
+
+export const RogueFight = z.strictObject({ id: Id, name: Text, enemies: z.array(Id).min(1).max(8), knob: z.number().optional().describe("Its own knob, set by the rogue calibration: what makes it cost what its tier should.") });
+export type RogueFightT = z.infer<typeof RogueFight>;
+export const RogueRegion = z.strictObject({
+  id: Id,
+  name: Text,
+  text: Text,
+  act: PosInt,
+  knob: z.strictObject({ mob: z.number(), elite: z.number(), boss: z.number() }).describe("The region's own adjustment to its act's knobs."),
+  easy: z.array(RogueFight).min(1),
+  normal: z.array(RogueFight).min(1),
+  elite: z.array(RogueFight).min(1),
+  bosses: z.array(RogueFight).min(1),
+});
+export type RogueRegionT = z.infer<typeof RogueRegion>;
+
+export const RogueAffix = z.strictObject({ id: Id, prefix: Text, suffix: Text, stats: z.array(FixedStat).min(1) });
+export type RogueAffixT = z.infer<typeof RogueAffix>;
+
+export type EventOpT =
+  | { op: "gold"; amount: number }
+  | { op: "hp"; pct: number; one?: boolean }
+  | { op: "mp"; pct: number }
+  | { op: "gear"; rarity: RarityT }
+  | { op: "recruit"; hp?: number }
+  | { op: "learn" }
+  | { op: "upgrade" }
+  | { op: "temper" }
+  | { op: "formation" }
+  | { op: "supply"; id: SupplyIdT }
+  | { op: "fight"; tier: "normal" | "elite" }
+  | { op: "camp" }
+  | { op: "chance"; pct: number; then: EventOpT[]; else: EventOpT[] };
+export const EventOp: z.ZodType<EventOpT> = z.lazy(() =>
+  z.union([
+    z.strictObject({ op: z.literal("gold"), amount: z.number().int() }),
+    z.strictObject({ op: z.literal("hp"), pct: z.number(), one: z.boolean().optional() }),
+    z.strictObject({ op: z.literal("mp"), pct: z.number() }),
+    z.strictObject({ op: z.literal("gear"), rarity: Rarity }),
+    z.strictObject({ op: z.literal("recruit"), hp: Pct.optional() }),
+    z.strictObject({ op: z.literal("learn") }),
+    z.strictObject({ op: z.literal("upgrade") }),
+    z.strictObject({ op: z.literal("temper") }),
+    z.strictObject({ op: z.literal("formation") }),
+    z.strictObject({ op: z.literal("supply"), id: SupplyId }),
+    z.strictObject({ op: z.literal("fight"), tier: z.enum(["normal", "elite"]) }),
+    z.strictObject({ op: z.literal("camp") }),
+    z.strictObject({ op: z.literal("chance"), pct: Pct, then: z.array(EventOp), else: z.array(EventOp) }),
+  ]),
+);
+export const RogueEvent = z.strictObject({
+  id: Id,
+  name: Text,
+  text: Text,
+  options: z.array(z.strictObject({ id: Id, label: Text, text: Text, gold: z.number().int().min(0).optional().describe("Gold it costs; it can't be picked without."), do: z.array(EventOp) })).min(1),
+});
+export type RogueEventT = z.infer<typeof RogueEvent>;
+
+export const Rogue = z.strictObject({
+  config: RogueConfig,
+  regions: z.array(RogueRegion).min(1),
+  gear: z.array(Gear).describe("Legendary pieces that only the rogue mode drops (the core set's own powerful pieces are in pack.gear)."),
+  legendaries: z.array(Id).min(1).describe("The legendary pool, by gear id, in pack.gear or rogue.gear."),
+  affixes: z.array(RogueAffix).min(2),
+  events: z.array(RogueEvent).min(1),
+});
+export type RogueT = z.infer<typeof Rogue>;
+
+// ─────────────────────────────────────────────────────────────────────────────
 // The pack
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -793,6 +915,7 @@ export const ContentPack = z.strictObject({
   }),
   progression: z.strictObject({ dungeonOrder: z.array(Id).min(1) }),
   campaign: Campaign.optional(),
+  rogue: Rogue.optional(),
 });
 export type ContentPack = z.infer<typeof ContentPack>;
 

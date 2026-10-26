@@ -711,6 +711,28 @@ function checkStarterAndProgression(pack: Pack, ix: Index, w: Walker, r: Report)
   pack.dungeons.forEach((dn, i) => dn.foes?.statuses?.forEach((id, j) => w.ref("statuses", id, `dungeons[${i}].foes.statuses[${j}]`, "status")));
   pack.dungeons.forEach((dn, i) => dn.bossFoes?.statuses?.forEach((id, j) => w.ref("statuses", id, `dungeons[${i}].bossFoes.statuses[${j}]`, "status")));
   if (pack.campaign) checkCampaign(pack, ix, w, r, pack.campaign);
+  if (pack.rogue) checkRogue(pack, w, r, pack.rogue);
+}
+
+/** The rogue mode: every enemy, class, ability, status and piece it names exists, and every region's act is one the config has. */
+function checkRogue(pack: Pack, w: Walker, r: Report, rg: S.RogueT) {
+  const acts = rg.config.knobs.length;
+  rg.regions.forEach((reg, i) => {
+    if (reg.act > acts) r.error("rogue.act", `rogue.regions[${i}]`, `region '${reg.id}' is in act ${reg.act}, but the config has ${acts} acts`);
+    for (const tier of ["easy", "normal", "elite", "bosses"] as const)
+      reg[tier].forEach((f, j) => f.enemies.forEach((e, k) => w.ref("enemies", e, `rogue.regions[${i}].${tier}[${j}].enemies[${k}]`, "enemy")));
+  });
+  for (let a = 1; a <= acts; a++) if (!rg.regions.some((reg) => reg.act === a)) r.error("rogue.act", "rogue.regions", `no region for act ${a}`);
+  Object.entries(rg.config.firstAbility).forEach(([cls, ab]) => {
+    w.ref("classes", cls, `rogue.config.firstAbility.${cls}`, "class");
+    if (!pack.classes.find((k) => k.id === cls)?.abilities.includes(ab)) r.error("rogue.ability", `rogue.config.firstAbility.${cls}`, `'${ab}' isn't one of ${cls}'s abilities`);
+  });
+  pack.classes.forEach((k) => { if (!rg.config.firstAbility[k.id]) r.error("rogue.ability", "rogue.config.firstAbility", `no first ability for '${k.id}'`); });
+  rg.gear.forEach((g, i) => g.statuses?.forEach((id, j) => w.ref("statuses", id, `rogue.gear[${i}].statuses[${j}]`, "status")));
+  rg.gear.forEach((g, i) => g.weapon?.kind && w.ref("weaponKinds", g.weapon.kind, `rogue.gear[${i}].weapon.kind`, "weapon kind"));
+  const all = new Set([...pack.gear.map((g) => g.id), ...rg.gear.map((g) => g.id)]);
+  rg.gear.forEach((g, i) => pack.gear.some((x) => x.id === g.id) && r.error("rogue.gear", `rogue.gear[${i}]`, `'${g.id}' is also in pack.gear`));
+  rg.legendaries.forEach((id, i) => !all.has(id) && r.error("rogue.legendary", `rogue.legendaries[${i}]`, `no gear '${id}'`));
 }
 
 /**
