@@ -2074,7 +2074,7 @@
   {
    "id": "lg_sunder",
    "name": "Shatter",
-   "text": "Basic attacks add several Sunder.",
+   "text": "Basic attacks add many Sunder.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2092,12 +2092,12 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00065,
+          "ratio": 0.00115,
           "stat": "attack",
           "of": "holder"
          },
          {
-          "ratio": 0.00065,
+          "ratio": 0.00115,
           "stat": "magic",
           "of": "holder"
          }
@@ -2112,7 +2112,7 @@
   {
    "id": "lg_song",
    "name": "Song",
-   "text": "Basic attacks give a random ally some MP.",
+   "text": "Basic attacks give a random ally some MP and a stack of Might.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2127,6 +2127,15 @@
       {
        "op": "mp",
        "amount": 300,
+       "to": {
+        "side": "allies",
+        "pick": "random"
+       }
+      },
+      {
+       "op": "apply",
+       "status": "might",
+       "stacks": 1,
        "to": {
         "side": "allies",
         "pick": "random"
@@ -2210,7 +2219,7 @@
   {
    "id": "lg_soul",
    "name": "Soul jar",
-   "text": "When a foe falls, every ally regains some MP.",
+   "text": "When a foe falls, every ally regains some MP and a little HP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2225,6 +2234,22 @@
       {
        "op": "mp",
        "amount": 500,
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
+      },
+      {
+       "op": "heal",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.04,
+          "stat": "max_hp",
+          "of": "target"
+         }
+        ]
+       },
        "to": {
         "side": "allies",
         "pick": "all"
@@ -2463,11 +2488,27 @@
   {
    "id": "lg_brittle",
    "name": "Shard",
-   "text": "Hits deal 12% more damage for each Chill stack on the target.",
+   "text": "Basic attacks add a Chill; hits deal 12% more damage for each Chill stack on the target.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "chill",
+       "stacks": 1,
+       "to": "other"
+      }
+     ]
+    }
+   ],
    "boosts": [
     {
      "tag": "physical",
@@ -2498,7 +2539,7 @@
   {
    "id": "lg_coil",
    "name": "Coil",
-   "text": "When hit, Shocks the attacker with several stacks.",
+   "text": "When hit, Shocks the attacker with many stacks.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2512,7 +2553,7 @@
       {
        "op": "apply",
        "status": "shock",
-       "stacks": 4,
+       "stacks": 7,
        "to": "other"
       }
      ]
@@ -2593,7 +2634,7 @@
   {
    "id": "lg_shade",
    "name": "Shade",
-   "text": "Starts each fight Hidden, and deals 60% more damage while Hidden.",
+   "text": "Hidden for the first 24 ticks of each fight, and deals 80% more damage while Hidden.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2607,7 +2648,8 @@
       {
        "op": "apply",
        "status": "hidden",
-       "to": "self"
+       "to": "self",
+       "duration": 24
       }
      ]
     }
@@ -2618,7 +2660,7 @@
      "pct": {
       "scale": [
        {
-        "ratio": 60,
+        "ratio": 80,
         "when": {
          "has": "hidden"
         }
@@ -2631,7 +2673,7 @@
      "pct": {
       "scale": [
        {
-        "ratio": 60,
+        "ratio": 80,
         "when": {
          "has": "hidden"
         }
@@ -11639,8 +11681,8 @@
     "name": "The Old Road",
     "act": 1,
     "knob": {
-     "mob": -6,
-     "elite": -6,
+     "mob": -4,
+     "elite": -4,
      "boss": 0
     },
     "text": "Bandits, wolves and snakes on the road out of town, and ogres at the bridges.",
@@ -11817,7 +11859,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 27
+      "knob": 32
      },
      {
       "id": "packmaster",
@@ -11829,7 +11871,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 24
+      "knob": 32
      },
      {
       "id": "chiefs_return",
@@ -11838,7 +11880,7 @@
        "ogre_chief",
        "ogre"
       ],
-      "knob": 10
+      "knob": 14
      }
     ]
    },
@@ -11847,8 +11889,8 @@
     "name": "The Crypt",
     "act": 2,
     "knob": {
-     "mob": 3,
-     "elite": 3,
+     "mob": 6,
+     "elite": 6,
      "boss": 0
     },
     "text": "Armored bones, bats you can't hit, ghosts magic can't touch, and Death with a bell.",
@@ -11993,7 +12035,7 @@
        "bat",
        "bat"
       ],
-      "knob": 170
+      "knob": 177
      },
      {
       "id": "reapers_court",
@@ -12003,7 +12045,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 139
+      "knob": 152
      }
     ]
    },
@@ -12012,8 +12054,8 @@
     "name": "The Fire Mine",
     "act": 2,
     "knob": {
-     "mob": 17,
-     "elite": 17,
+     "mob": 23,
+     "elite": 23,
      "boss": 0
     },
     "text": "Everything here burns, and the lord of the furnace casts a fire that ends parties.",
@@ -12160,7 +12202,7 @@
       "enemies": [
        "fire_giant"
       ],
-      "knob": -25
+      "knob": -17
      },
      {
       "id": "giants_forge",
@@ -12170,7 +12212,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -28
+      "knob": -22
      },
      {
       "id": "giants_wrath",
@@ -12180,7 +12222,7 @@
        "fire_imp",
        "fire_imp"
       ],
-      "knob": -36
+      "knob": -33
      }
     ]
    },
@@ -12189,8 +12231,8 @@
     "name": "The Ice Pass",
     "act": 2,
     "knob": {
-     "mob": -4,
-     "elite": -4,
+     "mob": 4,
+     "elite": 4,
      "boss": 0
     },
     "text": "Every fight asks what kind of hit you make, and a Titan of ice waits at the top.",
@@ -12334,7 +12376,7 @@
       "enemies": [
        "ice_titan"
       ],
-      "knob": 110
+      "knob": 119
      },
      {
       "id": "glacier_king",
@@ -12344,7 +12386,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 92
+      "knob": 104
      }
     ]
    },
@@ -12353,8 +12395,8 @@
     "name": "The Storm Tower",
     "act": 3,
     "knob": {
-     "mob": -1,
-     "elite": -1,
+     "mob": 5,
+     "elite": 5,
      "boss": 0
     },
     "text": "Clouds of sparks, leeches that drink mana, and a queen behind a wall of drones.",
@@ -12504,7 +12546,7 @@
        "drone",
        "drone"
       ],
-      "knob": 141
+      "knob": 155
      },
      {
       "id": "hive_queen",
@@ -12516,7 +12558,7 @@
        "drone",
        "drone"
       ],
-      "knob": 115
+      "knob": 126
      }
     ]
    },
@@ -12525,8 +12567,8 @@
     "name": "The Deep Crypt",
     "act": 3,
     "knob": {
-     "mob": -16,
-     "elite": -16,
+     "mob": -1,
+     "elite": -1,
      "boss": 0
     },
     "text": "Beneath the Crypt, something takes every voice. Power that isn't an ability is the key.",
@@ -12666,7 +12708,7 @@
       "enemies": [
        "silent_one"
       ],
-      "knob": 350
+      "knob": 366
      },
      {
       "id": "silent_court",
@@ -12676,7 +12718,7 @@
        "bone_priest",
        "bone_priest"
       ],
-      "knob": 207
+      "knob": 217
      }
     ]
    },
@@ -12685,8 +12727,8 @@
     "name": "The Tower Top",
     "act": 3,
     "knob": {
-     "mob": 8,
-     "elite": 8,
+     "mob": 19,
+     "elite": 19,
      "boss": 0
     },
     "text": "Above the storm: the queen's drones, the king's soldiers, and the king who rages when they fall.",
@@ -12829,7 +12871,7 @@
       "enemies": [
        "storm_king"
       ],
-      "knob": 103
+      "knob": 114
      },
      {
       "id": "kings_guard",
@@ -12888,7 +12930,11 @@
     "stats": [
      {
       "stat": "crit_chance",
-      "flat": 4
+      "flat": 8
+     },
+     {
+      "stat": "max_hp",
+      "flat": 500
      }
     ],
     "statuses": [
@@ -12902,6 +12948,12 @@
     "slot": "amulet",
     "tier": "powerful",
     "source": "unlock",
+    "stats": [
+     {
+      "stat": "attack",
+      "flat": 1000
+     }
+    ],
     "statuses": [
      "lg_sunder"
     ]
@@ -12913,6 +12965,12 @@
     "slot": "amulet",
     "tier": "powerful",
     "source": "unlock",
+    "stats": [
+     {
+      "stat": "max_hp",
+      "flat": 500
+     }
+    ],
     "statuses": [
      "lg_song"
     ]
@@ -12994,6 +13052,10 @@
      {
       "stat": "mp_regen",
       "flat": 1000
+     },
+     {
+      "stat": "magic",
+      "flat": 1000
      }
     ],
     "statuses": [
@@ -13035,6 +13097,12 @@
     "slot": "amulet",
     "tier": "powerful",
     "source": "unlock",
+    "stats": [
+     {
+      "stat": "max_hp",
+      "flat": 500
+     }
+    ],
     "statuses": [
      "lg_brittle"
     ]
@@ -13046,6 +13114,12 @@
     "slot": "amulet",
     "tier": "powerful",
     "source": "unlock",
+    "stats": [
+     {
+      "stat": "max_hp",
+      "flat": 500
+     }
+    ],
     "statuses": [
      "lg_coil"
     ]
@@ -13116,6 +13190,10 @@
      {
       "stat": "evasion",
       "flat": 20
+     },
+     {
+      "stat": "max_hp",
+      "flat": 500
      }
     ],
     "statuses": [
@@ -13218,6 +13296,12 @@
     },
     "statuses": [
      "lg_hunter"
+    ],
+    "stats": [
+     {
+      "stat": "attack",
+      "flat": 1000
+     }
     ]
    },
    {
@@ -13241,6 +13325,12 @@
     },
     "statuses": [
      "lg_grave"
+    ],
+    "stats": [
+     {
+      "stat": "magic",
+      "flat": 1000
+     }
     ]
    },
    {
@@ -13316,6 +13406,12 @@
     },
     "statuses": [
      "lg_sunder"
+    ],
+    "stats": [
+     {
+      "stat": "magic",
+      "flat": 1000
+     }
     ]
    }
   ],
