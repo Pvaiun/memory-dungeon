@@ -916,13 +916,13 @@ export function options(c: Content, run: RogueRun): string[] {
     case "levelup": {
       // Learn one more, or make one known better: breadth or depth, a real choice even with one ability left to learn.
       const m = member(run, p.queue[0]);
-      return [...unlearned(c, m), ...upgradable(m)];
+      // Or gold instead: a level-up late in a run can have one thing left, which was no choice (three playtesters).
+      return [...unlearned(c, m), ...upgradable(m), ...(cfg(c).levelGold ? ["gold"] : [])];
     }
     case "region": return p.options;
     case "over": return [];
   }
 }
-/** Can an event's verb happen now? A recruit needs room at camp, learning something to learn, tempering a piece to temper. */
 /** Why an event's option can't be picked now, in a player's words (empty when it can). */
 export function whyNot(c: Content, run: RogueRun, opt: RogueEventT["options"][number]): string {
   if ((opt.gold ?? 0) > run.gold) return "not enough gold";
@@ -930,6 +930,7 @@ export function whyNot(c: Content, run: RogueRun, opt: RogueEventT["options"][nu
   if (!op) return "";
   return op.op === "recruit" ? "no room at camp" : op.op === "learn" ? "nothing left to learn" : op.op === "upgrade" ? "nothing left to upgrade" : op.op === "temper" ? "no common or uncommon piece to temper" : op.op === "formation" ? "every formation owned" : "can't happen now";
 }
+/** Can an event's verb happen now? A recruit needs room at camp, learning something to learn, tempering a piece to temper. */
 function possible(c: Content, run: RogueRun, op: EventOpT): boolean {
   if (op.op === "recruit") return roomForRecruit(c, run);
   if (op.op === "learn") return learnOptions(c, run).length > 0;
@@ -1055,7 +1056,8 @@ export function choose(c: Content, run: RogueRun, pick: string) {
     case "levelup": {
       const cls = p.queue[0];
       const m = member(run, cls);
-      if (unlearned(c, m).includes(pick)) learn(c, run, cls, pick);
+      if (pick === "gold") (gainGold(run, cfg(c).levelGold ?? 0), note(run, `${c.classes.get(cls)!.name} takes ${cfg(c).levelGold} gold instead.`));
+      else if (unlearned(c, m).includes(pick)) learn(c, run, cls, pick);
       else upgrade(c, run, cls, pick);
       const queue = p.queue.slice(1).filter((x) => run.roster.some((mm) => mm.cls === x));
       run.pending = queue.length ? { kind: "levelup", queue } : { kind: "map" };

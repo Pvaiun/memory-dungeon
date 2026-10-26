@@ -213,7 +213,7 @@ function look(run: RogueRun): string {
     case "levelup": {
       const m = member(run, p.queue[0]);
       out.push(`LEVEL UP: the ${c.classes.get(m.cls)!.name} learns a new ability, or makes a known one better (+):`);
-      for (const a of options(c, run)) out.push(`  pick ${a}: ${unlearned(c, m).includes(a) ? `learn ${c.abilities.get(a)!.name}: ${c.abilities.get(a)!.text}` : upText(a, run, m.cls)}`);
+      for (const a of options(c, run)) out.push(`  pick ${a}: ${a === "gold" ? `${rogue(c).config.levelGold} gold instead` : unlearned(c, m).includes(a) ? `learn ${c.abilities.get(a)!.name}: ${c.abilities.get(a)!.text}` : upText(a, run, m.cls)}`);
       break;
     }
     case "region":

@@ -74,6 +74,8 @@ export const ROGUE_CONFIG: RogueConfigT = {
   // 7% of the act I runs meeting them, every other act I fight 2% or less, with their knobs already at the floor: the
   // regular fights' extra HP gives a snake more hits, and Bleed doesn't shrink with the knob).
   neverGrow: ["snake"],
+  /** A level-up can be taken as gold instead (one with a single thing left to learn or upgrade was no choice). */
+  levelGold: 40,
   /** Prices, in gold. A piece sells for `sell` % of its price. Services are once a visit. */
   prices: { common: 45, uncommon: 70, rare: 110, legendary: 190, recruit: 120, formation: 100, learn: 60, upgrade: 80, trainStep: 30, supply: { tonic: 35, ether: 35, phoenix: 60 }, sell: 35 },
   shop: { gear: { common: 2, uncommon: 2, rare: 1, legendary: 1 }, recruits: 1, formations: 1, supplies: 2 },

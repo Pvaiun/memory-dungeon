@@ -819,6 +819,7 @@ export const RogueConfig = z.strictObject({
   heat: z.strictObject({ per: z.number(), max: z.number().int().min(0) }),
   shape: z.record(z.string(), z.strictObject({ hp: z.number(), power: z.number() })).optional().describe("By tier (fight, elite, boss): HP % and damage % added to every foe on top of the knob, so a tier's fights can be longer and softer at the same cost."),
   growFrom: PosInt.describe("From this floor, each pack of two or more may gain one more foe."),
+  levelGold: z.number().int().min(0).optional().describe("A level-up can be taken as this much gold instead."),
   neverGrow: z.array(Id).optional().describe("Enemies whose packs never grow (Snakes: their Bleed doesn't shrink with a fight's knob)."),
 });
 export type RogueConfigT = z.infer<typeof RogueConfig>;

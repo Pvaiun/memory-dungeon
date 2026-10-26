@@ -11,7 +11,7 @@ The core set as a roguelite, on Slay the Spire's structure, as the director aske
 - **Preparation.** Entering a fight room shows its foes (what each is, what it does and how big its moves are before Armor, what it hits with, what it resists); gear, seats, formation and ability order can still change (an ability can be left out of fights), and supplies be used, until the fight begins. Then it's set: leaving replays it from its start, the same way.
 - **Numbers shown.** Every ability shows its size for the unit that has it ("shield ≈ 30", "≈ 22 blunt + Stun"), an upgrade shows its numbers before and after, and a piece's HP moves current HP with it, which the command line says.
 - **Attrition.** HP, MP and knockouts carry from fight to fight; the run ends when nobody in the roster stands; HP is kept as what's missing, so gear that raises max HP raises current HP too (and takes it away when it comes off). A heal by share of max (REST, FOCUS, a tonic, an ether) counts from no more than the max the last fight ended with, so a +HP piece worn just for the heal adds nothing. Only campfires, supplies, a few events and the start of each act restore anything. A party knocked out entirely ends the run.
-- **Each act starts restored**: everyone stands up with full HP and MP, and **levels up**: each member learns an ability or makes a known one better (+), the player's pick.
+- **Each act starts restored**: everyone stands up with full HP and MP, and **levels up**: each member learns an ability or makes a known one better (+), the player's pick, or takes 40 gold instead.
 
 ## What a party grows by
 

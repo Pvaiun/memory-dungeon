@@ -95,7 +95,8 @@ function upText(id: string, run?: RogueRun, cls?: string): string {
   if (up.cooldown !== a.cooldown) return `Every ${Math.round(up.cooldown)} ticks instead of ${Math.round(a.cooldown)}.`;
   const st = run && cls ? fighter(run, cls).stats : null;
   const was = st ? sizeWords(a, st) : "", now = st ? sizeWords(up, st) : "";
-  return was && now && was !== now ? `${was.toUpperCase()} → ${now.toUpperCase()}.` : "40% more of what it deals, heals, shields or stacks.";
+  // The shield's cap is said once, after the new size.
+  return was && now && was !== now ? `${was.replace(/ \(at most[^)]*\)/i, "").toUpperCase()} → ${now.toUpperCase()}.` : "40% more of what it deals, heals, shields or stacks.";
 }
 /** An offer as a card's body. */
 function offerBody(run: RogueRun, o: Offer): Child[] {
@@ -506,15 +507,17 @@ function levelView(run: RogueRun): Child[] {
   const m = member(run, cls);
   const opts = options(c, run);
   const learn = opts.filter((a) => unlearned(c, m).includes(a));
-  const up = opts.filter((a) => !learn.includes(a));
+  const up = opts.filter((a) => !learn.includes(a) && a !== "gold");
   return [
     header("LEVEL UP", () => go("home"), h("span", { class: "dim" }, `${p.queue.length} TO GO`)),
-    win("", classHead(cls), h("div", { class: "line hi wrap" }, `${shortName(cls)} LEARNS ONE, OR MAKES ONE BETTER`)),
+    win("", classHead(cls), h("div", { class: "line hi wrap" }, `${shortName(cls)} LEARNS ONE, MAKES ONE BETTER, OR TAKES GOLD`)),
     win("scroll",
       learn.length ? section("LEARN") : null,
       ...learn.map((a) => h("div", { onClick: () => pickOrSave(run, a), style: "cursor:pointer" }, abilityBlock(c.abilities.get(a)!, fighter(run, cls).stats, setup.settings.designer))),
       up.length ? section("MAKE BETTER (+)") : null,
-      ...up.map((a) => h("div", { onClick: () => pickOrSave(run, a), style: "cursor:pointer" }, trainRow(run, cls, a, "+", null, true)))),
+      ...up.map((a) => h("div", { onClick: () => pickOrSave(run, a), style: "cursor:pointer" }, trainRow(run, cls, a, "+", null, true))),
+      opts.includes("gold") ? section("OR") : null,
+      opts.includes("gold") ? row2(`${rogue(c).config.levelGold} GOLD`, "Take gold instead of training.", () => pickOrSave(run, "gold")) : null),
     h("div", { class: "text dim small wrap" }, "Tap one."),
   ];
 }

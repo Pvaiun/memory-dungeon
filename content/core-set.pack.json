@@ -11609,6 +11609,7 @@
    "neverGrow": [
     "snake"
    ],
+   "levelGold": 40,
    "prices": {
     "common": 45,
     "uncommon": 70,
@@ -11687,8 +11688,8 @@
     "name": "The Old Road",
     "act": 1,
     "knob": {
-     "mob": 4,
-     "elite": 4,
+     "mob": 7,
+     "elite": 7,
      "boss": 0
     },
     "text": "Bandits, wolves and snakes on the road out of town, and ogres at the bridges.",
@@ -11863,7 +11864,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 31
+      "knob": 29
      },
      {
       "id": "packmaster",
@@ -11875,7 +11876,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 32
+      "knob": 33
      },
      {
       "id": "chiefs_return",
@@ -11884,7 +11885,7 @@
        "ogre_chief",
        "ogre"
       ],
-      "knob": 14
+      "knob": 13
      }
     ]
    },
@@ -11893,8 +11894,8 @@
     "name": "The Crypt",
     "act": 2,
     "knob": {
-     "mob": 9,
-     "elite": 9,
+     "mob": 16,
+     "elite": 16,
      "boss": 0
     },
     "text": "Armored bones, bats you can't hit, ghosts magic can't touch, and Death with a bell.",
@@ -12039,7 +12040,7 @@
        "bat",
        "bat"
       ],
-      "knob": 178
+      "knob": 181
      },
      {
       "id": "reapers_court",
@@ -12049,7 +12050,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 154
+      "knob": 159
      }
     ]
    },
@@ -12058,8 +12059,8 @@
     "name": "The Fire Mine",
     "act": 2,
     "knob": {
-     "mob": 32,
-     "elite": 32,
+     "mob": 40,
+     "elite": 40,
      "boss": 0
     },
     "text": "Everything here burns, and the lord of the furnace casts a fire that ends parties.",
@@ -12206,7 +12207,7 @@
       "enemies": [
        "fire_giant"
       ],
-      "knob": -16
+      "knob": -8
      },
      {
       "id": "giants_forge",
@@ -12216,7 +12217,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -23
+      "knob": -21
      },
      {
       "id": "giants_wrath",
@@ -12226,7 +12227,7 @@
        "fire_imp",
        "fire_imp"
       ],
-      "knob": -28
+      "knob": -27
      }
     ]
    },
@@ -12380,7 +12381,7 @@
       "enemies": [
        "ice_titan"
       ],
-      "knob": 119
+      "knob": 117
      },
      {
       "id": "glacier_king",
@@ -12390,7 +12391,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 107
+      "knob": 106
      }
     ]
    },
@@ -12399,8 +12400,8 @@
     "name": "The Storm Tower",
     "act": 3,
     "knob": {
-     "mob": 19,
-     "elite": 19,
+     "mob": 23,
+     "elite": 23,
      "boss": 0
     },
     "text": "Clouds of sparks, leeches that drink mana, and a queen behind a wall of drones.",
@@ -12550,7 +12551,7 @@
        "drone",
        "drone"
       ],
-      "knob": 159
+      "knob": 157
      },
      {
       "id": "hive_queen",
@@ -12562,7 +12563,7 @@
        "drone",
        "drone"
       ],
-      "knob": 125
+      "knob": 124
      }
     ]
    },
@@ -12571,8 +12572,8 @@
     "name": "The Deep Crypt",
     "act": 3,
     "knob": {
-     "mob": 12,
-     "elite": 12,
+     "mob": 23,
+     "elite": 23,
      "boss": 0
     },
     "text": "Beneath the Crypt, something takes every voice. Power that isn't an ability is the key.",
@@ -12712,7 +12713,7 @@
       "enemies": [
        "silent_one"
       ],
-      "knob": 363
+      "knob": 366
      },
      {
       "id": "silent_court",
@@ -12722,7 +12723,7 @@
        "bone_priest",
        "bone_priest"
       ],
-      "knob": 218
+      "knob": 215
      }
     ]
    },
@@ -12731,8 +12732,8 @@
     "name": "The Tower Top",
     "act": 3,
     "knob": {
-     "mob": 33,
-     "elite": 33,
+     "mob": 38,
+     "elite": 38,
      "boss": 0
     },
     "text": "Above the storm: the queen's drones, the king's soldiers, and the king who rages when they fall.",
@@ -12885,7 +12886,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 60
+      "knob": 63
      }
     ]
    }

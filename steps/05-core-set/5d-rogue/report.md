@@ -16,7 +16,7 @@ HP, MP and knockouts carry from fight to fight. A won run adds its party to the 
 ### A. The shape I chose: confirm or change
 
 - **The start: a leader you own, then two companions drafted from all sixteen** (pick one of three, twice). Your words were "start by selecting a class out of the ones that you own". I read that as the leader, not the whole party, so every run has a full party from the first fight and every class can turn up in your first run. The meta still bites: a won run's party becomes leaders. **The alternative** is a whole party from owned classes, so every early run would be the Knight, Cleric and Ranger.
-- **Abilities, one at a time: the run's biggest power curve.** A class joins knowing one ability, plus one for each act reached. It learns the rest at campfires (TRAIN), from tomes, at the shop and at the level-up after each boss. If every class joined knowing all three, the simulated player would win 59% of runs instead of 37%, which is more than every legendary piece in a run put together. **No experience levels:** the level-up after each boss (learn one, or make one better) does that job with a choice.
+- **Abilities, one at a time: the run's biggest power curve.** A class joins knowing one ability, plus one for each act reached. It learns the rest at campfires (TRAIN), from tomes, at the shop and at the level-up after each boss. If every class joined knowing all three, the simulated player would win 57% of runs instead of 36%, which is more than every legendary piece in a run put together. **No experience levels:** the level-up after each boss (learn one, or make one better) does that job with a choice.
 - **Fights are shown before they start.** Entering a fight room shows each foe: what it is, what its moves do, who they aim at, how big they are before Armor, what it hits with and what it resists. The party can still be re-geared, re-seated and re-ordered. Once the fight begins it's set, and leaving replays it from its start, the same way. The first two playtesters asked for this ("gear is a blind guess"), and by the third round the playtesters' favourite moments came from it: "read 'absorbs fire, weak to ice / Inferno: very long cast', benched my best damage dealer, put Hush first: Inferno is lost." **Say if you want the blind version back.**
 - **Swaps at campfires, as you asked, with two exceptions I added for those waiting at camp:**
   - a fallen party member can trade places with someone standing at camp any time between rooms;
@@ -45,10 +45,10 @@ Each class as leader with two random companions (300 runs each; the average is l
 
 | Wins | Classes |
 | --- | --- |
-| 32%, 31% | Vampire, Monk |
-| 25% to 18% | Knight 25, Valkyrie 23, Bramble knight 21, Geomancer 18 |
-| 16% to 12% | Ranger 16, Assassin 15, Cleric 14, Paladin 14, Hoplite 13, Stormcaller 13, Pyromancer 12 |
-| 10% to 7% | Frostweaver 10, Bard 7, Hexer 7 |
+| 34%, 32% | Vampire, Monk |
+| 25% to 19% | Knight 25, Valkyrie 21, Geomancer 19 |
+| 17% to 12% | Ranger 17, Bramble knight 17, Paladin 17, Stormcaller 15, Pyromancer 14, Cleric 13, Assassin 13, Frostweaver 13, Hoplite 12 |
+| 9%, 7% | Bard, Hexer |
 
 - **The top is the top because attrition rewards sustain.** HP carries over, so lifesteal heals HP that would otherwise need a campfire. The Vampire and the Monk were the playtesters' "mandatory" classes too, and "Knight wall plus Assassin carry" was the reliable pattern. With Blood drain as its first ability the Vampire won 37% when the next best class won 20%. **I start it with Wither instead**, the rogue mode's one class-specific choice.
 - **The bottom is the bottom because of the kit, not the start.** The Bard's first ability is War ballad and the Hexer's is Enfeeble: a buff and a debuff, no damage. A rule letting the weakest eight join knowing two abilities moved none of them by more than 4 points, and no other starting ability lifted them.
@@ -57,15 +57,15 @@ Each class as leader with two random companions (300 runs each; the average is l
 
 ### D. Difficulty, heat and the playtesters
 
-- **The simulated player wins 37% of runs at heat 0.** It plays by rules of thumb: it equips by stat weights and drafts by measured class values, with no search. Bosses end 14%, 23% and 30% of the runs that reach them in acts I, II and III (targets 12, 20 and 25: the reserves bring more runs to the late bosses with weaker parties). Regular fights and elites end 4% to 10% of the runs that enter a region.
+- **The simulated player wins 36% of runs at heat 0.** It plays by rules of thumb: it equips by stat weights and drafts by measured class values, with no search. Bosses end 14%, 23% and 29% of the runs that reach them in acts I, II and III (targets 12, 20 and 25: the reserves bring more runs to the late bosses with weaker parties). Regular fights and elites end 5% to 10% of the runs that enter a region.
 - **The AI playtesters won 11 of 30 runs:** 2 and 0 of 3 in round 1, then 1 of 3 for each of the four players of rounds 2 and 3, 2 and 1 in round 4, and 1 each in round 5. Asked how much they'd want another run right away, round 4 said 7 out of 10 (both) and round 5 said 6 (both). Bosses ended most of their lost runs, and so did a few big swarms (eight snakes and bandits on act I's floor 7; five Leeches from an Ambush).
 - **Act I felt hardest to three of them, and acts II and III easy once a carry came online.** Part of that was two snake fights: the Viper Den and the Snake Pit ended 9% and 7% of the act I runs meeting them, every other act I fight 2% or less, with their knobs already at the floor. Bleed doesn't shrink with a fight's knob, and the regular fights' extra HP gave snakes more hits. Snake packs now never grow and act I's hold two (recalibrated: both cost what the rest do). The rest of the impression, a human's build outgrowing the late acts, is what heat is for, and I left the targets alone.
-- **Heat:** a won run opens the next level, each +5 on every knob, about 6 points of the simulated player's wins a level (33%, 25%, 18% and 12% at heats 1, 2, 3 and 5). **Say if heat 0 should be harder or easier.** The targets are one line in `src/rogue-calibrate.ts` and `src/rogue-tune.ts`.
+- **Heat:** a won run opens the next level, each +5 on every knob, about 6 points of the simulated player's wins a level (33%, 27%, 19% and 12% at heats 1, 2, 3 and 5). **Say if heat 0 should be harder or easier.** The targets are one line in `src/rogue-calibrate.ts` and `src/rogue-tune.ts`.
 
 ### E. Measured and left alone
 
 - **Boss lock-out.** Playtesters saw the Storm King stunned out of his Rally and the Fire Giant silenced out of Inferno, so I read every boss fight's log in 300 runs (`src/rogue-bosses.ts`). Every boss casts its big move 1.1 to 1.8 times a fight. Silence costs a boss a cast 0.05 times a fight at most, and stuns hold a wind-up 0.1 to 0.6 times. A lock-out needs the right pair (the Knight's Shield bash with the Assassin's Garrote, or the Hexer's Hush against Inferno). That reads as counterplay, and the playtester who did it loved it. No boss rule added.
-- **Events and level-ups are close to flavour.** Picking at random wins as often as the simulated player's picks. I'd add stakes when there's content input from you.
+- **Events and level-ups are close to flavour.** Picking at random wins as often as the simulated player's picks. A level-up can now be taken as 40 gold, so a late one with a single thing left is still a choice. I'd add stakes to events when there's content input from you.
 - **Bomb Bugs come at most two to a fight.** Their document says "three together wipe", and a roguelite party can't be built for one fight.
 - **Three core-set questions the playtesters raised, not rogue rules:**
   - **Aggro has a floor of 100 against a tank's 6,000 or more.** So a member pushed to the floor by a formation or gear is hit about 1.6% of the time: "aggro 0 acts like immunity while anyone else is up" (two playtesters, one with a healer kept out of reach all run). A higher floor would fix it.
@@ -133,43 +133,43 @@ Each class as leader with two random companions (300 runs each; the average is l
 
 | | |
 | --- | --- |
-| Runs won | 37% |
-| Runs ended by a boss (acts I, II, III) | 13%, 18%, 16% |
-| Runs ended in an act's regular fights and elites | 5%, 6%, 5% |
-| Bosses end the runs that reach them | 14%, 23%, 30% |
-| Party HP on arriving at a boss | 86% to 89% |
-| HP a won fight costs (points of party HP) | regular 11, elite 16, boss 29 |
-| Fights started above 80% party HP | 72% |
-| A regular fight or elite lost, by HP brought | under 40%: 44%; 40% to 60%: 9%; 60% to 80%: 2% |
-| Fights a run (a boss included); elites a run | 12.3; 3.2 |
-| Gold earned, spent | 586, 422 |
-| Legendary pieces the final party wears | 2.0 |
+| Runs won | 36% |
+| Runs ended by a boss (acts I, II, III) | 13%, 17%, 15% |
+| Runs ended in an act's regular fights and elites | 6%, 7%, 7% |
+| Bosses end the runs that reach them | 14%, 23%, 29% |
+| Party HP on arriving at a boss | 86% to 90% |
+| HP a won fight costs (points of party HP) | regular 11, elite 16, boss 30 |
+| Fights started above 80% party HP | 73% |
+| A regular fight or elite lost, by HP brought | under 40%: 58%; 40% to 60%: 11%; 60% to 80%: 2% |
+| Fights a run (a boss included); elites a run | 12.2; 3.2 |
+| Gold earned, spent | 574, 417 |
+| Legendary pieces the final party wears | 1.9 |
 
 **What each decision is worth.** The same 1,000 runs, with the simulated player picking at random at one kind of decision:
 
 | Decision made at random | Runs won | Cost |
 | --- | --- | --- |
-| None (the simulated player) | 37% | |
-| Spoils and the boss's boon | 16% | 21 |
-| The draft | 21% | 16 |
-| The campfire (rest, focus, raise, train) | 21% | 16 |
-| The route | 27% | 10 |
-| The shop | 30% | 7 |
-| Events | 37% | 0 |
-| Which ability to learn or upgrade | 38% | 0 |
+| None (the simulated player) | 36% | |
+| Spoils and the boss's boon | 14% | 22 |
+| The draft | 21% | 15 |
+| The route | 24% | 12 |
+| The campfire (rest, focus, raise, train) | 24% | 12 |
+| The shop | 30% | 6 |
+| Which ability to learn or upgrade | 37% | 0 |
+| Events | 40% | 0 |
 | No gear at all beyond the plain weapon | 0% | |
 
-**Elites:** avoiding them 31%, taking them when healthy 37%, seeking every one 37%. Since the legendary pass and trophies aimed at the party, taking them pays 6 points (before, 2).
+**Elites:** avoiding them 31%, taking them when healthy 36%, seeking every one 38%. Since the legendary pass and trophies aimed at the party, taking them pays 5 points (before, 2).
 
-**What a reward is worth**, handed over at the start: three legendary pieces +19 points, three rares +14, 150 gold +9.
+**What a reward is worth**, handed over at the start: three legendary pieces +19 points, three rares +14, 150 gold +8.
 
-**The rules added from the playtests:** without stand-ins from camp 40%, with training once a visit 37%. Both are within noise of the game as it is: they're about fairness and gold, not balance.
+**The rules added from the playtests:** without stand-ins from camp 37%, with training once a visit 38%. Both are within noise: they're about fairness and gold, not balance. The wounded boss for the reserves was worth 2 points, and the healer in each draft nothing measurable.
 
-**The power curve:** if every class joined knowing all three abilities, 59% won (+22). Learning is the run's biggest source of growth, then gear.
+**The power curve:** if every class joined knowing all three abilities, 57% won (+21). Learning is the run's biggest source of growth, then gear.
 
-**Heat:** 33%, 25%, 18% and 12% at heats 1, 2, 3 and 5.
+**Heat:** 33%, 27%, 19% and 12% at heats 1, 2, 3 and 5.
 
-**How sure:** the decision costs held across three complete passes (`tuning.md`, rounds 18, 21 and 28 to 30) within 4 points, except the campfire's, which fell from 29 to 16 as stand-ins, stronger legendaries and longer regular fights spread the party's recovery across more things. The class table's order held, but its top came down (the Vampire from 48% to 32%) as the late bosses got harder. Every number here is the simulated player's. The playtesters (section 4) are the human-like check.
+**How sure:** the decision costs held across five complete passes (`tuning.md`, rounds 18, 21, 28, 30 and 32) within 4 points, except the campfire's, which fell from 29 to 12 as stand-ins, the reserves, stronger legendaries and longer regular fights spread the party's recovery across more things. The class table's order held, but its top came down (the Vampire from 48% to 34%) as the late bosses got harder. Every number here is the simulated player's. The playtesters (section 4) are the human-like check.
 
 ## 4. Feel: ten AI playtests
 
@@ -216,7 +216,7 @@ Ten fresh agents played the rogue mode from a command line that shows only what 
 | A danger rating or fight timeline | 3, 4, 5 | Not done: previews show moves, targets and sizes; the summary names killing blows |
 | Answers to a boss's opening seconds (a squishy dead before the Taunt is up) | 5 | Not done: how fights open is the core set's (5c's slotted head starts); see below |
 | Supplies at the moment of a wipe | 4, 5 | Not done: supplies are used between rooms by design; a phoenix now pairs with the empty-seat rule |
-| No level-up with a single option | 2, 4, 5 | Not done: a level-up late in a run can have one thing left to learn or upgrade |
+| No level-up with a single option | 2, 4, 5 | A level-up can be taken as 40 gold instead |
 
 **What they found broken, and fixed:**
 - two refill exploits;
