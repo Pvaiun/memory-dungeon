@@ -11,7 +11,7 @@ import { SUBTICKS } from "../../../src/schema.js";
 import type { CUnit } from "../../../src/engine/combat/fight.js";
 import { c, disp } from "../content.js";
 import { manifest, VFX_FOR, type Pose } from "../art.js";
-import { actorSpan, backdropImage, drawActor, drawEnemy, drawStatus, drawText, enemyK, enemySprite, FRAME_W, OUTLINE, STATUS_ICON, statusIconOf, vfxSprite } from "../pixel.js";
+import { actorSpan, backdropImage, drawActor, drawCampfire, drawEnemy, drawStatus, drawText, enemyK, enemySprite, FRAME_W, OUTLINE, STATUS_ICON, statusIconOf, vfxSprite } from "../pixel.js";
 import type { Driver } from "./driver.js";
 
 export const W = FRAME_W, H = 228;
@@ -125,6 +125,8 @@ export function backdrop(theme: string, h = H): HTMLCanvasElement {
 }
 
 const WAIT_FRAMES = [0, 1, 2, 1];
+/** The backdrops with a sky, which get stars at night. */
+const OUTDOOR = new Set(["old_road", "ice_pass", "tower_top"]);
 /** The icon statuses a unit shows, Shield last, with the count to draw. */
 export function shownStatuses(u: CUnit): { id: string; count: number | null }[] {
   const out: { id: string; count: number | null }[] = [];
@@ -156,6 +158,8 @@ export class Scene {
   /** Draw thin HP bars under the party too (Settings → PARTY HP). */
   partyBars = false;
   wall = 0;
+  /** The campfire between fights: who sits by the fire, and who lies fallen. */
+  camp: { ref: string; ko: boolean }[] | null = null;
 
   constructor(public canvas: HTMLCanvasElement, public driver: Driver, public theme: string) {
     canvas.width = W;
@@ -313,8 +317,19 @@ export class Scene {
 
   // ─── Drawing ───
 
+  startCamp(members: { ref: string; ko: boolean }[]) {
+    this.camp = members;
+    this.numbers = [];
+    this.fx = [];
+    this.banner = null;
+  }
+  stopCamp() {
+    this.camp = null;
+  }
+
   frame(wall: number) {
     this.wall = wall;
+    if (this.camp) return this.drawCamp();
     const ctx = this.ctx;
     const units = this.driver.units();
     ctx.drawImage(backdrop(this.theme), 0, 0);
@@ -377,6 +392,10 @@ export class Scene {
       drawEnemy(ctx, v.ref, v.k, x, v.y + bob, flash);
     }
     ctx.restore();
+  }
+
+  private drawCamp() {
+    drawCampScene(this.ctx, this.theme, this.camp!, this.wall);
   }
 
   /** A soft pixel ellipse under a unit's feet, so it stands on the floor instead of floating over it. */
@@ -558,6 +577,85 @@ export class Scene {
       }
     }
     return best;
+  }
+}
+
+// ─── The campfire ───
+
+/** A soft pixel ellipse under a unit's feet. */
+function shadow(ctx: CanvasRenderingContext2D, cx: number, feet: number, w: number) {
+  const rx = w / 2, ry = 2;
+  ctx.fillStyle = "rgba(8, 8, 16, 0.45)";
+  for (let dy = -ry; dy <= ry; dy++) {
+    const half = Math.round(rx * Math.sqrt(1 - (dy / (ry + 0.5)) ** 2));
+    ctx.fillRect(Math.round(cx - half), Math.round(feet - 1 + dy), half * 2, 1);
+  }
+}
+/**
+ * The campfire: a scene's backdrop at night (washed blue and dark), the fire in the middle lighting a stepped ring
+ * around it, and the party kneeling at it without their weapons, facing the fire; the fallen lie beside it. The
+ * battle's field draws it between fights; the rogue mode's campfire screen draws it as a strip.
+ */
+export function drawCampScene(ctx: CanvasRenderingContext2D, theme: string, members: { ref: string; ko: boolean }[], wall: number, h = H) {
+  const fx = Math.round(W / 2), fy = h - 42;
+  // A strip shorter than the field takes the scene from just above its horizon down, so the camp has a skyline behind it.
+  const sy = h < H ? Math.round((H - h) * 0.45) : 0;
+  ctx.drawImage(backdrop(theme), 0, sy, W, h, 0, 0, W, h);
+  // Left and right of the fire, facing it; a third sits behind it.
+  const spots = [{ x: fx - 42, y: fy + 12, mirror: false }, { x: fx + 42, y: fy + 12, mirror: true }, { x: fx - 8, y: fy - 18, mirror: false }];
+  const order = members.slice(0, 3).map((m, i) => ({ ...m, ...spots[i] })).sort((a, b) => a.y - b.y);
+  const f = [0, 1, 2, 1][Math.floor(wall / 520) % 4];
+  for (const m of order) {
+    shadow(ctx, m.x, m.y, 22);
+    drawActor(ctx, m.ref, m.ko ? "dead" : "dying", m.ko ? 2 : f, m.x, m.y, false, 1, undefined, m.mirror);
+  }
+  // Night: everything washed dark blue, then the firelight in bands that breathe with the flame.
+  ctx.save();
+  ctx.globalCompositeOperation = "multiply";
+  ctx.fillStyle = "#3a4478";
+  ctx.fillRect(0, 0, W, h);
+  ctx.globalCompositeOperation = "lighter";
+  const flicker = Math.round(Math.sin(wall / 130) + Math.sin(wall / 57));
+  for (const [r, a] of [[96, 0.06], [70, 0.08], [48, 0.11], [28, 0.14]] as const) {
+    ctx.fillStyle = `rgba(255, 140, 50, ${a})`;
+    const rx = r + flicker * 2, ry = Math.round(rx * 0.5);
+    for (let dy = -ry; dy <= ry; dy++) {
+      const half = Math.round(rx * Math.sqrt(1 - (dy / (ry + 0.5)) ** 2));
+      ctx.fillRect(fx - half, fy - 10 + dy, half * 2, 1);
+    }
+  }
+  ctx.restore();
+  // Stars, where the backdrop has a sky.
+  if (OUTDOOR.has(theme) && !sy) {
+    ctx.fillStyle = "#e8ecff";
+    for (let i = 0; i < 26; i++) {
+      const x = (i * 97 + 31) % W, y = (i * 53 + 7) % 44;
+      if ((Math.floor(wall / 700) + i) % 7) ctx.fillRect(x, y, 1, 1);
+    }
+  }
+  drawCampfire(ctx, fx, fy + 4, wall);
+}
+
+/** The campfire as a strip for a menu screen, animated. */
+export class CampStrip {
+  private timer = 0;
+  private wall = 0;
+  ctx: CanvasRenderingContext2D;
+  constructor(public canvas: HTMLCanvasElement, public theme: string, public members: { ref: string; ko: boolean }[], public h = 96) {
+    canvas.width = W;
+    canvas.height = h;
+    this.ctx = canvas.getContext("2d")!;
+    this.ctx.imageSmoothingEnabled = false;
+  }
+  start() {
+    const t0 = performance.now();
+    const tick = () => { this.wall = performance.now() - t0; drawCampScene(this.ctx, this.theme, this.members, this.wall, this.h); };
+    tick();
+    this.timer = window.setInterval(() => { if (!this.canvas.isConnected) return this.stop(); tick(); }, 110);
+    return this;
+  }
+  stop() {
+    clearInterval(this.timer);
   }
 }
 

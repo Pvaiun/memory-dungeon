@@ -42,7 +42,11 @@ def find_file(name):
 
 ACTORS = find_dir("Style 2", "sv_actors") or find_dir("sv_actors")
 WEAPONS = find_dir("Style 2", "weapons") or find_dir("Weapon_Pack", "weapons")
-ENEMIES = find_dir("Sideview Enemies")
+# The standalone weapon pack has more sheets (blades past 19, maces, scythes, halberds) than the battlers' own copy.
+WEAPONS_MORE = next((p for p in sorted(SRC.rglob("weapons")) if p.is_dir() and (p / "SCYTHE_01.png").exists()), None)
+# The enemies: the "Sideview Enemies" folder, or the same sprites as the Retro 8-bit Monster Pack's 300% Style 2.
+ENEMIES = find_dir("Sideview Enemies") or find_dir("300%", "Style 2")
+CAMPFIRE = find_file("Small_sheet.png")
 STATUS = find_file("Status_effect1_1_01.png")
 STATUS = STATUS.parent if STATUS else None
 VFX = find_dir("individual_frames")
@@ -147,13 +151,13 @@ ENEMY = {
     "ghost": ("Elemental_ManaSpirit", 1, 0.9, None),
     "ice_ghost": ("Elemental_ManaSpirit", 2, 0.9, None),
     "bone_priest": ("Undead_Crossairs", 1, 1.0, None),
-    "witch": ("Elemental_CursedTome", 1, 1.0, "Cursed Tome"),
+    "witch": ("Humanoid_Hobzard", 2, 1.0, None),          # a hooded figure in a pointed purple hat: the witch, no rename
     "lich": ("Undead_Lich", 1, 1.0, None),
     "ghoul": ("Undead_Ghoul", 1, 0.95, None),
     "reaper": ("Demon_Titan", 1, 1.3, None),
     "wraith": ("Undead_Reaper", 1, 0.95, None),
     "silent_one": ("Undead_Warlord", 1, 1.5, None),
-    "hellhound": ("Beast_Werecat", 4, 0.8, "Hellcat"),
+    "hellhound": ("Summon_Fenrir", 3, 0.7, None),          # the wolves' red Fenrir: a hound of fire, no rename
     "lava_slime": ("Elemental_Lodrop", 4, 1.0, None),
     "mini_slime": ("Elemental_Lodrop", 4, 0.6, None),
     "bomb_bug": ("Insect_Antlion", 1, 0.9, None),
@@ -169,7 +173,7 @@ ENEMY = {
     "storm_king": ("Aerial_Aethon", 4, 1.5, None),
     "soldier": ("Insect_Antwolf", 4, 0.75, None),
     "troll": ("Humanoid_Goliath", 2, 1.1, None),
-    "mummy": ("Undead_Vanguard", 1, 1.0, "Crypt Guard"),
+    "mummy": ("Undead_Vanguard", 1, 1.0, "Crypt Guard"),  # the content's mummy hides behind a big shield: this sprite carries one
 }
 if ENEMIES:
     ensure(OUT / "enemies")
@@ -204,7 +208,7 @@ RAMPS = {
     "sick": [(20, 30, 10), (40, 60, 15), (90, 120, 30), (160, 200, 70), (235, 250, 200)],
 }
 STATUSES = {
-    "bleed": (94, "red"), "regen": (83, "green"), "shield": (41, "ice"), "might": (102, "orange"), "weaken": (162, "purple"),
+    "bleed": (283, "red"), "regen": (83, "green"), "shield": (41, "ice"), "might": (102, "orange"), "weaken": (162, "purple"),
     "guard": (48, "steel"), "stun": (322, "yellow"), "slow": (13, "blue"), "haste": (341, "yellow"), "taunt": (35, "red"),
     "burn": (301, "orange"), "chill": (193, "ice"), "shock": (382, "yellow"), "ward": (46, "purple"), "sunder": (263, "brown"),
     "silence": (372, "gray"), "hidden": (129, "gray"), "rot": (183, "sick"), "clarity": (311, "blue"), "aegis": (50, "gold"),
@@ -218,6 +222,16 @@ STATUSES = {
     "venom": (94, "red"), "fire_bite": (301, "orange"), "split": (123, "orange"), "volatile": (164, "orange"), "rime": (191, "ice"),
     "ice_crust_passive": (194, "ice"), "frozen_core": (45, "ice"), "static": (382, "yellow"), "vengeance": (102, "red"),
     "mp_regen": (311, "blue"), "thorns": (118, "green"), "lifesteal": (85, "crimson"), "siphon": (313, "purple"), "double_strike": (209, "gray"),
+    "refrain": (285, "blue"),
+    # the rogue mode's legendary pieces, shown on sheets and as their amulets' art
+    "lg_ember": (303, "orange"), "lg_cleave": (209, "steel"), "lg_rime": (195, "ice"), "lg_wounds": (286, "red"), "lg_sunder": (293, "brown"),
+    "lg_song": (391, "gold"), "lg_judge": (207, "gold"), "lg_lantern": (57, "gold"), "lg_soul": (54, "blue"), "lg_banner": (60, "red"),
+    "lg_hourglass": (14, "gold"), "lg_horn": (82, "green"), "lg_bell": (132, "steel"), "lg_fury": (233, "red"), "lg_idol": (326, "gold"),
+    "lg_idol_on": (326, "gold"), "lg_brittle": (198, "ice"), "lg_coil": (383, "yellow"), "lg_frost": (196, "ice"), "lg_briar": (119, "green"),
+    "lg_spikes": (296, "steel"), "lg_shade": (130, "purple"), "lg_execute": (181, "crimson"), "lg_storm": (384, "yellow"), "lg_hunter": (125, "red"),
+    "lg_grave": (184, "purple"), "lg_cinder": (304, "orange"),
+    # glyphs for the sheets: an ability's cooldown (a clock face, part swept) and its wind-up (a swirl)
+    "ui_cooldown": (19, "steel"), "ui_cast": (353, "purple"),
 }
 SOURCE_RAMP = [(48, 15, 10), (85, 15, 10), (155, 26, 10), (239, 105, 47), (239, 216, 161)]
 
@@ -293,6 +307,9 @@ WEAPON_SPRITES = {
     "plain_ice_staff": ("STAFF_01", "ice"), "rime_staff": ("STAFF_05", "ice"), "hoarfrost_staff": ("STAFF_03", "ice"), "glacier_staff": ("STAFF_06", "ice"),
     "plain_light_staff": ("STAFF_01", "light"), "sunstaff": ("STAFF_04", "light"), "dawn_staff": ("STAFF_06", "light"), "chapel_staff": ("STAFF_03", "light"), "templar_staff": ("STAFF_04", "light"),
     "plain_dark_staff": ("STAFF_01", "dark"), "nightstaff": ("STAFF_05", "dark"), "leech_staff": ("STAFF_03", "dark"), "sanguine_staff": ("STAFF_02", "dark"),
+    # the rogue mode's own pieces (a run's items show their base piece's art)
+    "headsman_axe": "SCYTHE_02", "stormbrand": "BLADE_05", "frostfang": "BLADE_24", "hunters_bow": "BOW_03", "brand_of_kings": "SPEAR_05",
+    "gravecaller": ("STAFF_06", "dark"), "cinder_rod": ("STAFF_04", "lightning"), "earthshaker": ("STAFF_05", "earth"),
 }
 # Four-step ramps, darkest first, for the staffs' gems and glow; the wooden shaft keeps its colour.
 ELEMENT_RAMPS = {
@@ -329,7 +346,10 @@ if WEAPONS:
     manifest["weapons"] = {}
     for gid, spec in WEAPON_SPRITES.items():
         name, element = (spec, None) if isinstance(spec, str) else spec
-        im = mode_downscale(Image.open(WEAPONS / f"{name}.png"), 3)
+        src = WEAPONS / f"{name}.png"
+        if not src.exists() and WEAPONS_MORE:
+            src = WEAPONS_MORE / f"{name}.png"
+        im = mode_downscale(Image.open(src), 3)
         if element:
             im = recolor_staff(im, element)
         im.save(OUT / "weapons" / f"{gid}.png")
@@ -522,6 +542,15 @@ if OW and DUNGEON and CASTLE:
     print(f"backdrops: {len(scenes)} scenes and the strip")
 else:
     print("backdrops: tilesets not found, kept")
+
+# ─── The campfire: the small sheet's eight 32×32 frames of a fire on its logs, at art size ───
+if CAMPFIRE:
+    im = Image.open(CAMPFIRE).convert("RGBA")
+    im.save(OUT / "campfire.png")
+    manifest["campfire"] = {"file": "campfire.png", "frames": im.width // im.height, "size": im.height}
+    print(f"campfire: {im.width // im.height} frames")
+else:
+    print("campfire: sheet not found, kept")
 
 with open(OUT / "manifest.json", "w") as f:
     json.dump(manifest, f, indent=1)

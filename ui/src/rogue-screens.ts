@@ -9,11 +9,20 @@ import {
   rogue, seat, sellPrice, setFormation, setOrder, swap, trainPrice, unlearned, upgraded, upgradeOptions, useSupply, wearer, type Item, type MapNode, type Offer, type RogueRun,
 } from "../../src/rogue.js";
 import { canEquip } from "../../src/validate.js";
-import type { AbilityT, GearT, RogueNodeKindT } from "../../src/schema.js";
+import type { GearT, RogueNodeKindT } from "../../src/schema.js";
 import { c, className, cls as classOf, disp, kindOf, shortName } from "./content.js";
 import { button, bar, h, header, toast, win, type Child } from "./dom.js";
-import { sizeWords, targetPhrase } from "./describe.js";
-import { abilityBlock, basicLine, classHead, codeSpans, gearRow, passiveBlock, role, section, specialLines, statGrid } from "./sheet.js";
+
+/** The screen's one big action, and the smaller ones beside it, at the bottom-centre. */
+const actions = (main: HTMLButtonElement | null, ...more: (HTMLButtonElement | null)[]) => {
+  main?.classList.add("big");
+  return h("div", { class: "actions" }, main, more.some(Boolean) ? h("div", { class: "btns even" }, ...more.map((b) => (b ? (b.classList.add("mid"), b) : null))) : null);
+};
+/** A choice as a big button: its word and, under it, what it does. */
+const choice = (label: string, sub: string, onClick: () => void) => button(h("span", { class: "big-label" }, label, sub ? h("span", { class: "sub" }, sub) : null), onClick, "hi big");
+import { abilityBlock, basicLine, classHead, classPassive, codeSpans, elementRow, enemyStats, gearRow, hitsWith, role, section, sizeEl, specialLines, statGrid } from "./sheet.js";
+import { sizeParts, sizeText } from "./describe.js";
+import { CampStrip, themeOf } from "./battle/scene.js";
 import { weaponOf } from "../../src/engine/combat/fight.js";
 import { actorEl, enemyThumb, faceEl, iconEl } from "./pixel.js";
 import { enemyDisplayName } from "./art.js";
@@ -36,17 +45,18 @@ const redraw = () => go("rogue", undefined, true);
 
 const ICON: Record<RogueNodeKindT, Cell> = { fight: [26, 7], elite: [10, 1], event: [10, 12], campfire: [13, 0], shop: [23, 11], treasure: [23, 15], boss: [18, 3] };
 const KIND_NAME: Record<RogueNodeKindT, string> = { fight: "FIGHT", elite: "ELITE", event: "EVENT", campfire: "CAMPFIRE", shop: "SHOP", treasure: "CHEST", boss: "BOSS" };
+/** What a room pays or offers, in a line. */
 const KIND_TEXT: Record<RogueNodeKindT, string> = {
-  fight: "A fight. Pays gold and a pick of spoils.",
-  elite: "A hard fight. Pays more gold, a legendary piece outright, and a better pick.",
-  event: "Something on the road: a choice, for better or worse.",
-  campfire: "Rest, focus, raise the fallen or train, and change who's in the party.",
-  shop: "Gear, recruits, a formation, training and supplies, for gold.",
-  treasure: "A chest: a rare or legendary piece, and some gold.",
-  boss: "The act's boss. Beat it to move on, restored, and everyone learns.",
+  fight: "GOLD · SPOILS",
+  elite: "MORE GOLD · A LEGENDARY · BETTER SPOILS",
+  event: "A CHOICE",
+  campfire: "REST · FOCUS · RAISE · TRAIN · SWAP",
+  shop: "GEAR · RECRUITS · TRAINING · SUPPLIES",
+  treasure: "A RARE OR LEGENDARY PIECE · GOLD",
+  boss: "THE ACT'S END · EVERYONE RESTORED AND LEARNS",
 };
 const SUPPLY_ICON: Record<string, Cell> = { tonic: [21, 7], ether: [20, 7], phoenix: [21, 14] };
-const SUPPLY_TEXT: Record<string, string> = { tonic: "Tonic: the party regains 30% of its HP.", ether: "Ether: the party regains 50% of its MP.", phoenix: "Phoenix feather: a fallen member stands up with half its HP." };
+const SUPPLY_TEXT: Record<string, string> = { tonic: "PARTY +30% HP", ether: "PARTY +50% MP", phoenix: "A FALLEN MEMBER UP, 50% HP" };
 const RARITY_CLASS: Record<string, string> = { common: "", uncommon: "good", rare: "buff", legendary: "gold" };
 const ROMAN = ["", "I", "II", "III", "IV"];
 const gold = (n: number) => h("span", { class: "gold" }, `${n}G`);
@@ -94,9 +104,8 @@ function upText(id: string, run?: RogueRun, cls?: string): string {
   const a = c.abilities.get(id)!, up = upgraded(c, id);
   if (up.cooldown !== a.cooldown) return `Every ${Math.round(up.cooldown)} ticks instead of ${Math.round(a.cooldown)}.`;
   const st = run && cls ? fighter(run, cls).stats : null;
-  const was = st ? sizeWords(a, st) : "", now = st ? sizeWords(up, st) : "";
-  // The shield's cap is said once, after the new size.
-  return was && now && was !== now ? `${was.replace(/ \(at most[^)]*\)/i, "").toUpperCase()} → ${now.toUpperCase()}.` : "40% more of what it deals, heals, shields or stacks.";
+  const was = st ? sizeText(sizeParts(a, st)) : "", now = st ? sizeText(sizeParts(up, st)) : "";
+  return was && now && was !== now ? `${was} → ${now}` : "+40%";
 }
 /** An offer as a card's body. */
 function offerBody(run: RogueRun, o: Offer): Child[] {
@@ -110,13 +119,13 @@ function offerBody(run: RogueRun, o: Offer): Child[] {
   if (o.kind === "recruit") {
     const k = classOf(o.cls);
     const known = rogueKnows(run, o.cls);
-    return [h("div", { class: "line" }, faceEl(o.cls), h("div", { class: "grow" }, h("div", { class: "hi" }, `RECRUIT: ${k.name.toUpperCase()}`), h("div", { class: "text dim small wrap" }, role(k.text)))), h("div", { class: "line small dim wrap" }, `KNOWS ${known.map((a) => c.abilities.get(a)!.name.toUpperCase()).join(", ")}`), run.party.length >= 3 ? h("div", { class: "line small dim" }, "WAITS AT CAMP UNTIL A CAMPFIRE") : null];
+    return [h("div", { class: "line" }, faceEl(o.cls), h("div", { class: "grow" }, h("div", { class: "hi" }, `RECRUIT: ${k.name.toUpperCase()}`), h("div", { class: "text dim small wrap" }, role(o.cls)))), h("div", { class: "line small dim wrap" }, `KNOWS ${known.map((a) => c.abilities.get(a)!.name.toUpperCase()).join(", ")}`), run.party.length >= 3 ? h("div", { class: "line small dim" }, "JOINS AT CAMP") : null];
   }
   if (o.kind === "formation") {
     const f = c.formations.get(o.id)!;
     return [h("div", { class: "line hi" }, `FORMATION: ${f.name.toUpperCase()}`), h("div", { class: "text dim small wrap" }, f.text), ...f.positions.map((p) => h("div", { class: "line small" }, h("span", { class: "dim" }, p.name.toUpperCase()), " ", ...codeSpans(p.stats)))];
   }
-  return [h("div", { class: "line" }, iconEl(SUPPLY_ICON[o.id]), h("span", { class: "grow" }, o.id.toUpperCase())), h("div", { class: "text dim small wrap" }, SUPPLY_TEXT[o.id])];
+  return [h("div", { class: "line" }, iconEl(SUPPLY_ICON[o.id]), h("span", { class: "grow" }, o.id.toUpperCase())), h("div", { class: "line dim small" }, SUPPLY_TEXT[o.id])];
 }
 /** What a recruit would know on joining now. */
 const rogueKnows = (run: RogueRun, cls: string) => joinKnown(c, cls, run.act);
@@ -187,17 +196,16 @@ function startView(): Child[] {
   const owned = m.owned;
   if (!leaderPick || !owned.includes(leaderPick)) leaderPick = owned[0];
   const last = lastRun();
-  const k = classOf(leaderPick);
-  const heatRow = m.maxHeat > 0 ? h("div", { class: "line" }, h("span", { class: "dim" }, "HEAT"), button("◀", () => { setHeat(m.heat - 1); redraw(); }, "sm"), h("span", { class: "hi" }, String(m.heat)), button("▶", () => { setHeat(m.heat + 1); redraw(); }, "sm"), h("span", { class: "dim small r text" }, m.heat ? `Foes +${m.heat * rogue(c).config.heat.per}%` : "As designed")) : null;
+  const heatRow = m.maxHeat > 0 ? h("div", { class: "line" }, h("span", { class: "dim" }, "HEAT"), button("◀", () => { setHeat(m.heat - 1); redraw(); }, "sm"), h("span", { class: "hi" }, String(m.heat)), button("▶", () => { setHeat(m.heat + 1); redraw(); }, "sm"), m.heat ? h("span", { class: "dim small r" }, `FOES +${m.heat * rogue(c).config.heat.per}%`) : null) : null;
   return [
     header("ROGUE", () => go("home"), h("span", { class: "dim" }, `${m.wins}/${m.runs} WON`)),
     last ? win("", h("div", { class: `line ${last.won ? "good" : "bad"}` }, last.won ? "LAST RUN: WON" : "LAST RUN: LOST"), last.unlocked.length ? h("div", { class: "line small hi wrap" }, `NEW LEADERS: ${last.unlocked.map(shortName).join(", ")}`) : null) : null,
-    win("", h("div", { class: "line hi" }, "CHOOSE YOUR LEADER"), h("div", { class: "text dim small wrap" }, "Two companions join you on the road. Win a run and its party can lead the next.")),
+    h("div", { class: "line hi" }, "CHOOSE YOUR LEADER"),
     win("roster", h("div", { class: "grid" }, ...owned.map((id) => h("div", { class: `cell${leaderPick === id ? " cur" : ""}`, onClick: () => { leaderPick = id; redraw(); } }, h("div", { class: "portrait" }, faceEl(id)), h("span", { class: "trunc", style: "max-width:100%" }, shortName(id)))),
       ...(owned.length < c.pack.classes.length ? [h("div", { class: "cell static dim" }, h("div", { class: "portrait locked" }, "?"), h("span", null, `${c.pack.classes.length - owned.length} MORE`))] : []))),
-    win("", classHead(leaderPick), h("div", { class: "line small dim wrap" }, `STARTS WITH ${c.abilities.get(rogue(c).config.firstAbility[leaderPick])!.name.toUpperCase()}`), h("div", { class: "text dim small wrap" }, k.text)),
+    win("", classHead(leaderPick), h("div", { class: "line small dim wrap" }, `STARTS WITH ${c.abilities.get(rogue(c).config.firstAbility[leaderPick])!.name.toUpperCase()}`)),
     heatRow,
-    h("div", { class: "btns even" }, button("SET OUT", () => { startRun(leaderPick!, m.heat); sfx.win(); redraw(); }, "hi"), button("CLASSES", () => go("classes"))),
+    actions(button("SET OUT", () => { startRun(leaderPick!, m.heat); sfx.win(); redraw(); }, "hi"), button("CLASSES", () => go("classes"))),
   ];
 }
 
@@ -214,10 +222,10 @@ function draftView(run: RogueRun): Child[] {
     partyStrip(run, false),
     h("div", { class: "cards" }, ...p.offers.map((id) => h("div", { class: `win card${draftPick === id ? " cur" : ""}`, onClick: () => { draftPick = id; redraw(); } },
       h("div", { class: "portrait" }, faceEl(id)), h("div", { class: "name" }, shortName(id)), h("div", { class: "codes small" }, c.abilities.get(rogue(c).config.firstAbility[id])!.name)))),
-    win("scroll", classHead(draftPick), h("div", { class: "text dim small wrap" }, classOf(draftPick).text), section("STARTS WITH"), abilityBlock(c.abilities.get(rogue(c).config.firstAbility[draftPick])!, classOf(draftPick).stats, setup.settings.designer),
+    win("scroll", classHead(draftPick), section("STARTS WITH"), abilityBlock(c.abilities.get(rogue(c).config.firstAbility[draftPick])!, classOf(draftPick).stats, setup.settings.designer),
       section("LEARNS LATER"), ...c.classes.get(draftPick)!.abilities.filter((a) => a !== rogue(c).config.firstAbility[draftPick!]).map((a) => abilityBlock(c.abilities.get(a)!, classOf(draftPick!).stats, false)),
-      section("PASSIVE"), ...(classOf(draftPick).passive ? passiveBlock(classOf(draftPick).passive!.name, classOf(draftPick).passive!.text) : passiveBlock("Einherjar", "Allies it revives come back with every action ready."))),
-    h("div", { class: "btns even" }, button(`TAKE ${shortName(draftPick)}`, () => pickOrSave(run, draftPick!), "hi")),
+      section("PASSIVE"), ...classPassive(draftPick)),
+    actions(button(`TAKE ${shortName(draftPick)}`, () => pickOrSave(run, draftPick!), "hi")),
   ];
 }
 
@@ -265,49 +273,42 @@ function mapView(run: RogueRun): Child[] {
     h("div", { class: "line small", onClick: () => go("rboss"), style: "cursor:pointer" }, iconEl(ICON.boss), h("span", { class: "dim" }, "BOSS "), h("span", { class: "gold trunc grow" }, run.boss.name.toUpperCase()), h("span", { class: "dim" }, "LOOK ▶")),
     partyStrip(run),
     scroller,
-    picked
-      ? win("", h("div", { class: "line" }, iconEl(ICON[picked.kind]), h("span", { class: "hi grow" }, KIND_NAME[picked.kind]), button("ENTER", () => { const id = picked.id; mapPick = null; pickOrSave(run, id); }, "hi sm")), h("div", { class: "text dim small wrap" }, KIND_TEXT[picked.kind]))
-      : win("", h("div", { class: "text dim small wrap" }, next.length ? "Tap a lit room to choose your way up." : "")),
-    h("div", { class: "btns" }, button("PARTY", () => go("rparty")), ...supplies),
+    picked ? win("", h("div", { class: "line" }, iconEl(ICON[picked.kind]), h("span", { class: "hi grow" }, KIND_NAME[picked.kind])), h("div", { class: "line dim small wrap" }, KIND_TEXT[picked.kind])) : null,
+    supplies.length ? h("div", { class: "btns" }, ...supplies) : null,
+    actions(picked ? button(`ENTER ${KIND_NAME[picked.kind]}`, () => { const id = picked.id; mapPick = null; pickOrSave(run, id); }, "hi") : null, button("PARTY", () => go("rparty"))),
   ];
 }
 function useSupplyView(run: RogueRun, id: "tonic" | "ether" | "phoenix") {
   if (id === "phoenix") {
     const down = run.roster.filter((m) => m.ko);
-    if (!down.length) return confirm("NOBODY IS DOWN", "A phoenix feather stands a fallen member up. Keep it for then.", "OK", () => {});
-    return confirm("PHOENIX FEATHER", `${className(down[0].cls)} stands up with half its HP.`, "USE", () => { useSupply(c, run, id, down[0].cls); saveRogue(); sfx.heal(); redraw(); });
+    if (!down.length) return confirm("NOBODY IS DOWN", "", "OK", () => {});
+    return confirm("PHOENIX FEATHER", `${className(down[0].cls).toUpperCase()} UP, 50% HP`, "USE", () => { useSupply(c, run, id, down[0].cls); saveRogue(); sfx.heal(); redraw(); });
   }
   confirm(id === "tonic" ? "TONIC" : "ETHER", SUPPLY_TEXT[id], "USE", () => { useSupply(c, run, id); saveRogue(); sfx.heal(); redraw(); });
 }
 
 // ─── A fight in waiting ────────────────────────────────────────────────────
 
-/** Who a foe's ability aims at, from the party's side of the field. */
-function atWords(ab: AbilityT): string {
-  const t = ab.target;
-  if (!t || t === "foe") return `one of the party, by aggro${ab.seek ? ", past Taunt" : "; Taunt draws it"}`;
-  const byAggro = typeof t === "object" && t.side === "foes" && (!t.pick || t.pick === "random");
-  return `${targetPhrase(t, ab.seek).replace(/every foe/g, "the whole party").replace(/random foe/g, "party member").replace(/\bfoes?\b/g, "party member")}${byAggro ? ", by aggro" : ""}`;
-}
-/** A fight's foes as the preview shows them: what each is, what it does, what it hits with, what it resists. */
-function foeLines(enemies: string[], foes: { power?: number } = {}): Child[] {
+/**
+ * A fight's foes as the preview shows them, with this fight's changes to HP and damage: each kind's likeness, name and
+ * count, its HP, ATK, MAG and ARM, the elements it's weak to or resists, what it hits with, and its abilities with
+ * their sizes, so a boss's big move can be planned for (Slay the Spire shows intents).
+ */
+function foeLines(enemies: string[], foes: { hp?: number; power?: number } = {}): Child[] {
   const kinds = [...new Set(enemies)];
   const n = (id: string) => enemies.filter((e) => e === id).length;
+  const mult = 1 + (foes.power ?? 0) / 100;
   return kinds.map((id) => {
     const en = c.enemies.get(id)!;
-    const res = Object.entries(en.stats).filter(([k]) => k.startsWith("resist:")).map(([k, v]) => h("span", { class: k.slice(7) }, `${v > 100 ? "ABSORBS" : v > 0 ? "RESISTS" : "WEAK TO"} ${k.slice(7).toUpperCase()} `));
-    // What it hits with: its attack's element (or physical), and its abilities' elements.
-    const el = (x?: string) => x ?? "physical";
-    const hits = new Set<string>([el(en.weapon?.element ?? (en.weapon?.kind ? c.weaponKinds.get(en.weapon.kind)?.element : undefined))]);
-    for (const a of en.abilities ?? []) for (const d of c.abilities.get(a)!.do) if (d.op === "damage") hits.add(d.type === "magical" ? el(d.element) : "physical");
-    if (res.length) res.unshift(h("span", { class: "dim" }, "· "));
-    res.unshift(h("span", { class: "dim" }, "HITS WITH "), ...[...hits].map((k) => h("span", { class: k }, `${k.toUpperCase()} `)));
-    // Its abilities by name and words, so a boss's big move can be planned for (the AI playtests: "let me answer what I see").
-    // Its sizes too, from its stats and this fight's knob, before the target's Armor and resistances (Slay the Spire shows intents).
-    // And who it aims at, in the party's words (Crush landing past a Taunt confused a playtester: it aims by aggro when it starts).
-    const acts = (en.abilities ?? []).map((a) => { const ab = c.abilities.get(a)!; const size = sizeWords(ab, en.stats, 1 + (foes.power ?? 0) / 100); return h("div", { class: "text small wrap" }, h("span", { class: "hi" }, `${ab.name.toUpperCase()}: `), h("span", { class: "dim" }, ab.text), h("span", { class: "dim" }, ` AT ${atWords(ab).toUpperCase()}.`), size ? h("span", { class: "dim" }, ` ${size.toUpperCase()}${/≈/.test(size) ? " BEFORE ARMOR, CRITS AND STATUSES" : ""}.`) : null); });
-    return h("div", { class: "line", style: "align-items:flex-start;min-height:3rem" }, h("span", { style: "width:3rem;display:inline-flex;justify-content:center" }, enemyThumb(id, 24)),
-      h("div", { class: "grow" }, h("div", { class: en.rank === "boss" ? "gold" : en.rank === "elite" ? "debuff" : "" }, `${enemyDisplayName(id).toUpperCase()}${n(id) > 1 ? ` ×${n(id)}` : ""}`), h("div", { class: "text dim small wrap" }, en.text), ...acts, res.length ? h("div", { class: "small text wrap" }, ...res) : null));
+    const st = enemyStats(en);
+    st.max_hp = Math.round(st.max_hp * (1 + (foes.hp ?? 0) / 100));
+    const acts = (en.abilities ?? []).map((a) => { const ab = c.abilities.get(a)!; return h("div", { class: "foe-act" }, h("div", { class: "text small wrap" }, h("span", { class: "hi" }, `${ab.name.toUpperCase()} `), h("span", { class: "dim" }, ab.text)), sizeEl(sizeParts(ab, st, mult))); });
+    return h("div", { class: "foe" },
+      h("div", { class: "line" }, h("span", { class: "foe-art" }, enemyThumb(id, 24)), h("span", { class: `grow trunc ${en.rank === "boss" ? "gold" : en.rank === "elite" ? "debuff" : ""}` }, `${enemyDisplayName(id).toUpperCase()}${n(id) > 1 ? ` ×${n(id)}` : ""}`)),
+      statGrid(st, null, false, ["max_hp", "attack", "magic", "armor"]),
+      elementRow(st),
+      h("div", { class: "line wrap small" }, h("span", { class: "dim" }, "HITS WITH"), ...hitsWith(en)),
+      ...acts);
   });
 }
 /** The act's boss, from the map: known from the act's start, so the party can be built and swapped toward it. */
@@ -317,7 +318,6 @@ export function rbossScreen(): Child[] {
   return [
     header("BOSS", () => go("rogue")),
     win("scroll", h("div", { class: "line gold" }, run.boss.name.toUpperCase()), ...foeLines(run.boss.enemies, bossFoes(c, run))),
-    h("div", { class: "text dim small wrap" }, "Waiting at the top of the map. Who's in the party changes at a campfire, and the last floor is always one."),
   ];
 }
 
@@ -329,8 +329,7 @@ function fightView(run: RogueRun): Child[] {
     header(p.tier === "boss" ? "BOSS" : p.tier === "elite" ? "ELITE" : "FIGHT", () => go("home")),
     partyStrip(run),
     win("scroll", h("div", { class: "line hi" }, p.fight.name.toUpperCase()), ...foes),
-    h("div", { class: "text dim small wrap" }, p.begun ? "The fight has begun: coming back plays it again from its start, the same way." : "Change gear, the formation and ability order now, or use a supply. Once the fight starts, the party is set."),
-    h("div", { class: "btns even" }, button("FIGHT", () => go("battle", { rogue: true }), "hi"), p.begun ? null : button("PARTY", () => go("rparty"))),
+    actions(button("FIGHT", () => go("battle", { rogue: true }), "hi"), p.begun ? null : button("PARTY", () => go("rparty"))),
   ];
 }
 
@@ -345,8 +344,8 @@ function rewardView(run: RogueRun): Child[] {
   const takeId = (i: number) => (p.kind === "treasure" ? "take" : `take:${i}`);
   if (rewardPick !== null && (rewardPick >= offers.length || !opts.includes(takeId(rewardPick)))) rewardPick = null;
   const title = p.kind === "boon" ? "THE BOSS FALLS" : p.kind === "treasure" ? "A CHEST" : p.tier === "elite" ? "ELITE SPOILS" : "SPOILS";
-  const goldLine = p.kind === "spoils" ? h("div", { class: "line" }, gold(p.gold), h("span", { class: "dim" }, " FOUND")) : p.kind === "treasure" ? h("div", { class: "line" }, gold(p.gold), h("span", { class: "dim" }, " INSIDE")) : h("div", { class: "text dim small wrap" }, "Pick a boon. The next act starts with everyone restored, and everyone learns.");
-  const trophy = p.kind === "spoils" && p.trophy ? win("", h("div", { class: "line gold" }, "TROPHY, ALREADY IN THE BAG"), ...offerBody(run, { kind: "gear", item: p.trophy })) : null;
+  const goldLine = p.kind === "spoils" ? h("div", { class: "line" }, gold(p.gold), h("span", { class: "dim" }, " FOUND")) : p.kind === "treasure" ? h("div", { class: "line" }, gold(p.gold), h("span", { class: "dim" }, " INSIDE")) : null;
+  const trophy = p.kind === "spoils" && p.trophy ? win("", h("div", { class: "line gold" }, "TROPHY"), ...offerBody(run, { kind: "gear", item: p.trophy })) : null;
   const cards = offers.map((o, i) => {
     const ok = opts.includes(takeId(i));
     return win(`roffer${rewardPick === i ? " cur" : ""}${ok ? "" : " dimmed"}`, ...offerBody(run, o), ok ? null : h("div", { class: "line small bad" }, "CAN'T TAKE IT NOW"));
@@ -357,10 +356,10 @@ function rewardView(run: RogueRun): Child[] {
     header(title, () => go("home"), p.kind === "treasure" ? null : h("span", { class: "dim" }, "PICK ONE")),
     goldLine,
     win("scroll flat", trophy, ...cards),
-    h("div", { class: "btns even" },
+    actions(
       p.kind === "treasure"
         ? button("TAKE", () => { if (opts.includes("take")) pickOrSave(run, "take"); }, "hi")
-        : button(rewardPick !== null ? "TAKE" : "PICK ONE", () => { if (rewardPick !== null) { const i = rewardPick; rewardPick = null; pickOrSave(run, takeId(i)); } }, rewardPick !== null ? "hi" : ""),
+        : (() => { const b = button("TAKE", () => { if (rewardPick !== null) { const i = rewardPick; rewardPick = null; pickOrSave(run, takeId(i)); } }, "hi"); b.disabled = rewardPick === null; return b; })(),
       button(p.kind === "treasure" ? "LEAVE IT" : "SKIP", () => { rewardPick = null; pickOrSave(run, skip); }),
       button("PARTY", () => go("rparty"))),
   ];
@@ -382,9 +381,7 @@ function shopView(run: RogueRun): Child[] {
       list.push(el);
     });
   } else if (shopTab === "train") {
-    const k = rogue(c).config.prices;
     const lp = trainPrice(c, p, "learn"), up = trainPrice(c, p, "upgrade");
-    list.push(h("div", { class: "text dim small wrap" }, k.trainStep ? `Learn an ability for ${lp}G, or make one better (+) for ${up}G. As often as you like: each one bought here makes the next ${k.trainStep}G dearer.` : `Learn an ability for ${lp}G, or make one better (+) for ${up}G. Once each a visit.`));
     if (p.learn) for (const o of learnOptions(c, run)) { const [cl, ab] = o.split(":"); list.push(trainRow(run, cl, ab, `LEARN ${lp}G`, opts.includes(`learn:${o}`) ? () => pickOrSave(run, `learn:${o}`) : null)); }
     else list.push(h("div", { class: "line dim" }, "LEARNED HERE ALREADY"));
     if (p.upgrade) for (const o of upgradeOptions(run)) { const [cl, ab] = o.split(":"); list.push(trainRow(run, cl, ab, `+ ${up}G`, opts.includes(`upgrade:${o}`) ? () => pickOrSave(run, `upgrade:${o}`) : null, true)); }
@@ -398,7 +395,7 @@ function shopView(run: RogueRun): Child[] {
     header("SHOP", () => go("home")),
     tabs,
     win("scroll", ...list),
-    h("div", { class: "btns even" }, button("LEAVE", () => { shopTab = "buy"; pickOrSave(run, "leave"); }, "hi"), button("PARTY", () => go("rparty"))),
+    actions(button("LEAVE", () => { shopTab = "buy"; pickOrSave(run, "leave"); }, "hi"), button("PARTY", () => go("rparty"))),
   ];
 }
 function trainRow(run: RogueRun, cls: string, ab: string, label: string, onClick: (() => void) | null, up = false): HTMLElement {
@@ -406,7 +403,7 @@ function trainRow(run: RogueRun, cls: string, ab: string, label: string, onClick
   return h("div", { class: "ab" },
     h("div", { class: "head" }, faceEl(cls), h("span", { class: "grow trunc" }, `${shortName(cls)}: ${a.name.toUpperCase()}${up ? "+" : ""}`), onClick ? button(label, onClick, "sm hi") : h("span", { class: "dim small" }, label)),
     h("div", { class: "body" }, up ? upText(ab, run, cls) : a.text, run.party.includes(cls) ? "" : " (at camp)"),
-    up ? null : (() => { const sz = sizeWords(a, fighter(run, cls).stats); return sz ? h("div", { class: "body hi" }, sz.toUpperCase()) : null; })());
+    up ? null : sizeEl(sizeParts(a, fighter(run, cls).stats)));
 }
 
 // ─── The campfire ──────────────────────────────────────────────────────────
@@ -420,19 +417,18 @@ function campView(run: RogueRun): Child[] {
   const body: Child[] = [];
   const used = run.pending.kind === "campfire" && !!run.pending.used;
   if (used && campTab !== "party") {
-    body.push(h("div", { class: "text hi wrap" }, "THE CAMPFIRE'S PICK IS MADE."), h("div", { class: "text dim small wrap" }, "Change who's in the party under SWAP if you like, then LEAVE."));
+    body.push(h("div", { class: "line hi" }, "PICK MADE"));
   } else if (campTab === "rest") {
-    body.push(row2("REST", `The party regains ${k.hp}% of its max HP (the max each had as the last fight ended).`, () => pickOrSave(run, "rest")));
-    body.push(row2("FOCUS", `The party regains ${k.mp}% of its max MP (likewise).`, () => pickOrSave(run, "focus")));
-    for (const o of opts.filter((x) => x.startsWith("raise:"))) body.push(row2(`RAISE ${shortName(o.slice(6))}`, `Stands up with ${k.revive}% of its HP.`, () => pickOrSave(run, o)));
-    body.push(h("div", { class: "text dim small wrap" }, `One pick; swaps stay open until you leave. Whatever you pick, those who were standing at camp when you arrived get half a REST and half a FOCUS (a fallen one needs a RAISE).`));
+    body.push(h("div", { class: "actions" },
+      choice("REST", `+${k.hp}% HP`, () => pickOrSave(run, "rest")),
+      choice("FOCUS", `+${k.mp}% MP`, () => pickOrSave(run, "focus")),
+      ...opts.filter((x) => x.startsWith("raise:")).map((o) => choice(`RAISE ${shortName(o.slice(6))}`, `${k.revive}% HP`, () => pickOrSave(run, o)))));
   } else if (campTab === "train") {
-    body.push(h("div", { class: "text dim small wrap" }, "Train instead of resting: one member learns an ability, or makes one better (+)."));
     for (const o of learnOptions(c, run)) { const [cl, ab] = o.split(":"); body.push(trainRow(run, cl, ab, "LEARN", () => pickOrSave(run, `learn:${o}`))); }
     for (const o of upgradeOptions(run)) { const [cl, ab] = o.split(":"); body.push(trainRow(run, cl, ab, "+", () => pickOrSave(run, `upgrade:${o}`), true)); }
   } else {
     const camp = bench(run);
-    body.push(h("div", { class: "text dim small wrap" }, camp.length ? "Tap one of the party, then one at camp, to trade places. This doesn't use up the campfire." : "Nobody waits at camp. Recruits wait here when the party is full."));
+    if (!camp.length) body.push(h("div", { class: "line dim" }, "NOBODY AT CAMP"));
     body.push(h("div", { class: "line small", onClick: () => go("rboss"), style: "cursor:pointer" }, iconEl(ICON.boss), h("span", { class: "dim" }, "BOSS "), h("span", { class: "gold grow trunc" }, run.boss.name.toUpperCase()), h("span", { class: "dim" }, "LOOK ▶")));
     for (const cls of [...run.party, ...camp]) {
       const v = vitals(run, cls);
@@ -454,16 +450,21 @@ function campView(run: RogueRun): Child[] {
         h("div", { class: "small dim" }, `${disp(v.hp)}/${disp(v.maxHp)}`)));
     }
   }
+  // The camp at night, as the battle draws it between fights: the party at the fire, the fallen lying beside it.
+  const cv = h("canvas", { class: "strip" });
+  cv.style.height = "12rem";
+  new CampStrip(cv, themeOf(run.region), run.party.map((cls) => ({ ref: cls, ko: member(run, cls).ko }))).start();
   return [
     header("CAMPFIRE", () => go("home")),
+    cv,
     partyStrip(run),
     tabs,
     win("scroll", ...body),
-    used ? h("div", { class: "btns even" }, button("LEAVE", () => { campTab = "rest"; swapPick = null; pickOrSave(run, "leave"); }, "hi")) : null,
+    used ? actions(button("LEAVE", () => { campTab = "rest"; swapPick = null; pickOrSave(run, "leave"); }, "hi")) : null,
   ];
 }
 function row2(label: string, text: string, onClick: () => void): HTMLElement {
-  return h("div", { class: "row", onClick, style: "min-height:3rem" }, h("span", { class: "cursor" }, "▶"), h("div", { class: "grow" }, h("div", { class: "hi" }, label), h("div", { class: "text dim small wrap" }, text)));
+  return h("div", { class: "row", onClick, style: "min-height:3rem" }, h("span", { class: "cursor" }, "▶"), h("div", { class: "grow" }, h("div", { class: "hi" }, label), text ? h("div", { class: "text dim small wrap" }, text) : null));
 }
 
 // ─── Events ────────────────────────────────────────────────────────────────
@@ -477,7 +478,7 @@ function eventView(run: RogueRun): Child[] {
     header(ev.name.toUpperCase(), () => go("home")),
     partyStrip(run),
     win("", h("div", { class: "line" }, iconEl(ICON.event, 2)), h("div", { class: "text wrap" }, ev.text)),
-    win("scroll list", ...(opts.includes("walk_on") ? [h("div", { class: "row", style: "min-height:3rem", onClick: () => pickOrSave(run, "walk_on") }, h("span", { class: "cursor" }, "▶"), h("div", { class: "grow" }, h("div", { class: "hi" }, "WALK ON"), h("div", { class: "text dim small wrap" }, "Nothing here you can use now.")))] : []), ...ev.options.map((o) => {
+    win("scroll list", ...(opts.includes("walk_on") ? [h("div", { class: "row", style: "min-height:3rem", onClick: () => pickOrSave(run, "walk_on") }, h("span", { class: "cursor" }, "▶"), h("div", { class: "grow" }, h("div", { class: "hi" }, "WALK ON")))] : []), ...ev.options.map((o) => {
       const ok = opts.includes(o.id);
       return h("div", { class: `row${ok ? "" : " static dimmed"}`, style: "min-height:3rem", onClick: ok ? () => pickOrSave(run, o.id) : undefined },
         h("span", { class: "cursor" }, ok ? "▶" : ""), h("div", { class: "grow" }, h("div", { class: ok ? "hi" : "dim" }, o.label, o.gold ? h("span", { class: "gold" }, ` (${o.gold}G)`) : null), h("div", { class: "text dim small wrap" }, o.text)));
@@ -510,15 +511,14 @@ function levelView(run: RogueRun): Child[] {
   const up = opts.filter((a) => !learn.includes(a) && a !== "gold");
   return [
     header("LEVEL UP", () => go("home"), h("span", { class: "dim" }, `${p.queue.length} TO GO`)),
-    win("", classHead(cls), h("div", { class: "line hi wrap" }, `${shortName(cls)} LEARNS ONE, MAKES ONE BETTER, OR TAKES GOLD`)),
+    win("", classHead(cls)),
     win("scroll",
       learn.length ? section("LEARN") : null,
       ...learn.map((a) => h("div", { onClick: () => pickOrSave(run, a), style: "cursor:pointer" }, abilityBlock(c.abilities.get(a)!, fighter(run, cls).stats, setup.settings.designer))),
       up.length ? section("MAKE BETTER (+)") : null,
       ...up.map((a) => h("div", { onClick: () => pickOrSave(run, a), style: "cursor:pointer" }, trainRow(run, cls, a, "+", null, true))),
       opts.includes("gold") ? section("OR") : null,
-      opts.includes("gold") ? row2(`${rogue(c).config.levelGold} GOLD`, "Take gold instead of training.", () => pickOrSave(run, "gold")) : null),
-    h("div", { class: "text dim small wrap" }, "Tap one."),
+      opts.includes("gold") ? row2(`${rogue(c).config.levelGold} GOLD`, "", () => pickOrSave(run, "gold")) : null),
   ];
 }
 
@@ -529,12 +529,11 @@ function regionView(run: RogueRun): Child[] {
   if (p.kind !== "region") return [];
   return [
     header(`ACT ${ROMAN[run.act + 1]}`, () => go("home")),
-    win("", h("div", { class: "text wrap" }, "The road forks. Each way has its own foes, and its own boss at the end.")),
     ...p.options.map((id) => {
       const r = rogue(c).regions.find((x) => x.id === id)!;
       // The boss this way is already set by the act's dice: shown with its moves, so the fork is a choice with its eyes open.
       const boss = actRoll(c, run, id, run.act + 1).boss;
-      return win("roffer", h("div", { class: "line hi" }, r.name.toUpperCase()), h("div", { class: "text dim small wrap" }, r.text), h("div", { class: "line small" }, iconEl(ICON.boss), h("span", { class: "gold" }, `BOSS: ${boss.name.toUpperCase()}`)), ...foeLines(boss.enemies, bossFoes(c, run, { act: run.act + 1, region: id })), h("div", { class: "btns" }, button("GO THIS WAY", () => pickOrSave(run, id), "hi sm")));
+      return win("roffer", h("div", { class: "line hi" }, r.name.toUpperCase()), h("div", { class: "text dim small wrap" }, r.text), h("div", { class: "line small" }, iconEl(ICON.boss), h("span", { class: "gold" }, `BOSS: ${boss.name.toUpperCase()}`)), ...foeLines(boss.enemies, bossFoes(c, run, { act: run.act + 1, region: id })), actions(button("GO THIS WAY", () => pickOrSave(run, id), "hi")));
     }),
   ];
 }
@@ -552,7 +551,7 @@ function overView(run: RogueRun): Child[] {
       h("div", { class: "line small dim wrap" }, `${run.stats.fights} FIGHTS · ${run.stats.elites} ELITES · ${run.stats.gold}G EARNED`),
       won ? h("div", { class: "line small hi wrap" }, `${run.party.map(shortName).join(", ")} CAN NOW LEAD A RUN`) : null),
     win("scroll", section("THE ROAD"), ...run.notes.map((n) => h("div", { class: "text small wrap" }, h("span", { class: "dim" }, `${ROMAN[n.act]}.${n.floor} `), n.text))),
-    h("div", { class: "btns even" }, button("DONE", () => { const r = endRun(); go("rogue"); if (r.won) cheer(r.unlocked, r.heat); }, "hi")),
+    actions(button("DONE", () => { const r = endRun(); go("rogue"); if (r.won) cheer(r.unlocked, r.heat); }, "hi")),
   ];
 }
 
@@ -592,9 +591,8 @@ export function rpartyScreen(): Child[] {
     header("PARTY", () => { seatPick = null; go("rogue"); }, `ACT ${ROMAN[run.act]}`),
     win("", h("div", { class: "line" }, prev, h("span", { class: "grow center hi" }, f.name), nxt), h("div", { class: "text dim small wrap" }, f.text, f.statuses?.length ? ` ${f.statuses.map((s) => c.statuses.get(s)!.text).join(" ")}` : "")),
     h("div", { class: "cards" }, ...cards),
-    h("div", { class: "text dim small wrap" }, manage ? "Tap two slots to trade seats; a slot twice for its sheet. Gear changes any time; who's in the party, only at a campfire." : "In a fight: look, don't touch."),
     win("scroll",
-      camp.length ? section("AT CAMP", fallen.length ? "can stand in for the fallen" : run.party.length < rogue(c).config.party ? "can fill the empty seat" : "swap at a campfire") : null,
+      camp.length ? section("AT CAMP") : null,
       ...camp.map((cls) => {
         const v = vitals(run, cls);
         // Any time between rooms, one standing at camp can take a fallen member's seat.
@@ -638,7 +636,7 @@ export function runitScreen(arg?: unknown): Child[] {
     win("", classHead(cls, h("div", { class: "line small" }, v.ko ? h("span", { class: "bad" }, "KO") : h("span", null, `HP ${disp(v.hp)}/${disp(v.maxHp)}`), h("span", { class: "mp" }, `  MP ${disp(v.mp)}/${disp(v.maxMp)}`)))),
     win("", statGrid(fm.stats, k.stats, setup.settings.designer), sp.length ? h("div", { class: "text up small wrap", style: "margin-top:.25rem" }, ...sp.flatMap((s, i) => (i ? [" · ", s] : [s]))) : null),
     win("scroll",
-      section("GEAR", manage ? "tap to change" : null),
+      section("GEAR"),
       ...(["weapon", "armor", "amulet"] as const).map((s) => {
         const uid = m.gear[s];
         const it = uid ? itemOf(run, uid) : undefined;
@@ -650,13 +648,13 @@ export function runitScreen(arg?: unknown): Child[] {
       }),
       h("div", { class: "line small dim wrap" }, `CAN USE ${k.weapons.map((w) => kindOf(w).name).join(", ").toUpperCase()} · ${k.armor.toUpperCase()} ARMOR`),
       section("PASSIVE"),
-      ...(k.passive ? passiveBlock(k.passive.name, k.passive.text) : passiveBlock("Einherjar", "Allies it revives come back with every action ready.")),
-      section("ABILITIES", manage && m.order.length ? (orderPick === null ? "tap two numbers to swap" : "the other, or the same to leave it out") : null),
+      ...classPassive(cls),
+      section("ABILITIES", manage && orderPick !== null ? h("span", { class: "hi" }, "SWAP · SAME: LEAVE OUT") : null),
       ...m.order.map((a, i) => abilityBlock(c.abilities.get(a)!, fm.stats, setup.settings.designer, { n: i + 1, onN: () => onN(i), cur: orderPick === i })),
-      basicLine(weaponOf(c, fm.weapon), fm.stats, setup.settings.designer),
-      out.length ? section("LEFT OUT", manage ? "tap to bring back" : null) : null,
+      basicLine(weaponOf(c, fm.weapon), fm.stats),
+      out.length ? section("LEFT OUT") : null,
       ...out.map((a) => { const el = abilityBlock(c.abilities.get(a)!, fm.stats, setup.settings.designer); el.classList.add("dimmed"); el.addEventListener("click", () => bringBack(a)); return el; }),
-      locked.length ? section("NOT LEARNED YET", "campfires, tomes, the shop") : null,
+      locked.length ? section("NOT LEARNED YET") : null,
       ...locked.map((a) => { const el = abilityBlock(c.abilities.get(a)!, fm.stats, false); el.classList.add("dimmed"); return el; }),
     ),
   ];
@@ -684,7 +682,6 @@ export function rgearScreen(arg?: unknown): Child[] {
         return g.statuses?.length ? h("div", null, r, ...effectLines(g)) : r;
       }),
     ),
-    h("div", { class: "text dim small wrap" }, "Pieces another member wears trade places with this one's. Colours: green uncommon, blue rare, gold ★ legendary."),
   ];
 }
 
@@ -699,9 +696,9 @@ export function rogueMenuLine(): string {
 /** A won run's moment: one card for the win, then one per class that can now lead, then the heat opened. A tap goes on. */
 function cheer(unlocked: string[], heat: boolean) {
   if (!frameEl) return;
-  const cards: Child[][] = [[h("div", { class: "cele-top" }, "VICTORY!"), h("div", { class: "text dim small wrap center" }, "All three acts cleared.")]];
-  for (const id of unlocked) cards.push([h("div", { class: "cele-top" }, "NEW LEADER!"), h("div", { class: "cele-art" }, faceEl(id, 2), actorEl(id, "victory", 2)), h("div", { class: "cele-name" }, classOf(id).name), h("div", { class: "text dim small wrap center" }, "Can now lead a run.")]);
-  if (heat) cards.push([h("div", { class: "cele-top" }, "HEAT RISES"), h("div", { class: "text dim small wrap center" }, `Heat ${meta().maxHeat} is open: every foe ${meta().maxHeat * rogue(c).config.heat.per}% tougher. Pick it on the leader screen.`)]);
+  const cards: Child[][] = [[h("div", { class: "cele-top" }, "VICTORY!")]];
+  for (const id of unlocked) cards.push([h("div", { class: "cele-top" }, "NEW LEADER!"), h("div", { class: "cele-art" }, faceEl(id, 2), actorEl(id, "victory", 2)), h("div", { class: "cele-name" }, classOf(id).name)]);
+  if (heat) cards.push([h("div", { class: "cele-top" }, "HEAT RISES"), h("div", { class: "cele-name" }, `HEAT ${meta().maxHeat}`), h("div", { class: "line center-line dim" }, `FOES +${meta().maxHeat * rogue(c).config.heat.per}%`)]);
   let at = 0;
   const overlay = h("div", { class: "overlay cele" });
   const show = () => {

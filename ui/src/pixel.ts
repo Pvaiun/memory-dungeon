@@ -16,7 +16,7 @@
  * crowded fights can shrink them further with the same filter and an outline.
  */
 import { c } from "./content.js";
-import { image, manifest, POSE, STATUS_STYLE, type Pose } from "./art.js";
+import { image, manifest, POSE, STATUS_STYLE, weaponArt, type Pose } from "./art.js";
 
 export const FRAME_W = 270;
 export const OUTLINE = "#14141e";
@@ -255,21 +255,22 @@ export function weaponFrame(pose: Pose, frame: number, bow = false): number | nu
     default: return null;
   }
 }
-/** Draws a party member with its feet at (x, y), facing right, with its weapon's strip in its hand. */
-export function drawActor(ctx: CanvasRenderingContext2D, cls: string, pose: Pose, frame: number, x: number, y: number, flash = false, scale = 1, weapon?: string) {
+/** Draws a party member with its feet at (x, y), facing right (or left, `mirror`), with its weapon's strip in its hand. */
+export function drawActor(ctx: CanvasRenderingContext2D, cls: string, pose: Pose, frame: number, x: number, y: number, flash = false, scale = 1, weapon?: string, mirror = false) {
   const sheet = actorSheet(cls);
   const [sx, sy, fw, fh] = actorFrame(pose, frame);
   const src = flash ? silhouette(sheet) : sheet;
   ctx.save();
-  ctx.translate(Math.round(x + actorCenterOffset(cls) * scale), Math.round(y + 2 * scale));
-  ctx.scale(-1, 1);
+  ctx.translate(Math.round(x + actorCenterOffset(cls) * scale * (mirror ? -1 : 1)), Math.round(y + 2 * scale));
+  if (!mirror) ctx.scale(-1, 1);
   ctx.drawImage(src, sx, sy, fw, fh, -Math.round((fw * scale) / 2), -fh * scale, fw * scale, fh * scale);
   const wf = weapon ? weaponFrame(pose, frame, c.gear.get(weapon)?.weapon?.kind === "bow") : null;
-  const strip = weapon && wf !== null && manifest.weapons[weapon] ? image(manifest.weapons[weapon]) : undefined;
+  const art = weaponArt(weapon);
+  const strip = art && wf !== null ? image(art) : undefined;
   if (strip) {
     // The pack's anchor: the 48×32 frame's bottom centre sits 12 pixels in front of the feet. While winding up the
     // figure steps back, so the weapon goes with it (by how far the chant pose's figure sits from the waiting one).
-    const w = flash ? silhouette(spriteOf(manifest.weapons[weapon!], 1)) : strip;
+    const w = flash ? silhouette(spriteOf(art!, 1)) : strip;
     const step = pose === "chant" ? Math.round(((actorBBox(cls, "chant").left + actorBBox(cls, "chant").right) - (actorBBox(cls).left + actorBBox(cls).right)) / 2) : 0;
     ctx.drawImage(w, wf! * 48, 0, 48, 32, Math.round((step - 36) * scale), -32 * scale, 48 * scale, 32 * scale);
   }
@@ -374,11 +375,40 @@ export function drawStatus(ctx: CanvasRenderingContext2D, id: string, x: number,
     drawDigits(ctx, s, x + STATUS_ICON + 1 - w, y + STATUS_ICON - 4, "#ffffff", OUTLINE);
   }
 }
+/** A status icon without its tile's border or a count: a glyph beside a number (an ability's cooldown and wind-up). */
+export const glyphEl = (id: string) => canvasEl(statusIconOf(id), 1, "glyph-icon");
 /** The icon as a DOM element, with its count. */
 export function statusEl(id: string, count?: number | null, scale = 1): HTMLCanvasElement {
   const cv = cv2d(STATUS_ICON + 2, STATUS_ICON + 2);
   drawStatus(cv.getContext("2d")!, id, 0, 0, count);
   return canvasEl(cv, scale, "sticon");
+}
+
+// ─── The campfire: an animated strip of square frames ───
+export function drawCampfire(ctx: CanvasRenderingContext2D, x: number, feet: number, wall: number) {
+  const cf = manifest.campfire;
+  const img = cf ? image(cf.file) : undefined;
+  if (!cf || !img) return;
+  const f = Math.floor(wall / 110) % cf.frames;
+  ctx.drawImage(img, f * cf.size, 0, cf.size, cf.size, Math.round(x - cf.size / 2), Math.round(feet - cf.size), cf.size, cf.size);
+}
+
+/**
+ * An action's icon as the battle's party rows draw it at a fight's start: shaded from the top by the share of its
+ * cooldown still to run, with the ticks to go in the corner. On a sheet it says when the ability first comes round.
+ */
+export function pipEl(cell: readonly [number, number], left: number, total: number, scale = 1): HTMLCanvasElement {
+  const cv = cv2d(16, 16);
+  const g = cv.getContext("2d")!;
+  g.drawImage(iconOf(cell[0], cell[1]), 0, 0);
+  const share = Math.max(0, Math.min(1, left / Math.max(1, total)));
+  if (share > 0) {
+    g.fillStyle = "rgba(10, 12, 24, 0.72)";
+    g.fillRect(0, 0, 16, Math.round(16 * share));
+    const t = String(Math.min(99, Math.round(left)));
+    drawDigits(g, t, 16 - (t.length * 4 - 1) - 1, 10, "#ffffff", OUTLINE);
+  }
+  return canvasEl(cv, scale, "icon");
 }
 
 // ─── Backdrops: a 270×224 scene per dungeon, composed from the tilesets by the asset tool ───
@@ -398,7 +428,7 @@ export function canvasEl(cv: HTMLCanvasElement, scale = 1, cls = ""): HTMLCanvas
 export const faceEl = (cls: string, scale = 1) => canvasEl(faceOf(cls), scale, "face");
 /** The weapon strip's held frame as a DOM element, for gear lists. */
 export function weaponEl(gearId: string, scale = 1): HTMLCanvasElement | null {
-  const file = manifest.weapons[gearId];
+  const file = weaponArt(gearId);
   if (!file) return null;
   const strip = spriteOf(file, 1);
   const cv = cv2d(32, 32);

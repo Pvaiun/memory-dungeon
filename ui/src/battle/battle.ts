@@ -12,13 +12,14 @@
 import { SUBTICKS } from "../../../src/schema.js";
 import type { CUnit } from "../../../src/engine/combat/fight.js";
 import { weaponOf } from "../../../src/engine/combat/fight.js";
-import { c, className, disp, elementName, fightName, runName, shortName } from "../content.js";
+import { c, className, disp, fightName, runName, shortName } from "../content.js";
 import { ELEMENT_COLOR, enemyDisplayName, enemyName, STATUS_STYLE, TAG_ICON, type Pose } from "../art.js";
 import { bar, button, clear, h, nav, win, type Child } from "../dom.js";
-import { party as partyLoadout, save, setup } from "../state.js";
+import { nextSeed, party as partyLoadout, save, setup } from "../state.js";
 import { abilityTag, statusText, weaponInfo } from "../describe.js";
-import { drawDigits, iconEl, iconOf, OUTLINE, statusEl } from "../pixel.js";
-import { classSheet, enemySheet, portraitEl } from "../sheet.js";
+import { drawDigits, enemyThumb, iconEl, iconOf, OUTLINE, statusEl } from "../pixel.js";
+import { classHead, classSheet, enemySheet, portraitEl } from "../sheet.js";
+import type { Member } from "../../../src/engine/combat/rules.js";
 import { Driver, type Ev } from "./driver.js";
 import { Narrator, type Beat, type Line, type Tone } from "./narrate.js";
 import { Scene, shieldOf, themeOf, W, H } from "./scene.js";
@@ -38,6 +39,11 @@ export type BattleArgs = { dungeon: string; seed?: number; node?: string; rogue?
 const TICK_MS = 500;
 const CHAR_MS = 26, BEAT_BASE = 520, BEAT_LINE = 300;
 const SPEEDS = [1, 2, 4] as const;
+/** The main action at a fight's end and at the campfire: big, in the message window's place, under the field. */
+const bigButton = (label: Child, onClick: () => void, sub?: string) => {
+  const b = button(h("span", { class: "big-label" }, label, sub ? h("span", { class: "sub" }, sub) : null), onClick, "hi big");
+  return b;
+};
 
 type Hist = { tick: number; text: string; tone: Tone; tag?: string };
 
@@ -49,7 +55,8 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   const prepared = rogue ? startRogueFight(c, rogue, { log: true }) : undefined;
   // The fight has begun: the party is set from here, even across a reload.
   if (rogue) saveRogue();
-  const seed = args.seed ?? setup.seed;
+  // A new seed every fight and every retry, unless the designer locked one (Settings → SEED LOCK).
+  const seed = args.seed ?? nextSeed();
   const dungeon = c.dungeons.get(args.dungeon);
   const fail = (msg: string) => {
     screen.append(win("", h("div", { class: "text wrap" }, msg), h("div", { class: "btns", style: "margin-top:.5rem" }, button("MENU", () => go("home")))));
@@ -108,7 +115,17 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   const tick = h("span", { class: "tick" }, "T", h("b", null, "0"));
   const foesEl = win("foes", foesList, tick);
   const ctl = h("div", { class: "ctl" });
-  screen.append(canvas, msgEl, partyEl, foesEl, ctl);
+  // At a fight's end and at the campfire, the main action takes the message window's place, under the field; the
+  // outcome and the smaller actions sit below the party, where the foes and the controls were.
+  const resultEl = h("div", { class: "result-slot" });
+  const lowerEl = h("div", { class: "lower-slot" });
+  screen.append(canvas, msgEl, resultEl, partyEl, foesEl, ctl, lowerEl);
+  /** Swaps the fight's own parts (the message window, the foes, the controls) for the end's or the campfire's. */
+  const showFight = (on: boolean, rows = true) => {
+    for (const el of [msgEl, foesEl, ctl]) el.style.display = on ? "" : "none";
+    partyEl.style.display = on || rows ? "" : "none";
+    if (on) (clear(resultEl), clear(lowerEl));
+  };
   setSound(setup.settings.sound);
   setMusic(setup.settings.music);
 
@@ -163,7 +180,8 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     queue.push(...narrator.take());
   }
   const charMs = () => (speed >= 4 ? 0 : CHAR_MS / speed);
-  const holdFor = (b: Beat) => (BEAT_BASE + BEAT_LINE * b.weight) / speed;
+  /** How long a typed beat stays: the base hold, scaled by Settings → HIT PAUSE, at the speed set. */
+  const holdFor = (b: Beat) => ((BEAT_BASE + BEAT_LINE * b.weight) * (setup.settings.hitPause ?? 1)) / speed;
   function startBeat(b: Beat) {
     clear(linesEl);
     playing = { beat: b, shown: 0, typed: 0, charAt: vwall, lineEls: [], typedAt: null, hold: holdFor(b) };
@@ -371,14 +389,8 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         scene.effectFor(String(ev.target), ev.status === "arc" ? "lightning" : "slash");
         break;
       case "fight_end":
-        if (ev.result === "won") {
-          scene.showBanner("VICTORY", "", 2500);
-          sfx.win();
-          for (const u of driver.units()) if (u.side === "party" && !u.ko) scene.pose(u.id, "victory", 2500);
-        } else {
-          scene.showBanner("DEFEAT", "", 2500);
-          sfx.lose();
-        }
+        // The engine logs a fight's end only when the run moves on (after NEXT): the end was already played when the fight was decided.
+        if (!endPlayed) playEnd(ev.result === "won");
         break;
       default:
         break;
@@ -581,11 +593,11 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     overlayDone = null;
     if (done) d?.();
   }
-  function openOverlay(title: Child, body: Child, onClose?: () => void, right?: Child): HTMLElement {
+  function openOverlay(title: Child, body: Child, onClose?: () => void, right?: Child, dialog = false): HTMLElement {
     closeOverlay();
     const box = win("scroll", body);
     overlayDone = onClose ?? null;
-    overlay = h("div", { class: "overlay" }, h("div", { class: "hdr" }, h("span", { class: "title" }, title), right, button("×", () => closeOverlay(true), "sm")), box);
+    overlay = h("div", { class: `overlay${dialog ? " dialog" : ""}` }, h("div", { class: "hdr" }, h("span", { class: "title" }, title), right, button("×", () => closeOverlay(true), "sm")), box);
     frame.append(overlay);
     nav.overlay = () => closeOverlay(true);
     return box;
@@ -598,6 +610,11 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     renderCtl();
     return () => { paused = wasPaused; stepping = wasStepping; renderCtl(); };
   }
+  /**
+   * Tapping a unit: the fight pauses and its whole sheet opens, with what's happening to it now on top: HP, Shield and
+   * MP, what it's winding up, and its statuses with their stacks, time left and what they do. The party's cooldowns are
+   * left out (the rows show them); a foe's stats are the fight's own, with the run's changes.
+   */
   function openInspect(id: string) {
     const u = driver.unit(id);
     if (!u) return;
@@ -607,51 +624,41 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     const designer = setup.settings.designer;
     const sh = shieldOf(u);
     const body = h("div", { class: "inspect" });
+    const casting = u.cast ? u.acts[u.cast.act] : null;
+    const castName = casting ? (casting.id === "basic" ? "ATTACK" : c.abilities.get(casting.id)?.name.toUpperCase() ?? "") : "";
+    if (isParty) body.append(classHead(u.ref, null, u.weapon));
+    else body.append(h("div", { class: "beast-art small" }, enemyThumb(u.ref, 56)));
     body.append(h("div", { class: "line" },
-      h("span", { class: "grow" }, u.ko ? h("span", { class: "bad" }, "KNOCKED OUT") : h("span", null, "HP ", h("b", { class: shieldOf(u) ? "sh" : "" }, `${disp(u.hp)}`), h("span", { class: "dim" }, `/${disp(u.stats.max_hp)}`))),
+      h("span", { class: "grow" }, u.ko ? h("span", { class: "bad" }, "KNOCKED OUT") : h("span", null, "HP ", h("b", { class: sh ? "sh" : "" }, `${disp(u.hp)}`), h("span", { class: "dim" }, `/${disp(u.stats.max_hp)}`))),
       sh ? h("span", { class: "buff" }, `SHIELD ${disp(sh)}`) : null,
       isParty || designer ? h("span", { class: "mp" }, `MP ${disp(u.mp)}`) : null,
     ));
-    body.append(h("div", { class: "section" }, "STATUSES"));
-    let any = false;
-    for (const s of u.statuses) {
+    if (casting) body.append(h("div", { class: "line hi" }, `WINDING UP ${castName}`, h("span", { class: "dim r" }, `${Math.max(0, Math.ceil((u.cast!.end - vt) / SUBTICKS))}T`)));
+    const sts = u.statuses.filter((s) => c.statuses.get(s.id)?.show === "icon");
+    if (sts.length) body.append(h("div", { class: "section" }, "STATUSES"));
+    for (const s of sts) {
       const d = c.statuses.get(s.id)!;
-      if (d.show !== "icon") continue;
-      any = true;
       const n = d.stacking === "intensity" ? (d.absorb ? disp(Math.floor(s.stacks / SUBTICKS)) : Math.floor(s.stacks / SUBTICKS)) : null;
-      const left = s.end === -1 ? "FOR THE FIGHT" : `${Math.max(0, Math.ceil((s.end - vt) / SUBTICKS))}T LEFT`;
+      const left = s.end === -1 ? "" : `${Math.max(0, Math.ceil((s.end - vt) / SUBTICKS))}T`;
       body.append(h("div", { class: "st" },
         statusEl(s.id, n),
         h("div", { class: "grow" },
-          h("div", { class: "line" }, h("span", { class: `grow trunc ${d.label === "buff" ? "buff" : "debuff"}` }, d.name.toUpperCase(), n !== null ? h("span", { class: "dim" }, d.absorb ? ` ${n} PTS` : ` ×${n}`) : null), h("span", { class: "dim" }, left)),
+          h("div", { class: "line" }, h("span", { class: `grow trunc ${d.label === "buff" ? "buff" : "debuff"}` }, d.name.toUpperCase(), n !== null ? h("span", { class: "dim" }, d.absorb ? ` ${n}` : ` ×${n}`) : null), h("span", { class: "dim" }, left)),
           h("div", { class: "text dim small wrap" }, d.text ?? statusText(d).slice(1).join(" ")),
         ),
       ));
     }
-    if (!any) body.append(h("div", { class: "line dim" }, "NONE"));
-    body.append(h("div", { class: "section" }, "ACTIONS"));
-    if (isParty || designer) {
-      u.acts.forEach((a, i) => {
-        const name = a.id === "basic" ? "ATTACK" : c.abilities.get(a.id)!.name;
-        const casting = u.cast?.act === i;
-        const left = Math.max(0, (a.ready - vt) / SUBTICKS);
-        const tag = narrator.tagOf(u.id, a.id);
-        body.append(h("div", { class: "line" }, TAG_ICON[tag] ? iconEl(TAG_ICON[tag]) : null, h("span", { class: "grow trunc" }, name.toUpperCase()), h("span", { class: `${casting ? "hi" : left > 0 ? "dim" : "good"}` }, casting ? "CASTING…" : left > 0 ? `IN ${Math.ceil(left)}T` : "READY")));
-      });
+    if (isParty) {
+      const member = { ...u, abilities: u.acts.filter((a) => a.id !== "basic").map((a) => a.id) } as unknown as Member;
+      const gear = driver.input.party.units.find((x) => x.class === u.ref)?.gear ?? {};
+      body.append(...(classSheet(u.ref, designer, member, gear).filter(Boolean) as Node[]));
     } else {
-      const e = c.enemies.get(u.ref)!;
-      for (const aid of e.abilities ?? []) {
-        const a = c.abilities.get(aid)!;
-        const casting = u.cast !== null && u.acts[u.cast.act]?.id === aid;
-        body.append(h("div", { class: "line" }, TAG_ICON[abilityTag(a)] ? iconEl(TAG_ICON[abilityTag(a)]) : null, h("span", { class: "grow trunc" }, a.name.toUpperCase()), h("span", { class: `${casting ? "hi" : "dim"}` }, casting ? "CASTING…" : "")));
-      }
-      const w = weaponInfo(e.weapon ?? c.pack.ruleset.unarmed, null);
-      body.append(h("div", { class: "line" }, TAG_ICON[w.tag] ? iconEl(TAG_ICON[w.tag]) : null, h("span", { class: "grow trunc" }, "ATTACK"), h("span", { class: "dim" }, `${(w.type === "magical" ? elementName(w.element ?? "") : w.subtype ?? "").toUpperCase()} /${w.cooldown}T`)));
+      body.append(...(enemySheet(c.enemies.get(u.ref)!, designer, u.stats, u.stats.power ?? 0).filter(Boolean) as Node[]));
     }
-    if (designer && !isParty) body.append(h("div", { class: "line dim" }, `ATK${disp(u.stats.attack)} MAG${disp(u.stats.magic)} ARM${disp(u.stats.armor)}`));
-    body.append(h("div", { class: "btns", style: "margin-top:.5rem" }, button("FULL SHEET", () => openSheet(u, resume), "sm"), button("CLOSE", () => closeOverlay(true), "sm")));
-    openOverlay(nameOf(u.id), body, resume, u.side === "party" ? portraitEl(u.ref) : null);
+    openOverlay(nameOf(u.id), body, resume, u.side === "party" ? null : h("span", { class: rankTone(u.ref) }, rankWord(u.ref)));
   }
+  const rankWord = (ref: string) => { const r = c.enemies.get(ref)?.rank; return r === "boss" ? "★BOSS" : (r ?? "").toUpperCase(); };
+  const rankTone = (ref: string) => { const r = c.enemies.get(ref)?.rank; return r === "boss" ? "gold" : r === "elite" ? "debuff" : "dim"; };
   function openLog() {
     const resume = holdClock();
     const body = h("div", { class: "log" });
@@ -664,19 +671,14 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     const box = openOverlay("LOG", body, resume);
     box.scrollTop = box.scrollHeight;
   }
-  function openSheet(u: CUnit, resume: () => void) {
-    const body = u.side === "party" ? classSheet(u.ref, setup.settings.designer) : enemySheet(c.enemies.get(u.ref)!, setup.settings.designer);
-    openOverlay(nameOf(u.id), h("div", null, ...body), resume);
-  }
 
   /** Leaving mid-fight loses it: ask first. */
   function confirmLeave() {
     if (!driver.fight || driver.fight.result) return exit();
     const resume = holdClock();
     openOverlay("LEAVE THE FIGHT?", h("div", null,
-      h("div", { class: "text dim wrap small" }, rogue ? "Coming back plays this fight again from its start, the same way: the run waits here." : "The fight and the run are lost. The same seed plays the same fight again from the menu."),
-      h("div", { class: "btns", style: "margin-top:.75rem" }, button("LEAVE", () => exit(), "hi"), button("STAY", () => closeOverlay(true))),
-    ), resume);
+      h("div", { class: "btns even", style: "margin-top:.25rem" }, button("LEAVE", () => exit(), "hi"), button("STAY", () => closeOverlay(true))),
+    ), resume, null, true);
   }
 
   // ─── Field input ───
@@ -690,15 +692,26 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
 
   // ─── Flow ───
   let ended = false;
+  /** The end of the fight has played: its banner, the fanfare and the poses. */
+  let endPlayed = false;
+  /** The fight is decided: VICTORY or DEFEAT, the fanfare and the victory poses now, not when the run moves on. */
+  function playEnd(won: boolean) {
+    endPlayed = true;
+    scene.showBanner(won ? "VICTORY" : "DEFEAT", "", 2500);
+    (won ? sfx.win : sfx.lose)();
+    if (won) for (const u of driver.units()) if (u.side === "party" && !u.ko) scene.pose(u.id, "victory", 2500);
+  }
   type Tally = { dealt: number; taken: number; healed: number; acts: number };
   function endOfFight() {
     if (ended) return;
     ended = true;
     checkClear();
     const f = driver.fight!;
+    const won = f.result === "won";
+    if (!endPlayed) playEnd(won);
+    history.push({ tick: Math.floor(f.now / SUBTICKS), text: won ? "Victory!" : "The party is defeated…", tone: won ? "good" : "bad" });
     const partyUnits = driver.units().filter((u) => u.side === "party");
     const tally = fightTally();
-    const won = f.result === "won";
     const last = single || driver.fightNo >= driver.fightTotal;
     const table = h("table", { class: "sum" },
       h("thead", null, h("tr", null, h("th", null, ""), h("th", null, "DEALT"), h("th", null, "TAKEN"), h("th", null, "HP"))),
@@ -707,29 +720,24 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         return h("tr", null, h("td", null, className(u.ref)), h("td", null, String(disp(t.dealt))), h("td", null, String(disp(t.taken))), h("td", { class: u.ko ? "bad" : "" }, u.ko ? "KO" : String(disp(u.hp))));
       })),
     );
-    const title = won ? (last ? (single ? "VICTORY" : "RUN CLEARED") : "VICTORY") : "DEFEAT";
+    const title = won ? (last && !single ? "RUN CLEARED" : "VICTORY") : "DEFEAT";
     const where = single ? "" : `${driver.fightNo}/${driver.fightTotal}`;
-    const newSeed = () => restart(Math.floor(Math.random() * 100000) + 1);
-    // A node just cleared leads to the journey; a replay or practice says it paid nothing.
-    const btns: Child[] = rogue
-      ? [button(won ? "ONWARD" : reservesStand(c, rogue) ? "THE CAMP STEPS IN" : "THE END", () => rogueOn(), "hi")]
-      : clearedNow
-      ? [button("JOURNEY", () => { stop(); go("journey"); if (!celebrated) cheer(); }, "hi")]
-      : won
-        ? [last ? null : button("NEXT", () => nextFight(), "hi"), button("AGAIN", () => restart(seed)), button("NEW SEED", newSeed), button(exitLabel, exit)]
-        : [button("RETRY", () => restart(seed), "hi"), button("NEW SEED", newSeed), button(exitLabel, exit)];
-    const note = clearedNow ? h("div", { class: "line hi" }, "JOURNEY: CLEARED!")
-      : args.node && won && last ? h("div", { class: "line dim small" }, single ? "PRACTICE: PAYS NOTHING" : "REPLAY: PAYS NOTHING") : null;
-    const box = win("summary",
-      h("div", { class: "line" }, h("span", { class: `grow ${won ? "good" : "bad"}` }, title), h("span", { class: "dim" }, `${where} T${f.round}`)),
-      table,
-      note,
-      h("div", { class: "btns", style: "margin-top:.5rem" }, ...btns, button("LOG", () => openLog())),
-    );
+    // One big way on, where the message window was; the rest below.
+    let main: HTMLButtonElement;
+    const more: HTMLButtonElement[] = [];
+    if (rogue) main = bigButton(won ? "ONWARD" : reservesStand(c, rogue) ? "THE CAMP STEPS IN" : "THE END", () => rogueOn());
+    else if (clearedNow) main = bigButton("JOURNEY", () => { stop(); go("journey"); if (!celebrated) cheer(); });
+    else if (won && !last) (main = bigButton("NEXT FIGHT", () => nextFight(), `${driver.fightNo + 1}/${driver.fightTotal}`)), more.push(button(exitLabel, exit));
+    else if (won) (main = bigButton(exitLabel, exit)), more.push(button("AGAIN", () => restart()));
+    else (main = bigButton("RETRY", () => restart())), more.push(button(exitLabel, exit));
+    more.push(button("LOG", () => openLog()));
+    const note = clearedNow ? h("div", { class: "line hi" }, "CLEARED!")
+      : args.node && won && last ? h("div", { class: "line dim small" }, single ? "PRACTICE" : "REPLAY") : null;
     setTimeout(() => {
       if (stopped || !ended) return;
-      for (const el of [msgEl, ctl]) el.style.display = "none";
-      screen.append(box);
+      showFight(false);
+      resultEl.append(win("result", h("div", { class: "line" }, h("span", { class: `grow ${won ? "good" : "bad"}` }, title), h("span", { class: "dim" }, `${where} T${f.round}`)), main));
+      lowerEl.append(win("summary", table, note, h("div", { class: "btns even", style: "margin-top:.5rem" }, ...more)));
     }, 900);
     if (won && !last && !rogue && setup.settings.autoContinue) setTimeout(() => { if (!stopped && ended) nextFight(); }, 2200);
     if (clearedNow) setTimeout(() => { if (!stopped && !celebrated) cheer(); }, 1700);
@@ -754,8 +762,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     return m;
   }
   function nextFight() {
-    screen.querySelector(".summary")?.remove();
-    for (const el of [msgEl, ctl]) el.style.display = "";
+    showFight(true);
     ended = false;
     queue.length = 0;
     playing = null;
@@ -767,49 +774,56 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     renderCtl();
     driver.continueRun();
     pull();
+    // The last fight's end beat comes out of the engine only now: it was already told and played.
+    queue.splice(0, queue.length, ...queue.filter((b) => b.kind !== "end"));
+    endPlayed = false;
     if (driver.phase === "campfire") return showCampfire();
-    if (driver.phase === "run_won" || driver.phase === "run_lost") {
-      screen.append(win("", h("div", { class: "line" }, driver.phase === "run_won" ? "RUN CLEARED" : "RUN LOST"), h("div", { class: "btns" }, button(exitLabel, exit))));
-    }
+    if (driver.phase === "run_won" || driver.phase === "run_lost") runOver();
   }
-  /** The campfire halfway through the run: the party as it stands, and one pick: HP back, MP back, or one fallen member back. */
+  function runOver() {
+    showFight(false, false);
+    resultEl.append(win("result", h("div", { class: "line" }, driver.phase === "run_won" ? "RUN CLEARED" : "RUN LOST"), bigButton(exitLabel, exit)));
+  }
+  /**
+   * The campfire halfway through a run: night on the field, the fire in the middle and the party resting around it;
+   * one pick in the message window's place (HP back, MP back, or one fallen member back), and each member's HP and MP below.
+   */
   function showCampfire() {
     const cf = driver.campfire();
     if (!cf) return;
-    for (const el of [msgEl, ctl]) el.style.display = "none";
     const party = driver.run.party as unknown as { id: string; ref: string; hp: number; mp: number; stats: Record<string, number> }[];
-    const box = win("summary",
-      h("div", { class: "line" }, h("span", { class: "grow hi" }, "CAMPFIRE"), h("span", { class: "dim" }, `${driver.fightNo}/${driver.fightTotal} DONE`)),
-      h("div", { class: "line dim small" }, cf.raise.length ? "Rest, focus, or raise one of the fallen. One pick." : "Rest, or focus. One pick."),
-      h("table", { class: "sum" },
-        h("thead", null, h("tr", null, h("th", null, ""), h("th", null, "HP"), h("th", null, "MP"))),
-        h("tbody", null, ...party.map((m) => h("tr", null,
-          h("td", null, className(m.ref)),
-          h("td", { class: m.hp <= 0 ? "bad" : "" }, m.hp <= 0 ? "KO" : `${disp(m.hp)}/${disp(m.stats.max_hp)}`),
-          h("td", null, `${disp(m.mp)}/${disp(m.stats.max_mp)}`),
-        ))),
-      ),
-      h("div", { class: "btns", style: "margin-top:.5rem" },
-        button(`REST +${cf.hp}% HP`, () => pick("rest"), "hi"),
-        button(`FOCUS +${cf.mp}% MP`, () => pick("focus"), "hi"),
-        ...cf.raise.map((id) => button(`RAISE ${className(party.find((m) => m.id === id)!.ref).toUpperCase()} ${cf.revive}% HP`, () => pick(`raise:${id}`), "hi")),
-      ),
-    );
-    screen.append(box);
+    scene.startCamp(party.map((m) => ({ ref: m.ref, ko: m.hp <= 0 })));
+    showFight(false, false);
+    const choices = [
+      bigButton("REST", () => pick("rest"), `+${cf.hp}% HP`),
+      bigButton("FOCUS", () => pick("focus"), `+${cf.mp}% MP`),
+      ...cf.raise.map((id) => bigButton(`RAISE ${shortName(party.find((m) => m.id === id)!.ref)}`, () => pick(`raise:${id}`), `${cf.revive}% HP`)),
+    ];
+    resultEl.append(win("result camp", h("div", { class: "line" }, h("span", { class: "grow hi" }, "CAMPFIRE"), h("span", { class: "dim" }, `${driver.fightNo}/${driver.fightTotal}`)), ...choices));
+    lowerEl.append(win("party list", ...party.map((m) => {
+      const ko = m.hp <= 0;
+      return h("div", { class: `member camp${ko ? " ko" : ""}` },
+        h("div", { class: "portrait" }, portraitEl(m.ref)),
+        h("div", { class: "stats" },
+          h("div", { class: "name trunc" }, className(m.ref)),
+          h("div", { class: "line2" }, h("span", { class: "lbl" }, "HP"), bar(ko ? 0 : m.hp / m.stats.max_hp), h("span", { class: "num" }, ko ? "KO" : `${disp(m.hp)}`)),
+          h("div", { class: "line2" }, h("span", { class: "lbl mp" }, "MP"), bar(m.mp / Math.max(1, m.stats.max_mp), "mp", 0, true), h("span", { class: "num mp" }, `${disp(m.mp)}`)),
+        ));
+    })));
     function pick(choice: string) {
-      box.remove();
-      for (const el of [msgEl, ctl]) el.style.display = "";
+      sfx.heal();
+      scene.stopCamp();
+      showFight(true);
       driver.choose(choice);
       pull();
       renderCtl();
-      if (driver.phase === "run_won" || driver.phase === "run_lost") {
-        screen.append(win("", h("div", { class: "line" }, driver.phase === "run_won" ? "RUN CLEARED" : "RUN LOST"), h("div", { class: "btns" }, button(exitLabel, exit))));
-      }
+      if (driver.phase === "run_won" || driver.phase === "run_lost") runOver();
     }
   }
-  function restart(newSeed: number) {
+  /** The same fight or run again, with a new seed (the designer's locked one, if set). */
+  function restart() {
     stop();
-    go("battle", { ...args, seed: newSeed });
+    go("battle", { ...args, seed: undefined });
   }
   /** Plays the rest of the fight at once: the log gets every line, the window the last beat. */
   function fastForward() {
@@ -900,9 +914,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     else if (e.key === "Escape") { if (overlay) closeOverlay(true); }
   };
   window.addEventListener("keydown", onKey);
-  if (driver.phase === "run_won" || driver.phase === "run_lost") {
-    screen.append(win("", h("div", { class: "line" }, "NOTHING TO FIGHT"), h("div", { class: "btns" }, button(exitLabel, exit))));
-  }
+  if (driver.phase === "run_won" || driver.phase === "run_lost") runOver();
   // The phone's back button: closes an overlay (nav.overlay), else asks before leaving the fight.
   nav.back = () => confirmLeave();
   // The first beats: the run's name, then the fight's opening.

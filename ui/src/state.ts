@@ -1,18 +1,27 @@
 /**
- * What the player set up: party, formation, gear, ability order, seed and
+ * What the player set up: party, formation, gear, ability order and
  * settings. Kept in localStorage, so a reload keeps the build. The journey and
  * free play each keep their own party, formation and gear (the loadout): the
  * one in use sits in `setup`, the other in `setup.other`, so switching modes
  * loses neither. What isn't owned is dropped on read (journey.ts says what's owned).
  */
 import type { Party } from "../../src/schema.js";
-import { c, classes, formations } from "./content.js";
+import { c, classes, formations, type NumberScale } from "./content.js";
 import { plainWeapon } from "../../src/sim/parties.js";
 import { mode as journeyMode, owned, ownsGear, resetJourney, setMode as setJourneyMode, type Mode } from "./journey.js";
 
 /** `portraits`: what stands for a class in the menus. "faces" everywhere, "sprites" everywhere, or "mixed": sprites in the party's slots, faces elsewhere. */
 export type Portraits = "faces" | "sprites" | "mixed";
-export type Settings = { speed: number; step: boolean; partyBars: boolean; sound: boolean; music: boolean; designer: boolean; autoContinue: boolean; theme: string; bigNumbers: boolean; portraits: Portraits };
+/**
+ * `numbers`: the display scale (content.ts). `hitPause`: how long the fight holds on each message once it's typed, as a
+ * share of the base hold. `seedLock`: designer view only, every fight plays `setup.seed`; otherwise each one draws a new seed.
+ */
+export type Settings = {
+  speed: number; step: boolean; partyBars: boolean; sound: boolean; music: boolean; designer: boolean; autoContinue: boolean; theme: string;
+  numbers: NumberScale; hitPause: number; seedLock: boolean; portraits: Portraits;
+};
+/** The HIT PAUSE choices, as shares of the base hold (half a second plus a third per line, at 1×). */
+export const HIT_PAUSES = [0.25, 0.5, 0.75, 1] as const;
 
 /** Who goes, where they stand and what they carry: one per mode. */
 export type Loadout = { party: string[]; formation: string; gear: Record<string, Record<string, string>> };
@@ -22,6 +31,7 @@ export type Setup = Loadout & {
   mode?: Mode;
   other?: Loadout;
   abilities: Record<string, string[]>;
+  /** The designer's fixed seed (Settings → SEED); players never see a seed. */
   seed: number;
   settings: Settings;
 };
@@ -40,7 +50,7 @@ function fresh(): Setup {
     mode: journeyMode(),
     abilities: {},
     seed: 1,
-    settings: { speed: 1, step: false, partyBars: false, sound: true, music: true, designer: false, autoContinue: false, theme: "night", bigNumbers: false, portraits: "mixed" },
+    settings: { speed: 1, step: false, partyBars: false, sound: true, music: true, designer: false, autoContinue: false, theme: "night", numbers: "medium", hitPause: 0.75, seedLock: false, portraits: "mixed" },
   };
 }
 
@@ -53,8 +63,13 @@ function load(): Setup {
     if (!raw) return fresh();
     const stored = JSON.parse(raw) as Partial<Setup>;
     const s = { ...fresh(), ...stored, mode: stored.mode === "rogue" ? "free" : stored.mode ?? "free" };
-    const old = s.settings as Partial<Settings> & { tickMs?: number; palette?: string };
+    const old = s.settings as Partial<Settings> & { tickMs?: number; palette?: string; bigNumbers?: boolean };
     s.settings = { ...fresh().settings, ...old };
+    // Before NUMBERS had three sizes: BIG stays big, SMALL moves to the new default.
+    if (!old.numbers) s.settings.numbers = old.bigNumbers ? "big" : "medium";
+    delete (s.settings as { bigNumbers?: boolean }).bigNumbers;
+    if (!["small", "medium", "big"].includes(s.settings.numbers)) s.settings.numbers = "medium";
+    if (!(HIT_PAUSES as readonly number[]).includes(s.settings.hitPause)) s.settings.hitPause = fresh().settings.hitPause;
     if (!(s.settings.speed === 1 || s.settings.speed === 2 || s.settings.speed === 4)) s.settings.speed = 1;
     if (s.settings.theme !== "night" && s.settings.theme !== "day") s.settings.theme = "night";
     if (!["faces", "sprites", "mixed"].includes(s.settings.portraits)) s.settings.portraits = "mixed";
@@ -145,3 +160,6 @@ export function soloParty(cls: string): Party {
 }
 
 export const classIds = classes.map((x) => x.id);
+
+/** The seed for a fight or run about to start: a new one every time, unless the designer locked one. */
+export const nextSeed = (): number => (setup.settings.designer && setup.settings.seedLock ? setup.seed : Math.floor(Math.random() * 1e9) + 1);

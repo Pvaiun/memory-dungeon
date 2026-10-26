@@ -7,7 +7,7 @@
  * draws them.
  */
 import type { GearT } from "../../src/schema.js";
-import { c } from "./content.js";
+import { baseGearId, c } from "./content.js";
 
 export type Manifest = {
   classes: Record<string, string>;
@@ -23,6 +23,8 @@ export type Manifest = {
   frame: number;
   iconset: string;
   actorFrame?: number;
+  /** The campfire's frames in one strip, square, at art size. */
+  campfire?: { file: string; frames: number; size: number };
 };
 
 export let manifest: Manifest;
@@ -37,6 +39,7 @@ export async function loadArt(): Promise<void> {
   const files = [
     ...Object.values(manifest.classes), ...Object.values(manifest.enemies).map((e) => e.file), ...Object.values(manifest.vfx).map((v) => v.file), manifest.iconset,
     ...Object.values(manifest.statuses), ...Object.values(manifest.weapons), ...Object.values(manifest.faces), ...Object.values(manifest.backdrops),
+    ...(manifest.campfire ? [manifest.campfire.file] : []),
   ];
   await Promise.all(files.map(load));
 }
@@ -62,6 +65,10 @@ export function enemyName(ref: string, unitName: string): string {
   return unitName.startsWith(base) ? art.name + unitName.slice(base.length) : art.name;
 }
 export const enemyDisplayName = (ref: string): string => manifest?.enemies[ref]?.name ?? c.enemies.get(ref)?.name ?? ref;
+/** A weapon's strip: its own, or for a rogue run's item, its base piece's. */
+export const weaponArt = (gearId: string | undefined): string | undefined => (gearId ? manifest.weapons[gearId] ?? manifest.weapons[baseGearId(gearId)] : undefined);
+/** A legendary amulet of the rogue mode shows the icon of the rule it carries (an hourglass, a lantern, a skull). */
+export const amuletStatus = (g: GearT): string | null => (g.slot === "amulet" && g.statuses?.[0]?.startsWith("lg_") && manifest.statuses[g.statuses[0]] ? g.statuses[0] : null);
 
 // ─── Actor sheets: RPG Maker MV sideview layout, 18 poses × 3 frames ───
 export const POSE = { walk: 0, wait: 1, chant: 2, guard: 3, damage: 4, evade: 5, thrust: 6, swing: 7, missile: 8, skill: 9, spell: 10, item: 11, escape: 12, victory: 13, dying: 14, abnormal: 15, sleep: 16, dead: 17 } as const;

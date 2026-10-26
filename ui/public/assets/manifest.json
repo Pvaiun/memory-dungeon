@@ -101,10 +101,9 @@
   },
   "witch": {
    "file": "enemies/witch.png",
-   "w": 127,
-   "h": 132,
-   "scale": 1.0,
-   "name": "Cursed Tome"
+   "w": 161,
+   "h": 126,
+   "scale": 1.0
   },
   "lich": {
    "file": "enemies/lich.png",
@@ -138,10 +137,9 @@
   },
   "hellhound": {
    "file": "enemies/hellhound.png",
-   "w": 196,
-   "h": 138,
-   "scale": 0.8,
-   "name": "Hellcat"
+   "w": 181,
+   "h": 171,
+   "scale": 0.7
   },
   "lava_slime": {
    "file": "enemies/lava_slime.png",
@@ -300,7 +298,37 @@
   "thorns": "status/thorns.png",
   "lifesteal": "status/lifesteal.png",
   "siphon": "status/siphon.png",
-  "double_strike": "status/double_strike.png"
+  "double_strike": "status/double_strike.png",
+  "refrain": "status/refrain.png",
+  "lg_ember": "status/lg_ember.png",
+  "lg_cleave": "status/lg_cleave.png",
+  "lg_rime": "status/lg_rime.png",
+  "lg_wounds": "status/lg_wounds.png",
+  "lg_sunder": "status/lg_sunder.png",
+  "lg_song": "status/lg_song.png",
+  "lg_judge": "status/lg_judge.png",
+  "lg_lantern": "status/lg_lantern.png",
+  "lg_soul": "status/lg_soul.png",
+  "lg_banner": "status/lg_banner.png",
+  "lg_hourglass": "status/lg_hourglass.png",
+  "lg_horn": "status/lg_horn.png",
+  "lg_bell": "status/lg_bell.png",
+  "lg_fury": "status/lg_fury.png",
+  "lg_idol": "status/lg_idol.png",
+  "lg_idol_on": "status/lg_idol_on.png",
+  "lg_brittle": "status/lg_brittle.png",
+  "lg_coil": "status/lg_coil.png",
+  "lg_frost": "status/lg_frost.png",
+  "lg_briar": "status/lg_briar.png",
+  "lg_spikes": "status/lg_spikes.png",
+  "lg_shade": "status/lg_shade.png",
+  "lg_execute": "status/lg_execute.png",
+  "lg_storm": "status/lg_storm.png",
+  "lg_hunter": "status/lg_hunter.png",
+  "lg_grave": "status/lg_grave.png",
+  "lg_cinder": "status/lg_cinder.png",
+  "ui_cooldown": "status/ui_cooldown.png",
+  "ui_cast": "status/ui_cast.png"
  },
  "vfx": {
   "fire1": {
@@ -684,7 +712,15 @@
   "plain_dark_staff": "weapons/plain_dark_staff.png",
   "nightstaff": "weapons/nightstaff.png",
   "leech_staff": "weapons/leech_staff.png",
-  "sanguine_staff": "weapons/sanguine_staff.png"
+  "sanguine_staff": "weapons/sanguine_staff.png",
+  "headsman_axe": "weapons/headsman_axe.png",
+  "stormbrand": "weapons/stormbrand.png",
+  "frostfang": "weapons/frostfang.png",
+  "hunters_bow": "weapons/hunters_bow.png",
+  "brand_of_kings": "weapons/brand_of_kings.png",
+  "gravecaller": "weapons/gravecaller.png",
+  "cinder_rod": "weapons/cinder_rod.png",
+  "earthshaker": "weapons/earthshaker.png"
  },
  "faces": {
   "knight": "faces/knight.png",
@@ -725,5 +761,10 @@
  "backdropSize": [
   270,
   228
- ]
+ ],
+ "campfire": {
+  "file": "campfire.png",
+  "frames": 8,
+  "size": 32
+ }
 }

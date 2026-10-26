@@ -1,14 +1,14 @@
 import { loadArt } from "./art.js";
 import { h, initBack } from "./dom.js";
 import { buildFont, fitScale, FONT } from "./pixel.js";
-import { setDisplayDiv } from "./content.js";
+import { setNumberScale } from "./content.js";
 import { sanitize, save, setup } from "./state.js";
 import { go, mount, refresh, setTheme } from "./screens.js";
 import { setCleared } from "./journey.js";
 
 fitScale();
 setTheme(setup.settings.theme);
-setDisplayDiv(setup.settings.bigNumbers ? 10 : 100);
+setNumberScale(setup.settings.numbers);
 window.addEventListener("resize", fitScale);
 
 initBack();

@@ -3,7 +3,7 @@
  * time, each popping in with a few twinkling stars. CLEARED! with the party
  * cheering; one card per thing unlocked (a class with its face and figure, a
  * formation with its slots, the gear with its sprites and who can wear it),
- * each saying where to find it; then the next node, or the journey's end.
+ * then the next node, or the journey's end.
  * A tap goes on; the phone's back button or Escape skips to the last card,
  * and closes it there.
  */
@@ -45,11 +45,10 @@ function cards(i: number): Card[] {
     if (!k) continue;
     out.push({
       top: "NEW CLASS!",
-      where: "FIND IT IN PARTY",
       body: [
         h("div", { class: "cele-art" }, faceEl(id, 2), actorEl(id, "wait", 2, gearFor(id).weapon)),
         h("div", { class: "cele-name" }, k.name),
-        h("div", { class: "text dim small wrap center" }, role(k.text)),
+        h("div", { class: "text dim small wrap center" }, role(id)),
       ],
     });
   }
@@ -58,7 +57,6 @@ function cards(i: number): Card[] {
     if (!f) continue;
     out.push({
       top: "NEW FORMATION!",
-      where: "CHOOSE IT ON THE PARTY SCREEN",
       body: [
         h("div", { class: "cele-name" }, f.name),
         h("div", { class: "text dim small wrap center" }, f.text, f.statuses?.length ? ` ${f.statuses.map((s) => c.statuses.get(s)?.text ?? "").join(" ")}` : ""),
@@ -75,7 +73,6 @@ function cards(i: number): Card[] {
     const chunk = gear.slice(k, k + 4);
     out.push({
       top: gear.length > 4 ? `NEW GEAR! ${k / 4 + 1}/${Math.ceil(gear.length / 4)}` : "NEW GEAR!",
-      where: "EQUIP IT FROM A CLASS'S SHEET",
       body: [h("div", { class: "cele-gear" }, ...chunk.map((g) => {
         const who = have.classes.filter((cls) => { const def = c.classes.get(cls); return !!def && canEquip(def, g); });
         return h("div", null,
@@ -90,7 +87,7 @@ function cards(i: number): Card[] {
     last: true,
     body: next
       ? [h("div", { class: "cele-name" }, `${i + 2} ${next.name}`), h("div", { class: "line center-line dim small" }, KIND_WORD[next.kind] ?? next.kind.toUpperCase()), h("div", { class: "text dim small wrap center" }, next.text)]
-      : [h("div", { class: "text dim small wrap center" }, "Every run is cleared. They stay open to replay, and free play (in Settings) has everything.")],
+      : [],
   });
   return out;
 }

@@ -3,16 +3,22 @@
  * single fights of every dungeon added as one-stage dungeons ("dungeon~stage"),
  * the display scale, and the short names and codes the Game Boy layout uses.
  * The data stores amounts at 1,000 per point of the documents' relative scale;
- * the interface shows 10 per point (a Knight has 50 HP, a sword hits for about
- * 11), or 100 per point with the "big numbers" setting.
+ * the interface shows 30 per point by default (a Knight has 120 HP, a sword
+ * hits for about 24), or 10 or 100 per point (Settings → NUMBERS).
  */
 import raw from "../../content/core-set.pack.json";
 import { build } from "../../src/sim/content.js";
 import type { Content } from "../../src/engine/run.js";
 import type { AbilityT, ClassDefT, DungeonT, EnemyT, FormationT, GearT, StatusT, WeaponKindT } from "../../src/schema.js";
 
-export let DISPLAY_DIV = 100;
-export const setDisplayDiv = (d: number) => { DISPLAY_DIV = d; };
+/**
+ * Points of the documents' scale shown per point, by the NUMBERS setting. Small (10) rounded a third of status ticks
+ * and half of all heals to 1 or 0; medium (30) leaves about 3% there, with a basic hit near 24 and a Knight at 120 HP.
+ */
+export type NumberScale = "small" | "medium" | "big";
+export const NUMBER_SCALES: Record<NumberScale, number> = { small: 10, medium: 30, big: 100 };
+export let DISPLAY_DIV = 1000 / NUMBER_SCALES.medium;
+export const setNumberScale = (s: NumberScale) => { DISPLAY_DIV = 1000 / (NUMBER_SCALES[s] ?? NUMBER_SCALES.medium); };
 /** An amount in the data, as shown. */
 export const disp = (n: number) => Math.round(n / DISPLAY_DIV);
 /** An amount in the data, in points of the documents' scale (HP 5 is 5,000). */
@@ -53,6 +59,36 @@ const SHORT: Record<string, string> = { bramble_knight: "BRAMBLE", pyromancer: "
 export const shortName = (id: string): string => SHORT[id] ?? (c.classes.get(id)?.name ?? id).toUpperCase();
 /** A class's full name, as the messages and sheets use it. */
 export const className = (id: string): string => c.classes.get(id)?.name ?? id;
+/**
+ * Each class in one sentence, for its sheet's head, the class list and the celebration. The interface's own words:
+ * the content's text opens with a role word ("Curser.", "Healer.") that read as a label, not a line.
+ */
+const TAGLINE: Record<string, string> = {
+  knight: "Guards the weakest ally and pulls foes onto itself.",
+  cleric: "Keeps the party standing with quick heals and Regen.",
+  ranger: "Wears down tough foes with barbed and burning arrows.",
+  bramble_knight: "Draws foes onto its thorns and leaves them bleeding.",
+  hoplite: "Shields the most vulnerable ally and cracks armor.",
+  paladin: "Wards the party against magic and smites the strong.",
+  valkyrie: "A storm spear that heals and brings back the fallen.",
+  bard: "Speeds up and empowers the party, and shocks every foe.",
+  hexer: "Curses the most dangerous foe into a crawl.",
+  monk: "Breaks armor with a fast blur of blows.",
+  assassin: "Picks off the weakest foe and leaves it bleeding.",
+  vampire: "Drains life with every hit to outlast the fight.",
+  pyromancer: "Piles Burn onto foes, then makes the hottest one pay.",
+  frostweaver: "Buries foes in Chill and hits harder the colder they are.",
+  stormcaller: "Rains lightning on every foe and charges itself up.",
+  geomancer: "Hides behind stone and hits hardest while it holds.",
+};
+export const tagline = (id: string): string => TAGLINE[id] ?? (c.classes.get(id)?.text ?? "").split(".")[0];
+/** The content piece a gear id stands for: itself, or for a rogue run's item (keyed by its own id) the base piece it was rolled from. */
+export function baseGearId(id: string): string {
+  const note = c.gear.get(id)?.note;
+  const m = note && /^rogue \w+: (\w+)/.exec(note);
+  return m ? m[1] : id;
+}
+
 /** A run's name without its "Run N:" prefix, a fight's without its number. */
 export const runName = (d: DungeonT) => d.name.replace(/^Run \d+: /, "");
 export const fightName = (s: { name?: string; id: string }) => (s.name ?? s.id).replace(/^\d+\. /, "");
