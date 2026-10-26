@@ -393,6 +393,15 @@ export function drawCampfire(ctx: CanvasRenderingContext2D, x: number, feet: num
   ctx.drawImage(img, f * cf.size, 0, cf.size, cf.size, Math.round(x - cf.size / 2), Math.round(feet - cf.size), cf.size, cf.size);
 }
 
+/** A chest with its bottom centre at (x, feet): `frame` 0 is shut, the last is open. */
+export function drawChest(ctx: CanvasRenderingContext2D, x: number, feet: number, frame: number, color = "gold") {
+  const ch = manifest.chest;
+  const img = ch ? image(ch.file) : undefined;
+  if (!ch || !img) return;
+  const col = ch.columns[color] ?? 9, f = Math.max(0, Math.min(ch.frames - 1, frame)), n = ch.cell;
+  ctx.drawImage(img, col * n, f * n, n, n, Math.round(x - n / 2), Math.round(feet - n), n, n);
+}
+
 /**
  * An action's icon as the battle's party rows draw it at a fight's start: shaded from the top by the share of its
  * cooldown still to run, with the ticks to go in the corner. On a sheet it says when the ability first comes round.

@@ -766,5 +766,16 @@
   "file": "campfire.png",
   "frames": 8,
   "size": 32
+ },
+ "chest": {
+  "file": "chest.png",
+  "cell": 16,
+  "frames": 4,
+  "columns": {
+   "gold": 9,
+   "silver": 8,
+   "ice": 10,
+   "fire": 11
+  }
  }
 }

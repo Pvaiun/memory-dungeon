@@ -18,7 +18,7 @@ import { abilityBlock, basicLine, canUse, classHead, classPassive, codeSpans, en
 import { enemyEl, enemyThumb, iconEl } from "./pixel.js";
 import { ELEMENTS, TAG_ICON } from "./art.js";
 import { weaponOf } from "../../src/engine/combat/fight.js";
-import { Strip, STRIP_H } from "./battle/scene.js";
+import { foesOnStage, partyOnStage, stageEl, Strip, STRIP_H, themeOf } from "./battle/scene.js";
 import { startBattle, type BattleArgs } from "./battle/battle.js";
 import { music, setMusic, setSound, sfx } from "./battle/audio.js";
 import { bindRogue, rbossScreen, rgearScreen, rogueMenuLine, rogueScreen, rpartyScreen, runitScreen } from "./rogue-screens.js";
@@ -112,6 +112,15 @@ export const actions = (main: HTMLButtonElement, ...more: (HTMLButtonElement | n
   return h("div", { class: "actions" }, main, more.some(Boolean) ? h("div", { class: "btns even" }, ...more.map((b) => (b ? (b.classList.add("mid"), b) : null))) : null);
 };
 
+/** A run's page opens on its ground: the party facing the run's boss (or its first fight's foes), as the battle will stand them. */
+function runScene(dungeonId: string, h = 128): HTMLCanvasElement {
+  const d = c.dungeons.get(dungeonId)!;
+  const fights = d.stages.flatMap((st) => (st.kind === "fight" ? [st] : []));
+  const fight = fights.find((st) => st.boss) ?? fights[0];
+  const party = partyOnStage({ refs: setup.party, weapons: Object.fromEntries(setup.party.map((id) => [id, gearFor(id).weapon])), formation: setup.formation }, h);
+  return stageEl({ theme: themeOf(dungeonId), h, actors: [...party, ...foesOnStage(fight?.enemies ?? [], h)] });
+}
+
 // ─── Home ───
 function home(): Child[] {
   const cur = currentIndex();
@@ -154,7 +163,7 @@ function fightRows(dungeonId: string, onFight: (stageId: string) => void): HTMLE
     return [...counts].map(([e, n]) => `${enemyDisplayName(e)}${n > 1 ? ` ×${n}` : ""}`).join(", ");
   };
   return d.stages.flatMap((s) => (s.kind === "fight" ? [s] : [])).map((s, i) => h("div", { class: "row", style: "min-height:3rem", onClick: () => onFight(s.id) },
-    h("span", { class: "cursor" }, ""), h("div", { class: "grow trunc" }, h("div", { class: "line" }, h("span", { class: s.boss ? "gold" : "" }, `${i + 1} ${s.boss ? "★" : ""}${fightName(s)}`)), h("div", { class: "text dim small trunc" }, foesOf(s.enemies)))));
+    h("span", { class: "cursor" }, ""), h("div", { class: "grow trunc" }, h("div", { class: "line" }, h("span", { class: s.boss ? "gold" : "" }, `${i + 1} ${s.boss ? "★" : ""}${fightName(s)}`)), h("div", { class: "text dim small wrap" }, foesOf(s.enemies)))));
 }
 
 function journey(): Child[] {
@@ -170,7 +179,7 @@ function journey(): Child[] {
       h("span", { class: `cursor${cur ? "" : " good"}` }, cur ? "▶" : "√"),
       h("div", { class: "grow trunc" },
         h("div", { class: "line" }, h("span", { class: "trunc" }, `${i + 1} ${n.name}`), newNode(n.id) ? newTag() : null, h("span", { class: "r" }, kindTag(n.kind))),
-        h("div", { class: "text dim small trunc" }, n.text)),
+        h("div", { class: "text dim small wrap" }, n.text)),
     );
     if (cur) curRow = el;
     return el;
@@ -212,6 +221,7 @@ function node(arg?: unknown): Child[] {
   const f = c.formations.get(setup.formation)!;
   return [
     header(`${i + 1} ${n.name}`, () => go("journey"), kindTag(n.kind)),
+    runScene(d.id),
     win("scroll",
       done ? h("div", { class: "line good" }, "√ CLEARED") : null,
       h("div", { class: "text wrap small" }, n.text),
@@ -251,7 +261,7 @@ function fight(arg?: unknown): Child[] {
       win("list scroll", ...dungeons.map((d, i) => {
         const n = d.stages.filter((s) => s.kind === "fight").length;
         return h("div", { class: `row${lastRun === d.id ? " cur" : ""}`, style: "min-height:3rem", onClick: () => { lastRun = d.id; go("fight", d.id); } },
-          h("span", { class: "cursor" }, lastRun === d.id ? "▶" : ""), h("div", { class: "grow trunc" }, h("div", { class: "line" }, `${i + 1} ${runName(d)}`), h("div", { class: "text dim small trunc" }, d.text)), h("span", { class: "dim" }, `${n}F`));
+          h("span", { class: "cursor" }, lastRun === d.id ? "▶" : ""), h("div", { class: "grow trunc" }, h("div", { class: "line" }, `${i + 1} ${runName(d)}`), h("div", { class: "text dim small wrap" }, d.text)), h("span", { class: "dim" }, `${n}F`));
       })),
       seedRow(),
     ];
@@ -260,6 +270,7 @@ function fight(arg?: unknown): Child[] {
   const fights = d.stages.filter((s) => s.kind === "fight");
   return [
     header(runName(d), () => go("fight"), `${fights.length} FIGHTS`),
+    runScene(d.id),
     win("list scroll", ...fightRows(d.id, (sid) => go("battle", { dungeon: `${d.id}~${sid}` }))),
     seedRow(),
     actions(button("RUN ALL", () => go("battle", { dungeon: d.id }), "hi"), button("PARTY", () => go("party"))),
@@ -352,7 +363,7 @@ function formation(): Child[] {
       const cur = fm.id === setup.formation;
       return h("div", { class: `row${cur ? " cur" : ""}`, style: "min-height:3rem", onClick: () => { setup.formation = fm.id; save(); go("party"); } },
         h("span", { class: "cursor" }, cur ? "▶" : ""),
-        h("div", { class: "grow trunc" }, h("div", { class: "line" }, fm.name, newFormation(fm.id) ? newTag() : null), h("div", { class: "text dim small trunc" }, fm.text)));
+        h("div", { class: "grow trunc" }, h("div", { class: "line" }, fm.name, newFormation(fm.id) ? newTag() : null), h("div", { class: "text dim small wrap" }, fm.text)));
     }), moreToFind(formations.length - fms.length)),
   ];
   // Opening the list shows them all: their NEW tags go after this look.

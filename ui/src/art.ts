@@ -25,6 +25,8 @@ export type Manifest = {
   actorFrame?: number;
   /** The campfire's frames in one strip, square, at art size. */
   campfire?: { file: string; frames: number; size: number };
+  /** Chests: an object sheet of square cells, each colour's column opening down its rows. */
+  chest?: { file: string; cell: number; frames: number; columns: Record<string, number> };
 };
 
 export let manifest: Manifest;
@@ -39,7 +41,7 @@ export async function loadArt(): Promise<void> {
   const files = [
     ...Object.values(manifest.classes), ...Object.values(manifest.enemies).map((e) => e.file), ...Object.values(manifest.vfx).map((v) => v.file), manifest.iconset,
     ...Object.values(manifest.statuses), ...Object.values(manifest.weapons), ...Object.values(manifest.faces), ...Object.values(manifest.backdrops),
-    ...(manifest.campfire ? [manifest.campfire.file] : []),
+    ...(manifest.campfire ? [manifest.campfire.file] : []), ...(manifest.chest ? [manifest.chest.file] : []),
   ];
   await Promise.all(files.map(load));
 }

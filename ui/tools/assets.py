@@ -47,6 +47,7 @@ WEAPONS_MORE = next((p for p in sorted(SRC.rglob("weapons")) if p.is_dir() and (
 # The enemies: the "Sideview Enemies" folder, or the same sprites as the Retro 8-bit Monster Pack's 300% Style 2.
 ENEMIES = find_dir("Sideview Enemies") or find_dir("300%", "Style 2")
 CAMPFIRE = find_file("Small_sheet.png")
+CHESTS = find_file("!D_CHEST.png")
 STATUS = find_file("Status_effect1_1_01.png")
 STATUS = STATUS.parent if STATUS else None
 VFX = find_dir("individual_frames")
@@ -551,6 +552,15 @@ if CAMPFIRE:
     print(f"campfire: {im.width // im.height} frames")
 else:
     print("campfire: sheet not found, kept")
+
+# ─── Chests: the dungeon pack's object sheet, 16×16 cells, each chest's column opening down its four rows ───
+if CHESTS:
+    import shutil
+    shutil.copyfile(CHESTS, OUT / "chest.png")
+    manifest["chest"] = {"file": "chest.png", "cell": 16, "frames": 4, "columns": {"gold": 9, "silver": 8, "ice": 10, "fire": 11}}
+    print("chest: sheet copied")
+else:
+    print("chest: sheet not found, kept")
 
 with open(OUT / "manifest.json", "w") as f:
     json.dump(manifest, f, indent=1)

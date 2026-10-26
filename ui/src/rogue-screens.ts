@@ -22,7 +22,8 @@ const actions = (main: HTMLButtonElement | null, ...more: (HTMLButtonElement | n
 const choice = (label: string, sub: string, onClick: () => void) => button(h("span", { class: "big-label" }, label, sub ? h("span", { class: "sub" }, sub) : null), onClick, "hi big");
 import { abilityBlock, basicLine, classHead, classPassive, codeSpans, elementRow, enemyStats, gearRow, hitsWith, role, section, sizeEl, specialLines, statGrid } from "./sheet.js";
 import { sizeParts, sizeText } from "./describe.js";
-import { CampStrip, themeOf } from "./battle/scene.js";
+import { campEl, foesOnStage, partyInLine, partyOnStage, stageEl, themeOf, type StageActor, type StageOpts } from "./battle/scene.js";
+import type { Pose } from "./art.js";
 import { weaponOf } from "../../src/engine/combat/fight.js";
 import { actorEl, enemyThumb, faceEl, iconEl } from "./pixel.js";
 import { enemyDisplayName } from "./art.js";
@@ -123,6 +124,24 @@ function offerBody(run: RogueRun, o: Offer): Child[] {
 }
 /** What a recruit would know on joining now. */
 const rogueKnows = (run: RogueRun, cls: string) => joinKnown(c, cls, run.act);
+
+// ─── Scenes: each moment of the run drawn in its region ───
+
+/** When each moment began (a screen redraws on every tap; its scene carries on rather than starting over). */
+const since = new Map<string, number>();
+const t0 = (key: string) => { if (!since.has(key)) since.set(key, performance.now()); return since.get(key)!; };
+/** The run's party on a stage `h` tall, in a pose, with their weapons; the fallen lie down. */
+function partyActors(run: RogueRun, h: number, pose: Pose = "wait", inLine?: { cx: number }): StageActor[] {
+  const weapons = Object.fromEntries(run.party.map((cls) => [cls, member(run, cls).gear.weapon ?? undefined]));
+  const p = { refs: run.party, weapons, formation: run.formation };
+  return (inLine ? partyInLine(p, h, pose, inLine.cx) : partyOnStage(p, h, pose)).map((a) => (a.kind === "hero" && member(run, a.ref).ko ? { ...a, pose: "dead" as Pose } : a));
+}
+/** A scene in the run's region (or `theme`), keyed so a redraw carries it on. */
+function scene(run: RogueRun, key: string, o: Omit<StageOpts, "theme" | "t0"> & { theme?: string }): HTMLCanvasElement {
+  return stageEl({ ...o, theme: o.theme ?? themeOf(run.region), t0: t0(`${key}:${run.act}:${run.floor}`) });
+}
+/** The party facing a fight's foes, as the battle will stand them. */
+const standoff = (run: RogueRun, enemies: string[], key: string, theme?: string, h = 136) => scene(run, key, { theme, h, actors: [...partyActors(run, h), ...foesOnStage(enemies, h)] });
 
 /** The party at a glance: faces, HP and MP bars, KO; tap for the party screen. */
 function partyStrip(run: RogueRun, tap = true): HTMLElement {
@@ -311,6 +330,7 @@ export function rbossScreen(): Child[] {
   if (!run) return rogueScreen();
   return [
     header("BOSS", () => go("rogue")),
+    standoff(run, run.boss.enemies, "boss"),
     win("scroll", h("div", { class: "line gold" }, run.boss.name.toUpperCase()), ...foeLines(run.boss.enemies, bossFoes(c, run))),
   ];
 }
@@ -321,6 +341,7 @@ function fightView(run: RogueRun): Child[] {
   const foes = foeLines(p.fight.enemies, p.foes);
   return [
     header(p.tier === "boss" ? "BOSS" : p.tier === "elite" ? "ELITE" : "FIGHT", () => go("home")),
+    standoff(run, p.fight.enemies, `fight:${p.fight.id}`),
     partyStrip(run),
     win("scroll", h("div", { class: "line hi" }, p.fight.name.toUpperCase()), ...foes),
     actions(button("FIGHT", () => go("battle", { rogue: true }), "hi"), p.begun ? null : button("PARTY", () => go("rparty"))),
@@ -346,8 +367,13 @@ function rewardView(run: RogueRun): Child[] {
   });
   cards.forEach((el, i) => el.addEventListener("click", () => { rewardPick = i; redraw(); }));
   const skip = p.kind === "treasure" ? "leave" : "skip";
+  // After a fight the party cheers where it stood; a chest opens in front of it.
+  const sceneEl = p.kind === "treasure"
+    ? scene(run, "chest", { h: 96, actors: [...partyActors(run, 96, "wait", { cx: 96 }), { kind: "chest", x: 196, y: 88, color: "gold" }], openAt: 500, sparkle: { x: 196, y: 74, strip: "diamond1" } })
+    : scene(run, `spoils:${p.kind}`, { h: 96, actors: partyActors(run, 96, "victory", { cx: 135 }) });
   return [
     header(title, () => go("home"), p.kind === "treasure" ? null : h("span", { class: "dim" }, "PICK ONE")),
+    sceneEl,
     goldLine,
     win("scroll flat", trophy, ...cards),
     actions(
@@ -445,12 +471,9 @@ function campView(run: RogueRun): Child[] {
     }
   }
   // The camp at night, as the battle draws it between fights: the party at the fire, the fallen lying beside it.
-  const cv = h("canvas", { class: "strip" });
-  cv.style.height = "12rem";
-  new CampStrip(cv, themeOf(run.region), run.party.map((cls) => ({ ref: cls, ko: member(run, cls).ko }))).start();
   return [
     header("CAMPFIRE", () => go("home")),
-    cv,
+    campEl(themeOf(run.region), run.party.map((cls) => ({ ref: cls, ko: member(run, cls).ko }))),
     partyStrip(run),
     tabs,
     win("scroll", ...body),
@@ -470,6 +493,7 @@ function eventView(run: RogueRun): Child[] {
   const opts = options(c, run);
   return [
     header(ev.name.toUpperCase(), () => go("home")),
+    scene(run, `event:${p.id}`, { h: 96, actors: partyActors(run, 96, "walk", { cx: 135 }) }),
     partyStrip(run),
     win("", h("div", { class: "line" }, iconEl(ICON.event, 2)), h("div", { class: "text wrap" }, ev.text)),
     win("scroll list", ...(opts.includes("walk_on") ? [h("div", { class: "row", style: "min-height:3rem", onClick: () => pickOrSave(run, "walk_on") }, h("span", { class: "cursor" }, "▶"), h("div", { class: "grow" }, h("div", { class: "hi" }, "WALK ON")))] : []), ...ev.options.map((o) => {
@@ -505,6 +529,7 @@ function levelView(run: RogueRun): Child[] {
   const up = opts.filter((a) => !learn.includes(a) && a !== "gold");
   return [
     header("LEVEL UP", () => go("home"), h("span", { class: "dim" }, `${p.queue.length} TO GO`)),
+    scene(run, `level:${cls}`, { h: 80, actors: [{ kind: "hero", ref: cls, x: 135, y: 74, pose: "victory", weapon: m.gear.weapon ?? undefined }], sparkle: { x: 135, y: 50, strip: "status1" } }),
     win("", classHead(cls)),
     win("scroll",
       learn.length ? section("LEARN") : null,
@@ -523,12 +548,12 @@ function regionView(run: RogueRun): Child[] {
   if (p.kind !== "region") return [];
   return [
     header(`ACT ${ROMAN[run.act + 1]}`, () => go("home")),
-    ...p.options.map((id) => {
+    win("scroll flat", ...p.options.map((id) => {
       const r = rogue(c).regions.find((x) => x.id === id)!;
       // The boss this way is already set by the act's dice: shown with its moves, so the fork is a choice with its eyes open.
       const boss = actRoll(c, run, id, run.act + 1).boss;
-      return win("roffer", h("div", { class: "line hi" }, r.name.toUpperCase()), h("div", { class: "text dim small wrap" }, r.text), h("div", { class: "line small" }, iconEl(ICON.boss), h("span", { class: "gold" }, `BOSS: ${boss.name.toUpperCase()}`)), ...foeLines(boss.enemies, bossFoes(c, run, { act: run.act + 1, region: id })), actions(button("GO THIS WAY", () => pickOrSave(run, id), "hi")));
-    }),
+      return [standoff(run, boss.enemies, `fork:${id}`, id, 112), win("roffer", h("div", { class: "line hi" }, r.name.toUpperCase()), h("div", { class: "text dim small wrap" }, r.text), h("div", { class: "line small" }, iconEl(ICON.boss), h("span", { class: "gold" }, `BOSS: ${boss.name.toUpperCase()}`)), ...foeLines(boss.enemies, bossFoes(c, run, { act: run.act + 1, region: id })), actions(button("GO THIS WAY", () => pickOrSave(run, id), "hi")))];
+    })),
   ];
 }
 
@@ -540,8 +565,8 @@ function overView(run: RogueRun): Child[] {
   const won = p.won;
   return [
     header(won ? "VICTORY" : "THE RUN ENDS", null),
-    win("", h("div", { class: "line center" }, ...run.party.map((id) => actorEl(id, won ? "victory" : "dead", 1, member(run, id).gear.weapon ?? undefined))),
-      h("div", { class: `line ${won ? "good" : "bad"}` }, won ? "ALL THREE ACTS CLEARED" : `FELL IN ACT ${ROMAN[run.act]}, FLOOR ${run.floor}`),
+    scene(run, "over", { h: 112, night: !won, actors: partyActors(run, 112, won ? "victory" : "dead", { cx: 135 }) }),
+    win("", h("div", { class: `line ${won ? "good" : "bad"}` }, won ? "ALL THREE ACTS CLEARED" : `FELL IN ACT ${ROMAN[run.act]}, FLOOR ${run.floor}`),
       h("div", { class: "line small dim wrap" }, `${run.stats.fights} FIGHTS · ${run.stats.elites} ELITES · ${run.stats.gold}G EARNED`),
       won ? h("div", { class: "line small hi wrap" }, `${run.party.map(shortName).join(", ")} CAN NOW LEAD A RUN`) : null),
     win("scroll", section("THE ROAD"), ...run.notes.map((n) => h("div", { class: "text small wrap" }, h("span", { class: "dim" }, `${ROMAN[n.act]}.${n.floor} `), n.text))),
