@@ -11,6 +11,14 @@ You asked for a third mode, beside the journey and free play: the core set as a 
 
 HP, MP and knockouts carry from fight to fight. A won run adds its party to the classes you can lead with.
 
+**What needs you, in short:**
+1. **The shape:** a leader you own plus two drafted companions, abilities learned one at a time, and fights previewed before they start (1A).
+2. **Two exceptions to "swaps at campfires":** the fallen can be replaced from camp between rooms, and after a wipe those standing at camp take the road (1A).
+3. **The core set's 14 powerful pieces:** in the rogue, most are worth less than an ordinary piece. Leave them, drop the worst from the rogue's pool, or a gear pass (1B).
+4. **The class pass,** with the rogue's table as a second measuring stick: the Vampire and Monk win a third of runs as leader, the Bard and Hexer under a tenth (1C).
+5. **Difficulty at heat 0:** the simulated player wins 36%, and the AI playtesters won 11 of 30. Harder or easier (1D)?
+6. **Three core-set questions:** the Aggro floor, Judgement against Taunt, and a boss's opening seconds (1E).
+
 ## 1. Decisions and open questions
 
 ### A. The shape I chose: confirm or change
@@ -64,7 +72,7 @@ Each class as leader with two random companions (300 runs each; the average is l
 
 ### E. Measured and left alone
 
-- **Boss lock-out.** Playtesters saw the Storm King stunned out of his Rally and the Fire Giant silenced out of Inferno, so I read every boss fight's log in 300 runs (`src/rogue-bosses.ts`). Every boss casts its big move 1.1 to 1.8 times a fight. Silence costs a boss a cast 0.05 times a fight at most, and stuns hold a wind-up 0.1 to 0.6 times. A lock-out needs the right pair (the Knight's Shield bash with the Assassin's Garrote, or the Hexer's Hush against Inferno). That reads as counterplay, and the playtester who did it loved it. No boss rule added.
+- **Boss lock-out.** Playtesters saw the Storm King stunned out of his Rally and the Fire Giant silenced out of Inferno, so I read every boss fight's log in 300 runs (`src/rogue-bosses.ts`, on the final build). Every boss casts its big move 1.1 to 1.7 times a fight. Silence costs a boss a cast 0.08 times a fight at most, and stuns hold a wind-up 0.1 to 0.5 times. A lock-out needs the right pair (the Knight's Shield bash with the Assassin's Garrote, or the Hexer's Hush against Inferno). That reads as counterplay, and the playtester who did it loved it. No boss rule added.
 - **Events and level-ups are close to flavour.** Picking at random wins as often as the simulated player's picks. A level-up can now be taken as 40 gold, so a late one with a single thing left is still a choice. I'd add stakes to events when there's content input from you.
 - **Bomb Bugs come at most two to a fight.** Their document says "three together wipe", and a roguelite party can't be built for one fight.
 - **Three core-set questions the playtesters raised, not rogue rules:**
