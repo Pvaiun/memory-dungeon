@@ -70,9 +70,9 @@ export function statCode(key: string): string {
   return key.toUpperCase().slice(0, 4);
 }
 const STATUS_CODE: Record<string, string> = {
-  poison: "PSN", regen: "RGN", shield: "SHD", might: "MGT", weaken: "WKN", guard: "GRD", stun: "STN", slow: "SLW", haste: "HST", taunt: "TNT",
+  bleed: "BLD", regen: "RGN", shield: "SHD", might: "MGT", weaken: "WKN", guard: "GRD", stun: "STN", slow: "SLW", haste: "HST", taunt: "TNT",
   burn: "BRN", chill: "CHL", shock: "SHK", ward: "WRD", sunder: "SND", silence: "SIL", hidden: "HID", rot: "ROT", clarity: "CLR", aegis: "AEG",
-  doom: "DOOM", bulwark: "BLW", bulwark_broken: "BRK", ice_crust: "CRST", shadow_strike_on: "SHDW", bloodlust_on: "BLD", bedrock_on: "BED",
+  doom: "DOOM", bulwark: "BLW", bulwark_broken: "BRK", ice_crust: "CRST", bloodlust_on: "LUST", bedrock_on: "BED",
 };
 export const statusCode = (id: string): string => STATUS_CODE[id] ?? (c.statuses.get(id)?.name ?? id).replace(/[^a-z]/gi, "").slice(0, 4).toUpperCase();
 
@@ -80,6 +80,8 @@ export const statusCode = (id: string): string => STATUS_CODE[id] ?? (c.statuses
 export function showStat(key: string, v: number): string {
   const def = c.stats.get(key);
   if (key === "crit_chance" || def?.kind === "points" || key.startsWith("resist")) return `${Math.round(v)}%`;
+  // Aggro is on its own scale, centred on 100 (the director's rule): shown as it is.
+  if (key === "aggro") return `${Math.round(v)}`;
   return `${disp(v)}`;
 }
 /** The sheet's stats, in order. */

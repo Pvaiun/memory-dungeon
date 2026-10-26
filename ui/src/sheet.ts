@@ -52,7 +52,7 @@ export function statGrid(stats: Stats, base: Stats | null, designer: boolean): H
     const v = stats[key] ?? 0;
     const b = base?.[key];
     const delta = b !== undefined ? v - b : 0;
-    const dtext = !delta ? null : key === "crit_chance" ? `${delta > 0 ? "+" : ""}${Math.round(delta)}%` : `${delta > 0 ? "+" : ""}${disp(delta)}`;
+    const dtext = !delta ? null : key === "crit_chance" ? `${delta > 0 ? "+" : ""}${Math.round(delta)}%` : key === "aggro" ? `${delta > 0 ? "+" : ""}${Math.round(delta)}` : `${delta > 0 ? "+" : ""}${disp(delta)}`;
     cells.push(cell(statCode(key), showStat(key, v), dtext ? h("i", { class: delta > 0 ? "good" : "bad" }, dtext) : undefined));
   }
   if (designer || !base) {
@@ -88,7 +88,7 @@ export function codeSpans(stats: { stat: string; flat?: number; pct?: number }[]
     const v = s.flat ?? 0;
     const sign = v >= 0 ? "+" : "";
     // Amounts at the display scale, as the stat sheet shows them (a +2 step reads +20); percent stats as they are.
-    const shown = s.stat === "crit_chance" || def?.kind === "points" || s.stat.startsWith("resist") ? `${sign}${v}%` : `${sign}${disp(v)}`;
+    const shown = s.stat === "crit_chance" || def?.kind === "points" || s.stat.startsWith("resist") ? `${sign}${v}%` : s.stat === "aggro" ? `${sign}${v}` : `${sign}${disp(v)}`;
     const pct = s.pct ? `${s.pct > 0 ? "+" : ""}${s.pct}%` : "";
     const el = s.stat.startsWith("resist:") ? s.stat.slice(7) : "";
     return [i ? " " : null, h("span", { class: `${v < 0 || (s.pct ?? 0) < 0 ? "bad" : "good"}${el ? ` ${el}` : ""}` }, `${statCode(s.stat)}${shown}${pct}`)];
@@ -125,7 +125,10 @@ export function abilityBlock(a: AbilityT, stats: Stats | null, designer: boolean
     TAG_ICON[tag] ? iconEl(TAG_ICON[tag]) : null,
     h("span", { class: `trunc grow ${ELEMENTS.includes(tag) ? tag : tag === "heal" || tag === "revive" || tag === "cleanse" ? "good" : ""}` }, i.name.toUpperCase()),
   );
-  const cost = h("div", { class: "cost" }, i.mp ? h("span", { class: "mp" }, `MP ${disp(i.mp)}`) : h("span", { class: "dim" }, "NO MP"), h("span", { class: "dim" }, ` · EVERY ${i.cooldown}T`), i.cast ? h("span", { class: "dim" }, ` · ${castWord(i.cast).toUpperCase()} CAST`) : null);
+  // Step 5c: an ability starts a fight charged by its slot (ruleset.opening.slots), so its first use is part of the plan.
+  const head0 = opts.n !== undefined ? c.pack.ruleset.opening?.slots?.[opts.n - 1] : undefined;
+  const first = head0 !== undefined ? Math.max(0, Math.round(i.cooldown - head0)) : null;
+  const cost = h("div", { class: "cost" }, i.mp ? h("span", { class: "mp" }, `MP ${disp(i.mp)}`) : h("span", { class: "dim" }, "NO MP"), h("span", { class: "dim" }, ` · EVERY ${i.cooldown}T`), first !== null ? h("span", { class: "dim" }, ` · FIRST ${first}T`) : null, i.cast ? h("span", { class: "dim" }, ` · ${castWord(i.cast).toUpperCase()} CAST`) : null);
   const body: Child[] = [cost, h("div", { class: "body" }, i.text)];
   if (designer) {
     body.push(h("div", { class: "body" }, `Wind-up ${i.cast}t, recovery ${i.recovery}t${i.seek ? ", Seek" : ""}. Target: ${i.target}${i.waits ? `; ${i.waits}` : ""}.`));

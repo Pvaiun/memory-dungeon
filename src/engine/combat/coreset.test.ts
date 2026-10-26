@@ -8,6 +8,7 @@
 import { test } from "vitest";
 import assert from "node:assert/strict";
 import { arena, weapons } from "./arena.js";
+import { drawOf } from "./fight.js";
 
 const BAG = { name: "Bag", stats: { max_hp: 1_000_000 } };
 const dmg = (amount: number, extra: object = {}) => ({ op: "damage", type: "physical", subtype: "blunt", amount, ...extra });
@@ -268,6 +269,94 @@ test("armor: each physical hit loses armorRatio × Armor; a fully absorbed hit s
   }).to(8);
   assert.deepEqual(b.hits("Knight").map((e) => [e.amount, e.word]), [[0, "BLOCKED"]]);
   assert.equal(b.has("Knight", "poison").length, 1);
+});
+
+test("armor, step 5c: with armorK a physical hit deals hit² ÷ (hit + k × Armor): nearly linear for big hits, never a blank, magic untouched", () => {
+  const swing = (attack: number, armor: number, type: "physical" | "magical" = "physical") =>
+    arena({
+      party: [{ name: "A", stats: { attack }, weapon: { ...weapons.dagger, ...(type === "magical" ? { type, element: "fire", subtype: undefined } : {}) } }],
+      enemies: [{ name: "Wall", stats: { max_hp: 100_000, armor } }],
+      ruleset: { armorRatio: 0.1, armorFloor: 25, armorK: 1 },
+    }).to(8).hits("Wall").map((e) => [e.amount, e.word])[0];
+  assert.deepEqual(swing(100, 100), [50, null], "100² ÷ 200");
+  assert.deepEqual(swing(1000, 100), [909, null], "a big hit loses about k × Armor");
+  assert.deepEqual(swing(10, 10_000), [0, null], "a tiny hit into a wall rounds down to nothing, but isn't BLOCKED by a floor or a flat cut");
+  assert.deepEqual(swing(100, 0), [100, null]);
+  assert.deepEqual(swing(100, 100, "magical"), [100, null], "Armor only meets physical hits");
+  const more = [100, 200, 400, 800].map((armor) => swing(300, armor)![0] as number);
+  assert.ok(more.every((x, i) => i === 0 || x < more[i - 1]), `every point of Armor still helps (${more})`);
+});
+
+test("bleed, step 5c: each hit its holder takes deals X per stack, untyped and past Armor, then the stacks drop; the hit that applies it doesn't set it off", () => {
+  const bleed = { id: "bleed", name: "BLEED", label: "debuff", show: "icon", stacking: "intensity", trigger: { on: { event: "hit_taken" }, do: [{ op: "damage", type: "none", amount: 10, to: "holder" }] }, drop: { fraction: 0.5 } };
+  const cut = { id: "cut", cast: 0, cooldown: 100, do: [{ op: "damage", type: "physical", subtype: "slash", amount: 1, apply: [{ status: "bleed", stacks: 8 }] }] };
+  const a = arena({
+    party: [{ name: "Cutter", abilities: ["cut"] }, { name: "Hitter", stats: { attack: 5 }, weapon: { ...weapons.dagger, cooldown: 4 } }],
+    enemies: [{ name: "Wall", stats: { max_hp: 100_000, armor: 1000 } }],
+    statuses: [bleed], abilities: [cut], ruleset: { armorK: 1 },
+  });
+  a.unit("Cutter").acts[0].ready = 0;
+  a.to(1);
+  assert.equal(a.entries("dmg", (e) => e.src === "bleed").length, 0, "the cut itself sets nothing off");
+  assert.equal(a.unit("Wall").statuses.find((s) => s.id === "bleed")!.stacks, 8000);
+  a.to(5);
+  const pops = a.entries("dmg", (e) => e.src === "bleed").map((e) => e.amount);
+  assert.deepEqual(pops, [80], "the next hit: 10 × 8 stacks, untouched by Armor 1000");
+  assert.equal(a.unit("Wall").statuses.find((s) => s.id === "bleed")!.stacks, 4000, "then half the stacks close");
+  a.to(9);
+  assert.deepEqual(a.entries("dmg", (e) => e.src === "bleed").map((e) => e.amount), [80, 40]);
+  assert.equal(a.entries("dmg", (e) => e.src === "bleed" && e.part === "hit").length, 0, "a pop isn't a hit");
+});
+
+test("crit tag, step 5c: a hit's events carry 'crit' when it crits, so a reaction can answer crits alone (the Assassin's Lacerate)", () => {
+  const mark = { id: "mark", name: "MARK", label: "debuff", show: "icon", stacking: "intensity" };
+  const lacerate = { id: "lacerate", name: "L", label: "buff", show: "sheet", stacking: "refresh", unremovable: true, reactions: [{ on: { event: "hit_lands", tags: ["crit"] }, do: [{ op: "apply", status: "mark", stacks: 1, to: "other" }] }] };
+  const run = (crit: number) => arena({
+    party: [{ name: "A", stats: { attack: 5, crit_chance: crit }, weapon: { ...weapons.dagger, cooldown: 4 }, statuses: ["lacerate"] }],
+    enemies: [BAG], statuses: [mark, lacerate],
+  }).to(42);
+  const always = run(100), never = run(0);
+  assert.equal(always.unit("Bag").statuses.find((s) => s.id === "mark")!.stacks / 1000, always.entries("dmg", (e) => e.crit === true).length, "one mark for each crit");
+  assert.equal(never.has("Bag", "mark").length, 0, "no crits, no marks");
+});
+
+test("opening slots, step 5c: a party unit's abilities start charged by the order they're slotted in; basic attacks and foes still roll", () => {
+  const ab = (id: string) => ({ id, cast: 0, cooldown: 40, target: "self", do: [{ op: "mp", amount: 0 }] });
+  const a = arena({
+    party: [{ name: "Hero", abilities: ["one", "two", "three"] }],
+    enemies: [{ ...BAG, abilities: ["foe"] }],
+    abilities: [ab("one"), ab("two"), ab("three"), ab("foe")],
+    ruleset: { opening: { min: 0.3, max: 0.7, slots: [25, 15, 10] } },
+  });
+  assert.deepEqual(a.unit("Hero").acts.slice(0, 3).map((x) => x.ready / 1000), [15, 25, 30], "40 less 25, 15 and 10 ticks");
+  const foe = a.unit("Bag").acts[0].ready / 1000;
+  assert.ok(foe >= 12 && foe <= 28, `a foe's ability still rolls a third to two thirds (${foe})`);
+});
+
+test("draw, the director's Aggro rule: foes pick by draw, Aggro through a curve centred on 100, between a third and three times an ordinary unit's", () => {
+  const r = { draw: { centre: 100, k: 50, max: 3 } };
+  const table: [number, number][] = [[1, 43], [40, 48], [60, 53], [80, 64], [90, 75], [100, 100], [110, 133], [120, 157], [140, 189], [160, 209], [200, 233]];
+  for (const [aggro, want] of table) assert.equal(Math.round(drawOf(r, aggro)), want, `Aggro ${aggro}`);
+  for (const d of [5, 20, 60, 99]) assert.ok(Math.abs(drawOf(r, 100 + d) * drawOf(r, 100 - d) - 10_000) < 1e-6, `+${d} and −${d} cancel`);
+  assert.ok(drawOf(r, 100_000) < 300 && drawOf(r, 1) > 33, "never past three times, nor under a third");
+  // The rule's example party, Knight / Cleric / Ranger at 140 / 60 / 70: 63% / 18% / 19% of picks.
+  const share = (xs: number[]) => xs.map((a) => drawOf(r, a) / xs.reduce((t, b) => t + drawOf(r, b), 0));
+  assert.deepEqual(share([140, 60, 70]).map((x) => Math.round(100 * x)), [63, 18, 19]);
+  assert.equal(drawOf({}, 37), 37, "without the curve, Aggro itself");
+});
+
+test("draw in a fight: picks follow draw, so a Veiled caster is still picked about a sixth of the time beside a wall", () => {
+  const picks: string[] = [];
+  for (let seed = 1; seed <= 400; seed++) {
+    const a = arena({
+      party: [{ name: "Foe", weapon: weapons.dagger }],
+      enemies: [{ name: "Wall", stats: { aggro: 170 } }, { name: "Caster", stats: { aggro: 50 } }, { name: "Other", stats: { aggro: 50 } }],
+      ruleset: { draw: { centre: 100, k: 50, max: 3 } }, seed,
+    }).to(8);
+    picks.push(String(a.entries("act")[0].targets));
+  }
+  const caster = share(picks, "e2");
+  assert.ok(caster > 0.11 && caster < 0.21, `the caster about 16% (${caster}); in proportion to Aggro it would be 19% here, and a few percent beside a wall of 1,000`);
 });
 
 // ─── Actions ─────────────────────────────────────────────────────────────────

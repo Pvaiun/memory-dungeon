@@ -140,7 +140,7 @@ const ACTION_EVENTS = ["action_start", "action_resolve", "action_interrupted"];
 const HIT_EVENTS = ["hit_lands", "hit_taken", "hit_evaded", "hit_missed"];
 const STATUS_EVENTS = ["status_gained", "status_triggered", "status_ended"];
 const DAMAGE_EVENTS = ["damage_dealt", "damage_taken"];
-const RESERVED_TAGS = ["basic", "ability", "extra", "physical", "magical", "none", "healing", "all", ...Object.keys(S.SUBTYPES)];
+const RESERVED_TAGS = ["basic", "ability", "extra", "physical", "magical", "none", "healing", "all", "crit", ...Object.keys(S.SUBTYPES)];
 const WEIGHT_ORDER: Record<S.WeightT, number> = { light: 0, medium: 1, heavy: 2 };
 
 class Combat {
@@ -609,10 +609,11 @@ function checkDungeons(pack: Pack, ix: Index, w: Walker, r: Report) {
       r.error("dungeon.perkPicks", `${p}.stages`, `${picks} perk picks; runs have ${d.perkPicksPerRun[0]}–${d.perkPicksPerRun[1]}`);
     }
     kinds.forEach((k, j) => {
-      if (k === "perk_pick" && (kinds[j - 1] !== "fight" || kinds[j + 1] !== "fight")) {
-        r.error("dungeon.stageOrder", `${p}.stages[${j}]`, `perk picks happen between two fights`);
+      if ((k === "perk_pick" || k === "campfire") && (kinds[j - 1] !== "fight" || kinds[j + 1] !== "fight")) {
+        r.error("dungeon.stageOrder", `${p}.stages[${j}]`, `${k === "campfire" ? "a campfire sits" : "perk picks happen"} between two fights`);
       }
     });
+    if (kinds.filter((k) => k === "campfire").length > 1) r.error("dungeon.campfires", `${p}.stages`, `a run has at most one campfire`);
     const bosses = dn.stages.flatMap((s, j) => (s.kind === "fight" && s.boss ? [j] : []));
     if (bosses.length !== 1 || bosses[0] !== dn.stages.length - 1) r.error("dungeon.boss", `${p}.stages`, `a run ends in exactly one boss fight, as its last stage`);
 
@@ -703,8 +704,66 @@ function checkStarterAndProgression(pack: Pack, ix: Index, w: Walker, r: Report)
   const order = pack.progression.dungeonOrder;
   order.forEach((id, i) => w.ref("dungeons", id, `progression.dungeonOrder[${i}]`, "dungeon"));
   if (new Set(order).size !== order.length) r.error("progression.duplicate", "progression.dungeonOrder", `a dungeon appears twice`);
+  const inCampaign = new Set(pack.campaign?.nodes.map((n) => n.dungeon) ?? []);
   pack.dungeons.forEach((dn) => {
-    if (!order.includes(dn.id)) r.error("progression.missing", "progression.dungeonOrder", `dungeon '${dn.id}' isn't in the progression order`);
+    if (!order.includes(dn.id) && !inCampaign.has(dn.id)) r.error("progression.missing", "progression.dungeonOrder", `dungeon '${dn.id}' isn't in the progression order or the campaign`);
+  });
+  pack.dungeons.forEach((dn, i) => dn.foes?.statuses?.forEach((id, j) => w.ref("statuses", id, `dungeons[${i}].foes.statuses[${j}]`, "status")));
+  pack.dungeons.forEach((dn, i) => dn.bossFoes?.statuses?.forEach((id, j) => w.ref("statuses", id, `dungeons[${i}].bossFoes.statuses[${j}]`, "status")));
+  if (pack.campaign) checkCampaign(pack, ix, w, r, pack.campaign);
+}
+
+/**
+ * The campaign: every reference resolves, nothing is unlocked twice, and every node can be entered with what the
+ * player owns by then (its required classes and formation are owned, and enough classes meet its armor and weapon needs).
+ */
+function checkCampaign(pack: Pack, ix: Index, w: Walker, r: Report, cp: S.CampaignT) {
+  const owned = { classes: new Set<string>(), formations: new Set<string>(), gear: new Set<string>() };
+  const take = (coll: "classes" | "formations" | "gear", ids: string[], path: string) =>
+    ids.forEach((id, i) => {
+      if (!w.ref(coll, id, `${path}[${i}]`, coll === "classes" ? "class" : coll === "gear" ? "gear" : "formation")) return;
+      if (owned[coll].has(id)) r.error("campaign.twice", `${path}[${i}]`, `'${id}' is already owned by then`);
+      owned[coll].add(id);
+    });
+  const plain = (cls: string) => {
+    const k = ix.get<S.ClassDefT>("classes", cls);
+    const g = k && pack.gear.find((x) => x.slot === "weapon" && x.source === "starter" && x.weapon?.kind === k.weapons[0]);
+    if (g) owned.gear.add(g.id);
+  };
+  take("classes", cp.start.classes, "campaign.start.classes");
+  take("formations", cp.start.formations, "campaign.start.formations");
+  take("gear", cp.start.gear, "campaign.start.gear");
+  cp.start.classes.forEach(plain);
+  const ids = new Set<string>();
+  cp.nodes.forEach((n, i) => {
+    const p = `campaign.nodes[${i}]`;
+    if (ids.has(n.id)) r.error("campaign.id", p, `duplicate node id '${n.id}'`);
+    ids.add(n.id);
+    w.ref("dungeons", n.dungeon, `${p}.dungeon`, "dungeon");
+    const need = { includes: [] as string[], excludes: [] as string[] };
+    let size = pack.dungeons.find((d) => d.id === n.dungeon)?.partySize.max ?? 3;
+    n.needs.forEach((nd, j) => {
+      const q = `${p}.needs[${j}]`;
+      if ("includes" in nd) nd.includes.forEach((c, k) => w.ref("classes", c, `${q}.includes[${k}]`, "class") && (need.includes.push(c), !owned.classes.has(c) && r.error("campaign.unowned", q, `needs class '${c}', which isn't owned by then`)));
+      else if ("excludes" in nd) nd.excludes.forEach((c, k) => w.ref("classes", c, `${q}.excludes[${k}]`, "class") && need.excludes.push(c));
+      else if ("formation" in nd) w.ref("formations", nd.formation, `${q}.formation`, "formation") && !owned.formations.has(nd.formation) && r.error("campaign.unowned", q, `needs formation '${nd.formation}', which isn't owned by then`);
+      else if ("weapons" in nd) nd.weapons.forEach((k, m) => w.ref("weaponKinds", k, `${q}.weapons[${m}]`, "weapon kind"));
+      else if ("size" in nd) size = Math.min(size, nd.size);
+    });
+    if (need.includes.some((c) => need.excludes.includes(c))) r.error("campaign.impossible", p, `a class is both required and excluded`);
+    if (need.includes.length > size) r.error("campaign.impossible", p, `needs ${need.includes.length} classes in a party of ${size}`);
+    // Enough owned classes can meet the armor and weapon needs.
+    const fits = [...owned.classes].filter((c) => !need.excludes.includes(c) && n.needs.every((nd) => {
+      const k = ix.get<S.ClassDefT>("classes", c)!;
+      if ("armor" in nd) return nd.armor === "none" || [...owned.gear].some((g) => { const x = ix.get<S.GearT>("gear", g); return !!x && x.slot === "armor" && x.weight === nd.armor && canEquip(k, x); });
+      if ("weapons" in nd) return [...owned.gear].some((g) => { const x = ix.get<S.GearT>("gear", g); return !!x && x.slot === "weapon" && !!x.weapon?.kind && nd.weapons.includes(x.weapon.kind) && canEquip(k, x); });
+      return true;
+    }));
+    if (need.includes.some((c) => !fits.includes(c))) r.error("campaign.impossible", p, `a required class can't meet the node's armor or weapon needs with the gear owned by then`);
+    take("classes", n.rewards.classes, `${p}.rewards.classes`);
+    take("formations", n.rewards.formations, `${p}.rewards.formations`);
+    take("gear", n.rewards.gear, `${p}.rewards.gear`);
+    n.rewards.classes.forEach(plain);
   });
 }
 

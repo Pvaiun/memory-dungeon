@@ -2,7 +2,7 @@
 
 What the game is, how it's being made, and where it stands. It's written for a reader with no access to the design repo, such as an AI interviewing the director about one design step. It describes; it doesn't decide. Where it and a step's brief differ, the brief is newer.
 
-Updated Oct 23, 2026, after the director's core set.
+Updated Oct 26, 2026, as the campaign joined main.
 
 ## Memory, and why the game exists
 
@@ -76,7 +76,7 @@ Direction is guidance, not law. "Firm" means bend it only with evidence and the 
 - Fights are automatic and run on ticks. Every action (a weapon's basic attack, or an ability) has a cast time, a cooldown and a recovery; a unit starts its first available ability, else its basic attack. Abilities have a short default cast and a recovery about a sword's.
 - Damage is physical (slash, pierce or blunt: meets Evasion and Armor) or magical (an element: meets that element's Resistance). Every amount states its own scaling, from any stats or none; nothing scales by default, and no stat is tied to a damage type (physical things scaling from Attack is a convention). Boosts, damage-taken modifiers, crits, riders and shields follow one resolution order.
 - Everything that happens on an event or a timer is a status: buffs, debuffs, damage over time, stuns and silences (lockouts), auras, and passives' reactions. A status is fixed when applied: the application scales the stacks it adds, from whatever stats it names, and a stack is a stack whoever applied it. Status damage is untyped and unresisted by convention. A reapplied Refresh status replaces the old one. Stacking statuses (Intensity) end below 1 stack.
-- Default targeting picks foes weighted by Aggro, which taunts (Forced) and stealth (Forbidden) override; abilities can state their own targeting.
+- Default targeting picks foes weighted by Aggro, which taunts (Forced) and stealth (Forbidden) override; abilities can state their own targeting. (Since Oct 26, 2026, foes pick by draw, a curve on Aggro that keeps every unit between a third and three times an ordinary unit's pull.)
 - Content is data built from stats, statuses, actions and targeting rules. The numbers are placeholders.
 
 Writing this step showed that the plan's steps 4 to 12 (verbs, mechanics, traits, units, formations, gear, runs, encounters) interlock too much to design one at a time, which led to the core set.
@@ -87,13 +87,15 @@ Writing this step showed that the plan's steps 4 to 12 (verbs, mechanics, traits
 
 1. **The core set's sign-off:** the director reads the build's report.
 2. **A visual interface,** so the director can see and play the slice before more design. It's in (Oct 24, 2026): a party screen (slots, formation, roster), unit sheets, a bestiary, and a battle screen that shows any fight as it plays and tells it in short English messages, with the director's sprites in colour in a retro JRPG frame, published to GitHub Pages so it runs on a phone. The balance pass by simulation, which tunes the first values, comes after the director has looked at it.
-3. **The full game,** grown out of the slice: content and balance at volume, progression pacing, the quest board, screens, onboarding, and a review against the principles. The original plan's later steps are the starting point, revisited then.
+3. **The campaign (Oct 25 and 26, 2026).** Playing the interface, the director found everything-available overwhelming and the slice far too easy, and asked for a game to beat: start with the three starters and the first run, and unlock the rest one node at a time. It is a road of 20 nodes (the seven runs, remixes, and trials that set needs on the party, such as "bring the Vampire and the Bard, pick your third"), each node's difficulty set by simulation against exactly what the player owns there, a numbers pass, and the interface's journey with celebrations for each unlock. Two passes on how fights play followed on the same branch: one on pacing and the value of actions (Oct 25), and one from the director's reactions to it (Oct 26): Bleed in place of Poison (it bursts each time its holder is hit), abilities that start a fight charged by the order they're slotted in, casters that run short of MP where the walls don't, Armor that never blanks a hit, and a campfire offering HP, MP or a fallen member back. The director played it, and the director's last change before taking it to main was Aggro by draw (Aggro centred on 100, picks through a curve, so no unit hides at a 1% chance or soaks every blow). **It joined main on Oct 26, 2026** as the base for the next work; `DECISIONS.md` (Step 5) has what it changed, and the core set's documents are updated to match. Next, proposed: a boss pass and a class pass (the casters, the Vampire and the Bramble knight).
+4. **The full game,** grown out of the slice: content and balance at volume, progression pacing, the quest board, screens, onboarding, and a review against the principles. The original plan's later steps are the starting point, revisited then.
 
 A question that belongs to later work can be noted and left for it.
 
 ## Words
 
-- **Core set:** the vertical slice being built now: rules, combat, classes, gear, formations and enemies, with its progression still to be decided, starting with none.
+- **Core set:** the vertical slice being built now: rules, combat, classes, gear, formations and enemies, played as a campaign (a road of 20 nodes that unlocks it) or freely.
+- **Campaign, node, knob:** the slice's road of 20 runs and trials; each is a node, and each node's two knobs (its regular fights' and its boss's strength) are set by simulation.
 - **Unlock:** a quest reward (class, formation or powerful gear).
 - **Keys and keyholes:** encounter-design terms for a party's strengths and the gimmicks that call for them. Predictions only.
 - **Verbs:** a hidden design vocabulary for roles (physical damage, healing, evasion…). The game never reads them.

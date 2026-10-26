@@ -72,7 +72,7 @@ export const VFX_FOR: Record<string, string> = {
   fire: "fire2", ice: "ice2", lightning: "lightning3", wind: "wind2", earth: "earth4", light: "holy1", dark: "darkness2",
   slash: "sword1", pierce: "weapon4", blunt: "impact1", bite: "bite1", arrow: "arrow1", staff: "impact4",
   heal: "heal2", revive: "holy3", buff: "status1", debuff: "status7", cleanse: "heal4", dispel: "status6", shield: "diamond1",
-  summon: "smoke2", split: "smoke3", explosion: "explosion1", miss: "dust2", burn: "fire1", poison: "status3", shock: "lightning1", chill: "ice3", regen: "heal5",
+  summon: "smoke2", split: "smoke3", explosion: "explosion1", miss: "dust2", burn: "fire1", bleed: "claw", shock: "lightning1", chill: "ice3", regen: "heal5",
 };
 
 // ─── Colour ───
@@ -128,10 +128,10 @@ export const MISC_ICON = { skull: [10, 1], star: [9, 13], boss: [9, 3], question
 
 // ─── Status colours, for their names and numbers; the icons are the pack's 16px ones (assets/status/) ───
 export const STATUS_STYLE: Record<string, { color: string; light?: string }> = {
-  poison: { color: "#c070f0" }, regen: { color: "#7ee07e" }, shield: { color: "#6ec8ff", light: "#e8f8ff" }, might: { color: "#ff6e5a" }, weaken: { color: "#ffa062" },
+  bleed: { color: "#e8384a", light: "#ffc0c8" }, regen: { color: "#7ee07e" }, shield: { color: "#6ec8ff", light: "#e8f8ff" }, might: { color: "#ff6e5a" }, weaken: { color: "#ffa062" },
   guard: { color: "#d8dde8" }, stun: { color: "#ffe14d" }, slow: { color: "#ffa062" }, haste: { color: "#6ef0e0" }, taunt: { color: "#ff5a5a" },
   burn: { color: "#ff7a3c", light: "#ffe14d" }, chill: { color: "#8ae6ff" }, shock: { color: "#ffe14d", light: "#ffffff" }, ward: { color: "#c892ff", light: "#f0e0ff" }, sunder: { color: "#dcae6e" },
   silence: { color: "#b8b8c8" }, hidden: { color: "#9aa0b4", light: "#ffffff" }, rot: { color: "#a8c050" }, clarity: { color: "#86cfff", light: "#ffffff" }, aegis: { color: "#ffd54a", light: "#fff8d0" },
   doom: { color: "#ff4a6a", light: "#ffd0d8" }, bulwark: { color: "#c9d3e0" }, bulwark_broken: { color: "#ff7b6b" }, ice_crust: { color: "#8ae6ff", light: "#ffffff" },
-  shadow_strike_on: { color: "#c892ff" }, bloodlust_on: { color: "#ff4a6a", light: "#ffb0b8" }, bedrock_on: { color: "#dcae6e", light: "#f8e0b0" }, generic: { color: "#c8c8d8" },
+  bloodlust_on: { color: "#ff4a6a", light: "#ffb0b8" }, bedrock_on: { color: "#dcae6e", light: "#f8e0b0" }, generic: { color: "#c8c8d8" },
 };

@@ -4,19 +4,20 @@
  * 16 ordinary and 4 powerful amulets.
  */
 import type { GearT, NumT, WeightT } from "../../src/schema.js";
-import { PER_PERCENT, RESIST, SPECIAL, SPECIAL_KEY, STEP, WEAPON, crit, type Level, type SpecialLevel, type SpecialStat } from "./scale.js";
-import { speedOf, weaponKinds } from "./vocabulary.js";
+import { KIND_SPEED, PER_PERCENT, RESIST, SPECIAL, SPECIAL_KEY, stepFor, SWING_REF, WEAPON, crit, type Level, type SpecialLevel, type SpecialStat } from "./scale.js";
+import { weaponKinds } from "./vocabulary.js";
 
 type Change = { stat: string; flat: number };
 /** A gear step: +1 or +2 on a stat, in the data's units. */
-const st = (stat: string, n: number): Change => ({ stat, flat: n * STEP });
+const st = (stat: string, n: number): Change => ({ stat, flat: n * stepFor(stat) });
 const critStep = (n: number): Change => ({ stat: "crit_chance", flat: crit(n) });
 const sp = (s: SpecialStat, level: SpecialLevel): Change => ({ stat: SPECIAL_KEY[s], flat: SPECIAL[s][level] });
 const resists = (...elements: string[]): Change[] => elements.map((e) => ({ stat: `resist:${e}`, flat: RESIST.gear }));
 
 /** A weapon's hit: its kind's speed factor × (base + ratio × stat). */
 export function weaponHit(kind: string, base: Level, ratio: Level, stat: string): NumT {
-  const f = WEAPON.speedFactor[speedOf(kind)];
+  // Pacing pass: the size follows the kind's own cooldown (it was a factor for each of three speed words).
+  const f = KIND_SPEED[kind] / SWING_REF;
   return { base: Math.round(f * WEAPON.base[base]), scale: [{ ratio: f * WEAPON.ratio[ratio] * (PER_PERCENT[stat] ?? 1), stat }] };
 }
 const usual = (kind: string) => (weaponKinds.find((k) => k.id === kind)!.type === "magical" ? "magic" : "attack");
@@ -67,8 +68,8 @@ const named: GearT[] = [
   weapon("rootstaff", "Rootstaff", "Thorns on living wood.", "earth_staff", { carries: [sp("thorns", "medium"), st("max_hp", 1)] }),
   weapon("rime_staff", "Rime staff", "Deep freeze.", "ice_staff", { carries: [st("magic", 2)] }),
   weapon("hoarfrost_staff", "Hoarfrost staff", "A wellspring of mana.", "ice_staff", { carries: [st("mp_regen", 2)] }),
-  weapon("sunstaff", "Sunstaff", "A crit heals more through Mercy.", "light_staff", { carries: [critStep(1), st("magic", 1)] }),
-  weapon("dawn_staff", "Dawn staff", "A heavy staff and nothing else: its damage is healing in a Cleric's hands.", "light_staff", { base: "high" }),
+  weapon("sunstaff", "Sunstaff", "Crits, and more Magic.", "light_staff", { carries: [critStep(1), st("magic", 1)] }),
+  weapon("dawn_staff", "Dawn staff", "A heavy staff and nothing else.", "light_staff", { base: "high" }),
   weapon("chapel_staff", "Chapel staff", "For the pilgrim.", "light_staff", { carries: [st("mp_regen", 2)] }),
   weapon("nightstaff", "Nightstaff", "Dark, and more of it.", "dark_staff", { carries: [st("magic", 2)] }),
   weapon("leech_staff", "Leech staff", "Drinks mana.", "dark_staff", { carries: [sp("siphon", "medium"), st("mp_regen", 1)] }),
@@ -76,7 +77,7 @@ const named: GearT[] = [
 
 /** Powerful weapons scale from a stat other than Attack or Magic, and carry nothing: the stat is the point. */
 const powerfulWeapons: GearT[] = [
-  weapon("heartwood_staff", "Heartwood staff", "Earth hits from the HP the Deep roots fork stacks.", "earth_staff", { stat: "max_hp", tier: "powerful", source: "unlock" }),
+  weapon("heartwood_staff", "Heartwood staff", "Earth hits that scale from max HP.", "earth_staff", { stat: "max_hp", tier: "powerful", source: "unlock" }),
   weapon("sanguine_staff", "Sanguine staff", "Blood as a caster: Blood drain and basic attacks on one stat.", "dark_staff", { stat: "max_hp", tier: "powerful", source: "unlock" }),
   weapon("cornerstone_axe", "Cornerstone axe", "Stone on one stat: everything from Armor.", "axe", { stat: "armor", tier: "powerful", source: "unlock" }),
   weapon("needle", "Needle", "Backstab and basic attacks share a stat: every Crit piece raises both.", "dagger", { stat: "crit_chance", tier: "powerful", source: "unlock" }),

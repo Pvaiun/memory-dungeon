@@ -4,13 +4,13 @@
  * Magic, Armor, Crit, Aggro, as the document lists them.
  */
 import type { AbilityT, EnemyT, StatusT, WeaponT } from "../../src/schema.js";
-import { COOLDOWN, COST, ENEMY_HIT, ENEMY_SPEED_FACTOR, ENEMY_SWING, FLAT_STACKS, HIT, RESIST, REVIVE, SPECIAL, SPEED, STATUS, WINDUP, crit, pts, type SwingWord } from "./scale.js";
+import { ENEMY_COOLDOWN, COST, ENEMY_HIT, ENEMY_SPEED_FACTOR, ENEMY_SWING, FLAT_STACKS, HIT, RESIST, REVIVE, SPECIAL, SPEED, STATUS, WINDUP, BOSS_HP, crit, jitter, aggroOf, pts, type SwingWord } from "./scale.js";
 import { T } from "./classes.js";
 import { speedOf } from "./vocabulary.js";
 
-type CD = keyof typeof COOLDOWN;
+type CD = keyof typeof ENEMY_COOLDOWN;
 type WU = keyof typeof WINDUP;
-const timing = (cd: CD, wu: WU) => ({ cooldown: COOLDOWN[cd], cast: WINDUP[wu], mp: COST[cd] });
+const timing = (cd: CD, wu: WU) => ({ cooldown: ENEMY_COOLDOWN[cd], cast: WINDUP[wu], mp: COST[cd] });
 
 /** A basic attack by kind and words: a flat swing from the word (see ENEMY_SWING); the kind sets how often. */
 const swing = (speed: keyof typeof SPEED, word: SwingWord) => Math.round(ENEMY_SPEED_FACTOR[speed] * ENEMY_SWING[word]);
@@ -21,12 +21,12 @@ const touch = (p: { subtype?: "slash" | "pierce" | "blunt"; element?: string }, 
 });
 
 const line = (hp: number, mp: number, regen: number, atk: number, mag: number, armor: number, c: number, aggro: number) => ({
-  max_hp: pts(hp), max_mp: pts(mp), mp_regen: pts(regen), attack: pts(atk), magic: pts(mag), armor: pts(armor), crit_chance: crit(c), aggro: pts(aggro),
+  max_hp: pts(hp), max_mp: pts(mp), mp_regen: pts(regen), attack: pts(atk), magic: pts(mag), armor: pts(armor), crit_chance: crit(c), aggro: aggroOf(aggro),
 });
 const res = (element: string, kind: keyof typeof RESIST) => ({ [`resist:${element}`]: RESIST[kind] });
 
 const enemy = (id: string, name: string, text: string, rank: EnemyT["rank"], stats: Record<string, number>, weapon: WeaponT, o: { abilities?: string[]; statuses?: string[]; note?: string } = {}): EnemyT => ({
-  id, name, text, rank, stats, weapon, ...(o.abilities ? { abilities: o.abilities } : {}), ...(o.statuses ? { statuses: o.statuses } : {}), ...(o.note ? { note: o.note } : {}),
+  id, name, text, rank, stats: rank === "boss" ? { ...stats, max_hp: Math.round(stats.max_hp * BOSS_HP) } : stats, weapon, ...(o.abilities ? { abilities: o.abilities } : {}), ...(o.statuses ? { statuses: o.statuses } : {}), ...(o.note ? { note: o.note } : {}),
 });
 const reskin = (of: EnemyT, id: string, name: string, text: string): EnemyT => ({ ...of, id, name, text, note: `A reskin of the ${of.name}: the same numbers.` });
 
@@ -37,7 +37,8 @@ const apply = (status: string, extra: object = {}) => ({ op: "apply", status, ..
 // ─── Passives ────────────────────────────────────────────────────────────────
 
 export const enemyStatuses: StatusT[] = [
-  passive("venom", "Venom", "Its bites poison.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("poison", { to: "other" })] }] }),
+  // Step 5c: Bleed, not Poison (the director's: "this also works with the snakes").
+  passive("venom", "Venom", "Its bites leave wounds that bleed.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("bleed", { stacks: FLAT_STACKS.few, to: "other" })] }] }),
   passive("fire_bite", "Fire bite", "Its bites burn.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("burn", { stacks: FLAT_STACKS.one, to: "other" })] }] }),
   passive("split", "Split", "Below half HP it splits in two.", { reactions: [{ on: { event: "hp_lost" }, do: [{ op: "replace", enemy: "mini_slime", count: 2, to: { side: "self", where: { hpBelow: 50 } } }] }] }),
   passive("volatile", "Volatile", "Explodes when it dies.", {
@@ -54,28 +55,31 @@ export const enemyStatuses: StatusT[] = [
 
 // ─── Abilities ───────────────────────────────────────────────────────────────
 
-const a = (id: string, name: string, text: string, body: Partial<AbilityT> & { do: AbilityT["do"]; cooldown: number }): AbilityT => ({ id, name, text, ...body });
+// Pacing pass: as for the classes, each ability's cooldown is moved by its id (scale.ts, jitter).
+const a = (id: string, name: string, text: string, body: Partial<AbilityT> & { do: AbilityT["do"]; cooldown: number }): AbilityT => ({ id, name, text, ...body, cooldown: jitter(body.cooldown, id) });
 const fromStat = (stat: string, ratio: number) => ({ scale: [{ ratio, stat }] });
 
+// Pacing pass: a boss's signature move (Crush, Inferno, Death bell, Tempest, its summons) is on a medium cooldown, not long, so
+// a shorter boss fight still sees it two or three times. Its size is unchanged.
 export const enemyAbilities: AbilityT[] = [
   a("shield_up", "Shield up", "Taunts.", { ...timing("short", "quick"), target: "self", do: [apply("taunt")] }),
   a("brace", "Brace", "Guards itself.", { ...timing("medium", "quick"), target: "self", do: [apply("guard")] }),
   a("flatten", "Flatten", "A heavy blow that Stuns.", { ...timing("long", "long"), target: { side: "foes", where: { lacks: "stun" }, ifNone: "any" }, do: [{ op: "damage", type: "physical", subtype: "blunt", amount: fromStat("attack", ENEMY_HIT.flatten), apply: [{ status: "stun" }] }] }),
-  a("crush", "Crush", "A massive blow.", { ...timing("long", "very_long"), do: [{ op: "damage", type: "physical", subtype: "blunt", amount: fromStat("attack", ENEMY_HIT.crush) }] }),
+  a("crush", "Crush", "A massive blow.", { ...timing("medium", "very_long"), do: [{ op: "damage", type: "physical", subtype: "blunt", amount: fromStat("attack", ENEMY_HIT.crush) }] }),
   a("mend", "Mend", "Heals the most hurt ally.", { ...timing("short", "normal"), ...{ if: { side: "allies", where: { hpBelow: 100 } } }, target: T.lowestShareAlly, do: [{ op: "heal", amount: fromStat("magic", ENEMY_HIT.mend) }] }),
   a("curse", "Curse", "Weakens and Slows every foe.", { ...timing("long", "long"), target: T.everyFoe, do: [apply("weaken"), apply("slow")] }),
   a("soulfire", "Soulfire", "A heavy Dark spell.", { ...timing("long", "very_long"), do: [{ op: "damage", type: "magical", element: "dark", amount: fromStat("magic", ENEMY_HIT.soulfire) }] }),
   a("dig_up", "Raise", "Digs a fallen packmate back up.", { ...timing("medium", "long"), if: { side: "allies", where: { ko: true } }, target: T.koAlly, do: [{ op: "revive", hp: { scale: [{ ratio: REVIVE.ghoul, stat: "max_hp", of: "target" }] } }] }),
-  a("death_bell", "Death bell", "Dooms a foe.", { ...timing("long", "long"), if: { side: "foes", where: { lacks: "doom" } }, target: { side: "foes", where: { lacks: "doom" } }, do: [apply("doom")] }),
+  a("death_bell", "Death bell", "Dooms a foe.", { ...timing("medium", "long"), if: { side: "foes", where: { lacks: "doom" } }, target: { side: "foes", where: { lacks: "doom" } }, do: [apply("doom")] }),
   a("mute", "Mute", "Silences the foe with the highest Attack or Magic.", { ...timing("medium", "normal"), if: { side: "foes", where: { lacks: "silence" } }, target: { ...T.highestAMFoe, where: { lacks: "silence" } }, do: [apply("silence")] }),
   a("quiet", "Quiet", "Silences every foe.", { ...timing("medium", "long"), target: T.everyFoe, do: [apply("silence")] }),
   a("cheer", "Cheer", "Might and Haste on its strongest ally.", { ...timing("medium", "normal"), target: T.highestAMAlly, do: [apply("might", { stacks: FLAT_STACKS.several }), apply("haste")] }),
   a("brand", "Brand", "Fire on a foe, with a few Burn.", { ...timing("short", "quick"), do: [{ op: "damage", type: "magical", element: "fire", amount: fromStat("magic", ENEMY_HIT.brand), apply: [{ status: "burn", stacks: FLAT_STACKS.few }] }] }),
-  a("inferno", "Inferno", "A very long cast: huge Fire on every foe, with many Burn.", { ...timing("long", "very_long"), target: T.everyFoe, do: [{ op: "damage", type: "magical", element: "fire", amount: fromStat("magic", ENEMY_HIT.inferno), apply: [{ status: "burn", stacks: FLAT_STACKS.many }] }] }),
+  a("inferno", "Inferno", "A very long cast: huge Fire on every foe, with many Burn.", { ...timing("medium", "very_long"), target: T.everyFoe, do: [{ op: "damage", type: "magical", element: "fire", amount: fromStat("magic", ENEMY_HIT.inferno), apply: [{ status: "burn", stacks: FLAT_STACKS.many }] }] }),
   a("hailstorm", "Hailstorm", "Ice on every foe, with a stack of Chill.", { ...timing("medium", "normal"), target: T.everyFoe, do: [{ op: "damage", type: "magical", element: "ice", amount: fromStat("magic", ENEMY_HIT.hailstorm), apply: [{ status: "chill", stacks: FLAT_STACKS.one }] }] }),
-  a("call_drones", "Call drones", "Summons two Drones.", { ...timing("long", "long"), do: [{ op: "summon", enemy: "drone", count: 2 }] }),
-  a("tempest", "Tempest", "Lightning on every foe, with a stack of Shock.", { ...timing("long", "long"), target: T.everyFoe, do: [{ op: "damage", type: "magical", element: "lightning", amount: fromStat("magic", ENEMY_HIT.tempest), apply: [{ status: "shock", stacks: FLAT_STACKS.one }] }] }),
-  a("rally_soldiers", "Rally", "Summons two Soldiers.", { ...timing("long", "long"), do: [{ op: "summon", enemy: "soldier", count: 2 }] }),
+  a("call_drones", "Call drones", "Summons two Drones.", { ...timing("medium", "long"), do: [{ op: "summon", enemy: "drone", count: 2 }] }),
+  a("tempest", "Tempest", "Lightning on every foe, with a stack of Shock.", { ...timing("medium", "long"), target: T.everyFoe, do: [{ op: "damage", type: "magical", element: "lightning", amount: fromStat("magic", ENEMY_HIT.tempest), apply: [{ status: "shock", stacks: FLAT_STACKS.one }] }] }),
+  a("rally_soldiers", "Rally", "Summons two Soldiers.", { ...timing("medium", "long"), do: [{ op: "summon", enemy: "soldier", count: 2 }] }),
 ];
 
 // ─── Enemies ─────────────────────────────────────────────────────────────────
@@ -83,7 +87,7 @@ export const enemyAbilities: AbilityT[] = [
 const wolf = enemy("wolf", "Wolf", "Hunts in packs.", "minion", line(2, 0, 0, 2, 0, 0, 2, 2), basic("dagger", "weak"));
 const bandit = enemy("bandit", "Bandit", "A common road thug.", "minion", line(4, 0, 0, 3, 0, 1, 2, 3), basic("sword"));
 const archer = enemy("archer", "Archer", "Hits hard, falls fast.", "minion", line(2, 0, 0, 7, 0, 0, 4, 2), basic("bow", "heavy"));
-const snake = enemy("snake", "Snake", "Its bite poisons.", "minion", line(2, 0, 0, 2, 0, 0, 2, 1), basic("dagger", "weak"), { statuses: ["venom"] });
+const snake = enemy("snake", "Snake", "Its bite leaves a bleeding wound.", "minion", line(2, 0, 0, 2, 0, 0, 2, 1), basic("dagger", "weak"), { statuses: ["venom"] });
 const shieldman = enemy("shieldman", "Shieldman", "Hides behind a big shield.", "elite", line(10, 3, 2, 2, 0, 5, 1, 4), basic("sword"), { abilities: ["shield_up", "brace"] });
 const ogre = enemy("ogre", "Ogre", "Big, slow, and swings a tree.", "elite", line(16, 2, 1, 6, 0, 2, 2, 4), basic("axe", "heavy", { cast: WINDUP.long }), { abilities: ["flatten"], note: "Its basic attack has a long wind-up: an exception to the no-wind-up default." });
 const ogreChief = enemy("ogre_chief", "Ogre Chief", "The biggest ogre, with the biggest club.", "boss", line(60, 4, 2, 12, 0, 3, 2, 4), basic("axe", "heavy"), { abilities: ["crush"] });

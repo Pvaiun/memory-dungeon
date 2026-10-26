@@ -7,7 +7,7 @@ The core set is a vertical slice of the Memory Dungeon Game, designed by the dir
 The full game is an optional tab in Memory, the director's ADHD memory app, where real-life quests pay unlocks and dungeons pay gear (`docs/concept-spec.md`). That pitch stands. The core set takes the game part of it and sets it out in full: the rules and combat system, 16 classes, the gear and formation lists, and the enemies. It leaves the rest out, so it can be built, played and tuned on its own:
 
 - no quest board, reward streams or unlocks;
-- progression still to be decided, starting with none: in the first version everything is available, with no challenges or perks, and combat, formations, gear and the battle system are tested freeform. Progression will most likely join the core set later, in a form not yet known;
+- progression started with none: in the first version everything was available, with no challenges or perks, so combat, formations, gear and the battle system could be tested freeform. The campaign (Oct 25, 2026, below) is its first progression, and free play keeps the everything-available version;
 - nothing about Memory itself.
 
 The slice is the first version of the game, not the whole of it. The full game grows out of it later, in ways not yet known.
@@ -23,7 +23,7 @@ The slice is the first version of the game, not the whole of it. The full game g
 
 The director wrote them, and they're the approved design: the core set's work starts at the method's build-and-tune stage (`docs/method.md`). They're written to stand on their own and refer to one another by title (*Core set: classes*).
 
-Changes to them go through the director and are recorded in `DECISIONS.md`, as step 4's design was. The rules the enemies document added (summoning, no unit leaving a fight alive, enemy-only Doom and Bulwark, two enemy-only target phrases) are folded into `rules-and-vocabulary.md`, which wins where the two differ. Its known-gaps list at the end holds the open questions.
+Changes to them go through the director and are recorded in `DECISIONS.md`, as step 4's design was. The changes from the campaign work (Oct 25 and 26, 2026) are written into each document, with a note at its top. The rules the enemies document added (summoning, no unit leaving a fight alive, enemy-only Doom and Bulwark, two enemy-only target phrases) are folded into `rules-and-vocabulary.md`, which wins where the two differ. Its known-gaps list at the end holds the open questions.
 
 ## How it relates to the rest of the repo
 
@@ -34,5 +34,7 @@ Changes to them go through the director and are recorded in `DECISIONS.md`, as s
 - **Numbers.** The core set's numbers are a relative scale (stats from 1 to 5, gear steps of +1 or +2, cooldowns short to long). First values and the balance pass by simulation are part of building it. **In the data, every number on that scale is multiplied by 1,000** (HP 2 is 2,000, a boss's HP 90 is 90,000), so percentages such as crits and Regen ticks stay whole, and the display divides it back down by a factor tuned for feel.
 
 ## Status
+
+**The campaign (Oct 25, 2026; on main since Oct 26):** the director asked for the slice to become a game to beat: start with the starters and the first run, and unlock everything else one node at a time. `steps/05-core-set/5a-campaign/` holds it: a road of 20 nodes (the seven runs, remixes and trials with needs) in `content/core-set/campaign.ts`, each node's difficulty set by simulation (`npm run campaign`), and the interface's journey. It changes some of this set's numbers (Burn, HP steps on gear, a few abilities) and adds rules (a lost cast goes on cooldown, staggered starts, an enrage); the report lists them. Everything-available play stays in the interface as free play. Two passes on the same branch went further, at the director's request, and change more of this set than numbers (`steps/05-core-set/5b-pacing/`, `steps/05-core-set/5c-bleed-mana/`): among them Bleed in place of Poison, a few abilities and passives replaced (Venom arrow, Shadow strike, Lullaby, Mercy, Prayer and Purify), Armor's formula, ability costs set by hand, a campfire, and Aggro picked by draw. The director played it and took it to main (Oct 26, 2026); `DECISIONS.md` (Step 5) has what changed, and the four documents are updated to match. The numbers are still first values.
 
 All four documents are in (Oct 23, 2026). **First implementation built (Oct 23, 2026):** every rule, class, piece of gear, formation, enemy, encounter and dungeon is in the engine and the content pack (`content/core-set.pack.json`, generated from `content/core-set/`), with first values for every number and a short ballpark tuning pass. The build's record is `steps/05-core-set/` (`report.md` for the director, `tuning.md` as the trail). The director's sign-off comes next, then the balance pass by simulation. **A first visual interface is in (Oct 24, 2026):** `npm run ui` serves it; `ui/README.md` says what it shows.

@@ -120,8 +120,14 @@ export class Narrator {
       case "immune":
         this.add(ev, { text: `${this.n(ev.unit)} is immune to ${String(ev.name)}.`, tone: "sys" });
         break;
+      case "enrage":
+        this.add(ev, { text: "The fight drags on: every blow lands harder!", tone: "bad" });
+        break;
       case "interrupt":
         this.add(ev, { text: `${this.n(ev.unit)}'s ${String(ev.name)} is interrupted!`, tone: "bad" });
+        break;
+      case "hold":
+        this.add(ev, { text: `${this.n(ev.unit)} is stunned: its ${String(ev.name)} has to wait.`, tone: "bad" });
         break;
       case "down": {
         const party = this.L.unit(String(ev.unit))?.side === "party";
@@ -166,7 +172,7 @@ export class Narrator {
     const verb = ELEMENTS.includes(tag) ? "casts" : "uses";
     const targets = ev.targets as string[];
     const first = ab?.do[0];
-    const on = targets.length === 1 && targets[0] !== by && first && first.op !== "damage" ? ` on ${this.n(targets[0])}` : "";
+    const on = targets.length === 1 && targets[0] !== by && first && first.op !== "damage" && first.op !== "summon" ? ` on ${this.n(targets[0])}` : "";
     return `${name} ${verb} ${ab?.name ?? String(ev.name)}${on}!`;
   }
 
@@ -193,7 +199,7 @@ export class Narrator {
   }
   private tickText(t: string, src: string, n: number): string {
     switch (src) {
-      case "poison": return `${t} takes ${n} from Poison.`;
+      case "bleed": return `${t} bleeds for ${n}.`;
       case "burn": return `${t} burns for ${n}.`;
       case "shock": return `${t} is shocked for ${n}.`;
       case "thorns": return `${t} takes ${n} from Thorns.`;
@@ -211,7 +217,6 @@ export class Narrator {
     let text: string;
     if (src === "regen") text = `${t} regenerates ${n}.`;
     else if (src === "lifesteal") text = `${t} drains ${n}.`;
-    else if (src === "mercy") text = `Mercy heals ${t} for ${n}.`;
     else if (isStatus) text = `${t} recovers ${n} from ${this.sname(src)}.`;
     else text = `${ev.crit ? "Critical! " : ""}${t} recovers ${n}.`;
     this.add(ev, { text, tone: "heal" }, src === "regen" ? "tick" : "act");
@@ -265,7 +270,7 @@ export class Narrator {
 export function gainPhrase(id: string, n: number | null, name: string): string {
   const N = n !== null ? ` (${n})` : "";
   switch (id) {
-    case "poison": return "is poisoned";
+    case "bleed": return `bleeds${N}`;
     case "regen": return "gains Regen";
     case "shield": return `is shielded${N}`;
     case "might": return `gains Might${N}`;
@@ -289,7 +294,6 @@ export function gainPhrase(id: string, n: number | null, name: string): string {
     case "bulwark": return `raises its Bulwark${N}`;
     case "bulwark_broken": return "is broken open!";
     case "ice_crust": return `thickens its ice${N}`;
-    case "shadow_strike_on": return "strikes from the shadows";
     case "bloodlust_on": return "is in bloodlust!";
     case "bedrock_on": return "stands on bedrock";
     default: return `gains ${name}${N}`;

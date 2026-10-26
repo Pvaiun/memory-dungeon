@@ -83,9 +83,12 @@ export const combat: Rules = {
         return fighter(copy, abilities, rngFor(seed, `fight:${stage.id}:${m.ref}`));
       })
       .sort((a, b) => a.slot - b.slot);
+    // A dungeon's change to its foes; a boss fight takes `bossFoes` instead when the dungeon sets one.
+    const dn = x.c.dungeons.get(x.run.record.dungeon);
+    const foes = stage.boss && dn?.bossFoes ? dn.bossFoes : dn?.foes;
     const f: CFight = {
       stage: stage.id, boss: stage.boss ?? false, units: party, round: 0, result: null, decided: false,
-      now: 0, seq: 0, queue: [], moments: 0, begun: false, seed,
+      now: 0, seq: 0, queue: [], moments: 0, begun: false, seed, ...(foes ? { foes } : {}),
     };
     const count = new Map<string, number>();
     stage.enemies.forEach((id) => count.set(id, (count.get(id) ?? 0) + 1));
@@ -99,15 +102,26 @@ export const combat: Rules = {
 
   /** Every status ends with the fight: a max HP increase that ends caps current HP, and that HP carries over. A revived unit carries its HP too. */
   endFight(x, f) {
+    const restore = f.result === "won" ? x.c.pack.ruleset.run.restore : undefined;
     for (const m of x.run.party as Member[]) {
       const u = (f as CFight).units.find((v) => v.id === m.id);
       if (!u) continue;
       m.hp = u.ko ? 0 : Math.min(u.hp, m.stats.max_hp);
       m.mp = Math.min(u.mp, m.stats.max_mp);
+      // A what-if the campaign tuning priced (ruleset.run.restore); the core set restores nothing.
+      if (restore && m.hp > 0) {
+        m.hp = Math.min(m.stats.max_hp, m.hp + Math.floor((m.stats.max_hp * (restore.hp ?? 0)) / 100));
+        m.mp = Math.min(m.stats.max_mp, m.mp + Math.floor((m.stats.max_mp * (restore.mp ?? 0)) / 100));
+      }
     }
   },
 
   stage(x, stage, rng) {
+    if (stage.kind === "campfire") {
+      // RAISE is one option per knocked-out member ("raise:p2"), so the player picks who.
+      const down = stage.revive ? (x.run.party as Member[]).filter((m) => m.hp <= 0).map((m) => `raise:${m.id}`) : [];
+      return { kind: "campfire", at: stage.id, options: ["rest", "focus", ...down] };
+    }
     if (stage.kind !== "perk_pick") throw new Error(`no '${stage.kind}' stage in combat-1`);
     const offer = x.c.pack.ruleset.run.perkOffer;
     const pool = x.c.dungeons.get(x.run.record.dungeon)!.perkPool.filter((p) => offer.repeatPicked || !x.run.perks.includes(p));
@@ -116,6 +130,23 @@ export const combat: Rules = {
 
   /** A picked perk gives its stat grants now, and its statuses at each later fight start, to the party units it's for. */
   apply(x, d, choice) {
+    if (d.kind === "campfire") {
+      // REST gives back a share of max HP, FOCUS a share of max MP, to every standing member; RAISE stands one fallen member up.
+      const st = x.c.dungeons.get(x.run.record.dungeon)!.stages.find((s) => s.id === d.at);
+      if (st?.kind !== "campfire") throw new Error(`no campfire '${d.at}'`);
+      if (choice.startsWith("raise:")) {
+        const m = (x.run.party as Member[]).find((p) => p.id === choice.slice(6) && p.hp <= 0);
+        if (!m) throw new Error(`nobody to raise at '${choice}'`);
+        m.hp = Math.max(1, Math.floor((m.stats.max_hp * (st.revive ?? 0)) / 100));
+        return;
+      }
+      for (const m of x.run.party as Member[]) {
+        if (m.hp <= 0) continue;
+        if (choice === "rest") m.hp = Math.min(m.stats.max_hp, m.hp + Math.floor((m.stats.max_hp * st.hp) / 100));
+        else m.mp = Math.min(m.stats.max_mp, m.mp + Math.floor((m.stats.max_mp * st.mp) / 100));
+      }
+      return;
+    }
     if (d.kind !== "perk") throw new Error(`no '${d.kind}' decision in combat-1`);
     x.run.perks.push(choice);
     const perk = x.c.perks.get(choice)!;

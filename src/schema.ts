@@ -90,8 +90,8 @@ export const ENGINE_STATS = {
   max_mp: ["amount", "Max MP. Abilities cost MP, paid when they resolve."],
   attack: ["amount", "Scales only what states it. By convention, physical things do."],
   magic: ["amount", "Scales only what states it. By convention, magical things do."],
-  armor: ["amount", "A flat reduction on each physical hit: ruleset.armorRatio × Armor, down to 0 (BLOCKED)."],
-  aggro: ["amount", "Default targeting picks foes weighted by Aggro. Its floor must be above 0."],
+  armor: ["amount", "Reduces each physical hit: to hit² ÷ (hit + ruleset.armorK × Armor) when armorK is set; else a flat ruleset.armorRatio × Armor, down to 0 (BLOCKED)."],
+  aggro: ["amount", "Default targeting picks foes weighted by draw: Aggro through ruleset.draw's curve, or Aggro itself without one. Its floor must be above 0."],
   resist: ["points", "General Resistance, in percent, added to every element's own resist:<element>. Negative shows WEAK, positive RESIST, 100 IMMUNE, above 100 ABSORB."],
   attack_speed: ["points", "Basic attack cooldown ÷ (1 + stat/100), down to its recovery. Haste, Slow and Chill act through it."],
   cooldown_reduction: ["points", "Ability cooldowns ÷ (1 + stat/100)."],
@@ -207,7 +207,7 @@ export const SIDES = {
 export const Side = z.enum(keys(SIDES));
 
 export const PICKS = {
-  aggro: "`count` units at random, weighted by Aggro. The default for foes.",
+  aggro: "`count` units at random, weighted by draw (Aggro through ruleset.draw). The default for foes.",
   random: "`count` units at random. The default otherwise.",
   lowest: "`count` units with the lowest `by`; ties at random.",
   highest: "`count` units with the highest `by`; ties at random.",
@@ -364,7 +364,7 @@ export const EventSpec = z.strictObject({
   event: EventName,
   whose: Whose.optional(),
   kind: z.enum(["basic", "ability", "extra"]).optional().describe("Action and hit events only."),
-  tags: z.array(Tag).min(1).optional().describe("Hit events only: the hit carries at least one of these tags (a subtype or an element)."),
+  tags: z.array(Tag).min(1).optional().describe("Hit events only: the hit carries at least one of these tags (its kind, type, subtype or element, and \"crit\" when it crits)."),
   status: Id.optional().describe("Status events, and damage events: the status whose pulse or reaction dealt the damage."),
   cause: z.array(Cause).min(1).optional().describe("status_ended only. Default: every cause."),
 });
@@ -405,7 +405,13 @@ export const Status = z.strictObject({
     .strictObject({ share: z.number().gt(0).max(100) })
     .optional()
     .describe("Blocks the next damage above this percent of the holder's max HP, from any source, after mitigation and before absorbs; then the status ends (Aegis)."),
-  lockout: z.strictObject({ covers: Tag, interrupt: z.boolean().optional() }).optional(),
+  lockout: z
+    .strictObject({
+      covers: Tag,
+      interrupt: z.boolean().optional().describe("A cast in progress that the lockout covers is lost (see ruleset.lostCast)."),
+      pause: z.boolean().optional().describe("A cast in progress that the lockout covers is held, not lost: its wind-up resumes where it was when the lockout ends."),
+    })
+    .optional(),
   riders: z.array(z.strictObject({ on: Tag, add: Instance })).optional().describe("Adds a rider to the holder's hits that carry `on`."),
   convert: z.strictObject({ element: Id.optional(), subtype: Subtype.optional() }).optional().describe("Changes the element of the holder's magical instances, or the subtype of its physical ones."),
   seek: Tag.optional().describe("The holder's actions carrying this tag (basic, ability or all) have Seek: their first pick ignores Taunt."),
@@ -518,11 +524,38 @@ export const Ruleset = z.strictObject({
   abilityCast: Ticks.describe("An ability's cast time unless it states one."),
   abilityRecovery: Ticks.describe("An ability's recovery unless it states one: about a sword's."),
   armorRatio: z.number().min(0).describe("Each physical hit loses armorRatio × the target's Armor, as a flat amount."),
+  armorFloor: z.number().min(0).max(100).optional().describe("Armor can't take a physical hit below this % of its size. Absent or 0: enough Armor blanks a hit. Ignored when armorK is set."),
+  armorK: z.number().min(0).optional().describe("Armor by the Path of Exile formula: a physical hit deals hit² ÷ (hit + armorK × Armor), so Armor is nearly linear against big hits and never blanks one. Replaces armorRatio and armorFloor when above 0; absent or 0, the flat cut."),
   taken: z.strictObject({ floor: z.number(), cap: z.number() }).describe("Bounds on a unit's total damage-taken modifier, in percent."),
   unarmed: Weapon.describe("The basic attack of a unit with no weapon."),
   maxEnemies: PosInt.describe("Most living units on the enemy side, summons included."),
+  enrage: z
+    .strictObject({ after: Ticks, every: Ticks.min(1), pct: z.number().min(0) })
+    .optional()
+    .describe("A fight that runs past `after` ticks: every unit, on both sides, deals pct % more damage with hits and reactions, and pct more again every `every` ticks, so no fight stalls. Absent: fights run to the safety stop."),
+  opening: z
+    .strictObject({
+      min: z.number().min(0).max(1),
+      max: z.number().min(0).max(1),
+      slots: z.array(z.number().min(0)).optional().describe("A party unit's abilities start this many ticks charged, by the order they're slotted in (first, second, third), in place of the roll: the order is the player's to choose. Its basic attack still rolls."),
+    })
+    .optional()
+    .describe("At fight start each action is already partly charged: it's first ready after a share of its cooldown, rolled between min and max on the unit's dice for each action (but see slots). Absent: every action starts a fight on its full cooldown."),
+  draw: z
+    .strictObject({ centre: z.number().positive(), k: z.number().positive(), max: z.number().min(1) })
+    .optional()
+    .describe("Foes pick in proportion to draw, not Aggro. With d how far a unit's Aggro is from `centre`: above it, draw = centre × (k + max × d) ÷ (k + d); below it, centre × (k + d) ÷ (k + max × d). An ordinary unit draws `centre`; none draws more than `max` times that or less than 1 ÷ max; +d and −d cancel. `k` sets how much the first steps count. Absent: picks weighted by Aggro itself."),
+  stagger: Ticks.optional().describe("Copies of the same enemy start a fight this many ticks apart, one after another, so identical foes don't act in lockstep. Absent or 0: they start together."),
+  lostCast: z
+    .enum(["retry", "cooldown"])
+    .optional()
+    .describe("An action interrupted in its wind-up, or whose targets are gone when it resolves. retry (the default): no MP, no cooldown, so it can start again at once. cooldown: no MP, but an interrupted action goes on cooldown, as a cast that fizzles for MP does, and one that found no target costs the unit its recovery."),
   run: z.strictObject({
     defeatedUnits: z.enum(["stay_down"]).describe("Knocked-out units stay down between fights until something revives them."),
+    restore: z
+      .strictObject({ hp: z.number().min(0).max(100).optional(), mp: z.number().min(0).max(100).optional() })
+      .optional()
+      .describe("After a won fight, every standing member regains these % of its max HP and of its max MP. Absent or 0: nothing restores them between fights (the core set's rule)."),
     perkOffer: PerkOffer,
   }),
 });
@@ -642,7 +675,16 @@ export const FightStage = z.strictObject({
   note: Note.optional(),
 });
 export const PickStage = z.strictObject({ kind: z.literal("perk_pick"), id: Id });
-export const Stage = z.discriminatedUnion("kind", [FightStage, PickStage]);
+export const CampfireStage = z
+  .strictObject({
+    kind: z.literal("campfire"),
+    id: Id,
+    hp: z.number().min(0).max(100).describe("REST: every standing member regains this % of its max HP."),
+    mp: z.number().min(0).max(100).describe("FOCUS: every standing member regains this % of its max MP."),
+    revive: z.number().min(0).max(100).optional().describe("RAISE: one knocked-out member of the player's choice stands again with this % of its max HP. Absent: no raise."),
+  })
+  .describe("A rest between two fights where the player picks one: HP back, MP back, or (with revive) one fallen member back. Knocked-out members otherwise stay down.");
+export const Stage = z.discriminatedUnion("kind", [FightStage, PickStage, CampfireStage]);
 
 export const LootTable = z.strictObject({
   guaranteed: z.array(Id).optional(),
@@ -666,17 +708,64 @@ export const Challenge = z.strictObject({
   note: Note.optional(),
 });
 
+export const Foes = z
+  .strictObject({
+    hp: z.number().int().min(-90).optional().describe("Every foe's max HP, +% (summoned foes too)."),
+    power: z.number().int().min(-90).optional().describe("Every foe's damage dealt, +%: the power stat, added to its hits' boosts."),
+    statuses: z.array(Id).optional().describe("Applied to every foe at fight start, after its own."),
+    text: Text.optional().describe("What the player is told about it."),
+  })
+  .describe("A change to every foe in a dungeon: how a campaign trial or remix makes its foes tougher. The engine applies it at each fight start and to summons.");
+export type FoesT = z.infer<typeof Foes>;
+
 export const Dungeon = z.strictObject({
   id: Id,
   name: Text,
   text: Text,
   partySize: z.strictObject({ max: PosInt }),
+  foes: Foes.optional(),
+  bossFoes: Foes.optional().describe("A change to the foes of the run's boss fight, in its place: the regular fights and the boss can be set apart."),
   perkPool: z.array(Id).default([]),
   stages: z.array(Stage).min(1),
   loot: z.strictObject({ firstClear: LootTable, replay: LootTable }).optional().describe("Absent: a win pays nothing. The core set has no progression yet."),
   challenges: z.array(Challenge).default([]).describe("Fixed sequence. Clearing one reveals the next. The core set has none yet."),
   note: Note.optional(),
 });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// The campaign: a fixed road of dungeons and trials, each cleared once, each
+// paying a fixed reward and revealing the next (the progression experiment).
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const Need = z
+  .union([
+    z.strictObject({ includes: z.array(Id).min(1) }).describe("The party brings every one of these classes."),
+    z.strictObject({ excludes: z.array(Id).min(1) }).describe("The party brings none of these classes."),
+    z.strictObject({ formation: Id }).describe("The party stands in this formation."),
+    z.strictObject({ armor: z.enum(["heavy", "medium", "light", "none"]) }).describe("Every member wears armor of exactly this weight (none: no armor)."),
+    z.strictObject({ weapons: z.array(Id).min(1) }).describe("Every member's weapon is of one of these kinds."),
+    z.strictObject({ size: PosInt }).describe("The party has at most this many members."),
+  ])
+  .describe("A requirement a trial sets on the party. Only things the player can see and change in the menus.");
+export type NeedT = z.infer<typeof Need>;
+
+export const CampaignNode = z.strictObject({
+  id: Id,
+  name: Text,
+  kind: z.enum(["dungeon", "remix", "trial"]).describe("dungeon: one of the seven runs. remix: a new run from the same enemies. trial: a run with requirements."),
+  dungeon: Id.describe("The run it plays."),
+  text: Text.describe("The node's line, as the player reads it."),
+  needs: z.array(Need).default([]),
+  rewards: z.strictObject({ classes: z.array(Id).default([]), formations: z.array(Id).default([]), gear: z.array(Id).default([]) }),
+  note: Note.optional(),
+});
+export type CampaignNodeT = z.infer<typeof CampaignNode>;
+
+export const Campaign = z.strictObject({
+  start: z.strictObject({ classes: z.array(Id).min(1), formations: z.array(Id).min(1), gear: z.array(Id) }).describe("Owned at the start. A class's plain weapon always comes with it."),
+  nodes: z.array(CampaignNode).min(1).describe("In order. Clearing one pays its rewards once and reveals the next."),
+});
+export type CampaignT = z.infer<typeof Campaign>;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // The pack
@@ -707,6 +796,7 @@ export const ContentPack = z.strictObject({
     gear: z.array(Id),
   }),
   progression: z.strictObject({ dungeonOrder: z.array(Id).min(1) }),
+  campaign: Campaign.optional(),
 });
 export type ContentPack = z.infer<typeof ContentPack>;
 

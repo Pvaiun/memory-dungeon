@@ -199,3 +199,36 @@ table.sum th { color: var(--dim); }
 .log .l .t { color: var(--dim); flex: 0 0 3.5rem; }
 .log .l.sys { color: var(--hi); }
 .toast { position: absolute; left: .5rem; right: .5rem; bottom: 1rem; text-align: center; text-transform: uppercase; color: var(--hi); pointer-events: none; }
+
+/* the journey: NEW tags, cleared and locked rows, a question over the screen */
+.new { flex: 0 0 auto; color: var(--edge); background: var(--gold); border-radius: .25rem; padding: 0 .25rem; line-height: 1.25rem; text-transform: uppercase; white-space: nowrap; }
+.cell { position: relative; }
+.cell .new { position: absolute; top: .125rem; right: .25rem; }
+.cell.static { cursor: default; }
+.portrait.locked { width: 4.5rem; height: 4.5rem; min-height: 0; align-items: center; border: .125rem dashed var(--dim); border-radius: .25rem; color: var(--dim); font-size: 2rem; line-height: 2rem; }
+.row.done { color: var(--dim); }
+.row .cursor.good { color: var(--good); }
+.list .more { padding: .5rem .25rem .25rem; }
+.overlay.dialog { justify-content: center; }
+.overlay.dialog > .win { flex: 0 0 auto; }
+
+/* the celebration: a window that pops in, stars that twinkle around it */
+.overlay.cele { justify-content: center; z-index: 6; background: rgba(0, 0, 0, .75); cursor: pointer; }
+.overlay.cele > .win { flex: 0 0 auto; max-height: calc(100% - 1rem); overflow-y: auto; scrollbar-width: none; display: flex; flex-direction: column; gap: .5rem; padding: .75rem .75rem .5rem; box-shadow: inset 0 0 0 .125rem var(--edge), 0 0 0 .25rem var(--edge), 0 0 3rem .5rem rgba(255, 213, 74, .3); animation: pop .32s steps(4) both; }
+.cele-top { text-align: center; color: var(--gold); font-size: 2rem; line-height: 2.5rem; text-transform: uppercase; animation: shine 1.2s steps(1) infinite; }
+.cele-name { text-align: center; text-transform: uppercase; color: var(--hi); line-height: 1.5rem; }
+.cele-art { display: flex; justify-content: center; align-items: flex-end; gap: .75rem; min-height: 4.5rem; }
+.cele-slots .slotline { display: flex; gap: .5rem; align-items: flex-start; text-transform: uppercase; line-height: 1.5rem; }
+.cele-slots .slotline > .dim { flex: 0 0 auto; min-width: 8rem; white-space: nowrap; }
+.cele-slots .codes { flex: 1; min-width: 0; white-space: normal; }
+.cele-gear .who { padding-left: 4.75rem; min-height: 1.25rem; }
+.cele-gear .gear-row, .cele-gear .gear-row .trunc { white-space: normal; overflow: visible; }
+.cele-gear .gear-row .codes { flex-wrap: wrap; row-gap: 0; }
+.cele-where { text-align: center; color: var(--good); text-transform: uppercase; line-height: 1.5rem; }
+.center-line { justify-content: center; }
+.blink { animation: blink .8s steps(1) infinite; }
+.cele .star { position: absolute; color: var(--gold); pointer-events: none; animation: blink 1.1s steps(1) infinite; }
+.cele .star.big { font-size: 2rem; line-height: 2rem; }
+@keyframes pop { 0% { transform: scale(.4); opacity: 0; } 60% { transform: scale(1.06); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+@keyframes blink { 0% { opacity: 0; } 50% { opacity: 1; } }
+@keyframes shine { 0% { color: var(--gold); } 50% { color: var(--ink); } }

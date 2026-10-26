@@ -70,7 +70,13 @@ export type Item =
       dead: boolean;
     });
 
-export type CFight = Omit<Fight, "units"> & { units: CUnit[]; now: number; seq: number; queue: Item[]; moments: number; begun: boolean; seed: number };
+export type CFight = Omit<Fight, "units"> & {
+  units: CUnit[]; now: number; seq: number; queue: Item[]; moments: number; begun: boolean; seed: number;
+  /** The dungeon's change to every foe (a campaign trial's): applied to each enemy as it's made, summons included. */
+  foes?: S.FoesT;
+  /** The enrage has been announced (ruleset.enrage). */
+  enraged?: boolean;
+};
 
 /** Not design rules: safety stops in case content makes a fight that can't end. Either counts as a loss. */
 export const LIMITS = { ticks: 5000, moments: 200_000 };
@@ -379,8 +385,14 @@ function resolve(w: W, u: CUnit, i: number) {
     return;
   }
   const targets = choose(w, u, d.target, seeks(w, u, d));
-  // A stated rule that finds nobody when the action resolves: no MP spent, no cooldown (step 4's rule, kept as the default).
-  if (!targets.length) return fail("target");
+  // A stated rule that finds nobody when the action resolves: no MP spent and no cooldown (step 4's rule). Under
+  // ruleset.lostCast "cooldown" the unit spends the action's recovery, so two Ghouls reaching for one corpse don't
+  // loop, but a Purify whose Stun ended mid-cast isn't locked out for a whole cooldown.
+  if (!targets.length) {
+    fail("target");
+    if (w.c.pack.ruleset.lostCast === "cooldown") u.busy = w.f.now + d.recovery;
+    return;
+  }
   if (d.mp) {
     u.mp -= d.mp;
     w.log?.({ t: "mp", vis: "hidden", at: w.f.now, target: u.id, amount: -d.mp, mp: u.mp });
@@ -478,8 +490,16 @@ function value(w: W, x: CUnit, by: NonNullable<S.TargetRuleT["by"]>): number {
   return total(x, by.stacks) / SUBTICKS;
 }
 
+/** A unit's draw: how strongly it pulls a foe's pick (ruleset.draw), from its Aggro. Without the curve, Aggro itself. */
+export function drawOf(r: Pick<S.ContentPack["ruleset"], "draw">, aggro: number): number {
+  const c = r.draw;
+  if (!c) return Math.max(0, aggro);
+  const d = Math.abs(aggro - c.centre);
+  return aggro >= c.centre ? (c.centre * (c.k + c.max * d)) / (c.k + d) : (c.centre * (c.k + d)) / (c.k + c.max * d);
+}
+
 function weightedPick(w: W, u: CUnit, pool: CUnit[], what: string): CUnit {
-  const weights = pool.map((x) => Math.max(0, stat(w, x, "aggro")));
+  const weights = pool.map((x) => drawOf(w.c.pack.ruleset, stat(w, x, "aggro")));
   const sum = weights.reduce((a, b) => a + b, 0);
   const r = next(u.rng) * sum;
   w.log?.({ t: "roll", vis: "hidden", at: w.f.now, by: u.id, what, roll: r, of: sum });
@@ -701,7 +721,13 @@ function calc(w: W, t: CUnit, p: Part, raw: number, tags: readonly string[], boo
   let word: string | null = null;
   let heal = 0;
   if (p.type === "physical") {
-    const y = Math.max(0, x - stat(w, t, "armor") * w.c.pack.ruleset.armorRatio);
+    const k = w.c.pack.ruleset.armorK;
+    const armor = stat(w, t, "armor");
+    // ruleset.armorK: the Path of Exile formula, hit² ÷ (hit + k × Armor): nearly linear against big hits, and it never
+    // blanks a small one. Otherwise a flat armorRatio × Armor, which ruleset.armorFloor keeps above a share of the hit.
+    const y = k
+      ? (x > 0 && armor > 0 ? (x * x) / (x + k * armor) : x)
+      : Math.max((x * (w.c.pack.ruleset.armorFloor ?? 0)) / 100, x - armor * w.c.pack.ruleset.armorRatio);
     if (y <= 0 && x > 0) word = "BLOCKED";
     x = y;
   } else if (p.element) {
@@ -753,9 +779,9 @@ function take(w: W, t: CUnit, amount: number): { soaked: number; lost: number; b
 
 const shield = (w: W, u: CUnit) => u.statuses.reduce((s, x) => (def(w, x.id).absorb ? s + Math.floor(x.stacks / SUBTICKS) : s), 0);
 
-function logDamage(w: W, by: CUnit | null, t: CUnit, src: string, part: string, r: Calc, tk: { soaked: number; blocked: boolean }) {
+function logDamage(w: W, by: CUnit | null, t: CUnit, src: string, part: string, r: Calc, tk: { soaked: number; blocked: boolean }, from?: string | null) {
   w.log?.({
-    t: "dmg", vis: "player", at: w.f.now, by: by?.id ?? null, target: t.id, src, part,
+    t: "dmg", vis: "player", at: w.f.now, by: by?.id ?? null, target: t.id, src, part, ...(from ? { from } : {}),
     amount: tk.blocked ? 0 : r.amount, soaked: tk.soaked, word: tk.blocked ? "AEGIS" : r.word, crit: r.crit, hp: t.hp, shield: shield(w, t),
   });
 }
@@ -791,8 +817,9 @@ function hit(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
   }
   // The hit and its riders read the same state, and share one crit roll.
   const crit = critRoll(w, a, stat(w, a, "crit_chance"), stat(w, a, "crit_multiplier"));
+  const power = stat(w, a, "power") + enrage(w);
   const results = parts.map(({ p, raw, rider }) =>
-    rider && p.type === "physical" && evaded(w, a, t) ? null : calc(w, t, p, raw, partTags(kind, p), boostOf(w, a, partTags(kind, p), t), crit),
+    rider && p.type === "physical" && evaded(w, a, t) ? null : calc(w, t, p, raw, partTags(kind, p), boostOf(w, a, partTags(kind, p), t) + power, crit),
   );
   let dealt = 0, lost = 0;
   for (let i = 0; i < parts.length && !t.ko; i++) {
@@ -815,10 +842,13 @@ function hit(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
   if (w.f.result) return;
   // An absorbed hit applies nothing and doesn't count as landing.
   if (results[0]?.word === "ABSORB") return;
-  if (!t.ko) for (const ap of e.apply ?? []) applyStatus(w, a, t, def(w, ap.status), { stacks: aval(w, ap.stacks ?? 1, a, t), duration: ap.duration, chance: ap.chance, rng: a });
-  fire(w, ev("hit_lands", a, t, { kind, tags, amount: dealt }));
-  fire(w, ev("hit_taken", t, a, { kind, tags, amount: dealt }));
+  // The hit's events carry "crit" when it crits, for reactions to crits (the Assassin's).
+  const evTags = crit ? [...tags, "crit"] : tags;
+  fire(w, ev("hit_lands", a, t, { kind, tags: evTags, amount: dealt }));
+  fire(w, ev("hit_taken", t, a, { kind, tags: evTags, amount: dealt }));
   damageEvents(w, a, t, dealt, lost, null);
+  // The hit's statuses land after its events, so a status set off by being hit (Bleed) waits for the next hit.
+  if (!t.ko && !w.f.result) for (const ap of e.apply ?? []) applyStatus(w, a, t, def(w, ap.status), { stacks: aval(w, ap.stacks ?? 1, a, t), duration: ap.duration, chance: ap.chance, rng: a });
 }
 
 function damageEvents(w: W, by: CUnit | null, t: CUnit, dealt: number, lost: number, status: string | null) {
@@ -847,11 +877,12 @@ function strike(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
       ? critRoll(w, from, stat(w, from, "crit_chance"), stat(w, from, "crit_multiplier"))
       : critRoll(w, st.holder, d.crit.chance, d.crit.multiplier ?? stat(w, st.holder, "crit_multiplier"));
   }
-  const r = calc(w, t, p, raw, tags, st.fixedBoost ? 0 : boostOf(w, ctx.actor, tags, t), crit);
+  const r = calc(w, t, p, raw, tags, st.fixedBoost ? 0 : boostOf(w, ctx.actor, tags, t) + stat(w, ctx.actor, "power") + enrage(w), crit);
   const by = st.fixedBoost ? (d.perSource ? unit(w, st.src) : null) : ctx.actor;
   if (r.word === "ABSORB") return absorb(w, by, t, d.id, r);
   const tk = take(w, t, r.amount);
-  logDamage(w, by, t, d.id, st.fixedBoost ? "pulse" : "reaction", r, tk);
+  // `from`: who applied the status, for reading a fight's damage by source (the log only).
+  logDamage(w, by, t, d.id, st.fixedBoost ? "pulse" : "reaction", r, tk, st.src);
   if (t.hp <= 0) ko(w, t);
   if (!w.f.result) damageEvents(w, by, t, tk.blocked ? 0 : r.amount, tk.lost, d.id);
 }
@@ -921,7 +952,7 @@ export function applyStatus(w: W, by: CUnit, to: CUnit, d: S.StatusT, o: ApplyOp
       cur.stacks = Math.min(capOf(w, d, cur.nums, to), cur.stacks + add);
       if (dur !== "permanent") cur.end = end;
     }
-    gained(w, to, d, cur);
+    gained(w, to, d, cur, by);
     return;
   }
   // An Intensity status exists only at 1 stack or more.
@@ -931,16 +962,17 @@ export function applyStatus(w: W, by: CUnit, to: CUnit, d: S.StatusT, o: ApplyOp
   inst.stacks = isIntensity(d) ? Math.min(capOf(w, d, nums, to), add) : 0;
   to.statuses.push(inst);
   if (d.pulse) push(w, { k: "pulse", at: f.now + sub(d.pulse.every), b: pulseBatch(to, d), g: 0, slot: to.slot, seq: f.seq++, unit: to.id, uid: inst.uid });
-  gained(w, to, d, inst);
+  gained(w, to, d, inst, by);
 }
 
-function gained(w: W, to: CUnit, d: S.StatusT, s: SInst) {
+function gained(w: W, to: CUnit, d: S.StatusT, s: SInst, by?: CUnit) {
   w.log?.({
-    t: "status", vis: d.show === "icon" ? "player" : "hidden", at: w.f.now, unit: to.id, status: d.id, name: d.name,
+    t: "status", vis: d.show === "icon" ? "player" : "hidden", at: w.f.now, unit: to.id, status: d.id, name: d.name, ...(by ? { by: by.id } : {}),
     total: isIntensity(d) ? s.stacks / SUBTICKS : null, end: s.end,
   });
   if (d.stats) refresh(w, to);
   if (d.lockout?.interrupt) interrupt(w, to, d.lockout.covers);
+  if (d.lockout?.pause && s.end !== -1) hold(w, to, d.lockout.covers, s.end - w.f.now);
   fire(w, ev("status_gained", to, null, { status: d.id }));
 }
 
@@ -961,15 +993,32 @@ function endStatus(w: W, u: CUnit, s: SInst, cause: S.CauseT) {
   fire(w, ev("status_ended", u, null, { status: d.id, cause, ending: s }));
 }
 
-/** An interrupting lockout cancels a cast it covers, as if the unit were KO'd mid-cast: no MP spent, no cooldown (section 7.3). */
+/**
+ * An interrupting lockout cancels a cast it covers, as if the unit were KO'd mid-cast: no MP spent, and by default
+ * no cooldown (section 7.3); under ruleset.lostCast "cooldown" the action goes on cooldown.
+ */
 function interrupt(w: W, u: CUnit, lockout: string) {
   if (!u.cast) return;
   const d = actDef(w, u, u.cast.act);
   if (!covers(lockout, d)) return;
   w.f.queue = w.f.queue.filter((it) => !(it.k === "act" && it.unit === u.id));
+  if (w.c.pack.ruleset.lostCast === "cooldown") u.acts[u.cast.act].ready = w.f.now + cooldownOf(w, u, d);
   u.cast = null;
   w.log?.({ t: "interrupt", vis: "player", at: w.f.now, unit: u.id, act: d.id, name: d.name });
   fire(w, ev("action_interrupted", u, null, { kind: d.kind }));
+}
+
+/** A pausing lockout (Stun): a cast in progress that it covers waits out the lockout, then carries on from where it was. */
+function hold(w: W, u: CUnit, lockout: string, ticks: number) {
+  if (!u.cast || ticks <= 0) return;
+  const d = actDef(w, u, u.cast.act);
+  if (!covers(lockout, d)) return;
+  const i = w.f.queue.findIndex((it) => it.k === "act" && it.unit === u.id);
+  if (i < 0) return;
+  const [it] = w.f.queue.splice(i, 1);
+  u.cast.end += ticks;
+  push(w, { ...it, at: u.cast.end, seq: w.f.seq++ });
+  w.log?.({ t: "hold", vis: "player", at: w.f.now, unit: u.id, act: d.id, name: d.name, ends: u.cast.end });
 }
 
 /** Removes buffs or debuffs, newest first or at random, skipping unremovable ones and a dispel-immune unit's buffs (section 7.9). */
@@ -1177,16 +1226,19 @@ function revive(w: W, by: CUnit, t: CUnit, hp: number, ready: boolean) {
 }
 
 /** A unit for the enemy side, from an enemy definition: at fight start or when summoned. */
-export function makeUnit(c: Content, f: Pick<CFight, "units" | "seed" | "stage">, enemyId: string, side: CUnit["side"], lettered: boolean): CUnit {
+export function makeUnit(c: Content, f: Pick<CFight, "units" | "seed" | "stage" | "foes">, enemyId: string, side: CUnit["side"], lettered: boolean): CUnit {
   const e = c.enemies.get(enemyId)!;
   const n = f.units.filter((u) => u.side === side).length + 1;
   const same = f.units.filter((u) => u.ref === enemyId).length;
   const id = `${side === "enemy" ? "e" : "p"}${n}`;
-  const m = { base: { ...e.stats }, flat: {}, pct: {} };
+  const foes = side === "enemy" ? f.foes : undefined;
+  const m: Pick<CUnit, "base" | "flat" | "pct"> = { base: { ...e.stats }, flat: {}, pct: {} };
+  if (foes?.power) m.flat.power = foes.power;
+  if (foes?.hp) m.pct.max_hp = foes.hp;
   const stats = derive(c, m);
   return {
     id, ref: enemyId, name: lettered ? `${e.name} ${letter(same)}` : e.name, side, stats, hp: stats.max_hp, mp: stats.max_mp,
-    slot: n - 1, ...m, start: [...(e.statuses ?? [])], weapon: e.weapon ? `enemy:${enemyId}` : "unarmed",
+    slot: n - 1, ...m, start: [...(e.statuses ?? []), ...(foes?.statuses ?? [])], weapon: e.weapon ? `enemy:${enemyId}` : "unarmed",
     ko: false, rng: rngFor(f.seed, `fight:${f.stage}:${id}`),
     acts: [...(e.abilities ?? []).map((a) => ({ id: a, ready: 0 })), { id: "basic", ready: 0 }], cast: null, busy: 0, statuses: [],
   };
@@ -1244,6 +1296,13 @@ export function nextTime(w: W): number {
   return t;
 }
 
+/** ruleset.enrage: the extra damage, in percent, every unit deals once a fight has run long. */
+function enrage(w: W): number {
+  const r = w.c.pack.ruleset.enrage;
+  if (!r || w.f.now <= r.after * SUBTICKS) return 0;
+  return (Math.floor((w.f.now - r.after * SUBTICKS) / (r.every * SUBTICKS)) + 1) * r.pct;
+}
+
 /** Fight start: statuses from passives, gear, formations and perks; every action on cooldown as if it had just resolved. */
 function begin(w: W) {
   const f = w.f;
@@ -1251,7 +1310,26 @@ function begin(w: W) {
     for (const id of u.start) applyStatus(w, u, u, def(w, id), { stacks: 1, rng: u });
     refresh(w, u);
   }
-  for (const u of f.units) u.acts.forEach((a, i) => (a.ready = cooldownOf(w, u, actDef(w, u, i))));
+  // ruleset.opening: each action starts partly charged, by its own roll, so a party's actions don't all come up together.
+  // With `slots`, a party unit's abilities start charged by the order they're slotted in instead: preparation, not dice.
+  const open = w.c.pack.ruleset.opening;
+  for (const u of f.units) u.acts.forEach((a, i) => {
+    const d = actDef(w, u, i);
+    const cd = cooldownOf(w, u, d);
+    if (open?.slots?.length && u.side === "party" && d.kind === "ability") a.ready = Math.max(0, cd - sub(open.slots[i] ?? 0));
+    else a.ready = open ? Math.round(cd * (open.min + (open.max - open.min) * next(u.rng))) : cd;
+  });
+  // ruleset.stagger: the n-th copy of an enemy starts n × stagger ticks behind the first, so three Ghosts ripple rather than volley.
+  const stagger = Math.round((w.c.pack.ruleset.stagger ?? 0) * SUBTICKS);
+  if (stagger) {
+    const seen = new Map<string, number>();
+    for (const u of f.units) {
+      if (u.side !== "enemy") continue;
+      const n = seen.get(u.ref) ?? 0;
+      seen.set(u.ref, n + 1);
+      if (n) for (const a of u.acts) a.ready += n * stagger;
+    }
+  }
   for (const u of f.units) if (!u.ko) fire(w, ev("fight_start", u, null));
   f.begun = true;
 }
@@ -1270,6 +1348,11 @@ export function step(w: W) {
     return;
   }
   f.now = t;
+  const rage = w.c.pack.ruleset.enrage;
+  if (rage && !f.enraged && t > rage.after * SUBTICKS) {
+    f.enraged = true;
+    w.log?.({ t: "enrage", vis: "player", at: t });
+  }
   for (const u of f.units) {
     if (u.ko || u.cast || u.busy > t) continue;
     const i = u.acts.findIndex((_, j) => available(w, u, j));

@@ -4,7 +4,7 @@
  * stats bring, the ruleset and the design block.
  */
 import type { ContentPack, StatDefT, StatusT, WeaponKindT } from "../../src/schema.js";
-import { MP_REGEN, P, RULES, SPEED, STATUS, pts } from "./scale.js";
+import { KIND_SPEED, MP_REGEN, P, RULES, SPEED, STATUS, pts } from "./scale.js";
 
 const TIMING = ["attack_speed", "cooldown_reduction", "cast_time_reduction"] as const;
 
@@ -14,8 +14,8 @@ export const stats: StatDefT[] = [
   { id: "mp_regen", name: "MP regen", kind: "amount", default: 0, floor: 0, brings: "mp_regen", note: `MP restored every ${MP_REGEN.every} ticks, through the status it brings.` },
   { id: "attack", name: "Attack", kind: "amount", default: 0, floor: 0 },
   { id: "magic", name: "Magic", kind: "amount", default: 0, floor: 0 },
-  { id: "armor", name: "Armor", kind: "amount", default: 0, floor: 0, note: `Each physical hit loses ${RULES.armorRatio} × Armor.` },
-  { id: "aggro", name: "Aggro", kind: "amount", default: pts(1), floor: 100, note: "Floors above zero: no unit becomes unpickable by numbers alone." },
+  { id: "armor", name: "Armor", kind: "amount", default: 0, floor: 0, note: `A physical hit deals hit² ÷ (hit + ${RULES.armorK} × Armor): nearly linear against big hits, never a blank.` },
+  { id: "aggro", name: "Aggro", kind: "amount", default: 100, floor: 1, note: "Centred on 100 (a word n is 70 + 10n, a gear or formation step 10), never below 1. Foes pick by draw, which comes from Aggro through ruleset.draw: an ordinary unit draws 100, none more than 300 or less than 33." },
   { id: "resist", name: "Resistance", kind: "points", default: 0, floor: -100, cap: 200, note: "Past 100 the damage heals instead: absorption, a class and boss trait." },
   { id: "attack_speed", name: "Attack speed", kind: "points", default: 0, floor: -300, cap: 300, note: "Hidden behind Haste, Slow and Chill." },
   { id: "cooldown_reduction", name: "Cooldown reduction", kind: "points", default: 0, floor: -300, cap: 300, note: "Hidden behind Haste, Slow and Chill." },
@@ -31,6 +31,7 @@ export const stats: StatDefT[] = [
   { id: "lifesteal", name: "Lifesteal", kind: "points", default: 0, floor: 0, brings: "lifesteal" },
   { id: "siphon", name: "Siphon", kind: "points", default: 0, floor: 0, brings: "siphon" },
   { id: "double_strike", name: "Double strike", kind: "points", default: 0, floor: 0, cap: 100, brings: "double_strike" },
+  { id: "power", name: "Power", kind: "points", default: 0, floor: -90, note: "Damage dealt by hits and reactions, +%. Only a dungeon's foes modifier sets it: how a campaign trial makes its foes hit harder." },
 ];
 
 export const elements = [
@@ -44,24 +45,24 @@ export const elements = [
 ];
 
 export const weaponKinds: WeaponKindT[] = [
-  { id: "dagger", name: "Dagger", type: "physical", subtype: "pierce", cooldown: SPEED.fast },
-  { id: "fist", name: "Fist weapons", type: "physical", subtype: "blunt", cooldown: SPEED.fast },
-  { id: "sword", name: "Sword", type: "physical", subtype: "slash", cooldown: SPEED.medium },
-  { id: "bow", name: "Bow", type: "physical", subtype: "pierce", cooldown: SPEED.medium },
-  { id: "spear", name: "Spear", type: "physical", subtype: "pierce", cooldown: SPEED.medium },
-  { id: "axe", name: "Axe", type: "physical", subtype: "blunt", cooldown: SPEED.slow },
-  { id: "fire_staff", name: "Fire staff", type: "magical", element: "fire", cooldown: SPEED.slow },
-  { id: "lightning_staff", name: "Lightning staff", type: "magical", element: "lightning", cooldown: SPEED.fast },
-  { id: "wind_staff", name: "Wind staff", type: "magical", element: "wind", cooldown: SPEED.fast },
-  { id: "earth_staff", name: "Earth staff", type: "magical", element: "earth", cooldown: SPEED.medium },
-  { id: "ice_staff", name: "Ice staff", type: "magical", element: "ice", cooldown: SPEED.medium },
-  { id: "light_staff", name: "Light staff", type: "magical", element: "light", cooldown: SPEED.medium },
-  { id: "dark_staff", name: "Dark staff", type: "magical", element: "dark", cooldown: SPEED.medium },
+  { id: "dagger", name: "Dagger", type: "physical", subtype: "pierce", cooldown: KIND_SPEED.dagger },
+  { id: "fist", name: "Fist weapons", type: "physical", subtype: "blunt", cooldown: KIND_SPEED.fist },
+  { id: "sword", name: "Sword", type: "physical", subtype: "slash", cooldown: KIND_SPEED.sword },
+  { id: "bow", name: "Bow", type: "physical", subtype: "pierce", cooldown: KIND_SPEED.bow },
+  { id: "spear", name: "Spear", type: "physical", subtype: "pierce", cooldown: KIND_SPEED.spear },
+  { id: "axe", name: "Axe", type: "physical", subtype: "blunt", cooldown: KIND_SPEED.axe },
+  { id: "fire_staff", name: "Fire staff", type: "magical", element: "fire", cooldown: KIND_SPEED.fire_staff },
+  { id: "lightning_staff", name: "Lightning staff", type: "magical", element: "lightning", cooldown: KIND_SPEED.lightning_staff },
+  { id: "wind_staff", name: "Wind staff", type: "magical", element: "wind", cooldown: KIND_SPEED.wind_staff },
+  { id: "earth_staff", name: "Earth staff", type: "magical", element: "earth", cooldown: KIND_SPEED.earth_staff },
+  { id: "ice_staff", name: "Ice staff", type: "magical", element: "ice", cooldown: KIND_SPEED.ice_staff },
+  { id: "light_staff", name: "Light staff", type: "magical", element: "light", cooldown: KIND_SPEED.light_staff },
+  { id: "dark_staff", name: "Dark staff", type: "magical", element: "dark", cooldown: KIND_SPEED.dark_staff },
 ];
 /** The speed word of a kind, for weapon damage. */
 export const speedOf = (kind: string): "fast" | "medium" | "slow" => {
-  const cd = weaponKinds.find((k) => k.id === kind)!.cooldown;
-  return cd === SPEED.fast ? "fast" : cd === SPEED.slow ? "slow" : "medium";
+  const cd = weaponKinds.find((k) => k.id === kind)!.cooldown ?? SPEED.medium;
+  return cd < 6.8 ? "fast" : cd > 9.6 ? "slow" : "medium";
 };
 
 const timing = (n: number) => TIMING.map((stat) => ({ stat, flat: n }));
@@ -70,20 +71,24 @@ const bothKinds = (pct: number) => [{ tag: "physical", pct }, { tag: "magical", 
 /** The 22 statuses of the vocabulary. */
 export const vocabulary: StatusT[] = [
   // Fundamental
-  { id: "poison", name: "POISON", text: "Loses health over time.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.poison.duration, pulse: { every: STATUS.poison.every, do: [{ op: "damage", type: "none", amount: STATUS.poison.damage }] } },
+  // Step 5c (the director's): Bleed replaces Poison. Nothing on its own and no duration; each hit the holder takes opens it.
+  {
+    id: "bleed", name: "BLEED", text: "Each hit it takes deals damage for each stack, then a third of the stacks close.", label: "debuff", show: "icon", stacking: "intensity",
+    trigger: { on: { event: "hit_taken" }, do: [{ op: "damage", type: "none", amount: STATUS.bleed.perStack, to: "holder" }] }, drop: { fraction: STATUS.bleed.drop },
+  },
   { id: "regen", name: "REGEN", text: "Recovers health over time.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.regen.duration, pulse: { every: STATUS.regen.every, do: [{ op: "heal", amount: { scale: [{ ratio: STATUS.regen.share, stat: "max_hp", of: "holder" }] } }] } },
   { id: "shield", name: "SHIELD", text: "Soaks damage before health.", label: "buff", show: "icon", stacking: "intensity", absorb: true, cap: { scale: [{ ratio: STATUS.shield.capShare, stat: "max_hp", of: "holder" }] } },
-  { id: "might", name: "MIGHT", text: "Deals more damage per stack.", label: "buff", show: "icon", stacking: "intensity", boosts: bothKinds(STATUS.might.perStack), pulse: { every: STATUS.might.every }, drop: { count: 1 } },
+  { id: "might", name: "MIGHT", text: "Deals more damage per stack.", label: "buff", show: "icon", stacking: "intensity", boosts: bothKinds(STATUS.might.perStack), cap: STATUS.might.cap, pulse: { every: STATUS.might.every }, drop: { count: 1 } },
   { id: "weaken", name: "WEAKEN", text: "Deals less damage.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.weaken.duration, boosts: bothKinds(STATUS.weaken.pct) },
   { id: "guard", name: "GUARD", text: "Armor up.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.guard.duration, stats: [{ stat: "armor", flat: STATUS.guard.armor }] },
-  { id: "stun", name: "STUN", text: "Can't act.", label: "debuff", show: "icon", stacking: "fizzle", duration: STATUS.stun.duration, lockout: { covers: "all", interrupt: true } },
+  { id: "stun", name: "STUN", text: "Can't act. A wind-up already under way waits it out, then carries on.", label: "debuff", show: "icon", stacking: "fizzle", duration: STATUS.stun.duration, lockout: { covers: "all", pause: true } },
   { id: "slow", name: "SLOW", text: "Slower in everything.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.slow.duration, stats: timing(STATUS.slow.speed) },
   { id: "haste", name: "HASTE", text: "Faster in everything.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.haste.duration, stats: timing(STATUS.haste.speed) },
   { id: "taunt", name: "TAUNT", text: "Foes must pick it.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.taunt.duration, stats: [{ stat: "forced", flat: 1 }] },
   // Specialist
   { id: "burn", name: "BURN", text: "Burns for each stack, then dies down.", label: "debuff", show: "icon", stacking: "intensity", pulse: { every: STATUS.burn.every, do: [{ op: "damage", type: "none", amount: STATUS.burn.perStack }] }, drop: { fraction: STATUS.burn.drop } },
   { id: "chill", name: "CHILL", text: "Slower for each stack.", label: "debuff", show: "icon", stacking: "intensity", cap: STATUS.chill.cap, stats: timing(STATUS.chill.perStack), pulse: { every: STATUS.chill.every }, drop: { fraction: STATUS.chill.drop } },
-  { id: "shock", name: "SHOCK", text: "Hurts for each stack every time it acts.", label: "debuff", show: "icon", stacking: "intensity", trigger: { on: { event: "action_resolve" }, do: [{ op: "damage", type: "none", amount: STATUS.shock.perStack, to: "holder" }] }, drop: { fraction: STATUS.shock.drop } },
+  { id: "shock", name: "SHOCK", text: "Hurts for each stack every time it acts.", label: "debuff", show: "icon", stacking: "intensity", cap: STATUS.shock.cap, trigger: { on: { event: "action_resolve" }, do: [{ op: "damage", type: "none", amount: STATUS.shock.perStack, to: "holder" }] }, drop: { fraction: STATUS.shock.drop } },
   { id: "ward", name: "WARD", text: "Resists every element.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.ward.duration, stats: [{ stat: "resist", flat: STATUS.ward.resist }] },
   { id: "sunder", name: "SUNDER", text: "Armor down for each stack.", label: "debuff", show: "icon", stacking: "intensity", stats: [{ stat: "armor", flat: STATUS.sunder.perStack }], pulse: { every: STATUS.sunder.every }, drop: { count: 1 } },
   { id: "silence", name: "SILENCE", text: "Can't use abilities.", label: "debuff", show: "icon", stacking: "fizzle", duration: STATUS.silence.duration, lockout: { covers: "ability", interrupt: true } },
@@ -129,12 +134,19 @@ export const machinery: StatusT[] = [
 
 export const ruleset: ContentPack["ruleset"] = {
   basicRecovery: RULES.basicRecovery,
+  armorFloor: RULES.armorFloor,
   abilityCast: RULES.abilityCast,
   abilityRecovery: RULES.abilityRecovery,
   armorRatio: RULES.armorRatio,
+  armorK: RULES.armorK,
   taken: { floor: -75, cap: 200 },
   unarmed: { type: "physical", subtype: "blunt", cooldown: SPEED.medium, amount: { base: 100, scale: [{ ratio: 0.2, stat: "attack" }] } },
   maxEnemies: RULES.maxEnemies,
+  lostCast: RULES.lostCast,
+  opening: RULES.opening,
+  stagger: RULES.stagger,
+  draw: RULES.draw,
+  enrage: RULES.enrage,
   run: { defeatedUnits: "stay_down", perkOffer: { options: 1, premiumChance: 0, repeatPicked: false, offerInapplicable: false } },
 };
 
