@@ -44,11 +44,14 @@ if (cmd === "show") {
   if (ft) out.push(`Foes: ${ft}`);
   out.push(node.needs.length ? `Needs: ${node.needs.map((nd) => needText(c, nd)).join("; ")}.` : "Needs: none.");
   out.push("", "Fights:");
-  d.stages.forEach((s, k) => {
+  // Fights numbered as the run summary numbers them; the campfire shows where it falls.
+  let k = 0;
+  d.stages.forEach((s) => {
+    if (s.kind === "campfire") return void out.push("  (campfire)");
     if (s.kind !== "fight") return;
     const counts = new Map<string, number>();
     for (const e of s.enemies) counts.set(e, (counts.get(e) ?? 0) + 1);
-    out.push(`  ${k + 1}. ${s.boss ? "BOSS " : ""}${(s.name ?? s.id).replace(/^\d+\. /, "")}: ${[...counts].map(([e, n]) => `${c.enemies.get(e)!.name}${n > 1 ? ` x${n}` : ""}`).join(", ")}`);
+    out.push(`  ${++k}. ${s.boss ? "BOSS " : ""}${(s.name ?? s.id).replace(/^\d+\. /, "")}: ${[...counts].map(([e, n]) => `${c.enemies.get(e)!.name}${n > 1 ? ` x${n}` : ""}`).join(", ")}`);
   });
   const seen = new Set<string>();
   out.push("", "The foes, as the bestiary describes them:");

@@ -1,6 +1,6 @@
 # Step 5c report: Bleed, slotted openings, hungry casters, a three-way campfire
 
-You reacted to the 5b report with a list of changes. All of them are built and on this branch. The road is re-tuned on them over five passes, and two AI playtests played it. This report leads with what needs you. `intent.md` has your words, `design.md` the changes in full, `tuning.md` the 23 rounds.
+You reacted to the 5b report with a list of changes. All of them are built and on this branch. The road is re-tuned on them over five passes, and two AI playtests played it. This report leads with what needs you. `intent.md` has your words, `design.md` the changes in full, `tuning.md` the 25 rounds.
 
 **To play it:** `npm install`, then `npm run ui`. A journey in progress carries over (same road), but fights play differently. On a class's sheet each ability card now says when it's first ready in a fight. Tap two numbers to swap the order.
 
@@ -83,7 +83,7 @@ Share of each node's top builds while owned (a fair share is about 20% to 35%):
 - **The Stormcaller** overshot to 57% when I also raised Shock to 80 a stack. With Shock back at 60 (cap 40) it's 33%.
 - **The bottom three** are the casters: fragile (2 HP, the Pyromancer with Aggro 3), MP-hungry, and knocked out twice as often as the walls (the Pyromancer 20 times in 100 fights, the Knight 10). Price isn't their main trouble: easing the Pyromancer from 2.5 times to double gained its builds 4 points.
 
-**My proposal:** a class pass next, on the casters' survival and the Knight.
+**My proposal:** a class pass next, on the casters' survival, the Knight and the Vampire (a playtester watched it solo two bosses, healing 33,000 and 64,000). The two playtests add the Bramble knight (it died early in all four runs it was given) and the Paladin (three 1,200 spells on a 3,000 pool still leave it dry by the third fight).
 
 ### F. Readings and choices to confirm
 
@@ -95,6 +95,11 @@ Share of each node's top builds while owned (a fair share is about 20% to 35%):
   - Thunder chord adds many Shock, not several: at several the first playtester saw it peak at 10 stacks.
   - Burn is 25% of the Pyromancer's damage (was 14%), Shock 22% of the Stormcaller's (was 13%), and Thunder chord's Shock 45% of the Bard's.
   - Smite's new Burn is small: the Paladin casts Smite about once every two regular fights.
+
+### G. Two things the playtests found that I'd fix next, not now
+
+- **The campfire on short runs.** On the Tower Top and the Royal Court (two regular fights, then the boss) "half the regular fights, rounded up" puts the fire after the first fight, while the party is still nearly full. The Storm Queen and the King then come back to back. I'd put it before the last regular fight when a run has two or fewer. It changes those nodes' knobs, so it waits for the next re-tune.
+- **Difficulty.** The two playtests took 27 and 56 attempts (5b's took 51), and the second got stuck on Judgement, whose answer is narrow: the simulations' best builds win 81% to 96% there, all with the Paladin and Hexer plus a Monk, Stormcaller or Vampire, and Hush slotted last. The tuner's target is unchanged ("the best builds win 85% of first tries"). The class pass and 5b's boss pass are the levers I'd pull before the target. Two bosses (the Fire Mine's Fire Giant, the Iron Gate) still die before their big move.
 
 ## 2. What was built
 
@@ -134,7 +139,31 @@ All 20 nodes, each node's best builds, 6 to 8 seeds, at each version's own knobs
 
 ## 4. Feel: two AI playtests
 
-*(Filled in below.)*
+Two fresh agents each played the whole road as first-time players, through the game as a command line that shows only what a player sees, with up to 8 tries a node. The first played pass 18, the second pass 19.
+
+**The road.** The first cleared all 20 nodes in 27 attempts, never needing more than two. The second took 56 and was stuck at Judgement (G). The hard spots were the Ogre Brothers (two walls, no healer), the Long Road's Reaper (100- to 270-tick slogs) and the Tower Top.
+
+**On your changes:**
+
+- **Bleed** read well on foes ("Statuses on foes: bleed" as its own damage line, stack counts that made sense). The Ranger felt good: 10 to 26 stacks, 2,500 to 12,600 a fight, most against big single targets. The first playtester still called it "a side dish". The Bramble knight did nothing for either, and the Assassin's crit Bleed stayed small (7 stacks). Snakes' Bleed on the party was invisible in the command line. It shows now: in one snake-pit run I checked, it was 2,600 of the 4,450 the party took.
+- **Ability order mattered.**
+  - The second playtester's favourite moment: moving the Hexer's Hush to the last slot so it lands in the Fire Giant's wind-up: "Inferno is lost". With Hush first it fired early on something harmless, and Inferno wiped the party.
+  - The first: with Smite first, the Paladin did twice the damage.
+  - The confusing part is the one in B: a head start in ticks lets Firebolt in slot 2 beat Fireball in slot 1.
+- **Mana:**
+  - The casters ran short, as intended: the Cleric (80 to 380 MP by the fourth fight), Pyromancer, Geomancer, Stormcaller, Frostweaver and Hexer. The tanks never did; the Knight sat at 1,800 to 2,000 of 2,000.
+  - Both playtesters changed gear for it: Prayer beads, Vestments, the Mana jewel, the Tailwind staff, the Hoarfrost staff.
+  - The first moved back to HP pieces: "deaths, not empty pools, were losing me runs".
+  - The Paladin still can't afford its kit.
+- **The campfire:** about two thirds REST, a quarter FOCUS, a tenth RAISE, mostly the game's own pick. Both found that committing to a pick before the run (the command line's limit; the interface asks at the fire) made forcing one risky, and "the game's own logic beat mine". The one genuinely hard choice was the Long Road: REST for HP, or FOCUS for the Stormcaller's MP.
+- **Burn and Shock:**
+  - The Pyromancer is strong against swarms but glass (knocked out at ticks 4 to 12 in later nodes). Burn did most on bosses as the Monk's rider (21,000 to 29,000).
+  - The Stormcaller felt about right: the swarm answer (a Wisp Cloud dead in 12 ticks), weak against a lone slow boss, fragile.
+  - Thunder chord now puts 18 to 21 Shock on every foe, 5,000 to 16,000 a fight, but the Bard dies early and still felt like a passenger.
+
+**Classes, by their play:** the Knight (in 14 of the second's 19 clears), the Monk (the carry from node 10), the Valkyrie and the Vampire felt mandatory. The Bramble knight, Hoplite, Assassin and Geomancer were never wanted. The Bard, the Assassin and the Hexer outside Hush felt like passengers. Both agree with the simulations' shape (E).
+
+**Fixed at once:** the command line now names a status's damage on the party, and numbers fights on the node page as the run summary does. Both playtesters stumbled on each.
 
 Three fights, retold:
 
@@ -147,3 +176,4 @@ Three fights, retold:
 - **A tool that plays every choice out answered "are they all useful" directly.** The campfire oracle replaced arguing about percentages with counts of runs each option alone wins. It showed that FOCUS's value depends on the party, which a single average hid, and it scored the playtester's rule of thumb against the simulations' picker.
 - **Your numbers were "made up", and two of them (k = 1, a 25-tick head start) broke something you'd asked for before.** Pricing each against the version I shipped, at fixed knobs, made the case in one table each. That's the method's "price the direction", done per number.
 - **The playtest found what the averages hid.** A Paladin that could afford one spell a fight, and a Raise that never fired: both read as "casts a little less" in the audit. Cheap re-tunes (ten minutes) let a playtest's findings go into the same step.
+- **One playtest is one player.** The same brief on nearly the same road took 27 attempts and then 56. Difficulty calls need two or more playtests, or the simulation's fresh-seed rate beside them. The classes they wanted and the confusions they hit agreed, so those are safe to act on from one.
