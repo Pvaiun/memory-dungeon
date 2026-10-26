@@ -7,11 +7,13 @@
  *   npx tsx src/rogue-play.ts look                                       where the run stands, and what it's waiting on
  *   npx tsx src/rogue-play.ts pick <option>                              answer it (a room, an offer, "fight", ...)
  *   npx tsx src/rogue-play.ts map                                        the act's whole map
+ *   npx tsx src/rogue-play.ts boss                                       the act's boss and what it does
  *   npx tsx src/rogue-play.ts party                                      the roster: stats, gear, abilities, the bag
  *   npx tsx src/rogue-play.ts class <id>                                 a class's sheet: passive, every ability
  *   npx tsx src/rogue-play.ts equip <class> <weapon|armor|amulet> <item|none>
- *   npx tsx src/rogue-play.ts formation <id>     seat <a,b,c>     order <class> <ability,ability,...>
- *   npx tsx src/rogue-play.ts use <tonic|ether|phoenix> [class]   swap <party member> <member at camp>   (swap: campfire only)
+ *   npx tsx src/rogue-play.ts formation <id>     seat <a,b,c>     order <class> <ability,...|none>   (abilities left out aren't brought)
+ *   npx tsx src/rogue-play.ts use <tonic|ether|phoenix> [class]   swap <party member> <member at camp>
+ *     (swap: at a campfire; any time between rooms for a fallen party member and someone standing at camp)
  *   npx tsx src/rogue-play.ts glossary                                   what each status shown in a fight does
  *
  * --save picks the file (default out/rogue-play/run.json); every command takes it.
