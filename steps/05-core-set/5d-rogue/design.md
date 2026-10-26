@@ -82,8 +82,9 @@ A third MODE in Settings (journey, free play, rogue). In rogue mode the home men
 
 ## Challenges
 
-- **Class balance shows harder here than in the campaign.** As leader with random companions, the Vampire (with Blood drain) won 37% of runs and the Frostweaver 4%. Starting the Vampire on Wither halves it; nothing rogue-specific lifts the casters. It's the 5c report's class pass, with numbers.
-- **MP rarely binds** in rogue runs, because the simulated player avoids the casters, who are the weakest classes. A class pass for the casters is the lever, not the rogue rules.
+- **Class balance shows harder here than in the campaign.** As leader with random companions, the Vampire wins 44% of runs and the Monk 38%; the Bard 9% and the Hexer 7%. Starting the Vampire on Wither instead of Blood drain cut its lead (it won 37% as leader when the next class won 20%); nothing rogue-specific lifts the weakest (not a second ability on joining, not another first ability). It's the 5c report's class pass, with numbers.
+- **MP binds only for casters.** The martial classes end nearly every fight at full MP, so FOCUS is right only for a caster-heavy party. A class pass for the casters, or MP costs for the martial classes, is the lever, not the rogue rules.
+- **The core set's powerful pieces are sidegrades.** In the rogue mode, locked on for a whole run, most cost points against an ordinary piece of their slot. They're shared with the journey and free play, so the rogue mode leaves them as they are and the report asks.
 
 ## Predictions, checked in the report
 
