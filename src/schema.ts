@@ -815,6 +815,7 @@ export const RogueConfig = z.strictObject({
   bag: z.number().int().min(0).describe("Supplies carried at most."),
   knobs: z.array(z.strictObject({ mob: z.number(), step: z.number(), elite: z.number(), boss: z.number() })).min(1).describe("Per act, added to each fight's own knob (HP +k %, damage +k/2 %): regular fights, the rise per floor from each pool's reference floor, elites, the boss."),
   heat: z.strictObject({ per: z.number(), max: z.number().int().min(0) }),
+  shape: z.record(z.string(), z.strictObject({ hp: z.number(), power: z.number() })).optional().describe("By tier (fight, elite, boss): HP % and damage % added to every foe on top of the knob, so a tier's fights can be longer and softer at the same cost."),
   growFrom: PosInt.describe("From this floor, each pack of two or more may gain one more foe."),
 });
 export type RogueConfigT = z.infer<typeof RogueConfig>;

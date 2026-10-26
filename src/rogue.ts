@@ -472,10 +472,18 @@ export function fightFor(c: Content, run: RogueRun, node: MapNode, tier: FightTi
   }
   return { ...base, enemies };
 }
+/** The foes' change for a tier at a knob: the knob's HP and damage, and the tier's shape on top. */
+export function foesFor(c: Content, tier: FightTier, k: number): FoesT {
+  const f = knobFoes(k);
+  const sh = cfg(c).shape?.[tier];
+  if (!sh) return f;
+  const hp = (f.hp ?? 0) + sh.hp, power = (f.power ?? 0) + sh.power;
+  return { ...(hp ? { hp: Math.max(-90, hp) } : {}), ...(power ? { power: Math.max(-90, power) } : {}) };
+}
 function fightSpec(c: Content, run: RogueRun, node: MapNode, tier: FightTier): FightSpec {
   const fight = fightFor(c, run, node, tier);
   run.met.push(fight.id);
-  return { node: node.id, tier, fight, foes: knobFoes(knobFor(c, run, tier, node.floor, fight)), seed: rngFor(run.seed, `fight:${run.act}:${node.id}:${tier}`)[0] };
+  return { node: node.id, tier, fight, foes: foesFor(c, tier, knobFor(c, run, tier, node.floor, fight)), seed: rngFor(run.seed, `fight:${run.act}:${node.id}:${tier}`)[0] };
 }
 
 // ─── Offers: gear, tomes, recruits, formations, supplies ───────────────────

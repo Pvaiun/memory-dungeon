@@ -82,6 +82,12 @@ export const ROGUE_CONFIG: RogueConfigT = {
     { mob: 0, step: 6, elite: 0, boss: 0 },
     { mob: 0, step: 6, elite: 0, boss: 0 },
   ],
+  /**
+   * Regular fights are longer and softer than the knob alone makes them: their foes have this much more HP and deal this
+   * much less damage, and the calibration sets each fight's knob on top, so a fight costs what it did and lasts longer
+   * (at the knob alone they lasted 21 to 25 ticks, half the campaign's, and a third slotted ability fired in one fight in three).
+   */
+  shape: { fight: { hp: 80, power: -30 } },
   /** Heat: each level adds this to every knob (about 6 points of the simulated player's wins a level). Won runs open the next. */
   heat: { per: 5, max: 10 },
   /** Later floors' fights grow: from this floor, each pack of two or more may gain one more (to the cap of 8). */

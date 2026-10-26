@@ -17,7 +17,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { availableParallelism } from "node:os";
 import { Worker, isMainThread, parentPort, workerData } from "node:worker_threads";
 import { loadContent, type Content } from "./engine/run.js";
-import { autoFight, knobFoes, newRogue, rogue, type RogueRun } from "./rogue.js";
+import { autoFight, foesFor, newRogue, rogue, type RogueRun } from "./rogue.js";
 import { aiPlayer, hpShare } from "./rogue-ai.js";
 import { choose } from "./rogue.js";
 import type { RogueFightT } from "./schema.js";
@@ -66,7 +66,8 @@ function trial(c: Content, s: Snap, fight: RogueFightT, k: number, tier: Tier, i
   // A regular fight or an elite meets the party whole but with its mana as it is (MP is the casters' attrition); a boss
   // meets it exactly as it arrived.
   if (tier !== "boss") for (const m of run.roster) (m.missHp = 0), (m.ko = false);
-  run.pending = { kind: "fight", node: "calibrate", tier: tier === "boss" ? "boss" : tier === "elite" ? "elite" : "fight", fight: { ...fight, knob: undefined }, foes: knobFoes(k), seed: 7919 * (i + 1) + 13 };
+  const t = tier === "boss" ? "boss" : tier === "elite" ? "elite" : "fight";
+  run.pending = { kind: "fight", node: "calibrate", tier: t, fight: { ...fight, knob: undefined }, foes: foesFor(c, t, k), seed: 7919 * (i + 1) + 13 };
   autoFight(c, run);
   const after = run.pending as RogueRun["pending"];
   const lost = after.kind === "over" && !after.won;
@@ -114,7 +115,8 @@ async function main() {
   const tasks: Task[] = [];
   for (const reg of rogue(c).regions) {
     if (only && !only.split(",").includes(reg.id)) continue;
-    for (const tier of ["easy", "normal", "elite", "boss"] as Tier[])
+    const tiers = (opt("--tiers") ?? "easy,normal,elite,boss").split(",") as Tier[];
+    for (const tier of tiers)
       for (const fight of reg[tier === "boss" ? "bosses" : tier]) tasks.push({ region: reg.id, act: reg.act, tier, fight });
   }
   const n = Number(opt("--workers") ?? availableParallelism());

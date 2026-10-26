@@ -62,7 +62,8 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   } catch (e) {
     return fail(`The party can't enter: ${(e as Error).message}`);
   }
-  const theme = themeOf(args.dungeon);
+  // A rogue fight is drawn in its region (every rogue fight shares one dungeon id, which the theme cache would pin).
+  const theme = rogue ? themeOf(rogue.region) : themeOf(args.dungeon);
   const single = args.dungeon.includes("~") || !!rogue;
   const nodeAt = args.node ? nodes().findIndex((n) => n.id === args.node) : -1;
   /** Does winning this run clear a node? Only the whole run of the node to clear next, in the journey. */
