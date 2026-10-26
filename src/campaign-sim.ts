@@ -20,7 +20,7 @@ import { loadContent, play, type Content } from "./engine/run.js";
 import { next, rngFor, type Rng } from "./engine/rng.js";
 import type { FoesT, Party } from "./schema.js";
 import { knobFoes, type Knob } from "../content/core-set/campaign.js";
-import { combos, current, describe, makeBuild, seat, STYLES, trios, fitting, type Style } from "./sim/kits.js";
+import { combos, current, describe, makeBuild, seat, ORDERS, STYLES, trios, fitting, type Order, type Style } from "./sim/kits.js";
 import { partyKey } from "./sim/parties.js";
 import { checkParty } from "./validate.js";
 import { readingPack } from "./sim/feel.js";
@@ -263,15 +263,15 @@ function buildSpace(c: Content, i: number, budget: number): Party[] {
   const size = c.dungeons.get(dungeon)!.partySize.max;
   const forced = needs.find((nd) => "formation" in nd) as { formation: string } | undefined;
   const forms = forced ? [forced.formation] : owned.formations;
-  const space: { t: string[]; f: string; s: Style }[] = [];
+  const space: { t: string[]; f: string; s: Style; o: Order }[] = [];
   // Parties whose members can't all meet the armor or weapon needs are dropped before sampling, so a narrow need doesn't empty the sample.
   const can = (t: string[]) => t.every((cls) => makeBuild(c, [cls], forms[0], "plain", owned, needs) !== null);
-  for (const t of trios(owned, needs, size).filter(can)) for (const f of forms) for (const s of STYLES) space.push({ t, f, s });
+  for (const t of trios(owned, needs, size).filter(can)) for (const f of forms) for (const s of STYLES) for (const o of ORDERS) space.push({ t, f, s, o });
   const picked = space.length > budget ? shuffle(space, 4242 + i).slice(0, budget) : space;
   const seen = new Set<string>();
   const builds: Party[] = [];
   for (const x of picked) {
-    const p = makeBuild(c, x.t, x.f, x.s, owned, needs);
+    const p = makeBuild(c, x.t, x.f, x.s, owned, needs, undefined, x.o);
     if (!p || checkParty(c.pack, p, { dungeon }).some((e) => e.level === "error")) continue;
     const k = partyKey(p);
     if (seen.has(k)) continue;
@@ -312,11 +312,11 @@ function mutate(c: Content, p: Party, owned: ReturnType<typeof ownedAt>, needs: 
     if (!out.length || !pool.length) return null;
     const drop = pick(out);
     const t = classes.map((x) => (x === drop ? pick(pool) : x));
-    return makeBuild(c, t, p.formation, style, owned, needs);
+    return keepOrders(makeBuild(c, t, p.formation, style, owned, needs, undefined, pick(ORDERS)), p);
   }
   if (what === 1) {
     if (forms.length < 2) return null;
-    return makeBuild(c, classes, pick(forms.filter((f) => f !== p.formation)), style, owned, needs);
+    return keepOrders(makeBuild(c, classes, pick(forms.filter((f) => f !== p.formation)), style, owned, needs), p);
   }
   if (what === 2) {
     const order = combos(classes, classes.length)[0];
@@ -341,6 +341,12 @@ function mutate(c: Content, p: Party, owned: ReturnType<typeof ownedAt>, needs: 
   const ab = p.units[u].abilities;
   const rot = shuffle(ab, Math.floor(next(rng) * 1e9));
   return { formation: p.formation, units: p.units.map((x, i) => (i === u ? { ...x, abilities: rot } : x)) };
+}
+
+/** A rebuilt party keeps the ability order its members had in the parent (step 5c: the order is part of a build). */
+function keepOrders(child: Party | null, parent: Party): Party | null {
+  if (!child) return null;
+  return { ...child, units: child.units.map((u) => ({ ...u, abilities: parent.units.find((x) => x.class === u.class)?.abilities ?? u.abilities })) };
 }
 
 /** The last node's best party, kept as far as this node allows: required classes swapped in for the last members, its formation if still allowed. */

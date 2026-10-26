@@ -713,8 +713,13 @@ function calc(w: W, t: CUnit, p: Part, raw: number, tags: readonly string[], boo
   let word: string | null = null;
   let heal = 0;
   if (p.type === "physical") {
-    // ruleset.armorFloor: Armor can't take a hit below this share of its size, so a wall isn't immune to small blows.
-    const y = Math.max((x * (w.c.pack.ruleset.armorFloor ?? 0)) / 100, x - stat(w, t, "armor") * w.c.pack.ruleset.armorRatio);
+    const k = w.c.pack.ruleset.armorK;
+    const armor = stat(w, t, "armor");
+    // ruleset.armorK: the Path of Exile formula, hit² ÷ (hit + k × Armor): nearly linear against big hits, and it never
+    // blanks a small one. Otherwise a flat armorRatio × Armor, which ruleset.armorFloor keeps above a share of the hit.
+    const y = k
+      ? (x > 0 && armor > 0 ? (x * x) / (x + k * armor) : x)
+      : Math.max((x * (w.c.pack.ruleset.armorFloor ?? 0)) / 100, x - armor * w.c.pack.ruleset.armorRatio);
     if (y <= 0 && x > 0) word = "BLOCKED";
     x = y;
   } else if (p.element) {
@@ -829,10 +834,13 @@ function hit(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
   if (w.f.result) return;
   // An absorbed hit applies nothing and doesn't count as landing.
   if (results[0]?.word === "ABSORB") return;
-  if (!t.ko) for (const ap of e.apply ?? []) applyStatus(w, a, t, def(w, ap.status), { stacks: aval(w, ap.stacks ?? 1, a, t), duration: ap.duration, chance: ap.chance, rng: a });
-  fire(w, ev("hit_lands", a, t, { kind, tags, amount: dealt }));
-  fire(w, ev("hit_taken", t, a, { kind, tags, amount: dealt }));
+  // The hit's events carry "crit" when it crits, for reactions to crits (the Assassin's).
+  const evTags = crit ? [...tags, "crit"] : tags;
+  fire(w, ev("hit_lands", a, t, { kind, tags: evTags, amount: dealt }));
+  fire(w, ev("hit_taken", t, a, { kind, tags: evTags, amount: dealt }));
   damageEvents(w, a, t, dealt, lost, null);
+  // The hit's statuses land after its events, so a status set off by being hit (Bleed) waits for the next hit.
+  if (!t.ko && !w.f.result) for (const ap of e.apply ?? []) applyStatus(w, a, t, def(w, ap.status), { stacks: aval(w, ap.stacks ?? 1, a, t), duration: ap.duration, chance: ap.chance, rng: a });
 }
 
 function damageEvents(w: W, by: CUnit | null, t: CUnit, dealt: number, lost: number, status: string | null) {
@@ -1295,10 +1303,13 @@ function begin(w: W) {
     refresh(w, u);
   }
   // ruleset.opening: each action starts partly charged, by its own roll, so a party's actions don't all come up together.
+  // With `slots`, a party unit's abilities start charged by the order they're slotted in instead: preparation, not dice.
   const open = w.c.pack.ruleset.opening;
   for (const u of f.units) u.acts.forEach((a, i) => {
-    const cd = cooldownOf(w, u, actDef(w, u, i));
-    a.ready = open ? Math.round(cd * (open.min + (open.max - open.min) * next(u.rng))) : cd;
+    const d = actDef(w, u, i);
+    const cd = cooldownOf(w, u, d);
+    if (open?.slots && u.side === "party" && d.kind === "ability") a.ready = Math.max(0, cd - sub(open.slots[i] ?? 0));
+    else a.ready = open ? Math.round(cd * (open.min + (open.max - open.min) * next(u.rng))) : cd;
   });
   // ruleset.stagger: the n-th copy of an enemy starts n × stagger ticks behind the first, so three Ghosts ripple rather than volley.
   const stagger = Math.round((w.c.pack.ruleset.stagger ?? 0) * SUBTICKS);

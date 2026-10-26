@@ -112,7 +112,7 @@ test("campfire: the run pauses for a choice between two fights; REST gives back 
   const at = d.stages.findIndex((s: { kind: string }) => s.kind === "campfire");
   assert.equal(at, Math.ceil(d.stages.filter((s: { kind: string; boss?: boolean }) => s.kind === "fight" && !s.boss).length / 2), "after half the regular fights");
   const c = loadContent(pack);
-  const party = { formation: "neutral", units: [{ class: "knight", position: "left", abilities: ["fortify", "protect", "shield_bash"], gear: { weapon: "plain_sword" } }, { class: "cleric", position: "center", abilities: ["renew", "cure", "raise"], gear: { weapon: "plain_light_staff" } }, { class: "ranger", position: "right", abilities: ["venom_arrow", "fire_arrow", "rending_arrow"], gear: { weapon: "plain_bow" } }] };
+  const party = { formation: "neutral", units: [{ class: "knight", position: "left", abilities: ["fortify", "protect", "shield_bash"], gear: { weapon: "plain_sword" } }, { class: "cleric", position: "center", abilities: ["renew", "cure", "raise"], gear: { weapon: "plain_light_staff" } }, { class: "ranger", position: "right", abilities: ["barbed_arrow", "fire_arrow", "rending_arrow"], gear: { weapon: "plain_bow" } }] };
   let reached = 0;
   for (const pick of ["rest", "focus"]) {
     // The first seed on which this party reaches the campfire.
@@ -125,7 +125,8 @@ test("campfire: the run pauses for a choice between two fights; REST gives back 
     if (run.outcome) continue;
     assert.equal(run.pending!.kind, "campfire");
     reached++;
-    const m = run.party as unknown as { hp: number; mp: number; stats: Record<string, number> }[];
+    const m = run.party as unknown as { id: string; hp: number; mp: number; stats: Record<string, number> }[];
+    assert.deepEqual(run.pending!.options, ["rest", "focus", ...m.filter((x) => x.hp <= 0).map((x) => `raise:${x.id}`)], "RAISE is one option per fallen member");
     const before = m.map((x) => [x.hp, x.mp]);
     combat.apply({ c, run, log: undefined } as never, run.pending!, pick);
     m.forEach((x, i) => {
@@ -135,4 +136,21 @@ test("campfire: the run pauses for a choice between two fights; REST gives back 
     });
   }
   assert.equal(reached, 2, "the party reaches the campfire on some seed");
+});
+
+test("campfire RAISE: the fallen member of the player's choice stands up with its share of max HP; nobody else changes", () => {
+  const c = loadContent(raw);
+  const party = { formation: "neutral", units: [{ class: "knight", position: "left", abilities: ["fortify", "protect", "shield_bash"], gear: { weapon: "plain_sword" } }, { class: "cleric", position: "center", abilities: ["renew", "cure", "raise"], gear: { weapon: "plain_light_staff" } }, { class: "ranger", position: "right", abilities: ["barbed_arrow", "fire_arrow", "rending_arrow"], gear: { weapon: "plain_bow" } }] };
+  const run = newRun(c, combat, { dungeon: "cmp_old_road", party, seed: 1 }, { checked: true });
+  const m = run.party as unknown as { id: string; hp: number; mp: number; stats: Record<string, number> }[];
+  m[1].hp = 0;
+  m[2].hp = 0;
+  const st = c.dungeons.get("cmp_old_road")!.stages.find((s) => s.kind === "campfire")!;
+  const d = combat.stage({ c, run, log: undefined } as never, st, null as never)!;
+  assert.deepEqual(d.options, ["rest", "focus", "raise:p2", "raise:p3"]);
+  const knight = m[0].hp;
+  combat.apply({ c, run, log: undefined } as never, d, "raise:p3");
+  assert.equal(m[2].hp, Math.floor((m[2].stats.max_hp * (st as { revive: number }).revive) / 100), "the Ranger stands with its share");
+  assert.equal(m[1].hp, 0, "the Cleric stays down");
+  assert.equal(m[0].hp, knight, "the Knight is unchanged");
 });

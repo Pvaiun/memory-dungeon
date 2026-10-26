@@ -14,7 +14,7 @@ export const stats: StatDefT[] = [
   { id: "mp_regen", name: "MP regen", kind: "amount", default: 0, floor: 0, brings: "mp_regen", note: `MP restored every ${MP_REGEN.every} ticks, through the status it brings.` },
   { id: "attack", name: "Attack", kind: "amount", default: 0, floor: 0 },
   { id: "magic", name: "Magic", kind: "amount", default: 0, floor: 0 },
-  { id: "armor", name: "Armor", kind: "amount", default: 0, floor: 0, note: `Each physical hit loses ${RULES.armorRatio} × Armor, but never more than ${100 - RULES.armorFloor}% of itself.` },
+  { id: "armor", name: "Armor", kind: "amount", default: 0, floor: 0, note: `A physical hit deals hit² ÷ (hit + ${RULES.armorK} × Armor): nearly linear against big hits, never a blank.` },
   { id: "aggro", name: "Aggro", kind: "amount", default: pts(1), floor: 100, note: "Floors above zero: no unit becomes unpickable by numbers alone." },
   { id: "resist", name: "Resistance", kind: "points", default: 0, floor: -100, cap: 200, note: "Past 100 the damage heals instead: absorption, a class and boss trait." },
   { id: "attack_speed", name: "Attack speed", kind: "points", default: 0, floor: -300, cap: 300, note: "Hidden behind Haste, Slow and Chill." },
@@ -71,7 +71,11 @@ const bothKinds = (pct: number) => [{ tag: "physical", pct }, { tag: "magical", 
 /** The 22 statuses of the vocabulary. */
 export const vocabulary: StatusT[] = [
   // Fundamental
-  { id: "poison", name: "POISON", text: "Loses health over time.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.poison.duration, pulse: { every: STATUS.poison.every, do: [{ op: "damage", type: "none", amount: STATUS.poison.damage }] } },
+  // Step 5c (the director's): Bleed replaces Poison. Nothing on its own and no duration; each hit the holder takes opens it.
+  {
+    id: "bleed", name: "BLEED", text: "Each hit it takes deals damage for each stack, then half the stacks close.", label: "debuff", show: "icon", stacking: "intensity",
+    trigger: { on: { event: "hit_taken" }, do: [{ op: "damage", type: "none", amount: STATUS.bleed.perStack, to: "holder" }] }, drop: { fraction: STATUS.bleed.drop },
+  },
   { id: "regen", name: "REGEN", text: "Recovers health over time.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.regen.duration, pulse: { every: STATUS.regen.every, do: [{ op: "heal", amount: { scale: [{ ratio: STATUS.regen.share, stat: "max_hp", of: "holder" }] } }] } },
   { id: "shield", name: "SHIELD", text: "Soaks damage before health.", label: "buff", show: "icon", stacking: "intensity", absorb: true, cap: { scale: [{ ratio: STATUS.shield.capShare, stat: "max_hp", of: "holder" }] } },
   { id: "might", name: "MIGHT", text: "Deals more damage per stack.", label: "buff", show: "icon", stacking: "intensity", boosts: bothKinds(STATUS.might.perStack), cap: STATUS.might.cap, pulse: { every: STATUS.might.every }, drop: { count: 1 } },
@@ -134,6 +138,7 @@ export const ruleset: ContentPack["ruleset"] = {
   abilityCast: RULES.abilityCast,
   abilityRecovery: RULES.abilityRecovery,
   armorRatio: RULES.armorRatio,
+  armorK: RULES.armorK,
   taken: { floor: -75, cap: 200 },
   unarmed: { type: "physical", subtype: "blunt", cooldown: SPEED.medium, amount: { base: 100, scale: [{ ratio: 0.2, stat: "attack" }] } },
   maxEnemies: RULES.maxEnemies,

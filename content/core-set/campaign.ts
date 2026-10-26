@@ -308,14 +308,14 @@ export const campaignDungeons: DungeonT[] = [];
 /** A spine run that a node changes (foes) is copied under the node's id; otherwise the node plays it as is. */
 /**
  * One campfire a run, in the middle, as the director asked: after half the regular fights (rounded up), the player picks
- * HP back (REST) or MP back (FOCUS) for everyone standing. It sat before the boss for a round; in the middle it splits the
+ * HP back (REST) or MP back (FOCUS) for everyone standing, or one fallen member back (RAISE, step 5c). It sat before the boss for a round; in the middle it splits the
  * run's attrition in two, so each regular fight can hit harder.
  */
 function withCampfire(stages: DungeonT["stages"]): DungeonT["stages"] {
   const regular = stages.filter((s) => s.kind === "fight" && !s.boss).length;
   if (regular < 1) return stages;
   const at = Math.ceil(regular / 2);
-  return [...stages.slice(0, at), { kind: "campfire", id: "campfire", hp: CAMPFIRE.hp, mp: CAMPFIRE.mp }, ...stages.slice(at)];
+  return [...stages.slice(0, at), { kind: "campfire", id: "campfire", hp: CAMPFIRE.hp, mp: CAMPFIRE.mp, revive: CAMPFIRE.revive }, ...stages.slice(at)];
 }
 
 export function campaignWith(spine: DungeonT[]): CampaignT {

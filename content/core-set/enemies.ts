@@ -4,13 +4,13 @@
  * Magic, Armor, Crit, Aggro, as the document lists them.
  */
 import type { AbilityT, EnemyT, StatusT, WeaponT } from "../../src/schema.js";
-import { COOLDOWN, COST, ENEMY_HIT, ENEMY_SPEED_FACTOR, ENEMY_SWING, FLAT_STACKS, HIT, RESIST, REVIVE, SPECIAL, SPEED, STATUS, WINDUP, BOSS_HP, crit, jitter, pts, type SwingWord } from "./scale.js";
+import { ENEMY_COOLDOWN, COST, ENEMY_HIT, ENEMY_SPEED_FACTOR, ENEMY_SWING, FLAT_STACKS, HIT, RESIST, REVIVE, SPECIAL, SPEED, STATUS, WINDUP, BOSS_HP, crit, jitter, pts, type SwingWord } from "./scale.js";
 import { T } from "./classes.js";
 import { speedOf } from "./vocabulary.js";
 
-type CD = keyof typeof COOLDOWN;
+type CD = keyof typeof ENEMY_COOLDOWN;
 type WU = keyof typeof WINDUP;
-const timing = (cd: CD, wu: WU) => ({ cooldown: COOLDOWN[cd], cast: WINDUP[wu], mp: COST[cd] });
+const timing = (cd: CD, wu: WU) => ({ cooldown: ENEMY_COOLDOWN[cd], cast: WINDUP[wu], mp: COST[cd] });
 
 /** A basic attack by kind and words: a flat swing from the word (see ENEMY_SWING); the kind sets how often. */
 const swing = (speed: keyof typeof SPEED, word: SwingWord) => Math.round(ENEMY_SPEED_FACTOR[speed] * ENEMY_SWING[word]);
@@ -37,7 +37,8 @@ const apply = (status: string, extra: object = {}) => ({ op: "apply", status, ..
 // ─── Passives ────────────────────────────────────────────────────────────────
 
 export const enemyStatuses: StatusT[] = [
-  passive("venom", "Venom", "Its bites poison.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("poison", { to: "other" })] }] }),
+  // Step 5c: Bleed, not Poison (the director's: "this also works with the snakes").
+  passive("venom", "Venom", "Its bites leave wounds that bleed.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("bleed", { stacks: FLAT_STACKS.few, to: "other" })] }] }),
   passive("fire_bite", "Fire bite", "Its bites burn.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("burn", { stacks: FLAT_STACKS.one, to: "other" })] }] }),
   passive("split", "Split", "Below half HP it splits in two.", { reactions: [{ on: { event: "hp_lost" }, do: [{ op: "replace", enemy: "mini_slime", count: 2, to: { side: "self", where: { hpBelow: 50 } } }] }] }),
   passive("volatile", "Volatile", "Explodes when it dies.", {
@@ -86,7 +87,7 @@ export const enemyAbilities: AbilityT[] = [
 const wolf = enemy("wolf", "Wolf", "Hunts in packs.", "minion", line(2, 0, 0, 2, 0, 0, 2, 2), basic("dagger", "weak"));
 const bandit = enemy("bandit", "Bandit", "A common road thug.", "minion", line(4, 0, 0, 3, 0, 1, 2, 3), basic("sword"));
 const archer = enemy("archer", "Archer", "Hits hard, falls fast.", "minion", line(2, 0, 0, 7, 0, 0, 4, 2), basic("bow", "heavy"));
-const snake = enemy("snake", "Snake", "Its bite poisons.", "minion", line(2, 0, 0, 2, 0, 0, 2, 1), basic("dagger", "weak"), { statuses: ["venom"] });
+const snake = enemy("snake", "Snake", "Its bite leaves a bleeding wound.", "minion", line(2, 0, 0, 2, 0, 0, 2, 1), basic("dagger", "weak"), { statuses: ["venom"] });
 const shieldman = enemy("shieldman", "Shieldman", "Hides behind a big shield.", "elite", line(10, 3, 2, 2, 0, 5, 1, 4), basic("sword"), { abilities: ["shield_up", "brace"] });
 const ogre = enemy("ogre", "Ogre", "Big, slow, and swings a tree.", "elite", line(16, 2, 1, 6, 0, 2, 2, 4), basic("axe", "heavy", { cast: WINDUP.long }), { abilities: ["flatten"], note: "Its basic attack has a long wind-up: an exception to the no-wind-up default." });
 const ogreChief = enemy("ogre_chief", "Ogre Chief", "The biggest ogre, with the biggest club.", "boss", line(60, 4, 2, 12, 0, 3, 2, 4), basic("axe", "heavy"), { abilities: ["crush"] });

@@ -117,7 +117,11 @@ export const combat: Rules = {
   },
 
   stage(x, stage, rng) {
-    if (stage.kind === "campfire") return { kind: "campfire", at: stage.id, options: ["rest", "focus"] };
+    if (stage.kind === "campfire") {
+      // RAISE is one option per knocked-out member ("raise:p2"), so the player picks who.
+      const down = stage.revive ? (x.run.party as Member[]).filter((m) => m.hp <= 0).map((m) => `raise:${m.id}`) : [];
+      return { kind: "campfire", at: stage.id, options: ["rest", "focus", ...down] };
+    }
     if (stage.kind !== "perk_pick") throw new Error(`no '${stage.kind}' stage in combat-1`);
     const offer = x.c.pack.ruleset.run.perkOffer;
     const pool = x.c.dungeons.get(x.run.record.dungeon)!.perkPool.filter((p) => offer.repeatPicked || !x.run.perks.includes(p));
@@ -127,9 +131,15 @@ export const combat: Rules = {
   /** A picked perk gives its stat grants now, and its statuses at each later fight start, to the party units it's for. */
   apply(x, d, choice) {
     if (d.kind === "campfire") {
-      // REST gives back a share of max HP, FOCUS a share of max MP, to every standing member.
+      // REST gives back a share of max HP, FOCUS a share of max MP, to every standing member; RAISE stands one fallen member up.
       const st = x.c.dungeons.get(x.run.record.dungeon)!.stages.find((s) => s.id === d.at);
       if (st?.kind !== "campfire") throw new Error(`no campfire '${d.at}'`);
+      if (choice.startsWith("raise:")) {
+        const m = (x.run.party as Member[]).find((p) => p.id === choice.slice(6) && p.hp <= 0);
+        if (!m) throw new Error(`nobody to raise at '${choice}'`);
+        m.hp = Math.max(1, Math.floor((m.stats.max_hp * (st.revive ?? 0)) / 100));
+        return;
+      }
       for (const m of x.run.party as Member[]) {
         if (m.hp <= 0) continue;
         if (choice === "rest") m.hp = Math.min(m.stats.max_hp, m.hp + Math.floor((m.stats.max_hp * st.hp) / 100));

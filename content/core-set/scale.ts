@@ -42,7 +42,13 @@ export const SPEED = { fast: 5.9, medium: 7.9, slow: 10.3 } as const;
  * Pacing pass: abilities are moments in a fight, not its whole rhythm. At 6, 12 and 22 ticks, a unit with three abilities was
  * casting nearly all the time and its basic attack came a third of its actions; the party acted twice for each foe action.
  */
-export const COOLDOWN = { short: 30, medium: 48, long: 70 } as const;
+/**
+ * Step 5c: 24, 38 and 56 (were 30, 48 and 70). With the slotted opening, a caster's second and third abilities came off in
+ * a third of regular fights or fewer, and the Paladin and Hexer cast nothing in most: "those cooldowns are too long".
+ */
+export const COOLDOWN = { short: 24, medium: 38, long: 56 } as const;
+/** Foes keep the pacing pass's cooldowns: the change is for the party's casters, not the bosses' signature moves. */
+export const ENEMY_COOLDOWN = { short: 30, medium: 48, long: 70 } as const;
 /**
  * An ability's cooldown: its word's, moved up to 15% either way by its id, so no two in a kit share one and few line up with
  * each other or with a swing. The director's ask: "you should probably never even have two that are the same".
@@ -64,8 +70,12 @@ export const RULES = {
   abilityCast: WINDUP.normal,
   /** Pacing pass: 1.5 (was 2.5). */
   abilityRecovery: 1.5,
-  /** Pacing pass: each action starts a fight a third to two thirds charged, by its own roll, so nothing lines up on the first ticks. */
-  opening: { min: 0.3, max: 0.7 },
+  /**
+   * Pacing pass: each action starts a fight a third to two thirds charged, by its own roll, so nothing lines up on the first ticks.
+   * Step 5c (the director's): a party unit's abilities start charged by the order they're slotted in, so the order is preparation,
+   * not dice: the first this many ticks, then the second, then the third. Basic attacks and foes still roll.
+   */
+  opening: { min: 0.3, max: 0.7, slots: [25, 15, 10] },
   /** Each physical hit loses this share of the target's Armor: Armor 5 takes 600 off, Armor 8 nearly blanks a sword. */
   armorRatio: 0.12,
   /**
@@ -73,6 +83,13 @@ export const RULES = {
    * ("wolves hit it for 0 BLOCKED"), so minions couldn't touch the wall and the Knight was in half the top builds.
    */
   armorFloor: 25,
+  /**
+   * Step 5c (the director's): Armor by the Path of Exile formula, hit² ÷ (hit + k × Armor), in place of the flat cut and its floor.
+   * Nearly linear against big hits, and it never blanks a small one, so stacking more Armor always helps. "k = 1 to start":
+   * on this scale (Armor 5 is 5,000, a normal swing 700) k = 1 took 92% off a minion's swing into a plated, Guarded Knight
+   * and made the party's walls the whole game; k = 0.25 takes about what the flat cut and its floor did (74%, was 75%).
+   */
+  armorK: 0.25,
   maxEnemies: 8,
   /**
    * An interrupted cast goes on cooldown, and one whose targets are gone costs its recovery (the core-set report's
@@ -99,8 +116,22 @@ export const RULES = {
  */
 export const COST = { short: 400, medium: 650, long: 1000 } as const;
 export const costly = (cd: keyof typeof COST) => Math.round(COST[cd] * 1.6);
+/**
+ * Step 5c: casters are hungry, walls aren't (the director's "the mana is inverted"). A class's abilities cost their word's MP
+ * × (its Magic − 1) ÷ 2, at least a quarter, fixed by the class's stat line (Magic from gear doesn't change it): Magic 1 (the
+ * Knight, Ranger, Monk) pays a quarter of the word, 2 (the Bramble knight, Vampire) half, 3 the word, 4 one and a half times,
+ * 5 (the Pyromancer) twice. At one price for everyone, the walls ran dry and the casters ended runs nearly full; at a price
+ * proportional to Magic, with class regen halved, the Bramble knight and Vampire starved as much as the Cleric.
+ */
+export const mpCost = (mp: number, magic: number) => Math.round((mp * Math.max(0.25, (magic - 1) / 2)) / 10) * 10;
 /** MP regen: every `every` ticks, restore `share` × the MP regen stat (regen 3 gives 150). */
 export const MP_REGEN = { every: 4, share: 0.05 };
+/**
+ * Step 5c: a class regenerates this share of the MP regen its stat line gives; gear's MP regen counts in full. So a caster's
+ * MP regen comes as much from its gear as from itself, and MP regen gear is a caster's real choice ("the mages should be
+ * going for magic regen gear").
+ */
+export const CLASS_REGEN = 1;
 
 // ─── Damage ──────────────────────────────────────────────────────────────────
 
@@ -179,7 +210,12 @@ export const STACKS = { few: 0.7, several: 1.3, many: 2.3 } as const;
 export type StackWord = keyof typeof STACKS;
 /** Pacing pass: an ability's application adds twice the word's stacks (abilities come a third as often); a passive's on basic attacks, the word's. */
 export const ABILITY_STACKS = 2;
-export const stacks = (word: StackWord, stat: string): NumT => ({ scale: [{ ratio: (ABILITY_STACKS * STACKS[word]) / P, stat }] });
+export const stacks = (word: StackWord, stat: string, mult = 1): NumT => ({ scale: [{ ratio: (mult * ABILITY_STACKS * STACKS[word]) / P, stat }] });
+/**
+ * Step 5c (the director's): the Pyromancer's Burn and the Stormcaller's Shock, on their abilities and passives, are this many
+ * times the word's. At 2 the Pyromancer's Burn is 24% of its damage (was 14%).
+ */
+export const BURN_SHOCK = 2;
 /** A flat stack count, for enemies that apply "a stack" or statuses that start with "many". */
 export const FLAT_STACKS = { one: 1, few: 2, several: 4, many: 7 } as const;
 
@@ -234,16 +270,16 @@ export const stepFor = (stat: string) => (stat === "max_hp" ? HP_STEP : STEP);
 // ─── Statuses: sizes and durations ───────────────────────────────────────────
 
 export const STATUS = {
-  /** 90 a tick-pair: Regen on a 2-HP unit (80) nearly outruns it, as the Snake Pit's story needs. */
-  /** Campaign pass: 160 a pulse for 12 ticks, about a third of a caster's HP per application. At 90 it showed as 1. */
   /**
-   * Pacing pass: 250 a pulse for 10 ticks (was 160 for 12): its five pulses outweigh the tap that carries it (Venom arrow is
-   * 0.15 of Attack). Flat, as every status is: a status never scales from its applier; a stackable one scales by the stacks
-   * applied, an unstackable one (Poison refreshes) by nothing (the director's rule). At 400 the Old Road's snakes, which
-   * Poison with every bite and aren't weakened by the node's knob, stopped the starters in 35 runs of 40 at the snake pit
-   * and the fight after it; at 200, 10.
+   * Step 5c (the director's): Bleed replaces Poison. It does nothing on its own and never runs out; each hit its holder takes
+   * deals this much per stack (untyped, past Armor and resistance, not a hit), then the stacks drop by this share: an inverse
+   * Shock, that pays a party for keeping up the pressure.
    */
-  poison: { every: 2, damage: 250, duration: 10 },
+  /**
+   * At 60 and a half (Shock's numbers), Bleed was 7% of the Ranger's damage, 9% of the Bramble knight's and 6% of the
+   * Assassin's; at 120 and a third, 16%, 20% and 13%, about where Burn and Shock sit in their classes.
+   */
+  bleed: { perStack: 120, drop: 1 / 3 },
   /** 8 pulses of 4%: a Prayer heals a third of everyone's max HP over 16 ticks. */
   /** Pacing pass: 12 pulses of 3% (was 8 of 4%): Renew and Regrowth come a third as often. */
   regen: { every: 2, share: 0.03, duration: 24 },
@@ -274,8 +310,10 @@ export const STATUS = {
   /**
    * Campaign pass: a cap of 25 stacks (uncapped, a slow boss gathered 50 to 100 and took 8,000 from one swing), and 60 a
    * stack, not 80 (the second AI playtester's Stormcaller carried the last nine nodes).
+   * Step 5c (the director's: "Burn and Shock are really weak"): 80 a stack and a cap of 40. With the Stormcaller's stacks
+   * doubled (BURN_SHOCK), the cap held its Shock at 18% of its damage; now 26%, and the Bard's Thunder chord 31%.
    */
-  shock: { perStack: 60, drop: 0.5, cap: 25 },
+  shock: { perStack: 80, drop: 0.5, cap: 40 },
   ward: { resist: 30, duration: 24 },
   sunder: { perStack: -600, every: 4 },
   silence: { duration: 8 },
@@ -289,8 +327,11 @@ export const STATUS = {
   ice_crust: { perStack: pts(1), duration: 6, cap: 6 },
 } as const;
 
-/** The campfire before each campaign boss: REST gives back this % of max HP to everyone standing, FOCUS this % of max MP. */
-export const CAMPFIRE = { hp: 40, mp: 40 } as const;
+/**
+ * The campfire in the middle of each campaign run: REST gives back this % of max HP to everyone standing, FOCUS this % of max
+ * MP, RAISE stands one fallen member of the player's choice up with this % of its max HP (step 5c, the director's).
+ */
+export const CAMPFIRE = { hp: 40, mp: 40, revive: 40 } as const;
 
 /** Shares of max HP a revive brings a unit back with. */
 export const REVIVE = { half: 0.5, tenth: 0.1, ghoul: 0.3 } as const;

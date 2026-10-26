@@ -140,7 +140,7 @@ const ACTION_EVENTS = ["action_start", "action_resolve", "action_interrupted"];
 const HIT_EVENTS = ["hit_lands", "hit_taken", "hit_evaded", "hit_missed"];
 const STATUS_EVENTS = ["status_gained", "status_triggered", "status_ended"];
 const DAMAGE_EVENTS = ["damage_dealt", "damage_taken"];
-const RESERVED_TAGS = ["basic", "ability", "extra", "physical", "magical", "none", "healing", "all", ...Object.keys(S.SUBTYPES)];
+const RESERVED_TAGS = ["basic", "ability", "extra", "physical", "magical", "none", "healing", "all", "crit", ...Object.keys(S.SUBTYPES)];
 const WEIGHT_ORDER: Record<S.WeightT, number> = { light: 0, medium: 1, heavy: 2 };
 
 class Combat {

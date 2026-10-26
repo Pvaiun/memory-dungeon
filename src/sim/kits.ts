@@ -11,26 +11,27 @@ import type { Owned } from "../campaign.js";
 
 /**
  * What each class's kit multiplies, per gear step (an amount stat's +1, Crit chance's 5%, a special stat at medium).
- * `basic` is how much its basic attack is worth (Mercy, Phalanx, Kindling, Arc and Iron palm ride on it).
+ * `basic` is how much its basic attack is worth (Refrain, Phalanx, Kindling, Arc and Iron palm ride on it). Step 5c: casters
+ * weigh MP regen as much as Magic (their spells cost twice what they did), the Magic-1 classes not at all.
  * Aggro is negative for the fragile, who want fewer hits, and positive for the walls.
  */
 export const PROFILES: Record<string, { w: Record<string, number>; basic: number }> = {
-  knight: { w: { max_hp: 3, armor: 3, aggro: 1, attack: 0.5, mp_regen: 1, max_mp: 0.5 }, basic: 0.5 },
-  cleric: { w: { magic: 3, mp_regen: 1.5, max_mp: 1, max_hp: 1.5, crit_chance: 1, double_strike: 1.5, armor: 0.5, aggro: -1 }, basic: 2 },
+  knight: { w: { max_hp: 3, armor: 3, aggro: 1, attack: 0.5 }, basic: 0.5 },
+  cleric: { w: { magic: 2.5, mp_regen: 3, max_mp: 1.5, max_hp: 1.5, crit_chance: 0.5, armor: 0.5, aggro: -1 }, basic: 1 },
   ranger: { w: { attack: 3, crit_multiplier: 1, crit_chance: 1, accuracy: 0.5, max_hp: 1.2, double_strike: 1, armor: 0.5, aggro: -0.5 }, basic: 2 },
   bramble_knight: { w: { thorns: 3, max_hp: 2.5, armor: 1.5, aggro: 1, attack: 0.5 }, basic: 0.5 },
   hoplite: { w: { attack: 2, armor: 2, max_hp: 2, crit_multiplier: 1, aggro: 0.5, crit_chance: 0.5 }, basic: 2.5 },
-  paladin: { w: { magic: 2.5, attack: 1.5, armor: 1.5, max_hp: 1.5, max_mp: 1, mp_regen: 1 }, basic: 1 },
-  valkyrie: { w: { attack: 2.5, magic: 1.5, max_hp: 1.5, armor: 0.8, mp_regen: 0.7 }, basic: 1 },
-  bard: { w: { magic: 2, mp_regen: 1.5, max_hp: 1.5, attack: 1, armor: 0.5, aggro: -1 }, basic: 0.5 },
-  hexer: { w: { magic: 2.5, mp_regen: 1.5, siphon: 1, max_hp: 1.5, aggro: -1 }, basic: 1.5 },
+  paladin: { w: { magic: 2.5, attack: 1.5, armor: 1.5, max_hp: 1.5, max_mp: 1, mp_regen: 2 }, basic: 1 },
+  valkyrie: { w: { attack: 2.5, magic: 1.5, max_hp: 1.5, armor: 0.8, mp_regen: 1 }, basic: 1 },
+  bard: { w: { magic: 2, mp_regen: 2, max_hp: 1.5, attack: 1, armor: 0.5, aggro: -1 }, basic: 1 },
+  hexer: { w: { magic: 2, mp_regen: 3, max_mp: 1, siphon: 1.5, max_hp: 1.5, aggro: -1 }, basic: 1.5 },
   monk: { w: { attack: 3, double_strike: 2, evasion: 1.5, crit_chance: 1, max_hp: 1, armor: 0.5 }, basic: 2.5 },
   assassin: { w: { crit_chance: 3, crit_multiplier: 2, attack: 2, evasion: 1, max_hp: 1, aggro: -0.5 }, basic: 1.5 },
   vampire: { w: { max_hp: 2.5, attack: 2, lifesteal: 2, armor: 0.8 }, basic: 1.5 },
-  pyromancer: { w: { magic: 3, mp_regen: 1.5, max_mp: 1, max_hp: 1.5, aggro: -1, armor: 0.3 }, basic: 1.5 },
-  frostweaver: { w: { magic: 3, mp_regen: 1.5, max_mp: 0.8, max_hp: 1.5, aggro: -0.7, armor: 0.3 }, basic: 1 },
-  stormcaller: { w: { magic: 3, max_hp: 1.5, mp_regen: 1, aggro: -1, armor: 0.3 }, basic: 2 },
-  geomancer: { w: { armor: 3, magic: 1.5, crit_chance: 2, crit_multiplier: 1.5, max_hp: 1.5 }, basic: 1 },
+  pyromancer: { w: { magic: 3, mp_regen: 3, max_mp: 1.5, max_hp: 1.5, aggro: -1, armor: 0.3 }, basic: 1.5 },
+  frostweaver: { w: { magic: 3, mp_regen: 2.5, max_mp: 1, max_hp: 1.5, aggro: -0.7, armor: 0.3 }, basic: 1 },
+  stormcaller: { w: { magic: 3, max_hp: 1.5, mp_regen: 2.5, max_mp: 1, aggro: -1, armor: 0.3 }, basic: 2 },
+  geomancer: { w: { armor: 3, magic: 1.5, crit_chance: 2, crit_multiplier: 1.5, max_hp: 1.5, mp_regen: 2 }, basic: 1 },
 };
 
 /** One gear step of each stat. */
@@ -135,8 +136,19 @@ export function seat(c: Content, classes: readonly string[], formation: string, 
   return best;
 }
 
-/** A whole build: seated, kitted, abilities in the documents' order. Null if some class can't meet the needs. */
-export function makeBuild(c: Content, classes: readonly string[], formation: string, style: Style, owned: Owned, needs: readonly NeedT[], order?: string[]): Party | null {
+/**
+ * The order abilities are slotted in (step 5c: the first starts a fight most charged): the documents' order, or the shortest
+ * cooldown first, which casts most.
+ */
+export type Order = "doc" | "quick";
+export const ORDERS: Order[] = ["doc", "quick"];
+export function slotted(c: Content, cls: string, order: Order = "doc"): string[] {
+  const own = c.classes.get(cls)!.abilities.slice(0, c.pack.design.abilitiesEquipped);
+  return order === "doc" ? own : own.slice().sort((a, b) => c.abilities.get(a)!.cooldown - c.abilities.get(b)!.cooldown);
+}
+
+/** A whole build: seated, kitted, abilities in the documents' order (or the shortest cooldown first). Null if some class can't meet the needs. */
+export function makeBuild(c: Content, classes: readonly string[], formation: string, style: Style, owned: Owned, needs: readonly NeedT[], order?: string[], abOrder: Order = "doc"): Party | null {
   const f = c.formations.get(formation)!;
   const seated = order ?? seat(c, classes, formation, style);
   const units = [];
@@ -144,7 +156,7 @@ export function makeBuild(c: Content, classes: readonly string[], formation: str
     const cls = seated[i];
     const gear = kit(c, cls, owned, needs, style);
     if (!gear) return null;
-    units.push({ class: cls, position: f.positions[i].id, abilities: c.classes.get(cls)!.abilities.slice(0, c.pack.design.abilitiesEquipped), gear });
+    units.push({ class: cls, position: f.positions[i].id, abilities: slotted(c, cls, abOrder), gear });
   }
   return { formation, units };
 }

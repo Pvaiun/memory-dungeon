@@ -9,7 +9,8 @@ import { readFileSync } from "node:fs";
 import { campaign, simPick } from "./campaign.js";
 import { combat } from "./engine/combat/rules.js";
 import type { Entry } from "./engine/log.js";
-import { loadContent, play } from "./engine/run.js";
+import { advanceOnce, answer, loadContent, newRun, type Run } from "./engine/run.js";
+import type { CFight } from "./engine/combat/fight.js";
 import type { Party } from "./schema.js";
 import { patch } from "./sim/content.js";
 import { current } from "./sim/kits.js";
@@ -47,8 +48,8 @@ const unitTicks = new Map<string, number>(); // "mob|party"
 const classActs = new Map<string, number>(); // "knight|basic"
 const dmg = new Map<string, number>(); // "mob|party|basic" damage dealt by that side from that source
 const dmgBy = new Map<string, number>(); // "party|<src>" (all fights): damage by source id
-const classUses = new Map<string, number>(); // "ranger|basic", "ranger|ability:venom_arrow", "ranger|status:poison": uses (swings, casts, applications)
-const classDmg = new Map<string, number>(); // "ranger|basic", "ranger|ability:venom_arrow", "ranger|status:poison": by the class that dealt or applied it
+const classUses = new Map<string, number>(); // "ranger|basic", "ranger|ability:barbed_arrow", "ranger|status:bleed": uses (swings, casts, applications)
+const classDmg = new Map<string, number>(); // "ranger|basic", "ranger|ability:barbed_arrow", "ranger|status:bleed": by the class that dealt or applied it
 const castsOf = new Map<string, number>(); // "party|<act id>"
 const critDmg = new Map<string, number>(); // "party" / "enemy"
 const hits = new Map<string, number>(), crits = new Map<string, number>();
@@ -64,6 +65,49 @@ const bigHit: number[] = []; // largest single hit on a party member per boss fi
 const losses = new Map<string, number>();
 const lossMp: number[] = [], lossTicks: number[] = [];
 let runs = 0, won = 0, enraged = 0;
+// Step 5c: MP. Time each class spends with an ability off cooldown that it can't pay for ("starved"), and with nothing to
+// cast for want of MP, by fight in the run; MP at each fight's start; casts by slot, and the first cast's tick, in regular fights.
+const starved = new Map<string, number>(), alive = new Map<string, number>(); // "cleric|3" (fight 3 of the run)
+const mpAt = new Map<string, number>(), mpN = new Map<string, number>(); // "cleric|3": MP share at the fight's start
+const slotCasts = new Map<string, number>(), slotFirst = new Map<string, number[]>(), slotFights = new Map<string, number>(); // "cleric|0"
+const noCast = new Map<string, number>(); // "cleric": regular fights in which it cast nothing
+const campfire = new Map<string, number>(); // the sims' picks: "rest", "focus", "raise"
+
+/** Plays a run a moment at a time, so MP starvation can be read off the fight's state between moments. */
+function playWatched(dungeon: string, party: Party, seed: number): Run {
+  const run = newRun(c, combat, { dungeon, party, seed, firstClear: true }, { log: true, checked: true });
+  let fightNo = 0, last: CFight | null = null, prev = 0;
+  let short = new Set<string>(); // party units short of MP for a ready ability, as of the last moment
+  while (!run.outcome) {
+    if (run.pending) {
+      const pick = simPick(run.pending, run);
+      add(campfire, pick.split(":")[0]);
+      answer(c, combat, run, pick);
+      continue;
+    }
+    const f = run.fight as CFight | null;
+    if (f && f !== last) {
+      last = f, prev = 0, fightNo++, short = new Set();
+      for (const u of f.units) if (u.side === "party" && !u.ko) add(mpAt, `${u.ref}|${fightNo}`, u.stats.max_mp ? u.mp / u.stats.max_mp : 1), add(mpN, `${u.ref}|${fightNo}`);
+    }
+    if (f && f.begun && !f.result) {
+      const t = f.now;
+      // Credit the time since the last moment to the state the units were in during it.
+      const dt = (t - prev) / T;
+      const now = new Set<string>();
+      for (const u of f.units) {
+        if (u.side !== "party" || u.ko) continue;
+        add(alive, `${u.ref}|${fightNo}`, dt);
+        if (short.has(u.id)) add(starved, `${u.ref}|${fightNo}`, dt);
+        if (u.acts.some((a) => a.id !== "basic" && a.ready <= t && u.mp < (c.abilities.get(a.id)?.mp ?? 0))) now.add(u.id);
+      }
+      short = now;
+      prev = t;
+    }
+    advanceOnce(c, combat, run);
+  }
+  return run;
+}
 
 for (const i of which) {
   const node = cp.nodes[i];
@@ -71,14 +115,17 @@ for (const i of which) {
   if (!r) continue;
   const parties = args.includes("--best") ? [r.best.party] : r.cands;
   for (const party of parties) for (const seed of seeds) {
-    const run = play(c, combat, { dungeon: node.dungeon, party: current(c, party), seed, firstClear: true }, simPick, { log: true });
+    const p = current(c, party);
+    const run = playWatched(node.dungeon, p, seed);
     runs++;
     if (run.outcome === "won") won++;
-    tally(run.log as Entry[], run.outcome === "won");
+    tally(run.log as Entry[], run.outcome === "won", p);
   }
 }
 
-function tally(log: Entry[], wonRun: boolean) {
+function tally(log: Entry[], wonRun: boolean, party: Party) {
+  const slotOf = (cls: string, act: string) => party.units.find((u) => u.class === cls)?.abilities.indexOf(act) ?? -1;
+  const firstBy = new Map<string, number>(), castBy = new Map<string, number>(); // per fight: unit id -> first cast tick, casts
   const side = new Map<string, string>(), ref = new Map<string, string>(), max = new Map<string, number>(), rank = new Map<string, string>();
   const born = new Map<string, number>(), died = new Map<string, number>(), acted = new Map<string, number>(), dealtBy = new Map<string, number>();
   const mp = new Map<string, number>(), mpMax = new Map<string, number>();
@@ -105,6 +152,7 @@ function tally(log: Entry[], wonRun: boolean) {
       }
       lastTick = -1, tickActs = 0, lastPartyActAt = -1;
       dots.length = 0;
+      firstBy.clear(), castBy.clear();
       continue;
     }
     const at = (e.at as number) ?? 0;
@@ -124,6 +172,12 @@ function tally(log: Entry[], wonRun: boolean) {
         if (at === lastPartyActAt) sameTickActs += 2; // both acts of the pair (approximate for triples)
         lastPartyActAt = at;
         if (a === "ability") {
+          if (kind === "mob") {
+            const sl = slotOf(ref.get(by)!, String(e.act));
+            add(slotCasts, `${ref.get(by)}|${sl}`);
+            if (!firstBy.has(`${by}|${sl}`)) firstBy.set(`${by}|${sl}`, at / T);
+            add(castBy, by);
+          }
           partyAbilities++;
           if (lastActKind.get(by) === "ability") chains++;
         }
@@ -161,7 +215,7 @@ function tally(log: Entry[], wonRun: boolean) {
         if (side.get(String(e.by)) === "party") add(classUses, `${ref.get(String(e.by))}|status:${e.status}`);
       }
       add(statusApps, String(e.status));
-      if (e.status === "poison" || e.status === "burn") dots.push({ unit: String(e.unit), at });
+      if (e.status === "burn") dots.push({ unit: String(e.unit), at });
     } else if (e.t === "mp") {
       const id = String(e.target), now = e.mp as number, before = now - (e.amount as number);
       mpMax.set(id, Math.max(mpMax.get(id) ?? 0, now, before));
@@ -198,6 +252,16 @@ function tally(log: Entry[], wonRun: boolean) {
       add(fightTicks, kind, ticks);
       for (const [id, s] of side) if (s && born.has(id)) add(unitTicks, `${kind}|${s}`, Math.max(0, (died.has(id) ? died.get(id)! / T : ticks) - (born.get(id) ?? 0) / T));
       if (kind === "boss") bigHit.push(biggest);
+      if (kind === "mob") for (const [id, s] of side) {
+        if (s !== "party" || !born.has(id)) continue;
+        const cl = ref.get(id)!;
+        if (!castBy.get(id)) add(noCast, cl);
+        for (let sl = 0; sl < 3; sl++) {
+          add(slotFights, `${cl}|${sl}`);
+          const ft = firstBy.get(`${id}|${sl}`);
+          if (ft !== undefined) slotFirst.set(`${cl}|${sl}`, [...(slotFirst.get(`${cl}|${sl}`) ?? []), ft]);
+        }
+      }
       if (e.result === "lost") {
         add(losses, kind);
         lossTicks.push(ticks);
@@ -242,7 +306,7 @@ for (const [key, v] of [...dmgBy].filter(([x]) => x.startsWith("party|")).sort((
   const uses = cat === "status" ? statusApps.get(id) ?? 0 : castsOf.get(`party|${id}`) ?? 0;
   out.push(`  ${src.padEnd(28)} ${pct(v, partyTotal).padStart(4)}   per use ${uses ? k(v / uses) : "–"}${cat === "status" ? ` (${uses} applications)` : ` (${uses} uses)`}`);
 }
-out.push(`\nDoT applications (Poison, Burn) on a foe that died within 4 ticks: ${pct(dotWasted, dotApps)} of ${dotApps}.`);
+out.push(`\nBurn applications on a foe that died within 4 ticks: ${pct(dotWasted, dotApps)} of ${dotApps}.`);
 out.push("\nEach class's damage by source (statuses counted for whoever applied them), with ×: one use against one of its swings:\n");
 for (const cl of [...new Set([...classDmg.keys()].map((x) => x.split("|")[0]))].sort()) {
   const rows = [...classDmg].filter(([x]) => x.startsWith(cl + "|"));
@@ -282,4 +346,30 @@ out.push(`\nBoss fights, the biggest single hit on a party member, as a share of
 out.push(`\nKnockouts per 100 fights a class is in: ${[...inFights].map(([cl, n]) => [cl, (100 * (koClass.get(cl) ?? 0)) / n] as const).sort((a, b) => b[1] - a[1]).map(([cl, v]) => `${cl} ${f1(v)}`).join(", ")}.`);
 out.push(`\nKnockouts by the blow that did it (spike: 35% of max HP or more): ${[...koCause].sort((a, b) => b[1] - a[1]).map(([x, v]) => `${x.replace("|", " ")} ${v}`).join(", ")}.`);
 out.push(`\nLosses: ${[...losses].map(([x, v]) => `${v} in ${x} fights`).join(", ") || "none"}; mean length ${f1(lossTicks.reduce((a, b) => a + b, 0) / Math.max(1, lossTicks.length))} ticks; the party's mean MP share at the loss ${pct(lossMp.reduce((a, b) => a + b, 0) / Math.max(1, lossMp.length), 1)}; fights that reached the enrage: ${enraged}.`);
+out.push("\n## 5. MP and casting\n");
+out.push("Time with an ability ready but not enough MP for it (starved), and MP at the fight's start, by fight in the run (regular and boss alike):\n");
+const fightNos = [...new Set([...alive.keys()].map((x) => Number(x.split("|")[1])))].sort((a, b) => a - b);
+out.push(`| Class | ${fightNos.map((n) => `fight ${n}`).join(" | ")} | all |\n| --- | ${fightNos.map(() => "---").join(" | ")} | --- |`);
+const mpClasses = [...new Set([...alive.keys()].map((x) => x.split("|")[0]))].sort();
+for (const cl of mpClasses) {
+  let sa = 0, ss = 0;
+  const cells = fightNos.map((n) => {
+    const a = alive.get(`${cl}|${n}`) ?? 0, st = starved.get(`${cl}|${n}`) ?? 0;
+    sa += a, ss += st;
+    const m = mpN.get(`${cl}|${n}`) ? (mpAt.get(`${cl}|${n}`) ?? 0) / mpN.get(`${cl}|${n}`)! : NaN;
+    return a ? `${pct(st, a)} / ${Number.isFinite(m) ? pct(m, 1) : "–"}` : "";
+  });
+  out.push(`| ${cl} | ${cells.join(" | ")} | ${pct(ss, sa)} |`);
+}
+out.push(`\nThe campfire, as the simulations picked: ${[...campfire].map(([k, v]) => `${k} ${v}`).join(", ") || "never reached"}.`);
+out.push("\nRegular fights: casts per fight by slot, the median first cast's tick (of fights with one), and fights with no cast at all:\n");
+out.push("| Class | slot 1 | slot 2 | slot 3 | no cast |\n| --- | --- | --- | --- | --- |");
+for (const cl of [...new Set([...slotFights.keys()].map((x) => x.split("|")[0]))].sort()) {
+  const n = slotFights.get(`${cl}|0`) ?? 1;
+  const cell = (sl: number) => {
+    const f = (slotFirst.get(`${cl}|${sl}`) ?? []).sort((a, b) => a - b);
+    return `${f1((slotCasts.get(`${cl}|${sl}`) ?? 0) / n)} (t${f.length ? Math.round(f[Math.floor(f.length / 2)]) : "–"})`;
+  };
+  out.push(`| ${cl} | ${cell(0)} | ${cell(1)} | ${cell(2)} | ${pct(noCast.get(cl) ?? 0, n)} |`);
+}
 console.log(out.join("\n"));
