@@ -67,7 +67,7 @@ function itemRow(run: RogueRun, it: Item, onClick?: () => void, opts: { arrow?: 
   const r = gearRow(g, g.slot, opts.stats ?? null, onClick, opts.arrow ?? false);
   const name = r.querySelector(".grow .line span");
   if (name) {
-    name.className = `trunc ${RARITY_CLASS[it.rarity]}`;
+    name.className = RARITY_CLASS[it.rarity];
     name.textContent = `${it.rarity === "legendary" ? "★" : ""}${g.name.toUpperCase()}`;
   }
   // The art glows by rarity: a recolour in place of new art.
@@ -93,12 +93,6 @@ function fitsLine(run: RogueRun, g: GearT, rarity?: string, base?: string): HTML
   const would = c.pack.classes.filter((k) => canEquip(k, g)).map((k) => shortName(k.id));
   return h("div", { class: "line small debuff wrap" }, tag, `NOBODY CAN USE IT YET · ${would.slice(0, 5).join(", ")}${would.length > 5 ? "…" : ""}`);
 }
-/** What a legendary piece's statuses do, in words. */
-function effectLines(g: GearT): Child[] {
-  // A rogue legendary's rule is its status's text; the piece's own text says the same in other words.
-  const out: Child[] = g.tier === "powerful" && !(g.statuses ?? []).some((id) => id.startsWith("lg_")) ? [h("div", { class: "text small wrap gold" }, g.text)] : [];
-  return [...out, ...(g.statuses ?? []).map((id) => c.statuses.get(id)).filter(Boolean).map((s) => h("div", { class: "text small wrap gold" }, s!.text ?? s!.name))];
-}
 /** What an upgrade changes, in this member's numbers where it has some ("≈ 9 pierce + Silence → ≈ 13 pierce + Silence"). */
 function upText(id: string, run?: RogueRun, cls?: string): string {
   const a = c.abilities.get(id)!, up = upgraded(c, id);
@@ -111,7 +105,7 @@ function upText(id: string, run?: RogueRun, cls?: string): string {
 function offerBody(run: RogueRun, o: Offer): Child[] {
   if (o.kind === "gear") {
     const g = c.gear.get(o.item.uid) ?? itemGear(c, o.item);
-    return [itemRow(run, o.item, undefined, { right: null }), ...effectLines(g), fitsLine(run, g, o.item.rarity, o.item.base)];
+    return [itemRow(run, o.item, undefined, { right: null }), fitsLine(run, g, o.item.rarity, o.item.base)];
   }
   if (o.kind === "tome") {
     return [h("div", { class: "line" }, faceEl(o.cls), h("span", { class: "grow hi" }, `TOME: ${shortName(o.cls)} LEARNS`)), abilityBlock(c.abilities.get(o.ability)!, null, false)];
@@ -642,9 +636,7 @@ export function runitScreen(arg?: unknown): Child[] {
         const it = uid ? itemOf(run, uid) : undefined;
         const open = manage ? () => go("rgear", { cls, slot: s }) : undefined;
         if (!it) return gearRow(null, s, fm.stats, open);
-        const r = itemRow(run, it, open, { arrow: !!open, stats: fm.stats, right: h("span", { class: `small ${RARITY_CLASS[it.rarity]}` }, it.rarity === "common" ? "" : it.rarity.toUpperCase()) });
-        const g = c.gear.get(uid!)!;
-        return g.statuses?.length ? h("div", null, r, ...effectLines(g)) : r;
+        return itemRow(run, it, open, { arrow: !!open, stats: fm.stats, right: h("span", { class: `small ${RARITY_CLASS[it.rarity]}` }, it.rarity === "common" ? "" : it.rarity.toUpperCase()) });
       }),
       h("div", { class: "line small dim wrap" }, `CAN USE ${k.weapons.map((w) => kindOf(w).name).join(", ").toUpperCase()} · ${k.armor.toUpperCase()} ARMOR`),
       section("PASSIVE"),
@@ -678,8 +670,7 @@ export function rgearScreen(arg?: unknown): Child[] {
       ...fits.map((it) => {
         const r = itemRow(run, it, () => pick(it.uid), { stats: fm.stats });
         if (it.uid === cur) r.classList.add("equipped");
-        const g = c.gear.get(it.uid)!;
-        return g.statuses?.length ? h("div", null, r, ...effectLines(g)) : r;
+        return r;
       }),
     ),
   ];

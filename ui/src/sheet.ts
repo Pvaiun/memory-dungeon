@@ -98,7 +98,7 @@ export function codeSpans(stats: { stat: string; flat?: number; pct?: number }[]
     const shown = s.stat === "crit_chance" || def?.kind === "points" || s.stat.startsWith("resist") ? `${sign}${v}%` : s.stat === "aggro" ? `${sign}${v}` : `${sign}${disp(v)}`;
     const pct = s.pct ? `${s.pct > 0 ? "+" : ""}${s.pct}%` : "";
     const el = s.stat.startsWith("resist:") ? s.stat.slice(7) : "";
-    return [i ? " " : null, h("span", { class: `${v < 0 || (s.pct ?? 0) < 0 ? "bad" : "good"}${el ? ` ${el}` : ""}` }, `${statCode(s.stat)}${shown}${pct}`)];
+    return [i ? " " : null, h("span", { class: `nowrap ${v < 0 || (s.pct ?? 0) < 0 ? "bad" : "good"}${el ? ` ${el}` : ""}` }, `${statCode(s.stat)}${shown}${pct}`)];
   });
 }
 
@@ -130,11 +130,20 @@ export function weaponParts(wp: WeaponT, stats: Stats | null): { tag: string; wo
   const value = stats ? `${wp.hits && wp.hits > 1 ? `${wp.hits}×` : ""}${disp(evalNum(wp.amount, stats).value)}` : null;
   return { tag: magic ? r.element ?? "magical" : r.subtype ?? "physical", word: (magic ? elementName(r.element ?? "") : r.subtype ?? "").toUpperCase(), tone: magic ? r.element ?? "" : "phys", cooldown: r.cooldown, value, scales: scalesOf(wp.amount) };
 }
-/** A weapon's kind and speed: "SLASH ⏲7". */
+/** A weapon's kind, speed and hit, then what the hit grows with: "PIERCE ⏲8 33", "(23% ATK)"; each part kept whole when the line wraps. */
 export function weaponCode(g: GearT, stats: Stats | null): Child[] {
   if (!g.weapon) return [];
   const w = weaponParts(g.weapon, stats);
-  return [h("span", { class: w.tone }, w.word), " ", glyph("ui_cooldown", tk(w.cooldown)), w.value ? h("span", { class: "ink" }, ` ${w.value}`) : null, w.scales.length ? " " : null, scaleEl(w.scales)];
+  return [h("span", { class: "wcode" }, h("span", { class: w.tone }, w.word), glyph("ui_cooldown", tk(w.cooldown)), w.value ? h("span", { class: "ink" }, w.value) : null), scaleEl(w.scales)];
+}
+/**
+ * What a powerful piece does beyond its numbers: a rogue legendary's rule (its status's text), or a core-set piece's
+ * own sentence (its trick is how its hit scales, which the codes show, but the sentence says why).
+ */
+export function gearEffect(g: GearT): string | null {
+  const rule = (g.statuses ?? []).map((id) => c.statuses.get(id)).find((d) => d?.text);
+  if (rule) return rule.text!;
+  return g.tier === "powerful" ? g.text : null;
 }
 
 /** A piece of gear as a two-line row: its sprite or icon, name (★ powerful), then its kind, speed, hit and codes. */
@@ -143,13 +152,16 @@ export function gearRow(g: GearT | null, slot: string, stats: Stats | null, onCl
   if (!g) return h("div", { class: "gear-row", onClick }, h("span", { class: "art" }, iconEl(SLOT_ICON[slot] ?? TAG_ICON.physical)), h("div", { class: "grow trunc" }, h("div", { class: "line" }, slotName), h("div", { class: "line small dim" }, "NOTHING")), onClick && arrow ? h("span", { class: "dim" }, "▶") : null);
   const lg = amuletStatus(g);
   const art = (g.slot === "weapon" ? weaponEl(g.id) : null) ?? (lg ? statusEl(lg) : iconEl(gearIcon(g)));
+  // Everything wraps: a rogue piece's name runs to "Keen Hunter's bow of the Bear", and its codes to five or six.
+  const effect = gearEffect(g);
   return h("div", { class: "gear-row", onClick },
     h("span", { class: "art" }, art),
-    h("div", { class: "grow trunc" },
-      h("div", { class: "line" }, h("span", { class: `trunc ${g.tier === "powerful" ? "gold" : ""}` }, `${g.tier === "powerful" ? "★" : ""}${g.name.toUpperCase()}`)),
-      h("div", { class: "line small codes" }, ...(g.weapon ? weaponCode(g, stats) : [slotName]), ...codeSpans(g.stats)),
+    h("div", { class: "grow" },
+      h("div", { class: "line wrap name" }, h("span", { class: g.tier === "powerful" ? "gold" : "" }, `${g.tier === "powerful" ? "★" : ""}${g.name.toUpperCase()}`)),
+      h("div", { class: "line wrap small codes" }, ...(g.weapon ? weaponCode(g, stats) : [slotName]), ...codeSpans(g.stats)),
+      effect ? h("div", { class: "text small wrap gold effect" }, effect) : null,
     ),
-    onClick && arrow ? h("span", { class: "dim" }, "▶") : null,
+    onClick && arrow ? h("span", { class: "dim go" }, "▶") : null,
   );
 }
 
