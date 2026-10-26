@@ -395,7 +395,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     if (!isStatus || amount >= 100) scene.hit(target);
     if (!isStatus) (crit ? sfx.crit : sfx.hit)();
     else sfx.status();
-    if (isStatus && (src === "burn" || src === "poison" || src === "shock")) scene.effectFor(target, src);
+    if (isStatus && (src === "burn" || src === "bleed" || src === "shock")) scene.effectFor(target, src);
   }
 
   // ─── Party rows: portrait | name, short HP and MP bars | the actions' cooldowns, big ───
@@ -744,15 +744,15 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       screen.append(win("", h("div", { class: "line" }, driver.phase === "run_won" ? "RUN CLEARED" : "RUN LOST"), h("div", { class: "btns" }, button(exitLabel, exit))));
     }
   }
-  /** The campfire before the boss: the party as it stands, and one pick, HP back or MP back. */
+  /** The campfire halfway through the run: the party as it stands, and one pick: HP back, MP back, or one fallen member back. */
   function showCampfire() {
     const cf = driver.campfire();
     if (!cf) return;
     for (const el of [msgEl, ctl]) el.style.display = "none";
-    const party = driver.run.party as unknown as { ref: string; hp: number; mp: number; stats: Record<string, number> }[];
+    const party = driver.run.party as unknown as { id: string; ref: string; hp: number; mp: number; stats: Record<string, number> }[];
     const box = win("summary",
       h("div", { class: "line" }, h("span", { class: "grow hi" }, "CAMPFIRE"), h("span", { class: "dim" }, `${driver.fightNo}/${driver.fightTotal} DONE`)),
-      h("div", { class: "line dim small" }, "Rest, or focus. One pick."),
+      h("div", { class: "line dim small" }, cf.raise.length ? "Rest, focus, or raise one of the fallen. One pick." : "Rest, or focus. One pick."),
       h("table", { class: "sum" },
         h("thead", null, h("tr", null, h("th", null, ""), h("th", null, "HP"), h("th", null, "MP"))),
         h("tbody", null, ...party.map((m) => h("tr", null,
@@ -764,6 +764,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       h("div", { class: "btns", style: "margin-top:.5rem" },
         button(`REST +${cf.hp}% HP`, () => pick("rest"), "hi"),
         button(`FOCUS +${cf.mp}% MP`, () => pick("focus"), "hi"),
+        ...cf.raise.map((id) => button(`RAISE ${className(party.find((m) => m.id === id)!.ref).toUpperCase()} ${cf.revive}% HP`, () => pick(`raise:${id}`), "hi")),
       ),
     );
     screen.append(box);

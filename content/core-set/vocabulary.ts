@@ -73,7 +73,7 @@ export const vocabulary: StatusT[] = [
   // Fundamental
   // Step 5c (the director's): Bleed replaces Poison. Nothing on its own and no duration; each hit the holder takes opens it.
   {
-    id: "bleed", name: "BLEED", text: "Each hit it takes deals damage for each stack, then half the stacks close.", label: "debuff", show: "icon", stacking: "intensity",
+    id: "bleed", name: "BLEED", text: "Each hit it takes deals damage for each stack, then a third of the stacks close.", label: "debuff", show: "icon", stacking: "intensity",
     trigger: { on: { event: "hit_taken" }, do: [{ op: "damage", type: "none", amount: STATUS.bleed.perStack, to: "holder" }] }, drop: { fraction: STATUS.bleed.drop },
   },
   { id: "regen", name: "REGEN", text: "Recovers health over time.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.regen.duration, pulse: { every: STATUS.regen.every, do: [{ op: "heal", amount: { scale: [{ ratio: STATUS.regen.share, stat: "max_hp", of: "holder" }] } }] } },

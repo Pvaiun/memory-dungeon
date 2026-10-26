@@ -199,7 +199,7 @@ export class Narrator {
   }
   private tickText(t: string, src: string, n: number): string {
     switch (src) {
-      case "poison": return `${t} takes ${n} from Poison.`;
+      case "bleed": return `${t} bleeds for ${n}.`;
       case "burn": return `${t} burns for ${n}.`;
       case "shock": return `${t} is shocked for ${n}.`;
       case "thorns": return `${t} takes ${n} from Thorns.`;
@@ -270,7 +270,7 @@ export class Narrator {
 export function gainPhrase(id: string, n: number | null, name: string): string {
   const N = n !== null ? ` (${n})` : "";
   switch (id) {
-    case "poison": return "is poisoned";
+    case "bleed": return `bleeds${N}`;
     case "regen": return "gains Regen";
     case "shield": return `is shielded${N}`;
     case "might": return `gains Might${N}`;
@@ -294,7 +294,6 @@ export function gainPhrase(id: string, n: number | null, name: string): string {
     case "bulwark": return `raises its Bulwark${N}`;
     case "bulwark_broken": return "is broken open!";
     case "ice_crust": return `thickens its ice${N}`;
-    case "shadow_strike_on": return "strikes from the shadows";
     case "bloodlust_on": return "is in bloodlust!";
     case "bedrock_on": return "stands on bedrock";
     default: return `gains ${name}${N}`;

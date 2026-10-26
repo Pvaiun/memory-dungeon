@@ -38,12 +38,16 @@ export function evalNum(n: NumT, stats: Stats | null, target: Stats | null = nul
 const fmtRatio = (r: number) => (Number.isInteger(r) ? String(r) : String(Number(r.toFixed(3))));
 export const statWord = (key: string) => c.stats.get(key)?.name ?? key;
 
-/** A damage or heal amount for display: "≈ 110" with its scaling in words. */
+/** A damage or heal amount for display: "≈ 110, from Attack" with its scaling in words. */
 export function amountText(n: NumT, stats: Stats | null, target: Stats | null = null): string {
   const { value, extra } = evalNum(n, stats, target);
   const parts: string[] = [];
-  if (stats || typeof n === "number") parts.push(`≈ ${disp(value)}`);
-  else parts.push(describeScale(n));
+  if (stats || typeof n === "number") {
+    parts.push(`≈ ${disp(value)}`);
+    // Worked out, the number hid what it grows with (Bramble lash's Thorns read as a bare number): name the stats.
+    const from = typeof n === "number" ? [] : [...new Set(n.scale.flatMap((s) => (s.stat && (!s.of || s.of === "self" || s.of === "holder") ? [statWord(s.stat)] : [])))];
+    if (from.length) parts.push(`from ${from.join(" and ")}`);
+  } else parts.push(describeScale(n));
   if (extra.length) parts.push(extra.join(", "));
   return parts.join(", ");
 }

@@ -126,6 +126,7 @@ for (const i of which) {
 function tally(log: Entry[], wonRun: boolean, party: Party) {
   const slotOf = (cls: string, act: string) => party.units.find((u) => u.class === cls)?.abilities.indexOf(act) ?? -1;
   const firstBy = new Map<string, number>(), castBy = new Map<string, number>(); // per fight: unit id -> first cast tick, casts
+  const startedDown = new Set<string>(); // party members knocked out before the fight began: not counted for casting
   const side = new Map<string, string>(), ref = new Map<string, string>(), max = new Map<string, number>(), rank = new Map<string, string>();
   const born = new Map<string, number>(), died = new Map<string, number>(), acted = new Map<string, number>(), dealtBy = new Map<string, number>();
   const mp = new Map<string, number>(), mpMax = new Map<string, number>();
@@ -145,7 +146,9 @@ function tally(log: Entry[], wonRun: boolean, party: Party) {
       start = 0;
       add(fights, kind);
       biggest = 0;
+      startedDown.clear();
       for (const u of e.units as { id: string; ref: string; side: string; hp: number; max: number }[]) {
+        if (u.hp <= 0) startedDown.add(u.id);
         side.set(u.id, u.side), ref.set(u.id, u.ref), max.set(u.id, u.max), born.set(u.id, 0), acted.set(u.id, 0), dealtBy.set(u.id, 0);
         if (u.side === "enemy") rank.set(u.id, c.enemies.get(u.ref)?.rank ?? "minion");
         else add(partyMaxHp, kind, u.max), add(inFights, u.ref);
@@ -253,7 +256,7 @@ function tally(log: Entry[], wonRun: boolean, party: Party) {
       for (const [id, s] of side) if (s && born.has(id)) add(unitTicks, `${kind}|${s}`, Math.max(0, (died.has(id) ? died.get(id)! / T : ticks) - (born.get(id) ?? 0) / T));
       if (kind === "boss") bigHit.push(biggest);
       if (kind === "mob") for (const [id, s] of side) {
-        if (s !== "party" || !born.has(id)) continue;
+        if (s !== "party" || !born.has(id) || startedDown.has(id)) continue;
         const cl = ref.get(id)!;
         if (!castBy.get(id)) add(noCast, cl);
         for (let sl = 0; sl < 3; sl++) {
@@ -362,7 +365,7 @@ for (const cl of mpClasses) {
   out.push(`| ${cl} | ${cells.join(" | ")} | ${pct(ss, sa)} |`);
 }
 out.push(`\nThe campfire, as the simulations picked: ${[...campfire].map(([k, v]) => `${k} ${v}`).join(", ") || "never reached"}.`);
-out.push("\nRegular fights: casts per fight by slot, the median first cast's tick (of fights with one), and fights with no cast at all:\n");
+out.push("\nRegular fights a member starts standing: casts per fight by slot, the median first cast's tick (of fights with one), and fights with no cast at all:\n");
 out.push("| Class | slot 1 | slot 2 | slot 3 | no cast |\n| --- | --- | --- | --- | --- |");
 for (const cl of [...new Set([...slotFights.keys()].map((x) => x.split("|")[0]))].sort()) {
   const n = slotFights.get(`${cl}|0`) ?? 1;

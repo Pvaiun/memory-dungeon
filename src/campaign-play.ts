@@ -9,8 +9,10 @@
  *   npx tsx src/campaign-play.ts play <node> --formation vanguard \
  *       --party "knight:oathblade,plate,heartstone;cleric:plain_light_staff,robes;ranger:warbow" [--seed N] [--full]
  *       A member is class:weapon,armor,amulet (ids; leave a slot out to leave it empty). Abilities fire in the
- *       order given after a slash: "knight:oathblade,plate/protect,fortify,shield_bash". --campfire rest|focus picks
- *       at the campfire halfway through the run (HP back, or MP back); left out, whichever the party is shorter of.
+ *       order given after a slash: "knight:oathblade,plate/protect,fortify,shield_bash" (the first starts a fight most
+ *       charged). --campfire rest|focus|raise:<class> picks at the campfire halfway through the run (HP back, MP back,
+ *       or that fallen member back); left out, the simulations' choice (raise if anyone is down, else whichever the
+ *       party is shorter of). A raise of a member who's standing falls back to the simulations' choice.
  */
 import { readFileSync } from "node:fs";
 import { campaign, foesText, needText, ownedAt, rewardsOf, simPick, unmet } from "./campaign.js";
@@ -67,7 +69,16 @@ if (cmd === "show") {
   for (const id of o.classes) {
     const k = c.classes.get(id)!;
     out.push(`  ${id} (${k.name}): ${k.text} Weapons: ${k.weapons.join(", ")}. Heaviest armor: ${k.armor}. Passive: ${k.passive?.name ?? "Einherjar"}: ${k.passive?.text ?? "revives with actions ready"}.`);
-    for (const a of k.abilities) out.push(`    ${a}: ${c.abilities.get(a)!.name}: ${c.abilities.get(a)!.text}`);
+    // The stat line in the run summary's units (HP 5000 is the sheet's 5), MP regen as what it restores.
+    const st = k.stats, pulse = c.statuses.get("mp_regen")?.pulse;
+    const amt = pulse?.do?.[0] && "amount" in pulse.do[0] ? pulse.do[0].amount : 0;
+    const share = typeof amt === "object" ? (amt.scale[0]?.ratio ?? 0) : 0;
+    const every = pulse?.every ?? 4, regen = Math.round(((st.mp_regen ?? 0) * share) / 10) * 10;
+    out.push(`    Stats: HP ${st.max_hp}, MP ${st.max_mp ?? 0} (+${regen} every ${every} ticks), Attack ${st.attack ?? 0}, Magic ${st.magic ?? 0}, Armor ${st.armor ?? 0}, Crit ${st.crit_chance ?? 0}%, Aggro ${st.aggro ?? 0}.`);
+    for (const a of k.abilities) {
+      const ab = c.abilities.get(a)!;
+      out.push(`    ${a}: ${ab.name} (MP ${ab.mp ?? 0}, every ${ab.cooldown} ticks): ${ab.text}`);
+    }
   }
   out.push("", "Formations:");
   for (const id of o.formations) {
@@ -105,9 +116,15 @@ if (cmd === "show") {
   const missing = unmet(c, node, party);
   if (missing.length) throw new Error(`can't start: ${missing.join("; ")}`);
   const seed = Number(opt("--seed") ?? 1);
-  // The campfire halfway through: --campfire rest (HP back) or focus (MP back); left out, the simulations' choice.
+  // The campfire halfway through: --campfire rest (HP back), focus (MP back) or raise:<class>; left out, the simulations' choice.
   const camp = opt("--campfire");
-  const run = play(c, combat, { dungeon: node.dungeon, party, seed, firstClear: true }, (d, r) => (d.kind === "campfire" && camp ? camp : simPick(d, r)), { log: true });
+  const campPick = (d: { options: string[] }, r: Parameters<typeof simPick>[1]) => {
+    if (!camp) return null;
+    if (!camp.startsWith("raise:")) return camp;
+    const m = (r.party as unknown as { id: string; ref: string }[]).find((x) => x.ref === camp.slice(6));
+    return m && d.options.includes(`raise:${m.id}`) ? `raise:${m.id}` : null;
+  };
+  const run = play(c, combat, { dungeon: node.dungeon, party, seed, firstClear: true }, (d, r) => (d.kind === "campfire" ? campPick(d, r) ?? simPick(d, r) : simPick(d, r)), { log: true });
   if (rest.includes("--full")) {
     console.log(readingPack(c, combat, { why: "", target: { key: node.id, dungeon: node.dungeon, name: node.name }, party, seed, won: run.outcome === "won" }, 1));
   } else console.log(summary((run.log as Entry[]).filter((e) => e.vis === "player" || e.t === "mp")));
@@ -139,7 +156,8 @@ function summary(log: Entry[]): string {
       continue;
     }
     if (e.t === "pick" && e.kind === "campfire") {
-      out.push("", e.pick === "rest" ? "Campfire: you REST (everyone standing gets HP back)." : "Campfire: you FOCUS (everyone standing gets MP back).");
+      const pk = String(e.pick);
+      out.push("", pk === "rest" ? "Campfire: you REST (everyone standing gets HP back)." : pk === "focus" ? "Campfire: you FOCUS (everyone standing gets MP back)." : `Campfire: you RAISE ${names.get(pk.slice(6)) ?? pk.slice(6)} (back on its feet with some HP).`);
       continue;
     }
     if (!f) continue;

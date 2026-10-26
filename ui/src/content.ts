@@ -70,9 +70,9 @@ export function statCode(key: string): string {
   return key.toUpperCase().slice(0, 4);
 }
 const STATUS_CODE: Record<string, string> = {
-  poison: "PSN", regen: "RGN", shield: "SHD", might: "MGT", weaken: "WKN", guard: "GRD", stun: "STN", slow: "SLW", haste: "HST", taunt: "TNT",
+  bleed: "BLD", regen: "RGN", shield: "SHD", might: "MGT", weaken: "WKN", guard: "GRD", stun: "STN", slow: "SLW", haste: "HST", taunt: "TNT",
   burn: "BRN", chill: "CHL", shock: "SHK", ward: "WRD", sunder: "SND", silence: "SIL", hidden: "HID", rot: "ROT", clarity: "CLR", aegis: "AEG",
-  doom: "DOOM", bulwark: "BLW", bulwark_broken: "BRK", ice_crust: "CRST", shadow_strike_on: "SHDW", bloodlust_on: "BLD", bedrock_on: "BED",
+  doom: "DOOM", bulwark: "BLW", bulwark_broken: "BRK", ice_crust: "CRST", bloodlust_on: "LUST", bedrock_on: "BED",
 };
 export const statusCode = (id: string): string => STATUS_CODE[id] ?? (c.statuses.get(id)?.name ?? id).replace(/[^a-z]/gi, "").slice(0, 4).toUpperCase();
 

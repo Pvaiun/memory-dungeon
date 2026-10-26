@@ -125,7 +125,10 @@ export function abilityBlock(a: AbilityT, stats: Stats | null, designer: boolean
     TAG_ICON[tag] ? iconEl(TAG_ICON[tag]) : null,
     h("span", { class: `trunc grow ${ELEMENTS.includes(tag) ? tag : tag === "heal" || tag === "revive" || tag === "cleanse" ? "good" : ""}` }, i.name.toUpperCase()),
   );
-  const cost = h("div", { class: "cost" }, i.mp ? h("span", { class: "mp" }, `MP ${disp(i.mp)}`) : h("span", { class: "dim" }, "NO MP"), h("span", { class: "dim" }, ` · EVERY ${i.cooldown}T`), i.cast ? h("span", { class: "dim" }, ` · ${castWord(i.cast).toUpperCase()} CAST`) : null);
+  // Step 5c: an ability starts a fight charged by its slot (ruleset.opening.slots), so its first use is part of the plan.
+  const head0 = opts.n !== undefined ? c.pack.ruleset.opening?.slots?.[opts.n - 1] : undefined;
+  const first = head0 !== undefined ? Math.max(0, Math.round(i.cooldown - head0)) : null;
+  const cost = h("div", { class: "cost" }, i.mp ? h("span", { class: "mp" }, `MP ${disp(i.mp)}`) : h("span", { class: "dim" }, "NO MP"), h("span", { class: "dim" }, ` · EVERY ${i.cooldown}T`), first !== null ? h("span", { class: "dim" }, ` · FIRST ${first}T`) : null, i.cast ? h("span", { class: "dim" }, ` · ${castWord(i.cast).toUpperCase()} CAST`) : null);
   const body: Child[] = [cost, h("div", { class: "body" }, i.text)];
   if (designer) {
     body.push(h("div", { class: "body" }, `Wind-up ${i.cast}t, recovery ${i.recovery}t${i.seek ? ", Seek" : ""}. Target: ${i.target}${i.waits ? `; ${i.waits}` : ""}.`));

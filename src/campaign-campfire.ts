@@ -4,13 +4,17 @@
  * when it's the one that wins: the share of visits each option wins where the others don't is what this measures, with
  * how often the simulations' picker (simPick) chose a winning option.
  *
- *   npx tsx src/campaign-campfire.ts [--nodes 1-20] [--seeds 8] [--set path=value]...
+ *   npx tsx src/campaign-campfire.ts [--nodes 1-20] [--seeds 8] [--harder N] [--set path=value]...
+ *
+ * --harder N plays every node with both its knobs N points harder, so the best builds sit nearer the margin where the
+ * choice decides runs (at the shipped knobs they win most runs whatever they pick).
  */
 import { readFileSync } from "node:fs";
 import { campaign, simPick } from "./campaign.js";
 import { combat } from "./engine/combat/rules.js";
 import { advance, answer, copyRun, loadContent, newRun, type Run } from "./engine/run.js";
-import type { Party } from "./schema.js";
+import type { DungeonT, FoesT, Party } from "./schema.js";
+import { knobFoes, knobOf } from "../content/core-set/campaign.js";
 import { patch } from "./sim/content.js";
 import { current } from "./sim/kits.js";
 
@@ -20,7 +24,16 @@ const opt = (name: string) => {
   return i >= 0 ? args[i + 1] : undefined;
 };
 const sets = args.flatMap((a, i) => (a === "--set" ? [args[i + 1]] : [])).map((x) => ({ path: x.slice(0, x.indexOf("=")), set: JSON.parse(x.slice(x.indexOf("=") + 1)) }));
-const c = loadContent(patch(JSON.parse(readFileSync(opt("--pack") ?? "content/core-set.pack.json", "utf8")), sets));
+const raw = patch(JSON.parse(readFileSync(opt("--pack") ?? "content/core-set.pack.json", "utf8")), sets) as { dungeons: DungeonT[]; campaign: { nodes: { id: string; dungeon: string }[] } };
+const harder = Number(opt("--harder") ?? 0);
+if (harder) for (const n of raw.campaign.nodes) {
+  const d = raw.dungeons.find((x) => x.id === n.dungeon)!;
+  const k = knobOf(n.id);
+  const keep = (f: FoesT | undefined) => { const { hp: _h, power: _p, ...rest } = f ?? {}; return rest; };
+  d.foes = { ...keep(d.foes), ...knobFoes(k.mob + harder) };
+  d.bossFoes = { ...keep(d.bossFoes ?? d.foes), ...knobFoes(k.boss + harder) };
+}
+const c = loadContent(raw);
 const results = JSON.parse(readFileSync(opt("--results") ?? "out/campaign/results.json", "utf8")) as Record<string, { cands: Party[] }>;
 const seeds = Array.from({ length: Number(opt("--seeds") ?? 8) }, (_, i) => 7001 + i);
 const cp = campaign(c);
@@ -48,6 +61,10 @@ const only = new Map<string, number>(); // visits this kind alone wins
 const wins = new Map<string, number>(); // visits this kind wins (best raise for raise)
 const offered = new Map<string, number>();
 let allWin = 0, noneWin = 0, simRight = 0, simWins = 0, bestWins = 0;
+const downWins = new Map<string, number>(); // with someone down: visits each kind wins
+// By the party's casters (classes with Magic 4 or more, whose spells cost the most): visits, and visits each kind alone wins.
+const casterVisits = new Map<number, number>(), casterOnly = new Map<string, number>();
+const castersIn = (p: Party) => p.units.filter((u) => (c.classes.get(u.class)?.stats.magic ?? 0) >= 4000).length;
 const simChose = new Map<string, number>();
 // What the party looked like when each kind alone won: mean HP share and MP share standing, and members down.
 const shape = new Map<string, { n: number; hp: number; mp: number; down: number }>();
@@ -69,14 +86,20 @@ for (const i of which) {
     const byKind = new Map<string, boolean>();
     for (const [o, x] of outs) byKind.set(kind(o), (byKind.get(kind(o)) ?? false) || x.won);
     for (const k of byKind.keys()) add(offered, k);
-    if (byKind.has("raise")) withDown++;
+    if (byKind.has("raise")) {
+      withDown++;
+      for (const [k, w] of byKind) if (w) add(downWins, k);
+    }
     for (const [k, w] of byKind) if (w) add(wins, k);
     const winners = [...byKind].filter(([, w]) => w).map(([k]) => k);
     if (winners.length === byKind.size) allWin++;
     if (!winners.length) noneWin++;
     const m = run.party as unknown as M[];
     const up = m.filter((x) => x.hp > 0);
+    const nc = castersIn(party);
+    casterVisits.set(nc, (casterVisits.get(nc) ?? 0) + 1);
     if (winners.length === 1) {
+      add(casterOnly, `${nc}|${winners[0]}`);
       add(only, winners[0]);
       add(nOnly, winners[0]);
       const s = shape.get(winners[0]) ?? { n: 0, hp: 0, mp: 0, down: 0 };
@@ -100,10 +123,12 @@ function add(m: Map<string, number>, k: string, v = 1) {
 }
 const pct = (a: number, b: number) => `${Math.round((100 * a) / Math.max(1, b))}%`;
 const out: string[] = [];
-out.push(`# The campfire: ${visits} visits (${withDown} with someone down), nodes ${which.map((i) => i + 1).join(",")}\n`);
+out.push(`# The campfire: ${visits} visits (${withDown} with someone down), nodes ${which.map((i) => i + 1).join(",")}${harder ? `, knobs ${harder > 0 ? "+" : ""}${harder}` : ""}\n`);
 out.push(`Every option wins: ${pct(allWin, visits)}. None wins: ${pct(noneWin, visits)}. The rest is where the choice matters.\n`);
 out.push("| Option | offered | wins when taken | the only winner |\n| --- | --- | --- | --- |");
 for (const k of ["rest", "focus", "raise"]) out.push(`| ${k} | ${offered.get(k) ?? 0} | ${pct(wins.get(k) ?? 0, offered.get(k) ?? 0)} | ${only.get(k) ?? 0} (${pct(only.get(k) ?? 0, visits)} of visits) |`);
+out.push(`\nWith someone down (${withDown} visits), each option wins: ${["rest", "focus", "raise"].map((k) => `${k} ${pct(downWins.get(k) ?? 0, withDown)}`).join(", ")}.`);
+out.push(`\nBy casters in the party (Magic 4 or more): ${[...casterVisits].sort((a, b) => a[0] - b[0]).map(([nc, v]) => `${nc}: ${v} visits, alone wins ${["rest", "focus", "raise"].map((k) => `${k} ${casterOnly.get(`${nc}|${k}`) ?? 0}`).join(", ")}`).join("; ")}.`);
 out.push(`\nWhen one option alone wins, the party standing at the fire (HP share, MP share, members down):`);
 for (const [k, s] of shape) out.push(`- ${k}: ${pct(s.hp, s.n)} HP, ${pct(s.mp, s.n)} MP, ${(s.down / s.n).toFixed(2)} down (${s.n} visits)`);
 out.push(`\nThe simulations' picker chose ${[...simChose].map(([k, v]) => `${k} ${v}`).join(", ")}: it won ${simWins} of the ${bestWins} visits some option wins, and picked a winning option (or nothing could win) in ${pct(simRight, visits)}.`);

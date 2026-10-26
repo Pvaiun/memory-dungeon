@@ -3,7 +3,7 @@
  * Every number comes from scale.ts; the words are the documents'.
  */
 import type { AbilityT, ClassDefT, NumT, StatusT, TargetRuleT } from "../../src/schema.js";
-import { BURN_SHOCK, CLASS_REGEN, COOLDOWN, COST, HIT, REVIVE, RESIST, SPECIAL, SPECIAL_KEY, STACKS, STATUS, STUN_COOLDOWN, WINDUP, crit, costly, from, jitter, mpCost, pts, stacks, type HitWord, type SpecialLevel, type SpecialStat, type StackWord } from "./scale.js";
+import { BURN_STACKS, CLASS_REGEN, SHOCK_STACKS, COOLDOWN, COST, HIT, REVIVE, RESIST, SPECIAL, SPECIAL_KEY, STACKS, STATUS, STUN_COOLDOWN, WINDUP, crit, costly, from, jitter, mpCost, pts, stacks, type HitWord, type SpecialLevel, type SpecialStat, type StackWord } from "./scale.js";
 import { P } from "./vocabulary.js";
 
 type CD = keyof typeof COOLDOWN;
@@ -85,14 +85,14 @@ export const passives: StatusT[] = [
     ],
   }),
   { id: "bloodlust_on", name: "BLOODLUST", text: "Lifesteal doubled.", label: "buff", show: "icon", stacking: "fizzle", stats: [{ stat: "lifesteal", flat: { scale: [{ ratio: 1, stat: "lifesteal", of: "holder" }] } }] },
-  passive("kindling", "Kindling", { text: "Basic attacks add a few Burn.", reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("burn", { stacks: own("few", "magic", BURN_SHOCK), to: "other" })] }] }),
+  passive("kindling", "Kindling", { text: "Basic attacks add a few Burn.", reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("burn", { stacks: own("few", "magic", BURN_STACKS), to: "other" })] }] }),
   passive("brittle", "Brittle", { text: "Hits deal more damage for each Chill stack on the target.", boosts: bothKinds({ scale: [{ ratio: 8, stacks: "chill", of: "target" }] }) }),
   passive("arc", "Arc", {
     text: "Basic attacks also hit a second foe, and Shock both.",
     strike: { to: T.secondFoe },
     reactions: [
-      { on: { event: "hit_lands", kind: "basic" }, do: [apply("shock", { stacks: own("few", "magic", BURN_SHOCK), to: "other" })] },
-      { on: { event: "hit_lands", kind: "extra" }, do: [apply("shock", { stacks: own("few", "magic", BURN_SHOCK), to: "other" })] },
+      { on: { event: "hit_lands", kind: "basic" }, do: [apply("shock", { stacks: own("few", "magic", SHOCK_STACKS), to: "other" })] },
+      { on: { event: "hit_lands", kind: "extra" }, do: [apply("shock", { stacks: own("few", "magic", SHOCK_STACKS), to: "other" })] },
     ],
   }),
   passive("bedrock", "Bedrock", {
@@ -201,10 +201,10 @@ export const abilities: A[] = [
   a("vampire", "wither", "Wither", "Rot on the foe with the lowest HP.", { ...timing("medium", "normal"), target: T.lowestHpFoe, do: [apply("rot")] }),
   a("vampire", "frenzy", "Frenzy", "Several Might on itself.", { ...timing("medium", "quick"), target: "self", do: [apply("might", { stacks: stacks("several", "attack") })] }),
   // Pyromancer
-  a("pyromancer", "firebolt", "Firebolt", "Fire at the foe with the most Burn, adding several.", { ...timing("short", "normal"), target: T.mostFoe("burn"), do: [magic("fire", hit("magic", "normal"), { apply: [{ status: "burn", stacks: stacks("several", "magic", BURN_SHOCK) }] })] }),
+  a("pyromancer", "firebolt", "Firebolt", "Fire at the foe with the most Burn, adding several.", { ...timing("short", "normal"), target: T.mostFoe("burn"), do: [magic("fire", hit("magic", "normal"), { apply: [{ status: "burn", stacks: stacks("several", "magic", BURN_STACKS) }] })] }),
   // Campaign pass: normal hits (0.35 of Magic), not light. Squishy damage dealers were in few winning builds; the run's attrition favours sustain.
   // Pacing pass: a light hit on each (was normal): about one swing a foe, for every foe.
-  a("pyromancer", "fireball", "Fireball", "Fire on every foe, adding a few Burn to each.", { ...timing("medium", "long"), target: T.everyFoe, do: [magic("fire", hit("magic", "light"), { apply: [{ status: "burn", stacks: stacks("few", "magic", BURN_SHOCK) }] })] }),
+  a("pyromancer", "fireball", "Fireball", "Fire on every foe, adding a few Burn to each.", { ...timing("medium", "long"), target: T.everyFoe, do: [magic("fire", hit("magic", "light"), { apply: [{ status: "burn", stacks: stacks("few", "magic", BURN_STACKS) }] })] }),
   a("pyromancer", "pyre", "Pyre", "Heavy Fire on the foe with the most Burn, rising with each stack. The Burn stays.", {
     ...timing("long", "very_long"), target: T.mostFoe("burn"), do: [magic("fire", { scale: [{ ratio: HIT.heavy, stat: "magic" }, { ratio: 300, stacks: "burn", of: "target" }] })],
   }),
@@ -218,11 +218,11 @@ export const abilities: A[] = [
     ...timing("short", "quick"),
     do: [
       // Pacing pass: 0.6 and 0.3 of Magic (were normal and light), so four foes take about two and a half swings, not five.
-      magic("lightning", from("magic", 0.6), { apply: [{ status: "shock", stacks: stacks("few", "magic", BURN_SHOCK) }] }),
-      magic("lightning", from("magic", 0.3), { apply: [{ status: "shock", stacks: stacks("few", "magic", BURN_SHOCK) }], to: T.threeOtherFoes }),
+      magic("lightning", from("magic", 0.6), { apply: [{ status: "shock", stacks: stacks("few", "magic", SHOCK_STACKS) }] }),
+      magic("lightning", from("magic", 0.3), { apply: [{ status: "shock", stacks: stacks("few", "magic", SHOCK_STACKS) }], to: T.threeOtherFoes }),
     ],
   }),
-  a("stormcaller", "thunderstorm", "Thunderstorm", "Lightning on every foe, adding a few Shock to each.", { ...timing("medium", "normal"), target: T.everyFoe, do: [magic("lightning", hit("magic", "light"), { apply: [{ status: "shock", stacks: stacks("few", "magic", BURN_SHOCK) }] })] }),
+  a("stormcaller", "thunderstorm", "Thunderstorm", "Lightning on every foe, adding a few Shock to each.", { ...timing("medium", "normal"), target: T.everyFoe, do: [magic("lightning", hit("magic", "light"), { apply: [{ status: "shock", stacks: stacks("few", "magic", SHOCK_STACKS) }] })] }),
   a("stormcaller", "static_charge", "Static charge", "Haste on itself.", { ...timing("long", "long"), target: "self", do: [apply("haste")] }),
   // Geomancer
   a("geomancer", "earthen_shell", "Earthen shell", "Shields itself and the other lowest ally; the amount scales from Armor.", {

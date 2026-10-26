@@ -1308,7 +1308,7 @@ function begin(w: W) {
   for (const u of f.units) u.acts.forEach((a, i) => {
     const d = actDef(w, u, i);
     const cd = cooldownOf(w, u, d);
-    if (open?.slots && u.side === "party" && d.kind === "ability") a.ready = Math.max(0, cd - sub(open.slots[i] ?? 0));
+    if (open?.slots?.length && u.side === "party" && d.kind === "ability") a.ready = Math.max(0, cd - sub(open.slots[i] ?? 0));
     else a.ready = open ? Math.round(cd * (open.min + (open.max - open.min) * next(u.rng))) : cd;
   });
   // ruleset.stagger: the n-th copy of an enemy starts n × stagger ticks behind the first, so three Ghosts ripple rather than volley.

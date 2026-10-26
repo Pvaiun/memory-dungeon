@@ -131,8 +131,9 @@ test("campfire: the run pauses for a choice between two fights; REST gives back 
     combat.apply({ c, run, log: undefined } as never, run.pending!, pick);
     m.forEach((x, i) => {
       if (before[i][0] <= 0) return assert.equal(x.hp, 0, "a knocked-out member stays down");
-      if (pick === "rest") assert.equal(x.hp, Math.min(x.stats.max_hp, before[i][0] + Math.floor(x.stats.max_hp * 0.4)));
-      else assert.equal(x.mp, Math.min(x.stats.max_mp, before[i][1] + Math.floor(x.stats.max_mp * 0.4)));
+      const st = d.stages[at] as { hp: number; mp: number };
+      if (pick === "rest") assert.equal(x.hp, Math.min(x.stats.max_hp, before[i][0] + Math.floor((x.stats.max_hp * st.hp) / 100)));
+      else assert.equal(x.mp, Math.min(x.stats.max_mp, before[i][1] + Math.floor((x.stats.max_mp * st.mp) / 100)));
     });
   }
   assert.equal(reached, 2, "the party reaches the campfire on some seed");

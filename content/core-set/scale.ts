@@ -43,10 +43,12 @@ export const SPEED = { fast: 5.9, medium: 7.9, slow: 10.3 } as const;
  * casting nearly all the time and its basic attack came a third of its actions; the party acted twice for each foe action.
  */
 /**
- * Step 5c: 24, 38 and 56 (were 30, 48 and 70). With the slotted opening, a caster's second and third abilities came off in
- * a third of regular fights or fewer, and the Paladin and Hexer cast nothing in most: "those cooldowns are too long".
+ * Step 5c: 24, 32 and 42 (were 30, 48 and 70). With the slotted opening, a caster's second and third abilities came off in
+ * a third of regular fights or fewer, and the Paladin and Hexer cast nothing in most: "those cooldowns are too long". At 24,
+ * 38 and 56 the Assassin, Paladin and Hexer still sat out half their regular fights or more; at 24, 32 and 42, the Hexer
+ * 30%, the Assassin 38%, the Paladin (an 8-tick Smite) 52%.
  */
-export const COOLDOWN = { short: 24, medium: 38, long: 56 } as const;
+export const COOLDOWN = { short: 24, medium: 32, long: 42 } as const;
 /** Foes keep the pacing pass's cooldowns: the change is for the party's casters, not the bosses' signature moves. */
 export const ENEMY_COOLDOWN = { short: 30, medium: 48, long: 70 } as const;
 /**
@@ -73,9 +75,11 @@ export const RULES = {
   /**
    * Pacing pass: each action starts a fight a third to two thirds charged, by its own roll, so nothing lines up on the first ticks.
    * Step 5c (the director's): a party unit's abilities start charged by the order they're slotted in, so the order is preparation,
-   * not dice: the first this many ticks, then the second, then the third. Basic attacks and foes still roll.
+   * not dice: the first this many ticks, then the second, then the third. Basic attacks and foes still roll. At the director's
+   * 25, 15 and 10, every short ability in a first slot (cooldowns 20 to 28) fired on the first tick, the whole party at once,
+   * and 19% of minions died before acting (the pacing pass had it at 6%); at 20, 12 and 6, 11%.
    */
-  opening: { min: 0.3, max: 0.7, slots: [25, 15, 10] },
+  opening: { min: 0.3, max: 0.7, slots: [20, 12, 6] },
   /** Each physical hit loses this share of the target's Armor: Armor 5 takes 600 off, Armor 8 nearly blanks a sword. */
   armorRatio: 0.12,
   /**
@@ -118,12 +122,16 @@ export const COST = { short: 400, medium: 650, long: 1000 } as const;
 export const costly = (cd: keyof typeof COST) => Math.round(COST[cd] * 1.6);
 /**
  * Step 5c: casters are hungry, walls aren't (the director's "the mana is inverted"). A class's abilities cost their word's MP
- * × (its Magic − 1) ÷ 2, at least a quarter, fixed by the class's stat line (Magic from gear doesn't change it): Magic 1 (the
- * Knight, Ranger, Monk) pays a quarter of the word, 2 (the Bramble knight, Vampire) half, 3 the word, 4 one and a half times,
- * 5 (the Pyromancer) twice. At one price for everyone, the walls ran dry and the casters ended runs nearly full; at a price
- * proportional to Magic, with class regen halved, the Bramble knight and Vampire starved as much as the Cleric.
+ * × a factor by its Magic, fixed by its stat line (Magic from gear doesn't change it): Magic 1 (the Knight, Hoplite, Ranger,
+ * Monk, Assassin) a quarter, 2 (the Bramble knight, Vampire) half, 3 (the Valkyrie, Bard) the word, 4 (the Cleric, Paladin,
+ * Hexer, Frostweaver, Stormcaller, Geomancer) double, 5 (the Pyromancer) two and a half times. At one price for everyone the walls ran dry
+ * and the casters ended runs nearly full; at 1.5 and 2 for Magic 4 and 5 the casters starved a few percent of the time and the
+ * campfire's FOCUS was the only winning pick in 2% of visits; at 2 and 3, 15% to 36%, and FOCUS earns its place in parties
+ * with casters. Triple left the Pyromancer, already the weakest class, dry from its third fight. A price proportional to
+ * Magic, with class regen halved, starved the Bramble knight and Vampire too.
  */
-export const mpCost = (mp: number, magic: number) => Math.round((mp * Math.max(0.25, (magic - 1) / 2)) / 10) * 10;
+export const MP_BY_MAGIC = [0.25, 0.25, 0.5, 1, 2, 2.5];
+export const mpCost = (mp: number, magic: number) => Math.round((mp * MP_BY_MAGIC[Math.min(5, Math.max(0, Math.round(magic)))]) / 10) * 10;
 /** MP regen: every `every` ticks, restore `share` × the MP regen stat (regen 3 gives 150). */
 export const MP_REGEN = { every: 4, share: 0.05 };
 /**
@@ -213,9 +221,10 @@ export const ABILITY_STACKS = 2;
 export const stacks = (word: StackWord, stat: string, mult = 1): NumT => ({ scale: [{ ratio: (mult * ABILITY_STACKS * STACKS[word]) / P, stat }] });
 /**
  * Step 5c (the director's): the Pyromancer's Burn and the Stormcaller's Shock, on their abilities and passives, are this many
- * times the word's. At 2 the Pyromancer's Burn is 24% of its damage (was 14%).
+ * times the word's. At 2 the Pyromancer's Burn was 24% of its damage (was 14%), and the Pyromancer the weakest class still.
  */
-export const BURN_SHOCK = 2;
+export const BURN_STACKS = 2.5;
+export const SHOCK_STACKS = 2;
 /** A flat stack count, for enemies that apply "a stack" or statuses that start with "many". */
 export const FLAT_STACKS = { one: 1, few: 2, several: 4, many: 7 } as const;
 
@@ -310,10 +319,11 @@ export const STATUS = {
   /**
    * Campaign pass: a cap of 25 stacks (uncapped, a slow boss gathered 50 to 100 and took 8,000 from one swing), and 60 a
    * stack, not 80 (the second AI playtester's Stormcaller carried the last nine nodes).
-   * Step 5c (the director's: "Burn and Shock are really weak"): 80 a stack and a cap of 40. With the Stormcaller's stacks
-   * doubled (BURN_SHOCK), the cap held its Shock at 18% of its damage; now 26%, and the Bard's Thunder chord 31%.
+   * Step 5c (the director's: "Burn and Shock are really weak"): a cap of 40. With the Stormcaller's stacks doubled
+   * (BURN_SHOCK) the cap of 25 held its Shock at 18% of its damage. At 80 a stack as well, the Stormcaller was in 57% of the
+   * top builds (was 23%), so it stays at 60.
    */
-  shock: { perStack: 80, drop: 0.5, cap: 40 },
+  shock: { perStack: 60, drop: 0.5, cap: 40 },
   ward: { resist: 30, duration: 24 },
   sunder: { perStack: -600, every: 4 },
   silence: { duration: 8 },
@@ -330,8 +340,10 @@ export const STATUS = {
 /**
  * The campfire in the middle of each campaign run: REST gives back this % of max HP to everyone standing, FOCUS this % of max
  * MP, RAISE stands one fallen member of the player's choice up with this % of its max HP (step 5c, the director's).
+ * FOCUS 60 (was 40): copied at the fire and played out each way, a party with casters found FOCUS the only winning pick in
+ * about a quarter of the visits where the pick decided the run (a third with three casters); a party of walls, never.
  */
-export const CAMPFIRE = { hp: 40, mp: 40, revive: 40 } as const;
+export const CAMPFIRE = { hp: 40, mp: 60, revive: 40 } as const;
 
 /** Shares of max HP a revive brings a unit back with. */
 export const REVIVE = { half: 0.5, tenth: 0.1, ghoul: 0.3 } as const;
