@@ -1,6 +1,6 @@
 # Step 5c report: Bleed, slotted openings, hungry casters, a three-way campfire
 
-You reacted to the 5b report with a list of changes. All of them are built and on this branch. The road is re-tuned on them over five passes, and two AI playtests played it. This report leads with what needs you. `intent.md` has your words, `design.md` the changes in full, `tuning.md` the 29 rounds.
+You reacted to the 5b report with a list of changes. All of them are built and on this branch. The road is re-tuned on them over five passes, and two AI playtests played it. This report leads with what needs you. `intent.md` has your words, `design.md` the changes in full, `tuning.md` the 30 rounds.
 
 **To play it:** `npm install`, then `npm run ui`. A journey in progress carries over (same road), but fights play differently. On a class's sheet each ability card now says when it's first ready in a fight. Tap two numbers to swap the order.
 
@@ -29,7 +29,9 @@ You reacted to the 5b report with a list of changes. All of them are built and o
 | **Protect on a long cooldown (42 ticks, from 30)** | **+7.9** | **59%** | **14** |
 | Its three abilities at the normal price (650 MP, from 160) | +5.8 | 54% | 12 |
 
-  For scale, the Valkyrie adds +10 and the Monk +5. **I'd take Protect on a long cooldown.** It's one word in the Knight's line, and it keeps the walls free of MP worries. The other option makes the Knight run dry over a run, the exception you floated ("maybe the Knight because he's OP"). Both need a re-tune after: the best builds' wins fall from 92% to 85% and 80% at today's knobs. Say which, and I'll ship it.
+  For scale, the Valkyrie adds +10 and the Monk +5. I proposed Protect on a long cooldown.
+
+- **Shipped, your pick to try:** the Knight at HP 4 (the document's 5) with Protect on a long cooldown (40 ticks, was 31), and the road re-tuned (pass 21). The Knight now adds +7.8 points to a build's wins (was +17.5), beside the Monk (+7.9), the Stormcaller (+8.1) and the Valkyrie (+11.5). Its share of top builds is 52% (was 69%), and it's in the best build of 13 nodes of 20 (was 17). One node needed a hand: Knives Out's regular fights came out too hard for whole runs (best build 77%), so I eased them (best build 90%).
 
 ## 1. Decisions and open questions
 

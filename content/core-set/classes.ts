@@ -117,8 +117,10 @@ const a = (cls: string, id: string, name: string, text: string, body: Partial<Ab
 export const abilities: A[] = [
   // Knight
   a("knight", "fortify", "Fortify", "Guards the ally with the lowest share of HP.", { ...timing("medium", "quick"), mp: 160, target: T.lowestShareAlly, do: [apply("guard")] }),
+  // Step 5c (the director's, to try): a long cooldown (was medium). How often it comes was the Knight's strength; its size isn't,
+  // since a Shield can't pass half its target's max HP.
   a("knight", "protect", "Protect", "Shields the lowest ally; the amount scales from the Knight's max HP.", {
-    ...timing("medium", "normal"), mp: 160, ...waitsFor("allies", { belowCap: "shield" }), target: { ...T.lowestShareAlly, where: { belowCap: "shield" } },
+    ...timing("long", "normal"), mp: 160, ...waitsFor("allies", { belowCap: "shield" }), target: { ...T.lowestShareAlly, where: { belowCap: "shield" } },
     do: [apply("shield", { stacks: from("max_hp", 0.6) })],
   }),
   // Pacing pass: a light hit (was normal): at normal it was seven or eight of the Knight's swings, a tank's nuke.
@@ -247,7 +249,8 @@ const p = (status: string, name: string, text: string) => ({ name, text, statuse
 
 export const classes: ClassDefT[] = [
   cls("knight", "Knight", "Protector. Stands in front in heavy plate, Guards and Shields whoever is lowest, bashes a foe now and then, and when an ally falls, calls every foe onto itself.", {
-    source: "starter", stats: stat(5, 2, 2, 3, 1, 5, 2, 5), weapons: ["sword", "axe"], armor: "heavy", passive: p("sworn", "Sworn", "When an ally is knocked out, the Knight gains Taunt."),
+    // Step 5c (the director's, to try): HP 4 (the document's 5), with Protect on a long cooldown: the Knight was in 69% of top builds.
+    source: "starter", stats: stat(4, 2, 2, 3, 1, 5, 2, 5), weapons: ["sword", "axe"], armor: "heavy", passive: p("sworn", "Sworn", "When an ally is knocked out, the Knight gains Taunt."),
   }),
   cls("cleric", "Cleric", "Healer. Mends whoever is lowest with quick, small heals, lifts a curse and wraps the ally in Regen, raises the fallen, and nothing silences its prayers.", {
     source: "starter", stats: stat(2, 5, 4, 1, 4, 2, 2, 2), weapons: ["light_staff"], armor: "light", passive: p("encore", "Encore", "It can't be Silenced."),
