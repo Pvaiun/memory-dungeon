@@ -11601,8 +11601,13 @@
    "campfire": {
     "hp": 40,
     "mp": 60,
-    "revive": 40
+    "revive": 40,
+    "camp": 50
    },
+   "reserves": true,
+   "neverGrow": [
+    "snake"
+   ],
    "prices": {
     "common": 45,
     "uncommon": 70,
@@ -11750,11 +11755,10 @@
       "enemies": [
        "snake",
        "snake",
-       "snake",
        "bandit",
        "bandit"
       ],
-      "knob": -77
+      "knob": -42
      },
      {
       "id": "bandit_camp",
@@ -11798,12 +11802,11 @@
       "enemies": [
        "snake",
        "snake",
-       "snake",
-       "snake",
+       "bandit",
        "bandit",
        "bandit"
       ],
-      "knob": -81
+      "knob": -57
      },
      {
       "id": "bandit_horde",

@@ -46,7 +46,7 @@ export type Pending =
   | { kind: "spoils"; gold: number; offers: Offer[]; tier: FightTier; trophy?: Item }
   | { kind: "boon"; offers: Offer[] }
   | { kind: "shop"; stock: ShopSlot[]; learn: boolean; upgrade: boolean; trained?: number }
-  | { kind: "campfire" }
+  | { kind: "campfire"; used?: boolean }
   | { kind: "event"; id: string }
   | { kind: "treasure"; offer: Offer; gold: number }
   | { kind: "choose"; what: "learn" | "upgrade" | "temper"; why: string }
@@ -235,6 +235,15 @@ export function endFight(c: Content, run: RogueRun, er: Run) {
   run.stats.fights++;
   if (p.tier === "elite") run.stats.elites++;
   if (!won) {
+    // The reserves: those standing at camp take the fallen party's places. A regular fight or elite is passed with no
+    // spoils; a boss is faced again, by them. With nobody standing at camp, the run is over.
+    const standing = bench(run).filter((cls) => !member(run, cls).ko);
+    if (reservesStand(c, run)) {
+      run.party = standing.slice(0, cfg(c).party);
+      note(run, `Fell to ${p.fight.name}. ${run.party.map((k) => c.classes.get(k)!.name).join(" and ")} take${run.party.length > 1 ? "" : "s"} up the road.`);
+      run.pending = p.tier === "boss" ? { ...p, begun: false } : { kind: "map" };
+      return;
+    }
     note(run, `Fell to ${p.fight.name}.`);
     run.pending = { kind: "over", won: false };
     return;
@@ -478,7 +487,8 @@ export function fightFor(c: Content, run: RogueRun, node: MapNode, tier: FightTi
     const counts = new Map<string, number>();
     for (const e of enemies) counts.set(e, (counts.get(e) ?? 0) + 1);
     // A pack that explodes never grows: two Bomb Bugs are a puzzle, three a wipe.
-    for (const [e, n] of counts) if (n >= 2 && enemies.length < 8 && !c.enemies.get(e)?.statuses?.includes("volatile") && next(rng) < 0.5) enemies.splice(enemies.lastIndexOf(e) + 1, 0, e);
+    // Snakes neither: their Bleed doesn't shrink with the knob, and eight-foe Viper Dens ended runs on act I's floor 7.
+    for (const [e, n] of counts) if (n >= 2 && enemies.length < 8 && !c.enemies.get(e)?.statuses?.includes("volatile") && !cfg(c).neverGrow?.includes(e) && next(rng) < 0.5) enemies.splice(enemies.lastIndexOf(e) + 1, 0, e);
   }
   return { ...base, enemies };
 }
@@ -808,6 +818,8 @@ export function useSupply(c: Content, run: RogueRun, id: SupplyIdT, target?: str
 /** Between rooms, and before a fight has begun (its foes are shown, so the party can be prepared for them). */
 const betweenRooms = (run: RogueRun) => !["over", "draft"].includes(run.pending.kind) && !(run.pending.kind === "fight" && run.pending.begun);
 export const canManage = betweenRooms;
+/** Would a lost fight now pass the road to those standing at camp (the reserves)? */
+export const reservesStand = (c: Content, run: RogueRun) => !!cfg(c).reserves && bench(run).some((cls) => !member(run, cls).ko);
 
 /**
  * The max a heal by share counts from: the max now, but no more than it was when the last fight ended. Putting on a
@@ -850,6 +862,9 @@ export function options(c: Content, run: RogueRun): string[] {
       return [...out, "leave"];
     }
     case "campfire": {
+      // Once its pick is made, the campfire waits for LEAVE: swaps stay open until then (a playtester raised a member at
+      // camp and found the swap window had closed with the pick).
+      if (p.used) return ["leave"];
       const out = ["rest", "focus"];
       for (const m of run.roster) if (m.ko) out.push(`raise:${m.cls}`);
       out.push(...learnOptions(c, run).map((o) => `learn:${o}`), ...upgradeOptions(run).map((o) => `upgrade:${o}`));
@@ -964,6 +979,7 @@ export function choose(c: Content, run: RogueRun, pick: string) {
       const party = run.party.map((cls) => member(run, cls));
       const camp = bench(run).map((cls) => member(run, cls));
       const [verb, ...rest] = pick.split(":");
+      if (verb === "leave") return void (run.pending = { kind: "map" });
       if (verb === "rest") (heal(c, run, party, k.hp, 0), note(run, "Rested."));
       else if (verb === "focus") (heal(c, run, party, 0, k.mp), note(run, "Focused."));
       else if (verb === "raise") {
@@ -973,9 +989,10 @@ export function choose(c: Content, run: RogueRun, pick: string) {
         note(run, `Raised the ${c.classes.get(m.cls)!.name}.`);
       } else if (verb === "learn") learn(c, run, rest[0], rest[1]);
       else if (verb === "upgrade") upgrade(c, run, rest[0], rest[1]);
-      // Those waiting at camp rest and focus whatever the party picks.
-      heal(c, run, camp, k.hp, k.mp);
-      run.pending = { kind: "map" };
+      // Those standing at camp rest and focus (a share of each) whatever the party picks; one raised here just now doesn't.
+      const share = (k.camp ?? 100) / 100;
+      heal(c, run, camp.filter((m) => !(verb === "raise" && m.cls === rest[0])), Math.round(k.hp * share), Math.round(k.mp * share));
+      p.used = true;
       return;
     }
     case "event": {
@@ -1098,7 +1115,7 @@ function doOps(c: Content, run: RogueRun, ops: readonly EventOpT[], rng: Rng) {
   ops = [...ops.filter((op) => !waits(op)), ...ops.filter(waits)];
   for (const op of ops) {
     switch (op.op) {
-      case "gold": gainGold(run, op.amount); break;
+      case "gold": gainGold(run, op.amount); note(run, `${op.amount > 0 ? "+" : ""}${op.amount} gold.`); break;
       case "hp": {
         const who = op.one ? [party().filter((m) => !m.ko)[0]].filter(Boolean) : party();
         if (op.pct >= 0) heal(c, run, who, op.pct, 0);
@@ -1130,7 +1147,12 @@ function doOps(c: Content, run: RogueRun, ops: readonly EventOpT[], rng: Rng) {
         const tier: FightTier = op.tier === "elite" ? "elite" : "fight";
         return void (run.pending = { kind: "fight", ...fightSpec(c, run, { ...node, floor: Math.max(node.floor, 3) }, tier) });
       }
-      case "chance": return doOps(c, run, next(rng) * 100 < op.pct ? op.then : op.else, rng);
+      case "chance": {
+        // A gamble says how it went (a playtester never learned whether the Gambler paid).
+        const hit = next(rng) * 100 < op.pct;
+        note(run, hit ? "Luck was with you." : "Luck was against you.");
+        return doOps(c, run, hit ? op.then : op.else, rng);
+      }
     }
   }
 }

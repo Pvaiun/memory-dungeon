@@ -147,3 +147,46 @@ test("rogue: no legendary piece twice in a run while others are left", () => {
     run.items.push(it);
   }
 });
+
+test("rogue: a campfire's pick leaves swaps open until LEAVE; those at camp get a share of REST, one raised there doesn't", () => {
+  const c = loadContent(raw);
+  const run = newRogue(c, { seed: 13, leader: "knight" });
+  while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
+  const [x, y] = c.pack.classes.map((k) => k.id).filter((id) => !run.party.includes(id));
+  recruit(c, run, x); recruit(c, run, y);
+  const [a] = run.party;
+  member(run, x).missHp = 2000;
+  member(run, y).ko = true;
+  run.pending = { kind: "campfire" };
+  choose(c, run, `raise:${y}`);
+  assert.deepEqual(options(c, run), ["leave"]);
+  assert.equal(swap(c, run, a, y), true, "a swap after the pick");
+  const share = (rogue(c).config.campfire.hp * (rogue(c).config.campfire.camp ?? 100)) / 100;
+  const max = c.classes.get(x)!.stats.max_hp;
+  assert.ok(member(run, x).missHp >= 2000 - Math.ceil((max * share) / 100) - 1 && member(run, x).missHp < 2000, "the camp's share");
+  const raised = member(run, y).missHp;
+  assert.ok(raised > 0, "the raised member didn't also get the camp's rest");
+  choose(c, run, "leave");
+  assert.equal(run.pending.kind, "map");
+});
+
+test("rogue: a lost fight with someone standing at camp passes the road to them; with nobody, the run is over", () => {
+  const c = loadContent(raw);
+  for (const reserve of [true, false]) {
+    const run = newRogue(c, { seed: 14, leader: "knight" });
+    while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
+    const spare = c.pack.classes.map((k) => k.id).find((id) => !run.party.includes(id))!;
+    if (reserve) recruit(c, run, spare);
+    choose(c, run, reachable(run)[0].id);
+    // A fight the party can't win: everyone at 1 HP against a boss.
+    const p = run.pending as Extract<RogueRun["pending"], { kind: "fight" }>;
+    p.fight = { ...run.boss };
+    p.tier = "boss";
+    for (const cls of run.party) member(run, cls).missHp = 99999;
+    autoFight(c, run);
+    if (reserve) {
+      assert.deepEqual(run.party, [spare]);
+      assert.equal(run.pending.kind, "fight", "a boss is faced again, by the reserves");
+    } else assert.equal(run.pending.kind, "over");
+  }
+});

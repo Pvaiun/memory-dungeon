@@ -804,7 +804,8 @@ export const RogueConfig = z.strictObject({
   spoils: z.strictObject({ fight: Spoils, elite: Spoils, usable: Pct.describe("Share of gear rolled from what the roster can use.") }),
   boon: z.strictObject({ count: PosInt }),
   treasure: z.strictObject({ rarity: RarityOdds, gold: IntRange }),
-  campfire: z.strictObject({ hp: Pct, mp: Pct, revive: Pct }),
+  campfire: z.strictObject({ hp: Pct, mp: Pct, revive: Pct, camp: Pct.optional().describe("The share of REST and FOCUS those standing at camp get, whatever the pick (default all of both).") }),
+  reserves: z.boolean().optional().describe("A lost fight with someone standing at camp doesn't end the run: they take the road (a regular fight or elite is passed with no spoils; a boss is faced again)."),
   prices: z.strictObject({
     common: z.number().int().min(0), uncommon: z.number().int().min(0), rare: z.number().int().min(0), legendary: z.number().int().min(0),
     recruit: z.number().int().min(0), formation: z.number().int().min(0), learn: z.number().int().min(0), upgrade: z.number().int().min(0),
@@ -818,6 +819,7 @@ export const RogueConfig = z.strictObject({
   heat: z.strictObject({ per: z.number(), max: z.number().int().min(0) }),
   shape: z.record(z.string(), z.strictObject({ hp: z.number(), power: z.number() })).optional().describe("By tier (fight, elite, boss): HP % and damage % added to every foe on top of the knob, so a tier's fights can be longer and softer at the same cost."),
   growFrom: PosInt.describe("From this floor, each pack of two or more may gain one more foe."),
+  neverGrow: z.array(Id).optional().describe("Enemies whose packs never grow (Snakes: their Bleed doesn't shrink with a fight's knob)."),
 });
 export type RogueConfigT = z.infer<typeof RogueConfig>;
 

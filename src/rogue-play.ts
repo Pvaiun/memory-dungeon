@@ -24,7 +24,7 @@ import { combat } from "./engine/combat/rules.js";
 import type { Entry } from "./engine/log.js";
 import {
   actRoll, bench, bossFoes, canManage, choose, endFight, equip, eventOf, itemGear, itemOf, joinKnown, maxOf, member, newRogue, options, reachable, registerGear, rogue,
-  migrate, seat, sellPrice, whyNot, setFormation, setOrder, startFight, swap, trainPrice, unlearned, upgraded, useSupply, wearer, type Item, type Offer, type RogueRun, type Slot,
+  learnOptions, migrate, seat, sellPrice, upgradeOptions, whyNot, setFormation, setOrder, startFight, swap, trainPrice, unlearned, upgraded, useSupply, wearer, type Item, type Offer, type RogueRun, type Slot,
 } from "./rogue.js";
 import type { AbilityT, NumT } from "./schema.js";
 import { summary } from "./play-summary.js";
@@ -85,7 +85,7 @@ function sizeOf(a: AbilityT, st: Record<string, number>, mult = 1): string {
       const v = Math.round(val(e.amount, st) * mult);
       out.push(`${v ? `about ${v} ` : ""}${kind}${e.hits && e.hits > 1 ? ` x${e.hits}` : ""}${(e.apply ?? []).map((x) => ` + ${x.status === "shield" ? `${Math.round(val(x.stacks, st))} shield` : stacks(x.status, x.stacks)}`).join("")}`);
     } else if (e.op === "heal") out.push(`heals about ${Math.round(val(e.amount, st))}`);
-    else if (e.op === "apply" && e.status === "shield") out.push(`shield about ${Math.round(val(e.stacks, st))}`);
+    else if (e.op === "apply" && e.status === "shield") out.push(`shield about ${Math.round(val(e.stacks, st))} (at most half its target's max HP)`);
     else if (e.op === "apply" && c.statuses.get(e.status)!.stacking === "intensity") out.push(stacks(e.status, e.stacks));
   }
   return out.join(" + ");
@@ -125,7 +125,7 @@ function header(run: RogueRun): string[] {
   const reg = rogue(c).regions.find((r) => r.id === run.region)!;
   return [
     `Act ${ROMAN[run.act]} of 3: ${reg.name}. ${reg.text} Boss at the top: ${run.boss.name}. ${run.floor > rogue(c).config.map.floors ? "At the boss." : run.floor === 0 ? `At the foot of the map: ${rogue(c).config.map.floors} floors, then the boss.` : `Floor ${run.floor} of ${rogue(c).config.map.floors}, the boss above.`}`,
-    `Gold ${run.gold}. Supplies: ${run.supplies.join(", ") || "none"} (bag holds ${rogue(c).config.bag}). Formation: ${c.formations.get(run.formation)!.name}. Formations owned: ${run.formations.join(", ")}.`,
+    `Gold ${run.gold}. Supplies: ${run.supplies.join(", ") || "none"} (carry ${rogue(c).config.bag} at most). Formation: ${c.formations.get(run.formation)!.name}. Formations owned: ${run.formations.join(", ")}.`,
     `Party: ${run.party.map((cls) => `${cls} (${vit(run, cls)})`).join("; ")}.${bench(run).length ? ` At camp: ${bench(run).map((cls) => `${cls} (${vit(run, cls)})`).join("; ")}.` : ""}`,
     ...(run.pending.kind !== "over" && run.party.some((x) => member(run, x).ko) && bench(run).some((x) => !member(run, x).ko) ? [`Someone standing at camp can take a fallen member's seat now: swap <fallen> <at camp>.`] : []),
   ];
@@ -167,15 +167,21 @@ function look(run: RogueRun): string {
       out.push(`SHOP (you have ${run.gold} gold). Buy, train${step ? ` (as often as you like: each training bought here makes the next ${step}g dearer)` : " (once each a visit)"}, sell from the bag, or leave.`);
       const full = run.supplies.length >= rogue(c).config.bag;
       p.stock.forEach((s, i) => out.push(`  ${s.sold ? "(bought) " : s.offer.kind === "supply" && full ? "(bag full) " : `pick buy:${i} `}for ${s.price}g: ${offerWords(run, s.offer)}`));
-      if (p.learn) for (const o of options(c, run).filter((x) => x.startsWith("learn:"))) out.push(`  pick ${o} for ${trainPrice(c, p, "learn")}g: ${c.abilities.get(o.split(":")[2])!.name}: ${c.abilities.get(o.split(":")[2])!.text}`);
-      if (p.upgrade) for (const o of options(c, run).filter((x) => x.startsWith("upgrade:"))) out.push(`  pick ${o} for ${trainPrice(c, p, "upgrade")}g: ${upText(o.split(":")[2], run, o.split(":")[1])}`);
+      // Training too dear right now stays listed, marked (unaffordable gear stays listed too).
+      const lp = trainPrice(c, p, "learn"), up = trainPrice(c, p, "upgrade");
+      if (p.learn) for (const o of learnOptions(c, run)) out.push(`  ${run.gold >= lp ? `pick learn:${o}` : "(not enough gold) learn:" + o} for ${lp}g: ${c.abilities.get(o.split(":")[1])!.name}: ${c.abilities.get(o.split(":")[1])!.text}`);
+      if (p.upgrade) for (const o of upgradeOptions(run)) out.push(`  ${run.gold >= up ? `pick upgrade:${o}` : "(not enough gold) upgrade:" + o} for ${up}g: ${upText(o.split(":")[1], run, o.split(":")[0])}`);
       for (const it of run.items.filter((x) => !wearer(run, x.uid))) out.push(`  pick sell:${it.uid} for ${sellPrice(c, it)}g: ${itemWords(it)}`);
       out.push("  pick leave");
       break;
     }
     case "campfire": {
       const k = rogue(c).config.campfire;
-      out.push(`CAMPFIRE: one pick. Whatever you pick, those waiting at camp who are standing get both REST and FOCUS (a fallen one needs a RAISE or a phoenix). Swapping who's in the party is free here (swap <out> <in>).`);
+      if (p.used) {
+        out.push(`CAMPFIRE: the pick is made. Swap who's in the party now if you like (swap <out> <in>), then: pick leave`);
+        break;
+      }
+      out.push(`CAMPFIRE: one pick, then swaps until you leave. Whatever you pick, those standing at camp get ${k.camp ?? 100}% of a REST and of a FOCUS (a fallen one needs a RAISE or a phoenix). Swapping who's in the party is free here, before or after the pick (swap <out> <in>).`);
       out.push(`  Before the boss: ${bossWords(run)}`);
       out.push(`  pick rest: the party regains ${k.hp}% of its HP.`, `  pick focus: the party regains ${k.mp}% of its MP.`);
       for (const o of options(c, run)) {

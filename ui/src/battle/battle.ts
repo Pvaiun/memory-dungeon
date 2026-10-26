@@ -28,7 +28,7 @@ import { clear as clearNode, isCurrent, nodes, onJourney } from "../journey.js";
 import { celebrate } from "../celebrate.js";
 import { advanceOnce } from "../../../src/engine/run.js";
 import { combat } from "../../../src/engine/combat/rules.js";
-import { endFight as endRogueFight, FIGHT_DUNGEON, partyOf, startFight as startRogueFight } from "../../../src/rogue.js";
+import { endFight as endRogueFight, FIGHT_DUNGEON, partyOf, reservesStand, startFight as startRogueFight } from "../../../src/rogue.js";
 import { current as rogueRun, saveRogue } from "../rogue-state.js";
 
 /** `node`: the journey node it was started from. Winning that node's whole run, while it's the one to clear, clears it; its single fights are practice. */
@@ -712,7 +712,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     const newSeed = () => restart(Math.floor(Math.random() * 100000) + 1);
     // A node just cleared leads to the journey; a replay or practice says it paid nothing.
     const btns: Child[] = rogue
-      ? [button(won ? "ONWARD" : "THE END", () => rogueOn(), "hi")]
+      ? [button(won ? "ONWARD" : reservesStand(c, rogue) ? "THE CAMP STEPS IN" : "THE END", () => rogueOn(), "hi")]
       : clearedNow
       ? [button("JOURNEY", () => { stop(); go("journey"); if (!celebrated) cheer(); }, "hi")]
       : won

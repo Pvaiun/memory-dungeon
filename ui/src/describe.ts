@@ -193,7 +193,7 @@ export function sizeWords(a: AbilityT, stats: Stats, dmgMult = 1): string {
     else if (e.op === "mp") out.push(`MP ≈ ${disp(evalNum(e.amount, stats).value)}`);
     else if (e.op === "apply") {
       const d = status(e.status);
-      if (e.status === "shield") out.push(`shield ≈ ${disp(evalNum(e.stacks ?? 0, stats).value)}`);
+      if (e.status === "shield") out.push(`shield ≈ ${disp(evalNum(e.stacks ?? 0, stats).value)} (at most half its target's max HP)`);
       else if (d.stacking === "intensity") out.push(`${stacksOf(e.stacks)} ${d.name}`);
     }
   }

@@ -66,7 +66,14 @@ export const ROGUE_CONFIG: RogueConfigT = {
   /** A chest: one piece, rare or better, and some gold. */
   treasure: { rarity: { common: 0, uncommon: 0, rare: 70, legendary: 30 }, gold: [15, 35] },
   /** The campfire: one pick of REST, FOCUS, RAISE or TRAIN; those at camp rest too. Swapping the party is free. */
-  campfire: { hp: 40, mp: 60, revive: 40 },
+  // Those at camp get half a REST and half a FOCUS whatever the pick (three playtesters called the whole of both a free
+  // heal battery); a wipe with someone standing at camp passes the road to them (four lost a run with healthy reserves).
+  campfire: { hp: 40, mp: 60, revive: 40, camp: 50 },
+  reserves: true,
+  // Snakes' packs never grow, and act I's regular fights hold two (round 29: the Viper Den and the Snake Pit ended 9% and
+  // 7% of the act I runs meeting them, every other act I fight 2% or less, with their knobs already at the floor: the
+  // regular fights' extra HP gives a snake more hits, and Bleed doesn't shrink with the knob).
+  neverGrow: ["snake"],
   /** Prices, in gold. A piece sells for `sell` % of its price. Services are once a visit. */
   prices: { common: 45, uncommon: 70, rare: 110, legendary: 190, recruit: 120, formation: 100, learn: 60, upgrade: 80, trainStep: 30, supply: { tonic: 35, ether: 35, phoenix: 60 }, sell: 35 },
   shop: { gear: { common: 2, uncommon: 2, rare: 1, legendary: 1 }, recruits: 1, formations: 1, supplies: 2 },
@@ -121,8 +128,8 @@ const REGIONS: RogueRegion[] = [
     text: "Bandits, wolves and snakes on the road out of town, and ogres at the bridges.",
     easy: [f("toll_gate", "Toll Gate", [3, "bandit"]), f("wolves", "Wolves", [4, "wolf"]), f("snake_grass", "Snake Grass", [3, "snake"]), f("road_thugs", "Road Thugs", [2, "bandit"], [2, "wolf"])],
     normal: [
-      f("wolf_pack", "Wolf Pack", [6, "wolf"]), f("snake_pit", "Snake Pit", [3, "snake"], [2, "bandit"]), f("bandit_camp", "Bandit Camp", [1, "shieldman"], [2, "archer"], [1, "bandit"]),
-      f("night_wolves", "Night Wolves", [7, "wolf"]), f("archers_nest", "Archers' Nest", [1, "shieldman"], [3, "archer"]), f("viper_den", "Viper Den", [4, "snake"], [2, "bandit"]),
+      f("wolf_pack", "Wolf Pack", [6, "wolf"]), f("snake_pit", "Snake Pit", [2, "snake"], [2, "bandit"]), f("bandit_camp", "Bandit Camp", [1, "shieldman"], [2, "archer"], [1, "bandit"]),
+      f("night_wolves", "Night Wolves", [7, "wolf"]), f("archers_nest", "Archers' Nest", [1, "shieldman"], [3, "archer"]), f("viper_den", "Viper Den", [2, "snake"], [3, "bandit"]),
       f("bandit_horde", "Bandit Horde", [5, "bandit"]),
     ],
     elite: [f("ogre_bridge", "Ogre Bridge", [1, "ogre"], [2, "bandit"]), f("twin_ogres", "Twin Ogres", [2, "ogre"]), f("war_camp", "War Camp", [1, "shieldman"], [2, "archer"], [1, "ogre"])],

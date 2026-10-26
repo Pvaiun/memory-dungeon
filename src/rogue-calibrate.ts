@@ -116,8 +116,9 @@ async function main() {
   for (const reg of rogue(c).regions) {
     if (only && !only.split(",").includes(reg.id)) continue;
     const tiers = (opt("--tiers") ?? "easy,normal,elite,boss").split(",") as Tier[];
+    const fights = opt("--fights")?.split(",");
     for (const tier of tiers)
-      for (const fight of reg[tier === "boss" ? "bosses" : tier]) tasks.push({ region: reg.id, act: reg.act, tier, fight });
+      for (const fight of reg[tier === "boss" ? "bosses" : tier]) if (!fights || fights.includes(fight.id)) tasks.push({ region: reg.id, act: reg.act, tier, fight });
   }
   const n = Number(opt("--workers") ?? availableParallelism());
   const results: Result[] = [];

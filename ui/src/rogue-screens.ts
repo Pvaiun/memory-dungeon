@@ -417,11 +417,14 @@ function campView(run: RogueRun): Child[] {
   const opts = options(c, run);
   const tabs = h("div", { class: "btns" }, ...(["rest", "train", "party"] as const).map((t) => button(t === "rest" ? "REST" : t === "train" ? "TRAIN" : "SWAP", () => { campTab = t; swapPick = null; redraw(); }, campTab === t ? "on sm" : "sm")));
   const body: Child[] = [];
-  if (campTab === "rest") {
+  const used = run.pending.kind === "campfire" && !!run.pending.used;
+  if (used && campTab !== "party") {
+    body.push(h("div", { class: "text hi wrap" }, "THE CAMPFIRE'S PICK IS MADE."), h("div", { class: "text dim small wrap" }, "Change who's in the party under SWAP if you like, then LEAVE."));
+  } else if (campTab === "rest") {
     body.push(row2("REST", `The party regains ${k.hp}% of its HP.`, () => pickOrSave(run, "rest")));
     body.push(row2("FOCUS", `The party regains ${k.mp}% of its MP.`, () => pickOrSave(run, "focus")));
     for (const o of opts.filter((x) => x.startsWith("raise:"))) body.push(row2(`RAISE ${shortName(o.slice(6))}`, `Stands up with ${k.revive}% of its HP.`, () => pickOrSave(run, o)));
-    body.push(h("div", { class: "text dim small wrap" }, "One pick, then the road. Whatever you pick, those standing at camp get both REST and FOCUS (a fallen one needs a RAISE)."));
+    body.push(h("div", { class: "text dim small wrap" }, `One pick; swaps stay open until you leave. Whatever you pick, those standing at camp get half a REST and half a FOCUS (a fallen one needs a RAISE).`));
   } else if (campTab === "train") {
     body.push(h("div", { class: "text dim small wrap" }, "Train instead of resting: one member learns an ability, or makes one better (+)."));
     for (const o of learnOptions(c, run)) { const [cl, ab] = o.split(":"); body.push(trainRow(run, cl, ab, "LEARN", () => pickOrSave(run, `learn:${o}`))); }
@@ -455,6 +458,7 @@ function campView(run: RogueRun): Child[] {
     partyStrip(run),
     tabs,
     win("scroll", ...body),
+    used ? h("div", { class: "btns even" }, button("LEAVE", () => { campTab = "rest"; swapPick = null; pickOrSave(run, "leave"); }, "hi")) : null,
   ];
 }
 function row2(label: string, text: string, onClick: () => void): HTMLElement {
