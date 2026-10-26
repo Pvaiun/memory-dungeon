@@ -130,8 +130,9 @@ test("campfire: the run pauses for a choice between two fights; REST gives back 
     combat.apply({ c, run, log: undefined } as never, run.pending!, pick);
     m.forEach((x, i) => {
       if (before[i][0] <= 0) return assert.equal(x.hp, 0, "a knocked-out member stays down");
-      if (pick === "rest") assert.equal(x.hp, Math.min(x.stats.max_hp, before[i][0] + Math.floor(x.stats.max_hp * 0.4)));
-      else assert.equal(x.mp, Math.min(x.stats.max_mp, before[i][1] + Math.floor(x.stats.max_mp * 0.4)));
+      const st = d0(c);
+      if (pick === "rest") assert.equal(x.hp, Math.min(x.stats.max_hp, before[i][0] + Math.floor((x.stats.max_hp * st.hp) / 100)));
+      else assert.equal(x.mp, Math.min(x.stats.max_mp, before[i][1] + Math.floor((x.stats.max_mp * st.mp) / 100)));
     });
   }
   assert.equal(reached, 2, "the party reaches the campfire on some seed");
@@ -148,7 +149,7 @@ test("campfire: the run pauses for a choice between two fights; REST gives back 
   assert.deepEqual(offer.options, ["rest", "focus", `revive:${m[1].id}`]);
   const before = m.map((x) => [x.hp, x.mp]);
   combat.apply({ c, run, log: undefined } as never, offer, `revive:${m[1].id}`);
-  assert.equal(m[1].hp, Math.floor(m[1].stats.max_hp * 0.5));
+  assert.equal(m[1].hp, Math.floor((m[1].stats.max_hp * (d0(c).revive ?? 0)) / 100));
   assert.deepEqual([m[0].hp, m[2].hp, m[1].mp], [before[0][0], before[2][0], before[1][1]]);
 });
-const d0 = (c: ReturnType<typeof loadContent>) => c.dungeons.get("cmp_old_road")!.stages.find((s) => s.kind === "campfire")!;
+const d0 = (c: ReturnType<typeof loadContent>) => c.dungeons.get("cmp_old_road")!.stages.find((s) => s.kind === "campfire") as { kind: "campfire"; id: string; hp: number; mp: number; revive?: number };
