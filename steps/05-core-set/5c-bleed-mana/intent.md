@@ -41,3 +41,9 @@ From the director's message in the session of Oct 26, 2026, after reading the 5b
 - [firm] "Burn and Shock are really weak right now. And Bleed probably is too, but let's test it first." "Buff the amount of Burn stacks and Shock stacks given from the Stormcaller and the Pyromancer."
 - [firm] **The Bard:** "Replace the Bard's Lullaby, which is a pretty much useless skill on the worst character, with a Shock skill that shocks the entire enemy team, scaling off of Magic."
 - [firm] **The Paladin:** "Give the Paladin Burn on their Smite, and lower its cooldown."
+
+## After the report (Oct 26, 2026)
+
+- [firm] **The Paladin:** "Fix the paladin. Mana cost."
+- [firm] **The Knight:** "Find a way and propose to me how we're [nerfing] the knight, so he's not OP." *(The message says "no freeing"; I took it as nerfing. A proposal, not a change.)*
+- [firm] **No stat-to-cost rule:** "Across the board for mana, I am in extreme disagreement with your rule. We don't want rules that are magical like that, where something that makes absolutely no logical sense but reflects well over a data set becomes a rule." "Just make the mana costs higher for characters that have high magic. Not as a rule, not as a scaling, like just today, right now. Change those costs for those characters at this moment. But the idea that there's this per class, per stat rule, it's very much against my philosophy."

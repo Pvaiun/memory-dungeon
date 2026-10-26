@@ -69,7 +69,7 @@ const named: GearT[] = [
   weapon("rime_staff", "Rime staff", "Deep freeze.", "ice_staff", { carries: [st("magic", 2)] }),
   weapon("hoarfrost_staff", "Hoarfrost staff", "A wellspring of mana.", "ice_staff", { carries: [st("mp_regen", 2)] }),
   weapon("sunstaff", "Sunstaff", "Crits, and more Magic.", "light_staff", { carries: [critStep(1), st("magic", 1)] }),
-  weapon("dawn_staff", "Dawn staff", "A heavy staff and nothing else: its damage is healing in a Cleric's hands.", "light_staff", { base: "high" }),
+  weapon("dawn_staff", "Dawn staff", "A heavy staff and nothing else.", "light_staff", { base: "high" }),
   weapon("chapel_staff", "Chapel staff", "For the pilgrim.", "light_staff", { carries: [st("mp_regen", 2)] }),
   weapon("nightstaff", "Nightstaff", "Dark, and more of it.", "dark_staff", { carries: [st("magic", 2)] }),
   weapon("leech_staff", "Leech staff", "Drinks mana.", "dark_staff", { carries: [sp("siphon", "medium"), st("mp_regen", 1)] }),

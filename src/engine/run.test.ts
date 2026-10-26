@@ -158,7 +158,7 @@ test("logging off changes nothing but the log", () => {
 
 test("pinned run: any change here means old records replay differently, so bump ENGINE_VERSION", () => {
   const run = play(c, combat, input(1), firstOption, { log: true });
-  assert.equal(ENGINE_VERSION, "0.11");
+  assert.equal(ENGINE_VERSION, "0.12");
   // The rogue mode's damage kind on each dmg entry changed the log, not the outcome (without it: 056750183aee1680).
   assert.equal(fingerprint(JSON.stringify(run.log!.slice(1))), "af822ab1ad6d015c");
 });

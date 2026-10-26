@@ -107,6 +107,12 @@ export const RULES = {
    */
   stagger: 1.5,
   /**
+   * The director's Aggro rule (Oct 26, 2026): foes pick in proportion to draw, which comes from Aggro through a curve. An
+   * ordinary unit (Aggro 100) draws 100; none draws more than 3 times that or less than a third; +d and −d cancel. Picks
+   * in proportion to Aggro itself let a unit reach a 1% chance of being picked too easily, which broke the balance.
+   */
+  draw: { centre: 100, k: 50, max: 3 },
+  /**
    * Past 300 ticks, everyone deals 25% more damage, and 25% more again every 30 ticks (campaign pass). An AI playtester
    * met a Vampire and two Bone Priests healing each other to the 5,000-tick safety stop, and Ghouls raising each other
    * for 2,600 ticks: minutes of watching nothing. Boss fights end in 100 to 250.
@@ -115,39 +121,12 @@ export const RULES = {
 };
 
 /**
- * MP cost follows the cooldown unless an ability is costly. Pacing pass: priced so a class with 2 MP regen spends more than it
- * regains when all three abilities fire, and runs low over a run; the campfire's FOCUS buys it back.
+ * Foes' MP cost by cooldown word (the party's abilities state their own; see classes.ts). Pacing pass: priced so a foe with 2
+ * MP regen spends more than it regains when its abilities all fire.
  */
 export const COST = { short: 400, medium: 650, long: 1000 } as const;
-export const costly = (cd: keyof typeof COST) => Math.round(COST[cd] * 1.6);
-/**
- * Step 5c: casters are hungry, walls aren't (the director's "the mana is inverted"). A class's abilities cost their word's MP
- * × a factor by its Magic, fixed by its stat line (Magic from gear doesn't change it): Magic 1 (the Knight, Hoplite, Ranger,
- * Monk, Assassin) a quarter, 2 (the Bramble knight, Vampire) half, 3 (the Valkyrie, Bard) the word, 4 (the Cleric, Paladin,
- * Hexer, Frostweaver, Stormcaller, Geomancer) and 5 (the Pyromancer) double. At one price for everyone the walls ran dry
- * and the casters ended runs nearly full; at 1.5 and 2 for Magic 4 and 5 the casters starved a few percent of the time and the
- * campfire's FOCUS was the only winning pick in 2% of visits; at 2 and 3, 15% to 36%, and FOCUS earns its place in parties
- * with casters. Triple left the Pyromancer, already the weakest class, dry from its third fight (and at 2.5 times its builds
- * won only 4 points less than at double: its trouble is surviving). A price proportional to Magic, with class regen halved,
- * starved the Bramble knight and Vampire too.
- */
-export const MP_BY_MAGIC = [0.25, 0.25, 0.5, 1, 2, 2];
-/**
- * And no ability costs more than this share of its class's MP pool, so every class can pay for two of its spells from full.
- * Doubled, the Paladin's Sanctuary and Absolve cost 2,000 of its 3,000, the Hexer's Hush 2,000 of 4,000 and the Cleric's Raise
- * 3,200 of 5,000: an AI playtester's Paladin could afford one spell a fight, and its Cleric never cast Raise.
- */
-export const MP_CAP = 0.4;
-export const mpCost = (mp: number, magic: number, pool = Infinity) =>
-  Math.round(Math.min(mp * MP_BY_MAGIC[Math.min(5, Math.max(0, Math.round(magic)))], pool * MP_CAP) / 10) * 10;
 /** MP regen: every `every` ticks, restore `share` × the MP regen stat (regen 3 gives 150). */
 export const MP_REGEN = { every: 4, share: 0.05 };
-/**
- * Step 5c: a class regenerates this share of the MP regen its stat line gives; gear's MP regen counts in full. So a caster's
- * MP regen comes as much from its gear as from itself, and MP regen gear is a caster's real choice ("the mages should be
- * going for magic regen gear").
- */
-export const CLASS_REGEN = 1;
 
 // ─── Damage ──────────────────────────────────────────────────────────────────
 
@@ -281,8 +260,11 @@ export const STEP = P;
  * and fed its Regen and Shield cap too, so HP everywhere was every class's best kit.
  */
 export const HP_STEP = P / 2;
+/** Aggro is centred on 100 (the director's rule): a class's or enemy's word n is 70 + 10n, and a gear or formation step is 10. */
+export const aggroOf = (n: number) => 70 + 10 * n;
+export const AGGRO_STEP = 10;
 /** The step for a stat, in the data's units. */
-export const stepFor = (stat: string) => (stat === "max_hp" ? HP_STEP : STEP);
+export const stepFor = (stat: string) => (stat === "max_hp" ? HP_STEP : stat === "aggro" ? AGGRO_STEP : STEP);
 
 // ─── Statuses: sizes and durations ───────────────────────────────────────────
 

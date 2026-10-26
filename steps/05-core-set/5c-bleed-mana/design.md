@@ -41,9 +41,17 @@ A party unit's abilities start a fight **20, 12 and 6 ticks charged**, by the or
 
 Casters hungry, walls not. Under 5b's prices the Knight, Hoplite, Bramble knight and Vampire spent a quarter of their fight time with an ability ready and no MP for it, and every caster none.
 
-- **A class's abilities cost their word's MP × a factor by its Magic**, fixed by its stat line (Magic from gear doesn't change it): Magic 1 (Knight, Hoplite, Ranger, Monk, Assassin) a quarter, 2 (Bramble knight, Vampire) half, 3 (Valkyrie, Bard) the word, 4 and 5 (Cleric, Paladin, Hexer, Frostweaver, Stormcaller, Geomancer, Pyromancer) double. **No ability costs more than 40% of its class's MP pool**, so every class can pay for two spells from full. A proportional rule (Magic ÷ 2.5) with class regen halved starved the Bramble knight and the Vampire as much as the Cleric; at 1.5 for Magic 4 the casters barely starved and FOCUS was almost never the right pick; uncapped, the Paladin could afford one spell a fight and the Cleric's Raise (3,200 of 5,000) never fired.
-- **MP regen unchanged** (the director's alternative, regen near zero with gear the only source, is priced in the report: 21% wins against 79%).
-- The simulations' kits weigh MP regen for casters as much as Magic, and not at all for the Magic-1 classes, so the search tries MP gear where it matters.
+**Each ability's MP cost is set by hand** (the director's: no rule from a stat to a cost). The casters' spells cost more than the walls' and fighters' skills:
+
+| Classes | Their abilities' MP costs |
+| --- | --- |
+| Knight, Hoplite, Ranger, Monk, Assassin | 100 to 250 |
+| Bramble knight, Vampire | 200 to 330 |
+| Valkyrie, Bard | 400 to 1,200 |
+| Paladin | 500 to 800 |
+| Cleric, Hexer, Frostweaver, Stormcaller, Geomancer, Pyromancer | 800 to 2,000 |
+
+MP regen is unchanged. The numbers came from the tuning rounds (a stat-based rule was tried and dropped at the director's word; the costs it produced were kept as plain numbers, the Paladin's lowered: its three spells cost 1,200 each on a 3,000 pool, so it could afford one a fight). The director's alternative, regen near zero with gear the only source, is priced in the report: 21% wins against 79%. The simulations' kits weigh MP regen for casters as much as Magic, and not at all for the classes whose costs are small, so the search tries MP gear where it matters.
 
 ## The campfire
 

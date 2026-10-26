@@ -56,7 +56,7 @@ const STAT_WORDS: [string, string][] = [
   ["mp_regen", "MP regained over a fight."],
   ["attack, magic", "What physical and magical hits and heals scale from (ability sizes in party are worked out from them)."],
   ["armor", "Shrinks physical hits: small hits a lot, big hits little."],
-  ["aggro", "How likely foes are to aim at this member: a foe's move without a target rule picks one of the party weighted by aggro, when it starts. Taunt draws every such move to the taunter."],
+  ["aggro", "How likely foes are to aim at this member, centred on 100: a foe's move without a target rule picks one of the party by draw, which comes from aggro through a curve (an ordinary member draws 100, nobody more than 300 or less than 33), when it starts. Taunt draws every such move to the taunter."],
   ["crit_chance, crit_damage", "How often a hit crits, and how much more a crit deals."],
   ["evasion, accuracy", "Evasion: a share of physical hits missed. Accuracy cancels a foe's evasion."],
   ["thorns", "Damage dealt back to whoever hits this member."],
@@ -71,7 +71,8 @@ const pts = (n: number) => Math.round(n / 100) / 10;
 const statWord = (stat: string, v: number) => {
   const pct = /crit|evasion|accuracy|double|lifesteal|siphon|resist/.test(stat);
   // HP and MP in the numbers the party shows (an AI playtester read "max_hp +0.5" as half a point); the rest on the documents' 1-5 scale.
-  const real = stat === "max_hp" || stat === "max_mp";
+  // Aggro is on its own scale, centred on 100: shown as it is.
+  const real = stat === "max_hp" || stat === "max_mp" || stat === "aggro";
   return `${stat.replace("crit_multiplier", "crit_damage")} ${v > 0 ? "+" : ""}${pct ? `${v}%` : real ? v : pts(v)}`;
 };
 /** An ability's size for a unit's stats: each hit, a heal, a shield, the stacks it adds. */
@@ -293,7 +294,7 @@ function partyWords(run: RogueRun): string {
     const k = c.classes.get(m.cls)!;
     const seatNo = run.party.indexOf(m.cls);
     const s = fighterOf(run, m.cls).stats;
-    out.push(`${m.cls} (${k.name})${seatNo >= 0 ? `, slot ${seatNo + 1} ${f.positions[seatNo].name}` : ", at camp"}: ${vit(run, m.cls)}. Attack ${pts(s.attack)}, Magic ${pts(s.magic)}, Armor ${pts(s.armor)}, Crit ${s.crit_chance}%, Aggro ${pts(s.aggro)}, MP regen ${pts(s.mp_regen)}.`);
+    out.push(`${m.cls} (${k.name})${seatNo >= 0 ? `, slot ${seatNo + 1} ${f.positions[seatNo].name}` : ", at camp"}: ${vit(run, m.cls)}. Attack ${pts(s.attack)}, Magic ${pts(s.magic)}, Armor ${pts(s.armor)}, Crit ${s.crit_chance}%, Aggro ${Math.round(s.aggro)}, MP regen ${pts(s.mp_regen)}.`);
     for (const slot of ["weapon", "armor", "amulet"] as Slot[]) out.push(`  ${slot}: ${m.gear[slot] ? itemWords(itemOf(run, m.gear[slot]!)!) : "nothing"}`);
     const head = c.pack.ruleset.opening?.slots ?? [];
     const left = m.known.filter((a) => !m.order.includes(a));
@@ -312,7 +313,7 @@ function classWords(id: string): string {
   const st = k.stats;
   return [
     `${k.name}: ${k.text}`,
-    `Stats: HP ${st.max_hp}, MP ${st.max_mp ?? 0}, Attack ${pts(st.attack ?? 0)}, Magic ${pts(st.magic ?? 0)}, Armor ${pts(st.armor ?? 0)}, Crit ${st.crit_chance ?? 0}%, Aggro ${pts(st.aggro ?? 0)}.`,
+    `Stats: HP ${st.max_hp}, MP ${st.max_mp ?? 0}, Attack ${pts(st.attack ?? 0)}, Magic ${pts(st.magic ?? 0)}, Armor ${pts(st.armor ?? 0)}, Crit ${st.crit_chance ?? 0}%, Aggro ${Math.round(st.aggro ?? 0)}.`,
     `Weapons: ${k.weapons.join(", ")}. Heaviest armor: ${k.armor}. Passive: ${k.passive?.name ?? "Einherjar"}: ${(k.passive?.text ?? "allies it revives come back with every action ready").replace(/\.$/, "")}.`,
     ...k.abilities.map((a) => { const ab = c.abilities.get(a)!; return `  ${a}${a === rogue(c).config.firstAbility[id] ? " (known on joining)" : ""}: ${ab.name}, MP ${ab.mp ?? 0}, every ${Math.round(ab.cooldown)} ticks: ${ab.text}`; }),
   ].join("\n");

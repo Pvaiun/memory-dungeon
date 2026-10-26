@@ -91,7 +91,7 @@ export const ENGINE_STATS = {
   attack: ["amount", "Scales only what states it. By convention, physical things do."],
   magic: ["amount", "Scales only what states it. By convention, magical things do."],
   armor: ["amount", "Reduces each physical hit: to hit² ÷ (hit + ruleset.armorK × Armor) when armorK is set; else a flat ruleset.armorRatio × Armor, down to 0 (BLOCKED)."],
-  aggro: ["amount", "Default targeting picks foes weighted by Aggro. Its floor must be above 0."],
+  aggro: ["amount", "Default targeting picks foes weighted by draw: Aggro through ruleset.draw's curve, or Aggro itself without one. Its floor must be above 0."],
   resist: ["points", "General Resistance, in percent, added to every element's own resist:<element>. Negative shows WEAK, positive RESIST, 100 IMMUNE, above 100 ABSORB."],
   attack_speed: ["points", "Basic attack cooldown ÷ (1 + stat/100), down to its recovery. Haste, Slow and Chill act through it."],
   cooldown_reduction: ["points", "Ability cooldowns ÷ (1 + stat/100)."],
@@ -207,7 +207,7 @@ export const SIDES = {
 export const Side = z.enum(keys(SIDES));
 
 export const PICKS = {
-  aggro: "`count` units at random, weighted by Aggro. The default for foes.",
+  aggro: "`count` units at random, weighted by draw (Aggro through ruleset.draw). The default for foes.",
   random: "`count` units at random. The default otherwise.",
   lowest: "`count` units with the lowest `by`; ties at random.",
   highest: "`count` units with the highest `by`; ties at random.",
@@ -541,6 +541,10 @@ export const Ruleset = z.strictObject({
     })
     .optional()
     .describe("At fight start each action is already partly charged: it's first ready after a share of its cooldown, rolled between min and max on the unit's dice for each action (but see slots). Absent: every action starts a fight on its full cooldown."),
+  draw: z
+    .strictObject({ centre: z.number().positive(), k: z.number().positive(), max: z.number().min(1) })
+    .optional()
+    .describe("Foes pick in proportion to draw, not Aggro. With d how far a unit's Aggro is from `centre`: above it, draw = centre × (k + max × d) ÷ (k + d); below it, centre × (k + d) ÷ (k + max × d). An ordinary unit draws `centre`; none draws more than `max` times that or less than 1 ÷ max; +d and −d cancel. `k` sets how much the first steps count. Absent: picks weighted by Aggro itself."),
   stagger: Ticks.optional().describe("Copies of the same enemy start a fight this many ticks apart, one after another, so identical foes don't act in lockstep. Absent or 0: they start together."),
   lostCast: z
     .enum(["retry", "cooldown"])

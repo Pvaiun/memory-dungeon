@@ -37,7 +37,7 @@ if (!node) throw new Error(`no node ${nodeArg}: there are ${cp.nodes.length}`);
 const d = c.dungeons.get(node.dungeon)!;
 const KIND: Record<string, string> = { dungeon: "RUN", remix: "REMIX", trial: "TRIAL" };
 const codes = (stats: { stat: string; flat?: number }[] = []) =>
-  stats.map((s) => `${s.stat} ${(s.flat ?? 0) > 0 ? "+" : ""}${s.stat.match(/crit|evasion|accuracy|double|lifesteal|siphon|resist/) ? s.flat : Math.round((s.flat ?? 0) / 100) / 10}`).join(", ");
+  stats.map((s) => `${s.stat} ${(s.flat ?? 0) > 0 ? "+" : ""}${s.stat.match(/crit|evasion|accuracy|double|lifesteal|siphon|resist|aggro/) ? s.flat : Math.round((s.flat ?? 0) / 100) / 10}`).join(", ");
 
 if (cmd === "show") {
   const out = [`Node ${i + 1} of ${cp.nodes.length}: ${node.name} (${KIND[node.kind]})`, node.text];

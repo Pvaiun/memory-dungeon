@@ -65,6 +65,11 @@
    ]
   },
   "stagger": 1.5,
+  "draw": {
+   "centre": 100,
+   "k": 50,
+   "max": 3
+  },
   "enrage": {
    "after": 300,
    "every": 30,
@@ -130,9 +135,9 @@
    "id": "aggro",
    "name": "Aggro",
    "kind": "amount",
-   "default": 1000,
-   "floor": 100,
-   "note": "Floors above zero: no unit becomes unpickable by numbers alone."
+   "default": 100,
+   "floor": 1,
+   "note": "Centred on 100 (a word n is 70 + 10n, a gear or formation step 10), never below 1. Foes pick by draw, which comes from Aggro through ruleset.draw: an ordinary unit draws 100, none more than 300 or less than 33."
   },
   {
    "id": "resist",
@@ -2963,14 +2968,14 @@
    "text": "Protector. Stands in front in heavy plate, Guards and Shields whoever is lowest, bashes a foe now and then, and when an ally falls, calls every foe onto itself.",
    "source": "starter",
    "stats": {
-    "max_hp": 5000,
+    "max_hp": 4000,
     "max_mp": 2000,
     "mp_regen": 2000,
     "attack": 3000,
     "magic": 1000,
     "armor": 5000,
     "crit_chance": 8,
-    "aggro": 5000
+    "aggro": 120
    },
    "weapons": [
     "sword",
@@ -3003,7 +3008,7 @@
     "magic": 4000,
     "armor": 2000,
     "crit_chance": 8,
-    "aggro": 2000
+    "aggro": 90
    },
    "weapons": [
     "light_staff"
@@ -3035,7 +3040,7 @@
     "magic": 1000,
     "armor": 2000,
     "crit_chance": 12,
-    "aggro": 2000,
+    "aggro": 90,
     "accuracy": 20
    },
    "weapons": [
@@ -3069,7 +3074,7 @@
     "magic": 2000,
     "armor": 3000,
     "crit_chance": 8,
-    "aggro": 4000,
+    "aggro": 110,
     "thorns": 300,
     "resist:fire": -50
    },
@@ -3104,7 +3109,7 @@
     "magic": 1000,
     "armor": 5000,
     "crit_chance": 8,
-    "aggro": 3000
+    "aggro": 100
    },
    "weapons": [
     "spear",
@@ -3137,7 +3142,7 @@
     "magic": 4000,
     "armor": 4000,
     "crit_chance": 8,
-    "aggro": 3000,
+    "aggro": 100,
     "resist:light": 50
    },
    "weapons": [
@@ -3171,7 +3176,7 @@
     "magic": 3000,
     "armor": 3000,
     "crit_chance": 12,
-    "aggro": 3000
+    "aggro": 100
    },
    "weapons": [
     "spear",
@@ -3202,7 +3207,7 @@
     "magic": 3000,
     "armor": 2000,
     "crit_chance": 8,
-    "aggro": 2000
+    "aggro": 90
    },
    "weapons": [
     "dagger",
@@ -3235,7 +3240,7 @@
     "magic": 4000,
     "armor": 1000,
     "crit_chance": 8,
-    "aggro": 2000,
+    "aggro": 90,
     "siphon": 10
    },
    "weapons": [
@@ -3269,7 +3274,7 @@
     "magic": 1000,
     "armor": 2000,
     "crit_chance": 12,
-    "aggro": 3000,
+    "aggro": 100,
     "evasion": 35,
     "double_strike": 25
    },
@@ -3304,7 +3309,7 @@
     "magic": 1000,
     "armor": 2000,
     "crit_chance": 20,
-    "aggro": 1000,
+    "aggro": 80,
     "crit_multiplier": 100,
     "evasion": 20
    },
@@ -3339,7 +3344,7 @@
     "magic": 2000,
     "armor": 2000,
     "crit_chance": 8,
-    "aggro": 3000,
+    "aggro": 100,
     "lifesteal": 30,
     "resist:light": -50,
     "resist:dark": 50
@@ -3376,7 +3381,7 @@
     "magic": 5000,
     "armor": 1000,
     "crit_chance": 8,
-    "aggro": 3000
+    "aggro": 100
    },
    "weapons": [
     "fire_staff",
@@ -3409,7 +3414,7 @@
     "magic": 4000,
     "armor": 2000,
     "crit_chance": 8,
-    "aggro": 2000,
+    "aggro": 90,
     "resist:ice": 50
    },
    "weapons": [
@@ -3443,7 +3448,7 @@
     "magic": 4000,
     "armor": 1000,
     "crit_chance": 8,
-    "aggro": 3000
+    "aggro": 100
    },
    "weapons": [
     "lightning_staff",
@@ -3476,7 +3481,7 @@
     "magic": 4000,
     "armor": 4000,
     "crit_chance": 16,
-    "aggro": 3000,
+    "aggro": 100,
     "crit_multiplier": 100
    },
    "weapons": [
@@ -3525,7 +3530,7 @@
    "class": "knight",
    "name": "Protect",
    "text": "Shields the lowest ally; the amount scales from the Knight's max HP.",
-   "cooldown": 30.6,
+   "cooldown": 40.2,
    "cast": 1.5,
    "mp": 160,
    "if": {
@@ -3976,7 +3981,7 @@
    "text": "Ward on every ally.",
    "cooldown": 38.1,
    "cast": 4,
-   "mp": 1200,
+   "mp": 700,
    "target": {
     "side": "allies",
     "pick": "all"
@@ -3995,7 +4000,7 @@
    "text": "Cleanses itself and one random other ally with a debuff.",
    "cooldown": 43,
    "cast": 0.5,
-   "mp": 1200,
+   "mp": 500,
    "if": {
     "side": "allies",
     "where": {
@@ -4027,7 +4032,7 @@
    "text": "Heavy Light damage to the foe with the highest Attack or Magic, adding several Burn.",
    "cooldown": 31,
    "cast": 8,
-   "mp": 1200,
+   "mp": 800,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -6011,7 +6016,7 @@
     },
     {
      "stat": "aggro",
-     "flat": 1000
+     "flat": 10
     }
    ]
   },
@@ -6235,7 +6240,7 @@
    "stats": [
     {
      "stat": "aggro",
-     "flat": 1000
+     "flat": 10
     },
     {
      "stat": "armor",
@@ -6433,7 +6438,7 @@
     },
     {
      "stat": "aggro",
-     "flat": -1000
+     "flat": -10
     }
    ]
   },
@@ -6638,7 +6643,7 @@
   {
    "id": "dawn_staff",
    "name": "Dawn staff",
-   "text": "A heavy staff and nothing else: its damage is healing in a Cleric's hands.",
+   "text": "A heavy staff and nothing else.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -6941,7 +6946,7 @@
     },
     {
      "stat": "aggro",
-     "flat": 1000
+     "flat": 10
     }
    ]
   },
@@ -7104,7 +7109,7 @@
     },
     {
      "stat": "aggro",
-     "flat": -1000
+     "flat": -10
     }
    ]
   },
@@ -7123,7 +7128,7 @@
     },
     {
      "stat": "aggro",
-     "flat": -1000
+     "flat": -10
     }
    ]
   },
@@ -7142,7 +7147,7 @@
     },
     {
      "stat": "aggro",
-     "flat": 2000
+     "flat": 20
     },
     {
      "stat": "armor",
@@ -7188,7 +7193,7 @@
     },
     {
      "stat": "aggro",
-     "flat": 1000
+     "flat": 10
     }
    ]
   },
@@ -7224,7 +7229,7 @@
     },
     {
      "stat": "aggro",
-     "flat": -1000
+     "flat": -10
     }
    ]
   },
@@ -7278,7 +7283,7 @@
     },
     {
      "stat": "aggro",
-     "flat": 1000
+     "flat": 10
     }
    ]
   },
@@ -7314,7 +7319,7 @@
     },
     {
      "stat": "aggro",
-     "flat": -1000
+     "flat": -10
     }
    ]
   },
@@ -7384,7 +7389,7 @@
    "stats": [
     {
      "stat": "aggro",
-     "flat": 2000
+     "flat": 20
     }
    ]
   },
@@ -7398,7 +7403,7 @@
    "stats": [
     {
      "stat": "aggro",
-     "flat": -2000
+     "flat": -20
     }
    ]
   },
@@ -7595,7 +7600,7 @@
      "stats": [
       {
        "stat": "aggro",
-       "flat": 2000
+       "flat": 20
       },
       {
        "stat": "armor",
@@ -7614,7 +7619,7 @@
      "stats": [
       {
        "stat": "aggro",
-       "flat": -1000
+       "flat": -10
       }
      ]
     },
@@ -7629,7 +7634,7 @@
      "stats": [
       {
        "stat": "aggro",
-       "flat": -1000
+       "flat": -10
       }
      ]
     }
@@ -7725,7 +7730,7 @@
      "stats": [
       {
        "stat": "aggro",
-       "flat": 2000
+       "flat": 20
       }
      ]
     },
@@ -7843,7 +7848,7 @@
       },
       {
        "stat": "aggro",
-       "flat": 2000
+       "flat": 20
       },
       {
        "stat": "armor",
@@ -7862,7 +7867,7 @@
      "stats": [
       {
        "stat": "aggro",
-       "flat": -1000
+       "flat": -10
       }
      ]
     },
@@ -7877,7 +7882,7 @@
      "stats": [
       {
        "stat": "aggro",
-       "flat": -1000
+       "flat": -10
       }
      ]
     }
@@ -8044,7 +8049,7 @@
      "stats": [
       {
        "stat": "aggro",
-       "flat": 2000
+       "flat": 20
       },
       {
        "stat": "max_hp",
@@ -8090,7 +8095,7 @@
      "stats": [
       {
        "stat": "aggro",
-       "flat": 1000
+       "flat": 10
       },
       {
        "stat": "armor",
@@ -8109,7 +8114,7 @@
      "stats": [
       {
        "stat": "aggro",
-       "flat": 1000
+       "flat": 10
       },
       {
        "stat": "armor",
@@ -8128,7 +8133,7 @@
      "stats": [
       {
        "stat": "aggro",
-       "flat": -2000
+       "flat": -20
       },
       {
        "stat": "attack",
@@ -8164,7 +8169,7 @@
     "magic": 0,
     "armor": 0,
     "crit_chance": 8,
-    "aggro": 2000
+    "aggro": 90
    },
    "weapon": {
     "kind": "dagger",
@@ -8184,7 +8189,7 @@
     "magic": 0,
     "armor": 1000,
     "crit_chance": 8,
-    "aggro": 3000
+    "aggro": 100
    },
    "weapon": {
     "kind": "sword",
@@ -8204,7 +8209,7 @@
     "magic": 0,
     "armor": 0,
     "crit_chance": 16,
-    "aggro": 2000
+    "aggro": 90
    },
    "weapon": {
     "kind": "bow",
@@ -8224,7 +8229,7 @@
     "magic": 0,
     "armor": 0,
     "crit_chance": 8,
-    "aggro": 1000
+    "aggro": 80
    },
    "weapon": {
     "kind": "dagger",
@@ -8247,7 +8252,7 @@
     "magic": 0,
     "armor": 5000,
     "crit_chance": 4,
-    "aggro": 4000
+    "aggro": 110
    },
    "weapon": {
     "kind": "sword",
@@ -8271,7 +8276,7 @@
     "magic": 0,
     "armor": 2000,
     "crit_chance": 8,
-    "aggro": 4000
+    "aggro": 110
    },
    "weapon": {
     "kind": "axe",
@@ -8296,7 +8301,7 @@
     "magic": 0,
     "armor": 3000,
     "crit_chance": 8,
-    "aggro": 4000
+    "aggro": 110
    },
    "weapon": {
     "kind": "axe",
@@ -8319,7 +8324,7 @@
     "magic": 0,
     "armor": 8000,
     "crit_chance": 8,
-    "aggro": 3000
+    "aggro": 100
    },
    "weapon": {
     "kind": "sword",
@@ -8340,7 +8345,7 @@
     "magic": 0,
     "armor": 0,
     "crit_chance": 8,
-    "aggro": 2000,
+    "aggro": 90,
     "evasion": 35
    },
    "weapon": {
@@ -8361,7 +8366,7 @@
     "magic": 3000,
     "armor": 0,
     "crit_chance": 8,
-    "aggro": 2000,
+    "aggro": 90,
     "resist": 75
    },
    "weapon": {
@@ -8384,7 +8389,7 @@
     "magic": 7000,
     "armor": 1000,
     "crit_chance": 8,
-    "aggro": 1000
+    "aggro": 80
    },
    "weapon": {
     "type": "magical",
@@ -8409,7 +8414,7 @@
     "magic": 4000,
     "armor": 0,
     "crit_chance": 8,
-    "aggro": 2000
+    "aggro": 90
    },
    "weapon": {
     "type": "magical",
@@ -8434,7 +8439,7 @@
     "magic": 7000,
     "armor": 0,
     "crit_chance": 8,
-    "aggro": 2000
+    "aggro": 90
    },
    "weapon": {
     "type": "magical",
@@ -8459,7 +8464,7 @@
     "magic": 0,
     "armor": 1000,
     "crit_chance": 8,
-    "aggro": 3000
+    "aggro": 100
    },
    "weapon": {
     "kind": "sword",
@@ -8482,7 +8487,7 @@
     "magic": 12000,
     "armor": 4000,
     "crit_chance": 8,
-    "aggro": 4000
+    "aggro": 110
    },
    "weapon": {
     "kind": "sword",
@@ -8505,7 +8510,7 @@
     "magic": 5000,
     "armor": 0,
     "crit_chance": 8,
-    "aggro": 2000
+    "aggro": 90
    },
    "weapon": {
     "type": "magical",
@@ -8530,7 +8535,7 @@
     "magic": 12000,
     "armor": 5000,
     "crit_chance": 8,
-    "aggro": 4000
+    "aggro": 110
    },
    "weapon": {
     "kind": "sword",
@@ -8553,7 +8558,7 @@
     "magic": 0,
     "armor": 0,
     "crit_chance": 8,
-    "aggro": 2000,
+    "aggro": 90,
     "resist:fire": 50,
     "resist:ice": -50
    },
@@ -8578,7 +8583,7 @@
     "magic": 0,
     "armor": 1000,
     "crit_chance": 8,
-    "aggro": 3000,
+    "aggro": 100,
     "resist:fire": 50,
     "resist:ice": -50
    },
@@ -8605,7 +8610,7 @@
     "magic": 0,
     "armor": 1000,
     "crit_chance": 8,
-    "aggro": 3000,
+    "aggro": 100,
     "resist:fire": 50,
     "resist:ice": -50
    },
@@ -8629,7 +8634,7 @@
     "magic": 5000,
     "armor": 3000,
     "crit_chance": 8,
-    "aggro": 2000,
+    "aggro": 90,
     "resist:fire": 50
    },
    "weapon": {
@@ -8655,7 +8660,7 @@
     "magic": 3000,
     "armor": 1000,
     "crit_chance": 8,
-    "aggro": 1000
+    "aggro": 80
    },
    "weapon": {
     "type": "magical",
@@ -8680,7 +8685,7 @@
     "magic": 14000,
     "armor": 5000,
     "crit_chance": 8,
-    "aggro": 4000,
+    "aggro": 110,
     "resist:fire": 150,
     "resist:ice": -50
    },
@@ -8706,7 +8711,7 @@
     "magic": 4000,
     "armor": 1000,
     "crit_chance": 8,
-    "aggro": 2000,
+    "aggro": 90,
     "resist:ice": 150,
     "resist:fire": -50
    },
@@ -8733,7 +8738,7 @@
     "magic": 0,
     "armor": 2000,
     "crit_chance": 8,
-    "aggro": 3000,
+    "aggro": 100,
     "resist:ice": 50
    },
    "weapon": {
@@ -8757,7 +8762,7 @@
     "magic": 8000,
     "armor": 6000,
     "crit_chance": 8,
-    "aggro": 4000,
+    "aggro": 110,
     "resist:ice": 50,
     "immune:dispel": 1
    },
@@ -8785,7 +8790,7 @@
     "magic": 2000,
     "armor": 0,
     "crit_chance": 8,
-    "aggro": 1000
+    "aggro": 80
    },
    "weapon": {
     "kind": "lightning_staff",
@@ -8808,7 +8813,7 @@
     "magic": 0,
     "armor": 1000,
     "crit_chance": 8,
-    "aggro": 2000,
+    "aggro": 90,
     "siphon": 20
    },
    "weapon": {
@@ -8829,7 +8834,7 @@
     "magic": 13000,
     "armor": 3000,
     "crit_chance": 8,
-    "aggro": 4000
+    "aggro": 110
    },
    "weapon": {
     "type": "magical",
@@ -8855,7 +8860,7 @@
     "magic": 2000,
     "armor": 0,
     "crit_chance": 8,
-    "aggro": 3000
+    "aggro": 100
    },
    "weapon": {
     "kind": "lightning_staff",
@@ -8878,7 +8883,7 @@
     "magic": 13000,
     "armor": 4000,
     "crit_chance": 8,
-    "aggro": 4000
+    "aggro": 110
    },
    "weapon": {
     "type": "magical",
@@ -8906,7 +8911,7 @@
     "magic": 2000,
     "armor": 2000,
     "crit_chance": 8,
-    "aggro": 3000
+    "aggro": 100
    },
    "weapon": {
     "kind": "lightning_staff",
@@ -8929,7 +8934,7 @@
     "magic": 0,
     "armor": 0,
     "crit_chance": 8,
-    "aggro": 2000
+    "aggro": 90
    },
    "weapon": {
     "kind": "dagger",
@@ -8950,7 +8955,7 @@
     "magic": 0,
     "armor": 2000,
     "crit_chance": 8,
-    "aggro": 4000
+    "aggro": 110
    },
    "weapon": {
     "kind": "axe",
@@ -8975,7 +8980,7 @@
     "magic": 0,
     "armor": 5000,
     "crit_chance": 4,
-    "aggro": 4000
+    "aggro": 110
    },
    "weapon": {
     "kind": "sword",
@@ -9000,7 +9005,7 @@
     "magic": 3000,
     "armor": 0,
     "crit_chance": 8,
-    "aggro": 2000,
+    "aggro": 90,
     "resist": 75
    },
    "weapon": {
@@ -9529,12 +9534,12 @@
     }
    ],
    "foes": {
-    "hp": -32,
-    "power": -16
+    "hp": -24,
+    "power": -12
    },
    "bossFoes": {
-    "hp": -28,
-    "power": -14
+    "hp": -80,
+    "power": -44
    }
   },
   {
@@ -9547,12 +9552,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 34,
-    "power": 17
+    "hp": 8,
+    "power": 4
    },
    "bossFoes": {
-    "hp": -35,
-    "power": -17
+    "hp": -50,
+    "power": -25
    },
    "stages": [
     {
@@ -9630,12 +9635,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 68,
-    "power": 34
+    "hp": 31,
+    "power": 16
    },
    "bossFoes": {
-    "hp": -55,
-    "power": -27
+    "hp": 18,
+    "power": 9
    },
    "stages": [
     {
@@ -9775,12 +9780,12 @@
     }
    ],
    "foes": {
-    "hp": 112,
-    "power": 56
+    "hp": 88,
+    "power": 44
    },
    "bossFoes": {
-    "hp": 105,
-    "power": 53
+    "hp": -80,
+    "power": -40
    }
   },
   {
@@ -9793,12 +9798,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 106,
-    "power": 53
+    "hp": 78,
+    "power": 39
    },
    "bossFoes": {
-    "hp": -2,
-    "power": -1
+    "hp": -21,
+    "power": -10
    },
    "stages": [
     {
@@ -9865,12 +9870,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 145,
-    "power": 73
+    "hp": 100,
+    "power": 50
    },
    "bossFoes": {
-    "hp": 32,
-    "power": 16
+    "hp": -45,
+    "power": -22
    },
    "stages": [
     {
@@ -9993,12 +9998,12 @@
     }
    ],
    "foes": {
-    "hp": 42,
-    "power": 21
+    "hp": 27,
+    "power": 14
    },
    "bossFoes": {
-    "hp": -67,
-    "power": -33
+    "hp": -80,
+    "power": -44
    }
   },
   {
@@ -10011,12 +10016,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 86,
-    "power": 43
+    "hp": 71,
+    "power": 36
    },
    "bossFoes": {
-    "hp": -44,
-    "power": -22
+    "hp": -50,
+    "power": -25
    },
    "stages": [
     {
@@ -10084,12 +10089,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 18,
-    "power": 9
+    "hp": -6,
+    "power": -3
    },
    "bossFoes": {
-    "hp": -79,
-    "power": -39
+    "hp": -80,
+    "power": -41
    },
    "stages": [
     {
@@ -10215,12 +10220,12 @@
     }
    ],
    "foes": {
-    "hp": 96,
-    "power": 48
+    "hp": 89,
+    "power": 45
    },
    "bossFoes": {
-    "hp": 27,
-    "power": 14
+    "hp": 7,
+    "power": 4
    }
   },
   {
@@ -10233,12 +10238,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 114,
-    "power": 57
+    "hp": 110,
+    "power": 55
    },
    "bossFoes": {
-    "hp": 13,
-    "power": 7
+    "hp": -8,
+    "power": -4
    },
    "stages": [
     {
@@ -10309,16 +10314,16 @@
      "haste"
     ],
     "text": "Every foe starts each fight Hasted.",
-    "hp": 95,
-    "power": 48
+    "hp": 91,
+    "power": 46
    },
    "bossFoes": {
     "statuses": [
      "haste"
     ],
     "text": "Every foe starts each fight Hasted.",
-    "hp": 50,
-    "power": 25
+    "hp": -7,
+    "power": -3
    },
    "stages": [
     {
@@ -10451,12 +10456,12 @@
     }
    ],
    "foes": {
-    "hp": 145,
+    "hp": 146,
     "power": 73
    },
    "bossFoes": {
-    "hp": 32,
-    "power": 16
+    "hp": 12,
+    "power": 6
    }
   },
   {
@@ -10469,12 +10474,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 75,
-    "power": 38
+    "hp": 74,
+    "power": 37
    },
    "bossFoes": {
-    "hp": -53,
-    "power": -26
+    "hp": -37,
+    "power": -18
    },
    "stages": [
     {
@@ -10544,12 +10549,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 117,
-    "power": 59
+    "hp": 108,
+    "power": 54
    },
    "bossFoes": {
-    "hp": 148,
-    "power": 74
+    "hp": 141,
+    "power": 71
    },
    "stages": [
     {
@@ -10698,12 +10703,12 @@
     }
    ],
    "foes": {
-    "hp": 137,
-    "power": 69
+    "hp": 148,
+    "power": 74
    },
    "bossFoes": {
-    "hp": 168,
-    "power": 84
+    "hp": 94,
+    "power": 47
    }
   },
   {
@@ -10716,12 +10721,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 125,
-    "power": 63
+    "hp": 119,
+    "power": 60
    },
    "bossFoes": {
-    "hp": 155,
-    "power": 78
+    "hp": 167,
+    "power": 84
    },
    "stages": [
     {
@@ -10786,12 +10791,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 41,
-    "power": 21
+    "hp": 44,
+    "power": 22
    },
    "bossFoes": {
-    "hp": -31,
-    "power": -15
+    "hp": -39,
+    "power": -19
    },
    "stages": [
     {
@@ -10898,12 +10903,12 @@
     }
    ],
    "foes": {
-    "hp": 112,
-    "power": 56
+    "hp": 108,
+    "power": 54
    },
    "bossFoes": {
-    "hp": 43,
-    "power": 22
+    "hp": 41,
+    "power": 21
    }
   },
   {
@@ -10916,12 +10921,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 143,
-    "power": 72
+    "hp": 139,
+    "power": 70
    },
    "bossFoes": {
-    "hp": -50,
-    "power": -25
+    "hp": -57,
+    "power": -28
    },
    "stages": [
     {
@@ -13752,7 +13757,7 @@
     "stats": [
      {
       "stat": "aggro",
-      "flat": -1000
+      "flat": -10
      }
     ]
    },
@@ -13763,7 +13768,7 @@
     "stats": [
      {
       "stat": "aggro",
-      "flat": 1000
+      "flat": 10
      },
      {
       "stat": "max_hp",

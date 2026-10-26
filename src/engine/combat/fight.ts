@@ -490,8 +490,16 @@ function value(w: W, x: CUnit, by: NonNullable<S.TargetRuleT["by"]>): number {
   return total(x, by.stacks) / SUBTICKS;
 }
 
+/** A unit's draw: how strongly it pulls a foe's pick (ruleset.draw), from its Aggro. Without the curve, Aggro itself. */
+export function drawOf(r: Pick<S.ContentPack["ruleset"], "draw">, aggro: number): number {
+  const c = r.draw;
+  if (!c) return Math.max(0, aggro);
+  const d = Math.abs(aggro - c.centre);
+  return aggro >= c.centre ? (c.centre * (c.k + c.max * d)) / (c.k + d) : (c.centre * (c.k + d)) / (c.k + c.max * d);
+}
+
 function weightedPick(w: W, u: CUnit, pool: CUnit[], what: string): CUnit {
-  const weights = pool.map((x) => Math.max(0, stat(w, x, "aggro")));
+  const weights = pool.map((x) => drawOf(w.c.pack.ruleset, stat(w, x, "aggro")));
   const sum = weights.reduce((a, b) => a + b, 0);
   const r = next(u.rng) * sum;
   w.log?.({ t: "roll", vis: "hidden", at: w.f.now, by: u.id, what, roll: r, of: sum });

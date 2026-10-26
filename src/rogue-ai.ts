@@ -142,7 +142,7 @@ function slotValue(c: Content, cls: string, stats: { stat: string; flat?: number
   const p = PROFILES[cls];
   let n = 0;
   for (const s of stats ?? []) {
-    const step = s.stat === "max_hp" ? 500 : s.stat === "crit_chance" ? 4 : s.stat === "evasion" ? 20 : 1000;
+    const step = s.stat === "max_hp" ? 500 : s.stat === "crit_chance" ? 4 : s.stat === "evasion" ? 20 : s.stat === "aggro" ? 10 : 1000;
     let w = p?.w[s.stat] ?? 0;
     if (s.stat === "aggro") w = WALLS.has(cls) ? 1.5 : -1.2;
     n += (w * (s.flat ?? 0)) / step;

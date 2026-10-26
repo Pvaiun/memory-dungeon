@@ -2,6 +2,8 @@
 
 Oct 23, 2026 · @Paul Suddaby
 
+*Updated Oct 26, 2026, when the campaign work joined main. The pieces are as written; three things around them changed. Aggro is centred on 100, so an Aggro step here is ±10 and foes pick by draw, which keeps every unit between a third and three times an ordinary unit's pull (*Core set: rules and vocabulary*, Targeting). A step of HP on gear or a formation slot is half a point, not one (at one, HP was every class's best kit). The Cleric lost Mercy and Prayer (*Core set: classes*), so the lines that leaned on them say what's left. `DECISIONS.md` has the reasons.*
+
 ## About this doc
 
 The gear and formation lists for the slice, designed against the gear and formation rules in *Core set: rules and vocabulary* and the build axes below.
@@ -30,15 +32,15 @@ What the lists are designed against. A stat is worth carrying when some kit mult
 | Max HP | Blood drain (Vampire) and Protect (Knight) scale from it. Every holder's Shield cap and Regen ticks grow with it. |
 | MP, MP regen | Costly casters over a dungeon: Pyromancer, Cleric (Raise), Paladin (Smite), Valkyrie (Valhalla). The low-MP defenders: Knight, Hoplite, Bramble knight. |
 | Attack | Physical damage and its stacks: Ranger, Monk, Hoplite (Sunder), Valkyrie (Gale spear's Shock), Vampire (Frenzy's Might), Assassin (Garrote). |
-| Magic | Magical damage and its stacks: Pyromancer, Frostweaver, Stormcaller, Hexer, Bard (War ballad's Might), Valkyrie (Rally), Cleric (Mercy), Paladin (Smite), Geomancer (Tremor). |
+| Magic | Magical damage and its stacks: Pyromancer, Frostweaver, Stormcaller, Hexer, Bard (War ballad's Might), Valkyrie (Rally), Cleric (Cure), Paladin (Smite), Geomancer (Tremor). |
 | Armor | Shield bash (Knight), Rockfall and Earthen shell (Geomancer). |
 | Resistances | Covering weaknesses: Bramble knight (Fire), Vampire (Light). Answering a foe's element once seen. |
-| Crit chance | Backstab (Assassin) scales from it, Bedrock (Geomancer) doubles it, Mercy (Cleric) heals more on a crit. |
+| Crit chance | Backstab (Assassin) scales from it, Bedrock (Geomancer) doubles it, Lacerate (Assassin) bleeds on each crit. |
 | Aggro | Up for units that want hits: Knight, Bramble knight, Hoplite, a dodging Monk. Down for fragile ones: Pyromancer and Stormcaller sit at Aggro 3 on HP 2. |
 | Evasion | Monk, Assassin. |
 | Accuracy | Physical units against high Evasion. The Ranger holds it. |
 | Crit damage | Assassin, Geomancer, the Hoplite's tripled blows. |
-| Double strike | Monk (Iron palm Sunders on both strikes), Cleric (a second Light hit is a second Mercy heal), fast weapons. A trap for the Hoplite, whose second strike isn't tripled, and for Kindling, Cold hex and Arc, which skip it. |
+| Double strike | Monk (Iron palm Sunders on both strikes), fast weapons. A trap for the Hoplite, whose second strike isn't tripled, and for Kindling, Cold hex and Arc, which skip it. |
 | Thorns | Bramble knight (Bramble lash). Any unit that draws many hits. |
 | Lifesteal | Vampire (doubled by Bloodlust). Fast hitters. |
 | Siphon | Hexer. MP-hungry casters on long runs, like the Pyromancer. |
@@ -48,7 +50,7 @@ What the lists are designed against. A stat is worth carrying when some kit mult
 | Class | Heaviest armor · kinds | Forks |
 | --- | --- | --- |
 | Knight | Heavy · sword, axe | **Party shield:** max HP, MP regen. **Iron wall:** Armor. |
-| Cleric | Light · Light staff | **Battle cleric:** Magic, Crit chance, Double strike. **Pilgrim:** MP, MP regen. |
+| Cleric | Light · Light staff | **Battle cleric:** Magic, Crit chance, Double strike (Mercy's build; since Mercy went, a Cleric that also hits). **Pilgrim:** MP, MP regen. |
 | Ranger | Medium · bow, dagger | **Marksman:** bow, Attack, Crit damage. **Harrier:** dagger, Double strike, Accuracy. Simple on purpose, as a starter. |
 | Bramble knight | Heavy · sword, Earth staff | **Thornwall:** Thorns, Aggro. **Deep roots:** HP, Armor, Fire resistance. |
 | Hoplite | Heavy · spear, sword | **Striker:** a high-damage weapon, Attack, Crit damage. **Bodyguard:** Armor, HP, Aggro. |
@@ -142,8 +144,8 @@ Two to four per kind, 33 pieces. Each row repeats its kind's speed, since that's
 | Rootstaff | Earth staff · medium | Medium / medium | Thorns medium, HP +1 | Thornwall with a staff in hand; Deep roots |
 | Rime staff | Ice staff · medium | Medium / medium | Magic +2 | Deep freeze; Frost, where Cold hex's stacks scale from Magic |
 | Hoarfrost staff | Ice staff · medium | Medium / medium | MP regen +2 | Wellspring, Endurance |
-| Sunstaff | Light staff · medium | Medium / medium | Crit chance +1, Magic +1 | Battle cleric: a crit heals more through Mercy |
-| Dawn staff | Light staff · medium | High / medium | Nothing | Battle cleric: Mercy heals half of each hit, so the staff's damage is healing. The basic-attack case. |
+| Sunstaff | Light staff · medium | Medium / medium | Crit chance +1, Magic +1 | Battle cleric: more Magic for Cure |
+| Dawn staff | Light staff · medium | High / medium | Nothing | The basic-attack case for a Light caster. (Under Mercy, until Oct 25, 2026, its damage was a Cleric's healing.) |
 | Chapel staff | Light staff · medium | Medium / medium | MP regen +2 | Pilgrim; Staff and robes; Light |
 | Nightstaff | Dark staff · medium | Medium / medium | Magic +2 | Frost on the Dark staff |
 | Leech staff | Dark staff · medium | Medium / medium | Siphon medium, MP regen +1 | Endurance |
@@ -343,7 +345,7 @@ For Long grind.
 
 **Effect:** when the fight starts, every ally gains Regen.
 
-The Quartermaster gives up hitting to keep its own MP flowing, so it's for a unit whose costly abilities don't scale from Attack or Magic: a Cleric saving for Prayer and Raise. A Regen at the start of every fight is real healing in a dungeon that never heals between fights.
+The Quartermaster gives up hitting to keep its own MP flowing, so it's for a unit whose costly abilities don't scale from Attack or Magic: a Cleric saving for Renew and Raise. A Regen at the start of every fight is real healing in a dungeon that never heals between fights.
 
 ### Last stand — the fallen spur the rest on
 
@@ -460,7 +462,6 @@ Special stats sit on gear. The one slot that carries one is Scatter's Decoy, whe
 Pieces that combine into builds the build axes didn't name.
 
 - **Thorn Knight:** Thorn mail and Thorn charm on Aggro 5, or Thornheart plate, so most hits on the party cost their attacker. Vanguard's Wall or Last stand's Martyr feeds it.
-- **Double strike Cleric:** Twinned charm or Twin-soul adds a second Light hit, and with it a second Mercy heal.
 - **All-Armor Geomancer:** with the Cornerstone axe, its Shields, Rockfall and basic attacks all scale from Armor, and Bastion plate counts three times.
 - **Hybrid Paladin or Valkyrie:** Crusader sword or Skyspear feeds both their physical hits and Smite or Rally.
 - **Crit Ranger:** Needle, Tracker's jerkin and Glass heart make a third Ranger build.
@@ -482,10 +483,10 @@ A heavy class in Robes or Brigandine is a trade, not a trap: that's the armor-we
 
 ## What to watch in simulation
 
-- **HP stacking.** Tower mail, Scale coat and Heartstone on a whole party feed Prayer, Caravan's Regen and every Shield cap at once. It may be the strongest generic build; if so, Regen's share comes down before HP gear does.
-- **Aggro stacking.** Shadowsilk or Quiet cloak, Veil and a Behind or Runner slot push a mage's Aggro to the bottom. Check that two such units don't just split hits evenly when the player meant one to hide, and that a Wall or Decoy still draws enough with no Taunt.
+- **HP stacking.** Tower mail, Scale coat and Heartstone on a whole party feed Renew's and Caravan's Regen and every Shield cap at once. It may be the strongest generic build; if so, Regen's share comes down before HP gear does.
+- **Aggro stacking.** Shadowsilk or Quiet cloak, Veil and a Behind or Runner slot push a mage's Aggro to the bottom. Check that two such units don't just split hits evenly when the player meant one to hide, and that a Wall or Decoy still draws enough with no Taunt. (The draw rule, Oct 26, 2026, answers the bottom: no unit draws less than a third of an ordinary unit.)
 - **Off-stat weapons at medium damage and ratio.** Whether Cornerstone axe on Armor 5 lands near a Fang on Attack 5. They should; the build is the reward, not the number.
-- **The basic-attack weapons.** Pike under Phalanx and Dawn staff under Mercy. If they're the obvious pick for those classes every time they're too good; if nobody takes them, cut the variation.
+- **The basic-attack weapons.** Pike under Phalanx (Dawn staff's case, under Mercy, is gone). If they're the obvious pick for those classes every time they're too good; if nobody takes them, cut the variation.
 - **High special stats on the class that already holds them.** Thornheart plate on the Bramble knight, Vampire's tooth under Bloodlust, Wraith leathers on the Monk. Check whether stacking past high needs a ceiling, which would be the first cap this set asks for.
 - **Resistance.** Whether it does anything at the class level. If the three charms are never worn, resistance needs a bigger step before it needs more pieces.
 - **The two knockout effects.** Escort's Shield, scaled from max HP, may be wasted on a Knight already at the Shield cap, and Last stand's Might may fade before a Raise brings the Martyr back to use it.
