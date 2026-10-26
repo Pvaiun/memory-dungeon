@@ -16,8 +16,12 @@ import { availableParallelism } from "node:os";
 import { isMainThread } from "node:worker_threads";
 import { Pool, many, digest, type RunRec } from "./rogue-sim.js";
 
-/** Targets by act: a boss beats this share of the parties that reach it; a region's fights and elites end this share of the runs that enter it. */
-export const RUN_TARGETS = { boss: [12, 20, 25], road: [6, 9, 12] };
+/**
+ * Targets by act: a boss beats this share of the parties that reach it; a region's fights and elites end this share of the
+ * runs that enter it. Bosses raised from 12, 20 and 25 at the director's word (Oct 26): about 20% of runs won at heat 0
+ * (0.94 × 0.78 × 0.91 × 0.65 × 0.88 × 0.55), the extra difficulty on the bosses, the road as it was.
+ */
+export const RUN_TARGETS = { boss: [22, 35, 45], road: [6, 9, 12] };
 /** Knob points per point of loss rate: how far a miss moves a knob (damped). */
 const GAIN = { boss: 1.0, road: 1.5 };
 const KNOBS = "content/core-set/rogue-knobs.json";

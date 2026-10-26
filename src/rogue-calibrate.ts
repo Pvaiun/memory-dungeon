@@ -27,8 +27,11 @@ export const TARGETS = {
   easy: [10, 11, 12],
   normal: [15, 16, 17],
   elite: [22, 23, 24],
-  /** A boss's wins against parties as they arrive, in percent. */
-  boss: [12, 20, 25],
+  /**
+   * A boss's wins against parties as they arrive, in percent. Raised from 12, 20 and 25 at the director's word (Oct 26): a
+   * first win should be an achievement, about 20% of the simulated player's runs at heat 0, with the extra on the bosses.
+   */
+  boss: [22, 35, 45],
 };
 type Tier = keyof typeof TARGETS;
 
