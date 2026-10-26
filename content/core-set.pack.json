@@ -2960,7 +2960,7 @@
    "text": "Ward on every ally.",
    "cooldown": 38.1,
    "cast": 4,
-   "mp": 1200,
+   "mp": 700,
    "target": {
     "side": "allies",
     "pick": "all"
@@ -2979,7 +2979,7 @@
    "text": "Cleanses itself and one random other ally with a debuff.",
    "cooldown": 43,
    "cast": 0.5,
-   "mp": 1200,
+   "mp": 500,
    "if": {
     "side": "allies",
     "where": {
@@ -3011,7 +3011,7 @@
    "text": "Heavy Light damage to the foe with the highest Attack or Magic, adding several Burn.",
    "cooldown": 31,
    "cast": 8,
-   "mp": 1200,
+   "mp": 800,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -9770,8 +9770,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 41,
-    "power": 21
+    "hp": 44,
+    "power": 22
    },
    "bossFoes": {
     "hp": -31,

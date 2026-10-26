@@ -1,8 +1,35 @@
 # Step 5c report: Bleed, slotted openings, hungry casters, a three-way campfire
 
-You reacted to the 5b report with a list of changes. All of them are built and on this branch. The road is re-tuned on them over five passes, and two AI playtests played it. This report leads with what needs you. `intent.md` has your words, `design.md` the changes in full, `tuning.md` the 25 rounds.
+You reacted to the 5b report with a list of changes. All of them are built and on this branch. The road is re-tuned on them over five passes, and two AI playtests played it. This report leads with what needs you. `intent.md` has your words, `design.md` the changes in full, `tuning.md` the 29 rounds.
 
 **To play it:** `npm install`, then `npm run ui`. A journey in progress carries over (same road), but fights play differently. On a class's sheet each ability card now says when it's first ready in a fight. Tap two numbers to swap the order.
+
+## 0. Follow-up, after your first read
+
+- **MP costs are plain numbers now.** The stat-based rule is gone. Each ability states its own cost in the content, at the values the tuning arrived at: the casters' spells several times the walls' skills (section C). Nothing changed in play except the Paladin.
+- **The Paladin is fixed:** Sanctuary 700, Absolve 500, Smite 800 (were 1,200 each on a 3,000 pool). It's no longer kept waiting for MP, and starts its fourth fight with 83% of its MP (was 55%). It still sits out a third of its regular fights: that's its slow kit (long cooldowns, an 8-tick Smite wind-up), not its MP. Its three nodes are re-tuned.
+- **The Knight: what makes it strong is Protect, and how often it comes.** Switching each piece of the Knight off in turn, its builds win:
+
+| The Knight… | its builds win |
+| --- | --- |
+| as it is | 75% |
+| without Protect | 47% |
+| with one point less HP | 64% |
+| with Aggro 3 instead of 5 | 68% |
+| without Fortify | 70% |
+| with Armor 4 instead of 5 | 70% |
+| without Sworn | 73% |
+| without Shield bash's Stun | 74% |
+
+  Protect's size barely matters: a Shield can't go past half its target's max HP, so even a smaller Protect fills it. What matters is that it comes every 30 ticks for 160 MP. Two ways to bring the Knight down, each searched over the whole road:
+
+| | What the Knight adds to a build's wins | Its share of top builds | Nodes whose best build has it |
+| --- | --- | --- | --- |
+| As it is | +17.5 points | 69% | 17 of 20 |
+| **Protect on a long cooldown (42 ticks, from 30)** | **+7.9** | **59%** | **14** |
+| Its three abilities at the normal price (650 MP, from 160) | +5.8 | 54% | 12 |
+
+  For scale, the Valkyrie adds +10 and the Monk +5. **I'd take Protect on a long cooldown.** It's one word in the Knight's line, and it keeps the walls free of MP worries. The other option makes the Knight run dry over a run, the exception you floated ("maybe the Knight because he's OP"). Both need a re-tune after: the best builds' wins fall from 92% to 85% and 80% at today's knobs. Say which, and I'll ship it.
 
 ## 1. Decisions and open questions
 
@@ -26,18 +53,19 @@ Abilities now start a fight charged by the order they're slotted in, with no dic
 - **Party cooldowns are 24, 32 and 42** (were 30, 48 and 70; foes unchanged). At the old lengths the Paladin, Hexer and Assassin sat out half or more of their regular fights. Your rule ("those cooldowns are too long") applied.
 - **A thing to know:** the head start is in ticks, as you asked, so a short ability in the second slot can still come before a long one in the first. A playtester put Fireball first and saw Firebolt fire first. The ability card's "FIRST nT" shows it.
 
-### C. Mana: priced by Magic
+### C. Mana: costs set by hand, higher for the casters
 
-**A class's abilities cost their word's MP times a factor by its Magic:**
+**Each ability's MP cost is now a plain number on the ability** (your call after the first read: no rule from a stat to a cost). The numbers are the ones the tuning arrived at:
 
-| Magic | Classes | Factor |
-| --- | --- | --- |
-| 1 | Knight, Hoplite, Ranger, Monk, Assassin | a quarter |
-| 2 | Bramble knight, Vampire | half |
-| 3 | Valkyrie, Bard | the word |
-| 4 and 5 | Cleric, Paladin, Hexer, Frostweaver, Stormcaller, Geomancer, Pyromancer | double |
+| Classes | Their abilities' MP costs |
+| --- | --- |
+| Knight, Hoplite, Ranger, Monk, Assassin | 100 to 250 |
+| Bramble knight, Vampire | 200 to 330 |
+| Valkyrie, Bard | 400 to 1,200 |
+| Paladin | 500 to 800 (was 1,200 each; see the follow-up) |
+| Cleric, Hexer, Frostweaver, Stormcaller, Geomancer, Pyromancer | 800 to 2,000 |
 
-No ability costs more than 40% of its class's MP pool. At double, the first playtester's Paladin could afford one spell a fight, and its Cleric never cast Raise (3,200 of 5,000). MP regen is unchanged. This is a new rule, so it's yours to accept.
+MP regen is unchanged.
 
 | | 5b | now |
 | --- | --- | --- |
@@ -108,7 +136,7 @@ Share of each node's top builds while owned (a fair share is about 20% to 35%):
   - Bleed, in place of Poison, on the Ranger's **Barbed arrow** (a light hit at a random foe, several Bleed from Attack), the Bramble knight's **Briar** (a few, from Armor), the Assassin's **Lacerate** (crits add several, from Attack) and the snakes.
   - **Thunder chord** (many Shock on every foe, from Magic) for Lullaby.
   - **Smite** adds several Burn, on a medium cooldown.
-  - Costs by Magic, capped at 40% of the pool; cooldowns 24/32/42; the campfire's three options.
+  - MP costs set by hand on each ability; cooldowns 24/32/42; the campfire's three options.
 - **The bug:** designer view worked out every amount and printed a bare number, so Bramble lash didn't say it scales from Thorns (nor any ability its stat). Every worked-out amount now names what it grows with ("≈ 1,800, from Thorns").
 - **Interface:** a RAISE button per fallen member at the campfire, Bleed's red drop icon and its messages ("bleeds for 252"), each ability's first tick on its card.
 - **Tools:**
