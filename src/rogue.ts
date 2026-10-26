@@ -9,7 +9,7 @@
  * seed, sliced by what it's for, so the same seed and the same choices make the same run. The data is the pack's
  * `rogue` block; fights are the engine's, one at a time.
  */
-import { advanceOnce, newRun, type Content, type Run } from "./engine/run.js";
+import { advance, newRun, type Content, type Run } from "./engine/run.js";
 import { combat, type Member as EngineMember } from "./engine/combat/rules.js";
 import { int, next, rngFor, shuffle, type Rng } from "./engine/rng.js";
 import type { AbilityT, DungeonT, EffectT, FoesT, GearT, NumT, Party, RarityT, RogueEventT, RogueFightT, RogueNodeKindT, RogueRegionT, RogueT, EventOpT, SupplyIdT } from "./schema.js";
@@ -46,7 +46,7 @@ export type Pending =
   | { kind: "spoils"; gold: number; offers: Offer[]; tier: FightTier; trophy?: Item }
   | { kind: "boon"; offers: Offer[] }
   | { kind: "shop"; stock: ShopSlot[]; learn: boolean; upgrade: boolean; trained?: number }
-  | { kind: "campfire"; used?: boolean }
+  | { kind: "campfire"; used?: boolean; resting?: string[] }
   | { kind: "event"; id: string }
   | { kind: "treasure"; offer: Offer; gold: number }
   | { kind: "choose"; what: "learn" | "upgrade" | "temper"; why: string }
@@ -221,16 +221,7 @@ export function carryIn(run: RogueRun, er: Run) {
 }
 
 /** The fight's result, carried back: HP, MP, knockouts; then spoils, the boss's boon, or the end. */
-/**
- * The share of HP a fight's boss has left, read from a finished fight before the engine clears it (the step after its
- * last turn). Undefined when there's no fight to read or no boss in it.
- */
-export function bossLeft(c: Content, er: Run): number | undefined {
-  const units = (er.fight?.units ?? []) as unknown as { ref?: string; side: string; hp: number; stats: { max_hp: number } }[];
-  const boss = units.find((u) => u.side === "enemy" && c.enemies.get(u.ref ?? "")?.rank === "boss");
-  return boss ? Math.max(0, boss.hp) / boss.stats.max_hp : undefined;
-}
-export function endFight(c: Content, run: RogueRun, er: Run, left?: number) {
+export function endFight(c: Content, run: RogueRun, er: Run) {
   const p = run.pending;
   if (p.kind !== "fight") throw new Error("no fight is pending");
   const won = er.outcome === "won";
@@ -244,19 +235,13 @@ export function endFight(c: Content, run: RogueRun, er: Run, left?: number) {
   run.stats.fights++;
   if (p.tier === "elite") run.stats.elites++;
   if (!won) {
-    // The reserves: those standing at camp take the fallen party's places. A regular fight or elite is passed with no
-    // spoils; a boss is faced again, by them. With nobody standing at camp, the run is over.
-    const standing = bench(run).filter((cls) => !member(run, cls).ko);
-    if (reservesStand(c, run)) {
-      run.party = standing.slice(0, cfg(c).party);
+    // The reserves: those standing at camp take the fallen party's places, and a regular fight or elite is passed with
+    // no spoils. A boss lost ends the run: met again by the reserves, it was either "a loss screen with extra steps" (back
+    // at full HP) or a wipe that "cost nothing" (left wounded, finished by one Firebolt); AI playtests, rounds 5 and 6.
+    if (reservesStand(c, run) && p.tier !== "boss") {
+      run.party = bench(run).filter((cls) => !member(run, cls).ko).slice(0, cfg(c).party);
       note(run, `Fell to ${p.fight.name}. ${run.party.map((k) => c.classes.get(k)!.name).join(" and ")} take${run.party.length > 1 ? "" : "s"} up the road.`);
-      if (p.tier !== "boss") return void (run.pending = { kind: "map" });
-      // A boss stays as wounded as the fallen left it: the reserves face it with that share of its HP (two playtesters met
-      // a boss back at full against one under-geared member, "a loss screen with extra steps").
-      const share = Math.max(0.1, left ?? 1);
-      const hp = Math.round(((1 + (p.foes.hp ?? 0) / 100) * share - 1) * 100);
-      run.pending = { ...p, begun: false, foes: { ...p.foes, hp: Math.max(-90, hp) } };
-      if (left !== undefined) note(run, `${p.fight.name} is left with ${Math.round(share * 100)}% of its HP.`);
+      run.pending = { kind: "map" };
       return;
     }
     note(run, `Fell to ${p.fight.name}.`);
@@ -293,12 +278,8 @@ export function endFight(c: Content, run: RogueRun, er: Run, left?: number) {
 /** Plays the pending fight at once (the simulations), and carries the result back. */
 export function autoFight(c: Content, run: RogueRun): Run {
   const er = startFight(c, run);
-  let left: number | undefined;
-  for (let i = 0; i < 1e6 && !er.outcome && !er.pending; i++) {
-    if (er.fight?.result) left = bossLeft(c, er);
-    advanceOnce(c, combat, er);
-  }
-  endFight(c, run, er, left);
+  advance(c, combat, er);
+  endFight(c, run, er);
   return er;
 }
 
@@ -727,12 +708,15 @@ export function upgrade(c: Content, run: RogueRun, cls: string, ability: string)
 // ─── Free actions between rooms: gear, formation, seats, order, supplies, the camp ─────
 
 export function equip(c: Content, run: RogueRun, cls: string, slot: Slot, uid: string | null): boolean {
+  if (!member(run, cls)) return false;
+  const old = uid ? wearer(run, uid) : null;
+  return holdCurrent(c, run, [cls, ...(old && old !== cls ? [old] : [])], () => equipNow(c, run, cls, slot, uid));
+}
+function equipNow(c: Content, run: RogueRun, cls: string, slot: Slot, uid: string | null): boolean {
   const m = member(run, cls);
-  if (!m) return false;
   if (uid === null) {
     if (slot === "weapon") return false;
     delete m.gear[slot];
-    clampMax(c, run, cls);
     return true;
   }
   const it = itemOf(run, uid);
@@ -748,38 +732,61 @@ export function equip(c: Content, run: RogueRun, cls: string, slot: Slot, uid: s
     if (slot === "weapon" && !fits) return false;
     if (fits) om.gear[slot] = was;
     else delete om.gear[slot];
-    clampMax(c, run, old);
   }
   m.gear[slot] = uid;
-  clampMax(c, run, cls);
   return true;
 }
-/** A member's max HP or MP as it stands with its gear and seat. */
-export function maxOf(c: Content, run: RogueRun, cls: string, stat: "max_hp" | "max_mp"): number {
+/** A member's stats as they stand with its gear and seat. */
+function statsOf(c: Content, run: RogueRun, cls: string): Record<string, number> {
   registerGear(c, run);
   const inParty = run.party.includes(cls);
   const p = inParty ? partyOf(c, run) : { formation: "neutral", units: [{ class: cls, position: c.formations.get("neutral")!.positions[0].id, abilities: [], gear: Object.fromEntries(Object.entries(member(run, cls).gear)) as Record<string, string> }] };
   const units = combat.party(c, { dungeon: FIGHT_DUNGEON, party: p, seed: 0 }) as EngineMember[];
-  return units.find((u) => u.ref === cls)!.stats[stat];
+  return units.find((u) => u.ref === cls)!.stats;
 }
+/** A member's max HP or MP as it stands with its gear and seat. */
+export const maxOf = (c: Content, run: RogueRun, cls: string, stat: "max_hp" | "max_mp"): number => statsOf(c, run, cls)[stat];
 /**
- * Gear and seats change max HP and MP; what's missing stays as it was, so current HP and MP move with the max and come
- * back when the piece does (a standing member shows at least 1 HP). Nothing is clamped: taking a piece off and putting
- * it back is never a free refill (an AI playtester found one when MP was clamped).
+ * Gear, seats and formations change max HP and MP, never current HP and MP: what a member has stays (capped at the new
+ * max). A +HP piece raises the ceiling, it doesn't heal; taking it off and putting it back is never a refill; and a piece
+ * moved off a fallen member brings nobody HP. (Before: what was missing stayed missing, so current moved with the max,
+ * and four AI playtesters used HP and MP gear as heals.)
  */
-function clampMax(_c: Content, _run: RogueRun, _cls: string) {}
+function holdCurrent(c: Content, run: RogueRun, who: string[], fn: () => boolean): boolean {
+  const st0 = statsAll(c, run, who);
+  const before = new Map(who.map((cls) => {
+    const st = st0.get(cls)!, m = member(run, cls);
+    return [cls, { hp: m.ko ? 0 : Math.max(1, st.max_hp - m.missHp), mp: Math.max(0, st.max_mp - m.missMp) }] as const;
+  }));
+  if (!fn()) return false;
+  const st1 = statsAll(c, run, who.filter((cls) => run.roster.some((x) => x.cls === cls)));
+  for (const [cls, b] of before) {
+    const m = run.roster.find((x) => x.cls === cls);
+    const st = st1.get(cls);
+    if (!m || !st) continue;
+    m.missHp = m.ko ? st.max_hp : st.max_hp - Math.min(b.hp, st.max_hp);
+    m.missMp = st.max_mp - Math.min(b.mp, st.max_mp);
+  }
+  return true;
+}
+/** Stats for several members at once: the party in one go (its seats), each one at camp on its own. */
+function statsAll(c: Content, run: RogueRun, who: string[]): Map<string, Record<string, number>> {
+  registerGear(c, run);
+  const out = new Map<string, Record<string, number>>();
+  if (who.some((cls) => run.party.includes(cls))) for (const u of combat.party(c, { dungeon: FIGHT_DUNGEON, party: partyOf(c, run), seed: 0 }) as EngineMember[]) if (who.includes(u.ref)) out.set(u.ref, u.stats);
+  for (const cls of who) if (!out.has(cls)) out.set(cls, statsOf(c, run, cls));
+  return out;
+}
 export function setFormation(c: Content, run: RogueRun, id: string): boolean {
   if (!run.formations.includes(id)) return false;
-  run.formation = id;
-  for (const cls of run.party) clampMax(c, run, cls);
-  return true;
+  if (run.formation === id) return true;
+  return holdCurrent(c, run, [...run.party], () => ((run.formation = id), true));
 }
 /** Puts the party in this seat order (the same classes). */
 export function seat(c: Content, run: RogueRun, order: string[]): boolean {
   if (order.length !== run.party.length || !order.every((x) => run.party.includes(x))) return false;
-  run.party = [...order];
-  for (const cls of run.party) clampMax(c, run, cls);
-  return true;
+  if (order.every((x, i) => run.party[i] === x)) return true;
+  return holdCurrent(c, run, [...run.party], () => ((run.party = [...order]), true));
 }
 /** An ability order: some or all of what the member knows, each once. What's left out isn't brought to fights. */
 export function setOrder(run: RogueRun, cls: string, order: string[]): boolean {
@@ -794,6 +801,10 @@ export function setOrder(run: RogueRun, cls: string, order: string[]): boolean {
  * healthy members watching from camp), and one standing at camp can fill an empty seat.
  */
 export function swap(c: Content, run: RogueRun, out: string, into: string | null): boolean {
+  // Seats change stats, so whoever moves keeps the HP and MP it has.
+  return holdCurrent(c, run, run.roster.map((m) => m.cls), () => swapNow(c, run, out, into));
+}
+function swapNow(c: Content, run: RogueRun, out: string, into: string | null): boolean {
   if (run.pending.kind !== "campfire") {
     if (!betweenRooms(run)) return false;
     // One standing at camp fills an empty seat (after the reserves took the road with fewer than a full party).
@@ -816,7 +827,6 @@ export function swap(c: Content, run: RogueRun, out: string, into: string | null
   }
   if (!bench(run).includes(into)) return false;
   run.party[i] = into;
-  for (const cls of run.party) clampMax(c, run, cls);
   return true;
 }
 /** At a campfire, with someone at camp: sends a member home for good, to make room. */
@@ -851,8 +861,8 @@ export function useSupply(c: Content, run: RogueRun, id: SupplyIdT, target?: str
 /** Between rooms, and before a fight has begun (its foes are shown, so the party can be prepared for them). */
 const betweenRooms = (run: RogueRun) => !["over", "draft"].includes(run.pending.kind) && !(run.pending.kind === "fight" && run.pending.begun);
 export const canManage = betweenRooms;
-/** Would a lost fight now pass the road to those standing at camp (the reserves)? */
-export const reservesStand = (c: Content, run: RogueRun) => !!cfg(c).reserves && bench(run).some((cls) => !member(run, cls).ko);
+/** Would a lost fight now pass the road to those standing at camp (the reserves)? Never at a boss. */
+export const reservesStand = (c: Content, run: RogueRun) => !!cfg(c).reserves && run.pending.kind === "fight" && run.pending.tier !== "boss" && bench(run).some((cls) => !member(run, cls).ko);
 
 /**
  * The max a heal by share counts from: the max now, but no more than it was when the last fight ended. Putting on a
@@ -1023,9 +1033,10 @@ export function choose(c: Content, run: RogueRun, pick: string) {
         note(run, `Raised the ${c.classes.get(m.cls)!.name}.`);
       } else if (verb === "learn") learn(c, run, rest[0], rest[1]);
       else if (verb === "upgrade") upgrade(c, run, rest[0], rest[1]);
-      // Those standing at camp rest and focus (a share of each) whatever the party picks; one raised here just now doesn't.
+      // Those standing at camp rest and focus (a share of each) whatever the party picks: those who were at camp when the
+      // campfire was reached, not a member stepped back just for it (a playtester's loop), nor one raised here just now.
       const share = (k.camp ?? 100) / 100;
-      heal(c, run, camp.filter((m) => !(verb === "raise" && m.cls === rest[0])), Math.round(k.hp * share), Math.round(k.mp * share));
+      heal(c, run, camp.filter((m) => (p.resting ?? camp.map((x) => x.cls)).includes(m.cls) && !(verb === "raise" && m.cls === rest[0])), Math.round(k.hp * share), Math.round(k.mp * share));
       p.used = true;
       return;
     }
@@ -1116,7 +1127,7 @@ function enter(c: Content, run: RogueRun, id: string) {
       return;
     case "campfire":
       run.stats.campfires++;
-      run.pending = { kind: "campfire" };
+      run.pending = { kind: "campfire", resting: bench(run) };
       return;
     case "shop":
       run.stats.shops++;
@@ -1176,7 +1187,7 @@ function doOps(c: Content, run: RogueRun, ops: readonly EventOpT[], rng: Rng) {
       case "learn": if (learnOptions(c, run).length) return void (run.pending = { kind: "choose", what: "learn", why: "event" }); break;
       case "upgrade": if (upgradeOptions(run).length) return void (run.pending = { kind: "choose", what: "upgrade", why: "event" }); break;
       case "temper": if (run.items.some((it) => it.rarity === "common" || it.rarity === "uncommon")) return void (run.pending = { kind: "choose", what: "temper", why: "event" }); break;
-      case "camp": return void (run.pending = { kind: "campfire" });
+      case "camp": return void (run.pending = { kind: "campfire", resting: bench(run) });
       case "fight": {
         const node = run.map.find((n) => n.id === run.at)!;
         const tier: FightTier = op.tier === "elite" ? "elite" : "fight";

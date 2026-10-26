@@ -19,11 +19,11 @@
  * --save picks the file (default out/rogue-play/run.json); every command takes it.
  */
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { advanceOnce, loadContent, type Content } from "./engine/run.js";
+import { advance, loadContent, type Content } from "./engine/run.js";
 import { combat } from "./engine/combat/rules.js";
 import type { Entry } from "./engine/log.js";
 import {
-  actRoll, bench, bossFoes, bossLeft, canManage, choose, endFight, equip, eventOf, itemGear, itemOf, joinKnown, maxOf, member, newRogue, options, reachable, registerGear, rogue,
+  actRoll, bench, bossFoes, canManage, choose, endFight, equip, eventOf, itemGear, itemOf, joinKnown, maxOf, member, newRogue, options, reachable, registerGear, rogue,
   learnOptions, migrate, seat, sellPrice, upgradeOptions, whyNot, setFormation, setOrder, startFight, swap, trainPrice, unlearned, upgraded, useSupply, wearer, type Item, type Offer, type RogueRun, type Slot,
 } from "./rogue.js";
 import type { AbilityT, NumT } from "./schema.js";
@@ -188,7 +188,7 @@ function look(run: RogueRun): string {
         out.push(`CAMPFIRE: the pick is made. Swap who's in the party now if you like (swap <out> <in>), then: pick leave`);
         break;
       }
-      out.push(`CAMPFIRE: one pick, then swaps until you leave. Whatever you pick, those standing at camp get ${k.camp ?? 100}% of a REST and of a FOCUS (a fallen one needs a RAISE or a phoenix). Swapping who's in the party is free here, before or after the pick (swap <out> <in>).`);
+      out.push(`CAMPFIRE: one pick, then swaps until you leave. Whatever you pick, those who were standing at camp when you arrived get ${k.camp ?? 100}% of a REST and of a FOCUS (a fallen one needs a RAISE or a phoenix). Swapping who's in the party is free here, before or after the pick (swap <out> <in>).`);
       out.push(`  Before the boss: ${bossWords(run)}`);
       out.push(`  pick rest: the party regains ${k.hp}% of its max HP (the max each had as the last fight ended).`, `  pick focus: the party regains ${k.mp}% of its max MP (likewise).`);
       for (const o of options(c, run)) {
@@ -279,10 +279,10 @@ function fighterOf(run: RogueRun, cls: string): EngineMember {
 const statsOf = (run: RogueRun, cls: string) => fighterOf(run, cls).stats as Record<string, number>;
 /** The act's boss and what it does, so the last campfire's swap can answer it. */
 const bossWords = (run: RogueRun) => `${run.boss.name}: ${[...new Set(run.boss.enemies)].map((e) => bestiary(e, bossFoes(c, run).power ?? 0)).join(" ")}`;
-/** HP and MP that moved with a change of gear, seat or formation: what's missing stays missing, so current moves with max. */
+/** Max HP and MP that a change of gear, seat or formation moved (current HP and MP stay, capped at the new max). */
 function moved(before: Map<string, string>, run: RogueRun): string {
   const lines = run.roster.filter((m) => before.get(m.cls) !== vit(run, m.cls)).map((m) => `  ${m.cls}: ${before.get(m.cls)} -> ${vit(run, m.cls)}`);
-  return lines.length ? `\nHP and MP moved with the max (what's missing stays missing):\n${lines.join("\n")}` : "";
+  return lines.length ? `\nmax HP and MP changed; current HP and MP stay as they were (capped at the new max):\n${lines.join("\n")}` : "";
 }
 const vits = (run: RogueRun) => new Map(run.roster.map((m) => [m.cls, vit(run, m.cls)]));
 
@@ -331,10 +331,9 @@ function mapWords(run: RogueRun): string {
 
 function fightNow(run: RogueRun): string {
   const er = startFight(c, run, { log: true });
-  let left: number | undefined;
-  for (let i = 0; i < 1e6 && !er.outcome && !er.pending; i++) { if (er.fight?.result) left = bossLeft(c, er); advanceOnce(c, combat, er); }
+  advance(c, combat, er);
   const before = run.notes.length;
-  endFight(c, run, er, left);
+  endFight(c, run, er);
   // Each fight is its own engine run, so the summary always says "Fight 1": it says the floor instead.
   const told = summary((er.log as Entry[]).filter((e) => e.vis === "player" || e.t === "mp"), (src) => c.abilities.get(src)?.name ?? c.statuses.get(src)?.name.toLowerCase() ?? (src === "basic" ? "attack" : src)).replace(/^\nFight 1/, `\nAct ${ROMAN[run.act]}, floor ${run.floor}`);
   return `${told}${run.notes.length > before ? `\n${run.notes.slice(before).map((n) => `  ${n.text}`).join("\n")}` : ""}`;

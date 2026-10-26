@@ -3,7 +3,7 @@ import { test } from "vitest";
 import assert from "node:assert/strict";
 import { loadContent } from "./engine/run.js";
 import { rngFor } from "./engine/rng.js";
-import { autoFight, choose, equip, finish, freshMeta, heals, itemGear, makeMap, member, newItem, newRogue, options, reachable, recruit, rogue, rollItem, swap, upgraded, type RogueRun } from "./rogue.js";
+import { autoFight, choose, equip, finish, freshMeta, heals, itemGear, makeMap, maxOf, member, newItem, newRogue, options, reachable, recruit, rogue, rollItem, swap, upgraded, type RogueRun } from "./rogue.js";
 import { aiPlayer, playRogue } from "./rogue-ai.js";
 
 const raw = JSON.parse(readFileSync("content/core-set.pack.json", "utf8"));
@@ -132,7 +132,9 @@ test("rogue: a heal by share counts from the max the last fight ended with, so a
   plain.pending = { kind: "campfire" };
   choose(c, run, "rest");
   choose(c, plain, "rest");
-  assert.equal(member(run, "knight").missHp, member(plain, "knight").missHp);
+  // Current HP after the rest is the same with the amulet worn for it as without.
+  const cur = (r: RogueRun) => maxOf(c, r, "knight", "max_hp") - member(r, "knight").missHp;
+  assert.equal(cur(run), cur(plain));
 });
 
 test("rogue: no legendary piece twice in a run while others are left", () => {
@@ -170,25 +172,43 @@ test("rogue: a campfire's pick leaves swaps open until LEAVE; those at camp get 
   assert.equal(run.pending.kind, "map");
 });
 
-test("rogue: a lost fight with someone standing at camp passes the road to them; with nobody, the run is over", () => {
+test("rogue: a lost regular fight with someone standing at camp passes the road to them; a lost boss, or nobody at camp, ends the run", () => {
   const c = loadContent(raw);
-  for (const reserve of [true, false]) {
+  for (const [reserve, boss] of [[true, false], [false, false], [true, true]]) {
     const run = newRogue(c, { seed: 14, leader: "knight" });
     while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
     const spare = c.pack.classes.map((k) => k.id).find((id) => !run.party.includes(id))!;
     if (reserve) recruit(c, run, spare);
     choose(c, run, reachable(run)[0].id);
-    // A fight the party can't win: everyone at 1 HP against a boss.
+    // A fight the party can't win: everyone at 1 HP.
     const p = run.pending as Extract<RogueRun["pending"], { kind: "fight" }>;
-    p.fight = { ...run.boss };
-    p.tier = "boss";
+    if (boss) (p.fight = { ...run.boss }), (p.tier = "boss");
     for (const cls of run.party) member(run, cls).missHp = 99999;
     autoFight(c, run);
-    if (reserve) {
+    if (reserve && !boss) {
       assert.deepEqual(run.party, [spare]);
-      assert.equal(run.pending.kind, "fight", "a boss is faced again, by the reserves");
+      assert.equal(run.pending.kind, "map", "a regular fight is passed");
     } else assert.equal(run.pending.kind, "over");
   }
+});
+
+test("rogue: gear changes max HP, not current HP: a +HP piece doesn't heal, and taking it off caps HP at the new max", () => {
+  const c = loadContent(raw);
+  const run = newRogue(c, { seed: 16, leader: "knight" });
+  while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
+  run.pending = { kind: "map" };
+  const m = member(run, "knight");
+  const max0 = c.classes.get("knight")!.stats.max_hp;
+  m.missHp = 1000;
+  const it = newItem(run, "heartstone", "common");
+  run.items.push(it);
+  equip(c, run, "knight", "amulet", it.uid);
+  const v = () => { const g = c.gear.get(it.uid) ?? itemGear(c, it); void g; return run.roster.find((x) => x.cls === "knight")!; };
+  // Current stays max0 - 1000 with a bigger max.
+  assert.ok(v().missHp > 1000, "the new max is above current, so more is missing");
+  equip(c, run, "knight", "amulet", null);
+  assert.equal(member(run, "knight").missHp, 1000, "back to where it was");
+  void max0;
 });
 
 test("rogue: one standing at camp fills an empty seat between rooms; while the party has no healer, each draft offers one", () => {

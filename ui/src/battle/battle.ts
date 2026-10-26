@@ -28,7 +28,7 @@ import { clear as clearNode, isCurrent, nodes, onJourney } from "../journey.js";
 import { celebrate } from "../celebrate.js";
 import { advanceOnce } from "../../../src/engine/run.js";
 import { combat } from "../../../src/engine/combat/rules.js";
-import { bossLeft, endFight as endRogueFight, FIGHT_DUNGEON, partyOf, reservesStand, startFight as startRogueFight } from "../../../src/rogue.js";
+import { endFight as endRogueFight, FIGHT_DUNGEON, partyOf, reservesStand, startFight as startRogueFight } from "../../../src/rogue.js";
 import { current as rogueRun, saveRogue } from "../rogue-state.js";
 
 /** `node`: the journey node it was started from. Winning that node's whole run, while it's the one to clear, clears it; its single fights are practice. */
@@ -90,10 +90,8 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     if (!rogue || rogueDone) return;
     rogueDone = true;
     const er = driver.run;
-    // The boss's share of HP, read before the engine clears the finished fight (the reserves face it that wounded).
-    let left = bossLeft(c, er);
-    for (let i = 0; i < 10 && !er.outcome; i++) { if (er.fight?.result) left = bossLeft(c, er) ?? left; advanceOnce(c, combat, er); }
-    endRogueFight(c, rogue, er, left);
+    for (let i = 0; i < 10 && !er.outcome; i++) advanceOnce(c, combat, er);
+    endRogueFight(c, rogue, er);
     saveRogue();
     stop();
     go("rogue");

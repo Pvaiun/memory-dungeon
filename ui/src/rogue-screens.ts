@@ -425,7 +425,7 @@ function campView(run: RogueRun): Child[] {
     body.push(row2("REST", `The party regains ${k.hp}% of its max HP (the max each had as the last fight ended).`, () => pickOrSave(run, "rest")));
     body.push(row2("FOCUS", `The party regains ${k.mp}% of its max MP (likewise).`, () => pickOrSave(run, "focus")));
     for (const o of opts.filter((x) => x.startsWith("raise:"))) body.push(row2(`RAISE ${shortName(o.slice(6))}`, `Stands up with ${k.revive}% of its HP.`, () => pickOrSave(run, o)));
-    body.push(h("div", { class: "text dim small wrap" }, `One pick; swaps stay open until you leave. Whatever you pick, those standing at camp get half a REST and half a FOCUS (a fallen one needs a RAISE).`));
+    body.push(h("div", { class: "text dim small wrap" }, `One pick; swaps stay open until you leave. Whatever you pick, those who were standing at camp when you arrived get half a REST and half a FOCUS (a fallen one needs a RAISE).`));
   } else if (campTab === "train") {
     body.push(h("div", { class: "text dim small wrap" }, "Train instead of resting: one member learns an ability, or makes one better (+)."));
     for (const o of learnOptions(c, run)) { const [cl, ab] = o.split(":"); body.push(trainRow(run, cl, ab, "LEARN", () => pickOrSave(run, `learn:${o}`))); }
