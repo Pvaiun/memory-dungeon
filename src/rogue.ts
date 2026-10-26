@@ -9,7 +9,7 @@
  * seed, sliced by what it's for, so the same seed and the same choices make the same run. The data is the pack's
  * `rogue` block; fights are the engine's, one at a time.
  */
-import { advance, newRun, type Content, type Run } from "./engine/run.js";
+import { advanceOnce, newRun, type Content, type Run } from "./engine/run.js";
 import { combat, type Member as EngineMember } from "./engine/combat/rules.js";
 import { int, next, rngFor, shuffle, type Rng } from "./engine/rng.js";
 import type { AbilityT, DungeonT, EffectT, FoesT, GearT, NumT, Party, RarityT, RogueEventT, RogueFightT, RogueNodeKindT, RogueRegionT, RogueT, EventOpT, SupplyIdT } from "./schema.js";
@@ -221,7 +221,16 @@ export function carryIn(run: RogueRun, er: Run) {
 }
 
 /** The fight's result, carried back: HP, MP, knockouts; then spoils, the boss's boon, or the end. */
-export function endFight(c: Content, run: RogueRun, er: Run) {
+/**
+ * The share of HP a fight's boss has left, read from a finished fight before the engine clears it (the step after its
+ * last turn). Undefined when there's no fight to read or no boss in it.
+ */
+export function bossLeft(c: Content, er: Run): number | undefined {
+  const units = (er.fight?.units ?? []) as unknown as { ref?: string; side: string; hp: number; stats: { max_hp: number } }[];
+  const boss = units.find((u) => u.side === "enemy" && c.enemies.get(u.ref ?? "")?.rank === "boss");
+  return boss ? Math.max(0, boss.hp) / boss.stats.max_hp : undefined;
+}
+export function endFight(c: Content, run: RogueRun, er: Run, left?: number) {
   const p = run.pending;
   if (p.kind !== "fight") throw new Error("no fight is pending");
   const won = er.outcome === "won";
@@ -241,7 +250,13 @@ export function endFight(c: Content, run: RogueRun, er: Run) {
     if (reservesStand(c, run)) {
       run.party = standing.slice(0, cfg(c).party);
       note(run, `Fell to ${p.fight.name}. ${run.party.map((k) => c.classes.get(k)!.name).join(" and ")} take${run.party.length > 1 ? "" : "s"} up the road.`);
-      run.pending = p.tier === "boss" ? { ...p, begun: false } : { kind: "map" };
+      if (p.tier !== "boss") return void (run.pending = { kind: "map" });
+      // A boss stays as wounded as the fallen left it: the reserves face it with that share of its HP (two playtesters met
+      // a boss back at full against one under-geared member, "a loss screen with extra steps").
+      const share = Math.max(0.1, left ?? 1);
+      const hp = Math.round(((1 + (p.foes.hp ?? 0) / 100) * share - 1) * 100);
+      run.pending = { ...p, begun: false, foes: { ...p.foes, hp: Math.max(-90, hp) } };
+      if (left !== undefined) note(run, `${p.fight.name} is left with ${Math.round(share * 100)}% of its HP.`);
       return;
     }
     note(run, `Fell to ${p.fight.name}.`);
@@ -278,8 +293,12 @@ export function endFight(c: Content, run: RogueRun, er: Run) {
 /** Plays the pending fight at once (the simulations), and carries the result back. */
 export function autoFight(c: Content, run: RogueRun): Run {
   const er = startFight(c, run);
-  advance(c, combat, er);
-  endFight(c, run, er);
+  let left: number | undefined;
+  for (let i = 0; i < 1e6 && !er.outcome && !er.pending; i++) {
+    if (er.fight?.result) left = bossLeft(c, er);
+    advanceOnce(c, combat, er);
+  }
+  endFight(c, run, er, left);
   return er;
 }
 
@@ -329,9 +348,20 @@ export function newRogue(c: Content, o: NewRun): RogueRun {
   run.pending = k.start.picks > 0 ? { kind: "draft", offers: draftOffers(c, run, 1), left: k.start.picks } : { kind: "map" };
   return run;
 }
+/** Does a class heal or raise others (an ability that heals, gives Regen or revives)? */
+export const heals = (c: Content, cls: string) =>
+  c.classes.get(cls)!.abilities.some((id) => c.abilities.get(id)!.do.some((e) => e.op === "heal" || e.op === "revive" || (e.op === "apply" && e.status === "regen")));
 function draftOffers(c: Content, run: RogueRun, n: number): string[] {
   const pool = c.pack.classes.map((k) => k.id).filter((id) => !run.roster.some((m) => m.cls === id));
-  return shuffle(r(run, `draft:${n}`), pool).slice(0, cfg(c).start.offers);
+  const offers = shuffle(r(run, `draft:${n}`), pool);
+  const out = offers.slice(0, cfg(c).start.offers);
+  // While the party has nobody who heals others, each draft offers one who does (a playtester: "two of my three runs
+  // felt lost at the draft"; HP carries over, and without a healer it only leaks).
+  if (cfg(c).start.healer && !run.roster.some((m) => heals(c, m.cls)) && !out.some((id) => heals(c, id))) {
+    const h = offers.find((id) => heals(c, id));
+    if (h) out[out.length - 1] = h;
+  }
+  return out;
 }
 
 // ─── Acts and maps ──────────────────────────────────────────────────────────
@@ -761,12 +791,15 @@ export function setOrder(run: RogueRun, cls: string, order: string[]): boolean {
 /**
  * At a campfire: one of the party and one at camp trade places. Or a party member steps back with nobody to replace it, while someone stands.
  * Any time between rooms, a fallen member can trade places with one standing at camp (both AI playtests of round 2 lost a run with
- * healthy members watching from camp).
+ * healthy members watching from camp), and one standing at camp can fill an empty seat.
  */
 export function swap(c: Content, run: RogueRun, out: string, into: string | null): boolean {
   if (run.pending.kind !== "campfire") {
+    if (!betweenRooms(run)) return false;
+    // One standing at camp fills an empty seat (after the reserves took the road with fewer than a full party).
+    if (into === null && bench(run).includes(out) && !member(run, out).ko && run.party.length < cfg(c).party) return run.party.push(out), true;
     const i = run.party.indexOf(out);
-    if (!betweenRooms(run) || i < 0 || !into || !member(run, out).ko || !bench(run).includes(into) || member(run, into).ko) return false;
+    if (i < 0 || !into || !member(run, out).ko || !bench(run).includes(into) || member(run, into).ko) return false;
     run.party[i] = into;
     return true;
   }
@@ -1164,7 +1197,7 @@ export function offerText(c: Content, run: RogueRun, o: Offer): string {
   if (o.kind === "tome") return `a tome: the ${c.classes.get(o.cls)!.name} learns ${c.abilities.get(o.ability)!.name}`;
   if (o.kind === "recruit") return `the ${c.classes.get(o.cls)!.name}`;
   if (o.kind === "formation") return `the ${c.formations.get(o.id)!.name} formation`;
-  return `a ${o.id}`;
+  return `${/^[aeiou]/.test(o.id) ? "an" : "a"} ${o.id}`;
 }
 
 // ─── Meta: what a run leaves behind ────────────────────────────────────────

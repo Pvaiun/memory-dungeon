@@ -3,7 +3,7 @@ import { test } from "vitest";
 import assert from "node:assert/strict";
 import { loadContent } from "./engine/run.js";
 import { rngFor } from "./engine/rng.js";
-import { autoFight, choose, equip, finish, freshMeta, itemGear, makeMap, member, newItem, newRogue, options, reachable, recruit, rogue, rollItem, swap, upgraded, type RogueRun } from "./rogue.js";
+import { autoFight, choose, equip, finish, freshMeta, heals, itemGear, makeMap, member, newItem, newRogue, options, reachable, recruit, rogue, rollItem, swap, upgraded, type RogueRun } from "./rogue.js";
 import { aiPlayer, playRogue } from "./rogue-ai.js";
 
 const raw = JSON.parse(readFileSync("content/core-set.pack.json", "utf8"));
@@ -188,5 +188,21 @@ test("rogue: a lost fight with someone standing at camp passes the road to them;
       assert.deepEqual(run.party, [spare]);
       assert.equal(run.pending.kind, "fight", "a boss is faced again, by the reserves");
     } else assert.equal(run.pending.kind, "over");
+  }
+});
+
+test("rogue: one standing at camp fills an empty seat between rooms; while the party has no healer, each draft offers one", () => {
+  const c = loadContent(raw);
+  const run = newRogue(c, { seed: 15, leader: "knight" });
+  while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
+  const spare = c.pack.classes.map((k) => k.id).find((id) => !run.party.includes(id))!;
+  recruit(c, run, spare);
+  run.party = run.party.slice(0, 2);
+  run.pending = { kind: "map" };
+  assert.equal(swap(c, run, spare, null), true);
+  assert.equal(run.party.length, 3);
+  for (let seed = 1; seed <= 40; seed++) {
+    const r2 = newRogue(c, { seed, leader: "knight" });
+    if (r2.pending.kind === "draft") assert.ok(r2.pending.offers.some((id) => heals(c, id)), `seed ${seed}: no healer offered`);
   }
 });

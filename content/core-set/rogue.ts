@@ -24,7 +24,7 @@ const critStep = (n: number): Change => ({ stat: "crit_chance", flat: crit(n) })
 
 export const ROGUE_CONFIG: RogueConfigT = {
   /** Gold at the start, and the draft: the leader (an owned class), then this many picks of one from `offers` classes. */
-  start: { gold: 60, offers: 3, picks: 2 },
+  start: { gold: 60, offers: 3, picks: 2, healer: true },
   /**
    * Abilities a class knows on joining: one in act I, two in act II, three in act III. Each class's first is below: the one
    * that best stands for it on its own. The Vampire starts with Wither, not Blood drain: as leader with random companions it
@@ -322,7 +322,7 @@ export const LEGENDARY_AIMS: Record<string, string[]> = {
   ember_sigil: ["monk", "ranger", "pyromancer"], cleaving_charm: ["monk", "ranger", "assassin", "knight"], rime_sigil: ["frostweaver", "monk", "ranger"],
   wound_sigil: ["assassin", "ranger"], shatter_sigil: ["monk", "knight", "hoplite"], siren_shell: ["bard", "monk"], crown_of_judgement: ["paladin", "assassin"],
   grave_lantern: ["knight", "bramble_knight", "hoplite"], soul_jar: ["cleric", "pyromancer", "stormcaller", "geomancer"], war_banner: ["knight", "valkyrie", "bard"],
-  hourglass: ["pyromancer", "stormcaller", "assassin"], herald_horn: ["cleric", "bard", "knight"], silver_bell: ["cleric", "pyromancer", "stormcaller"],
+  hourglass: ["pyromancer", "stormcaller", "assassin"], herald_horn: ["cleric", "bard", "knight"], silver_bell: ["pyromancer", "stormcaller", "frostweaver"],
   berserker_torc: ["vampire", "monk"], stone_idol: ["geomancer", "knight"], frost_shard: ["frostweaver", "hexer"], static_coil: ["knight", "hoplite", "bramble_knight"],
   frozen_heart: ["knight", "hoplite", "bramble_knight"], briar_coat: ["valkyrie", "ranger", "monk"], spiked_bulwark: ["knight", "hoplite"],
   shadow_cowl: ["assassin", "ranger", "bard"], headsman_axe: ["knight", "geomancer"], stormbrand: ["knight", "valkyrie", "assassin"],

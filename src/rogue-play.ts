@@ -19,11 +19,11 @@
  * --save picks the file (default out/rogue-play/run.json); every command takes it.
  */
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { advance, loadContent, type Content } from "./engine/run.js";
+import { advanceOnce, loadContent, type Content } from "./engine/run.js";
 import { combat } from "./engine/combat/rules.js";
 import type { Entry } from "./engine/log.js";
 import {
-  actRoll, bench, bossFoes, canManage, choose, endFight, equip, eventOf, itemGear, itemOf, joinKnown, maxOf, member, newRogue, options, reachable, registerGear, rogue,
+  actRoll, bench, bossFoes, bossLeft, canManage, choose, endFight, equip, eventOf, itemGear, itemOf, joinKnown, maxOf, member, newRogue, options, reachable, registerGear, rogue,
   learnOptions, migrate, seat, sellPrice, upgradeOptions, whyNot, setFormation, setOrder, startFight, swap, trainPrice, unlearned, upgraded, useSupply, wearer, type Item, type Offer, type RogueRun, type Slot,
 } from "./rogue.js";
 import type { AbilityT, NumT } from "./schema.js";
@@ -78,7 +78,13 @@ const statWord = (stat: string, v: number) => {
 const val = (n: NumT | undefined, st: Record<string, number>) => (n === undefined ? 1 : typeof n === "number" ? n : (n.base ?? 0) + n.scale.reduce((t, x) => t + (x.stat && x.of !== "target" ? x.ratio * (st[x.stat] ?? 0) : 0), 0));
 function sizeOf(a: AbilityT, st: Record<string, number>, mult = 1): string {
   const out: string[] = [];
-  const stacks = (id: string, n: NumT | undefined) => (c.statuses.get(id)!.stacking === "intensity" ? `${Math.round(val(n, st) * 10) / 10} ${c.statuses.get(id)!.name}` : c.statuses.get(id)!.name);
+  const stacks = (id: string, n: NumT | undefined) => {
+    const d = c.statuses.get(id)!;
+    if (d.stacking !== "intensity") return d.name;
+    const v = Math.round(val(n, st) * 10) / 10;
+    // Past a status's cap, the cap (a playtester saw "+25.5 CHILL" on foes that hold 8).
+    return typeof d.cap === "number" && v > d.cap ? `${d.cap} ${d.name} (the most it holds)` : `${v} ${d.name}`;
+  };
   for (const e of a.do) {
     if (e.op === "damage") {
       const kind = e.element ?? (e.type === "physical" ? e.subtype ?? "physical" : "untyped");
@@ -128,6 +134,7 @@ function header(run: RogueRun): string[] {
     `Gold ${run.gold}. Supplies: ${run.supplies.join(", ") || "none"} (carry ${rogue(c).config.bag} at most). Formation: ${c.formations.get(run.formation)!.name}. Formations owned: ${run.formations.join(", ")}.`,
     `Party: ${run.party.map((cls) => `${cls} (${vit(run, cls)})`).join("; ")}.${bench(run).length ? ` At camp: ${bench(run).map((cls) => `${cls} (${vit(run, cls)})`).join("; ")}.` : ""}`,
     ...(run.pending.kind !== "over" && run.party.some((x) => member(run, x).ko) && bench(run).some((x) => !member(run, x).ko) ? [`Someone standing at camp can take a fallen member's seat now: swap <fallen> <at camp>.`] : []),
+    ...(run.pending.kind !== "over" && run.party.length < rogue(c).config.party && bench(run).some((x) => !member(run, x).ko) ? [`A seat is empty: someone standing at camp can fill it now (swap <at camp>).`] : []),
   ];
 }
 
@@ -183,7 +190,7 @@ function look(run: RogueRun): string {
       }
       out.push(`CAMPFIRE: one pick, then swaps until you leave. Whatever you pick, those standing at camp get ${k.camp ?? 100}% of a REST and of a FOCUS (a fallen one needs a RAISE or a phoenix). Swapping who's in the party is free here, before or after the pick (swap <out> <in>).`);
       out.push(`  Before the boss: ${bossWords(run)}`);
-      out.push(`  pick rest: the party regains ${k.hp}% of its HP.`, `  pick focus: the party regains ${k.mp}% of its MP.`);
+      out.push(`  pick rest: the party regains ${k.hp}% of its max HP (the max each had as the last fight ended).`, `  pick focus: the party regains ${k.mp}% of its max MP (likewise).`);
       for (const o of options(c, run)) {
         if (o.startsWith("raise:")) out.push(`  pick ${o}: stands up with ${k.revive}% of its HP.`);
         else if (o.startsWith("learn:")) out.push(`  pick ${o}: ${c.abilities.get(o.split(":")[2])!.text}`);
@@ -324,10 +331,12 @@ function mapWords(run: RogueRun): string {
 
 function fightNow(run: RogueRun): string {
   const er = startFight(c, run, { log: true });
-  advance(c, combat, er);
-  endFight(c, run, er);
+  let left: number | undefined;
+  for (let i = 0; i < 1e6 && !er.outcome && !er.pending; i++) { if (er.fight?.result) left = bossLeft(c, er); advanceOnce(c, combat, er); }
   const before = run.notes.length;
-  const told = summary((er.log as Entry[]).filter((e) => e.vis === "player" || e.t === "mp"), (src) => c.abilities.get(src)?.name ?? c.statuses.get(src)?.name.toLowerCase() ?? (src === "basic" ? "attack" : src));
+  endFight(c, run, er, left);
+  // Each fight is its own engine run, so the summary always says "Fight 1": it says the floor instead.
+  const told = summary((er.log as Entry[]).filter((e) => e.vis === "player" || e.t === "mp"), (src) => c.abilities.get(src)?.name ?? c.statuses.get(src)?.name.toLowerCase() ?? (src === "basic" ? "attack" : src)).replace(/^\nFight 1/, `\nAct ${ROMAN[run.act]}, floor ${run.floor}`);
   return `${told}${run.notes.length > before ? `\n${run.notes.slice(before).map((n) => `  ${n.text}`).join("\n")}` : ""}`;
 }
 
@@ -342,6 +351,7 @@ const USAGE = [
   "order <class> <ability,ability,...|none>   slot order; abilities left out aren't brought to fights",
   "use <tonic|ether|phoenix> [class]",
   "swap <party member> <member at camp>   at a campfire; any time between rooms for a fallen member",
+  "swap <member at camp>     fills an empty seat (at a campfire, or any time between rooms if they're standing)",
   "Every command takes --save <file>.",
 ].join("\n");
 function main() {
@@ -393,7 +403,7 @@ if (cmd === "new") {
       break;
     }
     case "use": out = useSupply(c, run, rest[0] as "tonic", rest[1]) ? `Used the ${rest[0]}.\n${header(run).join("\n")}` : "Can't use that now."; break;
-    case "swap": out = swap(c, run, rest[0], rest[1] ?? null) ? `Party: ${run.party.join(", ")}. At camp: ${bench(run).join(", ") || "nobody"}.` : "At a campfire: a party member and someone at camp. Any time between rooms: a fallen party member and someone standing at camp."; break;
+    case "swap": out = swap(c, run, rest[0], rest[1] ?? null) ? `Party: ${run.party.join(", ")}. At camp: ${bench(run).join(", ") || "nobody"}.` : "At a campfire: a party member and someone at camp. Any time between rooms: a fallen party member and someone standing at camp, or someone standing at camp into an empty seat (swap <member at camp>)."; break;
     case "boss": out = bossWords(run); break;
     default: throw new Error(`unknown command '${cmd}'. Commands:\n${USAGE}`);
   }

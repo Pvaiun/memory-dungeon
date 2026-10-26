@@ -7,10 +7,10 @@
  *   npx tsx src/rogue-bosses.ts [--runs 300] [--set path=json ...] [--dials k=v,...]
  */
 import { readFileSync } from "node:fs";
-import { advance, loadContent } from "./engine/run.js";
+import { advanceOnce, loadContent } from "./engine/run.js";
 import { combat } from "./engine/combat/rules.js";
 import type { Entry } from "./engine/log.js";
-import { choose, endFight, newRogue, startFight } from "./rogue.js";
+import { bossLeft, choose, endFight, newRogue, startFight } from "./rogue.js";
 import { aiPlayer } from "./rogue-ai.js";
 import { parseDials, parsePatches } from "./rogue-sim.js";
 import { patch } from "./sim/content.js";
@@ -34,9 +34,10 @@ for (let seed = 1; seed <= runs; seed++) {
     if (p.kind !== "fight") { choose(c, run, ai.decide(c, run)); continue; }
     const boss = p.tier === "boss";
     const er = startFight(c, run, { log: boss });
-    advance(c, combat, er);
+    let left: number | undefined;
+    for (let k = 0; k < 1e6 && !er.outcome && !er.pending; k++) { if (er.fight?.result) left = bossLeft(c, er); advanceOnce(c, combat, er); }
     if (boss) read(p.fight.id, er.log ?? [], er.outcome === "won");
-    endFight(c, run, er);
+    endFight(c, run, er, left);
   }
 }
 

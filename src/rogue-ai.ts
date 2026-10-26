@@ -262,9 +262,13 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
 
   function prepare(c: Content, run: RogueRun) {
     // The fallen trade places with the best standing at camp, if the rules allow it here.
-    if (!d.noBenchSwap) for (const out of run.party.filter((cls) => member(run, cls).ko)) {
-      const into = bench(run).filter((x) => !member(run, x).ko).sort((a, b) => classScore(d, run, b) - classScore(d, run, a))[0];
-      if (into) swap(c, run, out, into);
+    if (!d.noBenchSwap) {
+      for (const out of run.party.filter((cls) => member(run, cls).ko)) {
+        const into = bench(run).filter((x) => !member(run, x).ko).sort((a, b) => classScore(d, run, b) - classScore(d, run, a))[0];
+        if (into) swap(c, run, out, into);
+      }
+      // Empty seats (after the reserves took the road) are filled by whoever stands at camp.
+      for (const cls of bench(run).filter((x) => !member(run, x).ko)) swap(c, run, cls, null);
     }
     if (!d.noGear) kitUp(c, run, d.lock);
     arrange(c, run);

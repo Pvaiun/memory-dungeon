@@ -11500,7 +11500,8 @@
    "start": {
     "gold": 60,
     "offers": 3,
-    "picks": 2
+    "picks": 2,
+    "healer": true
    },
    "firstAbility": {
     "knight": "protect",
@@ -13589,9 +13590,9 @@
     "knight"
    ],
    "silver_bell": [
-    "cleric",
     "pyromancer",
-    "stormcaller"
+    "stormcaller",
+    "frostweaver"
    ],
    "berserker_torc": [
     "vampire",

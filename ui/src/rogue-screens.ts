@@ -421,8 +421,8 @@ function campView(run: RogueRun): Child[] {
   if (used && campTab !== "party") {
     body.push(h("div", { class: "text hi wrap" }, "THE CAMPFIRE'S PICK IS MADE."), h("div", { class: "text dim small wrap" }, "Change who's in the party under SWAP if you like, then LEAVE."));
   } else if (campTab === "rest") {
-    body.push(row2("REST", `The party regains ${k.hp}% of its HP.`, () => pickOrSave(run, "rest")));
-    body.push(row2("FOCUS", `The party regains ${k.mp}% of its MP.`, () => pickOrSave(run, "focus")));
+    body.push(row2("REST", `The party regains ${k.hp}% of its max HP (the max each had as the last fight ended).`, () => pickOrSave(run, "rest")));
+    body.push(row2("FOCUS", `The party regains ${k.mp}% of its max MP (likewise).`, () => pickOrSave(run, "focus")));
     for (const o of opts.filter((x) => x.startsWith("raise:"))) body.push(row2(`RAISE ${shortName(o.slice(6))}`, `Stands up with ${k.revive}% of its HP.`, () => pickOrSave(run, o)));
     body.push(h("div", { class: "text dim small wrap" }, `One pick; swaps stay open until you leave. Whatever you pick, those standing at camp get half a REST and half a FOCUS (a fallen one needs a RAISE).`));
   } else if (campTab === "train") {
@@ -591,11 +591,15 @@ export function rpartyScreen(): Child[] {
     h("div", { class: "cards" }, ...cards),
     h("div", { class: "text dim small wrap" }, manage ? "Tap two slots to trade seats; a slot twice for its sheet. Gear changes any time; who's in the party, only at a campfire." : "In a fight: look, don't touch."),
     win("scroll",
-      camp.length ? section("AT CAMP", fallen.length ? "can stand in for the fallen" : "swap at a campfire") : null,
+      camp.length ? section("AT CAMP", fallen.length ? "can stand in for the fallen" : run.party.length < rogue(c).config.party ? "can fill the empty seat" : "swap at a campfire") : null,
       ...camp.map((cls) => {
         const v = vitals(run, cls);
         // Any time between rooms, one standing at camp can take a fallen member's seat.
-        const stand = manage && !v.ko && fallen.length ? button(`IN FOR ${shortName(fallen[0])}`, (e?: Event) => { e?.stopPropagation(); swap(c, run, fallen[0], cls); saveRogue(); go("rparty", undefined, true); }, "sm hi") : null;
+        const stand = !manage || v.ko ? null
+          : fallen.length ? button(`IN FOR ${shortName(fallen[0])}`, (e?: Event) => { e?.stopPropagation(); swap(c, run, fallen[0], cls); saveRogue(); go("rparty", undefined, true); }, "sm hi")
+          // An empty seat (after the reserves took the road): one standing at camp fills it.
+          : run.party.length < rogue(c).config.party ? button("TAKE A SEAT", (e?: Event) => { e?.stopPropagation(); swap(c, run, cls, null); saveRogue(); go("rparty", undefined, true); }, "sm hi")
+          : null;
         return h("div", { class: "member", onClick: () => go("runit", cls) }, faceEl(cls), h("div", { class: "stats" }, h("div", { class: "name" }, shortName(cls)), v.ko ? h("div", { class: "bad" }, "KO") : bar(v.hp / v.maxHp)), stand ?? h("div", { class: "small dim" }, `${disp(v.hp)}/${disp(v.maxHp)}`));
       }),
       section("BAG", `${run.items.filter((it) => !wearer(run, it.uid)).length} PIECES`),
