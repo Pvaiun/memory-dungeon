@@ -207,34 +207,37 @@ const both = (pct: NumT) => [{ tag: "physical", pct }, { tag: "magical", pct }];
 
 /** Statuses that legendary pieces give. Stacks scale from the wearer's Attack and Magic together (half of each), so they suit anyone. */
 export const rogueStatuses: StatusT[] = [
-  relic("lg_ember", "Ember", "Basic attacks add a few Burn.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("burn", { stacks: own("few", 1.5), to: "other" })] }] }),
+  // Legendary pass (tuning round 27): every rule measured locked on all run against an ordinary piece of its slot; the
+  // ones worth less than an ordinary piece's stats grew (most by a stack word or two).
+  relic("lg_ember", "Ember", "Basic attacks add several Burn.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("burn", { stacks: own("several", 1.5), to: "other" })] }] }),
   relic("lg_cleave", "Cleave", "Basic attacks also hit a second, random foe.", { strike: { to: T.secondFoe } }),
-  relic("lg_rime", "Rime", "Basic attacks add a few Chill.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("chill", { stacks: own("few"), to: "other" })] }] }),
-  relic("lg_wounds", "Wounds", "Crits add several Bleed.", { reactions: [{ on: { event: "hit_lands", tags: ["crit"] }, do: [apply("bleed", { stacks: own("several"), to: "other" })] }] }),
-  relic("lg_sunder", "Shatter", "Basic attacks add a few Sunder.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("sunder", { stacks: own("few"), to: "other" })] }] }),
-  relic("lg_song", "Song", "Basic attacks give a random ally a little MP.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [{ op: "mp", amount: 120, to: { side: "allies", pick: "random" } }] }] }),
+  relic("lg_rime", "Rime", "Basic attacks add several Chill.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("chill", { stacks: own("several"), to: "other" })] }] }),
+  relic("lg_wounds", "Wounds", "Crits add many Bleed.", { reactions: [{ on: { event: "hit_lands", tags: ["crit"] }, do: [apply("bleed", { stacks: own("many"), to: "other" })] }] }),
+  relic("lg_sunder", "Shatter", "Basic attacks add several Sunder.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("sunder", { stacks: own("several"), to: "other" })] }] }),
+  relic("lg_song", "Song", "Basic attacks give a random ally some MP.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [{ op: "mp", amount: 300, to: { side: "allies", pick: "random" } }] }] }),
   relic("lg_judge", "Verdict", "Hits deal 60% more damage to foes with a buff.", { boosts: both({ scale: [{ ratio: 60, when: { buffs: true }, of: "target" }] }) }),
-  relic("lg_lantern", "Lantern", "When a foe falls, heals a tenth of its own max HP.", { reactions: [{ on: { event: "ko", whose: "foe" }, do: [{ op: "heal", amount: { scale: [{ ratio: 0.1, stat: "max_hp", of: "holder" }] }, to: "self" }] }] }),
-  relic("lg_soul", "Soul jar", "When a foe falls, every ally regains a little MP.", { reactions: [{ on: { event: "ko", whose: "foe" }, do: [{ op: "mp", amount: 200, to: T.everyAlly }] }] }),
-  relic("lg_banner", "Banner", "When the fight starts, every ally gains several Might.", { reactions: [{ on: { event: "fight_start" }, do: [apply("might", { stacks: FLAT_STACKS.several, to: T.everyAlly })] }] }),
-  relic("lg_hourglass", "Hourglass", "Starts each fight Hasted.", { reactions: [{ on: { event: "fight_start" }, do: [apply("haste", { to: "self" })] }] }),
+  relic("lg_lantern", "Lantern", "When a foe falls, heals a sixth of its own max HP.", { reactions: [{ on: { event: "ko", whose: "foe" }, do: [{ op: "heal", amount: { scale: [{ ratio: 0.16, stat: "max_hp", of: "holder" }] }, to: "self" }] }] }),
+  relic("lg_soul", "Soul jar", "When a foe falls, every ally regains some MP.", { reactions: [{ on: { event: "ko", whose: "foe" }, do: [{ op: "mp", amount: 500, to: T.everyAlly }] }] }),
+  relic("lg_banner", "Banner", "When the fight starts, every ally gains many Might.", { reactions: [{ on: { event: "fight_start" }, do: [apply("might", { stacks: FLAT_STACKS.many, to: T.everyAlly })] }] }),
+  relic("lg_hourglass", "Hourglass", "Hasted for the first 40 ticks of each fight.", { reactions: [{ on: { event: "fight_start" }, do: [apply("haste", { to: "self", duration: 40 })] }] }),
   relic("lg_horn", "Horn", "When the fight starts, every ally gains Regen.", { reactions: [{ on: { event: "fight_start" }, do: [apply("regen", { to: T.everyAlly })] }] }),
-  relic("lg_bell", "Bell", "Can't be Silenced.", { stats: [{ stat: "immune:status:silence", flat: 1 }] }),
-  relic("lg_fury", "Fury", "Below half HP, deals 50% more damage; below a quarter, double.", { boosts: both({ scale: [{ ratio: 50, when: { hpBelow: 50 } }, { ratio: 50, when: { hpBelow: 25 } }] }) }),
-  relic("lg_idol", "Stone idol", "The Geomancer's Bedrock, for anyone: crit chance doubled while its Shield holds.", {
+  relic("lg_bell", "Bell", "Can't be Silenced or Stunned.", { stats: [{ stat: "immune:status:silence", flat: 1 }, { stat: "immune:status:stun", flat: 1 }] }),
+  relic("lg_fury", "Fury", "Below half HP, deals 75% more damage; below a quarter, two and a half times.", { boosts: both({ scale: [{ ratio: 75, when: { hpBelow: 50 } }, { ratio: 75, when: { hpBelow: 25 } }] }) }),
+  relic("lg_idol", "Stone idol", "The Geomancer's Bedrock, for anyone: crit chance doubled while its Shield holds. Starts each fight with a Shield of a fifth of its max HP.", {
     reactions: [
+      { on: { event: "fight_start" }, do: [apply("shield", { stacks: { scale: [{ ratio: 0.2, stat: "max_hp", of: "holder" }] }, to: "self" })] },
       { on: { event: "status_gained", status: "shield" }, do: [apply("lg_idol_on", { to: "holder" })] },
       { on: { event: "status_ended", status: "shield" }, do: [{ op: "remove", label: "buff", status: "lg_idol_on", to: "holder" }] },
     ],
   }),
   { id: "lg_idol_on", name: "IDOL", text: "Crit chance doubled.", label: "buff", show: "icon", stacking: "fizzle", stats: [{ stat: "crit_chance", flat: { scale: [{ ratio: 1, stat: "crit_chance", of: "holder" }] } }] },
-  relic("lg_brittle", "Shard", "Hits deal more damage for each Chill stack on the target.", { boosts: both({ scale: [{ ratio: 5, stacks: "chill", of: "target" }] }) }),
-  relic("lg_coil", "Coil", "When hit, Shocks the attacker.", { reactions: [{ on: { event: "hit_taken" }, do: [apply("shock", { stacks: FLAT_STACKS.few, to: "other" })] }] }),
-  relic("lg_frost", "Frozen heart", "When hit, Chills the attacker.", { reactions: [{ on: { event: "hit_taken" }, do: [apply("chill", { stacks: FLAT_STACKS.one, to: "other" })] }] }),
-  relic("lg_briar", "Briar", "When hit, the attacker starts to bleed.", { reactions: [{ on: { event: "hit_taken" }, do: [apply("bleed", { stacks: FLAT_STACKS.few, to: "other" })] }] }),
-  relic("lg_spikes", "Spikes", "Thorns equal to a twentieth of its Armor.", { stats: [{ stat: "thorns", flat: { scale: [{ ratio: 0.05, stat: "armor", of: "holder" }] } }] }),
-  relic("lg_shade", "Shade", "Starts each fight Hidden.", { reactions: [{ on: { event: "fight_start" }, do: [apply("hidden", { to: "self" })] }] }),
-  relic("lg_execute", "Executioner", "Hits deal double damage to foes below a third of their HP.", { boosts: both({ scale: [{ ratio: 100, when: { hpBelow: 34 }, of: "target" }] }) }),
+  relic("lg_brittle", "Shard", "Hits deal 12% more damage for each Chill stack on the target.", { boosts: both({ scale: [{ ratio: 12, stacks: "chill", of: "target" }] }) }),
+  relic("lg_coil", "Coil", "When hit, Shocks the attacker with several stacks.", { reactions: [{ on: { event: "hit_taken" }, do: [apply("shock", { stacks: FLAT_STACKS.several, to: "other" })] }] }),
+  relic("lg_frost", "Frozen heart", "When hit, Chills the attacker with a few stacks.", { reactions: [{ on: { event: "hit_taken" }, do: [apply("chill", { stacks: FLAT_STACKS.few, to: "other" })] }] }),
+  relic("lg_briar", "Briar", "When hit, the attacker takes several Bleed.", { reactions: [{ on: { event: "hit_taken" }, do: [apply("bleed", { stacks: FLAT_STACKS.several, to: "other" })] }] }),
+  relic("lg_spikes", "Spikes", "Thorns equal to a twelfth of its Armor.", { stats: [{ stat: "thorns", flat: { scale: [{ ratio: 0.08, stat: "armor", of: "holder" }] } }] }),
+  relic("lg_shade", "Shade", "Starts each fight Hidden, and deals 60% more damage while Hidden.", { reactions: [{ on: { event: "fight_start" }, do: [apply("hidden", { to: "self" })] }], boosts: both({ scale: [{ ratio: 60, when: { has: "hidden" } }] }) }),
+  relic("lg_execute", "Executioner", "Hits deal double damage to foes below half their HP.", { boosts: both({ scale: [{ ratio: 100, when: { hpBelow: 50 }, of: "target" }] }) }),
   relic("lg_storm", "Storm edge", "Basic attacks also hit a second, random foe, and Shock both.", {
     strike: { to: T.secondFoe },
     reactions: [
@@ -242,9 +245,9 @@ export const rogueStatuses: StatusT[] = [
       { on: { event: "hit_lands", kind: "extra" }, do: [apply("shock", { stacks: own("few", 1.5), to: "other" })] },
     ],
   }),
-  relic("lg_hunter", "Hunter", "Hits deal 50% more damage to foes that bleed.", { boosts: both({ scale: [{ ratio: 50, when: { has: "bleed" }, of: "target" }] }) }),
-  relic("lg_grave", "Gravecaller", "When a foe falls, gains several Might.", { reactions: [{ on: { event: "ko", whose: "foe" }, do: [apply("might", { stacks: FLAT_STACKS.several, to: "self" })] }] }),
-  relic("lg_cinder", "Cinder", "Hits deal 40% more damage to foes that burn.", { boosts: both({ scale: [{ ratio: 40, when: { has: "burn" }, of: "target" }] }) }),
+  relic("lg_hunter", "Hunter", "Basic attacks add a few Bleed; hits deal 50% more damage to foes that bleed.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("bleed", { stacks: own("few"), to: "other" })] }], boosts: both({ scale: [{ ratio: 50, when: { has: "bleed" }, of: "target" }] }) }),
+  relic("lg_grave", "Gravecaller", "When a foe falls, gains many Might.", { reactions: [{ on: { event: "ko", whose: "foe" }, do: [apply("might", { stacks: FLAT_STACKS.many, to: "self" })] }] }),
+  relic("lg_cinder", "Cinder", "Basic attacks add a few Burn; hits deal 60% more damage to foes that burn.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("burn", { stacks: own("few", 1.5), to: "other" })] }], boosts: both({ scale: [{ ratio: 60, when: { has: "burn" }, of: "target" }] }) }),
 ];
 
 // ─── Legendary pieces ────────────────────────────────────────────────────────
@@ -297,6 +300,28 @@ export const LEGENDARY_BASES = [
   "heartwood_staff", "sanguine_staff", "cornerstone_axe", "needle", "mist_claws", "glacier_staff", "templar_staff",
   "thornheart_plate", "wraith_leathers", "archmages_robes", "twin_soul_charm", "vampires_tooth", "thirsting_jewel", "glass_heart",
 ];
+
+/**
+ * Who each legendary piece is for: the designer's reading of its rule against the classes that can wear it. An elite's
+ * trophy comes from pieces aimed at the party (a playtester won Archmage's robes with no caster, and a dagger for a bow
+ * Ranger), a recruit leans toward a class a piece in the bag is for, and a card says FOR.
+ */
+export const LEGENDARY_AIMS: Record<string, string[]> = {
+  heartwood_staff: ["bramble_knight", "geomancer"], sanguine_staff: ["vampire", "hexer"], cornerstone_axe: ["knight", "geomancer"],
+  needle: ["assassin", "ranger"], mist_claws: ["monk", "vampire"], glacier_staff: ["frostweaver", "hexer"], templar_staff: ["paladin", "valkyrie"],
+  thornheart_plate: ["bramble_knight", "knight", "hoplite"], wraith_leathers: ["monk", "assassin", "ranger"],
+  archmages_robes: ["pyromancer", "frostweaver", "stormcaller", "cleric", "hexer"], twin_soul_charm: ["vampire", "monk"],
+  vampires_tooth: ["vampire", "monk", "assassin"], thirsting_jewel: ["paladin", "valkyrie", "geomancer", "bard"], glass_heart: ["assassin", "ranger", "geomancer"],
+  ember_sigil: ["monk", "ranger", "pyromancer"], cleaving_charm: ["monk", "ranger", "assassin", "knight"], rime_sigil: ["frostweaver", "monk", "ranger"],
+  wound_sigil: ["assassin", "ranger"], shatter_sigil: ["monk", "knight", "hoplite"], siren_shell: ["bard", "monk"], crown_of_judgement: ["paladin", "assassin"],
+  grave_lantern: ["knight", "bramble_knight", "hoplite"], soul_jar: ["cleric", "pyromancer", "stormcaller", "geomancer"], war_banner: ["knight", "valkyrie", "bard"],
+  hourglass: ["pyromancer", "stormcaller", "assassin"], herald_horn: ["cleric", "bard", "knight"], silver_bell: ["cleric", "pyromancer", "stormcaller"],
+  berserker_torc: ["vampire", "monk"], stone_idol: ["geomancer", "knight"], frost_shard: ["frostweaver", "hexer"], static_coil: ["knight", "hoplite", "bramble_knight"],
+  frozen_heart: ["knight", "hoplite", "bramble_knight"], briar_coat: ["valkyrie", "ranger", "monk"], spiked_bulwark: ["knight", "hoplite"],
+  shadow_cowl: ["assassin", "ranger", "bard"], headsman_axe: ["knight", "geomancer"], stormbrand: ["knight", "valkyrie", "assassin"],
+  frostfang: ["assassin", "ranger", "bard"], hunters_bow: ["ranger", "bard"], gravecaller: ["hexer", "vampire"], cinder_rod: ["pyromancer", "stormcaller"],
+  brand_of_kings: ["valkyrie", "hoplite", "monk"], earthshaker: ["geomancer", "bramble_knight"],
+};
 
 // ─── Affixes: what makes a piece uncommon (one) or rare (two) ────────────────
 

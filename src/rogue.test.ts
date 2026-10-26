@@ -3,7 +3,7 @@ import { test } from "vitest";
 import assert from "node:assert/strict";
 import { loadContent } from "./engine/run.js";
 import { rngFor } from "./engine/rng.js";
-import { autoFight, choose, finish, freshMeta, itemGear, makeMap, member, newRogue, options, reachable, recruit, rogue, swap, upgraded, type RogueRun } from "./rogue.js";
+import { autoFight, choose, equip, finish, freshMeta, itemGear, makeMap, member, newItem, newRogue, options, reachable, recruit, rogue, rollItem, swap, upgraded, type RogueRun } from "./rogue.js";
 import { aiPlayer, playRogue } from "./rogue-ai.js";
 
 const raw = JSON.parse(readFileSync("content/core-set.pack.json", "utf8"));
@@ -113,4 +113,37 @@ test("rogue: a shop's training can be bought again in a visit, each time dearer 
   assert.equal(run.gold, 1000 - k.learn - (k.learn + k.trainStep!));
   choose(c, run, options(c, run).find((o) => o.startsWith("upgrade:"))!);
   assert.equal(run.gold, 1000 - k.learn - (k.learn + k.trainStep!) - (k.upgrade + 2 * k.trainStep!));
+});
+
+test("rogue: a heal by share counts from the max the last fight ended with, so a +HP piece put on just to rest heals nothing extra", () => {
+  const c = loadContent(raw);
+  const run = newRogue(c, { seed: 11, leader: "knight" });
+  while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
+  choose(c, run, reachable(run)[0].id);
+  autoFight(c, run);
+  const m = member(run, "knight");
+  m.missHp = 3000;
+  const plain = structuredClone(run);
+  // With a +HP amulet worn for the rest only, the rest heals the same as without it.
+  const it = newItem(run, "heartstone", "common");
+  run.items.push(it);
+  equip(c, run, "knight", "amulet", it.uid);
+  run.pending = { kind: "campfire" };
+  plain.pending = { kind: "campfire" };
+  choose(c, run, "rest");
+  choose(c, plain, "rest");
+  assert.equal(member(run, "knight").missHp, member(plain, "knight").missHp);
+});
+
+test("rogue: no legendary piece twice in a run while others are left", () => {
+  const c = loadContent(raw);
+  const run = newRogue(c, { seed: 12, leader: "ranger" });
+  const rng = rngFor(12, "x");
+  const seen = new Set<string>();
+  for (let i = 0; i < rogue(c).legendaries.length; i++) {
+    const it = rollItem(c, run, rng, "legendary");
+    assert.ok(!seen.has(it.base), `${it.base} twice`);
+    seen.add(it.base);
+    run.items.push(it);
+  }
 });

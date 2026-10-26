@@ -23,8 +23,8 @@ import { advance, loadContent, type Content } from "./engine/run.js";
 import { combat } from "./engine/combat/rules.js";
 import type { Entry } from "./engine/log.js";
 import {
-  bench, bossFoes, canManage, choose, endFight, equip, eventOf, itemGear, itemOf, joinKnown, maxOf, member, newRogue, options, reachable, registerGear, rogue,
-  migrate, seat, sellPrice, setFormation, setOrder, startFight, swap, trainPrice, unlearned, upgraded, useSupply, wearer, type Item, type Offer, type RogueRun, type Slot,
+  actRoll, bench, bossFoes, canManage, choose, endFight, equip, eventOf, itemGear, itemOf, joinKnown, maxOf, member, newRogue, options, reachable, registerGear, rogue,
+  migrate, seat, sellPrice, whyNot, setFormation, setOrder, startFight, swap, trainPrice, unlearned, upgraded, useSupply, wearer, type Item, type Offer, type RogueRun, type Slot,
 } from "./rogue.js";
 import type { AbilityT, NumT } from "./schema.js";
 import { summary } from "./play-summary.js";
@@ -50,6 +50,23 @@ function save(run: RogueRun) {
 // ─── Words ──────────────────────────────────────────────────────────────────
 
 const ROMAN = ["", "I", "II", "III"];
+/** What each stat does, in a player's words (a playtester found the glossary covered statuses only). */
+const STAT_WORDS: [string, string][] = [
+  ["max_hp, max_mp", "HP and MP. Gear that raises the max raises current HP or MP with it, and takes it away when it comes off: what's missing stays missing."],
+  ["mp_regen", "MP regained over a fight."],
+  ["attack, magic", "What physical and magical hits and heals scale from (ability sizes in party are worked out from them)."],
+  ["armor", "Shrinks physical hits: small hits a lot, big hits little."],
+  ["aggro", "How likely foes are to aim at this member: a foe's move without a target rule picks one of the party weighted by aggro, when it starts. Taunt draws every such move to the taunter."],
+  ["crit_chance, crit_damage", "How often a hit crits, and how much more a crit deals."],
+  ["evasion, accuracy", "Evasion: a share of physical hits missed. Accuracy cancels a foe's evasion."],
+  ["thorns", "Damage dealt back to whoever hits this member."],
+  ["lifesteal", "A share of damage dealt comes back as HP."],
+  ["siphon", "A share of damage dealt comes back as MP."],
+  ["double_strike", "A chance for a basic attack to hit twice."],
+  ["healing_received", "More or less from every heal."],
+  ["resist:<element>", "Less damage of that element; past 100%, the damage heals it instead (\"absorbs\")."],
+  ["weapon kinds", "A weapon kind sets which classes can use it and how its basic attack swings (how often, and physical or an element)."],
+];
 const pts = (n: number) => Math.round(n / 100) / 10;
 const statWord = (stat: string, v: number) => {
   const pct = /crit|evasion|accuracy|double|lifesteal|siphon|resist/.test(stat);
@@ -77,7 +94,8 @@ const codes = (stats: { stat: string; flat?: number }[] = []) => stats.map((s) =
 function gearWords(g: ReturnType<typeof itemGear> | undefined): string {
   if (!g) return "nothing";
   const kind = g.weapon?.kind ? `${g.weapon.kind}` : g.weight ? `${g.weight} armor` : "amulet";
-  const fx = [g.tier === "powerful" ? g.text : "", ...(g.statuses ?? []).map((id) => c.statuses.get(id)?.text)].filter(Boolean).join(" ");
+  // A rogue legendary's rule is its status's text; its own text says the same in other words (the Hourglass read twice).
+  const fx = [g.tier === "powerful" && !(g.statuses ?? []).some((id) => id.startsWith("lg_")) ? g.text : "", ...(g.statuses ?? []).map((id) => c.statuses.get(id)?.text)].filter(Boolean).join(" ");
   return `${g.name} (${kind}${g.stats?.length ? `; ${codes(g.stats)}` : ""}${fx ? `; ${fx}` : ""})`;
 }
 const itemWords = (it: Item) => `${it.uid}: ${it.rarity} ${gearWords(c.gear.get(it.uid) ?? itemGear(c, it))}`;
@@ -85,7 +103,8 @@ function offerWords(run: RogueRun, o: Offer): string {
   if (o.kind === "gear") {
     const g = c.gear.get(o.item.uid) ?? itemGear(c, o.item);
     const fits = run.roster.filter((m) => c.classes.get(m.cls)!.weapons.includes(g.weapon?.kind ?? "") || (g.slot === "armor" && ["light", "medium", "heavy"].indexOf(g.weight!) <= ["light", "medium", "heavy"].indexOf(c.classes.get(m.cls)!.armor)) || g.slot === "amulet").map((m) => m.cls);
-    return `gear: ${o.item.rarity} ${gearWords(g)}. Fits: ${fits.join(", ") || "nobody in the roster yet"}.`;
+    const aims = o.item.rarity === "legendary" ? rogue(c).aims?.[o.item.base] : undefined;
+    return `gear: ${o.item.rarity} ${gearWords(g)}.${aims ? ` For: ${aims.join(", ")}.` : ""} Fits: ${fits.join(", ") || "nobody in the roster yet"}.`;
   }
   if (o.kind === "tome") return `tome: the ${c.classes.get(o.cls)!.name} learns ${c.abilities.get(o.ability)!.name} (${c.abilities.get(o.ability)!.text})`;
   if (o.kind === "recruit") return `recruit: the ${c.classes.get(o.cls)!.name} (${c.classes.get(o.cls)!.text.split(".")[0]}); joins knowing ${joinKnown(c, o.cls, run.act).map((a) => c.abilities.get(a)!.name).join(", ")}${run.party.length >= 3 ? "; waits at camp until a campfire" : ""}`;
@@ -98,7 +117,7 @@ function offerWords(run: RogueRun, o: Offer): string {
 function vit(run: RogueRun, cls: string): string {
   const m = member(run, cls);
   const hp = maxOf(c, run, cls, "max_hp"), mp = maxOf(c, run, cls, "max_mp");
-  return m.ko ? `KNOCKED OUT (max HP ${hp})` : `HP ${hp - m.missHp}/${hp}, MP ${mp - m.missMp}/${mp}`;
+  return m.ko ? `KNOCKED OUT (max HP ${hp})` : `HP ${Math.max(1, hp - m.missHp)}/${hp}, MP ${Math.max(0, mp - m.missMp)}/${mp}`;
 }
 const KIND_WORD: Record<string, string> = { fight: "fight", elite: "ELITE (hard fight; pays a legendary piece outright and a better pick)", event: "event (?)", campfire: "campfire", shop: "shop", treasure: "chest", boss: "BOSS" };
 
@@ -108,7 +127,7 @@ function header(run: RogueRun): string[] {
     `Act ${ROMAN[run.act]} of 3: ${reg.name}. ${reg.text} Boss at the top: ${run.boss.name}. ${run.floor > rogue(c).config.map.floors ? "At the boss." : run.floor === 0 ? `At the foot of the map: ${rogue(c).config.map.floors} floors, then the boss.` : `Floor ${run.floor} of ${rogue(c).config.map.floors}, the boss above.`}`,
     `Gold ${run.gold}. Supplies: ${run.supplies.join(", ") || "none"} (bag holds ${rogue(c).config.bag}). Formation: ${c.formations.get(run.formation)!.name}. Formations owned: ${run.formations.join(", ")}.`,
     `Party: ${run.party.map((cls) => `${cls} (${vit(run, cls)})`).join("; ")}.${bench(run).length ? ` At camp: ${bench(run).map((cls) => `${cls} (${vit(run, cls)})`).join("; ")}.` : ""}`,
-    ...(run.party.some((x) => member(run, x).ko) && bench(run).some((x) => !member(run, x).ko) ? [`Someone standing at camp can take a fallen member's seat now: swap <fallen> <at camp>.`] : []),
+    ...(run.pending.kind !== "over" && run.party.some((x) => member(run, x).ko) && bench(run).some((x) => !member(run, x).ko) ? [`Someone standing at camp can take a fallen member's seat now: swap <fallen> <at camp>.`] : []),
   ];
 }
 
@@ -138,7 +157,7 @@ function look(run: RogueRun): string {
     case "spoils": case "boon": case "treasure": {
       const offers = p.kind === "treasure" ? [p.offer] : p.offers;
       out.push(p.kind === "boon" ? "BOSS BEATEN: pick a boon (the next act starts with everyone restored, and everyone learns an ability)." : p.kind === "treasure" ? `CHEST: ${p.gold} gold inside, and a piece.` : `SPOILS: ${p.gold} gold found. Pick one, or skip.`);
-      if (p.kind === "spoils" && p.trophy) out.push(`  Trophy (already in your bag): ${itemWords(p.trophy)}`);
+      if (p.kind === "spoils" && p.trophy) out.push(`  Trophy (already in your bag): ${itemWords(p.trophy)}${rogue(c).aims?.[p.trophy.base] ? ` For: ${rogue(c).aims![p.trophy.base].join(", ")}.` : ""}`);
       offers.forEach((o, i) => out.push(`  pick ${p.kind === "treasure" ? "take" : `take:${i}`}: ${offerWords(run, o)}`));
       out.push(`  pick ${p.kind === "treasure" ? "leave" : "skip"}`);
       break;
@@ -170,7 +189,7 @@ function look(run: RogueRun): string {
       const ev = eventOf(c, p.id);
       out.push(`EVENT: ${ev.name}. ${ev.text}`);
       const opts = options(c, run);
-      for (const o of ev.options) out.push(`  ${opts.includes(o.id) ? `pick ${o.id}` : `(not now) ${o.id}`}: ${o.label}${o.gold ? ` (${o.gold}g)` : ""}. ${o.text}`);
+      for (const o of ev.options) out.push(`  ${opts.includes(o.id) ? `pick ${o.id}` : `(not now: ${whyNot(c, run, o) || "can't happen now"}) ${o.id}`}: ${o.label}${o.gold ? ` (${o.gold}g)` : ""}. ${o.text}`);
       if (opts.includes("walk_on")) out.push("  pick walk_on: nothing here you can use now.");
       break;
     }
@@ -186,7 +205,12 @@ function look(run: RogueRun): string {
     }
     case "region":
       out.push("THE ROAD FORKS: pick the next act's region.");
-      for (const id of p.options) { const r = rogue(c).regions.find((x) => x.id === id)!; out.push(`  pick ${id}: ${r.name}. ${r.text} Its boss is one of: ${r.bosses.map((b) => b.name).join(", ")}.`); }
+      for (const id of p.options) {
+        const r = rogue(c).regions.find((x) => x.id === id)!;
+        const boss = actRoll(c, run, id, run.act + 1).boss;
+        const power = bossFoes(c, run, { act: run.act + 1, region: id }).power ?? 0;
+        out.push(`  pick ${id}: ${r.name}. ${r.text} Its boss: ${boss.name}: ${[...new Set(boss.enemies)].map((e) => bestiary(e, power)).join(" ")}`);
+      }
       break;
     case "over":
       out.push(p.won ? "THE RUN IS WON." : `THE RUN IS OVER: lost in act ${ROMAN[run.act]}, floor ${run.floor}.`);
@@ -197,10 +221,22 @@ function look(run: RogueRun): string {
   return out.join("\n");
 }
 /** An enemy as the bestiary describes it: what it does, its abilities, its resistances. Never its stats. */
+/** Who a foe's move aims at, from the party's side. */
+function atWords(ab: AbilityT): string {
+  const t = ab.target;
+  if (!t || t === "foe") return `one of the party, by aggro${ab.seek ? ", past Taunt" : " (Taunt draws it)"}`;
+  if (t === "self") return "itself";
+  if (t === "ally") return "one of its allies";
+  const who = t.side === "foes" ? "party member" : t.side === "self" ? "itself" : "ally of its own";
+  const cond = t.where && "lacks" in t.where ? ` without ${c.statuses.get(String(t.where.lacks))?.name ?? t.where.lacks}` : t.where && "has" in t.where ? ` with ${c.statuses.get(String(t.where.has))?.name ?? t.where.has}` : "";
+  if (t.pick === "all") return t.side === "foes" ? `the whole party${cond}` : `all its side${cond}`;
+  if (t.pick === "lowest" || t.pick === "highest") return `the ${who} with the ${t.pick} ${typeof t.by === "string" ? t.by.replace("hp_share", "share of HP").replace("hp", "HP") : "value"}${cond}`;
+  return `a ${who}${cond}${t.side === "foes" ? ", by aggro" : ""}`;
+}
 function bestiary(id: string, power = 0): string {
   const en = c.enemies.get(id)!;
   // An ability's size from the foe's stats and this fight's knob, before Armor and resistances.
-  const acts = (en.abilities ?? []).map((a) => { const sz = sizeOf(c.abilities.get(a)!, en.stats as Record<string, number>, 1 + power / 100); return `${c.abilities.get(a)!.name} (${c.abilities.get(a)!.text}${sz ? ` ${sz}${/about/.test(sz) ? ", before Armor" : ""}` : ""})`; });
+  const acts = (en.abilities ?? []).map((a) => { const ab = c.abilities.get(a)!; const sz = sizeOf(ab, en.stats as Record<string, number>, 1 + power / 100); return `${ab.name} (${ab.text} Aims at ${atWords(ab)}.${sz ? ` ${sz}${/about/.test(sz) ? ", before Armor, crits and statuses" : ""}.` : ""})`; });
   const pas = (en.statuses ?? []).map((st) => `${c.statuses.get(st)!.name}: ${c.statuses.get(st)!.text ?? ""}`);
   const res = Object.entries(en.stats).filter(([k]) => k.startsWith("resist:")).map(([k, v]) => `${v > 100 ? "absorbs" : v > 0 ? "resists" : "weak to"} ${k.slice(7)}`);
   const kind = en.weapon?.element ?? (en.weapon?.kind ? c.weaponKinds.get(en.weapon.kind)?.element ?? "physical" : en.weapon?.type ?? "physical");
@@ -211,7 +247,8 @@ function upText(id: string, run?: RogueRun, cls?: string): string {
   const a = c.abilities.get(id)!, up = upgraded(c, id);
   if (up.cooldown !== a.cooldown) return `${up.name}: every ${Math.round(up.cooldown)} ticks instead of ${Math.round(a.cooldown)}.`;
   const st = run && cls ? statsOf(run, cls) : null;
-  return `${up.name}: 40% more of what it deals, heals, shields or stacks${st ? ` (${sizeOf(a, st)} becomes ${sizeOf(up, st)})` : ""}.`;
+  const was = st ? sizeOf(a, st) : "", now = st ? sizeOf(up, st) : "";
+  return `${up.name}: 40% more of what it deals, heals, shields or stacks${was && now && was !== now ? ` (${was} becomes ${now})` : ""}.`;
 }
 const counts = (enemies: string[]) => {
   const m = new Map<string, number>();
@@ -247,7 +284,7 @@ function partyWords(run: RogueRun): string {
     for (const slot of ["weapon", "armor", "amulet"] as Slot[]) out.push(`  ${slot}: ${m.gear[slot] ? itemWords(itemOf(run, m.gear[slot]!)!) : "nothing"}`);
     const head = c.pack.ruleset.opening?.slots ?? [];
     const left = m.known.filter((a) => !m.order.includes(a));
-    out.push(`  abilities, in slot order: ${m.order.map((a, i) => `${a} (${c.abilities.get(a)!.name}, MP ${c.abilities.get(a)!.mp ?? 0}, every ${Math.round(c.abilities.get(a)!.cooldown)} ticks, first ready about t${Math.max(0, Math.round(c.abilities.get(a)!.cooldown - (head[i] ?? 0)))}; ${sizeOf(c.abilities.get(a)!, s) || "no amount"})`).join("; ") || "none"}${left.length ? `. Left out of fights: ${left.join(", ")}` : ""}${unlearned(c, m).length ? `. Not learned yet: ${unlearned(c, m).join(", ")}` : ""}.`);
+    out.push(`  abilities, in slot order: ${m.order.map((a, i) => `${a} (${c.abilities.get(a)!.name}, MP ${c.abilities.get(a)!.mp ?? 0}, every ${Math.round(c.abilities.get(a)!.cooldown)} ticks, first ready about t${Math.max(0, Math.round(c.abilities.get(a)!.cooldown - (head[i] ?? 0)))}${sizeOf(c.abilities.get(a)!, s) ? `; ${sizeOf(c.abilities.get(a)!, s)}` : ""})`).join("; ") || "none"}${left.length ? `. Left out of fights: ${left.join(", ")}` : ""}${unlearned(c, m).length ? `. Not learned yet: ${unlearned(c, m).join(", ")}` : ""}.`);
     out.push(`  can use: ${k.weapons.join(", ")}; ${k.armor} armor or lighter.`);
   }
   out.push("", "Formations owned:", ...run.formations.map((id) => { const fm = c.formations.get(id)!; return `  ${id}${id === run.formation ? " (in use)" : ""}: ${fm.text}${fm.positions.map((p, k) => ` Slot ${k + 1} ${p.name}: ${codes(p.stats) || "no change"}.`).join("")}`; }));
@@ -263,7 +300,7 @@ function classWords(id: string): string {
   return [
     `${k.name}: ${k.text}`,
     `Stats: HP ${st.max_hp}, MP ${st.max_mp ?? 0}, Attack ${pts(st.attack ?? 0)}, Magic ${pts(st.magic ?? 0)}, Armor ${pts(st.armor ?? 0)}, Crit ${st.crit_chance ?? 0}%, Aggro ${pts(st.aggro ?? 0)}.`,
-    `Weapons: ${k.weapons.join(", ")}. Heaviest armor: ${k.armor}. Passive: ${k.passive?.name ?? "Einherjar"}: ${k.passive?.text ?? "allies it revives come back with every action ready"}.`,
+    `Weapons: ${k.weapons.join(", ")}. Heaviest armor: ${k.armor}. Passive: ${k.passive?.name ?? "Einherjar"}: ${(k.passive?.text ?? "allies it revives come back with every action ready").replace(/\.$/, "")}.`,
     ...k.abilities.map((a) => { const ab = c.abilities.get(a)!; return `  ${a}${a === rogue(c).config.firstAbility[id] ? " (known on joining)" : ""}: ${ab.name}, MP ${ab.mp ?? 0}, every ${Math.round(ab.cooldown)} ticks: ${ab.text}`; }),
   ].join("\n");
 }
@@ -288,8 +325,21 @@ function fightNow(run: RogueRun): string {
   return `${told}${run.notes.length > before ? `\n${run.notes.slice(before).map((n) => `  ${n.text}`).join("\n")}` : ""}`;
 }
 
-try { main(); } catch (e) { console.log(`Error: ${(e as Error).message}`); process.exitCode = 1; }
+const USAGE = [
+  "new <knight|cleric|ranger> --seed N --save file     start a run",
+  "look                      where the run stands, and what it's waiting on",
+  "pick <option>             answer it (a room, an offer, fight, ...)",
+  "map | boss | party | glossary | class <id>",
+  "equip <class> <weapon|armor|amulet> <item id|none>",
+  "formation <id>",
+  "seat <a,b,c>              the party's seat order, commas, no spaces",
+  "order <class> <ability,ability,...|none>   slot order; abilities left out aren't brought to fights",
+  "use <tonic|ether|phoenix> [class]",
+  "swap <party member> <member at camp>   at a campfire; any time between rooms for a fallen member",
+  "Every command takes --save <file>.",
+].join("\n");
 function main() {
+if (!cmd || cmd === "help") return void console.log(USAGE);
 if (cmd === "new") {
   const leader = rest[0];
   if (!["knight", "cleric", "ranger"].includes(leader)) throw new Error("leaders: knight, cleric, ranger");
@@ -304,7 +354,7 @@ if (cmd === "new") {
     case "map": out = mapWords(run); break;
     case "party": out = partyWords(run); break;
     case "class": out = classWords(rest[0]); break;
-    case "glossary": out = c.pack.statuses.filter((s) => s.show === "icon").map((s) => `${s.name}: ${s.text ?? ""}`).join("\n"); break;
+    case "glossary": out = ["STATUSES (icons in a fight):", ...c.pack.statuses.filter((s) => s.show === "icon").map((s) => `  ${s.name}: ${s.text ?? ""}`), "", "STATS (on classes, gear, affixes and seats):", ...STAT_WORDS.map(([k, v]) => `  ${k}: ${v}`)].join("\n"); break;
     case "pick": {
       if (run.pending.kind === "fight") {
         if (rest[0] !== "fight") throw new Error("a fight is waiting: pick fight");
@@ -322,13 +372,15 @@ if (cmd === "new") {
       if (!canManage(run)) throw new Error("not now");
       const before = vits(run);
       const ok = equip(c, run, rest[0], rest[1] as Slot, rest[2] === "none" ? null : rest[2]);
-      out = ok ? `Done.${moved(before, run)}\n${partyWords(run)}` : "That doesn't fit (class, slot or weight), or a weapon can't be left empty.";
+      out = ok ? `Done.${moved(before, run)}\n${partyWords(run)}` : "That doesn't fit (class, slot or weight), or a weapon can't be left empty. Syntax: equip <class> <weapon|armor|amulet> <item id|none>.";
       break;
     }
     case "formation": { const before = vits(run); out = canManage(run) && setFormation(c, run, rest[0]) ? `Formation: ${rest[0]}.${moved(before, run)}` : "Not owned, or not now."; break; }
-    case "seat": { const before = vits(run); out = canManage(run) && seat(c, run, rest[0].split(",")) ? `Seats: ${run.party.join(", ")}.${moved(before, run)}` : "Name the same party members, in the new order."; break; }
+    case "seat": { const before = vits(run); out = canManage(run) && rest[0] && seat(c, run, rest[0].split(",")) ? `Seats: ${run.party.join(", ")}.${moved(before, run)}` : "Name the same party members, in the new order, with commas: seat <a,b,c>."; break; }
     case "order": {
-      // Base ids find their upgrades (sanctuary finds sanctuary_plus); "none" brings no ability at all.
+      // Base ids find their upgrades (sanctuary finds sanctuary_plus); "none" brings no ability at all. Names separated by
+      // spaces were read as one list and left the rest out silently (a playtester): commas only.
+      if (rest.length > 2) { out = "Use commas, no spaces: order <class> <ability,ability,...> (or none)."; break; }
       const m = member(run, rest[0]);
       const ids = !m || rest[1] === "none" ? [] : (rest[1] ?? "").split(",").filter(Boolean).map((a) => (m.known.includes(a) ? a : m.known.includes(`${a}_plus`) ? `${a}_plus` : a));
       out = canManage(run) && setOrder(run, rest[0], ids) ? `Order: ${ids.join(", ") || "none"}.${m && m.known.some((a) => !ids.includes(a)) ? ` Left out of fights: ${m.known.filter((a) => !ids.includes(a)).join(", ")}.` : ""}` : "Name known abilities once each, in slot order (ids from party); any left out aren't brought to fights.";
@@ -337,9 +389,11 @@ if (cmd === "new") {
     case "use": out = useSupply(c, run, rest[0] as "tonic", rest[1]) ? `Used the ${rest[0]}.\n${header(run).join("\n")}` : "Can't use that now."; break;
     case "swap": out = swap(c, run, rest[0], rest[1] ?? null) ? `Party: ${run.party.join(", ")}. At camp: ${bench(run).join(", ") || "nobody"}.` : "At a campfire: a party member and someone at camp. Any time between rooms: a fallen party member and someone standing at camp."; break;
     case "boss": out = bossWords(run); break;
-    default: throw new Error("commands: new, look, pick, map, boss, party, class, equip, formation, seat, order, use, swap, glossary");
+    default: throw new Error(`unknown command '${cmd}'. Commands:\n${USAGE}`);
   }
   save(run);
   console.log(out);
 }
 }
+
+try { main(); } catch (e) { console.log(`Error: ${(e as Error).message}`); process.exitCode = 1; }

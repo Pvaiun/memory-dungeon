@@ -18,7 +18,7 @@ import { enemies, enemyAbilities, enemyStatuses } from "./enemies.js";
 import { effects, formations } from "./formations.js";
 import { gear } from "./gear.js";
 import { design, elements, machinery, ruleset, stats, vocabulary, weaponKinds } from "./vocabulary.js";
-import { LEGENDARY_BASES, ROGUE_AFFIXES, ROGUE_CONFIG, ROGUE_EVENTS, ROGUE_REGIONS, rogueGear, rogueStatuses, rogueWeapons } from "./rogue.js";
+import { LEGENDARY_AIMS, LEGENDARY_BASES, ROGUE_AFFIXES, ROGUE_CONFIG, ROGUE_EVENTS, ROGUE_REGIONS, rogueGear, rogueStatuses, rogueWeapons } from "./rogue.js";
 
 /** The rogue mode's block: its legendary weapons take their kind's plain swing. */
 function rogueBlock(): NonNullable<ContentPack["rogue"]> {
@@ -27,7 +27,7 @@ function rogueBlock(): NonNullable<ContentPack["rogue"]> {
     return { id: w.id, name: w.name, text: w.text, slot: "weapon" as const, tier: "powerful" as const, source: "unlock" as const, weapon: structuredClone(plain.weapon!), statuses: w.statuses, ...(w.stats?.length ? { stats: w.stats } : {}) };
   });
   const own = [...rogueGear, ...weapons];
-  return { config: ROGUE_CONFIG, regions: ROGUE_REGIONS, gear: own, legendaries: [...LEGENDARY_BASES, ...own.map((g) => g.id)], affixes: ROGUE_AFFIXES, events: ROGUE_EVENTS };
+  return { config: ROGUE_CONFIG, regions: ROGUE_REGIONS, gear: own, legendaries: [...LEGENDARY_BASES, ...own.map((g) => g.id)], aims: LEGENDARY_AIMS, affixes: ROGUE_AFFIXES, events: ROGUE_EVENTS };
 }
 
 export function buildPack(): unknown {

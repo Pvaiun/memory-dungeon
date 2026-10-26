@@ -1942,7 +1942,7 @@
   {
    "id": "lg_ember",
    "name": "Ember",
-   "text": "Basic attacks add a few Burn.",
+   "text": "Basic attacks add several Burn.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -1960,12 +1960,12 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0005249999999999999,
+          "ratio": 0.0009750000000000001,
           "stat": "attack",
           "of": "holder"
          },
          {
-          "ratio": 0.0005249999999999999,
+          "ratio": 0.0009750000000000001,
           "stat": "magic",
           "of": "holder"
          }
@@ -1996,7 +1996,7 @@
   {
    "id": "lg_rime",
    "name": "Rime",
-   "text": "Basic attacks add a few Chill.",
+   "text": "Basic attacks add several Chill.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2014,12 +2014,12 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00035,
+          "ratio": 0.00065,
           "stat": "attack",
           "of": "holder"
          },
          {
-          "ratio": 0.00035,
+          "ratio": 0.00065,
           "stat": "magic",
           "of": "holder"
          }
@@ -2034,7 +2034,7 @@
   {
    "id": "lg_wounds",
    "name": "Wounds",
-   "text": "Crits add several Bleed.",
+   "text": "Crits add many Bleed.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2054,12 +2054,12 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00065,
+          "ratio": 0.00115,
           "stat": "attack",
           "of": "holder"
          },
          {
-          "ratio": 0.00065,
+          "ratio": 0.00115,
           "stat": "magic",
           "of": "holder"
          }
@@ -2074,7 +2074,7 @@
   {
    "id": "lg_sunder",
    "name": "Shatter",
-   "text": "Basic attacks add a few Sunder.",
+   "text": "Basic attacks add several Sunder.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2092,12 +2092,12 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00035,
+          "ratio": 0.00065,
           "stat": "attack",
           "of": "holder"
          },
          {
-          "ratio": 0.00035,
+          "ratio": 0.00065,
           "stat": "magic",
           "of": "holder"
          }
@@ -2112,7 +2112,7 @@
   {
    "id": "lg_song",
    "name": "Song",
-   "text": "Basic attacks give a random ally a little MP.",
+   "text": "Basic attacks give a random ally some MP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2126,7 +2126,7 @@
      "do": [
       {
        "op": "mp",
-       "amount": 120,
+       "amount": 300,
        "to": {
         "side": "allies",
         "pick": "random"
@@ -2178,7 +2178,7 @@
   {
    "id": "lg_lantern",
    "name": "Lantern",
-   "text": "When a foe falls, heals a tenth of its own max HP.",
+   "text": "When a foe falls, heals a sixth of its own max HP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2195,7 +2195,7 @@
        "amount": {
         "scale": [
          {
-          "ratio": 0.1,
+          "ratio": 0.16,
           "stat": "max_hp",
           "of": "holder"
          }
@@ -2210,7 +2210,7 @@
   {
    "id": "lg_soul",
    "name": "Soul jar",
-   "text": "When a foe falls, every ally regains a little MP.",
+   "text": "When a foe falls, every ally regains some MP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2224,7 +2224,7 @@
      "do": [
       {
        "op": "mp",
-       "amount": 200,
+       "amount": 500,
        "to": {
         "side": "allies",
         "pick": "all"
@@ -2237,7 +2237,7 @@
   {
    "id": "lg_banner",
    "name": "Banner",
-   "text": "When the fight starts, every ally gains several Might.",
+   "text": "When the fight starts, every ally gains many Might.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2251,7 +2251,7 @@
       {
        "op": "apply",
        "status": "might",
-       "stacks": 4,
+       "stacks": 7,
        "to": {
         "side": "allies",
         "pick": "all"
@@ -2264,7 +2264,7 @@
   {
    "id": "lg_hourglass",
    "name": "Hourglass",
-   "text": "Starts each fight Hasted.",
+   "text": "Hasted for the first 40 ticks of each fight.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2278,7 +2278,8 @@
       {
        "op": "apply",
        "status": "haste",
-       "to": "self"
+       "to": "self",
+       "duration": 40
       }
      ]
     }
@@ -2313,7 +2314,7 @@
   {
    "id": "lg_bell",
    "name": "Bell",
-   "text": "Can't be Silenced.",
+   "text": "Can't be Silenced or Stunned.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2322,13 +2323,17 @@
     {
      "stat": "immune:status:silence",
      "flat": 1
+    },
+    {
+     "stat": "immune:status:stun",
+     "flat": 1
     }
    ]
   },
   {
    "id": "lg_fury",
    "name": "Fury",
-   "text": "Below half HP, deals 50% more damage; below a quarter, double.",
+   "text": "Below half HP, deals 75% more damage; below a quarter, two and a half times.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2339,13 +2344,13 @@
      "pct": {
       "scale": [
        {
-        "ratio": 50,
+        "ratio": 75,
         "when": {
          "hpBelow": 50
         }
        },
        {
-        "ratio": 50,
+        "ratio": 75,
         "when": {
          "hpBelow": 25
         }
@@ -2358,13 +2363,13 @@
      "pct": {
       "scale": [
        {
-        "ratio": 50,
+        "ratio": 75,
         "when": {
          "hpBelow": 50
         }
        },
        {
-        "ratio": 50,
+        "ratio": 75,
         "when": {
          "hpBelow": 25
         }
@@ -2377,12 +2382,33 @@
   {
    "id": "lg_idol",
    "name": "Stone idol",
-   "text": "The Geomancer's Bedrock, for anyone: crit chance doubled while its Shield holds.",
+   "text": "The Geomancer's Bedrock, for anyone: crit chance doubled while its Shield holds. Starts each fight with a Shield of a fifth of its max HP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
    "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "shield",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.2,
+          "stat": "max_hp",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "self"
+      }
+     ]
+    },
     {
      "on": {
       "event": "status_gained",
@@ -2437,7 +2463,7 @@
   {
    "id": "lg_brittle",
    "name": "Shard",
-   "text": "Hits deal more damage for each Chill stack on the target.",
+   "text": "Hits deal 12% more damage for each Chill stack on the target.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2448,7 +2474,7 @@
      "pct": {
       "scale": [
        {
-        "ratio": 5,
+        "ratio": 12,
         "stacks": "chill",
         "of": "target"
        }
@@ -2460,7 +2486,7 @@
      "pct": {
       "scale": [
        {
-        "ratio": 5,
+        "ratio": 12,
         "stacks": "chill",
         "of": "target"
        }
@@ -2472,7 +2498,7 @@
   {
    "id": "lg_coil",
    "name": "Coil",
-   "text": "When hit, Shocks the attacker.",
+   "text": "When hit, Shocks the attacker with several stacks.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2486,7 +2512,7 @@
       {
        "op": "apply",
        "status": "shock",
-       "stacks": 2,
+       "stacks": 4,
        "to": "other"
       }
      ]
@@ -2496,7 +2522,7 @@
   {
    "id": "lg_frost",
    "name": "Frozen heart",
-   "text": "When hit, Chills the attacker.",
+   "text": "When hit, Chills the attacker with a few stacks.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2510,7 +2536,7 @@
       {
        "op": "apply",
        "status": "chill",
-       "stacks": 1,
+       "stacks": 2,
        "to": "other"
       }
      ]
@@ -2520,7 +2546,7 @@
   {
    "id": "lg_briar",
    "name": "Briar",
-   "text": "When hit, the attacker starts to bleed.",
+   "text": "When hit, the attacker takes several Bleed.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2534,7 +2560,7 @@
       {
        "op": "apply",
        "status": "bleed",
-       "stacks": 2,
+       "stacks": 4,
        "to": "other"
       }
      ]
@@ -2544,7 +2570,7 @@
   {
    "id": "lg_spikes",
    "name": "Spikes",
-   "text": "Thorns equal to a twentieth of its Armor.",
+   "text": "Thorns equal to a twelfth of its Armor.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2555,7 +2581,7 @@
      "flat": {
       "scale": [
        {
-        "ratio": 0.05,
+        "ratio": 0.08,
         "stat": "armor",
         "of": "holder"
        }
@@ -2567,7 +2593,7 @@
   {
    "id": "lg_shade",
    "name": "Shade",
-   "text": "Starts each fight Hidden.",
+   "text": "Starts each fight Hidden, and deals 60% more damage while Hidden.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2585,12 +2611,40 @@
       }
      ]
     }
+   ],
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 60,
+        "when": {
+         "has": "hidden"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "tag": "magical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 60,
+        "when": {
+         "has": "hidden"
+        }
+       }
+      ]
+     }
+    }
    ]
   },
   {
    "id": "lg_execute",
    "name": "Executioner",
-   "text": "Hits deal double damage to foes below a third of their HP.",
+   "text": "Hits deal double damage to foes below half their HP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2603,7 +2657,7 @@
        {
         "ratio": 100,
         "when": {
-         "hpBelow": 34
+         "hpBelow": 50
         },
         "of": "target"
        }
@@ -2617,7 +2671,7 @@
        {
         "ratio": 100,
         "when": {
-         "hpBelow": 34
+         "hpBelow": 50
         },
         "of": "target"
        }
@@ -2701,11 +2755,40 @@
   {
    "id": "lg_hunter",
    "name": "Hunter",
-   "text": "Hits deal 50% more damage to foes that bleed.",
+   "text": "Basic attacks add a few Bleed; hits deal 50% more damage to foes that bleed.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.00035,
+          "stat": "attack",
+          "of": "holder"
+         },
+         {
+          "ratio": 0.00035,
+          "stat": "magic",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    }
+   ],
    "boosts": [
     {
      "tag": "physical",
@@ -2740,7 +2823,7 @@
   {
    "id": "lg_grave",
    "name": "Gravecaller",
-   "text": "When a foe falls, gains several Might.",
+   "text": "When a foe falls, gains many Might.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2755,7 +2838,7 @@
       {
        "op": "apply",
        "status": "might",
-       "stacks": 4,
+       "stacks": 7,
        "to": "self"
       }
      ]
@@ -2765,18 +2848,47 @@
   {
    "id": "lg_cinder",
    "name": "Cinder",
-   "text": "Hits deal 40% more damage to foes that burn.",
+   "text": "Basic attacks add a few Burn; hits deal 60% more damage to foes that burn.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "burn",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0005249999999999999,
+          "stat": "attack",
+          "of": "holder"
+         },
+         {
+          "ratio": 0.0005249999999999999,
+          "stat": "magic",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    }
+   ],
    "boosts": [
     {
      "tag": "physical",
      "pct": {
       "scale": [
        {
-        "ratio": 40,
+        "ratio": 60,
         "when": {
          "has": "burn"
         },
@@ -2790,7 +2902,7 @@
      "pct": {
       "scale": [
        {
-        "ratio": 40,
+        "ratio": 60,
         "when": {
          "has": "burn"
         },
@@ -13252,6 +13364,208 @@
    "brand_of_kings",
    "earthshaker"
   ],
+  "aims": {
+   "heartwood_staff": [
+    "bramble_knight",
+    "geomancer"
+   ],
+   "sanguine_staff": [
+    "vampire",
+    "hexer"
+   ],
+   "cornerstone_axe": [
+    "knight",
+    "geomancer"
+   ],
+   "needle": [
+    "assassin",
+    "ranger"
+   ],
+   "mist_claws": [
+    "monk",
+    "vampire"
+   ],
+   "glacier_staff": [
+    "frostweaver",
+    "hexer"
+   ],
+   "templar_staff": [
+    "paladin",
+    "valkyrie"
+   ],
+   "thornheart_plate": [
+    "bramble_knight",
+    "knight",
+    "hoplite"
+   ],
+   "wraith_leathers": [
+    "monk",
+    "assassin",
+    "ranger"
+   ],
+   "archmages_robes": [
+    "pyromancer",
+    "frostweaver",
+    "stormcaller",
+    "cleric",
+    "hexer"
+   ],
+   "twin_soul_charm": [
+    "vampire",
+    "monk"
+   ],
+   "vampires_tooth": [
+    "vampire",
+    "monk",
+    "assassin"
+   ],
+   "thirsting_jewel": [
+    "paladin",
+    "valkyrie",
+    "geomancer",
+    "bard"
+   ],
+   "glass_heart": [
+    "assassin",
+    "ranger",
+    "geomancer"
+   ],
+   "ember_sigil": [
+    "monk",
+    "ranger",
+    "pyromancer"
+   ],
+   "cleaving_charm": [
+    "monk",
+    "ranger",
+    "assassin",
+    "knight"
+   ],
+   "rime_sigil": [
+    "frostweaver",
+    "monk",
+    "ranger"
+   ],
+   "wound_sigil": [
+    "assassin",
+    "ranger"
+   ],
+   "shatter_sigil": [
+    "monk",
+    "knight",
+    "hoplite"
+   ],
+   "siren_shell": [
+    "bard",
+    "monk"
+   ],
+   "crown_of_judgement": [
+    "paladin",
+    "assassin"
+   ],
+   "grave_lantern": [
+    "knight",
+    "bramble_knight",
+    "hoplite"
+   ],
+   "soul_jar": [
+    "cleric",
+    "pyromancer",
+    "stormcaller",
+    "geomancer"
+   ],
+   "war_banner": [
+    "knight",
+    "valkyrie",
+    "bard"
+   ],
+   "hourglass": [
+    "pyromancer",
+    "stormcaller",
+    "assassin"
+   ],
+   "herald_horn": [
+    "cleric",
+    "bard",
+    "knight"
+   ],
+   "silver_bell": [
+    "cleric",
+    "pyromancer",
+    "stormcaller"
+   ],
+   "berserker_torc": [
+    "vampire",
+    "monk"
+   ],
+   "stone_idol": [
+    "geomancer",
+    "knight"
+   ],
+   "frost_shard": [
+    "frostweaver",
+    "hexer"
+   ],
+   "static_coil": [
+    "knight",
+    "hoplite",
+    "bramble_knight"
+   ],
+   "frozen_heart": [
+    "knight",
+    "hoplite",
+    "bramble_knight"
+   ],
+   "briar_coat": [
+    "valkyrie",
+    "ranger",
+    "monk"
+   ],
+   "spiked_bulwark": [
+    "knight",
+    "hoplite"
+   ],
+   "shadow_cowl": [
+    "assassin",
+    "ranger",
+    "bard"
+   ],
+   "headsman_axe": [
+    "knight",
+    "geomancer"
+   ],
+   "stormbrand": [
+    "knight",
+    "valkyrie",
+    "assassin"
+   ],
+   "frostfang": [
+    "assassin",
+    "ranger",
+    "bard"
+   ],
+   "hunters_bow": [
+    "ranger",
+    "bard"
+   ],
+   "gravecaller": [
+    "hexer",
+    "vampire"
+   ],
+   "cinder_rod": [
+    "pyromancer",
+    "stormcaller"
+   ],
+   "brand_of_kings": [
+    "valkyrie",
+    "hoplite",
+    "monk"
+   ],
+   "earthshaker": [
+    "geomancer",
+    "bramble_knight"
+   ]
+  },
   "affixes": [
    {
     "id": "hp",

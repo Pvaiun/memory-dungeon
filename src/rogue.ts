@@ -24,7 +24,11 @@ export const SLOT_LIST: Slot[] = ["weapon", "armor", "amulet"];
 /** A piece of gear in a run: a base piece, its rarity and its affixes. Its id in the content is `uid`. */
 export type Item = { uid: string; base: string; rarity: RarityT; affixes: string[] };
 /** A class in the run's roster. HP and MP are kept as what's missing, so gear that raises the max raises the current too. */
-export type Member = { cls: string; known: string[]; order: string[]; gear: Partial<Record<Slot, string>>; missHp: number; missMp: number; ko: boolean };
+export type Member = {
+  cls: string; known: string[]; order: string[]; gear: Partial<Record<Slot, string>>; missHp: number; missMp: number; ko: boolean;
+  /** Max HP and MP as the last fight ended: a heal by share of max counts from no more than this (see `healMax`). */
+  lastMax?: { hp: number; mp: number };
+};
 export type MapNode = { id: string; floor: number; col: number; kind: RogueNodeKindT; next: string[] };
 export type Offer =
   | { kind: "gear"; item: Item }
@@ -226,6 +230,7 @@ export function endFight(c: Content, run: RogueRun, er: Run) {
     m.ko = em.hp <= 0;
     m.missHp = m.ko ? em.stats.max_hp : Math.max(0, em.stats.max_hp - em.hp);
     m.missMp = Math.max(0, em.stats.max_mp - em.mp);
+    m.lastMax = { hp: em.stats.max_hp, mp: em.stats.max_mp };
   }
   run.stats.fights++;
   if (p.tier === "elite") run.stats.elites++;
@@ -254,7 +259,7 @@ export function endFight(c: Content, run: RogueRun, er: Run) {
   // An elite's trophy: a legendary piece, won outright and in the bag already.
   let trophy: Item | undefined;
   if (cfg(c).spoils[p.tier === "elite" ? "elite" : "fight"].trophy) {
-    trophy = rollItem(c, run, r(run, `trophy:${run.act}:${p.node}`), "legendary");
+    trophy = rollItem(c, run, r(run, `trophy:${run.act}:${p.node}`), "legendary", true);
     take(c, run, { kind: "gear", item: trophy });
     note(run, `Won ${c.gear.get(trophy.uid)!.name}.`);
   }
@@ -282,7 +287,7 @@ export function plainWeapon(c: Content, cls: string): string {
   const kind = c.classes.get(cls)!.weapons[0];
   return c.pack.gear.find((g) => g.slot === "weapon" && g.source === "starter" && g.weapon?.kind === kind)!.id;
 }
-function newItem(run: RogueRun, base: string, rarity: RarityT, affixes: string[] = []): Item {
+export function newItem(run: RogueRun, base: string, rarity: RarityT, affixes: string[] = []): Item {
   return { uid: `rg${run.seed % 100000}_${++run.uid}`, base, rarity, affixes };
 }
 /** A class joins: its plain weapon, the abilities for this act, full HP and MP (or `hp` %). To the party if there's room, else to camp. */
@@ -412,12 +417,17 @@ function assignKinds(c: Content, nodes: MapNode[], rng: Rng) {
 }
 
 /** A new act: its region, its map and its boss. With `restore`, everyone stands up whole and learns an ability. */
+/** An act's map and boss in a region, from the act's own dice: the fork shows each region's boss before the pick. */
+export function actRoll(c: Content, run: RogueRun, region: string, act: number): { map: MapNode[]; boss: RogueFightT } {
+  const reg = regionOf(c, region);
+  const rng = r(run, `act:${act}`);
+  const map = makeMap(c, rng);
+  return { map, boss: reg.bosses[int(rng, reg.bosses.length)] };
+}
 function beginAct(c: Content, run: RogueRun, region: string, restore: boolean) {
   run.region = region;
   const reg = regionOf(c, region);
-  const rng = r(run, `act:${run.act}`);
-  run.map = makeMap(c, rng);
-  run.boss = reg.bosses[int(rng, reg.bosses.length)];
+  ({ map: run.map, boss: run.boss } = actRoll(c, run, region, run.act));
   run.at = null;
   run.visited = [];
   run.met = [];
@@ -481,7 +491,10 @@ export function foesFor(c: Content, tier: FightTier, k: number): FoesT {
   return { ...(hp ? { hp: Math.max(-90, hp) } : {}), ...(power ? { power: Math.max(-90, power) } : {}) };
 }
 /** The act's boss fight as it will be met: its foes' HP and damage changes (the boss screen shows its moves' sizes). */
-export const bossFoes = (c: Content, run: RogueRun): FoesT => foesFor(c, "boss", knobFor(c, run, "boss", cfg(c).map.floors + 1, run.boss));
+export function bossFoes(c: Content, run: RogueRun, at?: { act: number; region: string }): FoesT {
+  const r2 = at ? { ...run, ...at, boss: actRoll(c, run, at.region, at.act).boss } : run;
+  return foesFor(c, "boss", knobFor(c, r2, "boss", cfg(c).map.floors + 1, r2.boss));
+}
 function fightSpec(c: Content, run: RogueRun, node: MapNode, tier: FightTier): FightSpec {
   const fight = fightFor(c, run, node, tier);
   run.met.push(fight.id);
@@ -497,14 +510,25 @@ const rollRarity = (rng: Rng, odds: Record<RarityT, number>): RarityT => {
   return ks.find((k) => (x -= odds[k]) < 0) ?? "common";
 };
 /** Can anyone in the roster use this piece? */
+/** Is a legendary piece aimed at this class (the content's aims; without them, any class that can wear it)? */
+export const aimedAt = (c: Content, base: string, cls: string) => rogue(c).aims?.[base]?.includes(cls) ?? canEquip(c.classes.get(cls)!, c.gear.get(base)!);
 export const usable = (c: Content, run: RogueRun, base: string) => run.roster.some((m) => canEquip(c.classes.get(m.cls)!, c.gear.get(base)!));
-export function rollItem(c: Content, run: RogueRun, rng: Rng, rarity: RarityT): Item {
+export function rollItem(c: Content, run: RogueRun, rng: Rng, rarity: RarityT, forParty = false): Item {
   registerGear(c);
   const pool = rarity === "legendary" ? rogue(c).legendaries : ORDINARY(c);
-  const fits = pool.filter((id) => usable(c, run, id));
+  // Won outright, a piece is one aimed at someone in the party (who can wear it), where any is.
+  const wears = (id: string) => (forParty ? run.party.some((cls) => canEquip(c.classes.get(cls)!, c.gear.get(id)!)) : usable(c, run, id));
+  const aimed = forParty ? pool.filter((id) => run.party.some((cls) => aimedAt(c, id, cls) && canEquip(c.classes.get(cls)!, c.gear.get(id)!))) : [];
+  // A legendary piece the run already has isn't rolled again while others are left (two Thornhearts in one run: a playtester).
+  const had = new Set(rarity === "legendary" ? run.items.filter((it) => it.rarity === "legendary").map((it) => it.base) : []);
+  const fresh = (ids: string[]) => ids.filter((id) => !had.has(id));
+  let fits = fresh(aimed);
+  if (!fits.length) fits = fresh(pool.filter(wears));
+  const anyFresh = fresh(pool);
   // Ordinary pieces are always ones the roster can wear (pieces for nobody felt like wasted offers to the playtesters);
-  // a legendary piece sometimes wants a class the run doesn't have yet.
-  const from = fits.length && (rarity !== "legendary" || next(rng) * 100 < cfg(c).spoils.usable) ? fits : pool;
+  // a legendary piece sometimes wants a class the run doesn't have yet, except one won outright (forParty: an elite's
+  // trophy, which a playtester got as Archmage's robes with no caster in the party).
+  const from = fits.length && (rarity !== "legendary" || forParty || next(rng) * 100 < cfg(c).spoils.usable) ? fits : anyFresh.length ? anyFresh : pool;
   const base = from[int(rng, from.length)];
   // A legendary piece carries a rare's two affixes on top of what makes it legendary: the core set's powerful pieces are
   // sidegrades by design, and three of them at the start of a run were worth a third of three rares (tuning round 9).
@@ -531,7 +555,7 @@ function rollRecruit(c: Content, run: RogueRun, rng: Rng, taken: string[] = []):
   // A class that could wear a legendary piece nobody in the roster can is three times as likely: a piece found for a class
   // the run doesn't have makes that class worth hoping for, and the odds answer (an AI playtester's ask).
   const waiting = bag(run).filter((it) => it.rarity === "legendary" && !run.roster.some((m) => canEquip(c.classes.get(m.cls)!, c.gear.get(it.uid) ?? itemGear(c, it))));
-  const weight = (id: string) => (waiting.some((it) => canEquip(c.classes.get(id)!, c.gear.get(it.uid) ?? itemGear(c, it))) ? 3 : 1);
+  const weight = (id: string) => (waiting.some((it) => aimedAt(c, it.base, id)) ? 3 : 1);
   let x = int(rng, pool.reduce((t, id) => t + weight(id), 0));
   for (const id of pool) if ((x -= weight(id)) < 0) return { kind: "recruit", cls: id };
   return { kind: "recruit", cls: pool[pool.length - 1] };
@@ -554,8 +578,11 @@ function spoilOffers(c: Content, run: RogueRun, tier: FightTier, node: string): 
     }
     const x = next(rng) * 100;
     let o: Offer | null = null;
-    if (x < s.tome) o = rollTome(c, run, rng);
-    else if (x < s.tome + s.recruit) {
+    if (x < s.tome) {
+      o = rollTome(c, run, rng);
+      // No tome twice in one offer (a playtester was offered Rending arrow twice).
+      if (o?.kind === "tome" && out.some((y) => y.kind === "tome" && y.cls === (o as { cls: string }).cls && y.ability === (o as { ability: string }).ability)) o = null;
+    } else if (x < s.tome + s.recruit) {
       o = rollRecruit(c, run, rng, recruits);
       if (o?.kind === "recruit") recruits.push(o.cls);
     } else if (x < s.tome + s.recruit + s.supply) o = { kind: "supply", id: SUPPLIES[int(rng, SUPPLIES.length)] };
@@ -771,8 +798,8 @@ export function useSupply(c: Content, run: RogueRun, id: SupplyIdT, target?: str
     const any = run.party.map((cls) => member(run, cls)).filter((m) => !m.ko);
     if (!any.length) return false;
     for (const m of any) {
-      if (id === "tonic") m.missHp = Math.max(0, m.missHp - Math.floor((maxOf(c, run, m.cls, "max_hp") * s.tonic.hp) / 100));
-      else m.missMp = Math.max(0, m.missMp - Math.floor((maxOf(c, run, m.cls, "max_mp") * s.ether.mp) / 100));
+      if (id === "tonic") m.missHp = Math.max(0, m.missHp - Math.floor((healMax(c, run, m, "max_hp") * s.tonic.hp) / 100));
+      else m.missMp = Math.max(0, m.missMp - Math.floor((healMax(c, run, m, "max_mp") * s.ether.mp) / 100));
     }
   }
   run.supplies.splice(i, 1);
@@ -782,11 +809,20 @@ export function useSupply(c: Content, run: RogueRun, id: SupplyIdT, target?: str
 const betweenRooms = (run: RogueRun) => !["over", "draft"].includes(run.pending.kind) && !(run.pending.kind === "fight" && run.pending.begun);
 export const canManage = betweenRooms;
 
+/**
+ * The max a heal by share counts from: the max now, but no more than it was when the last fight ended. Putting on a
+ * +HP piece to REST or drink a tonic, then taking it off, healed the piece's share for free (an AI playtester's exploit).
+ */
+function healMax(c: Content, run: RogueRun, m: Member, stat: "max_hp" | "max_mp"): number {
+  const now = maxOf(c, run, m.cls, stat);
+  const last = m.lastMax?.[stat === "max_hp" ? "hp" : "mp"];
+  return last === undefined ? now : Math.min(now, last);
+}
 function heal(c: Content, run: RogueRun, who: Member[], hpPct: number, mpPct: number) {
   for (const m of who) {
     if (m.ko) continue;
-    if (hpPct) m.missHp = Math.max(0, Math.min(maxOf(c, run, m.cls, "max_hp") - 1, m.missHp - Math.floor((maxOf(c, run, m.cls, "max_hp") * hpPct) / 100)));
-    if (mpPct) m.missMp = Math.max(0, Math.min(maxOf(c, run, m.cls, "max_mp"), m.missMp - Math.floor((maxOf(c, run, m.cls, "max_mp") * mpPct) / 100)));
+    if (hpPct) m.missHp = Math.max(0, Math.min(maxOf(c, run, m.cls, "max_hp") - 1, m.missHp - Math.floor((healMax(c, run, m, "max_hp") * hpPct) / 100)));
+    if (mpPct) m.missMp = Math.max(0, Math.min(maxOf(c, run, m.cls, "max_mp"), m.missMp - Math.floor((healMax(c, run, m, "max_mp") * mpPct) / 100)));
   }
 }
 function gainGold(run: RogueRun, n: number) {
@@ -839,6 +875,13 @@ export function options(c: Content, run: RogueRun): string[] {
   }
 }
 /** Can an event's verb happen now? A recruit needs room at camp, learning something to learn, tempering a piece to temper. */
+/** Why an event's option can't be picked now, in a player's words (empty when it can). */
+export function whyNot(c: Content, run: RogueRun, opt: RogueEventT["options"][number]): string {
+  if ((opt.gold ?? 0) > run.gold) return "not enough gold";
+  const op = opt.do.find((x) => !possible(c, run, x));
+  if (!op) return "";
+  return op.op === "recruit" ? "no room at camp" : op.op === "learn" ? "nothing left to learn" : op.op === "upgrade" ? "nothing left to upgrade" : op.op === "temper" ? "no common or uncommon piece to temper" : op.op === "formation" ? "every formation owned" : "can't happen now";
+}
 function possible(c: Content, run: RogueRun, op: EventOpT): boolean {
   if (op.op === "recruit") return roomForRecruit(c, run);
   if (op.op === "learn") return learnOptions(c, run).length > 0;

@@ -733,6 +733,18 @@ function checkRogue(pack: Pack, w: Walker, r: Report, rg: S.RogueT) {
   const all = new Set([...pack.gear.map((g) => g.id), ...rg.gear.map((g) => g.id)]);
   rg.gear.forEach((g, i) => pack.gear.some((x) => x.id === g.id) && r.error("rogue.gear", `rogue.gear[${i}]`, `'${g.id}' is also in pack.gear`));
   rg.legendaries.forEach((id, i) => !all.has(id) && r.error("rogue.legendary", `rogue.legendaries[${i}]`, `no gear '${id}'`));
+  // Every piece is aimed at classes that exist and can wear it; every legendary has an aim.
+  const gearOf = (id: string) => pack.gear.find((g) => g.id === id) ?? rg.gear.find((g) => g.id === id);
+  for (const [id, classes] of Object.entries(rg.aims ?? {})) {
+    if (!rg.legendaries.includes(id)) r.error("rogue.aim", `rogue.aims.${id}`, `'${id}' isn't a legendary piece`);
+    const g = gearOf(id);
+    classes.forEach((cls, j) => {
+      const k = pack.classes.find((x) => x.id === cls);
+      if (!k) return void r.error("rogue.aim", `rogue.aims.${id}[${j}]`, `no class '${cls}'`);
+      if (g && !canEquip(k, g)) r.error("rogue.aim", `rogue.aims.${id}[${j}]`, `'${cls}' can't wear '${id}'`);
+    });
+  }
+  if (rg.aims) rg.legendaries.forEach((id) => !rg.aims![id] && r.warn("rogue.aim", `rogue.aims`, `'${id}' isn't aimed at anyone`));
 }
 
 /**

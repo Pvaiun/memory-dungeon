@@ -27,6 +27,8 @@ export type Dials = {
   noGear: boolean;
   /** Never trades a fallen member for one at camp between rooms (the rule before round 25), to price it. */
   noBenchSwap?: boolean;
+  /** A piece (by base id) kept on whichever party member it suits best, all run: to price a legendary's rule. */
+  lock?: string;
   /** Class values, by id, in gear steps. */
   classValue: Record<string, number>;
 };
@@ -52,23 +54,27 @@ function statusValue(cls: string, id: string): number {
   const dmg = Math.max(p?.w.attack ?? 0, p?.w.magic ?? 0, 1);
   const wall = WALLS.has(cls) ? 1 : 0;
   switch (id) {
-    case "lg_ember": case "lg_rime": case "lg_sunder": case "lg_song": return 1.2 * basic;
+    // Raised with the legendary pass (tuning round 27).
+    case "lg_ember": case "lg_rime": case "lg_sunder": case "lg_song": return 1.8 * basic;
     case "lg_cleave": return 1.6 * basic;
     case "lg_storm": return 2.2 * basic;
-    case "lg_wounds": return 1 + 0.8 * (p?.w.crit_chance ?? 0);
-    case "lg_judge": case "lg_execute": case "lg_fury": return 1.0 * dmg;
-    case "lg_hunter": case "lg_cinder": case "lg_brittle": return 0.7 * dmg;
-    case "lg_lantern": return 2 + wall;
-    case "lg_soul": return CASTERS.has(cls) ? 2.5 : 1.5;
-    case "lg_banner": return 3.5;
-    case "lg_hourglass": return 2.5;
+    case "lg_wounds": return 1.5 + 1.0 * (p?.w.crit_chance ?? 0);
+    case "lg_judge": return 1.0 * dmg;
+    case "lg_execute": return 1.4 * dmg;
+    case "lg_fury": return 1.3 * dmg;
+    case "lg_hunter": case "lg_cinder": return 1.2 * dmg;
+    case "lg_brittle": return 1.0 * dmg;
+    case "lg_lantern": return 2.5 + wall;
+    case "lg_soul": return CASTERS.has(cls) ? 3.5 : 2;
+    case "lg_banner": return 4.5;
+    case "lg_hourglass": return 3.5;
     case "lg_horn": return 3.5;
-    case "lg_bell": return CASTERS.has(cls) ? 1.5 : 0.5;
-    case "lg_idol": return cls === "geomancer" ? 3 : cls === "knight" ? 1.5 : 0.5;
-    case "lg_coil": case "lg_frost": case "lg_briar": return 0.8 + 1.5 * wall;
-    case "lg_spikes": return 0.5 + 2.5 * wall;
-    case "lg_shade": return WALLS.has(cls) ? 0 : 1.5;
-    case "lg_grave": return 1.5;
+    case "lg_bell": return CASTERS.has(cls) ? 2 : 1.5;
+    case "lg_idol": return cls === "geomancer" ? 4 : cls === "knight" ? 2.5 : 1.5;
+    case "lg_coil": case "lg_frost": case "lg_briar": return 1.2 + 2 * wall;
+    case "lg_spikes": return 0.8 + 3 * wall;
+    case "lg_shade": return WALLS.has(cls) ? 0 : 2.5;
+    case "lg_grave": return 2.5;
     default: return 0;
   }
 }
@@ -86,10 +92,17 @@ export function itemValue(c: Content, cls: string, uid: string): number {
  * Hands out every item: greedily, the biggest gain first, the party before those at camp. A weapon always stays on.
  * Returns the total value of what the party wears.
  */
-export function kitUp(c: Content, run: RogueRun): number {
+export function kitUp(c: Content, run: RogueRun, lock?: string): number {
   registerGear(c, run);
   const order = [...run.party, ...bench(run)];
   const val = (cls: string, uid: string | undefined) => (uid ? itemValue(c, cls, uid) : 0);
+  // A locked piece goes first, to the party member it suits best (a weapon only where the old one can go back to the bag), and stays.
+  const locked = lock ? run.items.find((it) => it.base === lock) : undefined;
+  if (locked && !run.party.includes(wearer(run, locked.uid) ?? "")) {
+    const g = c.gear.get(locked.uid)!;
+    const who = run.party.filter((cls) => canEquip(c.classes.get(cls)!, g)).sort((a, b) => val(b, locked.uid) - val(a, locked.uid))[0];
+    if (who) equip(c, run, who, g.slot as Slot, locked.uid);
+  }
   // Start from nothing but weapons, then fill: a weapon slot can't be empty, so weapons go first.
   for (let moves = 0; moves < 300; moves++) {
     let best: { cls: string; slot: Slot; uid: string; gain: number } | null = null;
@@ -98,8 +111,9 @@ export function kitUp(c: Content, run: RogueRun): number {
       const w = run.party.includes(cls) ? 1 : 0.3;
       for (const slot of SLOT_LIST) {
         const cur = val(cls, m.gear[slot]);
+        if (locked && m.gear[slot] === locked.uid) continue;
         for (const it of run.items) {
-          if (m.gear[slot] === it.uid) continue;
+          if (m.gear[slot] === it.uid || it === locked) continue;
           const g = c.gear.get(it.uid)!;
           if (g.slot !== slot) continue;
           const v = val(cls, it.uid);
@@ -252,7 +266,7 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
       const into = bench(run).filter((x) => !member(run, x).ko).sort((a, b) => classScore(d, run, b) - classScore(d, run, a))[0];
       if (into) swap(c, run, out, into);
     }
-    if (!d.noGear) kitUp(c, run);
+    if (!d.noGear) kitUp(c, run, d.lock);
     arrange(c, run);
     // Supplies before a room: HP if the party is low, MP if casters are dry, a phoenix for the fallen.
     const down = run.party.filter((cls) => member(run, cls).ko);

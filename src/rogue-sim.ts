@@ -13,7 +13,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { availableParallelism } from "node:os";
 import { Worker, isMainThread, parentPort, workerData } from "node:worker_threads";
 import { loadContent, type Content } from "./engine/run.js";
-import { autoFight, member, newRogue, rollItem, take, type RogueRun } from "./rogue.js";
+import { autoFight, member, newItem, newRogue, rollItem, take, type RogueRun } from "./rogue.js";
 import { rngFor } from "./engine/rng.js";
 import type { RarityT } from "./schema.js";
 import { aiPlayer, hpShare, mpShare, type Dials } from "./rogue-ai.js";
@@ -37,7 +37,12 @@ export function playOne(c: Content, seed: number, leader: string, heat: number, 
   const run = newRogue(c, { seed, leader, heat });
   // A what-if: pieces of a rarity, or gold, handed over at the start.
   const grng = rngFor(seed, "gift");
-  for (const [k, n] of Object.entries(gift)) for (let i = 0; i < n; i++) k === "gold" ? (run.gold += 1) : take(c, run, { kind: "gear", item: rollItem(c, run, grng, k as RarityT) });
+  // (piece:<id> hands over that legendary piece without affixes, to price its rule alone: npx tsx src/rogue-legendaries.ts.)
+  for (const [k, n] of Object.entries(gift)) for (let i = 0; i < n; i++) {
+    if (k === "gold") run.gold += 1;
+    else if (k.startsWith("piece:")) take(c, run, { kind: "gear", item: newItem(run, k.slice(6), "legendary") });
+    else take(c, run, { kind: "gear", item: rollItem(c, run, grng, k as RarityT) });
+  }
   const ai = aiPlayer(dials, seed);
   const bossHp: number[] = [], bossFight: string[] = [], regions: string[] = [run.region];
   let died: string | null = null;

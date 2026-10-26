@@ -5,14 +5,14 @@
  * Every choice goes to src/rogue.ts, is saved, and the screen redraws from the run.
  */
 import {
-  bench, bossFoes, canManage, choose, eventOf, equip, itemGear, itemOf, joinKnown, learnOptions, member, options, reachable,
+  actRoll, bench, bossFoes, canManage, choose, eventOf, equip, itemGear, itemOf, joinKnown, learnOptions, member, options, reachable,
   rogue, seat, sellPrice, setFormation, setOrder, swap, trainPrice, unlearned, upgraded, upgradeOptions, useSupply, wearer, type Item, type MapNode, type Offer, type RogueRun,
 } from "../../src/rogue.js";
 import { canEquip } from "../../src/validate.js";
-import type { GearT, RogueNodeKindT } from "../../src/schema.js";
+import type { AbilityT, GearT, RogueNodeKindT } from "../../src/schema.js";
 import { c, className, cls as classOf, disp, kindOf, shortName } from "./content.js";
 import { button, bar, h, header, toast, win, type Child } from "./dom.js";
-import { sizeWords } from "./describe.js";
+import { sizeWords, targetPhrase } from "./describe.js";
 import { abilityBlock, basicLine, classHead, codeSpans, gearRow, passiveBlock, role, section, specialLines, statGrid } from "./sheet.js";
 import { weaponOf } from "../../src/engine/combat/fight.js";
 import { actorEl, enemyThumb, faceEl, iconEl } from "./pixel.js";
@@ -68,8 +68,14 @@ function itemRow(run: RogueRun, it: Item, onClick?: () => void, opts: { arrow?: 
   return r;
 }
 /** Who in the roster could wear a piece, or a nudge toward who could. */
-function fitsLine(run: RogueRun, g: GearT, rarity?: string): HTMLElement {
+function fitsLine(run: RogueRun, g: GearT, rarity?: string, base?: string): HTMLElement {
   const tag = rarity && rarity !== "common" ? h("span", { class: RARITY_CLASS[rarity] }, `${rarity.toUpperCase()} · `) : null;
+  // A legendary piece names who it's for: the classes in the roster lit, the rest dim ("I need this class for that").
+  const aims = base ? rogue(c).aims?.[base] : undefined;
+  if (rarity === "legendary" && aims) {
+    const have = (cls: string) => run.roster.some((m) => m.cls === cls);
+    return h("div", { class: "text small wrap" }, tag, h("span", { class: "dim" }, "FOR "), ...aims.flatMap((cls, i) => [i ? h("span", { class: "dim" }, ", ") : null, h("span", { class: have(cls) ? "hi" : "dim" }, shortName(cls))]), aims.some(have) ? null : h("span", { class: "debuff" }, " · NOBODY HERE YET"));
+  }
   const can = run.roster.filter((m) => canEquip(c.classes.get(m.cls)!, g)).map((m) => shortName(m.cls));
   if (can.length) return h("div", { class: "line small dim wrap" }, tag, `FITS ${can.join(", ")}`);
   const would = c.pack.classes.filter((k) => canEquip(k, g)).map((k) => shortName(k.id));
@@ -77,10 +83,10 @@ function fitsLine(run: RogueRun, g: GearT, rarity?: string): HTMLElement {
 }
 /** What a legendary piece's statuses do, in words. */
 function effectLines(g: GearT): Child[] {
-  const out: Child[] = g.tier === "powerful" ? [h("div", { class: "text small wrap gold" }, g.text)] : [];
+  // A rogue legendary's rule is its status's text; the piece's own text says the same in other words.
+  const out: Child[] = g.tier === "powerful" && !(g.statuses ?? []).some((id) => id.startsWith("lg_")) ? [h("div", { class: "text small wrap gold" }, g.text)] : [];
   return [...out, ...(g.statuses ?? []).map((id) => c.statuses.get(id)).filter(Boolean).map((s) => h("div", { class: "text small wrap gold" }, s!.text ?? s!.name))];
 }
-/** What an upgrade does to one ability, in numbers. */
 /** What an upgrade changes, in this member's numbers where it has some ("≈ 9 pierce + Silence → ≈ 13 pierce + Silence"). */
 function upText(id: string, run?: RogueRun, cls?: string): string {
   const a = c.abilities.get(id)!, up = upgraded(c, id);
@@ -93,7 +99,7 @@ function upText(id: string, run?: RogueRun, cls?: string): string {
 function offerBody(run: RogueRun, o: Offer): Child[] {
   if (o.kind === "gear") {
     const g = c.gear.get(o.item.uid) ?? itemGear(c, o.item);
-    return [itemRow(run, o.item, undefined, { right: null }), ...effectLines(g), fitsLine(run, g, o.item.rarity)];
+    return [itemRow(run, o.item, undefined, { right: null }), ...effectLines(g), fitsLine(run, g, o.item.rarity, o.item.base)];
   }
   if (o.kind === "tome") {
     return [h("div", { class: "line" }, faceEl(o.cls), h("span", { class: "grow hi" }, `TOME: ${shortName(o.cls)} LEARNS`)), abilityBlock(c.abilities.get(o.ability)!, null, false)];
@@ -273,6 +279,13 @@ function useSupplyView(run: RogueRun, id: "tonic" | "ether" | "phoenix") {
 
 // ─── A fight in waiting ────────────────────────────────────────────────────
 
+/** Who a foe's ability aims at, from the party's side of the field. */
+function atWords(ab: AbilityT): string {
+  const t = ab.target;
+  if (!t || t === "foe") return `one of the party, by aggro${ab.seek ? ", past Taunt" : "; Taunt draws it"}`;
+  const byAggro = typeof t === "object" && t.side === "foes" && (!t.pick || t.pick === "random");
+  return `${targetPhrase(t, ab.seek).replace(/every foe/g, "the whole party").replace(/random foe/g, "party member").replace(/\bfoes?\b/g, "party member")}${byAggro ? ", by aggro" : ""}`;
+}
 /** A fight's foes as the preview shows them: what each is, what it does, what it hits with, what it resists. */
 function foeLines(enemies: string[], foes: { power?: number } = {}): Child[] {
   const kinds = [...new Set(enemies)];
@@ -284,12 +297,14 @@ function foeLines(enemies: string[], foes: { power?: number } = {}): Child[] {
     const el = (x?: string) => x ?? "physical";
     const hits = new Set<string>([el(en.weapon?.element ?? (en.weapon?.kind ? c.weaponKinds.get(en.weapon.kind)?.element : undefined))]);
     for (const a of en.abilities ?? []) for (const d of c.abilities.get(a)!.do) if (d.op === "damage") hits.add(d.type === "magical" ? el(d.element) : "physical");
+    if (res.length) res.unshift(h("span", { class: "dim" }, "· "));
     res.unshift(h("span", { class: "dim" }, "HITS WITH "), ...[...hits].map((k) => h("span", { class: k }, `${k.toUpperCase()} `)));
     // Its abilities by name and words, so a boss's big move can be planned for (the AI playtests: "let me answer what I see").
     // Its sizes too, from its stats and this fight's knob, before the target's Armor and resistances (Slay the Spire shows intents).
-    const acts = (en.abilities ?? []).map((a) => { const ab = c.abilities.get(a)!; const size = sizeWords(ab, en.stats, 1 + (foes.power ?? 0) / 100); return h("div", { class: "text small wrap" }, h("span", { class: "hi" }, `${ab.name.toUpperCase()}: `), h("span", { class: "dim" }, ab.text), size ? h("span", { class: "dim" }, ` ${size.toUpperCase()}${/≈/.test(size) ? " BEFORE ARMOR" : ""}.`) : null); });
+    // And who it aims at, in the party's words (Crush landing past a Taunt confused a playtester: it aims by aggro when it starts).
+    const acts = (en.abilities ?? []).map((a) => { const ab = c.abilities.get(a)!; const size = sizeWords(ab, en.stats, 1 + (foes.power ?? 0) / 100); return h("div", { class: "text small wrap" }, h("span", { class: "hi" }, `${ab.name.toUpperCase()}: `), h("span", { class: "dim" }, ab.text), h("span", { class: "dim" }, ` AT ${atWords(ab).toUpperCase()}.`), size ? h("span", { class: "dim" }, ` ${size.toUpperCase()}${/≈/.test(size) ? " BEFORE ARMOR, CRITS AND STATUSES" : ""}.`) : null); });
     return h("div", { class: "line", style: "align-items:flex-start;min-height:3rem" }, h("span", { style: "width:3rem;display:inline-flex;justify-content:center" }, enemyThumb(id, 24)),
-      h("div", { class: "grow" }, h("div", { class: en.rank === "boss" ? "gold" : en.rank === "elite" ? "debuff" : "" }, `${enemyDisplayName(id).toUpperCase()}${n(id) > 1 ? ` ×${n(id)}` : ""}`), h("div", { class: "text dim small wrap" }, en.text), ...acts, res.length ? h("div", { class: "small" }, ...res) : null));
+      h("div", { class: "grow" }, h("div", { class: en.rank === "boss" ? "gold" : en.rank === "elite" ? "debuff" : "" }, `${enemyDisplayName(id).toUpperCase()}${n(id) > 1 ? ` ×${n(id)}` : ""}`), h("div", { class: "text dim small wrap" }, en.text), ...acts, res.length ? h("div", { class: "small text wrap" }, ...res) : null));
   });
 }
 /** The act's boss, from the map: known from the act's start, so the party can be built and swapped toward it. */
@@ -507,7 +522,9 @@ function regionView(run: RogueRun): Child[] {
     win("", h("div", { class: "text wrap" }, "The road forks. Each way has its own foes, and its own boss at the end.")),
     ...p.options.map((id) => {
       const r = rogue(c).regions.find((x) => x.id === id)!;
-      return win("roffer", h("div", { class: "line hi" }, r.name.toUpperCase()), h("div", { class: "text dim small wrap" }, r.text), h("div", { class: "line small" }, iconEl(ICON.boss), h("span", { class: "gold" }, `BOSS: ${r.bosses.map((b) => b.name.replace(/^The /, "")).join(" OR ").toUpperCase()}`)), h("div", { class: "btns" }, button("GO THIS WAY", () => pickOrSave(run, id), "hi sm")));
+      // The boss this way is already set by the act's dice: shown with its moves, so the fork is a choice with its eyes open.
+      const boss = actRoll(c, run, id, run.act + 1).boss;
+      return win("roffer", h("div", { class: "line hi" }, r.name.toUpperCase()), h("div", { class: "text dim small wrap" }, r.text), h("div", { class: "line small" }, iconEl(ICON.boss), h("span", { class: "gold" }, `BOSS: ${boss.name.toUpperCase()}`)), ...foeLines(boss.enemies, bossFoes(c, run, { act: run.act + 1, region: id })), h("div", { class: "btns" }, button("GO THIS WAY", () => pickOrSave(run, id), "hi sm")));
     }),
   ];
 }
