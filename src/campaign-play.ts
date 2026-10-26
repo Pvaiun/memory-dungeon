@@ -173,7 +173,11 @@ function summary(log: Entry[]): string {
       const tg = String(e.target);
       if (e.word && e.by && side.get(String(e.by)) === "party") add(f.words, `${String(e.word)} on ${names.get(tg)!.replace(/ [A-Z]$/, "")}`, 1);
       f.hp.set(tg, e.hp as number);
-      if (side.get(tg) === "party") add(f.taken, names.get(tg)!, e.amount);
+      if (side.get(tg) === "party") {
+        add(f.taken, names.get(tg)!, e.amount);
+        // A status's damage on the party (Bleed, Burn, Shock) shows on screen as its own message: name it here too.
+        if (e.part === "pulse") add(f.taken, `(of which ${String(e.src)})`, e.amount);
+      }
       else if (e.by && side.get(String(e.by)) === "party") add(f.dealt, names.get(String(e.by))!, e.amount);
       else if (e.part === "pulse") add(f.dealt, `(statuses on foes: ${String(e.src)})`, e.amount);
     } else if (e.t === "heal") {
