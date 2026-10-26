@@ -177,7 +177,8 @@ export const abilities: A[] = [
   // Campaign pass: many Might, not several. The Bard was in no winning build on any node.
   a("bard", "war_ballad", "War ballad", "Many Might on the ally with the highest Attack or Magic.", { ...timing("medium", "normal"), target: T.highestAMAlly, do: [apply("might", { stacks: stacks("many", "magic") })] }),
   // Step 5c (the director's): Lullaby (Slow on one foe) became a Shock on every foe.
-  a("bard", "thunder_chord", "Thunder chord", "Several Shock on every foe.", { ...timing("medium", "normal"), target: T.everyFoe, do: [apply("shock", { stacks: stacks("several", "magic") })] }),
+  // Many, not several: at several an AI playtester saw it peak at 10 stacks for under 2,000 a fight, the Bard a passenger.
+  a("bard", "thunder_chord", "Thunder chord", "Many Shock on every foe.", { ...timing("medium", "normal"), target: T.everyFoe, do: [apply("shock", { stacks: stacks("many", "magic") })] }),
   // Hexer
   a("hexer", "hush", "Hush", "Silences the foe with the highest Attack or Magic.", { ...timing("long", "quick"), ...waitsFor("foes", { lacks: "silence" }), target: lacking(T.highestAMFoe, "silence"), do: [apply("silence")] }),
   a("hexer", "unravel", "Unravel", "Strips one random buff from a random foe with a buff.", { ...timing("medium", "normal"), ...waitsFor("foes", { buffs: true }), target: T.buffedFoe, do: [{ op: "remove", label: "buff", count: 1, order: "random" }] }),
@@ -296,4 +297,4 @@ export const classes: ClassDefT[] = [
 ];
 
 // Step 5c: each class's abilities cost their word's MP × its Magic ÷ SPELL_MAGIC (scale.ts, mpCost): casters hungry, walls not.
-for (const k of classes) for (const ab of abilities) if (ab.class === k.id && ab.mp) ab.mp = mpCost(ab.mp, k.stats.magic / P);
+for (const k of classes) for (const ab of abilities) if (ab.class === k.id && ab.mp) ab.mp = mpCost(ab.mp, k.stats.magic / P, k.stats.max_mp);

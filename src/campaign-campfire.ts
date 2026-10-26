@@ -61,6 +61,14 @@ const only = new Map<string, number>(); // visits this kind alone wins
 const wins = new Map<string, number>(); // visits this kind wins (best raise for raise)
 const offered = new Map<string, number>();
 let allWin = 0, noneWin = 0, simRight = 0, simWins = 0, bestWins = 0;
+// Other pickers, scored on the visits where the pick decides the run: REST unless someone is down (then RAISE), and the like.
+const pickers: Record<string, (d: { options: string[] }, m: M[]) => string> = {
+  "rest, or raise if down": (d) => d.options.find((o) => o.startsWith("raise:")) ?? "rest",
+  "always rest": () => "rest",
+  "the simulations' picker": () => "",
+};
+const pickerWins = new Map<string, number>();
+let decided = 0;
 const downWins = new Map<string, number>(); // with someone down: visits each kind wins
 // By the party's casters (classes with Magic 4 or more, whose spells cost the most): visits, and visits each kind alone wins.
 const casterVisits = new Map<number, number>(), casterOnly = new Map<string, number>();
@@ -109,6 +117,13 @@ for (const i of which) {
       s.down += m.length - up.length;
       shape.set(winners[0], s);
     }
+    if (winners.length && winners.length < byKind.size) {
+      decided++;
+      for (const [name, f] of Object.entries(pickers)) {
+        const pk = f(d, run.party as unknown as M[]) || simPick(d, run);
+        if (outs.get(pk)?.won) add(pickerWins, name);
+      }
+    }
     const sp = simPick(d, run);
     add(simChose, kind(sp));
     if (outs.get(sp)!.won) simWins++;
@@ -132,6 +147,7 @@ out.push(`\nBy casters in the party (Magic 4 or more): ${[...casterVisits].sort(
 out.push(`\nWhen one option alone wins, the party standing at the fire (HP share, MP share, members down):`);
 for (const [k, s] of shape) out.push(`- ${k}: ${pct(s.hp, s.n)} HP, ${pct(s.mp, s.n)} MP, ${(s.down / s.n).toFixed(2)} down (${s.n} visits)`);
 out.push(`\nThe simulations' picker chose ${[...simChose].map(([k, v]) => `${k} ${v}`).join(", ")}: it won ${simWins} of the ${bestWins} visits some option wins, and picked a winning option (or nothing could win) in ${pct(simRight, visits)}.`);
+out.push(`\nPickers on the ${decided} visits where the pick decides the run (wins): ${Object.keys(pickers).map((k) => `${k} ${pickerWins.get(k) ?? 0}`).join(", ")}.`);
 out.push("\nBy node:");
 out.push(...perNode.map((x) => `- ${x}`));
 console.log(out.join("\n"));
