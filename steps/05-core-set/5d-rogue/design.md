@@ -52,7 +52,7 @@ The core set as a roguelite, on Slay the Spire's structure, as the director aske
   - `npm run rogue:calibrate` measures each fight against snapshots of real parties from simulated runs (made whole, MP as it was) and bisects its knob until it costs its tier's share of party HP: easy 10/11/12, regular 15/16/17, elite 22/23/24 points, by act. Bosses are measured against parties exactly as they arrive.
   - `npm run rogue:tune` then corrects in whole runs: each boss toward beating 12%, 20% and 25% of the parties that reach it (acts I, II, III), each region's regular fights and elites toward ending 6%, 9% and 12% of the runs that enter it.
 - **Bomb Bugs** come at most two to a fight: their document says three together wipe, and a roguelite party can't be built for one fight. **Snakes' packs never grow**, and act I's regular fights hold two: their Bleed doesn't shrink with a fight's knob, and the regular fights' extra HP gave them more hits (the Viper Den ended 9% of the act I runs meeting it with its knob at the floor).
-- **Heat:** a won run opens the next heat level; each adds 5 to every knob, about 4 to 8 points of the simulated player's wins (33%, 25%, 18% and 12% at heats 1, 2, 3 and 5). Heat 0 is the game as tuned.
+- **Heat:** a won run opens the next heat level; each adds 5 to every knob, about 5 to 9 points of the simulated player's wins (31%, 26%, 20% and 11% at heats 1, 2, 3 and 5, from 38% at heat 0). Heat 0 is the game as tuned.
 
 ## Meta: what a run leaves
 
@@ -82,7 +82,7 @@ A third MODE in Settings (journey, free play, rogue). In rogue mode the home men
 
 ## Challenges
 
-- **Class balance shows harder here than in the campaign.** As leader with random companions, the Vampire wins 44% of runs and the Monk 38%; the Bard 9% and the Hexer 7%. Starting the Vampire on Wither instead of Blood drain cut its lead (it won 37% as leader when the next class won 20%); nothing rogue-specific lifts the weakest (not a second ability on joining, not another first ability). It's the 5c report's class pass, with numbers.
+- **Class balance shows harder here than in the campaign.** As leader with random companions, the Vampire wins 34% of runs and the Monk 33%; the Hexer 10% and the Bard 9%. Starting the Vampire on Wither instead of Blood drain cut its lead (it won 37% as leader when the next class won 20%); nothing rogue-specific lifts the weakest (not a second ability on joining, not another first ability). It's the 5c report's class pass, with numbers.
 - **MP binds only for casters.** The martial classes end nearly every fight at full MP, so FOCUS is right only for a caster-heavy party. A class pass for the casters, or MP costs for the martial classes, is the lever, not the rogue rules.
 - **The core set's powerful pieces are sidegrades.** In the rogue mode, locked on for a whole run, most cost points against an ordinary piece of their slot. They're shared with the journey and free play, so the rogue mode leaves them as they are and the report asks.
 
