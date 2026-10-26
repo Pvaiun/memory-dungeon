@@ -98,11 +98,15 @@ export type RogueRegion = {
   easy: RogueFight[]; normal: RogueFight[]; elite: RogueFight[]; bosses: RogueFight[];
 };
 
-/** A region's fight, with its calibrated knob (rogue-knobs.json, by region/tier/id) when it has one. */
+/**
+ * A region's fights with their calibrated knobs (rogue-knobs.json, by region/tier/id, from npm run rogue:calibrate), and
+ * the region's own knob for its regular fights and elites (region/<id>/mob, from npm run rogue:tune).
+ */
 const KNOBS = fightKnobs as Record<string, number>;
 function withKnobs(r: RogueRegion): RogueRegion {
   const tag = (tier: string) => (x: RogueFight): RogueFight => (KNOBS[`${r.id}/${tier}/${x.id}`] !== undefined ? { ...x, knob: KNOBS[`${r.id}/${tier}/${x.id}`] } : x);
-  return { ...r, easy: r.easy.map(tag("easy")), normal: r.normal.map(tag("normal")), elite: r.elite.map(tag("elite")), bosses: r.bosses.map(tag("bosses")) };
+  const mob = KNOBS[`region/${r.id}/mob`];
+  return { ...r, ...(mob !== undefined ? { knob: { ...r.knob, mob, elite: mob } } : {}), easy: r.easy.map(tag("easy")), normal: r.normal.map(tag("normal")), elite: r.elite.map(tag("elite")), bosses: r.bosses.map(tag("bosses")) };
 }
 const f = enc;
 const REGIONS: RogueRegion[] = [
@@ -357,7 +361,7 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   {
     id: "gambler", name: "The Gambler", text: "A grinning stranger with a pair of bone dice. \"Double or nothing?\"",
     options: [
-      { id: "bet", label: "BET 40 GOLD", text: "Half the time, win 80 back.", gold: 40, do: [{ op: "chance", pct: 50, then: [{ op: "gold", amount: 80 }], else: [] }] },
+      { id: "bet", label: "BET 40 GOLD", text: "Half the time, win 100 back.", gold: 40, do: [{ op: "chance", pct: 50, then: [{ op: "gold", amount: 100 }], else: [] }] },
       { id: "leave", label: "WALK AWAY", text: "Nothing happens.", do: [] },
     ],
   },
@@ -399,7 +403,10 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   },
   {
     id: "camp", name: "An Empty Camp", text: "Someone left in a hurry: the fire is still burning, the bedrolls still laid out.",
-    options: [{ id: "camp", label: "MAKE CAMP", text: "A campfire: rest, focus, raise or train, and change the party.", do: [{ op: "camp" }] }],
+    options: [
+      { id: "camp", label: "MAKE CAMP", text: "A campfire: rest, focus, raise or train, and change the party.", do: [{ op: "camp" }] },
+      { id: "search", label: "SEARCH THE PACKS", text: "A tonic, an ether or a phoenix feather, and 20 gold.", do: [{ op: "gold", amount: 20 }, { op: "chance", pct: 40, then: [{ op: "supply", id: "tonic" }], else: [{ op: "chance", pct: 50, then: [{ op: "supply", id: "ether" }], else: [{ op: "supply", id: "phoenix" }] }] }] },
+    ],
   },
   {
     id: "pilgrims", name: "Pilgrims", text: "A band of pilgrims with a healer among them. \"For a donation…\"",

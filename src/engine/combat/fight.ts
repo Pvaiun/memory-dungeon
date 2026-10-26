@@ -771,9 +771,11 @@ function take(w: W, t: CUnit, amount: number): { soaked: number; lost: number; b
 
 const shield = (w: W, u: CUnit) => u.statuses.reduce((s, x) => (def(w, x.id).absorb ? s + Math.floor(x.stacks / SUBTICKS) : s), 0);
 
-function logDamage(w: W, by: CUnit | null, t: CUnit, src: string, part: string, r: Calc, tk: { soaked: number; blocked: boolean }, from?: string | null) {
+/** What a piece of damage was, for the log: its element, "physical", or "untyped". */
+const dmgKind = (p: Part) => p.element ?? (p.type === "none" ? "untyped" : p.type);
+function logDamage(w: W, by: CUnit | null, t: CUnit, src: string, part: string, r: Calc, tk: { soaked: number; blocked: boolean }, from?: string | null, kind?: string) {
   w.log?.({
-    t: "dmg", vis: "player", at: w.f.now, by: by?.id ?? null, target: t.id, src, part, ...(from ? { from } : {}),
+    t: "dmg", vis: "player", at: w.f.now, by: by?.id ?? null, target: t.id, src, part, ...(from ? { from } : {}), ...(kind ? { kind } : {}),
     amount: tk.blocked ? 0 : r.amount, soaked: tk.soaked, word: tk.blocked ? "AEGIS" : r.word, crit: r.crit, hp: t.hp, shield: shield(w, t),
   });
 }
@@ -826,7 +828,7 @@ function hit(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
       continue;
     }
     const tk = take(w, t, r.amount);
-    logDamage(w, a, t, ctx.id, part, r, tk);
+    logDamage(w, a, t, ctx.id, part, r, tk, null, dmgKind(parts[i].p));
     if (!tk.blocked) dealt += r.amount;
     lost += tk.lost;
     if (t.hp <= 0) ko(w, t);
@@ -874,7 +876,7 @@ function strike(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
   if (r.word === "ABSORB") return absorb(w, by, t, d.id, r);
   const tk = take(w, t, r.amount);
   // `from`: who applied the status, for reading a fight's damage by source (the log only).
-  logDamage(w, by, t, d.id, st.fixedBoost ? "pulse" : "reaction", r, tk, st.src);
+  logDamage(w, by, t, d.id, st.fixedBoost ? "pulse" : "reaction", r, tk, st.src, dmgKind(p));
   if (t.hp <= 0) ko(w, t);
   if (!w.f.result) damageEvents(w, by, t, tk.blocked ? 0 : r.amount, tk.lost, d.id);
 }

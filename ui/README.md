@@ -6,6 +6,8 @@ A browser interface on the headless engine, so the director can set up a party a
 
 **The journey (Oct 25, 2026).** Having everything at once was overwhelming on the phone, so the interface now plays the progression experiment, the pack's campaign: it starts with the Knight, the Cleric, the Ranger, Neutral and the first run, and each run won opens the next and gives classes, formations and gear, once. Free play, the old sandbox, is a setting. See **The journey** below.
 
+**The rogue mode (Oct 26, 2026).** A third MODE in Settings, beside the journey and free play: the core set as a roguelite on Slay the Spire's structure (`steps/05-core-set/5d-rogue/`). See **The rogue mode** below.
+
 ## Running it
 
 - **On a phone:** every push to `main` builds it and publishes it to GitHub Pages at **https://pvaiun.github.io/memory-dungeon/** (`.github/workflows/pages.yml`). One-time setup in the repo: Settings → Pages → Build and deployment → Source: "GitHub Actions". On Android, Chrome's menu → "Add to Home screen" installs it as a full-screen app (`public/manifest.webmanifest`).
@@ -49,6 +51,22 @@ The pack's `campaign` block is a road of about twenty runs, in order: the seven 
 - **Two loadouts.** The journey and free play each keep their own party, formation and gear, so switching modes loses neither; an install from before the journey keeps its party as free play's and starts the journey with the starting three. Anything not owned (after a reset, or when the content changes under the save) is dropped on read: a party member that isn't owned leaves, a piece of gear falls back to the plain weapon or nothing, a formation to Neutral.
 - **Backdrops** for the campaign's own runs (`cmp_*`) come from their enemies: the core set run they share the most foes with (each counted per fight, a boss three times) lends its scene; a small table by node id is the fallback (`themeOf` in `src/battle/scene.ts`).
 - `window.__journey(n)` sets the journey to n runs cleared (nothing marked seen), for screenshots.
+
+## The rogue mode
+
+Settings → MODE → ROGUE. The home menu then shows ROGUE (the run's act, or how many leaders and wins) and, during a run, the run's PARTY. Its screens are `src/rogue-screens.ts`; the run is saved in localStorage after every step (`src/rogue-state.ts`), so a reload lands where the player was.
+
+- **The leader:** the classes you own as a grid (the Knight, Cleric and Ranger to begin with; a won run adds its party), the picked one's sheet and the ability it starts with, the heat once a run is won, SET OUT.
+- **The draft:** three class cards; the picked one's sheet below, with the ability it starts with and the two it learns later.
+- **The map:** Slay the Spire's. The act and region in the header, the boss's name under it, the party's faces with HP and MP bars, gold and supplies. Rooms are icons (a sword for a fight, a pink skull for an elite, a gold ? for an event, a flame for a campfire, a coin bag for the shop, a gem for a chest, a crown for the boss), joined by dotted lines; the walked path turns gold, the rooms you can reach pulse, and a tap shows what the room is and ENTER. Supplies are buttons under the map.
+- **A fight:** the battle screen as it is, with the party's HP and MP carried in and no retry: ONWARD after a win, THE END after a loss. Leaving mid-fight and coming back replays it from its start, the same way.
+- **Spoils, a boon, a chest:** cards to pick one of, or skip. Gear shows its rarity by colour (green uncommon, blue rare, gold ★ legendary), what a legendary piece does, and who in the roster it fits, or "NOBODY CAN USE IT YET" with the classes that could. An elite's trophy shows above, already in the bag.
+- **The shop:** BUY (cards with prices), TRAIN (learn or upgrade, once each a visit), SELL (the bag).
+- **The campfire:** REST, FOCUS and RAISE; TRAIN (learn or upgrade); SWAP (tap a party member, then one at camp; free).
+- **Events, level-ups, the fork, the end:** a window of text and a list of choices; at the end, the road told as notes, then DONE adds a won run's party to the leaders.
+- **Party, unit sheet, gear:** the party screen shows the formation (◀ ▶ over the owned ones), the three seats (tap two to trade seats), who waits at camp and the bag; the unit sheet shows the run's gear and the abilities learned (two numbers to swap their order) and those not learned yet; the gear picker lists the run's pieces that fit, legendary first, with who wears each (taking one from another member trades pieces).
+
+Settings gains GIVE UP THE RUN and RESET ROGUE in rogue mode.
 
 ## The battle screen
 

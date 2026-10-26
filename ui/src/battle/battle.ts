@@ -47,6 +47,8 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   if (args.rogue && (!rogue || rogue.pending.kind !== "fight")) { go("rogue"); return () => {}; }
   if (rogue && rogue.pending.kind === "fight") args = { ...args, dungeon: FIGHT_DUNGEON, seed: rogue.pending.seed };
   const prepared = rogue ? startRogueFight(c, rogue, { log: true }) : undefined;
+  // The fight has begun: the party is set from here, even across a reload.
+  if (rogue) saveRogue();
   const seed = args.seed ?? setup.seed;
   const dungeon = c.dungeons.get(args.dungeon);
   const fail = (msg: string) => {

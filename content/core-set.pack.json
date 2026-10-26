@@ -11520,8 +11520,8 @@
     "name": "The Old Road",
     "act": 1,
     "knob": {
-     "mob": 0,
-     "elite": 0,
+     "mob": 1,
+     "elite": 1,
      "boss": 0
     },
     "text": "Bandits, wolves and snakes on the road out of town, and ogres at the bridges.",
@@ -11698,7 +11698,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 11
+      "knob": 18
      },
      {
       "id": "packmaster",
@@ -11710,7 +11710,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 26
+      "knob": 17
      },
      {
       "id": "chiefs_return",
@@ -11719,7 +11719,7 @@
        "ogre_chief",
        "ogre"
       ],
-      "knob": 0
+      "knob": 5
      }
     ]
    },
@@ -11728,8 +11728,8 @@
     "name": "The Crypt",
     "act": 2,
     "knob": {
-     "mob": 0,
-     "elite": 0,
+     "mob": -6,
+     "elite": -6,
      "boss": 0
     },
     "text": "Armored bones, bats you can't hit, ghosts magic can't touch, and Death with a bell.",
@@ -11874,7 +11874,7 @@
        "bat",
        "bat"
       ],
-      "knob": 136
+      "knob": 148
      },
      {
       "id": "reapers_court",
@@ -11884,7 +11884,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 110
+      "knob": 134
      }
     ]
    },
@@ -11893,8 +11893,8 @@
     "name": "The Fire Mine",
     "act": 2,
     "knob": {
-     "mob": 0,
-     "elite": 0,
+     "mob": 5,
+     "elite": 5,
      "boss": 0
     },
     "text": "Everything here burns, and the lord of the furnace casts a fire that ends parties.",
@@ -12041,7 +12041,7 @@
       "enemies": [
        "fire_giant"
       ],
-      "knob": -31
+      "knob": -32
      },
      {
       "id": "giants_forge",
@@ -12051,7 +12051,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -46
+      "knob": -35
      },
      {
       "id": "giants_wrath",
@@ -12061,7 +12061,7 @@
        "fire_imp",
        "fire_imp"
       ],
-      "knob": -50
+      "knob": -41
      }
     ]
    },
@@ -12070,8 +12070,8 @@
     "name": "The Ice Pass",
     "act": 2,
     "knob": {
-     "mob": 0,
-     "elite": 0,
+     "mob": -11,
+     "elite": -11,
      "boss": 0
     },
     "text": "Every fight asks what kind of hit you make, and a Titan of ice waits at the top.",
@@ -12215,7 +12215,7 @@
       "enemies": [
        "ice_titan"
       ],
-      "knob": 76
+      "knob": 104
      },
      {
       "id": "glacier_king",
@@ -12225,7 +12225,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 53
+      "knob": 84
      }
     ]
    },
@@ -12234,8 +12234,8 @@
     "name": "The Storm Tower",
     "act": 3,
     "knob": {
-     "mob": 0,
-     "elite": 0,
+     "mob": -10,
+     "elite": -10,
      "boss": 0
     },
     "text": "Clouds of sparks, leeches that drink mana, and a queen behind a wall of drones.",
@@ -12385,7 +12385,7 @@
        "drone",
        "drone"
       ],
-      "knob": 136
+      "knob": 142
      },
      {
       "id": "hive_queen",
@@ -12397,7 +12397,7 @@
        "drone",
        "drone"
       ],
-      "knob": 125
+      "knob": 100
      }
     ]
    },
@@ -12406,8 +12406,8 @@
     "name": "The Deep Crypt",
     "act": 3,
     "knob": {
-     "mob": 0,
-     "elite": 0,
+     "mob": -19,
+     "elite": -19,
      "boss": 0
     },
     "text": "Beneath the Crypt, something takes every voice. Power that isn't an ability is the key.",
@@ -12547,7 +12547,7 @@
       "enemies": [
        "silent_one"
       ],
-      "knob": 352
+      "knob": 344
      },
      {
       "id": "silent_court",
@@ -12557,7 +12557,7 @@
        "bone_priest",
        "bone_priest"
       ],
-      "knob": 212
+      "knob": 204
      }
     ]
    },
@@ -12566,8 +12566,8 @@
     "name": "The Tower Top",
     "act": 3,
     "knob": {
-     "mob": 0,
-     "elite": 0,
+     "mob": 4,
+     "elite": 4,
      "boss": 0
     },
     "text": "Above the storm: the queen's drones, the king's soldiers, and the king who rages when they fall.",
@@ -12710,7 +12710,7 @@
       "enemies": [
        "storm_king"
       ],
-      "knob": 91
+      "knob": 95
      },
      {
       "id": "kings_guard",
@@ -12720,7 +12720,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 68
+      "knob": 50
      }
     ]
    }
@@ -13554,7 +13554,7 @@
      {
       "id": "bet",
       "label": "BET 40 GOLD",
-      "text": "Half the time, win 80 back.",
+      "text": "Half the time, win 100 back.",
       "gold": 40,
       "do": [
        {
@@ -13563,7 +13563,7 @@
         "then": [
          {
           "op": "gold",
-          "amount": 80
+          "amount": 100
          }
         ],
         "else": []
@@ -13754,6 +13754,45 @@
       "do": [
        {
         "op": "camp"
+       }
+      ]
+     },
+     {
+      "id": "search",
+      "label": "SEARCH THE PACKS",
+      "text": "A tonic, an ether or a phoenix feather, and 20 gold.",
+      "do": [
+       {
+        "op": "gold",
+        "amount": 20
+       },
+       {
+        "op": "chance",
+        "pct": 40,
+        "then": [
+         {
+          "op": "supply",
+          "id": "tonic"
+         }
+        ],
+        "else": [
+         {
+          "op": "chance",
+          "pct": 50,
+          "then": [
+           {
+            "op": "supply",
+            "id": "ether"
+           }
+          ],
+          "else": [
+           {
+            "op": "supply",
+            "id": "phoenix"
+           }
+          ]
+         }
+        ]
        }
       ]
      }

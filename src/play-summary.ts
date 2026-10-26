@@ -6,13 +6,16 @@
 import type { Entry } from "./engine/log.js";
 
 /** A player's memory of a run: per fight, how it went, who fell, what the foes did, what the party dealt and took. */
-export function summary(log: Entry[]): string {
+export function summary(log: Entry[], nameOf: (src: string) => string = (x) => x.replace(/_/g, " ")): string {
   const out: string[] = [];
   const names = new Map<string, string>();
   const side = new Map<string, string>();
   const max = new Map<string, number>();
   // MP shows as a bar on screen; here, what's left at each fight's end.
   const mp = new Map<string, number>();
+  // The last blow each unit took, and the damage taken by kind, so a knockout can say what did it.
+  const last = new Map<string, string>();
+  const kinds = new Map<string, Map<string, number>>();
   let f: { dealt: Map<string, number>; taken: Map<string, number>; healed: Map<string, number>; acts: Map<string, number>; status: Map<string, number>; foeStatus: Map<string, number>; words: Map<string, number>; down: string[]; hp: Map<string, number>; n: number; name: string; boss: boolean } | null = null;
   let n = 0;
   const add = (m: Map<string, number>, k: string, v: number) => m.set(k, (m.get(k) ?? 0) + v);
@@ -20,6 +23,7 @@ export function summary(log: Entry[]): string {
   for (const e of log) {
     if (e.t === "fight_start") {
       n++;
+      kinds.clear();
       f = { dealt: new Map(), taken: new Map(), healed: new Map(), acts: new Map(), status: new Map(), foeStatus: new Map(), words: new Map(), down: [], hp: new Map(), n, name: String(e.stage), boss: !!e.boss };
       const us = e.units as { id: string; name: string; side: string; hp: number; max: number }[];
       for (const u of us) names.set(u.id, u.name), side.set(u.id, u.side), max.set(u.id, u.max), f.hp.set(u.id, u.hp);
@@ -44,8 +48,10 @@ export function summary(log: Entry[]): string {
       const tg = String(e.target);
       if (e.word && e.by && side.get(String(e.by)) === "party") add(f.words, `${String(e.word)} on ${names.get(tg)!.replace(/ [A-Z]$/, "")}`, 1);
       f.hp.set(tg, e.hp as number);
+      if (e.amount > 0) last.set(tg, `${e.part === "pulse" ? `${nameOf(String(e.src))}` : `${nameOf(String(e.src))} from ${e.by ? names.get(String(e.by)) ?? "?" : "?"}`}, ${e.amount}${e.kind ? ` ${e.kind}` : ""}`);
       if (side.get(tg) === "party") {
         add(f.taken, names.get(tg)!, e.amount);
+        if (e.kind) { const k = kinds.get(names.get(tg)!) ?? new Map<string, number>(); add(k, String(e.kind), e.amount); kinds.set(names.get(tg)!, k); }
         // A status's damage on the party (Bleed, Burn, Shock) shows on screen as its own message: name it here too.
         if (e.part === "pulse") add(f.taken, `(of which ${String(e.src)})`, e.amount);
       }
@@ -62,7 +68,7 @@ export function summary(log: Entry[]): string {
       f.status.set(k, Math.max(f.status.get(k) ?? 0, e.total as number));
     } else if (e.t === "status" && side.get(String(e.unit)) === "party") f.status.set(`${e.name} on your party`, Math.max(f.status.get(`${e.name} on your party`) ?? 0, 1));
     else if (e.t === "down") {
-      f.down.push(`${names.get(String(e.unit))} ${t(e.at)}`);
+      f.down.push(`${names.get(String(e.unit))} ${t(e.at)}${side.get(String(e.unit)) === "party" && last.has(String(e.unit)) ? ` (last blow: ${last.get(String(e.unit))})` : ""}`);
       f.hp.set(String(e.unit), 0);
     } else if (e.t === "leave") f.hp.set(String(e.unit), 0);
     else if (e.t === "mp" && side.get(String(e.target)) === "party") mp.set(String(e.target), e.mp as number);
@@ -71,7 +77,7 @@ export function summary(log: Entry[]): string {
       out.push(`  ${t(e.at)} ${names.get(String(e.unit))} is raised by ${names.get(String(e.by))}.`);
       f.hp.set(String(e.unit), e.hp as number);
     } else if (e.t === "fight_end") {
-      const foesLeft = [...f.hp].filter(([id, hp]) => side.get(id) === "enemy" && hp > 0).map(([id, hp]) => `${names.get(id)} at ${Math.round((100 * hp) / max.get(id)!)}%`);
+      const foesLeft = [...f.hp].filter(([id, hp]) => side.get(id) === "enemy" && hp > 0).map(([id, hp]) => { const p = (100 * hp) / max.get(id)!; return `${names.get(id)} at ${p < 1 ? "under 1" : Math.round(p)}%`; });
       const party = [...f.hp].filter(([id]) => side.get(id) === "party").map(([id, hp]) => `${names.get(id)} ${hp}/${max.get(id)}`);
       const mpLeft = [...mp].map(([id, v]) => `${names.get(id)} ${v}`);
       out.push(`  ${e.result === "won" ? "WON" : "LOST"} at t${e.rounds}. Party after: ${party.join(", ")}.${mpLeft.length ? ` MP left: ${mpLeft.join(", ")}.` : ""}${foesLeft.length ? ` Foes still standing: ${foesLeft.join(", ")}.` : ""}`);
@@ -79,7 +85,7 @@ export function summary(log: Entry[]): string {
       if (down.length) out.push(`  Knocked out: ${down.join(", ")}.`);
       const fmt = (m: Map<string, number>) => [...m].map(([k, v]) => `${k} ${v}`).join(", ");
       if (f.dealt.size) out.push(`  Damage dealt: ${fmt(f.dealt)}.`);
-      if (f.taken.size) out.push(`  Damage taken: ${fmt(f.taken)}.`);
+      if (f.taken.size) out.push(`  Damage taken: ${[...f.taken].map(([k, v]) => `${k} ${v}${kinds.get(k)?.size ? ` (${[...kinds.get(k)!].sort((a, b) => b[1] - a[1]).map(([kk, vv]) => `${kk} ${vv}`).join(", ")})` : ""}`).join(", ")}.`);
       if (f.healed.size) out.push(`  Healing received: ${fmt(f.healed)}.`);
       if (f.acts.size) out.push(`  Abilities used: ${fmt(f.acts)}.`);
       if (f.foeStatus.size) out.push(`  Statuses on foes (peak stacks): ${[...f.foeStatus].map(([k, v]) => `${k}${v > 1 ? ` ${Math.round(v)}` : ""}`).join(", ")}.`);

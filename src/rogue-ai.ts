@@ -160,6 +160,8 @@ const share = (c: Content, run: RogueRun, stat: "hp" | "mp", who = run.party) =>
     return s + (max ? (max - (stat === "hp" ? m.missHp : m.missMp)) / max : 1);
   }, 0) / ms.length;
 };
+/** The party's MP as a share of its max, among those standing who have any. */
+export const mpShare = (c: Content, run: RogueRun) => share(c, run, "mp", run.party.filter((cls) => maxOf(c, run, cls, "max_mp") > 0));
 export const hpShare = (c: Content, run: RogueRun) => {
   const ms = run.party.map((cls) => member(run, cls));
   return ms.reduce((s, m) => s + (m.ko ? 0 : (maxOf(c, run, m.cls, "max_hp") - m.missHp) / maxOf(c, run, m.cls, "max_hp")), 0) / Math.max(1, ms.length);
@@ -285,7 +287,7 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
       case "treasure": return opts.includes("take") ? "take" : "leave";
       case "shop": return shopPick(c, d, run, opts);
       case "campfire": return campfirePick(c, d, run, opts);
-      case "event": return eventPick(c, d, run, opts);
+      case "event": { const e = eventPick(c, d, run, opts); return opts.includes(e) ? e : opts[0]; }
       case "choose": {
         if (p.what === "temper") {
           let best = opts[0], bv = -Infinity;
@@ -368,7 +370,7 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
     switch (id) {
       case "wounded_traveller": return has("take") && run.roster.length < 5 ? "take" : "rob";
       case "blood_shrine": return h > 0.75 && has("bleed") ? "bleed" : "pray";
-      case "gambler": return "leave";
+      case "gambler": return has("bet") && run.gold >= 80 ? "bet" : "leave";
       case "forge": return run.items.some((it) => (it.rarity === "common" || it.rarity === "uncommon") && wearer(run, it.uid) && run.party.includes(wearer(run, it.uid)!) && !c.gear.get(it.base)?.id.startsWith("plain_")) ? "temper" : "scrap";
       case "old_master": return h > 0.6 && learnOptions(c, run).some((o) => run.party.includes(o.split(":")[0])) ? "learn" : has("polish") ? "polish" : "leave";
       case "ambush": return h > 0.65 ? "fight" : "run";

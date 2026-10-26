@@ -38,7 +38,7 @@ export type FightSpec = { node: string; tier: FightTier; fight: RogueFightT; foe
 export type Pending =
   | { kind: "draft"; offers: string[]; left: number }
   | { kind: "map" }
-  | ({ kind: "fight" } & FightSpec)
+  | ({ kind: "fight"; begun?: boolean } & FightSpec)
   | { kind: "spoils"; gold: number; offers: Offer[]; tier: FightTier; trophy?: Item }
   | { kind: "boon"; offers: Offer[] }
   | { kind: "shop"; stock: ShopSlot[]; learn: boolean; upgrade: boolean }
@@ -67,6 +67,8 @@ export type RogueRun = {
   visited: string[];
   /** Events met this run, so a run doesn't meet the same one twice until it has met them all. */
   seen: string[];
+  /** Fights met this act, so an act doesn't repeat one while its pool has others. */
+  met: string[];
   roster: Member[];
   /** Classes in the party, in formation slot order; the rest of the roster waits at camp. */
   party: string[];
@@ -192,6 +194,8 @@ export function startFight(c: Content, run: RogueRun, opts: { log?: boolean } = 
   if (p.kind !== "fight") throw new Error("no fight is pending");
   registerGear(c, run);
   fightDungeon(c, p);
+  // From here the party is set: leaving and coming back replays this fight as it starts, the same way.
+  p.begun = true;
   const er = newRun(c, combat, { dungeon: FIGHT_DUNGEON, party: partyOf(c, run), seed: p.seed }, { checked: true, log: opts.log });
   carryIn(run, er);
   return er;
@@ -291,7 +295,7 @@ export type NewRun = { seed: number; leader: string; heat?: number };
 export function newRogue(c: Content, o: NewRun): RogueRun {
   const k = cfg(c);
   const run: RogueRun = {
-    v: ROGUE_VERSION, seed: o.seed, heat: o.heat ?? 0, leader: o.leader, act: 1, region: "", boss: { id: "none", name: "none", enemies: ["wolf"] }, map: [], at: null, visited: [], seen: [],
+    v: ROGUE_VERSION, seed: o.seed, heat: o.heat ?? 0, leader: o.leader, act: 1, region: "", boss: { id: "none", name: "none", enemies: ["wolf"] }, map: [], at: null, visited: [], seen: [], met: [],
     roster: [], party: [], formation: "neutral", formations: ["neutral"], items: [], supplies: [], gold: k.start.gold, pending: { kind: "map" }, uid: 0,
     stats: { fights: 0, elites: 0, bosses: 0, gold: 0, spent: 0, events: 0, shops: 0, campfires: 0, picks: {} }, notes: [], floor: 0,
   };
@@ -379,8 +383,24 @@ function assignKinds(c: Content, nodes: MapNode[], rng: Rng) {
       cands[int(rng, cands.length)].kind = kind;
     }
   };
-  ensure("shop", 1);
+  ensure("shop", 2);
   ensure("elite", 2);
+  // Every way up passes a campfire between the early floors and the last (the playtesters: recruits waited at camp all
+  // act, and long stretches without one decided runs more than skill did).
+  const last = Number(Object.keys(m.fixed).find((f) => m.fixed[f] === "campfire") ?? m.floors);
+  const paths = (): MapNode[][] => {
+    const out: MapNode[][] = [];
+    const go = (n: MapNode, acc: MapNode[]) => (n.floor >= last ? out.push(acc) : n.next.forEach((id) => go(byId.get(id)!, [...acc, byId.get(id)!])));
+    for (const n of nodes.filter((x) => x.floor === 1)) go(n, [n]);
+    return out;
+  };
+  for (let tries = 0; tries < 40; tries++) {
+    const bare = paths().find((p) => !p.some((n) => n.kind === "campfire" && n.floor >= m.lateFrom && n.floor < last));
+    if (!bare) break;
+    const cands = bare.filter((n) => n.floor >= m.lateFrom && n.floor < last - 1 && (n.kind === "fight" || n.kind === "event") && ![...parents(n), ...n.next.map((id) => byId.get(id)!)].some((x) => x.kind === "campfire"));
+    if (!cands.length) break;
+    cands[int(rng, cands.length)].kind = "campfire";
+  }
 }
 
 /** A new act: its region, its map and its boss. With `restore`, everyone stands up whole and learns an ability. */
@@ -392,6 +412,7 @@ function beginAct(c: Content, run: RogueRun, region: string, restore: boolean) {
   run.boss = reg.bosses[int(rng, reg.bosses.length)];
   run.at = null;
   run.visited = [];
+  run.met = [];
   run.floor = 0;
   if (restore) for (const m of run.roster) (m.missHp = 0), (m.missMp = 0), (m.ko = false);
   note(run, `Act ${run.act}: ${reg.name}. ${run.boss.name} waits at the end.`);
@@ -429,7 +450,10 @@ export function fightFor(c: Content, run: RogueRun, node: MapNode, tier: FightTi
   if (tier === "boss") return run.boss;
   const reg = regionOf(c, run.region);
   const rng = r(run, `enc:${run.act}:${node.id}:${tier}`);
-  const pool = tier === "elite" ? reg.elite : node.floor <= 2 ? reg.easy : reg.normal;
+  const all = tier === "elite" ? reg.elite : node.floor <= 2 ? reg.easy : reg.normal;
+  // Not the same fight twice in an act while the pool has others.
+  const fresh = all.filter((f) => !run.met.includes(f.id));
+  const pool = fresh.length ? fresh : all;
   const base = pool[int(rng, pool.length)];
   const enemies = [...base.enemies];
   if (node.floor >= cfg(c).growFrom && tier !== "elite") {
@@ -442,6 +466,7 @@ export function fightFor(c: Content, run: RogueRun, node: MapNode, tier: FightTi
 }
 function fightSpec(c: Content, run: RogueRun, node: MapNode, tier: FightTier): FightSpec {
   const fight = fightFor(c, run, node, tier);
+  run.met.push(fight.id);
   return { node: node.id, tier, fight, foes: knobFoes(knobFor(c, run, tier, node.floor, fight)), seed: rngFor(run.seed, `fight:${run.act}:${node.id}:${tier}`)[0] };
 }
 
@@ -459,7 +484,9 @@ export function rollItem(c: Content, run: RogueRun, rng: Rng, rarity: RarityT): 
   registerGear(c);
   const pool = rarity === "legendary" ? rogue(c).legendaries : ORDINARY(c);
   const fits = pool.filter((id) => usable(c, run, id));
-  const from = fits.length && next(rng) * 100 < cfg(c).spoils.usable ? fits : pool;
+  // Ordinary pieces are always ones the roster can wear (pieces for nobody felt like wasted offers to the playtesters);
+  // a legendary piece sometimes wants a class the run doesn't have yet.
+  const from = fits.length && (rarity !== "legendary" || next(rng) * 100 < cfg(c).spoils.usable) ? fits : pool;
   const base = from[int(rng, from.length)];
   // A legendary piece carries a rare's two affixes on top of what makes it legendary: the core set's powerful pieces are
   // sidegrades by design, and three of them at the start of a run were worth a third of three rares (tuning round 9).
@@ -507,7 +534,13 @@ function spoilOffers(c: Content, run: RogueRun, tier: FightTier, node: string): 
       o = rollRecruit(c, run, rng, recruits);
       if (o?.kind === "recruit") recruits.push(o.cls);
     } else if (x < s.tome + s.recruit + s.supply) o = { kind: "supply", id: SUPPLIES[int(rng, SUPPLIES.length)] };
-    out.push(o ?? { kind: "gear", item: rollItem(c, run, rng, rollRarity(rng, s.rarity)) });
+    if (!o) {
+      // No two offers of the same piece.
+      let item = rollItem(c, run, rng, rollRarity(rng, s.rarity));
+      for (let k = 0; k < 6 && out.some((x) => x.kind === "gear" && x.item.base === item.base); k++) (run.uid--, (item = rollItem(c, run, rng, item.rarity)));
+      o = { kind: "gear", item };
+    }
+    out.push(o);
   }
   return out;
 }
@@ -630,13 +663,12 @@ export function maxOf(c: Content, run: RogueRun, cls: string, stat: "max_hp" | "
   const units = combat.party(c, { dungeon: FIGHT_DUNGEON, party: p, seed: 0 }) as EngineMember[];
   return units.find((u) => u.ref === cls)!.stats[stat];
 }
-/** Missing HP can't exceed max HP − 1 for a standing member (losing a +HP piece never knocks anyone out). */
-function clampMax(c: Content, run: RogueRun, cls: string) {
-  const m = member(run, cls);
-  if (m.ko) return;
-  m.missHp = Math.min(m.missHp, maxOf(c, run, cls, "max_hp") - 1);
-  m.missMp = Math.min(m.missMp, maxOf(c, run, cls, "max_mp"));
-}
+/**
+ * Gear and seats change max HP and MP; what's missing stays as it was, so current HP and MP move with the max and come
+ * back when the piece does (a standing member shows at least 1 HP). Nothing is clamped: taking a piece off and putting
+ * it back is never a free refill (an AI playtester found one when MP was clamped).
+ */
+function clampMax(_c: Content, _run: RogueRun, _cls: string) {}
 export function setFormation(c: Content, run: RogueRun, id: string): boolean {
   if (!run.formations.includes(id)) return false;
   run.formation = id;
@@ -704,7 +736,8 @@ export function useSupply(c: Content, run: RogueRun, id: SupplyIdT, target?: str
   run.supplies.splice(i, 1);
   return true;
 }
-const betweenRooms = (run: RogueRun) => !["fight", "over", "draft"].includes(run.pending.kind);
+/** Between rooms, and before a fight has begun (its foes are shown, so the party can be prepared for them). */
+const betweenRooms = (run: RogueRun) => !["over", "draft"].includes(run.pending.kind) && !(run.pending.kind === "fight" && run.pending.begun);
 export const canManage = betweenRooms;
 
 function heal(c: Content, run: RogueRun, who: Member[], hpPct: number, mpPct: number) {
@@ -746,20 +779,31 @@ export function options(c: Content, run: RogueRun): string[] {
     }
     case "event": {
       const ev = eventOf(c, p.id);
-      return ev.options.filter((o) => (o.gold ?? 0) <= run.gold).map((o) => o.id);
+      const ok = ev.options.filter((o) => (o.gold ?? 0) <= run.gold && o.do.every((op) => possible(c, run, op))).map((o) => o.id);
+      // Nothing it offers can happen now: the party walks on.
+      return ok.length ? ok : ["walk_on"];
     }
     case "choose":
       if (p.what === "learn") return learnOptions(c, run);
       if (p.what === "upgrade") return upgradeOptions(run);
       return run.items.filter((it) => it.rarity === "common" || it.rarity === "uncommon").map((it) => it.uid);
     case "levelup": {
+      // Learn one more, or make one known better: breadth or depth, a real choice even with one ability left to learn.
       const m = member(run, p.queue[0]);
-      const l = unlearned(c, m);
-      return l.length ? l : upgradable(m);
+      return [...unlearned(c, m), ...upgradable(m)];
     }
     case "region": return p.options;
     case "over": return [];
   }
+}
+/** Can an event's verb happen now? A recruit needs room at camp, learning something to learn, tempering a piece to temper. */
+function possible(c: Content, run: RogueRun, op: EventOpT): boolean {
+  if (op.op === "recruit") return roomForRecruit(c, run);
+  if (op.op === "learn") return learnOptions(c, run).length > 0;
+  if (op.op === "upgrade") return upgradeOptions(run).length > 0;
+  if (op.op === "temper") return run.items.some((it) => it.rarity === "common" || it.rarity === "uncommon");
+  if (op.op === "formation") return c.pack.formations.some((f) => !run.formations.includes(f.id));
+  return true;
 }
 /** `cls:ability` for every ability someone in the roster can learn. */
 export const learnOptions = (c: Content, run: RogueRun) => run.roster.flatMap((m) => unlearned(c, m).map((a) => `${m.cls}:${a}`));
@@ -849,7 +893,8 @@ export function choose(c: Content, run: RogueRun, pick: string) {
     }
     case "event": {
       const ev = eventOf(c, p.id);
-      const o = ev.options.find((x) => x.id === pick)!;
+      const o = ev.options.find((x) => x.id === pick);
+      if (!o) return void ((run.pending = { kind: "map" }), note(run, `${ev.name}: walked on.`));
       if (o.gold) spend(run, o.gold);
       note(run, `${ev.name}: ${o.label.toLowerCase()}.`);
       run.pending = { kind: "map" };
@@ -960,6 +1005,10 @@ function enter(c: Content, run: RogueRun, id: string) {
 /** An event option's effects, in order. A fight, a camp or a choice ends the list there and waits on it. */
 function doOps(c: Content, run: RogueRun, ops: readonly EventOpT[], rng: Rng) {
   const party = () => run.party.map((cls) => member(run, cls));
+  // What happens at once happens first; a choice, a camp or a fight comes last and waits (the Old Master's lesson cost
+  // nothing when its HP came after the choice: an AI playtester).
+  const waits = (op: EventOpT) => ["learn", "upgrade", "temper", "camp", "fight"].includes(op.op);
+  ops = [...ops.filter((op) => !waits(op)), ...ops.filter(waits)];
   for (const op of ops) {
     switch (op.op) {
       case "gold": gainGold(run, op.amount); break;

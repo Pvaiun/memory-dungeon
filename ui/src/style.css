@@ -256,3 +256,6 @@ table.sum th { color: var(--dim); }
 .roffer.cur { background: var(--sel); border-color: var(--hi); }
 .dimmed { opacity: .5; }
 .member.cur { background: var(--sel); }
+.art.glow-uncommon > * { filter: drop-shadow(0 0 .125rem var(--good)); }
+.art.glow-rare > * { filter: drop-shadow(0 0 .125rem var(--buff)); }
+.art.glow-legendary > * { filter: drop-shadow(0 0 .1875rem var(--gold)); }

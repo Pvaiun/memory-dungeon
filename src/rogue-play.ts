@@ -22,7 +22,7 @@ import { combat } from "./engine/combat/rules.js";
 import type { Entry } from "./engine/log.js";
 import {
   bench, canManage, choose, endFight, equip, eventOf, itemGear, itemOf, joinKnown, maxOf, member, newRogue, options, reachable, registerGear, rogue,
-  seat, sellPrice, setFormation, setOrder, startFight, swap, unlearned, useSupply, wearer, type Item, type Offer, type RogueRun, type Slot,
+  seat, sellPrice, setFormation, setOrder, startFight, swap, unlearned, upgraded, useSupply, wearer, type Item, type Offer, type RogueRun, type Slot,
 } from "./rogue.js";
 import { summary } from "./play-summary.js";
 import { combat as rules, type Member as EngineMember } from "./engine/combat/rules.js";
@@ -56,7 +56,7 @@ const codes = (stats: { stat: string; flat?: number }[] = []) => stats.map((s) =
 function gearWords(g: ReturnType<typeof itemGear> | undefined): string {
   if (!g) return "nothing";
   const kind = g.weapon?.kind ? `${g.weapon.kind}` : g.weight ? `${g.weight} armor` : "amulet";
-  const fx = (g.statuses ?? []).map((id) => c.statuses.get(id)?.text).filter(Boolean).join(" ");
+  const fx = [g.tier === "powerful" ? g.text : "", ...(g.statuses ?? []).map((id) => c.statuses.get(id)?.text)].filter(Boolean).join(" ");
   return `${g.name} (${kind}${g.stats?.length ? `; ${codes(g.stats)}` : ""}${fx ? `; ${fx}` : ""})`;
 }
 const itemWords = (it: Item) => `${it.uid}: ${it.rarity} ${gearWords(c.gear.get(it.uid) ?? itemGear(c, it))}`;
@@ -84,7 +84,7 @@ const KIND_WORD: Record<string, string> = { fight: "fight", elite: "ELITE (hard 
 function header(run: RogueRun): string[] {
   const reg = rogue(c).regions.find((r) => r.id === run.region)!;
   return [
-    `Act ${ROMAN[run.act]} of 3: ${reg.name}. ${reg.text} Boss at the top: ${run.boss.name}. Floor ${run.floor} of ${rogue(c).config.map.floors} (the boss is above the last).`,
+    `Act ${ROMAN[run.act]} of 3: ${reg.name}. ${reg.text} Boss at the top: ${run.boss.name}. ${run.floor > rogue(c).config.map.floors ? "At the boss." : `Floor ${run.floor} of ${rogue(c).config.map.floors}, the boss above.`}`,
     `Gold ${run.gold}. Supplies: ${run.supplies.join(", ") || "none"} (bag holds ${rogue(c).config.bag}). Formation: ${c.formations.get(run.formation)!.name}. Formations owned: ${run.formations.join(", ")}.`,
     `Party: ${run.party.map((cls) => `${cls} (${vit(run, cls)})`).join("; ")}.${bench(run).length ? ` At camp: ${bench(run).map((cls) => `${cls} (${vit(run, cls)})`).join("; ")}.` : ""}`,
   ];
@@ -109,7 +109,9 @@ function look(run: RogueRun): string {
       break;
     }
     case "fight":
-      out.push(`FIGHT: ${p.fight.name} (${p.tier}). Foes: ${counts(p.fight.enemies)}. Your party is set; no changes now. pick fight`);
+      out.push(`FIGHT: ${p.fight.name} (${p.tier}). Foes: ${counts(p.fight.enemies)}.`);
+      for (const e of [...new Set(p.fight.enemies)]) out.push(`  ${bestiary(e)}`);
+      out.push(p.begun ? "The fight has begun: pick fight to play it." : "You can still change gear, the formation, seats and ability order, and use supplies. Then: pick fight");
       break;
     case "spoils": case "boon": case "treasure": {
       const offers = p.kind === "treasure" ? [p.offer] : p.offers;
@@ -121,21 +123,21 @@ function look(run: RogueRun): string {
     }
     case "shop": {
       out.push(`SHOP (you have ${run.gold} gold). Buy, train (once each a visit), sell from the bag, or leave.`);
-      p.stock.forEach((s, i) => out.push(`  ${s.sold ? "(sold) " : `pick buy:${i} `}for ${s.price}g: ${offerWords(run, s.offer)}`));
-      if (p.learn) out.push(`  pick learn:<class>:<ability> for ${rogue(c).config.prices.learn}g: a member learns an ability it doesn't know.`);
-      if (p.upgrade) out.push(`  pick upgrade:<class>:<ability> for ${rogue(c).config.prices.upgrade}g: one known ability gets 40% bigger (or 25% quicker, if it has no amount).`);
+      p.stock.forEach((s, i) => out.push(`  ${s.sold ? "(bought) " : `pick buy:${i} `}for ${s.price}g: ${offerWords(run, s.offer)}`));
+      if (p.learn) for (const o of options(c, run).filter((x) => x.startsWith("learn:"))) out.push(`  pick ${o} for ${rogue(c).config.prices.learn}g: ${c.abilities.get(o.split(":")[2])!.name}: ${c.abilities.get(o.split(":")[2])!.text}`);
+      if (p.upgrade) for (const o of options(c, run).filter((x) => x.startsWith("upgrade:"))) out.push(`  pick ${o} for ${rogue(c).config.prices.upgrade}g: ${upText(o.split(":")[2])}`);
       for (const it of run.items.filter((x) => !wearer(run, x.uid))) out.push(`  pick sell:${it.uid} for ${sellPrice(c, it)}g: ${itemWords(it)}`);
       out.push("  pick leave");
       break;
     }
     case "campfire": {
       const k = rogue(c).config.campfire;
-      out.push(`CAMPFIRE: one pick. Those at camp rest and focus whatever you pick. Swapping who's in the party is free here (swap <out> <in>).`);
+      out.push(`CAMPFIRE: one pick. Whatever you pick, those waiting at camp get both REST and FOCUS. Swapping who's in the party is free here (swap <out> <in>).`);
       out.push(`  pick rest: the party regains ${k.hp}% of its HP.`, `  pick focus: the party regains ${k.mp}% of its MP.`);
       for (const o of options(c, run)) {
         if (o.startsWith("raise:")) out.push(`  pick ${o}: stands up with ${k.revive}% of its HP.`);
         else if (o.startsWith("learn:")) out.push(`  pick ${o}: ${c.abilities.get(o.split(":")[2])!.text}`);
-        else if (o.startsWith("upgrade:")) out.push(`  pick ${o}: 40% bigger (or 25% quicker).`);
+        else if (o.startsWith("upgrade:")) out.push(`  pick ${o}: ${upText(o.split(":")[2])}`);
       }
       break;
     }
@@ -143,7 +145,8 @@ function look(run: RogueRun): string {
       const ev = eventOf(c, p.id);
       out.push(`EVENT: ${ev.name}. ${ev.text}`);
       const opts = options(c, run);
-      for (const o of ev.options) out.push(`  ${opts.includes(o.id) ? `pick ${o.id}` : `(can't afford) ${o.id}`}: ${o.label}${o.gold ? ` (${o.gold}g)` : ""}. ${o.text}`);
+      for (const o of ev.options) out.push(`  ${opts.includes(o.id) ? `pick ${o.id}` : `(not now) ${o.id}`}: ${o.label}${o.gold ? ` (${o.gold}g)` : ""}. ${o.text}`);
+      if (opts.includes("walk_on")) out.push("  pick walk_on: nothing here you can use now.");
       break;
     }
     case "choose":
@@ -152,8 +155,8 @@ function look(run: RogueRun): string {
       break;
     case "levelup": {
       const m = member(run, p.queue[0]);
-      out.push(`LEVEL UP: the ${c.classes.get(m.cls)!.name} ${unlearned(c, m).length ? "learns one" : "makes one better (+)"}:`);
-      for (const a of options(c, run)) out.push(`  pick ${a}: ${c.abilities.get(a)!.name}: ${c.abilities.get(a)!.text}`);
+      out.push(`LEVEL UP: the ${c.classes.get(m.cls)!.name} learns a new ability, or makes a known one better (+):`);
+      for (const a of options(c, run)) out.push(`  pick ${a}: ${unlearned(c, m).includes(a) ? `learn ${c.abilities.get(a)!.name}: ${c.abilities.get(a)!.text}` : upText(a)}`);
       break;
     }
     case "region":
@@ -167,6 +170,20 @@ function look(run: RogueRun): string {
   }
   if (canManage(run)) out.push("", "Between rooms you can change gear (equip), the formation, seats and ability order, and use supplies.");
   return out.join("\n");
+}
+/** An enemy as the bestiary describes it: what it does, its abilities, its resistances. Never its stats. */
+function bestiary(id: string): string {
+  const en = c.enemies.get(id)!;
+  const acts = (en.abilities ?? []).map((a) => `${c.abilities.get(a)!.name} (${c.abilities.get(a)!.text})`);
+  const pas = (en.statuses ?? []).map((st) => `${c.statuses.get(st)!.name}: ${c.statuses.get(st)!.text ?? ""}`);
+  const res = Object.entries(en.stats).filter(([k]) => k.startsWith("resist:")).map(([k, v]) => `${v > 100 ? "absorbs" : v > 0 ? "resists" : "weak to"} ${k.slice(7)}`);
+  const kind = en.weapon?.element ?? (en.weapon?.kind ? c.weaponKinds.get(en.weapon.kind)?.element ?? "physical" : en.weapon?.type ?? "physical");
+  return `${en.name}${en.rank !== "minion" ? ` (${en.rank})` : ""}: ${en.text} Attacks: ${kind}.${acts.length ? ` Abilities: ${acts.join("; ")}.` : ""}${pas.length ? ` ${pas.join(" ")}` : ""}${res.length ? ` ${res.join(", ")}.` : ""}`;
+}
+/** What an upgrade does to one ability, in numbers. */
+function upText(id: string): string {
+  const a = c.abilities.get(id)!, up = upgraded(c, id);
+  return up.cooldown !== a.cooldown ? `${up.name}: every ${Math.round(up.cooldown)} ticks instead of ${Math.round(a.cooldown)}.` : `${up.name}: 40% more of what it deals, heals, shields or stacks.`;
 }
 const counts = (enemies: string[]) => {
   const m = new Map<string, number>();
@@ -184,9 +201,11 @@ function partyWords(run: RogueRun): string {
     const s = fm.stats;
     out.push(`${m.cls} (${k.name})${seatNo >= 0 ? `, slot ${seatNo + 1} ${f.positions[seatNo].name}` : ", at camp"}: ${vit(run, m.cls)}. Attack ${pts(s.attack)}, Magic ${pts(s.magic)}, Armor ${pts(s.armor)}, Crit ${s.crit_chance}%, Aggro ${pts(s.aggro)}, MP regen ${pts(s.mp_regen)}.`);
     for (const slot of ["weapon", "armor", "amulet"] as Slot[]) out.push(`  ${slot}: ${m.gear[slot] ? itemWords(itemOf(run, m.gear[slot]!)!) : "nothing"}`);
-    out.push(`  abilities, in slot order: ${m.order.map((a) => `${a} (${c.abilities.get(a)!.name}, MP ${c.abilities.get(a)!.mp ?? 0}, every ${Math.round(c.abilities.get(a)!.cooldown)} ticks)`).join("; ")}${unlearned(c, m).length ? `. Not learned yet: ${unlearned(c, m).join(", ")}` : ""}.`);
+    const head = c.pack.ruleset.opening?.slots ?? [];
+    out.push(`  abilities, in slot order: ${m.order.map((a, i) => `${a} (${c.abilities.get(a)!.name}, MP ${c.abilities.get(a)!.mp ?? 0}, every ${Math.round(c.abilities.get(a)!.cooldown)} ticks, first ready about t${Math.max(0, Math.round(c.abilities.get(a)!.cooldown - (head[i] ?? 0)))})`).join("; ")}${unlearned(c, m).length ? `. Not learned yet: ${unlearned(c, m).join(", ")}` : ""}.`);
     out.push(`  can use: ${k.weapons.join(", ")}; ${k.armor} armor or lighter.`);
   }
+  out.push("", "Formations owned:", ...run.formations.map((id) => { const fm = c.formations.get(id)!; return `  ${id}${id === run.formation ? " (in use)" : ""}: ${fm.text}${fm.positions.map((p, k) => ` Slot ${k + 1} ${p.name}: ${codes(p.stats) || "no change"}.`).join("")}`; }));
   const bagItems = run.items.filter((it) => !wearer(run, it.uid));
   out.push("", `Bag: ${bagItems.length ? "" : "empty"}`, ...bagItems.map((it) => `  ${itemWords(it)}`));
   return out.join("\n");
@@ -219,7 +238,9 @@ function fightNow(run: RogueRun): string {
   const er = startFight(c, run, { log: true });
   advance(c, combat, er);
   endFight(c, run, er);
-  return summary((er.log as Entry[]).filter((e) => e.vis === "player" || e.t === "mp"));
+  const before = run.notes.length;
+  const told = summary((er.log as Entry[]).filter((e) => e.vis === "player" || e.t === "mp"), (src) => c.abilities.get(src)?.name ?? c.statuses.get(src)?.name.toLowerCase() ?? (src === "basic" ? "attack" : src));
+  return `${told}${run.notes.length > before ? `\n${run.notes.slice(before).map((n) => `  ${n.text}`).join("\n")}` : ""}`;
 }
 
 try { main(); } catch (e) { console.log(`Error: ${(e as Error).message}`); process.exitCode = 1; }
@@ -245,9 +266,10 @@ if (cmd === "new") {
         out = fightNow(run);
         out += `\n\n${look(run)}`;
       } else {
+        const before = run.notes.length;
         choose(c, run, rest[0]);
-        if ((run.pending as RogueRun["pending"]).kind === "fight") out = look(run);
-        else out = look(run);
+        const news = run.notes.slice(before).map((n) => `  ${n.text}`);
+        out = `${news.length ? `${news.join("\n")}\n\n` : ""}${look(run)}`;
       }
       break;
     }

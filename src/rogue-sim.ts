@@ -16,7 +16,7 @@ import { loadContent, type Content } from "./engine/run.js";
 import { autoFight, member, newRogue, rollItem, take, type RogueRun } from "./rogue.js";
 import { rngFor } from "./engine/rng.js";
 import type { RarityT } from "./schema.js";
-import { aiPlayer, hpShare, type Dials } from "./rogue-ai.js";
+import { aiPlayer, hpShare, mpShare, type Dials } from "./rogue-ai.js";
 import { patch, type Patch } from "./sim/content.js";
 import { choose } from "./rogue.js";
 
@@ -26,8 +26,11 @@ export type RunRec = {
   fights: number; elites: number; gold: number; spent: number; party: string[]; roster: string[]; drafted: string[];
   legendaries: number; formation: string; formations: number; bossHp: number[]; bossFight: string[]; picks: Record<string, number>;
   known: number; notes?: string[]; items: number; supplies: number;
-  /** Each fight: act, floor, tier (f, e, b), party HP % before and after (−1: lost), and its fight id. */
-  trace: [number, number, string, number, number, string][];
+  /** Each fight: act, floor, tier (f, e, b), party HP % before and after (−1: lost), its fight id, and party MP % before. */
+  trace: [number, number, string, number, number, string, number][];
+  /** Legendary pieces the final party wears, by base id. */
+  worn: string[];
+  swaps: number;
 };
 
 export function playOne(c: Content, seed: number, leader: string, heat: number, dials: Partial<Dials>, diary = false, gift: Record<string, number> = {}): RunRec {
@@ -40,6 +43,7 @@ export function playOne(c: Content, seed: number, leader: string, heat: number, 
   let died: string | null = null;
   const drafted: string[] = [];
   const trace: RunRec["trace"] = [];
+  let swaps = 0;
   for (let i = 0; i < 3000 && run.pending.kind !== "over"; i++) {
     ai.prepare(c, run);
     const p = run.pending;
@@ -47,14 +51,17 @@ export function playOne(c: Content, seed: number, leader: string, heat: number, 
       if (p.tier === "boss") (bossHp.push(Math.round(hpShare(c, run) * 100)), bossFight.push(p.fight.id));
       const tier = p.tier;
       const before = Math.round(hpShare(c, run) * 100);
+      const mpBefore = Math.round(mpShare(c, run) * 100);
       autoFight(c, run);
       const after = run.pending as RogueRun["pending"];
       const lost = after.kind === "over" && !after.won;
       if (lost) died = tier;
-      trace.push([run.act, run.floor, tier[0], before, lost ? -1 : Math.round(hpShare(c, run) * 100), p.fight.id]);
+      trace.push([run.act, run.floor, tier[0], before, lost ? -1 : Math.round(hpShare(c, run) * 100), p.fight.id, mpBefore]);
       continue;
     }
+    const partyBefore = run.party.join();
     const pick = ai.decide(c, run);
+    if (p.kind === "campfire" && run.party.join() !== partyBefore) swaps++;
     if (p.kind === "draft") drafted.push(pick);
     choose(c, run, pick);
     if (p.kind === "region") regions.push(run.region);
@@ -65,7 +72,8 @@ export function playOne(c: Content, seed: number, leader: string, heat: number, 
     gold: run.stats.gold, spent: run.stats.spent, party: [...run.party], roster: run.roster.map((m) => m.cls), drafted,
     legendaries: run.party.reduce((s, cls) => s + Object.values(member(run, cls).gear).filter((uid) => run.items.find((it) => it.uid === uid)?.rarity === "legendary").length, 0),
     formation: run.formation, formations: run.formations.length, bossHp, bossFight, picks: run.stats.picks,
-    known: run.party.reduce((s, cls) => s + member(run, cls).known.length, 0), items: run.items.length, supplies: run.supplies.length, trace,
+    known: run.party.reduce((s, cls) => s + member(run, cls).known.length, 0), items: run.items.length, supplies: run.supplies.length, trace, swaps,
+    worn: run.party.flatMap((cls) => Object.values(member(run, cls).gear).map((uid) => run.items.find((it) => it.uid === uid)).filter((it) => it?.rarity === "legendary").map((it) => it!.base)),
     ...(diary ? { notes: run.notes.map((n) => `${n.act}.${n.floor} ${n.text}`) } : {}),
   };
 }
@@ -223,7 +231,8 @@ async function main() {
 }
 
 if (isMainThread) {
-  if (import.meta.url === `file://${process.argv[1]}` || process.argv[1]?.endsWith("rogue.mjs")) void main();
+  // Only as its own program: the tuner bundles this file too.
+  if (/rogue(-sim)?\.(mjs|ts)$/.test(process.argv[1] ?? "")) void main();
 } else {
   const c = loadContent((workerData as { raw: unknown }).raw);
   parentPort!.on("message", (job: Job) => parentPort!.postMessage(runJob(c, job)));
