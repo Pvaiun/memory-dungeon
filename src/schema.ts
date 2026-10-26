@@ -365,6 +365,7 @@ export const EventSpec = z.strictObject({
   whose: Whose.optional(),
   kind: z.enum(["basic", "ability", "extra"]).optional().describe("Action and hit events only."),
   tags: z.array(Tag).min(1).optional().describe("Hit events only: the hit carries at least one of these tags (a subtype or an element)."),
+  crit: z.boolean().optional().describe("hit_lands and hit_taken only: the hit critted (true) or didn't (false)."),
   status: Id.optional().describe("Status events, and damage events: the status whose pulse or reaction dealt the damage."),
   cause: z.array(Cause).min(1).optional().describe("status_ended only. Default: every cause."),
 });
@@ -524,7 +525,12 @@ export const Ruleset = z.strictObject({
   abilityCast: Ticks.describe("An ability's cast time unless it states one."),
   abilityRecovery: Ticks.describe("An ability's recovery unless it states one: about a sword's."),
   armorRatio: z.number().min(0).describe("Each physical hit loses armorRatio × the target's Armor, as a flat amount."),
-  armorFloor: z.number().min(0).max(100).optional().describe("Armor can't take a physical hit below this % of its size. Absent or 0: enough Armor blanks a hit."),
+  armorFloor: z.number().min(0).max(100).optional().describe("Armor can't take a physical hit below this % of its size. Absent or 0: enough Armor blanks a hit. Ignored when armorK is set."),
+  armorK: z
+    .number()
+    .gt(0)
+    .optional()
+    .describe("Armor on a curve (Path of Exile's): a physical hit H deals H² ÷ (H + armorK × A), where A is armorRatio × Armor, the amount the flat rule took off. Big hits lose about A, a hit of k × A loses half, small hits lose most of themselves but never all. Absent: the flat rule."),
   taken: z.strictObject({ floor: z.number(), cap: z.number() }).describe("Bounds on a unit's total damage-taken modifier, in percent."),
   unarmed: Weapon.describe("The basic attack of a unit with no weapon."),
   maxEnemies: PosInt.describe("Most living units on the enemy side, summons included."),
@@ -533,9 +539,18 @@ export const Ruleset = z.strictObject({
     .optional()
     .describe("A fight that runs past `after` ticks: every unit, on both sides, deals pct % more damage with hits and reactions, and pct more again every `every` ticks, so no fight stalls. Absent: fights run to the safety stop."),
   opening: z
-    .strictObject({ min: z.number().min(0).max(1), max: z.number().min(0).max(1) })
+    .union([
+      z.strictObject({ min: z.number().min(0).max(1), max: z.number().min(0).max(1) }).describe("Each action's first use comes after a share of its cooldown, rolled between min and max on the unit's dice."),
+      z
+        .strictObject({
+          abilities: z.array(Ticks).min(1).describe("Ticks of cooldown already done at fight start, by the ability's slot: the first equipped ability gets the first number, and so on; slots past the list get its last."),
+          basic: z.number().min(0).max(1).describe("A basic attack's first use comes after this share of its cooldown."),
+          step: Ticks.optional().describe("A party member's first basic attack waits this many ticks more per formation slot, so two members with the same weapon don't swing together."),
+        })
+        .describe("Set by the build, not the dice: the order the abilities are slotted in decides which comes first."),
+    ])
     .optional()
-    .describe("At fight start each action is already partly charged: it's first ready after a share of its cooldown, rolled between min and max on the unit's dice for each action. Absent: every action starts a fight on its full cooldown."),
+    .describe("How charged each action is at fight start. Absent: every action starts a fight on its full cooldown."),
   stagger: Ticks.optional().describe("Copies of the same enemy start a fight this many ticks apart, one after another, so identical foes don't act in lockstep. Absent or 0: they start together."),
   lostCast: z
     .enum(["retry", "cooldown"])
@@ -672,8 +687,9 @@ export const CampfireStage = z
     id: Id,
     hp: z.number().min(0).max(100).describe("REST: every standing member regains this % of its max HP."),
     mp: z.number().min(0).max(100).describe("FOCUS: every standing member regains this % of its max MP."),
+    revive: z.number().min(0).max(100).optional().describe("REVIVE: one knocked-out member, of the player's choice, stands up with this % of its max HP. Offered only when someone is down. Absent: no revive."),
   })
-  .describe("A rest between two fights where the player picks one: HP back, or MP back. Knocked-out members stay down.");
+  .describe("A rest between two fights where the player picks one: HP back, MP back, or (when it offers one and someone is down) one member revived.");
 export const Stage = z.discriminatedUnion("kind", [FightStage, PickStage, CampfireStage]);
 
 export const LootTable = z.strictObject({

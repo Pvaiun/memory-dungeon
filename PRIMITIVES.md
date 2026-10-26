@@ -174,6 +174,7 @@ A number is a plain number, or `{ base, scale: [...] }`: base + Σ ratio × sour
 | `whose` |  |
 | `kind` | Action and hit events only. |
 | `tags` | Hit events only: the hit carries at least one of these tags (a subtype or an element). |
+| `crit` | hit_lands and hit_taken only: the hit critted (true) or didn't (false). |
 | `status` | Status events, and damage events: the status whose pulse or reaction dealt the damage. |
 | `cause` | status_ended only. Default: every cause. |
 

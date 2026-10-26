@@ -302,6 +302,7 @@ class Combat {
   event(spec: S.EventSpecT, path: string) {
     if (spec.kind && !ACTION_EVENTS.includes(spec.event) && !HIT_EVENTS.includes(spec.event)) this.r.error("event.kind", `${path}.kind`, `only action and hit events have a kind`);
     if (spec.tags && !HIT_EVENTS.includes(spec.event)) this.r.error("event.tags", `${path}.tags`, `only hit events carry tags`);
+    if (spec.crit !== undefined && spec.event !== "hit_lands" && spec.event !== "hit_taken") this.r.error("event.crit", `${path}.crit`, `only a landed hit can crit`);
     if (spec.status) {
       if (!STATUS_EVENTS.includes(spec.event) && !DAMAGE_EVENTS.includes(spec.event)) this.r.error("event.status", `${path}.status`, `only status and damage events name a status`);
       this.w.ref("statuses", spec.status, `${path}.status`, "status");

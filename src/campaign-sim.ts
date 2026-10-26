@@ -20,7 +20,7 @@ import { loadContent, play, type Content } from "./engine/run.js";
 import { next, rngFor, type Rng } from "./engine/rng.js";
 import type { FoesT, Party } from "./schema.js";
 import { knobFoes, type Knob } from "../content/core-set/campaign.js";
-import { combos, current, describe, makeBuild, seat, STYLES, trios, fitting, type Style } from "./sim/kits.js";
+import { combos, current, describe, makeBuild, ORDERS, seat, STYLES, trios, fitting, type Order, type Style } from "./sim/kits.js";
 import { partyKey } from "./sim/parties.js";
 import { checkParty } from "./validate.js";
 import { readingPack } from "./sim/feel.js";
@@ -263,15 +263,16 @@ function buildSpace(c: Content, i: number, budget: number): Party[] {
   const size = c.dungeons.get(dungeon)!.partySize.max;
   const forced = needs.find((nd) => "formation" in nd) as { formation: string } | undefined;
   const forms = forced ? [forced.formation] : owned.formations;
-  const space: { t: string[]; f: string; s: Style }[] = [];
+  const space: { t: string[]; f: string; s: Style; o: Order }[] = [];
   // Parties whose members can't all meet the armor or weapon needs are dropped before sampling, so a narrow need doesn't empty the sample.
   const can = (t: string[]) => t.every((cls) => makeBuild(c, [cls], forms[0], "plain", owned, needs) !== null);
-  for (const t of trios(owned, needs, size).filter(can)) for (const f of forms) for (const s of STYLES) space.push({ t, f, s });
+  // Step 5c: the ability order is part of a build (the first slot starts a fight with the most of its cooldown done).
+  for (const t of trios(owned, needs, size).filter(can)) for (const f of forms) for (const s of STYLES) for (const o of ORDERS) space.push({ t, f, s, o });
   const picked = space.length > budget ? shuffle(space, 4242 + i).slice(0, budget) : space;
   const seen = new Set<string>();
   const builds: Party[] = [];
   for (const x of picked) {
-    const p = makeBuild(c, x.t, x.f, x.s, owned, needs);
+    const p = makeBuild(c, x.t, x.f, x.s, owned, needs, undefined, x.o);
     if (!p || checkParty(c.pack, p, { dungeon }).some((e) => e.level === "error")) continue;
     const k = partyKey(p);
     if (seen.has(k)) continue;
@@ -305,6 +306,7 @@ function mutate(c: Content, p: Party, owned: ReturnType<typeof ownedAt>, needs: 
   const inc = needs.flatMap((nd) => ("includes" in nd ? nd.includes : []));
   const exc = needs.flatMap((nd) => ("excludes" in nd ? nd.excludes : []));
   const style = pick(STYLES);
+  const order = pick(ORDERS);
   const what = Math.floor(next(rng) * 5);
   if (what === 0) {
     const out = classes.filter((x) => !inc.includes(x));
@@ -312,11 +314,11 @@ function mutate(c: Content, p: Party, owned: ReturnType<typeof ownedAt>, needs: 
     if (!out.length || !pool.length) return null;
     const drop = pick(out);
     const t = classes.map((x) => (x === drop ? pick(pool) : x));
-    return makeBuild(c, t, p.formation, style, owned, needs);
+    return makeBuild(c, t, p.formation, style, owned, needs, undefined, order);
   }
   if (what === 1) {
     if (forms.length < 2) return null;
-    return makeBuild(c, classes, pick(forms.filter((f) => f !== p.formation)), style, owned, needs);
+    return makeBuild(c, classes, pick(forms.filter((f) => f !== p.formation)), style, owned, needs, undefined, order);
   }
   if (what === 2) {
     const order = combos(classes, classes.length)[0];
@@ -407,8 +409,14 @@ async function tuneNode(c: Content, pool: Pool, i: number, o: { builds: number; 
     return Math.round(lo);
   };
   const mobShare = Math.min(0.6, 2.5 * o.share);
-  const mob = await bisect(o.knob.mob, (k) => check({ dungeon: node.dungeon, foes: foesAt(k), mobOnly: true }, mobShare, MOB_TARGET));
+  let mob = await bisect(o.knob.mob, (k) => check({ dungeon: node.dungeon, foes: foesAt(k), mobOnly: true }, mobShare, MOB_TARGET));
   let boss = await bisect(o.knob.boss, (k) => check({ dungeon: node.dungeon, foes: foesAt(mob), bossFoes: foesAt(k) }, o.share, o.target));
+  // Step 5c: a boss keeps at least half its HP (BOSS_FLOOR). When the regular fights' attrition leaves it less room than that,
+  // the regular fights are eased instead and the boss found again. Without it, the Ogre Chief went to −88 and died in 14 ticks.
+  for (let n = 0; n < 6 && boss < BOSS_FLOOR && mob > -80; n++) {
+    mob = Math.round(mob - Math.max(10, Math.abs(mob) * 0.15));
+    boss = await bisect(Math.max(boss, BOSS_FLOOR), (k) => check({ dungeon: node.dungeon, foes: foesAt(mob), bossFoes: foesAt(k) }, o.share, o.target));
+  }
   let r = await searchNode(c, pool, i, { builds: o.builds, climb: o.climb, foes: foesAt(mob), bossFoes: foesAt(boss), carryFrom: o.carryFrom });
   // The check that keeps the road passable: the best build, scored on fresh seeds, must hold the target. If it doesn't
   // (the bisection read noisy 24-seed rates), ease the boss and search again. A playtester got stuck on a node that
@@ -423,6 +431,8 @@ async function tuneNode(c: Content, pool: Pool, i: number, o: { builds: number; 
 
 /** The best builds clear a node's regular fights alone this often, at its mob knob. */
 const MOB_TARGET = 0.95;
+/** The easiest a boss's knob may go before the regular fights are eased instead (step 5c). */
+const BOSS_FLOOR = -50;
 
 // ─── Main ───────────────────────────────────────────────────────────────────
 

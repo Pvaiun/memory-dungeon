@@ -242,7 +242,6 @@
   }
  },
  "statuses": {
-  "poison": "status/poison.png",
   "regen": "status/regen.png",
   "shield": "status/shield.png",
   "might": "status/might.png",
@@ -266,7 +265,6 @@
   "bulwark": "status/bulwark.png",
   "bulwark_broken": "status/bulwark_broken.png",
   "ice_crust": "status/ice_crust.png",
-  "shadow_strike_on": "status/shadow_strike_on.png",
   "bloodlust_on": "status/bloodlust_on.png",
   "bedrock_on": "status/bedrock_on.png",
   "sworn": "status/sworn.png",
@@ -278,7 +276,6 @@
   "encore": "status/encore.png",
   "cold_hex": "status/cold_hex.png",
   "iron_palm": "status/iron_palm.png",
-  "shadow_strike": "status/shadow_strike.png",
   "bloodlust": "status/bloodlust.png",
   "kindling": "status/kindling.png",
   "brittle": "status/brittle.png",
@@ -301,7 +298,9 @@
   "thorns": "status/thorns.png",
   "lifesteal": "status/lifesteal.png",
   "siphon": "status/siphon.png",
-  "double_strike": "status/double_strike.png"
+  "double_strike": "status/double_strike.png",
+  "bleed": "status/bleed.png",
+  "lacerate": "status/lacerate.png"
  },
  "vfx": {
   "fire1": {

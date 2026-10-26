@@ -713,8 +713,11 @@ function calc(w: W, t: CUnit, p: Part, raw: number, tags: readonly string[], boo
   let word: string | null = null;
   let heal = 0;
   if (p.type === "physical") {
-    // ruleset.armorFloor: Armor can't take a hit below this share of its size, so a wall isn't immune to small blows.
-    const y = Math.max((x * (w.c.pack.ruleset.armorFloor ?? 0)) / 100, x - stat(w, t, "armor") * w.c.pack.ruleset.armorRatio);
+    const rs = w.c.pack.ruleset;
+    const armor = stat(w, t, "armor") * rs.armorRatio;
+    // ruleset.armorK: Armor on a curve, H² ÷ (H + k × A): about linear against big hits, and it never blanks one.
+    // Otherwise the flat rule, where ruleset.armorFloor stops Armor taking a hit below that share of its size.
+    const y = rs.armorK !== undefined ? (x > 0 ? (x * x) / (x + rs.armorK * armor) : 0) : Math.max((x * (rs.armorFloor ?? 0)) / 100, x - armor);
     if (y <= 0 && x > 0) word = "BLOCKED";
     x = y;
   } else if (p.element) {
@@ -829,9 +832,10 @@ function hit(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
   if (w.f.result) return;
   // An absorbed hit applies nothing and doesn't count as landing.
   if (results[0]?.word === "ABSORB") return;
+  fire(w, ev("hit_lands", a, t, { kind, tags, amount: dealt, crit: crit > 0 }));
+  fire(w, ev("hit_taken", t, a, { kind, tags, amount: dealt, crit: crit > 0 }));
+  // The hit's own statuses come after its hit events, so a status that a hit sets off (Bleed) waits for the next hit.
   if (!t.ko) for (const ap of e.apply ?? []) applyStatus(w, a, t, def(w, ap.status), { stacks: aval(w, ap.stacks ?? 1, a, t), duration: ap.duration, chance: ap.chance, rng: a });
-  fire(w, ev("hit_lands", a, t, { kind, tags, amount: dealt }));
-  fire(w, ev("hit_taken", t, a, { kind, tags, amount: dealt }));
   damageEvents(w, a, t, dealt, lost, null);
 }
 
@@ -1067,14 +1071,16 @@ type Ev = {
   tags: string[];
   /** Status events: the status. Damage events: the status whose pulse or reaction dealt it, if any. */
   status: string | null;
+  /** hit_lands and hit_taken: the hit critted. */
+  crit: boolean;
   cause: string | null;
   amount: number;
   /** The status that just ended, so its own reactions to its ending still run. */
   ending: SInst | null;
 };
 
-const ev = (e: Ev["e"], owner: CUnit, other: CUnit | null, x: Partial<Pick<Ev, "kind" | "tags" | "status" | "cause" | "amount" | "ending">> = {}): Ev => ({
-  e, owner, other, kind: x.kind ?? null, tags: x.tags ?? [], status: x.status ?? null, cause: x.cause ?? null, amount: x.amount ?? 0, ending: x.ending ?? null,
+const ev = (e: Ev["e"], owner: CUnit, other: CUnit | null, x: Partial<Pick<Ev, "kind" | "tags" | "status" | "crit" | "cause" | "amount" | "ending">> = {}): Ev => ({
+  e, owner, other, kind: x.kind ?? null, tags: x.tags ?? [], status: x.status ?? null, crit: x.crit ?? false, cause: x.cause ?? null, amount: x.amount ?? 0, ending: x.ending ?? null,
 });
 
 function matches(spec: S.EventSpecT, e: Ev, holder: CUnit): boolean {
@@ -1086,6 +1092,7 @@ function matches(spec: S.EventSpecT, e: Ev, holder: CUnit): boolean {
   if (spec.kind && spec.kind !== e.kind) return false;
   if (spec.tags && !spec.tags.some((t) => e.tags.includes(t))) return false;
   if (spec.status && spec.status !== e.status) return false;
+  if (spec.crit !== undefined && spec.crit !== e.crit) return false;
   if (spec.cause && !spec.cause.includes(e.cause as never)) return false;
   return true;
 }
@@ -1294,11 +1301,16 @@ function begin(w: W) {
     for (const id of u.start) applyStatus(w, u, u, def(w, id), { stacks: 1, rng: u });
     refresh(w, u);
   }
-  // ruleset.opening: each action starts partly charged, by its own roll, so a party's actions don't all come up together.
+  // ruleset.opening: each action starts partly charged. By slot: the first equipped ability has the most of its cooldown
+  // done, then the second, then the third; a basic attack a share of its own, a step later for each party slot. Or by roll.
   const open = w.c.pack.ruleset.opening;
   for (const u of f.units) u.acts.forEach((a, i) => {
-    const cd = cooldownOf(w, u, actDef(w, u, i));
-    a.ready = open ? Math.round(cd * (open.min + (open.max - open.min) * next(u.rng))) : cd;
+    const d = actDef(w, u, i);
+    const cd = cooldownOf(w, u, d);
+    if (!open) a.ready = cd;
+    else if ("min" in open) a.ready = Math.round(cd * (open.min + (open.max - open.min) * next(u.rng)));
+    else if (d.kind === "basic") a.ready = Math.round(cd * open.basic) + (u.side === "party" ? sub(open.step ?? 0) * u.slot : 0);
+    else a.ready = Math.max(0, cd - sub(open.abilities[Math.min(i, open.abilities.length - 1)]));
   });
   // ruleset.stagger: the n-th copy of an enemy starts n × stagger ticks behind the first, so three Ghosts ripple rather than volley.
   const stagger = Math.round((w.c.pack.ruleset.stagger ?? 0) * SUBTICKS);

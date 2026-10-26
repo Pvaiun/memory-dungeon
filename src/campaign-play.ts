@@ -9,8 +9,9 @@
  *   npx tsx src/campaign-play.ts play <node> --formation vanguard \
  *       --party "knight:oathblade,plate,heartstone;cleric:plain_light_staff,robes;ranger:warbow" [--seed N] [--full]
  *       A member is class:weapon,armor,amulet (ids; leave a slot out to leave it empty). Abilities fire in the
- *       order given after a slash: "knight:oathblade,plate/protect,fortify,shield_bash". --campfire rest|focus picks
- *       at the campfire halfway through the run (HP back, or MP back); left out, whichever the party is shorter of.
+ *       order given after a slash: "knight:oathblade,plate/protect,fortify,shield_bash"; the first starts a fight with the
+ *       most of its cooldown done. --campfire rest|focus|revive:<class> picks at the campfire halfway through the run (HP
+ *       back, MP back, or that member up if down); left out, the simulations' choice.
  */
 import { readFileSync } from "node:fs";
 import { campaign, foesText, needText, ownedAt, rewardsOf, simPick, unmet } from "./campaign.js";
@@ -43,6 +44,7 @@ if (cmd === "show") {
   out.push(node.needs.length ? `Needs: ${node.needs.map((nd) => needText(c, nd)).join("; ")}.` : "Needs: none.");
   out.push("", "Fights:");
   d.stages.forEach((s, k) => {
+    if (s.kind === "campfire") return void out.push(`  ${k + 1}. Campfire: REST (everyone standing +${s.hp}% HP), FOCUS (+${s.mp}% MP)${s.revive ? ` or REVIVE one member who is down (+${s.revive}% HP)` : ""}.`);
     if (s.kind !== "fight") return;
     const counts = new Map<string, number>();
     for (const e of s.enemies) counts.set(e, (counts.get(e) ?? 0) + 1);
@@ -105,9 +107,16 @@ if (cmd === "show") {
   const missing = unmet(c, node, party);
   if (missing.length) throw new Error(`can't start: ${missing.join("; ")}`);
   const seed = Number(opt("--seed") ?? 1);
-  // The campfire halfway through: --campfire rest (HP back) or focus (MP back); left out, the simulations' choice.
+  // The campfire halfway through: --campfire rest (HP back), focus (MP back) or revive:<class> (that member up, if down;
+  // otherwise the simulations' choice); left out, the simulations' choice.
   const camp = opt("--campfire");
-  const run = play(c, combat, { dungeon: node.dungeon, party, seed, firstClear: true }, (d, r) => (d.kind === "campfire" && camp ? camp : simPick(d, r)), { log: true });
+  const campPick = (d: Parameters<typeof simPick>[0], r: Parameters<typeof simPick>[1]) => {
+    if (d.kind !== "campfire" || !camp) return simPick(d, r);
+    if (!camp.startsWith("revive:")) return camp;
+    const m = (r.party as { id: string; ref: string }[]).find((x) => x.ref === camp.slice(7));
+    return m && d.options.includes(`revive:${m.id}`) ? `revive:${m.id}` : simPick(d, r);
+  };
+  const run = play(c, combat, { dungeon: node.dungeon, party, seed, firstClear: true }, campPick, { log: true });
   if (rest.includes("--full")) {
     console.log(readingPack(c, combat, { why: "", target: { key: node.id, dungeon: node.dungeon, name: node.name }, party, seed, won: run.outcome === "won" }, 1));
   } else console.log(summary((run.log as Entry[]).filter((e) => e.vis === "player" || e.t === "mp")));
@@ -139,7 +148,8 @@ function summary(log: Entry[]): string {
       continue;
     }
     if (e.t === "pick" && e.kind === "campfire") {
-      out.push("", e.pick === "rest" ? "Campfire: you REST (everyone standing gets HP back)." : "Campfire: you FOCUS (everyone standing gets MP back).");
+      const p = String(e.pick);
+      out.push("", p === "rest" ? "Campfire: you REST (everyone standing gets HP back)." : p === "focus" ? "Campfire: you FOCUS (everyone standing gets MP back)." : `Campfire: you REVIVE the ${names.get(p.slice(7)) ?? p.slice(7)}.`);
       continue;
     }
     if (!f) continue;

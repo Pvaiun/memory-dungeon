@@ -204,15 +204,15 @@ RAMPS = {
     "sick": [(20, 30, 10), (40, 60, 15), (90, 120, 30), (160, 200, 70), (235, 250, 200)],
 }
 STATUSES = {
-    "poison": (94, "green"), "regen": (83, "green"), "shield": (41, "ice"), "might": (102, "orange"), "weaken": (162, "purple"),
+    "bleed": (94, "crimson"), "regen": (83, "green"), "shield": (41, "ice"), "might": (102, "orange"), "weaken": (162, "purple"),
     "guard": (48, "steel"), "stun": (322, "yellow"), "slow": (13, "blue"), "haste": (341, "yellow"), "taunt": (35, "red"),
     "burn": (301, "orange"), "chill": (193, "ice"), "shock": (382, "yellow"), "ward": (46, "purple"), "sunder": (263, "brown"),
     "silence": (372, "gray"), "hidden": (129, "gray"), "rot": (183, "sick"), "clarity": (311, "blue"), "aegis": (50, "gold"),
     "doom": (16, "crimson"), "bulwark": (45, "steel"), "bulwark_broken": (269, "red"), "ice_crust": (194, "ice"),
-    "shadow_strike_on": (169, "purple"), "bloodlust_on": (85, "crimson"), "bedrock_on": (326, "gold"),
+    "bloodlust_on": (85, "crimson"), "bedrock_on": (326, "gold"),
     # passives and formation effects, for sheets
     "sworn": (35, "steel"), "mercy": (2, "gold"), "hunters_eye": (124, "green"), "briar": (118, "green"), "phalanx": (47, "brown"),
-    "judgement": (206, "gold"), "encore": (373, "yellow"), "cold_hex": (191, "ice"), "iron_palm": (212, "brown"), "shadow_strike": (169, "purple"),
+    "judgement": (206, "gold"), "encore": (373, "yellow"), "cold_hex": (191, "ice"), "iron_palm": (212, "brown"), "lacerate": (169, "crimson"),
     "bloodlust": (85, "crimson"), "kindling": (303, "orange"), "brittle": (197, "ice"), "arc": (384, "yellow"), "bedrock": (326, "gold"),
     "blitz_charge": (341, "yellow"), "caravan_pace": (83, "green"), "last_stand_spur": (102, "red"), "escort_insurance": (41, "ice"),
     "venom": (94, "green"), "fire_bite": (301, "orange"), "split": (123, "orange"), "volatile": (164, "orange"), "rime": (191, "ice"),

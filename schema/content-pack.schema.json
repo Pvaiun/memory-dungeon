@@ -166,6 +166,17 @@
           "minimum": 0,
           "description": "Each physical hit loses armorRatio × the target's Armor, as a flat amount."
         },
+        "armorFloor": {
+          "description": "Armor can't take a physical hit below this % of its size. Absent or 0: enough Armor blanks a hit. Ignored when armorK is set.",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "armorK": {
+          "description": "Armor on a curve (Path of Exile's): a physical hit H deals H² ÷ (H + armorK × A), where A is armorRatio × Armor, the amount the flat rule took off. Big hits lose about A, a hit of k × A loses half, small hits lose most of themselves but never all. Absent: the flat rule.",
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
         "taken": {
           "type": "object",
           "properties": {
@@ -943,6 +954,100 @@
           "maximum": 9007199254740991,
           "description": "Most living units on the enemy side, summons included."
         },
+        "enrage": {
+          "description": "A fight that runs past `after` ticks: every unit, on both sides, deals pct % more damage with hits and reactions, and pct more again every `every` ticks, so no fight stalls. Absent: fights run to the safety stop.",
+          "type": "object",
+          "properties": {
+            "after": {
+              "type": "number",
+              "minimum": 0
+            },
+            "every": {
+              "type": "number",
+              "minimum": 1
+            },
+            "pct": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "after",
+            "every",
+            "pct"
+          ],
+          "additionalProperties": false
+        },
+        "opening": {
+          "description": "How charged each action is at fight start. Absent: every action starts a fight on its full cooldown.",
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "min": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "max": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "required": [
+                "min",
+                "max"
+              ],
+              "additionalProperties": false,
+              "description": "Each action's first use comes after a share of its cooldown, rolled between min and max on the unit's dice."
+            },
+            {
+              "type": "object",
+              "properties": {
+                "abilities": {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "description": "Ticks of cooldown already done at fight start, by the ability's slot: the first equipped ability gets the first number, and so on; slots past the list get its last."
+                },
+                "basic": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1,
+                  "description": "A basic attack's first use comes after this share of its cooldown."
+                },
+                "step": {
+                  "description": "A party member's first basic attack waits this many ticks more per formation slot, so two members with the same weapon don't swing together.",
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "required": [
+                "abilities",
+                "basic"
+              ],
+              "additionalProperties": false,
+              "description": "Set by the build, not the dice: the order the abilities are slotted in decides which comes first."
+            }
+          ]
+        },
+        "stagger": {
+          "description": "Copies of the same enemy start a fight this many ticks apart, one after another, so identical foes don't act in lockstep. Absent or 0: they start together.",
+          "type": "number",
+          "minimum": 0
+        },
+        "lostCast": {
+          "description": "An action interrupted in its wind-up, or whose targets are gone when it resolves. retry (the default): no MP, no cooldown, so it can start again at once. cooldown: no MP, but an interrupted action goes on cooldown, as a cast that fizzles for MP does, and one that found no target costs the unit its recovery.",
+          "type": "string",
+          "enum": [
+            "retry",
+            "cooldown"
+          ]
+        },
         "run": {
           "type": "object",
           "properties": {
@@ -952,6 +1057,23 @@
                 "stay_down"
               ],
               "description": "Knocked-out units stay down between fights until something revives them."
+            },
+            "restore": {
+              "description": "After a won fight, every standing member regains these % of its max HP and of its max MP. Absent or 0: nothing restores them between fights (the core set's rule).",
+              "type": "object",
+              "properties": {
+                "hp": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "mp": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                }
+              },
+              "additionalProperties": false
             },
             "perkOffer": {
               "type": "object",
@@ -2348,6 +2470,11 @@
                 "pattern": "^[a-z][a-z0-9_]*(:[a-z0-9_]+)*$"
               },
               "interrupt": {
+                "description": "A cast in progress that the lockout covers is lost (see ruleset.lostCast).",
+                "type": "boolean"
+              },
+              "pause": {
+                "description": "A cast in progress that the lockout covers is held, not lost: its wind-up resumes where it was when the lockout ends.",
                 "type": "boolean"
               }
             },
@@ -2966,6 +3093,10 @@
                       "pattern": "^[a-z][a-z0-9_]*(:[a-z0-9_]+)*$"
                     }
                   },
+                  "crit": {
+                    "description": "hit_lands and hit_taken only: the hit critted (true) or didn't (false).",
+                    "type": "boolean"
+                  },
                   "status": {
                     "description": "Status events, and damage events: the status whose pulse or reaction dealt the damage.",
                     "type": "string",
@@ -3119,6 +3250,10 @@
                         "type": "string",
                         "pattern": "^[a-z][a-z0-9_]*(:[a-z0-9_]+)*$"
                       }
+                    },
+                    "crit": {
+                      "description": "hit_lands and hit_taken only: the hit critted (true) or didn't (false).",
+                      "type": "boolean"
                     },
                     "status": {
                       "description": "Status events, and damage events: the status whose pulse or reaction dealt the damage.",
@@ -5760,6 +5895,70 @@
             ],
             "additionalProperties": false
           },
+          "foes": {
+            "type": "object",
+            "properties": {
+              "hp": {
+                "description": "Every foe's max HP, +% (summoned foes too).",
+                "type": "integer",
+                "minimum": -90,
+                "maximum": 9007199254740991
+              },
+              "power": {
+                "description": "Every foe's damage dealt, +%: the power stat, added to its hits' boosts.",
+                "type": "integer",
+                "minimum": -90,
+                "maximum": 9007199254740991
+              },
+              "statuses": {
+                "description": "Applied to every foe at fight start, after its own.",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]*$"
+                }
+              },
+              "text": {
+                "description": "What the player is told about it.",
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": false,
+            "description": "A change to every foe in a dungeon: how a campaign trial or remix makes its foes tougher. The engine applies it at each fight start and to summons."
+          },
+          "bossFoes": {
+            "description": "A change to the foes of the run's boss fight, in its place: the regular fights and the boss can be set apart.",
+            "type": "object",
+            "properties": {
+              "hp": {
+                "description": "Every foe's max HP, +% (summoned foes too).",
+                "type": "integer",
+                "minimum": -90,
+                "maximum": 9007199254740991
+              },
+              "power": {
+                "description": "Every foe's damage dealt, +%: the power stat, added to its hits' boosts.",
+                "type": "integer",
+                "minimum": -90,
+                "maximum": 9007199254740991
+              },
+              "statuses": {
+                "description": "Applied to every foe at fight start, after its own.",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]*$"
+                }
+              },
+              "text": {
+                "description": "What the player is told about it.",
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": false
+          },
           "perkPool": {
             "default": [],
             "type": "array",
@@ -5831,6 +6030,45 @@
                     "id"
                   ],
                   "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "const": "campfire"
+                    },
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_]*$"
+                    },
+                    "hp": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100,
+                      "description": "REST: every standing member regains this % of its max HP."
+                    },
+                    "mp": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100,
+                      "description": "FOCUS: every standing member regains this % of its max MP."
+                    },
+                    "revive": {
+                      "description": "REVIVE: one knocked-out member, of the player's choice, stands up with this % of its max HP. Offered only when someone is down. Absent: no revive.",
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "id",
+                    "hp",
+                    "mp"
+                  ],
+                  "additionalProperties": false,
+                  "description": "A rest between two fights where the player picks one: HP back, MP back, or (when it offers one and someone is down) one member revived."
                 }
               ]
             }
@@ -6133,6 +6371,250 @@
       },
       "required": [
         "dungeonOrder"
+      ],
+      "additionalProperties": false
+    },
+    "campaign": {
+      "type": "object",
+      "properties": {
+        "start": {
+          "type": "object",
+          "properties": {
+            "classes": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*$"
+              }
+            },
+            "formations": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*$"
+              }
+            },
+            "gear": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*$"
+              }
+            }
+          },
+          "required": [
+            "classes",
+            "formations",
+            "gear"
+          ],
+          "additionalProperties": false,
+          "description": "Owned at the start. A class's plain weapon always comes with it."
+        },
+        "nodes": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*$"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Player-facing text. The engine never reads it."
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "dungeon",
+                  "remix",
+                  "trial"
+                ],
+                "description": "dungeon: one of the seven runs. remix: a new run from the same enemies. trial: a run with requirements."
+              },
+              "dungeon": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*$",
+                "description": "The run it plays."
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "description": "The node's line, as the player reads it."
+              },
+              "needs": {
+                "default": [],
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "includes": {
+                          "minItems": 1,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "pattern": "^[a-z][a-z0-9_]*$"
+                          }
+                        }
+                      },
+                      "required": [
+                        "includes"
+                      ],
+                      "additionalProperties": false,
+                      "description": "The party brings every one of these classes."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "excludes": {
+                          "minItems": 1,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "pattern": "^[a-z][a-z0-9_]*$"
+                          }
+                        }
+                      },
+                      "required": [
+                        "excludes"
+                      ],
+                      "additionalProperties": false,
+                      "description": "The party brings none of these classes."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "formation": {
+                          "type": "string",
+                          "pattern": "^[a-z][a-z0-9_]*$"
+                        }
+                      },
+                      "required": [
+                        "formation"
+                      ],
+                      "additionalProperties": false,
+                      "description": "The party stands in this formation."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "armor": {
+                          "type": "string",
+                          "enum": [
+                            "heavy",
+                            "medium",
+                            "light",
+                            "none"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "armor"
+                      ],
+                      "additionalProperties": false,
+                      "description": "Every member wears armor of exactly this weight (none: no armor)."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "weapons": {
+                          "minItems": 1,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "pattern": "^[a-z][a-z0-9_]*$"
+                          }
+                        }
+                      },
+                      "required": [
+                        "weapons"
+                      ],
+                      "additionalProperties": false,
+                      "description": "Every member's weapon is of one of these kinds."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "size": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "required": [
+                        "size"
+                      ],
+                      "additionalProperties": false,
+                      "description": "The party has at most this many members."
+                    }
+                  ],
+                  "description": "A requirement a trial sets on the party. Only things the player can see and change in the menus."
+                }
+              },
+              "rewards": {
+                "type": "object",
+                "properties": {
+                  "classes": {
+                    "default": [],
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_]*$"
+                    }
+                  },
+                  "formations": {
+                    "default": [],
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_]*$"
+                    }
+                  },
+                  "gear": {
+                    "default": [],
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_]*$"
+                    }
+                  }
+                },
+                "required": [
+                  "classes",
+                  "formations",
+                  "gear"
+                ],
+                "additionalProperties": false
+              },
+              "note": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Designer note. Never shown to players and never read by the engine."
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "kind",
+              "dungeon",
+              "text",
+              "needs",
+              "rewards"
+            ],
+            "additionalProperties": false
+          },
+          "description": "In order. Clearing one pays its rewards once and reveals the next."
+        }
+      },
+      "required": [
+        "start",
+        "nodes"
       ],
       "additionalProperties": false
     }

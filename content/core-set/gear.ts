@@ -4,7 +4,7 @@
  * 16 ordinary and 4 powerful amulets.
  */
 import type { GearT, NumT, WeightT } from "../../src/schema.js";
-import { KIND_SPEED, PER_PERCENT, RESIST, SPECIAL, SPECIAL_KEY, stepFor, SWING_REF, WEAPON, crit, type Level, type SpecialLevel, type SpecialStat } from "./scale.js";
+import { KIND_SPEED, PER_PERCENT, RESIST, SPECIAL, SPECIAL_KEY, STAFF_MAGIC, stepFor, SWING_REF, WEAPON, crit, type Level, type SpecialLevel, type SpecialStat } from "./scale.js";
 import { weaponKinds } from "./vocabulary.js";
 
 type Change = { stat: string; flat: number };
@@ -18,7 +18,9 @@ const resists = (...elements: string[]): Change[] => elements.map((e) => ({ stat
 export function weaponHit(kind: string, base: Level, ratio: Level, stat: string): NumT {
   // Pacing pass: the size follows the kind's own cooldown (it was a factor for each of three speed words).
   const f = KIND_SPEED[kind] / SWING_REF;
-  return { base: Math.round(f * WEAPON.base[base]), scale: [{ ratio: f * WEAPON.ratio[ratio] * (PER_PERCENT[stat] ?? 1), stat }] };
+  // Step 5c: a staff counts Magic for less (STAFF_MAGIC), so a caster's power is in its spells and its MP gates it.
+  const m = stat === "magic" ? STAFF_MAGIC : 1;
+  return { base: Math.round(f * WEAPON.base[base]), scale: [{ ratio: f * WEAPON.ratio[ratio] * m * (PER_PERCENT[stat] ?? 1), stat }] };
 }
 const usual = (kind: string) => (weaponKinds.find((k) => k.id === kind)!.type === "magical" ? "magic" : "attack");
 

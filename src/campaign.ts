@@ -104,14 +104,22 @@ export function foesText(d: DungeonT): string | null {
 export const nodeIndex = (c: Content, id: string) => campaign(c).nodes.findIndex((n) => n.id === id);
 
 /**
- * The simulations' choice at a decision: at a campfire, HP back (rest) when anyone standing is below a third of their max
- * HP, or the standing party has less of its HP left than of its MP; else MP back (focus). Anything else, the first option.
- * (A playtester saw the average alone pick FOCUS with the tank on a tenth of its HP.)
+ * The simulations' choice at a decision: at a campfire, a member back (revive) when anyone is down, the first in formation
+ * order; else HP back (rest) when anyone standing is below a third of their max HP, or the standing party has less of its
+ * HP left than of its MP; else MP back (focus). Anything else, the first option. (A playtester saw the average alone pick
+ * FOCUS with the tank on a tenth of its HP.)
  */
 export const simPick: Picker = (d, run) => {
   if (d.kind !== "campfire") return d.options[0];
+  const revive = d.options.find((o) => o.startsWith("revive:"));
+  if (revive) return revive;
+  return restOrFocus(run);
+};
+
+/** The campfire's HP-or-MP half of the simulations' choice. */
+export function restOrFocus(run: Parameters<Picker>[1]): "rest" | "focus" {
   const up = (run.party as unknown as { hp: number; mp: number; stats: Record<string, number> }[]).filter((m) => m.hp > 0);
   if (up.some((m) => m.hp * 3 < m.stats.max_hp)) return "rest";
   const share = (k: "hp" | "mp") => up.reduce((a, m) => a + m[k] / Math.max(1, m.stats[`max_${k}`]), 0) / Math.max(1, up.length);
   return share("hp") <= share("mp") ? "rest" : "focus";
-};
+}

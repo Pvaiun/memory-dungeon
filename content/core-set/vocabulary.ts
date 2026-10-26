@@ -1,6 +1,6 @@
 /**
  * The core set's vocabulary (docs/core-set/rules-and-vocabulary.md): the stat
- * registry, elements, weapon kinds, the 22 statuses, the statuses that special
+ * registry, elements, weapon kinds, the 22 statuses (Bleed in Poison's place), the statuses that special
  * stats bring, the ruleset and the design block.
  */
 import type { ContentPack, StatDefT, StatusT, WeaponKindT } from "../../src/schema.js";
@@ -14,7 +14,7 @@ export const stats: StatDefT[] = [
   { id: "mp_regen", name: "MP regen", kind: "amount", default: 0, floor: 0, brings: "mp_regen", note: `MP restored every ${MP_REGEN.every} ticks, through the status it brings.` },
   { id: "attack", name: "Attack", kind: "amount", default: 0, floor: 0 },
   { id: "magic", name: "Magic", kind: "amount", default: 0, floor: 0 },
-  { id: "armor", name: "Armor", kind: "amount", default: 0, floor: 0, note: `Each physical hit loses ${RULES.armorRatio} × Armor, but never more than ${100 - RULES.armorFloor}% of itself.` },
+  { id: "armor", name: "Armor", kind: "amount", default: 0, floor: 0, note: `A physical hit H deals H² ÷ (H + ${RULES.armorK} × ${RULES.armorRatio} × Armor): big hits lose about ${RULES.armorRatio} × Armor, small ones most of themselves, never all.` },
   { id: "aggro", name: "Aggro", kind: "amount", default: pts(1), floor: 100, note: "Floors above zero: no unit becomes unpickable by numbers alone." },
   { id: "resist", name: "Resistance", kind: "points", default: 0, floor: -100, cap: 200, note: "Past 100 the damage heals instead: absorption, a class and boss trait." },
   { id: "attack_speed", name: "Attack speed", kind: "points", default: 0, floor: -300, cap: 300, note: "Hidden behind Haste, Slow and Chill." },
@@ -71,7 +71,8 @@ const bothKinds = (pct: number) => [{ tag: "physical", pct }, { tag: "magical", 
 /** The 22 statuses of the vocabulary. */
 export const vocabulary: StatusT[] = [
   // Fundamental
-  { id: "poison", name: "POISON", text: "Loses health over time.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.poison.duration, pulse: { every: STATUS.poison.every, do: [{ op: "damage", type: "none", amount: STATUS.poison.damage }] } },
+  // Step 5c: Bleed in place of Poison. An Intensity status with no timer, set off by each hit its holder takes.
+  { id: "bleed", name: "BLEED", text: "Each hit it takes makes it bleed for each stack, then the bleeding slows.", label: "debuff", show: "icon", stacking: "intensity", trigger: { on: { event: "hit_taken" }, do: [{ op: "damage", type: "none", amount: STATUS.bleed.perStack, to: "holder" }] }, drop: { fraction: STATUS.bleed.drop } },
   { id: "regen", name: "REGEN", text: "Recovers health over time.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.regen.duration, pulse: { every: STATUS.regen.every, do: [{ op: "heal", amount: { scale: [{ ratio: STATUS.regen.share, stat: "max_hp", of: "holder" }] } }] } },
   { id: "shield", name: "SHIELD", text: "Soaks damage before health.", label: "buff", show: "icon", stacking: "intensity", absorb: true, cap: { scale: [{ ratio: STATUS.shield.capShare, stat: "max_hp", of: "holder" }] } },
   { id: "might", name: "MIGHT", text: "Deals more damage per stack.", label: "buff", show: "icon", stacking: "intensity", boosts: bothKinds(STATUS.might.perStack), cap: STATUS.might.cap, pulse: { every: STATUS.might.every }, drop: { count: 1 } },
@@ -130,7 +131,7 @@ export const machinery: StatusT[] = [
 
 export const ruleset: ContentPack["ruleset"] = {
   basicRecovery: RULES.basicRecovery,
-  armorFloor: RULES.armorFloor,
+  armorK: RULES.armorK,
   abilityCast: RULES.abilityCast,
   abilityRecovery: RULES.abilityRecovery,
   armorRatio: RULES.armorRatio,

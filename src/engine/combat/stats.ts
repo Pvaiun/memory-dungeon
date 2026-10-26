@@ -27,7 +27,10 @@ export function finalValue(c: Content, key: string, base: number, flat: number, 
   const v = Math.trunc((base + flat) * (1 + pct / 100));
   const def = c.stats.get(key);
   if (!def) return v;
-  return Math.min(def.cap ?? v, Math.max(def.floor ?? v, v));
+  // Floor, then cap, each only when the stat has one. (Before engine 0.11 a floor held only on stats that also had a cap,
+  // so Sunder took Armor below zero and every physical hit gained what the Armor was below zero.)
+  const floored = def.floor !== undefined ? Math.max(def.floor, v) : v;
+  return def.cap !== undefined ? Math.min(def.cap, floored) : floored;
 }
 
 export const statDefault = (c: Content, key: string) => c.stats.get(key)?.default ?? 0;

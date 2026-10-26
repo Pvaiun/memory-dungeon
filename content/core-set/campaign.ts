@@ -315,7 +315,7 @@ function withCampfire(stages: DungeonT["stages"]): DungeonT["stages"] {
   const regular = stages.filter((s) => s.kind === "fight" && !s.boss).length;
   if (regular < 1) return stages;
   const at = Math.ceil(regular / 2);
-  return [...stages.slice(0, at), { kind: "campfire", id: "campfire", hp: CAMPFIRE.hp, mp: CAMPFIRE.mp }, ...stages.slice(at)];
+  return [...stages.slice(0, at), { kind: "campfire", id: "campfire", hp: CAMPFIRE.hp, mp: CAMPFIRE.mp, revive: CAMPFIRE.revive }, ...stages.slice(at)];
 }
 
 export function campaignWith(spine: DungeonT[]): CampaignT {

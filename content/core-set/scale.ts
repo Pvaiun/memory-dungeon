@@ -42,7 +42,7 @@ export const SPEED = { fast: 5.9, medium: 7.9, slow: 10.3 } as const;
  * Pacing pass: abilities are moments in a fight, not its whole rhythm. At 6, 12 and 22 ticks, a unit with three abilities was
  * casting nearly all the time and its basic attack came a third of its actions; the party acted twice for each foe action.
  */
-export const COOLDOWN = { short: 30, medium: 48, long: 70 } as const;
+export const COOLDOWN = { short: 30, medium: 38, long: 46 } as const;
 /**
  * An ability's cooldown: its word's, moved up to 15% either way by its id, so no two in a kit share one and few line up with
  * each other or with a swing. The director's ask: "you should probably never even have two that are the same".
@@ -64,15 +64,20 @@ export const RULES = {
   abilityCast: WINDUP.normal,
   /** Pacing pass: 1.5 (was 2.5). */
   abilityRecovery: 1.5,
-  /** Pacing pass: each action starts a fight a third to two thirds charged, by its own roll, so nothing lines up on the first ticks. */
-  opening: { min: 0.3, max: 0.7 },
-  /** Each physical hit loses this share of the target's Armor: Armor 5 takes 600 off, Armor 8 nearly blanks a sword. */
+  /**
+   * Step 5c (the director's): the opening is set by the build, not the dice. The first ability slotted starts a fight with 25
+   * ticks of its cooldown done, the second 15, the third 10; a basic attack half charged, a tick later for each party slot. It
+   * was a roll of a third to two thirds for each action: "you can't prepare for something random like that."
+   */
+  opening: { abilities: [25, 15, 10], basic: 0.5, step: 1 },
+  /** A point of Armor's worth against a hit: Armor 5 is 600, what it took off every hit under the old flat rule. */
   armorRatio: 0.12,
   /**
-   * Pacing pass: Armor can't take a hit below a quarter of its size. Plate on a Knight blanked every weak and normal swing
-   * ("wolves hit it for 0 BLOCKED"), so minions couldn't touch the wall and the Knight was in half the top builds.
+   * Step 5c (the director's): Armor on Path of Exile's curve, a hit H dealing H² ÷ (H + k × A), with A the armor value above.
+   * About linear against big hits (Armor 5 still takes about 600 off a 3,000 blow), half off a hit of k × A, and it never
+   * blanks one. The flat rule with a floor of a quarter (pacing pass) made Armor past a quarter of the roster's hits worthless.
    */
-  armorFloor: 25,
+  armorK: 1,
   maxEnemies: 8,
   /**
    * An interrupted cast goes on cooldown, and one whose targets are gone costs its recovery (the core-set report's
@@ -99,8 +104,15 @@ export const RULES = {
  */
 export const COST = { short: 400, medium: 650, long: 1000 } as const;
 export const costly = (cd: keyof typeof COST) => Math.round(COST[cd] * 1.6);
+/**
+ * Step 5c (the director's): spellcasters are mana hungry, tanks rarely run dry. An ability costs its price × (its class's MP − from) ÷ per,
+ * so a class with MP 5 (Cleric, Pyromancer) pays 2.5 times what a class with MP 2 (Knight, Bramble knight) pays. Every class
+ * starts a run with about the same number of casts in its pool; its MP regen against its prices then decides how long they
+ * last. Before, prices were the same for everyone, and the tanks (MP 2, regen 2) ran dry while the casters never did.
+ */
+export const MP_APPETITE = { from: 1, per: 2 };
 /** MP regen: every `every` ticks, restore `share` × the MP regen stat (regen 3 gives 150). */
-export const MP_REGEN = { every: 4, share: 0.05 };
+export const MP_REGEN = { every: 4, share: 0.03 };
 
 // ─── Damage ──────────────────────────────────────────────────────────────────
 
@@ -111,6 +123,12 @@ export const WEAPON = {
   speedFactor: { fast: 0.6, medium: 1, slow: 1.6 },
 } as const;
 export type Level = keyof typeof WEAPON.base;
+/**
+ * Step 5c: a weapon that scales from Magic (a staff) counts it at this share. With Magic 5, a Pyromancer's staff swung for more
+ * than any sword, so a caster out of MP lost little: FOCUS decided a run with a Cleric as often as REST did, and almost never
+ * with a damage caster. The director: a magic unit is "not that useful without their spells".
+ */
+export const STAFF_MAGIC = 1;
 
 /** An ability's hit, as a share of its scaling stat. */
 /** Pacing pass: each ability is rarer, so each hit is bigger (was 0.2, 0.35 and 0.6): a normal hit is about three swings. */
@@ -234,16 +252,13 @@ export const stepFor = (stat: string) => (stat === "max_hp" ? HP_STEP : STEP);
 // ─── Statuses: sizes and durations ───────────────────────────────────────────
 
 export const STATUS = {
-  /** 90 a tick-pair: Regen on a 2-HP unit (80) nearly outruns it, as the Snake Pit's story needs. */
-  /** Campaign pass: 160 a pulse for 12 ticks, about a third of a caster's HP per application. At 90 it showed as 1. */
   /**
-   * Pacing pass: 250 a pulse for 10 ticks (was 160 for 12): its five pulses outweigh the tap that carries it (Venom arrow is
-   * 0.15 of Attack). Flat, as every status is: a status never scales from its applier; a stackable one scales by the stacks
-   * applied, an unstackable one (Poison refreshes) by nothing (the director's rule). At 400 the Old Road's snakes, which
-   * Poison with every bite and aren't weakened by the node's knob, stopped the starters in 35 runs of 40 at the snake pit
-   * and the fight after it; at 200, 10.
+   * Step 5c (the director's): Bleed replaces Poison ("attrition is already well handled by healing and shields"). It does nothing
+   * on its own and never runs out; each hit its holder takes costs it `perStack` a stack, untyped, then a `drop` share of the
+   * stacks go. An inverse Shock: it rewards the side that keeps hitting. 120 a stack and a quarter gone a hit (a stack is worth
+   * up to 480, spent over three to five hits): a Barbed arrow's Bleed is worth its arrow's hit; at 60 and a fifth, half.
    */
-  poison: { every: 2, damage: 250, duration: 10 },
+  bleed: { perStack: 120, drop: 0.25 },
   /** 8 pulses of 4%: a Prayer heals a third of everyone's max HP over 16 ticks. */
   /** Pacing pass: 12 pulses of 3% (was 8 of 4%): Renew and Regrowth come a third as often. */
   regen: { every: 2, share: 0.03, duration: 24 },
@@ -269,13 +284,18 @@ export const STATUS = {
    * holds 15 to 25 on its target) and lingers when the burning stops. Each stack burns for 30 a pulse, so a stack's
    * whole Burn is 1.5 times what it was: slower Burn spends more of itself after its target is dead.
    */
-  burn: { every: 2, perStack: 30, drop: 0.1 },
+  /** Step 5c (the director's: "burn and shock are really weak"): 40 a stack (was 30), with more stacks from the Pyromancer. */
+  burn: { every: 2, perStack: 40, drop: 0.1 },
   chill: { cap: 8, perStack: -6, every: 3, drop: 1 / 3 },
   /**
    * Campaign pass: a cap of 25 stacks (uncapped, a slow boss gathered 50 to 100 and took 8,000 from one swing), and 60 a
    * stack, not 80 (the second AI playtester's Stormcaller carried the last nine nodes).
    */
-  shock: { perStack: 60, drop: 0.5, cap: 25 },
+  /**
+   * Step 5c: 90 a stack (was 60). More stacks from the Stormcaller alone did little: its own swings already reach the cap,
+   * and a higher cap (40) added a fifth of what 90 did.
+   */
+  shock: { perStack: 90, drop: 0.5, cap: 25 },
   ward: { resist: 30, duration: 24 },
   sunder: { perStack: -600, every: 4 },
   silence: { duration: 8 },
@@ -289,8 +309,12 @@ export const STATUS = {
   ice_crust: { perStack: pts(1), duration: 6, cap: 6 },
 } as const;
 
-/** The campfire before each campaign boss: REST gives back this % of max HP to everyone standing, FOCUS this % of max MP. */
-export const CAMPFIRE = { hp: 40, mp: 40 } as const;
+/**
+ * The campfire in the middle of each campaign run: REST gives back this % of max HP to everyone standing, FOCUS this % of max MP,
+ * REVIVE stands one knocked-out member of the player's choice up with this % of its max HP (step 5c, the director's: "revive is
+ * pretty mandatory").
+ */
+export const CAMPFIRE = { hp: 40, mp: 50, revive: 35 } as const;
 
 /** Shares of max HP a revive brings a unit back with. */
 export const REVIVE = { half: 0.5, tenth: 0.1, ghoul: 0.3 } as const;

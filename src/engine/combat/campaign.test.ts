@@ -105,14 +105,14 @@ test("a pausing lockout (Stun): a wind-up under way waits it out and then lands,
   assert.deepEqual(a.entries("act", (e) => e.act === "smash").map((e) => e.at), [at(16)], "and Smash lands at 16, not 11");
 });
 
-test("campfire: the run pauses for a choice between two fights; REST gives back HP, FOCUS MP, to everyone standing", () => {
+test("campfire: the run pauses for a choice between two fights; REST gives back HP, FOCUS MP, to everyone standing; REVIVE stands one member up", () => {
   const pack = structuredClone(raw);
   const d = pack.dungeons.find((x: { id: string }) => x.id === "cmp_old_road");
   assert.ok(d.stages.some((s: { kind: string }) => s.kind === "campfire"), "every campaign run has a campfire");
   const at = d.stages.findIndex((s: { kind: string }) => s.kind === "campfire");
   assert.equal(at, Math.ceil(d.stages.filter((s: { kind: string; boss?: boolean }) => s.kind === "fight" && !s.boss).length / 2), "after half the regular fights");
   const c = loadContent(pack);
-  const party = { formation: "neutral", units: [{ class: "knight", position: "left", abilities: ["fortify", "protect", "shield_bash"], gear: { weapon: "plain_sword" } }, { class: "cleric", position: "center", abilities: ["renew", "cure", "raise"], gear: { weapon: "plain_light_staff" } }, { class: "ranger", position: "right", abilities: ["venom_arrow", "fire_arrow", "rending_arrow"], gear: { weapon: "plain_bow" } }] };
+  const party = { formation: "neutral", units: [{ class: "knight", position: "left", abilities: ["fortify", "protect", "shield_bash"], gear: { weapon: "plain_sword" } }, { class: "cleric", position: "center", abilities: ["renew", "cure", "raise"], gear: { weapon: "plain_light_staff" } }, { class: "ranger", position: "right", abilities: ["barbed_arrow", "fire_arrow", "rending_arrow"], gear: { weapon: "plain_bow" } }] };
   let reached = 0;
   for (const pick of ["rest", "focus"]) {
     // The first seed on which this party reaches the campfire.
@@ -135,4 +135,20 @@ test("campfire: the run pauses for a choice between two fights; REST gives back 
     });
   }
   assert.equal(reached, 2, "the party reaches the campfire on some seed");
+  // REVIVE: offered for each knocked-out member; the one picked stands up with the campfire's share of its max HP, nobody else changes.
+  let run = newRun(c, combat, { dungeon: "cmp_old_road", party, seed: 1 }, { checked: true });
+  for (let seed = 1; seed < 40 && !run.pending; seed++) {
+    run = newRun(c, combat, { dungeon: "cmp_old_road", party, seed }, { checked: true });
+    while (!run.pending && !run.outcome) advanceOnce(c, combat, run);
+  }
+  assert.ok(run.pending, "the party reaches the campfire on some seed");
+  const m = run.party as unknown as { id: string; hp: number; mp: number; stats: Record<string, number> }[];
+  m[1].hp = 0;
+  const offer = combat.stage({ c, run, log: undefined } as never, d0(c), undefined as never)!;
+  assert.deepEqual(offer.options, ["rest", "focus", `revive:${m[1].id}`]);
+  const before = m.map((x) => [x.hp, x.mp]);
+  combat.apply({ c, run, log: undefined } as never, offer, `revive:${m[1].id}`);
+  assert.equal(m[1].hp, Math.floor(m[1].stats.max_hp * 0.5));
+  assert.deepEqual([m[0].hp, m[2].hp, m[1].mp], [before[0][0], before[2][0], before[1][1]]);
 });
+const d0 = (c: ReturnType<typeof loadContent>) => c.dungeons.get("cmp_old_road")!.stages.find((s) => s.kind === "campfire")!;

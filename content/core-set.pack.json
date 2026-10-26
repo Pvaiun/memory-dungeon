@@ -30,7 +30,7 @@
  },
  "ruleset": {
   "basicRecovery": 0.25,
-  "armorFloor": 25,
+  "armorK": 1,
   "abilityCast": 1.5,
   "abilityRecovery": 1.5,
   "armorRatio": 0.12,
@@ -55,8 +55,13 @@
   "maxEnemies": 8,
   "lostCast": "cooldown",
   "opening": {
-   "min": 0.3,
-   "max": 0.7
+   "abilities": [
+    25,
+    15,
+    10
+   ],
+   "basic": 0.5,
+   "step": 1
   },
   "stagger": 1.5,
   "enrage": {
@@ -118,7 +123,7 @@
    "kind": "amount",
    "default": 0,
    "floor": 0,
-   "note": "Each physical hit loses 0.12 × Armor, but never more than 75% of itself."
+   "note": "A physical hit H deals H² ÷ (H + 1 × 0.12 × Armor): big hits lose about 0.12 × Armor, small ones most of themselves, never all."
   },
   {
    "id": "aggro",
@@ -382,22 +387,27 @@
  ],
  "statuses": [
   {
-   "id": "poison",
-   "name": "POISON",
-   "text": "Loses health over time.",
+   "id": "bleed",
+   "name": "BLEED",
+   "text": "Each hit it takes makes it bleed for each stack, then the bleeding slows.",
    "label": "debuff",
    "show": "icon",
-   "stacking": "refresh",
-   "duration": 10,
-   "pulse": {
-    "every": 2,
+   "stacking": "intensity",
+   "trigger": {
+    "on": {
+     "event": "hit_taken"
+    },
     "do": [
      {
       "op": "damage",
       "type": "none",
-      "amount": 250
+      "amount": 120,
+      "to": "holder"
      }
     ]
+   },
+   "drop": {
+    "fraction": 0.25
    }
   },
   {
@@ -590,7 +600,7 @@
      {
       "op": "damage",
       "type": "none",
-      "amount": 30
+      "amount": 40
      }
     ]
    },
@@ -643,7 +653,7 @@
      {
       "op": "damage",
       "type": "none",
-      "amount": 60,
+      "amount": 90,
       "to": "holder"
      }
     ]
@@ -876,7 +886,7 @@
       "amount": {
        "scale": [
         {
-         "ratio": 0.05,
+         "ratio": 0.03,
          "stat": "mp_regen",
          "of": "holder"
         }
@@ -1053,17 +1063,25 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Foes its Thorns wound are Poisoned.",
+   "text": "Foes that hit it Bleed.",
    "reactions": [
     {
      "on": {
-      "event": "damage_dealt",
-      "status": "thorns"
+      "event": "hit_taken"
      },
      "do": [
       {
        "op": "apply",
-       "status": "poison",
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0013,
+          "stat": "armor",
+          "of": "holder"
+         }
+        ]
+       },
        "to": "other"
       }
      ]
@@ -1261,54 +1279,35 @@
    ]
   },
   {
-   "id": "shadow_strike",
-   "name": "Shadow strike",
+   "id": "lacerate",
+   "name": "Lacerate",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Hits always crit while Hidden.",
+   "text": "Its crits add several Bleed.",
    "reactions": [
     {
      "on": {
-      "event": "status_gained",
-      "status": "hidden"
+      "event": "hit_lands",
+      "crit": true
      },
      "do": [
       {
        "op": "apply",
-       "status": "shadow_strike_on",
-       "to": "holder"
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0013,
+          "stat": "attack",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
       }
      ]
-    },
-    {
-     "on": {
-      "event": "status_ended",
-      "status": "hidden"
-     },
-     "do": [
-      {
-       "op": "remove",
-       "label": "buff",
-       "status": "shadow_strike_on",
-       "to": "holder"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "id": "shadow_strike_on",
-   "name": "SHADOW",
-   "text": "Every hit crits.",
-   "label": "buff",
-   "show": "icon",
-   "stacking": "fizzle",
-   "stats": [
-    {
-     "stat": "crit_chance",
-     "flat": 100
     }
    ]
   },
@@ -1387,7 +1386,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks add a few Burn.",
+   "text": "Basic attacks add several Burn.",
    "reactions": [
     {
      "on": {
@@ -1401,7 +1400,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.0013,
           "stat": "magic",
           "of": "holder"
          }
@@ -1476,7 +1475,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.0013,
           "stat": "magic",
           "of": "holder"
          }
@@ -1498,7 +1497,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.0013,
           "stat": "magic",
           "of": "holder"
          }
@@ -1677,7 +1676,7 @@
   {
    "id": "venom",
    "name": "Venom",
-   "text": "Its bites poison.",
+   "text": "Its bites leave Bleed.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -1691,7 +1690,8 @@
      "do": [
       {
        "op": "apply",
-       "status": "poison",
+       "status": "bleed",
+       "stacks": 1,
        "to": "other"
       }
      ]
@@ -2005,7 +2005,7 @@
   {
    "id": "ranger",
    "name": "Ranger",
-   "text": "Wears down tough targets. Looses poison, fire and armor-rending arrows at whatever stands in front, while its plain arrows fly past any guard.",
+   "text": "Wears down tough targets. Looses barbed, fire and armor-rending arrows at whatever stands in front, while its plain arrows fly past any guard.",
    "source": "starter",
    "stats": {
     "max_hp": 3000,
@@ -2031,7 +2031,7 @@
     ]
    },
    "abilities": [
-    "venom_arrow",
+    "barbed_arrow",
     "fire_arrow",
     "rending_arrow"
    ]
@@ -2039,7 +2039,7 @@
   {
    "id": "bramble_knight",
    "name": "Bramble knight",
-   "text": "Thorns tank. Draws every foe onto its thorns, where each attacker bleeds and is poisoned, regrows whoever is lowest, and lashes out with the thorns themselves.",
+   "text": "Thorns tank. Draws every foe onto its thorns, where each attacker is cut and left bleeding, regrows whoever is lowest, and lashes out with the thorns themselves.",
    "source": "unlock",
    "stats": {
     "max_hp": 5000,
@@ -2060,7 +2060,7 @@
    "armor": "heavy",
    "passive": {
     "name": "Briar",
-    "text": "Each time its Thorns damage a foe, that foe gets Poison.",
+    "text": "Each foe that hits it gets several Bleed; stacks scale from Armor.",
     "statuses": [
      "briar"
     ]
@@ -2107,7 +2107,7 @@
   {
    "id": "paladin",
    "name": "Paladin",
-   "text": "Shelter against magic. Shelters the party from spells and curses, and brings down slow, heavy judgement, twice as hard on any foe that holds a buff.",
+   "text": "Shelter against magic. Shelters the party from spells and curses, and brings down slow, heavy, burning judgement, twice as hard on any foe that holds a buff.",
    "source": "unlock",
    "stats": {
     "max_hp": 4000,
@@ -2172,7 +2172,7 @@
   {
    "id": "bard",
    "name": "Bard",
-   "text": "Party tempo. Plays the fight's tempo: allies faster and stronger, foes slower, and every note it strikes gives an ally a little mana.",
+   "text": "Party tempo. Plays the fight's tempo: allies faster and stronger, a thunderous chord that Shocks every foe, and every note it strikes gives an ally a little mana.",
    "source": "unlock",
    "stats": {
     "max_hp": 2000,
@@ -2199,7 +2199,7 @@
    "abilities": [
     "allegro",
     "war_ballad",
-    "lullaby"
+    "thunder_chord"
    ]
   },
   {
@@ -2274,7 +2274,7 @@
   {
    "id": "assassin",
    "name": "Assassin",
-   "text": "Burst killer. Slips out of sight, picks off the weakest foe past any guard with crits that punch through armor, and silences the back line.",
+   "text": "Burst killer. Slips out of sight, picks off the weakest foe past any guard with crits that punch through armor and leave it bleeding, and silences the back line.",
    "source": "unlock",
    "stats": {
     "max_hp": 2000,
@@ -2294,10 +2294,10 @@
    ],
    "armor": "medium",
    "passive": {
-    "name": "Shadow strike",
-    "text": "Its hits always crit while it's Hidden.",
+    "name": "Lacerate",
+    "text": "Each of its crits adds several Bleed; stacks scale from Attack.",
     "statuses": [
-     "shadow_strike"
+     "lacerate"
     ]
    },
    "abilities": [
@@ -2365,7 +2365,7 @@
    "armor": "light",
    "passive": {
     "name": "Kindling",
-    "text": "Its basic attacks add a few Burn, whatever staff it carries; stacks scale from Magic.",
+    "text": "Its basic attacks add several Burn, whatever staff it carries; stacks scale from Magic.",
     "statuses": [
      "kindling"
     ]
@@ -2432,7 +2432,7 @@
    "armor": "light",
    "passive": {
     "name": "Arc",
-    "text": "Each of its basic attacks also hits a second, random foe, and adds a few Shock to both; stacks scale from Magic.",
+    "text": "Each of its basic attacks also hits a second, random foe, and adds several Shock to both; stacks scale from Magic.",
     "statuses": [
      "arc"
     ]
@@ -2485,9 +2485,9 @@
    "class": "knight",
    "name": "Fortify",
    "text": "Guards the ally with the lowest share of HP.",
-   "cooldown": 44,
+   "cooldown": 34.8,
    "cast": 0.5,
-   "mp": 650,
+   "mp": 325,
    "target": {
     "side": "allies",
     "pick": "lowest",
@@ -2505,9 +2505,9 @@
    "class": "knight",
    "name": "Protect",
    "text": "Shields the lowest ally; the amount scales from the Knight's max HP.",
-   "cooldown": 45.9,
+   "cooldown": 36.4,
    "cast": 1.5,
-   "mp": 650,
+   "mp": 325,
    "if": {
     "side": "allies",
     "where": {
@@ -2542,9 +2542,9 @@
    "class": "knight",
    "name": "Shield bash",
    "text": "Bashes a foe with the shield, which scales from Armor, and Stuns it.",
-   "cooldown": 52.6,
+   "cooldown": 41.6,
    "cast": 0.5,
-   "mp": 650,
+   "mp": 325,
    "target": {
     "side": "foes",
     "where": {
@@ -2578,9 +2578,9 @@
    "class": "cleric",
    "name": "Renew",
    "text": "Cleanses an ally with a debuff and gives it Regen; with nobody debuffed, Regen on the lowest ally.",
-   "cooldown": 46.9,
+   "cooldown": 37.1,
    "cast": 1.5,
-   "mp": 650,
+   "mp": 1300,
    "target": {
     "side": "allies",
     "where": {
@@ -2608,7 +2608,7 @@
    "text": "A quick, small heal on the lowest ally.",
    "cooldown": 30.9,
    "cast": 0.5,
-   "mp": 640,
+   "mp": 800,
    "if": {
     "side": "allies",
     "where": {
@@ -2639,9 +2639,9 @@
    "class": "cleric",
    "name": "Raise",
    "text": "Revives a random knocked-out ally with half its HP.",
-   "cooldown": 69.9,
+   "cooldown": 46,
    "cast": 8,
-   "mp": 1600,
+   "mp": 3200,
    "if": {
     "side": "allies",
     "where": {
@@ -2670,20 +2670,13 @@
    ]
   },
   {
-   "id": "venom_arrow",
+   "id": "barbed_arrow",
    "class": "ranger",
-   "name": "Venom arrow",
-   "text": "A poisoned arrow at a foe that isn't Poisoned yet, if there is one.",
-   "cooldown": 34.2,
+   "name": "Barbed arrow",
+   "text": "A barbed arrow at a random foe, adding several Bleed.",
+   "cooldown": 31.3,
    "cast": 0.5,
    "mp": 400,
-   "target": {
-    "side": "foes",
-    "where": {
-     "lacks": "poison"
-    },
-    "ifNone": "any"
-   },
    "do": [
     {
      "op": "damage",
@@ -2692,14 +2685,22 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.15,
+        "ratio": 0.43,
         "stat": "attack"
        }
       ]
      },
      "apply": [
       {
-       "status": "poison"
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0026,
+          "stat": "attack"
+         }
+        ]
+       }
       }
      ]
     }
@@ -2710,7 +2711,7 @@
    "class": "ranger",
    "name": "Fire arrow",
    "text": "A burning arrow at the foe with the most Burn, adding many.",
-   "cooldown": 48.8,
+   "cooldown": 38.6,
    "cast": 4,
    "mp": 650,
    "target": {
@@ -2754,7 +2755,7 @@
    "class": "ranger",
    "name": "Rending arrow",
    "text": "An arrow at the foe with the most Sunder, adding several.",
-   "cooldown": 41.6,
+   "cooldown": 33,
    "cast": 1.5,
    "mp": 650,
    "target": {
@@ -2798,9 +2799,9 @@
    "class": "bramble_knight",
    "name": "Thicket",
    "text": "Taunts and Guards itself.",
-   "cooldown": 45.2,
+   "cooldown": 35.8,
    "cast": 0.5,
-   "mp": 650,
+   "mp": 325,
    "target": "self",
    "do": [
     {
@@ -2818,9 +2819,9 @@
    "class": "bramble_knight",
    "name": "Regrowth",
    "text": "Regen on the lowest ally.",
-   "cooldown": 46.7,
+   "cooldown": 37,
    "cast": 1.5,
-   "mp": 650,
+   "mp": 325,
    "target": {
     "side": "allies",
     "pick": "lowest",
@@ -2840,7 +2841,7 @@
    "text": "Lashes a random foe with its thorns.",
    "cooldown": 25.8,
    "cast": 0.5,
-   "mp": 400,
+   "mp": 200,
    "do": [
     {
      "op": "damage",
@@ -2862,9 +2863,9 @@
    "class": "hoplite",
    "name": "Aspis",
    "text": "Aegis on the lowest ally.",
-   "cooldown": 50.9,
+   "cooldown": 40.3,
    "cast": 0.5,
-   "mp": 650,
+   "mp": 325,
    "if": {
     "side": "allies",
     "where": {
@@ -2891,9 +2892,9 @@
    "class": "hoplite",
    "name": "Paired guard",
    "text": "Guards itself and the other lowest ally.",
-   "cooldown": 48.5,
+   "cooldown": 38.4,
    "cast": 1.5,
-   "mp": 650,
+   "mp": 325,
    "target": "self",
    "do": [
     {
@@ -2918,7 +2919,7 @@
    "text": "A thrust at a random foe that adds a few Sunder.",
    "cooldown": 34,
    "cast": 0.5,
-   "mp": 400,
+   "mp": 200,
    "do": [
     {
      "op": "damage",
@@ -2953,7 +2954,7 @@
    "class": "paladin",
    "name": "Sanctuary",
    "text": "Ward on every ally.",
-   "cooldown": 63.4,
+   "cooldown": 41.7,
    "cast": 4,
    "mp": 1000,
    "target": {
@@ -2972,7 +2973,7 @@
    "class": "paladin",
    "name": "Absolve",
    "text": "Cleanses itself and one random other ally with a debuff.",
-   "cooldown": 71.6,
+   "cooldown": 47.1,
    "cast": 0.5,
    "mp": 1000,
    "if": {
@@ -3003,10 +3004,10 @@
    "id": "smite",
    "class": "paladin",
    "name": "Smite",
-   "text": "Heavy Light damage to the foe with the highest Attack or Magic.",
-   "cooldown": 67.8,
+   "text": "Heavy Light damage to the foe with the highest Attack or Magic, adding several Burn.",
+   "cooldown": 36.8,
    "cast": 8,
-   "mp": 1600,
+   "mp": 1040,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -3029,7 +3030,20 @@
         "stat": "magic"
        }
       ]
-     }
+     },
+     "apply": [
+      {
+       "status": "burn",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0026,
+          "stat": "magic"
+         }
+        ]
+       }
+      }
+     ]
     }
    ]
   },
@@ -3084,7 +3098,7 @@
    "class": "valkyrie",
    "name": "Rally",
    "text": "Heals the lowest ally; the amount scales from Magic.",
-   "cooldown": 43.5,
+   "cooldown": 34.5,
    "cast": 1.5,
    "mp": 650,
    "if": {
@@ -3117,7 +3131,7 @@
    "class": "valkyrie",
    "name": "Valhalla",
    "text": "Revives a random knocked-out ally with a tenth of its HP, every action ready.",
-   "cooldown": 78.8,
+   "cooldown": 51.8,
    "cast": 0.5,
    "mp": 1600,
    "if": {
@@ -3153,9 +3167,9 @@
    "class": "bard",
    "name": "Allegro",
    "text": "Haste on a random ally.",
-   "cooldown": 51,
+   "cooldown": 40.4,
    "cast": 1.5,
-   "mp": 650,
+   "mp": 975,
    "target": "ally",
    "do": [
     {
@@ -3169,9 +3183,9 @@
    "class": "bard",
    "name": "War ballad",
    "text": "Many Might on the ally with the highest Attack or Magic.",
-   "cooldown": 54.8,
+   "cooldown": 43.4,
    "cast": 1.5,
-   "mp": 650,
+   "mp": 975,
    "target": {
     "side": "allies",
     "pick": "highest",
@@ -3198,17 +3212,29 @@
    ]
   },
   {
-   "id": "lullaby",
+   "id": "thunder_chord",
    "class": "bard",
-   "name": "Lullaby",
-   "text": "Slow on a random foe.",
-   "cooldown": 49.5,
-   "cast": 4,
-   "mp": 650,
+   "name": "Thunder chord",
+   "text": "Several Shock on every foe.",
+   "cooldown": 41.9,
+   "cast": 1.5,
+   "mp": 975,
+   "target": {
+    "side": "foes",
+    "pick": "all"
+   },
    "do": [
     {
      "op": "apply",
-     "status": "slow"
+     "status": "shock",
+     "stacks": {
+      "scale": [
+       {
+        "ratio": 0.0026,
+        "stat": "magic"
+       }
+      ]
+     }
     }
    ]
   },
@@ -3217,9 +3243,9 @@
    "class": "hexer",
    "name": "Hush",
    "text": "Silences the foe with the highest Attack or Magic.",
-   "cooldown": 60.4,
+   "cooldown": 39.7,
    "cast": 0.5,
-   "mp": 1000,
+   "mp": 1500,
    "if": {
     "side": "foes",
     "where": {
@@ -3251,9 +3277,9 @@
    "class": "hexer",
    "name": "Unravel",
    "text": "Strips one random buff from a random foe with a buff.",
-   "cooldown": 52.7,
+   "cooldown": 41.7,
    "cast": 1.5,
-   "mp": 650,
+   "mp": 975,
    "if": {
     "side": "foes",
     "where": {
@@ -3280,9 +3306,9 @@
    "class": "hexer",
    "name": "Enfeeble",
    "text": "Weakens and Slows the foe with the highest Attack or Magic.",
-   "cooldown": 43.3,
+   "cooldown": 34.3,
    "cast": 1.5,
-   "mp": 650,
+   "mp": 975,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -3311,7 +3337,7 @@
    "text": "Haste on itself.",
    "cooldown": 30,
    "cast": 0.5,
-   "mp": 400,
+   "mp": 200,
    "target": "self",
    "do": [
     {
@@ -3327,7 +3353,7 @@
    "text": "Three quick Fire hits on the foe with the most Burn, each adding a few.",
    "cooldown": 31.1,
    "cast": 0.5,
-   "mp": 400,
+   "mp": 200,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -3370,9 +3396,9 @@
    "class": "monk",
    "name": "Pressure point",
    "text": "Stuns the foe with the highest Attack or Magic, past any guard.",
-   "cooldown": 43.1,
+   "cooldown": 34.2,
    "cast": 1.5,
-   "mp": 650,
+   "mp": 325,
    "seek": true,
    "target": {
     "side": "foes",
@@ -3414,7 +3440,7 @@
    "class": "assassin",
    "name": "Vanish",
    "text": "Goes Hidden.",
-   "cooldown": 78,
+   "cooldown": 51.3,
    "cast": 0.5,
    "mp": 1000,
    "if": {
@@ -3436,7 +3462,7 @@
    "class": "assassin",
    "name": "Backstab",
    "text": "Heavy damage, scaling from Crit chance, to the foe with the lowest HP, past any guard.",
-   "cooldown": 43,
+   "cooldown": 34,
    "cast": 1.5,
    "mp": 650,
    "seek": true,
@@ -3466,7 +3492,7 @@
    "class": "assassin",
    "name": "Garrote",
    "text": "Silences a random foe that isn't Taunting, past any guard.",
-   "cooldown": 74.3,
+   "cooldown": 48.8,
    "cast": 0.5,
    "mp": 1000,
    "seek": true,
@@ -3508,7 +3534,7 @@
    "text": "Dark damage scaling from max HP to a random foe, which is Weakened.",
    "cooldown": 29.5,
    "cast": 0.5,
-   "mp": 400,
+   "mp": 200,
    "do": [
     {
      "op": "damage",
@@ -3535,9 +3561,9 @@
    "class": "vampire",
    "name": "Wither",
    "text": "Rot on the foe with the lowest HP.",
-   "cooldown": 47.6,
+   "cooldown": 37.7,
    "cast": 1.5,
-   "mp": 650,
+   "mp": 325,
    "target": {
     "side": "foes",
     "pick": "lowest",
@@ -3555,9 +3581,9 @@
    "class": "vampire",
    "name": "Frenzy",
    "text": "Several Might on itself.",
-   "cooldown": 46,
+   "cooldown": 36.4,
    "cast": 0.5,
-   "mp": 650,
+   "mp": 325,
    "target": "self",
    "do": [
     {
@@ -3578,10 +3604,10 @@
    "id": "firebolt",
    "class": "pyromancer",
    "name": "Firebolt",
-   "text": "Fire at the foe with the most Burn, adding several.",
+   "text": "Fire at the foe with the most Burn, adding many.",
    "cooldown": 26.3,
    "cast": 1.5,
-   "mp": 400,
+   "mp": 800,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -3608,7 +3634,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0026,
+          "ratio": 0.0046,
           "stat": "magic"
          }
         ]
@@ -3622,10 +3648,10 @@
    "id": "fireball",
    "class": "pyromancer",
    "name": "Fireball",
-   "text": "Fire on every foe, adding a few Burn to each.",
-   "cooldown": 49.2,
+   "text": "Fire on every foe, adding several Burn to each.",
+   "cooldown": 39,
    "cast": 4,
-   "mp": 650,
+   "mp": 1300,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -3649,7 +3675,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0014,
+          "ratio": 0.0026,
           "stat": "magic"
          }
         ]
@@ -3664,9 +3690,9 @@
    "class": "pyromancer",
    "name": "Pyre",
    "text": "Heavy Fire on the foe with the most Burn, rising with each stack. The Burn stays.",
-   "cooldown": 78.6,
+   "cooldown": 51.6,
    "cast": 8,
-   "mp": 1000,
+   "mp": 2000,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -3702,7 +3728,7 @@
    "text": "Ice at the foe with the most Chill, adding several.",
    "cooldown": 33.6,
    "cast": 1.5,
-   "mp": 400,
+   "mp": 600,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -3744,9 +3770,9 @@
    "class": "frostweaver",
    "name": "Blizzard",
    "text": "Ice on every foe, adding a few Chill to each.",
-   "cooldown": 42.4,
+   "cooldown": 33.6,
    "cast": 4,
-   "mp": 650,
+   "mp": 975,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -3785,9 +3811,9 @@
    "class": "frostweaver",
    "name": "Stillness",
    "text": "Clarity on a random ally.",
-   "cooldown": 77.3,
+   "cooldown": 50.8,
    "cast": 0.5,
-   "mp": 1000,
+   "mp": 1500,
    "target": "ally",
    "do": [
     {
@@ -3800,7 +3826,7 @@
    "id": "chain_lightning",
    "class": "stormcaller",
    "name": "Chain lightning",
-   "text": "Lightning at a random foe, then up to three others, adding a few Shock to each.",
+   "text": "Lightning at a random foe, then up to three others, adding several Shock to each.",
    "cooldown": 30.4,
    "cast": 0.5,
    "mp": 400,
@@ -3823,7 +3849,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0014,
+          "ratio": 0.0026,
           "stat": "magic"
          }
         ]
@@ -3849,7 +3875,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0014,
+          "ratio": 0.0026,
           "stat": "magic"
          }
         ]
@@ -3869,8 +3895,8 @@
    "id": "thunderstorm",
    "class": "stormcaller",
    "name": "Thunderstorm",
-   "text": "Lightning on every foe, adding a few Shock to each.",
-   "cooldown": 44.6,
+   "text": "Lightning on every foe, adding several Shock to each.",
+   "cooldown": 35.3,
    "cast": 1.5,
    "mp": 650,
    "target": {
@@ -3896,7 +3922,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0014,
+          "ratio": 0.0026,
           "stat": "magic"
          }
         ]
@@ -3911,7 +3937,7 @@
    "class": "stormcaller",
    "name": "Static charge",
    "text": "Haste on itself.",
-   "cooldown": 72.5,
+   "cooldown": 47.6,
    "cast": 4,
    "mp": 1000,
    "target": "self",
@@ -3927,7 +3953,7 @@
    "class": "geomancer",
    "name": "Earthen shell",
    "text": "Shields itself and the other lowest ally; the amount scales from Armor.",
-   "cooldown": 52.8,
+   "cooldown": 41.8,
    "cast": 1.5,
    "mp": 650,
    "if": {
@@ -4007,7 +4033,7 @@
    "class": "geomancer",
    "name": "Tremor",
    "text": "Earth damage on a random foe, which is Stunned.",
-   "cooldown": 43.7,
+   "cooldown": 34.6,
    "cast": 8,
    "mp": 650,
    "target": {
@@ -4057,7 +4083,7 @@
    "id": "brace",
    "name": "Brace",
    "text": "Guards itself.",
-   "cooldown": 47.4,
+   "cooldown": 37.5,
    "cast": 0.5,
    "mp": 650,
    "target": "self",
@@ -4072,7 +4098,7 @@
    "id": "flatten",
    "name": "Flatten",
    "text": "A heavy blow that Stuns.",
-   "cooldown": 76.1,
+   "cooldown": 50,
    "cast": 4,
    "mp": 1000,
    "target": {
@@ -4107,9 +4133,9 @@
    "id": "crush",
    "name": "Crush",
    "text": "A massive blow.",
-   "cooldown": 48.6,
+   "cooldown": 46.5,
    "cast": 8,
-   "mp": 650,
+   "mp": 1000,
    "do": [
     {
      "op": "damage",
@@ -4162,7 +4188,7 @@
    "id": "curse",
    "name": "Curse",
    "text": "Weakens and Slows every foe.",
-   "cooldown": 65.5,
+   "cooldown": 43,
    "cast": 4,
    "mp": 1000,
    "target": {
@@ -4184,7 +4210,7 @@
    "id": "soulfire",
    "name": "Soulfire",
    "text": "A heavy Dark spell.",
-   "cooldown": 78.6,
+   "cooldown": 51.7,
    "cast": 8,
    "mp": 1000,
    "do": [
@@ -4207,7 +4233,7 @@
    "id": "dig_up",
    "name": "Raise",
    "text": "Digs a fallen packmate back up.",
-   "cooldown": 43.7,
+   "cooldown": 34.6,
    "cast": 4,
    "mp": 650,
    "if": {
@@ -4241,9 +4267,9 @@
    "id": "death_bell",
    "name": "Death bell",
    "text": "Dooms a foe.",
-   "cooldown": 49.9,
+   "cooldown": 47.8,
    "cast": 4,
-   "mp": 650,
+   "mp": 1000,
    "if": {
     "side": "foes",
     "where": {
@@ -4267,7 +4293,7 @@
    "id": "mute",
    "name": "Mute",
    "text": "Silences the foe with the highest Attack or Magic.",
-   "cooldown": 47.6,
+   "cooldown": 37.7,
    "cast": 1.5,
    "mp": 650,
    "if": {
@@ -4300,7 +4326,7 @@
    "id": "quiet",
    "name": "Quiet",
    "text": "Silences every foe.",
-   "cooldown": 46.4,
+   "cooldown": 36.7,
    "cast": 4,
    "mp": 650,
    "target": {
@@ -4318,7 +4344,7 @@
    "id": "cheer",
    "name": "Cheer",
    "text": "Might and Haste on its strongest ally.",
-   "cooldown": 53.5,
+   "cooldown": 42.4,
    "cast": 1.5,
    "mp": 650,
    "target": {
@@ -4376,9 +4402,9 @@
    "id": "inferno",
    "name": "Inferno",
    "text": "A very long cast: huge Fire on every foe, with many Burn.",
-   "cooldown": 50.5,
+   "cooldown": 48.4,
    "cast": 8,
-   "mp": 650,
+   "mp": 1000,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -4409,7 +4435,7 @@
    "id": "hailstorm",
    "name": "Hailstorm",
    "text": "Ice on every foe, with a stack of Chill.",
-   "cooldown": 52.8,
+   "cooldown": 41.8,
    "cast": 1.5,
    "mp": 650,
    "target": {
@@ -4442,9 +4468,9 @@
    "id": "call_drones",
    "name": "Call drones",
    "text": "Summons two Drones.",
-   "cooldown": 45.9,
+   "cooldown": 44,
    "cast": 4,
-   "mp": 650,
+   "mp": 1000,
    "do": [
     {
      "op": "summon",
@@ -4457,9 +4483,9 @@
    "id": "tempest",
    "name": "Tempest",
    "text": "Lightning on every foe, with a stack of Shock.",
-   "cooldown": 51.1,
+   "cooldown": 49,
    "cast": 4,
-   "mp": 650,
+   "mp": 1000,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -4490,9 +4516,9 @@
    "id": "rally_soldiers",
    "name": "Rally",
    "text": "Summons two Soldiers.",
-   "cooldown": 48.9,
+   "cooldown": 46.8,
    "cast": 4,
-   "mp": 650,
+   "mp": 1000,
    "do": [
     {
      "op": "summon",
@@ -7168,7 +7194,7 @@
   {
    "id": "snake",
    "name": "Snake",
-   "text": "Its bite poisons.",
+   "text": "Its bite draws blood.",
    "rank": "minion",
    "stats": {
     "max_hp": 2000,
@@ -8446,7 +8472,8 @@
      "kind": "campfire",
      "id": "campfire",
      "hp": 40,
-     "mp": 40
+     "mp": 50,
+     "revive": 35
     },
     {
      "kind": "fight",
@@ -8482,12 +8509,12 @@
     }
    ],
    "foes": {
-    "hp": -46,
-    "power": -23
+    "hp": -69,
+    "power": -34
    },
    "bossFoes": {
-    "hp": -58,
-    "power": -29
+    "hp": -50,
+    "power": -25
    }
   },
   {
@@ -8500,8 +8527,8 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": -15,
-    "power": -7
+    "hp": -32,
+    "power": -16
    },
    "bossFoes": {
     "hp": -20,
@@ -8538,7 +8565,8 @@
      "kind": "campfire",
      "id": "campfire",
      "hp": 40,
-     "mp": 40
+     "mp": 50,
+     "revive": 35
     },
     {
      "kind": "fight",
@@ -8582,12 +8610,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": -2,
-    "power": -1
+    "hp": 21,
+    "power": 11
    },
    "bossFoes": {
-    "hp": 6,
-    "power": 3
+    "hp": -40,
+    "power": -20
    },
    "stages": [
     {
@@ -8622,7 +8650,8 @@
      "kind": "campfire",
      "id": "campfire",
      "hp": 40,
-     "mp": 40
+     "mp": 50,
+     "revive": 35
     },
     {
      "kind": "fight",
@@ -8689,7 +8718,8 @@
      "kind": "campfire",
      "id": "campfire",
      "hp": 40,
-     "mp": 40
+     "mp": 50,
+     "revive": 35
     },
     {
      "kind": "fight",
@@ -8725,12 +8755,12 @@
     }
    ],
    "foes": {
-    "hp": 69,
-    "power": 35
+    "hp": 52,
+    "power": 26
    },
    "bossFoes": {
-    "hp": 11,
-    "power": 6
+    "hp": -2,
+    "power": -1
    }
   },
   {
@@ -8743,12 +8773,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 59,
-    "power": 30
+    "hp": 57,
+    "power": 29
    },
    "bossFoes": {
-    "hp": -9,
-    "power": -4
+    "hp": -2,
+    "power": -1
    },
    "stages": [
     {
@@ -8778,7 +8808,8 @@
      "kind": "campfire",
      "id": "campfire",
      "hp": 40,
-     "mp": 40
+     "mp": 50,
+     "revive": 35
     },
     {
      "kind": "fight",
@@ -8814,12 +8845,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 98,
-    "power": 49
+    "hp": 46,
+    "power": 23
    },
    "bossFoes": {
-    "hp": 42,
-    "power": 21
+    "hp": -20,
+    "power": -10
    },
    "stages": [
     {
@@ -8846,7 +8877,8 @@
      "kind": "campfire",
      "id": "campfire",
      "hp": 40,
-     "mp": 40
+     "mp": 50,
+     "revive": 35
     },
     {
      "kind": "fight",
@@ -8906,7 +8938,8 @@
      "kind": "campfire",
      "id": "campfire",
      "hp": 40,
-     "mp": 40
+     "mp": 50,
+     "revive": 35
     },
     {
      "kind": "fight",
@@ -8940,12 +8973,12 @@
     }
    ],
    "foes": {
-    "hp": 20,
-    "power": 10
+    "hp": -38,
+    "power": -19
    },
    "bossFoes": {
-    "hp": -80,
-    "power": -61
+    "hp": -50,
+    "power": -25
    }
   },
   {
@@ -8958,12 +8991,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 61,
-    "power": 31
+    "hp": 28,
+    "power": 14
    },
    "bossFoes": {
-    "hp": -74,
-    "power": -37
+    "hp": -45,
+    "power": -22
    },
    "stages": [
     {
@@ -8993,7 +9026,8 @@
      "kind": "campfire",
      "id": "campfire",
      "hp": 40,
-     "mp": 40
+     "mp": 50,
+     "revive": 35
     },
     {
      "kind": "fight",
@@ -9030,12 +9064,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": -8,
-    "power": -4
+    "hp": -38,
+    "power": -19
    },
    "bossFoes": {
-    "hp": -80,
-    "power": -44
+    "hp": -22,
+    "power": -11
    },
    "stages": [
     {
@@ -9064,7 +9098,8 @@
      "kind": "campfire",
      "id": "campfire",
      "hp": 40,
-     "mp": 40
+     "mp": 50,
+     "revive": 35
     },
     {
      "kind": "fight",
@@ -9126,7 +9161,8 @@
      "kind": "campfire",
      "id": "campfire",
      "hp": 40,
-     "mp": 40
+     "mp": 50,
+     "revive": 35
     },
     {
      "kind": "fight",
@@ -9159,12 +9195,12 @@
     }
    ],
    "foes": {
-    "hp": 42,
-    "power": 21
+    "hp": 52,
+    "power": 26
    },
    "bossFoes": {
-    "hp": 11,
-    "power": 6
+    "hp": -26,
+    "power": -13
    }
   },
   {
@@ -9177,12 +9213,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 64,
-    "power": 32
+    "hp": 83,
+    "power": 42
    },
    "bossFoes": {
-    "hp": -39,
-    "power": -19
+    "hp": -50,
+    "power": -25
    },
    "stages": [
     {
@@ -9213,7 +9249,8 @@
      "kind": "campfire",
      "id": "campfire",
      "hp": 40,
-     "mp": 40
+     "mp": 50,
+     "revive": 35
     },
     {
      "kind": "fight",
@@ -9252,7 +9289,7 @@
      "haste"
     ],
     "text": "Every foe starts each fight Hasted.",
-    "hp": 52,
+    "hp": 51,
     "power": 26
    },
    "bossFoes": {
@@ -9260,8 +9297,8 @@
      "haste"
     ],
     "text": "Every foe starts each fight Hasted.",
-    "hp": 10,
-    "power": 5
+    "hp": -17,
+    "power": -8
    },
    "stages": [
     {
@@ -9294,7 +9331,8 @@
      "kind": "campfire",
      "id": "campfire",
      "hp": 40,
-     "mp": 40
+     "mp": 50,
+     "revive": 35
     },
     {
      "kind": "fight",
@@ -9366,7 +9404,8 @@
      "kind": "campfire",
      "id": "campfire",
      "hp": 40,
-     "mp": 40
+     "mp": 50,
+     "revive": 35
     },
     {
      "kind": "fight",
@@ -9392,12 +9431,12 @@
     }
    ],
    "foes": {
-    "hp": 94,
-    "power": 47
+    "hp": 95,
+    "power": 48
    },
    "bossFoes": {
-    "hp": -2,
-    "power": -1
+    "hp": 30,
+    "power": 15
    }
   },
   {
@@ -9410,12 +9449,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 28,
-    "power": 14
+    "hp": 20,
+    "power": 10
    },
    "bossFoes": {
-    "hp": -52,
-    "power": -26
+    "hp": -12,
+    "power": -6
    },
    "stages": [
     {
@@ -9444,7 +9483,8 @@
      "kind": "campfire",
      "id": "campfire",
      "hp": 40,
-     "mp": 40
+     "mp": 50,
+     "revive": 35
     },
     {
      "kind": "fight",
@@ -9484,12 +9524,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 88,
-    "power": 44
+    "hp": 80,
+    "power": 40
    },
    "bossFoes": {
-    "hp": 110,
-    "power": 55
+    "hp": 73,
+    "power": 37
    },
    "stages": [
     {
@@ -9529,7 +9569,8 @@
      "kind": "campfire",
      "id": "campfire",
      "hp": 40,
-     "mp": 40
+     "mp": 50,
+     "revive": 35
     },
     {
      "kind": "fight",
@@ -9612,7 +9653,8 @@
      "kind": "campfire",
      "id": "campfire",
      "hp": 40,
-     "mp": 40
+     "mp": 50,
+     "revive": 35
     },
     {
      "kind": "fight",
@@ -9636,12 +9678,12 @@
     }
    ],
    "foes": {
-    "hp": 92,
-    "power": 46
+    "hp": 96,
+    "power": 48
    },
    "bossFoes": {
-    "hp": 85,
-    "power": 43
+    "hp": 61,
+    "power": 31
    }
   },
   {
@@ -9654,12 +9696,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 77,
-    "power": 39
+    "hp": 82,
+    "power": 41
    },
    "bossFoes": {
-    "hp": 48,
-    "power": 24
+    "hp": 77,
+    "power": 39
    },
    "stages": [
     {
@@ -9687,7 +9729,8 @@
      "kind": "campfire",
      "id": "campfire",
      "hp": 40,
-     "mp": 40
+     "mp": 50,
+     "revive": 35
     },
     {
      "kind": "fight",
@@ -9723,12 +9766,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 22,
-    "power": 11
+    "hp": 12,
+    "power": 6
    },
    "bossFoes": {
-    "hp": -51,
-    "power": -25
+    "hp": -37,
+    "power": -18
    },
    "stages": [
     {
@@ -9757,7 +9800,8 @@
      "kind": "campfire",
      "id": "campfire",
      "hp": 40,
-     "mp": 40
+     "mp": 50,
+     "revive": 35
     },
     {
      "kind": "fight",
@@ -9810,7 +9854,8 @@
      "kind": "campfire",
      "id": "campfire",
      "hp": 40,
-     "mp": 40
+     "mp": 50,
+     "revive": 35
     },
     {
      "kind": "fight",
@@ -9833,12 +9878,12 @@
     }
    ],
    "foes": {
-    "hp": 67,
-    "power": 34
+    "hp": 93,
+    "power": 47
    },
    "bossFoes": {
-    "hp": -38,
-    "power": -19
+    "hp": -24,
+    "power": -12
    }
   },
   {
@@ -9851,12 +9896,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 103,
+    "hp": 104,
     "power": 52
    },
    "bossFoes": {
-    "hp": -65,
-    "power": -32
+    "hp": -50,
+    "power": -25
    },
    "stages": [
     {
@@ -9878,7 +9923,8 @@
      "kind": "campfire",
      "id": "campfire",
      "hp": 40,
-     "mp": 40
+     "mp": 50,
+     "revive": 35
     },
     {
      "kind": "fight",

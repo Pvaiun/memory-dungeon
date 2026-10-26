@@ -38,11 +38,15 @@ export function evalNum(n: NumT, stats: Stats | null, target: Stats | null = nul
 const fmtRatio = (r: number) => (Number.isInteger(r) ? String(r) : String(Number(r.toFixed(3))));
 export const statWord = (key: string) => c.stats.get(key)?.name ?? key;
 
-/** A damage or heal amount for display: "≈ 110" with its scaling in words. */
-export function amountText(n: NumT, stats: Stats | null, target: Stats | null = null): string {
+/**
+ * A damage or heal amount for display: "≈ 110" with its scaling in words. `scaling`: also name the stats a worked-out number
+ * scales from, "≈ 18 (6 × Thorns)" (the designer view's effects; it showed the number alone, so Bramble lash didn't say Thorns).
+ */
+export function amountText(n: NumT, stats: Stats | null, target: Stats | null = null, scaling = false): string {
   const { value, extra } = evalNum(n, stats, target);
   const parts: string[] = [];
-  if (stats || typeof n === "number") parts.push(`≈ ${disp(value)}`);
+  const formula = scaling && typeof n !== "number" && n.scale.some((s) => s.stat) ? ` (${describeScale(n)})` : "";
+  if (stats || typeof n === "number") parts.push(`≈ ${disp(value)}${formula}`);
   else parts.push(describeScale(n));
   if (extra.length) parts.push(extra.join(", "));
   return parts.join(", ");
@@ -143,11 +147,11 @@ export function effectText(e: EffectT, stats: Stats | null, inAction = true): st
       const kind = e.type === "physical" ? `${e.subtype ?? "physical"} damage` : e.type === "magical" ? `${elementName(e.element ?? "")} damage` : e.element ? `${elementName(e.element)} damage` : "untyped damage";
       const hits = e.hits && e.hits > 1 ? `${e.hits} hits of ` : "";
       const apply = (e.apply ?? []).map((a) => `applies ${status(a.status).name}${a.stacks !== undefined ? ` (${stacksText(a.stacks, stats, a.status)})` : ""}${a.chance !== undefined && a.chance < 100 ? `, ${a.chance}% chance` : ""}`);
-      const riders = (e.riders ?? []).map((r) => `plus ${r.element ? elementName(r.element) : r.subtype} ${amountText(r.amount, stats)}`);
-      return [`${hits}${kind}${to}: ${amountText(e.amount, stats)}`, ...riders, ...apply].join("; ");
+      const riders = (e.riders ?? []).map((r) => `plus ${r.element ? elementName(r.element) : r.subtype} ${amountText(r.amount, stats, null, true)}`);
+      return [`${hits}${kind}${to}: ${amountText(e.amount, stats, null, true)}`, ...riders, ...apply].join("; ");
     }
     case "heal":
-      return `heals${to}: ${amountText(e.amount, stats)}`;
+      return `heals${to}: ${amountText(e.amount, stats, null, true)}`;
     case "mp":
       return `MP${to}: ${amountText(e.amount, stats)}`;
     case "apply": {

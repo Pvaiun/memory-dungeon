@@ -92,15 +92,15 @@ export class Driver {
     this.begin();
   }
 
-  /** The campfire's two numbers, for its window: HP and MP back, in percent. */
-  campfire(): { hp: number; mp: number } | null {
+  /** The campfire's numbers, for its window: HP and MP back, and a revive's HP, in percent; and the options ("revive:p2" for each member down). */
+  campfire(): { hp: number; mp: number; revive: number; options: string[] } | null {
     const d = this.run.pending;
     if (!d || d.kind !== "campfire") return null;
     const st = c.dungeons.get(this.input.dungeon)!.stages.find((s) => s.id === d.at);
-    return st?.kind === "campfire" ? { hp: st.hp, mp: st.mp } : null;
+    return st?.kind === "campfire" ? { hp: st.hp, mp: st.mp, revive: st.revive ?? 0, options: d.options } : null;
   }
 
-  /** Answers the campfire (rest or focus) and starts the next fight. */
+  /** Answers the campfire (rest, focus or revive:<member>) and starts the next fight. */
   choose(pick: string) {
     if (!this.run.pending) return;
     answer(c, combat, this.run, pick);

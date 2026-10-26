@@ -135,8 +135,20 @@ export function seat(c: Content, classes: readonly string[], formation: string, 
   return best;
 }
 
-/** A whole build: seated, kitted, abilities in the documents' order. Null if some class can't meet the needs. */
-export function makeBuild(c: Content, classes: readonly string[], formation: string, style: Style, owned: Owned, needs: readonly NeedT[], order?: string[]): Party | null {
+/**
+ * The order abilities are slotted in (step 5c: the first slot starts a fight with the most of its cooldown done). doc: the
+ * documents' order. long: the longest cooldown first, so all three tend to come up in a short fight.
+ */
+export type Order = "doc" | "long";
+export const ORDERS: Order[] = ["doc", "long"];
+export function abilityOrder(c: Content, cls: string, how: Order): string[] {
+  const own = c.classes.get(cls)!.abilities.slice(0, c.pack.design.abilitiesEquipped);
+  if (how === "doc") return own;
+  return own.map((id, i) => ({ id, i, cd: c.abilities.get(id)!.cooldown })).sort((a, b) => b.cd - a.cd || a.i - b.i).map((x) => x.id);
+}
+
+/** A whole build: seated, kitted, abilities in the documents' order (or the order asked for). Null if some class can't meet the needs. */
+export function makeBuild(c: Content, classes: readonly string[], formation: string, style: Style, owned: Owned, needs: readonly NeedT[], order?: string[], how: Order = "doc"): Party | null {
   const f = c.formations.get(formation)!;
   const seated = order ?? seat(c, classes, formation, style);
   const units = [];
@@ -144,7 +156,7 @@ export function makeBuild(c: Content, classes: readonly string[], formation: str
     const cls = seated[i];
     const gear = kit(c, cls, owned, needs, style);
     if (!gear) return null;
-    units.push({ class: cls, position: f.positions[i].id, abilities: c.classes.get(cls)!.abilities.slice(0, c.pack.design.abilitiesEquipped), gear });
+    units.push({ class: cls, position: f.positions[i].id, abilities: abilityOrder(c, cls, how), gear });
   }
   return { formation, units };
 }

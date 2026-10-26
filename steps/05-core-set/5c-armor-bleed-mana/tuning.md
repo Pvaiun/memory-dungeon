@@ -1,0 +1,29 @@
+# Step 5c tuning trail
+
+One line a round. "Top builds" are the tuner's top 10 per node; the audit (`src/campaign-audit.ts`) reads each node's best builds (up to 9) on 6 or 8 seeds at the knobs of the pass; the campfire test (`src/campaign-campfire.ts`) branches the same builds' runs at the campfire. A search pass takes about a minute here and a full re-tune about four (the 5b sessions took an hour), so every rule change below was re-tuned. Pass 14 is 5b's final state.
+
+1. **Built** (engine 0.11): armor on Path of Exile's curve (k = 1 on the armor value, 0.12 × Armor), a hit's own statuses after its hit events, the opening by ability slot (25/15/10 ticks), REVIVE at the campfire (50% HP), a crit filter on hit events; Bleed in place of Poison (60 a stack, a fifth gone a hit) on the Ranger, Bramble knight, Assassin and snakes; Thunder chord, Smite's Burn, more Burn and Shock stacks; MP costs × class MP ÷ 3. Cooldowns still 30/48/70.
+2. **Baseline (pass 14):** basic attacks 66% of party actions; tanks run dry (Knight and Hoplite under a fifth of MP at some fight's start in half their runs, Vampire 46%, Monk 33%), casters never (Cleric 87% MP at the boss); the Paladin casts nothing in 60% of regular fights.
+3. **Search at pass 14's knobs:** the MP rule works (tanks no longer dry); slot-2 and slot-3 abilities rarely come up in 34-tick regular fights: the Paladin casts nothing in 99%, the Assassin 97%, the Hexer 86%.
+4. **The simulations' kits learn ability order:** two orders per build (the documents', longest cooldown first), and new members in the climb get one at random.
+5. **Cooldowns 30/40/52:** the Paladin 74%, the Assassin 78%, the Hexer 55% without a cast.
+6. **An engine bug:** stat floors only held on stats that also had a cap. Sunder took Armor below zero; under the flat rule every physical hit gained the difference (about 2,900 on the Ice Titan at 50 Sunder), and under the curve one Shield bash hit for 22,650,249. Fixed, with a test.
+7. **Pass A** (the first re-tune): the Assassin's silence is Knives Out (archers, liches and drones die in 7 to 15 ticks, before a long ability); the Paladin and Hexer cast late. Campfire, everyone standing: REST alone wins 36%, FOCUS alone 2%; someone down: REVIVE alone 16%.
+8. **Cooldowns 30/38/46.**
+9. **MP variants at pass A's knobs:** costs × (MP − 1) ÷ 2 with regen 0.04 gives the director's shape (Cleric 20% MP at the boss and dry in 44% of runs, Pyromancer 44%, Frostweaver 40%; Knight 72%, Monk 86%); a regen cut alone (0.035) dries the tanks first (Vampire 59%, Hoplite 38%, Knight 32%).
+10. **FOCUS amounts** (70%, 100%, with REST at 30% or 40%): FOCUS alone wins 7% to 8% at most. Bigger isn't the lever.
+11. **By party:** with a Cleric, FOCUS alone wins as often as REST (18% and 17%); with a Pyromancer, Frostweaver, Stormcaller or Hexer, 0% to 6%. A damage caster's staff swings carry it without MP (the Pyromancer's swing, 2,900, is the biggest in the game).
+12. **Staves count Magic at half** (tested, not shipped): FOCUS alone with a Pyromancer 6% to 9%, with a Frostweaver 2% to 6%; every build loses ground (wins at fixed knobs 73% to 58%).
+13. **Steeper costs** ((MP − 1) ÷ 1.5, ÷ 1): harder runs everywhere (wins 29% and 9% at fixed knobs), and FOCUS no more decisive.
+14. **Casting in regular fights of 25 ticks or more:** every class casts in nine of ten or more, except the Bard (28% without a cast; it's knocked out most) and the Paladin (23%; 4- and 8-tick wind-ups).
+15. **Bleed grid** (wins of builds with the Ranger, the Bramble knight, the Assassin): more Bleed lowered the Ranger's wins, because snakes Bleed the party on its early nodes; with the snakes' stacks held to the same damage, 120 a stack and a quarter gone a hit: the Ranger's Bleed per arrow is worth the arrow's own hit (×1.7 swings each), 44% of the Bramble knight's damage, 24% of the Assassin's. Snakes at 1 stack a bite.
+16. **Burn and Shock:** Burn 40 a stack (was 30), Shock 90 (was 60); a Shock cap of 40 instead added a fifth of what 90 did. Statuses 9% of the party's damage in regular fights and 12% against bosses (were 6% and 9%).
+17. **Pass B:** basic attacks 61% to 63% of party actions; casters hungry, tanks not; FOCUS alone 2%. Nine bosses eased by half or more.
+18. **Regen 0.03 and 0.025** at pass B's knobs: with a Cleric, FOCUS alone 15% to 22% against REST 14% to 19%; the Vampire dry in 40% to 48% of runs, the Knight 8% to 14%. Regen 0.03.
+19. **REVIVE at 25%, 35%, 50% HP** (someone down): REVIVE alone wins 10%, 14%, 20%; REST or FOCUS alone 3% to 4% at 25% and 35%, 2% to 3% at 50%. 35%.
+20. **Bosses' signature moves to the long word** (46 ticks, as 5b's 48), FOCUS 50%. **Pass C:** bosses still at the floor (the Ogre Chief at −88, dying in 14 ticks).
+21. **Why:** the tuner sets the regular fights first (the best builds win them 95%), then fits the boss into what's left under 85% for the whole run. Under the curve, a swarm's many small hits wear the party down more, so little was left for the boss. **The boss floor:** a boss keeps at least half its HP; the regular fights are eased instead. **Pass D.**
+22. **Class shares at pass D** (top builds while owned): the Cleric 18% (49% at pass 14: falling with each mana step), the Stormcaller 52% (51% already at pass A: the stacks and shorter cooldowns, not Shock 90). Cure at a normal price: the Cleric 24%.
+23. **Pass E** (final, k = 1): see the report.
+24. **Armor k priced:** at pass E's knobs, k = 0.5, 2 and 4 move every build's wins together (the Knight's builds 56%, 92%, 95% against 79%): both sides wear armor. Re-tuned at k = 2: the Knight 59% to 63%, the Pyromancer 19% to 16%, the Monk 36% to 28%. k = 1 kept.
+25. **The campfire before the boss** (tested at pass E's knobs): FOCUS alone 1%; REVIVE alone 20% with someone down. The boss is decided by HP. Not the lever.

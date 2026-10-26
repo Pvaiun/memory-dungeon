@@ -7,8 +7,8 @@
  * - A party unit's stats are its class's, plus stat grants from its class
  *   passive, gear, formation slot, formation and perks.
  * - Statuses from those are applied at each fight start.
- * - HP and MP carry between fights, and nothing restores them. A knocked-out
- *   unit joins later fights knocked out, until something revives it.
+ * - HP and MP carry between fights, and nothing restores them but a campfire.
+ *   A knocked-out unit joins later fights knocked out, until something revives it.
  * - Each unit draws from its own dice: party units by class, enemies by
  *   their place in the fight. The same seed brings the same luck to the same
  *   unit, whatever else is in the fight.
@@ -117,7 +117,11 @@ export const combat: Rules = {
   },
 
   stage(x, stage, rng) {
-    if (stage.kind === "campfire") return { kind: "campfire", at: stage.id, options: ["rest", "focus"] };
+    if (stage.kind === "campfire") {
+      // REVIVE is offered once for each knocked-out member, when the campfire has one: "revive:p2" stands p2 up.
+      const down = stage.revive ? (x.run.party as Member[]).filter((m) => m.hp <= 0).map((m) => `revive:${m.id}`) : [];
+      return { kind: "campfire", at: stage.id, options: ["rest", "focus", ...down] };
+    }
     if (stage.kind !== "perk_pick") throw new Error(`no '${stage.kind}' stage in combat-1`);
     const offer = x.c.pack.ruleset.run.perkOffer;
     const pool = x.c.dungeons.get(x.run.record.dungeon)!.perkPool.filter((p) => offer.repeatPicked || !x.run.perks.includes(p));
@@ -127,9 +131,15 @@ export const combat: Rules = {
   /** A picked perk gives its stat grants now, and its statuses at each later fight start, to the party units it's for. */
   apply(x, d, choice) {
     if (d.kind === "campfire") {
-      // REST gives back a share of max HP, FOCUS a share of max MP, to every standing member.
+      // REST gives back a share of max HP, FOCUS a share of max MP, to every standing member; REVIVE stands one member up.
       const st = x.c.dungeons.get(x.run.record.dungeon)!.stages.find((s) => s.id === d.at);
       if (st?.kind !== "campfire") throw new Error(`no campfire '${d.at}'`);
+      if (choice.startsWith("revive:")) {
+        const m = (x.run.party as Member[]).find((p) => p.id === choice.slice(7) && p.hp <= 0);
+        if (!m) throw new Error(`nobody to revive at '${d.at}': ${choice}`);
+        m.hp = Math.max(1, Math.floor((m.stats.max_hp * (st.revive ?? 0)) / 100));
+        return;
+      }
       for (const m of x.run.party as Member[]) {
         if (m.hp <= 0) continue;
         if (choice === "rest") m.hp = Math.min(m.stats.max_hp, m.hp + Math.floor((m.stats.max_hp * st.hp) / 100));
