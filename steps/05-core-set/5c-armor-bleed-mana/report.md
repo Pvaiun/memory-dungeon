@@ -121,7 +121,20 @@ How sure: the shares hold across the 6 to 8 seeds and up to 9 builds a node. The
 
 ## 3. Feel: the seventh AI playtest
 
-(Pending: the playtest is running.)
+A fresh agent played the road as a first-time player, through the command line, seeing only what a player sees.
+
+- **How far:** it cleared 17 of 20 nodes in its allowed 60 plays. The 5b playtest cleared all 20 in 51.
+- **Walls:** the Long Road (node 15) beat it 8 times, always at the Ghoul Pit with the tank worn down by wisps. The Tower Top (node 19) did too: the Storm Queen's Tempest killed its Cleric from full HP on every run (3,586 against 3,000 HP), and the bestiary's "Lightning on every foe, with a stack of Shock" reads as mild. Judgement fell on the last allowed try. The Tempest spike belongs to the boss pass 5b proposed.
+
+On your points, in its words where they help:
+
+- **Bleed was readable from the totals:** the Ranger's Barbed arrow and Taunt-ignoring arrows won node 13 (12,055 Bleed on the Queen), and the Bramble knight did 11,800 to 18,700 Bleed on whatever kept hitting it, but almost nothing on wisps, which die first. The Assassin's crits did 10,400 to 15,600. It never noticed the snakes' Bleed on its own party, and the glossary doesn't say how big a stack is.
+- **Ability order:** "I used it every node, and it changed outcomes." Shield bash first gave "Ogre Chief is stunned: Crush has to wait" in the run that cleared node 9. Sanctuary first held a Lich's damage on the Paladin to 2,286, against 5,368 with Smite first. "In short fights, the order decides which abilities happen at all."
+- **The campfire:** "REST against FOCUS is a real choice." On node 15, REST left the Pyromancer below Fireball's cost, and FOCUS left the tank too low for the Ghoul Pit. REVIVE "felt great when it fired, but a member back at 35% often died straight away." Its biggest frustration was the tool: it had to choose before the run, so a fixed REST was wasted with someone down, and a revive with nobody down fell back to the simulations' pick. The interface asks in the moment, so this is the command line's limit; it now takes a list in order of preference ("revive:cleric,rest").
+- **Mana mattered, and it picked gear for it:** Prayer beads on the Knight cleared node 9 after six losses (node 9's leeches drain MP), and Vestments with beads on the Frostweaver cleared node 8. It saw the Cleric end long boss fights on 40 to 260 MP, and the Assassin's Garrote stop firing.
+- **Burn:** "the strongest thing in the game": 19,700 on the Reaper at 66 stacks, 36,700 on the Silent One at 84. The Bard's War ballad with the Pyromancer was its favourite moment ("something I built"). The Pyromancer is still in only a fifth of the top builds, so Burn is strong in long boss fights rather than everywhere; worth watching in the class pass.
+- **Shock** was strong against Hasted foes (15,400 to 19,900 on Hasted ghouls), and modest from the Valkyrie.
+- **Other notes:** Garrote silenced a Drone instead of the Queen (it picks a random foe that isn't Taunting, as the documents say), and wisps did 5,000 to 9,000 to the tank in a fight.
 
 ## 4. Method notes
 

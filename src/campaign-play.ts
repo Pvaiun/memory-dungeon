@@ -11,7 +11,8 @@
  *       A member is class:weapon,armor,amulet (ids; leave a slot out to leave it empty). Abilities fire in the
  *       order given after a slash: "knight:oathblade,plate/protect,fortify,shield_bash"; the first starts a fight with the
  *       most of its cooldown done. --campfire rest|focus|revive:<class> picks at the campfire halfway through the run (HP
- *       back, MP back, or that member up if down); left out, the simulations' choice.
+ *       back, MP back, or that member up if down), or a list in order of preference, "revive:cleric,rest"; left out,
+ *       the simulations' choice.
  */
 import { readFileSync } from "node:fs";
 import { campaign, foesText, needText, ownedAt, rewardsOf, simPick, unmet } from "./campaign.js";
@@ -107,14 +108,19 @@ if (cmd === "show") {
   const missing = unmet(c, node, party);
   if (missing.length) throw new Error(`can't start: ${missing.join("; ")}`);
   const seed = Number(opt("--seed") ?? 1);
-  // The campfire halfway through: --campfire rest (HP back), focus (MP back) or revive:<class> (that member up, if down;
-  // otherwise the simulations' choice); left out, the simulations' choice.
-  const camp = opt("--campfire");
+  // The campfire halfway through: --campfire rest (HP back), focus (MP back) or revive:<class> (that member up, if down),
+  // or a list in order of preference ("revive:cleric,revive:knight,rest"): the first that's on offer. Left out, or none on
+  // offer, the simulations' choice. (A playtester's fixed REST was wasted with someone down, and a lone revive fell back to
+  // the simulations' FOCUS.)
+  const camp = opt("--campfire")?.split(",");
   const campPick = (d: Parameters<typeof simPick>[0], r: Parameters<typeof simPick>[1]) => {
     if (d.kind !== "campfire" || !camp) return simPick(d, r);
-    if (!camp.startsWith("revive:")) return camp;
-    const m = (r.party as { id: string; ref: string }[]).find((x) => x.ref === camp.slice(7));
-    return m && d.options.includes(`revive:${m.id}`) ? `revive:${m.id}` : simPick(d, r);
+    for (const want of camp) {
+      if (!want.startsWith("revive:")) return want;
+      const m = (r.party as { id: string; ref: string }[]).find((x) => x.ref === want.slice(7));
+      if (m && d.options.includes(`revive:${m.id}`)) return `revive:${m.id}`;
+    }
+    return simPick(d, r);
   };
   const run = play(c, combat, { dungeon: node.dungeon, party, seed, firstClear: true }, campPick, { log: true });
   if (rest.includes("--full")) {
