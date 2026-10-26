@@ -260,10 +260,10 @@ export const STEP = P;
  * and fed its Regen and Shield cap too, so HP everywhere was every class's best kit.
  */
 export const HP_STEP = P / 2;
-/** The step for a stat, in the data's units. */
 /** Aggro is centred on 100 (the director's rule): a class's or enemy's word n is 70 + 10n, and a gear or formation step is 10. */
 export const aggroOf = (n: number) => 70 + 10 * n;
 export const AGGRO_STEP = 10;
+/** The step for a stat, in the data's units. */
 export const stepFor = (stat: string) => (stat === "max_hp" ? HP_STEP : stat === "aggro" ? AGGRO_STEP : STEP);
 
 // ─── Statuses: sizes and durations ───────────────────────────────────────────

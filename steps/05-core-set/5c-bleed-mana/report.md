@@ -33,6 +33,8 @@ You reacted to the 5b report with a list of changes. All of them are built and o
 
 - **Shipped, your pick to try:** the Knight at HP 4 (the document's 5) with Protect on a long cooldown (40 ticks, was 31), and the road re-tuned (pass 21). The Knight now adds +7.8 points to a build's wins (was +17.5), beside the Monk (+7.9), the Stormcaller (+8.1) and the Valkyrie (+11.5). Its share of top builds is 52% (was 69%), and it's in the best build of 13 nodes of 20 (was 17). One node needed a hand: Knives Out's regular fights came out too hard for whole runs (best build 77%), so I eased them (best build 90%).
 
+- **Aggro by draw, your rule, before main (Oct 26, 2026).** Aggro is centred on 100 and foes pick by draw through your curve, so no unit draws more than three times or less than a third of an ordinary one; your examples are the engine's tests. At the old knobs the same builds won 63% (were 78%), since the back line can't hide at a 1% chance any more, so I re-tuned the knobs only (pass 22): every node's best build wins 81% to 100% of first tries. No balance pass. The core set's documents, `DECISIONS.md`, the concept spec and the primer now match the build, for main.
+
 ## 1. Decisions and open questions
 
 ### A. Armor: your formula, with k = 0.25, not 1

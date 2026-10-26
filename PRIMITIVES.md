@@ -210,7 +210,7 @@ An action's `target` is `foe` (default targeting: a foe by Aggro, under the Hidd
 
 | Pick | Meaning |
 | --- | --- |
-| `aggro` | `count` units at random, weighted by Aggro. The default for foes. |
+| `aggro` | `count` units at random, weighted by draw (Aggro through ruleset.draw). The default for foes. |
 | `random` | `count` units at random. The default otherwise. |
 | `lowest` | `count` units with the lowest `by`; ties at random. |
 | `highest` | `count` units with the highest `by`; ties at random. |
@@ -251,7 +251,7 @@ An action's `target` is `foe` (default targeting: a foe by Aggro, under the Hidd
 | `attack` | amount | Scales only what states it. By convention, physical things do. |
 | `magic` | amount | Scales only what states it. By convention, magical things do. |
 | `armor` | amount | Reduces each physical hit: to hit² ÷ (hit + ruleset.armorK × Armor) when armorK is set; else a flat ruleset.armorRatio × Armor, down to 0 (BLOCKED). |
-| `aggro` | amount | Default targeting picks foes weighted by Aggro. Its floor must be above 0. |
+| `aggro` | amount | Default targeting picks foes weighted by draw: Aggro through ruleset.draw's curve, or Aggro itself without one. Its floor must be above 0. |
 | `resist` | points | General Resistance, in percent, added to every element's own resist:<element>. Negative shows WEAK, positive RESIST, 100 IMMUNE, above 100 ABSORB. |
 | `attack_speed` | points | Basic attack cooldown ÷ (1 + stat/100), down to its recovery. Haste, Slow and Chill act through it. |
 | `cooldown_reduction` | points | Ability cooldowns ÷ (1 + stat/100). |

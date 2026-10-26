@@ -2,6 +2,13 @@
 
 Oct 23, 2026 · @Paul Suddaby
 
+*Updated Oct 26, 2026, when the campaign work joined main. The enemies, encounters and dungeons are as written, with these changes, recorded in `DECISIONS.md`:*
+
+- *Poison is gone; Bleed replaced it (*Core set: rules and vocabulary*). The Snake's Venom now adds a few Bleed. Where a challenge's key or a test below still names Poison as an answer (to Armor, Evasion or resistance), read it as the original design's reasoning: Bleed also deals damage past Armor and resistance, but only when its holder is hit, so it answers those challenges less cleanly than Poison did.*
+- *The Cleric's Mercy, Prayer and Purify, the Bard's Encore, the Ranger's Venom arrow and the Assassin's Shadow strike were replaced (*Core set: classes*). Tests that name them are the original reasoning; Renew does Purify's job on one ally, Cure the healing.*
+- *Bosses have 55% of the HP written here, and their signature moves come on a medium cooldown, not long, so a boss fight is about one and a half regular fights long. Enemy Aggro words are on the 100 scale (70 + 10 × the word), and foes pick by draw. Stun pauses a wind-up for its 5 ticks rather than cancelling it; Silence interrupts. A run has one campfire.*
+- *In the campaign, each node sets two difficulty knobs (its regular fights, then its boss) that scale these enemies' HP and damage; the numbers here are the free-play baseline.*
+
 The complete enemy-side content spec for the first playable: rules the engine must honor, 29 enemies, 27 encounters and 7 dungeons. Companion to *Core set: rules and vocabulary* and *Core set: classes*.
 
 ## Fixed rules and scale
@@ -12,7 +19,7 @@ Everything here is binding on the content below. The combat rules themselves are
 - **Class scale:** stats run 1–5; gear takes a class stat to at most 12.
 - **Enemy scale:** same stat meanings. Regular enemies sit at 1–8, with one standout up to 12 only where that stat is the challenge. Swarm bodies sit at 1–3. Large regulars sit at 10–20 HP. Bosses run 8–14 in their standout stats; boss HP runs 60–120. All numbers state relative intent; simulation sets final values.
 - **A fight holds at most 8 foes.** Parties are 3. The player owns all 16 classes.
-- **Statuses end when a fight ends.** HP, MP and knockouts carry between a run's fights, and nothing restores them between fights. Losing costs nothing; retries are free.
+- **Statuses end when a fight ends.** HP, MP and knockouts carry between a run's fights, and nothing restores them between fights except the run's one campfire. Losing costs nothing; retries are free.
 - **Dungeons are played in order 1–7** with no progression between them. Run 1 is additionally clearable by the ungeared starting trio (Knight, Cleric, Ranger).
 - **Summoning** exists: a unit can bring new foes into a fight, up to the cap. Used by: Split (Lava Slime), Call Drones (Storm Queen), Rally (Storm King).
 - **No unit leaves a fight alive.** Nothing flees, fades or escapes.
@@ -63,7 +70,7 @@ The full list: 61 challenges plus two run types, Echo and Lock. Fundamental answ
 | Challenge | Tier | In a fight | Answers | Built as |
 | --- | --- | --- | --- | --- |
 | Curser | Fundamental | Weakens and Slows the party. | Cleanse, Might, Haste; Silence | Witch |
-| Poisoner | Fundamental | Poisons the party. | Cleanse, Regen, Heal, Shield | Snake |
+| Poisoner | Fundamental | Bleeds the party (Poison until Oct 26, 2026). | Cleanse, Regen, Heal, Shield | Snake |
 | Binder | Specialist | Silences a unit. | Cleanse, Stun; Silence, basic attacks | Wraith |
 | Mana thief | Specialist | Has Siphon: its hits drain MP. | Evasion, Slow; Siphon, Clarity, Thorns | Leech |
 
@@ -139,7 +146,7 @@ Which classes and which of this set's enemies hold each piece. Doom and Bulwark 
 | --- | --- | --- | --- |
 | Area | Fundamental | Pyromancer, Frostweaver, Stormcaller | Fire Giant, Ice Titan, Storm Queen |
 | Evasion | Fundamental | Monk, Assassin | Bat |
-| Poison | Fundamental | Ranger, Bramble knight | Snake |
+| Bleed | Fundamental | Ranger, Bramble knight, Assassin | Snake |
 | Taunt | Fundamental | Knight, Bramble knight | Shieldman, Mummy; Drone; Soldier |
 | Might | Fundamental | Bard, Vampire | Fire Imp, Storm King |
 | Guard | Fundamental | Knight, Bramble knight, Hoplite | Shieldman, Mummy |
@@ -203,13 +210,13 @@ Hits hard, falls fast. **Challenge:** Glass cannon — the stat line is the chal
 
 ### Snake
 
-Its bite poisons. **Challenge:** Poisoner.
+Its bite leaves a bleeding wound. **Challenge:** Poisoner.
 
 **Stats:** HP 2, MP 0, MP regen 0, Attack 2, Magic 0, Armor 0, Crit 2, Aggro 1. **Basic attack:** fast, weak, piercing.
 
-**Passive – Venom.** Its basic attacks apply Poison (refresh).
+**Passive – Venom.** Its basic attacks add a few Bleed (2 stacks). (Poison, refreshed, until Oct 26, 2026.)
 
-*Beats it — Knight, Cleric, Ranger vs three Snakes and a Bandit:* Poison refreshes rather than stacks, so three Snakes are no worse than one per target; Regen on every ally outruns the ticks. *Fails — Ranger, Bard, Assassin:* three low-HP bodies, no Heal, Cleanse or Shield; the ticks finish what the swords start.
+*Beats it — Knight, Cleric, Ranger vs three Snakes and a Bandit:* each bite's Bleed bursts on the next hit, so the bites pile up on whoever is hit most; Armor and Guard thin the hits that open it, Renew lifts it, and Cure mends the rest. *Fails — Ranger, Bard, Assassin:* three low-HP bodies, no Heal, Cleanse or Shield; the ticks finish what the swords start.
 
 ### Shieldman
 

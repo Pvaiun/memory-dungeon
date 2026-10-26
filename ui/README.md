@@ -68,7 +68,7 @@ How long a beat holds comes from its weight: the typing at about 26 ms a charact
 
 ## Numbers
 
-The data stores every amount at 1,000 per point of the documents' 1–5 scale (`docs/core-set/README.md`). The interface shows **10 per point**: a Knight has 50 HP, a plain sword hits for about 11, a Poison tick for 1, a boss has 900 HP. Percent stats (crit, evasion, resistances, Lifesteal) show as they are. Settings → NUMBERS: BIG switches to 100 per point (`DISPLAY_DIV` in `src/content.ts`) for reading small ticks. Shield shows its points.
+The data stores every amount at 1,000 per point of the documents' 1–5 scale (`docs/core-set/README.md`). The interface shows **10 per point**: a Knight has 40 HP, a plain sword hits for about 11, a boss has a few hundred HP. Percent stats (crit, evasion, resistances, Lifesteal) show as they are, and Aggro shows on its own scale, centred on 100. Settings → NUMBERS: BIG switches to 100 per point (`DISPLAY_DIV` in `src/content.ts`) for reading small ticks. Shield shows its points.
 
 ## Art
 

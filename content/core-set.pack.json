@@ -5627,7 +5627,7 @@
   {
    "id": "dawn_staff",
    "name": "Dawn staff",
-   "text": "A heavy staff and nothing else: its damage is healing in a Cleric's hands.",
+   "text": "A heavy staff and nothing else.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -8518,12 +8518,12 @@
     }
    ],
    "foes": {
-    "hp": -34,
-    "power": -17
+    "hp": -24,
+    "power": -12
    },
    "bossFoes": {
-    "hp": -18,
-    "power": -9
+    "hp": -80,
+    "power": -44
    }
   },
   {
@@ -8536,12 +8536,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 17,
-    "power": 9
+    "hp": 8,
+    "power": 4
    },
    "bossFoes": {
-    "hp": 10,
-    "power": 5
+    "hp": -50,
+    "power": -25
    },
    "stages": [
     {
@@ -8619,12 +8619,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 40,
-    "power": 20
+    "hp": 31,
+    "power": 16
    },
    "bossFoes": {
-    "hp": -47,
-    "power": -23
+    "hp": 18,
+    "power": 9
    },
    "stages": [
     {
@@ -8764,12 +8764,12 @@
     }
    ],
    "foes": {
-    "hp": 97,
-    "power": 49
+    "hp": 88,
+    "power": 44
    },
    "bossFoes": {
-    "hp": 24,
-    "power": 12
+    "hp": -80,
+    "power": -40
    }
   },
   {
@@ -8782,12 +8782,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 85,
-    "power": 43
+    "hp": 78,
+    "power": 39
    },
    "bossFoes": {
-    "hp": -41,
-    "power": -20
+    "hp": -21,
+    "power": -10
    },
    "stages": [
     {
@@ -8854,12 +8854,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 128,
-    "power": 64
+    "hp": 100,
+    "power": 50
    },
    "bossFoes": {
-    "hp": -9,
-    "power": -4
+    "hp": -45,
+    "power": -22
    },
    "stages": [
     {
@@ -8982,12 +8982,12 @@
     }
    ],
    "foes": {
-    "hp": 29,
-    "power": 15
+    "hp": 27,
+    "power": 14
    },
    "bossFoes": {
-    "hp": -75,
-    "power": -37
+    "hp": -80,
+    "power": -44
    }
   },
   {
@@ -9000,12 +9000,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 84,
-    "power": 42
+    "hp": 71,
+    "power": 36
    },
    "bossFoes": {
-    "hp": -44,
-    "power": -22
+    "hp": -50,
+    "power": -25
    },
    "stages": [
     {
@@ -9073,12 +9073,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 3,
-    "power": 2
+    "hp": -6,
+    "power": -3
    },
    "bossFoes": {
-    "hp": -65,
-    "power": -32
+    "hp": -80,
+    "power": -41
    },
    "stages": [
     {
@@ -9208,8 +9208,8 @@
     "power": 45
    },
    "bossFoes": {
-    "hp": 13,
-    "power": 7
+    "hp": 7,
+    "power": 4
    }
   },
   {
@@ -9222,12 +9222,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 112,
-    "power": 56
+    "hp": 110,
+    "power": 55
    },
    "bossFoes": {
-    "hp": -13,
-    "power": -6
+    "hp": -8,
+    "power": -4
    },
    "stages": [
     {
@@ -9298,16 +9298,16 @@
      "haste"
     ],
     "text": "Every foe starts each fight Hasted.",
-    "hp": 95,
-    "power": 48
+    "hp": 91,
+    "power": 46
    },
    "bossFoes": {
     "statuses": [
      "haste"
     ],
     "text": "Every foe starts each fight Hasted.",
-    "hp": 44,
-    "power": 22
+    "hp": -7,
+    "power": -3
    },
    "stages": [
     {
@@ -9440,12 +9440,12 @@
     }
    ],
    "foes": {
-    "hp": 143,
-    "power": 72
+    "hp": 146,
+    "power": 73
    },
    "bossFoes": {
-    "hp": 23,
-    "power": 12
+    "hp": 12,
+    "power": 6
    }
   },
   {
@@ -9458,12 +9458,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 66,
-    "power": 33
+    "hp": 74,
+    "power": 37
    },
    "bossFoes": {
-    "hp": -80,
-    "power": -41
+    "hp": -37,
+    "power": -18
    },
    "stages": [
     {
@@ -9533,12 +9533,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 110,
-    "power": 55
+    "hp": 108,
+    "power": 54
    },
    "bossFoes": {
-    "hp": 133,
-    "power": 67
+    "hp": 141,
+    "power": 71
    },
    "stages": [
     {
@@ -9687,12 +9687,12 @@
     }
    ],
    "foes": {
-    "hp": 145,
-    "power": 73
+    "hp": 148,
+    "power": 74
    },
    "bossFoes": {
-    "hp": 89,
-    "power": 45
+    "hp": 94,
+    "power": 47
    }
   },
   {
@@ -9705,12 +9705,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 125,
-    "power": 63
+    "hp": 119,
+    "power": 60
    },
    "bossFoes": {
-    "hp": 155,
-    "power": 78
+    "hp": 167,
+    "power": 84
    },
    "stages": [
     {
@@ -9779,8 +9779,8 @@
     "power": 22
    },
    "bossFoes": {
-    "hp": -33,
-    "power": -16
+    "hp": -39,
+    "power": -19
    },
    "stages": [
     {
@@ -9891,8 +9891,8 @@
     "power": 54
    },
    "bossFoes": {
-    "hp": 43,
-    "power": 22
+    "hp": 41,
+    "power": 21
    }
   },
   {

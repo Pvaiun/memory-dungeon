@@ -2,6 +2,8 @@
 
 Oct 23, 2026 · @Paul Suddaby
 
+*Updated Oct 26, 2026, when the campaign work joined main: the rules the director changed after playing it (the campfire, the opening by slot, lost casts, enrage, Aggro and draw, Armor's formula, Bleed for Poison, Stun's pause, the status scaling rule) are written in here. `DECISIONS.md` has each one's reasons.*
+
 The game rules, the combat system and the vocabulary for the first playable version. The classes are in *Core set: classes*, the gear and formation pieces in *Core set: gear and formation lists*, and the enemy side in *Core set: enemies*.
 
 ## The game
@@ -41,7 +43,7 @@ It's an optional game inside a personal productivity app made for someone with A
 
 - A few automatic fights, then a boss.
 - HP, MP and knockouts carry between fights. A unit knocked out stays knocked out in later fights until something revives it, which can happen in any later fight.
-- Nothing restores HP or MP between fights.
+- Nothing restores HP or MP between fights, except one **campfire** a run (the campaign, Oct 25–26, 2026): after half the run's regular fights, rounded up, the player picks one of REST (everyone standing regains 40% of max HP), FOCUS (60% of max MP) or RAISE (one knocked-out member of their choice stands with 40% of its HP; offered only when someone is down).
 - Statuses don't carry over: every status ends when its fight ends.
 - Losing costs nothing, and retries are free.
 
@@ -71,31 +73,35 @@ Fights run in real time, in ticks, with no orders: each unit acts on its own, fr
 - When a unit is free, it uses the first of its abilities that's ready, in the order the player slotted them, and otherwise its basic attack.
 - Abilities cost MP. Besides its cooldown, an ability can have a trigger condition and a targeting rule.
 - An ability is ready only when it's off cooldown, its condition (if it has one) is true, and the unit has the MP to pay for it. MP is paid when the action resolves, at the end of its wind-up. If the unit no longer has enough MP then, the ability fizzles: it does nothing and no MP is spent, but it still goes on cooldown. This is unrelated to the Fizzle stacking rule.
-- Every action starts the fight on cooldown.
+- Every action starts the fight partly charged. A party unit's abilities are charged by the order they're slotted in: the first starts with 20 ticks of its cooldown done, the second 12, the third 6, so the order is part of a build. Basic attacks, and every action of a foe, start a third to two thirds charged, by their own roll, so nothing lines up on the first ticks. Copies of the same enemy start 1.5 ticks apart.
+- An action interrupted in its wind-up goes on cooldown, and one whose targets are gone when it resolves costs its recovery.
+- **Enrage.** Past 300 ticks, every unit on both sides deals 25% more damage, and 25% more again every 30 ticks, so no fight stalls.
 - Damage doesn't interrupt a cast; only a knockout or an interrupting lockout does.
 - **Firing.** An ability fires as soon as it's ready. It waits only when firing would do literally nothing; reapplying a status that refreshes counts as doing something. Its description says what it waits for, and its targeting conditions are followed as written.
 - **Fizzle statuses.** An ability that applies Stun, Silence, Aegis or Doom skips targets that already have it and takes the next one its target phrase allows: Hush goes to the foe with the next-highest Attack or Magic. If every candidate already has it, an ability that only applies the status waits; one that also deals damage, like Shield bash or Tremor, fires anyway at its usual target, dealing its damage without the status. A Shield at its cap counts as already there under this rule: an ability that adds Shield skips a capped ally for the next one its target phrase allows, and waits if every candidate is capped.
 
 ### Targeting
 
-- Units mostly attack a random foe, weighted by Aggro, a stat every unit has.
+- Units mostly attack a random foe, weighted by **draw**, which comes from Aggro, a stat every unit has (see Aggro and draw below).
 - A unit can be made the forced target of foes (Taunt) or made untargetable (Hidden).
 - An ability's targeting rule can pick its own targets instead, by any condition. Targeting rules come free with any ability and aren't a piece.
 - **Seek** is a keyword an ability can carry: its targeting gets past Taunt.
-- **Taunt rule.** Taunt decides only the first target an ability or basic attack picks. For that pick, if any foe is Taunting and the ability doesn't have Seek, only Taunting foes can be picked, whatever the target phrase asks for: an ability aimed at the foe with the most Burn hits a Taunting foe even if it has no Burn. Extra targets after the first (Arc's second hit, Chain lightning's other foes) ignore Taunt. When several units Taunt, foes pick among them weighted by Aggro.
+- **Taunt rule.** Taunt decides only the first target an ability or basic attack picks. For that pick, if any foe is Taunting and the ability doesn't have Seek, only Taunting foes can be picked, whatever the target phrase asks for: an ability aimed at the foe with the most Burn hits a Taunting foe even if it has no Burn. Extra targets after the first (Arc's second hit, Chain lightning's other foes) ignore Taunt. When several units Taunt, foes pick among them weighted by draw.
 - **Hidden rule.** Foes can't pick a Hidden unit as a target, by any targeting, Seek included; only their all-foes effects (Area) reach it. Its allies can still pick it. No unit in the first pass is both Hidden and Taunting.
 - Basic attacks have no targeting rules: they always use the default, a random foe under the Taunt rule. Passives can change this: the Ranger's Hunter's eye ignores Taunt, and the Stormcaller's Arc adds a hit on a second, random foe.
+
+**Aggro and draw** (the director's rule, Oct 26, 2026). Aggro is centred on 100: a class's or enemy's Aggro word n (1 to 5) is 70 + 10n (80, 90, 100, 110, 120), and gear and formation slots add ±10 a step. Aggro is never below 1. Foes don't pick in proportion to Aggro but to draw: with d how far a unit's Aggro is from 100, draw = 100 × (50 + 3d) ÷ (50 + d) above 100, and 100 × (50 + d) ÷ (50 + 3d) below it. An ordinary unit draws 100; none draws more than three times that, or less than a third; +d and −d cancel. A unit's chance to be picked is its draw over the total draw of the units that can be picked. Aggro 80 draws 64, 90 75, 110 133, 120 157, 140 189; a Knight, Cleric and Ranger at 140, 60 and 70 are picked 63%, 18% and 19% of the time.
 
 The target phrases in ability descriptions each mean exactly this, and are used word for word. "An ally" always includes the caster, unless the phrase says "other".
 
 | Phrase | Means |
 | --- | --- |
-| A random foe | Any foe, weighted by Aggro. |
-| A random foe that isn't Taunting | Any foe without Taunt, weighted by Aggro. If every foe is Taunting, any foe. Only abilities with Seek use it. |
+| A random foe | Any foe, weighted by draw (from Aggro). |
+| A random foe that isn't Taunting | Any foe without Taunt, weighted by draw. If every foe is Taunting, any foe. Only abilities with Seek use it. |
 | The foe with the lowest current HP | The foe whose HP is lowest right now. Ties are broken at random. |
 | The foe with the highest Attack or Magic | For each foe, take its Attack or its Magic, whichever is higher, and pick the foe whose number is highest. Ties are broken at random. |
 | The foe with the most Burn (or Chill, or Sunder) | The foe holding the most stacks of that status. If no foe has any, a random foe. |
-| A random foe with a buff | Any foe holding at least one buff, weighted by Aggro. |
+| A random foe with a buff | Any foe holding at least one buff, weighted by draw. |
 | A second, random foe (Arc) | A random foe other than the first target. The Taunt rule doesn't apply. |
 | Up to three other random foes (Chain lightning) | Up to three different random foes, none of them the first target; fewer if there aren't enough foes. The Taunt rule doesn't apply. |
 | A random foe, ignoring Aggro (Fickle) | Enemy-only, with Seek. Any foe, all equally likely. |
@@ -112,7 +118,7 @@ The target phrases in ability descriptions each mean exactly this, and are used 
 
 ### Damage
 
-- **Physical** damage is slashing, piercing or blunt. Evasion is a chance to dodge it, whether it comes from a basic attack or an ability. Armor takes a flat amount off each hit, so many small hits do poorly against heavy armor.
+- **Physical** damage is slashing, piercing or blunt. Evasion is a chance to dodge it, whether it comes from a basic attack or an ability. Armor reduces each hit to hit² ÷ (hit + k × Armor), with k = 0.25 (the director's Path of Exile formula, Oct 26, 2026): nearly linear against big hits, a bigger share off small ones, and never a blank, so every point of Armor helps and many small hits still do poorly against heavy armor.
 - The three physical types behave the same by default: Evasion and one Armor stat cover them all. A type is only a tag that gear, passives and statuses can hook into.
 - **Magical** damage carries an element. It can't be dodged, and the target's resistance to that element reduces it by a percentage. Negative resistance is a weakness; full resistance is immunity; resistance past full is absorption, where the damage heals instead.
 - There's no untyped magic: a unit that resists magic in general has the same resistance in every element.
@@ -193,10 +199,11 @@ Each status has one fixed definition and does the same specific thing every time
 - **Per source:** each applier keeps its own copy; it can end when its applier is knocked out (an aura).
 - A status has a duration or lasts the whole fight, and every status ends when the fight does. It can be unremovable, or survive its holder being knocked out.
 - Effects can remove buffs or debuffs, and units can be immune to particular statuses or kinds of effect. Every status is either a buff or a debuff, and every status that deals damage over time is a debuff; the lists are under Vocabulary: statuses.
-- A status's own damage is untyped by default. A status can instead deal physical damage: it still isn't dodged, but Armor takes its flat amount off each tick, as it does off each hit.
+- A status's own damage is untyped by default. A status can instead deal physical damage: it still isn't dodged, but Armor reduces each tick as it does a hit.
 - Damage-taken modifiers and shields reduce all status damage.
 - Status damage isn't a hit: it can't crit, never triggers anything that reacts to hits, and doesn't count toward anything that counts hits.
-- A status is fixed when it's applied. The applier's stats can set how many stacks an application adds, and nothing else: its damage boosts don't raise the status's damage.
+- A status is fixed when it's applied. The applier's stats can set how many stacks an application adds, and nothing else: its damage boosts don't raise the status's damage. A status never scales from its applier otherwise (the director's rule, Oct 25, 2026): a stacking status scales only by the stacks applied, a single one by nothing.
+- A hit's own statuses land after the hit, so a status set off by being hit (Bleed) waits for the next one.
 
 ### What players see
 
@@ -228,17 +235,17 @@ Ten staples make the Fundamental base, each useful from a single application. Th
 
 | Status | Tier | What it does |
 | --- | --- | --- |
-| Poison | Fundamental | Untyped damage on a timer. Refresh. One application gives its full effect; steady but slow, so weak against big HP. |
+| Bleed | Fundamental | Stacks, with no duration, and does nothing on its own. Each hit its holder takes deals untyped damage per stack (not a hit itself; past Armor and resistance), then a third of the stacks close. An inverse Shock: it pays a party that keeps the hits coming. Replaced Poison (the director, Oct 26, 2026). |
 | Regen | Fundamental | Heals a share of its holder's max HP on each tick. Refresh: a single status that doesn't stack. |
 | Shield | Fundamental | Soaks a pool of damage before HP, status damage included. One pool per unit, a second health bar, shown as a bar over HP. Each application adds to the pool, up to a cap of half the holder's max HP; how much an application adds scales from a stat the ability or effect names (Protect from max HP, Earthen shell from Armor, Escort's effect from max HP). The pool has no timer: it lasts until it's used up or the fight ends. Dispel removes the whole pool. If the pool proves too strong, a slow drain is the knob. |
 | Might | Fundamental | Deals more damage per stack. Stacks; loses one stack on a timer. |
 | Weaken | Fundamental | Deals less damage. Refresh. |
 | Guard | Fundamental | Raises Armor. Refresh. Best against many small hits. |
-| Stun | Fundamental | Can't act; loses any wind-up. Fizzle. Short; abilities that apply it have long cooldowns. |
+| Stun | Fundamental | Can't act; a wind-up under way waits it out, then carries on (Silence is the interrupt). Fizzle. 5 ticks. |
 | Slow | Fundamental | Longer cooldowns, wind-ups and time between attacks. Refresh. |
 | Haste | Fundamental | Shorter cooldowns, wind-ups and time between attacks. Refresh. |
-| Taunt | Fundamental | Foes' single-target picks must go to a taunting unit; with several taunters, Aggro weights the pick. Refresh. Seek gets past it. |
-| Burn | Specialist | Stacks. Each tick deals untyped damage per stack, then loses a share of its stacks, so it stays high only while someone keeps applying it. A much higher ceiling than Poison. |
+| Taunt | Fundamental | Foes' single-target picks must go to a taunting unit; with several taunters, draw (from Aggro) weights the pick. Refresh. Seek gets past it. |
+| Burn | Specialist | Stacks. Each tick deals untyped damage per stack, then loses a share of its stacks, so it stays high only while someone keeps applying it. A much higher ceiling than a single application of anything. |
 | Chill | Specialist | Stacks up to a cap; each stack slows its holder a little. Loses a share of its stacks on a timer. Full Chill is slower than Slow, and the two add. |
 | Shock | Specialist | Stacks. Each time its holder acts (when an action resolves: at the end of its wind-up, or at once for a basic attack), it takes untyped damage per stack and loses some stacks, so it hurts fast units most. |
 | Ward | Specialist | Raises resistance to every element. Refresh. |
@@ -256,7 +263,7 @@ Ten staples make the Fundamental base, each useful from a single application. Th
 | Kind | Statuses |
 | --- | --- |
 | Buff | Regen, Shield, Might, Guard, Haste, Taunt, Ward, Hidden, Clarity, Aegis, Bulwark |
-| Debuff | Poison, Weaken, Stun, Slow, Burn, Chill, Shock, Sunder, Silence, Rot, Doom |
+| Debuff | Bleed, Weaken, Stun, Slow, Burn, Chill, Shock, Sunder, Silence, Rot, Doom |
 
 ## Vocabulary: special stats and effects
 
@@ -313,16 +320,16 @@ Most Fundamentals have a partner that opposes or undoes them, and two have a bui
 | Haste, Slow | Opposite sides of tempo. Haste also feeds every built-up status, since a faster unit applies more stacks. |
 | Guard, Sunder | Armor up, Armor down. |
 | Evasion, Accuracy | A chance to dodge, and the stat that cancels it. |
-| Poison, Regen, Cleanse | Ticks against ticks. Cleanse ends Poison outright. |
+| Bleed, Regen, Cleanse | Bleed bursts with every hit, Regen heals over time, Cleanse lifts Bleed outright. |
 | Shield, Heal, Rot | Shield prevents and Heal mends; under Rot, only Shield still works. |
-| Taunt, Seek, Area | Taunt decides who foes can pick, split by Aggro when several units taunt. Seek gets past it, and Area skips picking altogether. |
+| Taunt, Seek, Area | Taunt decides who foes can pick, split by draw when several units taunt. Seek gets past it, and Area skips picking altogether. |
 
 | Kind | Applied once, full effect | Built up and kept up |
 | --- | --- | --- |
-| Damage | Poison | Burn |
+| Damage | none since Bleed replaced Poison | Burn, Bleed |
 | Control | Slow | Chill |
 
-Shock is built up too, but it drains each time its holder acts, not over time.
+Shock is built up too, but it drains each time its holder acts, not over time; Bleed drains each time its holder is hit.
 
 ## Gear
 
@@ -344,7 +351,7 @@ Shock is built up too, but it drains each time its holder acts, not over time.
 
 ## Floors and caps
 
-- Aggro has a floor above zero, so no unit becomes unpickable by numbers alone; that's Hidden's job. Every other stat floors at zero, and HP at one.
+- Aggro never goes below 1, and draw keeps every unit between a third and three times an ordinary unit's pull, so no unit becomes unpickable, or the only pick, by numbers alone; that's Hidden's and Taunt's job. Every other stat floors at zero, and HP at one.
 - Evasion and Crit chance have caps, set in balancing and expected to sit far out of reach. Resistance from gear and formations stops short of full; immunity and absorption stay class and boss traits.
 
 ## Known gaps
@@ -359,6 +366,6 @@ The engine's finer rules come from step 4 (`steps/04-combat-concepts/design.md`)
 - **Same-moment order.** When several things resolve at the same moment, the engine resolves the party's batch before the enemies', and within a batch pulses, then reactions, then actions, each in formation slot order. This document says slot order only breaks targeting ties. Which order the core set wants, and whether slot order decides it.
 - **Timing stats.** The engine has Attack Speed, Cooldown Reduction and Cast Time Reduction as stats, which Haste, Slow and Chill would act through. The stat list here has none of them. Whether they stay as hidden stats behind Haste, Slow and Chill, or those statuses are defined directly.
 - **Dice.** Each unit draws its own dice, so the same seed brings the same luck to the same unit whatever else is in the fight. This document is silent; keep it unless a reason appears.
-- **An action whose target is gone when it resolves.** The engine fails it with no MP spent and no cooldown. The firing rule here starts an ability only when it would do something, and a cast that fizzles for MP goes on cooldown. Which applies when the target is knocked out during the wind-up.
+- **An action whose target is gone when it resolves.** Answered in the campaign (Oct 25, 2026): it spends no MP and costs its recovery, and a cast interrupted in its wind-up goes on cooldown (Time and actions).
 - **A fight nobody can win.** The engine stops a fight at 5,000 ticks and counts it a loss, as a safety stop. This document sets no time limit.
 - **Rounding.** The engine rounds damage down once, after mitigation, and heals after crit; shields soak whole points. The resolution order here puts Aegis and Shields after mitigation. Where rounding happens with them in the chain.

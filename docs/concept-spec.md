@@ -3,6 +3,8 @@
 Oct 14, 2026 · brought in line with `DECISIONS.md` Oct 21, 2026
 
 > **Where this stands (Oct 23, 2026).** This is the full game, and the pitch stands. What's being built right now is the core set (`docs/core-set/`): a vertical slice the director designed, with the rules, combat, classes, gear, formations and enemies, its progression still to be decided (starting with none), and without the quest board or reward streams. Where the core set differs from this spec (party size, class count, gear and formation slots, abilities per class), the core set is what's built, and this spec is brought back in line once the slice has shown what holds. `DECISIONS.md` has the decision.
+>
+> **Since then (Oct 26, 2026):** the slice has a campaign, a road of 20 nodes that unlocks it one step at a time (its first progression), and its rules changed in play: one campfire a run between fights, Bleed in place of Poison, Armor's formula, Aggro picked by draw, MP costs set by hand. They're in the core set's documents and `DECISIONS.md` (Step 5). How the campaign meets this spec's progression (quest unlocks, perk picks between fights) is for later.
 
 This is the game at a high level. `DECISIONS.md` holds the detail and the reasons, and this spec is kept in line with it (see `method.md`). If the two ever differ, `DECISIONS.md` wins, and this spec gets fixed.
 

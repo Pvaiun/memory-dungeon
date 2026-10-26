@@ -2,6 +2,8 @@
 
 Oct 23, 2026 · @Paul Suddaby
 
+*Updated Oct 26, 2026, when the campaign work joined main: the kits the director changed after playing it are written in here (the Knight, Cleric, Ranger, Bramble knight, Paladin, Bard and Assassin entries, and Bleed for Poison throughout). The tests, the parties of 3 and the tier check are the original design's reasoning, with the changed names swapped in; where a test leans on a removed piece, it says so. `DECISIONS.md` has the reasons, and `content/core-set/` the numbers.*
+
 The 16 core classes for the first playable. The rules and vocabulary they build on are in *Core set: rules and vocabulary*; the gear and formation pieces are in *Core set: gear and formation lists*; the challenges named in the tests and parties are in *Core set: enemies*.
 
 ## The classes
@@ -13,7 +15,7 @@ The core set is 16 classes. Players start with the Knight, Cleric and Ranger, a 
 | Knight (starter) | Protector | Physical | – |
 | Cleric (starter) | Healer | Magical | Light |
 | Ranger (starter) | Wears down tough targets | Both | Fire |
-| Bramble knight | Thorns tank | Physical, plus Thorns and Poison | Earth (staff) |
+| Bramble knight | Thorns tank | Physical, plus Thorns and Bleed | Earth (staff) |
 | Hoplite | Bodyguard who breaks armor | Physical | – |
 | Paladin | Shelter against magic | Both | Light |
 | Valkyrie | Storm spear who heals and revives | Both | Wind, Light (staff) |
@@ -33,7 +35,8 @@ Not in the core set for now: Berserker (the first to add next: Might, Lifesteal 
 
 - **Stats** run from 1 to 5: 1 is very low, 3 average, 5 very high. Special stats and resistances are zero unless a class lists them.
 - **Armor weight** is the heaviest armor the class can wear; the weight rules are under Gear in *Core set: rules and vocabulary*.
-- **Timing.** Cooldowns are short, medium or long. Wind-ups (cast speed, in other docs) are quick, normal, long or very long. MP cost follows the cooldown unless an ability says it's costly. Basic attacks have no wind-up by default.
+- **Timing.** Cooldowns are short, medium or long. Wind-ups (cast speed, in other docs) are quick, normal, long or very long. Basic attacks have no wind-up by default.
+- **MP costs** are set by hand on each ability (Oct 26, 2026; the director's: no rule from a stat to a cost). The casters' spells cost several times the walls' and fighters' skills, so casters run short of MP and wear MP gear, and walls rarely do. Costly abilities (Raise, Valhalla) cost the most in their kits.
 - **Damage and stacks.** Every ability that deals damage says what the damage scales from. Every ability that adds a stacking status says how many stacks (a few, several or many) and what sets that number. Statuses that don't stack have one fixed size.
 - **Firing, Fizzle statuses and target phrases** are defined in *Core set: rules and vocabulary*, under Combat system: Time and actions, and Targeting.
 - **Tests.** Each class ends with a test: one fight against a challenge it should answer, traced through its kit.
@@ -42,7 +45,7 @@ Not in the core set for now: Berserker (the first to add next: Might, Lifesteal 
 
 | Class | HP | MP | MP regen | Attack | Magic | Armor | Crit | Aggro |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Knight | 5 | 2 | 2 | 3 | 1 | 5 | 2 | 5 |
+| Knight | 4 | 2 | 2 | 3 | 1 | 5 | 2 | 5 |
 | Cleric | 2 | 5 | 4 | 1 | 4 | 2 | 2 | 2 |
 | Ranger | 3 | 3 | 3 | 4 | 1 | 2 | 3 | 2 |
 | Bramble knight | 5 | 2 | 2 | 3 | 2 | 3 | 2 | 4 |
@@ -59,7 +62,7 @@ Not in the core set for now: Berserker (the first to add next: Might, Lifesteal 
 | Stormcaller | 2 | 3 | 3 | 1 | 4 | 1 | 2 | 3 |
 | Geomancer | 3 | 3 | 3 | 3 | 4 | 4 | 4 | 3 |
 
-Crit is Crit chance. Resistances and special stats are listed with each class below.
+Crit is Crit chance. Resistances and special stats are listed with each class below. The Knight's HP was 5 until Oct 26, 2026 (to try, with Protect on a long cooldown: it was in 69% of the best builds).
 
 ## Starting classes
 
@@ -73,36 +76,38 @@ The starters cover every Fundamental challenge between them: a wall, a healer an
 
 - **Passive – Sworn.** When an ally is knocked out, the Knight gains Taunt.
 - **Fortify.** Applies Guard to the ally with the lowest share of max HP. Medium cooldown, quick wind-up.
-- **Protect.** Applies Shield to the ally with the lowest share of max HP; the amount scales from max HP. Medium cooldown, normal wind-up.
+- **Protect.** Applies Shield to the ally with the lowest share of max HP; the amount scales from max HP. Long cooldown, normal wind-up.
 - **Shield bash.** Deals physical damage that scales from Armor to a random foe, and applies Stun. Long cooldown, quick wind-up.
 
 *Test, Tank buster:* with Aggro 5, the boss picks the Knight most of the time, so the Knight is usually the lowest and gets its own Guard and Shield. Early on, with everyone at full HP, they go to any ally. If the boss knocks out the Cleric, Sworn Taunts and the next swings come to the Knight. Shield bash lands at a random moment, often during the long wind-up.
 
 ### Cleric
 
-**Role:** healer. **Plan:** keeps the party standing through a whole dungeon: its staff hits mend the lowest ally, Prayer keeps everyone regenerating, curses are lifted and the fallen raised.
+**Role:** healer. **Plan:** mends whoever is lowest with quick, small heals, lifts a curse and wraps the ally in Regen, raises the fallen, and nothing silences its prayers. An active healer that spends MP: it has no free heal.
 
 **Weapons:** Light staff. **Armor weight:** light. **Special stats:** none. **Resistances:** none.
 
-- **Passive – Mercy.** Each of its Light hits heals the ally with the lowest share of max HP for half the damage the hit dealt.
-- **Prayer.** Applies Regen to every ally. Long cooldown, long wind-up.
-- **Purify.** Cleanses a random ally with a debuff. Waits until an ally has a debuff. Medium cooldown, normal wind-up.
+- **Passive – Encore.** It can't be Silenced. (The Bard's passive until Oct 25, 2026.)
+- **Renew.** Cleanses an ally with a debuff and applies Regen to it; with no ally debuffed, Regen on the ally with the lowest share of max HP. Medium cooldown, normal wind-up.
+- **Cure.** Heals the ally with the lowest share of max HP; the amount scales from Magic. A quick, small heal. Waits until an ally is below max HP. Short cooldown, quick wind-up.
 - **Raise.** Revives a random knocked-out ally with half of its max HP. Waits until an ally is knocked out. Long cooldown, very long wind-up, costly.
 
-*Test, Raidwide:* every boss hit lands on all three. Prayer's Regen ticks on everyone, and between Prayers each staff hit heals the lowest ally for no MP. Under Anti-heal, Rot cuts both, so there the Cleric is the wrong pick.
+Until Oct 25, 2026 it had Mercy (each Light hit healed the lowest ally for half its damage), Prayer (Regen on every ally) and Purify (a cleanse). Mercy's free healing was what broke the campaign's balance (5a's probe), so the director replaced the three.
+
+*Test, Raidwide:* every boss hit lands on all three. Cure keeps topping up whoever is lowest and Renew's Regen ticks on one ally at a time, both paid in MP, so a long fight can run it dry. Under Anti-heal, Rot cuts both, so there the Cleric is the wrong pick.
 
 ### Ranger
 
-**Role:** wears down tough targets. **Plan:** looses poison, fire and armor-rending arrows at whatever stands in front, while its plain arrows fly past any guard.
+**Role:** wears down tough targets. **Plan:** looses barbed, fire and armor-rending arrows at whatever stands in front, while its plain arrows fly past any guard and open the wounds.
 
 **Weapons:** bow, dagger. **Armor weight:** medium. **Special stats:** Accuracy medium. **Resistances:** none.
 
 - **Passive – Hunter's eye.** Its basic attacks ignore Taunt: they go to a random foe, Taunting or not.
-- **Venom arrow.** Deals physical damage that scales from Attack to a random foe, and applies Poison. Short cooldown, quick wind-up.
+- **Barbed arrow.** Deals light physical damage that scales from Attack to a random foe, and adds several Bleed; stacks scale from Attack. Short cooldown, quick wind-up. (Venom arrow, with Poison, until Oct 26, 2026.)
 - **Fire arrow.** Deals Fire damage that scales from Attack to the foe with the most Burn, and adds many Burn; stacks scale from Attack. Medium cooldown, long wind-up.
 - **Rending arrow.** Deals physical damage that scales from Attack to the foe with the most Sunder, and adds several Sunder; stacks scale from Attack. Medium cooldown, normal wind-up.
 
-*Test, Shield wall:* its arrows have no Seek, so they go to the Taunting, Guarded foe, which gets Poisoned, Burned and Sundered, and the Sunder offsets its Guard. Its basic attacks ignore Taunt and land on the fragile dealers behind. Against a lone boss, everything stacks on one target.
+*Test, Shield wall:* its arrows have no Seek, so they go to the Taunting, Guarded foe, which gets Bleed, Burn and Sunder, and the Sunder offsets its Guard. Its basic attacks ignore Taunt and land on the fragile dealers behind. Against a lone boss, everything stacks on one target.
 
 ## Defenders and support
 
@@ -110,16 +115,16 @@ Six classes that win through the party: a tank that punishes, a bodyguard, a she
 
 ### Bramble knight
 
-**Role:** thorns tank. **Plan:** draws every foe onto its thorns, where each attacker bleeds and is poisoned, regrows whoever is lowest, and lashes out with the thorns themselves.
+**Role:** thorns tank. **Plan:** draws every foe onto its thorns, where each attacker is left bleeding for the party's blows, regrows whoever is lowest, and lashes out with the thorns themselves.
 
 **Weapons:** sword, Earth staff. **Armor weight:** heavy. **Special stats:** Thorns high. **Resistances:** weak to Fire.
 
-- **Passive – Briar.** Each time its Thorns damage a foe, that foe gets Poison.
+- **Passive – Briar.** Each time its Thorns damage a foe, that foe gets a few Bleed; stacks scale from Armor.
 - **Thicket.** Applies Taunt and Guard to itself. Medium cooldown, quick wind-up.
 - **Regrowth.** Applies Regen to the ally with the lowest share of max HP. Medium cooldown, normal wind-up.
 - **Bramble lash.** Deals physical damage that scales from Thorns to a random foe. Short cooldown, quick wind-up.
 
-*Test, Swarm:* Thicket pulls all eight foes onto the knight. Each basic attack costs its attacker Thorns and Poisons it, Thicket's Guard blunts the many small hits, and Regrowth mends the knight. Against a Brute it does worse: one big swing triggers Thorns once.
+*Test, Swarm:* Thicket pulls all eight foes onto the knight. Each basic attack costs its attacker Thorns and leaves it bleeding for the party's next hits, Thicket's Guard blunts the many small hits, and Regrowth mends the knight. Against a Brute it does worse: one big swing triggers Thorns once.
 
 ### Hoplite
 
@@ -136,14 +141,14 @@ Six classes that win through the party: a tank that punishes, a bodyguard, a she
 
 ### Paladin
 
-**Role:** shelter against magic. **Plan:** shelters the party from spells and curses, and brings down slow, heavy judgement, twice as hard on any foe that holds a buff.
+**Role:** shelter against magic. **Plan:** shelters the party from spells and curses, and brings down slow, heavy, burning judgement, twice as hard on any foe that holds a buff.
 
 **Weapons:** sword, Light staff. **Armor weight:** heavy. **Special stats:** none. **Resistances:** resists Light.
 
 - **Passive – Judgement.** Its hits deal double damage to foes with a buff.
 - **Sanctuary.** Applies Ward to every ally. Long cooldown, long wind-up.
 - **Absolve.** Cleanses itself and one random other ally with a debuff. Waits until it or an ally has a debuff. Long cooldown, quick wind-up.
-- **Smite.** Deals heavy Light damage that scales from Magic to the foe with the highest Attack or Magic. Long cooldown, very long wind-up, costly.
+- **Smite.** Deals heavy Light damage that scales from Magic to the foe with the highest Attack or Magic, and adds several Burn; stacks scale from Magic. Medium cooldown, very long wind-up. (Long cooldown and no Burn until Oct 26, 2026.)
 
 *Test, Nuker:* Sanctuary's Ward cuts the heavy spell across the party, and Absolve lifts whatever it leaves behind. Against a Buffer's allies, every hit lands double while their buffs last; beside a Hexer that strips those buffs, it loses that edge. Smite's very long wind-up is its weakness: a fast fight may end before it lands.
 
@@ -162,16 +167,16 @@ Six classes that win through the party: a tank that punishes, a bodyguard, a she
 
 ### Bard
 
-**Role:** party tempo. **Plan:** plays the fight's tempo: allies faster and stronger, foes slower, and nothing stops the song.
+**Role:** party tempo. **Plan:** plays the fight's tempo: allies faster and stronger, every foe shocked by its thunder, and every note it strikes gives an ally a little mana.
 
 **Weapons:** dagger, bow. **Armor weight:** medium. **Special stats:** none. **Resistances:** none.
 
-- **Passive – Encore.** It can't be Silenced.
+- **Passive – Refrain.** Each of its basic attacks that lands gives a random ally a little MP. (Encore, which went to the Cleric, until Oct 25, 2026.)
 - **Allegro.** Applies Haste to a random ally. Medium cooldown, normal wind-up.
-- **War ballad.** Adds several Might to the ally with the highest Attack or Magic; stacks scale from Magic. Medium cooldown, normal wind-up.
-- **Lullaby.** Applies Slow to a random foe. Medium cooldown, long wind-up.
+- **War ballad.** Adds many Might to the ally with the highest Attack or Magic; stacks scale from Magic. Medium cooldown, normal wind-up.
+- **Thunder chord.** Adds many Shock to every foe; stacks scale from Magic. Medium cooldown, normal wind-up. (Lullaby, Slow on a random foe, until Oct 26, 2026.)
 
-*Test, Curser:* the Curser Weakens and Slows the party. Allegro's Haste offsets the Slow on one ally at a time, and War ballad's Might outweighs the Weaken on the hardest hitter. It lifts neither debuff, so a Cleric's Purify still helps. Against a Binder, Encore makes the Bard the one ally it can't shut down.
+*Test, Curser:* the Curser Weakens and Slows the party. Allegro's Haste offsets the Slow on one ally at a time, and War ballad's Might outweighs the Weaken on the hardest hitter. It lifts neither debuff, so a Cleric's Renew still helps. Thunder chord makes every foe pay for each action it takes. (With Encore gone to the Cleric, the Bard is no longer the one ally a Binder can't shut down.)
 
 ### Hexer
 
@@ -205,16 +210,16 @@ Three damage dealers, each beating armor its own way: the Monk with Sunder, the 
 
 ### Assassin
 
-**Role:** burst killer. **Plan:** slips out of sight, picks off the weakest foe past any guard with crits that punch through armor, and silences the back line.
+**Role:** burst killer. **Plan:** slips out of sight, picks off the weakest foe past any guard, leaves every crit a bleeding wound, and silences the back line.
 
 **Weapons:** dagger, sword. **Armor weight:** medium. **Special stats:** Crit damage high, Evasion medium. **Resistances:** none.
 
-- **Passive – Shadow strike.** Its hits always crit while it's Hidden.
+- **Passive – Lacerate.** Each of its crits adds several Bleed to the foe; stacks scale from Attack. (Shadow strike, every hit a crit while Hidden, until Oct 26, 2026.)
 - **Vanish.** Applies Hidden to itself. Waits until it isn't Hidden. Long cooldown, quick wind-up.
 - **Backstab.** Has Seek. Deals heavy physical damage that scales from Crit chance to the foe with the lowest current HP. Medium cooldown, normal wind-up.
 - **Garrote.** Has Seek. Deals physical damage that scales from Attack to a random foe that isn't Taunting, and applies Silence. Long cooldown, quick wind-up.
 
-*Test, Stalker:* the Stalker hunts the lowest-HP unit, usually the Assassin. Once Vanish is up, the Assassin is out of reach and every hit it lands crits. Until then it's exposed, so it wants a Shield or an Area ally beside it.
+*Test, Stalker:* the Stalker hunts the lowest-HP unit, usually the Assassin. Once Vanish is up, the Assassin is out of reach, and its crits leave Bleed for the party's hits to open. Until then it's exposed, so it wants a Shield or an Area ally beside it.
 
 ### Vampire
 
@@ -291,16 +296,16 @@ Different trios win different fights, and Burn, Chill and Shock each have more t
 
 | Challenge | A party that beats it | Why it works | Wrong pick here |
 | --- | --- | --- | --- |
-| Swarm | Bramble knight, Stormcaller, Valkyrie | Thicket pulls all eight onto Thorns and Poison; Arc, Chain lightning, Thunderstorm and Gale spear Shock them | Assassin, Hexer: single-target |
+| Swarm | Bramble knight, Stormcaller, Valkyrie | Thicket pulls all eight onto Thorns and Bleed; Arc, Chain lightning, Thunderstorm and Gale spear Shock them | Assassin, Hexer: single-target |
 | Skirmisher | Hexer, Frostweaver, Knight | Cold hex and Frost lance keep Chill high, Enfeeble adds Slow, Fortify's Guard blunts the many small hits | Pyromancer: long wind-ups against fast foes |
 | Tank buster | Knight, Hoplite, Pyromancer | Aggro keeps the boss on the Knight, who becomes the lowest and so gets Aspis's Aegis; Guard and Shield soften what gets through; Burn ramps safely | Bramble knight: one big swing triggers Thorns once |
 | Stalker | Geomancer, Assassin, Stormcaller | Thunderstorm reaches the Hidden Stalker; Vanish hides its usual prey; Earthen shell covers the lowest | Ranger: its arrows can't pick a Hidden foe |
 | Summoner | Valkyrie, Ranger, Frostweaver | Gale spear skips the Taunting adds to strike the summoner; the Ranger's basic attacks ignore Taunt; Blizzard thins the adds | Knight: nothing it does gets past the Taunting adds |
 | Buffer | Hexer, Assassin, Knight | Unravel strips one buff per cast; Hush and Garrote Silence the casters; Shield bash Stuns | Stormcaller: spreads damage instead of stopping the Buffer |
-| Hit counter (boss) | Geomancer, Knight, Ranger | Shielded, the Geomancer lands few hits that crit hard; Poison ticks aren't hits; Protect keeps the Geomancer shielded | Monk, Stormcaller: many small hits set off the counter |
+| Hit counter (boss) | Geomancer, Knight, Ranger | Shielded, the Geomancer lands few hits that crit hard; Burn ticks aren't hits; Protect keeps the Geomancer shielded | Monk, Stormcaller: many small hits set off the counter |
 | Damage race (boss) | Bard, Monk, Pyromancer | War ballad's Might, and Haste from Allegro and Flow, ramp the party; Burn comes from two sources | Hoplite: protects, but can't win a race |
 | Two states (boss) | Pyromancer, Ranger, Monk | Burn from three sources ticks through both phases; Sunder opens the Armor phase | All-physical or all-magical parties without Burn |
-| Long grind (run) | Cleric, Vampire, Frostweaver | Mercy and Prayer heal cheaply, Raise fixes knockouts, Lifesteal keeps the Vampire full, Stillness refills MP | Pyromancer: burns MP the run can't refill |
+| Long grind (run) | Cleric, Vampire, Frostweaver | Cure and Renew heal steadily, Raise fixes knockouts, Lifesteal keeps the Vampire full, Stillness refills MP | Pyromancer: burns MP the run can't refill |
 | Executioner (boss) | Paladin, Hoplite, Valkyrie | Absolve can lift Doom, Aspis's Aegis may soak it, and Valhalla returns the victim ready | Bard, Hexer: nothing for Doom |
 | Anti-heal (boss) | Paladin, Geomancer, Knight | Absolve lifts Rot; Ward, Shields and Guard stop damage instead of healing it | Cleric, Vampire, Bramble knight: their healing is Rotted |
 
@@ -312,21 +317,21 @@ Every piece is used. Fundamentals sit in 2 or 3 classes each plus enemies, Speci
 | --- | --- | --- | --- |
 | Area | Fundamental | Pyromancer, Frostweaver, Stormcaller | Raidwide |
 | Evasion | Fundamental | Monk, Assassin | Dodger |
-| Poison | Fundamental | Ranger, Bramble knight | Poisoner |
+| Bleed | Fundamental | Ranger, Bramble knight, Assassin | Poisoner (snakes) |
 | Taunt | Fundamental | Knight, Bramble knight | Shield wall, Summoner's and Burrower's adds |
 | Might | Fundamental | Bard, Vampire | Buffer, Damage race, Punisher |
 | Guard | Fundamental | Knight, Bramble knight, Hoplite | Shield wall, Buffer |
 | Shield | Fundamental | Knight, Geomancer | Buffer |
 | Stun | Fundamental | Knight, Monk, Geomancer | – |
 | Haste | Fundamental | Bard, Monk, Stormcaller | Buffer |
-| Slow | Fundamental | Bard, Hexer | Curser |
+| Slow | Fundamental | Hexer | Curser |
 | Weaken | Fundamental | Hexer, Vampire | Curser |
 | Regen | Fundamental | Cleric, Bramble knight | Regenerator |
 | Heal | Fundamental | Cleric, Valkyrie | Healer |
 | Cleanse | Fundamental | Cleric, Paladin | – |
-| Burn | Specialist | Pyromancer, Ranger, Monk | – |
+| Burn | Specialist | Pyromancer, Ranger, Monk, Paladin | – |
 | Chill | Specialist | Hexer, Frostweaver | – |
-| Shock | Specialist | Stormcaller, Valkyrie | – |
+| Shock | Specialist | Stormcaller, Valkyrie, Bard | – |
 | Sunder | Specialist | Monk, Ranger, Hoplite | Tank swap |
 | Seek | Specialist | Ranger (basic attacks), Valkyrie, Monk, Assassin | – |
 | Silence | Specialist | Hexer, Assassin | Binder |
@@ -345,7 +350,7 @@ Every piece is used. Fundamentals sit in 2 or 3 classes each plus enemies, Speci
 | Aegis | Signature | Hoplite | – |
 
 - **Built-up statuses on basic attacks.** Each has a basic-attack source: Burn (Pyromancer), Chill (Hexer), Shock (Stormcaller) and Sunder (Monk).
-- **Effects that reach every ally:** Prayer and Sanctuary.
+- **Effects that reach every ally:** Sanctuary. (Prayer did too, until Oct 25, 2026.) Thunder chord reaches every foe.
 - **Scaling from a stat other than Attack or Magic** (obvious targets for gear later): Shield bash (Armor), Bramble lash (Thorns), Backstab (Crit chance), Blood drain (max HP), Rockfall (Armor), and the Shield amounts of Protect (max HP) and Earthen shell (Armor).
 - **Elements:** Fire (Pyromancer, Ranger, Monk), Earth (Geomancer), Ice (Frostweaver), Lightning (Stormcaller), Wind (Valkyrie), Light (Cleric, Paladin) and Dark (Vampire). Second staffs spread them further.
 - **Physical answers to defences:** Sunder (Monk, Ranger) and Crit damage (Assassin) beat heavy Armor; Accuracy (Ranger) beats high Evasion.
