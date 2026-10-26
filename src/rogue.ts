@@ -86,6 +86,13 @@ export type RogueRun = {
   floor: number;
 };
 
+/** A saved run brought up to date: fields added since it was saved get their defaults. */
+export function migrate(run: RogueRun): RogueRun {
+  run.seen ??= [];
+  run.met ??= [];
+  return run;
+}
+
 /** What a player keeps between runs: the classes a run can start with, and how far they've climbed. */
 export type RogueMeta = { owned: string[]; heat: number; maxHeat: number; runs: number; wins: number; best: { act: number; floor: number } };
 
@@ -268,7 +275,7 @@ export function autoFight(c: Content, run: RogueRun): Run {
 export function joinKnown(c: Content, cls: string, act: number): string[] {
   const all = c.classes.get(cls)!.abilities;
   const first = cfg(c).firstAbility[cls] ?? all[0];
-  const known = (cfg(c).start.known ?? 1) + act - 1;
+  const known = (cfg(c).startKnown?.[cls] ?? cfg(c).start.known ?? 1) + act - 1;
   return [first, ...all.filter((a) => a !== first)].slice(0, Math.max(1, Math.min(known, all.length)));
 }
 export function plainWeapon(c: Content, cls: string): string {

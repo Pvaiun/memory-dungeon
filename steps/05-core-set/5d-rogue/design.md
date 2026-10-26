@@ -5,11 +5,12 @@ The core set as a roguelite, on Slay the Spire's structure, as the director aske
 ## The shape of a run
 
 - **Three acts.** Act I is always the Old Road. At the end of each act the road forks: the next region is one of two offered (act II from the Crypt, the Fire Mine and the Ice Pass; act III from the Storm Tower, the Deep Crypt and the Tower Top), each shown with its boss. A run is won when act III's boss falls.
-- **The map** (Slay the Spire's generator): nine floors on five columns, five paths walked up from the bottom, never crossing, and the boss above them. Floor 1 is always a fight, floor 5 a chest, floor 9 a campfire. The other floors roll fight 46%, event 22%, elite 12%, campfire 12%, shop 8%; no elites or campfires before floor 4, no elite, campfire or shop straight after another of its kind, siblings differ where they can, and every act has a shop and two elites. The boss is shown from the act's start, so the party can be built toward it.
+- **The map** (Slay the Spire's generator): nine floors on five columns, five paths walked up from the bottom, never crossing, and the boss above them. Floor 1 is always a fight, floor 5 a chest, floor 9 a campfire. The other floors roll fight 46%, event 22%, elite 12%, campfire 12%, shop 8%; no elites or campfires before floor 4, no elite, campfire or shop straight after another of its kind, siblings differ where they can. Every act has two shops and two elites, and every way up passes a campfire between floors 4 and 7 (the playtesters' recruits waited all act for one). The boss is shown from the act's start, so the party can be built toward it.
 - **About 12 fights a run** (5 an act, a boss included), and as many other rooms.
-- **The party.** The player picks a **leader** from the classes they own (the Knight, Cleric and Ranger to begin with), then **two companions**, each a pick of one from three classes drawn from all sixteen. More classes join on the way (recruits from spoils, the boss's boon, the shop and two events); up to two wait **at camp**, and who's in the party changes only at a campfire. Those at camp rest and focus at every campfire.
+- **The party.** The player picks a **leader** from the classes they own (the Knight, Cleric and Ranger to begin with), then **two companions**, each a pick of one from three classes drawn from all sixteen. More classes join on the way (recruits from spoils, the boss's boon, the shop and two events); up to two wait **at camp**, and who's in the party changes only at a campfire. Those at camp get both REST and FOCUS at every campfire.
+- **Preparation.** Entering a fight room shows its foes (what each is, what it hits with, what it resists); gear, seats, formation and ability order can still change, and supplies be used, until the fight begins. Then it's set: leaving replays it from its start, the same way.
 - **Attrition.** HP, MP and knockouts carry from fight to fight; HP is kept as what's missing, so gear that raises max HP raises current HP too. Only campfires, supplies, a few events and the start of each act restore anything. A party knocked out entirely ends the run.
-- **Each act starts restored**: everyone stands up with full HP and MP, and **levels up**: each member learns an ability of the player's choice (or, knowing all three, makes one better).
+- **Each act starts restored**: everyone stands up with full HP and MP, and **levels up**: each member learns an ability or makes a known one better (+), the player's pick.
 
 ## What a party grows by
 
@@ -20,7 +21,7 @@ The core set as a roguelite, on Slay the Spire's structure, as the director aske
   - **rare**: two affixes, one as a prefix and one as a suffix ("Sturdy Plate of the Tortoise");
   - **legendary**: a piece that bends a rule, with two affixes on top (a powerful piece alone was a sidegrade, worth a third of a rare: `tuning.md`, round 10).
   
-  Twenty affixes: HP, Armor, Attack, Magic, MP regen, MP, Crit, Aggro down, Aggro up with HP, the seven special stats at medium, and four resistances. Names and colours carry the rarity (green, blue, gold ★); the art is the base piece's. Each item is one piece: one member wears it, and gear changes hands any time between rooms. A quarter of the gear rolled is from anything (not only what the roster can use), so a run turns up pieces that want a class it doesn't have: the interface says "NOBODY CAN USE IT YET · PYRO, GEO".
+  Twenty affixes: HP, Armor, Attack, Magic, MP regen, MP, Crit, Aggro down, Aggro up with HP, the seven special stats at medium, and four resistances. Names and colours carry the rarity (green, blue, gold ★); the art is the base piece's. Each item is one piece: one member wears it, and gear changes hands any time between rooms. A quarter of the legendary pieces rolled are from anything (not only what the roster can use), so a run turns up pieces that want a class it doesn't have: the interface says "NOBODY CAN USE IT YET · PYRO, GEO". Ordinary pieces are always wearable by someone.
 - **Legendary pieces: 43.** The core set's 14 powerful pieces and 29 new ones, built from statuses the engine already has:
   - class passives for anyone, by sigil: Ember (Kindling's Burn), Rime (Chill), Wound (crits bleed), Shatter (Sunder), Siren shell (Refrain's MP), Stone idol (Bedrock);
   - rule-benders: the Cleaving charm (basic attacks hit a second foe), Stormbrand (a sword that arcs and shocks), the Crown of judgement and the Brand of kings (hits on buffed foes +60%), the Headsman's axe (double damage below a third of HP), the Hunter's bow (+50% on bleeding foes), the Cinder rod (+40% on burning foes), the Frost shard (more per Chill stack), the Berserker's torc (+50% below half HP, double below a quarter);
@@ -33,13 +34,13 @@ The core set as a roguelite, on Slay the Spire's structure, as the director aske
 
 ## The rooms
 
-- **Fight:** gold (12 to 20, +5 an act) and **spoils**: pick one of three or skip. An offer is gear (55% common, 33% uncommon, 12% rare), a tome (12%), a recruit (6%) or a supply (8%).
-- **Elite:** a hard fight from the region's elite pool. Gold 30 to 40 and a **trophy**, a legendary piece won outright, plus a pick of three (half uncommon, half rare; tomes 15%, recruits 10%). This is Slay the Spire's elite relic: without the trophy, avoiding elites won more runs than taking them (`tuning.md`, rounds 9 to 12).
+- **Fight:** gold (12 to 20, +5 an act) and **spoils**: pick one of three or skip. An offer is gear (55% common, 33% uncommon, 12% rare, never two of the same piece, always something the roster can wear), a tome (12%), a recruit (6%) or a supply (8%). An act never repeats a fight while its pool has others.
+- **Elite:** a hard fight from the region's elite pool. Gold 50 to 65 and a **trophy**, a legendary piece won outright, plus a pick of three rares (or tomes 15%, recruits 10%). This is Slay the Spire's elite relic: without the trophy, avoiding elites won more runs than taking them (`tuning.md`, rounds 9 to 12 and 19).
 - **Boss:** gold 90 to 110 and a **boon**: one of a legendary piece, a formation and a recruit. Then the fork, the restore and the level-up.
 - **Campfire:** one pick of REST (+40% HP), FOCUS (+60% MP), RAISE (a fallen member at 40% HP) or TRAIN (learn or upgrade an ability). Swapping the party is free. The campaign's three-way campfire, plus Slay the Spire's smith.
 - **Shop:** two common, two uncommon, a rare and a legendary piece (45, 70, 110 and 190 gold), a recruit (120), a formation (100), two supplies (35 to 60), one learning (60) and one upgrade (80) a visit, and selling (35% of a piece's price).
 - **Chest:** a rare (70%) or legendary (30%) piece and 15 to 35 gold.
-- **Event (?):** twelve, each a choice in a few verbs (gold, HP, MP, gear, a recruit, learning, an upgrade, tempering a piece up a rarity, a formation, a supply, a fight, a camp, a gamble): a Wounded Traveller, a Blood Shrine, the Gambler, an Abandoned Forge, the Old Master, an Ambush, a Clear Spring, a Strange Chest, an Empty Camp, Pilgrims, a Drill Yard, a Fallen Standard. A run doesn't meet the same one twice until it has met them all.
+- **Event (?):** twelve, each a choice in a few verbs (gold, HP, MP, gear, a recruit, learning, an upgrade, tempering a piece up a rarity, a formation, a supply, a fight, a camp, a gamble): a Wounded Traveller, a Blood Shrine, the Gambler, an Abandoned Forge, the Old Master, an Ambush, a Clear Spring, a Strange Chest, an Empty Camp, Pilgrims, a Drill Yard, a Fallen Standard. A run doesn't meet the same one twice until it has met them all. Costs come before choices, an option that can't happen now is greyed, and WALK ON appears when none can.
 - **Supplies** (the bag holds three): a tonic (the party +30% HP), an ether (+50% MP), a phoenix feather (a fallen member up at half HP). Used between rooms.
 
 ## The fights: remixed, themed, and each its own knob
@@ -49,7 +50,7 @@ The core set as a roguelite, on Slay the Spire's structure, as the director aske
   - `npm run rogue:calibrate` measures each fight against snapshots of real parties from simulated runs (made whole, MP as it was) and bisects its knob until it costs its tier's share of party HP: easy 10/11/12, regular 15/16/17, elite 22/23/24 points, by act. Bosses are measured against parties exactly as they arrive.
   - `npm run rogue:tune` then corrects in whole runs: each boss toward beating 12%, 20% and 25% of the parties that reach it (acts I, II, III), each region's regular fights and elites toward ending 6%, 9% and 12% of the runs that enter it.
 - **Bomb Bugs** come at most two to a fight: their document says three together wipe, and a roguelite party can't be built for one fight.
-- **Heat:** a won run opens the next heat level; each adds 15 to every knob. Heat 0 is the game as tuned.
+- **Heat:** a won run opens the next heat level; each adds 5 to every knob, about 6 points of the simulated player's wins. Heat 0 is the game as tuned.
 
 ## Meta: what a run leaves
 

@@ -247,7 +247,7 @@ function mapView(run: RogueRun): Child[] {
   const picked = mapPick ? run.map.find((n) => n.id === mapPick)! : null;
   const supplies = run.supplies.map((id, i) => button(h("span", null, iconEl(SUPPLY_ICON[id]), id.toUpperCase()), () => useSupplyView(run, id), "sm"));
   return [
-    header(`ACT ${ROMAN[run.act]} · ${reg.name.toUpperCase()}`, () => go("home"), h("span", { class: "dim" }, `F${run.floor}`)),
+    header(`ACT ${ROMAN[run.act]} · ${reg.name.toUpperCase()}`, () => go("home"), h("span", { class: "dim" }, run.floor ? `F${run.floor}` : "START")),
     h("div", { class: "line small" }, iconEl(ICON.boss), h("span", { class: "dim" }, "BOSS "), h("span", { class: "gold trunc grow" }, run.boss.name.toUpperCase())),
     partyStrip(run),
     scroller,

@@ -22,7 +22,7 @@ import { combat } from "./engine/combat/rules.js";
 import type { Entry } from "./engine/log.js";
 import {
   bench, canManage, choose, endFight, equip, eventOf, itemGear, itemOf, joinKnown, maxOf, member, newRogue, options, reachable, registerGear, rogue,
-  seat, sellPrice, setFormation, setOrder, startFight, swap, unlearned, upgraded, useSupply, wearer, type Item, type Offer, type RogueRun, type Slot,
+  migrate, seat, sellPrice, setFormation, setOrder, startFight, swap, unlearned, upgraded, useSupply, wearer, type Item, type Offer, type RogueRun, type Slot,
 } from "./rogue.js";
 import { summary } from "./play-summary.js";
 import { combat as rules, type Member as EngineMember } from "./engine/combat/rules.js";
@@ -35,7 +35,7 @@ const args = argv.filter((a, i) => !a.startsWith("--") && !(i > 0 && argv[i - 1]
 const [cmd, ...rest] = args;
 
 function load(): RogueRun {
-  const run = JSON.parse(readFileSync(SAVE, "utf8")) as RogueRun;
+  const run = migrate(JSON.parse(readFileSync(SAVE, "utf8")) as RogueRun);
   registerGear(c, run);
   return run;
 }
@@ -84,7 +84,7 @@ const KIND_WORD: Record<string, string> = { fight: "fight", elite: "ELITE (hard 
 function header(run: RogueRun): string[] {
   const reg = rogue(c).regions.find((r) => r.id === run.region)!;
   return [
-    `Act ${ROMAN[run.act]} of 3: ${reg.name}. ${reg.text} Boss at the top: ${run.boss.name}. ${run.floor > rogue(c).config.map.floors ? "At the boss." : `Floor ${run.floor} of ${rogue(c).config.map.floors}, the boss above.`}`,
+    `Act ${ROMAN[run.act]} of 3: ${reg.name}. ${reg.text} Boss at the top: ${run.boss.name}. ${run.floor > rogue(c).config.map.floors ? "At the boss." : run.floor === 0 ? `At the foot of the map: ${rogue(c).config.map.floors} floors, then the boss.` : `Floor ${run.floor} of ${rogue(c).config.map.floors}, the boss above.`}`,
     `Gold ${run.gold}. Supplies: ${run.supplies.join(", ") || "none"} (bag holds ${rogue(c).config.bag}). Formation: ${c.formations.get(run.formation)!.name}. Formations owned: ${run.formations.join(", ")}.`,
     `Party: ${run.party.map((cls) => `${cls} (${vit(run, cls)})`).join("; ")}.${bench(run).length ? ` At camp: ${bench(run).map((cls) => `${cls} (${vit(run, cls)})`).join("; ")}.` : ""}`,
   ];
