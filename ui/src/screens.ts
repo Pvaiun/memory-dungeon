@@ -11,7 +11,7 @@ import { button, h, header, nav, row, settleBack, win, type Child } from "./dom.
 import { abilitiesFor, gearFor, party as partyLoadout, reset, resetJourneyLoadout, save, setup, useMode } from "./state.js";
 import {
   anyNewClass, anyNewFormation, anyNewGear, cleared, currentIndex, hasJourney, markSeen, newClass, newFormation, newGear, newGearFor, newNode, nodes, onJourney,
-  ownsClass, ownsFormation, ownsGear, resetJourney, setCleared,
+  ownsClass, ownsFormation, ownsGear, resetJourney, setCleared, mode as playMode, onRogue,
 } from "./journey.js";
 import { celebrate } from "./celebrate.js";
 import { abilityBlock, basicLine, classHead, codeSpans, enemySheet, gearRow, memberFor, passiveBlock, portraitEl, role, section, specialLines, statGrid } from "./sheet.js";
@@ -20,8 +20,10 @@ import { weaponOf } from "../../src/engine/combat/fight.js";
 import { Strip, STRIP_H } from "./battle/scene.js";
 import { startBattle, type BattleArgs } from "./battle/battle.js";
 import { music, setMusic, setSound, sfx } from "./battle/audio.js";
+import { bindRogue, rgearScreen, rogueMenuLine, rogueScreen, rpartyScreen, runitScreen } from "./rogue-screens.js";
+import { abandonRun, current as rogueRun, resetRogue } from "./rogue-state.js";
 
-export type Screen = "home" | "journey" | "node" | "fight" | "party" | "formation" | "unit" | "gear" | "classes" | "bestiary" | "enemy" | "settings" | "battle";
+export type Screen = "home" | "journey" | "node" | "fight" | "party" | "formation" | "unit" | "gear" | "classes" | "bestiary" | "enemy" | "settings" | "battle" | "rogue" | "rparty" | "runit" | "rgear";
 
 let current: Screen = "home";
 let currentArg: unknown;
@@ -38,6 +40,7 @@ export function setTheme(name: string) {
 export function mount(app: HTMLElement) {
   frame = h("div", { class: "frame" });
   app.append(frame);
+  bindRogue((s, arg, keep) => go(s as Screen, arg, keep), frame);
   go("home");
 }
 
@@ -64,7 +67,10 @@ export function go(s: Screen, arg?: unknown, keepScroll = false) {
     stopBattle = startBattle(frame, screenEl, arg as BattleArgs);
     return;
   }
-  const screens: Record<Exclude<Screen, "battle">, (arg?: unknown) => Child[]> = { home, journey, node, fight, party, formation, unit, gear, classes: classesScreen, bestiary, enemy, settings };
+  const screens: Record<Exclude<Screen, "battle">, (arg?: unknown) => Child[]> = {
+    home, journey, node, fight, party, formation, unit, gear, classes: classesScreen, bestiary, enemy, settings,
+    rogue: rogueScreen, rparty: rpartyScreen, runit: runitScreen, rgear: rgearScreen,
+  };
   screenEl.append(...(screens[s](arg).filter(Boolean) as Node[]));
   settleBack();
   [...screenEl.querySelectorAll(".scroll")].forEach((el, i) => { if (scrolls[i]) el.scrollTop = scrolls[i]; });
@@ -102,9 +108,15 @@ function home(): Child[] {
   const cur = currentIndex();
   const owned = classes.filter((k) => ownsClass(k.id)).length;
   // In the journey the first item is the road, with the next node's name; free play keeps FIGHT. NEW marks what holds something unseen.
-  const items: [Screen, string, string, boolean][] = [
-    onJourney() ? ["journey", "JOURNEY", cur === null ? "Complete" : `${cur + 1}. ${nodes()[cur].name}`, cur !== null && newNode(nodes()[cur].id)] : ["fight", "FIGHT", "Runs, and single fights", false],
-    ["party", "PARTY", "Who goes, and what they carry", anyNewClass() || anyNewFormation() || anyNewGear()],
+  type Item = [Screen, string, string, boolean];
+  const head: Item[] = onRogue()
+    ? [["rogue", "ROGUE", rogueMenuLine(), false], ...(rogueRun() ? [["rparty", "PARTY", "The run's party, gear and bag", false] as Item] : [])]
+    : [
+      onJourney() ? ["journey", "JOURNEY", cur === null ? "Complete" : `${cur + 1}. ${nodes()[cur].name}`, cur !== null && newNode(nodes()[cur].id)] : ["fight", "FIGHT", "Runs, and single fights", false],
+      ["party", "PARTY", "Who goes, and what they carry", anyNewClass() || anyNewFormation() || anyNewGear()],
+    ];
+  const items: Item[] = [
+    ...head,
     ["classes", "CLASSES", onJourney() ? `${owned} of ${classes.length} found` : `The ${classes.length} classes`, anyNewClass() || anyNewGear()],
     ["bestiary", "BESTIARY", "Every enemy", false],
     ["settings", "SETTINGS", "Theme, speed, sound, music", false],
@@ -494,7 +506,7 @@ function settings(): Child[] {
   return [
     header("SETTINGS", () => go("home")),
     win("list",
-      hasJourney ? row([h("span", { class: "grow" }, "MODE"), h("span", { class: onJourney() ? "hi" : "" }, onJourney() ? "JOURNEY" : "FREE PLAY")], () => { useMode(onJourney() ? "free" : "journey"); refresh(); }, { cursor: false }) : null,
+      row([h("span", { class: "grow" }, "MODE"), h("span", { class: playMode() === "free" ? "" : "hi" }, playMode() === "journey" ? "JOURNEY" : playMode() === "rogue" ? "ROGUE" : "FREE PLAY")], () => { const m = playMode(); useMode(m === "journey" ? "free" : m === "free" ? "rogue" : hasJourney ? "journey" : "free"); refresh(); }, { cursor: false }),
       row([h("span", { class: "grow" }, "THEME"), h("span", null, s.theme.toUpperCase())], () => { s.theme = s.theme === "night" ? "day" : "night"; setTheme(s.theme); save(); refresh(); }, { cursor: false }),
       row([h("span", { class: "grow" }, "SPEED"), h("span", null, `${s.speed}×`)], () => { s.speed = s.speed === 1 ? 2 : s.speed === 2 ? 4 : 1; save(); refresh(); }, { cursor: false }),
       toggle("SOUND", "sound"),
@@ -506,8 +518,10 @@ function settings(): Child[] {
       row([h("span", { class: "grow" }, "PORTRAITS"), h("span", null, s.portraits.toUpperCase())], () => { s.portraits = s.portraits === "faces" ? "sprites" : s.portraits === "sprites" ? "mixed" : "faces"; save(); refresh(); }, { cursor: false }),
       hasJourney ? row([h("span", { class: "grow" }, "RESET JOURNEY")], () => ask("RESET THE JOURNEY?", "Back to the first run, with the starting three and nothing found. Free play's party is kept.", "RESET", () => { resetJourney(); resetJourneyLoadout(); go("home"); }), { cursor: false }) : null,
       onJourney() && s.designer ? row([h("span", { class: "grow" }, "CLEAR NEXT"), h("span", { class: "dim" }, "DESIGNER")], () => clearNext(), { cursor: false }) : null,
+      onRogue() && rogueRun() ? row([h("span", { class: "grow" }, "GIVE UP THE RUN")], () => ask("GIVE UP THE RUN?", "It ends as a lost run. Your leaders stay.", "GIVE UP", () => { abandonRun(); go("home"); }), { cursor: false }) : null,
+      onRogue() ? row([h("span", { class: "grow" }, "RESET ROGUE")], () => ask("RESET THE ROGUE MODE?", "Back to the three starting leaders, no runs, no heat.", "RESET", () => { resetRogue(); go("home"); }), { cursor: false }) : null,
       row([h("span", { class: "grow bad" }, "RESET ALL")], () => ask("RESET ALL?", "Settings, both parties and the journey go back to the start.", "RESET", () => { reset(); setTheme(setup.settings.theme); setDisplayDiv(100); go("home"); }), { cursor: false }),
     ),
-    h("div", { class: "text dim small wrap" }, hasJourney ? "Mode: the journey starts with three classes and gives more, with formations and gear, as its runs are cleared; free play has everything and pays nothing. Each keeps its own party. " : "", "Speed is how fast a fight is told: each message holds the clock while it's on screen. In a fight, II pauses, STEP plays one message at a time, >> skips to the end. Designer view shows hidden enemy stats and worked-out numbers. Small numbers are 10 per point of the design's 1–5 scale; big are 100. Portraits: faces everywhere, sprites everywhere, or mixed, with sprites in the party's slots and faces in the lists and rows. Party HP on field adds thin HP bars under the party in a fight, like the foes'."),
+    h("div", { class: "text dim small wrap" }, hasJourney ? "Mode: the journey starts with three classes and gives more, with formations and gear, as its runs are cleared; free play has everything and pays nothing; rogue is a run of three acts from a leader you own, built as you go, and a won run's party can lead the next. Each keeps its own party. " : "", "Speed is how fast a fight is told: each message holds the clock while it's on screen. In a fight, II pauses, STEP plays one message at a time, >> skips to the end. Designer view shows hidden enemy stats and worked-out numbers. Small numbers are 10 per point of the design's 1–5 scale; big are 100. Portraits: faces everywhere, sprites everywhere, or mixed, with sprites in the party's slots and faces in the lists and rows. Party HP on field adds thin HP bars under the party in a fight, like the foes'."),
   ];
 }

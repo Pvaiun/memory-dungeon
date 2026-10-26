@@ -232,3 +232,27 @@ table.sum th { color: var(--dim); }
 @keyframes pop { 0% { transform: scale(.4); opacity: 0; } 60% { transform: scale(1.06); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
 @keyframes blink { 0% { opacity: 0; } 50% { opacity: 1; } }
 @keyframes shine { 0% { color: var(--gold); } 50% { color: var(--ink); } }
+
+/* The rogue mode */
+.rstrip { padding: .25rem .375rem; }
+.rcells { display: flex; gap: .25rem; }
+.rcell { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: .125rem; cursor: pointer; text-transform: uppercase; }
+.rcell .bar { width: 100%; }
+.rcell .face.ko { opacity: .35; filter: grayscale(1); }
+.rmap-win { padding: .25rem; }
+.rmap { position: relative; width: 100%; }
+.rmap-lines { position: absolute; inset: 0; pointer-events: none; }
+.rmap-lines svg { display: block; }
+.rmap-lines line { stroke: var(--dim); stroke-width: 2; stroke-dasharray: 3 4; opacity: .55; }
+.rmap-lines line.walked { stroke: var(--hi); stroke-dasharray: none; opacity: 1; }
+.rnode { position: absolute; transform: translate(-50%, -50%); width: 3.75rem; height: 3.75rem; display: flex; align-items: center; justify-content: center; border-radius: .5rem; background: var(--win); border: .125rem solid transparent; opacity: .55; }
+.rnode.boss { width: 5rem; height: 5rem; opacity: .9; }
+.rnode.been { opacity: .35; }
+.rnode.here { opacity: 1; border-color: var(--hi); }
+.rnode.can { opacity: 1; cursor: pointer; border-color: var(--line); animation: rpulse 1.2s steps(2) infinite; }
+.rnode.cur { background: var(--sel); border-color: var(--hi); animation: none; }
+@keyframes rpulse { 50% { border-color: var(--hi); } }
+.roffer { cursor: pointer; margin-bottom: .5rem; }
+.roffer.cur { background: var(--sel); border-color: var(--hi); }
+.dimmed { opacity: .5; }
+.member.cur { background: var(--sel); }

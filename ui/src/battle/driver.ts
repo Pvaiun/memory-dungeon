@@ -27,8 +27,9 @@ export class Driver {
   fightNo = 0;
   fightTotal: number;
 
-  constructor(public input: RunInput) {
-    this.run = newRun(c, combat, input, { log: true });
+  /** `prepared`: an engine run made elsewhere (the rogue mode's, with its party's HP and MP carried in). */
+  constructor(public input: RunInput, prepared?: Run) {
+    this.run = prepared ?? newRun(c, combat, input, { log: true });
     this.logIndex = this.run.log!.length;
     this.fightTotal = c.dungeons.get(input.dungeon)!.stages.filter((s) => s.kind === "fight").length;
     this.begin();

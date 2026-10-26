@@ -52,7 +52,7 @@ function load(): Setup {
     const raw = localStorage.getItem(KEY) ?? localStorage.getItem(OLD_KEY);
     if (!raw) return fresh();
     const stored = JSON.parse(raw) as Partial<Setup>;
-    const s = { ...fresh(), ...stored, mode: stored.mode ?? "free" };
+    const s = { ...fresh(), ...stored, mode: stored.mode === "rogue" ? "free" : stored.mode ?? "free" };
     const old = s.settings as Partial<Settings> & { tickMs?: number; palette?: string };
     s.settings = { ...fresh().settings, ...old };
     if (!(s.settings.speed === 1 || s.settings.speed === 2 || s.settings.speed === 4)) s.settings.speed = 1;
@@ -87,6 +87,8 @@ export function reset() {
 /** Puts the mode's loadout in use, keeping the other one, and records the mode. */
 export function useMode(m: Mode) {
   setJourneyMode(m);
+  // The rogue mode keeps its party in its run (rogue-state.ts): the loadout in use stays as it is.
+  if (m === "rogue") return void save();
   if (setup.mode !== m) {
     const { party, formation, gear } = setup;
     Object.assign(setup, setup.other ?? freshLoadout());

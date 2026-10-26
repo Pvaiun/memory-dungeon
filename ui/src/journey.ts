@@ -11,7 +11,7 @@ import type { CampaignNodeT } from "../../src/schema.js";
 import { canEquip } from "../../src/validate.js";
 import { c } from "./content.js";
 
-export type Mode = "journey" | "free";
+export type Mode = "journey" | "free" | "rogue";
 type Kind = "classes" | "formations" | "gear" | "nodes";
 type Journey = { mode: Mode; cleared: number; ids: string[]; seen: Record<Kind, string[]> };
 
@@ -29,7 +29,7 @@ function load(): Journey {
     if (!raw) return fresh();
     const s = JSON.parse(raw) as Partial<Journey>;
     const f = fresh();
-    return { mode: s.mode === "free" ? "free" : "journey", cleared: Number(s.cleared) || 0, ids: Array.isArray(s.ids) ? s.ids : [], seen: { ...f.seen, ...(s.seen ?? {}) } };
+    return { mode: s.mode === "free" || s.mode === "rogue" ? s.mode : "journey", cleared: Number(s.cleared) || 0, ids: Array.isArray(s.ids) ? s.ids : [], seen: { ...f.seen, ...(s.seen ?? {}) } };
   } catch {
     return fresh();
   }
@@ -42,7 +42,8 @@ function save() {
   }
 }
 
-export const mode = (): Mode => (hasJourney ? j.mode : "free");
+export const mode = (): Mode => (hasJourney || j.mode === "rogue" ? j.mode : "free");
+export const onRogue = () => mode() === "rogue";
 export const onJourney = () => mode() === "journey";
 export function setMode(m: Mode) {
   j.mode = m;
