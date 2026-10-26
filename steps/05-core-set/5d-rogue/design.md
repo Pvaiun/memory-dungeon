@@ -52,7 +52,7 @@ The core set as a roguelite, on Slay the Spire's structure, as the director aske
   - `npm run rogue:calibrate` measures each fight against snapshots of real parties from simulated runs (made whole, MP as it was) and bisects its knob until it costs its tier's share of party HP: easy 10/11/12, regular 15/16/17, elite 22/23/24 points, by act. Bosses are measured against parties exactly as they arrive.
   - `npm run rogue:tune` then corrects in whole runs: each boss toward beating 22%, 35% and 45% of the parties that reach it (acts I, II, III; 12%, 20% and 25% until the director asked for a harder heat 0), each region's regular fights and elites toward ending 6%, 9% and 12% of the runs that enter it.
 - **Bomb Bugs** come at most two to a fight: their document says three together wipe, and a roguelite party can't be built for one fight. **Snakes' packs never grow**, and act I's regular fights hold two: their Bleed doesn't shrink with a fight's knob, and the regular fights' extra HP gave them more hits (the Viper Den ended 9% of the act I runs meeting it with its knob at the floor).
-- **Heat:** a won run opens the next heat level; each adds 5 to every knob, about a quarter of the simulated player's wins left at each level (16%, 11%, 8% and 4% at heats 1, 2, 3 and 5, from 21% at heat 0). Heat 0 is the game as tuned.
+- **Heat:** a won run opens the next heat level; each adds 4 to every knob (5 at first; 4 at the director's word, erring hard for their playtest), about a fifth of the simulated player's wins left at each level (17%, 12%, 10%, 6%, 3% and 2% at heats 1, 2, 3, 5, 7 and 10, from 21% at heat 0). Heat 0 is the game as tuned.
 
 ## Meta: what a run leaves
 
