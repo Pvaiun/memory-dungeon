@@ -1,6 +1,6 @@
 # Step 5d report: a rogue mode
 
-You asked for a third mode, beside the journey and free play: the core set as a roguelite, on Slay the Spire's structure, built and tuned overnight. It's built, tuned by simulation, and was played by ten AI playtesters over five rounds, each round fixing what the last one found. It's on this branch (`ccr-9e0c2cb1-in0wcs`, branched from the campaign branch). This report leads with what needs you. `design.md` has the mode in full, `intent.md` your words, and `tuning.md` the 32 rounds.
+You asked for a third mode, beside the journey and free play: the core set as a roguelite, on Slay the Spire's structure, built and tuned overnight. It's built, tuned by simulation, and was played by twelve AI playtesters over six rounds, each round fixing what the last one found. It's on this branch (`ccr-9e0c2cb1-in0wcs`, branched from the campaign branch). This report leads with what needs you. `design.md` has the mode in full, `intent.md` your words, and `tuning.md` the 32 rounds.
 
 **To play it:** `npm install`, then `npm run ui`, and open the address it prints (on a phone on the same Wi-Fi, the Network address). Settings → MODE → ROGUE, then ROGUE on the home menu. Pick a leader, take two companions, and climb. Tap a lit room on the map to see what it is, then ENTER; tap BOSS under the map to see what waits at the top. When you enter a fight you see the foes first: change gear (PARTY), then FIGHT. The journey and free play are untouched.
 
@@ -13,10 +13,10 @@ HP, MP and knockouts carry from fight to fight. A won run adds its party to the 
 
 **What needs you, in short:**
 1. **The shape:** a leader you own plus two drafted companions, abilities learned one at a time, and fights previewed before they start (1A).
-2. **Two exceptions to "swaps at campfires":** the fallen can be replaced from camp between rooms, and after a wipe those standing at camp take the road (1A).
+2. **Two exceptions to "swaps at campfires":** the fallen can be replaced from camp between rooms, and after a wipe in a regular fight or elite those standing at camp take the road; a wipe at a boss still ends the run (1A).
 3. **The core set's 14 powerful pieces:** in the rogue, most are worth less than an ordinary piece. Leave them, drop the worst from the rogue's pool, or a gear pass (1B).
 4. **The class pass,** with the rogue's table as a second measuring stick: the Vampire and Monk win a third of runs as leader, the Bard and Hexer under a tenth (1C).
-5. **Difficulty at heat 0:** the simulated player wins 36%, and the AI playtesters won 11 of 30. Harder or easier (1D)?
+5. **Difficulty at heat 0:** the simulated player wins ⟨WON⟩, and the AI playtesters won 14 of 36 (one won all three of its runs and called it too easy; another won none). Harder or easier (1D)?
 6. **Three core-set questions:** the Aggro floor, Judgement against Taunt, and a boss's opening seconds (1E).
 
 ## 1. Decisions and open questions
@@ -28,10 +28,11 @@ HP, MP and knockouts carry from fight to fight. A won run adds its party to the 
 - **Fights are shown before they start.** Entering a fight room shows each foe: what it is, what its moves do, who they aim at, how big they are before Armor, what it hits with and what it resists. The party can still be re-geared, re-seated and re-ordered. Once the fight begins it's set, and leaving replays it from its start, the same way. The first two playtesters asked for this ("gear is a blind guess"), and by the third round the playtesters' favourite moments came from it: "read 'absorbs fire, weak to ice / Inferno: very long cast', benched my best damage dealer, put Hush first: Inferno is lost." **Say if you want the blind version back.**
 - **Swaps at campfires, as you asked, with two exceptions I added for those waiting at camp:**
   - a fallen party member can trade places with someone standing at camp any time between rooms;
-  - **the reserves:** a lost fight with someone standing at camp doesn't end the run. They take the road: a regular fight or elite is passed with no spoils, and a boss is faced again by them, as wounded as the fallen left it. One standing at camp can also fill an empty seat any time.
+  - **the reserves:** a lost regular fight or elite with someone standing at camp doesn't end the run. They take the road, and the room is passed with no spoils. One standing at camp can also fill an empty seat any time. **A lost boss still ends the run.**
 
-  Four playtesters in three rounds named the same least favourite moment: a run lost with healthy members watching from camp. The fifth round found the first version of the reserves hollow (a boss back at full HP against one under-geared member), so a boss now keeps its wounds. Together the rules are worth about 2 points to the simulated player: they remove a loss that feels unfair more than they make runs easier. A campfire's swaps also stay open until you leave, not just until you pick (one playtester raised a member at camp, found the window shut, and lost the run to it). **Confirm, or say campfires only.**
-- **Those waiting at camp get half a REST and half a FOCUS at every campfire**, whatever you pick. All of both made a fourth member "a free heal battery" (three playtesters). Half keeps the bench worth having, like Darkest Dungeon's roster.
+  Four playtesters in three rounds named the same least favourite moment: a run lost with healthy members watching from camp, almost always mid-act. At bosses, the reserves didn't work either way: met at full HP, the boss was "a loss screen with extra steps" (round 5); left wounded, it was "a wipe that cost nothing", finished by one Firebolt after a phoenix (round 6). So the boss stays the climax. A campfire's swaps also stay open until you leave, not just until you pick (one playtester raised a member at camp, found the window shut, and lost the run to it). **Confirm, or say campfires only.**
+- **Those waiting at camp get half a REST and half a FOCUS at every campfire**, whatever you pick (those who were at camp when you arrived). All of both made a fourth member "a free heal battery" (three playtesters). Half keeps the bench worth having, like Darkest Dungeon's roster.
+- **Gear changes max HP and MP, never current.** A +HP piece raises the ceiling and doesn't heal; one moved off a fallen member brings nobody HP. Four playtesters used HP and MP gear as heals and ethers while what was missing stayed missing.
 - **Elites work like Slay the Spire's elite relic.** An elite pays a legendary piece outright (the trophy, now always one aimed at someone in the party), 50 to 65 gold and a pick of three rares. Without the trophy, avoiding elites won more runs than taking them.
 - **Regular fights are longer and softer than the campaign's:** their foes have 80% more HP and deal 30% less a hit, at the same cost to the party. Fights went from 21 to 25 ticks to about 37, and each ability slot fires about twice as often. Before that, the playtesters' "fights are over before the build shows" and "the third ability never fires" were right.
 - **While the party has nobody who heals others, each draft offers one who does** (the Cleric, the Bramble knight or the Valkyrie). "Two of my three runs felt lost at the draft": HP carries over, and without a healer it only leaks. Within noise for the simulated player, which drafts by value anyway.
@@ -66,7 +67,7 @@ Each class as leader with two random companions (300 runs each; the average is l
 ### D. Difficulty, heat and the playtesters
 
 - **The simulated player wins 36% of runs at heat 0.** It plays by rules of thumb: it equips by stat weights and drafts by measured class values, with no search. Bosses end 14%, 23% and 29% of the runs that reach them in acts I, II and III (targets 12, 20 and 25: the reserves bring more runs to the late bosses with weaker parties). Regular fights and elites end 5% to 10% of the runs that enter a region.
-- **The AI playtesters won 11 of 30 runs:** 2 and 0 of 3 in round 1, then 1 of 3 for each of the four players of rounds 2 and 3, 2 and 1 in round 4, and 1 each in round 5. Asked how much they'd want another run right away, round 4 said 7 out of 10 (both) and round 5 said 6 (both). Bosses ended most of their lost runs, and so did a few big swarms (eight snakes and bandits on act I's floor 7; five Leeches from an Ambush).
+- **The AI playtesters won 14 of 36 runs:** 2 and 0 of 3 in round 1, then 1 of 3 for each of the four players of rounds 2 and 3, 2 and 1 in round 4, 1 each in round 5, and 3 and 0 in round 6. Asked how much they'd want another run right away, rounds 4 to 6 said 7, 7, 6, 6, 6 and 6 out of 10. The two of round 6 disagreed on difficulty: "too easy; elites easy and paying well, gold and supplies plentiful" against "two of three losses came from fights whose danger I had no way to see". Bosses ended most of their lost runs, and so did a few big swarms (eight snakes and bandits on act I's floor 7; five Leeches from an Ambush).
 - **Act I felt hardest to three of them, and acts II and III easy once a carry came online.** Part of that was two snake fights: the Viper Den and the Snake Pit ended 9% and 7% of the act I runs meeting them, every other act I fight 2% or less, with their knobs already at the floor. Bleed doesn't shrink with a fight's knob, and the regular fights' extra HP gave snakes more hits. Snake packs now never grow and act I's hold two (recalibrated: both cost what the rest do). The rest of the impression, a human's build outgrowing the late acts, is what heat is for, and I left the targets alone.
 - **Heat:** a won run opens the next level, each +5 on every knob, about 6 points of the simulated player's wins a level (33%, 27%, 19% and 12% at heats 1, 2, 3 and 5). **Say if heat 0 should be harder or easier.** The targets are one line in `src/rogue-calibrate.ts` and `src/rogue-tune.ts`.
 
@@ -109,10 +110,10 @@ Each class as leader with two random companions (300 runs each; the average is l
   - `npx tsx src/rogue-play.ts`: the AI playtester's game.
   - Tests in `src/rogue.test.ts`.
 - **One engine change, to the log only:** each damage entry names its kind (an element, physical or untyped), so a fight summary can break down damage taken. Outcomes are unchanged, and the pinned run's log fingerprint changed for it alone (checked: without the field, the old fingerprint comes back).
-- **Fixed from the playtests** (five rounds; `tuning.md`, rounds 16, 17, 24 to 26, 29 and 31):
+- **Fixed from the playtests** (six rounds; `tuning.md`, rounds 16, 17, 24 to 26, 29, 31 and 33):
   - **Exploits and bugs:**
     - a refill from taking MP gear off and back on;
-    - a heal from wearing a +HP piece just to rest;
+    - a heal from wearing a +HP piece just to rest, and HP and MP gear as heals;
     - an event cost that never applied, and the Pilgrims' text;
     - the same legendary twice in a run.
   - **Information:**
@@ -124,7 +125,8 @@ Each class as leader with two random companions (300 runs each; the average is l
     - who laid a status that dealt a killing blow.
   - **Rules:**
     - a mid-act campfire on every path, and two shops an act;
-    - swaps open until a campfire's LEAVE, the reserves after a wipe (a boss keeps its wounds), empty seats filled from camp, and half a rest for the bench;
+    - swaps open until a campfire's LEAVE, the reserves after a wipe on the road, empty seats filled from camp, and half a rest for the bench;
+    - gear that changes max HP and MP but never current;
     - a healer offered in each draft while the party has none;
     - snake packs that never grow, two to an act I fight;
     - no fight twice in an act;
@@ -179,9 +181,9 @@ Each class as leader with two random companions (300 runs each; the average is l
 
 **How sure:** the decision costs held across five complete passes (`tuning.md`, rounds 18, 21, 28, 30 and 32) within 4 points, except the campfire's, which fell from 29 to 12 as stand-ins, the reserves, stronger legendaries and longer regular fights spread the party's recovery across more things. The class table's order held, but its top came down (the Vampire from 48% to 34%) as the late bosses got harder. Every number here is the simulated player's. The playtesters (section 4) are the human-like check.
 
-## 4. Feel: ten AI playtests
+## 4. Feel: twelve AI playtests
 
-Ten fresh agents played the rogue mode from a command line that shows only what a player sees, three runs each, about half an hour a player. Every round paired a careful first-timer with an experienced roguelite player, and each round played the build the last round's fixes made. The last two rounds rated wanting another run at 7, 7, 6 and 6 out of 10: "the map, the boss forecast and the legendary hunting pulled me forward, and every boss fight was close"; "the fork, build and gear loop is good and run 3 felt earned"; and against: "fights are hands-off", "two of my three runs were decided by a squishy dying in the boss's first seconds".
+Twelve fresh agents played the rogue mode from a command line that shows only what a player sees, three runs each, about half an hour a player. Every round paired a careful first-timer with an experienced roguelite player, and each round played the build the last round's fixes made. The last three rounds rated wanting another run at 7, 7, 6, 6, 6 and 6 out of 10: "the map, the boss forecast and the legendary hunting pulled me forward, and every boss fight was close"; "the fork, build and gear loop is good and run 3 felt earned"; and against: "fights are hands-off", "two of my three runs were decided by a squishy dying in the boss's first seconds".
 
 **What they liked, every round:**
 - the Slay the Spire map with the boss shown from the start;
@@ -199,6 +201,8 @@ Ten fresh agents played the rogue mode from a command line that shows only what 
 - "Ogre Chief is stunned: Crush has to wait", then a kill at t33.
 - "The Glacier King: the Assassin alone, the Bulwark BROKEN, a win at t103 with 812 HP left."
 - "Picking the Deep Crypt because 'power that isn't an ability is the key', then beating the Silent One with an un-Silenceable Cleric and Rime-sigil basic attacks."
+- "Buying the Valkyrie to break the Ice Titan's Bulwark, and watching it work."
+- "The 26,250 Fire arrow on the same Golem Gate that had killed run 1: Burn piled up, the arrow found it."
 
 **What they asked for, and what happened:**
 
@@ -215,7 +219,8 @@ Ten fresh agents played the rogue mode from a command line that shows only what 
 | Fights long enough for builds to show | 1, 2 | Regular fights about 37 ticks, slots firing twice as often |
 | Legendaries that define a build | 2, 3 | The rogue's own pieces lifted (section 1B); the core set's left to you |
 | Enemy intent inside a fight; foe HP numbers | 3 | Not done: fights are automatic and foe stats stay hidden by the core set's rule. The preview's sizes and targets are the substitute. |
-| Healthy members at camp to step in | 2, 3, 4, 5 | The fallen replaced between rooms; empty seats filled; the reserves after a wipe, facing a boss as wounded as it was left |
+| Healthy members at camp to step in | 2, 3, 4, 5 | The fallen replaced between rooms; empty seats filled; the reserves after a wipe on the road (a boss lost still ends the run, round 6) |
+| HP and MP gear not acting as a heal | 1, 3, 5, 6 | Gear changes max, never current |
 | A healer in reach | 3, 5 | Each draft offers one while the party has none |
 | Swaps after a campfire's pick | 4 | Open until LEAVE |
 | A smaller free rest for the bench | 2, 4 | Half a REST and half a FOCUS |
