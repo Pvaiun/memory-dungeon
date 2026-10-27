@@ -1,82 +1,82 @@
 {
  "old_road": {
-  "mob": -26,
-  "boss": -74
+  "mob": 7,
+  "boss": -24
  },
  "road_at_night": {
-  "mob": 4,
-  "boss": -20
+  "mob": 57,
+  "boss": -2
  },
  "wildfire": {
-  "mob": 18,
-  "boss": -37
+  "mob": 86,
+  "boss": 53
  },
  "crypt": {
-  "mob": 88,
-  "boss": -7
+  "mob": 211,
+  "boss": 306
  },
  "ossuary": {
-  "mob": 76,
-  "boss": 32
+  "mob": 144,
+  "boss": 182
  },
  "ogre_brothers": {
-  "mob": 96,
-  "boss": -28
+  "mob": 100,
+  "boss": -88
  },
  "fire_mine": {
-  "mob": 57,
+  "mob": 85,
   "boss": -75
  },
  "deep_freeze": {
-  "mob": 67,
-  "boss": -66
+  "mob": 110,
+  "boss": -74
  },
  "iron_wall": {
-  "mob": 4,
-  "boss": -76
+  "mob": 0,
+  "boss": -88
  },
  "ice_pass": {
-  "mob": 72,
-  "boss": -12
+  "mob": 117,
+  "boss": 23
  },
  "valhalla": {
-  "mob": 95,
-  "boss": -30
+  "mob": 135,
+  "boss": -10
  },
  "wild_hunt": {
-  "mob": 72,
-  "boss": 8
+  "mob": 130,
+  "boss": -3
  },
  "storm_tower": {
-  "mob": 120,
-  "boss": 1
+  "mob": 135,
+  "boss": -5
  },
  "knives_out": {
-  "mob": 48,
-  "boss": -17
- },
- "long_road": {
-  "mob": 57,
-  "boss": 38
- },
- "deep_crypt": {
-  "mob": 122,
-  "boss": 43
- },
- "blood_moon": {
-  "mob": 72,
-  "boss": 28
- },
- "judgement": {
-  "mob": 37,
+  "mob": 66,
   "boss": -56
  },
+ "long_road": {
+  "mob": 85,
+  "boss": 138
+ },
+ "deep_crypt": {
+  "mob": 137,
+  "boss": 163
+ },
+ "blood_moon": {
+  "mob": 142,
+  "boss": 45
+ },
+ "judgement": {
+  "mob": 97,
+  "boss": -69
+ },
  "tower_top": {
-  "mob": 76,
-  "boss": -40
+  "mob": 54,
+  "boss": -17
  },
  "royal_court": {
-  "mob": 115,
-  "boss": -72
+  "mob": 168,
+  "boss": -69
  }
 }
