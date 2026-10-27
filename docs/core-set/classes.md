@@ -4,6 +4,8 @@ Oct 23, 2026 · @Paul Suddaby
 
 *Updated Oct 26, 2026, when the campaign work joined main: the kits the director changed after playing it are written in here (the Knight, Cleric, Ranger, Bramble knight, Paladin, Bard and Assassin entries, and Bleed for Poison throughout). The tests, the parties of 3 and the tier check are the original design's reasoning, with the changed names swapped in; where a test leans on a removed piece, it says so. `DECISIONS.md` has the reasons, and `content/core-set/` the numbers.*
 
+*Updated Oct 27, 2026, by the balance pass (step 5e, awaiting the director's read): the Bard, Hexer and Assassin stand at HP 3 (the original 2; at 2 they were knocked out before their kits played), and Allegro's Haste goes to the ally with the highest Attack or Magic (was a random ally). The pass changed numbers everywhere else without touching the words here; `steps/05-core-set/5e-balance/report.md` has them.*
+
 The 16 core classes for the first playable. The rules and vocabulary they build on are in *Core set: rules and vocabulary*; the gear and formation pieces are in *Core set: gear and formation lists*; the challenges named in the tests and parties are in *Core set: enemies*.
 
 ## The classes
@@ -52,17 +54,17 @@ Not in the core set for now: Berserker (the first to add next: Might, Lifesteal 
 | Hoplite | 4 | 2 | 2 | 3 | 1 | 5 | 2 | 3 |
 | Paladin | 4 | 3 | 3 | 3 | 4 | 4 | 2 | 3 |
 | Valkyrie | 3 | 3 | 3 | 4 | 3 | 3 | 3 | 3 |
-| Bard | 2 | 4 | 3 | 3 | 3 | 2 | 2 | 2 |
-| Hexer | 2 | 4 | 3 | 1 | 4 | 1 | 2 | 2 |
+| Bard | 3 | 4 | 3 | 3 | 3 | 2 | 2 | 2 |
+| Hexer | 3 | 4 | 3 | 1 | 4 | 1 | 2 | 2 |
 | Monk | 3 | 2 | 3 | 4 | 1 | 2 | 3 | 3 |
-| Assassin | 2 | 3 | 3 | 5 | 1 | 2 | 5 | 1 |
+| Assassin | 3 | 3 | 3 | 5 | 1 | 2 | 5 | 1 |
 | Vampire | 4 | 2 | 2 | 4 | 2 | 2 | 2 | 3 |
 | Pyromancer | 2 | 5 | 2 | 1 | 5 | 1 | 2 | 3 |
 | Frostweaver | 2 | 4 | 3 | 1 | 4 | 2 | 2 | 2 |
 | Stormcaller | 2 | 3 | 3 | 1 | 4 | 1 | 2 | 3 |
 | Geomancer | 3 | 3 | 3 | 3 | 4 | 4 | 4 | 3 |
 
-Crit is Crit chance. Resistances and special stats are listed with each class below. The Knight's HP was 5 until Oct 26, 2026 (to try, with Protect on a long cooldown: it was in 69% of the best builds).
+Crit is Crit chance. Resistances and special stats are listed with each class below. The Knight's HP was 5 until Oct 26, 2026 (to try, with Protect on a long cooldown: it was in 69% of the best builds). The Bard's, Hexer's and Assassin's HP was 2 until Oct 27, 2026 (step 5e: at HP 2 the three were knocked out in 44 to 65 of 100 campaign fights, before their kits played, and their parties lost 10 to 25 points more than parties without them; the director's call to keep or revert).
 
 ## Starting classes
 
@@ -172,7 +174,7 @@ Six classes that win through the party: a tank that punishes, a bodyguard, a she
 **Weapons:** dagger, bow. **Armor weight:** medium. **Special stats:** none. **Resistances:** none.
 
 - **Passive – Refrain.** Each of its basic attacks that lands gives a random ally a little MP. (Encore, which went to the Cleric, until Oct 25, 2026.)
-- **Allegro.** Applies Haste to a random ally. Medium cooldown, normal wind-up.
+- **Allegro.** Applies Haste to the ally with the highest Attack or Magic. Medium cooldown, normal wind-up. (A random ally until Oct 27, 2026.)
 - **War ballad.** Adds many Might to the ally with the highest Attack or Magic; stacks scale from Magic. Medium cooldown, normal wind-up.
 - **Thunder chord.** Adds many Shock to every foe; stacks scale from Magic. Medium cooldown, normal wind-up. (Lullaby, Slow on a random foe, until Oct 26, 2026.)
 

@@ -2,6 +2,8 @@
 
 Oct 23, 2026 · @Paul Suddaby
 
+*Updated Oct 27, 2026, by the balance pass (step 5e, awaiting the director's read): a formation slot's step is one and a half gear steps (the sim found the five formations with no effect within 3 points of Neutral; this doc's own fix), Caravan's Regen is a short one (8 ticks of the status's 16), Escort's slots carry Aggro alone and its Shield is 0.12 of max HP. The gear pieces are as written: probed one by one, every piece sits within a few points of its slot's mean.*
+
 *Updated Oct 26, 2026, when the campaign work joined main. The pieces are as written; three things around them changed. Aggro is centred on 100, so an Aggro step here is ±10 and foes pick by draw, which keeps every unit between a third and three times an ordinary unit's pull (*Core set: rules and vocabulary*, Targeting). A step of HP on gear or a formation slot is half a point, not one (at one, HP was every class's best kit). The Cleric lost Mercy and Prayer (*Core set: classes*), so the lines that leaned on them say what's left. `DECISIONS.md` has the reasons.*
 
 ## About this doc
@@ -251,7 +253,7 @@ Bundles, not bigger numbers: none is a superset of an ordinary charm.
 
 The neutral formation plus nine, each telling a party's story, with no budget between slots. Some slots are plain bonuses, some are a bonus bought with a penalty, two only take, and the magnitudes differ on purpose: Vanguard is small and costs nothing, Champion and Tortoise swing hard, and the four with an effect carry part of their power there, so their slots are smaller. Every slot says one thing: a unit in it is sturdier or squishier, hits harder or softer, draws more or less, never two of those pulling against each other. "Attack +1, Magic +1" raises both, so one slot serves a physical or a magical unit alike. Effects are flat, every ally on a trigger, and no effect gives Taunt.
 
-**Weight.** A full slot here is worth about one gear piece, so a formation adds roughly a fourth slot to every unit: more on a cursed slot, less on a small one. Whether that's enough to make the formation a decision rather than an afterthought is for the sim. If it isn't, the fix is a bigger step on every slot, not more slots.
+**Weight.** A full slot here is worth about one gear piece, so a formation adds roughly a fourth slot to every unit: more on a cursed slot, less on a small one. Whether that's enough to make the formation a decision rather than an afterthought is for the sim. If it isn't, the fix is a bigger step on every slot, not more slots. (The sim said it wasn't, Oct 27, 2026: probed on the same parties, the five formations with no effect sat within 3 points of Neutral while the effects were worth 7 to 20. A slot's step is now one and a half gear steps, and the effects were trimmed: step 5e.)
 
 ### Neutral — the start
 
@@ -343,7 +345,7 @@ For Long grind.
 | Quartermaster | MP regen +2, Attack −2, Magic −2 |
 | Traveller (two of these) | HP +1 |
 
-**Effect:** when the fight starts, every ally gains Regen.
+**Effect:** when the fight starts, every ally gains a short Regen (8 ticks of the status's 16, step 5e: the full Regen on every ally at every fight's start was worth two Clerics, and the same parties won 20 points more in Caravan than in Neutral).
 
 The Quartermaster gives up hitting to keep its own MP flowing, so it's for a unit whose costly abilities don't scale from Attack or Magic: a Cleric saving for Renew and Raise. A Regen at the start of every fight is real healing in a dungeon that never heals between fights.
 
@@ -366,10 +368,10 @@ For Tank buster, Executioner.
 
 | Slot | Changes |
 | --- | --- |
-| Escort (two of these) | Aggro +1, Armor +1, HP +1 |
+| Escort (two of these) | Aggro +1 (Armor +1 and HP +1 until the campaign and step 5e took them: with every slot a plain bonus and an effect on top, the same parties won 11 points more in it than in Neutral) |
 | Charge | Aggro −2, Attack +1, Magic +1, Crit chance +1 |
 
-**Effect:** when an ally is knocked out, every other ally gains Shield; the amount scales from its max HP, as Protect does.
+**Effect:** when an ally is knocked out, every other ally gains Shield; the amount scales from its max HP, as Protect does (0.12 of it, step 5e).
 
 Moderate slots with nothing taken away: the carry is protected, not stretched. Where Last stand plans for the knockout, Escort insures against it: the Shield is for the fight where a protector falls anyway, so the Charge lives to finish it.
 

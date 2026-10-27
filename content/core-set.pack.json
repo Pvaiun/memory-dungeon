@@ -59,9 +59,9 @@
    "min": 0.3,
    "max": 0.7,
    "slots": [
-    20,
+    16,
     12,
-    6
+    8
    ]
   },
   "stagger": 1.5,
@@ -423,7 +423,7 @@
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
-   "duration": 24,
+   "duration": 16,
    "pulse": {
     "every": 2,
     "do": [
@@ -432,7 +432,7 @@
       "amount": {
        "scale": [
         {
-         "ratio": 0.03,
+         "ratio": 0.02,
          "stat": "max_hp",
          "of": "holder"
         }
@@ -659,7 +659,7 @@
      {
       "op": "damage",
       "type": "none",
-      "amount": 60,
+      "amount": 70,
       "to": "holder"
      }
     ]
@@ -723,7 +723,7 @@
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
-   "duration": 14,
+   "duration": 20,
    "unremovable": true,
    "stats": [
     {
@@ -892,7 +892,7 @@
       "amount": {
        "scale": [
         {
-         "ratio": 0.05,
+         "ratio": 0.04,
          "stat": "mp_regen",
          "of": "holder"
         }
@@ -1604,7 +1604,7 @@
   {
    "id": "caravan_pace",
    "name": "Caravan",
-   "text": "Regen when the fight starts.",
+   "text": "A short Regen when the fight starts.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -1618,6 +1618,7 @@
       {
        "op": "apply",
        "status": "regen",
+       "duration": 8,
        "to": "holder"
       }
      ]
@@ -1670,7 +1671,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.25,
+          "ratio": 0.12,
           "stat": "max_hp",
           "of": "holder"
          }
@@ -1783,7 +1784,7 @@
        "amount": {
         "scale": [
          {
-          "ratio": 0.25,
+          "ratio": 0.15,
           "stat": "magic",
           "of": "holder"
          }
@@ -3075,7 +3076,7 @@
     "armor": 3000,
     "crit_chance": 8,
     "aggro": 110,
-    "thorns": 300,
+    "thorns": 250,
     "resist:fire": -50
    },
    "weapons": [
@@ -3200,7 +3201,7 @@
    "text": "Party tempo. Plays the fight's tempo: allies faster and stronger, every foe shocked by its thunder, and every note it strikes gives an ally a little mana.",
    "source": "unlock",
    "stats": {
-    "max_hp": 2000,
+    "max_hp": 3000,
     "max_mp": 4000,
     "mp_regen": 3000,
     "attack": 3000,
@@ -3233,7 +3234,7 @@
    "text": "Curser. Curses the most dangerous foe into a crawl, silenced, weakened, slowed and chilled, and strips foes' buffs one at a time.",
    "source": "unlock",
    "stats": {
-    "max_hp": 2000,
+    "max_hp": 3000,
     "max_mp": 4000,
     "mp_regen": 3000,
     "attack": 1000,
@@ -3302,7 +3303,7 @@
    "text": "Burst killer. Slips out of sight, picks off the weakest foe past any guard, leaves every crit a bleeding wound, and silences the back line.",
    "source": "unlock",
    "stats": {
-    "max_hp": 2000,
+    "max_hp": 3000,
     "max_mp": 3000,
     "mp_regen": 3000,
     "attack": 5000,
@@ -3345,7 +3346,7 @@
     "armor": 2000,
     "crit_chance": 8,
     "aggro": 100,
-    "lifesteal": 30,
+    "lifesteal": 15,
     "resist:light": -50,
     "resist:dark": 50
    },
@@ -3530,7 +3531,7 @@
    "class": "knight",
    "name": "Protect",
    "text": "Shields the lowest ally; the amount scales from the Knight's max HP.",
-   "cooldown": 40.2,
+   "cooldown": 34.4,
    "cast": 1.5,
    "mp": 160,
    "if": {
@@ -3633,7 +3634,7 @@
    "text": "A quick, small heal on the lowest ally.",
    "cooldown": 24.8,
    "cast": 0.5,
-   "mp": 1280,
+   "mp": 1000,
    "if": {
     "side": "allies",
     "where": {
@@ -3651,7 +3652,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.45,
+        "ratio": 0.65,
         "stat": "magic"
        }
       ]
@@ -3664,8 +3665,8 @@
    "class": "cleric",
    "name": "Raise",
    "text": "Revives a random knocked-out ally with half its HP.",
-   "cooldown": 42,
-   "cast": 8,
+   "cooldown": 36,
+   "cast": 6,
    "mp": 2000,
    "if": {
     "side": "allies",
@@ -3953,7 +3954,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.75,
+        "ratio": 1.5,
         "stat": "attack"
        }
       ]
@@ -3979,7 +3980,7 @@
    "class": "paladin",
    "name": "Sanctuary",
    "text": "Ward on every ally.",
-   "cooldown": 38.1,
+   "cooldown": 32.6,
    "cast": 4,
    "mp": 700,
    "target": {
@@ -3998,7 +3999,7 @@
    "class": "paladin",
    "name": "Absolve",
    "text": "Cleanses itself and one random other ally with a debuff.",
-   "cooldown": 43,
+   "cooldown": 36.8,
    "cast": 0.5,
    "mp": 500,
    "if": {
@@ -4031,7 +4032,7 @@
    "name": "Smite",
    "text": "Heavy Light damage to the foe with the highest Attack or Magic, adding several Burn.",
    "cooldown": 31,
-   "cast": 8,
+   "cast": 6,
    "mp": 800,
    "target": {
     "side": "foes",
@@ -4079,7 +4080,7 @@
    "text": "Three quick Wind hits on a foe that isn't Taunting, each adding a few Shock.",
    "cooldown": 24.6,
    "cast": 0.5,
-   "mp": 400,
+   "mp": 500,
    "seek": true,
    "target": {
     "side": "foes",
@@ -4096,7 +4097,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.25,
+        "ratio": 0.2,
         "stat": "attack"
        }
       ]
@@ -4125,7 +4126,7 @@
    "text": "Heals the lowest ally; the amount scales from Magic.",
    "cooldown": 29,
    "cast": 1.5,
-   "mp": 650,
+   "mp": 800,
    "if": {
     "side": "allies",
     "where": {
@@ -4143,7 +4144,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.7,
+        "ratio": 0.45,
         "stat": "magic"
        }
       ]
@@ -4156,9 +4157,9 @@
    "class": "valkyrie",
    "name": "Valhalla",
    "text": "Revives a random knocked-out ally with a tenth of its HP, every action ready.",
-   "cooldown": 47.3,
+   "cooldown": 40.5,
    "cast": 0.5,
-   "mp": 1200,
+   "mp": 1500,
    "if": {
     "side": "allies",
     "where": {
@@ -4191,11 +4192,20 @@
    "id": "allegro",
    "class": "bard",
    "name": "Allegro",
-   "text": "Haste on a random ally.",
+   "text": "Haste on the ally with the highest Attack or Magic.",
    "cooldown": 34,
    "cast": 1.5,
-   "mp": 650,
-   "target": "ally",
+   "mp": 400,
+   "target": {
+    "side": "allies",
+    "pick": "highest",
+    "by": {
+     "stats": [
+      "attack",
+      "magic"
+     ]
+    }
+   },
    "do": [
     {
      "op": "apply",
@@ -4210,7 +4220,7 @@
    "text": "Many Might on the ally with the highest Attack or Magic.",
    "cooldown": 36.5,
    "cast": 1.5,
-   "mp": 650,
+   "mp": 400,
    "target": {
     "side": "allies",
     "pick": "highest",
@@ -4243,7 +4253,7 @@
    "text": "Many Shock on every foe.",
    "cooldown": 35.2,
    "cast": 1.5,
-   "mp": 650,
+   "mp": 400,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -4268,9 +4278,9 @@
    "class": "hexer",
    "name": "Hush",
    "text": "Silences the foe with the highest Attack or Magic.",
-   "cooldown": 36.2,
+   "cooldown": 31.1,
    "cast": 0.5,
-   "mp": 1600,
+   "mp": 1200,
    "if": {
     "side": "foes",
     "where": {
@@ -4304,7 +4314,7 @@
    "text": "Strips one random buff from a random foe with a buff.",
    "cooldown": 35.1,
    "cast": 1.5,
-   "mp": 1300,
+   "mp": 900,
    "if": {
     "side": "foes",
     "where": {
@@ -4333,7 +4343,7 @@
    "text": "Weakens and Slows the foe with the highest Attack or Magic.",
    "cooldown": 28.9,
    "cast": 1.5,
-   "mp": 1300,
+   "mp": 1000,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -4465,7 +4475,7 @@
    "class": "assassin",
    "name": "Vanish",
    "text": "Goes Hidden.",
-   "cooldown": 46.8,
+   "cooldown": 40.1,
    "cast": 0.5,
    "mp": 250,
    "if": {
@@ -4517,7 +4527,7 @@
    "class": "assassin",
    "name": "Garrote",
    "text": "Silences a random foe that isn't Taunting, past any guard.",
-   "cooldown": 44.6,
+   "cooldown": 38.2,
    "cast": 0.5,
    "mp": 250,
    "seek": true,
@@ -4568,7 +4578,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.75,
+        "ratio": 0.4,
         "stat": "max_hp"
        }
       ]
@@ -4715,8 +4725,8 @@
    "class": "pyromancer",
    "name": "Pyre",
    "text": "Heavy Fire on the foe with the most Burn, rising with each stack. The Burn stays.",
-   "cooldown": 47.1,
-   "cast": 8,
+   "cooldown": 40.4,
+   "cast": 6,
    "mp": 2000,
    "target": {
     "side": "foes",
@@ -4797,7 +4807,7 @@
    "text": "Ice on every foe, adding a few Chill to each.",
    "cooldown": 28.3,
    "cast": 4,
-   "mp": 1300,
+   "mp": 1000,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -4836,9 +4846,9 @@
    "class": "frostweaver",
    "name": "Stillness",
    "text": "Clarity on a random ally.",
-   "cooldown": 46.4,
+   "cooldown": 39.7,
    "cast": 0.5,
-   "mp": 1600,
+   "mp": 400,
    "target": "ally",
    "do": [
     {
@@ -4962,9 +4972,9 @@
    "class": "stormcaller",
    "name": "Static charge",
    "text": "Haste on itself.",
-   "cooldown": 43.5,
+   "cooldown": 37.3,
    "cast": 4,
-   "mp": 1200,
+   "mp": 400,
    "target": "self",
    "do": [
     {
@@ -5059,7 +5069,7 @@
    "name": "Tremor",
    "text": "Earth damage on a random foe, which is Stunned.",
    "cooldown": 29.1,
-   "cast": 8,
+   "cast": 6,
    "mp": 1200,
    "target": {
     "side": "foes",
@@ -5108,7 +5118,7 @@
    "id": "brace",
    "name": "Brace",
    "text": "Guards itself.",
-   "cooldown": 47.4,
+   "cooldown": 39.5,
    "cast": 0.5,
    "mp": 650,
    "target": "self",
@@ -5123,7 +5133,7 @@
    "id": "flatten",
    "name": "Flatten",
    "text": "A heavy blow that Stuns.",
-   "cooldown": 76.1,
+   "cooldown": 65.3,
    "cast": 4,
    "mp": 1000,
    "target": {
@@ -5158,8 +5168,8 @@
    "id": "crush",
    "name": "Crush",
    "text": "A massive blow.",
-   "cooldown": 48.6,
-   "cast": 8,
+   "cooldown": 40.5,
+   "cast": 6,
    "mp": 650,
    "do": [
     {
@@ -5213,7 +5223,7 @@
    "id": "curse",
    "name": "Curse",
    "text": "Weakens and Slows every foe.",
-   "cooldown": 65.5,
+   "cooldown": 56.1,
    "cast": 4,
    "mp": 1000,
    "target": {
@@ -5235,8 +5245,8 @@
    "id": "soulfire",
    "name": "Soulfire",
    "text": "A heavy Dark spell.",
-   "cooldown": 78.6,
-   "cast": 8,
+   "cooldown": 67.4,
+   "cast": 6,
    "mp": 1000,
    "do": [
     {
@@ -5258,7 +5268,7 @@
    "id": "dig_up",
    "name": "Raise",
    "text": "Digs a fallen packmate back up.",
-   "cooldown": 43.7,
+   "cooldown": 36.5,
    "cast": 4,
    "mp": 650,
    "if": {
@@ -5292,7 +5302,7 @@
    "id": "death_bell",
    "name": "Death bell",
    "text": "Dooms a foe.",
-   "cooldown": 49.9,
+   "cooldown": 41.5,
    "cast": 4,
    "mp": 650,
    "if": {
@@ -5318,7 +5328,7 @@
    "id": "mute",
    "name": "Mute",
    "text": "Silences the foe with the highest Attack or Magic.",
-   "cooldown": 47.6,
+   "cooldown": 39.7,
    "cast": 1.5,
    "mp": 650,
    "if": {
@@ -5351,7 +5361,7 @@
    "id": "quiet",
    "name": "Quiet",
    "text": "Silences every foe.",
-   "cooldown": 46.4,
+   "cooldown": 38.7,
    "cast": 4,
    "mp": 650,
    "target": {
@@ -5369,7 +5379,7 @@
    "id": "cheer",
    "name": "Cheer",
    "text": "Might and Haste on its strongest ally.",
-   "cooldown": 53.5,
+   "cooldown": 44.6,
    "cast": 1.5,
    "mp": 650,
    "target": {
@@ -5427,8 +5437,8 @@
    "id": "inferno",
    "name": "Inferno",
    "text": "A very long cast: huge Fire on every foe, with many Burn.",
-   "cooldown": 50.5,
-   "cast": 8,
+   "cooldown": 42.1,
+   "cast": 6,
    "mp": 650,
    "target": {
     "side": "foes",
@@ -5460,7 +5470,7 @@
    "id": "hailstorm",
    "name": "Hailstorm",
    "text": "Ice on every foe, with a stack of Chill.",
-   "cooldown": 52.8,
+   "cooldown": 44,
    "cast": 1.5,
    "mp": 650,
    "target": {
@@ -5493,7 +5503,7 @@
    "id": "call_drones",
    "name": "Call drones",
    "text": "Summons two Drones.",
-   "cooldown": 45.9,
+   "cooldown": 38.3,
    "cast": 4,
    "mp": 650,
    "do": [
@@ -5508,7 +5518,7 @@
    "id": "tempest",
    "name": "Tempest",
    "text": "Lightning on every foe, with a stack of Shock.",
-   "cooldown": 51.1,
+   "cooldown": 42.6,
    "cast": 4,
    "mp": 650,
    "target": {
@@ -5541,7 +5551,7 @@
    "id": "rally_soldiers",
    "name": "Rally",
    "text": "Summons two Soldiers.",
-   "cooldown": 48.9,
+   "cooldown": 40.7,
    "cast": 4,
    "mp": 650,
    "do": [
@@ -5952,7 +5962,7 @@
    "stats": [
     {
      "stat": "lifesteal",
-     "flat": 15
+     "flat": 8
     },
     {
      "stat": "max_hp",
@@ -7143,7 +7153,7 @@
    "stats": [
     {
      "stat": "thorns",
-     "flat": 300
+     "flat": 250
     },
     {
      "stat": "aggro",
@@ -7243,7 +7253,7 @@
    "stats": [
     {
      "stat": "lifesteal",
-     "flat": 15
+     "flat": 8
     },
     {
      "stat": "max_hp",
@@ -7487,7 +7497,7 @@
     },
     {
      "stat": "lifesteal",
-     "flat": 15
+     "flat": 8
     }
    ]
   },
@@ -7501,7 +7511,7 @@
    "stats": [
     {
      "stat": "lifesteal",
-     "flat": 30
+     "flat": 15
     },
     {
      "stat": "max_hp",
@@ -7600,11 +7610,11 @@
      "stats": [
       {
        "stat": "aggro",
-       "flat": 20
+       "flat": 30
       },
       {
        "stat": "armor",
-       "flat": 1000
+       "flat": 1500
       }
      ]
     },
@@ -7619,7 +7629,7 @@
      "stats": [
       {
        "stat": "aggro",
-       "flat": -10
+       "flat": -15
       }
      ]
     },
@@ -7634,7 +7644,7 @@
      "stats": [
       {
        "stat": "aggro",
-       "flat": -10
+       "flat": -15
       }
      ]
     }
@@ -7657,19 +7667,19 @@
      "stats": [
       {
        "stat": "max_hp",
-       "flat": 1000
+       "flat": 1500
       },
       {
        "stat": "armor",
-       "flat": 2000
+       "flat": 3000
       },
       {
        "stat": "attack",
-       "flat": 2000
+       "flat": 3000
       },
       {
        "stat": "magic",
-       "flat": 2000
+       "flat": 3000
       }
      ]
     },
@@ -7684,11 +7694,11 @@
      "stats": [
       {
        "stat": "attack",
-       "flat": -2000
+       "flat": -3000
       },
       {
        "stat": "magic",
-       "flat": -2000
+       "flat": -3000
       }
      ]
     },
@@ -7703,11 +7713,11 @@
      "stats": [
       {
        "stat": "attack",
-       "flat": -2000
+       "flat": -3000
       },
       {
        "stat": "magic",
-       "flat": -2000
+       "flat": -3000
       }
      ]
     }
@@ -7730,7 +7740,7 @@
      "stats": [
       {
        "stat": "aggro",
-       "flat": 20
+       "flat": 30
       }
      ]
     },
@@ -7745,11 +7755,11 @@
      "stats": [
       {
        "stat": "crit_chance",
-       "flat": 8
+       "flat": 12
       },
       {
        "stat": "max_hp",
-       "flat": -500
+       "flat": -750
       }
      ]
     },
@@ -7764,7 +7774,7 @@
      "stats": [
       {
        "stat": "crit_chance",
-       "flat": 4
+       "flat": 6
       }
      ]
     }
@@ -7787,7 +7797,7 @@
      "stats": [
       {
        "stat": "armor",
-       "flat": 2000
+       "flat": 3000
       }
      ]
     },
@@ -7802,7 +7812,7 @@
      "stats": [
       {
        "stat": "max_hp",
-       "flat": 1000
+       "flat": 1500
       }
      ]
     },
@@ -7817,11 +7827,11 @@
      "stats": [
       {
        "stat": "attack",
-       "flat": -2000
+       "flat": -3000
       },
       {
        "stat": "magic",
-       "flat": -2000
+       "flat": -3000
       }
      ]
     }
@@ -7848,11 +7858,11 @@
       },
       {
        "stat": "aggro",
-       "flat": 20
+       "flat": 30
       },
       {
        "stat": "armor",
-       "flat": -1000
+       "flat": -1500
       }
      ]
     },
@@ -7867,7 +7877,7 @@
      "stats": [
       {
        "stat": "aggro",
-       "flat": -10
+       "flat": -15
       }
      ]
     },
@@ -7882,7 +7892,7 @@
      "stats": [
       {
        "stat": "aggro",
-       "flat": -10
+       "flat": -15
       }
      ]
     }
@@ -7905,15 +7915,15 @@
      "stats": [
       {
        "stat": "attack",
-       "flat": 1000
+       "flat": 1500
       },
       {
        "stat": "magic",
-       "flat": 1000
+       "flat": 1500
       },
       {
        "stat": "max_hp",
-       "flat": -500
+       "flat": -750
       }
      ]
     },
@@ -7928,15 +7938,15 @@
      "stats": [
       {
        "stat": "attack",
-       "flat": 1000
+       "flat": 1500
       },
       {
        "stat": "magic",
-       "flat": 1000
+       "flat": 1500
       },
       {
        "stat": "max_hp",
-       "flat": -500
+       "flat": -750
       }
      ]
     },
@@ -7951,15 +7961,15 @@
      "stats": [
       {
        "stat": "attack",
-       "flat": 1000
+       "flat": 1500
       },
       {
        "stat": "magic",
-       "flat": 1000
+       "flat": 1500
       },
       {
        "stat": "max_hp",
-       "flat": -500
+       "flat": -750
       }
      ]
     }
@@ -7985,15 +7995,15 @@
      "stats": [
       {
        "stat": "mp_regen",
-       "flat": 2000
+       "flat": 3000
       },
       {
        "stat": "attack",
-       "flat": -2000
+       "flat": -3000
       },
       {
        "stat": "magic",
-       "flat": -2000
+       "flat": -3000
       }
      ]
     },
@@ -8008,7 +8018,7 @@
      "stats": [
       {
        "stat": "max_hp",
-       "flat": 500
+       "flat": 750
       }
      ]
     },
@@ -8023,7 +8033,7 @@
      "stats": [
       {
        "stat": "max_hp",
-       "flat": 500
+       "flat": 750
       }
      ]
     }
@@ -8049,11 +8059,11 @@
      "stats": [
       {
        "stat": "aggro",
-       "flat": 20
+       "flat": 30
       },
       {
        "stat": "max_hp",
-       "flat": -1000
+       "flat": -1500
       }
      ]
     },
@@ -8087,7 +8097,7 @@
     {
      "id": "escort_a",
      "name": "Escort",
-     "text": "Draws more, armored.",
+     "text": "Draws more.",
      "layout": {
       "line": "front",
       "column": 0
@@ -8095,18 +8105,14 @@
      "stats": [
       {
        "stat": "aggro",
-       "flat": 10
-      },
-      {
-       "stat": "armor",
-       "flat": 1000
+       "flat": 15
       }
      ]
     },
     {
      "id": "escort_b",
      "name": "Escort",
-     "text": "Draws more, armored.",
+     "text": "Draws more.",
      "layout": {
       "line": "middle",
       "column": 1
@@ -8114,11 +8120,7 @@
      "stats": [
       {
        "stat": "aggro",
-       "flat": 10
-      },
-      {
-       "stat": "armor",
-       "flat": 1000
+       "flat": 15
       }
      ]
     },
@@ -8133,19 +8135,19 @@
      "stats": [
       {
        "stat": "aggro",
-       "flat": -20
+       "flat": -30
       },
       {
        "stat": "attack",
-       "flat": 1000
+       "flat": 1500
       },
       {
        "stat": "magic",
-       "flat": 1000
+       "flat": 1500
       },
       {
        "stat": "crit_chance",
-       "flat": 4
+       "flat": 6
       }
      ]
     }
@@ -9066,6 +9068,13 @@
      ]
     },
     {
+     "kind": "campfire",
+     "id": "campfire",
+     "hp": 40,
+     "mp": 60,
+     "revive": 40
+    },
+    {
      "kind": "fight",
      "id": "bandit_camp",
      "name": "4. Bandit Camp",
@@ -9130,6 +9139,13 @@
       "bat",
       "bat"
      ]
+    },
+    {
+     "kind": "campfire",
+     "id": "campfire",
+     "hp": 40,
+     "mp": 60,
+     "revive": 40
     },
     {
      "kind": "fight",
@@ -9197,6 +9213,13 @@
      ]
     },
     {
+     "kind": "campfire",
+     "id": "campfire",
+     "hp": 40,
+     "mp": 60,
+     "revive": 40
+    },
+    {
      "kind": "fight",
      "id": "bomb_room",
      "name": "16. Bomb Room",
@@ -9259,6 +9282,13 @@
       "ice_golem",
       "ice_golem"
      ]
+    },
+    {
+     "kind": "campfire",
+     "id": "campfire",
+     "hp": 40,
+     "mp": 60,
+     "revive": 40
     },
     {
      "kind": "fight",
@@ -9330,6 +9360,13 @@
      ]
     },
     {
+     "kind": "campfire",
+     "id": "campfire",
+     "hp": 40,
+     "mp": 60,
+     "revive": 40
+    },
+    {
      "kind": "fight",
      "id": "leech_den",
      "name": "25. Leech Den",
@@ -9383,6 +9420,13 @@
      ]
     },
     {
+     "kind": "campfire",
+     "id": "campfire",
+     "hp": 40,
+     "mp": 60,
+     "revive": 40
+    },
+    {
      "kind": "fight",
      "id": "silent_hall",
      "name": "27. Silent Hall",
@@ -9426,6 +9470,13 @@
       "leech",
       "leech"
      ]
+    },
+    {
+     "kind": "campfire",
+     "id": "campfire",
+     "hp": 40,
+     "mp": 60,
+     "revive": 40
     },
     {
      "kind": "fight",
@@ -9534,12 +9585,12 @@
     }
    ],
    "foes": {
-    "hp": -24,
-    "power": -12
+    "hp": -26,
+    "power": -13
    },
    "bossFoes": {
-    "hp": -80,
-    "power": -44
+    "hp": -74,
+    "power": -37
    }
   },
   {
@@ -9552,12 +9603,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 8,
-    "power": 4
+    "hp": 4,
+    "power": 2
    },
    "bossFoes": {
-    "hp": -50,
-    "power": -25
+    "hp": -20,
+    "power": -10
    },
    "stages": [
     {
@@ -9635,12 +9686,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 31,
-    "power": 16
-   },
-   "bossFoes": {
     "hp": 18,
     "power": 9
+   },
+   "bossFoes": {
+    "hp": -37,
+    "power": -18
    },
    "stages": [
     {
@@ -9784,8 +9835,8 @@
     "power": 44
    },
    "bossFoes": {
-    "hp": -80,
-    "power": -40
+    "hp": -7,
+    "power": -3
    }
   },
   {
@@ -9798,12 +9849,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 78,
-    "power": 39
+    "hp": 76,
+    "power": 38
    },
    "bossFoes": {
-    "hp": -21,
-    "power": -10
+    "hp": 32,
+    "power": 16
    },
    "stages": [
     {
@@ -9870,12 +9921,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 100,
-    "power": 50
+    "hp": 96,
+    "power": 48
    },
    "bossFoes": {
-    "hp": -45,
-    "power": -22
+    "hp": -28,
+    "power": -14
    },
    "stages": [
     {
@@ -9998,12 +10049,12 @@
     }
    ],
    "foes": {
-    "hp": 27,
-    "power": 14
+    "hp": 57,
+    "power": 29
    },
    "bossFoes": {
-    "hp": -80,
-    "power": -44
+    "hp": -75,
+    "power": -37
    }
   },
   {
@@ -10016,12 +10067,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 71,
-    "power": 36
+    "hp": 67,
+    "power": 34
    },
    "bossFoes": {
-    "hp": -50,
-    "power": -25
+    "hp": -66,
+    "power": -33
    },
    "stages": [
     {
@@ -10089,12 +10140,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": -6,
-    "power": -3
+    "hp": 4,
+    "power": 2
    },
    "bossFoes": {
-    "hp": -80,
-    "power": -41
+    "hp": -76,
+    "power": -38
    },
    "stages": [
     {
@@ -10220,12 +10271,12 @@
     }
    ],
    "foes": {
-    "hp": 89,
-    "power": 45
+    "hp": 72,
+    "power": 36
    },
    "bossFoes": {
-    "hp": 7,
-    "power": 4
+    "hp": -12,
+    "power": -6
    }
   },
   {
@@ -10238,12 +10289,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 110,
-    "power": 55
+    "hp": 95,
+    "power": 48
    },
    "bossFoes": {
-    "hp": -8,
-    "power": -4
+    "hp": -30,
+    "power": -15
    },
    "stages": [
     {
@@ -10314,16 +10365,16 @@
      "haste"
     ],
     "text": "Every foe starts each fight Hasted.",
-    "hp": 91,
-    "power": 46
+    "hp": 72,
+    "power": 36
    },
    "bossFoes": {
     "statuses": [
      "haste"
     ],
     "text": "Every foe starts each fight Hasted.",
-    "hp": -7,
-    "power": -3
+    "hp": 8,
+    "power": 4
    },
    "stages": [
     {
@@ -10456,12 +10507,12 @@
     }
    ],
    "foes": {
-    "hp": 146,
-    "power": 73
+    "hp": 120,
+    "power": 60
    },
    "bossFoes": {
-    "hp": 12,
-    "power": 6
+    "hp": 1,
+    "power": 1
    }
   },
   {
@@ -10474,12 +10525,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 74,
-    "power": 37
+    "hp": 48,
+    "power": 24
    },
    "bossFoes": {
-    "hp": -37,
-    "power": -18
+    "hp": -17,
+    "power": -8
    },
    "stages": [
     {
@@ -10549,12 +10600,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 108,
-    "power": 54
+    "hp": 57,
+    "power": 29
    },
    "bossFoes": {
-    "hp": 141,
-    "power": 71
+    "hp": 38,
+    "power": 19
    },
    "stages": [
     {
@@ -10703,12 +10754,12 @@
     }
    ],
    "foes": {
-    "hp": 148,
-    "power": 74
+    "hp": 122,
+    "power": 61
    },
    "bossFoes": {
-    "hp": 94,
-    "power": 47
+    "hp": 43,
+    "power": 22
    }
   },
   {
@@ -10721,12 +10772,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 119,
-    "power": 60
+    "hp": 72,
+    "power": 36
    },
    "bossFoes": {
-    "hp": 167,
-    "power": 84
+    "hp": 28,
+    "power": 14
    },
    "stages": [
     {
@@ -10791,12 +10842,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 44,
-    "power": 22
+    "hp": 37,
+    "power": 19
    },
    "bossFoes": {
-    "hp": -39,
-    "power": -19
+    "hp": -56,
+    "power": -28
    },
    "stages": [
     {
@@ -10903,12 +10954,12 @@
     }
    ],
    "foes": {
-    "hp": 108,
-    "power": 54
+    "hp": 76,
+    "power": 38
    },
    "bossFoes": {
-    "hp": 41,
-    "power": 21
+    "hp": -40,
+    "power": -20
    }
   },
   {
@@ -10921,12 +10972,12 @@
    "perkPool": [],
    "challenges": [],
    "foes": {
-    "hp": 139,
-    "power": 70
+    "hp": 115,
+    "power": 58
    },
    "bossFoes": {
-    "hp": -57,
-    "power": -28
+    "hp": -72,
+    "power": -36
    },
    "stages": [
     {
@@ -11693,8 +11744,8 @@
     "name": "The Old Road",
     "act": 1,
     "knob": {
-     "mob": -2,
-     "elite": -2,
+     "mob": 4,
+     "elite": 4,
      "boss": 0
     },
     "text": "Bandits, wolves and snakes on the road out of town, and ogres at the bridges.",
@@ -11707,7 +11758,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": -12
+      "knob": -20
      },
      {
       "id": "wolves",
@@ -11718,7 +11769,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 41
+      "knob": 34
      },
      {
       "id": "snake_grass",
@@ -11728,7 +11779,7 @@
        "snake",
        "snake"
       ],
-      "knob": -42
+      "knob": -46
      },
      {
       "id": "road_thugs",
@@ -11739,7 +11790,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": -12
+      "knob": -16
      }
     ],
     "normal": [
@@ -11754,7 +11805,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 61
+      "knob": 45
      },
      {
       "id": "snake_pit",
@@ -11765,7 +11816,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": -42
+      "knob": -46
      },
      {
       "id": "bandit_camp",
@@ -11776,7 +11827,7 @@
        "archer",
        "bandit"
       ],
-      "knob": -16
+      "knob": -39
      },
      {
       "id": "night_wolves",
@@ -11790,7 +11841,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 49
+      "knob": 30
      },
      {
       "id": "archers_nest",
@@ -11801,7 +11852,7 @@
        "archer",
        "archer"
       ],
-      "knob": -24
+      "knob": -35
      },
      {
       "id": "viper_den",
@@ -11813,7 +11864,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": -65
+      "knob": -73
      },
      {
       "id": "bandit_horde",
@@ -11825,7 +11876,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 0
+      "knob": -20
      }
     ],
     "elite": [
@@ -11837,7 +11888,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 37
+      "knob": 7
      },
      {
       "id": "twin_ogres",
@@ -11846,7 +11897,7 @@
        "ogre",
        "ogre"
       ],
-      "knob": 4
+      "knob": 0
      },
      {
       "id": "war_camp",
@@ -11857,7 +11908,7 @@
        "archer",
        "ogre"
       ],
-      "knob": -24
+      "knob": -35
      }
     ],
     "bosses": [
@@ -11869,7 +11920,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 38
+      "knob": 19
      },
      {
       "id": "packmaster",
@@ -11881,7 +11932,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 37
+      "knob": 25
      },
      {
       "id": "chiefs_return",
@@ -11890,7 +11941,7 @@
        "ogre_chief",
        "ogre"
       ],
-      "knob": 14
+      "knob": 0
      }
     ]
    },
@@ -11899,8 +11950,8 @@
     "name": "The Crypt",
     "act": 2,
     "knob": {
-     "mob": 11,
-     "elite": 11,
+     "mob": 20,
+     "elite": 20,
      "boss": 0
     },
     "text": "Armored bones, bats you can't hit, ghosts magic can't touch, and Death with a bell.",
@@ -11924,7 +11975,7 @@
        "bat",
        "bat"
       ],
-      "knob": 147
+      "knob": 117
      },
      {
       "id": "wailing",
@@ -11933,7 +11984,7 @@
        "ghost",
        "ghost"
       ],
-      "knob": 4
+      "knob": -16
      }
     ],
     "normal": [
@@ -11946,7 +11997,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 140
+      "knob": 110
      },
      {
       "id": "dark_hall",
@@ -11957,7 +12008,7 @@
        "bat",
        "bat"
       ],
-      "knob": 87
+      "knob": 49
      },
      {
       "id": "curse_room",
@@ -11967,7 +12018,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 140
+      "knob": 121
      },
      {
       "id": "haunted_hall",
@@ -11978,7 +12029,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 22
+      "knob": -8
      },
      {
       "id": "bone_wall",
@@ -11990,7 +12041,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 121
+      "knob": 76
      },
      {
       "id": "dead_watch",
@@ -12001,7 +12052,7 @@
        "witch",
        "ghost"
       ],
-      "knob": 49
+      "knob": 15
      }
     ],
     "elite": [
@@ -12014,7 +12065,7 @@
        "ghoul",
        "ghoul"
       ],
-      "knob": 76
+      "knob": 53
      },
      {
       "id": "lich_lair",
@@ -12023,7 +12074,7 @@
        "lich",
        "mummy"
       ],
-      "knob": 242
+      "knob": 204
      },
      {
       "id": "grave_watch",
@@ -12033,7 +12084,7 @@
        "troll",
        "troll"
       ],
-      "knob": 72
+      "knob": 45
      }
     ],
     "bosses": [
@@ -12045,7 +12096,7 @@
        "bat",
        "bat"
       ],
-      "knob": 193
+      "knob": 129
      },
      {
       "id": "reapers_court",
@@ -12055,7 +12106,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 151
+      "knob": 116
      }
     ]
    },
@@ -12064,8 +12115,8 @@
     "name": "The Fire Mine",
     "act": 2,
     "knob": {
-     "mob": 35,
-     "elite": 35,
+     "mob": 36,
+     "elite": 36,
      "boss": 0
     },
     "text": "Everything here burns, and the lord of the furnace casts a fire that ends parties.",
@@ -12079,7 +12130,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 72
+      "knob": 34
      },
      {
       "id": "fuse_room",
@@ -12089,7 +12140,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -27
+      "knob": -8
      },
      {
       "id": "imp_and_hound",
@@ -12099,7 +12150,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 57
+      "knob": 68
      }
     ],
     "normal": [
@@ -12113,7 +12164,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 83
+      "knob": 49
      },
      {
       "id": "bomb_room",
@@ -12124,7 +12175,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -77
+      "knob": -54
      },
      {
       "id": "imp_kennel",
@@ -12135,7 +12186,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 98
+      "knob": 57
      },
      {
       "id": "hound_run",
@@ -12148,7 +12199,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 37
+      "knob": 7
      },
      {
       "id": "slag_heap",
@@ -12158,7 +12209,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 197
+      "knob": 128
      },
      {
       "id": "miners",
@@ -12169,7 +12220,7 @@
        "bandit",
        "bomb_bug"
       ],
-      "knob": 7
+      "knob": 0
      }
     ],
     "elite": [
@@ -12180,7 +12231,7 @@
        "lava_slime",
        "lava_slime"
       ],
-      "knob": 132
+      "knob": 106
      },
      {
       "id": "imp_court",
@@ -12192,7 +12243,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 61
+      "knob": 49
      },
      {
       "id": "powder_room",
@@ -12202,7 +12253,7 @@
        "bomb_bug",
        "ogre"
       ],
-      "knob": -81
+      "knob": -69
      }
     ],
     "bosses": [
@@ -12212,7 +12263,7 @@
       "enemies": [
        "fire_giant"
       ],
-      "knob": -7
+      "knob": -28
      },
      {
       "id": "giants_forge",
@@ -12222,7 +12273,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -27
+      "knob": -34
      },
      {
       "id": "giants_wrath",
@@ -12232,7 +12283,7 @@
        "fire_imp",
        "fire_imp"
       ],
-      "knob": -23
+      "knob": -36
      }
     ]
    },
@@ -12241,8 +12292,8 @@
     "name": "The Ice Pass",
     "act": 2,
     "knob": {
-     "mob": 19,
-     "elite": 19,
+     "mob": 16,
+     "elite": 16,
      "boss": 0
     },
     "text": "Every fight asks what kind of hit you make, and a Titan of ice waits at the top.",
@@ -12256,7 +12307,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 147
+      "knob": 121
      },
      {
       "id": "spirits",
@@ -12265,7 +12316,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 26
+      "knob": 11
      },
      {
       "id": "cold_ghosts",
@@ -12274,7 +12325,7 @@
        "ice_ghost",
        "ice_ghost"
       ],
-      "knob": 11
+      "knob": -16
      }
     ],
     "normal": [
@@ -12289,7 +12340,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 155
+      "knob": 121
      },
      {
       "id": "ice_heart",
@@ -12299,7 +12350,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 15
+      "knob": 4
      },
      {
       "id": "whiteout",
@@ -12309,7 +12360,7 @@
        "ice_ghost",
        "ice_spirit"
       ],
-      "knob": 4
+      "knob": -12
      },
      {
       "id": "ghost_lights",
@@ -12319,7 +12370,7 @@
        "ice_ghost",
        "ice_ghost"
       ],
-      "knob": -4
+      "knob": -12
      },
      {
       "id": "long_pack",
@@ -12333,7 +12384,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 121
+      "knob": 83
      },
      {
       "id": "drift",
@@ -12344,7 +12395,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 41
+      "knob": 19
      }
     ],
     "elite": [
@@ -12355,7 +12406,7 @@
        "ice_golem",
        "ice_golem"
       ],
-      "knob": 117
+      "knob": 125
      },
      {
       "id": "golem_gate",
@@ -12365,7 +12416,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 45
+      "knob": 22
      },
      {
       "id": "frost_trolls",
@@ -12376,7 +12427,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 4
+      "knob": -12
      }
     ],
     "bosses": [
@@ -12386,7 +12437,7 @@
       "enemies": [
        "ice_titan"
       ],
-      "knob": 132
+      "knob": 90
      },
      {
       "id": "glacier_king",
@@ -12396,7 +12447,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 118
+      "knob": 72
      }
     ]
    },
@@ -12405,8 +12456,8 @@
     "name": "The Storm Tower",
     "act": 3,
     "knob": {
-     "mob": 28,
-     "elite": 28,
+     "mob": 40,
+     "elite": 40,
      "boss": 0
     },
     "text": "Clouds of sparks, leeches that drink mana, and a queen behind a wall of drones.",
@@ -12421,7 +12472,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 91
+      "knob": 45
      },
      {
       "id": "leeches",
@@ -12432,7 +12483,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 106
+      "knob": 83
      },
      {
       "id": "drones",
@@ -12442,7 +12493,7 @@
        "drone",
        "drone"
       ],
-      "knob": 174
+      "knob": 121
      }
     ],
     "normal": [
@@ -12459,7 +12510,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 68
+      "knob": 26
      },
      {
       "id": "wisp_nest",
@@ -12472,7 +12523,7 @@
        "leech",
        "leech"
       ],
-      "knob": 121
+      "knob": 57
      },
      {
       "id": "leech_den",
@@ -12483,7 +12534,7 @@
        "leech",
        "leech"
       ],
-      "knob": 219
+      "knob": 151
      },
      {
       "id": "drone_wall",
@@ -12496,7 +12547,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 95
+      "knob": 30
      },
      {
       "id": "storm_front",
@@ -12509,7 +12560,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 113
+      "knob": 45
      }
     ],
     "elite": [
@@ -12522,7 +12573,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 91
+      "knob": 57
      },
      {
       "id": "sniper_ridge",
@@ -12534,7 +12585,7 @@
        "archer",
        "archer"
       ],
-      "knob": 49
+      "knob": 30
      },
      {
       "id": "lich_pair",
@@ -12544,7 +12595,7 @@
        "lich",
        "lich"
       ],
-      "knob": 219
+      "knob": 132
      }
     ],
     "bosses": [
@@ -12556,7 +12607,7 @@
        "drone",
        "drone"
       ],
-      "knob": 172
+      "knob": 112
      },
      {
       "id": "hive_queen",
@@ -12568,7 +12619,7 @@
        "drone",
        "drone"
       ],
-      "knob": 144
+      "knob": 94
      }
     ]
    },
@@ -12577,8 +12628,8 @@
     "name": "The Deep Crypt",
     "act": 3,
     "knob": {
-     "mob": 21,
-     "elite": 21,
+     "mob": 33,
+     "elite": 33,
      "boss": 0
     },
     "text": "Beneath the Crypt, something takes every voice. Power that isn't an ability is the key.",
@@ -12591,7 +12642,7 @@
        "skeleton",
        "ghost"
       ],
-      "knob": 80
+      "knob": 61
      },
      {
       "id": "whispers",
@@ -12600,7 +12651,7 @@
        "wraith",
        "wraith"
       ],
-      "knob": 182
+      "knob": 143
      },
      {
       "id": "diggers",
@@ -12610,7 +12661,7 @@
        "ghoul",
        "ghoul"
       ],
-      "knob": 128
+      "knob": 87
      }
     ],
     "normal": [
@@ -12622,7 +12673,7 @@
        "troll",
        "troll"
       ],
-      "knob": 125
+      "knob": 76
      },
      {
       "id": "lich_lair",
@@ -12631,7 +12682,7 @@
        "lich",
        "mummy"
       ],
-      "knob": 307
+      "knob": 223
      },
      {
       "id": "silent_hall",
@@ -12642,7 +12693,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 166
+      "knob": 102
      },
      {
       "id": "quiet_hall",
@@ -12653,7 +12704,7 @@
        "ghost",
        "ghost"
       ],
-      "knob": 41
+      "knob": 19
      },
      {
       "id": "coven",
@@ -12664,7 +12715,7 @@
        "wraith",
        "wraith"
       ],
-      "knob": 106
+      "knob": 68
      },
      {
       "id": "ghoul_feast",
@@ -12675,7 +12726,7 @@
        "ghoul",
        "ghoul"
       ],
-      "knob": 117
+      "knob": 91
      }
     ],
     "elite": [
@@ -12687,7 +12738,7 @@
        "bone_priest",
        "troll"
       ],
-      "knob": 197
+      "knob": 128
      },
      {
       "id": "lich_court",
@@ -12698,7 +12749,7 @@
        "lich",
        "lich"
       ],
-      "knob": 158
+      "knob": 98
      },
      {
       "id": "tomb_lords",
@@ -12708,7 +12759,7 @@
        "mummy",
        "witch"
       ],
-      "knob": 178
+      "knob": 132
      }
     ],
     "bosses": [
@@ -12718,7 +12769,7 @@
       "enemies": [
        "silent_one"
       ],
-      "knob": 388
+      "knob": 298
      },
      {
       "id": "silent_court",
@@ -12728,7 +12779,7 @@
        "bone_priest",
        "bone_priest"
       ],
-      "knob": 257
+      "knob": 181
      }
     ]
    },
@@ -12737,8 +12788,8 @@
     "name": "The Tower Top",
     "act": 3,
     "knob": {
-     "mob": 31,
-     "elite": 31,
+     "mob": -15,
+     "elite": -15,
      "boss": 0
     },
     "text": "Above the storm: the queen's drones, the king's soldiers, and the king who rages when they fall.",
@@ -12753,7 +12804,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 83
+      "knob": 45
      },
      {
       "id": "guard_post",
@@ -12762,7 +12813,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 155
+      "knob": 106
      },
      {
       "id": "top_drones",
@@ -12772,7 +12823,7 @@
        "drone",
        "drone"
       ],
-      "knob": 158
+      "knob": 132
      }
     ],
     "normal": [
@@ -12789,7 +12840,7 @@
        "leech",
        "leech"
       ],
-      "knob": 57
+      "knob": 15
      },
      {
       "id": "wisp_nest",
@@ -12802,7 +12853,7 @@
        "leech",
        "leech"
       ],
-      "knob": 121
+      "knob": 57
      },
      {
       "id": "barracks",
@@ -12812,7 +12863,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 158
+      "knob": 95
      },
      {
       "id": "drone_wall",
@@ -12825,7 +12876,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 95
+      "knob": 30
      },
      {
       "id": "watch",
@@ -12836,7 +12887,7 @@
        "drone",
        "drone"
       ],
-      "knob": 136
+      "knob": 80
      }
     ],
     "elite": [
@@ -12848,7 +12899,7 @@
        "drone",
        "drone"
       ],
-      "knob": 37
+      "knob": 158
      },
      {
       "id": "honour_guard",
@@ -12859,7 +12910,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 91
+      "knob": 57
      },
      {
       "id": "leech_den",
@@ -12871,7 +12922,7 @@
        "leech",
        "leech"
       ],
-      "knob": 182
+      "knob": 113
      }
     ],
     "bosses": [
@@ -12881,7 +12932,7 @@
       "enemies": [
        "storm_king"
       ],
-      "knob": 131
+      "knob": 61
      },
      {
       "id": "kings_guard",
@@ -12891,7 +12942,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 68
+      "knob": 26
      }
     ]
    }
@@ -13794,7 +13845,7 @@
     "stats": [
      {
       "stat": "lifesteal",
-      "flat": 15
+      "flat": 8
      }
     ]
    },
