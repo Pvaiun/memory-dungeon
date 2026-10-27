@@ -66,7 +66,8 @@ export const enemyAbilities: AbilityT[] = [
   a("shield_up", "Shield up", "Taunts.", { ...timing("short", "quick"), target: "self", do: [apply("taunt")] }),
   a("brace", "Brace", "Guards itself.", { ...timing("medium", "quick"), target: "self", do: [apply("guard")] }),
   a("flatten", "Flatten", "A heavy blow that Stuns.", { ...timing("long", "long"), target: { side: "foes", where: { lacks: "stun" }, ifNone: "any" }, do: [{ op: "damage", type: "physical", subtype: "blunt", amount: fromStat("attack", ENEMY_HIT.flatten), apply: [{ status: "stun" }] }] }),
-  a("crush", "Crush", "A massive blow.", { ...timing("medium", "very_long"), do: [{ op: "damage", type: "physical", subtype: "blunt", amount: fromStat("attack", ENEMY_HIT.crush) }] }),
+  // Step 5f: Crush on a short cooldown (was medium): the Ogre Chief cast it 0.6 times a fight, its fight being the shortest.
+  a("crush", "Crush", "A massive blow.", { ...timing("short", "very_long"), do: [{ op: "damage", type: "physical", subtype: "blunt", amount: fromStat("attack", ENEMY_HIT.crush) }] }),
   a("mend", "Mend", "Heals the most hurt ally.", { ...timing("short", "normal"), ...{ if: { side: "allies", where: { hpBelow: 100 } } }, target: T.lowestShareAlly, do: [{ op: "heal", amount: fromStat("magic", ENEMY_HIT.mend) }] }),
   a("curse", "Curse", "Weakens and Slows every foe.", { ...timing("long", "long"), target: T.everyFoe, do: [apply("weaken"), apply("slow")] }),
   a("soulfire", "Soulfire", "A heavy Dark spell.", { ...timing("long", "very_long"), do: [{ op: "damage", type: "magical", element: "dark", amount: fromStat("magic", ENEMY_HIT.soulfire) }] }),

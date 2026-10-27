@@ -11,7 +11,7 @@ type Change = { stat: string; flat: number };
  * Step 5e: a formation slot's step is one and a half gear steps (was one). Probed on the same parties, the five formations with no
  * effect sat within 3 points of Neutral while the effects were worth 7 to 14: the gear document's own fix, "a bigger step on every slot".
  */
-export const FORMATION_STEP = 1.5;
+export const FORMATION_STEP = 1.25; // Step 5f round 4: 1.25 (5e's 1.5): with longer fights the slot formations ran +10 against Neutral, Last stand −10.
 const st = (stat: string, n: number): Change => ({ stat, flat: Math.round(n * FORMATION_STEP * stepFor(stat)) });
 const critStep = (n: number): Change => ({ stat: "crit_chance", flat: crit(n * FORMATION_STEP) });
 const lines = ["front", "middle", "back"] as const;
@@ -71,7 +71,7 @@ export const formations: FormationT[] = [
     slot("traveller_b", "Traveller", "Sturdier.", 2, [st("max_hp", 1)]),
   ], "caravan_pace"),
   formation("last_stand", "Last stand", "The fallen spur the rest on: Might for everyone when an ally falls.", [
-    slot("martyr", "Martyr", "Draws more, much frailer.", 0, [st("aggro", 2), st("max_hp", -2)]),
+    slot("martyr", "Martyr", "Draws more, frailer.", 0, [st("aggro", 2), st("max_hp", -1)]), // Step 5f: −1 (was −2: with Glass heart it took an HP-2 class to nothing).
     slot("other_a", "Other", undefined, 1, []),
     slot("other_b", "Other", undefined, 2, []),
   ], "last_stand_spur"),

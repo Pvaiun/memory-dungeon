@@ -63,7 +63,7 @@ const bothKinds = (pct: StatusT["boosts"] extends (infer B)[] | undefined ? (B e
 
 export const passives: StatusT[] = [
   // Step 5f (the director's): Sworn (Taunt when an ally falls) rarely fired and came too late; the Knight starts behind a Shield instead.
-  passive("vanguard", "Vanguard", { text: "Starts every fight behind a Shield from its max HP.", reactions: [{ on: { event: "fight_start" }, do: [apply("shield", { stacks: { scale: [{ ratio: 0.25, stat: "max_hp", of: "holder" }] }, to: "holder" })] }] }),
+  passive("vanguard", "Vanguard", { text: "Starts every fight behind a Shield from its max HP.", reactions: [{ on: { event: "fight_start" }, do: [apply("shield", { stacks: { scale: [{ ratio: 0.2, stat: "max_hp", of: "holder" }] }, to: "holder" })] }] }),
   passive("hunters_eye", "Hunter's eye", { text: "Basic attacks ignore Taunt.", seek: "basic" }),
   // Step 5c (the director's): Bleed, not Poison, with stacks from Armor.
   passive("briar", "Briar", { text: "Foes its Thorns wound start to bleed.", reactions: [{ on: { event: "damage_dealt", status: "thorns" }, do: [apply("bleed", { stacks: own("few", "armor"), to: "other" })] }] }),
@@ -101,7 +101,7 @@ export const passives: StatusT[] = [
   }),
   { id: "bloodlust_on", name: "BLOODLUST", text: "Lifesteal doubled.", label: "buff", show: "icon", stacking: "fizzle", stats: [{ stat: "lifesteal", flat: { scale: [{ ratio: 1, stat: "lifesteal", of: "holder" }] } }] },
   passive("kindling", "Kindling", { text: "Basic attacks add a few Burn.", reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("burn", { stacks: own("few", "magic", BURN_STACKS), to: "other" })] }] }),
-  passive("brittle", "Brittle", { text: "Hits deal more damage for each Chill stack on the target.", boosts: bothKinds({ scale: [{ ratio: 8, stacks: "chill", of: "target" }] }) }),
+  passive("brittle", "Brittle", { text: "Hits deal more damage for each Chill stack on the target.", boosts: bothKinds({ scale: [{ ratio: 12, stacks: "chill", of: "target" }] }) }), // Round 4: 12% a stack (was 8): with Chill at a cap of 12 that lingers, the Frostweaver was still the weakest caster.
   passive("arc", "Arc", {
     text: "Basic attacks also hit a second foe, and Shock both.",
     strike: { to: T.secondFoe },
@@ -141,7 +141,8 @@ export const abilities: A[] = [
   // since a Shield can't pass half its target's max HP.
   // Step 5f (the director's): Protect (a Shield on the lowest ally) overlapped the Hoplite; Stand fast is Taunt on the Knight and mana for an ally.
   a("knight", "stand_fast", "Stand fast", "Taunts, and gives Clarity to the ally with the least MP.", {
-    ...timing("medium", "quick"), mp: 250, target: "self", do: [apply("taunt"), apply("clarity", { to: T.lowestMpAlly })],
+    // Round 4: short (was medium): the first Taunt came at tick 18, and the casters died at 17.
+    ...timing("short", "quick"), mp: 150, target: "self", do: [apply("taunt"), apply("clarity", { to: T.lowestMpAlly })],
   }),
   // Pacing pass: a light hit (was normal): at normal it was seven or eight of the Knight's swings, a tank's nuke.
   a("knight", "shield_bash", "Shield bash", "Bashes a foe with the shield, which scales from max HP, and Stuns it.", {
@@ -230,7 +231,7 @@ export const abilities: A[] = [
     ...timing("medium", "normal"), mp: 250, seek: true, target: lacking(T.highestAMFoe, "stun", true), do: [phys("blunt", hit("attack", "normal"), { apply: [{ status: "stun" }] })],
   }),
   // Assassin
-  a("assassin", "vanish", "Vanish", "Goes Hidden.", { ...timing("short", "quick"), mp: 150, ...waitsFor("self", { lacks: "hidden" }), target: "self", do: [apply("hidden")] }),
+  a("assassin", "vanish", "Vanish", "Goes Hidden.", { ...timing("medium", "quick"), mp: 150, ...waitsFor("self", { lacks: "hidden" }), target: "self", do: [apply("hidden")] }),
   a("assassin", "backstab", "Backstab", "Heavy damage, scaling from Crit chance, to the foe with the lowest HP, past any guard.", { ...timing("medium", "normal"), mp: 250, seek: true, target: T.lowestHpFoe, do: [phys("pierce", hit("crit_chance", "heavy"))] }),
   a("assassin", "garrote", "Garrote", "Silences a random foe that isn't Taunting, past any guard.", {
     ...timing("medium", "quick"), mp: 250, seek: true, target: lacking(T.notTauntingFoe, ["taunt", "silence"], true), do: [phys("pierce", hit("attack", "normal"), { apply: [{ status: "silence" }] })],
@@ -238,7 +239,7 @@ export const abilities: A[] = [
   // Vampire
   // Step 5e: 0.5 of max HP (was a normal hit, 0.75): at 4 swings a cast twice a fight it was 60% of the Vampire's damage, and
   // through Lifesteal most of the 3,850 HP it healed itself a fight; parties with the Vampire won 37 points more than without.
-  a("vampire", "blood_drain", "Blood drain", "Dark damage scaling from max HP to a random foe, which is Weakened.", { ...timing("short", "quick"), mp: 300, do: [magic("dark", from("max_hp", 0.4), { apply: [{ status: "weaken" }] })] }), // round 6: 0.4 (the Vampire still +11 / +25 / +9 at 0.5).
+  a("vampire", "blood_drain", "Blood drain", "Dark damage scaling from max HP to a random foe, which is Weakened.", { ...timing("short", "quick"), mp: 150, do: [magic("dark", from("max_hp", 0.4), { apply: [{ status: "weaken" }] })] }), // round 6: 0.4 (the Vampire still +11 / +25 / +9 at 0.5).
   // Step 5f (the director's): Wither's Rot met one enemy heal in the whole roster. Blood gift spends the Vampire's own HP on an ally.
   a("vampire", "blood_gift", "Blood gift", "Spends a fifth of its max HP to heal the lowest other ally for as much, and gives it Clarity.", {
     ...timing("medium", "normal"), mp: 500, ...waitsFor("others", { hpBelow: 100 }), target: T.otherLowestShareAlly,

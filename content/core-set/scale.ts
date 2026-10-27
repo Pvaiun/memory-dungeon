@@ -37,7 +37,7 @@ export const KIND_SPEED: Record<string, number> = {
 };
 /** A swing's size is (base + ratio × stat) × its cooldown ÷ this: per tick, the old medium swing's. */
 /** Step 5f round 2: 14 (was 10): a swing is sized by its interval ÷ this, so every kind deals about 30% less a tick, and fights have room. */
-export const SWING_REF = 14;
+export const SWING_REF = 16; // Round 4: 16 (fights of 39 ticks, the target 45).
 /** The documents' speed words, for enemies' touches and a kind's damage word: between the kinds' cooldowns, so they don't line up either. */
 /** Step 5f: half again as slow, with the kinds. */
 export const SPEED = { fast: 8.9, medium: 11.9, slow: 15.5 } as const;
@@ -176,7 +176,7 @@ export type Level = keyof typeof WEAPON.base;
 /** Pacing pass: each ability is rarer, so each hit is bigger (was 0.2, 0.35 and 0.6): a normal hit is about three swings. */
 /** Step 5f: touch, for abilities whose point is the status they apply (the director's: "skewed towards their upfront damage"). */
 /** Round 2: every word three quarters of what it was (0.25 / 0.43 / 0.75 / 1.25), with the swings: fights of 32 ticks had to reach 45. */
-export const HIT = { touch: 0.19, light: 0.32, normal: 0.56, heavy: 0.94 } as const;
+export const HIT = { touch: 0.17, light: 0.29, normal: 0.5, heavy: 0.85 } as const; // Round 4: nine tenths again.
 export type HitWord = keyof typeof HIT;
 
 /**
@@ -186,7 +186,7 @@ export type HitWord = keyof typeof HIT;
  * blanked by Armor 5, as the Wolf's bites are meant to be.
  */
 /** Step 5f: half again as big, as the swings come half again as slowly. */
-export const ENEMY_SWING = { weak: 550, normal: 770, heavy: 1200, massive: 1750 } as const; // Round 2: 1.1 × the old words (were 1.5 ×), with the party's cut, so the foes don't out-pace it.
+export const ENEMY_SWING = { weak: 500, normal: 700, heavy: 1100, massive: 1600 } as const; // Round 4: the old words again, with the party's cut. // Round 2: 1.1 × the old words (were 1.5 ×), with the party's cut, so the foes don't out-pace it.
 /**
  * A fast swing lands for less (a Leech's bite isn't a Bandit's sword twice as often); a slow one for the same,
  * since the slow attackers carry the big blows in their abilities (Flatten, Crush). A slow factor of 1.4 pulled
@@ -372,7 +372,7 @@ export const STATUS = {
   sunder: { perStack: -600, every: 4, cap: 20 }, // Step 5f: a cap (the Silent One carried 235). Armor's floor is 0, so it never went past.
   silence: { duration: 16 }, // Step 5f: 16 (was 8: Hush interrupted a cast 0.06 times an application).
   /** Step 5e: 20 ticks (was 14). Vanish is on the long cooldown (36), so the Assassin was Hidden 14 ticks in 36 at best, and it died at tick 18 in 45 of 100 fights. */
-  hidden: { duration: 14 }, // Step 5f round 3: 14 with Vanish on a short cooldown (16): hidden most of a fight, with gaps.
+  hidden: { duration: 14 }, // Step 5f round 4: 14 on a medium Vanish (28): hidden half a fight. On a short one the Assassin hid 85% of the time and its two allies took every hit (−20 points in the campaign).
   rot: { healing: -60, duration: 20 },
   /** Step 5f (the director's): Regen for mana, not a doubled stat: 4% of max MP every 2 ticks for 16 ticks (32% of max MP). */
   clarity: { every: 2, share: 0.04, duration: 16 },
