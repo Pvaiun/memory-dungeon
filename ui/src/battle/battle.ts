@@ -608,7 +608,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       sh ? h("span", { class: "buff" }, `SHIELD ${disp(sh)}`) : null,
       isParty || designer ? h("span", { class: "mp" }, `MP ${disp(u.mp)}`) : null,
     ));
-    if (casting) body.append(h("div", { class: "line hi" }, `WINDING UP ${castName}`, h("span", { class: "dim r" }, `${Math.max(0, Math.ceil((u.cast!.end - vt) / SUBTICKS))}T`)));
+    if (casting) body.append(h("div", { class: "line hi" }, `CASTING ${castName}`, h("span", { class: "dim r" }, `${Math.max(0, Math.ceil((u.cast!.end - vt) / SUBTICKS))}T`)));
     const sts = u.statuses.filter((s) => c.statuses.get(s.id)?.show === "icon");
     if (sts.length) body.append(h("div", { class: "section" }, "STATUSES"));
     for (const s of sts) {
