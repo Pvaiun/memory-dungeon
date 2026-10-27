@@ -6,6 +6,7 @@
  * the weapon strips, the faces, the backdrops and the status colours. pixel.ts
  * draws them.
  */
+import { BUILD } from "./update.js";
 import type { GearT } from "../../src/schema.js";
 import { baseGearId, c } from "./content.js";
 
@@ -46,7 +47,8 @@ export async function loadArt(): Promise<void> {
   await Promise.all(files.map(load));
 }
 
-export const url = (file: string) => `${import.meta.env.BASE_URL}assets/${file}`;
+/** An asset's URL, with the build's id so a new build's art is never served from an old cache. */
+export const url = (file: string) => `${import.meta.env.BASE_URL}assets/${file}?v=${BUILD}`;
 
 function load(file: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
