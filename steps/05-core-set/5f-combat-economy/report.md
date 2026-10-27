@@ -37,7 +37,7 @@ Shares of their appliers' damage, before → after at the same knobs: Burn 9% �
 
 ### F. Pacing: fewer, bigger, slower, with a tempo per class
 
-Weapons swing half again as slowly and hit half again as hard (the Ice staff is now the fast, light staff, for Cold hex and Brittle). Cooldown words are 16 / 28 / 44 / 60 (were 24 / 32 / 36), wind-ups 1 / 3 / 6 / 10 (were 0.5 / 1.5 / 4 / 6), head starts by slot 8 / 4 / 0, so a kit's two shorts fire at ticks 8 and 12 rather than together. Each class mixes the words by its tempo (the Bard, Monk, Stormcaller and Vampire quick; the Hoplite, Paladin and Geomancer slow). Damage a tick was cut by about a third on both sides to get there (fights didn't lengthen on slower swings alone: bigger swings and more casts kept the pace). Casts are 40% of the party's actions (were 34%). The feel read, on round 4, saw cast times read (Fire arrow six ticks, Crush ten) and fights in two waves (ticks 5 to 9, then 18 to 27); round 6's head starts answer the waves, and the fresh read (section 6) says whether they did.
+Weapons swing half again as slowly and hit half again as hard (the Ice staff is now the fast, light staff, for Cold hex and Brittle). Cooldown words are 16 / 28 / 44 / 60 (were 24 / 32 / 36), wind-ups 1 / 3 / 6 / 10 (were 0.5 / 1.5 / 4 / 6), head starts by slot 8 / 4 / 0, so a kit's two shorts fire at ticks 8 and 12 rather than together. Each class mixes the words by its tempo (the Bard, Monk, Stormcaller and Vampire quick; the Hoplite, Paladin and Geomancer slow). Damage a tick was cut by about a third on both sides to get there (fights didn't lengthen on slower swings alone: bigger swings and more casts kept the pace). Casts are 40% of the party's actions (were 34%). The feel read, on round 4, saw cast times read (Fire arrow six ticks, Crush ten) and fights in two waves (ticks 5 to 9, then 18 to 27); round 6's head starts answer the waves, and the fresh read (section 5) found regular fights "have air, with Burn ticks, wind-ups and Regen pulses visible between actions" and the tempos apart (the Monk 2.7 actions every 10 ticks, the Hoplite 0.84). It also found the mediums in slots 2 and 3 firing 0.4 to 0.9 times a fight, not twice (section 1I).
 
 ### G. Bosses cast their moves
 
@@ -130,7 +130,7 @@ The Bard, Hexer and Assassin are at HP 2 again. 5e's other numbers (Lifesteal, R
 | 19 | The Tower Top | +76 → +54 | -40 → -17 | 83% |
 | 20 | The Royal Court | +115 → +168 | -72 → -69 | 98% |
 
-What the knobs say: **the regular fights' knobs rose by two thirds** (mean +64 → +103) and the bosses' by a third (mean -23 → +16). The party is sturdier now: with damage a tick cut by a third on both sides, fights of 44 ticks at the old knobs, and three new heals (Chorus, Absolve, Blood gift) and a Knight that taunts from the start, the sensible builds outlast the foes, so the tuner gives the foes HP. **That lengthens the campaign's fights:** a knob is HP +k% and damage +k/2%, so difficulty bought with HP is bought with time. The best build's run at Iron Wall, at a knob of +10, has regular fights of 85 to 114 ticks. The fresh read's sheet at the new knobs (section 5) has the campaign's fight lengths; if they run long, the knob's shape (more damage, less HP) is the lever, and it's a decision for you (section 1F).
+What the knobs say: **the regular fights' knobs rose by two thirds** (mean +64 → +103) and the bosses' by a third (mean -23 → +16). The party is sturdier now: with damage a tick cut by a third on both sides, fights of 44 ticks at the old knobs, and three new heals (Chorus, Absolve, Blood gift) and a Knight that taunts from the start, the sensible builds outlast the foes, so the tuner gives the foes HP. **That lengthens the campaign's fights:** a knob is HP +k% and damage +k/2%, so difficulty bought with HP is bought with time. The best build's run at Iron Wall, at a knob of +10, has regular fights of 85 to 114 ticks. **At the new knobs the average held:** the fresh read's sheet (`sheet-final.md`) has a campaign regular fight at 46.8 ticks and a boss fight at 67 (the rogue 49.7 and 77). The exception is the slow walls' required party at node 6, which took 137 to 167 ticks a regular fight against a Taunting Shieldman: HP as difficulty is time for the parties that deal least. The knob's shape (more damage, less HP) is the lever, and it's a decision for you (section 1F). Class values at the new knobs, campaign / rogue: the Vampire +18 / +12, the Bramble knight +5 / +8.5, the Valkyrie +5 / +6.5, the Knight +7 / +1.6; the Assassin −9.5 / −15.5, the Frostweaver −7 / −9, the Geomancer −4 / −5.7; the rest within ±5.
 
 ### The rogue
 
@@ -138,14 +138,59 @@ What the knobs say: **the regular fights' knobs rose by two thirds** (mean +64 �
 
 ## 5. Fresh eyes
 
-(The rogue's re-tune and the fresh read were running as this was committed; their numbers follow in the next commit.)
+A separate agent that had not seen this step's notes ran the sheet at the new knobs (`sheet-final.md`: 228,000 runs, 46 flags), played nodes 1 to 6 of the campaign with only what a player sees (won 1, 2, 4, 5 and 6, lost 3 three times) and one whole rogue run (two acts won, wiped at the Hive Queen), reading fights tick by tick, and wrote `fresh-eyes.md`. Here it is as written:
+
+> Oct 27, 2026. Read cold: the balance sheet, campaign nodes 1 to 6 as a first-time player (won 1, 2, 4, 5 and 6; lost 3 in three tries) and one rogue run as the Cleric, seed 19 (two acts won, wiped at the Hive Queen). Rogue numbers where modes differ.
+> 
+> ### What still looks wrong, worst first
+> 
+> 1. **Mana is upside down: walls starve, casters never spend.** The Vampire has an ability ready and no MP 46% of its time (band 0–8%); the Cleric, Hexer, Pyromancer, Frostweaver and Bard starve 0–2% (band 3–30%) and end fights with 76–92% of their MP. In the rogue run the Bramble knight sat near 80 of 2,000 MP through act II; the Cleric died at the final boss holding 5,380 of 6,000. The cheap skills sit on the small pools, the dear spells on the big ones, and those rarely fire.
+> 
+> 2. **Slots 2 and 3 barely fire, so a kit is two abilities and a swing.** Regular fights last 47 ticks (campaign) and 50 (rogue); a medium in slot 2 or 3 fires 0.4–0.9 times, not the rules' "twice": Pyre 0.11 (first cast t45), Tremor 0.34, Static charge 0.22, Fireball 0.43, Fire arrow 0.40. At node 3 the Pyromancer began Pyre at t36 in a fight that ended at t38. The dear spells never land, which is item 1's cause.
+> 
+> 3. **Campaign fights swing between slog and coin flip.** Node 6's required party (Knight, Hoplite, Escort) spent 137, 167 and 160 ticks on regular fights, poking a Taunting Shieldman for 289 a hit, then felled both bosses in 39. Node 4's Reaper lived 144 ticks and node 5's 240 with no danger (Doom's 3,500 against Cure's 3,900). Node 3's Crush one-shot the full-HP Knight in plate (6,323 against 5,500) twice in three tries.
+> 
+> 4. **Boss moves are nothing or everything, and rogue bosses span 96% to 7%.** Parties reaching the Ogre Chief kill it 96% of the time, the Reaper 47%, the Ice Titan 26%, the Silent One 7%. In my run the Cleric and Valkyrie took zero damage in 11 of 15 regular fights, then the Hive Queen's first Tempest (2,197 to everyone) one-shot the 2,000-HP Cleric. Knockouts come 72–74% from basic attacks anyway.
+> 
+> 5. **Bleed turns Taunt into a death sentence against snakes.** Viper Den (node 3) killed the Knight twice in three tries: ten bites at 137 each, Bleed adding 240–656 per hit and restacking on every bite, about 5,600 of the 8,400 taken; Renew cleanses once a fight.
+> 
+> 6. **Class worth is still wide at both ends.** Vampire +11.6 points (healing 4,713 a fight, more than the Cleric's 3,944) and Bramble knight +8.5, out-damaging the Knight 2.5×. Assassin −15.5 with the highest knockout rate while taking the least damage; Frostweaver −9 with Chill dealing nothing at 0.8 applications a fight; Geomancer 0.75× a dealer, under the floor.
+> 
+> 7. **Burn's cap binds on one cast.** Firebolt at +2 Magic landed BURN 40 on a wolf at node 3, Fire arrow BURN 40 at node 2; the sheet's Firebolt puts 31 stacks an application against a cap of 40, so the first bolt is the ramp and Kindling, the Monk and the Ranger add nothing on top.
+> 
+> 8. **The healing ladder is Cure, then nothing.** Cure, "a quick, small heal", heals 2,600 at Magic 4, 3,900 in robes, 5,460 at Cure+: a full bar on anyone for 300 MP every 16.5 ticks; Renew's Regen heals about 330 per application, often on a unit already full, for 500 MP.
+> 
+> 9. **Stand fast's Clarity feeds the Knight.** "The ally with the least MP" is usually the Knight itself: nine of thirteen casts in nodes 1 and 2 landed on a Knight at full MP; a share of max would aim it right.
+> 
+> 10. **Smaller things the bands miss.** Blood gift knocked the Vampire itself out 78 times; Rot is applied 0 times, Slow 0.04; Accuracy never binds; Shock sits at its cap on nearly every rogue foe; Pressure point fired once in a 240-tick fight, Flow 15 times. Tool, not game: the playtester's campfire ignored RAISE with the Knight down three times, part of node 3's loss.
+> 
+> ### What looked right
+> 
+> - Regular fights have air, with Burn ticks, wind-ups and Regen pulses visible between actions; a Shield bash holding an Ogre's Flatten reads as play.
+> - Tempos differ: the Monk acts 2.7 times per 10 ticks, the Hoplite 0.84.
+> - Status shares land where a class is built on them: Burn 44–53% of the Pyromancer's damage, Thorns and Bleed 55% of the Bramble knight's.
+> - Bosses cast more than once (Crush twice a fight, Death bell five to eight times); the Hexer's rework works; gear and formations stay inside ±7.
+
+**My reading of it.** Items 1, 2 and 6 are sections 1D, 1I and 1B and 1C in other words, with the sheet now at the new knobs (where the rogue's harder bosses widen the rogue's class spread too: the Vampire +11.6 there, the Assassin −15.5). What's new, and right:
+
+- **Crush one-shots a full-HP Knight in plate at node 3** (6,323 against 5,500): the knob's damage half at +53 on a 10-tick blow that is meant to be played against. 5e's fresh read saw the same from an Archer at +96. The question stands (section 1F, and 5e's): should knobs touch HP only?
+- **Node 6's required party slogs** (137 to 167 ticks a regular fight, poking a Taunting Shieldman) while its average campaign fight is 47 ticks: the slow walls' tempo against a Taunting elite is the worst case the knobs' HP makes. A knob that buys difficulty with damage rather than HP would shorten it.
+- **Bleed and Taunt against the snakes** (item 5): the Knight taunting from tick 6 now takes every bite, and each bite bursts its Bleed. Real, by the two rules together; Renew cleanses once a fight. A kit answer (the Knight's Fortify as a cleanse? a Guard that halves Bleed?) is yours.
+- **Burn's cap binds on one geared Firebolt** (item 7): at Magic 7 a Firebolt adds 41 stacks against the cap of 40, so the ramp is one cast. The cap was the answer to the nuke; the next rung is a lower multiplier with a higher cap (section 1E).
+- **Stand fast's Clarity goes to the Knight itself** nine times in thirteen (item 9): "the ally with the least MP" is the 2,000-pool Knight. One word in the content (others, not allies) fixes it; left for your read, with the rest.
+- **Blood gift killed the Vampire 78 times** (item 10): its price is paid at any HP. A wait on its own HP needs a condition on two sides at once, which the engine's conditions don't do; a smaller price below 30% HP is content.
+- **The healing ladder** (item 8): Cure at Cure+ heals a full bar; Renew's Regen 330 an application. Regen's worth was your item 18; Cure's rogue upgrade is the rogue's to price.
+- **Tool bugs** (item 10): the campaign playtester's campfire choice ignored RAISE with a member down, and a lost run printed "RUN CLEARED". Not the game; to fix before the next read.
+
+Where I read it differently: (3) the Reaper living 144 and 240 ticks "with no danger" is Doom against Cure at the node's knobs; the boss's danger is the knob's job, and a boss that can't kill a healed party is a difficulty reading, not a balance one. (4) 72% to 74% of knockouts from basic attacks is the pace the director asked for (basics about 60% of actions); the moves' share of knockouts is what the nothing-or-everything shape should change, and that is the knob's damage half again.
 
 ## 6. What to do next
 
 1. **Your decisions above:** the Vampire (B), the campaign's attrition shape (C), the casters' hunger (D), Burn's ceiling (E), the Knight's second ability and Aggro's step (A).
 2. **A kit pass on the third slots** that never fire (Pyre, Static charge, Tremor, Fireball in boss fights), and the Assassin's place in a party of three.
 3. **The enemy side you deferred:** buffs, taunts and multi-hits on more foes, now that Unmake, Judgement and the Hexer's dispel have something to meet.
-4. **Two sheet measures the pass needed and lacked:** the spread of stacks an application adds (the mean hid the Burn nuke) and the party's actions by tick (the feel read saw the waves; the sheet couldn't). Both are small additions to `src/balance.ts`.
+4. **Small content fixes the fresh read points at:** Stand fast's Clarity on the other allies (one word), Blood gift's price smaller below 30% HP, a cleanse within the Knight's reach against Bleed, Burn's cap and multiplier, Renew's Regen. And two tool bugs: the campaign playtester's campfire choice (RAISE ignored with a member down) and a lost run printed as cleared.
+5. **Two sheet measures the pass needed and lacked:** the spread of stacks an application adds (the mean hid the Burn nuke) and the party's actions by tick (the feel read saw the waves; the sheet couldn't). Both are small additions to `src/balance.ts`.
 
 ## 7. Method notes
 
