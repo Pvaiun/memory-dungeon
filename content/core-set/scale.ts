@@ -108,7 +108,7 @@ export const RULES = {
    * Wisps and Drones in free play died before acting; at 6 a third-slot ability on the long word came after most fights ended.
    */
   /** Step 5f: 10, 8 and 6 with the shorter words: a first-slot short ability fires at tick 6, a medium at 18, a long at 34. */
-  opening: { min: 0.3, max: 0.7, slots: [10, 8, 6] },
+  opening: { min: 0.3, max: 0.7, slots: [8, 4, 0] }, // Round 6: 8, 4 and 0 (were 10, 8, 6): every first- and second-slot short fired between ticks 5 and 9, one wave; now 8, 12 and 16.
   /** Each physical hit loses this share of the target's Armor: Armor 5 takes 600 off, Armor 8 nearly blanks a sword. */
   armorRatio: 0.12,
   /**
@@ -248,7 +248,7 @@ export const stacks = (word: StackWord, stat: string, mult = 1): NumT => ({ scal
  * Step 5c (the director's): the Pyromancer's Burn and the Stormcaller's Shock, on their abilities and passives, are this many
  * times the word's. At 2 the Pyromancer's Burn was 24% of its damage (was 14%), and the Pyromancer the weakest class still.
  */
-export const BURN_STACKS = 2.5;
+export const BURN_STACKS = 1.5; // Round 6: 1.5 (5c's 2.5): with triple stacks and a cap of 40, a Firebolt adds about 29 at Magic 5.
 export const SHOCK_STACKS = 2;
 /** A flat stack count, for enemies that apply "a stack" or statuses that start with "many". */
 export const FLAT_STACKS = { one: 1, few: 2, several: 4, many: 7 } as const;
@@ -336,7 +336,7 @@ export const STATUS = {
   shield: { capShare: 0.5 },
   /** Campaign pass: a cap of 25 stacks. Uncapped, a hidden Bard stacked 123 on itself and the Storm King reached 38. */
   /** Step 5f (the director's): Might spends with action, not time: one stack each time the holder acts (vocabulary.ts). 10% a stack, cap 20. */
-  might: { perStack: 10, cap: 20 },
+  might: { perStack: 8, cap: 15 }, // Round 6: 8% to a cap of 15 (was 10% to 20: Anthem at the cap tripled an ally's swings all fight).
   /** Pacing pass: buffs and debuffs from abilities last about twice as long (their abilities come a third as often). */
   weaken: { pct: -30, duration: 20 },
   guard: { armor: pts(3), duration: 28 }, // Step 5f: +3,000 for 28 ticks (was +2,000 for 20): a minion's swing into Armor 5,000 falls 28%, Crush 9%.
@@ -357,9 +357,10 @@ export const STATUS = {
    * whole Burn is 1.5 times what it was: slower Burn spends more of itself after its target is dead.
    */
   /** Step 5f (the director's: "ticks down too slowly" and "doesn't do very much"): 60 a stack, a quarter lost a pulse. 18 stacks deal 3,400 over 12 ticks, not 30. */
-  burn: { every: 2, perStack: 60, drop: 0.25 },
+  /** Round 6 (the feel read): a Firebolt's 88 stacks dealt 5,265 on their first pulse and a quarter less each pulse: a nuke, not a ramp. 40 a stack, 15% lost a pulse, and a cap of 40, so the Pyromancer reaches the cap in two casts and keeps it there with Kindling. */
+  burn: { every: 2, perStack: 40, drop: 0.15, cap: 40 },
   /** Step 5f (the director's deep freeze): cap 12, −5 a stack (−60 at the cap, colder than Slow), one stack lost every 4 ticks, so reapplying keeps a foe frozen. */
-  chill: { cap: 12, perStack: -5, every: 4 },
+  chill: { cap: 12, perStack: -5, every: 6 }, // Round 6: one stack every 6 ticks (was 4): a Hexer's two or three stacks thawed before its next swing.
   /**
    * Campaign pass: a cap of 25 stacks (uncapped, a slow boss gathered 50 to 100 and took 8,000 from one swing), and 60 a
    * stack, not 80 (the second AI playtester's Stormcaller carried the last nine nodes).
@@ -372,10 +373,10 @@ export const STATUS = {
   sunder: { perStack: -600, every: 4, cap: 20 }, // Step 5f: a cap (the Silent One carried 235). Armor's floor is 0, so it never went past.
   silence: { duration: 16 }, // Step 5f: 16 (was 8: Hush interrupted a cast 0.06 times an application).
   /** Step 5e: 20 ticks (was 14). Vanish is on the long cooldown (36), so the Assassin was Hidden 14 ticks in 36 at best, and it died at tick 18 in 45 of 100 fights. */
-  hidden: { duration: 14 }, // Step 5f round 4: 14 on a medium Vanish (28): hidden half a fight. On a short one the Assassin hid 85% of the time and its two allies took every hit (−20 points in the campaign).
+  hidden: { duration: 10 }, // Step 5f round 6: 10 on a short Vanish (16): hidden 60% of a fight, from tick 8. Medium came at tick 22, after the Assassin died at 20; 14 on a short had it hidden 85% and its allies took every hit.
   rot: { healing: -60, duration: 20 },
   /** Step 5f (the director's): Regen for mana, not a doubled stat: 4% of max MP every 2 ticks for 16 ticks (32% of max MP). */
-  clarity: { every: 2, share: 0.03, duration: 16 }, // Round 5: 3% a pulse (24% of max MP; was 4%, 32%).
+  clarity: { every: 2, share: 0.02, duration: 16 }, // Rounds 5 and 6: 2% a pulse (16% of max MP; was 4%, 32%): Stand fast's every 16 ticks made mana infinite.
   aegis: { share: 25 },
   /** Kills anything at HP 3 or below; a Hoplite or Knight survives it. */
   doom: { countdown: 10, damage: 3500 },

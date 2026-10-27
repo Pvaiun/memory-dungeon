@@ -59,9 +59,9 @@
    "min": 0.3,
    "max": 0.7,
    "slots": [
-    10,
     8,
-    6
+    4,
+    0
    ]
   },
   "stagger": 1.5,
@@ -470,14 +470,14 @@
    "boosts": [
     {
      "tag": "physical",
-     "pct": 10
+     "pct": 8
     },
     {
      "tag": "magical",
-     "pct": 10
+     "pct": 8
     }
    ],
-   "cap": 20,
+   "cap": 15,
    "trigger": {
     "on": {
      "event": "action_resolve"
@@ -602,18 +602,19 @@
    "label": "debuff",
    "show": "icon",
    "stacking": "intensity",
+   "cap": 40,
    "pulse": {
     "every": 2,
     "do": [
      {
       "op": "damage",
       "type": "none",
-      "amount": 60
+      "amount": 40
      }
     ]
    },
    "drop": {
-    "fraction": 0.25
+    "fraction": 0.15
    }
   },
   {
@@ -639,7 +640,7 @@
     }
    ],
    "pulse": {
-    "every": 4
+    "every": 6
    },
    "drop": {
     "count": 1
@@ -726,7 +727,7 @@
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
-   "duration": 14,
+   "duration": 10,
    "unremovable": true,
    "stats": [
     {
@@ -766,7 +767,7 @@
       "amount": {
        "scale": [
         {
-         "ratio": 0.03,
+         "ratio": 0.02,
          "stat": "max_mp",
          "of": "holder"
         }
@@ -1486,7 +1487,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00175,
+          "ratio": 0.0010499999999999997,
           "stat": "magic",
           "of": "holder"
          }
@@ -4318,7 +4319,7 @@
    "id": "anthem",
    "class": "bard",
    "name": "Anthem",
-   "text": "Haste and many Might on a random ally.",
+   "text": "Haste and several Might on a random ally.",
    "cooldown": 15.7,
    "cast": 1,
    "mp": 300,
@@ -4334,7 +4335,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 0.0069,
+        "ratio": 0.0039000000000000003,
         "stat": "magic"
        }
       ]
@@ -4625,7 +4626,7 @@
    "class": "assassin",
    "name": "Vanish",
    "text": "Goes Hidden.",
-   "cooldown": 31.2,
+   "cooldown": 17.8,
    "cast": 1,
    "mp": 150,
    "if": {
@@ -4843,7 +4844,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00975,
+          "ratio": 0.00585,
           "stat": "magic"
          }
         ]
@@ -4884,7 +4885,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00525,
+          "ratio": 0.00315,
           "stat": "magic"
          }
         ]

@@ -210,7 +210,8 @@ export const abilities: A[] = [
   // Step 5e: Haste on the ally with the highest Attack or Magic (was a random ally), and the Bard's songs at 400 MP (were 650): it never
   // ran short of MP, and its parties won 13 to 25 points less than parties without it.
   // Step 5f (the director's): Allegro and War ballad merged into one short song on a random ally, and a small heal on every ally in the slot it frees.
-  a("bard", "anthem", "Anthem", "Haste and many Might on a random ally.", { ...timing("short", "quick"), mp: 300, target: "ally", do: [apply("haste"), apply("might", { stacks: stacks("many", "magic") })] }),
+  // Round 6: several Might (was many: 20 stacks, the cap, every 14 ticks).
+  a("bard", "anthem", "Anthem", "Haste and several Might on a random ally.", { ...timing("short", "quick"), mp: 300, target: "ally", do: [apply("haste"), apply("might", { stacks: stacks("several", "magic") })] }),
   a("bard", "chorus", "Chorus", "A small heal on every ally; the amount scales from Magic.", { ...timing("short", "normal"), mp: 300, ...waitsFor("allies", { hpBelow: 100 }), target: T.everyAlly, do: [{ op: "heal", amount: from("magic", 0.15) }] }),
   // Step 5c (the director's): Lullaby (Slow on one foe) became a Shock on every foe.
   // Many, not several: at several an AI playtester saw it peak at 10 stacks for under 2,000 a fight, the Bard a passenger.
@@ -232,7 +233,7 @@ export const abilities: A[] = [
     ...timing("medium", "normal"), mp: 250, seek: true, target: lacking(T.highestAMFoe, "stun", true), do: [phys("blunt", hit("attack", "normal"), { apply: [{ status: "stun" }] })],
   }),
   // Assassin
-  a("assassin", "vanish", "Vanish", "Goes Hidden.", { ...timing("medium", "quick"), mp: 150, ...waitsFor("self", { lacks: "hidden" }), target: "self", do: [apply("hidden")] }),
+  a("assassin", "vanish", "Vanish", "Goes Hidden.", { ...timing("short", "quick"), mp: 150, ...waitsFor("self", { lacks: "hidden" }), target: "self", do: [apply("hidden")] }),
   a("assassin", "backstab", "Backstab", "Heavy damage, scaling from Crit chance, to the foe with the lowest HP, past any guard.", { ...timing("medium", "normal"), mp: 250, seek: true, target: T.lowestHpFoe, do: [phys("pierce", hit("crit_chance", "heavy"))] }),
   a("assassin", "garrote", "Garrote", "Silences a random foe that isn't Taunting, past any guard.", {
     ...timing("medium", "quick"), mp: 250, seek: true, target: lacking(T.notTauntingFoe, ["taunt", "silence"], true), do: [phys("pierce", hit("attack", "normal"), { apply: [{ status: "silence" }] })],
