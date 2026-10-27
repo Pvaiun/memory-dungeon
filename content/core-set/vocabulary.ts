@@ -9,7 +9,8 @@ import { KIND_SPEED, MP_REGEN, P, RULES, SPEED, STATUS, pts } from "./scale.js";
 const TIMING = ["attack_speed", "cooldown_reduction", "cast_time_reduction"] as const;
 
 export const stats: StatDefT[] = [
-  { id: "max_hp", name: "HP", kind: "amount", default: pts(1), floor: 1 },
+  // Step 5f: a floor of half a point. Last stand's Martyr slot and Glass heart together took an HP-2 class to 0 max HP, and a Raise brought it back at 0.
+  { id: "max_hp", name: "HP", kind: "amount", default: pts(1), floor: pts(1) / 2 },
   { id: "max_mp", name: "MP", kind: "amount", default: 0, floor: 0 },
   { id: "mp_regen", name: "MP regen", kind: "amount", default: 0, floor: 0, brings: "mp_regen", note: `MP restored every ${MP_REGEN.every} ticks, through the status it brings.` },
   { id: "attack", name: "Attack", kind: "amount", default: 0, floor: 0 },

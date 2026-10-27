@@ -91,7 +91,7 @@
    "name": "HP",
    "kind": "amount",
    "default": 1000,
-   "floor": 1
+   "floor": 500
   },
   {
    "id": "max_mp",
@@ -726,7 +726,7 @@
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
-   "duration": 24,
+   "duration": 14,
    "unremovable": true,
    "stats": [
     {
@@ -906,7 +906,7 @@
       "amount": {
        "scale": [
         {
-         "ratio": 0.02,
+         "ratio": 0.025,
          "stat": "mp_regen",
          "of": "holder"
         }
@@ -1062,7 +1062,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.4,
+          "ratio": 0.25,
           "stat": "max_hp",
           "of": "holder"
          }
@@ -3625,7 +3625,7 @@
    "text": "Guards the ally with the lowest share of HP.",
    "cooldown": 14.7,
    "cast": 1,
-   "mp": 250,
+   "mp": 150,
    "target": {
     "side": "allies",
     "pick": "lowest",
@@ -3645,7 +3645,7 @@
    "text": "Taunts, and gives Clarity to the ally with the least MP.",
    "cooldown": 27.5,
    "cast": 1,
-   "mp": 400,
+   "mp": 250,
    "target": "self",
    "do": [
     {
@@ -3670,7 +3670,7 @@
    "text": "Bashes a foe with the shield, which scales from max HP, and Stuns it.",
    "cooldown": 30.7,
    "cast": 1,
-   "mp": 400,
+   "mp": 250,
    "target": {
     "side": "foes",
     "where": {
@@ -3706,7 +3706,7 @@
    "text": "Cleanses an ally with a debuff and gives it Regen; with nobody debuffed, Regen on the lowest ally.",
    "cooldown": 27.3,
    "cast": 3,
-   "mp": 400,
+   "mp": 500,
    "target": {
     "side": "allies",
     "where": {
@@ -3734,7 +3734,7 @@
    "text": "A quick, small heal on the lowest ally.",
    "cooldown": 16.5,
    "cast": 1,
-   "mp": 250,
+   "mp": 300,
    "if": {
     "side": "allies",
     "where": {
@@ -3767,7 +3767,7 @@
    "text": "Revives a random knocked-out ally with half its HP.",
    "cooldown": 59.9,
    "cast": 10,
-   "mp": 1300,
+   "mp": 1200,
    "if": {
     "side": "allies",
     "where": {
@@ -3802,7 +3802,7 @@
    "text": "A barbed arrow at a random foe, adding several Bleed.",
    "cooldown": 16.7,
    "cast": 1,
-   "mp": 250,
+   "mp": 150,
    "do": [
     {
      "op": "damage",
@@ -3839,7 +3839,7 @@
    "text": "A burning arrow at the foe with the most Burn, adding many.",
    "cooldown": 28.5,
    "cast": 6,
-   "mp": 400,
+   "mp": 250,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -3883,7 +3883,7 @@
    "text": "An arrow at the foe with the most Sunder, adding several.",
    "cooldown": 24.3,
    "cast": 3,
-   "mp": 400,
+   "mp": 250,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -3927,7 +3927,7 @@
    "text": "Taunts and Guards itself.",
    "cooldown": 15.1,
    "cast": 1,
-   "mp": 250,
+   "mp": 150,
    "target": "self",
    "do": [
     {
@@ -3947,7 +3947,7 @@
    "text": "Regen on the lowest ally.",
    "cooldown": 27.2,
    "cast": 3,
-   "mp": 400,
+   "mp": 250,
    "target": {
     "side": "allies",
     "pick": "lowest",
@@ -3967,7 +3967,7 @@
    "text": "Lashes a random foe with its thorns.",
    "cooldown": 13.8,
    "cast": 1,
-   "mp": 250,
+   "mp": 150,
    "do": [
     {
      "op": "damage",
@@ -3991,7 +3991,7 @@
    "text": "Aegis on the lowest ally.",
    "cooldown": 46.6,
    "cast": 1,
-   "mp": 650,
+   "mp": 400,
    "if": {
     "side": "allies",
     "where": {
@@ -4020,7 +4020,7 @@
    "text": "Guards itself and the other lowest ally.",
    "cooldown": 28.3,
    "cast": 3,
-   "mp": 400,
+   "mp": 250,
    "target": "self",
    "do": [
     {
@@ -4045,7 +4045,7 @@
    "text": "A thrust at a random foe that adds a few Sunder.",
    "cooldown": 31.8,
    "cast": 6,
-   "mp": 400,
+   "mp": 250,
    "do": [
     {
      "op": "damage",
@@ -4082,7 +4082,7 @@
    "text": "Ward on every ally.",
    "cooldown": 39.9,
    "cast": 6,
-   "mp": 650,
+   "mp": 800,
    "target": {
     "side": "allies",
     "pick": "all"
@@ -4101,7 +4101,7 @@
    "text": "Cleanses and heals itself and the lowest other ally; the heal scales from Magic.",
    "cooldown": 28.7,
    "cast": 3,
-   "mp": 400,
+   "mp": 500,
    "if": {
     "side": "allies",
     "where": {
@@ -4159,7 +4159,7 @@
    "text": "Heavy Light damage to the foe with the highest Attack or Magic, adding several Burn.",
    "cooldown": 27.1,
    "cast": 10,
-   "mp": 400,
+   "mp": 500,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -4206,7 +4206,7 @@
    "text": "Three quick Wind hits on a foe that isn't Taunting, each adding a few Shock.",
    "cooldown": 16.4,
    "cast": 1,
-   "mp": 250,
+   "mp": 150,
    "seek": true,
    "target": {
     "side": "foes",
@@ -4235,7 +4235,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0020999999999999994,
+          "ratio": 0.0010499999999999997,
           "stat": "attack"
          }
         ]
@@ -4252,7 +4252,7 @@
    "text": "Heals the lowest ally; the amount scales from Magic.",
    "cooldown": 25.4,
    "cast": 3,
-   "mp": 400,
+   "mp": 500,
    "if": {
     "side": "allies",
     "where": {
@@ -4285,7 +4285,7 @@
    "text": "Revives a random knocked-out ally with a tenth of its HP, every action ready.",
    "cooldown": 67.5,
    "cast": 1,
-   "mp": 1300,
+   "mp": 1200,
    "if": {
     "side": "allies",
     "where": {
@@ -4321,7 +4321,7 @@
    "text": "Haste and many Might on a random ally.",
    "cooldown": 15.7,
    "cast": 1,
-   "mp": 250,
+   "mp": 300,
    "target": "ally",
    "do": [
     {
@@ -4349,7 +4349,7 @@
    "text": "A small heal on every ally; the amount scales from Magic.",
    "cooldown": 18.3,
    "cast": 3,
-   "mp": 250,
+   "mp": 300,
    "if": {
     "side": "allies",
     "where": {
@@ -4381,7 +4381,7 @@
    "text": "Many Shock on every foe.",
    "cooldown": 30.8,
    "cast": 3,
-   "mp": 400,
+   "mp": 500,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -4408,7 +4408,7 @@
    "text": "A few Burn and a few Shock on every foe.",
    "cooldown": 18.3,
    "cast": 3,
-   "mp": 250,
+   "mp": 300,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -4447,7 +4447,7 @@
    "text": "Silences the casting foe with the highest Attack or Magic and strips its buffs. Waits for a foe to cast.",
    "cooldown": 29.2,
    "cast": 1,
-   "mp": 400,
+   "mp": 500,
    "if": {
     "side": "foes",
     "where": {
@@ -4485,7 +4485,7 @@
    "text": "Weakens the foe with the highest Attack or Magic and adds several Sunder.",
    "cooldown": 14.4,
    "cast": 3,
-   "mp": 250,
+   "mp": 300,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -4522,7 +4522,7 @@
    "text": "Haste on itself.",
    "cooldown": 16,
    "cast": 1,
-   "mp": 250,
+   "mp": 150,
    "target": "self",
    "do": [
     {
@@ -4538,7 +4538,7 @@
    "text": "Three quick Fire hits on the foe with the most Burn, each adding a few.",
    "cooldown": 16.6,
    "cast": 1,
-   "mp": 250,
+   "mp": 150,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -4583,7 +4583,7 @@
    "text": "Stuns the foe with the highest Attack or Magic, past any guard.",
    "cooldown": 25.2,
    "cast": 3,
-   "mp": 400,
+   "mp": 250,
    "seek": true,
    "target": {
     "side": "foes",
@@ -4625,9 +4625,9 @@
    "class": "assassin",
    "name": "Vanish",
    "text": "Goes Hidden.",
-   "cooldown": 31.2,
+   "cooldown": 17.8,
    "cast": 1,
-   "mp": 400,
+   "mp": 150,
    "if": {
     "side": "self",
     "where": {
@@ -4649,7 +4649,7 @@
    "text": "Heavy damage, scaling from Crit chance, to the foe with the lowest HP, past any guard.",
    "cooldown": 25.1,
    "cast": 3,
-   "mp": 400,
+   "mp": 250,
    "seek": true,
    "target": {
     "side": "foes",
@@ -4679,7 +4679,7 @@
    "text": "Silences a random foe that isn't Taunting, past any guard.",
    "cooldown": 29.7,
    "cast": 1,
-   "mp": 400,
+   "mp": 250,
    "seek": true,
    "target": {
     "side": "foes",
@@ -4719,7 +4719,7 @@
    "text": "Dark damage scaling from max HP to a random foe, which is Weakened.",
    "cooldown": 15.7,
    "cast": 1,
-   "mp": 250,
+   "mp": 300,
    "do": [
     {
      "op": "damage",
@@ -4748,7 +4748,7 @@
    "text": "Spends a fifth of its max HP to heal the lowest other ally for as much, and gives it Clarity.",
    "cooldown": 25.4,
    "cast": 3,
-   "mp": 400,
+   "mp": 500,
    "if": {
     "side": "others",
     "where": {
@@ -4792,7 +4792,7 @@
    "text": "Several Might on itself.",
    "cooldown": 26.8,
    "cast": 1,
-   "mp": 400,
+   "mp": 500,
    "target": "self",
    "do": [
     {
@@ -4816,7 +4816,7 @@
    "text": "Fire at the foe with the most Burn, adding several.",
    "cooldown": 14,
    "cast": 3,
-   "mp": 250,
+   "mp": 300,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -4860,7 +4860,7 @@
    "text": "Fire on every foe, adding a few Burn to each.",
    "cooldown": 28.7,
    "cast": 6,
-   "mp": 650,
+   "mp": 800,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -4901,7 +4901,7 @@
    "text": "Heavy Fire on the foe with the most Burn, rising with each stack. The Burn stays.",
    "cooldown": 49.4,
    "cast": 10,
-   "mp": 1300,
+   "mp": 1200,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -4937,7 +4937,7 @@
    "text": "Ice at the foe with the most Chill, adding several.",
    "cooldown": 17.9,
    "cast": 3,
-   "mp": 250,
+   "mp": 300,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -4981,7 +4981,7 @@
    "text": "Ice on every foe, adding a few Chill to each.",
    "cooldown": 24.7,
    "cast": 6,
-   "mp": 650,
+   "mp": 800,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -5022,7 +5022,7 @@
    "text": "Clarity on the ally with the least MP.",
    "cooldown": 30.9,
    "cast": 1,
-   "mp": 400,
+   "mp": 500,
    "target": {
     "side": "allies",
     "pick": "lowest",
@@ -5042,7 +5042,7 @@
    "text": "Lightning at a random foe, then up to three others, adding a few Shock to each.",
    "cooldown": 16.2,
    "cast": 1,
-   "mp": 400,
+   "mp": 500,
    "do": [
     {
      "op": "damage",
@@ -5111,7 +5111,7 @@
    "text": "Lightning on every foe, adding a few Shock to each.",
    "cooldown": 26,
    "cast": 3,
-   "mp": 650,
+   "mp": 800,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -5152,7 +5152,7 @@
    "text": "Haste on itself.",
    "cooldown": 45.6,
    "cast": 6,
-   "mp": 650,
+   "mp": 800,
    "target": "self",
    "do": [
     {
@@ -5168,7 +5168,7 @@
    "text": "Shields itself and the other lowest ally; the amount scales from Armor.",
    "cooldown": 30.8,
    "cast": 3,
-   "mp": 400,
+   "mp": 500,
    "if": {
     "side": "allies",
     "where": {
@@ -5224,7 +5224,7 @@
    "text": "Earth damage scaling from Armor on a random foe.",
    "cooldown": 17.7,
    "cast": 6,
-   "mp": 250,
+   "mp": 300,
    "do": [
     {
      "op": "damage",
@@ -5248,7 +5248,7 @@
    "text": "Earth damage on a random foe, which is Stunned.",
    "cooldown": 40.1,
    "cast": 10,
-   "mp": 650,
+   "mp": 800,
    "target": {
     "side": "foes",
     "where": {
@@ -5283,7 +5283,7 @@
    "text": "Taunts.",
    "cooldown": 19.4,
    "cast": 1,
-   "mp": 250,
+   "mp": 300,
    "target": "self",
    "do": [
     {
@@ -5298,7 +5298,7 @@
    "text": "Guards itself.",
    "cooldown": 33.6,
    "cast": 1,
-   "mp": 400,
+   "mp": 500,
    "target": "self",
    "do": [
     {
@@ -5313,7 +5313,7 @@
    "text": "A heavy blow that Stuns.",
    "cooldown": 52.2,
    "cast": 6,
-   "mp": 650,
+   "mp": 800,
    "target": {
     "side": "foes",
     "where": {
@@ -5348,7 +5348,7 @@
    "text": "A massive blow.",
    "cooldown": 34.4,
    "cast": 10,
-   "mp": 400,
+   "mp": 500,
    "do": [
     {
      "op": "damage",
@@ -5371,7 +5371,7 @@
    "text": "Heals the most hurt ally.",
    "cooldown": 24.4,
    "cast": 3,
-   "mp": 250,
+   "mp": 300,
    "if": {
     "side": "allies",
     "where": {
@@ -5403,7 +5403,7 @@
    "text": "Weakens and Slows every foe.",
    "cooldown": 44.9,
    "cast": 6,
-   "mp": 650,
+   "mp": 800,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -5425,7 +5425,7 @@
    "text": "A heavy Dark spell.",
    "cooldown": 53.9,
    "cast": 10,
-   "mp": 650,
+   "mp": 800,
    "do": [
     {
      "op": "damage",
@@ -5448,7 +5448,7 @@
    "text": "Digs a fallen packmate back up.",
    "cooldown": 31,
    "cast": 6,
-   "mp": 400,
+   "mp": 500,
    "if": {
     "side": "allies",
     "where": {
@@ -5482,7 +5482,7 @@
    "text": "Dooms a foe.",
    "cooldown": 35.3,
    "cast": 6,
-   "mp": 400,
+   "mp": 500,
    "if": {
     "side": "foes",
     "where": {
@@ -5508,7 +5508,7 @@
    "text": "Silences the foe with the highest Attack or Magic.",
    "cooldown": 33.7,
    "cast": 3,
-   "mp": 400,
+   "mp": 500,
    "if": {
     "side": "foes",
     "where": {
@@ -5541,7 +5541,7 @@
    "text": "Silences every foe.",
    "cooldown": 32.9,
    "cast": 6,
-   "mp": 400,
+   "mp": 500,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -5559,7 +5559,7 @@
    "text": "Might and Haste on its strongest ally.",
    "cooldown": 37.9,
    "cast": 3,
-   "mp": 400,
+   "mp": 500,
    "target": {
     "side": "allies",
     "pick": "highest",
@@ -5588,7 +5588,7 @@
    "text": "Fire on a foe, with a few Burn.",
    "cooldown": 24,
    "cast": 1,
-   "mp": 250,
+   "mp": 300,
    "do": [
     {
      "op": "damage",
@@ -5617,7 +5617,7 @@
    "text": "A very long cast: huge Fire on every foe, with many Burn.",
    "cooldown": 35.7,
    "cast": 10,
-   "mp": 400,
+   "mp": 500,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -5650,7 +5650,7 @@
    "text": "Ice on every foe, with a stack of Chill.",
    "cooldown": 37.4,
    "cast": 3,
-   "mp": 400,
+   "mp": 500,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -5683,7 +5683,7 @@
    "text": "Summons two Drones.",
    "cooldown": 32.5,
    "cast": 6,
-   "mp": 400,
+   "mp": 500,
    "do": [
     {
      "op": "summon",
@@ -5698,7 +5698,7 @@
    "text": "Lightning on every foe, with a stack of Shock.",
    "cooldown": 36.2,
    "cast": 6,
-   "mp": 400,
+   "mp": 500,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -5731,7 +5731,7 @@
    "text": "Summons two Soldiers.",
    "cooldown": 34.6,
    "cast": 6,
-   "mp": 400,
+   "mp": 500,
    "do": [
     {
      "op": "summon",

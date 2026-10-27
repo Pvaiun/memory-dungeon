@@ -154,13 +154,13 @@ export const RULES = {
  * MP regen spends more than it regains when its abilities all fire.
  */
 /** Step 5f: on the party's ladder (200 / 350 / 600), as their cooldowns shortened. */
-export const COST = { short: 250, medium: 400, long: 650 } as const; // Round 2: a rung dearer, with the party's.
+export const COST = { short: 300, medium: 500, long: 800 } as const; // Round 3: the spells tier (classes.ts).
 /**
  * MP regen: every `every` ticks, restore `share` × the MP regen stat (regen 3 gives 120). Step 5e: 0.04 (was 0.05). Over whole
  * campaign runs the party regained 110% of the MP it spent, and the casters spent 1% to 4% of their time short of MP (the
  * Geomancer 14%), against 5c's intent that casters are gated by it; the walls, at 96% to 98% MP, don't feel the step.
  */
-export const MP_REGEN = { every: 4, share: 0.02 }; // Step 5f: 0.03, then round 2: 0.02 (at 0.03 and the first ladder the party regained 115% of what it spent). Every cost is on one ladder (classes.ts), so every class feels MP.
+export const MP_REGEN = { every: 4, share: 0.025 }; // Step 5f: 0.03, then round 2: 0.02 (at 0.03 and the first ladder the party regained 115% of what it spent). Every cost is on one ladder (classes.ts), so every class feels MP.
 
 // ─── Damage ──────────────────────────────────────────────────────────────────
 
@@ -372,7 +372,7 @@ export const STATUS = {
   sunder: { perStack: -600, every: 4, cap: 20 }, // Step 5f: a cap (the Silent One carried 235). Armor's floor is 0, so it never went past.
   silence: { duration: 16 }, // Step 5f: 16 (was 8: Hush interrupted a cast 0.06 times an application).
   /** Step 5e: 20 ticks (was 14). Vanish is on the long cooldown (36), so the Assassin was Hidden 14 ticks in 36 at best, and it died at tick 18 in 45 of 100 fights. */
-  hidden: { duration: 24 }, // Step 5f: 24, with Vanish on a medium cooldown.
+  hidden: { duration: 14 }, // Step 5f round 3: 14 with Vanish on a short cooldown (16): hidden most of a fight, with gaps.
   rot: { healing: -60, duration: 20 },
   /** Step 5f (the director's): Regen for mana, not a doubled stat: 4% of max MP every 2 ticks for 16 ticks (32% of max MP). */
   clarity: { every: 2, share: 0.04, duration: 16 },

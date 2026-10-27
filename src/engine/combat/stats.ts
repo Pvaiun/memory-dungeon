@@ -27,7 +27,9 @@ export function finalValue(c: Content, key: string, base: number, flat: number, 
   const v = Math.trunc((base + flat) * (1 + pct / 100));
   const def = c.stats.get(key);
   if (!def) return v;
-  return Math.min(def.cap ?? v, Math.max(def.floor ?? v, v));
+  // Step 5f: a floor without a cap never held (the missing cap fell back to the unfloored value, which the min then kept), so
+  // Sunder took Armor below 0 and a Martyr's HP reached 0. Engine 0.13.
+  return Math.min(def.cap ?? Infinity, Math.max(def.floor ?? -Infinity, v));
 }
 
 export const statDefault = (c: Content, key: string) => c.stats.get(key)?.default ?? 0;

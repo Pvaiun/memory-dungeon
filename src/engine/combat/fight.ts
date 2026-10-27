@@ -484,7 +484,7 @@ function holds(w: W, u: CUnit, c: S.ConditionT) {
 
 function value(w: W, x: CUnit, by: NonNullable<S.TargetRuleT["by"]>): number {
   if (by === "hp") return x.hp;
-  if (by === "hp_share") return x.hp / x.stats.max_hp;
+  if (by === "hp_share") return x.stats.max_hp > 0 ? x.hp / x.stats.max_hp : 0;
   if (by === "mp_share") return x.stats.max_mp > 0 ? x.mp / x.stats.max_mp : 1;
   if (by === "buffs" || by === "debuffs") return x.statuses.filter((s) => def(w, s.id).label === by.slice(0, -1)).length;
   if ("stat" in by) return stat(w, x, by.stat);
