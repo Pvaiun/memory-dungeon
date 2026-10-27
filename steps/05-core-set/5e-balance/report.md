@@ -119,7 +119,7 @@ At the frozen knobs, 54 flags, of which these are real and left for you or the n
 - **The Bard and the Hexer** (section 1B): a design question.
 - **Third-slot abilities of the casters that die first** (1F): Pyre, Static charge, Stillness, plus Fireball, Tremor, Thunderstorm and Blizzard under 0.6 casts a boss fight in the campaign (their casters are down by then).
 - **The Vampire, the Valkyrie and the Monk** at +6 to +9.5 in the campaign, +20 to +24 in free play: above the ±8 band when the three sets are averaged. The Vampire's heal is now 2,150 a fight; the Valkyrie's worth is Rally, Valhalla and a 3 / 3 / 3 body; the Monk's is 3.2 actions every 10 ticks. One more cut each would land them, at the cost of free play's strongest picks; I stopped where the two played modes were inside ±10.
-- **Caravan and Escort** at +8 against Neutral (band ±7): a point over.
+- **Caravan and Escort** at +8 against Neutral at the frozen knobs (band ±7), +9 and +10 at the new ones: the fresh read flags them too.
 - **The Stormcaller** at 1.8× (1H).
 - **Casters that are never short of MP:** the Bard, the Paladin, the Pyromancer and the Frostweaver (1G).
 - **By design, left alone:** the Wisp, the Bomb Bug, the Ghoul's long life.
@@ -156,6 +156,8 @@ Win rates set difficulty, never balance, as you said: the knobs were frozen thro
 | 19 | The Tower Top | +108 → +76 | +41 → −40 | 96% |
 | 20 | The Royal Court | +139 → +115 | −57 → −72 | 96% |
 
+At the new knobs the sheet (`sheet-after.md`, 50 flags) reads the campaign column: the Vampire +11, the Monk +10, the Valkyrie +10, the Stormcaller +8; the Bard −12, the Hexer −8, the Pyromancer −8, the Frostweaver −6.5; the other eight within ±5. The spread wins 16% of campaign runs (the sensible kits 20%, the gear rotation 11%).
+
 What the knobs say: **no boss sits at the floor any more** (four did, at −80 to −88: the party's abilities came too fast for them to be anything but a speed bump), the regular fights' knobs fell on fifteen nodes (mean +77 → +64: the party's free sustain is gone, so the foes don't need +148% HP to hurt), and the late bosses came down hard (the Long Road +141 → +38, Blood Moon +167 → +28) because the best builds there leaned on the Vampire, the Valkyrie and Caravan. The spread of the knobs narrowed from 255 points to 119: the knobs absorb less of what the classes do, which was your complaint.
 
 ### The rogue
@@ -166,7 +168,56 @@ What the knobs say, as in the campaign: the regular fights' and elites' knobs fe
 
 ## 6. Fresh eyes
 
-The fresh agent's read is still running as this is committed; its list goes here as it writes it (`fresh-eyes.md`).
+A separate agent that had not seen the tuning log, the findings or this report ran the sheet at the new knobs (`sheet-after.md`), played nodes 1 to 6 of the campaign with only what a player sees (three tries a node) and one whole rogue run, and wrote `fresh-eyes.md`. Here it is as written:
+
+> From `npm run balance -- --trios 80 --seeds 2`, a campaign playtest of nodes 1 to 6 (three tries a node) and one rogue run (Knight, seed 7, won). Numbers are campaign / free play / rogue; the tuning log was not read.
+> 
+> ### What still looks wrong, worst first
+> 
+> 1. **The campaign kills in regular fights, not at the boss.** 91% of campaign losses come in regular fights; one takes 56% of the party's HP and knocks out a member on average, while a boss fight lasts 32.5 ticks to a regular fight's 30.8 and knocks out fewer (0.9). All five of my lost runs ended in a regular room.
+> 
+> 2. **Nodes 3 and 6 lost three of three with sensible parties.** Node 3's four snakes bled the party for 3,200 to 4,700, and the Knight's Sworn Taunt pulled every bite onto a Knight already bleeding. At node 6 an Archer's 2,026 basic one-shot a full-HP Cleric (2,000) at t4.
+> 
+> 3. **The HP 2 classes still die before their kit plays.** Cleric knocked out in 40.6 of 100 campaign fights (mean tick 20.9), Pyromancer 47 (tick 12.7). My Pyromancer bled out at t10, my Cleric at t16 of a run's first fight.
+> 
+> 4. **Bard, Hexer and Frostweaver are passengers.** Parties with them win 15.9, 10.9 and 8.2 points less. The Hexer's damage is 100% basic attacks and it is knocked out most of anyone (52.5 of 100); the Bard casts 1.7 times a fight.
+> 
+> 5. **Vampire, Valkyrie and Monk carry.** +13.7, +12.2 and +11.5 points. Lifesteal is 47% of all campaign healing: the Vampire heals itself more than the Cleric heals anyone. The Monk out-damaged my other two together in every rogue boss fight.
+> 
+> 6. **Third-slot and long-cooldown abilities don't fire.** Pyre 0.03 casts a regular fight (never in ten playtest fights), Raise 0.07, Absolve 0.09, Stillness 0.13: a 40-tick cooldown with an 8-tick head start is ready at t32, and campaign fights end at t31.
+> 
+> 7. **Signature moves rarely come.** The Ogre Chief casts Crush 0.36 / 0.74 times a fight, never in my node 1; the Witch's Curse lands 0.11 times a fight; Aegis ends with the fight unused 70% of the time.
+> 
+> 8. **Ghosts and Ghouls are boss-grade minions.** A Ghost deals 2.67× the median minion's damage and lives 1.5× as long, a Ghoul 1.75× and 2.6×; the party loses 56% and 62% of the campaign fights they are in (Bandits: 8%), under a band that tops at 3.
+> 
+> 9. **Half the formations lose to Neutral.** In the spread Last stand is 11.6 points under Neutral, Ambush 9.5, Blitz 5.9, Scatter 5.3; the probe has Escort +10.2 and Caravan +9.4.
+> 
+> 10. **One amulet and one bow.** Heartstone is worn 15,246 unit-fights, +3.9 over an empty slot, which Warhorn and Glass heart lose to. Warbow gives ×1.61 damage: my Ranger out-damaged both walls 35,874 to 4,922 and 8,178.
+> 
+> 11. **Stats that never bind.** Foes dodge 0% of the party's hits, so Accuracy does nothing; resistances take 3% off the party's magic, so elements barely count; one Frost lance fills Chill's cap of 8, so Blizzard adds nothing; Sunder has no cap and reached 235 on the Silent One.
+> 
+> 12. **Rogue fights run long and the end is soft.** Mine ran 52 to 125 ticks against a 37-tick shape, nobody fell at any boss, and Quiet changed nothing, against the sheet's 95% Silent One win rate.
+> 
+> 13. **The Geomancer runs dry; Regen is small.** Starved 19% of its time; Earthen shell casts in a third of fights, so Bedrock is up 0.07 times a fight. Regen heals 284 an application: Renew's 1,300 MP buys a quarter of Cure's 1,000.
+> 
+> ### What looked right
+> 
+> - Bleed, Burn and Shock at 12%, 9% and 20% of their appliers' damage, all visible in play.
+> - Seven classes within 6 points of even: there is a middle.
+> - MP binds on casters, never on walls; zero fizzled casts.
+> - Nodes 1 and 2 play as a tutorial should: first-try wins, short fights.
+> - The campfire's three choices were real decisions, and the rogue's recruits and swaps rescued a run two members down.
+
+**My reading of it.** Items 3 to 7 and 13 are sections 1B, 1C, 1E and 1F in other words (the Geomancer's 19% is inside the band that asks a caster to be short 3% to 30% of its time). What's new, and right:
+
+- **Ghosts and Ghouls (8).** The party loses 56% and 62% of the campaign fights they're in, against 8% for Bandits. The enemy band reads damage and life per appearance, not the fights a foe decides; that measure belongs on the sheet, and the Ghost belongs in the next pass.
+- **Sunder has no cap (11).** 235 stacks on the Silent One: the one stacking status without a ceiling. Shock's cap (40) is the model.
+- **Accuracy never binds (11):** no foe in the core set dodges, so the stat is a dead line on every sheet. Either a foe with Evasion or no Accuracy.
+- **Glass heart and Warhorn under an empty slot (10):** the probe at the new knobs has them at −1.4 and −0.2 against nothing in the slot. A piece worse than no piece is useless by your principle; two to fix.
+- **Taunt and Bleed (2).** Sworn's Taunt pulls every bite onto the Knight, and every bite bursts its Bleed. A real interaction the sheet can't see and a playtest can; it's also the Knight doing its job. Worth a line on the Knight's sheet rather than a number.
+- **A one-shot at node 6 (2).** At a mob knob of +96 (damage +48%) an Archer's swing took a full-HP Cleric at tick 4. The knob's damage half makes hard nodes deadlier, not just longer. **A question for you:** should knobs touch HP only? Fights would run longer at the same win rates, and no unit would die to one swing at full HP.
+
+Where I read it differently: (1) the spread's losses fall in regular fights because the mob knob is set so the best builds clear them 95% alone, and the spread is mostly not best builds; whether a node should kill on its road or at its boss is the campaign's difficulty shape (5a), not balance, and it's yours to set. The three losses at nodes 3 and 6 are one playtester's three tries against the tuner's 92% and 81% best builds (node 6 is the road's first wall by design: one build in four wins half its runs there). (9) The spread confounds a formation with the parties that chose it; the probe, on the same parties, has Escort +10, Caravan +9, Blitz +7.5 and the other six within ±6 of Neutral. The top two were +8 at the frozen knobs and gained a point or two at the new ones: they stay on the list (section 4). (12) One won rogue run; the simulated player wins 23% of 2,000.
 
 ## 7. What to do next
 
