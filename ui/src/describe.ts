@@ -5,16 +5,11 @@
  */
 import type { AbilityT, EffectT, NumT, StatusT, TargetRuleT, WeaponT } from "../../src/schema.js";
 import { resolveWeapon } from "../../src/engine/combat/fight.js";
-import { c, disp, elementName, enemy, status } from "./content.js";
+import { c, DISPLAY_DIV, disp, elementName, enemy, status, statCode } from "./content.js";
 import { enemyDisplayName } from "./art.js";
 
 export type Stats = Record<string, number>;
 
-// ─── Timing words (content/core-set/scale.ts) ───
-const CAST_WORD: Record<number, string> = { 0: "none", 0.5: "quick", 1.5: "normal", 4: "long", 8: "very long" };
-const CD_WORD: Record<number, string> = { 6: "short", 12: "medium", 22: "long" };
-export const castWord = (t: number) => CAST_WORD[t] ?? `${t} ticks`;
-export const cooldownWord = (t: number) => CD_WORD[t] ?? `${t} ticks`;
 export const ticks = (t: number) => `${Number(t.toFixed(2))}t`;
 
 // ─── Numbers ───
@@ -176,31 +171,62 @@ export function effectText(e: EffectT, stats: Stats | null, inAction = true): st
 
 // ─── Abilities ───
 /**
- * An ability's size for one unit, in a few numbers: what each hit deals, a heal, a shield, the stacks it adds
- * ("≈ 9 fire + 4 Burn"). Slay the Spire prints a card's numbers; an AI playtester never knew how big a Protect was.
+ * What an amount grows with, the way a MOBA tooltip says it: "125% MAG" for a share of one of the unit's stats, "8×CRT"
+ * for a percent stat, "+9 PER BURN" for stacks on the target. The stat's code doubles as its colour on the sheet.
  */
-export function sizeWords(a: AbilityT, stats: Stats, dmgMult = 1): string {
-  const out: string[] = [];
-  const stacksOf = (n: NumT | undefined) => { const v = n === undefined ? 1 : evalNum(n, stats).value; return v >= 10 ? Math.round(v) : Math.round(v * 10) / 10; };
-  // Stacks past a status's cap read as the cap (a playtester saw "+25.5 CHILL" on a foe that holds 8 at most).
-  const capped = (id: string, n: NumT | undefined) => { const cap = status(id).cap; const v = stacksOf(n); return typeof cap === "number" && v > cap ? `${cap} (THE MOST IT HOLDS)` : String(v); };
+export type Scale = { text: string; stat?: string };
+export function scalesOf(n: NumT | undefined, stacks = false): Scale[] {
+  if (n === undefined || typeof n === "number") return [];
+  const out: Scale[] = [];
+  for (const s of n.scale) {
+    if (s.stat && s.of !== "target") {
+      const def = c.stats.get(s.stat);
+      const code = statCode(s.stat);
+      // Stacks scale too (Burn from Magic), but a share of a stat means nothing for a count: just the stat.
+      if (stacks) out.push({ text: code, stat: s.stat });
+      else if (def?.kind === "points") out.push({ text: `${short(s.ratio / DISPLAY_DIV)}×${code}`, stat: s.stat });
+      else out.push({ text: `${Math.round(s.ratio * 100)}% ${code}`, stat: s.stat });
+    } else if (s.stacks) out.push({ text: `+${short(s.ratio / DISPLAY_DIV)} PER ${status(s.stacks).name.toUpperCase()}` });
+  }
+  return out;
+}
+const short = (v: number) => (v >= 10 ? String(Math.round(v)) : String(Math.round(v * 10) / 10));
+
+/** One part of an ability's size: a number, what it is (an element, a kind, a status), and what it grows with. */
+export type SizePart = { value?: string; word: string; tone?: string; scales: Scale[]; chance?: number };
+/**
+ * An ability's size for one unit, in parts: what each hit deals and its kind, a heal, a shield, the stacks it adds,
+ * and the stats each grows with. Slay the Spire prints a card's numbers; the director also wanted to see what to gear for.
+ */
+export function sizeParts(a: AbilityT, stats: Stats, dmgMult = 1): SizePart[] {
+  const out: SizePart[] = [];
+  const count = (n: NumT | undefined, id: string) => {
+    const v = n === undefined ? 1 : evalNum(n, stats).value;
+    const cap = status(id).cap;
+    const r = v >= 10 ? Math.round(v) : Math.round(v * 10) / 10;
+    return String(typeof cap === "number" && r > cap ? cap : r);
+  };
+  const statusPart = (id: string, n: NumT | undefined, chance?: number): SizePart => {
+    const d = status(id);
+    if (id === "shield") return { value: String(disp(evalNum(n ?? 0, stats).value)), word: "SHIELD", tone: "sh", scales: scalesOf(n), chance };
+    return { value: d.stacking === "intensity" ? count(n, id) : undefined, word: d.name.toUpperCase(), tone: d.label === "buff" ? "buff" : "debuff", scales: d.stacking === "intensity" ? scalesOf(n, true) : [], chance };
+  };
   for (const e of a.do) {
     if (e.op === "damage") {
-      const kind = e.type === "magical" ? elementName(e.element ?? "").toLowerCase() : e.element ? elementName(e.element).toLowerCase() : e.type === "physical" ? (e.subtype ?? "physical") : "damage";
+      const magic = e.type === "magical" || !!e.element;
+      const word = magic ? elementName(e.element ?? "").toUpperCase() : (e.subtype ?? "physical").toUpperCase();
       const value = evalNum(e.amount, stats).value * dmgMult;
-      let w = `${value > 0 ? `≈ ${disp(value)} ` : ""}${kind}${e.hits && e.hits > 1 ? ` × ${e.hits}` : ""}`;
-      for (const ap of e.apply ?? []) w += ` + ${ap.status === "shield" ? `${disp(evalNum(ap.stacks ?? 0, stats).value)} shield` : status(ap.status).stacking === "intensity" ? `${capped(ap.status, ap.stacks)} ${status(ap.status).name}` : status(ap.status).name}${ap.chance !== undefined && ap.chance < 100 ? ` (${ap.chance}%)` : ""}`;
-      out.push(w);
-    } else if (e.op === "heal") out.push(`heals ≈ ${disp(evalNum(e.amount, stats).value)}`);
-    else if (e.op === "mp") out.push(`MP ≈ ${disp(evalNum(e.amount, stats).value)}`);
-    else if (e.op === "apply") {
-      const d = status(e.status);
-      if (e.status === "shield") out.push(`shield ≈ ${disp(evalNum(e.stacks ?? 0, stats).value)} (at most half its target's max HP)`);
-      else if (d.stacking === "intensity") out.push(`${capped(e.status, e.stacks)} ${d.name}`);
-    }
+      out.push({ value: `${e.hits && e.hits > 1 ? `${e.hits}×` : ""}${disp(value)}`, word, tone: magic ? e.element : "phys", scales: scalesOf(e.amount) });
+      for (const ap of e.apply ?? []) out.push(statusPart(ap.status, ap.stacks, ap.chance !== undefined && ap.chance < 100 ? ap.chance : undefined));
+    } else if (e.op === "heal") out.push({ value: String(disp(evalNum(e.amount, stats).value)), word: "HEAL", tone: "good", scales: scalesOf(e.amount) });
+    else if (e.op === "mp") out.push({ value: String(disp(evalNum(e.amount, stats).value)), word: "MP", tone: "mp", scales: scalesOf(e.amount) });
+    else if (e.op === "apply" && (e.status === "shield" || status(e.status).stacking === "intensity")) out.push(statusPart(e.status, e.stacks));
   }
-  return out.join(" · ");
+  return out;
 }
+
+/** An ability's size as plain words, for a before-and-after: "150 LIGHT + 10 BURN". */
+export const sizeText = (parts: SizePart[]) => parts.map((p) => `${p.value ? `${p.value} ` : ""}${p.word}`).join(" + ");
 
 export type AbilityInfo = {
   id: string;

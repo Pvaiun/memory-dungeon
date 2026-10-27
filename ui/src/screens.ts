@@ -5,19 +5,20 @@
  */
 import { gearFor as gearThatFits } from "../../src/sim/parties.js";
 import { foesText, meets, needText, rewardsOf, unmet } from "../../src/campaign.js";
-import { c, className, classes, cls as classOf, dungeons, enemies, fightName, formations, gearOf, kindOf, runName, setDisplayDiv, shortName } from "./content.js";
+import { c, className, classes, cls as classOf, dungeons, enemies, fightName, formations, gearOf, runName, setNumberScale, shortName, showStat, type NumberScale } from "./content.js";
 import { enemyDisplayName } from "./art.js";
 import { button, h, header, nav, row, settleBack, win, type Child } from "./dom.js";
-import { abilitiesFor, gearFor, party as partyLoadout, reset, resetJourneyLoadout, save, setup, useMode } from "./state.js";
+import { abilitiesFor, gearFor, HIT_PAUSES, party as partyLoadout, reset, resetJourneyLoadout, save, setup, useMode } from "./state.js";
 import {
   anyNewClass, anyNewFormation, anyNewGear, cleared, currentIndex, hasJourney, markSeen, newClass, newFormation, newGear, newGearFor, newNode, nodes, onJourney,
   ownsClass, ownsFormation, ownsGear, resetJourney, setCleared, mode as playMode, onRogue,
 } from "./journey.js";
 import { celebrate } from "./celebrate.js";
-import { abilityBlock, basicLine, classHead, codeSpans, enemySheet, gearRow, memberFor, passiveBlock, portraitEl, role, section, specialLines, statGrid } from "./sheet.js";
-import { enemyEl, enemyThumb } from "./pixel.js";
+import { abilityBlock, basicLine, canUse, classHead, classPassive, codeSpans, enemySheet, enemyStats, gearRow, memberFor, portraitEl, role, section, specialLines, statGrid } from "./sheet.js";
+import { enemyEl, enemyThumb, iconEl } from "./pixel.js";
+import { ELEMENTS, TAG_ICON } from "./art.js";
 import { weaponOf } from "../../src/engine/combat/fight.js";
-import { Strip, STRIP_H } from "./battle/scene.js";
+import { foesOnStage, partyOnStage, stageEl, Strip, STRIP_H, themeOf } from "./battle/scene.js";
 import { startBattle, type BattleArgs } from "./battle/battle.js";
 import { music, setMusic, setSound, sfx } from "./battle/audio.js";
 import { bindRogue, rbossScreen, rgearScreen, rogueMenuLine, rogueScreen, rpartyScreen, runitScreen } from "./rogue-screens.js";
@@ -81,14 +82,14 @@ export const refresh = () => go(current, currentArg, true);
 /** A small gold NEW tag, on things the journey gave that haven't been looked at. */
 export const newTag = () => h("span", { class: "new" }, "NEW");
 /** "13 more to find": what the journey still holds, at the end of a list. */
-const moreToFind = (n: number) => (n > 0 ? h("div", { class: "line dim small more" }, h("span", { class: "trunc" }, `${n} MORE TO FIND ON THE JOURNEY`)) : null);
+const moreToFind = (n: number) => (n > 0 ? h("div", { class: "line dim small more" }, h("span", { class: "trunc" }, `${n} MORE TO FIND`)) : null);
 
 /** A question over the screen, with a yes and a cancel. */
 function ask(title: string, text: string, yes: string, onYes: () => void) {
   const close = () => { box.remove(); nav.overlay = null; };
   const box = h("div", { class: "overlay dialog" }, win("",
     h("div", { class: "line hi" }, title),
-    h("div", { class: "text dim small wrap" }, text),
+    text ? h("div", { class: "text dim small wrap" }, text) : null,
     h("div", { class: "btns", style: "margin-top:.75rem" }, button(yes, () => { close(); onYes(); }, "hi"), button("CANCEL", close)),
   ));
   frame.append(box);
@@ -101,7 +102,24 @@ function stripEl(pick: number | null = null): HTMLCanvasElement {
   strip = new Strip(cv, setup.party, setup.formation, Object.fromEntries(setup.party.map((id) => [id, gearFor(id).weapon])), pick).start();
   return cv;
 }
-const seedRow = () => h("div", { class: "line" }, h("span", { class: "dim" }, "SEED"), h("span", { class: "grow" }, String(setup.seed)), button("NEW SEED", () => { setup.seed = Math.floor(Math.random() * 100000) + 1; save(); refresh(); }, "sm"));
+/** Designer view only: the seed every fight plays while it's locked (Settings → SEED). Players never see a seed. */
+const seedRow = () => (setup.settings.designer && setup.settings.seedLock
+  ? h("div", { class: "line dim small" }, h("span", null, "SEED"), h("span", { class: "grow" }, String(setup.seed)), button("NEW", () => { setup.seed = Math.floor(Math.random() * 1e9) + 1; save(); refresh(); }, "sm"))
+  : null);
+/** The screen's one big action, and the smaller ones beside it, where a thumb finds them: the bottom-centre, full width. */
+export const actions = (main: HTMLButtonElement, ...more: (HTMLButtonElement | null)[]) => {
+  main.classList.add("big");
+  return h("div", { class: "actions" }, main, more.some(Boolean) ? h("div", { class: "btns even" }, ...more.map((b) => (b ? (b.classList.add("mid"), b) : null))) : null);
+};
+
+/** A run's page opens on its ground: the party facing the run's boss (or its first fight's foes), as the battle will stand them. */
+function runScene(dungeonId: string, h = 128): HTMLCanvasElement {
+  const d = c.dungeons.get(dungeonId)!;
+  const fights = d.stages.flatMap((st) => (st.kind === "fight" ? [st] : []));
+  const fight = fights.find((st) => st.boss) ?? fights[0];
+  const party = partyOnStage({ refs: setup.party, weapons: Object.fromEntries(setup.party.map((id) => [id, gearFor(id).weapon])), formation: setup.formation }, h);
+  return stageEl({ theme: themeOf(dungeonId), h, actors: [...party, ...foesOnStage(fight?.enemies ?? [], h)] });
+}
 
 // ─── Home ───
 function home(): Child[] {
@@ -110,26 +128,25 @@ function home(): Child[] {
   // In the journey the first item is the road, with the next node's name; free play keeps FIGHT. NEW marks what holds something unseen.
   type Item = [Screen, string, string, boolean];
   const head: Item[] = onRogue()
-    ? [["rogue", "ROGUE", rogueMenuLine(), false], ...(rogueRun() ? [["rparty", "PARTY", "The run's party, gear and bag", false] as Item] : [])]
+    ? [["rogue", "ROGUE", rogueMenuLine(), false], ...(rogueRun() ? [["rparty", "PARTY", "", false] as Item] : [])]
     : [
-      onJourney() ? ["journey", "JOURNEY", cur === null ? "Complete" : `${cur + 1}. ${nodes()[cur].name}`, cur !== null && newNode(nodes()[cur].id)] : ["fight", "FIGHT", "Runs, and single fights", false],
-      ["party", "PARTY", "Who goes, and what they carry", anyNewClass() || anyNewFormation() || anyNewGear()],
+      onJourney() ? ["journey", "JOURNEY", cur === null ? "Complete" : `${cur + 1}. ${nodes()[cur].name}`, cur !== null && newNode(nodes()[cur].id)] : ["fight", "FIGHT", "", false],
+      ["party", "PARTY", "", anyNewClass() || anyNewFormation() || anyNewGear()],
     ];
   const items: Item[] = [
     ...head,
-    ["classes", "CLASSES", onJourney() ? `${owned} of ${classes.length} found` : `The ${classes.length} classes`, anyNewClass() || anyNewGear()],
-    ["bestiary", "BESTIARY", "Every enemy", false],
-    ["settings", "SETTINGS", "Theme, speed, sound, music", false],
+    ["classes", "CLASSES", onJourney() ? `${owned} of ${classes.length} found` : "", anyNewClass() || anyNewGear()],
+    ["bestiary", "BESTIARY", "", false],
+    ["settings", "SETTINGS", "", false],
   ];
   const f = c.formations.get(setup.formation)!;
   return [
     h("div", { class: "title-big" }, "MEMORY", h("br"), "DUNGEON"),
     stripEl(),
     h("div", { class: "menu-wrap" },
-      win("list menu", ...items.map(([s, label, sub, isNew]) => h("div", { class: "row", onClick: () => go(s) }, h("span", { class: "cursor" }, "▶"), h("div", { class: "grow" }, h("div", { class: "line" }, label, isNew ? newTag() : null), h("div", { class: "text dim small trunc" }, sub))))),
+      win("list menu", ...items.map(([s, label, sub, isNew]) => h("div", { class: "row", onClick: () => go(s) }, h("span", { class: "cursor" }, "▶"), h("div", { class: "grow" }, h("div", { class: "line" }, label, isNew ? newTag() : null), sub ? h("div", { class: "text dim small trunc" }, sub) : null)))),
       // Free play's loadout means nothing to a rogue run: hidden in rogue mode.
-      onRogue() ? null : h("div", { class: "line dim small", style: "margin-top:.5rem" }, h("span", { class: "trunc grow" }, setup.party.map(shortName).join(" · ") || "NO PARTY"), h("span", null, `SEED ${setup.seed}`)),
-      onRogue() ? null : h("div", { class: "line dim small" }, h("span", { class: "trunc grow" }, f.name)),
+      onRogue() ? null : h("div", { class: "line dim small", style: "margin-top:.5rem" }, h("span", { class: "trunc grow" }, setup.party.map(shortName).join(" · ") || "NO PARTY"), h("span", { class: "trunc" }, f.name.toUpperCase())),
     ),
   ];
 }
@@ -146,7 +163,7 @@ function fightRows(dungeonId: string, onFight: (stageId: string) => void): HTMLE
     return [...counts].map(([e, n]) => `${enemyDisplayName(e)}${n > 1 ? ` ×${n}` : ""}`).join(", ");
   };
   return d.stages.flatMap((s) => (s.kind === "fight" ? [s] : [])).map((s, i) => h("div", { class: "row", style: "min-height:3rem", onClick: () => onFight(s.id) },
-    h("span", { class: "cursor" }, ""), h("div", { class: "grow trunc" }, h("div", { class: "line" }, h("span", { class: s.boss ? "gold" : "" }, `${i + 1} ${s.boss ? "★" : ""}${fightName(s)}`)), h("div", { class: "text dim small trunc" }, foesOf(s.enemies)))));
+    h("span", { class: "cursor" }, ""), h("div", { class: "grow trunc" }, h("div", { class: "line" }, h("span", { class: s.boss ? "gold" : "" }, `${i + 1} ${s.boss ? "★" : ""}${fightName(s)}`)), h("div", { class: "text dim small wrap" }, foesOf(s.enemies)))));
 }
 
 function journey(): Child[] {
@@ -162,7 +179,7 @@ function journey(): Child[] {
       h("span", { class: `cursor${cur ? "" : " good"}` }, cur ? "▶" : "√"),
       h("div", { class: "grow trunc" },
         h("div", { class: "line" }, h("span", { class: "trunc" }, `${i + 1} ${n.name}`), newNode(n.id) ? newTag() : null, h("span", { class: "r" }, kindTag(n.kind))),
-        h("div", { class: "text dim small trunc" }, n.text)),
+        h("div", { class: "text dim small wrap" }, n.text)),
     );
     if (cur) curRow = el;
     return el;
@@ -172,7 +189,6 @@ function journey(): Child[] {
   return [
     header("JOURNEY", () => go("home"), done >= ns.length ? "COMPLETE" : `${done}/${ns.length}`),
     list,
-    h("div", { class: "text dim small wrap" }, "Clear a run (win every fight) to get its reward and open the next. Cleared runs can be replayed; replays pay nothing."),
   ];
 }
 
@@ -200,30 +216,29 @@ function node(arg?: unknown): Child[] {
   const missing = unmet(c, n, p);
   const foes = foesText(d);
   const r = rewardsOf(c, i);
-  const start = button("START", () => go("battle", { dungeon: d.id, node: n.id }), "hi");
-  start.disabled = missing.length > 0;
+  const start = button(done ? "REPLAY" : "START", () => go("battle", { dungeon: d.id, node: n.id }), "hi");
+  start.disabled = missing.length > 0 || !p.units.length;
   const f = c.formations.get(setup.formation)!;
   return [
     header(`${i + 1} ${n.name}`, () => go("journey"), kindTag(n.kind)),
+    runScene(d.id),
     win("scroll",
-      done ? h("div", { class: "line good" }, "√ CLEARED", h("span", { class: "dim r small" }, "REPLAYS PAY NOTHING")) : null,
+      done ? h("div", { class: "line good" }, "√ CLEARED") : null,
       h("div", { class: "text wrap small" }, n.text),
       foes ? h("div", { class: "text wrap small debuff", style: "margin-top:.25rem" }, foes) : null,
-      n.needs.length ? section("NEEDS", "from the party") : null,
+      n.needs.length ? section("NEEDS") : null,
       ...n.needs.map((nd) => {
         const ok = meets(c, nd, p);
         return h("div", { class: `line wrap ${ok ? "good" : "bad"}` }, h("span", null, ok ? "√" : "×"), h("span", { class: "text grow" }, needText(c, nd)));
       }),
-      section("FIGHTS", "tap one to practise"),
+      section("FIGHTS", "PRACTICE"),
       ...fightRows(d.id, (sid) => go("battle", { dungeon: `${d.id}~${sid}`, node: n.id })),
       section(done ? "IT GAVE" : "REWARD"),
       done ? rewardList(r) : h("div", { class: "line hi wrap" }, teaser(i)),
-      h("div", { class: "text dim small wrap" }, done || !(r.classes.length + r.formations.length + r.gear.length) ? "Practice fights and replays pay nothing." : "Paid once, the first time the whole run is won. Practice fights pay nothing."),
     ),
     h("div", { class: "line dim small" }, h("span", { class: "trunc grow" }, `${p.units.map((u) => shortName(u.class)).join(" · ") || "NO PARTY"}`), h("span", { class: "trunc" }, f.name.toUpperCase())),
-    missing.length ? h("div", { class: "text bad small wrap" }, `To start: ${missing.join("; ")}.`) : null,
-    h("div", { class: "btns even" }, start, button("PARTY", () => go("party"))),
     seedRow(),
+    actions(start, button("PARTY", () => go("party"))),
   ];
 }
 /** What a cleared node gave: classes, formations and gear, by name. */
@@ -239,14 +254,14 @@ function rewardList(r: ReturnType<typeof rewardsOf>): Child[] {
 let lastRun = dungeons[0].id;
 function fight(arg?: unknown): Child[] {
   const runId = typeof arg === "string" ? arg : null;
-  if (!setup.party.length) return [header("FIGHT", () => go("home")), win("text", "Pick a party first."), h("div", { class: "btns" }, button("PARTY", () => go("party")))];
+  if (!setup.party.length) return [header("FIGHT", () => go("home")), h("div", { class: "grow" }), actions(button("PARTY", () => go("party"), "hi"))];
   if (!runId) {
     return [
       header("FIGHT", () => go("home")),
       win("list scroll", ...dungeons.map((d, i) => {
         const n = d.stages.filter((s) => s.kind === "fight").length;
         return h("div", { class: `row${lastRun === d.id ? " cur" : ""}`, style: "min-height:3rem", onClick: () => { lastRun = d.id; go("fight", d.id); } },
-          h("span", { class: "cursor" }, lastRun === d.id ? "▶" : ""), h("div", { class: "grow trunc" }, h("div", { class: "line" }, `${i + 1} ${runName(d)}`), h("div", { class: "text dim small trunc" }, d.text)), h("span", { class: "dim" }, `${n}F`));
+          h("span", { class: "cursor" }, lastRun === d.id ? "▶" : ""), h("div", { class: "grow trunc" }, h("div", { class: "line" }, `${i + 1} ${runName(d)}`), h("div", { class: "text dim small wrap" }, d.text)), h("span", { class: "dim" }, `${n}F`));
       })),
       seedRow(),
     ];
@@ -254,12 +269,11 @@ function fight(arg?: unknown): Child[] {
   const d = c.dungeons.get(runId)!;
   const fights = d.stages.filter((s) => s.kind === "fight");
   return [
-    header(runName(d), () => go("fight")),
-    win("list scroll",
-      row([h("span", { class: "grow" }, "RUN ALL"), h("span", { class: "dim" }, `${fights.length} FIGHTS`)], () => go("battle", { dungeon: d.id }), { cur: true }),
-      ...fightRows(d.id, (sid) => go("battle", { dungeon: `${d.id}~${sid}` })),
-    ),
+    header(runName(d), () => go("fight"), `${fights.length} FIGHTS`),
+    runScene(d.id),
+    win("list scroll", ...fightRows(d.id, (sid) => go("battle", { dungeon: `${d.id}~${sid}` }))),
     seedRow(),
+    actions(button("RUN ALL", () => go("battle", { dungeon: d.id }), "hi"), button("PARTY", () => go("party"))),
   ];
 }
 
@@ -324,11 +338,6 @@ function party(): Child[] {
   const removeBtn = button("REMOVE", () => { if (picked && inParty) { setup.party.splice(setup.party.indexOf(picked), 1); done(); } }, "sm");
   sheetBtn.disabled = !picked;
   removeBtn.disabled = !inParty;
-  const hint = pickSlot !== null
-    ? "Tap a class to put it here, another slot to swap, or this slot again to deselect."
-    : pickClass !== null
-      ? "Tap a slot to put it there, or this class again for its sheet."
-      : "Tap a slot then a class, or a class then a slot. Tap a class twice for its sheet.";
   return [
     header("PARTY", () => go(...partyFrom), `${setup.party.length}/3`),
     win("",
@@ -336,11 +345,7 @@ function party(): Child[] {
       h("div", { class: "text dim small wrap" }, f.text, f.statuses?.length ? ` ${f.statuses.map((s) => c.statuses.get(s)!.text).join(" ")}` : ""),
     ),
     h("div", { class: "cards" }, ...cards),
-    h("div", { class: "btns" },
-      sheetBtn,
-      removeBtn,
-      h("span", { class: "dim small text", style: "margin-left:auto;text-align:right;line-height:1.25rem" }, hint),
-    ),
+    h("div", { class: "btns even" }, sheetBtn, removeBtn),
     win("scroll roster", h("div", { class: "grid" }, ...roster.map((k) => {
       const inP = setup.party.includes(k.id);
       return h("div", { class: `cell${inP ? " in" : ""}${pickClass === k.id ? " cur" : ""}`, onClick: () => tapClass(k.id) },
@@ -358,7 +363,7 @@ function formation(): Child[] {
       const cur = fm.id === setup.formation;
       return h("div", { class: `row${cur ? " cur" : ""}`, style: "min-height:3rem", onClick: () => { setup.formation = fm.id; save(); go("party"); } },
         h("span", { class: "cursor" }, cur ? "▶" : ""),
-        h("div", { class: "grow trunc" }, h("div", { class: "line" }, fm.name, newFormation(fm.id) ? newTag() : null), h("div", { class: "text dim small trunc" }, fm.text)));
+        h("div", { class: "grow trunc" }, h("div", { class: "line" }, fm.name, newFormation(fm.id) ? newTag() : null), h("div", { class: "text dim small wrap" }, fm.text)));
     }), moreToFind(formations.length - fms.length)),
   ];
   // Opening the list shows them all: their NEW tags go after this look.
@@ -406,15 +411,14 @@ function unit(arg?: unknown): Child[] {
     win("", classHead(id, h("div", { class: "line", style: "min-height:1.75rem" }, where))),
     win("", statGrid(member.stats, k.stats, designer), sp.length ? h("div", { class: "text up small wrap", style: "margin-top:.25rem" }, ...sp.flatMap((s, i) => (i ? [" · ", s] : [s]))) : null),
     win("scroll",
-      h("div", { class: "text dim wrap small" }, k.text),
       section("PASSIVE"),
-      ...(k.passive ? passiveBlock(k.passive.name, k.passive.text, k.passive.statuses?.[0]) : passiveBlock("Einherjar", "", null)),
-      section("GEAR", "tap to change"),
+      ...classPassive(id),
+      section("GEAR"),
       ...gearRows,
-      h("div", { class: "line small dim wrap" }, `CAN USE ${k.weapons.map((w) => kindOf(w).name).join(", ").toUpperCase()} · ${k.armor.toUpperCase()} ARMOR`),
-      section("ABILITIES", orderPick === null ? "tap two numbers to swap" : "now tap the other"),
+      canUse(id),
+      section("ABILITIES", orderPick === null ? null : h("span", { class: "hi" }, "SWAP WITH?")),
       ...order.map((a, i) => abilityBlock(c.abilities.get(a)!, member.stats, designer, { n: i + 1, onN: () => onN(i), cur: orderPick === i })),
-      basicLine(weaponOf(c, member.weapon), member.stats, designer),
+      basicLine(weaponOf(c, member.weapon), member.stats),
     ),
   ];
 }
@@ -452,7 +456,6 @@ function gear(arg?: unknown): Child[] {
       }),
       moreToFind(all.length - fits.length),
     ),
-    h("div", { class: "text dim small wrap" }, slot === "weapon" ? "A weapon sets the basic attack: its kind, speed and element. ★ is a powerful piece." : "The numbers are on the stat sheet's scale. ★ is a powerful piece."),
   ];
 }
 
@@ -462,31 +465,39 @@ function classesScreen(): Child[] {
   return [
     header("CLASSES", () => go("home"), onJourney() ? `${list.length}/${classes.length}` : null),
     win("list scroll",
-      ...list.map((k) => row([h("div", { class: "portrait" }, portraitEl(k.id)), h("div", { class: "grow trunc" }, h("div", { class: "line" }, k.name, newClass(k.id) || newGearFor(k.id) ? newTag() : null), h("div", { class: "text dim small trunc" }, role(k.text)))], () => { orderPick = null; go("unit", k.id); }, { cursor: false, cur: setup.party.includes(k.id), cls: "tall" })),
+      ...list.map((k) => row([h("div", { class: "portrait" }, portraitEl(k.id)), h("div", { class: "grow trunc" }, h("div", { class: "line" }, k.name, newClass(k.id) || newGearFor(k.id) ? newTag() : null), h("div", { class: "text dim small" }, role(k.id)))], () => { orderPick = null; go("unit", k.id); }, { cursor: false, cur: setup.party.includes(k.id), cls: "tall" })),
       moreToFind(classes.length - list.length),
     ),
   ];
 }
-const rankClass = (rank: string) => (rank === "boss" ? "gold" : rank === "elite" ? "debuff" : "dim");
+const rankClass = (rank: string) => (rank === "boss" ? "gold" : rank === "elite" ? "debuff" : "");
+/** The bestiary: each enemy's likeness, name and rank, its HP, and the elements it's weak to at a glance. */
 function bestiary(): Child[] {
   return [
-    header("BESTIARY", () => go("home")),
-    win("list scroll", ...enemies.map((e) => row([h("span", { style: "width:3rem;display:inline-flex;justify-content:center", class: "px-wrap" }, enemyThumb(e.id, 24)), h("span", { class: "grow trunc" }, enemyDisplayName(e.id)), h("span", { class: rankClass(e.rank) }, e.rank === "boss" ? "★BOSS" : e.rank)], () => go("enemy", e.id), { cursor: false }))),
+    header("BESTIARY", () => go("home"), `${enemies.length}`),
+    win("list scroll", ...enemies.map((e) => {
+      const st = enemyStats(e);
+      const weak = ELEMENTS.filter((el) => (st[`resist:${el}`] ?? 0) + (st.resist ?? 0) < 0);
+      return row([
+        h("span", { style: "width:3rem;display:inline-flex;justify-content:center" }, enemyThumb(e.id, 24)),
+        h("div", { class: "grow trunc" }, h("div", { class: "line" }, h("span", { class: `trunc ${rankClass(e.rank)}` }, `${e.rank === "boss" ? "★" : ""}${enemyDisplayName(e.id)}`)),
+          h("div", { class: "line small dim" }, `HP ${showStat("max_hp", st.max_hp)}`, weak.length ? h("span", { class: "bad" }, "WEAK") : null, ...weak.map((el) => iconEl(TAG_ICON[el])))),
+      ], () => go("enemy", e.id), { cursor: false, cls: "beast" });
+    })),
   ];
 }
 function enemy(arg?: unknown): Child[] {
   const id = String(arg);
   const e = c.enemies.get(id);
   if (!e) return bestiary();
-  const where = dungeons.flatMap((d) => d.stages.map((s, i) => (s.kind === "fight" && s.enemies.includes(e.id) ? `${runName(d)} ${i + 1}` : "")).filter(Boolean));
-  const sprite = enemyEl(e.id, 3, 1);
+  const where = [...new Set(dungeons.flatMap((d) => d.stages.flatMap((s) => (s.kind === "fight" && s.enemies.includes(e.id) ? [runName(d)] : []))))];
   return [
-    header(enemyDisplayName(e.id), () => go("bestiary"), h("span", { class: rankClass(e.rank) }, e.rank === "boss" ? "★BOSS" : e.rank)),
+    header(enemyDisplayName(e.id), () => go("bestiary"), h("span", { class: rankClass(e.rank) || "dim" }, e.rank === "boss" ? "★BOSS" : e.rank)),
     win("scroll",
-      h("div", { class: "center", style: "display:flex;justify-content:center;padding:.5rem 0" }, sprite),
-      e.name !== enemyDisplayName(e.id) ? h("div", { class: "line dim" }, h("span", { class: "trunc" }, `AKA ${e.name} IN THE DOCUMENTS`)) : null,
+      h("div", { class: "beast-art" }, enemyEl(e.id, 3, 1)),
       ...enemySheet(e, setup.settings.designer),
-      h("div", { class: "text dim wrap small", style: "margin-top:.5rem" }, where.length ? `Found in: ${where.join(", ")}.` : "Summoned only."),
+      section("FOUND IN"),
+      h("div", { class: "text dim wrap small" }, where.length ? where.join(", ") : "Summoned"),
     ),
   ];
 }
@@ -501,28 +512,33 @@ function clearNext() {
 }
 
 // ─── Settings ───
+const NUMBER_ORDER: NumberScale[] = ["small", "medium", "big"];
 function settings(): Child[] {
   const s = setup.settings;
-  const toggle = (label: string, key: "sound" | "music" | "designer" | "autoContinue" | "partyBars") => row([h("span", { class: "grow" }, label), h("span", { class: s[key] ? "good" : "dim" }, s[key] ? "ON" : "OFF")], () => { s[key] = !s[key]; if (key === "sound") setSound(s.sound); if (key === "music") setMusic(s.music); save(); refresh(); }, { cursor: false });
+  const toggle = (label: string, key: "sound" | "music" | "designer" | "autoContinue" | "partyBars" | "seedLock") => row([h("span", { class: "grow" }, label), h("span", { class: s[key] ? "good" : "dim" }, s[key] ? "ON" : "OFF")], () => { s[key] = !s[key]; if (key === "sound") setSound(s.sound); if (key === "music") setMusic(s.music); save(); refresh(); }, { cursor: false });
+  const cycle = <T,>(label: string, list: readonly T[], at: T, show: (v: T) => string, set: (v: T) => void) =>
+    row([h("span", { class: "grow" }, label), h("span", null, show(at))], () => { set(list[(list.indexOf(at) + 1) % list.length]); save(); refresh(); }, { cursor: false });
   return [
     header("SETTINGS", () => go("home")),
-    win("list",
+    win("list scroll",
       row([h("span", { class: "grow" }, "MODE"), h("span", { class: playMode() === "free" ? "" : "hi" }, playMode() === "journey" ? "JOURNEY" : playMode() === "rogue" ? "ROGUE" : "FREE PLAY")], () => { const m = playMode(); useMode(m === "journey" ? "free" : m === "free" ? "rogue" : hasJourney ? "journey" : "free"); refresh(); }, { cursor: false }),
       row([h("span", { class: "grow" }, "THEME"), h("span", null, s.theme.toUpperCase())], () => { s.theme = s.theme === "night" ? "day" : "night"; setTheme(s.theme); save(); refresh(); }, { cursor: false }),
-      row([h("span", { class: "grow" }, "SPEED"), h("span", null, `${s.speed}×`)], () => { s.speed = s.speed === 1 ? 2 : s.speed === 2 ? 4 : 1; save(); refresh(); }, { cursor: false }),
+      cycle("SPEED", [1, 2, 4], s.speed, (v) => `${v}×`, (v) => (s.speed = v)),
+      cycle("HIT PAUSE", HIT_PAUSES, s.hitPause as (typeof HIT_PAUSES)[number], (v) => `${Math.round(v * 100)}%`, (v) => (s.hitPause = v)),
       toggle("SOUND", "sound"),
       toggle("MUSIC", "music"),
       toggle("AUTO NEXT", "autoContinue"),
       toggle("PARTY HP ON FIELD", "partyBars"),
+      cycle("NUMBERS", NUMBER_ORDER, s.numbers, (v) => v.toUpperCase(), (v) => { s.numbers = v; setNumberScale(v); }),
+      cycle("PORTRAITS", ["faces", "sprites", "mixed"] as const, s.portraits, (v) => v.toUpperCase(), (v) => (s.portraits = v)),
       toggle("DESIGNER", "designer"),
-      row([h("span", { class: "grow" }, "NUMBERS"), h("span", null, s.bigNumbers ? "BIG" : "SMALL")], () => { s.bigNumbers = !s.bigNumbers; setDisplayDiv(s.bigNumbers ? 10 : 100); save(); refresh(); }, { cursor: false }),
-      row([h("span", { class: "grow" }, "PORTRAITS"), h("span", null, s.portraits.toUpperCase())], () => { s.portraits = s.portraits === "faces" ? "sprites" : s.portraits === "sprites" ? "mixed" : "faces"; save(); refresh(); }, { cursor: false }),
-      hasJourney ? row([h("span", { class: "grow" }, "RESET JOURNEY")], () => ask("RESET THE JOURNEY?", "Back to the first run, with the starting three and nothing found. Free play's party is kept.", "RESET", () => { resetJourney(); resetJourneyLoadout(); go("home"); }), { cursor: false }) : null,
+      s.designer ? toggle("SEED LOCK", "seedLock") : null,
+      s.designer && s.seedLock ? seedRow() : null,
       onJourney() && s.designer ? row([h("span", { class: "grow" }, "CLEAR NEXT"), h("span", { class: "dim" }, "DESIGNER")], () => clearNext(), { cursor: false }) : null,
-      onRogue() && rogueRun() ? row([h("span", { class: "grow" }, "GIVE UP THE RUN")], () => ask("GIVE UP THE RUN?", "It ends as a lost run. Your leaders stay.", "GIVE UP", () => { abandonRun(); go("home"); }), { cursor: false }) : null,
-      onRogue() ? row([h("span", { class: "grow" }, "RESET ROGUE")], () => ask("RESET THE ROGUE MODE?", "Back to the three starting leaders, no runs, no heat.", "RESET", () => { resetRogue(); go("home"); }), { cursor: false }) : null,
-      row([h("span", { class: "grow bad" }, "RESET ALL")], () => ask("RESET ALL?", "Settings, both parties and the journey go back to the start.", "RESET", () => { reset(); setTheme(setup.settings.theme); setDisplayDiv(100); go("home"); }), { cursor: false }),
+      hasJourney ? row([h("span", { class: "grow" }, "RESET JOURNEY")], () => ask("RESET THE JOURNEY?", "", "RESET", () => { resetJourney(); resetJourneyLoadout(); go("home"); }), { cursor: false }) : null,
+      onRogue() && rogueRun() ? row([h("span", { class: "grow" }, "GIVE UP THE RUN")], () => ask("GIVE UP THE RUN?", "", "GIVE UP", () => { abandonRun(); go("home"); }), { cursor: false }) : null,
+      onRogue() ? row([h("span", { class: "grow" }, "RESET ROGUE")], () => ask("RESET THE ROGUE MODE?", "", "RESET", () => { resetRogue(); go("home"); }), { cursor: false }) : null,
+      row([h("span", { class: "grow bad" }, "RESET ALL")], () => ask("RESET ALL?", "", "RESET", () => { reset(); setTheme(setup.settings.theme); setNumberScale(setup.settings.numbers); go("home"); }), { cursor: false }),
     ),
-    h("div", { class: "text dim small wrap" }, hasJourney ? "Mode: the journey starts with three classes and gives more, with formations and gear, as its runs are cleared; free play has everything and pays nothing; rogue is a run of three acts from a leader you own, built as you go, and a won run's party can lead the next. Each keeps its own party. " : "", "Speed is how fast a fight is told: each message holds the clock while it's on screen. In a fight, II pauses, STEP plays one message at a time, >> skips to the end. Designer view shows hidden enemy stats and worked-out numbers. Small numbers are 10 per point of the design's 1–5 scale; big are 100. Portraits: faces everywhere, sprites everywhere, or mixed, with sprites in the party's slots and faces in the lists and rows. Party HP on field adds thin HP bars under the party in a fight, like the foes'."),
   ];
 }
