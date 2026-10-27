@@ -83,7 +83,7 @@ export class Narrator {
         break;
       }
       case "cast": {
-        const what = ev.act === "basic" ? "winds up a blow" : `readies ${String(ev.name)}`;
+        const what = ev.act === "basic" ? "readies a blow" : `readies ${String(ev.name)}`;
         const line: Omit<Line, "events"> = { text: `${this.n(ev.by)} ${what}…`, tone: "act", tag: this.tagOf(String(ev.by), String(ev.act)) };
         const b = this.open;
         if (b && b.kind === "cast" && b.at === at && b.lines.length < 3) {

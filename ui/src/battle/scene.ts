@@ -661,12 +661,13 @@ export class CampStrip {
 
 // ─── Stages: a moment of the run drawn for a menu screen ───
 
-/** What stands on a stage: a party member (in a pose, with its weapon, facing right or left), a foe, a chest, a fire. */
+/** What stands on a stage: a party member (in a pose, with its weapon, facing right or left), a foe, a chest, a fire, loot on the ground. */
 export type StageActor =
   | { kind: "hero"; ref: string; x: number; y: number; pose?: Pose; weapon?: string; mirror?: boolean }
   | { kind: "foe"; ref: string; x: number; y: number; k: number }
   | { kind: "chest"; x: number; y: number; color?: string }
-  | { kind: "fire"; x: number; y: number };
+  | { kind: "fire"; x: number; y: number }
+  | { kind: "loot"; x: number; y: number; art: HTMLCanvasElement };
 /**
  * A stage: a scene's backdrop (the part just above its horizon when it's shorter than the field), what stands on it,
  * and optionally night, a chest that opens `openAt` ms in, and a sparkle looping over a point.
@@ -696,6 +697,9 @@ export function drawStage(ctx: CanvasRenderingContext2D, o: StageOpts, wall: num
     } else if (a.kind === "chest") {
       shadow(ctx, a.x, a.y, 18);
       drawChest(ctx, a.x, a.y, o.openAt === undefined || wall < o.openAt ? 0 : Math.floor((wall - o.openAt) / 110), a.color);
+    } else if (a.kind === "loot") {
+      shadow(ctx, a.x, a.y, Math.max(10, Math.round(a.art.width * 0.8)));
+      ctx.drawImage(a.art, Math.round(a.x - a.art.width / 2), a.y - a.art.height);
     } else drawCampfire(ctx, a.x, a.y, wall);
   }
   if (o.night) {

@@ -6,8 +6,9 @@
  * while it's read. A tap on the window finishes the beat or moves to the
  * next; LOG opens the whole fight so far. Tapping a unit pauses the fight and
  * opens what's happening to it. The speed buttons scale the typing and the
- * hold; STEP plays one beat and pauses, skipping the dead time before it but
- * letting a wind-up fill at the speed set; >> plays the rest at once.
+ * hold; on a paused fight a tap on the window plays one beat, skipping the
+ * dead time before it but letting a wind-up fill at the speed set; >> plays
+ * the rest at once.
  */
 import { SUBTICKS } from "../../../src/schema.js";
 import type { CUnit } from "../../../src/engine/combat/fight.js";
@@ -154,23 +155,27 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   let playing: Playing | null = null;
   const history: Hist[] = [];
 
-  // STEP is a mode, remembered across fights like the speed: on, the fight waits after every beat for a tap
-  // (STEP, the message window, Enter). ▶ leaves it; II only pauses.
-  const setStep = (on: boolean) => { if (setup.settings.step !== on) { setup.settings.step = on; save(); } };
-  const pauseBtn = button("II", () => { if (paused) { paused = false; stepping = false; setStep(false); } else paused = true; renderCtl(); });
-  const stepBtn = button("STEP", () => { paused = true; stepping = true; setStep(true); renderCtl(); });
+  // One pause (STEP, which did the same, is gone): II stops the fight, ▶ plays it on, and paused, a tap on the message
+  // window or Enter plays one beat. The pause is remembered like the speed (`settings.step`): a fight left paused
+  // starts the next one paused.
+  const setPaused = (on: boolean) => {
+    paused = on;
+    stepping = false;
+    if (setup.settings.step !== on) { setup.settings.step = on; save(); }
+    renderCtl();
+  };
+  const pauseBtn = button("II", () => setPaused(!paused));
   // One button for the speed: each tap goes 1×, 2×, 4×, round again.
   const speedBtn = button("1×", () => { speed = SPEEDS[(SPEEDS.indexOf(speed as 1 | 2 | 4) + 1) % SPEEDS.length]; setup.settings.speed = speed; save(); renderCtl(); }, "speed");
   const renderCtl = () => {
     pauseBtn.textContent = paused ? "▶" : "II";
-    pauseBtn.className = paused && !setup.settings.step ? "on" : "";
-    stepBtn.className = setup.settings.step ? "on" : "";
+    pauseBtn.className = paused ? "on" : "";
     speedBtn.textContent = `${speed}×`;
   };
-  /** In step mode a fight starts waiting: its first beat plays, then it waits for a tap. */
+  /** After a pause, a fight starts paused: its first beat plays, then it waits for a tap. */
   const enterStepMode = () => { if (setup.settings.step) { paused = true; stepping = true; } };
   enterStepMode();
-  ctl.append(button("◀", () => confirmLeave()), pauseBtn, stepBtn, speedBtn, button(">>", () => fastForward()), button("LOG", () => openLog()), tick);
+  ctl.append(button("◀", () => confirmLeave()), pauseBtn, speedBtn, button(">>", () => fastForward()), button("LOG", () => openLog()), tick);
   renderCtl();
 
   const castingNow = () => driver.units().some((u) => !u.ko && u.cast !== null);
@@ -608,7 +613,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       sh ? h("span", { class: "buff" }, `SHIELD ${disp(sh)}`) : null,
       isParty || designer ? h("span", { class: "mp" }, `MP ${disp(u.mp)}`) : null,
     ));
-    if (casting) body.append(h("div", { class: "line hi" }, `WINDING UP ${castName}`, h("span", { class: "dim r" }, `${Math.max(0, Math.ceil((u.cast!.end - vt) / SUBTICKS))}T`)));
+    if (casting) body.append(h("div", { class: "line hi" }, `CASTING ${castName}`, h("span", { class: "dim r" }, `${Math.max(0, Math.ceil((u.cast!.end - vt) / SUBTICKS))}T`)));
     const sts = u.statuses.filter((s) => c.statuses.get(s.id)?.show === "icon");
     if (sts.length) body.append(h("div", { class: "section" }, "STATUSES"));
     for (const s of sts) {
@@ -858,7 +863,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         } else if (driver.phase === "fighting") {
           driver.advance((dt * speed * SUBTICKS) / TICK_MS);
           pull();
-          // STEP skips dead time only: with nobody winding up, jump to the next moment; a wind-up plays at the speed set, so it can be watched filling.
+          // A tapped-through beat skips dead time only: with nobody winding up, jump to the next moment; a wind-up plays at the speed set, so it can be watched filling.
           let guard = 0;
           while (stepping && !queue.length && driver.phase === "fighting" && !castingNow() && guard++ < 400) {
             driver.advance(SUBTICKS / 4);
@@ -878,7 +883,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   const onKey = (e: KeyboardEvent) => {
     if (stopped) return;
     if ((e.target as HTMLElement)?.tagName === "INPUT") return;
-    if (e.key === " ") { paused = !paused; stepping = false; renderCtl(); e.preventDefault(); }
+    if (e.key === " ") { setPaused(!paused); e.preventDefault(); }
     else if (e.key === "n" || e.key === "." || e.key === "Enter") { advance(); }
     else if (e.key === "1") { speed = 1; renderCtl(); }
     else if (e.key === "2") { speed = 2; renderCtl(); }
