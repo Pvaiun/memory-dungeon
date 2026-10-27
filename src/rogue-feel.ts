@@ -447,8 +447,9 @@ for (const st of c.pack.statuses) if (st.show === "icon") {
   if (st.duration) bits.push(`lasts ${st.duration} ticks`);
   if (typeof st.cap === "number") bits.push(`cap ${st.cap} stacks`);
   if (st.pulse?.every) bits.push(`pulses every ${st.pulse.every} ticks`);
-  if (st.drop && "fraction" in st.drop && st.drop.fraction) bits.push(`loses ${Math.round(st.drop.fraction * 100)}% of its stacks each time`);
-  if (st.drop && "count" in st.drop && st.drop.count) bits.push(`loses ${st.drop.count} stack each time`);
+  const drop = st.drop as unknown;
+  if (drop && typeof drop === "object" && "fraction" in drop) bits.push(`loses ${Math.round(Number((drop as { fraction: number }).fraction) * 100)}% of its stacks each time`);
+  if (drop && typeof drop === "object" && "count" in drop) bits.push(`loses ${(drop as { count: number }).count} stack each time`);
   gl.push(`- ${st.name}: ${st.text ?? ""}${bits.length ? ` (${bits.join("; ")})` : ""}`);
 }
 gl.push("", "Time: a tick is the unit; a regular fight is meant to run about 45 ticks and a boss fight about 80. Basic attacks swing every 8 to 16 ticks by weapon kind. Ability cooldown words: short 16, medium 28, long 44, very long 60 ticks; wind-ups 1, 3, 6 or 10 ticks. Abilities start a fight partly charged by slot (8, 4, 0 ticks of head start).", "Stats: HP, MP, Attack, Magic, Armor on a 1 to 5 scale (shown ×1,000 in the data: HP 2 is 2,000). Armor cuts a physical hit to hit² ÷ (hit + 0.25 × Armor). Elites carry 15 and bosses 25 resistance to every element. Aggro: foes pick by draw; an ordinary unit draws 100, a Knight (Aggro 120) about 157, a caster (Aggro 80) about 64; Taunt forces the pick, Hidden forbids it.");
