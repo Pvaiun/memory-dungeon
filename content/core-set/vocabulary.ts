@@ -62,7 +62,7 @@ export const weaponKinds: WeaponKindT[] = [
 /** The speed word of a kind, for weapon damage. */
 export const speedOf = (kind: string): "fast" | "medium" | "slow" => {
   const cd = weaponKinds.find((k) => k.id === kind)!.cooldown ?? SPEED.medium;
-  return cd < 6.8 ? "fast" : cd > 9.6 ? "slow" : "medium";
+  return cd < 10.2 ? "fast" : cd > 14.4 ? "slow" : "medium"; // Step 5f: the thresholds moved with the intervals.
 };
 
 const timing = (n: number) => TIMING.map((stat) => ({ stat, flat: n }));
@@ -78,7 +78,8 @@ export const vocabulary: StatusT[] = [
   },
   { id: "regen", name: "REGEN", text: "Recovers health over time.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.regen.duration, pulse: { every: STATUS.regen.every, do: [{ op: "heal", amount: { scale: [{ ratio: STATUS.regen.share, stat: "max_hp", of: "holder" }] } }] } },
   { id: "shield", name: "SHIELD", text: "Soaks damage before health.", label: "buff", show: "icon", stacking: "intensity", absorb: true, cap: { scale: [{ ratio: STATUS.shield.capShare, stat: "max_hp", of: "holder" }] } },
-  { id: "might", name: "MIGHT", text: "Deals more damage per stack.", label: "buff", show: "icon", stacking: "intensity", boosts: bothKinds(STATUS.might.perStack), cap: STATUS.might.cap, pulse: { every: STATUS.might.every }, drop: { count: 1 } },
+  // Step 5f (the director's): a stack is spent each time the holder acts, not on a timer.
+  { id: "might", name: "MIGHT", text: "Deals more damage per stack; each action spends a stack.", label: "buff", show: "icon", stacking: "intensity", boosts: bothKinds(STATUS.might.perStack), cap: STATUS.might.cap, trigger: { on: { event: "action_resolve" } }, drop: { count: 1 } },
   { id: "weaken", name: "WEAKEN", text: "Deals less damage.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.weaken.duration, boosts: bothKinds(STATUS.weaken.pct) },
   { id: "guard", name: "GUARD", text: "Armor up.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.guard.duration, stats: [{ stat: "armor", flat: STATUS.guard.armor }] },
   { id: "stun", name: "STUN", text: "Can't act. A wind-up already under way waits it out, then carries on.", label: "debuff", show: "icon", stacking: "fizzle", duration: STATUS.stun.duration, lockout: { covers: "all", pause: true } },
@@ -87,14 +88,14 @@ export const vocabulary: StatusT[] = [
   { id: "taunt", name: "TAUNT", text: "Foes must pick it.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.taunt.duration, stats: [{ stat: "forced", flat: 1 }] },
   // Specialist
   { id: "burn", name: "BURN", text: "Burns for each stack, then dies down.", label: "debuff", show: "icon", stacking: "intensity", pulse: { every: STATUS.burn.every, do: [{ op: "damage", type: "none", amount: STATUS.burn.perStack }] }, drop: { fraction: STATUS.burn.drop } },
-  { id: "chill", name: "CHILL", text: "Slower for each stack.", label: "debuff", show: "icon", stacking: "intensity", cap: STATUS.chill.cap, stats: timing(STATUS.chill.perStack), pulse: { every: STATUS.chill.every }, drop: { fraction: STATUS.chill.drop } },
+  { id: "chill", name: "CHILL", text: "Slower for each stack; thaws one stack at a time.", label: "debuff", show: "icon", stacking: "intensity", cap: STATUS.chill.cap, stats: timing(STATUS.chill.perStack), pulse: { every: STATUS.chill.every }, drop: { count: 1 } },
   { id: "shock", name: "SHOCK", text: "Hurts for each stack every time it acts.", label: "debuff", show: "icon", stacking: "intensity", cap: STATUS.shock.cap, trigger: { on: { event: "action_resolve" }, do: [{ op: "damage", type: "none", amount: STATUS.shock.perStack, to: "holder" }] }, drop: { fraction: STATUS.shock.drop } },
   { id: "ward", name: "WARD", text: "Resists every element.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.ward.duration, stats: [{ stat: "resist", flat: STATUS.ward.resist }] },
-  { id: "sunder", name: "SUNDER", text: "Armor down for each stack.", label: "debuff", show: "icon", stacking: "intensity", stats: [{ stat: "armor", flat: STATUS.sunder.perStack }], pulse: { every: STATUS.sunder.every }, drop: { count: 1 } },
+  { id: "sunder", name: "SUNDER", text: "Armor down for each stack.", label: "debuff", show: "icon", stacking: "intensity", cap: STATUS.sunder.cap, stats: [{ stat: "armor", flat: STATUS.sunder.perStack }], pulse: { every: STATUS.sunder.every }, drop: { count: 1 } },
   { id: "silence", name: "SILENCE", text: "Can't use abilities.", label: "debuff", show: "icon", stacking: "fizzle", duration: STATUS.silence.duration, lockout: { covers: "ability", interrupt: true } },
   { id: "hidden", name: "HIDDEN", text: "Foes can't pick it.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.hidden.duration, unremovable: true, stats: [{ stat: "forbidden", flat: 1 }] },
   { id: "rot", name: "ROT", text: "Heals less.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.rot.duration, stats: [{ stat: "healing_received", flat: STATUS.rot.healing }] },
-  { id: "clarity", name: "CLARITY", text: "Regains MP faster.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.clarity.duration, stats: [{ stat: "mp_regen", pct: STATUS.clarity.regenPct }] },
+  { id: "clarity", name: "CLARITY", text: "Recovers MP over time.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.clarity.duration, pulse: { every: STATUS.clarity.every, do: [{ op: "mp", amount: { scale: [{ ratio: STATUS.clarity.share, stat: "max_mp", of: "holder" }] } }] } },
   // Signature
   { id: "aegis", name: "AEGIS", text: "Blocks the next big blow.", label: "buff", show: "icon", stacking: "fizzle", block: { share: STATUS.aegis.share } },
   {

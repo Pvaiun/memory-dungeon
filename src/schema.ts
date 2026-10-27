@@ -231,6 +231,7 @@ export const UnitCond = z.strictObject({
   stacks: z.strictObject({ status: Id, atLeast: z.number() }).optional().describe("A status's Intensity total, in stacks."),
   atCap: Id.optional().describe("Holds this Intensity status at its cap."),
   belowCap: Id.optional().describe("Doesn't hold this Intensity status at its cap (or at all)."),
+  casting: z.boolean().optional().describe("true: in an action's wind-up right now (step 5f: what Unmake waits for). false: not."),
   ko: z.boolean().optional().describe("true: knocked out, still in the fight. Sides list living units unless a rule asks for this. Default: living."),
 });
 export type UnitCondT = z.infer<typeof UnitCond>;
@@ -256,7 +257,7 @@ export const Num = z.union([z.number(), z.strictObject({ base: z.number().option
 export type NumT = z.infer<typeof Num>;
 
 export const Value = z.union([
-  z.enum(["hp", "hp_share", "buffs", "debuffs"]),
+  z.enum(["hp", "hp_share", "mp_share", "buffs", "debuffs"]),
   z.strictObject({ stat: StatKey }),
   z.strictObject({ stats: z.array(StatKey).min(1) }).describe("The highest of these stats (\"the foe with the highest Attack or Magic\")."),
   z.strictObject({ stacks: Id }),

@@ -445,6 +445,7 @@ function passes(w: W, x: CUnit, c: S.UnitCondT): boolean {
   if (c.stacks && total(x, c.stacks.status) / SUBTICKS < c.stacks.atLeast) return false;
   if (c.atCap !== undefined && !atCap(w, x, c.atCap)) return false;
   if (c.belowCap !== undefined && atCap(w, x, c.belowCap)) return false;
+  if (c.casting !== undefined && (x.cast !== null) !== c.casting) return false;
   return true;
 }
 
@@ -484,6 +485,7 @@ function holds(w: W, u: CUnit, c: S.ConditionT) {
 function value(w: W, x: CUnit, by: NonNullable<S.TargetRuleT["by"]>): number {
   if (by === "hp") return x.hp;
   if (by === "hp_share") return x.hp / x.stats.max_hp;
+  if (by === "mp_share") return x.stats.max_mp > 0 ? x.mp / x.stats.max_mp : 1;
   if (by === "buffs" || by === "debuffs") return x.statuses.filter((s) => def(w, s.id).label === by.slice(0, -1)).length;
   if ("stat" in by) return stat(w, x, by.stat);
   if ("stats" in by) return Math.max(...by.stats.map((k) => stat(w, x, k)));

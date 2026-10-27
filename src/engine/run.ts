@@ -9,7 +9,7 @@ import { fingerprint, int, rngFor, type Rng } from "./rng.js";
 import type { Entry } from "./log.js";
 
 /** Bump on any change that can change a run's outcome: old records stop replaying. */
-export const ENGINE_VERSION = "0.12";
+export const ENGINE_VERSION = "0.13"; // Step 5f: the `casting` unit condition and `mp_share` as a target value.
 
 // ─── Content, loaded and checked once ───────────────────────────────────────
 

@@ -31,8 +31,8 @@
  "ruleset": {
   "basicRecovery": 0.25,
   "armorFloor": 25,
-  "abilityCast": 1.5,
-  "abilityRecovery": 1.5,
+  "abilityCast": 3,
+  "abilityRecovery": 2,
   "armorRatio": 0.12,
   "armorK": 0.25,
   "taken": {
@@ -42,7 +42,7 @@
   "unarmed": {
    "type": "physical",
    "subtype": "blunt",
-   "cooldown": 7.9,
+   "cooldown": 11.9,
    "amount": {
     "base": 100,
     "scale": [
@@ -59,9 +59,9 @@
    "min": 0.3,
    "max": 0.7,
    "slots": [
-    16,
-    12,
-    8
+    10,
+    8,
+    6
    ]
   },
   "stagger": 1.5,
@@ -304,91 +304,91 @@
    "name": "Dagger",
    "type": "physical",
    "subtype": "pierce",
-   "cooldown": 5.3
+   "cooldown": 8
   },
   {
    "id": "fist",
    "name": "Fist weapons",
    "type": "physical",
    "subtype": "blunt",
-   "cooldown": 5.7
+   "cooldown": 8.6
   },
   {
    "id": "sword",
    "name": "Sword",
    "type": "physical",
    "subtype": "slash",
-   "cooldown": 7.4
+   "cooldown": 11.1
   },
   {
    "id": "bow",
    "name": "Bow",
    "type": "physical",
    "subtype": "pierce",
-   "cooldown": 7.8
+   "cooldown": 11.7
   },
   {
    "id": "spear",
    "name": "Spear",
    "type": "physical",
    "subtype": "pierce",
-   "cooldown": 8.2
+   "cooldown": 12.3
   },
   {
    "id": "axe",
    "name": "Axe",
    "type": "physical",
    "subtype": "blunt",
-   "cooldown": 10.7
+   "cooldown": 16.1
   },
   {
    "id": "fire_staff",
    "name": "Fire staff",
    "type": "magical",
    "element": "fire",
-   "cooldown": 9.8
+   "cooldown": 14.7
   },
   {
    "id": "lightning_staff",
    "name": "Lightning staff",
    "type": "magical",
    "element": "lightning",
-   "cooldown": 6.6
+   "cooldown": 9.9
   },
   {
    "id": "wind_staff",
    "name": "Wind staff",
    "type": "magical",
    "element": "wind",
-   "cooldown": 6.1
+   "cooldown": 9.2
   },
   {
    "id": "earth_staff",
    "name": "Earth staff",
    "type": "magical",
    "element": "earth",
-   "cooldown": 9.4
+   "cooldown": 14.1
   },
   {
    "id": "ice_staff",
    "name": "Ice staff",
    "type": "magical",
    "element": "ice",
-   "cooldown": 9
+   "cooldown": 7.6
   },
   {
    "id": "light_staff",
    "name": "Light staff",
    "type": "magical",
    "element": "light",
-   "cooldown": 8.5
+   "cooldown": 12.8
   },
   {
    "id": "dark_staff",
    "name": "Dark staff",
    "type": "magical",
    "element": "dark",
-   "cooldown": 8.7
+   "cooldown": 9.5
   }
  ],
  "statuses": [
@@ -423,7 +423,7 @@
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
-   "duration": 16,
+   "duration": 24,
    "pulse": {
     "every": 2,
     "do": [
@@ -463,23 +463,25 @@
   {
    "id": "might",
    "name": "MIGHT",
-   "text": "Deals more damage per stack.",
+   "text": "Deals more damage per stack; each action spends a stack.",
    "label": "buff",
    "show": "icon",
    "stacking": "intensity",
    "boosts": [
     {
      "tag": "physical",
-     "pct": 8
+     "pct": 10
     },
     {
      "tag": "magical",
-     "pct": 8
+     "pct": 10
     }
    ],
-   "cap": 25,
-   "pulse": {
-    "every": 4
+   "cap": 20,
+   "trigger": {
+    "on": {
+     "event": "action_resolve"
+    }
    },
    "drop": {
     "count": 1
@@ -511,11 +513,11 @@
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
-   "duration": 20,
+   "duration": 28,
    "stats": [
     {
      "stat": "armor",
-     "flat": 2000
+     "flat": 3000
     }
    ]
   },
@@ -526,7 +528,7 @@
    "label": "debuff",
    "show": "icon",
    "stacking": "fizzle",
-   "duration": 5,
+   "duration": 8,
    "lockout": {
     "covers": "all",
     "pause": true
@@ -539,7 +541,7 @@
    "label": "debuff",
    "show": "icon",
    "stacking": "refresh",
-   "duration": 20,
+   "duration": 24,
    "stats": [
     {
      "stat": "attack_speed",
@@ -562,7 +564,7 @@
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
-   "duration": 14,
+   "duration": 20,
    "stats": [
     {
      "stat": "attack_speed",
@@ -585,7 +587,7 @@
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
-   "duration": 14,
+   "duration": 20,
    "stats": [
     {
      "stat": "forced",
@@ -606,41 +608,41 @@
      {
       "op": "damage",
       "type": "none",
-      "amount": 30
+      "amount": 60
      }
     ]
    },
    "drop": {
-    "fraction": 0.1
+    "fraction": 0.25
    }
   },
   {
    "id": "chill",
    "name": "CHILL",
-   "text": "Slower for each stack.",
+   "text": "Slower for each stack; thaws one stack at a time.",
    "label": "debuff",
    "show": "icon",
    "stacking": "intensity",
-   "cap": 8,
+   "cap": 12,
    "stats": [
     {
      "stat": "attack_speed",
-     "flat": -6
+     "flat": -5
     },
     {
      "stat": "cooldown_reduction",
-     "flat": -6
+     "flat": -5
     },
     {
      "stat": "cast_time_reduction",
-     "flat": -6
+     "flat": -5
     }
    ],
    "pulse": {
-    "every": 3
+    "every": 4
    },
    "drop": {
-    "fraction": 0.3333333333333333
+    "count": 1
    }
   },
   {
@@ -650,7 +652,7 @@
    "label": "debuff",
    "show": "icon",
    "stacking": "intensity",
-   "cap": 40,
+   "cap": 30,
    "trigger": {
     "on": {
      "event": "action_resolve"
@@ -659,7 +661,7 @@
      {
       "op": "damage",
       "type": "none",
-      "amount": 70,
+      "amount": 120,
       "to": "holder"
      }
     ]
@@ -675,11 +677,11 @@
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
-   "duration": 24,
+   "duration": 30,
    "stats": [
     {
      "stat": "resist",
-     "flat": 30
+     "flat": 40
     }
    ]
   },
@@ -690,6 +692,7 @@
    "label": "debuff",
    "show": "icon",
    "stacking": "intensity",
+   "cap": 20,
    "stats": [
     {
      "stat": "armor",
@@ -710,7 +713,7 @@
    "label": "debuff",
    "show": "icon",
    "stacking": "fizzle",
-   "duration": 8,
+   "duration": 16,
    "lockout": {
     "covers": "ability",
     "interrupt": true
@@ -723,7 +726,7 @@
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
-   "duration": 20,
+   "duration": 24,
    "unremovable": true,
    "stats": [
     {
@@ -750,17 +753,28 @@
   {
    "id": "clarity",
    "name": "CLARITY",
-   "text": "Regains MP faster.",
+   "text": "Recovers MP over time.",
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
-   "duration": 24,
-   "stats": [
-    {
-     "stat": "mp_regen",
-     "pct": 100
-    }
-   ]
+   "duration": 16,
+   "pulse": {
+    "every": 2,
+    "do": [
+     {
+      "op": "mp",
+      "amount": {
+       "scale": [
+        {
+         "ratio": 0.04,
+         "stat": "max_mp",
+         "of": "holder"
+        }
+       ]
+      }
+     }
+    ]
+   }
   },
   {
    "id": "aegis",
@@ -892,7 +906,7 @@
       "amount": {
        "scale": [
         {
-         "ratio": 0.04,
+         "ratio": 0.02,
          "stat": "mp_regen",
          "of": "holder"
         }
@@ -1029,23 +1043,31 @@
    }
   },
   {
-   "id": "sworn",
-   "name": "Sworn",
+   "id": "vanguard",
+   "name": "Vanguard",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Taunts when an ally falls.",
+   "text": "Starts every fight behind a Shield from its max HP.",
    "reactions": [
     {
      "on": {
-      "event": "ko",
-      "whose": "ally"
+      "event": "fight_start"
      },
      "do": [
       {
        "op": "apply",
-       "status": "taunt",
+       "status": "shield",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.4,
+          "stat": "max_hp",
+          "of": "holder"
+         }
+        ]
+       },
        "to": "holder"
       }
      ]
@@ -1123,14 +1145,14 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Hits deal double damage to foes with a buff.",
+   "text": "Hits deal half again as much to foes with a buff.",
    "boosts": [
     {
      "tag": "physical",
      "pct": {
       "scale": [
        {
-        "ratio": 100,
+        "ratio": 50,
         "when": {
          "buffs": true
         },
@@ -1144,7 +1166,7 @@
      "pct": {
       "scale": [
        {
-        "ratio": 100,
+        "ratio": 50,
         "when": {
          "buffs": true
         },
@@ -1156,17 +1178,63 @@
    ]
   },
   {
-   "id": "encore",
-   "name": "Encore",
+   "id": "last_rites",
+   "name": "Last rites",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Can't be Silenced.",
+   "text": "Cooldowns halved below 30% HP.",
+   "reactions": [
+    {
+     "on": {
+      "event": "hp_lost"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "last_rites_on",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpBelow": 30
+        }
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "healed"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "last_rites_on",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpAtLeast": 30
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "last_rites_on",
+   "name": "LAST RITES",
+   "text": "Cooldowns halved.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "fizzle",
+   "unremovable": true,
    "stats": [
     {
-     "stat": "immune:status:silence",
-     "flat": 1
+     "stat": "cooldown_reduction",
+     "flat": 100
     }
    ]
   },
@@ -1177,7 +1245,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks give a random ally a little MP.",
+   "text": "Basic attacks give a random ally MP, more with Attack.",
    "reactions": [
     {
      "on": {
@@ -1187,7 +1255,16 @@
      "do": [
       {
        "op": "mp",
-       "amount": 100,
+       "amount": {
+        "base": 60,
+        "scale": [
+         {
+          "ratio": 0.03,
+          "stat": "attack",
+          "of": "holder"
+         }
+        ]
+       },
        "to": {
         "side": "allies",
         "pick": "random"
@@ -1550,6 +1627,40 @@
        "op": "remove",
        "label": "buff",
        "status": "bedrock_on",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "blood_price",
+   "name": "BLOOD PRICE",
+   "text": "Pays a fifth of its max HP.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "fizzle",
+   "unremovable": true,
+   "duration": 1,
+   "reactions": [
+    {
+     "on": {
+      "event": "status_gained",
+      "status": "blood_price"
+     },
+     "do": [
+      {
+       "op": "damage",
+       "type": "none",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.2,
+          "stat": "max_hp",
+          "of": "holder"
+         }
+        ]
+       },
        "to": "holder"
       }
      ]
@@ -2966,15 +3077,15 @@
   {
    "id": "knight",
    "name": "Knight",
-   "text": "Protector. Stands in front in heavy plate, Guards and Shields whoever is lowest, bashes a foe now and then, and when an ally falls, calls every foe onto itself.",
+   "text": "Protector. Starts every fight behind its own Shield, Guards whoever is lowest, calls every foe onto itself while an ally regains its mana, and bashes a foe with the weight of its own body.",
    "source": "starter",
    "stats": {
-    "max_hp": 4000,
+    "max_hp": 5000,
     "max_mp": 2000,
     "mp_regen": 2000,
     "attack": 3000,
     "magic": 1000,
-    "armor": 5000,
+    "armor": 4000,
     "crit_chance": 8,
     "aggro": 120
    },
@@ -2984,22 +3095,22 @@
    ],
    "armor": "heavy",
    "passive": {
-    "name": "Sworn",
-    "text": "When an ally is knocked out, the Knight gains Taunt.",
+    "name": "Vanguard",
+    "text": "It starts every fight behind a Shield that scales from its max HP.",
     "statuses": [
-     "sworn"
+     "vanguard"
     ]
    },
    "abilities": [
     "fortify",
-    "protect",
+    "stand_fast",
     "shield_bash"
    ]
   },
   {
    "id": "cleric",
    "name": "Cleric",
-   "text": "Healer. Mends whoever is lowest with quick, small heals, lifts a curse and wraps the ally in Regen, raises the fallen, and nothing silences its prayers.",
+   "text": "Healer. Mends whoever is lowest with quick, small heals, lifts a curse and wraps the ally in Regen, raises the fallen, and prays twice as fast when its own life is in danger.",
    "source": "starter",
    "stats": {
     "max_hp": 2000,
@@ -3009,17 +3120,17 @@
     "magic": 4000,
     "armor": 2000,
     "crit_chance": 8,
-    "aggro": 90
+    "aggro": 80
    },
    "weapons": [
     "light_staff"
    ],
    "armor": "light",
    "passive": {
-    "name": "Encore",
-    "text": "It can't be Silenced.",
+    "name": "Last rites",
+    "text": "Below 30% of its max HP, its cooldowns are halved.",
     "statuses": [
-     "encore"
+     "last_rites"
     ]
    },
    "abilities": [
@@ -3075,8 +3186,8 @@
     "magic": 2000,
     "armor": 3000,
     "crit_chance": 8,
-    "aggro": 110,
-    "thorns": 250,
+    "aggro": 120,
+    "thorns": 300,
     "resist:fire": -50
    },
    "weapons": [
@@ -3106,11 +3217,11 @@
     "max_hp": 4000,
     "max_mp": 2000,
     "mp_regen": 2000,
-    "attack": 3000,
+    "attack": 4000,
     "magic": 1000,
     "armor": 5000,
     "crit_chance": 8,
-    "aggro": 100
+    "aggro": 120
    },
    "weapons": [
     "spear",
@@ -3143,7 +3254,7 @@
     "magic": 4000,
     "armor": 4000,
     "crit_chance": 8,
-    "aggro": 100,
+    "aggro": 110,
     "resist:light": 50
    },
    "weapons": [
@@ -3153,7 +3264,7 @@
    "armor": "heavy",
    "passive": {
     "name": "Judgement",
-    "text": "Its hits deal double damage to foes with a buff.",
+    "text": "Its hits deal half again as much damage to foes with a buff.",
     "statuses": [
      "judgement"
     ]
@@ -3198,50 +3309,51 @@
   {
    "id": "bard",
    "name": "Bard",
-   "text": "Party tempo. Plays the fight's tempo: allies faster and stronger, every foe shocked by its thunder, and every note it strikes gives an ally a little mana.",
+   "text": "Party tempo. A rapid caster at the back: an anthem that makes an ally faster and stronger, a chorus that mends everyone a little, thunder that shocks every foe, and every note it strikes gives an ally mana.",
    "source": "unlock",
    "stats": {
-    "max_hp": 3000,
+    "max_hp": 2000,
     "max_mp": 4000,
     "mp_regen": 3000,
     "attack": 3000,
     "magic": 3000,
     "armor": 2000,
     "crit_chance": 8,
-    "aggro": 90
+    "aggro": 80
    },
    "weapons": [
     "dagger",
-    "bow"
+    "bow",
+    "light_staff"
    ],
    "armor": "medium",
    "passive": {
     "name": "Refrain",
-    "text": "Each of its basic attacks that lands gives a random ally a little MP.",
+    "text": "Each of its basic attacks that lands gives a random ally MP, more the higher its Attack.",
     "statuses": [
      "refrain"
     ]
    },
    "abilities": [
-    "allegro",
-    "war_ballad",
+    "anthem",
+    "chorus",
     "thunder_chord"
    ]
   },
   {
    "id": "hexer",
    "name": "Hexer",
-   "text": "Curser. Curses the most dangerous foe into a crawl, silenced, weakened, slowed and chilled, and strips foes' buffs one at a time.",
+   "text": "Curser. The debuff bot: burns and shocks every foe a little so the party's statuses pile up, weakens and sunders the most dangerous one, chills whatever it strikes, and silences a foe mid-cast.",
    "source": "unlock",
    "stats": {
-    "max_hp": 3000,
+    "max_hp": 2000,
     "max_mp": 4000,
     "mp_regen": 3000,
     "attack": 1000,
     "magic": 4000,
     "armor": 1000,
     "crit_chance": 8,
-    "aggro": 90,
+    "aggro": 80,
     "siphon": 10
    },
    "weapons": [
@@ -3257,8 +3369,8 @@
     ]
    },
    "abilities": [
-    "hush",
-    "unravel",
+    "malison",
+    "unmake",
     "enfeeble"
    ]
   },
@@ -3271,11 +3383,11 @@
     "max_hp": 3000,
     "max_mp": 2000,
     "mp_regen": 3000,
-    "attack": 4000,
+    "attack": 3700,
     "magic": 1000,
     "armor": 2000,
-    "crit_chance": 12,
-    "aggro": 100,
+    "crit_chance": 8,
+    "aggro": 90,
     "evasion": 35,
     "double_strike": 25
    },
@@ -3303,7 +3415,7 @@
    "text": "Burst killer. Slips out of sight, picks off the weakest foe past any guard, leaves every crit a bleeding wound, and silences the back line.",
    "source": "unlock",
    "stats": {
-    "max_hp": 3000,
+    "max_hp": 2000,
     "max_mp": 3000,
     "mp_regen": 3000,
     "attack": 5000,
@@ -3335,7 +3447,7 @@
   {
    "id": "vampire",
    "name": "Vampire",
-   "text": "Drains to outlast. Feeds on everything it hits: the harder it hits, the more it heals, and its prey is left weakened and unable to mend.",
+   "text": "Drains to outlast. Feeds on everything it hits: the harder it hits, the more it heals, its prey is left weakened, and it bleeds its own life into an ally's wounds and mana.",
    "source": "unlock",
    "stats": {
     "max_hp": 4000,
@@ -3346,7 +3458,7 @@
     "armor": 2000,
     "crit_chance": 8,
     "aggro": 100,
-    "lifesteal": 15,
+    "lifesteal": 30,
     "resist:light": -50,
     "resist:dark": 50
    },
@@ -3365,7 +3477,7 @@
    },
    "abilities": [
     "blood_drain",
-    "wither",
+    "blood_gift",
     "frenzy"
    ]
   },
@@ -3382,7 +3494,7 @@
     "magic": 5000,
     "armor": 1000,
     "crit_chance": 8,
-    "aggro": 100
+    "aggro": 80
    },
    "weapons": [
     "fire_staff",
@@ -3415,7 +3527,7 @@
     "magic": 4000,
     "armor": 2000,
     "crit_chance": 8,
-    "aggro": 90,
+    "aggro": 80,
     "resist:ice": 50
    },
    "weapons": [
@@ -3449,7 +3561,7 @@
     "magic": 4000,
     "armor": 1000,
     "crit_chance": 8,
-    "aggro": 100
+    "aggro": 80
    },
    "weapons": [
     "lightning_staff",
@@ -3511,9 +3623,9 @@
    "class": "knight",
    "name": "Fortify",
    "text": "Guards the ally with the lowest share of HP.",
-   "cooldown": 29.3,
-   "cast": 0.5,
-   "mp": 160,
+   "cooldown": 14.7,
+   "cast": 1,
+   "mp": 250,
    "target": {
     "side": "allies",
     "pick": "lowest",
@@ -3527,38 +3639,26 @@
    ]
   },
   {
-   "id": "protect",
+   "id": "stand_fast",
    "class": "knight",
-   "name": "Protect",
-   "text": "Shields the lowest ally; the amount scales from the Knight's max HP.",
-   "cooldown": 34.4,
-   "cast": 1.5,
-   "mp": 160,
-   "if": {
-    "side": "allies",
-    "where": {
-     "belowCap": "shield"
-    }
-   },
-   "target": {
-    "side": "allies",
-    "pick": "lowest",
-    "by": "hp_share",
-    "where": {
-     "belowCap": "shield"
-    }
-   },
+   "name": "Stand fast",
+   "text": "Taunts, and gives Clarity to the ally with the least MP.",
+   "cooldown": 27.5,
+   "cast": 1,
+   "mp": 400,
+   "target": "self",
    "do": [
     {
      "op": "apply",
-     "status": "shield",
-     "stacks": {
-      "scale": [
-       {
-        "ratio": 0.6,
-        "stat": "max_hp"
-       }
-      ]
+     "status": "taunt"
+    },
+    {
+     "op": "apply",
+     "status": "clarity",
+     "to": {
+      "side": "allies",
+      "pick": "lowest",
+      "by": "mp_share"
      }
     }
    ]
@@ -3567,10 +3667,10 @@
    "id": "shield_bash",
    "class": "knight",
    "name": "Shield bash",
-   "text": "Bashes a foe with the shield, which scales from Armor, and Stuns it.",
-   "cooldown": 35,
-   "cast": 0.5,
-   "mp": 160,
+   "text": "Bashes a foe with the shield, which scales from max HP, and Stuns it.",
+   "cooldown": 30.7,
+   "cast": 1,
+   "mp": 400,
    "target": {
     "side": "foes",
     "where": {
@@ -3586,8 +3686,8 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.43,
-        "stat": "armor"
+        "ratio": 0.32,
+        "stat": "max_hp"
        }
       ]
      },
@@ -3604,9 +3704,9 @@
    "class": "cleric",
    "name": "Renew",
    "text": "Cleanses an ally with a debuff and gives it Regen; with nobody debuffed, Regen on the lowest ally.",
-   "cooldown": 31.2,
-   "cast": 1.5,
-   "mp": 1300,
+   "cooldown": 27.3,
+   "cast": 3,
+   "mp": 400,
    "target": {
     "side": "allies",
     "where": {
@@ -3632,9 +3732,9 @@
    "class": "cleric",
    "name": "Cure",
    "text": "A quick, small heal on the lowest ally.",
-   "cooldown": 24.8,
-   "cast": 0.5,
-   "mp": 1000,
+   "cooldown": 16.5,
+   "cast": 1,
+   "mp": 250,
    "if": {
     "side": "allies",
     "where": {
@@ -3665,9 +3765,9 @@
    "class": "cleric",
    "name": "Raise",
    "text": "Revives a random knocked-out ally with half its HP.",
-   "cooldown": 36,
-   "cast": 6,
-   "mp": 2000,
+   "cooldown": 59.9,
+   "cast": 10,
+   "mp": 1300,
    "if": {
     "side": "allies",
     "where": {
@@ -3700,9 +3800,9 @@
    "class": "ranger",
    "name": "Barbed arrow",
    "text": "A barbed arrow at a random foe, adding several Bleed.",
-   "cooldown": 25,
-   "cast": 0.5,
-   "mp": 100,
+   "cooldown": 16.7,
+   "cast": 1,
+   "mp": 250,
    "do": [
     {
      "op": "damage",
@@ -3711,7 +3811,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.43,
+        "ratio": 0.32,
         "stat": "attack"
        }
       ]
@@ -3722,7 +3822,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0026,
+          "ratio": 0.0039000000000000003,
           "stat": "attack"
          }
         ]
@@ -3737,9 +3837,9 @@
    "class": "ranger",
    "name": "Fire arrow",
    "text": "A burning arrow at the foe with the most Burn, adding many.",
-   "cooldown": 32.5,
-   "cast": 4,
-   "mp": 160,
+   "cooldown": 28.5,
+   "cast": 6,
+   "mp": 400,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -3755,7 +3855,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 1.25,
+        "ratio": 0.56,
         "stat": "attack"
        }
       ]
@@ -3766,7 +3866,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0046,
+          "ratio": 0.0069,
           "stat": "attack"
          }
         ]
@@ -3781,9 +3881,9 @@
    "class": "ranger",
    "name": "Rending arrow",
    "text": "An arrow at the foe with the most Sunder, adding several.",
-   "cooldown": 27.7,
-   "cast": 1.5,
-   "mp": 160,
+   "cooldown": 24.3,
+   "cast": 3,
+   "mp": 400,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -3799,7 +3899,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.75,
+        "ratio": 0.94,
         "stat": "attack"
        }
       ]
@@ -3810,7 +3910,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0026,
+          "ratio": 0.0039000000000000003,
           "stat": "attack"
          }
         ]
@@ -3825,9 +3925,9 @@
    "class": "bramble_knight",
    "name": "Thicket",
    "text": "Taunts and Guards itself.",
-   "cooldown": 30.2,
-   "cast": 0.5,
-   "mp": 330,
+   "cooldown": 15.1,
+   "cast": 1,
+   "mp": 250,
    "target": "self",
    "do": [
     {
@@ -3845,9 +3945,9 @@
    "class": "bramble_knight",
    "name": "Regrowth",
    "text": "Regen on the lowest ally.",
-   "cooldown": 31.1,
-   "cast": 1.5,
-   "mp": 330,
+   "cooldown": 27.2,
+   "cast": 3,
+   "mp": 400,
    "target": {
     "side": "allies",
     "pick": "lowest",
@@ -3865,9 +3965,9 @@
    "class": "bramble_knight",
    "name": "Bramble lash",
    "text": "Lashes a random foe with its thorns.",
-   "cooldown": 20.6,
-   "cast": 0.5,
-   "mp": 200,
+   "cooldown": 13.8,
+   "cast": 1,
+   "mp": 250,
    "do": [
     {
      "op": "damage",
@@ -3876,7 +3976,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 6,
+        "ratio": 4.5,
         "stat": "thorns"
        }
       ]
@@ -3889,9 +3989,9 @@
    "class": "hoplite",
    "name": "Aspis",
    "text": "Aegis on the lowest ally.",
-   "cooldown": 33.9,
-   "cast": 0.5,
-   "mp": 160,
+   "cooldown": 46.6,
+   "cast": 1,
+   "mp": 650,
    "if": {
     "side": "allies",
     "where": {
@@ -3918,9 +4018,9 @@
    "class": "hoplite",
    "name": "Paired guard",
    "text": "Guards itself and the other lowest ally.",
-   "cooldown": 32.3,
-   "cast": 1.5,
-   "mp": 160,
+   "cooldown": 28.3,
+   "cast": 3,
+   "mp": 400,
    "target": "self",
    "do": [
     {
@@ -3943,9 +4043,9 @@
    "class": "hoplite",
    "name": "Spear thrust",
    "text": "A thrust at a random foe that adds a few Sunder.",
-   "cooldown": 27.2,
-   "cast": 0.5,
-   "mp": 100,
+   "cooldown": 31.8,
+   "cast": 6,
+   "mp": 400,
    "do": [
     {
      "op": "damage",
@@ -3954,7 +4054,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 1.5,
+        "ratio": 1.1,
         "stat": "attack"
        }
       ]
@@ -3965,7 +4065,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0014,
+          "ratio": 0.0020999999999999994,
           "stat": "attack"
          }
         ]
@@ -3980,9 +4080,9 @@
    "class": "paladin",
    "name": "Sanctuary",
    "text": "Ward on every ally.",
-   "cooldown": 32.6,
-   "cast": 4,
-   "mp": 700,
+   "cooldown": 39.9,
+   "cast": 6,
+   "mp": 650,
    "target": {
     "side": "allies",
     "pick": "all"
@@ -3998,14 +4098,14 @@
    "id": "absolve",
    "class": "paladin",
    "name": "Absolve",
-   "text": "Cleanses itself and one random other ally with a debuff.",
-   "cooldown": 36.8,
-   "cast": 0.5,
-   "mp": 500,
+   "text": "Cleanses and heals itself and the lowest other ally; the heal scales from Magic.",
+   "cooldown": 28.7,
+   "cast": 3,
+   "mp": 400,
    "if": {
     "side": "allies",
     "where": {
-     "debuffs": true
+     "hpBelow": 100
     }
    },
    "target": "self",
@@ -4015,13 +4115,39 @@
      "label": "debuff"
     },
     {
+     "op": "heal",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.4,
+        "stat": "magic"
+       }
+      ]
+     }
+    },
+    {
      "op": "remove",
      "label": "debuff",
      "to": {
       "side": "others",
-      "where": {
-       "debuffs": true
-      }
+      "pick": "lowest",
+      "by": "hp_share"
+     }
+    },
+    {
+     "op": "heal",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.4,
+        "stat": "magic"
+       }
+      ]
+     },
+     "to": {
+      "side": "others",
+      "pick": "lowest",
+      "by": "hp_share"
      }
     }
    ]
@@ -4031,9 +4157,9 @@
    "class": "paladin",
    "name": "Smite",
    "text": "Heavy Light damage to the foe with the highest Attack or Magic, adding several Burn.",
-   "cooldown": 31,
-   "cast": 6,
-   "mp": 800,
+   "cooldown": 27.1,
+   "cast": 10,
+   "mp": 400,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -4052,7 +4178,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 1.25,
+        "ratio": 0.56,
         "stat": "magic"
        }
       ]
@@ -4063,7 +4189,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0026,
+          "ratio": 0.0039000000000000003,
           "stat": "magic"
          }
         ]
@@ -4078,9 +4204,9 @@
    "class": "valkyrie",
    "name": "Gale spear",
    "text": "Three quick Wind hits on a foe that isn't Taunting, each adding a few Shock.",
-   "cooldown": 24.6,
-   "cast": 0.5,
-   "mp": 500,
+   "cooldown": 16.4,
+   "cast": 1,
+   "mp": 250,
    "seek": true,
    "target": {
     "side": "foes",
@@ -4097,7 +4223,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.2,
+        "ratio": 0.09,
         "stat": "attack"
        }
       ]
@@ -4109,7 +4235,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0014,
+          "ratio": 0.0020999999999999994,
           "stat": "attack"
          }
         ]
@@ -4124,9 +4250,9 @@
    "class": "valkyrie",
    "name": "Rally",
    "text": "Heals the lowest ally; the amount scales from Magic.",
-   "cooldown": 29,
-   "cast": 1.5,
-   "mp": 800,
+   "cooldown": 25.4,
+   "cast": 3,
+   "mp": 400,
    "if": {
     "side": "allies",
     "where": {
@@ -4157,9 +4283,9 @@
    "class": "valkyrie",
    "name": "Valhalla",
    "text": "Revives a random knocked-out ally with a tenth of its HP, every action ready.",
-   "cooldown": 40.5,
-   "cast": 0.5,
-   "mp": 1500,
+   "cooldown": 67.5,
+   "cast": 1,
+   "mp": 1300,
    "if": {
     "side": "allies",
     "where": {
@@ -4189,56 +4315,58 @@
    ]
   },
   {
-   "id": "allegro",
+   "id": "anthem",
    "class": "bard",
-   "name": "Allegro",
-   "text": "Haste on the ally with the highest Attack or Magic.",
-   "cooldown": 34,
-   "cast": 1.5,
-   "mp": 400,
-   "target": {
-    "side": "allies",
-    "pick": "highest",
-    "by": {
-     "stats": [
-      "attack",
-      "magic"
-     ]
-    }
-   },
+   "name": "Anthem",
+   "text": "Haste and many Might on a random ally.",
+   "cooldown": 15.7,
+   "cast": 1,
+   "mp": 250,
+   "target": "ally",
    "do": [
     {
      "op": "apply",
      "status": "haste"
-    }
-   ]
-  },
-  {
-   "id": "war_ballad",
-   "class": "bard",
-   "name": "War ballad",
-   "text": "Many Might on the ally with the highest Attack or Magic.",
-   "cooldown": 36.5,
-   "cast": 1.5,
-   "mp": 400,
-   "target": {
-    "side": "allies",
-    "pick": "highest",
-    "by": {
-     "stats": [
-      "attack",
-      "magic"
-     ]
-    }
-   },
-   "do": [
+    },
     {
      "op": "apply",
      "status": "might",
      "stacks": {
       "scale": [
        {
-        "ratio": 0.0046,
+        "ratio": 0.0069,
+        "stat": "magic"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "chorus",
+   "class": "bard",
+   "name": "Chorus",
+   "text": "A small heal on every ally; the amount scales from Magic.",
+   "cooldown": 18.3,
+   "cast": 3,
+   "mp": 250,
+   "if": {
+    "side": "allies",
+    "where": {
+     "hpBelow": 100
+    }
+   },
+   "target": {
+    "side": "allies",
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "heal",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.15,
         "stat": "magic"
        }
       ]
@@ -4251,8 +4379,8 @@
    "class": "bard",
    "name": "Thunder chord",
    "text": "Many Shock on every foe.",
-   "cooldown": 35.2,
-   "cast": 1.5,
+   "cooldown": 30.8,
+   "cast": 3,
    "mp": 400,
    "target": {
     "side": "foes",
@@ -4265,7 +4393,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 0.0046,
+        "ratio": 0.0069,
         "stat": "magic"
        }
       ]
@@ -4274,65 +4402,79 @@
    ]
   },
   {
-   "id": "hush",
+   "id": "malison",
    "class": "hexer",
-   "name": "Hush",
-   "text": "Silences the foe with the highest Attack or Magic.",
-   "cooldown": 31.1,
-   "cast": 0.5,
-   "mp": 1200,
+   "name": "Malison",
+   "text": "A few Burn and a few Shock on every foe.",
+   "cooldown": 18.3,
+   "cast": 3,
+   "mp": 250,
+   "target": {
+    "side": "foes",
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "burn",
+     "stacks": {
+      "scale": [
+       {
+        "ratio": 0.0020999999999999994,
+        "stat": "magic"
+       }
+      ]
+     }
+    },
+    {
+     "op": "apply",
+     "status": "shock",
+     "stacks": {
+      "scale": [
+       {
+        "ratio": 0.0020999999999999994,
+        "stat": "magic"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "unmake",
+   "class": "hexer",
+   "name": "Unmake",
+   "text": "Silences the casting foe with the highest Attack or Magic and strips its buffs. Waits for a foe to cast.",
+   "cooldown": 29.2,
+   "cast": 1,
+   "mp": 400,
    "if": {
     "side": "foes",
     "where": {
-     "lacks": "silence"
+     "casting": true
     }
    },
    "target": {
     "side": "foes",
+    "where": {
+     "casting": true
+    },
     "pick": "highest",
     "by": {
      "stats": [
       "attack",
       "magic"
      ]
-    },
-    "where": {
-     "lacks": "silence"
     }
    },
    "do": [
     {
      "op": "apply",
      "status": "silence"
-    }
-   ]
-  },
-  {
-   "id": "unravel",
-   "class": "hexer",
-   "name": "Unravel",
-   "text": "Strips one random buff from a random foe with a buff.",
-   "cooldown": 35.1,
-   "cast": 1.5,
-   "mp": 900,
-   "if": {
-    "side": "foes",
-    "where": {
-     "buffs": true
-    }
-   },
-   "target": {
-    "side": "foes",
-    "where": {
-     "buffs": true
-    }
-   },
-   "do": [
+    },
     {
      "op": "remove",
-     "label": "buff",
-     "count": 1,
-     "order": "random"
+     "label": "buff"
     }
    ]
   },
@@ -4340,10 +4482,10 @@
    "id": "enfeeble",
    "class": "hexer",
    "name": "Enfeeble",
-   "text": "Weakens and Slows the foe with the highest Attack or Magic.",
-   "cooldown": 28.9,
-   "cast": 1.5,
-   "mp": 1000,
+   "text": "Weakens the foe with the highest Attack or Magic and adds several Sunder.",
+   "cooldown": 14.4,
+   "cast": 3,
+   "mp": 250,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -4361,7 +4503,15 @@
     },
     {
      "op": "apply",
-     "status": "slow"
+     "status": "sunder",
+     "stacks": {
+      "scale": [
+       {
+        "ratio": 0.0039000000000000003,
+        "stat": "magic"
+       }
+      ]
+     }
     }
    ]
   },
@@ -4370,9 +4520,9 @@
    "class": "monk",
    "name": "Flow",
    "text": "Haste on itself.",
-   "cooldown": 24,
-   "cast": 0.5,
-   "mp": 100,
+   "cooldown": 16,
+   "cast": 1,
+   "mp": 250,
    "target": "self",
    "do": [
     {
@@ -4386,9 +4536,9 @@
    "class": "monk",
    "name": "Burning fist",
    "text": "Three quick Fire hits on the foe with the most Burn, each adding a few.",
-   "cooldown": 24.8,
-   "cast": 0.5,
-   "mp": 100,
+   "cooldown": 16.6,
+   "cast": 1,
+   "mp": 250,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -4404,7 +4554,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.25,
+        "ratio": 0.11,
         "stat": "attack"
        }
       ]
@@ -4416,7 +4566,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0014,
+          "ratio": 0.0020999999999999994,
           "stat": "attack"
          }
         ]
@@ -4431,9 +4581,9 @@
    "class": "monk",
    "name": "Pressure point",
    "text": "Stuns the foe with the highest Attack or Magic, past any guard.",
-   "cooldown": 28.8,
-   "cast": 1.5,
-   "mp": 160,
+   "cooldown": 25.2,
+   "cast": 3,
+   "mp": 400,
    "seek": true,
    "target": {
     "side": "foes",
@@ -4457,7 +4607,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.75,
+        "ratio": 0.56,
         "stat": "attack"
        }
       ]
@@ -4475,9 +4625,9 @@
    "class": "assassin",
    "name": "Vanish",
    "text": "Goes Hidden.",
-   "cooldown": 40.1,
-   "cast": 0.5,
-   "mp": 250,
+   "cooldown": 31.2,
+   "cast": 1,
+   "mp": 400,
    "if": {
     "side": "self",
     "where": {
@@ -4497,9 +4647,9 @@
    "class": "assassin",
    "name": "Backstab",
    "text": "Heavy damage, scaling from Crit chance, to the foe with the lowest HP, past any guard.",
-   "cooldown": 28.6,
-   "cast": 1.5,
-   "mp": 160,
+   "cooldown": 25.1,
+   "cast": 3,
+   "mp": 400,
    "seek": true,
    "target": {
     "side": "foes",
@@ -4514,7 +4664,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 250,
+        "ratio": 188,
         "stat": "crit_chance"
        }
       ]
@@ -4527,9 +4677,9 @@
    "class": "assassin",
    "name": "Garrote",
    "text": "Silences a random foe that isn't Taunting, past any guard.",
-   "cooldown": 38.2,
-   "cast": 0.5,
-   "mp": 250,
+   "cooldown": 29.7,
+   "cast": 1,
+   "mp": 400,
    "seek": true,
    "target": {
     "side": "foes",
@@ -4549,7 +4699,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.75,
+        "ratio": 0.56,
         "stat": "attack"
        }
       ]
@@ -4567,9 +4717,9 @@
    "class": "vampire",
    "name": "Blood drain",
    "text": "Dark damage scaling from max HP to a random foe, which is Weakened.",
-   "cooldown": 23.6,
-   "cast": 0.5,
-   "mp": 200,
+   "cooldown": 15.7,
+   "cast": 1,
+   "mp": 250,
    "do": [
     {
      "op": "damage",
@@ -4592,22 +4742,46 @@
    ]
   },
   {
-   "id": "wither",
+   "id": "blood_gift",
    "class": "vampire",
-   "name": "Wither",
-   "text": "Rot on the foe with the lowest HP.",
-   "cooldown": 31.7,
-   "cast": 1.5,
-   "mp": 330,
+   "name": "Blood gift",
+   "text": "Spends a fifth of its max HP to heal the lowest other ally for as much, and gives it Clarity.",
+   "cooldown": 25.4,
+   "cast": 3,
+   "mp": 400,
+   "if": {
+    "side": "others",
+    "where": {
+     "hpBelow": 100
+    }
+   },
    "target": {
-    "side": "foes",
+    "side": "others",
     "pick": "lowest",
-    "by": "hp"
+    "by": "hp_share"
    },
    "do": [
     {
      "op": "apply",
-     "status": "rot"
+     "status": "blood_price",
+     "to": {
+      "side": "self"
+     }
+    },
+    {
+     "op": "heal",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.2,
+        "stat": "max_hp"
+       }
+      ]
+     }
+    },
+    {
+     "op": "apply",
+     "status": "clarity"
     }
    ]
   },
@@ -4616,9 +4790,9 @@
    "class": "vampire",
    "name": "Frenzy",
    "text": "Several Might on itself.",
-   "cooldown": 30.6,
-   "cast": 0.5,
-   "mp": 330,
+   "cooldown": 26.8,
+   "cast": 1,
+   "mp": 400,
    "target": "self",
    "do": [
     {
@@ -4627,7 +4801,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 0.0026,
+        "ratio": 0.0039000000000000003,
         "stat": "attack"
        }
       ]
@@ -4640,9 +4814,9 @@
    "class": "pyromancer",
    "name": "Firebolt",
    "text": "Fire at the foe with the most Burn, adding several.",
-   "cooldown": 21,
-   "cast": 1.5,
-   "mp": 800,
+   "cooldown": 14,
+   "cast": 3,
+   "mp": 250,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -4658,7 +4832,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.75,
+        "ratio": 0.32,
         "stat": "magic"
        }
       ]
@@ -4669,7 +4843,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0065,
+          "ratio": 0.00975,
           "stat": "magic"
          }
         ]
@@ -4684,9 +4858,9 @@
    "class": "pyromancer",
    "name": "Fireball",
    "text": "Fire on every foe, adding a few Burn to each.",
-   "cooldown": 32.8,
-   "cast": 4,
-   "mp": 1300,
+   "cooldown": 28.7,
+   "cast": 6,
+   "mp": 650,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -4699,7 +4873,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.43,
+        "ratio": 0.19,
         "stat": "magic"
        }
       ]
@@ -4710,7 +4884,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0035,
+          "ratio": 0.00525,
           "stat": "magic"
          }
         ]
@@ -4725,9 +4899,9 @@
    "class": "pyromancer",
    "name": "Pyre",
    "text": "Heavy Fire on the foe with the most Burn, rising with each stack. The Burn stays.",
-   "cooldown": 40.4,
-   "cast": 6,
-   "mp": 2000,
+   "cooldown": 49.4,
+   "cast": 10,
+   "mp": 1300,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -4743,7 +4917,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 1.25,
+        "ratio": 0.94,
         "stat": "magic"
        },
        {
@@ -4761,9 +4935,9 @@
    "class": "frostweaver",
    "name": "Frost lance",
    "text": "Ice at the foe with the most Chill, adding several.",
-   "cooldown": 26.9,
-   "cast": 1.5,
-   "mp": 800,
+   "cooldown": 17.9,
+   "cast": 3,
+   "mp": 250,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -4779,7 +4953,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.75,
+        "ratio": 0.32,
         "stat": "magic"
        }
       ]
@@ -4790,7 +4964,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0026,
+          "ratio": 0.0039000000000000003,
           "stat": "magic"
          }
         ]
@@ -4805,9 +4979,9 @@
    "class": "frostweaver",
    "name": "Blizzard",
    "text": "Ice on every foe, adding a few Chill to each.",
-   "cooldown": 28.3,
-   "cast": 4,
-   "mp": 1000,
+   "cooldown": 24.7,
+   "cast": 6,
+   "mp": 650,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -4820,7 +4994,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.43,
+        "ratio": 0.19,
         "stat": "magic"
        }
       ]
@@ -4831,7 +5005,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0014,
+          "ratio": 0.0020999999999999994,
           "stat": "magic"
          }
         ]
@@ -4845,11 +5019,15 @@
    "id": "stillness",
    "class": "frostweaver",
    "name": "Stillness",
-   "text": "Clarity on a random ally.",
-   "cooldown": 39.7,
-   "cast": 0.5,
+   "text": "Clarity on the ally with the least MP.",
+   "cooldown": 30.9,
+   "cast": 1,
    "mp": 400,
-   "target": "ally",
+   "target": {
+    "side": "allies",
+    "pick": "lowest",
+    "by": "mp_share"
+   },
    "do": [
     {
      "op": "apply",
@@ -4862,9 +5040,9 @@
    "class": "stormcaller",
    "name": "Chain lightning",
    "text": "Lightning at a random foe, then up to three others, adding a few Shock to each.",
-   "cooldown": 24.3,
-   "cast": 0.5,
-   "mp": 800,
+   "cooldown": 16.2,
+   "cast": 1,
+   "mp": 400,
    "do": [
     {
      "op": "damage",
@@ -4873,7 +5051,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.6,
+        "ratio": 0.32,
         "stat": "magic"
        }
       ]
@@ -4884,7 +5062,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0028,
+          "ratio": 0.004199999999999999,
           "stat": "magic"
          }
         ]
@@ -4899,7 +5077,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.3,
+        "ratio": 0.19,
         "stat": "magic"
        }
       ]
@@ -4910,7 +5088,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0028,
+          "ratio": 0.004199999999999999,
           "stat": "magic"
          }
         ]
@@ -4931,9 +5109,9 @@
    "class": "stormcaller",
    "name": "Thunderstorm",
    "text": "Lightning on every foe, adding a few Shock to each.",
-   "cooldown": 29.7,
-   "cast": 1.5,
-   "mp": 1200,
+   "cooldown": 26,
+   "cast": 3,
+   "mp": 650,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -4946,7 +5124,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.43,
+        "ratio": 0.19,
         "stat": "magic"
        }
       ]
@@ -4957,7 +5135,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0028,
+          "ratio": 0.004199999999999999,
           "stat": "magic"
          }
         ]
@@ -4972,9 +5150,9 @@
    "class": "stormcaller",
    "name": "Static charge",
    "text": "Haste on itself.",
-   "cooldown": 37.3,
-   "cast": 4,
-   "mp": 400,
+   "cooldown": 45.6,
+   "cast": 6,
+   "mp": 650,
    "target": "self",
    "do": [
     {
@@ -4988,9 +5166,9 @@
    "class": "geomancer",
    "name": "Earthen shell",
    "text": "Shields itself and the other lowest ally; the amount scales from Armor.",
-   "cooldown": 35.2,
-   "cast": 1.5,
-   "mp": 1200,
+   "cooldown": 30.8,
+   "cast": 3,
+   "mp": 400,
    "if": {
     "side": "allies",
     "where": {
@@ -5044,9 +5222,9 @@
    "class": "geomancer",
    "name": "Rockfall",
    "text": "Earth damage scaling from Armor on a random foe.",
-   "cooldown": 26.5,
-   "cast": 1.5,
-   "mp": 800,
+   "cooldown": 17.7,
+   "cast": 6,
+   "mp": 250,
    "do": [
     {
      "op": "damage",
@@ -5055,7 +5233,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.75,
+        "ratio": 0.56,
         "stat": "armor"
        }
       ]
@@ -5068,9 +5246,9 @@
    "class": "geomancer",
    "name": "Tremor",
    "text": "Earth damage on a random foe, which is Stunned.",
-   "cooldown": 29.1,
-   "cast": 6,
-   "mp": 1200,
+   "cooldown": 40.1,
+   "cast": 10,
+   "mp": 650,
    "target": {
     "side": "foes",
     "where": {
@@ -5086,7 +5264,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.75,
+        "ratio": 0.56,
         "stat": "magic"
        }
       ]
@@ -5103,9 +5281,9 @@
    "id": "shield_up",
    "name": "Shield up",
    "text": "Taunts.",
-   "cooldown": 26.4,
-   "cast": 0.5,
-   "mp": 400,
+   "cooldown": 19.4,
+   "cast": 1,
+   "mp": 250,
    "target": "self",
    "do": [
     {
@@ -5118,9 +5296,9 @@
    "id": "brace",
    "name": "Brace",
    "text": "Guards itself.",
-   "cooldown": 39.5,
-   "cast": 0.5,
-   "mp": 650,
+   "cooldown": 33.6,
+   "cast": 1,
+   "mp": 400,
    "target": "self",
    "do": [
     {
@@ -5133,9 +5311,9 @@
    "id": "flatten",
    "name": "Flatten",
    "text": "A heavy blow that Stuns.",
-   "cooldown": 65.3,
-   "cast": 4,
-   "mp": 1000,
+   "cooldown": 52.2,
+   "cast": 6,
+   "mp": 650,
    "target": {
     "side": "foes",
     "where": {
@@ -5168,9 +5346,9 @@
    "id": "crush",
    "name": "Crush",
    "text": "A massive blow.",
-   "cooldown": 40.5,
-   "cast": 6,
-   "mp": 650,
+   "cooldown": 34.4,
+   "cast": 10,
+   "mp": 400,
    "do": [
     {
      "op": "damage",
@@ -5191,9 +5369,9 @@
    "id": "mend",
    "name": "Mend",
    "text": "Heals the most hurt ally.",
-   "cooldown": 33.3,
-   "cast": 1.5,
-   "mp": 400,
+   "cooldown": 24.4,
+   "cast": 3,
+   "mp": 250,
    "if": {
     "side": "allies",
     "where": {
@@ -5223,9 +5401,9 @@
    "id": "curse",
    "name": "Curse",
    "text": "Weakens and Slows every foe.",
-   "cooldown": 56.1,
-   "cast": 4,
-   "mp": 1000,
+   "cooldown": 44.9,
+   "cast": 6,
+   "mp": 650,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -5245,9 +5423,9 @@
    "id": "soulfire",
    "name": "Soulfire",
    "text": "A heavy Dark spell.",
-   "cooldown": 67.4,
-   "cast": 6,
-   "mp": 1000,
+   "cooldown": 53.9,
+   "cast": 10,
+   "mp": 650,
    "do": [
     {
      "op": "damage",
@@ -5268,9 +5446,9 @@
    "id": "dig_up",
    "name": "Raise",
    "text": "Digs a fallen packmate back up.",
-   "cooldown": 36.5,
-   "cast": 4,
-   "mp": 650,
+   "cooldown": 31,
+   "cast": 6,
+   "mp": 400,
    "if": {
     "side": "allies",
     "where": {
@@ -5302,9 +5480,9 @@
    "id": "death_bell",
    "name": "Death bell",
    "text": "Dooms a foe.",
-   "cooldown": 41.5,
-   "cast": 4,
-   "mp": 650,
+   "cooldown": 35.3,
+   "cast": 6,
+   "mp": 400,
    "if": {
     "side": "foes",
     "where": {
@@ -5328,9 +5506,9 @@
    "id": "mute",
    "name": "Mute",
    "text": "Silences the foe with the highest Attack or Magic.",
-   "cooldown": 39.7,
-   "cast": 1.5,
-   "mp": 650,
+   "cooldown": 33.7,
+   "cast": 3,
+   "mp": 400,
    "if": {
     "side": "foes",
     "where": {
@@ -5361,9 +5539,9 @@
    "id": "quiet",
    "name": "Quiet",
    "text": "Silences every foe.",
-   "cooldown": 38.7,
-   "cast": 4,
-   "mp": 650,
+   "cooldown": 32.9,
+   "cast": 6,
+   "mp": 400,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -5379,9 +5557,9 @@
    "id": "cheer",
    "name": "Cheer",
    "text": "Might and Haste on its strongest ally.",
-   "cooldown": 44.6,
-   "cast": 1.5,
-   "mp": 650,
+   "cooldown": 37.9,
+   "cast": 3,
+   "mp": 400,
    "target": {
     "side": "allies",
     "pick": "highest",
@@ -5408,9 +5586,9 @@
    "id": "brand",
    "name": "Brand",
    "text": "Fire on a foe, with a few Burn.",
-   "cooldown": 32.7,
-   "cast": 0.5,
-   "mp": 400,
+   "cooldown": 24,
+   "cast": 1,
+   "mp": 250,
    "do": [
     {
      "op": "damage",
@@ -5437,9 +5615,9 @@
    "id": "inferno",
    "name": "Inferno",
    "text": "A very long cast: huge Fire on every foe, with many Burn.",
-   "cooldown": 42.1,
-   "cast": 6,
-   "mp": 650,
+   "cooldown": 35.7,
+   "cast": 10,
+   "mp": 400,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -5470,9 +5648,9 @@
    "id": "hailstorm",
    "name": "Hailstorm",
    "text": "Ice on every foe, with a stack of Chill.",
-   "cooldown": 44,
-   "cast": 1.5,
-   "mp": 650,
+   "cooldown": 37.4,
+   "cast": 3,
+   "mp": 400,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -5503,9 +5681,9 @@
    "id": "call_drones",
    "name": "Call drones",
    "text": "Summons two Drones.",
-   "cooldown": 38.3,
-   "cast": 4,
-   "mp": 650,
+   "cooldown": 32.5,
+   "cast": 6,
+   "mp": 400,
    "do": [
     {
      "op": "summon",
@@ -5518,9 +5696,9 @@
    "id": "tempest",
    "name": "Tempest",
    "text": "Lightning on every foe, with a stack of Shock.",
-   "cooldown": 42.6,
-   "cast": 4,
-   "mp": 650,
+   "cooldown": 36.2,
+   "cast": 6,
+   "mp": 400,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -5551,9 +5729,9 @@
    "id": "rally_soldiers",
    "name": "Rally",
    "text": "Summons two Soldiers.",
-   "cooldown": 40.7,
-   "cast": 4,
-   "mp": 650,
+   "cooldown": 34.6,
+   "cast": 6,
+   "mp": 400,
    "do": [
     {
      "op": "summon",
@@ -5574,10 +5752,10 @@
    "weapon": {
     "kind": "dagger",
     "amount": {
-     "base": 106,
+     "base": 114,
      "scale": [
       {
-       "ratio": 0.159,
+       "ratio": 0.1714285714285714,
        "stat": "attack"
       }
      ]
@@ -5594,10 +5772,10 @@
    "weapon": {
     "kind": "fist",
     "amount": {
-     "base": 114,
+     "base": 123,
      "scale": [
       {
-       "ratio": 0.171,
+       "ratio": 0.18428571428571425,
        "stat": "attack"
       }
      ]
@@ -5614,10 +5792,10 @@
    "weapon": {
     "kind": "sword",
     "amount": {
-     "base": 148,
+     "base": 159,
      "scale": [
       {
-       "ratio": 0.222,
+       "ratio": 0.23785714285714282,
        "stat": "attack"
       }
      ]
@@ -5634,10 +5812,10 @@
    "weapon": {
     "kind": "bow",
     "amount": {
-     "base": 156,
+     "base": 167,
      "scale": [
       {
-       "ratio": 0.23399999999999999,
+       "ratio": 0.25071428571428567,
        "stat": "attack"
       }
      ]
@@ -5654,10 +5832,10 @@
    "weapon": {
     "kind": "spear",
     "amount": {
-     "base": 164,
+     "base": 176,
      "scale": [
       {
-       "ratio": 0.24599999999999997,
+       "ratio": 0.26357142857142857,
        "stat": "attack"
       }
      ]
@@ -5674,10 +5852,10 @@
    "weapon": {
     "kind": "axe",
     "amount": {
-     "base": 214,
+     "base": 230,
      "scale": [
       {
-       "ratio": 0.32099999999999995,
+       "ratio": 0.34500000000000003,
        "stat": "attack"
       }
      ]
@@ -5694,10 +5872,10 @@
    "weapon": {
     "kind": "fire_staff",
     "amount": {
-     "base": 196,
+     "base": 210,
      "scale": [
       {
-       "ratio": 0.29400000000000004,
+       "ratio": 0.315,
        "stat": "magic"
       }
      ]
@@ -5714,10 +5892,10 @@
    "weapon": {
     "kind": "lightning_staff",
     "amount": {
-     "base": 132,
+     "base": 141,
      "scale": [
       {
-       "ratio": 0.19799999999999998,
+       "ratio": 0.21214285714285716,
        "stat": "magic"
       }
      ]
@@ -5734,10 +5912,10 @@
    "weapon": {
     "kind": "wind_staff",
     "amount": {
-     "base": 122,
+     "base": 131,
      "scale": [
       {
-       "ratio": 0.183,
+       "ratio": 0.19714285714285715,
        "stat": "magic"
       }
      ]
@@ -5754,10 +5932,10 @@
    "weapon": {
     "kind": "earth_staff",
     "amount": {
-     "base": 188,
+     "base": 201,
      "scale": [
       {
-       "ratio": 0.28200000000000003,
+       "ratio": 0.3021428571428571,
        "stat": "magic"
       }
      ]
@@ -5774,10 +5952,10 @@
    "weapon": {
     "kind": "ice_staff",
     "amount": {
-     "base": 180,
+     "base": 109,
      "scale": [
       {
-       "ratio": 0.27,
+       "ratio": 0.16285714285714284,
        "stat": "magic"
       }
      ]
@@ -5794,10 +5972,10 @@
    "weapon": {
     "kind": "light_staff",
     "amount": {
-     "base": 170,
+     "base": 183,
      "scale": [
       {
-       "ratio": 0.255,
+       "ratio": 0.2742857142857143,
        "stat": "magic"
       }
      ]
@@ -5814,10 +5992,10 @@
    "weapon": {
     "kind": "dark_staff",
     "amount": {
-     "base": 174,
+     "base": 136,
      "scale": [
       {
-       "ratio": 0.26099999999999995,
+       "ratio": 0.20357142857142857,
        "stat": "magic"
       }
      ]
@@ -5834,10 +6012,10 @@
    "weapon": {
     "kind": "dagger",
     "amount": {
-     "base": 106,
+     "base": 114,
      "scale": [
       {
-       "ratio": 0.159,
+       "ratio": 0.1714285714285714,
        "stat": "attack"
       }
      ]
@@ -5860,10 +6038,10 @@
    "weapon": {
     "kind": "dagger",
     "amount": {
-     "base": 106,
+     "base": 114,
      "scale": [
       {
-       "ratio": 0.159,
+       "ratio": 0.1714285714285714,
        "stat": "attack"
       }
      ]
@@ -5890,10 +6068,10 @@
    "weapon": {
     "kind": "dagger",
     "amount": {
-     "base": 106,
+     "base": 114,
      "scale": [
       {
-       "ratio": 0.159,
+       "ratio": 0.1714285714285714,
        "stat": "attack"
       }
      ]
@@ -5920,10 +6098,10 @@
    "weapon": {
     "kind": "fist",
     "amount": {
-     "base": 114,
+     "base": 123,
      "scale": [
       {
-       "ratio": 0.171,
+       "ratio": 0.18428571428571425,
        "stat": "attack"
       }
      ]
@@ -5950,10 +6128,10 @@
    "weapon": {
     "kind": "fist",
     "amount": {
-     "base": 114,
+     "base": 123,
      "scale": [
       {
-       "ratio": 0.171,
+       "ratio": 0.18428571428571425,
        "stat": "attack"
       }
      ]
@@ -5962,7 +6140,7 @@
    "stats": [
     {
      "stat": "lifesteal",
-     "flat": 8
+     "flat": 15
     },
     {
      "stat": "max_hp",
@@ -5980,10 +6158,10 @@
    "weapon": {
     "kind": "fist",
     "amount": {
-     "base": 114,
+     "base": 123,
      "scale": [
       {
-       "ratio": 0.171,
+       "ratio": 0.18428571428571425,
        "stat": "attack"
       }
      ]
@@ -6010,10 +6188,10 @@
    "weapon": {
     "kind": "sword",
     "amount": {
-     "base": 148,
+     "base": 159,
      "scale": [
       {
-       "ratio": 0.222,
+       "ratio": 0.23785714285714282,
        "stat": "attack"
       }
      ]
@@ -6040,10 +6218,10 @@
    "weapon": {
     "kind": "sword",
     "amount": {
-     "base": 148,
+     "base": 159,
      "scale": [
       {
-       "ratio": 0.222,
+       "ratio": 0.23785714285714282,
        "stat": "attack"
       }
      ]
@@ -6066,10 +6244,10 @@
    "weapon": {
     "kind": "sword",
     "amount": {
-     "base": 148,
+     "base": 159,
      "scale": [
       {
-       "ratio": 0.222,
+       "ratio": 0.23785714285714282,
        "stat": "attack"
       }
      ]
@@ -6096,10 +6274,10 @@
    "weapon": {
     "kind": "sword",
     "amount": {
-     "base": 148,
+     "base": 159,
      "scale": [
       {
-       "ratio": 0.222,
+       "ratio": 0.23785714285714282,
        "stat": "attack"
       }
      ]
@@ -6126,10 +6304,10 @@
    "weapon": {
     "kind": "bow",
     "amount": {
-     "base": 156,
+     "base": 167,
      "scale": [
       {
-       "ratio": 0.23399999999999999,
+       "ratio": 0.25071428571428567,
        "stat": "attack"
       }
      ]
@@ -6152,10 +6330,10 @@
    "weapon": {
     "kind": "bow",
     "amount": {
-     "base": 156,
+     "base": 167,
      "scale": [
       {
-       "ratio": 0.23399999999999999,
+       "ratio": 0.25071428571428567,
        "stat": "attack"
       }
      ]
@@ -6182,10 +6360,10 @@
    "weapon": {
     "kind": "bow",
     "amount": {
-     "base": 156,
+     "base": 167,
      "scale": [
       {
-       "ratio": 0.23399999999999999,
+       "ratio": 0.25071428571428567,
        "stat": "attack"
       }
      ]
@@ -6212,10 +6390,10 @@
    "weapon": {
     "kind": "spear",
     "amount": {
-     "base": 287,
+     "base": 308,
      "scale": [
       {
-       "ratio": 0.12299999999999998,
+       "ratio": 0.13178571428571428,
        "stat": "attack"
       }
      ]
@@ -6238,10 +6416,10 @@
    "weapon": {
     "kind": "spear",
     "amount": {
-     "base": 164,
+     "base": 176,
      "scale": [
       {
-       "ratio": 0.24599999999999997,
+       "ratio": 0.26357142857142857,
        "stat": "attack"
       }
      ]
@@ -6268,10 +6446,10 @@
    "weapon": {
     "kind": "spear",
     "amount": {
-     "base": 164,
+     "base": 176,
      "scale": [
       {
-       "ratio": 0.24599999999999997,
+       "ratio": 0.26357142857142857,
        "stat": "attack"
       }
      ]
@@ -6298,10 +6476,10 @@
    "weapon": {
     "kind": "axe",
     "amount": {
-     "base": 214,
+     "base": 230,
      "scale": [
       {
-       "ratio": 0.32099999999999995,
+       "ratio": 0.34500000000000003,
        "stat": "attack"
       }
      ]
@@ -6328,10 +6506,10 @@
    "weapon": {
     "kind": "axe",
     "amount": {
-     "base": 374,
+     "base": 403,
      "scale": [
       {
-       "ratio": 0.16049999999999998,
+       "ratio": 0.17250000000000001,
        "stat": "attack"
       }
      ]
@@ -6354,10 +6532,10 @@
    "weapon": {
     "kind": "fire_staff",
     "amount": {
-     "base": 196,
+     "base": 210,
      "scale": [
       {
-       "ratio": 0.29400000000000004,
+       "ratio": 0.315,
        "stat": "magic"
       }
      ]
@@ -6380,10 +6558,10 @@
    "weapon": {
     "kind": "fire_staff",
     "amount": {
-     "base": 196,
+     "base": 210,
      "scale": [
       {
-       "ratio": 0.29400000000000004,
+       "ratio": 0.315,
        "stat": "magic"
       }
      ]
@@ -6406,10 +6584,10 @@
    "weapon": {
     "kind": "lightning_staff",
     "amount": {
-     "base": 132,
+     "base": 141,
      "scale": [
       {
-       "ratio": 0.19799999999999998,
+       "ratio": 0.21214285714285716,
        "stat": "magic"
       }
      ]
@@ -6432,10 +6610,10 @@
    "weapon": {
     "kind": "lightning_staff",
     "amount": {
-     "base": 132,
+     "base": 141,
      "scale": [
       {
-       "ratio": 0.19799999999999998,
+       "ratio": 0.21214285714285716,
        "stat": "magic"
       }
      ]
@@ -6462,10 +6640,10 @@
    "weapon": {
     "kind": "wind_staff",
     "amount": {
-     "base": 122,
+     "base": 131,
      "scale": [
       {
-       "ratio": 0.183,
+       "ratio": 0.19714285714285715,
        "stat": "magic"
       }
      ]
@@ -6492,10 +6670,10 @@
    "weapon": {
     "kind": "wind_staff",
     "amount": {
-     "base": 122,
+     "base": 131,
      "scale": [
       {
-       "ratio": 0.183,
+       "ratio": 0.19714285714285715,
        "stat": "magic"
       }
      ]
@@ -6518,10 +6696,10 @@
    "weapon": {
     "kind": "earth_staff",
     "amount": {
-     "base": 188,
+     "base": 201,
      "scale": [
       {
-       "ratio": 0.28200000000000003,
+       "ratio": 0.3021428571428571,
        "stat": "magic"
       }
      ]
@@ -6548,10 +6726,10 @@
    "weapon": {
     "kind": "earth_staff",
     "amount": {
-     "base": 188,
+     "base": 201,
      "scale": [
       {
-       "ratio": 0.28200000000000003,
+       "ratio": 0.3021428571428571,
        "stat": "magic"
       }
      ]
@@ -6578,10 +6756,10 @@
    "weapon": {
     "kind": "ice_staff",
     "amount": {
-     "base": 180,
+     "base": 109,
      "scale": [
       {
-       "ratio": 0.27,
+       "ratio": 0.16285714285714284,
        "stat": "magic"
       }
      ]
@@ -6604,10 +6782,10 @@
    "weapon": {
     "kind": "ice_staff",
     "amount": {
-     "base": 180,
+     "base": 109,
      "scale": [
       {
-       "ratio": 0.27,
+       "ratio": 0.16285714285714284,
        "stat": "magic"
       }
      ]
@@ -6630,10 +6808,10 @@
    "weapon": {
     "kind": "light_staff",
     "amount": {
-     "base": 170,
+     "base": 183,
      "scale": [
       {
-       "ratio": 0.255,
+       "ratio": 0.2742857142857143,
        "stat": "magic"
       }
      ]
@@ -6660,10 +6838,10 @@
    "weapon": {
     "kind": "light_staff",
     "amount": {
-     "base": 298,
+     "base": 320,
      "scale": [
       {
-       "ratio": 0.255,
+       "ratio": 0.2742857142857143,
        "stat": "magic"
       }
      ]
@@ -6680,10 +6858,10 @@
    "weapon": {
     "kind": "light_staff",
     "amount": {
-     "base": 170,
+     "base": 183,
      "scale": [
       {
-       "ratio": 0.255,
+       "ratio": 0.2742857142857143,
        "stat": "magic"
       }
      ]
@@ -6706,10 +6884,10 @@
    "weapon": {
     "kind": "dark_staff",
     "amount": {
-     "base": 174,
+     "base": 136,
      "scale": [
       {
-       "ratio": 0.26099999999999995,
+       "ratio": 0.20357142857142857,
        "stat": "magic"
       }
      ]
@@ -6732,10 +6910,10 @@
    "weapon": {
     "kind": "dark_staff",
     "amount": {
-     "base": 174,
+     "base": 136,
      "scale": [
       {
-       "ratio": 0.26099999999999995,
+       "ratio": 0.20357142857142857,
        "stat": "magic"
       }
      ]
@@ -6762,10 +6940,10 @@
    "weapon": {
     "kind": "earth_staff",
     "amount": {
-     "base": 188,
+     "base": 201,
      "scale": [
       {
-       "ratio": 0.28200000000000003,
+       "ratio": 0.3021428571428571,
        "stat": "max_hp"
       }
      ]
@@ -6782,10 +6960,10 @@
    "weapon": {
     "kind": "dark_staff",
     "amount": {
-     "base": 174,
+     "base": 136,
      "scale": [
       {
-       "ratio": 0.26099999999999995,
+       "ratio": 0.20357142857142857,
        "stat": "max_hp"
       }
      ]
@@ -6802,10 +6980,10 @@
    "weapon": {
     "kind": "axe",
     "amount": {
-     "base": 214,
+     "base": 230,
      "scale": [
       {
-       "ratio": 0.32099999999999995,
+       "ratio": 0.34500000000000003,
        "stat": "armor"
       }
      ]
@@ -6822,10 +7000,10 @@
    "weapon": {
     "kind": "dagger",
     "amount": {
-     "base": 106,
+     "base": 114,
      "scale": [
       {
-       "ratio": 31.8,
+       "ratio": 34.28571428571428,
        "stat": "crit_chance"
       }
      ]
@@ -6842,10 +7020,10 @@
    "weapon": {
     "kind": "fist",
     "amount": {
-     "base": 114,
+     "base": 123,
      "scale": [
       {
-       "ratio": 25.650000000000002,
+       "ratio": 27.64285714285714,
        "stat": "evasion"
       }
      ]
@@ -6862,10 +7040,10 @@
    "weapon": {
     "kind": "ice_staff",
     "amount": {
-     "base": 180,
+     "base": 109,
      "scale": [
       {
-       "ratio": 0.27,
+       "ratio": 0.16285714285714284,
        "stat": "max_mp"
       }
      ]
@@ -6882,10 +7060,10 @@
    "weapon": {
     "kind": "light_staff",
     "amount": {
-     "base": 170,
+     "base": 183,
      "scale": [
       {
-       "ratio": 0.255,
+       "ratio": 0.2742857142857143,
        "stat": "armor"
       }
      ]
@@ -7153,7 +7331,7 @@
    "stats": [
     {
      "stat": "thorns",
-     "flat": 250
+     "flat": 300
     },
     {
      "stat": "aggro",
@@ -7253,7 +7431,7 @@
    "stats": [
     {
      "stat": "lifesteal",
-     "flat": 8
+     "flat": 15
     },
     {
      "stat": "max_hp",
@@ -7497,7 +7675,7 @@
     },
     {
      "stat": "lifesteal",
-     "flat": 8
+     "flat": 15
     }
    ]
   },
@@ -7511,7 +7689,7 @@
    "stats": [
     {
      "stat": "lifesteal",
-     "flat": 15
+     "flat": 30
     },
     {
      "stat": "max_hp",
@@ -8164,6 +8342,7 @@
    "text": "Hunts in packs.",
    "rank": "minion",
    "stats": {
+    "resist": 0,
     "max_hp": 2000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -8175,7 +8354,7 @@
    },
    "weapon": {
     "kind": "dagger",
-    "amount": 375
+    "amount": 413
    }
   },
   {
@@ -8184,6 +8363,7 @@
    "text": "A common road thug.",
    "rank": "minion",
    "stats": {
+    "resist": 0,
     "max_hp": 4000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -8195,7 +8375,7 @@
    },
    "weapon": {
     "kind": "sword",
-    "amount": 700
+    "amount": 770
    }
   },
   {
@@ -8204,6 +8384,7 @@
    "text": "Hits hard, falls fast.",
    "rank": "minion",
    "stats": {
+    "resist": 0,
     "max_hp": 2000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -8215,7 +8396,7 @@
    },
    "weapon": {
     "kind": "bow",
-    "amount": 1100
+    "amount": 1200
    }
   },
   {
@@ -8224,6 +8405,7 @@
    "text": "Its bite leaves a bleeding wound.",
    "rank": "minion",
    "stats": {
+    "resist": 0,
     "max_hp": 2000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -8235,7 +8417,7 @@
    },
    "weapon": {
     "kind": "dagger",
-    "amount": 375
+    "amount": 413
    },
    "statuses": [
     "venom"
@@ -8247,6 +8429,7 @@
    "text": "Hides behind a big shield.",
    "rank": "elite",
    "stats": {
+    "resist": 15,
     "max_hp": 10000,
     "max_mp": 3000,
     "mp_regen": 2000,
@@ -8258,7 +8441,7 @@
    },
    "weapon": {
     "kind": "sword",
-    "amount": 700
+    "amount": 770
    },
    "abilities": [
     "shield_up",
@@ -8271,6 +8454,7 @@
    "text": "Big, slow, and swings a tree.",
    "rank": "elite",
    "stats": {
+    "resist": 15,
     "max_hp": 16000,
     "max_mp": 2000,
     "mp_regen": 1000,
@@ -8282,8 +8466,8 @@
    },
    "weapon": {
     "kind": "axe",
-    "amount": 1100,
-    "cast": 4
+    "amount": 1200,
+    "cast": 6
    },
    "abilities": [
     "flatten"
@@ -8296,6 +8480,7 @@
    "text": "The biggest ogre, with the biggest club.",
    "rank": "boss",
    "stats": {
+    "resist": 25,
     "max_hp": 33000,
     "max_mp": 4000,
     "mp_regen": 2000,
@@ -8307,7 +8492,7 @@
    },
    "weapon": {
     "kind": "axe",
-    "amount": 1100
+    "amount": 1200
    },
    "abilities": [
     "crush"
@@ -8319,6 +8504,7 @@
    "text": "Old bones in heavy armor.",
    "rank": "minion",
    "stats": {
+    "resist": 0,
     "max_hp": 3000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -8330,8 +8516,8 @@
    },
    "weapon": {
     "kind": "sword",
-    "amount": 700,
-    "cooldown": 10.3
+    "amount": 770,
+    "cooldown": 15.5
    }
   },
   {
@@ -8340,6 +8526,7 @@
    "text": "Fast, and hard to hit.",
    "rank": "minion",
    "stats": {
+    "resist": 0,
     "max_hp": 2000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -8352,7 +8539,7 @@
    },
    "weapon": {
     "kind": "dagger",
-    "amount": 375
+    "amount": 413
    }
   },
   {
@@ -8374,8 +8561,8 @@
    "weapon": {
     "type": "magical",
     "element": "dark",
-    "cooldown": 7.9,
-    "amount": 700
+    "cooldown": 11.9,
+    "amount": 770
    }
   },
   {
@@ -8384,6 +8571,7 @@
    "text": "Heals the other dead.",
    "rank": "minion",
    "stats": {
+    "resist": 0,
     "max_hp": 3000,
     "max_mp": 6000,
     "mp_regen": 3000,
@@ -8396,8 +8584,8 @@
    "weapon": {
     "type": "magical",
     "element": "dark",
-    "cooldown": 7.9,
-    "amount": 500
+    "cooldown": 11.9,
+    "amount": 550
    },
    "abilities": [
     "mend"
@@ -8409,6 +8597,7 @@
    "text": "Curses the whole party.",
    "rank": "minion",
    "stats": {
+    "resist": 0,
     "max_hp": 3000,
     "max_mp": 5000,
     "mp_regen": 3000,
@@ -8421,8 +8610,8 @@
    "weapon": {
     "type": "magical",
     "element": "dark",
-    "cooldown": 7.9,
-    "amount": 500
+    "cooldown": 11.9,
+    "amount": 550
    },
    "abilities": [
     "curse"
@@ -8434,6 +8623,7 @@
    "text": "A dead wizard with one big spell.",
    "rank": "minion",
    "stats": {
+    "resist": 0,
     "max_hp": 2000,
     "max_mp": 6000,
     "mp_regen": 2000,
@@ -8446,8 +8636,8 @@
    "weapon": {
     "type": "magical",
     "element": "dark",
-    "cooldown": 7.9,
-    "amount": 500
+    "cooldown": 11.9,
+    "amount": 550
    },
    "abilities": [
     "soulfire"
@@ -8459,6 +8649,7 @@
    "text": "Ghouls dig each other back up.",
    "rank": "minion",
    "stats": {
+    "resist": 0,
     "max_hp": 8000,
     "max_mp": 3000,
     "mp_regen": 2000,
@@ -8470,7 +8661,7 @@
    },
    "weapon": {
     "kind": "sword",
-    "amount": 700
+    "amount": 770
    },
    "abilities": [
     "dig_up"
@@ -8482,6 +8673,7 @@
    "text": "Death, with a scythe and a bell.",
    "rank": "boss",
    "stats": {
+    "resist": 25,
     "max_hp": 46750,
     "max_mp": 8000,
     "mp_regen": 3000,
@@ -8493,7 +8685,7 @@
    },
    "weapon": {
     "kind": "sword",
-    "amount": 1100
+    "amount": 1200
    },
    "abilities": [
     "death_bell"
@@ -8505,6 +8697,7 @@
    "text": "Steals voices.",
    "rank": "minion",
    "stats": {
+    "resist": 0,
     "max_hp": 4000,
     "max_mp": 5000,
     "mp_regen": 3000,
@@ -8517,8 +8710,8 @@
    "weapon": {
     "type": "magical",
     "element": "dark",
-    "cooldown": 7.9,
-    "amount": 500
+    "cooldown": 11.9,
+    "amount": 550
    },
    "abilities": [
     "mute"
@@ -8530,6 +8723,7 @@
    "text": "Its silence falls on everyone.",
    "rank": "boss",
    "stats": {
+    "resist": 25,
     "max_hp": 49500,
     "max_mp": 10000,
     "mp_regen": 3000,
@@ -8541,7 +8735,7 @@
    },
    "weapon": {
     "kind": "sword",
-    "amount": 1100
+    "amount": 1200
    },
    "abilities": [
     "quiet"
@@ -8553,6 +8747,7 @@
    "text": "A fire dog; its bite burns.",
    "rank": "minion",
    "stats": {
+    "resist": 0,
     "max_hp": 3000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -8566,7 +8761,7 @@
    },
    "weapon": {
     "kind": "dagger",
-    "amount": 375
+    "amount": 413
    },
    "statuses": [
     "fire_bite"
@@ -8578,6 +8773,7 @@
    "text": "Cut it in half and you get two.",
    "rank": "elite",
    "stats": {
+    "resist": 15,
     "max_hp": 14000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -8592,8 +8788,8 @@
    "weapon": {
     "type": "physical",
     "subtype": "blunt",
-    "cooldown": 10.3,
-    "amount": 700
+    "cooldown": 15.5,
+    "amount": 770
    },
    "statuses": [
     "split"
@@ -8605,6 +8801,7 @@
    "text": "Half a slime, still hungry.",
    "rank": "minion",
    "stats": {
+    "resist": 0,
     "max_hp": 7000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -8619,8 +8816,8 @@
    "weapon": {
     "type": "physical",
     "subtype": "blunt",
-    "cooldown": 10.3,
-    "amount": 700
+    "cooldown": 15.5,
+    "amount": 770
    }
   },
   {
@@ -8629,6 +8826,7 @@
    "text": "Explodes when it dies.",
    "rank": "minion",
    "stats": {
+    "resist": 0,
     "max_hp": 6000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -8642,8 +8840,8 @@
    "weapon": {
     "type": "physical",
     "subtype": "blunt",
-    "cooldown": 7.9,
-    "amount": 700
+    "cooldown": 11.9,
+    "amount": 770
    },
    "statuses": [
     "volatile"
@@ -8655,6 +8853,7 @@
    "text": "Cheers its friends on.",
    "rank": "minion",
    "stats": {
+    "resist": 0,
     "max_hp": 3000,
     "max_mp": 5000,
     "mp_regen": 3000,
@@ -8667,8 +8866,8 @@
    "weapon": {
     "type": "magical",
     "element": "fire",
-    "cooldown": 7.9,
-    "amount": 500
+    "cooldown": 11.9,
+    "amount": 550
    },
    "abilities": [
     "cheer"
@@ -8680,6 +8879,7 @@
    "text": "Lord of the furnace.",
    "rank": "boss",
    "stats": {
+    "resist": 25,
     "max_hp": 52250,
     "max_mp": 10000,
     "mp_regen": 3000,
@@ -8693,7 +8893,7 @@
    },
    "weapon": {
     "kind": "fire_staff",
-    "amount": 1100
+    "amount": 1200
    },
    "abilities": [
     "brand",
@@ -8706,6 +8906,7 @@
    "text": "Living ice: ice heals it, fire melts it.",
    "rank": "minion",
    "stats": {
+    "resist": 0,
     "max_hp": 5000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -8720,8 +8921,8 @@
    "weapon": {
     "type": "magical",
     "element": "ice",
-    "cooldown": 7.9,
-    "amount": 700
+    "cooldown": 11.9,
+    "amount": 770
    },
    "statuses": [
     "rime"
@@ -8733,6 +8934,7 @@
    "text": "Every hit thickens its ice.",
    "rank": "elite",
    "stats": {
+    "resist": 15,
     "max_hp": 14000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -8745,7 +8947,7 @@
    },
    "weapon": {
     "kind": "axe",
-    "amount": 1100
+    "amount": 1200
    },
    "statuses": [
     "ice_crust_passive"
@@ -8757,6 +8959,7 @@
    "text": "A walking glacier.",
    "rank": "boss",
    "stats": {
+    "resist": 25,
     "max_hp": 60500,
     "max_mp": 6000,
     "mp_regen": 2000,
@@ -8770,7 +8973,7 @@
    },
    "weapon": {
     "kind": "axe",
-    "amount": 1600
+    "amount": 1750
    },
    "abilities": [
     "hailstorm"
@@ -8785,6 +8988,7 @@
    "text": "A tiny spark with a temper.",
    "rank": "minion",
    "stats": {
+    "resist": 0,
     "max_hp": 1000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -8796,7 +9000,7 @@
    },
    "weapon": {
     "kind": "lightning_staff",
-    "amount": 375
+    "amount": 413
    },
    "statuses": [
     "static"
@@ -8808,6 +9012,7 @@
    "text": "Drinks mana.",
    "rank": "minion",
    "stats": {
+    "resist": 0,
     "max_hp": 3000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -8820,7 +9025,7 @@
    },
    "weapon": {
     "kind": "dagger",
-    "amount": 525
+    "amount": 578
    }
   },
   {
@@ -8829,6 +9034,7 @@
    "text": "Queen of the storm drones.",
    "rank": "boss",
    "stats": {
+    "resist": 25,
     "max_hp": 46750,
     "max_mp": 10000,
     "mp_regen": 4000,
@@ -8841,8 +9047,8 @@
    "weapon": {
     "type": "magical",
     "element": "lightning",
-    "cooldown": 7.9,
-    "amount": 700
+    "cooldown": 11.9,
+    "amount": 770
    },
    "abilities": [
     "call_drones",
@@ -8855,6 +9061,7 @@
    "text": "The queen's drone: it buzzes in front of her.",
    "rank": "minion",
    "stats": {
+    "resist": 0,
     "max_hp": 2000,
     "max_mp": 2000,
     "mp_regen": 2000,
@@ -8866,7 +9073,7 @@
    },
    "weapon": {
     "kind": "lightning_staff",
-    "amount": 375
+    "amount": 413
    },
    "abilities": [
     "shield_up"
@@ -8878,6 +9085,7 @@
    "text": "The Storm Queen's mate. Hurt his soldiers and he gets angry.",
    "rank": "boss",
    "stats": {
+    "resist": 25,
     "max_hp": 55000,
     "max_mp": 10000,
     "mp_regen": 4000,
@@ -8890,8 +9098,8 @@
    "weapon": {
     "type": "magical",
     "element": "lightning",
-    "cooldown": 10.3,
-    "amount": 1600
+    "cooldown": 15.5,
+    "amount": 1750
    },
    "abilities": [
     "rally_soldiers"
@@ -8906,6 +9114,7 @@
    "text": "The king's soldier: it stands in front of him.",
    "rank": "minion",
    "stats": {
+    "resist": 0,
     "max_hp": 9000,
     "max_mp": 2000,
     "mp_regen": 2000,
@@ -8917,7 +9126,7 @@
    },
    "weapon": {
     "kind": "lightning_staff",
-    "amount": 375
+    "amount": 413
    },
    "abilities": [
     "shield_up"
@@ -8929,6 +9138,7 @@
    "text": "Hunts in packs, in the snow.",
    "rank": "minion",
    "stats": {
+    "resist": 0,
     "max_hp": 2000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -8940,7 +9150,7 @@
    },
    "weapon": {
     "kind": "dagger",
-    "amount": 375
+    "amount": 413
    },
    "note": "A reskin of the Wolf: the same numbers."
   },
@@ -8950,6 +9160,7 @@
    "text": "Big, slow, and swings a tree, under the ground.",
    "rank": "elite",
    "stats": {
+    "resist": 15,
     "max_hp": 16000,
     "max_mp": 2000,
     "mp_regen": 1000,
@@ -8961,8 +9172,8 @@
    },
    "weapon": {
     "kind": "axe",
-    "amount": 1100,
-    "cast": 4
+    "amount": 1200,
+    "cast": 6
    },
    "abilities": [
     "flatten"
@@ -8975,6 +9186,7 @@
    "text": "Hides behind a big, old shield.",
    "rank": "elite",
    "stats": {
+    "resist": 15,
     "max_hp": 10000,
     "max_mp": 3000,
     "mp_regen": 2000,
@@ -8986,7 +9198,7 @@
    },
    "weapon": {
     "kind": "sword",
-    "amount": 700
+    "amount": 770
    },
    "abilities": [
     "shield_up",
@@ -9013,8 +9225,8 @@
    "weapon": {
     "type": "magical",
     "element": "dark",
-    "cooldown": 7.9,
-    "amount": 700
+    "cooldown": 11.9,
+    "amount": 770
    },
    "note": "A reskin of the Ghost: the same numbers."
   }
@@ -11560,18 +11772,18 @@
     "healer": true
    },
    "firstAbility": {
-    "knight": "protect",
+    "knight": "stand_fast",
     "cleric": "cure",
     "ranger": "barbed_arrow",
     "bramble_knight": "thicket",
     "hoplite": "aspis",
     "paladin": "smite",
     "valkyrie": "gale_spear",
-    "bard": "war_ballad",
+    "bard": "anthem",
     "hexer": "enfeeble",
     "monk": "burning_fist",
     "assassin": "backstab",
-    "vampire": "wither",
+    "vampire": "blood_gift",
     "pyromancer": "firebolt",
     "frostweaver": "frost_lance",
     "stormcaller": "chain_lightning",
@@ -13271,10 +13483,10 @@
     "weapon": {
      "kind": "axe",
      "amount": {
-      "base": 214,
+      "base": 230,
       "scale": [
        {
-        "ratio": 0.32099999999999995,
+        "ratio": 0.34500000000000003,
         "stat": "attack"
        }
       ]
@@ -13294,10 +13506,10 @@
     "weapon": {
      "kind": "sword",
      "amount": {
-      "base": 148,
+      "base": 159,
       "scale": [
        {
-        "ratio": 0.222,
+        "ratio": 0.23785714285714282,
         "stat": "attack"
        }
       ]
@@ -13317,10 +13529,10 @@
     "weapon": {
      "kind": "dagger",
      "amount": {
-      "base": 106,
+      "base": 114,
       "scale": [
        {
-        "ratio": 0.159,
+        "ratio": 0.1714285714285714,
         "stat": "attack"
        }
       ]
@@ -13346,10 +13558,10 @@
     "weapon": {
      "kind": "bow",
      "amount": {
-      "base": 156,
+      "base": 167,
       "scale": [
        {
-        "ratio": 0.23399999999999999,
+        "ratio": 0.25071428571428567,
         "stat": "attack"
        }
       ]
@@ -13375,10 +13587,10 @@
     "weapon": {
      "kind": "dark_staff",
      "amount": {
-      "base": 174,
+      "base": 136,
       "scale": [
        {
-        "ratio": 0.26099999999999995,
+        "ratio": 0.20357142857142857,
         "stat": "magic"
        }
       ]
@@ -13404,10 +13616,10 @@
     "weapon": {
      "kind": "lightning_staff",
      "amount": {
-      "base": 132,
+      "base": 141,
       "scale": [
        {
-        "ratio": 0.19799999999999998,
+        "ratio": 0.21214285714285716,
         "stat": "magic"
        }
       ]
@@ -13433,10 +13645,10 @@
     "weapon": {
      "kind": "spear",
      "amount": {
-      "base": 164,
+      "base": 176,
       "scale": [
        {
-        "ratio": 0.24599999999999997,
+        "ratio": 0.26357142857142857,
         "stat": "attack"
        }
       ]
@@ -13456,10 +13668,10 @@
     "weapon": {
      "kind": "earth_staff",
      "amount": {
-      "base": 188,
+      "base": 201,
       "scale": [
        {
-        "ratio": 0.28200000000000003,
+        "ratio": 0.3021428571428571,
         "stat": "magic"
        }
       ]
@@ -13845,7 +14057,7 @@
     "stats": [
      {
       "stat": "lifesteal",
-      "flat": 8
+      "flat": 15
      }
     ]
    },

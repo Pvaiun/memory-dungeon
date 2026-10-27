@@ -26,14 +26,21 @@ export const crit = (n: number) => 4 * n;
  * tick. They were three speeds (6, 10 and 16 ticks). A swing's size follows its cooldown (see SWING_REF), so every kind
  * deals about the same per tick.
  */
+/**
+ * Step 5f (the director's: "fights have no room to breathe"): every kind swings half again as slowly, and each swing is half
+ * again as big (the size follows the interval), so weapon damage a tick is unchanged and there are fewer, bigger blows.
+ * The ice staff is the fast, light staff (the director's: it feeds Cold hex and Brittle); the others keep their order.
+ */
 export const KIND_SPEED: Record<string, number> = {
-  dagger: 5.3, fist: 5.7, wind_staff: 6.1, lightning_staff: 6.6, sword: 7.4, bow: 7.8, spear: 8.2,
-  light_staff: 8.5, dark_staff: 8.7, ice_staff: 9.0, earth_staff: 9.4, fire_staff: 9.8, axe: 10.7,
+  ice_staff: 7.6, dagger: 8.0, fist: 8.6, wind_staff: 9.2, dark_staff: 9.5, lightning_staff: 9.9, sword: 11.1, bow: 11.7, spear: 12.3,
+  light_staff: 12.8, earth_staff: 14.1, fire_staff: 14.7, axe: 16.1,
 };
 /** A swing's size is (base + ratio × stat) × its cooldown ÷ this: per tick, the old medium swing's. */
-export const SWING_REF = 10;
+/** Step 5f round 2: 14 (was 10): a swing is sized by its interval ÷ this, so every kind deals about 30% less a tick, and fights have room. */
+export const SWING_REF = 14;
 /** The documents' speed words, for enemies' touches and a kind's damage word: between the kinds' cooldowns, so they don't line up either. */
-export const SPEED = { fast: 5.9, medium: 7.9, slow: 10.3 } as const;
+/** Step 5f: half again as slow, with the kinds. */
+export const SPEED = { fast: 8.9, medium: 11.9, slow: 15.5 } as const;
 /**
  * Regular fights last about 30 ticks and every action starts a fight on cooldown, so at long = 30 the Cleric's
  * Prayer never fired in one and a boss's signature blow came once in 38 ticks. Shorter words keep the ratios.
@@ -53,13 +60,19 @@ export const SPEED = { fast: 5.9, medium: 7.9, slow: 10.3 } as const;
  * a third-slot head start of 6 ticks, a long ability's first cast came at tick 36 to 44, in regular fights of 31 ticks
  * (Pyre, Static charge, Stillness 0.01 to 0.04 casts a regular fight; Vanish and Garrote 0.18).
  */
-export const COOLDOWN = { short: 24, medium: 32, long: 36 } as const;
+/**
+ * Step 5f (the director's): "rarely do abilities feel meaningfully faster than others". Wider words, so in a 45-tick fight a short
+ * ability fires about three times, a medium twice, a long once; very long is for the revives and the Pyre. Each kit mixes them
+ * by its class's tempo (classes.ts).
+ */
+export const COOLDOWN = { short: 16, medium: 28, long: 44, very_long: 60 } as const;
 /**
  * Foes keep the pacing pass's short cooldown. Step 5e: medium 40 and long 60 (were 48 and 70). In free play, at the documents'
  * numbers, a boss fight lasted 46 ticks and the signature moves (Crush, Quiet, Tempest, Death bell, Rally) came 0.5 to 0.9
  * times a fight against the enemies document's "two or three times".
  */
-export const ENEMY_COOLDOWN = { short: 30, medium: 40, long: 60 } as const;
+/** Step 5f: 22, 34 and 48, so a boss's medium move comes two or three times in an 80-tick fight. */
+export const ENEMY_COOLDOWN = { short: 22, medium: 34, long: 48 } as const;
 /**
  * An ability's cooldown: its word's, moved up to 15% either way by its id, so no two in a kit share one and few line up with
  * each other or with a swing. The director's ask: "you should probably never even have two that are the same".
@@ -76,12 +89,13 @@ export function jitter(cooldown: number, id: string): number {
  */
 export const STUN_COOLDOWN: keyof typeof COOLDOWN = "medium";
 /** Step 5e: very long 6 (was 8). An 8-tick wind-up on top of a long cooldown put Pyre, Smite, Tremor and Raise past most fights' ends, and Crush past a boss's. */
-export const WINDUP = { quick: 0.5, normal: 1.5, long: 4, very_long: 6 } as const;
+/** Step 5f (the director's: "cast times feel largely irrelevant"): 1, 3, 6 and 10 (were 0.5, 1.5, 4 and 6). */
+export const WINDUP = { quick: 1, normal: 3, long: 6, very_long: 10 } as const;
 export const RULES = {
   basicRecovery: 0.25,
   abilityCast: WINDUP.normal,
-  /** Pacing pass: 1.5 (was 2.5). */
-  abilityRecovery: 1.5,
+  /** Pacing pass: 1.5 (was 2.5). Step 5f: 2. */
+  abilityRecovery: 2,
   /**
    * Pacing pass: each action starts a fight a third to two thirds charged, by its own roll, so nothing lines up on the first ticks.
    * Step 5c (the director's): a party unit's abilities start charged by the order they're slotted in, so the order is preparation,
@@ -93,7 +107,8 @@ export const RULES = {
    * Step 5e: 16, 12 and 8 (were 20, 12 and 6). At 20 the first-slot abilities fired at ticks 2 to 6 and a third of the Wolves,
    * Wisps and Drones in free play died before acting; at 6 a third-slot ability on the long word came after most fights ended.
    */
-  opening: { min: 0.3, max: 0.7, slots: [16, 12, 8] },
+  /** Step 5f: 10, 8 and 6 with the shorter words: a first-slot short ability fires at tick 6, a medium at 18, a long at 34. */
+  opening: { min: 0.3, max: 0.7, slots: [10, 8, 6] },
   /** Each physical hit loses this share of the target's Armor: Armor 5 takes 600 off, Armor 8 nearly blanks a sword. */
   armorRatio: 0.12,
   /**
@@ -138,13 +153,14 @@ export const RULES = {
  * Foes' MP cost by cooldown word (the party's abilities state their own; see classes.ts). Pacing pass: priced so a foe with 2
  * MP regen spends more than it regains when its abilities all fire.
  */
-export const COST = { short: 400, medium: 650, long: 1000 } as const;
+/** Step 5f: on the party's ladder (200 / 350 / 600), as their cooldowns shortened. */
+export const COST = { short: 250, medium: 400, long: 650 } as const; // Round 2: a rung dearer, with the party's.
 /**
  * MP regen: every `every` ticks, restore `share` × the MP regen stat (regen 3 gives 120). Step 5e: 0.04 (was 0.05). Over whole
  * campaign runs the party regained 110% of the MP it spent, and the casters spent 1% to 4% of their time short of MP (the
  * Geomancer 14%), against 5c's intent that casters are gated by it; the walls, at 96% to 98% MP, don't feel the step.
  */
-export const MP_REGEN = { every: 4, share: 0.04 };
+export const MP_REGEN = { every: 4, share: 0.02 }; // Step 5f: 0.03, then round 2: 0.02 (at 0.03 and the first ladder the party regained 115% of what it spent). Every cost is on one ladder (classes.ts), so every class feels MP.
 
 // ─── Damage ──────────────────────────────────────────────────────────────────
 
@@ -158,7 +174,9 @@ export type Level = keyof typeof WEAPON.base;
 
 /** An ability's hit, as a share of its scaling stat. */
 /** Pacing pass: each ability is rarer, so each hit is bigger (was 0.2, 0.35 and 0.6): a normal hit is about three swings. */
-export const HIT = { light: 0.43, normal: 0.75, heavy: 1.25 } as const;
+/** Step 5f: touch, for abilities whose point is the status they apply (the director's: "skewed towards their upfront damage"). */
+/** Round 2: every word three quarters of what it was (0.25 / 0.43 / 0.75 / 1.25), with the swings: fights of 32 ticks had to reach 45. */
+export const HIT = { touch: 0.19, light: 0.32, normal: 0.56, heavy: 0.94 } as const;
 export type HitWord = keyof typeof HIT;
 
 /**
@@ -167,7 +185,8 @@ export type HitWord = keyof typeof HIT;
  * otherwise make its plain swing bigger than its signature blow. A weak swing gets through Armor 2 and is
  * blanked by Armor 5, as the Wolf's bites are meant to be.
  */
-export const ENEMY_SWING = { weak: 500, normal: 700, heavy: 1100, massive: 1600 } as const;
+/** Step 5f: half again as big, as the swings come half again as slowly. */
+export const ENEMY_SWING = { weak: 550, normal: 770, heavy: 1200, massive: 1750 } as const; // Round 2: 1.1 × the old words (were 1.5 ×), with the party's cut, so the foes don't out-pace it.
 /**
  * A fast swing lands for less (a Leech's bite isn't a Bandit's sword twice as often); a slow one for the same,
  * since the slow attackers carry the big blows in their abilities (Flatten, Crush). A slow factor of 1.4 pulled
@@ -222,7 +241,8 @@ export const from = (stat: string, ratio: number, base = 0): NumT => ({ ...(base
 export const STACKS = { few: 0.7, several: 1.3, many: 2.3 } as const;
 export type StackWord = keyof typeof STACKS;
 /** Pacing pass: an ability's application adds twice the word's stacks (abilities come a third as often); a passive's on basic attacks, the word's. */
-export const ABILITY_STACKS = 2;
+/** Step 5f: 3 (the director's: statuses 40% to 60% of their appliers' damage; the applier abilities give up their hit for their stacks). */
+export const ABILITY_STACKS = 3;
 export const stacks = (word: StackWord, stat: string, mult = 1): NumT => ({ scale: [{ ratio: (mult * ABILITY_STACKS * STACKS[word]) / P, stat }] });
 /**
  * Step 5c (the director's): the Pyromancer's Burn and the Stormcaller's Shock, on their abilities and passives, are this many
@@ -243,12 +263,12 @@ export const SPECIAL = {
   double_strike: { medium: 25, high: 40 },
   /** Untyped damage dealt back per hit taken. */
   /** Step 5e: high 250 (was 300). The Bramble knight, a wall, dealt 0.9× an average unit's damage (Thorns a quarter of it) while taking 1.6×, and its parties won 10 to 16 points more than parties without it. */
-  thorns: { medium: 150, high: 250 },
+  thorns: { medium: 150, high: 300 }, // Step 5f: 300 again; the Bramble knight is measured, not pre-cut.
   /**
    * Step 5e: 10 and 20 (were 15 and 30). Lifesteal was 52% of all the healing on the party, nearly all of it the Vampire's (60% under
    * Bloodlust): it healed itself 4,350 a fight and its parties won 25 to 40 points more than parties without it, after Blood drain was cut.
    */
-  lifesteal: { medium: 8, high: 15 }, // round 4: the Vampire was still +16 / +36 / +12 at 10 and 20, healing itself 3,000 a fight.
+  lifesteal: { medium: 15, high: 30 }, // Step 5f (the director's): back to 15 and 30; the Vampire pays with Blood gift instead.
   siphon: { medium: 10, high: 20 },
 } as const;
 export type SpecialStat = keyof typeof SPECIAL;
@@ -260,6 +280,9 @@ export const SPECIAL_KEY: Record<SpecialStat, string> = {
 };
 
 // ─── Resistances, in percent ─────────────────────────────────────────────────
+
+/** Step 5f (the director's): blanket resistance by rank, so spells meet something where swings meet Armor; the untyped statuses are the way through. */
+export const RANK_RESIST = { minion: 0, elite: 15, boss: 25 } as const;
 
 export const RESIST = {
   /** A class or enemy that "resists" an element. */
@@ -309,31 +332,34 @@ export const STATUS = {
    * and the same parties won 20 points more in Caravan than in Neutral: 36% of the whole party's HP a fight, for nothing, was
    * more than a Cleric heals. The Herald's horn (+9 points on the amulets) is the same Regen.
    */
-  regen: { every: 2, share: 0.02, duration: 16 }, // round 3: 10 pulses of 2%, a fifth of max HP: Caravan was still +14.7 at a quarter. Round 4: 8 pulses, 16% (Caravan +13.7 at a fifth).
+  regen: { every: 2, share: 0.02, duration: 24 }, // Step 5f: 24 ticks (24% of max HP) with the longer fights. // round 3: 10 pulses of 2%, a fifth of max HP: Caravan was still +14.7 at a quarter. Round 4: 8 pulses, 16% (Caravan +13.7 at a fifth).
   shield: { capShare: 0.5 },
   /** Campaign pass: a cap of 25 stacks. Uncapped, a hidden Bard stacked 123 on itself and the Storm King reached 38. */
-  might: { perStack: 8, every: 4, cap: 25 },
+  /** Step 5f (the director's): Might spends with action, not time: one stack each time the holder acts (vocabulary.ts). 10% a stack, cap 20. */
+  might: { perStack: 10, cap: 20 },
   /** Pacing pass: buffs and debuffs from abilities last about twice as long (their abilities come a third as often). */
   weaken: { pct: -30, duration: 20 },
-  guard: { armor: pts(2), duration: 20 },
+  guard: { armor: pts(3), duration: 28 }, // Step 5f: +3,000 for 28 ticks (was +2,000 for 20): a minion's swing into Armor 5,000 falls 28%, Crush 9%.
   /**
    * Follow-up redesign (the director's): a Stun pauses a wind-up rather than cancelling it (Silence is the interrupt), and
    * lasts long enough to take a foe out of the fight for a moment. It was 2 ticks.
    */
-  stun: { duration: 5 },
+  stun: { duration: 8 }, // Step 5f: 8.
   /** The Bard's Refrain: MP a basic attack gives a random ally. */
-  refrain: { mp: 100 },
-  slow: { speed: -40, duration: 20 },
+  refrain: { mp: 60, perAttack: 0.03 }, // Step 5f (the director's): 60 + 3% of Attack a landed basic (was 100 flat): at Attack 3,000, 150.
+  slow: { speed: -40, duration: 24 }, // Step 5f: 24.
   /** Pacing pass: 14 ticks, not 20. At 20 the Monk's own Flow (a 30-tick cooldown) kept it Hasted two thirds of every fight. */
-  haste: { speed: 40, duration: 14 },
-  taunt: { duration: 14 },
+  haste: { speed: 40, duration: 20 }, // Step 5f: 20, with the longer fights.
+  taunt: { duration: 20 }, // Step 5f: 20; Thicket on a short cooldown holds it most of a fight.
   /**
    * Campaign pass: a tenth of the stacks go each pulse, not a quarter, so Burn builds over a fight (a Pyromancer
    * holds 15 to 25 on its target) and lingers when the burning stops. Each stack burns for 30 a pulse, so a stack's
    * whole Burn is 1.5 times what it was: slower Burn spends more of itself after its target is dead.
    */
-  burn: { every: 2, perStack: 30, drop: 0.1 },
-  chill: { cap: 8, perStack: -6, every: 3, drop: 1 / 3 },
+  /** Step 5f (the director's: "ticks down too slowly" and "doesn't do very much"): 60 a stack, a quarter lost a pulse. 18 stacks deal 3,400 over 12 ticks, not 30. */
+  burn: { every: 2, perStack: 60, drop: 0.25 },
+  /** Step 5f (the director's deep freeze): cap 12, −5 a stack (−60 at the cap, colder than Slow), one stack lost every 4 ticks, so reapplying keeps a foe frozen. */
+  chill: { cap: 12, perStack: -5, every: 4 },
   /**
    * Campaign pass: a cap of 25 stacks (uncapped, a slow boss gathered 50 to 100 and took 8,000 from one swing), and 60 a
    * stack, not 80 (the second AI playtester's Stormcaller carried the last nine nodes).
@@ -341,14 +367,15 @@ export const STATUS = {
    * (BURN_SHOCK) the cap of 25 held its Shock at 18% of its damage. At 80 a stack as well, the Stormcaller was in 57% of the
    * top builds (was 23%), so it stays at 60.
    */
-  shock: { perStack: 70, drop: 0.5, cap: 40 }, // Step 5e: 70 (was 60). Shock was 17% to 21% of its appliers' damage, and the Bard's Thunder chord is a third of what the Bard does.
-  ward: { resist: 30, duration: 24 },
-  sunder: { perStack: -600, every: 4 },
-  silence: { duration: 8 },
+  shock: { perStack: 120, drop: 0.5, cap: 30 }, // Step 5f: 120 a stack, cap 30 (were 70 and 40): a trigger at 10 stacks is 1,200, past a swing.
+  ward: { resist: 40, duration: 30 }, // Step 5f: 40 for 30 ticks.
+  sunder: { perStack: -600, every: 4, cap: 20 }, // Step 5f: a cap (the Silent One carried 235). Armor's floor is 0, so it never went past.
+  silence: { duration: 16 }, // Step 5f: 16 (was 8: Hush interrupted a cast 0.06 times an application).
   /** Step 5e: 20 ticks (was 14). Vanish is on the long cooldown (36), so the Assassin was Hidden 14 ticks in 36 at best, and it died at tick 18 in 45 of 100 fights. */
-  hidden: { duration: 20 },
+  hidden: { duration: 24 }, // Step 5f: 24, with Vanish on a medium cooldown.
   rot: { healing: -60, duration: 20 },
-  clarity: { regenPct: 100, duration: 24 },
+  /** Step 5f (the director's): Regen for mana, not a doubled stat: 4% of max MP every 2 ticks for 16 ticks (32% of max MP). */
+  clarity: { every: 2, share: 0.04, duration: 16 },
   aegis: { share: 25 },
   /** Kills anything at HP 3 or below; a Hoplite or Knight survives it. */
   doom: { countdown: 10, damage: 3500 },

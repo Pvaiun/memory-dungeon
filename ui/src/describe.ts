@@ -77,6 +77,7 @@ export function targetPhrase(t: AbilityT["target"] | "foe" | "ally" | "self" | T
     let what: string;
     if (by === "hp") what = `the ${r.pick} current HP`;
     else if (by === "hp_share") what = `the ${r.pick} share of max HP`;
+    else if (by === "mp_share") what = `the ${r.pick} share of max MP`;
     else if (by === "buffs" || by === "debuffs") what = `the ${r.pick === "highest" ? "most" : "fewest"} ${by}`;
     else if ("stat" in by) what = `the ${r.pick} ${statWord(by.stat)}`;
     else if ("stats" in by) what = `the ${r.pick} ${by.stats.map(statWord).join(" or ")}`;

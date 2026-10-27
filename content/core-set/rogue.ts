@@ -31,8 +31,8 @@ export const ROGUE_CONFIG: RogueConfigT = {
    * won 37% of runs with Blood drain (the next best class 20%), 19% with Wither.
    */
   firstAbility: {
-    knight: "protect", cleric: "cure", ranger: "barbed_arrow", bramble_knight: "thicket", hoplite: "aspis", paladin: "smite",
-    valkyrie: "gale_spear", bard: "war_ballad", hexer: "enfeeble", monk: "burning_fist", assassin: "backstab", vampire: "wither",
+    knight: "stand_fast", cleric: "cure", ranger: "barbed_arrow", bramble_knight: "thicket", hoplite: "aspis", paladin: "smite",
+    valkyrie: "gale_spear", bard: "anthem", hexer: "enfeeble", monk: "burning_fist", assassin: "backstab", vampire: "blood_gift",
     pyromancer: "firebolt", frostweaver: "frost_lance", stormcaller: "chain_lightning", geomancer: "earthen_shell",
   } as Record<string, string>,
   /** Party of three, and up to two more waiting at camp. */

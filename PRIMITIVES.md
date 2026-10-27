@@ -240,6 +240,7 @@ An action's `target` is `foe` (default targeting: a foe by Aggro, under the Hidd
 | `stacks` | A status's Intensity total, in stacks. |
 | `atCap` | Holds this Intensity status at its cap. |
 | `belowCap` | Doesn't hold this Intensity status at its cap (or at all). |
+| `casting` | true: in an action's wind-up right now (step 5f: what Unmake waits for). false: not. |
 | `ko` | true: knocked out, still in the fight. Sides list living units unless a rule asks for this. Default: living. |
 
 ## Stats the engine reads

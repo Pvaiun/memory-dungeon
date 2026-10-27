@@ -4,7 +4,7 @@
  * Magic, Armor, Crit, Aggro, as the document lists them.
  */
 import type { AbilityT, EnemyT, StatusT, WeaponT } from "../../src/schema.js";
-import { ENEMY_COOLDOWN, COST, ENEMY_HIT, ENEMY_SPEED_FACTOR, ENEMY_SWING, FLAT_STACKS, HIT, RESIST, REVIVE, SPECIAL, SPEED, STATUS, WINDUP, BOSS_HP, crit, jitter, aggroOf, pts, type SwingWord } from "./scale.js";
+import { ENEMY_COOLDOWN, COST, ENEMY_HIT, ENEMY_SPEED_FACTOR, ENEMY_SWING, FLAT_STACKS, HIT, RANK_RESIST, RESIST, REVIVE, SPECIAL, SPEED, STATUS, WINDUP, BOSS_HP, crit, jitter, aggroOf, pts, type SwingWord } from "./scale.js";
 import { T } from "./classes.js";
 import { speedOf } from "./vocabulary.js";
 
@@ -26,7 +26,8 @@ const line = (hp: number, mp: number, regen: number, atk: number, mag: number, a
 const res = (element: string, kind: keyof typeof RESIST) => ({ [`resist:${element}`]: RESIST[kind] });
 
 const enemy = (id: string, name: string, text: string, rank: EnemyT["rank"], stats: Record<string, number>, weapon: WeaponT, o: { abilities?: string[]; statuses?: string[]; note?: string } = {}): EnemyT => ({
-  id, name, text, rank, stats: rank === "boss" ? { ...stats, max_hp: Math.round(stats.max_hp * BOSS_HP) } : stats, weapon, ...(o.abilities ? { abilities: o.abilities } : {}), ...(o.statuses ? { statuses: o.statuses } : {}), ...(o.note ? { note: o.note } : {}),
+  // Step 5f (the director's): elites and bosses carry blanket resistance, as every foe carries Armor; a foe that names its own keeps it.
+  id, name, text, rank, stats: { ...("resist" in stats ? {} : { resist: RANK_RESIST[rank] }), ...stats, ...(rank === "boss" ? { max_hp: Math.round(stats.max_hp * BOSS_HP) } : {}) }, weapon, ...(o.abilities ? { abilities: o.abilities } : {}), ...(o.statuses ? { statuses: o.statuses } : {}), ...(o.note ? { note: o.note } : {}),
 });
 const reskin = (of: EnemyT, id: string, name: string, text: string): EnemyT => ({ ...of, id, name, text, note: `A reskin of the ${of.name}: the same numbers.` });
 

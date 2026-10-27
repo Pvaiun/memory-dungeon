@@ -559,7 +559,10 @@ function shapeOf2(c: Content, m: Party["units"][number], s: string): boolean {
 
 function runJob(c: Content, job: Job): Tally {
   const t: Tally = {};
-  for (const seed of job.seeds) playAndTally(c, job, seed, t);
+  for (const seed of job.seeds) {
+    try { playAndTally(c, job, seed, t); }
+    catch (e) { console.error(`balance: a fight crashed: set ${job.set} dungeon ${job.dungeon} seed ${seed} party ${JSON.stringify(job.party)}`); throw e; }
+  }
   return t;
 }
 
