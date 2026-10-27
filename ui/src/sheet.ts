@@ -71,7 +71,8 @@ export function statGrid(stats: Stats, base: Stats | null, designer: boolean, ke
   }
   for (const [k, v] of Object.entries(stats)) {
     if (!k.startsWith("resist:") || !v) continue;
-    cells.push(cell(h("span", { class: k.slice(7) }, statCode(k)), h("span", { class: v > 0 ? "good" : "bad" }, `${v > 0 ? "+" : ""}${v}%`)));
+    // Two columns wide: "LIGHT RES" is longer than a cell.
+    cells.push(cell(h("span", { class: k.slice(7) }, statCode(k)), h("span", { class: v > 0 ? "good" : "bad" }, `${v > 0 ? "+" : ""}${v}%`), undefined, "wide"));
   }
   if (stats.resist) cells.push(cell("RES", `${stats.resist > 0 ? "+" : ""}${stats.resist}%`));
   return h("div", { class: "stats" }, ...cells);

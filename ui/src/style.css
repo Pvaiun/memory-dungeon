@@ -140,6 +140,7 @@ button.mid { padding: .625rem .5rem; }
 .sheet-head .name { text-transform: uppercase; line-height: 1.5rem; }
 .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: .375rem .25rem; text-transform: uppercase; }
 .stats .cell { align-items: flex-start; padding: 0; gap: 0; cursor: default; }
+.stats .cell.wide { grid-column: span 2; }
 .stats .lbl { color: var(--ink); line-height: 1.25rem; }
 .stats .val { line-height: 1.5rem; white-space: nowrap; }
 .stats .val i { font-style: normal; margin-left: .25rem; }
