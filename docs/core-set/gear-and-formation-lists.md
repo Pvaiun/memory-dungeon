@@ -2,7 +2,7 @@
 
 Oct 23, 2026 · @Paul Suddaby
 
-*Updated Oct 27, 2026, by the balance pass (step 5e, awaiting the director's read): a formation slot's step is one and a half gear steps (the sim found the five formations with no effect within 3 points of Neutral; this doc's own fix), Caravan's Regen is a short one (8 ticks of the status's 16), Escort's slots carry Aggro alone and its Shield is 0.12 of max HP. The gear pieces are as written: probed one by one, every piece sits within a few points of its slot's mean.*
+*Updated Oct 27, 2026, by the balance pass (step 5e) and the combat economy pass (step 5f, awaiting the director's read): a formation slot's step is one and a quarter gear steps (5e set one and a half when the five formations with no effect sat within 3 points of Neutral; 5f's longer fights made the slot formations worth +10 and brought it down), Caravan's Regen is a short one (8 ticks of the status's 24), Escort's slots carry Aggro alone and its Shield is 0.12 of max HP, Last stand's Martyr gives up one HP step (two took an HP-2 class to nothing beside Glass heart). Weapons swing half again as slowly and hit half again as hard (5f), the Ice staff the fast light staff among them. The gear pieces are as written.*
 
 *Updated Oct 26, 2026, when the campaign work joined main. The pieces are as written; three things around them changed. Aggro is centred on 100, so an Aggro step here is ±10 and foes pick by draw, which keeps every unit between a third and three times an ordinary unit's pull (*Core set: rules and vocabulary*, Targeting). A step of HP on gear or a formation slot is half a point, not one (at one, HP was every class's best kit). The Cleric lost Mercy and Prayer (*Core set: classes*), so the lines that leaned on them say what's left. `DECISIONS.md` has the reasons.*
 
@@ -253,7 +253,7 @@ Bundles, not bigger numbers: none is a superset of an ordinary charm.
 
 The neutral formation plus nine, each telling a party's story, with no budget between slots. Some slots are plain bonuses, some are a bonus bought with a penalty, two only take, and the magnitudes differ on purpose: Vanguard is small and costs nothing, Champion and Tortoise swing hard, and the four with an effect carry part of their power there, so their slots are smaller. Every slot says one thing: a unit in it is sturdier or squishier, hits harder or softer, draws more or less, never two of those pulling against each other. "Attack +1, Magic +1" raises both, so one slot serves a physical or a magical unit alike. Effects are flat, every ally on a trigger, and no effect gives Taunt.
 
-**Weight.** A full slot here is worth about one gear piece, so a formation adds roughly a fourth slot to every unit: more on a cursed slot, less on a small one. Whether that's enough to make the formation a decision rather than an afterthought is for the sim. If it isn't, the fix is a bigger step on every slot, not more slots. (The sim said it wasn't, Oct 27, 2026: probed on the same parties, the five formations with no effect sat within 3 points of Neutral while the effects were worth 7 to 20. A slot's step is now one and a half gear steps, and the effects were trimmed: step 5e.)
+**Weight.** A full slot here is worth about one gear piece, so a formation adds roughly a fourth slot to every unit: more on a cursed slot, less on a small one. Whether that's enough to make the formation a decision rather than an afterthought is for the sim. If it isn't, the fix is a bigger step on every slot, not more slots. (The sim said it wasn't, Oct 27, 2026: probed on the same parties, the five formations with no effect sat within 3 points of Neutral while the effects were worth 7 to 20. A slot's step became one and a half gear steps and the effects were trimmed: step 5e. With 5f's longer fights the slot formations ran +10 against Neutral, so the step is one and a quarter.)
 
 ### Neutral — the start
 
@@ -345,7 +345,7 @@ For Long grind.
 | Quartermaster | MP regen +2, Attack −2, Magic −2 |
 | Traveller (two of these) | HP +1 |
 
-**Effect:** when the fight starts, every ally gains a short Regen (8 ticks of the status's 16, step 5e: the full Regen on every ally at every fight's start was worth two Clerics, and the same parties won 20 points more in Caravan than in Neutral).
+**Effect:** when the fight starts, every ally gains a short Regen (8 ticks of the status's 24, steps 5e and 5f: the full Regen on every ally at every fight's start was worth two Clerics, and the same parties won 20 points more in Caravan than in Neutral).
 
 The Quartermaster gives up hitting to keep its own MP flowing, so it's for a unit whose costly abilities don't scale from Attack or Magic: a Cleric saving for Renew and Raise. A Regen at the start of every fight is real healing in a dungeon that never heals between fights.
 
@@ -355,12 +355,12 @@ For Executioner, Tank buster, and any party built around revives.
 
 | Slot | Changes |
 | --- | --- |
-| Martyr | Aggro +2, HP −2 |
+| Martyr | Aggro +2, HP −1 (−2 until Oct 27, 2026, step 5f) |
 | Other (two of these) | Nothing |
 
 **Effect:** when an ally is knocked out, every ally gains Might (several stacks).
 
-Each knockout gives the party Might, so a Cleric or Valkyrie that brings the Martyr back sets up the next one, and a Knight's Sworn Taunts on the same knockout. A sturdy Martyr like the Bramble knight holds out; a fragile one falls early and starts the Might sooner. Either is a plan.
+Each knockout gives the party Might, so a Cleric or Valkyrie that brings the Martyr back sets up the next one, and a Knight's Stand fast keeps the foes on it meanwhile (its Sworn, a Taunt on the same knockout, until Oct 27, 2026). A sturdy Martyr like the Bramble knight holds out; a fragile one falls early and starts the Might sooner. Either is a plan.
 
 ### Escort — two protectors, one carry
 

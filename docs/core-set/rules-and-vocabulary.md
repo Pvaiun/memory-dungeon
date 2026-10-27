@@ -2,6 +2,8 @@
 
 Oct 23, 2026 · @Paul Suddaby
 
+*Updated Oct 27, 2026, by the combat economy pass (step 5f, awaiting the director's read), from the director's per-fight list: the words for time (Time and actions), MP on one ladder in two tiers, a floor on max HP (half a point) and on Armor (0) that the engine now holds, resistance by rank on elites and bosses, and the status numbers written into the table below (Might spent by action, Chill a slow thaw to 12, Clarity a pulse of MP, Burn hot and brief, Shock 120 a stack, Sunder capped, Stun, Silence, Taunt, Guard and Ward longer or bigger). `steps/05-core-set/5f-combat-economy/` has the reasons.*
+
 *Updated Oct 26, 2026, when the campaign work joined main: the rules the director changed after playing it (the campfire, the opening by slot, lost casts, enrage, Aggro and draw, Armor's formula, Bleed for Poison, Stun's pause, the status scaling rule) are written in here. `DECISIONS.md` has each one's reasons.*
 
 The game rules, the combat system and the vocabulary for the first playable version. The classes are in *Core set: classes*, the gear and formation pieces in *Core set: gear and formation lists*, and the enemy side in *Core set: enemies*.
@@ -57,7 +59,7 @@ It's an optional game inside a personal productivity app made for someone with A
 
 ### Design rules
 
-- Units and classes have no element. Each unit has its own resistance to each element, and a resistance can be negative: elemental weaknesses and strengths exist, set unit by unit.
+- Units and classes have no element. Each unit has its own resistance to each element, and a resistance can be negative: elemental weaknesses and strengths exist, set unit by unit. Step 5f (the director's): every elite carries 15 resistance to all elements and every boss 25, as every foe carries Armor, so spells meet something and the untyped statuses are the way through; minions carry none unless their line says so.
 - There's no fixed wheel where one element beats another. Each element has a thematic gameplay shape, rhythm or utility (see Elements). These are themes for its abilities, not rules: any element can still do anything.
 - There's no battlefield geometry and no positioning.
 - This is an auto-battler: abilities can have targeting rules, but no mechanic can need very smart targeting or timing.
@@ -71,9 +73,10 @@ Fights run in real time, in ticks, with no orders: each unit acts on its own, fr
 - Fights run in real time, counted in ticks. Nobody gives orders.
 - Every action, basic attack or ability, has a cast time (a wind-up), a cooldown and a short recovery. Basic attacks have no wind-up by default. Wind-up, cast time and cast speed are the same thing; other docs often say cast speed.
 - When a unit is free, it uses the first of its abilities that's ready, in the order the player slotted them, and otherwise its basic attack.
-- Abilities cost MP. Besides its cooldown, an ability can have a trigger condition and a targeting rule.
+- Abilities cost MP, on one ladder by cooldown word (step 5f, the director's: "mana needs to be normalized to values that make sense across the roster"): a skill (the physical classes' and the Valkyrie's spear) costs 150, 250, 400 or 600 for short, medium, long or very long; a spell (the healers', the Bard's, Hexer's and Paladin's, the four mages', the Vampire's dark arts) 300, 500, 800 or 1,200, the biggest a rung up. MP regen restores 2.5% of the stat every 4 ticks, so every class spends more than it regains over a run and the casters, who cast most, run short first. Besides its cooldown, an ability can have a trigger condition and a targeting rule.
 - An ability is ready only when it's off cooldown, its condition (if it has one) is true, and the unit has the MP to pay for it. MP is paid when the action resolves, at the end of its wind-up. If the unit no longer has enough MP then, the ability fizzles: it does nothing and no MP is spent, but it still goes on cooldown. This is unrelated to the Fizzle stacking rule.
-- Every action starts the fight partly charged. A party unit's abilities are charged by the order they're slotted in: the first starts with 16 ticks of its cooldown done, the second 12, the third 8 (step 5e, Oct 27, 2026; 20, 12 and 6 before: at 20 the first slot fired at ticks 2 to 6 and a third of the Wolves and Wisps died before acting), so the order is part of a build. Basic attacks, and every action of a foe, start a third to two thirds charged, by their own roll, so nothing lines up on the first ticks. Copies of the same enemy start 1.5 ticks apart.
+- Every action starts the fight partly charged. A party unit's abilities are charged by the order they're slotted in: the first starts with 10 ticks of its cooldown done, the second 8, the third 6 (step 5f, Oct 27, 2026, with the shorter words; 16, 12 and 8 in 5e; 20, 12 and 6 in 5c), so the order is part of a build. Basic attacks, and every action of a foe, start a third to two thirds charged, by their own roll, so nothing lines up on the first ticks. Copies of the same enemy start 1.5 ticks apart.
+- **Words for time (step 5f, the director's: "rarely do abilities feel meaningfully faster than others").** A party ability's cooldown is short (16 ticks), medium (28), long (44) or very long (60), each moved up to 15% by its id so no two match; a foe's short, medium or long is 22, 34 or 48. A wind-up is quick (1 tick), normal (3), long (6) or very long (10); an ability's recovery is 2. Each class mixes the words by its tempo (*Core set: classes*): the Bard, Monk, Stormcaller and Vampire are quick, the Hoplite, Paladin and Geomancer slow. Weapons swing every 7.6 ticks (the Ice staff, the fast light one) to 16 (the axe); a swing's size follows its interval, so every kind deals about the same a tick. In a 45-tick regular fight a short ability fires about three times, a medium twice, a long once.
 - An action interrupted in its wind-up goes on cooldown, and one whose targets are gone when it resolves costs its recovery.
 - **Enrage.** Past 300 ticks, every unit on both sides deals 25% more damage, and 25% more again every 30 ticks, so no fight stalls.
 - Damage doesn't interrupt a cast; only a knockout or an interrupting lockout does.
@@ -162,7 +165,7 @@ Each weapon is its own kind, every staff included, and a class can use more than
 | Lightning staff | Fast | Lightning | Stormcaller, Pyromancer |
 | Wind staff | Fast | Wind | Stormcaller, Frostweaver |
 | Earth staff | Medium | Earth | Geomancer, Bramble knight (living wood) |
-| Ice staff | Medium | Ice | Frostweaver, Hexer |
+| Ice staff | Fast | Ice | Frostweaver, Hexer (step 5f: the fast, light staff, so Cold hex and Brittle get their hits) |
 | Light staff | Medium | Light | Cleric, Paladin, Valkyrie |
 | Dark staff | Medium | Dark | Hexer, Vampire (a side option: its Magic is low) |
 
@@ -238,22 +241,22 @@ Ten staples make the Fundamental base, each useful from a single application. Th
 | Bleed | Fundamental | Stacks, with no duration, and does nothing on its own. Each hit its holder takes deals untyped damage per stack (not a hit itself; past Armor and resistance), then a third of the stacks close. An inverse Shock: it pays a party that keeps the hits coming. Replaced Poison (the director, Oct 26, 2026). |
 | Regen | Fundamental | Heals a share of its holder's max HP on each tick. Refresh: a single status that doesn't stack. |
 | Shield | Fundamental | Soaks a pool of damage before HP, status damage included. One pool per unit, a second health bar, shown as a bar over HP. Each application adds to the pool, up to a cap of half the holder's max HP; how much an application adds scales from a stat the ability or effect names (Protect from max HP, Earthen shell from Armor, Escort's effect from max HP). The pool has no timer: it lasts until it's used up or the fight ends. Dispel removes the whole pool. If the pool proves too strong, a slow drain is the knob. |
-| Might | Fundamental | Deals more damage per stack. Stacks; loses one stack on a timer. |
+| Might | Fundamental | Deals 10% more damage per stack, up to 20. Stacks; each action its holder takes spends one stack (step 5f, the director's: it spends with action, not time). |
 | Weaken | Fundamental | Deals less damage. Refresh. |
-| Guard | Fundamental | Raises Armor. Refresh. Best against many small hits. |
-| Stun | Fundamental | Can't act; a wind-up under way waits it out, then carries on (Silence is the interrupt). Fizzle. 5 ticks. |
+| Guard | Fundamental | Raises Armor by 3,000 for 28 ticks (step 5f: 2,000 for 20 before). Refresh. Best against many small hits. |
+| Stun | Fundamental | Can't act; a wind-up under way waits it out, then carries on (Silence is the interrupt). Fizzle. 8 ticks (step 5f; 5 before). |
 | Slow | Fundamental | Longer cooldowns, wind-ups and time between attacks. Refresh. |
 | Haste | Fundamental | Shorter cooldowns, wind-ups and time between attacks. Refresh. |
-| Taunt | Fundamental | Foes' single-target picks must go to a taunting unit; with several taunters, draw (from Aggro) weights the pick. Refresh. Seek gets past it. |
-| Burn | Specialist | Stacks. Each tick deals untyped damage per stack, then loses a share of its stacks, so it stays high only while someone keeps applying it. A much higher ceiling than a single application of anything. |
-| Chill | Specialist | Stacks up to a cap; each stack slows its holder a little. Loses a share of its stacks on a timer. Full Chill is slower than Slow, and the two add. |
-| Shock | Specialist | Stacks. Each time its holder acts (when an action resolves: at the end of its wind-up, or at once for a basic attack), it takes untyped damage per stack and loses some stacks, so it hurts fast units most. |
-| Ward | Specialist | Raises resistance to every element. Refresh. |
-| Sunder | Specialist | Stacks; each stack lowers Armor. Loses one stack on a timer. |
-| Silence | Specialist | Can't use abilities, only basic attacks; loses an ability's wind-up. Fizzle. Lasts longer than Stun. |
+| Taunt | Fundamental | Foes' single-target picks must go to a taunting unit; with several taunters, draw (from Aggro) weights the pick. Refresh, 20 ticks (step 5f: 14 before). Seek gets past it. |
+| Burn | Specialist | Stacks. Every 2 ticks deals 60 untyped damage per stack, then loses a quarter of its stacks (step 5f: 30 and a tenth before; it burns hard and dies fast now, so it stays high only while someone keeps applying it). A much higher ceiling than a single application of anything. |
+| Chill | Specialist | Stacks up to 12; each stack slows its holder 5%. Thaws one stack every 4 ticks (step 5f, the director's deep freeze: a frozen foe stays frozen while the Chill is kept up). Full Chill (−60%) is slower than Slow (−40%), and the two add. |
+| Shock | Specialist | Stacks up to 30. Each time its holder acts (when an action resolves: at the end of its wind-up, or at once for a basic attack), it takes 120 untyped damage per stack and loses half its stacks (step 5f: 70 and a cap of 40 before), so it hurts fast units most. |
+| Ward | Specialist | Raises resistance to every element by 40 for 30 ticks (step 5f: 30 for 24 before). Refresh. |
+| Sunder | Specialist | Stacks up to 20; each stack lowers Armor by 600. Loses one stack every 4 ticks. Armor never goes below 0 (step 5f: the engine's floor didn't hold before; it does). |
+| Silence | Specialist | Can't use abilities, only basic attacks; loses an ability's wind-up. Fizzle. 16 ticks (step 5f; 8 before). |
 | Hidden | Specialist | Foes can't pick it as a target, Seek included; only their Area reaches it. Its allies can still pick it. Lasts a set time and can't be removed. Refresh. |
 | Rot | Specialist | Receives less healing; Shields are unaffected. Refresh. |
-| Clarity | Specialist | Regenerates MP faster. Refresh. Cast on oneself or an ally. |
+| Clarity | Specialist | Restores 4% of its holder's max MP every 2 ticks for 16 ticks (step 5f: Regen for mana; it doubled MP regen before). Refresh. Cast on oneself or an ally. |
 | Aegis | Signature | Blocks the next damage above a set share of max HP (25% for now), from any source, then ends. Checked after mitigation, before Shields. Fizzle. Small hits pass; one big one doesn't. |
 | Doom | Signature (boss) | A visible countdown; at zero its holder takes heavy untyped damage. Fizzle. Cleanse removes it; Shield and Aegis soak it. |
 | Bulwark | Signature (boss) | Starts with a stack count; each piercing or Wind hit removes one. At zero its holder is Stunned and takes double damage for a while, then Bulwark refills. |
