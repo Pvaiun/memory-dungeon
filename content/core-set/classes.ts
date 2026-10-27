@@ -227,7 +227,8 @@ export const abilities: A[] = [
   // Monk
   a("monk", "flow", "Flow", "Haste on itself.", { ...timing("short", "quick"), mp: 150, target: "self", do: [apply("haste")] }),
   a("monk", "burning_fist", "Burning fist", "Three quick Fire hits on the foe with the most Burn, each adding a few.", {
-    ...timing("short", "quick"), mp: 150, target: T.mostFoe("burn"), do: [magic("fire", from("attack", 0.11), { hits: 3, apply: [{ status: "burn", stacks: stacks("few", "attack") }] })],
+    // Step 5g round 2: about 3 Burn a hit, 9 a cast at base (was 5 a hit): three touches on a short cooldown made the Monk a bigger Burn engine than the Pyromancer (a near-dead Monk's one cast took a ghoul to 40 stacks and 39% of a fight's damage).
+    ...timing("short", "quick"), mp: 150, target: T.mostFoe("burn"), do: [magic("fire", from("attack", 0.11), { hits: 3, apply: [{ status: "burn", stacks: stacks("few", "attack", 0.6) }] })],
   }),
   a("monk", "pressure_point", "Pressure point", "Stuns the foe with the highest Attack or Magic, past any guard.", {
     ...timing("medium", "normal"), mp: 250, seek: true, target: lacking(T.highestAMFoe, "stun", true), do: [phys("blunt", hit("attack", "normal"), { apply: [{ status: "stun" }] })],

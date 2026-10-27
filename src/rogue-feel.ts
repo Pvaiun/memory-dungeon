@@ -8,7 +8,7 @@
  *
  *   npx tsx src/rogue-feel.ts [--runs 48] [--heat 0] [--packs 10] [--focus frostweaver,hexer] [--player] [--out out/feel] [--set path=value]...
  *
- * The leader cycles through every class and the draft picks at random, so every class is seen (the simulated player's own
+ * The leader cycles through every class and half the draft picks are random, so every class is seen (the simulated player's own
  * drafter never takes the Frostweaver or the Hexer); --player plays it as the simulated player does, three leaders and its
  * own picks. --focus picks fights whose party holds those classes first. Seeds are fixed, so a round's packs can be compared
  * with the last's.
@@ -48,7 +48,9 @@ const recs: Rec[] = [];
 for (let s = 1; s <= RUNS; s++) {
   const seed = 9000 + s;
   const run = newRogue(c, { seed, leader: LEADERS[s % LEADERS.length], heat: HEAT });
-  const ai = aiPlayer(PLAYER ? {} : { noise: 1, noisy: ["draft"] }, seed);
+  // Half the drafts at random (every class gets seen), half by the player's own scoring (a wall and a healer where it can), so the parties are
+  // closer to a player's than pure chance: at noise 1 the reads were of parties that arrived broken.
+  const ai = aiPlayer(PLAYER ? {} : { noise: 0.5, noisy: ["draft"] }, seed);
   for (let i = 0; i < 3000 && run.pending.kind !== "over"; i++) {
     ai.prepare(c, run);
     const p = run.pending;

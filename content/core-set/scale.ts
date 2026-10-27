@@ -148,7 +148,7 @@ export const RULES = {
    * met a Vampire and two Bone Priests healing each other to the 5,000-tick safety stop, and Ghouls raising each other
    * for 2,600 ticks: minutes of watching nothing. Boss fights end in 100 to 250.
    */
-  enrage: { after: 300, every: 30, pct: 25 },
+  enrage: { after: 200, every: 20, pct: 25 }, // Step 5g round 2: 200 and 20 (were 300 and 30). A lone Vampire that out-healed the Hive Queen's Tempest soloed it for 305 ticks; the safety should close such a fight sooner.
 };
 
 /**
@@ -219,7 +219,8 @@ export const ENEMY_HIT = {
   brand: 0.11,
   /** Inferno: ends the run if it lands uninterrupted. */
   /** Campaign pass: 0.5 wiped every party it landed on; at 0.35 it nearly wipes, and an interrupt buys a whole cooldown. */
-  inferno: 0.35,
+  /** Step 5g round 2: 0.17 (2,400 to everyone, with many Burn). At 0.35 it was 4,900, every caster outright, so the tuner had cut the Fire Giant to 12,000 HP and it died in 18 ticks having cast nothing. */
+  inferno: 0.15,
   /** Hailstorm: a raidwide the Cleric can mend. Pacing pass: 0.18 (was 0.08), as it comes a third as often. */
   hailstorm: 0.18,
   /** Tempest: a raidwide the Cleric can absorb. Pacing pass: 0.13 (was 0.06). */
@@ -341,11 +342,11 @@ export const STATUS = {
    * and the same parties won 20 points more in Caravan than in Neutral: 36% of the whole party's HP a fight, for nothing, was
    * more than a Cleric heals. The Herald's horn (+9 points on the amulets) is the same Regen.
    */
-  regen: { every: 2, share: 0.02, duration: 24 }, // Step 5f: 24 ticks (24% of max HP) with the longer fights. // round 3: 10 pulses of 2%, a fifth of max HP: Caravan was still +14.7 at a quarter. Round 4: 8 pulses, 16% (Caravan +13.7 at a fifth).
+  regen: { every: 2, share: 0.03, duration: 24 }, // Step 5g round 2: 3% a pulse (36% over 24 ticks); at 2% a Regen pulsed 60 on a Cleric and read as nothing. // Step 5f: 24 ticks (24% of max HP) with the longer fights. // round 3: 10 pulses of 2%, a fifth of max HP: Caravan was still +14.7 at a quarter. Round 4: 8 pulses, 16% (Caravan +13.7 at a fifth).
   shield: { capShare: 0.5 },
   /** Campaign pass: a cap of 25 stacks. Uncapped, a hidden Bard stacked 123 on itself and the Storm King reached 38. */
   /** Step 5f (the director's): Might spends with action, not time: one stack each time the holder acts (vocabulary.ts). 10% a stack, cap 20. */
-  might: { perStack: 8, cap: 15 }, // Round 6: 8% to a cap of 15 (was 10% to 20: Anthem at the cap tripled an ally's swings all fight).
+  might: { perStack: 6, cap: 15 }, // Step 5g round 2: 6% a stack (was 8): the Bard's Anthem every 16 ticks on a slow swinger climbs to the cap, and at 8% the Cleric's staff dealt 2.2× and carried a fight. // Round 6: 8% to a cap of 15 (was 10% to 20: Anthem at the cap tripled an ally's swings all fight).
   /** Pacing pass: buffs and debuffs from abilities last about twice as long (their abilities come a third as often). */
   weaken: { pct: -30, duration: 20 },
   guard: { armor: pts(3), duration: 28 }, // Step 5f: +3,000 for 28 ticks (was +2,000 for 20): a minion's swing into Armor 5,000 falls 28%, Crush 9%.
