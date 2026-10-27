@@ -57,6 +57,7 @@ OW = find_dir("Tileset 1x")
 DUNGEON = find_dir("1x", "tilesets")
 CASTLE = find_dir("1x", "Tileset")
 TOWN = find_file("TOWNS_ALL_1x.png")
+TOWN_INSIDE = find_file("TOWN_INSIDE.png")
 
 def ensure(d):
     os.makedirs(d, exist_ok=True)
@@ -515,6 +516,42 @@ def backdrop_tower_top(castle, a2):
     darken(d, (0, 68, W, H), 0.75)
     return d
 
+def backdrop_shop(t, keeper):
+    """The rogue mode's shop: a wood-panelled room from the town interior tiles (1x), shelves of potions and books
+    along the wall, a window and a painting, and a counter of goods on a rug with the shopkeeper behind it (an unused
+    robed figure from the enemy pack, arms raised). Composed for the 144 rows a stage shows (38 to 182)."""
+    d = Image.new("RGBA", (W, H), (20, 14, 10, 255))
+    oy = 38
+
+    def piece(x0, y0, x1, y1):
+        im = t.crop((int(x0 * 16), int(y0 * 16), int(x1 * 16), int(y1 * 16)))
+        bb = im.split()[3].getbbox()
+        return im.crop(bb) if bb else im
+
+    def put(im, cx, feet):
+        d.alpha_composite(im, (int(cx - im.width / 2), int(feet + oy - im.height)))
+
+    tile(d, t, (48, 80, 96, 112), (0, 0, W, 64 + oy))           # wood wall panels
+    tile(d, t, (16, 0, 32, 16), (0, 64 + oy, W, H))             # wood planks
+    darken(d, (0, 64 + oy, W, H), 0.66)
+    darken(d, (0, 0, W, 64 + oy), 0.9)
+    for x, box in ((14, (1, 7.5, 2, 10)), (32, (1, 11.5, 2, 14)), (50, (1, 15.5, 2, 18)), (252, (0, 8, 1, 10))):
+        put(piece(*box), x, 66)                                   # potion shelves
+    put(piece(3, 8.5, 4, 10), 92, 40)                            # a window
+    put(piece(11, 10, 13, 12), 216, 66)                          # a bookcase
+    put(piece(6, 12, 7, 13), 140, 34)                            # a painting
+    put(piece(14, 0.5, 17, 3), 196, 132)                         # a rug before the counter
+    put(piece(10, 16.5, 11, 18), 8, 140)                         # plants by the door
+    put(piece(7, 16.5, 8, 18), 262, 140)
+    put(keeper, 198, 104)                                        # the shopkeeper, behind
+    table = piece(4, 10, 6, 11)
+    for x in (166, 198, 230):
+        put(table, x, 110)                                       # the counter: three tables end to end
+    top = 110 - table.height + 5
+    for x, box in ((158, (1, 10, 2, 11)), (176, (6, 9, 7, 10)), (220, (8, 11, 9, 12)), (236, (0, 14, 1, 15)), (252, (2, 14, 3, 16))):
+        put(piece(*box), x, top)                                 # goods: a pot, books, a drum, a candle
+    return d
+
 if OW and DUNGEON and CASTLE:
     ensure(OUT / "backdrops")
     a2, b, c = img(OW / "OW_A2.png"), img(OW / "OW_B.png"), img(OW / "OW_C.png")
@@ -543,6 +580,16 @@ if OW and DUNGEON and CASTLE:
     print(f"backdrops: {len(scenes)} scenes and the strip")
 else:
     print("backdrops: tilesets not found, kept")
+
+if TOWN_INSIDE and ENEMIES:
+    ensure(OUT / "backdrops")
+    keeper = mode_downscale(Image.open(ENEMIES / "Humanoid_Diabolist_3.png"), 3)
+    keeper = keeper.crop(keeper.split()[3].getbbox())
+    backdrop_shop(img(TOWN_INSIDE), keeper).save(OUT / "backdrops" / "shop.png")
+    manifest["backdrops"]["shop"] = "backdrops/shop.png"
+    print("backdrops: the shop")
+else:
+    print("backdrops: the shop's tiles not found, kept")
 
 # ─── The campfire: the small sheet's eight 32×32 frames of a fire on its logs, at art size ───
 if CAMPFIRE:

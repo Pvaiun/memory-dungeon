@@ -5,7 +5,7 @@
  */
 import { gearFor as gearThatFits } from "../../src/sim/parties.js";
 import { foesText, meets, needText, rewardsOf, unmet } from "../../src/campaign.js";
-import { c, className, classes, cls as classOf, dungeons, enemies, fightName, formations, gearOf, runName, setNumberScale, shortName, showStat, type NumberScale } from "./content.js";
+import { c, className, classes, cls as classOf, dungeons, enemies, fightName, formations, gearOf, runName, setNumberScale, shortName, type NumberScale } from "./content.js";
 import { enemyDisplayName } from "./art.js";
 import { button, h, header, nav, row, settleBack, win, type Child } from "./dom.js";
 import { abilitiesFor, gearFor, HIT_PAUSES, party as partyLoadout, reset, resetJourneyLoadout, save, setup, useMode } from "./state.js";
@@ -15,9 +15,8 @@ import {
 } from "./journey.js";
 import { celebrate } from "./celebrate.js";
 import { anyNewEnemy, known, look, metCount, newEnemy } from "./bestiary.js";
-import { abilityBlock, basicLine, canUse, classHead, classPassive, codeSpans, enemySheet, enemyStats, gearRow, memberFor, portraitEl, role, section, specialLines, statGrid } from "./sheet.js";
-import { enemyEl, enemyThumb, iconEl } from "./pixel.js";
-import { ELEMENTS, TAG_ICON } from "./art.js";
+import { abilityBlock, basicLine, canUse, classHead, classPassive, codeSpans, enemySheet, gearRow, memberFor, portraitEl, role, section, specialLines, statGrid } from "./sheet.js";
+import { enemyEl, enemyThumb } from "./pixel.js";
 import { weaponOf } from "../../src/engine/combat/fight.js";
 import { foesOnStage, partyOnStage, stageEl, Strip, STRIP_H, themeOf } from "./battle/scene.js";
 import { startBattle, type BattleArgs } from "./battle/battle.js";
@@ -136,18 +135,15 @@ function home(): Child[] {
     ];
   const items: Item[] = [
     ...head,
-    ["classes", "CLASSES", onJourney() ? `${owned} of ${classes.length} found` : "", anyNewClass() || anyNewGear()],
-    ["bestiary", "BESTIARY", playMode() === "free" ? "" : `${metCount()} of ${enemies.length} met`, anyNewEnemy()],
+    ["classes", "CLASSES", onJourney() ? `${owned} of ${classes.length}` : "", anyNewClass() || anyNewGear()],
+    ["bestiary", "BESTIARY", playMode() === "free" ? "" : `${metCount()} of ${enemies.length}`, anyNewEnemy()],
     ["settings", "SETTINGS", "", false],
   ];
-  const f = c.formations.get(setup.formation)!;
   return [
     h("div", { class: "title-big" }, "MEMORY", h("br"), "DUNGEON"),
     stripEl(),
     h("div", { class: "menu-wrap" },
       win("list menu", ...items.map(([s, label, sub, isNew]) => h("div", { class: "row", onClick: () => go(s) }, h("span", { class: "cursor" }, "▶"), h("div", { class: "grow" }, h("div", { class: "line" }, label, isNew ? newTag() : null), sub ? h("div", { class: "text dim small trunc" }, sub) : null)))),
-      // Free play's loadout means nothing to a rogue run: hidden in rogue mode.
-      onRogue() ? null : h("div", { class: "line dim small", style: "margin-top:.5rem" }, h("span", { class: "trunc grow" }, setup.party.map(shortName).join(" · ") || "NO PARTY"), h("span", { class: "trunc" }, f.name.toUpperCase())),
     ),
   ];
 }
@@ -481,12 +477,10 @@ function bestiary(): Child[] {
     win("list scroll", ...enemies.map((e) => {
       // Not met yet: its shape and ???, a Pokédex's way.
       if (!known(e.id)) return row([h("span", { style: "width:3rem;display:inline-flex;justify-content:center" }, enemyThumb(e.id, 24, true)), h("span", { class: "grow dim" }, "???")], undefined, { cursor: false, cls: "beast" });
-      const st = enemyStats(e);
-      const weak = ELEMENTS.filter((el) => (st[`resist:${el}`] ?? 0) + (st.resist ?? 0) < 0);
+      // Its likeness and name only: what it's made of is on its page.
       return row([
         h("span", { style: "width:3rem;display:inline-flex;justify-content:center" }, enemyThumb(e.id, 24)),
-        h("div", { class: "grow trunc" }, h("div", { class: "line" }, h("span", { class: `trunc ${rankClass(e.rank)}` }, `${e.rank === "boss" ? "★" : ""}${enemyDisplayName(e.id)}`), newEnemy(e.id) ? newTag() : null),
-          h("div", { class: "line small dim" }, `HP ${showStat("max_hp", st.max_hp)}`, weak.length ? h("span", { class: "bad" }, "WEAK") : null, ...weak.map((el) => iconEl(TAG_ICON[el])))),
+        h("div", { class: "grow trunc" }, h("div", { class: "line" }, h("span", { class: `trunc ${rankClass(e.rank)}` }, `${e.rank === "boss" ? "★" : ""}${enemyDisplayName(e.id)}`), newEnemy(e.id) ? newTag() : null)),
       ], () => go("enemy", e.id), { cursor: false, cls: "beast" });
     })),
   ];
