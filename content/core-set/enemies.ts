@@ -62,6 +62,8 @@ const fromStat = (stat: string, ratio: number) => ({ scale: [{ ratio, stat }] })
 
 // Pacing pass: a boss's signature move (Crush, Inferno, Death bell, Tempest, its summons) is on a medium cooldown, not long, so
 // a shorter boss fight still sees it two or three times. Its size is unchanged.
+// Step 5f round 5 (the director's: "their abilities should need to be played against, and occur multiple times per fight"): the
+// signature blows and spells on a short cooldown (22); the summons stay medium, or the room fills.
 export const enemyAbilities: AbilityT[] = [
   a("shield_up", "Shield up", "Taunts.", { ...timing("short", "quick"), target: "self", do: [apply("taunt")] }),
   a("brace", "Brace", "Guards itself.", { ...timing("medium", "quick"), target: "self", do: [apply("guard")] }),
@@ -72,15 +74,15 @@ export const enemyAbilities: AbilityT[] = [
   a("curse", "Curse", "Weakens and Slows every foe.", { ...timing("long", "long"), target: T.everyFoe, do: [apply("weaken"), apply("slow")] }),
   a("soulfire", "Soulfire", "A heavy Dark spell.", { ...timing("long", "very_long"), do: [{ op: "damage", type: "magical", element: "dark", amount: fromStat("magic", ENEMY_HIT.soulfire) }] }),
   a("dig_up", "Raise", "Digs a fallen packmate back up.", { ...timing("medium", "long"), if: { side: "allies", where: { ko: true } }, target: T.koAlly, do: [{ op: "revive", hp: { scale: [{ ratio: REVIVE.ghoul, stat: "max_hp", of: "target" }] } }] }),
-  a("death_bell", "Death bell", "Dooms a foe.", { ...timing("medium", "long"), if: { side: "foes", where: { lacks: "doom" } }, target: { side: "foes", where: { lacks: "doom" } }, do: [apply("doom")] }),
+  a("death_bell", "Death bell", "Dooms a foe.", { ...timing("short", "long"), if: { side: "foes", where: { lacks: "doom" } }, target: { side: "foes", where: { lacks: "doom" } }, do: [apply("doom")] }),
   a("mute", "Mute", "Silences the foe with the highest Attack or Magic.", { ...timing("medium", "normal"), if: { side: "foes", where: { lacks: "silence" } }, target: { ...T.highestAMFoe, where: { lacks: "silence" } }, do: [apply("silence")] }),
-  a("quiet", "Quiet", "Silences every foe.", { ...timing("medium", "long"), target: T.everyFoe, do: [apply("silence")] }),
+  a("quiet", "Quiet", "Silences every foe.", { ...timing("short", "long"), target: T.everyFoe, do: [apply("silence")] }),
   a("cheer", "Cheer", "Might and Haste on its strongest ally.", { ...timing("medium", "normal"), target: T.highestAMAlly, do: [apply("might", { stacks: FLAT_STACKS.several }), apply("haste")] }),
   a("brand", "Brand", "Fire on a foe, with a few Burn.", { ...timing("short", "quick"), do: [{ op: "damage", type: "magical", element: "fire", amount: fromStat("magic", ENEMY_HIT.brand), apply: [{ status: "burn", stacks: FLAT_STACKS.few }] }] }),
-  a("inferno", "Inferno", "A very long cast: huge Fire on every foe, with many Burn.", { ...timing("medium", "very_long"), target: T.everyFoe, do: [{ op: "damage", type: "magical", element: "fire", amount: fromStat("magic", ENEMY_HIT.inferno), apply: [{ status: "burn", stacks: FLAT_STACKS.many }] }] }),
-  a("hailstorm", "Hailstorm", "Ice on every foe, with a stack of Chill.", { ...timing("medium", "normal"), target: T.everyFoe, do: [{ op: "damage", type: "magical", element: "ice", amount: fromStat("magic", ENEMY_HIT.hailstorm), apply: [{ status: "chill", stacks: FLAT_STACKS.one }] }] }),
+  a("inferno", "Inferno", "A very long cast: huge Fire on every foe, with many Burn.", { ...timing("short", "very_long"), target: T.everyFoe, do: [{ op: "damage", type: "magical", element: "fire", amount: fromStat("magic", ENEMY_HIT.inferno), apply: [{ status: "burn", stacks: FLAT_STACKS.many }] }] }),
+  a("hailstorm", "Hailstorm", "Ice on every foe, with a stack of Chill.", { ...timing("short", "normal"), target: T.everyFoe, do: [{ op: "damage", type: "magical", element: "ice", amount: fromStat("magic", ENEMY_HIT.hailstorm), apply: [{ status: "chill", stacks: FLAT_STACKS.one }] }] }),
   a("call_drones", "Call drones", "Summons two Drones.", { ...timing("medium", "long"), do: [{ op: "summon", enemy: "drone", count: 2 }] }),
-  a("tempest", "Tempest", "Lightning on every foe, with a stack of Shock.", { ...timing("medium", "long"), target: T.everyFoe, do: [{ op: "damage", type: "magical", element: "lightning", amount: fromStat("magic", ENEMY_HIT.tempest), apply: [{ status: "shock", stacks: FLAT_STACKS.one }] }] }),
+  a("tempest", "Tempest", "Lightning on every foe, with a stack of Shock.", { ...timing("short", "long"), target: T.everyFoe, do: [{ op: "damage", type: "magical", element: "lightning", amount: fromStat("magic", ENEMY_HIT.tempest), apply: [{ status: "shock", stacks: FLAT_STACKS.one }] }] }),
   a("rally_soldiers", "Rally", "Summons two Soldiers.", { ...timing("medium", "long"), do: [{ op: "summon", enemy: "soldier", count: 2 }] }),
 ];
 

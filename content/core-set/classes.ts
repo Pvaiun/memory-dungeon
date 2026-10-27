@@ -136,7 +136,8 @@ const a = (cls: string, id: string, name: string, text: string, body: Partial<Ab
 
 export const abilities: A[] = [
   // Knight
-  a("knight", "fortify", "Fortify", "Guards the ally with the lowest share of HP.", { ...timing("short", "quick"), mp: 150, target: T.lowestShareAlly, do: [apply("guard")] }),
+  // Round 5: Fortify medium (the Knight cast 7 times a regular fight on two shorts).
+  a("knight", "fortify", "Fortify", "Guards the ally with the lowest share of HP.", { ...timing("medium", "quick"), mp: 250, target: T.lowestShareAlly, do: [apply("guard")] }),
   // Step 5c (the director's, to try): a long cooldown (was medium). How often it comes was the Knight's strength; its size isn't,
   // since a Shield can't pass half its target's max HP.
   // Step 5f (the director's): Protect (a Shield on the lowest ally) overlapped the Hoplite; Stand fast is Taunt on the Knight and mana for an ally.
@@ -252,7 +253,8 @@ export const abilities: A[] = [
   // Pacing pass: a light hit on each (was normal): about one swing a foe, for every foe.
   a("pyromancer", "fireball", "Fireball", "Fire on every foe, adding a few Burn to each.", { ...timing("medium", "long"), mp: 800, target: T.everyFoe, do: [magic("fire", hit("magic", "touch"), { apply: [{ status: "burn", stacks: stacks("few", "magic", BURN_STACKS) }] })] }),
   a("pyromancer", "pyre", "Pyre", "Heavy Fire on the foe with the most Burn, rising with each stack. The Burn stays.", {
-    ...timing("long", "very_long"), mp: 1200, target: T.mostFoe("burn"), do: [magic("fire", { scale: [{ ratio: HIT.heavy, stat: "magic" }, { ratio: 300, stacks: "burn", of: "target" }] })],
+    // Round 5: medium (was long): on a long cooldown with a 10-tick wind-up, a caster that lives 19 ticks cast it 0.03 times a fight.
+    ...timing("medium", "very_long"), mp: 1200, target: T.mostFoe("burn"), do: [magic("fire", { scale: [{ ratio: HIT.heavy, stat: "magic" }, { ratio: 300, stacks: "burn", of: "target" }] })],
   }),
   // Frostweaver
   a("frostweaver", "frost_lance", "Frost lance", "Ice at the foe with the most Chill, adding several.", { ...timing("short", "normal"), mp: 300, target: T.mostFoe("chill"), do: [magic("ice", hit("magic", "light"), { apply: [{ status: "chill", stacks: stacks("several", "magic") }] })] }),
@@ -272,7 +274,8 @@ export const abilities: A[] = [
   }),
   a("stormcaller", "thunderstorm", "Thunderstorm", "Lightning on every foe, adding a few Shock to each.", { ...timing("medium", "normal"), mp: 800, target: T.everyFoe, do: [magic("lightning", hit("magic", "touch"), { apply: [{ status: "shock", stacks: stacks("few", "magic", SHOCK_STACKS) }] })] }),
   // Step 5e: 400 MP (was 1,200 for the same Haste the Monk's Flow gives for 100; it fired 0.02 times a regular fight).
-  a("stormcaller", "static_charge", "Static charge", "Haste on itself.", { ...timing("long", "long"), mp: 800, target: "self", do: [apply("haste")] }),
+  // Round 5: Static charge medium and quick (was long with a 6-tick wind-up: 0.06 casts a fight).
+  a("stormcaller", "static_charge", "Static charge", "Haste on itself.", { ...timing("medium", "quick"), mp: 500, target: "self", do: [apply("haste")] }),
   // Geomancer
   a("geomancer", "earthen_shell", "Earthen shell", "Shields itself and the other lowest ally; the amount scales from Armor.", {
     ...timing("medium", "normal"), mp: 500, ...waitsFor("allies", { belowCap: "shield" }), target: "self",

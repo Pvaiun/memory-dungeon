@@ -27,7 +27,7 @@ const formation = (id: string, name: string, text: string, slots: ReturnType<typ
 export const effects: StatusT[] = [
   { id: "blitz_charge", name: "Blitz", text: "Haste when the fight starts.", label: "buff", show: "sheet", stacking: "refresh", unremovable: true, reactions: [{ on: { event: "fight_start" }, do: [{ op: "apply", status: "haste", to: "holder" }] }] },
   // Step 5e: a short Regen, 10 ticks (the status's own is 16). The same parties won 12 to 20 points more in Caravan than in Neutral: a full Regen on every ally at every fight's start was two Clerics for nothing.
-  { id: "caravan_pace", name: "Caravan", text: "A short Regen when the fight starts.", label: "buff", show: "sheet", stacking: "refresh", unremovable: true, reactions: [{ on: { event: "fight_start" }, do: [{ op: "apply", status: "regen", duration: 8, to: "holder" }] }] }, // round 6: 8 ticks (Caravan still +9.5 at 10).
+  { id: "caravan_pace", name: "Caravan", text: "A short Regen when the fight starts.", label: "buff", show: "sheet", stacking: "refresh", unremovable: true, reactions: [{ on: { event: "fight_start" }, do: [{ op: "apply", status: "regen", duration: 6, to: "holder" }] }] }, // round 6: 8 ticks (Caravan still +9.5 at 10).
   { id: "last_stand_spur", name: "Last stand", text: "Several Might when an ally falls.", label: "buff", show: "sheet", stacking: "refresh", unremovable: true, reactions: [{ on: { event: "ko", whose: "ally" }, do: [{ op: "apply", status: "might", stacks: FLAT_STACKS.several, to: "holder" }] }] },
   { id: "escort_insurance", name: "Escort", text: "A Shield when an ally falls, scaling from max HP.", label: "buff", show: "sheet", stacking: "refresh", unremovable: true, reactions: [{ on: { event: "ko", whose: "ally" }, do: [{ op: "apply", status: "shield", stacks: { scale: [{ ratio: 0.12, stat: "max_hp", of: "holder" }] }, to: "holder" }] }] }, // Step 5e: 0.12 of max HP (was 0.25, then 0.15): the same parties won 9 to 13 points more in Escort than in Neutral.
 ];
@@ -66,7 +66,7 @@ export const formations: FormationT[] = [
     slot("charge_c", "Charge", "Hits harder, frailer.", 2, [st("attack", 1), st("magic", 1), st("max_hp", -1)]),
   ], "blitz_charge"),
   formation("caravan", "Caravan", "Pace yourselves for the whole dungeon. Everyone starts each fight with Regen.", [
-    slot("quartermaster", "Quartermaster", "MP flows, but hits much softer.", 0, [st("mp_regen", 2), st("attack", -2), st("magic", -2)]),
+    slot("quartermaster", "Quartermaster", "MP flows, but hits much softer.", 0, [st("mp_regen", 1), st("attack", -2), st("magic", -2)]), // Step 5f round 5: +1 (was +2): with mana binding, the slot was worth a unit's whole regen and Caravan ran +12.
     slot("traveller_a", "Traveller", "Sturdier.", 1, [st("max_hp", 1)]),
     slot("traveller_b", "Traveller", "Sturdier.", 2, [st("max_hp", 1)]),
   ], "caravan_pace"),

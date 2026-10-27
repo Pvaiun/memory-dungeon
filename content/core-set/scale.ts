@@ -160,7 +160,7 @@ export const COST = { short: 300, medium: 500, long: 800 } as const; // Round 3:
  * campaign runs the party regained 110% of the MP it spent, and the casters spent 1% to 4% of their time short of MP (the
  * Geomancer 14%), against 5c's intent that casters are gated by it; the walls, at 96% to 98% MP, don't feel the step.
  */
-export const MP_REGEN = { every: 4, share: 0.025 }; // Step 5f: 0.03, then round 2: 0.02 (at 0.03 and the first ladder the party regained 115% of what it spent). Every cost is on one ladder (classes.ts), so every class feels MP.
+export const MP_REGEN = { every: 4, share: 0.015 }; // Round 5: 1.5% (2.5% in round 3): with Stand fast's Clarity every 16 ticks the party regained all it spent again, and no caster was ever short. // Step 5f: 0.03, then round 2: 0.02 (at 0.03 and the first ladder the party regained 115% of what it spent). Every cost is on one ladder (classes.ts), so every class feels MP.
 
 // ─── Damage ──────────────────────────────────────────────────────────────────
 
@@ -375,7 +375,7 @@ export const STATUS = {
   hidden: { duration: 14 }, // Step 5f round 4: 14 on a medium Vanish (28): hidden half a fight. On a short one the Assassin hid 85% of the time and its two allies took every hit (−20 points in the campaign).
   rot: { healing: -60, duration: 20 },
   /** Step 5f (the director's): Regen for mana, not a doubled stat: 4% of max MP every 2 ticks for 16 ticks (32% of max MP). */
-  clarity: { every: 2, share: 0.04, duration: 16 },
+  clarity: { every: 2, share: 0.03, duration: 16 }, // Round 5: 3% a pulse (24% of max MP; was 4%, 32%).
   aegis: { share: 25 },
   /** Kills anything at HP 3 or below; a Hoplite or Knight survives it. */
   doom: { countdown: 10, damage: 3500 },

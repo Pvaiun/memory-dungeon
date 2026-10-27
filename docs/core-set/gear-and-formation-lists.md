@@ -2,7 +2,7 @@
 
 Oct 23, 2026 · @Paul Suddaby
 
-*Updated Oct 27, 2026, by the balance pass (step 5e) and the combat economy pass (step 5f, awaiting the director's read): a formation slot's step is one and a quarter gear steps (5e set one and a half when the five formations with no effect sat within 3 points of Neutral; 5f's longer fights made the slot formations worth +10 and brought it down), Caravan's Regen is a short one (8 ticks of the status's 24), Escort's slots carry Aggro alone and its Shield is 0.12 of max HP, Last stand's Martyr gives up one HP step (two took an HP-2 class to nothing beside Glass heart). Weapons swing half again as slowly and hit half again as hard (5f), the Ice staff the fast light staff among them. The gear pieces are as written.*
+*Updated Oct 27, 2026, by the balance pass (step 5e) and the combat economy pass (step 5f, awaiting the director's read): a formation slot's step is one and a quarter gear steps (5e set one and a half when the five formations with no effect sat within 3 points of Neutral; 5f's longer fights made the slot formations worth +10 and brought it down), Caravan's Regen is a short one (6 ticks of the status's 24) and its Quartermaster gives one step of MP regen, not two (with mana binding, two were a unit's whole regen), Escort's slots carry Aggro alone and its Shield is 0.12 of max HP, Last stand's Martyr gives up one HP step (two took an HP-2 class to nothing beside Glass heart). Weapons swing half again as slowly and hit half again as hard (5f), the Ice staff the fast light staff among them. The gear pieces are as written.*
 
 *Updated Oct 26, 2026, when the campaign work joined main. The pieces are as written; three things around them changed. Aggro is centred on 100, so an Aggro step here is ±10 and foes pick by draw, which keeps every unit between a third and three times an ordinary unit's pull (*Core set: rules and vocabulary*, Targeting). A step of HP on gear or a formation slot is half a point, not one (at one, HP was every class's best kit). The Cleric lost Mercy and Prayer (*Core set: classes*), so the lines that leaned on them say what's left. `DECISIONS.md` has the reasons.*
 
@@ -342,10 +342,10 @@ For Long grind.
 
 | Slot | Changes |
 | --- | --- |
-| Quartermaster | MP regen +2, Attack −2, Magic −2 |
+| Quartermaster | MP regen +1, Attack −2, Magic −2 |
 | Traveller (two of these) | HP +1 |
 
-**Effect:** when the fight starts, every ally gains a short Regen (8 ticks of the status's 24, steps 5e and 5f: the full Regen on every ally at every fight's start was worth two Clerics, and the same parties won 20 points more in Caravan than in Neutral).
+**Effect:** when the fight starts, every ally gains a short Regen (6 ticks of the status's 24, steps 5e and 5f: the full Regen on every ally at every fight's start was worth two Clerics, and the same parties won 20 points more in Caravan than in Neutral).
 
 The Quartermaster gives up hitting to keep its own MP flowing, so it's for a unit whose costly abilities don't scale from Attack or Magic: a Cleric saving for Renew and Raise. A Regen at the start of every fight is real healing in a dungeon that never heals between fights.
 

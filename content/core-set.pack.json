@@ -766,7 +766,7 @@
       "amount": {
        "scale": [
         {
-         "ratio": 0.04,
+         "ratio": 0.03,
          "stat": "max_mp",
          "of": "holder"
         }
@@ -906,7 +906,7 @@
       "amount": {
        "scale": [
         {
-         "ratio": 0.025,
+         "ratio": 0.015,
          "stat": "mp_regen",
          "of": "holder"
         }
@@ -1729,7 +1729,7 @@
       {
        "op": "apply",
        "status": "regen",
-       "duration": 8,
+       "duration": 6,
        "to": "holder"
       }
      ]
@@ -3623,9 +3623,9 @@
    "class": "knight",
    "name": "Fortify",
    "text": "Guards the ally with the lowest share of HP.",
-   "cooldown": 14.7,
+   "cooldown": 25.7,
    "cast": 1,
-   "mp": 150,
+   "mp": 250,
    "target": {
     "side": "allies",
     "pick": "lowest",
@@ -4899,7 +4899,7 @@
    "class": "pyromancer",
    "name": "Pyre",
    "text": "Heavy Fire on the foe with the most Burn, rising with each stack. The Burn stays.",
-   "cooldown": 49.4,
+   "cooldown": 31.4,
    "cast": 10,
    "mp": 1200,
    "target": {
@@ -5150,9 +5150,9 @@
    "class": "stormcaller",
    "name": "Static charge",
    "text": "Haste on itself.",
-   "cooldown": 45.6,
-   "cast": 6,
-   "mp": 800,
+   "cooldown": 29,
+   "cast": 1,
+   "mp": 500,
    "target": "self",
    "do": [
     {
@@ -5480,9 +5480,9 @@
    "id": "death_bell",
    "name": "Death bell",
    "text": "Dooms a foe.",
-   "cooldown": 35.3,
+   "cooldown": 22.9,
    "cast": 6,
-   "mp": 500,
+   "mp": 300,
    "if": {
     "side": "foes",
     "where": {
@@ -5539,9 +5539,9 @@
    "id": "quiet",
    "name": "Quiet",
    "text": "Silences every foe.",
-   "cooldown": 32.9,
+   "cooldown": 21.3,
    "cast": 6,
-   "mp": 500,
+   "mp": 300,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -5615,9 +5615,9 @@
    "id": "inferno",
    "name": "Inferno",
    "text": "A very long cast: huge Fire on every foe, with many Burn.",
-   "cooldown": 35.7,
+   "cooldown": 23.1,
    "cast": 10,
-   "mp": 500,
+   "mp": 300,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -5648,9 +5648,9 @@
    "id": "hailstorm",
    "name": "Hailstorm",
    "text": "Ice on every foe, with a stack of Chill.",
-   "cooldown": 37.4,
+   "cooldown": 24.2,
    "cast": 3,
-   "mp": 500,
+   "mp": 300,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -5696,9 +5696,9 @@
    "id": "tempest",
    "name": "Tempest",
    "text": "Lightning on every foe, with a stack of Shock.",
-   "cooldown": 36.2,
+   "cooldown": 23.4,
    "cast": 6,
-   "mp": 500,
+   "mp": 300,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -8173,7 +8173,7 @@
      "stats": [
       {
        "stat": "mp_regen",
-       "flat": 2500
+       "flat": 1250
       },
       {
        "stat": "attack",
