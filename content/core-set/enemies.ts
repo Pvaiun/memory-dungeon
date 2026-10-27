@@ -67,12 +67,13 @@ const fromStat = (stat: string, ratio: number) => ({ scale: [{ ratio, stat }] })
 export const enemyAbilities: AbilityT[] = [
   a("shield_up", "Shield up", "Taunts.", { ...timing("short", "quick"), target: "self", do: [apply("taunt")] }),
   a("brace", "Brace", "Guards itself.", { ...timing("medium", "quick"), target: "self", do: [apply("guard")] }),
-  a("flatten", "Flatten", "A heavy blow that Stuns.", { ...timing("long", "long"), target: { side: "foes", where: { lacks: "stun" }, ifNone: "any" }, do: [{ op: "damage", type: "physical", subtype: "blunt", amount: fromStat("attack", ENEMY_HIT.flatten), apply: [{ status: "stun" }] }] }),
+  // Step 5g (the feel read): Flatten, Soulfire and Curse on the medium word (were long, 48 ticks): "foe moves promised and not cast" (Soulfire 0.33 casts an appearance, Flatten 0.68).
+  a("flatten", "Flatten", "A heavy blow that Stuns.", { ...timing("medium", "long"), target: { side: "foes", where: { lacks: "stun" }, ifNone: "any" }, do: [{ op: "damage", type: "physical", subtype: "blunt", amount: fromStat("attack", ENEMY_HIT.flatten), apply: [{ status: "stun" }] }] }),
   // Step 5f: Crush on a short cooldown (was medium): the Ogre Chief cast it 0.6 times a fight, its fight being the shortest.
   a("crush", "Crush", "A massive blow.", { ...timing("short", "very_long"), do: [{ op: "damage", type: "physical", subtype: "blunt", amount: fromStat("attack", ENEMY_HIT.crush) }] }),
   a("mend", "Mend", "Heals the most hurt ally.", { ...timing("short", "normal"), ...{ if: { side: "allies", where: { hpBelow: 100 } } }, target: T.lowestShareAlly, do: [{ op: "heal", amount: fromStat("magic", ENEMY_HIT.mend) }] }),
-  a("curse", "Curse", "Weakens and Slows every foe.", { ...timing("long", "long"), target: T.everyFoe, do: [apply("weaken"), apply("slow")] }),
-  a("soulfire", "Soulfire", "A heavy Dark spell.", { ...timing("long", "very_long"), do: [{ op: "damage", type: "magical", element: "dark", amount: fromStat("magic", ENEMY_HIT.soulfire) }] }),
+  a("curse", "Curse", "Weakens and Slows every foe.", { ...timing("medium", "long"), target: T.everyFoe, do: [apply("weaken"), apply("slow")] }),
+  a("soulfire", "Soulfire", "A heavy Dark spell.", { ...timing("medium", "very_long"), do: [{ op: "damage", type: "magical", element: "dark", amount: fromStat("magic", ENEMY_HIT.soulfire) }] }),
   a("dig_up", "Raise", "Digs a fallen packmate back up.", { ...timing("medium", "long"), if: { side: "allies", where: { ko: true } }, target: T.koAlly, do: [{ op: "revive", hp: { scale: [{ ratio: REVIVE.ghoul, stat: "max_hp", of: "target" }] } }] }),
   a("death_bell", "Death bell", "Dooms a foe.", { ...timing("short", "long"), if: { side: "foes", where: { lacks: "doom" } }, target: { side: "foes", where: { lacks: "doom" } }, do: [apply("doom")] }),
   a("mute", "Mute", "Silences the foe with the highest Attack or Magic.", { ...timing("medium", "normal"), if: { side: "foes", where: { lacks: "silence" } }, target: { ...T.highestAMFoe, where: { lacks: "silence" } }, do: [apply("silence")] }),

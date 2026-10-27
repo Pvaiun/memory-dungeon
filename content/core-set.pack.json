@@ -56,8 +56,8 @@
   "maxEnemies": 8,
   "lostCast": "cooldown",
   "opening": {
-   "min": 0.3,
-   "max": 0.7,
+   "min": 0.2,
+   "max": 0.6,
    "slots": [
     8,
     4,
@@ -602,7 +602,6 @@
    "label": "debuff",
    "show": "icon",
    "stacking": "intensity",
-   "cap": 40,
    "pulse": {
     "every": 2,
     "do": [
@@ -614,7 +613,7 @@
     ]
    },
    "drop": {
-    "fraction": 0.15
+    "fraction": 0.12
    }
   },
   {
@@ -653,7 +652,7 @@
    "label": "debuff",
    "show": "icon",
    "stacking": "intensity",
-   "cap": 30,
+   "cap": 40,
    "trigger": {
     "on": {
      "event": "action_resolve"
@@ -662,7 +661,7 @@
      {
       "op": "damage",
       "type": "none",
-      "amount": 120,
+      "amount": 100,
       "to": "holder"
      }
     ]
@@ -760,14 +759,14 @@
    "stacking": "refresh",
    "duration": 16,
    "pulse": {
-    "every": 2,
+    "every": 4,
     "do": [
      {
       "op": "mp",
       "amount": {
        "scale": [
         {
-         "ratio": 0.02,
+         "ratio": 0.04,
          "stat": "max_mp",
          "of": "holder"
         }
@@ -1487,7 +1486,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0010499999999999997,
+          "ratio": 0.0007,
           "stat": "magic",
           "of": "holder"
          }
@@ -1562,7 +1561,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0014,
+          "ratio": 0.0010499999999999997,
           "stat": "magic",
           "of": "holder"
          }
@@ -1584,7 +1583,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0014,
+          "ratio": 0.0010499999999999997,
           "stat": "magic",
           "of": "holder"
          }
@@ -3767,7 +3766,7 @@
    "name": "Raise",
    "text": "Revives a random knocked-out ally with half its HP.",
    "cooldown": 59.9,
-   "cast": 10,
+   "cast": 8,
    "mp": 1200,
    "if": {
     "side": "allies",
@@ -3823,7 +3822,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0039000000000000003,
+          "ratio": 0.0026,
           "stat": "attack"
          }
         ]
@@ -3867,7 +3866,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0069,
+          "ratio": 0.0046,
           "stat": "attack"
          }
         ]
@@ -3911,7 +3910,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0039000000000000003,
+          "ratio": 0.0026,
           "stat": "attack"
          }
         ]
@@ -4066,7 +4065,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0020999999999999994,
+          "ratio": 0.0014,
           "stat": "attack"
          }
         ]
@@ -4159,7 +4158,7 @@
    "name": "Smite",
    "text": "Heavy Light damage to the foe with the highest Attack or Magic, adding several Burn.",
    "cooldown": 27.1,
-   "cast": 10,
+   "cast": 8,
    "mp": 500,
    "target": {
     "side": "foes",
@@ -4190,7 +4189,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0039000000000000003,
+          "ratio": 0.0026,
           "stat": "magic"
          }
         ]
@@ -4236,7 +4235,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0010499999999999997,
+          "ratio": 0.0007,
           "stat": "attack"
          }
         ]
@@ -4335,7 +4334,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 0.0039000000000000003,
+        "ratio": 0.0026,
         "stat": "magic"
        }
       ]
@@ -4394,7 +4393,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 0.0069,
+        "ratio": 0.0046,
         "stat": "magic"
        }
       ]
@@ -4421,7 +4420,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 0.0020999999999999994,
+        "ratio": 0.0014,
         "stat": "magic"
        }
       ]
@@ -4433,7 +4432,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 0.0020999999999999994,
+        "ratio": 0.0014,
         "stat": "magic"
        }
       ]
@@ -4508,7 +4507,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 0.0039000000000000003,
+        "ratio": 0.0026,
         "stat": "magic"
        }
       ]
@@ -4567,7 +4566,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0020999999999999994,
+          "ratio": 0.0014,
           "stat": "attack"
          }
         ]
@@ -4802,7 +4801,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 0.0039000000000000003,
+        "ratio": 0.0026,
         "stat": "attack"
        }
       ]
@@ -4844,7 +4843,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00585,
+          "ratio": 0.0026,
           "stat": "magic"
          }
         ]
@@ -4885,7 +4884,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00315,
+          "ratio": 0.0014,
           "stat": "magic"
          }
         ]
@@ -4901,7 +4900,7 @@
    "name": "Pyre",
    "text": "Heavy Fire on the foe with the most Burn, rising with each stack. The Burn stays.",
    "cooldown": 31.4,
-   "cast": 10,
+   "cast": 8,
    "mp": 1200,
    "target": {
     "side": "foes",
@@ -4922,7 +4921,7 @@
         "stat": "magic"
        },
        {
-        "ratio": 300,
+        "ratio": 200,
         "stacks": "burn",
         "of": "target"
        }
@@ -4965,7 +4964,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0039000000000000003,
+          "ratio": 0.00156,
           "stat": "magic"
          }
         ]
@@ -5006,7 +5005,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0020999999999999994,
+          "ratio": 0.0007,
           "stat": "magic"
          }
         ]
@@ -5063,7 +5062,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.004199999999999999,
+          "ratio": 0.0020999999999999994,
           "stat": "magic"
          }
         ]
@@ -5089,7 +5088,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.004199999999999999,
+          "ratio": 0.0020999999999999994,
           "stat": "magic"
          }
         ]
@@ -5136,7 +5135,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.004199999999999999,
+          "ratio": 0.0020999999999999994,
           "stat": "magic"
          }
         ]
@@ -5248,7 +5247,7 @@
    "name": "Tremor",
    "text": "Earth damage on a random foe, which is Stunned.",
    "cooldown": 40.1,
-   "cast": 10,
+   "cast": 8,
    "mp": 800,
    "target": {
     "side": "foes",
@@ -5312,9 +5311,9 @@
    "id": "flatten",
    "name": "Flatten",
    "text": "A heavy blow that Stuns.",
-   "cooldown": 52.2,
+   "cooldown": 37,
    "cast": 6,
-   "mp": 800,
+   "mp": 500,
    "target": {
     "side": "foes",
     "where": {
@@ -5348,7 +5347,7 @@
    "name": "Crush",
    "text": "A massive blow.",
    "cooldown": 22.3,
-   "cast": 10,
+   "cast": 8,
    "mp": 300,
    "do": [
     {
@@ -5358,7 +5357,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.5,
+        "ratio": 0.42,
         "stat": "attack"
        }
       ]
@@ -5402,9 +5401,9 @@
    "id": "curse",
    "name": "Curse",
    "text": "Weakens and Slows every foe.",
-   "cooldown": 44.9,
+   "cooldown": 31.8,
    "cast": 6,
-   "mp": 800,
+   "mp": 500,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -5424,9 +5423,9 @@
    "id": "soulfire",
    "name": "Soulfire",
    "text": "A heavy Dark spell.",
-   "cooldown": 53.9,
-   "cast": 10,
-   "mp": 800,
+   "cooldown": 38.2,
+   "cast": 8,
+   "mp": 500,
    "do": [
     {
      "op": "damage",
@@ -5617,7 +5616,7 @@
    "name": "Inferno",
    "text": "A very long cast: huge Fire on every foe, with many Burn.",
    "cooldown": 23.1,
-   "cast": 10,
+   "cast": 8,
    "mp": 300,
    "target": {
     "side": "foes",
@@ -8343,7 +8342,7 @@
    "text": "Hunts in packs.",
    "rank": "minion",
    "stats": {
-    "resist": 0,
+    "resist": 10,
     "max_hp": 2000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -8364,7 +8363,7 @@
    "text": "A common road thug.",
    "rank": "minion",
    "stats": {
-    "resist": 0,
+    "resist": 10,
     "max_hp": 4000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -8385,7 +8384,7 @@
    "text": "Hits hard, falls fast.",
    "rank": "minion",
    "stats": {
-    "resist": 0,
+    "resist": 10,
     "max_hp": 2000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -8406,7 +8405,7 @@
    "text": "Its bite leaves a bleeding wound.",
    "rank": "minion",
    "stats": {
-    "resist": 0,
+    "resist": 10,
     "max_hp": 2000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -8505,7 +8504,7 @@
    "text": "Old bones in heavy armor.",
    "rank": "minion",
    "stats": {
-    "resist": 0,
+    "resist": 10,
     "max_hp": 3000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -8527,7 +8526,7 @@
    "text": "Fast, and hard to hit.",
    "rank": "minion",
    "stats": {
-    "resist": 0,
+    "resist": 10,
     "max_hp": 2000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -8572,7 +8571,7 @@
    "text": "Heals the other dead.",
    "rank": "minion",
    "stats": {
-    "resist": 0,
+    "resist": 10,
     "max_hp": 3000,
     "max_mp": 6000,
     "mp_regen": 3000,
@@ -8598,7 +8597,7 @@
    "text": "Curses the whole party.",
    "rank": "minion",
    "stats": {
-    "resist": 0,
+    "resist": 10,
     "max_hp": 3000,
     "max_mp": 5000,
     "mp_regen": 3000,
@@ -8624,7 +8623,7 @@
    "text": "A dead wizard with one big spell.",
    "rank": "minion",
    "stats": {
-    "resist": 0,
+    "resist": 10,
     "max_hp": 2000,
     "max_mp": 6000,
     "mp_regen": 2000,
@@ -8650,7 +8649,7 @@
    "text": "Ghouls dig each other back up.",
    "rank": "minion",
    "stats": {
-    "resist": 0,
+    "resist": 10,
     "max_hp": 8000,
     "max_mp": 3000,
     "mp_regen": 2000,
@@ -8698,7 +8697,7 @@
    "text": "Steals voices.",
    "rank": "minion",
    "stats": {
-    "resist": 0,
+    "resist": 10,
     "max_hp": 4000,
     "max_mp": 5000,
     "mp_regen": 3000,
@@ -8748,7 +8747,7 @@
    "text": "A fire dog; its bite burns.",
    "rank": "minion",
    "stats": {
-    "resist": 0,
+    "resist": 10,
     "max_hp": 3000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -8802,7 +8801,7 @@
    "text": "Half a slime, still hungry.",
    "rank": "minion",
    "stats": {
-    "resist": 0,
+    "resist": 10,
     "max_hp": 7000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -8827,7 +8826,7 @@
    "text": "Explodes when it dies.",
    "rank": "minion",
    "stats": {
-    "resist": 0,
+    "resist": 10,
     "max_hp": 6000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -8854,7 +8853,7 @@
    "text": "Cheers its friends on.",
    "rank": "minion",
    "stats": {
-    "resist": 0,
+    "resist": 10,
     "max_hp": 3000,
     "max_mp": 5000,
     "mp_regen": 3000,
@@ -8907,7 +8906,7 @@
    "text": "Living ice: ice heals it, fire melts it.",
    "rank": "minion",
    "stats": {
-    "resist": 0,
+    "resist": 10,
     "max_hp": 5000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -8989,7 +8988,7 @@
    "text": "A tiny spark with a temper.",
    "rank": "minion",
    "stats": {
-    "resist": 0,
+    "resist": 10,
     "max_hp": 1000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -9013,7 +9012,7 @@
    "text": "Drinks mana.",
    "rank": "minion",
    "stats": {
-    "resist": 0,
+    "resist": 10,
     "max_hp": 3000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -9062,7 +9061,7 @@
    "text": "The queen's drone: it buzzes in front of her.",
    "rank": "minion",
    "stats": {
-    "resist": 0,
+    "resist": 10,
     "max_hp": 2000,
     "max_mp": 2000,
     "mp_regen": 2000,
@@ -9115,7 +9114,7 @@
    "text": "The king's soldier: it stands in front of him.",
    "rank": "minion",
    "stats": {
-    "resist": 0,
+    "resist": 10,
     "max_hp": 9000,
     "max_mp": 2000,
     "mp_regen": 2000,
@@ -9139,7 +9138,7 @@
    "text": "Hunts in packs, in the snow.",
    "rank": "minion",
    "stats": {
-    "resist": 0,
+    "resist": 10,
     "max_hp": 2000,
     "max_mp": 0,
     "mp_regen": 0,

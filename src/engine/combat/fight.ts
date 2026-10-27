@@ -797,7 +797,8 @@ function logDamage(w: W, by: CUnit | null, t: CUnit, src: string, part: string, 
 function absorb(w: W, by: CUnit | null, t: CUnit, src: string, r: Calc) {
   const got = Math.min(r.heal, t.stats.max_hp - t.hp);
   t.hp += got;
-  w.log?.({ t: "heal", vis: "player", at: w.f.now, by: by?.id ?? null, target: t.id, src, amount: got, crit: false, hp: t.hp, word: "ABSORB" });
+  // Step 5g: a heal of nothing (a full unit) is not a moment; the log keeps the beats a player reads. Outcomes are unchanged.
+  if (got > 0) w.log?.({ t: "heal", vis: "player", at: w.f.now, by: by?.id ?? null, target: t.id, src, amount: got, crit: false, hp: t.hp, word: "ABSORB" });
   if (got > 0) fire(w, ev("healed", t, by, { amount: got }));
 }
 
@@ -905,7 +906,7 @@ function heal(w: W, ctx: Ctx, t: CUnit, raw: number) {
   if (crit) x = (x * crit) / 100;
   const restored = Math.min(Math.max(0, Math.floor(x)), t.stats.max_hp - t.hp);
   t.hp += restored;
-  w.log?.({ t: "heal", vis: "player", at: w.f.now, by: ctx.actor.id, target: t.id, src: ctx.id, amount: restored, crit: crit > 0, hp: t.hp });
+  if (restored > 0) w.log?.({ t: "heal", vis: "player", at: w.f.now, by: ctx.actor.id, target: t.id, src: ctx.id, amount: restored, crit: crit > 0, hp: t.hp });
   if (restored > 0) fire(w, ev("healed", t, ctx.actor, { amount: restored }));
 }
 

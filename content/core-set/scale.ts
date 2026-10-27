@@ -90,7 +90,8 @@ export function jitter(cooldown: number, id: string): number {
 export const STUN_COOLDOWN: keyof typeof COOLDOWN = "medium";
 /** Step 5e: very long 6 (was 8). An 8-tick wind-up on top of a long cooldown put Pyre, Smite, Tremor and Raise past most fights' ends, and Crush past a boss's. */
 /** Step 5f (the director's: "cast times feel largely irrelevant"): 1, 3, 6 and 10 (were 0.5, 1.5, 4 and 6). */
-export const WINDUP = { quick: 1, normal: 3, long: 6, very_long: 10 } as const;
+/** Step 5g (the feel read): very long 8. At 10, Smite died in its own wind-up and Pyre landed as the fight ended; the bosses' telegraphs read at 8 too. */
+export const WINDUP = { quick: 1, normal: 3, long: 6, very_long: 8 } as const;
 export const RULES = {
   basicRecovery: 0.25,
   abilityCast: WINDUP.normal,
@@ -108,7 +109,8 @@ export const RULES = {
    * Wisps and Drones in free play died before acting; at 6 a third-slot ability on the long word came after most fights ended.
    */
   /** Step 5f: 10, 8 and 6 with the shorter words: a first-slot short ability fires at tick 6, a medium at 18, a long at 34. */
-  opening: { min: 0.3, max: 0.7, slots: [8, 4, 0] }, // Round 6: 8, 4 and 0 (were 10, 8, 6): every first- and second-slot short fired between ticks 5 and 9, one wave; now 8, 12 and 16.
+  // Step 5g (the feel read): 0.2 to 0.6 charged (was 0.3 to 0.7): "three basics by t5, the opening is a volley, never a build". A sword's first swing now comes at 4 to 9 ticks.
+  opening: { min: 0.2, max: 0.6, slots: [8, 4, 0] }, // Round 6: 8, 4 and 0 (were 10, 8, 6): every first- and second-slot short fired between ticks 5 and 9, one wave; now 8, 12 and 16.
   /** Each physical hit loses this share of the target's Armor: Armor 5 takes 600 off, Armor 8 nearly blanks a sword. */
   armorRatio: 0.12,
   /**
@@ -207,7 +209,8 @@ export const ENEMY_HIT = {
   /** Flatten: a heavy blow that Stuns. Nearly kills a caster. */
   flatten: 0.4,
   /** Crush: knocks out any unguarded caster outright; a Guarded, Shielded Knight survives it. */
-  crush: 0.5,
+  /** Step 5g (the feel read): 0.42 (was 0.5). Three Crushes were three kills, the Guarded Bramble knight among them; at 5,000 a full-HP wall with Guard stands, a caster never does. */
+  crush: 0.42,
   /** Mend: the Bone Priest's heal, about a party's damage output: a mirror until the priest is stopped. Pacing pass: 1.3 (was 0.6). */
   mend: 1.3,
   /** Soulfire: deletes a caster. */
@@ -242,14 +245,19 @@ export const STACKS = { few: 0.7, several: 1.3, many: 2.3 } as const;
 export type StackWord = keyof typeof STACKS;
 /** Pacing pass: an ability's application adds twice the word's stacks (abilities come a third as often); a passive's on basic attacks, the word's. */
 /** Step 5f: 3 (the director's: statuses 40% to 60% of their appliers' damage; the applier abilities give up their hit for their stacks). */
-export const ABILITY_STACKS = 3;
+/**
+ * Step 5g (the director's: a cap a single cast reaches is a sledgehammer, size the applications instead): 2 again. At 3 a Firebolt
+ * put 29 Burn on a foe (cap 40), a Frost lance 16 Chill (cap 12), a Chain lightning 17 Shock on each of four (cap 30), a Frenzy 16
+ * Might (cap 15): every ramp was one cast. The ramp is applications small against the ceiling that upkeep reaches.
+ */
+export const ABILITY_STACKS = 2;
 export const stacks = (word: StackWord, stat: string, mult = 1): NumT => ({ scale: [{ ratio: (mult * ABILITY_STACKS * STACKS[word]) / P, stat }] });
 /**
  * Step 5c (the director's): the Pyromancer's Burn and the Stormcaller's Shock, on their abilities and passives, are this many
  * times the word's. At 2 the Pyromancer's Burn was 24% of its damage (was 14%), and the Pyromancer the weakest class still.
  */
-export const BURN_STACKS = 1.5; // Round 6: 1.5 (5c's 2.5): with triple stacks and a cap of 40, a Firebolt adds about 29 at Magic 5.
-export const SHOCK_STACKS = 2;
+export const BURN_STACKS = 1; // Step 5g: 1 (a Firebolt adds 13 at Magic 5; Kindling 3.5 a swing; the Pyromancer's upkeep holds about 23 with no cap). Round 6: 1.5 (5c's 2.5): with triple stacks and a cap of 40, a Firebolt adds about 29 at Magic 5.
+export const SHOCK_STACKS = 1.5; // Step 5g: 1.5 (a Chain lightning adds 8.4 to each foe at Magic 4, Arc 4.2 a swing).
 /** A flat stack count, for enemies that apply "a stack" or statuses that start with "many". */
 export const FLAT_STACKS = { one: 1, few: 2, several: 4, many: 7 } as const;
 
@@ -282,7 +290,8 @@ export const SPECIAL_KEY: Record<SpecialStat, string> = {
 // ─── Resistances, in percent ─────────────────────────────────────────────────
 
 /** Step 5f (the director's): blanket resistance by rank, so spells meet something where swings meet Armor; the untyped statuses are the way through. */
-export const RANK_RESIST = { minion: 0, elite: 15, boss: 25 } as const;
+/** Step 5g: minions 10. Armor 1 takes 31% off a dagger's swing and nothing off a staff's; a little resistance on every rank narrows the gap between physical and magical basics. */
+export const RANK_RESIST = { minion: 10, elite: 15, boss: 25 } as const;
 
 export const RESIST = {
   /** A class or enemy that "resists" an element. */
@@ -358,7 +367,12 @@ export const STATUS = {
    */
   /** Step 5f (the director's: "ticks down too slowly" and "doesn't do very much"): 60 a stack, a quarter lost a pulse. 18 stacks deal 3,400 over 12 ticks, not 30. */
   /** Round 6 (the feel read): a Firebolt's 88 stacks dealt 5,265 on their first pulse and a quarter less each pulse: a nuke, not a ramp. 40 a stack, 15% lost a pulse, and a cap of 40, so the Pyromancer reaches the cap in two casts and keeps it there with Kindling. */
-  burn: { every: 2, perStack: 50, drop: 0.15, cap: 40 }, // Round 7 (with the knobs): 50 a stack, so the capped ramp's ceiling is worth reaching (the Pyromancer's statuses 44% of its damage at 40).
+  /**
+   * Step 5g (the director's: the cap was a sledgehammer): no cap; 50 a stack, 12% of the stacks lost a pulse. With a Firebolt at 13 stacks
+   * (650 on its first pulse, under the bolt's own hit) and Kindling at 3.5 a swing, a Pyromancer's upkeep settles around 23 stacks
+   * (1,150 a pulse) in a regular fight and higher on a boss: a ramp applications can't reach alone.
+   */
+  burn: { every: 2, perStack: 50, drop: 0.12 }, // Round 7 (with the knobs): 50 a stack, so the capped ramp's ceiling is worth reaching (the Pyromancer's statuses 44% of its damage at 40).
   /** Step 5f (the director's deep freeze): cap 12, −5 a stack (−60 at the cap, colder than Slow), one stack lost every 4 ticks, so reapplying keeps a foe frozen. */
   chill: { cap: 12, perStack: -5, every: 6 }, // Round 6: one stack every 6 ticks (was 4): a Hexer's two or three stacks thawed before its next swing.
   /**
@@ -368,7 +382,7 @@ export const STATUS = {
    * (BURN_SHOCK) the cap of 25 held its Shock at 18% of its damage. At 80 a stack as well, the Stormcaller was in 57% of the
    * top builds (was 23%), so it stays at 60.
    */
-  shock: { perStack: 120, drop: 0.5, cap: 30 }, // Step 5f: 120 a stack, cap 30 (were 70 and 40): a trigger at 10 stacks is 1,200, past a swing.
+  shock: { perStack: 100, drop: 0.5, cap: 40 }, // Step 5g: 100 a stack and the cap back at 40 as a safety (one Chain lightning put 25 to 30 on each of four foes and each paid 3,000 to 3,600 as it acted); applications are 8 to 14 now. // Step 5f: 120 a stack, cap 30 (were 70 and 40): a trigger at 10 stacks is 1,200, past a swing.
   ward: { resist: 40, duration: 30 }, // Step 5f: 40 for 30 ticks.
   sunder: { perStack: -600, every: 4, cap: 20 }, // Step 5f: a cap (the Silent One carried 235). Armor's floor is 0, so it never went past.
   silence: { duration: 16 }, // Step 5f: 16 (was 8: Hush interrupted a cast 0.06 times an application).
@@ -376,7 +390,7 @@ export const STATUS = {
   hidden: { duration: 10 }, // Step 5f round 6: 10 on a short Vanish (16): hidden 60% of a fight, from tick 8. Medium came at tick 22, after the Assassin died at 20; 14 on a short had it hidden 85% and its allies took every hit.
   rot: { healing: -60, duration: 20 },
   /** Step 5f (the director's): Regen for mana, not a doubled stat: 4% of max MP every 2 ticks for 16 ticks (32% of max MP). */
-  clarity: { every: 2, share: 0.02, duration: 16 }, // Rounds 5 and 6: 2% a pulse (16% of max MP; was 4%, 32%): Stand fast's every 16 ticks made mana infinite.
+  clarity: { every: 4, share: 0.04, duration: 16 }, // Step 5g: 4% every 4 ticks (the same 16%): four pulses a player can see, not eight of 40 MP. // Rounds 5 and 6: 2% a pulse (16% of max MP; was 4%, 32%): Stand fast's every 16 ticks made mana infinite.
   aegis: { share: 25 },
   /** Kills anything at HP 3 or below; a Hoplite or Knight survives it. */
   doom: { countdown: 10, damage: 3500 },

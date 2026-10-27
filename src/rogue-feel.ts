@@ -213,19 +213,22 @@ const pc = (a: number, b: number) => (b ? `${Math.round((100 * a) / b)}%` : "–
 const val = (n: NumT | undefined, st: Record<string, number>) => (n === undefined ? 1 : typeof n === "number" ? n : (n.base ?? 0) + n.scale.reduce((t, x) => t + (x.stat && x.of !== "target" ? x.ratio * (st[x.stat] ?? 0) : 0), 0));
 function sizeOf(a: AbilityT, st: Record<string, number>): string {
   const out: string[] = [];
+  // Past a status's cap, the cap; a Shield past half the unit's max HP, that half (the feel read: "ability text doesn't match what lands").
   const stacks = (id: string, n: NumT | undefined) => {
     const d = c.statuses.get(id)!;
     if (d.stacking !== "intensity") return d.name;
-    return `${n1(val(n, st))} ${d.name}`;
+    const v = val(n, st);
+    return typeof d.cap === "number" && v > d.cap ? `${d.cap} ${d.name} (its cap)` : `${n1(v)} ${d.name}`;
   };
+  const shieldOf = (n: NumT | undefined) => { const v = val(n, st), cap = (st.max_hp ?? 0) / 2; return v > cap && cap > 0 ? `${n0(cap)} shield (half its max HP)` : `${n0(v)} shield`; };
   for (const e of a.do) {
     if (e.op === "damage") {
       const kind = e.element ?? (e.type === "physical" ? e.subtype ?? "physical" : "untyped");
       const v = Math.round(val(e.amount, st));
-      out.push(`${v ? `${n0(v)} ` : ""}${kind}${e.hits && e.hits > 1 ? ` x${e.hits}` : ""}${(e.apply ?? []).map((x) => ` + ${x.status === "shield" ? `${n0(val(x.stacks, st))} shield` : stacks(x.status, x.stacks)}`).join("")}`);
+      out.push(`${v ? `${n0(v)} ` : ""}${kind}${e.hits && e.hits > 1 ? ` x${e.hits}` : ""}${(e.apply ?? []).map((x) => ` + ${x.status === "shield" ? shieldOf(x.stacks) : stacks(x.status, x.stacks)}`).join("")}`);
     } else if (e.op === "heal") out.push(`heals ${n0(val(e.amount, st))}`);
     else if (e.op === "mp") out.push(`MP ${n0(val(e.amount, st))}`);
-    else if (e.op === "apply" && e.status === "shield") out.push(`shield ${n0(val(e.stacks, st))}`);
+    else if (e.op === "apply" && e.status === "shield") out.push(shieldOf(e.stacks));
     else if (e.op === "apply") out.push(stacks(e.status, e.stacks));
     else if (e.op === "remove") out.push(`strips ${e.label}s`);
     else if (e.op === "revive") out.push("revives");

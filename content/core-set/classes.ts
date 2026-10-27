@@ -255,13 +255,15 @@ export const abilities: A[] = [
   a("pyromancer", "fireball", "Fireball", "Fire on every foe, adding a few Burn to each.", { ...timing("medium", "long"), mp: 800, target: T.everyFoe, do: [magic("fire", hit("magic", "touch"), { apply: [{ status: "burn", stacks: stacks("few", "magic", BURN_STACKS) }] })] }),
   a("pyromancer", "pyre", "Pyre", "Heavy Fire on the foe with the most Burn, rising with each stack. The Burn stays.", {
     // Round 5: medium (was long): on a long cooldown with a 10-tick wind-up, a caster that lives 19 ticks cast it 0.03 times a fight.
-    ...timing("medium", "very_long"), mp: 1200, target: T.mostFoe("burn"), do: [magic("fire", { scale: [{ ratio: HIT.heavy, stat: "magic" }, { ratio: 300, stacks: "burn", of: "target" }] })],
+    // Step 5g: 200 a stack (was 300), with Burn uncapped: at 25 stacks a Pyre is 9,250, the ramp's payoff, not a second ramp.
+    ...timing("medium", "very_long"), mp: 1200, target: T.mostFoe("burn"), do: [magic("fire", { scale: [{ ratio: HIT.heavy, stat: "magic" }, { ratio: 200, stacks: "burn", of: "target" }] })],
   }),
   // Frostweaver
-  a("frostweaver", "frost_lance", "Frost lance", "Ice at the foe with the most Chill, adding several.", { ...timing("short", "normal"), mp: 300, target: T.mostFoe("chill"), do: [magic("ice", hit("magic", "light"), { apply: [{ status: "chill", stacks: stacks("several", "magic") }] })] }),
+  // Step 5g (the director's deep freeze with upkeep): about 6 Chill a lance at Magic 4 (was 16 against a cap of 12: one cast froze a foe solid). The third lance, or the second with a Blizzard between, reaches 12; a stack thaws every 6 ticks.
+  a("frostweaver", "frost_lance", "Frost lance", "Ice at the foe with the most Chill, adding several.", { ...timing("short", "normal"), mp: 300, target: T.mostFoe("chill"), do: [magic("ice", hit("magic", "light"), { apply: [{ status: "chill", stacks: stacks("several", "magic", 0.6) }] })] }),
   // Campaign pass: 0.3 of Magic, not light's 0.2, for the same reason as Fireball.
   // Step 5e: Blizzard 1,000 MP (was 1,300): cast 0.44 times a regular fight.
-  a("frostweaver", "blizzard", "Blizzard", "Ice on every foe, adding a few Chill to each.", { ...timing("medium", "long"), mp: 800, target: T.everyFoe, do: [magic("ice", hit("magic", "touch"), { apply: [{ status: "chill", stacks: stacks("few", "magic") }] })] }),
+  a("frostweaver", "blizzard", "Blizzard", "Ice on every foe, adding a few Chill to each.", { ...timing("medium", "long"), mp: 800, target: T.everyFoe, do: [magic("ice", hit("magic", "touch"), { apply: [{ status: "chill", stacks: stacks("few", "magic", 0.5) }] })] }), // Step 5g: about 3 a foe.
   // Step 5e: 400 MP (was 1,600: it cost more than the Clarity it gave back, and fired 0.04 times a regular fight).
   a("frostweaver", "stillness", "Stillness", "Clarity on the ally with the least MP.", { ...timing("medium", "quick"), mp: 500, target: T.lowestMpAlly, do: [apply("clarity")] }),
   // Stormcaller
