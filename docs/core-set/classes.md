@@ -77,7 +77,7 @@ The starters cover every Fundamental challenge between them: a wall, a healer an
 **Weapons:** sword, axe. **Armor weight:** heavy. **Special stats:** none. **Resistances:** none.
 
 - **Passive – Vanguard.** It starts every fight behind a Shield that scales from its max HP. (Sworn, Taunt when an ally fell, until Oct 27, 2026: it rarely fired, and too late.)
-- **Fortify.** Applies Guard to the ally with the lowest share of max HP. Short cooldown, quick wind-up.
+- **Fortify.** Applies Guard to the ally with the lowest share of max HP. Medium cooldown, quick wind-up.
 - **Stand fast.** Applies Taunt to itself and Clarity to the ally with the least MP. Short cooldown, quick wind-up. (Protect, a Shield on the lowest ally, until Oct 27, 2026: it overlapped the Hoplite.)
 - **Shield bash.** Deals physical damage that scales from max HP to a random foe, and applies Stun. Medium cooldown, quick wind-up. (From Armor until Oct 27, 2026.)
 
@@ -174,7 +174,7 @@ Six classes that win through the party: a tank that punishes, a bodyguard, a she
 **Weapons:** dagger, bow, Light staff. **Armor weight:** medium. **Special stats:** none. **Resistances:** none.
 
 - **Passive – Refrain.** Each of its basic attacks that lands gives a random ally MP, more the higher its Attack, so its weapon is a choice. (Encore, which went to the Cleric, until Oct 25, 2026; a flat amount until Oct 27.)
-- **Anthem.** Applies Haste and adds many Might to a random ally; stacks scale from Magic. Short cooldown, quick wind-up. (Allegro and War ballad, two songs on medium cooldowns, until Oct 27, 2026: they came once a fight, at its end.)
+- **Anthem.** Applies Haste and adds several Might to a random ally; stacks scale from Magic. Short cooldown, quick wind-up. (Allegro and War ballad, two songs on medium cooldowns, until Oct 27, 2026: they came once a fight, at its end.)
 - **Chorus.** Heals every ally a little; the amount scales from Magic. Waits until an ally is below max HP. Short cooldown, normal wind-up. (New Oct 27, 2026: healing on more classes, and the fantasy of constantly helping in little ways.)
 - **Thunder chord.** Adds many Shock to every foe; stacks scale from Magic. Medium cooldown, normal wind-up. (Lullaby, Slow on a random foe, until Oct 26, 2026.)
 
@@ -249,7 +249,7 @@ Four mages, each on its element's job: Fire ramps, Ice controls, Lightning sprea
 - **Passive – Kindling.** Its basic attacks add a few Burn, whatever staff it carries; stacks scale from Magic.
 - **Firebolt.** Deals Fire damage that scales from Magic to the foe with the most Burn, and adds several Burn; stacks scale from Magic. Short cooldown, normal wind-up.
 - **Fireball.** Deals Fire damage that scales from Magic to every foe, and adds a few Burn to each; stacks scale from Magic. Medium cooldown, long wind-up.
-- **Pyre.** Deals heavy Fire damage to the foe with the most Burn; the damage scales from Magic and rises with each Burn stack on that foe. The Burn stays. Long cooldown, very long wind-up.
+- **Pyre.** Deals heavy Fire damage to the foe with the most Burn; the damage scales from Magic and rises with each Burn stack on that foe. The Burn stays. Medium cooldown, very long wind-up.
 
 *Test, Two states:* in the Armor phase its fire lands in full. In the resistance phase its hits do little, but Burn still lands and ticks as untyped damage. With a Ranger or Monk adding Burn too, it stays high through both phases.
 
@@ -275,7 +275,7 @@ Four mages, each on its element's job: Fire ramps, Ice controls, Lightning sprea
 - **Passive – Arc.** Each of its basic attacks also hits a second, random foe, and adds a few Shock to both; stacks scale from Magic.
 - **Chain lightning.** Deals Lightning damage that scales from Magic to a random foe, then to up to three other random foes, and adds a few Shock to each; stacks scale from Magic. Short cooldown, quick wind-up.
 - **Thunderstorm.** Deals Lightning damage that scales from Magic to every foe, and adds a few Shock to each; stacks scale from Magic. Medium cooldown, normal wind-up.
-- **Static charge.** Applies Haste to itself. Long cooldown, long wind-up.
+- **Static charge.** Applies Haste to itself. Medium cooldown, quick wind-up.
 
 *Test, Swarm:* Arc, Chain lightning and Thunderstorm Shock all eight foes, and every time one acts, Shock hurts it. Against a lone Nuker it's weak: one slow caster barely sets off Shock, and Arc has no second foe.
 
