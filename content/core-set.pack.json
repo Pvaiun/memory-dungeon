@@ -609,7 +609,7 @@
      {
       "op": "damage",
       "type": "none",
-      "amount": 40
+      "amount": 50
      }
     ]
    },

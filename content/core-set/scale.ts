@@ -358,7 +358,7 @@ export const STATUS = {
    */
   /** Step 5f (the director's: "ticks down too slowly" and "doesn't do very much"): 60 a stack, a quarter lost a pulse. 18 stacks deal 3,400 over 12 ticks, not 30. */
   /** Round 6 (the feel read): a Firebolt's 88 stacks dealt 5,265 on their first pulse and a quarter less each pulse: a nuke, not a ramp. 40 a stack, 15% lost a pulse, and a cap of 40, so the Pyromancer reaches the cap in two casts and keeps it there with Kindling. */
-  burn: { every: 2, perStack: 40, drop: 0.15, cap: 40 },
+  burn: { every: 2, perStack: 50, drop: 0.15, cap: 40 }, // Round 7 (with the knobs): 50 a stack, so the capped ramp's ceiling is worth reaching (the Pyromancer's statuses 44% of its damage at 40).
   /** Step 5f (the director's deep freeze): cap 12, −5 a stack (−60 at the cap, colder than Slow), one stack lost every 4 ticks, so reapplying keeps a foe frozen. */
   chill: { cap: 12, perStack: -5, every: 6 }, // Round 6: one stack every 6 ticks (was 4): a Hexer's two or three stacks thawed before its next swing.
   /**
