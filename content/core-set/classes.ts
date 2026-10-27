@@ -171,15 +171,16 @@ export const abilities: A[] = [
   a("valkyrie", "gale_spear", "Gale spear", "Three quick Wind hits on a foe that isn't Taunting, each adding a few Shock.", {
     // Campaign pass: 0.1 of Attack a hit, not light's 0.2. Three undodgeable hits with Seek on a short cooldown made the Valkyrie the best class on every node.
     // Step 5e: 0.2 a hit (was 0.25): Gale spear was 45% of the Valkyrie's damage at 2.7 swings a cast, 1.4 casts a regular fight, and its parties won 15 to 32 points more than parties without it.
-    ...timing("short", "quick"), mp: 400, seek: true, target: T.notTauntingFoe, do: [magic("wind", from("attack", 0.2), { hits: 3, apply: [{ status: "shock", stacks: stacks("few", "attack") }] })],
+    // Round 6: 500, 800 and 1,500 MP (were 400, 650 and 1,200): a spear that heals and revives is a mid-tier caster, and it was short of MP 3% of its time.
+    ...timing("short", "quick"), mp: 500, seek: true, target: T.notTauntingFoe, do: [magic("wind", from("attack", 0.2), { hits: 3, apply: [{ status: "shock", stacks: stacks("few", "attack") }] })],
   }),
   a("valkyrie", "rally", "Rally", "Heals the lowest ally; the amount scales from Magic.", {
     // Campaign pass: 0.3 of Magic, not 0.6.
     // Step 5e: 0.55 of Magic (was 0.7): see Cure. The Valkyrie healed more a fight than the Cleric and its parties won 13 to 31 points more than parties without it.
-    ...timing("medium", "normal"), mp: 650, ...waitsFor("allies", { hpBelow: 100 }), target: T.lowestShareAlly, do: [{ op: "heal", amount: from("magic", 0.45) }], // round 5: 0.45; at 0.55 the Valkyrie still healed as much a fight as the Cleric.
+    ...timing("medium", "normal"), mp: 800, ...waitsFor("allies", { hpBelow: 100 }), target: T.lowestShareAlly, do: [{ op: "heal", amount: from("magic", 0.45) }], // round 5: 0.45; at 0.55 the Valkyrie still healed as much a fight as the Cleric.
   }),
   a("valkyrie", "valhalla", "Valhalla", "Revives a random knocked-out ally with a tenth of its HP, every action ready.", {
-    ...timing("long", "quick"), mp: 1200, ...waitsFor("allies", { ko: true }), target: T.koAlly, do: [{ op: "revive", hp: { scale: [{ ratio: REVIVE.tenth, stat: "max_hp", of: "target" }] }, ready: true }],
+    ...timing("long", "quick"), mp: 1500, ...waitsFor("allies", { ko: true }), target: T.koAlly, do: [{ op: "revive", hp: { scale: [{ ratio: REVIVE.tenth, stat: "max_hp", of: "target" }] }, ready: true }],
   }),
   // Bard
   // Step 5e: Haste on the ally with the highest Attack or Magic (was a random ally), and the Bard's songs at 400 MP (were 650): it never
@@ -212,7 +213,7 @@ export const abilities: A[] = [
   // Vampire
   // Step 5e: 0.5 of max HP (was a normal hit, 0.75): at 4 swings a cast twice a fight it was 60% of the Vampire's damage, and
   // through Lifesteal most of the 3,850 HP it healed itself a fight; parties with the Vampire won 37 points more than without.
-  a("vampire", "blood_drain", "Blood drain", "Dark damage scaling from max HP to a random foe, which is Weakened.", { ...timing("short", "quick"), mp: 200, do: [magic("dark", from("max_hp", 0.5), { apply: [{ status: "weaken" }] })] }),
+  a("vampire", "blood_drain", "Blood drain", "Dark damage scaling from max HP to a random foe, which is Weakened.", { ...timing("short", "quick"), mp: 200, do: [magic("dark", from("max_hp", 0.4), { apply: [{ status: "weaken" }] })] }), // round 6: 0.4 (the Vampire still +11 / +25 / +9 at 0.5).
   a("vampire", "wither", "Wither", "Rot on the foe with the lowest HP.", { ...timing("medium", "normal"), mp: 330, target: T.lowestHpFoe, do: [apply("rot")] }),
   a("vampire", "frenzy", "Frenzy", "Several Might on itself.", { ...timing("medium", "quick"), mp: 330, target: "self", do: [apply("might", { stacks: stacks("several", "attack") })] }),
   // Pyromancer
