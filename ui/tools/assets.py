@@ -232,8 +232,6 @@ STATUSES = {
     "lg_idol_on": (326, "gold"), "lg_brittle": (198, "ice"), "lg_coil": (383, "yellow"), "lg_frost": (196, "ice"), "lg_briar": (119, "green"),
     "lg_spikes": (296, "steel"), "lg_shade": (130, "purple"), "lg_execute": (181, "crimson"), "lg_storm": (384, "yellow"), "lg_hunter": (125, "red"),
     "lg_grave": (184, "purple"), "lg_cinder": (304, "orange"),
-    # glyphs for the sheets: an ability's cooldown (a clock face, part swept) and its wind-up (a swirl)
-    "ui_cooldown": (19, "steel"), "ui_cast": (353, "purple"),
 }
 SOURCE_RAMP = [(48, 15, 10), (85, 15, 10), (155, 26, 10), (239, 105, 47), (239, 216, 161)]
 

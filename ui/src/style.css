@@ -152,13 +152,11 @@ button.mid { padding: .625rem .5rem; }
 .gear-row .tag { margin-left: auto; color: var(--hi); padding-left: .5rem; }
 .gear-row .codes { color: var(--dim); column-gap: .5rem; row-gap: 0; line-height: 1.25rem; min-height: 1.25rem; }
 .wcode { display: inline-flex; align-items: center; gap: .375rem; white-space: nowrap; }
-.wcode .glyph { color: var(--ink); gap: .125rem; }
 .ab { display: flex; flex-direction: column; gap: 0; padding: .375rem .25rem; border-radius: .25rem; margin-top: .25rem; }
 .ab.cur { background: var(--sel); }
 .ab .head { display: flex; align-items: center; gap: .5rem; min-height: 2rem; text-transform: uppercase; white-space: nowrap; overflow: hidden; }
 .ab .head .pip { flex: 0 0 auto; display: inline-flex; }
 .ab .head .cost { padding-left: 0; display: flex; align-items: center; gap: .75rem; min-height: 1.75rem; }
-.glyph { display: inline-flex; align-items: center; gap: .25rem; white-space: nowrap; }
 .ab .size { text-transform: uppercase; white-space: normal; line-height: 1.5rem; padding-left: 2.25rem; margin-top: .25rem; }
 .size .scale, .codes .scale { color: var(--dim); }
 

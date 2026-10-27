@@ -326,9 +326,7 @@
   "lg_storm": "status/lg_storm.png",
   "lg_hunter": "status/lg_hunter.png",
   "lg_grave": "status/lg_grave.png",
-  "lg_cinder": "status/lg_cinder.png",
-  "ui_cooldown": "status/ui_cooldown.png",
-  "ui_cast": "status/ui_cast.png"
+  "lg_cinder": "status/lg_cinder.png"
  },
  "vfx": {
   "fire1": {
