@@ -194,8 +194,9 @@ export function withLegendaries(c: Content, p: Party, _i: number): Party {
 
 // ─── Playing and reading ────────────────────────────────────────────────────
 
+/** The classes document's roles, for the bands: the two walls draw (Aggro 4 and 5); the Hoplite (a bodyguard) and the Paladin (a shelter) stand at Aggro 3 beside the party, so they're judged as supports. */
 const ROLE: Record<string, "wall" | "support" | "dealer"> = {
-  knight: "wall", bramble_knight: "wall", hoplite: "wall", paladin: "wall",
+  knight: "wall", bramble_knight: "wall", hoplite: "support", paladin: "support",
   cleric: "support", bard: "support", hexer: "support", valkyrie: "support",
   ranger: "dealer", monk: "dealer", assassin: "dealer", vampire: "dealer", pyromancer: "dealer", frostweaver: "dealer", stormcaller: "dealer", geomancer: "dealer",
 };

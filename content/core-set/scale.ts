@@ -203,7 +203,7 @@ export const ENEMY_HIT = {
   /** Tempest: a raidwide the Cleric can absorb. Pacing pass: 0.13 (was 0.06). */
   tempest: 0.13,
   /** Volatile: one blast behind Shields is fine; three together wipe. Step 5e: 0.18 (was 0.25): the Bomb Bug dealt 4.8 times the median minion's damage per appearance. */
-  volatile: 0.18,
+  volatile: 0.15, // round 3: still 3.4× the median minion at 0.18.
 } as const;
 
 /**
@@ -242,8 +242,13 @@ export const SPECIAL = {
   crit_damage: { medium: 50, high: 100 },
   double_strike: { medium: 25, high: 40 },
   /** Untyped damage dealt back per hit taken. */
-  thorns: { medium: 150, high: 300 },
-  lifesteal: { medium: 15, high: 30 },
+  /** Step 5e: high 250 (was 300). The Bramble knight, a wall, dealt 0.9× an average unit's damage (Thorns a quarter of it) while taking 1.6×, and its parties won 10 to 16 points more than parties without it. */
+  thorns: { medium: 150, high: 250 },
+  /**
+   * Step 5e: 10 and 20 (were 15 and 30). Lifesteal was 52% of all the healing on the party, nearly all of it the Vampire's (60% under
+   * Bloodlust): it healed itself 4,350 a fight and its parties won 25 to 40 points more than parties without it, after Blood drain was cut.
+   */
+  lifesteal: { medium: 8, high: 15 }, // round 4: the Vampire was still +16 / +36 / +12 at 10 and 20, healing itself 3,000 a fight.
   siphon: { medium: 10, high: 20 },
 } as const;
 export type SpecialStat = keyof typeof SPECIAL;
@@ -304,7 +309,7 @@ export const STATUS = {
    * and the same parties won 20 points more in Caravan than in Neutral: 36% of the whole party's HP a fight, for nothing, was
    * more than a Cleric heals. The Herald's horn (+9 points on the amulets) is the same Regen.
    */
-  regen: { every: 2, share: 0.025, duration: 20 },
+  regen: { every: 2, share: 0.02, duration: 16 }, // round 3: 10 pulses of 2%, a fifth of max HP: Caravan was still +14.7 at a quarter. Round 4: 8 pulses, 16% (Caravan +13.7 at a fifth).
   shield: { capShare: 0.5 },
   /** Campaign pass: a cap of 25 stacks. Uncapped, a hidden Bard stacked 123 on itself and the Storm King reached 38. */
   might: { perStack: 8, every: 4, cap: 25 },
@@ -336,11 +341,12 @@ export const STATUS = {
    * (BURN_SHOCK) the cap of 25 held its Shock at 18% of its damage. At 80 a stack as well, the Stormcaller was in 57% of the
    * top builds (was 23%), so it stays at 60.
    */
-  shock: { perStack: 60, drop: 0.5, cap: 40 },
+  shock: { perStack: 70, drop: 0.5, cap: 40 }, // Step 5e: 70 (was 60). Shock was 17% to 21% of its appliers' damage, and the Bard's Thunder chord is a third of what the Bard does.
   ward: { resist: 30, duration: 24 },
   sunder: { perStack: -600, every: 4 },
   silence: { duration: 8 },
-  hidden: { duration: 14 },
+  /** Step 5e: 20 ticks (was 14). Vanish is on the long cooldown (36), so the Assassin was Hidden 14 ticks in 36 at best, and it died at tick 18 in 45 of 100 fights. */
+  hidden: { duration: 20 },
   rot: { healing: -60, duration: 20 },
   clarity: { regenPct: 100, duration: 24 },
   aegis: { share: 25 },

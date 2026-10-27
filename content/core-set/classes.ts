@@ -133,7 +133,8 @@ export const abilities: A[] = [
     ...timing("medium", "normal"), mp: 1300, target: { side: "allies", where: { debuffs: true }, ifNone: "any", pick: "lowest", by: "hp_share" }, do: [{ op: "remove", label: "debuff" }, apply("regen")],
   }),
   a("cleric", "cure", "Cure", "A quick, small heal on the lowest ally.", {
-    ...timing("short", "quick"), mp: 1280, ...waitsFor("allies", { hpBelow: 100 }), target: T.lowestShareAlly, do: [{ op: "heal", amount: from("magic", 0.45) }],
+    // Step 5e: 0.55 of Magic for 1,000 MP (was 0.45 for 1,280): Cure healed a third of a unit's HP a cast while the Valkyrie's Rally healed half for half the MP, so the healer was the worse healer.
+    ...timing("short", "quick"), mp: 1000, ...waitsFor("allies", { hpBelow: 100 }), target: T.lowestShareAlly, do: [{ op: "heal", amount: from("magic", 0.65) }], // round 5: 0.65, so the healer out-heals the Valkyrie.
   }),
   a("cleric", "raise", "Raise", "Revives a random knocked-out ally with half its HP.", {
     ...timing("long", "very_long"), mp: 2000, ...waitsFor("allies", { ko: true }), target: T.koAlly, do: [{ op: "revive", hp: { scale: [{ ratio: REVIVE.half, stat: "max_hp", of: "target" }] } }],
@@ -169,26 +170,31 @@ export const abilities: A[] = [
   // Valkyrie
   a("valkyrie", "gale_spear", "Gale spear", "Three quick Wind hits on a foe that isn't Taunting, each adding a few Shock.", {
     // Campaign pass: 0.1 of Attack a hit, not light's 0.2. Three undodgeable hits with Seek on a short cooldown made the Valkyrie the best class on every node.
-    ...timing("short", "quick"), mp: 400, seek: true, target: T.notTauntingFoe, do: [magic("wind", from("attack", 0.25), { hits: 3, apply: [{ status: "shock", stacks: stacks("few", "attack") }] })],
+    // Step 5e: 0.2 a hit (was 0.25): Gale spear was 45% of the Valkyrie's damage at 2.7 swings a cast, 1.4 casts a regular fight, and its parties won 15 to 32 points more than parties without it.
+    ...timing("short", "quick"), mp: 400, seek: true, target: T.notTauntingFoe, do: [magic("wind", from("attack", 0.2), { hits: 3, apply: [{ status: "shock", stacks: stacks("few", "attack") }] })],
   }),
   a("valkyrie", "rally", "Rally", "Heals the lowest ally; the amount scales from Magic.", {
     // Campaign pass: 0.3 of Magic, not 0.6.
-    ...timing("medium", "normal"), mp: 650, ...waitsFor("allies", { hpBelow: 100 }), target: T.lowestShareAlly, do: [{ op: "heal", amount: from("magic", 0.7) }],
+    // Step 5e: 0.55 of Magic (was 0.7): see Cure. The Valkyrie healed more a fight than the Cleric and its parties won 13 to 31 points more than parties without it.
+    ...timing("medium", "normal"), mp: 650, ...waitsFor("allies", { hpBelow: 100 }), target: T.lowestShareAlly, do: [{ op: "heal", amount: from("magic", 0.45) }], // round 5: 0.45; at 0.55 the Valkyrie still healed as much a fight as the Cleric.
   }),
   a("valkyrie", "valhalla", "Valhalla", "Revives a random knocked-out ally with a tenth of its HP, every action ready.", {
     ...timing("long", "quick"), mp: 1200, ...waitsFor("allies", { ko: true }), target: T.koAlly, do: [{ op: "revive", hp: { scale: [{ ratio: REVIVE.tenth, stat: "max_hp", of: "target" }] }, ready: true }],
   }),
   // Bard
-  a("bard", "allegro", "Allegro", "Haste on a random ally.", { ...timing("medium", "normal"), mp: 650, target: "ally", do: [apply("haste")] }),
+  // Step 5e: Haste on the ally with the highest Attack or Magic (was a random ally), and the Bard's songs at 400 MP (were 650): it never
+  // ran short of MP, and its parties won 13 to 25 points less than parties without it.
+  a("bard", "allegro", "Allegro", "Haste on the ally with the highest Attack or Magic.", { ...timing("medium", "normal"), mp: 400, target: T.highestAMAlly, do: [apply("haste")] }),
   // Campaign pass: many Might, not several. The Bard was in no winning build on any node.
-  a("bard", "war_ballad", "War ballad", "Many Might on the ally with the highest Attack or Magic.", { ...timing("medium", "normal"), mp: 650, target: T.highestAMAlly, do: [apply("might", { stacks: stacks("many", "magic") })] }),
+  a("bard", "war_ballad", "War ballad", "Many Might on the ally with the highest Attack or Magic.", { ...timing("medium", "normal"), mp: 400, target: T.highestAMAlly, do: [apply("might", { stacks: stacks("many", "magic") })] }),
   // Step 5c (the director's): Lullaby (Slow on one foe) became a Shock on every foe.
   // Many, not several: at several an AI playtester saw it peak at 10 stacks for under 2,000 a fight, the Bard a passenger.
-  a("bard", "thunder_chord", "Thunder chord", "Many Shock on every foe.", { ...timing("medium", "normal"), mp: 650, target: T.everyFoe, do: [apply("shock", { stacks: stacks("many", "magic") })] }),
+  a("bard", "thunder_chord", "Thunder chord", "Many Shock on every foe.", { ...timing("medium", "normal"), mp: 400, target: T.everyFoe, do: [apply("shock", { stacks: stacks("many", "magic") })] }),
   // Hexer
-  a("hexer", "hush", "Hush", "Silences the foe with the highest Attack or Magic.", { ...timing("long", "quick"), mp: 1600, ...waitsFor("foes", { lacks: "silence" }), target: lacking(T.highestAMFoe, "silence"), do: [apply("silence")] }),
-  a("hexer", "unravel", "Unravel", "Strips one random buff from a random foe with a buff.", { ...timing("medium", "normal"), mp: 1300, ...waitsFor("foes", { buffs: true }), target: T.buffedFoe, do: [{ op: "remove", label: "buff", count: 1, order: "random" }] }),
-  a("hexer", "enfeeble", "Enfeeble", "Weakens and Slows the foe with the highest Attack or Magic.", { ...timing("medium", "normal"), mp: 1300, target: T.highestAMFoe, do: [apply("weaken"), apply("slow")] }),
+  // Step 5e: 1,200, 900 and 1,000 MP (were 1,600, 1,300 and 1,300): the Hexer's parties won 9 to 17 points less than parties without it, and it cast 1.3 abilities a regular fight.
+  a("hexer", "hush", "Hush", "Silences the foe with the highest Attack or Magic.", { ...timing("long", "quick"), mp: 1200, ...waitsFor("foes", { lacks: "silence" }), target: lacking(T.highestAMFoe, "silence"), do: [apply("silence")] }),
+  a("hexer", "unravel", "Unravel", "Strips one random buff from a random foe with a buff.", { ...timing("medium", "normal"), mp: 900, ...waitsFor("foes", { buffs: true }), target: T.buffedFoe, do: [{ op: "remove", label: "buff", count: 1, order: "random" }] }),
+  a("hexer", "enfeeble", "Enfeeble", "Weakens and Slows the foe with the highest Attack or Magic.", { ...timing("medium", "normal"), mp: 1000, target: T.highestAMFoe, do: [apply("weaken"), apply("slow")] }),
   // Monk
   a("monk", "flow", "Flow", "Haste on itself.", { ...timing("short", "quick"), mp: 100, target: "self", do: [apply("haste")] }),
   a("monk", "burning_fist", "Burning fist", "Three quick Fire hits on the foe with the most Burn, each adding a few.", {
@@ -220,7 +226,8 @@ export const abilities: A[] = [
   // Frostweaver
   a("frostweaver", "frost_lance", "Frost lance", "Ice at the foe with the most Chill, adding several.", { ...timing("short", "normal"), mp: 800, target: T.mostFoe("chill"), do: [magic("ice", hit("magic", "normal"), { apply: [{ status: "chill", stacks: stacks("several", "magic") }] })] }),
   // Campaign pass: 0.3 of Magic, not light's 0.2, for the same reason as Fireball.
-  a("frostweaver", "blizzard", "Blizzard", "Ice on every foe, adding a few Chill to each.", { ...timing("medium", "long"), mp: 1300, target: T.everyFoe, do: [magic("ice", hit("magic", "light"), { apply: [{ status: "chill", stacks: stacks("few", "magic") }] })] }),
+  // Step 5e: Blizzard 1,000 MP (was 1,300): cast 0.44 times a regular fight.
+  a("frostweaver", "blizzard", "Blizzard", "Ice on every foe, adding a few Chill to each.", { ...timing("medium", "long"), mp: 1000, target: T.everyFoe, do: [magic("ice", hit("magic", "light"), { apply: [{ status: "chill", stacks: stacks("few", "magic") }] })] }),
   // Step 5e: 400 MP (was 1,600: it cost more than the Clarity it gave back, and fired 0.04 times a regular fight).
   a("frostweaver", "stillness", "Stillness", "Clarity on a random ally.", { ...timing("long", "quick"), mp: 400, target: "ally", do: [apply("clarity")] }),
   // Stormcaller
@@ -276,17 +283,21 @@ export const classes: ClassDefT[] = [
     stats: stat(3, 3, 3, 4, 3, 3, 3, 3), weapons: ["spear", "sword", "light_staff"], armor: "medium", passive: { name: "Einherjar", text: "Allies it revives come back with all their actions ready, instead of on cooldown." },
   }),
   cls("bard", "Bard", "Party tempo. Plays the fight's tempo: allies faster and stronger, every foe shocked by its thunder, and every note it strikes gives an ally a little mana.", {
-    stats: stat(2, 4, 3, 3, 3, 2, 2, 2), weapons: ["dagger", "bow"], armor: "medium", passive: p("refrain", "Refrain", "Each of its basic attacks that lands gives a random ally a little MP."),
+    // Step 5e (to the director): HP 3 (the document's 2). At HP 2 and Armor 2 it was knocked out in 55 of 100 campaign fights at tick 19,
+    // before its second song, and its parties won 13 to 25 points less than parties without it.
+    stats: stat(3, 4, 3, 3, 3, 2, 2, 2), weapons: ["dagger", "bow"], armor: "medium", passive: p("refrain", "Refrain", "Each of its basic attacks that lands gives a random ally a little MP."),
   }),
   cls("hexer", "Hexer", "Curser. Curses the most dangerous foe into a crawl, silenced, weakened, slowed and chilled, and strips foes' buffs one at a time.", {
-    stats: { ...stat(2, 4, 3, 1, 4, 1, 2, 2), ...special("siphon", "medium") }, weapons: ["ice_staff", "dark_staff"], armor: "light", passive: p("cold_hex", "Cold hex", "Its basic attacks add a few Chill, whatever staff it carries; stacks scale from Magic."),
+    // Step 5e (to the director): HP 3 (the document's 2). At HP 2 and Armor 1 it was knocked out in 65 of 100 campaign fights, the most of any class, at tick 17.
+    stats: { ...stat(3, 4, 3, 1, 4, 1, 2, 2), ...special("siphon", "medium") }, weapons: ["ice_staff", "dark_staff"], armor: "light", passive: p("cold_hex", "Cold hex", "Its basic attacks add a few Chill, whatever staff it carries; stacks scale from Magic."),
   }),
   cls("monk", "Monk", "Breaks armor with a blur of blows. Every blow cracks armor, Flow keeps it fast, burning fists pile onto the hottest foe, and a pressure point drops the most dangerous one for a moment.", {
     stats: { ...stat(3, 2, 3, 4, 1, 2, 3, 3), ...special("evasion", "high"), ...special("double_strike", "medium") }, weapons: ["fist", "spear"], armor: "medium",
     passive: p("iron_palm", "Iron palm", "Its basic attacks, and the second strike of its Double strike, add a few Sunder; stacks scale from Attack."),
   }),
   cls("assassin", "Assassin", "Burst killer. Slips out of sight, picks off the weakest foe past any guard, leaves every crit a bleeding wound, and silences the back line.", {
-    stats: { ...stat(2, 3, 3, 5, 1, 2, 5, 1), ...special("crit_damage", "high"), ...special("evasion", "medium") }, weapons: ["dagger", "sword"], armor: "medium",
+    // Step 5e (to the director): HP 3 (the document's 2). Knocked out in 44 of 100 campaign fights at tick 18, before Vanish (first cast at tick 26); its parties won 7 to 20 points less than parties without it.
+    stats: { ...stat(3, 3, 3, 5, 1, 2, 5, 1), ...special("crit_damage", "high"), ...special("evasion", "medium") }, weapons: ["dagger", "sword"], armor: "medium",
     passive: p("lacerate", "Lacerate", "Each of its crits adds several Bleed to the foe; stacks scale from Attack."),
   }),
   cls("vampire", "Vampire", "Drains to outlast. Feeds on everything it hits: the harder it hits, the more it heals, and its prey is left weakened and unable to mend.", {
