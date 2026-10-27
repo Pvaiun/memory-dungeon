@@ -47,11 +47,11 @@ export function classHead(id: string, right?: Child, weapon: string | undefined 
   );
 }
 
-/** A stat's code in its colour: ATK warm, MAG violet, ARM steel, HP green; the same colours mark what an amount grows with. */
-const STAT_TONE: Record<string, string> = { attack: "st-atk", magic: "st-mag", armor: "st-arm", max_hp: "st-hp", thorns: "st-hp", crit_chance: "gold", max_mp: "mp", mp_regen: "mp" };
-export const statLabel = (key: string) => h("span", { class: STAT_TONE[key] ?? "" }, statCode(key));
 
-/** The stat grid: label over number, four to a row; a coloured change when gear or the formation moved a stat off the class's base. */
+/**
+ * The stat grid: label over number, four to a row; a coloured change when gear or the formation moved a stat off the
+ * class's base; then an element only where it differs ("LIGHT +50%"), for a class and an enemy alike.
+ */
 export function statGrid(stats: Stats, base: Stats | null, designer: boolean, keys: readonly string[] = SHEET_STATS): HTMLElement {
   const cell = (label: Child, value: Child, delta?: Child, cls = "") => h("div", { class: `cell${cls ? ` ${cls}` : ""}` }, h("span", { class: "lbl" }, label), h("span", { class: "val" }, value, delta ?? null));
   const cells: Child[] = [];
@@ -60,7 +60,7 @@ export function statGrid(stats: Stats, base: Stats | null, designer: boolean, ke
     const b = base?.[key];
     const delta = b !== undefined ? v - b : 0;
     const dtext = !delta ? null : key === "crit_chance" ? `${delta > 0 ? "+" : ""}${Math.round(delta)}%` : key === "aggro" ? `${delta > 0 ? "+" : ""}${Math.round(delta)}` : `${delta > 0 ? "+" : ""}${disp(delta)}`;
-    cells.push(cell(statLabel(key), showStat(key, v), dtext ? h("i", { class: delta > 0 ? "good" : "bad" }, dtext) : undefined));
+    cells.push(cell(statCode(key), showStat(key, v), dtext ? h("i", { class: delta > 0 ? "good" : "bad" }, dtext) : undefined));
   }
   if (designer || !base) {
     for (const key of SPECIAL_STATS) {
@@ -70,10 +70,10 @@ export function statGrid(stats: Stats, base: Stats | null, designer: boolean, ke
     }
   }
   for (const [k, v] of Object.entries(stats)) {
-    if (!k.startsWith("resist:") || !v || !base) continue;
+    if (!k.startsWith("resist:") || !v) continue;
     cells.push(cell(h("span", { class: k.slice(7) }, statCode(k)), h("span", { class: v > 0 ? "good" : "bad" }, `${v > 0 ? "+" : ""}${v}%`)));
   }
-  if (stats.resist && base) cells.push(cell("RES", `${stats.resist}%`));
+  if (stats.resist) cells.push(cell("RES", `${stats.resist > 0 ? "+" : ""}${stats.resist}%`));
   return h("div", { class: "stats" }, ...cells);
 }
 /** The special stats a unit has above default, as "EVA 35%" lines. */
@@ -104,10 +104,10 @@ export function codeSpans(stats: { stat: string; flat?: number; pct?: number }[]
 
 // ─── Amounts and timings ───
 
-/** "(125% MAG)", each stat in its colour. */
+/** "(125% MAG)". */
 export function scaleEl(scales: Scale[]): Child {
   if (!scales.length) return null;
-  return h("span", { class: "scale" }, "(", ...scales.flatMap((s, i) => [i ? ", " : null, h("span", { class: s.stat ? STAT_TONE[s.stat] ?? "" : "" }, s.text)]), ")");
+  return h("span", { class: "scale" }, `(${scales.map((s) => s.text).join(", ")})`);
 }
 /** An ability's size: "50 LIGHT (125% MAG) + 10 BURN (MAG)". */
 export function sizeEl(parts: SizePart[]): HTMLElement | null {
@@ -170,7 +170,7 @@ export function gearRow(g: GearT | null, slot: string, stats: Stats | null, onCl
  * name in its element's colour, the MP, cooldown and wind-up as glyphs and whole numbers; the documents' sentence; and
  * its size for this unit with what it grows with. In designer view, the target and every effect in words.
  */
-export function abilityBlock(a: AbilityT, stats: Stats | null, designer: boolean, opts: { n?: number; onN?: () => void; cur?: boolean; dmgMult?: number; opening?: boolean } = {}): HTMLElement {
+export function abilityBlock(a: AbilityT, stats: Stats | null, designer: boolean, opts: { n?: number; onN?: () => void; cur?: boolean; target?: boolean; dmgMult?: number; opening?: boolean } = {}): HTMLElement {
   const i = abilityInfo(a, stats);
   const tag = abilityTag(a);
   const cell = TAG_ICON[tag] ?? TAG_ICON.physical;
@@ -178,8 +178,9 @@ export function abilityBlock(a: AbilityT, stats: Stats | null, designer: boolean
   const head0 = opts.n !== undefined && opts.opening !== false ? c.pack.ruleset.opening?.slots?.[opts.n - 1] : undefined;
   const first = head0 !== undefined ? Math.max(0, i.cooldown - head0) : 0;
   const head = h("div", { class: "head" },
-    opts.n !== undefined ? h("span", { class: "n", onClick: opts.onN }, String(opts.n)) : null,
-    h("span", { class: "pip" }, pipEl(cell, first, i.cooldown, 2)),
+    // With another number picked, this one pulses: it's where the next tap goes.
+    opts.n !== undefined ? h("span", { class: `n${opts.target ? " target" : ""}`, onClick: opts.onN }, String(opts.n)) : null,
+    h("span", { class: "pip" }, pipEl(cell, first, i.cooldown)),
     h("div", { class: "grow" },
       h("div", { class: `trunc ${ELEMENTS.includes(tag) ? tag : tag === "heal" || tag === "revive" || tag === "cleanse" ? "good" : ""}` }, i.name.toUpperCase()),
       h("div", { class: "cost" },
@@ -203,7 +204,7 @@ export function basicLine(wp: WeaponT, stats: Stats | null, opts: { mult?: numbe
   const w = weaponParts(wp, stats);
   const value = stats && opts.mult && opts.mult !== 1 ? `${wp.hits && wp.hits > 1 ? `${wp.hits}×` : ""}${disp(evalNum(wp.amount, stats).value * opts.mult)}` : w.value;
   return h("div", { class: "ab" },
-    h("div", { class: "head" }, opts.slot === false ? null : h("span", { class: "n dim" }, "·"), h("span", { class: "pip" }, iconEl(TAG_ICON[w.tag] ?? TAG_ICON.physical, 2)),
+    h("div", { class: "head" }, opts.slot === false ? null : h("span", { class: "n dim" }, "·"), h("span", { class: "pip" }, iconEl(TAG_ICON[w.tag] ?? TAG_ICON.physical)),
       h("div", { class: "grow" }, h("div", null, "ATTACK"), h("div", { class: "cost" }, glyph("ui_cooldown", tk(w.cooldown))))),
     h("div", { class: "size" }, value ? `${value} ` : "", h("span", { class: w.tone }, w.word), w.scales.length ? " " : null, scaleEl(w.scales)),
   );
@@ -240,12 +241,12 @@ export function classSheet(id: string, designer: boolean, member: Member = membe
   const sp = specialLines(member.stats);
   if (sp.length) out.push(h("div", { class: "text up small wrap" }, ...sp.flatMap((s, i) => (i ? [" · ", s] : [s]))));
   out.push(section("PASSIVE"), ...classPassive(id, designer));
+  out.push(section("GEAR"));
+  for (const slot of ["weapon", "armor", "amulet"] as const) out.push(gearRow(gear[slot] ? c.gear.get(gear[slot]) ?? null : null, slot, member.stats, undefined, false));
   out.push(section("ABILITIES"));
   // In a fight the rows show each cooldown live: the sheet's icons stay plain.
   member.abilities.forEach((a, i) => out.push(abilityBlock(c.abilities.get(a)!, member.stats, designer, { n: i + 1, opening: false })));
   out.push(basicLine(weaponOf(c, member.weapon), member.stats));
-  out.push(section("GEAR"));
-  for (const slot of ["weapon", "armor", "amulet"] as const) out.push(gearRow(gear[slot] ? c.gear.get(gear[slot]) ?? null : null, slot, member.stats, undefined, false));
   return out;
 }
 
@@ -254,37 +255,21 @@ export function classSheet(id: string, designer: boolean, member: Member = membe
 /** An enemy's stats with the defaults filled in. */
 export const enemyStats = (e: EnemyT): Stats => ({ ...Object.fromEntries(c.pack.stats.map((s) => [s.id, s.default])), ...e.stats });
 
-/** How an element treats a unit, from its resist (its own plus the general one): the word and its colour. */
-function affinity(v: number): [string, string] {
-  if (v > 100) return ["ABS", "good"];
-  if (v >= 100) return ["IMM", "good"];
-  if (v > 0) return ["RES", "buff"];
-  if (v < 0) return ["WEAK", "bad"];
-  return ["·", "dim"];
-}
-/** The seven elements in a row, each icon over how it lands: WEAK, RES, IMM, ABS or a dot. Final Fantasy's bestiary does it this way. */
-export function elementRow(stats: Stats, designer = false): HTMLElement {
-  return h("div", { class: "elements" }, ...ELEMENTS.map((el) => {
-    const v = (stats[`resist:${el}`] ?? 0) + (stats.resist ?? 0);
-    const [word, tone] = affinity(v);
-    return h("div", { class: "el" }, iconEl(TAG_ICON[el]), h("span", { class: tone }, designer && v ? `${v > 0 ? "+" : ""}${v}` : word));
-  }));
-}
-/** What a foe hits with: its attack's kind and every kind its abilities deal, as icons and words. */
+/** What a foe hits with: its attack's kind and every kind its abilities deal, in words, an element in its colour. */
 export function hitsWith(e: EnemyT): Child[] {
   const kinds = new Map<string, string>();
   const w = resolveWeapon(c, e.weapon ?? c.pack.ruleset.unarmed);
   const add = (tag: string, tone: string) => kinds.set(tag, tone);
   add(w.type === "magical" ? w.element ?? "magical" : w.subtype ?? "physical", w.type === "magical" ? w.element ?? "" : "phys");
   for (const a of e.abilities ?? []) for (const d of c.abilities.get(a)!.do) if (d.op === "damage") add(d.type === "magical" ? d.element ?? "magical" : d.subtype ?? "physical", d.type === "magical" ? d.element ?? "" : "phys");
-  return [...kinds].map(([tag, tone]) => h("span", { class: `nowrap ${tone}` }, iconEl(TAG_ICON[tag] ?? TAG_ICON.physical), ` ${(ELEMENT_CODE[tag] ?? tag).toUpperCase()}`));
+  return [...kinds].map(([tag, tone]) => h("span", { class: `nowrap ${tone}` }, (ELEMENT_CODE[tag] ?? tag).toUpperCase()));
 }
 /** The enemy stats a player reads: how much HP, how hard it hits each way, how much Armor; the rest only when it differs from the default. */
 const ENEMY_STATS = ["max_hp", "attack", "magic", "armor"] as const;
 
 /**
  * Everything about an enemy, for the bestiary and a fight's inspect window: its line, its stats (`live` for a fight's
- * unit, with the run's changes), how each element lands, what it hits with, what it can't be given, its passives and
+ * unit, with the run's changes) and any element it resists or is weak to, what it hits with, what it can't be given, its passives and
  * its actions with their sizes. `power` is a fight's damage change, in percent.
  */
 export function enemySheet(e: EnemyT, designer: boolean, live?: Stats, power = 0): Child[] {
@@ -294,7 +279,6 @@ export function enemySheet(e: EnemyT, designer: boolean, live?: Stats, power = 0
   if (e.text) out.push(h("div", { class: "text dim wrap small", style: "margin-bottom:.375rem" }, e.text));
   // A fight's foe has its HP just above, live: the grid leaves it out.
   out.push(statGrid(stats, null, designer, live ? ENEMY_STATS.slice(1) : ENEMY_STATS));
-  out.push(section("ELEMENTS"), elementRow(stats, designer));
   out.push(h("div", { class: "line wrap small" }, h("span", { class: "dim" }, "HITS WITH"), ...hitsWith(e)));
   const immune = Object.entries(stats).filter(([k, v]) => k.startsWith("immune:") && v).map(([k]) => k.slice(7));
   if (immune.length) out.push(h("div", { class: "line wrap small" }, h("span", { class: "dim" }, "IMMUNE TO"), ...immune.map((s) => h("span", { class: "nowrap" }, c.statuses.has(s) ? statusEl(s) : null, ` ${(c.statuses.get(s)?.name ?? s).toUpperCase()}`))));

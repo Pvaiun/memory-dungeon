@@ -10,7 +10,7 @@ import {
 } from "../../src/rogue.js";
 import { canEquip } from "../../src/validate.js";
 import type { GearT, RogueNodeKindT } from "../../src/schema.js";
-import { c, className, cls as classOf, disp, kindOf, shortName } from "./content.js";
+import { c, className, cls as classOf, disp, shortName } from "./content.js";
 import { button, bar, h, header, toast, win, type Child } from "./dom.js";
 
 /** The screen's one big action, and the smaller ones beside it, at the bottom-centre. */
@@ -20,7 +20,7 @@ const actions = (main: HTMLButtonElement | null, ...more: (HTMLButtonElement | n
 };
 /** A choice as a big button: its word and, under it, what it does. */
 const choice = (label: string, sub: string, onClick: () => void) => button(h("span", { class: "big-label" }, label, sub ? h("span", { class: "sub" }, sub) : null), onClick, "hi big");
-import { abilityBlock, basicLine, classHead, classPassive, codeSpans, elementRow, enemyStats, gearRow, hitsWith, role, section, sizeEl, specialLines, statGrid } from "./sheet.js";
+import { abilityBlock, basicLine, canUse, classHead, classPassive, codeSpans, enemyStats, gearRow, hitsWith, role, section, sizeEl, specialLines, statGrid } from "./sheet.js";
 import { sizeParts, sizeText } from "./describe.js";
 import { campEl, foesOnStage, partyInLine, partyOnStage, stageEl, themeOf, type StageActor, type StageOpts } from "./battle/scene.js";
 import type { Pose } from "./art.js";
@@ -131,10 +131,10 @@ const rogueKnows = (run: RogueRun, cls: string) => joinKnown(c, cls, run.act);
 const since = new Map<string, number>();
 const t0 = (key: string) => { if (!since.has(key)) since.set(key, performance.now()); return since.get(key)!; };
 /** The run's party on a stage `h` tall, in a pose, with their weapons; the fallen lie down. */
-function partyActors(run: RogueRun, h: number, pose: Pose = "wait", inLine?: { cx: number }): StageActor[] {
+function partyActors(run: RogueRun, h: number, pose: Pose = "wait", inLine?: { cx: number; gap?: number }): StageActor[] {
   const weapons = Object.fromEntries(run.party.map((cls) => [cls, member(run, cls).gear.weapon ?? undefined]));
   const p = { refs: run.party, weapons, formation: run.formation };
-  return (inLine ? partyInLine(p, h, pose, inLine.cx) : partyOnStage(p, h, pose)).map((a) => (a.kind === "hero" && member(run, a.ref).ko ? { ...a, pose: "dead" as Pose } : a));
+  return (inLine ? partyInLine(p, h, pose, inLine.cx, inLine.gap) : partyOnStage(p, h, pose)).map((a) => (a.kind === "hero" && member(run, a.ref).ko ? { ...a, pose: "dead" as Pose } : a));
 }
 /** A scene in the run's region (or `theme`), keyed so a redraw carries it on. */
 function scene(run: RogueRun, key: string, o: Omit<StageOpts, "theme" | "t0"> & { theme?: string }): HTMLCanvasElement {
@@ -235,9 +235,9 @@ function draftView(run: RogueRun): Child[] {
     partyStrip(run, false),
     h("div", { class: "cards" }, ...p.offers.map((id) => h("div", { class: `win card${draftPick === id ? " cur" : ""}`, onClick: () => { draftPick = id; redraw(); } },
       h("div", { class: "portrait" }, faceEl(id)), h("div", { class: "name" }, shortName(id)), h("div", { class: "codes small" }, c.abilities.get(rogue(c).config.firstAbility[id])!.name)))),
-    win("scroll", classHead(draftPick), section("STARTS WITH"), abilityBlock(c.abilities.get(rogue(c).config.firstAbility[draftPick])!, classOf(draftPick).stats, setup.settings.designer),
+    win("scroll", classHead(draftPick), section("PASSIVE"), ...classPassive(draftPick), section("STARTS WITH"), abilityBlock(c.abilities.get(rogue(c).config.firstAbility[draftPick])!, classOf(draftPick).stats, setup.settings.designer),
       section("LEARNS LATER"), ...c.classes.get(draftPick)!.abilities.filter((a) => a !== rogue(c).config.firstAbility[draftPick!]).map((a) => abilityBlock(c.abilities.get(a)!, classOf(draftPick!).stats, false)),
-      section("PASSIVE"), ...classPassive(draftPick)),
+    ),
     actions(button(`TAKE ${shortName(draftPick)}`, () => pickOrSave(run, draftPick!), "hi")),
   ];
 }
@@ -251,7 +251,7 @@ function mapView(run: RogueRun): Child[] {
   if (mapPick && !next.some((n) => n.id === mapPick)) mapPick = null;
   const floors = rogue(c).config.map.floors;
   const W = rogue(c).config.map.width;
-  const ROW = 4.75; // rem a floor
+  const ROW = 5.5; // rem a floor: room for the rooms within reach, drawn bigger
   const height = (floors + 1) * ROW + 1;
   const pos = (n: MapNode) => ({ x: ((n.col + 0.5) / W) * 100, y: (floors + 1 - n.floor) * ROW + 0.5 + ROW / 2 });
   const lines: string[] = [];
@@ -267,7 +267,10 @@ function mapView(run: RogueRun): Child[] {
     const p = pos(n);
     const can = next.some((x) => x.id === n.id);
     const been = run.visited.includes(n.id);
-    const el = h("div", { class: `rnode ${n.kind}${can ? " can" : ""}${been ? " been" : ""}${run.at === n.id ? " here" : ""}${mapPick === n.id ? " cur" : ""}`, style: `left:${p.x}%;top:${p.y}rem`, onClick: can ? () => { mapPick = n.id; redraw(); } : undefined }, iconEl(ICON[n.kind], 2));
+    // A room within reach: one tap picks it (what it gives shows below), a second tap on it goes in.
+    const enter = () => { mapPick = null; pickOrSave(run, n.id); };
+    const el = h("div", { class: `rnode ${n.kind}${can ? " can" : ""}${been ? " been" : ""}${run.at === n.id ? " here" : ""}${mapPick === n.id ? " cur" : ""}`, style: `left:${p.x}%;top:${p.y}rem`, onClick: can ? () => { if (mapPick === n.id) return enter(); mapPick = n.id; redraw(); } : undefined },
+      iconEl(ICON[n.kind], 2), mapPick === n.id ? h("span", { class: "rnode-tag" }, KIND_NAME[n.kind]) : null);
     return el;
   });
   const box = h("div", { class: "rmap", style: `height:${height}rem` }, svg, ...nodes);
@@ -319,7 +322,6 @@ function foeLines(enemies: string[], foes: { hp?: number; power?: number } = {})
     return h("div", { class: "foe" },
       h("div", { class: "line" }, h("span", { class: "foe-art" }, enemyThumb(id, 24)), h("span", { class: `grow trunc ${en.rank === "boss" ? "gold" : en.rank === "elite" ? "debuff" : ""}` }, `${enemyDisplayName(id).toUpperCase()}${n(id) > 1 ? ` ×${n(id)}` : ""}`)),
       statGrid(st, null, false, ["max_hp", "attack", "magic", "armor"]),
-      elementRow(st),
       h("div", { class: "line wrap small" }, h("span", { class: "dim" }, "HITS WITH"), ...hitsWith(en)),
       ...acts);
   });
@@ -413,6 +415,8 @@ function shopView(run: RogueRun): Child[] {
   }
   return [
     header("SHOP", () => go("home")),
+    // The shop: the party in at the door, the shopkeeper behind a counter of goods.
+    scene(run, "shop", { theme: "shop", h: 144, actors: partyActors(run, 144, "wait", { cx: 66, gap: 36 }) }),
     tabs,
     win("scroll", ...list),
     actions(button("LEAVE", () => { shopTab = "buy"; pickOrSave(run, "leave"); }, "hi"), button("PARTY", () => go("rparty"))),
@@ -453,7 +457,7 @@ function campView(run: RogueRun): Child[] {
     for (const cls of [...run.party, ...camp]) {
       const v = vitals(run, cls);
       const inParty = run.party.includes(cls);
-      body.push(h("div", { class: `member${swapPick === cls ? " cur" : ""}`, onClick: () => {
+      body.push(h("div", { class: `member${swapPick === cls ? " cur" : ""}${swapPick !== null && swapPick !== cls ? " target" : ""}`, onClick: () => {
         if (swapPick === null) swapPick = cls;
         else if (swapPick === cls) swapPick = null;
         else {
@@ -589,7 +593,7 @@ export function rpartyScreen(): Child[] {
   const cards = run.party.map((cls, i) => {
     const pos = f.positions[i];
     const v = vitals(run, cls);
-    return h("div", { class: `win card${seatPick === i ? " cur" : ""}`, onClick: () => {
+    return h("div", { class: `win card${seatPick === i ? " cur" : ""}${manage && seatPick !== null && seatPick !== i ? " target" : ""}`, onClick: () => {
       if (!manage) return go("runit", cls);
       if (seatPick === null) seatPick = i;
       else if (seatPick === i) { seatPick = null; return go("runit", cls); }
@@ -655,6 +659,8 @@ export function runitScreen(arg?: unknown): Child[] {
     win("", classHead(cls, h("div", { class: "line small" }, v.ko ? h("span", { class: "bad" }, "KO") : h("span", null, `HP ${disp(v.hp)}/${disp(v.maxHp)}`), h("span", { class: "mp" }, `  MP ${disp(v.mp)}/${disp(v.maxMp)}`)))),
     win("", statGrid(fm.stats, k.stats, setup.settings.designer), sp.length ? h("div", { class: "text up small wrap", style: "margin-top:.25rem" }, ...sp.flatMap((s, i) => (i ? [" · ", s] : [s]))) : null),
     win("scroll",
+      section("PASSIVE"),
+      ...classPassive(cls),
       section("GEAR"),
       ...(["weapon", "armor", "amulet"] as const).map((s) => {
         const uid = m.gear[s];
@@ -663,11 +669,9 @@ export function runitScreen(arg?: unknown): Child[] {
         if (!it) return gearRow(null, s, fm.stats, open);
         return itemRow(run, it, open, { arrow: !!open, stats: fm.stats, right: h("span", { class: `small ${RARITY_CLASS[it.rarity]}` }, it.rarity === "common" ? "" : it.rarity.toUpperCase()) });
       }),
-      h("div", { class: "line small dim wrap" }, `CAN USE ${k.weapons.map((w) => kindOf(w).name).join(", ").toUpperCase()} · ${k.armor.toUpperCase()} ARMOR`),
-      section("PASSIVE"),
-      ...classPassive(cls),
+      canUse(cls),
       section("ABILITIES", manage && orderPick !== null ? h("span", { class: "hi" }, "SWAP · SAME: LEAVE OUT") : null),
-      ...m.order.map((a, i) => abilityBlock(c.abilities.get(a)!, fm.stats, setup.settings.designer, { n: i + 1, onN: () => onN(i), cur: orderPick === i })),
+      ...m.order.map((a, i) => abilityBlock(c.abilities.get(a)!, fm.stats, setup.settings.designer, { n: i + 1, onN: () => onN(i), cur: orderPick === i, target: orderPick !== null })),
       basicLine(weaponOf(c, fm.weapon), fm.stats),
       out.length ? section("LEFT OUT") : null,
       ...out.map((a) => { const el = abilityBlock(c.abilities.get(a)!, fm.stats, setup.settings.designer); el.classList.add("dimmed"); el.addEventListener("click", () => bringBack(a)); return el; }),

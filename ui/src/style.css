@@ -8,18 +8,18 @@
  */
 :root {
   --u: 4px;
-  --bg: #0c1020; --win: #151b2e; --win2: #1f2740; --line: #f2f0e4; --ink: #f2f0e4; --dim: #8e99b8; --hi: #ffd54a; --sel: #2f3d66; --edge: #0c1020;
+  --bg: #0c1020; --win: #151b2e; --win2: #1f2740; --line: #f2f0e4; --ink: #f2f0e4; --dim: #8e99b8; --hi: #ffd54a; --sel: #222a46; --edge: #0c1020;
   --hp: #58d858; --hpmid: #f0d050; --hplow: #f05858; --mp: #5aa0f5; --sh: #a8e8ff;
   --good: #7ee07e; --bad: #ff7b6b; --buff: #86cfff; --debuff: #ffa062; --gold: #ffd54a;
   --fire: #ff8a4a; --ice: #8ae6ff; --lightning: #ffe14d; --wind: #9af09a; --earth: #dcae6e; --light: #fff4b8; --dark: #c892ff;
-  --atk: #ff9a62; --mag: #b4a4ff; --arm: #a8c4e0; --phys: #e8e2d0;
+  --phys: #e8e2d0;
 }
 :root[data-theme="day"] {
-  --bg: #cfd8bf; --win: #f7f4e6; --win2: #e9e5d2; --line: #1f2433; --ink: #1f2433; --dim: #68708a; --hi: #b85400; --sel: #ffe9a8; --edge: #cfd8bf;
+  --bg: #cfd8bf; --win: #f7f4e6; --win2: #e9e5d2; --line: #1f2433; --ink: #1f2433; --dim: #68708a; --hi: #b85400; --sel: #ebe5cd; --edge: #cfd8bf;
   --hp: #2fae2f; --hpmid: #c9a300; --hplow: #d33a3a; --mp: #2f6fd0; --sh: #4aa8d8;
   --good: #238a23; --bad: #c43a2c; --buff: #1f6fb8; --debuff: #c45a10; --gold: #a66a00;
   --fire: #d85a1a; --ice: #1f8fb8; --lightning: #a88a00; --wind: #2f8f2f; --earth: #8a5a20; --light: #a88a30; --dark: #7a3ac8;
-  --atk: #c4501a; --mag: #5a3ac8; --arm: #3a5a7a; --phys: #2a2e3a;
+  --phys: #2a2e3a;
 }
 @font-face { font-family: 'Press Start 2P'; src: url(/fonts/PressStart2P-Regular.ttf) format('truetype'); font-display: block; }
 html { font-size: calc(var(--u) * 8); }
@@ -45,7 +45,7 @@ canvas.field { display: block; width: 33.75rem; image-rendering: pixelated; bord
 .gold { color: var(--gold); }
 .mp { color: var(--mp); }
 .sh { color: var(--sh); }
-.st-atk { color: var(--atk); } .st-mag { color: var(--mag); } .st-arm { color: var(--arm); } .st-hp { color: var(--good); } .phys { color: var(--phys); } .ink { color: var(--ink); }
+.phys { color: var(--phys); } .ink { color: var(--ink); }
 .fire { color: var(--fire); } .ice { color: var(--ice); } .lightning { color: var(--lightning); } .wind { color: var(--wind); } .earth { color: var(--earth); } .light { color: var(--light); } .dark { color: var(--dark); }
 .center { text-align: center; }
 .grow { flex: 1; min-width: 0; }
@@ -95,10 +95,9 @@ button.sm { padding: .25rem .375rem; }
 .btns.even button { flex: 1; text-align: center; }
 /* a screen's main action: big, full width, at the bottom-centre where a thumb finds it; the smaller ones beside it */
 .actions { display: flex; flex-direction: column; gap: .5rem; flex: 0 0 auto; }
-button.big { font-size: 2rem; line-height: 2rem; padding: .75rem .5rem; width: 100%; text-align: center; box-shadow: inset 0 0 0 .125rem var(--edge); }
-button.big.hi:not(:disabled) { background: var(--sel); animation: glow 1.6s steps(2) infinite; }
+/* big by its size, not its letters: the 8px font stays at its own size, crisp */
+button.big { min-height: 3.75rem; line-height: 1.25rem; padding: .75rem .5rem; width: 100%; text-align: center; }
 button.mid { padding: .625rem .5rem; }
-@keyframes glow { 50% { border-color: var(--hi); } }
 
 /* bars */
 .bar { position: relative; height: .75rem; border: .125rem solid var(--line); background: var(--edge); flex: 1; min-width: 2rem; overflow: hidden; }
@@ -141,7 +140,7 @@ button.mid { padding: .625rem .5rem; }
 .sheet-head .name { text-transform: uppercase; line-height: 1.5rem; }
 .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: .375rem .25rem; text-transform: uppercase; }
 .stats .cell { align-items: flex-start; padding: 0; gap: 0; cursor: default; }
-.stats .lbl { color: var(--dim); line-height: 1.25rem; }
+.stats .lbl { color: var(--ink); line-height: 1.25rem; }
 .stats .val { line-height: 1.5rem; white-space: nowrap; }
 .stats .val i { font-style: normal; margin-left: .25rem; }
 .gear-row { display: flex; align-items: flex-start; gap: .5rem; min-height: 3rem; cursor: pointer; text-transform: uppercase; padding: .25rem .25rem; border-radius: .25rem; }
@@ -149,7 +148,7 @@ button.mid { padding: .625rem .5rem; }
 .gear-row .go { align-self: center; flex: 0 0 auto; }
 .gear-row .line.name { min-height: 1.5rem; row-gap: 0; }
 .gear-row .effect { line-height: 1.25rem; margin-top: .125rem; }
-.gear-row.equipped { background: var(--sel); box-shadow: inset 0 0 0 .25rem var(--hi); }
+.gear-row.equipped { background: var(--sel); box-shadow: inset 0 0 0 .125rem var(--hi); }
 .gear-row .tag { margin-left: auto; color: var(--hi); padding-left: .5rem; }
 .gear-row .codes { color: var(--dim); column-gap: .5rem; row-gap: 0; line-height: 1.25rem; min-height: 1.25rem; }
 .wcode { display: inline-flex; align-items: center; gap: .375rem; white-space: nowrap; }
@@ -171,8 +170,6 @@ button.mid { padding: .625rem .5rem; }
 /* the bestiary: an enemy's likeness, its seven elements in a row */
 .beast-art { display: flex; justify-content: center; align-items: flex-end; padding: .5rem 0; min-height: 6rem; }
 .row.beast { min-height: 3.75rem; }
-.elements { display: grid; grid-template-columns: repeat(7, 1fr); gap: .25rem 0; margin: .25rem 0; }
-.elements .el { display: flex; flex-direction: column; align-items: center; gap: .125rem; text-transform: uppercase; line-height: 1.25rem; }
 
 /* battle */
 .win.msg { min-height: 7.25rem; flex: 0 0 auto; position: relative; cursor: pointer; padding: .5rem .75rem .5rem; }
@@ -204,22 +201,19 @@ button.mid { padding: .625rem .5rem; }
 .member .cds { flex: 0 0 auto; }
 .member.ko { color: var(--dim); }
 .member.ko .face { opacity: .4; }
-.win.foes { display: flex; align-items: center; gap: .5rem; min-height: 2.75rem; padding: .25rem .5rem; }
-.foelist { flex: 1; min-width: 0; display: flex; flex-wrap: wrap; gap: 0 .5rem; text-transform: uppercase; line-height: 1.5rem; }
-.foelist span + span::before { content: "·"; color: var(--dim); margin-right: .5rem; }
-.foelist span { cursor: pointer; }
-.foelist span.dead { color: var(--dim); text-decoration: line-through; }
 .tick { white-space: nowrap; color: var(--dim); flex: 0 0 auto; }
 .tick b { color: var(--ink); }
 .ctl { display: flex; gap: .25rem; align-items: center; flex: 0 0 auto; }
-.ctl button { padding: .375rem .25rem; min-width: 3rem; text-align: center; flex: 1 1 auto; }
+.ctl button { padding: .75rem .25rem; min-width: 3rem; text-align: center; flex: 1 1 auto; }
+.ctl button.speed { min-width: 4rem; }
+.ctl .tick { flex: 0 0 auto; padding: 0 .25rem; }
 .inspect .st { display: flex; align-items: flex-start; gap: .5rem; min-height: 2rem; margin: .25rem 0; }
 .inspect .st .sticon { margin-top: .125rem; }
 /* a fight's end and the campfire: the way on in the message window's place, the rest below */
 .result-slot:empty, .lower-slot:empty { display: none; }
 .win.result { display: flex; flex-direction: column; gap: .5rem; padding: .5rem .5rem .625rem; animation: pop .32s steps(4) both; }
-.big-label { display: flex; flex-direction: column; align-items: center; gap: .375rem; }
-.big-label .sub { font-size: 1rem; line-height: 1rem; color: var(--ink); }
+.big-label { display: flex; flex-direction: column; align-items: center; gap: .25rem; }
+.big-label .sub { color: var(--dim); }
 .member.camp { grid-template-columns: auto 1fr; }
 table.sum { border-collapse: collapse; width: 100%; text-transform: uppercase; }
 table.sum td, table.sum th { padding: 0 .25rem; text-align: right; font-weight: normal; white-space: nowrap; line-height: 1.5rem; }
@@ -282,11 +276,17 @@ table.sum th { color: var(--dim); }
 .rnode.been { opacity: .35; }
 .rnode.here { opacity: 1; border-color: var(--hi); }
 .rnode.can { opacity: 1; cursor: pointer; border-color: var(--line); animation: rpulse 1.2s steps(2) infinite; }
-.rnode.cur { background: var(--sel); border-color: var(--hi); animation: none; }
+.rnode.can { width: 5rem; height: 5rem; z-index: 1; }
+.rnode.cur { background: var(--sel); border-color: var(--hi); animation: none; z-index: 2; }
+.rnode-tag { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: .125rem; color: var(--edge); background: var(--hi); border-radius: .25rem; padding: 0 .25rem; line-height: 1.25rem; white-space: nowrap; }
 @keyframes rpulse { 50% { border-color: var(--hi); } }
 .roffer { cursor: pointer; margin-bottom: .5rem; }
 .roffer.cur { background: var(--sel); border-color: var(--hi); }
 .dimmed { opacity: .5; }
+/* where the next tap can go, once something is picked: a pulsing gold edge */
+.target { animation: target 1s steps(2) infinite; }
+.cell.target, .member.target { border-radius: .25rem; }
+@keyframes target { 50% { box-shadow: inset 0 0 0 .25rem var(--hi); border-color: var(--hi); } }
 .member.cur { background: var(--sel); }
 .art.glow-uncommon > * { filter: drop-shadow(0 0 .125rem var(--good)); }
 .art.glow-rare > * { filter: drop-shadow(0 0 .125rem var(--buff)); }

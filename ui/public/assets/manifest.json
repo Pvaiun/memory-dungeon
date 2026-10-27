@@ -748,7 +748,8 @@
   "storm_tower": "backdrops/storm_tower.png",
   "deep_crypt": "backdrops/deep_crypt.png",
   "tower_top": "backdrops/tower_top.png",
-  "strip": "backdrops/strip.png"
+  "strip": "backdrops/strip.png",
+  "shop": "backdrops/shop.png"
  },
  "frame": 64,
  "actorFrame": 48,

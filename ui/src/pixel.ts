@@ -307,10 +307,12 @@ export function drawEnemy(ctx: CanvasRenderingContext2D, ref: string, k: number,
 }
 export const enemyEl = (ref: string, k = 3, scale = 1) => canvasEl(enemySprite(ref, k), scale);
 /** A small likeness for lists: the sprite shrunk to fit `size`. */
-export function enemyThumb(ref: string, size = 24): HTMLCanvasElement {
+export function enemyThumb(ref: string, size = 24, shadowed = false): HTMLCanvasElement {
   const art = manifest.enemies[ref];
   const k = art ? Math.max(3, Math.ceil(Math.max(art.w, art.h) / size)) : 3;
-  return canvasEl(spriteOf(art?.file ?? "", k, { align: k === 3, outline: true, trim: true }), 1, "thumb");
+  const s = spriteOf(art?.file ?? "", k, { align: k === 3, outline: true, trim: true });
+  // Not met yet: only its shape, as a Pokédex shows it.
+  return canvasEl(shadowed ? silhouette(s, "#3a4260") : s, 1, "thumb");
 }
 
 // ─── VFX: 64-pixel frames in strips ───
