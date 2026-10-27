@@ -155,7 +155,8 @@ export const abilities: A[] = [
   // Hoplite
   a("hoplite", "aspis", "Aspis", "Aegis on the lowest ally.", { ...timing("medium", "quick"), mp: 160, ...waitsFor("allies", { lacks: "aegis" }), target: lacking(T.lowestShareAlly, "aegis"), do: [apply("aegis")] }),
   a("hoplite", "paired_guard", "Paired guard", "Guards itself and the other lowest ally.", { ...timing("medium", "normal"), mp: 160, target: "self", do: [apply("guard"), apply("guard", { to: T.otherLowestShareAlly })] }),
-  a("hoplite", "spear_thrust", "Spear thrust", "A thrust at a random foe that adds a few Sunder.", { ...timing("short", "quick"), mp: 100, do: [phys("pierce", hit("attack", "normal"), { apply: [{ status: "sunder", stacks: stacks("few", "attack") }] })] }),
+  // Step 5e: 1.5 of Attack (was a normal hit, 0.75): Phalanx triples the swing and not the thrust, so the thrust dealt 0.9 of the Hoplite's own swing.
+  a("hoplite", "spear_thrust", "Spear thrust", "A thrust at a random foe that adds a few Sunder.", { ...timing("short", "quick"), mp: 100, do: [phys("pierce", from("attack", 1.5), { apply: [{ status: "sunder", stacks: stacks("few", "attack") }] })] }),
   // Paladin
   a("paladin", "sanctuary", "Sanctuary", "Ward on every ally.", { ...timing("long", "long"), mp: 700, target: T.everyAlly, do: [apply("ward")] }),
   a("paladin", "absolve", "Absolve", "Cleanses itself and one random other ally with a debuff.", {
@@ -203,7 +204,9 @@ export const abilities: A[] = [
     ...timing("long", "quick"), mp: 250, seek: true, target: lacking(T.notTauntingFoe, ["taunt", "silence"], true), do: [phys("pierce", hit("attack", "normal"), { apply: [{ status: "silence" }] })],
   }),
   // Vampire
-  a("vampire", "blood_drain", "Blood drain", "Dark damage scaling from max HP to a random foe, which is Weakened.", { ...timing("short", "quick"), mp: 200, do: [magic("dark", hit("max_hp", "normal"), { apply: [{ status: "weaken" }] })] }),
+  // Step 5e: 0.5 of max HP (was a normal hit, 0.75): at 4 swings a cast twice a fight it was 60% of the Vampire's damage, and
+  // through Lifesteal most of the 3,850 HP it healed itself a fight; parties with the Vampire won 37 points more than without.
+  a("vampire", "blood_drain", "Blood drain", "Dark damage scaling from max HP to a random foe, which is Weakened.", { ...timing("short", "quick"), mp: 200, do: [magic("dark", from("max_hp", 0.5), { apply: [{ status: "weaken" }] })] }),
   a("vampire", "wither", "Wither", "Rot on the foe with the lowest HP.", { ...timing("medium", "normal"), mp: 330, target: T.lowestHpFoe, do: [apply("rot")] }),
   a("vampire", "frenzy", "Frenzy", "Several Might on itself.", { ...timing("medium", "quick"), mp: 330, target: "self", do: [apply("might", { stacks: stacks("several", "attack") })] }),
   // Pyromancer
@@ -218,7 +221,8 @@ export const abilities: A[] = [
   a("frostweaver", "frost_lance", "Frost lance", "Ice at the foe with the most Chill, adding several.", { ...timing("short", "normal"), mp: 800, target: T.mostFoe("chill"), do: [magic("ice", hit("magic", "normal"), { apply: [{ status: "chill", stacks: stacks("several", "magic") }] })] }),
   // Campaign pass: 0.3 of Magic, not light's 0.2, for the same reason as Fireball.
   a("frostweaver", "blizzard", "Blizzard", "Ice on every foe, adding a few Chill to each.", { ...timing("medium", "long"), mp: 1300, target: T.everyFoe, do: [magic("ice", hit("magic", "light"), { apply: [{ status: "chill", stacks: stacks("few", "magic") }] })] }),
-  a("frostweaver", "stillness", "Stillness", "Clarity on a random ally.", { ...timing("long", "quick"), mp: 1600, target: "ally", do: [apply("clarity")] }),
+  // Step 5e: 400 MP (was 1,600: it cost more than the Clarity it gave back, and fired 0.04 times a regular fight).
+  a("frostweaver", "stillness", "Stillness", "Clarity on a random ally.", { ...timing("long", "quick"), mp: 400, target: "ally", do: [apply("clarity")] }),
   // Stormcaller
   a("stormcaller", "chain_lightning", "Chain lightning", "Lightning at a random foe, then up to three others, adding a few Shock to each.", {
     ...timing("short", "quick"), mp: 800,
@@ -229,7 +233,8 @@ export const abilities: A[] = [
     ],
   }),
   a("stormcaller", "thunderstorm", "Thunderstorm", "Lightning on every foe, adding a few Shock to each.", { ...timing("medium", "normal"), mp: 1200, target: T.everyFoe, do: [magic("lightning", hit("magic", "light"), { apply: [{ status: "shock", stacks: stacks("few", "magic", SHOCK_STACKS) }] })] }),
-  a("stormcaller", "static_charge", "Static charge", "Haste on itself.", { ...timing("long", "long"), mp: 1200, target: "self", do: [apply("haste")] }),
+  // Step 5e: 400 MP (was 1,200 for the same Haste the Monk's Flow gives for 100; it fired 0.02 times a regular fight).
+  a("stormcaller", "static_charge", "Static charge", "Haste on itself.", { ...timing("long", "long"), mp: 400, target: "self", do: [apply("haste")] }),
   // Geomancer
   a("geomancer", "earthen_shell", "Earthen shell", "Shields itself and the other lowest ally; the amount scales from Armor.", {
     ...timing("medium", "normal"), mp: 1200, ...waitsFor("allies", { belowCap: "shield" }), target: "self",

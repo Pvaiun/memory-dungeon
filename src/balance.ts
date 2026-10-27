@@ -331,7 +331,8 @@ function readLog(c: Content, run: Run, job: Job, t: Tally) {
       }
       case "join": {
         const u = e.unit as { id: string; ref: string; side: string; hp: number; max: number };
-        side.set(u.id, u.side); ref.set(u.id, u.ref); max.set(u.id, u.max); born.set(u.id, at); acted.set(u.id, 0); dealt.set(u.id, 0); hpOf.set(u.id, u.hp);
+        side.set(u.id, u.side); ref.set(u.id, u.ref); max.set(u.id, u.max); born.set(u.id, at); acted.set(u.id, 1); dealt.set(u.id, 0); hpOf.set(u.id, u.hp);
+        // A unit that joins mid-fight (a summon, a split half) enters with its actions on cooldown, so it isn't counted among those killed before acting.
         if (u.side === "enemy") { add(t, `en|${u.ref}|n`); add(t, `en|${u.ref}|summoned`); }
         break;
       }
@@ -613,7 +614,7 @@ export const BANDS: Record<string, { lo: number; hi: number; unit: string; why: 
   "class.casts": { lo: 1.6, hi: 6, unit: "casts a regular fight", why: "Three slotted abilities in a fight of 30 to 40 ticks on 24/32/42 cooldowns with slotted head starts: fewer than 1.6 casts a fight and the kit isn't playing (5c: 'those cooldowns are too long'); more than 6 and basic attacks are gone (5b's complaint)." },
   "ability.castsMob": { lo: 0.45, hi: 3, unit: "casts a regular fight owned", why: "An ability slotted by a standing member should fire in most regular fights; under 0.45 it fires in fewer than half, and the slot is dead (useless). Over 3 it's the unit's whole rhythm." },
   "ability.castsBoss": { lo: 0.9, hi: 6, unit: "casts a boss fight owned", why: "A boss fight is about one and a half regular fights long (5b); every slotted ability should come at least once, or it's a slot wasted where it matters most." },
-  "ability.swings": { lo: 1.4, hi: 8, unit: "swings a cast", why: "scale.ts: a light hit is about 1.7 swings, a normal about 3, a heavy about 5 (on the same stat). Below 1.4 a basic attack does the job (dominated); above 8 the ability is the class and its other two don't matter." },
+  "ability.swings": { lo: 1.4, hi: 10, unit: "swings a cast", why: "scale.ts: a light hit is about 1.7 swings, a normal about 3, a heavy about 5 (on the same stat); a finisher that grows with stacks (Pyre) or crit (Backstab) can reach 8 or 9. Below 1.4 a basic attack does the job (dominated); above 10 the ability is the class and its other two don't matter." },
   "ability.share": { lo: 0, hi: 0.62, unit: "share of the class's damage", why: "A kit is three abilities and a passive on a basic attack. One ability over 62% of its class's damage means the rest is filler (nothing wins on its own)." },
   "ability.fail": { lo: 0, hi: 0.1, unit: "share of attempts", why: "A cast that fizzles (no MP at resolution, or no target) is a lost action and a lost cooldown. Past 10% the ability is unreliable." },
   "ability.healShare": { lo: 0.12, hi: 0.7, unit: "of an average unit's HP a cast", why: "Cure is 'a quick, small heal', Rally bigger; under 12% of a unit's HP a heal doesn't change a fight, over 70% a single cast undoes a boss's blow (nothing wins on its own)." },
@@ -637,7 +638,11 @@ type Lines = Record<string, Record<string, number>>;
 type Sheet = {
   classes: Lines; abilities: Lines; enemyAbilities: Lines; statuses: Lines; enemies: Lines; gear: Lines; formations: Lines;
   resources: Record<string, number>; events: Record<string, number>; stats: Record<string, number>; flags: Flag[]; context: Record<string, number>;
+  /** What the judge needs beyond numbers: each status's kit appliers in this set. */
+  meta: { appliers: Record<string, string[]> };
 };
+/** Line metrics that are counts, summed when sets are pooled; everything else is a rate or a mean, averaged. */
+const SUM_KEYS = new Set(["fights", "runs", "n", "ownedMob", "worn", "kit", "failMp", "failTarget", "dmg", "kills", "kos", "immune", "silentMob"]);
 
 function keys(t: Tally, prefix: string): string[] {
   const out = new Set<string>();
@@ -647,17 +652,8 @@ function keys(t: Tally, prefix: string): string[] {
 
 /** The lines of one tally (one set, or both pooled). */
 export function compute(c: Content, t: Tally, setName: string): Sheet {
-  const flags: Flag[] = [];
-  /** A band is judged on the pooled numbers unless it names a set (`on`); then only that set's sheet raises it. */
-  const flag = (kind: string, id: string, name: string, band: string, value: number, text: string) => {
-    const b = BANDS[band];
-    if (!b || !Number.isFinite(value)) return;
-    if ((b.on ?? "pooled") !== (setName === "campaign" || setName === "rogue" || setName === "free" ? setName : "pooled")) return;
-    if (value >= b.lo && value <= b.hi) return;
-    const width = Number.isFinite(b.hi) ? b.hi - b.lo : Math.max(1, Math.abs(b.lo)) || 1;
-    const dist = value < b.lo ? b.lo - value : value - b.hi;
-    flags.push({ kind, id, name, band, value, set: setName, severity: dist / width, text });
-  };
+  const appliersOf: Record<string, string[]> = {};
+  const flag = (_kind: string, _id: string, _name: string, _band: string, _value: number, _text: string) => {};
   const fightsMob = get(t, "fights|mob"), fightsBoss = get(t, "fights|boss"), fights = fightsMob + fightsBoss;
   const runs = get(t, "runs"), won = get(t, "won");
   const unitHp = div(get(t, "partyHp|mob") + get(t, "partyHp|boss"), c.pack.classes.reduce((a, k) => a + get(t, `cls|${k.id}|fights|mob`) + get(t, `cls|${k.id}|fights|boss`), 0));
@@ -698,17 +694,6 @@ export function compute(c: Content, t: Tally, setName: string): Sheet {
       extraPerBasic: div(get(t, `cls|${k}|extra`), basics),
     };
     classes[k] = line;
-    const name = c.classes.get(k)!.name;
-    flag("class", k, name, "class.win", line.win, `parties with the ${name} win ${r1(line.win)} points ${line.win >= 0 ? "more" : "less"} than parties without it`);
-    const role = ROLE[k];
-    if (role === "dealer") flag("class", k, name, "class.dmgDealer", line.dmgIdx, `a dealer dealing ${r2(line.dmgIdx)}× an average unit's damage`);
-    else flag("class", k, name, "class.dmgOther", line.dmgIdx, `a ${role} dealing ${r2(line.dmgIdx)}× an average unit's damage`);
-    flag("class", k, name, "class.ko", line.koIdx, `knocked out ${r2(line.koIdx)}× as often as the median class (${r1(100 * line.ko)} per 100 fights)`);
-    if (role === "wall") flag("class", k, name, "class.takenWall", line.takenIdx, `a wall taking ${r2(line.takenIdx)}× an average unit's damage`);
-    else flag("class", k, name, "class.takenOther", line.takenIdx, `a ${role} taking ${r2(line.takenIdx)}× an average unit's damage`);
-    if (CASTERS.has(k)) flag("class", k, name, "class.starvedCaster", line.starved, `${pc(line.starved)} of its time with a spell ready and no MP`);
-    else flag("class", k, name, "class.starvedOther", line.starved, `${pc(line.starved)} of its time with an ability ready and no MP`);
-    flag("class", k, name, "class.casts", line.castsMob, `${r1(line.castsMob)} casts a regular fight`);
   }
 
   // Abilities (the party's).
@@ -737,13 +722,6 @@ export function compute(c: Content, t: Tally, setName: string): Sheet {
       ...Object.fromEntries(apps.map((s) => [`apps:${s}`, div(get(t, `ab|${a.id}|app|${s}`), casts)])),
     };
     abilities[a.id] = line;
-    const name = `${owner.name}'s ${a.name}`;
-    const waits = !!a.if;
-    if (!waits) { flag("ability", a.id, name, "ability.castsMob", line.castsMob, `cast ${r2(line.castsMob)} times a regular fight it's slotted in`); flag("ability", a.id, name, "ability.castsBoss", line.castsBoss, `cast ${r2(line.castsBoss)} times a boss fight`); }
-    if (shape.kind === "damage") { flag("ability", a.id, name, "ability.swings", line.swings, `a cast deals ${r1(line.swings)} of its class's swings`); flag("ability", a.id, name, "ability.share", line.share, `${pc(line.share)} of its class's damage`); }
-    flag("ability", a.id, name, "ability.fail", line.fail, `${pc(line.fail)} of its casts fizzle (${line.failMp} for MP, ${line.failTarget} for want of a target)`);
-    if (shape.kind === "heal") flag("ability", a.id, name, "ability.healShare", line.healShare, `a cast heals ${pc(line.healShare)} of an average unit's max HP`);
-    for (const [s, v] of Object.entries(stacksPer)) { const d = c.statuses.get(s); if (d?.stacking === "intensity" && s !== "shield") flag("ability", a.id, name, "ability.stacks", v, `an application adds ${r1(v)} ${d.name}`); }
   }
 
   // Enemy abilities.
@@ -786,9 +764,7 @@ export function compute(c: Content, t: Tally, setName: string): Sheet {
       holdsPerApp: div(get(t, `st|${s}|holds`), apps), interruptsPerApp: div(get(t, `st|${s}|interrupts`), apps), tauntHitsPerFight: div(get(t, `st|${s}|tauntHits`), fights),
     };
     statuses[s] = line;
-    const harms = !!(d.pulse?.do?.some((e) => e.op === "damage") || d.trigger?.do?.some((e) => e.op === "damage"));
-    if (harms && d.label === "debuff" && appliers.length) flag("status", s, d.name, "status.dmgShare", line.dmgShareOfAppliers, `${pc(line.dmgShareOfAppliers)} of its appliers' damage (${appliers.map((k) => c.classes.get(k)!.name).join(", ")})`);
-    if (!["doom", "bulwark", "bulwark_broken", "bedrock_on", "bloodlust_on", "lg_idol_on", "ice_crust"].includes(s)) flag("status", s, d.name, "status.apps", line.appsPerFight, `applied ${r2(line.appsPerFight)} times a fight`);
+    appliersOf[s] = appliers;
   }
 
   // Enemies.
@@ -812,10 +788,6 @@ export function compute(c: Content, t: Tally, setName: string): Sheet {
       healGot: div(get(t, `en|${e.id}|healGot`), n), interrupted: div(get(t, `en|${e.id}|interrupted`), fts), held: div(get(t, `en|${e.id}|held`), fts),
     };
     enemies[e.id] = line;
-    if (e.rank === "minion") flag("enemy", e.id, e.name, "enemy.acted0", line.acted0, `${pc(line.acted0)} killed before acting`);
-    flag("enemy", e.id, e.name, "enemy.dmgRank", line.dmgIdx, `deals ${r2(line.dmgIdx)}× the median ${e.rank}'s damage per appearance`);
-    flag("enemy", e.id, e.name, "enemy.lifeRank", line.lifeIdx, `lives ${r2(line.lifeIdx)}× the median ${e.rank}'s ticks`);
-    if (e.rank === "boss") { flag("boss", e.id, e.name, "boss.signature", line.signature, `casts its signature move ${r2(line.signature)} times a fight`); flag("boss", e.id, e.name, "boss.kos", line.kos, `knocks out ${r2(line.kos)} party members a fight`); }
   }
 
   // Gear: each piece against its slot's mean for the same class, weighted by wearings.
@@ -850,7 +822,6 @@ export function compute(c: Content, t: Tally, setName: string): Sheet {
       swingDmg: div(get(t, `gear|${g}|swingDmg`), get(t, `gear|${g}|swings`)), healPerFight: div(heal, get(t, `gear|${g}|worn`)),
     };
     gear[g] = line;
-    if (piece) flag("gear", g, piece.name, "gear.worn", line.worn, `worn in ${line.worn} unit-fights`);
   }
 
   // Formations.
@@ -914,7 +885,109 @@ export function compute(c: Content, t: Tally, setName: string): Sheet {
     "Power (a knob's damage): foes' damage a fight to the party, share of party HP": div(sumCls("taken"), get(t, "partyHp|mob") + get(t, "partyHp|boss")),
   };
   const context = { fights, runs, won, unitHp };
-  return { classes, abilities, enemyAbilities, statuses, enemies, gear, formations, resources, events, stats, flags, context };
+  const sheet: Sheet = { classes, abilities, enemyAbilities, statuses, enemies, gear, formations, resources, events, stats, flags: [], context, meta: { appliers: appliersOf } };
+  sheet.flags = judge(c, sheet, setName);
+  void flag;
+  return sheet;
+}
+
+/** The three sets pooled: every rate and mean averaged across the sets where it exists (each mode counts once), every count summed. */
+export function poolSheets(c: Content, sheets: Record<string, Sheet>): Sheet {
+  const all = Object.values(sheets);
+  const poolLines = (pick: (s: Sheet) => Lines): Lines => {
+    const out: Lines = {};
+    const ids = new Set(all.flatMap((s) => Object.keys(pick(s))));
+    for (const id of ids) {
+      const rows = all.map((s) => pick(s)[id]).filter(Boolean);
+      const keys = new Set(rows.flatMap((r) => Object.keys(r)));
+      const line: Record<string, number> = {};
+      for (const k of keys) {
+        const vs = rows.map((r) => r[k]).filter((v) => Number.isFinite(v));
+        line[k] = SUM_KEYS.has(k) ? vs.reduce((a, b) => a + b, 0) : vs.length ? vs.reduce((a, b) => a + b, 0) / vs.length : NaN;
+      }
+      out[id] = line;
+    }
+    return out;
+  };
+  const poolRec = (pick: (s: Sheet) => Record<string, number>): Record<string, number> => {
+    const out: Record<string, number> = {};
+    for (const k of new Set(all.flatMap((s) => Object.keys(pick(s))))) { const vs = all.map((s) => pick(s)[k]).filter((v) => Number.isFinite(v)); out[k] = vs.length ? vs.reduce((a, b) => a + b, 0) / vs.length : NaN; }
+    return out;
+  };
+  const appliers: Record<string, string[]> = {};
+  for (const s of all) for (const [k, v] of Object.entries(s.meta.appliers)) appliers[k] = [...new Set([...(appliers[k] ?? []), ...v])];
+  const sheet: Sheet = {
+    classes: poolLines((s) => s.classes), abilities: poolLines((s) => s.abilities), enemyAbilities: poolLines((s) => s.enemyAbilities), statuses: poolLines((s) => s.statuses),
+    enemies: poolLines((s) => s.enemies), gear: poolLines((s) => s.gear), formations: poolLines((s) => s.formations),
+    resources: poolRec((s) => s.resources), events: poolRec((s) => s.events), stats: poolRec((s) => s.stats), flags: [],
+    context: { fights: all.reduce((a, s) => a + s.context.fights, 0), runs: all.reduce((a, s) => a + s.context.runs, 0), won: all.reduce((a, s) => a + s.context.won, 0), unitHp: mean(all.map((s) => s.context.unitHp)) },
+    meta: { appliers },
+  };
+  sheet.flags = judge(c, sheet, "pooled");
+  return sheet;
+}
+
+/** The bands, applied to a sheet's lines. A band is judged on the pooled sheet unless it names a set (`on`); then only that set's sheet raises it. */
+export function judge(c: Content, sh: Sheet, setName: string): Flag[] {
+  const flags: Flag[] = [];
+  const flag = (kind: string, id: string, name: string, band: string, value: number, text: string) => {
+    const b = BANDS[band];
+    if (!b || !Number.isFinite(value)) return;
+    if ((b.on ?? "pooled") !== setName) return;
+    if (value >= b.lo && value <= b.hi) return;
+    const width = Number.isFinite(b.hi) ? b.hi - b.lo : Math.max(1, Math.abs(b.lo)) || 1;
+    const dist = value < b.lo ? b.lo - value : value - b.hi;
+    flags.push({ kind, id, name, band, value, set: setName, severity: dist / width, text });
+  };
+  for (const k of c.pack.classes.map((x) => x.id)) {
+    const line = sh.classes[k];
+    if (!line) continue;
+    const name = c.classes.get(k)!.name;
+    flag("class", k, name, "class.win", line.win, `parties with the ${name} win ${r1(line.win)} points ${line.win >= 0 ? "more" : "less"} than parties without it`);
+    const role = ROLE[k];
+    if (role === "dealer") flag("class", k, name, "class.dmgDealer", line.dmgIdx, `a dealer dealing ${r2(line.dmgIdx)}× an average unit's damage`);
+    else flag("class", k, name, "class.dmgOther", line.dmgIdx, `a ${role} dealing ${r2(line.dmgIdx)}× an average unit's damage`);
+    flag("class", k, name, "class.ko", line.koIdx, `knocked out ${r2(line.koIdx)}× as often as the median class (${r1(100 * line.ko)} per 100 fights)`);
+    if (role === "wall") flag("class", k, name, "class.takenWall", line.takenIdx, `a wall taking ${r2(line.takenIdx)}× an average unit's damage per tick`);
+    else flag("class", k, name, "class.takenOther", line.takenIdx, `a ${role} taking ${r2(line.takenIdx)}× an average unit's damage per tick`);
+    if (CASTERS.has(k)) flag("class", k, name, "class.starvedCaster", line.starved, `${pc(line.starved)} of its time with a spell ready and no MP`);
+    else flag("class", k, name, "class.starvedOther", line.starved, `${pc(line.starved)} of its time with an ability ready and no MP`);
+    flag("class", k, name, "class.casts", line.castsMob, `${r1(line.castsMob)} casts a regular fight`);
+  }
+  const kinds = ["damage", "heal", "revive", "shield", "control", "cleanse", "debuff", "buff", "other"];
+  for (const a of c.pack.abilities) {
+    const line = sh.abilities[a.id];
+    if (!line) continue;
+    const owner = c.pack.classes.find((k) => k.abilities.includes(a.id))!;
+    const name = `${owner.name}'s ${a.name}`;
+    const kind = kinds[line.kind];
+    if (!a.if) { flag("ability", a.id, name, "ability.castsMob", line.castsMob, `cast ${r2(line.castsMob)} times a regular fight it's slotted in`); flag("ability", a.id, name, "ability.castsBoss", line.castsBoss, `cast ${r2(line.castsBoss)} times a boss fight`); }
+    if (kind === "damage") { flag("ability", a.id, name, "ability.swings", line.swings, `a cast deals ${r1(line.swings)} of its class's swings`); flag("ability", a.id, name, "ability.share", line.share, `${pc(line.share)} of its class's damage`); }
+    flag("ability", a.id, name, "ability.fail", line.fail, `${pc(line.fail)} of its casts fizzle (${line.failMp} for MP, ${line.failTarget} for want of a target)`);
+    if (kind === "heal") flag("ability", a.id, name, "ability.healShare", line.healShare, `a cast heals ${pc(line.healShare)} of an average unit's max HP`);
+    for (const [k, v] of Object.entries(line)) if (k.startsWith("stacks:")) { const d = c.statuses.get(k.slice(7)); if (d?.stacking === "intensity" && d.id !== "shield") flag("ability", a.id, name, "ability.stacks", v, `an application adds ${r1(v)} ${d.name}`); }
+  }
+  for (const [s, line] of Object.entries(sh.statuses)) {
+    const d = c.statuses.get(s)!;
+    const appliers = sh.meta.appliers[s] ?? [];
+    const harms = !!(d.pulse?.do?.some((e) => e.op === "damage") || d.trigger?.do?.some((e) => e.op === "damage"));
+    if (harms && d.label === "debuff" && appliers.length) flag("status", s, d.name, "status.dmgShare", line.dmgShareOfAppliers, `${pc(line.dmgShareOfAppliers)} of its appliers' damage (${appliers.map((k) => c.classes.get(k)!.name).join(", ")})`);
+    if (!["doom", "bulwark", "bulwark_broken", "bedrock_on", "bloodlust_on", "lg_idol_on", "ice_crust"].includes(s)) flag("status", s, d.name, "status.apps", line.appsPerFight, `applied ${r2(line.appsPerFight)} times a fight`);
+  }
+  for (const e of c.pack.enemies) {
+    const line = sh.enemies[e.id];
+    if (!line || !line.n) continue;
+    if (e.rank === "minion") flag("enemy", e.id, e.name, "enemy.acted0", line.acted0, `${pc(line.acted0)} killed before acting`);
+    flag("enemy", e.id, e.name, "enemy.dmgRank", line.dmgIdx, `deals ${r2(line.dmgIdx)}× the median ${e.rank}'s damage per appearance`);
+    flag("enemy", e.id, e.name, "enemy.lifeRank", line.lifeIdx, `lives ${r2(line.lifeIdx)}× the median ${e.rank}'s ticks`);
+    if (e.rank === "boss") { flag("boss", e.id, e.name, "boss.signature", line.signature, `casts its signature move ${r2(line.signature)} times a fight`); flag("boss", e.id, e.name, "boss.kos", line.kos, `knocks out ${r2(line.kos)} party members a fight`); }
+  }
+  registerGear(c);
+  for (const g of [...c.pack.gear, ...rogue(c).gear]) {
+    const line = sh.gear[g.id];
+    if (line) flag("gear", g.id, g.name, "gear.worn", line.worn, `worn in ${line.worn} unit-fights`);
+  }
+  return flags;
 }
 
 // ─── The probes ─────────────────────────────────────────────────────────────
@@ -1010,7 +1083,7 @@ export function writeSheet(c: Content, sheets: Record<string, Sheet>, pooled: Sh
   const out: string[] = [];
   const sets = Object.keys(sheets);
   const both = (get: (s: Sheet) => number, fmt: (x: number) => string) => sets.map((s) => fmt(get(sheets[s]))).join(" / ");
-  out.push(`# Balance sheet\n\n${info}\n\nEvery group of numbers is ${sets.join(" / ")}: the campaign's twenty runs at their knobs; the rogue's fights at their calibrated knobs (heat 0); free play, the seven runs at the documents' numbers with no knob. Flags are judged on the pooled numbers, except where a band names a set (the enemies in free play, MP in the campaign's runs, gear and formations in their probes).\n`);
+  out.push(`# Balance sheet\n\n${info}\n\nEvery group of numbers is ${sets.join(" / ")}: the campaign's twenty runs at their knobs; the rogue's fights at their calibrated knobs (heat 0); free play, the seven runs at the documents' numbers with no knob. Flags are judged on the pooled numbers (each mode counting once: the three sets' rates averaged), except where a band names a set (the enemies in free play, MP in the campaign's runs, gear and formations in their probes).\n`);
   const ranked = allFlags(sheets, pooled, probes);
   out.push(`## Flags (${ranked.length}), worst first\n`);
   out.push(table(["#", "kind", "what", "measure", "band", "finding"], ranked.map((f, i) => [String(i + 1), f.kind, f.name, `${r2(f.value)} ${BANDS[f.band].unit}`, `${r2(BANDS[f.band].lo)}–${Number.isFinite(BANDS[f.band].hi) ? r2(BANDS[f.band].hi) : "∞"}`, f.text])));
@@ -1118,10 +1191,8 @@ async function main() {
   await Promise.all(jobs);
   pool.close();
   const main: Record<string, Tally> = Object.fromEntries(Object.entries(tallies).filter(([k]) => !k.startsWith("probe:")));
-  const pooled: Tally = {};
-  for (const t of Object.values(main)) for (const k in t) add(pooled, k, t[k]);
   const sheets = Object.fromEntries(Object.entries(main).map(([s, t]) => [s, compute(c, t, s)]));
-  const all = compute(c, pooled, "pooled");
+  const all = poolSheets(c, sheets);
   const probes = computeProbes(c, tallies);
   const secs = ((Date.now() - t0) / 1000).toFixed(0);
   const info = `${spread.length} parties (${trios} trios, each as a gear rotation and as a sensible kit) × ${fights.filter((f) => f.set === "campaign").length} campaign runs, ${fights.filter((f) => f.set === "free").length} free-play runs and ${fights.filter((f) => f.set === "rogue").length} rogue fights × ${seeds.length} seed${seeds.length > 1 ? "s" : ""}, plus ${probeRuns} probe runs (every piece on every class that can wear it, and every formation, on the same parties): ${n} runs, ${all.context.fights} fights in the main sets, in ${secs} s. Content ${c.pack.id}#${c.fingerprint}.`;

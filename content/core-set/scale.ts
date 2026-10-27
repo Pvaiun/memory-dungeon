@@ -48,9 +48,18 @@ export const SPEED = { fast: 5.9, medium: 7.9, slow: 10.3 } as const;
  * 38 and 56 the Assassin, Paladin and Hexer still sat out half their regular fights or more; at 24, 32 and 42, the Hexer
  * 30%, the Assassin 38%, the Paladin (an 8-tick Smite) 52%.
  */
-export const COOLDOWN = { short: 24, medium: 32, long: 42 } as const;
-/** Foes keep the pacing pass's cooldowns: the change is for the party's casters, not the bosses' signature moves. */
-export const ENEMY_COOLDOWN = { short: 30, medium: 48, long: 70 } as const;
+/**
+ * Step 5e (the balance sheet): long 36 (was 42, up to 48 with the jitter). Six abilities on the long word never fired: with
+ * a third-slot head start of 6 ticks, a long ability's first cast came at tick 36 to 44, in regular fights of 31 ticks
+ * (Pyre, Static charge, Stillness 0.01 to 0.04 casts a regular fight; Vanish and Garrote 0.18).
+ */
+export const COOLDOWN = { short: 24, medium: 32, long: 36 } as const;
+/**
+ * Foes keep the pacing pass's short cooldown. Step 5e: medium 40 and long 60 (were 48 and 70). In free play, at the documents'
+ * numbers, a boss fight lasted 46 ticks and the signature moves (Crush, Quiet, Tempest, Death bell, Rally) came 0.5 to 0.9
+ * times a fight against the enemies document's "two or three times".
+ */
+export const ENEMY_COOLDOWN = { short: 30, medium: 40, long: 60 } as const;
 /**
  * An ability's cooldown: its word's, moved up to 15% either way by its id, so no two in a kit share one and few line up with
  * each other or with a swing. The director's ask: "you should probably never even have two that are the same".
@@ -66,7 +75,8 @@ export function jitter(cooldown: number, id: string): number {
  * cooldowns, the bash came five ticks before every Inferno wind-up, in every seed. Stuns run on this instead.
  */
 export const STUN_COOLDOWN: keyof typeof COOLDOWN = "medium";
-export const WINDUP = { quick: 0.5, normal: 1.5, long: 4, very_long: 8 } as const;
+/** Step 5e: very long 6 (was 8). An 8-tick wind-up on top of a long cooldown put Pyre, Smite, Tremor and Raise past most fights' ends, and Crush past a boss's. */
+export const WINDUP = { quick: 0.5, normal: 1.5, long: 4, very_long: 6 } as const;
 export const RULES = {
   basicRecovery: 0.25,
   abilityCast: WINDUP.normal,
@@ -79,7 +89,11 @@ export const RULES = {
    * 25, 15 and 10, every short ability in a first slot (cooldowns 20 to 28) fired on the first tick, the whole party at once,
    * and 19% of minions died before acting (the pacing pass had it at 6%); at 20, 12 and 6, 11%.
    */
-  opening: { min: 0.3, max: 0.7, slots: [20, 12, 6] },
+  /**
+   * Step 5e: 16, 12 and 8 (were 20, 12 and 6). At 20 the first-slot abilities fired at ticks 2 to 6 and a third of the Wolves,
+   * Wisps and Drones in free play died before acting; at 6 a third-slot ability on the long word came after most fights ended.
+   */
+  opening: { min: 0.3, max: 0.7, slots: [16, 12, 8] },
   /** Each physical hit loses this share of the target's Armor: Armor 5 takes 600 off, Armor 8 nearly blanks a sword. */
   armorRatio: 0.12,
   /**
@@ -125,8 +139,12 @@ export const RULES = {
  * MP regen spends more than it regains when its abilities all fire.
  */
 export const COST = { short: 400, medium: 650, long: 1000 } as const;
-/** MP regen: every `every` ticks, restore `share` × the MP regen stat (regen 3 gives 150). */
-export const MP_REGEN = { every: 4, share: 0.05 };
+/**
+ * MP regen: every `every` ticks, restore `share` × the MP regen stat (regen 3 gives 120). Step 5e: 0.04 (was 0.05). Over whole
+ * campaign runs the party regained 110% of the MP it spent, and the casters spent 1% to 4% of their time short of MP (the
+ * Geomancer 14%), against 5c's intent that casters are gated by it; the walls, at 96% to 98% MP, don't feel the step.
+ */
+export const MP_REGEN = { every: 4, share: 0.04 };
 
 // ─── Damage ──────────────────────────────────────────────────────────────────
 
@@ -184,8 +202,8 @@ export const ENEMY_HIT = {
   hailstorm: 0.18,
   /** Tempest: a raidwide the Cleric can absorb. Pacing pass: 0.13 (was 0.06). */
   tempest: 0.13,
-  /** Volatile: one blast behind Shields is fine; three together wipe. */
-  volatile: 0.25,
+  /** Volatile: one blast behind Shields is fine; three together wipe. Step 5e: 0.18 (was 0.25): the Bomb Bug dealt 4.8 times the median minion's damage per appearance. */
+  volatile: 0.18,
 } as const;
 
 /**
@@ -281,7 +299,12 @@ export const STATUS = {
   bleed: { perStack: 120, drop: 1 / 3 },
   /** 8 pulses of 4%: a Prayer heals a third of everyone's max HP over 16 ticks. */
   /** Pacing pass: 12 pulses of 3% (was 8 of 4%): Renew and Regrowth come a third as often. */
-  regen: { every: 2, share: 0.03, duration: 24 },
+  /**
+   * Step 5e: 10 pulses of 2.5%, a quarter of max HP (was 12 of 3%, 36%). Caravan gives it to every ally at every fight's start,
+   * and the same parties won 20 points more in Caravan than in Neutral: 36% of the whole party's HP a fight, for nothing, was
+   * more than a Cleric heals. The Herald's horn (+9 points on the amulets) is the same Regen.
+   */
+  regen: { every: 2, share: 0.025, duration: 20 },
   shield: { capShare: 0.5 },
   /** Campaign pass: a cap of 25 stacks. Uncapped, a hidden Bard stacked 123 on itself and the Storm King reached 38. */
   might: { perStack: 8, every: 4, cap: 25 },
