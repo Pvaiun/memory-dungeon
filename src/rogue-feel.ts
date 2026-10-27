@@ -71,7 +71,7 @@ for (let s = 1; s <= RUNS; s++) {
 type Side = "party" | "enemy";
 type UnitInfo = { id: string; ref: string; name: string; side: Side; max: number };
 /** Per-unit tallies for one fight. */
-type UT = { basics: number; casts: Record<string, number>; fizz: number; dealt: Record<string, number>; taken: number; healed: number; mpSpent: number; mpGained: number; downAt: number | null; firstCast: Record<string, number>; firstAct: number | null };
+type UT = { basics: number; casts: Record<string, number>; fizz: number; dealt: Record<string, number>; taken: number; healed: number; mpSpent: number; mpGained: number; downAt: number | null; firstCast: Record<string, number>; firstAct: number | null; short: number; mpTrace: [number, number][] };
 type StatusT2 = { apps: number; stacks: number; peak: number; dmg: number; byClass: Record<string, number> };
 type Read = { units: Map<string, UnitInfo>; ut: Map<string, UT>; status: Map<string, StatusT2>; interrupts: number; holds: number; mpEnd: Map<string, number> };
 
@@ -84,7 +84,9 @@ function readLog(r: Rec): Read {
   const ut = new Map<string, UT>();
   const status = new Map<string, StatusT2>();
   const mpEnd = new Map<string, number>();
-  const fresh = (): UT => ({ basics: 0, casts: {}, fizz: 0, dealt: {}, taken: 0, healed: 0, mpSpent: 0, mpGained: 0, downAt: null, firstCast: {}, firstAct: null });
+  const fresh = (): UT => ({ basics: 0, casts: {}, fizz: 0, dealt: {}, taken: 0, healed: 0, mpSpent: 0, mpGained: 0, downAt: null, firstCast: {}, firstAct: null, short: 0, mpTrace: [] });
+  // Every cast's tick per ability, to tell when it was ready again (its cooldown from the pack, Haste and Slow ignored).
+  const castsAt = new Map<string, Record<string, number[]>>();
   const hpLeft = new Map<string, number>();
   let interrupts = 0, holds = 0;
   const add = (o: Record<string, number>, k: string, v: number) => { o[k] = (o[k] ?? 0) + v; };
@@ -103,7 +105,10 @@ function readLog(r: Rec): Read {
         const t = ut.get(String(e.by)); if (!t) break;
         if (t.firstAct === null) t.firstAct = at;
         if (e.act === "basic") t.basics++;
-        else { add(t.casts, String(e.act), 1); if (t.firstCast[String(e.act)] === undefined) t.firstCast[String(e.act)] = at; }
+        else {
+          add(t.casts, String(e.act), 1); if (t.firstCast[String(e.act)] === undefined) t.firstCast[String(e.act)] = at;
+          const ca = castsAt.get(String(e.by)) ?? {}; (ca[String(e.act)] ??= []).push(at); castsAt.set(String(e.by), ca);
+        }
         break;
       }
       case "fail": if (e.why === "mp") { const t = ut.get(String(e.by)); if (t) t.fizz++; } break;
@@ -112,6 +117,7 @@ function readLog(r: Rec): Read {
         const v = Number(e.amount);
         if (v < 0) t.mpSpent += -v; else t.mpGained += v;
         mpEnd.set(String(e.target), Number(e.mp));
+        t.mpTrace.push([at, Number(e.mp)]);
         break;
       }
       case "dmg": {
@@ -167,6 +173,34 @@ function readLog(r: Rec): Read {
       case "revive": hpLeft.set(String(e.unit), Number(e.hp)); break;
     }
   }
+  // Time short of MP: ticks where a slotted ability was off cooldown (by its last cast plus its cooldown, or its first-ready
+  // tick) and the unit's MP was below its cost, as a share of the time the unit stood.
+  const head = c.pack.ruleset.opening?.slots ?? [];
+  r.party.units.forEach((pu, i) => {
+    const id = [...units.values()].find((u) => u.side === "party" && u.ref === pu.class)?.id;
+    const t = id ? ut.get(id) : undefined;
+    const m = r.members[i];
+    if (!id || !t || !m) return;
+    const end = t.downAt ?? r.ticks;
+    if (end <= 0) return;
+    const ca = castsAt.get(id) ?? {};
+    let short = 0;
+    for (let tick = 0; tick < end; tick++) {
+      const trace = t.mpTrace;
+      let mp = m.mp;
+      for (const [a, v] of trace) { if (a <= tick) mp = v; else break; }
+      const hungry = pu.abilities.some((a, j) => {
+        const ab = c.abilities.get(a)!;
+        const cost = ab.mp ?? 0;
+        if (cost <= 0 || mp >= cost) return false;
+        const last = (ca[a] ?? []).filter((x) => x <= tick).at(-1);
+        const ready = last === undefined ? ab.cooldown - (head[j] ?? 0) : last + ab.cooldown;
+        return tick >= ready;
+      });
+      if (hungry) short++;
+    }
+    t.short = short / end;
+  });
   return { units, ut, status, interrupts, holds, mpEnd };
 }
 
@@ -310,7 +344,7 @@ function pack(r: Rec, n: number): string {
     const abil = dealt - basic - statusD;
     const casts = Object.entries(t.casts).map(([k, v]) => `${nameOf(c, k)} ×${v} (first t${n1(t.firstCast[k])})`).join(", ");
     const srcs = Object.entries(t.dealt).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k.startsWith("status:") ? nameOf(c, k.slice(7)) : nameOf(c, k)} ${n0(v)}`).join(", ");
-    out.push(`- **${u.name}**: ${t.basics} basics, casts: ${casts || "none"}${t.fizz ? `, ${t.fizz} fizzled for MP` : ""}. Dealt ${n0(dealt)} (${pc(dealt, totalDealt)} of the party's): basic ${pc(basic, dealt)}, abilities ${pc(abil, dealt)}, statuses ${pc(statusD, dealt)}${srcs ? ` [${srcs}]` : ""}. Took ${n0(t.taken)}. Healed others ${n0(t.healed)}. MP spent ${n0(t.mpSpent)}, regained ${n0(t.mpGained)}, left ${rd.mpEnd.has(id) ? n0(rd.mpEnd.get(id)!) : "full"}.${t.downAt !== null ? ` DOWN at t${n1(t.downAt)}.` : ""}`);
+    out.push(`- **${u.name}**: ${t.basics} basics, casts: ${casts || "none"}${t.fizz ? `, ${t.fizz} fizzled for MP` : ""}. Dealt ${n0(dealt)} (${pc(dealt, totalDealt)} of the party's): basic ${pc(basic, dealt)}, abilities ${pc(abil, dealt)}, statuses ${pc(statusD, dealt)}${srcs ? ` [${srcs}]` : ""}. Took ${n0(t.taken)}. Healed others ${n0(t.healed)}. MP spent ${n0(t.mpSpent)}, regained ${n0(t.mpGained)}, left ${rd.mpEnd.has(id) ? n0(rd.mpEnd.get(id)!) : "full"}${t.short > 0.02 ? `, short of MP ${pc(t.short, 1)} of its time` : ""}.${t.downAt !== null ? ` DOWN at t${n1(t.downAt)}.` : ""}`);
   }
   for (const id of foeIds) {
     const u = rd.units.get(id)!, t = rd.ut.get(id)!;
@@ -369,15 +403,16 @@ function summary(): string {
     out.push(`| ${act} | ${tier} | ${xs.length} | ${pc(xs.filter((x) => x.r.won).length, xs.length)} | ${n1(mean(ticks))} | ${ticks[Math.floor(ticks.length * 0.1)]}–${ticks[Math.floor(ticks.length * 0.9)]} | ${n1(kos)} |`);
   }
   // Classes.
-  out.push("", "## Classes (over the fights the class was in)", "", "| class | fights | dealt a fight | share of party's | basic | abilities | statuses | healed a fight | taken a fight | KO per 100 | down at (mean t) | MP spent | regained | left % | fizzles a fight |", "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |");
-  const classRows: Record<string, { fights: number; dealt: number; share: number; basic: number; abil: number; status: number; healed: number; taken: number; ko: number; downAt: number[]; spent: number; gained: number; left: number[]; fizz: number }> = {};
+  out.push("", "## Classes (over the fights the class was in)", "", "| class | fights | dealt a fight | share of party's | basic | abilities | statuses | healed a fight | taken a fight | KO per 100 | down at (mean t) | MP spent | regained | left % | short of MP (% of its time) |", "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |");
+  const classRows: Record<string, { fights: number; dealt: number; share: number; basic: number; abil: number; status: number; healed: number; taken: number; ko: number; downAt: number[]; spent: number; gained: number; left: number[]; fizz: number; short: number[] }> = {};
   const abilRows: Record<string, { present: number; casts: number; first: number[]; fizz: number; dealt: number }> = {};
   for (const { r, rd } of reads) {
     const partyIds = [...rd.units.values()].filter((u) => u.side === "party");
     const total = partyIds.reduce((s, u) => s + Object.values(rd.ut.get(u.id)!.dealt).reduce((a, b) => a + b, 0), 0);
     partyIds.forEach((u, i) => {
       const t = rd.ut.get(u.id)!;
-      const row = (classRows[u.ref] ??= { fights: 0, dealt: 0, share: 0, basic: 0, abil: 0, status: 0, healed: 0, taken: 0, ko: 0, downAt: [], spent: 0, gained: 0, left: [], fizz: 0 });
+      const row = (classRows[u.ref] ??= { fights: 0, dealt: 0, share: 0, basic: 0, abil: 0, status: 0, healed: 0, taken: 0, ko: 0, downAt: [], spent: 0, gained: 0, left: [], fizz: 0, short: [] });
+      row.short.push(t.short);
       const dealt = Object.values(t.dealt).reduce((a, b) => a + b, 0);
       const basic = t.dealt.basic ?? 0;
       const st = Object.entries(t.dealt).filter(([k]) => k.startsWith("status:")).reduce((a, [, v]) => a + v, 0);
@@ -395,7 +430,7 @@ function summary(): string {
     });
   }
   for (const [cls, r] of Object.entries(classRows).sort((a, b) => b[1].fights - a[1].fights)) {
-    out.push(`| ${c.classes.get(cls)!.name} | ${r.fights} | ${n0(r.dealt / r.fights)} | ${pc(r.share, r.fights)} | ${pc(r.basic, r.dealt)} | ${pc(r.abil, r.dealt)} | ${pc(r.status, r.dealt)} | ${n0(r.healed / r.fights)} | ${n0(r.taken / r.fights)} | ${n1((100 * r.ko) / r.fights)} | ${r.downAt.length ? n1(mean(r.downAt)) : "–"} | ${n0(r.spent / r.fights)} | ${n0(r.gained / r.fights)} | ${r.left.length ? pc(mean(r.left), 1) : "–"} | ${n1(r.fizz / r.fights)} |`);
+    out.push(`| ${c.classes.get(cls)!.name} | ${r.fights} | ${n0(r.dealt / r.fights)} | ${pc(r.share, r.fights)} | ${pc(r.basic, r.dealt)} | ${pc(r.abil, r.dealt)} | ${pc(r.status, r.dealt)} | ${n0(r.healed / r.fights)} | ${n0(r.taken / r.fights)} | ${n1((100 * r.ko) / r.fights)} | ${r.downAt.length ? n1(mean(r.downAt)) : "–"} | ${n0(r.spent / r.fights)} | ${n0(r.gained / r.fights)} | ${r.left.length ? pc(mean(r.left), 1) : "–"} | ${pc(mean(r.short), 1)} |`);
   }
   out.push("", "## Abilities (over the fights they were slotted)", "", "| ability | class | word | fights | casts a fight | first cast (mean t) | dealt a cast | fizzles a fight |", "| --- | --- | --- | --- | --- | --- | --- | --- |");
   for (const [id, r] of Object.entries(abilRows).sort((a, b) => (c.abilities.get(a[0])?.class ?? "").localeCompare(c.abilities.get(b[0])?.class ?? ""))) {
