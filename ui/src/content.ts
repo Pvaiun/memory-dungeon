@@ -102,7 +102,8 @@ export const STAT_CODE: Record<string, string> = {
 export const ELEMENT_CODE: Record<string, string> = { fire: "FIRE", ice: "ICE", lightning: "LTNG", wind: "WIND", earth: "EARTH", light: "LIGHT", dark: "DARK" };
 export function statCode(key: string): string {
   if (STAT_CODE[key]) return STAT_CODE[key];
-  if (key.startsWith("resist:")) return ELEMENT_CODE[key.slice(7)] ?? key.slice(7).toUpperCase();
+  // "WIND RES", not "WIND": the director read a bare element on gear as a stat (wind-up).
+  if (key.startsWith("resist:")) return `${ELEMENT_CODE[key.slice(7)] ?? key.slice(7).toUpperCase()} RES`;
   if (key.startsWith("immune:")) return `NO ${key.slice(7).toUpperCase()}`;
   return key.toUpperCase().slice(0, 4);
 }

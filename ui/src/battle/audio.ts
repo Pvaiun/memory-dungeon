@@ -2,9 +2,12 @@
  * Sound: the director's retro effects pack and two tracks, as small mp3s in
  * public/audio/ (ui/README.md says which file plays for what). Effects and
  * music have their own switches (Settings). Browsers only start audio after a
- * tap, so music that couldn't start waits for the next tap.
+ * tap, so music that couldn't start waits for the next tap. In the background (another app, the phone locked) the music
+ * pauses, and picks up where it was on return.
  */
-const base = () => `${import.meta.env.BASE_URL}audio/`;
+import { BUILD } from "../update.js";
+
+const at = (name: string) => `${import.meta.env.BASE_URL}audio/${name}.mp3?v=${BUILD}`;
 
 let sfxOn = true;
 let musicOn = true;
@@ -27,7 +30,7 @@ function play(name: string, volume = 0.6) {
   let a = pool.find((x) => x.paused || x.ended);
   if (!a) {
     if (pool.length >= 4) return;
-    a = new Audio(`${base()}${name}.mp3`);
+    a = new Audio(at(name));
     a.preload = "auto";
     pool.push(a);
   }
@@ -64,11 +67,12 @@ export const music = {
     if (!musicOn) return;
     if (currentTrack === track && current && !current.paused) return;
     music.stop();
-    const a = new Audio(`${base()}${track}.mp3`);
+    const a = new Audio(at(track));
     a.loop = true;
     a.volume = track === "battle" ? 0.45 : 0.4;
     current = a;
     currentTrack = track;
+    if (document.hidden) return;
     a.play().then(() => { pending = false; }).catch(() => { pending = true; });
   },
   stop() {
@@ -88,3 +92,9 @@ const unlock = () => {
 };
 window.addEventListener("pointerdown", unlock, true);
 window.addEventListener("keydown", unlock, true);
+
+document.addEventListener("visibilitychange", () => {
+  if (!current) return;
+  if (document.hidden) current.pause();
+  else if (musicOn) current.play().then(() => { pending = false; }).catch(() => { pending = true; });
+});

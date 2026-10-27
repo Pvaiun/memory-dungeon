@@ -28,6 +28,8 @@ export type Screen = "home" | "journey" | "node" | "fight" | "party" | "formatio
 
 let current: Screen = "home";
 let currentArg: unknown;
+/** The screen on show. */
+export const screen = (): Screen => current;
 let frame: HTMLElement;
 let screenEl: HTMLElement | null = null;
 let strip: Strip | null = null;
