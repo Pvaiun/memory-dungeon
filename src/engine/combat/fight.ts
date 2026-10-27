@@ -712,12 +712,14 @@ function critRoll(w: W, rng: CUnit, chance: number, multiplier: number): number 
   return multiplier;
 }
 
-type Calc = { amount: number; word: string | null; crit: boolean; heal: number };
+type Calc = { amount: number; word: string | null; crit: boolean; heal: number; raw: number };
 
 /** Resolution order steps 2 to 6 (section 5): amount, boosts, damage-taken modifiers, crit, mitigation. Whole points, rounded down. */
 function calc(w: W, t: CUnit, p: Part, raw: number, tags: readonly string[], boost: number, crit: number): Calc {
   let x = raw * (1 + boost / 100) * (1 + takenOf(w, t, tags) / 100);
   if (crit) x = (x * crit) / 100;
+  // The amount before Armor or resistance, for the log only: what mitigation took off.
+  const preMit = x;
   let word: string | null = null;
   let heal = 0;
   if (p.type === "physical") {
@@ -743,9 +745,10 @@ function calc(w: W, t: CUnit, p: Part, raw: number, tags: readonly string[], boo
       word = r < 0 ? "WEAK" : r > 0 ? "RESIST" : null;
     }
   }
+  const raw0 = Math.max(0, Math.floor(preMit));
   x = Math.max(0, Math.floor(x));
   if (stat(w, t, "immune:damage") > 0) (x = 0), (heal = 0), (word = "IMMUNE");
-  return { amount: x, word, crit: crit > 0, heal };
+  return { amount: x, word, crit: crit > 0, heal, raw: raw0 };
 }
 
 /** Steps 7 and 8: a block (Aegis) stops damage above its share outright; absorbs soak in the order they were first applied; the rest comes off HP. */
@@ -784,7 +787,7 @@ const dmgKind = (p: Part) => p.element ?? (p.type === "none" ? "untyped" : p.typ
 function logDamage(w: W, by: CUnit | null, t: CUnit, src: string, part: string, r: Calc, tk: { soaked: number; blocked: boolean }, from?: string | null, kind?: string) {
   w.log?.({
     t: "dmg", vis: "player", at: w.f.now, by: by?.id ?? null, target: t.id, src, part, ...(from ? { from } : {}), ...(kind ? { kind } : {}),
-    amount: tk.blocked ? 0 : r.amount, soaked: tk.soaked, word: tk.blocked ? "AEGIS" : r.word, crit: r.crit, hp: t.hp, shield: shield(w, t),
+    amount: tk.blocked ? 0 : r.amount, raw: r.raw, soaked: tk.soaked, word: tk.blocked ? "AEGIS" : r.word, crit: r.crit, hp: t.hp, shield: shield(w, t),
   });
 }
 

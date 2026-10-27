@@ -24,7 +24,8 @@
     "rogue": "esbuild src/rogue-sim.ts --bundle --platform=node --format=esm --outfile=out/rogue.mjs --log-level=warning && node out/rogue.mjs",
     "rogue:calibrate": "esbuild src/rogue-calibrate.ts --bundle --platform=node --format=esm --outfile=out/rogue-calibrate.mjs --log-level=warning && node out/rogue-calibrate.mjs",
     "rogue:tune": "esbuild src/rogue-tune.ts --bundle --platform=node --format=esm --outfile=out/rogue-tune.mjs --log-level=warning && node out/rogue-tune.mjs",
-    "rogue:legendaries": "esbuild src/rogue-legendaries.ts --bundle --platform=node --format=esm --outfile=out/rogue-legendaries.mjs --log-level=warning && node out/rogue-legendaries.mjs"
+    "rogue:legendaries": "esbuild src/rogue-legendaries.ts --bundle --platform=node --format=esm --outfile=out/rogue-legendaries.mjs --log-level=warning && node out/rogue-legendaries.mjs",
+    "balance": "esbuild src/balance.ts --bundle --platform=node --format=esm --outfile=out/balance.mjs --log-level=warning && node out/balance.mjs"
   },
   "keywords": [],
   "author": "",
