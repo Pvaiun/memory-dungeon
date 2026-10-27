@@ -134,7 +134,7 @@ What the knobs say: **the regular fights' knobs rose by two thirds** (mean +64 â
 
 ### The rogue
 
-(The rogue's re-tune and the fresh read were running as this was committed; their numbers follow in the next commit.)
+`npm run rogue:calibrate` set every fight's knob again (100 fights), then `npm run rogue:tune` corrected the bosses and the regions over whole runs, six rounds of 1,500 runs (the 5d targets: a boss beats 22%, 35% and 45% of the parties that reach it by act; a region's road ends 6%, 9% and 12% of the runs that enter it). Confirmed on 2,000 fresh runs at heat 0: **the simulated player wins 20%** (5e had 23%, 5d 21%); the bosses beat 26%, 38% and 41% of the parties that reach them; 70% of runs reach act 2 and 39% act 3. Heats 1, 3, 5 and 10 win 17%, 12%, 7% and 3% (5d: 17%, 10%, 6%, 2%). Two act-3 roads still end 20% to 22% of their entrants against a 12% target (the Storm Tower and the Deep Crypt), closing ten knob points a round; stopped with the headline on target. Among the simulated player's final parties the Monk wins most (36%) and the Vampire next (28%); the Hexer, Bard and Frostweaver are drafted least (23 to 33 parties of 2,000), which is the drafter's habit, not the sheet's reading of them.
 
 ## 5. Fresh eyes
 
