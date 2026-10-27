@@ -12,13 +12,14 @@ import type { Content } from "../../src/engine/run.js";
 import type { AbilityT, ClassDefT, DungeonT, EnemyT, FormationT, GearT, StatusT, WeaponKindT } from "../../src/schema.js";
 
 /**
- * Points of the documents' scale shown per point, by the NUMBERS setting. Small (10) rounded a third of status ticks
- * and half of all heals to 1 or 0; medium (30) leaves about 3% there, with a basic hit near 24 and a Knight at 120 HP.
+ * The NUMBERS setting: how many times the documents' scale the numbers show, ×1 being 10 a point (the Knight's HP 4
+ * shows as 40). Measured over the campaign's runs, the share of status ticks and of heals that show as 1 or 0: ×1, 23%
+ * and 46%; ×1.6, 17% and 38%; ×2, 15% and 23%; ×2.5, 6% and 2%; ×3 (the default, a basic hit near 24), 4% and 2%.
  */
-export type NumberScale = "small" | "medium" | "big";
-export const NUMBER_SCALES: Record<NumberScale, number> = { small: 10, medium: 30, big: 100 };
-export let DISPLAY_DIV = 1000 / NUMBER_SCALES.medium;
-export const setNumberScale = (s: NumberScale) => { DISPLAY_DIV = 1000 / (NUMBER_SCALES[s] ?? NUMBER_SCALES.medium); };
+export const NUMBER_SCALES = [1, 1.3, 1.6, 2, 2.5, 3, 4, 5, 10] as const;
+export const DEFAULT_NUMBERS = 3;
+export let DISPLAY_DIV = 100 / DEFAULT_NUMBERS;
+export const setNumberScale = (m: number) => { DISPLAY_DIV = 100 / (m > 0 ? m : DEFAULT_NUMBERS); };
 /** An amount in the data, as shown. */
 export const disp = (n: number) => Math.round(n / DISPLAY_DIV);
 /** An amount in the data, in points of the documents' scale (HP 5 is 5,000). */
