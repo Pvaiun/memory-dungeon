@@ -204,15 +204,12 @@ button.mid { padding: .625rem .5rem; }
 .member .cds { flex: 0 0 auto; }
 .member.ko { color: var(--dim); }
 .member.ko .face { opacity: .4; }
-.win.foes { display: flex; align-items: center; gap: .5rem; min-height: 2.75rem; padding: .25rem .5rem; }
-.foelist { flex: 1; min-width: 0; display: flex; flex-wrap: wrap; gap: 0 .5rem; text-transform: uppercase; line-height: 1.5rem; }
-.foelist span + span::before { content: "·"; color: var(--dim); margin-right: .5rem; }
-.foelist span { cursor: pointer; }
-.foelist span.dead { color: var(--dim); text-decoration: line-through; }
 .tick { white-space: nowrap; color: var(--dim); flex: 0 0 auto; }
 .tick b { color: var(--ink); }
 .ctl { display: flex; gap: .25rem; align-items: center; flex: 0 0 auto; }
-.ctl button { padding: .375rem .25rem; min-width: 3rem; text-align: center; flex: 1 1 auto; }
+.ctl button { padding: .75rem .25rem; min-width: 3rem; text-align: center; flex: 1 1 auto; }
+.ctl button.speed { min-width: 4rem; }
+.ctl .tick { flex: 0 0 auto; padding: 0 .25rem; }
 .inspect .st { display: flex; align-items: flex-start; gap: .5rem; min-height: 2rem; margin: .25rem 0; }
 .inspect .st .sticon { margin-top: .125rem; }
 /* a fight's end and the campfire: the way on in the message window's place, the rest below */
@@ -282,11 +279,17 @@ table.sum th { color: var(--dim); }
 .rnode.been { opacity: .35; }
 .rnode.here { opacity: 1; border-color: var(--hi); }
 .rnode.can { opacity: 1; cursor: pointer; border-color: var(--line); animation: rpulse 1.2s steps(2) infinite; }
-.rnode.cur { background: var(--sel); border-color: var(--hi); animation: none; }
+.rnode.can { width: 6.5rem; height: 6.5rem; z-index: 1; }
+.rnode.cur { background: var(--sel); border-color: var(--hi); animation: none; z-index: 2; }
+.rnode-tag { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: .125rem; color: var(--edge); background: var(--hi); border-radius: .25rem; padding: 0 .25rem; line-height: 1.25rem; white-space: nowrap; }
 @keyframes rpulse { 50% { border-color: var(--hi); } }
 .roffer { cursor: pointer; margin-bottom: .5rem; }
 .roffer.cur { background: var(--sel); border-color: var(--hi); }
 .dimmed { opacity: .5; }
+/* where the next tap can go, once something is picked: a pulsing gold edge */
+.target { animation: target 1s steps(2) infinite; }
+.cell.target, .member.target { border-radius: .25rem; }
+@keyframes target { 50% { box-shadow: inset 0 0 0 .25rem var(--hi); border-color: var(--hi); } }
 .member.cur { background: var(--sel); }
 .art.glow-uncommon > * { filter: drop-shadow(0 0 .125rem var(--good)); }
 .art.glow-rare > * { filter: drop-shadow(0 0 .125rem var(--buff)); }

@@ -13,7 +13,7 @@ import { SUBTICKS } from "../../../src/schema.js";
 import type { CUnit } from "../../../src/engine/combat/fight.js";
 import { weaponOf } from "../../../src/engine/combat/fight.js";
 import { c, className, disp, fightName, runName, shortName } from "../content.js";
-import { ELEMENT_COLOR, enemyDisplayName, enemyName, STATUS_STYLE, TAG_ICON, type Pose } from "../art.js";
+import { ELEMENT_COLOR, enemyName, STATUS_STYLE, TAG_ICON, type Pose } from "../art.js";
 import { bar, button, clear, h, nav, win, type Child } from "../dom.js";
 import { nextSeed, party as partyLoadout, save, setup } from "../state.js";
 import { abilityTag, statusText, weaponInfo } from "../describe.js";
@@ -27,6 +27,7 @@ import { setMusic, setSound, sfx } from "./audio.js";
 import { go } from "../screens.js";
 import { clear as clearNode, isCurrent, nodes, onJourney } from "../journey.js";
 import { celebrate } from "../celebrate.js";
+import { meet } from "../bestiary.js";
 import { advanceOnce } from "../../../src/engine/run.js";
 import { combat } from "../../../src/engine/combat/rules.js";
 import { endFight as endRogueFight, FIGHT_DUNGEON, partyOf, reservesStand, startFight as startRogueFight } from "../../../src/rogue.js";
@@ -111,18 +112,17 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   const cursorEl = h("span", { class: "cursor-dq" }, "▼");
   const msgEl = win("msg", linesEl, cursorEl);
   const partyEl = win("party list");
-  const foesList = h("div", { class: "foelist" });
+  // The foes are on the field (tap one to inspect it): the list of their names under the party is gone, the tick sits with the controls.
   const tick = h("span", { class: "tick" }, "T", h("b", null, "0"));
-  const foesEl = win("foes", foesList, tick);
   const ctl = h("div", { class: "ctl" });
   // At a fight's end and at the campfire, the main action takes the message window's place, under the field; the
   // outcome and the smaller actions sit below the party, where the foes and the controls were.
   const resultEl = h("div", { class: "result-slot" });
   const lowerEl = h("div", { class: "lower-slot" });
-  screen.append(canvas, msgEl, resultEl, partyEl, foesEl, ctl, lowerEl);
+  screen.append(canvas, msgEl, resultEl, partyEl, ctl, lowerEl);
   /** Swaps the fight's own parts (the message window, the foes, the controls) for the end's or the campfire's. */
   const showFight = (on: boolean, rows = true) => {
-    for (const el of [msgEl, foesEl, ctl]) el.style.display = on ? "" : "none";
+    for (const el of [msgEl, ctl]) el.style.display = on ? "" : "none";
     partyEl.style.display = on || rows ? "" : "none";
     if (on) (clear(resultEl), clear(lowerEl));
   };
@@ -159,17 +159,18 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   const setStep = (on: boolean) => { if (setup.settings.step !== on) { setup.settings.step = on; save(); } };
   const pauseBtn = button("II", () => { if (paused) { paused = false; stepping = false; setStep(false); } else paused = true; renderCtl(); });
   const stepBtn = button("STEP", () => { paused = true; stepping = true; setStep(true); renderCtl(); });
-  const speedBtns = SPEEDS.map((s) => button(`${s}×`, () => { speed = s; setup.settings.speed = s; save(); renderCtl(); }));
+  // One button for the speed: each tap goes 1×, 2×, 4×, round again.
+  const speedBtn = button("1×", () => { speed = SPEEDS[(SPEEDS.indexOf(speed as 1 | 2 | 4) + 1) % SPEEDS.length]; setup.settings.speed = speed; save(); renderCtl(); }, "speed");
   const renderCtl = () => {
     pauseBtn.textContent = paused ? "▶" : "II";
     pauseBtn.className = paused && !setup.settings.step ? "on" : "";
     stepBtn.className = setup.settings.step ? "on" : "";
-    speedBtns.forEach((b, i) => (b.className = SPEEDS[i] === speed ? "on" : ""));
+    speedBtn.textContent = `${speed}×`;
   };
   /** In step mode a fight starts waiting: its first beat plays, then it waits for a tap. */
   const enterStepMode = () => { if (setup.settings.step) { paused = true; stepping = true; } };
   enterStepMode();
-  ctl.append(button("◀", () => confirmLeave()), pauseBtn, stepBtn, ...speedBtns, button(">>", () => fastForward()), button("LOG", () => openLog()));
+  ctl.append(button("◀", () => confirmLeave()), pauseBtn, stepBtn, speedBtn, button(">>", () => fastForward()), button("LOG", () => openLog()), tick);
   renderCtl();
 
   const castingNow = () => driver.units().some((u) => !u.ko && u.cast !== null);
@@ -279,7 +280,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       case "fight_start": {
         scene.sync();
         buildRows();
-        foesKey = "";
+        meet(driver.units().filter((u) => u.side === "enemy").map((u) => u.ref));
         const stage = dungeon!.stages.find((s) => s.id === ev.stage);
         const name = fightName(stage?.kind === "fight" ? stage : { id: String(ev.stage) });
         const where = single ? "" : `${driver.fightNo}/${driver.fightTotal}`;
@@ -374,16 +375,15 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         sfx.heal();
         break;
       case "join": {
-        const u = ev.unit as { id: string };
+        const u = ev.unit as { id: string; ref?: string };
         scene.sync();
+        if (u.ref) meet([u.ref]);
         scene.effectFor(u.id, "summon");
-        foesKey = "";
         break;
       }
       case "leave":
         scene.effectFor(String(ev.unit), "split");
         scene.leave(String(ev.unit));
-        foesKey = "";
         break;
       case "strike":
         scene.effectFor(String(ev.target), ev.status === "arc" ? "lightning" : "slash");
@@ -554,31 +554,6 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         g.strokeRect(p.x - o, y - o, p.size + 2 * o, p.size + 2 * o);
       }
     }
-  }
-
-  // ─── Foes ───
-  let foesKey = "";
-  function updateFoes() {
-    const foes = driver.units().filter((u) => u.side === "enemy" && !u.gone);
-    const groups = new Map<string, { alive: number; total: number; first: string | null; boss: boolean }>();
-    for (const u of foes) {
-      const g = groups.get(u.ref) ?? { alive: 0, total: 0, first: null, boss: c.enemies.get(u.ref)?.rank === "boss" };
-      g.total++;
-      if (!u.ko) {
-        g.alive++;
-        g.first ??= u.id;
-      }
-      groups.set(u.ref, g);
-    }
-    const key = [...groups].map(([r, g]) => `${r}:${g.alive}/${g.total}`).join("|");
-    if (key === foesKey) return;
-    foesKey = key;
-    clear(foesList);
-    for (const [ref, g] of groups) {
-      const label = `${g.boss ? "★" : ""}${enemyDisplayName(ref)}${g.total > 1 ? ` ×${g.alive}` : ""}`;
-      foesList.append(h("span", { class: g.alive ? "" : "dead", onClick: () => { if (g.first) openInspect(g.first); } }, label));
-    }
-    if (!groups.size) foesList.append(h("span", { class: "dim" }, "NO FOES"));
   }
 
   // ─── Overlays: a unit's state, the log, a sheet ───
@@ -897,7 +872,6 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     } else if (playing && playing.typedAt !== null) cursorEl.style.visibility = Math.floor(now / 400) % 2 ? "hidden" : "visible";
     scene.frame(vwall);
     updateRows();
-    updateFoes();
     (tick.lastChild as HTMLElement).textContent = String(Math.floor(driver.tick));
     raf = requestAnimationFrame(frameStep);
   }

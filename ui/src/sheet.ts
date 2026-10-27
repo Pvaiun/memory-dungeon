@@ -170,7 +170,7 @@ export function gearRow(g: GearT | null, slot: string, stats: Stats | null, onCl
  * name in its element's colour, the MP, cooldown and wind-up as glyphs and whole numbers; the documents' sentence; and
  * its size for this unit with what it grows with. In designer view, the target and every effect in words.
  */
-export function abilityBlock(a: AbilityT, stats: Stats | null, designer: boolean, opts: { n?: number; onN?: () => void; cur?: boolean; dmgMult?: number; opening?: boolean } = {}): HTMLElement {
+export function abilityBlock(a: AbilityT, stats: Stats | null, designer: boolean, opts: { n?: number; onN?: () => void; cur?: boolean; target?: boolean; dmgMult?: number; opening?: boolean } = {}): HTMLElement {
   const i = abilityInfo(a, stats);
   const tag = abilityTag(a);
   const cell = TAG_ICON[tag] ?? TAG_ICON.physical;
@@ -178,7 +178,8 @@ export function abilityBlock(a: AbilityT, stats: Stats | null, designer: boolean
   const head0 = opts.n !== undefined && opts.opening !== false ? c.pack.ruleset.opening?.slots?.[opts.n - 1] : undefined;
   const first = head0 !== undefined ? Math.max(0, i.cooldown - head0) : 0;
   const head = h("div", { class: "head" },
-    opts.n !== undefined ? h("span", { class: "n", onClick: opts.onN }, String(opts.n)) : null,
+    // With another number picked, this one pulses: it's where the next tap goes.
+    opts.n !== undefined ? h("span", { class: `n${opts.target ? " target" : ""}`, onClick: opts.onN }, String(opts.n)) : null,
     h("span", { class: "pip" }, pipEl(cell, first, i.cooldown, 2)),
     h("div", { class: "grow" },
       h("div", { class: `trunc ${ELEMENTS.includes(tag) ? tag : tag === "heal" || tag === "revive" || tag === "cleanse" ? "good" : ""}` }, i.name.toUpperCase()),

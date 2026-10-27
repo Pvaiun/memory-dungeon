@@ -14,6 +14,7 @@ import {
   ownsClass, ownsFormation, ownsGear, resetJourney, setCleared, mode as playMode, onRogue,
 } from "./journey.js";
 import { celebrate } from "./celebrate.js";
+import { anyNewEnemy, known, look, metCount, newEnemy } from "./bestiary.js";
 import { abilityBlock, basicLine, canUse, classHead, classPassive, codeSpans, enemySheet, enemyStats, gearRow, memberFor, portraitEl, role, section, specialLines, statGrid } from "./sheet.js";
 import { enemyEl, enemyThumb, iconEl } from "./pixel.js";
 import { ELEMENTS, TAG_ICON } from "./art.js";
@@ -136,7 +137,7 @@ function home(): Child[] {
   const items: Item[] = [
     ...head,
     ["classes", "CLASSES", onJourney() ? `${owned} of ${classes.length} found` : "", anyNewClass() || anyNewGear()],
-    ["bestiary", "BESTIARY", "", false],
+    ["bestiary", "BESTIARY", playMode() === "free" ? "" : `${metCount()} of ${enemies.length} met`, anyNewEnemy()],
     ["settings", "SETTINGS", "", false],
   ];
   const f = c.formations.get(setup.formation)!;
@@ -325,7 +326,9 @@ function party(): Child[] {
     const id = setup.party[i];
     const pos = f.positions[i];
     const codes = codeSpans(pos.stats);
-    return h("div", { class: `win card${i === pickSlot ? " cur" : ""}`, onClick: () => tapSlot(i) },
+    // Something picked: the slots it can go to pulse.
+    const target = pickClass !== null || (pickSlot !== null && pickSlot !== i);
+    return h("div", { class: `win card${i === pickSlot ? " cur" : ""}${target ? " target" : ""}`, onClick: () => tapSlot(i) },
       h("div", { class: "slot" }, `${i + 1} ${pos.name}`),
       id ? h("div", { class: "portrait" }, portraitEl(id, "slot")) : h("div", { class: "empty" }, "EMPTY"),
       h("div", { class: "name" }, id ? shortName(id) : "---"),
@@ -348,7 +351,7 @@ function party(): Child[] {
     h("div", { class: "btns even" }, sheetBtn, removeBtn),
     win("scroll roster", h("div", { class: "grid" }, ...roster.map((k) => {
       const inP = setup.party.includes(k.id);
-      return h("div", { class: `cell${inP ? " in" : ""}${pickClass === k.id ? " cur" : ""}`, onClick: () => tapClass(k.id) },
+      return h("div", { class: `cell${inP ? " in" : ""}${pickClass === k.id ? " cur" : ""}${pickSlot !== null ? " target" : ""}`, onClick: () => tapClass(k.id) },
         h("div", { class: "portrait" }, portraitEl(k.id)), h("span", { class: "trunc", style: "max-width:100%" }, shortName(k.id)), newClass(k.id) || newGearFor(k.id) ? newTag() : null);
     }), roster.length < classes.length ? h("div", { class: "cell static dim" }, h("div", { class: "portrait locked" }, "?"), h("span", null, `${classes.length - roster.length} MORE`)) : null)),
   ];
@@ -417,7 +420,7 @@ function unit(arg?: unknown): Child[] {
       ...gearRows,
       canUse(id),
       section("ABILITIES", orderPick === null ? null : h("span", { class: "hi" }, "SWAP WITH?")),
-      ...order.map((a, i) => abilityBlock(c.abilities.get(a)!, member.stats, designer, { n: i + 1, onN: () => onN(i), cur: orderPick === i })),
+      ...order.map((a, i) => abilityBlock(c.abilities.get(a)!, member.stats, designer, { n: i + 1, onN: () => onN(i), cur: orderPick === i, target: orderPick !== null && orderPick !== i })),
       basicLine(weaponOf(c, member.weapon), member.stats),
     ),
   ];
@@ -474,13 +477,15 @@ const rankClass = (rank: string) => (rank === "boss" ? "gold" : rank === "elite"
 /** The bestiary: each enemy's likeness, name and rank, its HP, and the elements it's weak to at a glance. */
 function bestiary(): Child[] {
   return [
-    header("BESTIARY", () => go("home"), `${enemies.length}`),
+    header("BESTIARY", () => go("home"), playMode() === "free" ? `${enemies.length}` : `${metCount()}/${enemies.length}`),
     win("list scroll", ...enemies.map((e) => {
+      // Not met yet: its shape and ???, a Pokédex's way.
+      if (!known(e.id)) return row([h("span", { style: "width:3rem;display:inline-flex;justify-content:center" }, enemyThumb(e.id, 24, true)), h("span", { class: "grow dim" }, "???")], undefined, { cursor: false, cls: "beast" });
       const st = enemyStats(e);
       const weak = ELEMENTS.filter((el) => (st[`resist:${el}`] ?? 0) + (st.resist ?? 0) < 0);
       return row([
         h("span", { style: "width:3rem;display:inline-flex;justify-content:center" }, enemyThumb(e.id, 24)),
-        h("div", { class: "grow trunc" }, h("div", { class: "line" }, h("span", { class: `trunc ${rankClass(e.rank)}` }, `${e.rank === "boss" ? "★" : ""}${enemyDisplayName(e.id)}`)),
+        h("div", { class: "grow trunc" }, h("div", { class: "line" }, h("span", { class: `trunc ${rankClass(e.rank)}` }, `${e.rank === "boss" ? "★" : ""}${enemyDisplayName(e.id)}`), newEnemy(e.id) ? newTag() : null),
           h("div", { class: "line small dim" }, `HP ${showStat("max_hp", st.max_hp)}`, weak.length ? h("span", { class: "bad" }, "WEAK") : null, ...weak.map((el) => iconEl(TAG_ICON[el])))),
       ], () => go("enemy", e.id), { cursor: false, cls: "beast" });
     })),
@@ -489,7 +494,8 @@ function bestiary(): Child[] {
 function enemy(arg?: unknown): Child[] {
   const id = String(arg);
   const e = c.enemies.get(id);
-  if (!e) return bestiary();
+  if (!e || !known(id)) return bestiary();
+  look(id);
   const where = [...new Set(dungeons.flatMap((d) => d.stages.flatMap((s) => (s.kind === "fight" && s.enemies.includes(e.id) ? [runName(d)] : []))))];
   return [
     header(enemyDisplayName(e.id), () => go("bestiary"), h("span", { class: rankClass(e.rank) || "dim" }, e.rank === "boss" ? "★BOSS" : e.rank)),

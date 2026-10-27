@@ -251,7 +251,7 @@ function mapView(run: RogueRun): Child[] {
   if (mapPick && !next.some((n) => n.id === mapPick)) mapPick = null;
   const floors = rogue(c).config.map.floors;
   const W = rogue(c).config.map.width;
-  const ROW = 4.75; // rem a floor
+  const ROW = 5.5; // rem a floor: room for the rooms within reach, drawn bigger
   const height = (floors + 1) * ROW + 1;
   const pos = (n: MapNode) => ({ x: ((n.col + 0.5) / W) * 100, y: (floors + 1 - n.floor) * ROW + 0.5 + ROW / 2 });
   const lines: string[] = [];
@@ -267,7 +267,10 @@ function mapView(run: RogueRun): Child[] {
     const p = pos(n);
     const can = next.some((x) => x.id === n.id);
     const been = run.visited.includes(n.id);
-    const el = h("div", { class: `rnode ${n.kind}${can ? " can" : ""}${been ? " been" : ""}${run.at === n.id ? " here" : ""}${mapPick === n.id ? " cur" : ""}`, style: `left:${p.x}%;top:${p.y}rem`, onClick: can ? () => { mapPick = n.id; redraw(); } : undefined }, iconEl(ICON[n.kind], 2));
+    // A room within reach: one tap picks it (what it gives shows below), a second tap on it goes in.
+    const enter = () => { mapPick = null; pickOrSave(run, n.id); };
+    const el = h("div", { class: `rnode ${n.kind}${can ? " can" : ""}${been ? " been" : ""}${run.at === n.id ? " here" : ""}${mapPick === n.id ? " cur" : ""}`, style: `left:${p.x}%;top:${p.y}rem`, onClick: can ? () => { if (mapPick === n.id) return enter(); mapPick = n.id; redraw(); } : undefined },
+      iconEl(ICON[n.kind], can ? 3 : 2), mapPick === n.id ? h("span", { class: "rnode-tag" }, KIND_NAME[n.kind]) : null);
     return el;
   });
   const box = h("div", { class: "rmap", style: `height:${height}rem` }, svg, ...nodes);
@@ -453,7 +456,7 @@ function campView(run: RogueRun): Child[] {
     for (const cls of [...run.party, ...camp]) {
       const v = vitals(run, cls);
       const inParty = run.party.includes(cls);
-      body.push(h("div", { class: `member${swapPick === cls ? " cur" : ""}`, onClick: () => {
+      body.push(h("div", { class: `member${swapPick === cls ? " cur" : ""}${swapPick !== null && swapPick !== cls ? " target" : ""}`, onClick: () => {
         if (swapPick === null) swapPick = cls;
         else if (swapPick === cls) swapPick = null;
         else {
@@ -589,7 +592,7 @@ export function rpartyScreen(): Child[] {
   const cards = run.party.map((cls, i) => {
     const pos = f.positions[i];
     const v = vitals(run, cls);
-    return h("div", { class: `win card${seatPick === i ? " cur" : ""}`, onClick: () => {
+    return h("div", { class: `win card${seatPick === i ? " cur" : ""}${manage && seatPick !== null && seatPick !== i ? " target" : ""}`, onClick: () => {
       if (!manage) return go("runit", cls);
       if (seatPick === null) seatPick = i;
       else if (seatPick === i) { seatPick = null; return go("runit", cls); }
@@ -667,7 +670,7 @@ export function runitScreen(arg?: unknown): Child[] {
       section("PASSIVE"),
       ...classPassive(cls),
       section("ABILITIES", manage && orderPick !== null ? h("span", { class: "hi" }, "SWAP · SAME: LEAVE OUT") : null),
-      ...m.order.map((a, i) => abilityBlock(c.abilities.get(a)!, fm.stats, setup.settings.designer, { n: i + 1, onN: () => onN(i), cur: orderPick === i })),
+      ...m.order.map((a, i) => abilityBlock(c.abilities.get(a)!, fm.stats, setup.settings.designer, { n: i + 1, onN: () => onN(i), cur: orderPick === i, target: orderPick !== null })),
       basicLine(weaponOf(c, fm.weapon), fm.stats),
       out.length ? section("LEFT OUT") : null,
       ...out.map((a) => { const el = abilityBlock(c.abilities.get(a)!, fm.stats, setup.settings.designer); el.classList.add("dimmed"); el.addEventListener("click", () => bringBack(a)); return el; }),
