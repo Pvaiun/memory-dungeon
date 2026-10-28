@@ -61,7 +61,7 @@
    "slotShares": [
     0.75,
     0.5,
-    0.25
+    0.4
    ]
   },
   "stagger": 1.5,
@@ -2698,7 +2698,7 @@
   {
    "id": "lg_coil",
    "name": "Coil",
-   "text": "When hit, Shocks the attacker with many stacks.",
+   "text": "When hit, Shocks the attacker with several stacks.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2712,7 +2712,7 @@
       {
        "op": "apply",
        "status": "shock",
-       "stacks": 7,
+       "stacks": 4,
        "to": "other"
       }
      ]
@@ -3810,7 +3810,7 @@
    "class": "cleric",
    "name": "Raise",
    "text": "Revives a random knocked-out ally with half its HP.",
-   "cooldown": 44,
+   "cooldown": 36,
    "cast": 8,
    "mp": 1200,
    "if": {
@@ -4034,7 +4034,7 @@
    "class": "hoplite",
    "name": "Aspis",
    "text": "Aegis on the lowest ally.",
-   "cooldown": 31.8,
+   "cooldown": 25.4,
    "cast": 1,
    "mp": 400,
    "if": {
@@ -4125,7 +4125,7 @@
    "class": "paladin",
    "name": "Sanctuary",
    "text": "Ward on every ally.",
-   "cooldown": 27.2,
+   "cooldown": 21.7,
    "cast": 6,
    "mp": 800,
    "target": {
@@ -4328,7 +4328,7 @@
    "class": "valkyrie",
    "name": "Valhalla",
    "text": "Revives a random knocked-out ally with a tenth of its HP, every action ready.",
-   "cooldown": 49.5,
+   "cooldown": 40.5,
    "cast": 1,
    "mp": 1200,
    "if": {
@@ -5017,7 +5017,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00156,
+          "ratio": 0.0010400000000000001,
           "stat": "magic"
          }
         ]
@@ -5058,7 +5058,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00049,
           "stat": "magic"
          }
         ]
@@ -5318,7 +5318,7 @@
    "class": "geomancer",
    "name": "Tremor",
    "text": "Earth damage on a random foe, which is Stunned.",
-   "cooldown": 27.3,
+   "cooldown": 21.9,
    "cast": 8,
    "mp": 800,
    "target": {
@@ -5708,7 +5708,7 @@
   {
    "id": "tolling",
    "name": "Tolling",
-   "text": "Several Might and Haste on itself: its swings come faster and harder.",
+   "text": "Many Might and Haste on itself: its swings come faster and harder.",
    "cooldown": 18.3,
    "cast": 1,
    "mp": 0,
@@ -5717,7 +5717,7 @@
     {
      "op": "apply",
      "status": "might",
-     "stacks": 4
+     "stacks": 7
     },
     {
      "op": "apply",
@@ -9043,7 +9043,7 @@
    },
    "weapon": {
     "kind": "sword",
-    "amount": 1100
+    "amount": 1600
    },
    "abilities": [
     "quiet",

@@ -71,7 +71,7 @@ export const SPEED = { fast: 8.9, medium: 11.9, slow: 15.5 } as const;
  * "take big swings"): 12 / 20 / 30 / 44 (were 16 / 28 / 36 / 60). In a 42-tick fight a short fires three or four times, a medium twice,
  * a long once or twice; the very long word is the revives'.
  */
-export const COOLDOWN = { short: 12, medium: 20, long: 30, very_long: 44 } as const;
+export const COOLDOWN = { short: 12, medium: 20, long: 24, very_long: 36 } as const; // Round 6: long 24 and very long 36 (were 30 and 44): the third slots still fired once or never (Tremor 0.5 casts a fight, Pyre 0.6, Spear thrust 0.69).
 /**
  * Foes keep the pacing pass's short cooldown. Step 5e: medium 40 and long 60 (were 48 and 70). In free play, at the documents'
  * numbers, a boss fight lasted 46 ticks and the signature moves (Crush, Quiet, Tempest, Death bell, Rally) came 0.5 to 0.9
@@ -122,7 +122,7 @@ export const RULES = {
    * accessible slow abilities"); a long ability in the third slot is ready at three quarters of its cooldown, not never. 8 / 4 / 0 flat
    * ticks "felt like the system had been gutted".
    */
-  opening: { min: 0.2, max: 0.6, slotShares: [0.75, 0.5, 0.25] },
+  opening: { min: 0.2, max: 0.6, slotShares: [0.75, 0.5, 0.4] }, // Round 6: the third slot two fifths charged (was a quarter).
   /** Each physical hit loses this share of the target's Armor: Armor 5 takes 600 off, Armor 8 nearly blanks a sword. */
   armorRatio: 0.12,
   /**

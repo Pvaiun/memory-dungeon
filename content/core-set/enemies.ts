@@ -90,7 +90,7 @@ export const enemyAbilities: AbilityT[] = [
   a("death_bell", "Death bell", "Dooms a foe.", { ...timing("short", "long"), if: { side: "foes", where: { lacks: "doom" } }, target: { side: "foes", where: { lacks: "doom" } }, do: [apply("doom")] }),
   // Step 5g round 5 (the director's: bosses with behaviours of their own, the one-shot the Ogre Chief's alone).
   a("reap", "Reap", "Three scythe slashes at random foes.", { ...timing("medium", "normal"), target: { side: "foes", pick: "random" }, do: [1, 2, 3].map(() => ({ op: "damage" as const, type: "physical" as const, subtype: "slash" as const, amount: fromStat("attack", ENEMY_HIT.reap), to: { side: "foes" as const, pick: "random" as const } })) }),
-  a("tolling", "Tolling", "Several Might and Haste on itself: its swings come faster and harder.", { ...timing("short", "quick"), mp: 0, target: "self", do: [apply("might", { stacks: FLAT_STACKS.several }), apply("haste")] }),
+  a("tolling", "Tolling", "Many Might and Haste on itself: its swings come faster and harder.", { ...timing("short", "quick"), mp: 0, target: "self", do: [apply("might", { stacks: FLAT_STACKS.many }), apply("haste")] }), // Round 6: many (was several): seven tollings moved its swing 8%; "a lock, not a threat".
   a("kindle", "Kindle", "Many Might and a Ward on itself; the Inferno follows.", { ...timing("medium", "quick"), mp: 0, target: "self", do: [apply("might", { stacks: FLAT_STACKS.many }), apply("ward")] }),
   a("mute", "Mute", "Silences the foe with the highest Attack or Magic.", { ...timing("medium", "normal"), if: { side: "foes", where: { lacks: "silence" } }, target: { ...T.highestAMFoe, where: { lacks: "silence" } }, do: [apply("silence")] }),
   // Step 5g round 4: medium (was short): at 22 the Silent One silenced the party 9 times a fight, 73% of the time, and the calibration gave it 218,000 HP to beat parties that could only swing; a 230-tick slog.
@@ -126,7 +126,7 @@ const lich = enemy("lich", "Lich", "A dead wizard with one big spell.", "minion"
 const ghoul = enemy("ghoul", "Ghoul", "Ghouls dig each other back up.", "minion", line(8, 3, 2, 4, 0, 1, 2, 3), basic("sword"), { abilities: ["dig_up"] });
 const reaper = enemy("reaper", "Reaper", "Death, with a scythe and a bell.", "boss", line(85, 8, 3, 9, 12, 4, 2, 4), basic("sword", "heavy"), { abilities: ["death_bell", "reap"] });
 const wraith = enemy("wraith", "Wraith", "Steals voices.", "minion", line(4, 5, 3, 0, 5, 0, 2, 2), touch({ element: "dark" }, "medium", "weak"), { abilities: ["mute"] });
-const silentOne = enemy("silent_one", "Silent One", "Its silence falls on everyone.", "boss", line(90, 10, 3, 11, 12, 5, 2, 4), basic("sword", "heavy"), { abilities: ["quiet", "tolling"] });
+const silentOne = enemy("silent_one", "Silent One", "Its silence falls on everyone.", "boss", line(90, 10, 3, 11, 12, 5, 2, 4), basic("sword", "massive"), { abilities: ["quiet", "tolling"] }); // Round 6: a massive swing (was heavy): the silence is the lock, the sword must be the threat.
 
 const hellhound = enemy("hellhound", "Hellhound", "A fire dog; its bite burns.", "minion", { ...line(3, 0, 0, 3, 0, 0, 2, 2), ...res("fire", "resists"), ...res("ice", "weak") }, flurry("dagger", "weak"), { statuses: ["fire_bite"] }); // Step 5g: two bites a swing, each burning.
 const lavaSlime = enemy("lava_slime", "Lava Slime", "Cut it in half and you get two.", "elite", { ...line(14, 0, 0, 4, 0, 1, 2, 3), ...res("fire", "resists"), ...res("ice", "weak") }, touch({ subtype: "blunt" }, "slow"), { statuses: ["split"] });

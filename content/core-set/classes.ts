@@ -272,10 +272,11 @@ export const abilities: A[] = [
   }),
   // Frostweaver
   // Step 5g (the director's deep freeze with upkeep): about 6 Chill a lance at Magic 4 (was 16 against a cap of 12: one cast froze a foe solid). The third lance, or the second with a Blizzard between, reaches 12; a stack thaws every 6 ticks.
-  a("frostweaver", "frost_lance", "Frost lance", "Ice at the foe with the most Chill, adding several.", { ...timing("short", "normal"), mp: 300, target: T.mostFoe("chill"), do: [magic("ice", hit("magic", "light"), { apply: [{ status: "chill", stacks: stacks("several", "magic", 0.6) }] })] }),
+  // Round 6: ×0.4 (was 0.6): with gear and the rogue's upgrade a lance put 12 Chill, the cap, in one cast, an instant 6,630 shatter and Stun for 300 MP every 13 ticks.
+  a("frostweaver", "frost_lance", "Frost lance", "Ice at the foe with the most Chill, adding several.", { ...timing("short", "normal"), mp: 300, target: T.mostFoe("chill"), do: [magic("ice", hit("magic", "light"), { apply: [{ status: "chill", stacks: stacks("several", "magic", 0.4) }] })] }),
   // Campaign pass: 0.3 of Magic, not light's 0.2, for the same reason as Fireball.
   // Step 5e: Blizzard 1,000 MP (was 1,300): cast 0.44 times a regular fight.
-  a("frostweaver", "blizzard", "Blizzard", "Ice on every foe, adding a few Chill to each.", { ...timing("medium", "long"), mp: 800, target: T.everyFoe, do: [magic("ice", hit("magic", "touch"), { apply: [{ status: "chill", stacks: stacks("few", "magic", 0.5) }] })] }), // Step 5g: about 3 a foe.
+  a("frostweaver", "blizzard", "Blizzard", "Ice on every foe, adding a few Chill to each.", { ...timing("medium", "long"), mp: 800, target: T.everyFoe, do: [magic("ice", hit("magic", "touch"), { apply: [{ status: "chill", stacks: stacks("few", "magic", 0.35) }] })] }), // Step 5g: about 2 a foe (round 6: 0.35).
   // Step 5e: 400 MP (was 1,600: it cost more than the Clarity it gave back, and fired 0.04 times a regular fight).
   // Step 5g round 5 (the director's: "a strictly worse version of the Knight's Clarity"): Clarity to an ally under half MP, and a few Chill on every foe, so it feeds the shatter too.
   a("frostweaver", "stillness", "Stillness", "Clarity on the ally with the least MP, if one is under half, and a few Chill on every foe.", { ...timing("medium", "quick"), mp: 500, target: T.everyFoe, do: [apply("chill", { stacks: stacks("few", "magic", 0.5) }), apply("clarity", { to: T.needsMpAlly })] }),

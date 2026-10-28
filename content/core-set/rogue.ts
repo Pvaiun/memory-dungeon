@@ -244,7 +244,7 @@ export const rogueStatuses: StatusT[] = [
   }),
   { id: "lg_idol_on", name: "IDOL", text: "Crit chance doubled.", label: "buff", show: "icon", stacking: "fizzle", stats: [{ stat: "crit_chance", flat: { scale: [{ ratio: 1, stat: "crit_chance", of: "holder" }] } }] },
   relic("lg_brittle", "Shard", "Basic attacks add a Chill; hits deal 12% more damage for each Chill stack on the target.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("chill", { stacks: FLAT_STACKS.one, to: "other" })] }], boosts: both({ scale: [{ ratio: 12, stacks: "chill", of: "target" }] }) }),
-  relic("lg_coil", "Coil", "When hit, Shocks the attacker with many stacks.", { reactions: [{ on: { event: "hit_taken" }, do: [apply("shock", { stacks: FLAT_STACKS.many, to: "other" })] }] }),
+  relic("lg_coil", "Coil", "When hit, Shocks the attacker with several stacks.", { reactions: [{ on: { event: "hit_taken" }, do: [apply("shock", { stacks: FLAT_STACKS.several, to: "other" })] }] }), // Step 5g round 6: several (was many): on a wall hit twenty times it dealt 25,574, 30% of a fight.
   relic("lg_frost", "Frozen heart", "When hit, Chills the attacker with a few stacks.", { reactions: [{ on: { event: "hit_taken" }, do: [apply("chill", { stacks: FLAT_STACKS.few, to: "other" })] }] }),
   relic("lg_briar", "Briar", "When hit, the attacker takes several Bleed.", { reactions: [{ on: { event: "hit_taken" }, do: [apply("bleed", { stacks: FLAT_STACKS.several, to: "other" })] }] }),
   relic("lg_spikes", "Spikes", "Thorns equal to a twelfth of its Armor.", { stats: [{ stat: "thorns", flat: { scale: [{ ratio: 0.08, stat: "armor", of: "holder" }] } }] }),
