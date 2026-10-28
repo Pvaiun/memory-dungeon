@@ -23,7 +23,7 @@ import { advance, loadContent, type Content } from "./engine/run.js";
 import { combat } from "./engine/combat/rules.js";
 import type { Entry } from "./engine/log.js";
 import {
-  actRoll, bench, bossFoes, canManage, choose, endFight, equip, eventOf, itemGear, itemOf, joinKnown, maxOf, member, newRogue, options, reachable, registerGear, rogue,
+  actRoll, bagRoom, bench, bossFoes, canManage, choose, endFight, equip, eventOf, itemGear, itemOf, joinKnown, maxOf, member, newRogue, options, reachable, registerGear, rogue,
   learnOptions, migrate, seat, sellPrice, upgradeOptions, whyNot, setFormation, setOrder, startFight, swap, trainPrice, unlearned, upgraded, useSupply, wearer, type Item, type Offer, type RogueRun, type Slot,
 } from "./rogue.js";
 import type { AbilityT, NumT } from "./schema.js";
@@ -134,7 +134,7 @@ function header(run: RogueRun): string[] {
   const reg = rogue(c).regions.find((r) => r.id === run.region)!;
   return [
     `Act ${ROMAN[run.act]} of 3: ${reg.name}. ${reg.text} Boss at the top: ${run.boss.name}. ${run.floor > rogue(c).config.map.floors ? "At the boss." : run.floor === 0 ? `At the foot of the map: ${rogue(c).config.map.floors} floors, then the boss.` : `Floor ${run.floor} of ${rogue(c).config.map.floors}, the boss above.`}`,
-    `Gold ${run.gold}. Supplies: ${run.supplies.join(", ") || "none"} (carry ${rogue(c).config.bag} at most). Formation: ${c.formations.get(run.formation)!.name}. Formations owned: ${run.formations.join(", ")}.`,
+    `Gold ${run.gold}. Supplies: ${run.supplies.join(", ") || "none"} (the bag holds ${rogue(c).config.bag.potion} potions, ${rogue(c).config.bag.tonic} tonics and ${rogue(c).config.bag.phoenix} phoenix feathers). Formation: ${c.formations.get(run.formation)!.name}. Formations owned: ${run.formations.join(", ")}.`,
     `Party: ${run.party.map((cls) => `${cls} (${vit(run, cls)})`).join("; ")}.${bench(run).length ? ` At camp: ${bench(run).map((cls) => `${cls} (${vit(run, cls)})`).join("; ")}.` : ""}`,
     ...(run.pending.kind !== "over" && run.party.some((x) => member(run, x).ko) && bench(run).some((x) => !member(run, x).ko) ? [`Someone standing at camp can take a fallen member's seat now: swap <fallen> <at camp>.`] : []),
     ...(run.pending.kind !== "over" && run.party.length < rogue(c).config.party && bench(run).some((x) => !member(run, x).ko) ? [`A seat is empty: someone standing at camp can fill it now (swap <at camp>).`] : []),
@@ -164,6 +164,9 @@ function look(run: RogueRun): string {
       for (const e of [...new Set(p.fight.enemies)]) out.push(`  ${bestiary(e, p.foes.power ?? 0)}`);
       out.push(p.begun ? "The fight has begun: pick fight to play it." : "You can still change gear, the formation, seats and ability order, and use supplies. Then: pick fight");
       break;
+    case "drop":
+      out.push(`FOUND SUPPLIES: take one (pick potion or pick tonic). A potion gives one member ${rogue(c).config.supplies.potion.hp}% HP, a tonic gives one member ${rogue(c).config.supplies.tonic.mp}% MP; you hold ${run.supplies.filter((x) => x === "potion").length}/${rogue(c).config.bag.potion} potions and ${run.supplies.filter((x) => x === "tonic").length}/${rogue(c).config.bag.tonic} tonics.`);
+      break;
     case "spoils": case "boon": case "treasure": {
       const offers = p.kind === "treasure" ? [p.offer] : p.offers;
       out.push(p.kind === "boon" ? "BOSS BEATEN: pick a boon (the next act starts with everyone restored, and everyone learns an ability)." : p.kind === "treasure" ? `CHEST: ${p.gold} gold inside, and a piece.` : `SPOILS: ${p.gold} gold found. Pick one, or skip.`);
@@ -175,8 +178,7 @@ function look(run: RogueRun): string {
     case "shop": {
       const step = rogue(c).config.prices.trainStep;
       out.push(`SHOP (you have ${run.gold} gold). Buy, train${step ? ` (as often as you like: each training bought here makes the next ${step}g dearer)` : " (once each a visit)"}, sell from the bag, or leave.`);
-      const full = run.supplies.length >= rogue(c).config.bag;
-      p.stock.forEach((s, i) => out.push(`  ${s.sold ? "(bought) " : s.offer.kind === "supply" && full ? "(bag full) " : `pick buy:${i} `}for ${s.price}g: ${offerWords(run, s.offer)}`));
+      p.stock.forEach((s, i) => out.push(`  ${s.sold ? "(bought) " : s.offer.kind === "supply" && !bagRoom(c, run, s.offer.id) ? "(bag full) " : `pick buy:${i} `}for ${s.price}g: ${offerWords(run, s.offer)}`));
       // Training too dear right now stays listed, marked (unaffordable gear stays listed too).
       const lp = trainPrice(c, p, "learn"), up = trainPrice(c, p, "upgrade");
       if (p.learn) for (const o of learnOptions(c, run)) out.push(`  ${run.gold >= lp ? `pick learn:${o}` : "(not enough gold) learn:" + o} for ${lp}g: ${c.abilities.get(o.split(":")[1])!.name}: ${c.abilities.get(o.split(":")[1])!.text}`);

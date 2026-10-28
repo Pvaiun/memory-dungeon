@@ -312,6 +312,12 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
         }
         return best;
       }
+      case "drop": {
+        // Round 9: the kind the party has fewer of; a tie goes to the resource the party is lower on (HP share against MP share).
+        const held = (id: string) => run.supplies.filter((x) => x === id).length;
+        const hp = hpShare(c, run), mp = mpShare(c, run);
+        return [...opts].sort((a, b) => held(a) - held(b) || (a === "potion" ? hp : mp) - (b === "potion" ? hp : mp))[0];
+      }
       case "treasure": return opts.includes("take") ? "take" : "leave";
       case "shop": return shopPick(c, d, run, opts);
       case "campfire": return campfirePick(c, d, run, opts);

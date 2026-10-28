@@ -24,9 +24,11 @@ import type { RogueFightT } from "./schema.js";
 
 /** What each tier should cost, by act: a regular fight or elite, in points of party HP %; a boss, the share of fights it wins. */
 export const TARGETS = {
-  easy: [10, 11, 12],
-  normal: [15, 16, 17],
-  elite: [22, 23, 24],
+  // Step 5g round 9 (the director's: "weak monsters basically just don't do anything", and potions and tonics are the run's sustain now): a
+  // regular fight costs a few points more than before (easy 10 / 11 / 12, normal 15 / 16 / 17, elite 22 / 23 / 24), at the shape's fuller damage.
+  easy: [12, 13, 14],
+  normal: [18, 19, 20],
+  elite: [25, 26, 27],
   /**
    * A boss's wins against parties as they arrive, in percent. Raised from 12, 20 and 25 at the director's word (Oct 26): a
    * first win should be an achievement, about 20% of the simulated player's runs at heat 0, with the extra on the bosses.
@@ -138,7 +140,10 @@ async function main() {
     feed();
   })));
   const knobs = JSON.parse(readFileSync(KNOBS, "utf8")) as Record<string, number>;
-  for (const r of results) knobs[r.key] = r.knob;
+  // A pool no sampled run reached (act 3 on a hard build) keeps its knob rather than taking 0.
+  const unmeasured = results.filter((r) => Number.isNaN(r.cost));
+  if (unmeasured.length) console.log(`${unmeasured.length} fights had no parties to measure against and keep their knobs: ${unmeasured.map((r) => r.key).join(", ")}`);
+  for (const r of results) if (!Number.isNaN(r.cost)) knobs[r.key] = r.knob;
   writeFileSync(KNOBS, JSON.stringify(Object.fromEntries(Object.entries(knobs).sort()), null, 1) + "\n");
   console.log(`${results.length} fights calibrated in ${((Date.now() - t0) / 1000).toFixed(0)} s; written to ${KNOBS}. Run npm run content.`);
 }

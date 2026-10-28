@@ -19,7 +19,16 @@ export type Portraits = "faces" | "sprites" | "mixed";
 export type Settings = {
   speed: number; step: boolean; partyBars: boolean; sound: boolean; music: boolean; designer: boolean; autoContinue: boolean; theme: string;
   numbers: NumberScale; hitPause: number; seedLock: boolean; portraits: Portraits;
+  /** Round 9 (the director's): the ticks each ability slot starts charged by (first, second, third), for them to try; zero by default. */
+  headStart: [number, number, number];
 };
+/** The HEAD START choices, in ticks. */
+export const HEAD_STARTS = [0, 2, 4, 6, 9, 12, 16, 20] as const;
+/** Writes the setting into the content's opening rule, which every fight reads at its start. */
+export function applyHeadStart(hs: [number, number, number]) {
+  const o = c.pack.ruleset.opening;
+  if (o) o.slots = [...hs];
+}
 /** The HIT PAUSE choices, as shares of the base hold (half a second plus a third per line, at 1×). */
 export const HIT_PAUSES = [0.25, 0.5, 0.75, 1] as const;
 
@@ -50,12 +59,13 @@ function fresh(): Setup {
     mode: journeyMode(),
     abilities: {},
     seed: 1,
-    settings: { speed: 1, step: false, partyBars: false, sound: true, music: true, designer: false, autoContinue: false, theme: "night", numbers: "medium", hitPause: 0.75, seedLock: false, portraits: "mixed" },
+    settings: { speed: 1, step: false, partyBars: false, sound: true, music: true, designer: false, autoContinue: false, theme: "night", numbers: "medium", hitPause: 0.75, seedLock: false, portraits: "mixed", headStart: [0, 0, 0] },
   };
 }
 
 export let setup: Setup = load();
 useMode(journeyMode());
+applyHeadStart(setup.settings.headStart);
 
 function load(): Setup {
   try {
@@ -73,6 +83,7 @@ function load(): Setup {
     if (!(s.settings.speed === 1 || s.settings.speed === 2 || s.settings.speed === 4)) s.settings.speed = 1;
     if (s.settings.theme !== "night" && s.settings.theme !== "day") s.settings.theme = "night";
     if (!["faces", "sprites", "mixed"].includes(s.settings.portraits)) s.settings.portraits = "mixed";
+    if (!Array.isArray(s.settings.headStart) || s.settings.headStart.length !== 3 || !s.settings.headStart.every((n) => (HEAD_STARTS as readonly number[]).includes(n))) s.settings.headStart = [0, 0, 0];
     delete (s.settings as { tickMs?: number }).tickMs;
     delete (s.settings as { palette?: string }).palette;
     s.party = s.party.filter((id) => c.classes.has(id)).slice(0, 3);
@@ -96,6 +107,7 @@ export function reset() {
   resetJourney();
   setJourneyMode("journey");
   setup = fresh();
+  applyHeadStart(setup.settings.headStart);
   save();
 }
 

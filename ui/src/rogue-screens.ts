@@ -6,7 +6,7 @@
  */
 import {
   actRoll, bench, bossFoes, canManage, choose, eventOf, equip, itemGear, itemOf, joinKnown, learnOptions, member, options, reachable,
-  rogue, seat, sellPrice, setFormation, setOrder, swap, trainPrice, unlearned, upgraded, upgradeOptions, useSupply, wearer, type Item, type MapNode, type Offer, type RogueRun,
+  bagRoom, rogue, seat, sellPrice, setFormation, setOrder, swap, trainPrice, unlearned, upgraded, upgradeOptions, useSupply, wearer, type Item, type MapNode, type Offer, type RogueRun,
 } from "../../src/rogue.js";
 import { canEquip } from "../../src/validate.js";
 import type { GearT, RogueNodeKindT } from "../../src/schema.js";
@@ -58,7 +58,8 @@ const KIND_TEXT: Record<RogueNodeKindT, string> = {
 };
 // Step 5g: a potion heals one member, a tonic refills one member's MP (the neediest; a choice of member is the next step).
 const SUPPLY_ICON: Record<string, Cell> = { potion: [21, 7], tonic: [20, 7], phoenix: [21, 14] };
-const SUPPLY_TEXT: Record<string, string> = { potion: "ONE MEMBER +30% HP", tonic: "ONE MEMBER +35% MP", phoenix: "A FALLEN MEMBER UP, 50% HP" };
+const SUPPLY_TEXT: Record<string, string> = { potion: "ONE MEMBER +30% HP", tonic: "ONE MEMBER +50% MP", phoenix: "A FALLEN MEMBER UP, 50% HP" };
+const held = (run: RogueRun, id: string) => run.supplies.filter((x) => x === id).length;
 const RARITY_CLASS: Record<string, string> = { common: "", uncommon: "good", rare: "buff", legendary: "gold" };
 const ROMAN = ["", "I", "II", "III", "IV"];
 const gold = (n: number) => h("span", { class: "gold" }, `${n}G`);
@@ -157,7 +158,7 @@ function partyStrip(run: RogueRun, tap = true): HTMLElement {
   });
   const camp = bench(run);
   return win("rstrip", h("div", { class: "rcells" }, ...cells),
-    h("div", { class: "line small" }, gold(run.gold), h("span", { class: "dim" }, ` · ${run.supplies.length}/${rogue(c).config.bag} SUPPLIES`), camp.length ? h("span", { class: "dim r" }, `CAMP: ${camp.map(shortName).join(", ")}`) : null));
+    h("div", { class: "line small" }, gold(run.gold), h("span", { class: "dim" }, ` · `, iconEl(SUPPLY_ICON.potion), `${held(run, "potion")}/${rogue(c).config.bag.potion} `, iconEl(SUPPLY_ICON.tonic), `${held(run, "tonic")}/${rogue(c).config.bag.tonic}`, held(run, "phoenix") ? h("span", null, " ", iconEl(SUPPLY_ICON.phoenix), `${held(run, "phoenix")}`) : null), camp.length ? h("span", { class: "dim r" }, `CAMP: ${camp.map(shortName).join(", ")}`) : null));
 }
 
 function pickOrSave(run: RogueRun, pick: string) {
@@ -191,6 +192,7 @@ export function rogueScreen(): Child[] {
     case "draft": return draftView(run);
     case "map": return mapView(run);
     case "fight": return fightView(run);
+    case "drop": return dropView(run);
     case "spoils": case "boon": case "treasure": return rewardView(run);
     case "shop": return shopView(run);
     case "campfire": return campView(run);
@@ -301,7 +303,31 @@ function useSupplyView(run: RogueRun, id: "potion" | "tonic" | "phoenix") {
     if (!down.length) return confirm("NOBODY IS DOWN", "", "OK", () => {});
     return confirm("PHOENIX FEATHER", `${className(down[0].cls).toUpperCase()} UP, 50% HP`, "USE", () => { useSupply(c, run, id, down[0].cls); saveRogue(); sfx.heal(); redraw(); });
   }
-  confirm(id === "potion" ? "POTION" : "TONIC", SUPPLY_TEXT[id], "USE", () => { useSupply(c, run, id); saveRogue(); sfx.heal(); redraw(); });
+  // Round 9 (the director's): the player picks who drinks it ("the feature doesn't work without that").
+  pickMember(run, id === "potion" ? "POTION: WHO DRINKS IT?" : "TONIC: WHO DRINKS IT?", id === "potion" ? "hp" : "mp", (cls) => { useSupply(c, run, id, cls); saveRogue(); sfx.heal(); redraw(); });
+}
+/** A standing party member to pick, with the bar the supply would fill; cancel closes it. */
+function pickMember(run: RogueRun, title: string, which: "hp" | "mp", onPick: (cls: string) => void) {
+  if (!frameEl) return;
+  const rows = run.party.map((cls) => ({ cls, ...vitals(run, cls) })).filter((v) => !v.ko && (which === "hp" ? v.maxHp : v.maxMp) > 0).map((v) =>
+    h("div", { class: "line", style: "cursor:pointer", onClick: () => { box.remove(); onPick(v.cls); } },
+      faceEl(v.cls), h("span", { class: "grow" }, className(v.cls).toUpperCase()),
+      h("span", { class: which === "hp" ? "" : "mp" }, which === "hp" ? `${disp(v.hp)}/${disp(v.maxHp)} HP` : `${disp(v.mp)}/${disp(v.maxMp)} MP`)));
+  const box = h("div", { class: "overlay dialog" }, win("", h("div", { class: "line hi" }, title), ...rows, h("div", { class: "btns", style: "margin-top:.75rem" }, button("CANCEL", () => box.remove()))));
+  frameEl.append(box);
+}
+/** Round 9 (the director's): after a won fight, one supply of the two, not one of each. */
+function dropView(run: RogueRun): Child[] {
+  const p = run.pending;
+  if (p.kind !== "drop") return [];
+  const cards = p.options.map((id) => win("roffer", h("div", { class: "line" }, iconEl(SUPPLY_ICON[id]), h("span", { class: "grow hi" }, id.toUpperCase()), h("span", { class: "dim small" }, `${held(run, id)}/${rogue(c).config.bag[id]} HELD`)), h("div", { class: "line dim small" }, SUPPLY_TEXT[id]),
+    h("div", { class: "btns" }, button("TAKE", () => pickOrSave(run, id), "hi sm"))));
+  return [
+    header("FOUND SUPPLIES", () => go("home"), h("span", { class: "dim" }, "PICK ONE")),
+    scene(run, "drop", { h: 96, actors: partyActors(run, 96, "victory", { cx: 135 }) }),
+    win("scroll flat", ...cards),
+    actions(button("PARTY", () => go("rparty"))),
+  ];
 }
 
 // ─── A fight in waiting ────────────────────────────────────────────────────
@@ -400,7 +426,7 @@ function shopView(run: RogueRun): Child[] {
   if (shopTab === "buy") {
     p.stock.forEach((s, i) => {
       const can = opts.includes(`buy:${i}`);
-      const el = win(`roffer${s.sold ? " dimmed" : can ? "" : " dimmed"}`, ...offerBody(run, s.offer), h("div", { class: "line" }, s.sold ? h("span", { class: "dim" }, "BOUGHT") : gold(s.price), !s.sold && s.offer.kind === "supply" && run.supplies.length >= rogue(c).config.bag ? h("span", { class: "dim small" }, " BAG FULL") : null, s.sold ? null : h("span", { class: "r" }, button("BUY", () => pickOrSave(run, `buy:${i}`), can ? "hi sm" : "sm"))));
+      const el = win(`roffer${s.sold ? " dimmed" : can ? "" : " dimmed"}`, ...offerBody(run, s.offer), h("div", { class: "line" }, s.sold ? h("span", { class: "dim" }, "BOUGHT") : gold(s.price), !s.sold && s.offer.kind === "supply" && !bagRoom(c, run, s.offer.id) ? h("span", { class: "dim small" }, " BAG FULL") : null, s.sold ? null : h("span", { class: "r" }, button("BUY", () => pickOrSave(run, `buy:${i}`), can ? "hi sm" : "sm"))));
       list.push(el);
     });
   } else if (shopTab === "train") {

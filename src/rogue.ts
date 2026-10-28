@@ -45,6 +45,8 @@ export type Pending =
   | { kind: "draft"; offers: string[]; left: number }
   | { kind: "map" }
   | ({ kind: "fight"; begun?: boolean } & FightSpec)
+  /** Round 9 (the director's): a won fight offers a choice of one supply; `then` is what follows the pick (the spoils, or a boss's boon). */
+  | { kind: "drop"; options: SupplyIdT[]; then: Pending }
   | { kind: "spoils"; gold: number; offers: Offer[]; tier: FightTier; trophy?: Item }
   | { kind: "boon"; offers: Offer[] }
   | { kind: "shop"; stock: ShopSlot[]; learn: boolean; upgrade: boolean; trained?: number }
@@ -257,9 +259,6 @@ export function endFight(c: Content, run: RogueRun, er: Run) {
   }
   const down = run.party.filter((cls) => member(run, cls).ko);
   note(run, `Beat ${p.fight.name}${down.length ? ` (${down.map((k) => c.classes.get(k)!.name).join(", ")} down)` : ""}.`);
-  // Step 5g (the director's): every won fight hands the party a potion and a tonic, free, up to the bag.
-  const dropped = (cfg(c).drops ?? []).filter((id) => run.supplies.length < cfg(c).bag && (run.supplies.push(id), true));
-  if (dropped.length) note(run, `Found ${dropped.map((id) => (id === "phoenix" ? "a phoenix feather" : `a ${id}`)).join(" and ")}.`);
   const g = cfg(c).gold;
   const rng = r(run, `gold:${run.act}:${p.node}`);
   const gold = between(rng, g[p.tier === "fight" ? "fight" : p.tier]) + g.perAct * (run.act - 1);
@@ -271,7 +270,7 @@ export function endFight(c: Content, run: RogueRun, er: Run) {
       run.pending = { kind: "over", won: true };
       return;
     }
-    run.pending = { kind: "boon", offers: boonOffers(c, run) };
+    run.pending = offerDrop(c, run, { kind: "boon", offers: boonOffers(c, run) });
     return;
   }
   const offers = spoilOffers(c, run, p.tier, p.node);
@@ -282,7 +281,23 @@ export function endFight(c: Content, run: RogueRun, er: Run) {
     take(c, run, { kind: "gear", item: trophy });
     note(run, `Won ${c.gear.get(trophy.uid)!.name}.`);
   }
-  run.pending = { kind: "spoils", gold, offers, tier: p.tier, ...(trophy ? { trophy } : {}) };
+  run.pending = offerDrop(c, run, { kind: "spoils", gold, offers, tier: p.tier, ...(trophy ? { trophy } : {}) });
+}
+
+/** The supplies of a kind the party carries. */
+export const carried = (run: RogueRun, id: SupplyIdT) => run.supplies.filter((s) => s === id).length;
+/** Room in the bag's slot for this kind. */
+export const bagRoom = (c: Content, run: RogueRun, id: SupplyIdT) => carried(run, id) < cfg(c).bag[id];
+export const supplyName = (id: SupplyIdT) => (id === "phoenix" ? "a phoenix feather" : `a ${id}`);
+/**
+ * Round 9 (the director's): after every won fight the party picks one of the dropped kinds (a potion or a tonic), not one of each; a kind
+ * whose slot is full isn't offered, one left is simply taken, none left is nothing.
+ */
+function offerDrop(c: Content, run: RogueRun, then: Pending): Pending {
+  const options = (cfg(c).drops ?? []).filter((id) => bagRoom(c, run, id));
+  if (options.length > 1) return { kind: "drop", options, then };
+  if (options.length === 1) (run.supplies.push(options[0]), note(run, `Found ${supplyName(options[0])}.`));
+  return then;
 }
 
 /** Plays the pending fight at once (the simulations), and carries the result back. */
@@ -462,7 +477,8 @@ function beginAct(c: Content, run: RogueRun, region: string, restore: boolean) {
   run.visited = [];
   run.met = [];
   run.floor = 0;
-  if (restore) for (const m of run.roster) (m.missHp = 0), (m.missMp = 0), (m.ko = false), (m.cooldowns = {});
+  // Round 9 (the director's): cooldowns are not reset with HP and MP ("totally arbitrary ... stunting the units at the start").
+  if (restore) for (const m of run.roster) (m.missHp = 0), (m.missMp = 0), (m.ko = false);
   note(run, `Act ${run.act}: ${reg.name}. ${run.boss.name} waits at the end.`);
 }
 
@@ -683,7 +699,7 @@ export function take(c: Content, run: RogueRun, o: Offer): boolean {
     run.formations.push(o.id);
     return true;
   }
-  if (run.supplies.length >= cfg(c).bag) return false;
+  if (!bagRoom(c, run, o.id)) return false;
   run.supplies.push(o.id);
   return true;
 }
@@ -691,7 +707,7 @@ export function canTake(c: Content, run: RogueRun, o: Offer): boolean {
   if (o.kind === "tome") { const m = run.roster.find((x) => x.cls === o.cls); return !!m && unlearned(c, m).includes(o.ability); }
   if (o.kind === "recruit") return roomForRecruit(c, run) && !run.roster.some((m) => m.cls === o.cls);
   if (o.kind === "formation") return !run.formations.includes(o.id);
-  if (o.kind === "supply") return run.supplies.length < cfg(c).bag;
+  if (o.kind === "supply") return bagRoom(c, run, o.id);
   return true;
 }
 
@@ -711,6 +727,8 @@ export function upgrade(c: Content, run: RogueRun, cls: string, ability: string)
   const up = upgraded(c, ability);
   m.known = m.known.map((a) => (a === ability ? up.id : a));
   m.order = m.order.map((a) => (a === ability ? up.id : a));
+  // Round 9: the carried cooldown follows the ability under its new id (it was lost, and the upgraded ability started a fight at its full cooldown).
+  if (m.cooldowns && ability in m.cooldowns) (m.cooldowns[up.id] = m.cooldowns[ability]), delete m.cooldowns[ability];
   note(run, `${c.classes.get(cls)!.name}'s ${up.name}.`);
   return true;
 }
@@ -906,6 +924,7 @@ export function options(c: Content, run: RogueRun): string[] {
     case "draft": return p.offers;
     case "map": return reachable(run).map((n) => n.id);
     case "fight": return [];
+    case "drop": return p.options;
     case "spoils": return [...p.offers.map((o, i) => (canTake(c, run, o) ? `take:${i}` : "")).filter(Boolean), "skip"];
     case "boon": return [...p.offers.map((o, i) => (canTake(c, run, o) ? `take:${i}` : "")).filter(Boolean), "skip"];
     case "treasure": return [canTake(c, run, p.offer) ? "take" : "", "leave"].filter(Boolean);
@@ -981,6 +1000,12 @@ export function choose(c: Content, run: RogueRun, pick: string) {
       return;
     }
     case "map": return enter(c, run, pick);
+    case "drop": {
+      run.supplies.push(pick as SupplyIdT);
+      note(run, `Took ${supplyName(pick as SupplyIdT)}.`);
+      run.pending = p.then;
+      return;
+    }
     case "spoils":
     case "boon": {
       if (p.kind === "spoils") gainGold(run, p.gold);
@@ -1109,6 +1134,7 @@ function pickKind(run: RogueRun, pick: string): string {
     case "levelup": return "levelup";
     case "draft": return "draft";
     case "region": return `region:${pick}`;
+    case "drop": return `drop:${pick}`;
     case "event": return `event:${p.id}:${pick}`;
     default: return `${p.kind}:${verb}`;
   }

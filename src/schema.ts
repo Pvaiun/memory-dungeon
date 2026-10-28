@@ -826,8 +826,8 @@ export const RogueConfig = z.strictObject({
   shop: z.strictObject({ gear: RarityOdds.describe("How many pieces of each rarity."), recruits: z.number().int().min(0), formations: z.number().int().min(0), supplies: z.number().int().min(0) }),
   supplies: z.strictObject({ potion: z.strictObject({ hp: Pct }), tonic: z.strictObject({ mp: Pct }), phoenix: z.strictObject({ revive: Pct }) }),
   /** Step 5g (the director's): after every won fight the party is handed these, free, up to the bag. */
-  drops: z.array(SupplyId).optional(),
-  bag: z.number().int().min(0).describe("Supplies carried at most."),
+  drops: z.array(SupplyId).optional().describe("Round 9: offered as a choice of one after every won fight."),
+  bag: z.strictObject({ potion: z.number().int().min(0), tonic: z.number().int().min(0), phoenix: z.number().int().min(0) }).describe("Supplies carried at most, a slot a kind."),
   knobs: z.array(z.strictObject({ mob: z.number(), step: z.number(), elite: z.number(), boss: z.number() })).min(1).describe("Per act, added to each fight's own knob (HP +k %, damage +k/2 %): regular fights, the rise per floor from each pool's reference floor, elites, the boss."),
   heat: z.strictObject({ per: z.number(), max: z.number().int().min(0) }),
   shape: z.record(z.string(), z.strictObject({ hp: z.number(), power: z.number() })).optional().describe("By tier (fight, elite, boss): HP % and damage % added to every foe on top of the knob, so a tier's fights can be longer and softer at the same cost."),

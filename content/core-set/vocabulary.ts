@@ -63,7 +63,7 @@ export const weaponKinds: WeaponKindT[] = [
 /** The speed word of a kind, for weapon damage. */
 export const speedOf = (kind: string): "fast" | "medium" | "slow" => {
   const cd = weaponKinds.find((k) => k.id === kind)!.cooldown ?? SPEED.medium;
-  return cd < 10.2 ? "fast" : cd > 14.4 ? "slow" : "medium"; // Step 5f: the thresholds moved with the intervals.
+  return cd < 7.5 ? "fast" : cd > 10.5 ? "slow" : "medium"; // Round 9: the thresholds moved with the intervals (were 10.2 and 14.4).
 };
 
 const timing = (n: number) => TIMING.map((stat) => ({ stat, flat: n }));
@@ -98,7 +98,9 @@ export const vocabulary: StatusT[] = [
   },
   { id: "shock", name: "SHOCK", text: "Hurts for each stack every time it acts. Lightning.", label: "debuff", show: "icon", stacking: "intensity", cap: STATUS.shock.cap, trigger: { on: { event: "action_resolve" }, do: [{ op: "damage", type: "magical", element: "lightning", amount: STATUS.shock.perStack, to: "holder" }] }, drop: { fraction: STATUS.shock.drop } },
   { id: "ward", name: "WARD", text: "Resists every element.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.ward.duration, stats: [{ stat: "resist", flat: STATUS.ward.resist }] },
-  { id: "sunder", name: "SUNDER", text: "Armor down for each stack.", label: "debuff", show: "icon", stacking: "intensity", cap: STATUS.sunder.cap, stats: [{ stat: "armor", flat: STATUS.sunder.perStack }], pulse: { every: STATUS.sunder.every }, drop: { count: 1 } },
+  // Step 5g round 9 (the director's): Sunder is a damage-taken ramp, not an Armor strip. Foes carry 1,000 to 3,000 Armor, so two stacks stripped a
+  // minion bare and the other eighteen showed nothing; as +1.5% a stack to every kind of damage it reads on every foe and gives the Hexer and the Monk a ramp.
+  { id: "sunder", name: "SUNDER", text: "Takes more damage for each stack.", label: "debuff", show: "icon", stacking: "intensity", cap: STATUS.sunder.cap, taken: [{ pct: STATUS.sunder.perStack }], pulse: { every: STATUS.sunder.every }, drop: { count: 1 } },
   { id: "silence", name: "SILENCE", text: "Can't use abilities.", label: "debuff", show: "icon", stacking: "fizzle", duration: STATUS.silence.duration, lockout: { covers: "ability", interrupt: true } },
   { id: "hidden", name: "HIDDEN", text: "Foes can't pick it.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.hidden.duration, unremovable: true, stats: [{ stat: "forbidden", flat: 1 }] },
   { id: "rot", name: "ROT", text: "Heals less.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.rot.duration, stats: [{ stat: "healing_received", flat: STATUS.rot.healing }] },
