@@ -3683,7 +3683,7 @@
    "text": "Guards the ally with the lowest share of HP.",
    "cooldown": 16.5,
    "cast": 1,
-   "mp": 325,
+   "mp": 250,
    "target": {
     "side": "allies",
     "pick": "lowest",
@@ -3703,7 +3703,7 @@
    "text": "Taunts, and gives Clarity to the ally with the least MP.",
    "cooldown": 11.8,
    "cast": 1,
-   "mp": 200,
+   "mp": 150,
    "target": "self",
    "do": [
     {
@@ -3732,7 +3732,7 @@
    "text": "Bashes a foe with the shield, which scales from max HP, and Stuns it.",
    "cooldown": 19.7,
    "cast": 1,
-   "mp": 325,
+   "mp": 250,
    "target": {
     "side": "foes",
     "where": {
@@ -3768,7 +3768,7 @@
    "text": "Cleanses an ally with a debuff and gives it Regen; with nobody debuffed, Regen on the lowest ally.",
    "cooldown": 17.6,
    "cast": 3,
-   "mp": 650,
+   "mp": 500,
    "target": {
     "side": "allies",
     "where": {
@@ -3796,7 +3796,7 @@
    "text": "A quick, small heal on the lowest ally.",
    "cooldown": 12.4,
    "cast": 1,
-   "mp": 400,
+   "mp": 350,
    "if": {
     "side": "allies",
     "where": {
@@ -3829,7 +3829,7 @@
    "text": "Revives a random knocked-out ally with half its HP.",
    "cooldown": 30,
    "cast": 8,
-   "mp": 1500,
+   "mp": 1200,
    "if": {
     "side": "allies",
     "where": {
@@ -3864,7 +3864,7 @@
    "text": "A barbed arrow at a random foe, adding several Bleed.",
    "cooldown": 12.5,
    "cast": 1,
-   "mp": 200,
+   "mp": 150,
    "do": [
     {
      "op": "damage",
@@ -3901,7 +3901,7 @@
    "text": "A burning arrow at the foe with the most Burn, adding many.",
    "cooldown": 18.3,
    "cast": 6,
-   "mp": 325,
+   "mp": 250,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -3945,7 +3945,7 @@
    "text": "An arrow at the foe with the most Sunder, adding several.",
    "cooldown": 15.6,
    "cast": 3,
-   "mp": 325,
+   "mp": 250,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -3989,7 +3989,7 @@
    "text": "Taunts and Guards itself.",
    "cooldown": 11.3,
    "cast": 1,
-   "mp": 200,
+   "mp": 150,
    "target": "self",
    "do": [
     {
@@ -4009,7 +4009,7 @@
    "text": "Regen on the lowest ally.",
    "cooldown": 17.5,
    "cast": 3,
-   "mp": 325,
+   "mp": 250,
    "target": {
     "side": "allies",
     "pick": "lowest",
@@ -4029,7 +4029,7 @@
    "text": "Lashes a random foe with its thorns.",
    "cooldown": 10.3,
    "cast": 1,
-   "mp": 200,
+   "mp": 150,
    "do": [
     {
      "op": "damage",
@@ -4053,7 +4053,7 @@
    "text": "Aegis on the lowest ally.",
    "cooldown": 23.3,
    "cast": 1,
-   "mp": 500,
+   "mp": 400,
    "if": {
     "side": "allies",
     "where": {
@@ -4082,7 +4082,7 @@
    "text": "Guards itself and the other lowest ally.",
    "cooldown": 18.2,
    "cast": 3,
-   "mp": 325,
+   "mp": 250,
    "target": "self",
    "do": [
     {
@@ -4107,7 +4107,7 @@
    "text": "A thrust at a random foe that adds a few Sunder.",
    "cooldown": 20.4,
    "cast": 6,
-   "mp": 325,
+   "mp": 250,
    "do": [
     {
      "op": "damage",
@@ -4144,7 +4144,7 @@
    "text": "Ward on every ally.",
    "cooldown": 19.9,
    "cast": 6,
-   "mp": 1000,
+   "mp": 800,
    "target": {
     "side": "allies",
     "pick": "all"
@@ -4163,7 +4163,7 @@
    "text": "Cleanses and heals itself and the lowest other ally; the heal scales from Magic.",
    "cooldown": 18.4,
    "cast": 3,
-   "mp": 650,
+   "mp": 500,
    "if": {
     "side": "allies",
     "where": {
@@ -4221,7 +4221,7 @@
    "text": "Heavy Light damage to the foe with the highest Attack or Magic, adding several Burn.",
    "cooldown": 17.4,
    "cast": 6,
-   "mp": 650,
+   "mp": 500,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -4268,7 +4268,7 @@
    "text": "Three quick Wind hits on a foe that isn't Taunting, each adding a few Shock.",
    "cooldown": 12.3,
    "cast": 1,
-   "mp": 200,
+   "mp": 150,
    "seek": true,
    "target": {
     "side": "foes",
@@ -4314,7 +4314,7 @@
    "text": "Heals the lowest ally; the amount scales from Magic.",
    "cooldown": 16.3,
    "cast": 3,
-   "mp": 650,
+   "mp": 500,
    "if": {
     "side": "allies",
     "where": {
@@ -4347,7 +4347,7 @@
    "text": "Revives a random knocked-out ally with a tenth of its HP, every action ready.",
    "cooldown": 33.8,
    "cast": 1,
-   "mp": 1500,
+   "mp": 1200,
    "if": {
     "side": "allies",
     "where": {
@@ -4383,7 +4383,7 @@
    "text": "A few Might on every ally.",
    "cooldown": 13.7,
    "cast": 1,
-   "mp": 400,
+   "mp": 350,
    "target": {
     "side": "allies",
     "pick": "all"
@@ -4410,7 +4410,7 @@
    "text": "Haste on every ally.",
    "cooldown": 19.1,
    "cast": 1,
-   "mp": 650,
+   "mp": 500,
    "target": {
     "side": "allies",
     "pick": "all"
@@ -4429,7 +4429,7 @@
    "text": "Several Shock on every foe.",
    "cooldown": 19.8,
    "cast": 3,
-   "mp": 650,
+   "mp": 500,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -4456,7 +4456,7 @@
    "text": "A few Burn and a few Shock on every foe.",
    "cooldown": 13.7,
    "cast": 3,
-   "mp": 400,
+   "mp": 350,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -4495,7 +4495,7 @@
    "text": "Silences the casting foe with the highest Attack or Magic and strips its buffs. Waits for a foe to cast.",
    "cooldown": 18.8,
    "cast": 1,
-   "mp": 650,
+   "mp": 500,
    "if": {
     "side": "foes",
     "where": {
@@ -4533,7 +4533,7 @@
    "text": "Weakens the foe with the highest Attack or Magic and adds several Sunder.",
    "cooldown": 10.8,
    "cast": 3,
-   "mp": 400,
+   "mp": 350,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -4570,7 +4570,7 @@
    "text": "Haste on itself.",
    "cooldown": 12,
    "cast": 1,
-   "mp": 200,
+   "mp": 150,
    "target": "self",
    "do": [
     {
@@ -4586,7 +4586,7 @@
    "text": "Three quick Fire hits on the foe with the most Burn, each adding a few.",
    "cooldown": 12.4,
    "cast": 1,
-   "mp": 200,
+   "mp": 150,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -4631,7 +4631,7 @@
    "text": "Stuns the foe with the highest Attack or Magic, past any guard.",
    "cooldown": 16.2,
    "cast": 3,
-   "mp": 325,
+   "mp": 250,
    "seek": true,
    "target": {
     "side": "foes",
@@ -4675,7 +4675,7 @@
    "text": "Goes Hidden.",
    "cooldown": 13.4,
    "cast": 1,
-   "mp": 200,
+   "mp": 150,
    "if": {
     "side": "self",
     "where": {
@@ -4697,7 +4697,7 @@
    "text": "Heavy damage, scaling from Crit chance, to the foe with the lowest HP, past any guard.",
    "cooldown": 16.1,
    "cast": 3,
-   "mp": 325,
+   "mp": 250,
    "seek": true,
    "target": {
     "side": "foes",
@@ -4727,7 +4727,7 @@
    "text": "Silences a random foe that isn't Taunting, past any guard.",
    "cooldown": 19.1,
    "cast": 1,
-   "mp": 325,
+   "mp": 250,
    "seek": true,
    "target": {
     "side": "foes",
@@ -4767,7 +4767,7 @@
    "text": "Dark damage scaling from max HP to a random foe, which is Weakened.",
    "cooldown": 11.8,
    "cast": 1,
-   "mp": 125,
+   "mp": 100,
    "do": [
     {
      "op": "damage",
@@ -4796,7 +4796,7 @@
    "text": "Spends a fifth of its max HP to heal the lowest other ally for as much, and gives it Clarity.",
    "cooldown": 16.3,
    "cast": 3,
-   "mp": 400,
+   "mp": 350,
    "if": [
     {
      "side": "others",
@@ -4848,7 +4848,7 @@
    "text": "Several Might on itself.",
    "cooldown": 17.2,
    "cast": 1,
-   "mp": 400,
+   "mp": 350,
    "target": "self",
    "do": [
     {
@@ -4872,7 +4872,7 @@
    "text": "Fire at the foe with the most Burn, adding several.",
    "cooldown": 10.5,
    "cast": 3,
-   "mp": 400,
+   "mp": 350,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -4916,7 +4916,7 @@
    "text": "Fire on every foe, adding a few Burn to each.",
    "cooldown": 18.5,
    "cast": 6,
-   "mp": 1000,
+   "mp": 800,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -4957,7 +4957,7 @@
    "text": "Heavy Fire on the foe with the most Burn, rising with each stack. The Burn stays.",
    "cooldown": 20.2,
    "cast": 8,
-   "mp": 1500,
+   "mp": 1200,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -4993,7 +4993,7 @@
    "text": "Ice at the foe with the most Chill, adding several.",
    "cooldown": 13.4,
    "cast": 3,
-   "mp": 400,
+   "mp": 350,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -5020,7 +5020,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0010400000000000001,
+          "ratio": 0.0013,
           "stat": "magic"
          }
         ]
@@ -5037,7 +5037,7 @@
    "text": "Ice on every foe, adding a few Chill to each.",
    "cooldown": 15.9,
    "cast": 6,
-   "mp": 1000,
+   "mp": 800,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -5061,7 +5061,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00049,
+          "ratio": 0.00063,
           "stat": "magic"
          }
         ]
@@ -5078,7 +5078,7 @@
    "text": "Clarity on the ally with the least MP, if one is under half, and a few Chill on every foe.",
    "cooldown": 19.9,
    "cast": 1,
-   "mp": 650,
+   "mp": 500,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -5118,7 +5118,7 @@
    "text": "Lightning at a random foe, then up to three others, adding a few Shock to each.",
    "cooldown": 12.1,
    "cast": 1,
-   "mp": 650,
+   "mp": 500,
    "do": [
     {
      "op": "damage",
@@ -5187,7 +5187,7 @@
    "text": "Lightning on every foe, adding a few Shock to each.",
    "cooldown": 16.7,
    "cast": 3,
-   "mp": 1000,
+   "mp": 800,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -5228,7 +5228,7 @@
    "text": "Haste on itself.",
    "cooldown": 18.6,
    "cast": 1,
-   "mp": 650,
+   "mp": 500,
    "target": "self",
    "do": [
     {
@@ -5244,7 +5244,7 @@
    "text": "Shields itself and the other lowest ally; the amount scales from Armor.",
    "cooldown": 19.8,
    "cast": 3,
-   "mp": 650,
+   "mp": 500,
    "if": {
     "side": "allies",
     "where": {
@@ -5300,7 +5300,7 @@
    "text": "Earth damage scaling from Armor on a random foe.",
    "cooldown": 13.2,
    "cast": 6,
-   "mp": 400,
+   "mp": 350,
    "do": [
     {
      "op": "damage",
@@ -5324,7 +5324,7 @@
    "text": "Earth damage on a random foe, which is Stunned.",
    "cooldown": 20,
    "cast": 8,
-   "mp": 1000,
+   "mp": 800,
    "target": {
     "side": "foes",
     "where": {
@@ -5588,9 +5588,9 @@
    "id": "dig_up",
    "name": "Raise",
    "text": "Digs a fallen packmate back up.",
-   "cooldown": 25.5,
+   "cooldown": 36.5,
    "cast": 6,
-   "mp": 500,
+   "mp": 800,
    "if": {
     "side": "allies",
     "where": {
@@ -5732,7 +5732,7 @@
   {
    "id": "kindle",
    "name": "Kindle",
-   "text": "Many Might and a Ward on itself; the Inferno follows.",
+   "text": "Several Might and a Ward on itself; the Inferno follows.",
    "cooldown": 32,
    "cast": 1,
    "mp": 0,
@@ -5741,7 +5741,7 @@
     {
      "op": "apply",
      "status": "might",
-     "stacks": 7
+     "stacks": 4
     },
     {
      "op": "apply",
@@ -5883,7 +5883,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.18,
+        "ratio": 0.15,
         "stat": "magic"
        }
       ]
@@ -12370,7 +12370,7 @@
      "hp": 30
     },
     "tonic": {
-     "mp": 35
+     "mp": 50
     },
     "phoenix": {
      "revive": 50
@@ -12484,7 +12484,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 178
+      "knob": 227
      },
      {
       "id": "snake_pit",
@@ -12495,7 +12495,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 128
+      "knob": 155
      },
      {
       "id": "bandit_camp",
@@ -12506,7 +12506,7 @@
        "archer",
        "bandit"
       ],
-      "knob": -4
+      "knob": 26
      },
      {
       "id": "night_wolves",
@@ -12520,7 +12520,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 143
+      "knob": 182
      },
      {
       "id": "archers_nest",
@@ -12531,7 +12531,7 @@
        "archer",
        "archer"
       ],
-      "knob": -16
+      "knob": 4
      },
      {
       "id": "viper_den",
@@ -12543,7 +12543,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 68
+      "knob": 91
      },
      {
       "id": "bandit_horde",
@@ -12555,7 +12555,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 53
+      "knob": 72
      }
     ],
     "elite": [
@@ -12567,7 +12567,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 53
+      "knob": 76
      },
      {
       "id": "twin_ogres",
@@ -12576,7 +12576,7 @@
        "ogre",
        "ogre"
       ],
-      "knob": 4
+      "knob": 30
      },
      {
       "id": "war_camp",
@@ -12587,7 +12587,7 @@
        "archer",
        "ogre"
       ],
-      "knob": -12
+      "knob": 0
      }
     ],
     "bosses": [
@@ -12599,7 +12599,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 41
+      "knob": 37
      },
      {
       "id": "packmaster",
@@ -12611,7 +12611,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 41
+      "knob": 37
      },
      {
       "id": "chiefs_return",
@@ -12643,7 +12643,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 340
+      "knob": 397
      },
      {
       "id": "bat_roost",
@@ -12654,7 +12654,7 @@
        "bat",
        "bat"
       ],
-      "knob": 363
+      "knob": 397
      },
      {
       "id": "wailing",
@@ -12663,7 +12663,7 @@
        "ghost",
        "ghost"
       ],
-      "knob": 121
+      "knob": 182
      }
     ],
     "normal": [
@@ -12676,7 +12676,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 355
+      "knob": 397
      },
      {
       "id": "dark_hall",
@@ -12687,7 +12687,7 @@
        "bat",
        "bat"
       ],
-      "knob": 238
+      "knob": 370
      },
      {
       "id": "curse_room",
@@ -12697,7 +12697,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 397
+      "knob": 370
      },
      {
       "id": "haunted_hall",
@@ -12708,7 +12708,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 110
+      "knob": 287
      },
      {
       "id": "bone_wall",
@@ -12720,7 +12720,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 249
+      "knob": 397
      },
      {
       "id": "dead_watch",
@@ -12731,7 +12731,7 @@
        "witch",
        "ghost"
       ],
-      "knob": 219
+      "knob": 276
      }
     ],
     "elite": [
@@ -12744,7 +12744,7 @@
        "ghoul",
        "ghoul"
       ],
-      "knob": 310
+      "knob": 370
      },
      {
       "id": "lich_lair",
@@ -12753,7 +12753,7 @@
        "lich",
        "mummy"
       ],
-      "knob": 227
+      "knob": 318
      },
      {
       "id": "grave_watch",
@@ -12763,7 +12763,7 @@
        "troll",
        "troll"
       ],
-      "knob": 106
+      "knob": 279
      }
     ],
     "bosses": [
@@ -12775,7 +12775,7 @@
        "bat",
        "bat"
       ],
-      "knob": 57
+      "knob": 76
      },
      {
       "id": "reapers_court",
@@ -12785,7 +12785,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 45
+      "knob": 76
      }
     ]
    },
@@ -12809,7 +12809,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 11
+      "knob": 76
      },
      {
       "id": "fuse_room",
@@ -12819,7 +12819,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -31
+      "knob": 162
      },
      {
       "id": "imp_and_hound",
@@ -12829,7 +12829,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 136
+      "knob": 219
      }
     ],
     "normal": [
@@ -12843,7 +12843,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 53
+      "knob": 158
      },
      {
       "id": "bomb_room",
@@ -12854,7 +12854,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -24
+      "knob": -8
      },
      {
       "id": "imp_kennel",
@@ -12865,7 +12865,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 125
+      "knob": 234
      },
      {
       "id": "hound_run",
@@ -12878,7 +12878,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 0
+      "knob": 61
      },
      {
       "id": "slag_heap",
@@ -12888,7 +12888,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 201
+      "knob": 340
      },
      {
       "id": "miners",
@@ -12899,7 +12899,7 @@
        "bandit",
        "bomb_bug"
       ],
-      "knob": 110
+      "knob": 204
      }
     ],
     "elite": [
@@ -12910,7 +12910,7 @@
        "lava_slime",
        "lava_slime"
       ],
-      "knob": 295
+      "knob": 393
      },
      {
       "id": "imp_court",
@@ -12922,7 +12922,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 132
+      "knob": 279
      },
      {
       "id": "powder_room",
@@ -12932,7 +12932,7 @@
        "bomb_bug",
        "ogre"
       ],
-      "knob": 7
+      "knob": 61
      }
     ],
     "bosses": [
@@ -12942,7 +12942,7 @@
       "enemies": [
        "fire_giant"
       ],
-      "knob": -61
+      "knob": -24
      },
      {
       "id": "giants_forge",
@@ -12952,7 +12952,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -65
+      "knob": -24
      },
      {
       "id": "giants_wrath",
@@ -12962,7 +12962,7 @@
        "fire_imp",
        "fire_imp"
       ],
-      "knob": -73
+      "knob": -35
      }
     ]
    },
@@ -12995,7 +12995,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 212
+      "knob": 295
      },
      {
       "id": "cold_ghosts",
@@ -13004,7 +13004,7 @@
        "ice_ghost",
        "ice_ghost"
       ],
-      "knob": 128
+      "knob": 174
      }
     ],
     "normal": [
@@ -13029,7 +13029,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 170
+      "knob": 234
      },
      {
       "id": "whiteout",
@@ -13039,7 +13039,7 @@
        "ice_ghost",
        "ice_spirit"
       ],
-      "knob": 80
+      "knob": 178
      },
      {
       "id": "ghost_lights",
@@ -13049,7 +13049,7 @@
        "ice_ghost",
        "ice_ghost"
       ],
-      "knob": 91
+      "knob": 147
      },
      {
       "id": "long_pack",
@@ -13063,7 +13063,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 382
+      "knob": 393
      },
      {
       "id": "drift",
@@ -13074,7 +13074,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 219
+      "knob": 393
      }
     ],
     "elite": [
@@ -13085,7 +13085,7 @@
        "ice_golem",
        "ice_golem"
       ],
-      "knob": 268
+      "knob": 397
      },
      {
       "id": "golem_gate",
@@ -13095,7 +13095,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 219
+      "knob": 314
      },
      {
       "id": "frost_trolls",
@@ -13106,7 +13106,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 158
+      "knob": 279
      }
     ],
     "bosses": [
@@ -13116,7 +13116,7 @@
       "enemies": [
        "ice_titan"
       ],
-      "knob": 83
+      "knob": 80
      },
      {
       "id": "glacier_king",
@@ -13126,7 +13126,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 68
+      "knob": 91
      }
     ]
    },
@@ -13151,7 +13151,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 268
+      "knob": 340
      },
      {
       "id": "leeches",
@@ -13162,7 +13162,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 378
+      "knob": 397
      },
      {
       "id": "drones",
@@ -13172,7 +13172,7 @@
        "drone",
        "drone"
       ],
-      "knob": 370
+      "knob": 397
      }
     ],
     "normal": [
@@ -13189,7 +13189,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 143
+      "knob": 279
      },
      {
       "id": "wisp_nest",
@@ -13202,7 +13202,7 @@
        "leech",
        "leech"
       ],
-      "knob": 249
+      "knob": 378
      },
      {
       "id": "leech_den",
@@ -13213,7 +13213,7 @@
        "leech",
        "leech"
       ],
-      "knob": 370
+      "knob": 397
      },
      {
       "id": "drone_wall",
@@ -13226,7 +13226,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 223
+      "knob": 344
      },
      {
       "id": "storm_front",
@@ -13239,7 +13239,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 268
+      "knob": 355
      }
     ],
     "elite": [
@@ -13252,7 +13252,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 340
+      "knob": 389
      },
      {
       "id": "sniper_ridge",
@@ -13264,7 +13264,7 @@
        "archer",
        "archer"
       ],
-      "knob": 128
+      "knob": 136
      },
      {
       "id": "lich_pair",
@@ -13274,7 +13274,7 @@
        "lich",
        "lich"
       ],
-      "knob": 219
+      "knob": 140
      }
     ],
     "bosses": [
@@ -13286,7 +13286,7 @@
        "drone",
        "drone"
       ],
-      "knob": 166
+      "knob": 158
      },
      {
       "id": "hive_queen",
@@ -13298,7 +13298,7 @@
        "drone",
        "drone"
       ],
-      "knob": 113
+      "knob": 143
      }
     ]
    },
@@ -13321,7 +13321,7 @@
        "skeleton",
        "ghost"
       ],
-      "knob": 333
+      "knob": 393
      },
      {
       "id": "whispers",
@@ -13330,7 +13330,7 @@
        "wraith",
        "wraith"
       ],
-      "knob": 397
+      "knob": 385
      },
      {
       "id": "diggers",
@@ -13340,7 +13340,7 @@
        "ghoul",
        "ghoul"
       ],
-      "knob": 303
+      "knob": 393
      }
     ],
     "normal": [
@@ -13352,7 +13352,7 @@
        "troll",
        "troll"
       ],
-      "knob": 158
+      "knob": 147
      },
      {
       "id": "lich_lair",
@@ -13361,7 +13361,7 @@
        "lich",
        "mummy"
       ],
-      "knob": 182
+      "knob": 310
      },
      {
       "id": "silent_hall",
@@ -13372,7 +13372,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 322
+      "knob": 393
      },
      {
       "id": "quiet_hall",
@@ -13383,7 +13383,7 @@
        "ghost",
        "ghost"
       ],
-      "knob": 136
+      "knob": 186
      },
      {
       "id": "coven",
@@ -13394,7 +13394,7 @@
        "wraith",
        "wraith"
       ],
-      "knob": 223
+      "knob": 370
      },
      {
       "id": "ghoul_feast",
@@ -13405,7 +13405,7 @@
        "ghoul",
        "ghoul"
       ],
-      "knob": 158
+      "knob": 340
      }
     ],
     "elite": [
@@ -13428,7 +13428,7 @@
        "lich",
        "lich"
       ],
-      "knob": 98
+      "knob": 65
      },
      {
       "id": "tomb_lords",
@@ -13438,7 +13438,7 @@
        "mummy",
        "witch"
       ],
-      "knob": 136
+      "knob": 279
      }
     ],
     "bosses": [
@@ -13458,7 +13458,7 @@
        "bone_priest",
        "bone_priest"
       ],
-      "knob": 68
+      "knob": 53
      }
     ]
    },
@@ -13483,7 +13483,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 264
+      "knob": 397
      },
      {
       "id": "guard_post",
@@ -13502,7 +13502,7 @@
        "drone",
        "drone"
       ],
-      "knob": 393
+      "knob": 397
      }
     ],
     "normal": [
@@ -13519,7 +13519,7 @@
        "leech",
        "leech"
       ],
-      "knob": 143
+      "knob": 253
      },
      {
       "id": "wisp_nest",
@@ -13532,7 +13532,7 @@
        "leech",
        "leech"
       ],
-      "knob": 249
+      "knob": 378
      },
      {
       "id": "barracks",
@@ -13542,7 +13542,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 314
+      "knob": 397
      },
      {
       "id": "drone_wall",
@@ -13555,7 +13555,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 223
+      "knob": 344
      },
      {
       "id": "watch",
@@ -13566,7 +13566,7 @@
        "drone",
        "drone"
       ],
-      "knob": 276
+      "knob": 393
      }
     ],
     "elite": [
@@ -13589,7 +13589,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 340
+      "knob": 389
      },
      {
       "id": "leech_den",
@@ -13601,7 +13601,7 @@
        "leech",
        "leech"
       ],
-      "knob": 249
+      "knob": 340
      }
     ],
     "bosses": [
@@ -13611,7 +13611,7 @@
       "enemies": [
        "storm_king"
       ],
-      "knob": 61
+      "knob": 72
      },
      {
       "id": "kings_guard",
@@ -13621,7 +13621,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 11
+      "knob": 19
      }
     ]
    }

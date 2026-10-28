@@ -236,7 +236,7 @@ export const ENEMY_HIT = {
   /** Inferno: ends the run if it lands uninterrupted. */
   /** Campaign pass: 0.5 wiped every party it landed on; at 0.35 it nearly wipes, and an interrupt buys a whole cooldown. */
   /** Step 5g round 2: 0.17 (2,400 to everyone, with many Burn). At 0.35 it was 4,900, every caster outright, so the tuner had cut the Fire Giant to 12,000 HP and it died in 18 ticks having cast nothing. */
-  inferno: 0.18, // Round 7: 0.18 (2,500 to everyone). At 0.25 it killed every caster outright, so the calibration bottomed the Giant's HP out and it died in 30 ticks before the Inferno landed: a race, not a boss.
+  inferno: 0.15, // Round 8: 0.15; with Kindle at several Might the Giant can carry HP again instead of racing its own Inferno. // Round 7: 0.18 (2,500 to everyone). At 0.25 it killed every caster outright, so the calibration bottomed the Giant's HP out and it died in 30 ticks before the Inferno landed: a race, not a boss.
   /** Hailstorm: a raidwide the Cleric can mend. Pacing pass: 0.18 (was 0.08), as it comes a third as often. */
   hailstorm: 0.18,
   /** Tempest: a raidwide the Cleric can absorb. Pacing pass: 0.13 (was 0.06). */

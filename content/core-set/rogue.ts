@@ -85,7 +85,7 @@ export const ROGUE_CONFIG: RogueConfigT = {
    * old ether gave it 50% MP), and every won fight hands the party one of each, free, up to a bag of five. Between-fight recovery is the
    * player's to spend, and mana is scarce enough that the tonics matter.
    */
-  supplies: { potion: { hp: 30 }, tonic: { mp: 35 }, phoenix: { revive: 50 } },
+  supplies: { potion: { hp: 30 }, tonic: { mp: 50 }, phoenix: { revive: 50 } }, // Round 8: the tonic half a pool (was 35%).
   drops: ["potion", "tonic"],
   bag: 5,
   /**

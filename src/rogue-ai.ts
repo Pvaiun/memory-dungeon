@@ -279,7 +279,7 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
     const need = (stat: "hp" | "mp", below: number) => run.party.map((cls) => member(run, cls)).filter((m) => !m.ko && maxOf(c, run, m.cls, stat === "hp" ? "max_hp" : "max_mp") > 0)
       .map((m) => ({ cls: m.cls, s: 1 - (stat === "hp" ? m.missHp : m.missMp) / maxOf(c, run, m.cls, stat === "hp" ? "max_hp" : "max_mp") })).filter((x) => x.s < below).sort((a, b) => a.s - b.s);
     for (const x of need("hp", 0.5)) if (run.supplies.includes("potion")) useSupply(c, run, "potion", x.cls);
-    for (const x of need("mp", 0.4)) if (run.supplies.includes("tonic")) useSupply(c, run, "tonic", x.cls);
+    for (const x of need("mp", 0.5)) if (run.supplies.includes("tonic")) useSupply(c, run, "tonic", x.cls);
   }
 
   function decide(c: Content, run: RogueRun): string {
