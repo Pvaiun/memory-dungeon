@@ -90,7 +90,7 @@ export const ROGUE_CONFIG: RogueConfigT = {
   drops: ["potion", "tonic"],
   bag: { potion: 2, tonic: 2, phoenix: 2 },
   /**
-   * The foes, in percent (the campaign's knob: HP +k %, damage +k/2 %): per act, the first floor's, the rise per floor, an
+   * The foes, in percent (the campaign's knob: HP +k %, damage +k/2.5 %): per act, the first floor's, the rise per floor, an
    * elite's on top, and the boss's. Each region adds its own (below). Set by the rogue tuning (npm run rogue).
    */
   knobs: [
