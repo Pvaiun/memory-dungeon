@@ -381,7 +381,7 @@ function pack(r: Rec, n: number): string {
     const abil = dealt - basic - statusD;
     const casts = Object.entries(t.casts).map(([k, v]) => `${nameOf(c, k)} ×${v} (first t${n1(t.firstCast[k])})`).join(", ");
     const srcs = Object.entries(t.dealt).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k.startsWith("status:") ? nameOf(c, k.slice(7)) : nameOf(c, k)} ${n0(v)}`).join(", ");
-    out.push(`- **${u.name}**: ${t.basics} basics, casts: ${casts || "none"}${t.fizz ? `, ${t.fizz} fizzled for MP` : ""}. Dealt ${n0(dealt)} (${pc(dealt, totalDealt)} of the party's): basic ${pc(basic, dealt)}, abilities ${pc(abil, dealt)}, statuses ${pc(statusD, dealt)}${srcs ? ` [${srcs}]` : ""}. Took ${n0(t.taken)}. Healed others ${n0(t.healed)}. MP spent ${n0(t.mpSpent)}, regained ${n0(t.mpGained)}, left ${rd.mpEnd.has(id) ? n0(rd.mpEnd.get(id)!) : "full"}${t.short > 0.02 ? `, short of MP ${pc(t.short, 1)} of its time` : ""}.${t.downAt !== null ? ` DOWN at t${n1(t.downAt)}.` : ""}`);
+    out.push(`- **${u.name}**: ${t.basics} basics, casts: ${casts || "none"}${t.fizz ? `, ${t.fizz} fizzled for MP` : ""}. Dealt ${n0(dealt)} (${pc(dealt, totalDealt)} of the party's): basic ${pc(basic, dealt)}, abilities ${pc(abil, dealt)}, statuses ${pc(statusD, dealt)}${srcs ? ` [${srcs}]` : ""}. Took ${n0(t.taken)}. Healing done ${n0(t.healed)}. MP spent ${n0(t.mpSpent)}, regained ${n0(t.mpGained)}, left ${rd.mpEnd.has(id) ? n0(rd.mpEnd.get(id)!) : "full"}${t.short > 0.02 ? `, short of MP ${pc(t.short, 1)} of its time` : ""}.${t.downAt !== null ? ` DOWN at t${n1(t.downAt)}.` : ""}`);
   }
   for (const id of foeIds) {
     const u = rd.units.get(id)!, t = rd.ut.get(id)!;
@@ -440,7 +440,7 @@ function summary(): string {
     out.push(`| ${act} | ${tier} | ${xs.length} | ${pc(xs.filter((x) => x.r.won).length, xs.length)} | ${n1(mean(ticks))} | ${ticks[Math.floor(ticks.length * 0.1)]}–${ticks[Math.floor(ticks.length * 0.9)]} | ${n1(kos)} |`);
   }
   // Classes.
-  out.push("", "## Classes (over the fights the class was in)", "", "| class | fights | dealt a fight | share of party's | basic | abilities | statuses | healed a fight | taken a fight | KO per 100 | down at (mean t) | MP spent | regained | left % | short of MP (% of its time) |", "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |");
+  out.push("", "## Classes (over the fights the class was in)", "", "| class | fights | dealt a fight | share of party's | basic | abilities | statuses | healing done a fight | taken a fight | KO per 100 | down at (mean t) | MP spent | regained | left % | short of MP (% of its time) |", "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |");
   const classRows: Record<string, { fights: number; dealt: number; share: number; basic: number; abil: number; status: number; healed: number; taken: number; ko: number; downAt: number[]; spent: number; gained: number; left: number[]; fizz: number; short: number[] }> = {};
   const abilRows: Record<string, { present: number; casts: number; first: number[]; fizz: number; dealt: number }> = {};
   for (const { r, rd } of reads) {
