@@ -174,7 +174,7 @@ If this step needs a structural change (a new event that hands out branches, say
 
 ## Tools
 
-`npm run content` (regenerate the pack after content changes), `npm test`, `npm run typecheck`, `npm run validate`, `npm run rogue:calibrate`, `npm run balance` (the balance sheet), `npx tsx src/rogue-feel.ts` (fights to read, in seconds), plus 5h's hand-built parties and its act-sequence tool for MP. Run `npm install` first.
+`npm run content` (regenerate the pack after content changes), `npm test`, `npm run typecheck`, `npm run validate`, `npm run balance` (the balance sheet), and 5h's tuning tools: `src/rogue-parties.ts` (the hand-built rosters: add or change rosters there to price pieces with and without their partners), `npm run rogue:calibrate -- --reps 3` (each fight's knob against those rosters, each fielding its best three of five), `npx tsx src/rogue-acts.ts` (MP: endurance by class, the act road with and without tonics), `npx tsx src/rogue-feel.ts --rosters` (fight packs from the rosters for a feel read). Run `npm install` first.
 
 ## Housekeeping
 
