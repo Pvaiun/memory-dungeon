@@ -15,6 +15,13 @@ const timing = (cd: CD, wu: WU) => ({ cooldown: ENEMY_COOLDOWN[cd], cast: WINDUP
 /** A basic attack by kind and words: a flat swing from the word (see ENEMY_SWING); the kind sets how often. */
 const swing = (speed: keyof typeof SPEED, word: SwingWord) => Math.round(ENEMY_SPEED_FACTOR[speed] * ENEMY_SWING[word]);
 const basic = (kind: string, word: SwingWord = "normal", extra: Partial<WeaponT> = {}): WeaponT => ({ kind, amount: swing(speedOf(kind), word), ...extra });
+/**
+ * Step 5g (the director's: "very few enemies have multi-hits"): a basic attack of two bites, each this share of the one swing, so the pair
+ * is a fifth bigger before Armor and about the same after it (Armor cuts small hits more); Thorns, Bleed on the attacker and Guard meet
+ * it twice. The skirmishers' swing.
+ */
+const MULTI_SHARE = 0.6;
+const flurry = (kind: string, word: SwingWord = "normal", extra: Partial<WeaponT> = {}): WeaponT => ({ kind, amount: Math.round(MULTI_SHARE * swing(speedOf(kind), word)), hits: 2, ...extra });
 /** A basic attack with no kind of its own (a touch, a slam): type, subtype or element, and speed. */
 const touch = (p: { subtype?: "slash" | "pierce" | "blunt"; element?: string }, speed: keyof typeof SPEED, word: SwingWord = "normal", extra: Partial<WeaponT> = {}): WeaponT => ({
   type: p.element ? "magical" : "physical", ...p, cooldown: SPEED[speed], amount: swing(speed, word), ...extra,
@@ -67,7 +74,11 @@ const fromStat = (stat: string, ratio: number) => ({ scale: [{ ratio, stat }] })
 // signature blows and spells on a short cooldown (22); the summons stay medium, or the room fills.
 export const enemyAbilities: AbilityT[] = [
   a("shield_up", "Shield up", "Taunts.", { ...timing("short", "quick"), target: "self", do: [apply("taunt")] }),
-  a("brace", "Brace", "Guards itself.", { ...timing("medium", "quick"), target: "self", do: [apply("guard")] }),
+  a("brace", "Brace", "Guards itself.", { ...timing("medium", "quick"), mp: 0, target: "self", do: [apply("guard")] }), // Step 5g: free, as the Skeleton and Golem carry no MP.
+  // Step 5g (the director's: more foes with simple buffs, so Judgement, Unmake and Dispel have targets; and elites with a move of their own).
+  a("take_aim", "Take aim", "Several Might on itself.", { ...timing("medium", "quick"), mp: 0, target: "self", do: [apply("might", { stacks: FLAT_STACKS.several })] }),
+  a("dark_ward", "Dark ward", "Wards itself.", { ...timing("medium", "quick"), mp: 0, target: "self", do: [apply("ward")] }), // Free, so it never takes the Soulfire's MP.
+  a("shield_slam", "Shield slam", "A blunt blow with the shield that Stuns.", { ...timing("medium", "normal"), target: { side: "foes", where: { lacks: "stun" }, ifNone: "any" }, do: [{ op: "damage", type: "physical", subtype: "blunt", amount: fromStat("attack", 1.0), apply: [{ status: "stun" }] }] }),
   // Step 5g (the feel read): Flatten, Soulfire and Curse on the medium word (were long, 48 ticks): "foe moves promised and not cast" (Soulfire 0.33 casts an appearance, Flatten 0.68).
   a("flatten", "Flatten", "A heavy blow that Stuns.", { ...timing("medium", "long"), target: { side: "foes", where: { lacks: "stun" }, ifNone: "any" }, do: [{ op: "damage", type: "physical", subtype: "blunt", amount: fromStat("attack", ENEMY_HIT.flatten), apply: [{ status: "stun" }] }] }),
   // Step 5f: Crush on a short cooldown (was medium): the Ogre Chief cast it 0.6 times a fight, its fight being the shortest.
@@ -91,27 +102,27 @@ export const enemyAbilities: AbilityT[] = [
 
 // ─── Enemies ─────────────────────────────────────────────────────────────────
 
-const wolf = enemy("wolf", "Wolf", "Hunts in packs.", "minion", line(2, 0, 0, 2, 0, 0, 2, 2), basic("dagger", "weak"));
+const wolf = enemy("wolf", "Wolf", "Hunts in packs.", "minion", line(2, 0, 0, 2, 0, 0, 2, 2), flurry("dagger", "weak")); // Step 5g: two bites a swing.
 const bandit = enemy("bandit", "Bandit", "A common road thug.", "minion", line(4, 0, 0, 3, 0, 1, 2, 3), basic("sword"));
-const archer = enemy("archer", "Archer", "Hits hard, falls fast.", "minion", line(2, 0, 0, 7, 0, 0, 4, 2), basic("bow", "heavy"));
+const archer = enemy("archer", "Archer", "Hits hard, falls fast.", "minion", line(2, 0, 0, 7, 0, 0, 4, 2), basic("bow", "heavy"), { abilities: ["take_aim"] }); // Step 5g: it takes aim (Might on itself).
 const snake = enemy("snake", "Snake", "Its bite leaves a bleeding wound.", "minion", line(2, 0, 0, 2, 0, 0, 2, 1), basic("dagger", "weak"), { statuses: ["venom"] });
-const shieldman = enemy("shieldman", "Shieldman", "Hides behind a big shield.", "elite", line(10, 3, 2, 2, 0, 5, 1, 4), basic("sword"), { abilities: ["shield_up", "brace"] });
+const shieldman = enemy("shieldman", "Shieldman", "Hides behind a big shield.", "elite", line(10, 3, 2, 2, 0, 5, 1, 4), basic("sword"), { abilities: ["shield_up", "shield_slam"] }); // Step 5g: a slam that Stuns in Brace's place (an elite that dealt 708 an appearance and wasted 36 ticks).
 // Step 5g round 3: a massive swing (was heavy): on a 16-tick axe with a 6-tick wind-up the elite swung three times in 35 ticks for a minion's damage a tick.
 const ogre = enemy("ogre", "Ogre", "Big, slow, and swings a tree.", "elite", line(16, 2, 1, 6, 0, 2, 2, 4), basic("axe", "massive", { cast: WINDUP.long }), { abilities: ["flatten"], note: "Its basic attack has a long wind-up: an exception to the no-wind-up default." });
 const ogreChief = enemy("ogre_chief", "Ogre Chief", "The biggest ogre, with the biggest club.", "boss", line(60, 4, 2, 12, 0, 3, 2, 4), basic("axe", "heavy"), { abilities: ["crush"] });
 
-const skeleton = enemy("skeleton", "Skeleton", "Old bones in heavy armor.", "minion", line(3, 0, 0, 3, 0, 8, 2, 3), basic("sword", "normal", { cooldown: SPEED.slow }));
+const skeleton = enemy("skeleton", "Skeleton", "Old bones in heavy armor.", "minion", line(3, 0, 0, 3, 0, 8, 2, 3), basic("sword", "normal", { cooldown: SPEED.slow }), { abilities: ["brace"] }); // Step 5g: it braces (Guard on itself).
 const bat = enemy("bat", "Bat", "Fast, and hard to hit.", "minion", { ...line(2, 0, 0, 2, 0, 0, 2, 2), evasion: SPECIAL.evasion.high }, basic("dagger", "weak"));
 const ghost = enemy("ghost", "Ghost", "Magic passes right through it.", "minion", { ...line(6, 0, 0, 0, 3, 0, 2, 2), resist: RESIST.high }, touch({ element: "dark" }, "medium"));
 const bonePriest = enemy("bone_priest", "Bone Priest", "Heals the other dead.", "minion", line(3, 6, 3, 0, 7, 1, 2, 1), touch({ element: "dark" }, "medium", "weak"), { abilities: ["mend"] });
 const witch = enemy("witch", "Witch", "Curses the whole party.", "minion", line(3, 5, 3, 0, 4, 0, 2, 2), touch({ element: "dark" }, "medium", "weak"), { abilities: ["curse"] });
-const lich = enemy("lich", "Lich", "A dead wizard with one big spell.", "minion", line(2, 6, 2, 0, 7, 0, 2, 2), touch({ element: "dark" }, "medium", "weak"), { abilities: ["soulfire"] });
+const lich = enemy("lich", "Lich", "A dead wizard with one big spell.", "minion", line(2, 6, 2, 0, 7, 0, 2, 2), touch({ element: "dark" }, "medium", "weak"), { abilities: ["soulfire", "dark_ward"] }); // Step 5g: it wards itself.
 const ghoul = enemy("ghoul", "Ghoul", "Ghouls dig each other back up.", "minion", line(8, 3, 2, 4, 0, 1, 2, 3), basic("sword"), { abilities: ["dig_up"] });
 const reaper = enemy("reaper", "Reaper", "Death, with a scythe and a bell.", "boss", line(85, 8, 3, 9, 12, 4, 2, 4), basic("sword", "heavy"), { abilities: ["death_bell"] });
 const wraith = enemy("wraith", "Wraith", "Steals voices.", "minion", line(4, 5, 3, 0, 5, 0, 2, 2), touch({ element: "dark" }, "medium", "weak"), { abilities: ["mute"] });
 const silentOne = enemy("silent_one", "Silent One", "Its silence falls on everyone.", "boss", line(90, 10, 3, 11, 12, 5, 2, 4), basic("sword", "heavy"), { abilities: ["quiet"] });
 
-const hellhound = enemy("hellhound", "Hellhound", "A fire dog; its bite burns.", "minion", { ...line(3, 0, 0, 3, 0, 0, 2, 2), ...res("fire", "resists"), ...res("ice", "weak") }, basic("dagger", "weak"), { statuses: ["fire_bite"] });
+const hellhound = enemy("hellhound", "Hellhound", "A fire dog; its bite burns.", "minion", { ...line(3, 0, 0, 3, 0, 0, 2, 2), ...res("fire", "resists"), ...res("ice", "weak") }, flurry("dagger", "weak"), { statuses: ["fire_bite"] }); // Step 5g: two bites a swing, each burning.
 const lavaSlime = enemy("lava_slime", "Lava Slime", "Cut it in half and you get two.", "elite", { ...line(14, 0, 0, 4, 0, 1, 2, 3), ...res("fire", "resists"), ...res("ice", "weak") }, touch({ subtype: "blunt" }, "slow"), { statuses: ["split"] });
 const miniSlime = enemy("mini_slime", "Mini Slime", "Half a slime, still hungry.", "minion", { ...line(7, 0, 0, 3, 0, 1, 2, 3), ...res("fire", "resists"), ...res("ice", "weak") }, touch({ subtype: "blunt" }, "slow"));
 const bombBug = enemy("bomb_bug", "Bomb Bug", "Explodes when it dies.", "minion", { ...line(6, 0, 0, 2, 5, 3, 2, 2), ...res("fire", "resists") }, touch({ subtype: "blunt" }, "medium"), { statuses: ["volatile"] });
@@ -119,7 +130,7 @@ const fireImp = enemy("fire_imp", "Fire Imp", "Cheers its friends on.", "minion"
 const fireGiant = enemy("fire_giant", "Fire Giant", "Lord of the furnace.", "boss", { ...line(95, 10, 3, 0, 14, 5, 2, 4), ...res("fire", "absorbs"), ...res("ice", "weak") }, basic("fire_staff", "heavy"), { abilities: ["brand", "inferno"] });
 
 const iceSpirit = enemy("ice_spirit", "Ice Spirit", "Living ice: ice heals it, fire melts it.", "minion", { ...line(5, 0, 0, 0, 4, 1, 2, 2), ...res("ice", "absorbs"), ...res("fire", "weak") }, touch({ element: "ice" }, "medium"), { statuses: ["rime"] });
-const iceGolem = enemy("ice_golem", "Ice Golem", "Every hit thickens its ice.", "elite", { ...line(14, 0, 0, 5, 0, 2, 2, 3), ...res("ice", "resists") }, basic("axe", "heavy"), { statuses: ["ice_crust_passive"] });
+const iceGolem = enemy("ice_golem", "Ice Golem", "Every hit thickens its ice.", "elite", { ...line(14, 0, 0, 5, 0, 2, 2, 3), ...res("ice", "resists") }, basic("axe", "heavy"), { abilities: ["brace"], statuses: ["ice_crust_passive"] }); // Step 5g: it braces too.
 const iceTitan = enemy("ice_titan", "Ice Titan", "A walking glacier.", "boss", { ...line(110, 6, 2, 14, 8, 6, 2, 4), ...res("ice", "resists"), "immune:dispel": 1 }, basic("axe", "massive"), { abilities: ["hailstorm"], statuses: ["frozen_core"] });
 
 const wisp = enemy("wisp", "Wisp", "A tiny spark with a temper.", "minion", line(1, 0, 0, 0, 2, 0, 2, 1), basic("lightning_staff", "weak"), { statuses: ["static"] });

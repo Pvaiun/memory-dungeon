@@ -5298,12 +5298,78 @@
    "text": "Guards itself.",
    "cooldown": 33.6,
    "cast": 1,
-   "mp": 500,
+   "mp": 0,
    "target": "self",
    "do": [
     {
      "op": "apply",
      "status": "guard"
+    }
+   ]
+  },
+  {
+   "id": "take_aim",
+   "name": "Take aim",
+   "text": "Several Might on itself.",
+   "cooldown": 31.4,
+   "cast": 1,
+   "mp": 0,
+   "target": "self",
+   "do": [
+    {
+     "op": "apply",
+     "status": "might",
+     "stacks": 4
+    }
+   ]
+  },
+  {
+   "id": "dark_ward",
+   "name": "Dark ward",
+   "text": "Wards itself.",
+   "cooldown": 30.7,
+   "cast": 1,
+   "mp": 0,
+   "target": "self",
+   "do": [
+    {
+     "op": "apply",
+     "status": "ward"
+    }
+   ]
+  },
+  {
+   "id": "shield_slam",
+   "name": "Shield slam",
+   "text": "A blunt blow with the shield that Stuns.",
+   "cooldown": 37.4,
+   "cast": 3,
+   "mp": 500,
+   "target": {
+    "side": "foes",
+    "where": {
+     "lacks": "stun"
+    },
+    "ifNone": "any"
+   },
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "subtype": "blunt",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 1,
+        "stat": "attack"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "stun"
+      }
+     ]
     }
    ]
   },
@@ -8354,7 +8420,8 @@
    },
    "weapon": {
     "kind": "dagger",
-    "amount": 375
+    "amount": 225,
+    "hits": 2
    }
   },
   {
@@ -8397,7 +8464,10 @@
    "weapon": {
     "kind": "bow",
     "amount": 1100
-   }
+   },
+   "abilities": [
+    "take_aim"
+   ]
   },
   {
    "id": "snake",
@@ -8445,7 +8515,7 @@
    },
    "abilities": [
     "shield_up",
-    "brace"
+    "shield_slam"
    ]
   },
   {
@@ -8518,7 +8588,10 @@
     "kind": "sword",
     "amount": 700,
     "cooldown": 15.5
-   }
+   },
+   "abilities": [
+    "brace"
+   ]
   },
   {
    "id": "bat",
@@ -8640,7 +8713,8 @@
     "amount": 500
    },
    "abilities": [
-    "soulfire"
+    "soulfire",
+    "dark_ward"
    ]
   },
   {
@@ -8761,7 +8835,8 @@
    },
    "weapon": {
     "kind": "dagger",
-    "amount": 375
+    "amount": 225,
+    "hits": 2
    },
    "statuses": [
     "fire_bite"
@@ -8949,6 +9024,9 @@
     "kind": "axe",
     "amount": 1100
    },
+   "abilities": [
+    "brace"
+   ],
    "statuses": [
     "ice_crust_passive"
    ]
@@ -9150,7 +9228,8 @@
    },
    "weapon": {
     "kind": "dagger",
-    "amount": 375
+    "amount": 225,
+    "hits": 2
    },
    "note": "A reskin of the Wolf: the same numbers."
   },
@@ -9202,7 +9281,7 @@
    },
    "abilities": [
     "shield_up",
-    "brace"
+    "shield_slam"
    ],
    "note": "A reskin of the Shieldman: the same numbers."
   },
