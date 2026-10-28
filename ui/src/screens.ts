@@ -8,7 +8,7 @@ import { foesText, meets, needText, rewardsOf, unmet } from "../../src/campaign.
 import { c, className, classes, cls as classOf, dungeons, enemies, fightName, formations, gearOf, NUMBER_SCALES, runName, setNumberScale, shortName } from "./content.js";
 import { enemyDisplayName } from "./art.js";
 import { button, h, header, nav, row, settleBack, win, type Child } from "./dom.js";
-import { abilitiesFor, gearFor, HIT_PAUSES, party as partyLoadout, reset, resetJourneyLoadout, save, setup, useMode } from "./state.js";
+import { abilitiesFor, applyHeadStart, gearFor, HEAD_STARTS, HIT_PAUSES, party as partyLoadout, reset, resetJourneyLoadout, save, setup, useMode } from "./state.js";
 import {
   anyNewClass, anyNewFormation, anyNewGear, cleared, currentIndex, hasJourney, markSeen, newClass, newFormation, newGear, newGearFor, newNode, nodes, onJourney,
   ownsClass, ownsFormation, ownsGear, resetJourney, setCleared, mode as playMode, onRogue,
@@ -532,6 +532,7 @@ function settings(): Child[] {
       toggle("PARTY HP ON FIELD", "partyBars"),
       cycle("NUMBERS", NUMBER_SCALES, s.numbers as (typeof NUMBER_SCALES)[number], (v) => `${v}×`, (v) => { s.numbers = v; setNumberScale(v); }),
       cycle("PORTRAITS", ["faces", "sprites", "mixed"] as const, s.portraits, (v) => v.toUpperCase(), (v) => (s.portraits = v)),
+      ...([0, 1, 2] as const).map((i) => cycle(`HEAD START ${["1ST", "2ND", "3RD"][i]} SLOT`, HEAD_STARTS, s.headStart[i] as (typeof HEAD_STARTS)[number], (v) => `${v} TICKS`, (v) => { s.headStart[i] = v; applyHeadStart(s.headStart); })),
       toggle("DESIGNER", "designer"),
       s.designer ? toggle("SEED LOCK", "seedLock") : null,
       s.designer && s.seedLock ? seedRow() : null,

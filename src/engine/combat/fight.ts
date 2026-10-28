@@ -41,6 +41,8 @@ export type CUnit = Unit & {
   pct: Record<string, number>;
   /** Statuses applied at fight start and again on revival: passive, gear, formation, perks, or an enemy's own. */
   start: string[];
+  /** Step 5g: ticks of cooldown each ability had left when the last fight ended (a party unit's; carried by the run or the rogue). */
+  cooldowns?: Record<string, number>;
   /** Where the basic attack comes from: a gear id, "enemy:<id>", or "unarmed". */
   weapon: string;
   acts: Act[];
@@ -65,6 +67,7 @@ export type Item =
       src: string | null;
       per: number;
       other: string | null;
+      owner: string | null;
       amount: number;
       /** The actor is KO'd and reacting to its own KO. */
       dead: boolean;
@@ -274,7 +277,7 @@ type ActDef = {
   cast: number;
   cooldown: number;
   recovery: number;
-  if: S.ConditionT | null;
+  if: S.ConditionT | S.ConditionT[] | null;
   target: Target;
   seek: boolean;
   effects: S.EffectT[];
@@ -354,7 +357,8 @@ function seeks(w: W, u: CUnit, d: ActDef) {
 function available(w: W, u: CUnit, i: number): boolean {
   if (u.acts[i].ready > w.f.now) return false;
   const d = actDef(w, u, i);
-  return u.mp >= d.mp && (!d.if || holds(w, u, d.if)) && !lockedOut(w, u, d);
+  // Step 5g: an ability may wait for several conditions at once (Blood gift: an ally hurt, and itself above the price).
+  return u.mp >= d.mp && (!d.if || [d.if].flat().every((cnd) => holds(w, u, cnd))) && !lockedOut(w, u, d);
 }
 
 function start(w: W, u: CUnit, i: number) {
@@ -437,6 +441,9 @@ function passes(w: W, x: CUnit, c: S.UnitCondT): boolean {
   if (c.ko !== undefined && x.ko !== c.ko) return false;
   if (c.hpBelow !== undefined && !(x.hp * 100 < c.hpBelow * x.stats.max_hp)) return false;
   if (c.hpAtLeast !== undefined && !(x.hp * 100 >= c.hpAtLeast * x.stats.max_hp)) return false;
+  // Step 5g: MP as a share of max MP (Clarity waits for an ally who needs it). A unit with no MP pool is never "below".
+  if (c.mpBelow !== undefined && !(x.stats.max_mp > 0 && x.mp * 100 < c.mpBelow * x.stats.max_mp)) return false;
+  if (c.mpAtLeast !== undefined && !(x.stats.max_mp <= 0 || x.mp * 100 >= c.mpAtLeast * x.stats.max_mp)) return false;
   if (c.has !== undefined && !ids(c.has).every((id) => x.statuses.some((s) => s.id === id))) return false;
   if (c.lacks !== undefined && ids(c.lacks).some((id) => x.statuses.some((s) => s.id === id))) return false;
   if (c.buffs !== undefined && x.statuses.some((s) => def(w, s.id).label === "buff") !== c.buffs) return false;
@@ -445,6 +452,7 @@ function passes(w: W, x: CUnit, c: S.UnitCondT): boolean {
   if (c.stacks && total(x, c.stacks.status) / SUBTICKS < c.stacks.atLeast) return false;
   if (c.atCap !== undefined && !atCap(w, x, c.atCap)) return false;
   if (c.belowCap !== undefined && atCap(w, x, c.belowCap)) return false;
+  if (c.casting !== undefined && (x.cast !== null) !== c.casting) return false;
   return true;
 }
 
@@ -483,7 +491,8 @@ function holds(w: W, u: CUnit, c: S.ConditionT) {
 
 function value(w: W, x: CUnit, by: NonNullable<S.TargetRuleT["by"]>): number {
   if (by === "hp") return x.hp;
-  if (by === "hp_share") return x.hp / x.stats.max_hp;
+  if (by === "hp_share") return x.stats.max_hp > 0 ? x.hp / x.stats.max_hp : 0;
+  if (by === "mp_share") return x.stats.max_mp > 0 ? x.mp / x.stats.max_mp : 1;
   if (by === "buffs" || by === "debuffs") return x.statuses.filter((s) => def(w, s.id).label === by.slice(0, -1)).length;
   if ("stat" in by) return stat(w, x, by.stat);
   if ("stats" in by) return Math.max(...by.stats.map((k) => stat(w, x, k)));
@@ -602,6 +611,8 @@ type Ctx = {
     src: string | null;
     per: number;
     other: CUnit | null;
+    /** Reactions: the unit the event is about (step 5g: the holder of a status that just reached its cap). */
+    owner: CUnit | null;
     amount: number;
     /** A pulse or trigger: no unit's boosts reach it. A reaction reads its actor's boosts now. */
     fixedBoost: boolean;
@@ -619,6 +630,7 @@ function targetsOf(w: W, ctx: Ctx, e: S.EffectT): CUnit[] {
   else if (t === "holder") out = [st?.holder ?? null];
   else if (t === "source") out = [unit(w, st?.src ?? null)];
   else if (t === "other") out = [st?.other ?? null];
+  else if (t === "owner") out = [st?.owner ?? null];
   else out = byRule(w, ctx.actor, t, { seek: true, main: false, targets: ctx.targets });
   const wantKo = e.op === "revive";
   return out.filter((x): x is CUnit => !!x && (wantKo ? x.ko && !x.gone : !x.ko));
@@ -712,12 +724,14 @@ function critRoll(w: W, rng: CUnit, chance: number, multiplier: number): number 
   return multiplier;
 }
 
-type Calc = { amount: number; word: string | null; crit: boolean; heal: number };
+type Calc = { amount: number; word: string | null; crit: boolean; heal: number; raw: number };
 
 /** Resolution order steps 2 to 6 (section 5): amount, boosts, damage-taken modifiers, crit, mitigation. Whole points, rounded down. */
 function calc(w: W, t: CUnit, p: Part, raw: number, tags: readonly string[], boost: number, crit: number): Calc {
   let x = raw * (1 + boost / 100) * (1 + takenOf(w, t, tags) / 100);
   if (crit) x = (x * crit) / 100;
+  // The amount before Armor or resistance, for the log only: what mitigation took off.
+  const preMit = x;
   let word: string | null = null;
   let heal = 0;
   if (p.type === "physical") {
@@ -743,9 +757,10 @@ function calc(w: W, t: CUnit, p: Part, raw: number, tags: readonly string[], boo
       word = r < 0 ? "WEAK" : r > 0 ? "RESIST" : null;
     }
   }
+  const raw0 = Math.max(0, Math.floor(preMit));
   x = Math.max(0, Math.floor(x));
   if (stat(w, t, "immune:damage") > 0) (x = 0), (heal = 0), (word = "IMMUNE");
-  return { amount: x, word, crit: crit > 0, heal };
+  return { amount: x, word, crit: crit > 0, heal, raw: raw0 };
 }
 
 /** Steps 7 and 8: a block (Aegis) stops damage above its share outright; absorbs soak in the order they were first applied; the rest comes off HP. */
@@ -784,7 +799,7 @@ const dmgKind = (p: Part) => p.element ?? (p.type === "none" ? "untyped" : p.typ
 function logDamage(w: W, by: CUnit | null, t: CUnit, src: string, part: string, r: Calc, tk: { soaked: number; blocked: boolean }, from?: string | null, kind?: string) {
   w.log?.({
     t: "dmg", vis: "player", at: w.f.now, by: by?.id ?? null, target: t.id, src, part, ...(from ? { from } : {}), ...(kind ? { kind } : {}),
-    amount: tk.blocked ? 0 : r.amount, soaked: tk.soaked, word: tk.blocked ? "AEGIS" : r.word, crit: r.crit, hp: t.hp, shield: shield(w, t),
+    amount: tk.blocked ? 0 : r.amount, raw: r.raw, soaked: tk.soaked, word: tk.blocked ? "AEGIS" : r.word, crit: r.crit, hp: t.hp, shield: shield(w, t),
   });
 }
 
@@ -792,7 +807,8 @@ function logDamage(w: W, by: CUnit | null, t: CUnit, src: string, part: string, 
 function absorb(w: W, by: CUnit | null, t: CUnit, src: string, r: Calc) {
   const got = Math.min(r.heal, t.stats.max_hp - t.hp);
   t.hp += got;
-  w.log?.({ t: "heal", vis: "player", at: w.f.now, by: by?.id ?? null, target: t.id, src, amount: got, crit: false, hp: t.hp, word: "ABSORB" });
+  // Step 5g: a heal of nothing (a full unit) is not a moment; the log keeps the beats a player reads. Outcomes are unchanged.
+  if (got > 0) w.log?.({ t: "heal", vis: "player", at: w.f.now, by: by?.id ?? null, target: t.id, src, amount: got, crit: false, hp: t.hp, word: "ABSORB" });
   if (got > 0) fire(w, ev("healed", t, by, { amount: got }));
 }
 
@@ -900,7 +916,7 @@ function heal(w: W, ctx: Ctx, t: CUnit, raw: number) {
   if (crit) x = (x * crit) / 100;
   const restored = Math.min(Math.max(0, Math.floor(x)), t.stats.max_hp - t.hp);
   t.hp += restored;
-  w.log?.({ t: "heal", vis: "player", at: w.f.now, by: ctx.actor.id, target: t.id, src: ctx.id, amount: restored, crit: crit > 0, hp: t.hp });
+  if (restored > 0) w.log?.({ t: "heal", vis: "player", at: w.f.now, by: ctx.actor.id, target: t.id, src: ctx.id, amount: restored, crit: crit > 0, hp: t.hp });
   if (restored > 0) fire(w, ev("healed", t, ctx.actor, { amount: restored }));
 }
 
@@ -976,6 +992,8 @@ function gained(w: W, to: CUnit, d: S.StatusT, s: SInst, by?: CUnit) {
   if (d.lockout?.interrupt) interrupt(w, to, d.lockout.covers);
   if (d.lockout?.pause && s.end !== -1) hold(w, to, d.lockout.covers, s.end - w.f.now);
   fire(w, ev("status_gained", to, null, { status: d.id }));
+  // Step 5g: an Intensity status that stands at its cap after an application has capped (Chill shatters). Other: the applier.
+  if (isIntensity(d) && compile(d).cap >= 0 && s.stacks >= capOf(w, d, s.nums, to) && to.statuses.includes(s)) fire(w, ev("status_capped", to, by ?? null, { status: d.id }));
 }
 
 const capOf = (w: W, d: S.StatusT, nums: number[], holder: CUnit) =>
@@ -1063,7 +1081,7 @@ function pulse(w: W, it: Extract<Item, { k: "pulse" }>) {
   push(w, { ...it, at: it.at + every, seq: w.f.seq++ });
   const ctx: Ctx = {
     actor: h, kind: null, targets: [], id: d.id, dead: false,
-    st: { d, nums: s.nums, holder: h, src: s.src, per: perOf(d, s), other: null, amount: 0, fixedBoost: true },
+    st: { d, nums: s.nums, holder: h, src: s.src, per: perOf(d, s), other: null, owner: null, amount: 0, fixedBoost: true },
   };
   for (const e of d.pulse!.do ?? []) {
     run(w, ctx, e);
@@ -1170,7 +1188,7 @@ function queueReaction(w: W, actor: CUnit, holder: CUnit, s: SInst, d: S.StatusT
   push(w, {
     k: "react", at: w.f.now + 1, b: batch(actor.side), g: 1, slot: actor.slot, seq: w.f.seq++, unit: actor.id,
     holder: holder.id, status: d.id, which, nums: s.nums.slice(), src: s.src, per,
-    other: e.other?.id ?? null, amount: e.amount, dead,
+    other: e.other?.id ?? null, owner: e.owner.id, amount: e.amount, dead,
   });
 }
 
@@ -1181,7 +1199,7 @@ function react(w: W, it: Extract<Item, { k: "react" }>) {
   const effects = it.which < 0 ? d.trigger!.do! : d.reactions![it.which].do;
   const ctx: Ctx = {
     actor, kind: null, targets: [], id: d.id, dead: it.dead,
-    st: { d, nums: it.nums, holder: unit(w, it.holder)!, src: it.src, per: it.per, other: unit(w, it.other), amount: it.amount, fixedBoost: it.which < 0 },
+    st: { d, nums: it.nums, holder: unit(w, it.holder)!, src: it.src, per: it.per, other: unit(w, it.other), owner: unit(w, it.owner), amount: it.amount, fixedBoost: it.which < 0 },
   };
   for (const e of effects) {
     run(w, ctx, e);
@@ -1318,7 +1336,11 @@ function begin(w: W) {
   for (const u of f.units) u.acts.forEach((a, i) => {
     const d = actDef(w, u, i);
     const cd = cooldownOf(w, u, d);
-    if (open?.slots?.length && u.side === "party" && d.kind === "ability") a.ready = Math.max(0, cd - sub(open.slots[i] ?? 0));
+    // Step 5g (the director's): a party ability's cooldown carries from the last fight (what was left when it ended, or its full cooldown
+    // the first time), and the slot's head start comes off that: slots as flat ticks, or slotShares as a share of the cooldown.
+    const carried = u.side === "party" && d.kind === "ability" && u.cooldowns?.[d.id] !== undefined ? Math.min(cd, sub(u.cooldowns[d.id])) : cd;
+    if (open?.slotShares?.length && u.side === "party" && d.kind === "ability") a.ready = Math.max(0, carried - Math.round(cd * (open.slotShares[i] ?? 0)));
+    else if (open?.slots?.length && u.side === "party" && d.kind === "ability") a.ready = Math.max(0, carried - sub(open.slots[i] ?? 0));
     else a.ready = open ? Math.round(cd * (open.min + (open.max - open.min) * next(u.rng))) : cd;
   });
   // ruleset.stagger: the n-th copy of an enemy starts n × stagger ticks behind the first, so three Ghosts ripple rather than volley.

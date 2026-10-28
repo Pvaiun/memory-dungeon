@@ -185,7 +185,8 @@ test("riders: a storm staff's lightning hit can't be evaded, so its pierce rider
 
 test("riders: a rider counts as part of its hit: hit events fire once per hit, riders included", () => {
   const count = status("count", { reactions: [{ on: { event: "hit_lands" }, do: [{ op: "heal", amount: 1, to: "self" }] }] });
-  const a = arena({ party: [{ name: "A", stats: { attack: 30, magic: 10 }, weapon: FLAME_SWORD, statuses: ["count"] }], enemies: [{ name: "T", stats: { max_hp: 1e9 } }], statuses: [count] }).to(13);
+  // A starts hurt, so the heal it counts with lands (step 5g: a heal of nothing is no longer logged).
+  const a = arena({ party: [{ name: "A", stats: { attack: 30, magic: 10 }, hp: 50, weapon: FLAME_SWORD, statuses: ["count"] }], enemies: [{ name: "T", stats: { max_hp: 1e9 } }], statuses: [count] }).to(13);
   assert.equal(a.hits("T").length, 2);
   assert.equal(a.entries("heal").length, 1);
 });

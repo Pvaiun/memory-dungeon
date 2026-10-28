@@ -3,6 +3,7 @@
  * Dungeons are played in order, with no progression between them.
  */
 import type { DungeonT } from "../../src/schema.js";
+import { CAMPFIRE } from "./scale.js";
 
 export type Fight = { id: string; name: string; enemies: string[] };
 const times = (n: number, id: string) => Array<string>(n).fill(id);
@@ -43,9 +44,20 @@ export const encounters = {
 } satisfies Record<string, Fight>;
 
 export const stage = (f: Fight, boss = false) => ({ kind: "fight" as const, id: f.id, name: f.name, enemies: f.enemies, ...(boss ? { boss: true } : {}) });
+/**
+ * One campfire a run, after half the regular fights (rounded up): REST, FOCUS or RAISE (the campaign, Oct 25–26, 2026). Step 5e
+ * puts it in the spine runs too: the rules document says every run has one, and free play played these runs without it.
+ */
+export function withCampfire(stages: DungeonT["stages"]): DungeonT["stages"] {
+  if (stages.some((s) => s.kind === "campfire")) return stages;
+  const regular = stages.filter((s) => s.kind === "fight" && !s.boss).length;
+  if (regular < 1) return stages;
+  const at = Math.ceil(regular / 2);
+  return [...stages.slice(0, at), { kind: "campfire", id: "campfire", hp: CAMPFIRE.hp, mp: CAMPFIRE.mp, revive: CAMPFIRE.revive }, ...stages.slice(at)];
+}
 const run = (id: string, name: string, text: string, fights: Fight[]): DungeonT => ({
   id, name, text, partySize: { max: 3 }, perkPool: [], challenges: [],
-  stages: fights.map((f, i) => stage(f, i === fights.length - 1)),
+  stages: withCampfire(fights.map((f, i) => stage(f, i === fights.length - 1))),
 });
 
 const E = encounters;

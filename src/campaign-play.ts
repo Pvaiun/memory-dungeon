@@ -9,7 +9,7 @@
  *   npx tsx src/campaign-play.ts play <node> --formation vanguard \
  *       --party "knight:oathblade,plate,heartstone;cleric:plain_light_staff,robes;ranger:warbow" [--seed N] [--full]
  *       A member is class:weapon,armor,amulet (ids; leave a slot out to leave it empty). Abilities fire in the
- *       order given after a slash: "knight:oathblade,plate/protect,fortify,shield_bash" (the first starts a fight most
+ *       order given after a slash: "knight:oathblade,plate/stand_fast,fortify,shield_bash" (the first starts a fight most
  *       charged). --campfire rest|focus|raise:<class> picks at the campfire halfway through the run (HP back, MP back,
  *       or that fallen member back); left out, the simulations' choice (raise if anyone is down, else whichever the
  *       party is shorter of). A raise of a member who's standing falls back to the simulations' choice.

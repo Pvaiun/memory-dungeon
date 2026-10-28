@@ -46,7 +46,7 @@ test("foes: a dungeon's change to every foe raises their HP, sets their power an
   d.foes = { hp: 50, power: 20, statuses: ["haste"] };
   const c = loadContent(pack);
   const plain = loadContent(raw);
-  const run = newRun(c, combat, { dungeon: "old_road", party: { formation: "neutral", units: [{ class: "knight", position: "left", abilities: ["fortify", "protect", "shield_bash"], gear: { weapon: "plain_sword" } }] }, seed: 1 }, { checked: true });
+  const run = newRun(c, combat, { dungeon: "old_road", party: { formation: "neutral", units: [{ class: "knight", position: "left", abilities: ["fortify", "stand_fast", "shield_bash"], gear: { weapon: "plain_sword" } }] }, seed: 1 }, { checked: true });
   while (!run.fight) advanceOnce(c, combat, run);
   advanceOnce(c, combat, run);
   const f = run.fight as CFight;
@@ -80,7 +80,7 @@ test("stagger: copies of the same enemy start a fight 1.5 ticks apart, so a pack
   const pack = structuredClone(raw);
   delete pack.ruleset.opening; // the opening roll adds to each copy's start; this test reads the stagger alone
   const c = loadContent(pack);
-  const run = newRun(c, combat, { dungeon: "old_road", party: { formation: "neutral", units: [{ class: "knight", position: "left", abilities: ["fortify", "protect", "shield_bash"], gear: { weapon: "plain_sword" } }] }, seed: 1 }, { checked: true });
+  const run = newRun(c, combat, { dungeon: "old_road", party: { formation: "neutral", units: [{ class: "knight", position: "left", abilities: ["fortify", "stand_fast", "shield_bash"], gear: { weapon: "plain_sword" } }] }, seed: 1 }, { checked: true });
   while (!run.fight) advanceOnce(c, combat, run);
   advanceOnce(c, combat, run);
   const bandits = (run.fight as CFight).units.filter((u) => u.ref === "bandit").map((u) => u.acts.find((a) => a.id === "basic")!.ready);
@@ -112,7 +112,7 @@ test("campfire: the run pauses for a choice between two fights; REST gives back 
   const at = d.stages.findIndex((s: { kind: string }) => s.kind === "campfire");
   assert.equal(at, Math.ceil(d.stages.filter((s: { kind: string; boss?: boolean }) => s.kind === "fight" && !s.boss).length / 2), "after half the regular fights");
   const c = loadContent(pack);
-  const party = { formation: "neutral", units: [{ class: "knight", position: "left", abilities: ["fortify", "protect", "shield_bash"], gear: { weapon: "plain_sword" } }, { class: "cleric", position: "center", abilities: ["renew", "cure", "raise"], gear: { weapon: "plain_light_staff" } }, { class: "ranger", position: "right", abilities: ["barbed_arrow", "fire_arrow", "rending_arrow"], gear: { weapon: "plain_bow" } }] };
+  const party = { formation: "neutral", units: [{ class: "knight", position: "left", abilities: ["fortify", "stand_fast", "shield_bash"], gear: { weapon: "plain_sword" } }, { class: "cleric", position: "center", abilities: ["renew", "cure", "raise"], gear: { weapon: "plain_light_staff" } }, { class: "ranger", position: "right", abilities: ["barbed_arrow", "frost_arrow", "rending_arrow"], gear: { weapon: "plain_bow" } }] };
   let reached = 0;
   for (const pick of ["rest", "focus"]) {
     // The first seed on which this party reaches the campfire.
@@ -141,7 +141,7 @@ test("campfire: the run pauses for a choice between two fights; REST gives back 
 
 test("campfire RAISE: the fallen member of the player's choice stands up with its share of max HP; nobody else changes", () => {
   const c = loadContent(raw);
-  const party = { formation: "neutral", units: [{ class: "knight", position: "left", abilities: ["fortify", "protect", "shield_bash"], gear: { weapon: "plain_sword" } }, { class: "cleric", position: "center", abilities: ["renew", "cure", "raise"], gear: { weapon: "plain_light_staff" } }, { class: "ranger", position: "right", abilities: ["barbed_arrow", "fire_arrow", "rending_arrow"], gear: { weapon: "plain_bow" } }] };
+  const party = { formation: "neutral", units: [{ class: "knight", position: "left", abilities: ["fortify", "stand_fast", "shield_bash"], gear: { weapon: "plain_sword" } }, { class: "cleric", position: "center", abilities: ["renew", "cure", "raise"], gear: { weapon: "plain_light_staff" } }, { class: "ranger", position: "right", abilities: ["barbed_arrow", "frost_arrow", "rending_arrow"], gear: { weapon: "plain_bow" } }] };
   const run = newRun(c, combat, { dungeon: "cmp_old_road", party, seed: 1 }, { checked: true });
   const m = run.party as unknown as { id: string; hp: number; mp: number; stats: Record<string, number> }[];
   m[1].hp = 0;

@@ -31,8 +31,8 @@ export const ROGUE_CONFIG: RogueConfigT = {
    * won 37% of runs with Blood drain (the next best class 20%), 19% with Wither.
    */
   firstAbility: {
-    knight: "protect", cleric: "cure", ranger: "barbed_arrow", bramble_knight: "thicket", hoplite: "aspis", paladin: "smite",
-    valkyrie: "gale_spear", bard: "war_ballad", hexer: "enfeeble", monk: "burning_fist", assassin: "backstab", vampire: "wither",
+    knight: "stand_fast", cleric: "cure", ranger: "barbed_arrow", bramble_knight: "thicket", hoplite: "aspis", paladin: "smite",
+    valkyrie: "gale_spear", bard: "war_ballad", hexer: "enfeeble", monk: "burning_fist", assassin: "backstab", vampire: "blood_gift",
     pyromancer: "firebolt", frostweaver: "frost_lance", stormcaller: "chain_lightning", geomancer: "earthen_shell",
   } as Record<string, string>,
   /** Party of three, and up to two more waiting at camp. */
@@ -77,13 +77,20 @@ export const ROGUE_CONFIG: RogueConfigT = {
   /** A level-up can be taken as gold instead (one with a single thing left to learn or upgrade was no choice). */
   levelGold: 40,
   /** Prices, in gold. A piece sells for `sell` % of its price. Services are once a visit. */
-  prices: { common: 45, uncommon: 70, rare: 110, legendary: 190, recruit: 120, formation: 100, learn: 60, upgrade: 80, trainStep: 30, supply: { tonic: 35, ether: 35, phoenix: 60 }, sell: 35 },
+  prices: { common: 45, uncommon: 70, rare: 110, legendary: 190, recruit: 120, formation: 100, learn: 60, upgrade: 80, trainStep: 30, supply: { potion: 35, tonic: 35, phoenix: 60 }, sell: 35 },
   shop: { gear: { common: 2, uncommon: 2, rare: 1, legendary: 1 }, recruits: 1, formations: 1, supplies: 2 },
   /** Supplies, used between fights: the bag holds this many. */
-  supplies: { tonic: { hp: 30 }, ether: { mp: 50 }, phoenix: { revive: 50 } },
-  bag: 3,
   /**
-   * The foes, in percent (the campaign's knob: HP +k %, damage +k/2 %): per act, the first floor's, the rise per floor, an
+   * Step 5g round 6 (the director's): a potion heals one member, a tonic refills one member's MP (the old tonic healed the whole party 30%, the
+   * old ether gave it 50% MP), and every won fight hands the party one of each, free, up to a bag of five. Between-fight recovery is the
+   * player's to spend, and mana is scarce enough that the tonics matter.
+   */
+  supplies: { potion: { hp: 30 }, tonic: { mp: 50 }, phoenix: { revive: 50 } }, // Round 8: the tonic half a pool (was 35%).
+  // Round 9 (the director's): a won fight offers a choice of one, and the bag has a slot a kind (two potions, two tonics), so one economy can't crowd out the other.
+  drops: ["potion", "tonic"],
+  bag: { potion: 2, tonic: 2, phoenix: 2 },
+  /**
+   * The foes, in percent (the campaign's knob: HP +k %, damage +k/2.5 %): per act, the first floor's, the rise per floor, an
    * elite's on top, and the boss's. Each region adds its own (below). Set by the rogue tuning (npm run rogue).
    */
   knobs: [
@@ -96,7 +103,10 @@ export const ROGUE_CONFIG: RogueConfigT = {
    * much less damage, and the calibration sets each fight's knob on top, so a fight costs what it did and lasts longer
    * (at the knob alone they lasted 21 to 25 ticks, half the campaign's, and a third slotted ability fired in one fight in three).
    */
-  shape: { fight: { hp: 80, power: -30 } },
+  // Step 5g round 3 (the feel reads: "fight length is ungoverned and tiers don't differ"; regular fights 15 to 116 ticks, elites shorter than
+  // regular fights with 1.8 knockouts each): regular fights +50% HP and −25% damage (were +80 and −30), elites +30% and −20% (had no shape),
+  // so an elite is a longer, less spiky fight at the same cost. Bosses keep the knob alone.
+  shape: { fight: { hp: 40, power: -10 }, elite: { hp: 15, power: -10 } }, // Round 9 (the director's: "weak monsters basically just don't do anything ... 200 damage to a unit with 5,000 health"): less HP, full damage (were +50 / −25 and +15 / −15). // Round 5: elites +15 / −15 (were +30 / −20: four ghouls at 160,000 HP read as a wall).
   /** Heat: each level adds this to every knob (about 6 points of the simulated player's wins a level). Won runs open the next. */
   heat: { per: 4, max: 10 },
   /** Later floors' fights grow: from this floor, each pack of two or more may gain one more (to the cap of 8). */
@@ -241,7 +251,7 @@ export const rogueStatuses: StatusT[] = [
   }),
   { id: "lg_idol_on", name: "IDOL", text: "Crit chance doubled.", label: "buff", show: "icon", stacking: "fizzle", stats: [{ stat: "crit_chance", flat: { scale: [{ ratio: 1, stat: "crit_chance", of: "holder" }] } }] },
   relic("lg_brittle", "Shard", "Basic attacks add a Chill; hits deal 12% more damage for each Chill stack on the target.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("chill", { stacks: FLAT_STACKS.one, to: "other" })] }], boosts: both({ scale: [{ ratio: 12, stacks: "chill", of: "target" }] }) }),
-  relic("lg_coil", "Coil", "When hit, Shocks the attacker with many stacks.", { reactions: [{ on: { event: "hit_taken" }, do: [apply("shock", { stacks: FLAT_STACKS.many, to: "other" })] }] }),
+  relic("lg_coil", "Coil", "When hit, Shocks the attacker with several stacks.", { reactions: [{ on: { event: "hit_taken" }, do: [apply("shock", { stacks: FLAT_STACKS.several, to: "other" })] }] }), // Step 5g round 6: several (was many): on a wall hit twenty times it dealt 25,574, 30% of a fight.
   relic("lg_frost", "Frozen heart", "When hit, Chills the attacker with a few stacks.", { reactions: [{ on: { event: "hit_taken" }, do: [apply("chill", { stacks: FLAT_STACKS.few, to: "other" })] }] }),
   relic("lg_briar", "Briar", "When hit, the attacker takes several Bleed.", { reactions: [{ on: { event: "hit_taken" }, do: [apply("bleed", { stacks: FLAT_STACKS.several, to: "other" })] }] }),
   relic("lg_spikes", "Spikes", "Thorns equal to a twelfth of its Armor.", { stats: [{ stat: "thorns", flat: { scale: [{ ratio: 0.08, stat: "armor", of: "holder" }] } }] }),
@@ -274,7 +284,7 @@ export const rogueGear: GearT[] = [
   legend("cleaving_charm", "Cleaving charm", "Every basic attack carries on into a second foe.", "amulet", { statuses: ["lg_cleave"] }),
   legend("rime_sigil", "Rime sigil", "Every basic attack leaves frost.", "amulet", { statuses: ["lg_rime"] }),
   legend("wound_sigil", "Wound sigil", "Every crit opens a wound.", "amulet", { statuses: ["lg_wounds"], stats: [critStep(2), st("max_hp", 1)] }),
-  legend("shatter_sigil", "Shatter sigil", "Every basic attack cracks armor.", "amulet", { statuses: ["lg_sunder"], stats: [st("attack", 1)] }),
+  legend("shatter_sigil", "Shatter sigil", "Every basic attack sunders the foe.", "amulet", { statuses: ["lg_sunder"], stats: [st("attack", 1)] }),
   legend("siren_shell", "Siren shell", "Every basic attack sings an ally a little mana.", "amulet", { statuses: ["lg_song"], stats: [st("max_hp", 1)] }),
   legend("crown_of_judgement", "Crown of judgement", "Strikes hardest at whatever has been lifted up.", "amulet", { statuses: ["lg_judge"] }),
   legend("grave_lantern", "Grave lantern", "Each foe that falls gives back a little life.", "amulet", { statuses: ["lg_lantern"] }),
@@ -301,7 +311,7 @@ export const rogueWeapons: LegendWeapon[] = [
   { id: "gravecaller", name: "Gravecaller", text: "Each fall makes it stronger.", kind: "dark_staff", statuses: ["lg_grave"], stats: [st("magic", 1)] },
   { id: "cinder_rod", name: "Cinder rod", text: "Lightning that hits burning foes harder.", kind: "lightning_staff", statuses: ["lg_cinder"], stats: [st("magic", 1)] },
   { id: "brand_of_kings", name: "Brand of kings", text: "A spear that strikes hardest at whatever has been lifted up.", kind: "spear", statuses: ["lg_judge"] },
-  { id: "earthshaker", name: "Earthshaker", text: "An earth staff that cracks the armor of what it strikes.", kind: "earth_staff", statuses: ["lg_sunder"], stats: [st("magic", 1)] },
+  { id: "earthshaker", name: "Earthshaker", text: "An earth staff that leaves what it strikes sundered.", kind: "earth_staff", statuses: ["lg_sunder"], stats: [st("magic", 1)] },
 ];
 
 /** The legendary pool: the core set's powerful pieces and the rogue mode's own. */
@@ -374,7 +384,7 @@ export type EventOp =
   | { op: "upgrade" }
   | { op: "temper" }
   | { op: "formation" }
-  | { op: "supply"; id: "tonic" | "ether" | "phoenix" }
+  | { op: "supply"; id: "potion" | "tonic" | "phoenix" }
   | { op: "fight"; tier: "normal" | "elite" }
   | { op: "camp" }
   | { op: "chance"; pct: number; then: EventOp[]; else: EventOp[] };
@@ -431,7 +441,7 @@ export const ROGUE_EVENTS: RogueEvent[] = [
     id: "spring", name: "A Clear Spring", text: "Cold water bubbles up through the stones. It tastes of mana.",
     options: [
       { id: "drink", label: "DRINK", text: "Everyone recovers 50% of max MP and 10% of max HP.", do: [{ op: "mp", pct: 50 }, { op: "hp", pct: 10 }] },
-      { id: "bottle", label: "BOTTLE IT", text: "An ether for later.", do: [{ op: "supply", id: "ether" }] },
+      { id: "bottle", label: "BOTTLE IT", text: "A tonic for later.", do: [{ op: "supply", id: "tonic" }] },
     ],
   },
   {
@@ -445,7 +455,7 @@ export const ROGUE_EVENTS: RogueEvent[] = [
     id: "camp", name: "An Empty Camp", text: "Someone left in a hurry: the fire is still burning, the bedrolls still laid out.",
     options: [
       { id: "camp", label: "MAKE CAMP", text: "A campfire: rest, focus, raise or train, and change the party.", do: [{ op: "camp" }] },
-      { id: "search", label: "SEARCH THE PACKS", text: "A tonic, an ether or a phoenix feather, and 20 gold.", do: [{ op: "gold", amount: 20 }, { op: "chance", pct: 40, then: [{ op: "supply", id: "tonic" }], else: [{ op: "chance", pct: 50, then: [{ op: "supply", id: "ether" }], else: [{ op: "supply", id: "phoenix" }] }] }] },
+      { id: "search", label: "SEARCH THE PACKS", text: "A potion, a tonic or a phoenix feather, and 20 gold.", do: [{ op: "gold", amount: 20 }, { op: "chance", pct: 40, then: [{ op: "supply", id: "potion" }], else: [{ op: "chance", pct: 50, then: [{ op: "supply", id: "tonic" }], else: [{ op: "supply", id: "phoenix" }] }] }] },
     ],
   },
   {

@@ -9,8 +9,7 @@
  * and simulated, against exactly what the player owns when they reach it.
  */
 import type { CampaignT, DungeonT, FoesT, NeedT } from "../../src/schema.js";
-import { enc, encounters as E, stage, type Fight } from "./dungeons.js";
-import { CAMPFIRE } from "./scale.js";
+import { enc, encounters as E, stage, withCampfire, type Fight } from "./dungeons.js";
 import knobs from "./campaign-knobs.json" with { type: "json" };
 
 /**
@@ -20,7 +19,7 @@ import knobs from "./campaign-knobs.json" with { type: "json" };
  * two-shot a 2-HP caster; when it fell as fast (pacing pass), a boss eased to −55 lost its spikes as well as its length.
  */
 export const knobFoes = (k: number): Pick<FoesT, "hp" | "power"> =>
-  k > 0 ? { hp: Math.round(k), power: Math.round(k / 2) } : k < 0 ? { hp: Math.max(-80, Math.round(k)), power: Math.max(-80, Math.round(k / 2)) } : {};
+  k > 0 ? { hp: Math.round(k), power: Math.round(k / 2.5) } : k < 0 ? { hp: Math.max(-80, Math.round(k)), power: Math.max(-80, Math.round(k / 2.5)) } : {};
 /**
  * A node's two knobs (pacing pass): one for its regular fights, one for its boss. With one knob for both, the tuner set it
  * so the boss could be beaten, and the regular fights went soft ("the bandits at the start do 2 damage to you").
@@ -306,17 +305,7 @@ const runs: Record<string, true> = { old_road: true, crypt: true, fire_mine: tru
 /** The campaign's own runs: a node's remixed fights, or a spine run with the node's foes. */
 export const campaignDungeons: DungeonT[] = [];
 /** A spine run that a node changes (foes) is copied under the node's id; otherwise the node plays it as is. */
-/**
- * One campfire a run, in the middle, as the director asked: after half the regular fights (rounded up), the player picks
- * HP back (REST) or MP back (FOCUS) for everyone standing, or one fallen member back (RAISE, step 5c). It sat before the boss for a round; in the middle it splits the
- * run's attrition in two, so each regular fight can hit harder.
- */
-function withCampfire(stages: DungeonT["stages"]): DungeonT["stages"] {
-  const regular = stages.filter((s) => s.kind === "fight" && !s.boss).length;
-  if (regular < 1) return stages;
-  const at = Math.ceil(regular / 2);
-  return [...stages.slice(0, at), { kind: "campfire", id: "campfire", hp: CAMPFIRE.hp, mp: CAMPFIRE.mp, revive: CAMPFIRE.revive }, ...stages.slice(at)];
-}
+// One campfire a run, in the middle, as the director asked (withCampfire, in dungeons.ts): it splits the run's attrition in two, so each regular fight can hit harder.
 
 export function campaignWith(spine: DungeonT[]): CampaignT {
   campaignDungeons.length = 0;

@@ -82,6 +82,8 @@ function describe(e: Entry, name: (id: unknown) => string, names: Map<string, st
       return `    ${name(e.unit)}: IMMUNE to ${e.name}`;
     case "interrupt":
       return `    ${name(e.unit)} is interrupted: ${e.name} is lost`;
+    case "hold":
+      return `    ${name(e.unit)} is stunned: ${e.name} has to wait`;
     case "down":
       return `    ${name(e.unit)} is down.`;
     case "stop":

@@ -2,12 +2,13 @@
 
 Oct 23, 2026 · @Paul Suddaby
 
-*Updated Oct 26, 2026, when the campaign work joined main. The enemies, encounters and dungeons are as written, with these changes, recorded in `DECISIONS.md`:*
+*Updated Oct 26, 2026, when the campaign work joined main, and Oct 28, 2026, after the feel pass (step 5g). The enemies, encounters and dungeons are as written, with these changes, recorded in `DECISIONS.md`:*
 
-- *Poison is gone; Bleed replaced it (*Core set: rules and vocabulary*). The Snake's Venom now adds a few Bleed. Where a challenge's key or a test below still names Poison as an answer (to Armor, Evasion or resistance), read it as the original design's reasoning: Bleed also deals damage past Armor and resistance, but only when its holder is hit, so it answers those challenges less cleanly than Poison did.*
-- *The Cleric's Mercy, Prayer and Purify, the Bard's Encore, the Ranger's Venom arrow and the Assassin's Shadow strike were replaced (*Core set: classes*). Tests that name them are the original reasoning; Renew does Purify's job on one ally, Cure the healing.*
-- *Bosses have 55% of the HP written here, and their signature moves come on a medium cooldown, not long, so a boss fight is about one and a half regular fights long. Enemy Aggro words are on the 100 scale (70 + 10 × the word), and foes pick by draw. Stun pauses a wind-up for its 5 ticks rather than cancelling it; Silence interrupts. A run has one campfire.*
-- *In the campaign, each node sets two difficulty knobs (its regular fights, then its boss) that scale these enemies' HP and damage; the numbers here are the free-play baseline.*
+- *Poison is gone; Bleed replaced it (*Core set: rules and vocabulary*). The Snake's Venom now adds one Bleed a bite. Where a challenge's key or a test below still names Poison as an answer (to Armor, Evasion or resistance), read it as the original design's reasoning: Bleed also deals damage past Armor and resistance, but only when its holder is hit, so it answers those challenges less cleanly than Poison did.*
+- *The Cleric's Mercy, Prayer and Purify, the Bard's Encore, the Ranger's Venom arrow and the Assassin's Shadow strike were replaced (*Core set: classes*), and later the Knight's Protect (Stand fast), the Hexer's Hush and Unravel (Malison and Unmake), the Ranger's Fire arrow (Frost arrow), the Frostweaver's Brittle (Shatterpoint) and the Bard's Anthem and Chorus (War ballad and Allegro). Tests that name them are the original reasoning; Renew does Purify's job on one ally, Cure the healing.*
+- *Bosses have 55% of the HP written here. The cooldown words on the abilities below are the build's: the bosses' signature blows and spells are on the short word and their summons on medium, so a boss casts its moves two or three times a fight. Enemy Aggro words are on the 100 scale (70 + 10 × the word), and foes pick by draw. Stun pauses a wind-up for its 8 ticks rather than cancelling it; Silence interrupts. A run has one campfire.*
+- *Step 5g: every enemy carries an Armor floor by rank and a theme's resistances on top of its rank's (Fixed rules); wolves and hounds bite twice a swing; several regulars gained a simple move of their own (Take aim, Brace, Dark ward, Shield slam); the bosses gained behaviours (Reap, Tolling, Kindle, Tempest's bolts), with the one-shot left to the Ogre Chief alone. The entries below carry the changes.*
+- *In the campaign, each node sets two difficulty knobs (its regular fights, then its boss) that scale these enemies' HP and damage; the numbers here are the free-play baseline. A knob k adds k% to HP and k ÷ 2.5 % to damage, in the campaign and the rogue alike. In the rogue every fight has its own knob, and the regular fights carry a shape on top of it (+40% HP and −10% damage; elites +15% HP and −10% damage; bosses the knob alone).*
 
 The complete enemy-side content spec for the first playable: rules the engine must honor, 29 enemies, 27 encounters and 7 dungeons. Companion to *Core set: rules and vocabulary* and *Core set: classes*.
 
@@ -19,7 +20,7 @@ Everything here is binding on the content below. The combat rules themselves are
 - **Class scale:** stats run 1–5; gear takes a class stat to at most 12.
 - **Enemy scale:** same stat meanings. Regular enemies sit at 1–8, with one standout up to 12 only where that stat is the challenge. Swarm bodies sit at 1–3. Large regulars sit at 10–20 HP. Bosses run 8–14 in their standout stats; boss HP runs 60–120. All numbers state relative intent; simulation sets final values.
 - **A fight holds at most 8 foes.** Parties are 3. The player owns all 16 classes.
-- **Statuses end when a fight ends.** HP, MP and knockouts carry between a run's fights, and nothing restores them between fights except the run's one campfire. Losing costs nothing; retries are free.
+- **Statuses end when a fight ends.** HP, MP, knockouts and the party's ability cooldowns carry between a run's fights, and nothing restores HP or MP between fights except the run's one campfire. Losing costs nothing; retries are free.
 - **Dungeons are played in order 1–7** with no progression between them. Run 1 is additionally clearable by the ungeared starting trio (Knight, Cleric, Ranger).
 - **Summoning** exists: a unit can bring new foes into a fight, up to the cap. Used by: Split (Lava Slime), Call Drones (Storm Queen), Rally (Storm King).
 - **No unit leaves a fight alive.** Nothing flees, fades or escapes.
@@ -28,8 +29,21 @@ Everything here is binding on the content below. The combat rules themselves are
 - **Enemy abilities scale from Attack or Magic.** Physical damage scales from Attack and magical damage from Magic, unless an ability says otherwise, as Volatile does.
 - **Passives may keep hidden state** (a counter, a timer) as long as the effect shows in the numbers: Split, Volatile, Ice Crust, Vengeance.
 - **Enemy revives** return the unit with every action on cooldown (the Ghoul's Raise). Only the Valkyrie's Einherjar overrides that rule, on the class side.
+- **Enemy timing words.** Enemy cooldowns are short 24, medium 38 and long 55 ticks, each moved a little by the ability's id so no two line up; wind-ups are quick 1, normal 3, long 6 and very long 8 ticks.
+- **Every enemy carries some Armor** (Step 5g): at least 1 for a minion, 2 for an elite, 3 for a boss. The stat lines below show the floor where it lifts the written value.
+- **Every enemy carries some resistance** (Steps 5f and 5g): a blanket against every element by rank (minion 10, elite 15, boss 25), then its theme's, which lift an element or two and lower one or two, for personality. A foe's own named resistance or weakness to an element replaces its theme's for that element and adds to the blanket; the Ghost's own high blanket replaces its rank's.
 
-**Stat lines are complete:** HP, MP, MP regen, Attack, Magic, Armor, Crit chance, Aggro, in that order. A 0 marks a stat the enemy doesn't use; MP 0 means no abilities. Resistances not listed are 0.
+| Theme | Up | Down | Enemies |
+| --- | --- | --- | --- |
+| Human | Earth +10, Light +5 | Fire −10, Dark −5 | Bandit, Archer, Shieldman (Mummy) |
+| Beast | Wind +10, Earth +10 | Fire −10, Ice −10 | Wolf (Snow Wolf), Snake, Bat |
+| Brute | Earth +15, Fire +5 | Lightning −10, Wind −5 | Ogre (Troll), Ogre Chief |
+| Undead | Dark +15, Ice +10 | Light −15, Fire −10 | Skeleton, Ghost (Ice Ghost), Bone Priest, Witch, Lich, Ghoul, Reaper, Wraith, Silent One |
+| Fire | Earth +5, Dark +5 | Wind −10, Light −5 | Hellhound, Lava Slime (Mini Slime), Bomb Bug, Fire Imp, Fire Giant |
+| Ice | Lightning +10, Dark +5 | Wind −10, Earth −5 | Ice Spirit, Ice Golem, Ice Titan |
+| Storm | Lightning +15, Wind +10 | Earth −15, Light −5 | Wisp, Leech, Storm Queen, Drone, Storm King, Soldier |
+
+**Stat lines are complete:** HP, MP, MP regen, Attack, Magic, Armor, Crit chance, Aggro, in that order. A 0 marks a stat the enemy doesn't use; MP 0 means no abilities that cost MP (a foe's self-buffs, such as Brace, Take aim, Dark ward, Tolling and Kindle, are free). The resistances listed are the enemy's own; every enemy also has its rank's and its theme's.
 
 ## Challenges
 
@@ -144,15 +158,15 @@ Which classes and which of this set's enemies hold each piece. Doom and Bulwark 
 
 | Piece | Tier | Classes | Enemies in this set |
 | --- | --- | --- | --- |
-| Area | Fundamental | Pyromancer, Frostweaver, Stormcaller | Fire Giant, Ice Titan, Storm Queen |
+| Area | Fundamental | Pyromancer, Frostweaver, Stormcaller | Fire Giant, Ice Titan |
 | Evasion | Fundamental | Monk, Assassin | Bat |
 | Bleed | Fundamental | Ranger, Bramble knight, Assassin | Snake |
 | Taunt | Fundamental | Knight, Bramble knight | Shieldman, Mummy; Drone; Soldier |
-| Might | Fundamental | Bard, Vampire | Fire Imp, Storm King |
-| Guard | Fundamental | Knight, Bramble knight, Hoplite | Shieldman, Mummy |
+| Might | Fundamental | Bard, Vampire | Archer, Fire Imp, Silent One, Fire Giant, Storm King |
+| Guard | Fundamental | Knight, Bramble knight, Hoplite | Skeleton, Ice Golem |
 | Shield | Fundamental | Knight, Geomancer | – |
-| Stun | Fundamental | Knight, Monk, Geomancer | Ogre |
-| Haste | Fundamental | Bard, Monk, Stormcaller | Fire Imp |
+| Stun | Fundamental | Knight, Monk, Geomancer | Shieldman, Mummy, Ogre |
+| Haste | Fundamental | Bard, Monk, Stormcaller | Fire Imp, Silent One |
 | Slow | Fundamental | Bard, Hexer | Witch |
 | Weaken | Fundamental | Hexer, Vampire | Witch |
 | Regen | Fundamental | Cleric, Bramble knight | – |
@@ -171,7 +185,7 @@ Which classes and which of this set's enemies hold each piece. Doom and Bulwark 
 | Lifesteal | Specialist | Vampire | – |
 | Siphon | Specialist | Hexer | Leech |
 | Rot | Specialist | Vampire | – |
-| Ward | Specialist | Paladin | – |
+| Ward | Specialist | Paladin | Lich, Fire Giant |
 | Clarity | Specialist | Frostweaver | – |
 | Accuracy | Specialist | Ranger | – |
 | Double strike | Specialist | Monk | – |
@@ -188,7 +202,7 @@ All Fundamental. Reskins: the Wolf returns as the Snow Wolf in the Ice Pass; the
 
 Hunts in packs. **Challenge:** Skirmisher; packs are the Swarm group.
 
-**Stats:** HP 2, MP 0, MP regen 0, Attack 2, Magic 0, Armor 0, Crit 2, Aggro 2. **Basic attack:** fast, weak, piercing.
+**Stats:** HP 2, MP 0, MP regen 0, Attack 2, Magic 0, Armor 1, Crit 2, Aggro 2. **Basic attack:** fast, weak, piercing: two bites a swing, each 0.6 of one, so Armor, Guard, Thorns and Bleed on the wolf meet it twice.
 
 *Beats it — Knight, Cleric, Ranger vs six:* Aggro 5 draws most bites onto Armor 5; Regen outheals the leaks while two weapons thin the pack a wolf a swing. *Fails — Assassin, Vampire, Hexer:* single-target overkill, no Armor, no Area, no front line; the pack wins the race.
 
@@ -204,7 +218,9 @@ A common road thug. **Challenge:** none — the yardstick enemy.
 
 Hits hard, falls fast. **Challenge:** Glass cannon — the stat line is the challenge; Attack 7 reads geared on purpose.
 
-**Stats:** HP 2, MP 0, MP regen 0, Attack 7, Magic 0, Armor 0, Crit 4, Aggro 2. **Basic attack:** medium, piercing, heavy for its speed.
+**Stats:** HP 2, MP 0, MP regen 0, Attack 7, Magic 0, Armor 1, Crit 4, Aggro 2. **Basic attack:** medium, piercing, heavy for its speed.
+
+- **Take aim.** Applies several Might to itself. Medium cooldown, quick wind-up. Free.
 
 *Beats it — Knight, Cleric, Ranger vs two Archers and two Bandits:* arrows spread by Aggro mostly onto a Shielded, Guarded Knight; each Archer dies to two hits. *Fails — Cleric, Hexer, Pyromancer:* an arrow takes most of a 2-HP caster before a wind-up finishes; two Archers alive is a knockout per volley.
 
@@ -212,9 +228,9 @@ Hits hard, falls fast. **Challenge:** Glass cannon — the stat line is the chal
 
 Its bite leaves a bleeding wound. **Challenge:** Poisoner.
 
-**Stats:** HP 2, MP 0, MP regen 0, Attack 2, Magic 0, Armor 0, Crit 2, Aggro 1. **Basic attack:** fast, weak, piercing.
+**Stats:** HP 2, MP 0, MP regen 0, Attack 2, Magic 0, Armor 1, Crit 2, Aggro 1. **Basic attack:** fast, weak, piercing.
 
-**Passive – Venom.** Its basic attacks add a few Bleed (2 stacks). (Poison, refreshed, until Oct 26, 2026.)
+**Passive – Venom.** Its basic attacks add one Bleed. (Poison, refreshed, until Oct 26, 2026; two Bleed until step 5g.)
 
 *Beats it — Knight, Cleric, Ranger vs three Snakes and a Bandit:* each bite's Bleed bursts on the next hit, so the bites pile up on whoever is hit most; Armor and Guard thin the hits that open it, Renew lifts it, and Cure mends the rest. *Fails — Ranger, Bard, Assassin:* three low-HP bodies, no Heal, Cleanse or Shield; the ticks finish what the swords start.
 
@@ -225,17 +241,17 @@ Hides behind a big shield. **Challenge:** anchors the Shield wall group.
 **Stats:** HP 10, MP 3, MP regen 2, Attack 2, Magic 0, Armor 5, Crit 1, Aggro 4. **Basic attack:** medium, slashing.
 
 - **Shield Up.** Applies Taunt to itself. Short cooldown, quick wind-up.
-- **Brace.** Applies Guard to itself. Medium cooldown, quick wind-up.
+- **Shield slam.** Deals a blunt blow with the shield (its full Attack) to a foe that isn't Stunned, and applies Stun. Medium cooldown, normal wind-up. (Brace, Guard on itself, until step 5g.)
 
-*Beats it — Knight, Cleric, Ranger in the Shield wall group:* Hunter's eye ignores the Taunt and kills the Archers behind the wall; Light prints true past Guard and Armor. The wall falls last, alone. *Fails — Knight, Bard, Vampire:* every first pick is forced onto Guard and Armor 5, chipping two points a swing, while the Archers shoot the Bard off the board.
+*Beats it — Knight, Cleric, Ranger in the Shield wall group:* Hunter's eye ignores the Taunt and kills the Archers behind the wall; Light prints true past Armor. The wall falls last, alone. *Fails — Knight, Bard, Vampire:* every first pick is forced onto Armor 5, chipping two points a swing, while the slams Stun and the Archers shoot the Bard off the board.
 
 ### Ogre
 
 Big, slow, and swings a tree. **Challenge:** Brute; carries the set's enemy Stun.
 
-**Stats:** HP 16, MP 2, MP regen 1, Attack 6, Magic 0, Armor 2, Crit 2, Aggro 4. **Basic attack:** slow, heavy, blunt, with a long wind-up (an exception to the no-wind-up default).
+**Stats:** HP 16, MP 2, MP regen 1, Attack 6, Magic 0, Armor 2, Crit 2, Aggro 4. **Basic attack:** slow, massive, blunt, with a long wind-up (an exception to the no-wind-up default).
 
-- **Flatten.** Deals heavy blunt damage to a random foe and applies Stun. Long cooldown, long wind-up.
+- **Flatten.** Deals heavy blunt damage to a random foe and applies Stun. Medium cooldown, long wind-up.
 
 *Beats it — Knight, Cleric, Ranger:* Aggro 5 pulls the club onto Guard and plate; Protect's Shield soaks Flatten, and a Stunned Knight is still doing his job while 16 HP falls. *Fails — Assassin, Pyromancer, Hexer:* no front line; each swing deletes most of a caster, and by the second Flatten someone is down.
 
@@ -247,7 +263,7 @@ The biggest ogre, with the biggest club. **Challenge:** Tank buster.
 
 **Stats:** HP 60, MP 4, MP regen 2, Attack 12, Magic 0, Armor 3, Crit 2, Aggro 4. **Basic attack:** slow, heavy, blunt.
 
-- **Crush.** Deals massive blunt damage to a random foe: enough to knock out any unguarded caster outright; a Guarded, Shielded Knight survives it. Long cooldown, very long wind-up.
+- **Crush.** Deals massive blunt damage (0.4 of its Attack) to a random foe: enough to knock out any caster outright; a wall at full HP with Guard survives it unless it crits. The one-shot is the Ogre Chief's identity: no other boss has one. Short cooldown, very long wind-up.
 
 *Beats it — Knight, Cleric, Ranger:* the rules doc's Knight test at boss scale — Fortify and Protect land inside the wind-up, Mercy refills the Knight, Poison and Sunder strip 60 HP while the boss spends its biggest numbers on the one unit built for them. *Fails — Ranger, Assassin, Stormcaller:* nobody holds the Crush; each one is a knockout, and 60 HP does not fall inside three of them.
 
@@ -261,13 +277,15 @@ Old bones in heavy armor. **Challenge:** Armored shell.
 
 **Stats:** HP 3, MP 0, MP regen 0, Attack 3, Magic 0, Armor 8, Crit 2, Aggro 3. **Basic attack:** slow, slashing.
 
+- **Brace.** Applies Guard to itself. Medium cooldown, quick wind-up. Free.
+
 *Beats it — Ranger, Hexer, Geomancer:* Poison ignores the plate, Sunder strips it, Ice and Earth never meet it, and Bedrock crits land before Armor does. *Fails — Knight, Bard, Vampire:* three swords print zeros into Armor 8; Might grinds through eventually, and eventually is how the chip wins.
 
 ### Bat
 
 Fast, and hard to hit. **Challenge:** Dodger.
 
-**Stats:** HP 2, MP 0, MP regen 0, Attack 2, Magic 0, Armor 0, Crit 2, Aggro 2. **Special stats:** Evasion high. **Basic attack:** fast, weak, piercing.
+**Stats:** HP 2, MP 0, MP regen 0, Attack 2, Magic 0, Armor 1, Crit 2, Aggro 2. **Special stats:** Evasion high. **Basic attack:** fast, weak, piercing.
 
 *Beats it — Knight, Cleric, Hexer:* magic can't be dodged; one Light or Ice hit ends a 2-HP Bat. *Fails — Monk, Assassin, Bard vs four:* three physical kits whiff; Double strike just misses twice while the chip adds up.
 
@@ -275,7 +293,7 @@ Fast, and hard to hit. **Challenge:** Dodger.
 
 Magic passes right through it. **Challenge:** Spellward. Returns in the Ice Pass as the Ice Ghost.
 
-**Stats:** HP 6, MP 0, MP regen 0, Attack 0, Magic 3, Armor 0, Crit 2, Aggro 2. **Resistances:** high against every element. **Basic attack:** medium, magical Dark touch.
+**Stats:** HP 6, MP 0, MP regen 0, Attack 0, Magic 3, Armor 1, Crit 2, Aggro 2. **Resistances:** high against every element (in place of its rank's blanket). **Basic attack:** medium, magical Dark touch.
 
 *Beats it — Knight, Ranger, Monk:* swords, arrows and fists ignore resistance; six HP falls in a few swings. *Fails — Pyromancer, Frostweaver, Stormcaller vs three:* three mages print slivers while the Dark touches outlast their MP.
 
@@ -293,9 +311,9 @@ Heals the other dead. **Challenge:** Healer.
 
 Curses the whole party. **Challenge:** Curser.
 
-**Stats:** HP 3, MP 5, MP regen 3, Attack 0, Magic 4, Armor 0, Crit 2, Aggro 2. **Basic attack:** medium, weak, magical Dark bolt.
+**Stats:** HP 3, MP 5, MP regen 3, Attack 0, Magic 4, Armor 1, Crit 2, Aggro 2. **Basic attack:** medium, weak, magical Dark bolt.
 
-- **Curse.** Applies Weaken and Slow to every foe. Long cooldown, long wind-up.
+- **Curse.** Applies Weaken and Slow to every foe. Medium cooldown, long wind-up.
 
 *Beats it — Cleric, Bard, Knight:* Purify lifts the curses one ally at a time; Haste and Might out-sing them. *Fails — Knight, Hoplite, Geomancer:* Weakened swings, Slowed casts, nothing lifts it; the room wins by stretching time.
 
@@ -303,9 +321,10 @@ Curses the whole party. **Challenge:** Curser.
 
 A dead wizard with one big spell. **Challenge:** Nuker.
 
-**Stats:** HP 2, MP 6, MP regen 2, Attack 0, Magic 7, Armor 0, Crit 2, Aggro 2. **Basic attack:** medium, weak, magical Dark bolt.
+**Stats:** HP 2, MP 6, MP regen 2, Attack 0, Magic 7, Armor 1, Crit 2, Aggro 2. **Basic attack:** medium, weak, magical Dark bolt.
 
-- **Soulfire.** Deals heavy Dark damage to a random foe. Long cooldown, very long wind-up.
+- **Soulfire.** Deals heavy Dark damage to a random foe. Medium cooldown, very long wind-up.
+- **Dark ward.** Applies Ward to itself. Medium cooldown, quick wind-up. Free, so it never takes the Soulfire's MP.
 
 *Beats it — Knight, Cleric, Ranger:* the cast is a clock; Shield bash lands in the wind-up often enough, and a 2-HP caster dies to one arrow. *Fails — Bramble knight, Vampire, Bard:* nobody can stop the cast, only Slow it; Soulfire deletes the back line, and Taunt was never the answer.
 
@@ -315,7 +334,7 @@ Ghouls dig each other back up. **Challenge:** the Linked pack group (three or fo
 
 **Stats:** HP 8, MP 3, MP regen 2, Attack 4, Magic 0, Armor 1, Crit 2, Aggro 3. **Basic attack:** medium, slashing claws.
 
-- **Raise.** Revive on a random knocked-out ally, returning it at a share of its HP, with every action on cooldown. Medium cooldown, long wind-up.
+- **Raise.** Revive on a random knocked-out ally, returning it at a share of its HP, with every action on cooldown. Long cooldown, long wind-up.
 
 *Beats it — Pyromancer, Stormcaller, Knight vs four:* spread Burn and Thunderstorm put the pack in knockout range together, inside one Raise window. *Fails — Assassin, Ranger, Cleric:* one Ghoul dies at a time and is raised before the second falls; they kill seven and the pack is still four.
 
@@ -325,7 +344,8 @@ Death, with a scythe and a bell. **Challenge:** Executioner (owns Doom).
 
 **Stats:** HP 85, MP 8, MP regen 3, Attack 9, Magic 12, Armor 4, Crit 2, Aggro 4. **Basic attack:** medium, heavy, slashing (a scythe).
 
-- **Death Bell.** Applies Doom to a random foe. Long cooldown, long wind-up. Fizzle: it skips a foe already Doomed.
+- **Death Bell.** Applies Doom to a random foe: when its countdown ends, it deals 60% of the doomed unit's max HP, so nobody dies to it from full and anyone hurt can. Short cooldown, long wind-up. Fizzle: it skips a foe already Doomed.
+- **Reap.** Three scythe slashes, each at a random foe (two may land on one), each a light share of its Attack. Medium cooldown, normal wind-up.
 
 *Beats it — Cleric, Hoplite, Ranger:* the Reaper applies no other debuff, so the Doomed unit is usually the only debuffed ally and Purify finds it; Aegis blocks the toll that slips through, and 85 HP falls to Poison, Sunder and arrows between bells. *Fails — Monk, Stormcaller, Bard:* no Cleanse, Shield, Aegis or Revive; the first Doom resolves and the three-becomes-two arithmetic repeats.
 
@@ -333,7 +353,7 @@ Death, with a scythe and a bell. **Challenge:** Executioner (owns Doom).
 
 Steals voices. **Challenge:** Binder.
 
-**Stats:** HP 4, MP 5, MP regen 3, Attack 0, Magic 5, Armor 0, Crit 2, Aggro 2. **Basic attack:** medium, weak, magical Dark touch.
+**Stats:** HP 4, MP 5, MP regen 3, Attack 0, Magic 5, Armor 1, Crit 2, Aggro 2. **Basic attack:** medium, weak, magical Dark touch.
 
 - **Mute.** Applies Silence to the foe with the highest Attack or Magic. Medium cooldown, normal wind-up. Fizzle: a foe already Silenced is skipped for the next-highest, as Hush does.
 
@@ -343,23 +363,24 @@ Steals voices. **Challenge:** Binder.
 
 Its silence falls on everyone. **Challenge:** Silence field.
 
-**Stats:** HP 90, MP 10, MP regen 3, Attack 11, Magic 12, Armor 5, Crit 2, Aggro 4. **Basic attack:** medium, heavy, slashing.
+**Stats:** HP 90, MP 10, MP regen 3, Attack 11, Magic 12, Armor 5, Crit 2, Aggro 4. **Basic attack:** medium, massive, slashing.
 
 - **Quiet.** Applies Silence to every foe. Medium cooldown, long wind-up. Purify and Absolve are abilities and are silenced with everything else.
+- **Tolling.** Applies many Might and Haste to itself, so its swings come faster and harder: the silence is the lock, the sword the threat. Short cooldown, quick wind-up. Free.
 
 *Beats it — Bard, Monk, Cleric:* Encore keeps Haste and Might flowing through the silence, Iron palm and Double strike never stop, Mercy heals on every Light basic; between Quiets the abilities burst. Second key: a Stun landing in the wind-up cancels the Quiet (Knight, Geomancer), for parties with their own sustain. *Fails — Frostweaver, Stormcaller, Paladin:* kits that are all ability; each Quiet is a stretch of staff bonks with no healing while Attack 11 grinds three light bodies down.
 
 ## Enemies — Fire Mine
 
-Everything here resists Fire; Hellhounds and Lava Slimes are weak to Ice.
+Everything here but the Fire Imp resists Fire; Hellhounds and Lava Slimes are weak to Ice.
 
 ### Hellhound
 
 A fire dog; its bite burns. **Challenge:** Skirmisher; a Burn source.
 
-**Stats:** HP 3, MP 0, MP regen 0, Attack 3, Magic 0, Armor 0, Crit 2, Aggro 2. **Resistances:** resists Fire, weak to Ice. **Basic attack:** fast, weak, piercing.
+**Stats:** HP 3, MP 0, MP regen 0, Attack 3, Magic 0, Armor 1, Crit 2, Aggro 2. **Resistances:** resists Fire, weak to Ice. **Basic attack:** fast, weak, piercing: two bites a swing, each 0.6 of one, as the Wolf's.
 
-**Passive – Fire Bite.** Its basic attacks apply a stack of Burn.
+**Passive – Fire Bite.** Its basic attacks apply a stack of Burn (each bite).
 
 *Beats it — Frostweaver, Knight, Cleric vs a pack of five:* Ice prints double, Chill slows the bites that feed the Burn, Regen outheals the ticks. *Fails — Pyromancer, Vampire, Assassin:* Fire slivers into Fire resistance while three low-Armor bodies wear climbing counters.
 
@@ -367,9 +388,9 @@ A fire dog; its bite burns. **Challenge:** Skirmisher; a Burn source.
 
 Cut it in half and you get two. **Challenge:** Splitter.
 
-**Stats:** HP 14, MP 0, MP regen 0, Attack 4, Magic 0, Armor 1, Crit 2, Aggro 3. **Resistances:** resists Fire, weak to Ice. **Basic attack:** slow, blunt slam.
+**Stats:** HP 14, MP 0, MP regen 0, Attack 4, Magic 0, Armor 2, Crit 2, Aggro 3. **Resistances:** resists Fire, weak to Ice. **Basic attack:** slow, blunt slam.
 
-**Passive – Split.** When it falls below half HP it is replaced by two Mini Slimes (HP 7, Attack 3, otherwise the same). They count toward the 8-foe cap and don't split again. They enter as new units: the Lava Slime's statuses don't pass to them, and their basic attacks start on cooldown. Being replaced isn't a knockout.
+**Passive – Split.** When it falls below half HP it is replaced by two Mini Slimes (HP 7, Attack 3, Armor 1, otherwise the same). They count toward the 8-foe cap and don't split again. They enter as new units: the Lava Slime's statuses don't pass to them, and their basic attacks start on cooldown. Being replaced isn't a knockout.
 
 *Beats it — Geomancer, Hoplite, Cleric:* a Bedrock crit or a Phalanx swing takes it from above half to zero, and no Mini Slimes ever exist. *Fails — Bard, Monk, Hexer:* many small hits split everything at speed; the room runs toward the cap.
 
@@ -400,9 +421,10 @@ Lord of the furnace. **Challenge:** Interrupt check.
 **Stats:** HP 95, MP 10, MP regen 3, Attack 0, Magic 14, Armor 5, Crit 2, Aggro 4. **Resistances:** absorbs Fire, weak to Ice. **Basic attack:** slow, heavy, magical Fire.
 
 - **Brand.** Deals Fire damage to a random foe and applies a few Burn. Short cooldown, quick wind-up.
-- **Inferno.** A very long cast: huge Fire damage to every foe and many Burn on each. Long cooldown.
+- **Kindle.** Applies several Might and a Ward to itself; the Inferno follows. Medium cooldown, quick wind-up. Free.
+- **Inferno.** A very long cast: Fire damage to every foe (0.15 of its Magic, with its Might on top) and several Burn on each. It waits until the Giant has kindled (has Might). Short cooldown, very long wind-up.
 
-*Beats it — Frostweaver, Knight, Cleric:* Brittle pays double into the weakness, and Shield bash breaks Inferno when it lands in the wind-up. *Fails — Pyromancer, Ranger, Vampire:* Fire heals an absorber, and an absorbed hit applies no Burn, so half the party's damage is a gift; the first uninterrupted Inferno ends the run.
+*Beats it — Frostweaver, Knight, Cleric:* Brittle pays double into the weakness, and Shield bash breaks Inferno when it lands in the wind-up. *Fails — Pyromancer, Ranger, Vampire:* Fire heals an absorber, and an absorbed hit applies no Burn, so half the party's damage is a gift; every uninterrupted Inferno lands on all three with the Giant's Might behind it, and the Burn piles up.
 
 ## Enemies — Ice Pass
 
@@ -424,6 +446,8 @@ Every hit thickens its ice. **Challenge:** Hardening hide.
 
 **Stats:** HP 14, MP 0, MP regen 0, Attack 5, Magic 0, Armor 2, Crit 2, Aggro 3. **Resistances:** resists Ice. **Basic attack:** slow, heavy, blunt.
 
+- **Brace.** Applies Guard to itself. Medium cooldown, quick wind-up. Free.
+
 **Passive – Ice Crust.** Each hit it takes raises its Armor for a while (hidden state; it thaws when the hits stop).
 
 *Beats it — Geomancer, Hoplite, Cleric:* few, heavy hits land before the crust grows, and magic never meets it at all. *Fails — Monk, Bard, Vampire:* the flurry party — Double strike and fast swords feed both crusts until everything prints zero.
@@ -437,7 +461,7 @@ A walking glacier. **Challenge:** Break shield (owns Bulwark), plus Raidwide as 
 **Passive – Frozen Core.** It is immune to Dispel: none of its buffs can be removed, Bulwark included.
 
 - **Bulwark** (Signature status). It starts the fight with many stacks; each piercing or Wind hit removes one. At zero it is Stunned and takes double damage for a while, then Bulwark refills.
-- **Hailstorm.** Deals Ice damage to every foe and applies a stack of Chill to each. Medium cooldown, normal wind-up.
+- **Hailstorm.** Deals Ice damage to every foe and applies a stack of Chill to each. Short cooldown, normal wind-up.
 
 *Beats it — Ranger, Valkyrie, Cleric:* bow, spear and Gale spear's three Wind hits strip the stacks fast; every break window is a Stunned Titan taking double arrows while the Cleric mends the Hailstorms. *Fails — Knight, Geomancer, Pyromancer:* no piercing, no Wind, no windows — only the long race against 110 HP and Attack 14, with the party moving slower every Hailstorm.
 
@@ -449,7 +473,7 @@ Shock's region; its small enemies attack with magic. The last entry belongs to T
 
 A tiny spark with a temper. **Challenge:** Swarm — a magical one; a Shock source.
 
-**Stats:** HP 1, MP 0, MP regen 0, Attack 0, Magic 2, Armor 0, Crit 2, Aggro 1. **Basic attack:** fast, weak, magical Lightning zap.
+**Stats:** HP 1, MP 0, MP regen 0, Attack 0, Magic 2, Armor 1, Crit 2, Aggro 1. **Basic attack:** fast, weak, magical Lightning zap.
 
 **Passive – Static.** Its hits apply a stack of Shock.
 
@@ -469,10 +493,10 @@ Queen of the storm drones. **Challenge:** Summoner (summoning tech).
 
 **Stats:** HP 85, MP 10, MP regen 4, Attack 0, Magic 13, Armor 3, Crit 2, Aggro 4. **Basic attack:** medium, magical Lightning.
 
-- **Call Drones.** Summons two Drones, up to the 8-foe cap. Long cooldown, long wind-up.
-- **Tempest.** Deals Lightning damage to every foe and applies a stack of Shock to each. Long cooldown, long wind-up.
+- **Call Drones.** Summons two Drones, up to the 8-foe cap. Medium cooldown, long wind-up.
+- **Tempest.** Three Lightning bolts, each at a random foe (two may land on one), each applying a stack of Shock. Short cooldown, long wind-up. (One blast on every foe until step 5g.)
 
-**Drone** — her add, only here: HP 2, MP 2, MP regen 2, Attack 0, Magic 2, Armor 0, Crit 2, Aggro 3. Fast, weak magical Lightning zap. **Shield Up:** applies Taunt to itself; short cooldown, quick wind-up.
+**Drone** — her add, only here: HP 2, MP 2, MP regen 2, Attack 0, Magic 2, Armor 1, Crit 2, Aggro 3. Fast, weak magical Lightning zap. **Shield Up:** applies Taunt to itself; short cooldown, quick wind-up.
 
 *Beats it — Stormcaller, Assassin, Cleric:* Thunderstorm deletes each wave of Drones as it lands, Garrote's Seek Silences the next Call Drones in her throat, the Cleric absorbs the Tempests. *Fails — Knight, Hoplite, Vampire:* every pick is Taunted onto an endless supply of Drones; each call rebuilds the wall faster than three swords clear it.
 
@@ -483,7 +507,7 @@ The Storm Queen's mate. Hurt his soldiers and he gets angry. **Challenge:** Aven
 **Stats:** HP 100, MP 10, MP regen 4, Attack 0, Magic 13, Armor 4, Crit 2, Aggro 4. **Basic attack:** slow, very heavy, magical Lightning.
 
 - **Passive – Vengeance.** When one of his Soldiers is knocked out, he gains several Might.
-- **Rally.** Summons two Soldiers, up to the 8-foe cap. Long cooldown, long wind-up.
+- **Rally.** Summons two Soldiers, up to the 8-foe cap. Medium cooldown, long wind-up.
 
 **Soldier** — his add, only here: HP 9, MP 2, MP regen 2, Attack 0, Magic 2, Armor 2, Crit 2, Aggro 3. Fast, weak magical Lightning zap. **Shield Up:** applies Taunt to itself; short cooldown, quick wind-up.
 
@@ -531,7 +555,7 @@ An encounter is a set of enemies inside the 8-foe cap, the challenge it poses (t
 
 **17. Imp Kennel** — 1× Fire Imp, 3× Hellhound. **Poses:** Buffer (S), on a canvas of Fundamental hounds. *Beats:* Hexer, Knight, Frostweaver — Unravel strips, Shield bash stops the Imp, Ice handles the hounds; Judgement is the other key. *Fails:* Cleric, Bramble knight, Valkyrie — no strip, stop or Silence, and the Bramble is weak to Fire.
 
-**18. Fire Giant — boss** — 1× Fire Giant. **Poses:** Interrupt check (S). *Beats:* Frostweaver, Knight, Cleric — Ice doubles into the weakness; Shield bash in the wind-up breaks Inferno. *Fails:* Pyromancer, Ranger, Vampire — their Fire heals it and leaves no Burn; the first uninterrupted Inferno ends the run.
+**18. Fire Giant — boss** — 1× Fire Giant. **Poses:** Interrupt check (S). *Beats:* Frostweaver, Knight, Cleric — Ice doubles into the weakness; Shield bash in the wind-up breaks Inferno. *Fails:* Pyromancer, Ranger, Vampire — their Fire heals it and leaves no Burn; every uninterrupted Inferno, kindled, burns all three.
 
 **19. Golem Hall** — 2× Ice Golem. **Poses:** Hardening hide (S). *Beats:* Geomancer, Hoplite, Cleric — few heavy hits land before the crusts grow; magic never meets them. *Fails:* Monk, Bard, Vampire — the flurry party feeds both crusts to zero.
 

@@ -2,6 +2,10 @@
 
 Oct 23, 2026 · @Paul Suddaby
 
+*Updated Oct 28, 2026, by the feel pass (step 5g): weapons swing faster again, most of the way back to their pre-5f intervals and with a wider spread (the dagger every 5.6 ticks to the axe every 12.8, the Ice staff the fastest staff), and a swing's base is up and its scaling down, so the kinds table gives each kind's interval and its speed word follows it (the Dark staff now reads fast and the Earth staff slow). Crits are rarer and smaller: a crit step on gear or a formation is read off the same table as the classes' crit words (3, 5, 9, 16, 20%), so Crit chance +1 on gear adds 3 points and +2 adds 5 (a formation's 3.5 and 7), and Crit damage medium and high add 25 and 50 to the 150% multiplier. Lifesteal medium and high are 10% and 20%. The Retainer, Tucked-in and Quartermaster slots give up one step of Attack and Magic, not two. Phalanx swings half as often for double damage, not a third as often for triple, and Brittle is gone (Chill shatters at its cap), so the lines that leaned on them say what's left. Two older changes are caught up here too: the Knight lost Protect and Sworn in step 5f (its Vanguard Shield and Shield bash scale from max HP), and Scatter's Decoy has been Armor −1 since the campaign pass. The gear pieces are as written.*
+
+*Updated Oct 27, 2026, by the balance pass (step 5e) and the combat economy pass (step 5f, awaiting the director's read): a formation slot's step is one and a quarter gear steps (5e set one and a half when the five formations with no effect sat within 3 points of Neutral; 5f's longer fights made the slot formations worth +10 and brought it down), Caravan's Regen is a short one (6 ticks of the status's 24) and its Quartermaster gives one step of MP regen, not two (with mana binding, two were a unit's whole regen), Escort's slots carry Aggro alone and its Shield is 0.12 of max HP, Last stand's Martyr gives up one HP step (two took an HP-2 class to nothing beside Glass heart). Weapons swing half again as slowly and hit half again as hard (5f), the Ice staff the fast light staff among them. The gear pieces are as written.*
+
 *Updated Oct 26, 2026, when the campaign work joined main. The pieces are as written; three things around them changed. Aggro is centred on 100, so an Aggro step here is ±10 and foes pick by draw, which keeps every unit between a third and three times an ordinary unit's pull (*Core set: rules and vocabulary*, Targeting). A step of HP on gear or a formation slot is half a point, not one (at one, HP was every class's best kit). The Cleric lost Mercy and Prayer (*Core set: classes*), so the lines that leaned on them say what's left. `DECISIONS.md` has the reasons.*
 
 ## About this doc
@@ -29,18 +33,18 @@ What the lists are designed against. A stat is worth carrying when some kit mult
 
 | Stat | Who multiplies it |
 | --- | --- |
-| Max HP | Blood drain (Vampire) and Protect (Knight) scale from it. Every holder's Shield cap and Regen ticks grow with it. |
+| Max HP | Blood drain (Vampire), and the Knight's Vanguard Shield and Shield bash, scale from it. Every holder's Shield cap and Regen ticks grow with it. |
 | MP, MP regen | Costly casters over a dungeon: Pyromancer, Cleric (Raise), Paladin (Smite), Valkyrie (Valhalla). The low-MP defenders: Knight, Hoplite, Bramble knight. |
 | Attack | Physical damage and its stacks: Ranger, Monk, Hoplite (Sunder), Valkyrie (Gale spear's Shock), Vampire (Frenzy's Might), Assassin (Garrote). |
 | Magic | Magical damage and its stacks: Pyromancer, Frostweaver, Stormcaller, Hexer, Bard (War ballad's Might), Valkyrie (Rally), Cleric (Cure), Paladin (Smite), Geomancer (Tremor). |
-| Armor | Shield bash (Knight), Rockfall and Earthen shell (Geomancer). |
+| Armor | Rockfall and Earthen shell (Geomancer). |
 | Resistances | Covering weaknesses: Bramble knight (Fire), Vampire (Light). Answering a foe's element once seen. |
 | Crit chance | Backstab (Assassin) scales from it, Bedrock (Geomancer) doubles it, Lacerate (Assassin) bleeds on each crit. |
-| Aggro | Up for units that want hits: Knight, Bramble knight, Hoplite, a dodging Monk. Down for fragile ones: Pyromancer and Stormcaller sit at Aggro 3 on HP 2. |
+| Aggro | Up for units that want hits: Knight, Bramble knight, Hoplite, a dodging Monk. Down for fragile ones: Pyromancer and Stormcaller sit at Aggro 1 on HP 2. |
 | Evasion | Monk, Assassin. |
 | Accuracy | Physical units against high Evasion. The Ranger holds it. |
-| Crit damage | Assassin, Geomancer, the Hoplite's tripled blows. |
-| Double strike | Monk (Iron palm Sunders on both strikes), fast weapons. A trap for the Hoplite, whose second strike isn't tripled, and for Kindling, Cold hex and Arc, which skip it. |
+| Crit damage | Assassin, Geomancer, the Hoplite's doubled blows. |
+| Double strike | Monk (Iron palm Sunders on both strikes), fast weapons. A trap for the Hoplite, whose second strike isn't doubled, and for Kindling, Cold hex and Arc, which skip it. |
 | Thorns | Bramble knight (Bramble lash). Any unit that draws many hits. |
 | Lifesteal | Vampire (doubled by Bloodlust). Fast hitters. |
 | Siphon | Hexer. MP-hungry casters on long runs, like the Pyromancer. |
@@ -88,23 +92,23 @@ Thirteen plain starters, thirty-three named ordinary pieces that each carry a bu
 
 ### Kinds
 
-The kind sets attack speed, damage type and, for a staff, element, exactly as *Core set: rules and vocabulary* has them; recovery is the same for every weapon. Speed and damage trade off: a fast kind hits for less per swing and a slow kind for more, so a dagger's medium damage is a smaller number than a sword's, and a sword's smaller than an axe's. "Medium" in every table below means medium for the kind. A named piece inherits all of this from its kind and changes only what its row says.
+The kind sets attack speed, damage type and, for a staff, element, as *Core set: rules and vocabulary* has them; recovery is the same for every weapon. Each kind swings on its own interval, in ticks, and its speed word is the nearest of fast (6.5), medium (8.7) and slow (11.3). Speed and damage trade off: a swing is (base + ratio × stat) × interval ÷ 16, so a fast kind hits for less per swing and a slow kind for more, and every kind deals about the same a tick; a dagger's medium damage is a smaller number than a sword's, and a sword's smaller than an axe's. Low, medium and high base are 350, 700 and 1,200, and low, medium and high ratio 0.1, 0.2 and 0.3 of the stat (step 5g: the base is about half a swing at Attack 4, was a seventh). "Medium" in every table below means medium for the kind. A named piece inherits all of this from its kind and changes only what its row says.
 
-| Kind | Speed | Damage | Classes |
+| Kind | Speed (ticks a swing) | Damage | Classes |
 | --- | --- | --- | --- |
-| Dagger | Fast | Piercing | Ranger, Bard, Assassin |
-| Fist weapons | Fast | Blunt | Monk, Vampire |
-| Sword | Medium | Slashing | Knight, Bramble knight, Hoplite, Paladin, Valkyrie, Assassin, Vampire |
-| Bow | Medium | Piercing | Ranger, Bard |
-| Spear | Medium | Piercing | Hoplite, Valkyrie, Monk |
-| Axe | Slow | Blunt | Knight, Geomancer |
-| Fire staff | Slow | Fire | Pyromancer, Geomancer |
-| Lightning staff | Fast | Lightning | Stormcaller, Pyromancer |
-| Wind staff | Fast | Wind | Stormcaller, Frostweaver |
-| Earth staff | Medium | Earth | Geomancer, Bramble knight |
-| Ice staff | Medium | Ice | Frostweaver, Hexer |
-| Light staff | Medium | Light | Cleric, Paladin, Valkyrie |
-| Dark staff | Medium | Dark | Hexer, Vampire |
+| Dagger | Fast (5.6) | Piercing | Ranger, Bard, Assassin |
+| Fist weapons | Fast (6.0) | Blunt | Monk, Vampire |
+| Sword | Medium (8.2) | Slashing | Knight, Bramble knight, Hoplite, Paladin, Valkyrie, Assassin, Vampire |
+| Bow | Medium (8.8) | Piercing | Ranger, Bard |
+| Spear | Medium (9.4) | Piercing | Hoplite, Valkyrie, Monk |
+| Axe | Slow (12.8) | Blunt | Knight, Geomancer |
+| Fire staff | Slow (11.6) | Fire | Pyromancer, Geomancer |
+| Lightning staff | Fast (7.2) | Lightning | Stormcaller, Pyromancer |
+| Wind staff | Fast (6.5) | Wind | Stormcaller, Frostweaver |
+| Earth staff | Slow (11.0) | Earth | Geomancer, Bramble knight |
+| Ice staff | Fast (6.0) | Ice | Frostweaver, Hexer |
+| Light staff | Medium (9.8) | Light | Cleric, Paladin, Valkyrie |
+| Dark staff | Fast (6.8) | Dark | Hexer, Vampire |
 
 ### Plain weapons — the starters
 
@@ -129,7 +133,7 @@ Two to four per kind, 33 pieces. Each row repeats its kind's speed, since that's
 | Warbow | Bow · medium | Medium / medium | Attack +2 | Marksman: every arrow scales from Attack, and the bow counts it twice |
 | Longbow | Bow · medium | Medium / medium | Crit damage medium, Attack +1 | Marksman |
 | Minstrel's bow | Bow · medium | Medium / medium | Magic +1, MP regen +1 | Songs: the Bard plays while it shoots |
-| Pike | Spear · medium | High / low | Crit damage medium | Striker: Phalanx triples the big base. The one spear where the damage matters more than the stat, so a Valkyrie or Monk does better elsewhere. |
+| Pike | Spear · medium | High / low | Crit damage medium | Striker: Phalanx doubles the big base. The one spear where the damage matters more than the stat, so a Valkyrie or Monk does better elsewhere. |
 | Sentinel spear | Spear · medium | Medium / medium | Aggro +1, Armor +1 | Bodyguard, Dodge tank |
 | Skyspear | Spear · medium | Medium / medium | Attack +1, Magic +1 | Storm and Light at once: Gale spear on Attack, Rally on Magic |
 | Rune axe | Axe · slow | Medium / medium | Crit chance +1, Attack +1 | The Geomancer's Axe fork, with Bedrock doubling the crits |
@@ -138,17 +142,17 @@ Two to four per kind, 33 pieces. Each row repeats its kind's speed, since that's
 | Ember staff | Fire staff · slow | Medium / medium | MP regen +2 | Slow burn |
 | Storm rod | Lightning staff · fast | Medium / medium | Magic +2 | Overcharge; Inferno on the fast staff |
 | Grounding rod | Lightning staff · fast | Medium / medium | HP +1, Aggro −1 | Grounded: survives, and draws less |
-| Zephyr staff | Wind staff · fast | Medium / medium | Double strike medium, Magic +1 | Deep freeze on a Wind staff: more Brittle hits, and more Wind hits for Bulwark. On a Stormcaller, Arc doesn't fire from the second strike. |
+| Zephyr staff | Wind staff · fast | Medium / medium | Double strike medium, Magic +1 | Deep freeze on a Wind staff: more Wind hits for Bulwark. On a Stormcaller, Arc doesn't fire from the second strike. |
 | Tailwind staff | Wind staff · fast | Medium / medium | MP regen +2 | Wellspring; Overcharge over a long dungeon |
-| Granite staff | Earth staff · medium | Medium / medium | Armor +1, Magic +1 | Stone: Rockfall and Earthen shell scale from Armor, Tremor and the staff from Magic |
-| Rootstaff | Earth staff · medium | Medium / medium | Thorns medium, HP +1 | Thornwall with a staff in hand; Deep roots |
-| Rime staff | Ice staff · medium | Medium / medium | Magic +2 | Deep freeze; Frost, where Cold hex's stacks scale from Magic |
-| Hoarfrost staff | Ice staff · medium | Medium / medium | MP regen +2 | Wellspring, Endurance |
+| Granite staff | Earth staff · slow | Medium / medium | Armor +1, Magic +1 | Stone: Rockfall and Earthen shell scale from Armor, Tremor and the staff from Magic |
+| Rootstaff | Earth staff · slow | Medium / medium | Thorns medium, HP +1 | Thornwall with a staff in hand; Deep roots |
+| Rime staff | Ice staff · fast | Medium / medium | Magic +2 | Deep freeze; Frost, where Cold hex's stacks scale from Magic |
+| Hoarfrost staff | Ice staff · fast | Medium / medium | MP regen +2 | Wellspring, Endurance |
 | Sunstaff | Light staff · medium | Medium / medium | Crit chance +1, Magic +1 | Battle cleric: more Magic for Cure |
 | Dawn staff | Light staff · medium | High / medium | Nothing | The basic-attack case for a Light caster. (Under Mercy, until Oct 25, 2026, its damage was a Cleric's healing.) |
 | Chapel staff | Light staff · medium | Medium / medium | MP regen +2 | Pilgrim; Staff and robes; Light |
-| Nightstaff | Dark staff · medium | Medium / medium | Magic +2 | Frost on the Dark staff |
-| Leech staff | Dark staff · medium | Medium / medium | Siphon medium, MP regen +1 | Endurance |
+| Nightstaff | Dark staff · fast | Medium / medium | Magic +2 | Frost on the Dark staff |
+| Leech staff | Dark staff · fast | Medium / medium | Siphon medium, MP regen +1 | Endurance |
 
 ### Powerful weapons
 
@@ -156,12 +160,12 @@ Each keeps its kind's speed and type, at medium damage and ratio, and scales fro
 
 | Piece | Kind | Scales from | For | What it opens |
 | --- | --- | --- | --- | --- |
-| Heartwood staff | Earth staff · medium | Max HP | Bramble knight | Deep roots gets a damage weapon of its own: Earth hits from the HP the fork stacks, reaching the armored and dodging foes its sword can't. Thornwall keeps the Rootstaff and Bramble lash, so the two Bramble knights stay two. |
-| Sanguine staff | Dark staff · medium | Max HP | Vampire | Blood as a caster: Blood drain and basic attacks on one stat, Lifesteal on both. |
-| Cornerstone axe | Axe · slow | Armor | Geomancer, Knight | Stone on one stat: Rockfall, Earthen shell and basic attacks all from Armor, with Bedrock doubling the crits. It's an axe and not a sword on purpose: an Armor sword would let the Hoplite triple an Armor-5 hit in heavy plate and merge Striker into Bodyguard. |
+| Heartwood staff | Earth staff · slow | Max HP | Bramble knight | Deep roots gets a damage weapon of its own: Earth hits from the HP the fork stacks, reaching the armored and dodging foes its sword can't. Thornwall keeps the Rootstaff and Bramble lash, so the two Bramble knights stay two. |
+| Sanguine staff | Dark staff · fast | Max HP | Vampire | Blood as a caster: Blood drain and basic attacks on one stat, Lifesteal on both. |
+| Cornerstone axe | Axe · slow | Armor | Geomancer, Knight | Stone on one stat: Rockfall, Earthen shell and basic attacks all from Armor, with Bedrock doubling the crits. It's an axe and not a sword on purpose: an Armor sword would let the Hoplite double an Armor-5 hit in heavy plate and merge Striker into Bodyguard. |
 | Needle | Dagger · fast | Crit chance | Assassin, Ranger | Precision: Backstab and basic attacks share a stat, so every Crit piece raises both. |
 | Mist claws | Fist weapons · fast | Evasion | Monk | Dodge tank from a stretch to a build: Evasion is defense and damage. Nothing on a Vampire. |
-| Glacier staff | Ice staff · medium | Max MP | Frostweaver, Hexer | Wellspring and Endurance stop being pure upkeep: the MP pool is also damage. Scales from max MP, not current, so casting doesn't shrink it. |
+| Glacier staff | Ice staff · fast | Max MP | Frostweaver, Hexer | Wellspring and Endurance stop being pure upkeep: the MP pool is also damage. Scales from max MP, not current, so casting doesn't shrink it. |
 | Templar staff | Light staff · medium | Armor | Paladin | A third Paladin build, staff and plate: heavy armor, Light basic attacks from Armor, Judgement doubling them. |
 
 That covers every source *Core set: classes* points at: max HP for the Earth and Dark staffs, Armor for the axe, Crit chance for the dagger. Evasion and max MP are new, and each has a class that holds the stat high or a fork built on it. Thorns gets no weapon: Thornwall already scales Bramble lash from it and carries it on three pieces.
@@ -178,7 +182,7 @@ Five heavy, five medium, four light, each a bundle that tells its story, and thr
 | --- | --- | --- |
 | Plate | Armor +1, HP +1 | Iron wall, Bodyguard, Stone, Sword and plate, Deep roots |
 | Bastion plate | Armor +2 | Iron wall; Stone, where Rockfall and Earthen shell count it twice |
-| Tower mail | HP +2 | Party shield: Protect, the Shield cap and every Regen on the Knight grow. Deep roots. |
+| Tower mail | HP +2 | Party shield: the Vanguard Shield, Shield bash, the Shield cap and every Regen on the Knight grow. Deep roots. |
 | Thorn mail | Thorns medium, Aggro +1 | Thornwall; a Knight or Hoplite that draws many hits |
 | Ashen plate | Resists Fire, Armor +1 | Deep roots against the Bramble knight's weakness; any wall against a Fire boss |
 
@@ -197,8 +201,8 @@ Five heavy, five medium, four light, each a bundle that tells its story, and thr
 | Piece | Stats | For |
 | --- | --- | --- |
 | Robes | Magic +2 | Inferno, Deep freeze, Overcharge, Frost, Battle cleric; Quake, Staff and robes, Light and Songs for the classes that step down |
-| Vestments | MP +1, MP regen +1 | Pilgrim, Wellspring, Endurance, Slow burn; a Knight that gives up plate to keep Protect up all dungeon |
-| Shadowsilk | Magic +1, Aggro −1 | Inferno and Overcharge at Aggro 3 on HP 2: less Magic than Robes, fewer hits |
+| Vestments | MP +1, MP regen +1 | Pilgrim, Wellspring, Endurance, Slow burn; a Knight that gives up plate to keep Fortify and Stand fast going all dungeon |
+| Shadowsilk | Magic +1, Aggro −1 | Inferno and Overcharge at Aggro 1 on HP 2: less Magic than Robes, fewer hits |
 | Quiet cloak | MP regen +1, Aggro −1 | Slow burn, Endurance, Wellspring, Grounded: the caster that lasts the dungeon by being hit less and running dry later |
 
 Robes are the default for a caster, and the other three are what it gives up Magic for: a longer dungeon, fewer hits, or both. HP for a light class comes from its amulet, since Heartstone does what a padded coat would and the light slot has better stories to tell. Plate, Bastion plate and Tower mail are one slot's triangle for a wall.
@@ -230,7 +234,7 @@ The one slot every class shares. Amulets carry special stats, HP, MP, MP regen, 
 | Mana jewel | MP +2 | Pilgrim, Wellspring; the Glacier staff. The pool for the costly casts (Raise, Smite, Valhalla), where Prayer beads are for the long run. |
 | Heartstone | HP +2 | Blood, Party shield, Grounded; feeds Regen and the Shield cap on anyone |
 | Lucky coin | Crit chance +2 | Precision, Battle cleric; the Geomancer under Bedrock |
-| Warhorn | Aggro +2 | Bodyguard, Thornwall, Dodge tank; a Knight that must hold a boss before Sworn fires |
+| Warhorn | Aggro +2 | Bodyguard, Thornwall, Dodge tank; a Knight that must hold a boss between its Taunts |
 | Veil | Aggro −2 | Inferno, Overcharge, Precision: the fragile unit steps out of the line |
 | Sun charm | Resists Fire, Lightning and Light | The Bramble knight's and the Vampire's weaknesses in one; against bright casters |
 | Moon charm | Resists Ice, Dark and Wind | Against cold and night |
@@ -251,7 +255,7 @@ Bundles, not bigger numbers: none is a superset of an ordinary charm.
 
 The neutral formation plus nine, each telling a party's story, with no budget between slots. Some slots are plain bonuses, some are a bonus bought with a penalty, two only take, and the magnitudes differ on purpose: Vanguard is small and costs nothing, Champion and Tortoise swing hard, and the four with an effect carry part of their power there, so their slots are smaller. Every slot says one thing: a unit in it is sturdier or squishier, hits harder or softer, draws more or less, never two of those pulling against each other. "Attack +1, Magic +1" raises both, so one slot serves a physical or a magical unit alike. Effects are flat, every ally on a trigger, and no effect gives Taunt.
 
-**Weight.** A full slot here is worth about one gear piece, so a formation adds roughly a fourth slot to every unit: more on a cursed slot, less on a small one. Whether that's enough to make the formation a decision rather than an afterthought is for the sim. If it isn't, the fix is a bigger step on every slot, not more slots.
+**Weight.** A full slot here is worth about one gear piece, so a formation adds roughly a fourth slot to every unit: more on a cursed slot, less on a small one. Whether that's enough to make the formation a decision rather than an afterthought is for the sim. If it isn't, the fix is a bigger step on every slot, not more slots. (The sim said it wasn't, Oct 27, 2026: probed on the same parties, the five formations with no effect sat within 3 points of Neutral while the effects were worth 7 to 20. A slot's step became one and a half gear steps and the effects were trimmed: step 5e. With 5f's longer fights the slot formations ran +10 against Neutral, so the step is one and a quarter.)
 
 ### Neutral — the start
 
@@ -275,11 +279,11 @@ Small, and it costs nothing. The Knight on the Wall, the Cleric and Ranger behin
 | Slot | Changes |
 | --- | --- |
 | Champion | HP +2, Armor +2, Attack +2, Magic +2 |
-| Retainer (two of these) | Attack −2, Magic −2 |
+| Retainer (two of these) | Attack −1, Magic −1 (−2 until step 5g) |
 
 **Effect:** none.
 
-One unit carries the fight and the other two only take, so it's for a party whose other two are support anyway. The cheapest seats are the Retainers, and they suit units whose value isn't in Attack or Magic: a Knight, whose Protect scales from max HP and Shield bash from Armor; a Bramble knight, whose Thorns don't care; a Hexer, Bard or Paladin, whose Silence, Weaken, Haste, Slow and Ward are fixed in size.
+One unit carries the fight and the other two only take, so it's for a party whose other two are support anyway. The cheapest seats are the Retainers, and they suit units whose value isn't in Attack or Magic: a Knight, whose Vanguard Shield and Shield bash scale from max HP; a Bramble knight, whose Thorns don't care; a Hexer, Bard or Paladin, whose Silence, Weaken, Haste, Slow and Ward are fixed in size.
 
 ### Ambush — one draws the eye, two strike
 
@@ -303,11 +307,11 @@ For Anti-heal.
 | --- | --- |
 | Shell | Armor +2 |
 | Heart | HP +2 |
-| Tucked in | Attack −2, Magic −2 |
+| Tucked in | Attack −1, Magic −1 (−2 until step 5g) |
 
 **Effect:** none.
 
-Two ways to be hard to hurt and one seat that gives up hitting altogether. Tucked in is for the unit whose value isn't damage, as with Champion's Retainers: under Anti-heal, a Paladin's Ward and Cleanse keep working there while its Smite wouldn't have won the fight.
+Two ways to be hard to hurt and one seat that hits softer. Tucked in is for the unit whose value isn't damage, as with Champion's Retainers: under Anti-heal, a Paladin's Ward and Cleanse keep working there while its Smite wouldn't have won the fight.
 
 ### Scatter — dodge, don't block
 
@@ -315,7 +319,7 @@ For Brute, Tank buster, and any fight of a few big physical swings.
 
 | Slot | Changes |
 | --- | --- |
-| Decoy | Evasion medium, Aggro +2, Armor −2 |
+| Decoy | Evasion medium, Aggro +2, Armor −1 (−2 until the campaign pass: the Decoy lost more to Armor than it gained in Evasion, and Scatter lost on every node) |
 | Runner (two of these) | Aggro −1 |
 
 **Effect:** none.
@@ -340,12 +344,12 @@ For Long grind.
 
 | Slot | Changes |
 | --- | --- |
-| Quartermaster | MP regen +2, Attack −2, Magic −2 |
+| Quartermaster | MP regen +1, Attack −1, Magic −1 (−2 until step 5g) |
 | Traveller (two of these) | HP +1 |
 
-**Effect:** when the fight starts, every ally gains Regen.
+**Effect:** when the fight starts, every ally gains a short Regen (6 ticks of the status's 24, steps 5e and 5f: the full Regen on every ally at every fight's start was worth two Clerics, and the same parties won 20 points more in Caravan than in Neutral).
 
-The Quartermaster gives up hitting to keep its own MP flowing, so it's for a unit whose costly abilities don't scale from Attack or Magic: a Cleric saving for Renew and Raise. A Regen at the start of every fight is real healing in a dungeon that never heals between fights.
+The Quartermaster gives up some of its hitting to keep its own MP flowing, so it's for a unit whose costly abilities don't scale from Attack or Magic: a Cleric saving for Renew and Raise. A Regen at the start of every fight is real healing in a dungeon that never heals between fights.
 
 ### Last stand — the fallen spur the rest on
 
@@ -353,12 +357,12 @@ For Executioner, Tank buster, and any party built around revives.
 
 | Slot | Changes |
 | --- | --- |
-| Martyr | Aggro +2, HP −2 |
+| Martyr | Aggro +2, HP −1 (−2 until Oct 27, 2026, step 5f) |
 | Other (two of these) | Nothing |
 
 **Effect:** when an ally is knocked out, every ally gains Might (several stacks).
 
-Each knockout gives the party Might, so a Cleric or Valkyrie that brings the Martyr back sets up the next one, and a Knight's Sworn Taunts on the same knockout. A sturdy Martyr like the Bramble knight holds out; a fragile one falls early and starts the Might sooner. Either is a plan.
+Each knockout gives the party Might, so a Cleric or Valkyrie that brings the Martyr back sets up the next one, and a Knight's Stand fast keeps the foes on it meanwhile (its Sworn, a Taunt on the same knockout, until Oct 27, 2026). A sturdy Martyr like the Bramble knight holds out; a fragile one falls early and starts the Might sooner. Either is a plan.
 
 ### Escort — two protectors, one carry
 
@@ -366,10 +370,10 @@ For Tank buster, Executioner.
 
 | Slot | Changes |
 | --- | --- |
-| Escort (two of these) | Aggro +1, Armor +1, HP +1 |
+| Escort (two of these) | Aggro +1 (Armor +1 and HP +1 until the campaign and step 5e took them: with every slot a plain bonus and an effect on top, the same parties won 11 points more in it than in Neutral) |
 | Charge | Aggro −2, Attack +1, Magic +1, Crit chance +1 |
 
-**Effect:** when an ally is knocked out, every other ally gains Shield; the amount scales from its max HP, as Protect does.
+**Effect:** when an ally is knocked out, every other ally gains Shield; the amount scales from its max HP, as the Knight's Vanguard Shield does (0.12 of it, step 5e).
 
 Moderate slots with nothing taken away: the carry is protected, not stretched. Where Last stand plans for the knockout, Escort insures against it: the Shield is for the fight where a protector falls anyway, so the Charge lives to finish it.
 
@@ -383,7 +387,7 @@ Moderate slots with nothing taken away: the carry is protected, not stretched. W
 | Two protectors, one carry | Escort | Moderate, no curses | Shield on every other ally when one falls |
 | All defenders | Tortoise | Big, one that only takes | None |
 | All offense; no front line | Blitz | Identical, all cursed | Haste on every ally at start |
-| Long run | Caravan | One big trade, two small | Regen on every ally at start |
+| Long run | Caravan | One trade, two small | Regen on every ally at start |
 | One unit carries | Champion | One huge, two that only take | None |
 | Built around revives | Last stand | One cursed, two empty | Might on every ally when one falls |
 
@@ -472,7 +476,7 @@ Pieces that combine into builds the build axes didn't name.
 
 Each is a piece that reads as an upgrade and isn't, for a class whose kit a player can learn from it.
 
-- Double strike on the Hoplite: the second strike isn't tripled. Under Kindling, Cold hex and Arc it adds damage but no stacks and no second foe.
+- Double strike on the Hoplite: the second strike isn't doubled. Under Kindling, Cold hex and Arc it adds damage but no stacks and no second foe.
 - The Pike, Splitter and Dawn staff on a class whose kit doesn't ride on its basic attacks: a Valkyrie with a Pike gives up the stat her abilities wanted.
 - A powerful weapon on a class without its stat: Mist claws on a Vampire, Sanguine staff on a Hexer, Needle on a Bard, Heartwood staff on a Geomancer at HP 3.
 - Thorns with Evasion: a dodged hit never lands, so Thorns never fires. Scatter's Decoy and Thorn mail work against each other, and so do Tiger claws and the Rootstaff on one unit.

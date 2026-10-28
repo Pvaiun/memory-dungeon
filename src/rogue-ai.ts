@@ -275,8 +275,11 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
     // Supplies before a room: HP if the party is low, MP if casters are dry, a phoenix for the fallen.
     const down = run.party.filter((cls) => member(run, cls).ko);
     if (down.length && run.supplies.includes("phoenix")) useSupply(c, run, "phoenix", down[0]);
-    if (run.supplies.includes("tonic") && hpShare(c, run) < 0.5) useSupply(c, run, "tonic");
-    if (run.supplies.includes("ether") && share(c, run, "mp") < 0.35 && run.party.some((x) => CASTERS.has(x))) useSupply(c, run, "ether");
+    // Step 5g: a potion to a member under half HP, a tonic to one under 40% MP (the neediest first), as many as the bag holds.
+    const need = (stat: "hp" | "mp", below: number) => run.party.map((cls) => member(run, cls)).filter((m) => !m.ko && maxOf(c, run, m.cls, stat === "hp" ? "max_hp" : "max_mp") > 0)
+      .map((m) => ({ cls: m.cls, s: 1 - (stat === "hp" ? m.missHp : m.missMp) / maxOf(c, run, m.cls, stat === "hp" ? "max_hp" : "max_mp") })).filter((x) => x.s < below).sort((a, b) => a.s - b.s);
+    for (const x of need("hp", 0.5)) if (run.supplies.includes("potion")) useSupply(c, run, "potion", x.cls);
+    for (const x of need("mp", 0.5)) if (run.supplies.includes("tonic")) useSupply(c, run, "tonic", x.cls);
   }
 
   function decide(c: Content, run: RogueRun): string {
@@ -308,6 +311,12 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
           if (v > bv) (bv = v), (best = o);
         }
         return best;
+      }
+      case "drop": {
+        // Round 9: the kind the party has fewer of; a tie goes to the resource the party is lower on (HP share against MP share).
+        const held = (id: string) => run.supplies.filter((x) => x === id).length;
+        const hp = hpShare(c, run), mp = mpShare(c, run);
+        return [...opts].sort((a, b) => held(a) - held(b) || (a === "potion" ? hp : mp) - (b === "potion" ? hp : mp))[0];
       }
       case "treasure": return opts.includes("take") ? "take" : "leave";
       case "shop": return shopPick(c, d, run, opts);
@@ -371,7 +380,7 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
       if (verb === "buy") {
         const s = p.stock[Number(rest[0])];
         v = offerValue(c, d, run, s.offer);
-        if (s.offer.kind === "supply") v = s.offer.id === "tonic" && hpShare(c, run) < 0.6 ? 3 : s.offer.id === "phoenix" && run.party.some((x) => member(run, x).ko) ? 4 : 0.8;
+        if (s.offer.kind === "supply") v = s.offer.id === "potion" && hpShare(c, run) < 0.6 ? 3 : s.offer.id === "phoenix" && run.party.some((x) => member(run, x).ko) ? 4 : 0.8;
         price = s.price;
       } else if (verb === "learn") {
         if (!run.party.includes(rest[0])) continue;

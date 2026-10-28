@@ -133,11 +133,16 @@ export function readingPack(c: Content, rules: Rules, r: Reading, n: number): st
       case "fight_end":
         out.push(`${e.result === "won" ? "Won" : "Lost"} at t${Number((lastAt / 1000).toFixed(1))}.`);
         break;
-      case "offer":
-        out.push("", `**Perk pick.** Offered: ${(e.options as string[]).map((id) => `${perkName(id)?.name} (${perkName(id)?.text})`).join("; ")}.`);
+      case "offer": {
+        // Step 5f: the campfire's offer (REST / FOCUS / RAISE) is a decision too, not a perk; it printed "undefined (undefined)".
+        const opts = e.options as string[];
+        const camp = opts.every((id) => !perkName(id));
+        const word = (id: string) => (perkName(id) ? `${perkName(id)!.name} (${perkName(id)!.text})` : id.replace(/^camp:/, "").replace(/:/g, " ").toUpperCase());
+        out.push("", `**${camp ? "Campfire" : "Perk pick"}.** Offered: ${opts.map(word).join("; ")}.`);
         break;
+      }
       case "pick":
-        out.push(`Picked ${perkName(String(e.pick))?.name}.`);
+        out.push(`Picked ${perkName(String(e.pick))?.name ?? String(e.pick).replace(/^camp:/, "").replace(/:/g, " ").toUpperCase()}.`);
         break;
       case "run_end":
         out.push("", `**Run ${e.outcome}.**${(e.loot as string[]).length ? ` Loot: ${(e.loot as string[]).map((g) => c.pack.gear.find((x) => x.id === g)?.name ?? g).join(", ")}.` : ""}`);

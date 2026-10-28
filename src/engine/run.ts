@@ -9,7 +9,7 @@ import { fingerprint, int, rngFor, type Rng } from "./rng.js";
 import type { Entry } from "./log.js";
 
 /** Bump on any change that can change a run's outcome: old records stop replaying. */
-export const ENGINE_VERSION = "0.12";
+export const ENGINE_VERSION = "0.15"; // Step 5g (the director's): a party unit's ability cooldowns carry from fight to fight like its HP and MP (Member.cooldowns), with the slot's head start taken off what remains. 0.14: slotShares, `if` as several conditions, mpBelow/mpAtLeast, status_capped, `owner`.
 
 // ─── Content, loaded and checked once ───────────────────────────────────────
 

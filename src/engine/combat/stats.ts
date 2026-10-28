@@ -11,6 +11,9 @@ export const sub = (ticks: number) => Math.round(ticks * SUBTICKS);
 /** A timing stat's speed, as a fraction [num, den]: (1 + s/100) at 0 or above, 1 ÷ (1 + |s|/100) below. */
 export type Speed = [number, number];
 export const speedOf = (s: number): Speed => (s >= 0 ? [100 + s, 100] : [100, 100 - s]);
+/** Ticks of head start a party ability gets in slot `i` (0-based): a share of its cooldown (ruleset.opening.slotShares) or flat ticks (slots). Step 5g. */
+export const headStart = (opening: { slots?: number[]; slotShares?: number[] } | undefined, cooldown: number, i: number): number =>
+  opening?.slotShares?.length ? cooldown * (opening.slotShares[i] ?? 0) : opening?.slots?.[i] ?? 0;
 export const sameSpeed = (a: Speed, b: Speed) => a[0] * b[1] === b[0] * a[1];
 /** timing ÷ speed, dropping any fraction of a sub-tick. */
 export const scaled = (t: number, s: Speed) => Math.floor((t * s[1]) / s[0]);
@@ -27,7 +30,9 @@ export function finalValue(c: Content, key: string, base: number, flat: number, 
   const v = Math.trunc((base + flat) * (1 + pct / 100));
   const def = c.stats.get(key);
   if (!def) return v;
-  return Math.min(def.cap ?? v, Math.max(def.floor ?? v, v));
+  // Step 5f: a floor without a cap never held (the missing cap fell back to the unfloored value, which the min then kept), so
+  // Sunder took Armor below 0 and a Martyr's HP reached 0. Engine 0.13.
+  return Math.min(def.cap ?? Infinity, Math.max(def.floor ?? -Infinity, v));
 }
 
 export const statDefault = (c: Content, key: string) => c.stats.get(key)?.default ?? 0;

@@ -9,6 +9,7 @@
  * ("50 LIGHT (125% MAG)"). Enemies get the same parts plus their elements.
  * Designer view adds the worked-out numbers from describe.ts.
  */
+import { headStart } from "../../src/engine/combat/stats.js";
 import type { AbilityT, EnemyT, GearT, WeaponT } from "../../src/schema.js";
 import { combat, type Member } from "../../src/engine/combat/rules.js";
 import { resolveWeapon, weaponOf } from "../../src/engine/combat/fight.js";
@@ -178,7 +179,7 @@ export function abilityBlock(a: AbilityT, stats: Stats | null, designer: boolean
   const tag = abilityTag(a);
   const cell = TAG_ICON[tag] ?? TAG_ICON.physical;
   // Step 5c: an ability starts a fight charged by its slot (ruleset.opening.slots), so its first use is part of the plan.
-  const head0 = opts.n !== undefined && opts.opening !== false ? c.pack.ruleset.opening?.slots?.[opts.n - 1] : undefined;
+  const head0 = opts.n !== undefined && opts.opening !== false ? headStart(c.pack.ruleset.opening, i.cooldown, opts.n - 1) : undefined;
   const first = head0 !== undefined ? Math.max(0, i.cooldown - head0) : 0;
   const head = h("div", { class: "head" },
     // With another number picked, this one pulses: it's where the next tap goes.

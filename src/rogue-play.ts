@@ -12,7 +12,7 @@
  *   npx tsx src/rogue-play.ts class <id>                                 a class's sheet: passive, every ability
  *   npx tsx src/rogue-play.ts equip <class> <weapon|armor|amulet> <item|none>
  *   npx tsx src/rogue-play.ts formation <id>     seat <a,b,c>     order <class> <ability,...|none>   (abilities left out aren't brought)
- *   npx tsx src/rogue-play.ts use <tonic|ether|phoenix> [class]   swap <party member> <member at camp>
+ *   npx tsx src/rogue-play.ts use <potion|tonic|phoenix> [class]   swap <party member> <member at camp>
  *     (swap: at a campfire; any time between rooms for a fallen party member and someone standing at camp)
  *   npx tsx src/rogue-play.ts glossary                                   what each status shown in a fight does
  *
@@ -23,12 +23,13 @@ import { advance, loadContent, type Content } from "./engine/run.js";
 import { combat } from "./engine/combat/rules.js";
 import type { Entry } from "./engine/log.js";
 import {
-  actRoll, bench, bossFoes, canManage, choose, endFight, equip, eventOf, itemGear, itemOf, joinKnown, maxOf, member, newRogue, options, reachable, registerGear, rogue,
+  actRoll, bagRoom, bench, bossFoes, canManage, choose, endFight, equip, eventOf, itemGear, itemOf, joinKnown, maxOf, member, newRogue, options, reachable, registerGear, rogue,
   learnOptions, migrate, seat, sellPrice, upgradeOptions, whyNot, setFormation, setOrder, startFight, swap, trainPrice, unlearned, upgraded, useSupply, wearer, type Item, type Offer, type RogueRun, type Slot,
 } from "./rogue.js";
 import type { AbilityT, NumT } from "./schema.js";
 import { summary } from "./play-summary.js";
 import { combat as rules, type Member as EngineMember } from "./engine/combat/rules.js";
+import { headStart } from "./engine/combat/stats.js";
 
 const c = loadContent(JSON.parse(readFileSync("content/core-set.pack.json", "utf8")));
 const argv = process.argv.slice(2);
@@ -119,7 +120,8 @@ function offerWords(run: RogueRun, o: Offer): string {
     const f = c.formations.get(o.id)!;
     return `formation: ${f.name}: ${f.text}${f.positions.map((p, k) => ` Slot ${k + 1} ${p.name}: ${codes(p.stats) || "no change"}.`).join("")}`;
   }
-  return `supply: ${o.id} (${o.id === "tonic" ? "the party regains 30% of its HP" : o.id === "ether" ? "the party regains 50% of its MP" : "a fallen member stands up with half its HP"})`;
+  const sp = rogue(c).config.supplies;
+  return `supply: ${o.id} (${o.id === "potion" ? `one member regains ${sp.potion.hp}% of its HP` : o.id === "tonic" ? `one member regains ${sp.tonic.mp}% of its MP` : "a fallen member stands up with half its HP"})`;
 }
 function vit(run: RogueRun, cls: string): string {
   const m = member(run, cls);
@@ -132,7 +134,7 @@ function header(run: RogueRun): string[] {
   const reg = rogue(c).regions.find((r) => r.id === run.region)!;
   return [
     `Act ${ROMAN[run.act]} of 3: ${reg.name}. ${reg.text} Boss at the top: ${run.boss.name}. ${run.floor > rogue(c).config.map.floors ? "At the boss." : run.floor === 0 ? `At the foot of the map: ${rogue(c).config.map.floors} floors, then the boss.` : `Floor ${run.floor} of ${rogue(c).config.map.floors}, the boss above.`}`,
-    `Gold ${run.gold}. Supplies: ${run.supplies.join(", ") || "none"} (carry ${rogue(c).config.bag} at most). Formation: ${c.formations.get(run.formation)!.name}. Formations owned: ${run.formations.join(", ")}.`,
+    `Gold ${run.gold}. Supplies: ${run.supplies.join(", ") || "none"} (the bag holds ${rogue(c).config.bag.potion} potions, ${rogue(c).config.bag.tonic} tonics and ${rogue(c).config.bag.phoenix} phoenix feathers). Formation: ${c.formations.get(run.formation)!.name}. Formations owned: ${run.formations.join(", ")}.`,
     `Party: ${run.party.map((cls) => `${cls} (${vit(run, cls)})`).join("; ")}.${bench(run).length ? ` At camp: ${bench(run).map((cls) => `${cls} (${vit(run, cls)})`).join("; ")}.` : ""}`,
     ...(run.pending.kind !== "over" && run.party.some((x) => member(run, x).ko) && bench(run).some((x) => !member(run, x).ko) ? [`Someone standing at camp can take a fallen member's seat now: swap <fallen> <at camp>.`] : []),
     ...(run.pending.kind !== "over" && run.party.length < rogue(c).config.party && bench(run).some((x) => !member(run, x).ko) ? [`A seat is empty: someone standing at camp can fill it now (swap <at camp>).`] : []),
@@ -162,6 +164,9 @@ function look(run: RogueRun): string {
       for (const e of [...new Set(p.fight.enemies)]) out.push(`  ${bestiary(e, p.foes.power ?? 0)}`);
       out.push(p.begun ? "The fight has begun: pick fight to play it." : "You can still change gear, the formation, seats and ability order, and use supplies. Then: pick fight");
       break;
+    case "drop":
+      out.push(`FOUND SUPPLIES: take one (pick potion or pick tonic). A potion gives one member ${rogue(c).config.supplies.potion.hp}% HP, a tonic gives one member ${rogue(c).config.supplies.tonic.mp}% MP; you hold ${run.supplies.filter((x) => x === "potion").length}/${rogue(c).config.bag.potion} potions and ${run.supplies.filter((x) => x === "tonic").length}/${rogue(c).config.bag.tonic} tonics.`);
+      break;
     case "spoils": case "boon": case "treasure": {
       const offers = p.kind === "treasure" ? [p.offer] : p.offers;
       out.push(p.kind === "boon" ? "BOSS BEATEN: pick a boon (the next act starts with everyone restored, and everyone learns an ability)." : p.kind === "treasure" ? `CHEST: ${p.gold} gold inside, and a piece.` : `SPOILS: ${p.gold} gold found. Pick one, or skip.`);
@@ -173,8 +178,7 @@ function look(run: RogueRun): string {
     case "shop": {
       const step = rogue(c).config.prices.trainStep;
       out.push(`SHOP (you have ${run.gold} gold). Buy, train${step ? ` (as often as you like: each training bought here makes the next ${step}g dearer)` : " (once each a visit)"}, sell from the bag, or leave.`);
-      const full = run.supplies.length >= rogue(c).config.bag;
-      p.stock.forEach((s, i) => out.push(`  ${s.sold ? "(bought) " : s.offer.kind === "supply" && full ? "(bag full) " : `pick buy:${i} `}for ${s.price}g: ${offerWords(run, s.offer)}`));
+      p.stock.forEach((s, i) => out.push(`  ${s.sold ? "(bought) " : s.offer.kind === "supply" && !bagRoom(c, run, s.offer.id) ? "(bag full) " : `pick buy:${i} `}for ${s.price}g: ${offerWords(run, s.offer)}`));
       // Training too dear right now stays listed, marked (unaffordable gear stays listed too).
       const lp = trainPrice(c, p, "learn"), up = trainPrice(c, p, "upgrade");
       if (p.learn) for (const o of learnOptions(c, run)) out.push(`  ${run.gold >= lp ? `pick learn:${o}` : "(not enough gold) learn:" + o} for ${lp}g: ${c.abilities.get(o.split(":")[1])!.name}: ${c.abilities.get(o.split(":")[1])!.text}`);
@@ -296,9 +300,8 @@ function partyWords(run: RogueRun): string {
     const s = fighterOf(run, m.cls).stats;
     out.push(`${m.cls} (${k.name})${seatNo >= 0 ? `, slot ${seatNo + 1} ${f.positions[seatNo].name}` : ", at camp"}: ${vit(run, m.cls)}. Attack ${pts(s.attack)}, Magic ${pts(s.magic)}, Armor ${pts(s.armor)}, Crit ${s.crit_chance}%, Aggro ${Math.round(s.aggro)}, MP regen ${pts(s.mp_regen)}.`);
     for (const slot of ["weapon", "armor", "amulet"] as Slot[]) out.push(`  ${slot}: ${m.gear[slot] ? itemWords(itemOf(run, m.gear[slot]!)!) : "nothing"}`);
-    const head = c.pack.ruleset.opening?.slots ?? [];
     const left = m.known.filter((a) => !m.order.includes(a));
-    out.push(`  abilities, in slot order: ${m.order.map((a, i) => `${a} (${c.abilities.get(a)!.name}, MP ${c.abilities.get(a)!.mp ?? 0}, every ${Math.round(c.abilities.get(a)!.cooldown)} ticks, first ready about t${Math.max(0, Math.round(c.abilities.get(a)!.cooldown - (head[i] ?? 0)))}${sizeOf(c.abilities.get(a)!, s) ? `; ${sizeOf(c.abilities.get(a)!, s)}` : ""})`).join("; ") || "none"}${left.length ? `. Left out of fights: ${left.join(", ")}` : ""}${unlearned(c, m).length ? `. Not learned yet: ${unlearned(c, m).join(", ")}` : ""}.`);
+    out.push(`  abilities, in slot order: ${m.order.map((a, i) => `${a} (${c.abilities.get(a)!.name}, MP ${c.abilities.get(a)!.mp ?? 0}, every ${Math.round(c.abilities.get(a)!.cooldown)} ticks, first ready about t${Math.max(0, Math.round(c.abilities.get(a)!.cooldown - headStart(c.pack.ruleset.opening, c.abilities.get(a)!.cooldown, i)))}${sizeOf(c.abilities.get(a)!, s) ? `; ${sizeOf(c.abilities.get(a)!, s)}` : ""})`).join("; ") || "none"}${left.length ? `. Left out of fights: ${left.join(", ")}` : ""}${unlearned(c, m).length ? `. Not learned yet: ${unlearned(c, m).join(", ")}` : ""}.`);
     out.push(`  can use: ${k.weapons.join(", ")}; ${k.armor} armor or lighter.`);
   }
   out.push("", "Formations owned:", ...run.formations.map((id) => { const fm = c.formations.get(id)!; return `  ${id}${id === run.formation ? " (in use)" : ""}: ${fm.text}${fm.positions.map((p, k) => ` Slot ${k + 1} ${p.name}: ${codes(p.stats) || "no change"}.`).join("")}`; }));
@@ -349,7 +352,7 @@ const USAGE = [
   "formation <id>",
   "seat <a,b,c>              the party's seat order, commas, no spaces",
   "order <class> <ability,ability,...|none>   slot order; abilities left out aren't brought to fights",
-  "use <tonic|ether|phoenix> [class]",
+  "use <potion|tonic|phoenix> [class]   (a potion or tonic goes to the member named, else the neediest)",
   "swap <party member> <member at camp>   at a campfire; any time between rooms for a fallen member",
   "swap <member at camp>     fills an empty seat (at a campfire, or any time between rooms if they're standing)",
   "Every command takes --save <file>.",
@@ -402,7 +405,7 @@ if (cmd === "new") {
       out = canManage(run) && setOrder(run, rest[0], ids) ? `Order: ${ids.join(", ") || "none"}.${m && m.known.some((a) => !ids.includes(a)) ? ` Left out of fights: ${m.known.filter((a) => !ids.includes(a)).join(", ")}.` : ""}` : "Name known abilities once each, in slot order (ids from party); any left out aren't brought to fights.";
       break;
     }
-    case "use": out = useSupply(c, run, rest[0] as "tonic", rest[1]) ? `Used the ${rest[0]}.\n${header(run).join("\n")}` : "Can't use that now."; break;
+    case "use": out = useSupply(c, run, rest[0] as "potion", rest[1]) ? `Used the ${rest[0]}.\n${header(run).join("\n")}` : "Can't use that now."; break;
     case "swap": out = swap(c, run, rest[0], rest[1] ?? null) ? `Party: ${run.party.join(", ")}. At camp: ${bench(run).join(", ") || "nobody"}.` : "At a campfire: a party member and someone at camp. Any time between rooms: a fallen party member and someone standing at camp, or someone standing at camp into an empty seat (swap <member at camp>)."; break;
     case "boss": out = bossWords(run); break;
     default: throw new Error(`unknown command '${cmd}'. Commands:\n${USAGE}`);
