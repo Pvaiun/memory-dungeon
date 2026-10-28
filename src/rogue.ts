@@ -26,6 +26,8 @@ export type Item = { uid: string; base: string; rarity: RarityT; affixes: string
 /** A class in the run's roster. HP and MP are kept as what's missing, so gear that raises the max raises the current too. */
 export type Member = {
   cls: string; known: string[]; order: string[]; gear: Partial<Record<Slot, string>>; missHp: number; missMp: number; ko: boolean;
+  /** Step 5g (the director's): ticks of cooldown each ability had left as the last fight ended; the next fight starts from there. */
+  cooldowns?: Record<string, number>;
   /** Max HP and MP as the last fight ended: a heal by share of max counts from no more than this (see `healMax`). */
   lastMax?: { hp: number; mp: number };
 };
@@ -94,6 +96,9 @@ export type RogueRun = {
 export function migrate(run: RogueRun): RogueRun {
   run.seen ??= [];
   run.met ??= [];
+  // Step 5g: the old party tonic is the potion, the old ether the tonic.
+  const OLD: Record<string, SupplyIdT> = { ether: "tonic", tonic: "potion" };
+  run.supplies = run.supplies.map((s) => OLD[s as string] ?? s);
   return run;
 }
 
@@ -217,6 +222,7 @@ export function carryIn(run: RogueRun, er: Run) {
     const m = member(run, em.ref);
     em.hp = m.ko ? 0 : Math.max(1, em.stats.max_hp - m.missHp);
     em.mp = Math.max(0, em.stats.max_mp - m.missMp);
+    if (m.cooldowns) em.cooldowns = { ...m.cooldowns };
   }
 }
 
@@ -231,6 +237,7 @@ export function endFight(c: Content, run: RogueRun, er: Run) {
     m.missHp = m.ko ? em.stats.max_hp : Math.max(0, em.stats.max_hp - em.hp);
     m.missMp = Math.max(0, em.stats.max_mp - em.mp);
     m.lastMax = { hp: em.stats.max_hp, mp: em.stats.max_mp };
+    if (em.cooldowns) m.cooldowns = { ...em.cooldowns };
   }
   run.stats.fights++;
   if (p.tier === "elite") run.stats.elites++;
@@ -250,6 +257,9 @@ export function endFight(c: Content, run: RogueRun, er: Run) {
   }
   const down = run.party.filter((cls) => member(run, cls).ko);
   note(run, `Beat ${p.fight.name}${down.length ? ` (${down.map((k) => c.classes.get(k)!.name).join(", ")} down)` : ""}.`);
+  // Step 5g (the director's): every won fight hands the party a potion and a tonic, free, up to the bag.
+  const dropped = (cfg(c).drops ?? []).filter((id) => run.supplies.length < cfg(c).bag && (run.supplies.push(id), true));
+  if (dropped.length) note(run, `Found ${dropped.map((id) => (id === "phoenix" ? "a phoenix feather" : `a ${id}`)).join(" and ")}.`);
   const g = cfg(c).gold;
   const rng = r(run, `gold:${run.act}:${p.node}`);
   const gold = between(rng, g[p.tier === "fight" ? "fight" : p.tier]) + g.perAct * (run.act - 1);
@@ -452,7 +462,7 @@ function beginAct(c: Content, run: RogueRun, region: string, restore: boolean) {
   run.visited = [];
   run.met = [];
   run.floor = 0;
-  if (restore) for (const m of run.roster) (m.missHp = 0), (m.missMp = 0), (m.ko = false);
+  if (restore) for (const m of run.roster) (m.missHp = 0), (m.missMp = 0), (m.ko = false), (m.cooldowns = {});
   note(run, `Act ${run.act}: ${reg.name}. ${run.boss.name} waits at the end.`);
 }
 
@@ -467,7 +477,7 @@ export function reachable(run: RogueRun): MapNode[] {
 
 /** The campaign's knob: HP +k %, damage +k/2 %; a negative k takes k % off HP and k/2 % off damage. */
 export const knobFoes = (k: number): FoesT =>
-  k > 0 ? { hp: Math.round(k), power: Math.round(k / 2) } : k < 0 ? { hp: Math.max(-80, Math.round(k)), power: Math.max(-80, Math.round(k / 2)) } : {};
+  k > 0 ? { hp: Math.round(k), power: Math.round(k / 2.5) } : k < 0 ? { hp: Math.max(-80, Math.round(k)), power: Math.max(-80, Math.round(k / 2.5)) } : {}; // Step 5g round 6 (the director's): damage k/2.5 (was k/2): a knob's basics one-shot casters less, without cutting its HP.
 /** Each pool's reference floor: a fight's own knob is set there, and the act's ramp moves it from there. */
 export const REF_FLOOR = { easy: 1, normal: 5, elite: 6 } as const;
 /**
@@ -585,7 +595,7 @@ function rollFormation(c: Content, run: RogueRun, rng: Rng, taken: string[] = []
   const pool = c.pack.formations.map((f) => f.id).filter((id) => !run.formations.includes(id) && !taken.includes(id));
   return pool.length ? { kind: "formation", id: pool[int(rng, pool.length)] } : null;
 }
-const SUPPLIES: SupplyIdT[] = ["tonic", "ether", "phoenix"];
+const SUPPLIES: SupplyIdT[] = ["potion", "tonic", "phoenix"];
 
 function spoilOffers(c: Content, run: RogueRun, tier: FightTier, node: string): Offer[] {
   const s = cfg(c).spoils[tier === "elite" ? "elite" : "fight"];
@@ -848,12 +858,14 @@ export function useSupply(c: Content, run: RogueRun, id: SupplyIdT, target?: str
     m.ko = false;
     m.missHp = Math.floor((maxOf(c, run, m.cls, "max_hp") * (100 - s.phoenix.revive)) / 100);
   } else {
-    const any = run.party.map((cls) => member(run, cls)).filter((m) => !m.ko);
-    if (!any.length) return false;
-    for (const m of any) {
-      if (id === "tonic") m.missHp = Math.max(0, m.missHp - Math.floor((healMax(c, run, m, "max_hp") * s.tonic.hp) / 100));
-      else m.missMp = Math.max(0, m.missMp - Math.floor((healMax(c, run, m, "max_mp") * s.ether.mp) / 100));
-    }
+    // Step 5g (the director's): a potion or a tonic goes to one unit: the one named, else the party member with the least share left.
+    const standing = run.party.map((cls) => member(run, cls)).filter((m) => !m.ko);
+    const stat = id === "potion" ? "max_hp" : "max_mp";
+    const pool = standing.filter((m) => maxOf(c, run, m.cls, stat) > 0);
+    const m = pool.find((x) => x.cls === target) ?? pool.sort((a, b) => (a[id === "potion" ? "missHp" : "missMp"] / maxOf(c, run, a.cls, stat)) - (b[id === "potion" ? "missHp" : "missMp"] / maxOf(c, run, b.cls, stat))).at(-1);
+    if (!m) return false;
+    if (id === "potion") m.missHp = Math.max(0, m.missHp - Math.floor((healMax(c, run, m, "max_hp") * s.potion.hp) / 100));
+    else m.missMp = Math.max(0, m.missMp - Math.floor((healMax(c, run, m, "max_mp") * s.tonic.mp) / 100));
   }
   run.supplies.splice(i, 1);
   return true;

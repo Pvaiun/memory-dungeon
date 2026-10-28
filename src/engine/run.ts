@@ -9,7 +9,7 @@ import { fingerprint, int, rngFor, type Rng } from "./rng.js";
 import type { Entry } from "./log.js";
 
 /** Bump on any change that can change a run's outcome: old records stop replaying. */
-export const ENGINE_VERSION = "0.14"; // Step 5g: head starts by a share of the cooldown (ruleset.opening.slotShares), an ability's `if` as several conditions, mpBelow/mpAtLeast, the status_capped event and the `owner` target word.
+export const ENGINE_VERSION = "0.15"; // Step 5g (the director's): a party unit's ability cooldowns carry from fight to fight like its HP and MP (Member.cooldowns), with the slot's head start taken off what remains. 0.14: slotShares, `if` as several conditions, mpBelow/mpAtLeast, status_capped, `owner`.
 
 // ─── Content, loaded and checked once ───────────────────────────────────────
 

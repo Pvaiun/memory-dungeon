@@ -41,8 +41,8 @@ export const formations: FormationT[] = [
   ]),
   formation("champion", "Champion", "All in on one hero.", [
     slot("champion", "Champion", "Sturdier and far stronger.", 0, [st("max_hp", 2), st("armor", 2), st("attack", 2), st("magic", 2)]),
-    slot("retainer_a", "Retainer", "Hits much softer.", 1, [st("attack", -2), st("magic", -2)]),
-    slot("retainer_b", "Retainer", "Hits much softer.", 2, [st("attack", -2), st("magic", -2)]),
+    slot("retainer_a", "Retainer", "Hits softer.", 1, [st("attack", -1), st("magic", -1)]),
+    slot("retainer_b", "Retainer", "Hits softer.", 2, [st("attack", -1), st("magic", -1)]),
   ]),
   formation("ambush", "Ambush", "One draws the eye, two strike.", [
     slot("bait", "Bait", "Draws more.", 0, [st("aggro", 2)]),
@@ -52,7 +52,7 @@ export const formations: FormationT[] = [
   formation("tortoise", "Tortoise", "Nobody falls, but fights run long.", [
     slot("shell", "Shell", "Armor far up.", 0, [st("armor", 2)]),
     slot("heart", "Heart", "Much sturdier.", 1, [st("max_hp", 2)]),
-    slot("tucked_in", "Tucked in", "Hits much softer.", 2, [st("attack", -2), st("magic", -2)]),
+    slot("tucked_in", "Tucked in", "Hits softer.", 2, [st("attack", -1), st("magic", -1)]),
   ]),
   formation("scatter", "Scatter", "Dodge, don't block.", [
     // Campaign pass: Armor −1, not −2. At −2 the Decoy lost more to Armor than it gained in Evasion, and Scatter lost on every node.
@@ -66,7 +66,7 @@ export const formations: FormationT[] = [
     slot("charge_c", "Charge", "Hits harder, frailer.", 2, [st("attack", 1), st("magic", 1), st("max_hp", -1)]),
   ], "blitz_charge"),
   formation("caravan", "Caravan", "Pace yourselves for the whole dungeon. Everyone starts each fight with Regen.", [
-    slot("quartermaster", "Quartermaster", "MP flows, but hits much softer.", 0, [st("mp_regen", 1), st("attack", -2), st("magic", -2)]), // Step 5f round 5: +1 (was +2): with mana binding, the slot was worth a unit's whole regen and Caravan ran +12.
+    slot("quartermaster", "Quartermaster", "MP flows, but hits much softer.", 0, [st("mp_regen", 1), st("attack", -1), st("magic", -1)]), // Step 5f round 5: +1 (was +2): with mana binding, the slot was worth a unit's whole regen and Caravan ran +12.
     slot("traveller_a", "Traveller", "Sturdier.", 1, [st("max_hp", 1)]),
     slot("traveller_b", "Traveller", "Sturdier.", 2, [st("max_hp", 1)]),
   ], "caravan_pace"),

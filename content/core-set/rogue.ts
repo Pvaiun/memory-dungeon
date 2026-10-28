@@ -32,7 +32,7 @@ export const ROGUE_CONFIG: RogueConfigT = {
    */
   firstAbility: {
     knight: "stand_fast", cleric: "cure", ranger: "barbed_arrow", bramble_knight: "thicket", hoplite: "aspis", paladin: "smite",
-    valkyrie: "gale_spear", bard: "anthem", hexer: "enfeeble", monk: "burning_fist", assassin: "backstab", vampire: "blood_gift",
+    valkyrie: "gale_spear", bard: "war_ballad", hexer: "enfeeble", monk: "burning_fist", assassin: "backstab", vampire: "blood_gift",
     pyromancer: "firebolt", frostweaver: "frost_lance", stormcaller: "chain_lightning", geomancer: "earthen_shell",
   } as Record<string, string>,
   /** Party of three, and up to two more waiting at camp. */
@@ -77,11 +77,17 @@ export const ROGUE_CONFIG: RogueConfigT = {
   /** A level-up can be taken as gold instead (one with a single thing left to learn or upgrade was no choice). */
   levelGold: 40,
   /** Prices, in gold. A piece sells for `sell` % of its price. Services are once a visit. */
-  prices: { common: 45, uncommon: 70, rare: 110, legendary: 190, recruit: 120, formation: 100, learn: 60, upgrade: 80, trainStep: 30, supply: { tonic: 35, ether: 35, phoenix: 60 }, sell: 35 },
+  prices: { common: 45, uncommon: 70, rare: 110, legendary: 190, recruit: 120, formation: 100, learn: 60, upgrade: 80, trainStep: 30, supply: { potion: 35, tonic: 35, phoenix: 60 }, sell: 35 },
   shop: { gear: { common: 2, uncommon: 2, rare: 1, legendary: 1 }, recruits: 1, formations: 1, supplies: 2 },
   /** Supplies, used between fights: the bag holds this many. */
-  supplies: { tonic: { hp: 30 }, ether: { mp: 50 }, phoenix: { revive: 50 } },
-  bag: 3,
+  /**
+   * Step 5g round 6 (the director's): a potion heals one member, a tonic refills one member's MP (the old tonic healed the whole party 30%, the
+   * old ether gave it 50% MP), and every won fight hands the party one of each, free, up to a bag of five. Between-fight recovery is the
+   * player's to spend, and mana is scarce enough that the tonics matter.
+   */
+  supplies: { potion: { hp: 30 }, tonic: { mp: 35 }, phoenix: { revive: 50 } },
+  drops: ["potion", "tonic"],
+  bag: 5,
   /**
    * The foes, in percent (the campaign's knob: HP +k %, damage +k/2 %): per act, the first floor's, the rise per floor, an
    * elite's on top, and the boss's. Each region adds its own (below). Set by the rogue tuning (npm run rogue).
@@ -377,7 +383,7 @@ export type EventOp =
   | { op: "upgrade" }
   | { op: "temper" }
   | { op: "formation" }
-  | { op: "supply"; id: "tonic" | "ether" | "phoenix" }
+  | { op: "supply"; id: "potion" | "tonic" | "phoenix" }
   | { op: "fight"; tier: "normal" | "elite" }
   | { op: "camp" }
   | { op: "chance"; pct: number; then: EventOp[]; else: EventOp[] };
@@ -434,7 +440,7 @@ export const ROGUE_EVENTS: RogueEvent[] = [
     id: "spring", name: "A Clear Spring", text: "Cold water bubbles up through the stones. It tastes of mana.",
     options: [
       { id: "drink", label: "DRINK", text: "Everyone recovers 50% of max MP and 10% of max HP.", do: [{ op: "mp", pct: 50 }, { op: "hp", pct: 10 }] },
-      { id: "bottle", label: "BOTTLE IT", text: "An ether for later.", do: [{ op: "supply", id: "ether" }] },
+      { id: "bottle", label: "BOTTLE IT", text: "A tonic for later.", do: [{ op: "supply", id: "tonic" }] },
     ],
   },
   {
@@ -448,7 +454,7 @@ export const ROGUE_EVENTS: RogueEvent[] = [
     id: "camp", name: "An Empty Camp", text: "Someone left in a hurry: the fire is still burning, the bedrolls still laid out.",
     options: [
       { id: "camp", label: "MAKE CAMP", text: "A campfire: rest, focus, raise or train, and change the party.", do: [{ op: "camp" }] },
-      { id: "search", label: "SEARCH THE PACKS", text: "A tonic, an ether or a phoenix feather, and 20 gold.", do: [{ op: "gold", amount: 20 }, { op: "chance", pct: 40, then: [{ op: "supply", id: "tonic" }], else: [{ op: "chance", pct: 50, then: [{ op: "supply", id: "ether" }], else: [{ op: "supply", id: "phoenix" }] }] }] },
+      { id: "search", label: "SEARCH THE PACKS", text: "A potion, a tonic or a phoenix feather, and 20 gold.", do: [{ op: "gold", amount: 20 }, { op: "chance", pct: 40, then: [{ op: "supply", id: "potion" }], else: [{ op: "chance", pct: 50, then: [{ op: "supply", id: "tonic" }], else: [{ op: "supply", id: "phoenix" }] }] }] },
     ],
   },
   {

@@ -122,7 +122,11 @@ export const RULES = {
    * accessible slow abilities"); a long ability in the third slot is ready at three quarters of its cooldown, not never. 8 / 4 / 0 flat
    * ticks "felt like the system had been gutted".
    */
-  opening: { min: 0.2, max: 0.6, slotShares: [0.75, 0.5, 0.4] }, // Round 6: the third slot two fifths charged (was a quarter).
+  /**
+   * Round 6 (the director's): flat head starts again, big, medium and small, none zero (shares of the cooldown averaged every slot onto the
+   * same tick), and cooldowns carry between fights (engine 0.15), so what matters is how much of what's left the slot takes off.
+   */
+  opening: { min: 0.2, max: 0.6, slots: [9, 6, 3] },
   /** Each physical hit loses this share of the target's Armor: Armor 5 takes 600 off, Armor 8 nearly blanks a sword. */
   armorRatio: 0.12,
   /**
@@ -174,7 +178,7 @@ export const COST = { short: 300, medium: 500, long: 800 } as const; // Round 3:
  * campaign runs the party regained 110% of the MP it spent, and the casters spent 1% to 4% of their time short of MP (the
  * Geomancer 14%), against 5c's intent that casters are gated by it; the walls, at 96% to 98% MP, don't feel the step.
  */
-export const MP_REGEN = { every: 4, share: 0.015 }; // Round 5: 1.5% (2.5% in round 3): with Stand fast's Clarity every 16 ticks the party regained all it spent again, and no caster was ever short. // Step 5f: 0.03, then round 2: 0.02 (at 0.03 and the first ladder the party regained 115% of what it spent). Every cost is on one ladder (classes.ts), so every class feels MP.
+export const MP_REGEN = { every: 4, share: 0.008 }; // Step 5g round 6 (the director's: mana must be scarce now that potions and tonics give the player agency): 0.8% (was 1.5%), with every cost up by about a third. // Round 5: 1.5% (2.5% in round 3): with Stand fast's Clarity every 16 ticks the party regained all it spent again, and no caster was ever short. // Step 5f: 0.03, then round 2: 0.02 (at 0.03 and the first ladder the party regained 115% of what it spent). Every cost is on one ladder (classes.ts), so every class feels MP.
 
 // ─── Damage ──────────────────────────────────────────────────────────────────
 
@@ -222,7 +226,7 @@ export const ENEMY_HIT = {
   flatten: 0.4,
   /** Crush: knocks out any unguarded caster outright; a Guarded, Shielded Knight survives it. */
   /** Step 5g (the feel read): 0.42 (was 0.5). Three Crushes were three kills, the Guarded Bramble knight among them; at 5,000 a full-HP wall with Guard stands, a caster never does. */
-  crush: 0.5, // Step 5g round 5 (the director's): the one-shot is the Ogre Chief's identity; the other bosses get behaviours of their own.
+  crush: 0.4, // Round 6 (the director's): a little less, so a full wall with Guard stands and a crit is what one-shots it; casters still die. 0.5 landed five kills in six.
   /** Mend: the Bone Priest's heal, about a party's damage output: a mirror until the priest is stopped. Pacing pass: 1.3 (was 0.6). */
   mend: 1.3,
   /** Soulfire: deletes a caster. */
@@ -371,7 +375,7 @@ export const STATUS = {
    */
   stun: { duration: 8 }, // Step 5f: 8.
   /** The Bard's Refrain: MP a basic attack gives a random ally. */
-  refrain: { mp: 60, perAttack: 0.03 }, // Step 5f (the director's): 60 + 3% of Attack a landed basic (was 100 flat): at Attack 3,000, 150.
+  refrain: { share: 0.3 }, // Step 5g round 6 (the director's): a share of the damage a basic deals, as a heal to a random ally and as MP to a random ally (the old Cleric's Mercy was 75% at Magic 4 with no resistance anywhere; this is small).
   slow: { speed: -40, duration: 24 }, // Step 5f: 24.
   /** Pacing pass: 14 ticks, not 20. At 20 the Monk's own Flow (a 30-tick cooldown) kept it Hasted two thirds of every fight. */
   haste: { speed: 40, duration: 20 }, // Step 5f: 20, with the longer fights.

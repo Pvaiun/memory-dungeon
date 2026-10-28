@@ -439,16 +439,18 @@ function summary(): string {
     out.push(`| ${act} | ${tier} | ${xs.length} | ${pc(xs.filter((x) => x.r.won).length, xs.length)} | ${n1(mean(ticks))} | ${ticks[Math.floor(ticks.length * 0.1)]}–${ticks[Math.floor(ticks.length * 0.9)]} | ${n1(kos)} |`);
   }
   // Classes.
-  out.push("", "## Classes (over the fights the class was in)", "", "| class | fights | dealt a fight | share of party's | basic | abilities | statuses | healing done a fight | taken a fight | KO per 100 | down at (mean t) | MP spent | regained | left % | short of MP (% of its time) |", "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |");
-  const classRows: Record<string, { fights: number; dealt: number; share: number; basic: number; abil: number; status: number; healed: number; taken: number; ko: number; downAt: number[]; spent: number; gained: number; left: number[]; fizz: number; short: number[] }> = {};
+  out.push("", "## Classes (over the fights the class was in)", "", "| class | fights | arrives at HP % | arrives at MP % | dealt a fight | share of party's | basic | abilities | statuses | healing done a fight | taken a fight | KO per 100 | down at (mean t) | MP spent | regained | left % | short of MP (% of its time) |", "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |");
+  const classRows: Record<string, { fights: number; dealt: number; share: number; basic: number; abil: number; status: number; healed: number; taken: number; ko: number; downAt: number[]; spent: number; gained: number; left: number[]; fizz: number; short: number[]; hpIn: number[]; mpIn: number[] }> = {};
   const abilRows: Record<string, { present: number; casts: number; first: number[]; fizz: number; dealt: number }> = {};
   for (const { r, rd } of reads) {
     const partyIds = [...rd.units.values()].filter((u) => u.side === "party");
     const total = partyIds.reduce((s, u) => s + Object.values(rd.ut.get(u.id)!.dealt).reduce((a, b) => a + b, 0), 0);
     partyIds.forEach((u, i) => {
       const t = rd.ut.get(u.id)!;
-      const row = (classRows[u.ref] ??= { fights: 0, dealt: 0, share: 0, basic: 0, abil: 0, status: 0, healed: 0, taken: 0, ko: 0, downAt: [], spent: 0, gained: 0, left: [], fizz: 0, short: [] });
+      const row = (classRows[u.ref] ??= { fights: 0, dealt: 0, share: 0, basic: 0, abil: 0, status: 0, healed: 0, taken: 0, ko: 0, downAt: [], spent: 0, gained: 0, left: [], fizz: 0, short: [], hpIn: [], mpIn: [] });
       row.short.push(t.short);
+      // The state the unit arrived in (the reads' "fights lost before they start").
+      { const mm = r.members[i]; if (mm) { row.hpIn.push(mm.maxHp ? mm.hp / mm.maxHp : 1); if (mm.maxMp > 0) row.mpIn.push(mm.mp / mm.maxMp); } }
       const dealt = Object.values(t.dealt).reduce((a, b) => a + b, 0);
       const basic = t.dealt.basic ?? 0;
       const st = Object.entries(t.dealt).filter(([k]) => k.startsWith("status:")).reduce((a, [, v]) => a + v, 0);
@@ -466,7 +468,7 @@ function summary(): string {
     });
   }
   for (const [cls, r] of Object.entries(classRows).sort((a, b) => b[1].fights - a[1].fights)) {
-    out.push(`| ${c.classes.get(cls)!.name} | ${r.fights} | ${n0(r.dealt / r.fights)} | ${pc(r.share, r.fights)} | ${pc(r.basic, r.dealt)} | ${pc(r.abil, r.dealt)} | ${pc(r.status, r.dealt)} | ${n0(r.healed / r.fights)} | ${n0(r.taken / r.fights)} | ${n1((100 * r.ko) / r.fights)} | ${r.downAt.length ? n1(mean(r.downAt)) : "–"} | ${n0(r.spent / r.fights)} | ${n0(r.gained / r.fights)} | ${r.left.length ? pc(mean(r.left), 1) : "–"} | ${pc(mean(r.short), 1)} |`);
+    out.push(`| ${c.classes.get(cls)!.name} | ${r.fights} | ${pc(mean(r.hpIn), 1)} | ${r.mpIn.length ? pc(mean(r.mpIn), 1) : "–"} | ${n0(r.dealt / r.fights)} | ${pc(r.share, r.fights)} | ${pc(r.basic, r.dealt)} | ${pc(r.abil, r.dealt)} | ${pc(r.status, r.dealt)} | ${n0(r.healed / r.fights)} | ${n0(r.taken / r.fights)} | ${n1((100 * r.ko) / r.fights)} | ${r.downAt.length ? n1(mean(r.downAt)) : "–"} | ${n0(r.spent / r.fights)} | ${n0(r.gained / r.fights)} | ${r.left.length ? pc(mean(r.left), 1) : "–"} | ${pc(mean(r.short), 1)} |`);
   }
   out.push("", "## Abilities (over the fights they were slotted)", "", "| ability | class | word | fights | casts a fight | first cast (mean t) | dealt a cast | fizzles a fight |", "| --- | --- | --- | --- | --- | --- | --- | --- |");
   for (const [id, r] of Object.entries(abilRows).sort((a, b) => (c.abilities.get(a[0])?.class ?? "").localeCompare(c.abilities.get(b[0])?.class ?? ""))) {

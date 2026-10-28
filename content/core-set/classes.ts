@@ -35,7 +35,7 @@ export const T = {
   /** Step 5f: the ally with the least MP, for the Clarity givers (`mp_share`, engine 0.13). */
   lowestMpAlly: { side: "allies", pick: "lowest", by: "mp_share" } satisfies TargetRuleT,
   /** Step 5g: the ally with the least MP among those under half (`mpBelow`, engine 0.14), or nobody: a Clarity on a full pool was the usual case. */
-  needsMpAlly: { side: "allies", where: { mpBelow: 50 }, pick: "lowest", by: "mp_share" } satisfies TargetRuleT,
+  needsMpAlly: { side: "allies", where: { mpBelow: 50 }, ifNone: "any", pick: "lowest", by: "mp_share" } satisfies TargetRuleT, // Round 6 (the director's): a preference, never a skip: with nobody under half, the least.
   /** Step 5f: a foe in a wind-up, for Unmake (`casting`, engine 0.13). */
   castingFoe: { side: "foes", where: { casting: true }, pick: "highest", by: { stats: ["attack", "magic"] } } satisfies TargetRuleT,
   randomAlly: "ally" as const,
@@ -84,7 +84,12 @@ export const passives: StatusT[] = [
   { id: "last_rites_on", name: "LAST RITES", text: "Cooldowns halved.", label: "buff", show: "icon", stacking: "fizzle", unremovable: true, stats: [{ stat: "cooldown_reduction", flat: 100 }] },
   // Follow-up redesign (the director's): the Bard's tempo includes mana. Its old passive, Encore, went to the Cleric.
   // Step 5f (the director's): the MP given grows with Attack, so the Bard's weapon is a choice.
-  passive("refrain", "Refrain", { text: "Basic attacks give a random ally MP, more with Attack.", reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [{ op: "mp", amount: { base: STATUS.refrain.mp, scale: [{ ratio: STATUS.refrain.perAttack, stat: "attack", of: "holder" }] }, to: { side: "allies", pick: "random" } }] }] }),
+  // Step 5g round 6 (the director's rework): the old Cleric's Mercy comes to the Bard, small: each landed basic attack heals a random ally for a share of
+  // the damage dealt, and gives a random ally MP for the same share; so its weapon is a choice against the foe's Armor and resistance.
+  passive("refrain", "Refrain", { text: "Basic attacks heal a random ally and give a random ally MP, each a share of the damage dealt.", reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [
+    { op: "heal", amount: { scale: [{ ratio: STATUS.refrain.share, amount: true }] }, to: { side: "allies", pick: "random" } },
+    { op: "mp", amount: { scale: [{ ratio: STATUS.refrain.share, amount: true }] }, to: { side: "allies", pick: "random" } },
+  ] }] }),
   passive("cold_hex", "Cold hex", { text: "Basic attacks add a few Chill.", reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("chill", { stacks: own("few", "magic"), to: "other" })] }] }),
   passive("iron_palm", "Iron palm", {
     text: "Basic attacks, and Double strike's second strike, add a few Sunder.",
@@ -128,6 +133,8 @@ export const passives: StatusT[] = [
 
 // ─── Abilities ───────────────────────────────────────────────────────────────
 
+// Step 5g round 6 (the director's): every cost up by about a third (skills 200 / 325 / 500 / 750, spells 400 / 650 / 1,000 / 1,500) and MP regen
+// halved, so that potions, tonics and Clarity matter: mana is scarce and the player spends it.
 // MP costs are set by hand, ability by ability (step 5c, the director's: no rule from a stat to a cost). Step 5f (the director's:
 // "mana needs to be normalized to values that make sense across the roster", and "the more a unit is a caster the more mana
 // matters"): two tiers on one ladder by cooldown word. Skills (the physical classes' and the Valkyrie's spear): 150 / 250 / 400 / 600.
@@ -141,165 +148,166 @@ const a = (cls: string, id: string, name: string, text: string, body: Partial<Ab
 export const abilities: A[] = [
   // Knight
   // Round 5: Fortify medium (the Knight cast 7 times a regular fight on two shorts).
-  a("knight", "fortify", "Fortify", "Guards the ally with the lowest share of HP.", { ...timing("medium", "quick"), mp: 250, target: T.lowestShareAlly, do: [apply("guard")] }),
+  a("knight", "fortify", "Fortify", "Guards the ally with the lowest share of HP.", { ...timing("medium", "quick"), mp: 325, target: T.lowestShareAlly, do: [apply("guard")] }),
   // Step 5c (the director's, to try): a long cooldown (was medium). How often it comes was the Knight's strength; its size isn't,
   // since a Shield can't pass half its target's max HP.
   // Step 5f (the director's): Protect (a Shield on the lowest ally) overlapped the Hoplite; Stand fast is Taunt on the Knight and mana for an ally.
   a("knight", "stand_fast", "Stand fast", "Taunts, and gives Clarity to the ally with the least MP.", {
     // Round 4: short (was medium): the first Taunt came at tick 18, and the casters died at 17.
     // Step 5g round 5 (the director's): the Clarity goes to an ally under half MP, or nobody; the Taunt always lands.
-    ...timing("short", "quick"), mp: 150, target: "self", do: [apply("taunt"), apply("clarity", { to: T.needsMpAlly })],
+    ...timing("short", "quick"), mp: 200, target: "self", do: [apply("taunt"), apply("clarity", { to: T.needsMpAlly })],
   }),
   // Pacing pass: a light hit (was normal): at normal it was seven or eight of the Knight's swings, a tank's nuke.
   a("knight", "shield_bash", "Shield bash", "Bashes a foe with the shield, which scales from max HP, and Stuns it.", {
-    ...timing("medium", "quick"), mp: 250, target: lacking({ side: "foes" }, "stun", true), do: [phys("blunt", hit("max_hp", "light"), { apply: [{ status: "stun" }] })], // Step 5f (the director's): from max HP, not Armor: the health tank.
+    ...timing("medium", "quick"), mp: 325, target: lacking({ side: "foes" }, "stun", true), do: [phys("blunt", hit("max_hp", "light"), { apply: [{ status: "stun" }] })], // Step 5f (the director's): from max HP, not Armor: the health tank.
   }),
   // Cleric. Follow-up redesign (the director's): no free heal (Mercy healed three quarters of every staff hit), an active
   // healer that spends MP. Prayer (Regen on every ally) and Purify (a cleanse) became Renew, on one ally that's never idle.
   a("cleric", "renew", "Renew", "Cleanses an ally with a debuff and gives it Regen; with nobody debuffed, Regen on the lowest ally.", {
-    ...timing("medium", "normal"), mp: 500, target: { side: "allies", where: { debuffs: true }, ifNone: "any", pick: "lowest", by: "hp_share" }, do: [{ op: "remove", label: "debuff" }, apply("regen")],
+    ...timing("medium", "normal"), mp: 650, target: { side: "allies", where: { debuffs: true }, ifNone: "any", pick: "lowest", by: "hp_share" }, do: [{ op: "remove", label: "debuff" }, apply("regen")],
   }),
   a("cleric", "cure", "Cure", "A quick, small heal on the lowest ally.", {
     // Step 5e: 0.55 of Magic for 1,000 MP (was 0.45 for 1,280): Cure healed a third of a unit's HP a cast while the Valkyrie's Rally healed half for half the MP, so the healer was the worse healer.
     // Step 5g round 3: waits for an ally under 80% (was 100%): "heals overkill or nothing"; a 2,600 Cure on a unit missing 300 HP was the Cleric's most frequent act.
-    ...timing("short", "quick"), mp: 300, ...waitsFor("allies", { hpBelow: 80 }), target: T.lowestShareAlly, do: [{ op: "heal", amount: from("magic", 0.65) }], // round 5: 0.65, so the healer out-heals the Valkyrie.
+    ...timing("short", "quick"), mp: 400, ...waitsFor("allies", { hpBelow: 80 }), target: T.lowestShareAlly, do: [{ op: "heal", amount: from("magic", 0.65) }], // round 5: 0.65, so the healer out-heals the Valkyrie.
   }),
   a("cleric", "raise", "Raise", "Revives a random knocked-out ally with half its HP.", {
-    ...timing("very_long", "very_long"), mp: 1200, ...waitsFor("allies", { ko: true }), target: T.koAlly, do: [{ op: "revive", hp: { scale: [{ ratio: REVIVE.half, stat: "max_hp", of: "target" }] } }],
+    ...timing("very_long", "very_long"), mp: 1500, ...waitsFor("allies", { ko: true }), target: T.koAlly, do: [{ op: "revive", hp: { scale: [{ ratio: REVIVE.half, stat: "max_hp", of: "target" }] } }],
   }),
   // Ranger
   // Step 5c (the director's): Bleed for Poison, stacks from Attack, at a random foe (it sought a foe without Poison).
-  a("ranger", "barbed_arrow", "Barbed arrow", "A barbed arrow at a random foe, adding several Bleed.", { ...timing("short", "quick"), mp: 150, do: [phys("pierce", hit("attack", "light"), { apply: [{ status: "bleed", stacks: stacks("several", "attack") }] })] }),
+  a("ranger", "barbed_arrow", "Barbed arrow", "A barbed arrow at a random foe, adding several Bleed.", { ...timing("short", "quick"), mp: 200, do: [phys("pierce", hit("attack", "light"), { apply: [{ status: "bleed", stacks: stacks("several", "attack") }] })] }),
   a("ranger", "fire_arrow", "Fire arrow", "A burning arrow at the foe with the most Burn, adding many.", {
     // Campaign pass: a heavy hit, not normal. The AI playtester never wanted the Ranger after the first node.
-    ...timing("medium", "long"), mp: 250, target: T.mostFoe("burn"), do: [magic("fire", hit("attack", "normal"), { apply: [{ status: "burn", stacks: stacks("many", "attack") }] })],
+    ...timing("medium", "long"), mp: 325, target: T.mostFoe("burn"), do: [magic("fire", hit("attack", "normal"), { apply: [{ status: "burn", stacks: stacks("many", "attack") }] })],
   }),
   a("ranger", "rending_arrow", "Rending arrow", "An arrow at the foe with the most Sunder, adding several.", {
-    ...timing("medium", "normal"), mp: 250, target: T.mostFoe("sunder"), do: [phys("pierce", hit("attack", "heavy"), { apply: [{ status: "sunder", stacks: stacks("several", "attack") }] })],
+    ...timing("medium", "normal"), mp: 325, target: T.mostFoe("sunder"), do: [phys("pierce", hit("attack", "heavy"), { apply: [{ status: "sunder", stacks: stacks("several", "attack") }] })],
   }),
   // Bramble knight
-  a("bramble_knight", "thicket", "Thicket", "Taunts and Guards itself.", { ...timing("short", "quick"), mp: 150, target: "self", do: [apply("taunt"), apply("guard")] }),
-  a("bramble_knight", "regrowth", "Regrowth", "Regen on the lowest ally.", { ...timing("medium", "normal"), mp: 250, target: T.lowestShareAlly, do: [apply("regen")] }),
-  a("bramble_knight", "bramble_lash", "Bramble lash", "Lashes a random foe with its thorns.", { ...timing("short", "quick"), mp: 150, do: [phys("pierce", { scale: [{ ratio: 4.5, stat: "thorns" }] })] }),
+  a("bramble_knight", "thicket", "Thicket", "Taunts and Guards itself.", { ...timing("short", "quick"), mp: 200, target: "self", do: [apply("taunt"), apply("guard")] }),
+  a("bramble_knight", "regrowth", "Regrowth", "Regen on the lowest ally.", { ...timing("medium", "normal"), mp: 325, target: T.lowestShareAlly, do: [apply("regen")] }),
+  a("bramble_knight", "bramble_lash", "Bramble lash", "Lashes a random foe with its thorns.", { ...timing("short", "quick"), mp: 200, do: [phys("pierce", { scale: [{ ratio: 4.5, stat: "thorns" }] })] }),
   // Hoplite
-  a("hoplite", "aspis", "Aspis", "Aegis on the lowest ally.", { ...timing("long", "quick"), mp: 400, ...waitsFor("allies", { lacks: "aegis" }), target: lacking(T.lowestShareAlly, "aegis"), do: [apply("aegis")] }),
-  a("hoplite", "paired_guard", "Paired guard", "Guards itself and the other lowest ally.", { ...timing("medium", "normal"), mp: 250, target: "self", do: [apply("guard"), apply("guard", { to: T.otherLowestShareAlly })] }),
+  a("hoplite", "aspis", "Aspis", "Aegis on the lowest ally.", { ...timing("long", "quick"), mp: 500, ...waitsFor("allies", { lacks: "aegis" }), target: lacking(T.lowestShareAlly, "aegis"), do: [apply("aegis")] }),
+  a("hoplite", "paired_guard", "Paired guard", "Guards itself and the other lowest ally.", { ...timing("medium", "normal"), mp: 325, target: "self", do: [apply("guard"), apply("guard", { to: T.otherLowestShareAlly })] }),
   // Step 5e: 1.5 of Attack (was a normal hit, 0.75): Phalanx triples the swing and not the thrust, so the thrust dealt 0.9 of the Hoplite's own swing.
-  a("hoplite", "spear_thrust", "Spear thrust", "A thrust at a random foe that adds a few Sunder.", { ...timing("medium", "long"), mp: 250, do: [phys("pierce", from("attack", 1.1), { apply: [{ status: "sunder", stacks: stacks("few", "attack") }] })] }),
+  a("hoplite", "spear_thrust", "Spear thrust", "A thrust at a random foe that adds a few Sunder.", { ...timing("medium", "long"), mp: 325, do: [phys("pierce", from("attack", 1.1), { apply: [{ status: "sunder", stacks: stacks("few", "attack") }] })] }),
   // Paladin
-  a("paladin", "sanctuary", "Sanctuary", "Ward on every ally.", { ...timing("long", "long"), mp: 800, target: T.everyAlly, do: [apply("ward")] }),
+  a("paladin", "sanctuary", "Sanctuary", "Ward on every ally.", { ...timing("long", "long"), mp: 1000, target: T.everyAlly, do: [apply("ward")] }),
   // Step 5f (the director's): Absolve heals as it cleanses, and fires whether or not there's a debuff to lift.
   a("paladin", "absolve", "Absolve", "Cleanses and heals itself and the lowest other ally; the heal scales from Magic.", {
-    ...timing("medium", "normal"), mp: 500, ...waitsFor("allies", { hpBelow: 100 }), target: "self",
+    ...timing("medium", "normal"), mp: 650, ...waitsFor("allies", { hpBelow: 100 }), target: "self",
     do: [{ op: "remove", label: "debuff" }, { op: "heal", amount: from("magic", 0.4) }, { op: "remove", label: "debuff", to: T.otherLowestShareAlly }, { op: "heal", amount: from("magic", 0.4), to: T.otherLowestShareAlly }],
   }),
   // Step 5c (the director's): Smite Burns, on a medium cooldown (was long).
   // Step 5g round 4: a long wind-up (6), not very long (8): the Paladin cast nothing in three of twelve read fights, dying in Smite's wind-up.
   a("paladin", "smite", "Smite", "Heavy Light damage to the foe with the highest Attack or Magic, adding several Burn.", {
-    ...timing("medium", "long"), mp: 500, target: T.highestAMFoe, do: [magic("light", hit("magic", "normal"), { apply: [{ status: "burn", stacks: stacks("several", "magic") }] })],
+    ...timing("medium", "long"), mp: 650, target: T.highestAMFoe, do: [magic("light", hit("magic", "normal"), { apply: [{ status: "burn", stacks: stacks("several", "magic") }] })],
   }),
   // Valkyrie
   a("valkyrie", "gale_spear", "Gale spear", "Three quick Wind hits on a foe that isn't Taunting, each adding a few Shock.", {
     // Campaign pass: 0.1 of Attack a hit, not light's 0.2. Three undodgeable hits with Seek on a short cooldown made the Valkyrie the best class on every node.
     // Step 5e: 0.2 a hit (was 0.25): Gale spear was 45% of the Valkyrie's damage at 2.7 swings a cast, 1.4 casts a regular fight, and its parties won 15 to 32 points more than parties without it.
     // Round 6: 500, 800 and 1,500 MP (were 400, 650 and 1,200): a spear that heals and revives is a mid-tier caster, and it was short of MP 3% of its time.
-    ...timing("short", "quick"), mp: 150, seek: true, target: T.notTauntingFoe, do: [magic("wind", from("attack", 0.09), { hits: 3, apply: [{ status: "shock", stacks: stacks("few", "attack", 0.5) }] })],
+    ...timing("short", "quick"), mp: 200, seek: true, target: T.notTauntingFoe, do: [magic("wind", from("attack", 0.09), { hits: 3, apply: [{ status: "shock", stacks: stacks("few", "attack", 0.5) }] })],
   }),
   a("valkyrie", "rally", "Rally", "Heals the lowest ally; the amount scales from Magic.", {
     // Campaign pass: 0.3 of Magic, not 0.6.
     // Step 5e: 0.55 of Magic (was 0.7): see Cure. The Valkyrie healed more a fight than the Cleric and its parties won 13 to 31 points more than parties without it.
-    ...timing("medium", "normal"), mp: 500, ...waitsFor("allies", { hpBelow: 80 }), target: T.lowestShareAlly, do: [{ op: "heal", amount: from("magic", 0.45) }], // round 5: 0.45; at 0.55 the Valkyrie still healed as much a fight as the Cleric. // Step 5g round 3: waits for 80%.
+    ...timing("medium", "normal"), mp: 650, ...waitsFor("allies", { hpBelow: 80 }), target: T.lowestShareAlly, do: [{ op: "heal", amount: from("magic", 0.45) }], // round 5: 0.45; at 0.55 the Valkyrie still healed as much a fight as the Cleric. // Step 5g round 3: waits for 80%.
   }),
   a("valkyrie", "valhalla", "Valhalla", "Revives a random knocked-out ally with a tenth of its HP, every action ready.", {
-    ...timing("very_long", "quick"), mp: 1200, ...waitsFor("allies", { ko: true }), target: T.koAlly, do: [{ op: "revive", hp: { scale: [{ ratio: REVIVE.tenth, stat: "max_hp", of: "target" }] }, ready: true }],
+    ...timing("very_long", "quick"), mp: 1500, ...waitsFor("allies", { ko: true }), target: T.koAlly, do: [{ op: "revive", hp: { scale: [{ ratio: REVIVE.tenth, stat: "max_hp", of: "target" }] }, ready: true }],
   }),
   // Bard
   // Step 5e: Haste on the ally with the highest Attack or Magic (was a random ally), and the Bard's songs at 400 MP (were 650): it never
   // ran short of MP, and its parties won 13 to 25 points less than parties without it.
   // Step 5f (the director's): Allegro and War ballad merged into one short song on a random ally, and a small heal on every ally in the slot it frees.
   // Round 6: several Might (was many: 20 stacks, the cap, every 14 ticks).
-  a("bard", "anthem", "Anthem", "Haste and several Might on a random ally.", { ...timing("short", "quick"), mp: 300, target: "ally", do: [apply("haste"), apply("might", { stacks: stacks("several", "magic") })] }),
+  // Step 5g round 6 (the director's): merging the two songs was a mistake. War ballad: a few Might on every ally on a short cooldown; Allegro: Haste on every ally on a medium one.
+  a("bard", "war_ballad", "War ballad", "A few Might on every ally.", { ...timing("short", "quick"), mp: 400, target: T.everyAlly, do: [apply("might", { stacks: stacks("few", "magic") })] }),
   // Step 5g round 3: 0.25 of Magic (was 0.15: 450 an ally against 6,800 incoming), and it waits for an ally under 80%.
-  a("bard", "chorus", "Chorus", "A small heal on every ally; the amount scales from Magic.", { ...timing("short", "normal"), mp: 300, ...waitsFor("allies", { hpBelow: 80 }), target: T.everyAlly, do: [{ op: "heal", amount: from("magic", 0.25) }] }),
+  a("bard", "allegro", "Allegro", "Haste on every ally.", { ...timing("medium", "quick"), mp: 650, target: T.everyAlly, do: [apply("haste")] }),
   // Step 5c (the director's): Lullaby (Slow on one foe) became a Shock on every foe.
   // Many, not several: at several an AI playtester saw it peak at 10 stacks for under 2,000 a fight, the Bard a passenger.
   // Step 5g round 4: several (was many): with gear and the rogue's upgrade one chord put 40 Shock (the cap) on a boss, which then paid 3,200 for a 560 swing.
-  a("bard", "thunder_chord", "Thunder chord", "Several Shock on every foe.", { ...timing("medium", "normal"), mp: 500, target: T.everyFoe, do: [apply("shock", { stacks: stacks("several", "magic") })] }),
+  a("bard", "thunder_chord", "Thunder chord", "Several Shock on every foe.", { ...timing("medium", "normal"), mp: 650, target: T.everyFoe, do: [apply("shock", { stacks: stacks("several", "magic") })] }),
   // Hexer
   // Step 5e: 1,200, 900 and 1,000 MP (were 1,600, 1,300 and 1,300): the Hexer's parties won 9 to 17 points less than parties without it, and it cast 1.3 abilities a regular fight.
   // Step 5f (the director's rework): the debuff bot. Hush (Silence on one foe) became Malison, Unravel (one buff off one foe) became Unmake.
-  a("hexer", "malison", "Malison", "A few Burn and a few Shock on every foe.", { ...timing("short", "normal"), mp: 300, target: T.everyFoe, do: [apply("burn", { stacks: stacks("few", "magic") }), apply("shock", { stacks: stacks("few", "magic") })] }),
+  a("hexer", "malison", "Malison", "A few Burn and a few Shock on every foe.", { ...timing("short", "normal"), mp: 400, target: T.everyFoe, do: [apply("burn", { stacks: stacks("few", "magic") }), apply("shock", { stacks: stacks("few", "magic") })] }),
   a("hexer", "unmake", "Unmake", "Silences the casting foe with the highest Attack or Magic and strips its buffs. Waits for a foe to cast.", {
-    ...timing("medium", "quick"), mp: 500, ...waitsFor("foes", { casting: true }), target: T.castingFoe, do: [apply("silence"), { op: "remove", label: "buff" }],
+    ...timing("medium", "quick"), mp: 650, ...waitsFor("foes", { casting: true }), target: T.castingFoe, do: [apply("silence"), { op: "remove", label: "buff" }],
   }),
-  a("hexer", "enfeeble", "Enfeeble", "Weakens the foe with the highest Attack or Magic and adds several Sunder.", { ...timing("short", "normal"), mp: 300, target: T.highestAMFoe, do: [apply("weaken"), apply("sunder", { stacks: stacks("several", "magic") })] }), // Step 5f: Sunder for Slow (Chill covers it).
+  a("hexer", "enfeeble", "Enfeeble", "Weakens the foe with the highest Attack or Magic and adds several Sunder.", { ...timing("short", "normal"), mp: 400, target: T.highestAMFoe, do: [apply("weaken"), apply("sunder", { stacks: stacks("several", "magic") })] }), // Step 5f: Sunder for Slow (Chill covers it).
   // Monk
-  a("monk", "flow", "Flow", "Haste on itself.", { ...timing("short", "quick"), mp: 150, target: "self", do: [apply("haste")] }),
+  a("monk", "flow", "Flow", "Haste on itself.", { ...timing("short", "quick"), mp: 200, target: "self", do: [apply("haste")] }),
   a("monk", "burning_fist", "Burning fist", "Three quick Fire hits on the foe with the most Burn, each adding a few.", {
     // Step 5g round 2: about 3 Burn a hit, 9 a cast at base (was 5 a hit): three touches on a short cooldown made the Monk a bigger Burn engine than the Pyromancer (a near-dead Monk's one cast took a ghoul to 40 stacks and 39% of a fight's damage).
-    ...timing("short", "quick"), mp: 150, target: T.mostFoe("burn"), do: [magic("fire", from("attack", 0.11), { hits: 3, apply: [{ status: "burn", stacks: stacks("few", "attack", 0.6) }] })],
+    ...timing("short", "quick"), mp: 200, target: T.mostFoe("burn"), do: [magic("fire", from("attack", 0.11), { hits: 3, apply: [{ status: "burn", stacks: stacks("few", "attack", 0.6) }] })],
   }),
   a("monk", "pressure_point", "Pressure point", "Stuns the foe with the highest Attack or Magic, past any guard.", {
-    ...timing("medium", "normal"), mp: 250, seek: true, target: lacking(T.highestAMFoe, "stun", true), do: [phys("blunt", hit("attack", "normal"), { apply: [{ status: "stun" }] })],
+    ...timing("medium", "normal"), mp: 325, seek: true, target: lacking(T.highestAMFoe, "stun", true), do: [phys("blunt", hit("attack", "normal"), { apply: [{ status: "stun" }] })],
   }),
   // Assassin
-  a("assassin", "vanish", "Vanish", "Goes Hidden.", { ...timing("short", "quick"), mp: 150, ...waitsFor("self", { lacks: "hidden" }), target: "self", do: [apply("hidden")] }),
-  a("assassin", "backstab", "Backstab", "Heavy damage, scaling from Crit chance, to the foe with the lowest HP, past any guard.", { ...timing("medium", "normal"), mp: 250, seek: true, target: T.lowestHpFoe, do: [phys("pierce", hit("crit_chance", "heavy"))] }),
+  a("assassin", "vanish", "Vanish", "Goes Hidden.", { ...timing("short", "quick"), mp: 200, ...waitsFor("self", { lacks: "hidden" }), target: "self", do: [apply("hidden")] }),
+  a("assassin", "backstab", "Backstab", "Heavy damage, scaling from Crit chance, to the foe with the lowest HP, past any guard.", { ...timing("medium", "normal"), mp: 325, seek: true, target: T.lowestHpFoe, do: [phys("pierce", hit("crit_chance", "heavy"))] }),
   a("assassin", "garrote", "Garrote", "Silences a random foe that isn't Taunting, past any guard.", {
-    ...timing("medium", "quick"), mp: 250, seek: true, target: lacking(T.notTauntingFoe, ["taunt", "silence"], true), do: [phys("pierce", hit("attack", "normal"), { apply: [{ status: "silence" }] })],
+    ...timing("medium", "quick"), mp: 325, seek: true, target: lacking(T.notTauntingFoe, ["taunt", "silence"], true), do: [phys("pierce", hit("attack", "normal"), { apply: [{ status: "silence" }] })],
   }),
   // Vampire
   // Step 5e: 0.5 of max HP (was a normal hit, 0.75): at 4 swings a cast twice a fight it was 60% of the Vampire's damage, and
   // through Lifesteal most of the 3,850 HP it healed itself a fight; parties with the Vampire won 37 points more than without.
-  a("vampire", "blood_drain", "Blood drain", "Dark damage scaling from max HP to a random foe, which is Weakened.", { ...timing("short", "quick"), mp: 100, do: [magic("dark", from("max_hp", 0.4), { apply: [{ status: "weaken" }] })] }), // Step 5g round 4: 100 MP (was 150): the Vampire arrived dry in four of six read fights; its 2,000 pool is the roster's smallest and its loop the most frequent. // round 6: 0.4 (the Vampire still +11 / +25 / +9 at 0.5).
+  a("vampire", "blood_drain", "Blood drain", "Dark damage scaling from max HP to a random foe, which is Weakened.", { ...timing("short", "quick"), mp: 125, do: [magic("dark", from("max_hp", 0.4), { apply: [{ status: "weaken" }] })] }), // Step 5g round 4: 100 MP (was 150): the Vampire arrived dry in four of six read fights; its 2,000 pool is the roster's smallest and its loop the most frequent. // round 6: 0.4 (the Vampire still +11 / +25 / +9 at 0.5).
   // Step 5f (the director's): Wither's Rot met one enemy heal in the whole roster. Blood gift spends the Vampire's own HP on an ally.
   a("vampire", "blood_gift", "Blood gift", "Spends a fifth of its max HP to heal the lowest other ally for as much, and gives it Clarity.", {
     // Step 5g round 3: 300 MP (was 500) and it waits for an ally under 80%: it already costs a fifth of the Vampire's HP, and the Vampire was the one class short of MP (21% of its time).
     // Round 5 (the director's): it also waits until the Vampire itself is above 35% HP, so the price (a fifth) never kills it.
-    ...timing("medium", "normal"), mp: 300, if: [{ side: "others", where: { hpBelow: 80 } }, { side: "self", where: { hpAtLeast: 35 } }], target: T.otherLowestShareAlly,
+    ...timing("medium", "normal"), mp: 400, if: [{ side: "others", where: { hpBelow: 80 } }, { side: "self", where: { hpAtLeast: 35 } }], target: T.otherLowestShareAlly,
     do: [apply("blood_price", { to: { side: "self" } }), { op: "heal", amount: from("max_hp", 0.2) }, apply("clarity")],
   }),
-  a("vampire", "frenzy", "Frenzy", "Several Might on itself.", { ...timing("medium", "quick"), mp: 300, target: "self", do: [apply("might", { stacks: stacks("several", "attack") })] }), // Step 5g round 3: 300 MP (was 500).
+  a("vampire", "frenzy", "Frenzy", "Several Might on itself.", { ...timing("medium", "quick"), mp: 400, target: "self", do: [apply("might", { stacks: stacks("several", "attack") })] }), // Step 5g round 3: 300 MP (was 500).
   // Pyromancer
-  a("pyromancer", "firebolt", "Firebolt", "Fire at the foe with the most Burn, adding several.", { ...timing("short", "normal"), mp: 300, target: T.mostFoe("burn"), do: [magic("fire", hit("magic", "light"), { apply: [{ status: "burn", stacks: stacks("several", "magic", BURN_STACKS) }] })] }),
+  a("pyromancer", "firebolt", "Firebolt", "Fire at the foe with the most Burn, adding several.", { ...timing("short", "normal"), mp: 400, target: T.mostFoe("burn"), do: [magic("fire", hit("magic", "light"), { apply: [{ status: "burn", stacks: stacks("several", "magic", BURN_STACKS) }] })] }),
   // Campaign pass: normal hits (0.35 of Magic), not light. Squishy damage dealers were in few winning builds; the run's attrition favours sustain.
   // Pacing pass: a light hit on each (was normal): about one swing a foe, for every foe.
-  a("pyromancer", "fireball", "Fireball", "Fire on every foe, adding a few Burn to each.", { ...timing("medium", "long"), mp: 800, target: T.everyFoe, do: [magic("fire", hit("magic", "touch"), { apply: [{ status: "burn", stacks: stacks("few", "magic", BURN_STACKS) }] })] }),
+  a("pyromancer", "fireball", "Fireball", "Fire on every foe, adding a few Burn to each.", { ...timing("medium", "long"), mp: 1000, target: T.everyFoe, do: [magic("fire", hit("magic", "touch"), { apply: [{ status: "burn", stacks: stacks("few", "magic", BURN_STACKS) }] })] }),
   a("pyromancer", "pyre", "Pyre", "Heavy Fire on the foe with the most Burn, rising with each stack. The Burn stays.", {
     // Round 5: medium (was long): on a long cooldown with a 10-tick wind-up, a caster that lives 19 ticks cast it 0.03 times a fight.
     // Step 5g: 200 a stack (was 300), with Burn uncapped: at 25 stacks a Pyre is 9,250, the ramp's payoff, not a second ramp.
-    ...timing("medium", "very_long"), mp: 1200, target: T.mostFoe("burn"), do: [magic("fire", { scale: [{ ratio: HIT.heavy, stat: "magic" }, { ratio: 200, stacks: "burn", of: "target" }] })],
+    ...timing("medium", "very_long"), mp: 1500, target: T.mostFoe("burn"), do: [magic("fire", { scale: [{ ratio: HIT.heavy, stat: "magic" }, { ratio: 200, stacks: "burn", of: "target" }] })],
   }),
   // Frostweaver
   // Step 5g (the director's deep freeze with upkeep): about 6 Chill a lance at Magic 4 (was 16 against a cap of 12: one cast froze a foe solid). The third lance, or the second with a Blizzard between, reaches 12; a stack thaws every 6 ticks.
   // Round 6: ×0.4 (was 0.6): with gear and the rogue's upgrade a lance put 12 Chill, the cap, in one cast, an instant 6,630 shatter and Stun for 300 MP every 13 ticks.
-  a("frostweaver", "frost_lance", "Frost lance", "Ice at the foe with the most Chill, adding several.", { ...timing("short", "normal"), mp: 300, target: T.mostFoe("chill"), do: [magic("ice", hit("magic", "light"), { apply: [{ status: "chill", stacks: stacks("several", "magic", 0.4) }] })] }),
+  a("frostweaver", "frost_lance", "Frost lance", "Ice at the foe with the most Chill, adding several.", { ...timing("short", "normal"), mp: 400, target: T.mostFoe("chill"), do: [magic("ice", hit("magic", "light"), { apply: [{ status: "chill", stacks: stacks("several", "magic", 0.4) }] })] }),
   // Campaign pass: 0.3 of Magic, not light's 0.2, for the same reason as Fireball.
   // Step 5e: Blizzard 1,000 MP (was 1,300): cast 0.44 times a regular fight.
-  a("frostweaver", "blizzard", "Blizzard", "Ice on every foe, adding a few Chill to each.", { ...timing("medium", "long"), mp: 800, target: T.everyFoe, do: [magic("ice", hit("magic", "touch"), { apply: [{ status: "chill", stacks: stacks("few", "magic", 0.35) }] })] }), // Step 5g: about 2 a foe (round 6: 0.35).
+  a("frostweaver", "blizzard", "Blizzard", "Ice on every foe, adding a few Chill to each.", { ...timing("medium", "long"), mp: 1000, target: T.everyFoe, do: [magic("ice", hit("magic", "touch"), { apply: [{ status: "chill", stacks: stacks("few", "magic", 0.35) }] })] }), // Step 5g: about 2 a foe (round 6: 0.35).
   // Step 5e: 400 MP (was 1,600: it cost more than the Clarity it gave back, and fired 0.04 times a regular fight).
   // Step 5g round 5 (the director's: "a strictly worse version of the Knight's Clarity"): Clarity to an ally under half MP, and a few Chill on every foe, so it feeds the shatter too.
-  a("frostweaver", "stillness", "Stillness", "Clarity on the ally with the least MP, if one is under half, and a few Chill on every foe.", { ...timing("medium", "quick"), mp: 500, target: T.everyFoe, do: [apply("chill", { stacks: stacks("few", "magic", 0.5) }), apply("clarity", { to: T.needsMpAlly })] }),
+  a("frostweaver", "stillness", "Stillness", "Clarity on the ally with the least MP, if one is under half, and a few Chill on every foe.", { ...timing("medium", "quick"), mp: 650, target: T.everyFoe, do: [apply("chill", { stacks: stacks("few", "magic", 0.5) }), apply("clarity", { to: T.needsMpAlly })] }),
   // Stormcaller
   a("stormcaller", "chain_lightning", "Chain lightning", "Lightning at a random foe, then up to three others, adding a few Shock to each.", {
-    ...timing("short", "quick"), mp: 500,
+    ...timing("short", "quick"), mp: 650,
     do: [
       // Pacing pass: 0.6 and 0.3 of Magic (were normal and light), so four foes take about two and a half swings, not five.
       magic("lightning", hit("magic", "light"), { apply: [{ status: "shock", stacks: stacks("few", "magic", SHOCK_STACKS) }] }),
       magic("lightning", hit("magic", "touch"), { apply: [{ status: "shock", stacks: stacks("few", "magic", SHOCK_STACKS) }], to: T.threeOtherFoes }),
     ],
   }),
-  a("stormcaller", "thunderstorm", "Thunderstorm", "Lightning on every foe, adding a few Shock to each.", { ...timing("medium", "normal"), mp: 800, target: T.everyFoe, do: [magic("lightning", hit("magic", "touch"), { apply: [{ status: "shock", stacks: stacks("few", "magic", SHOCK_STACKS) }] })] }),
+  a("stormcaller", "thunderstorm", "Thunderstorm", "Lightning on every foe, adding a few Shock to each.", { ...timing("medium", "normal"), mp: 1000, target: T.everyFoe, do: [magic("lightning", hit("magic", "touch"), { apply: [{ status: "shock", stacks: stacks("few", "magic", SHOCK_STACKS) }] })] }),
   // Step 5e: 400 MP (was 1,200 for the same Haste the Monk's Flow gives for 100; it fired 0.02 times a regular fight).
   // Round 5: Static charge medium and quick (was long with a 6-tick wind-up: 0.06 casts a fight).
-  a("stormcaller", "static_charge", "Static charge", "Haste on itself.", { ...timing("medium", "quick"), mp: 500, target: "self", do: [apply("haste")] }),
+  a("stormcaller", "static_charge", "Static charge", "Haste on itself.", { ...timing("medium", "quick"), mp: 650, target: "self", do: [apply("haste")] }),
   // Geomancer
   a("geomancer", "earthen_shell", "Earthen shell", "Shields itself and the other lowest ally; the amount scales from Armor.", {
-    ...timing("medium", "normal"), mp: 500, ...waitsFor("allies", { belowCap: "shield" }), target: "self",
+    ...timing("medium", "normal"), mp: 650, ...waitsFor("allies", { belowCap: "shield" }), target: "self",
     do: [apply("shield", { stacks: from("armor", 1.0), to: { side: "self", where: { belowCap: "shield" } } }), apply("shield", { stacks: from("armor", 1.0), to: { ...T.otherLowestShareAlly, where: { belowCap: "shield" } } })],
   }),
-  a("geomancer", "rockfall", "Rockfall", "Earth damage scaling from Armor on a random foe.", { ...timing("short", "long"), mp: 300, do: [magic("earth", hit("armor", "normal"))] }),
-  a("geomancer", "tremor", "Tremor", "Earth damage on a random foe, which is Stunned.", { ...timing("long", "very_long"), mp: 800, target: lacking({ side: "foes" }, "stun", true), do: [magic("earth", hit("magic", "normal"), { apply: [{ status: "stun" }] })] }),
+  a("geomancer", "rockfall", "Rockfall", "Earth damage scaling from Armor on a random foe.", { ...timing("short", "long"), mp: 400, do: [magic("earth", hit("armor", "normal"))] }),
+  a("geomancer", "tremor", "Tremor", "Earth damage on a random foe, which is Stunned.", { ...timing("long", "very_long"), mp: 1000, target: lacking({ side: "foes" }, "stun", true), do: [magic("earth", hit("magic", "normal"), { apply: [{ status: "stun" }] })] }),
 ];
 
 // ─── Classes ─────────────────────────────────────────────────────────────────
@@ -333,9 +341,9 @@ export const classes: ClassDefT[] = [
   cls("valkyrie", "Valkyrie", "Storm spear who heals and revives. A storm-borne spear that reaches past any guard and Shocks what it hits, mends the wounded, and snatches the fallen back ready to fight.", {
     stats: stat(3, 3, 3, 4, 3, 3, 3, 3), weapons: ["spear", "sword", "light_staff"], armor: "medium", passive: { name: "Einherjar", text: "Allies it revives come back with all their actions ready, instead of on cooldown." },
   }),
-  cls("bard", "Bard", "Party tempo. A rapid caster at the back: an anthem that makes an ally faster and stronger, a chorus that mends everyone a little, thunder that shocks every foe, and every note it strikes gives an ally mana.", {
-    // Step 5f: HP 2 again (the director's: not HP).
-    stats: stat(2, 4, 3, 3, 3, 2, 2, 1), weapons: ["dagger", "bow", "light_staff"], armor: "medium", passive: p("refrain", "Refrain", "Each of its basic attacks that lands gives a random ally MP, more the higher its Attack."),
+  cls("bard", "Bard", "Party tempo. A caster at the back whose every note mends an ally a little and gives another mana, with a ballad that steadies the whole party, an allegro that quickens it, and thunder that shocks every foe.", {
+    // Step 5g round 6 (the director's): HP 3 and Armor 3 (were 2 and 2): a buffer that doesn't deal damage needn't be glass.
+    stats: stat(3, 4, 3, 3, 3, 3, 2, 1), weapons: ["dagger", "bow", "light_staff"], armor: "medium", passive: p("refrain", "Refrain", "Each of its basic attacks that lands heals a random ally and gives a random ally MP, each a share of the damage dealt."),
   }),
   cls("hexer", "Hexer", "Curser. The debuff bot: burns and shocks every foe a little so the party's statuses pile up, weakens and sunders the most dangerous one, chills whatever it strikes, and silences a foe mid-cast.", {
     // Step 5f: HP 2 again (the director's: not HP).

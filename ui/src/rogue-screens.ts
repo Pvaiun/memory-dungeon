@@ -56,8 +56,9 @@ const KIND_TEXT: Record<RogueNodeKindT, string> = {
   treasure: "A RARE OR LEGENDARY PIECE · GOLD",
   boss: "THE ACT'S END · EVERYONE RESTORED AND LEARNS",
 };
-const SUPPLY_ICON: Record<string, Cell> = { tonic: [21, 7], ether: [20, 7], phoenix: [21, 14] };
-const SUPPLY_TEXT: Record<string, string> = { tonic: "PARTY +30% HP", ether: "PARTY +50% MP", phoenix: "A FALLEN MEMBER UP, 50% HP" };
+// Step 5g: a potion heals one member, a tonic refills one member's MP (the neediest; a choice of member is the next step).
+const SUPPLY_ICON: Record<string, Cell> = { potion: [21, 7], tonic: [20, 7], phoenix: [21, 14] };
+const SUPPLY_TEXT: Record<string, string> = { potion: "ONE MEMBER +30% HP", tonic: "ONE MEMBER +35% MP", phoenix: "A FALLEN MEMBER UP, 50% HP" };
 const RARITY_CLASS: Record<string, string> = { common: "", uncommon: "good", rare: "buff", legendary: "gold" };
 const ROMAN = ["", "I", "II", "III", "IV"];
 const gold = (n: number) => h("span", { class: "gold" }, `${n}G`);
@@ -294,13 +295,13 @@ function mapView(run: RogueRun): Child[] {
     actions(picked ? button(`ENTER ${KIND_NAME[picked.kind]}`, () => { const id = picked.id; mapPick = null; pickOrSave(run, id); }, "hi") : null, button("PARTY", () => go("rparty"))),
   ];
 }
-function useSupplyView(run: RogueRun, id: "tonic" | "ether" | "phoenix") {
+function useSupplyView(run: RogueRun, id: "potion" | "tonic" | "phoenix") {
   if (id === "phoenix") {
     const down = run.roster.filter((m) => m.ko);
     if (!down.length) return confirm("NOBODY IS DOWN", "", "OK", () => {});
     return confirm("PHOENIX FEATHER", `${className(down[0].cls).toUpperCase()} UP, 50% HP`, "USE", () => { useSupply(c, run, id, down[0].cls); saveRogue(); sfx.heal(); redraw(); });
   }
-  confirm(id === "tonic" ? "TONIC" : "ETHER", SUPPLY_TEXT[id], "USE", () => { useSupply(c, run, id); saveRogue(); sfx.heal(); redraw(); });
+  confirm(id === "potion" ? "POTION" : "TONIC", SUPPLY_TEXT[id], "USE", () => { useSupply(c, run, id); saveRogue(); sfx.heal(); redraw(); });
 }
 
 // ─── A fight in waiting ────────────────────────────────────────────────────

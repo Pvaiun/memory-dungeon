@@ -12,7 +12,7 @@
  *   npx tsx src/rogue-play.ts class <id>                                 a class's sheet: passive, every ability
  *   npx tsx src/rogue-play.ts equip <class> <weapon|armor|amulet> <item|none>
  *   npx tsx src/rogue-play.ts formation <id>     seat <a,b,c>     order <class> <ability,...|none>   (abilities left out aren't brought)
- *   npx tsx src/rogue-play.ts use <tonic|ether|phoenix> [class]   swap <party member> <member at camp>
+ *   npx tsx src/rogue-play.ts use <potion|tonic|phoenix> [class]   swap <party member> <member at camp>
  *     (swap: at a campfire; any time between rooms for a fallen party member and someone standing at camp)
  *   npx tsx src/rogue-play.ts glossary                                   what each status shown in a fight does
  *
@@ -120,7 +120,8 @@ function offerWords(run: RogueRun, o: Offer): string {
     const f = c.formations.get(o.id)!;
     return `formation: ${f.name}: ${f.text}${f.positions.map((p, k) => ` Slot ${k + 1} ${p.name}: ${codes(p.stats) || "no change"}.`).join("")}`;
   }
-  return `supply: ${o.id} (${o.id === "tonic" ? "the party regains 30% of its HP" : o.id === "ether" ? "the party regains 50% of its MP" : "a fallen member stands up with half its HP"})`;
+  const sp = rogue(c).config.supplies;
+  return `supply: ${o.id} (${o.id === "potion" ? `one member regains ${sp.potion.hp}% of its HP` : o.id === "tonic" ? `one member regains ${sp.tonic.mp}% of its MP` : "a fallen member stands up with half its HP"})`;
 }
 function vit(run: RogueRun, cls: string): string {
   const m = member(run, cls);
@@ -349,7 +350,7 @@ const USAGE = [
   "formation <id>",
   "seat <a,b,c>              the party's seat order, commas, no spaces",
   "order <class> <ability,ability,...|none>   slot order; abilities left out aren't brought to fights",
-  "use <tonic|ether|phoenix> [class]",
+  "use <potion|tonic|phoenix> [class]   (a potion or tonic goes to the member named, else the neediest)",
   "swap <party member> <member at camp>   at a campfire; any time between rooms for a fallen member",
   "swap <member at camp>     fills an empty seat (at a campfire, or any time between rooms if they're standing)",
   "Every command takes --save <file>.",
@@ -402,7 +403,7 @@ if (cmd === "new") {
       out = canManage(run) && setOrder(run, rest[0], ids) ? `Order: ${ids.join(", ") || "none"}.${m && m.known.some((a) => !ids.includes(a)) ? ` Left out of fights: ${m.known.filter((a) => !ids.includes(a)).join(", ")}.` : ""}` : "Name known abilities once each, in slot order (ids from party); any left out aren't brought to fights.";
       break;
     }
-    case "use": out = useSupply(c, run, rest[0] as "tonic", rest[1]) ? `Used the ${rest[0]}.\n${header(run).join("\n")}` : "Can't use that now."; break;
+    case "use": out = useSupply(c, run, rest[0] as "potion", rest[1]) ? `Used the ${rest[0]}.\n${header(run).join("\n")}` : "Can't use that now."; break;
     case "swap": out = swap(c, run, rest[0], rest[1] ?? null) ? `Party: ${run.party.join(", ")}. At camp: ${bench(run).join(", ") || "nobody"}.` : "At a campfire: a party member and someone at camp. Any time between rooms: a fallen party member and someone standing at camp, or someone standing at camp into an empty seat (swap <member at camp>)."; break;
     case "boss": out = bossWords(run); break;
     default: throw new Error(`unknown command '${cmd}'. Commands:\n${USAGE}`);

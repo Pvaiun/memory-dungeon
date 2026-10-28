@@ -782,7 +782,8 @@ export const RogueNodeKind = z.enum(["fight", "elite", "event", "campfire", "sho
 export type RogueNodeKindT = z.infer<typeof RogueNodeKind>;
 export const Rarity = z.enum(["common", "uncommon", "rare", "legendary"]);
 export type RarityT = z.infer<typeof Rarity>;
-export const SupplyId = z.enum(["tonic", "ether", "phoenix"]);
+/** Step 5g (the director's): a potion heals one unit, a tonic restores one unit's MP (the old tonic healed the party, the old ether its MP). */
+export const SupplyId = z.enum(["potion", "tonic", "phoenix"]);
 export type SupplyIdT = z.infer<typeof SupplyId>;
 const Pct = z.number().min(0).max(100);
 const RarityOdds = z.strictObject({ common: z.number().min(0), uncommon: z.number().min(0), rare: z.number().min(0), legendary: z.number().min(0) });
@@ -823,7 +824,9 @@ export const RogueConfig = z.strictObject({
     supply: z.record(z.string(), z.number().int().min(0)), sell: Pct,
   }),
   shop: z.strictObject({ gear: RarityOdds.describe("How many pieces of each rarity."), recruits: z.number().int().min(0), formations: z.number().int().min(0), supplies: z.number().int().min(0) }),
-  supplies: z.strictObject({ tonic: z.strictObject({ hp: Pct }), ether: z.strictObject({ mp: Pct }), phoenix: z.strictObject({ revive: Pct }) }),
+  supplies: z.strictObject({ potion: z.strictObject({ hp: Pct }), tonic: z.strictObject({ mp: Pct }), phoenix: z.strictObject({ revive: Pct }) }),
+  /** Step 5g (the director's): after every won fight the party is handed these, free, up to the bag. */
+  drops: z.array(SupplyId).optional(),
   bag: z.number().int().min(0).describe("Supplies carried at most."),
   knobs: z.array(z.strictObject({ mob: z.number(), step: z.number(), elite: z.number(), boss: z.number() })).min(1).describe("Per act, added to each fight's own knob (HP +k %, damage +k/2 %): regular fights, the rise per floor from each pool's reference floor, elites, the boss."),
   heat: z.strictObject({ per: z.number(), max: z.number().int().min(0) }),

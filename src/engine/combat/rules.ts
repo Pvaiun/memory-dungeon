@@ -13,7 +13,7 @@
  *   their place in the fight. The same seed brings the same luck to the same
  *   unit, whatever else is in the fight.
  */
-import { SLOTS, type FixedStatT, type LootTableT } from "../../schema.js";
+import { SLOTS, SUBTICKS, type FixedStatT, type LootTableT } from "../../schema.js";
 import { next, rngFor, type Rng } from "../rng.js";
 import type { Content, Rules, Unit } from "../run.js";
 import { derive, makeUnit, step, world, type CFight, type CUnit } from "./fight.js";
@@ -28,6 +28,8 @@ export type Member = Unit & {
   start: string[];
   weapon: string;
   abilities: string[];
+  /** Step 5g: ticks of cooldown each ability had left when the last fight ended; the next fight starts from there. */
+  cooldowns?: Record<string, number>;
 };
 
 type Grant = { stats?: FixedStatT[]; statuses?: string[] };
@@ -108,6 +110,8 @@ export const combat: Rules = {
       if (!u) continue;
       m.hp = u.ko ? 0 : Math.min(u.hp, m.stats.max_hp);
       m.mp = Math.min(u.mp, m.stats.max_mp);
+      // Step 5g (the director's): cooldowns carry like HP and MP, so a run's abilities drift apart and a revive can wait ready between fights.
+      m.cooldowns = Object.fromEntries(u.acts.filter((a) => a.id !== "basic").map((a) => [a.id, Math.max(0, (a.ready - (f as CFight).now) / SUBTICKS)]));
       // A what-if the campaign tuning priced (ruleset.run.restore); the core set restores nothing.
       if (restore && m.hp > 0) {
         m.hp = Math.min(m.stats.max_hp, m.hp + Math.floor((m.stats.max_hp * (restore.hp ?? 0)) / 100));

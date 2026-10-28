@@ -41,6 +41,8 @@ export type CUnit = Unit & {
   pct: Record<string, number>;
   /** Statuses applied at fight start and again on revival: passive, gear, formation, perks, or an enemy's own. */
   start: string[];
+  /** Step 5g: ticks of cooldown each ability had left when the last fight ended (a party unit's; carried by the run or the rogue). */
+  cooldowns?: Record<string, number>;
   /** Where the basic attack comes from: a gear id, "enemy:<id>", or "unarmed". */
   weapon: string;
   acts: Act[];
@@ -1334,9 +1336,11 @@ function begin(w: W) {
   for (const u of f.units) u.acts.forEach((a, i) => {
     const d = actDef(w, u, i);
     const cd = cooldownOf(w, u, d);
-    // Step 5g: by a share of the ability's own cooldown (slotShares), so a long ability's head start is long too; the flat ticks (slots) stay as the older form.
-    if (open?.slotShares?.length && u.side === "party" && d.kind === "ability") a.ready = Math.max(0, cd - Math.round(cd * (open.slotShares[i] ?? 0)));
-    else if (open?.slots?.length && u.side === "party" && d.kind === "ability") a.ready = Math.max(0, cd - sub(open.slots[i] ?? 0));
+    // Step 5g (the director's): a party ability's cooldown carries from the last fight (what was left when it ended, or its full cooldown
+    // the first time), and the slot's head start comes off that: slots as flat ticks, or slotShares as a share of the cooldown.
+    const carried = u.side === "party" && d.kind === "ability" && u.cooldowns?.[d.id] !== undefined ? Math.min(cd, sub(u.cooldowns[d.id])) : cd;
+    if (open?.slotShares?.length && u.side === "party" && d.kind === "ability") a.ready = Math.max(0, carried - Math.round(cd * (open.slotShares[i] ?? 0)));
+    else if (open?.slots?.length && u.side === "party" && d.kind === "ability") a.ready = Math.max(0, carried - sub(open.slots[i] ?? 0));
     else a.ready = open ? Math.round(cd * (open.min + (open.max - open.min) * next(u.rng))) : cd;
   });
   // ruleset.stagger: the n-th copy of an enemy starts n × stagger ticks behind the first, so three Ghosts ripple rather than volley.
