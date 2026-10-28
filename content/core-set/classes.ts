@@ -50,7 +50,9 @@ const lacking = (rule: TargetRuleT, status: string | string[], fallback = false)
 const waitsFor = (side: TargetRuleT["side"], where: NonNullable<TargetRuleT["where"]>) => ({ if: { side, where } });
 
 const stat = (hp: number, mp: number, regen: number, atk: number, mag: number, armor: number, c: number, aggro: number) => ({
-  max_hp: pts(hp), max_mp: pts(mp), mp_regen: pts(regen), attack: pts(atk), magic: pts(mag), armor: pts(armor), crit_chance: crit(c), aggro: aggroOf(aggro),
+  // Step 5h (the director's): no MP regen in fights by default. A class's regen word is kept for the record and given 0: MP comes
+  // back on the bench after a fight sat out (rogue config benchMp), and in fights only from gear, a seat, Clarity, Refrain or Siphon.
+  max_hp: pts(hp), max_mp: pts(mp), mp_regen: 0 * regen, attack: pts(atk), magic: pts(mag), armor: pts(armor), crit_chance: crit(c), aggro: aggroOf(aggro),
 });
 // Step 5g round 7 (a feel reader's catch): a class's stat line is its base, so "Crit damage high" had set the Geomancer's and Assassin's
 // multiplier to 100 (crits for no extra damage) in place of the default 150 plus the word. The word adds to the default now.

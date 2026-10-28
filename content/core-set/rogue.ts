@@ -26,18 +26,26 @@ export const ROGUE_CONFIG: RogueConfigT = {
   /** Gold at the start, and the draft: the leader (an owned class), then this many picks of one from `offers` classes. */
   start: { gold: 60, offers: 3, picks: 2, healer: true },
   /**
-   * Abilities a class knows on joining: one in act I, two in act II, three in act III. Each class's first is below: the one
-   * that best stands for it on its own. The Vampire starts with Wither, not Blood drain: as leader with random companions it
-   * won 37% of runs with Blood drain (the next best class 20%), 19% with Wither.
+   * Step 5h (the director's): what a class knows is rolled. A starting unit (the leader, the draft) knows one of its three
+   * abilities at random; a recruit one, two or all three, the odds by act (`recruits.known`). Raise and Valhalla are rolled
+   * like any other: a bad roll is a pick the player can decline. (Before: a fixed first ability per class, one more an act.)
    */
-  firstAbility: {
-    knight: "stand_fast", cleric: "cure", ranger: "barbed_arrow", bramble_knight: "thicket", hoplite: "aspis", paladin: "smite",
-    valkyrie: "gale_spear", bard: "war_ballad", hexer: "enfeeble", monk: "burning_fist", assassin: "backstab", vampire: "blood_gift",
-    pyromancer: "firebolt", frostweaver: "frost_lance", stormcaller: "chain_lightning", geomancer: "earthen_shell",
-  } as Record<string, string>,
-  /** Party of three, and up to two more waiting at camp. */
+  /** Party of three; two seats at camp at the start, up to four (a boon's seat, an event). */
   party: 3,
   bench: 2,
+  benchMax: 4,
+  /** Recruits are offered one of two (the director's: one of three let every run gun for the same party). Known: by act, weights for one, two, three. */
+  recruits: { offers: 2, known: [[70, 25, 5], [35, 45, 20], [15, 45, 40]] },
+  /** After each won fight, those who sat it out regain this share of max MP (flat, like a tonic; no gear touches it). */
+  benchMp: 50,
+  /** A fresh ability (a starting unit's, a recruit's, one just learned) starts with this share of its cooldown already run. */
+  fresh: 50,
+  /** The Muster: a pick of one of two recruits. The Drill ground: one of two formations, or two members trained. */
+  muster: { offers: 2 },
+  drill: { offers: 2, train: 2 },
+  /** Formation rarities, provisional until step 5i sets them (and adds legendary ones); offers roll a rarity by act. */
+  formationRarity: { neutral: "common", vanguard: "common", ambush: "common", scatter: "common", tortoise: "common", champion: "rare", blitz: "rare", escort: "rare", last_stand: "rare", caravan: "rare" },
+  formationOdds: [{ common: 70, rare: 28, legendary: 2 }, { common: 45, rare: 45, legendary: 10 }, { common: 25, rare: 55, legendary: 20 }],
   /**
    * The map of an act: `floors` floors and the boss above them, `width` columns, `paths` paths walked up from the bottom
    * (Slay the Spire's generator). Fixed floors; then room odds for the rest, with elites and campfires kept off the first
@@ -46,8 +54,10 @@ export const ROGUE_CONFIG: RogueConfigT = {
   map: {
     floors: 9, width: 5, paths: 5,
     fixed: { 1: "fight", 5: "treasure", 9: "campfire" } as Record<string, RogueNodeKindT>,
-    odds: { fight: 46, event: 22, elite: 12, campfire: 12, shop: 8 } as Record<string, number>,
+    odds: { fight: 40, event: 20, elite: 12, campfire: 11, shop: 7, muster: 5, drill: 5 } as Record<string, number>,
     lateFrom: 4,
+    // Step 5h: two Musters and two Drill grounds an act, so routing toward a recruit or a formation is a choice.
+    ensure: { shop: 2, elite: 2, muster: 2, drill: 2 },
   },
   /** Gold for a win: [min, max], plus `perAct` × (act − 1). */
   gold: { fight: [12, 20], elite: [50, 65], boss: [90, 110], perAct: 5 },
@@ -57,19 +67,22 @@ export const ROGUE_CONFIG: RogueConfigT = {
    * in the roster can use; the rest is anything (the piece that wants a class you don't have yet).
    */
   spoils: {
-    fight: { count: 3, rarity: { common: 55, uncommon: 33, rare: 12, legendary: 0 }, tome: 12, recruit: 6, supply: 8 },
-    elite: { count: 3, trophy: true, rarity: { common: 0, uncommon: 0, rare: 100, legendary: 0 }, tome: 15, recruit: 10, supply: 0 },
-    usable: 75,
+    // Step 5h (the director's: enough loot to fill the seats and build; legendaries "by orders of magnitude"): a pick of three,
+    // gear in 60% of fights and mixed with a tome or a formation in 40%; no supplies (every won fight already drops one); no
+    // recruits (they have their own rooms). A full run should take about 28 pieces and 12 legendaries (design.md).
+    fight: { count: 3, rarity: { common: 35, uncommon: 30, rare: 22, legendary: 13 }, tome: 0, recruit: 0, supply: 0, mixed: 40, mix: { tome: 60, formation: 40, recruit: 0 } },
+    elite: { count: 3, trophy: true, rarity: { common: 0, uncommon: 0, rare: 60, legendary: 40 }, tome: 0, recruit: 0, supply: 0, mixed: 30, mix: { tome: 30, formation: 40, recruit: 30 } },
+    // A third of offered gear is for a class not in the roster, so a piece can make you want a class (was none: 0.05 a run).
+    offRoster: 33,
   },
   /** The boss's boon: pick one of a legendary piece, a formation and a recruit. The next act starts restored, and everyone learns. */
-  boon: { count: 3 },
-  /** A chest: one piece, rare or better, and some gold. */
-  treasure: { rarity: { common: 0, uncommon: 0, rare: 70, legendary: 30 }, gold: [15, 35] },
-  /** The campfire: one pick of REST, FOCUS, RAISE or TRAIN; those at camp rest too. Swapping the party is free. */
-  // Those at camp get half a REST and half a FOCUS whatever the pick (three playtesters called the whole of both a free
-  // heal battery); a wipe with someone standing at camp passes the road to them (four lost a run with healthy reserves).
-  campfire: { hp: 40, mp: 60, revive: 40, camp: 50 },
-  reserves: true,
+  boon: { count: 3, seat: true },
+  /** A chest: one piece, rare or better, and some gold; or a cage, a recruit with a piece suited to it. */
+  treasure: { rarity: { common: 0, uncommon: 0, rare: 35, legendary: 45 }, gold: [15, 35], cage: 20 },
+  /** The campfire: one pick of REST, FOCUS, RAISE or TRAIN (two members); those at camp get half a REST whatever the pick. */
+  // Step 5h: the bench's MP comes after every fight now, so the camp's share is HP only; the reserves rule is gone (a wipe is
+  // a wipe, now that the party can be changed before any fight); a stranger at the fire sometimes asks to join.
+  campfire: { hp: 40, mp: 60, revive: 40, camp: 50, train: 2, stranger: 30 },
   // Snakes' packs never grow, and act I's regular fights hold two (round 29: the Viper Den and the Snake Pit ended 9% and
   // 7% of the act I runs meeting them, every other act I fight 2% or less, with their knobs already at the floor: the
   // regular fights' extra HP gives a snake more hits, and Bleed doesn't shrink with the knob).
@@ -78,7 +91,7 @@ export const ROGUE_CONFIG: RogueConfigT = {
   levelGold: 40,
   /** Prices, in gold. A piece sells for `sell` % of its price. Services are once a visit. */
   prices: { common: 45, uncommon: 70, rare: 110, legendary: 190, recruit: 120, formation: 100, learn: 60, upgrade: 80, trainStep: 30, supply: { potion: 35, tonic: 35, phoenix: 60 }, sell: 35 },
-  shop: { gear: { common: 2, uncommon: 2, rare: 1, legendary: 1 }, recruits: 1, formations: 1, supplies: 2 },
+  shop: { gear: { common: 2, uncommon: 2, rare: 1, legendary: 1 }, legendaryByAct: [1, 2, 2], recruits: 1, formations: 1, supplies: 2 },
   /** Supplies, used between fights: the bag holds this many. */
   /**
    * Step 5g round 6 (the director's): a potion heals one member, a tonic refills one member's MP (the old tonic healed the whole party 30%, the
@@ -379,17 +392,21 @@ export type EventOp =
   | { op: "hp"; pct: number; one?: boolean }
   | { op: "mp"; pct: number }
   | { op: "gear"; rarity: "common" | "uncommon" | "rare" | "legendary" }
-  | { op: "recruit"; hp?: number }
+  | { op: "recruit"; hp?: number; known?: number; gear?: "common" | "uncommon" | "rare" | "legendary" }
   | { op: "learn" }
   | { op: "upgrade" }
   | { op: "temper" }
-  | { op: "formation" }
+  | { op: "formation"; rarity?: "common" | "uncommon" | "rare" | "legendary" }
+  | { op: "seat" }
+  | { op: "train"; n: number }
+  | { op: "muster"; n: number; known?: number }
+  | { op: "trade" }
   | { op: "supply"; id: "potion" | "tonic" | "phoenix" }
   | { op: "fight"; tier: "normal" | "elite" }
   | { op: "camp" }
   | { op: "chance"; pct: number; then: EventOp[]; else: EventOp[] };
 export type EventOption = { id: string; label: string; text: string; gold?: number; do: EventOp[] };
-export type RogueEvent = { id: string; name: string; text: string; options: EventOption[] };
+export type RogueEvent = { id: string; name: string; text: string; options: EventOption[]; variants?: { text?: string; options: EventOption[] }[] };
 
 export const ROGUE_EVENTS: RogueEvent[] = [
   {
@@ -454,8 +471,18 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   {
     id: "camp", name: "An Empty Camp", text: "Someone left in a hurry: the fire is still burning, the bedrolls still laid out.",
     options: [
-      { id: "camp", label: "MAKE CAMP", text: "A campfire: rest, focus, raise or train, and change the party.", do: [{ op: "camp" }] },
+      { id: "camp", label: "MAKE CAMP", text: "A campfire: rest, focus, raise or train.", do: [{ op: "camp" }] },
       { id: "search", label: "SEARCH THE PACKS", text: "A potion, a tonic or a phoenix feather, and 20 gold.", do: [{ op: "gold", amount: 20 }, { op: "chance", pct: 40, then: [{ op: "supply", id: "potion" }], else: [{ op: "chance", pct: 50, then: [{ op: "supply", id: "tonic" }], else: [{ op: "supply", id: "phoenix" }] }] }] },
+    ],
+    variants: [
+      { options: [
+        { id: "camp", label: "MAKE CAMP", text: "A campfire: rest, focus, raise or train.", do: [{ op: "camp" }] },
+        { id: "search", label: "SEARCH THE PACKS", text: "A potion, a tonic or a phoenix feather, and 20 gold.", do: [{ op: "gold", amount: 20 }, { op: "chance", pct: 40, then: [{ op: "supply", id: "potion" }], else: [{ op: "chance", pct: 50, then: [{ op: "supply", id: "tonic" }], else: [{ op: "supply", id: "phoenix" }] }] }] },
+      ] },
+      { text: "Someone left in a hurry, and left room: a good camp, big enough for one more.", options: [
+        { id: "claim", label: "CLAIM IT", text: "A seat at camp: room for one more in the roster (up to four at camp).", do: [{ op: "seat" }] },
+        { id: "camp", label: "MAKE CAMP", text: "A campfire: rest, focus, raise or train.", do: [{ op: "camp" }] },
+      ] },
     ],
   },
   {
@@ -465,18 +492,112 @@ export const ROGUE_EVENTS: RogueEvent[] = [
       { id: "leave", label: "PASS BY", text: "Nothing happens.", do: [] },
     ],
   },
+  // Step 5h: the Drill Yard and the Fallen Standard became the Drill ground (a room) and the Old Banner. Six events around the
+  // roster, each rolling one of its versions on entering, so a known event can still surprise.
   {
-    id: "drill_yard", name: "A Drill Yard", text: "Veterans spar in an old courtyard. One of them could be talked into joining.",
+    id: "deserter", name: "A Deserter", text: "A soldier slumps against a milestone, still in uniform. \"I'm done with them. Not with fighting.\"",
     options: [
-      { id: "hire", label: "HIRE ONE FOR 70", text: "A recruit joins you.", gold: 70, do: [{ op: "recruit" }] },
-      { id: "drill", label: "DRILL", text: "One member learns an ability.", do: [{ op: "learn" }] },
+      { id: "take", label: "TAKE THEM IN", text: "They join you at half HP, with an uncommon piece suited to them.", do: [{ op: "recruit", hp: 50, gear: "uncommon" }] },
+      { id: "turn", label: "TURN THEM IN", text: "+50 gold.", do: [{ op: "gold", amount: 50 }] },
+    ],
+    variants: [
+      { options: [
+        { id: "take", label: "TAKE THEM IN", text: "They join you at half HP, with an uncommon piece suited to them.", do: [{ op: "recruit", hp: 50, gear: "uncommon" }] },
+        { id: "turn", label: "TURN THEM IN", text: "+50 gold.", do: [{ op: "gold", amount: 50 }] },
+      ] },
+      { text: "An officer, by the look of the blade at their hip, bleeding from a wound they won't explain.", options: [
+        { id: "take", label: "TAKE THEM IN", text: "They join you at a third of their HP, knowing two abilities, with a rare piece suited to them.", do: [{ op: "recruit", hp: 33, known: 2, gear: "rare" }] },
+        { id: "blade", label: "TAKE THE BLADE", text: "A rare piece; they limp off.", do: [{ op: "gear", rarity: "rare" }] },
+      ] },
     ],
   },
   {
-    id: "standard", name: "A Fallen Standard", text: "A war banner, half-buried in the mud. Its company's drill is written on the back.",
+    id: "mercenaries", name: "Mercenaries", text: "A company of sellswords around a crossroads fire. \"Coin first.\"",
     options: [
-      { id: "take", label: "TAKE THE DRILL", text: "A new formation.", do: [{ op: "formation" }] },
+      { id: "hire", label: "HIRE ONE FOR 60", text: "Pick one of three recruits.", gold: 60, do: [{ op: "muster", n: 3 }] },
+      { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
+    ],
+    variants: [
+      { options: [
+        { id: "hire", label: "HIRE ONE FOR 60", text: "Pick one of three recruits.", gold: 60, do: [{ op: "muster", n: 3 }] },
+        { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
+      ] },
+      { text: "Veterans, scarred and expensive. \"We know our trade.\"", options: [
+        { id: "hire", label: "HIRE ONE FOR 110", text: "Pick one of two recruits who know all three abilities.", gold: 110, do: [{ op: "muster", n: 2, known: 3 }] },
+        { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
+      ] },
+    ],
+  },
+  {
+    id: "prisoner_cart", name: "A Prisoner Cart", text: "A cart with a cage on the back, two guards dozing beside it. The prisoner watches you.",
+    options: [
+      { id: "free", label: "FREE THE PRISONER", text: "They join you, and the guards wake: a fight.", do: [{ op: "recruit" }, { op: "fight", tier: "normal" }] },
+      { id: "pass", label: "LET IT PASS", text: "Nothing happens.", do: [] },
+    ],
+    variants: [
+      { options: [
+        { id: "free", label: "FREE THE PRISONER", text: "They join you, and the guards wake: a fight.", do: [{ op: "recruit" }, { op: "fight", tier: "normal" }] },
+        { id: "pass", label: "LET IT PASS", text: "Nothing happens.", do: [] },
+      ] },
+      { text: "A cart with a cage on the back, and an escort of hard-looking guards. The prisoner wears an old company's colours.", options: [
+        { id: "free", label: "FREE THE PRISONER", text: "They join you knowing two abilities, and the escort attacks: a hard fight, with an elite's spoils.", do: [{ op: "recruit", known: 2 }, { op: "fight", tier: "elite" }] },
+        { id: "pass", label: "LET IT PASS", text: "Nothing happens.", do: [] },
+      ] },
+    ],
+  },
+  {
+    id: "rival_company", name: "A Rival Company", text: "Another party shares the road. Their captain eyes your newest recruit. \"A trade? One of yours for one of ours, sight unseen.\"",
+    options: [
+      { id: "trade", label: "TRADE", text: "Your newest member (never the leader) leaves; their gear stays in your bag. One of theirs joins, knowing all three abilities.", do: [{ op: "trade" }] },
+      { id: "decline", label: "DECLINE", text: "Nothing happens.", do: [] },
+    ],
+    variants: [
+      { options: [
+        { id: "trade", label: "TRADE", text: "Your newest member (never the leader) leaves; their gear stays in your bag. One of theirs joins, knowing all three abilities.", do: [{ op: "trade" }] },
+        { id: "decline", label: "DECLINE", text: "Nothing happens.", do: [] },
+      ] },
+      { text: "Another party shares the road, short of hands and long on coin. \"A trade, and we'll pay for it.\"", options: [
+        { id: "trade", label: "TRADE FOR 60", text: "Your newest member (never the leader) leaves; their gear stays in your bag. One of theirs joins, knowing all three abilities, and +60 gold.", do: [{ op: "trade" }, { op: "gold", amount: 60 }] },
+        { id: "decline", label: "DECLINE", text: "Nothing happens.", do: [] },
+      ] },
+    ],
+  },
+  {
+    id: "old_banner", name: "An Old Banner", text: "A war banner, half-buried in the mud. Its company's drill is written on the back.",
+    options: [
+      { id: "take", label: "TAKE THE DRILL", text: "A rare formation.", do: [{ op: "formation", rarity: "rare" }] },
       { id: "sell", label: "SELL THE BANNER", text: "+45 gold.", do: [{ op: "gold", amount: 45 }] },
+    ],
+    variants: [
+      { options: [
+        { id: "take", label: "TAKE THE DRILL", text: "A rare formation.", do: [{ op: "formation", rarity: "rare" }] },
+        { id: "sell", label: "SELL THE BANNER", text: "+45 gold.", do: [{ op: "gold", amount: 45 }] },
+      ] },
+      { text: "A torn pennant on a broken spear, a few lines of drill still legible.", options: [
+        { id: "take", label: "TAKE THE DRILL", text: "A common formation and 20 gold from the spear's fittings.", do: [{ op: "formation", rarity: "common" }, { op: "gold", amount: 20 }] },
+        { id: "sell", label: "SELL THE SPEAR", text: "+30 gold.", do: [{ op: "gold", amount: 30 }] },
+      ] },
+      { text: "A great standard, still upright, ringed by the bones of those who held it. The ground around it is cursed.", options: [
+        { id: "take", label: "DIG IT OUT", text: "Everyone loses 15% of max HP. A formation of the highest rarity there is.", do: [{ op: "hp", pct: -15 }, { op: "formation", rarity: "legendary" }] },
+        { id: "leave", label: "LEAVE IT", text: "Nothing happens.", do: [] },
+      ] },
+    ],
+  },
+  {
+    id: "training_hall", name: "A Training Hall", text: "Practice dummies, a rack of blunted weapons, and a sergeant with a whistle.",
+    options: [
+      { id: "train", label: "TRAIN FOR 50", text: "Two members each learn an ability or make one better (+).", gold: 50, do: [{ op: "train", n: 2 }] },
+      { id: "watch", label: "WATCH", text: "One member learns an ability.", do: [{ op: "learn" }] },
+    ],
+    variants: [
+      { options: [
+        { id: "train", label: "TRAIN FOR 50", text: "Two members each learn an ability or make one better (+).", gold: 50, do: [{ op: "train", n: 2 }] },
+        { id: "watch", label: "WATCH", text: "One member learns an ability.", do: [{ op: "learn" }] },
+      ] },
+      { text: "The sergeant drills anyone who walks in, for free, and hard.", options: [
+        { id: "train", label: "TAKE THE DRILL", text: "Two members each learn an ability or make one better (+); everyone loses 15% of max HP.", do: [{ op: "hp", pct: -15 }, { op: "train", n: 2 }] },
+        { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
+      ] },
     ],
   },
 ];

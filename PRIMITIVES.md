@@ -53,6 +53,7 @@ Or a targeting rule. Extra targets after an action's first ignore Taunt.
 | `holder` | Statuses: the holder. The default for pulses. |
 | `source` | Statuses that know their source (Refresh, Fizzle, Per source): the unit that applied it. |
 | `other` | Reactions: the event's other unit (the attacker for hit_taken, the target for hit_lands). Nothing if unknown. |
+| `owner` | Reactions: the unit the event is about, whoever holds the reacting status (the holder of a status that just capped, the unit knocked out). Step 5g. |
 
 ## Damage types
 
@@ -166,6 +167,7 @@ A number is a plain number, or `{ base, scale: [...] }`: base + Σ ratio × sour
 | `status_gained` | A status is applied (each application, refreshes and added stacks included). Whose: the holder. Has `status`. |
 | `status_triggered` | A status pulses, or an Intensity status's trigger fires. Whose: the holder. Has `status`. |
 | `status_ended` | A status ends. Whose: the holder. Has `status` and `cause`. |
+| `status_capped` | An Intensity status stands at its cap after an application (step 5g: Chill shatters). Whose: the holder; other: the applier. Has `status`. |
 | `ko` | A unit is KO'd. Whose: that unit. The unit's own statuses that survive a KO can still react to it. |
 | `revived` | A unit is revived. Whose: that unit; other: the reviver. |
 
@@ -232,6 +234,8 @@ An action's `target` is `foe` (default targeting: a foe by Aggro, under the Hidd
 | --- | --- |
 | `hpBelow` | HP below this percent of max HP. |
 | `hpAtLeast` |  |
+| `mpBelow` | MP below this share of max MP (step 5g: what a Clarity waits for). A unit with no MP pool never passes. |
+| `mpAtLeast` |  |
 | `has` | Has this status (or every one of these). |
 | `lacks` | Doesn't have this status (or any of these). |
 | `buffs` | true: has any buff. false: has none. |

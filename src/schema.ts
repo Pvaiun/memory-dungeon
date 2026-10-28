@@ -778,7 +778,8 @@ export type CampaignT = z.infer<typeof Campaign>;
 // Its rules are src/rogue.ts; this is the data they read.
 // ─────────────────────────────────────────────────────────────────────────────
 
-export const RogueNodeKind = z.enum(["fight", "elite", "event", "campfire", "shop", "treasure", "boss"]);
+/** Step 5h: the Muster (a pick of recruits) and the Drill ground (a pick of formations, or training). */
+export const RogueNodeKind = z.enum(["fight", "elite", "event", "campfire", "shop", "treasure", "boss", "muster", "drill"]);
 export type RogueNodeKindT = z.infer<typeof RogueNodeKind>;
 export const Rarity = z.enum(["common", "uncommon", "rare", "legendary"]);
 export type RarityT = z.infer<typeof Rarity>;
@@ -795,14 +796,25 @@ const Spoils = z.strictObject({
   supply: Pct.describe("Chance an offer is a supply."),
   legendaries: z.number().int().min(0).optional().describe("How many of the offers are always a legendary piece."),
   trophy: z.boolean().optional().describe("A legendary piece is won outright, on top of the pick."),
+  mixed: Pct.optional().describe("Step 5h: chance, in percent, that the pick mixes kinds: one piece of gear, then offers rolled from `mix` (the rest stay gear)."),
+  mix: z.strictObject({ tome: z.number().min(0), formation: z.number().min(0), recruit: z.number().min(0) }).optional().describe("Weights of the other kinds in a mixed pick."),
 });
+const KnownOdds = z.array(z.number().min(0)).length(3).describe("Weights for knowing one, two or three abilities.");
 
 export const RogueConfig = z.strictObject({
   start: z.strictObject({ gold: z.number().int().min(0), offers: PosInt, picks: z.number().int().min(0), known: PosInt.optional().describe("Abilities a class knows on joining in act I (default 1); one more an act after."), healer: z.boolean().optional().describe("While the party has nobody who heals others, each draft offers one who does.") }).describe("Gold at the start; the draft after the leader: `picks` picks of one from `offers` classes."),
-  firstAbility: z.record(Id, Id).describe("The ability each class knows on joining in act I. It learns one more for each act reached."),
+  firstAbility: z.record(Id, Id).optional().describe("Before step 5h: the ability each class knew on joining. Step 5h rolls what a class knows instead."),
   startKnown: z.record(Id, PosInt).optional().describe("Classes that join knowing more than start.known abilities in act I, by class."),
   party: PosInt,
-  bench: z.number().int().min(0).describe("Members who can wait at camp, besides the party."),
+  bench: z.number().int().min(0).describe("Seats at camp at a run's start, besides the party (step 5h: two)."),
+  benchMax: z.number().int().min(0).optional().describe("Step 5h: seats at camp at most; the others are won (a boon's seat, an event)."),
+  recruits: z.strictObject({ offers: PosInt, known: z.array(KnownOdds).min(1).describe("By act: how many abilities a recruit knows, rolled at random from its three.") }).optional(),
+  benchMp: Pct.optional().describe("Step 5h: share of max MP a member regains after each won fight it sat out (from the max it last fought with)."),
+  fresh: Pct.optional().describe("Step 5h: share of its cooldown already run for a fresh ability: a starting unit's, a recruit's, one just learned."),
+  muster: z.strictObject({ offers: PosInt }).optional().describe("Step 5h: the Muster's pick of recruits."),
+  drill: z.strictObject({ offers: PosInt, train: PosInt }).optional().describe("Step 5h: the Drill ground's pick of formations, or this many members trained."),
+  formationRarity: z.record(Id, Rarity).optional().describe("Step 5h: each formation's rarity (provisional until step 5i); unlisted ones are common."),
+  formationOdds: z.array(z.strictObject({ common: z.number().min(0), rare: z.number().min(0), legendary: z.number().min(0) })).min(1).optional().describe("By act: the rarity a formation offer rolls."),
   map: z.strictObject({
     floors: PosInt,
     width: PosInt,
@@ -810,20 +822,25 @@ export const RogueConfig = z.strictObject({
     fixed: z.record(z.string(), RogueNodeKind).describe("Floor number to the kind every node on it has."),
     odds: z.record(z.string(), z.number().min(0)).describe("Room odds for the other floors, by kind."),
     lateFrom: PosInt.describe("Elites and campfires only from this floor."),
+    ensure: z.record(z.string(), z.number().int().min(0)).optional().describe("Rooms of a kind an act has at least, where the rules allow."),
   }),
   gold: z.strictObject({ fight: IntRange, elite: IntRange, boss: IntRange, perAct: z.number().int().min(0) }),
-  spoils: z.strictObject({ fight: Spoils, elite: Spoils, usable: Pct.describe("Share of gear rolled from what the roster can use.") }),
-  boon: z.strictObject({ count: PosInt }),
-  treasure: z.strictObject({ rarity: RarityOdds, gold: IntRange }),
-  campfire: z.strictObject({ hp: Pct, mp: Pct, revive: Pct, camp: Pct.optional().describe("The share of REST and FOCUS those standing at camp get, whatever the pick (default all of both).") }),
-  reserves: z.boolean().optional().describe("A lost fight with someone standing at camp doesn't end the run: they take the road (a regular fight or elite is passed with no spoils; a boss is faced again)."),
+  spoils: z.strictObject({ fight: Spoils, elite: Spoils, offRoster: Pct.describe("Step 5h: share of offered gear (spoils, chests, events; not the shop or a trophy) rolled for classes not in the roster, where there is such a piece.") }),
+  boon: z.strictObject({ count: PosInt, seat: z.boolean().optional().describe("Step 5h: a seat at camp is among the options, while there's one to win.") }),
+  treasure: z.strictObject({ rarity: RarityOdds, gold: IntRange, cage: Pct.optional().describe("Step 5h: chance the chest is a cage: a recruit with a piece suited to it.") }),
+  campfire: z.strictObject({
+    hp: Pct, mp: Pct, revive: Pct,
+    camp: Pct.optional().describe("The share of REST those standing at camp get, whatever the pick (default all)."),
+    train: PosInt.optional().describe("Step 5h: members TRAIN teaches or upgrades (default one)."),
+    stranger: Pct.optional().describe("Step 5h: chance a stranger at the fire asks to join."),
+  }),
   prices: z.strictObject({
     common: z.number().int().min(0), uncommon: z.number().int().min(0), rare: z.number().int().min(0), legendary: z.number().int().min(0),
     recruit: z.number().int().min(0), formation: z.number().int().min(0), learn: z.number().int().min(0), upgrade: z.number().int().min(0),
     trainStep: z.number().int().min(0).optional().describe("A shop's training can be bought again in the same visit, each time this much dearer (learning and upgrading alike); without it, once each a visit."),
     supply: z.record(z.string(), z.number().int().min(0)), sell: Pct,
   }),
-  shop: z.strictObject({ gear: RarityOdds.describe("How many pieces of each rarity."), recruits: z.number().int().min(0), formations: z.number().int().min(0), supplies: z.number().int().min(0) }),
+  shop: z.strictObject({ gear: RarityOdds.describe("How many pieces of each rarity."), legendaryByAct: z.array(z.number().int().min(0)).optional().describe("Step 5h: legendary pieces a visit, by act (in place of gear.legendary)."), recruits: z.number().int().min(0), formations: z.number().int().min(0), supplies: z.number().int().min(0) }),
   supplies: z.strictObject({ potion: z.strictObject({ hp: Pct }), tonic: z.strictObject({ mp: Pct }), phoenix: z.strictObject({ revive: Pct }) }),
   /** Step 5g (the director's): after every won fight the party is handed these, free, up to the bag. */
   drops: z.array(SupplyId).optional().describe("Round 9: offered as a choice of one after every won fight."),
@@ -860,11 +877,15 @@ export type EventOpT =
   | { op: "hp"; pct: number; one?: boolean }
   | { op: "mp"; pct: number }
   | { op: "gear"; rarity: RarityT }
-  | { op: "recruit"; hp?: number }
+  | { op: "recruit"; hp?: number; known?: number; gear?: RarityT }
   | { op: "learn" }
   | { op: "upgrade" }
   | { op: "temper" }
-  | { op: "formation" }
+  | { op: "formation"; rarity?: RarityT }
+  | { op: "seat" }
+  | { op: "train"; n: number }
+  | { op: "muster"; n: number; known?: number }
+  | { op: "trade" }
   | { op: "supply"; id: SupplyIdT }
   | { op: "fight"; tier: "normal" | "elite" }
   | { op: "camp" }
@@ -875,22 +896,28 @@ export const EventOp: z.ZodType<EventOpT> = z.lazy(() =>
     z.strictObject({ op: z.literal("hp"), pct: z.number(), one: z.boolean().optional() }),
     z.strictObject({ op: z.literal("mp"), pct: z.number() }),
     z.strictObject({ op: z.literal("gear"), rarity: Rarity }),
-    z.strictObject({ op: z.literal("recruit"), hp: Pct.optional() }),
+    z.strictObject({ op: z.literal("recruit"), hp: Pct.optional(), known: z.number().int().min(1).max(3).optional(), gear: Rarity.optional() }),
     z.strictObject({ op: z.literal("learn") }),
     z.strictObject({ op: z.literal("upgrade") }),
     z.strictObject({ op: z.literal("temper") }),
-    z.strictObject({ op: z.literal("formation") }),
+    z.strictObject({ op: z.literal("formation"), rarity: Rarity.optional() }),
+    z.strictObject({ op: z.literal("seat") }),
+    z.strictObject({ op: z.literal("train"), n: PosInt }),
+    z.strictObject({ op: z.literal("muster"), n: PosInt, known: z.number().int().min(1).max(3).optional() }),
+    z.strictObject({ op: z.literal("trade") }),
     z.strictObject({ op: z.literal("supply"), id: SupplyId }),
     z.strictObject({ op: z.literal("fight"), tier: z.enum(["normal", "elite"]) }),
     z.strictObject({ op: z.literal("camp") }),
     z.strictObject({ op: z.literal("chance"), pct: Pct, then: z.array(EventOp), else: z.array(EventOp) }),
   ]),
 );
+const EventOption = z.strictObject({ id: Id, label: Text, text: Text, gold: z.number().int().min(0).optional().describe("Gold it costs; it can't be picked without."), do: z.array(EventOp) });
 export const RogueEvent = z.strictObject({
   id: Id,
   name: Text,
   text: Text,
-  options: z.array(z.strictObject({ id: Id, label: Text, text: Text, gold: z.number().int().min(0).optional().describe("Gold it costs; it can't be picked without."), do: z.array(EventOp) })).min(1),
+  options: z.array(EventOption).min(1),
+  variants: z.array(z.strictObject({ text: Text.optional(), options: z.array(EventOption).min(1) })).optional().describe("Step 5h: versions of the event; one is rolled on entering, its text and options in place of the first's."),
 });
 export type RogueEventT = z.infer<typeof RogueEvent>;
 

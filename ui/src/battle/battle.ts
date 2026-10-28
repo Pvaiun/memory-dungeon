@@ -31,7 +31,7 @@ import { celebrate } from "../celebrate.js";
 import { meet } from "../bestiary.js";
 import { advanceOnce } from "../../../src/engine/run.js";
 import { combat } from "../../../src/engine/combat/rules.js";
-import { endFight as endRogueFight, FIGHT_DUNGEON, partyOf, reservesStand, startFight as startRogueFight } from "../../../src/rogue.js";
+import { endFight as endRogueFight, FIGHT_DUNGEON, partyOf, startFight as startRogueFight } from "../../../src/rogue.js";
 import { current as rogueRun, saveRogue } from "../rogue-state.js";
 
 /** `node`: the journey node it was started from. Winning that node's whole run, while it's the one to clear, clears it; its single fights are practice. */
@@ -705,7 +705,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     // One big way on, where the message window was; the rest below.
     let main: HTMLButtonElement;
     const more: HTMLButtonElement[] = [];
-    if (rogue) main = bigButton(won ? "ONWARD" : reservesStand(c, rogue) ? "THE CAMP STEPS IN" : "THE END", () => rogueOn());
+    if (rogue) main = bigButton(won ? "ONWARD" : "THE END", () => rogueOn());
     else if (clearedNow) main = bigButton("JOURNEY", () => { stop(); go("journey"); if (!celebrated) cheer(); });
     else if (won && !last) (main = bigButton("NEXT FIGHT", () => nextFight(), `${driver.fightNo + 1}/${driver.fightTotal}`)), more.push(button(exitLabel, exit));
     else if (won) (main = bigButton(exitLabel, exit)), more.push(button("AGAIN", () => restart()));

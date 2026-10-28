@@ -212,8 +212,9 @@ function offerValue(c: Content, d: Dials, run: RogueRun, o: Offer): number {
     return gain + 0.3;
   }
   if (o.kind === "tome") return run.party.includes(o.cls) ? ABILITY_VALUE : 1.5;
-  if (o.kind === "recruit") return recruitValue(d, run, o.cls);
+  if (o.kind === "recruit") return recruitValue(d, run, o.cls) + ((o.known?.length ?? 1) - 1) * 1.5 + (o.item ? 1 : 0);
   if (o.kind === "formation") return 2;
+  if (o.kind === "seat") return 2.5;
   return o.id === "phoenix" ? 1.8 : 1.4;
 }
 
@@ -267,8 +268,18 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
         const into = bench(run).filter((x) => !member(run, x).ko).sort((a, b) => classScore(d, run, b) - classScore(d, run, a))[0];
         if (into) swap(c, run, out, into);
       }
-      // Empty seats (after the reserves took the road) are filled by whoever stands at camp.
+      // Empty seats are filled by whoever stands at camp.
       for (const cls of bench(run).filter((x) => !member(run, x).ko)) swap(c, run, cls, null);
+      // Step 5h: before a fight, a member under a third of its MP rests, and the fullest one at camp with more than half takes
+      // its seat (a plain rotation rule; the simulated player isn't tuned on, but its runs should hold together).
+      if (run.pending.kind === "fight" && !run.pending.begun) {
+        const mpOf = (cls: string) => { const mx = maxOf(c, run, cls, "max_mp"); return mx > 0 ? 1 - member(run, cls).missMp / mx : 1; };
+        for (const out of [...run.party]) {
+          if (mpOf(out) >= 1 / 3) continue;
+          const into = bench(run).filter((x) => !member(run, x).ko && mpOf(x) > 0.5).sort((a, b) => classScore(d, run, b) - classScore(d, run, a))[0];
+          if (into) swap(c, run, out, into);
+        }
+      }
     }
     if (!d.noGear) kitUp(c, run, d.lock);
     arrange(c, run);
@@ -303,7 +314,8 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
         return best;
       }
       case "spoils":
-      case "boon": {
+      case "boon":
+      case "muster": {
         let best = "skip", bv = 0.25;
         for (const o of opts) {
           if (o === "skip") continue;
@@ -319,6 +331,17 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
         return [...opts].sort((a, b) => held(a) - held(b) || (a === "potion" ? hp : mp) - (b === "potion" ? hp : mp))[0];
       }
       case "treasure": return opts.includes("take") ? "take" : "leave";
+      case "drill": {
+        // A formation it doesn't have, unless a party member has something to learn (then the drill trains).
+        const trainable = opts.includes("train") && learnOptions(c, run).some((o) => run.party.includes(o.split(":")[0]));
+        return trainable ? "train" : (opts.find((o) => o.startsWith("take:")) ?? "skip");
+      }
+      case "train": {
+        const t = opts.filter((o) => o !== "done");
+        const learnP = t.filter((o) => o.startsWith("learn:") && run.party.includes(o.split(":")[1]));
+        const upP = t.filter((o) => o.startsWith("upgrade:") && run.party.includes(o.split(":")[1]));
+        return learnP[0] ?? upP[0] ?? t[0] ?? "done";
+      }
       case "shop": return shopPick(c, d, run, opts);
       case "campfire": return campfirePick(c, d, run, opts);
       case "event": { const e = eventPick(c, d, run, opts); return opts.includes(e) ? e : opts[0]; }
@@ -350,6 +373,7 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
       const better = bench(run).filter((x) => !member(run, x).ko).sort((a, b) => sc(b) - sc(a))[0];
       if (better && sc(better) > sc(out) + (m.ko ? -100 : 1.5)) swap(c, run, out, better);
     }
+    if (opts.includes("recruit")) return "recruit";
     const raise = opts.filter((o) => o.startsWith("raise:") && run.party.includes(o.slice(6)));
     if (raise.length) return raise[0];
     const h = hpShare(c, run);
@@ -357,10 +381,8 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
     const nextBoss = reachable(run).some((n) => n.kind === "boss");
     if (h < 0.55 || (nextBoss && h < 0.8)) return "rest";
     if (mp < 0.35 && run.party.filter((x) => CASTERS.has(x)).length >= 1) return "focus";
-    const learn = opts.filter((o) => o.startsWith("learn:") && run.party.includes(o.split(":")[1]));
-    if (learn.length) return learn[0];
-    const up = opts.filter((o) => o.startsWith("upgrade:") && run.party.includes(o.split(":")[1]));
-    if (up.length && h > 0.7) return up[0];
+    // Step 5h: TRAIN (two members) when a party member has something to learn, or the party is healthy.
+    if (opts.includes("train") && (learnOptions(c, run).some((o) => run.party.includes(o.split(":")[0])) || h > 0.7)) return "train";
     return "rest";
   }
 
@@ -412,8 +434,12 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
       case "strange_chest": return h > 0.6 ? "open" : "leave";
       case "camp": return "camp";
       case "pilgrims": return has("donate") && (h < 0.7 || run.party.some((x) => member(run, x).ko)) ? "donate" : "leave";
-      case "drill_yard": return has("hire") && run.roster.length < 4 ? "hire" : "drill";
-      case "standard": return "take";
+      case "deserter": return has("take") ? "take" : opts.find((o) => o !== "take") ?? opts[0];
+      case "mercenaries": return has("hire") && run.gold >= 120 ? "hire" : "leave";
+      case "prisoner_cart": return has("free") && h > 0.6 ? "free" : "pass";
+      case "rival_company": return "decline";
+      case "old_banner": return has("take") && (h > 0.6 || !opts.includes("leave")) ? "take" : opts.find((o) => o !== "take") ?? opts[0];
+      case "training_hall": return has("train") ? "train" : opts[0];
       default: return opts[0];
     }
   }
