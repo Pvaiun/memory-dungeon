@@ -71,7 +71,7 @@ export const SPEED = { fast: 8.9, medium: 11.9, slow: 15.5 } as const;
  * "take big swings"): 12 / 20 / 30 / 44 (were 16 / 28 / 36 / 60). In a 42-tick fight a short fires three or four times, a medium twice,
  * a long once or twice; the very long word is the revives'.
  */
-export const COOLDOWN = { short: 12, medium: 20, long: 24, very_long: 36 } as const; // Round 6: long 24 and very long 36 (were 30 and 44): the third slots still fired once or never (Tremor 0.5 casts a fight, Pyre 0.6, Spear thrust 0.69).
+export const COOLDOWN = { short: 12, medium: 18, long: 22, very_long: 30 } as const; // Round 7: a notch shorter again (the director's guess, with cooldowns carrying between fights). // Round 6: long 24 and very long 36 (were 30 and 44): the third slots still fired once or never (Tremor 0.5 casts a fight, Pyre 0.6, Spear thrust 0.69).
 /**
  * Foes keep the pacing pass's short cooldown. Step 5e: medium 40 and long 60 (were 48 and 70). In free play, at the documents'
  * numbers, a boss fight lasted 46 ticks and the signature moves (Crush, Quiet, Tempest, Death bell, Rally) came 0.5 to 0.9
@@ -126,7 +126,7 @@ export const RULES = {
    * Round 6 (the director's): flat head starts again, big, medium and small, none zero (shares of the cooldown averaged every slot onto the
    * same tick), and cooldowns carry between fights (engine 0.15), so what matters is how much of what's left the slot takes off.
    */
-  opening: { min: 0.2, max: 0.6, slots: [9, 6, 3] },
+  opening: { min: 0.2, max: 0.6, slots: [9, 6, 4] },
   /** Each physical hit loses this share of the target's Armor: Armor 5 takes 600 off, Armor 8 nearly blanks a sword. */
   armorRatio: 0.12,
   /**
@@ -178,7 +178,7 @@ export const COST = { short: 300, medium: 500, long: 800 } as const; // Round 3:
  * campaign runs the party regained 110% of the MP it spent, and the casters spent 1% to 4% of their time short of MP (the
  * Geomancer 14%), against 5c's intent that casters are gated by it; the walls, at 96% to 98% MP, don't feel the step.
  */
-export const MP_REGEN = { every: 4, share: 0.008 }; // Step 5g round 6 (the director's: mana must be scarce now that potions and tonics give the player agency): 0.8% (was 1.5%), with every cost up by about a third. // Round 5: 1.5% (2.5% in round 3): with Stand fast's Clarity every 16 ticks the party regained all it spent again, and no caster was ever short. // Step 5f: 0.03, then round 2: 0.02 (at 0.03 and the first ladder the party regained 115% of what it spent). Every cost is on one ladder (classes.ts), so every class feels MP.
+export const MP_REGEN = { every: 4, share: 0.012 }; // Round 7 (the director's: healthy, not punishing): 1.2% (was 0.8% in round 6: the small pools were dry 60 to 120 ticks at a time). // Step 5g round 6 (the director's: mana must be scarce now that potions and tonics give the player agency): 0.8% (was 1.5%), with every cost up by about a third. // Round 5: 1.5% (2.5% in round 3): with Stand fast's Clarity every 16 ticks the party regained all it spent again, and no caster was ever short. // Step 5f: 0.03, then round 2: 0.02 (at 0.03 and the first ladder the party regained 115% of what it spent). Every cost is on one ladder (classes.ts), so every class feels MP.
 
 // ─── Damage ──────────────────────────────────────────────────────────────────
 
@@ -236,7 +236,7 @@ export const ENEMY_HIT = {
   /** Inferno: ends the run if it lands uninterrupted. */
   /** Campaign pass: 0.5 wiped every party it landed on; at 0.35 it nearly wipes, and an interrupt buys a whole cooldown. */
   /** Step 5g round 2: 0.17 (2,400 to everyone, with many Burn). At 0.35 it was 4,900, every caster outright, so the tuner had cut the Fire Giant to 12,000 HP and it died in 18 ticks having cast nothing. */
-  inferno: 0.25, // Round 5: 0.25 (3,500 to everyone) now that Kindle announces it: the Giant kindles, then begins Inferno eight ticks later.
+  inferno: 0.18, // Round 7: 0.18 (2,500 to everyone). At 0.25 it killed every caster outright, so the calibration bottomed the Giant's HP out and it died in 30 ticks before the Inferno landed: a race, not a boss.
   /** Hailstorm: a raidwide the Cleric can mend. Pacing pass: 0.18 (was 0.08), as it comes a third as often. */
   hailstorm: 0.18,
   /** Tempest: a raidwide the Cleric can absorb. Pacing pass: 0.13 (was 0.06). */
@@ -414,7 +414,7 @@ export const STATUS = {
   hidden: { duration: 10 }, // Step 5f round 6: 10 on a short Vanish (16): hidden 60% of a fight, from tick 8. Medium came at tick 22, after the Assassin died at 20; 14 on a short had it hidden 85% and its allies took every hit.
   rot: { healing: -60, duration: 20 },
   /** Step 5f (the director's): Regen for mana, not a doubled stat: 4% of max MP every 2 ticks for 16 ticks (32% of max MP). */
-  clarity: { every: 4, share: 0.04, duration: 16 }, // Step 5g: 4% every 4 ticks (the same 16%): four pulses a player can see, not eight of 40 MP. // Rounds 5 and 6: 2% a pulse (16% of max MP; was 4%, 32%): Stand fast's every 16 ticks made mana infinite.
+  clarity: { every: 4, share: 0.06, duration: 16 }, // Round 7: four pulses of 6%, 24% of max MP (was 16%): a top-up a player notices. // Step 5g: 4% every 4 ticks (the same 16%): four pulses a player can see, not eight of 40 MP. // Rounds 5 and 6: 2% a pulse (16% of max MP; was 4%, 32%): Stand fast's every 16 ticks made mana infinite.
   aegis: { share: 25 },
   /** Step 5g round 5 (the director's): 60% of the doomed unit's max HP (was 3,500 flat: a kill on anyone at HP 3 or below). From full nobody dies to it; hurt, anyone does. */
   doom: { countdown: 10, share: 0.6 },

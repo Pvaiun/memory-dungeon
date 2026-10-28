@@ -52,7 +52,9 @@ const waitsFor = (side: TargetRuleT["side"], where: NonNullable<TargetRuleT["whe
 const stat = (hp: number, mp: number, regen: number, atk: number, mag: number, armor: number, c: number, aggro: number) => ({
   max_hp: pts(hp), max_mp: pts(mp), mp_regen: pts(regen), attack: pts(atk), magic: pts(mag), armor: pts(armor), crit_chance: crit(c), aggro: aggroOf(aggro),
 });
-const special = (s: SpecialStat, level: SpecialLevel) => ({ [SPECIAL_KEY[s]]: SPECIAL[s][level] });
+// Step 5g round 7 (a feel reader's catch): a class's stat line is its base, so "Crit damage high" had set the Geomancer's and Assassin's
+// multiplier to 100 (crits for no extra damage) in place of the default 150 plus the word. The word adds to the default now.
+const special = (s: SpecialStat, level: SpecialLevel) => ({ [SPECIAL_KEY[s]]: (s === "crit_damage" ? 150 : 0) + SPECIAL[s][level] });
 const resist = (element: string, kind: "resists" | "weak") => ({ [`resist:${element}`]: RESIST[kind] });
 
 /** Stacks a passive's application adds: scaled from the holder's stat, read when it fires. */
