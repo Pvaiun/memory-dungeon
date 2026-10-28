@@ -189,8 +189,9 @@ export const abilities: A[] = [
     do: [{ op: "remove", label: "debuff" }, { op: "heal", amount: from("magic", 0.4) }, { op: "remove", label: "debuff", to: T.otherLowestShareAlly }, { op: "heal", amount: from("magic", 0.4), to: T.otherLowestShareAlly }],
   }),
   // Step 5c (the director's): Smite Burns, on a medium cooldown (was long).
+  // Step 5g round 4: a long wind-up (6), not very long (8): the Paladin cast nothing in three of twelve read fights, dying in Smite's wind-up.
   a("paladin", "smite", "Smite", "Heavy Light damage to the foe with the highest Attack or Magic, adding several Burn.", {
-    ...timing("medium", "very_long"), mp: 500, target: T.highestAMFoe, do: [magic("light", hit("magic", "normal"), { apply: [{ status: "burn", stacks: stacks("several", "magic") }] })],
+    ...timing("medium", "long"), mp: 500, target: T.highestAMFoe, do: [magic("light", hit("magic", "normal"), { apply: [{ status: "burn", stacks: stacks("several", "magic") }] })],
   }),
   // Valkyrie
   a("valkyrie", "gale_spear", "Gale spear", "Three quick Wind hits on a foe that isn't Taunting, each adding a few Shock.", {
@@ -217,7 +218,8 @@ export const abilities: A[] = [
   a("bard", "chorus", "Chorus", "A small heal on every ally; the amount scales from Magic.", { ...timing("short", "normal"), mp: 300, ...waitsFor("allies", { hpBelow: 80 }), target: T.everyAlly, do: [{ op: "heal", amount: from("magic", 0.25) }] }),
   // Step 5c (the director's): Lullaby (Slow on one foe) became a Shock on every foe.
   // Many, not several: at several an AI playtester saw it peak at 10 stacks for under 2,000 a fight, the Bard a passenger.
-  a("bard", "thunder_chord", "Thunder chord", "Many Shock on every foe.", { ...timing("medium", "normal"), mp: 500, target: T.everyFoe, do: [apply("shock", { stacks: stacks("many", "magic") })] }),
+  // Step 5g round 4: several (was many): with gear and the rogue's upgrade one chord put 40 Shock (the cap) on a boss, which then paid 3,200 for a 560 swing.
+  a("bard", "thunder_chord", "Thunder chord", "Several Shock on every foe.", { ...timing("medium", "normal"), mp: 500, target: T.everyFoe, do: [apply("shock", { stacks: stacks("several", "magic") })] }),
   // Hexer
   // Step 5e: 1,200, 900 and 1,000 MP (were 1,600, 1,300 and 1,300): the Hexer's parties won 9 to 17 points less than parties without it, and it cast 1.3 abilities a regular fight.
   // Step 5f (the director's rework): the debuff bot. Hush (Silence on one foe) became Malison, Unravel (one buff off one foe) became Unmake.
@@ -244,7 +246,7 @@ export const abilities: A[] = [
   // Vampire
   // Step 5e: 0.5 of max HP (was a normal hit, 0.75): at 4 swings a cast twice a fight it was 60% of the Vampire's damage, and
   // through Lifesteal most of the 3,850 HP it healed itself a fight; parties with the Vampire won 37 points more than without.
-  a("vampire", "blood_drain", "Blood drain", "Dark damage scaling from max HP to a random foe, which is Weakened.", { ...timing("short", "quick"), mp: 150, do: [magic("dark", from("max_hp", 0.4), { apply: [{ status: "weaken" }] })] }), // round 6: 0.4 (the Vampire still +11 / +25 / +9 at 0.5).
+  a("vampire", "blood_drain", "Blood drain", "Dark damage scaling from max HP to a random foe, which is Weakened.", { ...timing("short", "quick"), mp: 100, do: [magic("dark", from("max_hp", 0.4), { apply: [{ status: "weaken" }] })] }), // Step 5g round 4: 100 MP (was 150): the Vampire arrived dry in four of six read fights; its 2,000 pool is the roster's smallest and its loop the most frequent. // round 6: 0.4 (the Vampire still +11 / +25 / +9 at 0.5).
   // Step 5f (the director's): Wither's Rot met one enemy heal in the whole roster. Blood gift spends the Vampire's own HP on an ally.
   a("vampire", "blood_gift", "Blood gift", "Spends a fifth of its max HP to heal the lowest other ally for as much, and gives it Clarity.", {
     // Step 5g round 3: 300 MP (was 500) and it waits for an ally under 80%: it already costs a fifth of the Vampire's HP, and the Vampire was the one class short of MP (21% of its time).

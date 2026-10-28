@@ -291,6 +291,13 @@ function pack(r: Rec, n: number): string {
   // The statuses each unit holds, for annotating hits (the reads: Weaken, Might, Guard and Chill "exist only in arithmetic").
   const held = new Map<string, Map<string, number>>();
   const holds = (id: unknown, st: string) => held.get(String(id))?.get(st);
+  const pace = (id: unknown) => {
+    const bits: string[] = [];
+    if (holds(id, "chill")) bits.push(`chilled ${n1(holds(id, "chill")!)}`);
+    if (holds(id, "slow") !== undefined) bits.push("slowed");
+    if (holds(id, "haste") !== undefined) bits.push("hasted");
+    return bits.length ? ` (${bits.join(", ")})` : "";
+  };
   const note = (by: unknown, target: unknown) => {
     const bits: string[] = [];
     if (holds(by, "weaken") !== undefined) bits.push("weakened");
@@ -328,13 +335,14 @@ function pack(r: Rec, n: number): string {
         const m = lastMp.get(String(e.by));
         const cost = m && m.at === atN && m.amount < 0 ? ` (MP −${n0(-m.amount)} → ${n0(m.mp)})` : "";
         const tg = (e.targets as string[]).map(who);
-        out.push(`${own}${who(e.by)} ${e.act === "basic" ? "attacks" : `uses ${e.name} on`} ${tg.length > 3 ? `${tg.length} targets` : tg.join(", ")}${cost}.`);
+        out.push(`${own}${who(e.by)}${pace(e.by)} ${e.act === "basic" ? "attacks" : `uses ${e.name} on`} ${tg.length > 3 ? `${tg.length} targets` : tg.join(", ")}${cost}.`);
         break;
       }
       case "fail": out.push(`${own}${who(e.by)}'s ${e.name} fails (${e.why === "mp" ? "no MP" : "no target"}).`); break;
       case "dmg": {
         const from = e.part === "pulse" || e.part === "reaction" ? ` from ${String(e.src).toUpperCase()}${e.from && who(e.from) !== String(e.from) ? ` (${who(e.from)}'s)` : ""}` : e.part === "extra" ? " (extra strike)" : "";
         if (e.word === "MISS") out.push(`${own}${who(e.target)}: MISS${from}.`);
+        else if (e.word === "AEGIS") out.push(`${own}${who(e.target)}: AEGIS blocks the blow (${n0(Number(e.raw))} raw)${hpWord(e.target, e.hp, e.shield)}.`);
         else out.push(`${own}${who(e.target)} takes ${e.crit ? "CRIT " : ""}${n0(Number(e.amount))}${e.kind ? ` ${e.kind}` : ""}${e.word ? ` ${e.word}` : ""}${from}${e.soaked ? `, ${n0(Number(e.soaked))} soaked` : ""}${e.part === "hit" || e.part === "extra" ? note(e.by, e.target) : ""}${hpWord(e.target, e.hp, e.shield)}.`);
         break;
       }

@@ -343,7 +343,7 @@ export const STATUS = {
    * and the same parties won 20 points more in Caravan than in Neutral: 36% of the whole party's HP a fight, for nothing, was
    * more than a Cleric heals. The Herald's horn (+9 points on the amulets) is the same Regen.
    */
-  regen: { every: 2, share: 0.03, duration: 24 }, // Step 5g round 2: 3% a pulse (36% over 24 ticks); at 2% a Regen pulsed 60 on a Cleric and read as nothing. // Step 5f: 24 ticks (24% of max HP) with the longer fights. // round 3: 10 pulses of 2%, a fifth of max HP: Caravan was still +14.7 at a quarter. Round 4: 8 pulses, 16% (Caravan +13.7 at a fifth).
+  regen: { every: 4, share: 0.06, duration: 24 }, // Step 5g round 4: six pulses of 6% (was twelve of 3%, the same 36%): twelve beats of 90 were the log's noise. // Step 5g round 2: 3% a pulse (36% over 24 ticks); at 2% a Regen pulsed 60 on a Cleric and read as nothing. // Step 5f: 24 ticks (24% of max HP) with the longer fights. // round 3: 10 pulses of 2%, a fifth of max HP: Caravan was still +14.7 at a quarter. Round 4: 8 pulses, 16% (Caravan +13.7 at a fifth).
   shield: { capShare: 0.5 },
   /** Campaign pass: a cap of 25 stacks. Uncapped, a hidden Bard stacked 123 on itself and the Storm King reached 38. */
   /** Step 5f (the director's): Might spends with action, not time: one stack each time the holder acts (vocabulary.ts). 10% a stack, cap 20. */
