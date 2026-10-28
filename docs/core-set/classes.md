@@ -47,24 +47,26 @@ Not in the core set for now: Berserker (the first to add next: Might, Lifesteal 
 
 ### Stats
 
+*Step 5h (Oct 28, 2026, the director's): the MP column is each class's MP pool, set by how many regular fights it lasts from full (about two or three for every class; the Valkyrie and Cleric keep room for their revives), and MP regen is 0 for every class: no class regains MP in a fight by itself (gear and a formation seat carry MP regen), and a member regains half its MP after each won fight it sits out on the bench. The old words were MP 2 to 5 and regen 2 to 4.*
+
 | Class | HP | MP | MP regen | Attack | Magic | Armor | Crit | Aggro |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Knight | 5 | 2 | 2 | 3 | 1 | 4 | 2 | 5 |
-| Cleric | 2 | 5 | 4 | 1 | 4 | 2 | 2 | 1 |
-| Ranger | 3 | 3 | 3 | 4 | 1 | 2 | 3 | 2 |
-| Bramble knight | 5 | 2 | 2 | 3 | 2 | 3 | 2 | 5 |
-| Hoplite | 4 | 2 | 2 | 4 | 1 | 5 | 2 | 5 |
-| Paladin | 4 | 3 | 3 | 3 | 4 | 4 | 2 | 4 |
-| Valkyrie | 3 | 3 | 3 | 4 | 3 | 3 | 3 | 3 |
-| Bard | 3 | 4 | 3 | 3 | 3 | 3 | 2 | 1 |
-| Hexer | 2 | 4 | 3 | 1 | 4 | 1 | 2 | 1 |
-| Monk | 3 | 2 | 3 | 3.7 | 1 | 2 | 2 | 2 |
-| Assassin | 2 | 3 | 3 | 5 | 1 | 2 | 5 | 1 |
-| Vampire | 4 | 2 | 2 | 4 | 2 | 2 | 2 | 3 |
-| Pyromancer | 2 | 5 | 2 | 1 | 5 | 1 | 2 | 1 |
-| Frostweaver | 2 | 4 | 3 | 1 | 4 | 2 | 2 | 1 |
-| Stormcaller | 2 | 3 | 3 | 1 | 4 | 1 | 2 | 1 |
-| Geomancer | 3 | 3 | 3 | 3 | 4 | 4 | 4 | 3 |
+| Knight | 5 | 1 | 0 | 3 | 1 | 4 | 2 | 5 |
+| Cleric | 2 | 2.2 | 0 | 1 | 4 | 2 | 2 | 1 |
+| Ranger | 3 | 2.1 | 0 | 4 | 1 | 2 | 3 | 2 |
+| Bramble knight | 5 | 1.7 | 0 | 3 | 2 | 3 | 2 | 5 |
+| Hoplite | 4 | 1.3 | 0 | 4 | 1 | 5 | 2 | 5 |
+| Paladin | 4 | 2.8 | 0 | 3 | 4 | 4 | 2 | 4 |
+| Valkyrie | 3 | 1.8 | 0 | 4 | 3 | 3 | 3 | 3 |
+| Bard | 3 | 2.4 | 0 | 3 | 3 | 3 | 2 | 1 |
+| Hexer | 2 | 1.7 | 0 | 1 | 4 | 1 | 2 | 1 |
+| Monk | 3 | 0.65 | 0 | 3.7 | 1 | 2 | 2 | 2 |
+| Assassin | 2 | 1.45 | 0 | 5 | 1 | 2 | 5 | 1 |
+| Vampire | 4 | 1.7 | 0 | 4 | 2 | 2 | 2 | 3 |
+| Pyromancer | 2 | 3.8 | 0 | 1 | 5 | 1 | 2 | 1 |
+| Frostweaver | 2 | 2.3 | 0 | 1 | 4 | 2 | 2 | 1 |
+| Stormcaller | 2 | 2.3 | 0 | 1 | 4 | 1 | 2 | 1 |
+| Geomancer | 3 | 2.3 | 0 | 3 | 4 | 4 | 4 | 3 |
 
 Crit is Crit chance. Resistances and special stats are listed with each class below. Step 5f (Oct 27, 2026, the director's): the Knight at HP 5 and Armor 4 (the health tank beside the Hoplite's plate; HP 4 was 5c's try), the Hoplite at Attack 4 and Aggro 5, the Monk at Attack 3.7, Crit 2 and Aggro 2, the Paladin and Bramble knight at Aggro 4 and 5, and the casters, the Cleric, the Bard and the Hexer at Aggro 1, so a draw-by-Aggro party leaves its back line alone. Step 5e's HP 3 on the Bard, Hexer and Assassin is reverted: not HP.
 

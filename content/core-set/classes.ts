@@ -382,3 +382,18 @@ export const classes: ClassDefT[] = [
     stats: { ...stat(3, 3, 3, 3, 4, 4, 4, 3), ...special("crit_damage", "high") }, weapons: ["earth_staff", "fire_staff", "axe"], armor: "heavy", passive: p("bedrock", "Bedrock", "While its Shield pool is above zero, its crit chance is doubled."),
   }),
 ];
+/**
+ * Step 5h (the director's: every class runs dry in about two or three fights from full, casters and walls close together,
+ * erring scarce; MP comes back on the bench, never in a fight by itself): each class's MP pool, in points, set by how many
+ * regular fights it lasts from full (`npx tsx src/rogue-acts.ts`, the endurance line). The cost ladder stays as it is; the
+ * pool is the class's MP identity. Was the stat line's word (in brackets).
+ */
+export const MP_POOL: Record<string, number> = {
+  // The Valkyrie and the Cleric keep room for their revive (1,500): they hold MP for Valhalla and Raise, so they last a little longer.
+  // Round 3: every pool a sixth smaller but the revivers' (medians sat at three fights, the top of the director's "two or three, scarce").
+  knight: 1 /* 2 */, cleric: 2.2 /* 5 */, ranger: 2.1 /* 3 */, bramble_knight: 1.7 /* 2 */, hoplite: 1.3 /* 2 */, paladin: 2.8 /* 3 */,
+  valkyrie: 1.8 /* 3 */, bard: 2.4 /* 4 */, hexer: 1.7 /* 4 */, monk: 0.65 /* 2 */, assassin: 1.45 /* 3 */, vampire: 1.7 /* 2 */,
+  pyromancer: 3.8 /* 5 */, frostweaver: 2.3 /* 4 */, stormcaller: 2.3 /* 3 */, geomancer: 2.3 /* 3 */,
+};
+for (const k of classes) if (MP_POOL[k.id] !== undefined) k.stats.max_mp = pts(MP_POOL[k.id]);
+

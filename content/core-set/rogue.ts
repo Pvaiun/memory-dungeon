@@ -86,7 +86,12 @@ export const ROGUE_CONFIG: RogueConfigT = {
   // Snakes' packs never grow, and act I's regular fights hold two (round 29: the Viper Den and the Snake Pit ended 9% and
   // 7% of the act I runs meeting them, every other act I fight 2% or less, with their knobs already at the floor: the
   // regular fights' extra HP gives a snake more hits, and Bleed doesn't shrink with the knob).
-  neverGrow: ["snake"],
+  // Step 5h: with a bench to pick from before every fight, the fights softened for a fixed party of three come back as
+  // puzzles: snake packs grow again, the Snake Pit and the Viper Den hold three and four snakes (as first built), and the
+  // Fire Mine a new elite, the Bomb Nest: three Bomb Bugs (the enemies document: "three together wipe" a party not built for
+  // them). Three cost a quarter of a counter-picked party's HP at the knob's floor, an elite's cost, so they're an elite and
+  // the regular Bomb Room and the Powder Room keep two.
+  neverGrow: [],
   /** A level-up can be taken as gold instead (one with a single thing left to learn or upgrade was no choice). */
   levelGold: 40,
   /** Prices, in gold. A piece sells for `sell` % of its price. Services are once a visit. */
@@ -153,8 +158,8 @@ const REGIONS: RogueRegion[] = [
     text: "Bandits, wolves and snakes on the road out of town, and ogres at the bridges.",
     easy: [f("toll_gate", "Toll Gate", [3, "bandit"]), f("wolves", "Wolves", [4, "wolf"]), f("snake_grass", "Snake Grass", [3, "snake"]), f("road_thugs", "Road Thugs", [2, "bandit"], [2, "wolf"])],
     normal: [
-      f("wolf_pack", "Wolf Pack", [6, "wolf"]), f("snake_pit", "Snake Pit", [2, "snake"], [2, "bandit"]), f("bandit_camp", "Bandit Camp", [1, "shieldman"], [2, "archer"], [1, "bandit"]),
-      f("night_wolves", "Night Wolves", [7, "wolf"]), f("archers_nest", "Archers' Nest", [1, "shieldman"], [3, "archer"]), f("viper_den", "Viper Den", [2, "snake"], [3, "bandit"]),
+      f("wolf_pack", "Wolf Pack", [6, "wolf"]), f("snake_pit", "Snake Pit", [3, "snake"], [2, "bandit"]), f("bandit_camp", "Bandit Camp", [1, "shieldman"], [2, "archer"], [1, "bandit"]),
+      f("night_wolves", "Night Wolves", [7, "wolf"]), f("archers_nest", "Archers' Nest", [1, "shieldman"], [3, "archer"]), f("viper_den", "Viper Den", [4, "snake"], [2, "bandit"]),
       f("bandit_horde", "Bandit Horde", [5, "bandit"]),
     ],
     elite: [f("ogre_bridge", "Ogre Bridge", [1, "ogre"], [2, "bandit"]), f("twin_ogres", "Twin Ogres", [2, "ogre"]), f("war_camp", "War Camp", [1, "shieldman"], [2, "archer"], [1, "ogre"])],
@@ -179,7 +184,7 @@ const REGIONS: RogueRegion[] = [
       f("hound_pack", "Hound Pack", [5, "hellhound"]), f("bomb_room", "Bomb Room", [2, "bomb_bug"], [2, "hellhound"]), f("imp_kennel", "Imp Kennel", [1, "fire_imp"], [3, "hellhound"]),
       f("hound_run", "Hound Run", [6, "hellhound"]), f("slag_heap", "Slag Heap", [1, "lava_slime"], [2, "hellhound"]), f("miners", "The Miners", [3, "bandit"], [1, "bomb_bug"]),
     ],
-    elite: [f("lava_flow", "Lava Flow", [2, "lava_slime"]), f("imp_court", "Imp Court", [2, "fire_imp"], [3, "hellhound"]), f("powder_room", "Powder Room", [2, "bomb_bug"], [1, "ogre"])],
+    elite: [f("lava_flow", "Lava Flow", [2, "lava_slime"]), f("imp_court", "Imp Court", [2, "fire_imp"], [3, "hellhound"]), f("powder_room", "Powder Room", [2, "bomb_bug"], [1, "ogre"]), f("bomb_nest", "Bomb Nest", [3, "bomb_bug"])],
     bosses: [f("fire_giant", "The Fire Giant", [1, "fire_giant"]), f("giants_forge", "The Giant's Forge", [1, "fire_giant"], [2, "hellhound"]), f("giants_wrath", "The Giant's Wrath", [1, "fire_giant"], [2, "fire_imp"])],
   },
   {

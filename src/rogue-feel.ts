@@ -6,7 +6,11 @@
  * bottom (each unit's actions, its damage by source, the statuses' share). A summary of every fight played goes beside
  * the packs: the short simulation that sits next to the read.
  *
- *   npx tsx src/rogue-feel.ts [--runs 48] [--heat 0] [--packs 10] [--focus frostweaver,hexer] [--player] [--out out/feel] [--set path=value]...
+ *   npx tsx src/rogue-feel.ts [--runs 48] [--heat 0] [--packs 10] [--focus frostweaver,hexer] [--player] [--rosters] [--out out/feel] [--set path=value]...
+ *
+ * Step 5h: --rosters reads the hand-built rosters (src/rogue-parties.ts) instead of the simulated player's runs: every roster
+ * at every act's and tier's power level meets a fight of each region's pool, fielding its best three of five for it (tried
+ * on other dice), as the calibration measures.
  *
  * The leader cycles through every class and half the draft picks are random, so every class is seen (the simulated player's own
  * drafter never takes the Frostweaver or the Hexer); --player plays it as the simulated player does, three leaders and its
@@ -17,8 +21,10 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { advance, loadContent, type Content } from "./engine/run.js";
 import { combat, type Member as EngineMember } from "./engine/combat/rules.js";
 import type { Entry } from "./engine/log.js";
-import { choose, endFight, newRogue, partyOf, registerGear, rogue, startFight, type FightTier, type RogueRun } from "./rogue.js";
-import { aiPlayer } from "./rogue-ai.js";
+import { autoFight, choose, endFight, foesFor, knobFor, newRogue, partyOf, registerGear, rogue, startFight, type FightTier, type RogueRun } from "./rogue.js";
+import { aiPlayer, hpShare } from "./rogue-ai.js";
+import { LEVELS, ROSTERS, buildRoster, trios, type Tier as PTier } from "./rogue-parties.js";
+import { int as rint, rngFor } from "./engine/rng.js";
 import { parsePatches } from "./rogue-sim.js";
 import { patch } from "./sim/content.js";
 import { SUBTICKS, type AbilityT, type GearT, type NumT, type Party } from "./schema.js";
@@ -46,7 +52,40 @@ type Rec = {
 // ─── Playing ─────────────────────────────────────────────────────────────────
 
 const recs: Rec[] = [];
-for (let s = 1; s <= RUNS; s++) {
+// Step 5h: the hand-built rosters, each fielding its best three for the fight.
+if (args.includes("--rosters")) for (const act of [1, 2, 3]) for (const reg of rogue(c).regions.filter((g) => g.act === act)) for (const pt of ["easy", "normal", "elite", "boss"] as PTier[]) ROSTERS.forEach((ro, ri) => {
+  const pool = pt === "boss" ? reg.bosses : reg[pt];
+  const fight = pool[rint(rngFor(500 + ri * 13 + act, `feel:${reg.id}:${pt}`), pool.length)];
+  const tier: FightTier = pt === "boss" ? "boss" : pt === "elite" ? "elite" : "fight";
+  const floor = pt === "easy" ? 1 : pt === "boss" ? 10 : 5;
+  const at = (run: RogueRun, seed: number) => { run.region = reg.id; run.floor = floor; run.pending = { kind: "fight", node: "feel", tier, fight, foes: foesFor(c, tier, knobFor(c, run, tier, floor, fight)), seed }; };
+  const base = buildRoster(c, ro, act, pt);
+  let best = base.party, bc = Infinity;
+  // Each trio on two throws of the dice, as the calibration picks (one throw picked worse trios: the act I bosses won 7 of 12).
+  for (const trio of trios(ro, LEVELS[act][pt].roster ?? 5)) {
+    let cost = 0;
+    for (const seed of [77 + ri, 177 + ri]) {
+      const t = structuredClone(base);
+      t.party = trio;
+      at(t, seed);
+      autoFight(c, t);
+      const after = t.pending as RogueRun["pending"];
+      cost += after.kind === "over" && !after.won ? 2 : 1 - hpShare(c, t);
+    }
+    if (cost < bc - 1e-9) (bc = cost), (best = trio);
+  }
+  const run = structuredClone(base);
+  run.party = best;
+  at(run, 9100 + ri * 7 + act);
+  const p = run.pending as Extract<RogueRun["pending"], { kind: "fight" }>;
+  const party = partyOf(c, run);
+  const er = startFight(c, run, { log: true });
+  const members = (er.party as EngineMember[]).map((m) => ({ cls: m.ref, hp: m.hp, maxHp: m.stats.max_hp, mp: m.mp, maxMp: m.stats.max_mp, stats: { ...m.stats }, ...(m.cooldowns ? { cooldowns: { ...m.cooldowns } } : {}) }));
+  advance(c, combat, er);
+  const end = (er.log as Entry[]).find((e) => e.t === "fight_end");
+  recs.push({ seed: 9100 + ri, act, floor, tier, region: reg.id, fightId: p.fight.id, fightName: `${p.fight.name} (${ro.id})`, won: er.outcome === "won", ticks: Number(end?.rounds ?? 0), party, members, foes: p.fight.enemies, log: er.log as Entry[], knob: p.foes });
+});
+for (let s = 1; s <= (args.includes("--rosters") ? 0 : RUNS); s++) {
   const seed = 9000 + s;
   const run = newRogue(c, { seed, leader: LEADERS[s % LEADERS.length], heat: HEAT });
   // Half the drafts at random (every class gets seen), half by the player's own scoring (a wall and a healer where it can), so the parties are
