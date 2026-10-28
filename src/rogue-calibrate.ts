@@ -10,11 +10,12 @@
  * 3. The knobs go to content/core-set/rogue-knobs.json; `npm run content` puts them in the pack.
  *
  * Step 5h (the director's): by default the parties are the hand-built rosters of src/rogue-parties.ts at each act's and
- * tier's power level, not the simulated player's snapshots (`--snapshots` brings those back). Each roster fields its best
- * three of five for each fight, chosen on other dice at the fight's knob, as a player uses the bench against a preview;
+ * tier's power level, not the simulated player's snapshots (`--snapshots` brings those back). Each roster fields a good
+ * three of five for each fight (the trio a quarter down the ranking, `--pick`), chosen on other dice at the fight's knob, as a
+ * player uses the bench against a preview;
  * the knob is set against those trios, then the trios are chosen again at the new knob and the knob refined.
  *
- *   npm run rogue:calibrate [-- --reps 3 --only crypt --tiers boss --fights a,b | --snapshots --runs 200 --per 48]
+ *   npm run rogue:calibrate [-- --reps 3 --pick 0.25 --only crypt --tiers boss --fights a,b | --snapshots --runs 200 --per 48]
  *
  * Bundled by esbuild like the other tuners, so worker threads can load it.
  */
@@ -24,7 +25,7 @@ import { Worker, isMainThread, parentPort, workerData } from "node:worker_thread
 import { loadContent, type Content } from "./engine/run.js";
 import { autoFight, foesFor, newRogue, rogue, type RogueRun } from "./rogue.js";
 import { aiPlayer, hpShare } from "./rogue-ai.js";
-import { LEVELS, ROSTERS, buildRoster, trios, type Roster } from "./rogue-parties.js";
+import { LEVELS, PICK, ROSTERS, buildRoster, trios, type Roster } from "./rogue-parties.js";
 import { choose } from "./rogue.js";
 import type { RogueFightT } from "./schema.js";
 
@@ -99,30 +100,29 @@ function trial(c: Content, s: Snap, fight: RogueFightT, k: number, tier: Tier, i
   return { cost: lost ? 1 : 1 - hpShare(c, run), lost };
 }
 
-type Task = { region: string; act: number; tier: Tier; fight: RogueFightT };
+type Task = { region: string; act: number; tier: Tier; fight: RogueFightT; pick: number };
 type Result = { key: string; knob: number; cost: number; lost: number };
 
 /**
- * Step 5h: each roster fields its best three of five for this fight at knob `k`, tried on other dice (two fights a trio),
+ * Step 5h: each roster fields a good three of five (PICK) for this fight at knob `k`, tried on other dice (two fights a trio),
  * seated in the roster's preference order.
  */
-function pickTrios(c: Content, snaps: Snap[], fight: RogueFightT, k: number, tier: Tier) {
+/** Each roster's three for a fight, tried on two throws of other dice: the one PICK of the way down the ranking (src/rogue-parties.ts). */
+function pickTrios(c: Content, snaps: Snap[], fight: RogueFightT, k: number, tier: Tier, pick: number) {
   snaps.forEach((s, i) => {
     if (!s.roster) return;
-    let best = s.run.party, bc = Infinity;
-    for (const trio of trios(s.roster, (s.ptier && LEVELS[s.act][s.ptier].roster) || 5)) {
+    const ranked = trios(s.roster, (s.ptier && LEVELS[s.act][s.ptier].roster) || 5).map((trio) => {
       s.run.party = trio;
-      const cost = [0, 1].reduce((t, j) => t + trial(c, s, fight, k, tier, 1000 + i * 7 + j).cost, 0);
-      if (cost < bc - 1e-9) (bc = cost), (best = trio);
-    }
-    s.run.party = best;
+      return { trio, cost: [0, 1].reduce((t, j) => t + trial(c, s, fight, k, tier, 1000 + i * 7 + j).cost, 0) };
+    }).sort((a, b) => a.cost - b.cost);
+    s.run.party = ranked[Math.round((ranked.length - 1) * pick)].trio;
   });
 }
 
 function calibrate(c: Content, snaps: Snap[], t: Task): Result {
   const target = TARGETS[t.tier][t.act - 1];
   const rosters = snaps.some((s) => s.roster);
-  if (rosters) pickTrios(c, snaps, t.fight, t.fight.knob ?? 0, t.tier);
+  if (rosters) pickTrios(c, snaps, t.fight, t.fight.knob ?? 0, t.tier, t.pick);
   const measure = (k: number) => {
     let cost = 0, lost = 0;
     snaps.forEach((s, i) => { const x = trial(c, s, t.fight, k, t.tier, i); cost += x.cost; lost += x.lost ? 1 : 0; });
@@ -144,7 +144,7 @@ function calibrate(c: Content, snaps: Snap[], t: Task): Result {
   let best = bisect(-85, 400, { k: 0, m: measure(0) });
   // With rosters, the trios are chosen again at the new knob (a fight much harder or softer can call for other members).
   if (rosters) {
-    pickTrios(c, snaps, t.fight, best.k, t.tier);
+    pickTrios(c, snaps, t.fight, best.k, t.tier, t.pick);
     best = bisect(best.k - 40, best.k + 40, { k: best.k, m: measure(best.k) });
   }
   return { key: `${t.region}/${t.tier === "boss" ? "bosses" : t.tier}/${t.fight.id}`, knob: best.k, cost: Math.round(best.m.cost), lost: Math.round(best.m.lost) };
@@ -170,7 +170,7 @@ async function main() {
     const tiers = (opt("--tiers") ?? "easy,normal,elite,boss").split(",") as Tier[];
     const fights = opt("--fights")?.split(",");
     for (const tier of tiers)
-      for (const fight of reg[tier === "boss" ? "bosses" : tier]) if (!fights || fights.includes(fight.id)) tasks.push({ region: reg.id, act: reg.act, tier, fight });
+      for (const fight of reg[tier === "boss" ? "bosses" : tier]) if (!fights || fights.includes(fight.id)) tasks.push({ region: reg.id, act: reg.act, tier, fight, pick: Number(opt("--pick") ?? PICK) });
   }
   const n = Number(opt("--workers") ?? availableParallelism());
   const results: Result[] = [];

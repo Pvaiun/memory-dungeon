@@ -40,14 +40,14 @@ Not in the core set for now: Berserker (the first to add next: Might, Lifesteal 
 - **Stats** run from 1 to 5: 1 is very low, 3 average, 5 very high. Special stats and resistances are zero unless a class lists them.
 - **Armor weight** is the heaviest armor the class can wear; the weight rules are under Gear in *Core set: rules and vocabulary*.
 - **Timing.** Cooldowns are quick, short, medium, long or very long (14, 22, 30, 40 and 56 ticks since step 5g). Wind-ups (cast speed, in other docs) are quick, normal, long or very long (1, 3, 6 and 8 ticks). Basic attacks have no wind-up by default. The word follows the ability's job (step 5g, the director's): abilities meant to repeat, such as stack applicators and top-up heals, are quick; a buff a unit puts on itself has a cooldown longer than the buff lasts, so it lapses before it comes back; the big nukes are long and the revives very long.
-- **MP costs** are set by hand on each ability (Oct 26, 2026; the director's: no rule from a stat to a cost), on one ladder in two tiers (step 5f), a third dearer since step 5g: a skill (the physical classes' and the Valkyrie's spear) costs 200, 325, 500 or 750 MP, and a spell (the healers', the Bard's, Hexer's and Paladin's, the mages', the Vampire's dark arts) 450, 650, 1,000 or 1,500. Blood drain, at 125, is the one cost off the ladder. The casters' spells cost several times the walls' and fighters' skills, so casters run short of MP and wear MP gear, and walls rarely do. The revives (Raise, Valhalla) and Pyre cost the most.
+- **MP costs** are set by hand on each ability (Oct 26, 2026; the director's: no rule from a stat to a cost), on one ladder in two tiers (step 5f), a third dearer since step 5g: a skill (the physical classes' and the Valkyrie's spear) costs 200, 325, 500 or 750 MP, and a spell (the healers', the Bard's, Hexer's and Paladin's, the mages', the Vampire's dark arts) 450, 650, 1,000 or 1,500. Blood drain, at 125, is the one cost off the ladder. The casters' spells cost several times the walls' and fighters' skills, so casters run short of MP and wear MP gear, and walls rarely do. Pyre costs the most. The revives (Raise, Valhalla) cost 650 since step 5h (the director's: they were 1,500 and almost never cast).
 - **Damage and stacks.** Every ability that deals damage says what the damage scales from. Every ability that adds a stacking status says how many stacks (a few, several or many) and what sets that number. Statuses that don't stack have one fixed size.
 - **Firing, Fizzle statuses and target phrases** are defined in *Core set: rules and vocabulary*, under Combat system: Time and actions, and Targeting.
 - **Tests.** Each class ends with a test: one fight against a challenge it should answer, traced through its kit.
 
 ### Stats
 
-*Step 5h (Oct 28, 2026, the director's): the MP column is each class's MP pool, set by how many regular fights it lasts from full (about two or three for every class; the Valkyrie and Cleric keep room for their revives), and MP regen is 0 for every class: no class regains MP in a fight by itself (gear and a formation seat carry MP regen), and a member regains half its MP after each won fight it sits out on the bench. The old words were MP 2 to 5 and regen 2 to 4.*
+*Step 5h (Oct 28, 2026, the director's): the MP column is each class's MP pool, set by how many regular fights it lasts from full (two for every class at the scarce end of the director's two or three, measured with cooldowns as a run carries them), and MP regen is 0 for every class: no class regains MP in a fight by itself (gear and a formation seat carry MP regen), and a member regains half its MP after each won fight it sits out on the bench. The old words were MP 2 to 5 and regen 2 to 4.*
 
 | Class | HP | MP | MP regen | Attack | Magic | Armor | Crit | Aggro |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -56,11 +56,11 @@ Not in the core set for now: Berserker (the first to add next: Might, Lifesteal 
 | Ranger | 3 | 2.1 | 0 | 4 | 1 | 2 | 3 | 2 |
 | Bramble knight | 5 | 1.7 | 0 | 3 | 2 | 3 | 2 | 5 |
 | Hoplite | 4 | 1.3 | 0 | 4 | 1 | 5 | 2 | 5 |
-| Paladin | 4 | 2.8 | 0 | 3 | 4 | 4 | 2 | 4 |
-| Valkyrie | 3 | 1.8 | 0 | 4 | 3 | 3 | 3 | 3 |
+| Paladin | 4 | 3.3 | 0 | 3 | 4 | 4 | 2 | 4 |
+| Valkyrie | 3 | 1.5 | 0 | 4 | 3 | 3 | 3 | 3 |
 | Bard | 3 | 2.4 | 0 | 3 | 3 | 3 | 2 | 1 |
 | Hexer | 2 | 1.7 | 0 | 1 | 4 | 1 | 2 | 1 |
-| Monk | 3 | 0.65 | 0 | 3.7 | 1 | 2 | 2 | 2 |
+| Monk | 3 | 0.75 | 0 | 3.7 | 1 | 2 | 2 | 2 |
 | Assassin | 2 | 1.45 | 0 | 5 | 1 | 2 | 5 | 1 |
 | Vampire | 4 | 1.7 | 0 | 4 | 2 | 2 | 2 | 3 |
 | Pyromancer | 2 | 3.8 | 0 | 1 | 5 | 1 | 2 | 1 |
@@ -98,7 +98,7 @@ The starters cover every Fundamental challenge between them: a wall, a healer an
 - **Passive – Last rites.** Below 30% of its max HP, its cooldowns are halved; healed back to 30% or more, they return to normal. (Encore, immunity to Silence, until Oct 27, 2026: two enemies in the roster silence. Until Oct 28, a bug kept the halving on for the rest of the fight.)
 - **Renew.** Cleanses an ally with a debuff and applies Regen to it; with no ally debuffed, Regen on the ally with the lowest share of max HP. Medium cooldown, normal wind-up, 650 MP.
 - **Cure.** Heals the ally with the lowest share of max HP; the amount scales from Magic. A quick, small top-up. Waits until an ally is below 80% of its max HP. Quick cooldown, quick wind-up, 450 MP. (Until Oct 28, 2026, a heal almost twice the size on a short cooldown, waiting for any ally below max HP: it healed to full every time, a heal nuke rather than a top-up.)
-- **Raise.** Revives a random knocked-out ally with half of its max HP. Waits until an ally is knocked out. Very long cooldown, very long wind-up, 1,500 MP.
+- **Raise.** Revives a random knocked-out ally with half of its max HP. Waits until an ally is knocked out. Very long cooldown, very long wind-up, 650 MP.
 
 Until Oct 25, 2026 it had Mercy (each Light hit healed the lowest ally for half its damage), Prayer (Regen on every ally) and Purify (a cleanse). Mercy's free healing was what broke the campaign's balance (5a's probe), so the director replaced the three.
 
@@ -169,7 +169,7 @@ Six classes that win through the party: a tank that punishes, a bodyguard, a she
 - **Passive – Einherjar.** Allies it revives come back with all their actions ready, instead of on cooldown.
 - **Gale spear.** Has Seek. Three quick hits on a random foe that isn't Taunting; each deals Wind damage that scales from Attack and adds a few Shock, with stacks that scale from Attack. Quick cooldown, quick wind-up, 200 MP.
 - **Rally.** Heals the ally with the lowest share of max HP; the amount scales from Magic. Waits until an ally is below 80% of its max HP. Medium cooldown, normal wind-up, 650 MP.
-- **Valhalla.** Revives a random knocked-out ally with a tenth of its max HP. Waits until an ally is knocked out. Very long cooldown, quick wind-up, 1,500 MP.
+- **Valhalla.** Revives a random knocked-out ally with a tenth of its max HP. Waits until an ally is knocked out. Very long cooldown, quick wind-up, 650 MP.
 
 *Test, Executioner:* Doom knocks out the Ranger. Valhalla brings it back almost at once, fragile but with every arrow ready, so the party loses little damage. With no Cleanse or Aegis beside her, Doom lands every time: the Valkyrie undoes it rather than stopping it. Next to the Cleric's Raise, Valhalla is the fast, fragile return; Raise is the slow, sturdy one.
 

@@ -58,3 +58,43 @@ Endurance medians after round 2 sat at three fights for every class (the Ranger 
 - **The puzzle fights** (the reader saw none): six packs read here.
   - Snakes are a light tax: one Bleed stack at a time, closing at once.
   - The Bomb fights are explosion tolls over in 17 to 24 ticks. The last Bug's blast never goes off, because the fight ends when it dies.
+
+## Round 5: the revives, and two errors in the harness
+
+**The director's word on the report:** "just lower the cost of the revives". Raise and Valhalla were 1,500, the dearest abilities in the game, and were cast 0.05 and 0.03 times a fight.
+
+**Price wasn't what stopped them.** At 1,000 or 650 the rosters still cast them as rarely. The rosters started every fight with every ability uncharged, so a revive wasn't ready until t56 to t63, and the first death came at t15 to t29. In a run, cooldowns carry between fights (step 5g). Measured over the rosters' third to sixth regular fights in a row, an ability starts a fight with 0.38 of its cooldown left on average, whatever its length, and a revive is ready 88% of the time, since it waits for a knockout most fights never bring. The rosters now start that way: 60% charged, a revive ready.
+
+**With the revive ready, price matters.** Probe: an ally falls beside a standing reviver with the revive slotted. How often is it cast?
+
+| Price | Cleric (Raise) | Valkyrie (Valhalla) |
+| --- | --- | --- |
+| 1,500 | 32% | 24% |
+| 1,000 | 32% | 41% |
+| 650 | 52% | 57% |
+
+The rest of the time the reviver was dry from casting, or fell first. Both went to **650**, the second spell rung (Rally's and Renew's price). The Valkyrie's pool came into line with the others (1.8 → 1.5), since it no longer keeps room for Valhalla.
+
+**The openings changed the difficulty.** Recalibrated on them, the knobs rose by a median of +70 on regular fights, +88 on easy fights, +51 on elites and +30 on bosses. The rosters had been understated, so every fight had been set too soft against them. Endurance fell to two fights from full for every class, the Paladin and the Monk to one. Round 3 had cut their pools on the uncharged openings, so that cut was undone for those two (the Paladin 2.8 → 3.3, the Monk 0.65 → 0.75).
+
+**The second error: the pick.** The simulated player fell from 12% to 1%, and the MP road (a plain rotation, no counter-pick) lost 27 to 35% of act II's regular fights. A probe at those knobs, act II's regular fights, what each of a roster's ten trios pays:
+
+| Trio | HP cost |
+| --- | --- |
+| Best | 15% |
+| 2nd | 21% |
+| 3rd | 26% |
+| 4th | 32% |
+| The roster's own first three | 31% |
+| Median | 43% |
+
+Any trio lost 13% of its plays. The calibration had set every fight against the best trio, found by playing all ten on the fight itself: a pick no player can make. With the bar there, any other pick paid two to three times the target. **The calibration now fields the trio a quarter of the way down the ranking** (`PICK` in `src/rogue-parties.ts`; `--pick` on the calibrator): the 3rd of ten, the 2nd of four, the only one of one. That's a good pick from the preview, not the perfect one. A perfect pick pays less than the target, and the roster's first three a little more. The feel tool picks the same way.
+
+**After** (every fight recalibrated, three plays a roster):
+- **Bosses** beat 19 to 22% of the rosters in act I, 33 to 36% in act II, 44 to 50% in act III.
+- **Other fights:** regular fights cost 17 to 21% of HP, elites 25 to 28%, easy fights 12 to 14%. The Bomb Room is on target (19%): its floor in round 2 came from the understated openings.
+- **Against round 4,** the knobs are higher: regular fights by a median of +37, easy fights +58 (the openings alone; act I's first floors have one trio), elites and bosses +24.
+- **Endurance:** two fights from full for every class.
+- **The road with tonics:** a bench member fights in 44 to 56% of fights, and fighters go in under a third of their MP 0 to 6% of the time. It loses 1 of act I's 48 regular fights and 11 and 18 of act II's and III's 144. Without tonics, 54 to 70% and 4 to 22%.
+- **Revives:** Valhalla is cast 0.06 times a fight (was 0.03), first at t26 (was t90). Raise is cast 0.02 times. In the probe's fights where an ally fell, the Cleric (HP 2) had fallen first in three of five, so a cheaper Raise can't help there; the Cleric's frailty is a kit question.
+- **The simulated player** (information only) wins 2% of runs; 40% of its runs end at act I's first elite and 34% at act I's boss. It never counter-picks, and plays well below the rosters.

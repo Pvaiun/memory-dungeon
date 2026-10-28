@@ -1,6 +1,6 @@
 # Step 5h report: the roster
 
-You asked for a roster to rotate: a small bench that grows by choice, parties changed any time outside a fight to answer each fight's preview, MP drained by fighting and restored on the bench, more loot (legendaries above all), recruits and formations as rewards you route toward, and tuning on hand-built parties rather than the simulated player. It's built, tuned on twelve hand-built rosters, read by a fresh feel reader, and pushed to `ccr-9cf44321-t2g2o5`. `design.md` is the approved design, `intent.md` your words in three rounds, `tuning.md` the four rounds, `parties.md` the rosters, `reads/round-4.md` the feel read.
+You asked for a roster to rotate: a small bench that grows by choice, parties changed any time outside a fight to answer each fight's preview, MP drained by fighting and restored on the bench, more loot (legendaries above all), recruits and formations as rewards you route toward, and tuning on hand-built parties rather than the simulated player. It's built, tuned on twelve hand-built rosters, read by a fresh feel reader, and pushed to `ccr-9cf44321-t2g2o5`. `design.md` is the approved design, `intent.md` your words in three rounds, `tuning.md` the five rounds, `parties.md` the rosters, `reads/round-4.md` the feel read.
 
 **To play it:** `npm install`, `npm run ui`, Settings → MODE → ROGUE. Start a run.
 - Before any fight, PARTY swaps who's in: tap a seat, then someone at camp.
@@ -8,20 +8,25 @@ You asked for a roster to rotate: a small bench that grows by choice, parties ch
 
 ## 1. Decisions and open questions
 
-1. **Difficulty is now set against competent play.** Every fight was recalibrated against the twelve rosters, each fielding its best three of five for that fight. The targets are the same costs as before (a regular fight 18 to 20 points of party HP, an elite 25 to 27, bosses beating 22 / 35 / 45% of arrivals). Against rosters that counter-pick, most fights got harder (the median regular knob is +30). The simulated player, which plays far worse, now wins 12% of runs (21% on the last build), and most of its losses are in act I. Your play is the check: **say if it's too hard**. The lever is one line of targets in `src/rogue-calibrate.ts`, and a recalibration takes four minutes.
-2. **Tonics don't replace the bench, at these numbers.** With a tonic taken after every fight where someone is low, the bench still fights in 43 to 47% of fights (54 to 62% without tonics). Fighters go in under a third of their MP 0 to 4% of the time, against 9 to 17% without. Tonics carry about a quarter to a third of the rotation's load. **My call: keep the tonic at half a pool.** If the bench feels optional when you play, a tonic at a third of a pool is the first knob.
-3. **Two classes last longer than the rest, on purpose.** The Valkyrie (a median of four fights) and the Cleric (three, with long tails) keep room for their 1,500-MP revives. A smaller pool would put Valhalla out of reach, and both hold MP for their revive when nobody's down. **Say if** you'd rather they run dry like the others, which means a cheaper Valhalla and Raise.
-4. **The Bomb Room has a floor.** Two Bomb Bugs and two hounds cost a counter-picked party 25% of its HP even at the knob's lowest (its target is 18). A Bomb Bug explodes when it dies, so its damage doesn't shrink with the knob; a stronger party only sets it off sooner. It was the same before this step, hidden by weaker parties. The three-Bug fight you wanted back is now an elite, the **Bomb Nest**, on target at 26%. **Options:** leave the Bomb Room as the one spiky regular fight (my pick, as a puzzle that rewards a counter-pick), cut it to one Bug, or make explosions shrink with the knob (a rules change).
-5. **Two overestimates were caught by the simulated player's numbers,** and I fixed both: act I's rosters had been given more than a careful player has there, and five members to pick from from the first floor. Act I is now calibrated at one or two abilities a member, common gear and no legendary before the first elite, with three to four members to pick from until the boss. **Say if** that reads wrong against your own runs. This is the place hand-built parties can go wrong.
+1. **Difficulty is set against a good player, and it's harder than the last build.** Every fight is calibrated on twelve hand-built rosters, each fielding a good three of five for the fight: the trio a quarter of the way down the ranking (the 3rd of ten), not the best. The targets are as before: a regular fight costs 18 to 20% of party HP, an elite 25 to 27%, and bosses beat 22 / 35 / 45% of arrivals. Round 5 found two errors in my harness (below), and fixing them moved the knobs up from round 4's: regular fights by a median of +37, easy fights +58, elites and bosses +24. The simulated player, which never counter-picks, now wins 2% of runs (12% in round 4). **Your play is the check: say if it's too hard.** There are two levers, each a four-minute recalibration:
+   - `PICK` in `src/rogue-parties.ts`: 0.5 tunes against a middling pick, which is much easier;
+   - the targets in `src/rogue-calibrate.ts`.
+2. **Tonics don't replace the bench.** With a tonic after every fight where someone's low, a bench member still fights in 44 to 56% of fights (56 to 70% without tonics). Fighters go in under a third of their MP 0 to 6% of the time (4 to 22% without). **My call: keep the tonic at half a pool.** If the bench feels optional when you play, a tonic at a third of a pool is the first knob.
+3. **Answered: the revives cost 650,** at your word (were 1,500). The Valkyrie's pool came into line with the others (1.8 → 1.5), since it no longer keeps room for Valhalla. Valhalla is now cast twice as often, and early (first at t26, was t90). Raise still isn't: where an ally fell, the Cleric (HP 2) had usually fallen first. That's a kit question for later, not a price.
+4. **Answered by the fix: the Bomb Room is on target** (19% of HP). Its floor came from the rosters' understated openings.
+5. **Act I's power level** is my estimate of a careful player there: one or two abilities a member, common gear, no legendary before the first elite, three to four members to pick from until the boss. **Say if** that reads wrong against your own runs. This is where hand-built parties can go wrong.
 6. **Free play** loses in-fight MP regen too, since it's one rule in the pack. Its pools are the same smaller ones.
-7. **MP does matter inside the long fights, against your words.** You said MP should drain over fights and "not really matter within a fight". At normal lengths that holds: a class is short of MP 1 to 14% of its time (the Monk most). In the long fights it doesn't hold. A caster runs dry halfway through and basic-attacks for 30 to 110 ticks, which reads as a class switching off, not a choice (four of the reader's ten packs). Almost all of those long fights are slogs: a fight lost at its first death that takes 100 more ticks to end, or an elite where two Bone Priests heal back what the party deals. **Options:**
+7. **MP does matter inside the long fights, against your words.** You said MP should drain over fights and "not really matter within a fight". At normal lengths that holds. In the long fights it doesn't: a caster runs dry halfway through and basic-attacks for 30 to 110 ticks, which reads as a class switching off, not a choice (four of the reader's ten packs). Almost all of those long fights are slogs: a fight lost at its first death that takes 100 more ticks to end, or an elite where two Bone Priests heal back what the party deals. **Options:**
    - bring the enrage forward from 200 ticks to about 120: only long fights reach it, and it ends the slogs;
    - cap the Bone Priest's Mend;
    - both (my pick: fix the slog, keep the MP);
    - accept it as the price of a long fight.
 
-   Bigger pools wouldn't help without breaking the two-or-three-fight drain: a boss fight is twice a regular one, so it spends twice the MP.
-8. **Revives are almost never cast,** which weakens decision 3. Valhalla is cast 0.03 times a fight and Raise 0.05. In won fights nobody's down, and in lost ones the reviver is often dry first: the Cleric in pack 8 never got near Raise's 1,500. The bigger pools buy the Valkyrie and Cleric very few revives. **Options:** cheaper Raise and Valhalla, with their pools brought into line (costs are yours to set); or keep revives as rare insurance at today's price.
+   Bigger pools wouldn't help without breaking the two-fight drain: a boss fight is twice a regular one, so it spends twice the MP.
+
+**Round 5's two harness errors** (the trail has the numbers):
+- **The rosters started every fight with every ability uncharged.** In a run, cooldowns carry between fights. I measured what a run leaves: about 60% charged, and a revive ready 88% of the time. This kept the revives from ever being ready, made third slots look absent, and set every fight too soft against the rosters.
+- **The calibration tuned against each roster's best trio,** found by playing all ten on the fight itself. No player can make that pick, and every other pick paid two to three times the target. In act II's regular fights the best trio paid 15% of HP, the 3rd 26%, a roster's own first three 31%, the median 43%.
 
 ## 2. What was built
 
@@ -67,7 +72,7 @@ All of the third design, in the rules (`src/rogue.ts`, the schema), the content 
 - **The puzzle fights back:** snake packs grow again (the Snake Pit three, the Viper Den four); three Bomb Bugs as the new Bomb Nest elite.
 - **Tools:**
   - **`src/rogue-parties.ts`:** the rosters.
-  - **`npm run rogue:calibrate -- --reps 3`:** on the rosters, each fielding its best three, about four minutes for every fight.
+  - **`npm run rogue:calibrate -- --reps 3`:** on the rosters, each fielding a good three (`--pick`), about four minutes for every fight.
   - **`npx tsx src/rogue-acts.ts`:** the MP check.
   - **`npx tsx src/rogue-feel.ts --rosters`:** fight packs from the rosters (`--fights id,id` for named fights).
 
@@ -75,29 +80,23 @@ All of the third design, in the rules (`src/rogue.ts`, the schema), the content 
 
 ## 3. What the numbers say
 
-**MP by class:** fights from full before a class is under a third, its roster's three fighting back to back with HP made whole (the median of 7 to 21 runs).
+**MP by class:** every class lasts two fights from full before it's under a third (the median of 7 to 21 runs; its roster's three fighting back to back with HP made whole). That's the scarce end of your two or three. Each class's pool is set to reach this (`MP_POOL` in `content/core-set/classes.ts`; your cost ladder untouched). The Monk's runs spread from one fight to all eight: alone it's dry after one, but with the Bard's Refrain or the Vampire's Blood gift beside it, it never runs out. That's the support path you described.
 
-| Fights | Classes |
-| --- | --- |
-| 2 | Paladin, Stormcaller, Knight, Monk |
-| 2.5 | Pyromancer |
-| 3 | Frostweaver, Bard, Vampire, Geomancer, Hexer, Bramble knight, Ranger, Assassin, Hoplite, Cleric |
-| 4 | Valkyrie |
+**The bench in use:** an act's fights in order, with a plain stated rotation (under a third of MP sits out; the preferred three who can fight, fight; no counter-pick).
 
-Each class's pool was set to reach this (`MP_POOL` in `content/core-set/classes.ts`; your cost ladder untouched). The Monk lasts longer in rosters with the Bard or the Vampire: their Refrain and Blood gift top up a small pool. That's the support path you described.
+| | A bench member fights | Fighters going in under a third of MP | Fighters' MP going in | Regular fights lost (acts I / II / III) |
+| --- | --- | --- | --- | --- |
+| Without tonics | 56 to 70% of fights | 4 to 22% | 61 to 75% | 4 / 20 / 16% |
+| With tonics | 44 to 56% | 0 to 6% | 71 to 77% | 2 / 8 / 13% |
 
-**The bench in use:** an act's fights in order, with a plain stated rotation (under a third of MP sits out; the preferred three who can fight, fight).
-
-| | A bench member fights | Fighters going in under a third of MP | Fighters' MP going in |
-| --- | --- | --- | --- |
-| Without tonics | 54 to 62% of fights | 9 to 17% | 65 to 74% |
-| With tonics | 43 to 47% | 0 to 4% | 75 to 78% |
-
-**Difficulty:** bosses beat 19 to 22% of the rosters in act I, 33 to 36% in act II, 42 to 47% in act III (targets 22, 35, 45). Every regular fight and elite is on its cost, except the Bomb Room (above). How sure: 36 plays a fight (twelve rosters, three throws each); a boss's rate is good to about ±8 points.
+**Difficulty:**
+- **Bosses** beat 19 to 22% of the rosters in act I, 33 to 36% in act II and 44 to 50% in act III (targets 22, 35, 45).
+- **Every other fight** is on its cost: regular fights 17 to 21%, elites 25 to 28%, easy fights 12 to 14%.
+- **How sure:** 36 plays a fight (twelve rosters, three throws each), so a boss's rate is good to about ±8 points.
 
 **Loot:** over a full run the system offers about 88 pieces (14, 34 and 40 by act), 24 of them legendary. The plan was about 80 and 25. 0.35 pieces a run are taken that nobody in the roster can wear yet (0.05 before), which is the off-roster share making you want a class. Each act's map has two Musters and two Drill grounds. A path taken at random passes about 0.7 of each an act, a path routed for them about 2.6 of the two together. With the shop, the stranger, the cage, the boon and the events, a run gets about eight chances at a recruit and around ten formation offers.
 
-**The simulated player** (information only): wins 12% of runs. Act I's boss beats half of the runs that reach it, against 22% of the rosters. It plays well below the rosters: it never counter-picks, and rotates only by MP.
+**The simulated player** (information only): wins 2% of runs. 40% of its runs end at act I's first elite and 34% at act I's boss, which beats 78% of the runs that reach it, against 22% of the rosters. It plays well below the rosters: it never counter-picks, and rotates only by MP.
 
 ## 4. Feel
 
@@ -115,8 +114,8 @@ A fresh reader read ten fights from the rosters tick by tick (`reads/round-4.md`
 
 **What doesn't:**
 1. **Lost fights are decided at the first death, then drag on.** Every lost fight lost its first member by t29 and none recovered. Three of them ran 100 to 140 ticks past that point (decision 7).
-2. **The tiers differ in danger, not in shape.** Regular fights are tolls: all 168 won, almost no KOs, 18 to 20% of the party's HP. Elites are won 94 to 100% of the time. Bosses are the only danger, and they turn on their first 20 to 30 ticks: on whether a big blow lands on a fragile member. Against the rosters, that's the attrition shape the bench is for. **Say if** you want regular fights to threaten too, which means a higher cost target (one line).
-3. **Third slots and revives hardly exist.** Third slots start uncharged on cooldowns of 33 to 63 ticks, so a 40-tick fight barely sees them (Tremor first lands at t50). Pyre, the biggest number in the game, comes once in six fights. This belongs to 5i: an upgrade branch can answer it. It's in the kickoff.
+2. **The tiers differ in danger, not in shape.** Regular fights are tolls for a good pick: all won, almost no KOs, 18 to 20% of the party's HP. A poor pick pays two to three times that (round 5). Elites are won 94 to 100% of the time. Bosses are the only danger, and they turn on their first 20 to 30 ticks: on whether a big blow lands on a fragile member. Against the rosters, that's the attrition shape the bench is for. **Say if** you want regular fights to threaten too, which means a higher cost target (one line).
+3. **Third slots and revives seemed not to exist, and that was mostly my harness** (round 5). Its rosters started every fight uncharged. With cooldowns carried as a run carries them, third slots land around t15 to t32 and twice as often: Pyre 0.52 casts a fight (was 0.16), Fireball 1.05 (0.33), Stillness 0.83 (0.21). Revives: decision 3.
 4. **The puzzle fights don't play as puzzles yet.**
    - **Snakes:** their Bleed lands one stack at a time and closes at once, about 300 to 650 damage a snake. The bandits beside them are the threat.
    - **Bomb fights:** a toll of explosions, over in 17 to 24 ticks. The counter-pick is fire resistance and HP, which fits "preparation is the game", but nothing in the order of kills matters. The last Bug's blast never goes off, because the fight ends when it dies. So the Nest costs two blasts, not three.
@@ -142,6 +141,11 @@ A fresh reader read ten fights from the rosters tick by tick (`reads/round-4.md`
 
 ## 5. Method notes
 
-- **Hand-built rosters with a counter-pick made tuning fast and readable.** A whole recalibration takes about four minutes, against an hour of whole runs before, and every party it tunes on is written down (`parties.md`).
-- **Its risk is the power level, and the simulated player is a good smoke alarm for it.** Its act I collapse (46% of its runs ended at an act I elite) pointed at two overstatements in my rosters that I wouldn't have seen otherwise. Keep it as an alarm, not a tuner.
-- **Pick the three on more than one throw of the dice.** On one throw, the feel tool's rosters picked worse trios and showed the act I bosses winning 7 of 12.
+- **Hand-built rosters made tuning fast and readable.** A whole recalibration takes about four minutes, against an hour of whole runs before, and every party it tunes on is written down (`parties.md`).
+- **Their risk is what they assume, and two assumptions were wrong until round 5:**
+  - **every fight opening uncharged:** model the state a run carries, not a fresh start;
+  - **a perfect pick:** tune against a pick a player can make.
+
+  Both were invisible in the rosters' own numbers. The revive question exposed the first; the plain road's losses and the simulated player exposed the second.
+- **The simulated player is a smoke alarm, not a tuner.** Its act I collapse in round 4 pointed at overstated act I rosters, and its fall in round 5 at the perfect pick.
+- **Pick the three on more than one throw of the dice.** On one throw, the feel tool's rosters picked worse trios.

@@ -9,7 +9,7 @@
  *   npx tsx src/rogue-feel.ts [--runs 48] [--heat 0] [--packs 10] [--focus frostweaver,hexer] [--player] [--rosters] [--fights id,id] [--out out/feel] [--set path=value]...
  *
  * Step 5h: --rosters reads the hand-built rosters (src/rogue-parties.ts) instead of the simulated player's runs: every roster
- * at every act's and tier's power level meets a fight of each region's pool, fielding its best three of five for it (tried
+ * at every act's and tier's power level meets a fight of each region's pool, fielding a good three of five for it (tried
  * on other dice), as the calibration measures. --fights snake_pit,bomb_nest plays only those fights (each roster at their tier).
  *
  * The leader cycles through every class and half the draft picks are random, so every class is seen (the simulated player's own
@@ -23,7 +23,7 @@ import { combat, type Member as EngineMember } from "./engine/combat/rules.js";
 import type { Entry } from "./engine/log.js";
 import { autoFight, choose, endFight, foesFor, knobFor, newRogue, partyOf, registerGear, rogue, startFight, type FightTier, type RogueRun } from "./rogue.js";
 import { aiPlayer, hpShare } from "./rogue-ai.js";
-import { LEVELS, ROSTERS, buildRoster, trios, type Tier as PTier } from "./rogue-parties.js";
+import { LEVELS, PICK, ROSTERS, buildRoster, trios, type Tier as PTier } from "./rogue-parties.js";
 import { int as rint, rngFor } from "./engine/rng.js";
 import { parsePatches } from "./rogue-sim.js";
 import { patch } from "./sim/content.js";
@@ -53,7 +53,7 @@ type Rec = {
 // ─── Playing ─────────────────────────────────────────────────────────────────
 
 const recs: Rec[] = [];
-// Step 5h: the hand-built rosters, each fielding its best three for the fight.
+// Step 5h: the hand-built rosters, each fielding a good three for the fight (PICK).
 if (args.includes("--rosters")) for (const act of [1, 2, 3]) for (const reg of rogue(c).regions.filter((g) => g.act === act)) for (const pt of ["easy", "normal", "elite", "boss"] as PTier[]) ROSTERS.forEach((ro, ri) => {
   const pool = pt === "boss" ? reg.bosses : reg[pt];
   // --fights: those fights wherever their region's pool holds them, else a fight of the pool by the dice.
@@ -63,9 +63,9 @@ if (args.includes("--rosters")) for (const act of [1, 2, 3]) for (const reg of r
   const floor = pt === "easy" ? 1 : pt === "boss" ? 10 : 5;
   const at = (run: RogueRun, seed: number) => { run.region = reg.id; run.floor = floor; run.pending = { kind: "fight", node: "feel", tier, fight, foes: foesFor(c, tier, knobFor(c, run, tier, floor, fight)), seed }; };
   const base = buildRoster(c, ro, act, pt);
-  let best = base.party, bc = Infinity;
-  // Each trio on two throws of the dice, as the calibration picks (one throw picked worse trios: the act I bosses won 7 of 12).
-  for (const trio of trios(ro, LEVELS[act][pt].roster ?? 5)) {
+  // Each trio on two throws of the dice (one throw picked worse trios: the act I bosses won 7 of 12), and the one PICK of the
+  // way down the ranking fielded, as the calibration does: a good pick from the preview, not the perfect one.
+  const ranked = trios(ro, LEVELS[act][pt].roster ?? 5).map((trio) => {
     let cost = 0;
     for (const seed of [77 + ri, 177 + ri]) {
       const t = structuredClone(base);
@@ -75,8 +75,9 @@ if (args.includes("--rosters")) for (const act of [1, 2, 3]) for (const reg of r
       const after = t.pending as RogueRun["pending"];
       cost += after.kind === "over" && !after.won ? 2 : 1 - hpShare(c, t);
     }
-    if (cost < bc - 1e-9) (bc = cost), (best = trio);
-  }
+    return { trio, cost };
+  }).sort((a, b) => a.cost - b.cost);
+  const best = ranked[Math.round((ranked.length - 1) * PICK)].trio;
   const run = structuredClone(base);
   run.party = best;
   at(run, 9100 + ri * 7 + act);

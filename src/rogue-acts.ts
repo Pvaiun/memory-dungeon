@@ -58,7 +58,7 @@ function endurance(c: Content, r: Roster, act: number, region: string): Record<s
   return out;
 }
 
-type RoadRec = { fights: number; benched: number; dryIn: number; lost: number; tonics: number; mpIn: number[] };
+type RoadRec = { fights: number; benched: number; dryIn: number; lost: number; tonics: number; mpIn: number[]; lostBy: Record<string, number> };
 const ROAD: (["easy" | "normal" | "elite" | "boss", number] | "camp")[] = [["easy", 1], ["easy", 2], ["normal", 3], ["elite", 4], ["normal", 5], ["normal", 6], "camp", ["normal", 7], ["elite", 8], "camp", ["boss", 10]];
 
 /** The road: an act's fights in order with the stated rotation, supply and campfire rules. */
@@ -67,7 +67,7 @@ function road(c: Content, r: Roster, act: number, region: string, tonics: boolea
   run.region = region;
   for (const m of run.roster) (m.missHp = 0), (m.missMp = 0), (m.ko = false);
   run.supplies = [];
-  const rec: RoadRec = { fights: 0, benched: 0, dryIn: 0, lost: 0, tonics: 0, mpIn: [] };
+  const rec: RoadRec = { fights: 0, benched: 0, dryIn: 0, lost: 0, tonics: 0, mpIn: [], lostBy: {} };
   const k = rogue(c).config;
   let step = 0;
   for (const s of ROAD) {
@@ -106,6 +106,7 @@ function road(c: Content, r: Roster, act: number, region: string, tonics: boolea
     const won = fight(c, run, s[0], s[1], 7000 + act * 100 + step * 13 + r.id.length);
     if (!won) {
       rec.lost++;
+      rec.lostBy[s[0]] = (rec.lostBy[s[0]] ?? 0) + 1;
       for (const m of run.roster) (m.missHp = 0), (m.ko = false);
       continue;
     }
@@ -139,7 +140,7 @@ function main() {
       for (const r of rosters) for (const g of regionsOf(act)) recs.push(road(c, r, act, g, tonics));
       const fights = recs.reduce((t, x) => t + x.fights, 0);
       const mp = recs.flatMap((x) => x.mpIn);
-      console.log(`  act ${act}: ${fights} fights; bench in ${((100 * recs.reduce((t, x) => t + x.benched, 0)) / fights).toFixed(0)}%; going in dry ${((100 * recs.reduce((t, x) => t + x.dryIn, 0)) / mp.length).toFixed(0)}%; MP going in ${(100 * avg(mp)).toFixed(0)}%; losses ${recs.reduce((t, x) => t + x.lost, 0)} of ${fights}; tonics ${recs.reduce((t, x) => t + x.tonics, 0)}`);
+      console.log(`  act ${act}: ${fights} fights; bench in ${((100 * recs.reduce((t, x) => t + x.benched, 0)) / fights).toFixed(0)}%; going in dry ${((100 * recs.reduce((t, x) => t + x.dryIn, 0)) / mp.length).toFixed(0)}%; MP going in ${(100 * avg(mp)).toFixed(0)}%; losses ${recs.reduce((t, x) => t + x.lost, 0)} of ${fights} (${["easy", "normal", "elite", "boss"].map((k) => `${k} ${recs.reduce((t, x) => t + (x.lostBy[k] ?? 0), 0)}`).join(", ")}); tonics ${recs.reduce((t, x) => t + x.tonics, 0)}`);
     }
   }
 }

@@ -177,7 +177,9 @@ export const abilities: A[] = [
     ...timing("quick", "quick"), mp: 450, ...waitsFor("allies", { hpBelow: 80 }), target: T.lowestShareAlly, do: [{ op: "heal", amount: from("magic", 0.35) }], // Round 9 (the director's: "a top up character", "never seen it not heal someone to full"): 0.35 on the quick word (was 0.65 on short). // round 5: 0.65, so the healer out-heals the Valkyrie.
   }),
   a("cleric", "raise", "Raise", "Revives a random knocked-out ally with half its HP.", {
-    ...timing("very_long", "very_long"), mp: 1500, ...waitsFor("allies", { ko: true }), target: T.koAlly, do: [{ op: "revive", hp: { scale: [{ ratio: REVIVE.half, stat: "max_hp", of: "target" }] } }],
+    // Step 5h (the director's: "just lower the cost of the revives"): 650 (was 1,500). When an ally fell beside a standing Cleric with Raise
+    // slotted, it was cast 32% of the time at 1,500 and 52% at 650; the rest, the Cleric was dry or fell before it landed.
+    ...timing("very_long", "very_long"), mp: 650, ...waitsFor("allies", { ko: true }), target: T.koAlly, do: [{ op: "revive", hp: { scale: [{ ratio: REVIVE.half, stat: "max_hp", of: "target" }] } }],
   }),
   // Ranger
   // Step 5c (the director's): Bleed for Poison, stacks from Attack, at a random foe (it sought a foe without Poison).
@@ -224,7 +226,8 @@ export const abilities: A[] = [
     ...timing("medium", "normal"), mp: 650, ...waitsFor("allies", { hpBelow: 80 }), target: T.lowestShareAlly, do: [{ op: "heal", amount: from("magic", 0.45) }], // round 5: 0.45; at 0.55 the Valkyrie still healed as much a fight as the Cleric. // Step 5g round 3: waits for 80%.
   }),
   a("valkyrie", "valhalla", "Valhalla", "Revives a random knocked-out ally with a tenth of its HP, every action ready.", {
-    ...timing("very_long", "quick"), mp: 1500, ...waitsFor("allies", { ko: true }), target: T.koAlly, do: [{ op: "revive", hp: { scale: [{ ratio: REVIVE.tenth, stat: "max_hp", of: "target" }] }, ready: true }],
+    // Step 5h (the director's): 650 (was 1,500), as Raise. Cast when an ally fell beside a standing Valkyrie 24% of the time at 1,500, 57% at 650.
+    ...timing("very_long", "quick"), mp: 650, ...waitsFor("allies", { ko: true }), target: T.koAlly, do: [{ op: "revive", hp: { scale: [{ ratio: REVIVE.tenth, stat: "max_hp", of: "target" }] }, ready: true }],
   }),
   // Bard
   // Step 5e: Haste on the ally with the highest Attack or Magic (was a random ally), and the Bard's songs at 400 MP (were 650): it never
@@ -389,10 +392,12 @@ export const classes: ClassDefT[] = [
  * pool is the class's MP identity. Was the stat line's word (in brackets).
  */
 export const MP_POOL: Record<string, number> = {
-  // The Valkyrie and the Cleric keep room for their revive (1,500): they hold MP for Valhalla and Raise, so they last a little longer.
   // Round 3: every pool a sixth smaller but the revivers' (medians sat at three fights, the top of the director's "two or three, scarce").
-  knight: 1 /* 2 */, cleric: 2.2 /* 5 */, ranger: 2.1 /* 3 */, bramble_knight: 1.7 /* 2 */, hoplite: 1.3 /* 2 */, paladin: 2.8 /* 3 */,
-  valkyrie: 1.8 /* 3 */, bard: 2.4 /* 4 */, hexer: 1.7 /* 4 */, monk: 0.65 /* 2 */, assassin: 1.45 /* 3 */, vampire: 1.7 /* 2 */,
+  // Round 5: the revives cost 650 (were 1,500), so the Valkyrie no longer keeps room for Valhalla: a sixth smaller like the rest (1.8 → 1.5).
+  // With the rosters' openings measured as a run carries them, every class lasts two fights from full, and the Paladin and the
+  // Monk one: round 3's cut, made on the uncharged openings, undone for those two (the Paladin 2.8 → 3.3, the Monk 0.65 → 0.75).
+  knight: 1 /* 2 */, cleric: 2.2 /* 5 */, ranger: 2.1 /* 3 */, bramble_knight: 1.7 /* 2 */, hoplite: 1.3 /* 2 */, paladin: 3.3 /* 3 */,
+  valkyrie: 1.5 /* 3 */, bard: 2.4 /* 4 */, hexer: 1.7 /* 4 */, monk: 0.75 /* 2 */, assassin: 1.45 /* 3 */, vampire: 1.7 /* 2 */,
   pyromancer: 3.8 /* 5 */, frostweaver: 2.3 /* 4 */, stormcaller: 2.3 /* 3 */, geomancer: 2.3 /* 3 */,
 };
 for (const k of classes) if (MP_POOL[k.id] !== undefined) k.stats.max_mp = pts(MP_POOL[k.id]);
