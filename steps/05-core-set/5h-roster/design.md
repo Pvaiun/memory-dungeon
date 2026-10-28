@@ -1,124 +1,152 @@
-# Step 5h design: the roster
+# Step 5h design: the roster, MP across fights, and the reward plan
 
-The director's words are in `intent.md`. This is the design for their OK before anything is built. The choices that are theirs are marked **Say if**, each with the designer's pick as the default. Gear, formations and upgrades are step 5i (`../5i-synergy/kickoff.md`). This step builds the structure they'll be found in and the training screen they'll fill.
+The director's words are in `intent.md`. This is the second version, revised from their ten notes on the first (session of Oct 28, 2026). Every choice below is taken unless marked **Asking**. Gear, formations and upgrades are step 5i (`../5i-synergy/kickoff.md`). This step builds the structure they're found in, the reward economy they drop into, and the training screen they'll fill.
 
 ## The idea in one line
 
-Every fight's preview becomes a team pick from a roster of eight. Fighting costs MP and resting on the bench restores it, so the player rotates the party to keep everyone usable, unless they build around supports that feed MP. HP stays the danger: only campfires, potions and the act's start restore it.
+Every fight's preview is a chance to adjust the party from a small roster. Fighting costs MP and sitting on the bench restores it, so a party is a build to keep running, not a list to rotate. Rewards come rarer and as choices between kinds (gear or a formation, a recruit or a camp seat), so a run's build stays open longer.
 
-## The design
+## The roster
 
-### The roster and swaps
+- **Party of three, bench of two at the start (a roster of five, as today), up to four on the bench.** A third and fourth seat are rewards you choose over something else: one of the boss's boon options, and an occasional event. The director's concern was that eight seats and many recruits make every run the same build. A small roster with 1-of-2 offers forces creativity, and a seat costs a reward.
+- **The start:** the leader, then two drafted picks, each **one of two** (was one of three). While the party has no healer, one of the two heals, as today.
+- **Every starting unit, the leader included, knows one ability, rolled at random** and shown on its card. That includes Raise and Valhalla. A bad roll is a choice the player can decline.
+- **Recruits are offered one of two** (was one of three). A recruit's rarity is what it knows: **one, two or all three** of its abilities, at random, leaning higher by act. Recruit offers never show a class already in the roster.
+- **Swaps any time outside a fight.** The campfire's SWAP tab goes. A full roster sends someone home to take a recruit.
+- **The reserves rule is gone.** A wipe ends the run.
+- **Cooldowns:** benched units keep their cooldowns as they left them. **Fresh abilities start half charged:** every ability of the starting party, of a new recruit, and an ability just learned (not upgraded) begins with half its cooldown already run. That's the director's fix for a Raise learned after a knockout that then can't come round in the boss fight.
 
-- **Party of three, bench of five: a roster of eight.** **Say if** you want six on the bench. Eight is half the classes, so a run sees most of what it could field, and a bigger roster means more menus before every fight.
-- **The start:** the leader plus **three** drafted picks (one of three each), so the roster is four and someone sits out from the first fight. **Say if** two picks, as today.
-- **Swaps any time outside a fight:** in or out, seats, formation, gear. Usually done on a fight's preview. The campfire's SWAP tab goes, since swapping is everywhere. A full roster sends someone home to take a recruit, any time.
-- **The reserves rule is gone.** A wipe ends the run. The rule was there because swaps were campfire-only, so healthy members watched runs end from camp. With free swaps, that can't happen.
-- **Benched units keep their cooldowns as they left them.** Cooldowns run only in fights, and they already carry between fights (5g). A unit that comes back from the bench "fresh" is a 5i formation idea (*Fresh legs*), so it isn't built in here. **Say if** the bench should reset cooldowns instead.
+## MP: drained by fighting, restored on the bench
 
-### MP: drained by fighting, restored by resting
+- **No MP regen in fights by default.** Every class's MP regen stat goes to 0.
+- **MP regen stays as a stat on gear** (and on Caravan's Quartermaster seat): a fighter wearing it regains MP during fights. That makes it a build choice, "this caster lasts a third fight". It only works in fights, on whoever wears it, so there's no bench cheese. The share it gives is raised so a piece is felt.
+- **The bench recovers a flat share of max MP after each fight it sat out.** Every class is the same and no gear touches it, just as a tonic restores a flat share. It counts from the max the member last fought with, the rule REST and tonics already follow, so +MP gear worn on the bench adds nothing. The starting value is 50% with a bench of two, then tuned.
+- **The target: from full, every class runs dry in about two to three fights** (casters two, walls three), erring scarce. No class goes an act without the bench, and no party is built around a wall that never rests. Costs and pools are tuned class by class to reach it. There's no global scaling, which the director agreed changes nothing alone.
+- **Fighters' other MP:** Clarity, Refrain, Siphon, the Soul jar, tonics and FOCUS. That's the support path.
+- **Unchanged:** the act's start restores everyone. Free play loses in-fight regen too, since it's one rule in the pack.
 
-- **No MP regen during fights.** Inside a fight, MP comes only from Clarity, the Bard's Refrain, Siphon, the Soul jar and other pieces. That's the support path.
-- **After every fight, each benched member regains MP by its MP regen stat.** The stat stops meaning "a trickle in fights" and starts meaning "how fast it rests". Gear with MP regen keeps a job: a member that wears it can come back sooner. Fighters regain nothing between fights except from a tonic or FOCUS.
-- **The targets** (tuned, not set by hand):
-  - from a full pool, no class runs dry in a fight;
-  - a caster can fight about two fights running, then needs one or two on the bench;
-  - a wall can fight four to six running;
-  - supports that feed MP stretch both.
+## The reward plan
 
-  How much each fight drains, against how much a bench fight restores, decides how often a unit sits out. It has to match a roster of eight.
-- **Challenge: I'd not raise every cost and pool together.** Raising both by the same factor changes nothing on its own; the absolute size is just what's printed, and NUMBERS rescales it anyway. In 385 fights from the feel tool, each class's gross spend a fight is already 15% to 50% of its pool (the Assassin 15%, the Ranger 23%, the Cleric 29%, the Knight 38%, the Stormcaller 45%, the Bard 51%). Pools already hold two to six fights of casting. What makes MP matter inside a fight today is that it's partly refilled during the fight and that casters arrive half-empty. The change that does the job is moving recovery onto the bench. I'd then tune pools and costs class by class, where a class's drain is off its target: casters fast, walls slow, as 5f set it. **Say if** you want the scale raised anyway, for how the numbers read.
-- **Unchanged:** the tonic (half a pool for one member), the campfire's FOCUS, and the act's start restoring everyone. Free play loses in-fight regen too, since it's one rule in the pack.
+### What the numbers say about gear today
 
-### Recruits and formations: more of them, as rewards you route toward
+From 300 runs of the simulated player at heat 0:
 
-Recruits and formations stay out of the fight spoils, which become gear, tomes and supplies only. That keeps them from being a choice after every fight. They become things you route toward, the way Hades shows each door's reward and Slay the Spire's map shows its shops:
+- **A run that reaches the end takes about 17 pieces:** 6.7 in act I, 5.6 in act II, 5.0 in act III.
+- **The rarities are upside down:** a full run takes about 4.7 legendary, 6 rare, 3 uncommon and 3.7 common pieces. In act I alone it takes **more legendaries (2.1) than commons (1.5)**.
+- **Where they come from, per run:**
 
-- **Two new rooms on the map**, each act having two of each, never adjacent to another of its kind, not on floor 1:
-  - **the Muster** (a recruit room): pick one of three recruits, or none;
-  - **the Drill ground**: pick one of three formations, or TRAIN two members instead.
-- **Other sources:**
-  - the boss's boon (a legendary piece, a formation or a recruit, as today, but the recruit and formation at a higher rarity);
-  - the shop (one recruit, one formation, as today);
-  - a **stranger at the fire** at some campfires (one recruit, take it or leave it), as you suggested;
-  - a **chest variant**: a cage, with a recruit and a piece of gear suited to it.
-- **Recruit rarity is what it knows** (your idea):
-  - a recruit arrives knowing **one, two or all three** of its abilities, drawn at random from its three, not always the first;
-  - the card shows which;
-  - the odds lean higher by act (mostly one in act I, two or three in act III).
+  | Source | Pieces a run |
+  | --- | --- |
+  | Fight spoils | 4.0 |
+  | Elite trophies (a legendary outright) | 2.4 |
+  | Chests (70% rare, 30% legendary) | 2.0 |
+  | Shop | 1.9, of 36 offered |
+  | Elite spoils (a pick of three rares) | 1.7 |
+  | The boss's boon | 0.5 |
+  | Events | 0.25 |
+- **Builds feel complete early.** By act I's boss the party wears real gear in 5.4 of its 9 slots, 1.4 of them legendary and 1.9 rare. By act II's boss it's 7.3 of 9. The armor and amulet slots are all filled by act II's floor 4 (the median run). Unworn pieces in the bag: 2.4, 5.9 and 10 at the three bosses.
+- **You never fish for a class.** 0.05 pieces a run were ones nobody could wear: drops are restricted to what the roster can use.
 
-  One guard: a recruit never arrives knowing only an ability that waits for a knockout (Raise, Valhalla), which would do nothing alone.
-- **Formation rarity:** common, rare and legendary, in the rarity colours gear uses. Offers roll their rarity by act. The nine existing formations get provisional rarities here; 5i sets the final ones and adds new formations. With nine formations and four to six offered a run, a run would see most of them, so 5i's new formations matter.
-- **More events, with variants.** Each event rolls one of two or three versions (another class, another rarity, another price), so a known event can still surprise. About six new ones around the roster:
-  - a Deserter (a hurt recruit who brings their gear);
-  - Mercenaries (pay gold for a pick of three);
-  - a Prisoner Cart (fight the guards, free a recruit);
-  - a Rival Company (trade a member of yours for one of theirs, sight unseen);
-  - an Old Banner (a formation of a set rarity);
-  - a Training Hall (two members train).
+So, of the director's five suspicions:
+- **too many drops:** yes, 17 pieces for 9 seats;
+- **rarities too generous:** yes, an upside-down pyramid;
+- **too few commons:** yes;
+- **drops restricted to usable:** yes, it removes the fishing;
+- **slots not restricted enough:** this is the least of the five. Slot rules stay as they are here; making pieces specific enough to switch for is 5i's job.
 
-  The Drill Yard and the Fallen Standard fold into the Drill ground and the Old Banner.
+(The simulated player takes gear greedily; a human may skip some. The offers are the system's either way.)
 
-### Training: more of it, in one nested screen
+### The plan
 
-- **More chances to train, for a roster of eight:**
-  - the Drill ground's TRAIN (two members);
-  - the campfire's TRAIN, which now trains **two** members;
-  - the act's level-up (every member learns or upgrades, or takes gold, as today);
-  - the shop (repeatable, as today);
-  - tomes in the spoils;
+**The targets for a full run:**
+- about **10 pieces** (from 17), roughly three or four an act;
+- a pyramid: about **five common or uncommon, three rare, two or three legendary**;
+- **a third of offered pieces** (outside the shop) **for a class not in the roster**, so a piece can make you want a class. Recruit offers already lean toward classes a bagged legendary is for.
+
+**Rewards as choices between kinds** (the director's type A versus type B):
+
+| Where | Was | Now |
+| --- | --- | --- |
+| Regular fight | Gold, then a pick of 3, mostly gear (rare 12%) | Gold, then a pick of **2** from a mixed table: gear (common 65%, uncommon 28%, rare 7%), a tome, a supply or more gold. Some fights offer no gear at all. |
+| Elite | Gold, a legendary outright, then a pick of 3 rares | Gold, then a pick of **2**: a legendary piece, against a rare formation, a recruit or a rare piece. An elite still pays a legendary if you want it (5d found elites need it). |
+| Chest | A rare (70%) or legendary (30%) piece | A rare (55%), a legendary (15%), or a cage: a recruit with an uncommon piece suited to it (30%). |
+| Shop | 6 pieces a visit, 1 recruit, 1 formation | 5 pieces (2 common, 1 uncommon, 1 rare, 1 legendary), 1 recruit, 1 formation. |
+| Boss's boon | A pick of 3: legendary, formation, recruit | A pick of 3 from: a legendary, a formation (rare or better), a recruit (two or three known), **a seat at camp** (up to four). |
+| **The Muster** (new room) | | A pick of **1 of 2** recruits, or none. |
+| **The Drill ground** (new room) | | A pick of **1 of 2** formations, or TRAIN two members instead. |
+
+- **The new rooms:** about two Musters and two Drill grounds an act, on different paths, so routing toward a recruit or a formation is a choice.
+- **Also:** a stranger at the fire at some campfires (one recruit, take it or not).
+- **Events with variants.** Each event rolls one of two or three versions. About six new ones around the roster: a Deserter, Mercenaries, a Prisoner Cart, a Rival Company, an Old Banner, a Training Hall. The Drill Yard and the Fallen Standard fold into the Drill ground and the Old Banner.
+- **Formation rarities:** common, rare, legendary, rolled by act. The nine formations get provisional rarities; 5i sets the final ones and adds more.
+
+### Training
+
+- **More chances to train, in one nested screen** (member → its abilities and passive → that one's upgrades), built with today's single upgrade. 5i fills in two branches for every ability and passive.
+- **Where it comes from:**
+  - the Drill ground and the campfire each train two members;
+  - the act's level-up;
+  - the shop (repeatable);
+  - tomes;
   - the Old Master and the Training Hall;
-  - recruits arriving with more already known.
-- **One nested screen**, used everywhere training happens: roster → member → its abilities, plus a passive row → that ability's upgrades. It's built with today's single upgrade. 5i fills in the second branch and the passive upgrades.
+  - recruits arriving with more known.
 
-### The party screen
+## Testing: hand-built parties, not a simulated player
 
-The three seats and formation on top, then the bench as a grid of faces with HP and MP bars, plus knocked-out marks. MP is the rotation's main information, so it's the bar that reads first. Tap to swap. It's reached from the fight preview's PARTY button and from the map.
+The director's point: a rules-of-thumb player can't come near a human who uses potions and builds well, and whole-run simulation has burned hours on something obviously wrong from the start. So this step tunes without it:
 
-## What's not in this step
+1. **Representative parties, built by hand:** about three dozen, three or four per act and tier (regular, elite, boss). They span the classes and the build shapes, with the gear, known abilities and formation a run would have there under the new reward plan. They're written down in the step folder so the director can read them.
+2. **Each fight's knob** from those parties: the calibrator, fed by them instead of by the simulated player's snapshots.
+3. **The MP economy:** each act's representative roster plays its act's fights in sequence with a plain, stated rotation rule. The rule: bench whoever is under a third of its MP, field the best of the rest. This measures fights-to-dry by class and how often the bench is used.
+4. **A feel read** of a few fights, then the report.
 
-Any control during a fight; new potion types; the Hourglass; six abilities per class; what the gear, formations and upgrades are (5i). The campaign is gone at your word, so the rogue mode is the only mode tuned.
+The simulated player is kept working so runs can be played end to end (tests, the interface), but nothing is tuned on it. Whole-run simulation comes back after 5i, when every system is in, if it stays cheap.
 
 ## Intent map
 
-| Your item | | |
+| The director's item | | |
 | --- | --- | --- |
-| Bench of 5 or 6 | used | 5; say if 6. |
-| Recruits more common; at campfires or chest slots; a recruit with a piece of gear | used | The Muster, the stranger at the fire, the caged recruit with gear, the boon, the shop, events. |
-| Swap any time outside a fight | used | |
-| MP back for the bench, not HP | used | After every fight, by the MP regen stat. |
-| Raise MP costs and pools by quite a bit | bent | The ratio does the job; scale only if you want it for how the numbers read (the challenge above). |
-| Parties that answer the preview; rotate unless built on support | used | The point of the step; MP sources inside fights are the support path. |
-| No reserves rule | used | |
-| More training, a cleaner screen | used | Two-member TRAIN at camp and the Drill ground, the Training Hall; the nested screen. |
-| Pick three; not a choice after every fight; formations and recruits as a lever of run design | used | Two new rooms, routed toward; spoils stay gear. |
-| Rarities for formations (2 or 3) | used | Three, as a drop mechanism here; content in 5i. |
-| A recruit's rarity is what it knows, not always the first, not always one | used | |
-| More events, with variants | used | Six new around the roster; every event rolls a variant. |
-| Enemies harder for the new flexibility | used | The knobs re-tuned at the end; see the predictions. |
-| Potions, the Hourglass, six abilities | set aside | Your word. |
+| Bench of 5 or 6 (first message) | bent, at their word | Two at the start, up to four, the extra seats as chosen rewards (their later notes). |
+| A small roster that grows, or a seat as a reward over something else | used | The boon's seat and an event. |
+| Recruit picks one of two | used | Recruits and the start draft. |
+| A starting unit knows one random ability; Raise isn't special | used | |
+| Recruit rarity is what it knows | used | |
+| Recruits more common; at campfires or chests; with a piece of gear | used | The Muster, the stranger at the fire, the cage. |
+| Swap any time outside a fight; no reserves rule | used | |
+| MP back on the bench, not HP; a flat share, not the regen stat; no gear cheese | used | A flat 50% (tuned), from the last-fought max. |
+| MP regen stays as a choice, default zero, from gear | used | Their alternative. |
+| Raise MP costs and pools | set aside, at their word | The ratio does it. |
+| Casters and walls run dry close together, scarce | used | Two to three fights for every class. |
+| Fresh units and new abilities start partly charged | used | Half charged. |
+| Gear economy: check counts, rarities, slots, usable-only drops | used | The numbers above; counts, rarities and usable-only change here, slots in 5i. |
+| Choices between kinds | used | Fight spoils, elites, chests, the boon, the Drill ground. |
+| Not a choice after every fight | used | Recruits and formations live in their own rooms; fight spoils are a pick of two. |
+| Formation rarities | used | Three. |
+| More training, a cleaner screen | used | |
+| More events, with variants | used | |
+| Test with representative parties, not a dumb picker | used | |
+| Enemies harder for the new flexibility | used | The knobs, on the hand-built parties. |
+| Potions, the Hourglass, six abilities | set aside | Their word. |
 
 ## Predictions (checked in the report)
 
-- The simulated player changes the fighting party before most fights. Picking the party at random costs it more than any other decision in 5d's table did (spoils cost 13 points then).
-- No class starting a fight at full MP runs dry in it. Casters rest about one fight in two or three, walls rarely.
-- A run offers six to eight recruit picks and four to six formation picks (formations were one or two).
-- Fights the rogue softened for a fixed party of three come back without ending more runs, now that a party can be picked for them: Bomb Bugs three to a fight again, snake packs that grow.
-- With the knobs re-tuned to the same win rate, they sit higher than today: the same win rate against harder fights.
+- Every class runs dry in two to three fights from full; none goes an act without the bench.
+- A full run takes about 10 pieces, two or three of them legendary. The party's slots fill around act III, not act II's floor 4. The bag holds three or four pieces, not ten.
+- Four to six formation picks a run (were one or two).
+- Fights the rogue softened for a fixed party come back without a spike: Bomb Bugs three to a fight, snake packs that grow.
 
-## The build, and what it costs
+## Asking
 
-- **Rules and content:**
-  - `src/rogue.ts` and `content/core-set/rogue.ts`: the roster, swaps, the reserves rule out, bench MP, the two rooms, rarities, events and variants, two-member training.
-  - MP regen during fights off in the pack. An engine version bump if regen is engine-side.
-- **Interface:** the party screen with the bench, the two rooms, recruit and formation cards with rarity, the nested training screen, the events.
-- **The simulated player needs a party picker:** three of up to eight, the seats and the formation, from the preview and each member's HP and MP. This is the step's biggest cost and its biggest risk. A weak picker makes the tuning wrong.
-  - My plan: a quick heuristic (fit to the fight's foes, MP and HP state), checked against a slow picker that plays a handful of candidate parties on other seeds.
-  - The AI playtester gets the same screens.
-- **Then:**
-  1. the feel tool and a read of a few fights (does rotation read?);
-  2. the knobs recalibrated and re-tuned harder;
-  3. the playtests;
-  4. the report.
+1. **Fight spoils with no gear.** On a regular fight, a pick of two that is sometimes a tome against a supply, with no gear at all. That's my pick, since it's the biggest lever on the count. Or should every regular fight keep at least one piece of gear in its two?
 
-  A budget of eight tuning rounds.
+## The build
+
+- **Rules and content:** `src/rogue.ts` and `content/core-set/rogue.ts`. MP regen off by default in the pack (`ENGINE_VERSION` bumped if regen is engine-side).
+- **The interface:**
+  - the party screen with the bench, MP bars reading first;
+  - the two rooms;
+  - recruit and formation cards with rarity;
+  - the mixed spoils;
+  - the nested training screen;
+  - the events.
+- **The tuning tools** (the hand-built parties, the act sequence for MP). A budget of eight tuning rounds.

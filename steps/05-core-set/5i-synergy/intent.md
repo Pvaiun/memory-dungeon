@@ -49,3 +49,11 @@ The designer weighed in: upgrades in the same pass as gear and formations, since
 And on the work's shape:
 
 > I would say go for developing that side on this branch, but I do think you need to commit a gearing kick off with everything that you want in it, because I think the context is going to get muddied during development.
+
+## The director's notes that shape this step (verbatim)
+
+From their ten notes on 5h's first design, the same day. Notes 7 (the gear economy), 8 (choices between kinds of reward) and 9 (testing) bear on this step too and are recorded in full in `../5h-roster/intent.md`; in the designer's summary, not their words: gear drops too freely, at too high a rarity, restricted to what the roster can use, so builds feel complete early and nothing makes you fish for a class ("potentially part of the fix is more specific loot that combos together so you'll want to switch more"); choices between kinds of reward (gear against a formation) are welcome; and tuning uses hand-built representative parties, not a simulated player, until every system is in. The rest, verbatim:
+
+> 10. Also, in my experience with AI, they are going to basically hyper-focus on the examples that you give and do only that. So I suggest being, at least for your set of... enablers and payoffs, being way more thorough in terms of things you actually want them to look at. For example, there's no mention of revive, there's no mention of healing, there's no mention of, like, you know, reacting to stun in any way, there's no reaction, nothing on thorns, nothing on armor or resistance, nothing on evasion, nothing on AoEs, nothing with sunder, silent. Like, there's just like either list everything or don't, or omit things for a reason. But the way it is there, I'm almost certain that representative sample is just going to be, you're just going to get those exact things.
+
+> reading the gear kickoff, it's unclear whether you're expecting them to come up with passives with branching upgrades or a single upgrade. I would keep the branching upgrade paradigm everywhere.
