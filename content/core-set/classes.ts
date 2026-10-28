@@ -156,7 +156,8 @@ export const abilities: A[] = [
   }),
   a("cleric", "cure", "Cure", "A quick, small heal on the lowest ally.", {
     // Step 5e: 0.55 of Magic for 1,000 MP (was 0.45 for 1,280): Cure healed a third of a unit's HP a cast while the Valkyrie's Rally healed half for half the MP, so the healer was the worse healer.
-    ...timing("short", "quick"), mp: 300, ...waitsFor("allies", { hpBelow: 100 }), target: T.lowestShareAlly, do: [{ op: "heal", amount: from("magic", 0.65) }], // round 5: 0.65, so the healer out-heals the Valkyrie.
+    // Step 5g round 3: waits for an ally under 80% (was 100%): "heals overkill or nothing"; a 2,600 Cure on a unit missing 300 HP was the Cleric's most frequent act.
+    ...timing("short", "quick"), mp: 300, ...waitsFor("allies", { hpBelow: 80 }), target: T.lowestShareAlly, do: [{ op: "heal", amount: from("magic", 0.65) }], // round 5: 0.65, so the healer out-heals the Valkyrie.
   }),
   a("cleric", "raise", "Raise", "Revives a random knocked-out ally with half its HP.", {
     ...timing("very_long", "very_long"), mp: 1200, ...waitsFor("allies", { ko: true }), target: T.koAlly, do: [{ op: "revive", hp: { scale: [{ ratio: REVIVE.half, stat: "max_hp", of: "target" }] } }],
@@ -201,7 +202,7 @@ export const abilities: A[] = [
   a("valkyrie", "rally", "Rally", "Heals the lowest ally; the amount scales from Magic.", {
     // Campaign pass: 0.3 of Magic, not 0.6.
     // Step 5e: 0.55 of Magic (was 0.7): see Cure. The Valkyrie healed more a fight than the Cleric and its parties won 13 to 31 points more than parties without it.
-    ...timing("medium", "normal"), mp: 500, ...waitsFor("allies", { hpBelow: 100 }), target: T.lowestShareAlly, do: [{ op: "heal", amount: from("magic", 0.45) }], // round 5: 0.45; at 0.55 the Valkyrie still healed as much a fight as the Cleric.
+    ...timing("medium", "normal"), mp: 500, ...waitsFor("allies", { hpBelow: 80 }), target: T.lowestShareAlly, do: [{ op: "heal", amount: from("magic", 0.45) }], // round 5: 0.45; at 0.55 the Valkyrie still healed as much a fight as the Cleric. // Step 5g round 3: waits for 80%.
   }),
   a("valkyrie", "valhalla", "Valhalla", "Revives a random knocked-out ally with a tenth of its HP, every action ready.", {
     ...timing("very_long", "quick"), mp: 1200, ...waitsFor("allies", { ko: true }), target: T.koAlly, do: [{ op: "revive", hp: { scale: [{ ratio: REVIVE.tenth, stat: "max_hp", of: "target" }] }, ready: true }],
@@ -212,7 +213,8 @@ export const abilities: A[] = [
   // Step 5f (the director's): Allegro and War ballad merged into one short song on a random ally, and a small heal on every ally in the slot it frees.
   // Round 6: several Might (was many: 20 stacks, the cap, every 14 ticks).
   a("bard", "anthem", "Anthem", "Haste and several Might on a random ally.", { ...timing("short", "quick"), mp: 300, target: "ally", do: [apply("haste"), apply("might", { stacks: stacks("several", "magic") })] }),
-  a("bard", "chorus", "Chorus", "A small heal on every ally; the amount scales from Magic.", { ...timing("short", "normal"), mp: 300, ...waitsFor("allies", { hpBelow: 100 }), target: T.everyAlly, do: [{ op: "heal", amount: from("magic", 0.15) }] }),
+  // Step 5g round 3: 0.25 of Magic (was 0.15: 450 an ally against 6,800 incoming), and it waits for an ally under 80%.
+  a("bard", "chorus", "Chorus", "A small heal on every ally; the amount scales from Magic.", { ...timing("short", "normal"), mp: 300, ...waitsFor("allies", { hpBelow: 80 }), target: T.everyAlly, do: [{ op: "heal", amount: from("magic", 0.25) }] }),
   // Step 5c (the director's): Lullaby (Slow on one foe) became a Shock on every foe.
   // Many, not several: at several an AI playtester saw it peak at 10 stacks for under 2,000 a fight, the Bard a passenger.
   a("bard", "thunder_chord", "Thunder chord", "Many Shock on every foe.", { ...timing("medium", "normal"), mp: 500, target: T.everyFoe, do: [apply("shock", { stacks: stacks("many", "magic") })] }),
@@ -245,10 +247,11 @@ export const abilities: A[] = [
   a("vampire", "blood_drain", "Blood drain", "Dark damage scaling from max HP to a random foe, which is Weakened.", { ...timing("short", "quick"), mp: 150, do: [magic("dark", from("max_hp", 0.4), { apply: [{ status: "weaken" }] })] }), // round 6: 0.4 (the Vampire still +11 / +25 / +9 at 0.5).
   // Step 5f (the director's): Wither's Rot met one enemy heal in the whole roster. Blood gift spends the Vampire's own HP on an ally.
   a("vampire", "blood_gift", "Blood gift", "Spends a fifth of its max HP to heal the lowest other ally for as much, and gives it Clarity.", {
-    ...timing("medium", "normal"), mp: 500, ...waitsFor("others", { hpBelow: 100 }), target: T.otherLowestShareAlly,
+    // Step 5g round 3: 300 MP (was 500) and it waits for an ally under 80%: it already costs a fifth of the Vampire's HP, and the Vampire was the one class short of MP (21% of its time).
+    ...timing("medium", "normal"), mp: 300, ...waitsFor("others", { hpBelow: 80 }), target: T.otherLowestShareAlly,
     do: [apply("blood_price", { to: { side: "self" } }), { op: "heal", amount: from("max_hp", 0.2) }, apply("clarity")],
   }),
-  a("vampire", "frenzy", "Frenzy", "Several Might on itself.", { ...timing("medium", "quick"), mp: 500, target: "self", do: [apply("might", { stacks: stacks("several", "attack") })] }),
+  a("vampire", "frenzy", "Frenzy", "Several Might on itself.", { ...timing("medium", "quick"), mp: 300, target: "self", do: [apply("might", { stacks: stacks("several", "attack") })] }), // Step 5g round 3: 300 MP (was 500).
   // Pyromancer
   a("pyromancer", "firebolt", "Firebolt", "Fire at the foe with the most Burn, adding several.", { ...timing("short", "normal"), mp: 300, target: T.mostFoe("burn"), do: [magic("fire", hit("magic", "light"), { apply: [{ status: "burn", stacks: stacks("several", "magic", BURN_STACKS) }] })] }),
   // Campaign pass: normal hits (0.35 of Magic), not light. Squishy damage dealers were in few winning builds; the run's attrition favours sustain.

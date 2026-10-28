@@ -285,6 +285,21 @@ function pack(r: Rec, n: number): string {
   };
   let lastAt = -1;
   const lastMp = new Map<string, { at: number; amount: number; mp: number }>();
+  // Which MP entries are an ability's cost (the act entry follows at once), so a drain (Siphon) can be told apart and shown.
+  const costAt = new Set<Entry>();
+  r.log.forEach((e, i) => { const n = r.log[i + 1]; if (e.t === "mp" && Number(e.amount) < 0 && n?.t === "act" && n.by === e.target && n.at === e.at) costAt.add(e); });
+  // The statuses each unit holds, for annotating hits (the reads: Weaken, Might, Guard and Chill "exist only in arithmetic").
+  const held = new Map<string, Map<string, number>>();
+  const holds = (id: unknown, st: string) => held.get(String(id))?.get(st);
+  const note = (by: unknown, target: unknown) => {
+    const bits: string[] = [];
+    if (holds(by, "weaken") !== undefined) bits.push("weakened");
+    if (holds(by, "might")) bits.push(`might ${n1(holds(by, "might")!)}`);
+    if (holds(target, "guard") !== undefined) bits.push("guarded");
+    if (holds(target, "chill")) bits.push(`chilled ${n1(holds(target, "chill")!)}`);
+    if (holds(target, "sunder")) bits.push(`sundered ${n1(holds(target, "sunder")!)}`);
+    return bits.length ? ` (${bits.join(", ")})` : "";
+  };
   for (const e of r.log) {
     const atN = typeof e.at === "number" ? e.at : null;
     const t = atN !== null ? `t${Number((atN / 1000).toFixed(1))}` : "";
@@ -304,8 +319,9 @@ function pack(r: Rec, n: number): string {
       case "mp": {
         const v = Number(e.amount);
         lastMp.set(String(e.target), { at: atN ?? 0, amount: v, mp: Number(e.mp) });
-        // Gains worth seeing (Clarity, Refrain, Siphon, a jar): regen's small pulses are summed in the tally instead.
+        // Gains worth seeing (Clarity, Refrain, Siphon, a jar): regen's small pulses are summed in the tally instead. A drain on a hero (Siphon) too.
         if (v >= 100) out.push(`${own}${who(e.target)} MP +${n0(v)} → ${n0(Number(e.mp))}.`);
+        else if (v < 0 && !costAt.has(e) && !isFoe(e.target)) out.push(`${own}${who(e.target)} loses ${n0(-v)} MP → ${n0(Number(e.mp))} (drained).`);
         break;
       }
       case "act": {
@@ -319,19 +335,27 @@ function pack(r: Rec, n: number): string {
       case "dmg": {
         const from = e.part === "pulse" || e.part === "reaction" ? ` from ${String(e.src).toUpperCase()}${e.from && who(e.from) !== String(e.from) ? ` (${who(e.from)}'s)` : ""}` : e.part === "extra" ? " (extra strike)" : "";
         if (e.word === "MISS") out.push(`${own}${who(e.target)}: MISS${from}.`);
-        else out.push(`${own}${who(e.target)} takes ${e.crit ? "CRIT " : ""}${n0(Number(e.amount))}${e.kind ? ` ${e.kind}` : ""}${e.word ? ` ${e.word}` : ""}${from}${e.soaked ? `, ${n0(Number(e.soaked))} soaked` : ""}${hpWord(e.target, e.hp, e.shield)}.`);
+        else out.push(`${own}${who(e.target)} takes ${e.crit ? "CRIT " : ""}${n0(Number(e.amount))}${e.kind ? ` ${e.kind}` : ""}${e.word ? ` ${e.word}` : ""}${from}${e.soaked ? `, ${n0(Number(e.soaked))} soaked` : ""}${e.part === "hit" || e.part === "extra" ? note(e.by, e.target) : ""}${hpWord(e.target, e.hp, e.shield)}.`);
         break;
       }
       case "heal":
         if (e.word === "ABSORB") out.push(`${own}${who(e.target)} ABSORBS it, healing ${n0(Number(e.amount))}${hpWord(e.target, e.hp)}.`);
         else out.push(`${own}${who(e.target)} is healed ${n0(Number(e.amount))}${e.src && e.src !== "basic" ? ` by ${nameOf(c, String(e.src))}` : ""}${hpWord(e.target, e.hp)}.`);
         break;
-      case "status": if (shown(e.status)) out.push(`${own}${who(e.unit)}: ${e.name}${e.total !== null ? ` ${n1(Number(e.total))}` : ""}${e.by && who(e.by) !== who(e.unit) ? ` (from ${who(e.by)})` : ""}.`); break;
-      case "status_end": if (shown(e.status) && e.cause !== "ko") out.push(`${own}${who(e.unit)}'s ${e.name} ends (${e.cause}).`); break;
+      case "status": {
+        const m = held.get(String(e.unit)) ?? new Map<string, number>(); m.set(String(e.status), typeof e.total === "number" ? e.total : 0); held.set(String(e.unit), m);
+        if (shown(e.status)) out.push(`${own}${who(e.unit)}: ${e.name}${e.total !== null ? ` ${n1(Number(e.total))}` : ""}${e.by && who(e.by) !== who(e.unit) ? ` (from ${who(e.by)})` : ""}.`);
+        break;
+      }
+      case "status_end": {
+        held.get(String(e.unit))?.delete(String(e.status));
+        if (shown(e.status) && e.cause !== "ko") out.push(`${own}${who(e.unit)}'s ${e.name} ends (${e.cause}).`);
+        break;
+      }
+      case "down": held.delete(String(e.unit)); out.push(`${own}${who(e.unit)} is DOWN.`); break;
       case "immune": out.push(`${own}${who(e.unit)}: IMMUNE to ${e.name}.`); break;
       case "interrupt": out.push(`${own}${who(e.unit)} is interrupted: ${e.name} is lost.`); break;
       case "hold": out.push(`${own}${who(e.unit)} is stunned: ${e.name} waits.`); break;
-      case "down": out.push(`${own}${who(e.unit)} is DOWN.`); break;
       case "enrage": out.push(`${own}ENRAGE: every blow lands harder from here.`); break;
       case "fight_end": out.push(`${e.result === "won" ? "WON" : "LOST"} at t${e.rounds}.`); break;
     }

@@ -39,7 +39,8 @@ const apply = (status: string, extra: object = {}) => ({ op: "apply", status, ..
 
 export const enemyStatuses: StatusT[] = [
   // Step 5c: Bleed, not Poison (the director's: "this also works with the snakes").
-  passive("venom", "Venom", "Its bites leave wounds that bleed.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("bleed", { stacks: FLAT_STACKS.few, to: "other" })] }] }),
+  // Step 5g round 3: one stack a bite (was two): at 120 a stack, a 67-damage bite left a wound that cost 240 on every hit after, and three snakes killed two heroes.
+  passive("venom", "Venom", "Its bites leave wounds that bleed.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("bleed", { stacks: FLAT_STACKS.one, to: "other" })] }] }),
   passive("fire_bite", "Fire bite", "Its bites burn.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("burn", { stacks: FLAT_STACKS.one, to: "other" })] }] }),
   passive("split", "Split", "Below half HP it splits in two.", { reactions: [{ on: { event: "hp_lost" }, do: [{ op: "replace", enemy: "mini_slime", count: 2, to: { side: "self", where: { hpBelow: 50 } } }] }] }),
   passive("volatile", "Volatile", "Explodes when it dies.", {
@@ -95,7 +96,8 @@ const bandit = enemy("bandit", "Bandit", "A common road thug.", "minion", line(4
 const archer = enemy("archer", "Archer", "Hits hard, falls fast.", "minion", line(2, 0, 0, 7, 0, 0, 4, 2), basic("bow", "heavy"));
 const snake = enemy("snake", "Snake", "Its bite leaves a bleeding wound.", "minion", line(2, 0, 0, 2, 0, 0, 2, 1), basic("dagger", "weak"), { statuses: ["venom"] });
 const shieldman = enemy("shieldman", "Shieldman", "Hides behind a big shield.", "elite", line(10, 3, 2, 2, 0, 5, 1, 4), basic("sword"), { abilities: ["shield_up", "brace"] });
-const ogre = enemy("ogre", "Ogre", "Big, slow, and swings a tree.", "elite", line(16, 2, 1, 6, 0, 2, 2, 4), basic("axe", "heavy", { cast: WINDUP.long }), { abilities: ["flatten"], note: "Its basic attack has a long wind-up: an exception to the no-wind-up default." });
+// Step 5g round 3: a massive swing (was heavy): on a 16-tick axe with a 6-tick wind-up the elite swung three times in 35 ticks for a minion's damage a tick.
+const ogre = enemy("ogre", "Ogre", "Big, slow, and swings a tree.", "elite", line(16, 2, 1, 6, 0, 2, 2, 4), basic("axe", "massive", { cast: WINDUP.long }), { abilities: ["flatten"], note: "Its basic attack has a long wind-up: an exception to the no-wind-up default." });
 const ogreChief = enemy("ogre_chief", "Ogre Chief", "The biggest ogre, with the biggest club.", "boss", line(60, 4, 2, 12, 0, 3, 2, 4), basic("axe", "heavy"), { abilities: ["crush"] });
 
 const skeleton = enemy("skeleton", "Skeleton", "Old bones in heavy armor.", "minion", line(3, 0, 0, 3, 0, 8, 2, 3), basic("sword", "normal", { cooldown: SPEED.slow }));

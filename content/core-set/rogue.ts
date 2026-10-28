@@ -96,7 +96,10 @@ export const ROGUE_CONFIG: RogueConfigT = {
    * much less damage, and the calibration sets each fight's knob on top, so a fight costs what it did and lasts longer
    * (at the knob alone they lasted 21 to 25 ticks, half the campaign's, and a third slotted ability fired in one fight in three).
    */
-  shape: { fight: { hp: 80, power: -30 } },
+  // Step 5g round 3 (the feel reads: "fight length is ungoverned and tiers don't differ"; regular fights 15 to 116 ticks, elites shorter than
+  // regular fights with 1.8 knockouts each): regular fights +50% HP and −25% damage (were +80 and −30), elites +30% and −20% (had no shape),
+  // so an elite is a longer, less spiky fight at the same cost. Bosses keep the knob alone.
+  shape: { fight: { hp: 50, power: -25 }, elite: { hp: 30, power: -20 } },
   /** Heat: each level adds this to every knob (about 6 points of the simulated player's wins a level). Won runs open the next. */
   heat: { per: 4, max: 10 },
   /** Later floors' fights grow: from this floor, each pack of two or more may gain one more (to the cap of 8). */

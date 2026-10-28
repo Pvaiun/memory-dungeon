@@ -65,7 +65,8 @@ export const SPEED = { fast: 8.9, medium: 11.9, slow: 15.5 } as const;
  * ability fires about three times, a medium twice, a long once; very long is for the revives and the Pyre. Each kit mixes them
  * by its class's tempo (classes.ts).
  */
-export const COOLDOWN = { short: 16, medium: 28, long: 44, very_long: 60 } as const;
+/** Step 5g round 3: long 36 (was 44). In a third slot (no head start) a long ability's first cast came at tick 44 to 50: Tremor 0.55 casts a fight, Aspis 0.64, Sanctuary 0.68; once a boss fight, never a regular one. */
+export const COOLDOWN = { short: 16, medium: 28, long: 36, very_long: 60 } as const;
 /**
  * Foes keep the pacing pass's short cooldown. Step 5e: medium 40 and long 60 (were 48 and 70). In free play, at the documents'
  * numbers, a boss fight lasted 46 ticks and the signature moves (Crush, Quiet, Tempest, Death bell, Rally) came 0.5 to 0.9
@@ -373,7 +374,7 @@ export const STATUS = {
    * (650 on its first pulse, under the bolt's own hit) and Kindling at 3.5 a swing, a Pyromancer's upkeep settles around 23 stacks
    * (1,150 a pulse) in a regular fight and higher on a boss: a ramp applications can't reach alone.
    */
-  burn: { every: 2, perStack: 50, drop: 0.12 }, // Round 7 (with the knobs): 50 a stack, so the capped ramp's ceiling is worth reaching (the Pyromancer's statuses 44% of its damage at 40).
+  burn: { every: 2, perStack: 55, drop: 0.15 }, // Round 3: 15% and 55 (were 12% and 50): the same ramp at the top (the Pyromancer's upkeep near 19), a shorter tail (the read: "twenty lines of 904 to 54"). // Round 7 (with the knobs): 50 a stack, so the capped ramp's ceiling is worth reaching (the Pyromancer's statuses 44% of its damage at 40).
   /** Step 5f (the director's deep freeze): cap 12, −5 a stack (−60 at the cap, colder than Slow), one stack lost every 4 ticks, so reapplying keeps a foe frozen. */
   chill: { cap: 12, perStack: -5, every: 6 }, // Round 6: one stack every 6 ticks (was 4): a Hexer's two or three stacks thawed before its next swing.
   /**
@@ -383,7 +384,7 @@ export const STATUS = {
    * (BURN_SHOCK) the cap of 25 held its Shock at 18% of its damage. At 80 a stack as well, the Stormcaller was in 57% of the
    * top builds (was 23%), so it stays at 60.
    */
-  shock: { perStack: 100, drop: 0.5, cap: 40 }, // Step 5g: 100 a stack and the cap back at 40 as a safety (one Chain lightning put 25 to 30 on each of four foes and each paid 3,000 to 3,600 as it acted); applications are 8 to 14 now. // Step 5f: 120 a stack, cap 30 (were 70 and 40): a trigger at 10 stacks is 1,200, past a swing.
+  shock: { perStack: 80, drop: 0.5, cap: 40 }, // Round 3: 80 (was 100): the Stormcaller dealt 64% of its party's damage over 61 fights, the next class 47%; one Chain lightning's Shock on four foes was most of it. // Step 5g: 100 a stack and the cap back at 40 as a safety (one Chain lightning put 25 to 30 on each of four foes and each paid 3,000 to 3,600 as it acted); applications are 8 to 14 now. // Step 5f: 120 a stack, cap 30 (were 70 and 40): a trigger at 10 stacks is 1,200, past a swing.
   ward: { resist: 40, duration: 30 }, // Step 5f: 40 for 30 ticks.
   sunder: { perStack: -600, every: 4, cap: 20 }, // Step 5f: a cap (the Silent One carried 235). Armor's floor is 0, so it never went past.
   silence: { duration: 16 }, // Step 5f: 16 (was 8: Hush interrupted a cast 0.06 times an application).
