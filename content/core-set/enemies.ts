@@ -88,16 +88,21 @@ export const enemyAbilities: AbilityT[] = [
   a("soulfire", "Soulfire", "A heavy Dark spell.", { ...timing("medium", "very_long"), do: [{ op: "damage", type: "magical", element: "dark", amount: fromStat("magic", ENEMY_HIT.soulfire) }] }),
   a("dig_up", "Raise", "Digs a fallen packmate back up.", { ...timing("medium", "long"), if: { side: "allies", where: { ko: true } }, target: T.koAlly, do: [{ op: "revive", hp: { scale: [{ ratio: REVIVE.ghoul, stat: "max_hp", of: "target" }] } }] }),
   a("death_bell", "Death bell", "Dooms a foe.", { ...timing("short", "long"), if: { side: "foes", where: { lacks: "doom" } }, target: { side: "foes", where: { lacks: "doom" } }, do: [apply("doom")] }),
+  // Step 5g round 5 (the director's: bosses with behaviours of their own, the one-shot the Ogre Chief's alone).
+  a("reap", "Reap", "Three scythe slashes at random foes.", { ...timing("medium", "normal"), target: { side: "foes", pick: "random" }, do: [1, 2, 3].map(() => ({ op: "damage" as const, type: "physical" as const, subtype: "slash" as const, amount: fromStat("attack", ENEMY_HIT.reap), to: { side: "foes" as const, pick: "random" as const } })) }),
+  a("tolling", "Tolling", "Several Might and Haste on itself: its swings come faster and harder.", { ...timing("short", "quick"), mp: 0, target: "self", do: [apply("might", { stacks: FLAT_STACKS.several }), apply("haste")] }),
+  a("kindle", "Kindle", "Many Might and a Ward on itself; the Inferno follows.", { ...timing("medium", "quick"), mp: 0, target: "self", do: [apply("might", { stacks: FLAT_STACKS.many }), apply("ward")] }),
   a("mute", "Mute", "Silences the foe with the highest Attack or Magic.", { ...timing("medium", "normal"), if: { side: "foes", where: { lacks: "silence" } }, target: { ...T.highestAMFoe, where: { lacks: "silence" } }, do: [apply("silence")] }),
   // Step 5g round 4: medium (was short): at 22 the Silent One silenced the party 9 times a fight, 73% of the time, and the calibration gave it 218,000 HP to beat parties that could only swing; a 230-tick slog.
   a("quiet", "Quiet", "Silences every foe.", { ...timing("medium", "long"), target: T.everyFoe, do: [apply("silence")] }),
   a("cheer", "Cheer", "Might and Haste on its strongest ally.", { ...timing("medium", "normal"), target: T.highestAMAlly, do: [apply("might", { stacks: FLAT_STACKS.several }), apply("haste")] }),
   a("brand", "Brand", "Fire on a foe, with a few Burn.", { ...timing("short", "quick"), do: [{ op: "damage", type: "magical", element: "fire", amount: fromStat("magic", ENEMY_HIT.brand), apply: [{ status: "burn", stacks: FLAT_STACKS.few }] }] }),
   // Step 5g round 2: several Burn (was many: with Burn uncapped and slow to fade, 7 stacks were 2,900 more damage per unit on top of the blast).
-  a("inferno", "Inferno", "A very long cast: huge Fire on every foe, with several Burn.", { ...timing("short", "very_long"), target: T.everyFoe, do: [{ op: "damage", type: "magical", element: "fire", amount: fromStat("magic", ENEMY_HIT.inferno), apply: [{ status: "burn", stacks: FLAT_STACKS.several }] }] }),
+  a("inferno", "Inferno", "A very long cast: huge Fire on every foe, with several Burn. It waits until the Giant has kindled.", { ...timing("short", "very_long"), if: { side: "self", where: { has: "might" } }, target: T.everyFoe, do: [{ op: "damage", type: "magical", element: "fire", amount: fromStat("magic", ENEMY_HIT.inferno), apply: [{ status: "burn", stacks: FLAT_STACKS.several }] }] }),
   a("hailstorm", "Hailstorm", "Ice on every foe, with a stack of Chill.", { ...timing("short", "normal"), target: T.everyFoe, do: [{ op: "damage", type: "magical", element: "ice", amount: fromStat("magic", ENEMY_HIT.hailstorm), apply: [{ status: "chill", stacks: FLAT_STACKS.one }] }] }),
   a("call_drones", "Call drones", "Summons two Drones.", { ...timing("medium", "long"), do: [{ op: "summon", enemy: "drone", count: 2 }] }),
-  a("tempest", "Tempest", "Lightning on every foe, with a stack of Shock.", { ...timing("short", "long"), target: T.everyFoe, do: [{ op: "damage", type: "magical", element: "lightning", amount: fromStat("magic", ENEMY_HIT.tempest), apply: [{ status: "shock", stacks: FLAT_STACKS.one }] }] }),
+  // Step 5g round 5 (the director's): three bolts at random foes (two may land on one), each with a stack of Shock, in place of one blast on everyone.
+  a("tempest", "Tempest", "Three lightning bolts at random foes, each with a stack of Shock.", { ...timing("short", "long"), target: { side: "foes", pick: "random" }, do: [1, 2, 3].map(() => ({ op: "damage" as const, type: "magical" as const, element: "lightning", amount: fromStat("magic", ENEMY_HIT.tempest), apply: [{ status: "shock", stacks: FLAT_STACKS.one }], to: { side: "foes" as const, pick: "random" as const } })) }),
   a("rally_soldiers", "Rally", "Summons two Soldiers.", { ...timing("medium", "long"), do: [{ op: "summon", enemy: "soldier", count: 2 }] }),
 ];
 
@@ -119,16 +124,16 @@ const bonePriest = enemy("bone_priest", "Bone Priest", "Heals the other dead.", 
 const witch = enemy("witch", "Witch", "Curses the whole party.", "minion", line(3, 5, 3, 0, 4, 0, 2, 2), touch({ element: "dark" }, "medium", "weak"), { abilities: ["curse"] });
 const lich = enemy("lich", "Lich", "A dead wizard with one big spell.", "minion", line(2, 6, 2, 0, 7, 0, 2, 2), touch({ element: "dark" }, "medium", "weak"), { abilities: ["soulfire", "dark_ward"] }); // Step 5g: it wards itself.
 const ghoul = enemy("ghoul", "Ghoul", "Ghouls dig each other back up.", "minion", line(8, 3, 2, 4, 0, 1, 2, 3), basic("sword"), { abilities: ["dig_up"] });
-const reaper = enemy("reaper", "Reaper", "Death, with a scythe and a bell.", "boss", line(85, 8, 3, 9, 12, 4, 2, 4), basic("sword", "heavy"), { abilities: ["death_bell"] });
+const reaper = enemy("reaper", "Reaper", "Death, with a scythe and a bell.", "boss", line(85, 8, 3, 9, 12, 4, 2, 4), basic("sword", "heavy"), { abilities: ["death_bell", "reap"] });
 const wraith = enemy("wraith", "Wraith", "Steals voices.", "minion", line(4, 5, 3, 0, 5, 0, 2, 2), touch({ element: "dark" }, "medium", "weak"), { abilities: ["mute"] });
-const silentOne = enemy("silent_one", "Silent One", "Its silence falls on everyone.", "boss", line(90, 10, 3, 11, 12, 5, 2, 4), basic("sword", "heavy"), { abilities: ["quiet"] });
+const silentOne = enemy("silent_one", "Silent One", "Its silence falls on everyone.", "boss", line(90, 10, 3, 11, 12, 5, 2, 4), basic("sword", "heavy"), { abilities: ["quiet", "tolling"] });
 
 const hellhound = enemy("hellhound", "Hellhound", "A fire dog; its bite burns.", "minion", { ...line(3, 0, 0, 3, 0, 0, 2, 2), ...res("fire", "resists"), ...res("ice", "weak") }, flurry("dagger", "weak"), { statuses: ["fire_bite"] }); // Step 5g: two bites a swing, each burning.
 const lavaSlime = enemy("lava_slime", "Lava Slime", "Cut it in half and you get two.", "elite", { ...line(14, 0, 0, 4, 0, 1, 2, 3), ...res("fire", "resists"), ...res("ice", "weak") }, touch({ subtype: "blunt" }, "slow"), { statuses: ["split"] });
 const miniSlime = enemy("mini_slime", "Mini Slime", "Half a slime, still hungry.", "minion", { ...line(7, 0, 0, 3, 0, 1, 2, 3), ...res("fire", "resists"), ...res("ice", "weak") }, touch({ subtype: "blunt" }, "slow"));
 const bombBug = enemy("bomb_bug", "Bomb Bug", "Explodes when it dies.", "minion", { ...line(6, 0, 0, 2, 5, 3, 2, 2), ...res("fire", "resists") }, touch({ subtype: "blunt" }, "medium"), { statuses: ["volatile"] });
 const fireImp = enemy("fire_imp", "Fire Imp", "Cheers its friends on.", "minion", line(3, 5, 3, 0, 3, 1, 2, 1), touch({ element: "fire" }, "medium", "weak"), { abilities: ["cheer"] });
-const fireGiant = enemy("fire_giant", "Fire Giant", "Lord of the furnace.", "boss", { ...line(95, 10, 3, 0, 14, 5, 2, 4), ...res("fire", "absorbs"), ...res("ice", "weak") }, basic("fire_staff", "heavy"), { abilities: ["brand", "inferno"] });
+const fireGiant = enemy("fire_giant", "Fire Giant", "Lord of the furnace.", "boss", { ...line(95, 10, 3, 0, 14, 5, 2, 4), ...res("fire", "absorbs"), ...res("ice", "weak") }, basic("fire_staff", "heavy"), { abilities: ["brand", "kindle", "inferno"] });
 
 const iceSpirit = enemy("ice_spirit", "Ice Spirit", "Living ice: ice heals it, fire melts it.", "minion", { ...line(5, 0, 0, 0, 4, 1, 2, 2), ...res("ice", "absorbs"), ...res("fire", "weak") }, touch({ element: "ice" }, "medium"), { statuses: ["rime"] });
 const iceGolem = enemy("ice_golem", "Ice Golem", "Every hit thickens its ice.", "elite", { ...line(14, 0, 0, 5, 0, 2, 2, 3), ...res("ice", "resists") }, basic("axe", "heavy"), { abilities: ["brace"], statuses: ["ice_crust_passive"] }); // Step 5g: it braces too.

@@ -34,6 +34,8 @@ export const T = {
   highestAMAlly: { side: "allies", pick: "highest", by: { stats: ["attack", "magic"] } } satisfies TargetRuleT,
   /** Step 5f: the ally with the least MP, for the Clarity givers (`mp_share`, engine 0.13). */
   lowestMpAlly: { side: "allies", pick: "lowest", by: "mp_share" } satisfies TargetRuleT,
+  /** Step 5g: the ally with the least MP among those under half (`mpBelow`, engine 0.14), or nobody: a Clarity on a full pool was the usual case. */
+  needsMpAlly: { side: "allies", where: { mpBelow: 50 }, pick: "lowest", by: "mp_share" } satisfies TargetRuleT,
   /** Step 5f: a foe in a wind-up, for Unmake (`casting`, engine 0.13). */
   castingFoe: { side: "foes", where: { casting: true }, pick: "highest", by: { stats: ["attack", "magic"] } } satisfies TargetRuleT,
   randomAlly: "ally" as const,
@@ -67,7 +69,8 @@ export const passives: StatusT[] = [
   passive("hunters_eye", "Hunter's eye", { text: "Basic attacks ignore Taunt.", seek: "basic" }),
   // Step 5c (the director's): Bleed, not Poison, with stacks from Armor.
   passive("briar", "Briar", { text: "Foes its Thorns wound start to bleed.", reactions: [{ on: { event: "damage_dealt", status: "thorns" }, do: [apply("bleed", { stacks: own("few", "armor"), to: "other" })] }] }),
-  passive("phalanx", "Phalanx", { text: "Basic attacks a third as often, for triple damage.", stats: [{ stat: "attack_speed", flat: -200 }], boosts: [{ tag: "basic", pct: 200 }] }),
+  // Step 5g round 5 (the director's): half as often for double damage (was a third for triple: one swing a fight, "a statue").
+  passive("phalanx", "Phalanx", { text: "Basic attacks half as often, for double damage.", stats: [{ stat: "attack_speed", flat: -100 }], boosts: [{ tag: "basic", pct: 100 }] }),
   // Step 5f (the director's): +50%, not double: "very situational and probably too powerful when it's relevant".
   passive("judgement", "Judgement", { text: "Hits deal half again as much to foes with a buff.", boosts: bothKinds({ scale: [{ ratio: 50, when: { buffs: true }, of: "target" }] }) }),
   // Step 5f (the director's): Encore (can't be Silenced) worked against two enemies; Last rites halves its cooldowns below 30% HP (Bloodlust's pattern).
@@ -101,7 +104,8 @@ export const passives: StatusT[] = [
   }),
   { id: "bloodlust_on", name: "BLOODLUST", text: "Lifesteal doubled.", label: "buff", show: "icon", stacking: "fizzle", stats: [{ stat: "lifesteal", flat: { scale: [{ ratio: 1, stat: "lifesteal", of: "holder" }] } }] },
   passive("kindling", "Kindling", { text: "Basic attacks add a few Burn.", reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("burn", { stacks: own("few", "magic", BURN_STACKS), to: "other" })] }] }),
-  passive("brittle", "Brittle", { text: "Hits deal more damage for each Chill stack on the target.", boosts: bothKinds({ scale: [{ ratio: 12, stacks: "chill", of: "target" }] }) }), // Round 4: 12% a stack (was 8): with Chill at a cap of 12 that lingers, the Frostweaver was still the weakest caster.
+  // Step 5g round 5 (the director's redesign): Chill shatters at its cap; the Frostweaver's passive rides the shatter. Brittle (more damage per Chill stack) is gone.
+  passive("shatterpoint", "Shatterpoint", { text: "When a foe's Chill shatters, it takes several Sunder.", reactions: [{ on: { event: "status_capped", status: "chill", whose: "foe" }, do: [apply("sunder", { stacks: own("several", "magic"), to: "owner" })] }] }),
   passive("arc", "Arc", {
     text: "Basic attacks also hit a second foe, and Shock both.",
     strike: { to: T.secondFoe },
@@ -143,7 +147,8 @@ export const abilities: A[] = [
   // Step 5f (the director's): Protect (a Shield on the lowest ally) overlapped the Hoplite; Stand fast is Taunt on the Knight and mana for an ally.
   a("knight", "stand_fast", "Stand fast", "Taunts, and gives Clarity to the ally with the least MP.", {
     // Round 4: short (was medium): the first Taunt came at tick 18, and the casters died at 17.
-    ...timing("short", "quick"), mp: 150, target: "self", do: [apply("taunt"), apply("clarity", { to: T.lowestMpAlly })],
+    // Step 5g round 5 (the director's): the Clarity goes to an ally under half MP, or nobody; the Taunt always lands.
+    ...timing("short", "quick"), mp: 150, target: "self", do: [apply("taunt"), apply("clarity", { to: T.needsMpAlly })],
   }),
   // Pacing pass: a light hit (was normal): at normal it was seven or eight of the Knight's swings, a tank's nuke.
   a("knight", "shield_bash", "Shield bash", "Bashes a foe with the shield, which scales from max HP, and Stuns it.", {
@@ -250,7 +255,8 @@ export const abilities: A[] = [
   // Step 5f (the director's): Wither's Rot met one enemy heal in the whole roster. Blood gift spends the Vampire's own HP on an ally.
   a("vampire", "blood_gift", "Blood gift", "Spends a fifth of its max HP to heal the lowest other ally for as much, and gives it Clarity.", {
     // Step 5g round 3: 300 MP (was 500) and it waits for an ally under 80%: it already costs a fifth of the Vampire's HP, and the Vampire was the one class short of MP (21% of its time).
-    ...timing("medium", "normal"), mp: 300, ...waitsFor("others", { hpBelow: 80 }), target: T.otherLowestShareAlly,
+    // Round 5 (the director's): it also waits until the Vampire itself is above 35% HP, so the price (a fifth) never kills it.
+    ...timing("medium", "normal"), mp: 300, if: [{ side: "others", where: { hpBelow: 80 } }, { side: "self", where: { hpAtLeast: 35 } }], target: T.otherLowestShareAlly,
     do: [apply("blood_price", { to: { side: "self" } }), { op: "heal", amount: from("max_hp", 0.2) }, apply("clarity")],
   }),
   a("vampire", "frenzy", "Frenzy", "Several Might on itself.", { ...timing("medium", "quick"), mp: 300, target: "self", do: [apply("might", { stacks: stacks("several", "attack") })] }), // Step 5g round 3: 300 MP (was 500).
@@ -271,7 +277,8 @@ export const abilities: A[] = [
   // Step 5e: Blizzard 1,000 MP (was 1,300): cast 0.44 times a regular fight.
   a("frostweaver", "blizzard", "Blizzard", "Ice on every foe, adding a few Chill to each.", { ...timing("medium", "long"), mp: 800, target: T.everyFoe, do: [magic("ice", hit("magic", "touch"), { apply: [{ status: "chill", stacks: stacks("few", "magic", 0.5) }] })] }), // Step 5g: about 3 a foe.
   // Step 5e: 400 MP (was 1,600: it cost more than the Clarity it gave back, and fired 0.04 times a regular fight).
-  a("frostweaver", "stillness", "Stillness", "Clarity on the ally with the least MP.", { ...timing("medium", "quick"), mp: 500, target: T.lowestMpAlly, do: [apply("clarity")] }),
+  // Step 5g round 5 (the director's: "a strictly worse version of the Knight's Clarity"): Clarity to an ally under half MP, and a few Chill on every foe, so it feeds the shatter too.
+  a("frostweaver", "stillness", "Stillness", "Clarity on the ally with the least MP, if one is under half, and a few Chill on every foe.", { ...timing("medium", "quick"), mp: 500, target: T.everyFoe, do: [apply("chill", { stacks: stacks("few", "magic", 0.5) }), apply("clarity", { to: T.needsMpAlly })] }),
   // Stormcaller
   a("stormcaller", "chain_lightning", "Chain lightning", "Lightning at a random foe, then up to three others, adding a few Shock to each.", {
     ...timing("short", "quick"), mp: 500,
@@ -317,7 +324,7 @@ export const classes: ClassDefT[] = [
     stats: { ...stat(5, 2, 2, 3, 2, 3, 2, 5), ...special("thorns", "high"), ...resist("fire", "weak") }, weapons: ["sword", "earth_staff"], armor: "heavy", passive: p("briar", "Briar", "Each time its Thorns damage a foe, that foe gets a few Bleed; stacks scale from Armor."),
   }),
   cls("hoplite", "Hoplite", "Bodyguard who breaks armor. Plants its great shield beside the most vulnerable ally to catch the killing blow, locks shields with it, and cracks armor with slow, crushing blows.", {
-    stats: stat(4, 2, 2, 4, 1, 5, 2, 5), weapons: ["spear", "sword"], armor: "heavy", passive: p("phalanx", "Phalanx", "Its basic attacks come a third as often and deal triple damage."),
+    stats: stat(4, 2, 2, 4, 1, 5, 2, 5), weapons: ["spear", "sword"], armor: "heavy", passive: p("phalanx", "Phalanx", "Its basic attacks come half as often and deal double damage."),
   }),
   cls("paladin", "Paladin", "Shelter against magic. Shelters the party from spells and curses, and brings down slow, heavy, burning judgement, twice as hard on any foe that holds a buff.", {
     stats: { ...stat(4, 3, 3, 3, 4, 4, 2, 4), ...resist("light", "resists") }, weapons: ["sword", "light_staff"], armor: "heavy", passive: p("judgement", "Judgement", "Its hits deal half again as much damage to foes with a buff."),
@@ -350,8 +357,8 @@ export const classes: ClassDefT[] = [
   cls("pyromancer", "Pyromancer", "Ramping Burn. Every strike adds Burn, bolts pile more onto the hottest foe, and a pyre lands on it.", {
     stats: stat(2, 5, 2, 1, 5, 1, 2, 1), weapons: ["fire_staff", "lightning_staff"], armor: "light", passive: p("kindling", "Kindling", "Its basic attacks add a few Burn, whatever staff it carries; stacks scale from Magic."),
   }),
-  cls("frostweaver", "Frostweaver", "Locks foes down with Chill. Buries foes in Chill and keeps them crawling, its hits landing harder the colder they are, and spends the time it buys keeping an ally's mana flowing.", {
-    stats: { ...stat(2, 4, 3, 1, 4, 2, 2, 1), ...resist("ice", "resists") }, weapons: ["ice_staff", "wind_staff"], armor: "light", passive: p("brittle", "Brittle", "Its hits deal more damage for each Chill stack on the target. The Chill stays."),
+  cls("frostweaver", "Frostweaver", "Freezes and shatters. Buries foes in Chill until it shatters into damage and a Stun, cracks the shattered foe's armor for the party, and spends the time it buys keeping an ally's mana flowing.", {
+    stats: { ...stat(2, 4, 3, 1, 4, 2, 2, 1), ...resist("ice", "resists") }, weapons: ["ice_staff", "wind_staff"], armor: "light", passive: p("shatterpoint", "Shatterpoint", "When a foe's Chill shatters, that foe takes several Sunder; stacks scale from Magic."),
   }),
   cls("stormcaller", "Stormcaller", "Shocks every foe. Rains quick strikes across every foe so the fast and the many hurt themselves by acting, and charges itself up to strike faster.", {
     stats: stat(2, 3, 3, 1, 4, 1, 2, 1), weapons: ["lightning_staff", "wind_staff"], armor: "light", passive: p("arc", "Arc", "Each of its basic attacks also hits a second, random foe, and adds a few Shock to both; stacks scale from Magic."),

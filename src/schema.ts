@@ -158,6 +158,7 @@ export const EVENTS = {
   status_gained: "A status is applied (each application, refreshes and added stacks included). Whose: the holder. Has `status`.",
   status_triggered: "A status pulses, or an Intensity status's trigger fires. Whose: the holder. Has `status`.",
   status_ended: "A status ends. Whose: the holder. Has `status` and `cause`.",
+  status_capped: "An Intensity status stands at its cap after an application (step 5g: Chill shatters). Whose: the holder; other: the applier. Has `status`.",
   ko: "A unit is KO'd. Whose: that unit. The unit's own statuses that survive a KO can still react to it.",
   revived: "A unit is revived. Whose: that unit; other: the reviver.",
 } as const;
@@ -196,6 +197,7 @@ export const TO = {
   holder: "Statuses: the holder. The default for pulses.",
   source: "Statuses that know their source (Refresh, Fizzle, Per source): the unit that applied it.",
   other: "Reactions: the event's other unit (the attacker for hit_taken, the target for hit_lands). Nothing if unknown.",
+  owner: "Reactions: the unit the event is about, whoever holds the reacting status (the holder of a status that just capped, the unit knocked out). Step 5g.",
 } as const;
 
 export const SIDES = {
@@ -223,6 +225,8 @@ export const Pick = z.enum(keys(PICKS));
 export const UnitCond = z.strictObject({
   hpBelow: z.number().min(0).max(100).optional().describe("HP below this percent of max HP."),
   hpAtLeast: z.number().min(0).max(100).optional(),
+  mpBelow: z.number().min(0).max(100).optional().describe("MP below this share of max MP (step 5g: what a Clarity waits for). A unit with no MP pool never passes."),
+  mpAtLeast: z.number().min(0).max(100).optional(),
   has: z.union([Id, z.array(Id).min(1)]).optional().describe("Has this status (or every one of these)."),
   lacks: z.union([Id, z.array(Id).min(1)]).optional().describe("Doesn't have this status (or any of these)."),
   buffs: z.boolean().optional().describe("true: has any buff. false: has none."),
@@ -485,7 +489,7 @@ export const Ability = z.strictObject({
   cast: Ticks.optional().describe("Default: ruleset.abilityCast."),
   cooldown: Ticks,
   recovery: Ticks.optional().describe("Default: ruleset.abilityRecovery."),
-  if: Condition.optional().describe("Checked when the action starts: what the ability waits for."),
+  if: z.union([Condition, z.array(Condition).min(1)]).optional().describe("Checked when the action starts: what the ability waits for. Several conditions must all hold (step 5g)."),
   target: Target.optional().describe("foe (default): a foe by Aggro, under the Taunt rule. ally: a random ally. Or a stated rule. Chosen when the action resolves."),
   seek: z.boolean().optional().describe("Its first pick ignores Taunt."),
   do: z.array(Effect).min(1),
@@ -539,6 +543,7 @@ export const Ruleset = z.strictObject({
       min: z.number().min(0).max(1),
       max: z.number().min(0).max(1),
       slots: z.array(z.number().min(0)).optional().describe("A party unit's abilities start this many ticks charged, by the order they're slotted in (first, second, third), in place of the roll: the order is the player's to choose. Its basic attack still rolls."),
+      slotShares: z.array(z.number().min(0).max(1)).optional().describe("Step 5g: as slots, but as a share of each ability's own cooldown (0.75 is three quarters charged), so a slow ability's head start is long too. Wins over slots when both are set."),
     })
     .optional()
     .describe("At fight start each action is already partly charged: it's first ready after a share of its cooldown, rolled between min and max on the unit's dice for each action (but see slots). Absent: every action starts a fight on its full cooldown."),

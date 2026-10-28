@@ -66,14 +66,19 @@ export const SPEED = { fast: 8.9, medium: 11.9, slow: 15.5 } as const;
  * by its class's tempo (classes.ts).
  */
 /** Step 5g round 3: long 36 (was 44). In a third slot (no head start) a long ability's first cast came at tick 44 to 50: Tremor 0.55 casts a fight, Aspis 0.64, Sanctuary 0.68; once a boss fight, never a regular one. */
-export const COOLDOWN = { short: 16, medium: 28, long: 36, very_long: 60 } as const;
+/**
+ * Step 5g round 5 (the director's: "I don't think there are abilities in this game that are conceived as firing only once in a fight";
+ * "take big swings"): 12 / 20 / 30 / 44 (were 16 / 28 / 36 / 60). In a 42-tick fight a short fires three or four times, a medium twice,
+ * a long once or twice; the very long word is the revives'.
+ */
+export const COOLDOWN = { short: 12, medium: 20, long: 30, very_long: 44 } as const;
 /**
  * Foes keep the pacing pass's short cooldown. Step 5e: medium 40 and long 60 (were 48 and 70). In free play, at the documents'
  * numbers, a boss fight lasted 46 ticks and the signature moves (Crush, Quiet, Tempest, Death bell, Rally) came 0.5 to 0.9
  * times a fight against the enemies document's "two or three times".
  */
 /** Step 5f: 22, 34 and 48, so a boss's medium move comes two or three times in an 80-tick fight. */
-export const ENEMY_COOLDOWN = { short: 22, medium: 34, long: 48 } as const;
+export const ENEMY_COOLDOWN = { short: 18, medium: 28, long: 40 } as const; // Step 5g round 5: with the party's words; a boss's medium move comes two or three times in a 70-tick fight.
 /**
  * An ability's cooldown: its word's, moved up to 15% either way by its id, so no two in a kit share one and few line up with
  * each other or with a swing. The director's ask: "you should probably never even have two that are the same".
@@ -111,7 +116,13 @@ export const RULES = {
    */
   /** Step 5f: 10, 8 and 6 with the shorter words: a first-slot short ability fires at tick 6, a medium at 18, a long at 34. */
   // Step 5g (the feel read): 0.2 to 0.6 charged (was 0.3 to 0.7): "three basics by t5, the opening is a volley, never a build". A sword's first swing now comes at 4 to 9 ticks.
-  opening: { min: 0.2, max: 0.6, slots: [8, 4, 0] }, // Round 6: 8, 4 and 0 (were 10, 8, 6): every first- and second-slot short fired between ticks 5 and 9, one wave; now 8, 12 and 16.
+  /**
+   * Step 5g round 5 (the director's): the head start is a share of each ability's own cooldown, by slot, and a big one: the first slot starts
+   * three quarters charged, the second half, the third a quarter. The order is the player's lever ("really fast fast abilities or more
+   * accessible slow abilities"); a long ability in the third slot is ready at three quarters of its cooldown, not never. 8 / 4 / 0 flat
+   * ticks "felt like the system had been gutted".
+   */
+  opening: { min: 0.2, max: 0.6, slotShares: [0.75, 0.5, 0.25] },
   /** Each physical hit loses this share of the target's Armor: Armor 5 takes 600 off, Armor 8 nearly blanks a sword. */
   armorRatio: 0.12,
   /**
@@ -211,7 +222,7 @@ export const ENEMY_HIT = {
   flatten: 0.4,
   /** Crush: knocks out any unguarded caster outright; a Guarded, Shielded Knight survives it. */
   /** Step 5g (the feel read): 0.42 (was 0.5). Three Crushes were three kills, the Guarded Bramble knight among them; at 5,000 a full-HP wall with Guard stands, a caster never does. */
-  crush: 0.42,
+  crush: 0.5, // Step 5g round 5 (the director's): the one-shot is the Ogre Chief's identity; the other bosses get behaviours of their own.
   /** Mend: the Bone Priest's heal, about a party's damage output: a mirror until the priest is stopped. Pacing pass: 1.3 (was 0.6). */
   mend: 1.3,
   /** Soulfire: deletes a caster. */
@@ -221,11 +232,14 @@ export const ENEMY_HIT = {
   /** Inferno: ends the run if it lands uninterrupted. */
   /** Campaign pass: 0.5 wiped every party it landed on; at 0.35 it nearly wipes, and an interrupt buys a whole cooldown. */
   /** Step 5g round 2: 0.17 (2,400 to everyone, with many Burn). At 0.35 it was 4,900, every caster outright, so the tuner had cut the Fire Giant to 12,000 HP and it died in 18 ticks having cast nothing. */
-  inferno: 0.15,
+  inferno: 0.25, // Round 5: 0.25 (3,500 to everyone) now that Kindle announces it: the Giant kindles, then begins Inferno eight ticks later.
   /** Hailstorm: a raidwide the Cleric can mend. Pacing pass: 0.18 (was 0.08), as it comes a third as often. */
   hailstorm: 0.18,
   /** Tempest: a raidwide the Cleric can absorb. Pacing pass: 0.13 (was 0.06). */
-  tempest: 0.13,
+  /** Step 5g round 5 (the director's): three bolts at random party members, each a third of the blast, in place of one blast on everyone. */
+  tempest: 0.045,
+  /** Reap (round 5): the Reaper's three scythe slashes at random party members, each this share of its Attack. */
+  reap: 0.2,
   /** Volatile: one blast behind Shields is fine; three together wipe. Step 5e: 0.18 (was 0.25): the Bomb Bug dealt 4.8 times the median minion's damage per appearance. */
   volatile: 0.15, // round 3: still 3.4× the median minion at 0.18.
 } as const;
@@ -278,7 +292,7 @@ export const SPECIAL = {
    * Step 5e: 10 and 20 (were 15 and 30). Lifesteal was 52% of all the healing on the party, nearly all of it the Vampire's (60% under
    * Bloodlust): it healed itself 4,350 a fight and its parties won 25 to 40 points more than parties without it, after Blood drain was cut.
    */
-  lifesteal: { medium: 15, high: 30 }, // Step 5f (the director's): back to 15 and 30; the Vampire pays with Blood gift instead.
+  lifesteal: { medium: 10, high: 20 }, // Step 5g round 5 (the director's: the brink is the identity, not the global sustain): 20 and 10 (were 30 and 15); Bloodlust's doubling below half HP stays.
   siphon: { medium: 10, high: 20 },
 } as const;
 export type SpecialStat = keyof typeof SPECIAL;
@@ -343,7 +357,7 @@ export const STATUS = {
    * and the same parties won 20 points more in Caravan than in Neutral: 36% of the whole party's HP a fight, for nothing, was
    * more than a Cleric heals. The Herald's horn (+9 points on the amulets) is the same Regen.
    */
-  regen: { every: 4, share: 0.06, duration: 24 }, // Step 5g round 4: six pulses of 6% (was twelve of 3%, the same 36%): twelve beats of 90 were the log's noise. // Step 5g round 2: 3% a pulse (36% over 24 ticks); at 2% a Regen pulsed 60 on a Cleric and read as nothing. // Step 5f: 24 ticks (24% of max HP) with the longer fights. // round 3: 10 pulses of 2%, a fifth of max HP: Caravan was still +14.7 at a quarter. Round 4: 8 pulses, 16% (Caravan +13.7 at a fifth).
+  regen: { every: 4, share: 0.08, duration: 24 }, // Step 5g round 5 (the director's: "mathematically insignificant", "make big swings"): six pulses of 8%, 48% of max HP (was 36%). // Step 5g round 2: 3% a pulse (36% over 24 ticks); at 2% a Regen pulsed 60 on a Cleric and read as nothing. // Step 5f: 24 ticks (24% of max HP) with the longer fights. // round 3: 10 pulses of 2%, a fifth of max HP: Caravan was still +14.7 at a quarter. Round 4: 8 pulses, 16% (Caravan +13.7 at a fifth).
   shield: { capShare: 0.5 },
   /** Campaign pass: a cap of 25 stacks. Uncapped, a hidden Bard stacked 123 on itself and the Storm King reached 38. */
   /** Step 5f (the director's): Might spends with action, not time: one stack each time the holder acts (vocabulary.ts). 10% a stack, cap 20. */
@@ -376,7 +390,11 @@ export const STATUS = {
    */
   burn: { every: 2, perStack: 55, drop: 0.15 }, // Round 3: 15% and 55 (were 12% and 50): the same ramp at the top (the Pyromancer's upkeep near 19), a shorter tail (the read: "twenty lines of 904 to 54"). // Round 7 (with the knobs): 50 a stack, so the capped ramp's ceiling is worth reaching (the Pyromancer's statuses 44% of its damage at 40).
   /** Step 5f (the director's deep freeze): cap 12, −5 a stack (−60 at the cap, colder than Slow), one stack lost every 4 ticks, so reapplying keeps a foe frozen. */
-  chill: { cap: 12, perStack: -5, every: 6 }, // Round 6: one stack every 6 ticks (was 4): a Hexer's two or three stacks thawed before its next swing.
+  /**
+   * Step 5g round 5 (the director's redesign): Chill still slows 5% a stack and thaws a stack every 6 ticks, and at its cap of 12 it
+   * shatters: untyped damage for each stack, a Stun, and the Chill is spent. A lock that ends in a payoff, not a lock.
+   */
+  chill: { cap: 12, perStack: -5, every: 6, shatter: 250 },
   /**
    * Campaign pass: a cap of 25 stacks (uncapped, a slow boss gathered 50 to 100 and took 8,000 from one swing), and 60 a
    * stack, not 80 (the second AI playtester's Stormcaller carried the last nine nodes).
@@ -394,8 +412,8 @@ export const STATUS = {
   /** Step 5f (the director's): Regen for mana, not a doubled stat: 4% of max MP every 2 ticks for 16 ticks (32% of max MP). */
   clarity: { every: 4, share: 0.04, duration: 16 }, // Step 5g: 4% every 4 ticks (the same 16%): four pulses a player can see, not eight of 40 MP. // Rounds 5 and 6: 2% a pulse (16% of max MP; was 4%, 32%): Stand fast's every 16 ticks made mana infinite.
   aegis: { share: 25 },
-  /** Kills anything at HP 3 or below; a Hoplite or Knight survives it. */
-  doom: { countdown: 10, damage: 3500 },
+  /** Step 5g round 5 (the director's): 60% of the doomed unit's max HP (was 3,500 flat: a kill on anyone at HP 3 or below). From full nobody dies to it; hurt, anyone does. */
+  doom: { countdown: 10, share: 0.6 },
   bulwark: { stacks: 6, broken: 5, takenPct: 100 },
   ice_crust: { perStack: pts(1), duration: 6, cap: 6 },
 } as const;

@@ -65,6 +65,7 @@ export type Item =
       src: string | null;
       per: number;
       other: string | null;
+      owner: string | null;
       amount: number;
       /** The actor is KO'd and reacting to its own KO. */
       dead: boolean;
@@ -274,7 +275,7 @@ type ActDef = {
   cast: number;
   cooldown: number;
   recovery: number;
-  if: S.ConditionT | null;
+  if: S.ConditionT | S.ConditionT[] | null;
   target: Target;
   seek: boolean;
   effects: S.EffectT[];
@@ -354,7 +355,8 @@ function seeks(w: W, u: CUnit, d: ActDef) {
 function available(w: W, u: CUnit, i: number): boolean {
   if (u.acts[i].ready > w.f.now) return false;
   const d = actDef(w, u, i);
-  return u.mp >= d.mp && (!d.if || holds(w, u, d.if)) && !lockedOut(w, u, d);
+  // Step 5g: an ability may wait for several conditions at once (Blood gift: an ally hurt, and itself above the price).
+  return u.mp >= d.mp && (!d.if || [d.if].flat().every((cnd) => holds(w, u, cnd))) && !lockedOut(w, u, d);
 }
 
 function start(w: W, u: CUnit, i: number) {
@@ -437,6 +439,9 @@ function passes(w: W, x: CUnit, c: S.UnitCondT): boolean {
   if (c.ko !== undefined && x.ko !== c.ko) return false;
   if (c.hpBelow !== undefined && !(x.hp * 100 < c.hpBelow * x.stats.max_hp)) return false;
   if (c.hpAtLeast !== undefined && !(x.hp * 100 >= c.hpAtLeast * x.stats.max_hp)) return false;
+  // Step 5g: MP as a share of max MP (Clarity waits for an ally who needs it). A unit with no MP pool is never "below".
+  if (c.mpBelow !== undefined && !(x.stats.max_mp > 0 && x.mp * 100 < c.mpBelow * x.stats.max_mp)) return false;
+  if (c.mpAtLeast !== undefined && !(x.stats.max_mp <= 0 || x.mp * 100 >= c.mpAtLeast * x.stats.max_mp)) return false;
   if (c.has !== undefined && !ids(c.has).every((id) => x.statuses.some((s) => s.id === id))) return false;
   if (c.lacks !== undefined && ids(c.lacks).some((id) => x.statuses.some((s) => s.id === id))) return false;
   if (c.buffs !== undefined && x.statuses.some((s) => def(w, s.id).label === "buff") !== c.buffs) return false;
@@ -604,6 +609,8 @@ type Ctx = {
     src: string | null;
     per: number;
     other: CUnit | null;
+    /** Reactions: the unit the event is about (step 5g: the holder of a status that just reached its cap). */
+    owner: CUnit | null;
     amount: number;
     /** A pulse or trigger: no unit's boosts reach it. A reaction reads its actor's boosts now. */
     fixedBoost: boolean;
@@ -621,6 +628,7 @@ function targetsOf(w: W, ctx: Ctx, e: S.EffectT): CUnit[] {
   else if (t === "holder") out = [st?.holder ?? null];
   else if (t === "source") out = [unit(w, st?.src ?? null)];
   else if (t === "other") out = [st?.other ?? null];
+  else if (t === "owner") out = [st?.owner ?? null];
   else out = byRule(w, ctx.actor, t, { seek: true, main: false, targets: ctx.targets });
   const wantKo = e.op === "revive";
   return out.filter((x): x is CUnit => !!x && (wantKo ? x.ko && !x.gone : !x.ko));
@@ -982,6 +990,8 @@ function gained(w: W, to: CUnit, d: S.StatusT, s: SInst, by?: CUnit) {
   if (d.lockout?.interrupt) interrupt(w, to, d.lockout.covers);
   if (d.lockout?.pause && s.end !== -1) hold(w, to, d.lockout.covers, s.end - w.f.now);
   fire(w, ev("status_gained", to, null, { status: d.id }));
+  // Step 5g: an Intensity status that stands at its cap after an application has capped (Chill shatters). Other: the applier.
+  if (isIntensity(d) && compile(d).cap >= 0 && s.stacks >= capOf(w, d, s.nums, to) && to.statuses.includes(s)) fire(w, ev("status_capped", to, by ?? null, { status: d.id }));
 }
 
 const capOf = (w: W, d: S.StatusT, nums: number[], holder: CUnit) =>
@@ -1069,7 +1079,7 @@ function pulse(w: W, it: Extract<Item, { k: "pulse" }>) {
   push(w, { ...it, at: it.at + every, seq: w.f.seq++ });
   const ctx: Ctx = {
     actor: h, kind: null, targets: [], id: d.id, dead: false,
-    st: { d, nums: s.nums, holder: h, src: s.src, per: perOf(d, s), other: null, amount: 0, fixedBoost: true },
+    st: { d, nums: s.nums, holder: h, src: s.src, per: perOf(d, s), other: null, owner: null, amount: 0, fixedBoost: true },
   };
   for (const e of d.pulse!.do ?? []) {
     run(w, ctx, e);
@@ -1176,7 +1186,7 @@ function queueReaction(w: W, actor: CUnit, holder: CUnit, s: SInst, d: S.StatusT
   push(w, {
     k: "react", at: w.f.now + 1, b: batch(actor.side), g: 1, slot: actor.slot, seq: w.f.seq++, unit: actor.id,
     holder: holder.id, status: d.id, which, nums: s.nums.slice(), src: s.src, per,
-    other: e.other?.id ?? null, amount: e.amount, dead,
+    other: e.other?.id ?? null, owner: e.owner.id, amount: e.amount, dead,
   });
 }
 
@@ -1187,7 +1197,7 @@ function react(w: W, it: Extract<Item, { k: "react" }>) {
   const effects = it.which < 0 ? d.trigger!.do! : d.reactions![it.which].do;
   const ctx: Ctx = {
     actor, kind: null, targets: [], id: d.id, dead: it.dead,
-    st: { d, nums: it.nums, holder: unit(w, it.holder)!, src: it.src, per: it.per, other: unit(w, it.other), amount: it.amount, fixedBoost: it.which < 0 },
+    st: { d, nums: it.nums, holder: unit(w, it.holder)!, src: it.src, per: it.per, other: unit(w, it.other), owner: unit(w, it.owner), amount: it.amount, fixedBoost: it.which < 0 },
   };
   for (const e of effects) {
     run(w, ctx, e);
@@ -1324,7 +1334,9 @@ function begin(w: W) {
   for (const u of f.units) u.acts.forEach((a, i) => {
     const d = actDef(w, u, i);
     const cd = cooldownOf(w, u, d);
-    if (open?.slots?.length && u.side === "party" && d.kind === "ability") a.ready = Math.max(0, cd - sub(open.slots[i] ?? 0));
+    // Step 5g: by a share of the ability's own cooldown (slotShares), so a long ability's head start is long too; the flat ticks (slots) stay as the older form.
+    if (open?.slotShares?.length && u.side === "party" && d.kind === "ability") a.ready = Math.max(0, cd - Math.round(cd * (open.slotShares[i] ?? 0)));
+    else if (open?.slots?.length && u.side === "party" && d.kind === "ability") a.ready = Math.max(0, cd - sub(open.slots[i] ?? 0));
     else a.ready = open ? Math.round(cd * (open.min + (open.max - open.min) * next(u.rng))) : cd;
   });
   // ruleset.stagger: the n-th copy of an enemy starts n × stagger ticks behind the first, so three Ghosts ripple rather than volley.

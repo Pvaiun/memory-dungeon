@@ -22,6 +22,7 @@ import { aiPlayer } from "./rogue-ai.js";
 import { parsePatches } from "./rogue-sim.js";
 import { patch } from "./sim/content.js";
 import type { AbilityT, GearT, NumT, Party } from "./schema.js";
+import { headStart } from "./engine/combat/stats.js";
 
 const args = process.argv.slice(2);
 const opt = (k: string) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : undefined; };
@@ -177,7 +178,6 @@ function readLog(r: Rec): Read {
   }
   // Time short of MP: ticks where a slotted ability was off cooldown (by its last cast plus its cooldown, or its first-ready
   // tick) and the unit's MP was below its cost, as a share of the time the unit stood.
-  const head = c.pack.ruleset.opening?.slots ?? [];
   r.party.units.forEach((pu, i) => {
     const id = [...units.values()].find((u) => u.side === "party" && u.ref === pu.class)?.id;
     const t = id ? ut.get(id) : undefined;
@@ -196,7 +196,7 @@ function readLog(r: Rec): Read {
         const cost = ab.mp ?? 0;
         if (cost <= 0 || mp >= cost) return false;
         const last = (ca[a] ?? []).filter((x) => x <= tick).at(-1);
-        const ready = last === undefined ? ab.cooldown - (head[j] ?? 0) : last + ab.cooldown;
+        const ready = last === undefined ? ab.cooldown - headStart(c.pack.ruleset.opening, ab.cooldown, j) : last + ab.cooldown;
         return tick >= ready;
       });
       if (hungry) short++;
@@ -256,14 +256,13 @@ function pack(r: Rec, n: number): string {
   out.push(`# Pack ${n}: ${r.fightName} (${r.tier}), act ${r.act} floor ${r.floor}, ${reg.name}`, "");
   out.push(`Run seed ${r.seed}. ${r.won ? "WON" : "LOST"} at t${r.ticks}. Foes' knob: HP ${r.knob.hp ? `${r.knob.hp > 0 ? "+" : ""}${r.knob.hp}%` : "±0"}, damage ${r.knob.power ? `${r.knob.power > 0 ? "+" : ""}${r.knob.power}%` : "±0"}.`, "");
   out.push(`## The party (formation ${c.formations.get(r.party.formation)!.name})`);
-  const head = c.pack.ruleset.opening?.slots ?? [];
   r.party.units.forEach((u, i) => {
     const m = r.members[i];
     const k = c.classes.get(u.class)!;
     const st = m.stats;
     out.push(`- **${k.name}** (slot ${i + 1}): HP ${n0(m.hp)}/${n0(m.maxHp)}, MP ${n0(m.mp)}/${n0(m.maxMp)}. Attack ${pts(st.attack)}, Magic ${pts(st.magic)}, Armor ${pts(st.armor)}, Crit ${st.crit_chance}%, Aggro ${Math.round(st.aggro)}, MP regen ${pts(st.mp_regen)}. Passive: ${k.passive?.name ?? "Einherjar"}: ${k.passive?.text ?? "allies it revives come back ready."}`);
     out.push(`  - Gear: ${(["weapon", "armor", "amulet"] as const).map((s) => `${s}: ${gearWords(u.gear[s] ? c.gear.get(u.gear[s]!) : undefined)}`).join("; ")}.`);
-    const abs = u.abilities.map((a, j) => { const ab = c.abilities.get(a)!; return `${ab.name} (MP ${ab.mp ?? 0}, every ${Math.round(ab.cooldown)}t, wind-up ${ab.cast ?? c.pack.ruleset.abilityCast}t, first ready ~t${Math.max(0, Math.round(ab.cooldown - (head[j] ?? 0)))}: ${sizeOf(ab, st) || ab.text})`; });
+    const abs = u.abilities.map((a, j) => { const ab = c.abilities.get(a)!; return `${ab.name} (MP ${ab.mp ?? 0}, every ${Math.round(ab.cooldown)}t, wind-up ${ab.cast ?? c.pack.ruleset.abilityCast}t, first ready ~t${Math.max(0, Math.round(ab.cooldown - headStart(c.pack.ruleset.opening, ab.cooldown, j)))}: ${sizeOf(ab, st) || ab.text})`; });
     out.push(`  - Abilities in slot order: ${abs.join("; ") || "none"}.`);
   });
   out.push("", "## The foes");

@@ -9,7 +9,7 @@ import { fingerprint, int, rngFor, type Rng } from "./rng.js";
 import type { Entry } from "./log.js";
 
 /** Bump on any change that can change a run's outcome: old records stop replaying. */
-export const ENGINE_VERSION = "0.13"; // Step 5f: the `casting` unit condition and `mp_share` as a target value.
+export const ENGINE_VERSION = "0.14"; // Step 5g: head starts by a share of the cooldown (ruleset.opening.slotShares), an ability's `if` as several conditions, mpBelow/mpAtLeast, the status_capped event and the `owner` target word.
 
 // ─── Content, loaded and checked once ───────────────────────────────────────
 

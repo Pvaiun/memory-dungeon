@@ -138,7 +138,7 @@ type Where = "action" | "pulse" | "reaction";
 
 const ACTION_EVENTS = ["action_start", "action_resolve", "action_interrupted"];
 const HIT_EVENTS = ["hit_lands", "hit_taken", "hit_evaded", "hit_missed"];
-const STATUS_EVENTS = ["status_gained", "status_triggered", "status_ended"];
+const STATUS_EVENTS = ["status_gained", "status_triggered", "status_ended", "status_capped"];
 const DAMAGE_EVENTS = ["damage_dealt", "damage_taken"];
 const RESERVED_TAGS = ["basic", "ability", "extra", "physical", "magical", "none", "healing", "all", "crit", ...Object.keys(S.SUBTYPES)];
 const WEIGHT_ORDER: Record<S.WeightT, number> = { light: 0, medium: 1, heavy: 2 };
@@ -451,7 +451,7 @@ class Combat {
       this.ticks(a.cast, `${p}.cast`);
       this.ticks(a.cooldown, `${p}.cooldown`);
       this.ticks(a.recovery, `${p}.recovery`);
-      if (a.if) this.unitCond(a.if.where, `${p}.if.where`);
+      if (a.if) [a.if].flat().forEach((cnd, k) => this.unitCond(cnd.where, `${p}.if${Array.isArray(a.if) ? `[${k}]` : ""}.where`));
       if (typeof a.target === "object") this.rule(a.target, `${p}.target`, { main: true });
       a.do.forEach((e, j) => this.effect(e, `${p}.do[${j}]`, "action", null, a));
     });

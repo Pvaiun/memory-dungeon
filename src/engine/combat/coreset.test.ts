@@ -519,3 +519,50 @@ test("stat changes can read the holder's own stat once, at application: Bedrock 
   assert.equal(a.has("Geo", "shield").length, 0, "the Foe's 5 used up the 5-point Shield");
   assert.equal(a.unit("Geo").stats.crit_chance, 20, "and Bedrock is off again");
 });
+
+// ─── Step 5g: head starts by share, several conditions, MP conditions, the capped event and the owner word ──
+
+test("opening.slotShares: a party ability starts charged by a share of its own cooldown, by slot", () => {
+  const quick = { id: "quick", cast: 0, cooldown: 20, do: [dmg(1)] };
+  const slow = { id: "slow", cast: 0, cooldown: 40, do: [dmg(1)] };
+  const a = arena({
+    party: [{ name: "Hero", stats: { max_hp: 1_000_000 }, abilities: ["slow", "quick"] }], enemies: [BAG], abilities: [quick, slow],
+    // min and max at 1: the arena's placeholder weapon starts on its (huge) full cooldown, so only the abilities act.
+    ruleset: { opening: { min: 1, max: 1, slotShares: [0.75, 0.25] } },
+  }).to(16);
+  const casts = a.entries("act").filter((e) => e.act !== "basic").map((e) => [e.act, Number(e.at) / 1000]);
+  assert.deepEqual(casts, [["slow", 10], ["quick", 15]], "the first slot's long ability at a quarter of 40, the second slot's short at three quarters of 20");
+});
+
+test("an ability's `if` can be several conditions, all of which must hold (Blood gift: an ally hurt, and itself above the price)", () => {
+  const gift = { id: "gift", cast: 0, cooldown: 10, if: [{ side: "others", where: { hpBelow: 80 } }, { side: "self", where: { hpAtLeast: 35 } }], target: { side: "others", pick: "lowest", by: "hp_share" }, do: [{ op: "heal", amount: 100 }] };
+  const run = (selfHp: number, allyHp: number) =>
+    arena({ party: [{ name: "V", stats: { max_hp: 1000 }, hp: selfHp, abilities: ["gift"] }, { name: "A", stats: { max_hp: 1000 }, hp: allyHp }], enemies: [BAG], abilities: [gift] }).to(12).entries("heal").length;
+  assert.equal(run(1000, 500), 1, "both hold: it casts");
+  assert.equal(run(200, 500), 0, "the Vampire is below 35%: it waits");
+  assert.equal(run(1000, 1000), 0, "nobody is hurt: it waits");
+});
+
+test("mpBelow: a target rule can ask for an ally under a share of its MP (Clarity waits for need); a unit with no pool never passes", () => {
+  const give = { id: "give", cast: 0, cooldown: 10, target: "self", do: [{ op: "mp", amount: 100, to: { side: "allies", where: { mpBelow: 50 }, pick: "lowest", by: "mp_share" } }] };
+  const run = (mp: number) =>
+    arena({ party: [{ name: "K", stats: { max_mp: 1000 }, mp: 1000, abilities: ["give"] }, { name: "C", stats: { max_mp: 1000 }, mp }, { name: "N" }], enemies: [BAG], abilities: [give] }).to(12);
+  assert.equal(run(300).entries("mp").filter((e) => Number(e.amount) === 100).length, 1, "the caster at 30% MP gets it");
+  assert.equal(run(900).entries("mp").filter((e) => Number(e.amount) === 100).length, 0, "nobody under half: nobody gets it");
+});
+
+test("status_capped: an Intensity status that reaches its cap fires an event; its own reaction can shatter it, and a foe's passive can answer on the owner", () => {
+  const chill = {
+    id: "chill", name: "CHILL", label: "debuff", show: "icon", stacking: "intensity", cap: 4,
+    reactions: [{ on: { event: "status_capped", status: "chill" }, do: [{ op: "damage", type: "none", amount: { scale: [{ ratio: 10, stacks: "chill", of: "holder" }] }, to: "holder" }, { op: "remove", label: "debuff", status: "chill", to: "holder" }] }],
+  };
+  const sunder = { id: "sunder", name: "SUNDER", label: "debuff", show: "icon", stacking: "intensity" };
+  const point = { id: "point", name: "Point", label: "buff", show: "sheet", stacking: "refresh", unremovable: true, reactions: [{ on: { event: "status_capped", status: "chill", whose: "foe" }, do: [{ op: "apply", status: "sunder", stacks: 2, to: "owner" }] }] };
+  const lance = { id: "lance", cast: 0, cooldown: 6, do: [{ op: "apply", status: "chill", stacks: 3 }] };
+  const a = arena({ party: [{ name: "F", abilities: ["lance"], statuses: ["point"] }], enemies: [{ name: "T", stats: { max_hp: 1000 } }], statuses: [chill, sunder, point], abilities: [lance] }).to(14);
+  const shatter = a.entries("dmg").filter((e) => e.part === "reaction" && e.src === "chill");
+  assert.equal(shatter.length, 1, "the second lance caps the Chill at 4 and it shatters once");
+  assert.equal(shatter[0].amount, 40, "damage for each stack at the cap");
+  assert.ok(a.entries("status_end").some((e) => e.status === "chill" && e.cause === "removed"), "the Chill is spent");
+  assert.ok(a.entries("status").some((e) => e.status === "sunder" && e.unit === shatter[0].target), "the Frostweaver's passive puts Sunder on the shattered foe");
+});

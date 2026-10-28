@@ -29,6 +29,7 @@ import {
 import type { AbilityT, NumT } from "./schema.js";
 import { summary } from "./play-summary.js";
 import { combat as rules, type Member as EngineMember } from "./engine/combat/rules.js";
+import { headStart } from "./engine/combat/stats.js";
 
 const c = loadContent(JSON.parse(readFileSync("content/core-set.pack.json", "utf8")));
 const argv = process.argv.slice(2);
@@ -296,9 +297,8 @@ function partyWords(run: RogueRun): string {
     const s = fighterOf(run, m.cls).stats;
     out.push(`${m.cls} (${k.name})${seatNo >= 0 ? `, slot ${seatNo + 1} ${f.positions[seatNo].name}` : ", at camp"}: ${vit(run, m.cls)}. Attack ${pts(s.attack)}, Magic ${pts(s.magic)}, Armor ${pts(s.armor)}, Crit ${s.crit_chance}%, Aggro ${Math.round(s.aggro)}, MP regen ${pts(s.mp_regen)}.`);
     for (const slot of ["weapon", "armor", "amulet"] as Slot[]) out.push(`  ${slot}: ${m.gear[slot] ? itemWords(itemOf(run, m.gear[slot]!)!) : "nothing"}`);
-    const head = c.pack.ruleset.opening?.slots ?? [];
     const left = m.known.filter((a) => !m.order.includes(a));
-    out.push(`  abilities, in slot order: ${m.order.map((a, i) => `${a} (${c.abilities.get(a)!.name}, MP ${c.abilities.get(a)!.mp ?? 0}, every ${Math.round(c.abilities.get(a)!.cooldown)} ticks, first ready about t${Math.max(0, Math.round(c.abilities.get(a)!.cooldown - (head[i] ?? 0)))}${sizeOf(c.abilities.get(a)!, s) ? `; ${sizeOf(c.abilities.get(a)!, s)}` : ""})`).join("; ") || "none"}${left.length ? `. Left out of fights: ${left.join(", ")}` : ""}${unlearned(c, m).length ? `. Not learned yet: ${unlearned(c, m).join(", ")}` : ""}.`);
+    out.push(`  abilities, in slot order: ${m.order.map((a, i) => `${a} (${c.abilities.get(a)!.name}, MP ${c.abilities.get(a)!.mp ?? 0}, every ${Math.round(c.abilities.get(a)!.cooldown)} ticks, first ready about t${Math.max(0, Math.round(c.abilities.get(a)!.cooldown - headStart(c.pack.ruleset.opening, c.abilities.get(a)!.cooldown, i)))}${sizeOf(c.abilities.get(a)!, s) ? `; ${sizeOf(c.abilities.get(a)!, s)}` : ""})`).join("; ") || "none"}${left.length ? `. Left out of fights: ${left.join(", ")}` : ""}${unlearned(c, m).length ? `. Not learned yet: ${unlearned(c, m).join(", ")}` : ""}.`);
     out.push(`  can use: ${k.weapons.join(", ")}; ${k.armor} armor or lighter.`);
   }
   out.push("", "Formations owned:", ...run.formations.map((id) => { const fm = c.formations.get(id)!; return `  ${id}${id === run.formation ? " (in use)" : ""}: ${fm.text}${fm.positions.map((p, k) => ` Slot ${k + 1} ${p.name}: ${codes(p.stats) || "no change"}.`).join("")}`; }));

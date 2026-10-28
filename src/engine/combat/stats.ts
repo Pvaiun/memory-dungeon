@@ -11,6 +11,9 @@ export const sub = (ticks: number) => Math.round(ticks * SUBTICKS);
 /** A timing stat's speed, as a fraction [num, den]: (1 + s/100) at 0 or above, 1 ÷ (1 + |s|/100) below. */
 export type Speed = [number, number];
 export const speedOf = (s: number): Speed => (s >= 0 ? [100 + s, 100] : [100, 100 - s]);
+/** Ticks of head start a party ability gets in slot `i` (0-based): a share of its cooldown (ruleset.opening.slotShares) or flat ticks (slots). Step 5g. */
+export const headStart = (opening: { slots?: number[]; slotShares?: number[] } | undefined, cooldown: number, i: number): number =>
+  opening?.slotShares?.length ? cooldown * (opening.slotShares[i] ?? 0) : opening?.slots?.[i] ?? 0;
 export const sameSpeed = (a: Speed, b: Speed) => a[0] * b[1] === b[0] * a[1];
 /** timing ÷ speed, dropping any fraction of a sub-tick. */
 export const scaled = (t: number, s: Speed) => Math.floor((t * s[1]) / s[0]);

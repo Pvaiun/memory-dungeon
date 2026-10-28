@@ -99,7 +99,7 @@ export const ROGUE_CONFIG: RogueConfigT = {
   // Step 5g round 3 (the feel reads: "fight length is ungoverned and tiers don't differ"; regular fights 15 to 116 ticks, elites shorter than
   // regular fights with 1.8 knockouts each): regular fights +50% HP and −25% damage (were +80 and −30), elites +30% and −20% (had no shape),
   // so an elite is a longer, less spiky fight at the same cost. Bosses keep the knob alone.
-  shape: { fight: { hp: 50, power: -25 }, elite: { hp: 30, power: -20 } },
+  shape: { fight: { hp: 50, power: -25 }, elite: { hp: 15, power: -15 } }, // Round 5: elites +15 / −15 (were +30 / −20: four ghouls at 160,000 HP read as a wall).
   /** Heat: each level adds this to every knob (about 6 points of the simulated player's wins a level). Won runs open the next. */
   heat: { per: 4, max: 10 },
   /** Later floors' fights grow: from this floor, each pack of two or more may gain one more (to the cap of 8). */

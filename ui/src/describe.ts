@@ -101,6 +101,8 @@ function whereText(w: TargetRuleT["where"]): string {
   if (w.lacks) parts.push(`without ${[w.lacks].flat().map((s) => status(s).name).join(" or ")}`);
   if (w.hpBelow !== undefined) parts.push(`below ${w.hpBelow}% HP`);
   if (w.hpAtLeast !== undefined) parts.push(`at ${w.hpAtLeast}% HP or more`);
+  if (w.mpBelow !== undefined) parts.push(`below ${w.mpBelow}% MP`);
+  if (w.mpAtLeast !== undefined) parts.push(`at ${w.mpAtLeast}% MP or more`);
   if (w.belowCap) parts.push(`whose ${status(w.belowCap).name} isn't full`);
   if (w.atCap) parts.push(`whose ${status(w.atCap).name} is full`);
   if (w.stacks) parts.push(`with ${w.stacks.atLeast}+ ${status(w.stacks.status).name}`);
@@ -109,11 +111,15 @@ function whereText(w: TargetRuleT["where"]): string {
 
 export function conditionText(a: AbilityT): string | null {
   if (!a.if) return null;
-  const side = a.if.side === "foes" ? "foe" : "ally";
-  const w = wherePredicate(a.if.where);
-  if (a.if.side === "self") return `waits until it ${w}`;
-  const n = a.if.atLeast ?? 1;
-  return `waits until ${n > 1 ? `${n} ${side}s` : `an ${side}`} ${w}`;
+  // Step 5g: several conditions, all of which must hold.
+  const parts = [a.if].flat().map((cnd) => {
+    const side = cnd.side === "foes" ? "foe" : "ally";
+    const w = wherePredicate(cnd.where);
+    if (cnd.side === "self") return `it ${w}`;
+    const n = cnd.atLeast ?? 1;
+    return `${n > 1 ? `${n} ${side}s` : `an ${side}`} ${w}`;
+  });
+  return `waits until ${parts.join(" and ")}`;
 }
 
 /** A condition as a predicate: "has a debuff", "is knocked out". */
