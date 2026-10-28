@@ -22,5 +22,4 @@
 - The questions in `handoff-round-10.md` (Unmake, Thunder chord, Rockfall, Shield bash, Blood gift) and its proposed round 10 (foes swinging bigger and slower so party Armor doesn't eat minion hits, Siphon halved, the Vampire's costs, Soulfire and Crush under a wall's max HP, act-2 elites, Chill tagged Ice).
 - A correction on record: Armor takes 22% / 35% / 41% off the party's physical hits on minions / elites / bosses, not "a tenth" as the designer said mid-step; foes' small swings lose 47% to the party's Armor.
 - The knobs: the rogue's were recalibrated in round 9; the campaign's were not re-tuned on the round-9 numbers, and `npm run balance` was not re-run.
-- The four core-set documents are not yet brought in line with this step; `DECISIONS.md` (Step 5g) and `tuning.md` are the record of what changed, and win where the documents differ.
 - Still open from the reads: fights that run on after they are decided, casters dead before half-time, Burn's long tail, Shock's size set by the foe's speed, the Hoplite's rare swings, heals on allies who don't need them, the engine taking the first ready ability by slot order.

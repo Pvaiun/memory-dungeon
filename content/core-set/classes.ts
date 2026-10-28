@@ -339,7 +339,7 @@ export const classes: ClassDefT[] = [
   cls("hoplite", "Hoplite", "Bodyguard who opens foes up. Plants its great shield beside the most vulnerable ally to catch the killing blow, locks shields with it, and leaves foes sundered with slow, crushing blows.", {
     stats: stat(4, 2, 2, 4, 1, 5, 2, 5), weapons: ["spear", "sword"], armor: "heavy", passive: p("phalanx", "Phalanx", "Its basic attacks come half as often and deal double damage."),
   }),
-  cls("paladin", "Paladin", "Shelter against magic. Shelters the party from spells and curses, and brings down slow, heavy, burning judgement, twice as hard on any foe that holds a buff.", {
+  cls("paladin", "Paladin", "Shelter against magic. Shelters the party from spells and curses, and brings down slow, heavy, burning judgement, half again as hard on any foe that holds a buff.", {
     stats: { ...stat(4, 3, 3, 3, 4, 4, 2, 4), ...resist("light", "resists") }, weapons: ["sword", "light_staff"], armor: "heavy", passive: p("judgement", "Judgement", "Its hits deal half again as much damage to foes with a buff."),
   }),
   cls("valkyrie", "Valkyrie", "Storm spear who heals and revives. A storm-borne spear that reaches past any guard and Shocks what it hits, mends the wounded, and snatches the fallen back ready to fight.", {

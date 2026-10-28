@@ -3300,7 +3300,7 @@
   {
    "id": "paladin",
    "name": "Paladin",
-   "text": "Shelter against magic. Shelters the party from spells and curses, and brings down slow, heavy, burning judgement, twice as hard on any foe that holds a buff.",
+   "text": "Shelter against magic. Shelters the party from spells and curses, and brings down slow, heavy, burning judgement, half again as hard on any foe that holds a buff.",
    "source": "unlock",
    "stats": {
     "max_hp": 4000,
