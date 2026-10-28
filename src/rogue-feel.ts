@@ -6,11 +6,11 @@
  * bottom (each unit's actions, its damage by source, the statuses' share). A summary of every fight played goes beside
  * the packs: the short simulation that sits next to the read.
  *
- *   npx tsx src/rogue-feel.ts [--runs 48] [--heat 0] [--packs 10] [--focus frostweaver,hexer] [--player] [--rosters] [--out out/feel] [--set path=value]...
+ *   npx tsx src/rogue-feel.ts [--runs 48] [--heat 0] [--packs 10] [--focus frostweaver,hexer] [--player] [--rosters] [--fights id,id] [--out out/feel] [--set path=value]...
  *
  * Step 5h: --rosters reads the hand-built rosters (src/rogue-parties.ts) instead of the simulated player's runs: every roster
  * at every act's and tier's power level meets a fight of each region's pool, fielding its best three of five for it (tried
- * on other dice), as the calibration measures.
+ * on other dice), as the calibration measures. --fights snake_pit,bomb_nest plays only those fights (each roster at their tier).
  *
  * The leader cycles through every class and half the draft picks are random, so every class is seen (the simulated player's own
  * drafter never takes the Frostweaver or the Hexer); --player plays it as the simulated player does, three leaders and its
@@ -39,6 +39,7 @@ const RUNS = Number(opt("--runs") ?? 48);
 const HEAT = Number(opt("--heat") ?? 0);
 const PACKS = Number(opt("--packs") ?? 10);
 const FOCUS = (opt("--focus") ?? "").split(",").filter(Boolean);
+const FIGHTS = (opt("--fights") ?? "").split(",").filter(Boolean);
 const OUT = opt("--out") ?? "out/feel";
 const PLAYER = args.includes("--player");
 const LEADERS = PLAYER ? ["knight", "cleric", "ranger"] : c.pack.classes.map((k) => k.id);
@@ -55,7 +56,9 @@ const recs: Rec[] = [];
 // Step 5h: the hand-built rosters, each fielding its best three for the fight.
 if (args.includes("--rosters")) for (const act of [1, 2, 3]) for (const reg of rogue(c).regions.filter((g) => g.act === act)) for (const pt of ["easy", "normal", "elite", "boss"] as PTier[]) ROSTERS.forEach((ro, ri) => {
   const pool = pt === "boss" ? reg.bosses : reg[pt];
-  const fight = pool[rint(rngFor(500 + ri * 13 + act, `feel:${reg.id}:${pt}`), pool.length)];
+  // --fights: those fights wherever their region's pool holds them, else a fight of the pool by the dice.
+  const fight = FIGHTS.length ? pool.find((f) => FIGHTS.includes(f.id)) : pool[rint(rngFor(500 + ri * 13 + act, `feel:${reg.id}:${pt}`), pool.length)];
+  if (!fight) return;
   const tier: FightTier = pt === "boss" ? "boss" : pt === "elite" ? "elite" : "fight";
   const floor = pt === "easy" ? 1 : pt === "boss" ? 10 : 5;
   const at = (run: RogueRun, seed: number) => { run.region = reg.id; run.floor = floor; run.pending = { kind: "fight", node: "feel", tier, fight, foes: foesFor(c, tier, knobFor(c, run, tier, floor, fight)), seed }; };
@@ -176,7 +179,9 @@ function readLog(r: Rec): Read {
         const tt = ut.get(tgt); if (tt) tt.taken += amt;
         if (e.part === "pulse" || e.part === "reaction") {
           const src = String(e.src);
-          const from = e.from ? String(e.from) : e.by ? String(e.by) : null;
+          // A status's damage belongs to the other side (a Chill shatter is logged by its holder): else it's split by stacks.
+          const named = e.from ? String(e.from) : e.by ? String(e.by) : null;
+          const from = named && units.get(named)?.side !== units.get(tgt)?.side ? named : null;
           if (from && ut.get(from)) add(ut.get(from)!.dealt, `status:${src}`, real);
           else {
             const shares = stackBy.get(`${tgt}|${src}`);

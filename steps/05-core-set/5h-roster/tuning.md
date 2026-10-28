@@ -45,3 +45,16 @@ Endurance medians after round 2 sat at three fights for every class (the Ranger 
 **Changed:** act I's regular fights at 1.4 abilities known (two of five members on their second) with common gear and no legendary, its elites at 1.6; and a roster size by level (`roster`): three to pick from in act I's easy fights, four in its regular fights and elites, five at its boss and after. Act I recalibrated (the Old Road's 17 fights): its regular knobs fell (bandit camp −62, archers' nest −74, the Viper Den −34; the wolf packs stay high, +55 and +80), its elites by up to 60, its bosses unchanged (they were measured at the boss's level). The simulated player now wins 12% (act I's boss beats half of the runs that reach it, against 22% of the rosters).
 
 **The feel tool** gained `--rosters` (the hand-built rosters' fights, each picking its best three on two throws of the dice, as the calibration does; one throw picked worse trios and showed the act I bosses winning 7 of 12). A fresh reader reads its packs: `reads/round-4.md`.
+
+**The read** (ten packs and the summary of 336 fights), in the report's §4. What it changes:
+- **Nothing tuned.** Its findings are either the director's decisions or balance items from before 5h:
+  - long fights drain casters mid-fight, against "MP doesn't really matter within a fight": decision 7, which proposes an earlier enrage and a capped Mend, not bigger pools;
+  - revives almost never cast: decision 8;
+  - balance items for the next pass, and third slots for 5i's kickoff.
+- **Three tool fixes:**
+  - each roster and level gets its own seed, because item ids collided and the packs printed another roster's gear. `parties.md` came out identical, and fights were never affected, since gear is registered before each fight;
+  - Chill shatter damage is credited to the party, not to the foe that held the Chill;
+  - `--fights` picks the fights to pack.
+- **The puzzle fights** (the reader saw none): six packs read here.
+  - Snakes are a light tax: one Bleed stack at a time, closing at once.
+  - The Bomb fights are explosion tolls over in 17 to 24 ticks. The last Bug's blast never goes off, because the fight ends when it dies.

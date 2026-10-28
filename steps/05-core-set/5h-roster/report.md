@@ -14,6 +14,14 @@ You asked for a roster to rotate: a small bench that grows by choice, parties ch
 4. **The Bomb Room has a floor.** Two Bomb Bugs and two hounds cost a counter-picked party 25% of its HP even at the knob's lowest (its target is 18). A Bomb Bug explodes when it dies, so its damage doesn't shrink with the knob; a stronger party only sets it off sooner. It was the same before this step, hidden by weaker parties. The three-Bug fight you wanted back is now an elite, the **Bomb Nest**, on target at 26%. **Options:** leave the Bomb Room as the one spiky regular fight (my pick, as a puzzle that rewards a counter-pick), cut it to one Bug, or make explosions shrink with the knob (a rules change).
 5. **Two overestimates were caught by the simulated player's numbers,** and I fixed both: act I's rosters had been given more than a careful player has there, and five members to pick from from the first floor. Act I is now calibrated at one or two abilities a member, common gear and no legendary before the first elite, with three to four members to pick from until the boss. **Say if** that reads wrong against your own runs. This is the place hand-built parties can go wrong.
 6. **Free play** loses in-fight MP regen too, since it's one rule in the pack. Its pools are the same smaller ones.
+7. **MP does matter inside the long fights, against your words.** You said MP should drain over fights and "not really matter within a fight". At normal lengths that holds: a class is short of MP 1 to 14% of its time (the Monk most). In the long fights it doesn't hold. A caster runs dry halfway through and basic-attacks for 30 to 110 ticks, which reads as a class switching off, not a choice (four of the reader's ten packs). Almost all of those long fights are slogs: a fight lost at its first death that takes 100 more ticks to end, or an elite where two Bone Priests heal back what the party deals. **Options:**
+   - bring the enrage forward from 200 ticks to about 120: only long fights reach it, and it ends the slogs;
+   - cap the Bone Priest's Mend;
+   - both (my pick: fix the slog, keep the MP);
+   - accept it as the price of a long fight.
+
+   Bigger pools wouldn't help without breaking the two-or-three-fight drain: a boss fight is twice a regular one, so it spends twice the MP.
+8. **Revives are almost never cast,** which weakens decision 3. Valhalla is cast 0.03 times a fight and Raise 0.05. In won fights nobody's down, and in lost ones the reviver is often dry first: the Cleric in pack 8 never got near Raise's 1,500. The bigger pools buy the Valkyrie and Cleric very few revives. **Options:** cheaper Raise and Valhalla, with their pools brought into line (costs are yours to set); or keep revives as rare insurance at today's price.
 
 ## 2. What was built
 
@@ -61,7 +69,7 @@ All of the third design, in the rules (`src/rogue.ts`, the schema), the content 
   - **`src/rogue-parties.ts`:** the rosters.
   - **`npm run rogue:calibrate -- --reps 3`:** on the rosters, each fielding its best three, about four minutes for every fight.
   - **`npx tsx src/rogue-acts.ts`:** the MP check.
-  - **`npx tsx src/rogue-feel.ts --rosters`:** fight packs from the rosters.
+  - **`npx tsx src/rogue-feel.ts --rosters`:** fight packs from the rosters (`--fights id,id` for named fights).
 
   The simulated player and the playtester's game follow the rules; nothing is tuned on them.
 
@@ -93,7 +101,44 @@ Each class's pool was set to reach this (`MP_POOL` in `content/core-set/classes.
 
 ## 4. Feel
 
-FEEL READ PENDING
+A fresh reader read ten fights from the rosters tick by tick (`reads/round-4.md`). I read six more of the puzzle fights, which its packs missed.
+
+**What reads well:**
+- **Wind-ups:** Crush gives 8 ticks of warning, Inferno 8, Flatten and a Troll's swing 6.
+- **Status shapes:**
+  - Briar's Bleed ramps;
+  - Burn fades visibly;
+  - a Chill shatter is the best moment in the game.
+- **Tempo:** each class has one you can read.
+- **Near misses:** a Rally 1.7 ticks late, a Vanish 0.6 ticks late.
+- **Best fight:** the Ogre Bridge elite, a plan you can watch work. The Hexer's Chill and Sunder set up the Monk, and a shatter finishes the Ogre.
+
+**What doesn't:**
+1. **Lost fights are decided at the first death, then drag on.** Every lost fight lost its first member by t29 and none recovered. Three of them ran 100 to 140 ticks past that point (decision 7).
+2. **The tiers differ in danger, not in shape.** Regular fights are tolls: all 168 won, almost no KOs, 18 to 20% of the party's HP. Elites are won 94 to 100% of the time. Bosses are the only danger, and they turn on their first 20 to 30 ticks: on whether a big blow lands on a fragile member. Against the rosters, that's the attrition shape the bench is for. **Say if** you want regular fights to threaten too, which means a higher cost target (one line).
+3. **Third slots and revives hardly exist.** Third slots start uncharged on cooldowns of 33 to 63 ticks, so a 40-tick fight barely sees them (Tremor first lands at t50). Pyre, the biggest number in the game, comes once in six fights. This belongs to 5i: an upgrade branch can answer it. It's in the kickoff.
+4. **The puzzle fights don't play as puzzles yet.**
+   - **Snakes:** their Bleed lands one stack at a time and closes at once, about 300 to 650 damage a snake. The bandits beside them are the threat.
+   - **Bomb fights:** a toll of explosions, over in 17 to 24 ticks. The counter-pick is fire resistance and HP, which fits "preparation is the game", but nothing in the order of kills matters. The last Bug's blast never goes off, because the fight ends when it dies. So the Nest costs two blasts, not three.
+5. **Balance items found, not 5h's.** These are for the next balance pass (or 5i's numbers):
+   - **Bone Priests' Mend:** in pack 8 it healed 36,211 against the party's 45,774, and nothing died in 124 ticks.
+   - **A Chill engine stun-locks the act III boss:** the Silent One was stunned about 48 of 70 ticks, with a Stun on every shatter.
+   - **Blood gift can still kill its caster.**
+   - **Siphon pays on overkill:** a Backstab into 266 HP refunded 615 MP.
+   - **The Hexer dies to ordinary basics:** 33 KOs per 100 fights, the most of any class.
+   - **The Cleric's Cure+ goes on itself** (four of five in pack 8).
+   - **Hellhounds do nothing:** 135 damage an appearance.
+
+**Feel by class:**
+- **Worst:** the Cleric (its heals miss the moment), the Hoplite (its kit arrives after the fight) and the Hexer (dies before its kit plays).
+- **Best:** the Monk, the Geomancer and the Bramble knight, each a loop you can watch.
+- **Dominant:** the Stormcaller, Ranger and Pyromancer decide regular fights in one volley, and the Bramble knight out-damages its own party.
+
+**Tool fixes from the read:**
+- **Gear:** the packs printed another roster's gear, because item ids collided across rosters. Each roster and level now has its own seed. The rosters are unchanged (`parties.md` is identical), and fights were never affected: gear is registered before every fight.
+- **Shatter damage:** it is now credited to the party member whose Chill shattered, not to the foe it hit.
+- **Packs for named fights:** the feel tool takes `--fights snake_pit,bomb_nest`.
+- **One open:** the War Banner's Might at a fight's start shows in the log under the wearer's name, with no piece named.
 
 ## 5. Method notes
 

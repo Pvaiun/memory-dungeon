@@ -48,6 +48,12 @@ The director's own example is the feeling to aim at. They put the Frostweaver be
 - **Formation rarity as a drop mechanism:** common, rare, legendary, rolled by act. The nine existing formations get provisional rarities in 5h; this step sets the final ones.
 - **The nested training screen:** member → its abilities and passive → that one's upgrades. 5h builds it with today's single upgrade; this step gives every ability and passive its two branches.
 - **Slot rules** (three slots; amulets for anyone; armor by heaviest weight) are unchanged in 5h. If the map says a slot rule is part of the problem, propose a change.
+- **What 5h's feel read found that this step can answer** (`steps/05-core-set/5h-roster/reads/round-4.md`, report §4):
+  - **Third slots hardly exist.** They start uncharged on cooldowns of 33 to 63 ticks, and a regular fight lasts about 40. Pyre is cast once in six fights, Tremor first lands at t50, and the Hoplite casts about 1.3 abilities a fight. An upgrade branch is a natural answer, such as a shorter cooldown or starting charged.
+  - **Revives are almost never cast:** Valhalla 0.03 a fight, Raise 0.05. Their price is the director's decision in 5h's report.
+  - **Engines can lock a boss.** A Chill engine kept the Silent One stunned about 48 of 70 ticks, with a Stun on every shatter. Synergies will make more engines like this. Decide what a boss does about one before pieces make it easy.
+  - **Siphon pays on overkill** (a Backstab into 266 HP refunded 615 MP). It matters when Siphon pieces are revalued.
+  - **The worst-feeling classes:** the Cleric, whose heals miss the moment; the Hoplite, whose kit arrives after the fight; and the Hexer, which dies before its kit plays.
 
 ## Out of scope
 

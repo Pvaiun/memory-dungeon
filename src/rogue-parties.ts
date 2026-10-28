@@ -99,7 +99,8 @@ export const LEVELS: Record<number, Record<Tier, { known: number; plus: number; 
 /** A roster at an act's and tier's power level, as a run: all five in the roster, the first three in the party. */
 export function buildRoster(c: Content, r: Roster, act: number, tier: Tier): RogueRun {
   const lv = LEVELS[act][tier];
-  const run = newRogue(c, { seed: 1, leader: r.classes[0] });
+  // A seed of its own per roster and level, so their items' ids never collide (the feel tool once printed another roster's gear).
+  const run = newRogue(c, { seed: 100 + ROSTERS.findIndex((x) => x.id === r.id) * 20 + act * 5 + ["easy", "normal", "elite", "boss"].indexOf(tier), leader: r.classes[0] });
   run.act = act;
   run.roster = [];
   run.party = [];
