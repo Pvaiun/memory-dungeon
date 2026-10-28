@@ -1,6 +1,6 @@
 # Step 5i kickoff: gear, formations and upgrades, from a gap map
 
-Written Oct 28, 2026, by the session that planned this step with the director, for a fresh session to start from. It was revised the same day after their notes. The director's words are in `intent.md` beside this file, verbatim. This file is the brief: what's decided, the designer's starting direction, the boundary with step 5h, the gate and the order of work. It's the designer's, not the director's: where the two differ, `intent.md` wins, and anything here can be challenged with evidence (`docs/method.md`).
+Written Oct 28, 2026, by the session that planned this step with the director, for a fresh session to start from. It was revised twice the same day after their notes. The director's words are in `intent.md` beside this file, verbatim. This file is the brief: what's decided, the designer's starting direction, the boundary with step 5h, the gate and the order of work. It's the designer's, not the director's: where the two differ, `intent.md` wins, and anything here can be challenged with evidence (`docs/method.md`).
 
 ## Read first
 
@@ -15,7 +15,7 @@ Written Oct 28, 2026, by the session that planned this step with the director, f
 
 On Oct 28 the director asked for a reviewer's read of the fights with no control, and decided against any control during fights: preparation is the game, and a team should win or lose as a team, not because someone pressed a button at the right moment. **Don't propose in-fight levers.** Two pillars came out of that conversation:
 
-- **the roster** (step 5h): a small bench that grows by choice, swaps any time outside fights, MP drained by fighting and restored on the bench, and rewards that come rarer and as choices between kinds;
+- **the roster** (step 5h): a small bench that grows by choice, swaps any time outside fights, MP drained by fighting and restored on the bench, and more loot, legendaries above all, sometimes as choices between kinds;
 - **builds that synergize** (this step).
 
 The director's own example is the feeling to aim at. They put the Frostweaver between a Monk and a Bard carrying Chill gear (the Rime sigil and the Frostfang put Chill on every basic attack). Two classes that never apply Chill fed the Frostweaver's Brittle, and the party was "exploding everywhere, left and right with chill". They want "a bunch of synergies like that", gear "that kind of transforms what you're doing", and "formations that push farther".
@@ -34,12 +34,10 @@ The director's own example is the feeling to aim at. They put the Frostweaver be
 
 ## What 5h decided that this step builds on
 
-- **The gear economy, measured (5h design, the reward plan).** Today a full run takes about 17 pieces for a party's 9 seats, and the rarities are upside down: 4.7 legendary and 6 rare against 3.7 common. By act II's boss the party wears real gear in 7 of 9 seats, and drops are restricted to what the roster can use, so nobody fishes for a class.
-
-  5h cuts this to about **10 pieces a run, in a pyramid** (about five common or uncommon, three rare, two or three legendary), with **a third of offered pieces for classes not in the roster**. It also makes rewards **choices between kinds** (gear against a formation, a recruit or a seat at camp). This step makes each piece worth that scarcity:
+- **The gear economy (5h design, the reward plan).** Worked out from the roster's seats, a full run should take about 28 pieces and see about 80. It should take about 12 legendaries and see about 25: if one legendary in three fits what a run is doing, that's two fitting legendaries an act. Today a full run takes about 17 pieces and 4.7 legendaries, so 5h raises the volume, legendaries most. **A third of offered gear is for classes not in the roster**, so a piece can make you want a class (today it's almost none). About 40% of reward choices are between kinds (gear against a formation, a recruit or a seat at camp); the rest stay between pieces. A run that sees about 25 legendaries sees most of today's 43, so new legendaries matter for variety. This step makes the volume worth having:
   - pieces specific enough that a run wants to switch;
   - pieces that make you want a class;
-  - fewer pieces that are simply bigger.
+  - pieces that combo with each other.
 - **What rarity means.** Today a rarity is more stat affixes on the same piece (uncommon one, rare two, legendary a rule plus two). So the highest rarity is nearly always the pick, which works against switching. Look at whether rarity should mean a stronger or more specific effect rather than more stats, and what affixes are for.
 - **MP rules.** Every class's MP regen is 0, and MP regen exists only on gear and Caravan's Quartermaster seat, working in fights on whoever wears it. The bench recovers a flat share of max MP per fight sat out, which gear doesn't touch. Every class runs dry in about two to three fights from full. So the MP pieces change meaning:
   - MP regen pieces are a fighter's way to last another fight;
@@ -64,9 +62,24 @@ The director's own example is the feeling to aim at. They put the Frostweaver be
 
 A synergy is an **enabler** (something that applies a status, sets a condition or gives a resource) feeding a **payoff** (something that cashes it in). The Chill story is enablers on the wrong classes feeding a payoff on the right one. Most payoffs in the game have enablers on only one or two classes. That's the gap this step fills, and it's only one kind of gap: the map below also finds reactions, answers and roles that only one class can fill.
 
-### The gap map: the first deliverable
+### Work as a designer, not a checklist
 
-Build `gap-map.md` from the content files, not from memory, **with a line for every row below, even if the line is "nothing needed, and why"**. Don't cover only the mechanics this file happens to mention as examples; the rows are the scope.
+You're the game's designer here. Look at the mechanics the game has, think about the builds and synergies that make the roguelites you know worth replaying, and pick the ones worth having in this game. Then fill the gaps that stop them existing. For example:
+- Slay the Spire's relics and card synergies;
+- Hades' boons, duo boons and Daedalus hammer (its two-way upgrades are the model for the branches);
+- Vampire Survivors' evolutions (a weapon plus a passive);
+- Path of Exile's support gems;
+- Diablo's legendaries that change a skill;
+- Teamfight Tactics' items and traits;
+- The Bazaar's items that charge or trigger each other;
+- Balatro's jokers;
+- Monster Train's clans and upgrades.
+
+Not every mechanic deserves a build: a synergy built on Clarity's ticks would be strange, and that's fine. Say why you chose what you chose.
+
+### The gap map: a tool, not a checklist
+
+Build `gap-map.md` from the content files, not from memory. The full list of mechanics below is there so you don't anchor on the few this file happens to name. It isn't a quota, and nothing needs to cover every row.
 
 - **The 22 statuses:** Bleed, Regen, Shield, Might, Weaken, Guard, Stun, Slow, Haste, Taunt, Burn, Chill and its shatter, Shock, Ward, Sunder, Silence, Hidden, Rot, Clarity, Aegis, and the enemy-only Doom and Bulwark (as things the party reacts to).
 - **The 7 special stats:** Evasion, Accuracy, Crit damage, Double strike, Thorns, Lifesteal, Siphon.
@@ -79,7 +92,7 @@ Build `gap-map.md` from the content files, not from memory, **with a line for ev
 - **Run-level resources:** HP carried between fights, MP carried and the bench, knockouts carried, cooldowns carried, supplies.
 - **Formation seats:** Aggro front and back, the seat's stat changes, the effect.
 
-**For each row:**
+**What the map records,** for the mechanics a build could be about (skip the ones that can't carry one, and say so in a line):
 - the enablers and the payoffs, each by source: class kits (abilities and passives), ordinary gear, rogue legendaries and affixes, formations;
 - which classes can reach each source (weapon kinds, armor weights, `aims`);
 - the reactions and answers the party has to it.
@@ -134,13 +147,13 @@ If this step needs a structural change (a new event that hands out branches, say
       - challenges;
       - predictions;
       - open questions.
-   3. **The sample spans the map, not the examples:**
-      - about eight pieces of gear across the kinds (a piece that bends a rule, an enabler, a payoff, a stat pushed harder, an ordinary piece with an effect, a piece that makes you want a class);
-      - about four formations (one of each rarity, and one about the bench or the run);
-      - about six ability branch pairs over at least three classes;
+   3. **The sample shows what you'd build.** Pick the synergies you think are strongest and the ones you're least sure of. Include:
+      - about eight pieces of gear across the kinds you'd make;
+      - about four formations;
+      - about six ability branch pairs over a few classes;
       - two passive branch pairs.
 
-      At least half of the sample should come from rows this file doesn't mention by name (revives, healing, Thorns, Armor, resistance, Evasion, Area, Silence and Stun reactions, Aggro, crits and the like are as much in scope as Chill). Include the items you're least sure of.
+      Each item says which synergy or gap it's for.
 2. **Gate:** the director reacts to the sample. Apply their feedback to the whole set, still as design. Show them a second sample if the feedback changed the rules.
 3. **After 5h is merged into main** (check `git log origin/main`):
    1. Merge main.
