@@ -5,7 +5,7 @@
  */
 import { gearFor as gearThatFits } from "../../src/sim/parties.js";
 import { foesText, meets, needText, rewardsOf, unmet } from "../../src/campaign.js";
-import { c, className, classes, cls as classOf, dungeons, enemies, fightName, formations, gearOf, runName, setNumberScale, shortName, type NumberScale } from "./content.js";
+import { c, className, classes, cls as classOf, dungeons, enemies, fightName, formations, gearOf, NUMBER_SCALES, runName, setNumberScale, shortName } from "./content.js";
 import { enemyDisplayName } from "./art.js";
 import { button, h, header, nav, row, settleBack, win, type Child } from "./dom.js";
 import { abilitiesFor, applyHeadStart, gearFor, HEAD_STARTS, HIT_PAUSES, party as partyLoadout, reset, resetJourneyLoadout, save, setup, useMode } from "./state.js";
@@ -28,6 +28,8 @@ export type Screen = "home" | "journey" | "node" | "fight" | "party" | "formatio
 
 let current: Screen = "home";
 let currentArg: unknown;
+/** The screen on show. */
+export const screen = (): Screen => current;
 let frame: HTMLElement;
 let screenEl: HTMLElement | null = null;
 let strip: Strip | null = null;
@@ -512,7 +514,6 @@ function clearNext() {
 }
 
 // ─── Settings ───
-const NUMBER_ORDER: NumberScale[] = ["small", "medium", "big"];
 function settings(): Child[] {
   const s = setup.settings;
   const toggle = (label: string, key: "sound" | "music" | "designer" | "autoContinue" | "partyBars" | "seedLock") => row([h("span", { class: "grow" }, label), h("span", { class: s[key] ? "good" : "dim" }, s[key] ? "ON" : "OFF")], () => { s[key] = !s[key]; if (key === "sound") setSound(s.sound); if (key === "music") setMusic(s.music); save(); refresh(); }, { cursor: false });
@@ -529,7 +530,7 @@ function settings(): Child[] {
       toggle("MUSIC", "music"),
       toggle("AUTO NEXT", "autoContinue"),
       toggle("PARTY HP ON FIELD", "partyBars"),
-      cycle("NUMBERS", NUMBER_ORDER, s.numbers, (v) => v.toUpperCase(), (v) => { s.numbers = v; setNumberScale(v); }),
+      cycle("NUMBERS", NUMBER_SCALES, s.numbers as (typeof NUMBER_SCALES)[number], (v) => `${v}×`, (v) => { s.numbers = v; setNumberScale(v); }),
       cycle("PORTRAITS", ["faces", "sprites", "mixed"] as const, s.portraits, (v) => v.toUpperCase(), (v) => (s.portraits = v)),
       ...([0, 1, 2] as const).map((i) => cycle(`HEAD START ${["1ST", "2ND", "3RD"][i]} SLOT`, HEAD_STARTS, s.headStart[i] as (typeof HEAD_STARTS)[number], (v) => `${v} TICKS`, (v) => { s.headStart[i] = v; applyHeadStart(s.headStart); })),
       toggle("DESIGNER", "designer"),

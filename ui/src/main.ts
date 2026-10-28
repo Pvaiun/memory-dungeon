@@ -3,8 +3,9 @@ import { h, initBack } from "./dom.js";
 import { buildFont, fitScale, FONT } from "./pixel.js";
 import { setNumberScale } from "./content.js";
 import { sanitize, save, setup } from "./state.js";
-import { go, mount, refresh, setTheme } from "./screens.js";
+import { go, mount, refresh, screen, setTheme } from "./screens.js";
 import { setCleared } from "./journey.js";
+import { checkForUpdate } from "./update.js";
 
 fitScale();
 setTheme(setup.settings.theme);
@@ -24,6 +25,11 @@ Promise.all([loadArt(), document.fonts.load(`8px ${FONT}`)])
   .catch((e: Error) => {
     app.replaceChildren(h("div", { class: "frame" }, h("div", { class: "screen" }, h("div", { class: "win text" }, `Couldn't load the art: ${e.message}`))));
   });
+
+// A newer build on the site: reload onto it, at start and whenever the app comes back to the front, but not mid-fight.
+const notFighting = () => screen() !== "battle";
+void checkForUpdate(notFighting);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) void checkForUpdate(notFighting); });
 
 // Hooks for scripted screenshots: window.__battle("old_road~ogre_bridge") starts that fight; window.__go("party") opens a screen.
 (window as unknown as { __battle: (d: string, seed?: number) => void }).__battle = (d: string, seed?: number) => go("battle", { dungeon: d, seed });

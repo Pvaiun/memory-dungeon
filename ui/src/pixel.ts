@@ -377,8 +377,6 @@ export function drawStatus(ctx: CanvasRenderingContext2D, id: string, x: number,
     drawDigits(ctx, s, x + STATUS_ICON + 1 - w, y + STATUS_ICON - 4, "#ffffff", OUTLINE);
   }
 }
-/** A status icon without its tile's border or a count: a glyph beside a number (an ability's cooldown and wind-up). */
-export const glyphEl = (id: string) => canvasEl(statusIconOf(id), 1, "glyph-icon");
 /** The icon as a DOM element, with its count. */
 export function statusEl(id: string, count?: number | null, scale = 1): HTMLCanvasElement {
   const cv = cv2d(STATUS_ICON + 2, STATUS_ICON + 2);
@@ -427,24 +425,37 @@ export const backdropImage = (theme: string): HTMLImageElement | undefined => (m
 
 // ─── DOM wrappers ───
 
-/** A canvas as a DOM element on the pixel grid; `scale` multiplies whole pixels. */
+/**
+ * A canvas as a DOM element on the pixel grid; `scale` multiplies whole pixels. A scale between whole numbers (the
+ * sheets' ability icons at 1.5) is rounded so each of the art's pixels is still a whole number of device pixels: off
+ * the font's grid, but crisp.
+ */
 export function canvasEl(cv: HTMLCanvasElement, scale = 1, cls = ""): HTMLCanvasElement {
   const el = cv2d(cv.width, cv.height);
   el.className = `px${cls ? ` ${cls}` : ""}`;
+  if (!Number.isInteger(scale)) {
+    const dev = Math.max(1, Math.round(px * (window.devicePixelRatio || 1)));
+    scale = Math.max(1, Math.round(scale * dev)) / dev;
+  }
   el.style.width = `${(cv.width * scale) / 8}rem`;
   el.style.height = `${(cv.height * scale) / 8}rem`;
   el.getContext("2d")!.drawImage(cv, 0, 0);
   return el;
 }
 export const faceEl = (cls: string, scale = 1) => canvasEl(faceOf(cls), scale, "face");
-/** The weapon strip's held frame as a DOM element, for gear lists. */
-export function weaponEl(gearId: string, scale = 1): HTMLCanvasElement | null {
+/** The weapon strip's held frame, trimmed: the weapon on its own, for gear lists and loot on a stage. */
+export function weaponIcon(gearId: string): HTMLCanvasElement | null {
   const file = weaponArt(gearId);
   if (!file) return null;
   const strip = spriteOf(file, 1);
   const cv = cv2d(32, 32);
   cv.getContext("2d")!.drawImage(strip, 96, 0, 48, 32, -8, 0, 48, 32);
-  return canvasEl(trimCanvas(cv), scale, "weapon");
+  return trimCanvas(cv);
+}
+/** The weapon as a DOM element, for gear lists. */
+export function weaponEl(gearId: string, scale = 1): HTMLCanvasElement | null {
+  const cv = weaponIcon(gearId);
+  return cv ? canvasEl(cv, scale, "weapon") : null;
 }
 
 // ─── Text on a canvas, from the pixel font ───

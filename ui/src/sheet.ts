@@ -17,7 +17,7 @@ import { c, cls, disp, ELEMENT_CODE, kindOf, SHEET_STATS, SPECIAL_STATS, showSta
 import { abilityInfo, abilityTag, evalNum, scalesOf, sizeParts, statusText, type Scale, type SizePart, type Stats } from "./describe.js";
 import { amuletStatus, ELEMENTS, gearIcon, SLOT_ICON, TAG_ICON } from "./art.js";
 import { h, type Child } from "./dom.js";
-import { actorEl, faceEl, glyphEl, iconEl, pipEl, statusEl, weaponEl } from "./pixel.js";
+import { actorEl, faceEl, iconEl, pipEl, statusEl, weaponEl } from "./pixel.js";
 import { gearFor, party, setup, soloParty } from "./state.js";
 
 /** The class's unit with its gear, formation slot and passive applied: what it brings to a fight. */
@@ -72,7 +72,8 @@ export function statGrid(stats: Stats, base: Stats | null, designer: boolean, ke
   }
   for (const [k, v] of Object.entries(stats)) {
     if (!k.startsWith("resist:") || !v) continue;
-    cells.push(cell(h("span", { class: k.slice(7) }, statCode(k)), h("span", { class: v > 0 ? "good" : "bad" }, `${v > 0 ? "+" : ""}${v}%`)));
+    // Two columns wide: "LIGHT RES" is longer than a cell.
+    cells.push(cell(h("span", { class: k.slice(7) }, statCode(k)), h("span", { class: v > 0 ? "good" : "bad" }, `${v > 0 ? "+" : ""}${v}%`), undefined, "wide"));
   }
   if (stats.resist) cells.push(cell("RES", `${stats.resist > 0 ? "+" : ""}${stats.resist}%`));
   return h("div", { class: "stats" }, ...cells);
@@ -121,8 +122,10 @@ export function sizeEl(parts: SizePart[]): HTMLElement | null {
 }
 /** A whole number of ticks: the director's "round it, even if it's off by a bit". */
 export const tk = (t: number) => String(Math.max(t > 0 ? 1 : 0, Math.round(t)));
-/** A glyph and a number: the cooldown's clock, the wind-up's swirl. */
-const glyph = (id: string, n: string, cls = "") => h("span", { class: `glyph ${cls}` }, glyphEl(id), n);
+/** A timing in words, as the director asked: "CD 8", "CAST 3". */
+const timing = (label: string, n: string) => h("span", { class: "nowrap" }, `${label} ${n}`);
+/** The sheets' ability icons: between the font's size and double it. */
+const ICON_SCALE = 1.5;
 
 /** What a weapon's basic attack is, worked out for a unit: its kind, how often, what it hits for and what it grows with. */
 export function weaponParts(wp: WeaponT, stats: Stats | null): { tag: string; word: string; tone: string; cooldown: number; value: string | null; scales: Scale[] } {
@@ -131,11 +134,11 @@ export function weaponParts(wp: WeaponT, stats: Stats | null): { tag: string; wo
   const value = stats ? `${wp.hits && wp.hits > 1 ? `${wp.hits}×` : ""}${disp(evalNum(wp.amount, stats).value)}` : null;
   return { tag: magic ? r.element ?? "magical" : r.subtype ?? "physical", word: (magic ? elementName(r.element ?? "") : r.subtype ?? "").toUpperCase(), tone: magic ? r.element ?? "" : "phys", cooldown: r.cooldown, value, scales: scalesOf(wp.amount) };
 }
-/** A weapon's kind, speed and hit, then what the hit grows with: "PIERCE ⏲8 33", "(23% ATK)"; each part kept whole when the line wraps. */
+/** A weapon's hit and kind, what the hit grows with, and how often: "33 PIERCE", "(23% ATK)", "CD 8"; each part kept whole when the line wraps. */
 export function weaponCode(g: GearT, stats: Stats | null): Child[] {
   if (!g.weapon) return [];
   const w = weaponParts(g.weapon, stats);
-  return [h("span", { class: "wcode" }, h("span", { class: w.tone }, w.word), glyph("ui_cooldown", tk(w.cooldown)), w.value ? h("span", { class: "ink" }, w.value) : null), scaleEl(w.scales)];
+  return [h("span", { class: "wcode" }, w.value ? h("span", { class: "ink" }, w.value) : null, h("span", { class: w.tone }, w.word)), scaleEl(w.scales), timing("CD", tk(w.cooldown))];
 }
 /**
  * What a powerful piece does beyond its numbers: a rogue legendary's rule (its status's text), or a core-set piece's
@@ -168,7 +171,7 @@ export function gearRow(g: GearT | null, slot: string, stats: Stats | null, onCl
 
 /**
  * An ability card: the slot number to tap, the icon (shaded until it first comes round, the ticks in its corner), the
- * name in its element's colour, the MP, cooldown and wind-up as glyphs and whole numbers; the documents' sentence; and
+ * name in its element's colour, the MP, cooldown and wind-up ("CAST") in words and whole numbers; the documents' sentence; and
  * its size for this unit with what it grows with. In designer view, the target and every effect in words.
  */
 export function abilityBlock(a: AbilityT, stats: Stats | null, designer: boolean, opts: { n?: number; onN?: () => void; cur?: boolean; target?: boolean; dmgMult?: number; opening?: boolean } = {}): HTMLElement {
@@ -181,13 +184,13 @@ export function abilityBlock(a: AbilityT, stats: Stats | null, designer: boolean
   const head = h("div", { class: "head" },
     // With another number picked, this one pulses: it's where the next tap goes.
     opts.n !== undefined ? h("span", { class: `n${opts.target ? " target" : ""}`, onClick: opts.onN }, String(opts.n)) : null,
-    h("span", { class: "pip" }, pipEl(cell, first, i.cooldown)),
+    h("span", { class: "pip" }, pipEl(cell, first, i.cooldown, ICON_SCALE)),
     h("div", { class: "grow" },
       h("div", { class: `trunc ${ELEMENTS.includes(tag) ? tag : tag === "heal" || tag === "revive" || tag === "cleanse" ? "good" : ""}` }, i.name.toUpperCase()),
       h("div", { class: "cost" },
         i.mp ? h("span", { class: "mp" }, `MP ${disp(i.mp)}`) : null,
-        glyph("ui_cooldown", tk(i.cooldown)),
-        i.cast ? glyph("ui_cast", tk(i.cast), "dim") : null,
+        timing("CD", tk(i.cooldown)),
+        i.cast ? timing("CAST", tk(i.cast)) : null,
       ),
     ),
   );
@@ -205,8 +208,8 @@ export function basicLine(wp: WeaponT, stats: Stats | null, opts: { mult?: numbe
   const w = weaponParts(wp, stats);
   const value = stats && opts.mult && opts.mult !== 1 ? `${wp.hits && wp.hits > 1 ? `${wp.hits}×` : ""}${disp(evalNum(wp.amount, stats).value * opts.mult)}` : w.value;
   return h("div", { class: "ab" },
-    h("div", { class: "head" }, opts.slot === false ? null : h("span", { class: "n dim" }, "·"), h("span", { class: "pip" }, iconEl(TAG_ICON[w.tag] ?? TAG_ICON.physical)),
-      h("div", { class: "grow" }, h("div", null, "ATTACK"), h("div", { class: "cost" }, glyph("ui_cooldown", tk(w.cooldown))))),
+    h("div", { class: "head" }, opts.slot === false ? null : h("span", { class: "n dim" }, "·"), h("span", { class: "pip" }, iconEl(TAG_ICON[w.tag] ?? TAG_ICON.physical, ICON_SCALE)),
+      h("div", { class: "grow" }, h("div", null, "ATTACK"), h("div", { class: "cost" }, timing("CD", tk(w.cooldown))))),
     h("div", { class: "size" }, value ? `${value} ` : "", h("span", { class: w.tone }, w.word), w.scales.length ? " " : null, scaleEl(w.scales)),
   );
 }

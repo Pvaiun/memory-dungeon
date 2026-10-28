@@ -21,11 +21,11 @@ const actions = (main: HTMLButtonElement | null, ...more: (HTMLButtonElement | n
 /** A choice as a big button: its word and, under it, what it does. */
 const choice = (label: string, sub: string, onClick: () => void) => button(h("span", { class: "big-label" }, label, sub ? h("span", { class: "sub" }, sub) : null), onClick, "hi big");
 import { abilityBlock, basicLine, canUse, classHead, classPassive, codeSpans, enemyStats, gearRow, hitsWith, role, section, sizeEl, specialLines, statGrid } from "./sheet.js";
-import { sizeParts, sizeText } from "./describe.js";
+import { abilityTag, sizeParts, sizeText } from "./describe.js";
 import { campEl, foesOnStage, partyInLine, partyOnStage, stageEl, themeOf, type StageActor, type StageOpts } from "./battle/scene.js";
-import type { Pose } from "./art.js";
+import { gearIcon, TAG_ICON, type Pose } from "./art.js";
 import { weaponOf } from "../../src/engine/combat/fight.js";
-import { actorEl, enemyThumb, faceEl, iconEl } from "./pixel.js";
+import { actorEl, enemyThumb, faceEl, iconEl, iconOf, weaponIcon } from "./pixel.js";
 import { enemyDisplayName } from "./art.js";
 import type { Cell } from "./art.js";
 import { current, endRun, fighter, lastRun, meta, saveRogue, setHeat, startRun, vitals } from "./rogue-state.js";
@@ -142,6 +142,32 @@ function partyActors(run: RogueRun, h: number, pose: Pose = "wait", inLine?: { c
 function scene(run: RogueRun, key: string, o: Omit<StageOpts, "theme" | "t0"> & { theme?: string }): HTMLCanvasElement {
   return stageEl({ ...o, theme: o.theme ?? themeOf(run.region), t0: t0(`${key}:${run.act}:${run.floor}`) });
 }
+/**
+ * The spoils on the ground beside the party: a sack of gold, then what's on offer, each as its own art (a weapon's
+ * sprite, a piece's icon, a tome's ability, a supply); a recruit stands among them, facing the party.
+ */
+function lootActors(run: RogueRun, offers: Offer[], gold: boolean, h: number, x0: number, x1: number): StageActor[] {
+  const cell = (k: readonly [number, number]) => iconOf(k[0], k[1]);
+  const arts: (HTMLCanvasElement | string)[] = gold ? [cell(GOLD_SACK)] : [];
+  for (const o of offers) {
+    if (o.kind === "gear") {
+      const g = c.gear.get(o.item.uid) ?? itemGear(c, o.item);
+      arts.push((g.slot === "weapon" ? weaponIcon(g.id) : null) ?? cell(gearIcon(g)));
+    } else if (o.kind === "tome") arts.push(cell(TAG_ICON[abilityTag(c.abilities.get(o.ability)!)] ?? TAG_ICON.physical));
+    else if (o.kind === "recruit") arts.push(o.cls);
+    else if (o.kind === "formation") arts.push(cell(FORMATION_ICON));
+    else arts.push(cell(SUPPLY_ICON[o.id]));
+  }
+  const step = arts.length > 1 ? Math.min(28, (x1 - x0) / (arts.length - 1)) : 0;
+  const left = (x0 + x1) / 2 - (step * (arts.length - 1)) / 2;
+  return arts.map((a, i) => {
+    const x = Math.round(left + i * step);
+    return typeof a === "string" ? { kind: "hero", ref: a, x, y: h - 6, pose: "wait", mirror: true } : { kind: "loot", x, y: h - 4, art: a };
+  });
+}
+const GOLD_SACK: Cell = [23, 11];
+const FORMATION_ICON: Cell = [23, 6];
+
 /** The party facing a fight's foes, as the battle will stand them. */
 const standoff = (run: RogueRun, enemies: string[], key: string, theme?: string, h = 136) => scene(run, key, { theme, h, actors: [...partyActors(run, h), ...foesOnStage(enemies, h)] });
 
@@ -396,15 +422,16 @@ function rewardView(run: RogueRun): Child[] {
   });
   cards.forEach((el, i) => el.addEventListener("click", () => { rewardPick = i; redraw(); }));
   const skip = p.kind === "treasure" ? "leave" : "skip";
-  // After a fight the party cheers where it stood; a chest opens in front of it.
+  // After a fight the party cheers beside what it won, laid on the ground; a chest opens in front of it.
   const sceneEl = p.kind === "treasure"
     ? scene(run, "chest", { h: 96, actors: [...partyActors(run, 96, "wait", { cx: 96 }), { kind: "chest", x: 196, y: 88, color: "gold" }], openAt: 500, sparkle: { x: 196, y: 74, strip: "diamond1" } })
-    : scene(run, `spoils:${p.kind}`, { h: 96, actors: partyActors(run, 96, "victory", { cx: 135 }) });
+    : scene(run, `spoils:${p.kind}`, { h: 96, actors: [...partyActors(run, 96, "victory", { cx: 72 }), ...lootActors(run, [...(p.kind === "spoils" && p.trophy ? [{ kind: "gear" as const, item: p.trophy }] : []), ...offers], p.kind === "spoils" && p.gold > 0, 96, 160, 248)], sparkle: { x: 204, y: 70, strip: "diamond1" } });
   return [
-    header(title, () => go("home"), p.kind === "treasure" ? null : h("span", { class: "dim" }, "PICK ONE")),
+    header(title, () => go("home")),
     sceneEl,
     goldLine,
-    win("scroll flat", trophy, ...cards),
+    // The choice is named where it's made, right over the cards.
+    win("scroll flat", trophy, p.kind === "treasure" ? null : h("div", { class: "section" }, "PICK ONE"), ...cards),
     actions(
       p.kind === "treasure"
         ? button("TAKE", () => { if (opts.includes("take")) pickOrSave(run, "take"); }, "hi")
