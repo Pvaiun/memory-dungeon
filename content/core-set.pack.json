@@ -3267,7 +3267,7 @@
   {
    "id": "hoplite",
    "name": "Hoplite",
-   "text": "Bodyguard who breaks armor. Plants its great shield beside the most vulnerable ally to catch the killing blow, locks shields with it, and cracks armor with slow, crushing blows.",
+   "text": "Bodyguard who opens foes up. Plants its great shield beside the most vulnerable ally to catch the killing blow, locks shields with it, and leaves foes sundered with slow, crushing blows.",
    "source": "unlock",
    "stats": {
     "max_hp": 4000,
@@ -3433,7 +3433,7 @@
   {
    "id": "monk",
    "name": "Monk",
-   "text": "Breaks armor with a blur of blows. Every blow cracks armor, Flow keeps it fast, burning fists pile onto the hottest foe, and a pressure point drops the most dangerous one for a moment.",
+   "text": "Sunders with a blur of blows. Every blow leaves the foe a little more open, Flow keeps it fast, burning fists pile onto the hottest foe, and a pressure point drops the most dangerous one for a moment.",
    "source": "unlock",
    "stats": {
     "max_hp": 3000,
@@ -3573,7 +3573,7 @@
   {
    "id": "frostweaver",
    "name": "Frostweaver",
-   "text": "Freezes and shatters. Buries foes in Chill until it shatters into damage and a Stun, cracks the shattered foe's armor for the party, and spends the time it buys keeping an ally's mana flowing.",
+   "text": "Freezes and shatters. Buries foes in Chill until it shatters into damage and a Stun, leaves the shattered foe sundered for the party, and spends the time it buys keeping an ally's mana flowing.",
    "source": "unlock",
    "stats": {
     "max_hp": 2000,
@@ -13686,7 +13686,7 @@
    {
     "id": "shatter_sigil",
     "name": "Shatter sigil",
-    "text": "Every basic attack cracks armor.",
+    "text": "Every basic attack sunders the foe.",
     "slot": "amulet",
     "tier": "powerful",
     "source": "unlock",
@@ -14130,7 +14130,7 @@
    {
     "id": "earthshaker",
     "name": "Earthshaker",
-    "text": "An earth staff that cracks the armor of what it strikes.",
+    "text": "An earth staff that leaves what it strikes sundered.",
     "slot": "weapon",
     "tier": "powerful",
     "source": "unlock",

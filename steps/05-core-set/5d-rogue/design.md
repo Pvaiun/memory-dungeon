@@ -43,6 +43,7 @@ The core set as a roguelite, on Slay the Spire's structure, as the director aske
 - **Chest:** a rare (70%) or legendary (30%) piece and 15 to 35 gold.
 - **Event (?):** twelve, each a choice in a few verbs (gold, HP, MP, gear, a recruit, learning, an upgrade, tempering a piece up a rarity, a formation, a supply, a fight, a camp, a gamble): a Wounded Traveller, a Blood Shrine, the Gambler, an Abandoned Forge, the Old Master, an Ambush, a Clear Spring, a Strange Chest, an Empty Camp, Pilgrims, a Drill Yard, a Fallen Standard. A run doesn't meet the same one twice until it has met them all. Costs come before choices, an option that can't happen now is greyed, and WALK ON appears when none can.
 - **Supplies** (the bag holds three): a tonic (the party +30% HP), an ether (+50% MP), a phoenix feather (a fallen member up at half HP). Used between rooms.
+  - *Step 5g (the director's), as built now:* renamed and reshaped. A **potion** gives one member, the player's pick, +30% HP; a **tonic** one member +50% MP; the phoenix as before. The bag has a slot a kind, two each. After every won fight the party picks one of a potion or a tonic, free. Cooldowns carry from fight to fight, across acts too.
 
 ## The fights: remixed, themed, and each its own knob
 

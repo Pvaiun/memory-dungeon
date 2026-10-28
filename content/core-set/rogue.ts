@@ -284,7 +284,7 @@ export const rogueGear: GearT[] = [
   legend("cleaving_charm", "Cleaving charm", "Every basic attack carries on into a second foe.", "amulet", { statuses: ["lg_cleave"] }),
   legend("rime_sigil", "Rime sigil", "Every basic attack leaves frost.", "amulet", { statuses: ["lg_rime"] }),
   legend("wound_sigil", "Wound sigil", "Every crit opens a wound.", "amulet", { statuses: ["lg_wounds"], stats: [critStep(2), st("max_hp", 1)] }),
-  legend("shatter_sigil", "Shatter sigil", "Every basic attack cracks armor.", "amulet", { statuses: ["lg_sunder"], stats: [st("attack", 1)] }),
+  legend("shatter_sigil", "Shatter sigil", "Every basic attack sunders the foe.", "amulet", { statuses: ["lg_sunder"], stats: [st("attack", 1)] }),
   legend("siren_shell", "Siren shell", "Every basic attack sings an ally a little mana.", "amulet", { statuses: ["lg_song"], stats: [st("max_hp", 1)] }),
   legend("crown_of_judgement", "Crown of judgement", "Strikes hardest at whatever has been lifted up.", "amulet", { statuses: ["lg_judge"] }),
   legend("grave_lantern", "Grave lantern", "Each foe that falls gives back a little life.", "amulet", { statuses: ["lg_lantern"] }),
@@ -311,7 +311,7 @@ export const rogueWeapons: LegendWeapon[] = [
   { id: "gravecaller", name: "Gravecaller", text: "Each fall makes it stronger.", kind: "dark_staff", statuses: ["lg_grave"], stats: [st("magic", 1)] },
   { id: "cinder_rod", name: "Cinder rod", text: "Lightning that hits burning foes harder.", kind: "lightning_staff", statuses: ["lg_cinder"], stats: [st("magic", 1)] },
   { id: "brand_of_kings", name: "Brand of kings", text: "A spear that strikes hardest at whatever has been lifted up.", kind: "spear", statuses: ["lg_judge"] },
-  { id: "earthshaker", name: "Earthshaker", text: "An earth staff that cracks the armor of what it strikes.", kind: "earth_staff", statuses: ["lg_sunder"], stats: [st("magic", 1)] },
+  { id: "earthshaker", name: "Earthshaker", text: "An earth staff that leaves what it strikes sundered.", kind: "earth_staff", statuses: ["lg_sunder"], stats: [st("magic", 1)] },
 ];
 
 /** The legendary pool: the core set's powerful pieces and the rogue mode's own. */

@@ -336,7 +336,7 @@ export const classes: ClassDefT[] = [
   cls("bramble_knight", "Bramble knight", "Thorns tank. Draws every foe onto its thorns, where each attacker is left bleeding for the party's blows, regrows whoever is lowest, and lashes out with the thorns themselves.", {
     stats: { ...stat(5, 2, 2, 3, 2, 3, 2, 5), ...special("thorns", "high"), ...resist("fire", "weak") }, weapons: ["sword", "earth_staff"], armor: "heavy", passive: p("briar", "Briar", "Each time its Thorns damage a foe, that foe gets a few Bleed; stacks scale from Armor."),
   }),
-  cls("hoplite", "Hoplite", "Bodyguard who breaks armor. Plants its great shield beside the most vulnerable ally to catch the killing blow, locks shields with it, and cracks armor with slow, crushing blows.", {
+  cls("hoplite", "Hoplite", "Bodyguard who opens foes up. Plants its great shield beside the most vulnerable ally to catch the killing blow, locks shields with it, and leaves foes sundered with slow, crushing blows.", {
     stats: stat(4, 2, 2, 4, 1, 5, 2, 5), weapons: ["spear", "sword"], armor: "heavy", passive: p("phalanx", "Phalanx", "Its basic attacks come half as often and deal double damage."),
   }),
   cls("paladin", "Paladin", "Shelter against magic. Shelters the party from spells and curses, and brings down slow, heavy, burning judgement, twice as hard on any foe that holds a buff.", {
@@ -353,7 +353,7 @@ export const classes: ClassDefT[] = [
     // Step 5f: HP 2 again (the director's: not HP).
     stats: { ...stat(2, 4, 3, 1, 4, 1, 2, 1), ...special("siphon", "medium") }, weapons: ["ice_staff", "dark_staff"], armor: "light", passive: p("cold_hex", "Cold hex", "Its basic attacks add a few Chill, whatever staff it carries; stacks scale from Magic."),
   }),
-  cls("monk", "Monk", "Breaks armor with a blur of blows. Every blow cracks armor, Flow keeps it fast, burning fists pile onto the hottest foe, and a pressure point drops the most dangerous one for a moment.", {
+  cls("monk", "Monk", "Sunders with a blur of blows. Every blow leaves the foe a little more open, Flow keeps it fast, burning fists pile onto the hottest foe, and a pressure point drops the most dangerous one for a moment.", {
     // Step 5f (the director's): Attack 3,700, Crit 2, Aggro 2.
     stats: { ...stat(3, 2, 3, 4, 1, 2, 2, 2), attack: 3700, ...special("evasion", "high"), ...special("double_strike", "medium") }, weapons: ["fist", "spear"], armor: "medium",
     passive: p("iron_palm", "Iron palm", "Its basic attacks, and the second strike of its Double strike, add a few Sunder; stacks scale from Attack."),
@@ -370,7 +370,7 @@ export const classes: ClassDefT[] = [
   cls("pyromancer", "Pyromancer", "Ramping Burn. Every strike adds Burn, bolts pile more onto the hottest foe, and a pyre lands on it.", {
     stats: stat(2, 5, 2, 1, 5, 1, 2, 1), weapons: ["fire_staff", "lightning_staff"], armor: "light", passive: p("kindling", "Kindling", "Its basic attacks add a few Burn, whatever staff it carries; stacks scale from Magic."),
   }),
-  cls("frostweaver", "Frostweaver", "Freezes and shatters. Buries foes in Chill until it shatters into damage and a Stun, cracks the shattered foe's armor for the party, and spends the time it buys keeping an ally's mana flowing.", {
+  cls("frostweaver", "Frostweaver", "Freezes and shatters. Buries foes in Chill until it shatters into damage and a Stun, leaves the shattered foe sundered for the party, and spends the time it buys keeping an ally's mana flowing.", {
     stats: { ...stat(2, 4, 3, 1, 4, 2, 2, 1), ...resist("ice", "resists") }, weapons: ["ice_staff", "wind_staff"], armor: "light", passive: p("shatterpoint", "Shatterpoint", "When a foe's Chill shatters, that foe takes several Sunder; stacks scale from Magic."),
   }),
   cls("stormcaller", "Stormcaller", "Shocks every foe. Rains quick strikes across every foe so the fast and the many hurt themselves by acting, and charges itself up to strike faster.", {
