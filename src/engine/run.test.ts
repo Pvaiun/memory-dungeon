@@ -160,6 +160,7 @@ test("pinned run: any change here means old records replay differently, so bump 
   const run = play(c, combat, input(1), firstOption, { log: true });
   assert.equal(ENGINE_VERSION, "0.15"); // Step 5g: cooldowns carry between a run's fights (the fixture has several), so its log changed; 0.14 (slotShares, several conditions, mpBelow, status_capped, `owner`) left it as it was.
   // The rogue mode's damage kind on each dmg entry changed the log, not the outcome (without it: 056750183aee1680), and so did
-  // the balance sheet's `raw` (the amount before Armor or resistance) on each dmg entry (without it: af822ab1ad6d015c).
-  assert.equal(fingerprint(JSON.stringify(run.log!.slice(1))), "c51584387a7a12ec");
+  // the balance sheet's `raw` (the amount before Armor or resistance) on each dmg entry (without it: af822ab1ad6d015c), and step
+  // 5h round 6's `by`, `src` and `part` on each mp entry, so the interface can tell a regen pulse from a gift (without: c51584387a7a12ec).
+  assert.equal(fingerprint(JSON.stringify(run.log!.slice(1))), "1df803345d528808");
 });

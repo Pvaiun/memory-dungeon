@@ -108,6 +108,9 @@ test("a pausing lockout (Stun): a wind-up under way waits it out and then lands,
 test("campfire: the run pauses for a choice between two fights; REST gives back HP, FOCUS MP, to everyone standing", () => {
   const pack = structuredClone(raw);
   const d = pack.dungeons.find((x: { id: string }) => x.id === "cmp_old_road");
+  // The campfire's mechanism, not the run's balance: foes made weak enough that the starters reach it (step 5h's smaller MP
+  // pools left the retired campaign's knobs too hard for them).
+  d.foes = { ...(d.foes ?? {}), hp: -80, power: -80 };
   assert.ok(d.stages.some((s: { kind: string }) => s.kind === "campfire"), "every campaign run has a campfire");
   const at = d.stages.findIndex((s: { kind: string }) => s.kind === "campfire");
   assert.equal(at, Math.ceil(d.stages.filter((s: { kind: string; boss?: boolean }) => s.kind === "fight" && !s.boss).length / 2), "after half the regular fights");

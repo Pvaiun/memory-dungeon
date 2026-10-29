@@ -663,7 +663,8 @@ function run(w: W, ctx: Ctx, e: S.EffectT) {
       case "mp": {
         const v = Math.trunc(num(w, ctx, e, e.amount, t));
         t.mp = Math.min(t.stats.max_mp, Math.max(0, t.mp + v));
-        w.log?.({ t: "mp", vis: "hidden", at: w.f.now, target: t.id, amount: v, mp: t.mp });
+        // Log only (step 5h round 6): who gave it, from what, and whether a status's pulse (regen, Clarity) or an action or reaction.
+        w.log?.({ t: "mp", vis: "hidden", at: w.f.now, target: t.id, amount: v, mp: t.mp, by: ctx.actor.id, src: ctx.id, part: ctx.st ? (ctx.st.fixedBoost ? "pulse" : "reaction") : "action" });
         break;
       }
       case "apply":

@@ -17,7 +17,7 @@ export type Tone = "act" | "hit" | "crit" | "heal" | "buff" | "debuff" | "bad" |
 export type Line = { text: string; tone: Tone; tag?: string; events: Ev[] };
 export type BeatKind = "intro" | "cast" | "act" | "tick" | "misc" | "end";
 /** `weight` is reading time in units of one plain line; `actor` is who acts, for the field. */
-export type Beat = { at: number; kind: BeatKind; lines: Line[]; actor?: string; weight: number };
+export type Beat = { at: number; kind: BeatKind; lines: Line[]; actor?: string; weight: number; /** Shown on the field as the beat opens, with no line (MP gained). */ quiet?: Ev[] };
 
 export type Lookup = { unit: (id: string) => CUnit | undefined; name: (id: string) => string };
 
@@ -43,7 +43,15 @@ export class Narrator {
 
   private start(kind: BeatKind, at: number, actor?: string): Beat {
     this.flush();
-    return (this.open = { at, kind, lines: [], actor, weight: 0 });
+    const quiet = this.quiet.splice(0);
+    return (this.open = { at, kind, lines: [], actor, weight: 0, ...(quiet.length ? { quiet } : {}) });
+  }
+  /** Events shown on the field with no line of their own: they ride the open beat's last line at their moment, else the next beat. */
+  private quiet: Ev[] = [];
+  private silent(ev: Ev) {
+    const last = this.open?.lines[this.open.lines.length - 1];
+    if (this.open && last && this.open.at === ev.at) last.events.push(ev);
+    else this.quiet.push(ev);
   }
   /** Adds a line to the open beat if it's at the same moment, else to a new beat of `kind`. */
   private add(ev: Ev, line: Omit<Line, "events">, kind: BeatKind = "misc") {
@@ -111,6 +119,16 @@ export class Narrator {
       case "heal":
         this.heal(ev);
         break;
+      case "mp": {
+        // Step 5h round 6 (the director's: MP gained in a fight "isn't shown anywhere"): a status's pulse (MP regen, Clarity) is a
+        // number on the field only, or the window would fill with ticks; any other gain (Siphon, a song, the Soul jar, a gift) is
+        // a line too.
+        const n = disp(ev.amount as number);
+        if (n <= 0) break;
+        if (ev.part === "pulse") this.silent(ev);
+        else this.add(ev, { text: `${this.n(ev.target)} gains ${n} MP${c.statuses.has(String(ev.src)) ? ` from ${this.sname(String(ev.src))}` : ""}.`, tone: "buff" });
+        break;
+      }
       case "status":
         this.status(ev);
         break;

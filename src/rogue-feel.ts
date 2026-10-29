@@ -6,7 +6,11 @@
  * bottom (each unit's actions, its damage by source, the statuses' share). A summary of every fight played goes beside
  * the packs: the short simulation that sits next to the read.
  *
- *   npx tsx src/rogue-feel.ts [--runs 48] [--heat 0] [--packs 10] [--focus frostweaver,hexer] [--player] [--out out/feel] [--set path=value]...
+ *   npx tsx src/rogue-feel.ts [--runs 48] [--heat 0] [--packs 10] [--focus frostweaver,hexer] [--player] [--rosters] [--fights id,id] [--out out/feel] [--set path=value]...
+ *
+ * Step 5h: --rosters reads the hand-built rosters (src/rogue-parties.ts) instead of the simulated player's runs: every roster
+ * at every act's and tier's power level meets a fight of each region's pool, fielding a good three of five for it (tried
+ * on other dice), as the calibration measures. --fights snake_pit,bomb_nest plays only those fights (each roster at their tier).
  *
  * The leader cycles through every class and half the draft picks are random, so every class is seen (the simulated player's own
  * drafter never takes the Frostweaver or the Hexer); --player plays it as the simulated player does, three leaders and its
@@ -17,8 +21,10 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { advance, loadContent, type Content } from "./engine/run.js";
 import { combat, type Member as EngineMember } from "./engine/combat/rules.js";
 import type { Entry } from "./engine/log.js";
-import { choose, endFight, newRogue, partyOf, registerGear, rogue, startFight, type FightTier, type RogueRun } from "./rogue.js";
-import { aiPlayer } from "./rogue-ai.js";
+import { autoFight, choose, endFight, foesFor, knobFor, newRogue, partyOf, registerGear, rogue, startFight, type FightTier, type RogueRun } from "./rogue.js";
+import { aiPlayer, hpShare } from "./rogue-ai.js";
+import { LEVELS, PICK, ROSTERS, buildRoster, trios, type Tier as PTier } from "./rogue-parties.js";
+import { int as rint, rngFor } from "./engine/rng.js";
 import { parsePatches } from "./rogue-sim.js";
 import { patch } from "./sim/content.js";
 import { SUBTICKS, type AbilityT, type GearT, type NumT, type Party } from "./schema.js";
@@ -33,6 +39,7 @@ const RUNS = Number(opt("--runs") ?? 48);
 const HEAT = Number(opt("--heat") ?? 0);
 const PACKS = Number(opt("--packs") ?? 10);
 const FOCUS = (opt("--focus") ?? "").split(",").filter(Boolean);
+const FIGHTS = (opt("--fights") ?? "").split(",").filter(Boolean);
 const OUT = opt("--out") ?? "out/feel";
 const PLAYER = args.includes("--player");
 const LEADERS = PLAYER ? ["knight", "cleric", "ranger"] : c.pack.classes.map((k) => k.id);
@@ -46,7 +53,43 @@ type Rec = {
 // ─── Playing ─────────────────────────────────────────────────────────────────
 
 const recs: Rec[] = [];
-for (let s = 1; s <= RUNS; s++) {
+// Step 5h: the hand-built rosters, each fielding a good three for the fight (PICK).
+if (args.includes("--rosters")) for (const act of [1, 2, 3]) for (const reg of rogue(c).regions.filter((g) => g.act === act)) for (const pt of ["easy", "normal", "elite", "boss"] as PTier[]) ROSTERS.forEach((ro, ri) => {
+  const pool = pt === "boss" ? reg.bosses : reg[pt];
+  // --fights: those fights wherever their region's pool holds them, else a fight of the pool by the dice.
+  const fight = FIGHTS.length ? pool.find((f) => FIGHTS.includes(f.id)) : pool[rint(rngFor(500 + ri * 13 + act, `feel:${reg.id}:${pt}`), pool.length)];
+  if (!fight) return;
+  const tier: FightTier = pt === "boss" ? "boss" : pt === "elite" ? "elite" : "fight";
+  const floor = pt === "easy" ? 1 : pt === "boss" ? 10 : 5;
+  const at = (run: RogueRun, seed: number) => { run.region = reg.id; run.floor = floor; run.pending = { kind: "fight", node: "feel", tier, fight, foes: foesFor(c, tier, knobFor(c, run, tier, floor, fight)), seed }; };
+  const base = buildRoster(c, ro, act, pt);
+  // Each trio on two throws of the dice (one throw picked worse trios: the act I bosses won 7 of 12), and the one PICK of the
+  // way down the ranking fielded, as the calibration does: a good pick from the preview, not the perfect one.
+  const ranked = trios(ro, LEVELS[act][pt].roster ?? 5).map((trio) => {
+    let cost = 0;
+    for (const seed of [77 + ri, 177 + ri]) {
+      const t = structuredClone(base);
+      t.party = trio;
+      at(t, seed);
+      autoFight(c, t);
+      const after = t.pending as RogueRun["pending"];
+      cost += after.kind === "over" && !after.won ? 2 : 1 - hpShare(c, t);
+    }
+    return { trio, cost };
+  }).sort((a, b) => a.cost - b.cost);
+  const best = ranked[Math.round((ranked.length - 1) * PICK)].trio;
+  const run = structuredClone(base);
+  run.party = best;
+  at(run, 9100 + ri * 7 + act);
+  const p = run.pending as Extract<RogueRun["pending"], { kind: "fight" }>;
+  const party = partyOf(c, run);
+  const er = startFight(c, run, { log: true });
+  const members = (er.party as EngineMember[]).map((m) => ({ cls: m.ref, hp: m.hp, maxHp: m.stats.max_hp, mp: m.mp, maxMp: m.stats.max_mp, stats: { ...m.stats }, ...(m.cooldowns ? { cooldowns: { ...m.cooldowns } } : {}) }));
+  advance(c, combat, er);
+  const end = (er.log as Entry[]).find((e) => e.t === "fight_end");
+  recs.push({ seed: 9100 + ri, act, floor, tier, region: reg.id, fightId: p.fight.id, fightName: `${p.fight.name} (${ro.id})`, won: er.outcome === "won", ticks: Number(end?.rounds ?? 0), party, members, foes: p.fight.enemies, log: er.log as Entry[], knob: p.foes });
+});
+for (let s = 1; s <= (args.includes("--rosters") ? 0 : RUNS); s++) {
   const seed = 9000 + s;
   const run = newRogue(c, { seed, leader: LEADERS[s % LEADERS.length], heat: HEAT });
   // Half the drafts at random (every class gets seen), half by the player's own scoring (a wall and a healer where it can), so the parties are
@@ -137,7 +180,9 @@ function readLog(r: Rec): Read {
         const tt = ut.get(tgt); if (tt) tt.taken += amt;
         if (e.part === "pulse" || e.part === "reaction") {
           const src = String(e.src);
-          const from = e.from ? String(e.from) : e.by ? String(e.by) : null;
+          // A status's damage belongs to the other side (a Chill shatter is logged by its holder): else it's split by stacks.
+          const named = e.from ? String(e.from) : e.by ? String(e.by) : null;
+          const from = named && units.get(named)?.side !== units.get(tgt)?.side ? named : null;
           if (from && ut.get(from)) add(ut.get(from)!.dealt, `status:${src}`, real);
           else {
             const shares = stackBy.get(`${tgt}|${src}`);
@@ -435,7 +480,7 @@ function pickPacks(): Rec[] {
   const focusRecs = FOCUS.length ? recs.filter((r) => r.party.units.some((u) => FOCUS.includes(u.class))) : recs;
   const pool = focusRecs.length >= 8 ? focusRecs : recs;
   const slots: [number, (r: Rec) => boolean][] = [
-    [1, (r) => r.act === 1 && r.tier === "fight" && r.floor <= 2], [1, (r) => r.act === 1 && r.tier === "fight" && r.floor >= 6], [1, (r) => r.act === 1 && r.tier === "elite"], [1, (r) => r.act === 1 && r.tier === "boss"],
+    [1, (r) => r.act === 1 && r.tier === "fight" && r.floor <= 3], [1, (r) => r.act === 1 && r.tier === "fight" && r.floor >= 8], [1, (r) => r.act === 1 && r.tier === "elite"], [1, (r) => r.act === 1 && r.tier === "boss"],
     [2, (r) => r.act === 2 && r.tier === "fight"], [2, (r) => r.act === 2 && r.tier === "elite"], [2, (r) => r.act === 2 && r.tier === "boss"],
     [3, (r) => r.act === 3 && r.tier === "fight"], [3, (r) => r.act === 3 && r.tier === "elite"], [3, (r) => r.act === 3 && r.tier === "boss"],
   ];
