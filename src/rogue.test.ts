@@ -410,11 +410,12 @@ test("rogue (5h round 6): every option of every event's every version plays thro
       run.pending = { kind: "event", id: ev.id, ...(v !== undefined ? { v } : {}) };
       if (!options(c, run).includes(opt.id)) continue;
       choose(c, run, opt.id);
-      for (let i = 0; i < 40 && run.pending.kind !== "map" && run.pending.kind !== "over"; i++) {
-        if (run.pending.kind === "fight") autoFight(c, run);
+      const kind = () => (run.pending as { kind: string }).kind;
+      for (let i = 0; i < 40 && kind() !== "map" && kind() !== "over"; i++) {
+        if (kind() === "fight") autoFight(c, run);
         else choose(c, run, ai.decide(c, run));
       }
-      assert.ok(run.pending.kind === "map" || run.pending.kind === "over", `${ev.id} v${v} ${opt.id} ended at ${run.pending.kind}`);
+      assert.ok(kind() === "map" || kind() === "over", `${ev.id} v${v} ${opt.id} ended at ${kind()}`);
       played++;
     }
   }
