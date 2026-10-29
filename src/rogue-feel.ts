@@ -480,7 +480,7 @@ function pickPacks(): Rec[] {
   const focusRecs = FOCUS.length ? recs.filter((r) => r.party.units.some((u) => FOCUS.includes(u.class))) : recs;
   const pool = focusRecs.length >= 8 ? focusRecs : recs;
   const slots: [number, (r: Rec) => boolean][] = [
-    [1, (r) => r.act === 1 && r.tier === "fight" && r.floor <= 2], [1, (r) => r.act === 1 && r.tier === "fight" && r.floor >= 6], [1, (r) => r.act === 1 && r.tier === "elite"], [1, (r) => r.act === 1 && r.tier === "boss"],
+    [1, (r) => r.act === 1 && r.tier === "fight" && r.floor <= 3], [1, (r) => r.act === 1 && r.tier === "fight" && r.floor >= 8], [1, (r) => r.act === 1 && r.tier === "elite"], [1, (r) => r.act === 1 && r.tier === "boss"],
     [2, (r) => r.act === 2 && r.tier === "fight"], [2, (r) => r.act === 2 && r.tier === "elite"], [2, (r) => r.act === 2 && r.tier === "boss"],
     [3, (r) => r.act === 3 && r.tier === "fight"], [3, (r) => r.act === 3 && r.tier === "elite"], [3, (r) => r.act === 3 && r.tier === "boss"],
   ];

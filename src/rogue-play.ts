@@ -108,12 +108,14 @@ function gearWords(g: ReturnType<typeof itemGear> | undefined): string {
 }
 const itemWords = (it: Item) => `${it.uid}: ${it.rarity} ${gearWords(c.gear.get(it.uid) ?? itemGear(c, it))}`;
 function offerWords(run: RogueRun, o: Offer): string {
+  if (o.kind === "gear" && o.sealed) return `a sealed piece: ${(c.gear.get(o.item.uid) ?? itemGear(c, o.item)).slot}, rare or better; what it is shows when taken.`;
   if (o.kind === "gear") {
     const g = c.gear.get(o.item.uid) ?? itemGear(c, o.item);
     const fits = run.roster.filter((m) => c.classes.get(m.cls)!.weapons.includes(g.weapon?.kind ?? "") || (g.slot === "armor" && ["light", "medium", "heavy"].indexOf(g.weight!) <= ["light", "medium", "heavy"].indexOf(c.classes.get(m.cls)!.armor)) || g.slot === "amulet").map((m) => m.cls);
     // Step 5h round 6: no FOR line (the director's: it "ruins the discovery"); who fits it stays.
     return `gear: ${o.item.rarity} ${gearWords(g)}. Fits: ${fits.join(", ") || "nobody in the roster yet"}.`;
   }
+  if (o.kind === "bundle") return `a bundle: ${offerWords(run, { kind: "gear", item: o.item })} And ${o.supply === "potion" ? "a potion" : "a tonic"}.`;
   if (o.kind === "tome") return `tome: the ${c.classes.get(o.cls)!.name} learns ${c.abilities.get(o.ability)!.name} (${c.abilities.get(o.ability)!.text})`;
   if (o.kind === "recruit") return `recruit: the ${c.classes.get(o.cls)!.name} (${c.classes.get(o.cls)!.text.split(".")[0]}); joins knowing ${(o.known ?? []).map((a) => c.abilities.get(a)!.name).join(", ")}${o.item ? `, carrying ${itemWords(o.item)}` : ""}${run.party.length >= 3 ? "; waits at camp until you swap it in" : ""}`;
   if (o.kind === "formation") {
@@ -184,6 +186,11 @@ function look(run: RogueRun): string {
       out.push(options(c, run).includes("back") ? "  pick back (nobody trained yet: back to the room, its pick unspent)" : "  pick done");
       break;
     }
+    case "captive": {
+      out.push(`A CAPTIVE, freed from the fight: ${offerWords(run, p.offer)}`);
+      for (const o of options(c, run)) out.push(o === "take" ? `  pick take: they join at ${rogue(c).config.captive?.hp ?? 100}% HP.` : o === "lesson" ? "  pick lesson: they teach one member before going (learn an ability or make one better)." : "  pick leave");
+      break;
+    }
     case "trophy": {
       out.push("ELITE: and a pick of formations. Pick one, or skip.");
       p.offers.forEach((o, i) => out.push(`  pick take:${i}: ${offerWords(run, o)}`));
@@ -216,10 +223,12 @@ function look(run: RogueRun): string {
         out.push(`CAMPFIRE: the pick is made. Swap who's in the party now if you like (swap <out> <in>), then: pick leave`);
         break;
       }
-      out.push(`CAMPFIRE: one pick. Whatever you pick, those who were standing at camp when you arrived get ${k.camp ?? 100}% of a REST (a fallen one needs a RAISE or a phoenix).`);
-      if (p.stranger) out.push(`  A stranger at the fire asks to join (pick recruit; it doesn't use the pick): ${offerWords(run, p.stranger)}`);
+      if (k.auto) out.push(`CAMPFIRE: on arriving, everyone (party and camp) regained ${k.auto.hp}% of max HP and ${k.auto.mp}% of max MP, and the fallen rose at ${k.auto.revive}% HP. Now one pick.`);
+      else out.push(`CAMPFIRE: one pick. Whatever you pick, those who were standing at camp when you arrived get ${k.camp ?? 100}% of a REST (a fallen one needs a RAISE or a phoenix).`);
+      if (p.stranger) out.push(`  A stranger at the fire asks to join (pick recruit, or pick lesson: one member learns or improves and the stranger moves on; neither uses the pick): ${offerWords(run, p.stranger)}`);
       out.push(`  Before the boss: ${bossWords(run)}`);
-      out.push(`  pick rest: the party regains ${k.hp}% of its max HP (the max each had as the last fight ended).`, `  pick focus: the party regains ${k.mp}% of its max MP (likewise).`);
+      if (k.auto) out.push(`  pick rest: everyone regains another ${k.hp}% of max HP and ${k.mp}% of max MP.`);
+      else out.push(`  pick rest: the party regains ${k.hp}% of its max HP (the max each had as the last fight ended).`, `  pick focus: the party regains ${k.mp}% of its max MP (likewise).`);
       for (const o of options(c, run)) {
         if (o.startsWith("raise:")) out.push(`  pick ${o}: stands up with ${k.revive}% of its HP.`);
         else if (o === "train") out.push(`  pick train: ${k.train ?? 1} members each learn an ability or make one better (+).`);

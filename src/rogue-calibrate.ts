@@ -80,7 +80,7 @@ function snapshots(c: Content, runs: number): Snap[] {
 /** The parties a pool is measured against: its act, its floors. */
 function poolSnaps(snaps: Snap[], act: number, tier: Tier, per: number): Snap[] {
   if (snaps.some((s) => s.ptier)) return snaps.filter((s) => s.act === act && s.ptier === tier);
-  const fit = snaps.filter((s) => s.act === act && (tier === "easy" ? s.floor <= 2 : tier === "normal" ? s.floor >= 3 && s.floor <= 9 : tier === "elite" ? s.floor >= 4 && s.floor <= 9 : s.tier === "boss"));
+  const fit = snaps.filter((s) => s.act === act && (tier === "easy" ? s.floor <= 3 : tier === "normal" ? s.floor >= 4 && s.floor <= 12 : tier === "elite" ? s.floor >= 5 && s.floor <= 12 : s.tier === "boss"));
   // Spread the sample over the whole list, so every kind of run is in it.
   const step = Math.max(1, fit.length / per);
   return Array.from({ length: Math.min(per, fit.length) }, (_, i) => fit[Math.floor(i * step)]);

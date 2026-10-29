@@ -24,8 +24,7 @@ test("rogue: the map follows its rules: fixed floors, no early elites or campfir
   for (let s = 1; s <= 30; s++) {
     const map = makeMap(c, rngFor(s, "map"));
     for (const n of map) {
-      if (n.floor === 1) assert.equal(n.kind, "fight");
-      if (n.floor === 5) assert.equal(n.kind, "treasure");
+      if (m.fixed[String(n.floor)]) assert.equal(n.kind, m.fixed[String(n.floor)]);
       if (n.floor === m.floors) assert.equal(n.kind, "campfire");
       if (n.floor < m.lateFrom) assert.ok(n.kind !== "elite" && n.kind !== "campfire", `${n.id} is ${n.kind}`);
       if (n.kind !== "boss") assert.ok(n.next.length > 0, `${n.id} leads nowhere`);
@@ -157,24 +156,31 @@ test("rogue: no legendary piece twice in a run while others are left", () => {
   }
 });
 
-test("rogue: a campfire's pick leaves swaps open until LEAVE; those at camp get a share of REST, one raised there doesn't", () => {
+test("rogue (5h round 6): a campfire heals everyone a share and raises the fallen on arrival; then REST or TRAIN; swaps stay open until LEAVE", () => {
   const c = loadContent(raw);
   const run = newRogue(c, { seed: 13, leader: "knight" });
   while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
   const [x, y] = c.pack.classes.map((k) => k.id).filter((id) => !run.party.includes(id));
   recruit(c, run, x); recruit(c, run, y);
   const [a] = run.party;
+  const k = rogue(c).config.campfire;
   member(run, x).missHp = 2000;
   member(run, y).ko = true;
-  run.pending = { kind: "campfire" };
-  choose(c, run, `raise:${y}`);
-  assert.deepEqual(options(c, run), ["leave"]);
+  const camp = run.map.find((n) => n.floor === 2)!;
+  camp.kind = "campfire";
+  run.pending = { kind: "map" };
+  run.at = run.map.find((n) => n.floor === 1 && n.next.includes(camp.id))!.id;
+  choose(c, run, camp.id);
+  const max = (cls: string) => maxOf(c, run, cls, "max_hp");
+  assert.ok(Math.abs(member(run, x).missHp - Math.max(0, 2000 - Math.floor((max(x) * k.auto!.hp) / 100))) <= 1, "the share on arrival, at camp too");
+  assert.equal(member(run, y).ko, false);
+  assert.equal(member(run, y).missHp, Math.floor((max(y) * (100 - k.auto!.revive)) / 100), "the fallen rise");
+  assert.ok(options(c, run).includes("rest") && options(c, run).includes("train") && !options(c, run).includes("focus"));
+  const before = member(run, x).missHp;
+  choose(c, run, "rest");
+  assert.ok(member(run, x).missHp < before || before === 0, "REST is the share again, for everyone");
+  assert.ok(options(c, run).includes("leave") && !options(c, run).includes("rest"), "the pick is made (a stranger's offer can stay)");
   assert.equal(swap(c, run, a, y), true, "a swap after the pick");
-  const share = (rogue(c).config.campfire.hp * (rogue(c).config.campfire.camp ?? 100)) / 100;
-  const max = c.classes.get(x)!.stats.max_hp;
-  assert.ok(member(run, x).missHp >= 2000 - Math.ceil((max * share) / 100) - 1 && member(run, x).missHp < 2000, "the camp's share");
-  const raised = member(run, y).missHp;
-  assert.ok(raised > 0, "the raised member didn't also get the camp's rest");
   choose(c, run, "leave");
   assert.equal(run.pending.kind, "map");
 });
@@ -320,18 +326,18 @@ test("rogue (5h round 6): TRAIN can be backed out of until someone is trained, a
   while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
   const [x] = c.pack.classes.map((k) => k.id).filter((id) => !run.party.includes(id));
   recruit(c, run, x);
-  member(run, x).missHp = 1000;
   run.pending = { kind: "campfire" };
   choose(c, run, "train");
   assert.ok(options(c, run).includes("back") && !options(c, run).includes("done"));
   choose(c, run, "back");
   assert.equal(run.pending.kind, "campfire");
-  assert.ok(!(run.pending as { used?: boolean }).used && member(run, x).missHp === 1000, "nothing spent");
+  assert.ok(!(run.pending as { used?: boolean }).used, "nothing spent");
   assert.ok(options(c, run).includes("rest"));
   choose(c, run, "train");
   choose(c, run, options(c, run).find((o) => o.startsWith("learn:") || o.startsWith("upgrade:"))!);
   assert.ok(!options(c, run).includes("back"), "no way back once someone is trained");
-  assert.ok(member(run, x).missHp < 1000, "the camp's share, once the pick is spent");
+  while ((run.pending as { kind: string }).kind === "train") choose(c, run, options(c, run).includes("done") ? "done" : options(c, run)[0]);
+  assert.ok(options(c, run).includes("leave") && !options(c, run).includes("rest"), "the campfire's pick is spent");
   // The shop: all three supplies.
   run.pending = { kind: "map" };
   const shop = run.map.find((n) => n.floor === 2)!;
@@ -342,4 +348,75 @@ test("rogue (5h round 6): TRAIN can be backed out of until someone is trained, a
     const stock = (run.pending as unknown as Extract<RogueRun["pending"], { kind: "shop" }>).stock;
     assert.deepEqual(stock.filter((s2) => s2.offer.kind === "supply").map((s2) => (s2.offer as { id: string }).id).sort(), ["phoenix", "potion", "tonic"]);
   }
+});
+
+test("rogue (5h round 6): a captive after some fights against people: taken in at half HP, a lesson, or let go; elites give a pick of legendaries then of formations", () => {
+  const c = loadContent(raw);
+  let captives = 0, rows = 0, lessons = 0;
+  for (let seed = 1; seed <= 60; seed++) {
+    const run = newRogue(c, { seed, leader: "knight" });
+    while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
+    const n = run.map.find((x) => x.floor === 1)!;
+    (run as { at: string | null }).at = null;
+    choose(c, run, n.id);
+    const p = run.pending as Extract<RogueRun["pending"], { kind: "fight" }>;
+    p.fight = { ...p.fight, enemies: ["bandit", "bandit"] };
+    autoFight(c, run);
+    for (let i = 0; i < 6 && run.pending.kind !== "map" && run.pending.kind !== "over"; i++) {
+      const q = run.pending;
+      if (q.kind === "captive") {
+        captives++;
+        const o = q.offer as { cls: string };
+        if (seed % 2) { choose(c, run, "take"); rows++; assert.ok(member(run, o.cls).missHp > 0, "joins hurt"); }
+        else if (options(c, run).includes("lesson")) { choose(c, run, "lesson"); lessons++; assert.equal(run.pending.kind, "train"); choose(c, run, options(c, run)[0]); }
+        else choose(c, run, "leave");
+      } else choose(c, run, options(c, run).includes("skip") ? "skip" : options(c, run)[0]);
+    }
+  }
+  assert.ok(captives > 3 && captives < 30, `about a fifth of fights against people (${captives} of 60)`);
+  assert.ok(rows > 0 && lessons > 0);
+  // An elite: three legendaries, then two formations.
+  const run = newRogue(c, { seed: 5, leader: "paladin" });
+  while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
+  const e = run.map.find((x) => x.floor === 1)!;
+  (run as { at: string | null }).at = null;
+  choose(c, run, e.id);
+  const f = run.pending as Extract<RogueRun["pending"], { kind: "fight" }>;
+  Object.assign(f, { tier: "elite", fight: { ...f.fight, enemies: ["bandit"] }, foes: { hp: -80, power: -80 } });
+  autoFight(c, run);
+  if (run.pending.kind === "drop") choose(c, run, options(c, run)[0]);
+  const sp = run.pending as Extract<RogueRun["pending"], { kind: "spoils" }>;
+  assert.equal(sp.kind, "spoils");
+  assert.ok(sp.offers.length === 3 && sp.offers.every((o) => o.kind === "gear" && o.item.rarity === "legendary"));
+  choose(c, run, "take:0");
+  assert.equal(run.pending.kind, "trophy");
+  assert.equal((run.pending as { offers: { kind: string }[] }).offers.filter((o) => o.kind === "formation").length, 2);
+});
+
+test("rogue (5h round 6): every option of every event's every version plays through to the map", () => {
+  const c = loadContent(raw);
+  const ai = aiPlayer({}, 3);
+  let played = 0;
+  for (const ev of rogue(c).events) {
+    const versions = ev.variants?.length ? ev.variants.map((_, v) => v) : [undefined];
+    for (const v of versions) for (const opt of eventView(c, { id: ev.id, v }).options) {
+      const run = newRogue(c, { seed: 50 + played, leader: "cleric" });
+      while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
+      run.gold = 500;
+      run.items.push(newItem(run, "heartstone", "common"), newItem(run, "heartstone", "rare", ["hp", "mp"]));
+      const at = run.map.find((n) => n.floor === 4)!;
+      run.at = at.id;
+      run.floor = 4;
+      run.pending = { kind: "event", id: ev.id, ...(v !== undefined ? { v } : {}) };
+      if (!options(c, run).includes(opt.id)) continue;
+      choose(c, run, opt.id);
+      for (let i = 0; i < 40 && run.pending.kind !== "map" && run.pending.kind !== "over"; i++) {
+        if (run.pending.kind === "fight") autoFight(c, run);
+        else choose(c, run, ai.decide(c, run));
+      }
+      assert.ok(run.pending.kind === "map" || run.pending.kind === "over", `${ev.id} v${v} ${opt.id} ended at ${run.pending.kind}`);
+      played++;
+    }
+  }
+  assert.ok(played > 60, `${played} options played`);
 });

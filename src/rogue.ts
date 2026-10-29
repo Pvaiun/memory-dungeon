@@ -33,7 +33,10 @@ export type Member = {
 };
 export type MapNode = { id: string; floor: number; col: number; kind: RogueNodeKindT; next: string[] };
 export type Offer =
-  | { kind: "gear"; item: Item }
+  /** Round 6: `sealed`, its rarity and name hidden until taken (an unknown reward). */
+  | { kind: "gear"; item: Item; sealed?: boolean }
+  /** Round 6: a bundle, a piece and a supply together. */
+  | { kind: "bundle"; item: Item; supply: SupplyIdT }
   | { kind: "tome"; cls: string; ability: string }
   /** Step 5h: a recruit comes knowing what its offer shows (rolled when offered), and a cage's recruit with a piece. */
   | { kind: "recruit"; cls: string; known?: string[]; item?: Item }
@@ -56,12 +59,14 @@ export type Pending =
    * elite's second pick, of formations, after its pick of legendaries.
    */
   | { kind: "trophy"; offers: Offer[]; then: Pending }
+  /** Step 5h round 6: a captive freed after a fight against people: taken in, a lesson, or let go; `then` follows. */
+  | { kind: "captive"; offer: Offer; then: Pending }
   | { kind: "boon"; offers: Offer[] }
   | { kind: "shop"; stock: ShopSlot[]; learn: boolean; upgrade: boolean; trained?: number }
   | { kind: "campfire"; used?: boolean; resting?: string[]; stranger?: Offer }
   | { kind: "event"; id: string; v?: number }
   /** Step 5h: the Muster (a pick of recruits) and the Drill ground (a pick of formations, or training). */
-  | { kind: "muster"; offers: Offer[] }
+  | { kind: "muster"; offers: Offer[]; then?: Pending }
   | { kind: "drill"; offers: Offer[] }
   /**
    * Step 5h: `left` members each learn or upgrade one ability (each member once); `then` is what follows. Round 6 (the director's:
@@ -69,7 +74,7 @@ export type Pending =
    */
   | { kind: "train"; left: number; done: string[]; then: Pending; why: string; back?: Pending }
   | { kind: "treasure"; offer: Offer; gold: number }
-  | { kind: "choose"; what: "learn" | "upgrade" | "temper"; why: string }
+  | { kind: "choose"; what: "learn" | "upgrade" | "temper"; why: string; from?: RarityT[]; risk?: number }
   | { kind: "levelup"; queue: string[] }
   | { kind: "region"; options: string[] }
   | { kind: "over"; won: boolean };
@@ -100,6 +105,8 @@ export type RogueRun = {
   formations: string[];
   /** Step 5h: seats at camp (the bench), from the config's start up to its max. */
   seats?: number;
+  /** Step 5h round 6: the fight (by count) the last captive came after, so none comes two fights running. */
+  captiveAt?: number;
   items: Item[];
   supplies: SupplyIdT[];
   gold: number;
@@ -290,8 +297,10 @@ export function endFight(c: Content, run: RogueRun, er: Run) {
   }
   const offers = spoilOffers(c, run, p.tier, p.node);
   const s = cfg(c).spoils[p.tier === "elite" ? "elite" : "fight"];
-  // What follows the pick: an elite's pick of formations (round 6), while there are any to win.
+  // What follows the pick: an elite's pick of formations (round 6), while there are any to win; then a captive, sometimes.
   let then: Pending = { kind: "map" };
+  const cap = captiveFor(c, run, p.fight.enemies, p.node);
+  if (cap) then = { kind: "captive", offer: cap, then };
   const fms = s.formations ? rollFormations(c, run, r(run, `trophy:${run.act}:${p.node}`), s.formations) : [];
   if (fms.length) then = { kind: "trophy", offers: fms, then };
   const spoils: Pending = { kind: "spoils", gold, offers, tier: p.tier, ...(then.kind !== "map" ? { then } : {}) };
@@ -319,6 +328,19 @@ function offerDrop(c: Content, run: RogueRun, then: Pending): Pending {
   return then;
 }
 
+/**
+ * Step 5h round 6: a captive after a won fight with people in it, `captive.chance` of the time, never two fights running (the
+ * director's: "as long as it's not every other fight or every fight").
+ */
+function captiveFor(c: Content, run: RogueRun, enemies: string[], node: string): Offer | null {
+  const k = cfg(c).captive;
+  if (!k || !enemies.some((e) => k.people.includes(e)) || run.captiveAt === run.stats.fights - 1) return null;
+  const rng = r(run, `captive:${run.act}:${node}`);
+  if (next(rng) * 100 >= k.chance) return null;
+  const o = rollRecruit(c, run, rng);
+  if (o) run.captiveAt = run.stats.fights;
+  return o;
+}
 /** Plays the pending fight at once (the simulations), and carries the result back. */
 export function autoFight(c: Content, run: RogueRun): Run {
   const er = startFight(c, run);
@@ -496,22 +518,8 @@ function assignKinds(c: Content, nodes: MapNode[], rng: Rng) {
     }
   };
   for (const [kind, count] of Object.entries(m.ensure ?? { shop: 2, elite: 2 })) ensure(kind as RogueNodeKindT, count, kind === "muster" || kind === "drill" ? 2 : m.lateFrom);
-  // Every way up passes a campfire between the early floors and the last (the playtesters: recruits waited at camp all
-  // act, and long stretches without one decided runs more than skill did).
-  const last = Number(Object.keys(m.fixed).find((f) => m.fixed[f] === "campfire") ?? m.floors);
-  const paths = (): MapNode[][] => {
-    const out: MapNode[][] = [];
-    const go = (n: MapNode, acc: MapNode[]) => (n.floor >= last ? out.push(acc) : n.next.forEach((id) => go(byId.get(id)!, [...acc, byId.get(id)!])));
-    for (const n of nodes.filter((x) => x.floor === 1)) go(n, [n]);
-    return out;
-  };
-  for (let tries = 0; tries < 40; tries++) {
-    const bare = paths().find((p) => !p.some((n) => n.kind === "campfire" && n.floor >= m.lateFrom && n.floor < last));
-    if (!bare) break;
-    const cands = bare.filter((n) => n.floor >= m.lateFrom && n.floor < last - 1 && (n.kind === "fight" || n.kind === "event") && ![...parents(n), ...n.next.map((id) => byId.get(id)!)].some((x) => x.kind === "campfire"));
-    if (!cands.length) break;
-    cands[int(rng, cands.length)].kind = "campfire";
-  }
+  // Step 5h round 6 (the director's): campfires are guaranteed only before the boss; the rest (`ensure`) sit on some paths, so
+  // going to one is a choice. (Before: every way up passed one between the early floors and the last.)
 }
 
 /** A new act: its region, its map and its boss. With `restore`, everyone stands up whole and learns an ability. */
@@ -552,7 +560,9 @@ export function reachable(run: RogueRun): MapNode[] {
 export const knobFoes = (k: number): FoesT =>
   k > 0 ? { hp: Math.round(k), power: Math.round(k / 2.5) } : k < 0 ? { hp: Math.max(-80, Math.round(k)), power: Math.max(-80, Math.round(k / 2.5)) } : {}; // Step 5g round 6 (the director's): damage k/2.5 (was k/2): a knob's basics one-shot casters less, without cutting its HP.
 /** Each pool's reference floor: a fight's own knob is set there, and the act's ramp moves it from there. */
-export const REF_FLOOR = { easy: 1, normal: 5, elite: 6 } as const;
+export const refFloors = (c: Content) => cfg(c).map.ref ?? { easy: 1, normal: 5, elite: 6 };
+/** The easy pool's last floor: a start's fights (step 5h round 6: floors 1 to 3). */
+export const easyTo = (c: Content) => cfg(c).map.easyTo ?? 2;
 /**
  * A fight's knob: its own (set by the calibration, npm run rogue:calibrate), the act's offset for its tier and region,
  * the ramp from its pool's reference floor, and the heat.
@@ -563,15 +573,18 @@ export function knobFor(c: Content, run: RogueRun, tier: FightTier, floor: numbe
   const heat = run.heat * cfg(c).heat.per;
   const own = fight.knob ?? 0;
   if (tier === "boss") return own + kn.boss + reg.boss + heat;
-  if (tier === "elite") return own + kn.elite + reg.elite + kn.step * (floor - REF_FLOOR.elite) + heat;
-  return own + kn.mob + reg.mob + kn.step * (floor - (floor <= 2 ? REF_FLOOR.easy : REF_FLOOR.normal)) + heat;
+  const ref = refFloors(c);
+  // The act's climb from the pool's reference floor; below it, `early` a floor (round 6: act I's measured against a party a few rooms in).
+  const climb = (from: number) => (floor < from ? (kn.early ?? kn.step) : kn.step) * (floor - from);
+  if (tier === "elite") return own + kn.elite + reg.elite + climb(ref.elite) + heat;
+  return own + kn.mob + reg.mob + climb(floor <= easyTo(c) ? ref.easy : ref.normal) + heat;
 }
 /** The fight a room holds: from the region's easy pool on the first two floors, then its normal or elite pool, packs growing late. */
 export function fightFor(c: Content, run: RogueRun, node: MapNode, tier: FightTier): RogueFightT {
   if (tier === "boss") return run.boss;
   const reg = regionOf(c, run.region);
   const rng = r(run, `enc:${run.act}:${node.id}:${tier}`);
-  const all = tier === "elite" ? reg.elite : node.floor <= 2 ? reg.easy : reg.normal;
+  const all = tier === "elite" ? reg.elite : node.floor <= easyTo(c) ? reg.easy : reg.normal;
   // Not the same fight twice in an act while the pool has others.
   const fresh = all.filter((f) => !run.met.includes(f.id));
   const pool = fresh.length ? fresh : all;
@@ -743,9 +756,12 @@ function spoilOffers(c: Content, run: RogueRun, tier: FightTier, node: string): 
   const other = (): Offer | null => {
     const m = s.mix;
     if (!m) return null;
-    const kinds = (["tome", "formation", "recruit"] as const).filter((k) => m[k] > 0);
-    let x = next(rng) * kinds.reduce((t, k) => t + m[k], 0);
-    const k = kinds.find((kk) => (x -= m[kk]) < 0) ?? kinds[0];
+    const kinds = (["tome", "formation", "recruit", "sealed", "bundle"] as const).filter((k) => (m[k] ?? 0) > 0);
+    let x = next(rng) * kinds.reduce((t, k) => t + (m[k] ?? 0), 0);
+    const k = kinds.find((kk) => (x -= m[kk] ?? 0) < 0) ?? kinds[0];
+    // Round 6 (the director's: "an unknown reward, or even bundles"): a sealed piece, rare or better, or a common piece with a supply.
+    if (k === "sealed") return { kind: "gear", item: rollItem(c, run, rng, next(rng) < 0.25 ? "legendary" : "rare", false, true), sealed: true };
+    if (k === "bundle") return { kind: "bundle", item: rollItem(c, run, rng, "common", false, true), supply: next(rng) < 0.5 ? "potion" : "tonic" };
     if (k === "tome") {
       const o = rollTome(c, run, rng);
       return o && !out.some((y) => y.kind === "tome" && y.cls === (o as { cls: string }).cls && y.ability === (o as { ability: string }).ability) ? o : null;
@@ -785,7 +801,7 @@ function boonOffers(c: Content, run: RogueRun): Offer[] {
 }
 export function priceOf(c: Content, o: Offer): number {
   const p = cfg(c).prices;
-  if (o.kind === "gear") return p[o.item.rarity];
+  if (o.kind === "gear" || o.kind === "bundle") return p[o.item.rarity];
   if (o.kind === "recruit") return p.recruit;
   if (o.kind === "formation") return p.formation;
   if (o.kind === "supply") return p.supply[o.id] ?? 40;
@@ -822,9 +838,10 @@ function shopStock(c: Content, run: RogueRun, node: string): ShopSlot[] {
 
 /** Takes an offer: gear to the bag, a tome taught, a recruit in, a formation owned, a supply carried. False if it can't be taken. */
 export function take(c: Content, run: RogueRun, o: Offer): boolean {
-  if (o.kind === "gear") {
+  if (o.kind === "gear" || o.kind === "bundle") {
     run.items.push(o.item);
     registerGear(c, run);
+    if (o.kind === "bundle" && bagRoom(c, run, o.supply)) run.supplies.push(o.supply);
     return true;
   }
   if (o.kind === "tome") return learn(c, run, o.cls, o.ability);
@@ -1069,6 +1086,7 @@ export function options(c: Content, run: RogueRun): string[] {
     case "spoils": return [...p.offers.map((o, i) => (canTake(c, run, o) ? `take:${i}` : "")).filter(Boolean), "skip"];
     case "boon": return [...p.offers.map((o, i) => (canTake(c, run, o) ? `take:${i}` : "")).filter(Boolean), "skip"];
     case "trophy": return [...p.offers.map((o, i) => (canTake(c, run, o) ? `take:${i}` : "")).filter(Boolean), "skip"];
+    case "captive": return [canTake(c, run, p.offer) ? "take" : "", trainOptions(c, run, []).length ? "lesson" : "", "leave"].filter(Boolean);
     case "muster": return [...p.offers.map((o, i) => (canTake(c, run, o) ? `take:${i}` : "")).filter(Boolean), "skip"];
     case "drill": return [...p.offers.map((o, i) => (canTake(c, run, o) ? `take:${i}` : "")).filter(Boolean), ...(trainOptions(c, run, []).length ? ["train"] : []), "skip"];
     case "train": return [...trainOptions(c, run, p.done), p.back && !p.done.length ? "back" : "done"];
@@ -1085,8 +1103,10 @@ export function options(c: Content, run: RogueRun): string[] {
       // camp and found the swap window had closed with the pick).
       // Step 5h: TRAIN teaches or upgrades two members (the nested training screen); a stranger at the fire can be taken in
       // whatever the pick, and doesn't use it.
-      const stranger = p.stranger && canTake(c, run, p.stranger) ? ["recruit"] : [];
+      const stranger = p.stranger ? [canTake(c, run, p.stranger) ? "recruit" : "", cfg(c).campfire.auto && trainOptions(c, run, []).length ? "lesson" : ""].filter(Boolean) : [];
       if (p.used) return [...stranger, "leave"];
+      // Round 6: with the free share on arrival, one pick of two: REST or TRAIN.
+      if (cfg(c).campfire.auto) return ["rest", ...(trainOptions(c, run, []).length ? ["train"] : []), ...stranger];
       const out = ["rest", "focus"];
       for (const m of run.roster) if (m.ko) out.push(`raise:${m.cls}`);
       if (trainOptions(c, run, []).length) out.push("train");
@@ -1100,7 +1120,7 @@ export function options(c: Content, run: RogueRun): string[] {
     case "choose":
       if (p.what === "learn") return learnOptions(c, run);
       if (p.what === "upgrade") return upgradeOptions(run);
-      return run.items.filter((it) => it.rarity === "common" || it.rarity === "uncommon").map((it) => it.uid);
+      return temperable(c, run, p.from).map((it) => it.uid);
     case "levelup": {
       // Learn one more, or make one known better: breadth or depth, a real choice even with one ability left to learn.
       const m = member(run, p.queue[0]);
@@ -1116,7 +1136,27 @@ export function whyNot(c: Content, run: RogueRun, opt: RogueEventT["options"][nu
   if ((opt.gold ?? 0) > run.gold) return "not enough gold";
   const op = opt.do.find((x) => !possible(c, run, x));
   if (!op) return "";
-  return op.op === "recruit" || op.op === "muster" ? "no room at camp" : op.op === "seat" ? "the camp is as big as it gets" : op.op === "train" ? "nothing left to train" : op.op === "trade" ? "nobody to trade" : op.op === "learn" ? "nothing left to learn" : op.op === "upgrade" ? "nothing left to upgrade" : op.op === "temper" ? "no common or uncommon piece to temper" : op.op === "formation" ? "every formation owned" : "can't happen now";
+  return op.op === "recruit" || op.op === "muster" ? "no room at camp" : op.op === "seat" ? "the camp is as big as it gets" : op.op === "train" ? "nothing left to train" : op.op === "trade" ? "nobody to trade" : op.op === "learn" ? "nothing left to learn" : op.op === "upgrade" ? "nothing left to upgrade" : op.op === "temper" ? "no piece it can work on" : op.op === "formation" ? "every formation owned" : "can't happen now";
+}
+/**
+ * Pieces a temper can take: of the rarities given (default common and uncommon). A rare only where a legendary of its slot exists
+ * that its wearer, or someone in the roster, can use (round 6: it's reforged into one).
+ */
+function temperable(c: Content, run: RogueRun, from: readonly RarityT[] = ["common", "uncommon"]): Item[] {
+  registerGear(c, run);
+  return run.items.filter((it) => from.includes(it.rarity) && (it.rarity !== "rare" || !!reforgeBase(c, run, it, null)));
+}
+/** The legendary a rare piece is reforged into: its slot, wearable by its wearer (or anyone in the roster), aimed at them where it can be. */
+function reforgeBase(c: Content, run: RogueRun, it: Item, rng: Rng | null): string | null {
+  const g = c.gear.get(it.uid) ?? itemGear(c, it);
+  const who = wearer(run, it.uid);
+  const users = who ? [who] : run.roster.map((m) => m.cls);
+  const had = new Set(run.items.filter((x) => x.rarity === "legendary").map((x) => x.base));
+  const fits = rogue(c).legendaries.filter((id) => !had.has(id) && c.gear.get(id)?.slot === g.slot && (g.slot !== "weapon" || c.gear.get(id)!.weapon?.kind === g.weapon?.kind || users.some((cls) => canEquip(c.classes.get(cls)!, c.gear.get(id)!))) && users.some((cls) => canEquip(c.classes.get(cls)!, c.gear.get(id)!)));
+  if (!fits.length) return null;
+  const aimed = fits.filter((id) => users.some((cls) => aimedAt(c, id, cls)));
+  const pool = aimed.length ? aimed : fits;
+  return rng ? pool[int(rng, pool.length)] : pool[0];
 }
 /** Can an event's verb happen now? A recruit needs room at camp, learning something to learn, tempering a piece to temper. */
 function possible(c: Content, run: RogueRun, op: EventOpT): boolean {
@@ -1126,7 +1166,8 @@ function possible(c: Content, run: RogueRun, op: EventOpT): boolean {
   if (op.op === "trade") return run.roster.some((m) => m.cls !== run.leader);
   if (op.op === "learn") return learnOptions(c, run).length > 0;
   if (op.op === "upgrade") return upgradeOptions(run).length > 0;
-  if (op.op === "temper") return run.items.some((it) => it.rarity === "common" || it.rarity === "uncommon");
+  if (op.op === "temper") return temperable(c, run, op.from).length > 0;
+  if (op.op === "revive") return true;
   if (op.op === "formation") return c.pack.formations.some((f) => !run.formations.includes(f.id));
   return true;
 }
@@ -1180,6 +1221,13 @@ export function choose(c: Content, run: RogueRun, pick: string) {
       run.pending = p.then ?? { kind: "map" };
       return;
     }
+    case "captive": {
+      const o = p.offer as Extract<Offer, { kind: "recruit" }>;
+      if (pick === "take") (recruit(c, run, o.cls, cfg(c).captive?.hp ?? 100, o.known), note(run, `A captive ${c.classes.get(o.cls)!.name} joins.`));
+      else if (pick === "lesson") return void (run.pending = { kind: "train", left: 1, done: [], then: p.then, why: "captive", back: p });
+      run.pending = p.then;
+      return;
+    }
     case "trophy": {
       if (pick !== "skip") {
         const o = p.offers[Number(pick.split(":")[1])];
@@ -1195,7 +1243,7 @@ export function choose(c: Content, run: RogueRun, pick: string) {
         take(c, run, o);
         note(run, `${offerText(c, run, o)} joins.`);
       }
-      run.pending = { kind: "map" };
+      run.pending = p.then ?? { kind: "map" };
       return;
     }
     case "drill": {
@@ -1210,8 +1258,11 @@ export function choose(c: Content, run: RogueRun, pick: string) {
     }
     case "train": {
       if (pick === "back") return void (run.pending = p.back!);
-      // A campfire's pick is spent with the first member trained, not on opening the screen (round 6).
-      if (pick !== "done" && !p.done.length && p.then.kind === "campfire" && !p.then.used) (note(run, "Trained."), campUsed(c, run, p.then));
+      // A campfire's pick is spent with the first member trained, not on opening the screen (round 6); a stranger's lesson spends the stranger.
+      if (pick !== "done" && !p.done.length && p.then.kind === "campfire") {
+        if (p.why === "stranger") (delete p.then.stranger, note(run, "The stranger teaches, and moves on."));
+        else if (!p.then.used) (note(run, "Trained."), campUsed(c, run, p.then));
+      }
       delete p.back;
       if (pick !== "done") {
         const [verb, cls, ab] = pick.split(":");
@@ -1271,6 +1322,14 @@ export function choose(c: Content, run: RogueRun, pick: string) {
         delete p.stranger;
         return;
       }
+      // Round 6: the stranger turned away for a lesson (one member), apart from the campfire's pick.
+      if (verb === "lesson") return void (run.pending = { kind: "train", left: 1, done: [], then: p, why: "stranger", back: p });
+      if (verb === "rest" && k.auto) {
+        heal(c, run, run.roster.filter((m) => !m.ko), k.hp, k.mp);
+        note(run, "Rested.");
+        p.used = true;
+        return;
+      }
       if (verb === "train") return void (run.pending = { kind: "train", left: k.train ?? 1, done: [], then: p, why: "campfire", back: p });
       if (verb === "rest") (heal(c, run, party, k.hp, 0), note(run, "Rested."));
       else if (verb === "focus") (heal(c, run, party, 0, k.mp), note(run, "Focused."));
@@ -1298,11 +1357,25 @@ export function choose(c: Content, run: RogueRun, pick: string) {
       else if (p.what === "upgrade") upgrade(c, run, ...(pick.split(":") as [string, string]));
       else {
         const it = itemOf(run, pick)!;
-        it.rarity = it.rarity === "common" ? "uncommon" : "rare";
-        const rest = rogue(c).affixes.map((a) => a.id).filter((a) => !it.affixes.includes(a));
-        it.affixes.push(rest[int(r(run, `temper:${pick}`), rest.length)]);
-        registerGear(c, run);
-        note(run, `Tempered: ${c.gear.get(it.uid)!.name}.`);
+        const rng = r(run, `temper:${pick}`);
+        // Round 6: a risky temper (the drunk smith) can crack the piece instead.
+        if (p.risk && next(rng) * 100 < p.risk) {
+          for (const m of run.roster) for (const s of SLOT_LIST) if (m.gear[s] === it.uid) delete m.gear[s];
+          run.items = run.items.filter((x) => x.uid !== it.uid);
+          note(run, `The ${c.gear.get(it.uid)?.name ?? "piece"} cracked in the forge and is lost.`);
+        } else if (it.rarity === "rare") {
+          // Round 6: a rare is reforged into a legendary of its slot, one its wearer (or someone) can use, keeping its two affixes.
+          it.base = reforgeBase(c, run, it, rng)!;
+          it.rarity = "legendary";
+          registerGear(c, run);
+          note(run, `Reforged: ${c.gear.get(it.uid)!.name}.`);
+        } else {
+          it.rarity = it.rarity === "common" ? "uncommon" : "rare";
+          const rest = rogue(c).affixes.map((a) => a.id).filter((a) => !it.affixes.includes(a));
+          it.affixes.push(rest[int(rng, rest.length)]);
+          registerGear(c, run);
+          note(run, `Tempered: ${c.gear.get(it.uid)!.name}.`);
+        }
       }
       run.pending = { kind: "map" };
       return;
@@ -1335,6 +1408,8 @@ export function choose(c: Content, run: RogueRun, pick: string) {
  */
 function campUsed(c: Content, run: RogueRun, p: Extract<Pending, { kind: "campfire" }>, raised?: string) {
   const k = cfg(c).campfire;
+  // Round 6: with the free share on arrival there's no camp share on top.
+  if (k.auto) return void (p.used = true);
   const camp = bench(run).map((cls) => member(run, cls));
   heal(c, run, camp.filter((m) => (p.resting ?? camp.map((x) => x.cls)).includes(m.cls) && m.cls !== raised), Math.round((k.hp * (k.camp ?? 100)) / 100), 0);
   p.used = true;
@@ -1345,6 +1420,7 @@ function pickKind(run: RogueRun, pick: string): string {
   const [verb, arg] = pick.split(":");
   switch (p.kind) {
     case "map": return `map:${run.map.find((n) => n.id === pick)?.kind}`;
+    case "captive": return `captive:${pick}`;
     case "spoils": case "boon": case "muster": case "drill": case "trophy": return pick === "skip" || pick === "train" ? `${p.kind}:${pick}` : `${p.kind}:${p.offers[Number(arg)].kind}`;
     case "train": return `train:${verb}`;
     case "shop": return verb === "buy" ? `shop:buy:${p.stock[Number(arg)].offer.kind}` : `shop:${verb}`;
@@ -1381,14 +1457,7 @@ function enter(c: Content, run: RogueRun, id: string) {
     case "boss":
       run.pending = { kind: "fight", ...fightSpec(c, run, node, node.kind) };
       return;
-    case "campfire": {
-      run.stats.campfires++;
-      // Step 5h: sometimes a stranger at the fire asks to join (one recruit, take it or not; it doesn't use the pick).
-      const rng = r(run, `stranger:${run.act}:${id}`);
-      const stranger = next(rng) * 100 < (cfg(c).campfire.stranger ?? 0) ? rollRecruit(c, run, rng) : null;
-      run.pending = { kind: "campfire", resting: bench(run), ...(stranger ? { stranger } : {}) };
-      return;
-    }
+    case "campfire": return arriveCamp(c, run, id);
     case "muster":
       run.pending = { kind: "muster", offers: rollRecruits(c, run, r(run, `muster:${run.act}:${id}`), cfg(c).muster?.offers ?? 2) };
       return;
@@ -1427,6 +1496,25 @@ function enter(c: Content, run: RogueRun, id: string) {
   }
 }
 
+/**
+ * A campfire reached. Round 6: everyone, party and camp, recovers the free share on arrival (`campfire.auto`), the fallen rising
+ * first; then the pick waits. Step 5h: sometimes a stranger at the fire asks to join (one recruit, take it or not; it doesn't use the
+ * pick).
+ */
+function arriveCamp(c: Content, run: RogueRun, key: string) {
+  run.stats.campfires++;
+  const k = cfg(c).campfire;
+  if (k.auto) {
+    const raised = run.roster.filter((m) => m.ko);
+    for (const m of raised) (m.ko = false), (m.missHp = Math.floor((maxOf(c, run, m.cls, "max_hp") * (100 - k.auto.revive)) / 100));
+    heal(c, run, run.roster.filter((m) => !raised.includes(m)), k.auto.hp, 0);
+    heal(c, run, run.roster, 0, k.auto.mp);
+    if (raised.length) note(run, `${raised.map((m) => c.classes.get(m.cls)!.name).join(", ")} back on their feet.`);
+  }
+  const rng = r(run, `stranger:${run.act}:${key}`);
+  const stranger = next(rng) * 100 < (k.stranger ?? 0) ? rollRecruit(c, run, rng) : null;
+  run.pending = { kind: "campfire", resting: bench(run), ...(stranger ? { stranger } : {}) };
+}
 /** An event option's effects, in order. A fight, a camp or a choice ends the list there and waits on it. */
 function doOps(c: Content, run: RogueRun, ops: readonly EventOpT[], rng: Rng) {
   const party = () => run.party.map((cls) => member(run, cls));
@@ -1443,10 +1531,16 @@ function doOps(c: Content, run: RogueRun, ops: readonly EventOpT[], rng: Rng) {
         else for (const m of who) if (!m.ko) m.missHp = Math.min(maxOf(c, run, m.cls, "max_hp") - 1, m.missHp + Math.floor((maxOf(c, run, m.cls, "max_hp") * -op.pct) / 100));
         break;
       }
-      case "mp": heal(c, run, party(), 0, op.pct); break;
+      case "mp":
+        if (op.pct >= 0) heal(c, run, party(), 0, op.pct);
+        else for (const m of party()) m.missMp = Math.min(maxOf(c, run, m.cls, "max_mp"), m.missMp + Math.floor((maxOf(c, run, m.cls, "max_mp") * -op.pct) / 100));
+        break;
+      case "revive":
+        for (const m of run.roster.filter((x) => x.ko)) (m.ko = false), (m.missHp = Math.floor((maxOf(c, run, m.cls, "max_hp") * (100 - op.pct)) / 100)), note(run, `The ${c.classes.get(m.cls)!.name} is back on their feet.`);
+        break;
       case "gear": { const o: Offer = { kind: "gear", item: rollItem(c, run, rng, op.rarity) }; take(c, run, o); note(run, `Gained ${offerText(c, run, o)}.`); break; }
       case "recruit": {
-        const o = rollRecruit(c, run, rng, [], 1, op.known);
+        const o = op.healer ? rollRecruit(c, run, rng, run.roster.length ? c.pack.classes.map((k) => k.id).filter((id) => !heals(c, id)) : [], 1, op.known) : rollRecruit(c, run, rng, [], 1, op.known);
         if (o?.kind === "recruit") {
           const item = op.gear ? rollItem(c, run, rng, op.gear, false, false, o.cls) : undefined;
           recruit(c, run, o.cls, op.hp ?? 100, o.known, item);
@@ -1470,7 +1564,15 @@ function doOps(c: Content, run: RogueRun, ops: readonly EventOpT[], rng: Rng) {
         break;
       }
       case "train": if (trainOptions(c, run, []).length) return void (run.pending = { kind: "train", left: op.n, done: [], then: { kind: "map" }, why: "event" }); break;
-      case "muster": if (roomForRecruit(c, run)) return void (run.pending = { kind: "muster", offers: rollRecruits(c, run, rng, op.n, 1, op.known) }); break;
+      case "muster": {
+        if (!roomForRecruit(c, run)) break;
+        // Round 6: each may carry a piece suited to it; a fight listed after the pick follows it (the Prisoner Convoy's guards).
+        const offers = rollRecruits(c, run, rng, op.n, 1, op.known).map((o) => (op.gear && o.kind === "recruit" ? { ...o, item: rollItem(c, run, rng, op.gear, false, false, o.cls) } : o));
+        const fight = ops.slice(ops.indexOf(op) + 1).find((x) => x.op === "fight");
+        const node = run.map.find((n) => n.id === run.at);
+        const then: Pending | undefined = fight?.op === "fight" && node ? { kind: "fight", ...fightSpec(c, run, { ...node, floor: Math.max(node.floor, easyTo(c) + 1) }, fight.tier === "elite" ? "elite" : "fight") } : undefined;
+        return void (run.pending = { kind: "muster", offers, ...(then ? { then } : {}) });
+      }
       case "supply": {
         if (op.id === "phoenix" && run.roster.some((m) => m.ko)) {
           const m = run.roster.find((x) => x.ko)!;
@@ -1481,12 +1583,12 @@ function doOps(c: Content, run: RogueRun, ops: readonly EventOpT[], rng: Rng) {
       }
       case "learn": if (learnOptions(c, run).length) return void (run.pending = { kind: "choose", what: "learn", why: "event" }); break;
       case "upgrade": if (upgradeOptions(run).length) return void (run.pending = { kind: "choose", what: "upgrade", why: "event" }); break;
-      case "temper": if (run.items.some((it) => it.rarity === "common" || it.rarity === "uncommon")) return void (run.pending = { kind: "choose", what: "temper", why: "event" }); break;
-      case "camp": return void (run.pending = { kind: "campfire", resting: bench(run) });
+      case "temper": if (temperable(c, run, op.from).length) return void (run.pending = { kind: "choose", what: "temper", why: "event", ...(op.from ? { from: op.from } : {}), ...(op.risk ? { risk: op.risk } : {}) }); break;
+      case "camp": return arriveCamp(c, run, `event:${run.at}`);
       case "fight": {
         const node = run.map.find((n) => n.id === run.at)!;
         const tier: FightTier = op.tier === "elite" ? "elite" : "fight";
-        return void (run.pending = { kind: "fight", ...fightSpec(c, run, { ...node, floor: Math.max(node.floor, 3) }, tier) });
+        return void (run.pending = { kind: "fight", ...fightSpec(c, run, { ...node, floor: Math.max(node.floor, easyTo(c) + 1) }, tier) });
       }
       case "chance": {
         // A gamble says how it went (a playtester never learned whether the Gambler paid).
@@ -1502,6 +1604,7 @@ function doOps(c: Content, run: RogueRun, ops: readonly EventOpT[], rng: Rng) {
 
 export function offerText(c: Content, run: RogueRun, o: Offer): string {
   if (o.kind === "gear") return (c.gear.get(o.item.uid) ?? itemGear(c, o.item)).name;
+  if (o.kind === "bundle") return `${(c.gear.get(o.item.uid) ?? itemGear(c, o.item)).name} and ${supplyName(o.supply)}`;
   if (o.kind === "tome") return `a tome: the ${c.classes.get(o.cls)!.name} learns ${c.abilities.get(o.ability)!.name}`;
   if (o.kind === "recruit") return `the ${c.classes.get(o.cls)!.name}${o.item ? ` (with ${(c.gear.get(o.item.uid) ?? itemGear(c, o.item)).name})` : ""}`;
   if (o.kind === "seat") return "a seat at camp";

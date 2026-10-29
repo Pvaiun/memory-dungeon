@@ -21,7 +21,7 @@ import type { CFight } from "./engine/combat/fight.js";
 import type { Entry } from "./engine/log.js";
 import { advanceOnce, answer, loadContent, newRun, type Content, type Run } from "./engine/run.js";
 import { next, rngFor } from "./engine/rng.js";
-import { foesFor, knobFor, REF_FLOOR, registerGear, rogue, type RogueRun } from "./rogue.js";
+import { foesFor, knobFor, refFloors, registerGear, rogue, type RogueRun } from "./rogue.js";
 import type { AbilityT, DungeonT, GearT, Party } from "./schema.js";
 import { patch } from "./sim/content.js";
 import { combos, makeBuild, ORDERS, seat, slotted, STYLES } from "./sim/kits.js";
@@ -54,7 +54,8 @@ export function fightSets(c: Content, sets: SetId[]): Fight[] {
       const tiers = [["easy", "fight"], ["normal", "fight"], ["elite", "elite"], ["bosses", "boss"]] as const;
       for (const [pool, tier] of tiers) for (const f of reg[pool]) {
         const fake = { act: reg.act, region: reg.id, heat: 0 } as unknown as RogueRun;
-        const floor = tier === "boss" ? 10 : pool === "easy" ? REF_FLOOR.easy : pool === "normal" ? REF_FLOOR.normal : REF_FLOOR.elite;
+        const ref = refFloors(c);
+        const floor = tier === "boss" ? rogue(c).config.map.floors + 1 : pool === "easy" ? ref.easy : pool === "normal" ? ref.normal : ref.elite;
         const foes = foesFor(c, tier, knobFor(c, fake, tier, floor, f));
         const id = `rg_${reg.id}_${pool}_${f.id}`;
         const d: DungeonT = {

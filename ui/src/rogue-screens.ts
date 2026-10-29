@@ -49,9 +49,9 @@ const KIND_NAME: Record<RogueNodeKindT, string> = { fight: "FIGHT", elite: "ELIT
 /** What a room pays or offers, in a line. */
 const KIND_TEXT: Record<RogueNodeKindT, string> = {
   fight: "GOLD · SPOILS",
-  elite: "MORE GOLD · A LEGENDARY · BETTER SPOILS",
+  elite: "MORE GOLD · PICK A LEGENDARY · PICK A FORMATION",
   event: "A CHOICE",
-  campfire: "REST · FOCUS · RAISE · TRAIN TWO",
+  campfire: "EVERYONE RECOVERS · THE FALLEN RISE · THEN REST OR TRAIN",
   shop: "GEAR · RECRUITS · TRAINING · SUPPLIES",
   treasure: "A RARE OR LEGENDARY PIECE, OR A CAGED RECRUIT · GOLD",
   boss: "THE ACT'S END · EVERYONE RESTORED AND LEARNS",
@@ -102,6 +102,15 @@ function upText(id: string, run?: RogueRun, cls?: string): string {
 }
 /** An offer as a card's body. */
 function offerBody(run: RogueRun, o: Offer): Child[] {
+  // Round 6 (the director's: "an unknown reward, or even bundles"): a sealed piece shows only its slot; a bundle, its piece and its supply.
+  if (o.kind === "gear" && o.sealed) {
+    const g = c.gear.get(o.item.uid) ?? itemGear(c, o.item);
+    return [h("div", { class: "line" }, iconEl(ICON.treasure), h("span", { class: "grow hi" }, `SEALED ${g.slot.toUpperCase()}`)), h("div", { class: "line small dim wrap" }, "RARE OR BETTER · SHOWN WHEN TAKEN")];
+  }
+  if (o.kind === "bundle") {
+    const g = c.gear.get(o.item.uid) ?? itemGear(c, o.item);
+    return [h("div", { class: "line hi" }, "A BUNDLE"), itemRow(run, o.item, undefined, { right: null }), fitsLine(run, g, o.item.rarity), h("div", { class: "line small" }, iconEl(SUPPLY_ICON[o.supply]), h("span", null, ` AND A ${o.supply.toUpperCase()}`), bagRoom(c, run, o.supply) ? null : h("span", { class: "dim" }, " (BAG FULL)"))];
+  }
   if (o.kind === "gear") {
     const g = c.gear.get(o.item.uid) ?? itemGear(c, o.item);
     return [itemRow(run, o.item, undefined, { right: null }), fitsLine(run, g, o.item.rarity)];
@@ -153,7 +162,8 @@ function lootActors(run: RogueRun, offers: Offer[], gold: boolean, h: number, x0
   const cell = (k: readonly [number, number]) => iconOf(k[0], k[1]);
   const arts: (HTMLCanvasElement | string)[] = gold ? [cell(GOLD_SACK)] : [];
   for (const o of offers) {
-    if (o.kind === "gear") {
+    if (o.kind === "gear" && o.sealed) arts.push(cell(ICON.treasure));
+    else if (o.kind === "gear" || o.kind === "bundle") {
       const g = c.gear.get(o.item.uid) ?? itemGear(c, o.item);
       arts.push((g.slot === "weapon" ? weaponIcon(g.id) : null) ?? cell(gearIcon(g)));
     } else if (o.kind === "tome") arts.push(cell(TAG_ICON[abilityTag(c.abilities.get(o.ability)!)] ?? TAG_ICON.physical));
@@ -224,6 +234,7 @@ export function rogueScreen(): Child[] {
     case "fight": return fightView(run);
     case "drop": return dropView(run);
     case "spoils": case "boon": case "treasure": case "trophy": return rewardView(run);
+    case "captive": return captiveView(run);
     case "shop": return shopView(run);
     case "campfire": return campView(run);
     case "event": return eventScreen(run);
@@ -457,6 +468,27 @@ function rewardView(run: RogueRun): Child[] {
   ];
 }
 
+// ─── A captive (round 6) ───────────────────────────────────────────────────
+
+/** A captive freed from the fight: taken in (hurt), a lesson for one member, or let go; on top of the spoils. */
+function captiveView(run: RogueRun): Child[] {
+  const p = run.pending;
+  if (p.kind !== "captive") return [];
+  const opts = options(c, run);
+  const hp = rogue(c).config.captive?.hp ?? 100;
+  return [
+    header("A CAPTIVE", () => go("home")),
+    scene(run, "captive", { h: 96, actors: [...partyActors(run, 96, "wait", { cx: 72 }), ...lootActors(run, [p.offer], false, 96, 190, 220)] }),
+    win("scroll flat", h("div", { class: "line small dim wrap" }, "FREED FROM THE FIGHT"), win("roffer", ...offerBody(run, p.offer)),
+      opts.includes("take") ? null : h("div", { class: "line small bad wrap" }, "ROSTER FULL: SEND SOMEONE HOME FIRST (PARTY)")),
+    actions(
+      (() => { const b = button(`TAKE THEM IN (${hp}% HP)`, () => pickOrSave(run, "take"), "hi"); b.disabled = !opts.includes("take"); return b; })(),
+      opts.includes("lesson") ? button("A LESSON", () => { trainWho = null; pickOrSave(run, "lesson"); }) : null,
+      button("LET THEM GO", () => pickOrSave(run, "leave")),
+      button("PARTY", () => go("rparty"))),
+  ];
+}
+
 // ─── The shop ──────────────────────────────────────────────────────────────
 
 let shopTab: "buy" | "train" | "sell" = "buy";
@@ -546,14 +578,21 @@ function campView(run: RogueRun): Child[] {
   const k = rogue(c).config.campfire;
   const opts = options(c, run);
   const body: Child[] = [];
+  // Round 6 (the director's): the share everyone got on arriving, then one pick of two, REST or TRAIN.
+  if (k.auto) body.push(h("div", { class: "line small good wrap" }, `EVERYONE +${k.auto.hp}% HP AND +${k.auto.mp}% MP · THE FALLEN UP AT ${k.auto.revive}%`));
   if (p.used) body.push(h("div", { class: "line hi" }, "PICK MADE"));
+  else if (k.auto) body.push(h("div", { class: "actions" },
+    choice("REST", `EVERYONE +${k.hp}% HP AND MP MORE`, () => pickOrSave(run, "rest")),
+    opts.includes("train") ? choice("TRAIN", `${k.train ?? 1} MEMBERS LEARN OR GET BETTER`, () => { trainWho = null; pickOrSave(run, "train"); }) : null));
   else body.push(h("div", { class: "actions" },
     choice("REST", `+${k.hp}% HP`, () => pickOrSave(run, "rest")),
     choice("FOCUS", `+${k.mp}% MP`, () => pickOrSave(run, "focus")),
     ...opts.filter((x) => x.startsWith("raise:")).map((o) => choice(`RAISE ${shortName(o.slice(6))}`, `${k.revive}% HP`, () => pickOrSave(run, o))),
     opts.includes("train") ? choice("TRAIN", `${k.train ?? 1} MEMBERS LEARN OR GET BETTER`, () => { trainWho = null; pickOrSave(run, "train"); }) : null));
+  // The stranger: taken in, or (round 6) turned away for a lesson; neither uses the pick.
   const stranger = p.stranger ? win("roffer", h("div", { class: "line hi" }, "A STRANGER AT THE FIRE"), ...offerBody(run, p.stranger),
-    h("div", { class: "btns" }, button("TAKE THEM IN", () => pickOrSave(run, "recruit"), opts.includes("recruit") ? "hi sm" : "sm"), opts.includes("recruit") ? null : h("span", { class: "dim small" }, "ROSTER FULL: SEND SOMEONE HOME (PARTY)"))) : null;
+    h("div", { class: "btns" }, button("TAKE THEM IN", () => pickOrSave(run, "recruit"), opts.includes("recruit") ? "hi sm" : "sm"), opts.includes("lesson") ? button("A LESSON", () => { trainWho = null; pickOrSave(run, "lesson"); }, "sm") : null),
+    opts.includes("recruit") ? null : h("div", { class: "line dim small" }, "ROSTER FULL: SEND SOMEONE HOME (PARTY)")) : null;
   // The camp at night, as the battle draws it between fights: the party at the fire, the fallen lying beside it.
   return [
     header("CAMPFIRE", () => go("home")),
@@ -594,7 +633,7 @@ function chooseView(run: RogueRun): Child[] {
   const p = run.pending;
   if (p.kind !== "choose") return [];
   const opts = options(c, run);
-  const title = p.what === "learn" ? "WHO LEARNS?" : p.what === "upgrade" ? "WHICH ABILITY?" : "TEMPER WHICH?";
+  const title = p.what === "learn" ? "WHO LEARNS?" : p.what === "upgrade" ? "WHICH ABILITY?" : p.risk ? "WHICH PIECE? IT MAY CRACK" : p.from?.length === 1 && p.from[0] === "rare" ? "REFORGE WHICH?" : "TEMPER WHICH?";
   const rows: Child[] = p.what === "temper"
     ? opts.map((uid) => itemRow(run, itemOf(run, uid)!, () => pickOrSave(run, uid), { arrow: true }))
     : trainPicker(run, opts.map((o) => { const [cl, ab] = o.split(":"); return { cls: cl, ab, up: p.what === "upgrade", label: p.what === "learn" ? "LEARN" : "+", onClick: () => { trainWho = null; pickOrSave(run, o); } }; }));
@@ -632,7 +671,7 @@ function trainView(run: RogueRun): Child[] {
   if (p.kind !== "train") return [];
   const entries: TrainEntry[] = trainOptions(c, run, p.done).map((o) => { const [verb, cl, ab] = o.split(":"); return { cls: cl, ab, up: verb === "upgrade", label: verb === "upgrade" ? "+" : "LEARN", onClick: () => { trainWho = null; pickOrSave(run, o); } }; });
   return [
-    header("TRAINING", () => go("home"), h("span", { class: "dim" }, `${p.left} TO GO`)),
+    header(p.why === "captive" || p.why === "stranger" ? "A LESSON" : "TRAINING", () => go("home"), h("span", { class: "dim" }, `${p.left} TO GO`)),
     win("scroll", ...trainPicker(run, entries)),
     // Round 6 (the director's: "you try to see what the available upgrades are and get locked in"): BACK to the room, its pick
     // unspent, until someone is trained.

@@ -211,6 +211,7 @@ function offerValue(c: Content, d: Dials, run: RogueRun, o: Offer): number {
     }).filter(Number.isFinite));
     return gain + 0.3;
   }
+  if (o.kind === "bundle") return offerValue(c, d, run, { kind: "gear", item: o.item }) + 0.8;
   if (o.kind === "tome") return run.party.includes(o.cls) ? ABILITY_VALUE : 1.5;
   if (o.kind === "recruit") return recruitValue(d, run, o.cls) + ((o.known?.length ?? 1) - 1) * 1.5 + (o.item ? 1 : 0);
   if (o.kind === "formation") return 2;
@@ -229,7 +230,7 @@ function walk(c: Content, d: Dials, run: RogueRun, path: MapNode[], h0: number):
     switch (n.kind) {
       case "fight": v += 1.5 + danger(0.15); h -= 0.12; gold += 16; break;
       case "elite": v += (d.greed >= 1 ? 3.5 * d.greed : 0.5) + 2 * danger(0.3); h -= 0.25; gold += 35; break;
-      case "campfire": { const heal = Math.min(0.4, 1 - h); v += heal > 0.2 ? heal * 10 : 2.5; h += heal > 0.2 ? heal : 0; break; }
+      case "campfire": { const heal = Math.min(0.5, 1 - h); v += heal > 0.2 ? heal * 10 : 2.5; h += heal > 0.2 ? heal : 0; break; }
       case "shop": v += gold >= 110 ? 3 : gold >= 60 ? 1.5 : 0.2; gold = Math.min(gold, 30); break;
       case "event": v += 1.6; break;
       case "treasure": v += 3; break;
@@ -375,6 +376,14 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
       if (better && sc(better) > sc(out) + (m.ko ? -100 : 1.5)) swap(c, run, out, better);
     }
     if (opts.includes("recruit")) return "recruit";
+    // Round 6: a stranger it has no room for teaches instead; the pick made, it leaves.
+    if (opts.includes("lesson")) return "lesson";
+    if (opts.includes("leave")) return "leave";
+    if (!opts.includes("focus")) {
+      // Round 6: the free share is in; TRAIN when the party is in fair shape and the boss isn't next, else REST.
+      const nextBoss = reachable(run).some((n) => n.kind === "boss");
+      return opts.includes("train") && hpShare(c, run) > 0.6 && share(c, run, "mp") > 0.5 && !nextBoss ? "train" : "rest";
+    }
     const raise = opts.filter((o) => o.startsWith("raise:") && run.party.includes(o.slice(6)));
     if (raise.length) return raise[0];
     const h = hpShare(c, run);
