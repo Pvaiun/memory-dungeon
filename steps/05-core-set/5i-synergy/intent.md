@@ -63,3 +63,35 @@ From their ten notes on 5h's first design, the same day. Notes 7 (the gear econo
 > Okay, we're close. A couple of notes. Careful about the loot numbers, because the AI is really bad, and they probably picked, like, the simulated player has way less gear than I was able to get in my runs. And just think about it for a second, right? If we have, at minimum, 5 party members, and each has 3 slots, and we get 10 pieces a run, then we're never even filling our unit slots at all. And the likelihood of us being able to build any sort of synergy is impossible. So I actually might have just been straight up wrong with my idea that there's too much loot. I think there isn't, probably. You need to just do, you know, a logical thought of how much gear we need for how many classes we're planning on getting, and then use that to implement the right number. Like, if we're getting 2 or 3 legendary gear, that means, you know, the chances of even having a single legendary gear that is relevant to something that I want to be doing is minuscule. I would definitely increase that, like, by orders of magnitude, probably. It's better to have too much than not enough if you're unsure for the first versions.
 
 > For the kickoff, I think you probably need to frame it like something like, you're a game designer and here's the mechanics, pick what you think would be interesting synergies based off other games that you've seen or stuff like that. If we're trying to tell it to, you know, it always must span the map, then you're gonna have synergies off of like clarity ticks, which is like the weirdest, dumbest thing. Like if you ask it to do a sample of everything, that's not gonna work. So you can list everything if you want, but then don't give it at least half of or any numbers like that. That never works.
+
+## Their feedback after playing 5h's round 5 (Oct 29, 2026; verbatim, the parts about this step)
+
+After five runs of 5h's build. The whole message, with the roster and map points, is in `../5h-roster/intent.md`; `../5h-roster/feedback.md` tracks every point (its numbers are used here, with theirs in brackets where they differ). They asked for this step's intent to be updated with points 21 and 25 ("I think you need to update its intent, I already started the first design pass, but this feels significant").
+
+> I can't wait to see it with better formations, loot, and abilities. I struggle to make too many sweeping changes without the loot formation and upgrade changes (5i), because I suspect they're going to make a dramatic difference to the way this plays. However, I will still make some notes about stuff that I think is quick to fix. Obviously not mentioning specific gear or loot.
+
+Point 6 (theirs 7):
+
+> Mostly setup for the 5i, but I don't like when gear says it's "for" someone. The fits names are super useful, but the signposting who the designer had in mind for that gear ruins the discovery
+
+Points 16 to 18, on MP:
+
+> 16. Mana feels extremely punishing early game, and late game, it feels better and more manageable. It stabilizes once you get magic up gear, regen gear, units with clarity and stuff like that. I actually don't think I would change anything right now until 5i happens, because I'm suspecting that's going to affect this a lot
+>
+> 17. Similar to the point above, You run out of mana in every boss fight, and you can only sustain for like 1.5 fights. Like in the second fight, you run out of mana completely. Once you get mana regen sources, this stops being a problem. But it really does feel like a threshold you have to pass. Again, I don't know if we change anything until 5i, but that's why I suggested giving a tonic at game start.
+>
+> 18. Turning off certain abilities to conserve manna is a key and necessary strategy. It adds a layer of choice, which I'm undecided if it's a good choice or not. It's worth shelving for later when we have more abilities for less slots, or think of another plan. Open to suggestions but I doubt we do anything here
+
+Point 20, on training at the campfire:
+
+> 20. At campfires, you focus 80% of the time and you heal 20% of the time. Never was it ever appropriate to learn something. The resource attrition is too great. It honestly didn't feel terrible because I had enough other sources to learn everything I needed to. Not sure what to do with this one. Something to watch out for. Open to suggestions here as well.
+
+Points 21 and 22, on rarity:
+
+> 21. It's common to get legendary gear like immediately in Act 1. And it's cool because it's the only interesting gear. But I mention this for the 5i pass. If every gear is kind of uninteresting except for legendary, then once you get one, it feels like everything else is a side grade. We definitely need like a tier that is not, that is either better than legendary or one below it, but that can also carry effects. 5i might change all of this. I think you need to update its intent, I already started the first design pass, but this feels significant. Weigh in on this issue
+>
+> 22. Similarly, I got way more legendary gear than any other type. I think adding interesting non-legendary gear is for the other thread, but making sure you don't only receive that is for here. But it's hard to tell if I only received legendary gear because I was only always picking it over the rare ones, because I'd rather pick an off situation gold that might have a useful passive later than a rare that just has random stats I don't care about.
+
+Point 25, on difficulty:
+
+> 25. Act 1 is challenging, act 2 less so but still mostly engaging, and act 3 is extremely easy and I had almost no risk. Obviously, the main power level comes from formation gear and ability upgrades, so 5i is going to do a huge pass, but I am 100% sure the game is going to be dramatically too easy with that pass. We need to instruct 5i and its intent to do a full balancing pass for difficulty after knowing that the current target we have is too easy when a human player engages with it
