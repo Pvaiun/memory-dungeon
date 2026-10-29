@@ -2,7 +2,42 @@
 
 Oct 29, 2026, for the director to pick from. Each structure is judged against `philosophy.md` (Slots): pieces that can be kept apart, rewards that read at a glance, and choices that aren't "picking which of your favourite toys you wanted to throw in the garbage". The builds are step 3 and the pieces step 4, so no piece is named here.
 
-## What needs you
+## After your read (Oct 29)
+
+**You picked A.** Armor can have four types, and certain classes can wear a second; the builds will tell us which (step 3). Your words are in `intent.md`.
+
+**The offhand: you asked whether one class each makes for bad looting. It does, so I now recommend sharing it.** A crude count, assuming:
+- about 27 offhands offered a run (a quarter of A's 110);
+- 5h's two thirds of offers aimed at the roster;
+- a roster of six;
+- 48 offhands written in all, every class in one kind.
+
+| Offhand kinds | Offhands a fighter can wear, a run | Acts where a fighter sees none | A given piece seen in a run | Pieces a class can reach | Offers no fighter can wear |
+| --- | --- | --- | --- | --- | --- |
+| One class each (A as written) | 3 | 33% | 65% | 3 | 66% |
+| Pairs | 4.7 | 19% | 54% | 6 | 53% |
+| **About three classes each** | **6.7** | **9%** | 49% | 10 | 39% |
+| Threes, a quarter of classes in two | 8.1 | 6% | 49% | 12 | 31% |
+| Fours | 7.9 | 5% | 48% | 12 | 32% |
+
+With one class each, a fighter sees about one offhand an act, and a third of acts none. Each class reaches only its own three pieces, so runs repeat. Kinds of about three, for the same 48 pieces, double what a fighter sees, make an empty act rare, and triple each class's reach.
+
+Recommendation:
+- **Kinds of two to four classes, mostly three, each class in one kind and a few in two.**
+- **They cut the classes along different lines from the weapons and the armor,** so each slot reaches a different set of neighbours.
+- **The card shows the kind's faces, with the roster's lit,** as fits does today.
+
+What it costs:
+- **A piece is tuned for three kits, not one.** It's still 3 of 16, so pieces can still be kept apart. An offhand can't name one class's ability, so that depth stays with the branches. That also settles my worry about offhands crowding the branches.
+- **Fewer drops are for nobody** (10%, was 33%), so offhands pull less toward a missing class. Weapons keep that pull, and 5h's third of offers for classes off the roster can aim at kinds nobody in the roster wears.
+- **Five or six kind names.** The faces carry the reading, so nobody has to learn them.
+- **New classes join a kind** and get its list, instead of needing their own from scratch.
+
+I also considered the other fix: offering offhands to the fighting party much more often. That raises the count, but each class still reaches only its own few pieces, so runs repeat. It also means writing a full list for every class.
+
+**Needs you:** class-only or shared offhands. Then I record your word and step 2 is closed.
+
+## What needed you (first read)
 
 1. **Pick a structure: A, B or C.** The parts are independent, so a mix works too (A with B's ring, say). **I recommend A.**
 2. **Two smaller calls, the same in all three:**

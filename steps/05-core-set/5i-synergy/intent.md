@@ -87,3 +87,9 @@ The designer's reply had sketched two build shapes (the duel, the relay), named 
 ## Their approval of the philosophy (Oct 29, 2026, verbatim)
 
 > I agree with the changes. Make sure in the upgrades somewhere, though, that you make it clear that targeting can be appended to an upgrade. I'm starting to realize targeting is kind of its own thing, and so I'm okay if targeting isn't part of this and we just do it after, but it's also okay to say that a branch includes targeting as part of its thing. I think your dozen builds should spread across the rhythm space, but I don't like the no to share rhythm. So builds rarely share rhythms unless differentiated by something else. Like, I think it's too specific there. The point of most builds can be played at several points over the ask versus gives range is hard to quantify. If you think it's useful AI speak, then keep it. Otherwise, I would remove it. I don't have an opinion on it. Okay, for starting on step two, I feel like we should start with a new agent because this context is massive right now. Do we have what we need for me to start with a new agent?
+
+## Their read of the slot structures (Oct 29, 2026, verbatim)
+
+Given after reading `slots.md` (three structures; A recommended).
+
+> Okay, I agree that A is the best of the three. I'm not against having 4 armor types. And I'm not against allowing units to use another armor type every once in a while, like certain units. I think design is going to tell us that. As for offhands, I'm not so worried about the bespoke thing, a little bit. My biggest worry is about the... looting experience. Like, if there's 16 classes and that's just a start and they each have 3 offhands, then that's 36 options. What are the odds you get the offhand you want on the class you want in the run that you want? Is it better to be shared? I'm honestly not sure about this one.
