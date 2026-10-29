@@ -11,7 +11,7 @@ The director picked A, then gave the designer two ways to do its offhand and ask
 - **Offhand (new):** shared kinds of two or three classes, mostly three. Each class wears one kind, and a few wear two. The kinds group the classes along different lines from the weapons and the armor.
 - **Armor:** locked by type. Three or four types, and a second type for certain classes, as the builds say.
 - **Amulet:** anyone.
-- **Mythic, a rarity above legendary, in any slot:** made for one class, about five or six a class. Like rare and legendary pieces, a mythic has no random affixes.
+- **Mythic, a rarity above legendary, in any slot:** made for one class. Every class has at least a couple, in the slots where it needs them; how many each has is whatever its builds call for (the director, after the pick: maybe five or six, maybe fewer). Like rare and legendary pieces, a mythic has no random affixes.
 
 **Why the designer picked shared offhands with mythics** over a class-only offhand:
 - **The web lives in shared pieces.** With a class-only offhand, a quarter of the loot would matter only through one class.
@@ -22,7 +22,7 @@ The director picked A, then gave the designer two ways to do its offhand and ask
 
 **Open, for after the builds (step 3) and with 5h's numbers:**
 - **Where mythics come from.**
-- **Whether a unit can carry more than one.** Five or six a class is few enough to check every pair by hand, so no rule yet.
+- **Whether a unit can carry more than one.** A class's mythics are few enough to check every pair by hand, so no rule yet.
 - **Mythics and branches** are both made for one class. A branch is chosen and kept; a mythic is found. Step 3 checks that they don't read alike.
 
 ## After your read (Oct 29)
