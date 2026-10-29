@@ -4,6 +4,22 @@
 
 You played round 5 (five runs, one won) and gave 26 points. All of them are answered: built, set for 5i, or kept as they are. `feedback.md` has each point's status, `design-round-6.md` the map and campfire design you approved, and `tuning.md` the numbers. Everything is pushed to `ccr-9cf44321-t2g2o5`.
 
+### After your act I play: four wins of four, "trivially"
+
+My tuning parties had fallen behind what a run holds on the 12-floor map. Twice the fights hand out twice the loot. By act I's middle, even the simulated player wears 1.4 legendaries and knows two abilities per member. The act I tuning parties had no legendary and 1.4 abilities. At act I's boss it wears 1.9 legendaries, against the parties' one.
+
+- **The fix:** acts I and II's tuning parties brought up to what runs hold, rounded up because you outplay the simulated player. Then act I's fights and all of act II were recalibrated, and act I's climb into regular fights re-measured.
+- **Against the build you played,** act I's fights are harder:
+  - about +30 on floor 4;
+  - +32 on floor 5;
+  - +38 from floor 7;
+  - +31 at elites;
+  - +18 at the boss.
+- **Act II:** its regular fights went up +37 and its elites +13.
+- **The simulated player** clears act I in 20% of runs. As you played it, 46%; round 5, which you called challenging, 10%. Floors 1 to 3 still lose almost nothing.
+
+How sure: the rosters now match what the simulated player holds, plus a margin. If you still win act I easily, you're holding more than that margin, and the next step is your own numbers. What did you have at act I's boss: legendaries, formations, abilities known, roster size?
+
 ### Decisions for you
 
 Answered (your word, the same day; numbers in `tuning.md`):

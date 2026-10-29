@@ -134,3 +134,7 @@ Same day, to the designer's reply (in `feedback.md`'s terms: the map plan for 26
 ## Their word on round 6's decisions (verbatim)
 
 > Based on what you said, it feels like a mid-act campfire should be maybe not a guarantee, but I think like 75 or 80% of paths should pass one. I would also decrease the free MP share right off the bat. The mechanic we had before was working really well. We weren't trying to give more free MP. We were trying to give less of a terrible choice. The other option is to give just like a sequence of choices. Like first, do you want HP or MP? Next, which of the rewards do you want? But you can start with just lowering the MP. Honestly, before I test it for your Act 3, I would boost it a little bit because it was brain dead easy when I played it.
+
+## After playing round 6's act I (verbatim)
+
+> I've played Act 1 4 times, and I've won every single time. Trivially.

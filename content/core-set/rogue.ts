@@ -152,8 +152,10 @@ export const ROGUE_CONFIG: RogueConfigT = {
   // climb below a pool's reference floor, act I's measured against a party a few rooms in (design-round-6.md §8).
   knobs: [
     // early: measured (npm run rogue:calibrate -- --climb): act I's regular fights against a party a few rooms in (four to pick
-    // from, one random ability each, no gear) need their knobs a median 77 lower on floor 4 than at the reference floor 7.
-    { mob: 0, step: 4.5, early: 25.7, elite: 0, boss: 0 },
+    // from, one random ability each, a piece each and a legendary) need their knobs a median 85 lower on floor 4 than at the
+    // reference floor 7, against act I's middle as a run on the 12-floor map has it (two abilities, two legendaries). (First
+    // measured at 25.7 against a weaker middle and a party with no gear: the director then won act I four times of four.)
+    { mob: 0, step: 4.5, early: 28.3, elite: 0, boss: 0 },
     { mob: 0, step: 4.5, elite: 0, boss: 0 },
     { mob: 0, step: 4.5, elite: 0, boss: 0 },
   ],

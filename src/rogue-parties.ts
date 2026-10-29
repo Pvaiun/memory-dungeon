@@ -72,7 +72,7 @@ export const ROSTERS: Roster[] = [
  * are the calibration's assumptions: regular fights and elites are measured from full HP with MP as rotation leaves it
  * (about 70%), a boss with the party as it arrives (85% HP, 80% MP after a campfire).
  */
-export type Level = { known: number; plus: number; gear: RarityT | null; legendaries: number; hp: number; mp: number; roster?: number; random?: boolean };
+export type Level = { known: number; plus: number; gear: RarityT | null; legendaries: number; hp: number; mp: number; roster?: number; random?: boolean; pieces?: number };
 export const LEVELS: Record<number, Record<Tier, Level> & { early?: Level }> = {
   1: {
     // `roster`: members to pick from (round 4): a run starts with three and its recruits come from floor 2, so act I's first
@@ -81,20 +81,29 @@ export const LEVELS: Record<number, Record<Tier, Level> & { early?: Level }> = {
     // random (a fresh roll each play) and half charged, not its best first ability 60% charged. Those paid two thirds of what a
     // random start paid (12 to 15% of HP against 17 to 22%).
     easy: { known: 1, plus: 0, gear: null, legendaries: 0, hp: 100, mp: 100, roster: 3, random: true },
-    // Round 6: a party a few rooms in, where the regular fights start (floor 4): four to pick from, one random ability each, no
-    // gear yet. Only for measuring act I's climb below the regular fights' reference floor (`npm run rogue:calibrate -- --climb`).
-    early: { known: 1, plus: 0, gear: null, legendaries: 0, hp: 100, mp: 70, roster: 4, random: true },
+    // Round 6: a party a few rooms in, where the regular fights start (floor 4): four to pick from, one random ability each, a piece
+    // each. Only for measuring act I's climb below the regular fights' reference floor (`npm run rogue:calibrate -- --climb`).
+    // (First measured with no gear, which set the climb far too steep: the director won act I four times of four, "trivially".)
+    // Rounded up like the rest (the simulated player's party wears 0.4 legendaries and 2.3 ordinary pieces on floors 4 to 6).
+    early: { known: 1, plus: 0, gear: "common", pieces: 1, legendaries: 1, hp: 100, mp: 70, roster: 4, random: true },
     // Round 4: act I's middle as a careful player has it on floors 3 to 8 (the first elite on floor 4 or 5, its trophy often the
     // run's first legendary): most members still on their first ability, a few pieces of common gear.
-    normal: { known: 1.4, plus: 0, gear: "common", legendaries: 0, hp: 100, mp: 70, roster: 4 },
-    elite: { known: 1.6, plus: 0, gear: "common", legendaries: 0, hp: 100, mp: 70, roster: 4 },
-    boss: { known: 2, plus: 0, gear: "uncommon", legendaries: 1, hp: 85, mp: 80 },
+    // Round 6, after the director won act I four times of four, "trivially": act I's levels from what a run holds on the 12-floor
+    // map, measured over 300 of the simulated player's runs (the party of three, each member's abilities; legendaries worn; ordinary
+    // pieces): floors 7 to 11 2.0 abilities, 1.4 legendaries, 3.6 pieces; its elites 1.75, 0.8, 3.1; its boss 2.3, 1.9, 4.0, five in
+    // the roster. Rounded up, since a human outplays it, and `pieces` caps the ordinary gear each member wears (the gear rule had
+    // filled every seat). Were: 1.4 / 1.6 / 2 abilities, no legendary until one at the boss, full common kits.
+    normal: { known: 2, plus: 0, gear: "common", pieces: 2, legendaries: 2, hp: 100, mp: 70, roster: 4 },
+    elite: { known: 2, plus: 0, gear: "common", pieces: 2, legendaries: 2, hp: 100, mp: 70, roster: 4 },
+    boss: { known: 2.4, plus: 0, gear: "uncommon", pieces: 2, legendaries: 3, hp: 85, mp: 80 },
   },
+  // Round 6, the same measure: act II's parties wear 2.3 / 2.9 / 3.2 legendaries (early, middle, boss) with 0.5 / 1.1 / 1.6 abilities
+  // upgraded each, so a legendary and an upgrade more than these had (were 1 / 2 / 2 / 3 legendaries, 0 / 0 / 1 / 1 upgraded).
   2: {
-    easy: { known: 2, plus: 0, gear: "uncommon", legendaries: 1, hp: 100, mp: 100 },
-    normal: { known: 3, plus: 0, gear: "uncommon", legendaries: 2, hp: 100, mp: 70 },
-    elite: { known: 3, plus: 1, gear: "rare", legendaries: 2, hp: 100, mp: 70 },
-    boss: { known: 3, plus: 1, gear: "rare", legendaries: 3, hp: 85, mp: 80 },
+    easy: { known: 3, plus: 0, gear: "uncommon", legendaries: 3, hp: 100, mp: 100 },
+    normal: { known: 3, plus: 1, gear: "uncommon", legendaries: 3, hp: 100, mp: 70 },
+    elite: { known: 3, plus: 1, gear: "rare", legendaries: 3, hp: 100, mp: 70 },
+    boss: { known: 3, plus: 2, gear: "rare", legendaries: 4, hp: 85, mp: 80 },
   },
   // Round 6 (the director's: act III "extremely easy ... almost no risk"): act III's rosters carry what the reward plan hands a run
   // by then (about four legendaries taken an act, so about eight on arriving), six or seven of them worn (were three: every
@@ -151,6 +160,11 @@ export function buildRoster(c: Content, r: Roster, act: number, tier: Tier | "ea
   for (const l of legend) {
     const g = c.gear.get(l.item.uid) ?? itemGear(c, l.item);
     equip(c, run, l.for, g.slot as Slot, l.item.uid);
+  }
+  // Round 6: at most `pieces` ordinary pieces a member (an amulet goes first, then armor; the weapon stays).
+  if (lv.pieces !== undefined) for (const m of run.roster) {
+    const ordinary = (s: Slot) => { const uid = m.gear[s]; const it = uid ? run.items.find((x) => x.uid === uid) : undefined; return !!it && it.rarity !== "legendary" && !it.base.startsWith("plain_"); };
+    for (const s of ["amulet", "armor"] as Slot[]) if ((["weapon", "armor", "amulet"] as Slot[]).filter(ordinary).length > lv.pieces && ordinary(s)) delete m.gear[s];
   }
   // Only what's worn stays: the rest of the offers weren't taken.
   const worn = new Set(run.roster.flatMap((m) => Object.values(m.gear)));

@@ -145,3 +145,27 @@ Their words are in `intent.md` (the last section).
 **Act III a step harder** (the director's: "brain dead easy when I played it"; on top of batch 2's rosters with the reward plan's legendaries). Act III's targets up: easy 14 → 16% of HP, regular 20 → 23%, elites 27 → 30%, bosses 45 → 52% of the rosters beaten. Recalibrated (40 fights, 86 s): knobs up a median of +37 (easy), +17 (regular), +7 (elites), +8.5 (bosses); bosses now beat 50 to 53% of the rosters. Since round 5, act III's knobs have risen by about +25 to +55.
 
 **The act road on the final numbers** (with tonics; the mid-act campfire is now on most paths): regular fights lost 0 / 10 / 15% by act (act III up from 7%, as asked); without the mid-act campfire 4 / 17 / 16%.
+
+## Round 6, after the director won act I four times of four, "trivially"
+
+**Why.** The tuning rosters no longer matched what a run holds on the 12-floor map: twice the fights hand out twice the loot. Measured over 300 of the simulated player's runs (it picks worse than a human, so this is a floor), the party of three at each act's fights:
+
+| | Abilities (each) | Upgraded | Legendaries worn | Ordinary pieces | The act I rosters had |
+| --- | --- | --- | --- | --- | --- |
+| Act I, floors 1–3 | 1.0 | 0 | 0.1 | 0.6 | random starts: matched |
+| Act I, floors 4–6 | 1.2 | 0 | 0.4 | 2.3 | (the climb's party) none, no gear |
+| Act I, floors 7–11 | 2.0 | 0 | 1.4 | 3.6 | 1.4 abilities, no legendary, full common kits |
+| Act I's elites | 1.75 | 0 | 0.8 | 3.1 | 1.6, none |
+| Act I's boss | 2.3 | 0.06 | 1.9 | 4.0 | 2, one |
+| Act II (early / middle / boss) | 2.9 | 0.5 / 1.1 / 1.6 | 2.3 / 2.9 / 3.2 | 4.2 to 5.0 | 1 / 2 / 3 legendaries, 0 / 0 / 1 upgraded |
+| Act III | 3.0 | 2.2 to 2.7 | 3.6 to 4.4 | 4.5 to 4.9 | 6 / 7 legendaries: already above |
+
+**Changed** (rounded up, since a human outplays the simulated player; a new `pieces` caps the ordinary gear each member wears, since the gear rule had filled every seat):
+- Act I: regular fights 2 abilities, 2 legendaries, 2 pieces each; elites the same; the boss 2.4 abilities, 3 legendaries; the climb's party one random ability, a piece each and a legendary.
+- Act II: 3 legendaries early and in the middle, 4 at the boss; 1 upgraded in the middle and at elites, 2 at the boss.
+- Recalibrated act I's regular, elite and boss fights and all of act II (57 fights, 108 s): act I regular +38, elites +31, bosses +18; act II regular +37, elites +13, bosses −3 (−6 to +18).
+- Act I's climb re-measured against those (`--climb`): its seven regular fights need knobs 66 to 118 lower on floor 4 than at the reference (median 85), so `early` = 28.3 a floor (was 25.7).
+
+**Against the build the director played:** act I's fights are harder by about +30 on floor 4, +32 on floor 5, +38 from floor 7, +31 at elites and +18 at the boss.
+
+**The simulated player** (200 runs, information only): it clears act I in 20% of runs (as played: 46%; round 5, which the director called challenging: 10%). Floors 1 to 3 still lose 0 to 1% of random starts; floor 4 23%, floors 5 and 6 about half, floor 8 over 80% (it's weak: it wins 4% of runs, as played 13%). The act road, with tonics and the mid-act campfire: regular fights lost 2 / 11 / 15% by act.
