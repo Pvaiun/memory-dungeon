@@ -1,6 +1,6 @@
 # Step 5i, step 5: the pieces' build and test, a brief for a fresh session
 
-Oct 29, 2026. It runs after the pieces' design (`pieces-design-brief.md`) has passed the director's gate. It puts the whole design into the game, measures all twelve builds together, tunes, and then runs the difficulty pass.
+Oct 29, 2026. It runs after the pieces' design (`pieces-design-brief.md`) has passed the director's gate. It puts the whole design into the game and measures all twelve builds together. Balancing and the difficulty pass come after it, as a pass of their own.
 
 ## The task
 
@@ -33,9 +33,8 @@ The lead splits the volume among parallel agents with bounded shares: the engine
   - **Strength by rung, for every build in one table.** What a build gives back should rise with what it asks, it should rarely be all or nothing, and no build should stand far above the rest at the same rung.
   - **Which pieces carry each build, and which never matter.**
   - **A feel read** of fights from several builds (`npx tsx src/rogue-feel.ts`).
-- **Gate 1:** a short report for the director. It shows the rhythm read and the strength table for all builds, what lands and what doesn't, and the fixes you propose. The director plays it.
-- **Then:** tune the pieces' numbers. Then the difficulty pass, aimed harder than today (the director: "I am 100% sure the game is going to be dramatically too easy with that pass"): every fight recalibrated on the hand-built parties, with 5h's climb and act road checked.
-- **Gate 2:** the report. Update `CLAUDE.md`'s Status, commit, push and stop.
+- **The gate:** a short report for the director. It shows the rhythm read and the strength table for all builds, what lands and what doesn't, and the fixes you propose. The director plays it. Update `CLAUDE.md`'s Status, commit, push and stop.
+- **Next, its own pass:** balancing, then the difficulty pass aimed harder than today (the director: "I am 100% sure the game is going to be dramatically too easy with that pass").
 
 ## Read first
 
