@@ -223,7 +223,7 @@ export function rogueScreen(): Child[] {
     case "map": return mapView(run);
     case "fight": return fightView(run);
     case "drop": return dropView(run);
-    case "spoils": case "boon": case "treasure": return rewardView(run);
+    case "spoils": case "boon": case "treasure": case "trophy": return rewardView(run);
     case "shop": return shopView(run);
     case "campfire": return campView(run);
     case "event": return eventScreen(run);
@@ -424,12 +424,12 @@ function fightView(run: RogueRun): Child[] {
 let rewardPick: number | null = null;
 function rewardView(run: RogueRun): Child[] {
   const p = run.pending;
-  if (p.kind !== "spoils" && p.kind !== "boon" && p.kind !== "treasure") return [];
+  if (p.kind !== "spoils" && p.kind !== "boon" && p.kind !== "treasure" && p.kind !== "trophy") return [];
   const offers = p.kind === "treasure" ? [p.offer] : p.offers;
   const opts = options(c, run);
   const takeId = (i: number) => (p.kind === "treasure" ? "take" : `take:${i}`);
   if (rewardPick !== null && (rewardPick >= offers.length || !opts.includes(takeId(rewardPick)))) rewardPick = null;
-  const title = p.kind === "boon" ? "THE BOSS FALLS" : p.kind === "treasure" ? "A CHEST" : p.tier === "elite" ? "ELITE SPOILS" : "SPOILS";
+  const title = p.kind === "boon" ? "THE BOSS FALLS" : p.kind === "treasure" ? "A CHEST" : p.kind === "trophy" ? "ELITE TROPHY" : p.tier === "elite" ? "ELITE SPOILS" : "SPOILS";
   const goldLine = p.kind === "spoils" ? h("div", { class: "line" }, gold(p.gold), h("span", { class: "dim" }, " FOUND")) : p.kind === "treasure" ? h("div", { class: "line" }, gold(p.gold), h("span", { class: "dim" }, " INSIDE")) : null;
   const trophy = p.kind === "spoils" && p.trophy ? win("", h("div", { class: "line gold" }, "TROPHY"), ...offerBody(run, { kind: "gear", item: p.trophy })) : null;
   const cards = offers.map((o, i) => {
@@ -452,7 +452,7 @@ function rewardView(run: RogueRun): Child[] {
       p.kind === "treasure"
         ? button("TAKE", () => { if (opts.includes("take")) pickOrSave(run, "take"); }, "hi")
         : (() => { const b = button("TAKE", () => { if (rewardPick !== null) { const i = rewardPick; rewardPick = null; pickOrSave(run, takeId(i)); } }, "hi"); b.disabled = rewardPick === null; return b; })(),
-      button(p.kind === "treasure" ? "LEAVE IT" : "SKIP", () => { rewardPick = null; pickOrSave(run, skip); }),
+      p.kind === "trophy" ? null : button(p.kind === "treasure" ? "LEAVE IT" : "SKIP", () => { rewardPick = null; pickOrSave(run, skip); }),
       button("PARTY", () => go("rparty"))),
   ];
 }

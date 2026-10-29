@@ -184,6 +184,11 @@ function look(run: RogueRun): string {
       out.push(options(c, run).includes("back") ? "  pick back (nobody trained yet: back to the room, its pick unspent)" : "  pick done");
       break;
     }
+    case "trophy": {
+      out.push("ELITE BEATEN: the trophy, a pick of one (the spoils follow).");
+      p.offers.forEach((o, i) => out.push(`  pick take:${i}: ${offerWords(run, o)}`));
+      break;
+    }
     case "spoils": case "boon": case "treasure": {
       const offers = p.kind === "treasure" ? [p.offer] : p.offers;
       out.push(p.kind === "boon" ? "BOSS BEATEN: pick a boon (the next act starts with everyone restored, and everyone learns an ability)." : p.kind === "treasure" ? `CHEST: ${p.gold} gold inside, and a piece.` : `SPOILS: ${p.gold} gold found. Pick one, or skip.`);

@@ -80,15 +80,19 @@ export const ROGUE_CONFIG: RogueConfigT = {
     // Step 5h (the director's: enough loot to fill the seats and build; legendaries "by orders of magnitude"): a pick of three,
     // gear in 60% of fights and mixed with a tome or a formation in 40%; no supplies (every won fight already drops one); no
     // recruits (they have their own rooms). A full run should take about 28 pieces and 12 legendaries (design.md).
-    fight: { count: 3, rarity: { common: 35, uncommon: 30, rare: 22, legendary: 13 }, tome: 0, recruit: 0, supply: 0, mixed: 40, mix: { tome: 60, formation: 40, recruit: 0 } },
-    elite: { count: 3, trophy: true, rarity: { common: 0, uncommon: 0, rare: 60, legendary: 40 }, tome: 0, recruit: 0, supply: 0, mixed: 30, mix: { tome: 30, formation: 40, recruit: 30 } },
+    // Round 6 (the director's: choices between kinds "too often"; "way more legendary gear than any other type"): mixed picks in 15%
+    // of fights and elites (were 40% and 30%); an elite's pick 25% legendary (was 40%), and its trophy a pick of the legendary or a
+    // formation (formations "came too late in most runs").
+    fight: { count: 3, rarity: { common: 35, uncommon: 30, rare: 22, legendary: 13 }, tome: 0, recruit: 0, supply: 0, mixed: 15, mix: { tome: 60, formation: 40, recruit: 0 } },
+    elite: { count: 3, trophy: true, trophyFormation: true, rarity: { common: 0, uncommon: 0, rare: 75, legendary: 25 }, tome: 0, recruit: 0, supply: 0, mixed: 15, mix: { tome: 30, formation: 40, recruit: 30 } },
     // A third of offered gear is for a class not in the roster, so a piece can make you want a class (was none: 0.05 a run).
     offRoster: 33,
   },
   /** The boss's boon: pick one of a legendary piece, a formation and a recruit. The next act starts restored, and everyone learns. */
   boon: { count: 3, seat: false }, // Step 5h round 6: seats come with each act (benchByAct), not from the boon.
   /** A chest: one piece, rare or better, and some gold; or a cage, a recruit with a piece suited to it. */
-  treasure: { rarity: { common: 0, uncommon: 0, rare: 35, legendary: 45 }, gold: [15, 35], cage: 20 },
+  // Round 6: a chest's piece legendary 30 times in 80 (was 45), rare the rest.
+  treasure: { rarity: { common: 0, uncommon: 0, rare: 50, legendary: 30 }, gold: [15, 35], cage: 20 },
   /** The campfire: one pick of REST, FOCUS, RAISE or TRAIN (two members); those at camp get half a REST whatever the pick. */
   // Step 5h: the bench's MP comes after every fight now, so the camp's share is HP only; the reserves rule is gone (a wipe is
   // a wipe, now that the party can be changed before any fight); a stranger at the fire sometimes asks to join.

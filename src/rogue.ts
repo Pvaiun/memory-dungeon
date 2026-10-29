@@ -51,6 +51,8 @@ export type Pending =
   /** Round 9 (the director's): a won fight offers a choice of one supply; `then` is what follows the pick (the spoils, or a boss's boon). */
   | { kind: "drop"; options: SupplyIdT[]; then: Pending }
   | { kind: "spoils"; gold: number; offers: Offer[]; tier: FightTier; trophy?: Item }
+  /** Step 5h round 6 (the director's: formations came too late): an elite's trophy is a pick, a legendary piece or a formation; the spoils follow. */
+  | { kind: "trophy"; offers: Offer[]; then: Pending }
   | { kind: "boon"; offers: Offer[] }
   | { kind: "shop"; stock: ShopSlot[]; learn: boolean; upgrade: boolean; trained?: number }
   | { kind: "campfire"; used?: boolean; resting?: string[]; stranger?: Offer }
@@ -284,14 +286,18 @@ export function endFight(c: Content, run: RogueRun, er: Run) {
     return;
   }
   const offers = spoilOffers(c, run, p.tier, p.node);
-  // An elite's trophy: a legendary piece, won outright and in the bag already.
-  let trophy: Item | undefined;
-  if (cfg(c).spoils[p.tier === "elite" ? "elite" : "fight"].trophy) {
-    trophy = rollItem(c, run, r(run, `trophy:${run.act}:${p.node}`), "legendary", true);
-    take(c, run, { kind: "gear", item: trophy });
-    note(run, `Won ${c.gear.get(trophy.uid)!.name}.`);
-  }
-  run.pending = offerDrop(c, run, { kind: "spoils", gold, offers, tier: p.tier, ...(trophy ? { trophy } : {}) });
+  const s = cfg(c).spoils[p.tier === "elite" ? "elite" : "fight"];
+  const spoils: Pending = { kind: "spoils", gold, offers, tier: p.tier };
+  if (!s.trophy) return void (run.pending = offerDrop(c, run, spoils));
+  // An elite's trophy: a legendary piece aimed at the party (Slay the Spire's elite relic). Step 5h round 6: or a formation (rare
+  // or better), the player's pick, while there's one to win; with none, the piece is won outright as before.
+  const tr = r(run, `trophy:${run.act}:${p.node}`);
+  const piece: Offer = { kind: "gear", item: rollItem(c, run, tr, "legendary", true) };
+  const drill = s.trophyFormation ? rollFormation(c, run, tr, [], undefined, "rare") : null;
+  if (drill) return void (run.pending = offerDrop(c, run, { kind: "trophy", offers: [piece, drill], then: spoils }));
+  take(c, run, piece);
+  note(run, `Won ${offerText(c, run, piece)}.`);
+  run.pending = offerDrop(c, run, { ...spoils, trophy: (piece as { item: Item }).item });
 }
 
 /** The supplies of a kind the party carries. */
@@ -1058,6 +1064,7 @@ export function options(c: Content, run: RogueRun): string[] {
     case "drop": return p.options;
     case "spoils": return [...p.offers.map((o, i) => (canTake(c, run, o) ? `take:${i}` : "")).filter(Boolean), "skip"];
     case "boon": return [...p.offers.map((o, i) => (canTake(c, run, o) ? `take:${i}` : "")).filter(Boolean), "skip"];
+    case "trophy": return p.offers.map((o, i) => (canTake(c, run, o) ? `take:${i}` : "")).filter(Boolean);
     case "muster": return [...p.offers.map((o, i) => (canTake(c, run, o) ? `take:${i}` : "")).filter(Boolean), "skip"];
     case "drill": return [...p.offers.map((o, i) => (canTake(c, run, o) ? `take:${i}` : "")).filter(Boolean), ...(trainOptions(c, run, []).length ? ["train"] : []), "skip"];
     case "train": return [...trainOptions(c, run, p.done), p.back && !p.done.length ? "back" : "done"];
@@ -1167,6 +1174,13 @@ export function choose(c: Content, run: RogueRun, pick: string) {
       }
       if (p.kind === "boon") return nextAct(c, run);
       run.pending = { kind: "map" };
+      return;
+    }
+    case "trophy": {
+      const o = p.offers[Number(pick.split(":")[1])];
+      take(c, run, o);
+      note(run, `Won ${offerText(c, run, o)}.`);
+      run.pending = p.then;
       return;
     }
     case "muster": {
@@ -1325,7 +1339,7 @@ function pickKind(run: RogueRun, pick: string): string {
   const [verb, arg] = pick.split(":");
   switch (p.kind) {
     case "map": return `map:${run.map.find((n) => n.id === pick)?.kind}`;
-    case "spoils": case "boon": case "muster": case "drill": return pick === "skip" || pick === "train" ? `${p.kind}:${pick}` : `${p.kind}:${p.offers[Number(arg)].kind}`;
+    case "spoils": case "boon": case "muster": case "drill": case "trophy": return pick === "skip" || pick === "train" ? `${p.kind}:${pick}` : `${p.kind}:${p.offers[Number(arg)].kind}`;
     case "train": return `train:${verb}`;
     case "shop": return verb === "buy" ? `shop:buy:${p.stock[Number(arg)].offer.kind}` : `shop:${verb}`;
     case "choose": return `choose:${p.what}`;
