@@ -18,7 +18,7 @@ const WEAPONS: Record<string, Kind> = {
   fist_weapons: { cell: "fast one-hand physical", classes: ["monk", "vampire"] },
   sword: { cell: "medium one-hand physical", classes: ["knight", "bramble_knight", "assassin"] },
   spear: { cell: "medium one-hand physical", classes: ["hoplite", "valkyrie", "monk"] },
-  bow: { cell: "medium one-hand physical", classes: ["ranger", "bard"] },
+  bow: { cell: "medium two-hand physical", classes: ["ranger", "bard"] },
   great_weapon: { cell: "slow two-hand physical", classes: ["knight", "hoplite", "paladin", "geomancer", "vampire"] },
   wand: { cell: "fast one-hand magical", classes: ["pyromancer", "hexer", "stormcaller", "bard"] },
   rod: { cell: "medium one-hand magical", classes: ["frostweaver", "hexer", "geomancer"] },
@@ -40,7 +40,7 @@ const OFFHANDS: Record<string, Kind> = {
   relic: { classes: ["cleric", "valkyrie"] },
   bell: { classes: ["monk", "cleric"] },
   totem: { classes: ["bramble_knight", "ranger"] },
-  knife: { classes: ["assassin", "vampire"] },
+  vial: { classes: ["assassin", "vampire"] },
   idol: { classes: ["hexer", "vampire"] },
   orb: { classes: ["geomancer", "stormcaller"] },
 };
