@@ -18,7 +18,7 @@ This page distils their words; it isn't their words. Where it's wrong, they corr
 - **All of the rogue's gear, formations and ability upgrades, from scratch.** "I would not keep any loot that we have now just for the sake of keeping it." (`philosophy.md`)
 - **Designed things, built backwards from about a dozen builds,** not rules with pieces fitted to them. "It should be designed entities that you build." Depth before width. (`philosophy.md`, `builds.md`)
 - **No limit on the type of effect,** on gear or formations, as long as each is phrased so the player knows what will happen. (`philosophy.md`)
-- **Engine additions, new rules and new stats,** as far as the designs need: "You can go as far as you want with that." (`builds.md`, `gear-brief.md`)
+- **Engine additions, new rules and new stats,** as far as the designs need: "You can go as far as you want with that." (`builds.md`)
 - **Exotic one-offs and chaos:** "These types of games are about finding the chaos, finding the build in the chaos." (`philosophy.md`)
 
 ## Builds (`philosophy.md`, `builds.md`)
@@ -35,11 +35,11 @@ This page distils their words; it isn't their words. Where it's wrong, they corr
 - **No lock-and-key fishing** for one formation.
 - **A new formation should make you rethink your party.** That's what worked best in play.
 
-## Gear (`gear-brief.md`)
+## Gear (`builds.md`, the section "Gear")
 
 - **All of the gear is open:** armor, weapons, offhands, amulets, and the tier above legendary. The armor's draft in `builds.md` is the most liked part so far, but not settled. Design it from needs, not tidy numbers; lopsided is fine. The weapons are open to reinvention.
-- **Every class has an offhand** (Oct 29): "every class has at least one offhand that they can wield, no question". Two-handed weapons that take the offhand's place are welcome "if you think it's actually a meaningful design pattern we can use". `gear.md` proposes them.
-- **The gear slots' first proposal** (`gear.md`, Oct 29): "I really like this design in general." Their answers:
+- **Every class has an offhand** (Oct 29): "every class has at least one offhand that they can wield, no question". Two-handed weapons that take the offhand's place are welcome "if you think it's actually a meaningful design pattern we can use". They're in.
+- **The gear slots' first proposal** (Oct 29): "I really like this design in general." Their answers:
   - Start with two-handers: "It's a good call."
   - The amulet open to everyone, valuable "in a game where you can switch units around", at 10% to 15% of the pool.
   - The Hoplite's pike is no worry for now.
@@ -49,7 +49,7 @@ This page distils their words; it isn't their words. Where it's wrong, they corr
 - **The Hexer and the Geomancer needn't be casters.**
   - The Geomancer's one Magic-scaling ability "could be 100% changed", and it might be renamed (Earth Knight, Earthbender: "We'll figure it out later").
   - The Hexer "could totally be like a Spellblade type thing".
-- **Next, at their word:** once they thumb up the gear, it merges into `builds.md`, and then they decide how to proceed.
+- **The gear is approved** (Oct 29: "I'm sold on this"), merged into `builds.md`.
 - **Cards show who can wear a piece ("fits"), never what it's "for":** "the signposting who the designer had in mind for that gear ruins the discovery".
 - **Rarity is mostly specificity,** plus power that grows by act and stays narrow. No random affixes on rare and legendary pieces for now. Tiers below legendary carry effects too: legendary shouldn't be "the only interesting gear".
 - **Plenty of loot:** "It's better to have too much than not enough if you're unsure for the first versions." How much drops follows the gear's design, not the other way round.

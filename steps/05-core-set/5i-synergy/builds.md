@@ -1,18 +1,18 @@
 # Step 5i, step 3: the builds and the web between them
 
-Oct 29, 2026, approved by the director apart from the gear. About a dozen builds as ways to play, the web that connects them, and what they say about the slots. Every build is judged against `philosophy.md`. No piece, formation or upgrade is designed here, and there are no numbers: those are step 4, built backwards from whatever survives this read. The builds' routes become step 4's hand-built test parties.
+Oct 29, 2026, approved by the director, the gear included. About a dozen builds as ways to play, the web that connects them, and what they say about the slots. Every build is judged against `philosophy.md`. No piece, formation or upgrade is designed here, and there are no numbers: those are step 4, built backwards from whatever survives this read. The builds' routes become step 4's hand-built test parties.
 
 **Revised twice after your reads (Oct 29).** What still stands of your intent is in `intent.md`. What changed:
 - **MP:** each build says which fuel it spends (HP or MP), not how many fights it lasts.
 - **Lockdown:** it's framed around piling onto disabled foes.
 - **Phoenix:** its needs include returns that don't wait on a reviver.
 - **Formations:** they're described as what they're allowed to be: seats that share roles across builds, but also their own roles, lopsided seats, effects on the whole party and costs.
-- **The gear:** an open gap, the armor included, to be filled in a new session.
+- **The gear:** settled in a session of its own and merged in (the section "Gear").
 
 ## What needs you
 
 1. **Formations** (the section "Formations: what they can be"). It now says what a formation is allowed to be, broadly, with the shared seat roles as one part of it. Does it read right?
-2. **The gear is an open gap** ("Gear: an open gap"), the armor included. A new session takes it up from `gear-brief.md`.
+2. **The gear is settled** (the section "Gear"): who shares which kinds of loot, the two-handers, the magical kinds, the offhands, the amulet and the mythic.
 3. **Settled from your reads:**
    - MP is fuel, measured within a fight.
    - No mythic formations in this pass.
@@ -893,32 +893,174 @@ The philosophy wants each ability's two versions to pull toward different builds
 | Enfeeble | the Toll and Lockdown |
 | Flow | Thousand Cuts and the Toll (the dancer) |
 
-## Gear: an open gap
+## Gear
 
-**The armor's current draft** is the most liked part of the gear so far, but it's open with the rest. Each type is what a unit in one shape of build needs to hold up: Plate for being hit, Mail for mending while fighting, Leather for speed and dodges, Robes for mana and casting.
+Settled with the director on Oct 29, in a session of its own. This section is who shares which kinds of loot in the rogue's four slots: weapon, armor, offhand and amulet. It designs no pieces.
 
-| Type | Wears it | Builds it serves |
+The build routes above still name today's weapons, and the Hexer and Geomancer before their re-theme. Read them through this section.
+
+`npx tsx src/gear-slots.ts` holds the tables below as data, and recounts every width and overlap after a change.
+
+### Rules the slots keep
+
+- **Slots have no job.**
+  - Any kind of effect can sit on any slot.
+  - Stats lean softly by slot: Armor more often on armor, damage on weapons.
+  - Nothing says what a slot, a kind or a piece is "for".
+- **Only weapons carry inherent behaviour:** a speed, a damage type (physical or magical) and a number of hands. A two-hander empties the offhand, so its pieces are designed to be worth a weapon and an offhand.
+- **Every piece fits exactly its kind's classes,** and its card says who can wear it. A mythic fits one class.
+- **Every class has at least one kind in every slot,** including a one-handed weapon, so it can always use an offhand.
+- **Two classes share at most two kinds.** The cap keeps every class's loot mostly its own. It costs the Bard the dagger it has today; with it, the Bard and Ranger would share the dagger, the bow and Leather.
+
+### The shape
+
+Armor groups classes by weight. Weapons and offhands cut across those groups.
+
+| Slot | Kinds | Classes per kind | Kinds per class | Other wearers of a piece in a roster of five |
+| --- | --- | --- | --- | --- |
+| Weapon | 11 (13 today) | 2 to 4 | 2 | 0.5 |
+| Armor | 4 | 5 each | 1 to 2 | 1.1 |
+| Offhand | 10 | 2 to 3 | 1 to 2 | 0.3 |
+| Amulet | 1 | all 16 | 1 | 4 |
+
+- **The last column:** when a piece drops for one member of a five-class roster, how many of the other four can wear it too, on average.
+- **Overlaps:**
+  - Of the 120 pairs of classes, 57 share nothing, 38 share one kind and 25 share two.
+  - Every class shares something with five to twelve others.
+  - For every class, no other class can wear more than half of its kinds.
+- **Apart where it counts:** 59% of the pairs of kinds from different slots never meet on one unit, so pieces in them can be strong together without ever stacking.
+- **How much a run shows:** at about 110 pieces seen a run (5h's volumes, raised a third for the fourth slot), each fighter sees about half of what it can wear in each slot.
+
+### Weapons
+
+| Kind | Speed | Damage | Hands | Classes |
+| --- | --- | --- | --- | --- |
+| Dagger | fast | physical | one | Assassin, Ranger, Hexer |
+| Fist weapons | fast | physical | one | Monk, Vampire |
+| Sword | medium | physical | one | Knight, Bramble knight, Assassin |
+| Spear | medium | physical | one | Hoplite, Valkyrie, Monk |
+| Bow | medium | physical | two | Ranger, Bard |
+| Great weapon (axe, hammer, pike, scythe) | slow | physical | two | Knight, Hoplite, Geomancer, Vampire |
+| Rune sword | medium | magical | one | Paladin, Valkyrie, Hexer, Geomancer |
+| Mace | slow | magical | one | Cleric, Paladin |
+| Wand | fast | magical | one | Pyromancer, Stormcaller, Bard |
+| Rod | medium | magical | one | Frostweaver, Stormcaller |
+| Staff | slow | magical | two | Cleric, Frostweaver, Pyromancer, Bramble knight |
+
+- **Magical damage belongs to the kind,** like speed.
+  - The seven elemental staves are gone.
+  - The rune sword (the director's name) and the mace are magic in a fighter's hand.
+  - The wand, rod and staff are the casters'.
+  - The four casters each hold a different pair from the wand, rod, staff and mace, so no two share more than one.
+  - Scaling stays: physical kinds from Attack, magical from Magic, unless a piece names another stat.
+- **Variety within a class:** each class's two kinds differ in speed, damage or hands.
+- **Variety between classes:** the 16 classes have 14 different weapon patterns.
+- **Builds' reach:**
+  - nine classes can go slow (Landslide);
+  - eight can go fast (Thousand Cuts, Cold Snap's frost seats);
+  - ten have a two-hander.
+- **Re-themed at the director's word:** the Hexer as a spellblade (dagger or rune sword, in Mail) and the Geomancer as an earth fighter (great weapon or rune sword, in Plate). Their kits and stats follow in the cleanup step: the Geomancer's Tremor comes off Magic, and the name may change.
+
+### Armor
+
+| Type | Classes (second type in brackets) |
+| --- | --- |
+| Plate | Knight, Hoplite, Geomancer, Bramble knight, (Paladin) |
+| Mail | Paladin, Valkyrie, Vampire, Hexer, (Bramble knight) |
+| Leather | Ranger, Monk, Assassin, Bard, (Valkyrie) |
+| Robes | Cleric, Pyromancer, Frostweaver, Stormcaller, (Bard) |
+
+- **Types replace weights:** a class wears only its types, and today's "or anything lighter" goes.
+- **Robes is the tightest group.** 9 of its 10 pairs share two kinds: one armor, and weapons drawn from the same few magical kinds. It's accepted because the casters are the most alike classes. If it reads muddy once pieces exist, the first cut is the Bard's Robes second.
+
+### Offhands
+
+| Kind | Classes | Why these classes |
 | --- | --- | --- |
-| Plate | Knight, Hoplite, Geomancer, Bramble knight; the Paladin as a second | Landslide, the Toll, Lockdown |
-| Mail | Paladin, Valkyrie, Vampire; the Bramble knight as a second | Blood Pact, Phoenix |
-| Leather | Ranger, Monk, Assassin, Bard; the Valkyrie as a second | Thousand Cuts, the Hunt, Ambush |
-| Robes | Cleric, Hexer, Pyromancer, Frostweaver, Stormcaller; the Bard as a second | Overflow, Bonfire, Cold Snap, Harvest |
+| Kite shield | Knight, Paladin | protectors who shelter the party |
+| Round shield | Hoplite, Valkyrie | spear fighters who cover an ally |
+| Horn | Knight, Bard | both hand an ally mana |
+| Tome | Frostweaver, Bard | both work on the whole field at once |
+| Lantern | Paladin, Pyromancer | holy light and fire, and both set foes burning |
+| Relic | Cleric, Valkyrie | the two revivers |
+| Bell | Monk, Cleric, Stormcaller | each sets its own tempo |
+| Totem | Bramble knight, Ranger, Geomancer | the wild and the earth |
+| Vial | Assassin, Vampire | poison and blood: hits that pay them back |
+| Idol | Hexer, Vampire | the dark arts, and both weaken foes |
 
-Whether one type a class proves too tight is for step 4's test parties.
+The last column is why the classes are alike, not what the kind is for. A kind's pieces can be anything. If they all followed this column, the kind's name would become the signpost that cards avoid.
 
-**All of it is open:** the armor, weapons, offhands, amulets, and the rarity above legendary. A new session explores them from the builds' needs (`gear-brief.md`).
+### The amulet
 
-What this document gives it:
-- **each build's needs and far end;**
-- **the shared needs** (the table in the web);
-- **the threads** and how much each matters to each build;
-- **the abilities that sit between builds;**
+- **It fits everyone,** so a run that switches units around never loses one. That's why it's valuable.
+- **It's a small part of the stock and the offers:** about a tenth of the stock and 15% of offers. A fighter still sees more amulets than anything else.
+- **No amulet names one class's ability.** It would be dead on fifteen classes and point at the sixteenth.
+- **It's the rule slot today** (17 of the 29 rogue rule pieces). Now that every other slot has narrow kinds, a piece meant for a few classes has a better home there.
+
+### Rarity and mythic
+
+- **Rarity is mostly how far a piece bends the game and how specific it is,** within its kind. Pieces below legendary carry effects too, and there are no random affixes on rare and legendary pieces.
+- **A mythic reaches into one class's kit.** A legendary bends the game for whoever wears it; a mythic rewrites a class.
+  - It fits one class and can sit in any slot. A mythic weapon has its own speed, damage and hands.
+  - A unit wears one at most.
+  - There's one per class to start (16), each pulling toward one of the class's builds, offered in act II and III boss boons.
+- **Mythics against upgrades:** an upgrade is trained, and changes one ability or the passive. A mythic is found, can be taken off, and goes past any one ability. Step 4 designs both together so they don't overlap.
+
+### Each class
+
+What it can wear, with the other classes that share each kind. Every class also wears every amulet.
+
+| Class | Weapons | Armor | Offhand |
+| --- | --- | --- | --- |
+| Knight | Sword (Bramble knight, Assassin); Great weapon (Hoplite, Geomancer, Vampire) | Plate (Hoplite, Geomancer, Bramble knight, Paladin) | Kite shield (Paladin); Horn (Bard) |
+| Cleric | Mace (Paladin); Staff (Frostweaver, Pyromancer, Bramble knight) | Robes (Pyromancer, Frostweaver, Stormcaller, Bard) | Relic (Valkyrie); Bell (Monk, Stormcaller) |
+| Ranger | Dagger (Assassin, Hexer); Bow (Bard) | Leather (Monk, Assassin, Bard, Valkyrie) | Totem (Bramble knight, Geomancer) |
+| Bramble knight | Sword (Knight, Assassin); Staff (Cleric, Frostweaver, Pyromancer) | Plate (Knight, Hoplite, Geomancer, Paladin); Mail (Paladin, Valkyrie, Vampire, Hexer) | Totem (Ranger, Geomancer) |
+| Hoplite | Spear (Valkyrie, Monk); Great weapon (Knight, Geomancer, Vampire) | Plate (Knight, Geomancer, Bramble knight, Paladin) | Round shield (Valkyrie) |
+| Paladin | Rune sword (Valkyrie, Hexer, Geomancer); Mace (Cleric) | Plate (Knight, Hoplite, Geomancer, Bramble knight); Mail (Valkyrie, Vampire, Hexer, Bramble knight) | Kite shield (Knight); Lantern (Pyromancer) |
+| Valkyrie | Spear (Hoplite, Monk); Rune sword (Paladin, Hexer, Geomancer) | Mail (Paladin, Vampire, Hexer, Bramble knight); Leather (Ranger, Monk, Assassin, Bard) | Round shield (Hoplite); Relic (Cleric) |
+| Bard | Bow (Ranger); Wand (Pyromancer, Stormcaller) | Leather (Ranger, Monk, Assassin, Valkyrie); Robes (Cleric, Pyromancer, Frostweaver, Stormcaller) | Horn (Knight); Tome (Frostweaver) |
+| Hexer | Dagger (Assassin, Ranger); Rune sword (Paladin, Valkyrie, Geomancer) | Mail (Paladin, Valkyrie, Vampire, Bramble knight) | Idol (Vampire) |
+| Monk | Fist weapons (Vampire); Spear (Hoplite, Valkyrie) | Leather (Ranger, Assassin, Bard, Valkyrie) | Bell (Cleric, Stormcaller) |
+| Assassin | Dagger (Ranger, Hexer); Sword (Knight, Bramble knight) | Leather (Ranger, Monk, Bard, Valkyrie) | Vial (Vampire) |
+| Vampire | Fist weapons (Monk); Great weapon (Knight, Hoplite, Geomancer) | Mail (Paladin, Valkyrie, Hexer, Bramble knight) | Vial (Assassin); Idol (Hexer) |
+| Pyromancer | Wand (Stormcaller, Bard); Staff (Cleric, Frostweaver, Bramble knight) | Robes (Cleric, Frostweaver, Stormcaller, Bard) | Lantern (Paladin) |
+| Frostweaver | Rod (Stormcaller); Staff (Cleric, Pyromancer, Bramble knight) | Robes (Cleric, Pyromancer, Stormcaller, Bard) | Tome (Bard) |
+| Stormcaller | Wand (Pyromancer, Bard); Rod (Frostweaver) | Robes (Cleric, Pyromancer, Frostweaver, Bard) | Bell (Monk, Cleric) |
+| Geomancer | Great weapon (Knight, Hoplite, Vampire); Rune sword (Paladin, Valkyrie, Hexer) | Plate (Knight, Hoplite, Bramble knight, Paladin) | Totem (Bramble knight, Ranger) |
 
 **Every class is in the routes of four to eight builds.** The Knight, Cleric, Bard and Monk are in eight; the Geomancer, Ranger, Vampire, Frostweaver and Bramble knight in four.
 
+### What it asks
+
+- **Schema:**
+  - an `offhand` slot;
+  - weapon kinds with a speed, a damage type and hands (no element or subtype);
+  - four armor types in place of weights;
+  - offhand kinds;
+  - each class's kinds in every slot;
+  - a mythic rarity that names one class;
+  - a two-hander emptying the offhand.
+- **The cleanup step:** the Hexer's and Geomancer's new kits and stats.
+- **Interface:** a fourth slot, with the offhand shown locked under a two-hander; a colour for mythics. The director sources the art for the new weapon kinds and the ten offhands.
+- **5h's loot numbers:**
+  - **Volume:** a third more gear, about 37 pieces taken and 110 seen a run.
+  - **Offers:** a slot first (weapons and offhands 30% each, armor 25%, amulets 15%), then a class as 5h does now, then a kind that class wears.
+  - **Stock to start:** 8 pieces a weapon kind, 12 an armor type, 8 an offhand kind and 24 amulets, about 240, plus 16 mythics.
+
+### Still open
+
+- **Fits at a glance:**
+  - the Cleric's mace dealing magic;
+  - the Geomancer's rune sword;
+  - the Bard's wand;
+  - the Vampire's great weapon;
+  - the Bramble knight's staff (at Magic 2, a weak option).
+- **Two-handers:** whether a piece can be worth two without being dead or mandatory. Step 4's test parties will show it.
+
 ## What the builds say about rarity and difficulty (your round-5 notes)
 
-- **Rarity (points 21 and 22).** Every build's first rung starts from what most runs find. If only legendaries carry effects, every build starts at a legendary, and you get what you described: one legendary and everything else a sidegrade. So pieces below legendary have to carry effects too: small ones that start a build. The rarest pieces are the far end. The gear session decides how the rarities divide the range.
+- **Rarity (points 21 and 22).** Every build's first rung starts from what most runs find. If only legendaries carry effects, every build starts at a legendary, and you get what you described: one legendary and everything else a sidegrade. So pieces below legendary have to carry effects too: small ones that start a build. The rarest pieces are the far end. How the rarities divide each kind's stock is step 4's.
 - **Difficulty (point 25).** Each build's far end is meant to be much stronger than today's parties. Step 4 tests with these routes as hand-built parties, at each rung. After the content is in, it runs the full difficulty pass you asked for, aimed harder than today's target. Your round-5 play says today's target is too easy for a human.
 
 ## Checks on the whole set
@@ -991,6 +1133,6 @@ What this document gives it:
 ## For step 4
 
 - **Test parties:** each build's routes, as hand-built parties, at each rung of what it asks.
-- **Pieces, formations and upgrades:** built backwards from the needs above, in the gear structure the gear session settles. The shared needs come first, since each pays off in several builds.
+- **Pieces, formations and upgrades:** built backwards from the needs above, in the gear structure above. The shared needs come first, since each pays off in several builds.
 - **A rhythm check:** the quick read here (`npx tsx src/rhythm-read.ts`), rerun with those parties in place of today's trios. Each build should land where the rhythm table puts it, and away from the others. Today they all sit on top of each other.
 - **Then the difficulty pass** your round-5 notes ask for.

@@ -46,7 +46,7 @@ What the structure has to give:
 - rewards a player can read at a glance;
 - choices that aren't, in the director's words, "picking which of your favourite toys you wanted to throw in the garbage".
 
-The structure itself is being designed from the builds (`gear-brief.md`).
+The structure is settled: `builds.md`, the section "Gear" (Oct 29).
 
 ## Formations
 
