@@ -1,5 +1,7 @@
 # Step 5i kickoff: gear, formations and upgrades, from a gap map
 
+> **Partly superseded (Oct 29, 2026).** The gap map is done (`gap-map.md`). The first design built on this brief's starting direction was set aside at the director's notes, and the step restarted from `philosophy.md`. A fresh session starts from `restart.md`, which says what still stands here (the decided list, the boundary with 5h, the tools) and what doesn't (the starting direction's enablers and payoffs, grains, and the gate's sample sizes).
+
 Written Oct 28, 2026, by the session that planned this step with the director, for a fresh session to start from. It was revised twice the same day after their notes. The director's words are in `intent.md` beside this file, verbatim. This file is the brief: what's decided, the designer's starting direction, the boundary with step 5h, the gate and the order of work. It's the designer's, not the director's: where the two differ, `intent.md` wins, and anything here can be challenged with evidence (`docs/method.md`).
 
 ## Read first

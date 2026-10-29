@@ -11,7 +11,7 @@ All of the rogue's gear, formations and ability upgrades, from scratch. A piece 
 - **It can be watched.** Someone watching a fight should be able to tell which build is playing and what it's waiting for. That's its identity.
 - **It has a rhythm:** how a fight unfolds over time for it. That covers where the damage and the danger fall, how steady or uneven the fight is, how often it turns, and how big each turn is.
   - Every point in that space is open.
-  - The dozen builds should spread across it, so that no two share a rhythm.
+  - The dozen builds should spread across it. Two builds rarely share a rhythm, unless something else sets them clearly apart.
 - **It's woven from several threads,** not one mechanic turned up. Anything in `gap-map.md` can be a thread: any mechanic, stat, damage kind, element, timing, targeting rule or resource. That includes the ones that look minor today.
 - **An element is a theme, not only its status.** What an element is like can shape a build's rhythm and identity far beyond the status that bears its name. An element's builds may leave that status out, and builds sharing an element should feel nothing alike.
 - **Two builds that differ only in which damage type shows on the numbers are one build.**
@@ -20,7 +20,7 @@ All of the rogue's gear, formations and ability upgrades, from scratch. A piece 
 
 - **What a build asks of a run is a range.**
   - At one end, it starts from what most runs find and gives back a little. At the other, it needs specific pieces that may come late, and gives back far more.
-  - Most builds can be played at several points along that range, and what a build gives back rises with what it asks.
+  - What a build gives back rises with what it asks. A build should rarely be all or nothing: it pays something before it's complete.
 - **More than one route.** The same build can be reached through different classes, pieces and formations.
 - **A web, not bundles.** Most pieces matter to more than one build, by different amounts and for different reasons, some of them not obvious. Builds connect through the pieces they share.
 - **Exotics.** Some pieces exist for their own sake: a strange effect worth seeing that belongs to no build in particular.
@@ -62,6 +62,7 @@ Step 2 brings two or three structures to pick from, starting from the director's
   - Either, both or neither can be better than the original.
   - Each should pull toward different builds, and often toward several.
 - **How a unit behaves matters as much as what it does.** What an ability aims at, what it waits for and when it fires are as open to change as its numbers. In an auto battler they're among the most readable things a player can see change.
+- **Targeting can be part of a version, or a thing of its own.** A version may come with its own targeting as part of what it is. Choosing a target rule may also turn out to be its own kind of upgrade, designed later; neither shape is decided.
 
 ## How it reads
 
