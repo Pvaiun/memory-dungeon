@@ -1,97 +1,78 @@
-# Step 5i intent: gear, formations and upgrades that make builds synergize
+# Step 5i intent: what the director wants, as it stands
 
-The director's words from the session of Oct 28, 2026, in four messages: a brainstorm on agency in fights (a reviewer's read of the fights with no control, then a designer's reply), and their reactions to it. Recorded verbatim; nothing here is the designer's. Only the parts about this step are kept. The roster (bench, swaps, MP across fights, where recruits and formations come from) is step 5h, whose `intent.md` keeps those parts. The read-back is the design gate.
+Oct 29, 2026. Every item below is the director's intent that still holds, quoting them where the wording matters, and naming the document that carries it.
 
-## Where they started
+This page distils their words; it isn't their words. Where it's wrong, they correct it, and their latest word wins.
 
-> So far, the parts of the gameplay that seem to work the best in terms of player choices are gear sometimes, though right now a lot of the gear is really, really overpowered. And formations are the big one. Whenever you get a new formation, it makes you rethink how you use your party, and it works really well. And then reordering abilities works a little bit. There are certain moments, like bringing a cleric in with raise at the first slot, because you want that to fire before the other ability that's off cooldown, because you want to get a quick heal at the start of the fight, a quick revive, sorry. That's cool.
+## The game around this step
 
-## No control in fights (context for every step)
+- **No control during fights.** Preparation is the game: a team should win or lose as a team, not because a button was pressed at the right moment.
+- **The rogue is the game.** The campaign is retired.
+- **Two kinds of damage, no elements** (Oct 29): physical meets Armor (the Path of Exile formula, tuned mostly flat) and Evasion; magical meets magic resist, a percentage, and can't be dodged. Burn, Shock and Chill aren't magical: they're statuses, not resisted (a foe that shrugs one off would need a resist stat for that status). Statuses are what build identities are made of. No elements, and no slashing, piercing or blunt, as mechanics. A class can still be themed by an element (an earth-themed physical class, a fire-themed Burn class). Scaling from Attack, Magic or other stats stays. The base game gets cleaned up in a short step of its own. Enemy puzzles are ignored for now: what matters is a build's efficacy.
+- **Step 5h goes ahead as designed:** the roster, the bench, MP drained by fighting, the reward plan. Once both steps land, everything else is readjusted around them: "we're going to readjust afterwards".
+- **A full difficulty pass comes after this step's content is in,** aimed harder than today: "I am 100% sure the game is going to be dramatically too easy with that pass."
+- **Out of this step:** more potion types, the hourglass, and more abilities per class than the three. "I would keep these for another moment."
 
-> I'm kind of convinced that the ability to affect outcomes during a fight is a mistake. I think it's creating a different game, and I think because humans are intelligent, they're going to figure out when the right moment to do something is, and the whole game is going to rely around pressing one button. Like, you're going to win or lose the same team, the same comp, because you pressed the potion button at the right time. That's fundamentally against the concept that this game wants to be.
+## What the step makes
 
-## Gear and formations
+- **All of the rogue's gear, formations and ability upgrades, from scratch.** "I would not keep any loot that we have now just for the sake of keeping it." (`philosophy.md`)
+- **Designed things, built backwards from about a dozen builds,** not rules with pieces fitted to them. "It should be designed entities that you build." Depth before width. (`philosophy.md`, `builds.md`)
+- **No limit on the type of effect,** on gear or formations, as long as each is phrased so the player knows what will happen. (`philosophy.md`)
+- **Engine additions, new rules and new stats,** as far as the designs need: "You can go as far as you want with that." (`builds.md`)
+- **Exotic one-offs and chaos:** "These types of games are about finding the chaos, finding the build in the chaos." (`philosophy.md`)
 
-> And then the even easier thing, and this is the one I would actually do earlier, because it's a lot of work to make a, like, three new abilities per character. But I think some of the legendary gear shows what gear can really be. Like, I did a build where I had the Frostweaver sitting between a monk with the chill staff and a bard with the chill dagger. And suddenly I was exploding everywhere, left and right with chill, with two classes that don't even apply chill naturally. That felt really amazing. I think the mechanics in the game are probably rich enough now that we could find a bunch of synergies like that. A bunch of cool legendary gear that kind of transforms what you're doing. As well as formations that push farther.
+## Builds (`philosophy.md`, `builds.md`)
 
-> 1. I really agree with your take on formations and gear. I think mapping the gaps and filling them is exactly how I would do it right now. Though that doesn't mean only legendaries with crazy passives. There's also some stats that we could double down on, or functionality effects that could exist. And not everything needs to be on legendary gear. Like, a gear piece could be quite varied in what it's doing, but we need to be careful of cognitive overload. But the way that you framed it, as starting with just a pass where you're looking for gaps and filling them, that seems really smart. And I'm okay if it's all legendaries for now, if that's what you think the right call is.
->
-> 2. I also agree that formations could be pushed a lot farther. I could even imagine them being customizable one day, but right now I think there is a lot of potential to having them be more themed with more bespoke effects that give a lot of control. I have limits on type of effects right now. The issue right now is that they're really rare to find within the rogue. Like, it's rare to get more than like one or two in a whole run. So we would need to make them more available, which we'll have to do with new recruits as well. [...] But even your examples are very strong.
->
-> I'd like to give a thumbs up though on all of the gear and the formations designed before they're built. Or actually, no, since I'm the only playtester, that would maybe really affect my ability to test the game. I would like you to show me a representative sample, and then I give you feedback on those, and you apply that feedback.
+- **A build is a way to play you can watch,** with a rhythm, woven from several threads, never one keyword turned up ("red fire or blue fire or gray fire"). Elements are themes, nothing more.
+- **What a build asks is a range,** from easy and modest to specific and potent, with several routes in and a web of shared pieces.
+- **MP is fuel.** Within a fight, MP and cooldowns are part of how a build is measured. No build is made better at lasting many fights; what differs is whether it spends more HP or more MP.
+- **The twelve builds in `builds.md` stand.**
 
-Their correction, in the next message:
+## Formations (`builds.md`, "Formations: what they can be")
 
-> Yes, sorry. I meant to say I have no limits on the type of effects right now. That's true for gear as well as for formations. We just need to make it extremely clear what's happening in the way we phrase them.
+- **A formation is a shape with its own identity:** "formations also have their own identity". It can have shared seat roles, custom roles, lopsided seats, and effects on the whole party.
+- **Rarities:** common, rare and legendary. No mythic formations in this pass.
+- **No lock-and-key fishing** for one formation.
+- **A new formation should make you rethink your party.** That's what worked best in play.
 
-> I also think it's compelling to have potentially rarities for formations. At least, you know, like 2 or 3 rarities.
+## Gear (`builds.md`, the section "Gear")
 
-The examples they called "very strong" were the designer's: *Frost line* (every ally's basic attacks add a Chill; Magic −1 in every slot), *Hunting party* (every ally's random single-target picks go to the foe with the lowest HP), *Choir* (when an ally gains Haste or Might, every other ally gains a little) and *Fresh legs* (an ally who sat out the last fight starts this one with its abilities ready).
+- **All of the gear is open:** armor, weapons, offhands, amulets, and the tier above legendary. The armor's draft in `builds.md` is the most liked part so far, but not settled. Design it from needs, not tidy numbers; lopsided is fine. The weapons are open to reinvention.
+- **Every class has an offhand** (Oct 29): "every class has at least one offhand that they can wield, no question". Two-handed weapons that take the offhand's place are welcome "if you think it's actually a meaningful design pattern we can use". They're in.
+- **The gear slots' first proposal** (Oct 29): "I really like this design in general." Their answers:
+  - Start with two-handers: "It's a good call."
+  - The amulet open to everyone, valuable "in a game where you can switch units around", at 10% to 15% of the pool.
+  - The Hoplite's pike is no worry for now.
+  - Mythics as proposed; starting with one per class "makes the task easier".
+  - The art for new weapon kinds and offhands is theirs to source.
+- **The sceptre becomes the rune sword:** "thematically better of a fit for the paladin and the Valkyrie. I think it's also just cooler."
+- **The Hexer and the Geomancer needn't be casters.**
+  - The Geomancer's one Magic-scaling ability "could be 100% changed", and it might be renamed (Earth Knight, Earthbender: "We'll figure it out later").
+  - The Hexer "could totally be like a Spellblade type thing".
+- **The gear is approved** (Oct 29: "I'm sold on this"), merged into `builds.md`.
+- **The order from here** (Oct 29):
+  1. Base features (the cleanup, with 5h, which is complete, and 5i merged into main), with no balancing or difficulty tuning: "I would not bother even a little bit balancing after the first pass. Just get it in."
+  2. Gear, formations and upgrades: one lead calling parallel agents, with all twelve builds made and tested together.
+  3. Then balance.
+  - **The cleanup's damage types:** each ability keeps its damage type minus the element, set by the gear's weapons where a class's weapons are all one type. The director tie-breaks and doesn't design.
+  - **The briefs:** `../5j-cleanup/brief.md`, `pieces-design-brief.md` and `pieces-build-brief.md`.
+- **Cards show who can wear a piece ("fits"), never what it's "for":** "the signposting who the designer had in mind for that gear ruins the discovery".
+- **Rarity is mostly specificity,** plus power that grows by act and stays narrow. No random affixes on rare and legendary pieces for now. Tiers below legendary carry effects too: legendary shouldn't be "the only interesting gear".
+- **Plenty of loot:** "It's better to have too much than not enough if you're unsure for the first versions." How much drops follows the gear's design, not the other way round.
 
-## Upgrades
+## Upgrades, for step 4 (`philosophy.md`)
 
-Their first idea, set aside for later in the same conversation ("The rest of the ideas are compelling, multiple abilities, the hourglass, but I would keep these for another moment"):
+- **Each ability and passive gets one plain power step and one choice between two versions,** designed for that ability. "The importance is the difference, not that they're not better."
+- **No formula across abilities.** Neither version is "more of the same"; both can be better, or neither.
+- **Targeting and trigger conditions are undervalued:** "I like things that play on triggering conditions or targeting conditions." A version can come with its own targeting, or targeting can become its own kind of upgrade later.
 
-> I think if most units, instead of having three abilities, they had like five or six, and you picked which ones that they went in, like which slots they went in. And when they leveled up, instead of just having one upgrade, they had like an and or upgrade, like two upgrades that you have to pick from, you know, and it could be things like lower cooldown versus higher damage. It could be the conditions you're talking about, like, oh, suddenly this shield bash is going to wait for someone on cast for it to happen, that kind of stuff. The idea behind these two being that now you can make builds that synergize more. Like, it isn't just like, you know, the Frostweaver and the Hexer that only have chill. Like, maybe you can get chill on a bunch of different units if you have the ability choices made for those units.
+## How to work with them
 
-Then the cheaper version, for this pass:
-
-> Another idea I have is a cheaper version of the version of the 6 abilities per unit. Rather than each ability just having one upgrade, you could have it so that each ability has 2 upgrades that are different. You know, not like dramatically transforming the ability into something else, but, you know There are a lot of things that are really trivial to do to abilities, like changing their cooldown, changing their scaling, changing their stacks, changing their damage, changing their mana cost, adding effects to them, adding status effects to them, changing their targeting rules, giving them targeting rules. Adding multiple hits to them. Like, a lot of this stuff are really easy to do. And I wonder if that is a way to add a lot of that diversity and sort of build synergy we're trying to look for. Because then you could make someone's ability branch into something else to help a build, like adding a status effect onto an ability that gives class new access to it. We can also upgrade passives, which we've never done, but passives are often a big identity of a unit. I mention it now because I could imagine that being done in the same pass as formation and gear, though I want you to weigh in on that. And if that's the case, then when we're looking at the UI for upgrading heroes, you know, we're going to want probably like a nested menu rather than a flat list if there's this many choices. Also as long as we stay within reasonable numbers, like ones we're kind of in, the balancing of the game should mostly hold up, and then we can do another pass later. Though obviously I think enemies need to be made harder if we end with things like swapping and more synergies.
-
-The designer weighed in: upgrades in the same pass as gear and formations, since a branch, a piece of gear and a formation are three ways to fill the same gap (`kickoff.md`).
-
-## Out of this step, at their word
-
-> I think the hourglass Potions between fights seems really cool, like more new types of potions. But unless there's like a really obvious design that really jumps out at you as completely risk-free, it feels like a next step. Because it's just like, I don't think it's going to be the thing that changes the game.
->
-> The rest of the ideas are compelling, multiple abilities, the hourglass, but I would keep these for another moment. That's not what we're trying to do right now.
-
-And on the work's shape:
-
-> I would say go for developing that side on this branch, but I do think you need to commit a gearing kick off with everything that you want in it, because I think the context is going to get muddied during development.
-
-## The director's notes that shape this step (verbatim)
-
-From their ten notes on 5h's first design, the same day. Notes 7 (the gear economy), 8 (choices between kinds of reward) and 9 (testing) bear on this step too and are recorded in full in `../5h-roster/intent.md`; in the designer's summary, not their words: gear drops too freely, at too high a rarity, restricted to what the roster can use, so builds feel complete early and nothing makes you fish for a class ("potentially part of the fix is more specific loot that combos together so you'll want to switch more"); choices between kinds of reward (gear against a formation) are welcome; and tuning uses hand-built representative parties, not a simulated player, until every system is in. The rest, verbatim:
-
-> 10. Also, in my experience with AI, they are going to basically hyper-focus on the examples that you give and do only that. So I suggest being, at least for your set of... enablers and payoffs, being way more thorough in terms of things you actually want them to look at. For example, there's no mention of revive, there's no mention of healing, there's no mention of, like, you know, reacting to stun in any way, there's no reaction, nothing on thorns, nothing on armor or resistance, nothing on evasion, nothing on AoEs, nothing with sunder, silent. Like, there's just like either list everything or don't, or omit things for a reason. But the way it is there, I'm almost certain that representative sample is just going to be, you're just going to get those exact things.
-
-> reading the gear kickoff, it's unclear whether you're expecting them to come up with passives with branching upgrades or a single upgrade. I would keep the branching upgrade paradigm everywhere.
-
-## Their third round of notes (verbatim, the parts about this step)
-
-> Okay, we're close. A couple of notes. Careful about the loot numbers, because the AI is really bad, and they probably picked, like, the simulated player has way less gear than I was able to get in my runs. And just think about it for a second, right? If we have, at minimum, 5 party members, and each has 3 slots, and we get 10 pieces a run, then we're never even filling our unit slots at all. And the likelihood of us being able to build any sort of synergy is impossible. So I actually might have just been straight up wrong with my idea that there's too much loot. I think there isn't, probably. You need to just do, you know, a logical thought of how much gear we need for how many classes we're planning on getting, and then use that to implement the right number. Like, if we're getting 2 or 3 legendary gear, that means, you know, the chances of even having a single legendary gear that is relevant to something that I want to be doing is minuscule. I would definitely increase that, like, by orders of magnitude, probably. It's better to have too much than not enough if you're unsure for the first versions.
-
-> For the kickoff, I think you probably need to frame it like something like, you're a game designer and here's the mechanics, pick what you think would be interesting synergies based off other games that you've seen or stuff like that. If we're trying to tell it to, you know, it always must span the map, then you're gonna have synergies off of like clarity ticks, which is like the weirdest, dumbest thing. Like if you ask it to do a sample of everything, that's not gonna work. So you can list everything if you want, but then don't give it at least half of or any numbers like that. That never works.
-
-## Their feedback after playing 5h's round 5 (Oct 29, 2026; verbatim, the parts about this step)
-
-After five runs of 5h's build. The whole message, with the roster and map points, is in `../5h-roster/intent.md`; `../5h-roster/feedback.md` tracks every point (its numbers are used here, with theirs in brackets where they differ). They asked for this step's intent to be updated with points 21 and 25 ("I think you need to update its intent, I already started the first design pass, but this feels significant").
-
-> I can't wait to see it with better formations, loot, and abilities. I struggle to make too many sweeping changes without the loot formation and upgrade changes (5i), because I suspect they're going to make a dramatic difference to the way this plays. However, I will still make some notes about stuff that I think is quick to fix. Obviously not mentioning specific gear or loot.
-
-Point 6 (theirs 7):
-
-> Mostly setup for the 5i, but I don't like when gear says it's "for" someone. The fits names are super useful, but the signposting who the designer had in mind for that gear ruins the discovery
-
-Points 16 to 18, on MP:
-
-> 16. Mana feels extremely punishing early game, and late game, it feels better and more manageable. It stabilizes once you get magic up gear, regen gear, units with clarity and stuff like that. I actually don't think I would change anything right now until 5i happens, because I'm suspecting that's going to affect this a lot
->
-> 17. Similar to the point above, You run out of mana in every boss fight, and you can only sustain for like 1.5 fights. Like in the second fight, you run out of mana completely. Once you get mana regen sources, this stops being a problem. But it really does feel like a threshold you have to pass. Again, I don't know if we change anything until 5i, but that's why I suggested giving a tonic at game start.
->
-> 18. Turning off certain abilities to conserve manna is a key and necessary strategy. It adds a layer of choice, which I'm undecided if it's a good choice or not. It's worth shelving for later when we have more abilities for less slots, or think of another plan. Open to suggestions but I doubt we do anything here
-
-Point 20, on training at the campfire:
-
-> 20. At campfires, you focus 80% of the time and you heal 20% of the time. Never was it ever appropriate to learn something. The resource attrition is too great. It honestly didn't feel terrible because I had enough other sources to learn everything I needed to. Not sure what to do with this one. Something to watch out for. Open to suggestions here as well.
-
-Points 21 and 22, on rarity:
-
-> 21. It's common to get legendary gear like immediately in Act 1. And it's cool because it's the only interesting gear. But I mention this for the 5i pass. If every gear is kind of uninteresting except for legendary, then once you get one, it feels like everything else is a side grade. We definitely need like a tier that is not, that is either better than legendary or one below it, but that can also carry effects. 5i might change all of this. I think you need to update its intent, I already started the first design pass, but this feels significant. Weigh in on this issue
->
-> 22. Similarly, I got way more legendary gear than any other type. I think adding interesting non-legendary gear is for the other thread, but making sure you don't only receive that is for here. But it's hard to tell if I only received legendary gear because I was only always picking it over the rare ones, because I'd rather pick an off situation gold that might have a useful passive later than a rare that just has random stats I don't care about.
-
-Point 25, on difficulty:
-
-> 25. Act 1 is challenging, act 2 less so but still mostly engaging, and act 3 is extremely easy and I had almost no risk. Obviously, the main power level comes from formation gear and ability upgrades, so 5i is going to do a huge pass, but I am 100% sure the game is going to be dramatically too easy with that pass. We need to instruct 5i and its intent to do a full balancing pass for difficulty after knowing that the current target we have is too easy when a human player engages with it
+- **Briefs and prompts for agents give intent and ranges, never examples:** "You will simply get the examples that you listed for sure, verbatim."
+- **Their notes contain illustrations made up on the spot** ("I'm just bullshitting", "None of these examples are suggestions"). Read them for the intent behind them.
+- **Don't ask for coverage of every mechanic.** Pick what's interesting, as a game designer would.
+- **Gates:**
+  - **Samples:** they review a representative sample, not every piece.
+  - **Testing:** use hand-built parties, not a simulated player.
+- **Write-ups:** short, plain, decisions first. Push back with reasons, and show what you're least sure of.
+- **Each round:** this page changes where their standing intent does, and only there.
