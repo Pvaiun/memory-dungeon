@@ -2,6 +2,29 @@
 
 Oct 29, 2026, for the director to pick from. Each structure is judged against `philosophy.md` (Slots): pieces that can be kept apart, rewards that read at a glance, and choices that aren't "picking which of your favourite toys you wanted to throw in the garbage". The builds are step 3 and the pieces step 4, so no piece is named here.
 
+## Outcome (Oct 29): step 2 closed
+
+The director picked A, then gave the designer two ways to do its offhand and asked for the better one for build making. The structure follows the content: where pieces come from gets reshaped to fit what the builds need, after step 3. Their words are in `intent.md`.
+
+**The structure:**
+- **Weapon:** by kind, as today.
+- **Offhand (new):** shared kinds of two or three classes, mostly three. Each class wears one kind, and a few wear two. The kinds group the classes along different lines from the weapons and the armor.
+- **Armor:** locked by type. Three or four types, and a second type for certain classes, as the builds say.
+- **Amulet:** anyone.
+- **Mythic, a rarity above legendary, in any slot:** made for one class, about five or six a class. Like rare and legendary pieces, a mythic has no random affixes.
+
+**Why the designer picked shared offhands with mythics** over a class-only offhand:
+- **The web lives in shared pieces.** With a class-only offhand, a quarter of the loot would matter only through one class.
+- **A mythic sits wherever its effect belongs,** in any slot, not only the offhand.
+- **Mythics are the far end of what a build asks:** specific, late, and far stronger for the builds that want them. Everything below them is shared, so a build gets something from what most runs find before its mythic arrives.
+- **The looting works.** Shared slots carry the base (the count below). Mythics are few enough to reach through a targeted room or event, such as the director's pick of one from three for a class, without making runs alike.
+- **The bespoke work is bounded and goes depth first:** the dozen builds' classes get their mythics first.
+
+**Open, for after the builds (step 3) and with 5h's numbers:**
+- **Where mythics come from.**
+- **Whether a unit can carry more than one.** Five or six a class is few enough to check every pair by hand, so no rule yet.
+- **Mythics and branches** are both made for one class. A branch is chosen and kept; a mythic is found. Step 3 checks that they don't read alike.
+
 ## After your read (Oct 29)
 
 **You picked A.** Armor can have four types, and certain classes can wear a second; the builds will tell us which (step 3). Your words are in `intent.md`.
@@ -35,7 +58,7 @@ What it costs:
 
 I also considered the other fix: offering offhands to the fighting party much more often. That raises the count, but each class still reaches only its own few pieces, so runs repeat. It also means writing a full list for every class.
 
-**Needs you:** class-only or shared offhands. Then I record your word and step 2 is closed.
+**Needed you:** class-only or shared offhands (answered: see Outcome).
 
 ## What needed you (first read)
 

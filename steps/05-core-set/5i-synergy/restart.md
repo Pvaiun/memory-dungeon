@@ -8,7 +8,7 @@ Written Oct 29, 2026, by the session that wrote the gap map, the first design an
 - **The gap map stands** (`gap-map.md`): every mechanic's enablers, payoffs and answers, from the content.
 - **The restart's order, agreed with the director:**
   1. a one-page philosophy (**done and approved**, `philosophy.md`);
-  2. the slots: two or three structures to pick from (**next**);
+  2. the slots: two or three structures to pick from (**done**, `slots.md`, Outcome);
   3. about a dozen builds and the web between them;
   4. the pieces, formations and upgrades, built backwards from the builds.
 
@@ -34,6 +34,7 @@ Written Oct 29, 2026, by the session that wrote the gap map, the first design an
 
 ## Decided so far, beyond `philosophy.md`
 
+- **The slots (step 2, Oct 29):** four a unit. A weapon by kind, as today. A new offhand in shared kinds of two or three classes. Armor locked by type (three or four types, a second for certain classes, as the builds say). An amulet for anyone. And a **mythic** rarity above legendary, in any slot, made for one class, about five or six a class. The structure follows the content: where pieces come from is reshaped after the builds. `slots.md` (Outcome) has the reasons and what's open.
 - **Loot starts from scratch.** No piece from today's game is kept for existing. The core set's 14 powerful pieces are assessed like anything else.
 - **Rarity** is mostly specificity, plus power that grows with the acts and stays narrow. No random affixes on rare and legendary pieces for now.
 - **Formation rarities:** common, rare, legendary. What they mean follows the philosophy, not the first design's limits.
