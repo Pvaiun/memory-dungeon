@@ -31,7 +31,7 @@ import { celebrate } from "../celebrate.js";
 import { meet } from "../bestiary.js";
 import { advanceOnce } from "../../../src/engine/run.js";
 import { combat } from "../../../src/engine/combat/rules.js";
-import { endFight as endRogueFight, FIGHT_DUNGEON, partyOf, reservesStand, startFight as startRogueFight } from "../../../src/rogue.js";
+import { endFight as endRogueFight, FIGHT_DUNGEON, partyOf, startFight as startRogueFight } from "../../../src/rogue.js";
 import { current as rogueRun, saveRogue } from "../rogue-state.js";
 
 /** `node`: the journey node it was started from. Winning that node's whole run, while it's the one to clear, clears it; its single fights are practice. */
@@ -191,6 +191,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   function startBeat(b: Beat) {
     clear(linesEl);
     playing = { beat: b, shown: 0, typed: 0, charAt: vwall, lineEls: [], typedAt: null, hold: holdFor(b) };
+    for (const ev of b.quiet ?? []) show(ev);
     if (b.kind === "intro") introUntil = vwall + Math.max(1800, playing.hold + 800);
     cursorEl.style.visibility = "hidden";
   }
@@ -321,6 +322,10 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       case "dmg":
         if (typeof ev.hp === "number") scene.told(String(ev.target), ev.hp);
         showDamage(ev);
+        break;
+      case "mp":
+        // Step 5h round 6: MP gained shows on the field, blue, like a heal.
+        scene.number(String(ev.target), `+${disp(ev.amount as number)}`, { color: "#6fb4ff", sub: "MP" });
         break;
       case "heal": {
         if (typeof ev.hp === "number") scene.told(String(ev.target), ev.hp);
@@ -705,7 +710,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     // One big way on, where the message window was; the rest below.
     let main: HTMLButtonElement;
     const more: HTMLButtonElement[] = [];
-    if (rogue) main = bigButton(won ? "ONWARD" : reservesStand(c, rogue) ? "THE CAMP STEPS IN" : "THE END", () => rogueOn());
+    if (rogue) main = bigButton(won ? "ONWARD" : "THE END", () => rogueOn());
     else if (clearedNow) main = bigButton("JOURNEY", () => { stop(); go("journey"); if (!celebrated) cheer(); });
     else if (won && !last) (main = bigButton("NEXT FIGHT", () => nextFight(), `${driver.fightNo + 1}/${driver.fightTotal}`)), more.push(button(exitLabel, exit));
     else if (won) (main = bigButton(exitLabel, exit)), more.push(button("AGAIN", () => restart()));

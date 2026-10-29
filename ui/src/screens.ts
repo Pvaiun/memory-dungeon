@@ -21,10 +21,10 @@ import { weaponOf } from "../../src/engine/combat/fight.js";
 import { foesOnStage, partyOnStage, stageEl, Strip, STRIP_H, themeOf } from "./battle/scene.js";
 import { startBattle, type BattleArgs } from "./battle/battle.js";
 import { music, setMusic, setSound, sfx } from "./battle/audio.js";
-import { bindRogue, rbossScreen, rgearScreen, rogueMenuLine, rogueScreen, rpartyScreen, runitScreen } from "./rogue-screens.js";
+import { bindRogue, rbossScreen, rclassScreen, rgearScreen, rogueMenuLine, rogueScreen, rpartyScreen, runitScreen } from "./rogue-screens.js";
 import { abandonRun, current as rogueRun, resetRogue } from "./rogue-state.js";
 
-export type Screen = "home" | "journey" | "node" | "fight" | "party" | "formation" | "unit" | "gear" | "classes" | "bestiary" | "enemy" | "settings" | "battle" | "rogue" | "rparty" | "runit" | "rgear" | "rboss";
+export type Screen = "home" | "journey" | "node" | "fight" | "party" | "formation" | "unit" | "gear" | "classes" | "bestiary" | "enemy" | "settings" | "battle" | "rogue" | "rparty" | "runit" | "rgear" | "rboss" | "rclass";
 
 let current: Screen = "home";
 let currentArg: unknown;
@@ -72,7 +72,7 @@ export function go(s: Screen, arg?: unknown, keepScroll = false) {
   }
   const screens: Record<Exclude<Screen, "battle">, (arg?: unknown) => Child[]> = {
     home, journey, node, fight, party, formation, unit, gear, classes: classesScreen, bestiary, enemy, settings,
-    rogue: rogueScreen, rparty: rpartyScreen, runit: runitScreen, rgear: rgearScreen, rboss: rbossScreen,
+    rogue: rogueScreen, rparty: rpartyScreen, runit: runitScreen, rgear: rgearScreen, rboss: rbossScreen, rclass: rclassScreen,
   };
   screenEl.append(...(screens[s](arg).filter(Boolean) as Node[]));
   settleBack();

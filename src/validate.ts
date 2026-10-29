@@ -723,11 +723,14 @@ function checkRogue(pack: Pack, w: Walker, r: Report, rg: S.RogueT) {
       reg[tier].forEach((f, j) => f.enemies.forEach((e, k) => w.ref("enemies", e, `rogue.regions[${i}].${tier}[${j}].enemies[${k}]`, "enemy")));
   });
   for (let a = 1; a <= acts; a++) if (!rg.regions.some((reg) => reg.act === a)) r.error("rogue.act", "rogue.regions", `no region for act ${a}`);
-  Object.entries(rg.config.firstAbility).forEach(([cls, ab]) => {
+  Object.entries(rg.config.firstAbility ?? {}).forEach(([cls, ab]) => {
     w.ref("classes", cls, `rogue.config.firstAbility.${cls}`, "class");
     if (!pack.classes.find((k) => k.id === cls)?.abilities.includes(ab)) r.error("rogue.ability", `rogue.config.firstAbility.${cls}`, `'${ab}' isn't one of ${cls}'s abilities`);
   });
-  pack.classes.forEach((k) => { if (!rg.config.firstAbility[k.id]) r.error("rogue.ability", "rogue.config.firstAbility", `no first ability for '${k.id}'`); });
+  // Step 5h: formation rarities name formations that exist; the act odds cover every act.
+  Object.keys(rg.config.formationRarity ?? {}).forEach((id) => w.ref("formations", id, `rogue.config.formationRarity.${id}`, "formation"));
+  if (rg.config.formationOdds && rg.config.formationOdds.length < acts) r.error("rogue.act", "rogue.config.formationOdds", `odds for ${rg.config.formationOdds.length} acts, but the config has ${acts}`);
+  if (rg.config.recruits && rg.config.recruits.known.length < acts) r.error("rogue.act", "rogue.config.recruits.known", `odds for ${rg.config.recruits.known.length} acts, but the config has ${acts}`);
   rg.gear.forEach((g, i) => g.statuses?.forEach((id, j) => w.ref("statuses", id, `rogue.gear[${i}].statuses[${j}]`, "status")));
   rg.gear.forEach((g, i) => g.weapon?.kind && w.ref("weaponKinds", g.weapon.kind, `rogue.gear[${i}].weapon.kind`, "weapon kind"));
   const all = new Set([...pack.gear.map((g) => g.id), ...rg.gear.map((g) => g.id)]);

@@ -52,8 +52,20 @@ export function prepare(run: RogueRun) {
   }
 }
 
+/**
+ * The next run's dice (step 5h round 6): drawn once and kept until a run starts, so the start screen can show the ability each
+ * leader would set out knowing, and leaving the screen doesn't re-roll it. A run started (or abandoned after) draws new ones.
+ */
+export function nextSeed(): number {
+  if (!s.meta.next) {
+    s.meta.next = Math.floor(Math.random() * 1e9) + 1;
+    saveRogue();
+  }
+  return s.meta.next;
+}
 export function startRun(leader: string, heat: number): RogueRun {
-  const seed = Math.floor(Math.random() * 1e9) + 1;
+  const seed = nextSeed();
+  delete s.meta.next;
   s.run = newRogue(c, { seed, leader, heat });
   s.last = null;
   prepare(s.run);

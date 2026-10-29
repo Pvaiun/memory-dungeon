@@ -24,61 +24,116 @@ const critStep = (n: number): Change => ({ stat: "crit_chance", flat: crit(n) })
 
 export const ROGUE_CONFIG: RogueConfigT = {
   /** Gold at the start, and the draft: the leader (an owned class), then this many picks of one from `offers` classes. */
-  start: { gold: 60, offers: 3, picks: 2, healer: true },
+  start: { gold: 60, offers: 3, picks: 2, healer: true, supplies: ["potion", "tonic"] }, // Step 5h round 6 (the director's): a potion and a tonic at the start, so the first fight can be recovered from.
   /**
-   * Abilities a class knows on joining: one in act I, two in act II, three in act III. Each class's first is below: the one
-   * that best stands for it on its own. The Vampire starts with Wither, not Blood drain: as leader with random companions it
-   * won 37% of runs with Blood drain (the next best class 20%), 19% with Wither.
+   * Step 5h (the director's): what a class knows is rolled. A starting unit (the leader, the draft) knows one of its three
+   * abilities at random; a recruit one, two or all three, the odds by act (`recruits.known`). Raise and Valhalla are rolled
+   * like any other: a bad roll is a pick the player can decline. (Before: a fixed first ability per class, one more an act.)
    */
-  firstAbility: {
-    knight: "stand_fast", cleric: "cure", ranger: "barbed_arrow", bramble_knight: "thicket", hoplite: "aspis", paladin: "smite",
-    valkyrie: "gale_spear", bard: "war_ballad", hexer: "enfeeble", monk: "burning_fist", assassin: "backstab", vampire: "blood_gift",
-    pyromancer: "firebolt", frostweaver: "frost_lance", stormcaller: "chain_lightning", geomancer: "earthen_shell",
-  } as Record<string, string>,
-  /** Party of three, and up to two more waiting at camp. */
+  /**
+   * Party of three; two seats at camp at the start, up to four. Step 5h round 6 (the director's: choosing a seat over a reward
+   * "never felt remotely appropriate"): a seat comes with each new act, three at camp in act II and four in act III (was a boon's
+   * option or an event's).
+   */
   party: 3,
   bench: 2,
+  benchMax: 4,
+  benchByAct: [2, 3, 4],
+  /**
+   * Recruits are offered one of two (the director's: one of three let every run gun for the same party). Known: by act, weights for
+   * one, two, three. Step 5h round 6 (the director's: "recruits shouldn't be able to know all 3 abilities in act 1, no matter the
+   * luck"): act I rolls one or two (was 5% three). The events that promise all three (the Veterans, the Rival Company) keep it, at
+   * their word: rare, named moments.
+   */
+  recruits: { offers: 2, known: [[70, 30, 0], [35, 45, 20], [15, 45, 40]] },
+  /** After each won fight, those who sat it out regain this share of max MP (flat, like a tonic; no gear touches it). */
+  benchMp: 50,
+  /** A fresh ability (a starting unit's, a recruit's, one just learned) starts with this share of its cooldown already run. */
+  fresh: 50,
+  /** The Muster: a pick of one of two recruits. The Drill ground: one of two formations, or two members trained. */
+  muster: { offers: 2 },
+  drill: { offers: 2, train: 2 },
+  /** Formation rarities, provisional until step 5i sets them (and adds legendary ones); offers roll a rarity by act. */
+  formationRarity: { neutral: "common", vanguard: "common", ambush: "common", scatter: "common", tortoise: "common", champion: "rare", blitz: "rare", escort: "rare", last_stand: "rare", caravan: "rare" },
+  formationOdds: [{ common: 70, rare: 28, legendary: 2 }, { common: 45, rare: 45, legendary: 10 }, { common: 25, rare: 55, legendary: 20 }],
   /**
    * The map of an act: `floors` floors and the boss above them, `width` columns, `paths` paths walked up from the bottom
    * (Slay the Spire's generator). Fixed floors; then room odds for the rest, with elites and campfires kept off the first
    * floors, and no elite, campfire or shop straight after another of its kind.
+   *
+   * Step 5h round 6 (the director's: two fights before a boss, "the map is filled with sort of dead spots"; design-round-6.md):
+   * 12 floors (were 9), the Muster and the Drill ground folded into other rewards, campfires guaranteed only before the boss
+   * (about two more a map, on about a third of paths); a path has 4.9 regular fights and 0.9 elites (were 2.1 and 0.7).
+   * `easyTo`: the easy pool's last floor (a start's fights, floors 1 to 3). `ref`: each pool's reference floor, where its fights'
+   * own knobs hold; the act's climb (`knobs[].step`, and `early` below the reference) moves them from there.
    */
   map: {
-    floors: 9, width: 5, paths: 5,
-    fixed: { 1: "fight", 5: "treasure", 9: "campfire" } as Record<string, RogueNodeKindT>,
-    odds: { fight: 46, event: 22, elite: 12, campfire: 12, shop: 8 } as Record<string, number>,
-    lateFrom: 4,
+    floors: 12, width: 5, paths: 5,
+    fixed: { 1: "fight", 7: "treasure", 12: "campfire" } as Record<string, RogueNodeKindT>,
+    odds: { fight: 50, event: 27, elite: 11, campfire: 6, shop: 4 } as Record<string, number>,
+    lateFrom: 5,
+    ensure: { shop: 2, elite: 2, campfire: 2 },
+    // Round 6 (the director's: "75 or 80% of paths should pass one"): mid-act campfires added until 60% of the ways up pass one, which
+    // lands at 79% of paths over many maps (a map's median 78%), since one campfire serves many ways up.
+    campPaths: 60,
+    easyTo: 3,
+    ref: { easy: 1, normal: 7, elite: 8 },
   },
-  /** Gold for a win: [min, max], plus `perAct` × (act − 1). */
-  gold: { fight: [12, 20], elite: [50, 65], boss: [90, 110], perAct: 5 },
+  /** Gold for a win: [min, max], plus `perAct` × (act − 1). Round 6: a regular fight 7–12 (was 12–20), with twice the fights. */
+  gold: { fight: [7, 12], elite: [50, 65], boss: [90, 110], perAct: 5 },
   /**
    * Spoils: after a fight, pick one of `count` (or none). Each is gear unless it rolls a tome (a member learns an
    * ability) or a recruit. An elite also pays a trophy, a legendary piece won outright (Slay the Spire's elite relic). Gear rolls its rarity from the table. `usable`: the share of gear rolled from what someone
    * in the roster can use; the rest is anything (the piece that wants a class you don't have yet).
    */
   spoils: {
-    fight: { count: 3, rarity: { common: 55, uncommon: 33, rare: 12, legendary: 0 }, tome: 12, recruit: 6, supply: 8 },
-    elite: { count: 3, trophy: true, rarity: { common: 0, uncommon: 0, rare: 100, legendary: 0 }, tome: 15, recruit: 10, supply: 0 },
-    usable: 75,
+    // Step 5h (the director's: enough loot to fill the seats and build; legendaries "by orders of magnitude"): a pick of three,
+    // gear in 60% of fights and mixed with a tome or a formation in 40%; no supplies (every won fight already drops one); no
+    // recruits (they have their own rooms). A full run should take about 28 pieces and 12 legendaries (design.md).
+    // Round 6 (the director's: choices between kinds "too often"): mixed picks in 15% of fights (were 40%).
+    // Round 6, the 12-floor map: a regular fight's pieces 6% legendary (were 13%), so legendaries offered a run hold with twice the fights.
+    // Round 6 (batch 3): a mixed pick can hold a sealed piece (rare or better, unseen) or a bundle (a common piece and a supply).
+    fight: { count: 3, rarity: { common: 35, uncommon: 32, rare: 27, legendary: 6 }, tome: 0, recruit: 0, supply: 0, mixed: 15, mix: { tome: 30, formation: 25, recruit: 0, sealed: 25, bundle: 20 } },
+    // Round 6 (the director's: "elites have a pick of a legendary and a pick of a formation"; formations "came too late in most runs"):
+    // a pick of three legendaries, one aimed at the party, then a pick of two formations. Was a legendary won outright, then a pick
+    // of three rares and legendaries.
+    elite: { count: 3, aimed: 1, rarity: { common: 0, uncommon: 0, rare: 0, legendary: 100 }, tome: 0, recruit: 0, supply: 0, formations: 2 },
+    // A third of offered gear is for a class not in the roster, so a piece can make you want a class (was none: 0.05 a run).
+    offRoster: 33,
   },
   /** The boss's boon: pick one of a legendary piece, a formation and a recruit. The next act starts restored, and everyone learns. */
-  boon: { count: 3 },
-  /** A chest: one piece, rare or better, and some gold. */
-  treasure: { rarity: { common: 0, uncommon: 0, rare: 70, legendary: 30 }, gold: [15, 35] },
-  /** The campfire: one pick of REST, FOCUS, RAISE or TRAIN; those at camp rest too. Swapping the party is free. */
-  // Those at camp get half a REST and half a FOCUS whatever the pick (three playtesters called the whole of both a free
-  // heal battery); a wipe with someone standing at camp passes the road to them (four lost a run with healthy reserves).
-  campfire: { hp: 40, mp: 60, revive: 40, camp: 50 },
-  reserves: true,
+  boon: { count: 3, seat: false }, // Step 5h round 6: seats come with each act (benchByAct), not from the boon.
+  /** A chest: one piece, rare or better, and some gold; or a cage, a recruit with a piece suited to it. */
+  // Round 6: a chest's piece legendary 30 times in 80 (was 45), rare the rest.
+  treasure: { rarity: { common: 0, uncommon: 0, rare: 50, legendary: 30 }, gold: [15, 35], cage: 20 },
+  /** The campfire: one pick of REST, FOCUS, RAISE or TRAIN (two members); those at camp get half a REST whatever the pick. */
+  // Step 5h: the bench's MP comes after every fight now, so the camp's share is HP only; the reserves rule is gone (a wipe is
+  // a wipe, now that the party can be changed before any fight); a stranger at the fire sometimes asks to join.
+  // Round 6 (the director's: four options, three of them sustain, RAISE often forced, so TRAIN never; design-round-6.md §3): on
+  // arrival everyone, party and camp, recovers `auto` (HP and MP, the fallen rise); then one pick of two, REST (everyone `hp` and `mp`
+  // again) or TRAIN (`train` members). The stranger can be taken in or turned away for a lesson, apart from the pick.
+  // Then (the director's, on the first build: "decrease the free MP share right off the bat ... We weren't trying to give more free
+  // MP. We were trying to give less of a terrible choice"): the free MP 10% (was 25%); REST still gives 25% of each.
+  campfire: { hp: 25, mp: 25, revive: 25, auto: { hp: 25, mp: 10, revive: 25 }, train: 3, stranger: 30 },
+  // Round 6 (the director's: recruits too hard to get in act I; "the thematic tying of humans or people to recruits ... as long as
+  // it's not every other fight"): after a won fight with people in it, sometimes a captive, free on top of the spoils: taken in (at
+  // `hp`%), turned into a lesson, or let go. Never two fights running.
+  captive: { chance: 20, hp: 50, people: ["bandit", "archer", "shieldman", "witch", "soldier"] },
   // Snakes' packs never grow, and act I's regular fights hold two (round 29: the Viper Den and the Snake Pit ended 9% and
   // 7% of the act I runs meeting them, every other act I fight 2% or less, with their knobs already at the floor: the
   // regular fights' extra HP gives a snake more hits, and Bleed doesn't shrink with the knob).
-  neverGrow: ["snake"],
+  // Step 5h: with a bench to pick from before every fight, the fights softened for a fixed party of three come back as
+  // puzzles: snake packs grow again, the Snake Pit and the Viper Den hold three and four snakes (as first built), and the
+  // Fire Mine a new elite, the Bomb Nest: three Bomb Bugs (the enemies document: "three together wipe" a party not built for
+  // them). Three cost a quarter of a counter-picked party's HP at the knob's floor, an elite's cost, so they're an elite and
+  // the regular Bomb Room and the Powder Room keep two.
+  neverGrow: [],
   /** A level-up can be taken as gold instead (one with a single thing left to learn or upgrade was no choice). */
   levelGold: 40,
   /** Prices, in gold. A piece sells for `sell` % of its price. Services are once a visit. */
   prices: { common: 45, uncommon: 70, rare: 110, legendary: 190, recruit: 120, formation: 100, learn: 60, upgrade: 80, trainStep: 30, supply: { potion: 35, tonic: 35, phoenix: 60 }, sell: 35 },
-  shop: { gear: { common: 2, uncommon: 2, rare: 1, legendary: 1 }, recruits: 1, formations: 1, supplies: 2 },
+  // Step 5h round 6 (the director's): the shop always has all three supplies (was two of the three).
+  shop: { gear: { common: 2, uncommon: 2, rare: 1, legendary: 1 }, legendaryByAct: [1, 2, 2], recruits: 1, formations: 1, supplies: 3 },
   /** Supplies, used between fights: the bag holds this many. */
   /**
    * Step 5g round 6 (the director's): a potion heals one member, a tonic refills one member's MP (the old tonic healed the whole party 30%, the
@@ -93,10 +148,16 @@ export const ROGUE_CONFIG: RogueConfigT = {
    * The foes, in percent (the campaign's knob: HP +k %, damage +k/2.5 %): per act, the first floor's, the rise per floor, an
    * elite's on top, and the boss's. Each region adds its own (below). Set by the rogue tuning (npm run rogue).
    */
+  // Round 6: the climb stretched over 12 floors (6 a floor → 4.5), so an act's top floor is as hard as floor 9 was. `early`: the
+  // climb below a pool's reference floor, act I's measured against a party a few rooms in (design-round-6.md §8).
   knobs: [
-    { mob: 0, step: 6, elite: 0, boss: 0 },
-    { mob: 0, step: 6, elite: 0, boss: 0 },
-    { mob: 0, step: 6, elite: 0, boss: 0 },
+    // early: measured (npm run rogue:calibrate -- --climb): act I's regular fights against a party a few rooms in (four to pick
+    // from, one random ability each, a piece each and a legendary) need their knobs a median 85 lower on floor 4 than at the
+    // reference floor 7, against act I's middle as a run on the 12-floor map has it (two abilities, two legendaries). (First
+    // measured at 25.7 against a weaker middle and a party with no gear: the director then won act I four times of four.)
+    { mob: 0, step: 4.5, early: 28.3, elite: 0, boss: 0 },
+    { mob: 0, step: 4.5, elite: 0, boss: 0 },
+    { mob: 0, step: 4.5, elite: 0, boss: 0 },
   ],
   /**
    * Regular fights are longer and softer than the knob alone makes them: their foes have this much more HP and deal this
@@ -109,8 +170,8 @@ export const ROGUE_CONFIG: RogueConfigT = {
   shape: { fight: { hp: 40, power: -10 }, elite: { hp: 15, power: -10 } }, // Round 9 (the director's: "weak monsters basically just don't do anything ... 200 damage to a unit with 5,000 health"): less HP, full damage (were +50 / −25 and +15 / −15). // Round 5: elites +15 / −15 (were +30 / −20: four ghouls at 160,000 HP read as a wall).
   /** Heat: each level adds this to every knob (about 6 points of the simulated player's wins a level). Won runs open the next. */
   heat: { per: 4, max: 10 },
-  /** Later floors' fights grow: from this floor, each pack of two or more may gain one more (to the cap of 8). */
-  growFrom: 6,
+  /** Later floors' fights grow: from this floor, each pack of two or more may gain one more (to the cap of 8). Round 6: floor 8 of 12 (was 6 of 9). */
+  growFrom: 8,
 };
 
 // ─── Regions ─────────────────────────────────────────────────────────────────
@@ -140,8 +201,8 @@ const REGIONS: RogueRegion[] = [
     text: "Bandits, wolves and snakes on the road out of town, and ogres at the bridges.",
     easy: [f("toll_gate", "Toll Gate", [3, "bandit"]), f("wolves", "Wolves", [4, "wolf"]), f("snake_grass", "Snake Grass", [3, "snake"]), f("road_thugs", "Road Thugs", [2, "bandit"], [2, "wolf"])],
     normal: [
-      f("wolf_pack", "Wolf Pack", [6, "wolf"]), f("snake_pit", "Snake Pit", [2, "snake"], [2, "bandit"]), f("bandit_camp", "Bandit Camp", [1, "shieldman"], [2, "archer"], [1, "bandit"]),
-      f("night_wolves", "Night Wolves", [7, "wolf"]), f("archers_nest", "Archers' Nest", [1, "shieldman"], [3, "archer"]), f("viper_den", "Viper Den", [2, "snake"], [3, "bandit"]),
+      f("wolf_pack", "Wolf Pack", [6, "wolf"]), f("snake_pit", "Snake Pit", [3, "snake"], [2, "bandit"]), f("bandit_camp", "Bandit Camp", [1, "shieldman"], [2, "archer"], [1, "bandit"]),
+      f("night_wolves", "Night Wolves", [7, "wolf"]), f("archers_nest", "Archers' Nest", [1, "shieldman"], [3, "archer"]), f("viper_den", "Viper Den", [4, "snake"], [2, "bandit"]),
       f("bandit_horde", "Bandit Horde", [5, "bandit"]),
     ],
     elite: [f("ogre_bridge", "Ogre Bridge", [1, "ogre"], [2, "bandit"]), f("twin_ogres", "Twin Ogres", [2, "ogre"]), f("war_camp", "War Camp", [1, "shieldman"], [2, "archer"], [1, "ogre"])],
@@ -166,7 +227,7 @@ const REGIONS: RogueRegion[] = [
       f("hound_pack", "Hound Pack", [5, "hellhound"]), f("bomb_room", "Bomb Room", [2, "bomb_bug"], [2, "hellhound"]), f("imp_kennel", "Imp Kennel", [1, "fire_imp"], [3, "hellhound"]),
       f("hound_run", "Hound Run", [6, "hellhound"]), f("slag_heap", "Slag Heap", [1, "lava_slime"], [2, "hellhound"]), f("miners", "The Miners", [3, "bandit"], [1, "bomb_bug"]),
     ],
-    elite: [f("lava_flow", "Lava Flow", [2, "lava_slime"]), f("imp_court", "Imp Court", [2, "fire_imp"], [3, "hellhound"]), f("powder_room", "Powder Room", [2, "bomb_bug"], [1, "ogre"])],
+    elite: [f("lava_flow", "Lava Flow", [2, "lava_slime"]), f("imp_court", "Imp Court", [2, "fire_imp"], [3, "hellhound"]), f("powder_room", "Powder Room", [2, "bomb_bug"], [1, "ogre"]), f("bomb_nest", "Bomb Nest", [3, "bomb_bug"])],
     bosses: [f("fire_giant", "The Fire Giant", [1, "fire_giant"]), f("giants_forge", "The Giant's Forge", [1, "fire_giant"], [2, "hellhound"]), f("giants_wrath", "The Giant's Wrath", [1, "fire_giant"], [2, "fire_imp"])],
   },
   {
@@ -379,23 +440,29 @@ export type EventOp =
   | { op: "hp"; pct: number; one?: boolean }
   | { op: "mp"; pct: number }
   | { op: "gear"; rarity: "common" | "uncommon" | "rare" | "legendary" }
-  | { op: "recruit"; hp?: number }
+  | { op: "recruit"; hp?: number; known?: number; gear?: "common" | "uncommon" | "rare" | "legendary"; healer?: boolean }
   | { op: "learn" }
   | { op: "upgrade" }
-  | { op: "temper" }
-  | { op: "formation" }
+  | { op: "temper"; from?: ("common" | "uncommon" | "rare")[]; risk?: number }
+  | { op: "revive"; pct: number }
+  | { op: "formation"; rarity?: "common" | "uncommon" | "rare" | "legendary" }
+  | { op: "seat" }
+  | { op: "train"; n: number }
+  | { op: "muster"; n: number; known?: number; gear?: "common" | "uncommon" | "rare" | "legendary" }
+  | { op: "trade" }
   | { op: "supply"; id: "potion" | "tonic" | "phoenix" }
   | { op: "fight"; tier: "normal" | "elite" }
   | { op: "camp" }
   | { op: "chance"; pct: number; then: EventOp[]; else: EventOp[] };
 export type EventOption = { id: string; label: string; text: string; gold?: number; do: EventOp[] };
-export type RogueEvent = { id: string; name: string; text: string; options: EventOption[] };
+export type RogueEvent = { id: string; name: string; text: string; options: EventOption[]; variants?: { text?: string; options: EventOption[] }[] };
 
 export const ROGUE_EVENTS: RogueEvent[] = [
   {
     id: "wounded_traveller", name: "A Wounded Traveller", text: "Someone lies hurt by the road, a weapon still in hand. They look like they can fight.",
     options: [
       { id: "take", label: "TAKE THEM IN", text: "They join you, hurt: a third of their HP.", do: [{ op: "recruit", hp: 33 }] },
+      { id: "lesson", label: "A LESSON", text: "Patched up, they show one of yours a trick before they go: one member learns an ability or makes one better.", do: [{ op: "train", n: 1 }] },
       { id: "rob", label: "TAKE THEIR PURSE", text: "+40 gold.", do: [{ op: "gold", amount: 40 }] },
       { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
     ],
@@ -454,9 +521,10 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   {
     id: "camp", name: "An Empty Camp", text: "Someone left in a hurry: the fire is still burning, the bedrolls still laid out.",
     options: [
-      { id: "camp", label: "MAKE CAMP", text: "A campfire: rest, focus, raise or train, and change the party.", do: [{ op: "camp" }] },
+      { id: "camp", label: "MAKE CAMP", text: "A campfire: rest, focus, raise or train.", do: [{ op: "camp" }] },
       { id: "search", label: "SEARCH THE PACKS", text: "A potion, a tonic or a phoenix feather, and 20 gold.", do: [{ op: "gold", amount: 20 }, { op: "chance", pct: 40, then: [{ op: "supply", id: "potion" }], else: [{ op: "chance", pct: 50, then: [{ op: "supply", id: "tonic" }], else: [{ op: "supply", id: "phoenix" }] }] }] },
     ],
+    // Step 5h round 6: its version with a seat at camp is gone (seats come with each act).
   },
   {
     id: "pilgrims", name: "Pilgrims", text: "A band of pilgrims with a healer among them. \"For a donation…\"",
@@ -465,18 +533,295 @@ export const ROGUE_EVENTS: RogueEvent[] = [
       { id: "leave", label: "PASS BY", text: "Nothing happens.", do: [] },
     ],
   },
+  // Step 5h: the Drill Yard and the Fallen Standard became the Drill ground (a room) and the Old Banner. Six events around the
+  // roster, each rolling one of its versions on entering, so a known event can still surprise.
   {
-    id: "drill_yard", name: "A Drill Yard", text: "Veterans spar in an old courtyard. One of them could be talked into joining.",
+    id: "deserter", name: "A Deserter", text: "A soldier slumps against a milestone, still in uniform. \"I'm done with them. Not with fighting.\"",
     options: [
-      { id: "hire", label: "HIRE ONE FOR 70", text: "A recruit joins you.", gold: 70, do: [{ op: "recruit" }] },
-      { id: "drill", label: "DRILL", text: "One member learns an ability.", do: [{ op: "learn" }] },
+      { id: "take", label: "TAKE THEM IN", text: "They join you at half HP, with an uncommon piece suited to them.", do: [{ op: "recruit", hp: 50, gear: "uncommon" }] },
+      { id: "lesson", label: "A LESSON", text: "They teach one of yours their drill and walk on: one member learns an ability or makes one better.", do: [{ op: "train", n: 1 }] },
+      { id: "turn", label: "TURN THEM IN", text: "+50 gold.", do: [{ op: "gold", amount: 50 }] },
+    ],
+    variants: [
+      { options: [
+        { id: "take", label: "TAKE THEM IN", text: "They join you at half HP, with an uncommon piece suited to them.", do: [{ op: "recruit", hp: 50, gear: "uncommon" }] },
+        { id: "lesson", label: "A LESSON", text: "They teach one of yours their drill and walk on: one member learns an ability or makes one better.", do: [{ op: "train", n: 1 }] },
+        { id: "turn", label: "TURN THEM IN", text: "+50 gold.", do: [{ op: "gold", amount: 50 }] },
+      ] },
+      { text: "An officer, by the look of the blade at their hip, bleeding from a wound they won't explain.", options: [
+        { id: "take", label: "TAKE THEM IN", text: "They join you at a third of their HP, knowing two abilities, with a rare piece suited to them.", do: [{ op: "recruit", hp: 33, known: 2, gear: "rare" }] },
+        { id: "lesson", label: "A LESSON", text: "They teach one of yours an officer's drill and walk on: one member learns an ability or makes one better.", do: [{ op: "train", n: 1 }] },
+        { id: "blade", label: "TAKE THE BLADE", text: "A rare piece; they limp off.", do: [{ op: "gear", rarity: "rare" }] },
+      ] },
     ],
   },
   {
-    id: "standard", name: "A Fallen Standard", text: "A war banner, half-buried in the mud. Its company's drill is written on the back.",
+    id: "mercenaries", name: "Mercenaries", text: "A company of sellswords around a crossroads fire. \"Coin first.\"",
     options: [
-      { id: "take", label: "TAKE THE DRILL", text: "A new formation.", do: [{ op: "formation" }] },
+      { id: "hire", label: "HIRE ONE FOR 60", text: "Pick one of three recruits.", gold: 60, do: [{ op: "muster", n: 3 }] },
+      { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
+    ],
+    variants: [
+      { options: [
+        { id: "hire", label: "HIRE ONE FOR 60", text: "Pick one of three recruits.", gold: 60, do: [{ op: "muster", n: 3 }] },
+        { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
+      ] },
+      { text: "Veterans, scarred and expensive. \"We know our trade.\"", options: [
+        { id: "hire", label: "HIRE ONE FOR 110", text: "Pick one of two recruits who know all three abilities.", gold: 110, do: [{ op: "muster", n: 2, known: 3 }] },
+        { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
+      ] },
+    ],
+  },
+  {
+    id: "prisoner_cart", name: "A Prisoner Cart", text: "A cart with a cage on the back, two guards dozing beside it. The prisoner watches you.",
+    options: [
+      { id: "free", label: "FREE THE PRISONER", text: "They join you, and the guards wake: a fight.", do: [{ op: "recruit" }, { op: "fight", tier: "normal" }] },
+      { id: "pass", label: "LET IT PASS", text: "Nothing happens.", do: [] },
+    ],
+    variants: [
+      { options: [
+        { id: "free", label: "FREE THE PRISONER", text: "They join you, and the guards wake: a fight.", do: [{ op: "recruit" }, { op: "fight", tier: "normal" }] },
+        { id: "pass", label: "LET IT PASS", text: "Nothing happens.", do: [] },
+      ] },
+      { text: "A cart with a cage on the back, and an escort of hard-looking guards. The prisoner wears an old company's colours.", options: [
+        { id: "free", label: "FREE THE PRISONER", text: "They join you knowing two abilities, and the escort attacks: a hard fight, with an elite's spoils.", do: [{ op: "recruit", known: 2 }, { op: "fight", tier: "elite" }] },
+        { id: "pass", label: "LET IT PASS", text: "Nothing happens.", do: [] },
+      ] },
+    ],
+  },
+  {
+    id: "rival_company", name: "A Rival Company", text: "Another party shares the road. Their captain eyes your newest recruit. \"A trade? One of yours for one of ours, sight unseen.\"",
+    options: [
+      { id: "trade", label: "TRADE", text: "Your newest member (never the leader) leaves; their gear stays in your bag. One of theirs joins, knowing all three abilities.", do: [{ op: "trade" }] },
+      { id: "decline", label: "DECLINE", text: "Nothing happens.", do: [] },
+    ],
+    variants: [
+      { options: [
+        { id: "trade", label: "TRADE", text: "Your newest member (never the leader) leaves; their gear stays in your bag. One of theirs joins, knowing all three abilities.", do: [{ op: "trade" }] },
+        { id: "decline", label: "DECLINE", text: "Nothing happens.", do: [] },
+      ] },
+      { text: "Another party shares the road, short of hands and long on coin. \"A trade, and we'll pay for it.\"", options: [
+        { id: "trade", label: "TRADE FOR 60", text: "Your newest member (never the leader) leaves; their gear stays in your bag. One of theirs joins, knowing all three abilities, and +60 gold.", do: [{ op: "trade" }, { op: "gold", amount: 60 }] },
+        { id: "decline", label: "DECLINE", text: "Nothing happens.", do: [] },
+      ] },
+    ],
+  },
+  {
+    id: "old_banner", name: "An Old Banner", text: "A war banner, half-buried in the mud. Its company's drill is written on the back.",
+    options: [
+      { id: "take", label: "TAKE THE DRILL", text: "A rare formation.", do: [{ op: "formation", rarity: "rare" }] },
       { id: "sell", label: "SELL THE BANNER", text: "+45 gold.", do: [{ op: "gold", amount: 45 }] },
+    ],
+    variants: [
+      { options: [
+        { id: "take", label: "TAKE THE DRILL", text: "A rare formation.", do: [{ op: "formation", rarity: "rare" }] },
+        { id: "sell", label: "SELL THE BANNER", text: "+45 gold.", do: [{ op: "gold", amount: 45 }] },
+      ] },
+      { text: "A torn pennant on a broken spear, a few lines of drill still legible.", options: [
+        { id: "take", label: "TAKE THE DRILL", text: "A common formation and 20 gold from the spear's fittings.", do: [{ op: "formation", rarity: "common" }, { op: "gold", amount: 20 }] },
+        { id: "sell", label: "SELL THE SPEAR", text: "+30 gold.", do: [{ op: "gold", amount: 30 }] },
+      ] },
+      { text: "A great standard, still upright, ringed by the bones of those who held it. The ground around it is cursed.", options: [
+        { id: "take", label: "DIG IT OUT", text: "Everyone loses 15% of max HP. A formation of the highest rarity there is.", do: [{ op: "hp", pct: -15 }, { op: "formation", rarity: "legendary" }] },
+        { id: "leave", label: "LEAVE IT", text: "Nothing happens.", do: [] },
+      ] },
+    ],
+  },
+  {
+    id: "training_hall", name: "A Training Hall", text: "Practice dummies, a rack of blunted weapons, and a sergeant with a whistle.",
+    options: [
+      { id: "train", label: "TRAIN FOR 50", text: "Two members each learn an ability or make one better (+).", gold: 50, do: [{ op: "train", n: 2 }] },
+      { id: "watch", label: "WATCH", text: "One member learns an ability.", do: [{ op: "learn" }] },
+    ],
+    variants: [
+      { options: [
+        { id: "train", label: "TRAIN FOR 50", text: "Two members each learn an ability or make one better (+).", gold: 50, do: [{ op: "train", n: 2 }] },
+        { id: "watch", label: "WATCH", text: "One member learns an ability.", do: [{ op: "learn" }] },
+      ] },
+      { text: "The sergeant drills anyone who walks in, for free, and hard.", options: [
+        { id: "train", label: "TAKE THE DRILL", text: "Two members each learn an ability or make one better (+); everyone loses 15% of max HP.", do: [{ op: "hp", pct: -15 }, { op: "train", n: 2 }] },
+        { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
+      ] },
+    ],
+  },
+  // Step 5h round 6 (the director's: events are "probably the coolest part of the game ... I wish there was more of these"; a path
+  // meets about three an act on the 12-floor map): ten more, leaning on what they liked (a recruit carrying something, raising a
+  // piece's rarity, risk against reward) and the shapes they named (an unknown reward, a bundle). design-round-6.md §6.
+  {
+    id: "master_smith", name: "The Master Smith", text: "A smith with a portable forge and a price for everything. \"Bring me anything. I'll make it better.\"",
+    options: [
+      { id: "temper", label: "TEMPER", text: "A common or uncommon piece of yours gains a rarity.", gold: 40, do: [{ op: "temper" }] },
+      { id: "reforge", label: "REFORGE", text: "A rare piece of yours is reforged into a legendary of its slot.", gold: 120, do: [{ op: "temper", from: ["rare"] }] },
+      { id: "scrap", label: "SELL HIM SCRAP", text: "+40 gold.", do: [{ op: "gold", amount: 40 }] },
+    ],
+    variants: [
+      { options: [
+        { id: "temper", label: "TEMPER", text: "A common or uncommon piece of yours gains a rarity.", gold: 40, do: [{ op: "temper" }] },
+        { id: "reforge", label: "REFORGE", text: "A rare piece of yours is reforged into a legendary of its slot.", gold: 120, do: [{ op: "temper", from: ["rare"] }] },
+        { id: "scrap", label: "SELL HIM SCRAP", text: "+40 gold.", do: [{ op: "gold", amount: 40 }] },
+      ] },
+      { text: "The smith is drunk, cheerful and working for free. \"Give it here. I'll make it sing.\"", options: [
+        { id: "try", label: "LET HIM TRY", text: "A piece of yours gains a rarity (a rare one becomes a legendary of its slot). Half the time it cracks and is lost.", do: [{ op: "temper", from: ["common", "uncommon", "rare"], risk: 50 }] },
+        { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
+      ] },
+    ],
+  },
+  {
+    id: "prisoner_convoy", name: "A Prisoner Convoy", text: "Three prisoners in chains on a cart, their confiscated gear in a sack beside the guards.",
+    options: [
+      { id: "free", label: "FREE ONE", text: "Pick one of three prisoners, each with a piece from the sack. The guards attack: a fight.", do: [{ op: "muster", n: 3, gear: "uncommon" }, { op: "fight", tier: "normal" }] },
+      { id: "bribe", label: "BRIBE THE GUARDS", text: "Pick one of three prisoners, each with a piece from the sack. No fight.", gold: 60, do: [{ op: "muster", n: 3, gear: "uncommon" }] },
+      { id: "ride", label: "RIDE ON", text: "Nothing happens.", do: [] },
+    ],
+    variants: [
+      { options: [
+        { id: "free", label: "FREE ONE", text: "Pick one of three prisoners, each with a piece from the sack. The guards attack: a fight.", do: [{ op: "muster", n: 3, gear: "uncommon" }, { op: "fight", tier: "normal" }] },
+        { id: "bribe", label: "BRIBE THE GUARDS", text: "Pick one of three prisoners, each with a piece from the sack. No fight.", gold: 60, do: [{ op: "muster", n: 3, gear: "uncommon" }] },
+        { id: "ride", label: "RIDE ON", text: "Nothing happens.", do: [] },
+      ] },
+      { text: "A convoy of hardened convicts under heavy guard. One wears an old company's colours.", options: [
+        { id: "free", label: "FREE ONE", text: "Pick one of three, each knowing two abilities and carrying a rare piece. The escort attacks: a hard fight, with an elite's spoils.", do: [{ op: "muster", n: 3, known: 2, gear: "rare" }, { op: "fight", tier: "elite" }] },
+        { id: "ride", label: "RIDE ON", text: "Nothing happens.", do: [] },
+      ] },
+    ],
+  },
+  {
+    id: "old_soldier", name: "An Old Soldier", text: "A grey-haired soldier sharpening a blade by the road. \"Still got some fight in me. Or some sense, if you'd rather.\"",
+    options: [
+      { id: "take", label: "TAKE HIM IN", text: "He joins you, knowing two abilities.", do: [{ op: "recruit", known: 2 }] },
+      { id: "lesson", label: "A LESSON", text: "Two members each learn an ability or make one better; he stays by the road.", do: [{ op: "train", n: 2 }] },
+    ],
+    variants: [
+      { options: [
+        { id: "take", label: "TAKE HIM IN", text: "He joins you, knowing two abilities.", do: [{ op: "recruit", known: 2 }] },
+        { id: "lesson", label: "A LESSON", text: "Two members each learn an ability or make one better; he stays by the road.", do: [{ op: "train", n: 2 }] },
+      ] },
+      { text: "An old soldier with a limp, too slow to march with anyone, too proud to beg.", options: [
+        { id: "take", label: "TAKE HIM IN", text: "He joins you at half HP, knowing two abilities, with an uncommon piece suited to him.", do: [{ op: "recruit", known: 2, hp: 50, gear: "uncommon" }] },
+        { id: "lesson", label: "A LESSON", text: "One member learns an ability or makes one better.", do: [{ op: "train", n: 1 }] },
+        { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
+      ] },
+    ],
+  },
+  {
+    id: "sealed_crates", name: "Three Sealed Crates", text: "Three crates, nailed shut and stamped with a merchant's mark. Room on your cart for one.",
+    options: [
+      { id: "open", label: "OPEN ONE", text: "A piece of unknown rarity: one crate holds a legendary, one a rare, one a common.", do: [{ op: "chance", pct: 33, then: [{ op: "gear", rarity: "legendary" }], else: [{ op: "chance", pct: 50, then: [{ op: "gear", rarity: "rare" }], else: [{ op: "gear", rarity: "common" }] }] }] },
+      { id: "leave", label: "LEAVE THEM", text: "Nothing happens.", do: [] },
+    ],
+    variants: [
+      { options: [
+        { id: "open", label: "OPEN ONE", text: "A piece of unknown rarity: one crate holds a legendary, one a rare, one a common.", do: [{ op: "chance", pct: 33, then: [{ op: "gear", rarity: "legendary" }], else: [{ op: "chance", pct: 50, then: [{ op: "gear", rarity: "rare" }], else: [{ op: "gear", rarity: "common" }] }] }] },
+        { id: "leave", label: "LEAVE THEM", text: "Nothing happens.", do: [] },
+      ] },
+      { text: "Three crates, nailed shut, and the merchant's boy, who'll pry open a second for a coin.", options: [
+        { id: "open", label: "OPEN ONE", text: "A piece of unknown rarity: one crate holds a legendary, one a rare, one a common.", do: [{ op: "chance", pct: 33, then: [{ op: "gear", rarity: "legendary" }], else: [{ op: "chance", pct: 50, then: [{ op: "gear", rarity: "rare" }], else: [{ op: "gear", rarity: "common" }] }] }] },
+        { id: "two", label: "OPEN TWO", text: "Two of the three crates, at random.", gold: 30, do: [{ op: "chance", pct: 33, then: [{ op: "gear", rarity: "rare" }, { op: "gear", rarity: "common" }], else: [{ op: "gear", rarity: "legendary" }, { op: "chance", pct: 50, then: [{ op: "gear", rarity: "rare" }], else: [{ op: "gear", rarity: "common" }] }] }] },
+      ] },
+    ],
+  },
+  {
+    id: "quartermaster", name: "The Quartermaster's Wagon", text: "An army wagon, and a quartermaster happy to sell what the army won't miss.",
+    options: [
+      { id: "bundle", label: "BUY THE BUNDLE", text: "A formation and a tonic.", gold: 50, do: [{ op: "formation" }, { op: "supply", id: "tonic" }] },
+      { id: "kit", label: "TAKE THE SPARE KIT", text: "A common piece and a potion.", do: [{ op: "gear", rarity: "common" }, { op: "supply", id: "potion" }] },
+    ],
+    variants: [
+      { options: [
+        { id: "bundle", label: "BUY THE BUNDLE", text: "A formation and a tonic.", gold: 50, do: [{ op: "formation" }, { op: "supply", id: "tonic" }] },
+        { id: "kit", label: "TAKE THE SPARE KIT", text: "A common piece and a potion.", do: [{ op: "gear", rarity: "common" }, { op: "supply", id: "potion" }] },
+      ] },
+      { text: "An army wagon stuck to the axles in mud, its quartermaster red in the face.", options: [
+        { id: "push", label: "PUSH IT FREE", text: "Everyone loses 10% of max HP. A formation and a potion, in thanks.", do: [{ op: "hp", pct: -10 }, { op: "formation" }, { op: "supply", id: "potion" }] },
+        { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
+      ] },
+    ],
+  },
+  {
+    id: "field_hospital", name: "A Field Hospital", text: "Tents, cots, and a surgeon who has seen worse than you.",
+    options: [
+      { id: "pay", label: "PAY THE SURGEON", text: "Everyone recovers 40% of max HP, and the fallen rise at half HP.", gold: 50, do: [{ op: "hp", pct: 40 }, { op: "revive", pct: 50 }] },
+      { id: "medic", label: "HIRE THE MEDIC", text: "One who heals or raises others joins you.", gold: 80, do: [{ op: "recruit", healer: true }] },
+      { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
+    ],
+    variants: [
+      { options: [
+        { id: "pay", label: "PAY THE SURGEON", text: "Everyone recovers 40% of max HP, and the fallen rise at half HP.", gold: 50, do: [{ op: "hp", pct: 40 }, { op: "revive", pct: 50 }] },
+        { id: "medic", label: "HIRE THE MEDIC", text: "One who heals or raises others joins you.", gold: 80, do: [{ op: "recruit", healer: true }] },
+        { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
+      ] },
+      { text: "A hospital overrun with wounded. The surgeon looks up: \"You. Hands. Now.\"", options: [
+        { id: "help", label: "HELP OUT", text: "Everyone loses 15% of max MP. A potion and a phoenix feather, from the stores.", do: [{ op: "mp", pct: -15 }, { op: "supply", id: "potion" }, { op: "supply", id: "phoenix" }] },
+        { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
+      ] },
+    ],
+  },
+  {
+    id: "war_table", name: "The War Table", text: "A deserted command tent, the maps still pinned to the table.",
+    options: [
+      { id: "study", label: "STUDY THE MAPS", text: "A rare formation; everyone loses 10% of max MP (a long night).", do: [{ op: "formation", rarity: "rare" }, { op: "mp", pct: -10 }] },
+      { id: "sell", label: "SELL THE MAPS", text: "+50 gold.", do: [{ op: "gold", amount: 50 }] },
+    ],
+    variants: [
+      { options: [
+        { id: "study", label: "STUDY THE MAPS", text: "A rare formation; everyone loses 10% of max MP (a long night).", do: [{ op: "formation", rarity: "rare" }, { op: "mp", pct: -10 }] },
+        { id: "sell", label: "SELL THE MAPS", text: "+50 gold.", do: [{ op: "gold", amount: 50 }] },
+      ] },
+      { text: "A command tent with one tired sentry dozing at the flap.", options: [
+        { id: "study", label: "SLIP IN", text: "A formation. The sentry wakes and calls the guard: a fight.", do: [{ op: "formation" }, { op: "fight", tier: "normal" }] },
+        { id: "leave", label: "BACK AWAY", text: "Nothing happens.", do: [] },
+      ] },
+    ],
+  },
+  {
+    id: "duelling_ground", name: "A Duelling Ground", text: "A ring of stakes, a champion inside it, and a crowd that wants blood.",
+    options: [
+      { id: "challenge", label: "CHALLENGE THE CHAMPION", text: "A hard fight, with an elite's spoils: a legendary, then a formation.", do: [{ op: "fight", tier: "elite" }] },
+      { id: "watch", label: "WATCH", text: "One member learns an ability or makes one better from the champion's form.", do: [{ op: "train", n: 1 }] },
+    ],
+    variants: [
+      { options: [
+        { id: "challenge", label: "CHALLENGE THE CHAMPION", text: "A hard fight, with an elite's spoils: a legendary, then a formation.", do: [{ op: "fight", tier: "elite" }] },
+        { id: "watch", label: "WATCH", text: "One member learns an ability or makes one better from the champion's form.", do: [{ op: "train", n: 1 }] },
+      ] },
+      { text: "An empty ring. The last champion's gear hangs on a stake under a sign: TAKE IT IF YOU CAN LIFT IT.", options: [
+        { id: "lift", label: "LIFT IT", text: "A legendary piece; everyone loses 20% of max HP.", do: [{ op: "hp", pct: -20 }, { op: "gear", rarity: "legendary" }] },
+        { id: "crowd", label: "WORK THE CROWD", text: "+30 gold.", do: [{ op: "gold", amount: 30 }] },
+      ] },
+    ],
+  },
+  {
+    id: "armoury", name: "The Abandoned Armoury", text: "Racks of old weapons behind a door hanging off its hinges. Something breathes further in.",
+    options: [
+      { id: "search", label: "SEARCH", text: "Two uncommon pieces.", do: [{ op: "gear", rarity: "uncommon" }, { op: "gear", rarity: "uncommon" }] },
+      { id: "deeper", label: "SEARCH DEEPER", text: "Three rare pieces, and whatever breathes wakes: a hard fight, with an elite's spoils.", do: [{ op: "gear", rarity: "rare" }, { op: "gear", rarity: "rare" }, { op: "gear", rarity: "rare" }, { op: "fight", tier: "elite" }] },
+    ],
+    variants: [
+      { options: [
+        { id: "search", label: "SEARCH", text: "Two uncommon pieces.", do: [{ op: "gear", rarity: "uncommon" }, { op: "gear", rarity: "uncommon" }] },
+        { id: "deeper", label: "SEARCH DEEPER", text: "Three rare pieces, and whatever breathes wakes: a hard fight, with an elite's spoils.", do: [{ op: "gear", rarity: "rare" }, { op: "gear", rarity: "rare" }, { op: "gear", rarity: "rare" }, { op: "fight", tier: "elite" }] },
+      ] },
+      { text: "The armoury's old caretaker is still here, and wants paying for what he's kept oiled all these years.", options: [
+        { id: "buy", label: "BUY THE BEST", text: "A legendary piece.", gold: 90, do: [{ op: "gear", rarity: "legendary" }] },
+        { id: "scraps", label: "SEARCH THE SCRAPS", text: "A common piece and 15 gold.", do: [{ op: "gear", rarity: "common" }, { op: "gold", amount: 15 }] },
+      ] },
+    ],
+  },
+  {
+    id: "mana_spring", name: "A Mana Spring", text: "A pool that glows a faint blue. The water stings.",
+    options: [
+      { id: "bathe", label: "BATHE", text: "Everyone back to full MP; everyone loses 15% of max HP.", do: [{ op: "mp", pct: 100 }, { op: "hp", pct: -15 }] },
+      { id: "flask", label: "FILL A FLASK", text: "A tonic and 20 gold's worth of glowing stones.", do: [{ op: "supply", id: "tonic" }, { op: "gold", amount: 20 }] },
+    ],
+    variants: [
+      { options: [
+        { id: "bathe", label: "BATHE", text: "Everyone back to full MP; everyone loses 15% of max HP.", do: [{ op: "mp", pct: 100 }, { op: "hp", pct: -15 }] },
+        { id: "flask", label: "FILL A FLASK", text: "A tonic and 20 gold's worth of glowing stones.", do: [{ op: "supply", id: "tonic" }, { op: "gold", amount: 20 }] },
+      ] },
+      { text: "A spring gone sour, though a shimmer still clings to the stones around it.", options: [
+        { id: "drink", label: "DRINK DEEP", text: "Everyone recovers 50% of max MP and loses 10% of max HP.", do: [{ op: "mp", pct: 50 }, { op: "hp", pct: -10 }] },
+        { id: "flask", label: "FILL A FLASK", text: "A tonic.", do: [{ op: "supply", id: "tonic" }] },
+      ] },
     ],
   },
 ];

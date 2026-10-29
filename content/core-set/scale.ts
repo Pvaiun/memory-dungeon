@@ -363,7 +363,13 @@ export const HP_STEP = P / 2;
 export const aggroOf = (n: number) => 70 + 10 * n;
 export const AGGRO_STEP = 10;
 /** The step for a stat, in the data's units. */
-export const stepFor = (stat: string) => (stat === "max_hp" ? HP_STEP : stat === "aggro" ? AGGRO_STEP : STEP);
+/**
+ * Step 5h: a step of MP regen on gear, a seat or an affix. With no class regen it's the only regen in fights, so a step is
+ * three of the old: +1 restores about 7% of a 3,000 pool over a 40-tick fight, +2 about 14% (foes' regen, from their own
+ * lines, is unchanged).
+ */
+export const MP_REGEN_STEP = 3 * P;
+export const stepFor = (stat: string) => (stat === "max_hp" ? HP_STEP : stat === "aggro" ? AGGRO_STEP : stat === "mp_regen" ? MP_REGEN_STEP : STEP);
 
 // ─── Statuses: sizes and durations ───────────────────────────────────────────
 

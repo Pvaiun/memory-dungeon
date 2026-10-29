@@ -23,7 +23,7 @@ import { advance, loadContent, type Content } from "./engine/run.js";
 import { combat } from "./engine/combat/rules.js";
 import type { Entry } from "./engine/log.js";
 import {
-  actRoll, bagRoom, bench, bossFoes, canManage, choose, endFight, equip, eventOf, itemGear, itemOf, joinKnown, maxOf, member, newRogue, options, reachable, registerGear, rogue,
+  actRoll, bagRoom, bench, bossFoes, canManage, choose, discard, dismiss, endFight, equip, eventView, formationRarity, itemGear, itemOf, maxOf, seatsOf, trainOptions, member, newRogue, options, reachable, registerGear, rogue,
   learnOptions, migrate, seat, sellPrice, upgradeOptions, whyNot, setFormation, setOrder, startFight, swap, trainPrice, unlearned, upgraded, useSupply, wearer, type Item, type Offer, type RogueRun, type Slot,
 } from "./rogue.js";
 import type { AbilityT, NumT } from "./schema.js";
@@ -108,18 +108,21 @@ function gearWords(g: ReturnType<typeof itemGear> | undefined): string {
 }
 const itemWords = (it: Item) => `${it.uid}: ${it.rarity} ${gearWords(c.gear.get(it.uid) ?? itemGear(c, it))}`;
 function offerWords(run: RogueRun, o: Offer): string {
+  if (o.kind === "gear" && o.sealed) return `a sealed piece: ${(c.gear.get(o.item.uid) ?? itemGear(c, o.item)).slot}, rare or better; what it is shows when taken.`;
   if (o.kind === "gear") {
     const g = c.gear.get(o.item.uid) ?? itemGear(c, o.item);
     const fits = run.roster.filter((m) => c.classes.get(m.cls)!.weapons.includes(g.weapon?.kind ?? "") || (g.slot === "armor" && ["light", "medium", "heavy"].indexOf(g.weight!) <= ["light", "medium", "heavy"].indexOf(c.classes.get(m.cls)!.armor)) || g.slot === "amulet").map((m) => m.cls);
-    const aims = o.item.rarity === "legendary" ? rogue(c).aims?.[o.item.base] : undefined;
-    return `gear: ${o.item.rarity} ${gearWords(g)}.${aims ? ` For: ${aims.join(", ")}.` : ""} Fits: ${fits.join(", ") || "nobody in the roster yet"}.`;
+    // Step 5h round 6: no FOR line (the director's: it "ruins the discovery"); who fits it stays.
+    return `gear: ${o.item.rarity} ${gearWords(g)}. Fits: ${fits.join(", ") || "nobody in the roster yet"}.`;
   }
+  if (o.kind === "bundle") return `a bundle: ${offerWords(run, { kind: "gear", item: o.item })} And ${o.supply === "potion" ? "a potion" : "a tonic"}.`;
   if (o.kind === "tome") return `tome: the ${c.classes.get(o.cls)!.name} learns ${c.abilities.get(o.ability)!.name} (${c.abilities.get(o.ability)!.text})`;
-  if (o.kind === "recruit") return `recruit: the ${c.classes.get(o.cls)!.name} (${c.classes.get(o.cls)!.text.split(".")[0]}); joins knowing ${joinKnown(c, o.cls, run.act).map((a) => c.abilities.get(a)!.name).join(", ")}${run.party.length >= 3 ? "; waits at camp until a campfire" : ""}`;
+  if (o.kind === "recruit") return `recruit: the ${c.classes.get(o.cls)!.name} (${c.classes.get(o.cls)!.text.split(".")[0]}); joins knowing ${(o.known ?? []).map((a) => c.abilities.get(a)!.name).join(", ")}${o.item ? `, carrying ${itemWords(o.item)}` : ""}${run.party.length >= 3 ? "; waits at camp until you swap it in" : ""}`;
   if (o.kind === "formation") {
     const f = c.formations.get(o.id)!;
-    return `formation: ${f.name}: ${f.text}${f.positions.map((p, k) => ` Slot ${k + 1} ${p.name}: ${codes(p.stats) || "no change"}.`).join("")}`;
+    return `formation (${formationRarity(c, o.id)}): ${f.name}: ${f.text}${f.positions.map((p, k) => ` Slot ${k + 1} ${p.name}: ${codes(p.stats) || "no change"}.`).join("")}`;
   }
+  if (o.kind === "seat") return `a seat at camp: room for one more in the roster (now ${seatsOf(c, run)} at camp)`;
   const sp = rogue(c).config.supplies;
   return `supply: ${o.id} (${o.id === "potion" ? `one member regains ${sp.potion.hp}% of its HP` : o.id === "tonic" ? `one member regains ${sp.tonic.mp}% of its MP` : "a fallen member stands up with half its HP"})`;
 }
@@ -136,7 +139,7 @@ function header(run: RogueRun): string[] {
     `Act ${ROMAN[run.act]} of 3: ${reg.name}. ${reg.text} Boss at the top: ${run.boss.name}. ${run.floor > rogue(c).config.map.floors ? "At the boss." : run.floor === 0 ? `At the foot of the map: ${rogue(c).config.map.floors} floors, then the boss.` : `Floor ${run.floor} of ${rogue(c).config.map.floors}, the boss above.`}`,
     `Gold ${run.gold}. Supplies: ${run.supplies.join(", ") || "none"} (the bag holds ${rogue(c).config.bag.potion} potions, ${rogue(c).config.bag.tonic} tonics and ${rogue(c).config.bag.phoenix} phoenix feathers). Formation: ${c.formations.get(run.formation)!.name}. Formations owned: ${run.formations.join(", ")}.`,
     `Party: ${run.party.map((cls) => `${cls} (${vit(run, cls)})`).join("; ")}.${bench(run).length ? ` At camp: ${bench(run).map((cls) => `${cls} (${vit(run, cls)})`).join("; ")}.` : ""}`,
-    ...(run.pending.kind !== "over" && run.party.some((x) => member(run, x).ko) && bench(run).some((x) => !member(run, x).ko) ? [`Someone standing at camp can take a fallen member's seat now: swap <fallen> <at camp>.`] : []),
+    `Roster: ${run.roster.length} of ${rogue(c).config.party + seatsOf(c, run)} (${seatsOf(c, run)} seats at camp). Swap anyone in or out any time outside a fight (swap <out> <in>); those at camp regain ${rogue(c).config.benchMp ?? 0}% of their MP after each won fight they sit out; nobody regains MP in a fight unless gear or a skill gives it.`,
     ...(run.pending.kind !== "over" && run.party.length < rogue(c).config.party && bench(run).some((x) => !member(run, x).ko) ? [`A seat is empty: someone standing at camp can fill it now (swap <at camp>).`] : []),
   ];
 }
@@ -150,7 +153,7 @@ function look(run: RogueRun): string {
       out.push(`DRAFT: pick a companion (${rogue(c).config.start.picks - p.left + 1} of ${rogue(c).config.start.picks}). Each joins knowing one ability and learns the rest along the way.`);
       for (const id of p.offers) {
         const k = c.classes.get(id)!;
-        out.push(`  pick ${id}: ${k.name}. ${k.text} Starts with ${c.abilities.get(rogue(c).config.firstAbility[id])!.name}. (See: class ${id})`);
+        out.push(`  pick ${id}: ${k.name}. ${k.text} Starts with ${(p.known?.[id] ?? []).map((a) => c.abilities.get(a)!.name).join(", ")}. (See: class ${id})`);
       }
       break;
     case "map": {
@@ -167,10 +170,37 @@ function look(run: RogueRun): string {
     case "drop":
       out.push(`FOUND SUPPLIES: take one (pick potion or pick tonic). A potion gives one member ${rogue(c).config.supplies.potion.hp}% HP, a tonic gives one member ${rogue(c).config.supplies.tonic.mp}% MP; you hold ${run.supplies.filter((x) => x === "potion").length}/${rogue(c).config.bag.potion} potions and ${run.supplies.filter((x) => x === "tonic").length}/${rogue(c).config.bag.tonic} tonics.`);
       break;
+    case "muster": case "drill": {
+      out.push(p.kind === "muster" ? "MUSTER: pick a recruit, or none (a full roster can send someone home first: dismiss <cls>)." : "DRILL GROUND: pick a formation, or train two members instead, or none.");
+      p.offers.forEach((o, i) => out.push(`  pick take:${i}: ${offerWords(run, o)}`));
+      if (options(c, run).includes("train")) out.push("  pick train: two members each learn an ability or make one better.");
+      out.push("  pick skip");
+      break;
+    }
+    case "train": {
+      out.push(`TRAINING (${p.left} more): each member once; learn an ability or make one better (+).`);
+      for (const o of trainOptions(c, run, p.done)) {
+        const [verb, cls, ab] = o.split(":");
+        out.push(`  pick ${o}: ${verb === "learn" ? `the ${c.classes.get(cls)!.name} learns ${c.abilities.get(ab)!.name}: ${c.abilities.get(ab)!.text}` : upText(ab, run, cls)}`);
+      }
+      out.push(options(c, run).includes("back") ? "  pick back (nobody trained yet: back to the room, its pick unspent)" : "  pick done");
+      break;
+    }
+    case "captive": {
+      out.push(`A CAPTIVE, freed from the fight: ${offerWords(run, p.offer)}`);
+      for (const o of options(c, run)) out.push(o === "take" ? `  pick take: they join at ${rogue(c).config.captive?.hp ?? 100}% HP.` : o === "lesson" ? "  pick lesson: they teach one member before going (learn an ability or make one better)." : "  pick leave");
+      break;
+    }
+    case "trophy": {
+      out.push("ELITE: and a pick of formations. Pick one, or skip.");
+      p.offers.forEach((o, i) => out.push(`  pick take:${i}: ${offerWords(run, o)}`));
+      out.push("  pick skip");
+      break;
+    }
     case "spoils": case "boon": case "treasure": {
       const offers = p.kind === "treasure" ? [p.offer] : p.offers;
       out.push(p.kind === "boon" ? "BOSS BEATEN: pick a boon (the next act starts with everyone restored, and everyone learns an ability)." : p.kind === "treasure" ? `CHEST: ${p.gold} gold inside, and a piece.` : `SPOILS: ${p.gold} gold found. Pick one, or skip.`);
-      if (p.kind === "spoils" && p.trophy) out.push(`  Trophy (already in your bag): ${itemWords(p.trophy)}${rogue(c).aims?.[p.trophy.base] ? ` For: ${rogue(c).aims![p.trophy.base].join(", ")}.` : ""}`);
+      if (p.kind === "spoils" && p.trophy) out.push(`  Trophy (already in your bag): ${itemWords(p.trophy)}`);
       offers.forEach((o, i) => out.push(`  pick ${p.kind === "treasure" ? "take" : `take:${i}`}: ${offerWords(run, o)}`));
       out.push(`  pick ${p.kind === "treasure" ? "leave" : "skip"}`);
       break;
@@ -193,18 +223,20 @@ function look(run: RogueRun): string {
         out.push(`CAMPFIRE: the pick is made. Swap who's in the party now if you like (swap <out> <in>), then: pick leave`);
         break;
       }
-      out.push(`CAMPFIRE: one pick, then swaps until you leave. Whatever you pick, those who were standing at camp when you arrived get ${k.camp ?? 100}% of a REST and of a FOCUS (a fallen one needs a RAISE or a phoenix). Swapping who's in the party is free here, before or after the pick (swap <out> <in>).`);
+      if (k.auto) out.push(`CAMPFIRE: on arriving, everyone (party and camp) regained ${k.auto.hp}% of max HP and ${k.auto.mp}% of max MP, and the fallen rose at ${k.auto.revive}% HP. Now one pick.`);
+      else out.push(`CAMPFIRE: one pick. Whatever you pick, those who were standing at camp when you arrived get ${k.camp ?? 100}% of a REST (a fallen one needs a RAISE or a phoenix).`);
+      if (p.stranger) out.push(`  A stranger at the fire asks to join (pick recruit, or pick lesson: one member learns or improves and the stranger moves on; neither uses the pick): ${offerWords(run, p.stranger)}`);
       out.push(`  Before the boss: ${bossWords(run)}`);
-      out.push(`  pick rest: the party regains ${k.hp}% of its max HP (the max each had as the last fight ended).`, `  pick focus: the party regains ${k.mp}% of its max MP (likewise).`);
+      if (k.auto) out.push(`  pick rest: everyone regains another ${k.hp}% of max HP and ${k.mp}% of max MP.`);
+      else out.push(`  pick rest: the party regains ${k.hp}% of its max HP (the max each had as the last fight ended).`, `  pick focus: the party regains ${k.mp}% of its max MP (likewise).`);
       for (const o of options(c, run)) {
         if (o.startsWith("raise:")) out.push(`  pick ${o}: stands up with ${k.revive}% of its HP.`);
-        else if (o.startsWith("learn:")) out.push(`  pick ${o}: ${c.abilities.get(o.split(":")[2])!.text}`);
-        else if (o.startsWith("upgrade:")) out.push(`  pick ${o}: ${upText(o.split(":")[2], run, o.split(":")[1])}`);
+        else if (o === "train") out.push(`  pick train: ${k.train ?? 1} members each learn an ability or make one better (+).`);
       }
       break;
     }
     case "event": {
-      const ev = eventOf(c, p.id);
+      const ev = eventView(c, p);
       out.push(`EVENT: ${ev.name}. ${ev.text}`);
       const opts = options(c, run);
       for (const o of ev.options) out.push(`  ${opts.includes(o.id) ? `pick ${o.id}` : `(not now: ${whyNot(c, run, o) || "can't happen now"}) ${o.id}`}: ${o.label}${o.gold ? ` (${o.gold}g)` : ""}. ${o.text}`);
@@ -318,7 +350,7 @@ function classWords(id: string): string {
     `${k.name}: ${k.text}`,
     `Stats: HP ${st.max_hp}, MP ${st.max_mp ?? 0}, Attack ${pts(st.attack ?? 0)}, Magic ${pts(st.magic ?? 0)}, Armor ${pts(st.armor ?? 0)}, Crit ${st.crit_chance ?? 0}%, Aggro ${Math.round(st.aggro ?? 0)}.`,
     `Weapons: ${k.weapons.join(", ")}. Heaviest armor: ${k.armor}. Passive: ${k.passive?.name ?? "Einherjar"}: ${(k.passive?.text ?? "allies it revives come back with every action ready").replace(/\.$/, "")}.`,
-    ...k.abilities.map((a) => { const ab = c.abilities.get(a)!; return `  ${a}${a === rogue(c).config.firstAbility[id] ? " (known on joining)" : ""}: ${ab.name}, MP ${ab.mp ?? 0}, every ${Math.round(ab.cooldown)} ticks: ${ab.text}`; }),
+    ...k.abilities.map((a) => { const ab = c.abilities.get(a)!; return `  ${a}: ${ab.name}, MP ${ab.mp ?? 0}, every ${Math.round(ab.cooldown)} ticks: ${ab.text}`; }),
   ].join("\n");
 }
 
@@ -353,8 +385,10 @@ const USAGE = [
   "seat <a,b,c>              the party's seat order, commas, no spaces",
   "order <class> <ability,ability,...|none>   slot order; abilities left out aren't brought to fights",
   "use <potion|tonic|phoenix> [class]   (a potion or tonic goes to the member named, else the neediest)",
-  "swap <party member> <member at camp>   at a campfire; any time between rooms for a fallen member",
-  "swap <member at camp>     fills an empty seat (at a campfire, or any time between rooms if they're standing)",
+  "swap <party member> <member at camp>   any time outside a fight",
+  "swap <member at camp>     fills an empty seat; swap <party member> steps it back",
+  "dismiss <class at camp>   sends it home for good (never the leader), to make room for a recruit",
+  "drop <item id>            drops a piece nobody wears from the bag",
   "Every command takes --save <file>.",
 ].join("\n");
 function main() {
@@ -406,7 +440,9 @@ if (cmd === "new") {
       break;
     }
     case "use": out = useSupply(c, run, rest[0] as "potion", rest[1]) ? `Used the ${rest[0]}.\n${header(run).join("\n")}` : "Can't use that now."; break;
-    case "swap": out = swap(c, run, rest[0], rest[1] ?? null) ? `Party: ${run.party.join(", ")}. At camp: ${bench(run).join(", ") || "nobody"}.` : "At a campfire: a party member and someone at camp. Any time between rooms: a fallen party member and someone standing at camp, or someone standing at camp into an empty seat (swap <member at camp>)."; break;
+    case "swap": out = swap(c, run, rest[0], rest[1] ?? null) ? `Party: ${run.party.join(", ")}. At camp: ${bench(run).join(", ") || "nobody"}.` : "Any time outside a fight: swap <party member> <member at camp>, swap <party member> (steps back), or swap <member at camp> (into an empty seat)."; break;
+    case "dismiss": out = dismiss(c, run, rest[0]) ? `The ${rest[0]} goes home. Roster: ${run.roster.map((m) => m.cls).join(", ")}.` : "Only someone at camp, never the leader, outside a fight: dismiss <class>."; break;
+    case "drop": out = discard(run, rest[0]) ? `Dropped ${rest[0]}.` : "Only a piece nobody wears, outside a fight: drop <item id>."; break;
     case "boss": out = bossWords(run); break;
     default: throw new Error(`unknown command '${cmd}'. Commands:\n${USAGE}`);
   }

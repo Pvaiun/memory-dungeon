@@ -3137,8 +3137,8 @@
    "source": "starter",
    "stats": {
     "max_hp": 5000,
-    "max_mp": 2000,
-    "mp_regen": 2000,
+    "max_mp": 1000,
+    "mp_regen": 0,
     "attack": 3000,
     "magic": 1000,
     "armor": 4000,
@@ -3170,8 +3170,8 @@
    "source": "starter",
    "stats": {
     "max_hp": 2000,
-    "max_mp": 5000,
-    "mp_regen": 4000,
+    "max_mp": 2200,
+    "mp_regen": 0,
     "attack": 1000,
     "magic": 4000,
     "armor": 2000,
@@ -3202,8 +3202,8 @@
    "source": "starter",
    "stats": {
     "max_hp": 3000,
-    "max_mp": 3000,
-    "mp_regen": 3000,
+    "max_mp": 2100,
+    "mp_regen": 0,
     "attack": 4000,
     "magic": 1000,
     "armor": 2000,
@@ -3236,8 +3236,8 @@
    "source": "unlock",
    "stats": {
     "max_hp": 5000,
-    "max_mp": 2000,
-    "mp_regen": 2000,
+    "max_mp": 1700,
+    "mp_regen": 0,
     "attack": 3000,
     "magic": 2000,
     "armor": 3000,
@@ -3271,8 +3271,8 @@
    "source": "unlock",
    "stats": {
     "max_hp": 4000,
-    "max_mp": 2000,
-    "mp_regen": 2000,
+    "max_mp": 1300,
+    "mp_regen": 0,
     "attack": 4000,
     "magic": 1000,
     "armor": 5000,
@@ -3304,8 +3304,8 @@
    "source": "unlock",
    "stats": {
     "max_hp": 4000,
-    "max_mp": 3000,
-    "mp_regen": 3000,
+    "max_mp": 3300,
+    "mp_regen": 0,
     "attack": 3000,
     "magic": 4000,
     "armor": 4000,
@@ -3338,8 +3338,8 @@
    "source": "unlock",
    "stats": {
     "max_hp": 3000,
-    "max_mp": 3000,
-    "mp_regen": 3000,
+    "max_mp": 1500,
+    "mp_regen": 0,
     "attack": 4000,
     "magic": 3000,
     "armor": 3000,
@@ -3369,8 +3369,8 @@
    "source": "unlock",
    "stats": {
     "max_hp": 3000,
-    "max_mp": 4000,
-    "mp_regen": 3000,
+    "max_mp": 2400,
+    "mp_regen": 0,
     "attack": 3000,
     "magic": 3000,
     "armor": 3000,
@@ -3403,8 +3403,8 @@
    "source": "unlock",
    "stats": {
     "max_hp": 2000,
-    "max_mp": 4000,
-    "mp_regen": 3000,
+    "max_mp": 1700,
+    "mp_regen": 0,
     "attack": 1000,
     "magic": 4000,
     "armor": 1000,
@@ -3437,8 +3437,8 @@
    "source": "unlock",
    "stats": {
     "max_hp": 3000,
-    "max_mp": 2000,
-    "mp_regen": 3000,
+    "max_mp": 750,
+    "mp_regen": 0,
     "attack": 3700,
     "magic": 1000,
     "armor": 2000,
@@ -3472,8 +3472,8 @@
    "source": "unlock",
    "stats": {
     "max_hp": 2000,
-    "max_mp": 3000,
-    "mp_regen": 3000,
+    "max_mp": 1450,
+    "mp_regen": 0,
     "attack": 5000,
     "magic": 1000,
     "armor": 2000,
@@ -3507,8 +3507,8 @@
    "source": "unlock",
    "stats": {
     "max_hp": 4000,
-    "max_mp": 2000,
-    "mp_regen": 2000,
+    "max_mp": 1700,
+    "mp_regen": 0,
     "attack": 4000,
     "magic": 2000,
     "armor": 2000,
@@ -3544,8 +3544,8 @@
    "source": "unlock",
    "stats": {
     "max_hp": 2000,
-    "max_mp": 5000,
-    "mp_regen": 2000,
+    "max_mp": 3800,
+    "mp_regen": 0,
     "attack": 1000,
     "magic": 5000,
     "armor": 1000,
@@ -3577,8 +3577,8 @@
    "source": "unlock",
    "stats": {
     "max_hp": 2000,
-    "max_mp": 4000,
-    "mp_regen": 3000,
+    "max_mp": 2300,
+    "mp_regen": 0,
     "attack": 1000,
     "magic": 4000,
     "armor": 2000,
@@ -3611,8 +3611,8 @@
    "source": "unlock",
    "stats": {
     "max_hp": 2000,
-    "max_mp": 3000,
-    "mp_regen": 3000,
+    "max_mp": 2300,
+    "mp_regen": 0,
     "attack": 1000,
     "magic": 4000,
     "armor": 1000,
@@ -3644,8 +3644,8 @@
    "source": "unlock",
    "stats": {
     "max_hp": 3000,
-    "max_mp": 3000,
-    "mp_regen": 3000,
+    "max_mp": 2300,
+    "mp_regen": 0,
     "attack": 3000,
     "magic": 4000,
     "armor": 4000,
@@ -3827,7 +3827,7 @@
    "text": "Revives a random knocked-out ally with half its HP.",
    "cooldown": 55.9,
    "cast": 8,
-   "mp": 1500,
+   "mp": 650,
    "if": {
     "side": "allies",
     "where": {
@@ -4345,7 +4345,7 @@
    "text": "Revives a random knocked-out ally with a tenth of its HP, every action ready.",
    "cooldown": 63,
    "cast": 1,
-   "mp": 1500,
+   "mp": 650,
    "if": {
     "side": "allies",
     "where": {
@@ -6677,7 +6677,7 @@
     },
     {
      "stat": "mp_regen",
-     "flat": 1000
+     "flat": 3000
     }
    ]
   },
@@ -6871,7 +6871,7 @@
    "stats": [
     {
      "stat": "mp_regen",
-     "flat": 2000
+     "flat": 6000
     }
    ]
   },
@@ -6983,7 +6983,7 @@
    "stats": [
     {
      "stat": "mp_regen",
-     "flat": 2000
+     "flat": 6000
     }
    ]
   },
@@ -7095,7 +7095,7 @@
    "stats": [
     {
      "stat": "mp_regen",
-     "flat": 2000
+     "flat": 6000
     }
    ]
   },
@@ -7171,7 +7171,7 @@
    "stats": [
     {
      "stat": "mp_regen",
-     "flat": 2000
+     "flat": 6000
     }
    ]
   },
@@ -7227,7 +7227,7 @@
     },
     {
      "stat": "mp_regen",
-     "flat": 1000
+     "flat": 3000
     }
    ]
   },
@@ -7579,7 +7579,7 @@
     },
     {
      "stat": "mp_regen",
-     "flat": 1000
+     "flat": 3000
     }
    ]
   },
@@ -7613,7 +7613,7 @@
    "stats": [
     {
      "stat": "mp_regen",
-     "flat": 1000
+     "flat": 3000
     },
     {
      "stat": "aggro",
@@ -7678,7 +7678,7 @@
     },
     {
      "stat": "mp_regen",
-     "flat": 1000
+     "flat": 3000
     },
     {
      "stat": "aggro",
@@ -7754,7 +7754,7 @@
     },
     {
      "stat": "mp_regen",
-     "flat": 1000
+     "flat": 3000
     }
    ]
   },
@@ -7822,7 +7822,7 @@
    "stats": [
     {
      "stat": "mp_regen",
-     "flat": 2000
+     "flat": 6000
     }
    ]
   },
@@ -8012,7 +8012,7 @@
     },
     {
      "stat": "mp_regen",
-     "flat": -1000
+     "flat": -3000
     }
    ]
   },
@@ -8474,7 +8474,7 @@
      "stats": [
       {
        "stat": "mp_regen",
-       "flat": 1250
+       "flat": 3750
       },
       {
        "stat": "attack",
@@ -12226,50 +12226,112 @@
     "gold": 60,
     "offers": 3,
     "picks": 2,
-    "healer": true
-   },
-   "firstAbility": {
-    "knight": "stand_fast",
-    "cleric": "cure",
-    "ranger": "barbed_arrow",
-    "bramble_knight": "thicket",
-    "hoplite": "aspis",
-    "paladin": "smite",
-    "valkyrie": "gale_spear",
-    "bard": "war_ballad",
-    "hexer": "enfeeble",
-    "monk": "burning_fist",
-    "assassin": "backstab",
-    "vampire": "blood_gift",
-    "pyromancer": "firebolt",
-    "frostweaver": "frost_lance",
-    "stormcaller": "chain_lightning",
-    "geomancer": "earthen_shell"
+    "healer": true,
+    "supplies": [
+     "potion",
+     "tonic"
+    ]
    },
    "party": 3,
    "bench": 2,
+   "benchMax": 4,
+   "benchByAct": [
+    2,
+    3,
+    4
+   ],
+   "recruits": {
+    "offers": 2,
+    "known": [
+     [
+      70,
+      30,
+      0
+     ],
+     [
+      35,
+      45,
+      20
+     ],
+     [
+      15,
+      45,
+      40
+     ]
+    ]
+   },
+   "benchMp": 50,
+   "fresh": 50,
+   "muster": {
+    "offers": 2
+   },
+   "drill": {
+    "offers": 2,
+    "train": 2
+   },
+   "formationRarity": {
+    "neutral": "common",
+    "vanguard": "common",
+    "ambush": "common",
+    "scatter": "common",
+    "tortoise": "common",
+    "champion": "rare",
+    "blitz": "rare",
+    "escort": "rare",
+    "last_stand": "rare",
+    "caravan": "rare"
+   },
+   "formationOdds": [
+    {
+     "common": 70,
+     "rare": 28,
+     "legendary": 2
+    },
+    {
+     "common": 45,
+     "rare": 45,
+     "legendary": 10
+    },
+    {
+     "common": 25,
+     "rare": 55,
+     "legendary": 20
+    }
+   ],
    "map": {
-    "floors": 9,
+    "floors": 12,
     "width": 5,
     "paths": 5,
     "fixed": {
      "1": "fight",
-     "5": "treasure",
-     "9": "campfire"
+     "7": "treasure",
+     "12": "campfire"
     },
     "odds": {
-     "fight": 46,
-     "event": 22,
-     "elite": 12,
-     "campfire": 12,
-     "shop": 8
+     "fight": 50,
+     "event": 27,
+     "elite": 11,
+     "campfire": 6,
+     "shop": 4
     },
-    "lateFrom": 4
+    "lateFrom": 5,
+    "ensure": {
+     "shop": 2,
+     "elite": 2,
+     "campfire": 2
+    },
+    "campPaths": 60,
+    "easyTo": 3,
+    "ref": {
+     "easy": 1,
+     "normal": 7,
+     "elite": 8
+    }
    },
    "gold": {
     "fight": [
-     12,
-     20
+     7,
+     12
     ],
     "elite": [
      50,
@@ -12285,55 +12347,80 @@
     "fight": {
      "count": 3,
      "rarity": {
-      "common": 55,
-      "uncommon": 33,
-      "rare": 12,
-      "legendary": 0
+      "common": 35,
+      "uncommon": 32,
+      "rare": 27,
+      "legendary": 6
      },
-     "tome": 12,
-     "recruit": 6,
-     "supply": 8
+     "tome": 0,
+     "recruit": 0,
+     "supply": 0,
+     "mixed": 15,
+     "mix": {
+      "tome": 30,
+      "formation": 25,
+      "recruit": 0,
+      "sealed": 25,
+      "bundle": 20
+     }
     },
     "elite": {
      "count": 3,
-     "trophy": true,
+     "aimed": 1,
      "rarity": {
       "common": 0,
       "uncommon": 0,
-      "rare": 100,
-      "legendary": 0
+      "rare": 0,
+      "legendary": 100
      },
-     "tome": 15,
-     "recruit": 10,
-     "supply": 0
+     "tome": 0,
+     "recruit": 0,
+     "supply": 0,
+     "formations": 2
     },
-    "usable": 75
+    "offRoster": 33
    },
    "boon": {
-    "count": 3
+    "count": 3,
+    "seat": false
    },
    "treasure": {
     "rarity": {
      "common": 0,
      "uncommon": 0,
-     "rare": 70,
+     "rare": 50,
      "legendary": 30
     },
     "gold": [
      15,
      35
-    ]
+    ],
+    "cage": 20
    },
    "campfire": {
-    "hp": 40,
-    "mp": 60,
-    "revive": 40,
-    "camp": 50
+    "hp": 25,
+    "mp": 25,
+    "revive": 25,
+    "auto": {
+     "hp": 25,
+     "mp": 10,
+     "revive": 25
+    },
+    "train": 3,
+    "stranger": 30
    },
-   "reserves": true,
-   "neverGrow": [
-    "snake"
-   ],
+   "captive": {
+    "chance": 20,
+    "hp": 50,
+    "people": [
+     "bandit",
+     "archer",
+     "shieldman",
+     "witch",
+     "soldier"
+    ]
+   },
+   "neverGrow": [],
    "levelGold": 40,
    "prices": {
     "common": 45,
@@ -12359,9 +12446,14 @@
      "rare": 1,
      "legendary": 1
     },
+    "legendaryByAct": [
+     1,
+     2,
+     2
+    ],
     "recruits": 1,
     "formations": 1,
-    "supplies": 2
+    "supplies": 3
    },
    "supplies": {
     "potion": {
@@ -12386,19 +12478,20 @@
    "knobs": [
     {
      "mob": 0,
-     "step": 6,
+     "step": 4.5,
+     "early": 28.3,
      "elite": 0,
      "boss": 0
     },
     {
      "mob": 0,
-     "step": 6,
+     "step": 4.5,
      "elite": 0,
      "boss": 0
     },
     {
      "mob": 0,
-     "step": 6,
+     "step": 4.5,
      "elite": 0,
      "boss": 0
     }
@@ -12417,7 +12510,7 @@
     "per": 4,
     "max": 10
    },
-   "growFrom": 6
+   "growFrom": 8
   },
   "regions": [
    {
@@ -12425,8 +12518,8 @@
     "name": "The Old Road",
     "act": 1,
     "knob": {
-     "mob": -28,
-     "elite": -28,
+     "mob": 0,
+     "elite": 0,
      "boss": 0
     },
     "text": "Bandits, wolves and snakes on the road out of town, and ogres at the bridges.",
@@ -12439,7 +12532,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": -35
+      "knob": -57
      },
      {
       "id": "wolves",
@@ -12450,7 +12543,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 37
+      "knob": 7
      },
      {
       "id": "snake_grass",
@@ -12460,7 +12553,7 @@
        "snake",
        "snake"
       ],
-      "knob": 0
+      "knob": -17
      },
      {
       "id": "road_thugs",
@@ -12471,7 +12564,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": -35
+      "knob": -57
      }
     ],
     "normal": [
@@ -12486,7 +12579,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 76
+      "knob": 150
      },
      {
       "id": "snake_pit",
@@ -12494,10 +12587,11 @@
       "enemies": [
        "snake",
        "snake",
+       "snake",
        "bandit",
        "bandit"
       ],
-      "knob": 15
+      "knob": 54
      },
      {
       "id": "bandit_camp",
@@ -12508,7 +12602,7 @@
        "archer",
        "bandit"
       ],
-      "knob": -65
+      "knob": -2
      },
      {
       "id": "night_wolves",
@@ -12522,7 +12616,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 53
+      "knob": 125
      },
      {
       "id": "archers_nest",
@@ -12533,7 +12627,7 @@
        "archer",
        "archer"
       ],
-      "knob": -65
+      "knob": -22
      },
      {
       "id": "viper_den",
@@ -12541,11 +12635,12 @@
       "enemies": [
        "snake",
        "snake",
-       "bandit",
+       "snake",
+       "snake",
        "bandit",
        "bandit"
       ],
-      "knob": -12
+      "knob": 21
      },
      {
       "id": "bandit_horde",
@@ -12557,7 +12652,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": -20
+      "knob": 35
      }
     ],
     "elite": [
@@ -12569,7 +12664,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 15
+      "knob": 60
      },
      {
       "id": "twin_ogres",
@@ -12578,7 +12673,7 @@
        "ogre",
        "ogre"
       ],
-      "knob": -27
+      "knob": 28
      },
      {
       "id": "war_camp",
@@ -12589,7 +12684,7 @@
        "archer",
        "ogre"
       ],
-      "knob": -39
+      "knob": -7
      }
     ],
     "bosses": [
@@ -12601,7 +12696,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 15
+      "knob": 50
      },
      {
       "id": "packmaster",
@@ -12613,7 +12708,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 0
+      "knob": 47
      },
      {
       "id": "chiefs_return",
@@ -12622,7 +12717,7 @@
        "ogre_chief",
        "ogre"
       ],
-      "knob": -24
+      "knob": 5
      }
     ]
    },
@@ -12631,8 +12726,8 @@
     "name": "The Crypt",
     "act": 2,
     "knob": {
-     "mob": -27,
-     "elite": -27,
+     "mob": 0,
+     "elite": 0,
      "boss": 0
     },
     "text": "Armored bones, bats you can't hit, ghosts magic can't touch, and Death with a bell.",
@@ -12645,7 +12740,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 193
+      "knob": 258
      },
      {
       "id": "bat_roost",
@@ -12656,7 +12751,7 @@
        "bat",
        "bat"
       ],
-      "knob": 193
+      "knob": 233
      },
      {
       "id": "wailing",
@@ -12665,7 +12760,7 @@
        "ghost",
        "ghost"
       ],
-      "knob": 26
+      "knob": 46
      }
     ],
     "normal": [
@@ -12678,7 +12773,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 208
+      "knob": 201
      },
      {
       "id": "dark_hall",
@@ -12689,7 +12784,7 @@
        "bat",
        "bat"
       ],
-      "knob": 128
+      "knob": 137
      },
      {
       "id": "curse_room",
@@ -12699,7 +12794,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 234
+      "knob": 280
      },
      {
       "id": "haunted_hall",
@@ -12710,7 +12805,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 30
+      "knob": 50
      },
      {
       "id": "bone_wall",
@@ -12722,7 +12817,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 170
+      "knob": 209
      },
      {
       "id": "dead_watch",
@@ -12733,7 +12828,7 @@
        "witch",
        "ghost"
       ],
-      "knob": 68
+      "knob": 89
      }
     ],
     "elite": [
@@ -12746,7 +12841,7 @@
        "ghoul",
        "ghoul"
       ],
-      "knob": 158
+      "knob": 121
      },
      {
       "id": "lich_lair",
@@ -12755,7 +12850,7 @@
        "lich",
        "mummy"
       ],
-      "knob": 276
+      "knob": 241
      },
      {
       "id": "grave_watch",
@@ -12765,7 +12860,7 @@
        "troll",
        "troll"
       ],
-      "knob": 158
+      "knob": 64
      }
     ],
     "bosses": [
@@ -12777,7 +12872,7 @@
        "bat",
        "bat"
       ],
-      "knob": 22
+      "knob": 48
      },
      {
       "id": "reapers_court",
@@ -12787,7 +12882,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 19
+      "knob": 43
      }
     ]
    },
@@ -12796,8 +12891,8 @@
     "name": "The Fire Mine",
     "act": 2,
     "knob": {
-     "mob": 6,
-     "elite": 6,
+     "mob": 0,
+     "elite": 0,
      "boss": 0
     },
     "text": "Everything here burns, and the lord of the furnace casts a fire that ends parties.",
@@ -12811,7 +12906,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -54
+      "knob": -27
      },
      {
       "id": "fuse_room",
@@ -12821,7 +12916,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -54
+      "knob": -79
      },
      {
       "id": "imp_and_hound",
@@ -12831,7 +12926,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 15
+      "knob": 35
      }
     ],
     "normal": [
@@ -12845,7 +12940,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -27
+      "knob": -3
      },
      {
       "id": "bomb_room",
@@ -12856,7 +12951,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -69
+      "knob": -118
      },
      {
       "id": "imp_kennel",
@@ -12867,7 +12962,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 26
+      "knob": 31
      },
      {
       "id": "hound_run",
@@ -12880,7 +12975,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -61
+      "knob": -29
      },
      {
       "id": "slag_heap",
@@ -12890,7 +12985,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 219
+      "knob": 135
      },
      {
       "id": "miners",
@@ -12901,7 +12996,7 @@
        "bandit",
        "bomb_bug"
       ],
-      "knob": 61
+      "knob": 63
      }
     ],
     "elite": [
@@ -12912,7 +13007,7 @@
        "lava_slime",
        "lava_slime"
       ],
-      "knob": 158
+      "knob": 163
      },
      {
       "id": "imp_court",
@@ -12924,7 +13019,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 49
+      "knob": 91
      },
      {
       "id": "powder_room",
@@ -12934,7 +13029,17 @@
        "bomb_bug",
        "ogre"
       ],
-      "knob": 7
+      "knob": -3
+     },
+     {
+      "id": "bomb_nest",
+      "name": "Bomb Nest",
+      "enemies": [
+       "bomb_bug",
+       "bomb_bug",
+       "bomb_bug"
+      ],
+      "knob": -77
      }
     ],
     "bosses": [
@@ -12944,7 +13049,7 @@
       "enemies": [
        "fire_giant"
       ],
-      "knob": -54
+      "knob": -3
      },
      {
       "id": "giants_forge",
@@ -12954,7 +13059,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -54
+      "knob": -29
      },
      {
       "id": "giants_wrath",
@@ -12964,7 +13069,7 @@
        "fire_imp",
        "fire_imp"
       ],
-      "knob": -65
+      "knob": -26
      }
     ]
    },
@@ -12973,8 +13078,8 @@
     "name": "The Ice Pass",
     "act": 2,
     "knob": {
-     "mob": -7,
-     "elite": -7,
+     "mob": 0,
+     "elite": 0,
      "boss": 0
     },
     "text": "Every fight asks what kind of hit you make, and a Titan of ice waits at the top.",
@@ -12988,7 +13093,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 223
+      "knob": 293
      },
      {
       "id": "spirits",
@@ -12997,7 +13102,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 65
+      "knob": 96
      },
      {
       "id": "cold_ghosts",
@@ -13006,7 +13111,7 @@
        "ice_ghost",
        "ice_ghost"
       ],
-      "knob": 22
+      "knob": 47
      }
     ],
     "normal": [
@@ -13021,7 +13126,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 310
+      "knob": 277
      },
      {
       "id": "ice_heart",
@@ -13031,7 +13136,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 68
+      "knob": 65
      },
      {
       "id": "whiteout",
@@ -13041,7 +13146,7 @@
        "ice_ghost",
        "ice_spirit"
       ],
-      "knob": 49
+      "knob": 47
      },
      {
       "id": "ghost_lights",
@@ -13051,7 +13156,7 @@
        "ice_ghost",
        "ice_ghost"
       ],
-      "knob": 26
+      "knob": 29
      },
      {
       "id": "long_pack",
@@ -13065,7 +13170,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 264
+      "knob": 237
      },
      {
       "id": "drift",
@@ -13076,7 +13181,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 113
+      "knob": 100
      }
     ],
     "elite": [
@@ -13087,7 +13192,7 @@
        "ice_golem",
        "ice_golem"
       ],
-      "knob": 279
+      "knob": 150
      },
      {
       "id": "golem_gate",
@@ -13097,7 +13202,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 158
+      "knob": 106
      },
      {
       "id": "frost_trolls",
@@ -13108,7 +13213,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 0
+      "knob": 12
      }
     ],
     "bosses": [
@@ -13118,7 +13223,7 @@
       "enemies": [
        "ice_titan"
       ],
-      "knob": 49
+      "knob": 48
      },
      {
       "id": "glacier_king",
@@ -13128,7 +13233,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 22
+      "knob": 38
      }
     ]
    },
@@ -13137,8 +13242,8 @@
     "name": "The Storm Tower",
     "act": 3,
     "knob": {
-     "mob": -13,
-     "elite": -13,
+     "mob": 0,
+     "elite": 0,
      "boss": 0
     },
     "text": "Clouds of sparks, leeches that drink mana, and a queen behind a wall of drones.",
@@ -13153,7 +13258,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 178
+      "knob": 108
      },
      {
       "id": "leeches",
@@ -13164,7 +13269,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 189
+      "knob": 197
      },
      {
       "id": "drones",
@@ -13174,7 +13279,7 @@
        "drone",
        "drone"
       ],
-      "knob": 279
+      "knob": 320
      }
     ],
     "normal": [
@@ -13191,7 +13296,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 102
+      "knob": 90
      },
      {
       "id": "wisp_nest",
@@ -13204,7 +13309,7 @@
        "leech",
        "leech"
       ],
-      "knob": 158
+      "knob": 125
      },
      {
       "id": "leech_den",
@@ -13215,7 +13320,7 @@
        "leech",
        "leech"
       ],
-      "knob": 318
+      "knob": 227
      },
      {
       "id": "drone_wall",
@@ -13228,7 +13333,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 128
+      "knob": 123
      },
      {
       "id": "storm_front",
@@ -13241,7 +13346,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 151
+      "knob": 138
      }
     ],
     "elite": [
@@ -13254,7 +13359,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 279
+      "knob": 138
      },
      {
       "id": "sniper_ridge",
@@ -13266,7 +13371,7 @@
        "archer",
        "archer"
       ],
-      "knob": 143
+      "knob": 81
      },
      {
       "id": "lich_pair",
@@ -13276,7 +13381,7 @@
        "lich",
        "lich"
       ],
-      "knob": 186
+      "knob": 150
      }
     ],
     "bosses": [
@@ -13288,7 +13393,7 @@
        "drone",
        "drone"
       ],
-      "knob": 166
+      "knob": 117
      },
      {
       "id": "hive_queen",
@@ -13300,7 +13405,7 @@
        "drone",
        "drone"
       ],
-      "knob": 128
+      "knob": 96
      }
     ]
    },
@@ -13309,8 +13414,8 @@
     "name": "The Deep Crypt",
     "act": 3,
     "knob": {
-     "mob": -27,
-     "elite": -27,
+     "mob": 0,
+     "elite": 0,
      "boss": 0
     },
     "text": "Beneath the Crypt, something takes every voice. Power that isn't an ability is the key.",
@@ -13323,7 +13428,7 @@
        "skeleton",
        "ghost"
       ],
-      "knob": 193
+      "knob": 178
      },
      {
       "id": "whispers",
@@ -13332,7 +13437,7 @@
        "wraith",
        "wraith"
       ],
-      "knob": 295
+      "knob": 350
      },
      {
       "id": "diggers",
@@ -13342,7 +13447,7 @@
        "ghoul",
        "ghoul"
       ],
-      "knob": 223
+      "knob": 208
      }
     ],
     "normal": [
@@ -13354,7 +13459,7 @@
        "troll",
        "troll"
       ],
-      "knob": 83
+      "knob": 65
      },
      {
       "id": "lich_lair",
@@ -13363,7 +13468,7 @@
        "lich",
        "mummy"
       ],
-      "knob": 283
+      "knob": 202
      },
      {
       "id": "silent_hall",
@@ -13374,7 +13479,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 268
+      "knob": 200
      },
      {
       "id": "quiet_hall",
@@ -13385,7 +13490,7 @@
        "ghost",
        "ghost"
       ],
-      "knob": 80
+      "knob": 38
      },
      {
       "id": "coven",
@@ -13396,7 +13501,7 @@
        "wraith",
        "wraith"
       ],
-      "knob": 166
+      "knob": 116
      },
      {
       "id": "ghoul_feast",
@@ -13407,7 +13512,7 @@
        "ghoul",
        "ghoul"
       ],
-      "knob": 279
+      "knob": 167
      }
     ],
     "elite": [
@@ -13419,7 +13524,7 @@
        "bone_priest",
        "troll"
       ],
-      "knob": 279
+      "knob": 178
      },
      {
       "id": "lich_court",
@@ -13430,7 +13535,7 @@
        "lich",
        "lich"
       ],
-      "knob": 136
+      "knob": 115
      },
      {
       "id": "tomb_lords",
@@ -13440,7 +13545,7 @@
        "mummy",
        "witch"
       ],
-      "knob": 279
+      "knob": 136
      }
     ],
     "bosses": [
@@ -13450,7 +13555,7 @@
       "enemies": [
        "silent_one"
       ],
-      "knob": 110
+      "knob": 98
      },
      {
       "id": "silent_court",
@@ -13460,7 +13565,7 @@
        "bone_priest",
        "bone_priest"
       ],
-      "knob": 83
+      "knob": 67
      }
     ]
    },
@@ -13469,8 +13574,8 @@
     "name": "The Tower Top",
     "act": 3,
     "knob": {
-     "mob": 5,
-     "elite": 5,
+     "mob": 0,
+     "elite": 0,
      "boss": 0
     },
     "text": "Above the storm: the queen's drones, the king's soldiers, and the king who rages when they fall.",
@@ -13485,7 +13590,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 147
+      "knob": 138
      },
      {
       "id": "guard_post",
@@ -13494,7 +13599,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 318
+      "knob": 308
      },
      {
       "id": "top_drones",
@@ -13504,7 +13609,7 @@
        "drone",
        "drone"
       ],
-      "knob": 299
+      "knob": 337
      }
     ],
     "normal": [
@@ -13521,7 +13626,7 @@
        "leech",
        "leech"
       ],
-      "knob": 102
+      "knob": 98
      },
      {
       "id": "wisp_nest",
@@ -13534,7 +13639,7 @@
        "leech",
        "leech"
       ],
-      "knob": 158
+      "knob": 125
      },
      {
       "id": "barracks",
@@ -13544,7 +13649,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 261
+      "knob": 188
      },
      {
       "id": "drone_wall",
@@ -13557,7 +13662,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 128
+      "knob": 123
      },
      {
       "id": "watch",
@@ -13568,7 +13673,7 @@
        "drone",
        "drone"
       ],
-      "knob": 219
+      "knob": 165
      }
     ],
     "elite": [
@@ -13580,7 +13685,7 @@
        "drone",
        "drone"
       ],
-      "knob": 158
+      "knob": 81
      },
      {
       "id": "honour_guard",
@@ -13591,7 +13696,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 279
+      "knob": 138
      },
      {
       "id": "leech_den",
@@ -13603,7 +13708,7 @@
        "leech",
        "leech"
       ],
-      "knob": 325
+      "knob": 216
      }
     ],
     "bosses": [
@@ -13613,7 +13718,7 @@
       "enemies": [
        "storm_king"
       ],
-      "knob": 61
+      "knob": 65
      },
      {
       "id": "kings_guard",
@@ -13623,7 +13728,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 15
+      "knob": 13
      }
     ]
    }
@@ -13793,7 +13898,7 @@
     "stats": [
      {
       "stat": "mp_regen",
-      "flat": 1000
+      "flat": 3000
      },
      {
       "stat": "magic",
@@ -14456,7 +14561,7 @@
     "stats": [
      {
       "stat": "mp_regen",
-      "flat": 1000
+      "flat": 3000
      }
     ]
    },
@@ -14644,6 +14749,17 @@
        {
         "op": "recruit",
         "hp": 33
+       }
+      ]
+     },
+     {
+      "id": "lesson",
+      "label": "A LESSON",
+      "text": "Patched up, they show one of yours a trick before they go: one member learns an ability or makes one better.",
+      "do": [
+       {
+        "op": "train",
+        "n": 1
        }
       ]
      },
@@ -14909,7 +15025,7 @@
      {
       "id": "camp",
       "label": "MAKE CAMP",
-      "text": "A campfire: rest, focus, raise or train, and change the party.",
+      "text": "A campfire: rest, focus, raise or train.",
       "do": [
        {
         "op": "camp"
@@ -14987,45 +15103,361 @@
     ]
    },
    {
-    "id": "drill_yard",
-    "name": "A Drill Yard",
-    "text": "Veterans spar in an old courtyard. One of them could be talked into joining.",
+    "id": "deserter",
+    "name": "A Deserter",
+    "text": "A soldier slumps against a milestone, still in uniform. \"I'm done with them. Not with fighting.\"",
     "options": [
      {
-      "id": "hire",
-      "label": "HIRE ONE FOR 70",
-      "text": "A recruit joins you.",
-      "gold": 70,
+      "id": "take",
+      "label": "TAKE THEM IN",
+      "text": "They join you at half HP, with an uncommon piece suited to them.",
       "do": [
        {
-        "op": "recruit"
+        "op": "recruit",
+        "hp": 50,
+        "gear": "uncommon"
        }
       ]
      },
      {
-      "id": "drill",
-      "label": "DRILL",
-      "text": "One member learns an ability.",
+      "id": "lesson",
+      "label": "A LESSON",
+      "text": "They teach one of yours their drill and walk on: one member learns an ability or makes one better.",
       "do": [
        {
-        "op": "learn"
+        "op": "train",
+        "n": 1
+       }
+      ]
+     },
+     {
+      "id": "turn",
+      "label": "TURN THEM IN",
+      "text": "+50 gold.",
+      "do": [
+       {
+        "op": "gold",
+        "amount": 50
+       }
+      ]
+     }
+    ],
+    "variants": [
+     {
+      "options": [
+       {
+        "id": "take",
+        "label": "TAKE THEM IN",
+        "text": "They join you at half HP, with an uncommon piece suited to them.",
+        "do": [
+         {
+          "op": "recruit",
+          "hp": 50,
+          "gear": "uncommon"
+         }
+        ]
+       },
+       {
+        "id": "lesson",
+        "label": "A LESSON",
+        "text": "They teach one of yours their drill and walk on: one member learns an ability or makes one better.",
+        "do": [
+         {
+          "op": "train",
+          "n": 1
+         }
+        ]
+       },
+       {
+        "id": "turn",
+        "label": "TURN THEM IN",
+        "text": "+50 gold.",
+        "do": [
+         {
+          "op": "gold",
+          "amount": 50
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "text": "An officer, by the look of the blade at their hip, bleeding from a wound they won't explain.",
+      "options": [
+       {
+        "id": "take",
+        "label": "TAKE THEM IN",
+        "text": "They join you at a third of their HP, knowing two abilities, with a rare piece suited to them.",
+        "do": [
+         {
+          "op": "recruit",
+          "hp": 33,
+          "known": 2,
+          "gear": "rare"
+         }
+        ]
+       },
+       {
+        "id": "lesson",
+        "label": "A LESSON",
+        "text": "They teach one of yours an officer's drill and walk on: one member learns an ability or makes one better.",
+        "do": [
+         {
+          "op": "train",
+          "n": 1
+         }
+        ]
+       },
+       {
+        "id": "blade",
+        "label": "TAKE THE BLADE",
+        "text": "A rare piece; they limp off.",
+        "do": [
+         {
+          "op": "gear",
+          "rarity": "rare"
+         }
+        ]
        }
       ]
      }
     ]
    },
    {
-    "id": "standard",
-    "name": "A Fallen Standard",
+    "id": "mercenaries",
+    "name": "Mercenaries",
+    "text": "A company of sellswords around a crossroads fire. \"Coin first.\"",
+    "options": [
+     {
+      "id": "hire",
+      "label": "HIRE ONE FOR 60",
+      "text": "Pick one of three recruits.",
+      "gold": 60,
+      "do": [
+       {
+        "op": "muster",
+        "n": 3
+       }
+      ]
+     },
+     {
+      "id": "leave",
+      "label": "WALK ON",
+      "text": "Nothing happens.",
+      "do": []
+     }
+    ],
+    "variants": [
+     {
+      "options": [
+       {
+        "id": "hire",
+        "label": "HIRE ONE FOR 60",
+        "text": "Pick one of three recruits.",
+        "gold": 60,
+        "do": [
+         {
+          "op": "muster",
+          "n": 3
+         }
+        ]
+       },
+       {
+        "id": "leave",
+        "label": "WALK ON",
+        "text": "Nothing happens.",
+        "do": []
+       }
+      ]
+     },
+     {
+      "text": "Veterans, scarred and expensive. \"We know our trade.\"",
+      "options": [
+       {
+        "id": "hire",
+        "label": "HIRE ONE FOR 110",
+        "text": "Pick one of two recruits who know all three abilities.",
+        "gold": 110,
+        "do": [
+         {
+          "op": "muster",
+          "n": 2,
+          "known": 3
+         }
+        ]
+       },
+       {
+        "id": "leave",
+        "label": "WALK ON",
+        "text": "Nothing happens.",
+        "do": []
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "prisoner_cart",
+    "name": "A Prisoner Cart",
+    "text": "A cart with a cage on the back, two guards dozing beside it. The prisoner watches you.",
+    "options": [
+     {
+      "id": "free",
+      "label": "FREE THE PRISONER",
+      "text": "They join you, and the guards wake: a fight.",
+      "do": [
+       {
+        "op": "recruit"
+       },
+       {
+        "op": "fight",
+        "tier": "normal"
+       }
+      ]
+     },
+     {
+      "id": "pass",
+      "label": "LET IT PASS",
+      "text": "Nothing happens.",
+      "do": []
+     }
+    ],
+    "variants": [
+     {
+      "options": [
+       {
+        "id": "free",
+        "label": "FREE THE PRISONER",
+        "text": "They join you, and the guards wake: a fight.",
+        "do": [
+         {
+          "op": "recruit"
+         },
+         {
+          "op": "fight",
+          "tier": "normal"
+         }
+        ]
+       },
+       {
+        "id": "pass",
+        "label": "LET IT PASS",
+        "text": "Nothing happens.",
+        "do": []
+       }
+      ]
+     },
+     {
+      "text": "A cart with a cage on the back, and an escort of hard-looking guards. The prisoner wears an old company's colours.",
+      "options": [
+       {
+        "id": "free",
+        "label": "FREE THE PRISONER",
+        "text": "They join you knowing two abilities, and the escort attacks: a hard fight, with an elite's spoils.",
+        "do": [
+         {
+          "op": "recruit",
+          "known": 2
+         },
+         {
+          "op": "fight",
+          "tier": "elite"
+         }
+        ]
+       },
+       {
+        "id": "pass",
+        "label": "LET IT PASS",
+        "text": "Nothing happens.",
+        "do": []
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "rival_company",
+    "name": "A Rival Company",
+    "text": "Another party shares the road. Their captain eyes your newest recruit. \"A trade? One of yours for one of ours, sight unseen.\"",
+    "options": [
+     {
+      "id": "trade",
+      "label": "TRADE",
+      "text": "Your newest member (never the leader) leaves; their gear stays in your bag. One of theirs joins, knowing all three abilities.",
+      "do": [
+       {
+        "op": "trade"
+       }
+      ]
+     },
+     {
+      "id": "decline",
+      "label": "DECLINE",
+      "text": "Nothing happens.",
+      "do": []
+     }
+    ],
+    "variants": [
+     {
+      "options": [
+       {
+        "id": "trade",
+        "label": "TRADE",
+        "text": "Your newest member (never the leader) leaves; their gear stays in your bag. One of theirs joins, knowing all three abilities.",
+        "do": [
+         {
+          "op": "trade"
+         }
+        ]
+       },
+       {
+        "id": "decline",
+        "label": "DECLINE",
+        "text": "Nothing happens.",
+        "do": []
+       }
+      ]
+     },
+     {
+      "text": "Another party shares the road, short of hands and long on coin. \"A trade, and we'll pay for it.\"",
+      "options": [
+       {
+        "id": "trade",
+        "label": "TRADE FOR 60",
+        "text": "Your newest member (never the leader) leaves; their gear stays in your bag. One of theirs joins, knowing all three abilities, and +60 gold.",
+        "do": [
+         {
+          "op": "trade"
+         },
+         {
+          "op": "gold",
+          "amount": 60
+         }
+        ]
+       },
+       {
+        "id": "decline",
+        "label": "DECLINE",
+        "text": "Nothing happens.",
+        "do": []
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "old_banner",
+    "name": "An Old Banner",
     "text": "A war banner, half-buried in the mud. Its company's drill is written on the back.",
     "options": [
      {
       "id": "take",
       "label": "TAKE THE DRILL",
-      "text": "A new formation.",
+      "text": "A rare formation.",
       "do": [
        {
-        "op": "formation"
+        "op": "formation",
+        "rarity": "rare"
        }
       ]
      },
@@ -15037,6 +15469,1284 @@
        {
         "op": "gold",
         "amount": 45
+       }
+      ]
+     }
+    ],
+    "variants": [
+     {
+      "options": [
+       {
+        "id": "take",
+        "label": "TAKE THE DRILL",
+        "text": "A rare formation.",
+        "do": [
+         {
+          "op": "formation",
+          "rarity": "rare"
+         }
+        ]
+       },
+       {
+        "id": "sell",
+        "label": "SELL THE BANNER",
+        "text": "+45 gold.",
+        "do": [
+         {
+          "op": "gold",
+          "amount": 45
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "text": "A torn pennant on a broken spear, a few lines of drill still legible.",
+      "options": [
+       {
+        "id": "take",
+        "label": "TAKE THE DRILL",
+        "text": "A common formation and 20 gold from the spear's fittings.",
+        "do": [
+         {
+          "op": "formation",
+          "rarity": "common"
+         },
+         {
+          "op": "gold",
+          "amount": 20
+         }
+        ]
+       },
+       {
+        "id": "sell",
+        "label": "SELL THE SPEAR",
+        "text": "+30 gold.",
+        "do": [
+         {
+          "op": "gold",
+          "amount": 30
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "text": "A great standard, still upright, ringed by the bones of those who held it. The ground around it is cursed.",
+      "options": [
+       {
+        "id": "take",
+        "label": "DIG IT OUT",
+        "text": "Everyone loses 15% of max HP. A formation of the highest rarity there is.",
+        "do": [
+         {
+          "op": "hp",
+          "pct": -15
+         },
+         {
+          "op": "formation",
+          "rarity": "legendary"
+         }
+        ]
+       },
+       {
+        "id": "leave",
+        "label": "LEAVE IT",
+        "text": "Nothing happens.",
+        "do": []
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "training_hall",
+    "name": "A Training Hall",
+    "text": "Practice dummies, a rack of blunted weapons, and a sergeant with a whistle.",
+    "options": [
+     {
+      "id": "train",
+      "label": "TRAIN FOR 50",
+      "text": "Two members each learn an ability or make one better (+).",
+      "gold": 50,
+      "do": [
+       {
+        "op": "train",
+        "n": 2
+       }
+      ]
+     },
+     {
+      "id": "watch",
+      "label": "WATCH",
+      "text": "One member learns an ability.",
+      "do": [
+       {
+        "op": "learn"
+       }
+      ]
+     }
+    ],
+    "variants": [
+     {
+      "options": [
+       {
+        "id": "train",
+        "label": "TRAIN FOR 50",
+        "text": "Two members each learn an ability or make one better (+).",
+        "gold": 50,
+        "do": [
+         {
+          "op": "train",
+          "n": 2
+         }
+        ]
+       },
+       {
+        "id": "watch",
+        "label": "WATCH",
+        "text": "One member learns an ability.",
+        "do": [
+         {
+          "op": "learn"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "text": "The sergeant drills anyone who walks in, for free, and hard.",
+      "options": [
+       {
+        "id": "train",
+        "label": "TAKE THE DRILL",
+        "text": "Two members each learn an ability or make one better (+); everyone loses 15% of max HP.",
+        "do": [
+         {
+          "op": "hp",
+          "pct": -15
+         },
+         {
+          "op": "train",
+          "n": 2
+         }
+        ]
+       },
+       {
+        "id": "leave",
+        "label": "WALK ON",
+        "text": "Nothing happens.",
+        "do": []
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "master_smith",
+    "name": "The Master Smith",
+    "text": "A smith with a portable forge and a price for everything. \"Bring me anything. I'll make it better.\"",
+    "options": [
+     {
+      "id": "temper",
+      "label": "TEMPER",
+      "text": "A common or uncommon piece of yours gains a rarity.",
+      "gold": 40,
+      "do": [
+       {
+        "op": "temper"
+       }
+      ]
+     },
+     {
+      "id": "reforge",
+      "label": "REFORGE",
+      "text": "A rare piece of yours is reforged into a legendary of its slot.",
+      "gold": 120,
+      "do": [
+       {
+        "op": "temper",
+        "from": [
+         "rare"
+        ]
+       }
+      ]
+     },
+     {
+      "id": "scrap",
+      "label": "SELL HIM SCRAP",
+      "text": "+40 gold.",
+      "do": [
+       {
+        "op": "gold",
+        "amount": 40
+       }
+      ]
+     }
+    ],
+    "variants": [
+     {
+      "options": [
+       {
+        "id": "temper",
+        "label": "TEMPER",
+        "text": "A common or uncommon piece of yours gains a rarity.",
+        "gold": 40,
+        "do": [
+         {
+          "op": "temper"
+         }
+        ]
+       },
+       {
+        "id": "reforge",
+        "label": "REFORGE",
+        "text": "A rare piece of yours is reforged into a legendary of its slot.",
+        "gold": 120,
+        "do": [
+         {
+          "op": "temper",
+          "from": [
+           "rare"
+          ]
+         }
+        ]
+       },
+       {
+        "id": "scrap",
+        "label": "SELL HIM SCRAP",
+        "text": "+40 gold.",
+        "do": [
+         {
+          "op": "gold",
+          "amount": 40
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "text": "The smith is drunk, cheerful and working for free. \"Give it here. I'll make it sing.\"",
+      "options": [
+       {
+        "id": "try",
+        "label": "LET HIM TRY",
+        "text": "A piece of yours gains a rarity (a rare one becomes a legendary of its slot). Half the time it cracks and is lost.",
+        "do": [
+         {
+          "op": "temper",
+          "from": [
+           "common",
+           "uncommon",
+           "rare"
+          ],
+          "risk": 50
+         }
+        ]
+       },
+       {
+        "id": "leave",
+        "label": "WALK ON",
+        "text": "Nothing happens.",
+        "do": []
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "prisoner_convoy",
+    "name": "A Prisoner Convoy",
+    "text": "Three prisoners in chains on a cart, their confiscated gear in a sack beside the guards.",
+    "options": [
+     {
+      "id": "free",
+      "label": "FREE ONE",
+      "text": "Pick one of three prisoners, each with a piece from the sack. The guards attack: a fight.",
+      "do": [
+       {
+        "op": "muster",
+        "n": 3,
+        "gear": "uncommon"
+       },
+       {
+        "op": "fight",
+        "tier": "normal"
+       }
+      ]
+     },
+     {
+      "id": "bribe",
+      "label": "BRIBE THE GUARDS",
+      "text": "Pick one of three prisoners, each with a piece from the sack. No fight.",
+      "gold": 60,
+      "do": [
+       {
+        "op": "muster",
+        "n": 3,
+        "gear": "uncommon"
+       }
+      ]
+     },
+     {
+      "id": "ride",
+      "label": "RIDE ON",
+      "text": "Nothing happens.",
+      "do": []
+     }
+    ],
+    "variants": [
+     {
+      "options": [
+       {
+        "id": "free",
+        "label": "FREE ONE",
+        "text": "Pick one of three prisoners, each with a piece from the sack. The guards attack: a fight.",
+        "do": [
+         {
+          "op": "muster",
+          "n": 3,
+          "gear": "uncommon"
+         },
+         {
+          "op": "fight",
+          "tier": "normal"
+         }
+        ]
+       },
+       {
+        "id": "bribe",
+        "label": "BRIBE THE GUARDS",
+        "text": "Pick one of three prisoners, each with a piece from the sack. No fight.",
+        "gold": 60,
+        "do": [
+         {
+          "op": "muster",
+          "n": 3,
+          "gear": "uncommon"
+         }
+        ]
+       },
+       {
+        "id": "ride",
+        "label": "RIDE ON",
+        "text": "Nothing happens.",
+        "do": []
+       }
+      ]
+     },
+     {
+      "text": "A convoy of hardened convicts under heavy guard. One wears an old company's colours.",
+      "options": [
+       {
+        "id": "free",
+        "label": "FREE ONE",
+        "text": "Pick one of three, each knowing two abilities and carrying a rare piece. The escort attacks: a hard fight, with an elite's spoils.",
+        "do": [
+         {
+          "op": "muster",
+          "n": 3,
+          "known": 2,
+          "gear": "rare"
+         },
+         {
+          "op": "fight",
+          "tier": "elite"
+         }
+        ]
+       },
+       {
+        "id": "ride",
+        "label": "RIDE ON",
+        "text": "Nothing happens.",
+        "do": []
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "old_soldier",
+    "name": "An Old Soldier",
+    "text": "A grey-haired soldier sharpening a blade by the road. \"Still got some fight in me. Or some sense, if you'd rather.\"",
+    "options": [
+     {
+      "id": "take",
+      "label": "TAKE HIM IN",
+      "text": "He joins you, knowing two abilities.",
+      "do": [
+       {
+        "op": "recruit",
+        "known": 2
+       }
+      ]
+     },
+     {
+      "id": "lesson",
+      "label": "A LESSON",
+      "text": "Two members each learn an ability or make one better; he stays by the road.",
+      "do": [
+       {
+        "op": "train",
+        "n": 2
+       }
+      ]
+     }
+    ],
+    "variants": [
+     {
+      "options": [
+       {
+        "id": "take",
+        "label": "TAKE HIM IN",
+        "text": "He joins you, knowing two abilities.",
+        "do": [
+         {
+          "op": "recruit",
+          "known": 2
+         }
+        ]
+       },
+       {
+        "id": "lesson",
+        "label": "A LESSON",
+        "text": "Two members each learn an ability or make one better; he stays by the road.",
+        "do": [
+         {
+          "op": "train",
+          "n": 2
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "text": "An old soldier with a limp, too slow to march with anyone, too proud to beg.",
+      "options": [
+       {
+        "id": "take",
+        "label": "TAKE HIM IN",
+        "text": "He joins you at half HP, knowing two abilities, with an uncommon piece suited to him.",
+        "do": [
+         {
+          "op": "recruit",
+          "known": 2,
+          "hp": 50,
+          "gear": "uncommon"
+         }
+        ]
+       },
+       {
+        "id": "lesson",
+        "label": "A LESSON",
+        "text": "One member learns an ability or makes one better.",
+        "do": [
+         {
+          "op": "train",
+          "n": 1
+         }
+        ]
+       },
+       {
+        "id": "leave",
+        "label": "WALK ON",
+        "text": "Nothing happens.",
+        "do": []
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "sealed_crates",
+    "name": "Three Sealed Crates",
+    "text": "Three crates, nailed shut and stamped with a merchant's mark. Room on your cart for one.",
+    "options": [
+     {
+      "id": "open",
+      "label": "OPEN ONE",
+      "text": "A piece of unknown rarity: one crate holds a legendary, one a rare, one a common.",
+      "do": [
+       {
+        "op": "chance",
+        "pct": 33,
+        "then": [
+         {
+          "op": "gear",
+          "rarity": "legendary"
+         }
+        ],
+        "else": [
+         {
+          "op": "chance",
+          "pct": 50,
+          "then": [
+           {
+            "op": "gear",
+            "rarity": "rare"
+           }
+          ],
+          "else": [
+           {
+            "op": "gear",
+            "rarity": "common"
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "id": "leave",
+      "label": "LEAVE THEM",
+      "text": "Nothing happens.",
+      "do": []
+     }
+    ],
+    "variants": [
+     {
+      "options": [
+       {
+        "id": "open",
+        "label": "OPEN ONE",
+        "text": "A piece of unknown rarity: one crate holds a legendary, one a rare, one a common.",
+        "do": [
+         {
+          "op": "chance",
+          "pct": 33,
+          "then": [
+           {
+            "op": "gear",
+            "rarity": "legendary"
+           }
+          ],
+          "else": [
+           {
+            "op": "chance",
+            "pct": 50,
+            "then": [
+             {
+              "op": "gear",
+              "rarity": "rare"
+             }
+            ],
+            "else": [
+             {
+              "op": "gear",
+              "rarity": "common"
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "id": "leave",
+        "label": "LEAVE THEM",
+        "text": "Nothing happens.",
+        "do": []
+       }
+      ]
+     },
+     {
+      "text": "Three crates, nailed shut, and the merchant's boy, who'll pry open a second for a coin.",
+      "options": [
+       {
+        "id": "open",
+        "label": "OPEN ONE",
+        "text": "A piece of unknown rarity: one crate holds a legendary, one a rare, one a common.",
+        "do": [
+         {
+          "op": "chance",
+          "pct": 33,
+          "then": [
+           {
+            "op": "gear",
+            "rarity": "legendary"
+           }
+          ],
+          "else": [
+           {
+            "op": "chance",
+            "pct": 50,
+            "then": [
+             {
+              "op": "gear",
+              "rarity": "rare"
+             }
+            ],
+            "else": [
+             {
+              "op": "gear",
+              "rarity": "common"
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "id": "two",
+        "label": "OPEN TWO",
+        "text": "Two of the three crates, at random.",
+        "gold": 30,
+        "do": [
+         {
+          "op": "chance",
+          "pct": 33,
+          "then": [
+           {
+            "op": "gear",
+            "rarity": "rare"
+           },
+           {
+            "op": "gear",
+            "rarity": "common"
+           }
+          ],
+          "else": [
+           {
+            "op": "gear",
+            "rarity": "legendary"
+           },
+           {
+            "op": "chance",
+            "pct": 50,
+            "then": [
+             {
+              "op": "gear",
+              "rarity": "rare"
+             }
+            ],
+            "else": [
+             {
+              "op": "gear",
+              "rarity": "common"
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "quartermaster",
+    "name": "The Quartermaster's Wagon",
+    "text": "An army wagon, and a quartermaster happy to sell what the army won't miss.",
+    "options": [
+     {
+      "id": "bundle",
+      "label": "BUY THE BUNDLE",
+      "text": "A formation and a tonic.",
+      "gold": 50,
+      "do": [
+       {
+        "op": "formation"
+       },
+       {
+        "op": "supply",
+        "id": "tonic"
+       }
+      ]
+     },
+     {
+      "id": "kit",
+      "label": "TAKE THE SPARE KIT",
+      "text": "A common piece and a potion.",
+      "do": [
+       {
+        "op": "gear",
+        "rarity": "common"
+       },
+       {
+        "op": "supply",
+        "id": "potion"
+       }
+      ]
+     }
+    ],
+    "variants": [
+     {
+      "options": [
+       {
+        "id": "bundle",
+        "label": "BUY THE BUNDLE",
+        "text": "A formation and a tonic.",
+        "gold": 50,
+        "do": [
+         {
+          "op": "formation"
+         },
+         {
+          "op": "supply",
+          "id": "tonic"
+         }
+        ]
+       },
+       {
+        "id": "kit",
+        "label": "TAKE THE SPARE KIT",
+        "text": "A common piece and a potion.",
+        "do": [
+         {
+          "op": "gear",
+          "rarity": "common"
+         },
+         {
+          "op": "supply",
+          "id": "potion"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "text": "An army wagon stuck to the axles in mud, its quartermaster red in the face.",
+      "options": [
+       {
+        "id": "push",
+        "label": "PUSH IT FREE",
+        "text": "Everyone loses 10% of max HP. A formation and a potion, in thanks.",
+        "do": [
+         {
+          "op": "hp",
+          "pct": -10
+         },
+         {
+          "op": "formation"
+         },
+         {
+          "op": "supply",
+          "id": "potion"
+         }
+        ]
+       },
+       {
+        "id": "leave",
+        "label": "WALK ON",
+        "text": "Nothing happens.",
+        "do": []
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "field_hospital",
+    "name": "A Field Hospital",
+    "text": "Tents, cots, and a surgeon who has seen worse than you.",
+    "options": [
+     {
+      "id": "pay",
+      "label": "PAY THE SURGEON",
+      "text": "Everyone recovers 40% of max HP, and the fallen rise at half HP.",
+      "gold": 50,
+      "do": [
+       {
+        "op": "hp",
+        "pct": 40
+       },
+       {
+        "op": "revive",
+        "pct": 50
+       }
+      ]
+     },
+     {
+      "id": "medic",
+      "label": "HIRE THE MEDIC",
+      "text": "One who heals or raises others joins you.",
+      "gold": 80,
+      "do": [
+       {
+        "op": "recruit",
+        "healer": true
+       }
+      ]
+     },
+     {
+      "id": "leave",
+      "label": "WALK ON",
+      "text": "Nothing happens.",
+      "do": []
+     }
+    ],
+    "variants": [
+     {
+      "options": [
+       {
+        "id": "pay",
+        "label": "PAY THE SURGEON",
+        "text": "Everyone recovers 40% of max HP, and the fallen rise at half HP.",
+        "gold": 50,
+        "do": [
+         {
+          "op": "hp",
+          "pct": 40
+         },
+         {
+          "op": "revive",
+          "pct": 50
+         }
+        ]
+       },
+       {
+        "id": "medic",
+        "label": "HIRE THE MEDIC",
+        "text": "One who heals or raises others joins you.",
+        "gold": 80,
+        "do": [
+         {
+          "op": "recruit",
+          "healer": true
+         }
+        ]
+       },
+       {
+        "id": "leave",
+        "label": "WALK ON",
+        "text": "Nothing happens.",
+        "do": []
+       }
+      ]
+     },
+     {
+      "text": "A hospital overrun with wounded. The surgeon looks up: \"You. Hands. Now.\"",
+      "options": [
+       {
+        "id": "help",
+        "label": "HELP OUT",
+        "text": "Everyone loses 15% of max MP. A potion and a phoenix feather, from the stores.",
+        "do": [
+         {
+          "op": "mp",
+          "pct": -15
+         },
+         {
+          "op": "supply",
+          "id": "potion"
+         },
+         {
+          "op": "supply",
+          "id": "phoenix"
+         }
+        ]
+       },
+       {
+        "id": "leave",
+        "label": "WALK ON",
+        "text": "Nothing happens.",
+        "do": []
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "war_table",
+    "name": "The War Table",
+    "text": "A deserted command tent, the maps still pinned to the table.",
+    "options": [
+     {
+      "id": "study",
+      "label": "STUDY THE MAPS",
+      "text": "A rare formation; everyone loses 10% of max MP (a long night).",
+      "do": [
+       {
+        "op": "formation",
+        "rarity": "rare"
+       },
+       {
+        "op": "mp",
+        "pct": -10
+       }
+      ]
+     },
+     {
+      "id": "sell",
+      "label": "SELL THE MAPS",
+      "text": "+50 gold.",
+      "do": [
+       {
+        "op": "gold",
+        "amount": 50
+       }
+      ]
+     }
+    ],
+    "variants": [
+     {
+      "options": [
+       {
+        "id": "study",
+        "label": "STUDY THE MAPS",
+        "text": "A rare formation; everyone loses 10% of max MP (a long night).",
+        "do": [
+         {
+          "op": "formation",
+          "rarity": "rare"
+         },
+         {
+          "op": "mp",
+          "pct": -10
+         }
+        ]
+       },
+       {
+        "id": "sell",
+        "label": "SELL THE MAPS",
+        "text": "+50 gold.",
+        "do": [
+         {
+          "op": "gold",
+          "amount": 50
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "text": "A command tent with one tired sentry dozing at the flap.",
+      "options": [
+       {
+        "id": "study",
+        "label": "SLIP IN",
+        "text": "A formation. The sentry wakes and calls the guard: a fight.",
+        "do": [
+         {
+          "op": "formation"
+         },
+         {
+          "op": "fight",
+          "tier": "normal"
+         }
+        ]
+       },
+       {
+        "id": "leave",
+        "label": "BACK AWAY",
+        "text": "Nothing happens.",
+        "do": []
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "duelling_ground",
+    "name": "A Duelling Ground",
+    "text": "A ring of stakes, a champion inside it, and a crowd that wants blood.",
+    "options": [
+     {
+      "id": "challenge",
+      "label": "CHALLENGE THE CHAMPION",
+      "text": "A hard fight, with an elite's spoils: a legendary, then a formation.",
+      "do": [
+       {
+        "op": "fight",
+        "tier": "elite"
+       }
+      ]
+     },
+     {
+      "id": "watch",
+      "label": "WATCH",
+      "text": "One member learns an ability or makes one better from the champion's form.",
+      "do": [
+       {
+        "op": "train",
+        "n": 1
+       }
+      ]
+     }
+    ],
+    "variants": [
+     {
+      "options": [
+       {
+        "id": "challenge",
+        "label": "CHALLENGE THE CHAMPION",
+        "text": "A hard fight, with an elite's spoils: a legendary, then a formation.",
+        "do": [
+         {
+          "op": "fight",
+          "tier": "elite"
+         }
+        ]
+       },
+       {
+        "id": "watch",
+        "label": "WATCH",
+        "text": "One member learns an ability or makes one better from the champion's form.",
+        "do": [
+         {
+          "op": "train",
+          "n": 1
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "text": "An empty ring. The last champion's gear hangs on a stake under a sign: TAKE IT IF YOU CAN LIFT IT.",
+      "options": [
+       {
+        "id": "lift",
+        "label": "LIFT IT",
+        "text": "A legendary piece; everyone loses 20% of max HP.",
+        "do": [
+         {
+          "op": "hp",
+          "pct": -20
+         },
+         {
+          "op": "gear",
+          "rarity": "legendary"
+         }
+        ]
+       },
+       {
+        "id": "crowd",
+        "label": "WORK THE CROWD",
+        "text": "+30 gold.",
+        "do": [
+         {
+          "op": "gold",
+          "amount": 30
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "armoury",
+    "name": "The Abandoned Armoury",
+    "text": "Racks of old weapons behind a door hanging off its hinges. Something breathes further in.",
+    "options": [
+     {
+      "id": "search",
+      "label": "SEARCH",
+      "text": "Two uncommon pieces.",
+      "do": [
+       {
+        "op": "gear",
+        "rarity": "uncommon"
+       },
+       {
+        "op": "gear",
+        "rarity": "uncommon"
+       }
+      ]
+     },
+     {
+      "id": "deeper",
+      "label": "SEARCH DEEPER",
+      "text": "Three rare pieces, and whatever breathes wakes: a hard fight, with an elite's spoils.",
+      "do": [
+       {
+        "op": "gear",
+        "rarity": "rare"
+       },
+       {
+        "op": "gear",
+        "rarity": "rare"
+       },
+       {
+        "op": "gear",
+        "rarity": "rare"
+       },
+       {
+        "op": "fight",
+        "tier": "elite"
+       }
+      ]
+     }
+    ],
+    "variants": [
+     {
+      "options": [
+       {
+        "id": "search",
+        "label": "SEARCH",
+        "text": "Two uncommon pieces.",
+        "do": [
+         {
+          "op": "gear",
+          "rarity": "uncommon"
+         },
+         {
+          "op": "gear",
+          "rarity": "uncommon"
+         }
+        ]
+       },
+       {
+        "id": "deeper",
+        "label": "SEARCH DEEPER",
+        "text": "Three rare pieces, and whatever breathes wakes: a hard fight, with an elite's spoils.",
+        "do": [
+         {
+          "op": "gear",
+          "rarity": "rare"
+         },
+         {
+          "op": "gear",
+          "rarity": "rare"
+         },
+         {
+          "op": "gear",
+          "rarity": "rare"
+         },
+         {
+          "op": "fight",
+          "tier": "elite"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "text": "The armoury's old caretaker is still here, and wants paying for what he's kept oiled all these years.",
+      "options": [
+       {
+        "id": "buy",
+        "label": "BUY THE BEST",
+        "text": "A legendary piece.",
+        "gold": 90,
+        "do": [
+         {
+          "op": "gear",
+          "rarity": "legendary"
+         }
+        ]
+       },
+       {
+        "id": "scraps",
+        "label": "SEARCH THE SCRAPS",
+        "text": "A common piece and 15 gold.",
+        "do": [
+         {
+          "op": "gear",
+          "rarity": "common"
+         },
+         {
+          "op": "gold",
+          "amount": 15
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "mana_spring",
+    "name": "A Mana Spring",
+    "text": "A pool that glows a faint blue. The water stings.",
+    "options": [
+     {
+      "id": "bathe",
+      "label": "BATHE",
+      "text": "Everyone back to full MP; everyone loses 15% of max HP.",
+      "do": [
+       {
+        "op": "mp",
+        "pct": 100
+       },
+       {
+        "op": "hp",
+        "pct": -15
+       }
+      ]
+     },
+     {
+      "id": "flask",
+      "label": "FILL A FLASK",
+      "text": "A tonic and 20 gold's worth of glowing stones.",
+      "do": [
+       {
+        "op": "supply",
+        "id": "tonic"
+       },
+       {
+        "op": "gold",
+        "amount": 20
+       }
+      ]
+     }
+    ],
+    "variants": [
+     {
+      "options": [
+       {
+        "id": "bathe",
+        "label": "BATHE",
+        "text": "Everyone back to full MP; everyone loses 15% of max HP.",
+        "do": [
+         {
+          "op": "mp",
+          "pct": 100
+         },
+         {
+          "op": "hp",
+          "pct": -15
+         }
+        ]
+       },
+       {
+        "id": "flask",
+        "label": "FILL A FLASK",
+        "text": "A tonic and 20 gold's worth of glowing stones.",
+        "do": [
+         {
+          "op": "supply",
+          "id": "tonic"
+         },
+         {
+          "op": "gold",
+          "amount": 20
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "text": "A spring gone sour, though a shimmer still clings to the stones around it.",
+      "options": [
+       {
+        "id": "drink",
+        "label": "DRINK DEEP",
+        "text": "Everyone recovers 50% of max MP and loses 10% of max HP.",
+        "do": [
+         {
+          "op": "mp",
+          "pct": 50
+         },
+         {
+          "op": "hp",
+          "pct": -10
+         }
+        ]
+       },
+       {
+        "id": "flask",
+        "label": "FILL A FLASK",
+        "text": "A tonic.",
+        "do": [
+         {
+          "op": "supply",
+          "id": "tonic"
+         }
+        ]
        }
       ]
      }
