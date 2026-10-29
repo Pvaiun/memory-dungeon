@@ -27,6 +27,7 @@ import {
   learnOptions, migrate, seat, sellPrice, upgradeOptions, whyNot, setFormation, setOrder, startFight, swap, trainPrice, unlearned, upgraded, useSupply, wearer, type Item, type Offer, type RogueRun, type Slot,
 } from "./rogue.js";
 import type { AbilityT, NumT } from "./schema.js";
+import { canEquip } from "./validate.js";
 import { summary } from "./play-summary.js";
 import { combat as rules, type Member as EngineMember } from "./engine/combat/rules.js";
 import { headStart } from "./engine/combat/stats.js";
@@ -89,7 +90,7 @@ function sizeOf(a: AbilityT, st: Record<string, number>, mult = 1): string {
   };
   for (const e of a.do) {
     if (e.op === "damage") {
-      const kind = e.element ?? (e.type === "physical" ? e.subtype ?? "physical" : "untyped");
+      const kind = e.type === "none" ? "untyped" : e.type;
       const v = Math.round(val(e.amount, st) * mult);
       out.push(`${v ? `about ${v} ` : ""}${kind}${e.hits && e.hits > 1 ? ` x${e.hits}` : ""}${(e.apply ?? []).map((x) => ` + ${x.status === "shield" ? `${Math.round(val(x.stacks, st))} shield` : stacks(x.status, x.stacks)}`).join("")}`);
     } else if (e.op === "heal") out.push(`heals about ${Math.round(val(e.amount, st))}`);
@@ -101,7 +102,7 @@ function sizeOf(a: AbilityT, st: Record<string, number>, mult = 1): string {
 const codes = (stats: { stat: string; flat?: number }[] = []) => stats.map((s) => statWord(s.stat, s.flat ?? 0)).join(", ");
 function gearWords(g: ReturnType<typeof itemGear> | undefined): string {
   if (!g) return "nothing";
-  const kind = g.weapon?.kind ? `${g.weapon.kind}` : g.weight ? `${g.weight} armor` : "amulet";
+  const kind = g.weapon?.kind ? `${g.weapon.kind}` : g.armor ? `${g.armor} armor` : g.offhand ? `${g.offhand} offhand` : g.slot;
   // A rogue legendary's rule is its status's text; its own text says the same in other words (the Hourglass read twice).
   const fx = [g.tier === "powerful" && !(g.statuses ?? []).some((id) => id.startsWith("lg_")) ? g.text : "", ...(g.statuses ?? []).map((id) => c.statuses.get(id)?.text)].filter(Boolean).join(" ");
   return `${g.name} (${kind}${g.stats?.length ? `; ${codes(g.stats)}` : ""}${fx ? `; ${fx}` : ""})`;
@@ -111,7 +112,7 @@ function offerWords(run: RogueRun, o: Offer): string {
   if (o.kind === "gear" && o.sealed) return `a sealed piece: ${(c.gear.get(o.item.uid) ?? itemGear(c, o.item)).slot}, rare or better; what it is shows when taken.`;
   if (o.kind === "gear") {
     const g = c.gear.get(o.item.uid) ?? itemGear(c, o.item);
-    const fits = run.roster.filter((m) => c.classes.get(m.cls)!.weapons.includes(g.weapon?.kind ?? "") || (g.slot === "armor" && ["light", "medium", "heavy"].indexOf(g.weight!) <= ["light", "medium", "heavy"].indexOf(c.classes.get(m.cls)!.armor)) || g.slot === "amulet").map((m) => m.cls);
+    const fits = run.roster.filter((m) => canEquip(c.classes.get(m.cls)!, g)).map((m) => m.cls);
     // Step 5h round 6: no FOR line (the director's: it "ruins the discovery"); who fits it stays.
     return `gear: ${o.item.rarity} ${gearWords(g)}. Fits: ${fits.join(", ") || "nobody in the roster yet"}.`;
   }
@@ -288,8 +289,8 @@ function bestiary(id: string, power = 0): string {
   // An ability's size from the foe's stats and this fight's knob, before Armor and resistances.
   const acts = (en.abilities ?? []).map((a) => { const ab = c.abilities.get(a)!; const sz = sizeOf(ab, en.stats as Record<string, number>, 1 + power / 100); return `${ab.name} (${ab.text} Aims at ${atWords(ab)}.${sz ? ` ${sz}${/about/.test(sz) ? ", before Armor, crits and statuses" : ""}.` : ""})`; });
   const pas = (en.statuses ?? []).map((st) => `${c.statuses.get(st)!.name}: ${c.statuses.get(st)!.text ?? ""}`);
-  const res = Object.entries(en.stats).filter(([k]) => k.startsWith("resist:")).map(([k, v]) => `${v > 100 ? "absorbs" : v > 0 ? "resists" : "weak to"} ${k.slice(7)}`);
-  const kind = en.weapon?.element ?? (en.weapon?.kind ? c.weaponKinds.get(en.weapon.kind)?.element ?? "physical" : en.weapon?.type ?? "physical");
+  const res: string[] = [];
+  const kind = en.weapon?.kind ? c.weaponKinds.get(en.weapon.kind)?.type ?? "physical" : en.weapon?.type ?? "physical";
   return `${en.name}${en.rank !== "minion" ? ` (${en.rank})` : ""}: ${en.text} Attacks: ${kind}.${acts.length ? ` Abilities: ${acts.join("; ")}.` : ""}${pas.length ? ` ${pas.join(" ")}` : ""}${res.length ? ` ${res.join(", ")}.` : ""}`;
 }
 /** What an upgrade does to one ability, in numbers. */

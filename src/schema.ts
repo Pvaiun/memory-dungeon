@@ -1,12 +1,13 @@
 /**
- * Memory Dungeon Game: content schema, v0.6 (the core set).
+ * Memory Dungeon Game: content schema, v0.7 (the core set).
  *
  * One data format for everything the engine runs on. Step 4 replaced schema
  * 0.3's turn-based rule language with the director's combat design; the core
  * set (docs/core-set/) builds on it: fights run on ticks, and everything that
  * happens on an event or a timer is a status. Content is built from
- *   - stats (a registry, plus the families resist:<element> and immune:...),
- *   - weapon kinds (speed, damage type and element, shared by gear and enemies),
+ *   - stats (a registry, plus the immune:... families),
+ *   - weapon kinds (speed, damage type and hands, shared by gear and enemies),
+ *     armor types and offhand kinds (who wears what),
  *   - statuses (bundles of effects with one duration, stacking mode and removal),
  *   - actions (a weapon's basic attack, and abilities),
  *   - targeting rules and conditions,
@@ -20,10 +21,17 @@
  * vocabulary (statuses, special stats, effects and challenges) replaces them,
  * and lives in the documents, not the data. Perks stay in the tech, unused by
  * the core set, which has no progression yet.
+ *
+ * Schema 0.7 (step 5j, the director's rule of Oct 29, 2026): two kinds of
+ * damage and nothing else. Physical meets Armor and Evasion; magical meets
+ * Magic resist and is never dodged; a status's own damage is untyped. No
+ * elements and no physical subtypes. Gear in four slots (weapon, armor,
+ * offhand, amulet), with armor types and offhand kinds, two-handed weapons,
+ * and mythic pieces that fit one class.
  */
 import * as z from "zod";
 
-export const SCHEMA_VERSION = "0.6" as const;
+export const SCHEMA_VERSION = "0.7" as const;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Primitives
@@ -43,7 +51,7 @@ const IntRange = z.tuple([z.number().int().min(0), z.number().int().min(0)]);
 /** Ticks. The engine counts 1,000 sub-ticks per tick, so a timing has at most 3 decimals. */
 const Ticks = z.number().min(0);
 
-/** A stat key: a registry id, or a family member such as resist:fire or immune:status:freeze. */
+/** A stat key: a registry id, or a family member such as immune:status:stun. */
 export const StatKey = z
   .string()
   .regex(/^[a-z][a-z0-9_]*(:[a-z0-9_]+)*$/, { message: "stat keys are lower_snake_case, with ':' between a family's parts" });
@@ -61,28 +69,22 @@ function keys<T extends Record<string, string>>(o: T) {
 
 export const SUBTICKS = 1000;
 
-export const SUBTYPES = { slash: "Physical subtype.", pierce: "Physical subtype.", blunt: "Physical subtype." } as const;
-export const Subtype = z.enum(keys(SUBTYPES));
-
 export const TYPES = {
-  physical: "Has exactly one subtype and no element. Meets Evasion and Armor.",
-  magical: "Has exactly one element and no subtype. Meets that element's Resistance: below 0 WEAK, above 0 RESIST, 100 IMMUNE, above 100 ABSORB (heals instead, and applies nothing).",
-  none: "Untyped: never meets Evasion or Armor; meets Resistance only if it carries an element. Not allowed in actions; the usual type for a status's own damage.",
+  physical: "Meets Evasion and Armor.",
+  magical: "Meets Magic resist, a percentage: above 0 RESIST, 100 IMMUNE. Never dodged.",
+  none: "Untyped: never dodged, never reduced by Armor or Magic resist. Not allowed in actions; the type of a status's own damage.",
 } as const;
 export const DamageType = z.enum(keys(TYPES));
 
-/** The three gear slots every unit has. */
+/** The four gear slots every unit has. */
 export const SLOTS = {
-  weapon: "Sets the basic attack through its weapon kind. A class can use only its kinds.",
-  armor: "Light, medium or heavy. A class can wear its heaviest weight or anything lighter.",
+  weapon: "Sets the basic attack through its weapon kind. A class can use only its kinds. A two-handed weapon empties the offhand.",
+  armor: "Of an armor type. A class wears only its types.",
+  offhand: "Of an offhand kind. A class holds only its kinds, and nothing under a two-handed weapon.",
   amulet: "No restrictions.",
 } as const;
 export const Slot = z.enum(keys(SLOTS));
 export type SlotT = z.infer<typeof Slot>;
-
-export const WEIGHTS = { light: "Anyone can wear it.", medium: "Medium and heavy classes.", heavy: "Heavy classes only." } as const;
-export const Weight = z.enum(keys(WEIGHTS));
-export type WeightT = z.infer<typeof Weight>;
 
 /** Stats the engine itself reads. The registry must define each, with this kind. */
 export const ENGINE_STATS = {
@@ -92,7 +94,7 @@ export const ENGINE_STATS = {
   magic: ["amount", "Scales only what states it. By convention, magical things do."],
   armor: ["amount", "Reduces each physical hit: to hit² ÷ (hit + ruleset.armorK × Armor) when armorK is set; else a flat ruleset.armorRatio × Armor, down to 0 (BLOCKED)."],
   aggro: ["amount", "Default targeting picks foes weighted by draw: Aggro through ruleset.draw's curve, or Aggro itself without one. Its floor must be above 0."],
-  resist: ["points", "General Resistance, in percent, added to every element's own resist:<element>. Negative shows WEAK, positive RESIST, 100 IMMUNE, above 100 ABSORB."],
+  magic_resist: ["points", "Magic resist, in percent: cuts each magical hit or pulse by that share. Positive shows RESIST, 100 IMMUNE."],
   attack_speed: ["points", "Basic attack cooldown ÷ (1 + stat/100), down to its recovery. Haste, Slow and Chill act through it."],
   cooldown_reduction: ["points", "Ability cooldowns ÷ (1 + stat/100)."],
   cast_time_reduction: ["points", "Cast times ÷ (1 + stat/100)."],
@@ -106,7 +108,6 @@ export const ENGINE_STATS = {
 } as const;
 
 export const STAT_FAMILIES = {
-  "resist:<element>": "Resistance to one element, in percent, added to the general resist.",
   "immune:status:<status>": "Above 0: immune to that status.",
   "immune:kind:<kind>": "Above 0: immune to every status containing that effect kind.",
   "immune:kind:<kind>:<tag>": "Above 0: immune to statuses containing that effect kind with that tag (a lockout's `covers`, a stat change's stat, a boost's or modifier's tag).",
@@ -122,7 +123,7 @@ export const KINDS = {
   absorb: "An absorb, such as a shield.",
   block: "A block: the next damage above a share of max HP is blocked, then the status ends (Aegis).",
   lockout: "A lockout. Tag: what it covers.",
-  action_change: "A rider added to the holder's actions, a change of element or subtype, Seek, or an extra strike.",
+  action_change: "A rider added to the holder's actions, Seek, or an extra strike.",
   pulse: "A repeating effect.",
   reaction: "A reaction, or an Intensity event trigger.",
 } as const;
@@ -134,8 +135,6 @@ export const TAGS = {
   extra: "Hits from extra strikes (Double strike's second strike, Arc's second hit): hits, but not basic attacks.",
   physical: "Physical hits (and actions with one).",
   magical: "Magical hits (and actions with one).",
-  "<subtype>": "slash, pierce or blunt.",
-  "<element>": "Any element in the pack.",
   "<status>": "A status's id: reaches that status's pulses (\"+20% Burn damage\").",
   "<status tag>": "A tag a status carries, which reaches its pulses.",
   healing: "Boosts only: heals.",
@@ -291,8 +290,6 @@ export type ToT = z.infer<typeof To>;
 
 export const Instance = z.strictObject({
   type: DamageType,
-  subtype: Subtype.optional(),
-  element: Id.optional(),
   amount: Num,
 });
 export type InstanceT = z.infer<typeof Instance>;
@@ -312,8 +309,6 @@ export const Effect = z
       .strictObject({
         op: z.literal("damage"),
         type: DamageType,
-        subtype: Subtype.optional(),
-        element: Id.optional(),
         amount: Num,
         hits: PosInt.optional().describe("Actions only. Each hit resolves in order and reads the state left by the earlier ones."),
         riders: z.array(Instance).optional().describe("Actions only: extra instances attached to each hit."),
@@ -369,7 +364,7 @@ export const EventSpec = z.strictObject({
   event: EventName,
   whose: Whose.optional(),
   kind: z.enum(["basic", "ability", "extra"]).optional().describe("Action and hit events only."),
-  tags: z.array(Tag).min(1).optional().describe("Hit events only: the hit carries at least one of these tags (its kind, type, subtype or element, and \"crit\" when it crits)."),
+  tags: z.array(Tag).min(1).optional().describe("Hit events only: the hit carries at least one of these tags (its kind and type, and \"crit\" when it crits)."),
   status: Id.optional().describe("Status events, and damage events: the status whose pulse or reaction dealt the damage."),
   cause: z.array(Cause).min(1).optional().describe("status_ended only. Default: every cause."),
 });
@@ -388,8 +383,6 @@ export const Status = z.strictObject({
   label: z.enum(["buff", "debuff"]).describe("Drives removal, conditions and the batch its pulses resolve in."),
   show: z.enum(["icon", "sheet", "stat"]).describe("icon: on the HP bar with its total. sheet: listed on the unit sheet. stat: shown as a stat."),
   tags: z.array(Tag).optional().describe("Tags that boosts (on its applications' stacks) and damage-taken modifiers (on its pulses) can name."),
-  element: Id.optional().describe("Its damage pulses meet this element's Resistance. Full Resistance makes the unit immune to it."),
-  subtype: Subtype.optional().describe("Used only for damage-taken modifiers on its pulses."),
   stacking: z.enum(["refresh", "fizzle", "intensity"]),
   perSource: z
     .strictObject({ endsWithSource: z.boolean().optional() })
@@ -418,7 +411,6 @@ export const Status = z.strictObject({
     })
     .optional(),
   riders: z.array(z.strictObject({ on: Tag, add: Instance })).optional().describe("Adds a rider to the holder's hits that carry `on`."),
-  convert: z.strictObject({ element: Id.optional(), subtype: Subtype.optional() }).optional().describe("Changes the element of the holder's magical instances, or the subtype of its physical ones."),
   seek: Tag.optional().describe("The holder's actions carrying this tag (basic, ability or all) have Seek: their first pick ignores Taunt."),
   strike: z
     .strictObject({
@@ -448,25 +440,31 @@ export type ReactionT = z.infer<typeof Reaction>;
 // Weapon kinds and actions
 // ─────────────────────────────────────────────────────────────────────────────
 
+const Hands = z.union([z.literal(1), z.literal(2)]);
+
 export const WeaponKind = z
   .strictObject({
     id: Id,
     name: Text,
     type: z.enum(["physical", "magical"]),
-    subtype: Subtype.optional(),
-    element: Id.optional(),
     cooldown: z.number().positive().describe("The kind's speed: the base cooldown of its basic attack, in ticks."),
+    hands: Hands.describe("2: a two-handed weapon, which empties the offhand."),
     note: Note.optional(),
   })
-  .describe("A kind of weapon: its speed, damage type and element. Every weapon belongs to one, and a class can use only its kinds.");
+  .describe("A kind of weapon: its speed, damage type and hands. Every weapon belongs to one, and a class can use only its kinds.");
 export type WeaponKindT = z.infer<typeof WeaponKind>;
+
+/** An armor type or an offhand kind: a name that says who can wear a piece. */
+export const GearKind = z
+  .strictObject({ id: Id, name: Text, note: Note.optional() })
+  .describe("An armor type or an offhand kind. A class wears only its own.");
+export type GearKindT = z.infer<typeof GearKind>;
 
 export const Weapon = z
   .strictObject({
-    kind: Id.optional().describe("A weapon kind: sets type, subtype or element, and cooldown. Any field stated here overrides the kind's."),
+    kind: Id.optional().describe("A weapon kind: sets type, cooldown and hands. Any field stated here overrides the kind's."),
     type: z.enum(["physical", "magical"]).optional(),
-    subtype: Subtype.optional(),
-    element: Id.optional(),
+    hands: Hands.optional(),
     hits: PosInt.optional(),
     cooldown: z.number().positive().optional().describe("The base cooldown, in ticks. Required without a kind."),
     amount: Num.describe("Per hit: a base, plus whatever scaling the weapon states. Nothing scales it by default."),
@@ -577,8 +575,6 @@ export const StatDef = z.strictObject({
   note: Note.optional(),
 });
 
-export const ElementDef = z.strictObject({ id: Id, name: Text });
-
 // ─────────────────────────────────────────────────────────────────────────────
 // Content
 // ─────────────────────────────────────────────────────────────────────────────
@@ -600,7 +596,8 @@ export const ClassDef = z.strictObject({
   source: UnlockSource,
   stats: StatBlock.describe("The unit's base stats."),
   weapons: z.array(Id).min(1).describe("The weapon kinds it can use, first kind first: it arrives with that kind's plain weapon."),
-  armor: Weight.describe("The heaviest armor it can wear."),
+  armor: z.array(Id).min(1).describe("The armor types it can wear."),
+  offhands: z.array(Id).min(1).describe("The offhand kinds it can hold."),
   passive: z.strictObject({ name: Text, text: Text, ...grants }).optional().describe("The class passive. Its stat grants are stats; its behaviour lives in the statuses it applies at fight start."),
   abilities: z.array(Id),
   note: Note.optional(),
@@ -613,8 +610,10 @@ export const Gear = z.strictObject({
   slot: Slot,
   tier: z.enum(["ordinary", "powerful"]).describe("ordinary: drops in dungeons, sidegrades. powerful: task rewards, a different build."),
   source: z.enum(["starter", "drop", "unlock"]),
-  weight: Weight.optional().describe("Armor only."),
-  weapon: Weapon.optional().describe("Weapons only: sets the basic attack. Names its kind."),
+  armor: Id.optional().describe("Armor only: its armor type."),
+  offhand: Id.optional().describe("Offhands only: its offhand kind."),
+  weapon: Weapon.optional().describe("Weapons only: sets the basic attack. Names its kind, unless it's a mythic with its own speed, damage type and hands."),
+  mythic: Id.optional().describe("A mythic piece: it fits this one class, in any slot, whatever its kind; a unit wears one at most."),
   ...grants,
   note: Note.optional(),
 });
@@ -748,7 +747,7 @@ export const Need = z
     z.strictObject({ includes: z.array(Id).min(1) }).describe("The party brings every one of these classes."),
     z.strictObject({ excludes: z.array(Id).min(1) }).describe("The party brings none of these classes."),
     z.strictObject({ formation: Id }).describe("The party stands in this formation."),
-    z.strictObject({ armor: z.enum(["heavy", "medium", "light", "none"]) }).describe("Every member wears armor of exactly this weight (none: no armor)."),
+    z.strictObject({ armor: Id }).describe("Every member wears armor of this type (or \"none\": no armor)."),
     z.strictObject({ weapons: z.array(Id).min(1) }).describe("Every member's weapon is of one of these kinds."),
     z.strictObject({ size: PosInt }).describe("The party has at most this many members."),
   ])
@@ -781,7 +780,8 @@ export type CampaignT = z.infer<typeof Campaign>;
 /** Step 5h: the Muster (a pick of recruits) and the Drill ground (a pick of formations, or training). */
 export const RogueNodeKind = z.enum(["fight", "elite", "event", "campfire", "shop", "treasure", "boss", "muster", "drill"]);
 export type RogueNodeKindT = z.infer<typeof RogueNodeKind>;
-export const Rarity = z.enum(["common", "uncommon", "rare", "legendary"]);
+/** Step 5j: mythic, above legendary, for a piece that fits one class. None is offered yet. */
+export const Rarity = z.enum(["common", "uncommon", "rare", "legendary", "mythic"]);
 export type RarityT = z.infer<typeof Rarity>;
 /** Step 5g (the director's): a potion heals one unit, a tonic restores one unit's MP (the old tonic healed the party, the old ether its MP). */
 export const SupplyId = z.enum(["potion", "tonic", "phoenix"]);
@@ -954,8 +954,9 @@ export const ContentPack = z.strictObject({
   design: Design,
   ruleset: Ruleset,
   stats: z.array(StatDef),
-  elements: z.array(ElementDef),
   weaponKinds: z.array(WeaponKind),
+  armorTypes: z.array(GearKind),
+  offhandKinds: z.array(GearKind),
   statuses: z.array(Status),
   classes: z.array(ClassDef),
   abilities: z.array(Ability),
@@ -984,7 +985,7 @@ export const PartyUnit = z.strictObject({
   class: Id,
   position: Id,
   abilities: z.array(Id).describe("Equipped abilities, in slot order."),
-  gear: z.record(Id, Id).describe("Slot (weapon, armor, amulet) to gear id."),
+  gear: z.record(Id, Id).describe("Slot (weapon, armor, offhand, amulet) to gear id."),
 });
 export const Party = z.strictObject({
   formation: Id,

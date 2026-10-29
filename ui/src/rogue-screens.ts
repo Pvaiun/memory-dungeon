@@ -9,6 +9,7 @@ import {
   bagRoom, rogue, seat, seatsOf, sellPrice, setFormation, setOrder, swap, trainOptions, trainPrice, unlearned, upgraded, upgradeOptions, useSupply, wearer, type Item, type MapNode, type Offer, type RogueRun,
 } from "../../src/rogue.js";
 import { canEquip } from "../../src/validate.js";
+import { plainWeapon } from "../../src/sim/parties.js";
 import type { GearT, RogueNodeKindT } from "../../src/schema.js";
 import { c, className, cls as classOf, disp, shortName } from "./content.js";
 import { button, bar, h, header, toast, win, type Child } from "./dom.js";
@@ -20,7 +21,7 @@ const actions = (main: HTMLButtonElement | null, ...more: (HTMLButtonElement | n
 };
 /** A choice as a big button: its word and, under it, what it does. */
 const choice = (label: string, sub: string, onClick: () => void) => button(h("span", { class: "big-label" }, label, sub ? h("span", { class: "sub" }, sub) : null), onClick, "hi big");
-import { abilityBlock, basicLine, canUse, classHead, classPassive, codeSpans, enemyStats, gearRow, hitsWith, role, section, sizeEl, specialLines, statGrid } from "./sheet.js";
+import { abilityBlock, basicLine, canUse, classHead, classPassive, codeSpans, ENEMY_STATS, enemyStats, gearRow, hitsWith, lockedRow, role, section, sizeEl, SLOTS, specialLines, statGrid, twoHanded, type GearSlot } from "./sheet.js";
 import { abilityTag, sizeParts, sizeText } from "./describe.js";
 import { campEl, foesOnStage, partyInLine, partyOnStage, stageEl, themeOf, type StageActor, type StageOpts } from "./battle/scene.js";
 import { gearIcon, TAG_ICON, type Pose } from "./art.js";
@@ -62,7 +63,8 @@ const KIND_TEXT: Record<RogueNodeKindT, string> = {
 const SUPPLY_ICON: Record<string, Cell> = { potion: [21, 7], tonic: [20, 7], phoenix: [21, 14] };
 const SUPPLY_TEXT: Record<string, string> = { potion: "ONE MEMBER +30% HP", tonic: "ONE MEMBER +50% MP", phoenix: "A FALLEN MEMBER UP, 50% HP" };
 const held = (run: RogueRun, id: string) => run.supplies.filter((x) => x === id).length;
-const RARITY_CLASS: Record<string, string> = { common: "", uncommon: "good", rare: "buff", legendary: "gold" };
+/** Step 5j: mythic in crimson, the director's pick (none is offered yet). */
+const RARITY_CLASS: Record<string, string> = { common: "", uncommon: "good", rare: "buff", legendary: "gold", mythic: "mythic" };
 const ROMAN = ["", "I", "II", "III", "IV"];
 const gold = (n: number) => h("span", { class: "gold" }, `${n}G`);
 
@@ -73,7 +75,7 @@ function itemRow(run: RogueRun, it: Item, onClick?: () => void, opts: { arrow?: 
   const name = r.querySelector(".grow .line span");
   if (name) {
     name.className = RARITY_CLASS[it.rarity];
-    name.textContent = `${it.rarity === "legendary" ? "★" : ""}${g.name.toUpperCase()}`;
+    name.textContent = `${it.rarity === "legendary" || it.rarity === "mythic" ? "★" : ""}${g.name.toUpperCase()}`;
   }
   // The art glows by rarity: a recolour in place of new art.
   if (it.rarity !== "common") r.querySelector(".art")?.classList.add(`glow-${it.rarity}`);
@@ -92,7 +94,7 @@ function fitsLine(run: RogueRun, g: GearT, rarity?: string): HTMLElement {
   const would = c.pack.classes.filter((k) => canEquip(k, g)).map((k) => shortName(k.id));
   return h("div", { class: "line small debuff wrap" }, tag, `NOBODY CAN USE IT YET · ${would.slice(0, 5).join(", ")}${would.length > 5 ? "…" : ""}`);
 }
-/** What an upgrade changes, in this member's numbers where it has some ("≈ 9 pierce + Silence → ≈ 13 pierce + Silence"). */
+/** What an upgrade changes, in this member's numbers where it has some ("9 PHYSICAL + SILENCE → 13 PHYSICAL + SILENCE"). */
 function upText(id: string, run?: RogueRun, cls?: string): string {
   const a = c.abilities.get(id)!, up = upgraded(c, id);
   if (up.cooldown !== a.cooldown) return `Every ${Math.round(up.cooldown)} ticks instead of ${Math.round(a.cooldown)}.`;
@@ -265,7 +267,7 @@ function startView(): Child[] {
     h("div", { class: "line hi" }, "CHOOSE YOUR LEADER"),
     win("roster", h("div", { class: "grid" }, ...owned.map((id) => h("div", { class: `cell${leaderPick === id ? " cur" : ""}`, onClick: () => { leaderPick = id; redraw(); } }, h("div", { class: "portrait" }, faceEl(id)), h("span", { class: "trunc", style: "max-width:100%" }, shortName(id)), h("span", { class: "trunc small dim", style: "max-width:100%" }, c.abilities.get(knows(id)[0])!.name.toUpperCase()))),
       ...(owned.length < c.pack.classes.length ? [h("div", { class: "cell static dim" }, h("div", { class: "portrait locked" }, "?"), h("span", null, `${c.pack.classes.length - owned.length} MORE`))] : []))),
-    win("", classHead(leaderPick), section("STARTS WITH"), ...knows(leaderPick).map((a) => abilityBlock(c.abilities.get(a)!, classOf(leaderPick!).stats, setup.settings.designer))),
+    win("", classHead(leaderPick, undefined, plainWeapon(c, leaderPick)), section("STARTS WITH"), ...knows(leaderPick).map((a) => abilityBlock(c.abilities.get(a)!, classOf(leaderPick!).stats, setup.settings.designer))),
     heatRow,
     actions(button("SET OUT", () => { startRun(leaderPick!, m.heat); sfx.win(); redraw(); }, "hi"), button("CLASSES", () => go("classes"))),
   ];
@@ -286,7 +288,7 @@ function draftView(run: RogueRun): Child[] {
     partyStrip(run, false),
     h("div", { class: "cards" }, ...p.offers.map((id) => h("div", { class: `win card${draftPick === id ? " cur" : ""}`, onClick: () => { draftPick = id; redraw(); } },
       h("div", { class: "portrait" }, faceEl(id)), h("div", { class: "name" }, shortName(id)), h("div", { class: "codes small" }, knows(id).map((a) => c.abilities.get(a)!.name).join(", "))))),
-    win("scroll", classHead(draftPick), section("PASSIVE"), ...classPassive(draftPick), section("STARTS WITH"), ...knows(draftPick).map((a) => abilityBlock(c.abilities.get(a)!, classOf(draftPick!).stats, setup.settings.designer)),
+    win("scroll", classHead(draftPick, undefined, plainWeapon(c, draftPick)), section("PASSIVE"), ...classPassive(draftPick), section("STARTS WITH"), ...knows(draftPick).map((a) => abilityBlock(c.abilities.get(a)!, classOf(draftPick!).stats, setup.settings.designer)),
       section("LEARNS LATER"), ...c.classes.get(draftPick)!.abilities.filter((a) => !knows(draftPick!).includes(a)).map((a) => abilityBlock(c.abilities.get(a)!, classOf(draftPick!).stats, false)),
     ),
     actions(button(`TAKE ${shortName(draftPick)}`, () => pickOrSave(run, draftPick!), "hi")),
@@ -386,7 +388,7 @@ function dropView(run: RogueRun): Child[] {
 
 /**
  * A fight's foes as the preview shows them, with this fight's changes to HP and damage: each kind's likeness, name and
- * count, its HP, ATK, MAG and ARM, the elements it's weak to or resists, what it hits with, and its abilities with
+ * count, its HP, ATK, MAG, ARM and Magic resist, what it hits with, and its abilities with
  * their sizes, so a boss's big move can be planned for (Slay the Spire shows intents).
  */
 function foeLines(enemies: string[], foes: { hp?: number; power?: number } = {}): Child[] {
@@ -400,7 +402,7 @@ function foeLines(enemies: string[], foes: { hp?: number; power?: number } = {})
     const acts = (en.abilities ?? []).map((a) => { const ab = c.abilities.get(a)!; return h("div", { class: "foe-act" }, h("div", { class: "text small wrap" }, h("span", { class: "hi" }, `${ab.name.toUpperCase()} `), h("span", { class: "dim" }, ab.text)), sizeEl(sizeParts(ab, st, mult))); });
     return h("div", { class: "foe" },
       h("div", { class: "line" }, h("span", { class: "foe-art" }, enemyThumb(id, 24)), h("span", { class: `grow trunc ${en.rank === "boss" ? "gold" : en.rank === "elite" ? "debuff" : ""}` }, `${enemyDisplayName(id).toUpperCase()}${n(id) > 1 ? ` ×${n(id)}` : ""}`)),
-      statGrid(st, null, false, ["max_hp", "attack", "magic", "armor"]),
+      statGrid(st, null, false, ENEMY_STATS),
       h("div", { class: "line wrap small" }, h("span", { class: "dim" }, "HITS WITH"), ...hitsWith(en)),
       ...acts);
   });
@@ -692,7 +694,7 @@ function levelView(run: RogueRun): Child[] {
   return [
     header("LEVEL UP", () => go("home"), h("span", { class: "dim" }, `${p.queue.length} TO GO`)),
     scene(run, `level:${cls}`, { h: 80, actors: [{ kind: "hero", ref: cls, x: 135, y: 74, pose: "victory", weapon: m.gear.weapon ?? undefined }], sparkle: { x: 135, y: 50, strip: "status1" } }),
-    win("", classHead(cls)),
+    win("", classHead(cls, undefined, m.gear.weapon)),
     win("scroll",
       learn.length ? section("LEARN") : null,
       ...learn.map((a) => h("div", { onClick: () => pickOrSave(run, a), style: "cursor:pointer" }, abilityBlock(c.abilities.get(a)!, fighter(run, cls).stats, setup.settings.designer))),
@@ -829,13 +831,16 @@ export function runitScreen(arg?: unknown): Child[] {
   return [
     header(k.name, () => { orderPick = null; go("rparty"); }, inParty ? h("span", { class: "hi small" }, `SLOT ${run.party.indexOf(cls) + 1}`) : h("span", { class: "dim small" }, "AT CAMP")),
     move ? h("div", { class: "btns" }, move) : null,
-    win("", classHead(cls, h("div", { class: "line small" }, v.ko ? h("span", { class: "bad" }, "KO") : h("span", null, `HP ${disp(v.hp)}/${disp(v.maxHp)}`), h("span", { class: "mp" }, `  MP ${disp(v.mp)}/${disp(v.maxMp)}`)))),
+    // The run's weapon in hand (the head had shown the journey's or free play's).
+    win("", classHead(cls, h("div", { class: "line small" }, v.ko ? h("span", { class: "bad" }, "KO") : h("span", null, `HP ${disp(v.hp)}/${disp(v.maxHp)}`), h("span", { class: "mp" }, `  MP ${disp(v.mp)}/${disp(v.maxMp)}`)), m.gear.weapon)),
     win("", statGrid(fm.stats, k.stats, setup.settings.designer), sp.length ? h("div", { class: "text up small wrap", style: "margin-top:.25rem" }, ...sp.flatMap((s, i) => (i ? [" · ", s] : [s]))) : null),
     win("scroll",
       section("PASSIVE"),
       ...classPassive(cls),
       section("GEAR"),
-      ...(["weapon", "armor", "amulet"] as const).map((s) => {
+      // Step 5j: four slots; under a two-handed weapon the offhand reads locked.
+      ...SLOTS.map((s) => {
+        if (s === "offhand" && twoHanded(m.gear)) return lockedRow(s);
         const uid = m.gear[s];
         const it = uid ? itemOf(run, uid) : undefined;
         const open = manage ? () => go("rgear", { cls, slot: s }) : undefined;
@@ -845,7 +850,7 @@ export function runitScreen(arg?: unknown): Child[] {
       canUse(cls),
       section("ABILITIES", manage && orderPick !== null ? h("span", { class: "hi" }, "SWAP · SAME: LEAVE OUT") : null),
       ...m.order.map((a, i) => abilityBlock(c.abilities.get(a)!, fm.stats, setup.settings.designer, { n: i + 1, onN: () => onN(i), cur: orderPick === i, target: orderPick !== null })),
-      basicLine(weaponOf(c, fm.weapon), fm.stats),
+      basicLine(weaponOf(c, fm.weapon), fm.stats, { ref: fm.weapon }),
       out.length ? section("LEFT OUT") : null,
       ...out.map((a) => { const el = abilityBlock(c.abilities.get(a)!, fm.stats, setup.settings.designer); el.classList.add("dimmed"); el.addEventListener("click", () => bringBack(a)); return el; }),
       locked.length ? section("NOT LEARNED YET") : null,
@@ -862,21 +867,21 @@ export function rclassScreen(arg?: unknown): Child[] {
   const later = c.classes.get(cls)!.abilities.filter((a) => !known.includes(a));
   return [
     header(k.name, () => go("rogue")),
-    win("scroll", classHead(cls), section("PASSIVE"), ...classPassive(cls), section("KNOWS"), ...known.map((a) => abilityBlock(c.abilities.get(a)!, k.stats, setup.settings.designer)),
+    win("scroll", classHead(cls, undefined, plainWeapon(c, cls)), section("PASSIVE"), ...classPassive(cls), section("KNOWS"), ...known.map((a) => abilityBlock(c.abilities.get(a)!, k.stats, setup.settings.designer)),
       later.length ? section("LEARNS LATER") : null, ...later.map((a) => { const el = abilityBlock(c.abilities.get(a)!, k.stats, false); el.classList.add("dimmed"); return el; })),
   ];
 }
 
 export function rgearScreen(arg?: unknown): Child[] {
   const run = current();
-  const { cls, slot } = (arg as { cls: string; slot: "weapon" | "armor" | "amulet" }) ?? {};
+  const { cls, slot } = (arg as { cls: string; slot: GearSlot }) ?? {};
   if (!run || !run.roster.some((m) => m.cls === cls)) return rpartyScreen();
   const k = c.classes.get(cls)!;
   const fm = fighter(run, cls);
   const cur = member(run, cls).gear[slot];
   const fits = run.items.filter((it) => { const g = c.gear.get(it.uid) ?? itemGear(c, it); return g.slot === slot && canEquip(k, g); });
   const pick = (uid: string | null) => { equip(c, run, cls, slot, uid); saveRogue(); go("runit", cls); };
-  const rarityOrder = { legendary: 0, rare: 1, uncommon: 2, common: 3 };
+  const rarityOrder = { mythic: -1, legendary: 0, rare: 1, uncommon: 2, common: 3 };
   fits.sort((a, b) => rarityOrder[a.rarity] - rarityOrder[b.rarity]);
   // Round 6 (the director's: "you keep accidentally equipping the gear that's on someone else"): what it wears now, then the
   // bag's pieces, then pieces someone else wears, dimmed under their face; taking one of those asks first.

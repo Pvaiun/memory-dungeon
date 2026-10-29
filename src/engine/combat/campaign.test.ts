@@ -14,7 +14,7 @@ import { campaign, meets, ownedAt, rewardsOf, unmet } from "../../campaign.js";
 const at = (ticks: number) => ticks * 1000;
 const debuff = (id: string, x: object) => ({ id, name: id.toUpperCase(), label: "debuff", show: "icon", stacking: "refresh", ...x });
 const giver = (id: string, status: string, x: object = {}) => ({ id, cast: 0, recovery: 0, cooldown: 1000, do: [{ op: "apply", status, ...x }] });
-const smash = { id: "smash", cast: 10, cooldown: 20, do: [{ op: "damage", type: "physical", subtype: "blunt", amount: 1 }] };
+const smash = { id: "smash", cast: 10, cooldown: 20, do: [{ op: "damage", type: "physical", amount: 1 }] };
 const interrupt = debuff("interrupt", { lockout: { covers: "all", interrupt: true } });
 
 test("lostCast cooldown: an interrupted cast spends no MP but goes on cooldown, instead of restarting at once", () => {
@@ -29,7 +29,7 @@ test("lostCast cooldown: an interrupted cast spends no MP but goes on cooldown, 
 });
 
 test("lostCast cooldown: an action whose targets are gone when it resolves costs the unit its recovery, so it doesn't loop as fast", () => {
-  const zap = { id: "zap", cast: 2, cooldown: 10, target: { side: "foes", where: { has: "mark" } }, do: [{ op: "damage", type: "magical", element: "fire", amount: 1 }] };
+  const zap = { id: "zap", cast: 2, cooldown: 10, target: { side: "foes", where: { has: "mark" } }, do: [{ op: "damage", type: "magical", amount: 1 }] };
   const mark = debuff("mark", {});
   const run = (lostCast: "retry" | "cooldown") => arena({ party: [{ name: "A", abilities: ["zap"] }], enemies: [{ name: "T", stats: { max_hp: 1e6 } }], statuses: [mark], abilities: [zap], ruleset: { lostCast } }).to(21);
   const loops = run("retry").entries("fail", (e) => e.act === "zap").length;
@@ -65,7 +65,7 @@ test("campaign: what's owned grows by each node's rewards, a new class brings it
   assert.ok(start.gear.includes("plain_sword") && start.gear.includes("plain_bow"));
   const i = cp.nodes.findIndex((n) => n.rewards.classes.includes("pyromancer"));
   assert.ok(ownedAt(c, i + 1).classes.includes("pyromancer") && !ownedAt(c, i).classes.includes("pyromancer"));
-  assert.ok(rewardsOf(c, i).gear.includes("plain_fire_staff"));
+  assert.ok(rewardsOf(c, i).gear.includes("plain_staff"));
   const everything = ownedAt(c, cp.nodes.length);
   assert.equal(everything.classes.length, c.pack.classes.length);
   assert.equal(everything.gear.length, c.pack.gear.length);
@@ -89,7 +89,7 @@ test("stagger: copies of the same enemy start a fight 1.5 ticks apart, so a pack
 });
 
 test("enrage: past `after` ticks every hit deals pct % more, and more again every `every` ticks, on both sides", () => {
-  const a = arena({ party: [{ name: "A", weapon: { type: "physical", subtype: "pierce", cooldown: 5, amount: 100 } }], enemies: [{ name: "T", stats: { max_hp: 1e6 } }], ruleset: { enrage: { after: 10, every: 10, pct: 50 } } }).to(36);
+  const a = arena({ party: [{ name: "A", weapon: { type: "physical", cooldown: 5, amount: 100 } }], enemies: [{ name: "T", stats: { max_hp: 1e6 } }], ruleset: { enrage: { after: 10, every: 10, pct: 50 } } }).to(36);
   assert.deepEqual(a.hits("T").map((e) => e.amount), [100, 100, 150, 200, 200, 250, 250], "100 until t10, then +50% for each 10 ticks begun");
   assert.equal(a.entries("enrage").length, 1);
 });
@@ -115,7 +115,7 @@ test("campfire: the run pauses for a choice between two fights; REST gives back 
   const at = d.stages.findIndex((s: { kind: string }) => s.kind === "campfire");
   assert.equal(at, Math.ceil(d.stages.filter((s: { kind: string; boss?: boolean }) => s.kind === "fight" && !s.boss).length / 2), "after half the regular fights");
   const c = loadContent(pack);
-  const party = { formation: "neutral", units: [{ class: "knight", position: "left", abilities: ["fortify", "stand_fast", "shield_bash"], gear: { weapon: "plain_sword" } }, { class: "cleric", position: "center", abilities: ["renew", "cure", "raise"], gear: { weapon: "plain_light_staff" } }, { class: "ranger", position: "right", abilities: ["barbed_arrow", "frost_arrow", "rending_arrow"], gear: { weapon: "plain_bow" } }] };
+  const party = { formation: "neutral", units: [{ class: "knight", position: "left", abilities: ["fortify", "stand_fast", "shield_bash"], gear: { weapon: "plain_sword" } }, { class: "cleric", position: "center", abilities: ["renew", "cure", "raise"], gear: { weapon: "plain_mace" } }, { class: "ranger", position: "right", abilities: ["barbed_arrow", "frost_arrow", "rending_arrow"], gear: { weapon: "plain_bow" } }] };
   let reached = 0;
   for (const pick of ["rest", "focus"]) {
     // The first seed on which this party reaches the campfire.
@@ -144,7 +144,7 @@ test("campfire: the run pauses for a choice between two fights; REST gives back 
 
 test("campfire RAISE: the fallen member of the player's choice stands up with its share of max HP; nobody else changes", () => {
   const c = loadContent(raw);
-  const party = { formation: "neutral", units: [{ class: "knight", position: "left", abilities: ["fortify", "stand_fast", "shield_bash"], gear: { weapon: "plain_sword" } }, { class: "cleric", position: "center", abilities: ["renew", "cure", "raise"], gear: { weapon: "plain_light_staff" } }, { class: "ranger", position: "right", abilities: ["barbed_arrow", "frost_arrow", "rending_arrow"], gear: { weapon: "plain_bow" } }] };
+  const party = { formation: "neutral", units: [{ class: "knight", position: "left", abilities: ["fortify", "stand_fast", "shield_bash"], gear: { weapon: "plain_sword" } }, { class: "cleric", position: "center", abilities: ["renew", "cure", "raise"], gear: { weapon: "plain_mace" } }, { class: "ranger", position: "right", abilities: ["barbed_arrow", "frost_arrow", "rending_arrow"], gear: { weapon: "plain_bow" } }] };
   const run = newRun(c, combat, { dungeon: "cmp_old_road", party, seed: 1 }, { checked: true });
   const m = run.party as unknown as { id: string; hp: number; mp: number; stats: Record<string, number> }[];
   m[1].hp = 0;

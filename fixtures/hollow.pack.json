@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "0.6",
+  "schemaVersion": "0.7",
   "id": "worked_example",
   "title": "Placeholder fixture: Hollow of the Grey Mother",
   "note": "PLACEHOLDER. Not game design. The step 1 worked example, kept as the machinery's test fixture (runs, decisions, replay, the harness): it's the one pack with perk picks. Real content is the core set (content/). Migrated to schema 0.6 with armorRatio 1, so its numbers behave as they did.",
@@ -39,7 +39,6 @@
     },
     "unarmed": {
       "type": "physical",
-      "subtype": "blunt",
       "cooldown": 10,
       "amount": {
         "scale": [
@@ -115,11 +114,11 @@
       "note": "Default targeting picks foes weighted by it. Warriors start at 20."
     },
     {
-      "id": "resist",
-      "name": "Resistance",
+      "id": "magic_resist",
+      "name": "Magic resist",
       "kind": "points",
       "default": 0,
-      "floor": -100,
+      "floor": 0,
       "cap": 100
     },
     {
@@ -206,52 +205,54 @@
       "note": "Damage dealt back to whoever lands a hit, through the status it brings."
     }
   ],
-  "elements": [
-    {
-      "id": "fire",
-      "name": "Fire"
-    },
-    {
-      "id": "ice",
-      "name": "Ice"
-    },
-    {
-      "id": "holy",
-      "name": "Holy"
-    },
-    {
-      "id": "shadow",
-      "name": "Shadow"
-    }
-  ],
   "weaponKinds": [
     {
       "id": "sword",
       "name": "Sword",
       "type": "physical",
-      "subtype": "slash",
-      "cooldown": 12
+      "cooldown": 12,
+      "hands": 1
     },
     {
       "id": "bow",
       "name": "Bow",
       "type": "physical",
-      "subtype": "pierce",
-      "cooldown": 10
+      "cooldown": 10,
+      "hands": 1
     },
     {
       "id": "rapier",
       "name": "Rapier",
       "type": "physical",
-      "subtype": "pierce",
-      "cooldown": 10
+      "cooldown": 10,
+      "hands": 1
     },
     {
       "id": "holy_staff",
       "name": "Holy staff",
       "type": "magical",
-      "element": "holy",
-      "cooldown": 14
+      "cooldown": 14,
+      "hands": 1
+    }
+  ],
+  "armorTypes": [
+    {
+      "id": "heavy",
+      "name": "Heavy"
+    },
+    {
+      "id": "medium",
+      "name": "Medium"
+    },
+    {
+      "id": "light",
+      "name": "Light"
+    }
+  ],
+  "offhandKinds": [
+    {
+      "id": "buckler",
+      "name": "Buckler"
     }
   ],
   "statuses": [
@@ -317,7 +318,6 @@
       "text": "Loses health every 2 ticks.",
       "label": "debuff",
       "show": "icon",
-      "subtype": "slash",
       "stacking": "refresh",
       "duration": 6,
       "pulse": {
@@ -338,7 +338,6 @@
       "text": "Loses health every 2 ticks.",
       "label": "debuff",
       "show": "icon",
-      "element": "shadow",
       "stacking": "refresh",
       "duration": 8,
       "pulse": {
@@ -446,7 +445,6 @@
             {
               "op": "damage",
               "type": "physical",
-              "subtype": "pierce",
               "amount": {
                 "scale": [
                   {
@@ -706,7 +704,14 @@
       "weapons": [
         "sword"
       ],
-      "armor": "heavy",
+      "armor": [
+        "heavy",
+        "medium",
+        "light"
+      ],
+      "offhands": [
+        "buckler"
+      ],
       "abilities": [
         "cleave",
         "stand_guard",
@@ -734,7 +739,13 @@
       "weapons": [
         "bow"
       ],
-      "armor": "medium",
+      "armor": [
+        "medium",
+        "light"
+      ],
+      "offhands": [
+        "buckler"
+      ],
       "abilities": [
         "barbed_arrows",
         "volley",
@@ -762,7 +773,13 @@
       "weapons": [
         "rapier"
       ],
-      "armor": "medium",
+      "armor": [
+        "medium",
+        "light"
+      ],
+      "offhands": [
+        "buckler"
+      ],
       "abilities": [
         "riposte",
         "flurry",
@@ -783,12 +800,17 @@
         "attack": 4,
         "magic": 14,
         "armor": 2,
-        "resist": 10
+        "magic_resist": 10
       },
       "weapons": [
         "holy_staff"
       ],
-      "armor": "light",
+      "armor": [
+        "light"
+      ],
+      "offhands": [
+        "buckler"
+      ],
       "abilities": [
         "mend",
         "purify",
@@ -814,7 +836,6 @@
         {
           "op": "damage",
           "type": "physical",
-          "subtype": "slash",
           "amount": {
             "scale": [
               {
@@ -862,7 +883,6 @@
         {
           "op": "damage",
           "type": "physical",
-          "subtype": "blunt",
           "amount": {
             "scale": [
               {
@@ -939,7 +959,6 @@
         {
           "op": "damage",
           "type": "physical",
-          "subtype": "pierce",
           "amount": {
             "scale": [
               {
@@ -973,7 +992,6 @@
         {
           "op": "damage",
           "type": "physical",
-          "subtype": "pierce",
           "amount": {
             "scale": [
               {
@@ -997,7 +1015,6 @@
         {
           "op": "damage",
           "type": "physical",
-          "subtype": "pierce",
           "amount": {
             "scale": [
               {
@@ -1027,7 +1044,6 @@
         {
           "op": "damage",
           "type": "physical",
-          "subtype": "pierce",
           "amount": {
             "scale": [
               {
@@ -1061,7 +1077,6 @@
         {
           "op": "damage",
           "type": "physical",
-          "subtype": "pierce",
           "amount": {
             "scale": [
               {
@@ -1098,7 +1113,6 @@
         {
           "op": "damage",
           "type": "physical",
-          "subtype": "pierce",
           "amount": {
             "scale": [
               {
@@ -1143,7 +1157,6 @@
         {
           "op": "damage",
           "type": "physical",
-          "subtype": "pierce",
           "amount": {
             "scale": [
               {
@@ -1166,7 +1179,6 @@
         {
           "op": "damage",
           "type": "physical",
-          "subtype": "slash",
           "amount": {
             "scale": [
               {
@@ -1291,7 +1303,6 @@
         {
           "op": "damage",
           "type": "magical",
-          "element": "holy",
           "amount": {
             "scale": [
               {
@@ -1380,7 +1391,6 @@
         {
           "op": "damage",
           "type": "physical",
-          "subtype": "blunt",
           "amount": {
             "scale": [
               {
@@ -1535,7 +1545,7 @@
       "slot": "armor",
       "tier": "ordinary",
       "source": "drop",
-      "weight": "medium",
+      "armor": "medium",
       "stats": [
         {
           "stat": "armor",
@@ -1554,7 +1564,7 @@
       "slot": "armor",
       "tier": "ordinary",
       "source": "drop",
-      "weight": "light",
+      "armor": "light",
       "stats": [
         {
           "stat": "armor",
@@ -2013,7 +2023,6 @@
       },
       "weapon": {
         "type": "physical",
-        "subtype": "pierce",
         "cooldown": 8,
         "amount": {
           "scale": [
@@ -2038,13 +2047,10 @@
         "attack": 3,
         "magic": 11,
         "armor": 2,
-        "resist:shadow": 50,
-        "resist:holy": -50,
         "aggro": 6
       },
       "weapon": {
         "type": "magical",
-        "element": "shadow",
         "cooldown": 12,
         "amount": {
           "scale": [
@@ -2073,7 +2079,6 @@
       },
       "weapon": {
         "type": "physical",
-        "subtype": "slash",
         "cooldown": 10,
         "hits": 2,
         "amount": {
@@ -2282,7 +2287,7 @@
           "flat": 5
         },
         {
-          "stat": "resist",
+          "stat": "magic_resist",
           "flat": 10
         }
       ]

@@ -13,11 +13,12 @@ import { advance, newRun, type Content, type Run } from "./engine/run.js";
 import { combat, type Member as EngineMember } from "./engine/combat/rules.js";
 import { int, next, rngFor, shuffle, type Rng } from "./engine/rng.js";
 import type { AbilityT, DungeonT, EffectT, FoesT, GearT, NumT, Party, RarityT, RogueEventT, RogueFightT, RogueNodeKindT, RogueRegionT, RogueT, EventOpT, SupplyIdT } from "./schema.js";
-import { canEquip } from "./validate.js";
+import { canEquip, handsOf } from "./validate.js";
 
 export const ROGUE_VERSION = 1;
-export type Slot = "weapon" | "armor" | "amulet";
-export const SLOT_LIST: Slot[] = ["weapon", "armor", "amulet"];
+/** Step 5j: four slots. The offhand stays empty until the next pass makes its pieces. */
+export type Slot = "weapon" | "armor" | "offhand" | "amulet";
+export const SLOT_LIST: Slot[] = ["weapon", "armor", "offhand", "amulet"];
 
 // ─── State ──────────────────────────────────────────────────────────────────
 
@@ -197,7 +198,7 @@ export function itemGear(c: Content, it: Item): GearT {
   for (const s of [...(base.stats ?? []), ...affixes.flatMap((a) => a.stats)]) stats.set(s.stat, (stats.get(s.stat) ?? 0) + (s.flat ?? 0));
   const name = affixes.length === 0 ? base.name : affixes.length === 1 ? `${affixes[0].prefix} ${base.name}` : `${affixes[0].prefix} ${base.name} ${affixes[1].suffix}`;
   return {
-    ...structuredClone(base), id: it.uid, name, tier: it.rarity === "legendary" ? "powerful" : "ordinary", source: "drop",
+    ...structuredClone(base), id: it.uid, name, tier: it.rarity === "legendary" || it.rarity === "mythic" ? "powerful" : "ordinary", source: "drop",
     ...(stats.size ? { stats: [...stats].filter(([, v]) => v !== 0).map(([stat, flat]) => ({ stat, flat })) } : {}),
     note: `rogue ${it.rarity}: ${it.base}${it.affixes.length ? ` + ${it.affixes.join(", ")}` : ""}`,
   };
@@ -398,6 +399,7 @@ export function recruit(c: Content, run: RogueRun, cls: string, hp = 100, known?
   if (item) {
     const g = c.gear.get(item.uid)!;
     if (canEquip(c.classes.get(cls)!, g)) m.gear[g.slot as Slot] = item.uid;
+    settle(c, m);
   }
   if (hp < 100) m.missHp = Math.floor((maxOf(c, run, cls, "max_hp") * (100 - hp)) / 100);
   if (run.party.length < cfg(c).party) run.party.push(cls);
@@ -638,11 +640,14 @@ function fightSpec(c: Content, run: RogueRun, node: MapNode, tier: FightTier): F
 // ─── Offers: gear, tomes, recruits, formations, supplies ───────────────────
 
 const ORDINARY = (c: Content) => c.pack.gear.filter((g) => g.source === "drop" && g.tier === "ordinary").map((g) => g.id);
-const rollRarity = (rng: Rng, odds: Record<RarityT, number>): RarityT => {
+const rollRarity = (rng: Rng, odds: Partial<Record<RarityT, number>>): RarityT => {
   const ks = Object.keys(odds) as RarityT[];
-  let x = next(rng) * ks.reduce((s, k) => s + odds[k], 0);
-  return ks.find((k) => (x -= odds[k]) < 0) ?? "common";
+  let x = next(rng) * ks.reduce((s, k) => s + (odds[k] ?? 0), 0);
+  return ks.find((k) => (x -= odds[k] ?? 0) < 0) ?? "common";
 };
+/** Step 5j: a mythic is priced as a legendary; none is offered yet (the next pass makes them). */
+type Priced = Exclude<RarityT, "mythic">;
+const priced = (rar: RarityT): Priced => (rar === "mythic" ? "legendary" : rar);
 /** Can anyone in the roster use this piece? */
 /** Is a legendary piece aimed at this class (the content's aims; without them, any class that can wear it)? */
 export const aimedAt = (c: Content, base: string, cls: string) => rogue(c).aims?.[base]?.includes(cls) ?? canEquip(c.classes.get(cls)!, c.gear.get(base)!);
@@ -818,7 +823,7 @@ function boonOffers(c: Content, run: RogueRun): Offer[] {
 }
 export function priceOf(c: Content, o: Offer): number {
   const p = cfg(c).prices;
-  if (o.kind === "gear" || o.kind === "bundle") return p[o.item.rarity];
+  if (o.kind === "gear" || o.kind === "bundle") return p[priced(o.item.rarity)];
   if (o.kind === "recruit") return p.recruit;
   if (o.kind === "formation") return p.formation;
   if (o.kind === "supply") return p.supply[o.id] ?? 40;
@@ -832,13 +837,13 @@ function trained(c: Content, p: ShopPending, verb: "learn" | "upgrade") {
   p.trained = (p.trained ?? 0) + 1;
   if (cfg(c).prices.trainStep === undefined) p[verb] = false;
 }
-export const sellPrice = (c: Content, it: Item) => Math.floor((cfg(c).prices[it.rarity] * cfg(c).prices.sell) / 100);
+export const sellPrice = (c: Content, it: Item) => Math.floor((cfg(c).prices[priced(it.rarity)] * cfg(c).prices.sell) / 100);
 function shopStock(c: Content, run: RogueRun, node: string): ShopSlot[] {
   const s = cfg(c).shop;
   const rng = r(run, `shop:${run.act}:${node}`);
   const out: Offer[] = [];
-  const count = (rar: RarityT) => (rar === "legendary" && s.legendaryByAct ? s.legendaryByAct[Math.min(run.act, s.legendaryByAct.length) - 1] : s.gear[rar]);
-  for (const rar of ["common", "uncommon", "rare", "legendary"] as RarityT[]) for (let i = 0; i < count(rar); i++) out.push({ kind: "gear", item: rollItem(c, run, rng, rar) });
+  const count = (rar: Priced) => (rar === "legendary" && s.legendaryByAct ? s.legendaryByAct[Math.min(run.act, s.legendaryByAct.length) - 1] : s.gear[rar]);
+  for (const rar of ["common", "uncommon", "rare", "legendary"] as Priced[]) for (let i = 0; i < count(rar); i++) out.push({ kind: "gear", item: rollItem(c, run, rng, rar) });
   const recs: string[] = [];
   for (let i = 0; i < s.recruits; i++) {
     const o = rollRecruit(c, run, rng, recs);
@@ -928,6 +933,8 @@ function equipNow(c: Content, run: RogueRun, cls: string, slot: Slot, uid: strin
   if (!it) return false;
   const g = c.gear.get(uid) ?? itemGear(c, it);
   if (g.slot !== slot || !canEquip(c.classes.get(cls)!, g)) return false;
+  // Step 5j: an offhand needs a free hand (the interface shows the slot locked under a two-handed weapon).
+  if (slot === "offhand" && twoHanded(c, m)) return false;
   const old = wearer(run, uid);
   if (old && old !== cls) {
     // Taken from another member, who gets this member's old piece if it fits them (a weapon slot is never left empty).
@@ -937,9 +944,19 @@ function equipNow(c: Content, run: RogueRun, cls: string, slot: Slot, uid: strin
     if (slot === "weapon" && !fits) return false;
     if (fits) om.gear[slot] = was;
     else delete om.gear[slot];
+    settle(c, om);
   }
+  // Step 5j: a unit wears one mythic at most; a new one sends the old one to the bag.
+  if (g.mythic) for (const s of SLOT_LIST) if (s !== slot && m.gear[s] && c.gear.get(m.gear[s]!)?.mythic) delete m.gear[s];
   m.gear[slot] = uid;
+  settle(c, m);
   return true;
+}
+/** Step 5j: does this member hold a two-handed weapon? */
+export const twoHanded = (c: Content, m: Member) => !!m.gear.weapon && handsOf(c.pack, c.gear.get(m.gear.weapon)) === 2;
+/** Step 5j: a two-handed weapon empties the offhand, which goes back to the bag. */
+function settle(c: Content, m: Member) {
+  if (m.gear.offhand && twoHanded(c, m)) delete m.gear.offhand;
 }
 /** A member's stats as they stand with its gear and seat. */
 function statsOf(c: Content, run: RogueRun, cls: string): Record<string, number> {

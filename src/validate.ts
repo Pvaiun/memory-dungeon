@@ -5,9 +5,9 @@
  *   1. Shape: the zod schema (types, required fields, closed sets).
  *   2. Meaning: every reference resolves, and content follows the combat
  *      rules for what's valid (steps/04-combat-concepts/design.md and
- *      docs/core-set/rules-and-vocabulary.md): a physical instance has a
- *      subtype and no element, percent changes only on amount stats, a
- *      weapon belongs to a kind, and so on.
+ *      docs/core-set/rules-and-vocabulary.md): an action's damage is
+ *      physical or magical, percent changes only on amount stats, a weapon
+ *      belongs to a kind, a piece fits its kind's classes, and so on.
  *   3. Design rules from the core set, driven by the pack's `design` block.
  *
  * Every issue carries a stable `code`, so tests and later tooling can rely on it.
@@ -32,7 +32,7 @@ class Report {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const COLLECTIONS = [
-  "stats", "elements", "weaponKinds", "statuses", "classes", "abilities", "gear", "formations", "enemies", "perkFamilies", "perks", "dungeons",
+  "stats", "weaponKinds", "armorTypes", "offhandKinds", "statuses", "classes", "abilities", "gear", "formations", "enemies", "perkFamilies", "perks", "dungeons",
 ] as const;
 type Coll = (typeof COLLECTIONS)[number];
 
@@ -140,8 +140,7 @@ const ACTION_EVENTS = ["action_start", "action_resolve", "action_interrupted"];
 const HIT_EVENTS = ["hit_lands", "hit_taken", "hit_evaded", "hit_missed"];
 const STATUS_EVENTS = ["status_gained", "status_triggered", "status_ended", "status_capped"];
 const DAMAGE_EVENTS = ["damage_dealt", "damage_taken"];
-const RESERVED_TAGS = ["basic", "ability", "extra", "physical", "magical", "none", "healing", "all", "crit", ...Object.keys(S.SUBTYPES)];
-const WEIGHT_ORDER: Record<S.WeightT, number> = { light: 0, medium: 1, heavy: 2 };
+const RESERVED_TAGS = ["basic", "ability", "extra", "physical", "magical", "none", "healing", "all", "crit"];
 
 class Combat {
   constructor(readonly pack: Pack, readonly ix: Index, readonly w: Walker, readonly r: Report) {}
@@ -152,8 +151,7 @@ class Combat {
   statKey(key: string, path: string): S.StatDefT | null {
     const [head, ...rest] = key.split(":");
     if (!rest.length) return this.w.ref("stats", key, path, "stat") ? this.ix.get<S.StatDefT>("stats", key)! : null;
-    if (head === "resist" && rest.length === 1) this.w.ref("elements", rest[0], path, "element");
-    else if (head === "immune" && rest[0] === "status" && rest.length === 2) this.w.ref("statuses", rest[1], path, "status");
+    if (head === "immune" && rest[0] === "status" && rest.length === 2) this.w.ref("statuses", rest[1], path, "status");
     else if (head === "immune" && rest[0] === "kind" && rest.length >= 2) {
       if (!(rest[1] in S.KINDS)) this.r.error("stat.family", path, `'${rest[1]}' isn't an effect kind (${Object.keys(S.KINDS).join(", ")})`);
     } else if (head !== "immune" || rest.length !== 1 || !["debuffs", "damage", "dispel"].includes(rest[0])) {
@@ -198,17 +196,10 @@ class Combat {
   }
 
   /** The design's rules for a damage instance (sections 5 and 7.5). */
-  instance(i: { type: string; subtype?: string; element?: string; amount: S.NumT }, path: string, where: Where, inStatus: boolean) {
-    if (i.type === "physical") {
-      if (!i.subtype) this.r.error("instance.physical", path, `every physical instance has exactly one subtype (slash, pierce or blunt)`);
-      if (i.element) this.r.error("instance.physical", `${path}.element`, `physical instances have no element`);
-    } else if (i.type === "magical") {
-      if (!i.element) this.r.error("instance.magical", path, `every magical instance has exactly one element`);
-      if (i.subtype) this.r.error("instance.magical", `${path}.subtype`, `magical instances have no subtype`);
-    } else if (where === "action") {
+  instance(i: { type: string; amount: S.NumT }, path: string, where: Where, inStatus: boolean) {
+    if (i.type === "none" && where === "action") {
       this.r.error("instance.untyped", `${path}.type`, `every damage instance an action produces is physical or magical`);
     }
-    if (i.element) this.w.ref("elements", i.element, `${path}.element`, "element");
     this.num(i.amount, `${path}.amount`, where, inStatus);
   }
 
@@ -311,7 +302,7 @@ class Combat {
 
   /** Tags that boosts, modifiers, lockouts, riders and event filters can name. */
   knownTags(): Set<string> {
-    return new Set([...RESERVED_TAGS, ...this.pack.elements.map((e) => e.id), ...this.pack.statuses.flatMap((s) => [s.id, ...(s.tags ?? [])])]);
+    return new Set([...RESERVED_TAGS, ...this.pack.statuses.flatMap((s) => [s.id, ...(s.tags ?? [])])]);
   }
 
   registries() {
@@ -333,9 +324,6 @@ class Combat {
     }
     const hp = known.get("max_hp");
     if (hp && !(hp.floor !== undefined && hp.floor >= 1)) this.r.error("stat.hpFloor", `stats[${pack.stats.indexOf(hp)}].floor`, `max HP's floor must be at least 1`);
-    pack.elements.forEach((e, i) => {
-      if (RESERVED_TAGS.includes(e.id)) this.r.error("element.reserved", `elements[${i}]`, `'${e.id}' is already a tag (${RESERVED_TAGS.join(", ")})`);
-    });
     pack.weaponKinds.forEach((k, i) => {
       const p = `weaponKinds[${i}]`;
       this.instance({ ...k, amount: 0 }, p, "action", false);
@@ -354,7 +342,7 @@ class Combat {
     const type = wp.type ?? k?.type;
     if (!type) this.r.error("weapon.kind", path, `a weapon names a kind, or states its own type and cooldown`);
     if (wp.cooldown === undefined && !k) this.r.error("weapon.kind", path, `a weapon without a kind states its cooldown`);
-    this.instance({ type: type ?? "physical", subtype: wp.subtype ?? k?.subtype, element: wp.element ?? k?.element, amount: wp.amount }, path, "action", false);
+    this.instance({ type: type ?? "physical", amount: wp.amount }, path, "action", false);
     wp.riders?.forEach((x, i) => this.instance(x, `${path}.riders[${i}]`, "action", false));
     wp.apply?.forEach((x, i) => this.apply(x, `${path}.apply[${i}]`, "action", false));
     this.ticks(wp.cooldown, `${path}.cooldown`);
@@ -380,7 +368,6 @@ class Combat {
       const p = `statuses[${i}]`;
       this.shared = shared(st);
       const intensity = st.stacking === "intensity";
-      if (st.element) this.w.ref("elements", st.element, `${p}.element`, "element");
       this.ticks(st.duration, `${p}.duration`);
       if (!intensity) {
         for (const k of ["cap", "absorb", "trigger", "drop"] as const) {
@@ -421,7 +408,6 @@ class Combat {
         tag(x.on, `${p}.riders[${j}].on`);
         this.instance(x.add, `${p}.riders[${j}].add`, "action", true);
       });
-      if (st.convert?.element) this.w.ref("elements", st.convert.element, `${p}.convert.element`, "element");
       if (st.pulse) {
         this.ticks(st.pulse.every, `${p}.pulse.every`);
         st.pulse.do?.forEach((e, j) => this.effect(e, `${p}.pulse.do[${j}]`, "pulse", st));
@@ -438,7 +424,7 @@ class Combat {
         x.on.tags?.forEach((t, k) => tag(t, `${p}.reactions[${j}].on.tags[${k}]`));
         x.do.forEach((e, k) => this.effect(e, `${p}.reactions[${j}].do[${k}]`, "reaction", st));
       });
-      const empty = !st.stats && !st.boosts && !st.taken && !st.absorb && !st.block && !st.lockout && !st.riders && !st.convert && !st.seek && !st.strike && !st.pulse && !st.trigger && !st.reactions;
+      const empty = !st.stats && !st.boosts && !st.taken && !st.absorb && !st.block && !st.lockout && !st.riders && !st.seek && !st.strike && !st.pulse && !st.trigger && !st.reactions;
       if (empty) this.r.warn("status.empty", p, `status '${st.id}' has no effects`);
     });
     this.shared = false;
@@ -468,6 +454,12 @@ function checkUnits(pack: Pack, ix: Index, w: Walker, r: Report, c: Combat) {
     c.grants(cl.passive, `${p}.passive`);
     cl.weapons.forEach((k, j) => w.ref("weaponKinds", k, `${p}.weapons[${j}]`, "weapon kind"));
     if (new Set(cl.weapons).size !== cl.weapons.length) r.error("class.weapons", `${p}.weapons`, `a weapon kind is listed twice`);
+    // Step 5j (builds.md, Gear): every class has a one-handed kind, so it can always hold an offhand.
+    if (!cl.weapons.some((k) => ix.get<S.WeaponKindT>("weaponKinds", k)?.hands === 1)) r.error("class.oneHanded", `${p}.weapons`, `'${cl.id}' has no one-handed weapon kind, so it could never hold an offhand`);
+    cl.armor.forEach((k, j) => w.ref("armorTypes", k, `${p}.armor[${j}]`, "armor type"));
+    if (new Set(cl.armor).size !== cl.armor.length) r.error("class.armor", `${p}.armor`, `an armor type is listed twice`);
+    cl.offhands.forEach((k, j) => w.ref("offhandKinds", k, `${p}.offhands[${j}]`, "offhand kind"));
+    if (new Set(cl.offhands).size !== cl.offhands.length) r.error("class.offhands", `${p}.offhands`, `an offhand kind is listed twice`);
     if (cl.abilities.length !== d.abilitiesPerClass) {
       r.error("class.abilityCount", `${p}.abilities`, `'${cl.id}' has ${cl.abilities.length} abilities; every class has ${d.abilitiesPerClass}`);
     }
@@ -492,13 +484,20 @@ function checkUnits(pack: Pack, ix: Index, w: Walker, r: Report, c: Combat) {
 function checkGear(pack: Pack, ix: Index, w: Walker, r: Report, c: Combat) {
   pack.gear.forEach((g, i) => {
     const p = `gear[${i}]`;
+    // Step 5j: a mythic fits one class whatever its kind, so it may have none (a mythic weapon states its own speed, type and hands).
+    if (g.mythic) w.ref("classes", g.mythic, `${p}.mythic`, "class");
     if (g.slot === "weapon") {
       if (!g.weapon) r.error("gear.weapon", p, `a weapon sets the basic attack: give it 'weapon'`);
-      else if (!g.weapon.kind) r.error("gear.weapon", `${p}.weapon`, `a weapon piece belongs to a kind`);
+      else if (!g.weapon.kind && !g.mythic) r.error("gear.weapon", `${p}.weapon`, `a weapon piece belongs to a kind`);
     } else if (g.weapon) r.error("gear.weapon", `${p}.weapon`, `only the weapon slot sets a basic attack`);
     if (g.slot === "armor") {
-      if (!g.weight) r.error("gear.weight", p, `armor has a weight (light, medium or heavy)`);
-    } else if (g.weight) r.error("gear.weight", `${p}.weight`, `only armor has a weight`);
+      if (g.armor) w.ref("armorTypes", g.armor, `${p}.armor`, "armor type");
+      else if (!g.mythic) r.error("gear.armor", p, `armor has an armor type`);
+    } else if (g.armor) r.error("gear.armor", `${p}.armor`, `only armor has an armor type`);
+    if (g.slot === "offhand") {
+      if (g.offhand) w.ref("offhandKinds", g.offhand, `${p}.offhand`, "offhand kind");
+      else if (!g.mythic) r.error("gear.offhand", p, `an offhand has an offhand kind`);
+    } else if (g.offhand) r.error("gear.offhand", `${p}.offhand`, `only offhands have an offhand kind`);
     const okSource = g.tier === "ordinary" ? g.source !== "unlock" : g.source === "unlock";
     if (!okSource) r.error("gear.source", `${p}.source`, `${g.tier} gear can't come from '${g.source}' (ordinary: starter or drop; powerful: unlock)`);
     if (g.weapon) c.weapon(g.weapon, `${p}.weapon`);
@@ -785,6 +784,7 @@ function checkCampaign(pack: Pack, ix: Index, w: Walker, r: Report, cp: S.Campai
       else if ("excludes" in nd) nd.excludes.forEach((c, k) => w.ref("classes", c, `${q}.excludes[${k}]`, "class") && need.excludes.push(c));
       else if ("formation" in nd) w.ref("formations", nd.formation, `${q}.formation`, "formation") && !owned.formations.has(nd.formation) && r.error("campaign.unowned", q, `needs formation '${nd.formation}', which isn't owned by then`);
       else if ("weapons" in nd) nd.weapons.forEach((k, m) => w.ref("weaponKinds", k, `${q}.weapons[${m}]`, "weapon kind"));
+      else if ("armor" in nd && nd.armor !== "none") w.ref("armorTypes", nd.armor, `${q}.armor`, "armor type");
       else if ("size" in nd) size = Math.min(size, nd.size);
     });
     if (need.includes.some((c) => need.excludes.includes(c))) r.error("campaign.impossible", p, `a class is both required and excluded`);
@@ -792,7 +792,7 @@ function checkCampaign(pack: Pack, ix: Index, w: Walker, r: Report, cp: S.Campai
     // Enough owned classes can meet the armor and weapon needs.
     const fits = [...owned.classes].filter((c) => !need.excludes.includes(c) && n.needs.every((nd) => {
       const k = ix.get<S.ClassDefT>("classes", c)!;
-      if ("armor" in nd) return nd.armor === "none" || [...owned.gear].some((g) => { const x = ix.get<S.GearT>("gear", g); return !!x && x.slot === "armor" && x.weight === nd.armor && canEquip(k, x); });
+      if ("armor" in nd) return nd.armor === "none" || [...owned.gear].some((g) => { const x = ix.get<S.GearT>("gear", g); return !!x && x.slot === "armor" && x.armor === nd.armor && canEquip(k, x); });
       if ("weapons" in nd) return [...owned.gear].some((g) => { const x = ix.get<S.GearT>("gear", g); return !!x && x.slot === "weapon" && !!x.weapon?.kind && nd.weapons.includes(x.weapon.kind) && canEquip(k, x); });
       return true;
     }));
@@ -828,11 +828,27 @@ function checkUnused(pack: Pack, ix: Index, r: Report) {
 /** What a player owns. Gear is a count per item: copies can be equipped up to that count. */
 export type Owned = { classes?: string[]; formations?: string[]; gear?: Record<string, number> };
 
-/** Can this class equip this piece? Weapons by kind, armor by weight, amulets always. */
+/** Can this class equip this piece? A mythic by its one class; weapons by kind, armor by type, offhands by kind; amulets always. */
 export function canEquip(cls: S.ClassDefT, g: S.GearT): boolean {
+  if (g.mythic) return g.mythic === cls.id;
   if (g.slot === "weapon") return !!g.weapon?.kind && cls.weapons.includes(g.weapon.kind);
-  if (g.slot === "armor") return !!g.weight && WEIGHT_ORDER[g.weight] <= WEIGHT_ORDER[cls.armor];
+  if (g.slot === "armor") return !!g.armor && cls.armor.includes(g.armor);
+  if (g.slot === "offhand") return !!g.offhand && cls.offhands.includes(g.offhand);
   return true;
+}
+
+/** Step 5j: a weapon's hands (its own, or its kind's). A two-handed weapon empties the offhand. */
+export function handsOf(pack: Pack, g: S.GearT | undefined): 1 | 2 {
+  if (!g?.weapon) return 1;
+  return g.weapon.hands ?? pack.weaponKinds.find((k) => k.id === g.weapon!.kind)?.hands ?? 1;
+}
+
+/** Why this class can't wear this piece, in a few words (for issues). */
+function misfit(cls: S.ClassDefT, g: S.GearT): string {
+  if (g.mythic) return `'${g.id}' is the ${g.mythic}'s mythic`;
+  if (g.slot === "weapon") return `a ${cls.id} can't use a ${g.weapon?.kind}`;
+  if (g.slot === "armor") return `a ${cls.id} wears ${cls.armor.join(" or ")}, not ${g.armor}`;
+  return `a ${cls.id} holds ${cls.offhands.join(" or ")}, not ${g.offhand}`;
 }
 
 export function checkParty(pack: Pack, raw: unknown, opts: { dungeon?: string; owned?: Owned } = {}): Issue[] {
@@ -874,18 +890,20 @@ export function checkParty(pack: Pack, raw: unknown, opts: { dungeon?: string; o
 
     for (const [slot, gid] of Object.entries(u.gear)) {
       const gp = `${p}.gear.${slot}`;
-      if (!(slot in S.SLOTS)) r.error("party.slot", gp, `there's no slot '${slot}': units carry a weapon, armor and an amulet`);
+      if (!(slot in S.SLOTS)) r.error("party.slot", gp, `there's no slot '${slot}': units carry a weapon, armor, an offhand and an amulet`);
       const g = ix.get<S.GearT>("gear", gid);
       if (!g) {
         r.error("ref.missing", gp, `unknown gear '${gid}'`);
         continue;
       }
       if (g.slot !== slot) r.error("party.gearSlot", gp, `'${gid}' goes in slot '${g.slot}', not '${slot}'`);
-      else if (!canEquip(cls, g)) {
-        r.error("party.gearClass", gp, g.slot === "weapon" ? `a ${u.class} can't use a ${g.weapon?.kind}` : `a ${u.class} can wear ${cls.armor} armor at most, not ${g.weight}`);
-      }
+      else if (!canEquip(cls, g)) r.error("party.gearClass", gp, misfit(cls, g));
       gearUse.set(gid, (gearUse.get(gid) ?? 0) + 1);
     }
+    // Step 5j: a two-handed weapon empties the offhand; a unit wears one mythic at most.
+    if (u.gear.offhand && handsOf(pack, ix.get<S.GearT>("gear", u.gear.weapon ?? "")) === 2) r.error("party.twoHanded", `${p}.gear.offhand`, `a two-handed weapon leaves no hand for an offhand`);
+    const mythics = Object.values(u.gear).filter((gid) => ix.get<S.GearT>("gear", gid)?.mythic);
+    if (mythics.length > 1) r.error("party.mythics", `${p}.gear`, `a unit wears one mythic at most (${mythics.join(", ")})`);
   });
   if (opts.owned?.gear) {
     for (const [gid, n] of gearUse) {

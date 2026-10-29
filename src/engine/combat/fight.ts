@@ -182,12 +182,6 @@ function retime(w: W, u: CUnit, old: Record<string, number>, now: Record<string,
   }
 }
 
-function resistTotal(w: W, u: CUnit, element: string) {
-  const v = stat(w, u, "resist") + stat(w, u, `resist:${element}`);
-  const d = w.c.stats.get("resist");
-  return Math.min(d?.cap ?? v, Math.max(d?.floor ?? v, v));
-}
-
 // ─── Numbers ────────────────────────────────────────────────────────────────
 
 type OfT = NonNullable<S.ScaleT["of"]>;
@@ -293,14 +287,13 @@ export function weaponOf(c: Content, ref: string): S.WeaponT {
   return c.gear.get(ref)!.weapon!;
 }
 
-/** A weapon with its kind's type, subtype or element and cooldown filled in, unless it states its own. */
+/** A weapon with its kind's type, cooldown and hands filled in, unless it states its own. */
 export function resolveWeapon(c: Content, wp: S.WeaponT) {
   const k = wp.kind ? c.weaponKinds.get(wp.kind) : undefined;
   return {
     type: wp.type ?? k?.type ?? "physical",
-    subtype: wp.subtype ?? k?.subtype,
-    element: wp.element ?? k?.element,
     cooldown: wp.cooldown ?? k?.cooldown ?? 10,
+    hands: wp.hands ?? k?.hands ?? 1,
   };
 }
 
@@ -313,7 +306,7 @@ function actDef(w: W, u: CUnit, i: number): ActDef {
     const wp = src as S.WeaponT;
     const r = resolveWeapon(w.c, wp);
     const cooldown = sub(r.cooldown);
-    const hit: S.EffectT = { op: "damage", type: r.type, subtype: r.subtype, element: r.element, amount: wp.amount, hits: wp.hits, riders: wp.riders, apply: wp.apply };
+    const hit: S.EffectT = { op: "damage", type: r.type, amount: wp.amount, hits: wp.hits, riders: wp.riders, apply: wp.apply };
     d = {
       id, kind: "basic", name: "attack", mp: 0, cast: sub(wp.cast ?? 0), cooldown,
       recovery: wp.recovery !== undefined ? sub(wp.recovery) : Math.round(w.c.pack.ruleset.basicRecovery * cooldown),
@@ -331,10 +324,10 @@ function actDef(w: W, u: CUnit, i: number): ActDef {
   return d;
 }
 
-/** What a lockout or Seek can cover: the action's kind, and the type and subtype or element of each of its hits. */
+/** What a lockout or Seek can cover: the action's kind, and the type of each of its hits. */
 function actTags(kind: string, effects: readonly S.EffectT[]): string[] {
   const out = [kind];
-  for (const e of effects) if (e.op === "damage") out.push(e.type, (e.type === "physical" ? e.subtype : e.element) ?? e.type);
+  for (const e of effects) if (e.op === "damage") out.push(e.type);
   return out;
 }
 
@@ -683,26 +676,12 @@ function run(w: W, ctx: Ctx, e: S.EffectT) {
   }
 }
 
-type Part = { type: S.InstanceT["type"]; subtype?: string; element?: string };
+type Part = { type: S.InstanceT["type"] };
 const partTags = (kind: string | null, p: Part, extra: readonly string[] = []) => {
   const out = kind ? [kind] : [];
   if (p.type !== "none") out.push(p.type);
-  if (p.subtype) out.push(p.subtype);
-  if (p.element) out.push(p.element);
   return [...out, ...extra];
 };
-
-/** The holder's statuses can change a magical instance's element or a physical instance's subtype (section 7.4). Newest wins. */
-function convert(w: W, u: CUnit, p: Part): Part {
-  let out = p;
-  for (const s of u.statuses) {
-    const cv = def(w, s.id).convert;
-    if (!cv) continue;
-    if (p.type === "magical" && cv.element) out = { ...out, element: cv.element };
-    if (p.type === "physical" && cv.subtype) out = { ...out, subtype: cv.subtype };
-  }
-  return out;
-}
 
 /** Physical only: one roll per hit (or physical rider) on the attacker's dice. */
 function evaded(w: W, a: CUnit, t: CUnit): boolean {
@@ -725,16 +704,15 @@ function critRoll(w: W, rng: CUnit, chance: number, multiplier: number): number 
   return multiplier;
 }
 
-type Calc = { amount: number; word: string | null; crit: boolean; heal: number; raw: number };
+type Calc = { amount: number; word: string | null; crit: boolean; raw: number };
 
 /** Resolution order steps 2 to 6 (section 5): amount, boosts, damage-taken modifiers, crit, mitigation. Whole points, rounded down. */
 function calc(w: W, t: CUnit, p: Part, raw: number, tags: readonly string[], boost: number, crit: number): Calc {
   let x = raw * (1 + boost / 100) * (1 + takenOf(w, t, tags) / 100);
   if (crit) x = (x * crit) / 100;
-  // The amount before Armor or resistance, for the log only: what mitigation took off.
+  // The amount before Armor or Magic resist, for the log only: what mitigation took off.
   const preMit = x;
   let word: string | null = null;
-  let heal = 0;
   if (p.type === "physical") {
     const k = w.c.pack.ruleset.armorK;
     const armor = stat(w, t, "armor");
@@ -745,23 +723,16 @@ function calc(w: W, t: CUnit, p: Part, raw: number, tags: readonly string[], boo
       : Math.max((x * (w.c.pack.ruleset.armorFloor ?? 0)) / 100, x - armor * w.c.pack.ruleset.armorRatio);
     if (y <= 0 && x > 0) word = "BLOCKED";
     x = y;
-  } else if (p.element) {
-    const r = resistTotal(w, t, p.element);
-    if (r > 100) {
-      // Resistance past full is absorption: the damage heals instead.
-      heal = Math.max(0, Math.floor((x * (r - 100)) / 100));
-      x = 0;
-      word = "ABSORB";
-    } else if (r >= 100) (x = 0), (word = "IMMUNE");
-    else {
-      x = x * (1 - r / 100);
-      word = r < 0 ? "WEAK" : r > 0 ? "RESIST" : null;
-    }
+  } else if (p.type === "magical") {
+    // Step 5j: one Magic resist for every magical hit and pulse, a percentage (its stat's floor and cap hold it between 0 and full).
+    const r = stat(w, t, "magic_resist");
+    if (r >= 100) (x = 0), (word = "IMMUNE");
+    else if (r > 0) (x = x * (1 - r / 100)), (word = "RESIST");
   }
   const raw0 = Math.max(0, Math.floor(preMit));
   x = Math.max(0, Math.floor(x));
-  if (stat(w, t, "immune:damage") > 0) (x = 0), (heal = 0), (word = "IMMUNE");
-  return { amount: x, word, crit: crit > 0, heal, raw: raw0 };
+  if (stat(w, t, "immune:damage") > 0) (x = 0), (word = "IMMUNE");
+  return { amount: x, word, crit: crit > 0, raw: raw0 };
 }
 
 /** Steps 7 and 8: a block (Aegis) stops damage above its share outright; absorbs soak in the order they were first applied; the rest comes off HP. */
@@ -795,8 +766,8 @@ function take(w: W, t: CUnit, amount: number): { soaked: number; lost: number; b
 
 const shield = (w: W, u: CUnit) => u.statuses.reduce((s, x) => (def(w, x.id).absorb ? s + Math.floor(x.stacks / SUBTICKS) : s), 0);
 
-/** What a piece of damage was, for the log: its element, "physical", or "untyped". */
-const dmgKind = (p: Part) => p.element ?? (p.type === "none" ? "untyped" : p.type);
+/** What a piece of damage was, for the log: "physical", "magical" or "untyped". */
+const dmgKind = (p: Part) => (p.type === "none" ? "untyped" : p.type);
 function logDamage(w: W, by: CUnit | null, t: CUnit, src: string, part: string, r: Calc, tk: { soaked: number; blocked: boolean }, from?: string | null, kind?: string) {
   w.log?.({
     t: "dmg", vis: "player", at: w.f.now, by: by?.id ?? null, target: t.id, src, part, ...(from ? { from } : {}), ...(kind ? { kind } : {}),
@@ -804,28 +775,19 @@ function logDamage(w: W, by: CUnit | null, t: CUnit, src: string, part: string, 
   });
 }
 
-/** An absorbed hit or pulse heals its target instead, unboosted, and applies nothing. */
-function absorb(w: W, by: CUnit | null, t: CUnit, src: string, r: Calc) {
-  const got = Math.min(r.heal, t.stats.max_hp - t.hp);
-  t.hp += got;
-  // Step 5g: a heal of nothing (a full unit) is not a moment; the log keeps the beats a player reads. Outcomes are unchanged.
-  if (got > 0) w.log?.({ t: "heal", vis: "player", at: w.f.now, by: by?.id ?? null, target: t.id, src, amount: got, crit: false, hp: t.hp, word: "ABSORB" });
-  if (got > 0) fire(w, ev("healed", t, by, { amount: got }));
-}
-
 /** A hit from an action or an extra strike, with its riders and attached statuses (sections 5 and 7.2). */
 function hit(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
   const a = ctx.actor, kind = ctx.kind!;
-  const main = convert(w, a, e);
+  const main: Part = { type: e.type };
   const tags = partTags(kind, main);
   const parts: { p: Part; raw: number; rider: boolean }[] = [{ p: main, raw: aval(w, e.amount, a, t), rider: false }];
-  for (const r of e.riders ?? []) parts.push({ p: convert(w, a, r), raw: aval(w, r.amount, a, t), rider: true });
+  for (const r of e.riders ?? []) parts.push({ p: { type: r.type }, raw: aval(w, r.amount, a, t), rider: true });
   for (const s of a.statuses) {
     const d = def(w, s.id);
     for (const r of d.riders ?? []) {
       if (!tags.includes(r.on)) continue;
       const raw = sval(w, { d, nums: s.nums, holder: a, actor: a, amount: 0 }, r, r.add.amount, t) * perOf(d, s);
-      parts.push({ p: convert(w, a, r.add), raw, rider: true });
+      parts.push({ p: { type: r.add.type }, raw, rider: true });
     }
   }
   if (main.type === "physical" && evaded(w, a, t)) {
@@ -848,10 +810,6 @@ function hit(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
       w.log?.({ t: "dmg", vis: "player", at: w.f.now, by: a.id, target: t.id, src: ctx.id, part, amount: 0, soaked: 0, word: "MISS", crit: false, hp: t.hp, shield: shield(w, t) });
       continue;
     }
-    if (r.word === "ABSORB") {
-      absorb(w, a, t, ctx.id, r);
-      continue;
-    }
     const tk = take(w, t, r.amount);
     logDamage(w, a, t, ctx.id, part, r, tk, null, dmgKind(parts[i].p));
     if (!tk.blocked) dealt += r.amount;
@@ -859,8 +817,6 @@ function hit(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
     if (t.hp <= 0) ko(w, t);
   }
   if (w.f.result) return;
-  // An absorbed hit applies nothing and doesn't count as landing.
-  if (results[0]?.word === "ABSORB") return;
   // The hit's events carry "crit" when it crits, for reactions to crits (the Assassin's).
   const evTags = crit ? [...tags, "crit"] : tags;
   fire(w, ev("hit_lands", a, t, { kind, tags: evTags, amount: dealt }));
@@ -882,7 +838,7 @@ function damageEvents(w: W, by: CUnit | null, t: CUnit, dealt: number, lost: num
 function strike(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
   const st = ctx.st!;
   const d = st.d;
-  const p: Part = { type: e.type, subtype: e.subtype ?? (e.type === "none" ? d.subtype : undefined), element: e.element ?? (e.type === "none" ? d.element : undefined) };
+  const p: Part = { type: e.type };
   const tags = partTags(null, p, compile(d).tags);
   const raw = num(w, ctx, e, e.amount, t);
   if (p.type === "physical" && evaded(w, ctx.actor, t)) {
@@ -898,7 +854,6 @@ function strike(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
   }
   const r = calc(w, t, p, raw, tags, st.fixedBoost ? 0 : boostOf(w, ctx.actor, tags, t) + stat(w, ctx.actor, "power") + enrage(w), crit);
   const by = st.fixedBoost ? (d.perSource ? unit(w, st.src) : null) : ctx.actor;
-  if (r.word === "ABSORB") return absorb(w, by, t, d.id, r);
   const tk = take(w, t, r.amount);
   // `from`: who applied the status, for reading a fight's damage by source (the log only).
   logDamage(w, by, t, d.id, st.fixedBoost ? "pulse" : "reaction", r, tk, st.src, dmgKind(p));
@@ -929,8 +884,7 @@ function immune(w: W, u: CUnit, d: S.StatusT): boolean {
   if (on(`immune:status:${d.id}`)) return true;
   if (d.label === "debuff" && on("immune:debuffs")) return true;
   if (cp.kinds.some(([k, tag]) => on(`immune:kind:${k}`) || (tag !== null && on(`immune:kind:${k}:${tag}`)))) return true;
-  if (cp.harms && on("immune:damage")) return true;
-  return !!d.element && resistTotal(w, u, d.element) >= 100;
+  return cp.harms && on("immune:damage");
 }
 
 type ApplyOpts = { stacks: number; duration?: number | "permanent"; chance?: number; rng: CUnit };
@@ -1100,7 +1054,7 @@ type Ev = {
   owner: CUnit;
   other: CUnit | null;
   kind: HitKind | null;
-  /** Hit events: the hit's tags (kind, type, subtype or element). */
+  /** Hit events: the hit's tags (kind and type). */
   tags: string[];
   /** Status events: the status. Damage events: the status whose pulse or reaction dealt it, if any. */
   status: string | null;

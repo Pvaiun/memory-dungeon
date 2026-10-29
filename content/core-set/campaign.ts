@@ -132,7 +132,7 @@ const NODES: Node[] = [
   {
     id: "fire_mine", name: "The Fire Mine", kind: "dungeon", run: "fire_mine",
     text: "Everything here burns, and the lord of the furnace casts a fire that ends parties.",
-    classes: ["frostweaver"], gear: ["hoarfrost_staff", "ashen_plate", "mountain_charm"],
+    classes: ["frostweaver"], gear: ["hoarfrost_staff", "ashen_plate"],
   },
   {
     id: "deep_freeze", name: "Deep Freeze", kind: "trial",
@@ -152,7 +152,7 @@ const NODES: Node[] = [
   {
     id: "iron_wall", name: "Iron Wall", kind: "trial",
     text: "Only plate goes through the foundry.",
-    needs: [{ armor: "heavy" }],
+    needs: [{ armor: "plate" }], // Step 5j: Plate (was heavy armor: the same five classes).
     run: {
       text: "The foundry under the mine.",
       fights: [
@@ -184,7 +184,7 @@ const NODES: Node[] = [
         enc("glacier_king", "The Glacier King", [1, "ice_titan"], [2, "snow_wolf"]),
       ],
     },
-    classes: ["stormcaller"], formations: ["ambush"], gear: ["storm_rod", "plain_wind_staff", "quiet_cloak", "wraith_leathers"],
+    classes: ["stormcaller"], formations: ["ambush"], gear: ["storm_rod", "plain_rune_sword", "quiet_cloak", "wraith_leathers"], // Step 5j: the plain rune sword (the Valkyrie's second kind) in the wind staff's place.
   },
   {
     id: "wild_hunt", name: "The Wild Hunt", kind: "trial",
@@ -247,7 +247,7 @@ const NODES: Node[] = [
   {
     id: "deep_crypt", name: "The Deep Crypt", kind: "dungeon", run: "deep_crypt",
     text: "Beneath the Crypt, something takes every voice. Power that isn't an ability is the key.",
-    classes: ["vampire"], formations: ["last_stand"], gear: ["bloodied_claws", "bloodstone", "duskhide", "plain_dark_staff", "nightstaff"],
+    classes: ["vampire"], formations: ["last_stand"], gear: ["bloodied_claws", "bloodstone", "duskhide", "nightstaff"], // Step 5j: the dark staff is gone; the great weapon arrives with the Geomancer.
   },
   {
     id: "blood_moon", name: "Blood Moon", kind: "trial",
@@ -262,7 +262,7 @@ const NODES: Node[] = [
         enc("silent_court", "The Silent Court", [1, "silent_one"], [2, "bone_priest"]),
       ],
     },
-    classes: ["paladin"], formations: ["champion"], gear: ["crusader_sword", "wardens_blade", "sun_charm", "moon_charm", "vampires_tooth", "sanguine_staff"],
+    classes: ["paladin"], formations: ["champion"], gear: ["crusader_sword", "wardens_blade", "vampires_tooth", "sanguine_staff"] /* Step 5j: the Sun and Moon charms are gone (they carried only resistances). */,
   },
   {
     id: "judgement", name: "Judgement", kind: "trial",
@@ -284,7 +284,7 @@ const NODES: Node[] = [
   {
     id: "tower_top", name: "The Tower Top", kind: "dungeon", run: "tower_top",
     text: "The queen again, at the top of the tower, and the king who rages when his soldiers fall. Strike past them.",
-    gear: ["ember_staff", "grounding_rod", "leech_staff", "splitter", "plain_axe", "mist_claws", "heartwood_staff", "archmages_robes", "thirsting_jewel"],
+    gear: ["ember_staff", "grounding_rod", "leech_staff", "splitter", "mist_claws", "heartwood_staff", "archmages_robes", "thirsting_jewel"], // Step 5j: the axe is the great weapon, which arrives with the Geomancer.
   },
   {
     id: "royal_court", name: "The Royal Court", kind: "remix",

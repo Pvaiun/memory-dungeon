@@ -38,7 +38,7 @@
               "type": "string",
               "pattern": "^[a-z][a-z0-9_]*$"
             },
-            "description": "Slot (weapon, armor, amulet) to gear id."
+            "description": "Slot (weapon, armor, offhand, amulet) to gear id."
           }
         },
         "required": [

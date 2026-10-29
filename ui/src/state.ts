@@ -8,6 +8,7 @@
 import type { Party } from "../../src/schema.js";
 import { c, classes, DEFAULT_NUMBERS, formations, NUMBER_SCALES } from "./content.js";
 import { plainWeapon } from "../../src/sim/parties.js";
+import { handsOf } from "../../src/validate.js";
 import { mode as journeyMode, owned, ownsGear, resetJourney, setMode as setJourneyMode, type Mode } from "./journey.js";
 
 /** `portraits`: what stands for a class in the menus. "faces" everywhere, "sprites" everywhere, or "mixed": sprites in the party's slots, faces elsewhere. */
@@ -148,6 +149,8 @@ export function gearFor(cls: string): Record<string, string> {
     const plain = plainWeapon(c, cls);
     if (plain) g.weapon = plain;
   }
+  // Step 5j: a two-handed weapon leaves no hand for an offhand.
+  if (g.offhand && handsOf(c.pack, c.gear.get(g.weapon ?? "")) === 2) delete g.offhand;
   return g;
 }
 

@@ -76,7 +76,7 @@ export function meets(c: Content, nd: NeedT, p: Party): boolean {
   if ("formation" in nd) return p.formation === nd.formation;
   if ("armor" in nd) return p.units.length > 0 && p.units.every((u) => {
     const g = u.gear.armor ? c.gear.get(u.gear.armor) : undefined;
-    return nd.armor === "none" ? !g : g?.weight === nd.armor;
+    return nd.armor === "none" ? !g : g?.armor === nd.armor;
   });
   if ("weapons" in nd) return p.units.length > 0 && p.units.every((u) => {
     const g = u.gear.weapon ? c.gear.get(u.gear.weapon) : undefined;

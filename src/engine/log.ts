@@ -72,7 +72,6 @@ function describe(e: Entry, name: (id: unknown) => string, names: Map<string, st
       return `    ${name(e.target)} takes ${e.crit ? "CRIT " : ""}${e.amount}${word}${what}${soak} (${e.hp} HP${e.shield ? `, ${e.shield} shield` : ""})`;
     }
     case "heal":
-      if (e.word === "ABSORB") return `    ${name(e.target)} ABSORBS ${name(e.by)}'s hit, healing ${e.amount} (${e.hp} HP)`;
       return `    ${name(e.target)} heals ${e.crit ? "CRIT " : ""}${e.amount} from ${name(e.by)} (${e.hp} HP)`;
     case "status":
       return `    ${name(e.unit)} gains ${e.name}${e.total !== null ? ` ${fmt(e.total)}` : ""}`;

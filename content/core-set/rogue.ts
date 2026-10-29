@@ -10,7 +10,7 @@
  * the affixes, the events and every number the run uses. src/rogue.ts is the rules that read it.
  */
 import type { GearT, NumT, RogueConfigT, RogueNodeKindT, StatusT } from "../../src/schema.js";
-import { FLAT_STACKS, P, RESIST, SPECIAL, STACKS, crit, stepFor } from "./scale.js";
+import { FLAT_STACKS, P, SPECIAL, STACKS, crit, stepFor } from "./scale.js";
 import { T } from "./classes.js";
 import { enc } from "./dungeons.js";
 import fightKnobs from "./rogue-knobs.json" with { type: "json" };
@@ -332,8 +332,8 @@ export const rogueStatuses: StatusT[] = [
 
 // ─── Legendary pieces ────────────────────────────────────────────────────────
 
-const legend = (id: string, name: string, text: string, slot: GearT["slot"], o: { statuses?: string[]; stats?: Change[]; weight?: GearT["weight"]; weapon?: GearT["weapon"] }): GearT => ({
-  id, name, text, slot, tier: "powerful", source: "unlock", ...(o.weight ? { weight: o.weight } : {}), ...(o.weapon ? { weapon: o.weapon } : {}),
+const legend = (id: string, name: string, text: string, slot: GearT["slot"], o: { statuses?: string[]; stats?: Change[]; armor?: string; weapon?: GearT["weapon"] }): GearT => ({
+  id, name, text, slot, tier: "powerful", source: "unlock", ...(o.armor ? { armor: o.armor } : {}), ...(o.weapon ? { weapon: o.weapon } : {}),
   ...(o.stats?.length ? { stats: o.stats } : {}), ...(o.statuses?.length ? { statuses: o.statuses } : {}),
 });
 /** A legendary weapon is its kind's plain one (the same swing), with what it bends on top. */
@@ -358,21 +358,21 @@ export const rogueGear: GearT[] = [
   legend("stone_idol", "Stone idol", "Crits twice as often behind a Shield.", "amulet", { statuses: ["lg_idol"], stats: [critStep(1)] }),
   legend("frost_shard", "Frost shard", "Hits harder the colder the foe.", "amulet", { statuses: ["lg_brittle"], stats: [st("max_hp", 1)] }),
   legend("static_coil", "Static coil", "Whatever hits its wearer is shocked.", "amulet", { statuses: ["lg_coil"], stats: [st("max_hp", 1)] }),
-  legend("frozen_heart", "Frozen heart", "Plate that chills whatever strikes it.", "armor", { weight: "heavy", statuses: ["lg_frost"], stats: [st("armor", 1)] }),
-  legend("briar_coat", "Briar coat", "Whatever strikes it starts to bleed.", "armor", { weight: "medium", statuses: ["lg_briar"], stats: [st("max_hp", 1)] }),
-  legend("spiked_bulwark", "Spiked bulwark", "The more plate, the more spikes.", "armor", { weight: "heavy", statuses: ["lg_spikes"], stats: [st("armor", 1)] }),
-  legend("shadow_cowl", "Shadow cowl", "Its wearer starts each fight unseen.", "armor", { weight: "medium", statuses: ["lg_shade"], stats: [sp("evasion", "medium"), st("max_hp", 1)] }),
+  legend("frozen_heart", "Frozen heart", "Plate that chills whatever strikes it.", "armor", { armor: "plate", statuses: ["lg_frost"], stats: [st("armor", 1)] }),
+  legend("briar_coat", "Briar coat", "Whatever strikes it starts to bleed.", "armor", { armor: "leather", statuses: ["lg_briar"], stats: [st("max_hp", 1)] }),
+  legend("spiked_bulwark", "Spiked bulwark", "The more plate, the more spikes.", "armor", { armor: "plate", statuses: ["lg_spikes"], stats: [st("armor", 1)] }),
+  legend("shadow_cowl", "Shadow cowl", "Its wearer starts each fight unseen.", "armor", { armor: "leather", statuses: ["lg_shade"], stats: [sp("evasion", "medium"), st("max_hp", 1)] }),
 ];
 
 export const rogueWeapons: LegendWeapon[] = [
-  { id: "headsman_axe", name: "Headsman's axe", text: "Finishes what's already falling.", kind: "axe", statuses: ["lg_execute"] },
+  { id: "headsman_axe", name: "Headsman's axe", text: "Finishes what's already falling.", kind: "great_weapon", statuses: ["lg_execute"] },
   { id: "stormbrand", name: "Stormbrand", text: "A sword that arcs to a second foe and shocks both.", kind: "sword", statuses: ["lg_storm"] },
   { id: "frostfang", name: "Frostfang", text: "A dagger that chills every cut.", kind: "dagger", statuses: ["lg_rime"], stats: [st("attack", 1)] },
   { id: "hunters_bow", name: "Hunter's bow", text: "Hits a bleeding quarry far harder.", kind: "bow", statuses: ["lg_hunter"], stats: [st("attack", 1)] },
-  { id: "gravecaller", name: "Gravecaller", text: "Each fall makes it stronger.", kind: "dark_staff", statuses: ["lg_grave"], stats: [st("magic", 1)] },
-  { id: "cinder_rod", name: "Cinder rod", text: "Lightning that hits burning foes harder.", kind: "lightning_staff", statuses: ["lg_cinder"], stats: [st("magic", 1)] },
+  { id: "gravecaller", name: "Gravecaller", text: "Each fall makes it stronger.", kind: "wand", statuses: ["lg_grave"], stats: [st("magic", 1)] },
+  { id: "cinder_rod", name: "Cinder rod", text: "Hits burning foes harder.", kind: "wand", statuses: ["lg_cinder"], stats: [st("magic", 1)] },
   { id: "brand_of_kings", name: "Brand of kings", text: "A spear that strikes hardest at whatever has been lifted up.", kind: "spear", statuses: ["lg_judge"] },
-  { id: "earthshaker", name: "Earthshaker", text: "An earth staff that leaves what it strikes sundered.", kind: "earth_staff", statuses: ["lg_sunder"], stats: [st("magic", 1)] },
+  { id: "earthshaker", name: "Earthshaker", text: "A staff that leaves what it strikes sundered.", kind: "staff", statuses: ["lg_sunder"], stats: [st("magic", 1)] },
 ];
 
 /** The legendary pool: the core set's powerful pieces and the rogue mode's own. */
@@ -423,10 +423,7 @@ export const ROGUE_AFFIXES: RogueAffix[] = [
   { id: "double", prefix: "Twin", suffix: "of Echoes", stats: [sp("double_strike", "medium")] },
   { id: "critdmg", prefix: "Cruel", suffix: "of Ruin", stats: [sp("crit_damage", "medium")] },
   { id: "siphon", prefix: "Draining", suffix: "of the Moth", stats: [sp("siphon", "medium")] },
-  { id: "fireproof", prefix: "Fireproof", suffix: "of Embers", stats: [{ stat: "resist:fire", flat: RESIST.gear }] },
-  { id: "frostproof", prefix: "Frostproof", suffix: "of Winter", stats: [{ stat: "resist:ice", flat: RESIST.gear }] },
-  { id: "stormproof", prefix: "Grounded", suffix: "of the Storm", stats: [{ stat: "resist:lightning", flat: RESIST.gear }] },
-  { id: "darkproof", prefix: "Hallowed", suffix: "of Dusk", stats: [{ stat: "resist:dark", flat: RESIST.gear }] },
+  // Step 5j: the four elemental resistance affixes (Fireproof, Frostproof, Grounded, Hallowed) are gone: they carried nothing else.
 ];
 
 // ─── Events: the "?" rooms ───────────────────────────────────────────────────

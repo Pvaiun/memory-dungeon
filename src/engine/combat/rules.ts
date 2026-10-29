@@ -16,7 +16,7 @@
 import { SLOTS, SUBTICKS, type FixedStatT, type LootTableT } from "../../schema.js";
 import { next, rngFor, type Rng } from "../rng.js";
 import type { Content, Rules, Unit } from "../run.js";
-import { derive, makeUnit, step, world, type CFight, type CUnit } from "./fight.js";
+import { derive, makeUnit, resolveWeapon, step, world, type CFight, type CUnit } from "./fight.js";
 
 /** A party unit between fights: what it brings to each fight. */
 export type Member = Unit & {
@@ -64,7 +64,10 @@ export const combat: Rules = {
       const slot = f.positions.findIndex((p) => p.id === pu.position);
       const m = { flat: {}, pct: {}, start: [] as string[] };
       grant(m, cls.passive);
-      const gear = Object.keys(SLOTS).flatMap((s) => (pu.gear[s] ? [c.gear.get(pu.gear[s])!] : []));
+      // Step 5j: a two-handed weapon empties the offhand, so an offhand under one gives nothing.
+      const held = pu.gear.weapon ? c.gear.get(pu.gear.weapon)?.weapon : undefined;
+      const twoHanded = !!held && resolveWeapon(c, held).hands === 2;
+      const gear = Object.keys(SLOTS).flatMap((s) => (pu.gear[s] && !(s === "offhand" && twoHanded) ? [c.gear.get(pu.gear[s])!] : []));
       for (const g of gear) grant(m, g);
       grant(m, f.positions[slot]);
       grant(m, f);

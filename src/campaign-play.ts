@@ -7,7 +7,7 @@
  *   npx tsx src/campaign-play.ts owned <node>                what's owned on reaching it
  *   npx tsx src/campaign-play.ts glossary 1                  what every status shown in a fight does
  *   npx tsx src/campaign-play.ts play <node> --formation vanguard \
- *       --party "knight:oathblade,plate,heartstone;cleric:plain_light_staff,robes;ranger:warbow" [--seed N] [--full]
+ *       --party "knight:oathblade,plate,heartstone;cleric:plain_mace,robes;ranger:warbow" [--seed N] [--full]
  *       A member is class:weapon,armor,amulet (ids; leave a slot out to leave it empty). Abilities fire in the
  *       order given after a slash: "knight:oathblade,plate/stand_fast,fortify,shield_bash" (the first starts a fight most
  *       charged). --campfire rest|focus|raise:<class> picks at the campfire halfway through the run (HP back, MP back,
@@ -92,7 +92,7 @@ if (cmd === "show") {
   out.push("", "Gear (any number of members can wear a piece):");
   for (const id of o.gear) {
     const g = c.gear.get(id)!;
-    out.push(`  ${id} (${g.name}, ${g.slot}${g.weapon?.kind ? `, ${g.weapon.kind}` : ""}${g.weight ? `, ${g.weight}` : ""}${g.tier === "powerful" ? ", powerful" : ""}): ${g.text}${g.stats?.length ? ` [${codes(g.stats)}]` : ""}`);
+    out.push(`  ${id} (${g.name}, ${g.slot}${g.weapon?.kind ? `, ${g.weapon.kind}` : ""}${g.armor ? `, ${g.armor}` : ""}${g.tier === "powerful" ? ", powerful" : ""}): ${g.text}${g.stats?.length ? ` [${codes(g.stats)}]` : ""}`);
   }
   console.log(out.join("\n"));
 } else if (cmd === "play") {

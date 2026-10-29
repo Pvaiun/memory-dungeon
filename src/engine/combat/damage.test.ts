@@ -91,45 +91,45 @@ test("accuracy: Blind (Accuracy −30) misses 30% of the time against a target w
   near(miss(-30, 70), 0.75, 0.03);
 });
 
-// ─── Resistance ─────────────────────────────────────────────────────────────
+// ─── Magic resist (step 5j: one stat, in place of an element's resistance) ──
 
-test("resistance: general +10 and fire gear +20 make Fire 30 (RESIST), Ice 10; Ice −25 shows WEAK; full Fire Resistance shows IMMUNE", () => {
-  const bolt = (element: string) => ({ weapon: { type: "magical" as const, element, cooldown: 10, amount: 100 } });
-  assert.deepEqual(strike(bolt("fire"), { stats: { resist: 10, "resist:fire": 20 } }).map((e) => [e.amount, e.word]), [[70, "RESIST"]]);
-  assert.deepEqual(strike(bolt("ice"), { stats: { resist: 10, "resist:fire": 20 } }).map((e) => [e.amount, e.word]), [[90, "RESIST"]]);
-  assert.deepEqual(strike(bolt("ice"), { stats: { "resist:ice": -25 } }).map((e) => [e.amount, e.word]), [[125, "WEAK"]]);
-  assert.deepEqual(strike(bolt("fire"), { stats: { "resist:fire": 100 } }).map((e) => [e.amount, e.word]), [[0, "IMMUNE"]]);
+test("magic resist: 30 cuts a magical hit by 30% (RESIST) and 100 makes it IMMUNE; it floors at 0, so there's no weakness", () => {
+  const bolt = { weapon: { type: "magical" as const, cooldown: 10, amount: 100 } };
+  assert.deepEqual(strike(bolt, { stats: { magic_resist: 30 } }).map((e) => [e.amount, e.word]), [[70, "RESIST"]]);
+  assert.deepEqual(strike(bolt, { stats: { magic_resist: 100 } }).map((e) => [e.amount, e.word]), [[0, "IMMUNE"]]);
+  assert.deepEqual(strike(bolt, { stats: { magic_resist: -25 } }).map((e) => [e.amount, e.word]), [[100, null]]);
 });
 
-test("resistance: subtypes have no Resistance lines, and Armor doesn't touch magic", () => {
-  const bolt = { weapon: { type: "magical" as const, element: "fire", cooldown: 10, amount: 100 } };
-  assert.deepEqual(strike(bolt, { stats: { armor: 50, resist: 0 } }).map((e) => e.amount), [100]);
+test("magic resist: Armor doesn't touch magic, and Magic resist doesn't touch a physical hit", () => {
+  const bolt = { weapon: { type: "magical" as const, cooldown: 10, amount: 100 } };
+  assert.deepEqual(strike(bolt, { stats: { armor: 50 } }).map((e) => e.amount), [100]);
+  assert.deepEqual(strike({ weapon: { ...weapons.axe, amount: 100 } }, { stats: { magic_resist: 50 } }).map((e) => e.amount), [100]);
 });
 
 // ─── Boosts and damage-taken modifiers ──────────────────────────────────────
 
-const FIRE_BOLT = { id: "fire_bolt", cast: 0, cooldown: 10, do: [{ op: "damage", type: "magical", element: "fire", amount: 100 }] };
-const SHIELD_BASH = { id: "shield_bash", cast: 0, cooldown: 10, do: [{ op: "damage", type: "physical", subtype: "blunt", amount: { scale: [{ ratio: 1.5, stat: "armor" }] } }] };
+const FIRE_BOLT = { id: "fire_bolt", cast: 0, cooldown: 10, do: [{ op: "damage", type: "magical", amount: 100 }] };
+const SHIELD_BASH = { id: "shield_bash", cast: 0, cooldown: 10, do: [{ op: "damage", type: "physical", amount: { scale: [{ ratio: 1.5, stat: "armor" }] } }] };
 
-test("boosts: Fire Bolt with +20% fire and +10% ability damage gets +30%, applied once; an amulet can carry both boosts", () => {
-  const amulet = status("amulet", { boosts: [{ tag: "fire", pct: 20 }, { tag: "ability", pct: 10 }] });
+test("boosts: Fire Bolt with +20% magical and +10% ability damage gets +30%, applied once; an amulet can carry both boosts", () => {
+  const amulet = status("amulet", { boosts: [{ tag: "magical", pct: 20 }, { tag: "ability", pct: 10 }] });
   assert.deepEqual(strike({ abilities: ["fire_bolt"], statuses: ["amulet"] }, {}, { statuses: [amulet], abilities: [FIRE_BOLT] }).map((e) => e.amount), [130]);
 });
 
-test("boosts: a +physical damage boost doesn't apply to Fire Bolt; a +blunt boost applies to Shield Bash but not to a sword's slash", () => {
-  const phys = status("phys", { boosts: [{ tag: "physical", pct: 50 }] }), blunt = status("blunt", { boosts: [{ tag: "blunt", pct: 50 }] });
+test("boosts: a +physical damage boost doesn't apply to Fire Bolt; a +ability boost applies to Shield Bash but not to a sword's basic attack", () => {
+  const phys = status("phys", { boosts: [{ tag: "physical", pct: 50 }] }), skill = status("skill", { boosts: [{ tag: "ability", pct: 50 }] });
   assert.deepEqual(strike({ abilities: ["fire_bolt"], statuses: ["phys"] }, {}, { statuses: [phys], abilities: [FIRE_BOLT] }).map((e) => e.amount), [100]);
-  const a = arena({ party: [{ name: "A", stats: { armor: 20, attack: 30 }, weapon: weapons.sword, abilities: ["shield_bash"], statuses: ["blunt"] }], enemies: [BAG], statuses: [blunt], abilities: [SHIELD_BASH] }).to(13);
+  const a = arena({ party: [{ name: "A", stats: { armor: 20, attack: 30 }, weapon: weapons.sword, abilities: ["shield_bash"], statuses: ["skill"] }], enemies: [BAG], statuses: [skill], abilities: [SHIELD_BASH] }).to(13);
   assert.deepEqual(a.hits("Bag").map((e) => [e.src, e.amount]), [["shield_bash", 45], ["basic", 30]]);
 });
 
 test("damage taken: Fire Bolt with +30% boosts against Vulnerable (+20% damage taken) deals amount × 1.3 × 1.2", () => {
-  const boost = status("boost", { boosts: [{ tag: "fire", pct: 30 }] }), vuln = status("vuln", { label: "debuff", taken: [{ pct: 20 }] });
+  const boost = status("boost", { boosts: [{ tag: "magical", pct: 30 }] }), vuln = status("vuln", { label: "debuff", taken: [{ pct: 20 }] });
   assert.deepEqual(strike({ abilities: ["fire_bolt"], statuses: ["boost"] }, { statuses: ["vuln"] }, { statuses: [boost, vuln], abilities: [FIRE_BOLT] }).map((e) => e.amount), [156]);
 });
 
 test("damage taken: a target with −30% damage taken always takes 30% less, whatever the attacker's boosts; a modifier can name a tag", () => {
-  const boost = status("boost", { boosts: [{ tag: "fire", pct: 50 }] }), ward = status("ward", { taken: [{ pct: -30 }] }), frost = status("frost", { taken: [{ tag: "ice", pct: -50 }] });
+  const boost = status("boost", { boosts: [{ tag: "magical", pct: 50 }] }), ward = status("ward", { taken: [{ pct: -30 }] }), frost = status("frost", { taken: [{ tag: "physical", pct: -50 }] });
   assert.deepEqual(strike({ abilities: ["fire_bolt"] }, { statuses: ["ward"] }, { statuses: [ward], abilities: [FIRE_BOLT] }).map((e) => e.amount), [70]);
   assert.deepEqual(strike({ abilities: ["fire_bolt"], statuses: ["boost"] }, { statuses: ["ward"] }, { statuses: [boost, ward], abilities: [FIRE_BOLT] }).map((e) => e.amount), [105]);
   assert.deepEqual(strike({ abilities: ["fire_bolt"] }, { statuses: ["frost"] }, { statuses: [frost], abilities: [FIRE_BOLT] }).map((e) => e.amount), [100]);
@@ -155,11 +155,11 @@ test("crits: crit comes before mitigation", () => {
 
 // ─── Riders ─────────────────────────────────────────────────────────────────
 
-const FLAME_SWORD = { ...weapons.sword, riders: [{ type: "magical" as const, element: "fire", amount: { scale: [{ ratio: 1, stat: "magic" }] } }] };
+const FLAME_SWORD = { ...weapons.sword, riders: [{ type: "magical" as const, amount: { scale: [{ ratio: 1, stat: "magic" }] } }] };
 const MAG = { scale: [{ ratio: 1, stat: "magic" }] };
-const STORM_STAFF = { type: "magical" as const, element: "lightning", cooldown: 12, amount: MAG, riders: [{ type: "physical" as const, subtype: "pierce" as const, amount: 10 }] };
+const STORM_STAFF = { type: "magical" as const, cooldown: 12, amount: MAG, riders: [{ type: "physical" as const, amount: 10 }] };
 
-test("riders: a flame sword is a slash hit from Attack plus a fire rider from Magic; if the target evades, MISS, and no fire", () => {
+test("riders: a flame sword is a physical hit from Attack plus a magical rider from Magic; if the target evades, MISS, and no rider", () => {
   const a = arena({ party: [{ name: "A", stats: { attack: 30, magic: 10, accuracy: -100 }, weapon: FLAME_SWORD }], enemies: [{ name: "T", stats: { max_hp: 1e9, evasion: 75 } }] }).to(1200);
   const at = a.acts("A").map((t) => a.hits("T").filter((e) => e.at === t * 1000));
   for (const parts of at) {
@@ -169,12 +169,12 @@ test("riders: a flame sword is a slash hit from Attack plus a fire rider from Ma
   assert.ok(at.some((p) => p[0].word === "MISS") && at.some((p) => p[0].word !== "MISS"));
 });
 
-test("riders: if Armor absorbs the whole hit (BLOCKED), the fire rider still lands and meets fire Resistance", () => {
-  const hits = strike({ stats: { attack: 30, magic: 20 }, weapon: FLAME_SWORD }, { stats: { armor: 40, "resist:fire": 50 } });
+test("riders: if Armor absorbs the whole hit (BLOCKED), the magical rider still lands and meets Magic resist", () => {
+  const hits = strike({ stats: { attack: 30, magic: 20 }, weapon: FLAME_SWORD }, { stats: { armor: 40, magic_resist: 50 } });
   assert.deepEqual(hits.map((e) => [e.part, e.amount, e.word]), [["hit", 0, "BLOCKED"], ["rider", 10, "RESIST"]]);
 });
 
-test("riders: a storm staff's lightning hit can't be evaded, so its pierce rider always occurs, then meets Evasion and Armor on its own", () => {
+test("riders: a storm staff's magical hit can't be evaded, so its physical rider always occurs, then meets Evasion and Armor on its own", () => {
   const c = arena({ party: [{ name: "A", stats: { magic: 30 }, weapon: { ...STORM_STAFF, cooldown: 1 } }], enemies: [{ name: "T", stats: { max_hp: 1e9, evasion: 50, armor: 4 } }], seed: 3 }).to(1000);
   const hits = c.hits("T").filter((e) => e.part === "hit"), riders = c.hits("T").filter((e) => e.part === "rider");
   assert.ok(hits.every((e) => e.word !== "MISS" && e.amount === 30));
@@ -193,22 +193,22 @@ test("riders: a rider counts as part of its hit: hit events fire once per hit, r
 
 // ─── Scaling ────────────────────────────────────────────────────────────────
 
-test("scaling: any stat can be a scaling source: Shield Bash (physical, blunt) and Storm Ward (magical, lightning) both scale with Armor", () => {
-  const ward = { id: "storm_ward", cast: 0, cooldown: 10, do: [{ op: "damage", type: "magical", element: "lightning", amount: { scale: [{ ratio: 2, stat: "armor" }] } }] };
+test("scaling: any stat can be a scaling source: Shield Bash (physical) and Storm Ward (magical) both scale with Armor", () => {
+  const ward = { id: "storm_ward", cast: 0, cooldown: 10, do: [{ op: "damage", type: "magical", amount: { scale: [{ ratio: 2, stat: "armor" }] } }] };
   assert.deepEqual(strike({ stats: { armor: 20 }, abilities: ["shield_bash"] }, {}, { abilities: [SHIELD_BASH] }).map((e) => e.amount), [30]);
   assert.deepEqual(strike({ stats: { armor: 20 }, abilities: ["storm_ward"] }, {}, { abilities: [ward] }).map((e) => e.amount), [40]);
 });
 
-test("scaling: weapons decide how a unit's basic attack works: the same fire staff hits weakly on a unit with low Magic", () => {
-  const staff = { type: "magical" as const, element: "fire", cooldown: 15, amount: MAG };
+test("scaling: weapons decide how a unit's basic attack works: the same magical staff hits weakly on a unit with low Magic", () => {
+  const staff = { type: "magical" as const, cooldown: 15, amount: MAG };
   assert.deepEqual(strike({ stats: { magic: 40, attack: 40 }, weapon: staff }, {}).map((e) => e.amount), [40]);
   assert.deepEqual(strike({ stats: { magic: 5, attack: 40 }, weapon: staff }, {}).map((e) => e.amount), [5]);
 });
 
 test("scaling: Detonate: 'deal 10 per Burn stack, then remove Burn' against a target with 12 stacks deals 120", () => {
-  const burn = status("burn", { label: "debuff", stacking: "intensity", element: "fire", pulse: { every: 100, do: [{ op: "damage", type: "none", amount: 1 }] }, drop: { fraction: 0.5 } });
+  const burn = status("burn", { label: "debuff", stacking: "intensity", pulse: { every: 100, do: [{ op: "damage", type: "none", amount: 1 }] }, drop: { fraction: 0.5 } });
   const detonate = { id: "detonate", cast: 0, cooldown: 10, do: [
-    { op: "damage", type: "magical", element: "fire", amount: { scale: [{ ratio: 10, stacks: "burn" }] } },
+    { op: "damage", type: "magical", amount: { scale: [{ ratio: 10, stacks: "burn" }] } },
     { op: "remove", label: "debuff", status: "burn" },
   ] };
   const kindle = { id: "kindle", cast: 0, cooldown: 5, do: [{ op: "apply", status: "burn", stacks: 12 }] };
@@ -226,8 +226,8 @@ function heal(healer: Spec, patient: Spec, statuses: unknown[] = []) {
   return a.entries("heal").map((e) => e.amount);
 }
 
-test("healing: heals have no type and are never mitigated, so Armor and Resistance don't touch them", () => {
-  assert.deepEqual(heal({}, { stats: { armor: 50, resist: 50 } }), [40]);
+test("healing: heals have no type and are never mitigated, so Armor and Magic resist don't touch them", () => {
+  assert.deepEqual(heal({}, { stats: { armor: 50, magic_resist: 50 } }), [40]);
 });
 
 test("healing: heals take healing boosts, and the target's Healing received as a separate multiplier; anti-heal (−50) halves them", () => {

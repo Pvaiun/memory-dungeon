@@ -8,8 +8,8 @@ import assert from "node:assert/strict";
 import { arena, weapons } from "./arena.js";
 
 const BAG = { name: "Bag", stats: { max_hp: 1_000_000 } };
-const fire = (cast: number, cooldown: number) => ({ id: "fire", cast, cooldown, do: [{ op: "damage", type: "magical", element: "fire", amount: 10 }] });
-const dmg = (amount: number) => ({ op: "damage", type: "physical", subtype: "blunt", amount });
+const fire = (cast: number, cooldown: number) => ({ id: "fire", cast, cooldown, do: [{ op: "damage", type: "magical", amount: 10 }] });
+const dmg = (amount: number) => ({ op: "damage", type: "physical", amount });
 const share = (xs: unknown[], x: unknown) => xs.filter((y) => y === x).length / xs.length;
 
 // ─── Timing (section 2) ─────────────────────────────────────────────────────

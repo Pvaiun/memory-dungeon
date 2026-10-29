@@ -292,7 +292,7 @@ function sizeOf(a: AbilityT, st: Record<string, number>): string {
   const shieldOf = (n: NumT | undefined) => { const v = val(n, st), cap = (st.max_hp ?? 0) / 2; return v > cap && cap > 0 ? `${n0(cap)} shield (half its max HP)` : `${n0(v)} shield`; };
   for (const e of a.do) {
     if (e.op === "damage") {
-      const kind = e.element ?? (e.type === "physical" ? e.subtype ?? "physical" : "untyped");
+      const kind = e.type === "none" ? "untyped" : e.type;
       const v = Math.round(val(e.amount, st));
       out.push(`${v ? `${n0(v)} ` : ""}${kind}${e.hits && e.hits > 1 ? ` x${e.hits}` : ""}${(e.apply ?? []).map((x) => ` + ${x.status === "shield" ? shieldOf(x.stacks) : stacks(x.status, x.stacks)}`).join("")}`);
     } else if (e.op === "heal") out.push(`heals ${n0(val(e.amount, st))}`);
