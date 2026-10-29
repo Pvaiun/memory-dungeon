@@ -337,10 +337,10 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
         return trainable ? "train" : (opts.find((o) => o.startsWith("take:")) ?? "skip");
       }
       case "train": {
-        const t = opts.filter((o) => o !== "done");
+        const t = opts.filter((o) => o !== "done" && o !== "back");
         const learnP = t.filter((o) => o.startsWith("learn:") && run.party.includes(o.split(":")[1]));
         const upP = t.filter((o) => o.startsWith("upgrade:") && run.party.includes(o.split(":")[1]));
-        return learnP[0] ?? upP[0] ?? t[0] ?? "done";
+        return learnP[0] ?? upP[0] ?? t[0] ?? (opts.includes("done") ? "done" : "back");
       }
       case "shop": return shopPick(c, d, run, opts);
       case "campfire": return campfirePick(c, d, run, opts);

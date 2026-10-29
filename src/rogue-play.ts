@@ -111,8 +111,8 @@ function offerWords(run: RogueRun, o: Offer): string {
   if (o.kind === "gear") {
     const g = c.gear.get(o.item.uid) ?? itemGear(c, o.item);
     const fits = run.roster.filter((m) => c.classes.get(m.cls)!.weapons.includes(g.weapon?.kind ?? "") || (g.slot === "armor" && ["light", "medium", "heavy"].indexOf(g.weight!) <= ["light", "medium", "heavy"].indexOf(c.classes.get(m.cls)!.armor)) || g.slot === "amulet").map((m) => m.cls);
-    const aims = o.item.rarity === "legendary" ? rogue(c).aims?.[o.item.base] : undefined;
-    return `gear: ${o.item.rarity} ${gearWords(g)}.${aims ? ` For: ${aims.join(", ")}.` : ""} Fits: ${fits.join(", ") || "nobody in the roster yet"}.`;
+    // Step 5h round 6: no FOR line (the director's: it "ruins the discovery"); who fits it stays.
+    return `gear: ${o.item.rarity} ${gearWords(g)}. Fits: ${fits.join(", ") || "nobody in the roster yet"}.`;
   }
   if (o.kind === "tome") return `tome: the ${c.classes.get(o.cls)!.name} learns ${c.abilities.get(o.ability)!.name} (${c.abilities.get(o.ability)!.text})`;
   if (o.kind === "recruit") return `recruit: the ${c.classes.get(o.cls)!.name} (${c.classes.get(o.cls)!.text.split(".")[0]}); joins knowing ${(o.known ?? []).map((a) => c.abilities.get(a)!.name).join(", ")}${o.item ? `, carrying ${itemWords(o.item)}` : ""}${run.party.length >= 3 ? "; waits at camp until you swap it in" : ""}`;
@@ -181,13 +181,13 @@ function look(run: RogueRun): string {
         const [verb, cls, ab] = o.split(":");
         out.push(`  pick ${o}: ${verb === "learn" ? `the ${c.classes.get(cls)!.name} learns ${c.abilities.get(ab)!.name}: ${c.abilities.get(ab)!.text}` : upText(ab, run, cls)}`);
       }
-      out.push("  pick done");
+      out.push(options(c, run).includes("back") ? "  pick back (nobody trained yet: back to the room, its pick unspent)" : "  pick done");
       break;
     }
     case "spoils": case "boon": case "treasure": {
       const offers = p.kind === "treasure" ? [p.offer] : p.offers;
       out.push(p.kind === "boon" ? "BOSS BEATEN: pick a boon (the next act starts with everyone restored, and everyone learns an ability)." : p.kind === "treasure" ? `CHEST: ${p.gold} gold inside, and a piece.` : `SPOILS: ${p.gold} gold found. Pick one, or skip.`);
-      if (p.kind === "spoils" && p.trophy) out.push(`  Trophy (already in your bag): ${itemWords(p.trophy)}${rogue(c).aims?.[p.trophy.base] ? ` For: ${rogue(c).aims![p.trophy.base].join(", ")}.` : ""}`);
+      if (p.kind === "spoils" && p.trophy) out.push(`  Trophy (already in your bag): ${itemWords(p.trophy)}`);
       offers.forEach((o, i) => out.push(`  pick ${p.kind === "treasure" ? "take" : `take:${i}`}: ${offerWords(run, o)}`));
       out.push(`  pick ${p.kind === "treasure" ? "leave" : "skip"}`);
       break;

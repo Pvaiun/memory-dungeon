@@ -12226,18 +12226,27 @@
     "gold": 60,
     "offers": 3,
     "picks": 2,
-    "healer": true
+    "healer": true,
+    "supplies": [
+     "potion",
+     "tonic"
+    ]
    },
    "party": 3,
    "bench": 2,
    "benchMax": 4,
+   "benchByAct": [
+    2,
+    3,
+    4
+   ],
    "recruits": {
     "offers": 2,
     "known": [
      [
       70,
-      25,
-      5
+      30,
+      0
      ],
      [
       35,
@@ -12372,7 +12381,7 @@
    },
    "boon": {
     "count": 3,
-    "seat": true
+    "seat": false
    },
    "treasure": {
     "rarity": {
@@ -12428,7 +12437,7 @@
     ],
     "recruits": 1,
     "formations": 1,
-    "supplies": 2
+    "supplies": 3
    },
    "supplies": {
     "potion": {
@@ -15029,86 +15038,6 @@
             "id": "phoenix"
            }
           ]
-         }
-        ]
-       }
-      ]
-     }
-    ],
-    "variants": [
-     {
-      "options": [
-       {
-        "id": "camp",
-        "label": "MAKE CAMP",
-        "text": "A campfire: rest, focus, raise or train.",
-        "do": [
-         {
-          "op": "camp"
-         }
-        ]
-       },
-       {
-        "id": "search",
-        "label": "SEARCH THE PACKS",
-        "text": "A potion, a tonic or a phoenix feather, and 20 gold.",
-        "do": [
-         {
-          "op": "gold",
-          "amount": 20
-         },
-         {
-          "op": "chance",
-          "pct": 40,
-          "then": [
-           {
-            "op": "supply",
-            "id": "potion"
-           }
-          ],
-          "else": [
-           {
-            "op": "chance",
-            "pct": 50,
-            "then": [
-             {
-              "op": "supply",
-              "id": "tonic"
-             }
-            ],
-            "else": [
-             {
-              "op": "supply",
-              "id": "phoenix"
-             }
-            ]
-           }
-          ]
-         }
-        ]
-       }
-      ]
-     },
-     {
-      "text": "Someone left in a hurry, and left room: a good camp, big enough for one more.",
-      "options": [
-       {
-        "id": "claim",
-        "label": "CLAIM IT",
-        "text": "A seat at camp: room for one more in the roster (up to four at camp).",
-        "do": [
-         {
-          "op": "seat"
-         }
-        ]
-       },
-       {
-        "id": "camp",
-        "label": "MAKE CAMP",
-        "text": "A campfire: rest, focus, raise or train.",
-        "do": [
-         {
-          "op": "camp"
          }
         ]
        }

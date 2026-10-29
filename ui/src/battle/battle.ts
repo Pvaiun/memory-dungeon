@@ -191,6 +191,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   function startBeat(b: Beat) {
     clear(linesEl);
     playing = { beat: b, shown: 0, typed: 0, charAt: vwall, lineEls: [], typedAt: null, hold: holdFor(b) };
+    for (const ev of b.quiet ?? []) show(ev);
     if (b.kind === "intro") introUntil = vwall + Math.max(1800, playing.hold + 800);
     cursorEl.style.visibility = "hidden";
   }
@@ -321,6 +322,10 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       case "dmg":
         if (typeof ev.hp === "number") scene.told(String(ev.target), ev.hp);
         showDamage(ev);
+        break;
+      case "mp":
+        // Step 5h round 6: MP gained shows on the field, blue, like a heal.
+        scene.number(String(ev.target), `+${disp(ev.amount as number)}`, { color: "#6fb4ff", sub: "MP" });
         break;
       case "heal": {
         if (typeof ev.hp === "number") scene.told(String(ev.target), ev.hp);

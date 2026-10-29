@@ -802,12 +802,13 @@ const Spoils = z.strictObject({
 const KnownOdds = z.array(z.number().min(0)).length(3).describe("Weights for knowing one, two or three abilities.");
 
 export const RogueConfig = z.strictObject({
-  start: z.strictObject({ gold: z.number().int().min(0), offers: PosInt, picks: z.number().int().min(0), known: PosInt.optional().describe("Abilities a class knows on joining in act I (default 1); one more an act after."), healer: z.boolean().optional().describe("While the party has nobody who heals others, each draft offers one who does.") }).describe("Gold at the start; the draft after the leader: `picks` picks of one from `offers` classes."),
+  start: z.strictObject({ gold: z.number().int().min(0), offers: PosInt, picks: z.number().int().min(0), known: PosInt.optional().describe("Abilities a class knows on joining in act I (default 1); one more an act after."), healer: z.boolean().optional().describe("While the party has nobody who heals others, each draft offers one who does."), supplies: z.array(SupplyId).optional().describe("Step 5h round 6: supplies in the bag at the start.") }).describe("Gold at the start; the draft after the leader: `picks` picks of one from `offers` classes."),
   firstAbility: z.record(Id, Id).optional().describe("Before step 5h: the ability each class knew on joining. Step 5h rolls what a class knows instead."),
   startKnown: z.record(Id, PosInt).optional().describe("Classes that join knowing more than start.known abilities in act I, by class."),
   party: PosInt,
   bench: z.number().int().min(0).describe("Seats at camp at a run's start, besides the party (step 5h: two)."),
   benchMax: z.number().int().min(0).optional().describe("Step 5h: seats at camp at most; the others are won (a boon's seat, an event)."),
+  benchByAct: z.array(z.number().int().min(0)).min(1).optional().describe("Step 5h round 6: seats at camp by act; a new act brings the run up to its act's (never down)."),
   recruits: z.strictObject({ offers: PosInt, known: z.array(KnownOdds).min(1).describe("By act: how many abilities a recruit knows, rolled at random from its three.") }).optional(),
   benchMp: Pct.optional().describe("Step 5h: share of max MP a member regains after each won fight it sat out (from the max it last fought with)."),
   fresh: Pct.optional().describe("Step 5h: share of its cooldown already run for a fresh ability: a starting unit's, a recruit's, one just learned."),
@@ -926,7 +927,7 @@ export const Rogue = z.strictObject({
   regions: z.array(RogueRegion).min(1),
   gear: z.array(Gear).describe("Legendary pieces that only the rogue mode drops (the core set's own powerful pieces are in pack.gear)."),
   legendaries: z.array(Id).min(1).describe("The legendary pool, by gear id, in pack.gear or rogue.gear."),
-  aims: z.record(Id, z.array(Id).min(1)).optional().describe("Who each legendary piece is for, by class id: an elite's trophy comes from pieces aimed at the party, a recruit leans toward a class a piece in the bag is for, and a card says FOR."),
+  aims: z.record(Id, z.array(Id).min(1)).optional().describe("Who each legendary piece is for, by class id: an elite's trophy comes from pieces aimed at the party, and a recruit leans toward a class a piece in the bag is for. Never shown (step 5h round 6, the director's: the FOR line “ruins the discovery”)."),
   affixes: z.array(RogueAffix).min(2),
   events: z.array(RogueEvent).min(1),
 });

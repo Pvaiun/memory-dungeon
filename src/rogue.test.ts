@@ -3,7 +3,7 @@ import { test } from "vitest";
 import assert from "node:assert/strict";
 import { loadContent } from "./engine/run.js";
 import { rngFor } from "./engine/rng.js";
-import { autoFight, bench, choose, discard, dismiss, equip, eventView, finish, freshMeta, heals, itemGear, learn, makeMap, maxOf, member, newItem, newRogue, options, reachable, recruit, rogue, rollItem, swap, upgraded, usable, type RogueRun } from "./rogue.js";
+import { autoFight, bench, choose, discard, dismiss, equip, eventView, finish, freshMeta, heals, itemGear, leaderKnown, learn, makeMap, maxOf, member, newItem, newRogue, options, reachable, recruit, recruitKnown, rogue, rollItem, seatsOf, swap, upgraded, usable, type RogueRun } from "./rogue.js";
 import { aiPlayer, playRogue } from "./rogue-ai.js";
 
 const raw = JSON.parse(readFileSync("content/core-set.pack.json", "utf8"));
@@ -299,5 +299,47 @@ test("rogue: one standing at camp fills an empty seat between rooms; while the p
   for (let seed = 1; seed <= 40; seed++) {
     const r2 = newRogue(c, { seed, leader: "knight" });
     if (r2.pending.kind === "draft") assert.ok(r2.pending.offers.some((id) => heals(c, id)), `seed ${seed}: no healer offered`);
+  }
+});
+
+test("rogue (5h round 6): a potion and a tonic at the start; the leader's roll is known before the run; act I recruits know one or two; a seat with each act", () => {
+  const c = loadContent(raw);
+  const run = newRogue(c, { seed: 77, leader: "cleric" });
+  assert.deepEqual([...run.supplies].sort(), ["potion", "tonic"]);
+  assert.deepEqual(member(run, "cleric").known, leaderKnown(c, 77, "cleric"), "the start screen's roll is the run's");
+  for (let i = 0; i < 400; i++) assert.ok(recruitKnown(c, run, rngFor(i, "k")) <= 2, "act I rolls one or two");
+  assert.equal(seatsOf(c, run), 2);
+  run.pending = { kind: "region", options: [rogue(c).regions.find((x) => x.act === 2)!.id] };
+  choose(c, run, options(c, run)[0]);
+  assert.equal(seatsOf(c, run), 3, "a seat with act II");
+});
+
+test("rogue (5h round 6): TRAIN can be backed out of until someone is trained, and the campfire's pick is only spent then", () => {
+  const c = loadContent(raw);
+  const run = newRogue(c, { seed: 19, leader: "knight" });
+  while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
+  const [x] = c.pack.classes.map((k) => k.id).filter((id) => !run.party.includes(id));
+  recruit(c, run, x);
+  member(run, x).missHp = 1000;
+  run.pending = { kind: "campfire" };
+  choose(c, run, "train");
+  assert.ok(options(c, run).includes("back") && !options(c, run).includes("done"));
+  choose(c, run, "back");
+  assert.equal(run.pending.kind, "campfire");
+  assert.ok(!(run.pending as { used?: boolean }).used && member(run, x).missHp === 1000, "nothing spent");
+  assert.ok(options(c, run).includes("rest"));
+  choose(c, run, "train");
+  choose(c, run, options(c, run).find((o) => o.startsWith("learn:") || o.startsWith("upgrade:"))!);
+  assert.ok(!options(c, run).includes("back"), "no way back once someone is trained");
+  assert.ok(member(run, x).missHp < 1000, "the camp's share, once the pick is spent");
+  // The shop: all three supplies.
+  run.pending = { kind: "map" };
+  const shop = run.map.find((n) => n.floor === 2)!;
+  shop.kind = "shop";
+  run.at = run.map.find((n) => n.floor === 1 && n.next.includes(shop.id))?.id ?? null;
+  if (run.at) {
+    choose(c, run, shop.id);
+    const stock = (run.pending as unknown as Extract<RogueRun["pending"], { kind: "shop" }>).stock;
+    assert.deepEqual(stock.filter((s2) => s2.offer.kind === "supply").map((s2) => (s2.offer as { id: string }).id).sort(), ["phoenix", "potion", "tonic"]);
   }
 });

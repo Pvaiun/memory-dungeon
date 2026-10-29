@@ -24,18 +24,28 @@ const critStep = (n: number): Change => ({ stat: "crit_chance", flat: crit(n) })
 
 export const ROGUE_CONFIG: RogueConfigT = {
   /** Gold at the start, and the draft: the leader (an owned class), then this many picks of one from `offers` classes. */
-  start: { gold: 60, offers: 3, picks: 2, healer: true },
+  start: { gold: 60, offers: 3, picks: 2, healer: true, supplies: ["potion", "tonic"] }, // Step 5h round 6 (the director's): a potion and a tonic at the start, so the first fight can be recovered from.
   /**
    * Step 5h (the director's): what a class knows is rolled. A starting unit (the leader, the draft) knows one of its three
    * abilities at random; a recruit one, two or all three, the odds by act (`recruits.known`). Raise and Valhalla are rolled
    * like any other: a bad roll is a pick the player can decline. (Before: a fixed first ability per class, one more an act.)
    */
-  /** Party of three; two seats at camp at the start, up to four (a boon's seat, an event). */
+  /**
+   * Party of three; two seats at camp at the start, up to four. Step 5h round 6 (the director's: choosing a seat over a reward
+   * "never felt remotely appropriate"): a seat comes with each new act, three at camp in act II and four in act III (was a boon's
+   * option or an event's).
+   */
   party: 3,
   bench: 2,
   benchMax: 4,
-  /** Recruits are offered one of two (the director's: one of three let every run gun for the same party). Known: by act, weights for one, two, three. */
-  recruits: { offers: 2, known: [[70, 25, 5], [35, 45, 20], [15, 45, 40]] },
+  benchByAct: [2, 3, 4],
+  /**
+   * Recruits are offered one of two (the director's: one of three let every run gun for the same party). Known: by act, weights for
+   * one, two, three. Step 5h round 6 (the director's: "recruits shouldn't be able to know all 3 abilities in act 1, no matter the
+   * luck"): act I rolls one or two (was 5% three). The events that promise all three (the Veterans, the Rival Company) keep it, at
+   * their word: rare, named moments.
+   */
+  recruits: { offers: 2, known: [[70, 30, 0], [35, 45, 20], [15, 45, 40]] },
   /** After each won fight, those who sat it out regain this share of max MP (flat, like a tonic; no gear touches it). */
   benchMp: 50,
   /** A fresh ability (a starting unit's, a recruit's, one just learned) starts with this share of its cooldown already run. */
@@ -76,7 +86,7 @@ export const ROGUE_CONFIG: RogueConfigT = {
     offRoster: 33,
   },
   /** The boss's boon: pick one of a legendary piece, a formation and a recruit. The next act starts restored, and everyone learns. */
-  boon: { count: 3, seat: true },
+  boon: { count: 3, seat: false }, // Step 5h round 6: seats come with each act (benchByAct), not from the boon.
   /** A chest: one piece, rare or better, and some gold; or a cage, a recruit with a piece suited to it. */
   treasure: { rarity: { common: 0, uncommon: 0, rare: 35, legendary: 45 }, gold: [15, 35], cage: 20 },
   /** The campfire: one pick of REST, FOCUS, RAISE or TRAIN (two members); those at camp get half a REST whatever the pick. */
@@ -96,7 +106,8 @@ export const ROGUE_CONFIG: RogueConfigT = {
   levelGold: 40,
   /** Prices, in gold. A piece sells for `sell` % of its price. Services are once a visit. */
   prices: { common: 45, uncommon: 70, rare: 110, legendary: 190, recruit: 120, formation: 100, learn: 60, upgrade: 80, trainStep: 30, supply: { potion: 35, tonic: 35, phoenix: 60 }, sell: 35 },
-  shop: { gear: { common: 2, uncommon: 2, rare: 1, legendary: 1 }, legendaryByAct: [1, 2, 2], recruits: 1, formations: 1, supplies: 2 },
+  // Step 5h round 6 (the director's): the shop always has all three supplies (was two of the three).
+  shop: { gear: { common: 2, uncommon: 2, rare: 1, legendary: 1 }, legendaryByAct: [1, 2, 2], recruits: 1, formations: 1, supplies: 3 },
   /** Supplies, used between fights: the bag holds this many. */
   /**
    * Step 5g round 6 (the director's): a potion heals one member, a tonic refills one member's MP (the old tonic healed the whole party 30%, the
@@ -479,16 +490,7 @@ export const ROGUE_EVENTS: RogueEvent[] = [
       { id: "camp", label: "MAKE CAMP", text: "A campfire: rest, focus, raise or train.", do: [{ op: "camp" }] },
       { id: "search", label: "SEARCH THE PACKS", text: "A potion, a tonic or a phoenix feather, and 20 gold.", do: [{ op: "gold", amount: 20 }, { op: "chance", pct: 40, then: [{ op: "supply", id: "potion" }], else: [{ op: "chance", pct: 50, then: [{ op: "supply", id: "tonic" }], else: [{ op: "supply", id: "phoenix" }] }] }] },
     ],
-    variants: [
-      { options: [
-        { id: "camp", label: "MAKE CAMP", text: "A campfire: rest, focus, raise or train.", do: [{ op: "camp" }] },
-        { id: "search", label: "SEARCH THE PACKS", text: "A potion, a tonic or a phoenix feather, and 20 gold.", do: [{ op: "gold", amount: 20 }, { op: "chance", pct: 40, then: [{ op: "supply", id: "potion" }], else: [{ op: "chance", pct: 50, then: [{ op: "supply", id: "tonic" }], else: [{ op: "supply", id: "phoenix" }] }] }] },
-      ] },
-      { text: "Someone left in a hurry, and left room: a good camp, big enough for one more.", options: [
-        { id: "claim", label: "CLAIM IT", text: "A seat at camp: room for one more in the roster (up to four at camp).", do: [{ op: "seat" }] },
-        { id: "camp", label: "MAKE CAMP", text: "A campfire: rest, focus, raise or train.", do: [{ op: "camp" }] },
-      ] },
-    ],
+    // Step 5h round 6: its version with a seat at camp is gone (seats come with each act).
   },
   {
     id: "pilgrims", name: "Pilgrims", text: "A band of pilgrims with a healer among them. \"For a donation…\"",

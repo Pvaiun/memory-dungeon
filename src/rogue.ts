@@ -58,8 +58,11 @@ export type Pending =
   /** Step 5h: the Muster (a pick of recruits) and the Drill ground (a pick of formations, or training). */
   | { kind: "muster"; offers: Offer[] }
   | { kind: "drill"; offers: Offer[] }
-  /** Step 5h: `left` members each learn or upgrade one ability (each member once); `then` is what follows. */
-  | { kind: "train"; left: number; done: string[]; then: Pending; why: string }
+  /**
+   * Step 5h: `left` members each learn or upgrade one ability (each member once); `then` is what follows. Round 6 (the director's:
+   * "you try to see what the available upgrades are and get locked in"): `back`, the room it came from, while nobody is trained yet.
+   */
+  | { kind: "train"; left: number; done: string[]; then: Pending; why: string; back?: Pending }
   | { kind: "treasure"; offer: Offer; gold: number }
   | { kind: "choose"; what: "learn" | "upgrade" | "temper"; why: string }
   | { kind: "levelup"; queue: string[] }
@@ -115,7 +118,7 @@ export function migrate(run: RogueRun): RogueRun {
 }
 
 /** What a player keeps between runs: the classes a run can start with, and how far they've climbed. */
-export type RogueMeta = { owned: string[]; heat: number; maxHeat: number; runs: number; wins: number; best: { act: number; floor: number } };
+export type RogueMeta = { owned: string[]; heat: number; maxHeat: number; runs: number; wins: number; best: { act: number; floor: number }; /** Step 5h round 6: the next run's dice, kept until a run starts (the start screen shows each leader's roll). */ next?: number };
 
 export const freshMeta = (): RogueMeta => ({ owned: ["knight", "cleric", "ranger"], heat: 0, maxHeat: 0, runs: 0, wins: 0, best: { act: 0, floor: 0 } });
 
@@ -371,6 +374,8 @@ export function recruit(c: Content, run: RogueRun, cls: string, hp = 100, known?
 }
 
 export type NewRun = { seed: number; leader: string; heat?: number };
+/** The ability a leader would set out knowing on a run with this seed (the start screen shows it before the pick). */
+export const leaderKnown = (c: Content, seed: number, leader: string): string[] => rollKnown(c, rngFor(seed, "rogue:known:leader"), leader, 1);
 export function newRogue(c: Content, o: NewRun): RogueRun {
   const k = cfg(c);
   const run: RogueRun = {
@@ -380,7 +385,8 @@ export function newRogue(c: Content, o: NewRun): RogueRun {
   };
   registerGear(c);
   run.seats = k.bench;
-  recruit(c, run, o.leader, 100, rollKnown(c, r(run, "known:leader"), o.leader, 1));
+  recruit(c, run, o.leader, 100, leaderKnown(c, o.seed, o.leader));
+  run.supplies.push(...(k.start.supplies ?? []));
   note(run, `${c.classes.get(o.leader)!.name} sets out.`);
   const first = rogue(c).regions.filter((x) => x.act === 1);
   beginAct(c, run, first[int(r(run, "region:1"), first.length)].id, false);
@@ -517,6 +523,10 @@ function beginAct(c: Content, run: RogueRun, region: string, restore: boolean) {
   run.floor = 0;
   // Round 9 (the director's): cooldowns are not reset with HP and MP ("totally arbitrary ... stunting the units at the start").
   if (restore) for (const m of run.roster) (m.missHp = 0), (m.missMp = 0), (m.ko = false);
+  // Step 5h round 6: a seat at camp comes with each new act (never fewer than the run already has).
+  const by = cfg(c).benchByAct;
+  const seats = by?.[Math.min(run.act, by.length) - 1];
+  if (seats !== undefined && seats > seatsOf(c, run)) (run.seats = seats), note(run, `Room for one more at camp: ${seats} seats.`);
   note(run, `Act ${run.act}: ${reg.name}. ${run.boss.name} waits at the end.`);
 }
 
@@ -1050,7 +1060,7 @@ export function options(c: Content, run: RogueRun): string[] {
     case "boon": return [...p.offers.map((o, i) => (canTake(c, run, o) ? `take:${i}` : "")).filter(Boolean), "skip"];
     case "muster": return [...p.offers.map((o, i) => (canTake(c, run, o) ? `take:${i}` : "")).filter(Boolean), "skip"];
     case "drill": return [...p.offers.map((o, i) => (canTake(c, run, o) ? `take:${i}` : "")).filter(Boolean), ...(trainOptions(c, run, []).length ? ["train"] : []), "skip"];
-    case "train": return [...trainOptions(c, run, p.done), "done"];
+    case "train": return [...trainOptions(c, run, p.done), p.back && !p.done.length ? "back" : "done"];
     case "treasure": return [canTake(c, run, p.offer) ? "take" : "", "leave"].filter(Boolean);
     case "shop": {
       const out = p.stock.map((s, i) => (!s.sold && s.price <= run.gold && canTake(c, run, s.offer) ? `buy:${i}` : "")).filter(Boolean);
@@ -1169,7 +1179,7 @@ export function choose(c: Content, run: RogueRun, pick: string) {
       return;
     }
     case "drill": {
-      if (pick === "train") return void (run.pending = { kind: "train", left: cfg(c).drill?.train ?? 2, done: [], then: { kind: "map" }, why: "drill" });
+      if (pick === "train") return void (run.pending = { kind: "train", left: cfg(c).drill?.train ?? 2, done: [], then: { kind: "map" }, why: "drill", back: p });
       if (pick !== "skip") {
         const o = p.offers[Number(pick.split(":")[1])];
         take(c, run, o);
@@ -1179,6 +1189,10 @@ export function choose(c: Content, run: RogueRun, pick: string) {
       return;
     }
     case "train": {
+      if (pick === "back") return void (run.pending = p.back!);
+      // A campfire's pick is spent with the first member trained, not on opening the screen (round 6).
+      if (pick !== "done" && !p.done.length && p.then.kind === "campfire" && !p.then.used) (note(run, "Trained."), campUsed(c, run, p.then));
+      delete p.back;
       if (pick !== "done") {
         const [verb, cls, ab] = pick.split(":");
         if (verb === "learn") learn(c, run, cls, ab);
@@ -1229,7 +1243,6 @@ export function choose(c: Content, run: RogueRun, pick: string) {
     case "campfire": {
       const k = cfg(c).campfire;
       const party = run.party.map((cls) => member(run, cls));
-      const camp = bench(run).map((cls) => member(run, cls));
       const [verb, ...rest] = pick.split(":");
       if (verb === "leave") return void (run.pending = { kind: "map" });
       if (verb === "recruit") {
@@ -1238,8 +1251,8 @@ export function choose(c: Content, run: RogueRun, pick: string) {
         delete p.stranger;
         return;
       }
-      if (verb === "train") note(run, "Trained.");
-      else if (verb === "rest") (heal(c, run, party, k.hp, 0), note(run, "Rested."));
+      if (verb === "train") return void (run.pending = { kind: "train", left: k.train ?? 1, done: [], then: p, why: "campfire", back: p });
+      if (verb === "rest") (heal(c, run, party, k.hp, 0), note(run, "Rested."));
       else if (verb === "focus") (heal(c, run, party, 0, k.mp), note(run, "Focused."));
       else if (verb === "raise") {
         const m = member(run, rest[0]);
@@ -1247,13 +1260,7 @@ export function choose(c: Content, run: RogueRun, pick: string) {
         m.missHp = Math.floor((maxOf(c, run, m.cls, "max_hp") * (100 - k.revive)) / 100);
         note(run, `Raised the ${c.classes.get(m.cls)!.name}.`);
       }
-      // Those standing at camp rest and focus (a share of each) whatever the party picks: those who were at camp when the
-      // campfire was reached, not a member stepped back just for it (a playtester's loop), nor one raised here just now.
-      // Step 5h: HP only (the bench's MP comes back after every fight it sits out).
-      const share = (k.camp ?? 100) / 100;
-      heal(c, run, camp.filter((m) => (p.resting ?? camp.map((x) => x.cls)).includes(m.cls) && !(verb === "raise" && m.cls === rest[0])), Math.round(k.hp * share), 0);
-      p.used = true;
-      if (verb === "train") run.pending = { kind: "train", left: k.train ?? 1, done: [], then: p, why: "campfire" };
+      campUsed(c, run, p, verb === "raise" ? rest[0] : undefined);
       return;
     }
     case "event": {
@@ -1300,6 +1307,17 @@ export function choose(c: Content, run: RogueRun, pick: string) {
     default:
       throw new Error(`nothing to choose at ${p.kind}`);
   }
+}
+/**
+ * A campfire's pick is spent. Those standing at camp rest (a share of REST) whatever the party picks: those who were at camp when
+ * the campfire was reached, not a member stepped back just for it (a playtester's loop), nor one raised here just now. Step 5h:
+ * HP only (the bench's MP comes back after every fight it sits out).
+ */
+function campUsed(c: Content, run: RogueRun, p: Extract<Pending, { kind: "campfire" }>, raised?: string) {
+  const k = cfg(c).campfire;
+  const camp = bench(run).map((cls) => member(run, cls));
+  heal(c, run, camp.filter((m) => (p.resting ?? camp.map((x) => x.cls)).includes(m.cls) && m.cls !== raised), Math.round((k.hp * (k.camp ?? 100)) / 100), 0);
+  p.used = true;
 }
 /** A pick as a counter's name: the decision and what kind of thing was picked ("map:elite", "spoils:gear", "shop:buy:recruit"). */
 function pickKind(run: RogueRun, pick: string): string {
