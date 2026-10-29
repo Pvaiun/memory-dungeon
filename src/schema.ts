@@ -827,6 +827,7 @@ export const RogueConfig = z.strictObject({
     lateFrom: PosInt.describe("Elites and campfires only from this floor."),
     ensure: z.record(z.string(), z.number().int().min(0)).optional().describe("Rooms of a kind an act has at least, where the rules allow."),
     easyTo: PosInt.optional().describe("Step 5h round 6: the easy pool's last floor (default 2)."),
+    campPaths: Pct.optional().describe("Step 5h round 6: mid-act campfires are added until at least this share of the ways up pass one before the last floor."),
     ref: z.strictObject({ easy: PosInt, normal: PosInt, elite: PosInt }).optional().describe("Step 5h round 6: each pool's reference floor, where its fights' own knobs hold (default 1, 5, 6)."),
   }),
   gold: z.strictObject({ fight: IntRange, elite: IntRange, boss: IntRange, perAct: z.number().int().min(0) }),

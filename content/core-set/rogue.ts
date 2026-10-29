@@ -73,6 +73,9 @@ export const ROGUE_CONFIG: RogueConfigT = {
     odds: { fight: 50, event: 27, elite: 11, campfire: 6, shop: 4 } as Record<string, number>,
     lateFrom: 5,
     ensure: { shop: 2, elite: 2, campfire: 2 },
+    // Round 6 (the director's: "75 or 80% of paths should pass one"): mid-act campfires added until 60% of the ways up pass one, which
+    // lands at 79% of paths over many maps (a map's median 78%), since one campfire serves many ways up.
+    campPaths: 60,
     easyTo: 3,
     ref: { easy: 1, normal: 7, elite: 8 },
   },
@@ -109,7 +112,9 @@ export const ROGUE_CONFIG: RogueConfigT = {
   // Round 6 (the director's: four options, three of them sustain, RAISE often forced, so TRAIN never; design-round-6.md §3): on
   // arrival everyone, party and camp, recovers `auto` (HP and MP, the fallen rise); then one pick of two, REST (everyone `hp` and `mp`
   // again) or TRAIN (`train` members). The stranger can be taken in or turned away for a lesson, apart from the pick.
-  campfire: { hp: 25, mp: 25, revive: 25, auto: { hp: 25, mp: 25, revive: 25 }, train: 3, stranger: 30 },
+  // Then (the director's, on the first build: "decrease the free MP share right off the bat ... We weren't trying to give more free
+  // MP. We were trying to give less of a terrible choice"): the free MP 10% (was 25%); REST still gives 25% of each.
+  campfire: { hp: 25, mp: 25, revive: 25, auto: { hp: 25, mp: 10, revive: 25 }, train: 3, stranger: 30 },
   // Round 6 (the director's: recruits too hard to get in act I; "the thematic tying of humans or people to recruits ... as long as
   // it's not every other fight"): after a won fight with people in it, sometimes a captive, free on top of the spoils: taken in (at
   // `hp`%), turned into a lesson, or let go. Never two fights running.

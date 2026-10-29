@@ -6,10 +6,13 @@ You played round 5 (five runs, one won) and gave 26 points. All of them are answ
 
 ### Decisions for you
 
-1. **Act II without a mid-act campfire is a slog.** On the act road (the stated rotation, potions and tonics), act II's regular fights lose 17% with no campfire before the one at the boss. They lost 8% in round 5, and lose 9% with a mid-act campfire. Today about a third of paths pass one (37%). Campfire odds 6 → 9 would make it about half (46%). **My pick: 9.** It stays "not every path", and act II goes back to where it was. Say if you'd rather feel the slog first.
-2. **The bench fights less.** The campfire's free share refills everyone's MP, so the road's bench fights in 27 / 49 / 37% of fights by act (round 5: 44 to 56%). If the bench feels optional, the lever is the free share's MP (25% → 15%), leaving more of it to REST.
-3. **Act I's middle may still be harsh.** The first floors are fixed: a random start loses nothing on floors 1 to 3 (floor 3 lost 41% before) and 4% on floor 4. From floor 5 the simulated player still loses a quarter of its fights, nearly half on floor 8. It's weak (it wins 8%), but act I's middle is tuned on rosters wearing a full set of common gear, more than a party has there. You called act I "challenging" without flagging its middle, so I've left it. If floors 5 to 8 feel unfair, that's the lever.
-4. **Act III** is harder by a median +20 on its fights' knobs. If it still feels safe, raise its targets: a 90-second recalibration.
+Answered (your word, the same day; numbers in `tuning.md`):
+- **Mid-act campfires on most paths.** A new map rule adds mid-act campfires until most ways up pass one: 79% of paths over many maps, not a guarantee. A path has 4.6 regular fights and about two campfires. On the road, act II's regular fights lose 10% (17% with no mid-act campfire).
+- **The free MP share is 10%** (was 25%). It barely changes how often the bench fights on the road (18 / 38 / 30% by act). What it changes is TRAIN: with MP the bottleneck, the road's rule (TRAIN when the party is over half MP) picks it at 3 of 36 of act II's mid-act campfires (was 14). That's your point about a terrible choice. Your next option, HP or MP first and then rest or train, is the fix I'd try if it reads that way in play.
+- **Act III is a step harder again**, before you play it: its targets up (regular fights 23% of HP, elites 30%, bosses beat 52% of the rosters), on top of batch 2's stronger rosters. Its fights' knobs have risen about +25 to +55 since round 5. On the road its regular fights lose 15% (were 7%).
+
+Still open:
+1. **Act I's middle may still be harsh.** The first floors are fixed: a random start loses nothing on floors 1 to 3 (floor 3 lost 41% before) and 4% on floor 4. From floor 5 the simulated player still loses a quarter of its fights, nearly half on floor 8. It's weak (it wins 8%), but act I's middle is tuned on rosters wearing a full set of common gear, more than a party has there. If floors 5 to 8 feel unfair when you play, that's the lever.
 
 ### What changed
 
@@ -29,16 +32,16 @@ You played round 5 (five runs, one won) and gave 26 points. All of them are answ
   - mixed picks in 15% of fights (were 40%);
   - an elite gives a pick of three legendaries, then a pick of two formations (your call);
   - chests 30 in 80 legendary (were 45);
-  - act III's fights recalibrated on rosters with the reward plan's legendaries.
+  - act III's fights recalibrated on rosters with the reward plan's legendaries, then on a step higher targets.
 - **The map (batch 3):**
   - 12 floors, so a path has 4.9 regular fights and 0.9 elites (were 2.1 and 0.7), and about three events;
   - the Muster and the Drill ground folded into other rewards;
-  - campfires guaranteed only before the boss;
+  - campfires guaranteed only before the boss, with a mid-act one on about 79% of paths;
   - enemies as strong as before, the act's climb stretched over 12 floors;
   - a regular fight's gold 7–12 (was 12–20) and its pieces 6% legendary (was 13%).
 - **The campfire:**
-  - on arrival, everyone recovers 25% of HP and MP, and the fallen rise at 25%;
-  - then REST (the same again) or TRAIN (three members).
+  - on arrival, everyone recovers 25% of HP and 10% of MP, and the fallen rise at 25%;
+  - then REST (25% of each, for everyone) or TRAIN (three members).
 - **Lessons:** any recruit you turn down can teach one member instead: a captive, the stranger, the Wounded Traveller, the Deserter.
 - **Captives:** after 20% of won fights with people in them, never two running. Take them in at half HP, take a lesson, or let them go.
 - **Events:** ten new ones, two versions each:

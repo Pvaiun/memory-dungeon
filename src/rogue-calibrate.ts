@@ -33,14 +33,16 @@ import type { RogueFightT } from "./schema.js";
 export const TARGETS = {
   // Step 5g round 9 (the director's: "weak monsters basically just don't do anything", and potions and tonics are the run's sustain now): a
   // regular fight costs a few points more than before (easy 10 / 11 / 12, normal 15 / 16 / 17, elite 22 / 23 / 24), at the shape's fuller damage.
-  easy: [12, 13, 14],
-  normal: [18, 19, 20],
-  elite: [25, 26, 27],
+  // Step 5h round 6 (the director's: act III "brain dead easy when I played it"; "I would boost it a little bit"): act III's targets a
+  // step up (were 14, 20, 27 and 45), on top of its rosters carrying the reward plan's legendaries.
+  easy: [12, 13, 16],
+  normal: [18, 19, 23],
+  elite: [25, 26, 30],
   /**
    * A boss's wins against parties as they arrive, in percent. Raised from 12, 20 and 25 at the director's word (Oct 26): a
    * first win should be an achievement, about 20% of the simulated player's runs at heat 0, with the extra on the bosses.
    */
-  boss: [22, 35, 45],
+  boss: [22, 35, 52],
 };
 type Tier = keyof typeof TARGETS;
 

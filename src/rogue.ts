@@ -518,8 +518,25 @@ function assignKinds(c: Content, nodes: MapNode[], rng: Rng) {
     }
   };
   for (const [kind, count] of Object.entries(m.ensure ?? { shop: 2, elite: 2 })) ensure(kind as RogueNodeKindT, count, kind === "muster" || kind === "drill" ? 2 : m.lateFrom);
-  // Step 5h round 6 (the director's): campfires are guaranteed only before the boss; the rest (`ensure`) sit on some paths, so
-  // going to one is a choice. (Before: every way up passed one between the early floors and the last.)
+  // Step 5h round 6 (the director's): campfires are guaranteed only before the boss. Then (their word on the first measure, a
+  // mid-act one on 37% of paths: "not a guarantee, but I think like 75 or 80% of paths should pass one"): mid-act campfires are
+  // added on ways up that pass none until `campPaths` % of them pass one. (Before round 6: every way up passed one.)
+  if (m.campPaths) {
+    const last = Number(Object.keys(m.fixed).find((f) => m.fixed[f] === "campfire") ?? m.floors);
+    const paths = (): MapNode[][] => {
+      const out: MapNode[][] = [];
+      const go = (n: MapNode, acc: MapNode[]) => (n.floor >= last ? out.push(acc) : n.next.forEach((id) => go(byId.get(id)!, [...acc, byId.get(id)!])));
+      for (const n of nodes.filter((x) => x.floor === 1)) go(n, [n]);
+      return out;
+    };
+    for (let tries = 0; tries < 40; tries++) {
+      const all = paths();
+      const bare = all.filter((p) => !p.some((n) => n.kind === "campfire" && n.floor < last));
+      if (all.length - bare.length >= (all.length * m.campPaths) / 100) break;
+      const cands = bare[int(rng, bare.length)].filter((n) => n.floor >= m.lateFrom && n.floor < last - 1 && (n.kind === "fight" || n.kind === "event") && ![...parents(n), ...n.next.map((id) => byId.get(id)!)].some((x) => x.kind === "campfire"));
+      if (cands.length) cands[int(rng, cands.length)].kind = "campfire";
+    }
+  }
 }
 
 /** A new act: its region, its map and its boss. With `restore`, everyone stands up whole and learns an ability. */

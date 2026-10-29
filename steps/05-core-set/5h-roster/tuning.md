@@ -133,3 +133,15 @@ The director played round 5 (five runs, one won) and gave 26 points (`intent.md`
 Act II without a mid-act campfire is the miss: five fights before the only rest. Campfire odds 6 → 9 would put one on 46% of paths (one more guaranteed a map changes nothing: 38%). Left as designed, for the director. The bench fights less than before (the free share at the campfire refills MP for everyone).
 
 **Loot and the simulated player** (200 runs each, this build against round 5's pack, information only): it wins 8% (round 5: 2%), most runs still ending in act I (129 of 200; was 179). Per act it's offered about twice the pieces and formations (act I 20.4 pieces, 3.6 formations; was 9.3 and 1.4) and plays 6.4 fights (was 3.3). Legendaries it holds at each act's end are unchanged (3.0 after act I, 6.2 after act II; round 5 3.0 and 6.1) while pieces held rose (13.8 and 23.4; were 10.9 and 18.6), so legendaries are a smaller share of what a run carries. Legendaries *offered* rose (5.6 in act I, was 2.2): an elite now shows three to take one.
+
+## Round 6, the director's word on its decisions: campfires on most paths, less free MP, act III harder
+
+Their words are in `intent.md` (the last section).
+
+**A mid-act campfire on 75 to 80% of paths, not guaranteed.** A new map rule, `campPaths`: mid-act campfires are added on ways up that pass none until that share of them pass one. Because one campfire serves many ways up, a target of 60 lands at 79% of paths over 600 maps (a map's median 78%, its tenth percentile 64%). A target of 70 overshot to 86%. On the built generator a path now has 4.6 regular fights, 0.86 elites, 2.85 events and 1.93 campfires (were 4.9, 0.86, 3.1 and 1.37).
+
+**The free MP share at a campfire 25% → 10%** (REST still 25% of each). On the act road with the mid-act campfire it changes little: the bench fights in 18 / 38 / 30% of fights (at 25%: 16 / 40 / 29%), and tonics drunk rise (177 against 147 in act II). What drops is TRAIN on the road's stated rule (TRAIN when the party is over 60% HP and 50% MP): at act II's mid-act campfires, 3 of 36 (was 14). MP is the bottleneck at a campfire, so with less of it free, REST is the pick more often. That's evidence for the director's other idea: a choice of HP or MP first, then rest or train.
+
+**Act III a step harder** (the director's: "brain dead easy when I played it"; on top of batch 2's rosters with the reward plan's legendaries). Act III's targets up: easy 14 → 16% of HP, regular 20 → 23%, elites 27 → 30%, bosses 45 → 52% of the rosters beaten. Recalibrated (40 fights, 86 s): knobs up a median of +37 (easy), +17 (regular), +7 (elites), +8.5 (bosses); bosses now beat 50 to 53% of the rosters. Since round 5, act III's knobs have risen by about +25 to +55.
+
+**The act road on the final numbers** (with tonics; the mid-act campfire is now on most paths): regular fights lost 0 / 10 / 15% by act (act III up from 7%, as asked); without the mid-act campfire 4 / 17 / 16%.
