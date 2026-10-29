@@ -8,7 +8,7 @@ What's picked by hand: the classes, the formation and seats, each class's abilit
 
 | Act | Tier | Abilities known | Upgraded | Ordinary gear | Legendaries found | Arrives at HP / MP |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | easy | 1 | 0 | plain weapon | 0 | 100% / 100% |
+| 1 | easy | 1 (rolled at random, half charged) | 0 | plain weapon | 0 | 100% / 100% |
 | 1 | normal | 1.4 | 0 | common | 0 | 100% / 70% |
 | 1 | elite | 1.6 | 0 | common | 0 | 100% / 70% |
 | 1 | boss | 2 | 0 | uncommon | 1 | 85% / 80% |

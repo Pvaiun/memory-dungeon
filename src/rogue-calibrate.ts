@@ -44,16 +44,21 @@ export const TARGETS = {
 };
 type Tier = keyof typeof TARGETS;
 
-type Snap = { run: RogueRun; act: number; floor: number; tier: string; roster?: Roster; ptier?: Tier };
+type Snap = { run: RogueRun; act: number; floor: number; tier: string; roster?: Roster; ptier?: Tier; roster4?: boolean };
 
-/** Step 5h: the hand-built rosters, at every act's and tier's power level; each `reps` times (each copy on its own dice). */
-function partySnaps(c: Content, reps: number): Snap[] {
+/**
+ * Step 5h: the hand-built rosters, at every act's and tier's power level; each `reps` times (each copy on its own dice). Round 6:
+ * a level of random starts (`random`) builds each copy with its own roll of abilities; `climb` puts act I's early level (a party a
+ * few rooms in) in the regular fights' place.
+ */
+function partySnaps(c: Content, reps: number, climb = false): Snap[] {
   const out: Snap[] = [];
   for (const act of [1, 2, 3]) for (const ptier of ["easy", "normal", "elite", "boss"] as Tier[]) {
-    void LEVELS;
+    const level = climb && act === 1 && ptier === "normal" ? "early" : ptier;
+    const lv = level === "early" ? LEVELS[act].early! : LEVELS[act][ptier];
     for (const roster of ROSTERS) {
-      const run = buildRoster(c, roster, act, ptier);
-      for (let i = 0; i < reps; i++) out.push({ run: structuredClone(run), act, floor: ptier === "easy" ? 1 : 5, tier: ptier === "boss" ? "boss" : ptier === "elite" ? "elite" : "fight", roster, ptier });
+      const base = buildRoster(c, roster, act, level);
+      for (let i = 0; i < reps; i++) out.push({ run: lv.random ? buildRoster(c, roster, act, level, i) : structuredClone(base), act, floor: ptier === "easy" ? 1 : 5, tier: ptier === "boss" ? "boss" : ptier === "elite" ? "elite" : "fight", roster, ptier, ...(level === "early" ? { roster4: true } : {}) });
     }
   }
   return out;
@@ -111,7 +116,7 @@ type Result = { key: string; knob: number; cost: number; lost: number };
 function pickTrios(c: Content, snaps: Snap[], fight: RogueFightT, k: number, tier: Tier, pick: number) {
   snaps.forEach((s, i) => {
     if (!s.roster) return;
-    const ranked = trios(s.roster, (s.ptier && LEVELS[s.act][s.ptier].roster) || 5).map((trio) => {
+    const ranked = trios(s.roster, (s.roster4 ? 4 : s.ptier && LEVELS[s.act][s.ptier].roster) || 5).map((trio) => {
       s.run.party = trio;
       return { trio, cost: [0, 1].reduce((t, j) => t + trial(c, s, fight, k, tier, 1000 + i * 7 + j).cost, 0) };
     }).sort((a, b) => a.cost - b.cost);
@@ -160,7 +165,10 @@ async function main() {
   const raw = JSON.parse(readFileSync("content/core-set.pack.json", "utf8"));
   const c = loadContent(raw);
   const t0 = Date.now();
-  const snaps = args.includes("--snapshots") ? snapshots(c, Number(opt("--runs") ?? 200)) : partySnaps(c, Number(opt("--reps") ?? 3));
+  // Round 6, `--climb`: act I's regular fights calibrated against a party a few rooms in (the early level) and compared with their
+  // knobs, to set act I's climb below the reference floor (`knobs[0].early`). Nothing is written.
+  const climb = args.includes("--climb");
+  const snaps = args.includes("--snapshots") ? snapshots(c, Number(opt("--runs") ?? 200)) : partySnaps(c, Number(opt("--reps") ?? 3), climb);
   const per = Number(opt("--per") ?? 48);
   console.log(`${snaps.length} snapshots (${((Date.now() - t0) / 1000).toFixed(0)} s); by act ${[1, 2, 3].map((a) => snaps.filter((s) => s.act === a).length).join("/")}`);
   const only = opt("--only");
@@ -187,6 +195,13 @@ async function main() {
     feed();
   })));
   const knobs = JSON.parse(readFileSync(KNOBS, "utf8")) as Record<string, number>;
+  if (climb) {
+    const ref = rogue(c).config.map.ref?.normal ?? 5, first = (rogue(c).config.map.easyTo ?? 2) + 1;
+    const d = results.filter((r) => r.key.includes("/normal/") && !Number.isNaN(r.cost)).map((r) => r.knob - (knobs[r.key] ?? 0)).sort((a, b) => a - b);
+    const med = d[Math.floor(d.length / 2)];
+    console.log(`climb: act I's regular fights against a party a few rooms in need their knobs ${d.join(", ")} (median ${med}); knobs[0].early = ${(-med / (ref - first)).toFixed(1)} a floor (floor ${first} is ${ref - first} below the reference). Nothing written.`);
+    return;
+  }
   // A pool no sampled run reached (act 3 on a hard build) keeps its knob rather than taking 0.
   const unmeasured = results.filter((r) => Number.isNaN(r.cost));
   if (unmeasured.length) console.log(`${unmeasured.length} fights had no parties to measure against and keep their knobs: ${unmeasured.map((r) => r.key).join(", ")}`);

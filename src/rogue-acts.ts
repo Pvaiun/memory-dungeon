@@ -18,7 +18,7 @@
 import { readFileSync } from "node:fs";
 import { loadContent, type Content } from "./engine/run.js";
 import { int, rngFor } from "./engine/rng.js";
-import { autoFight, foesFor, knobFor, maxOf, member, rogue, useSupply, type FightTier, type RogueRun } from "./rogue.js";
+import { arriveCamp, autoFight, choose, foesFor, knobFor, maxOf, member, rogue, useSupply, type FightTier, type RogueRun } from "./rogue.js";
 import { ROSTERS, buildRoster, type Roster } from "./rogue-parties.js";
 import { patch, type Patch } from "./sim/content.js";
 
@@ -58,27 +58,36 @@ function endurance(c: Content, r: Roster, act: number, region: string): Record<s
   return out;
 }
 
-type RoadRec = { fights: number; benched: number; dryIn: number; lost: number; tonics: number; mpIn: number[]; lostBy: Record<string, number> };
-const ROAD: (["easy" | "normal" | "elite" | "boss", number] | "camp")[] = [["easy", 1], ["easy", 2], ["normal", 3], ["elite", 4], ["normal", 5], ["normal", 6], "camp", ["normal", 7], ["elite", 8], "camp", ["boss", 10]];
+type RoadRec = { fights: number; benched: number; dryIn: number; lost: number; tonics: number; mpIn: number[]; lostBy: Record<string, number>; camps: number; trained: number };
+/**
+ * Round 6, the 12-floor map: a typical path (4.9 regular fights and 0.9 elites; the generator's measure) with the campfire before
+ * the boss; `--midcamp` adds the mid-act campfire about a third of paths pass. (Before: two easy, four regular, two elites, two campfires.)
+ */
+const ROAD: (["easy" | "normal" | "elite" | "boss", number] | "camp")[] = [["easy", 1], ["easy", 3], ["normal", 4], ["normal", 6], ["elite", 8], ["normal", 9], ["normal", 10], "camp", ["boss", 13]];
+const MIDCAMP: typeof ROAD = [["easy", 1], ["easy", 3], ["normal", 4], ["normal", 6], ["elite", 8], "camp", ["normal", 9], ["normal", 10], "camp", ["boss", 13]];
 
 /** The road: an act's fights in order with the stated rotation, supply and campfire rules. */
 function road(c: Content, r: Roster, act: number, region: string, tonics: boolean): RoadRec {
   const run = buildRoster(c, r, act, "normal");
   run.region = region;
   for (const m of run.roster) (m.missHp = 0), (m.missMp = 0), (m.ko = false);
-  run.supplies = [];
-  const rec: RoadRec = { fights: 0, benched: 0, dryIn: 0, lost: 0, tonics: 0, mpIn: [], lostBy: {} };
+  run.supplies = act === 1 ? [...(rogue(c).config.start.supplies ?? [])] : [];
+  const rec: RoadRec = { fights: 0, benched: 0, dryIn: 0, lost: 0, tonics: 0, mpIn: [], lostBy: {}, camps: 0, trained: 0 };
   const k = rogue(c).config;
   let step = 0;
-  for (const s of ROAD) {
+  for (const s of args.includes("--midcamp") ? MIDCAMP : ROAD) {
     step++;
     if (s === "camp") {
-      const party = run.party.map((cls) => member(run, cls));
+      // Round 6: the campfire as built (the free share for everyone, the fallen up), then the stated pick: TRAIN when the party is
+      // over 60% HP and 50% MP and the boss isn't next (it isn't played out: the roster's kit stays), else REST.
+      rec.camps++;
+      arriveCamp(c, run, `road${step}`);
       const hp = run.party.reduce((t, cls) => t + hpOf(c, run, cls), 0) / run.party.length;
-      for (const m of party) if (!m.ko) {
-        if (hp < 0.7) m.missHp = Math.max(0, m.missHp - Math.floor((maxOf(c, run, m.cls, "max_hp") * k.campfire.hp) / 100));
-        else m.missMp = Math.max(0, m.missMp - Math.floor((maxOf(c, run, m.cls, "max_mp") * k.campfire.mp) / 100));
-      }
+      const mp = run.party.reduce((t, cls) => t + mpOf(c, run, cls), 0) / run.party.length;
+      const bossNext = (args.includes("--midcamp") ? MIDCAMP : ROAD)[step]?.[0] === "boss";
+      if (k.campfire.auto && hp > 0.6 && mp > 0.5 && !bossNext) rec.trained++;
+      else if (k.campfire.auto) choose(c, run, "rest");
+      run.pending = { kind: "map" };
       continue;
     }
     // Supplies before the fight.
@@ -140,7 +149,7 @@ function main() {
       for (const r of rosters) for (const g of regionsOf(act)) recs.push(road(c, r, act, g, tonics));
       const fights = recs.reduce((t, x) => t + x.fights, 0);
       const mp = recs.flatMap((x) => x.mpIn);
-      console.log(`  act ${act}: ${fights} fights; bench in ${((100 * recs.reduce((t, x) => t + x.benched, 0)) / fights).toFixed(0)}%; going in dry ${((100 * recs.reduce((t, x) => t + x.dryIn, 0)) / mp.length).toFixed(0)}%; MP going in ${(100 * avg(mp)).toFixed(0)}%; losses ${recs.reduce((t, x) => t + x.lost, 0)} of ${fights} (${["easy", "normal", "elite", "boss"].map((k) => `${k} ${recs.reduce((t, x) => t + (x.lostBy[k] ?? 0), 0)}`).join(", ")}); tonics ${recs.reduce((t, x) => t + x.tonics, 0)}`);
+      console.log(`  act ${act}: ${fights} fights; bench in ${((100 * recs.reduce((t, x) => t + x.benched, 0)) / fights).toFixed(0)}%; going in dry ${((100 * recs.reduce((t, x) => t + x.dryIn, 0)) / mp.length).toFixed(0)}%; MP going in ${(100 * avg(mp)).toFixed(0)}%; losses ${recs.reduce((t, x) => t + x.lost, 0)} of ${fights} (${["easy", "normal", "elite", "boss"].map((k) => `${k} ${recs.reduce((t, x) => t + (x.lostBy[k] ?? 0), 0)}`).join(", ")}); tonics ${recs.reduce((t, x) => t + x.tonics, 0)}; campfires ${recs.reduce((t, x) => t + x.camps, 0)}, TRAIN at ${recs.reduce((t, x) => t + x.trained, 0)}`);
     }
   }
 }

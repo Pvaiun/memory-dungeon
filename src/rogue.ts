@@ -1501,7 +1501,7 @@ function enter(c: Content, run: RogueRun, id: string) {
  * first; then the pick waits. Step 5h: sometimes a stranger at the fire asks to join (one recruit, take it or not; it doesn't use the
  * pick).
  */
-function arriveCamp(c: Content, run: RogueRun, key: string) {
+export function arriveCamp(c: Content, run: RogueRun, key: string) {
   run.stats.campfires++;
   const k = cfg(c).campfire;
   if (k.auto) {

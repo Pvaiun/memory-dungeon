@@ -12478,7 +12478,7 @@
     {
      "mob": 0,
      "step": 4.5,
-     "early": 4.5,
+     "early": 25.7,
      "elite": 0,
      "boss": 0
     },
@@ -12531,7 +12531,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": -12
+      "knob": -57
      },
      {
       "id": "wolves",
@@ -12542,7 +12542,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 49
+      "knob": 7
      },
      {
       "id": "snake_grass",
@@ -12552,7 +12552,7 @@
        "snake",
        "snake"
       ],
-      "knob": 43
+      "knob": -17
      },
      {
       "id": "road_thugs",
@@ -12563,7 +12563,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": -18
+      "knob": -57
      }
     ],
     "normal": [

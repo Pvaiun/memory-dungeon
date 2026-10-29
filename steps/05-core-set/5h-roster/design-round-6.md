@@ -1,6 +1,8 @@
 # Step 5h round 6, batch 3: the map, the campfire and where training lives
 
-The director's words are in `intent.md` (the fourth round and their reaction to the reply). The map's direction is approved: longer acts, the Muster folded into captives, rooms by Slay the Spire's logic, enemies as strong as now. The campfire and where training lives are theirs to OK; this is the design for that, and nothing here is built yet. Numbers are first values, to be tuned on the hand-built rosters.
+**Approved by the director (Oct 29, 2026: "I 100% agree with your plan for batch 3. Go ahead.") and built as written**, all five open items included, with one change from their reply: elites give a pick of legendaries and then a pick of formations (section 2's elite row). What the build measured is in `report.md` (round 6) and `tuning.md`.
+
+The director's words are in `intent.md` (the fourth round and their reactions). The map's direction was approved first: longer acts, the Muster folded into captives, rooms by Slay the Spire's logic, enemies as strong as now. Numbers are first values, tuned on the hand-built rosters.
 
 ## What needs you
 
@@ -50,7 +52,7 @@ Slay the Spire's logic, as you laid it out: gear (its cards) and supplies (its p
 | Room | Gives |
 | --- | --- |
 | **Fight** | Gold; a potion or a tonic; a pick of three pieces (sometimes mixed). Against people, sometimes a **captive** (section 5). |
-| **Elite** | Gold; a potion or a tonic; a legendary **or** a formation (batch 2); a pick of three, rare or better. |
+| **Elite** | Gold; a potion or a tonic; a pick of three legendaries (one aimed at the party), then a pick of two formations (the director's, after batch 2). |
 | **Chest** | A legendary, a rare, or a caged recruit with a piece. |
 | **Event** | The grab bag: recruits, formations, lessons, raising a piece's rarity, risk against reward, a fight for a prize. A bigger bucket (section 6). |
 | **Shop** | Everything: gear (two legendaries from act II), a recruit, a formation, all three supplies, training. |

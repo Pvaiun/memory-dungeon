@@ -111,3 +111,25 @@ The director played round 5 (five runs, one won) and gave 26 points (`intent.md`
 - Same trios, random abilities: the first floors' fights cost 17 to 22% of HP against the rosters' 12 to 15%. None lost.
 - Whole starts (a random draft, the simulated player's routing and gear, 300 runs to floor 4): floor 1's fight lost 0%, floor 2's 3%, **floor 3's regular fights 41%**, the early event fights at an elite's strength (Ambush!, the Strange Chest's bite, the escorted Prisoner Cart) 50 to 72%. Starting with a potion and a tonic moved floor 3 from 41% to 38%.
 - The cliff is where the normal pool starts: its fights are calibrated on act I's middle (four to pick from, two of five on a second ability, common gear) and ramped down only 12 points for floor 3, while a real party there is still its starting three with one ability each. The simulated player is weaker than a human (it drafts and routes by rules of thumb), so the human numbers are lower, but the shape matches the director's two runs lost early. The fix belongs to batch 3's map (which pools sit on which floors, and what a start is calibrated against): proposed there.
+
+## Round 6, batch 3: the 12-floor map, the campfire, captives, events (built at the director's OK of `design-round-6.md`)
+
+**The map, measured on the built generator** (2,000 maps): a path has 4.9 regular fights, 0.86 elites, 3.1 events, 1.37 campfires (a mid-act one on 37% of paths), 0.74 shops and the chest; 3 or fewer fights and elites on about 6% of paths (was 75%).
+
+**Act I's easy pool on random starts.** Its four fights recalibrated against the rosters' classes each knowing one ability rolled at random (a fresh roll each of six plays a roster) and half charged, as a run starts: knobs down 39 to 60 (road thugs −18 → −57, toll gate −12 → −57, snake grass 43 → −17, wolves 49 → 7), each now 12% of HP against a real start.
+
+**Act I's climb, measured** (`npm run rogue:calibrate -- --climb`, new): act I's seven regular fights calibrated against a party a few rooms in (four to pick from, one random ability each, no gear; `LEVELS[1].early`) need their knobs 59 to 91 lower than at the reference floor (median 77). Floor 4 is three floors below the reference (7), so `knobs[0].early` = 25.7 a floor (was the plain 4.5). Above the reference the climb stays 4.5.
+
+**Real starts again** (300 random drafts, the simulated player's routing and gear, to floor 8): floors 1 to 3 lose nothing (was 3% on floor 2 and 41% on floor 3), floor 4's regular fights 4%; then floor 5 21 to 25%, floor 6 26 to 27%, floor 8 44 to 46% (elites there 66%). From floor 7 the fights are tuned on act I's middle rosters, which wear a full set of common gear (the gear rule fills every seat), more than a party there has under the reward plan; the simulated player is also weak (it wins 8%). The director found act I "challenging" and didn't flag its middle, so it stays; it's in the report as a question.
+
+**The act road, rebuilt for the 12-floor map**: two easy, four regular, an elite, the campfire, the boss (a typical path; `--midcamp` adds the mid-act campfire about a third of paths pass); the campfire as built (the free share for everyone, the fallen up), then TRAIN when the party is over 60% HP and 50% MP and the boss isn't next, else REST; act I starts with its potion and tonic. With tonics:
+
+| | Regular fights lost (acts I / II / III) | A bench member fights | Fighters under a third of MP | TRAIN at a mid-act campfire |
+| --- | --- | --- | --- | --- |
+| Round 5's road (9 floors) | 2 / 8 / 13% | 44 to 56% | 0 to 6% | (no TRAIN rule) |
+| No mid-act campfire | 4 / 17 / 10% | 27 / 49 / 37% | 0 to 8% | |
+| With one | 0 / 9 / 7% | 16 / 40 / 29% | 0 to 2% | 10 of 12 / 14 of 36 / 20 of 36 |
+
+Act II without a mid-act campfire is the miss: five fights before the only rest. Campfire odds 6 → 9 would put one on 46% of paths (one more guaranteed a map changes nothing: 38%). Left as designed, for the director. The bench fights less than before (the free share at the campfire refills MP for everyone).
+
+**Loot and the simulated player** (200 runs each, this build against round 5's pack, information only): it wins 8% (round 5: 2%), most runs still ending in act I (129 of 200; was 179). Per act it's offered about twice the pieces and formations (act I 20.4 pieces, 3.6 formations; was 9.3 and 1.4) and plays 6.4 fights (was 3.3). Legendaries it holds at each act's end are unchanged (3.0 after act I, 6.2 after act II; round 5 3.0 and 6.1) while pieces held rose (13.8 and 23.4; were 10.9 and 18.6), so legendaries are a smaller share of what a run carries. Legendaries *offered* rose (5.6 in act I, was 2.2): an elite now shows three to take one.

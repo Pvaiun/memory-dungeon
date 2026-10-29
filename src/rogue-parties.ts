@@ -14,7 +14,7 @@
 import type { Content } from "./engine/run.js";
 import { rngFor, shuffle } from "./engine/rng.js";
 import { canEquip } from "./validate.js";
-import { equip, itemGear, member, newItem, newRogue, recruit, registerGear, rogue, rollItem, seat, setFormation, upgraded, type RogueRun, type Slot } from "./rogue.js";
+import { equip, itemGear, member, newItem, newRogue, recruit, registerGear, rogue, rollItem, rollKnown, seat, setFormation, upgraded, type RogueRun, type Slot } from "./rogue.js";
 import { kitUp } from "./rogue-ai.js";
 import type { RarityT } from "./schema.js";
 
@@ -72,11 +72,18 @@ export const ROSTERS: Roster[] = [
  * are the calibration's assumptions: regular fights and elites are measured from full HP with MP as rotation leaves it
  * (about 70%), a boss with the party as it arrives (85% HP, 80% MP after a campfire).
  */
-export const LEVELS: Record<number, Record<Tier, { known: number; plus: number; gear: RarityT | null; legendaries: number; hp: number; mp: number; roster?: number }>> = {
+export type Level = { known: number; plus: number; gear: RarityT | null; legendaries: number; hp: number; mp: number; roster?: number; random?: boolean };
+export const LEVELS: Record<number, Record<Tier, Level> & { early?: Level }> = {
   1: {
     // `roster`: members to pick from (round 4): a run starts with three and its recruits come from floor 2, so act I's first
     // floors have three, its middle four, its boss five.
-    easy: { known: 1, plus: 0, gear: null, legendaries: 0, hp: 100, mp: 100, roster: 3 },
+    // Round 6 (`random`): act I's easy pool (floors 1 to 3) is set against a real start: each member knowing one ability rolled at
+    // random (a fresh roll each play) and half charged, not its best first ability 60% charged. Those paid two thirds of what a
+    // random start paid (12 to 15% of HP against 17 to 22%).
+    easy: { known: 1, plus: 0, gear: null, legendaries: 0, hp: 100, mp: 100, roster: 3, random: true },
+    // Round 6: a party a few rooms in, where the regular fights start (floor 4): four to pick from, one random ability each, no
+    // gear yet. Only for measuring act I's climb below the regular fights' reference floor (`npm run rogue:calibrate -- --climb`).
+    early: { known: 1, plus: 0, gear: null, legendaries: 0, hp: 100, mp: 70, roster: 4, random: true },
     // Round 4: act I's middle as a careful player has it on floors 3 to 8 (the first elite on floor 4 or 5, its trophy often the
     // run's first legendary): most members still on their first ability, a few pieces of common gear.
     normal: { known: 1.4, plus: 0, gear: "common", legendaries: 0, hp: 100, mp: 70, roster: 4 },
@@ -101,10 +108,10 @@ export const LEVELS: Record<number, Record<Tier, { known: number; plus: number; 
 };
 
 /** A roster at an act's and tier's power level, as a run: all five in the roster, the first three in the party. */
-export function buildRoster(c: Content, r: Roster, act: number, tier: Tier): RogueRun {
-  const lv = LEVELS[act][tier];
+export function buildRoster(c: Content, r: Roster, act: number, tier: Tier | "early", rep = 0): RogueRun {
+  const lv = tier === "early" ? LEVELS[act].early! : LEVELS[act][tier];
   // A seed of its own per roster and level, so their items' ids never collide (the feel tool once printed another roster's gear).
-  const run = newRogue(c, { seed: 100 + ROSTERS.findIndex((x) => x.id === r.id) * 20 + act * 5 + ["easy", "normal", "elite", "boss"].indexOf(tier), leader: r.classes[0] });
+  const run = newRogue(c, { seed: 100 + ROSTERS.findIndex((x) => x.id === r.id) * 20 + act * 5 + ["easy", "normal", "elite", "boss", "early"].indexOf(tier), leader: r.classes[0] });
   run.act = act;
   run.roster = [];
   run.party = [];
@@ -112,7 +119,7 @@ export function buildRoster(c: Content, r: Roster, act: number, tier: Tier): Rog
   run.seats = 2;
   run.pending = { kind: "map" };
   r.classes.forEach((cls, i) => {
-    const known = ORDER[cls].slice(0, Math.floor(lv.known) + (i < Math.round((lv.known % 1) * r.classes.length) ? 1 : 0));
+    const known = lv.random ? rollKnown(c, rngFor(rep * 101 + i, `start:${r.id}:${cls}:${tier}`), cls, Math.floor(lv.known)) : ORDER[cls].slice(0, Math.floor(lv.known) + (i < Math.round((lv.known % 1) * r.classes.length) ? 1 : 0));
     recruit(c, run, cls, 100, known);
     const m = member(run, cls);
     for (const a of known.slice(0, lv.plus)) {
@@ -125,13 +132,15 @@ export function buildRoster(c: Content, r: Roster, act: number, tier: Tier): Rog
     // fights never bring. (Every ability uncharged, as before, kept Raise and Valhalla from being ready when anyone fell, and
     // understated every roster's opening: the bosses' knobs had been set too soft.)
     m.cooldowns = Object.fromEntries(m.known.map((a) => { const d = c.abilities.get(a)!; return [a, d.do.some((op) => op.op === "revive") ? 0 : Math.round(d.cooldown * 40) / 100]; }));
+    // A real start's abilities are fresh: half charged (round 6).
+    if (lv.random) m.cooldowns = Object.fromEntries(m.known.map((a) => [a, Math.round(c.abilities.get(a)!.cooldown * (100 - (rogue(c).config.fresh ?? 0))) / 100]));
   });
   run.party = r.classes.slice(0, 3);
   run.formations = [...new Set(["neutral", r.formation])];
   setFormation(c, run, r.formation);
   seat(c, run, r.classes.slice(0, 3));
   // Ordinary gear: six pieces of the level's rarity each member can wear, the best of them worn.
-  const rng = rngFor(1000 + act * 10 + ["easy", "normal", "elite", "boss"].indexOf(tier), `parties:${r.id}`);
+  const rng = rngFor(1000 + act * 10 + ["easy", "normal", "elite", "boss", "early"].indexOf(tier), `parties:${r.id}`);
   if (lv.gear) for (const cls of r.classes) for (let i = 0; i < 6; i++) run.items.push(rollItem(c, run, rng, lv.gear, false, false, cls));
   // A legendary piece carries two affixes, as one found in a run does.
   const affixes = rogue(c).affixes.map((a) => a.id);
@@ -220,7 +229,7 @@ function sheet(c: Content): string {
   ];
   for (const act of [1, 2, 3]) for (const t of ["easy", "normal", "elite", "boss"] as Tier[]) {
     const lv = LEVELS[act][t];
-    out.push(`| ${act} | ${t} | ${lv.known} | ${lv.plus} | ${lv.gear ?? "plain weapon"} | ${lv.legendaries} | ${lv.hp}% / ${lv.mp}% |`);
+    out.push(`| ${act} | ${t} | ${lv.known}${lv.random ? " (rolled at random, half charged)" : ""} | ${lv.plus} | ${lv.gear ?? "plain weapon"} | ${lv.legendaries} | ${lv.hp}% / ${lv.mp}% |`);
   }
   out.push("", "## The rosters", "");
   for (const r of ROSTERS) {

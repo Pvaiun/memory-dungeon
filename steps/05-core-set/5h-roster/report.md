@@ -1,10 +1,82 @@
 # Step 5h report: the roster
 
+## Round 6: after your play (Oct 29, 2026)
+
+You played round 5 (five runs, one won) and gave 26 points. All of them are answered: built, set for 5i, or kept as they are. `feedback.md` has each point's status, `design-round-6.md` the map and campfire design you approved, and `tuning.md` the numbers. Everything is pushed to `ccr-9cf44321-t2g2o5`.
+
+### Decisions for you
+
+1. **Act II without a mid-act campfire is a slog.** On the act road (the stated rotation, potions and tonics), act II's regular fights lose 17% with no campfire before the one at the boss. They lost 8% in round 5, and lose 9% with a mid-act campfire. Today about a third of paths pass one (37%). Campfire odds 6 → 9 would make it about half (46%). **My pick: 9.** It stays "not every path", and act II goes back to where it was. Say if you'd rather feel the slog first.
+2. **The bench fights less.** The campfire's free share refills everyone's MP, so the road's bench fights in 27 / 49 / 37% of fights by act (round 5: 44 to 56%). If the bench feels optional, the lever is the free share's MP (25% → 15%), leaving more of it to REST.
+3. **Act I's middle may still be harsh.** The first floors are fixed: a random start loses nothing on floors 1 to 3 (floor 3 lost 41% before) and 4% on floor 4. From floor 5 the simulated player still loses a quarter of its fights, nearly half on floor 8. It's weak (it wins 8%), but act I's middle is tuned on rosters wearing a full set of common gear, more than a party has there. You called act I "challenging" without flagging its middle, so I've left it. If floors 5 to 8 feel unfair, that's the lever.
+4. **Act III** is harder by a median +20 on its fights' knobs. If it still feels safe, raise its targets: a 90-second recalibration.
+
+### What changed
+
+- **Quick fixes (batch 1):**
+  - each leader's rolled ability on the start screen;
+  - potions and tonics on the party screen and the fight preview;
+  - no FOR line on gear;
+  - a recruit's sheet from a tap on its face;
+  - BACK out of training until someone is trained;
+  - MP on the field: a blue number for regen, and a line too for any other gain;
+  - the gear picker: what the member wears, then the bag, then what others wear (taking one asks first);
+  - a potion and a tonic at the start;
+  - a seat at camp with each act;
+  - act I recruits know one or two abilities (the two named events keep three);
+  - all three supplies at the shop.
+- **Rewards (batch 2):**
+  - mixed picks in 15% of fights (were 40%);
+  - an elite gives a pick of three legendaries, then a pick of two formations (your call);
+  - chests 30 in 80 legendary (were 45);
+  - act III's fights recalibrated on rosters with the reward plan's legendaries.
+- **The map (batch 3):**
+  - 12 floors, so a path has 4.9 regular fights and 0.9 elites (were 2.1 and 0.7), and about three events;
+  - the Muster and the Drill ground folded into other rewards;
+  - campfires guaranteed only before the boss;
+  - enemies as strong as before, the act's climb stretched over 12 floors;
+  - a regular fight's gold 7–12 (was 12–20) and its pieces 6% legendary (was 13%).
+- **The campfire:**
+  - on arrival, everyone recovers 25% of HP and MP, and the fallen rise at 25%;
+  - then REST (the same again) or TRAIN (three members).
+- **Lessons:** any recruit you turn down can teach one member instead: a captive, the stranger, the Wounded Traveller, the Deserter.
+- **Captives:** after 20% of won fights with people in them, never two running. Take them in at half HP, take a lesson, or let them go.
+- **Events:** ten new ones, two versions each:
+  - the Master Smith (reforges a rare into a legendary; a drunk version that can crack it);
+  - a Prisoner Convoy (each prisoner carries a piece);
+  - an Old Soldier;
+  - Three Sealed Crates;
+  - the Quartermaster's Wagon;
+  - a Field Hospital;
+  - the War Table;
+  - a Duelling Ground;
+  - the Abandoned Armoury;
+  - a Mana Spring.
+- **Two new pick shapes** in mixed picks: a sealed piece (rare or better, unseen until taken) and a bundle (a piece and a supply).
+- **The first floors:**
+  - easy fights on floors 1 to 3, tuned against random starts;
+  - act I's climb into regular fights measured (a new `--climb` on the calibrator) and set at 25.7 a floor below act I's middle.
+
+### What the numbers say
+
+- **The map, on the built generator:** 3 or fewer fights and elites on 6% of paths (was 75%). A run has about 19 fights, bosses included (was about 11.5).
+- **Loot,** over the simulated player's runs (information only): per act it's offered about twice the pieces and formations, and plays twice the fights. It holds as many legendaries at each act's end as in round 5 (3 after act I, 6 after act II), among a quarter more pieces. You get more choice, and legendaries are a smaller share of what you carry.
+- **TRAIN** is picked at about half of mid-act campfires on the road's stated rule. On that rule REST always comes before the boss.
+- **The simulated player** wins 8% (round 5: 2%).
+
+### Not done
+
+- The full balance pass is 5i's (in its intent).
+- Act I's middle and the campfire numbers wait on your play.
+
+
 You asked for a roster to rotate: a small bench that grows by choice, parties changed any time outside a fight to answer each fight's preview, MP drained by fighting and restored on the bench, more loot (legendaries above all), recruits and formations as rewards you route toward, and tuning on hand-built parties rather than the simulated player. It's built, tuned on twelve hand-built rosters, read by a fresh feel reader, and pushed to `ccr-9cf44321-t2g2o5`. `design.md` is the approved design, `intent.md` your words in three rounds, `tuning.md` the five rounds, `parties.md` the rosters, `reads/round-4.md` the feel read.
 
 **To play it:** `npm install`, `npm run ui`, Settings → MODE → ROGUE. Start a run.
 - Before any fight, PARTY swaps who's in: tap a seat, then someone at camp.
 - The map has two new rooms: a helmet (the Muster: recruits) and a banner (the Drill ground: formations or training).
+
+## Round 5 (before your play)
 
 ## 1. Decisions and open questions
 

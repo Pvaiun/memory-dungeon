@@ -146,7 +146,9 @@ export const ROGUE_CONFIG: RogueConfigT = {
   // Round 6: the climb stretched over 12 floors (6 a floor → 4.5), so an act's top floor is as hard as floor 9 was. `early`: the
   // climb below a pool's reference floor, act I's measured against a party a few rooms in (design-round-6.md §8).
   knobs: [
-    { mob: 0, step: 4.5, early: 4.5, elite: 0, boss: 0 },
+    // early: measured (npm run rogue:calibrate -- --climb): act I's regular fights against a party a few rooms in (four to pick
+    // from, one random ability each, no gear) need their knobs a median 77 lower on floor 4 than at the reference floor 7.
+    { mob: 0, step: 4.5, early: 25.7, elite: 0, boss: 0 },
     { mob: 0, step: 4.5, elite: 0, boss: 0 },
     { mob: 0, step: 4.5, elite: 0, boss: 0 },
   ],
