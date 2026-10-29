@@ -39,6 +39,17 @@ This page distils their words; it isn't their words. Where it's wrong, they corr
 
 - **All of the gear is open:** armor, weapons, offhands, amulets, and the tier above legendary. The armor's draft in `builds.md` is the most liked part so far, but not settled. Design it from needs, not tidy numbers; lopsided is fine. The weapons are open to reinvention.
 - **Every class has an offhand** (Oct 29): "every class has at least one offhand that they can wield, no question". Two-handed weapons that take the offhand's place are welcome "if you think it's actually a meaningful design pattern we can use". `gear.md` proposes them.
+- **The gear slots' first proposal** (`gear.md`, Oct 29): "I really like this design in general." Their answers:
+  - Start with two-handers: "It's a good call."
+  - The amulet open to everyone, valuable "in a game where you can switch units around", at 10% to 15% of the pool.
+  - The Hoplite's pike is no worry for now.
+  - Mythics as proposed; starting with one per class "makes the task easier".
+  - The art for new weapon kinds and offhands is theirs to source.
+- **The sceptre becomes the rune sword:** "thematically better of a fit for the paladin and the Valkyrie. I think it's also just cooler."
+- **The Hexer and the Geomancer needn't be casters.**
+  - The Geomancer's one Magic-scaling ability "could be 100% changed", and it might be renamed (Earth Knight, Earthbender: "We'll figure it out later").
+  - The Hexer "could totally be like a Spellblade type thing".
+- **Next, at their word:** once they thumb up the gear, it merges into `builds.md`, and then they decide how to proceed.
 - **Cards show who can wear a piece ("fits"), never what it's "for":** "the signposting who the designer had in mind for that gear ruins the discovery".
 - **Rarity is mostly specificity,** plus power that grows by act and stays narrow. No random affixes on rare and legendary pieces for now. Tiers below legendary carry effects too: legendary shouldn't be "the only interesting gear".
 - **Plenty of loot:** "It's better to have too much than not enough if you're unsure for the first versions." How much drops follows the gear's design, not the other way round.

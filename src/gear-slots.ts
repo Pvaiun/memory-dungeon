@@ -14,22 +14,23 @@
 type Kind = { classes: string[]; cell?: string };
 
 const WEAPONS: Record<string, Kind> = {
-  dagger: { cell: "fast one-hand physical", classes: ["assassin", "ranger"] },
+  dagger: { cell: "fast one-hand physical", classes: ["assassin", "ranger", "hexer"] },
   fist_weapons: { cell: "fast one-hand physical", classes: ["monk", "vampire"] },
   sword: { cell: "medium one-hand physical", classes: ["knight", "bramble_knight", "assassin"] },
   spear: { cell: "medium one-hand physical", classes: ["hoplite", "valkyrie", "monk"] },
   bow: { cell: "medium two-hand physical", classes: ["ranger", "bard"] },
-  great_weapon: { cell: "slow two-hand physical", classes: ["knight", "hoplite", "paladin", "geomancer", "vampire"] },
-  wand: { cell: "fast one-hand magical", classes: ["pyromancer", "hexer", "stormcaller", "bard"] },
-  rod: { cell: "medium one-hand magical", classes: ["frostweaver", "hexer", "geomancer"] },
-  sceptre: { cell: "medium one-hand magical", classes: ["cleric", "stormcaller", "paladin", "valkyrie"] },
-  staff: { cell: "slow two-hand magical", classes: ["cleric", "frostweaver", "pyromancer", "geomancer", "bramble_knight"] },
+  great_weapon: { cell: "slow two-hand physical", classes: ["knight", "hoplite", "geomancer", "vampire"] },
+  rune_sword: { cell: "medium one-hand magical", classes: ["paladin", "valkyrie", "hexer", "geomancer"] },
+  mace: { cell: "slow one-hand magical", classes: ["cleric", "paladin"] },
+  wand: { cell: "fast one-hand magical", classes: ["pyromancer", "stormcaller", "bard"] },
+  rod: { cell: "medium one-hand magical", classes: ["frostweaver", "stormcaller"] },
+  staff: { cell: "slow two-hand magical", classes: ["cleric", "frostweaver", "pyromancer", "bramble_knight"] },
 };
 const ARMOR: Record<string, Kind> = {
-  plate: { classes: ["knight", "hoplite", "geomancer", "bramble_knight"] },
-  mail: { classes: ["paladin", "valkyrie", "vampire", "bramble_knight"] },
+  plate: { classes: ["knight", "hoplite", "geomancer", "bramble_knight", "paladin"] },
+  mail: { classes: ["paladin", "valkyrie", "vampire", "hexer", "bramble_knight"] },
   leather: { classes: ["ranger", "monk", "assassin", "bard", "valkyrie"] },
-  robes: { classes: ["cleric", "hexer", "pyromancer", "frostweaver", "stormcaller", "bard"] },
+  robes: { classes: ["cleric", "pyromancer", "frostweaver", "stormcaller", "bard"] },
 };
 const OFFHANDS: Record<string, Kind> = {
   kite_shield: { classes: ["knight", "paladin"] },
@@ -38,11 +39,10 @@ const OFFHANDS: Record<string, Kind> = {
   tome: { classes: ["frostweaver", "bard"] },
   lantern: { classes: ["paladin", "pyromancer"] },
   relic: { classes: ["cleric", "valkyrie"] },
-  bell: { classes: ["monk", "cleric"] },
-  totem: { classes: ["bramble_knight", "ranger"] },
+  bell: { classes: ["monk", "cleric", "stormcaller"] },
+  totem: { classes: ["bramble_knight", "ranger", "geomancer"] },
   vial: { classes: ["assassin", "vampire"] },
   idol: { classes: ["hexer", "vampire"] },
-  orb: { classes: ["geomancer", "stormcaller"] },
 };
 
 /** builds.md's routes: three parties per build. */
