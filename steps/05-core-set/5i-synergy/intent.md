@@ -50,6 +50,10 @@ This page distils their words; it isn't their words. Where it's wrong, they corr
   - The Geomancer's one Magic-scaling ability "could be 100% changed", and it might be renamed (Earth Knight, Earthbender: "We'll figure it out later").
   - The Hexer "could totally be like a Spellblade type thing".
 - **The gear is approved** (Oct 29: "I'm sold on this"), merged into `builds.md`.
+- **The order from here** (Oct 29):
+  - the cleanup first, with 5h (complete) and 5i merged into main;
+  - then the pieces: one lead calling parallel agents, with all twelve builds made and tested together.
+  - The briefs are `../5j-cleanup/brief.md`, `pieces-design-brief.md` and `pieces-build-brief.md`.
 - **Cards show who can wear a piece ("fits"), never what it's "for":** "the signposting who the designer had in mind for that gear ruins the discovery".
 - **Rarity is mostly specificity,** plus power that grows by act and stays narrow. No random affixes on rare and legendary pieces for now. Tiers below legendary carry effects too: legendary shouldn't be "the only interesting gear".
 - **Plenty of loot:** "It's better to have too much than not enough if you're unsure for the first versions." How much drops follows the gear's design, not the other way round.
