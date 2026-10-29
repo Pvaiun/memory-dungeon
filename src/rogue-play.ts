@@ -185,8 +185,9 @@ function look(run: RogueRun): string {
       break;
     }
     case "trophy": {
-      out.push("ELITE BEATEN: the trophy, a pick of one (the spoils follow).");
+      out.push("ELITE: and a pick of formations. Pick one, or skip.");
       p.offers.forEach((o, i) => out.push(`  pick take:${i}: ${offerWords(run, o)}`));
+      out.push("  pick skip");
       break;
     }
     case "spoils": case "boon": case "treasure": {

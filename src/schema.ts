@@ -796,7 +796,8 @@ const Spoils = z.strictObject({
   supply: Pct.describe("Chance an offer is a supply."),
   legendaries: z.number().int().min(0).optional().describe("How many of the offers are always a legendary piece."),
   trophy: z.boolean().optional().describe("A legendary piece is won outright, on top of the pick."),
-  trophyFormation: z.boolean().optional().describe("Step 5h round 6: the trophy is a pick of the legendary piece or a formation (rare or better), while there's one to win."),
+  aimed: z.number().int().min(0).optional().describe("Step 5h round 6: the first this many offers are pieces aimed at someone in the party."),
+  formations: z.number().int().min(0).optional().describe("Step 5h round 6: a second pick follows, of this many formations (an elite's)."),
   mixed: Pct.optional().describe("Step 5h: chance, in percent, that the pick mixes kinds: one piece of gear, then offers rolled from `mix` (the rest stay gear)."),
   mix: z.strictObject({ tome: z.number().min(0), formation: z.number().min(0), recruit: z.number().min(0) }).optional().describe("Weights of the other kinds in a mixed pick."),
 });

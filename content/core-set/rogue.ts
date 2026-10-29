@@ -80,11 +80,12 @@ export const ROGUE_CONFIG: RogueConfigT = {
     // Step 5h (the director's: enough loot to fill the seats and build; legendaries "by orders of magnitude"): a pick of three,
     // gear in 60% of fights and mixed with a tome or a formation in 40%; no supplies (every won fight already drops one); no
     // recruits (they have their own rooms). A full run should take about 28 pieces and 12 legendaries (design.md).
-    // Round 6 (the director's: choices between kinds "too often"; "way more legendary gear than any other type"): mixed picks in 15%
-    // of fights and elites (were 40% and 30%); an elite's pick 25% legendary (was 40%), and its trophy a pick of the legendary or a
-    // formation (formations "came too late in most runs").
+    // Round 6 (the director's: choices between kinds "too often"): mixed picks in 15% of fights (were 40%).
     fight: { count: 3, rarity: { common: 35, uncommon: 30, rare: 22, legendary: 13 }, tome: 0, recruit: 0, supply: 0, mixed: 15, mix: { tome: 60, formation: 40, recruit: 0 } },
-    elite: { count: 3, trophy: true, trophyFormation: true, rarity: { common: 0, uncommon: 0, rare: 75, legendary: 25 }, tome: 0, recruit: 0, supply: 0, mixed: 15, mix: { tome: 30, formation: 40, recruit: 30 } },
+    // Round 6 (the director's: "elites have a pick of a legendary and a pick of a formation"; formations "came too late in most runs"):
+    // a pick of three legendaries, one aimed at the party, then a pick of two formations. Was a legendary won outright, then a pick
+    // of three rares and legendaries.
+    elite: { count: 3, aimed: 1, rarity: { common: 0, uncommon: 0, rare: 0, legendary: 100 }, tome: 0, recruit: 0, supply: 0, formations: 2 },
     // A third of offered gear is for a class not in the roster, so a piece can make you want a class (was none: 0.05 a run).
     offRoster: 33,
   },

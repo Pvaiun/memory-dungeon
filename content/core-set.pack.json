@@ -12360,23 +12360,17 @@
     },
     "elite": {
      "count": 3,
-     "trophy": true,
-     "trophyFormation": true,
+     "aimed": 1,
      "rarity": {
       "common": 0,
       "uncommon": 0,
-      "rare": 75,
-      "legendary": 25
+      "rare": 0,
+      "legendary": 100
      },
      "tome": 0,
      "recruit": 0,
      "supply": 0,
-     "mixed": 15,
-     "mix": {
-      "tome": 30,
-      "formation": 40,
-      "recruit": 30
-     }
+     "formations": 2
     },
     "offRoster": 33
    },

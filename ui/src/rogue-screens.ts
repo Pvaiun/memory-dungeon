@@ -114,9 +114,9 @@ function offerBody(run: RogueRun, o: Offer): Child[] {
     const known = o.known ?? [];
     // Step 5h: a recruit's rarity is what it knows (one, two or all three), shown as the gear's rarity colours.
     const rar = known.length >= 3 ? "legendary" : known.length === 2 ? "rare" : "common";
-    // Round 6 (the director's: "can't inspect recruits on any screens"): SHEET opens the class with what this one knows.
-    const sheet = button("SHEET", (e?: Event) => { e?.stopPropagation(); go("rclass", { cls: o.cls, known }); }, "sm");
-    return [h("div", { class: "line" }, faceEl(o.cls), h("div", { class: "grow" }, h("div", { class: RARITY_CLASS[rar] || "hi" }, `RECRUIT: ${k.name.toUpperCase()}`), h("div", { class: "text dim small wrap" }, role(o.cls))), sheet),
+    // Round 6 (the director's: "can't inspect recruits on any screens"): a tap on the face opens the class with what this one knows.
+    const face = h("span", { style: "cursor:pointer", onClick: (e?: Event) => { e?.stopPropagation(); go("rclass", { cls: o.cls, known }); } }, faceEl(o.cls));
+    return [h("div", { class: "line" }, face, h("div", { class: "grow" }, h("div", { class: RARITY_CLASS[rar] || "hi" }, `RECRUIT: ${k.name.toUpperCase()}`), h("div", { class: "text dim small wrap" }, role(o.cls)))),
       h("div", { class: "line small wrap" }, h("span", { class: "dim" }, `KNOWS ${known.length}/3: `), known.map((a) => c.abilities.get(a)!.name.toUpperCase()).join(", ")),
       o.item ? itemRow(run, o.item, undefined, { right: h("span", { class: "dim small" }, "CARRIES") }) : null,
       run.party.length >= 3 ? h("div", { class: "line small dim" }, "JOINS AT CAMP") : null];
@@ -429,7 +429,7 @@ function rewardView(run: RogueRun): Child[] {
   const opts = options(c, run);
   const takeId = (i: number) => (p.kind === "treasure" ? "take" : `take:${i}`);
   if (rewardPick !== null && (rewardPick >= offers.length || !opts.includes(takeId(rewardPick)))) rewardPick = null;
-  const title = p.kind === "boon" ? "THE BOSS FALLS" : p.kind === "treasure" ? "A CHEST" : p.kind === "trophy" ? "ELITE TROPHY" : p.tier === "elite" ? "ELITE SPOILS" : "SPOILS";
+  const title = p.kind === "boon" ? "THE BOSS FALLS" : p.kind === "treasure" ? "A CHEST" : p.kind === "trophy" ? "ELITE: A FORMATION" : p.tier === "elite" ? "ELITE: A LEGENDARY" : "SPOILS";
   const goldLine = p.kind === "spoils" ? h("div", { class: "line" }, gold(p.gold), h("span", { class: "dim" }, " FOUND")) : p.kind === "treasure" ? h("div", { class: "line" }, gold(p.gold), h("span", { class: "dim" }, " INSIDE")) : null;
   const trophy = p.kind === "spoils" && p.trophy ? win("", h("div", { class: "line gold" }, "TROPHY"), ...offerBody(run, { kind: "gear", item: p.trophy })) : null;
   const cards = offers.map((o, i) => {
@@ -452,7 +452,7 @@ function rewardView(run: RogueRun): Child[] {
       p.kind === "treasure"
         ? button("TAKE", () => { if (opts.includes("take")) pickOrSave(run, "take"); }, "hi")
         : (() => { const b = button("TAKE", () => { if (rewardPick !== null) { const i = rewardPick; rewardPick = null; pickOrSave(run, takeId(i)); } }, "hi"); b.disabled = rewardPick === null; return b; })(),
-      p.kind === "trophy" ? null : button(p.kind === "treasure" ? "LEAVE IT" : "SKIP", () => { rewardPick = null; pickOrSave(run, skip); }),
+      button(p.kind === "treasure" ? "LEAVE IT" : "SKIP", () => { rewardPick = null; pickOrSave(run, skip); }),
       button("PARTY", () => go("rparty"))),
   ];
 }

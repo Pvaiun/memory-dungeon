@@ -313,13 +313,8 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
         for (const id of opts) { const v = bestPathValue(c, d, run, run.map.find((n) => n.id === id)!, h) + next(rng) * 0.01; if (v > bv) (bv = v), (best = id); }
         return best;
       }
-      case "trophy": {
-        // Round 6: the legendary or the formation, by the same value as any offer (it has to take one).
-        let best = opts[0], bv = -Infinity;
-        for (const o of opts) { const v = offerValue(c, d, run, p.offers[Number(o.split(":")[1])]); if (v > bv) (bv = v), (best = o); }
-        return best;
-      }
       case "spoils":
+      case "trophy":
       case "boon":
       case "muster": {
         let best = "skip", bv = 0.25;

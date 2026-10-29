@@ -119,11 +119,16 @@ export class Narrator {
       case "heal":
         this.heal(ev);
         break;
-      case "mp":
-        // Step 5h round 6 (the director's: MP gained in a fight "isn't shown anywhere"): a number on the field, no line, for
-        // every gain alike (regen, Clarity, Siphon, a song).
-        if (disp(ev.amount as number) > 0) this.silent(ev);
+      case "mp": {
+        // Step 5h round 6 (the director's: MP gained in a fight "isn't shown anywhere"): a status's pulse (MP regen, Clarity) is a
+        // number on the field only, or the window would fill with ticks; any other gain (Siphon, a song, the Soul jar, a gift) is
+        // a line too.
+        const n = disp(ev.amount as number);
+        if (n <= 0) break;
+        if (ev.part === "pulse") this.silent(ev);
+        else this.add(ev, { text: `${this.n(ev.target)} gains ${n} MP${c.statuses.has(String(ev.src)) ? ` from ${this.sname(String(ev.src))}` : ""}.`, tone: "buff" });
         break;
+      }
       case "status":
         this.status(ev);
         break;

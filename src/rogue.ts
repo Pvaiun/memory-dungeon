@@ -50,8 +50,11 @@ export type Pending =
   | ({ kind: "fight"; begun?: boolean } & FightSpec)
   /** Round 9 (the director's): a won fight offers a choice of one supply; `then` is what follows the pick (the spoils, or a boss's boon). */
   | { kind: "drop"; options: SupplyIdT[]; then: Pending }
-  | { kind: "spoils"; gold: number; offers: Offer[]; tier: FightTier; trophy?: Item }
-  /** Step 5h round 6 (the director's: formations came too late): an elite's trophy is a pick, a legendary piece or a formation; the spoils follow. */
+  | { kind: "spoils"; gold: number; offers: Offer[]; tier: FightTier; trophy?: Item; then?: Pending }
+  /**
+   * Step 5h round 6 (the director's: formations came too late; "elites have a pick of a legendary and a pick of a formation"): an
+   * elite's second pick, of formations, after its pick of legendaries.
+   */
   | { kind: "trophy"; offers: Offer[]; then: Pending }
   | { kind: "boon"; offers: Offer[] }
   | { kind: "shop"; stock: ShopSlot[]; learn: boolean; upgrade: boolean; trained?: number }
@@ -287,14 +290,14 @@ export function endFight(c: Content, run: RogueRun, er: Run) {
   }
   const offers = spoilOffers(c, run, p.tier, p.node);
   const s = cfg(c).spoils[p.tier === "elite" ? "elite" : "fight"];
-  const spoils: Pending = { kind: "spoils", gold, offers, tier: p.tier };
+  // What follows the pick: an elite's pick of formations (round 6), while there are any to win.
+  let then: Pending = { kind: "map" };
+  const fms = s.formations ? rollFormations(c, run, r(run, `trophy:${run.act}:${p.node}`), s.formations) : [];
+  if (fms.length) then = { kind: "trophy", offers: fms, then };
+  const spoils: Pending = { kind: "spoils", gold, offers, tier: p.tier, ...(then.kind !== "map" ? { then } : {}) };
   if (!s.trophy) return void (run.pending = offerDrop(c, run, spoils));
-  // An elite's trophy: a legendary piece aimed at the party (Slay the Spire's elite relic). Step 5h round 6: or a formation (rare
-  // or better), the player's pick, while there's one to win; with none, the piece is won outright as before.
-  const tr = r(run, `trophy:${run.act}:${p.node}`);
-  const piece: Offer = { kind: "gear", item: rollItem(c, run, tr, "legendary", true) };
-  const drill = s.trophyFormation ? rollFormation(c, run, tr, [], undefined, "rare") : null;
-  if (drill) return void (run.pending = offerDrop(c, run, { kind: "trophy", offers: [piece, drill], then: spoils }));
+  // An elite's trophy: a legendary piece aimed at the party, won outright and in the bag already (before round 6).
+  const piece: Offer = { kind: "gear", item: rollItem(c, run, r(run, `trophy:${run.act}:${p.node}`), "legendary", true) };
   take(c, run, piece);
   note(run, `Won ${offerText(c, run, piece)}.`);
   run.pending = offerDrop(c, run, { ...spoils, trophy: (piece as { item: Item }).item });
@@ -731,9 +734,10 @@ function spoilOffers(c: Content, run: RogueRun, tier: FightTier, node: string): 
   const rng = r(run, `spoils:${run.act}:${node}`);
   const out: Offer[] = [];
   const gear = (): Offer => {
-    // No two offers of the same piece.
-    let item = rollItem(c, run, rng, rollRarity(rng, s.rarity), false, true);
-    for (let k = 0; k < 6 && out.some((x) => x.kind === "gear" && x.item.base === item.base); k++) (run.uid--, (item = rollItem(c, run, rng, item.rarity, false, true)));
+    // No two offers of the same piece. Round 6: the first `aimed` offers are pieces aimed at someone in the party (an elite's pick).
+    const aimed = out.length < (s.aimed ?? 0);
+    let item = rollItem(c, run, rng, rollRarity(rng, s.rarity), aimed, !aimed);
+    for (let k = 0; k < 6 && out.some((x) => x.kind === "gear" && x.item.base === item.base); k++) (run.uid--, (item = rollItem(c, run, rng, item.rarity, aimed, !aimed)));
     return { kind: "gear", item };
   };
   const other = (): Offer | null => {
@@ -1064,7 +1068,7 @@ export function options(c: Content, run: RogueRun): string[] {
     case "drop": return p.options;
     case "spoils": return [...p.offers.map((o, i) => (canTake(c, run, o) ? `take:${i}` : "")).filter(Boolean), "skip"];
     case "boon": return [...p.offers.map((o, i) => (canTake(c, run, o) ? `take:${i}` : "")).filter(Boolean), "skip"];
-    case "trophy": return p.offers.map((o, i) => (canTake(c, run, o) ? `take:${i}` : "")).filter(Boolean);
+    case "trophy": return [...p.offers.map((o, i) => (canTake(c, run, o) ? `take:${i}` : "")).filter(Boolean), "skip"];
     case "muster": return [...p.offers.map((o, i) => (canTake(c, run, o) ? `take:${i}` : "")).filter(Boolean), "skip"];
     case "drill": return [...p.offers.map((o, i) => (canTake(c, run, o) ? `take:${i}` : "")).filter(Boolean), ...(trainOptions(c, run, []).length ? ["train"] : []), "skip"];
     case "train": return [...trainOptions(c, run, p.done), p.back && !p.done.length ? "back" : "done"];
@@ -1173,13 +1177,15 @@ export function choose(c: Content, run: RogueRun, pick: string) {
         note(run, `Took ${offerText(c, run, o)}.`);
       }
       if (p.kind === "boon") return nextAct(c, run);
-      run.pending = { kind: "map" };
+      run.pending = p.then ?? { kind: "map" };
       return;
     }
     case "trophy": {
-      const o = p.offers[Number(pick.split(":")[1])];
-      take(c, run, o);
-      note(run, `Won ${offerText(c, run, o)}.`);
+      if (pick !== "skip") {
+        const o = p.offers[Number(pick.split(":")[1])];
+        take(c, run, o);
+        note(run, `Took ${offerText(c, run, o)}.`);
+      }
       run.pending = p.then;
       return;
     }
