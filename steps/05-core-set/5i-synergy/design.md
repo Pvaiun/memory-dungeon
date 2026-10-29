@@ -1,5 +1,7 @@
 # Step 5i design: gear, formations and upgrades that make builds synergize
 
+**Superseded (Oct 29, 2026).** The director's notes on this version (`intent.md`, last section) reject its approach: rules first and pieces fitted to them, builds that each double down on one keyword, and a sample of single-line effects. The step restarts from a philosophy, then the slot structure, then a dozen builds designed as whole things, then the pieces built backwards from them. Kept as the record. What they liked here: the gap map, Curse ring, Pyre's Wildfire, Frost fist, Vanguard's Cover, Shield bash scaling from a second stat, and branches that play on triggers and targeting.
+
 First version, Oct 28, 2026, for the director's reaction to the sample (the gate). Design only: nothing is built until 5h is merged into main. The director's words are in `intent.md`, the brief in `kickoff.md`, and what the content has today in `gap-map.md`. 5h's design, which this builds on, is on branch `ccr-9cf44321-t2g2o5` (`steps/05-core-set/5h-roster/design.md`).
 
 ## What needs you
