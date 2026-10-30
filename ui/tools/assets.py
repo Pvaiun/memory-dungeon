@@ -233,13 +233,45 @@ STATUSES = {
     "lg_spikes": (296, "steel"), "lg_shade": (130, "purple"), "lg_execute": (181, "crimson"), "lg_storm": (384, "yellow"), "lg_hunter": (125, "red"),
     "lg_grave": (184, "purple"), "lg_cinder": (304, "orange"),
 }
+# Step 5i: stand-ins for the statuses the new pieces, formations and upgrades show as icons, from icons already drawn
+# above in another colour, until the director's art pass ("Reuse the art assets we already have, I'll do a full art pass
+# later"). Built from the pack when it's there; without it, recoloured from the committed icon of the same number.
+STAND_INS = {
+    # Marked and the seven counters
+    "marked": (125, "red"), "cuts": (286, "steel"), "heat": (303, "red"), "spite": (296, "crimson"), "tempo": (14, "blue"),
+    "surge": (383, "purple"), "fervor": (391, "gold"), "charge": (384, "ice"),
+    # formations
+    "vigil_mourning": (184, "purple"), "the_wheel_wall": (47, "steel"), "the_wheel_wall_opening": (47, "steel"),
+    "the_wheel_blade": (209, "gold"), "the_wheel_blade_opening": (209, "gold"), "the_wheel_well": (285, "ice"),
+    "the_wheel_well_opening": (285, "ice"), "the_hurricane_count": (313, "green"), "the_mountain_strength": (102, "brown"),
+    # weapons, armor, amulets
+    "gorged_claws_on": (341, "red"), "spellbound": (54, "purple"), "sunburst": (326, "orange"), "portcullis_on": (132, "steel"),
+    "last_bastion_on": (60, "red"), "silvered_hauberk_on": (46, "steel"), "bloodsworn_mail_on": (269, "crimson"),
+    "sanguine_mail_on": (83, "crimson"), "mottled_hide_on": (129, "brown"), "frostwalkers_furs_on": (196, "ice"),
+    "matins_robe_on": (57, "gold"), "wallflowers_robe_on": (129, "purple"), "weavers_robes_on": (118, "purple"),
+    "urchin_shell_on": (296, "brown"), "wasp_charm_on": (209, "yellow"),
+    # upgrades and mythics
+    "last_rites_on": (16, "purple"), "hold_the_line": (118, "steel"), "rite_of_passage": (14, "crimson"),
+    "battle_prayer": (206, "purple"), "battle_prayer_plus": (206, "purple"), "bloodroot": (119, "crimson"),
+    "overgrowth": (119, "green"), "deep_roots": (119, "brown"), "opening_thrust": (207, "steel"),
+    "chooser_of_the_slain": (181, "gold"), "flow_state_count": (285, "green"), "stillness_of_mind": (130, "blue"),
+    "shadow_step_strike": (130, "purple"), "bloodlust_on_plus": (85, "crimson"), "shared_feast_on": (85, "gold"),
+    "shared_feast_on_plus": (85, "gold"), "undying_thirst": (181, "crimson"), "undying_thirst_plus": (181, "crimson"),
+    "feeding_frenzy": (233, "red"), "deep_calm_free": (311, "purple"), "static_field": (383, "yellow"),
+    "static_field_plus": (383, "yellow"), "overcharge_charges": (384, "purple"), "storm_shield": (45, "yellow"),
+    "bedrock_on_plus": (326, "gold"), "faultline": (293, "brown"), "rampart": (50, "steel"),
+    "the_witch_blade_swings": (286, "purple"), "nights_edge_strike": (207, "purple"), "thralls_chalice_debt": (94, "purple"),
+    "crown_of_embers_aura": (304, "orange"),
+}
+DRAWN = dict(STATUSES)
+STATUSES.update(STAND_INS)
 SOURCE_RAMP = [(48, 15, 10), (85, 15, 10), (155, 26, 10), (239, 105, 47), (239, 216, 161)]
 
-def recolor(im, ramp):
+def recolor(im, ramp, source=SOURCE_RAMP):
     if ramp is None:
         return im
     px = im.load()
-    lut = {SOURCE_RAMP[i]: ramp[i] for i in range(5)}
+    lut = {source[i]: ramp[i] for i in range(5)}
     for y in range(im.height):
         for x in range(im.width):
             r, g, b, a = px[x, y]
@@ -259,6 +291,15 @@ if STATUS:
     print(f"statuses: {len(STATUSES)} icons")
 else:
     print("statuses: pack not found, kept")
+    # The stand-ins, from the committed icons: each from one already drawn with the same icon number, its ramp swapped.
+    for sid, (n, ramp) in STAND_INS.items():
+        src = next((k for k, (m, _) in DRAWN.items() if m == n and (OUT / "status" / f"{k}.png").exists()), None)
+        if not src:
+            raise SystemExit(f"no committed icon {n} for the stand-in {sid}")
+        im = Image.open(OUT / "status" / f"{src}.png").convert("RGBA")
+        recolor(im, RAMPS[ramp] or SOURCE_RAMP, RAMPS[DRAWN[src][1]] or SOURCE_RAMP).save(OUT / "status" / f"{sid}.png")
+        manifest["statuses"][sid] = f"status/{sid}.png"
+    print(f"statuses: {len(STAND_INS)} stand-ins from the committed icons")
 
 if ICONSET:
     import shutil

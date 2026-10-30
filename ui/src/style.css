@@ -165,6 +165,14 @@ button.mid { padding: .625rem .5rem; }
 
 .ab .head .n { width: 1.75rem; text-align: center; color: var(--hi); cursor: pointer; flex: 0 0 auto; border: .125rem solid var(--dim); border-radius: .25rem; line-height: 1.5rem; }
 .ab .head .n.dim { border-color: transparent; }
+/* step 5i: a training card's chip (+ the power step, A and B the versions); gold once taken */
+.ab .head .chip { width: 1.75rem; text-align: center; color: var(--dim); flex: 0 0 auto; border: .125rem solid var(--win2); border-radius: .25rem; line-height: 1.5rem; }
+.ab .head .chip.on { color: var(--hi); border-color: var(--hi); }
+.ab .size.changes { display: flex; flex-wrap: wrap; column-gap: .75rem; }
+.gear-row .who { column-gap: .5rem; row-gap: 0; line-height: 1.25rem; min-height: 1.25rem; }
+/* step 5i: a formation's seats on an offer, each with what its statuses do under it */
+.seat { margin-top: .25rem; }
+.seat-text { padding-left: 1rem; }
 .ab .cost { text-transform: uppercase; white-space: nowrap; line-height: 1.25rem; }
 .ab .body { color: var(--dim); text-transform: none; white-space: normal; overflow-wrap: anywhere; line-height: 1.25rem; padding-left: 2.25rem; margin-top: .125rem; }
 

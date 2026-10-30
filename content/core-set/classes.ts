@@ -71,6 +71,8 @@ export const passives: StatusT[] = [
   // Step 5f (the director's): Sworn (Taunt when an ally falls) rarely fired and came too late; the Knight starts behind a Shield instead.
   passive("vanguard", "Vanguard", { text: "Starts every fight behind a Shield from its max HP.", reactions: [{ on: { event: "fight_start" }, do: [apply("shield", { stacks: { scale: [{ ratio: 0.2, stat: "max_hp", of: "holder" }] }, to: "holder" })] }] }),
   passive("hunters_eye", "Hunter's eye", { text: "Basic attacks ignore Taunt.", seek: "basic" }),
+  // Step 5i (build/engine-spec.md R3, X35): Einherjar is a status, so it can be trained; the revive rule moved here from Valhalla's `ready`.
+  passive("einherjar", "Einherjar", { text: "Allies it revives come back with every action ready.", revives: { ready: true } }),
   // Step 5c (the director's): Bleed, not Poison, with stacks from Armor.
   passive("briar", "Briar", { text: "Foes its Thorns wound start to bleed.", reactions: [{ on: { event: "damage_dealt", status: "thorns" }, do: [apply("bleed", { stacks: own("few", "armor"), to: "other" })] }] }),
   // Step 5g round 5 (the director's): half as often for double damage (was a third for triple: one swing a fight, "a statue").
@@ -130,8 +132,6 @@ export const passives: StatusT[] = [
       { on: { event: "status_ended", status: "shield" }, do: [{ op: "remove", label: "buff", status: "bedrock_on", to: "holder" }] },
     ],
   }),
-  // Step 5f: Blood gift's price. An action can't deal untyped damage, and a hit on itself would meet its own mitigation and Lifesteal; a status pays it the moment it lands.
-  { id: "blood_price", name: "BLOOD PRICE", text: "Pays a fifth of its max HP.", label: "buff", show: "icon", stacking: "fizzle", unremovable: true, duration: 1, reactions: [{ on: { event: "status_gained", status: "blood_price" }, do: [{ op: "damage", type: "none", amount: { scale: [{ ratio: 0.2, stat: "max_hp", of: "holder" }] }, to: "holder" }] }] },
   { id: "bedrock_on", name: "BEDROCK", text: "Crit chance doubled.", label: "buff", show: "icon", stacking: "fizzle", stats: [{ stat: "crit_chance", flat: { scale: [{ ratio: 1, stat: "crit_chance", of: "holder" }] } }] },
 ];
 
@@ -225,9 +225,10 @@ export const abilities: A[] = [
     // Step 5e: 0.55 of Magic (was 0.7): see Cure. The Valkyrie healed more a fight than the Cleric and its parties won 13 to 31 points more than parties without it.
     ...timing("medium", "normal"), mp: 650, ...waitsFor("allies", { hpBelow: 80 }), target: T.lowestShareAlly, do: [{ op: "heal", amount: from("magic", 0.45) }], // round 5: 0.45; at 0.55 the Valkyrie still healed as much a fight as the Cleric. // Step 5g round 3: waits for 80%.
   }),
-  a("valkyrie", "valhalla", "Valhalla", "Revives a random knocked-out ally with a tenth of its HP, every action ready.", {
+  // Step 5i (build/engine-spec.md X35): "every action ready" is Einherjar's now (its passive status's `revives`), so a Valkyrie trained to Chooser of the slain raises on cooldown.
+  a("valkyrie", "valhalla", "Valhalla", "Revives a random knocked-out ally with a tenth of its HP.", {
     // Step 5h (the director's): 650 (was 1,500), as Raise. Cast when an ally fell beside a standing Valkyrie 24% of the time at 1,500, 57% at 650.
-    ...timing("very_long", "quick"), mp: 650, ...waitsFor("allies", { ko: true }), target: T.koAlly, do: [{ op: "revive", hp: { scale: [{ ratio: REVIVE.tenth, stat: "max_hp", of: "target" }] }, ready: true }],
+    ...timing("very_long", "quick"), mp: 650, ...waitsFor("allies", { ko: true }), target: T.koAlly, do: [{ op: "revive", hp: { scale: [{ ratio: REVIVE.tenth, stat: "max_hp", of: "target" }] } }],
   }),
   // Bard
   // Step 5e: Haste on the ally with the highest Attack or Magic (was a random ally), and the Bard's songs at 400 MP (were 650): it never
@@ -274,7 +275,8 @@ export const abilities: A[] = [
     // Step 5g round 3: 300 MP (was 500) and it waits for an ally under 80%: it already costs a fifth of the Vampire's HP, and the Vampire was the one class short of MP (21% of its time).
     // Round 5 (the director's): it also waits until the Vampire itself is above 35% HP, so the price (a fifth) never kills it.
     ...timing("medium", "normal"), mp: 450, if: [{ side: "others", where: { hpBelow: 80 } }, { side: "self", where: { hpAtLeast: 35 } }], target: T.otherLowestShareAlly,
-    do: [apply("blood_price", { to: { side: "self" } }), { op: "heal", amount: from("max_hp", 0.2) }, apply("clarity")],
+    // Step 5i (G12, engine-spec X23): the price is paid with `pay`, HP lost at once, not damage: no Shield soaks it, nothing reacts, never below 1 HP (was blood_price's untyped damage).
+    do: [{ op: "pay", hp: from("max_hp", 0.2), to: "self" }, { op: "heal", amount: from("max_hp", 0.2) }, apply("clarity")],
   }),
   a("vampire", "frenzy", "Frenzy", "Several Might on itself.", { ...timing("medium", "quick"), mp: 450, target: "self", do: [apply("might", { stacks: stacks("several", "attack") })] }), // Step 5g round 3: 300 MP (was 500).
   // Pyromancer
@@ -348,7 +350,7 @@ export const classes: ClassDefT[] = [
     stats: { ...stat(4, 3, 3, 3, 4, 4, 2, 4) }, weapons: ["rune_sword", "mace"], armor: ["mail", "plate"], offhands: ["kite_shield", "lantern"], passive: p("judgement", "Judgement", "Its hits deal half again as much damage to foes with a buff."),
   }),
   cls("valkyrie", "Valkyrie", "Storm spear who heals and revives. A storm-borne spear that reaches past any guard and Shocks what it hits, mends the wounded, and snatches the fallen back ready to fight.", {
-    stats: stat(3, 3, 3, 4, 3, 3, 3, 3), weapons: ["spear", "rune_sword"], armor: ["mail", "leather"], offhands: ["round_shield", "relic"], passive: { name: "Einherjar", text: "Allies it revives come back with all their actions ready, instead of on cooldown." },
+    stats: stat(3, 3, 3, 4, 3, 3, 3, 3), weapons: ["spear", "rune_sword"], armor: ["mail", "leather"], offhands: ["round_shield", "relic"], passive: p("einherjar", "Einherjar", "Allies it revives come back with all their actions ready, instead of on cooldown."),
   }),
   cls("bard", "Bard", "Party tempo. A caster at the back whose every note mends an ally a little and gives another mana, with a ballad that steadies the whole party, an allegro that quickens it, and thunder that shocks every foe.", {
     // Step 5g round 6 (the director's): HP 3 and Armor 3 (were 2 and 2): a buffer that doesn't deal damage needn't be glass.

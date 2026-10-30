@@ -89,6 +89,7 @@ export function targetPhrase(t: AbilityT["target"] | "foe" | "ally" | "self" | T
     else if (by === "hp_share") what = `the ${r.pick} share of max HP`;
     else if (by === "mp_share") what = `the ${r.pick} share of max MP`;
     else if (by === "buffs" || by === "debuffs") what = `the ${r.pick === "highest" ? "most" : "fewest"} ${by}`;
+    else if (by === "swing") what = `the ${r.pick === "highest" ? "slowest" : "fastest"} basic attack`;
     else if ("stat" in by) what = `the ${r.pick} ${statWord(by.stat)}`;
     else if ("stats" in by) what = `the ${r.pick} ${by.stats.map(statWord).join(" or ")}`;
     else what = `the ${r.pick === "highest" ? "most" : "least"} ${status(by.stacks).name}`;
@@ -121,15 +122,16 @@ function whereText(w: TargetRuleT["where"]): string {
 
 export function conditionText(a: AbilityT): string | null {
   if (!a.if) return null;
-  // Step 5g: several conditions, all of which must hold.
-  const parts = [a.if].flat().map((cnd) => {
+  // Step 5g: several conditions, all of which must hold; step 5i: or any one of them.
+  const any = "any" in a.if;
+  const parts = ("any" in a.if ? a.if.any : [a.if].flat()).map((cnd) => {
     const side = cnd.side === "foes" ? "foe" : "ally";
     const w = wherePredicate(cnd.where);
     if (cnd.side === "self") return `it ${w}`;
     const n = cnd.atLeast ?? 1;
     return `${n > 1 ? `${n} ${side}s` : `an ${side}`} ${w}`;
   });
-  return `waits until ${parts.join(" and ")}`;
+  return `waits until ${parts.join(any ? " or " : " and ")}`;
 }
 
 /** A condition as a predicate: "has a debuff", "is knocked out". */
@@ -203,7 +205,10 @@ export function scalesOf(n: NumT | undefined, stacks = false): Scale[] {
       if (stacks) out.push({ text: code, stat: s.stat });
       else if (def?.kind === "points") out.push({ text: `${short(s.ratio / DISPLAY_DIV)}×${code}`, stat: s.stat });
       else out.push({ text: `${Math.round(s.ratio * 100)}% ${code}`, stat: s.stat });
-    } else if (s.stacks) out.push({ text: `+${short(s.ratio / DISPLAY_DIV)} PER ${status(s.stacks).name.toUpperCase()}` });
+    }
+    // A Shield's stacks are its points, so a share of it reads like a stat's ("58% SHIELD", step 5i's Crushing bash).
+    else if (s.stacks && status(s.stacks).absorb) out.push({ text: `${Math.round(s.ratio * 100)}% ${status(s.stacks).name.toUpperCase()}` });
+    else if (s.stacks) out.push({ text: `+${short(s.ratio / DISPLAY_DIV)} PER ${status(s.stacks).name.toUpperCase()}` });
   }
   return out;
 }
@@ -287,7 +292,7 @@ export function statusText(d: StatusT): string[] {
   if (d.text) out.push(d.text);
   const mode = d.stacking === "refresh" ? "reapplying refreshes it" : d.stacking === "fizzle" ? "can't be reapplied while it lasts" : "stacks";
   const dur = d.duration ? `${d.duration} ticks` : "until the fight ends";
-  out.push(`${d.label === "buff" ? "Buff" : "Debuff"}, ${dur}; ${mode}.`);
+  out.push(`${d.label === "buff" ? "Buff" : d.label === "marker" ? "Marker" : "Debuff"}, ${dur}; ${mode}.`);
   for (const s of d.stats ?? []) {
     const flat = typeof s.flat === "number" ? s.flat : undefined;
     const pct = typeof s.pct === "number" ? s.pct : undefined;

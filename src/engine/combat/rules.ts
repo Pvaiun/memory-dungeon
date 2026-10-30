@@ -13,7 +13,7 @@
  *   their place in the fight. The same seed brings the same luck to the same
  *   unit, whatever else is in the fight.
  */
-import { SLOTS, SUBTICKS, type FixedStatT, type LootTableT } from "../../schema.js";
+import { SLOTS, SUBTICKS, formBase, type FixedStatT, type LootTableT } from "../../schema.js";
 import { next, rngFor, type Rng } from "../rng.js";
 import type { Content, Rules, Unit } from "../run.js";
 import { derive, makeUnit, resolveWeapon, step, world, type CFight, type CUnit } from "./fight.js";
@@ -22,6 +22,8 @@ import { derive, makeUnit, resolveWeapon, step, world, type CFight, type CUnit }
 export type Member = Unit & {
   mp: number;
   slot: number;
+  /** Step 5i (X13): the id of its position in the party's formation. */
+  seat?: string;
   base: Record<string, number>;
   flat: Record<string, number>;
   pct: Record<string, number>;
@@ -64,6 +66,12 @@ export const combat: Rules = {
       const slot = f.positions.findIndex((p) => p.id === pu.position);
       const m = { flat: {}, pct: {}, start: [] as string[] };
       grant(m, cls.passive);
+      // Step 5i (R4): a trained passive's form takes its base status's place; the passive's stat grants stay.
+      if (pu.passive) {
+        const k = m.start.indexOf(formBase(pu.passive));
+        if (k >= 0) m.start[k] = pu.passive;
+        else m.start.push(pu.passive);
+      }
       // Step 5j: a two-handed weapon empties the offhand, so an offhand under one gives nothing.
       const held = pu.gear.weapon ? c.gear.get(pu.gear.weapon)?.weapon : undefined;
       const twoHanded = !!held && resolveWeapon(c, held).hands === 2;
@@ -71,10 +79,12 @@ export const combat: Rules = {
       for (const g of gear) grant(m, g);
       grant(m, f.positions[slot]);
       grant(m, f);
+      // Step 5i (X40): each equipped ability (a trained form included) brings its statuses, applied at fight start and on a revive.
+      for (const a of pu.abilities) m.start.push(...(c.abilities.get(a)?.statuses ?? []));
       const base = { ...cls.stats };
       const stats = derive(c, { base, ...m });
       return {
-        id: `p${i + 1}`, ref: cls.id, name: cls.name, side: "party", stats, hp: stats.max_hp, mp: stats.max_mp, slot, base, ...m,
+        id: `p${i + 1}`, ref: cls.id, name: cls.name, side: "party", stats, hp: stats.max_hp, mp: stats.max_mp, slot, seat: pu.position, base, ...m,
         weapon: gear.find((g) => g.weapon)?.id ?? "unarmed", abilities: [...pu.abilities],
       };
     });

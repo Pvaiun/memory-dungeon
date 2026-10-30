@@ -51,12 +51,17 @@ type Node = {
   note?: string;
 };
 
+/**
+ * Step 5i (the build's retire share): the campaign is retired, and the old gear and formations with it. Every reward that
+ * named a retired piece or formation is gone (the plain rune sword stays), and so are the needs that could no longer be met:
+ * the Escort, Scatter and Caravan formations (the Ogre Brothers, the Wild Hunt, the Long Road) and Iron Wall's Plate (no
+ * armor exists to meet it). Texts stay as they were.
+ */
 const NODES: Node[] = [
   // ─── Act I: the Old Road ──────────────────────────────────────────────────
   {
     id: "old_road", name: "The Old Road", kind: "dungeon", run: "old_road",
     text: "Bandits, wolves and snakes on the road out of town, and an ogre chief at the bridge.",
-    formations: ["vanguard"], gear: ["plate", "robes", "brigandine"],
   },
   {
     id: "road_at_night", name: "The Road at Night", kind: "remix",
@@ -71,7 +76,7 @@ const NODES: Node[] = [
         enc("chiefs_return", "The Chief's Return", [1, "ogre_chief"], [1, "ogre"]),
       ],
     },
-    classes: ["pyromancer"], gear: ["brand_staff", "veil", "heartstone", "warbow"],
+    classes: ["pyromancer"],
   },
   {
     id: "wildfire", name: "Wildfire", kind: "trial",
@@ -86,14 +91,14 @@ const NODES: Node[] = [
         enc("packmaster", "The Packmaster", [1, "ogre_chief"], [5, "wolf"]),
       ],
     },
-    classes: ["hoplite"], gear: ["oathblade", "prayer_beads"],
+    classes: ["hoplite"],
   },
 
   // ─── Act II: the Crypt ────────────────────────────────────────────────────
   {
     id: "crypt", name: "The Crypt", kind: "dungeon", run: "crypt",
     text: "Armored bones, bats you can't hit, ghosts magic can't touch, and Death with a bell.",
-    classes: ["monk"], gear: ["sunstaff", "bastion_plate", "fang"],
+    classes: ["monk"],
   },
   {
     id: "ossuary", name: "The Ossuary", kind: "trial",
@@ -110,12 +115,11 @@ const NODES: Node[] = [
         enc("reapers_court", "The Reaper's Court", [1, "reaper"], [2, "skeleton"]),
       ],
     },
-    formations: ["escort"], gear: ["paired_cestus", "scout_leathers", "shadowsilk", "mana_jewel"],
   },
   {
     id: "ogre_brothers", name: "The Ogre Brothers", kind: "trial",
     text: "Two chiefs, two clubs. Two walls to stand in front of them.",
-    needs: [{ includes: ["knight", "hoplite"] }, { formation: "escort" }],
+    needs: [{ includes: ["knight", "hoplite"] }],
     run: {
       text: "Ogre country.",
       fights: [
@@ -125,14 +129,14 @@ const NODES: Node[] = [
         enc("ogre_brothers", "The Ogre Brothers", [2, "ogre_chief"]),
       ],
     },
-    classes: ["hexer"], gear: ["rime_staff", "hawks_eye", "vestments"],
+    classes: ["hexer"],
   },
 
   // ─── Act III: the Fire Mine ───────────────────────────────────────────────
   {
     id: "fire_mine", name: "The Fire Mine", kind: "dungeon", run: "fire_mine",
     text: "Everything here burns, and the lord of the furnace casts a fire that ends parties.",
-    classes: ["frostweaver"], gear: ["hoarfrost_staff", "ashen_plate"],
+    classes: ["frostweaver"],
   },
   {
     id: "deep_freeze", name: "Deep Freeze", kind: "trial",
@@ -147,12 +151,11 @@ const NODES: Node[] = [
         enc("giants_forge", "The Giant's Forge", [1, "fire_giant"], [2, "hellhound"]),
       ],
     },
-    classes: ["geomancer"], formations: ["blitz"], gear: ["granite_staff", "lucky_coin", "tower_mail", "glacier_staff"],
+    classes: ["geomancer"],
   },
   {
     id: "iron_wall", name: "Iron Wall", kind: "trial",
     text: "Only plate goes through the foundry.",
-    needs: [{ armor: "plate" }], // Step 5j: Plate (was heavy armor: the same five classes).
     run: {
       text: "The foundry under the mine.",
       fights: [
@@ -162,14 +165,13 @@ const NODES: Node[] = [
         enc("iron_gate", "The Iron Gate", [1, "ogre_chief"], [2, "bomb_bug"]),
       ],
     },
-    classes: ["valkyrie"], gear: ["skyspear", "chapel_staff", "rune_axe", "cornerstone_axe"],
+    classes: ["valkyrie"],
   },
 
   // ─── Act IV: the Ice Pass ─────────────────────────────────────────────────
   {
     id: "ice_pass", name: "The Ice Pass", kind: "dungeon", run: "ice_pass",
     text: "Every fight asks what kind of hit you make. The Titan hides behind a shield of ice and armor like a glacier.",
-    formations: ["scatter"], gear: ["pike", "sentinel_spear", "tiger_claws", "feather_charm", "longbow"],
   },
   {
     id: "valhalla", name: "Valhalla", kind: "trial",
@@ -184,12 +186,12 @@ const NODES: Node[] = [
         enc("glacier_king", "The Glacier King", [1, "ice_titan"], [2, "snow_wolf"]),
       ],
     },
-    classes: ["stormcaller"], formations: ["ambush"], gear: ["storm_rod", "plain_rune_sword", "quiet_cloak", "wraith_leathers"], // Step 5j: the plain rune sword (the Valkyrie's second kind) in the wind staff's place.
+    classes: ["stormcaller"], gear: ["plain_rune_sword"], // Step 5j: the plain rune sword (the Valkyrie's second kind) in the wind staff's place.
   },
   {
     id: "wild_hunt", name: "The Wild Hunt", kind: "trial",
     text: "Everything that runs in packs, running faster. Don't stand still for it.",
-    needs: [{ includes: ["stormcaller"] }, { formation: "scatter" }],
+    needs: [{ includes: ["stormcaller"] }],
     foes: { statuses: ["haste"], text: "Every foe starts each fight Hasted." },
     run: {
       text: "Old hunting grounds, at a gallop.",
@@ -200,14 +202,14 @@ const NODES: Node[] = [
         enc("huntmaster", "The Huntmaster", [1, "ogre_chief"], [4, "wolf"]),
       ],
     },
-    classes: ["bramble_knight"], gear: ["rootstaff", "thorn_mail", "thorn_charm"],
+    classes: ["bramble_knight"],
   },
 
   // ─── Act V: the Storm Tower ───────────────────────────────────────────────
   {
     id: "storm_tower", name: "The Storm Tower", kind: "dungeon", run: "storm_tower",
     text: "Clouds of sparks, leeches that drink mana, and a queen behind a wall of drones.",
-    classes: ["assassin"], formations: ["tortoise"], gear: ["bodkin", "stiletto", "trackers_jerkin", "thornheart_plate"],
+    classes: ["assassin"],
   },
   {
     id: "knives_out", name: "Knives Out", kind: "trial",
@@ -222,12 +224,10 @@ const NODES: Node[] = [
         enc("hive_queen", "The Hive Queen", [1, "storm_queen"], [4, "drone"]),
       ],
     },
-    formations: ["caravan"], gear: ["duellists_sword", "zephyr_staff", "tailwind_staff", "mana_leech", "glass_heart"],
   },
   {
     id: "long_road", name: "The Long Road", kind: "trial",
     text: "Seven fights and one campfire. Pace yourselves.",
-    needs: [{ formation: "caravan" }],
     run: {
       text: "Every road so far, end to end.",
       fights: [
@@ -240,14 +240,14 @@ const NODES: Node[] = [
         { ...E.reaper, name: "Reaper" },
       ],
     },
-    classes: ["bard"], gear: ["minstrels_bow", "twinned_charm", "warhorn", "twin_soul_charm"],
+    classes: ["bard"],
   },
 
   // ─── Act VI: the Deep Crypt ───────────────────────────────────────────────
   {
     id: "deep_crypt", name: "The Deep Crypt", kind: "dungeon", run: "deep_crypt",
     text: "Beneath the Crypt, something takes every voice. Power that isn't an ability is the key.",
-    classes: ["vampire"], formations: ["last_stand"], gear: ["bloodied_claws", "bloodstone", "duskhide", "nightstaff"], // Step 5j: the dark staff is gone; the great weapon arrives with the Geomancer.
+    classes: ["vampire"],
   },
   {
     id: "blood_moon", name: "Blood Moon", kind: "trial",
@@ -262,7 +262,7 @@ const NODES: Node[] = [
         enc("silent_court", "The Silent Court", [1, "silent_one"], [2, "bone_priest"]),
       ],
     },
-    classes: ["paladin"], formations: ["champion"], gear: ["crusader_sword", "wardens_blade", "vampires_tooth", "sanguine_staff"] /* Step 5j: the Sun and Moon charms are gone (they carried only resistances). */,
+    classes: ["paladin"],
   },
   {
     id: "judgement", name: "Judgement", kind: "trial",
@@ -277,14 +277,12 @@ const NODES: Node[] = [
         enc("giants_wrath", "The Giant's Wrath", [1, "fire_giant"], [2, "fire_imp"]),
       ],
     },
-    gear: ["dawn_staff", "scale_coat", "serrated_charm", "templar_staff", "needle"],
   },
 
   // ─── Act VII: the Tower Top ───────────────────────────────────────────────
   {
     id: "tower_top", name: "The Tower Top", kind: "dungeon", run: "tower_top",
     text: "The queen again, at the top of the tower, and the king who rages when his soldiers fall. Strike past them.",
-    gear: ["ember_staff", "grounding_rod", "leech_staff", "splitter", "mist_claws", "heartwood_staff", "archmages_robes", "thirsting_jewel"], // Step 5j: the axe is the great weapon, which arrives with the Geomancer.
   },
   {
     id: "royal_court", name: "The Royal Court", kind: "remix",

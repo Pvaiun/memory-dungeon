@@ -67,15 +67,23 @@ export function compile(s: StatusT): Compiled {
     slots.set(owner, nums.length);
     for (const n of ns) nums.push({ n: n ?? 0, stat: false });
   };
+  // Step 5i (X18): a live change keeps its slot for the part fixed at application (its base and its source's side) and
+  // reads the holder's side each time the holder's stats are worked out (fight.ts's derive), so it isn't a stat slot here.
   for (const ch of s.stats ?? []) {
     slots.set(ch, nums.length);
-    nums.push({ n: ch.flat ?? 0, stat: true }, { n: ch.pct ?? 0, stat: true });
+    nums.push({ n: ch.flat ?? 0, stat: !ch.live }, { n: ch.pct ?? 0, stat: !ch.live });
   }
   for (const b of s.boosts ?? []) add(b, b.pct);
   for (const t of s.taken ?? []) add(t, t.pct);
   for (const r of s.riders ?? []) add(r, r.add.amount);
   const effects = [...(s.pulse?.do ?? []), ...(s.trigger?.do ?? []), ...(s.reactions ?? []).flatMap((r) => r.do)];
-  for (const e of effects) add(e, numOf(e));
+  for (const e of effects) {
+    add(e, numOf(e));
+    // Step 5i (share H, X38): each status a `one` can pick carries its own stacks.
+    if (e.op === "one") for (const x of e.of) add(x, x.stacks ?? 1);
+  }
+  // Step 5i (share H, X35): a reviver's rule's HP.
+  if (s.revives?.hp !== undefined) add(s.revives, s.revives.hp);
   let cap = -1;
   if (s.cap !== undefined) {
     cap = nums.length;
@@ -84,12 +92,15 @@ export function compile(s: StatusT): Compiled {
   }
   const kinds: Compiled["kinds"] = [];
   for (const ch of s.stats ?? []) kinds.push(["stat", ch.stat]);
+  // Step 5i (KINDS): a stat set to a value is a stat change; an HP floor or a cover is a block; an aim, ability changes,
+  // crits by condition, echo or a rule for revives change the holder's actions.
+  for (const x of s.set ?? []) kinds.push(["stat", x.stat]);
   for (const b of s.boosts ?? []) kinds.push(["boost", b.tag]);
   for (const t of s.taken ?? []) kinds.push(["taken", t.tag ?? null]);
   if (s.absorb) kinds.push(["absorb", null]);
-  if (s.block) kinds.push(["block", null]);
+  if (s.block || s.floor || s.cover) kinds.push(["block", null]);
   if (s.lockout) kinds.push(["lockout", s.lockout.covers]);
-  if (s.riders?.length || s.seek || s.strike) kinds.push(["action_change", null]);
+  if (s.riders?.length || s.seek || s.strike || s.aim || s.mods || s.crits || s.echo || s.revives) kinds.push(["action_change", null]);
   if (s.pulse) kinds.push(["pulse", null]);
   if (s.reactions?.length || s.trigger) kinds.push(["reaction", null]);
   const harms = (s.pulse?.do ?? []).some((e) => e.op === "damage" && (e.to ?? "holder") === "holder");
@@ -109,6 +120,7 @@ function numOf(e: { op: string } & Record<string, unknown>): NumT {
     case "apply":
       return (e.stacks as NumT | undefined) ?? 1;
     case "revive":
+    case "pay":
       return e.hp as NumT;
     default:
       return 0;
@@ -128,6 +140,8 @@ export function role(s: ScaleT, inStatus: boolean): "self" | "target" | "holder"
   if (s.amount) return "amount";
   if (s.of) return s.of;
   if (s.stat) return inStatus ? "source" : "self";
+  // Step 5i (X8): a count of a side's units, an action's targets or the units it hit reads from the acting unit's side.
+  if (s.count !== undefined && s.count !== "buffs" && s.count !== "debuffs") return inStatus ? "holder" : "self";
   return inStatus ? "holder" : "target";
 }
 

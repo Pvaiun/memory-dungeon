@@ -14,7 +14,7 @@
 import type { Content } from "./engine/run.js";
 import { rngFor, shuffle } from "./engine/rng.js";
 import { canEquip } from "./validate.js";
-import { equip, itemGear, member, newItem, newRogue, recruit, registerGear, rogue, rollItem, rollKnown, seat, setFormation, upgraded, type RogueRun, type Slot } from "./rogue.js";
+import { equip, itemGear, member, newItem, newRogue, recruit, registerGear, rogue, rollItem, rollKnown, seat, setFormation, SLOT_LIST, stockOf, upgradeOf, type RogueRun, type Slot } from "./rogue.js";
 import { kitUp } from "./rogue-ai.js";
 import type { RarityT } from "./schema.js";
 
@@ -51,22 +51,21 @@ export const ORDER: Record<string, string[]> = {
 };
 
 /** Twelve rosters, every class fighting in at least one and most in two or three, each built around something. */
-// Step 5j: the re-sort left six hand-picked legendaries on classes that can't wear them; each was swapped for one the class can
-// (the Hexer's staves for Frostfang, the Valkyrie's Templar staff for the Brand of kings, the Frostweaver's Glacier staff for
-// Earthshaker, the Geomancer's Earthshaker for the Cornerstone axe, the Bard's Frostfang for the Glacier staff, a wand now).
+// Step 5i (the build's retire share): the old loot is gone, so every roster stands in Neutral with no legendaries for now (each
+// had a formation and three hand-picked legendaries); the build's parties share rebuilds them on the new pieces.
 export const ROSTERS: Roster[] = [
-  { id: "wall-fire", note: "A wall, a Burn caster and a healer; a Ranger and a Monk to rotate in.", classes: ["knight", "pyromancer", "cleric", "ranger", "monk"], formation: "vanguard", legendaries: [{ piece: "ember_sigil", for: "pyromancer" }, { piece: "herald_horn", for: "cleric" }, { piece: "cornerstone_axe", for: "knight" }] },
-  { id: "chill-engine", note: "The director's build: Chill on the Monk's basic attacks, paid off by the Frostweaver's shatter.", classes: ["monk", "frostweaver", "bard", "hexer", "valkyrie"], formation: "scatter", legendaries: [{ piece: "rime_sigil", for: "monk" }, { piece: "glacier_staff", for: "bard" }, { piece: "frost_shard", for: "frostweaver" }] },
-  { id: "thorns", note: "A thorns wall draws everything; the Assassin and Vampire cash in the Bleed.", classes: ["bramble_knight", "assassin", "vampire", "cleric", "hoplite"], formation: "vanguard", legendaries: [{ piece: "thornheart_plate", for: "bramble_knight" }, { piece: "wound_sigil", for: "assassin" }, { piece: "vampires_tooth", for: "vampire" }] },
-  { id: "storm", note: "Shock on everything behind two spears.", classes: ["hoplite", "valkyrie", "stormcaller", "bard", "paladin"], formation: "escort", legendaries: [{ piece: "cinder_rod", for: "stormcaller" }, { piece: "brand_of_kings", for: "valkyrie" }, { piece: "static_coil", for: "hoplite" }] },
-  { id: "bleed", note: "Bleed from three sources: the Ranger's arrows, the thorns, the Assassin's crits.", classes: ["bramble_knight", "assassin", "ranger", "monk", "cleric"], formation: "ambush", legendaries: [{ piece: "hunters_bow", for: "ranger" }, { piece: "needle", for: "assassin" }, { piece: "briar_coat", for: "ranger" }] },
-  { id: "holy", note: "A shelter against magic, a healer and a Geomancer behind its stone.", classes: ["paladin", "geomancer", "cleric", "knight", "valkyrie"], formation: "vanguard", legendaries: [{ piece: "crown_of_judgement", for: "paladin" }, { piece: "stone_idol", for: "geomancer" }, { piece: "soul_jar", for: "cleric" }] },
-  { id: "curse", note: "The Hexer burns and shocks every foe for the Pyromancer; a Knight holds the line.", classes: ["knight", "hexer", "pyromancer", "stormcaller", "bard"], formation: "vanguard", legendaries: [{ piece: "frostfang", for: "hexer" }, { piece: "shatter_sigil", for: "knight" }, { piece: "silver_bell", for: "pyromancer" }] },
-  { id: "blood", note: "Sustain by hitting: the Vampire and Monk drain, the Valkyrie brings back whoever falls.", classes: ["vampire", "monk", "valkyrie", "bard", "assassin"], formation: "last_stand", legendaries: [{ piece: "twin_soul_charm", for: "vampire" }, { piece: "mist_claws", for: "monk" }, { piece: "war_banner", for: "valkyrie" }] },
-  { id: "earth-wall", note: "Armor everywhere: a Hoplite, a Geomancer whose rocks scale from Armor, a Ranger behind.", classes: ["hoplite", "geomancer", "ranger", "knight", "pyromancer"], formation: "vanguard", legendaries: [{ piece: "cornerstone_axe", for: "geomancer" }, { piece: "spiked_bulwark", for: "hoplite" }, { piece: "glass_heart", for: "ranger" }] },
-  { id: "tempo", note: "Haste and Might from the Bard on a Stormcaller, all in.", classes: ["knight", "bard", "stormcaller", "frostweaver", "cleric"], formation: "blitz", legendaries: [{ piece: "siren_shell", for: "bard" }, { piece: "hourglass", for: "stormcaller" }, { piece: "grave_lantern", for: "knight" }] },
-  { id: "revive", note: "Two who bring back the fallen and an Assassin to carry.", classes: ["valkyrie", "cleric", "assassin", "paladin", "monk"], formation: "escort", legendaries: [{ piece: "brand_of_kings", for: "valkyrie" }, { piece: "shadow_cowl", for: "assassin" }, { piece: "soul_jar", for: "cleric" }] },
-  { id: "frost-wall", note: "Two Chill sources behind a thorns wall.", classes: ["bramble_knight", "hexer", "frostweaver", "geomancer", "hoplite"], formation: "vanguard", legendaries: [{ piece: "earthshaker", for: "frostweaver" }, { piece: "frozen_heart", for: "bramble_knight" }, { piece: "frostfang", for: "hexer" }] },
+  { id: "wall-fire", note: "A wall, a Burn caster and a healer; a Ranger and a Monk to rotate in.", classes: ["knight", "pyromancer", "cleric", "ranger", "monk"], formation: "neutral", legendaries: [] },
+  { id: "chill-engine", note: "The director's build: Chill on the Monk's basic attacks, paid off by the Frostweaver's shatter.", classes: ["monk", "frostweaver", "bard", "hexer", "valkyrie"], formation: "neutral", legendaries: [] },
+  { id: "thorns", note: "A thorns wall draws everything; the Assassin and Vampire cash in the Bleed.", classes: ["bramble_knight", "assassin", "vampire", "cleric", "hoplite"], formation: "neutral", legendaries: [] },
+  { id: "storm", note: "Shock on everything behind two spears.", classes: ["hoplite", "valkyrie", "stormcaller", "bard", "paladin"], formation: "neutral", legendaries: [] },
+  { id: "bleed", note: "Bleed from three sources: the Ranger's arrows, the thorns, the Assassin's crits.", classes: ["bramble_knight", "assassin", "ranger", "monk", "cleric"], formation: "neutral", legendaries: [] },
+  { id: "holy", note: "A shelter against magic, a healer and a Geomancer behind its stone.", classes: ["paladin", "geomancer", "cleric", "knight", "valkyrie"], formation: "neutral", legendaries: [] },
+  { id: "curse", note: "The Hexer burns and shocks every foe for the Pyromancer; a Knight holds the line.", classes: ["knight", "hexer", "pyromancer", "stormcaller", "bard"], formation: "neutral", legendaries: [] },
+  { id: "blood", note: "Sustain by hitting: the Vampire and Monk drain, the Valkyrie brings back whoever falls.", classes: ["vampire", "monk", "valkyrie", "bard", "assassin"], formation: "neutral", legendaries: [] },
+  { id: "earth-wall", note: "Armor everywhere: a Hoplite, a Geomancer whose rocks scale from Armor, a Ranger behind.", classes: ["hoplite", "geomancer", "ranger", "knight", "pyromancer"], formation: "neutral", legendaries: [] },
+  { id: "tempo", note: "Haste and Might from the Bard on a Stormcaller, all in.", classes: ["knight", "bard", "stormcaller", "frostweaver", "cleric"], formation: "neutral", legendaries: [] },
+  { id: "revive", note: "Two who bring back the fallen and an Assassin to carry.", classes: ["valkyrie", "cleric", "assassin", "paladin", "monk"], formation: "neutral", legendaries: [] },
+  { id: "frost-wall", note: "Two Chill sources behind a thorns wall.", classes: ["bramble_knight", "hexer", "frostweaver", "geomancer", "hoplite"], formation: "neutral", legendaries: [] },
 ];
 
 /**
@@ -134,11 +133,8 @@ export function buildRoster(c: Content, r: Roster, act: number, tier: Tier | "ea
     const known = lv.random ? rollKnown(c, rngFor(rep * 101 + i, `start:${r.id}:${cls}:${tier}`), cls, Math.floor(lv.known)) : ORDER[cls].slice(0, Math.floor(lv.known) + (i < Math.round((lv.known % 1) * r.classes.length) ? 1 : 0));
     recruit(c, run, cls, 100, known);
     const m = member(run, cls);
-    for (const a of known.slice(0, lv.plus)) {
-      const up = upgraded(c, a).id;
-      m.known = m.known.map((x) => (x === a ? up : x));
-      m.order = m.order.map((x) => (x === a ? up : x));
-    }
+    // Step 5i: an ability "upgraded" is one with its power step (the generic + rule is gone), where the content has its upgrade.
+    for (const a of known.slice(0, lv.plus)) if (upgradeOf(c, a)) m.trained = { ...(m.trained ?? {}), [a]: { power: true } };
     // Cooldowns as a run carries them between fights (step 5g), measured over the rosters' third to sixth fights in a row: 0.38
     // of a cooldown left on average whatever its length, and a revive ready 88% of the time, since it waits for a knockout most
     // fights never bring. (Every ability uncharged, as before, kept Raise and Valhalla from being ready when anyone fell, and
@@ -153,10 +149,9 @@ export function buildRoster(c: Content, r: Roster, act: number, tier: Tier | "ea
   seat(c, run, r.classes.slice(0, 3));
   // Ordinary gear: six pieces of the level's rarity each member can wear, the best of them worn.
   const rng = rngFor(1000 + act * 10 + ["easy", "normal", "elite", "boss", "early"].indexOf(tier), `parties:${r.id}`);
-  if (lv.gear) for (const cls of r.classes) for (let i = 0; i < 6; i++) run.items.push(rollItem(c, run, rng, lv.gear, false, false, cls));
-  // A legendary piece carries two affixes, as one found in a run does.
-  const affixes = rogue(c).affixes.map((a) => a.id);
-  const legend = [...r.legendaries, ...extraLegendaries(c, r, lv.legendaries - r.legendaries.length)].slice(0, lv.legendaries).map((l, i) => ({ ...l, item: newItem(run, l.piece, "legendary", [affixes[(i * 7 + act * 3) % affixes.length], affixes[(i * 7 + act * 3 + 5) % affixes.length]]) }));
+  if (lv.gear) for (const cls of r.classes) for (let i = 0; i < 6; i++) { const it = rollItem(c, run, rng, lv.gear, false, false, cls); if (it) run.items.push(it); }
+  // Step 5i: a legendary piece is fixed (no affixes).
+  const legend = [...r.legendaries, ...extraLegendaries(c, r, lv.legendaries - r.legendaries.length)].slice(0, lv.legendaries).map((l) => ({ ...l, item: newItem(run, l.piece, "legendary") }));
   for (const l of legend) run.items.push(l.item);
   registerGear(c, run);
   kitUp(c, run);
@@ -167,7 +162,7 @@ export function buildRoster(c: Content, r: Roster, act: number, tier: Tier | "ea
   // Round 6: at most `pieces` ordinary pieces a member (an amulet goes first, then armor; the weapon stays).
   if (lv.pieces !== undefined) for (const m of run.roster) {
     const ordinary = (s: Slot) => { const uid = m.gear[s]; const it = uid ? run.items.find((x) => x.uid === uid) : undefined; return !!it && it.rarity !== "legendary" && !it.base.startsWith("plain_"); };
-    for (const s of ["amulet", "armor"] as Slot[]) if ((["weapon", "armor", "amulet"] as Slot[]).filter(ordinary).length > lv.pieces && ordinary(s)) delete m.gear[s];
+    for (const s of ["amulet", "offhand", "armor"] as Slot[]) if (SLOT_LIST.filter(ordinary).length > lv.pieces && ordinary(s)) delete m.gear[s];
   }
   // Only what's worn stays: the rest of the offers weren't taken.
   const worn = new Set(run.roster.flatMap((m) => Object.values(m.gear)));
@@ -183,21 +178,21 @@ export function buildRoster(c: Content, r: Roster, act: number, tier: Tier | "ea
 }
 /**
  * Round 6: legendaries past a roster's hand-picked three, by a stated rule: the fighting three in turn (then the bench), each a
- * piece aimed at it (`aims`) that it can wear, in a slot no legendary of its own fills yet, not already held; first in the pool's
- * order, shuffled by the roster's own dice.
+ * piece it can wear (step 5i: the aims are gone), in a slot no legendary of its own fills yet, not already held; first in the
+ * stock's order, shuffled by the roster's own dice.
  */
 function extraLegendaries(c: Content, r: Roster, n: number): { piece: string; for: string }[] {
   const out: { piece: string; for: string }[] = [];
   if (n <= 0) return out;
-  const pool = shuffle(rngFor(7, `extra:${r.id}`), [...rogue(c).legendaries]);
+  const pool = shuffle(rngFor(7, `extra:${r.id}`), stockOf(c).all.filter((g) => g.rarity === "legendary").map((g) => g.id));
   const held = [...r.legendaries];
-  const slotOf = (id: string) => c.gear.get(id)?.slot ?? rogue(c).gear.find((g) => g.id === id)?.slot;
+  const slotOf = (id: string) => c.gear.get(id)?.slot;
   const order = [0, 1, 2, 0, 1, 2, 3, 4, 0, 1, 2].map((i) => r.classes[i]);
   for (const cls of order) {
     if (out.length >= n) break;
     const k = c.classes.get(cls)!;
     const taken = new Set(held.filter((l) => l.for === cls).map((l) => slotOf(l.piece)));
-    const piece = pool.find((id) => rogue(c).aims?.[id]?.includes(cls) && !held.some((l) => l.piece === id) && !taken.has(slotOf(id)) && canEquip(k, c.gear.get(id) ?? rogue(c).gear.find((g) => g.id === id)!));
+    const piece = pool.find((id) => !held.some((l) => l.piece === id) && !taken.has(slotOf(id)) && canEquip(k, c.gear.get(id)!));
     if (!piece) continue;
     held.push({ piece, for: cls });
     out.push({ piece, for: cls });
@@ -250,7 +245,7 @@ function sheet(c: Content): string {
   }
   out.push("", "## The rosters", "");
   for (const r of ROSTERS) {
-    out.push(`### ${r.id}: ${r.note}`, "", `Fighting: ${r.classes.slice(0, 3).map(name).join(", ")} (${c.formations.get(r.formation)!.name}); bench: ${r.classes.slice(3).map(name).join(", ")}. Legendaries, in the order found: ${r.legendaries.map((l) => `${c.gear.get(l.piece)?.name ?? (rogue(c).gear.find((g) => g.id === l.piece)?.name ?? l.piece)} (${name(l.for)})`).join(", ")}.`, "");
+    out.push(`### ${r.id}: ${r.note}`, "", `Fighting: ${r.classes.slice(0, 3).map(name).join(", ")} (${c.formations.get(r.formation)!.name}); bench: ${r.classes.slice(3).map(name).join(", ")}. Legendaries, in the order found: ${r.legendaries.map((l) => `${c.gear.get(l.piece)?.name ?? l.piece} (${name(l.for)})`).join(", ")}.`, "");
     const run = buildRoster(c, r, 2, "boss");
     out.push("At act II's boss:", "");
     for (const m of run.roster) {

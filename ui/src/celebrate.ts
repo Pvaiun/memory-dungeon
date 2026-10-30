@@ -12,7 +12,7 @@ import { canEquip } from "../../src/validate.js";
 import { c, shortName } from "./content.js";
 import { button, h, nav, win, type Child } from "./dom.js";
 import { actorEl, faceEl } from "./pixel.js";
-import { codeSpans, gearRow, role } from "./sheet.js";
+import { formationNote, gearRow, RARITY_TONE, role, seatCodes, seatNotes } from "./sheet.js";
 import { gearFor, setup } from "./state.js";
 import { nodes } from "./journey.js";
 import { sfx } from "./battle/audio.js";
@@ -58,12 +58,10 @@ function cards(i: number): Card[] {
     out.push({
       top: "NEW FORMATION!",
       body: [
-        h("div", { class: "cele-name" }, f.name),
-        h("div", { class: "text dim small wrap center" }, f.text, f.statuses?.length ? ` ${f.statuses.map((s) => c.statuses.get(s)?.text ?? "").join(" ")}` : ""),
-        h("div", { class: "cele-slots" }, ...f.positions.map((pos, j) => {
-          const codes = codeSpans(pos.stats);
-          return h("div", { class: "slotline" }, h("span", { class: "dim" }, `${j + 1} ${pos.name}`), h("span", { class: "codes" }, ...(codes.length ? codes : [h("span", { class: "dim" }, "no change")])));
-        })),
+        // Step 5i: in its rarity's colour, with what its seats' own statuses do.
+        h("div", { class: `cele-name ${RARITY_TONE[f.rarity ?? "common"]}` }, f.name),
+        h("div", { class: "text dim small wrap center" }, f.text, formationNote(f), seatNotes(f) ? ` ${seatNotes(f)}` : ""),
+        h("div", { class: "cele-slots" }, ...f.positions.map((pos, j) => h("div", { class: "slotline" }, h("span", { class: "dim" }, `${j + 1} ${pos.name}`), h("span", { class: "codes" }, ...seatCodes(pos))))),
       ],
     });
   }

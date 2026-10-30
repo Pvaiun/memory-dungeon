@@ -16,7 +16,7 @@
  * crowded fights can shrink them further with the same filter and an outline.
  */
 import { c } from "./content.js";
-import { image, manifest, POSE, STATUS_STYLE, weaponArt, type Pose } from "./art.js";
+import { image, manifest, POSE, statusStyle, weaponArt, type Pose } from "./art.js";
 
 export const FRAME_W = 270;
 export const OUTLINE = "#14141e";
@@ -345,7 +345,7 @@ export function statusIconOf(id: string): HTMLCanvasElement {
   if (img) g.drawImage(img, 1, 1, STATUS_ICON, STATUS_ICON, 0, 0, STATUS_ICON, STATUS_ICON);
   else {
     // No icon in the pack: a coloured tile with the status's first letter.
-    g.fillStyle = (STATUS_STYLE[id] ?? STATUS_STYLE.generic).color;
+    g.fillStyle = statusStyle(id).color;
     g.fillRect(0, 0, STATUS_ICON, STATUS_ICON);
     drawText(g, (c.statuses.get(id)?.name ?? id).slice(0, 1).toUpperCase(), 3, 3, OUTLINE);
   }
