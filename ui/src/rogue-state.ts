@@ -6,6 +6,7 @@
  */
 import { combat, type Member as EngineMember } from "../../src/engine/combat/rules.js";
 import { ROGUE_VERSION, finish, freshMeta, member, migrate, newRogue, partyOf, registerGear, type RogueMeta, type RogueRun } from "../../src/rogue.js";
+import { beginRecord, recordAbandon } from "../../src/rogue-record.js";
 import { canEquip } from "../../src/validate.js";
 import { manifest } from "./art.js";
 import { c } from "./content.js";
@@ -52,13 +53,25 @@ export function saveRogue() {
   try {
     localStorage.setItem(KEY, JSON.stringify(s));
   } catch {
-    /* private mode: nothing to do */
+    // Storage full: the run matters more than its record, so the record goes and the run is saved without it.
+    const run = s.run as (RogueRun & { record?: unknown }) | null;
+    if (!run?.record) return;
+    delete run.record;
+    try {
+      localStorage.setItem(KEY, JSON.stringify(s));
+    } catch {
+      /* private mode: nothing to do */
+    }
   }
 }
 
 /** The run in progress, with its gear and upgraded abilities known to the content and its weapons to the art. */
 export function current(): RogueRun | null {
-  if (s.run) prepare(s.run);
+  if (s.run) {
+    prepare(s.run);
+    // Every run keeps a record for balancing (a run begun before records started from where it stands).
+    beginRecord(s.run);
+  }
   return s.run;
 }
 export const meta = (): RogueMeta => s.meta;
@@ -89,6 +102,7 @@ export function startRun(leader: string, heat: number): RogueRun {
   const seed = nextSeed();
   delete s.meta.next;
   s.run = newRogue(c, { seed, leader, heat });
+  beginRecord(s.run);
   s.last = null;
   prepare(s.run);
   saveRogue();
@@ -108,6 +122,7 @@ export function endRun(): { won: boolean; unlocked: string[]; heat: boolean } {
 /** Gives up the run in progress (it counts as a run, and lost). */
 export function abandonRun() {
   if (!s.run) return;
+  recordAbandon(s.run);
   s.run.pending = { kind: "over", won: false };
   endRun();
 }

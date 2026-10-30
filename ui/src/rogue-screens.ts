@@ -5,9 +5,11 @@
  * Every choice goes to src/rogue.ts, is saved, and the screen redraws from the run.
  */
 import {
-  actRoll, bench, bossFoes, canManage, choose, discard, dismiss, eventView as eventOfRun, equip, formationRarity, itemGear, itemOf, leaderKnown, learnOptions, member, options, reachable,
-  bagRoom, rogue, seat, seatsOf, sellPrice, setFormation, setOrder, swap, trainOptions, trainPrice, improveOptions, parseTraining, passiveOf, formOf, trainingId, upgradeOf, useSupply, wearer, type Item, type MapNode, type Member, type Offer, type RogueRun, type Trained, type Training,
+  actRoll, bench, bossFoes, canManage, eventView as eventOfRun, formationRarity, itemGear, itemOf, leaderKnown, learnOptions, member, options, reachable,
+  bagRoom, rogue, seatsOf, sellPrice, trainOptions, trainPrice, improveOptions, parseTraining, passiveOf, formOf, trainingId, upgradeOf, wearer, type Item, type MapNode, type Member, type Offer, type RogueRun, type Trained, type Training,
 } from "../../src/rogue.js";
+import { choose, discard, dismiss, equip, exportRecord, seat, setFormation, setOrder, swap, useSupply } from "../../src/rogue-record.js";
+import { BUILD } from "./update.js";
 import { canEquip } from "../../src/validate.js";
 import { plainWeapon } from "../../src/sim/parties.js";
 import type { AbilityT, RogueNodeKindT } from "../../src/schema.js";
@@ -781,8 +783,19 @@ function overView(run: RogueRun): Child[] {
       h("div", { class: "line small dim wrap" }, `${run.stats.fights} FIGHTS · ${run.stats.elites} ELITES · ${run.stats.gold}G EARNED`),
       won ? h("div", { class: "line small hi wrap" }, `${run.party.map(shortName).join(", ")} CAN NOW LEAD A RUN`) : null),
     win("scroll", section("THE ROAD"), ...run.notes.map((n) => h("div", { class: "text small wrap" }, h("span", { class: "dim" }, `${ROMAN[n.act]}.${n.floor} `), n.text))),
-    actions(button("DONE", () => { const r = endRun(); go("rogue"); if (r.won) cheer(r.unlocked, r.heat); }, "hi")),
+    actions(button("DONE", () => { const r = endRun(); go("rogue"); if (r.won) cheer(r.unlocked, r.heat); }, "hi"), button("SAVE RUN", () => saveRunFile(run))),
   ];
+}
+/** The run's record (every choice, what was offered, the party before every fight) downloaded as a file, for balancing. */
+function saveRunFile(run: RogueRun) {
+  const blob = new Blob([exportRecord(run, BUILD)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = h("a", { href: url, download: `rogue-run-${new Date().toISOString().slice(0, 16).replace(/[:T]/g, "-")}-${run.pending.kind === "over" && run.pending.won ? "won" : "lost"}.json` }) as HTMLAnchorElement;
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 10_000);
+  if (frameEl) toast(frameEl, "RUN SAVED");
 }
 
 // ─── Managing the party ────────────────────────────────────────────────────
