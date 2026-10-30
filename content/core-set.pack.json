@@ -4539,6 +4539,2736 @@
    ]
   },
   {
+   "id": "gatekeepers_kite",
+   "name": "Gatekeeper's kite",
+   "text": "While its holder Taunts, it takes a tenth less damage.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "taken": [
+    {
+     "pct": {
+      "scale": [
+       {
+        "ratio": -10,
+        "when": {
+         "has": "taunt"
+        },
+        "of": "holder"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "sheltering_kite",
+   "name": "Sheltering kite",
+   "text": "At the start of every fight, the ally with the lowest share of its HP is Guarded.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "guard",
+       "to": {
+        "side": "allies",
+        "pick": "lowest",
+        "by": "hp_share"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "rubble_shield",
+   "name": "Rubble shield",
+   "text": "When its holder's Shield breaks, the foe whose blow broke it is Stunned.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "shield",
+      "cause": [
+       "stacks"
+      ],
+      "other": "foe"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "stun",
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "humbling_shield",
+   "name": "Humbling shield",
+   "text": "The first time each foe hits its holder, that foe is Weakened.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_taken"
+     },
+     "if": {
+      "unit": "other",
+      "where": {
+       "lacks": "humbling_shield_humbled"
+      }
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "weaken",
+       "to": "other"
+      },
+      {
+       "op": "apply",
+       "status": "humbling_shield_humbled",
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "humbling_shield_humbled",
+   "name": "Humbled",
+   "text": "Already Weakened by a Humbling shield this fight.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh"
+  },
+  {
+   "id": "spiked_bulwark",
+   "name": "Spiked bulwark",
+   "text": "Thorns from its holder's Armor: each foe that hits it takes a twentieth of its Armor back.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "stats": [
+    {
+     "stat": "thorns",
+     "flat": {
+      "scale": [
+       {
+        "ratio": 0.05,
+        "stat": "armor",
+        "of": "holder"
+       }
+      ]
+     },
+     "live": true
+    }
+   ]
+  },
+  {
+   "id": "oathbound_shield",
+   "name": "Oathbound shield",
+   "text": "When a hit would deal an ally more than a quarter of its max HP, its holder takes the hit instead.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "cover": {
+    "share": 25
+   }
+  },
+  {
+   "id": "comrades_targe",
+   "name": "Comrade's targe",
+   "text": "At the start of every fight, the other ally with the highest Aggro is Guarded.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "guard",
+       "to": {
+        "side": "others",
+        "pick": "highest",
+        "by": {
+         "stat": "aggro"
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "linebreaker",
+   "name": "Linebreaker",
+   "text": "Its holder's hits on a Taunting foe deal a fifth more.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 20,
+        "when": {
+         "has": "taunt"
+        },
+        "of": "target"
+       }
+      ]
+     }
+    },
+    {
+     "tag": "magical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 20,
+        "when": {
+         "has": "taunt"
+        },
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "paired_shields",
+   "name": "Paired shields",
+   "text": "Whenever its holder is Guarded, so is the other ally lowest in HP share that isn't Guarded yet.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "status_gained",
+      "status": "guard"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "guard",
+       "to": {
+        "side": "others",
+        "where": {
+         "lacks": "guard"
+        },
+        "pick": "lowest",
+        "by": "hp_share"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "hunters_buckler",
+   "name": "Hunter's buckler",
+   "text": "When its holder's hit fells a foe, it gains Haste and a Shield.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "ko",
+      "whose": "foe",
+      "other": "holder",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "haste",
+       "to": "holder"
+      },
+      {
+       "op": "apply",
+       "status": "shield",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.15,
+          "stat": "max_hp",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "ko",
+      "whose": "foe",
+      "other": "holder",
+      "kind": "ability"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "haste",
+       "to": "holder"
+      },
+      {
+       "op": "apply",
+       "status": "shield",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.15,
+          "stat": "max_hp",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "ko",
+      "whose": "foe",
+      "other": "holder",
+      "kind": "extra"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "haste",
+       "to": "holder"
+      },
+      {
+       "op": "apply",
+       "status": "shield",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.15,
+          "stat": "max_hp",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "phalanx_shield",
+   "name": "Phalanx shield",
+   "text": "While its holder stands, allies with less Armor than it take a fifth less damage. Its holder deals a fifth less.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": -20
+    },
+    {
+     "tag": "magical",
+     "pct": -20
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "phalanx_shield_aura",
+       "to": {
+        "side": "others",
+        "where": {
+         "lower": {
+          "stat": "armor"
+         }
+        },
+        "pick": "all"
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "phalanx_shield_aura",
+       "to": {
+        "side": "others",
+        "where": {
+         "lower": {
+          "stat": "armor"
+         }
+        },
+        "pick": "all"
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived",
+      "whose": "ally"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "phalanx_shield_aura",
+       "to": {
+        "side": "others",
+        "where": {
+         "lower": {
+          "stat": "armor"
+         }
+        },
+        "pick": "all"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "phalanx_shield_aura",
+   "name": "Phalanx",
+   "text": "Takes a fifth less damage while the Phalanx shield's holder stands.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "perSource": {
+    "endsWithSource": true
+   },
+   "taken": [
+    {
+     "pct": -20
+    }
+   ]
+  },
+  {
+   "id": "shield_of_the_chosen",
+   "name": "Shield of the chosen",
+   "text": "Once a fight, when another ally falls, its holder raises it at once with a tenth of its HP.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "ko",
+      "whose": "ally"
+     },
+     "if": {
+      "side": "self",
+      "where": {
+       "lacks": "shield_of_the_chosen_spent"
+      }
+     },
+     "do": [
+      {
+       "op": "revive",
+       "hp": {
+        "scale": [
+         {
+          "ratio": 0.1,
+          "stat": "max_hp",
+          "of": "target"
+         }
+        ]
+       },
+       "to": {
+        "side": "others",
+        "where": {
+         "ko": true
+        },
+        "pick": "random"
+       }
+      },
+      {
+       "op": "apply",
+       "status": "shield_of_the_chosen_spent",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "shield_of_the_chosen_spent",
+   "name": "Shield of the chosen (spent)",
+   "text": "Its raise is spent this fight.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh"
+  },
+  {
+   "id": "reveille",
+   "name": "Reveille",
+   "text": "At the start of every fight, the ally with the least MP gains Clarity.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "clarity",
+       "to": {
+        "side": "allies",
+        "pick": "lowest",
+        "by": "mp_share"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "bulls_horn",
+   "name": "Bull's horn",
+   "text": "The first time in a fight that a foe falls, every ally is Hasted.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "ko",
+      "whose": "foe"
+     },
+     "if": {
+      "side": "self",
+      "where": {
+       "lacks": "bulls_horn_rung"
+      }
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "haste",
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
+      },
+      {
+       "op": "apply",
+       "status": "bulls_horn_rung",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "bulls_horn_rung",
+   "name": "Bull's horn (rung)",
+   "text": "It has rung this fight.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh"
+  },
+  {
+   "id": "war_horn",
+   "name": "War horn",
+   "text": "At the start of every fight, the ally with the slowest basic attack gains many Might.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "might",
+       "stacks": 7,
+       "to": {
+        "side": "allies",
+        "pick": "highest",
+        "by": "swing"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "echo_horn",
+   "name": "Echo horn",
+   "text": "Each time an ally finishes casting an ability, the ally with the least MP gains a little MP.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "action_resolve",
+      "kind": "ability"
+     },
+     "do": [
+      {
+       "op": "mp",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.05,
+          "stat": "max_mp",
+          "of": "target"
+         }
+        ]
+       },
+       "to": {
+        "side": "allies",
+        "pick": "lowest",
+        "by": "mp_share"
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "action_resolve",
+      "whose": "ally",
+      "kind": "ability"
+     },
+     "do": [
+      {
+       "op": "mp",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.05,
+          "stat": "max_mp",
+          "of": "target"
+         }
+        ]
+       },
+       "to": {
+        "side": "allies",
+        "pick": "lowest",
+        "by": "mp_share"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "horn_of_the_charge",
+   "name": "Horn of the charge",
+   "text": "At the start of every fight, every ally is Hasted and its first action comes at once. Its holder starts every fight with every ability on cooldown.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "haste",
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
+      },
+      {
+       "op": "cooldown",
+       "which": "basic",
+       "set": "ready",
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
+      },
+      {
+       "op": "cooldown",
+       "which": "abilities",
+       "set": "full",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "rallying_horn",
+   "name": "Rallying horn",
+   "text": "When an ally falls (its holder too), every ally still standing gains Haste and a Shield. When an ally is revived, it gains many Might.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "survivesKO": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "ko"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "haste",
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
+      },
+      {
+       "op": "apply",
+       "status": "shield",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.2,
+          "stat": "max_hp",
+          "of": "target"
+         }
+        ]
+       },
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "ko",
+      "whose": "ally"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "haste",
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
+      },
+      {
+       "op": "apply",
+       "status": "shield",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.2,
+          "stat": "max_hp",
+          "of": "target"
+         }
+        ]
+       },
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "might",
+       "stacks": 7,
+       "to": "owner"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived",
+      "whose": "ally"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "might",
+       "stacks": 7,
+       "to": "owner"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "snowbound_folio",
+   "name": "Snowbound folio",
+   "text": "At the start of every fight, every foe gains a few Chill.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "chill",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0007,
+          "stat": "magic",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": {
+        "side": "foes",
+        "pick": "all"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "abridged_lexicon",
+   "name": "Abridged lexicon",
+   "text": "Its holder's abilities cost a tenth less MP.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "mods": [
+    {
+     "mp": -10
+    }
+   ]
+  },
+  {
+   "id": "primer_of_frost",
+   "name": "Primer of frost",
+   "text": "Each time its holder adds Chill to a foe, it adds a quarter more for every four stacks the foe already holds.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "boosts": [
+    {
+     "tag": "chill",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 6.25,
+        "stacks": "chill",
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "treatise_on_the_field",
+   "name": "Treatise on the field",
+   "text": "Its holder's abilities that hit every foe deal half again as much to each foe above half its HP.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "boosts": [
+    {
+     "tag": "area",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 50,
+        "when": {
+         "hpAtLeast": 50
+        },
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "last_page",
+   "name": "Last page",
+   "text": "When a foe falls, every foe below a tenth of its HP falls too.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "ko",
+      "whose": "foe"
+     },
+     "do": [
+      {
+       "op": "damage",
+       "type": "none",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 1,
+          "hp": "current",
+          "of": "target"
+         },
+         {
+          "ratio": 1,
+          "stacks": "shield",
+          "of": "target"
+         }
+        ]
+       },
+       "to": {
+        "side": "foes",
+        "where": {
+         "hpBelow": 10
+        },
+        "pick": "all"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "annotated_grimoire",
+   "name": "Annotated grimoire",
+   "text": "Each ability its holder pays for makes the next ability any ally casts free.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "action_resolve",
+      "kind": "ability",
+      "amountAtLeast": 1
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "annotated_grimoire_free",
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "annotated_grimoire_free",
+   "name": "Free cast",
+   "text": "Its next ability costs no MP.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh",
+   "mods": [
+    {
+     "mp": -100
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "action_resolve",
+      "kind": "ability"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "marker",
+       "status": "annotated_grimoire_free",
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pitch_lantern",
+   "name": "Pitch lantern",
+   "text": "At the start of every fight, every foe gains a few Burn.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "burn",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0007,
+          "stat": "magic",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": {
+        "side": "foes",
+        "pick": "all"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "dazzling_lantern",
+   "name": "Dazzling lantern",
+   "text": "At the start of every fight, the foe with the highest Attack or Magic is Weakened.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "weaken",
+       "to": {
+        "side": "foes",
+        "pick": "highest",
+        "by": {
+         "stats": [
+          "attack",
+          "magic"
+         ]
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "bellows_lantern",
+   "name": "Bellows lantern",
+   "text": "Each hit its holder lands on a burning foe adds Burn: a tenth of what the foe holds.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "burn",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.1,
+          "stacks": "burn",
+          "of": "target"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "signal_lantern",
+   "name": "Signal lantern",
+   "text": "A foe its holder hits with an ability is Marked. Abilities that hit every foe don't Mark.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "ability",
+      "notTags": [
+       "area"
+      ]
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "marked",
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "wick",
+   "name": "Wick",
+   "text": "When a burning foe falls, all its Burn passes to the foe with the most HP, and its holder gains Heat.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "status_ended",
+      "whose": "foe",
+      "status": "burn",
+      "cause": [
+       "ko"
+      ]
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "burn",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 1,
+          "amount": true
+         }
+        ]
+       },
+       "to": {
+        "side": "foes",
+        "pick": "highest",
+        "by": "hp"
+       }
+      },
+      {
+       "op": "apply",
+       "status": "heat",
+       "stacks": 2,
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lamp_of_vigil",
+   "name": "Lamp of vigil",
+   "text": "After each won fight, one fallen ally stands up with a quarter of its HP.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_won"
+     },
+     "do": [
+      {
+       "op": "revive",
+       "hp": {
+        "scale": [
+         {
+          "ratio": 0.25,
+          "stat": "max_hp",
+          "of": "target"
+         }
+        ]
+       },
+       "to": {
+        "side": "allies",
+        "where": {
+         "ko": true
+        },
+        "pick": "random"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "holy_water",
+   "name": "Holy water",
+   "text": "Each time one of its holder's abilities heals an ally, it also lifts one debuff from that ally.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "healed",
+      "whose": "any",
+      "other": "holder",
+      "kind": "ability"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "debuff",
+       "count": 1,
+       "to": "owner"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "charnel_icon",
+   "name": "Charnel icon",
+   "text": "Each time a foe falls, the ally with the lowest share of its HP is healed a little.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "ko",
+      "whose": "foe"
+     },
+     "do": [
+      {
+       "op": "heal",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.06,
+          "stat": "max_hp",
+          "of": "target"
+         }
+        ]
+       },
+       "to": {
+        "side": "allies",
+        "pick": "lowest",
+        "by": "hp_share"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "saints_knucklebone",
+   "name": "Saint's knucklebone",
+   "text": "Each time one of its holder's abilities heals an ally, that ally gains a few Might.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "healed",
+      "whose": "any",
+      "other": "holder",
+      "kind": "ability"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "might",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0007,
+          "stat": "magic",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "owner"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "reliquary_of_mercy",
+   "name": "Reliquary of mercy",
+   "text": "Its holder's revives cost half their MP and wind up in a moment.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "mods": [
+    {
+     "of": {
+      "does": [
+       "revive"
+      ]
+     },
+     "mp": -50,
+     "cast": 1
+    }
+   ]
+  },
+  {
+   "id": "phylactery",
+   "name": "Phylactery",
+   "text": "The part of its holder's heals that would go past full becomes a Shield on the healed ally.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "overhealed",
+      "whose": "any",
+      "other": "holder"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "shield",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 1,
+          "amount": true
+         }
+        ]
+       },
+       "to": "owner"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "bones_of_the_returned",
+   "name": "Bones of the returned",
+   "text": "Allies its holder revives come back with all their HP, and with every ability on full cooldown.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "revives": {
+    "ready": false,
+    "hp": {
+     "scale": [
+      {
+       "ratio": 1,
+       "stat": "max_hp",
+       "of": "target"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "quickening_chime",
+   "name": "Quickening chime",
+   "text": "Each time its holder dodges a hit, its next basic attack comes a little sooner.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_evaded"
+     },
+     "do": [
+      {
+       "op": "cooldown",
+       "which": "basic",
+       "set": {
+        "less": 2
+       },
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "waking_bell",
+   "name": "Waking bell",
+   "text": "The first time in a fight that an ally is Silenced, the Silence is lifted at once. A cast it broke is still lost.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "status_gained",
+      "status": "silence"
+     },
+     "if": {
+      "side": "self",
+      "where": {
+       "lacks": "waking_bell_rung"
+      }
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "debuff",
+       "status": "silence",
+       "to": "owner"
+      },
+      {
+       "op": "apply",
+       "status": "waking_bell_rung",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_gained",
+      "status": "silence",
+      "whose": "ally"
+     },
+     "if": {
+      "side": "self",
+      "where": {
+       "lacks": "waking_bell_rung"
+      }
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "debuff",
+       "status": "silence",
+       "to": "owner"
+      },
+      {
+       "op": "apply",
+       "status": "waking_bell_rung",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "waking_bell_rung",
+   "name": "Waking bell (rung)",
+   "text": "It has rung this fight.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh"
+  },
+  {
+   "id": "tempo_bell",
+   "name": "Tempo bell",
+   "text": "Each time its holder gains Haste, the other ally with the slowest basic attack that isn't Hasted gains it too.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "status_gained",
+      "status": "haste"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "haste",
+       "to": {
+        "side": "others",
+        "where": {
+         "lacks": "haste"
+        },
+        "pick": "highest",
+        "by": "swing"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "warding_bell",
+   "name": "Warding bell",
+   "text": "Every so often, it lifts one debuff from the ally holding the most.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "warding_bell_wait",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "warding_bell_wait",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "warding_bell_wait",
+      "cause": [
+       "expired"
+      ]
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "debuff",
+       "count": 1,
+       "to": {
+        "side": "allies",
+        "where": {
+         "debuffs": true
+        },
+        "pick": "highest",
+        "by": "debuffs"
+       }
+      },
+      {
+       "op": "apply",
+       "status": "warding_bell_beat",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "warding_bell_wait",
+   "name": "Warding bell (waiting)",
+   "text": "Its first beat comes when this runs out.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh",
+   "duration": 11
+  },
+  {
+   "id": "warding_bell_beat",
+   "name": "Warding bell (beating)",
+   "text": "Its beat, every so often.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh",
+   "pulse": {
+    "every": 22,
+    "do": [
+     {
+      "op": "remove",
+      "label": "debuff",
+      "count": 1,
+      "to": {
+       "side": "allies",
+       "where": {
+        "debuffs": true
+       },
+       "pick": "highest",
+       "by": "debuffs"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "bell_of_the_hour",
+   "name": "Bell of the hour",
+   "text": "Every so often, its holder's ability with the longest cooldown left comes a few ticks closer.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "bell_of_the_hour_wait",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "bell_of_the_hour_wait",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "bell_of_the_hour_wait",
+      "cause": [
+       "expired"
+      ]
+     },
+     "do": [
+      {
+       "op": "cooldown",
+       "which": "longest",
+       "set": {
+        "less": 5
+       },
+       "to": "holder"
+      },
+      {
+       "op": "apply",
+       "status": "bell_of_the_hour_beat",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "bell_of_the_hour_wait",
+   "name": "Bell of the hour (waiting)",
+   "text": "Its first beat comes when this runs out.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh",
+   "duration": 11
+  },
+  {
+   "id": "bell_of_the_hour_beat",
+   "name": "Bell of the hour (beating)",
+   "text": "Its beat, every so often.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh",
+   "pulse": {
+    "every": 22,
+    "do": [
+     {
+      "op": "cooldown",
+      "which": "longest",
+      "set": {
+       "less": 5
+      },
+      "to": "holder"
+     }
+    ]
+   }
+  },
+  {
+   "id": "funeral_bell",
+   "name": "Funeral bell",
+   "text": "When any unit falls, friend or foe, every ally still standing gains Fervor. It rings for its holder's own fall too.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "survivesKO": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "ko",
+      "whose": "any"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "fervor",
+       "stacks": 1,
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "spinebark_pole",
+   "name": "Spinebark pole",
+   "text": "At the start of every fight, the ally with the highest Aggro gains Thorns for the fight.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "spinebark_pole_thorns",
+       "to": {
+        "side": "allies",
+        "pick": "highest",
+        "by": {
+         "stat": "aggro"
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "spinebark_pole_thorns",
+   "name": "Spinebark",
+   "text": "Thorns up for the fight.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "survivesKO": true,
+   "stats": [
+    {
+     "stat": "thorns",
+     "flat": 150
+    }
+   ]
+  },
+  {
+   "id": "bear_fetish",
+   "name": "Bear fetish",
+   "text": "The first ally to drop below half its HP each fight is Guarded.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hp_lost"
+     },
+     "if": [
+      {
+       "unit": "owner",
+       "where": {
+        "hpBelow": 50
+       }
+      },
+      {
+       "side": "self",
+       "where": {
+        "lacks": "bear_fetish_spent"
+       }
+      }
+     ],
+     "do": [
+      {
+       "op": "apply",
+       "status": "guard",
+       "to": "owner"
+      },
+      {
+       "op": "apply",
+       "status": "bear_fetish_spent",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "hp_lost",
+      "whose": "ally"
+     },
+     "if": [
+      {
+       "unit": "owner",
+       "where": {
+        "hpBelow": 50
+       }
+      },
+      {
+       "side": "self",
+       "where": {
+        "lacks": "bear_fetish_spent"
+       }
+      }
+     ],
+     "do": [
+      {
+       "op": "apply",
+       "status": "guard",
+       "to": "owner"
+      },
+      {
+       "op": "apply",
+       "status": "bear_fetish_spent",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "bear_fetish_spent",
+   "name": "Bear fetish (spent)",
+   "text": "Its Guard is spent this fight.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh"
+  },
+  {
+   "id": "briar_totem",
+   "name": "Briar totem",
+   "text": "Foes that hit its holder gain a few Bleed.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_taken"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0007,
+          "stat": "armor",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "stone_totem",
+   "name": "Stone totem",
+   "text": "Its holder starts every fight behind a Shield from its Armor.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "shield",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.5,
+          "stat": "armor",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "earthmother_totem",
+   "name": "Earthmother totem",
+   "text": "While its holder stands, every Shield an ally gains is a third larger. When an ally's Shield breaks, that ally gains a few Might.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "earthmother_totem_aura",
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "earthmother_totem_aura",
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived",
+      "whose": "ally"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "earthmother_totem_aura",
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_ended",
+      "whose": "holder",
+      "status": "shield",
+      "cause": [
+       "stacks"
+      ]
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "might",
+       "stacks": 2,
+       "to": "owner"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_ended",
+      "whose": "ally",
+      "status": "shield",
+      "cause": [
+       "stacks"
+      ]
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "might",
+       "stacks": 2,
+       "to": "owner"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "earthmother_totem_aura",
+   "name": "Earthmother",
+   "text": "The Shields it gives are a third larger while the Earthmother totem's holder stands.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "perSource": {
+    "endsWithSource": true
+   },
+   "boosts": [
+    {
+     "tag": "shield",
+     "pct": 33
+    }
+   ]
+  },
+  {
+   "id": "wild_hunt_totem",
+   "name": "Wild hunt totem",
+   "text": "Its holder's basic attacks Mark their target. Each time a foe falls, every ally gains a few Might.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "marked",
+       "to": "other"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "ko",
+      "whose": "foe"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "might",
+       "stacks": 2,
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "clotting_salve",
+   "name": "Clotting salve",
+   "text": "Its holder's crits heal it for a fifth of the damage they deal.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "tags": [
+       "crit"
+      ]
+     },
+     "do": [
+      {
+       "op": "heal",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.2,
+          "amount": true
+         }
+        ]
+       },
+       "to": "self"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "crimson_dregs",
+   "name": "Crimson dregs",
+   "text": "Its holder's hits on a bleeding foe heal it for a share of their damage.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands"
+     },
+     "if": {
+      "unit": "other",
+      "where": {
+       "has": "bleed"
+      }
+     },
+     "do": [
+      {
+       "op": "heal",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.1,
+          "amount": true
+         }
+        ]
+       },
+       "to": "self"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "blood_vial",
+   "name": "Blood vial",
+   "text": "Its holder's abilities cost half their MP, plus HP equal to their full cost. The HP price never takes it below 1 HP.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "mods": [
+    {
+     "mp": -50,
+     "hp": {
+      "pct": 100
+     }
+    }
+   ]
+  },
+  {
+   "id": "venom_vial",
+   "name": "Venom vial",
+   "text": "Its holder's crits add several Bleed, and it crits more often on a bleeding foe.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "tags": [
+       "crit"
+      ]
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0013,
+          "stat": "attack",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    }
+   ],
+   "crits": [
+    {
+     "when": {
+      "has": "bleed"
+     },
+     "chance": 5
+    }
+   ]
+  },
+  {
+   "id": "vial_of_the_last_breath",
+   "name": "Vial of the last breath",
+   "text": "Once a fight, when its holder falls, it stands up a few ticks later with a third of its HP.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "survivesKO": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "ko"
+     },
+     "if": {
+      "side": "self",
+      "where": {
+       "lacks": "vial_of_the_last_breath_spent",
+       "ko": true
+      }
+     },
+     "do": [
+      {
+       "op": "revive",
+       "hp": {
+        "scale": [
+         {
+          "ratio": 0.33,
+          "stat": "max_hp",
+          "of": "target"
+         }
+        ]
+       },
+       "after": 4,
+       "to": {
+        "side": "self",
+        "where": {
+         "ko": true
+        }
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived",
+      "other": "holder"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "vial_of_the_last_breath_spent",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "vial_of_the_last_breath_spent",
+   "name": "Vial of the last breath (spent)",
+   "text": "Its return is spent this fight.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh"
+  },
+  {
+   "id": "bloodlust_draught",
+   "name": "Bloodlust draught",
+   "text": "Its holder starts every fight at half its HP (it pays), and its Lifesteal is doubled until it's full.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "pay",
+       "hp": {
+        "scale": [
+         {
+          "ratio": 1,
+          "hp": "current",
+          "of": "holder"
+         },
+         {
+          "ratio": -0.5,
+          "stat": "max_hp",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "holder"
+      },
+      {
+       "op": "apply",
+       "status": "bloodlust_draught_thirst",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "bloodlust_draught_thirst",
+   "name": "THIRST",
+   "text": "Lifesteal doubled until it's healed to full.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "fizzle",
+   "stats": [
+    {
+     "stat": "lifesteal",
+     "flat": {
+      "scale": [
+       {
+        "ratio": 1,
+        "stat": "lifesteal",
+        "of": "holder"
+       }
+      ]
+     }
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "healed"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "bloodlust_draught_thirst",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpAtLeast": 100
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "carrion_idol",
+   "name": "Carrion idol",
+   "text": "When its holder's hit fells a foe, it regains MP.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "ko",
+      "whose": "foe",
+      "other": "holder",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "mp",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.15,
+          "stat": "max_mp",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "ko",
+      "whose": "foe",
+      "other": "holder",
+      "kind": "ability"
+     },
+     "do": [
+      {
+       "op": "mp",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.15,
+          "stat": "max_mp",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "ko",
+      "whose": "foe",
+      "other": "holder",
+      "kind": "extra"
+     },
+     "do": [
+      {
+       "op": "mp",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.15,
+          "stat": "max_mp",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "fanged_idol",
+   "name": "Fanged idol",
+   "text": "Its holder's crits Rot their target.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "tags": [
+       "crit"
+      ]
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "rot",
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "withering_idol",
+   "name": "Withering idol",
+   "text": "Its holder's basic attacks Weaken their target, and its hits on a Weakened foe deal a little more.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "weaken",
+       "to": "other"
+      }
+     ]
+    }
+   ],
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 15,
+        "when": {
+         "has": "weaken"
+        },
+        "of": "target"
+       }
+      ]
+     }
+    },
+    {
+     "tag": "magical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 15,
+        "when": {
+         "has": "weaken"
+        },
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "leech_idol",
+   "name": "Leech idol",
+   "text": "MP it drains past its holder's full pool goes to the ally with the least MP.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands"
+     },
+     "if": {
+      "side": "self",
+      "where": {
+       "mpAtLeast": 100
+      }
+     },
+     "do": [
+      {
+       "op": "mp",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.01,
+          "amount": true,
+          "times": {
+           "stat": "siphon",
+           "of": "holder"
+          }
+         }
+        ]
+       },
+       "to": {
+        "side": "others",
+        "pick": "lowest",
+        "by": "mp_share"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "idol_of_binding",
+   "name": "Idol of binding",
+   "text": "Foes its holder Weakens are also Slowed, and its hits on a foe that's both deal double.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "status_gained",
+      "whose": "foe",
+      "status": "weaken",
+      "other": "holder"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "slow",
+       "to": "owner"
+      }
+     ]
+    }
+   ],
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 100,
+        "when": {
+         "has": [
+          "weaken",
+          "slow"
+         ]
+        },
+        "of": "target"
+       }
+      ]
+     }
+    },
+    {
+     "tag": "magical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 100,
+        "when": {
+         "has": [
+          "weaken",
+          "slow"
+         ]
+        },
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "idol_of_the_hungry_dark",
+   "name": "Idol of the hungry dark",
+   "text": "Every so often, it takes one buff from a foe and gives it to its holder.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "idol_of_the_hungry_dark_wait",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "idol_of_the_hungry_dark_wait",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "idol_of_the_hungry_dark_wait",
+      "cause": [
+       "expired"
+      ]
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "count": 1,
+       "move": true,
+       "to": {
+        "side": "foes",
+        "where": {
+         "buffs": true
+        },
+        "pick": "random"
+       }
+      },
+      {
+       "op": "apply",
+       "status": "idol_of_the_hungry_dark_beat",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "idol_of_the_hungry_dark_wait",
+   "name": "Idol of the hungry dark (waiting)",
+   "text": "Its first beat comes when this runs out.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh",
+   "duration": 11
+  },
+  {
+   "id": "idol_of_the_hungry_dark_beat",
+   "name": "Idol of the hungry dark (beating)",
+   "text": "Its beat, every so often.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh",
+   "pulse": {
+    "every": 22,
+    "do": [
+     {
+      "op": "remove",
+      "label": "buff",
+      "count": 1,
+      "move": true,
+      "to": {
+       "side": "foes",
+       "where": {
+        "buffs": true
+       },
+       "pick": "random"
+      }
+     }
+    ]
+   }
+  },
+  {
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -18049,6 +20779,1314 @@
      ]
     }
    },
+   "rarity": "legendary"
+  },
+  {
+   "id": "pavise",
+   "name": "Pavise",
+   "text": "Armor +2.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "kite_shield",
+   "stats": [
+    {
+     "stat": "armor",
+     "flat": 2000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "banner_kite",
+   "name": "Banner kite",
+   "text": "HP +1, Aggro +1.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "kite_shield",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": 500
+    },
+    {
+     "stat": "aggro",
+     "flat": 10
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "gatekeepers_kite",
+   "name": "Gatekeeper's kite",
+   "text": "Armor +1. While its holder Taunts, it takes a tenth less damage.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "kite_shield",
+   "stats": [
+    {
+     "stat": "armor",
+     "flat": 1000
+    }
+   ],
+   "statuses": [
+    "gatekeepers_kite"
+   ],
+   "rarity": "uncommon"
+  },
+  {
+   "id": "sheltering_kite",
+   "name": "Sheltering kite",
+   "text": "HP +1. At the start of every fight, the ally with the lowest share of its HP is Guarded.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "kite_shield",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
+   "statuses": [
+    "sheltering_kite"
+   ],
+   "rarity": "uncommon"
+  },
+  {
+   "id": "rubble_shield",
+   "name": "Rubble shield",
+   "text": "Armor +1. When its holder's Shield breaks, the foe whose blow broke it is Stunned.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "kite_shield",
+   "stats": [
+    {
+     "stat": "armor",
+     "flat": 1000
+    }
+   ],
+   "statuses": [
+    "rubble_shield"
+   ],
+   "rarity": "rare"
+  },
+  {
+   "id": "humbling_shield",
+   "name": "Humbling shield",
+   "text": "The first time each foe hits its holder, that foe is Weakened.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "kite_shield",
+   "statuses": [
+    "humbling_shield"
+   ],
+   "rarity": "rare"
+  },
+  {
+   "id": "spiked_bulwark",
+   "name": "Spiked bulwark",
+   "text": "Thorns from its holder's Armor: each foe that hits it takes a twentieth of its Armor back.",
+   "slot": "offhand",
+   "tier": "powerful",
+   "source": "unlock",
+   "offhand": "kite_shield",
+   "statuses": [
+    "spiked_bulwark"
+   ],
+   "rarity": "legendary"
+  },
+  {
+   "id": "oathbound_shield",
+   "name": "Oathbound shield",
+   "text": "HP +1. When a hit would deal an ally more than a quarter of its max HP, its holder takes the hit instead.",
+   "slot": "offhand",
+   "tier": "powerful",
+   "source": "unlock",
+   "offhand": "kite_shield",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
+   "statuses": [
+    "oathbound_shield"
+   ],
+   "rarity": "legendary"
+  },
+  {
+   "id": "bronze_buckler",
+   "name": "Bronze buckler",
+   "text": "Armor +1, Attack +1.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "round_shield",
+   "stats": [
+    {
+     "stat": "armor",
+     "flat": 1000
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "linden_shield",
+   "name": "Linden shield",
+   "text": "HP +2.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "round_shield",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": 1000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "comrades_targe",
+   "name": "Comrade's targe",
+   "text": "Armor +1. At the start of every fight, the other ally with the highest Aggro is Guarded.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "round_shield",
+   "stats": [
+    {
+     "stat": "armor",
+     "flat": 1000
+    }
+   ],
+   "statuses": [
+    "comrades_targe"
+   ],
+   "rarity": "uncommon"
+  },
+  {
+   "id": "linebreaker",
+   "name": "Linebreaker",
+   "text": "Attack +1. Its holder's hits on a Taunting foe deal a fifth more.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "round_shield",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "statuses": [
+    "linebreaker"
+   ],
+   "rarity": "uncommon"
+  },
+  {
+   "id": "paired_shields",
+   "name": "Paired shields",
+   "text": "Armor +1. Whenever its holder is Guarded, so is the other ally lowest in HP share that isn't Guarded yet.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "round_shield",
+   "stats": [
+    {
+     "stat": "armor",
+     "flat": 1000
+    }
+   ],
+   "statuses": [
+    "paired_shields"
+   ],
+   "rarity": "rare"
+  },
+  {
+   "id": "hunters_buckler",
+   "name": "Hunter's buckler",
+   "text": "Attack +1. When its holder's hit fells a foe, it gains Haste and a Shield.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "round_shield",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "statuses": [
+    "hunters_buckler"
+   ],
+   "rarity": "rare"
+  },
+  {
+   "id": "phalanx_shield",
+   "name": "Phalanx shield",
+   "text": "While its holder stands, allies with less Armor than it take a fifth less damage. Its holder deals a fifth less.",
+   "slot": "offhand",
+   "tier": "powerful",
+   "source": "unlock",
+   "offhand": "round_shield",
+   "statuses": [
+    "phalanx_shield"
+   ],
+   "rarity": "legendary"
+  },
+  {
+   "id": "shield_of_the_chosen",
+   "name": "Shield of the chosen",
+   "text": "Once a fight, when another ally falls, its holder raises it at once with a tenth of its HP.",
+   "slot": "offhand",
+   "tier": "powerful",
+   "source": "unlock",
+   "offhand": "round_shield",
+   "statuses": [
+    "shield_of_the_chosen"
+   ],
+   "rarity": "legendary"
+  },
+  {
+   "id": "rams_horn",
+   "name": "Ram's horn",
+   "text": "Aggro +1, Attack +1.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "horn",
+   "stats": [
+    {
+     "stat": "aggro",
+     "flat": 10
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "ivory_horn",
+   "name": "Ivory horn",
+   "text": "MP regen +1, Magic +1.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "horn",
+   "stats": [
+    {
+     "stat": "mp_regen",
+     "flat": 3000
+    },
+    {
+     "stat": "magic",
+     "flat": 1000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "reveille",
+   "name": "Reveille",
+   "text": "Magic +1. At the start of every fight, the ally with the least MP gains Clarity.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "horn",
+   "stats": [
+    {
+     "stat": "magic",
+     "flat": 1000
+    }
+   ],
+   "statuses": [
+    "reveille"
+   ],
+   "rarity": "uncommon"
+  },
+  {
+   "id": "bulls_horn",
+   "name": "Bull's horn",
+   "text": "Attack +1. The first time in a fight that a foe falls, every ally is Hasted.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "horn",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "statuses": [
+    "bulls_horn"
+   ],
+   "rarity": "uncommon"
+  },
+  {
+   "id": "war_horn",
+   "name": "War horn",
+   "text": "At the start of every fight, the ally with the slowest basic attack gains many Might.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "horn",
+   "statuses": [
+    "war_horn"
+   ],
+   "rarity": "rare"
+  },
+  {
+   "id": "echo_horn",
+   "name": "Echo horn",
+   "text": "Each time an ally finishes casting an ability, the ally with the least MP gains a little MP.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "horn",
+   "statuses": [
+    "echo_horn"
+   ],
+   "rarity": "rare"
+  },
+  {
+   "id": "horn_of_the_charge",
+   "name": "Horn of the charge",
+   "text": "At the start of every fight, every ally is Hasted and its first action comes at once. Its holder starts every fight with every ability on cooldown.",
+   "slot": "offhand",
+   "tier": "powerful",
+   "source": "unlock",
+   "offhand": "horn",
+   "statuses": [
+    "horn_of_the_charge"
+   ],
+   "rarity": "legendary"
+  },
+  {
+   "id": "rallying_horn",
+   "name": "Rallying horn",
+   "text": "When an ally falls (its holder too), every ally still standing gains Haste and a Shield. When an ally is revived, it gains many Might.",
+   "slot": "offhand",
+   "tier": "powerful",
+   "source": "unlock",
+   "offhand": "horn",
+   "statuses": [
+    "rallying_horn"
+   ],
+   "rarity": "legendary"
+  },
+  {
+   "id": "scholars_codex",
+   "name": "Scholar's codex",
+   "text": "Magic +2.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "tome",
+   "stats": [
+    {
+     "stat": "magic",
+     "flat": 2000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "hymnal",
+   "name": "Hymnal",
+   "text": "MP +1, MP regen +1.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "tome",
+   "stats": [
+    {
+     "stat": "max_mp",
+     "flat": 1000
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "snowbound_folio",
+   "name": "Snowbound folio",
+   "text": "Magic +1. At the start of every fight, every foe gains a few Chill.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "tome",
+   "stats": [
+    {
+     "stat": "magic",
+     "flat": 1000
+    }
+   ],
+   "statuses": [
+    "snowbound_folio"
+   ],
+   "rarity": "uncommon"
+  },
+  {
+   "id": "abridged_lexicon",
+   "name": "Abridged lexicon",
+   "text": "MP +1. Its holder's abilities cost a tenth less MP.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "tome",
+   "stats": [
+    {
+     "stat": "max_mp",
+     "flat": 1000
+    }
+   ],
+   "statuses": [
+    "abridged_lexicon"
+   ],
+   "rarity": "uncommon"
+  },
+  {
+   "id": "primer_of_frost",
+   "name": "Primer of frost",
+   "text": "Each time its holder adds Chill to a foe, it adds a quarter more for every four stacks the foe already holds.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "tome",
+   "statuses": [
+    "primer_of_frost"
+   ],
+   "rarity": "rare"
+  },
+  {
+   "id": "treatise_on_the_field",
+   "name": "Treatise on the field",
+   "text": "Magic +1. Its holder's abilities that hit every foe deal half again as much to each foe above half its HP.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "tome",
+   "stats": [
+    {
+     "stat": "magic",
+     "flat": 1000
+    }
+   ],
+   "statuses": [
+    "treatise_on_the_field"
+   ],
+   "rarity": "rare"
+  },
+  {
+   "id": "last_page",
+   "name": "Last page",
+   "text": "When a foe falls, every foe below a tenth of its HP falls too.",
+   "slot": "offhand",
+   "tier": "powerful",
+   "source": "unlock",
+   "offhand": "tome",
+   "statuses": [
+    "last_page"
+   ],
+   "rarity": "legendary"
+  },
+  {
+   "id": "annotated_grimoire",
+   "name": "Annotated grimoire",
+   "text": "Each ability its holder pays for makes the next ability any ally casts free.",
+   "slot": "offhand",
+   "tier": "powerful",
+   "source": "unlock",
+   "offhand": "tome",
+   "statuses": [
+    "annotated_grimoire"
+   ],
+   "rarity": "legendary"
+  },
+  {
+   "id": "brass_lantern",
+   "name": "Brass lantern",
+   "text": "Magic +1, HP +1.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "lantern",
+   "stats": [
+    {
+     "stat": "magic",
+     "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "hooded_lantern",
+   "name": "Hooded lantern",
+   "text": "MP +2.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "lantern",
+   "stats": [
+    {
+     "stat": "max_mp",
+     "flat": 2000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "pitch_lantern",
+   "name": "Pitch lantern",
+   "text": "Magic +1. At the start of every fight, every foe gains a few Burn.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "lantern",
+   "stats": [
+    {
+     "stat": "magic",
+     "flat": 1000
+    }
+   ],
+   "statuses": [
+    "pitch_lantern"
+   ],
+   "rarity": "uncommon"
+  },
+  {
+   "id": "dazzling_lantern",
+   "name": "Dazzling lantern",
+   "text": "HP +1. At the start of every fight, the foe with the highest Attack or Magic is Weakened.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "lantern",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
+   "statuses": [
+    "dazzling_lantern"
+   ],
+   "rarity": "uncommon"
+  },
+  {
+   "id": "bellows_lantern",
+   "name": "Bellows lantern",
+   "text": "Each hit its holder lands on a burning foe adds Burn: a tenth of what the foe holds.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "lantern",
+   "statuses": [
+    "bellows_lantern"
+   ],
+   "rarity": "rare"
+  },
+  {
+   "id": "signal_lantern",
+   "name": "Signal lantern",
+   "text": "A foe its holder hits with an ability is Marked. Abilities that hit every foe don't Mark.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "lantern",
+   "statuses": [
+    "signal_lantern"
+   ],
+   "rarity": "rare"
+  },
+  {
+   "id": "wick",
+   "name": "Wick",
+   "text": "When a burning foe falls, all its Burn passes to the foe with the most HP, and its holder gains Heat.",
+   "slot": "offhand",
+   "tier": "powerful",
+   "source": "unlock",
+   "offhand": "lantern",
+   "statuses": [
+    "wick"
+   ],
+   "rarity": "legendary"
+  },
+  {
+   "id": "lamp_of_vigil",
+   "name": "Lamp of vigil",
+   "text": "After each won fight, one fallen ally stands up with a quarter of its HP.",
+   "slot": "offhand",
+   "tier": "powerful",
+   "source": "unlock",
+   "offhand": "lantern",
+   "statuses": [
+    "lamp_of_vigil"
+   ],
+   "rarity": "legendary"
+  },
+  {
+   "id": "shrine_token",
+   "name": "Shrine token",
+   "text": "MP regen +2.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "relic",
+   "stats": [
+    {
+     "stat": "mp_regen",
+     "flat": 6000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "blessed_knot",
+   "name": "Blessed knot",
+   "text": "Magic +1, HP +1.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "relic",
+   "stats": [
+    {
+     "stat": "magic",
+     "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "holy_water",
+   "name": "Holy water",
+   "text": "Magic +1. Each time one of its holder's abilities heals an ally, it also lifts one debuff from that ally.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "relic",
+   "stats": [
+    {
+     "stat": "magic",
+     "flat": 1000
+    }
+   ],
+   "statuses": [
+    "holy_water"
+   ],
+   "rarity": "uncommon"
+  },
+  {
+   "id": "charnel_icon",
+   "name": "Charnel icon",
+   "text": "MP regen +1. Each time a foe falls, the ally with the lowest share of its HP is healed a little.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "relic",
+   "stats": [
+    {
+     "stat": "mp_regen",
+     "flat": 3000
+    }
+   ],
+   "statuses": [
+    "charnel_icon"
+   ],
+   "rarity": "uncommon"
+  },
+  {
+   "id": "saints_knucklebone",
+   "name": "Saint's knucklebone",
+   "text": "Each time one of its holder's abilities heals an ally, that ally gains a few Might.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "relic",
+   "statuses": [
+    "saints_knucklebone"
+   ],
+   "rarity": "rare"
+  },
+  {
+   "id": "reliquary_of_mercy",
+   "name": "Reliquary of mercy",
+   "text": "Its holder's revives cost half their MP and wind up in a moment.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "relic",
+   "statuses": [
+    "reliquary_of_mercy"
+   ],
+   "rarity": "rare"
+  },
+  {
+   "id": "phylactery",
+   "name": "Phylactery",
+   "text": "The part of its holder's heals that would go past full becomes a Shield on the healed ally.",
+   "slot": "offhand",
+   "tier": "powerful",
+   "source": "unlock",
+   "offhand": "relic",
+   "statuses": [
+    "phylactery"
+   ],
+   "rarity": "legendary"
+  },
+  {
+   "id": "bones_of_the_returned",
+   "name": "Bones of the returned",
+   "text": "Allies its holder revives come back with all their HP, and with every ability on full cooldown.",
+   "slot": "offhand",
+   "tier": "powerful",
+   "source": "unlock",
+   "offhand": "relic",
+   "statuses": [
+    "bones_of_the_returned"
+   ],
+   "rarity": "legendary"
+  },
+  {
+   "id": "temple_bell",
+   "name": "Temple bell",
+   "text": "Evasion medium, Attack +1.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "bell",
+   "stats": [
+    {
+     "stat": "evasion",
+     "flat": 20
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "prayer_bell",
+   "name": "Prayer bell",
+   "text": "MP regen +1, Magic +1.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "bell",
+   "stats": [
+    {
+     "stat": "mp_regen",
+     "flat": 3000
+    },
+    {
+     "stat": "magic",
+     "flat": 1000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "quickening_chime",
+   "name": "Quickening chime",
+   "text": "Evasion medium. Each time its holder dodges a hit, its next basic attack comes a little sooner.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "bell",
+   "stats": [
+    {
+     "stat": "evasion",
+     "flat": 20
+    }
+   ],
+   "statuses": [
+    "quickening_chime"
+   ],
+   "rarity": "uncommon"
+  },
+  {
+   "id": "waking_bell",
+   "name": "Waking bell",
+   "text": "MP regen +1. The first time in a fight that an ally is Silenced, the Silence is lifted at once. A cast it broke is still lost.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "bell",
+   "stats": [
+    {
+     "stat": "mp_regen",
+     "flat": 3000
+    }
+   ],
+   "statuses": [
+    "waking_bell"
+   ],
+   "rarity": "uncommon"
+  },
+  {
+   "id": "tempo_bell",
+   "name": "Tempo bell",
+   "text": "Each time its holder gains Haste, the other ally with the slowest basic attack that isn't Hasted gains it too.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "bell",
+   "statuses": [
+    "tempo_bell"
+   ],
+   "rarity": "rare"
+  },
+  {
+   "id": "warding_bell",
+   "name": "Warding bell",
+   "text": "Every so often, it lifts one debuff from the ally holding the most.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "bell",
+   "statuses": [
+    "warding_bell"
+   ],
+   "rarity": "rare"
+  },
+  {
+   "id": "bell_of_the_hour",
+   "name": "Bell of the hour",
+   "text": "Every so often, its holder's ability with the longest cooldown left comes a few ticks closer.",
+   "slot": "offhand",
+   "tier": "powerful",
+   "source": "unlock",
+   "offhand": "bell",
+   "statuses": [
+    "bell_of_the_hour"
+   ],
+   "rarity": "legendary"
+  },
+  {
+   "id": "funeral_bell",
+   "name": "Funeral bell",
+   "text": "When any unit falls, friend or foe, every ally still standing gains Fervor. It rings for its holder's own fall too.",
+   "slot": "offhand",
+   "tier": "powerful",
+   "source": "unlock",
+   "offhand": "bell",
+   "statuses": [
+    "funeral_bell"
+   ],
+   "rarity": "legendary"
+  },
+  {
+   "id": "standing_stone",
+   "name": "Standing stone",
+   "text": "Armor +2.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "totem",
+   "stats": [
+    {
+     "stat": "armor",
+     "flat": 2000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "hawthorn_fetish",
+   "name": "Hawthorn fetish",
+   "text": "Attack +1, Thorns medium.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "totem",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "thorns",
+     "flat": 150
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "spinebark_pole",
+   "name": "Spinebark pole",
+   "text": "Armor +1. At the start of every fight, the ally with the highest Aggro gains Thorns for the fight.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "totem",
+   "stats": [
+    {
+     "stat": "armor",
+     "flat": 1000
+    }
+   ],
+   "statuses": [
+    "spinebark_pole"
+   ],
+   "rarity": "uncommon"
+  },
+  {
+   "id": "bear_fetish",
+   "name": "Bear fetish",
+   "text": "Attack +1. The first ally to drop below half its HP each fight is Guarded.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "totem",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "statuses": [
+    "bear_fetish"
+   ],
+   "rarity": "uncommon"
+  },
+  {
+   "id": "briar_totem",
+   "name": "Briar totem",
+   "text": "Foes that hit its holder gain a few Bleed.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "totem",
+   "statuses": [
+    "briar_totem"
+   ],
+   "rarity": "rare"
+  },
+  {
+   "id": "stone_totem",
+   "name": "Stone totem",
+   "text": "Its holder starts every fight behind a Shield from its Armor.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "totem",
+   "statuses": [
+    "stone_totem"
+   ],
+   "rarity": "rare"
+  },
+  {
+   "id": "earthmother_totem",
+   "name": "Earthmother totem",
+   "text": "While its holder stands, every Shield an ally gains is a third larger. When an ally's Shield breaks, that ally gains a few Might.",
+   "slot": "offhand",
+   "tier": "powerful",
+   "source": "unlock",
+   "offhand": "totem",
+   "statuses": [
+    "earthmother_totem"
+   ],
+   "rarity": "legendary"
+  },
+  {
+   "id": "wild_hunt_totem",
+   "name": "Wild hunt totem",
+   "text": "Its holder's basic attacks Mark their target. Each time a foe falls, every ally gains a few Might.",
+   "slot": "offhand",
+   "tier": "powerful",
+   "source": "unlock",
+   "offhand": "totem",
+   "statuses": [
+    "wild_hunt_totem"
+   ],
+   "rarity": "legendary"
+  },
+  {
+   "id": "red_tincture",
+   "name": "Red tincture",
+   "text": "Lifesteal medium, Attack +1.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "vial",
+   "stats": [
+    {
+     "stat": "lifesteal",
+     "flat": 10
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "hemlock_phial",
+   "name": "Hemlock phial",
+   "text": "Crit +1, Attack +1.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "vial",
+   "stats": [
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "clotting_salve",
+   "name": "Clotting salve",
+   "text": "Crit +1. Its holder's crits heal it for a fifth of the damage they deal.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "vial",
+   "stats": [
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    }
+   ],
+   "statuses": [
+    "clotting_salve"
+   ],
+   "rarity": "uncommon"
+  },
+  {
+   "id": "crimson_dregs",
+   "name": "Crimson dregs",
+   "text": "Attack +1. Its holder's hits on a bleeding foe heal it for a share of their damage.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "vial",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "statuses": [
+    "crimson_dregs"
+   ],
+   "rarity": "uncommon"
+  },
+  {
+   "id": "blood_vial",
+   "name": "Blood vial",
+   "text": "Its holder's abilities cost half their MP, plus HP equal to their full cost. The HP price never takes it below 1 HP.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "vial",
+   "statuses": [
+    "blood_vial"
+   ],
+   "rarity": "rare"
+  },
+  {
+   "id": "venom_vial",
+   "name": "Venom vial",
+   "text": "Its holder's crits add several Bleed, and it crits more often on a bleeding foe.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "vial",
+   "statuses": [
+    "venom_vial"
+   ],
+   "rarity": "rare"
+  },
+  {
+   "id": "vial_of_the_last_breath",
+   "name": "Vial of the last breath",
+   "text": "Once a fight, when its holder falls, it stands up a few ticks later with a third of its HP.",
+   "slot": "offhand",
+   "tier": "powerful",
+   "source": "unlock",
+   "offhand": "vial",
+   "statuses": [
+    "vial_of_the_last_breath"
+   ],
+   "rarity": "legendary"
+  },
+  {
+   "id": "bloodlust_draught",
+   "name": "Bloodlust draught",
+   "text": "Its holder starts every fight at half its HP (it pays), and its Lifesteal is doubled until it's full.",
+   "slot": "offhand",
+   "tier": "powerful",
+   "source": "unlock",
+   "offhand": "vial",
+   "statuses": [
+    "bloodlust_draught"
+   ],
+   "rarity": "legendary"
+  },
+  {
+   "id": "night_mask",
+   "name": "Night mask",
+   "text": "Siphon medium, Magic +1.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "idol",
+   "stats": [
+    {
+     "stat": "siphon",
+     "flat": 10
+    },
+    {
+     "stat": "magic",
+     "flat": 1000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "carved_effigy",
+   "name": "Carved effigy",
+   "text": "HP +2.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "idol",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": 1000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "carrion_idol",
+   "name": "Carrion idol",
+   "text": "Magic +1. When its holder's hit fells a foe, it regains MP.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "idol",
+   "stats": [
+    {
+     "stat": "magic",
+     "flat": 1000
+    }
+   ],
+   "statuses": [
+    "carrion_idol"
+   ],
+   "rarity": "uncommon"
+  },
+  {
+   "id": "fanged_idol",
+   "name": "Fanged idol",
+   "text": "Crit +1. Its holder's crits Rot their target.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "idol",
+   "stats": [
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    }
+   ],
+   "statuses": [
+    "fanged_idol"
+   ],
+   "rarity": "uncommon"
+  },
+  {
+   "id": "withering_idol",
+   "name": "Withering idol",
+   "text": "Its holder's basic attacks Weaken their target, and its hits on a Weakened foe deal a little more.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "idol",
+   "statuses": [
+    "withering_idol"
+   ],
+   "rarity": "rare"
+  },
+  {
+   "id": "leech_idol",
+   "name": "Leech idol",
+   "text": "Siphon medium. MP it drains past its holder's full pool goes to the ally with the least MP.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "idol",
+   "stats": [
+    {
+     "stat": "siphon",
+     "flat": 10
+    }
+   ],
+   "statuses": [
+    "leech_idol"
+   ],
+   "rarity": "rare"
+  },
+  {
+   "id": "idol_of_binding",
+   "name": "Idol of binding",
+   "text": "Foes its holder Weakens are also Slowed, and its hits on a foe that's both deal double.",
+   "slot": "offhand",
+   "tier": "powerful",
+   "source": "unlock",
+   "offhand": "idol",
+   "statuses": [
+    "idol_of_binding"
+   ],
+   "rarity": "legendary"
+  },
+  {
+   "id": "idol_of_the_hungry_dark",
+   "name": "Idol of the hungry dark",
+   "text": "Every so often, it takes one buff from a foe and gives it to its holder.",
+   "slot": "offhand",
+   "tier": "powerful",
+   "source": "unlock",
+   "offhand": "idol",
+   "statuses": [
+    "idol_of_the_hungry_dark"
+   ],
    "rarity": "legendary"
   },
   {
