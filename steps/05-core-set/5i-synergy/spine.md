@@ -1,6 +1,6 @@
 # Step 5i, step 4: the spine
 
-Oct 30, 2026. **Approved by the director at gate 1 (Oct 30: "I like this"), with the decisions in section 11.** The lead's design of every rare and legendary piece, every formation, every upgrade and the 16 mythics, one line each, built backwards from the twelve builds in `builds.md` and written all together. Commons and uncommons get a rule per kind, not lines. No numbers yet: the fill writes them, inside the ranges below. This is gate 1 of `pieces-design-brief.md`.
+Oct 30, 2026. **Approved by the director at gate 1 (Oct 30: "I like this"), with the decisions in section 11.** **Then filled in full** (`fill/`, from `fill-brief.md`); the lead's rulings on the fill's challenges (`fill-rulings.md`) change some lines here, and where they differ, the rulings and the fill win. The lead's design of every rare and legendary piece, every formation, every upgrade and the 16 mythics, one line each, built backwards from the twelve builds in `builds.md` and written all together. Commons and uncommons get a rule per kind, not lines. No numbers yet: the fill writes them, inside the ranges below. This is gate 1 of `pieces-design-brief.md`.
 
 ## For your read
 
