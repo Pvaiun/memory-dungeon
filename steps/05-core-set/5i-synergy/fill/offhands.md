@@ -35,7 +35,7 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the ten offhand kinds,
 | Horn | Ram's horn | Ivory horn | Reveille | Bull's horn | War horn | Echo horn | Horn of the charge | Rallying horn |
 | Tome | Scholar's codex | Hymnal | Snowbound folio | Abridged lexicon | Primer of frost | Treatise on the field | Last page | Annotated grimoire |
 | Lantern | Brass lantern | Hooded lantern | Pitch lantern | Dazzling lantern | Bellows lantern | Signal lantern | Wick | Lamp of vigil |
-| Relic | Shrine token | Blessed knot | Holy water | Mending icon | Saint's knucklebone | Reliquary of mercy | Phylactery | Bones of the returned |
+| Relic | Shrine token | Blessed knot | Holy water | Charnel icon | Saint's knucklebone | Reliquary of mercy | Phylactery | Bones of the returned |
 | Bell | Temple bell | Prayer bell | Quickening chime | Waking bell | Tempo bell | Warding bell | Bell of the hour | Funeral bell |
 | Totem | Standing stone | Hawthorn fetish | Spinebark pole | Bear fetish | Briar totem | Stone totem | Earthmother totem | Wild hunt totem |
 | Vial | Red tincture | Hemlock phial | Clotting salve | Crimson dregs | Blood vial | Venom vial | Vial of the last breath | Bloodlust draught |
@@ -433,7 +433,7 @@ The spine's rule: commons lean Magic, HP, MP; uncommons a few Burn on every foe 
 
 ## Relic (Cleric, Valkyrie)
 
-The spine's rule: commons lean Magic, MP regen, HP; uncommons heals that also cleanse one debuff, a Regen on the lowest ally at the start. The eight: riders on heals (a cleanse, Might), cheaper and quicker revives, overhealing turned into a Shield, and a revive that trades readiness for HP.
+The spine's rule: commons lean Magic, MP regen, HP; uncommons heals that also cleanse one debuff, a Regen on the lowest ally at the start. Under G7 (the second round) the Regen at the start goes, since the mace's Mender's mace has it for the Cleric; the second uncommon mends the hurt as foes fall instead. The eight: riders on heals (a cleanse, Might), a mend from each fallen foe, cheaper and quicker revives, overhealing turned into a Shield, and a revive that trades readiness for HP.
 
 #### Shrine token · relic · common
 - **Card:** Relic. Fits Cleric, Valkyrie. MP regen +2.
@@ -456,11 +456,14 @@ The spine's rule: commons lean Magic, MP regen, HP; uncommons heals that also cl
 - **Hooks:** the piece's status: addition 7 (a heal given, from the healer's side), kind `ability` → `remove` label `debuff`, count 1, `to: other`.
 - **Builds:** Pact 1 ● (Weaken and Rot off the drinker), Toll 1 ● (the anchor kept clean), Phoenix 1 ●.
 
-#### Mending icon · relic · uncommon
-- **Card:** Relic. Fits Cleric, Valkyrie. MP regen +1. At the start of every fight, the ally with the lowest share of its HP gains a short Regen.
-- **Numbers:** MP regen +1 (3,000). A short Regen (G1): 12 ticks, half its own, so three pulses, 24% of that ally's max HP.
-- **Hooks:** the piece's status: `fight_start` → `apply` regen, duration 12, `to: { side: allies, pick: lowest, by: hp_share }`.
-- **Builds:** Pact 1 ●, Phoenix 1 ●, Toll 1 ●.
+#### Charnel icon · relic · uncommon
+- **Card:** Relic. Fits Cleric, Valkyrie. MP regen +1. Each time a foe falls, the ally with the lowest share of its HP is healed a little.
+- **Numbers:**
+  - MP regen +1 (3,000).
+  - 6% of the healed ally's max HP a fall. A regular fight's three or four kills before the last come to about a fifth of one ally's HP, about what the short Regen at the start gave, but paid out as the fight is won.
+  - It replaces the Regen at the start (and the name Mending icon, a near-twin of Mender's mace), which repeated the mace's for the Cleric (G7, second round). No other kind the Cleric or the Valkyrie wears heals on a foe's fall.
+- **Hooks:** the piece's status: `ko` (whose `foe`) → `heal` `{ ratio: 0.06, stat: max_hp, of: target }`, `to: { side: allies, pick: lowest, by: hp_share }`.
+- **Builds:** Hunt 1 ● (each kill mends the hurt), Pact 1 ● (life bought back), Phoenix 1 ● (the returned kept up).
 
 #### Saint's knucklebone · relic · rare
 - **Card:** Relic. Fits Cleric, Valkyrie. Each time one of its holder's abilities heals an ally, that ally gains a few Might.

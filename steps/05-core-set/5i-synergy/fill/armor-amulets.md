@@ -513,9 +513,8 @@ To check, not yet new: whether a knocked-out unit can be given a timed status (P
 
 ## Least sure
 
-The rulings settled Matins robe's Clarity and the duplicates across kinds (G7), Gambler's coin and Windrunner's Evasion (their rulings) and Heat (G3). The rest stands, with one new item.
+The rulings settled Matins robe's Clarity and the duplicates across kinds (G7), Gambler's coin and Windrunner's Evasion (their rulings), Heat (G3) and Thornheart plate against swarms (G11). The rest stands, with one new item.
 
 1. **Blood covenant's rate:** a share of HP for the same share of MP is exact (a pool for a pool) but makes walls pay hard (Stand fast is a fifth of the Knight's small pool, so a fifth of its HP). The other reading, half the MP cost in HP, lets walls cast almost free.
-2. **Thornheart plate against swarms:** it reaches +300 Thorns in about a dozen ticks on six to eight foes.
-3. **Echo charm carries no Double strike,** since Wasp charm would then be its small version, so it does nothing on a unit without extra strikes (in kit, only the Monk and the Stormcaller have them).
-4. **New, written under G7 and not yet read:** Courier's coat (Haste below half), Silvered hauberk (the first magical hit halved), Matins robe (the first ability free), Glyphed robe (a Shield each cast). Red ribbon's new Taunt below half is the round shield's uncommon effect too, and the Hoplite and Valkyrie wear both.
+2. **Echo charm carries no Double strike,** since Wasp charm would then be its small version, so it does nothing on a unit without extra strikes (in kit, only the Monk and the Stormcaller have them).
+3. **New under the rulings and not yet read:** Courier's coat (Haste below half), Silvered hauberk (the first magical hit halved), Matins robe (the first ability at half cost), Glyphed robe (a Shield each cast), Keystone cuirass (basic attacks from Armor). Red ribbon's new Taunt below half is the round shield's uncommon effect too, and the Hoplite and Valkyrie wear both.

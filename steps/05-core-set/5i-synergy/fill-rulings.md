@@ -145,6 +145,7 @@ A fresh reader read all seven files together. These are the lead's rulings on wh
 - Focused curse: twice as much, not three times. Searing: a few Burn on the foe with the most, not twice as many.
 - Hexweave mail: +5% a debuff, up to six debuffs. Counting debuffs is an engine addition (as upgrades-2 says).
 - Oathkeeper: its sweep hits every other foe for half.
+- Storm pike: its Charge caps at 6, so under G11 its storm comes about as often as before. Skyshot bow became the Snaring bow.
 - Matins robe: the first ability each fight costs half.
 - Reprisal hauberk: strikes back at the first three foes that hit it each fight.
 - Supercell: up to +40%.
