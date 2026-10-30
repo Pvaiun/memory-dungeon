@@ -326,12 +326,12 @@ A free cast waits on its voice until that voice casts. A second cue before then 
 
 ### The undying · legendary
 **Card:** "One gives itself so the others live: when it falls they're made whole, and it stands again before the next fight."
-- **Martyr** · "Draws far more. Can't be healed by others. The first time it falls each fight, the others heal to full; it stands again after the fight with half its HP." Aggro +25. Heals from other units, a Regen they gave included, don't land on it; its own heals and Lifesteal do. The first time it falls in a fight, every other ally heals to full; if it's raised and falls again, nothing more. If it's down when a fight is won, it stands with half its max HP for the next, with every ability on full cooldown (G10).
+- **Martyr** · "Draws far more. Can't be healed by others. When it falls, the others heal to full; it stands again after the fight with half its HP." Aggro +25. Heals from other units, a Regen they gave included, don't land on it; its own heals and Lifesteal do. Each time it falls, every other ally heals to full, again after each revive. If it's down when a fight is won, it stands with half its max HP for the next, with every ability on full cooldown (G10).
 - **Spared** ×2 · nothing of their own.
 
 **Party effect:** none beyond the Martyr's fall.
-**Shape:** a party built round one sacrifice, made once a fight.
-**Hooks:** Martyr: heals from others don't land (**NEW** 3). A seat status that survives a KO, reacting to its own `ko` with `heal` to `{ side: others, pick: all }` for their missing HP, once a fight (the status spends itself). The return is engine 12 (after a won fight), with every ability on full cooldown (G10). It covers the unit that fell in this seat, so a fallen unit moved into the seat between fights doesn't stand.
+**Shape:** a party built round one sacrifice that keeps being made.
+**Hooks:** Martyr: heals from others don't land (**NEW** 3). A seat status that survives a KO, reacting to its own `ko` with `heal` to `{ side: others, pick: all }` for their missing HP. The return is engine 12 (after a won fight), with every ability on full cooldown (G10). It covers the unit that fell in this seat, so a fallen unit moved into the seat between fights doesn't stand.
 **Builds:** Phoenix 3 ●●● (a fall that doesn't stay, and a return between fights), Pact ●● (life passed on).
 
 ### The hurricane · legendary
@@ -358,7 +358,7 @@ I read "once it falls" as "while it's down". If the Peak is raised, the Foothill
 **Card:** "Every single-target hit the party lands is a tenth softer, and also strikes the healthiest other foe, for a quarter."
 - **Thunderhead** ×3 · nothing.
 
-**Party effect:** each hit from a basic attack or a single-target ability deals a tenth less, and also hits the foe with the most current HP other than the first target (with one foe, nothing). The second hit is a quarter of the first, before mitigation, and meets that foe's own Armor or Magic resist. It's a hit (an extra strike, so it never chains) and carries nothing of the first hit's riders or statuses.
+**Party effect:** each hit from a basic attack or a single-target ability also hits the foe with the most current HP other than the first target (with one foe, nothing). The second hit is a quarter of the first, before mitigation, and meets that foe's own Armor or Magic resist. It's a hit (an extra strike, so it never chains) and carries nothing of the first hit's riders or statuses.
 **Gives up:** a tenth of every single-target hit, all of it against a lone foe.
 **Shape:** every blow chips the biggest foe, so the field sinks together.
 **Hooks:** a −10 boost on single-target hits, and engine 9 (a reaction that strikes), sized from the triggering hit (**NEW** 4), aimed at `{ side: foes, pick: highest, by: hp, exclude }`.
