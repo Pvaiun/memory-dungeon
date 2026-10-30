@@ -20,6 +20,9 @@ This page distils their words; it isn't their words. Where it's wrong, they corr
 - **No limit on the type of effect,** on gear or formations, as long as each is phrased so the player knows what will happen. (`philosophy.md`)
 - **Engine additions, new rules and new stats,** as far as the designs need: "You can go as far as you want with that." (`builds.md`)
 - **Exotic one-offs and chaos:** "These types of games are about finding the chaos, finding the build in the chaos." (`philosophy.md`)
+- **Statuses are universal** (Oct 30, gate 2): a piece never applies a status for less, or more, than its own length. "I would keep statuses universal. You can't apply a shorter status."
+- **No balancing rules in this step** (Oct 30, gate 2): "don't make rules about balancing. We're gonna do that in the balancing pass." Synergies may be overpowered: "We're trying synergies now, it's okay if they're OP." The number ranges are first values, not limits.
+- **The engine can grow** (Oct 30, gate 2): "Engine growing is totally fine."
 
 ## Builds (`philosophy.md`, `builds.md`)
 

@@ -32,6 +32,8 @@ For each item in your share, in one markdown file (path in your share), in the o
 
 ## The ranges
 
+*At gate 2 (Oct 30) the director ruled out balancing rules in this step: these ranges are first values, not limits, and synergies may be overpowered. Statuses are universal, as the rule above says.*
+
 Numbers stay in today's ranges, so balance mostly holds. Use the scale's words wherever one exists.
 - **Stat steps:** +1 or +2 of a stat (a point is 1,000 on the scale); HP half a point a step; Aggro ±10 a step; MP regen a step as `scale.ts` sets it; Crit chance +1 is 3 points, +2 is 5. A step can be negative where a piece gives something up.
 - **Special stats** at their words: medium on commons, uncommons and rares; high only on a legendary or a mythic.

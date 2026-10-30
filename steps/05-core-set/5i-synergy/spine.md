@@ -50,6 +50,8 @@ Plus the 11 plain weapons, which stay the starters and the cheapest drops outsid
 
 ### Numbers: the ranges for the fill
 
+*At gate 2 (Oct 30) the director ruled out balancing rules in this step: these are the first values to write, not limits. Statuses are universal: no piece applies one for less, or more, than its own length.*
+
 Today's ranges, so balance mostly holds.
 - **Stat steps** as gear has them: +1 or +2 of a stat, half a point of HP, ±10 Aggro, a special stat medium (high only on a legendary).
 - **Stacks** in the classes' words: a few, several, many, read off the applier's stat the way a kit's are. A rider on every hit is "a few" or less.
