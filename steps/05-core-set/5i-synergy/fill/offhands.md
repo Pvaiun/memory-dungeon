@@ -496,7 +496,7 @@ The spine's rule: commons lean Magic, MP regen, HP; uncommons heals that also cl
 
 ## Bell (Monk, Cleric, Stormcaller)
 
-The spine's rule: commons lean MP regen, Evasion, Magic or Attack; uncommons a short Haste at the start, a Silence answer. The eight: tempo shared, a cleanse on a beat, cooldowns that come round, and a bell that rings for every fall.
+The spine's rule: commons lean MP regen, Evasion, Magic or Attack; uncommons a short Haste at the start, a Silence answer. Under G7 the Haste at the start goes (the fist weapons keep theirs), and the first uncommon quickens its holder on a dodge instead. The eight: a dodge that pays, tempo shared, a cleanse on a beat, cooldowns that come round, and a bell that rings for every fall.
 
 #### Temple bell · bell · common
 - **Card:** Bell. Fits Monk, Cleric, Stormcaller. Evasion medium, Attack +1.

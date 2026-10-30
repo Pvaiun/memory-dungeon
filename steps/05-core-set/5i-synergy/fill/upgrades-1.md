@@ -699,19 +699,20 @@ Each fits one class, sits in its slot, and a unit wears one at most. Offered in 
 
 ## CHALLENGES
 
-1. **Blossom** (Regrowth B): "half as long" changes Regen's duration, which the status rule forbids. I'd give the whole Regen to every ally on a long cooldown at 500 MP.
-2. **Triage and Last stand** (Cure A, Rally B) are one shape: wait for a low ally, heal double, for the same two builds. I'd keep Triage and make Last stand "heals for double, and the Valkyrie Taunts for 20 ticks" (she stands over the one she saved), which pulls toward Phoenix's martyr and the Toll.
-3. **Stand fast's power step** ("cheaper") starts on the ladder's bottom rung (200). I wrote 125, Blood drain's off-ladder price; the alternative, a shorter cooldown, would keep the Knight Taunting 20 of every 22 ticks.
-4. **Flight of the valkyries'** "longer cooldown" has no word past very long. I wrote 70 ticks; the lead may prefer a sixth word or "once a fight".
-5. **Martyr's raise** costs HP and no MP. I read the rule "revives cost 650" as the MP price of a revive that costs MP; at 650 MP and half its HP, the version would be worse than the base almost everywhere.
-6. **Stone guard** (Fortify A): the ally with the most Armor is often the Knight itself, and once Guarded (+3,000) it stays the most. I'd make it "the other ally with the most Armor", so it reaches the Armor-scaler it's for.
-7. **Horn of the keep:** I wrote the MP to "the other ally with the least MP". Read as "ally", the Knight (a pool of 1,000, the roster's smallest) would take most of it, and the casters it's meant to feed would get little.
-8. **Huntmaster's quiver:** its abilities have no Seek, so against a Taunting front the hunt points at the wall, and as armor it shuts out Tracker's coat (the Ranger's other route to Seek on abilities). I'd give its abilities Seek: "aim past any guard at the foe with the lowest HP".
+Each settled by the lead's rulings (`fill-rulings.md`):
+1. **Blossom:** settled by G1. A status can be applied for less than its own length, so the spine's line stands: Regen on every ally for 12 ticks.
+2. **Triage and Last stand:** settled by "Upgrades, first eight classes". Last stand heals double and the Valkyrie Taunts at half length (G1, 10 ticks).
+3. **Stand fast's power step:** settled at 125 MP.
+4. **Flight of the valkyries:** settled at 70 ticks.
+5. **Martyr's raise:** settled: it costs HP and no MP.
+6. **Stone guard:** settled: the other ally with the most Armor.
+7. **Horn of the keep:** settled: the other ally with the least MP.
+8. **Huntmaster's quiver:** settled: its abilities have Seek.
 
 ## NEW
 
 Engine needs beyond the spine's list:
-1. **An `if` on reactions:** a test of a side or of the event's other unit, as an ability's `if` tests a side. For Shared rites, Horn of the keep, Chains of light.
+1. **An `if` on reactions:** a test of a side or of the event's other unit, as an ability's `if` tests a side. For Shared rites, Horn of the keep, Chains of light, and The last wall's once per Aspis.
 2. **Basic attacks with a target rule from a passive:** Quarry and Overwatch. Engine 2 aims basic attacks by a status; this aims them by a rule. The pack and The vise (formations) need the same.
 3. **Two target `by`s:** the wind-up left (Cover) and the basic attack's interval (Accelerando). Cover also needs a rule whose fallback picks by something else.
 4. **A condition "is its side's highest by a stat"** (Sentence).
@@ -725,12 +726,11 @@ Engine needs beyond the spine's list:
 
 ## Least sure
 
-- **Pinning arrow** holds the most dangerous foe Slowed all fight on a quick 200-MP arrow, and **Lullaby** Slows every foe 24 ticks in 40. Both are "a hold that never bursts"; both may be too much on a lone boss.
+Settled by the rulings and taken off: Pinning arrow and Lullaby (the balance pass watches them), The last wall (capped and once per Aspis), the near-repeats (Penance and Chosen changed, and the Earthmother totem gives Might, not Guard).
+
 - **Heartwood mail** against swarms (the spine's own worry), worst beside Spreading thorns: every hit on any ally returns 300 to its attacker and 300 to another foe, both bleeding.
-- **The last wall** returns a boss's biggest blow in full and untyped, and Aspis comes straight back. With Watch the anchor it may decide every Crush.
 - **Metronome** against the Bard's 2,400 MP: a full beat costs 1,750, so it may spend the Bard dry in one fight. That fits "MP is fuel", but it may read as a mythic that empties its wearer.
 - **Shieldbearer** at a third more a swing, rising with Plate, Guard and Stone guard, may outclass Opening thrust everywhere but Ambush.
 - **Inquisition:** in any status party (Smite's own Burn included), the bonus is on nearly all fight.
 - **Taunts that last longer** are written as Taunt applied again: Overgrowth's second Taunt, Horn of the keep's renewal. Taunt keeps its own 20 ticks; check that this reads as the line meant.
-- **Near-repeats across slots:** Penance's Might and Saint's knucklebone's; Chosen's Might on the revived and the Rallying horn's; Grudge's Guard on a broken Shield and the Earthmother totem's. None can meet the other on one unit, but each pair is the same effect on a different trigger.
 - **Ward of life** puts a Shield and a revive on one very long cooldown; the shorter wind-up (normal) also makes its raise faster.

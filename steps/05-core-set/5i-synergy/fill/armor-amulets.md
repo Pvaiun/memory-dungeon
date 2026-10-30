@@ -1,6 +1,6 @@
 # The fill: armor and amulets
 
-Oct 30, 2026. One share of the fill (`../fill-brief.md`): the four armor types and the amulets, 72 pieces. Commons and uncommons are new, written from the spine's table (section 1, "Commons and uncommons, kind by kind"); rares and legendaries are the spine's lines (sections 3 and 5), written in full and in its order. Lines I'd change carry a **CHALLENGE**; engine needs beyond the spine's list carry a **NEW**. Both are gathered at the end.
+Oct 30, 2026. One share of the fill (`../fill-brief.md`): the four armor types and the amulets, 72 pieces. Commons and uncommons are new, written from the spine's table (section 1, "Commons and uncommons, kind by kind"); rares and legendaries are the spine's lines (sections 3 and 5), written in full and in its order. The lead's rulings (`../fill-rulings.md`, G1 to G10 and "Armor and amulets") are applied; where one changed a piece, the piece says so. Engine needs beyond the spine's list carry a **NEW**, gathered at the end with the challenges and what I'm least sure of.
 
 ## Words used below
 
