@@ -15,8 +15,9 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
 - **Stacks** follow `scale.ts`: an ability adds twice the word per point of its stat (few 1.4 a point, several 2.6, many 4.6), a passive's rider on a hit the word once; a kit's own multiplier (Cold hex × 1.3, Burning fist × 0.6, Frost lance × 0.6, Blizzard × 0.45, Stillness × 0.5, the Stormcaller's Shock × 1.5) stays unless the entry says otherwise.
 - **Hits** read off their stat: touch 0.17, light 0.29, normal 0.5, heavy 0.85.
 - **Time:** cooldowns quick 14, short 22, medium 30, long 40, very long 56 ticks (moved up to 15% by id, as today); wind-ups quick 1, normal 3, long 6, very long 8.
-- **A kit state** is a status a kit keeps on a unit, as Bedrock's and Last rites' are today: shown on the sheet or as an icon, never a new word for the player. Its duration is its own. A status from the vocabulary (Taunt, Hidden, Stun, Haste…) always keeps its own duration: where a line asks for a shorter one, there's a CHALLENGE.
-- **Counters** keep one meaning across every share. Heat is used here as the formations share read it: 3% more damage on the holder's hits a stack, to a cap of 15, never spent, ending with the fight. The lead fixes it once.
+- **A kit state** is a status a kit keeps on a unit, as Bedrock's and Last rites' are today: shown on the sheet or as an icon, never a new word for the player. Its duration is its own. A status from the vocabulary (Taunt, Hidden, Stun, Haste…) can be applied for less than its own length, never more (the lead's ruling G1): "short" or "a moment" is half its own length.
+- **Counters** keep one meaning across every share. Heat (G3): +3% damage a stack, up to 15, kept all fight. This share uses no Marked or Fervor, and nothing in it reshapes a swing (G5).
+- **The lead's rulings** (`fill-rulings.md`) are applied: where an entry changed, it says so in its numbers, and the list at the end says which ruling settled each challenge.
 
 ---
 
@@ -37,11 +38,10 @@ Magic 4, Attack 3, HP 2, MP 1,700, Siphon medium. Dagger (fast, physical) or run
 - **Builds:** Bonfire (the stoker: a second Kindling on a fast weapon). It leaves Snap.
 
 **B, Deep cold**
-- **Card:** Its basic attacks add Chill only to the foe with the most Chill, twice as many; stacks scale from Magic.
-- **Numbers:** 7.3 a hit, wherever the attack landed, to the foe with the most Chill (with none chilled, a random foe). A shatter spends that foe's Chill, so the next most-chilled takes over.
+- **Card:** Its basic attacks add Chill only to the foe with the most Chill, half again as many; stacks scale from Magic.
+- **Numbers:** 5.5 a hit, wherever the attack landed, to the foe with the most Chill (with none chilled, a random foe). A shatter spends that foe's Chill, so the next most-chilled takes over. Half again, not the spine's twice (ruling): at twice, a lone boss shattered about every 10 ticks and was Stunned most of the fight; at half again, about every 14.
 - **Hooks:** the same reaction, its `apply` aimed at `{side: foes, pick: highest, by: {stacks: chill}}` in place of `other`.
 - **Builds:** Snap (one foe walked to its shatter, then the next, on a count a watcher can follow).
-- **CHALLENGE:** against a lone boss "twice" is a plain double, and the shatter's Stun becomes a lock: on a dagger it lays 7.3 Chill every 5.6 ticks, a shatter and an 8-tick Stun about every 10 ticks, so the boss is Stunned most of the fight (the base already shatters it about every 20). I'd make it half again (5.5 a hit): a shatter about every 14 ticks on a boss, and concentration stays the version's point in a pack.
 
 ### Malison
 
@@ -83,7 +83,7 @@ Magic 4, Attack 3, HP 2, MP 1,700, Siphon medium. Dagger (fast, physical) or run
 
 **Now:** Applies Weaken and adds a few Sunder to the foe with the highest Attack or Magic; stacks scale from Magic. (Quick, normal wind-up, 450 MP; 5.6 Sunder.)
 
-**Power step:** more Sunder: two fifths more (7.8). Wither adds none, so there it's a rung cheaper (650 → 450). On Expose, two fifths more of its own stacks.
+**Power step:** more Sunder: two fifths more (7.8). Wither adds none, so there it's a rung cheaper (650 → 450). On Expose, two fifths more of its own stacks (14.6).
 
 **A, Wither**
 - **Card:** Weakens every foe.
@@ -92,11 +92,10 @@ Magic 4, Attack 3, HP 2, MP 1,700, Siphon medium. Dagger (fast, physical) or run
 - **Builds:** Toll (the blows keep coming and keep paying the Thorns, each smaller), Lockdown (Weaken as a hold on the whole field).
 
 **B, Expose**
-- **Card:** Adds many Sunder to the foe with the lowest HP; stacks scale from Magic.
-- **Numbers:** no Weaken. 18.4 Sunder (the cap is 20). The foe with the lowest current HP, no Seek.
+- **Card:** Adds several Sunder to the foe with the lowest HP; stacks scale from Magic.
+- **Numbers:** no Weaken. 10.4 Sunder (the cap is 20), so two casts cap the hunted foe. Several, not the spine's many (G8): many reached the cap in one cast. The foe with the lowest current HP, no Seek.
 - **Hooks:** `target: {side: foes, pick: lowest, by: hp}`.
 - **Builds:** Hunt (the foe about to fall takes more from everyone), Cuts (Sunder lifts every small hit).
-- **CHALLENGE:** many reaches Sunder's cap in one cast at Magic 4 and passes it with any Magic gear, against the director's 5g rule that a cap one cast reaches is a sledgehammer (Enfeeble went from several to a few for exactly this). I'd make it several (10.4): two casts cap the hunted foe.
 
 ### Mythic: The witch-blade
 
@@ -144,10 +143,9 @@ Attack 3.7, HP 3, MP 750, Evasion high (35), Double strike medium (25). Fist wea
 
 **B, Stillness of mind**
 - **Card:** Taunts for a short while, and raises its Evasion by 35 for 20 ticks. No Haste.
-- **Numbers:** a short Taunt (10 ticks, as the line asks; see CHALLENGE). Evasion +35 (high) in a kit state: with the Monk's own high Evasion, 70, under the cap of 75.
-- **Hooks:** `apply taunt`; a kit state, Refresh, 20 ticks, `stats: evasion +35`, both `to: self`.
+- **Numbers:** a short Taunt: 10 ticks, half its own (G1). Evasion +35 (high) in a kit state for 20 ticks, so the blows that follow the Taunt still miss: with the Monk's own high Evasion, 70, under the cap of 75.
+- **Hooks:** `apply taunt`, `duration: 10`; a kit state, Refresh, 20 ticks, `stats: evasion +35`, both `to: self`.
 - **Builds:** Toll (the dancer anchor: it draws, then dodges; with a dodge that pays, every miss strikes back).
-- **CHALLENGE:** "a short Taunt" changes how long Taunt lasts, which the status rule forbids (part 1 challenged Blossom's half Regen the same way). I'd give the whole Taunt (20 ticks) with the Evasion for the same 20: on Flow's long cooldown that's an anchor half of every fight.
 
 ### Burning fist
 
@@ -171,7 +169,7 @@ Attack 3.7, HP 3, MP 750, Evasion high (35), Double strike medium (25). Fist wea
 
 **Now:** Has Seek. Deals physical damage that scales from Attack to the foe with the highest Attack or Magic, and applies Stun. (Medium, normal wind-up, 325 MP; a normal hit, 1,850.)
 
-**Power step:** more damage: two fifths more (0.7 of Attack, 2,590). On Vital strike, two fifths more of its amount.
+**Power step:** more damage: two fifths more (0.7 of Attack, 2,590). On Vital strike, two fifths more of its amount (1.4 of Attack, 5,180).
 
 **A, Lingering point**
 - **Card:** Has Seek. Deals physical damage that scales from Attack to the foe with the highest Attack or Magic, and applies Stun. When that Stun ends, the foe is Slowed.
@@ -180,16 +178,15 @@ Attack 3.7, HP 3, MP 750, Evasion high (35), Double strike medium (25). Fist wea
 - **Builds:** Lockdown (a window that closes slowly: the foe's next wind-up and swings come late).
 
 **B, Vital strike**
-- **Card:** Has Seek. Deals triple physical damage that scales from Attack to the foe with the lowest HP. No Stun.
-- **Numbers:** 1.5 of Attack (5,550). `target: {side: foes, pick: lowest, by: hp}`, with Seek.
+- **Card:** Has Seek. Deals double physical damage that scales from Attack to the foe with the lowest HP. No Stun.
+- **Numbers:** 1.0 of Attack (3,700). Double, not the spine's triple (ruling): triple was 2.8 times the Assassin's Backstab on the same target. `target: {side: foes, pick: lowest, by: hp}`, with Seek.
 - **Builds:** Hunt (a kill on the beat).
-- **CHALLENGE:** triple, unconditional, is 5,550 on the foe with the lowest HP every 30 ticks: 2.8 times the Assassin's Backstab (2,000) on the same target, and past the brief's "double only on a condition a fight meets a few times". I'd make it double (3,700): still the Monk's kill, and still bigger than Backstab before crits.
 
 ### Mythic: Ember palms
 
 - **Slot:** weapon: fast (6.0 ticks), physical, one hand. Fits the Monk.
 - **Card:** Every hit the Monk lands adds a Burn. Every 5 ticks, it gains a Heat for each burning foe, up to three at a time.
-- **Numbers:** one Burn a hit (basic attacks, extra strikes and ability hits). Heat at the shared reading (3% a stack, cap 15): against a pack with three burning it reaches the cap by tick 25; against a lone boss about 8 Heat (24%) at tick 40 and the cap at tick 75. A plain fist weapon's damage (medium base and ratio, from Attack), and Attack +1.
+- **Numbers:** one Burn a hit (basic attacks, extra strikes and ability hits). Heat as G3 sets it (+3% damage a stack, up to 15, kept all fight): against a pack with three burning it reaches the cap by tick 25; against a lone boss about 8 Heat (24%) at tick 40 and the cap at tick 75. A plain fist weapon's damage (medium base and ratio, from Attack), and Attack +1.
 - **Hooks:** a rider on the holder's hits (`riders`: `apply burn`, 1 stack); a pulse every 5 ticks applying Heat to the holder, as many stacks as there are burning foes, at most 3. **NEW:** a scale that counts the units on a side meeting a condition (foes holding Burn).
 - **Pulls toward:** Bonfire 3 ●●●, Cuts ●●.
 
@@ -266,18 +263,17 @@ Attack 5, HP 2, MP 1,450, Crit chance 5 (20%), Crit damage high (× 2), Evasion 
 - **Builds:** Lockdown (an interrupt that waits for the cast, past the front).
 
 **B, Garrote wire**
-- **Card:** Has Seek. Deals physical damage that scales from Attack to a random foe that isn't Taunting, applies Rot, and adds many Bleed; stacks scale from Attack. No Silence.
-- **Numbers:** Rot at its own numbers (60% less healing for 20 ticks); many Bleed, 23. The target no longer skips Silenced foes.
+- **Card:** Has Seek. Deals physical damage that scales from Attack to a random foe that isn't Taunting, applies Rot, and adds several Bleed; stacks scale from Attack. No Silence.
+- **Numbers:** Rot at its own numbers (60% less healing for 20 ticks); several Bleed, 13. Several, not the spine's many (G8): many was 23, worth about three times the hit. The target no longer skips Silenced foes.
 - **Builds:** Hunt against healers (Rot on what the hunt is killing: the anti-heal nobody had).
-- **CHALLENGE:** many at Attack 5 is 23 Bleed, worth about 7,600 over the hits that follow: three times the hit itself, past anything a kit lays today (Firebolt's 13 is the most). I'd make it several (13), the Ranger's Barbed arrow's size.
 
 ### Mythic: Night's edge
 
 - **Slot:** armor. Fits the Assassin.
-- **Card:** When the Assassin lands a killing blow, it's Hidden. While it's Hidden, its hits always crit.
-- **Numbers:** Hidden at its own 10 ticks (the line's "a moment"); it lands only if the Assassin isn't already Hidden for longer, so it never cuts a Vanish short. Every hit while Hidden crits, so Lacerate's Bleed lands on each. HP +1 step.
-- **Hooks:** engine 5 (the KO's killer: the physical weapons share's NEW A) → `apply hidden` to self if it lacks it. A kit state on Hidden's `status_gained` and `status_ended`, as Bedrock's is on its Shield: `crit_chance +100`. The crit is the Assassin's own state, so it needs no crit by target condition. Engine 17.
-- **Pulls toward:** Hunt 3 ●●● (each kill hides it and makes the next blow certain), Ambush ●●.
+- **Card:** When the Assassin lands a killing blow, it's Hidden for a moment, and its next hit deals double damage.
+- **Numbers:** Hidden for 5 ticks, half its own (G1); it lands only if the Assassin isn't already Hidden, so it never cuts a Vanish short. The next hit after the kill +100% (it can crit on top); a few kills a fight, so the double stands under G9. HP +1 step. (The ruling: the first draft's "every hit from Hidden crits" brought back Shadow strike, which the director retired on Oct 26.)
+- **Hooks:** the killing blow it lands (the engine additions gathered: who landed it) → `apply hidden`, `duration: 5`, to self if it lacks Hidden; and a kit state on self (Fizzle, `boosts` +100 on both damage tags) that removes itself on its next `hit_lands`. Engine 17.
+- **Pulls toward:** Hunt 3 ●●● (each kill hides it for a breath and makes the next blow land twice as hard), Ambush ●●.
 
 ---
 
@@ -310,10 +306,9 @@ HP 4, Attack 4, MP 1,700, Lifesteal high (20%). Fist weapons (fast) or great wea
 **Power step:** more damage: two fifths more (0.56 of max HP, 2,240). The same on both: more Lifesteal with it, and on Drain the well more MP.
 
 **A, Bloodletting**
-- **Card:** Deals physical damage that scales from max HP to a random foe, and adds many Bleed; stacks scale from max HP. No Weaken.
-- **Numbers:** many from max HP: 18.4.
+- **Card:** Deals physical damage that scales from max HP to a random foe, and adds several Bleed; stacks scale from max HP. No Weaken.
+- **Numbers:** several from max HP: 10.4, the Ranger's Barbed arrow's size. Several, not the spine's many (G8): many was 18.4 every 14 ticks for 125 MP.
 - **Builds:** Pact (the claws that keep opening the wound), Cuts (a fast party sets it off hit after hit).
-- **CHALLENGE:** 18.4 Bleed every 14 ticks for 125 MP is about 6,000 worth of Bleed a cast, nearly twice the Ranger's Barbed arrow (10.4, also a quick cast); and HP gear raises it. I'd make it several (10.4).
 
 **B, Drain the well**
 - **Card:** Deals physical damage that scales from max HP to a random foe, and drains MP from it: a quarter of the damage dealt, given to the ally with the least MP. No Weaken.
@@ -352,10 +347,9 @@ HP 4, Attack 4, MP 1,700, Lifesteal high (20%). Fist weapons (fast) or great wea
 - **Builds:** Pact (the bigger the blows, the more it drinks).
 
 **B, Blood rage**
-- **Card:** Adds several Might to the ally with the highest Attack or Magic; stacks scale from the Vampire's Attack.
-- **Numbers:** `target: {side: allies, pick: highest, by: {stats: [attack, magic]}}`.
+- **Card:** Adds several Might to the other ally with the highest Attack or Magic; stacks scale from the Vampire's Attack.
+- **Numbers:** `target: {side: others, pick: highest, by: {stats: [attack, magic]}}`. The other ally, not the spine's "the ally" (ruling): with the Vampire included, it often kept the Might and the version read as the base.
 - **Builds:** Landslide (the hammer: Might on one unit, spent by its few, big actions), Cuts.
-- **CHALLENGE:** "the ally" includes the Vampire (Attack 4), so beside a Knight, Bard or Cleric it keeps the Might and the version reads as the base. I'd make it "the other ally with the highest Attack or Magic".
 
 ### Mythic: Thrall's chalice
 
@@ -396,10 +390,9 @@ Magic 5, HP 2, MP 3,800. Staff (slow, two hands) or wand (fast), both magical; R
 **Power step:** more Burn: two fifths more (18.2). On Slow burn, two fifths more of its own Burn; on Flash bolt, of its halved Burn (9.1).
 
 **A, Slow burn**
-- **Card:** Deals half the magical damage, scaling from Magic, to the foe with the most Burn, and adds twice the Burn; stacks scale from Magic.
-- **Numbers:** a hit of 0.145 of Magic (725); 26 Burn.
+- **Card:** Deals half the magical damage, scaling from Magic, to the foe with the most Burn, and adds half again the Burn; stacks scale from Magic.
+- **Numbers:** a hit of 0.145 of Magic (725); 19.5 Burn. Half again, not the spine's twice (ruling): twice was +65% on the Pyromancer's main spell for the 725 of hit it gave up; half again is about +25%, more of it later.
 - **Builds:** Bonfire (a fire that lasts).
-- **CHALLENGE:** 13 more Burn are worth about 4,800 over their decay, against the 725 of hit it gives up: an unconditional +65% on the Pyromancer's main spell, past the brief's boost ranges, and the upkeep on the hottest foe rises from about 23 to about 40 (Pyre with it). I'd make it half again the Burn (19.5): a fire that lasts, at about +25%.
 
 **B, Flash bolt**
 - **Card:** A quick bolt: deals magical damage that scales from Magic to the foe with the most Burn, and adds a few Burn; stacks scale from Magic.
@@ -413,10 +406,9 @@ Magic 5, HP 2, MP 3,800. Staff (slow, two hands) or wand (fast), both magical; R
 **Power step:** more damage: two fifths more (1,190 each). On both versions, two fifths more of their own hit.
 
 **A, Conflagration**
-- **Card:** Deals magical damage that scales from Magic to every foe, and adds many Burn to each; stacks scale from Magic.
-- **Numbers:** long cooldown (was medium); 23 Burn on each foe.
+- **Card:** Deals magical damage that scales from Magic to every foe, and adds several Burn to each; stacks scale from Magic. A longer cooldown.
+- **Numbers:** long cooldown (was medium); 13 Burn on each foe, about two fifths more Burn a tick than the base. Several, not the spine's many (G8): many was 23 on every foe, two and a half times the base's rate.
 - **Builds:** Bonfire, Harvest (every foe lit deep at once).
-- **CHALLENGE:** many is 23 Burn on every foe, about 8,000 worth each over its decay, two and a half times the base's Burn rate on the longer cooldown: on six foes, one cast is most of a fight's damage. I'd make it several (13), about two fifths more Burn a tick than the base, which is a clear choice against Flashfire.
 
 **B, Flashfire**
 - **Card:** A quick blast: deals magical damage that scales from Magic to every foe, smaller, and adds a little Burn to each; stacks scale from Magic.

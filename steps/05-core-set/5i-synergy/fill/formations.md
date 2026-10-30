@@ -2,7 +2,9 @@
 
 Oct 30, 2026. The 32 formations of `spine.md` section 6, written in full and in its order: 11 common, 12 rare, 9 legendary. Neutral stays as it is (three seats that do nothing, no effect). Written from `fill-brief.md`.
 
-Each formation gives its rarity, the **card** (one line, as the player reads it), its three **seats** (the seat's text as the player reads it, then the numbers), its **party effect** if it has one, its **shape** (what the three seats add up to), its **hooks** and its **builds**. Where a line can't work as the spine wrote it, it's written as the spine wrote it and a **CHALLENGE** follows.
+Each formation gives its rarity, the **card** (one line, as the player reads it), its three **seats** (the seat's text as the player reads it, then the numbers), its **party effect** if it has one, its **shape** (what the three seats add up to), its **hooks** and its **builds**.
+
+**Updated Oct 30 with the lead's rulings** (`fill-rulings.md`): the global rulings G1 to G10 and the section "The formations". The challenges they settled are listed at the end.
 
 ## The words, as numbers
 
@@ -22,7 +24,9 @@ A seat's stat step is 1.25 gear steps (`FORMATION_STEP` in `content/core-set/for
 | Abilities cost less | the cost stat (engine 3) | −10 is a tenth less |
 | Evasion, Thorns, Lifesteal, Crit damage | medium 20; medium 150, high 300; medium 10%; medium +25 | |
 
-**Statuses keep their own numbers:** Taunt 20 ticks, Guard +3,000 Armor for 28, Haste +40 speed for 20, Slow −40 for 24, Weaken −30% for 20, Stun 8, Silence 16, Regen 8% of max HP every 4 ticks for 24, Might 6% a stack (one spent per action, cap 15), a Shield's cap half its holder's max HP. **"Taunts all fight"** is Taunt at the start, given again each time it ends, so Taunt's own length is never changed.
+**Statuses keep their own numbers:** Taunt 20 ticks, Guard +3,000 Armor for 28, Haste +40 speed for 20, Slow −40 for 24, Weaken −30% for 20, Stun 8, Silence 16, Regen 8% of max HP every 4 ticks for 24, Might 6% a stack (one spent per action, cap 15), a Shield's cap half its holder's max HP. **G1:** a status can be applied for less than its own length, never more; "short" is half its own length, and a shorter length written here stands. **"Taunts all fight"** is Taunt at the start, given again each time it ends, so Taunt is never applied for longer than its own length.
+
+**Marked (G2):** a debuff on a foe, 14 ticks, Refresh. The party's basic attacks pick a Marked foe, by draw among several. Each unit keeps one Mark: a new Mark it applies moves its old one. Abilities follow their own targeting. While a foe Taunts, only basic attacks with Seek follow the Mark past it. **Heat (G3):** +3% damage a stack, up to 15, kept all fight. No formation uses Fervor.
 
 **A seat's statuses already exist:** a `Position` carries `stats` and `statuses`, applied at the fight's start and again on a revive (`src/schema.ts`). Unconditional seats need nothing new. A seat that reads who sits in it is engine 13.
 
@@ -40,9 +44,9 @@ A seat's stat step is 1.25 gear steps (`FORMATION_STEP` in `content/core-set/for
 **Party effect:** none.
 **Shape:** all the danger on one unit, and nothing taken from it. The plainest front line.
 **Hooks:** seat `stats` only. Nothing new.
-**Builds:** Toll 1 ●● (an anchor that draws), Landslide 1 ●● (the Wall's Armor feeds a Geomancer's Earthen shell, Rockfall and Tremor, and the Hoplite's Shieldbearer), Bonfire 1 ●● (the keeper holds the early fight), Harvest ● (a rod), Phoenix ● (it chooses who falls first).
+**Builds:** Toll 1 ●● (an anchor that draws), Landslide 1 ●● (the Wall's Armor feeds a Geomancer's Earthen shell, Rockfall and Tremor, and the Hoplite's Shieldbearer), Bonfire 1 ●● (the keeper holds the early fight), Harvest ● (a unit that draws the whole field), Phoenix ● (it chooses who falls first).
 
-### Anvil · common
+### Heavy line · common
 **Card:** "One strikes, one holds, one is free."
 - **Hammer** · "Attack up. Its crits hit harder. Draws less." Attack +1,250, Crit damage medium (+25), Aggro −13.
 - **Holder** · "Draws more. HP up two steps." Aggro +13, HP +1,250.
@@ -86,10 +90,9 @@ A seat's stat step is 1.25 gear steps (`FORMATION_STEP` in `content/core-set/for
 **Card:** "Pace yourselves: everyone mends in each fight's first ticks, and hits a little softer."
 - **Marcher** ×3 · nothing.
 
-**Party effect:** when each fight starts, every ally gains a short Regen: 8 ticks, two pulses of 8%, 16% of its max HP. Every ally deals 10% less damage, all fight.
+**Party effect:** when each fight starts, every ally gains a short Regen: 8 ticks, two pulses of 8%, 16% of its max HP (G1: shorter than half its own 24, as written). Every ally deals 10% less damage, all fight.
 **Shape:** even and steady: a little health back every fight, paid for in every fight's damage.
 **Hooks:** a formation status reacting to `fight_start` with `apply` regen (duration 8), and a −10 boost on all the holder's hits.
-**CHALLENGE:** "a short Regen" changes how long Regen lasts, which the fill brief rules out (a piece decides who gets a status and when, never its length). See CHALLENGES 1.
 **Builds:** Pact 1 ●● (refilling what the pact costs), Toll ● (the anchor topped up), Phoenix ● (a unit back at low HP survives the next fight).
 
 ### First light · common
@@ -113,13 +116,13 @@ A seat's stat step is 1.25 gear steps (`FORMATION_STEP` in `content/core-set/for
 
 ### Ring of steel · common
 **Card:** "One draws the field onto its spikes; two cut it down."
-- **Rod** · "Draws far more. Thorns." Aggro +25, Thorns medium (150).
+- **Beacon** · "Draws far more. Thorns." Aggro +25, Thorns medium (150).
 - **Reaper** ×2 · "Attack and Magic up." Attack +1,250, Magic +1,250.
 
 **Party effect:** none.
 **Shape:** one unit holds the field and returns a little of every blow; two hit harder because nothing is hitting them.
 **Hooks:** seat `stats`. Nothing new.
-**Builds:** Harvest 1 ●● (the rod holds the full field while the reapers spread), Toll 1 ●● (an anchor's thorns).
+**Builds:** Harvest 1 ●● (the Beacon holds the full field while the reapers spread), Toll 1 ●● (an anchor's thorns).
 
 ### Vigil · common
 **Card:** "One stands where the blows fall. While anyone lies fallen, the two who keep watch hit harder."
@@ -148,23 +151,22 @@ A seat's stat step is 1.25 gear steps (`FORMATION_STEP` in `content/core-set/for
 ### Hammer and anvil · rare
 **Card:** "One takes the blows, one strikes like a falling hill, one builds stone around the striker."
 - **Anvil** · "Draws more. Guarded when each fight starts." Aggro +13; Guard at the fight's start, at its own numbers.
-- **Hammer** · reads its weapon. "With a slow weapon: basic attacks come half as often and deal triple. Otherwise: Attack up." With a great weapon, mace or staff: `attack_speed` −50 (its swing interval doubled) and +200% on its basic attacks' hits. With any other weapon: Attack +1,250.
+- **Hammer** · reads its weapon. "With a slow weapon: basic attacks come half as often and deal triple. Otherwise: Attack up." With a great weapon, mace or staff: `attack_speed` −50 (its swing interval doubled) and +200% on its basic attacks' hits. With any other weapon: Attack +1,250. Under G5 the seat's reshape is one swing shape among the others, and a unit takes one: its passive's first, then its pieces' in slot order, then the seat's. A unit that already has a shape (Phalanx, the Millstone, the Hummingbird charm, the Worldbreaker) gets its weapon's stat +1 (Attack or Magic +1,250) from this seat instead.
 - **Mason** · "Its Shields and Guards on an ally go to the Hammer first." When one of the Mason's abilities or pieces gives a Shield or a Guard to an ally other than itself, its first pick is the Hammer, if the Hammer can take it (a Shield at its cap passes to the usual target). Examples: a Geomancer's Earthen shell covers itself and the Hammer, a Knight's Fortify Guards the Hammer, a Hoplite's Paired guard covers itself and the Hammer.
 
 **Party effect:** none.
 **Shape:** the most lopsided rare: one huge swing, one wall, and one builder whose stone goes to the swing.
-**Hooks:** Anvil: a seat status reacting to `fight_start`. Hammer: engine 13 (reads its weapon kind's speed), then `attack_speed` and a `basic` boost, which exist. Mason: engine 13 (reads abilities that give a Shield or Guard) and engine 14, which changes an ability's target here (**NEW** 7), with the Hammer named by its seat (**NEW** 1).
-**CHALLENGE:** the reshape multiplies with Phalanx, the Millstone and the Worldbreaker. See CHALLENGES 6.
+**Hooks:** Anvil: a seat status reacting to `fight_start`. Hammer: engine 13 (reads its weapon kind's speed), then `attack_speed` and a `basic` boost, which exist, and one swing shape per unit (G5). Mason: engine 13 (reads abilities that give a Shield or Guard) and engine 14, which changes an ability's target here (**NEW** 7), with the Hammer named by its seat (**NEW** 1).
 **Builds:** Landslide 2 ●●● (the hammer seat, with stone on it for the Cornerstone maul and Bedrock), Snap ●● (the smash after a shatter), Lockdown ● (one big swing in a window).
 
 ### Hunting party · rare
 **Card:** "One picks the quarry, one runs it down past any guard, one holds the line."
-- **Marker** · "Its basic attacks Mark their target." Marked at its own numbers: the party's basic attacks go to a Marked foe while it lives.
+- **Marker** · "Its basic attacks Mark their target." Marked (G2): 14 ticks, and the party's basic attacks go to a Marked foe while it lives. Each swing moves the Marker's one Mark to the foe it hits.
 - **Chaser** · "Everything it does has Seek." Seek on its basic attacks and its abilities.
 - **Warden** · "Taunts when each fight starts." Taunt, its own 20 ticks.
 
 **Party effect:** none.
-**Shape:** a hunt in three parts: the picker, the reach, and the wall that buys the hunt its time. The Marker's first swing follows the usual pick (a random foe by draw, under the Taunt rule), so behind a Taunting front its first Mark lands on the front, unless the Marker already ignores Taunt (the Ranger's Hunter's eye).
+**Shape:** a hunt in three parts: the picker, the reach, and the wall that buys the hunt its time. The Marker's first swing follows the usual pick (a random foe by draw, under the Taunt rule), so behind a Taunting front its first Mark lands on the front, unless the Marker already ignores Taunt (the Ranger's Hunter's eye). While a foe Taunts, only basic attacks with Seek follow the Mark past it (G2): the Chaser's always do.
 **Hooks:** Marker: a rider on `basic` hits applying Marked (engine 2). Chaser: a status with `seek: all`. Warden: a seat status reacting to `fight_start`; Taunt ends Hidden (engine 17), so an Assassin in this seat loses its Vanish.
 **Builds:** Hunt 2 ●●● (the marker and the chaser), Lockdown ● (the Chaser reaches a caster).
 
@@ -182,12 +184,11 @@ A seat's stat step is 1.25 gear steps (`FORMATION_STEP` in `content/core-set/for
 ### Hoarfrost line · rare
 **Card:** "Two lay frost with every blow; the third waits to break what freezes."
 - **Frost** ×2 · "Basic attacks add a Chill." One Chill for each basic attack that lands.
-- **Breaker** · "When any foe's Chill shatters, its next hit deals triple." +200% on its next hit (the first hit of its next action), kept until it lands. A second shatter before then adds nothing.
+- **Breaker** · "When any foe's Chill shatters, its next hit deals double." +100% on its next hit (the first hit of its next action), kept until it lands. A second shatter before then adds nothing.
 
 **Party effect:** none.
 **Shape:** two feeders and a hammer on a fuse.
-**Hooks:** Frost: a rider on `basic` applying one chill. Breaker: a reaction to `status_capped` (whose: foe, status chill) applies a hidden buff (Refresh) with a +200 boost, which removes itself on the holder's next `hit_lands`. Nothing new.
-**CHALLENGE:** triple is past the brief's ceiling. See CHALLENGES 5.
+**Hooks:** Frost: a rider on `basic` applying one chill. Breaker: a reaction to `status_capped` (whose: foe, status chill) applies a hidden buff (Refresh) with a +100 boost, which removes itself on the holder's next `hit_lands`. Nothing new.
 **Builds:** Snap 2 ●●● (Chill on two units' basic attacks, and a payoff after each shatter), Lockdown ● (the shatter's Stun as a window).
 
 ### Reaping line · rare

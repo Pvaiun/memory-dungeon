@@ -10,7 +10,8 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 - **Stacks from a stat** read the wearer's stat the way a passive's do: a few is 0.7 a point, several 1.3, many 2.3. So a few is 2.1 at Attack 3, 2.8 at 4, 3.5 at 5.
 - **Two-handers** (bow, great weapon) are worth a weapon and an offhand. Their commons carry three steps (the spine's rule). Following the same logic, I gave their uncommons two steps beside the effect, and their rares one or two steps where a single effect is thin.
 - **A finding that helps several hooks.** A weapon's own `apply` (statuses attached to its hits) already rides its extra strikes, because an extra strike reuses the basic attack's damage effect (`strikes()` in `fight.ts`). Riders written on the weapon cover "basic attacks and extra strikes" with no new engine. Reactions to `hit_lands` of kind `basic` don't ride extra strikes.
-- **Marked** (spine section 1) has no numbers in the spine. Where my pieces use it, I assumed this: it lasts 10 ticks with Refresh, it works inside the Taunt rule (a basic attack without Seek still goes to a Taunting foe), and when several foes are Marked, a basic attack picks among them by draw. See "least sure".
+- **Marked** is as the lead's rulings define it (G2). It's a debuff on a foe that lasts 14 ticks, with Refresh. The party's basic attacks pick a Marked foe, and among several they pick by draw. Each unit keeps one Mark, so a new Mark it applies moves its old one. Abilities follow their own targeting. It works inside the Taunt rule: while a foe Taunts, only basic attacks with Seek follow the Mark past it.
+- **Short statuses** (G1): a status can be applied for less than its own length, never more. "Short" is half the status's own length, so the Taunt and Haste at the start here last 10 ticks. No piece here uses Heat or Fervor (G3, G4), and none applies "many" in one hit (G8).
 - **Engine additions** are named by their number in `spine.md` section 1. New needs are lettered A to F and gathered under **NEW** at the end.
 
 ---
@@ -32,11 +33,11 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 - **Builds:** Cuts 1 (light bodies that dodge), Toll ● (the dancer).
 
 ### Weeping kris · dagger · uncommon
-- **Card:** Dagger. Fits Assassin, Ranger, Hexer. Crit chance +1. Its crits add a few Bleed (from Attack).
+- **Card:** Dagger. Fits Assassin, Ranger, Hexer. Crit chance +1. Its first hit on each foe adds a few Bleed (from Attack).
 - **Weapon:** medium, medium, Attack.
-- **Numbers:** Crit chance +3. A few Bleed: 2.1 to 3.5 a crit at Attack 3 to 5. On the Assassin it adds to Lacerate's several.
-- **Hooks:** a piece status (granted by `statuses`, unremovable, on the sheet) with a reaction: `hit_lands` with tag `crit` → `apply` bleed, stacks 0.7 × Attack (`of: holder`), `to: other`. This is Lacerate's shape.
-- **Builds:** Cuts 1, Hunt 1, Ambush ●. See CHALLENGE 1.
+- **Numbers:** Crit chance +3. A few Bleed, once a foe: 2.1 to 3.5 at Attack 3 to 5. Basic attacks, extra strikes and ability hits all count as a first hit. It opens a wound that later hits, the wearer's or the party's, burst. The Notched knife adds Bleed on every hit; this one opens each wound once (the lead's ruling).
+- **Hooks:** a piece status (granted by `statuses`, unremovable, on the sheet) with a reaction on `hit_lands` of any kind. It first does `apply` bleed, stacks 0.7 × Attack `times` a `when` that the target lacks the wearer's marker (0 once it has it), `to: other`. Then it does `apply` a hidden, per-source marker, `to: other`. The marker is the gathered list's "marker that's neither buff nor debuff", so no Cleanse or Dispel lifts it.
+- **Builds:** Cuts 1, Hunt 1, Ambush ● (the first hits fall at the opening).
 
 ### Misericorde · dagger · uncommon
 - **Card:** Dagger. Fits Assassin, Ranger, Hexer. Attack +1. Its basic attacks ignore Taunt.
@@ -55,7 +56,7 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 ### Marking knife · dagger · rare
 - **Card:** Dagger. Fits Assassin, Ranger, Hexer. Attack +1. Its basic attacks Mark their target.
 - **Weapon:** medium, medium, Attack.
-- **Numbers:** Attack +1,000 (the effect deals nothing by itself, so it's thin for its wearer). Marked uses its own numbers (assumed 10 ticks, Refresh). Because the wearer's own basic attacks follow the Mark, each one refreshes it, so the Mark stays on one foe until that foe falls.
+- **Numbers:** Attack +1,000 (the effect deals nothing by itself, so it's thin for its wearer). Marked uses its own numbers (G2: 14 ticks, Refresh). Because the wearer's own basic attacks follow the Mark, each one refreshes it, so the Mark stays on one foe until that foe falls. Then the next swing Marks a new foe, and the wearer's one Mark moves there. While a foe Taunts, the wearer's basic attacks (without Seek) hit the Taunter and Mark it, and the Hexer's and Assassin's do the same. The Ranger's (Hunter's eye) Mark past it.
 - **Hooks:** addition 2 (Marked), as the weapon's own `apply`.
 - **Builds:** Hunt 2 ●●●, Cuts ●.
 
@@ -92,10 +93,10 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 - **Builds:** Pact 1 (Lifesteal on a fast hitter), Cuts ●.
 
 ### Wildcat claws · fist weapons · uncommon
-- **Card:** Fist weapons. Fits Monk, Vampire. Attack +1. Hasted when each fight starts.
+- **Card:** Fist weapons. Fits Monk, Vampire. Attack +1. Starts each fight with a short Haste.
 - **Weapon:** medium, medium, Attack.
-- **Numbers:** Attack +1,000. Haste uses its own numbers (+40 speed for 20 ticks, half a regular fight). See CHALLENGE 3 on "short".
-- **Hooks:** a piece status: `fight_start` → `apply` haste, `to: holder`.
+- **Numbers:** Attack +1,000. Haste at +40 speed (its own) for 10 ticks, half its own 20 (G1). That's about a quarter of a regular fight. The fist weapons keep Haste at the start (G7).
+- **Hooks:** a piece status: `fight_start` → `apply` haste, `duration: 10`, `to: holder`.
 - **Builds:** Cuts 1, Ambush 1 (the hastened second), Bonfire ● (a stoker), Snap ● (a frost seat that acts often).
 
 ### Brass knuckles · fist weapons · uncommon
@@ -152,18 +153,18 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 - **Builds:** Toll 1, Landslide 1 (the blows kept on the stone), Bonfire ● (the keeper), Phoenix ● (the martyr).
 
 ### Clarion blade · sword · uncommon
-- **Card:** Sword. Fits Knight, Bramble knight, Assassin. HP +1. Taunts when each fight starts.
+- **Card:** Sword. Fits Knight, Bramble knight, Assassin. HP +1. Starts each fight with a short Taunt.
 - **Weapon:** medium, medium, Attack.
-- **Numbers:** HP +500. Taunt uses its own numbers (20 ticks, half a regular fight). See CHALLENGE 3. On the Assassin it costs Vanish its first 20 ticks: Taunt ends Hidden, and Hidden doesn't land on a Taunting unit.
-- **Hooks:** a piece status: `fight_start` → `apply` taunt, `to: holder`. Addition 17 (Taunt ends Hidden).
+- **Numbers:** HP +500. Taunt for 10 ticks, half its own 20 (G1), so it covers the fight's opening, not half of it. It stays beside Mocking mail (G7), and only the Bramble knight can wear both. On the Assassin it costs Vanish its first 10 ticks: Taunt ends Hidden, and Hidden doesn't land on a Taunting unit.
+- **Hooks:** a piece status: `fight_start` → `apply` taunt, `duration: 10`, `to: holder`. Addition 17 (Taunt ends Hidden).
 - **Builds:** Toll 1 (an anchor from the first tick), Bonfire 1 (the keeper holds the early fight), Landslide ●, Harvest ● (the rod).
 
 ### Nettle blade · sword · uncommon
-- **Card:** Sword. Fits Knight, Bramble knight, Assassin. Aggro +1. Thorns medium.
-- **Weapon:** medium, medium, Attack.
-- **Numbers:** Thorns 150 untyped a hit taken (the effect), Aggro +10 (the step). It adds to the Bramble knight's Thorns high (300), and to Briar's Bleed, which fires on Thorns damage.
-- **Hooks:** the special stat thorns, plus aggro.
-- **Builds:** Toll 1, Harvest ● (the rod draws the field).
+- **Card:** Sword. Fits Knight, Bramble knight, Assassin. Thorns medium. Its basic attacks deal extra damage equal to half its Thorns.
+- **Weapon:** medium, medium, Attack, plus half the wearer's Thorns on each swing.
+- **Numbers:** Thorns 150 untyped a hit taken (the step, under G6: a special stat alone is a common's step, so the swing is the effect). The Aggro +1 it had is gone, to keep it at one step. The swing gains 75 from this blade's Thorns alone (+10% at Attack 4), and 225 on the Bramble knight (Thorns high 300 plus 150), about +29%. The Thorns add to Briar's Bleed, which fires on Thorns damage. The added damage is part of the physical swing, so it meets Armor and rides extra strikes.
+- **Hooks:** the special stat thorns, and a second scale term on the weapon's amount: `{ ratio: 0.5, stat: thorns, of: self }`. Both exist today.
+- **Builds:** Toll 1 (the anchor's swing grows with its Thorns), Harvest ● (the rod draws the field).
 
 ### Sweeping blade · sword · rare
 - **Card:** Sword. Fits Knight, Bramble knight, Assassin. Its basic attacks also hit a second, random foe for half.

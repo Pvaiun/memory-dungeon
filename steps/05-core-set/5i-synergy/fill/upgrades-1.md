@@ -2,6 +2,8 @@
 
 Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `spine.md` sections 7 and 8, inside `fill-brief.md`'s rules and ranges: the Knight, Cleric, Ranger, Bramble knight, Hoplite, Paladin, Valkyrie and Bard. 32 entries (8 passives, 24 abilities), each with a power step and two versions (64 versions), then 8 mythics. The lists the brief asks for (CHALLENGES, NEW, least sure) are at the end.
 
+**The lead's rulings are applied** (`fill-rulings.md`, Oct 30): the global rulings G1 to G10 and the section "Upgrades, first eight classes". Where an entry changed, it says which ruling changed it.
+
 ## How to read an entry
 
 - **Now:** the ability's line in `docs/core-set/classes.md`, with today's numbers from `content/core-set/classes.ts` in brackets.
@@ -16,7 +18,8 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
   - **Hooks:** in `PRIMITIVES.md`'s terms; engine additions by their number in `spine.md` section 1; **NEW** where the list doesn't have it.
   - **Builds:** as the spine gives them, with what the version does there.
 - **Words for time:** cooldowns quick 14, short 22, medium 30, long 40, very long 56 ticks (moved up to 15% by id, as today); wind-ups quick 1, normal 3, long 6, very long 8.
-- **Stacks** follow `scale.ts`: an ability's "a few" is 1.4 a point of its stat, "several" 2.6, "many" 4.6; a passive's on a hit is half that.
+- **Stacks** follow `scale.ts`: an ability's "a few" is 1.4 a point of its stat, "several" 2.6; a passive's on a hit is half that. No version lands "many" in one cast (G8).
+- **A status's length** is its own, or half of it where a line says "short" or "briefly" (G1), never more.
 - **A version is content:** a new ability under its own id, as today's `upgraded()` makes the "+" one, or, for a passive, a new passive status in the class's place. Training a passive is a run-layer change (today only abilities train), listed under NEW.
 - **One phrase this share adds,** used by three versions: **the ally foes are most drawn to** means a Taunting ally if there is one (the one with the most Aggro among several), otherwise the ally with the most Aggro. As a rule: `{side: allies, where: {has: taunt}, ifNone: any, pick: highest, by: {stat: aggro}}`.
 
@@ -49,10 +52,10 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
 **Power step:** cooldown shorter: long → medium (40 → 30). The same on both versions.
 
 **A, Stone guard**
-- **Card:** Guards the ally with the most Armor, and gives it a Shield from the Knight's Armor.
+- **Card:** Guards the other ally with the most Armor, and gives it a Shield from the Knight's Armor.
 - **Numbers:** a Shield of a quarter of the Knight's Armor (1,000 at Armor 4; 1,750 while the Knight is Guarded), read when it lands.
-- **Hooks:** `target: {side: allies, pick: highest, by: {stat: armor}}`; `do: apply guard; apply shield, stacks {ratio: 0.25, stat: armor, of: self}`.
-- **Builds:** Landslide (Guard's +3,000 Armor finally reaches the units whose kit scales from Armor: Rockfall, Tremor and Earthen shell, and a Hoplite's Shieldbearer swings). See CHALLENGES: the Knight is often the ally with the most Armor itself.
+- **Hooks:** `target: {side: others, pick: highest, by: {stat: armor}}` (the other ally, by the lead's ruling: the Knight itself was usually the most armored); `do: apply guard; apply shield, stacks {ratio: 0.25, stat: armor, of: self}`.
+- **Builds:** Landslide (Guard's +3,000 Armor finally reaches the units whose kit scales from Armor: Rockfall, Tremor and Earthen shell, and a Hoplite's Shieldbearer swings).
 
 **B, Cover**
 - **Card:** Guards another ally in a wind-up, the one with the most wind-up left. With nobody else casting, the ally with the lowest share of HP.
@@ -64,7 +67,7 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
 
 **Now:** Applies Taunt to itself, and Clarity to the ally with the least MP among those under half their max MP, or, with nobody under half, the ally with the least. (Medium, quick wind-up, 200 MP.)
 
-**Power step:** cheaper: 200 → 125. The ladder's bottom rung is 200; 125 is Blood drain's price, the one cost off it (see CHALLENGES). The same on both versions.
+**Power step:** cheaper: 200 → 125, by the lead's ruling. The ladder's bottom rung is 200; 125 is Blood drain's price, the one cost off it. The same on both versions.
 
 **A, Rally the well**
 - **Card:** Gives Clarity to every ally under half its MP. Waits until one is. No Taunt.
@@ -162,7 +165,7 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
 
 **A, Martyr's raise**
 - **Card:** Pays half its current HP to revive a random knocked-out ally with that much. Costs no MP.
-- **Numbers:** price: half the Cleric's current HP (1,000 from a full HP 2 Cleric); the ally rises with that much. 0 MP. Very long, very long wind-up, as the base.
+- **Numbers:** price: half the Cleric's current HP (1,000 from a full HP 2 Cleric); the ally rises with that much, every ability on full cooldown (G10). 0 MP, by the lead's ruling. Very long, very long wind-up, as the base.
 - **Hooks:** engine 4 (HP as a cost, in full). The revive's `hp` reads the Cleric's current HP before the price is paid (`{ratio: 0.5, hp: current, of: self}`); see NEW. Paying can drop the Cleric under Last rites' line, which halves its cooldowns.
 - **Builds:** Pact, Phoenix (life passed on: a return that doesn't rest on MP).
 
@@ -185,13 +188,13 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
 **A, Quarry**
 - **Card:** Basic attacks ignore Taunt and go to the foe with the lowest share of its max HP.
 - **Numbers:** none.
-- **Hooks:** `seek: basic`, plus a target rule for its basic attacks: `{side: foes, pick: lowest, by: hp_share}`. A Marked foe still comes first (engine 2). **NEW:** basic attacks with a target rule given by a passive (engine 2's machinery, which aims them by a status, extended to a rule).
+- **Hooks:** `seek: basic`, plus a target rule for its basic attacks: `{side: foes, pick: lowest, by: hp_share}`. A Marked foe still comes first (G2: among several, by draw; its Seek follows the Mark past a Taunting foe). **NEW:** basic attacks with a target rule given by a passive (engine 2's machinery, which aims them by a status, extended to a rule).
 - **Builds:** Hunt (the arrows finish what's wounded, and the staircase speeds up).
 
 **B, Overwatch**
 - **Card:** Basic attacks ignore Taunt, and go to a foe in a wind-up when there is one.
 - **Numbers:** among several casters, the one with the highest Attack or Magic; with none, a random foe as now.
-- **Hooks:** `seek: basic`; basic-attack target rule `{side: foes, where: {casting: true}, pick: highest, by: {stats: [attack, magic]}}`, falling back to the default pick. The same **NEW** as A.
+- **Hooks:** `seek: basic`; basic-attack target rule `{side: foes, where: {casting: true}, pick: highest, by: {stats: [attack, magic]}}`, falling back to the default pick. A Marked foe comes first, as on A (G2). The same **NEW** as A.
 - **Builds:** Lockdown (a door: an archer that punishes every cast, so a Stun or Silence is followed by arrows).
 
 ### Barbed arrow
