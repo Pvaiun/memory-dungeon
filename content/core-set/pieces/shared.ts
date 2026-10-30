@@ -30,7 +30,8 @@ export const counters: StatusT[] = [
   }),
   counter("surge", "SURGE", "Deals 5% more damage with its hits for each stack.", { boosts: both(COUNTER.surge.pct), cap: COUNTER.surge.cap }),
   counter("fervor", "FERVOR", "Deals 5% more damage with its hits for each stack, through a knockout.", { boosts: both(COUNTER.fervor.pct), cap: COUNTER.fervor.cap, survivesKO: true }),
-  counter("charge", "CHARGE", "Hits saved for one blow.", { cap: COUNTER.charge.cap }),
+  // Not unremovable: the Storm pike spends its Charges with a remove.
+  counter("charge", "CHARGE", "Hits saved for one blow.", { cap: COUNTER.charge.cap, unremovable: false }),
 ];
 
 /**
