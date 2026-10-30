@@ -36,7 +36,7 @@ import { formId, type FoesT, type Party as EParty, type RogueFightT, type Upgrad
 import { checkParty } from "./validate.js";
 import { ALL_PARTIES, BUILDS, type BuildId, type Member as BMember, type Party as BParty, type Rung } from "./build-parties.js";
 
-const PACK = "content/core-set.pack.json";
+const PACK = process.env.BUILD_TEST_PACK ?? "content/core-set.pack.json"; // BUILD_TEST_PACK: a variant pack, to price a rule
 
 // ─── Fielding: a build party as the engine's party ──────────────────────────
 
