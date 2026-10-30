@@ -10,6 +10,7 @@ import { enemies, enemyAbilities, enemyStatuses } from "./enemies.js";
 import { effects, formations } from "./formations.js";
 import { gear } from "./gear.js";
 import { armorTypes, design, machinery, offhandKinds, ruleset, stats, vocabulary, weaponKinds } from "./vocabulary.js";
+import { mythicGear, pieceGear, pieceStatuses, upgradeAbilities, upgrades } from "./pieces/index.js";
 import { ROGUE_CONFIG, ROGUE_EVENTS, ROGUE_REGIONS } from "./rogue.js";
 
 /**
@@ -33,11 +34,11 @@ export function buildPack(): unknown {
     weaponKinds,
     armorTypes,
     offhandKinds,
-    statuses: [...vocabulary, ...machinery, ...passives, ...effects, ...enemyStatuses],
+    statuses: [...vocabulary, ...machinery, ...passives, ...effects, ...enemyStatuses, ...pieceStatuses],
     classes,
-    abilities: [...abilities, ...enemyAbilities],
-    upgrades: [],
-    gear,
+    abilities: [...abilities, ...enemyAbilities, ...upgradeAbilities],
+    upgrades,
+    gear: [...gear, ...pieceGear, ...mythicGear],
     formations,
     enemies,
     perkFamilies: [],

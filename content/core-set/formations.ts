@@ -6,6 +6,7 @@
  * formations of steps/05-core-set/5i-synergy/fill/ take their place.
  */
 import type { FormationT, StatusT } from "../../src/schema.js";
+import type { Builds } from "./pieces/kit.js";
 
 type Change = { stat: string; flat: number };
 const lines = ["front", "middle", "back"] as const;
@@ -23,3 +24,6 @@ export const effects: StatusT[] = [];
 export const formations: FormationT[] = [
   formation("neutral", "Neutral", "Three slots that do nothing.", [slot("a", "Left", undefined, 0, []), slot("b", "Centre", undefined, 1, []), slot("c", "Right", undefined, 2, [])], undefined, "starter"),
 ];
+
+/** Designer data, never in the pack: which builds and rungs each formation serves. */
+export const builds: Builds = {};

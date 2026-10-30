@@ -35,10 +35,10 @@ export const counters: StatusT[] = [
 
 /**
  * Marked (G2): a debuff on a foe, 14 ticks, Refresh. The party's basic attacks pick a Marked foe (by draw among several) inside the
- * Taunt rule; each unit keeps one Mark, so a new one it applies moves its old one. The engine fields that make it so are the spec's
- * (build/engine-spec.md); the engine share adds them here.
+ * Taunt rule; each unit keeps one Mark, so a new one it applies moves its old one. `focus` and `single` are the spec's X11
+ * (build/engine-spec.md).
  */
 export const MARKED = { duration: 14 } as const;
-export const marked: StatusT = { id: "marked", name: "MARKED", text: "The party's basic attacks go to it.", label: "debuff", show: "icon", stacking: "refresh", duration: MARKED.duration };
+export const marked: StatusT = { id: "marked", name: "MARKED", text: "The party's basic attacks go to it.", label: "debuff", show: "icon", stacking: "refresh", duration: MARKED.duration, focus: true, single: true };
 
 export const sharedStatuses: StatusT[] = [...counters, marked];

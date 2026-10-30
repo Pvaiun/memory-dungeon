@@ -2014,6 +2014,156 @@
      ]
     }
    ]
+  },
+  {
+   "id": "cuts",
+   "name": "CUTS",
+   "text": "Deals 2% more damage with its hits for each Cut.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "intensity",
+   "unremovable": true,
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": 2
+    },
+    {
+     "tag": "magical",
+     "pct": 2
+    }
+   ],
+   "cap": 25
+  },
+  {
+   "id": "heat",
+   "name": "HEAT",
+   "text": "Deals 3% more damage with its hits for each stack.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "intensity",
+   "unremovable": true,
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": 3
+    },
+    {
+     "tag": "magical",
+     "pct": 3
+    }
+   ],
+   "cap": 15
+  },
+  {
+   "id": "spite",
+   "name": "SPITE",
+   "text": "Thorns up for each stack.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "intensity",
+   "unremovable": true,
+   "stats": [
+    {
+     "stat": "thorns",
+     "flat": 15
+    }
+   ],
+   "cap": 20
+  },
+  {
+   "id": "tempo",
+   "name": "TEMPO",
+   "text": "Faster in everything for each stack; each hit taken spends half.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "intensity",
+   "unremovable": true,
+   "stats": [
+    {
+     "stat": "attack_speed",
+     "flat": 5
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": 5
+    },
+    {
+     "stat": "cast_time_reduction",
+     "flat": 5
+    }
+   ],
+   "cap": 10,
+   "trigger": {
+    "on": {
+     "event": "hit_taken"
+    }
+   },
+   "drop": {
+    "fraction": 0.5
+   }
+  },
+  {
+   "id": "surge",
+   "name": "SURGE",
+   "text": "Deals 5% more damage with its hits for each stack.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "intensity",
+   "unremovable": true,
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": 5
+    },
+    {
+     "tag": "magical",
+     "pct": 5
+    }
+   ],
+   "cap": 10
+  },
+  {
+   "id": "fervor",
+   "name": "FERVOR",
+   "text": "Deals 5% more damage with its hits for each stack, through a knockout.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "intensity",
+   "unremovable": true,
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": 5
+    },
+    {
+     "tag": "magical",
+     "pct": 5
+    }
+   ],
+   "cap": 20,
+   "survivesKO": true
+  },
+  {
+   "id": "charge",
+   "name": "CHARGE",
+   "text": "Hits saved for one blow.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "intensity",
+   "unremovable": true,
+   "cap": 10
+  },
+  {
+   "id": "marked",
+   "name": "MARKED",
+   "text": "The party's basic attacks go to it.",
+   "label": "debuff",
+   "show": "icon",
+   "stacking": "refresh",
+   "duration": 14,
+   "focus": true,
+   "single": true
   }
  ],
  "classes": [
