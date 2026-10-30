@@ -1767,6 +1767,2007 @@
    ]
   },
   {
+   "id": "spur_pacer",
+   "name": "Pacer",
+   "text": "When each fight starts, the others are Hasted.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "haste",
+       "to": {
+        "side": "others",
+        "pick": "all"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "wellspring_spender",
+   "name": "Spender",
+   "text": "Abilities cost a tenth less MP.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "mods": [
+    {
+     "mp": -10
+    }
+   ]
+  },
+  {
+   "id": "long_march",
+   "name": "Long march",
+   "text": "Starts each fight with Regen. Deals 10% less damage.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "regen",
+       "to": "holder"
+      }
+     ]
+    }
+   ],
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": -10
+    },
+    {
+     "tag": "magical",
+     "pct": -10
+    }
+   ]
+  },
+  {
+   "id": "first_light",
+   "name": "First light",
+   "text": "Its abilities start each fight 5 ticks closer to ready.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "cooldown",
+       "which": "abilities",
+       "set": {
+        "less": 5
+       },
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "vigil_mourner",
+   "name": "Mourner",
+   "text": "While an ally is down, Attack and Magic up two steps.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "if": {
+      "side": "others",
+      "where": {
+       "ko": true
+      }
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "vigil_mourning",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived"
+     },
+     "if": {
+      "side": "others",
+      "where": {
+       "ko": true
+      }
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "vigil_mourning",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "ko",
+      "whose": "ally"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "vigil_mourning",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived",
+      "whose": "ally"
+     },
+     "if": {
+      "side": "others",
+      "where": {
+       "ko": true
+      },
+      "atMost": 0
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "vigil_mourning",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "vigil_mourning",
+   "name": "MOURNING",
+   "text": "Attack and Magic up while an ally is down.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "refresh",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 2500
+    },
+    {
+     "stat": "magic",
+     "flat": 2500
+    }
+   ]
+  },
+  {
+   "id": "hammer_and_anvil_anvil",
+   "name": "Anvil",
+   "text": "Guarded when each fight starts.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "guard",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "hammer_and_anvil_hammer",
+   "name": "Hammer",
+   "text": "With a great weapon, mace or staff: basic attacks half as often, for triple damage. Otherwise: Attack up. Gains the Shields and Guards the Mason gives another ally.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "stats": [
+    {
+     "stat": "attack_speed",
+     "flat": {
+      "scale": [
+       {
+        "ratio": -100,
+        "when": {
+         "weapon": [
+          "great_weapon",
+          "mace",
+          "staff"
+         ]
+        },
+        "of": "holder"
+       }
+      ]
+     }
+    },
+    {
+     "stat": "attack",
+     "flat": {
+      "base": 1250,
+      "scale": [
+       {
+        "ratio": -1250,
+        "when": {
+         "weapon": [
+          "great_weapon",
+          "mace",
+          "staff"
+         ]
+        },
+        "of": "holder"
+       }
+      ]
+     }
+    }
+   ],
+   "boosts": [
+    {
+     "tag": "basic",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 200,
+        "when": {
+         "weapon": [
+          "great_weapon",
+          "mace",
+          "staff"
+         ]
+        },
+        "of": "holder"
+       }
+      ]
+     }
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "status_gained",
+      "whose": "ally",
+      "status": "guard"
+     },
+     "if": [
+      {
+       "unit": "other",
+       "where": {
+        "has": "hammer_and_anvil_mason"
+       }
+      },
+      {
+       "unit": "owner",
+       "where": {
+        "lacks": "hammer_and_anvil_mason"
+       }
+      }
+     ],
+     "do": [
+      {
+       "op": "apply",
+       "status": "guard",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_gained",
+      "whose": "ally",
+      "status": "shield"
+     },
+     "if": [
+      {
+       "unit": "other",
+       "where": {
+        "has": "hammer_and_anvil_mason"
+       }
+      },
+      {
+       "unit": "owner",
+       "where": {
+        "lacks": "hammer_and_anvil_mason"
+       }
+      }
+     ],
+     "do": [
+      {
+       "op": "apply",
+       "status": "shield",
+       "to": "holder",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 1,
+          "amount": true
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "hammer_and_anvil_mason",
+   "name": "Mason",
+   "text": "When it gives another ally a Shield or a Guard, the Hammer gains the same.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh"
+  },
+  {
+   "id": "hunting_party_marker",
+   "name": "Marker",
+   "text": "Its basic attacks Mark their target.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "marked",
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "hunting_party_chaser",
+   "name": "Chaser",
+   "text": "Everything it does has Seek.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "seek": "all"
+  },
+  {
+   "id": "hunting_party_warden",
+   "name": "Warden",
+   "text": "Taunts when each fight starts.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "taunt",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "hearth_keeper",
+   "name": "Keeper",
+   "text": "Taunts and is Guarded when each fight starts.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "taunt",
+       "to": "holder"
+      },
+      {
+       "op": "apply",
+       "status": "guard",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "hearth_stoker",
+   "name": "Stoker",
+   "text": "Hasted when each fight starts.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "haste",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "hearth_torch",
+   "name": "Torch",
+   "text": "Each of its hits adds a Burn to every foe that's already burning.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "burn",
+       "to": {
+        "side": "foes",
+        "where": {
+         "has": "burn"
+        },
+        "pick": "all"
+       },
+       "stacks": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "hoarfrost_line_frost",
+   "name": "Frost",
+   "text": "Basic attacks add a Chill.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "chill",
+       "to": "other",
+       "stacks": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "hoarfrost_line_breaker",
+   "name": "Breaker",
+   "text": "When any foe's Chill shatters, its next hit deals triple.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "status_capped",
+      "whose": "foe",
+      "status": "chill"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "hoarfrost_line_primed",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "hoarfrost_line_primed",
+   "name": "BREAKER",
+   "text": "Its next hit deals triple.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "intensity",
+   "cap": 1,
+   "trigger": {
+    "on": {
+     "event": "hit_lands"
+    }
+   },
+   "drop": "all",
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": 200
+    },
+    {
+     "tag": "magical",
+     "pct": 200
+    }
+   ]
+  },
+  {
+   "id": "reaping_line_beacon",
+   "name": "Beacon",
+   "text": "Taunts all fight.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "taunt",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "taunt",
+      "cause": [
+       "expired",
+       "removed"
+      ]
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "taunt",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "taunt",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "reaping_line_scythe",
+   "name": "Scythe",
+   "text": "Its basic attacks hit every foe, for a fifth each.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "aim": {
+    "rule": {
+     "side": "foes",
+     "pick": "all"
+    },
+    "first": true
+   },
+   "boosts": [
+    {
+     "tag": "basic",
+     "pct": -80
+    }
+   ]
+  },
+  {
+   "id": "relay_well",
+   "name": "Well",
+   "text": "Each ability it casts gives the second seat a third of its cost in MP.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "action_resolve",
+      "kind": "ability"
+     },
+     "do": [
+      {
+       "op": "mp",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.3333333333333333,
+          "amount": true
+         }
+        ]
+       },
+       "to": {
+        "side": "others",
+        "seat": "spender_a"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "relay_second",
+   "name": "Spender",
+   "text": "When the Well casts, its next ability comes 4 ticks closer.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "action_resolve",
+      "whose": "ally",
+      "kind": "ability",
+      "seat": "well"
+     },
+     "do": [
+      {
+       "op": "cooldown",
+       "which": "soonest",
+       "set": {
+        "less": 4
+       },
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "relay_third",
+   "name": "Spender",
+   "text": "When the second seat casts, its next ability comes 4 ticks closer.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "action_resolve",
+      "whose": "ally",
+      "kind": "ability",
+      "seat": "spender_a"
+     },
+     "do": [
+      {
+       "op": "cooldown",
+       "which": "soonest",
+       "set": {
+        "less": 4
+       },
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "gaol_watcher",
+   "name": "Watcher",
+   "text": "Its abilities that Stun or Silence wait for a foe's wind-up, and aim at it.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "mods": [
+    {
+     "of": {
+      "does": [
+       "stun",
+       "silence"
+      ]
+     },
+     "wait": {
+      "side": "foes",
+      "where": {
+       "casting": true
+      }
+     },
+     "target": {
+      "side": "foes",
+      "where": {
+       "casting": true
+      },
+      "pick": "highest",
+      "by": {
+       "stats": [
+        "attack",
+        "magic"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "gaol_turnkey",
+   "name": "Turnkey",
+   "text": "Whenever any foe is Stunned or Silenced, its abilities come 3 ticks closer.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "status_gained",
+      "whose": "foe",
+      "status": "stun"
+     },
+     "do": [
+      {
+       "op": "cooldown",
+       "which": "abilities",
+       "set": {
+        "less": 3
+       },
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_gained",
+      "whose": "foe",
+      "status": "silence"
+     },
+     "do": [
+      {
+       "op": "cooldown",
+       "which": "abilities",
+       "set": {
+        "less": 3
+       },
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "thorn_hedge_thorns",
+   "name": "Thorns",
+   "text": "A foe that hits the Anchor is Weakened.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_taken",
+      "whose": "ally",
+      "seat": "anchor"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "weaken",
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "blood_oath_bleeder",
+   "name": "Bleeder",
+   "text": "Pays 0.5% of its max HP every tick, never below 1. Its hits deal half again as much.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "pulse": {
+    "every": 1,
+    "do": [
+     {
+      "op": "pay",
+      "hp": {
+       "scale": [
+        {
+         "ratio": 0.005,
+         "stat": "max_hp",
+         "of": "holder"
+        }
+       ]
+      },
+      "to": "holder"
+     }
+    ]
+   },
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": 50
+    },
+    {
+     "tag": "magical",
+     "pct": 50
+    }
+   ]
+  },
+  {
+   "id": "blood_oath_donor",
+   "name": "Donor",
+   "text": "Its heals on the Bleeder are doubled.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "boosts": [
+    {
+     "tag": "healing",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 100,
+        "when": {
+         "has": "blood_oath_bleeder"
+        },
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "pyre_of_heroes_martyr",
+   "name": "Martyr",
+   "text": "When it falls, every ally gains several Might and Haste.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "survivesKO": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "ko"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "might",
+       "to": {
+        "side": "others",
+        "pick": "all"
+       },
+       "stacks": 4
+      },
+      {
+       "op": "apply",
+       "status": "haste",
+       "to": {
+        "side": "others",
+        "pick": "all"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pyre_of_heroes_survivor",
+   "name": "Survivor",
+   "text": "Guarded whenever an ally falls.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "ko",
+      "whose": "ally"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "guard",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "knives_drawn_opener",
+   "name": "Opener",
+   "text": "Its first action each fight deals double.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "knives_drawn_opening",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "knives_drawn_opening",
+   "name": "OPENER",
+   "text": "Its first action deals double.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "intensity",
+   "cap": 1,
+   "trigger": {
+    "on": {
+     "event": "action_resolve"
+    }
+   },
+   "drop": "all",
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": 100
+    },
+    {
+     "tag": "magical",
+     "pct": 100
+    }
+   ]
+  },
+  {
+   "id": "knives_drawn_second",
+   "name": "Second",
+   "text": "Hasted when each fight starts.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "haste",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "knives_drawn_rear_guard",
+   "name": "Rear guard",
+   "text": "Starts each fight behind a Shield. From tick 6, draws more.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "shield",
+       "to": "holder",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.15,
+          "stat": "max_hp",
+          "of": "holder"
+         }
+        ]
+       }
+      },
+      {
+       "op": "apply",
+       "status": "knives_drawn_rear_guard_wait",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "knives_drawn_rear_guard_wait",
+      "cause": [
+       "expired"
+      ]
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "knives_drawn_rear_guard_draw",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "knives_drawn_rear_guard_wait",
+   "name": "Rear guard's first few ticks",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh",
+   "duration": 6
+  },
+  {
+   "id": "knives_drawn_rear_guard_draw",
+   "name": "Rear guard",
+   "text": "Draws more.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "stats": [
+    {
+     "stat": "aggro",
+     "flat": 13
+    }
+   ]
+  },
+  {
+   "id": "the_wheel_wall_opening",
+   "name": "WALL",
+   "text": "Draws more. Armor up.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "refresh",
+   "unremovable": true,
+   "duration": 11,
+   "stats": [
+    {
+     "stat": "aggro",
+     "flat": 13
+    },
+    {
+     "stat": "armor",
+     "flat": 1250
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "the_wheel_wall_opening",
+      "cause": [
+       "expired"
+      ]
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "the_wheel_blade",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "the_wheel_blade_opening",
+   "name": "BLADE",
+   "text": "Basic attacks a fifth faster. Crits more.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "refresh",
+   "unremovable": true,
+   "duration": 11,
+   "stats": [
+    {
+     "stat": "attack_speed",
+     "flat": 20
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3.5
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "the_wheel_blade_opening",
+      "cause": [
+       "expired"
+      ]
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "the_wheel_well",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "the_wheel_well_opening",
+   "name": "WELL",
+   "text": "Regains MP in fights. Heals on it are stronger.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "refresh",
+   "unremovable": true,
+   "duration": 11,
+   "stats": [
+    {
+     "stat": "mp_regen",
+     "flat": 3750
+    },
+    {
+     "stat": "healing_received",
+     "flat": 20
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "the_wheel_well_opening",
+      "cause": [
+       "expired"
+      ]
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "the_wheel_wall",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "the_wheel_wall",
+   "name": "WALL",
+   "text": "Draws more. Armor up.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "refresh",
+   "unremovable": true,
+   "duration": 22,
+   "stats": [
+    {
+     "stat": "aggro",
+     "flat": 13
+    },
+    {
+     "stat": "armor",
+     "flat": 1250
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "the_wheel_wall",
+      "cause": [
+       "expired"
+      ]
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "the_wheel_blade",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "the_wheel_blade",
+   "name": "BLADE",
+   "text": "Basic attacks a fifth faster. Crits more.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "refresh",
+   "unremovable": true,
+   "duration": 22,
+   "stats": [
+    {
+     "stat": "attack_speed",
+     "flat": 20
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3.5
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "the_wheel_blade",
+      "cause": [
+       "expired"
+      ]
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "the_wheel_well",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "the_wheel_well",
+   "name": "WELL",
+   "text": "Regains MP in fights. Heals on it are stronger.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "refresh",
+   "unremovable": true,
+   "duration": 22,
+   "stats": [
+    {
+     "stat": "mp_regen",
+     "flat": 3750
+    },
+    {
+     "stat": "healing_received",
+     "flat": 20
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "the_wheel_well",
+      "cause": [
+       "expired"
+      ]
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "the_wheel_wall",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "the_pack_lead",
+   "name": "Lead",
+   "text": "Its hits Mark their target. When the foe it Marked falls, its abilities come 5 ticks closer.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "notTags": [
+       "area",
+       "extra"
+      ]
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "marked",
+       "to": "other"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_ended",
+      "whose": "foe",
+      "status": "marked",
+      "cause": [
+       "ko"
+      ],
+      "source": "holder"
+     },
+     "do": [
+      {
+       "op": "cooldown",
+       "which": "abilities",
+       "set": {
+        "less": 5
+       },
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "the_forge",
+   "name": "The forge",
+   "text": "Gains a Heat every 4 ticks. Slowed when each fight starts.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "pulse": {
+    "every": 4,
+    "do": [
+     {
+      "op": "apply",
+      "status": "heat",
+      "to": "holder",
+      "stacks": 1
+     }
+    ]
+   },
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "slow",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "the_ambuscade",
+   "name": "The ambuscade",
+   "text": "Its basic attack is ready when each fight starts, and its first action deals double. From tick 6, it deals a sixth less.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "cooldown",
+       "which": "basic",
+       "set": "ready",
+       "to": "holder"
+      },
+      {
+       "op": "apply",
+       "status": "the_ambuscade_opening",
+       "to": "holder"
+      },
+      {
+       "op": "apply",
+       "status": "the_ambuscade_wait",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "the_ambuscade_wait",
+      "cause": [
+       "expired"
+      ]
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "the_ambuscade_tail",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "the_ambuscade_opening",
+   "name": "AMBUSCADE",
+   "text": "Its first action deals double.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "intensity",
+   "cap": 1,
+   "trigger": {
+    "on": {
+     "event": "action_resolve"
+    }
+   },
+   "drop": "all",
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": {
+      "base": 100,
+      "scale": [
+       {
+        "ratio": 17,
+        "when": {
+         "has": "the_ambuscade_tail"
+        },
+        "of": "holder"
+       }
+      ]
+     }
+    },
+    {
+     "tag": "magical",
+     "pct": {
+      "base": 100,
+      "scale": [
+       {
+        "ratio": 17,
+        "when": {
+         "has": "the_ambuscade_tail"
+        },
+        "of": "holder"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "the_ambuscade_wait",
+   "name": "The ambuscade's first few ticks",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh",
+   "duration": 6
+  },
+  {
+   "id": "the_ambuscade_tail",
+   "name": "SPENT",
+   "text": "Deals a sixth less damage.",
+   "label": "debuff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": -17
+    },
+    {
+     "tag": "magical",
+     "pct": -17
+    }
+   ]
+  },
+  {
+   "id": "the_choir",
+   "name": "The choir",
+   "text": "Each ability it casts makes the next voice's next ability free.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "action_resolve",
+      "kind": "ability"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "the_choir_cue",
+       "to": {
+        "side": "others",
+        "seat": "next"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "the_choir_cue",
+   "name": "CUE",
+   "text": "Its next ability is free.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "intensity",
+   "cap": 1,
+   "trigger": {
+    "on": {
+     "event": "action_resolve",
+     "kind": "ability"
+    }
+   },
+   "drop": "all",
+   "mods": [
+    {
+     "mp": -100
+    }
+   ]
+  },
+  {
+   "id": "the_undying_martyr",
+   "name": "Martyr",
+   "text": "Can't be healed by others. When it falls, the others heal to full. Down when a fight is won, it stands with half its HP.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "heals": "own",
+   "survivesKO": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "ko"
+     },
+     "do": [
+      {
+       "op": "heal",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 1,
+          "hp": "missing",
+          "of": "target"
+         }
+        ]
+       },
+       "to": {
+        "side": "others",
+        "pick": "all"
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "fight_won"
+     },
+     "do": [
+      {
+       "op": "revive",
+       "hp": {
+        "scale": [
+         {
+          "ratio": 0.5,
+          "stat": "max_hp",
+          "of": "target"
+         }
+        ]
+       },
+       "to": {
+        "side": "self",
+        "where": {
+         "ko": true
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "the_hurricane",
+   "name": "The hurricane",
+   "text": "Every hit the party lands winds the storm. At 30, Hasted, and it winds again.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "the_hurricane_count",
+       "to": "holder",
+       "stacks": 1
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "hit_lands",
+      "whose": "ally"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "the_hurricane_count",
+       "to": "holder",
+       "stacks": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "the_hurricane_count",
+   "name": "HURRICANE",
+   "text": "The party's hits, winding the storm. At 30: Haste, and it winds again.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "intensity",
+   "unremovable": true,
+   "cap": 30,
+   "trigger": {
+    "on": {
+     "event": "status_capped",
+     "status": "the_hurricane_count"
+    },
+    "do": [
+     {
+      "op": "apply",
+      "status": "haste",
+      "to": "holder"
+     }
+    ]
+   },
+   "drop": "all"
+  },
+  {
+   "id": "the_mountain_peak",
+   "name": "Peak",
+   "text": "Taunts all fight. While it stands, the others deal a third more; while it's down, they take double.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "survivesKO": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "taunt",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "taunt",
+      "cause": [
+       "expired",
+       "removed"
+      ]
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "taunt",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "taunt",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "the_mountain_strength",
+       "to": {
+        "side": "others",
+        "pick": "all"
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "ko"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "the_mountain_exposed",
+       "to": {
+        "side": "others",
+        "pick": "all"
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "marker",
+       "status": "the_mountain_exposed",
+       "to": {
+        "side": "others",
+        "pick": "all"
+       }
+      },
+      {
+       "op": "apply",
+       "status": "the_mountain_strength",
+       "to": {
+        "side": "others",
+        "pick": "all"
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived",
+      "whose": "ally"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "the_mountain_strength",
+       "to": "owner"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "the_mountain_foothill",
+   "name": "Foothill",
+   "text": "While the Peak stands, deals a third more. While it's down, takes double.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "if": {
+      "side": "others",
+      "seat": "peak",
+      "where": {
+       "ko": true
+      }
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "the_mountain_exposed",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived"
+     },
+     "if": {
+      "side": "others",
+      "seat": "peak",
+      "where": {
+       "ko": true
+      }
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "the_mountain_exposed",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "the_mountain_strength",
+   "name": "MOUNTAIN",
+   "text": "Deals a third more while the Peak stands.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "refresh",
+   "perSource": {
+    "endsWithSource": true
+   },
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": 33
+    },
+    {
+     "tag": "magical",
+     "pct": 33
+    }
+   ]
+  },
+  {
+   "id": "the_mountain_exposed",
+   "name": "EXPOSED",
+   "text": "Takes double damage while the Peak is down.",
+   "label": "marker",
+   "show": "icon",
+   "stacking": "refresh",
+   "taken": [
+    {
+     "pct": 100
+    }
+   ]
+  },
+  {
+   "id": "the_storm_front",
+   "name": "The storm front",
+   "text": "Each single-target hit it lands also strikes the healthiest other foe, for a quarter.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "notTags": [
+       "area",
+       "extra"
+      ]
+     },
+     "do": [
+      {
+       "op": "strike",
+       "share": 25,
+       "of": "hit",
+       "to": {
+        "side": "foes",
+        "pick": "highest",
+        "by": "hp",
+        "exclude": "other"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "the_vise",
+   "name": "The vise",
+   "text": "Its basic attacks go to a Stunned or Silenced foe, and deal 40% more to one.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "aim": {
+    "rule": {
+     "side": "foes",
+     "where": {
+      "hasAny": [
+       "stun",
+       "silence"
+      ]
+     },
+     "pick": "random"
+    },
+    "first": true
+   },
+   "boosts": [
+    {
+     "tag": "basic",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 40,
+        "when": {
+         "hasAny": [
+          "stun",
+          "silence"
+         ]
+        },
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
    "id": "venom",
    "name": "Venom",
    "text": "Its bites leave wounds that bleed.",
@@ -22232,6 +24233,7 @@
    "id": "neutral",
    "name": "Neutral",
    "text": "Three slots that do nothing.",
+   "rarity": "common",
    "source": "starter",
    "positions": [
     {
@@ -22258,6 +24260,1565 @@
       "column": 2
      }
     }
+   ]
+  },
+  {
+   "id": "shieldwall",
+   "name": "Shieldwall",
+   "text": "One stands in front with its shield up; two stand behind it.",
+   "rarity": "common",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "wall",
+     "name": "Wall",
+     "text": "Draws far more. Armor up two steps.",
+     "layout": {
+      "line": "front",
+      "column": 0
+     },
+     "stats": [
+      {
+       "stat": "aggro",
+       "flat": 25
+      },
+      {
+       "stat": "armor",
+       "flat": 2500
+      }
+     ]
+    },
+    {
+     "id": "behind_a",
+     "name": "Behind",
+     "text": "Draws less.",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     },
+     "stats": [
+      {
+       "stat": "aggro",
+       "flat": -13
+      }
+     ]
+    },
+    {
+     "id": "behind_b",
+     "name": "Behind",
+     "text": "Draws less.",
+     "layout": {
+      "line": "back",
+      "column": 2
+     },
+     "stats": [
+      {
+       "stat": "aggro",
+       "flat": -13
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "heavy_line",
+   "name": "Heavy line",
+   "text": "One strikes, one holds, one is free.",
+   "rarity": "common",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "bruiser",
+     "name": "Bruiser",
+     "text": "Attack up. Its crits hit harder. Draws less.",
+     "layout": {
+      "line": "front",
+      "column": 0
+     },
+     "stats": [
+      {
+       "stat": "attack",
+       "flat": 1250
+      },
+      {
+       "stat": "crit_multiplier",
+       "flat": 25
+      },
+      {
+       "stat": "aggro",
+       "flat": -13
+      }
+     ]
+    },
+    {
+     "id": "holder",
+     "name": "Holder",
+     "text": "Draws more. HP up two steps.",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     },
+     "stats": [
+      {
+       "stat": "aggro",
+       "flat": 13
+      },
+      {
+       "stat": "max_hp",
+       "flat": 1250
+      }
+     ]
+    },
+    {
+     "id": "free",
+     "name": "Free",
+     "text": "Nothing.",
+     "layout": {
+      "line": "back",
+      "column": 2
+     }
+    }
+   ]
+  },
+  {
+   "id": "skirmish_line",
+   "name": "Skirmish line",
+   "text": "Three light fighters who'd rather not be hit at all.",
+   "rarity": "common",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "skirmisher_a",
+     "name": "Skirmisher",
+     "text": "Dodges. Armor down.",
+     "layout": {
+      "line": "front",
+      "column": 0
+     },
+     "stats": [
+      {
+       "stat": "evasion",
+       "flat": 20
+      },
+      {
+       "stat": "armor",
+       "flat": -1250
+      }
+     ]
+    },
+    {
+     "id": "skirmisher_b",
+     "name": "Skirmisher",
+     "text": "Dodges. Armor down.",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     },
+     "stats": [
+      {
+       "stat": "evasion",
+       "flat": 20
+      },
+      {
+       "stat": "armor",
+       "flat": -1250
+      }
+     ]
+    },
+    {
+     "id": "skirmisher_c",
+     "name": "Skirmisher",
+     "text": "Dodges. Armor down.",
+     "layout": {
+      "line": "back",
+      "column": 2
+     },
+     "stats": [
+      {
+       "stat": "evasion",
+       "flat": 20
+      },
+      {
+       "stat": "armor",
+       "flat": -1250
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "spur",
+   "name": "Spur",
+   "text": "One sets the pace; two strike fast and light.",
+   "rarity": "common",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "pacer",
+     "name": "Pacer",
+     "text": "When each fight starts, the other two are Hasted.",
+     "layout": {
+      "line": "front",
+      "column": 0
+     },
+     "statuses": [
+      "spur_pacer"
+     ]
+    },
+    {
+     "id": "blade_a",
+     "name": "Blade",
+     "text": "Basic attacks a fifth faster. HP down.",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     },
+     "stats": [
+      {
+       "stat": "attack_speed",
+       "flat": 20
+      },
+      {
+       "stat": "max_hp",
+       "flat": -625
+      }
+     ]
+    },
+    {
+     "id": "blade_b",
+     "name": "Blade",
+     "text": "Basic attacks a fifth faster. HP down.",
+     "layout": {
+      "line": "back",
+      "column": 2
+     },
+     "stats": [
+      {
+       "stat": "attack_speed",
+       "flat": 20
+      },
+      {
+       "stat": "max_hp",
+       "flat": -625
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "wellspring",
+   "name": "Wellspring",
+   "text": "One regains mana all through the fight; two spend less of theirs.",
+   "rarity": "common",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "source",
+     "name": "Source",
+     "text": "Regains MP in fights. Magic down.",
+     "layout": {
+      "line": "front",
+      "column": 0
+     },
+     "stats": [
+      {
+       "stat": "mp_regen",
+       "flat": 7500
+      },
+      {
+       "stat": "magic",
+       "flat": -1250
+      }
+     ]
+    },
+    {
+     "id": "spender_a",
+     "name": "Spender",
+     "text": "Abilities cost a tenth less MP.",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     },
+     "statuses": [
+      "wellspring_spender"
+     ]
+    },
+    {
+     "id": "spender_b",
+     "name": "Spender",
+     "text": "Abilities cost a tenth less MP.",
+     "layout": {
+      "line": "back",
+      "column": 2
+     },
+     "statuses": [
+      "wellspring_spender"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "long_march",
+   "name": "Long march",
+   "text": "Pace yourselves: everyone starts each fight with Regen, and hits a little softer.",
+   "rarity": "common",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "marcher_a",
+     "name": "Marcher",
+     "layout": {
+      "line": "front",
+      "column": 0
+     }
+    },
+    {
+     "id": "marcher_b",
+     "name": "Marcher",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     }
+    },
+    {
+     "id": "marcher_c",
+     "name": "Marcher",
+     "layout": {
+      "line": "back",
+      "column": 2
+     }
+    }
+   ],
+   "statuses": [
+    "long_march"
+   ]
+  },
+  {
+   "id": "first_light",
+   "name": "First light",
+   "text": "Up before dawn: everyone's abilities start each fight closer to ready, in lighter kit.",
+   "rarity": "common",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "riser_a",
+     "name": "Riser",
+     "layout": {
+      "line": "front",
+      "column": 0
+     }
+    },
+    {
+     "id": "riser_b",
+     "name": "Riser",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     }
+    },
+    {
+     "id": "riser_c",
+     "name": "Riser",
+     "layout": {
+      "line": "back",
+      "column": 2
+     }
+    }
+   ],
+   "stats": [
+    {
+     "stat": "armor",
+     "flat": -1250
+    }
+   ],
+   "statuses": [
+    "first_light"
+   ]
+  },
+  {
+   "id": "arrowhead",
+   "name": "Arrowhead",
+   "text": "A sharp point and two keen flanks. The point catches the eye.",
+   "rarity": "common",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "point",
+     "name": "Point",
+     "text": "Crits far more. Draws more.",
+     "layout": {
+      "line": "front",
+      "column": 0
+     },
+     "stats": [
+      {
+       "stat": "crit_chance",
+       "flat": 7
+      },
+      {
+       "stat": "aggro",
+       "flat": 13
+      }
+     ]
+    },
+    {
+     "id": "flank_a",
+     "name": "Flank",
+     "text": "Crits more.",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     },
+     "stats": [
+      {
+       "stat": "crit_chance",
+       "flat": 3.5
+      }
+     ]
+    },
+    {
+     "id": "flank_b",
+     "name": "Flank",
+     "text": "Crits more.",
+     "layout": {
+      "line": "back",
+      "column": 2
+     },
+     "stats": [
+      {
+       "stat": "crit_chance",
+       "flat": 3.5
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ring_of_steel",
+   "name": "Ring of steel",
+   "text": "One draws the field onto its spikes; two cut it down.",
+   "rarity": "common",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "beacon",
+     "name": "Beacon",
+     "text": "Draws far more. Thorns.",
+     "layout": {
+      "line": "front",
+      "column": 0
+     },
+     "stats": [
+      {
+       "stat": "aggro",
+       "flat": 25
+      },
+      {
+       "stat": "thorns",
+       "flat": 150
+      }
+     ]
+    },
+    {
+     "id": "reaper_a",
+     "name": "Reaper",
+     "text": "Attack and Magic up.",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     },
+     "stats": [
+      {
+       "stat": "attack",
+       "flat": 1250
+      },
+      {
+       "stat": "magic",
+       "flat": 1250
+      }
+     ]
+    },
+    {
+     "id": "reaper_b",
+     "name": "Reaper",
+     "text": "Attack and Magic up.",
+     "layout": {
+      "line": "back",
+      "column": 2
+     },
+     "stats": [
+      {
+       "stat": "attack",
+       "flat": 1250
+      },
+      {
+       "stat": "magic",
+       "flat": 1250
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "vigil",
+   "name": "Vigil",
+   "text": "One stands where the blows fall. While anyone lies fallen, the two who keep watch hit harder.",
+   "rarity": "common",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "martyr",
+     "name": "Martyr",
+     "text": "Draws more. HP down.",
+     "layout": {
+      "line": "front",
+      "column": 0
+     },
+     "stats": [
+      {
+       "stat": "aggro",
+       "flat": 13
+      },
+      {
+       "stat": "max_hp",
+       "flat": -625
+      }
+     ]
+    },
+    {
+     "id": "mourner_a",
+     "name": "Mourner",
+     "text": "While an ally is down, Attack and Magic up two steps.",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     },
+     "statuses": [
+      "vigil_mourner"
+     ]
+    },
+    {
+     "id": "mourner_b",
+     "name": "Mourner",
+     "text": "While an ally is down, Attack and Magic up two steps.",
+     "layout": {
+      "line": "back",
+      "column": 2
+     },
+     "statuses": [
+      "vigil_mourner"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "watchtower",
+   "name": "Watchtower",
+   "text": "One keeps watch from the tower; two stand guard below it.",
+   "rarity": "common",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "lookout",
+     "name": "Lookout",
+     "text": "Abilities come round a little faster.",
+     "layout": {
+      "line": "front",
+      "column": 0
+     },
+     "stats": [
+      {
+       "stat": "cooldown_reduction",
+       "flat": 15
+      }
+     ]
+    },
+    {
+     "id": "sentry_a",
+     "name": "Sentry",
+     "text": "Armor up. Draws a little more.",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     },
+     "stats": [
+      {
+       "stat": "armor",
+       "flat": 1250
+      },
+      {
+       "stat": "aggro",
+       "flat": 10
+      }
+     ]
+    },
+    {
+     "id": "sentry_b",
+     "name": "Sentry",
+     "text": "Armor up. Draws a little more.",
+     "layout": {
+      "line": "back",
+      "column": 2
+     },
+     "stats": [
+      {
+       "stat": "armor",
+       "flat": 1250
+      },
+      {
+       "stat": "aggro",
+       "flat": 10
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "hammer_and_anvil",
+   "name": "Hammer and anvil",
+   "text": "One takes the blows, one strikes like a falling hill, one builds stone around the striker.",
+   "rarity": "rare",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "anvil",
+     "name": "Anvil",
+     "text": "Draws more. Guarded when each fight starts.",
+     "layout": {
+      "line": "front",
+      "column": 0
+     },
+     "stats": [
+      {
+       "stat": "aggro",
+       "flat": 13
+      }
+     ],
+     "statuses": [
+      "hammer_and_anvil_anvil"
+     ]
+    },
+    {
+     "id": "hammer",
+     "name": "Hammer",
+     "text": "With a slow weapon: basic attacks come half as often and deal triple. Otherwise: Attack up.",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     },
+     "statuses": [
+      "hammer_and_anvil_hammer"
+     ]
+    },
+    {
+     "id": "mason",
+     "name": "Mason",
+     "text": "When it gives another ally a Shield or a Guard, the Hammer gains the same.",
+     "layout": {
+      "line": "back",
+      "column": 2
+     },
+     "statuses": [
+      "hammer_and_anvil_mason"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "hunting_party",
+   "name": "Hunting party",
+   "text": "One picks the quarry, one runs it down past any guard, one holds the line.",
+   "rarity": "rare",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "marker",
+     "name": "Marker",
+     "text": "Its basic attacks Mark their target.",
+     "layout": {
+      "line": "front",
+      "column": 0
+     },
+     "statuses": [
+      "hunting_party_marker"
+     ]
+    },
+    {
+     "id": "chaser",
+     "name": "Chaser",
+     "text": "Everything it does has Seek.",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     },
+     "statuses": [
+      "hunting_party_chaser"
+     ]
+    },
+    {
+     "id": "warden",
+     "name": "Warden",
+     "text": "Taunts when each fight starts.",
+     "layout": {
+      "line": "back",
+      "column": 2
+     },
+     "statuses": [
+      "hunting_party_warden"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "hearth",
+   "name": "Hearth",
+   "text": "One holds the door, one feeds the fire, one carries it to every burning foe.",
+   "rarity": "rare",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "keeper",
+     "name": "Keeper",
+     "text": "Taunts and is Guarded when each fight starts.",
+     "layout": {
+      "line": "front",
+      "column": 0
+     },
+     "statuses": [
+      "hearth_keeper"
+     ]
+    },
+    {
+     "id": "stoker",
+     "name": "Stoker",
+     "text": "Hasted when each fight starts. Basic attacks a fifth faster.",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     },
+     "stats": [
+      {
+       "stat": "attack_speed",
+       "flat": 20
+      }
+     ],
+     "statuses": [
+      "hearth_stoker"
+     ]
+    },
+    {
+     "id": "torch",
+     "name": "Torch",
+     "text": "Each of its hits adds a Burn to every foe that's already burning.",
+     "layout": {
+      "line": "back",
+      "column": 2
+     },
+     "statuses": [
+      "hearth_torch"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "hoarfrost_line",
+   "name": "Hoarfrost line",
+   "text": "Two lay frost with every blow; the third waits to break what freezes.",
+   "rarity": "rare",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "frost_a",
+     "name": "Frost",
+     "text": "Basic attacks add a Chill.",
+     "layout": {
+      "line": "front",
+      "column": 0
+     },
+     "statuses": [
+      "hoarfrost_line_frost"
+     ]
+    },
+    {
+     "id": "frost_b",
+     "name": "Frost",
+     "text": "Basic attacks add a Chill.",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     },
+     "statuses": [
+      "hoarfrost_line_frost"
+     ]
+    },
+    {
+     "id": "breaker",
+     "name": "Breaker",
+     "text": "When any foe's Chill shatters, its next hit deals triple.",
+     "layout": {
+      "line": "back",
+      "column": 2
+     },
+     "statuses": [
+      "hoarfrost_line_breaker"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "reaping_line",
+   "name": "Reaping line",
+   "text": "One holds the whole field on itself; two reap through it.",
+   "rarity": "rare",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "beacon",
+     "name": "Beacon",
+     "text": "Taunts all fight. Thorns. Heals on it are halved.",
+     "layout": {
+      "line": "front",
+      "column": 0
+     },
+     "stats": [
+      {
+       "stat": "thorns",
+       "flat": 150
+      },
+      {
+       "stat": "healing_received",
+       "flat": -50
+      }
+     ],
+     "statuses": [
+      "reaping_line_beacon"
+     ]
+    },
+    {
+     "id": "scythe_a",
+     "name": "Scythe",
+     "text": "Its basic attacks hit every foe, for a fifth each.",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     },
+     "statuses": [
+      "reaping_line_scythe"
+     ]
+    },
+    {
+     "id": "scythe_b",
+     "name": "Scythe",
+     "text": "Its basic attacks hit every foe, for a fifth each.",
+     "layout": {
+      "line": "back",
+      "column": 2
+     },
+     "statuses": [
+      "reaping_line_scythe"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "relay",
+   "name": "Relay",
+   "text": "Each cast passes something down the line: mana to the second seat, and a quicker next ability to the third.",
+   "rarity": "rare",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "well",
+     "name": "Well",
+     "text": "Each ability it casts gives the second seat a third of its cost in MP.",
+     "layout": {
+      "line": "front",
+      "column": 0
+     },
+     "statuses": [
+      "relay_well"
+     ]
+    },
+    {
+     "id": "spender_a",
+     "name": "Spender",
+     "text": "When the Well casts, this seat's next ability comes 4 ticks closer.",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     },
+     "statuses": [
+      "relay_second"
+     ]
+    },
+    {
+     "id": "spender_b",
+     "name": "Spender",
+     "text": "When the second seat casts, this seat's next ability comes 4 ticks closer.",
+     "layout": {
+      "line": "back",
+      "column": 2
+     },
+     "statuses": [
+      "relay_third"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "gaol",
+   "name": "Gaol",
+   "text": "One waits for the moment to lock, one keeps the foes' eyes, one comes round faster every time a foe is held.",
+   "rarity": "rare",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "watcher",
+     "name": "Watcher",
+     "text": "Its abilities that Stun or Silence wait for a foe's wind-up, and aim at it.",
+     "layout": {
+      "line": "front",
+      "column": 0
+     },
+     "statuses": [
+      "gaol_watcher"
+     ]
+    },
+    {
+     "id": "gaoler",
+     "name": "Gaoler",
+     "text": "Draws far more.",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     },
+     "stats": [
+      {
+       "stat": "aggro",
+       "flat": 25
+      }
+     ]
+    },
+    {
+     "id": "turnkey",
+     "name": "Turnkey",
+     "text": "Whenever any foe is Stunned or Silenced, its abilities come 3 ticks closer.",
+     "layout": {
+      "line": "back",
+      "column": 2
+     },
+     "statuses": [
+      "gaol_turnkey"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "thorn_hedge",
+   "name": "Thorn hedge",
+   "text": "A thorned wall that draws the blows, and two who make every attacker pay.",
+   "rarity": "rare",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "anchor",
+     "name": "Anchor",
+     "text": "Draws far more. Thorns, high.",
+     "layout": {
+      "line": "front",
+      "column": 0
+     },
+     "stats": [
+      {
+       "stat": "aggro",
+       "flat": 25
+      },
+      {
+       "stat": "thorns",
+       "flat": 300
+      }
+     ]
+    },
+    {
+     "id": "thorns_a",
+     "name": "Thorns",
+     "text": "A foe that hits the Anchor is Weakened.",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     },
+     "statuses": [
+      "thorn_hedge_thorns"
+     ]
+    },
+    {
+     "id": "thorns_b",
+     "name": "Thorns",
+     "text": "A foe that hits the Anchor is Weakened.",
+     "layout": {
+      "line": "back",
+      "column": 2
+     },
+     "statuses": [
+      "thorn_hedge_thorns"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "blood_oath",
+   "name": "Blood oath",
+   "text": "One bleeds for power, one drinks it back, one pours life into the bleeder.",
+   "rarity": "rare",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "bleeder",
+     "name": "Bleeder",
+     "text": "Loses a little HP every tick. Its hits deal half again as much.",
+     "layout": {
+      "line": "front",
+      "column": 0
+     },
+     "statuses": [
+      "blood_oath_bleeder"
+     ]
+    },
+    {
+     "id": "drinker",
+     "name": "Drinker",
+     "text": "Lifesteal.",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     },
+     "stats": [
+      {
+       "stat": "lifesteal",
+       "flat": 10
+      }
+     ]
+    },
+    {
+     "id": "donor",
+     "name": "Donor",
+     "text": "Its heals on the Bleeder are doubled.",
+     "layout": {
+      "line": "back",
+      "column": 2
+     },
+     "statuses": [
+      "blood_oath_donor"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pyre_of_heroes",
+   "name": "Pyre of heroes",
+   "text": "One is meant to fall, one to bring it back, one to stand through it.",
+   "rarity": "rare",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "martyr",
+     "name": "Martyr",
+     "text": "Draws far more. When it falls, every ally gains several Might and Haste.",
+     "layout": {
+      "line": "front",
+      "column": 0
+     },
+     "stats": [
+      {
+       "stat": "aggro",
+       "flat": 25
+      }
+     ],
+     "statuses": [
+      "pyre_of_heroes_martyr"
+     ]
+    },
+    {
+     "id": "reviver",
+     "name": "Reviver",
+     "text": "Draws far less. Can't be Silenced.",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     },
+     "stats": [
+      {
+       "stat": "aggro",
+       "flat": -25
+      },
+      {
+       "stat": "immune:status:silence",
+       "flat": 1
+      }
+     ]
+    },
+    {
+     "id": "survivor",
+     "name": "Survivor",
+     "text": "Guarded whenever an ally falls.",
+     "layout": {
+      "line": "back",
+      "column": 2
+     },
+     "statuses": [
+      "pyre_of_heroes_survivor"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "knives_drawn",
+   "name": "Knives drawn",
+   "text": "The first blow lands twice as hard, the second comes quickly, and the third holds what's left.",
+   "rarity": "rare",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "opener",
+     "name": "Opener",
+     "text": "Its first action each fight deals double.",
+     "layout": {
+      "line": "front",
+      "column": 0
+     },
+     "statuses": [
+      "knives_drawn_opener"
+     ]
+    },
+    {
+     "id": "second",
+     "name": "Second",
+     "text": "Hasted when each fight starts.",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     },
+     "statuses": [
+      "knives_drawn_second"
+     ]
+    },
+    {
+     "id": "rear_guard",
+     "name": "Rear guard",
+     "text": "Starts each fight behind a Shield. After the first few ticks, draws more.",
+     "layout": {
+      "line": "back",
+      "column": 2
+     },
+     "statuses": [
+      "knives_drawn_rear_guard"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "the_wheel",
+   "name": "The wheel",
+   "text": "Every so often the wheel turns, and each unit takes the next seat's part.",
+   "rarity": "rare",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "wall",
+     "name": "Wall",
+     "text": "Draws more. Armor up.",
+     "layout": {
+      "line": "front",
+      "column": 0
+     },
+     "statuses": [
+      "the_wheel_wall_opening"
+     ]
+    },
+    {
+     "id": "blade",
+     "name": "Blade",
+     "text": "Basic attacks a fifth faster. Crits more.",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     },
+     "statuses": [
+      "the_wheel_blade_opening"
+     ]
+    },
+    {
+     "id": "well",
+     "name": "Well",
+     "text": "Regains MP in fights. Heals on it are stronger.",
+     "layout": {
+      "line": "back",
+      "column": 2
+     },
+     "statuses": [
+      "the_wheel_well_opening"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "the_pack",
+   "name": "The pack",
+   "text": "Everyone's basic attacks follow the Lead's last target. When it falls, the Lead's abilities come closer.",
+   "rarity": "legendary",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "lead",
+     "name": "Lead",
+     "text": "Its hits Mark their target. When the foe it Marked falls, its abilities come 5 ticks closer.",
+     "layout": {
+      "line": "front",
+      "column": 0
+     },
+     "statuses": [
+      "the_pack_lead"
+     ]
+    },
+    {
+     "id": "packmate_a",
+     "name": "Packmate",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     }
+    },
+    {
+     "id": "packmate_b",
+     "name": "Packmate",
+     "layout": {
+      "line": "back",
+      "column": 2
+     }
+    }
+   ]
+  },
+  {
+   "id": "the_forge",
+   "name": "The forge",
+   "text": "The longer the fight, the hotter everyone burns; but the forge is slow to light.",
+   "rarity": "legendary",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "forgehand_a",
+     "name": "Forgehand",
+     "layout": {
+      "line": "front",
+      "column": 0
+     }
+    },
+    {
+     "id": "forgehand_b",
+     "name": "Forgehand",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     }
+    },
+    {
+     "id": "forgehand_c",
+     "name": "Forgehand",
+     "layout": {
+      "line": "back",
+      "column": 2
+     }
+    }
+   ],
+   "statuses": [
+    "the_forge"
+   ]
+  },
+  {
+   "id": "the_ambuscade",
+   "name": "The ambuscade",
+   "text": "Everyone's first action comes at once and lands twice as hard. After that, everyone hits a sixth softer.",
+   "rarity": "legendary",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "lurker_a",
+     "name": "Lurker",
+     "layout": {
+      "line": "front",
+      "column": 0
+     }
+    },
+    {
+     "id": "lurker_b",
+     "name": "Lurker",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     }
+    },
+    {
+     "id": "lurker_c",
+     "name": "Lurker",
+     "layout": {
+      "line": "back",
+      "column": 2
+     }
+    }
+   ],
+   "statuses": [
+    "the_ambuscade"
+   ]
+  },
+  {
+   "id": "the_choir",
+   "name": "The choir",
+   "text": "Each ability a voice casts makes the next voice's next ability free. Nobody regains MP from MP regen.",
+   "rarity": "legendary",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "first_voice",
+     "name": "First voice",
+     "text": "When the voice before casts an ability, this voice's next ability is free.",
+     "layout": {
+      "line": "front",
+      "column": 0
+     }
+    },
+    {
+     "id": "second_voice",
+     "name": "Second voice",
+     "text": "When the voice before casts an ability, this voice's next ability is free.",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     }
+    },
+    {
+     "id": "third_voice",
+     "name": "Third voice",
+     "text": "When the voice before casts an ability, this voice's next ability is free.",
+     "layout": {
+      "line": "back",
+      "column": 2
+     }
+    }
+   ],
+   "stats": [
+    {
+     "stat": "mp_regen",
+     "pct": -100
+    }
+   ],
+   "statuses": [
+    "the_choir"
+   ]
+  },
+  {
+   "id": "the_undying",
+   "name": "The undying",
+   "text": "One gives itself so the others live: when it falls they're made whole, and it stands again before the next fight.",
+   "rarity": "legendary",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "martyr",
+     "name": "Martyr",
+     "text": "Draws far more. Can't be healed by others. When it falls, the others heal to full; it stands again after the fight with half its HP.",
+     "layout": {
+      "line": "front",
+      "column": 0
+     },
+     "stats": [
+      {
+       "stat": "aggro",
+       "flat": 25
+      }
+     ],
+     "statuses": [
+      "the_undying_martyr"
+     ]
+    },
+    {
+     "id": "spared_a",
+     "name": "Spared",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     }
+    },
+    {
+     "id": "spared_b",
+     "name": "Spared",
+     "layout": {
+      "line": "back",
+      "column": 2
+     }
+    }
+   ]
+  },
+  {
+   "id": "the_hurricane",
+   "name": "The hurricane",
+   "text": "Every hit the party lands winds the storm. At 30, everyone is Hasted, and it winds again.",
+   "rarity": "legendary",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "squall_a",
+     "name": "Squall",
+     "layout": {
+      "line": "front",
+      "column": 0
+     }
+    },
+    {
+     "id": "squall_b",
+     "name": "Squall",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     }
+    },
+    {
+     "id": "squall_c",
+     "name": "Squall",
+     "layout": {
+      "line": "back",
+      "column": 2
+     }
+    }
+   ],
+   "statuses": [
+    "the_hurricane"
+   ]
+  },
+  {
+   "id": "the_mountain",
+   "name": "The mountain",
+   "text": "One stands like a mountain. While it stands, the two below strike a third harder; while it's down, they take double.",
+   "rarity": "legendary",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "peak",
+     "name": "Peak",
+     "text": "Taunts all fight. Armor and HP up two steps.",
+     "layout": {
+      "line": "front",
+      "column": 0
+     },
+     "stats": [
+      {
+       "stat": "armor",
+       "flat": 2500
+      },
+      {
+       "stat": "max_hp",
+       "flat": 1250
+      }
+     ],
+     "statuses": [
+      "the_mountain_peak"
+     ]
+    },
+    {
+     "id": "foothill_a",
+     "name": "Foothill",
+     "text": "While the Peak stands, deals a third more. While it's down, takes double.",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     },
+     "statuses": [
+      "the_mountain_foothill"
+     ]
+    },
+    {
+     "id": "foothill_b",
+     "name": "Foothill",
+     "text": "While the Peak stands, deals a third more. While it's down, takes double.",
+     "layout": {
+      "line": "back",
+      "column": 2
+     },
+     "statuses": [
+      "the_mountain_foothill"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "the_storm_front",
+   "name": "The storm front",
+   "text": "Every single-target hit the party lands also strikes the healthiest other foe, for a quarter.",
+   "rarity": "legendary",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "thunderhead_a",
+     "name": "Thunderhead",
+     "layout": {
+      "line": "front",
+      "column": 0
+     }
+    },
+    {
+     "id": "thunderhead_b",
+     "name": "Thunderhead",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     }
+    },
+    {
+     "id": "thunderhead_c",
+     "name": "Thunderhead",
+     "layout": {
+      "line": "back",
+      "column": 2
+     }
+    }
+   ],
+   "statuses": [
+    "the_storm_front"
+   ]
+  },
+  {
+   "id": "the_vise",
+   "name": "The vise",
+   "text": "When a foe is Stunned or Silenced, everyone's basic attacks turn on it and hit 40% harder.",
+   "rarity": "legendary",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "jaw_a",
+     "name": "Jaw",
+     "layout": {
+      "line": "front",
+      "column": 0
+     }
+    },
+    {
+     "id": "screw",
+     "name": "Screw",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     }
+    },
+    {
+     "id": "jaw_b",
+     "name": "Jaw",
+     "layout": {
+      "line": "back",
+      "column": 2
+     }
+    }
+   ],
+   "statuses": [
+    "the_vise"
    ]
   }
  ],
