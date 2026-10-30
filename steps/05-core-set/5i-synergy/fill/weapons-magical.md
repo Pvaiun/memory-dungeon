@@ -1,6 +1,6 @@
 # The fill: magical weapons
 
-Oct 30, 2026. One share of the fill (`../fill-brief.md`): the five magical weapon kinds, eight pieces each, in the spine's order. The commons and uncommons are new, from the spine's rule for each kind (`spine.md` section 1); the rares and legendaries are the spine's lines (section 2), written in full. The lead's rulings (`../fill-rulings.md`: G1 to G10 and "The magical weapons") are applied: they changed the Humbling mace, Glacial rod, Wildmagic wand and Sunhammer, shortened the start-of-fight Regen and Clarity, and took the wand off Bonfire's first rung.
+Oct 30, 2026. One share of the fill (`../fill-brief.md`): the five magical weapon kinds, eight pieces each, in the spine's order. The commons and uncommons are new, from the spine's rule for each kind (`spine.md` section 1); the rares and legendaries are the spine's lines (section 2), written in full. The lead's rulings (`../fill-rulings.md`) are applied as the director's third round leaves them. Statuses are universal, so every status here is at its own length. Changes made for strength or size are undone, back to the spine's line or my first number. Two kept rulings change this file: the Wildmagic wand at 2 stacks, and the wand taken off Bonfire's first rung.
 
 **How to read the numbers.**
 - Every weapon here has damage medium, ratio medium and scales from Magic, as its kind's plain weapon does; no piece changes them, or its kind's speed, damage type or hands.
@@ -8,7 +8,7 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the five magical weapo
 - Steps: +1 Magic, Attack or Armor is 1,000; +1 HP is 500; +1 MP is 1,000; +1 MP regen is 3,000 (about 21 MP every 4 ticks, 210 in a regular fight); +1 Crit chance is 3%.
 - Stacks on a piece read off the wearer's stat the way a passive's do: a few is 0.7 a point (2.8 at Magic 4), several 1.3 (5.2). The flat words are one, a few (2), several (4).
 - A status named on a card keeps its own numbers (Ward +40 Magic resist for 30 ticks, Regen 48% of max HP over 24 ticks, Clarity 24% of max MP over 16 ticks, Weaken −30% for 20 ticks, Slow −40% for 24 ticks).
-- **"Short" is half the status's own length** (G1). An uncommon's Regen or Clarity at a fight's start is short: Regen 12 ticks (24% of max HP), Clarity 8 ticks (12% of max MP).
+- **Statuses are universal** (the director, third round): a piece never applies a status for less or more than its own length.
 - **Hooks** name a status the piece grants (gear `statuses`: applied at the fight's start and again on a revive) and what it does in `PRIMITIVES.md`'s terms.
 
 ---
@@ -81,10 +81,10 @@ Fits: Paladin, Valkyrie, Hexer, Geomancer. Medium (8.5 ticks), magical, one hand
 - **Builds:** Snap 2 ●●, Bonfire 2 ●●, Toll ●●, Lockdown ●: a curser's blade, worth something to every status party. It's strongest on the Hexer, whose Cold hex and Malison put three of the five on every foe.
 
 ### Dawnblade · rune sword · legendary
-- **Card:** Each time an ally falls or is revived, the wearer gains 4 Fervor, one every 2 ticks. Its own fall and return count too. Fervor: the holder deals 5% more damage a stack, up to 20, for the rest of the fight.
+- **Card:** Each time an ally falls or is revived, the wearer gains 4 Fervor. Its own fall and return count too. Fervor: the holder deals 5% more damage a stack, up to 20, for the rest of the fight.
 - **Weapon:** damage medium, ratio medium, from Magic.
 - **Numbers:**
-  - 4 Fervor an event (the flat word several). Under G11 a counter gains at most one stack every 2 ticks, so the 4 arrive one every 2 ticks, over 8 ticks. Two events close together queue their stacks rather than lose them.
+  - 4 Fervor an event (the flat word several), all at once.
   - **Fervor**, the spine's counter, as G4 sets it:
     - +5% a stack to the holder's hits, physical and magical. It never reaches a status's damage.
     - Capped at 20 stacks (+100%). It never drops and ends with the fight.
@@ -94,8 +94,7 @@ Fits: Paladin, Valkyrie, Hexer, Geomancer. Medium (8.5 ticks), magical, one hand
   - A granted status that survives a knockout.
   - Reactions on `ko` (whose `ally`, and whose `holder`) and on `revived` (whose `ally`, and whose `holder`), each applying `fervor` 4 to the holder.
   - `fervor` is an Intensity buff with boosts on `physical` and `magical` of 5 a stack, cap 20, `survivesKO`, unremovable, shown as an icon.
-  - G11's limit has to space a gain of 4 over 8 ticks rather than drop the extra stacks. If it drops them, Dawnblade is one Fervor (+5%) a fall and needs re-sizing (least sure).
-  - Existing primitives, plus the spine's counter and G11's limit.
+  - Existing primitives, plus the spine's counter.
 - **Builds:** Phoenix 3 ●●● (strongest the second time round), Pact ●.
 
 ---
