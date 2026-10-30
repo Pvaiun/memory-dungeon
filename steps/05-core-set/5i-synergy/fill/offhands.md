@@ -140,11 +140,11 @@ The spine's rule: commons lean Armor, Attack, HP; uncommons a Guard at the start
 - **Builds:** Toll 1 ●, Pact 1 ●.
 
 #### Comrade's targe · round shield · uncommon
-- **Card:** Round shield. Fits Hoplite, Valkyrie. Armor +1. At the start of every fight, the ally with the highest Aggro is Guarded.
+- **Card:** Round shield. Fits Hoplite, Valkyrie. Armor +1. At the start of every fight, the other ally with the highest Aggro is Guarded.
 - **Numbers:**
   - Armor +1 (1,000).
-  - Guard at its own numbers. On a Hoplite (Aggro 5) it's usually the Hoplite or another wall; on a Valkyrie (Aggro 3) it's the party's wall.
-- **Hooks:** the piece's status: `fight_start` → `apply` guard, `to: { side: allies, pick: highest, by: { stat: aggro } }`.
+  - Guard at its own numbers, on the other ally drawing the most, never the holder (the second round's ruling): on a Hoplite, the party's other wall or its sturdiest fighter; on a Valkyrie, the party's wall.
+- **Hooks:** the piece's status: `fight_start` → `apply` guard, `to: { side: others, pick: highest, by: { stat: aggro } }`.
 - **Builds:** Toll 1 ● (the anchor), Landslide 1 ● (the bulwark), Bonfire 1 ● (the keeper).
 
 #### Linebreaker · round shield · uncommon
@@ -204,7 +204,7 @@ The spine's rule: commons lean Armor, Attack, HP; uncommons a Guard at the start
 
 ## Horn (Knight, Bard)
 
-The spine's rule: commons lean Aggro, MP regen, Attack or Magic; uncommons a Clarity on the least-MP ally at the start, a short Taunt at the start. The eight reach Overflow, Landslide, Ambush, Phoenix and the Toll. Four of them act at the fight's start (see "least sure").
+The spine's rule: commons lean Aggro, MP regen, Attack or Magic; uncommons a Clarity on the least-MP ally at the start, a short Taunt at the start. Under G7 (the second round) the Taunt at the start goes, since the sword's Clarion blade has it for the Knight; the second uncommon quickens the party on its first kill instead. The eight reach Overflow, Landslide, Ambush, the Hunt, Phoenix and the Toll. Three of them act at the fight's start (see "least sure").
 
 #### Ram's horn · horn · common
 - **Card:** Horn. Fits Knight, Bard. Aggro +1, Attack +1.
@@ -228,10 +228,13 @@ The spine's rule: commons lean Aggro, MP regen, Attack or Magic; uncommons a Cla
 - **Builds:** Overflow 1 ●, Lockdown 1 ● (MP for the locks), Bonfire 1 ● (the feeding casts).
 
 #### Bull's horn · horn · uncommon
-- **Card:** Horn. Fits Knight, Bard. HP +1. Its holder Taunts briefly at the start of every fight.
-- **Numbers:** HP +1 (500). A short Taunt: 10 ticks, half its own (G1). On a Bard (HP 3, Aggro 1) it's a real risk, and a choice.
-- **Hooks:** the piece's status: `fight_start` → `apply` taunt, duration 10, `to: holder`.
-- **Builds:** Toll 1 ●, Bonfire 1 ● (the keeper), Landslide 1 ● (the stone draws), Ambush 1 ● (the counter-rush caught).
+- **Card:** Horn. Fits Knight, Bard. Attack +1. The first time in a fight that a foe falls, every ally is briefly Hasted.
+- **Numbers:**
+  - Attack +1 (1,000).
+  - A short Haste (G1): 10 ticks, half its own, on every standing ally, once a fight.
+  - It replaces the Taunt at the start, which repeated the sword's Clarion blade for the Knight (G7, second round). No other kind the Knight or the Bard wears answers a kill.
+- **Hooks:** the piece's status: `ko` (whose `foe`) → `apply` haste, duration 10, `to: { side: allies, pick: all }`, while the holder lacks a fight-long marker, which the reaction then applies.
+- **Builds:** Hunt 1 ● (the first kill speeds the next), Cuts 1 ● (speed), Ambush 1 ● (the volley's first kill hastens the tail).
 
 #### War horn · horn · rare
 - **Card:** Horn. Fits Knight, Bard. At the start of every fight, the ally with the slowest basic attack gains several Might.
@@ -810,7 +813,7 @@ Beyond the spine's list and the physical weapons' lettered needs (I use their NE
 ## Least sure
 
 1. **Oathbound shield** against raidwides: one blast can land on the holder two or three times.
-2. **The horn leans on the fight's start:** Reveille, Bull's horn, War horn and Horn of the charge, four of eight. The spine's rule set both uncommons there.
+2. **The horn leans on the fight's start:** Reveille, War horn and Horn of the charge, three of eight (Bull's horn moved off it in the second round).
 3. **Close pairs within a kind,** kept because their triggers differ: Reveille and Echo horn (MP to the neediest, once at the start or on every cast), Abridged lexicon and Annotated grimoire (cheaper own casts, or a free one passed on), Waking bell and Warding bell (one Silence answered, or a debuff lifted on a beat).
 4. **Treatise on the field is thin:** among tome holders, only the Frostweaver's Blizzard and two versions hit every foe, and those hits are touch-sized.
 

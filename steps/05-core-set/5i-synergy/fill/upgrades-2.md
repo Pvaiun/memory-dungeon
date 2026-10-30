@@ -16,8 +16,9 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
 - **Hits** read off their stat: touch 0.17, light 0.29, normal 0.5, heavy 0.85.
 - **Time:** cooldowns quick 14, short 22, medium 30, long 40, very long 56 ticks (moved up to 15% by id, as today); wind-ups quick 1, normal 3, long 6, very long 8.
 - **A kit state** is a status a kit keeps on a unit, as Bedrock's and Last rites' are today: shown on the sheet or as an icon, never a new word for the player. Its duration is its own. A status from the vocabulary (Taunt, Hidden, Stun, Haste…) can be applied for less than its own length, never more (the lead's ruling G1): "short" or "a moment" is half its own length.
-- **Counters** keep one meaning across every share. Heat (G3): +3% damage a stack, up to 15, kept all fight. This share uses no Marked or Fervor, and nothing in it reshapes a swing (G5).
-- **The lead's rulings** (`fill-rulings.md`) are applied: where an entry changed, it says so in its numbers, and the list at the end says which ruling settled each challenge.
+- **Counters** keep one meaning across every share. Heat (G3): +3% damage a stack, up to 15, kept all fight, and like every counter it gains at most one stack every 2 ticks (G11). This share uses no Marked or Fervor, and nothing in it reshapes a swing (G5).
+- **Paying HP** (G12, engine 4): the payer loses that much HP at once; it isn't damage, so no Shield soaks it, nothing reacts to it, and it can't take the payer below 1 HP.
+- **The lead's rulings** (`fill-rulings.md`, both rounds) are applied: where an entry changed, it says so in its numbers, and the list at the end says which ruling settled each change. Mythics carry no stat steps (G15).
 
 ---
 
@@ -47,7 +48,7 @@ Magic 4, Attack 3, HP 2, MP 1,700, Siphon medium. Dagger (fast, physical) or run
 
 **Now:** Adds a few Burn and a few Shock to every foe; stacks scale from Magic. (Short, normal wind-up, 450 MP; 5.6 of each.)
 
-**Power step:** more of both: two fifths more of every stack the cast adds (7.8 Burn and 7.8 Shock; on Plague the Bleed too; on Focused curse 23.5 of each).
+**Power step:** more of both: two fifths more of every stack the cast adds (7.8 Burn and 7.8 Shock; on Plague the Bleed too; on Focused curse 15.7 of each).
 
 **A, Plague**
 - **Card:** Adds a few Burn, a few Shock and a few Bleed to every foe; stacks scale from Magic.
@@ -56,9 +57,9 @@ Magic 4, Attack 3, HP 2, MP 1,700, Siphon medium. Dagger (fast, physical) or run
 - **Builds:** Cuts (every hit the party lands sets the Bleed off), Harvest (an Area hit sets it off on every foe at once), Toll (the swarm on the wall is already bleeding for the finisher's blows).
 
 **B, Focused curse**
-- **Card:** Adds Burn and Shock to the foe with the highest Attack or Magic, three times as many; stacks scale from Magic.
-- **Numbers:** 16.8 Burn and 16.8 Shock on that foe (Shock's cap is 40). No Seek: a Taunting foe catches it first, as with Enfeeble.
-- **Hooks:** `target: {side: foes, pick: highest, by: {stats: [attack, magic]}}`; stacks × 3.
+- **Card:** Adds Burn and Shock to the foe with the highest Attack or Magic, twice as many; stacks scale from Magic.
+- **Numbers:** 11.2 Burn and 11.2 Shock on that foe. Twice, not the spine's three times (second round): against a lone boss three times was a straight triple of Malison. No Seek: a Taunting foe catches it first, as with Enfeeble.
+- **Hooks:** `target: {side: foes, pick: highest, by: {stats: [attack, magic]}}`; stacks × 2.
 - **Builds:** Bonfire (the fire started on the foe that matters, where Firebolt and Pyre then aim), Lockdown (the dangerous foe pays for every act it gets).
 
 ### Unmake
@@ -101,7 +102,7 @@ Magic 4, Attack 3, HP 2, MP 1,700, Siphon medium. Dagger (fast, physical) or run
 
 - **Slot:** weapon: fast (5.8 ticks), magical, one hand. Fits the Hexer.
 - **Card:** After each ability the Hexer casts, its next three basic attacks hit every foe that holds a debuff.
-- **Numbers:** a plain fast weapon's damage (medium base and ratio, from Magic: about 600 a foe at Magic 5), and Magic +1. Each cast sets the count back to three; it doesn't add. Each foe it hits takes a basic attack, so Cold hex lays its Chill and Siphon draws MP on every one.
+- **Numbers:** a plain fast weapon's damage (medium base and ratio, from Magic: about 540 a foe at Magic 4), and no stat steps (G15). Each cast sets the count back to three; it doesn't add. Each foe it hits takes a basic attack, so Cold hex lays its Chill and Siphon draws MP on every one.
 - **Hooks:** a kit state with three stacks, set to three on `action_resolve` (kind `ability`), one spent on each basic attack; while it holds any, the basic attack's target is `{side: foes, where: {debuffs: true}, pick: all}`. **NEW:** a basic attack with an all-pick whose hits still count as basic attacks. (The other shape is extra strikes on every debuffed foe, the physical weapons share's NEW D, with the mythic naming Cold hex to ride them: part 1's NEW 9.)
 - **Pulls toward:** Snap 3 ●●● (Malison's curses make every foe a target, and Cold hex chills them all at once: shatters in chains), Harvest ●●.
 
@@ -185,9 +186,9 @@ Attack 3.7, HP 3, MP 750, Evasion high (35), Double strike medium (25). Fist wea
 ### Mythic: Ember palms
 
 - **Slot:** weapon: fast (6.0 ticks), physical, one hand. Fits the Monk.
-- **Card:** Every hit the Monk lands adds a Burn. Every 5 ticks, it gains a Heat for each burning foe, up to three at a time.
-- **Numbers:** one Burn a hit (basic attacks, extra strikes and ability hits). Heat as G3 sets it (+3% damage a stack, up to 15, kept all fight): against a pack with three burning it reaches the cap by tick 25; against a lone boss about 8 Heat (24%) at tick 40 and the cap at tick 75. A plain fist weapon's damage (medium base and ratio, from Attack), and Attack +1.
-- **Hooks:** a rider on the holder's hits (`riders`: `apply burn`, 1 stack); a pulse every 5 ticks applying Heat to the holder, as many stacks as there are burning foes, at most 3. **NEW:** a scale that counts the units on a side meeting a condition (foes holding Burn).
+- **Card:** Every hit the Monk lands adds a Burn. Every 6 ticks, it gains a Heat for each burning foe, up to three.
+- **Numbers:** one Burn a hit (basic attacks, extra strikes and ability hits). Heat as G3 sets it (+3% damage a stack, up to 15, kept all fight), at most one stack every 2 ticks (G11): every 6 ticks fits three, so against a pack with three burning it climbs one every 2 ticks and reaches the cap by tick 30; against a lone boss one every 6 ticks, about 6 Heat (18%) at tick 40 and 13 (39%) at tick 80. A plain fist weapon's damage (medium base and ratio, from Attack), and no stat steps (G15).
+- **Hooks:** a rider on the holder's hits (`riders`: `apply burn`, 1 stack); a pulse every 6 ticks applying Heat to the holder, as many stacks as there are burning foes, at most 3, landing one every 2 ticks (G11). **NEW:** a scale that counts the units on a side meeting a condition (foes holding Burn).
 - **Pulls toward:** Bonfire 3 ●●●, Cuts ●●.
 
 ---
@@ -205,13 +206,13 @@ Attack 5, HP 2, MP 1,450, Crit chance 5 (20%), Crit damage high (× 2), Evasion 
 **A, Opening wound**
 - **Card:** Its first hit on each foe always crits. Each of its crits adds several Bleed to the foe; stacks scale from Attack.
 - **Numbers:** once a foe a fight; a summoned foe is a new foe. The first hit can still be dodged; the next landed hit is then the first.
-- **Hooks:** a Per source marker on each foe it has landed a hit on (all fight); hits on a foe without it crit. **NEW B** of the physical weapons share (a crit by a condition of the target; Quietus needs the same).
+- **Hooks:** a Per source marker on each foe it has landed a hit on (all fight); hits on a foe without it crit. **NEW B** of the physical weapons share (a crit by a condition of the target; Quietus needs the same). A hit that always crits wins over Gambler's coin (G17).
 - **Builds:** Ambush (every foe it reaches opens bleeding from its first blow).
 
 **B, Rupture**
-- **Card:** Each of its crits sets off all the foe's Bleed at once, as if the foe were hit until the Bleed closed, then adds several Bleed; stacks scale from Attack.
-- **Numbers:** the Bleed's whole worth at once, untyped: 120 a stack, again and again as a third closes each time, until it's gone, about 330 a stack (3,300 for 10 stacks). It reads the stacks left after the crit's own hit has set the Bleed off once. Then Lacerate's several Bleed land as usual, so the next crit has something to set off. No damage is lost against the base, only moved forward: the Bleed comes due now, not over the hits to come.
-- **Hooks:** Lacerate's reaction (`hit_lands`, tag `crit`) in order: `damage`, type `none`, `{ratio: 330, stacks: bleed}` read on the event's other unit (engine 5), to `other`; `remove` Bleed from `other`; `apply bleed`.
+- **Card:** Each of its crits sets off the foe's Bleed once more, for each stack, and the Bleed closes; then it adds several Bleed; stacks scale from Attack.
+- **Numbers:** one hit's worth is Bleed's own per-hit damage for each stack (second round): 120 a stack, untyped (1,200 for 10 stacks), read on the stacks left after the crit's own hit has set the Bleed off once. Then the Bleed closes, and Lacerate's several Bleed land as usual, so the next crit has something to set off. The trade: the Bleed's damage now, about a third of what the hits to come would have drawn from it.
+- **Hooks:** Lacerate's reaction (`hit_lands`, tag `crit`) in order: `damage`, type `none`, `{ratio: 120, stacks: bleed}` read on the event's other unit (engine 5), to `other`; `remove` Bleed from `other`; `apply bleed`.
 - **Builds:** Hunt (the burst on the foe being hunted).
 
 ### Vanish
@@ -227,10 +228,10 @@ Attack 5, HP 2, MP 1,450, Crit chance 5 (20%), Crit damage high (× 2), Evasion 
 - **Builds:** Phoenix (the fragile one kept out of reach until the turn), Toll (the anchor alone in reach: only Area finds the others).
 
 **B, Shadow step**
-- **Card:** Applies Hidden to itself. Waits until it isn't Hidden. Its first hit after that Hidden ends deals triple damage.
-- **Numbers:** +200% on one hit, once a Vanish: about twice a regular fight. It can crit on top.
-- **Hooks:** a reaction on `status_ended`, Hidden, `expired`: `apply` a kit state to `self` (Fizzle, `boosts` +200 on both damage tags) that removes itself on its next `hit_lands`.
-- **Builds:** Ambush (out of the shadows with a blow that lands like three; Vanish first in the slots puts one at the opening).
+- **Card:** Applies Hidden to itself. Waits until it isn't Hidden. Its first hit after that Hidden ends deals double damage.
+- **Numbers:** +100% on one hit, once a Vanish: about twice a regular fight. It can crit on top. Double, not the spine's triple (G14).
+- **Hooks:** a reaction on `status_ended`, Hidden, `expired`: `apply` a kit state to `self` (Fizzle, `boosts` +100 on both damage tags) that removes itself on its next `hit_lands`.
+- **Builds:** Ambush (out of the shadows with a blow that lands like two; Vanish first in the slots puts one at the opening).
 
 ### Backstab
 
@@ -271,7 +272,7 @@ Attack 5, HP 2, MP 1,450, Crit chance 5 (20%), Crit damage high (× 2), Evasion 
 
 - **Slot:** armor. Fits the Assassin.
 - **Card:** When the Assassin lands a killing blow, it's Hidden for a moment, and its next hit deals double damage.
-- **Numbers:** Hidden for 5 ticks, half its own (G1); it lands only if the Assassin isn't already Hidden, so it never cuts a Vanish short. The next hit after the kill +100% (it can crit on top); a few kills a fight, so the double stands under G9. HP +1 step. (The ruling: the first draft's "every hit from Hidden crits" brought back Shadow strike, which the director retired on Oct 26.)
+- **Numbers:** Hidden for 5 ticks, half its own (G1); it lands only if the Assassin isn't already Hidden, so it never cuts a Vanish short. The next hit after the kill +100% (it can crit on top); a few kills a fight, so the double stands under G9. No stat steps (G15). (The ruling: the first draft's "every hit from Hidden crits" brought back Shadow strike, which the director retired on Oct 26.)
 - **Hooks:** the killing blow it lands (the engine additions gathered: who landed it) → `apply hidden`, `duration: 5`, to self if it lacks Hidden; and a kit state on self (Fizzle, `boosts` +100 on both damage tags) that removes itself on its next `hit_lands`. Engine 17.
 - **Pulls toward:** Hunt 3 ●●● (each kill hides it for a breath and makes the next blow land twice as hard), Ambush ●●.
 
@@ -325,13 +326,13 @@ HP 4, Attack 4, MP 1,700, Lifesteal high (20%). Fist weapons (fast) or great wea
 **A, Blood for mana**
 - **Card:** Spends a fifth of its max HP to give the other ally with the least MP as much MP, and gives it Clarity. Waits until another ally is under half its MP and the Vampire is at 35% of its max HP or more.
 - **Numbers:** 800 MP and Clarity at HP 4.
-- **Hooks:** `if: [{side: others, where: {mpBelow: 50}}, {side: self, where: {hpAtLeast: 35}}]`; `target: {side: others, pick: lowest, by: mp_share}`; `mp` in place of `heal`.
+- **Hooks:** `if: [{side: others, where: {mpBelow: 50}}, {side: self, where: {hpAtLeast: 35}}]`; `target: {side: others, pick: lowest, by: mp_share}`; the price paid as G12 sets it (engine 4: HP lost at once, not damage, never below 1 HP), then `mp` in place of `heal`.
 - **Builds:** Overflow (HP turned into a caster's fuel), Pact (life as the party's currency).
 
 **B, Lifeblood**
 - **Card:** Waits until an ally is knocked out. Spends a fifth of its max HP to revive it with as much HP. Waits too until the Vampire is at 35% of its max HP or more.
 - **Numbers:** very long cooldown and 650 MP (the revives' word and price), normal wind-up. A random knocked-out ally comes back with 800 HP, every action on its full cooldown (the Revive rule). No Clarity.
-- **Hooks:** `if: [{side: allies, where: {ko: true}}, {side: self, where: {hpAtLeast: 35}}]`; `target: {side: allies, where: {ko: true}}`; `blood_price`, then `revive`, `hp: {ratio: 0.2, stat: max_hp, of: self}`.
+- **Hooks:** `if: [{side: allies, where: {ko: true}}, {side: self, where: {hpAtLeast: 35}}]`; `target: {side: allies, where: {ko: true}}`; the price paid as G12 sets it (engine 4: HP lost at once, not damage, never below 1 HP), then `revive`, `hp: {ratio: 0.2, stat: max_hp, of: self}`. The revived comes back with every ability on full cooldown (G10).
 - **Builds:** Phoenix (a revive for a third class, paid in blood).
 
 ### Frenzy
@@ -354,10 +355,10 @@ HP 4, Attack 4, MP 1,700, Lifesteal high (20%). Fist weapons (fast) or great wea
 ### Mythic: Thrall's chalice
 
 - **Slot:** offhand. Fits the Vampire.
-- **Card:** When an ally falls, the Vampire heals to full. The next time the Vampire lands a killing blow, a fallen ally rises with a quarter of its max HP.
-- **Numbers:** the heal is its max HP, on each fall. One rise for each fall this fight, each at a quarter of the risen ally's max HP, every action on its full cooldown (the Revive rule). HP +1 step.
-- **Hooks:** a reaction on `ko` (`whose: ally`): `heal` the holder by its `max_hp`, and add a stack to a kit state (the debt). On a killing blow the Vampire lands (engine 5, the KO's killer): spend a stack, `revive` `{side: allies, where: {ko: true}}`, `hp` a quarter of the target's `max_hp`.
-- **Pulls toward:** Phoenix 3 ●●● (each fall heals the Vampire and buys a return), Pact ●●.
+- **Card:** Once a fight, when an ally falls, the Vampire heals to full, and the next time it lands a killing blow, that ally rises with a quarter of its max HP.
+- **Numbers:** once a fight, both halves (second round): the first fall heals the Vampire by its max HP, and one rise follows, at a quarter of the risen ally's max HP, every ability on its full cooldown (G10). No stat steps (G15).
+- **Hooks:** a reaction on `ko` (`whose: ally`), once a fight (a spent marker): `heal` the holder by its `max_hp`, and apply a kit state (the debt). On a killing blow the Vampire lands while it holds the debt (engine 5, the KO's killer): remove it, `revive` `{side: allies, where: {ko: true}}`, `hp` a quarter of the target's `max_hp`.
+- **Pulls toward:** Phoenix 3 ●●● (the first fall heals the Vampire and buys a return), Pact ●●.
 
 ---
 
@@ -369,7 +370,7 @@ Magic 5, HP 2, MP 3,800. Staff (slow, two hands) or wand (fast), both magical; R
 
 **Now:** Its basic attacks add a few Burn, whatever weapon it carries; stacks scale from Magic. (3.5 a hit.)
 
-**Power step:** more Burn: two fifths more (4.9 a hit). On Wildfire, to each of its two foes; on Searing, two fifths more of the doubled amount.
+**Power step:** more Burn: two fifths more (4.9 a hit). On Wildfire, to each of its two foes; on Searing, on the hottest foe.
 
 **A, Wildfire**
 - **Card:** Its basic attacks add a few Burn to their target and to a random other foe; stacks scale from Magic.
@@ -378,8 +379,8 @@ Magic 5, HP 2, MP 3,800. Staff (slow, two hands) or wand (fast), both magical; R
 - **Builds:** Harvest (the field burning together).
 
 **B, Searing**
-- **Card:** Its basic attacks add Burn only to the foe with the most Burn, twice as many; stacks scale from Magic.
-- **Numbers:** 7 a hit, wherever the attack landed.
+- **Card:** Its basic attacks add a few Burn only to the foe with the most Burn; stacks scale from Magic.
+- **Numbers:** 3.5 a hit, wherever the attack landed: Kindling's own amount, all on the hottest foe. A few, not the spine's twice as many (second round).
 - **Hooks:** the reaction's `apply` aimed at `{side: foes, pick: highest, by: {stacks: burn}}`.
 - **Builds:** Bonfire (the focus: the hottest foe kept hottest).
 
@@ -437,7 +438,7 @@ Magic 5, HP 2, MP 3,800. Staff (slow, two hands) or wand (fast), both magical; R
 
 - **Slot:** amulet. Fits the Pyromancer.
 - **Card:** While the Pyromancer stands, every ally's hits add a Burn.
-- **Numbers:** one Burn a hit (basic attacks, extra strikes and ability hits) for every ally, the Pyromancer included. It ends when the Pyromancer falls and returns when it's revived. Magic +1.
+- **Numbers:** one Burn a hit (basic attacks, extra strikes and ability hits) for every ally, the Pyromancer included. It ends when the Pyromancer falls and returns when it's revived. No stat steps (G15).
 - **Hooks:** a Per source aura (ends with its source's KO) applied to every ally on `fight_start` and on the Pyromancer's `revived`, carrying a rider: `apply burn`, 1 stack, on every hit.
 - **Pulls toward:** Bonfire 3 ●●● (the party as the fire).
 
@@ -522,7 +523,7 @@ Magic 4, HP 2, MP 2,300. Rod (medium) or staff (slow, two hands), both magical; 
 
 - **Slot:** armor. Fits the Frostweaver.
 - **Card:** Whenever a foe's Chill shatters, the Frostweaver puts half of it back: 6 Chill on that foe.
-- **Numbers:** 6 Chill (half the cap), whoever's Chill it was. While the Frostweaver is down, nothing. Magic +1.
+- **Numbers:** 6 Chill (half the cap), whoever's Chill it was. While the Frostweaver is down, nothing. No stat steps (G15).
 - **Hooks:** a reaction on `status_ended` (Chill, cause `removed`, `whose: foe`) → `apply chill`, 6 stacks, to `owner`. It listens for the end, not the cap: the party's reactions resolve before the foes', so on the cap the 6 would land on a full Chill a moment before the shatter spends it. (A Cleanse of Chill by a foe would also set it off; rare.)
 - **Pulls toward:** Snap 3 ●●● (each shatter after the first comes from half as far: shatters on a beat that speeds up).
 
@@ -575,9 +576,9 @@ Magic 4, HP 2, MP 2,300. Wand (fast) or rod (medium), both magical; Robes; bell.
 **Power step:** more damage: two fifths more (952 each). Static field deals none, so there its bolts are two fifths bigger (560).
 
 **A, Supercell**
-- **Card:** Deals magical damage that scales from Magic to every foe, 12% more for each foe it hits, and adds a few Shock to each; stacks scale from Magic.
-- **Numbers:** +12% a foe hit: four foes +48%, six +72%, eight +96%.
-- **Hooks:** engine 6 → a boost on this action, 12 a foe.
+- **Card:** Deals magical damage that scales from Magic to every foe, 10% more for each foe it hits, up to 40% more, and adds a few Shock to each; stacks scale from Magic.
+- **Numbers:** +10% a foe hit, up to +40% (second round): two foes +20%, four or more +40%.
+- **Hooks:** engine 6 → a boost on this action, 10 a foe, at most 40.
 - **Builds:** Harvest.
 
 **B, Static field**
@@ -608,7 +609,7 @@ Magic 4, HP 2, MP 2,300. Wand (fast) or rod (medium), both magical; Robes; bell.
 
 - **Slot:** weapon: fast (6.6 ticks), magical, one hand. Fits the Stormcaller.
 - **Card:** Every hit the Stormcaller lands jumps to one more random foe for half its damage. When a foe falls holding Shock, every other foe gains half of it.
-- **Numbers:** a jump is an extra hit at half the hit's damage, to a random foe other than the one just hit; Arc's Shock rides it, and it doesn't jump again. The fallen foe's Shock: half its stacks to each other foe (Shock's cap is 40). A plain wand's damage (from Magic), and Magic +1.
+- **Numbers:** a jump is an extra hit at half the hit's damage, to a random foe other than the one just hit; Arc's Shock rides it, and it doesn't jump again. The fallen foe's Shock: half its stacks to each other foe (Shock's cap is 40). A plain wand's damage (from Magic), and no stat steps (G15).
 - **Hooks:** engine 9 (a reaction that strikes), sized at half (the physical weapons share's NEW D); engine 5 (the fallen foe's Shock).
 - **Pulls toward:** Harvest 3 ●●●.
 
@@ -622,7 +623,7 @@ Armor 4, HP 3, Attack 3, Magic 4, MP 2,300, Crit chance 4 (16%), Crit damage hig
 
 **Now:** While its Shield pool is above zero, its crit chance is doubled. (16% → 32%.)
 
-**Power step:** more crit damage behind its Shield: +25 (medium), so its crits deal × 2.25 while the Shield holds. The same on both versions (Faultline's triple comes after the Shield is gone, so the step doesn't touch it).
+**Power step:** more crit damage behind its Shield: +25 (medium), so its crits deal × 2.25 while the Shield holds. The same on both versions (Faultline's crit comes after the Shield is gone, so the step doesn't touch it).
 
 **A, Stunning crits**
 - **Card:** While its Shield pool is above zero, its crit chance is doubled and its crits Stun.
@@ -631,9 +632,9 @@ Armor 4, HP 3, Attack 3, Magic 4, MP 2,300, Crit chance 4 (16%), Crit damage hig
 - **Builds:** Lockdown.
 
 **B, Faultline**
-- **Card:** While its Shield pool is above zero, its crit chance is doubled. When its Shield breaks, its next hit crits for triple damage.
-- **Numbers:** that hit crits at × 3 (the Geomancer's own crit is × 2). A Shield refilled and broken again sets it up again.
-- **Hooks:** a reaction on `status_ended` (Shield, cause `stacks`) → a kit state on `self` (`crit_chance +100`, `crit_multiplier +100`) that removes itself on its next `hit_lands`. Its own state, so no crit by target condition.
+- **Card:** While its Shield pool is above zero, its crit chance is doubled. When its Shield breaks, its next hit crits, for double damage.
+- **Numbers:** that hit always crits, at × 2, the Geomancer's own crit at Crit damage high. Double, not the spine's triple (G14). A Shield refilled and broken again sets it up again.
+- **Hooks:** a reaction on `status_ended` (Shield, cause `stacks`) → a kit state on `self` (`crit_chance +100`) that removes itself on its next `hit_lands`. Its own state, so no crit by target condition. A hit that always crits wins over Gambler's coin (G17).
 - **Builds:** Landslide (the break as the blow).
 
 ### Earthen shell
@@ -685,16 +686,16 @@ Armor 4, HP 3, Attack 3, Magic 4, MP 2,300, Crit chance 4 (16%), Crit damage hig
 - **Builds:** Lockdown (every foe a window at once), Snap.
 
 **B, Fissure**
-- **Card:** Deals magical damage that scales from Armor to a Stunned foe, triple; with no foe Stunned, to a random foe. A shorter wind-up. No Stun.
-- **Numbers:** 1.5 of Armor (6,000) on a Stunned foe, 0.5 otherwise. Normal wind-up (was very long), so it lands inside the Stun it aims at.
-- **Hooks:** `target: {side: foes, where: {has: stun}, ifNone: any}`; amount `{ratio: 0.5, stat: armor}` plus `{ratio: 1.0, stat: armor}` × `when: {has: stun}` on the target.
+- **Card:** Deals magical damage that scales from Armor to a Stunned foe, double; with no foe Stunned, to a random foe. A shorter wind-up. No Stun.
+- **Numbers:** 1.0 of Armor (4,000) on a Stunned foe, 0.5 otherwise. Double, not the spine's triple (G14). Normal wind-up (was very long), so it lands inside the Stun it aims at.
+- **Hooks:** `target: {side: foes, where: {has: stun}, ifNone: any}`; amount `{ratio: 0.5, stat: armor}` plus `{ratio: 0.5, stat: armor}` × `when: {has: stun}` on the target.
 - **Builds:** Landslide (the heaviest blow), Snap (the breaker after a shatter).
 
 ### Mythic: Mountain's crown
 
 - **Slot:** amulet. Fits the Geomancer.
 - **Card:** Each crit the Geomancer lands rebuilds its own Shield by the damage the crit dealt.
-- **Numbers:** up to the Shield's cap (half its max HP, 1,500 at HP 3), so one good crit refills it. Armor +1.
+- **Numbers:** up to the Shield's cap (half its max HP, 1,500 at HP 3), so one good crit refills it. No stat steps (G15).
 - **Hooks:** a reaction on `hit_lands`, tag `crit`: `apply shield`, `{ratio: 1, amount: true}`, `to: self`.
 - **Pulls toward:** Landslide 3 ●●● (the crits keep the stone up, and the stone keeps the crits coming).
 
@@ -702,22 +703,33 @@ Armor 4, HP 3, Attack 3, Magic 4, MP 2,300, Crit chance 4 (16%), Crit damage hig
 
 ## CHALLENGES, as ruled
 
-Each challenge, and the ruling in `fill-rulings.md` that settled it (applied in the entries above):
-1. **Deep cold** (Cold hex B): half again, 5.5 a hit (Upgrades, second eight).
-2. **Expose** (Enfeeble B): several, 10.4 (G8).
-3. **Stillness of mind** (Flow B): the short Taunt stands, 10 ticks (G1).
-4. **Vital strike** (Pressure point B): double, 3,700 (Upgrades, second eight).
-5. **Garrote wire** (Garrote B): several, 13 (G8).
-6. **Bloodletting** (Blood drain A): several, 10.4 (G8).
-7. **Blood rage** (Frenzy B): the other ally (Upgrades, second eight).
-8. **Slow burn** (Firebolt A): half again, 19.5 (Upgrades, second eight).
-9. **Conflagration** (Fireball A): several, 13 (G8).
-10. **Deep calm** (Stillness A): no Chill; Clarity on the ally with the least MP, and the Frostweaver's next ability free (Upgrades, second eight).
-11. **Earthen shell's power step:** comes round sooner, 30 → 22 (Upgrades, second eight).
-12. **Rampart** (Earthen shell B): rebuilt once when it breaks under its Guard (Upgrades, second eight).
-13. **Aftershock** (Tremor A): the short Stun stands, 4 ticks (G1).
-
-Also ruled, from the least-sure list: **Overcharge**, its next two abilities at half cost (Upgrades, second eight); **Night's edge**, a kill hides the Assassin for a moment and its next hit deals double, in place of the retired Shadow strike (Upgrades, second eight; Hidden at half length, G1); **Flash bolt's 225 MP** stands (Upgrades, second eight); **Heat** as G3 sets it.
+Each change from the spine, and the ruling in `fill-rulings.md` that settled it (applied in the entries above):
+1. **Deep cold** (Cold hex B): half again, 5.5 a hit. Settled by the first round (Upgrades, second eight).
+2. **Expose** (Enfeeble B): several, 10.4. Settled by G8.
+3. **Stillness of mind** (Flow B): the short Taunt stands, 10 ticks. Settled by G1.
+4. **Vital strike** (Pressure point B): double, 3,700. Settled by the first round (Upgrades, second eight).
+5. **Garrote wire** (Garrote B): several, 13. Settled by G8.
+6. **Bloodletting** (Blood drain A): several, 10.4. Settled by G8.
+7. **Blood rage** (Frenzy B): the other ally. Settled by the first round (Upgrades, second eight).
+8. **Slow burn** (Firebolt A): half again, 19.5. Settled by the first round (Upgrades, second eight).
+9. **Conflagration** (Fireball A): several, 13. Settled by G8.
+10. **Deep calm** (Stillness A): no Chill; Clarity on the ally with the least MP, and the Frostweaver's next ability free. Settled by the first round (Upgrades, second eight).
+11. **Earthen shell's power step:** comes round sooner, 30 → 22. Settled by the first round (Upgrades, second eight).
+12. **Rampart** (Earthen shell B): rebuilt once when it breaks under its Guard. Settled by the first round (Upgrades, second eight).
+13. **Aftershock** (Tremor A): the short Stun stands, 4 ticks. Settled by G1.
+14. **Overcharge** (Static charge A): its next two abilities at half cost. Settled by the first round (Upgrades, second eight).
+15. **Night's edge** (mythic): a kill hides the Assassin for a moment (5 ticks) and its next hit deals double, in place of the retired Shadow strike. Settled by the first round (Upgrades, second eight) and G1.
+16. **Flash bolt** (Firebolt B): 225 MP stands, off the ladder. Settled by the first round (Upgrades, second eight).
+17. **Focused curse** (Malison B): twice as many, 11.2 of each. Settled by the second round (Too strong).
+18. **Searing** (Kindling B): a few Burn on the foe with the most, 3.5. Settled by the second round (Too strong).
+19. **Supercell** (Thunderstorm A): +10% a foe, up to +40%. Settled by the second round (Too strong).
+20. **Thrall's chalice** (mythic): once a fight, both halves. Settled by the second round (Too strong).
+21. **Rupture** (Lacerate B): Bleed's own per-hit damage for each stack, 120 a stack. Settled by the second round (Too strong).
+22. **Shadow step** (Vanish B), **Faultline** (Bedrock B) and **Fissure** (Tremor B): double, not triple. Settled by G14.
+23. **Ember palms** (mythic): Heat every 6 ticks for each burning foe, at most one every 2 ticks. Settled by G3 and G11.
+24. **Blood for mana** and **Lifeblood** (Blood gift A and B): the HP price as engine 4 defines it. Settled by G12 (and G10 for Lifeblood's revive).
+25. **The eight mythics:** no stat steps. Settled by G15.
+26. **Opening wound** (Lacerate A) and **Faultline**: always-crit hits win over Gambler's coin. Settled by G17.
 
 ## NEW
 
@@ -734,8 +746,8 @@ Engine needs beyond the spine's list (several are the same as the other shares';
 - **Flow state** keeps the Monk Hasted almost all fight while it hits; the director cut Flow in the pacing pass when it held Haste two thirds of a fight. Here it's the version's point, and a Stun or dodges break it, but it may be too much.
 - **Stillness of mind:** 70% Evasion on a Taunting Monk, with Duelist's leathers or Windrunner's garb, may be an anchor nothing hits.
 - **Silence all** is the base in most fights (one foe casts at a time); it pays only against packs of casters.
-- **Focused curse, Searing, Ball lightning and Static grip** concentrate what was spread: against a lone boss each is a straight multiple of the base (×3, ×2, about ×3 and ×2). In a pack they give up the spread; against a boss they give up nothing.
+- **Focused curse, Ball lightning and Static grip** concentrate what was spread: against a lone boss each is a straight multiple of the base (×2, about ×3 and ×2). In a pack they give up the spread; against a boss they give up nothing.
 - **The witch-blade:** basic attacks on every cursed foe, with Siphon on each hit, may make the Hexer a mana engine as well as a shatter engine.
-- **Rupture** reads "one hit's worth for every stack" as the Bleed going off once for each stack it holds, which is its whole worth at once (about 330 a stack). Read as one hit's worth in all (120 a stack), it would throw away two thirds of the Bleed and be worse than the base.
+- **Rupture,** as ruled (120 a stack, then the Bleed closes), takes about a third of what the hits to come would draw from the Bleed: a burst on a foe about to fall, a loss on one that lives. It may read as worse than the base.
 - **Static field** sits near the Bramble knight's mythic (Heartwood mail, every hit on an ally sets off its Thorns): one is a 20-tick spell, the other all fight, but both are "the whole party strikes back".
 - **Boulder and Rockslide** take the medium cooldown and 650 MP so a double hit or an Area one doesn't double the Geomancer's spell; the line names only the wind-up for Boulder.

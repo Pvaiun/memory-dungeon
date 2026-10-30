@@ -483,24 +483,33 @@ Every card ends: *Fits everyone.* No amulet names a class's ability.
 
 ## CHALLENGES
 
-All five are settled by the lead's rulings.
+All are settled by the lead's rulings: my five, then the second round's changes.
 
 1. **Rubble plate's loop:** settled by the ruling under "Armor and amulets": the blast equals the most the Shield held since it last broke, and a quarter of that is rebuilt.
 2. **Vestments of return, a Cleric-only piece:** settled by the ruling under "Armor and amulets": its Shield goes to every ally revived while the wearer stands.
 3. **The uncommons made from stats:** settled by G6: they keep their small effects.
 4. **The short Haste and Taunt at the start:** settled by G1: a short status is half its length (Hare's foot and Red ribbon at 10 ticks; Courier's coat changed under G7).
 5. **Phoenix ember's Ambush tag:** settled by G10: dropped.
+6. **Keystone cuirass, a small Stone totem:** settled by the second round's G7 line: its basic attacks deal 2% more for every 1,000 Armor.
+7. **Vestments of return's cheap, quick revives:** settled by the second round: they were Reliquary of mercy's and go; only the Shield on revived allies stays.
+8. **Hexweave mail's size:** settled by the second round: +5% a debuff, up to six, with counting debuffs as an engine addition.
+9. **Matins robe's free cast:** settled by the second round: half cost.
+10. **Reprisal hauberk on a full field:** settled by the second round: the first three foes that hit it each fight.
+11. **Gambler's coin against sure crits:** settled by G17: hits that always crit still do, and the card says so.
+12. **Echo charm's card:** settled by the second round: it names what carries (statuses and on-hit effects), not damage boosts or Lifesteal.
+13. **Thornheart plate's speed against swarms, and Tempo's and Surge's:** settled by G11: at most one stack every 2 ticks.
+14. **Blood covenant's HP price:** settled by G12: paid at once, not damage, never below 1 HP.
 
 ## NEW
 
 1. **An HP floor:** a status that leaves its holder at 1 HP when a blow would knock it out, then ends (Last bastion; also the Vampire's Undying thirst). Today only a revive answers a knockout, and it counts as a fall.
-2. **A side's condition on a pulse or reaction,** as an ability's `if` (Kindled robes: "while any foe has Burn"; Red ribbon: "an ally below half"). Statuses can't check a side today.
+2. **A side's condition on a pulse or reaction,** as an ability's `if` (Kindled robes: "while any foe has Burn"; Red ribbon: "an ally below half"; Reprisal hauberk: "while it holds a reprisal"). Statuses can't check a side today.
 3. **Extra strikes heard as basic attacks** by the wearer's riders and reactions (Kindling, Cold hex, Iron palm, Refrain, any piece's "basic attacks add"), never by what grants a strike (Double strike, Arc), so nothing chains (Echo charm). Engine 10 is a different bend.
 4. **A killing blow:** the `ko` event naming the unit whose damage knocked it out. Today it names nobody (`ev("ko", u, null)` in `fight.ts`). Pack leader's coat and Bounty charm need it, as do the spine's Hunting spear, Hunter's buckler, Night's edge and Coup de grâce. It may belong under engine 5.
 5. **A stat set to a value,** after every other change (Gambler's coin's 50%). A flat change read once can fake it, but later changes (Bedrock, a seat) would land on top.
 6. **The most a Shield held since it last broke** (Rubble plate, under the lead's ruling).
 
-To check, not yet new: whether a knocked-out unit can be given a timed status (Phoenix ember and Vial of the last breath stand up a few ticks later); if not, a delayed self-revive. Details inside listed additions: engine 4 reads Blood covenant's cost as a share of max MP and never knocks out its caster; engine 3's cost stat needs a floor at free (Vestments of return and Reliquary of mercy on one Cleric reach −117%); engine 14 needs ability heals apart from all heals (Archmage's mantle).
+To check, not yet new: whether a knocked-out unit can be given a timed status (Phoenix ember and Vial of the last breath stand up a few ticks later); if not, a delayed self-revive. Details inside listed additions: engine 4 reads Blood covenant's cost as a share of max MP, paid as G12 defines it; engine 3's cost stat needs a floor at free (stacked discounts, such as Matins robe and Reliquary of mercy on one Cleric's first Raise, reach −100%); engine 14 needs ability heals apart from all heals (Archmage's mantle). Hexweave mail's debuff count is the rulings' "counting a unit's debuffs".
 
 ## Least sure
 

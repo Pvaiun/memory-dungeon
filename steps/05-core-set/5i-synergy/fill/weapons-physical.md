@@ -407,6 +407,6 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 1. **Marked's own numbers:** settled by G2.
 2. **Gravemark Marks nothing itself:** settled by the physical weapons' ruling (if no foe is Marked, it Marks).
 3. **Worldbreaker on the Hoplite, or with Millstone:** settled by G5 (one swing shape a unit). The Stun goes with the shape, and a unit that already has one gets Attack +1 only.
-4. **Two-handers' worth.** My reading (uncommons with two steps, single-effect rares with a step or two) is mine, not the spine's. The Volley bow (one volley in a regular fight) and the Executioner's longbow (half its effect redundant on the Ranger) may not be worth an offhand. That's a test.
-5. **Oathkeeper's reach.** On a Taunter with Stand fast or Thicket, it sweeps every foe for about two thirds of every fight at full swings. Against swarms that may outweigh both the Harvest and Toll pieces around it.
-6. **Storm pike's lightning** is light damage from Attack on every foe, free, about once in 30 ticks. That's bigger than a mage's Area touch, on purpose for a far end, but it's the size I'm least sure of.
+4. **Two-handers' worth.** The uncommons' two steps are settled by G16. The single-effect rares with a step or two are still my reading. The Volley bow (one volley in a regular fight) and the Executioner's longbow (half its effect redundant on the Ranger) may not be worth an offhand. That's a test.
+5. **Oathkeeper's reach:** settled by the second round (its sweep hits for half).
+6. **Storm pike's lightning** is light damage from Attack on every foe, and free. Under G11 it comes about once every 55 ticks on a Valkyrie and far less often on the Hoplite, so it may now be too rare for a far end. If so, I'd lower the cap from 10 Charges to 6, which brings back about one storm in a regular fight on a Valkyrie.
