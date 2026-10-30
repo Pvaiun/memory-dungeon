@@ -132,8 +132,6 @@ export const passives: StatusT[] = [
       { on: { event: "status_ended", status: "shield" }, do: [{ op: "remove", label: "buff", status: "bedrock_on", to: "holder" }] },
     ],
   }),
-  // Step 5f: Blood gift's price. An action can't deal untyped damage, and a hit on itself would meet its own mitigation and Lifesteal; a status pays it the moment it lands.
-  { id: "blood_price", name: "BLOOD PRICE", text: "Pays a fifth of its max HP.", label: "buff", show: "icon", stacking: "fizzle", unremovable: true, duration: 1, reactions: [{ on: { event: "status_gained", status: "blood_price" }, do: [{ op: "damage", type: "none", amount: { scale: [{ ratio: 0.2, stat: "max_hp", of: "holder" }] }, to: "holder" }] }] },
   { id: "bedrock_on", name: "BEDROCK", text: "Crit chance doubled.", label: "buff", show: "icon", stacking: "fizzle", stats: [{ stat: "crit_chance", flat: { scale: [{ ratio: 1, stat: "crit_chance", of: "holder" }] } }] },
 ];
 
@@ -277,7 +275,8 @@ export const abilities: A[] = [
     // Step 5g round 3: 300 MP (was 500) and it waits for an ally under 80%: it already costs a fifth of the Vampire's HP, and the Vampire was the one class short of MP (21% of its time).
     // Round 5 (the director's): it also waits until the Vampire itself is above 35% HP, so the price (a fifth) never kills it.
     ...timing("medium", "normal"), mp: 450, if: [{ side: "others", where: { hpBelow: 80 } }, { side: "self", where: { hpAtLeast: 35 } }], target: T.otherLowestShareAlly,
-    do: [apply("blood_price", { to: { side: "self" } }), { op: "heal", amount: from("max_hp", 0.2) }, apply("clarity")],
+    // Step 5i (G12, engine-spec X23): the price is paid with `pay`, HP lost at once, not damage: no Shield soaks it, nothing reacts, never below 1 HP (was blood_price's untyped damage).
+    do: [{ op: "pay", hp: from("max_hp", 0.2), to: "self" }, { op: "heal", amount: from("max_hp", 0.2) }, apply("clarity")],
   }),
   a("vampire", "frenzy", "Frenzy", "Several Might on itself.", { ...timing("medium", "quick"), mp: 450, target: "self", do: [apply("might", { stacks: stacks("several", "attack") })] }), // Step 5g round 3: 300 MP (was 500).
   // Pyromancer
