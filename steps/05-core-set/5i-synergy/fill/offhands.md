@@ -399,9 +399,10 @@ The spine's rule: commons lean Magic, HP, MP; uncommons a few Burn on every foe 
 #### Signal lantern · lantern · rare
 - **Card:** Lantern. Fits Paladin, Pyromancer. A foe its holder hits with an ability is Marked. Abilities that hit every foe don't Mark.
 - **Numbers:**
-  - Marked at its own numbers.
+  - Marked as G2 sets it: 14 ticks, Refresh, one Mark for the holder at a time, so each new ability hit moves it.
   - Smite Marks the foe with the highest Attack or Magic; Firebolt and Pyre Mark the foe with the most Burn.
   - Fireball would Mark every foe, which marks nothing, hence the exception.
+  - Behind a Taunting front, only basic attacks with Seek follow the Mark (G2).
 - **Hooks:** the piece's status: `hit_lands` (kind `ability`, whose `holder`), not `area` (**NEW**, the tag shared with Treatise on the field) → `apply` marked, `to: other`. Addition 2.
 - **Builds:** Hunt 2 ●● (Smite on the dangerous foe, the hunt's own), Bonfire ●● (the hottest foe as everyone's target).
 
@@ -409,7 +410,7 @@ The spine's rule: commons lean Magic, HP, MP; uncommons a few Burn on every foe 
 - **Card:** Lantern. Fits Paladin, Pyromancer. When a burning foe falls, all its Burn passes to the foe with the most HP, and its holder gains Heat.
 - **Numbers:**
   - Every stack the fallen foe held, to the living foe with the most current HP.
-  - 2 Heat a burning foe's fall, at Heat's own numbers.
+  - 2 Heat a burning foe's fall: +6% damage on its hits each time, up to Heat's cap of 15 (+45%, G3).
   - Any burning foe counts, whoever lit it.
 - **Hooks:**
   - The piece's status: `status_ended` (burn, cause `ko`, whose `foe`): a foe's statuses end just before its `ko` event, as the Gravemark's hook relies on.
@@ -453,9 +454,9 @@ The spine's rule: commons lean Magic, MP regen, HP; uncommons heals that also cl
 - **Builds:** Pact 1 ● (Weaken and Rot off the drinker), Toll 1 ● (the anchor kept clean), Phoenix 1 ●.
 
 #### Mending icon · relic · uncommon
-- **Card:** Relic. Fits Cleric, Valkyrie. MP regen +1. At the start of every fight, the ally with the lowest share of its HP gains Regen.
-- **Numbers:** MP regen +1 (3,000). Regen at its own numbers: 48% of that ally's max HP over 24 ticks.
-- **Hooks:** the piece's status: `fight_start` → `apply` regen, `to: { side: allies, pick: lowest, by: hp_share }`.
+- **Card:** Relic. Fits Cleric, Valkyrie. MP regen +1. At the start of every fight, the ally with the lowest share of its HP gains a short Regen.
+- **Numbers:** MP regen +1 (3,000). A short Regen (G1): 12 ticks, half its own, so three pulses, 24% of that ally's max HP.
+- **Hooks:** the piece's status: `fight_start` → `apply` regen, duration 12, `to: { side: allies, pick: lowest, by: hp_share }`.
 - **Builds:** Pact 1 ●, Phoenix 1 ●, Toll 1 ●.
 
 #### Saint's knucklebone · relic · rare

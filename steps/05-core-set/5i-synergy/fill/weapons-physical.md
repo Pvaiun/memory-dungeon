@@ -372,7 +372,7 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 - **Weapon:** medium, medium, Attack.
 - **Numbers:** attack speed −100 (a swing every 25.6 ticks), +200% on basic attacks, and Stun on each swing that lands (its own 8 ticks, Fizzle). At Attack 4 a swing is 3,600 before crit, every 25.6 ticks: 1.5 times a plain great weapon's damage a tick, and a foe Stunned about a third of the time. Riders on basic attacks fire half as often.
 - **One swing shape (G5):** half as often for triple is a swing shape, so a unit takes only one. A passive's shape comes first, then the first piece's in slot order. The Stun goes with the shape (the lead's correction), since a Stun on every swing at normal speed would be a lock. On a unit that already has a shape, Worldbreaker gives Attack +1 and nothing else. On the Hoplite, Phalanx keeps its shape: it swings every 25.6 ticks for double, with no Stun. On the other three wearers the weapon comes first, so it beats a Millstone, a Hummingbird charm or a Hammer seat, and each of those gives Attack +1 instead.
-- **Hooks:** stats `attack_speed` −100 and a boost on tag `basic` of +200, both under the one-shape rule (G5, in the gathered list), and the weapon's own `apply` of stun.
+- **Hooks:** stats `attack_speed` −100, a boost on tag `basic` of +200 and the weapon's own `apply` of stun, all three under the one-shape rule (G5, in the gathered list). They all give way together to Attack +1.
 - **Builds:** Landslide 3 ●●● (the heaviest swing), Lockdown 3 ●●.
 
 ---
@@ -399,7 +399,7 @@ Applying the rulings also changed one piece that wasn't a challenge. Under G6, t
 
 1. **Marked's own numbers:** settled by G2.
 2. **Gravemark Marks nothing itself:** settled by the physical weapons' ruling (if no foe is Marked, it Marks).
-3. **Worldbreaker on the Hoplite, or with Millstone:** settled by G5 (one swing shape a unit). One reading is mine: the Stun stays when the shape is replaced.
+3. **Worldbreaker on the Hoplite, or with Millstone:** settled by G5 (one swing shape a unit). The Stun goes with the shape, and a unit that already has one gets Attack +1 only.
 4. **Two-handers' worth.** My reading (uncommons with two steps, single-effect rares with a step or two) is mine, not the spine's. The Volley bow (one volley in a regular fight) and the Executioner's longbow (half its effect redundant on the Ranger) may not be worth an offhand. That's a test.
 5. **Oathkeeper's reach.** On a Taunter with Stand fast or Thicket, it sweeps every foe for about two thirds of every fight at full swings. Against swarms that may outweigh both the Harvest and Toll pieces around it.
 6. **Storm pike's lightning** is light damage from Attack on every foe, free, about once in 30 ticks. That's bigger than a mage's Area touch, on purpose for a far end, but it's the size I'm least sure of.

@@ -416,7 +416,7 @@ Every card ends: *Fits everyone.* No amulet names a class's ability.
 **Hummingbird charm** · amulet · rare
 - **Card:** Basic attacks come twice as often and deal 45% as much.
 - **Numbers:** attack speed +100; basic attacks −55%.
-- **Hooks:** a stat change (attack_speed +100); `boosts` tag basic −55.
+- **Hooks:** a stat change (attack_speed +100); `boosts` tag basic −55. Ruling G5: on a unit that already has a swing shape, it gives Attack or Magic +1 instead, its weapon's stat.
 - **Builds:** Cuts 2 ●●●, Snap ●● and Bonfire ●● (riders twice as often). Millstone's lever pulled the other way.
 
 **Echo charm** · amulet · rare
@@ -459,7 +459,7 @@ Every card ends: *Fits everyone.* No amulet names a class's ability.
 - **Card:** HP −1. Once a fight, when the wearer falls, it stands up 4 ticks later with a fifth of its HP.
 - **Numbers:** max HP −500 (the line's "a little less max HP"); stands after 4 ticks with 20% of max HP. As every revive, it comes back with its actions on full cooldown.
 - **Hooks:** a status that survives a knockout; `ko` (its own) → apply RISING (4 ticks, survives a knockout) and a once-a-fight marker; RISING's `status_ended` (expired) → `revive` self, 0.2 × max HP. If a knocked-out unit can't be given a status, a delayed self-revive is new (see NEW, to check).
-- **Builds:** Phoenix 3 ●●●, Pact ●●, Ambush ● (a second volley: see CHALLENGE 5). Gives up: HP.
+- **Builds:** Phoenix 3 ●●●, Pact ●●. Gives up: HP. (Ruling G10: no Ambush tag, since it comes back on full cooldowns.)
 
 **Ready stance** · amulet · legendary
 - **Card:** The wearer's abilities start every fight at least half charged. Its cooldowns are a fifth longer.
@@ -475,8 +475,8 @@ Every card ends: *Fits everyone.* No amulet names a class's ability.
 
 **Gambler's coin** ✦ · amulet · legendary
 - **Card:** The wearer's crit chance is 50%. Its hits that don't crit deal half; its crits deal what a crit always does.
-- **Numbers:** crit chance 50; every hit −50%; crit multiplier doubled, so a crit lands at its usual ×1.5 (×1.75 or ×2 with Crit damage). On average a hit is unchanged, and a quarter bigger with Crit damage high.
-- **Hooks:** **NEW 5** (a stat set to a value); `boosts` −50 on physical and magical; a stat change of +100% on crit multiplier.
+- **Numbers:** crit chance 50, set after every other change, so nothing raises or lowers it (Bedrock doesn't double it); Backstab, which scales from crit chance, reads the 50. Every hit −50%; crit multiplier doubled, so a crit lands at its usual ×1.5 (×1.75 or ×2 with Crit damage). On average a hit is unchanged, and a quarter bigger with Crit damage high. The balance pass watches it.
+- **Hooks:** **NEW 5** (a stat set to a value after every other change); `boosts` −50 on physical and magical; a stat change of +100% on crit multiplier.
 - **Builds:** exotic: a coin toss on every swing. Landslide ● and Ambush ● for the crit-built.
 
 ---

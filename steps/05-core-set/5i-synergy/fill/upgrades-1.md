@@ -669,9 +669,9 @@ Each fits one class, sits in its slot, and a unit wears one at most. Offered in 
 
 ### The last wall · Hoplite · offhand
 
-- **Card:** Fits the Hoplite. When an Aegis the Hoplite gave blocks a blow, the attacker takes the blocked damage, and Aspis is ready again at once.
-- **Numbers:** the full blocked amount, untyped (not dodged, not reduced). Aspis still costs its MP when it's cast again.
-- **Hooks:** engine 1 (Aspis made ready). **NEW:** an event when a block is spent that carries the blocked amount and the attacker (`status_ended` with `cause: spent` has neither). Can't be held under a great weapon.
+- **Card:** Fits the Hoplite. The first time an Aegis from each Aspis blocks a blow, the attacker takes the blocked damage, up to half the Hoplite's max HP, and Aspis is ready again at once.
+- **Numbers:** the blocked amount, untyped (not dodged, not reduced), at most half the Hoplite's max HP (2,000 at HP 4), once per Aspis cast (with Shield wall, the first of its Aegis to block). Aspis still costs its MP when it's cast again. The cap and the once are the lead's ruling.
+- **Hooks:** each Aspis cast puts a hidden marker on the Hoplite; the return needs it and spends it (an `if` on the reaction, NEW 1). Engine 1 (Aspis made ready). **NEW:** an event when a block is spent that carries the blocked amount and the attacker (`status_ended` with `cause: spent` has neither). Can't be held under a great weapon.
 - **Pulls toward:** Toll 3 ●●, Bonfire 3 ●● (the keeper).
 
 ### Chains of light · Paladin · offhand
