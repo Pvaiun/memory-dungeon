@@ -39,5 +39,5 @@ The lead splits the volume among parallel agents with bounded shares: the engine
 ## Read first
 
 - `CLAUDE.md` and `docs/method.md`.
-- In this folder: `intent.md`, `builds.md`, and the design the previous step wrote.
+- In this folder: `intent.md`, `builds.md`, and the design the previous step wrote: `spine.md`, then the pieces in full in `fill/`, with `fill-rulings.md` (the lead's rulings, which win where they differ, and the engine additions gathered) and `fill-report.md` (gate 2).
 - The cleanup's report, and 5h's report and tools.
