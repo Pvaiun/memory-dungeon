@@ -6,11 +6,12 @@ Oct 29, 2026. It runs after the pieces' design (`pieces-design-brief.md`) has pa
 
 Build the gear, formations, upgrades and mythics as designed, and the engine additions they need. Then test every build against the others on the same fights. As in the design, one lead owns the build and calls parallel agents for the volume.
 
-**This step builds and measures. It doesn't balance** (the director, Oct 30: "don't make rules about balancing. We're gonna do that in the balancing pass"):
+**This step builds and measures. It doesn't run a balance pass** (the director, Oct 30: "don't make rules about balancing. We're gonna do that in the balancing pass"):
 - Every number goes in as the design wrote it: pieces, formations, upgrades, mythics, and the control resistance's first values.
-- No number is changed to balance anything: not a piece, a class, an enemy or a fight's knob. Synergies may be overpowered, and the game may be far too easy; that's expected.
-- What the build may fix is what doesn't work: a crash, an infinite loop, an effect that does nothing or the opposite of its card. Each fix is listed in the report.
-- Where the measurements show something broken in strength, the report says so and proposes a fix, from the levers at the end of `fill-rulings.md` or its own. The balance pass, a step of its own after the director plays, decides.
+- Synergies may be overpowered, and the game may be far too easy; that's expected. No knob is re-tuned.
+- **One correction, no iteration** (the director, Oct 30: "if its first test shows that something's super off [...] it should just make that change. What I don't want it to do is to iterate on the changes"). When the first measurement shows a number is wildly off (a piece or version that obviously dominates or does nothing, by a margin no balance pass would keep), change it once, by judgement, and don't re-measure to fine-tune it. The levers at the end of `fill-rulings.md` are the first place to look. Statuses stay universal.
+- Also fixed: what doesn't work (a crash, an infinite loop, an effect that does nothing or the opposite of its card).
+- Every change of either kind is listed in the report, with its before and after. Everything short of "wildly off" is reported with a proposed fix, for the balance pass, a step of its own after the director plays.
 
 ## What it builds
 
