@@ -271,7 +271,7 @@ type ActDef = {
   cast: number;
   cooldown: number;
   recovery: number;
-  if: S.ConditionT | S.ConditionT[] | null;
+  if: S.ConditionT[] | null;
   target: Target;
   seek: boolean;
   effects: S.EffectT[];
@@ -316,12 +316,19 @@ function actDef(w: W, u: CUnit, i: number): ActDef {
     const a = src as S.AbilityT;
     d = {
       id, kind: "ability", name: a.name, mp: a.mp ?? 0, cast: sub(a.cast ?? w.c.pack.ruleset.abilityCast), cooldown: sub(a.cooldown),
-      recovery: sub(a.recovery ?? w.c.pack.ruleset.abilityRecovery), if: a.if ?? null, target: a.target ?? "foe", seek: a.seek ?? false, effects: a.do,
+      recovery: sub(a.recovery ?? w.c.pack.ruleset.abilityRecovery), if: allOf(a.if), target: a.target ?? "foe", seek: a.seek ?? false, effects: a.do,
       tags: actTags("ability", a.do),
     };
   }
   acts.set(src, d);
   return d;
+}
+
+/** An ability's `if` as conditions that must all hold. Schema 0.8's `{ any }` (build/engine-spec.md X41) isn't built yet. */
+function allOf(c: S.AbilityT["if"]): S.ConditionT[] | null {
+  if (!c) return null;
+  if ("any" in c) throw new Error("an ability's `if: { any }` isn't built yet (build/engine-spec.md X41)");
+  return [c].flat();
 }
 
 /** What a lockout or Seek can cover: the action's kind, and the type of each of its hits. */
@@ -351,7 +358,7 @@ function available(w: W, u: CUnit, i: number): boolean {
   if (u.acts[i].ready > w.f.now) return false;
   const d = actDef(w, u, i);
   // Step 5g: an ability may wait for several conditions at once (Blood gift: an ally hurt, and itself above the price).
-  return u.mp >= d.mp && (!d.if || [d.if].flat().every((cnd) => holds(w, u, cnd))) && !lockedOut(w, u, d);
+  return u.mp >= d.mp && (!d.if || d.if.every((cnd) => holds(w, u, cnd))) && !lockedOut(w, u, d);
 }
 
 function start(w: W, u: CUnit, i: number) {
@@ -487,6 +494,7 @@ function value(w: W, x: CUnit, by: NonNullable<S.TargetRuleT["by"]>): number {
   if (by === "hp_share") return x.stats.max_hp > 0 ? x.hp / x.stats.max_hp : 0;
   if (by === "mp_share") return x.stats.max_mp > 0 ? x.mp / x.stats.max_mp : 1;
   if (by === "buffs" || by === "debuffs") return x.statuses.filter((s) => def(w, s.id).label === by.slice(0, -1)).length;
+  if (by === "swing") throw new Error("pick by swing isn't built yet (build/engine-spec.md X9)");
   if ("stat" in by) return stat(w, x, by.stat);
   if ("stats" in by) return Math.max(...by.stats.map((k) => stat(w, x, k)));
   return total(x, by.stacks) / SUBTICKS;

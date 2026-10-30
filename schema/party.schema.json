@@ -26,7 +26,12 @@
               "type": "string",
               "pattern": "^[a-z][a-z0-9_]*$"
             },
-            "description": "Equipped abilities, in slot order."
+            "description": "Equipped abilities, in slot order: a class ability, or (step 5i) the trained form of one (<id>__p, __a, __b, __ap or __bp)."
+          },
+          "passive": {
+            "description": "Step 5i: the trained form of its class passive (<passive>__p, __a, __b, __ap or __bp): a status that takes the passive status's place at fight start and on a revive. Absent: the class's own.",
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
           },
           "gear": {
             "type": "object",

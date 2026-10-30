@@ -104,6 +104,7 @@ export function validatePack(raw: unknown, opts: ValidateOptions = {}): Validate
   checkPerks(pack, ix, w, r, c);
   checkDungeons(pack, ix, w, r);
   checkStarterAndProgression(pack, ix, w, r);
+  checkUpgrades(pack, ix, w, r);
   if (opts.complete) checkComplete(pack, r);
   checkUnused(pack, ix, r);
 
@@ -140,7 +141,15 @@ const ACTION_EVENTS = ["action_start", "action_resolve", "action_interrupted"];
 const HIT_EVENTS = ["hit_lands", "hit_taken", "hit_evaded", "hit_missed"];
 const STATUS_EVENTS = ["status_gained", "status_triggered", "status_ended", "status_capped"];
 const DAMAGE_EVENTS = ["damage_dealt", "damage_taken"];
-const RESERVED_TAGS = ["basic", "ability", "extra", "physical", "magical", "none", "healing", "all", "crit"];
+const RESERVED_TAGS = ["basic", "ability", "extra", "physical", "magical", "none", "healing", "all", "crit", "area"];
+/** Step 5i: events with a kind besides action and hit events (the killing hit's, the healing action's). */
+const KIND_EVENTS = [...ACTION_EVENTS, ...HIT_EVENTS, "ko", "healed", "overhealed"];
+/** Step 5i: events that carry an amount. */
+const AMOUNT_EVENTS = ["action_resolve", "hit_lands", "hit_taken", ...DAMAGE_EVENTS, "hp_lost", "healed", "overhealed", "status_gained", "status_ended"];
+/** Step 5i: the relative seats a seat field can name; no formation's position may take these ids. */
+const RELATIVE_SEATS = ["next", "previous"];
+/** Step 5i: what an ability filter's `does` can name besides a status. */
+const DOES = ["revive", "heal", "damage"];
 
 class Combat {
   constructor(readonly pack: Pack, readonly ix: Index, readonly w: Walker, readonly r: Report) {}
@@ -182,6 +191,13 @@ class Combat {
       if (s.stat) this.statKey(s.stat, `${p}.stat`);
       if (s.stacks) this.w.ref("statuses", s.stacks, `${p}.stacks`, "status");
       if (s.when) this.unitCond(s.when, `${p}.when`);
+      if (s.count !== undefined) {
+        if ((s.count === "targets" || s.count === "hit") && where !== "action") this.r.error("scale.count", `${p}.count`, `'${s.count}' counts an action's targets or the units its hits landed on: only an action has them`);
+        if (typeof s.count === "object") {
+          if (s.count.where) this.unitCond(s.count.where, `${p}.count.where`);
+          if (s.count.seat) this.seat(s.count.seat, `${p}.count.seat`);
+        }
+      }
       if (s.amount && where !== "reaction") this.r.error("scale.amount", p, `only a reaction has an event amount to scale from`);
       if (!inStatus && (s.of === "holder" || s.of === "source")) this.r.error("scale.of", `${p}.of`, `'${s.of}' only means something inside a status; in an action, use self or target`);
       if (inStatus && s.stat && !s.of) this.r.error("scale.of", p, `in a status, say whose stat this is: source (fixed at application) or holder (read when used)`);
@@ -217,12 +233,32 @@ class Combat {
         if (st.stacking !== "intensity" || st.cap === undefined) this.r.error("cond.cap", `${path}.${k}`, `'${id}' isn't an Intensity status with a cap`);
       }
     }
+    // Step 5i: any of several statuses, a stat against the reading unit's, the top of a side, a weapon kind.
+    c.hasAny?.forEach((id, i) => this.w.ref("statuses", id, `${path}.hasAny[${i}]`, "status"));
+    if (c.lower) this.statKey(c.lower.stat, `${path}.lower.stat`);
+    c.top?.stats.forEach((k, i) => this.statKey(k, `${path}.top.stats[${i}]`));
+    c.weapon?.forEach((k, i) => this.w.ref("weaponKinds", k, `${path}.weapon[${i}]`, "weapon kind"));
   }
 
-  rule(t: S.TargetRuleT, path: string, opts: { main?: boolean } = {}) {
+  /** Step 5i: a seat names a position some formation has, or a relative seat. */
+  seat(id: string, path: string) {
+    if (RELATIVE_SEATS.includes(id)) return;
+    if (!this.pack.formations.some((f) => f.positions.some((p) => p.id === id))) this.r.error("seat.unknown", path, `no formation has a seat '${id}' (or use ${RELATIVE_SEATS.join(" or ")})`);
+  }
+
+  /** An ability's or a pulse's conditions, or a reaction's tests. */
+  condition(c: S.ConditionT, path: string) {
+    this.unitCond(c.where, `${path}.where`);
+    if (c.seat) this.seat(c.seat, `${path}.seat`);
+    if (c.atLeast !== undefined && c.atMost !== undefined && c.atMost < c.atLeast) this.r.error("cond.range", path, `atMost is below atLeast: it can never hold`);
+  }
+
+  rule(t: S.TargetRuleT, path: string, opts: { main?: boolean; where?: Where } = {}) {
     if (t.where) this.unitCond(t.where, `${path}.where`);
+    if (t.seat) this.seat(t.seat, `${path}.seat`);
     if (t.ifNone && !t.where) this.r.error("target.ifNone", `${path}.ifNone`, `ifNone only means something with a where filter`);
     if (t.exclude && opts.main) this.r.error("target.exclude", `${path}.exclude`, `an action's own target rule has no earlier targets to exclude; use it on an effect's 'to' or a strike`);
+    if ((t.exclude === "other" || t.exclude === "owner") && opts.where !== "reaction") this.r.error("target.exclude", `${path}.exclude`, `only a reaction has an event's ${t.exclude} unit to skip`);
     if ((t.pick === "lowest" || t.pick === "highest") && !t.by) this.r.error("target.by", path, `pick ${t.pick} needs 'by'`);
     if (t.by && typeof t.by === "object") {
       if ("stat" in t.by) this.statKey(t.by.stat, `${path}.by.stat`);
@@ -249,14 +285,14 @@ class Combat {
   effect(e: S.EffectT, path: string, where: Where, st: S.StatusT | null, action?: S.AbilityT) {
     const inStatus = !!st;
     const to = "to" in e ? e.to : undefined;
-    if (typeof to === "object") this.rule(to, `${path}.to`);
+    if (typeof to === "object") this.rule(to, `${path}.to`, { where });
     else if (to) {
       if (where === "action" && ["holder", "source", "other"].includes(to)) this.r.error("effect.to", `${path}.to`, `'${to}' only means something inside a status`);
       if (where !== "action" && to === "target") this.r.error("effect.to", `${path}.to`, `'target' is an action's targets; in a status, use holder, self, other or a rule`);
       if (where === "pulse" && to === "other") this.r.error("effect.to", `${path}.to`, `a pulse has no event, so no 'other' unit`);
       if (to === "source" && (!st || shared(st))) this.r.error("effect.to", `${path}.to`, `only statuses with one applier at a time (Refresh, Fizzle, Per source) know their source`);
     }
-    if (where === "reaction" && to === undefined && e.op !== "summon") this.r.error("reaction.to", path, `a reaction's effects state their target (holder, self, other, source or a rule)`);
+    if (where === "reaction" && to === undefined && e.op !== "summon" && e.op !== "recast") this.r.error("reaction.to", path, `a reaction's effects state their target (holder, self, other, source or a rule)`);
     switch (e.op) {
       case "damage":
         this.instance(e, path, where, inStatus);
@@ -272,11 +308,33 @@ class Combat {
         this.apply(e, path, where, inStatus);
         break;
       case "remove":
-        if (e.status) this.w.ref("statuses", e.status, `${path}.status`, "status");
+        if (e.status && this.w.ref("statuses", e.status, `${path}.status`, "status")) {
+          const named = this.ix.get<S.StatusT>("statuses", e.status)!;
+          if (named.label !== e.label) this.r.warn("remove.label", `${path}.label`, `'${e.status}' is a ${named.label}, not a ${e.label}: this removes nothing`);
+        }
+        if (e.label === "marker" && !e.status) this.r.error("remove.label", `${path}.label`, `a marker is lifted only by name: give its status`);
         if (e.tag && !e.kind) this.r.error("remove.tag", `${path}.tag`, `a tag narrows an effect kind; give the kind too`);
+        break;
+      case "cooldown":
+        if (typeof e.which === "object") e.which.ability.forEach((id, i) => this.w.ref("abilities", id, `${path}.which.ability[${i}]`, "ability"));
+        if (e.which === "event" && where !== "reaction") this.r.error("cooldown.event", `${path}.which`, `only a reaction to an action event knows the ability that set it off`);
+        if (e.which === "basic" && typeof e.set === "object" && "atMost" in e.set) this.r.warn("cooldown.basic", `${path}.set`, `atMost reads an ability's full cooldown; the basic attack's is its swing`);
+        break;
+      case "pay":
+        this.num(e.hp, `${path}.hp`, where, inStatus);
+        break;
+      case "strike":
+        if (where !== "reaction") this.r.error("strike.where", path, `a strike effect is a reaction's (an action's own hits are its damage effects)`);
+        break;
+      case "one":
+        e.of.forEach((x, i) => this.apply(x, `${path}.of[${i}]`, where, inStatus));
+        break;
+      case "recast":
+        if (where !== "reaction") this.r.error("recast.where", path, `recast answers the holder's own action_resolve: it belongs in a reaction`);
         break;
       case "revive": {
         this.num(e.hp, `${path}.hp`, where, inStatus);
+        this.ticks(e.after, `${path}.after`);
         // Its targets must be knocked-out units: a rule asking for ko, or an action whose own target rule does.
         const asks = (rule: unknown) => typeof rule === "object" && rule !== null && (rule as S.TargetRuleT).where?.ko === true;
         const ok = typeof to === "object" ? asks(to) : (to === undefined || to === "target") && where === "action" && asks(action?.target);
@@ -291,13 +349,37 @@ class Combat {
   }
 
   event(spec: S.EventSpecT, path: string) {
-    if (spec.kind && !ACTION_EVENTS.includes(spec.event) && !HIT_EVENTS.includes(spec.event)) this.r.error("event.kind", `${path}.kind`, `only action and hit events have a kind`);
-    if (spec.tags && !HIT_EVENTS.includes(spec.event)) this.r.error("event.tags", `${path}.tags`, `only hit events carry tags`);
+    if (spec.kind && !KIND_EVENTS.includes(spec.event)) this.r.error("event.kind", `${path}.kind`, `only action and hit events, ko, healed and overhealed have a kind`);
+    for (const k of ["tags", "notTags"] as const) if (spec[k] && !HIT_EVENTS.includes(spec.event)) this.r.error("event.tags", `${path}.${k}`, `only hit events carry tags`);
     if (spec.status) {
       if (!STATUS_EVENTS.includes(spec.event) && !DAMAGE_EVENTS.includes(spec.event)) this.r.error("event.status", `${path}.status`, `only status and damage events name a status`);
       this.w.ref("statuses", spec.status, `${path}.status`, "status");
     }
     if (spec.cause && spec.event !== "status_ended") this.r.error("event.cause", `${path}.cause`, `only status_ended has a cause`);
+    // Step 5i: the filters that read who did it, where it sits, and the event's numbers.
+    if (spec.source && !STATUS_EVENTS.includes(spec.event)) this.r.error("event.source", `${path}.source`, `only status events have a status whose source can be read`);
+    if (spec.other && ["fight_start", "fight_won", "action_start", "action_resolve", "action_interrupted", "hp_lost", "status_triggered"].includes(spec.event)) this.r.error("event.other", `${path}.other`, `'${spec.event}' has no other unit`);
+    if (spec.amountAtLeast !== undefined && !AMOUNT_EVENTS.includes(spec.event)) this.r.error("event.amount", `${path}.amountAtLeast`, `'${spec.event}' carries no amount`);
+    if (spec.countAtLeast !== undefined && spec.event !== "action_resolve") this.r.error("event.count", `${path}.countAtLeast`, `only action_resolve counts the units its hits landed on`);
+    if (spec.repeat !== undefined && !ACTION_EVENTS.includes(spec.event)) this.r.error("event.repeat", `${path}.repeat`, `only action events can be a recast's repeat`);
+    if (spec.seat) this.seat(spec.seat, `${path}.seat`);
+  }
+
+  /** Step 5i: a status's changes to its holder's abilities. */
+  mod(m: S.AbilityModT, path: string) {
+    m.of?.ability?.forEach((id, i) => this.w.ref("abilities", id, `${path}.of.ability[${i}]`, "ability"));
+    m.of?.does?.forEach((id, i) => DOES.includes(id) || this.w.ref("statuses", id, `${path}.of.does[${i}]`, `status (or ${DOES.join(", ")})`));
+    if (m.if) this.unitCond(m.if, `${path}.if`);
+    this.ticks(m.cast, `${path}.cast`);
+    m.stacks?.statuses?.forEach((id, i) => {
+      if (!this.w.ref("statuses", id, `${path}.stacks.statuses[${i}]`, "status")) return;
+      if (this.ix.get<S.StatusT>("statuses", id)!.stacking !== "intensity") this.r.error("mod.stacks", `${path}.stacks.statuses[${i}]`, `'${id}' isn't an Intensity status, so it has no stacks to add`);
+    });
+    if (m.target) this.rule(m.target, `${path}.target`, { main: true });
+    if (m.wait) [m.wait].flat().forEach((c, i) => this.condition(c, `${path}.wait${Array.isArray(m.wait) ? `[${i}]` : ""}`));
+    m.apply?.forEach((x, i) => this.apply(x, `${path}.apply[${i}]`, "action", false));
+    const changes = [m.mp, m.hp, m.cast, m.stacks, m.heal, m.target, m.seek, m.wait, m.apply].filter((x) => x !== undefined).length;
+    if (!changes) this.r.error("mod.empty", path, `an ability change changes something: mp, hp, cast, stacks, heal, target, seek, wait or apply`);
   }
 
   /** Tags that boosts, modifiers, lockouts, riders and event filters can name. */
@@ -334,6 +416,12 @@ class Combat {
     this.ticks(rs.abilityCast, "ruleset.abilityCast");
     this.ticks(rs.abilityRecovery, "ruleset.abilityRecovery");
     if (rs.taken.floor > rs.taken.cap) this.r.error("ruleset.taken", "ruleset.taken", `floor is above cap`);
+    // Step 5i: control resistance names statuses that exist, and resists before it's immune.
+    if (rs.control) {
+      rs.control.statuses.forEach((id, i) => this.w.ref("statuses", id, `ruleset.control.statuses[${i}]`, "status"));
+      if (rs.control.resist.at >= rs.control.cap) this.r.error("ruleset.control", "ruleset.control.resist.at", `control is resisted from ${rs.control.resist.at} stacks, but immune at ${rs.control.cap}: resist below the cap`);
+      this.ticks(rs.control.drain, "ruleset.control.drain");
+    }
   }
 
   /** A weapon: its kind's type and cooldown, or its own. */
@@ -403,7 +491,32 @@ class Combat {
       if (st.strike) {
         if (st.strike.scale) this.statKey(st.strike.scale, `${p}.strike.scale`);
         if (typeof st.strike.to === "object") this.rule(st.strike.to, `${p}.strike.to`);
+        if (st.strike.chain && st.strike.chance === undefined && !st.strike.scale) this.r.warn("strike.chain", `${p}.strike.chain`, `a strike that always lands would always chain to its most`);
       }
+      // Step 5i: Marked, aims, ability changes, crits, stats set, revives.
+      if (st.single && shared(st)) this.r.error("status.single", `${p}.single`, `a shared Intensity total has no applier to keep one copy each; make it Refresh, Fizzle or Per source`);
+      if (st.focus && st.label === "buff") this.r.warn("status.focus", `${p}.focus`, `a focus draws the holder's foes' basic attacks: usually a debuff (Marked)`);
+      if (st.aim) this.rule(st.aim.rule, `${p}.aim.rule`, { main: true });
+      st.mods?.forEach((m, j) => this.mod(m, `${p}.mods[${j}]`));
+      st.crits?.forEach((x, j) => {
+        tag(x.tag, `${p}.crits[${j}].tag`);
+        if (x.when) this.unitCond(x.when, `${p}.crits[${j}].when`);
+        if (x.chance === undefined && x.bonus === undefined) this.r.error("crit.empty", `${p}.crits[${j}]`, `a crit rule adds chance, bonus or both`);
+      });
+      st.set?.forEach((x, j) => this.statKey(x.stat, `${p}.set[${j}].stat`));
+      if (st.revives?.hp !== undefined) this.num(st.revives.hp, `${p}.revives.hp`, "action", false);
+      if (st.pulse?.if) [st.pulse.if].flat().forEach((c, j) => this.condition(c, `${p}.pulse.if${Array.isArray(st.pulse!.if) ? `[${j}]` : ""}`));
+      st.reactions?.forEach((x, j) => {
+        if (!x.if) return;
+        [x.if].flat().forEach((t, k) => {
+          const tp = `${p}.reactions[${j}].if${Array.isArray(x.if) ? `[${k}]` : ""}`;
+          if ("unit" in t) this.unitCond(t.where, `${tp}.where`);
+          else this.condition(t, tp);
+        });
+      });
+      st.stats?.forEach((ch, j) => {
+        if (ch.live && typeof ch.flat !== "object" && typeof ch.pct !== "object") this.r.warn("stat.live", `${p}.stats[${j}].live`, `a live change reads other stats; a plain number never changes`);
+      });
       st.riders?.forEach((x, j) => {
         tag(x.on, `${p}.riders[${j}].on`);
         this.instance(x.add, `${p}.riders[${j}].add`, "action", true);
@@ -424,8 +537,10 @@ class Combat {
         x.on.tags?.forEach((t, k) => tag(t, `${p}.reactions[${j}].on.tags[${k}]`));
         x.do.forEach((e, k) => this.effect(e, `${p}.reactions[${j}].do[${k}]`, "reaction", st));
       });
-      const empty = !st.stats && !st.boosts && !st.taken && !st.absorb && !st.block && !st.lockout && !st.riders && !st.seek && !st.strike && !st.pulse && !st.trigger && !st.reactions;
-      if (empty) this.r.warn("status.empty", p, `status '${st.id}' has no effects`);
+      const empty = !st.stats && !st.boosts && !st.taken && !st.absorb && !st.block && !st.lockout && !st.riders && !st.seek && !st.strike && !st.pulse && !st.trigger && !st.reactions
+        && !st.focus && !st.aim && !st.mods && !st.crits && !st.echo && !st.set && !st.cover && !st.floor && !st.heals && !st.revives;
+      // Step 5i: a marker is bookkeeping, read by name, so it may have no effects of its own.
+      if (empty && st.label !== "marker") this.r.warn("status.empty", p, `status '${st.id}' has no effects`);
     });
     this.shared = false;
   }
@@ -437,9 +552,14 @@ class Combat {
       this.ticks(a.cast, `${p}.cast`);
       this.ticks(a.cooldown, `${p}.cooldown`);
       this.ticks(a.recovery, `${p}.recovery`);
-      if (a.if) [a.if].flat().forEach((cnd, k) => this.unitCond(cnd.where, `${p}.if${Array.isArray(a.if) ? `[${k}]` : ""}.where`));
+      if (a.if) {
+        const list = "any" in a.if ? a.if.any : [a.if].flat();
+        const at = (k: number) => ("any" in a.if! ? `.any[${k}]` : Array.isArray(a.if) ? `[${k}]` : "");
+        list.forEach((cnd, k) => this.condition(cnd, `${p}.if${at(k)}`));
+      }
       if (typeof a.target === "object") this.rule(a.target, `${p}.target`, { main: true });
       a.do.forEach((e, j) => this.effect(e, `${p}.do[${j}]`, "action", null, a));
+      a.statuses?.forEach((s, j) => this.w.ref("statuses", s, `${p}.statuses[${j}]`, "status"));
     });
   }
 }
@@ -473,10 +593,46 @@ function checkUnits(pack: Pack, ix: Index, w: Walker, r: Report, c: Combat) {
     });
   });
 
+  // Step 5i: an upgrade's forms are reached by training, not listed by their class.
+  const forms = new Set((pack.upgrades ?? []).filter((u) => u.kind === "ability").flatMap((u) => Object.keys(S.UPGRADE_FORMS).map((f) => S.formId(u.id, f as S.UpgradeFormT))));
   pack.abilities.forEach((a, i) => {
-    const used = pack.classes.some((cl) => cl.abilities.includes(a.id)) || pack.enemies.some((e) => e.abilities?.includes(a.id));
+    const used = pack.classes.some((cl) => cl.abilities.includes(a.id)) || pack.enemies.some((e) => e.abilities?.includes(a.id)) || forms.has(a.id);
     if (!used) r.warn("ability.unused", `abilities[${i}]`, `no class or enemy lists ability '${a.id}'`);
   });
+}
+
+// ─── Upgrades (step 5i) ──────────────────────────────────────────────────────
+
+/**
+ * Every upgrade names a class and one of its abilities or its passive status, at most once, and its five forms are
+ * all there: abilities of that class, or statuses. Nothing else takes a form's id.
+ */
+function checkUpgrades(pack: Pack, ix: Index, w: Walker, r: Report) {
+  const seen = new Set<string>();
+  const formIds = new Set<string>();
+  (pack.upgrades ?? []).forEach((u, i) => {
+    const p = `upgrades[${i}]`;
+    if (seen.has(u.id)) r.error("upgrade.duplicate", p, `'${u.id}' is upgraded twice`);
+    seen.add(u.id);
+    if (!w.ref("classes", u.class, `${p}.class`, "class")) return;
+    const cls = ix.get<S.ClassDefT>("classes", u.class)!;
+    if (u.kind === "ability" && !cls.abilities.includes(u.id)) r.error("upgrade.base", `${p}.id`, `'${u.id}' isn't one of ${u.class}'s abilities`);
+    if (u.kind === "passive" && !cls.passive?.statuses?.includes(u.id)) r.error("upgrade.base", `${p}.id`, `'${u.id}' isn't a status of ${u.class}'s passive`);
+    for (const f of Object.keys(S.UPGRADE_FORMS) as S.UpgradeFormT[]) {
+      const id = S.formId(u.id, f);
+      formIds.add(id);
+      const fp = `${p} (form ${id})`;
+      if (u.kind === "ability") {
+        if (!w.ref("abilities", id, fp, "ability (an upgrade's form)")) continue;
+        const a = ix.get<S.AbilityT>("abilities", id)!;
+        if (a.class !== u.class) r.error("upgrade.form", fp, `form '${id}' belongs to class '${a.class ?? "none"}', not '${u.class}'`);
+        if (pack.classes.some((c) => c.abilities.includes(id))) r.error("upgrade.form", fp, `form '${id}' is listed as a class's own ability; forms are reached by training`);
+      } else w.ref("statuses", id, fp, "status (an upgrade's form)");
+    }
+  });
+  // A form's id belongs to its upgrade: no stray <id>__p and the rest without one.
+  pack.abilities.forEach((a, i) => S.formBase(a.id) !== a.id && !formIds.has(a.id) && r.error("upgrade.stray", `abilities[${i}]`, `'${a.id}' is named as an upgrade's form, but no upgrade of '${S.formBase(a.id)}' exists`));
+  pack.statuses.forEach((s, i) => S.formBase(s.id) !== s.id && !formIds.has(s.id) && r.error("upgrade.stray", `statuses[${i}]`, `'${s.id}' is named as an upgrade's form, but no upgrade of '${S.formBase(s.id)}' exists`));
 }
 
 // ─── Gear ────────────────────────────────────────────────────────────────────
@@ -486,6 +642,8 @@ function checkGear(pack: Pack, ix: Index, w: Walker, r: Report, c: Combat) {
     const p = `gear[${i}]`;
     // Step 5j: a mythic fits one class whatever its kind, so it may have none (a mythic weapon states its own speed, type and hands).
     if (g.mythic) w.ref("classes", g.mythic, `${p}.mythic`, "class");
+    // Step 5i: a piece's rarity is mythic exactly when it names its class.
+    if (g.rarity && (g.rarity === "mythic") !== !!g.mythic) r.error("gear.rarity", `${p}.rarity`, g.mythic ? `a mythic piece's rarity is mythic` : `only a piece that names its class with 'mythic' is mythic`);
     if (g.slot === "weapon") {
       if (!g.weapon) r.error("gear.weapon", p, `a weapon sets the basic attack: give it 'weapon'`);
       else if (!g.weapon.kind && !g.mythic) r.error("gear.weapon", `${p}.weapon`, `a weapon piece belongs to a kind`);
@@ -528,6 +686,7 @@ function checkFormations(pack: Pack, r: Report, c: Combat) {
     f.positions.forEach((pos, j) => {
       const pp = `${p}.positions[${j}]`;
       if (ids.has(pos.id)) r.error("formation.positionId", pp, `duplicate position id '${pos.id}'`);
+      if (RELATIVE_SEATS.includes(pos.id)) r.error("formation.positionId", pp, `'${pos.id}' names a relative seat; a position needs another id`);
       ids.add(pos.id);
       const cell = `${pos.layout.line}:${pos.layout.column}`;
       if (cells.has(cell)) r.error("formation.layout", `${pp}.layout`, `two slots are drawn in the same place (${pos.layout.line}, column ${pos.layout.column})`);
@@ -883,10 +1042,20 @@ export function checkParty(pack: Pack, raw: unknown, opts: { dungeon?: string; o
     positions.add(u.position);
 
     if (u.abilities.length !== d.abilitiesEquipped) r.error("party.abilities", `${p}.abilities`, `${u.abilities.length} abilities equipped; units equip ${d.abilitiesEquipped}`);
-    if (new Set(u.abilities).size !== u.abilities.length) r.error("party.abilities", `${p}.abilities`, `an ability is equipped twice`);
+    // Step 5i: a trained form stands for its ability, so two forms of one ability are the ability twice.
+    if (new Set(u.abilities.map(S.formBase)).size !== u.abilities.length) r.error("party.abilities", `${p}.abilities`, `an ability is equipped twice`);
+    const upgraded = (id: string, kind: S.UpgradeT["kind"]) => (pack.upgrades ?? []).some((x) => x.id === S.formBase(id) && x.class === u.class && x.kind === kind);
     u.abilities.forEach((a, j) => {
-      if (!cls.abilities.includes(a)) r.error("party.abilityNotOwned", `${p}.abilities[${j}]`, `'${u.class}' doesn't have ability '${a}'`);
+      const base = S.formBase(a);
+      if (!cls.abilities.includes(base)) r.error("party.abilityNotOwned", `${p}.abilities[${j}]`, `'${u.class}' doesn't have ability '${base}'`);
+      else if (base !== a && (!upgraded(a, "ability") || !ix.has("abilities", a))) r.error("party.abilityForm", `${p}.abilities[${j}]`, `'${a}' isn't a form of an upgrade of '${base}'`);
     });
+    if (u.passive !== undefined) {
+      const base = S.formBase(u.passive);
+      if (base === u.passive || !cls.passive?.statuses?.includes(base) || !upgraded(u.passive, "passive") || !ix.has("statuses", u.passive)) {
+        r.error("party.passive", `${p}.passive`, `'${u.passive}' isn't a trained form of ${u.class}'s passive`);
+      }
+    }
 
     for (const [slot, gid] of Object.entries(u.gear)) {
       const gp = `${p}.gear.${slot}`;

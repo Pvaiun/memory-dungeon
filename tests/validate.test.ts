@@ -368,3 +368,84 @@ test("party: copies of gear can be shared up to the count owned", () => {
   assert.deepEqual(codes(checkParty(PACK, party, { dungeon: DUNGEON, owned: owned(2) })), []);
   assert.deepEqual(codes(checkParty(PACK, party, { dungeon: DUNGEON, owned: owned(1) })), ["party.gearCount"]);
 });
+
+// ─── Step 5i: schema 0.8's references (steps/05-core-set/5i-synergy/build/engine-spec.md) ──
+
+const FORMS = ["p", "a", "b", "ap", "bp"];
+/** The warrior's Cleave with all five forms, and a passive status with all five, each skipped if named. */
+function withUpgrades(p: any, skip: string[] = []) {
+  const cleave = find(p.abilities, "cleave");
+  for (const f of FORMS) if (!skip.includes(`cleave__${f}`)) p.abilities.push({ ...clone(cleave), id: `cleave__${f}`, name: `Cleave ${f}` });
+  const steady = { id: "steady", name: "Steady", label: "buff", show: "sheet", stacking: "refresh", stats: [{ stat: "armor", flat: 1 }] };
+  p.statuses.push(steady);
+  for (const f of FORMS) if (!skip.includes(`steady__${f}`)) p.statuses.push({ ...steady, id: `steady__${f}` });
+  find(p.classes, "warrior").passive = { name: "Steady", text: "-", statuses: ["steady"] };
+  const v = { name: "V", text: "-" };
+  p.upgrades = [
+    { id: "cleave", class: "warrior", kind: "ability", power: "More.", a: v, b: v },
+    { id: "steady", class: "warrior", kind: "passive", power: "More.", a: v, b: v },
+  ];
+  return p;
+}
+const clean = (p: any) => assert.deepEqual(codes(validatePack(p).issues, "error"), []);
+const probe = (x: object) => (p: any) => p.statuses.push({ id: "probe", name: "P", label: "buff", show: "sheet", stacking: "refresh", ...x });
+
+test("upgrades: an upgrade with its five forms is clean, and its forms aren't flagged as unused", () => {
+  const { issues } = validatePack(withUpgrades(clone(PACK)));
+  assert.deepEqual(codes(issues, "error"), []);
+  assert.ok(!issues.some((i) => i.code === "ability.unused" && i.message.includes("cleave__")));
+});
+
+test("upgrades: a missing form, a form of another class, a stray form, a base the class lacks and a second upgrade are errors", () => {
+  expectIssue("ref.missing", (p) => withUpgrades(p, ["cleave__bp"]));
+  expectIssue("ref.missing", (p) => withUpgrades(p, ["steady__a"]));
+  expectIssue("upgrade.form", (p) => (find(withUpgrades(p).abilities, "cleave__a").class = "ranger"));
+  expectIssue("upgrade.stray", (p) => p.abilities.push({ ...clone(find(p.abilities, "mend")), id: "mend__a" }));
+  expectIssue("upgrade.base", (p) => (withUpgrades(p).upgrades[0].id = "volley"));
+  expectIssue("upgrade.duplicate", (p) => withUpgrades(p).upgrades.push(clone(p.upgrades[0])));
+});
+
+test("upgrades: a party equips a form in its ability's place and names its passive's form, one form an ability", () => {
+  const p = withUpgrades(clone(PACK));
+  const party = clone(PARTY);
+  party.units[0].abilities = ["cleave__ap", "stand_guard", "shield_bash"];
+  party.units[0].passive = "steady__b";
+  assert.deepEqual(checkParty(p, party, { dungeon: DUNGEON }), []);
+  party.units[0].abilities = ["cleave__a", "cleave", "shield_bash"];
+  assert.ok(codes(checkParty(p, party)).includes("party.abilities"));
+  party.units[0].abilities = ["cleave", "stand_guard__a", "shield_bash"];
+  assert.ok(codes(checkParty(p, party)).includes("party.abilityForm"));
+  party.units[0].abilities = ["cleave", "stand_guard", "shield_bash"];
+  party.units[0].passive = "steady";
+  assert.ok(codes(checkParty(p, party)).includes("party.passive"));
+});
+
+test("rarity: a mythic piece is mythic, and only a mythic piece is", () => {
+  const p = clone(PACK) as any;
+  p.gear[0].rarity = "common";
+  clean(p);
+  expectIssue("gear.rarity", (q) => (q.gear[0].rarity = "mythic"));
+  expectIssue("gear.rarity", (q) => Object.assign(q.gear[0], { mythic: "warrior", rarity: "legendary" }));
+});
+
+test("control resistance names statuses that exist, and resists below its cap", () => {
+  const control = { ranks: ["boss"], statuses: ["stun"], resist: { at: 2, pct: 50 }, cap: 4, drain: 22 };
+  expectIssue("ref.missing", (p) => (p.ruleset.control = { ...control, statuses: ["stun_lock"] }));
+  expectIssue("ruleset.control", (p) => (p.ruleset.control = { ...control, statuses: [p.statuses[0].id], resist: { at: 4, pct: 50 } }));
+});
+
+test("step 5i's reaction words: seats exist, other and owner exclusions and strikes belong to reactions, markers are lifted by name", () => {
+  expectIssue("seat.unknown", probe({ reactions: [{ on: { event: "hit_taken", whose: "ally", seat: "nowhere" }, do: [{ op: "apply", status: "probe", to: "self" }] }] }));
+  card({ target: { side: "foes", pick: "random" }, do: [{ op: "damage", type: "physical", amount: 1, to: { side: "foes", exclude: "other" } }] }, "target.exclude");
+  card({ do: [{ op: "strike", to: "self" }] }, "strike.where");
+  card({ do: [{ op: "remove", label: "marker", to: "self" }] }, "remove.label");
+  const p = clone(PACK) as any;
+  probe({
+    reactions: [{
+      on: { event: "ko", whose: "foe", other: "holder", kind: "basic" },
+      if: [{ unit: "other", where: { hasAny: ["probe"] } }, { side: "foes", where: { has: "probe" }, atMost: 0 }],
+      do: [{ op: "cooldown", which: "longest", set: "ready", to: "self" }, { op: "strike", share: 25, of: "hit", to: { side: "foes", exclude: "other" } }],
+    }],
+  })(p);
+  clean(p);
+});

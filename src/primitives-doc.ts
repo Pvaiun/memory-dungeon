@@ -34,7 +34,7 @@ out.push(
 
 h("Gear slots");
 table(S.SLOTS, "Slot");
-out.push("", "A weapon belongs to a kind (a registry: speed, damage type and hands), a piece of armor to an armor type and an offhand to an offhand kind (registries of names). A class lists the weapon kinds, armor types and offhand kinds it can use. A two-handed weapon empties the offhand. A mythic piece fits one class, in any slot, and a unit wears one at most.");
+out.push("", "A weapon belongs to a kind (a registry: speed, damage type and hands), a piece of armor to an armor type and an offhand to an offhand kind (registries of names). A class lists the weapon kinds, armor types and offhand kinds it can use. A two-handed weapon empties the offhand. A mythic piece fits one class, in any slot, and a unit wears one at most. Step 5i: every piece has its own fixed rarity (common, uncommon, rare, legendary, mythic: no affixes), and every formation its own (common, rare, legendary).");
 
 h("Effects (in actions, pulses, triggers and reactions)");
 out.push("| Op | Fields | Meaning |", "| --- | --- | --- |");
@@ -42,6 +42,12 @@ for (const o of S.Effect.options) {
   const f = Object.keys(o.shape).filter((k) => k !== "op");
   out.push(`| \`${o.shape.op.value}\` | ${f.map((x) => `\`${x}\``).join(", ")} | ${o.description ?? ""} |`);
 }
+out.push("");
+h("Cooldown changes (the `cooldown` effect)");
+table(S.COOLDOWN_WHICH, "Which");
+out.push("");
+table(S.COOLDOWN_SET, "Set");
+
 h("Effect targets (`to`)");
 out.push("Or a targeting rule. Extra targets after an action's first ignore Taunt.", "");
 table(S.TO, "To");
@@ -55,9 +61,28 @@ out.push("A number is a plain number, or `{ base, scale: [...] }`: base + Σ rat
 table(S.SCALE_OF, "Of");
 out.push("");
 fields(S.Scale);
+out.push("", "A scale's `count` (step 5i):", "");
+table(S.COUNTS, "Count");
 
 h("Status fields");
 fields(S.Status, ["id", "name", "text", "note"]);
+
+h("Status labels");
+table(S.LABELS, "Label");
+
+h("Reactions");
+fields(S.Reaction);
+out.push("", "A reaction's `if` is a condition (below), or a test of one of its event's units:", "");
+fields(S.EventUnitTest);
+
+h("Ability changes (a status's `mods`, step 5i)");
+out.push("Each change reaches the holder's own abilities, read each time one is used: when it's checked, when it starts, when it pays, when it picks, when it hits.", "");
+fields(S.AbilityMod);
+out.push("", "Its `of`:", "");
+fields(S.AbilityFilter);
+
+h("Crits by condition (a status's `crits`, step 5i)");
+fields(S.CritRule);
 
 h("Effect kinds (for immunity, removal and conditions)");
 table(S.KINDS, "Kind");
@@ -84,7 +109,11 @@ out.push("");
 table(S.PICKS, "Pick");
 out.push("");
 fields(S.TargetRule, ["side", "pick"]);
-out.push("", `\`by\` (for lowest and highest): \`hp\`, \`hp_share\`, \`buffs\`, \`debuffs\`, \`{ stat }\`, \`{ stats }\` (the highest of several) or \`{ stacks }\`.`);
+out.push("", `\`by\` (for lowest and highest): \`hp\`, \`hp_share\`, \`mp_share\`, \`buffs\`, \`debuffs\`, \`swing\` (step 5i: the basic attack's interval now; highest is the slowest), \`{ stat }\`, \`{ stats }\` (the highest of several) or \`{ stacks }\`.`);
+out.push("", "Basic attacks pick in this order (step 5i): an `aim` with `first` the attacker holds; a foe holding a `focus` status (Marked); its other `aim`; the default. Each step that finds nobody passes to the next.");
+
+h("Conditions (an ability's `if`, a pulse's or reaction's `if`)");
+fields(S.Condition, ["side", "where"]);
 
 h("Unit conditions (`where`, an ability's `if`, and a scale's `when`)");
 fields(S.UnitCond);
@@ -95,5 +124,15 @@ for (const [k, [kind, text]] of Object.entries(S.ENGINE_STATS)) out.push(`| \`${
 out.push("", "Every other stat (MP regen, Thorns, Lifesteal, Siphon, Double strike and the rest) is a registry entry that `brings` a status while it's above 0.");
 h("Stat families");
 table(S.STAT_FAMILIES, "Key");
+
+h("Control resistance (`ruleset.control`, step 5i)");
+out.push(S.Control.description ?? "", "");
+fields(S.Control);
+
+h("Upgrades (`upgrades`, step 5i)");
+out.push(S.Upgrade.description ?? "", "");
+fields(S.Upgrade);
+out.push("", "Its five forms, each content under the id `<id>__<form>`: an ability of the class for an ability's upgrade, a status for a passive's. A party unit equips a form in its ability's place, and names its passive's form in `passive`.", "");
+table(S.UPGRADE_FORMS, "Form");
 
 console.log(out.join("\n"));
