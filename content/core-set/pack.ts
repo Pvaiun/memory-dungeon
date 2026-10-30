@@ -2,8 +2,7 @@
  * The core set's content pack, built from the generator files beside it. `build.ts` writes it to
  * content/core-set.pack.json; `tests/content.test.ts` checks the committed file still matches it.
  */
-import type { ContentPack, GearT } from "../../src/schema.js";
-import { canEquip } from "../../src/validate.js";
+import type { ContentPack } from "../../src/schema.js";
 import { abilities, classes, passives } from "./classes.js";
 import { dungeons } from "./dungeons.js";
 import { campaignDungeons, campaignWith } from "./campaign.js";
@@ -11,24 +10,14 @@ import { enemies, enemyAbilities, enemyStatuses } from "./enemies.js";
 import { effects, formations } from "./formations.js";
 import { gear } from "./gear.js";
 import { armorTypes, design, machinery, offhandKinds, ruleset, stats, vocabulary, weaponKinds } from "./vocabulary.js";
-import { LEGENDARY_AIMS, LEGENDARY_BASES, ROGUE_AFFIXES, ROGUE_CONFIG, ROGUE_EVENTS, ROGUE_REGIONS, rogueGear, rogueStatuses, rogueWeapons } from "./rogue.js";
+import { ROGUE_CONFIG, ROGUE_EVENTS, ROGUE_REGIONS } from "./rogue.js";
 
-/** The rogue mode's block: its legendary weapons take their kind's plain swing. */
+/**
+ * The rogue mode's block. Step 5i (the retire share): no loot of its own until the new pieces land: no rogue pieces, an
+ * empty legendary pool with no aims, no affixes.
+ */
 function rogueBlock(): NonNullable<ContentPack["rogue"]> {
-  const weapons = rogueWeapons.map((w) => {
-    const plain = gear.find((g) => g.id === `plain_${w.kind}`)!;
-    return { id: w.id, name: w.name, text: w.text, slot: "weapon" as const, tier: "powerful" as const, source: "unlock" as const, weapon: structuredClone(plain.weapon!), statuses: w.statuses, ...(w.stats?.length ? { stats: w.stats } : {}) };
-  });
-  const own = [...rogueGear, ...weapons];
-  // Step 5j: the re-sort moved pieces to kinds some of their aimed classes no longer wear (the Sanguine staff is a wand now). Each piece's
-  // aims are narrowed to who can still wear it, and a piece none of them can wear is aimed at everyone who can.
-  const pieces = new Map<string, GearT>([...gear, ...own].map((g) => [g.id, g]));
-  const aims = Object.fromEntries(Object.entries(LEGENDARY_AIMS).map(([id, cls]) => {
-    const g = pieces.get(id)!;
-    const can = cls.filter((c) => canEquip(classes.find((k) => k.id === c)!, g));
-    return [id, can.length ? can : classes.filter((k) => canEquip(k, g)).map((k) => k.id)];
-  }));
-  return { config: ROGUE_CONFIG, regions: ROGUE_REGIONS, gear: own, legendaries: [...LEGENDARY_BASES, ...own.map((g) => g.id)], aims, affixes: ROGUE_AFFIXES, events: ROGUE_EVENTS };
+  return { config: ROGUE_CONFIG, regions: ROGUE_REGIONS, gear: [], legendaries: [], affixes: [], events: ROGUE_EVENTS };
 }
 
 export function buildPack(): unknown {
@@ -44,7 +33,7 @@ export function buildPack(): unknown {
     weaponKinds,
     armorTypes,
     offhandKinds,
-    statuses: [...vocabulary, ...machinery, ...passives, ...effects, ...enemyStatuses, ...rogueStatuses],
+    statuses: [...vocabulary, ...machinery, ...passives, ...effects, ...enemyStatuses],
     classes,
     abilities: [...abilities, ...enemyAbilities],
     gear,

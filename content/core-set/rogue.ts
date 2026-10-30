@@ -1,24 +1,20 @@
 /**
  * The rogue mode (steps/05-core-set/5d-rogue): the core set as a roguelite. A run is three acts on Slay the Spire's
  * structure: a map of branching paths through a themed region, a boss at its end, and the next region picked from two.
- * The party is a leader the player owns plus two drafted companions; it grows through gear (drawn from the core set's
- * pieces, with affixes and rarities), legendary pieces that bend a rule, abilities learned one at a time, formations,
- * and classes recruited along the way. HP, MP and knockouts carry from fight to fight; campfires and the shop are
- * the only relief, and each act begins restored.
+ * The party is a leader the player owns plus two drafted companions; it grows through gear, abilities learned one at a
+ * time, formations, and classes recruited along the way. HP, MP and knockouts carry from fight to fight; campfires and
+ * the shop are the only relief, and each act begins restored.
  *
- * This file is the content: the regions and their encounters, the legendary pieces and the statuses behind them,
- * the affixes, the events and every number the run uses. src/rogue.ts is the rules that read it.
+ * This file is the content: the regions and their encounters, the events and every number the run uses. src/rogue.ts
+ * is the rules that read it.
+ *
+ * Step 5i (the build's retire share): the rogue's own loot is gone: its 29 legendary pieces (21 armors and amulets, 8
+ * weapons) and the 27 statuses behind them, the legendary pool and its aims, the 16 affixes, and the provisional formation
+ * rarities. The pieces, formations and upgrades of steps/05-core-set/5i-synergy/fill/ take their place.
  */
-import type { GearT, NumT, RogueConfigT, RogueNodeKindT, StatusT } from "../../src/schema.js";
-import { FLAT_STACKS, P, SPECIAL, STACKS, crit, stepFor } from "./scale.js";
-import { T } from "./classes.js";
+import type { RogueConfigT, RogueNodeKindT } from "../../src/schema.js";
 import { enc } from "./dungeons.js";
 import fightKnobs from "./rogue-knobs.json" with { type: "json" };
-
-type Change = { stat: string; flat: number };
-const st = (stat: string, n: number): Change => ({ stat, flat: n * stepFor(stat) });
-const sp = (stat: keyof typeof SPECIAL, level: "medium" | "high", key = stat === "crit_damage" ? "crit_multiplier" : stat): Change => ({ stat: key, flat: SPECIAL[stat][level] });
-const critStep = (n: number): Change => ({ stat: "crit_chance", flat: crit(n) });
 
 // ─── The run's numbers ───────────────────────────────────────────────────────
 
@@ -53,8 +49,7 @@ export const ROGUE_CONFIG: RogueConfigT = {
   /** The Muster: a pick of one of two recruits. The Drill ground: one of two formations, or two members trained. */
   muster: { offers: 2 },
   drill: { offers: 2, train: 2 },
-  /** Formation rarities, provisional until step 5i sets them (and adds legendary ones); offers roll a rarity by act. */
-  formationRarity: { neutral: "common", vanguard: "common", ambush: "common", scatter: "common", tortoise: "common", champion: "rare", blitz: "rare", escort: "rare", last_stand: "rare", caravan: "rare" },
+  /** Formation offers roll a rarity by act. */
   formationOdds: [{ common: 70, rare: 28, legendary: 2 }, { common: 45, rare: 45, legendary: 10 }, { common: 25, rare: 55, legendary: 20 }],
   /**
    * The map of an act: `floors` floors and the boss above them, `width` columns, `paths` paths walked up from the bottom
@@ -277,154 +272,6 @@ const REGIONS: RogueRegion[] = [
 ];
 
 export const ROGUE_REGIONS: RogueRegion[] = REGIONS.map(withKnobs);
-
-// ─── Legendary pieces: the statuses behind them ──────────────────────────────
-
-const own = (word: keyof typeof STACKS, mult = 1) => ({ scale: [{ ratio: (mult * STACKS[word]) / P / 2, stat: "attack", of: "holder" as const }, { ratio: (mult * STACKS[word]) / P / 2, stat: "magic", of: "holder" as const }] });
-const relic = (id: string, name: string, text: string, body: Partial<StatusT>): StatusT => ({ id, name, text, label: "buff", show: "sheet", stacking: "refresh", unremovable: true, ...body }) as StatusT;
-const apply = (status: string, extra: object = {}) => ({ op: "apply", status, ...extra }) as const;
-const both = (pct: NumT) => [{ tag: "physical", pct }, { tag: "magical", pct }];
-
-/** Statuses that legendary pieces give. Stacks scale from the wearer's Attack and Magic together (half of each), so they suit anyone. */
-export const rogueStatuses: StatusT[] = [
-  // Legendary pass (tuning round 27): every rule measured locked on all run against an ordinary piece of its slot; the
-  // ones worth less than an ordinary piece's stats grew (most by a stack word or two).
-  relic("lg_ember", "Ember", "Basic attacks add several Burn.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("burn", { stacks: own("several", 1.5), to: "other" })] }] }),
-  relic("lg_cleave", "Cleave", "Basic attacks also hit a second, random foe.", { strike: { to: T.secondFoe } }),
-  relic("lg_rime", "Rime", "Basic attacks add several Chill.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("chill", { stacks: own("several"), to: "other" })] }] }),
-  relic("lg_wounds", "Wounds", "Crits add many Bleed.", { reactions: [{ on: { event: "hit_lands", tags: ["crit"] }, do: [apply("bleed", { stacks: own("many"), to: "other" })] }] }),
-  relic("lg_sunder", "Shatter", "Basic attacks add many Sunder.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("sunder", { stacks: own("many"), to: "other" })] }] }),
-  relic("lg_song", "Song", "Basic attacks give a random ally some MP and a stack of Might.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [{ op: "mp", amount: 300, to: { side: "allies", pick: "random" } }, apply("might", { stacks: 1, to: { side: "allies", pick: "random" } })] }] }),
-  relic("lg_judge", "Verdict", "Hits deal 60% more damage to foes with a buff.", { boosts: both({ scale: [{ ratio: 60, when: { buffs: true }, of: "target" }] }) }),
-  relic("lg_lantern", "Lantern", "When a foe falls, heals a sixth of its own max HP.", { reactions: [{ on: { event: "ko", whose: "foe" }, do: [{ op: "heal", amount: { scale: [{ ratio: 0.16, stat: "max_hp", of: "holder" }] }, to: "self" }] }] }),
-  relic("lg_soul", "Soul jar", "When a foe falls, every ally regains some MP and a little HP.", { reactions: [{ on: { event: "ko", whose: "foe" }, do: [{ op: "mp", amount: 500, to: T.everyAlly }, { op: "heal", amount: { scale: [{ ratio: 0.04, stat: "max_hp", of: "target" }] }, to: T.everyAlly }] }] }),
-  relic("lg_banner", "Banner", "When the fight starts, every ally gains many Might.", { reactions: [{ on: { event: "fight_start" }, do: [apply("might", { stacks: FLAT_STACKS.many, to: T.everyAlly })] }] }),
-  relic("lg_hourglass", "Hourglass", "Hasted for the first 40 ticks of each fight.", { reactions: [{ on: { event: "fight_start" }, do: [apply("haste", { to: "self", duration: 40 })] }] }),
-  relic("lg_horn", "Horn", "When the fight starts, every ally gains Regen.", { reactions: [{ on: { event: "fight_start" }, do: [apply("regen", { to: T.everyAlly })] }] }),
-  relic("lg_bell", "Bell", "Can't be Silenced or Stunned.", { stats: [{ stat: "immune:status:silence", flat: 1 }, { stat: "immune:status:stun", flat: 1 }] }),
-  relic("lg_fury", "Fury", "Below half HP, deals 75% more damage; below a quarter, two and a half times.", { boosts: both({ scale: [{ ratio: 75, when: { hpBelow: 50 } }, { ratio: 75, when: { hpBelow: 25 } }] }) }),
-  relic("lg_idol", "Stone idol", "The Geomancer's Bedrock, for anyone: crit chance doubled while its Shield holds. Starts each fight with a Shield of a fifth of its max HP.", {
-    reactions: [
-      { on: { event: "fight_start" }, do: [apply("shield", { stacks: { scale: [{ ratio: 0.2, stat: "max_hp", of: "holder" }] }, to: "self" })] },
-      { on: { event: "status_gained", status: "shield" }, do: [apply("lg_idol_on", { to: "holder" })] },
-      { on: { event: "status_ended", status: "shield" }, do: [{ op: "remove", label: "buff", status: "lg_idol_on", to: "holder" }] },
-    ],
-  }),
-  { id: "lg_idol_on", name: "IDOL", text: "Crit chance doubled.", label: "buff", show: "icon", stacking: "fizzle", stats: [{ stat: "crit_chance", flat: { scale: [{ ratio: 1, stat: "crit_chance", of: "holder" }] } }] },
-  relic("lg_brittle", "Shard", "Basic attacks add a Chill; hits deal 12% more damage for each Chill stack on the target.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("chill", { stacks: FLAT_STACKS.one, to: "other" })] }], boosts: both({ scale: [{ ratio: 12, stacks: "chill", of: "target" }] }) }),
-  relic("lg_coil", "Coil", "When hit, Shocks the attacker with several stacks.", { reactions: [{ on: { event: "hit_taken" }, do: [apply("shock", { stacks: FLAT_STACKS.several, to: "other" })] }] }), // Step 5g round 6: several (was many): on a wall hit twenty times it dealt 25,574, 30% of a fight.
-  relic("lg_frost", "Frozen heart", "When hit, Chills the attacker with a few stacks.", { reactions: [{ on: { event: "hit_taken" }, do: [apply("chill", { stacks: FLAT_STACKS.few, to: "other" })] }] }),
-  relic("lg_briar", "Briar", "When hit, the attacker takes several Bleed.", { reactions: [{ on: { event: "hit_taken" }, do: [apply("bleed", { stacks: FLAT_STACKS.several, to: "other" })] }] }),
-  relic("lg_spikes", "Spikes", "Thorns equal to a twelfth of its Armor.", { stats: [{ stat: "thorns", flat: { scale: [{ ratio: 0.08, stat: "armor", of: "holder" }] } }] }),
-  relic("lg_shade", "Shade", "Hidden for the first 24 ticks of each fight, and deals 80% more damage while Hidden.", { reactions: [{ on: { event: "fight_start" }, do: [apply("hidden", { to: "self", duration: 24 })] }], boosts: both({ scale: [{ ratio: 80, when: { has: "hidden" } }] }) }),
-  relic("lg_execute", "Executioner", "Hits deal double damage to foes below half their HP.", { boosts: both({ scale: [{ ratio: 100, when: { hpBelow: 50 }, of: "target" }] }) }),
-  relic("lg_storm", "Storm edge", "Basic attacks also hit a second, random foe, and Shock both.", {
-    strike: { to: T.secondFoe },
-    reactions: [
-      { on: { event: "hit_lands", kind: "basic" }, do: [apply("shock", { stacks: own("few", 1.5), to: "other" })] },
-      { on: { event: "hit_lands", kind: "extra" }, do: [apply("shock", { stacks: own("few", 1.5), to: "other" })] },
-    ],
-  }),
-  relic("lg_hunter", "Hunter", "Basic attacks add a few Bleed; hits deal 50% more damage to foes that bleed.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("bleed", { stacks: own("few"), to: "other" })] }], boosts: both({ scale: [{ ratio: 50, when: { has: "bleed" }, of: "target" }] }) }),
-  relic("lg_grave", "Gravecaller", "When a foe falls, gains many Might.", { reactions: [{ on: { event: "ko", whose: "foe" }, do: [apply("might", { stacks: FLAT_STACKS.many, to: "self" })] }] }),
-  relic("lg_cinder", "Cinder", "Basic attacks add a few Burn; hits deal 60% more damage to foes that burn.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("burn", { stacks: own("few", 1.5), to: "other" })] }], boosts: both({ scale: [{ ratio: 60, when: { has: "burn" }, of: "target" }] }) }),
-];
-
-// ─── Legendary pieces ────────────────────────────────────────────────────────
-
-const legend = (id: string, name: string, text: string, slot: GearT["slot"], o: { statuses?: string[]; stats?: Change[]; armor?: string; weapon?: GearT["weapon"] }): GearT => ({
-  id, name, text, slot, tier: "powerful", source: "unlock", ...(o.armor ? { armor: o.armor } : {}), ...(o.weapon ? { weapon: o.weapon } : {}),
-  ...(o.stats?.length ? { stats: o.stats } : {}), ...(o.statuses?.length ? { statuses: o.statuses } : {}),
-});
-/** A legendary weapon is its kind's plain one (the same swing), with what it bends on top. */
-export type LegendWeapon = { id: string; name: string; text: string; kind: string; statuses: string[]; stats?: Change[] };
-
-/** Legendary armor and amulets, new to the rogue mode. Weapons are below, built on their kind's plain weapon. */
-export const rogueGear: GearT[] = [
-  legend("ember_sigil", "Ember sigil", "Every basic attack sets a fire.", "amulet", { statuses: ["lg_ember"] }),
-  legend("cleaving_charm", "Cleaving charm", "Every basic attack carries on into a second foe.", "amulet", { statuses: ["lg_cleave"] }),
-  legend("rime_sigil", "Rime sigil", "Every basic attack leaves frost.", "amulet", { statuses: ["lg_rime"] }),
-  legend("wound_sigil", "Wound sigil", "Every crit opens a wound.", "amulet", { statuses: ["lg_wounds"], stats: [critStep(2), st("max_hp", 1)] }),
-  legend("shatter_sigil", "Shatter sigil", "Every basic attack sunders the foe.", "amulet", { statuses: ["lg_sunder"], stats: [st("attack", 1)] }),
-  legend("siren_shell", "Siren shell", "Every basic attack sings an ally a little mana.", "amulet", { statuses: ["lg_song"], stats: [st("max_hp", 1)] }),
-  legend("crown_of_judgement", "Crown of judgement", "Strikes hardest at whatever has been lifted up.", "amulet", { statuses: ["lg_judge"] }),
-  legend("grave_lantern", "Grave lantern", "Each foe that falls gives back a little life.", "amulet", { statuses: ["lg_lantern"] }),
-  legend("soul_jar", "Soul jar", "Each foe that falls fills the party's mana.", "amulet", { statuses: ["lg_soul"] }),
-  legend("war_banner", "War banner", "The whole party starts each fight with Might.", "amulet", { statuses: ["lg_banner"] }),
-  legend("hourglass", "Hourglass", "Its wearer starts each fight Hasted.", "amulet", { statuses: ["lg_hourglass"] }),
-  legend("herald_horn", "Herald's horn", "The whole party starts each fight with Regen.", "amulet", { statuses: ["lg_horn"] }),
-  legend("silver_bell", "Silver bell", "Nothing silences its wearer.", "amulet", { statuses: ["lg_bell"], stats: [st("mp_regen", 1), st("magic", 1)] }),
-  legend("berserker_torc", "Berserker's torc", "Hits harder the closer its wearer is to falling.", "amulet", { statuses: ["lg_fury"] }),
-  legend("stone_idol", "Stone idol", "Crits twice as often behind a Shield.", "amulet", { statuses: ["lg_idol"], stats: [critStep(1)] }),
-  legend("frost_shard", "Frost shard", "Hits harder the colder the foe.", "amulet", { statuses: ["lg_brittle"], stats: [st("max_hp", 1)] }),
-  legend("static_coil", "Static coil", "Whatever hits its wearer is shocked.", "amulet", { statuses: ["lg_coil"], stats: [st("max_hp", 1)] }),
-  legend("frozen_heart", "Frozen heart", "Plate that chills whatever strikes it.", "armor", { armor: "plate", statuses: ["lg_frost"], stats: [st("armor", 1)] }),
-  legend("briar_coat", "Briar coat", "Whatever strikes it starts to bleed.", "armor", { armor: "leather", statuses: ["lg_briar"], stats: [st("max_hp", 1)] }),
-  legend("spiked_bulwark", "Spiked bulwark", "The more plate, the more spikes.", "armor", { armor: "plate", statuses: ["lg_spikes"], stats: [st("armor", 1)] }),
-  legend("shadow_cowl", "Shadow cowl", "Its wearer starts each fight unseen.", "armor", { armor: "leather", statuses: ["lg_shade"], stats: [sp("evasion", "medium"), st("max_hp", 1)] }),
-];
-
-export const rogueWeapons: LegendWeapon[] = [
-  { id: "headsman_axe", name: "Headsman's axe", text: "Finishes what's already falling.", kind: "great_weapon", statuses: ["lg_execute"] },
-  { id: "stormbrand", name: "Stormbrand", text: "A sword that arcs to a second foe and shocks both.", kind: "sword", statuses: ["lg_storm"] },
-  { id: "frostfang", name: "Frostfang", text: "A dagger that chills every cut.", kind: "dagger", statuses: ["lg_rime"], stats: [st("attack", 1)] },
-  { id: "hunters_bow", name: "Hunter's bow", text: "Hits a bleeding quarry far harder.", kind: "bow", statuses: ["lg_hunter"], stats: [st("attack", 1)] },
-  { id: "gravecaller", name: "Gravecaller", text: "Each fall makes it stronger.", kind: "wand", statuses: ["lg_grave"], stats: [st("magic", 1)] },
-  { id: "cinder_rod", name: "Cinder rod", text: "Hits burning foes harder.", kind: "wand", statuses: ["lg_cinder"], stats: [st("magic", 1)] },
-  { id: "brand_of_kings", name: "Brand of kings", text: "A spear that strikes hardest at whatever has been lifted up.", kind: "spear", statuses: ["lg_judge"] },
-  { id: "earthshaker", name: "Earthshaker", text: "A staff that leaves what it strikes sundered.", kind: "staff", statuses: ["lg_sunder"], stats: [st("magic", 1)] },
-];
-
-/** The legendary pool: the core set's powerful pieces and the rogue mode's own. */
-export const LEGENDARY_BASES = [
-  "heartwood_staff", "sanguine_staff", "cornerstone_axe", "needle", "mist_claws", "glacier_staff", "templar_staff",
-  "thornheart_plate", "wraith_leathers", "archmages_robes", "twin_soul_charm", "vampires_tooth", "thirsting_jewel", "glass_heart",
-];
-
-/**
- * Who each legendary piece is for: the designer's reading of its rule against the classes that can wear it. An elite's
- * trophy comes from pieces aimed at the party (a playtester won Archmage's robes with no caster, and a dagger for a bow
- * Ranger), a recruit leans toward a class a piece in the bag is for, and a card says FOR.
- */
-export const LEGENDARY_AIMS: Record<string, string[]> = {
-  heartwood_staff: ["bramble_knight", "geomancer"], sanguine_staff: ["vampire", "hexer"], cornerstone_axe: ["knight", "geomancer"],
-  needle: ["assassin", "ranger"], mist_claws: ["monk", "vampire"], glacier_staff: ["frostweaver", "hexer"], templar_staff: ["paladin", "valkyrie"],
-  thornheart_plate: ["bramble_knight", "knight", "hoplite"], wraith_leathers: ["monk", "assassin", "ranger"],
-  archmages_robes: ["pyromancer", "frostweaver", "stormcaller", "cleric", "hexer"], twin_soul_charm: ["vampire", "monk"],
-  vampires_tooth: ["vampire", "monk", "assassin"], thirsting_jewel: ["paladin", "valkyrie", "geomancer", "bard"], glass_heart: ["assassin", "ranger", "geomancer"],
-  ember_sigil: ["monk", "ranger", "pyromancer"], cleaving_charm: ["monk", "ranger", "assassin", "knight"], rime_sigil: ["frostweaver", "monk", "ranger"],
-  wound_sigil: ["assassin", "ranger"], shatter_sigil: ["monk", "knight", "hoplite"], siren_shell: ["bard", "monk"], crown_of_judgement: ["paladin", "assassin"],
-  grave_lantern: ["knight", "bramble_knight", "hoplite"], soul_jar: ["cleric", "pyromancer", "stormcaller", "geomancer"], war_banner: ["knight", "valkyrie", "bard"],
-  hourglass: ["pyromancer", "stormcaller", "assassin"], herald_horn: ["cleric", "bard", "knight"], silver_bell: ["pyromancer", "stormcaller", "frostweaver"],
-  berserker_torc: ["vampire", "monk"], stone_idol: ["geomancer", "knight"], frost_shard: ["frostweaver", "hexer"], static_coil: ["knight", "hoplite", "bramble_knight"],
-  frozen_heart: ["knight", "hoplite", "bramble_knight"], briar_coat: ["valkyrie", "ranger", "monk"], spiked_bulwark: ["knight", "hoplite"],
-  shadow_cowl: ["assassin", "ranger", "bard"], headsman_axe: ["knight", "geomancer"], stormbrand: ["knight", "valkyrie", "assassin"],
-  frostfang: ["assassin", "ranger", "bard"], hunters_bow: ["ranger", "bard"], gravecaller: ["hexer", "vampire"], cinder_rod: ["pyromancer", "stormcaller"],
-  brand_of_kings: ["valkyrie", "hoplite", "monk"], earthshaker: ["geomancer", "bramble_knight"],
-};
-
-// ─── Affixes: what makes a piece uncommon (one) or rare (two) ────────────────
-
-export type RogueAffix = { id: string; prefix: string; suffix: string; stats: Change[] };
-export const ROGUE_AFFIXES: RogueAffix[] = [
-  { id: "hp", prefix: "Sturdy", suffix: "of the Bear", stats: [st("max_hp", 1)] },
-  { id: "armor", prefix: "Plated", suffix: "of the Tortoise", stats: [st("armor", 1)] },
-  { id: "attack", prefix: "Keen", suffix: "of the Wolf", stats: [st("attack", 1)] },
-  { id: "magic", prefix: "Arcane", suffix: "of the Owl", stats: [st("magic", 1)] },
-  { id: "regen", prefix: "Flowing", suffix: "of the Spring", stats: [st("mp_regen", 1)] },
-  { id: "mp", prefix: "Deep", suffix: "of the Well", stats: [st("max_mp", 1)] },
-  { id: "crit", prefix: "Lucky", suffix: "of the Fox", stats: [critStep(1)] },
-  { id: "quiet", prefix: "Quiet", suffix: "of Shadows", stats: [st("aggro", -1)] },
-  { id: "bold", prefix: "Bold", suffix: "of the Lion", stats: [st("aggro", 1), st("max_hp", 1)] },
-  { id: "thorns", prefix: "Thorned", suffix: "of Thorns", stats: [sp("thorns", "medium")] },
-  { id: "lifesteal", prefix: "Thirsty", suffix: "of the Leech", stats: [sp("lifesteal", "medium")] },
-  { id: "evasion", prefix: "Nimble", suffix: "of the Cat", stats: [sp("evasion", "medium")] },
-  { id: "accuracy", prefix: "True", suffix: "of the Hawk", stats: [sp("accuracy", "medium")] },
-  { id: "double", prefix: "Twin", suffix: "of Echoes", stats: [sp("double_strike", "medium")] },
-  { id: "critdmg", prefix: "Cruel", suffix: "of Ruin", stats: [sp("crit_damage", "medium")] },
-  { id: "siphon", prefix: "Draining", suffix: "of the Moth", stats: [sp("siphon", "medium")] },
-  // Step 5j: the four elemental resistance affixes (Fireproof, Frostproof, Grounded, Hallowed) are gone: they carried nothing else.
-];
 
 // ─── Events: the "?" rooms ───────────────────────────────────────────────────
 

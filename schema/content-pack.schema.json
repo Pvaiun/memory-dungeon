@@ -9347,7 +9347,6 @@
           "description": "Legendary pieces that only the rogue mode drops (the core set's own powerful pieces are in pack.gear)."
         },
         "legendaries": {
-          "minItems": 1,
           "type": "array",
           "items": {
             "type": "string",
@@ -9372,7 +9371,6 @@
           }
         },
         "affixes": {
-          "minItems": 2,
           "type": "array",
           "items": {
             "type": "object",

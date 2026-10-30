@@ -15,8 +15,11 @@ import { int, next, rngFor, shuffle, type Rng } from "./engine/rng.js";
 import type { AbilityT, DungeonT, EffectT, FoesT, GearT, NumT, Party, RarityT, RogueEventT, RogueFightT, RogueNodeKindT, RogueRegionT, RogueT, EventOpT, SupplyIdT } from "./schema.js";
 import { canEquip, handsOf } from "./validate.js";
 
-/** Step 5j: 2. A run saved before the cleanup holds pieces and affixes the content no longer has, so it's set aside. */
-export const ROGUE_VERSION = 2;
+/**
+ * Step 5j: 2. A run saved before the cleanup holds pieces and affixes the content no longer has, so it's set aside.
+ * Step 5i: 3. The old loot is retired (every piece but the plain weapons, every formation but Neutral, the affixes).
+ */
+export const ROGUE_VERSION = 3;
 /** Step 5j: four slots. The offhand stays empty until the next pass makes its pieces. */
 export type Slot = "weapon" | "armor" | "offhand" | "amulet";
 export const SLOT_LIST: Slot[] = ["weapon", "armor", "offhand", "amulet"];
@@ -306,12 +309,13 @@ export function endFight(c: Content, run: RogueRun, er: Run) {
   const fms = s.formations ? rollFormations(c, run, r(run, `trophy:${run.act}:${p.node}`), s.formations) : [];
   if (fms.length) then = { kind: "trophy", offers: fms, then };
   const spoils: Pending = { kind: "spoils", gold, offers, tier: p.tier, ...(then.kind !== "map" ? { then } : {}) };
-  if (!s.trophy) return void (run.pending = offerDrop(c, run, spoils));
-  // An elite's trophy: a legendary piece aimed at the party, won outright and in the bag already (before round 6).
-  const piece: Offer = { kind: "gear", item: rollItem(c, run, r(run, `trophy:${run.act}:${p.node}`), "legendary", true) };
+  // An elite's trophy: a legendary piece aimed at the party, won outright and in the bag already (before round 6); none with no piece to win.
+  const prize = s.trophy ? rollItem(c, run, r(run, `trophy:${run.act}:${p.node}`), "legendary", true) : null;
+  if (!prize) return void (run.pending = offerDrop(c, run, spoils));
+  const piece: Offer = { kind: "gear", item: prize };
   take(c, run, piece);
   note(run, `Won ${offerText(c, run, piece)}.`);
-  run.pending = offerDrop(c, run, { ...spoils, trophy: (piece as { item: Item }).item });
+  run.pending = offerDrop(c, run, { ...spoils, trophy: prize });
 }
 
 /** The supplies of a kind the party carries. */
@@ -641,6 +645,13 @@ function fightSpec(c: Content, run: RogueRun, node: MapNode, tier: FightTier): F
 // ─── Offers: gear, tomes, recruits, formations, supplies ───────────────────
 
 const ORDINARY = (c: Content) => c.pack.gear.filter((g) => g.source === "drop" && g.tier === "ordinary").map((g) => g.id);
+/**
+ * The pieces a rarity rolls from. Step 5i (the build's retire share): the old loot is gone, so a pool can be empty; an offer
+ * that would be a piece is then another kind of offer, or nothing (see each caller).
+ */
+const poolOf = (c: Content, rarity: RarityT) => (rarity === "legendary" ? rogue(c).legendaries : ORDINARY(c));
+/** Is there a piece of this rarity to roll? */
+export const canRoll = (c: Content, rarity: RarityT) => poolOf(c, rarity).length > 0;
 const rollRarity = (rng: Rng, odds: Partial<Record<RarityT, number>>): RarityT => {
   const ks = Object.keys(odds) as RarityT[];
   let x = next(rng) * ks.reduce((s, k) => s + (odds[k] ?? 0), 0);
@@ -657,10 +668,12 @@ export const usable = (c: Content, run: RogueRun, base: string) => run.roster.so
  * A piece of a rarity. `forParty` (an elite's trophy): one aimed at someone in the party, where any is. `open` (spoils, chests,
  * events; step 5h): a share of them (`spoils.offRoster`) is for a class not in the roster, where there's such a piece, so a
  * piece can make the run want a class. Otherwise one the roster can wear. `forCls`: one that class can wear (a cage's recruit).
+ * Null when the rarity's pool is empty.
  */
-export function rollItem(c: Content, run: RogueRun, rng: Rng, rarity: RarityT, forParty = false, open = false, forCls?: string): Item {
+export function rollItem(c: Content, run: RogueRun, rng: Rng, rarity: RarityT, forParty = false, open = false, forCls?: string): Item | null {
   registerGear(c);
-  const pool = rarity === "legendary" ? rogue(c).legendaries : ORDINARY(c);
+  const pool = poolOf(c, rarity);
+  if (!pool.length) return null;
   // A legendary piece the run already has isn't rolled again while others are left (two Thornhearts in one run: a playtester).
   const had = new Set(rarity === "legendary" ? run.items.filter((it) => it.rarity === "legendary").map((it) => it.base) : []);
   const fresh = (ids: string[]) => ids.filter((id) => !had.has(id));
@@ -769,11 +782,12 @@ function spoilOffers(c: Content, run: RogueRun, tier: FightTier, node: string): 
   const s = cfg(c).spoils[tier === "elite" ? "elite" : "fight"];
   const rng = r(run, `spoils:${run.act}:${node}`);
   const out: Offer[] = [];
-  const gear = (): Offer => {
+  const gear = (): Offer | null => {
     // No two offers of the same piece. Round 6: the first `aimed` offers are pieces aimed at someone in the party (an elite's pick).
     const aimed = out.length < (s.aimed ?? 0);
     let item = rollItem(c, run, rng, rollRarity(rng, s.rarity), aimed, !aimed);
-    for (let k = 0; k < 6 && out.some((x) => x.kind === "gear" && x.item.base === item.base); k++) (run.uid--, (item = rollItem(c, run, rng, item.rarity, aimed, !aimed)));
+    if (!item) return null;
+    for (let k = 0; k < 6 && out.some((x) => x.kind === "gear" && x.item.base === item!.base); k++) (run.uid--, (item = rollItem(c, run, rng, item.rarity, aimed, !aimed) ?? item));
     return { kind: "gear", item };
   };
   const other = (): Offer | null => {
@@ -783,8 +797,8 @@ function spoilOffers(c: Content, run: RogueRun, tier: FightTier, node: string): 
     let x = next(rng) * kinds.reduce((t, k) => t + (m[k] ?? 0), 0);
     const k = kinds.find((kk) => (x -= m[kk] ?? 0) < 0) ?? kinds[0];
     // Round 6 (the director's: "an unknown reward, or even bundles"): a sealed piece, rare or better, or a common piece with a supply.
-    if (k === "sealed") return { kind: "gear", item: rollItem(c, run, rng, next(rng) < 0.25 ? "legendary" : "rare", false, true), sealed: true };
-    if (k === "bundle") return { kind: "bundle", item: rollItem(c, run, rng, "common", false, true), supply: next(rng) < 0.5 ? "potion" : "tonic" };
+    if (k === "sealed") { const item = rollItem(c, run, rng, next(rng) < 0.25 ? "legendary" : "rare", false, true); return item && { kind: "gear", item, sealed: true }; }
+    if (k === "bundle") { const item = rollItem(c, run, rng, "common", false, true); return item && { kind: "bundle", item, supply: next(rng) < 0.5 ? "potion" : "tonic" }; }
     if (k === "tome") {
       const o = rollTome(c, run, rng);
       return o && !out.some((y) => y.kind === "tome" && y.cls === (o as { cls: string }).cls && y.ability === (o as { ability: string }).ability) ? o : null;
@@ -795,7 +809,8 @@ function spoilOffers(c: Content, run: RogueRun, tier: FightTier, node: string): 
   const mixed = !!s.mix && next(rng) * 100 < (s.mixed ?? 0);
   for (let i = 0; i < s.count; i++) {
     if (i < (s.legendaries ?? 0)) {
-      out.push({ kind: "gear", item: rollItem(c, run, rng, "legendary", false, true) });
+      const item = rollItem(c, run, rng, "legendary", false, true);
+      if (item) out.push({ kind: "gear", item });
       continue;
     }
     let o: Offer | null = null;
@@ -807,7 +822,9 @@ function spoilOffers(c: Content, run: RogueRun, tier: FightTier, node: string): 
       else if (x < s.tome + s.recruit + s.supply) o = { kind: "supply", id: SUPPLIES[int(rng, SUPPLIES.length)] };
       if (o?.kind === "tome" && out.some((y) => y.kind === "tome" && y.cls === (o as { cls: string }).cls && y.ability === (o as { ability: string }).ability)) o = null;
     }
-    out.push(o ?? gear());
+    // Step 5i (the retire share): with no piece to roll, a pick that would be gear is nothing.
+    const x = o ?? gear();
+    if (x) out.push(x);
   }
   return out;
 }
@@ -817,8 +834,9 @@ function spoilOffers(c: Content, run: RogueRun, tier: FightTier, node: string): 
  */
 function boonOffers(c: Content, run: RogueRun): Offer[] {
   const rng = r(run, `boon:${run.act}`);
-  const legend = (): Offer => ({ kind: "gear", item: rollItem(c, run, rng, "legendary") });
-  const out: Offer[] = [legend(), rollFormation(c, run, rng, [], undefined, "rare") ?? legend(), rollRecruit(c, run, rng, [], 2) ?? legend()];
+  // Step 5i (the retire share): with no legendary to roll, its place is the next option's, or nothing.
+  const legend = (): Offer | null => { const item = rollItem(c, run, rng, "legendary"); return item && { kind: "gear", item }; };
+  const out: Offer[] = [legend(), rollFormation(c, run, rng, [], undefined, "rare") ?? legend(), rollRecruit(c, run, rng, [], 2) ?? legend()].filter((o): o is Offer => !!o);
   if (cfg(c).boon.seat && seatsOf(c, run) < (cfg(c).benchMax ?? cfg(c).bench)) out.push({ kind: "seat" });
   return out.length > cfg(c).boon.count ? shuffle(rng, out).slice(0, cfg(c).boon.count) : out;
 }
@@ -844,7 +862,7 @@ function shopStock(c: Content, run: RogueRun, node: string): ShopSlot[] {
   const rng = r(run, `shop:${run.act}:${node}`);
   const out: Offer[] = [];
   const count = (rar: Priced) => (rar === "legendary" && s.legendaryByAct ? s.legendaryByAct[Math.min(run.act, s.legendaryByAct.length) - 1] : s.gear[rar]);
-  for (const rar of ["common", "uncommon", "rare", "legendary"] as Priced[]) for (let i = 0; i < count(rar); i++) out.push({ kind: "gear", item: rollItem(c, run, rng, rar) });
+  for (const rar of ["common", "uncommon", "rare", "legendary"] as Priced[]) for (let i = 0; i < count(rar); i++) { const item = rollItem(c, run, rng, rar); if (item) out.push({ kind: "gear", item }); }
   const recs: string[] = [];
   for (let i = 0; i < s.recruits; i++) {
     const o = rollRecruit(c, run, rng, recs);
@@ -1171,7 +1189,7 @@ export function whyNot(c: Content, run: RogueRun, opt: RogueEventT["options"][nu
   if ((opt.gold ?? 0) > run.gold) return "not enough gold";
   const op = opt.do.find((x) => !possible(c, run, x));
   if (!op) return "";
-  return op.op === "recruit" || op.op === "muster" ? "no room at camp" : op.op === "seat" ? "the camp is as big as it gets" : op.op === "train" ? "nothing left to train" : op.op === "trade" ? "nobody to trade" : op.op === "learn" ? "nothing left to learn" : op.op === "upgrade" ? "nothing left to upgrade" : op.op === "temper" ? "no piece it can work on" : op.op === "formation" ? "every formation owned" : "can't happen now";
+  return op.op === "recruit" || op.op === "muster" ? "no room at camp" : op.op === "seat" ? "the camp is as big as it gets" : op.op === "train" ? "nothing left to train" : op.op === "trade" ? "nobody to trade" : op.op === "learn" ? "nothing left to learn" : op.op === "upgrade" ? "nothing left to upgrade" : op.op === "temper" ? "no piece it can work on" : op.op === "formation" ? "every formation owned" : op.op === "gear" ? "nothing to find" : "can't happen now";
 }
 /**
  * Pieces a temper can take: of the rarities given (default common and uncommon). A rare only where a legendary of its slot exists
@@ -1179,7 +1197,9 @@ export function whyNot(c: Content, run: RogueRun, opt: RogueEventT["options"][nu
  */
 function temperable(c: Content, run: RogueRun, from: readonly RarityT[] = ["common", "uncommon"]): Item[] {
   registerGear(c, run);
-  return run.items.filter((it) => from.includes(it.rarity) && (it.rarity !== "rare" || !!reforgeBase(c, run, it, null)));
+  // Step 5i (the retire share): a common or uncommon is tempered by gaining an affix, so only while one is left to gain (none exist now).
+  const affixLeft = (it: Item) => rogue(c).affixes.some((a) => !it.affixes.includes(a.id));
+  return run.items.filter((it) => from.includes(it.rarity) && (it.rarity !== "rare" ? affixLeft(it) : !!reforgeBase(c, run, it, null)));
 }
 /** The legendary a rare piece is reforged into: its slot, wearable by its wearer (or anyone in the roster), aimed at them where it can be. */
 function reforgeBase(c: Content, run: RogueRun, it: Item, rng: Rng | null): string | null {
@@ -1202,6 +1222,8 @@ function possible(c: Content, run: RogueRun, op: EventOpT): boolean {
   if (op.op === "learn") return learnOptions(c, run).length > 0;
   if (op.op === "upgrade") return upgradeOptions(run).length > 0;
   if (op.op === "temper") return temperable(c, run, op.from).length > 0;
+  // Step 5i (the retire share): a piece needs a piece of its rarity to find.
+  if (op.op === "gear") return canRoll(c, op.rarity);
   if (op.op === "revive") return true;
   if (op.op === "formation") return c.pack.formations.some((f) => !run.formations.includes(f.id));
   return true;
@@ -1510,9 +1532,13 @@ function enter(c: Content, run: RogueRun, id: string) {
       let offer: Offer | null = null;
       if (next(rng) * 100 < (t.cage ?? 0)) {
         const o = rollRecruit(c, run, rng);
-        if (o?.kind === "recruit") offer = { ...o, item: rollItem(c, run, rng, "uncommon", false, false, o.cls) };
+        if (o?.kind === "recruit") { const item = rollItem(c, run, rng, "uncommon", false, false, o.cls); offer = { ...o, ...(item ? { item } : {}) }; }
       }
-      offer ??= { kind: "gear", item: rollItem(c, run, rng, rollRarity(rng, t.rarity), false, true) };
+      if (!offer) {
+        // Step 5i (the retire share): with no piece to find, the chest holds a supply.
+        const item = rollItem(c, run, rng, rollRarity(rng, t.rarity), false, true);
+        offer = item ? { kind: "gear", item } : { kind: "supply", id: SUPPLIES[int(rng, SUPPLIES.length)] };
+      }
       run.pending = { kind: "treasure", offer, gold: between(rng, t.gold) };
       return;
     }
@@ -1573,11 +1599,19 @@ function doOps(c: Content, run: RogueRun, ops: readonly EventOpT[], rng: Rng) {
       case "revive":
         for (const m of run.roster.filter((x) => x.ko)) (m.ko = false), (m.missHp = Math.floor((maxOf(c, run, m.cls, "max_hp") * (100 - op.pct)) / 100)), note(run, `The ${c.classes.get(m.cls)!.name} is back on their feet.`);
         break;
-      case "gear": { const o: Offer = { kind: "gear", item: rollItem(c, run, rng, op.rarity) }; take(c, run, o); note(run, `Gained ${offerText(c, run, o)}.`); break; }
+      case "gear": {
+        // Step 5i (the retire share): nothing, with no piece to find (an option that only finds one isn't offered then).
+        const item = rollItem(c, run, rng, op.rarity);
+        if (!item) break;
+        const o: Offer = { kind: "gear", item };
+        take(c, run, o);
+        note(run, `Gained ${offerText(c, run, o)}.`);
+        break;
+      }
       case "recruit": {
         const o = op.healer ? rollRecruit(c, run, rng, run.roster.length ? c.pack.classes.map((k) => k.id).filter((id) => !heals(c, id)) : [], 1, op.known) : rollRecruit(c, run, rng, [], 1, op.known);
         if (o?.kind === "recruit") {
-          const item = op.gear ? rollItem(c, run, rng, op.gear, false, false, o.cls) : undefined;
+          const item = (op.gear ? rollItem(c, run, rng, op.gear, false, false, o.cls) : null) ?? undefined;
           recruit(c, run, o.cls, op.hp ?? 100, o.known, item);
           note(run, `${c.classes.get(o.cls)!.name} joins.`);
         }
@@ -1602,7 +1636,10 @@ function doOps(c: Content, run: RogueRun, ops: readonly EventOpT[], rng: Rng) {
       case "muster": {
         if (!roomForRecruit(c, run)) break;
         // Round 6: each may carry a piece suited to it; a fight listed after the pick follows it (the Prisoner Convoy's guards).
-        const offers = rollRecruits(c, run, rng, op.n, 1, op.known).map((o) => (op.gear && o.kind === "recruit" ? { ...o, item: rollItem(c, run, rng, op.gear, false, false, o.cls) } : o));
+        const offers = rollRecruits(c, run, rng, op.n, 1, op.known).map((o): Offer => {
+          const item = op.gear && o.kind === "recruit" ? rollItem(c, run, rng, op.gear, false, false, o.cls) : null;
+          return item ? { ...(o as Extract<Offer, { kind: "recruit" }>), item } : o;
+        });
         const fight = ops.slice(ops.indexOf(op) + 1).find((x) => x.op === "fight");
         const node = run.map.find((n) => n.id === run.at);
         const then: Pending | undefined = fight?.op === "fight" && node ? { kind: "fight", ...fightSpec(c, run, { ...node, floor: Math.max(node.floor, easyTo(c) + 1) }, fight.tier === "elite" ? "elite" : "fight") } : undefined;

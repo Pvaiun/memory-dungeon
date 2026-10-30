@@ -69,7 +69,8 @@ test("campaign: what's owned grows by each node's rewards, a new class brings it
   const everything = ownedAt(c, cp.nodes.length);
   assert.equal(everything.classes.length, c.pack.classes.length);
   assert.equal(everything.gear.length, c.pack.gear.length);
-  const trial = cp.nodes.find((n) => n.needs.some((nd) => "formation" in nd))!;
+  // Step 5i (the retire): no node needs a formation now (theirs were retired), so a trial is given one here.
+  const trial = { ...cp.nodes.find((n) => n.kind === "trial")!, needs: [{ formation: "wedge" }] };
   const party = { formation: "neutral", units: [{ class: "knight", position: "left", abilities: [], gear: {} }] };
   assert.ok(unmet(c, trial, party).length > 0);
   assert.ok(meets(c, { armor: "none" }, party));

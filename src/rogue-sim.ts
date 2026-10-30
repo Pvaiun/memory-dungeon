@@ -41,7 +41,7 @@ export function playOne(c: Content, seed: number, leader: string, heat: number, 
   for (const [k, n] of Object.entries(gift)) for (let i = 0; i < n; i++) {
     if (k === "gold") run.gold += 1;
     else if (k.startsWith("piece:")) take(c, run, { kind: "gear", item: newItem(run, k.slice(6), "legendary") });
-    else take(c, run, { kind: "gear", item: rollItem(c, run, grng, k as RarityT) });
+    else { const item = rollItem(c, run, grng, k as RarityT); if (item) take(c, run, { kind: "gear", item }); }
   }
   const ai = aiPlayer(dials, seed);
   const bossHp: number[] = [], bossFight: string[] = [], regions: string[] = [run.region];
