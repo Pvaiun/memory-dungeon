@@ -659,11 +659,10 @@ The spine's rule: commons lean Lifesteal, Crit chance, Attack; uncommons crits t
 - **Builds:** Pact 1 ●, Ambush 1 ●, Hunt 1 ●.
 
 #### Crimson dregs · vial · uncommon
-- **Card:** Vial. Fits Assassin, Vampire. Attack +1. Below half its HP, its holder has Lifesteal.
-- **Numbers:** Attack +1 (1,000). Lifesteal medium (10%) while below half.
-- **Hooks:** Bloodlust's pattern: `hp_lost` → `apply` a status with Lifesteal +10, `to: { side: self, where: { hpBelow: 50 } }`; `healed` → `remove` it, `to: { side: self, where: { hpAtLeast: 50 } }`.
-- **Builds:** Pact 1 ●, Phoenix 1 ● (the low unit kept up), Cuts 1 ●.
-- **CHALLENGE:** see CHALLENGE 8 (a small Bloodsworn mail, beside the Bloodlust draught).
+- **Card:** Vial. Fits Assassin, Vampire. Attack +1. Its holder's hits on a bleeding foe heal it for a share of their damage.
+- **Numbers:** Attack +1 (1,000). Lifesteal medium (10%) on hits against a bleeding foe, added to any Lifesteal it has (the offhands ruling).
+- **Hooks:** the piece's status: `hit_lands` (whose `holder`), where the other has bleed → `heal` `{ ratio: 0.1, amount: true }`, `to: self`. Lifesteal's own shape, on a condition.
+- **Builds:** Pact 1 ● (Lifesteal), Cuts 1 ● (Bleed on every hit), Toll 1 ● (Briar's bleeding attackers).
 
 #### Blood vial · vial · rare
 - **Card:** Vial. Fits Assassin, Vampire. Its holder's abilities cost half their MP, plus HP equal to their full cost. An ability waits while that price would knock its holder out.
@@ -698,17 +697,19 @@ The spine's rule: commons lean Lifesteal, Crit chance, Attack; uncommons crits t
 - **Numbers:**
   - Above half at a fight's start, it pays down to half; at or below half, it pays nothing.
   - The doubling ends the first time it's healed to full, and doesn't come back that fight.
+  - On the Vampire, the draught's doubling and Bloodlust's add, never multiply (the offhands ruling): each adds the Vampire's base Lifesteal once, so below half with both it has three times its base. Lifesteal high (20%) becomes 60%, not 80%.
   - On the Assassin (Lifesteal 0 of its own) it doubles only what gear gives.
 - **Hooks:**
   - The piece's status: `fight_start` → an HP price down to 50% (addition 4, as a price, not damage: no Shield soaks it, and `hp_lost` fires so below-half pieces hear it).
-  - `apply` a status with Lifesteal + the holder's Lifesteal (Bloodlust's own pattern), removed on `healed` where `hpAtLeast: 100`.
+  - `apply` a status with Lifesteal + the holder's base Lifesteal, removed on `healed` where `hpAtLeast: 100`.
+  - Bloodlust's own status must then add the base too, not the current value (it reads the holder's Lifesteal at application today, which would count the draught's). The base is the Lifesteal from the class and gear, before either doubling.
 - **Builds:** Pact 3 ●●●, Cuts ●.
 
 ---
 
 ## Idol (Hexer, Vampire)
 
-The spine's rule: commons lean Siphon, Magic, HP; uncommons MP on a kill, a little Siphon on crits. The eight: MP from the dead and from wounds, Weaken on every swing, drained mana passed on, Weaken that binds, and a thief of buffs.
+The spine's rule: commons lean Siphon, Magic, HP; uncommons MP on a kill, a little Siphon on crits. The lead's ruling moves the second to Rot on crits. The eight: MP from the dead, crits that spoil healing, Weaken on every swing, drained mana passed on, Weaken that binds, and a thief of buffs.
 
 #### Night mask · idol · common
 - **Card:** Idol. Fits Hexer, Vampire. Siphon medium, Magic +1.
