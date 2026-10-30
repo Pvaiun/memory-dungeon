@@ -2,7 +2,7 @@
 
 Oct 30, 2026. One share of the fill (`../fill-brief.md`): the ten offhand kinds, eight pieces each, 80 in all, in the spine's order. In each kind, two commons and two uncommons are new, designed from the spine's rule for the kind (`spine.md` section 1, the commons-and-uncommons table); the two rares and two legendaries are the spine's lines (section 4), written in full.
 
-**The lead's rulings are applied** (`../fill-rulings.md`: G1 to G10 and "The offhands"). Where a ruling changed a piece, its entry says which. The CHALLENGES list at the end now says which ruling settled each item.
+**The lead's rulings are applied** (`../fill-rulings.md`: G1 to G10 and "The offhands", then the second round's G11 to G17 and its lines naming offhand pieces). Where a ruling changed a piece, its entry says which. The CHALLENGES list at the end now says which ruling settled each item.
 
 **How to read a piece.**
 - **Card** is what the player reads. "Its holder" is the unit holding the offhand. Every card names its kind and who can hold it.
