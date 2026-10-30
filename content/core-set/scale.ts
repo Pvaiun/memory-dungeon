@@ -189,6 +189,14 @@ export const RULES = {
    * for 2,600 ticks: minutes of watching nothing. Boss fights end in 100 to 250.
    */
   enrage: { after: 200, every: 20, pct: 25 }, // Step 5g round 2: 200 and 20 (were 300 and 30). A lone Vampire that out-healed the Hive Queen's Tempest soloed it for 305 ticks; the safety should close such a fight sooner.
+  /**
+   * Step 5i (the director's, Oct 30): bosses resist repeated control, the one exception to universal statuses. Each Stun, Silence
+   * or Slow that lands on a boss adds a hidden stack; from 2 stacks the next lands for half its length (RESISTED), at 4 none
+   * lands (IMMUNE). A stack drains 22 ticks after the last change: the first two controls land in full and the next two at
+   * half (Stun 4, Silence 8, Slow 12 ticks), and one control every 22 ticks or slower never builds past a stack. Weaken stays
+   * out (the director: a boss Weakened all fight still acts). First values; all four are the balance pass's levers.
+   */
+  control: { ranks: ["boss" as const], statuses: ["stun", "silence", "slow"], resist: { at: 2, pct: 50 }, cap: 4, drain: 22 },
 };
 
 /**

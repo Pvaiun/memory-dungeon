@@ -91,8 +91,8 @@ A number is a plain number, or `{ base, scale: [...] }`: base + Σ ratio × sour
 
 | Of | Meaning |
 | --- | --- |
-| `self` | Actions: the acting unit. The default for stats in actions. |
-| `target` | Actions: the unit the effect lands on. Boosts: the unit being hit. The default for hp, stacks and conditions in actions. |
+| `self` | Actions: the acting unit. The default for stats in actions, and (step 5i) for a count of a side's units. |
+| `target` | Actions: the unit the effect lands on. Boosts: the unit being hit. The default for hp, stacks, conditions and counts of buffs or debuffs in actions. |
 | `source` | Statuses that know their source (not a shared Intensity total): the unit that applied it, read once at application. |
 | `holder` | Statuses: the holder, read each time the number is used (stat changes: once, at application). The default for hp, stacks and conditions in statuses; stats must say whose. |
 
@@ -340,7 +340,7 @@ Basic attacks pick in this order (step 5i): an `aim` with `first` the attacker h
 
 | Field | Meaning |
 | --- | --- |
-| `atLeast` | At least this many pass. Default 1. |
+| `atLeast` | At least this many pass. Default 1, or 0 when atMost is given. |
 | `atMost` | Step 5i: at most this many pass (0: none does, "no foe is Marked"). |
 | `seat` | Step 5i: the unit in this seat of the party's formation (a position id), or `next` / `previous`: the seat after or before the reading unit's, by slot order, wrapping round and skipping empty seats. |
 

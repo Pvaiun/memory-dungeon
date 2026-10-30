@@ -4100,6 +4100,12 @@
                       "minimum": 0,
                       "maximum": 9007199254740991
                     },
+                    "extra": {
+                      "description": "Step 5i: chance, in percent, that a second pick of `count` pieces follows the first (gear only, from the same rarity table): a third more gear for the fourth slot.",
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100
+                    },
                     "mixed": {
                       "description": "Step 5h: chance, in percent, that the pick mixes kinds: one piece of gear, then offers rolled from `mix` (the rest stay gear).",
                       "type": "number",
@@ -4225,6 +4231,12 @@
                       "type": "integer",
                       "minimum": 0,
                       "maximum": 9007199254740991
+                    },
+                    "extra": {
+                      "description": "Step 5i: chance, in percent, that a second pick of `count` pieces follows the first (gear only, from the same rarity table): a third more gear for the fourth slot.",
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100
                     },
                     "mixed": {
                       "description": "Step 5h: chance, in percent, that the pick mixes kinds: one piece of gear, then offers rolled from `mix` (the rest stay gear).",
@@ -6432,7 +6444,7 @@
           "$ref": "#/$defs/UnitCond"
         },
         "atLeast": {
-          "description": "At least this many pass. Default 1.",
+          "description": "At least this many pass. Default 1, or 0 when atMost is given.",
           "type": "integer",
           "minimum": 1,
           "maximum": 9007199254740991
