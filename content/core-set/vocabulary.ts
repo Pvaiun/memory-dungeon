@@ -169,6 +169,7 @@ export const ruleset: ContentPack["ruleset"] = {
   stagger: RULES.stagger,
   draw: RULES.draw,
   enrage: RULES.enrage,
+  control: RULES.control,
   run: { defeatedUnits: "stay_down", perkOffer: { options: 1, premiumChance: 0, repeatPicked: false, offerInapplicable: false } },
 };
 

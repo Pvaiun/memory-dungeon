@@ -74,6 +74,22 @@
    "every": 20,
    "pct": 25
   },
+  "control": {
+   "ranks": [
+    "boss"
+   ],
+   "statuses": [
+    "stun",
+    "silence",
+    "slow"
+   ],
+   "resist": {
+    "at": 2,
+    "pct": 50
+   },
+   "cap": 4,
+   "drain": 22
+  },
   "run": {
    "defeatedUnits": "stay_down",
    "perkOffer": {

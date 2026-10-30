@@ -22,6 +22,8 @@ import { derive, makeUnit, resolveWeapon, step, world, type CFight, type CUnit }
 export type Member = Unit & {
   mp: number;
   slot: number;
+  /** Step 5i (X13): the id of its position in the party's formation. */
+  seat?: string;
   base: Record<string, number>;
   flat: Record<string, number>;
   pct: Record<string, number>;
@@ -74,7 +76,7 @@ export const combat: Rules = {
       const base = { ...cls.stats };
       const stats = derive(c, { base, ...m });
       return {
-        id: `p${i + 1}`, ref: cls.id, name: cls.name, side: "party", stats, hp: stats.max_hp, mp: stats.max_mp, slot, base, ...m,
+        id: `p${i + 1}`, ref: cls.id, name: cls.name, side: "party", stats, hp: stats.max_hp, mp: stats.max_mp, slot, seat: pu.position, base, ...m,
         weapon: gear.find((g) => g.weapon)?.id ?? "unarmed", abilities: [...pu.abilities],
       };
     });

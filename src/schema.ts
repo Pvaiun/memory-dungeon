@@ -197,8 +197,8 @@ export const Cause = z.enum(keys(CAUSES));
 export type CauseT = z.infer<typeof Cause>;
 
 export const SCALE_OF = {
-  self: "Actions: the acting unit. The default for stats in actions.",
-  target: "Actions: the unit the effect lands on. Boosts: the unit being hit. The default for hp, stacks and conditions in actions.",
+  self: "Actions: the acting unit. The default for stats in actions, and (step 5i) for a count of a side's units.",
+  target: "Actions: the unit the effect lands on. Boosts: the unit being hit. The default for hp, stacks, conditions and counts of buffs or debuffs in actions.",
   source: "Statuses that know their source (not a shared Intensity total): the unit that applied it, read once at application.",
   holder: "Statuses: the holder, read each time the number is used (stat changes: once, at application). The default for hp, stacks and conditions in statuses; stats must say whose.",
 } as const;
@@ -363,7 +363,7 @@ export type TargetRuleT = z.infer<typeof TargetRule>;
 export const Condition = z.strictObject({
   side: Side,
   where: UnitCond,
-  atLeast: PosInt.optional().describe("At least this many pass. Default 1."),
+  atLeast: PosInt.optional().describe("At least this many pass. Default 1, or 0 when atMost is given."),
   atMost: z.number().int().min(0).optional().describe("Step 5i: at most this many pass (0: none does, \"no foe is Marked\")."),
   seat: Seat.optional().describe(SEAT),
 }).meta({ id: "Condition" });
