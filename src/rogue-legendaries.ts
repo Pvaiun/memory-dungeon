@@ -10,7 +10,7 @@ import { readFileSync } from "node:fs";
 import { availableParallelism } from "node:os";
 import { isMainThread } from "node:worker_threads";
 import { loadContent } from "./engine/run.js";
-import { rogue } from "./rogue.js";
+import { stockOf } from "./rogue.js";
 import { many, Pool } from "./rogue-sim.js";
 
 async function main() {
@@ -20,7 +20,8 @@ async function main() {
   const c = loadContent(raw);
   const runs = Number(opt("--runs") ?? 1000);
   const leaders = ["knight", "cleric", "ranger"];
-  const ids = opt("--only")?.split(",") ?? rogue(c).legendaries;
+  // Step 5i: the stock's legendary pieces (the rogue's own legendary pool is gone).
+  const ids = opt("--only")?.split(",") ?? stockOf(c).all.filter((g) => g.rarity === "legendary").map((g) => g.id);
   const pool = new Pool(raw, Number(opt("--workers") ?? availableParallelism()));
   const base = await many(pool, runs, { leaders });
   console.log(`${runs} runs a piece, the same seeds; nothing handed over: ${Math.round((100 * base.filter((r) => r.won).length) / runs)}% won.`);

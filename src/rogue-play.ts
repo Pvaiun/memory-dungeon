@@ -24,7 +24,7 @@ import { combat } from "./engine/combat/rules.js";
 import type { Entry } from "./engine/log.js";
 import {
   actRoll, bagRoom, bench, bossFoes, canManage, choose, discard, dismiss, endFight, equip, eventView, formationRarity, itemGear, itemOf, maxOf, seatsOf, trainOptions, member, newRogue, options, reachable, registerGear, rogue,
-  learnOptions, migrate, seat, sellPrice, upgradeOptions, whyNot, setFormation, setOrder, startFight, swap, trainPrice, unlearned, upgraded, useSupply, wearer, type Item, type Offer, type RogueRun, type Slot,
+  learnOptions, migrate, seat, sellPrice, improveOptions, unlearned, formOf, whyNot, setFormation, setOrder, startFight, swap, trainPrice, parseTraining, trainingText, useSupply, wearer, type Item, type Offer, type RogueRun, type Slot,
 } from "./rogue.js";
 import type { AbilityT, NumT } from "./schema.js";
 import { canEquip } from "./validate.js";
@@ -179,10 +179,10 @@ function look(run: RogueRun): string {
       break;
     }
     case "train": {
-      out.push(`TRAINING (${p.left} more): each member once; learn an ability or make one better (+).`);
+      out.push(`TRAINING (${p.left} more): each member once; learn an ability, or take an ability's or the passive's power step or one of its two versions (a power step and a version are two trainings).`);
       for (const o of trainOptions(c, run, p.done)) {
         const [verb, cls, ab] = o.split(":");
-        out.push(`  pick ${o}: ${verb === "learn" ? `the ${c.classes.get(cls)!.name} learns ${c.abilities.get(ab)!.name}: ${c.abilities.get(ab)!.text}` : upText(ab, run, cls)}`);
+        out.push(`  pick ${o}: ${verb === "learn" ? `the ${c.classes.get(cls)!.name} learns ${c.abilities.get(ab)!.name}: ${c.abilities.get(ab)!.text}` : upText(o)}`);
       }
       out.push(options(c, run).includes("back") ? "  pick back (nobody trained yet: back to the room, its pick unspent)" : "  pick done");
       break;
@@ -213,7 +213,7 @@ function look(run: RogueRun): string {
       // Training too dear right now stays listed, marked (unaffordable gear stays listed too).
       const lp = trainPrice(c, p, "learn"), up = trainPrice(c, p, "upgrade");
       if (p.learn) for (const o of learnOptions(c, run)) out.push(`  ${run.gold >= lp ? `pick learn:${o}` : "(not enough gold) learn:" + o} for ${lp}g: ${c.abilities.get(o.split(":")[1])!.name}: ${c.abilities.get(o.split(":")[1])!.text}`);
-      if (p.upgrade) for (const o of upgradeOptions(run)) out.push(`  ${run.gold >= up ? `pick upgrade:${o}` : "(not enough gold) upgrade:" + o} for ${up}g: ${upText(o.split(":")[1], run, o.split(":")[0])}`);
+      if (p.upgrade) for (const o of improveOptions(c, run)) out.push(`  ${run.gold >= up ? `pick ${o}` : "(not enough gold) " + o} for ${up}g: ${upText(o)}`);
       for (const it of run.items.filter((x) => !wearer(run, x.uid))) out.push(`  pick sell:${it.uid} for ${sellPrice(c, it)}g: ${itemWords(it)}`);
       out.push("  pick leave");
       break;
@@ -232,7 +232,7 @@ function look(run: RogueRun): string {
       else out.push(`  pick rest: the party regains ${k.hp}% of its max HP (the max each had as the last fight ended).`, `  pick focus: the party regains ${k.mp}% of its max MP (likewise).`);
       for (const o of options(c, run)) {
         if (o.startsWith("raise:")) out.push(`  pick ${o}: stands up with ${k.revive}% of its HP.`);
-        else if (o === "train") out.push(`  pick train: ${k.train ?? 1} members each learn an ability or make one better (+).`);
+        else if (o === "train") out.push(`  pick train: ${k.train ?? 1} members each learn an ability or train one (a power step or a version).`);
       }
       break;
     }
@@ -246,12 +246,12 @@ function look(run: RogueRun): string {
     }
     case "choose":
       out.push(`CHOOSE (${p.what}):`);
-      for (const o of options(c, run)) out.push(`  pick ${o}${p.what === "temper" ? `: ${itemWords(itemOf(run, o)!)}` : `: ${c.abilities.get(o.split(":")[1])!.text}`}`);
+      for (const o of options(c, run)) out.push(`  pick ${o}${p.what === "temper" ? `: ${itemWords(itemOf(run, o)!)}` : p.what === "upgrade" ? `: ${upText(o)}` : `: ${c.abilities.get(o.split(":")[1])!.text}`}`);
       break;
     case "levelup": {
       const m = member(run, p.queue[0]);
-      out.push(`LEVEL UP: the ${c.classes.get(m.cls)!.name} learns a new ability, or makes a known one better (+):`);
-      for (const a of options(c, run)) out.push(`  pick ${a}: ${a === "gold" ? `${rogue(c).config.levelGold} gold instead` : unlearned(c, m).includes(a) ? `learn ${c.abilities.get(a)!.name}: ${c.abilities.get(a)!.text}` : upText(a, run, m.cls)}`);
+      out.push(`LEVEL UP: the ${c.classes.get(m.cls)!.name} learns a new ability, or trains one it knows or its passive (a power step or a version):`);
+      for (const a of options(c, run)) out.push(`  pick ${a}: ${a === "gold" ? `${rogue(c).config.levelGold} gold instead` : upText(a)}`);
       break;
     }
     case "region":
@@ -293,13 +293,12 @@ function bestiary(id: string, power = 0): string {
   const kind = en.weapon?.kind ? c.weaponKinds.get(en.weapon.kind)?.type ?? "physical" : en.weapon?.type ?? "physical";
   return `${en.name}${en.rank !== "minion" ? ` (${en.rank})` : ""}: ${en.text} Attacks: ${kind}.${acts.length ? ` Abilities: ${acts.join("; ")}.` : ""}${pas.length ? ` ${pas.join(" ")}` : ""}${res.length ? ` ${res.join(", ")}.` : ""}`;
 }
-/** What an upgrade does to one ability, in numbers. */
-function upText(id: string, run?: RogueRun, cls?: string): string {
-  const a = c.abilities.get(id)!, up = upgraded(c, id);
-  if (up.cooldown !== a.cooldown) return `${up.name}: every ${Math.round(up.cooldown)} ticks instead of ${Math.round(a.cooldown)}.`;
-  const st = run && cls ? statsOf(run, cls) : null;
-  const was = st ? sizeOf(a, st) : "", now = st ? sizeOf(up, st) : "";
-  return `${up.name}: 40% more of what it deals, heals, shields or stacks${was && now && was !== now ? ` (${was} becomes ${now})` : ""}.`;
+/** Step 5i: what a training does, in the content's words: an ability to learn, or a power step's or a version's card. */
+function upText(opt: string): string {
+  const t = parseTraining(opt);
+  if (!t) return opt;
+  const w = trainingText(c, t);
+  return t.verb === "learn" ? `learn ${w.name}: ${w.text}` : `${w.name}, ${w.what}: ${w.text}`;
 }
 const counts = (enemies: string[]) => {
   const m = new Map<string, number>();
@@ -332,9 +331,11 @@ function partyWords(run: RogueRun): string {
     const seatNo = run.party.indexOf(m.cls);
     const s = fighterOf(run, m.cls).stats;
     out.push(`${m.cls} (${k.name})${seatNo >= 0 ? `, slot ${seatNo + 1} ${f.positions[seatNo].name}` : ", at camp"}: ${vit(run, m.cls)}. Attack ${pts(s.attack)}, Magic ${pts(s.magic)}, Armor ${pts(s.armor)}, Crit ${s.crit_chance}%, Aggro ${Math.round(s.aggro)}, MP regen ${pts(s.mp_regen)}.`);
-    for (const slot of ["weapon", "armor", "amulet"] as Slot[]) out.push(`  ${slot}: ${m.gear[slot] ? itemWords(itemOf(run, m.gear[slot]!)!) : "nothing"}`);
+    for (const slot of ["weapon", "armor", "offhand", "amulet"] as Slot[]) out.push(`  ${slot}: ${m.gear[slot] ? itemWords(itemOf(run, m.gear[slot]!)!) : "nothing"}`);
+    // Step 5i: a trained ability plays as its form.
+    const ab = (a: string) => c.abilities.get(formOf(m, a)) ?? c.abilities.get(a)!;
     const left = m.known.filter((a) => !m.order.includes(a));
-    out.push(`  abilities, in slot order: ${m.order.map((a, i) => `${a} (${c.abilities.get(a)!.name}, MP ${c.abilities.get(a)!.mp ?? 0}, every ${Math.round(c.abilities.get(a)!.cooldown)} ticks, first ready about t${Math.max(0, Math.round(c.abilities.get(a)!.cooldown - headStart(c.pack.ruleset.opening, c.abilities.get(a)!.cooldown, i)))}${sizeOf(c.abilities.get(a)!, s) ? `; ${sizeOf(c.abilities.get(a)!, s)}` : ""})`).join("; ") || "none"}${left.length ? `. Left out of fights: ${left.join(", ")}` : ""}${unlearned(c, m).length ? `. Not learned yet: ${unlearned(c, m).join(", ")}` : ""}.`);
+    out.push(`  abilities, in slot order: ${m.order.map((a, i) => `${formOf(m, a)} (${ab(a).name}, MP ${ab(a).mp ?? 0}, every ${Math.round(ab(a).cooldown)} ticks, first ready about t${Math.max(0, Math.round(ab(a).cooldown - headStart(c.pack.ruleset.opening, ab(a).cooldown, i)))}${sizeOf(ab(a), s) ? `; ${sizeOf(ab(a), s)}` : ""})`).join("; ") || "none"}${left.length ? `. Left out of fights: ${left.join(", ")}` : ""}${unlearned(c, m).length ? `. Not learned yet: ${unlearned(c, m).join(", ")}` : ""}.`);
     out.push(`  can use: ${k.weapons.join(", ")}; ${k.armor} armor or lighter.`);
   }
   out.push("", "Formations owned:", ...run.formations.map((id) => { const fm = c.formations.get(id)!; return `  ${id}${id === run.formation ? " (in use)" : ""}: ${fm.text}${fm.positions.map((p, k) => ` Slot ${k + 1} ${p.name}: ${codes(p.stats) || "no change"}.`).join("")}`; }));
@@ -432,11 +433,11 @@ if (cmd === "new") {
     case "formation": { const before = vits(run); out = canManage(run) && setFormation(c, run, rest[0]) ? `Formation: ${rest[0]}.${moved(before, run)}` : "Not owned, or not now."; break; }
     case "seat": { const before = vits(run); out = canManage(run) && rest[0] && seat(c, run, rest[0].split(",")) ? `Seats: ${run.party.join(", ")}.${moved(before, run)}` : "Name the same party members, in the new order, with commas: seat <a,b,c>."; break; }
     case "order": {
-      // Base ids find their upgrades (sanctuary finds sanctuary_plus); "none" brings no ability at all. Names separated by
-      // spaces were read as one list and left the rest out silently (a playtester): commas only.
+      // "none" brings no ability at all (step 5i: known abilities are base ids; a trained one plays as its form). Names separated
+      // by spaces were read as one list and left the rest out silently (a playtester): commas only.
       if (rest.length > 2) { out = "Use commas, no spaces: order <class> <ability,ability,...> (or none)."; break; }
       const m = member(run, rest[0]);
-      const ids = !m || rest[1] === "none" ? [] : (rest[1] ?? "").split(",").filter(Boolean).map((a) => (m.known.includes(a) ? a : m.known.includes(`${a}_plus`) ? `${a}_plus` : a));
+      const ids = !m || rest[1] === "none" ? [] : (rest[1] ?? "").split(",").filter(Boolean).map((a) => a);
       out = canManage(run) && setOrder(run, rest[0], ids) ? `Order: ${ids.join(", ") || "none"}.${m && m.known.some((a) => !ids.includes(a)) ? ` Left out of fights: ${m.known.filter((a) => !ids.includes(a)).join(", ")}.` : ""}` : "Name known abilities once each, in slot order (ids from party); any left out aren't brought to fights.";
       break;
     }
