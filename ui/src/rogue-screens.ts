@@ -6,7 +6,7 @@
  */
 import {
   actRoll, bench, bossFoes, canManage, choose, discard, dismiss, eventView as eventOfRun, equip, formationRarity, itemGear, itemOf, leaderKnown, learnOptions, member, options, reachable,
-  bagRoom, rogue, seat, seatsOf, sellPrice, setFormation, setOrder, swap, trainOptions, trainPrice, unlearned, upgraded, upgradeOptions, useSupply, wearer, type Item, type MapNode, type Offer, type RogueRun,
+  bagRoom, rogue, seat, seatsOf, sellPrice, setFormation, setOrder, swap, trainOptions, trainPrice, improveOptions, parseTraining, passiveOf, formOf, trainingText, useSupply, wearer, type Item, type MapNode, type Offer, type RogueRun, type Training,
 } from "../../src/rogue.js";
 import { canEquip } from "../../src/validate.js";
 import { plainWeapon } from "../../src/sim/parties.js";
@@ -63,7 +63,7 @@ const KIND_TEXT: Record<RogueNodeKindT, string> = {
 const SUPPLY_ICON: Record<string, Cell> = { potion: [21, 7], tonic: [20, 7], phoenix: [21, 14] };
 const SUPPLY_TEXT: Record<string, string> = { potion: "ONE MEMBER +30% HP", tonic: "ONE MEMBER +50% MP", phoenix: "A FALLEN MEMBER UP, 50% HP" };
 const held = (run: RogueRun, id: string) => run.supplies.filter((x) => x === id).length;
-/** Step 5j: mythic in crimson, the director's pick (none is offered yet). */
+/** Step 5j: mythic in crimson, the director's pick (step 5i: offered in the boss's boons that open acts II and III). */
 const RARITY_CLASS: Record<string, string> = { common: "", uncommon: "good", rare: "buff", legendary: "gold", mythic: "mythic" };
 const ROMAN = ["", "I", "II", "III", "IV"];
 const gold = (n: number) => h("span", { class: "gold" }, `${n}G`);
@@ -94,14 +94,8 @@ function fitsLine(run: RogueRun, g: GearT, rarity?: string): HTMLElement {
   const would = c.pack.classes.filter((k) => canEquip(k, g)).map((k) => shortName(k.id));
   return h("div", { class: "line small debuff wrap" }, tag, `NOBODY CAN USE IT YET · ${would.slice(0, 5).join(", ")}${would.length > 5 ? "…" : ""}`);
 }
-/** What an upgrade changes, in this member's numbers where it has some ("9 PHYSICAL + SILENCE → 13 PHYSICAL + SILENCE"). */
-function upText(id: string, run?: RogueRun, cls?: string): string {
-  const a = c.abilities.get(id)!, up = upgraded(c, id);
-  if (up.cooldown !== a.cooldown) return `Every ${Math.round(up.cooldown)} ticks instead of ${Math.round(a.cooldown)}.`;
-  const st = run && cls ? fighter(run, cls).stats : null;
-  const was = st ? sizeText(sizeParts(a, st)) : "", now = st ? sizeText(sizeParts(up, st)) : "";
-  return was && now && was !== now ? `${was} → ${now}` : "+40%";
-}
+/** Step 5i: a training's button word: LEARN, POWER, or the version (A or B). */
+const trainWord = (opt: string) => { const t = parseTraining(opt); return t?.verb === "learn" ? "LEARN" : t?.verb === "power" ? "POWER" : `VERSION ${t?.version?.toUpperCase() ?? ""}`; };
 /** An offer as a card's body. */
 function offerBody(run: RogueRun, o: Offer): Child[] {
   // Round 6 (the director's: "an unknown reward, or even bundles"): a sealed piece shows only its slot; a bundle, its piece and its supply.
@@ -509,8 +503,8 @@ function shopView(run: RogueRun): Child[] {
   } else if (shopTab === "train") {
     const lp = trainPrice(c, p, "learn"), up = trainPrice(c, p, "upgrade");
     const entries: TrainEntry[] = [
-      ...(p.learn ? learnOptions(c, run).map((o) => { const [cl, ab] = o.split(":"); return { cls: cl, ab, up: false, label: `LEARN ${lp}G`, onClick: opts.includes(`learn:${o}`) ? () => pickOrSave(run, `learn:${o}`) : null }; }) : []),
-      ...(p.upgrade ? upgradeOptions(run).map((o) => { const [cl, ab] = o.split(":"); return { cls: cl, ab, up: true, label: `+ ${up}G`, onClick: opts.includes(`upgrade:${o}`) ? () => pickOrSave(run, `upgrade:${o}`) : null }; }) : []),
+      ...(p.learn ? learnOptions(c, run).map((o) => ({ opt: `learn:${o}`, label: `LEARN ${lp}G`, onClick: opts.includes(`learn:${o}`) ? () => pickOrSave(run, `learn:${o}`) : null })) : []),
+      ...(p.upgrade ? improveOptions(c, run).map((o) => ({ opt: o, label: `${trainWord(o)} ${up}G`, onClick: opts.includes(o) ? () => pickOrSave(run, o) : null })) : []),
     ];
     list.push(...trainPicker(run, entries));
   } else {
@@ -527,44 +521,49 @@ function shopView(run: RogueRun): Child[] {
     actions(button("LEAVE", () => { shopTab = "buy"; pickOrSave(run, "leave"); }, "hi"), button("PARTY", () => go("rparty"))),
   ];
 }
-/** One thing training can do: a member learns an ability, or makes one better (+). */
-type TrainEntry = { cls: string; ab: string; up: boolean; label: string; onClick: (() => void) | null };
+/** One thing training can do (step 5i: learn an ability, or a power step or a version), as its option's id, with its button. */
+type TrainEntry = { opt: string; label: string; onClick: (() => void) | null };
 /**
  * Step 5h (the director's: "a nested menu rather than a flat list"): training in two levels, the same everywhere it happens.
- * First the roster, each member with how many things it can learn or make better; then one member's abilities and passive,
- * each with what can be done to it. Step 5i gives every ability and passive two upgrades to pick between.
+ * First the roster, each member with how many things it can learn or train; then one member's abilities and passive, each with
+ * what can be done to it. Step 5i: every ability and passive with an upgrade has a power step and two versions to pick between.
+ * (The interface share builds the real screen; this is the least that plays.)
  */
 let trainWho: string | null = null;
 function trainPicker(run: RogueRun, entries: TrainEntry[]): Child[] {
-  const who = [...new Set(entries.map((e) => e.cls))];
+  const es = entries.map((e) => ({ ...e, t: parseTraining(e.opt) })).filter((e): e is TrainEntry & { t: Training } => !!e.t);
+  const who = [...new Set(es.map((e) => e.t.cls))];
   if (trainWho && !who.includes(trainWho)) trainWho = null;
   if (!who.length) return [h("div", { class: "line dim" }, "NOTHING LEFT TO TRAIN")];
   if (!trainWho) return run.roster.filter((m) => who.includes(m.cls)).map((m) => {
-    const es = entries.filter((e) => e.cls === m.cls);
-    const learn = es.filter((e) => !e.up).length, up = es.filter((e) => e.up).length;
+    const mine = es.filter((e) => e.t.cls === m.cls);
+    const learn = mine.filter((e) => e.t.verb === "learn").length, up = mine.length - learn;
     return h("div", { class: "member wide", onClick: () => { trainWho = m.cls; redraw(); } }, faceEl(m.cls),
       h("div", { class: "stats" }, h("div", { class: "name" }, shortName(m.cls), h("span", { class: "dim small" }, run.party.includes(m.cls) ? " · PARTY" : " · CAMP")),
-        h("div", { class: "small dim" }, [learn ? `${learn} TO LEARN` : "", up ? `${up} TO MAKE BETTER` : ""].filter(Boolean).join(" · "))),
+        h("div", { class: "small dim" }, [learn ? `${learn} TO LEARN` : "", up ? `${up} TO TRAIN` : ""].filter(Boolean).join(" · "))),
       h("span", { class: "cursor" }, "▶"));
   });
   const m = member(run, trainWho);
   const k = c.classes.get(trainWho)!;
   const rows: Child[] = [h("div", { class: "line", style: "cursor:pointer", onClick: () => { trainWho = null; redraw(); } }, h("span", { class: "dim" }, "◀ "), faceEl(trainWho), h("span", { class: "hi grow" }, shortName(trainWho)))];
+  const on = (id: string) => es.filter((e) => e.t.cls === trainWho && e.t.id === id);
   for (const a of k.abilities) {
-    const known = m.known.find((x) => x === a || x === `${a}_plus`);
-    const es = entries.filter((e) => e.cls === trainWho && (e.ab === a || e.ab === known));
-    if (!es.length) rows.push(h("div", { class: "ab dimmed" }, h("div", { class: "head" }, h("span", { class: "grow trunc" }, `${c.abilities.get(known ?? a)!.name.toUpperCase()}`), h("span", { class: "dim small" }, known?.endsWith("_plus") ? "DONE" : ""))));
-    else rows.push(...es.map((e) => trainRow(run, e.cls, e.ab, e.label, e.onClick, e.up)));
+    if (!on(a).length) rows.push(h("div", { class: "ab dimmed" }, h("div", { class: "head" }, h("span", { class: "grow trunc" }, (c.abilities.get(formOf(m, a)) ?? c.abilities.get(a)!).name.toUpperCase()), h("span", { class: "dim small" }, m.known.includes(a) ? "DONE" : ""))));
+    else rows.push(...on(a).map((e) => trainRow(run, e.t, e.label, e.onClick)));
   }
-  rows.push(section("PASSIVE"), h("div", { class: "ab dimmed" }, h("div", { class: "head" }, h("span", { class: "grow trunc" }, (k.passive?.name ?? "Einherjar").toUpperCase()), h("span", { class: "dim small" }, "NO UPGRADES YET"))));
+  const pid = passiveOf(c, trainWho);
+  rows.push(section("PASSIVE"));
+  if (pid && on(pid).length) rows.push(...on(pid).map((e) => trainRow(run, e.t, e.label, e.onClick)));
+  else rows.push(h("div", { class: "ab dimmed" }, h("div", { class: "head" }, h("span", { class: "grow trunc" }, (k.passive?.name ?? "Einherjar").toUpperCase()), h("span", { class: "dim small" }, pid ? "DONE" : "NO UPGRADES YET"))));
   return rows;
 }
-function trainRow(run: RogueRun, cls: string, ab: string, label: string, onClick: (() => void) | null, up = false): HTMLElement {
-  const a = c.abilities.get(ab)!;
+function trainRow(run: RogueRun, t: Training, label: string, onClick: (() => void) | null): HTMLElement {
+  const w = trainingText(c, t);
+  const a = t.verb === "learn" ? c.abilities.get(t.id) : undefined;
   return h("div", { class: "ab" },
-    h("div", { class: "head" }, faceEl(cls), h("span", { class: "grow trunc" }, `${shortName(cls)}: ${a.name.toUpperCase()}${up ? "+" : ""}`), onClick ? button(label, onClick, "sm hi") : h("span", { class: "dim small" }, label)),
-    h("div", { class: "body" }, up ? upText(ab, run, cls) : a.text, run.party.includes(cls) ? "" : " (at camp)"),
-    up ? null : sizeEl(sizeParts(a, fighter(run, cls).stats)));
+    h("div", { class: "head" }, faceEl(t.cls), h("span", { class: "grow trunc" }, `${shortName(t.cls)}: ${w.name.toUpperCase()}${t.verb === "learn" ? "" : ` · ${w.what.toUpperCase()}`}`), onClick ? button(label, onClick, "sm hi") : h("span", { class: "dim small" }, label)),
+    h("div", { class: "body" }, w.text, run.party.includes(t.cls) ? "" : " (at camp)"),
+    a ? sizeEl(sizeParts(a, fighter(run, t.cls).stats)) : null);
 }
 
 // ─── The campfire ──────────────────────────────────────────────────────────
@@ -638,7 +637,7 @@ function chooseView(run: RogueRun): Child[] {
   const title = p.what === "learn" ? "WHO LEARNS?" : p.what === "upgrade" ? "WHICH ABILITY?" : p.risk ? "WHICH PIECE? IT MAY CRACK" : p.from?.length === 1 && p.from[0] === "rare" ? "REFORGE WHICH?" : "TEMPER WHICH?";
   const rows: Child[] = p.what === "temper"
     ? opts.map((uid) => itemRow(run, itemOf(run, uid)!, () => pickOrSave(run, uid), { arrow: true }))
-    : trainPicker(run, opts.map((o) => { const [cl, ab] = o.split(":"); return { cls: cl, ab, up: p.what === "upgrade", label: p.what === "learn" ? "LEARN" : "+", onClick: () => { trainWho = null; pickOrSave(run, o); } }; }));
+    : trainPicker(run, opts.map((o) => { const opt = p.what === "learn" ? `learn:${o}` : o; return { opt, label: trainWord(opt), onClick: () => { trainWho = null; pickOrSave(run, o); } }; }));
   return [header(title, () => go("home")), win("scroll", ...rows)];
 }
 
@@ -671,7 +670,7 @@ function roomView(run: RogueRun): Child[] {
 function trainView(run: RogueRun): Child[] {
   const p = run.pending;
   if (p.kind !== "train") return [];
-  const entries: TrainEntry[] = trainOptions(c, run, p.done).map((o) => { const [verb, cl, ab] = o.split(":"); return { cls: cl, ab, up: verb === "upgrade", label: verb === "upgrade" ? "+" : "LEARN", onClick: () => { trainWho = null; pickOrSave(run, o); } }; });
+  const entries: TrainEntry[] = trainOptions(c, run, p.done).map((o) => ({ opt: o, label: trainWord(o), onClick: () => { trainWho = null; pickOrSave(run, o); } }));
   return [
     header(p.why === "captive" || p.why === "stranger" ? "A LESSON" : "TRAINING", () => go("home"), h("span", { class: "dim" }, `${p.left} TO GO`)),
     win("scroll", ...trainPicker(run, entries)),
@@ -689,17 +688,18 @@ function levelView(run: RogueRun): Child[] {
   const cls = p.queue[0];
   const m = member(run, cls);
   const opts = options(c, run);
-  const learn = opts.filter((a) => unlearned(c, m).includes(a));
-  const up = opts.filter((a) => !learn.includes(a) && a !== "gold");
+  // Step 5i: the options are trainings (learn, a power step, a version), or gold.
+  const learn = opts.filter((o) => parseTraining(o)?.verb === "learn");
+  const up = opts.filter((o) => !learn.includes(o) && o !== "gold");
   return [
     header("LEVEL UP", () => go("home"), h("span", { class: "dim" }, `${p.queue.length} TO GO`)),
     scene(run, `level:${cls}`, { h: 80, actors: [{ kind: "hero", ref: cls, x: 135, y: 74, pose: "victory", weapon: m.gear.weapon ?? undefined }], sparkle: { x: 135, y: 50, strip: "status1" } }),
     win("", classHead(cls, undefined, m.gear.weapon)),
     win("scroll",
       learn.length ? section("LEARN") : null,
-      ...learn.map((a) => h("div", { onClick: () => pickOrSave(run, a), style: "cursor:pointer" }, abilityBlock(c.abilities.get(a)!, fighter(run, cls).stats, setup.settings.designer))),
-      up.length ? section("MAKE BETTER (+)") : null,
-      ...up.map((a) => h("div", { onClick: () => pickOrSave(run, a), style: "cursor:pointer" }, trainRow(run, cls, a, "+", null, true))),
+      ...learn.map((o) => h("div", { onClick: () => pickOrSave(run, o), style: "cursor:pointer" }, abilityBlock(c.abilities.get(parseTraining(o)!.id)!, fighter(run, cls).stats, setup.settings.designer))),
+      up.length ? section("TRAIN") : null,
+      ...up.map((o) => h("div", { onClick: () => pickOrSave(run, o), style: "cursor:pointer" }, trainRow(run, parseTraining(o)!, trainWord(o), null))),
       opts.includes("gold") ? section("OR") : null,
       opts.includes("gold") ? row2(`${rogue(c).config.levelGold} GOLD`, "", () => pickOrSave(run, "gold")) : null),
   ];
@@ -811,7 +811,9 @@ export function runitScreen(arg?: unknown): Child[] {
   const fm = fighter(run, cls);
   const manage = canManage(run);
   const sp = specialLines(fm.stats);
-  const locked = c.classes.get(cls)!.abilities.filter((a) => !m.known.some((x) => x === a || x === `${a}_plus`));
+  const locked = c.classes.get(cls)!.abilities.filter((a) => !m.known.includes(a));
+  // Step 5i: a trained ability shows as its form.
+  const formAb = (a: string) => c.abilities.get(formOf(m, a)) ?? c.abilities.get(a)!;
   const onN = (i: number) => {
     if (!manage) return;
     if (orderPick === null) orderPick = i;
@@ -849,10 +851,10 @@ export function runitScreen(arg?: unknown): Child[] {
       }),
       canUse(cls),
       section("ABILITIES", manage && orderPick !== null ? h("span", { class: "hi" }, "SWAP · SAME: LEAVE OUT") : null),
-      ...m.order.map((a, i) => abilityBlock(c.abilities.get(a)!, fm.stats, setup.settings.designer, { n: i + 1, onN: () => onN(i), cur: orderPick === i, target: orderPick !== null })),
+      ...m.order.map((a, i) => abilityBlock(formAb(a), fm.stats, setup.settings.designer, { n: i + 1, onN: () => onN(i), cur: orderPick === i, target: orderPick !== null })),
       basicLine(weaponOf(c, fm.weapon), fm.stats, { ref: fm.weapon }),
       out.length ? section("LEFT OUT") : null,
-      ...out.map((a) => { const el = abilityBlock(c.abilities.get(a)!, fm.stats, setup.settings.designer); el.classList.add("dimmed"); el.addEventListener("click", () => bringBack(a)); return el; }),
+      ...out.map((a) => { const el = abilityBlock(formAb(a), fm.stats, setup.settings.designer); el.classList.add("dimmed"); el.addEventListener("click", () => bringBack(a)); return el; }),
       locked.length ? section("NOT LEARNED YET") : null,
       ...locked.map((a) => { const el = abilityBlock(c.abilities.get(a)!, fm.stats, false); el.classList.add("dimmed"); return el; }),
     ),

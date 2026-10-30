@@ -885,27 +885,11 @@ function checkRogue(pack: Pack, w: Walker, r: Report, rg: S.RogueT) {
     w.ref("classes", cls, `rogue.config.firstAbility.${cls}`, "class");
     if (!pack.classes.find((k) => k.id === cls)?.abilities.includes(ab)) r.error("rogue.ability", `rogue.config.firstAbility.${cls}`, `'${ab}' isn't one of ${cls}'s abilities`);
   });
-  // Step 5h: formation rarities name formations that exist; the act odds cover every act.
-  Object.keys(rg.config.formationRarity ?? {}).forEach((id) => w.ref("formations", id, `rogue.config.formationRarity.${id}`, "formation"));
+  // Step 5h: the act odds cover every act. Step 5i: a formation's rarity is its own (Formation.rarity), and the rogue has no loot of
+  // its own: its stock is the pack's pieces, each fixed at its rarity.
   if (rg.config.formationOdds && rg.config.formationOdds.length < acts) r.error("rogue.act", "rogue.config.formationOdds", `odds for ${rg.config.formationOdds.length} acts, but the config has ${acts}`);
   if (rg.config.recruits && rg.config.recruits.known.length < acts) r.error("rogue.act", "rogue.config.recruits.known", `odds for ${rg.config.recruits.known.length} acts, but the config has ${acts}`);
-  rg.gear.forEach((g, i) => g.statuses?.forEach((id, j) => w.ref("statuses", id, `rogue.gear[${i}].statuses[${j}]`, "status")));
-  rg.gear.forEach((g, i) => g.weapon?.kind && w.ref("weaponKinds", g.weapon.kind, `rogue.gear[${i}].weapon.kind`, "weapon kind"));
-  const all = new Set([...pack.gear.map((g) => g.id), ...rg.gear.map((g) => g.id)]);
-  rg.gear.forEach((g, i) => pack.gear.some((x) => x.id === g.id) && r.error("rogue.gear", `rogue.gear[${i}]`, `'${g.id}' is also in pack.gear`));
-  rg.legendaries.forEach((id, i) => !all.has(id) && r.error("rogue.legendary", `rogue.legendaries[${i}]`, `no gear '${id}'`));
-  // Every piece is aimed at classes that exist and can wear it; every legendary has an aim.
-  const gearOf = (id: string) => pack.gear.find((g) => g.id === id) ?? rg.gear.find((g) => g.id === id);
-  for (const [id, classes] of Object.entries(rg.aims ?? {})) {
-    if (!rg.legendaries.includes(id)) r.error("rogue.aim", `rogue.aims.${id}`, `'${id}' isn't a legendary piece`);
-    const g = gearOf(id);
-    classes.forEach((cls, j) => {
-      const k = pack.classes.find((x) => x.id === cls);
-      if (!k) return void r.error("rogue.aim", `rogue.aims.${id}[${j}]`, `no class '${cls}'`);
-      if (g && !canEquip(k, g)) r.error("rogue.aim", `rogue.aims.${id}[${j}]`, `'${cls}' can't wear '${id}'`);
-    });
-  }
-  if (rg.aims) rg.legendaries.forEach((id) => !rg.aims![id] && r.warn("rogue.aim", `rogue.aims`, `'${id}' isn't aimed at anyone`));
+  (rg.config.boon.mythic ?? []).forEach((a, i) => (a < 2 || a > acts) && r.error("rogue.act", `rogue.config.boon.mythic[${i}]`, `act ${a} opens with no boss's boon before it (acts 2 to ${acts} do)`));
 }
 
 /**

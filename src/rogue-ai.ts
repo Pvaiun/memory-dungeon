@@ -4,17 +4,19 @@
  * a fast, steady player whose win rate measures the run's difficulty, and whose dials (skill, greed, random picks)
  * measure what each decision is worth.
  *
- * Gear goes by the campaign's kit weights (src/sim/kits.ts); a legendary piece's status by a small table of what it
- * multiplies for each class. Class values start as rules of thumb and are replaced by what the simulations measure.
+ * Gear goes by the campaign's kit weights (src/sim/kits.ts) for its stats and swing, plus a step for its rarity (step 5i: a
+ * plain, generic reading, with no table of pieces); formations by their seats' stats and rarity; trainings by a few flat values.
+ * Class values start as rules of thumb and are replaced by what the simulations measure.
  */
 import type { Content } from "./engine/run.js";
 import { int, next, rngFor, type Rng } from "./engine/rng.js";
 import { PROFILES, scoreGear } from "./sim/kits.js";
-import { canEquip } from "./validate.js";
+import { canEquip, handsOf } from "./validate.js";
 import {
-  bench, choose, equip, trainPrice, itemGear, learnOptions, maxOf, member, options, registerGear, reachable, rogue, seat, setFormation, swap,
-  useSupply, wearer, type Item, type MapNode, type Offer, type RogueRun, type Slot, SLOT_LIST,
+  bench, choose, equip, formationRarity, trainPrice, itemGear, learnOptions, maxOf, member, options, parseTraining, registerGear, reachable, seat, setFormation, swap,
+  twoHanded, useSupply, wearer, type Item, type MapNode, type Offer, type RogueRun, type Slot, SLOT_LIST,
 } from "./rogue.js";
+import type { RarityT } from "./schema.js";
 
 export type Dials = {
   /** Elite appetite: 0 avoids elites, 1 takes them when healthy, 2 seeks them. */
@@ -27,7 +29,7 @@ export type Dials = {
   noGear: boolean;
   /** Never trades a fallen member for one at camp between rooms (the rule before round 25), to price it. */
   noBenchSwap?: boolean;
-  /** A piece (by base id) kept on whichever party member it suits best, all run: to price a legendary's rule. */
+  /** A piece (by base id) kept on whichever party member it suits best, all run: to price a piece's rule. */
   lock?: string;
   /** Class values, by id, in gear steps. */
   classValue: Record<string, number>;
@@ -47,43 +49,17 @@ const WALLS = new Set(["knight", "hoplite", "bramble_knight", "paladin", "geoman
 const HEALERS = new Set(["cleric", "valkyrie", "bramble_knight", "vampire"]);
 const CASTERS = new Set(["cleric", "paladin", "hexer", "frostweaver", "stormcaller", "geomancer", "pyromancer"]);
 
-/** What a legendary piece's status is worth to a class, in gear steps. */
-function statusValue(cls: string, id: string): number {
-  const p = PROFILES[cls];
-  const basic = p?.basic ?? 1;
-  const dmg = Math.max(p?.w.attack ?? 0, p?.w.magic ?? 0, 1);
-  const wall = WALLS.has(cls) ? 1 : 0;
-  switch (id) {
-    // Raised with the legendary pass (tuning round 27).
-    case "lg_ember": case "lg_rime": case "lg_sunder": case "lg_song": return 1.8 * basic;
-    case "lg_cleave": return 1.6 * basic;
-    case "lg_storm": return 2.2 * basic;
-    case "lg_wounds": return 1.5 + 1.0 * (p?.w.crit_chance ?? 0);
-    case "lg_judge": return 1.0 * dmg;
-    case "lg_execute": return 1.4 * dmg;
-    case "lg_fury": return 1.3 * dmg;
-    case "lg_hunter": case "lg_cinder": return 1.2 * dmg;
-    case "lg_brittle": return 1.0 * dmg;
-    case "lg_lantern": return 2.5 + wall;
-    case "lg_soul": return CASTERS.has(cls) ? 3.5 : 2;
-    case "lg_banner": return 4.5;
-    case "lg_hourglass": return 3.5;
-    case "lg_horn": return 3.5;
-    case "lg_bell": return CASTERS.has(cls) ? 2 : 1.5;
-    case "lg_idol": return cls === "geomancer" ? 4 : cls === "knight" ? 2.5 : 1.5;
-    case "lg_coil": case "lg_frost": case "lg_briar": return 1.2 + 2 * wall;
-    case "lg_spikes": return 0.8 + 3 * wall;
-    case "lg_shade": return WALLS.has(cls) ? 0 : 2.5;
-    case "lg_grave": return 2.5;
-    default: return 0;
-  }
-}
+/**
+ * Step 5i: what a piece's rarity adds, in gear steps, on top of its stats: a plain, generic reading of its effect (pieces below
+ * legendary carry effects too; a mythic rewrites a class). No table of pieces: the simulated player isn't tuned on.
+ */
+export const RARITY_VALUE: Record<RarityT, number> = { common: 0, uncommon: 0.8, rare: 1.6, legendary: 2.5, mythic: 3.5 };
 
-/** How much a piece is worth to a class, in gear steps: its stats and swing by the kit weights, its statuses by the table. */
+/** How much a piece is worth to a class, in gear steps: its stats and swing by the kit weights, and its rarity. */
 export function itemValue(c: Content, cls: string, uid: string): number {
   const g = c.gear.get(uid)!;
   if (!canEquip(c.classes.get(cls)!, g)) return -Infinity;
-  return scoreGear(c, cls, uid, "plain") + (g.statuses ?? []).reduce((s, id) => s + statusValue(cls, id), 0);
+  return scoreGear(c, cls, uid, "plain") + RARITY_VALUE[g.rarity ?? "common"];
 }
 
 // ─── Gear: who wears what ──────────────────────────────────────────────────
@@ -104,16 +80,20 @@ export function kitUp(c: Content, run: RogueRun, lock?: string): number {
     if (who) equip(c, run, who, g.slot as Slot, locked.uid);
   }
   // Start from nothing but weapons, then fill: a weapon slot can't be empty, so weapons go first.
+  // Step 5i: a two-handed weapon costs what the offhand it empties was worth, and an offhand under one isn't tried; a move the
+  // rules refuse is set aside, not the end of the kitting.
+  const refused = new Set<string>();
   for (let moves = 0; moves < 300; moves++) {
     let best: { cls: string; slot: Slot; uid: string; gain: number } | null = null;
     for (const cls of order) {
       const m = member(run, cls);
       const w = run.party.includes(cls) ? 1 : 0.3;
       for (const slot of SLOT_LIST) {
+        if (slot === "offhand" && twoHanded(c, m)) continue;
         const cur = val(cls, m.gear[slot]);
         if (locked && m.gear[slot] === locked.uid) continue;
         for (const it of run.items) {
-          if (m.gear[slot] === it.uid || it === locked) continue;
+          if (m.gear[slot] === it.uid || it === locked || refused.has(`${cls}:${it.uid}`)) continue;
           const g = c.gear.get(it.uid)!;
           if (g.slot !== slot) continue;
           const v = val(cls, it.uid);
@@ -124,20 +104,23 @@ export function kitUp(c: Content, run: RogueRun, lock?: string): number {
           const back = holder && was && canEquip(c.classes.get(holder)!, c.gear.get(was)!) ? val(holder, was) : 0;
           if (holder && slot === "weapon" && !back && !(was && canEquip(c.classes.get(holder)!, c.gear.get(was)!))) continue;
           const loss = holder ? (run.party.includes(holder) ? 1 : 0.3) * (val(holder, it.uid) - back) : 0;
-          const gain = w * (v - cur) - loss;
+          const emptied = slot === "weapon" && handsOf(c.pack, g) === 2 ? val(cls, m.gear.offhand) : 0;
+          const gain = w * (v - cur - emptied) - loss;
           if (gain > 0.05 && (!best || gain > best.gain)) best = { cls, slot, uid: it.uid, gain };
         }
       }
     }
     if (!best) break;
-    if (!equip(c, run, best.cls, best.slot, best.uid)) break;
+    if (!equip(c, run, best.cls, best.slot, best.uid)) refused.add(`${best.cls}:${best.uid}`);
   }
   return run.party.reduce((s, cls) => s + SLOT_LIST.reduce((t, slot) => t + val(cls, member(run, cls).gear[slot]), 0), 0);
 }
 
 // ─── Formation and seats ───────────────────────────────────────────────────
 
-const EFFECT_VALUE: Record<string, number> = { blitz: 3, caravan: 3, last_stand: 1, escort: 1.5 };
+/** Step 5i: what a formation's rarity adds, in gear steps, on top of its seats' stats (a generic reading of its effect). Neutral adds nothing. */
+const FORMATION_VALUE: Record<string, number> = { common: 0.8, rare: 1.6, legendary: 2.5 };
+const formationValue = (c: Content, id: string) => (id === "neutral" ? 0 : FORMATION_VALUE[formationRarity(c, id)]);
 function slotValue(c: Content, cls: string, stats: { stat: string; flat?: number }[] | undefined): number {
   const p = PROFILES[cls];
   let n = 0;
@@ -157,8 +140,7 @@ export function arrange(c: Content, run: RogueRun) {
   for (const fid of run.formations) {
     const f = c.formations.get(fid)!;
     for (const order of perms(run.party)) {
-      let v = order.reduce((s, cls, i) => s + slotValue(c, cls, f.positions[i]?.stats), 0) + (EFFECT_VALUE[fid] ?? 0);
-      if (fid === "last_stand" && living < 3) v -= 1;
+      const v = order.reduce((s, cls, i) => s + slotValue(c, cls, f.positions[i]?.stats), 0) + formationValue(c, fid) * (living / 3);
       if (v > best.v + 1e-9) best = { f: fid, order, v };
     }
   }
@@ -199,6 +181,14 @@ function recruitValue(d: Dials, run: RogueRun, cls: string): number {
 }
 /** A learned ability, in gear steps: a third of a class's kit. */
 const ABILITY_VALUE = 4;
+/** Step 5i: a power step or a version, in gear steps: about half a learned ability. */
+const TRAIN_VALUE = 2;
+/** A training (an option's id), in gear steps: learning, else a power step or a version; for a member at camp, less. */
+function trainingValue(run: RogueRun, opt: string): number {
+  const t = parseTraining(opt);
+  if (!t) return 0;
+  return (t.verb === "learn" ? ABILITY_VALUE : t.verb === "power" ? TRAIN_VALUE + 0.1 : TRAIN_VALUE) * (run.party.includes(t.cls) ? 1 : 0.4);
+}
 function offerValue(c: Content, d: Dials, run: RogueRun, o: Offer): number {
   if (o.kind === "gear") {
     if (d.noGear) return 0.3;
@@ -214,7 +204,7 @@ function offerValue(c: Content, d: Dials, run: RogueRun, o: Offer): number {
   if (o.kind === "bundle") return offerValue(c, d, run, { kind: "gear", item: o.item }) + 0.8;
   if (o.kind === "tome") return run.party.includes(o.cls) ? ABILITY_VALUE : 1.5;
   if (o.kind === "recruit") return recruitValue(d, run, o.cls) + ((o.known?.length ?? 1) - 1) * 1.5 + (o.item ? 1 : 0);
-  if (o.kind === "formation") return 2;
+  if (o.kind === "formation") return 1 + formationValue(c, o.id);
   if (o.kind === "seat") return 2.5;
   return o.id === "phoenix" ? 1.8 : 1.4;
 }
@@ -340,9 +330,7 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
       }
       case "train": {
         const t = opts.filter((o) => o !== "done" && o !== "back");
-        const learnP = t.filter((o) => o.startsWith("learn:") && run.party.includes(o.split(":")[1]));
-        const upP = t.filter((o) => o.startsWith("upgrade:") && run.party.includes(o.split(":")[1]));
-        return learnP[0] ?? upP[0] ?? t[0] ?? (opts.includes("done") ? "done" : "back");
+        return t.length ? pickTraining(c, run, t) : opts.includes("done") ? "done" : "back";
       }
       case "shop": return shopPick(c, d, run, opts);
       case "campfire": return campfirePick(c, d, run, opts);
@@ -353,18 +341,25 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
           for (const uid of opts) { const w = wearer(run, uid); const v = (w && run.party.includes(w) ? 2 : 0) + (itemOf2(run, uid)?.rarity === "uncommon" ? 1 : 0); if (v > bv) (bv = v), (best = uid); }
           return best;
         }
-        return pickTraining(c, run, opts);
+        return p.what === "learn" ? pickTraining(c, run, opts.map((o) => `learn:${o}`)).slice(6) : pickTraining(c, run, opts);
       }
-      case "levelup": return opts[0];
+      case "levelup": { const t = opts.filter((o) => o !== "gold"); return t.length ? pickTraining(c, run, t) : opts[0]; }
       case "region": return opts[0];
       default: return opts[0];
     }
   }
 
+  /**
+   * Step 5i: the training worth most (learning first, then a power step, then a version, a party member's before one at camp), in
+   * the options' order; between a version A and B, a coin.
+   */
   function pickTraining(c: Content, run: RogueRun, opts: string[]): string {
-    // A party member's ability first, in its class's order; an upgrade of a first ability otherwise.
-    const inParty = opts.filter((o) => run.party.includes(o.split(":")[0]));
-    return (inParty.length ? inParty : opts)[0];
+    let best = opts[0], bv = -Infinity;
+    for (const o of opts) {
+      const v = trainingValue(run, o) + (o.endsWith(":b") ? (next(rng) < 0.5 ? 0.01 : -0.01) : 0);
+      if (v > bv + 1e-9) (bv = v), (best = o);
+    }
+    return best;
   }
 
   function campfirePick(c: Content, d: Dials, run: RogueRun, opts: string[]): string {
@@ -417,9 +412,10 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
       } else if (verb === "learn") {
         if (!run.party.includes(rest[0])) continue;
         v = 4; price = trainPrice(c, p, "learn");
-      } else if (verb === "upgrade") {
+      } else if (verb === "power" || verb === "version") {
+        // Step 5i: a power step or a version, at the upgrade price.
         if (!run.party.includes(rest[0])) continue;
-        v = 2; price = trainPrice(c, p, "upgrade");
+        v = trainingValue(run, o); price = trainPrice(c, p, "upgrade");
       } else continue;
       // Gold has no other use than this: buy anything worth a gear step or more, the most value for the gold first.
       const ratio = v / Math.max(1, price);

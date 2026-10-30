@@ -8712,7 +8712,14 @@
    },
    "drill": {
     "offers": 2,
-    "train": 2
+    "train": 3
+   },
+   "lesson": 3,
+   "slots": {
+    "weapon": 30,
+    "offhand": 30,
+    "armor": 25,
+    "amulet": 15
    },
    "formationOdds": [
     {
@@ -8795,7 +8802,8 @@
       "recruit": 0,
       "sealed": 25,
       "bundle": 20
-     }
+     },
+     "extra": 70
     },
     "elite": {
      "count": 3,
@@ -8815,7 +8823,11 @@
    },
    "boon": {
     "count": 3,
-    "seat": false
+    "seat": false,
+    "mythic": [
+     2,
+     3
+    ]
    },
    "treasure": {
     "rarity": {
@@ -8874,9 +8886,9 @@
    },
    "shop": {
     "gear": {
-     "common": 2,
+     "common": 3,
      "uncommon": 2,
-     "rare": 1,
+     "rare": 2,
      "legendary": 1
     },
     "legendaryByAct": [
@@ -10166,9 +10178,6 @@
     ]
    }
   ],
-  "gear": [],
-  "legendaries": [],
-  "affixes": [],
   "events": [
    {
     "id": "wounded_traveller",
@@ -10189,11 +10198,11 @@
      {
       "id": "lesson",
       "label": "A LESSON",
-      "text": "Patched up, they show one of yours a trick before they go: one member learns an ability or makes one better.",
+      "text": "Patched up, they show yours a few tricks before they go: three members each learn an ability or train one.",
       "do": [
        {
         "op": "train",
-        "n": 1
+        "n": 3
        }
       ]
      },
@@ -10295,7 +10304,7 @@
      {
       "id": "temper",
       "label": "TEMPER A PIECE",
-      "text": "A piece of your choice gains a rarity: common to uncommon, uncommon to rare.",
+      "text": "A common or uncommon piece of yours becomes one of the next rarity, of its kind.",
       "do": [
        {
         "op": "temper"
@@ -10337,7 +10346,7 @@
      {
       "id": "polish",
       "label": "PAY 50 TO PRACTISE",
-      "text": "One member's ability gets better (+).",
+      "text": "One member trains an ability or its passive: a power step or a version.",
       "gold": 50,
       "do": [
        {
@@ -10556,11 +10565,11 @@
      {
       "id": "lesson",
       "label": "A LESSON",
-      "text": "They teach one of yours their drill and walk on: one member learns an ability or makes one better.",
+      "text": "They teach yours their drill and walk on: three members each learn an ability or train one.",
       "do": [
        {
         "op": "train",
-        "n": 1
+        "n": 3
        }
       ]
      },
@@ -10594,11 +10603,11 @@
        {
         "id": "lesson",
         "label": "A LESSON",
-        "text": "They teach one of yours their drill and walk on: one member learns an ability or makes one better.",
+        "text": "They teach yours their drill and walk on: three members each learn an ability or train one.",
         "do": [
          {
           "op": "train",
-          "n": 1
+          "n": 3
          }
         ]
        },
@@ -10634,11 +10643,11 @@
        {
         "id": "lesson",
         "label": "A LESSON",
-        "text": "They teach one of yours an officer's drill and walk on: one member learns an ability or makes one better.",
+        "text": "They teach yours an officer's drill and walk on: three members each learn an ability or train one.",
         "do": [
          {
           "op": "train",
-          "n": 1
+          "n": 3
          }
         ]
        },
@@ -11001,12 +11010,12 @@
      {
       "id": "train",
       "label": "TRAIN FOR 50",
-      "text": "Two members each learn an ability or make one better (+).",
+      "text": "Three members each learn an ability or train one.",
       "gold": 50,
       "do": [
        {
         "op": "train",
-        "n": 2
+        "n": 3
        }
       ]
      },
@@ -11027,12 +11036,12 @@
        {
         "id": "train",
         "label": "TRAIN FOR 50",
-        "text": "Two members each learn an ability or make one better (+).",
+        "text": "Three members each learn an ability or train one.",
         "gold": 50,
         "do": [
          {
           "op": "train",
-          "n": 2
+          "n": 3
          }
         ]
        },
@@ -11054,7 +11063,7 @@
        {
         "id": "train",
         "label": "TAKE THE DRILL",
-        "text": "Two members each learn an ability or make one better (+); everyone loses 15% of max HP.",
+        "text": "Three members each learn an ability or train one; everyone loses 15% of max HP.",
         "do": [
          {
           "op": "hp",
@@ -11062,7 +11071,7 @@
          },
          {
           "op": "train",
-          "n": 2
+          "n": 3
          }
         ]
        },
@@ -11084,7 +11093,7 @@
      {
       "id": "temper",
       "label": "TEMPER",
-      "text": "A common or uncommon piece of yours gains a rarity.",
+      "text": "A common or uncommon piece of yours becomes one of the next rarity, of its kind.",
       "gold": 40,
       "do": [
        {
@@ -11095,7 +11104,7 @@
      {
       "id": "reforge",
       "label": "REFORGE",
-      "text": "A rare piece of yours is reforged into a legendary of its slot.",
+      "text": "A rare piece of yours is reforged into a legendary of its kind.",
       "gold": 120,
       "do": [
        {
@@ -11124,7 +11133,7 @@
        {
         "id": "temper",
         "label": "TEMPER",
-        "text": "A common or uncommon piece of yours gains a rarity.",
+        "text": "A common or uncommon piece of yours becomes one of the next rarity, of its kind.",
         "gold": 40,
         "do": [
          {
@@ -11135,7 +11144,7 @@
        {
         "id": "reforge",
         "label": "REFORGE",
-        "text": "A rare piece of yours is reforged into a legendary of its slot.",
+        "text": "A rare piece of yours is reforged into a legendary of its kind.",
         "gold": 120,
         "do": [
          {
@@ -11165,7 +11174,7 @@
        {
         "id": "try",
         "label": "LET HIM TRY",
-        "text": "A piece of yours gains a rarity (a rare one becomes a legendary of its slot). Half the time it cracks and is lost.",
+        "text": "A piece of yours becomes one of the next rarity, of its kind (a rare one a legendary). Half the time it cracks and is lost.",
         "do": [
          {
           "op": "temper",
@@ -11318,11 +11327,11 @@
      {
       "id": "lesson",
       "label": "A LESSON",
-      "text": "Two members each learn an ability or make one better; he stays by the road.",
+      "text": "Three members each learn an ability or train one; he stays by the road.",
       "do": [
        {
         "op": "train",
-        "n": 2
+        "n": 3
        }
       ]
      }
@@ -11344,11 +11353,11 @@
        {
         "id": "lesson",
         "label": "A LESSON",
-        "text": "Two members each learn an ability or make one better; he stays by the road.",
+        "text": "Three members each learn an ability or train one; he stays by the road.",
         "do": [
          {
           "op": "train",
-          "n": 2
+          "n": 3
          }
         ]
        }
@@ -11373,11 +11382,11 @@
        {
         "id": "lesson",
         "label": "A LESSON",
-        "text": "One member learns an ability or makes one better.",
+        "text": "Three members each learn an ability or train one.",
         "do": [
          {
           "op": "train",
-          "n": 1
+          "n": 3
          }
         ]
        },
@@ -11892,11 +11901,11 @@
      {
       "id": "watch",
       "label": "WATCH",
-      "text": "One member learns an ability or makes one better from the champion's form.",
+      "text": "Three members each learn an ability or train one from the champion's form.",
       "do": [
        {
         "op": "train",
-        "n": 1
+        "n": 3
        }
       ]
      }
@@ -11918,11 +11927,11 @@
        {
         "id": "watch",
         "label": "WATCH",
-        "text": "One member learns an ability or makes one better from the champion's form.",
+        "text": "Three members each learn an ability or train one from the champion's form.",
         "do": [
          {
           "op": "train",
-          "n": 1
+          "n": 3
          }
         ]
        }
