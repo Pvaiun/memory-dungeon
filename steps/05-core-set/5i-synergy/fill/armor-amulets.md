@@ -9,7 +9,7 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the four armor types a
 - **Statuses at their own numbers** (`rules-and-vocabulary.md`): Guard (Armor +3,000, 28 ticks), Haste (+40% speed, 20 ticks), Taunt (20), Ward (Magic resist +40, 30), Hidden (10), Clarity (6% of max MP every 4 ticks for 16, 24% in all), Might (6% a stack, one spent an action, cap 15), Shield (a pool capped at half max HP). Burn, Chill and Shock as their table says. No piece here changes a status's size or scaling. A piece may apply a status for less than its own length, never more; "short" is half its length (ruling G1).
 - **Marked** (ruling G2): a debuff on a foe, 14 ticks, Refresh; the party's basic attacks pick a Marked foe (among several, by draw), within the Taunt rule. Used here only as one of Hexweave mail's debuffs.
 - **Flat stacks:** one 1, a few 2, several 4, many 7. Where a piece reads stacks off a stat, it says which.
-- **The counters this share needs** (each its own status, an icon with a number, ending with the fight):
+- **The counters this share needs** (each its own status, an icon with a number, ending with the fight; each gains at most one stack every 2 ticks, however many triggers fire: ruling G11):
   - **Spite** (Thornheart plate): +15 Thorns a stack, cap 20.
   - **Tempo** (Windrunner's garb): +5% speed a stack, as Haste (attacks, cooldowns, wind-ups), cap 10; each hit taken spends half.
   - **Heat** (Kindled robes; ruling G3, the same in every share): +3% damage a stack, up to 15, kept all fight. Like any boost, it never raises a status's own damage.
@@ -48,10 +48,10 @@ Every card ends: *Fits Knight, Hoplite, Geomancer, Bramble knight, Paladin.*
 - **Builds:** Toll 1, Landslide 1 (the bulwark), Bonfire 1 (the keeper). Once the wall is hurt it pulls less, so the danger spreads instead of finishing it.
 
 **Keystone cuirass** · Plate · uncommon
-- **Card:** Armor +1. Starts every fight behind a Shield of three tenths of its Armor.
-- **Numbers:** Armor +1,000; a Shield of 0.3 × Armor at the fight's start (1,500 at Armor 5), within the Shield's cap.
-- **Hooks:** `fight_start` → apply `shield` to self, stacks scaled from Armor (of holder), as Vanguard's are from max HP.
-- **Builds:** Landslide 1 (stone from the first tick: Bedrock lit, a break to set off), Ambush 1 (the rear guard), Toll 1.
+- **Card:** Armor +1. Its basic attacks deal 2% more for every 1,000 Armor it has.
+- **Numbers:** Armor +1,000; +2% to basic attacks for each 1,000 Armor, read live (+10% at Armor 5,000, +16% while Guarded). About an Attack step on a sword at Armor 5. (Second-round ruling, G7: its Shield at the start was a small Stone totem for the Geomancer and Bramble knight.)
+- **Hooks:** `boosts` tag basic, pct scaled from Armor (of holder), 0.002 a point: Judgement's shape, read from a stat.
+- **Builds:** Landslide 1 (Armor as a damage stat, and Guard that reaches it), Toll 1 (a wall that hits back harder).
 
 **Holdfast** · Plate · uncommon
 - **Card:** HP +1. The first time each fight the wearer drops below half its HP, it's Guarded.
@@ -85,7 +85,7 @@ Every card ends: *Fits Knight, Hoplite, Geomancer, Bramble knight, Paladin.*
 
 **Thornheart plate** · Plate · legendary
 - **Card:** Each hit the wearer takes adds 1 Spite (+15 Thorns a stack, up to 20) for the rest of the fight.
-- **Numbers:** Spite as above: +300 Thorns at the cap, Thorns high's worth, on top of any Thorns it has. No Thorns of its own. A swarm caps it in a dozen ticks, a boss in about half a fight: the cap is why short and long fights stay close.
+- **Numbers:** Spite as above: +300 Thorns at the cap, Thorns high's worth, on top of any Thorns it has. No Thorns of its own. At most one Spite every 2 ticks (G11), so even a swarm takes 40 ticks to cap it, and a boss about a whole fight: it grows at the fight's pace, not the swarm's.
 - **Hooks:** `hit_taken` → apply `spite` (1) to self. SPITE: Intensity, cap 20, `stats` thorns +15 a stack, an icon.
 - **Builds:** Toll 3 ●●●, Landslide ●.
 
@@ -235,7 +235,7 @@ Every card ends: *Fits Ranger, Monk, Assassin, Bard, Valkyrie.*
 
 **Windrunner's garb** · Leather · legendary
 - **Card:** Evasion 20. Each dodge adds 1 Tempo (+5% speed in everything a stack, up to 10) for the rest of the fight. Each hit the wearer takes spends half its Tempo.
-- **Numbers:** Tempo as above (+50% at the cap, a little past Haste). Evasion medium isn't in the spine's line; the lead's ruling keeps it, since three of the five Leather classes have no Evasion and the piece does nothing without dodges.
+- **Numbers:** Tempo as above (+50% at the cap, a little past Haste), at most one stack every 2 ticks (G11). Evasion medium isn't in the spine's line; the lead's ruling keeps it, since three of the five Leather classes have no Evasion and the piece does nothing without dodges.
 - **Hooks:** `hit_evaded` → apply `tempo` (1) to self. TEMPO: Intensity, cap 10, `stats` attack speed, cooldown reduction and cast time reduction +5 a stack; `trigger` on `hit_taken` with `drop` fraction 0.5 (Bleed's shape).
 - **Builds:** Cuts 3 ●●●, Toll 3 ●● (the dancer's rhythm).
 
@@ -319,7 +319,7 @@ Every card ends: *Fits Cleric, Pyromancer, Frostweaver, Stormcaller, Bard.*
 
 **Stormweave** · Robes · legendary
 - **Card:** Each of the wearer's actions that hits three or more foes adds 1 Surge (+5% damage a stack, up to 10) for the rest of the fight.
-- **Numbers:** Surge as above. A Stormcaller earns 3 or 4 in a regular fight, 7 or 8 in a boss fight. Only actions that deal damage hit, so Thunder chord (Shock alone) adds none.
+- **Numbers:** Surge as above, at most one stack every 2 ticks (G11). A Stormcaller earns 3 or 4 in a regular fight, 7 or 8 in a boss fight. Only actions that deal damage hit, so Thunder chord (Shock alone) adds none.
 - **Hooks:** `action_resolve` reading the count of foes the action hit (engine 6), three or more → apply `surge` (1) to self. SURGE: Intensity, cap 10, `boosts` +5 physical and magical a stack.
 - **Builds:** Harvest 3 ●●●, Snap ●.
 

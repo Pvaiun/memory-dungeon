@@ -166,7 +166,7 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
 **A, Martyr's raise**
 - **Card:** Pays half its current HP to revive a random knocked-out ally with that much. Costs no MP.
 - **Numbers:** price: half the Cleric's current HP (1,000 from a full HP 2 Cleric); the ally rises with that much, every ability on full cooldown (G10). 0 MP, by the lead's ruling. Very long, very long wind-up, as the base.
-- **Hooks:** engine 4 (HP as a cost, in full). The revive's `hp` reads the Cleric's current HP before the price is paid (`{ratio: 0.5, hp: current, of: self}`); see NEW. Paying can drop the Cleric under Last rites' line, which halves its cooldowns.
+- **Hooks:** engine 4 (HP as a cost, in full), paid as G12 defines: the Cleric loses the HP at once; it isn't damage, so no Shield soaks it, nothing reacts to it, and it can't take the Cleric below 1 HP. The revive's `hp` reads the Cleric's current HP before the price is paid (`{ratio: 0.5, hp: current, of: self}`); see NEW. The payment itself doesn't set off Last rites, though it can leave the Cleric under the line for its next loss of HP.
 - **Builds:** Pact, Phoenix (life passed on: a return that doesn't rest on MP).
 
 **B, Ward of life**
@@ -324,7 +324,7 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
 **B, Rebuke**
 - **Card:** Waits until it's been hit five times since its last lash, then lashes a random foe for double.
 - **Numbers:** 9 × Thorns (2,700). The quick cooldown still applies after each lash.
-- **Hooks:** a hidden count on the Bramble knight (an Intensity status gaining a stack on `hit_taken`); `if: {side: self, where: {stacks: {status: rebuke_count, atLeast: 5}}}`; the lash removes the count.
+- **Hooks:** a hidden count on the Bramble knight (an Intensity status gaining a stack on `hit_taken`, at most one every 2 ticks under G11, so five take at least 10 ticks even in a swarm); `if: {side: self, where: {stacks: {status: rebuke_count, atLeast: 5}}}`; the lash removes the count.
 - **Builds:** Toll (damage that follows the foe: the more it's struck, the more it lashes).
 
 ---
@@ -335,14 +335,14 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
 
 **Now:** Its basic attacks come half as often and deal double damage.
 
-**Power step:** a little more than double: × 2.4 (Phalanx's boost +140%, was +100%). On A, its first swing becomes × 3.4. On B, the Armor part grows with the rest.
+**Power step:** a little more than double: × 2.4 (Phalanx's boost +140%, was +100%). On A, the first swing with the rest. On B, the Armor part grows with the rest.
 
 **One swing shape (G5):** Phalanx, in either version, is the Hoplite's swing shape and comes first. A Millstone, Hummingbird charm, Worldbreaker or Hammer seat on the Hoplite gives Attack +1 instead of its shape.
 
 **A, Opening thrust**
-- **Card:** Basic attacks come half as often and deal double. The first of each fight comes at once and deals triple.
-- **Numbers:** the first swing × 3.
-- **Hooks:** a reaction on `fight_start`: engine 1 (the attack timer made ready) and `apply opening_thrust` (a buff, `boosts: basic +100%`, which adds to Phalanx's as boosts do, removed by a reaction on the holder's first `hit_lands`, `kind: basic`, or its first `hit_missed`).
+- **Card:** Basic attacks come half as often and deal double. The first of each fight comes at once.
+- **Numbers:** the first swing deals double, as every Phalanx swing does: the spine's triple is past the ceiling (G14). What the version adds is the timing: a doubled swing on the first tick, where it would have come 7 to 15 ticks in.
+- **Hooks:** a reaction on `fight_start`: engine 1 (the attack timer made ready). No boost of its own.
 - **Builds:** Ambush (the opener), Landslide (one huge blow, struck first).
 
 **B, Shieldbearer**
@@ -453,8 +453,8 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
 
 **A, Penance**
 - **Card:** Cleanses and heals both other allies for twice as much, and pays a fifth of each heal in its own HP. Not itself.
-- **Numbers:** 0.8 of Magic each (3,200 at Magic 4); the price a fifth of each heal (640 a heal, 1,280 for both). Waits until another ally is below max HP and the Paladin is at 35% of its max HP or more, as Blood gift does, so the price never kills it. By the lead's ruling, in place of the Might.
-- **Hooks:** `if: [{side: others, where: {hpBelow: 100}}, {side: self, where: {hpAtLeast: 35}}]`; `target: {side: others, pick: all}`; `do: remove debuff; heal 0.8 of Magic`; the price by engine 4 (HP as a cost, in part: 0.32 of Magic for two heals).
+- **Numbers:** 0.8 of Magic each (3,200 at Magic 4); the price a fifth of each heal (640 a heal, 1,280 for both). Waits until another ally is below max HP and the Paladin is at 35% of its max HP or more, as Blood gift does, so it stops paying when low. By the lead's ruling, in place of the Might.
+- **Hooks:** `if: [{side: others, where: {hpBelow: 100}}, {side: self, where: {hpAtLeast: 35}}]`; `target: {side: others, pick: all}`; `do: remove debuff; heal 0.8 of Magic`; the price by engine 4 (HP as a cost, in part: 0.32 of Magic for two heals), paid as G12 defines: lost at once, not damage, soaked by no Shield, heard by nothing, never below 1 HP.
 - **Builds:** Pact (life passed on: the Paladin bleeds so the others mend).
 
 **B, Absolution**
@@ -691,8 +691,8 @@ Each fits one class, sits in its slot, and a unit wears one at most. Offered in 
 ### Metronome · Bard · offhand
 
 - **Card:** Fits the Bard. Counts every hit the party lands. At 20, War ballad, Allegro and Thunder chord are ready at once, and the count starts again.
-- **Numbers:** 20 hits, extra strikes and each hit of a multi-hit ability included (Thorns and status damage aren't hits). A blur party lands about one hit a tick, a slow one about one in three. The songs still cost their MP (450, 650 and 650 as today), and only the ones the Bard knows.
-- **Hooks:** a count on the Bard (an Intensity status, cap 20) gaining a stack on `hit_lands` from the holder and from `whose: ally`; at the cap, engine 1 makes the three ready by name (**NEW**, as above) and the count is spent. Can't be held under a bow.
+- **Numbers:** 20 hits, extra strikes and each hit of a multi-hit ability included (Thorns and status damage aren't hits). The count gains at most one every 2 ticks (G11), so a beat comes at most every 40 ticks: about that often for a blur party (a hit a tick), about every 60 for a slow one (a hit in three ticks). The songs still cost their MP (450, 650 and 650 as today), and only the ones the Bard knows.
+- **Hooks:** a count on the Bard (an Intensity status, cap 20) gaining a stack on `hit_lands` from the holder and from `whose: ally`, at most one every 2 ticks (G11); at the cap, engine 1 makes the three ready by name (**NEW**, as above) and the count is spent. Can't be held under a bow.
 - **Pulls toward:** Cuts 3 ●●● (the blur sets the tempo).
 
 ---
@@ -708,6 +708,12 @@ Each settled by the lead's rulings (`fill-rulings.md`):
 6. **Stone guard:** settled: the other ally with the most Armor.
 7. **Horn of the keep:** settled: the other ally with the least MP.
 8. **Huntmaster's quiver:** settled: its abilities have Seek.
+
+Settled in the second round:
+9. **Opening thrust:** settled by G14: its first swing deals double, as every Phalanx swing does; the version is the timing (a swing on the first tick).
+10. **Martyr's raise and Penance:** settled by G12: the HP is lost at once, isn't damage, no Shield soaks it, nothing reacts to it (so the payment doesn't set off Last rites), and it never takes the payer below 1 HP.
+11. **Metronome and Rebuke's count:** settled by G11: each gains at most one every 2 ticks, so a Metronome beat comes at most every 40 ticks.
+12. **The mythics' stats:** settled by G15: none of the eight carries a stat step (no change; the Stormspear's damage is its weapon's).
 
 ## NEW
 
@@ -729,8 +735,8 @@ Engine needs beyond the spine's list:
 Settled by the rulings and taken off: Pinning arrow and Lullaby (the balance pass watches them), The last wall (capped and once per Aspis), the near-repeats (Penance and Chosen changed, and the Earthmother totem gives Might, not Guard).
 
 - **Heartwood mail** against swarms (the spine's own worry), worst beside Spreading thorns: every hit on any ally returns 300 to its attacker and 300 to another foe, both bleeding.
-- **Metronome** against the Bard's 2,400 MP: a full beat costs 1,750, so it may spend the Bard dry in one fight. That fits "MP is fuel", but it may read as a mythic that empties its wearer.
-- **Shieldbearer** at a third more a swing, rising with Plate, Guard and Stone guard, may outclass Opening thrust everywhere but Ambush.
+- **Metronome** against the Bard's 2,400 MP: a full beat costs 1,750. With G11 a beat comes at most every 40 ticks, so it empties the Bard more slowly, but it may still read as a mythic that empties its wearer.
+- **Shieldbearer** at a third more a swing, rising with Plate, Guard and Stone guard, outclasses Opening thrust everywhere but Ambush, more so now that Opening thrust is only its timing (G14). Opening thrust may want something else on its first swing that isn't a triple or Drawn steel's crit.
 - **Inquisition:** in any status party (Smite's own Burn included), the bonus is on nearly all fight.
 - **Taunts that last longer** are written as Taunt applied again: Overgrowth's second Taunt, Horn of the keep's renewal. Taunt keeps its own 20 ticks; check that this reads as the line meant.
 - **Ward of life** puts a Shield and a revive on one very long cooldown; the shorter wind-up (normal) also makes its raise faster.

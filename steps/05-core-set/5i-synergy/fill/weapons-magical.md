@@ -81,10 +81,10 @@ Fits: Paladin, Valkyrie, Hexer, Geomancer. Medium (8.5 ticks), magical, one hand
 - **Builds:** Snap 2 ●●, Bonfire 2 ●●, Toll ●●, Lockdown ●: a curser's blade, worth something to every status party. It's strongest on the Hexer, whose Cold hex and Malison put three of the five on every foe.
 
 ### Dawnblade · rune sword · legendary
-- **Card:** Each time an ally falls or is revived, the wearer gains 4 Fervor. Its own fall and return count too. Fervor: the holder deals 5% more damage a stack, up to 20, for the rest of the fight.
+- **Card:** Each time an ally falls or is revived, the wearer gains 4 Fervor, one every 2 ticks. Its own fall and return count too. Fervor: the holder deals 5% more damage a stack, up to 20, for the rest of the fight.
 - **Weapon:** damage medium, ratio medium, from Magic.
 - **Numbers:**
-  - 4 Fervor an event (the flat word several).
+  - 4 Fervor an event (the flat word several). Under G11 a counter gains at most one stack every 2 ticks, so the 4 arrive one every 2 ticks, over 8 ticks. Two events close together queue their stacks rather than lose them.
   - **Fervor**, the spine's counter, as G4 sets it:
     - +5% a stack to the holder's hits, physical and magical. It never reaches a status's damage.
     - Capped at 20 stacks (+100%). It never drops and ends with the fight.
@@ -94,7 +94,8 @@ Fits: Paladin, Valkyrie, Hexer, Geomancer. Medium (8.5 ticks), magical, one hand
   - A granted status that survives a knockout.
   - Reactions on `ko` (whose `ally`, and whose `holder`) and on `revived` (whose `ally`, and whose `holder`), each applying `fervor` 4 to the holder.
   - `fervor` is an Intensity buff with boosts on `physical` and `magical` of 5 a stack, cap 20, `survivesKO`, unremovable, shown as an icon.
-  - Existing primitives, plus the spine's counter.
+  - G11's limit has to space a gain of 4 over 8 ticks rather than drop the extra stacks. If it drops them, Dawnblade is one Fervor (+5%) a fall and needs re-sizing (least sure).
+  - Existing primitives, plus the spine's counter and G11's limit.
 - **Builds:** Phoenix 3 ●●● (strongest the second time round), Pact ●.
 
 ---
@@ -164,14 +165,14 @@ Fits: Cleric, Paladin. Slow (11 ticks), magical, one hand.
 - **Builds:** Bonfire 3 ●●●, Harvest ●●.
 
 ### Martyr's maul · mace · legendary
-- **Card:** The wearer's basic attacks deal more the lower its HP: half again as much below 70%, double below 50%, two and a half times below 30%, and triple below 10%. Below 30% HP, each basic attack also heals the wearer for the damage it dealt.
+- **Card:** The wearer's basic attacks deal more the lower its HP: a quarter more below 70%, half again below 50%, three quarters more below 30%, and double below 10%. Below 30% HP, each basic attack also heals the wearer for the damage it dealt.
 - **Weapon:** damage medium, ratio medium, from Magic.
 - **Numbers:**
-  - +50% at each of 70, 50, 30 and 10% of max HP, up to triple. That's nearly even: about +50% for each further fifth of HP lost.
+  - +25% at each of 70, 50, 30 and 10% of max HP, up to double. G14 makes triple past the ceiling; the spine said up to triple at a tenth. That's nearly even: about +25% for each further fifth of HP lost.
   - The heal is 100% of the damage dealt, after Magic resist.
-  - A Cleric (HP 2) at a quarter of its HP swings for about 2,500 and heals about that much: from 25% to full in one swing. A Paladin (HP 4) goes from 25% to about 80%.
+  - A Cleric (HP 2) at a quarter of its HP swings for about 1,800 and heals about 1,600: from 25% to full in one swing. A Paladin (HP 4) goes from 25% to about 65%.
 - **Hooks:**
-  - Boosts on `basic`, with the pct as four terms `{ ratio: 50, when: { hpBelow: X }, of: "holder" }` for X = 70, 50, 30 and 10.
+  - Boosts on `basic`, with the pct as four terms `{ ratio: 25, when: { hpBelow: X }, of: "holder" }` for X = 70, 50, 30 and 10.
   - A reaction on `hit_lands` (kind `basic`) that heals `{ scale: [{ ratio: 1, amount: true }] }` to `{ side: "self", where: { hpBelow: 30 } }`.
   - Existing primitives.
 - **Builds:** Pact 3 ●●●, Phoenix ●● (Last rites' Cleric: below 30% its cooldowns halve as well).
@@ -280,11 +281,11 @@ Fits: Frostweaver, Stormcaller. Medium (9.1 ticks), magical, one hand.
 - **Builds:** Snap 1 ●●, Lockdown 1 ● (the slow on the way up).
 
 ### Cistern rod · rod · uncommon
-- **Card:** +1 HP. Once a fight, when the wearer has less than a third of its MP (at the fight's start, or after it casts), it gains Clarity.
+- **Card:** +1 HP. Once a fight, when the wearer has less than a third of its MP (at the fight's start, or after it casts), it gains a short Clarity.
 - **Weapon:** damage medium, ratio medium, from Magic.
-- **Numbers:** max HP +500. Clarity is its own, at full length: 6% of max MP every 4 ticks for 16 ticks, 24% in all. It answers low MP, not the fight's start, so G1's short start-of-fight Clarity doesn't reach it. Once a fight; a revived wearer can have it again.
+- **Numbers:** max HP +500. A short Clarity whenever it fires (G1, the lead's second-round ruling): Clarity's 6% of max MP every 4 ticks, for 8 ticks (half its 16), 12% in all. Once a fight; a revived wearer can have it again.
 - **Hooks:**
-  - Reactions on `fight_start` and on `action_resolve` (kind `ability`). Each applies `clarity` to `{ side: "self", where: { mpBelow: 33, lacks: "cistern_spent" } }`, then a hidden marker `cistern_spent` to the same.
+  - Reactions on `fight_start` and on `action_resolve` (kind `ability`). Each applies `clarity` with `duration: 8` to `{ side: "self", where: { mpBelow: 33, lacks: "cistern_spent" } }`, then a hidden marker `cistern_spent` to the same.
   - The marker ends with the fight or a knockout.
   - Existing primitives.
 - **Builds:** Overflow 1 ●● (the cliff softened), Bonfire 1 ●, Lockdown 1 ●, Harvest 1 ●.
@@ -337,7 +338,7 @@ Fits: Frostweaver, Stormcaller. Medium (9.1 ticks), magical, one hand.
 
 ## Staff (two hands)
 
-Fits: Cleric, Frostweaver, Pyromancer, Bramble knight. Slow (11.6 ticks), magical, two hands: the offhand stays empty. Its pieces are worth a weapon and an offhand: commons carry three steps, uncommons two (see least sure), and rares and legendaries pair two effects or carry a bigger one. Its two uncommons keep their Clarity and Shield at the start; Robes changes its own (G7).
+Fits: Cleric, Frostweaver, Pyromancer, Bramble knight. Slow (11.6 ticks), magical, two hands: the offhand stays empty. Its pieces are worth a weapon and an offhand: commons carry three steps, uncommons two (G16), and rares and legendaries pair two effects or carry a bigger one. Its two uncommons keep their Clarity and Shield at the start; Robes changes its own (G7).
 
 ### Ashwood staff · staff · common
 - **Card:** +2 Magic, +1 HP.
@@ -416,11 +417,17 @@ Fits: Cleric, Frostweaver, Pyromancer, Bramble knight. Slow (11.6 ticks), magica
 
 ## CHALLENGES
 
-All four are settled by the lead's rulings (`../fill-rulings.md`) and applied above.
+Every item is settled by the lead's rulings (`../fill-rulings.md`) and applied above. Items 1 to 4 are from the first round, 5 to 10 from the second.
 1. **Humbling mace and Glacial rod** (a permanent Weaken or Slow on a lone boss): settled by "The magical weapons": one basic attack in three applies it.
 2. **Wildmagic wand** (one stack, the uncommon's size): settled by "The magical weapons": a few (2) of the random status a swing.
 3. **Uncommon effects repeated on kinds that share wearers** (the staff's against Robes', the Ward at the start on four kinds): settled by G7. The staff, rune sword and mace keep theirs; Robes, Mail and the lantern change.
 4. **Section 9's wand uncommons on Bonfire's first rung:** settled by "The magical weapons": the wand is off Bonfire's first rung.
+5. **Dawnblade's 4 Fervor at once:** settled by G11 (a counter gains at most one stack every 2 ticks): the 4 arrive one every 2 ticks.
+6. **Martyr's maul's triple at a tenth:** settled by G14 (triple is past the ceiling): +25% a step, up to double.
+7. **The staff's uncommons at two steps:** settled by G16 (two-handers' uncommons carry two steps and their effect).
+8. **Cistern rod's Clarity at full length:** settled by the second round's "Too strong" ruling: short (G1) whenever it fires.
+9. **Prior's mace and Canopy staff** changed the spine's table lines (the Ward to the ally drawing most, a second Shield target): settled by "Cards and names": they stand.
+10. **Mender's mace against the relic's Mending icon:** settled by "Same cards in two places": the relic changes, and Mender's mace stays.
 
 ## NEW
 
@@ -433,8 +440,8 @@ All four are settled by the lead's rulings (`../fill-rulings.md`) and applied ab
 
 ## Least sure
 
-Four of the first list were settled by rulings and are gone: the Censer mace (it stays, for the balance pass to watch), the full Regen and Clarity at the start (short, G1), Fervor's definition (G4), and Sunhammer's Burn (a few).
-1. **The two-hander's uncommons at two steps** are my reading of "worth a weapon and an offhand"; the rule says one step.
-2. **Brimming rod's gift** of 45 to 100 MP a cast may read as bookkeeping in the log. If it does, a fifth.
-3. **Chain wand on the Stormcaller:** every swing hits four foes, all of them Shocked. Beside Stormweave, every swing is an action that hits three or more foes and adds Surge.
-4. **Hexblade at one stack** is small, except on the Hexer, which feeds three of the five itself.
+Five of the first list were settled by rulings and are gone: the Censer mace (it stays, for the balance pass to watch), the full Regen and Clarity at the start (short, G1), Fervor's definition (G4), Sunhammer's Burn (a few), and the staff's two-step uncommons (G16).
+1. **Brimming rod's gift** of 45 to 100 MP a cast may read as bookkeeping in the log. If it does, a fifth.
+2. **Chain wand on the Stormcaller:** every swing hits four foes, all of them Shocked. Beside Stormweave, every swing is an action that hits three or more foes and adds Surge. G11 holds Surge to one stack every 2 ticks, and a wand's 6.6-tick swing stays under that.
+3. **Hexblade at one stack** is small, except on the Hexer, which feeds three of the five itself.
+4. **Dawnblade under G11:** I read the limit as spacing a gain of 4 over 8 ticks. If the engine drops the extra stacks instead, Dawnblade is one Fervor (+5%) a fall and needs re-sizing.

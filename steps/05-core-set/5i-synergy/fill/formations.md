@@ -48,7 +48,7 @@ A seat's stat step is 1.25 gear steps (`FORMATION_STEP` in `content/core-set/for
 
 ### Heavy line · common
 **Card:** "One strikes, one holds, one is free."
-- **Hammer** · "Attack up. Its crits hit harder. Draws less." Attack +1,250, Crit damage medium (+25), Aggro −13.
+- **Bruiser** · "Attack up. Its crits hit harder. Draws less." Attack +1,250, Crit damage medium (+25), Aggro −13. It isn't a swing shape.
 - **Holder** · "Draws more. HP up two steps." Aggro +13, HP +1,250.
 - **Free** · "Nothing."
 
@@ -151,7 +151,7 @@ A seat's stat step is 1.25 gear steps (`FORMATION_STEP` in `content/core-set/for
 ### Hammer and anvil · rare
 **Card:** "One takes the blows, one strikes like a falling hill, one builds stone around the striker."
 - **Anvil** · "Draws more. Guarded when each fight starts." Aggro +13; Guard at the fight's start, at its own numbers.
-- **Hammer** · reads its weapon. "With a slow weapon: basic attacks come half as often and deal triple. Otherwise: Attack up." With a great weapon, mace or staff: `attack_speed` −50 (its swing interval doubled) and +200% on its basic attacks' hits. With any other weapon: Attack +1,250. Under G5 the seat's reshape is one swing shape among the others, and a unit takes one: its passive's first, then its pieces' in slot order, then the seat's. A unit that already has a shape (Phalanx, the Millstone, the Hummingbird charm, the Worldbreaker) gets its weapon's stat +1 (Attack or Magic +1,250) from this seat instead.
+- **Hammer** · reads its weapon. "With a slow weapon: basic attacks come half as often and deal triple. Otherwise: Attack up." With a great weapon, mace or staff: attack speed −100 (half as often, as the Millstone writes it) and +200% on its basic attacks' hits. Triple stays: like the Worldbreaker's, it's a swing shape that swings half as often (G14). With any other weapon: Attack +1,250. Under G5 the seat's reshape is one swing shape among the others, and a unit takes one: its passive's first, then its pieces' in slot order, then the seat's. A unit that already has a shape (Phalanx, the Millstone, the Hummingbird charm, the Worldbreaker) gets its weapon's stat +1 (Attack or Magic +1,250) from this seat instead.
 - **Mason** · "Its Shields and Guards on an ally go to the Hammer first." When one of the Mason's abilities or pieces gives a Shield or a Guard to an ally other than itself, its first pick is the Hammer, if the Hammer can take it (a Shield at its cap passes to the usual target). Examples: a Geomancer's Earthen shell covers itself and the Hammer, a Knight's Fortify Guards the Hammer, a Hoplite's Paired guard covers itself and the Hammer.
 
 **Party effect:** none.
@@ -174,11 +174,11 @@ A seat's stat step is 1.25 gear steps (`FORMATION_STEP` in `content/core-set/for
 **Card:** "One holds the door, one feeds the fire, one carries it to every burning foe."
 - **Keeper** · "Taunts and is Guarded when each fight starts." Taunt and Guard, at their own numbers.
 - **Stoker** · "Hasted when each fight starts. Basic attacks a fifth faster." Haste; `attack_speed` +20.
-- **Torch** · "Each of its hits adds a Burn to every foe that's already burning." One Burn on each burning foe, for every hit it lands (basic attacks, abilities and extra strikes; not Thorns or statuses).
+- **Torch** · "Each of its basic attacks adds a Burn to every foe that's already burning." One Burn on each burning foe, for every basic attack it lands. Abilities, extra strikes, Thorns and statuses don't.
 
 **Party effect:** none.
-**Shape:** the danger on the Keeper while the fire catches, the speed on the Stoker, the spread on the Torch. An Area hit on five foes is five hits: a Torch's Fireball on five burning foes adds five Burn to each.
-**Hooks:** Keeper and Stoker: seat statuses reacting to `fight_start`. Torch: a reaction to `hit_lands` (whose: holder) applying one burn to `{ side: foes, where: { has: burn }, pick: all }`. Nothing new.
+**Shape:** the danger on the Keeper while the fire catches, the speed on the Stoker, the spread on the Torch, on the Torch's own beat: a fast weapon spreads the fire more often.
+**Hooks:** Keeper and Stoker: seat statuses reacting to `fight_start`. Torch: a reaction to `hit_lands` (whose: holder, kind: basic) applying one burn to `{ side: foes, where: { has: burn }, pick: all }`. Nothing new.
 **Builds:** Bonfire 2 ●●● (keeper, stoker and torch), Harvest ● (fire on the whole field).
 
 ### Hoarfrost line · rare
@@ -194,11 +194,11 @@ A seat's stat step is 1.25 gear steps (`FORMATION_STEP` in `content/core-set/for
 ### Reaping line · rare
 **Card:** "One holds the whole field on itself; two reap through it."
 - **Beacon** · "Taunts all fight. Thorns. Heals on it are halved." Taunt, given again each time it ends; Thorns medium (150); healing received −50.
-- **Scythe** ×2 · "Its basic attacks hit every foe, for a fifth each." Each basic attack is an Area hit on every foe at a fifth of its usual damage, so Taunt and Hidden don't steer it. Each of those hits is a basic-attack hit and carries what its basic attacks carry. That totals 160% of a swing against eight foes, 100% against five, and 40% against two.
+- **Scythe** ×2 · "Its basic attacks hit every foe, for a fifth each." Each basic attack hits its usual target for a fifth of its usual damage, carrying what its basic attacks carry. It also hits every other foe for a fifth, damage only: those extra hits carry no riders or statuses. That totals 160% of a swing against eight foes, 100% against five, and 40% against two. It's a swing shape (G5): a unit that already has one (Phalanx, the Millstone, the Hummingbird charm, the Worldbreaker) gets its weapon's stat +1 (Attack or Magic +1,250) from this seat instead.
 
 **Party effect:** none.
 **Shape:** a beacon and two scythes. The field stays on one unit, which pays for it in healing, while the scythes sink every foe evenly: worth most against a crowd, less against a few.
-**Hooks:** Beacon: a seat status reacting to `fight_start` and to `status_ended` (taunt) by applying Taunt; `thorns` and `healing_received`. Scythe: its basic attacks aimed by a rule, `{ side: foes, pick: all }` (**NEW** 9), with a −80 `basic` boost.
+**Hooks:** Beacon: a seat status reacting to `fight_start` and to `status_ended` (taunt) by applying Taunt; `thorns` and `healing_received`. Scythe: a −80 `basic` boost, plus an extra strike spread over every other foe (`{ side: foes, pick: all, exclude }`) that carries damage only (**NEW** 9), under one swing shape per unit (G5).
 **Builds:** Harvest 2 ●●● (the beacon and two scythes), Toll ●● (an anchor that Taunts all fight with thorns).
 
 ### Relay · rare
@@ -217,12 +217,12 @@ A seat's stat step is 1.25 gear steps (`FORMATION_STEP` in `content/core-set/for
 **Card:** "One waits for the moment to lock, one keeps the foes' eyes, one comes round faster every time a foe is held."
 - **Watcher** · "Its abilities that Stun or Silence wait for a foe's wind-up, and aim at it." They wait until a foe is winding up, then pick the casting foe with the highest Attack or Magic (under the Taunt rule, unless the ability has Seek). Unmake already waits, so it's unchanged.
 - **Gaoler** · "Draws far more." Aggro +25.
-- **Warden** · "Whenever any foe is Stunned or Silenced, its abilities come 3 ticks closer." Every lock counts, a shatter's Stun included, and so do the Warden's own.
+- **Turnkey** · "Whenever any foe is Stunned or Silenced, its abilities come 3 ticks closer." Every lock counts, a shatter's Stun included, and so do the Turnkey's own.
 
 **Party effect:** none.
 **Shape:** three clocks: one that waits, one that holds the eyes, one that speeds up with every lock.
-**Hooks:** Watcher: engine 13 (reads abilities that Stun or Silence) and engine 14, which changes an ability's wait (`casting`) and its target (**NEW** 7). Warden: reactions to `status_gained` (whose: foe, stun, and again for silence), then a cooldown change of −3 ticks on each of its abilities (engine 1). Stun and Silence fizzle on a foe that already holds them, so the loop is bounded.
-**Builds:** Lockdown 2 ●●● (locks that wait, and locks that come round), Overflow ● (more casts on the Warden). On a Knight with Measured blow or an Assassin with Choke, the Watcher's wait adds nothing: those versions already wait.
+**Hooks:** Watcher: engine 13 (reads abilities that Stun or Silence) and engine 14, which changes an ability's wait (`casting`) and its target (**NEW** 7). Turnkey: reactions to `status_gained` (whose: foe, stun, and again for silence), then a cooldown change of −3 ticks on each of its abilities (engine 1). Stun and Silence fizzle on a foe that already holds them, so the loop is bounded.
+**Builds:** Lockdown 2 ●●● (locks that wait, and locks that come round), Overflow ● (more casts on the Turnkey). On a Knight with Measured blow or an Assassin with Choke, the Watcher's wait adds nothing: those versions already wait.
 
 ### Thorn hedge · rare
 **Card:** "A thorned wall that draws the blows, and two who make every attacker pay."
@@ -236,13 +236,13 @@ A seat's stat step is 1.25 gear steps (`FORMATION_STEP` in `content/core-set/for
 
 ### Blood oath · rare
 **Card:** "One bleeds for power, one drinks it back, one pours life into the bleeder."
-- **Bleeder** · "Loses a little HP every tick. Its hits deal half again as much." It loses 0.5% of its max HP a tick (20% over a 40-tick fight, 40% over 80), paid the way Blood gift's price is (a Shield soaks it). The loss stops at a tenth of its max HP, so the oath never knocks it out. Its hits deal +50%.
+- **Bleeder** · "Loses a little HP every tick. Its hits deal half again as much." It pays 0.5% of its max HP a tick (20% over a 40-tick fight, 40% over 80). Under G12 the price is HP lost at once: it isn't damage, no Shield soaks it, nothing reacts to it, and it never takes the Bleeder below 1 HP. Its hits deal +50%.
 - **Drinker** · "Lifesteal." Lifesteal medium (10%).
-- **Donor** · "Its heals on the Bleeder are doubled." Direct heals the Donor casts on the Bleeder are doubled. A Regen it applies is an ordinary Regen, since statuses keep their numbers.
+- **Donor** · "Its heals on the Bleeder are half again as big." Direct heals the Donor casts on the Bleeder +50% (G9: the Bleeder is there all fight). A Regen it applies is an ordinary Regen, since statuses keep their numbers.
 
 **Party effect:** none.
 **Shape:** life moving through three hands: one spends it, one takes it from foes, one gives it.
-**Hooks:** Bleeder: a seat status pulsing every tick, untyped damage `to: { side: self, where: { hpAtLeast: 10 } }`; a +50 boost on all its hits. Drinker: `lifesteal`. Donor: a `healing` boost of +100, scaled by `when` the healed unit holds the Bleeder's hidden seat status (`of: target`, as Judgement reads its target). Nothing new.
+**Hooks:** Bleeder: a seat status pulsing every tick that pays HP (engine 4, as G12 defines it); a +50 boost on all its hits. Drinker: `lifesteal`. Donor: a `healing` boost of +50, scaled by `when` the healed unit holds the Bleeder's hidden seat status (`of: target`, as Judgement reads its target). Nothing new.
 **Builds:** Pact 2 ●●● (the bleeder, the drinker and the donor).
 
 ### Pyre of heroes · rare
@@ -273,9 +273,9 @@ A seat's stat step is 1.25 gear steps (`FORMATION_STEP` in `content/core-set/for
 - **Blade** · "Basic attacks a fifth faster. Crits more." `attack_speed` +20, Crit chance +3.5%.
 - **Well** · "Regains MP in fights. Heals on it are stronger." MP regen +3,750, healing received +20.
 
-**Party effect:** every 22 ticks (a short cooldown), the wheel turns: the Wall's unit takes the Blade's part, the Blade's takes the Well's, and the Well's takes the Wall's. It turns once in a 40-tick fight and three times in an 80-tick one.
+**Party effect:** every so often (G13: every 22 ticks, first at tick 11), the wheel turns: the Wall's unit takes the Blade's part, the Blade's takes the Well's, and the Well's takes the Wall's. It turns at ticks 11, 33, 55 and 77: twice in a 40-tick fight, four times in an 80-tick one.
 **Shape:** a party that changes shape on a clock. No seat is the right one for long, so it suits three all-rounders.
-**Hooks:** each part is a 22-tick status, given by its seat at the fight's start; when it expires (`status_ended`, cause expired), the holder gains the next part. Nothing new. The interface shows the part a unit holds now on the seat and the unit.
+**Hooks:** each part is a status, given by its seat at the fight's start for 11 ticks, and for 22 after that; when it expires (`status_ended`, cause expired), the holder gains the next part. Nothing new. The interface shows the part a unit holds now on the seat and the unit.
 **Builds:** exotic: no build.
 
 ---
@@ -298,7 +298,7 @@ A seat's stat step is 1.25 gear steps (`FORMATION_STEP` in `content/core-set/for
 - **Forgehand** ×3 · nothing.
 
 **Party effect:** every 4 ticks, every ally gains a Heat. When each fight starts, every ally is Slowed for 8 ticks (G1: shorter than half Slow's own 24, as written).
-**Heat (G3):** +3% damage a stack on the holder's hits, up to 15, kept all fight. Here that's +30% by tick 40 and the cap (+45%) at tick 60, so a 40-tick and an 80-tick fight end about half apart. Like any boost, it doesn't raise Burn's damage.
+**Heat (G3):** +3% damage a stack on the holder's hits, up to 15, kept all fight. One stack every 4 ticks is inside G11's one every 2. Here that's +30% by tick 40 and the cap (+45%) at tick 60, so a 40-tick and an 80-tick fight end about half apart. Like any boost, it doesn't raise Burn's damage.
 **Gives up:** the start: 8 ticks at −40% speed, while the foes are fresh.
 **Hooks:** a formation status pulsing every 4 ticks that applies one Heat (a new counter, section 1), and a reaction to `fight_start` applying Slow for 8 ticks.
 **Builds:** Bonfire 3 ●●● (the party's own heat), Landslide ●● (power that isn't spent, so the slowest hitter keeps all of it), Pact ● (long fights).

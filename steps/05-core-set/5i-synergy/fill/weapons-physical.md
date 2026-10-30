@@ -61,10 +61,10 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 - **Builds:** Hunt 2 ●●●, Cuts ●.
 
 ### Thousandth cut · dagger · legendary
-- **Card:** Dagger. Fits Assassin, Ranger, Hexer. Each hit it lands adds a Cut, kept for the rest of the fight, up to 25. Its hits deal 2% more for each Cut.
+- **Card:** Dagger. Fits Assassin, Ranger, Hexer. Each hit it lands adds a Cut, at most one every 2 ticks, kept for the rest of the fight, up to 25. Its hits deal 2% more for each Cut.
 - **Weapon:** medium, medium, Attack.
-- **Numbers:** +2% a Cut on its hits (physical and magical), with a cap of 25 Cuts (+50%) and no decay. Basic attacks, extra strikes and ability hits all count. Status damage is neither counted nor boosted. A dagger unit without Haste or Double strike lands about 7 to 12 hits in a 40-tick fight, so it ends that fight at +14% to +24% and an 80-tick fight at about twice that. A blur (Haste and Double strike) reaches the cap around tick 60, so its 40-tick and 80-tick fights end about half apart.
-- **Hooks:** the counter **Cuts**, intensity, cap 25, shown as an icon with its number, with a boost on both damage tags of 2 × its own stacks (`of: holder`). A piece status reacts to `hit_lands` of any kind → `apply` cuts, 1 stack, `to: self`.
+- **Numbers:** +2% a Cut on its hits (physical and magical), with a cap of 25 Cuts (+50%) and no decay. Basic attacks, extra strikes and ability hits all count, but a counter gains at most one stack every 2 ticks (G11). An extra strike that lands with its swing, or a three-hit ability, gives one Cut, so the count follows the wearer's actions more than its hits. Status damage is neither counted nor boosted. A dagger unit without Haste lands 9 or 10 counted hits in a 40-tick fight (+18% to +20% by its end). A Hasted blur lands about 14 (+28%) and reaches the cap near tick 70, so its 40-tick and 80-tick fights end a little under twice apart.
+- **Hooks:** the counter **Cuts**, intensity, cap 25, shown as an icon with its number, with a boost on both damage tags of 2 × its own stacks (`of: holder`). A piece status reacts to `hit_lands` of any kind → `apply` cuts, 1 stack, `to: self`, under G11's gain limit (NEW H).
 - **Builds:** Cuts 3 ●●●, Snap ●● (the Hexer's Cold hex hits), Hunt ●.
 
 ### Quietus · dagger · legendary

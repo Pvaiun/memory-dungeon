@@ -117,7 +117,7 @@ That's about thirty-five additions on top of the spine's seventeen. Most are sma
 A fresh reader read all seven files together. These are the lead's rulings on what it found. The same rules as above: each agent applies its share's lines, and the global ones apply to all.
 
 ### Global
-- **G11. A counter gains at most one stack every 2 ticks,** however many triggers fire (Spite, Heat, Cuts, Tempo, Surge, Fervor, Charge). Against a pack, a counter then grows at a fight's pace, not a swarm's.
+- **G11. A counter gains at most one stack every 2 ticks,** however many triggers fire (Spite, Heat, Cuts, Tempo, Surge, Fervor, Charge). Against a pack, a counter then grows at a fight's pace, not a swarm's. Stacks over the limit wait their turn rather than being lost, so a piece that gives several at once (Dawnblade) gives them over a few ticks.
 - **G12. Paying HP,** one definition for every piece and version that costs HP: the payer loses that much HP at once; it isn't damage, so no Shield soaks it, nothing reacts to it, and it can't take the payer below 1 HP (engine 4).
 - **G13. "Every so often" is 22 ticks** (the short cooldown word), first at tick 11, unless a line states its own number.
 - **G14. Triple is past the ceiling.** Every remaining triple is double: Fissure, Shadow step, Faultline (its crit for double), Opening thrust. The Worldbreaker's triple stays: it's a swing shape that swings half as often.
