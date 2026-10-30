@@ -62,6 +62,7 @@ Oct 30, 2026. Seven agents wrote the fill (`fill/`), each from `fill-brief.md`, 
 - Last page: foes that aren't bosses.
 - Bloodlust draught and Bloodlust add their doublings (×3), not multiply.
 - Comrade's targe stays as written (Guard on whoever draws most).
+- The round shield's Taunt-below-half uncommon changes under G7: the amulet Red ribbon has that effect now.
 
 ## The formations
 

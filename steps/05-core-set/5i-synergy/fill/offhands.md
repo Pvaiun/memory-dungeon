@@ -593,11 +593,10 @@ The spine's rule: commons lean Armor, Attack, Thorns; uncommons Thorns, a Guard 
 - **Builds:** Toll 1 ●, Landslide 1 ● (the stone wall pricks), Harvest 1 ● (the rod).
 
 #### Bear fetish · totem · uncommon
-- **Card:** Totem. Fits Bramble knight, Ranger, Geomancer. Attack +1. The first time in a fight that its holder drops below half its HP, it's Guarded.
-- **Numbers:** Attack +1 (1,000). Guard at its own numbers, once a fight.
-- **Hooks:** the piece's status: `hp_lost` → `apply` guard, `to: { side: self, where: { hpBelow: 50, lacks: <marker> } }`, then the fight-long marker.
-- **Builds:** Toll 1 ●, Pact 1 ● (low and still standing), Landslide 1 ●.
-- **CHALLENGE:** see CHALLENGE 10 (it repeats the Plate uncommon on two of its three holders).
+- **Card:** Totem. Fits Bramble knight, Ranger, Geomancer. Attack +1. The first ally to drop below half its HP each fight is Guarded.
+- **Numbers:** Attack +1 (1,000). Guard at its own numbers, once a fight, on whichever ally (the holder included) first drops below half (G7).
+- **Hooks:** the piece's status: `hp_lost` (whose `holder` and whose `ally`) → `apply` guard, `to: owner`, only if the owner is now below half (addition 5: a condition on the event's other unit) and the holder lacks a fight-long marker, which the reaction then applies.
+- **Builds:** Toll 1 ● (the anchor's first crack), Pact 1 ● (low and still standing), Phoenix 1 ● (the next to fall, held).
 
 #### Briar totem · totem · rare
 - **Card:** Totem. Fits Bramble knight, Ranger, Geomancer. Foes that hit its holder gain a few Bleed.
@@ -617,21 +616,21 @@ The spine's rule: commons lean Armor, Attack, Thorns; uncommons Thorns, a Guard 
 - **Builds:** Landslide 2 ●●● (Bedrock from the first tick), Ambush ●●.
 
 #### Earthmother totem · totem · legendary
-- **Card:** Totem. Fits Bramble knight, Ranger, Geomancer. While its holder stands, every Shield an ally gains is a third larger, and so is its cap. When an ally's Shield breaks, that ally is Guarded.
+- **Card:** Totem. Fits Bramble knight, Ranger, Geomancer. While its holder stands, every Shield an ally gains is a third larger. When an ally's Shield breaks, that ally gains a few Might.
 - **Numbers:**
-  - +33% to each Shield application.
-  - The cap goes from half to two thirds of max HP.
-  - Guard at its own numbers, on every break, for every ally.
+  - +33% to each Shield application. The cap stays the Shield's own, half of max HP (the offhands ruling), so a third larger shows most on the small and middling Shields: Vanguard, Stone totem, the Knight's and the uncommons' Shields at the start.
+  - A few Might, flat: 2, on every break, for every ally (the offhands ruling: Might, not Guard, which is the Knight's Grudge). The hammer behind the stone hits harder once the stone is gone.
 - **Hooks:**
-  - The piece's status gives every ally a per-source aura that ends with the holder.
-  - Addition 16 (Shields received, a stat beside healing received) at +33, read by the Shield's cap as well as by each application.
-  - `status_ended` (shield, cause `stacks`, whose `holder` and whose `ally`) → `apply` guard, `to: owner`.
+  - The piece's status gives every ally a per-source aura that ends with the holder: addition 16 (Shields received, a stat beside healing received) at +33, read by each application only.
+  - `status_ended` (shield, cause `stacks`, whose `holder` and whose `ally`) → `apply` might 2, `to: owner`.
 - **Builds:** Landslide 3 ●●●, Phoenix ●●, Toll ●.
-- **CHALLENGE:** see CHALLENGE 5 (the cap).
 
 #### Wild hunt totem · totem · legendary
 - **Card:** Totem. Fits Bramble knight, Ranger, Geomancer. Its holder's basic attacks Mark their target. Each time a foe falls, every ally gains a few Might.
-- **Numbers:** Marked at its own numbers. A few Might, flat: 2 for every ally on every foe's fall (6% a stack, spent one an action).
+- **Numbers:**
+  - Marked as G2 sets it: 14 ticks, Refresh, and one Mark for the holder at a time, so each basic attack moves it to the foe just hit. The party's basic attacks follow the holder's latest target.
+  - On a Ranger, Hunter's eye gives its basic attacks Seek, so its Marks land past a Taunting front, but only Seeking basic attacks follow them there (G2).
+  - A few Might, flat: 2 for every ally on every foe's fall (6% a stack, spent one an action).
 - **Hooks:** the piece's status: `hit_lands` (kind `basic`, whose `holder`) → `apply` marked, `to: other` (addition 2); `ko` (whose `foe`) → `apply` might 2, `to: { side: allies, pick: all }`.
 - **Builds:** Hunt 3 ●●●, Ambush ●.
 
@@ -639,7 +638,7 @@ The spine's rule: commons lean Armor, Attack, Thorns; uncommons Thorns, a Guard 
 
 ## Vial (Assassin, Vampire)
 
-The spine's rule: commons lean Lifesteal, Crit chance, Attack; uncommons crits that heal a little, Lifesteal below half HP. The eight: crits that heal or bleed, abilities paid in blood, a return from the dead, and a price paid at every fight's start.
+The spine's rule: commons lean Lifesteal, Crit chance, Attack; uncommons crits that heal a little, Lifesteal below half HP. The lead's ruling moves the second to Lifesteal on hits against a bleeding foe. The eight: crits that heal or bleed, a drink from open wounds, abilities paid in blood, a return from the dead, and a price paid at every fight's start.
 
 #### Red tincture · vial · common
 - **Card:** Vial. Fits Assassin, Vampire. Lifesteal medium, Attack +1.
