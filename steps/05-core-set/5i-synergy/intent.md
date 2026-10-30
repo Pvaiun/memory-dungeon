@@ -23,6 +23,9 @@ This page distils their words; it isn't their words. Where it's wrong, they corr
 - **Statuses are universal** (Oct 30, gate 2): a piece never applies a status for less, or more, than its own length. "I would keep statuses universal. You can't apply a shorter status."
 - **No balancing rules in this step** (Oct 30, gate 2): "don't make rules about balancing. We're gonna do that in the balancing pass." Synergies may be overpowered: "We're trying synergies now, it's okay if they're OP." The number ranges are first values, not limits.
 - **The engine can grow** (Oct 30, gate 2): "Engine growing is totally fine."
+- **Training** (Oct 30, after gate 2): a fresh unit now needs about ten trainings (learning two abilities, then a power step and a version for each of three abilities and the passive), against five before. "For now I would start by just making training opportunities give 3 choices, and we can decide what else to do later."
+- **Marked is fine** (Oct 30): the director supplies art for its status icon.
+- **Control resistance on bosses** (Oct 30, the director's design, to get ahead of permanent locks): "Whenever a boss gets hit by one of those three CCs [Stun, Silence, Slow], and that includes the stun that comes from a chill, they gain a stack of a resistance, like a control resistance buff, invisibly to the player. And at a certain stack threshold, it decreases the duration of the effects. And then at the max threshold, it makes them immune to the effects. And then the stack lowers over time naturally." A party that isn't stacking control hovers around zero. The text box says RESISTED or IMMUNE. It's the one exception to universal statuses, and it's the boss's, not a piece's.
 
 ## Builds (`philosophy.md`, `builds.md`)
 

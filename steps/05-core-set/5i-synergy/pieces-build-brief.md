@@ -24,6 +24,12 @@ Build the gear, formations, upgrades and mythics as designed, and the engine add
 
 The lead splits the volume among parallel agents with bounded shares: the engine additions, groups of gear kinds, formations, upgrades and the interface. Brief them with intent and ranges, never examples. The lead joins their work, and the tests, typecheck, validation and smoke stay green at every commit.
 
+## Also in this build (the director's, Oct 30, after the design's gate 2)
+
+- **Control resistance on bosses** (`intent.md` has their words). A boss gains a hidden stack each time it's Stunned (a Chill shatter's Stun included), Silenced or Slowed. Past a first threshold, those statuses land on it for less time; at the most stacks, it's immune to them. The stacks drain over time, so a party that isn't chaining control sits near zero. The battle text says RESISTED or IMMUNE. The thresholds, the cap and the drain are first values for the balance pass. It's the one exception to universal statuses.
+- **Training:** a fresh unit needs about ten trainings now. For a start, each training opportunity gives three trainings where it gave one. The rest is decided later.
+- **Marked** gets the director's icon art.
+
 ## How to test
 
 - **The parties:** hand-built parties for every route of every build, at each of its three rungs (what most runs find, specific pieces, the far end). Build them with 5h's party tool (`src/rogue-parties.ts`). Neutral and formation versions both count.
