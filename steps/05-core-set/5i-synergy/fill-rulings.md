@@ -111,3 +111,49 @@ The spine listed 17. The fill adds these, grouped; the build brief takes them as
 - **The run layer:** passives that can be trained; an upgrade as two trainings.
 
 That's about thirty-five additions on top of the spine's seventeen. Most are small extensions of what the engine already does; the build brief should cost them before building and cut any that serve a single piece, offering the piece a simpler shape instead.
+
+## Second round, after a fresh read of the whole fill
+
+A fresh reader read all seven files together. These are the lead's rulings on what it found. The same rules as above: each agent applies its share's lines, and the global ones apply to all.
+
+### Global
+- **G11. A counter gains at most one stack every 2 ticks,** however many triggers fire (Spite, Heat, Cuts, Tempo, Surge, Fervor, Charge). Against a pack, a counter then grows at a fight's pace, not a swarm's.
+- **G12. Paying HP,** one definition for every piece and version that costs HP: the payer loses that much HP at once; it isn't damage, so no Shield soaks it, nothing reacts to it, and it can't take the payer below 1 HP (engine 4).
+- **G13. "Every so often" is 22 ticks** (the short cooldown word), first at tick 11, unless a line states its own number.
+- **G14. Triple is past the ceiling.** Every remaining triple is double: Fissure, Shadow step, Faultline (its crit for double), Opening thrust. The Worldbreaker's triple stays: it's a swing shape that swings half as often.
+- **G15. Mythics carry no stat steps** unless the line's shape needs one (as the first upgrades share did).
+- **G16. Two-handers' uncommons** carry two steps and their effect: the brief's "worth a weapon and an offhand" wins over "one step".
+- **G17. Hits that always crit win over Gambler's coin,** and its card says so.
+
+### Same cards in two places (G7 again)
+- Bull's horn (horn) repeats Clarion blade (sword) for the Knight: the horn's changes.
+- Mending icon (relic) repeats Mender's mace for the Cleric: the relic's changes, and takes a name that isn't a near-twin.
+- Gatekeeper's kite repeats Carapace charm (amulet): the kite's changes.
+- Keystone cuirass (Plate uncommon) is a small Stone totem for the Geomancer and Bramble knight: the cuirass changes.
+- Skyshot bow (bow uncommon) is Tracker's coat for the Ranger and Bard: the bow's changes.
+- Comrade's targe: Guard on the other ally drawing the most, never the holder.
+- Vestments of return: only its Shield on every ally revived while the wearer stands; its cheap, quick revives go (they were Reliquary of mercy's).
+- Phoenix ember and the Vial of the last breath stay: one is for anyone and pays for it, the other for two classes.
+- Ironclad kite takes another name.
+
+### Too strong, or out of range
+- Withering idol: one basic attack in three Weakens, as the mace and rod.
+- The Hammer seat in Hammer and anvil: attack speed −100 (half as often), as the Millstone.
+- Reaping line's Scythes are a swing shape under G5, and their extra hits carry damage only, no riders.
+- Hearth's Torch: only its basic attacks add a Burn to each foe already burning.
+- Blood oath's Donor: its heals on the Bleeder are half again (G9).
+- Focused curse: twice as much, not three times. Searing: a few Burn on the foe with the most, not twice as many.
+- Hexweave mail: +5% a debuff, up to six debuffs. Counting debuffs is an engine addition (as upgrades-2 says).
+- Oathkeeper: its sweep hits every other foe for half.
+- Matins robe: the first ability each fight costs half.
+- Reprisal hauberk: strikes back at the first three foes that hit it each fight.
+- Supercell: up to +40%.
+- Thrall's chalice: once a fight, both halves.
+- Rupture: one hit's worth is Bleed's own per-hit damage for each stack.
+- Cistern rod's Clarity is short (G1), whenever it fires.
+
+### Cards and names
+- Echo charm: its card says it carries what a basic attack applies (statuses and on-hit effects), not damage boosts or Lifesteal.
+- Funeral bell: one Fervor for each fall.
+- Gaol's Warden becomes Turnkey; Heavy line's Hammer becomes Bruiser (it isn't a swing shape).
+- Prior's mace and Canopy staff changed the spine's table lines (the Ward to the ally drawing most, a second target): they stand.
