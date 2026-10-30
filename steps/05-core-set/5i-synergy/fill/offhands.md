@@ -31,7 +31,7 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the ten offhand kinds,
 | Kind | Common | Common | Uncommon | Uncommon | Rare | Rare | Legendary | Legendary |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Kite shield | Ironclad kite | Banner kite | Gatekeeper's kite | Sheltering kite | Rubble shield | Humbling shield | Spiked bulwark | Oathbound shield |
-| Round shield | Bronze buckler | Linden shield | Comrade's targe | Guardian's round | Paired shields | Hunter's buckler | Phalanx shield | Shield of the chosen |
+| Round shield | Bronze buckler | Linden shield | Comrade's targe | Linebreaker | Paired shields | Hunter's buckler | Phalanx shield | Shield of the chosen |
 | Horn | Ram's horn | Ivory horn | Reveille | Bull's horn | War horn | Echo horn | Horn of the charge | Rallying horn |
 | Tome | Scholar's codex | Hymnal | Snowbound folio | Abridged lexicon | Primer of frost | Treatise on the field | Last page | Annotated grimoire |
 | Lantern | Brass lantern | Hooded lantern | Pitch lantern | Dazzling lantern | Bellows lantern | Signal lantern | Wick | Lamp of vigil |
@@ -125,7 +125,7 @@ The spine's rule: commons lean Armor, HP, Aggro; uncommons a Shield at the start
 
 ## Round shield (Hoplite, Valkyrie)
 
-The spine's rule: commons lean Armor, Attack, HP; uncommons a Guard at the start, a short Taunt when an ally drops below half. The eight: Guard passed along, a kill that hardens the killer, an aura that costs its holder damage, and a raise on the spot.
+The spine's rule: commons lean Armor, Attack, HP; uncommons a Guard at the start, a short Taunt when an ally drops below half. Under G7 the Taunt goes (the amulet's Red ribbon has it now), and the second uncommon breaks a Taunting front instead. The eight: Guard passed along, a front broken, a kill that hardens the killer, an aura that costs its holder damage, and a raise on the spot.
 
 #### Bronze buckler · round shield · common
 - **Card:** Round shield. Fits Hoplite, Valkyrie. Armor +1, Attack +1.
@@ -147,14 +147,14 @@ The spine's rule: commons lean Armor, Attack, HP; uncommons a Guard at the start
 - **Hooks:** the piece's status: `fight_start` → `apply` guard, `to: { side: allies, pick: highest, by: { stat: aggro } }`.
 - **Builds:** Toll 1 ● (the anchor), Landslide 1 ● (the bulwark), Bonfire 1 ● (the keeper).
 
-#### Guardian's round · round shield · uncommon
-- **Card:** Round shield. Fits Hoplite, Valkyrie. HP +1. The first time in a fight that another ally drops below half its HP, its holder Taunts briefly.
-- **Numbers:** HP +1 (500). A short Taunt: 10 ticks, half its own (G1), once a fight.
-- **Hooks:**
-  - The piece's status: `hp_lost` (whose: `ally`) → `apply` taunt, `to: holder`.
-  - The Taunt is applied with a duration of 10.
-  - Only if the event's owner is now below half (addition 5: a condition on the event's other unit), and the holder lacks a fight-long marker, which the reaction then applies.
-- **Builds:** Toll 1 ● (an anchor that steps in), Phoenix 1 ● (it chooses who falls next), Bonfire 1 ● (the keeper).
+#### Linebreaker · round shield · uncommon
+- **Card:** Round shield. Fits Hoplite, Valkyrie. Attack +1. Its holder's hits on a Taunting foe deal a fifth more.
+- **Numbers:**
+  - Attack +1 (1,000).
+  - +20% (a small boost) on its hits, both damage types, against a foe that's Taunting.
+  - It replaces the short Taunt when an ally drops below half, which the amulet's Red ribbon now gives (G7). No other kind the Hoplite or the Valkyrie wears pays for hitting a Taunting front.
+- **Hooks:** a boost on `physical` and `magical`, `{ ratio: 20, when: { has: taunt }, of: target }`.
+- **Builds:** Hunt 1 ● (the front that shields the back row, pried open), Ambush 1 ● (the front that catches the volley), Landslide 1 ● (the blows land on the wall).
 
 #### Paired shields · round shield · rare
 - **Card:** Round shield. Fits Hoplite, Valkyrie. Armor +1. Whenever its holder is Guarded, so is the other ally lowest in HP share that isn't Guarded yet.
@@ -730,11 +730,13 @@ The spine's rule: commons lean Siphon, Magic, HP; uncommons MP on a kill, a litt
 - **Builds:** Hunt 1 ● (each kill pays), Overflow 1 ●.
 
 #### Fanged idol · idol · uncommon
-- **Card:** Idol. Fits Hexer, Vampire. Crit +1. Its holder's crits drain MP from their target.
-- **Numbers:** Crit chance +1 (3 points). 20% of each crit's damage taken as MP from the target and given to the holder (Siphon's way, on crits only).
-- **Hooks:** the piece's status: `hit_lands` (tags `crit`, whose `holder`) → `mp` `{ ratio: -0.2, amount: true }`, `to: other`; `mp` `{ ratio: 0.2, amount: true }`, `to: self`.
-- **Builds:** Overflow 1 ●, Pact 1 ●.
-- **CHALLENGE:** see CHALLENGE 7 (a small Leech idol in the same kind).
+- **Card:** Idol. Fits Hexer, Vampire. Crit +1. Its holder's crits Rot their target.
+- **Numbers:**
+  - Crit chance +1 (3 points).
+  - Rot at its own numbers (−60% healing received, 20 ticks), on every crit (the offhands ruling).
+  - No class applies Rot today; it's the party's answer to foes that heal (Bone Priests, a Regenerator, an enemy Vampire). Its Shields are untouched.
+- **Hooks:** the piece's status: `hit_lands` (tags `crit`, whose `holder`) → `apply` rot, `to: other`.
+- **Builds:** Hunt 1 ● (the back row's healers), Pact 1 ● (a drain race won).
 
 #### Withering idol · idol · rare
 - **Card:** Idol. Fits Hexer, Vampire. Its holder's basic attacks Weaken their target, and its hits on a Weakened foe deal a little more.
@@ -753,16 +755,15 @@ The spine's rule: commons lean Siphon, Magic, HP; uncommons MP on a kill, a litt
 - **Builds:** Overflow 2 ●●●, Pact ●.
 
 #### Idol of binding · idol · legendary
-- **Card:** Idol. Fits Hexer, Vampire. Foes its holder Weakens are also Slowed, and its hits on a foe that's both deal double.
+- **Card:** Idol. Fits Hexer, Vampire. Foes its holder Weakens are also Slowed for as long, and its hits on a foe that's both deal half again as much.
 - **Numbers:**
-  - Slow at its own numbers (24 ticks, a little longer than Weaken's 20; the spine's "for as long" would change Slow's duration).
-  - +100% on its hits, both types, against a foe that has both.
+  - Slow for as long as the Weaken it came with: 20 ticks, under Slow's own 24 (G1 allows the shorter).
+  - +50% on its hits, both types, against a foe that has both (G9: the holder keeps the condition up all fight with a quick Enfeeble or Blood drain, so half again, not double).
   - The Weakens come from Enfeeble (the Hexer's, quick), Blood drain (the Vampire's, quick) and Weaken from other pieces.
 - **Hooks:**
-  - The piece's status: `status_gained` (weaken, whose `foe`) where the applier is the holder (NEW A) → `apply` slow, `to: owner`.
-  - A boost `{ ratio: 100, when: { has: [weaken, slow] }, of: target }`.
+  - The piece's status: `status_gained` (weaken, whose `foe`) where the applier is the holder (NEW A) → `apply` slow, duration 20, `to: owner`.
+  - A boost `{ ratio: 50, when: { has: [weaken, slow] }, of: target }`.
 - **Builds:** Lockdown 3 ●●●, Toll ●●.
-- **CHALLENGE:** see CHALLENGE 4 (double on a condition the holder keeps up).
 
 #### Idol of the hungry dark ✦ · idol · legendary
 - **Card:** Idol. Fits Hexer, Vampire. Every so often, it takes one buff from a foe and gives it to its holder.
@@ -779,16 +780,19 @@ The spine's rule: commons lean Siphon, Magic, HP; uncommons MP on a kill, a litt
 
 ## CHALLENGES
 
-1. **"Short" Taunt and Haste** (Guardian's round, Bull's horn, Quickening chime): the spine's rule asks for "a short Taunt" and "a short Haste", but the brief keeps every status at its own duration. I wrote them at their own (Taunt 20 ticks, Haste 20), once a fight. A short one is a duration override on the apply, which the engine has but the status rule forbids. I'd keep the rule.
-2. **Warding bell's start beat** lifts nothing: every status ends with its fight, so nothing is on an ally at the first tick. I'd drop the start and put the first lift at tick 11, then every 22.
-3. **Phalanx shield is strong everywhere on the Hoplite.** At Armor 5 nearly every ally has less, and the price (a fifth off its own damage) is small, because the Hoplite deals a small share of a party's damage. I'd hold the cut only while the holder is above half its HP. That's the spine's "early fight held", with a visible turn when it breaks. Its own fifth less stays.
-4. **Idol of binding's double** is on a condition its holder keeps up: Enfeeble or Blood drain on a quick cooldown re-Weakens the same foe before the 20 ticks run out, so against a lone boss it's double all fight. The brief allows double only on a condition a fight meets a few times. I'd make it half again, or double on the first hit after each new Weaken. "Slowed for as long" is written as Slow's own 24 ticks.
-5. **Earthmother totem raises the Shield's cap,** which is part of what Shield is. I kept it, as a holder-side stat like healing received (never the applier), because without it the piece is near dead for the Geomancer, whose Earthen shell fills its cap already. If the status rule wins, the alternative is "a third larger" alone, with a different second half.
-6. **Annotated grimoire, as written, loops:** the holder's free cast would make the next one free, so a lone holder would pay once a fight. I added "a cast it made free doesn't make another" (the brief: nothing triggers without limit on a condition the party controls).
-7. **Fanged idol (the idol's "a little Siphon on crits") is a small Leech idol** in the same kind, against the rule that no two pieces in a kind are a small and a big version of one thing. The Hexer and Vampire also crit 5% of the time, so it's thin. I'd make it "its crits add Rot", an anti-heal no class has, which gives the Hunt and Pact an answer to healers.
-8. **Crimson dregs (the vial's "Lifesteal below half HP")** is a smaller Bloodsworn mail, which the Vampire also wears, and it sits beside the Bloodlust draught in its own kind (Lifesteal up when hurt). I'd make it "Lifesteal medium on hits against a bleeding foe": poison and blood, on another trigger.
-9. **"Thorns" as an uncommon** (the totem's rule, and the mail's): a special stat at medium is a common's step, so a Thorns uncommon is a common. I gave Spinebark pole a target instead (Thorns for whoever draws most) and kept the plain stat on a common. The same applies to the mail's Lifesteal and Thorns uncommons in the armor share.
-10. **Bear fetish repeats the Plate uncommon** ("a Guard once a fight below half"). The Bramble knight and the Geomancer wear both, and two copies fire together and refresh. I'd make the totem's "the first ally to drop below half each fight is Guarded".
+Each one is settled; the line says by which ruling (`../fill-rulings.md`).
+1. **"Short" Taunt and Haste:** settled by G1. Short is half a status's own length: Bull's horn's Taunt is 10 ticks, and Reveille's Clarity and Mending icon's Regen are short too.
+2. **Warding bell's start beat:** settled by the offhands ruling. The first lift is at tick 11, then every 22.
+3. **Phalanx shield, strong everywhere on the Hoplite:** settled by the offhands ruling. The cut holds while the holder is above half its HP.
+4. **Idol of binding's double:** settled by G9 and the offhands ruling: half again. G1 also lets its Slow last as long as the Weaken (20 ticks), as the spine wrote.
+5. **Earthmother totem's cap:** settled by the offhands ruling. A third larger, with the cap unchanged; a break gives a few Might, not Guard.
+6. **Annotated grimoire's loop:** settled by the offhands ruling. A cast it made free doesn't make another.
+7. **Fanged idol, a small Leech idol:** settled by the offhands ruling. Its crits add Rot.
+8. **Crimson dregs, a small Bloodsworn mail:** settled by the offhands ruling. Lifesteal medium on hits against a bleeding foe.
+9. **"Thorns" as an uncommon:** settled by G6 and the offhands ruling. Spinebark pole keeps its target.
+10. **Bear fetish repeating the Plate uncommon:** settled by G7. The first ally to drop below half each fight is Guarded.
+11. **The lantern's Ward and the bell's Haste at the start** (not raised by me; the lead's): settled by G7. Dazzling lantern takes a short Weaken on the most dangerous foe, and Quickening chime takes a dodge that brings its next basic attack sooner.
+12. **The round shield's short Taunt when an ally drops below half** (the lead's, after Red ribbon took that shape on the amulet): settled by G7. Linebreaker takes Attack +1 and +20% on hits against a Taunting foe.
 
 ## NEW
 
@@ -800,16 +804,14 @@ Beyond the spine's list and the physical weapons' lettered needs (I use their NE
 5. **A fallen unit's status acting on a timer** (Vial of the last breath; the Phoenix ember needs the same).
 6. **Moving a status** from one unit to another, with its stacks and time left (Idol of the hungry dark).
 7. **"Past full" for MP** as well as HP, on addition 8 (Leech idol).
-8. **Einherjar as a rule on every revive the Valkyrie makes,** not a field on Valhalla (Shield of the chosen; Bones of the returned's trade).
+8. **Einherjar as a rule on every revive the Valkyrie makes,** not a field on Valhalla (Shield of the chosen; Bones of the returned's trade). G10 keeps Einherjar as the exception.
+9. **A unit condition on rank, "not a boss"** (Last page, after its ruling).
 
 ## Least sure
 
-1. **Phalanx shield** (CHALLENGE 3) and **Oathbound shield** against raidwides: one blast can land on the holder two or three times.
+1. **Oathbound shield** against raidwides: one blast can land on the holder two or three times.
 2. **The horn leans on the fight's start:** Reveille, Bull's horn, War horn and Horn of the charge, four of eight. The spine's rule set both uncommons there.
 3. **Close pairs within a kind,** kept because their triggers differ: Reveille and Echo horn (MP to the neediest, once at the start or on every cast), Abridged lexicon and Annotated grimoire (cheaper own casts, or a free one passed on), Waking bell and Warding bell (one Silence answered, or a debuff lifted on a beat).
-4. **Mending icon** is a free Regen (48% of max HP) on the lowest ally every fight. That's sustain across fights, which the intent says no build should get more of; it's the spine's rule.
-5. **Last page fells bosses too:** a boss below a tenth falls when one of its adds does.
-6. **Bloodlust draught on the Vampire multiplies with Bloodlust:** Lifesteal high (20%) becomes 80% below half. I'd make the two doublings add (×3).
-7. **Treatise on the field is thin:** among tome holders, only the Frostweaver's Blizzard and two versions hit every foe, and those hits are touch-sized.
-8. **Comrade's targe** reads the spine's "a Guard at the start" as a Guard on whoever draws most. On the holder, it would be Bastion plate's whole effect (a Plate rare) as an uncommon, and the Hoplite wears both.
-9. **Wild hunt totem on a Ranger's dagger** Marks a new random foe every 5.6 ticks. Unless Marked is one per marker (a new Mark moves the old), the focus spreads over two or three foes.
+4. **Treatise on the field is thin:** among tome holders, only the Frostweaver's Blizzard and two versions hit every foe, and those hits are touch-sized.
+
+Settled by the rulings and dropped from this list: Phalanx shield's strength (the offhands ruling), Mending icon's free Regen (G1 makes it short), Last page on bosses (the offhands ruling), the Bloodlust draught's multiplied Lifesteal (the offhands ruling), Comrade's targe's reading (the offhands ruling), and the Wild hunt totem's spreading Marks (G2: one Mark per unit).
