@@ -461,7 +461,7 @@ The spine's rule: commons lean Magic, MP regen, HP; uncommons heals that also cl
 - **Card:** Relic. Fits Cleric, Valkyrie. MP regen +1. Each time a foe falls, the ally with the lowest share of its HP is healed a little.
 - **Numbers:**
   - MP regen +1 (3,000).
-  - 6% of the healed ally's max HP a fall. A regular fight's three or four kills before the last come to about a fifth of one ally's HP, about what the short Regen at the start gave, but paid out as the fight is won.
+  - 6% of the healed ally's max HP a fall. A regular fight's three or four kills before the last come to about a fifth of one ally's HP, paid out as the fight is won.
   - It replaces the Regen at the start (and the name Mending icon, a near-twin of Mender's mace), which repeated the mace's for the Cleric (G7, second round). No other kind the Cleric or the Valkyrie wears heals on a foe's fall.
 - **Hooks:** the piece's status: `ko` (whose `foe`) → `heal` `{ ratio: 0.06, stat: max_hp, of: target }`, `to: { side: allies, pick: lowest, by: hp_share }`.
 - **Builds:** Hunt 1 ● (each kill mends the hurt), Pact 1 ● (life bought back), Phoenix 1 ● (the returned kept up).
