@@ -284,24 +284,23 @@ A seat's stat step is 1.25 gear steps (`FORMATION_STEP` in `content/core-set/for
 
 ### The pack · legendary
 **Card:** "Everyone's basic attacks follow the Lead's last target. When it falls, the Lead's abilities come closer."
-- **Lead** (first seat) · "Its hits Mark their target and take the Mark off every other foe. When a Marked foe falls, its abilities come 5 ticks closer." Only hits from its basic attacks and single-target abilities move the Mark: Area hits and extra targets don't.
+- **Lead** (first seat) · "Its hits Mark their target. When the foe it Marked falls, its abilities come 5 ticks closer." Only hits from its basic attacks and single-target abilities Mark: Area hits and extra targets don't. Under G2, the Lead keeps one Mark (14 ticks), and each new one moves it, so the Mark is always on the Lead's last target. The Lead's swing (12.8 ticks at most) comes round before the Mark runs out.
 - **Packmate** ×2 · nothing of their own.
 
-**Party effect:** through Marked, the party's basic attacks go to the Lead's quarry while it lives. The Lead's own basic attacks follow it too, so the quarry changes when one of the Lead's abilities picks another foe (Backstab the lowest, Pressure point the strongest) or when it falls.
+**Party effect:** through Marked, the party's basic attacks go to the Lead's quarry while it lives (by draw if another unit's Mark is out too). The Lead's own basic attacks follow it too, so the quarry changes when one of the Lead's abilities picks another foe (Backstab the lowest, Pressure point the strongest) or when it falls. While a foe Taunts, only basic attacks with Seek follow the Mark past it (G2).
 **Gives up:** anything that spreads. Riders pile onto one foe, damage past its HP is lost, and the field never sinks together.
 **Shape:** one picker, and a pack that follows it on a staircase of kills.
-**Hooks:** Lead: a seat status reacting to `hit_lands` (whose: holder; single-target hits only), which removes Marked from `{ side: foes, pick: all }` and then applies it to `other` (engine 2). On a foe's `ko`: engine 5 reads whether the fallen foe was Marked, then a cooldown change of −5 ticks on each of the Lead's abilities (engine 1).
+**Hooks:** Lead: a seat status reacting to `hit_lands` (whose: holder; single-target hits only) by applying Marked to `other`, which moves the Lead's one Mark (engine 2, G2). On a foe's `ko`: engine 5 reads whether the fallen foe held the Lead's Mark, then a cooldown change of −5 ticks on each of the Lead's abilities (engine 1).
 **Builds:** Hunt 3 ●●● (the whole party on one foe, and a kill that resets the hunt), Lockdown ● (a disabled foe as the Lead's pick).
 
 ### The forge · legendary
 **Card:** "The longer the fight, the hotter everyone burns; but the forge is slow to light."
 - **Forgehand** ×3 · nothing.
 
-**Party effect:** every 4 ticks, every ally gains a Heat. When each fight starts, every ally is Slowed for 8 ticks.
-**Heat, as I read section 1** (one meaning across every share, for the lead to fix once): each stack gives 3% more damage on the holder's hits, to a cap of 15. It's never spent and ends with the fight. Here that's +30% by tick 40 and the cap (+45%) at tick 60, so a 40-tick and an 80-tick fight end about half apart. Like any boost, it doesn't raise Burn's damage.
+**Party effect:** every 4 ticks, every ally gains a Heat. When each fight starts, every ally is Slowed for 8 ticks (G1: shorter than half Slow's own 24, as written).
+**Heat (G3):** +3% damage a stack on the holder's hits, up to 15, kept all fight. Here that's +30% by tick 40 and the cap (+45%) at tick 60, so a 40-tick and an 80-tick fight end about half apart. Like any boost, it doesn't raise Burn's damage.
 **Gives up:** the start: 8 ticks at −40% speed, while the foes are fresh.
 **Hooks:** a formation status pulsing every 4 ticks that applies one Heat (a new counter, section 1), and a reaction to `fight_start` applying Slow for 8 ticks.
-**CHALLENGE:** "Slowed for a moment" changes Slow's length. See CHALLENGES 2.
 **Builds:** Bonfire 3 ●●● (the party's own heat), Landslide ●● (power that isn't spent, so the slowest hitter keeps all of it), Pact ● (long fights).
 
 ### The ambuscade · legendary
@@ -315,24 +314,24 @@ A seat's stat step is 1.25 gear steps (`FORMATION_STEP` in `content/core-set/for
 **Builds:** Ambush 3 ●●● (an opening that clears a room), Cuts ● (fast hitters' first swings).
 
 ### The choir · legendary
-**Card:** "Each ability a voice casts makes the next voice's next ability free. Nobody regains MP from MP regen."
+**Card:** "Each ability a voice casts makes the next voice's next ability free. In a fight, nobody gains MP any other way."
 - **First voice**, **Second voice**, **Third voice** (a ring: the first follows the third) · "When the voice before casts an ability, this voice's next ability is free."
 
-**Party effect:** every ally's MP regen is 0. Every other source of MP still works: Clarity, Refrain, Siphon, tonics, the bench.
+**Party effect:** in a fight, no ally gains MP from anything (MP regen, Clarity, Refrain, Siphon): its only mana is the casts the choir makes free. Between fights, tonics and the bench work as usual.
 A free cast waits on its voice until that voice casts. A second cue before then adds nothing. A free cast cues the next voice like any other cast.
-**Gives up:** regen.
-**Shape:** a round: the casting passes from voice to voice. A voice that casts twice in a row pays for the second.
-**Hooks:** a reaction to `action_resolve` (kind: ability) applies a hidden Cue (Refresh) to the next seat's unit (**NEW** 1). The Cue sets the cost of the holder's next ability to 0 and ends when it resolves (engine 3, through engine 14). The formation's `stats`: MP regen −100%.
+**Gives up:** MP from anything else.
+**Shape:** a round: the casting passes from voice to voice. A voice that casts twice in a row pays for the second, out of a pool nothing refills until the fight ends.
+**Hooks:** a reaction to `action_resolve` (kind: ability) applies a hidden Cue (Refresh) to the next seat's unit (**NEW** 1). The Cue sets the cost of the holder's next ability to 0 and ends when it resolves (engine 3, through engine 14). No MP gained in a fight (**NEW** 8).
 **Builds:** Overflow 3 ●●● (casts that pay for the next), Lockdown ●● (free locks).
 
 ### The undying · legendary
 **Card:** "One gives itself so the others live: when it falls they're made whole, and it stands again before the next fight."
-- **Martyr** · "Draws far more. Can't be healed by others. When it falls, the others heal to full; it stands again after the fight with half its HP." Aggro +25. Heals from other units, a Regen they gave included, don't land on it; its own heals and Lifesteal do. When it falls, every other ally heals to full. If it's down when a fight is won, it stands with half its max HP for the next.
+- **Martyr** · "Draws far more. Can't be healed by others. The first time it falls each fight, the others heal to full; it stands again after the fight with half its HP." Aggro +25. Heals from other units, a Regen they gave included, don't land on it; its own heals and Lifesteal do. The first time it falls in a fight, every other ally heals to full; if it's raised and falls again, nothing more. If it's down when a fight is won, it stands with half its max HP for the next, with every ability on full cooldown (G10).
 - **Spared** ×2 · nothing of their own.
 
 **Party effect:** none beyond the Martyr's fall.
-**Shape:** a party built round one sacrifice that keeps being made.
-**Hooks:** Martyr: heals from others don't land (**NEW** 3). A seat status that survives a KO, reacting to its own `ko` with `heal` to `{ side: others, pick: all }` for their missing HP. The return is engine 12 (after a won fight): it covers the unit that fell in this seat, so a fallen unit moved into the seat between fights doesn't stand.
+**Shape:** a party built round one sacrifice, made once a fight.
+**Hooks:** Martyr: heals from others don't land (**NEW** 3). A seat status that survives a KO, reacting to its own `ko` with `heal` to `{ side: others, pick: all }` for their missing HP, once a fight (the status spends itself). The return is engine 12 (after a won fight), with every ability on full cooldown (G10). It covers the unit that fell in this seat, so a fallen unit moved into the seat between fights doesn't stand.
 **Builds:** Phoenix 3 ●●● (a fall that doesn't stay, and a return between fights), Pact ●● (life passed on).
 
 ### The hurricane · legendary
@@ -356,12 +355,13 @@ I read "once it falls" as "while it's down". If the Peak is raised, the Foothill
 **Builds:** Landslide 3 ●●● (a Geomancer or Knight as the Peak, with its Armor in its stone and its blows), Toll 3 ●● (an anchor that Taunts all fight).
 
 ### The storm front · legendary
-**Card:** "Every single-target hit the party lands also strikes the healthiest other foe, for a quarter."
+**Card:** "Every single-target hit the party lands is a tenth softer, and also strikes the healthiest other foe, for a quarter."
 - **Thunderhead** ×3 · nothing.
 
-**Party effect:** each hit from a basic attack or a single-target ability also hits the foe with the most current HP other than the first target (with one foe, nothing). The second hit is a quarter of the first, before mitigation, and meets that foe's own Armor or Magic resist. It's a hit (an extra strike, so it never chains) and carries nothing of the first hit's riders or statuses.
+**Party effect:** each hit from a basic attack or a single-target ability deals a tenth less, and also hits the foe with the most current HP other than the first target (with one foe, nothing). The second hit is a quarter of the first, before mitigation, and meets that foe's own Armor or Magic resist. It's a hit (an extra strike, so it never chains) and carries nothing of the first hit's riders or statuses.
+**Gives up:** a tenth of every single-target hit, all of it against a lone foe.
 **Shape:** every blow chips the biggest foe, so the field sinks together.
-**Hooks:** engine 9 (a reaction that strikes), sized from the triggering hit (**NEW** 4), aimed at `{ side: foes, pick: highest, by: hp, exclude }`.
+**Hooks:** a −10 boost on single-target hits, and engine 9 (a reaction that strikes), sized from the triggering hit (**NEW** 4), aimed at `{ side: foes, pick: highest, by: hp, exclude }`.
 **Builds:** Harvest 3 ●●● (the field falls together), Cuts ● (many small hits, each with an echo).
 
 ### The vise · legendary
@@ -375,33 +375,33 @@ I read "once it falls" as "while it's down". If the Peak is raised, the Foothill
 
 ---
 
-## CHALLENGES
+## CHALLENGES, settled
 
-1. **Long march's "short Regen"** changes Regen's length, which the brief rules out. Written as 8 ticks (16% of max HP). I'd change it to the formation's own mend, not Regen: every ally heals 8% of its max HP at ticks 4 and 8. That's the same 16%, with no status carrying it. A full Regen (48%) on everyone each fight is what made Caravan +20 in 5e.
-2. **The forge's "Slowed for a moment"**: the same rule. Written as Slow for 8 ticks. I'd change it to the formation's own slowness (everything 40% slower for the first 8 ticks), not the Slow status. Slow at its own 24 ticks costs most of a regular fight.
-3. **Thorn hedge's "Weakened briefly"**: the same rule. Written as 6 ticks. At Weaken's own 20 ticks, given again on every hit, every attacker of the Anchor would be Weakened nearly all fight: −30% on most of the damage the party takes, strong for a rare. I'd change it to Weaken at its own length, on a quarter of the hits that land on the Anchor.
-4. **Thorn hedge's Thorns high:** high is for legendaries and mythics only. Section 9 also describes this formation as "Thorns from Armor in Plate", which section 6 doesn't say. I'd change it to Thorns medium and drop section 9's note. The door from Landslide into the Toll keeps the Spiked bulwark and Bastion plate, two pieces, as the door rule asks.
-5. **Hoarfrost line's triple:** past the brief's ceiling (double only on a condition a fight meets a few times). In Snap's second rung, shatters come faster than a slow swing, so nearly every Breaker swing would triple. I'd change it to double.
-6. **Hammer and anvil's Hammer:** "half as often for triple" multiplies with Phalanx, the Millstone and the Worldbreaker. A Hoplite with a great weapon in the seat would swing once every 51 ticks for six times a swing: once a regular fight, which is what Phalanx was cut back from on Oct 28. I'd add that a unit whose basic attacks are already slowed by another effect gets Attack up instead.
-7. **The Reaping line's Scythes and The storm front** are a small and a big version of one thing (a quarter of a single-target hit on a second foe), in one kind. I'd change the Scythes to: "basic attacks hit every foe, for a fifth each". That's an even sweep that pays with five or more foes and costs with fewer. The storm front stays the echo on the healthiest foe for everyone.
-8. **Names.** The "Rod" seats (Ring of steel, Reaping line) read as seats for a rod wielder, now that the rod is a weapon kind; I'd call them "Lightning rod". "Anvil" (common) and "Hammer and anvil" (rare) share seat names and a shape, so they read as a small and a big version even though their seats differ (crits and HP, against a slower swing and stone); I'd rename the common.
+1. **Long march's short Regen:** settled by G1. It stays a short Regen of 8 ticks, as written.
+2. **The forge's Slow for a moment:** settled by G1. It stays a Slow of 8 ticks, as written.
+3. **Thorn hedge's brief Weaken:** settled by G1. It stays a Weaken of 6 ticks, as written.
+4. **Thorn hedge's Thorns high:** settled by the formations ruling. Thorns are medium, and section 9's "in Plate" note goes.
+5. **Hoarfrost line's triple:** settled by the formations ruling. The Breaker deals double.
+6. **Hammer and anvil's Hammer stacking with other reshapes:** settled by G5. A unit takes one swing shape, and the seat gives Attack or Magic +1 instead.
+7. **The Scythes against The storm front:** settled by the formations ruling. The Scythes' basic attacks hit every foe for a fifth each.
+8. **Names:** settled by the formations ruling. The "Rod" seats are Beacon, and the common Anvil is Heavy line.
 
 ## NEW
 
 1. **Seats as targets and event sources:** "the unit in a named seat" and "the next seat" (the Mason, Relay, The choir, Thorn hedge's Thorns). Engine 13 reads who sits in a seat; this is the other half.
 2. **A party condition:** "an ally is knocked out", read live and at a fight's start (Vigil's Mourners; The mountain when the Peak starts down).
 3. **Heals from other units don't land** (The undying's Martyr).
-4. **A strike sized from the hit that set it off,** a share of its damage before mitigation (the Scythes, The storm front): a small extension of engine 9.
+4. **A strike sized from the hit that set it off,** a share of its damage before mitigation (The storm front; the Scythes no longer need it): a small extension of engine 9.
 5. **Reading the MP cost just paid** (Relay's Well; the Brimming rod needs it too): small, beside engine 3.
 6. **One party count, shown once** and kept in step after a revive (The hurricane): small, mostly interface.
 7. **Engine 14 extended** from costs, stacks and cooldowns to an ability's wait and target (Gaol's Watcher, Hammer and anvil's Mason).
+8. **No MP gained in a fight,** from any source (The choir, from its ruling): small, beside "heals from others blocked".
+9. **Basic attacks aimed by a rule,** here every foe (the Scythes, from their ruling). It's on the lead's gathered list.
 
 ## Least sure
 
-1. **The pack.** Focus fire helps most parties, so "gives up anything that spreads" may not cost enough. If it doesn't, basic attacks could also lose their extra targets. It also rests on Marked's length: the Mark must outlast the Lead's swing (up to 12.8 ticks), or it lapses between hits.
-2. **The storm front** adds about a quarter to any party's single-target damage whenever two or more foes stand, and has no cost written. If it's strong everywhere, I'd make the first hit deal a tenth less.
-3. **The choir.** Since 5h no class regains MP by itself, so "gives up regen" costs only regen gear and seats, and in a three-caster party most casts are free.
-4. **Heat's numbers** (3% a stack, cap 15) are my reading. Kindled robes, the Wick and Ember palms use Heat too; the lead fixes it once.
-5. **The undying.** Each revive lets the Martyr fall again and heal the others to full again, bounded only by the revives' very long cooldowns.
-6. **Skirmish line.** Against many small blows, the Armor it takes away costs about what the dodges save (Scatter's lesson, 5a); it pays against big blows and with the dodge pieces.
-7. **Relay's name** echoes the director's "relay is too complicated".
+1. **The pack.** Focus fire helps most parties, so "gives up anything that spreads" may not cost enough. If it doesn't, basic attacks could also lose their extra targets. G2 settled the Mark's length: 14 ticks outlasts the Lead's swing.
+2. **Skirmish line.** Against many small blows, the Armor it takes away costs about what the dodges save (Scatter's lesson, 5a); it pays against big blows and with the dodge pieces.
+3. **Relay's name** echoes the director's "relay is too complicated".
+
+Settled by the rulings and taken off this list: the storm front's cost (a tenth less), the choir's cost (no MP from anything else), Heat's numbers (G3), and the undying's repeated falls (once a fight).

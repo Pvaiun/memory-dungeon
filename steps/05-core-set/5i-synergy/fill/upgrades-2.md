@@ -593,9 +593,9 @@ Magic 4, HP 2, MP 2,300. Wand (fast) or rod (medium), both magical; Robes; bell.
 **Power step:** cooldown shorter: long → medium (40 → 30). The same on both versions.
 
 **A, Overcharge**
-- **Card:** Applies Haste to itself. While that Haste lasts, its next three abilities cost no MP.
-- **Numbers:** three, within Haste's 20 ticks: Hasted, about two Chain lightnings and a Thunderstorm, up to 2,300 MP, a whole pool.
-- **Hooks:** a kit state with three stacks, ending with the Haste, carrying MP cost −100 (engine 3, through engine 14), one stack spent on each ability's `action_resolve`.
+- **Card:** Applies Haste to itself. While that Haste lasts, its next two abilities cost half their MP.
+- **Numbers:** two, within Haste's 20 ticks: a Chain lightning and a Thunderstorm save 825 MP. Two at half, not the spine's three free (ruling): three free returned up to 2,300, a whole pool.
+- **Hooks:** a kit state with two stacks, ending with the Haste, carrying MP cost −50 (engine 3, through engine 14), one stack spent on each ability's `action_resolve`.
 - **Builds:** Overflow.
 
 **B, Storm shield**
@@ -640,7 +640,7 @@ Armor 4, HP 3, Attack 3, Magic 4, MP 2,300, Crit chance 4 (16%), Crit damage hig
 
 **Now:** Applies Shield to itself and to the other ally with the lowest share of max HP; the amount scales from Armor. (Medium, normal wind-up, 650 MP; 1.0 of Armor, 4,000, which passes the cap, half the holder's max HP, on anyone under HP 8.)
 
-**Power step:** bigger Shields: two fifths more (5,600). On Stone skin, two fifths more on every ally (1,960). On the base and Rampart it changes nothing: see CHALLENGE.
+**Power step:** comes round sooner: medium → short (30 → 22). The same on both versions. Not the spine's "bigger Shields" (ruling): the base's 4,000 already fills the Shield's cap (its own) on everyone under HP 8, so bigger did nothing.
 
 **A, Stone skin**
 - **Card:** Applies a smaller Shield to every ally; the amount scales from Armor.
@@ -649,13 +649,10 @@ Armor 4, HP 3, Attack 3, Magic 4, MP 2,300, Crit chance 4 (16%), Crit damage hig
 - **Builds:** Landslide (the mason: stone on everyone), Phoenix (the survivors covered).
 
 **B, Rampart**
-- **Card:** Applies a Shield twice as big to itself, and Guard. No Shield for an ally.
-- **Numbers:** 2.0 of Armor (capped at half its max HP, 1,500 at HP 3); Guard at its own numbers (+3,000 Armor for 28 ticks), which also lifts Rockfall and Tremor, both from Armor, by three quarters while it lasts.
-- **Hooks:** `target: self`; `apply shield`, `apply guard`.
+- **Card:** Applies Shield and Guard to itself. While that Guard lasts, the first time its Shield breaks it's rebuilt at once. No Shield for an ally.
+- **Numbers:** the Shield as the base's (1.0 of Armor, filling its cap: 1,500 at HP 3), rebuilt once a cast, within the Guard's 28 ticks: twice the stone in effect, the cap untouched. This is the ruling's shape for the spine's "twice as big", which the cap made do nothing. Guard at its own numbers (+3,000 Armor), which also lifts Rockfall and Tremor, both from Armor, by three quarters while it lasts.
+- **Hooks:** `target: self`; `apply shield`, `apply guard`, and a kit state (one use, 28 ticks): on `status_ended` (Shield, cause `stacks`) it applies the Shield again, from Armor, and removes itself. A rebuilt Shield also turns Bedrock back on.
 - **Builds:** Landslide (the bulwark, and Guard reaching the Armor-scaler), Toll.
-- **CHALLENGE:** see the power step's: "twice as big" changes nothing, since the base already fills the Geomancer's cap. I'd make Rampart "Shield and Guard on itself; while that Guard lasts, the first time its Shield breaks it's rebuilt at once": twice the stone in effect, the cap untouched.
-
-**CHALLENGE (the power step):** Earthen shell's 4,000 from Armor 4 already fills the Shield's cap on everyone under HP 8, so "bigger" does nothing on the base, and a status's cap is its own. I'd make the power step "comes round sooner": medium → short (30 → 22).
 
 ### Rockfall
 
@@ -683,10 +680,9 @@ Armor 4, HP 3, Attack 3, Magic 4, MP 2,300, Crit chance 4 (16%), Crit damage hig
 
 **A, Aftershock**
 - **Card:** Deals magical damage that scales from Armor to a random foe, and Stuns every foe for a short while.
-- **Numbers:** a short Stun on every foe (4 ticks, as the line asks; see CHALLENGE). Fizzle skips foes already Stunned.
-- **Hooks:** `apply stun` to `{side: foes, pick: all}`.
+- **Numbers:** a short Stun on every foe: 4 ticks, half its own (G1). Fizzle skips foes already Stunned.
+- **Hooks:** `apply stun`, `duration: 4`, to `{side: foes, pick: all}`.
 - **Builds:** Lockdown (every foe a window at once), Snap.
-- **CHALLENGE:** "a shorter Stun" changes how long Stun lasts, which the status rule forbids. I'd keep the whole Stun (8 ticks) on every foe and move Aftershock to the very long word (56): the field Stunned about a seventh of a fight, in one big window.
 
 **B, Fissure**
 - **Card:** Deals magical damage that scales from Armor to a Stunned foe, triple; with no foe Stunned, to a random foe. A shorter wind-up. No Stun.
@@ -704,21 +700,24 @@ Armor 4, HP 3, Attack 3, Magic 4, MP 2,300, Crit chance 4 (16%), Crit damage hig
 
 ---
 
-## CHALLENGES
+## CHALLENGES, as ruled
 
-1. **Deep cold** (Cold hex B): "twice the Chill" on a lone boss shatters it about every 10 ticks, Stunned most of the fight. Half again (5.5 a hit).
-2. **Expose** (Enfeeble B): many Sunder (18.4) reaches the cap of 20 in one cast. Several (10.4).
-3. **Stillness of mind** (Flow B): a short Taunt changes Taunt's duration. The whole Taunt (20) and Evasion +35 for the same 20.
-4. **Vital strike** (Pressure point B): unconditional triple is 2.8 times Backstab on the same target. Double.
-5. **Garrote wire** (Garrote B): many Bleed is 23 at Attack 5, three times the hit. Several (13).
-6. **Bloodletting** (Blood drain A): many Bleed (18.4) on a quick 125-MP cast. Several (10.4).
-7. **Blood rage** (Frenzy B): "the ally" includes the Vampire, which often keeps the Might. "The other ally".
-8. **Slow burn** (Firebolt A): twice the Burn is +65% on the main spell for a 725 hit. Half again (19.5).
-9. **Conflagration** (Fireball A): many Burn (23) on every foe. Several (13).
-10. **Deep calm** (Stillness A): the Knight's Rally the well, word for word. Clarity on the least-MP ally on the short word.
-11. **Earthen shell's power step:** the base already fills the Shield's cap, so "bigger" does nothing. Comes round sooner (30 → 22).
-12. **Rampart** (Earthen shell B): "twice as big" does nothing for the same reason. Rebuilt once when it breaks under its Guard.
-13. **Aftershock** (Tremor A): a shorter Stun changes Stun's duration. The whole Stun on every foe, on the very long word.
+Each challenge, and the ruling in `fill-rulings.md` that settled it (applied in the entries above):
+1. **Deep cold** (Cold hex B): half again, 5.5 a hit (Upgrades, second eight).
+2. **Expose** (Enfeeble B): several, 10.4 (G8).
+3. **Stillness of mind** (Flow B): the short Taunt stands, 10 ticks (G1).
+4. **Vital strike** (Pressure point B): double, 3,700 (Upgrades, second eight).
+5. **Garrote wire** (Garrote B): several, 13 (G8).
+6. **Bloodletting** (Blood drain A): several, 10.4 (G8).
+7. **Blood rage** (Frenzy B): the other ally (Upgrades, second eight).
+8. **Slow burn** (Firebolt A): half again, 19.5 (Upgrades, second eight).
+9. **Conflagration** (Fireball A): several, 13 (G8).
+10. **Deep calm** (Stillness A): no Chill; Clarity on the ally with the least MP, and the Frostweaver's next ability free (Upgrades, second eight).
+11. **Earthen shell's power step:** comes round sooner, 30 → 22 (Upgrades, second eight).
+12. **Rampart** (Earthen shell B): rebuilt once when it breaks under its Guard (Upgrades, second eight).
+13. **Aftershock** (Tremor A): the short Stun stands, 4 ticks (G1).
+
+Also ruled, from the least-sure list: **Overcharge**, its next two abilities at half cost (Upgrades, second eight); **Night's edge**, a kill hides the Assassin for a moment and its next hit deals double, in place of the retired Shadow strike (Upgrades, second eight; Hidden at half length, G1); **Flash bolt's 225 MP** stands (Upgrades, second eight); **Heat** as G3 sets it.
 
 ## NEW
 
@@ -734,13 +733,9 @@ Engine needs beyond the spine's list (several are the same as the other shares';
 
 - **Flow state** keeps the Monk Hasted almost all fight while it hits; the director cut Flow in the pacing pass when it held Haste two thirds of a fight. Here it's the version's point, and a Stun or dodges break it, but it may be too much.
 - **Stillness of mind:** 70% Evasion on a Taunting Monk, with Duelist's leathers or Windrunner's garb, may be an anchor nothing hits.
-- **Overcharge** can return a whole pool (2,300) every 40 ticks; it fits "costs that fall" but may make the Stormcaller's MP a non-issue.
 - **Silence all** is the base in most fights (one foe casts at a time); it pays only against packs of casters.
 - **Focused curse, Searing, Ball lightning and Static grip** concentrate what was spread: against a lone boss each is a straight multiple of the base (×3, ×2, about ×3 and ×2). In a pack they give up the spread; against a boss they give up nothing.
 - **The witch-blade:** basic attacks on every cursed foe, with Siphon on each hit, may make the Hexer a mana engine as well as a shatter engine.
-- **Night's edge** brings back, on a mythic, the "every hit a crit while Hidden" the director retired in 5c (Shadow strike).
 - **Rupture** reads "one hit's worth for every stack" as the Bleed going off once for each stack it holds, which is its whole worth at once (about 330 a stack). Read as one hit's worth in all (120 a stack), it would throw away two thirds of the Bleed and be worse than the base.
-- **Heat** at 3% a stack, cap 15, is the formations share's reading; Ember palms is written to it.
-- **Flash bolt at 225 MP** is off the ladder, as the line's "half the cost" asks.
 - **Static field** sits near the Bramble knight's mythic (Heartwood mail, every hit on an ally sets off its Thorns): one is a 20-tick spell, the other all fight, but both are "the whole party strikes back".
 - **Boulder and Rockslide** take the medium cooldown and 650 MP so a double hit or an Area one doesn't double the Geomancer's spell; the line names only the wind-up for Boulder.

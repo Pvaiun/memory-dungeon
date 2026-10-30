@@ -305,9 +305,8 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
 
 **B, Blossom**
 - **Card:** Regen on every ally, lasting half as long.
-- **Numbers (as written):** Regen on every ally for 12 ticks (three pulses, 24% of max HP each); medium, 325 MP.
+- **Numbers:** a short Regen on every ally, half its own length (G1): 12 ticks, three pulses, 24% of max HP each. Medium, 325 MP, as the base.
 - **Hooks:** `target: {side: allies, pick: all}`, `apply regen, duration: 12`.
-- **CHALLENGE:** "half as long" changes Regen's duration, which the status rule forbids. I'd keep Regen whole (24 ticks, 48%) on every ally, on a long cooldown (40) at 500 MP: about twice the base's healing for half again its cost.
 - **Builds:** Pact, Harvest (the whole party mended while it holds the full field).
 
 ### Bramble lash
@@ -337,6 +336,8 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
 **Now:** Its basic attacks come half as often and deal double damage.
 
 **Power step:** a little more than double: × 2.4 (Phalanx's boost +140%, was +100%). On A, its first swing becomes × 3.4. On B, the Armor part grows with the rest.
+
+**One swing shape (G5):** Phalanx, in either version, is the Hoplite's swing shape and comes first. A Millstone, Hummingbird charm, Worldbreaker or Hammer seat on the Hoplite gives Attack +1 instead of its shape.
 
 **A, Opening thrust**
 - **Card:** Basic attacks come half as often and deal double. The first of each fight comes at once and deals triple.
@@ -448,17 +449,17 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
 
 **Now:** Cleanses and heals itself and the other ally with the lowest share of max HP; the heal scales from Magic. Waits until an ally is below max HP. (0.4 of Magic each, 1,600. Medium, normal wind-up, 650 MP.)
 
-**Power step:** a bigger heal: 0.56 of Magic (2,240). On A, the heals grow, not the Might. On B, the raise comes back with 0.28 of max HP.
+**Power step:** a bigger heal: 0.56 of Magic (2,240). On A, the doubled heals grow to 1.12 of Magic (4,480), and the price with them. On B, the raise comes back with 0.28 of max HP.
 
 **A, Penance**
-- **Card:** Cleanses and heals both other allies, and gives each a few Might. Not itself.
-- **Numbers:** 0.4 of Magic each (1,600); a few Might from Magic each (5.6). Waits until another ally is below max HP.
-- **Hooks:** `target: {side: others, pick: all}`; `do: remove debuff; heal; apply might`.
-- **Builds:** Pact (healing turned into power).
+- **Card:** Cleanses and heals both other allies for twice as much, and pays a fifth of each heal in its own HP. Not itself.
+- **Numbers:** 0.8 of Magic each (3,200 at Magic 4); the price a fifth of each heal (640 a heal, 1,280 for both). Waits until another ally is below max HP and the Paladin is at 35% of its max HP or more, as Blood gift does, so the price never kills it. By the lead's ruling, in place of the Might.
+- **Hooks:** `if: [{side: others, where: {hpBelow: 100}}, {side: self, where: {hpAtLeast: 35}}]`; `target: {side: others, pick: all}`; `do: remove debuff; heal 0.8 of Magic`; the price by engine 4 (HP as a cost, in part: 0.32 of Magic for two heals).
+- **Builds:** Pact (life passed on: the Paladin bleeds so the others mend).
 
 **B, Absolution**
 - **Card:** Waits until an ally falls, then revives a random knocked-out ally with a fifth of its HP.
-- **Numbers:** a fifth of max HP. Very long cooldown (56, was medium), normal wind-up, 650 MP (the revives' price). No heal and no cleanse.
+- **Numbers:** a fifth of max HP, every ability on full cooldown (G10). Very long cooldown (56, was medium), normal wind-up, 650 MP (the revives' price). No heal and no cleanse.
 - **Hooks:** as Raise: `if: {side: allies, where: {ko: true}}`, `target: {side: allies, where: {ko: true}}`, `revive`.
 - **Builds:** Phoenix (a revive for one more class, in a body that doesn't fall easily).
 
@@ -491,10 +492,10 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
 **Power step:** allies it revives come back with a small Shield: 15% of their max HP. It lands as written on both versions (on B, on the allies Valhalla raises, which come back on cooldown).
 
 **A, Chosen**
-- **Card:** Allies it revives come back with all their actions ready, Hasted and with several Might.
-- **Numbers:** Haste at its own numbers; several Might (4).
-- **Hooks:** the revive's `ready: true`, then `apply haste; apply might, stacks 4` on the revived (a reaction on `revived` with the Valkyrie as `other`, or effects after Valhalla's `revive`).
-- **Builds:** Phoenix (the return as a power spike).
+- **Card:** Allies it revives come back with all their actions ready, and Guarded.
+- **Numbers:** Guard at its own numbers (+3,000 Armor for 28 ticks). By the lead's ruling, in place of Haste and Might.
+- **Hooks:** the revive's `ready: true`, then `apply guard` on the revived (a reaction on `revived` with the Valkyrie as `other`, or an effect after Valhalla's `revive`).
+- **Builds:** Phoenix (the return that survives its first moments and unloads).
 
 **B, Chooser of the slain**
 - **Card:** While it stands, every ally deals a fifth more to foes below half their HP. Allies it revives come back on cooldown, as anyone's do.
@@ -524,7 +525,7 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
 
 **Now:** Heals the ally with the lowest share of max HP; the amount scales from Magic. Waits until an ally is below 80% of its max HP. (0.45 of Magic, 1,350 at Magic 3. Medium, normal wind-up, 650 MP.)
 
-**Power step:** a bigger heal: 0.63 of Magic (1,890). On B, of B's double (1.26, 3,780).
+**Power step:** a bigger heal: 0.63 of Magic (1,890). On B, of B's double (1.26, 3,780); the Taunt stays as it is.
 
 **A, Battle hymn**
 - **Card:** Heals the ally with the lowest share of HP, and Hastes it.
@@ -533,10 +534,10 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
 - **Builds:** Cuts, Pact (the hurt one comes back faster, and a Lifesteal unit drinks faster).
 
 **B, Last stand**
-- **Card:** Waits until an ally is below 30% of its max HP, then heals it for double.
-- **Numbers:** 0.9 of Magic (2,700); waits for 30% (was 80%). A Valhalla at a tenth sets it off at once.
-- **Hooks:** `if: {side: allies, where: {hpBelow: 30}}`.
-- **Builds:** Phoenix, Pact (from the brink). See CHALLENGES: this is Cure's Triage in shape.
+- **Card:** Waits until an ally is below 30% of its max HP, then heals it for double, and the Valkyrie Taunts briefly.
+- **Numbers:** 0.9 of Magic (2,700); waits for 30% (was 80%). A short Taunt, half its own length (G1): 10 ticks. A Valhalla at a tenth sets it off at once. The Taunt is the lead's ruling, so it no longer repeats Cure's Triage.
+- **Hooks:** `if: {side: allies, where: {hpBelow: 30}}`; `do: heal; apply taunt, duration: 10, to: self`. A Taunt ends Hidden (engine 17).
+- **Builds:** Phoenix, Pact (from the brink: the Valkyrie stands over the one she saved and draws the blows off it).
 
 ### Valhalla
 
@@ -546,7 +547,7 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
 
 **A, Flight of the valkyries**
 - **Card:** Revives every knocked-out ally with a tenth of its HP.
-- **Numbers:** a cooldown a quarter past very long (70 ticks; there's no longer word, see CHALLENGES), 650 MP.
+- **Numbers:** a cooldown a quarter past very long (70 ticks, by the lead's ruling; there's no longer word), 650 MP. The revived come back ready under Einherjar, on full cooldown without it (G10).
 - **Hooks:** `target: {side: allies, where: {ko: true}, pick: all}`, `revive`. Einherjar (or Chosen) applies to each.
 - **Builds:** Phoenix (two falls answered by one cast).
 
@@ -582,11 +583,11 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
 
 **Now:** Adds a few Might to every ally; stacks scale from Magic. (4.2 at Magic 3. Quick, quick wind-up, 450 MP.)
 
-**Power step:** more Might: two fifths more (5.9). On A, of A's doubled (11.8). On B, which gives no Might, a quarter off its cooldown (14 → 10.5), today's rule for an ability with no amount.
+**Power step:** more Might: two fifths more (5.9). On A, of A's half again (8.8). On B, which gives no Might, a quarter off its cooldown (14 → 10.5), today's rule for an ability with no amount.
 
 **A, Lament**
-- **Card:** Might to every ally below half its HP, twice as many. Waits until an ally is below half.
-- **Numbers:** 8.4 Might each.
+- **Card:** Might to every ally below half its HP, half again as many. Waits until an ally is below half.
+- **Numbers:** 6.3 Might each. The spine's "twice as many" is half again under G9: a Pact party keeps its members below half most of a fight.
 - **Hooks:** `if: {side: allies, where: {hpBelow: 50}}`; `target: {side: allies, where: {hpBelow: 50}, pick: all}`.
 - **Builds:** Pact, Phoenix (the low as the strong).
 
@@ -641,7 +642,7 @@ Each fits one class, sits in its slot, and a unit wears one at most. Offered in 
 ### Horn of the keep · Knight · offhand
 
 - **Card:** Fits the Knight. Every hit the Knight takes gives the other ally with the least MP a tenth of the hit's damage as MP. When Stand fast's Taunt runs out while an ally is in a wind-up, the Knight Taunts again.
-- **Numbers:** MP a tenth of the damage the hit dealt (a 400 bite gives 40; a 2,000 blow, 200), to the other ally with the lowest share of its MP. The renewed Taunt is Taunt's own 20 ticks, and it renews again if an ally is casting when that one ends.
+- **Numbers:** MP a tenth of the damage the hit dealt (a 400 bite gives 40; a 2,000 blow, 200), to the other ally with the lowest share of its MP (the other ally, by the lead's ruling). The renewed Taunt is Taunt's own 20 ticks, and it renews again if an ally is casting when that one ends.
 - **Hooks:** a reaction on `hit_taken`: `mp`, `amount: {ratio: 0.1, amount: true}`, `to: {side: others, pick: lowest, by: mp_share}`. A reaction on `status_ended`, `status: taunt`, `cause: [expired]`, applies Taunt if an ally is casting: **NEW**, a reaction that tests a side (as Shared rites). The mythic names Stand fast: **NEW**, a mythic that changes its class's abilities by name. With Stand fast trained as Rally the well (no Taunt), the second half is idle.
 - **Pulls toward:** Overflow 3 ●●●, Toll ●● (a wall whose beating feeds the casters).
 
@@ -654,9 +655,9 @@ Each fits one class, sits in its slot, and a unit wears one at most. Offered in 
 
 ### Huntmaster's quiver · Ranger · armor
 
-- **Card:** Fits the Ranger. All the Ranger's abilities aim at the foe with the lowest HP. When a foe one of them hit falls, the cooldowns left on its abilities are halved.
+- **Card:** Fits the Ranger. All the Ranger's abilities aim past any guard at the foe with the lowest HP. When a foe one of them hit falls, the cooldowns left on its abilities are halved.
 - **Numbers:** each ability's remaining cooldown halved, once a kill, whoever lands it.
-- **Hooks:** each of its abilities re-aimed `{side: foes, pick: lowest, by: hp}` (the Taunt rule still applies; see CHALLENGES). The abilities mark their target with a hidden debuff (Per source, `survivesKO`) whose reaction on its holder's `ko` refunds half of each remaining cooldown on `source` (engine 1). A version's own aim gives way to the quiver's. **NEW:** a mythic that re-aims its class's abilities by name.
+- **Hooks:** each of its abilities re-aimed `{side: foes, pick: lowest, by: hp}` with `seek: true` (Seek by the lead's ruling, so a Taunting front doesn't catch the hunt). The abilities mark their target with a hidden debuff (Per source, `survivesKO`) whose reaction on its holder's `ko` refunds half of each remaining cooldown on `source` (engine 1). A version's own aim gives way to the quiver's. **NEW:** a mythic that re-aims its class's abilities by name.
 - **Pulls toward:** Hunt 3 ●●●.
 
 ### Heartwood mail · Bramble knight · armor

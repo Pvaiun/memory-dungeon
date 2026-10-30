@@ -26,7 +26,7 @@ Oct 30, 2026. Seven agents wrote the fill (`fill/`), each from `fill-brief.md`, 
 - Weeping kris: its first hit on each foe adds a few Bleed (the agent's change).
 - Pike wall: strikes back at most once every 3 ticks.
 - Gravemark: if no foe is Marked, its basic attacks Mark their target.
-- The Worldbreaker under G5.
+- The Worldbreaker under G5. Its Stun goes with its swing shape: on a unit that already has a shape, it gives Attack +1 and nothing else.
 - Short statuses under G1.
 
 ## The magical weapons

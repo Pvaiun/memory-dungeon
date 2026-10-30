@@ -284,12 +284,12 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 - **Weapon:** medium, medium, Attack.
 - **Numbers:** Crit chance +3, Attack +1,000. A few Bleed a crit: 2.1 to 2.8 at Attack 3 to 4.
 - **Hooks:** a piece status: `hit_lands` with tag `crit` → `apply` bleed, stacks 0.7 × Attack, `to: other`.
-- **Builds:** Cuts 1, Hunt 1, Toll ●. See CHALLENGE 1 (the same effect as the Weeping kris, and the Ranger wears both kinds).
+- **Builds:** Cuts 1, Hunt 1, Toll ●. The Weeping kris now opens wounds once a foe, so the Ranger's two kinds no longer share this effect.
 
 ### Huntsman's bow · bow · rare
 - **Card:** Bow, two hands. Fits Ranger, Bard. Its basic attacks Mark their target. Its hits on a Marked foe deal a third more.
 - **Weapon:** medium, medium, Attack.
-- **Numbers:** +33% on its hits (both types) against a Marked foe. It pairs two effects, a two-hander's. The Ranger's basic attacks ignore Taunt, so with this bow it Marks past the front, and the party follows wherever the Taunt rule lets it.
+- **Numbers:** +33% on its hits (both types) against a Marked foe. It pairs two effects, a two-hander's. Marked is G2's: 14 ticks, Refresh, one Mark a unit. The Ranger's basic attacks have Seek (Hunter's eye), so with this bow it Marks past the front, and it follows its Mark there. While a foe Taunts, allies without Seek keep hitting the Taunter (G2). The Bard's basic attacks have no Seek, so it Marks the Taunter.
 - **Hooks:** addition 2, as the weapon's own `apply`. A boost on both tags, `when: { has: marked }, of: target`.
 - **Builds:** Hunt 2 ●●●, Ambush ●.
 
@@ -370,17 +370,20 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 ### Worldbreaker · great weapon · legendary
 - **Card:** Great weapon, two hands. Fits Knight, Hoplite, Geomancer, Vampire. Its basic attacks come half as often, deal triple, and Stun their target.
 - **Weapon:** medium, medium, Attack.
-- **Numbers:** attack speed −100 (a swing every 25.6 ticks), +200% on basic attacks, and Stun on each swing that lands (its own 8 ticks, Fizzle). At Attack 4 a swing is 3,600 before crit, every 25.6 ticks: 1.5 times a plain great weapon's damage a tick, and a foe Stunned about a third of the time. Riders on basic attacks fire half as often. It stacks with Phalanx or Millstone (see "least sure").
-- **Hooks:** stats `attack_speed` −100, a boost on tag `basic` of +200, and the weapon's own `apply` of stun.
+- **Numbers:** attack speed −100 (a swing every 25.6 ticks), +200% on basic attacks, and Stun on each swing that lands (its own 8 ticks, Fizzle). At Attack 4 a swing is 3,600 before crit, every 25.6 ticks: 1.5 times a plain great weapon's damage a tick, and a foe Stunned about a third of the time. Riders on basic attacks fire half as often.
+- **One swing shape (G5):** half as often for triple is a swing shape, so a unit takes only one. A passive's shape comes first, then the first piece's in slot order. The Stun goes with the shape (the lead's correction), since a Stun on every swing at normal speed would be a lock. On a unit that already has a shape, Worldbreaker gives Attack +1 and nothing else. On the Hoplite, Phalanx keeps its shape: it swings every 25.6 ticks for double, with no Stun. On the other three wearers the weapon comes first, so it beats a Millstone, a Hummingbird charm or a Hammer seat, and each of those gives Attack +1 instead.
+- **Hooks:** stats `attack_speed` −100 and a boost on tag `basic` of +200, both under the one-shape rule (G5, in the gathered list), and the weapon's own `apply` of stun.
 - **Builds:** Landslide 3 ●●● (the heaviest swing), Lockdown 3 ●●.
 
 ---
 
 ## CHALLENGES
 
-1. **The dagger's uncommon (Weeping kris) is a small Notched knife,** in the same kind: a few Bleed on crits against a few Bleed on every hit. That's the "small and big version of one thing" the brief rules out. It's also the bow's uncommon (Broadhead bow) word for word, and the Ranger wears both kinds. Both are written as the spine has them. The change I'd make: the dagger's uncommon *opens* a wound, so its first hit on each foe adds a few Bleed. That's a different trigger from the Notched knife's, and a different job (starting a wound that others' hits burst). It can be built today: a hidden per-source marker on the foe, and the Bleed's stacks gated by a `when` that the foe lacks it.
-2. **Pike wall has no limit.** Each strike is a full swing (881 at Attack 4), several times Thorns high (300). Against a swarm hitting an ally with less Armor, nothing caps it. With a Bramble knight Taunting six wolves beside a Hoplite, that's up to about 35 strikes in a regular fight, around 30,000 damage, against the Hoplite's own 4,000 or so. The change I'd make: the wearer can strike back at most once every 3 ticks, so about 13 strikes in a 40-tick fight. That needs a cooldown on a reaction (NEW F). The other option is striking for a third of a swing.
-3. **"A short Haste" and "a short Taunt" at the fight's start** (my Wildcat claws and Clarion blade, and the same words on the leather, round shield, horn and bell uncommons in other shares) would change a status's duration, which the brief forbids. I kept the statuses' own 20 ticks. A free 20-tick Taunt at every fight's start is the Knight's Stand fast without its cost, on an uncommon. The change I'd make: the spine's table says "Haste at the start" and "Taunt at the start", with no "short", and the balance pass watches the Taunt.
+1. **Weeping kris as a small Notched knife:** settled by the physical weapons' ruling (its first hit on each foe adds a few Bleed).
+2. **Pike wall with no limit:** settled by the physical weapons' ruling (at most once every 3 ticks).
+3. **Short Haste and Taunt at the start:** settled by G1 (half length, 10 ticks). G7 keeps the fist weapons' Haste and the sword's Taunt.
+
+Applying the rulings also changed one piece that wasn't a challenge. Under G6, the **Nettle blade**'s Thorns became its step, and its effect is now half its Thorns added to each swing. It lost its Aggro +1.
 
 ## NEW (engine needs beyond the spine's list)
 
@@ -389,13 +392,14 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 - **C. "Hasn't acted this fight"** as a unit condition: true until the unit's first action resolves. Mine: Quietus.
 - **D. Extra strikes, sized and spread.** `strike` takes a share of the weapon's damage (half, a quarter, 80%), and a rule that picks several foes strikes each of them (today `strikes()` takes only the first unit the rule picks). Mine: Sweeping blade, Glaive, Oathkeeper, Volley bow, and Flurry wraps' weakening. Elsewhere: Chain wand, The storm front, the Reaping line's Scythes.
 - **E. Comparing two units' stats** as a condition (an ally with less Armor than the wearer). Mine: Pike wall. Elsewhere: Phalanx shield.
-- **F. A cooldown on a reaction** (fires at most once every N ticks). Needed only if CHALLENGE 2 is taken.
+- **F. A cooldown on a reaction** (fires at most once every N ticks). Needed now that the ruling caps Pike wall at one strike every 3 ticks.
+- **G. A side's state as a reaction's `if`** (no foe is Marked). It's in the lead's gathered list. Mine: Gravemark, from the ruling.
 
 ## Least sure
 
-1. **Marked's own numbers.** I assumed 10 ticks with Refresh, inside the Taunt rule, and a pick by draw among several Marked foes. The Hunt rests on it, and five shares use it. One owner should set it.
-2. **Gravemark Marks nothing itself.** On its own it's a plain sword, and the Assassin can't hold it with the Marking knife. Five other pieces and a formation Mark, so a party can find a partner. If that's too all-or-nothing for a legendary, I'd add "if no foe is Marked, its basic attacks Mark their target".
-3. **Worldbreaker on the Hoplite, or with Millstone.** The slowings add up: a swing every 38 ticks for four times the damage, close to the "statue" the director rejected in 5g. It's still a choice the player makes, but it may read badly.
+1. **Marked's own numbers:** settled by G2.
+2. **Gravemark Marks nothing itself:** settled by the physical weapons' ruling (if no foe is Marked, it Marks).
+3. **Worldbreaker on the Hoplite, or with Millstone:** settled by G5 (one swing shape a unit). One reading is mine: the Stun stays when the shape is replaced.
 4. **Two-handers' worth.** My reading (uncommons with two steps, single-effect rares with a step or two) is mine, not the spine's. The Volley bow (one volley in a regular fight) and the Executioner's longbow (half its effect redundant on the Ranger) may not be worth an offhand. That's a test.
 5. **Oathkeeper's reach.** On a Taunter with Stand fast or Thicket, it sweeps every foe for about two thirds of every fight at full swings. Against swarms that may outweigh both the Harvest and Toll pieces around it.
 6. **Storm pike's lightning** is light damage from Attack on every foe, free, about once in 30 ticks. That's bigger than a mage's Area touch, on purpose for a far end, but it's the size I'm least sure of.

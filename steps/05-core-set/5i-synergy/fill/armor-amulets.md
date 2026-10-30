@@ -6,12 +6,13 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the four armor types a
 
 - **Steps:** +1 of a stat is 1,000; HP half a point (500); Aggro ±10; MP regen 3,000 of the stat (about 21 MP every 4 ticks, 7% of a 3,000 pool over a 40-tick fight); Crit chance +1 is 3 points, +2 is 5.
 - **Special stats:** medium is Evasion 20, Accuracy 20, Crit damage +25, Double strike 25%, Thorns 150, Lifesteal 10%; high is 35, 35, +50, 40%, 300, 20%.
-- **Statuses at their own numbers** (`rules-and-vocabulary.md`): Guard (Armor +3,000, 28 ticks), Haste (+40% speed, 20 ticks), Taunt (20), Ward (Magic resist +40, 30), Hidden (10), Clarity (6% of max MP every 4 ticks for 16, 24% in all), Might (6% a stack, one spent an action, cap 15), Shield (a pool capped at half max HP). Burn, Chill and Shock as their table says. No piece here changes a status's size, length or scaling.
+- **Statuses at their own numbers** (`rules-and-vocabulary.md`): Guard (Armor +3,000, 28 ticks), Haste (+40% speed, 20 ticks), Taunt (20), Ward (Magic resist +40, 30), Hidden (10), Clarity (6% of max MP every 4 ticks for 16, 24% in all), Might (6% a stack, one spent an action, cap 15), Shield (a pool capped at half max HP). Burn, Chill and Shock as their table says. No piece here changes a status's size or scaling. A piece may apply a status for less than its own length, never more; "short" is half its length (ruling G1).
+- **Marked** (ruling G2): a debuff on a foe, 14 ticks, Refresh; the party's basic attacks pick a Marked foe (among several, by draw), within the Taunt rule. Used here only as one of Hexweave mail's debuffs.
 - **Flat stacks:** one 1, a few 2, several 4, many 7. Where a piece reads stacks off a stat, it says which.
 - **The counters this share needs** (each its own status, an icon with a number, ending with the fight):
   - **Spite** (Thornheart plate): +15 Thorns a stack, cap 20.
   - **Tempo** (Windrunner's garb): +5% speed a stack, as Haste (attacks, cooldowns, wind-ups), cap 10; each hit taken spends half.
-  - **Heat** (Kindled robes): +3% damage dealt a stack (hits only, never a status's own damage), cap 15. Wick, The forge and Ember palms use Heat too, so it needs one definition across the shares.
+  - **Heat** (Kindled robes; ruling G3, the same in every share): +3% damage a stack, up to 15, kept all fight. Like any boost, it never raises a status's own damage.
   - **Surge** (Stormweave): +5% damage dealt a stack, cap 10.
 - **Fits:** each type's card ends with its fits line, given once at the head of the type.
 - **Builds:** commons and uncommons name the builds whose first rung they serve. Rares and legendaries carry the spine's rungs and worths (●●● a lot, ●● some, ● a little).
@@ -77,11 +78,10 @@ Every card ends: *Fits Knight, Hoplite, Geomancer, Bramble knight, Paladin.*
 - **Builds:** Toll 2 ●●, Phoenix 2 ●● (it chooses who falls next), Bonfire ●●, Harvest ●.
 
 **Rubble plate** · Plate · legendary
-- **Card:** When the wearer's Shield breaks, every foe takes damage equal to the Shield's cap (half the wearer's max HP), and a Shield of a quarter of that is rebuilt.
-- **Numbers:** untyped damage of 0.5 × max HP to every foe (2,500 on a Knight at HP 5); a rebuilt Shield of 0.125 × max HP.
-- **Hooks:** `status_ended` (status: shield, cause: stacks) → `damage` (type none, not a hit) to `{ side: "foes", pick: "all" }`, 0.5 × max HP of holder; then apply `shield` to self, 0.125 × max HP. A Dispel (cause: removed) doesn't set it off.
+- **Card:** When the wearer's Shield breaks, every foe takes damage equal to the most that Shield held since it last broke, and a Shield of a quarter of that is rebuilt.
+- **Numbers:** untyped damage equal to the Shield's peak (up to its cap, half max HP: 2,500 on a Knight at HP 5); a rebuilt Shield of a quarter of the peak. A rebuilt Shield that breaks unrefilled blasts for a quarter, then a sixteenth, so one Shield's blasts add up to about a third more than its size; every fresh Shield (Vanguard, Earthen shell, Keystone cuirass) arms a full one. (The lead's ruling: the first draft blasted the whole cap on every rebuilt break, a loop.)
+- **Hooks:** `status_ended` (status: shield, cause: stacks) → `damage` (type none, not a hit) to `{ side: "foes", pick: "all" }`, the Shield's peak since it last broke (**NEW 6**); then apply `shield` to self, a quarter of that. A Dispel (cause: removed) doesn't set it off.
 - **Builds:** Landslide 3 ●●●, Toll ●●.
-- **CHALLENGE:** the rebuilt quarter loops. It breaks to about one swing, and each break blasts the whole cap again: against a pack hitting a Taunting Knight, every foe takes 2,500 every tick or two. My change: every foe takes damage equal to the most the Shield held since it last broke, and a quarter of that is rebuilt. A rebuilt Shield that breaks unrefilled then blasts for a quarter, a sixteenth, and so on, so a Shield's blasts add up to about a third more than its size, and every fresh Shield (Vanguard, Earthen shell, Keystone cuirass) arms a full one. Needs NEW 6.
 
 **Thornheart plate** · Plate · legendary
 - **Card:** Each hit the wearer takes adds 1 Spite (+15 Thorns a stack, up to 20) for the rest of the fight.
@@ -132,10 +132,10 @@ Every card ends: *Fits Paladin, Valkyrie, Vampire, Hexer, Bramble knight.*
 - **Builds:** Toll 1 (a swarm pays as it arrives), Harvest 1 (every foe of a full field pays once).
 
 **Silvered hauberk** · Mail · uncommon
-- **Card:** Magic +1. Starts every fight Warded.
-- **Numbers:** Magic +1,000; Ward at the fight's start.
-- **Hooks:** `fight_start` → apply `ward` to self.
-- **Builds:** Lockdown 1 (it stands through a caster's opening), Harvest 1 (the whole field's spells held), Bonfire 1 (the early danger).
+- **Card:** Magic +1. The first magical hit the wearer takes each fight deals half.
+- **Numbers:** Magic +1,000; −50% on one magical hit a fight. (Ruling G7: Ward at the start stays on the rune sword and the mace, which the Mail classes also hold.)
+- **Hooks:** `fight_start` → apply SILVERED to self: a `taken` modifier −50 tagged magical, removed on its holder's `hit_taken` (tags: magical).
+- **Builds:** Lockdown 1 (a caster's opening blunted), Bonfire 1 (the early danger), Toll 1 (the anchor).
 
 **Static mail** · Mail · rare
 - **Card:** Foes that hit the wearer gain 2 Shock.
@@ -170,7 +170,7 @@ Every card ends: *Fits Paladin, Valkyrie, Vampire, Hexer, Bramble knight.*
 **Hexweave mail** · Mail · legendary
 - **Card:** The wearer's hits deal 10% more to a foe for each debuff it holds.
 - **Numbers:** +10% a debuff: five debuffs, half again as much.
-- **Hooks:** `boosts` (physical and magical) as a sum of `when` terms read on the target, one for each debuff the party can lay (Bleed, Weaken, Stun, Slow, Burn, Chill, Shock, Sunder, Silence, Rot, Marked), each worth 10: Judgement's shape, no new primitive.
+- **Hooks:** `boosts` (physical and magical) as a sum of `when` terms read on the target, one for each debuff the party can lay (Bleed, Weaken, Stun, Slow, Burn, Chill, Shock, Sunder, Silence, Rot, Marked as G2 defines it), each worth 10: Judgement's shape, no new primitive.
 - **Builds:** Lockdown 3 ●●, Bonfire ●●, Snap ●●, Toll ●●: strong only where foes carry many debuffs.
 
 ---
@@ -198,10 +198,10 @@ Every card ends: *Fits Ranger, Monk, Assassin, Bard, Valkyrie.*
 - **Builds:** Hunt 1 (the dodgers in the back row), Ambush 1.
 
 **Courier's coat** · Leather · uncommon
-- **Card:** Attack +1. Starts every fight Hasted.
-- **Numbers:** Attack +1,000; Haste at the fight's start (its own 20 ticks: see CHALLENGE 4).
-- **Hooks:** `fight_start` → apply `haste` to self.
-- **Builds:** Cuts 1, Ambush 1, Bonfire 1 (a stoker).
+- **Card:** Attack +1. The first time each fight the wearer drops below half its HP, it's Hasted.
+- **Numbers:** Attack +1,000; Haste (its own 20 ticks), once a fight. (Ruling G7: Haste at the start stays on the fist weapons and the amulet.)
+- **Hooks:** `hp_lost` → apply `haste`, then a marker COURIER (Fizzle, all fight, no icon), both to self `where: { hpBelow: 50, lacks: "courier" }`: Holdfast's shape.
+- **Builds:** Cuts 1 (a light body that speeds up when hurt), Pact 1 (low HP as power), Toll 1 (the dancer).
 
 **Mottled hide** · Leather · uncommon
 - **Card:** Evasion 20. While the wearer is below half its HP, it draws far less (Aggro −20).
@@ -224,7 +224,7 @@ Every card ends: *Fits Ranger, Monk, Assassin, Bard, Valkyrie.*
 **Shadow cloak** · Leather · rare
 - **Card:** Hidden when the fight starts. The wearer's hits deal half again as much while it's Hidden.
 - **Numbers:** Hidden at the fight's start; +50% while Hidden. No stats.
-- **Hooks:** `fight_start` → apply `hidden` to self; `boosts` (physical and magical) `when: { has: "hidden" }` of holder. Engine 17: a wearer that Taunts at the start (Red ribbon) isn't Hidden.
+- **Hooks:** `fight_start` → apply `hidden` to self; `boosts` (physical and magical) `when: { has: "hidden" }` of holder. Engine 17: a Taunt (Red ribbon's, say) ends it.
 - **Builds:** Ambush 2 ●●●, Hunt ●●, Phoenix ●.
 
 **Tracker's coat** · Leather · rare
@@ -235,7 +235,7 @@ Every card ends: *Fits Ranger, Monk, Assassin, Bard, Valkyrie.*
 
 **Windrunner's garb** · Leather · legendary
 - **Card:** Evasion 20. Each dodge adds 1 Tempo (+5% speed in everything a stack, up to 10) for the rest of the fight. Each hit the wearer takes spends half its Tempo.
-- **Numbers:** Tempo as above (+50% at the cap, a little past Haste). Evasion medium is mine, not the line's: three of the five Leather classes have no Evasion, and the piece does nothing without dodges.
+- **Numbers:** Tempo as above (+50% at the cap, a little past Haste). Evasion medium isn't in the spine's line; the lead's ruling keeps it, since three of the five Leather classes have no Evasion and the piece does nothing without dodges.
 - **Hooks:** `hit_evaded` → apply `tempo` (1) to self. TEMPO: Intensity, cap 10, `stats` attack speed, cooldown reduction and cast time reduction +5 a stack; `trigger` on `hit_taken` with `drop` fraction 0.5 (Bleed's shape).
 - **Builds:** Cuts 3 ●●●, Toll 3 ●● (the dancer's rhythm).
 
@@ -276,10 +276,10 @@ Every card ends: *Fits Cleric, Pyromancer, Frostweaver, Stormcaller, Bard.*
 - **Builds:** Harvest 1, Bonfire 1, Overflow 1.
 
 **Matins robe** · Robes · uncommon
-- **Card:** Magic +1. Starts every fight with Clarity.
-- **Numbers:** Magic +1,000; Clarity at the fight's start (24% of max MP over 16 ticks).
-- **Hooks:** `fight_start` → apply `clarity` to self.
-- **Builds:** Overflow 1, Bonfire 1, Lockdown 1.
+- **Card:** Magic +1. The first ability the wearer casts each fight costs no MP.
+- **Numbers:** Magic +1,000; one free cast a fight, worth its cost (450 for a Firebolt, 1,000 for a Fireball). (Ruling G7: Clarity at the start stays on the staff, which three Robes classes also hold.)
+- **Hooks:** `fight_start` → apply MATINS (MP cost −100, through engine 3's stat) to self; `action_resolve` (kind ability, holder) → remove MATINS, after the cost is paid: Weaver's robes' shape (engines 3 and 14).
+- **Builds:** Overflow 1, Bonfire 1 (the first feeding cast), Ambush 1 (a spell in the opening).
 
 **Wallflower's robe** · Robes · uncommon
 - **Card:** HP +1. Draws far less (Aggro −20) until the first hit lands on it each fight.
@@ -288,10 +288,10 @@ Every card ends: *Fits Cleric, Pyromancer, Frostweaver, Stormcaller, Bard.*
 - **Builds:** Overflow 1, Harvest 1 (the sweeper lives to sweep), Phoenix 1 (the reviver).
 
 **Glyphed robe** · Robes · uncommon
-- **Card:** MP regen +1. Starts every fight behind a Shield of a quarter of its Magic.
-- **Numbers:** MP regen +3,000; a Shield of 0.25 × Magic (1,000 at Magic 4, the cap of an HP 2 caster).
-- **Hooks:** `fight_start` → apply `shield` to self, stacks from Magic (of holder).
-- **Builds:** Overflow 1, Bonfire 1, Phoenix 1.
+- **Card:** MP regen +1. Each ability the wearer finishes casting gives it a Shield of a tenth of its Magic.
+- **Numbers:** MP regen +3,000; a Shield of 0.1 × Magic a cast (400 at Magic 4), within the Shield's cap (1,000 for an HP 2 caster). (Ruling G7: the Shield from Magic at the start stays on the staff.)
+- **Hooks:** `action_resolve` (kind ability, holder) → apply `shield` to self, stacks from Magic (of holder).
+- **Builds:** Overflow 1 (the casting party stays standing), Bonfire 1 (the feeders), Harvest 1 (the sweepers).
 
 **Kindled robes** · Robes · rare
 - **Card:** While any foe has Burn, the wearer gains 1 Heat every 4 ticks (+3% damage a stack, up to 15) for the rest of the fight.
@@ -324,11 +324,10 @@ Every card ends: *Fits Cleric, Pyromancer, Frostweaver, Stormcaller, Bard.*
 - **Builds:** Harvest 3 ●●●, Snap ●.
 
 **Vestments of return** · Robes · legendary
-- **Card:** The wearer's revives cost a third of their MP and wind up in 1 tick. Allies it revives come back behind a Shield of half their max HP.
-- **Numbers:** revive costs ×⅓ (Raise 650 → 217); wind-up quick (1 tick; Raise's is 8); a Shield of 0.5 × the revived ally's max HP, the Shield's cap.
-- **Hooks:** engine 14 on its abilities that revive: MP cost −67 (engine 3's stat), wind-up 1 tick, and `apply shield` added to the revive.
+- **Card:** The wearer's revives cost a third of their MP and wind up in 1 tick. While the wearer stands, every ally revived comes back behind a Shield of half its max HP.
+- **Numbers:** revive costs ×⅓ (Raise 650 → 217); wind-up quick (1 tick; Raise's is 8); a Shield of 0.5 × the revived ally's max HP, the Shield's cap, whoever revives it (Raise, Valhalla, a phoenix feather, Phoenix ember, Lamp of vigil). (The lead's ruling: only the Cleric revives among the Robes classes, so the Shield now reaches every revive.)
+- **Hooks:** engine 14 on its own abilities that revive: MP cost −67 (engine 3's stat), wind-up 1 tick; `revived` (whose: ally) → apply `shield` to `owner`, 0.5 × max HP of target.
 - **Builds:** Phoenix 3 ●●●, Ambush ● (a Raise first in the order).
-- **CHALLENGE:** of the five Robes classes, only the Cleric revives, so this is a Cleric piece on a five-class card, and it sits close to Reliquary of mercy (relic, Cleric and Valkyrie: revives at half cost, in a moment). My change: the Shield goes to every ally revived while the wearer stands, by anyone (Valhalla, a phoenix feather, Phoenix ember, Lamp of vigil), and its own revives stay cheap and fast. A Pyromancer or Bard in a Phoenix party then wears it too, and the Shield part becomes a plain `revived` (whose: ally) reaction.
 
 ---
 
@@ -373,10 +372,10 @@ Every card ends: *Fits everyone.* No amulet names a class's ability.
 - **Builds:** Cuts 1, Toll 1 (the dancer).
 
 **Red ribbon** · amulet · uncommon
-- **Card:** Armor +1. Taunts when the fight starts.
-- **Numbers:** Armor +1,000; Taunt at the fight's start (its own 20 ticks).
-- **Hooks:** `fight_start` → apply `taunt` to self. Engine 17: it ends a Hidden that also landed at the start.
-- **Builds:** Toll 1, Phoenix 1 (who falls first), Bonfire 1 (the keeper), Harvest 1 (the rod).
+- **Card:** Armor +1. The first time an ally drops below half its HP each fight, the wearer Taunts briefly.
+- **Numbers:** Armor +1,000; a short Taunt (10 ticks, half its own: ruling G1), once a fight. (Ruling G7: it was a Taunt at the start.)
+- **Hooks:** `hp_lost` (whose: ally) → apply `taunt` (10 ticks) and a marker RIBBON (Fizzle, all fight, no icon) to self, if another ally is below 50% (**NEW 2**, a side's condition on a reaction) and it lacks RIBBON. Engine 17: the Taunt ends a Hidden.
+- **Builds:** Toll 1, Bonfire 1 (the keeper), Pact 1 (the blows drawn off the hurt ally).
 
 **Carapace charm** · amulet · uncommon
 - **Card:** HP +1. Starts every fight behind a Shield of 15% of its max HP.
@@ -385,8 +384,8 @@ Every card ends: *Fits everyone.* No amulet names a class's ability.
 - **Builds:** Landslide 1 (Bedrock lit and a break armed from the first tick), Ambush 1 (the rear guard), Phoenix 1 (the survivors).
 
 **Hare's foot** · amulet · uncommon
-- **Card:** Magic +1. Starts every fight Hasted.
-- **Numbers:** Magic +1,000; Haste at the fight's start (its own 20 ticks).
+- **Card:** Magic +1. Starts every fight Hasted briefly.
+- **Numbers:** Magic +1,000; a short Haste at the fight's start (10 ticks, half its own: ruling G1).
 - **Hooks:** `fight_start` → apply `haste` to self.
 - **Builds:** Ambush 1, Bonfire 1, Overflow 1, Cuts 1.
 
@@ -410,8 +409,8 @@ Every card ends: *Fits everyone.* No amulet names a class's ability.
 
 **Millstone** · amulet · rare
 - **Card:** Basic attacks come half as often and deal two and a quarter times as much.
-- **Numbers:** attack speed −100 (half as often); basic attacks +125%. Extra strikes keep their size. On the Hoplite, with Phalanx: a third as often, for 3.25×.
-- **Hooks:** a stat change (attack_speed −100); `boosts` tag basic +125.
+- **Numbers:** attack speed −100 (half as often); basic attacks +125%. Extra strikes keep their size.
+- **Hooks:** a stat change (attack_speed −100); `boosts` tag basic +125. Ruling G5, one swing shape per unit: on a unit that already has one (its passive, as the Hoplite's Phalanx, or a piece earlier in slot order), it gives Attack or Magic +1 instead, its weapon's stat.
 - **Builds:** Landslide 2 ●●● (any unit becomes a hammer), Ambush ●, Lockdown ●.
 
 **Hummingbird charm** · amulet · rare

@@ -148,10 +148,11 @@ The spine's rule: commons lean Armor, Attack, HP; uncommons a Guard at the start
 - **Builds:** Toll 1 ● (the anchor), Landslide 1 ● (the bulwark), Bonfire 1 ● (the keeper).
 
 #### Guardian's round · round shield · uncommon
-- **Card:** Round shield. Fits Hoplite, Valkyrie. HP +1. The first time in a fight that another ally drops below half its HP, its holder Taunts.
-- **Numbers:** HP +1 (500). Taunt at its own 20 ticks, once a fight. The spine's "short" Taunt is CHALLENGE 1.
+- **Card:** Round shield. Fits Hoplite, Valkyrie. HP +1. The first time in a fight that another ally drops below half its HP, its holder Taunts briefly.
+- **Numbers:** HP +1 (500). A short Taunt: 10 ticks, half its own (G1), once a fight.
 - **Hooks:**
   - The piece's status: `hp_lost` (whose: `ally`) → `apply` taunt, `to: holder`.
+  - The Taunt is applied with a duration of 10.
   - Only if the event's owner is now below half (addition 5: a condition on the event's other unit), and the holder lacks a fight-long marker, which the reaction then applies.
 - **Builds:** Toll 1 ● (an anchor that steps in), Phoenix 1 ● (it chooses who falls next), Bonfire 1 ● (the keeper).
 
@@ -176,17 +177,17 @@ The spine's rule: commons lean Armor, Attack, HP; uncommons a Guard at the start
 - **Builds:** Hunt 2 ●●, Ambush ●.
 
 #### Phalanx shield · round shield · legendary
-- **Card:** Round shield. Fits Hoplite, Valkyrie. While its holder stands, allies with less Armor than it take a fifth less damage. Its holder deals a fifth less.
+- **Card:** Round shield. Fits Hoplite, Valkyrie. While its holder is above half its HP, allies with less Armor than it take a fifth less damage. Its holder always deals a fifth less.
 - **Numbers:**
-  - −20% damage taken, of every kind, status damage included.
-  - −20% on the holder's own hits.
+  - −20% damage taken, of every kind, status damage included, while the holder is above half its HP (the offhands ruling). When the holder drops below half, the cover lifts; healed back above, it returns.
+  - −20% on the holder's own hits, all fight.
   - At Armor 5 the Hoplite covers almost anyone; a Valkyrie at Armor 3 covers the casters and the light fighters.
 - **Hooks:**
   - The piece's status gives each other ally a per-source aura that ends with the holder (`endsWithSource`): `taken: [{ pct: -20 }]`.
-  - The aura holds only while that ally's Armor is below the holder's (NEW E, comparing two units' stats, shared with the Pike wall).
+  - The aura holds only while that ally's Armor is below the holder's (NEW E, comparing two units' stats, shared with the Pike wall) and the holder is at half its HP or more.
+  - The second condition is Bloodlust's pattern on the holder: `hp_lost` removes the cover where the holder is below 50; `healed` restores it where it's at 50 or more.
   - The holder: `boosts` −20 on `physical` and `magical`.
 - **Builds:** Bonfire 3 ●●● (the early fight held), Harvest ●● (the full field held), Toll ●●; gives up: its own damage.
-- **CHALLENGE:** see CHALLENGE 3.
 
 #### Shield of the chosen · round shield · legendary
 - **Card:** Round shield. Fits Hoplite, Valkyrie. Once a fight, when another ally falls, its holder raises it at once with a tenth of its HP.
@@ -218,27 +219,27 @@ The spine's rule: commons lean Aggro, MP regen, Attack or Magic; uncommons a Cla
 - **Builds:** Overflow 1 ● (MP regen), Harvest 1 ● (Thunder chord's Shock reads Magic).
 
 #### Reveille · horn · uncommon
-- **Card:** Horn. Fits Knight, Bard. Magic +1. At the start of every fight, the ally with the least MP gains Clarity.
+- **Card:** Horn. Fits Knight, Bard. Magic +1. At the start of every fight, the ally with the least MP gains a short Clarity.
 - **Numbers:**
   - Magic +1 (1,000).
-  - Clarity at its own numbers: 24% of that ally's max MP over 16 ticks.
-  - MP carries between fights and no class regains it in a fight, so this is the party's driest caster topped up once a fight.
-- **Hooks:** the piece's status: `fight_start` → `apply` clarity, `to: { side: allies, pick: lowest, by: mp_share }`.
+  - A short Clarity (G1): 8 ticks, half its own, so two pulses, 12% of that ally's max MP.
+  - MP carries between fights and no class regains it in a fight, so this is the party's driest caster topped up a little once a fight.
+- **Hooks:** the piece's status: `fight_start` → `apply` clarity, duration 8, `to: { side: allies, pick: lowest, by: mp_share }`.
 - **Builds:** Overflow 1 ●, Lockdown 1 ● (MP for the locks), Bonfire 1 ● (the feeding casts).
 
 #### Bull's horn · horn · uncommon
-- **Card:** Horn. Fits Knight, Bard. HP +1. Its holder Taunts at the start of every fight.
-- **Numbers:** HP +1 (500). Taunt at its own 20 ticks; the spine's "short" is CHALLENGE 1. On a Bard (HP 3, Aggro 1) it's a real risk, and a choice.
-- **Hooks:** the piece's status: `fight_start` → `apply` taunt, `to: holder`.
+- **Card:** Horn. Fits Knight, Bard. HP +1. Its holder Taunts briefly at the start of every fight.
+- **Numbers:** HP +1 (500). A short Taunt: 10 ticks, half its own (G1). On a Bard (HP 3, Aggro 1) it's a real risk, and a choice.
+- **Hooks:** the piece's status: `fight_start` → `apply` taunt, duration 10, `to: holder`.
 - **Builds:** Toll 1 ●, Bonfire 1 ● (the keeper), Landslide 1 ● (the stone draws), Ambush 1 ● (the counter-rush caught).
 
 #### War horn · horn · rare
-- **Card:** Horn. Fits Knight, Bard. At the start of every fight, the ally with the slowest basic attack gains many Might.
+- **Card:** Horn. Fits Knight, Bard. At the start of every fight, the ally with the slowest basic attack gains several Might.
 - **Numbers:**
-  - Many Might, flat: 7 stacks (+42%), spent one an action.
-  - On a Hoplite's Phalanx (a great weapon's 12.8 ticks, halved again) that's most of a fight's swings.
+  - Several Might, flat: 4 stacks (+24%), spent one an action. The spine's "many" is "several" under G8 (a single application).
+  - On a Hoplite's Phalanx (a great weapon's 12.8 ticks, halved again) that's its first four swings, about half a regular fight.
 - **Hooks:**
-  - The piece's status: `fight_start` → `apply` might, stacks 7, `to:` the ally with the slowest basic attack.
+  - The piece's status: `fight_start` → `apply` might, stacks 4, `to:` the ally with the slowest basic attack.
   - **NEW** (small, shared with the Tempo bell): a pick by basic-attack interval (the weapon's cooldown after Attack speed), "slowest basic attack".
 - **Builds:** Landslide 2 ●●● (Might on the hammer), Ambush 2 ●●.
 
@@ -264,14 +265,14 @@ The spine's rule: commons lean Aggro, MP regen, Attack or Magic; uncommons a Cla
 - **Builds:** Ambush 3 ●●●, Cuts ●●; gives up: the holder's own opening.
 
 #### Rallying horn · horn · legendary
-- **Card:** Horn. Fits Knight, Bard. When an ally falls (its holder too), every ally still standing gains Haste and a Shield. When an ally is revived, it gains many Might.
+- **Card:** Horn. Fits Knight, Bard. When an ally falls (its holder too), every ally still standing gains Haste and a Shield. When an ally is revived, it gains several Might.
 - **Numbers:**
   - Haste at its own numbers.
   - A Shield of a fifth of each ally's own max HP.
-  - Many Might, flat: 7 on the revived.
+  - Several Might, flat: 4 on the revived (the spine's "many", under G8).
 - **Hooks:**
   - The piece's status, which survives its holder's knockout, so it rings for the holder's own fall: `ko` (whose `holder` and whose `ally`) → `apply` haste and shield (`{ ratio: 0.2, stat: max_hp, of: target }`), `to: { side: allies, pick: all }`.
-  - `revived` (whose `holder` and whose `ally`) → `apply` might 7, `to: owner`.
+  - `revived` (whose `holder` and whose `ally`) → `apply` might 4, `to: owner`.
 - **Builds:** Phoenix 3 ●●●, Toll ●.
 
 ---
@@ -325,13 +326,14 @@ The spine's rule: commons lean Magic, MP, MP regen; uncommons a few Chill on eve
 - **Builds:** Harvest 2 ●●● (evening out).
 
 #### Last page · tome · legendary
-- **Card:** Tome. Fits Frostweaver, Bard. When a foe falls, every foe below a tenth of its HP falls too.
+- **Card:** Tome. Fits Frostweaver, Bard. When a foe falls, every foe below a tenth of its HP falls too, except a boss.
 - **Numbers:**
   - Below 10% of max HP.
   - Every fall it causes checks again, so a field of low foes goes down at once.
-  - Bosses aren't spared (see "least sure").
+  - Bosses are spared (the offhands ruling); any fall, a boss's adds included, still sets it off.
 - **Hooks:**
-  - The piece's status: `ko` (whose: `foe`) → `damage` of type `none`, amount `{ ratio: 1, hp: current, of: target } + { ratio: 1, stacks: shield, of: target }`, `to: { side: foes, where: { hpBelow: 10 }, pick: all }`.
+  - The piece's status: `ko` (whose: `foe`) → `damage` of type `none`, amount `{ ratio: 1, hp: current, of: target } + { ratio: 1, stacks: shield, of: target }`, `to: { side: foes, where: { hpBelow: 10, not a boss }, pick: all }`.
+  - **NEW** (small): a unit condition on rank, "not a boss".
   - It isn't a hit, and nothing reacts to it as one.
   - A foe whose damage-taken cut leaves it a sliver would survive. If that ever happens, a knockout effect is cleaner than damage.
 - **Builds:** Harvest 3 ●●● (the finisher), Snap ●● (a shatter starts a chain), Bonfire ●.
@@ -347,13 +349,13 @@ The spine's rule: commons lean Magic, MP, MP regen; uncommons a few Chill on eve
   - The token is a stat on addition 3 at −100.
   - Any ally's `action_resolve` of kind `ability` spends it: `remove` the token from every ally.
 - **Builds:** Overflow 3 ●●●, Lockdown ●● (free locks).
-- **CHALLENGE:** see CHALLENGE 6 (the line as written loops).
+- The guard against the loop ("a cast it made free doesn't make another") is the lead's ruling.
 
 ---
 
 ## Lantern (Paladin, Pyromancer)
 
-The spine's rule: commons lean Magic, HP, MP; uncommons a few Burn on every foe at the start, a Ward at the start. Three of the eight work on Burn (the start, the flare, the fire passed on); the others are a Ward, a mark for the hunt, and returns between fights.
+The spine's rule: commons lean Magic, HP, MP; uncommons a few Burn on every foe at the start, a Ward at the start. Under G7 the Ward goes (the rune sword and the mace keep theirs), and the second uncommon dazzles the most dangerous foe instead. Three of the eight work on Burn (the start, the flare, the fire passed on); the others are a dazzle, a mark for the hunt, and returns between fights.
 
 #### Brass lantern · lantern · common
 - **Card:** Lantern. Fits Paladin, Pyromancer. Magic +1, HP +1.
@@ -376,11 +378,14 @@ The spine's rule: commons lean Magic, HP, MP; uncommons a few Burn on every foe 
 - **Hooks:** the piece's status: `fight_start` → `apply` burn, stacks `{ ratio: 0.0007, stat: magic, of: holder }`, `to: { side: foes, pick: all }`.
 - **Builds:** Bonfire 1 ●, Harvest 1 ●, Ambush 1 ●.
 
-#### Votive lantern · lantern · uncommon
-- **Card:** Lantern. Fits Paladin, Pyromancer. HP +1. At the start of every fight, the ally with the highest Attack or Magic gains Ward.
-- **Numbers:** HP +1 (500). Ward at its own numbers (+40 Magic resist, 30 ticks).
-- **Hooks:** the piece's status: `fight_start` → `apply` ward, `to: { side: allies, pick: highest, by: { stats: [attack, magic] } }`.
-- **Builds:** Bonfire 1 ● (the feeder kept), Overflow 1 ● (the caster kept), Harvest 1 ● (the full field's spells).
+#### Dazzling lantern · lantern · uncommon
+- **Card:** Lantern. Fits Paladin, Pyromancer. HP +1. At the start of every fight, the foe with the highest Attack or Magic is briefly Weakened.
+- **Numbers:**
+  - HP +1 (500).
+  - A short Weaken (G1): −30% damage for 10 ticks, half its own, once a fight.
+  - It takes the edge off the opening blows of the foe most likely to land them. None of the other kinds the Paladin and the Pyromancer wear has a Weaken at the start (G7: it replaces the Ward at the start).
+- **Hooks:** the piece's status: `fight_start` → `apply` weaken, duration 10, `to: { side: foes, pick: highest, by: { stats: [attack, magic] } }`.
+- **Builds:** Bonfire 1 ● (the early danger), Toll 1 ● (Weaken), Lockdown 1 ● (a disabled foe from the first tick).
 
 #### Bellows lantern · lantern · rare
 - **Card:** Lantern. Fits Paladin, Pyromancer. Each hit its holder lands on a burning foe adds Burn: a tenth of what the foe holds.
