@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "0.7",
+  "schemaVersion": "0.8",
   "id": "worked_example",
   "title": "Placeholder fixture: Hollow of the Grey Mother",
   "note": "PLACEHOLDER. Not game design. The step 1 worked example, kept as the machinery's test fixture (runs, decisions, replay, the harness): it's the one pack with perk picks. Real content is the core set (content/). Migrated to schema 0.6 with armorRatio 1, so its numbers behave as they did.",

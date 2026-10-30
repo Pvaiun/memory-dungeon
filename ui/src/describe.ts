@@ -89,6 +89,7 @@ export function targetPhrase(t: AbilityT["target"] | "foe" | "ally" | "self" | T
     else if (by === "hp_share") what = `the ${r.pick} share of max HP`;
     else if (by === "mp_share") what = `the ${r.pick} share of max MP`;
     else if (by === "buffs" || by === "debuffs") what = `the ${r.pick === "highest" ? "most" : "fewest"} ${by}`;
+    else if (by === "swing") what = `the ${r.pick === "highest" ? "slowest" : "fastest"} basic attack`;
     else if ("stat" in by) what = `the ${r.pick} ${statWord(by.stat)}`;
     else if ("stats" in by) what = `the ${r.pick} ${by.stats.map(statWord).join(" or ")}`;
     else what = `the ${r.pick === "highest" ? "most" : "least"} ${status(by.stacks).name}`;
@@ -121,15 +122,16 @@ function whereText(w: TargetRuleT["where"]): string {
 
 export function conditionText(a: AbilityT): string | null {
   if (!a.if) return null;
-  // Step 5g: several conditions, all of which must hold.
-  const parts = [a.if].flat().map((cnd) => {
+  // Step 5g: several conditions, all of which must hold; step 5i: or any one of them.
+  const any = "any" in a.if;
+  const parts = ("any" in a.if ? a.if.any : [a.if].flat()).map((cnd) => {
     const side = cnd.side === "foes" ? "foe" : "ally";
     const w = wherePredicate(cnd.where);
     if (cnd.side === "self") return `it ${w}`;
     const n = cnd.atLeast ?? 1;
     return `${n > 1 ? `${n} ${side}s` : `an ${side}`} ${w}`;
   });
-  return `waits until ${parts.join(" and ")}`;
+  return `waits until ${parts.join(any ? " or " : " and ")}`;
 }
 
 /** A condition as a predicate: "has a debuff", "is knocked out". */
