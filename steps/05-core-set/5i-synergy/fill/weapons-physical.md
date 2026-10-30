@@ -147,7 +147,7 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 ### Gilded sword · sword · common
 - **Card:** Sword. Fits Knight, Bramble knight, Assassin. HP +1, Aggro +1.
 - **Weapon:** medium, medium, Attack.
-- **Numbers:** HP +500, Aggro +10 (Aggro 120 draws 157 to 175 at 130).
+- **Numbers:** HP +500, Aggro +10 (a Knight's Aggro of 120 becomes 130, and its draw goes from 157 to 175).
 - **Hooks:** stats only.
 - **Builds:** Toll 1, Landslide 1 (the blows kept on the stone), Bonfire ● (the keeper), Phoenix ● (the martyr).
 
@@ -378,7 +378,7 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 ## CHALLENGES
 
 1. **The dagger's uncommon (Weeping kris) is a small Notched knife,** in the same kind: a few Bleed on crits against a few Bleed on every hit. That's the "small and big version of one thing" the brief rules out. It's also the bow's uncommon (Broadhead bow) word for word, and the Ranger wears both kinds. Both are written as the spine has them. The change I'd make: the dagger's uncommon *opens* a wound, so its first hit on each foe adds a few Bleed. That's a different trigger from the Notched knife's, and a different job (starting a wound that others' hits burst). It can be built today: a hidden per-source marker on the foe, and the Bleed's stacks gated by a `when` that the foe lacks it.
-2. **Pike wall has no limit.** Each strike is a full swing (881 at Attack 4), several times Thorns high (300). Against a swarm hitting an ally with less Armor, nothing caps it. With a Bramble knight Taunting six wolves beside a Hoplite, that's about 35 strikes in a regular fight, around 30,000 damage, against the Hoplite's own 4,000 or so. The change I'd make: the wearer can strike back at most once every 3 ticks, so about 13 strikes in a 40-tick fight. That needs a cooldown on a reaction (NEW F). The other option is striking for a third of a swing.
+2. **Pike wall has no limit.** Each strike is a full swing (881 at Attack 4), several times Thorns high (300). Against a swarm hitting an ally with less Armor, nothing caps it. With a Bramble knight Taunting six wolves beside a Hoplite, that's up to about 35 strikes in a regular fight, around 30,000 damage, against the Hoplite's own 4,000 or so. The change I'd make: the wearer can strike back at most once every 3 ticks, so about 13 strikes in a 40-tick fight. That needs a cooldown on a reaction (NEW F). The other option is striking for a third of a swing.
 3. **"A short Haste" and "a short Taunt" at the fight's start** (my Wildcat claws and Clarion blade, and the same words on the leather, round shield, horn and bell uncommons in other shares) would change a status's duration, which the brief forbids. I kept the statuses' own 20 ticks. A free 20-tick Taunt at every fight's start is the Knight's Stand fast without its cost, on an uncommon. The change I'd make: the spine's table says "Haste at the start" and "Taunt at the start", with no "short", and the balance pass watches the Taunt.
 
 ## NEW (engine needs beyond the spine's list)
