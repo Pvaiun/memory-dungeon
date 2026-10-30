@@ -2151,7 +2151,7 @@
    "label": "buff",
    "show": "icon",
    "stacking": "intensity",
-   "unremovable": true,
+   "unremovable": false,
    "cap": 10
   },
   {
