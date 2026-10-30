@@ -168,9 +168,9 @@ Every card ends: *Fits Paladin, Valkyrie, Vampire, Hexer, Bramble knight.*
 - **Builds:** Phoenix 3 ●●●, Toll ●.
 
 **Hexweave mail** · Mail · legendary
-- **Card:** The wearer's hits deal 10% more to a foe for each debuff it holds.
-- **Numbers:** +10% a debuff: five debuffs, half again as much.
-- **Hooks:** `boosts` (physical and magical) as a sum of `when` terms read on the target, one for each debuff the party can lay (Bleed, Weaken, Stun, Slow, Burn, Chill, Shock, Sunder, Silence, Rot, Marked as G2 defines it), each worth 10: Judgement's shape, no new primitive.
+- **Card:** The wearer's hits deal 5% more to a foe for each debuff it holds, up to six debuffs.
+- **Numbers:** +5% a debuff, +30% at most (six debuffs). Marked counts, as G2 defines it. (Second-round ruling: it was 10% a debuff, uncapped.)
+- **Hooks:** `boosts` (physical and magical), pct scaled from the target's count of debuffs, capped at 6: counting a unit's debuffs is an engine addition (in the rulings' gathered list, under Conditions), not a sum of `when` terms.
 - **Builds:** Lockdown 3 ●●, Bonfire ●●, Snap ●●, Toll ●●: strong only where foes carry many debuffs.
 
 ---
@@ -276,9 +276,9 @@ Every card ends: *Fits Cleric, Pyromancer, Frostweaver, Stormcaller, Bard.*
 - **Builds:** Harvest 1, Bonfire 1, Overflow 1.
 
 **Matins robe** · Robes · uncommon
-- **Card:** Magic +1. The first ability the wearer casts each fight costs no MP.
-- **Numbers:** Magic +1,000; one free cast a fight, worth its cost (450 for a Firebolt, 1,000 for a Fireball). (Ruling G7: Clarity at the start stays on the staff, which three Robes classes also hold.)
-- **Hooks:** `fight_start` → apply MATINS (MP cost −100, through engine 3's stat) to self; `action_resolve` (kind ability, holder) → remove MATINS, after the cost is paid: Weaver's robes' shape (engines 3 and 14).
+- **Card:** Magic +1. The first ability the wearer casts each fight costs half its MP.
+- **Numbers:** Magic +1,000; one half-price cast a fight (225 saved on a Firebolt, 500 on a Fireball). (Ruling G7: Clarity at the start stays on the staff, which three Robes classes also hold. Second-round ruling: half, not free.)
+- **Hooks:** `fight_start` → apply MATINS (MP cost −50, through engine 3's stat) to self; `action_resolve` (kind ability, holder) → remove MATINS, after the cost is paid: Weaver's robes' shape (engines 3 and 14).
 - **Builds:** Overflow 1, Bonfire 1 (the first feeding cast), Ambush 1 (a spell in the opening).
 
 **Wallflower's robe** · Robes · uncommon
@@ -324,10 +324,10 @@ Every card ends: *Fits Cleric, Pyromancer, Frostweaver, Stormcaller, Bard.*
 - **Builds:** Harvest 3 ●●●, Snap ●.
 
 **Vestments of return** · Robes · legendary
-- **Card:** The wearer's revives cost a third of their MP and wind up in 1 tick. While the wearer stands, every ally revived comes back behind a Shield of half its max HP.
-- **Numbers:** revive costs ×⅓ (Raise 650 → 217); wind-up quick (1 tick; Raise's is 8); a Shield of 0.5 × the revived ally's max HP, the Shield's cap, whoever revives it (Raise, Valhalla, a phoenix feather, Phoenix ember, Lamp of vigil). (The lead's ruling: only the Cleric revives among the Robes classes, so the Shield now reaches every revive.)
-- **Hooks:** engine 14 on its own abilities that revive: MP cost −67 (engine 3's stat), wind-up 1 tick; `revived` (whose: ally) → apply `shield` to `owner`, 0.5 × max HP of target.
-- **Builds:** Phoenix 3 ●●●, Ambush ● (a Raise first in the order).
+- **Card:** While the wearer stands, every ally revived comes back behind a Shield of half its max HP.
+- **Numbers:** a Shield of 0.5 × the revived ally's max HP, the Shield's cap, whoever revives it (Raise, Valhalla, a phoenix feather, Phoenix ember, Lamp of vigil). (The lead's rulings: first, only the Cleric revives among the Robes classes, so the Shield reaches every revive; then, its cheap and quick revives go, since they were Reliquary of mercy's.)
+- **Hooks:** `revived` (whose: ally) → apply `shield` to `owner`, 0.5 × max HP of target.
+- **Builds:** Phoenix 3 ●●●.
 
 ---
 
@@ -420,9 +420,9 @@ Every card ends: *Fits everyone.* No amulet names a class's ability.
 - **Builds:** Cuts 2 ●●●, Snap ●● and Bonfire ●● (riders twice as often). Millstone's lever pulled the other way.
 
 **Echo charm** · amulet · rare
-- **Card:** The wearer's extra strikes carry everything its basic attacks carry.
-- **Numbers:** none.
-- **Hooks:** **NEW 3** (extra strikes heard as basic attacks by the wearer's riders and reactions, never by what grants a strike).
+- **Card:** The wearer's extra strikes apply what its basic attacks apply: statuses and on-hit effects. Not damage boosts or Lifesteal.
+- **Numbers:** none. (Second-round ruling: the card says what carries.)
+- **Hooks:** **NEW 3** (extra strikes heard as basic attacks by the wearer's riders and reactions that apply statuses or on-hit effects; never by `boosts` tagged basic, nor by what grants a strike).
 - **Builds:** Cuts 2 ●●●, Bonfire ● (Kindling on a wand with Double strike), Toll ● (Refrain), Snap ●.
 
 **Opportunist's charm** · amulet · rare

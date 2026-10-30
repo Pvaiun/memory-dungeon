@@ -413,5 +413,7 @@ Second round:
 1. **The pack.** Focus fire helps most parties, so "gives up anything that spreads" may not cost enough. If it doesn't, basic attacks could also lose their extra targets. G2 settled the Mark's length: 14 ticks outlasts the Lead's swing.
 2. **Skirmish line.** Against many small blows, the Armor it takes away costs about what the dodges save (Scatter's lesson, 5a); it pays against big blows and with the dodge pieces.
 3. **Relay's name** echoes the director's "relay is too complicated".
+4. **Attack speed −100 for "half as often"** (the Hammer seat, after the Millstone and the Worldbreaker) doesn't match the engine. `PRIMITIVES.md` divides a swing's interval by 1 + stat/100, so half as often is −50 there, and −100 would mean never. Either the build reads the shares' −100 as "interval doubled", or every half-as-often piece takes −50. Spur's, Hearth's and the wheel's +20 mean the same under both readings.
+5. **The hurricane and G11.** G11 names the seven counters, and The hurricane's tally (30 party hits, then Haste) isn't one of them, so it still gains a stack per hit. If G11 is meant to cover it too, the mark should fall to 15, to keep about one Haste every 30 ticks.
 
 Settled by the rulings and taken off this list: the storm front's cost (a tenth less), the choir's cost (no MP from anything else), Heat's numbers (G3), and the undying's repeated falls (once a fight).

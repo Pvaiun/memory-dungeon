@@ -181,10 +181,10 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 - **Builds:** Ambush 2 ●●●, Landslide ● (the first blow).
 
 ### Oathkeeper · sword · legendary
-- **Card:** Sword. Fits Knight, Bramble knight, Assassin. While it Taunts, its basic attacks also hit every other foe.
+- **Card:** Sword. Fits Knight, Bramble knight, Assassin. While it Taunts, its basic attacks also hit every other foe for half.
 - **Weapon:** medium, medium, Attack.
-- **Numbers:** each other foe takes a full swing (769 at Attack 4) as an extra strike. These strikes ignore Taunt, reach Hidden foes and can be dodged. Taunt's own 20 ticks from Stand fast or Thicket put it on for about two thirds of a fight.
-- **Hooks:** a piece status: `status_gained` (taunt) → `apply` a sweep status; `status_ended` (taunt) → `remove` it. The sweep status has `strike` to every other foe (`side: foes, pick: all, exclude: targets`). That needs NEW D: today a strike takes only the first unit its rule picks.
+- **Numbers:** each other foe takes half a swing (385 at Attack 4) as an extra strike (the lead's second-round ruling; it was a full swing). These strikes ignore Taunt, reach Hidden foes and can be dodged. Taunt's own 20 ticks from Stand fast or Thicket put it on for about two thirds of a fight.
+- **Hooks:** a piece status: `status_gained` (taunt) → `apply` a sweep status; `status_ended` (taunt) → `remove` it. The sweep status has `strike` to every other foe (`side: foes, pick: all, exclude: targets`), sized at half. That needs NEW D: today a strike takes only the first unit its rule picks, at full size.
 - **Builds:** Toll 3 ●●●, Harvest 3 ●●● (the rod that sweeps), Landslide ●.
 
 ### Gravemark · sword · legendary
@@ -248,10 +248,10 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 - **Builds:** Toll 3 ●●● (a warden that returns blows aimed at others), Landslide ●●, Bonfire ● (the keeper).
 
 ### Storm pike · spear · legendary
-- **Card:** Spear. Fits Hoplite, Valkyrie, Monk. Each hit it lands adds a Charge, up to 10. At 10, its next basic attack that lands also calls lightning on every foe (light magical damage, from Attack) and spends the Charges.
+- **Card:** Spear. Fits Hoplite, Valkyrie, Monk. Each hit it lands adds a Charge, at most one every 2 ticks, up to 10. At 10, its next basic attack that lands also calls lightning on every foe (light magical damage, from Attack) and spends the Charges.
 - **Weapon:** medium, medium, Attack. The spear's own damage stays physical.
-- **Numbers:** the lightning is light: 0.29 × Attack, so 1,160 to each foe at Attack 4 before Magic resist (10, 15 or 25 by rank). That's bigger than a Thunderstorm's touch, free, and comes about once every 30 ticks on a Valkyrie (Gale spear's three hits on a quick cooldown, plus swings). That makes about one storm in a regular fight and two or three in a boss fight. The lightning is a reaction's damage, so it's not a hit: no crit, no Lifesteal, and it adds no Charges (it can't feed itself). Hits that land while the Charges stand at 10 add nothing. Charge has a cap and is spent, so it grows with a fight's length, never compounds.
-- **Hooks:** the counter **Charge**, intensity, cap 10, shown. A piece status: `hit_lands` of any kind → `apply` charge 1 to self. `status_capped` (charge) → `apply` a ready status. The ready status: `hit_lands` of kind `basic` → `damage` magical, 0.29 × Attack, to every foe; `remove` charge; `remove` itself.
+- **Numbers:** the lightning is light: 0.29 × Attack, so 1,160 to each foe at Attack 4 before Magic resist (10, 15 or 25 by rank). That's bigger than a Thunderstorm's touch, and free. A counter gains at most one stack every 2 ticks (G11), so Gale spear's three hits give one Charge. On a Valkyrie (Gale spear on a quick cooldown, plus swings) that's about 0.18 a tick, or one storm every 55 ticks: none to one in a regular fight, one or two in a boss fight. On a Monk with a spear it's one every 70 ticks, and on the Hoplite (Phalanx) about one every 120. See "least sure". The lightning is a reaction's damage, so it's not a hit: no crit, no Lifesteal, and it adds no Charges (it can't feed itself). Hits that land while the Charges stand at 10 add nothing. Charge has a cap and is spent, so it grows with a fight's length, never compounds.
+- **Hooks:** the counter **Charge**, intensity, cap 10, shown. A piece status: `hit_lands` of any kind → `apply` charge 1 to self, under G11's gain limit (NEW H). `status_capped` (charge) → `apply` a ready status. The ready status: `hit_lands` of kind `basic` → `damage` magical, 0.29 × Attack, to every foe; `remove` charge; `remove` itself.
 - **Builds:** Harvest 3 ●●●, Cuts ●●.
 
 ---
