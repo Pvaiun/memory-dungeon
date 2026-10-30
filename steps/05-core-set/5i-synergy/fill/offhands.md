@@ -30,7 +30,7 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the ten offhand kinds,
 
 | Kind | Common | Common | Uncommon | Uncommon | Rare | Rare | Legendary | Legendary |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Kite shield | Ironclad kite | Banner kite | Gatekeeper's kite | Sheltering kite | Rubble shield | Humbling shield | Spiked bulwark | Oathbound shield |
+| Kite shield | Pavise | Banner kite | Gatekeeper's kite | Sheltering kite | Rubble shield | Humbling shield | Spiked bulwark | Oathbound shield |
 | Round shield | Bronze buckler | Linden shield | Comrade's targe | Linebreaker | Paired shields | Hunter's buckler | Phalanx shield | Shield of the chosen |
 | Horn | Ram's horn | Ivory horn | Reveille | Bull's horn | War horn | Echo horn | Horn of the charge | Rallying horn |
 | Tome | Scholar's codex | Hymnal | Snowbound folio | Abridged lexicon | Primer of frost | Treatise on the field | Last page | Annotated grimoire |
@@ -45,9 +45,9 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the ten offhand kinds,
 
 ## Kite shield (Knight, Paladin)
 
-The spine's rule: commons lean Armor, HP, Aggro; uncommons a Shield at the start from max HP, a Guard on the lowest ally at the start. The eight spread across the Toll, Landslide, Lockdown and Phoenix: a bigger wall, a lock off the wall's Shield, Weaken on whoever hits it, thorns from its Armor, and a bodyguard.
+The spine's rule: commons lean Armor, HP, Aggro; uncommons a Shield at the start from max HP, a Guard on the lowest ally at the start. Under G7 (the second round) the Shield at the start goes, since the amulet's Carapace charm has it; the first uncommon braces its holder while it Taunts instead. The eight spread across the Toll, Landslide, Lockdown and Phoenix: a bigger wall, a lock off the wall's Shield, Weaken on whoever hits it, thorns from its Armor, and a bodyguard.
 
-#### Ironclad kite · kite shield · common
+#### Pavise · kite shield · common
 - **Card:** Kite shield. Fits Knight, Paladin. Armor +2.
 - **Numbers:** Armor +2 (2,000).
 - **Hooks:** stats only.
@@ -60,13 +60,13 @@ The spine's rule: commons lean Armor, HP, Aggro; uncommons a Shield at the start
 - **Builds:** Toll 1 ● (the draw), Landslide 1 ● (max HP feeds Vanguard and Shield bash).
 
 #### Gatekeeper's kite · kite shield · uncommon
-- **Card:** Kite shield. Fits Knight, Paladin. Armor +1. Its holder starts every fight behind a Shield from its max HP.
+- **Card:** Kite shield. Fits Knight, Paladin. Armor +1. While its holder Taunts, it takes a tenth less damage.
 - **Numbers:**
   - Armor +1 (1,000).
-  - A Shield of 15% of max HP: 750 on a Knight at HP 5, 600 on a Paladin at HP 4.
-  - The Shield's own cap holds. On the Knight it joins Vanguard's pool: 1,750 of a 2,500 cap.
-- **Hooks:** the piece's status: `fight_start` → `apply` shield, stacks `{ ratio: 0.15, stat: max_hp, of: holder }`, `to: holder`.
-- **Builds:** Landslide 1 ● (the stone), Toll 1 ● (the anchor), Ambush 1 ● (the rear guard).
+  - −10% damage taken, of every kind, while Taunting. The Knight Taunts through Stand fast; the Paladin needs a Taunt from gear.
+  - It replaces the Shield at the start, which repeated the amulet's Carapace charm (G7, second round). No other kind the Knight or the Paladin wears cuts the damage a Taunting unit takes.
+- **Hooks:** the piece's status: `status_gained` (taunt) on the holder → `apply` a status with `taken: [{ pct: -10 }]`, `to: holder`; `status_ended` (taunt) → `remove` it.
+- **Builds:** Toll 1 ● (the anchor), Landslide 1 ● (the bulwark), Bonfire 1 ● (the keeper).
 
 #### Sheltering kite · kite shield · uncommon
 - **Card:** Kite shield. Fits Knight, Paladin. HP +1. At the start of every fight, the ally with the lowest share of its HP is Guarded.

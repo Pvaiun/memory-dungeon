@@ -79,7 +79,7 @@ Every card ends: *Fits Knight, Hoplite, Geomancer, Bramble knight, Paladin.*
 
 **Rubble plate** · Plate · legendary
 - **Card:** When the wearer's Shield breaks, every foe takes damage equal to the most that Shield held since it last broke, and a Shield of a quarter of that is rebuilt.
-- **Numbers:** untyped damage equal to the Shield's peak (up to its cap, half max HP: 2,500 on a Knight at HP 5); a rebuilt Shield of a quarter of the peak. A rebuilt Shield that breaks unrefilled blasts for a quarter, then a sixteenth, so one Shield's blasts add up to about a third more than its size; every fresh Shield (Vanguard, Earthen shell, Keystone cuirass) arms a full one. (The lead's ruling: the first draft blasted the whole cap on every rebuilt break, a loop.)
+- **Numbers:** untyped damage equal to the Shield's peak (up to its cap, half max HP: 2,500 on a Knight at HP 5); a rebuilt Shield of a quarter of the peak. A rebuilt Shield that breaks unrefilled blasts for a quarter, then a sixteenth, so one Shield's blasts add up to about a third more than its size; every fresh Shield (Vanguard, Earthen shell, Carapace charm) arms a full one. (The lead's ruling: the first draft blasted the whole cap on every rebuilt break, a loop.)
 - **Hooks:** `status_ended` (status: shield, cause: stacks) → `damage` (type none, not a hit) to `{ side: "foes", pick: "all" }`, the Shield's peak since it last broke (**NEW 6**); then apply `shield` to self, a quarter of that. A Dispel (cause: removed) doesn't set it off.
 - **Builds:** Landslide 3 ●●●, Toll ●●.
 
@@ -469,13 +469,13 @@ Every card ends: *Fits everyone.* No amulet names a class's ability.
 
 **Blood covenant** · amulet · legendary
 - **Card:** The wearer's abilities cost HP in place of MP: the same share of its max HP as they'd cost of its max MP. It won't cast one that would leave it below a tenth of its HP.
-- **Numbers:** HP cost = MP cost × max HP ÷ max MP (a Pyromancer's Fireball, 1,000 of 3,800 MP, costs 26% of its HP: 526 at HP 2). It waits rather than pay below 10% of max HP. Its MP pool sits unused, so Clarity, Siphon and MP regen give it nothing.
-- **Hooks:** engine 4, with the cost read as a share and a floor that makes the ability wait.
+- **Numbers:** HP cost = MP cost × max HP ÷ max MP (a Pyromancer's Fireball, 1,000 of 3,800 MP, costs 26% of its HP: 526 at HP 2). It waits rather than pay below 10% of max HP. Paying is G12's: the HP goes at once, it isn't damage (no Shield soaks it, nothing reacts to it), and it never takes the wearer below 1 HP. Its MP pool sits unused, so Clarity, Siphon and MP regen give it nothing.
+- **Hooks:** engine 4 (paying HP as G12 defines it), with the cost read as a share and a floor that makes the ability wait.
 - **Builds:** Pact 3 ●●● (life as the only currency, on any class), Overflow ● (mana left to pass on). Gives up: HP.
 
 **Gambler's coin** ✦ · amulet · legendary
-- **Card:** The wearer's crit chance is 50%. Its hits that don't crit deal half; its crits deal what a crit always does.
-- **Numbers:** crit chance 50, set after every other change, so nothing raises or lowers it (Bedrock doesn't double it); Backstab, which scales from crit chance, reads the 50. Every hit −50%; crit multiplier doubled, so a crit lands at its usual ×1.5 (×1.75 or ×2 with Crit damage). On average a hit is unchanged, and a quarter bigger with Crit damage high. The balance pass watches it.
+- **Card:** The wearer's crit chance is 50%. Its hits that don't crit deal half; its crits deal what a crit always does. Hits that always crit still do.
+- **Numbers:** crit chance 50, set after every other change, so nothing raises or lowers it (Bedrock doesn't double it); Backstab, which scales from crit chance, reads the 50. Hits that always crit (Quietus, Still hand, Drawn steel's first swing) win over the coin (G17). Every hit −50%; crit multiplier doubled, so a crit lands at its usual ×1.5 (×1.75 or ×2 with Crit damage). On average a hit is unchanged, and a quarter bigger with Crit damage high. The balance pass watches it.
 - **Hooks:** **NEW 5** (a stat set to a value after every other change); `boosts` −50 on physical and magical; a stat change of +100% on crit multiplier.
 - **Builds:** exotic: a coin toss on every swing. Landslide ● and Ambush ● for the crit-built.
 

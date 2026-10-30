@@ -272,12 +272,13 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 - **Hooks:** stats only.
 - **Builds:** Hunt 1 (the back row, the dodgers), Cuts ●.
 
-### Skyshot bow · bow · uncommon
-- **Card:** Bow, two hands. Fits Ranger, Bard. Attack +1, Accuracy medium. Its abilities have Seek: they get past Taunt.
+### Snaring bow · bow · uncommon
+- **Card:** Bow, two hands. Fits Ranger, Bard. Attack +1, Accuracy medium. Each time it looses a basic attack while a foe is winding up, that foe gains a short Slow (the one with the highest Attack or Magic, if several are).
 - **Weapon:** medium, medium, Attack.
-- **Numbers:** Attack +1,000, Accuracy +20 (a two-hander's two steps). The Ranger's three arrows get past the front. The Bard's abilities reach every ally or every foe already, so for the Bard it's only the steps.
-- **Hooks:** a piece status with `seek: "ability"`.
-- **Builds:** Hunt 1 (reach), Lockdown ● (the caster behind a wall), Ambush ●.
+- **Numbers:** Attack +1,000, Accuracy +20 (the two-hander's two steps, G16). Slow is its own −40 speed, for 12 ticks (half its own 24, G1). It stretches what's left of the wind-up, so a cast 3 ticks from landing takes about 4, and it slows the foe's swings and cooldowns for the 12 ticks. With a foe winding up, a bow swing every 8.8 ticks slows a boss's big move about half the times it comes. It slows whoever is casting, whether or not the arrow hits that foe. With nobody winding up, it does nothing.
+- **Why it changed:** the second round's G7 ruling. The Skyshot bow's Seek on abilities repeated Tracker's coat for the Ranger and Bard, so the bow's uncommon changed, and so did its name. It differs from the Glacial rod (its basic attacks Slow their target, one in three; worn by other classes) and from Pinning arrow (a Ranger version that Slows the arrow's own target).
+- **Hooks:** a piece status: `action_resolve` of kind `basic` → `apply` slow, `duration: 12`, `to: { side: foes, where: { casting: true }, pick: highest, by: { stats: [attack, magic] } }`, with no `ifNone`, so nobody is picked when no foe is casting. All of this exists (`casting` since engine 0.13).
+- **Builds:** Lockdown 1 (a slow that holds a big move back without bursting), Toll ● (fewer blows), Hunt ● (the back-row caster).
 
 ### Broadhead bow · bow · uncommon
 - **Card:** Bow, two hands. Fits Ranger, Bard. Crit chance +1, Attack +1. Its crits add a few Bleed (from Attack).
@@ -370,7 +371,7 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 ### Worldbreaker · great weapon · legendary
 - **Card:** Great weapon, two hands. Fits Knight, Hoplite, Geomancer, Vampire. Its basic attacks come half as often, deal triple, and Stun their target.
 - **Weapon:** medium, medium, Attack.
-- **Numbers:** attack speed −100 (a swing every 25.6 ticks), +200% on basic attacks, and Stun on each swing that lands (its own 8 ticks, Fizzle). At Attack 4 a swing is 3,600 before crit, every 25.6 ticks: 1.5 times a plain great weapon's damage a tick, and a foe Stunned about a third of the time. Riders on basic attacks fire half as often.
+- **Numbers:** attack speed −100 (a swing every 25.6 ticks), +200% on basic attacks, and Stun on each swing that lands (its own 8 ticks, Fizzle). At Attack 4 a swing is 3,600 before crit, every 25.6 ticks: 1.5 times a plain great weapon's damage a tick, and a foe Stunned about a third of the time. Riders on basic attacks fire half as often. The triple stays under G14: it's a swing shape that swings half as often.
 - **One swing shape (G5):** half as often for triple is a swing shape, so a unit takes only one. A passive's shape comes first, then the first piece's in slot order. The Stun goes with the shape (the lead's correction), since a Stun on every swing at normal speed would be a lock. On a unit that already has a shape, Worldbreaker gives Attack +1 and nothing else. On the Hoplite, Phalanx keeps its shape: it swings every 25.6 ticks for double, with no Stun. On the other three wearers the weapon comes first, so it beats a Millstone, a Hummingbird charm or a Hammer seat, and each of those gives Attack +1 instead.
 - **Hooks:** stats `attack_speed` −100, a boost on tag `basic` of +200 and the weapon's own `apply` of stun, all three under the one-shape rule (G5, in the gathered list). They all give way together to Attack +1.
 - **Builds:** Landslide 3 ●●● (the heaviest swing), Lockdown 3 ●●.
@@ -383,7 +384,12 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 2. **Pike wall with no limit:** settled by the physical weapons' ruling (at most once every 3 ticks).
 3. **Short Haste and Taunt at the start:** settled by G1 (half length, 10 ticks). G7 keeps the fist weapons' Haste and the sword's Taunt.
 
-Applying the rulings also changed one piece that wasn't a challenge. Under G6, the **Nettle blade**'s Thorns became its step, and its effect is now half its Thorns added to each swing. It lost its Aggro +1.
+4. **Nettle blade, a special stat alone on an uncommon:** settled by G6 (Thorns is its step, and its effect is half its Thorns added to each swing; it lost Aggro +1).
+5. **Skyshot bow repeating Tracker's coat:** settled by the second round's G7 (now the Snaring bow: a short Slow on a foe winding up).
+6. **Oathkeeper's reach at full swings:** settled by the second round's ruling (its sweep hits every other foe for half).
+7. **Cuts and Charge growing with every hit of a swarm or a multi-hit:** settled by G11 (at most one stack every 2 ticks).
+8. **Always-crits against Gambler's coin (Quietus, Still hand, Drawn steel):** settled by G17 (the always-crit wins).
+9. **Two-handers' uncommons at two steps:** settled by G16. Worldbreaker's triple is kept by G14.
 
 ## NEW (engine needs beyond the spine's list)
 
@@ -394,6 +400,7 @@ Applying the rulings also changed one piece that wasn't a challenge. Under G6, t
 - **E. Comparing two units' stats** as a condition (an ally with less Armor than the wearer). Mine: Pike wall. Elsewhere: Phalanx shield.
 - **F. A cooldown on a reaction** (fires at most once every N ticks). Needed now that the ruling caps Pike wall at one strike every 3 ticks.
 - **G. A side's state as a reaction's `if`** (no foe is Marked). It's in the lead's gathered list. Mine: Gravemark, from the ruling.
+- **H. A counter's gain limit** (G11): a counter gains at most one stack every 2 ticks, however many triggers fire. Mine: Thousandth cut (Cuts), Storm pike (Charge). Every share's counters use it.
 
 ## Least sure
 
