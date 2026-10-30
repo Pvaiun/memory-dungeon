@@ -935,9 +935,9 @@ export const Rogue = z.strictObject({
   config: RogueConfig,
   regions: z.array(RogueRegion).min(1),
   gear: z.array(Gear).describe("Legendary pieces that only the rogue mode drops (the core set's own powerful pieces are in pack.gear)."),
-  legendaries: z.array(Id).min(1).describe("The legendary pool, by gear id, in pack.gear or rogue.gear."),
+  legendaries: z.array(Id).describe("The legendary pool, by gear id, in pack.gear or rogue.gear."),
   aims: z.record(Id, z.array(Id).min(1)).optional().describe("Who each legendary piece is for, by class id: an elite's trophy comes from pieces aimed at the party, and a recruit leans toward a class a piece in the bag is for. Never shown (step 5h round 6, the director's: the FOR line “ruins the discovery”)."),
-  affixes: z.array(RogueAffix).min(2),
+  affixes: z.array(RogueAffix),
   events: z.array(RogueEvent).min(1),
 });
 export type RogueT = z.infer<typeof Rogue>;

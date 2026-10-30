@@ -1,12 +1,38 @@
 import { readFileSync } from "node:fs";
 import { test } from "vitest";
 import assert from "node:assert/strict";
-import { loadContent } from "./engine/run.js";
+import { loadContent, type Content } from "./engine/run.js";
 import { rngFor } from "./engine/rng.js";
-import { autoFight, bench, choose, discard, dismiss, equip, eventView, finish, freshMeta, heals, itemGear, leaderKnown, learn, makeMap, maxOf, member, newItem, newRogue, options, reachable, recruit, recruitKnown, rogue, rollItem, seatsOf, swap, upgraded, usable, type RogueRun } from "./rogue.js";
+import { autoFight, bench, choose, discard, dismiss, equip, eventView, finish, freshMeta, heals, itemGear, leaderKnown, learn, makeMap, maxOf, member, newItem, newRogue, options, reachable, recruit, recruitKnown, rogue, rollItem, seatsOf, swap, upgraded, usable, whyNot, type RogueRun } from "./rogue.js";
 import { aiPlayer, playRogue } from "./rogue-ai.js";
+import type { ContentPack, GearT } from "./schema.js";
 
 const raw = JSON.parse(readFileSync("content/core-set.pack.json", "utf8"));
+
+/**
+ * Step 5i (the build's retire share): the old loot is gone, so the tests of the rules that roll, wear or temper pieces bring
+ * their own, in a copy of the pack: each plain weapon again as an ordinary drop (`fx_<kind>`) and as a legendary
+ * (`fx_lg_<kind>`), a +HP amulet (`fx_heart`) and a legendary one (`fx_lg_heart`), the legendary pool those, three
+ * formations to win (Neutral's slots under other names) and two affixes.
+ */
+const HEART = 1000;
+function withLoot(): Content {
+  const pack = structuredClone(raw) as ContentPack;
+  const plain = pack.gear.filter((g) => g.source === "starter");
+  const drop = plain.map((g): GearT => ({ ...structuredClone(g), id: `fx_${g.weapon!.kind}`, name: `Drop ${g.name}`, source: "drop" }));
+  const legend = plain.map((g): GearT => ({ ...structuredClone(g), id: `fx_lg_${g.weapon!.kind}`, name: `Legend ${g.name}`, tier: "powerful", source: "unlock" }));
+  const heart: GearT = { id: "fx_heart", name: "Heart", text: "More HP.", slot: "amulet", tier: "ordinary", source: "drop", stats: [{ stat: "max_hp", flat: HEART }] };
+  legend.push({ ...heart, id: "fx_lg_heart", name: "Great heart", tier: "powerful", source: "unlock" });
+  pack.gear.push(...drop, ...legend, heart);
+  const neutral = pack.formations.find((f) => f.id === "neutral")!;
+  for (const id of ["fx_wedge", "fx_line", "fx_ring"]) pack.formations.push({ ...structuredClone(neutral), id, name: id, source: "unlock" });
+  pack.rogue!.legendaries = legend.map((g) => g.id);
+  pack.rogue!.affixes = [
+    { id: "hp", prefix: "Sturdy", suffix: "of the Bear", stats: [{ stat: "max_hp", flat: 500 }] },
+    { id: "armor", prefix: "Plated", suffix: "of the Tortoise", stats: [{ stat: "armor", flat: 1000 }] },
+  ];
+  return loadContent(pack);
+}
 
 test("rogue: a run starts with the leader and a draft, and the same seed and choices make the same run", () => {
   const c = loadContent(raw);
@@ -50,15 +76,15 @@ test("rogue: HP carries from fight to fight, as what's missing", () => {
 });
 
 test("rogue: a rare piece is its base with two affixes added; an upgraded ability is 40% bigger", () => {
-  const c = loadContent(raw);
+  const c = withLoot();
   const run = newRogue(c, { seed: 1, leader: "knight" });
-  const it = { uid: "t1", base: "plate", rarity: "rare" as const, affixes: ["hp", "armor"] };
+  const it = { uid: "t1", base: "fx_heart", rarity: "rare" as const, affixes: ["hp", "armor"] };
   const g = itemGear(c, it);
-  const plate = c.gear.get("plate")!;
+  const heart = c.gear.get("fx_heart")!;
   const sum = (gg: typeof g, stat: string) => (gg.stats ?? []).filter((x) => x.stat === stat).reduce((s, x) => s + (x.flat ?? 0), 0);
-  assert.equal(sum(g, "armor"), sum(plate, "armor") + 1000);
-  assert.equal(sum(g, "max_hp"), sum(plate, "max_hp") + 500);
-  assert.equal(g.name, "Sturdy Plate of the Tortoise");
+  assert.equal(sum(g, "armor"), sum(heart, "armor") + 1000);
+  assert.equal(sum(g, "max_hp"), sum(heart, "max_hp") + 500);
+  assert.equal(g.name, "Sturdy Heart of the Tortoise");
   const up = upgraded(c, "firebolt");
   const dmg = (a: typeof up) => { const d = a.do[0]; return d.op === "damage" && typeof d.amount !== "number" ? d.amount.scale[0].ratio : 0; };
   assert.ok(Math.abs(dmg(up) / dmg(c.abilities.get("firebolt")!) - 1.4) < 1e-9);
@@ -122,7 +148,7 @@ test("rogue: a shop's training can be bought again in a visit, each time dearer 
 });
 
 test("rogue: a heal by share counts from the max the last fight ended with, so a +HP piece put on just to rest heals nothing extra", () => {
-  const c = loadContent(raw);
+  const c = withLoot();
   const run = newRogue(c, { seed: 11, leader: "knight" });
   while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
   choose(c, run, reachable(run)[0].id);
@@ -131,7 +157,7 @@ test("rogue: a heal by share counts from the max the last fight ended with, so a
   m.missHp = 3000;
   const plain = structuredClone(run);
   // With a +HP amulet worn for the rest only, the rest heals the same as without it.
-  const it = newItem(run, "heartstone", "common");
+  const it = newItem(run, "fx_heart", "common");
   run.items.push(it);
   equip(c, run, "knight", "amulet", it.uid);
   run.pending = { kind: "campfire" };
@@ -144,16 +170,42 @@ test("rogue: a heal by share counts from the max the last fight ended with, so a
 });
 
 test("rogue: no legendary piece twice in a run while others are left", () => {
-  const c = loadContent(raw);
+  const c = withLoot();
   const run = newRogue(c, { seed: 12, leader: "ranger" });
   const rng = rngFor(12, "x");
   const seen = new Set<string>();
+  assert.ok(rogue(c).legendaries.length > 2);
   for (let i = 0; i < rogue(c).legendaries.length; i++) {
-    const it = rollItem(c, run, rng, "legendary");
+    const it = rollItem(c, run, rng, "legendary")!;
     assert.ok(!seen.has(it.base), `${it.base} twice`);
     seen.add(it.base);
     run.items.push(it);
   }
+});
+
+test("rogue (5i, the retire): with no piece in a pool, an offer that would be one is another kind or nothing, and nothing breaks", () => {
+  const c = loadContent(raw);
+  const run = newRogue(c, { seed: 17, leader: "knight" });
+  while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
+  for (const rar of ["common", "uncommon", "rare", "legendary"] as const) assert.equal(rollItem(c, run, rngFor(17, rar), rar), null);
+  // A chest holds a supply; a shop sells no gear; an event option that only finds a piece isn't offered.
+  for (const kind of ["treasure", "shop"] as const) {
+    const node = run.map.find((n) => n.floor === 2)!;
+    node.kind = kind;
+    run.pending = { kind: "map" };
+    run.at = run.map.find((n) => n.floor === 1 && n.next.includes(node.id))?.id ?? null;
+    if (!run.at) continue;
+    choose(c, run, node.id);
+    const p = run.pending as RogueRun["pending"];
+    if (p.kind === "treasure") assert.ok(p.offer.kind !== "gear" && p.offer.kind !== "bundle");
+    if (p.kind === "shop") assert.ok(p.stock.every((s) => s.offer.kind !== "gear"));
+  }
+  const armoury = rogue(c).events.find((e) => e.id === "armoury")!;
+  run.pending = { kind: "event", id: armoury.id, v: 0 };
+  assert.deepEqual(options(c, run), ["walk_on"]);
+  assert.equal(whyNot(c, run, armoury.variants![0].options[0]), "nothing to find");
+  // Whole runs play to their end.
+  for (let seed = 1; seed <= 4; seed++) assert.equal(playRogue(c, newRogue(c, { seed, leader: "cleric" }), aiPlayer({}, seed), autoFight).pending.kind, "over");
 });
 
 test("rogue (5h round 6): a campfire heals everyone a share and raises the fallen on arrival; then REST or TRAIN; swaps stay open until LEAVE", () => {
@@ -213,7 +265,7 @@ test("rogue (5h): a wipe ends the run, whoever is at camp; after a won fight, th
 });
 
 test("rogue (5h): the Muster, the Drill ground and training; a seat at camp; event versions; dropping a piece; spoils without supplies", () => {
-  const c = loadContent(raw);
+  const c = withLoot();
   const run = newRogue(c, { seed: 31, leader: "ranger" });
   while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
   // The Muster: one of two recruits, each knowing what its card shows.
@@ -247,7 +299,7 @@ test("rogue (5h): the Muster, the Drill ground and training; a seat at camp; eve
   assert.equal(eventView(c, { id: ev.id, v: 1 }).options, ev.variants![1].options);
   // A piece nobody wears can be dropped; a worn one can't.
   run.pending = { kind: "map" };
-  const it = newItem(run, "heartstone", "common");
+  const it = newItem(run, "fx_heart", "common");
   run.items.push(it);
   assert.equal(discard(run, it.uid), true);
   assert.equal(discard(run, member(run, "ranger").gear.weapon!), false);
@@ -274,14 +326,14 @@ test("rogue (5h): the Muster, the Drill ground and training; a seat at camp; eve
 });
 
 test("rogue: gear changes max HP, not current HP: a +HP piece doesn't heal, and taking it off caps HP at the new max", () => {
-  const c = loadContent(raw);
+  const c = withLoot();
   const run = newRogue(c, { seed: 16, leader: "knight" });
   while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
   run.pending = { kind: "map" };
   const m = member(run, "knight");
   const max0 = c.classes.get("knight")!.stats.max_hp;
   m.missHp = 1000;
-  const it = newItem(run, "heartstone", "common");
+  const it = newItem(run, "fx_heart", "common");
   run.items.push(it);
   equip(c, run, "knight", "amulet", it.uid);
   const v = () => { const g = c.gear.get(it.uid) ?? itemGear(c, it); void g; return run.roster.find((x) => x.cls === "knight")!; };
@@ -351,7 +403,7 @@ test("rogue (5h round 6): TRAIN can be backed out of until someone is trained, a
 });
 
 test("rogue (5h round 6): a captive after some fights against people: taken in at half HP, a lesson, or let go; elites give a pick of legendaries then of formations", () => {
-  const c = loadContent(raw);
+  const c = withLoot();
   let captives = 0, rows = 0, lessons = 0;
   for (let seed = 1; seed <= 60; seed++) {
     const run = newRogue(c, { seed, leader: "knight" });
@@ -394,30 +446,33 @@ test("rogue (5h round 6): a captive after some fights against people: taken in a
 });
 
 test("rogue (5h round 6): every option of every event's every version plays through to the map", () => {
-  const c = loadContent(raw);
-  const ai = aiPlayer({}, 3);
-  let played = 0;
-  for (const ev of rogue(c).events) {
-    const versions = ev.variants?.length ? ev.variants.map((_, v) => v) : [undefined];
-    for (const v of versions) for (const opt of eventView(c, { id: ev.id, v }).options) {
-      const run = newRogue(c, { seed: 50 + played, leader: "cleric" });
-      while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
-      run.gold = 500;
-      run.items.push(newItem(run, "heartstone", "common"), newItem(run, "heartstone", "rare", ["hp", "mp"]));
-      const at = run.map.find((n) => n.floor === 4)!;
-      run.at = at.id;
-      run.floor = 4;
-      run.pending = { kind: "event", id: ev.id, ...(v !== undefined ? { v } : {}) };
-      if (!options(c, run).includes(opt.id)) continue;
-      choose(c, run, opt.id);
-      const kind = () => (run.pending as { kind: string }).kind;
-      for (let i = 0; i < 40 && kind() !== "map" && kind() !== "over"; i++) {
-        if (kind() === "fight") autoFight(c, run);
-        else choose(c, run, ai.decide(c, run));
+  // Step 5i (the retire): with the fixture's loot every option can be picked; the content as it stands, with none, plays too.
+  for (const [c, least] of [[withLoot(), 60], [loadContent(raw), 30]] as const) {
+    const ai = aiPlayer({}, 3);
+    let played = 0;
+    for (const ev of rogue(c).events) {
+      const versions = ev.variants?.length ? ev.variants.map((_, v) => v) : [undefined];
+      for (const v of versions) for (const opt of eventView(c, { id: ev.id, v }).options) {
+        const run = newRogue(c, { seed: 50 + played, leader: "cleric" });
+        while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
+        run.gold = 500;
+        run.items.push(newItem(run, "plain_mace", "common"));
+        if (c.gear.has("fx_heart")) run.items.push(newItem(run, "fx_heart", "common"), newItem(run, "fx_heart", "rare", ["hp", "armor"]));
+        const at = run.map.find((n) => n.floor === 4)!;
+        run.at = at.id;
+        run.floor = 4;
+        run.pending = { kind: "event", id: ev.id, ...(v !== undefined ? { v } : {}) };
+        if (!options(c, run).includes(opt.id)) continue;
+        choose(c, run, opt.id);
+        const kind = () => (run.pending as { kind: string }).kind;
+        for (let i = 0; i < 40 && kind() !== "map" && kind() !== "over"; i++) {
+          if (kind() === "fight") autoFight(c, run);
+          else choose(c, run, ai.decide(c, run));
+        }
+        assert.ok(kind() === "map" || kind() === "over", `${ev.id} v${v} ${opt.id} ended at ${kind()}`);
+        played++;
       }
-      assert.ok(kind() === "map" || kind() === "over", `${ev.id} v${v} ${opt.id} ended at ${kind()}`);
-      played++;
     }
+    assert.ok(played > least, `${played} options played`);
   }
-  assert.ok(played > 60, `${played} options played`);
 });
