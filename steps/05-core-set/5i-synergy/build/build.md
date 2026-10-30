@@ -10,3 +10,11 @@ The trail for later sessions: what was decided while building, and every change 
 - **Oct 30, the lead:** the spec's section 6 fixes stand for the items it names (Dawnblade, Phoenix ember, the Vial of the last breath, Halo of the saint, heals given read as `owner`, Ember heart and Eye of the tempest from `status_ended`, the Lightning rod on `area` hits, Horn of the keep on any Taunt, Gambler's coin about 50%).
 - **Oct 30, the director:** control resistance counts Stun, Silence and Slow only, as designed. Weaken stays out: a boss Weakened all fight still acts, and its strength is the balance pass's.
 - **Oct 30, the lead:** Marked's icon is a stand-in from the packs until the director's art arrives.
+
+## Changes from the design, by share (for the report)
+
+**Magical weapons:** Dawnblade's own return gives +8 Fervor (spec 6.1); the Lightning rod echoes `area` hits (spec 6.4); the Cinderheart staff's flare is Burn's own numbers at 20 stacks (about 350 a stack); the Brimming rod gives back about 7.5% of the listed cost while its own discount holds (it reads the MP paid); Dawnblade gains nothing while its wearer is down. Interface: icons for Spellbound and Sunburst.
+
+**Physical weapons:** Weeping kris's and Still hand's conditional stacks as reaction tests (X3); Storm pike's ready waits for Charge at its cap; the Volley bow's count drops on its own cap; Charge removable so Storm pike can spend it. Engine needs passed on: Flurry wraps' chain replaces the plain Double strike roll (H); an application adding 0 stacks does nothing (W); `atMost` alone means at most (W).
+
+**Upgrades, first eight:** the Valkyrie's `einherjar` passive (revives ready), Valhalla's `ready` and its text moved to it. Cover aims at a casting ally (no pick by wind-up left exists), else the lowest share; Watch the anchor is the ally with the most Aggro holding no Aegis; Ward of life raises one and shields another when both hold; Overgrowth removes itself before reapplying; Heartwood mail applies Briar's Bleed itself; Chains of light doesn't skip a Silenced foe; Resonance hits only foes holding Shock. Power steps ×1.4 exactly; every version tagged ●● (the fill gives builds, not worth); mythic kinds picked for art.
