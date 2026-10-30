@@ -27,7 +27,7 @@ The lead splits the volume among parallel agents with bounded shares: the engine
 ## Also in this build (the director's, Oct 30, after the design's gate 2)
 
 - **Control resistance on bosses** (`intent.md` has their words). A boss gains a hidden stack each time it's Stunned (a Chill shatter's Stun included), Silenced or Slowed. Past a first threshold, those statuses land on it for less time; at the most stacks, it's immune to them. The stacks drain over time, so a party that isn't chaining control sits near zero. The battle text says RESISTED or IMMUNE. The thresholds, the cap and the drain are first values for the balance pass. It's the one exception to universal statuses.
-- **Training:** a fresh unit needs about ten trainings now. For a start, each training opportunity gives three trainings where it gave one. The rest is decided later.
+- **Training:** a fresh unit needs about ten trainings now. For a start, every training opportunity gives three: the campfire's TRAIN already does; the training events (two today) and lessons (one) go up to three. A new act's "everyone learns one" and the shop's paid training stay as they are. The rest is decided later.
 - **Marked** gets the director's icon art.
 
 ## How to test
