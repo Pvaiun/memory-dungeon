@@ -511,10 +511,14 @@ The spine's rule: commons lean MP regen, Evasion, Magic or Attack; uncommons a s
 - **Builds:** Overflow 1 ●, Harvest 1 ● (the Stormcaller's sweeps).
 
 #### Quickening chime · bell · uncommon
-- **Card:** Bell. Fits Monk, Cleric, Stormcaller. Evasion medium. Its holder starts every fight Hasted.
-- **Numbers:** Evasion medium (20). Haste at its own 20 ticks; the spine's "short" is CHALLENGE 1.
-- **Hooks:** the piece's status: `fight_start` → `apply` haste, `to: holder`.
-- **Builds:** Cuts 1 ●, Ambush 1 ●, Bonfire 1 ● (a stoker).
+- **Card:** Bell. Fits Monk, Cleric, Stormcaller. Evasion medium. Each time its holder dodges a hit, its next basic attack comes a little sooner.
+- **Numbers:**
+  - Evasion medium (20).
+  - 2 ticks off the holder's basic-attack timer for each dodge: a small step, on a trigger the foes control.
+  - On a Monk (Evasion high, 35, plus 20) taking a pack's blows, that's a swing or two more a fight; on a Cleric or Stormcaller, a dodge now and then.
+  - None of the other kinds its holders wear has a dodge that pays (G7: it replaces the Haste at the start).
+- **Hooks:** the piece's status: `hit_evaded` (whose `holder`) → addition 1 (bring the basic-attack timer 2 ticks closer).
+- **Builds:** Cuts 1 ● (the dodge as one more hit), Toll 1 ● (the dancer).
 
 #### Waking bell · bell · uncommon
 - **Card:** Bell. Fits Monk, Cleric, Stormcaller. MP regen +1. The first time in a fight that an ally is Silenced, the Silence is lifted at once. A cast it broke is still lost.
@@ -533,12 +537,12 @@ The spine's rule: commons lean MP regen, Evasion, Magic or Attack; uncommons a s
 - **Builds:** Cuts 2 ●●● (Flow and Static charge become a pacer's), Overflow ●.
 
 #### Warding bell · bell · rare
-- **Card:** Bell. Fits Monk, Cleric, Stormcaller. At the start of every fight and every so often after, it lifts one debuff from the ally holding the most.
+- **Card:** Bell. Fits Monk, Cleric, Stormcaller. Every so often, it lifts one debuff from the ally holding the most.
 - **Numbers:**
-  - Every short beat (22 ticks): 1 or 2 lifts in a regular fight, 3 in a boss fight.
+  - The first lift at tick 11, then every short beat (22 ticks) after: ticks 11, 33, 55, 77 (the offhands ruling; statuses end with each fight, so a lift at the start found nothing).
+  - 2 lifts in a regular fight, 3 or 4 in a boss fight.
   - The newest debuff. Doom counts.
-  - The start beat finds nothing, since statuses end with each fight (CHALLENGE 2).
-- **Hooks:** the piece's status: `fight_start` and a `pulse` every 22 → `remove` label `debuff`, count 1, `to: { side: allies, where: { debuffs: true }, pick: highest, by: debuffs }`.
+- **Hooks:** the piece's status: a `pulse` every 22, its first at tick 11 (a pulse offset: today a pulse's first beat comes one interval in, so the first lift is a `fight_start` reaction applying an 11-tick timer whose end starts the pulse) → `remove` label `debuff`, count 1, `to: { side: allies, where: { debuffs: true }, pick: highest, by: debuffs }`.
 - **Builds:** Toll 2 ●●, Lockdown ●, Pact ●.
 
 #### Bell of the hour · bell · legendary
@@ -552,7 +556,7 @@ The spine's rule: commons lean MP regen, Evasion, Magic or Attack; uncommons a s
 #### Funeral bell · bell · legendary
 - **Card:** Bell. Fits Monk, Cleric, Stormcaller. When any unit falls, friend or foe, every ally still standing gains Fervor. It rings for its holder's own fall too.
 - **Numbers:**
-  - A few Fervor, flat: 2 a fall, at Fervor's own numbers (5% a stack, cap 20).
+  - A few Fervor, flat: 2 a fall, at Fervor's numbers (G4: +5% damage a stack, up to 20, kept all fight and through a knockout).
   - A regular fight's three or four kills before the last make +30% to +40% by its end. Each ally's fall gives the survivors +10% more.
   - Once its holder is down, it's silent until it's revived.
 - **Hooks:** the piece's status, which survives its holder's knockout: `ko` (whose `any`) → `apply` fervor 2, `to: { side: allies, pick: all }`. A fallen unit's statuses can react to its own `ko` today, so the holder's fall rings.

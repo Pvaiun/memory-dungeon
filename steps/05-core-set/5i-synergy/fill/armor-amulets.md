@@ -483,20 +483,22 @@ Every card ends: *Fits everyone.* No amulet names a class's ability.
 
 ## CHALLENGES
 
-1. **Rubble plate:** its rebuilt quarter breaks to about one swing and blasts the whole cap again, so a Taunting wall in a pack blasts every foe every tick or two. Change: the blast equals the most the Shield held since it last broke, and a quarter of that is rebuilt (needs NEW 6).
-2. **Vestments of return:** only the Cleric revives among the Robes classes, so it's a one-class piece, and close to Reliquary of mercy. Change: its Shield goes to every ally revived while the wearer stands, by anyone.
-3. **The uncommon table's stat entries** (Plate's "Thorns with Aggro up", Mail's "Lifesteal" and "Thorns", Leather's "Evasion with Aggro down", Robes' "HP with Aggro down", the amulets' "Lifesteal", "Thorns" and "Double strike"): as stats they're two steps, which is a common, and Mail's and the amulets' would repeat their own commons. I kept each thread and made it a small effect (a draw that turns on HP or the first hit, a heal per hit, a once-per-foe reprisal, Lifesteal on abilities, Thorns behind a Shield, Double strike while Hasted). If you'd rather keep them as stats, the rarity rule needs an exception.
-4. **"A short Haste" and "a short Taunt" at the start:** the brief says a piece never changes how long a status lasts, so Courier's coat, Hare's foot and Red ribbon use the statuses' own 20 ticks. If "short" matters, start-of-fight statuses need an exception (5g's content had one: Caravan's 6-tick Regen).
-5. **Phoenix ember's Ambush ●:** a revive comes back on full cooldowns, so there's no second volley to fire. Either drop the ●, or have it stand up with its cooldowns as they were when it fell (stronger for Phoenix too). Vial of the last breath has the same shape.
+All five are settled by the lead's rulings.
+
+1. **Rubble plate's loop:** settled by the ruling under "Armor and amulets": the blast equals the most the Shield held since it last broke, and a quarter of that is rebuilt.
+2. **Vestments of return, a Cleric-only piece:** settled by the ruling under "Armor and amulets": its Shield goes to every ally revived while the wearer stands.
+3. **The uncommons made from stats:** settled by G6: they keep their small effects.
+4. **The short Haste and Taunt at the start:** settled by G1: a short status is half its length (Hare's foot and Red ribbon at 10 ticks; Courier's coat changed under G7).
+5. **Phoenix ember's Ambush tag:** settled by G10: dropped.
 
 ## NEW
 
 1. **An HP floor:** a status that leaves its holder at 1 HP when a blow would knock it out, then ends (Last bastion; also the Vampire's Undying thirst). Today only a revive answers a knockout, and it counts as a fall.
-2. **A side's condition on a pulse or reaction,** as an ability's `if` (Kindled robes: "while any foe has Burn"). Statuses can't check a side today.
+2. **A side's condition on a pulse or reaction,** as an ability's `if` (Kindled robes: "while any foe has Burn"; Red ribbon: "an ally below half"). Statuses can't check a side today.
 3. **Extra strikes heard as basic attacks** by the wearer's riders and reactions (Kindling, Cold hex, Iron palm, Refrain, any piece's "basic attacks add"), never by what grants a strike (Double strike, Arc), so nothing chains (Echo charm). Engine 10 is a different bend.
 4. **A killing blow:** the `ko` event naming the unit whose damage knocked it out. Today it names nobody (`ev("ko", u, null)` in `fight.ts`). Pack leader's coat and Bounty charm need it, as do the spine's Hunting spear, Hunter's buckler, Night's edge and Coup de grâce. It may belong under engine 5.
 5. **A stat set to a value,** after every other change (Gambler's coin's 50%). A flat change read once can fake it, but later changes (Bedrock, a seat) would land on top.
-6. **Only if CHALLENGE 1 is taken:** the most a Shield held since it last broke (Rubble plate).
+6. **The most a Shield held since it last broke** (Rubble plate, under the lead's ruling).
 
 To check, not yet new: whether a knocked-out unit can be given a timed status (Phoenix ember and Vial of the last breath stand up a few ticks later); if not, a delayed self-revive. Details inside listed additions: engine 4 reads Blood covenant's cost as a share of max MP and never knocks out its caster; engine 3's cost stat needs a floor at free (Vestments of return and Reliquary of mercy on one Cleric reach −117%); engine 14 needs ability heals apart from all heals (Archmage's mantle).
 
