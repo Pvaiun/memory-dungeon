@@ -17,7 +17,7 @@ out.push(
   "",
   `Generated from \`src/schema.ts\` (schema ${S.SCHEMA_VERSION}) by \`npm run docs\`. Do not edit by hand.`,
   "",
-  "The engine runs the core set's combat system (`docs/core-set/rules-and-vocabulary.md`) on step 4's machinery (`steps/04-combat-concepts/design.md`), whose finer rules stand where the core set is silent. This is the closed set of building blocks it runs on. Each needs engine code, so adding one is a schema version bump plus an engine change. Stats, weapon kinds, statuses, elements, abilities and everything else are registries in the pack, and grow without touching the schema. The numbers in the content are first values, placeholders until the balance pass.",
+  "The engine runs the core set's combat system (`docs/core-set/rules-and-vocabulary.md`) on step 4's machinery (`steps/04-combat-concepts/design.md`), whose finer rules stand where the core set is silent. This is the closed set of building blocks it runs on. Each needs engine code, so adding one is a schema version bump plus an engine change. Stats, weapon kinds, armor types, offhand kinds, statuses, abilities and everything else are registries in the pack, and grow without touching the schema. The numbers in the content are first values, placeholders until the balance pass.",
 );
 
 h("How a fight runs");
@@ -32,11 +32,9 @@ out.push(
   ].join("\n"),
 );
 
-h("Gear slots and armor weights");
+h("Gear slots");
 table(S.SLOTS, "Slot");
-out.push("");
-table(S.WEIGHTS, "Weight");
-out.push("", "A weapon belongs to a kind (a registry: speed, damage type and element), and a class lists the kinds it can use and the heaviest armor it can wear.");
+out.push("", "A weapon belongs to a kind (a registry: speed, damage type and hands), a piece of armor to an armor type and an offhand to an offhand kind (registries of names). A class lists the weapon kinds, armor types and offhand kinds it can use. A two-handed weapon empties the offhand. A mythic piece fits one class, in any slot, and a unit wears one at most.");
 
 h("Effects (in actions, pulses, triggers and reactions)");
 out.push("| Op | Fields | Meaning |", "| --- | --- | --- |");
@@ -50,7 +48,7 @@ table(S.TO, "To");
 
 h("Damage types");
 table(S.TYPES, "Type");
-out.push("", `Physical subtypes: ${Object.keys(S.SUBTYPES).map((s) => `\`${s}\``).join(", ")}. Elements are a registry in the pack.`);
+out.push("", "There are no elements and no physical subtypes (step 5j): an element is a theme in a name, never a mechanic.");
 
 h("Numbers");
 out.push("A number is a plain number, or `{ base, scale: [...] }`: base + Σ ratio × source (× times). A scale reads one of `stat`, `hp` (current or missing), `stacks` (a status's Intensity total), `amount` (a reaction's event amount) or `when` (1 if a condition holds), from:", "");

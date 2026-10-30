@@ -867,16 +867,16 @@ export function compute(c: Content, t: Tally, setName: string): Sheet {
   // Every stat a unit carries, with what it did.
   const sumCls = (m: string) => cls.reduce((a, k) => a + get(t, `cls|${k}|${m}`), 0);
   const sumEn = (m: string) => ens.reduce((a, e) => a + get(t, `en|${e.id}|${m}`), 0);
-  const elements = c.pack.elements.map((e) => e.id);
-  const magTaken = (side: "cls" | "en") => elements.reduce((a, el) => a + (side === "cls" ? sumCls(`taken|${el}`) : sumEn(`taken|${el}`)), 0);
-  const magRaw = (side: "cls" | "en") => elements.reduce((a, el) => a + (side === "cls" ? sumCls(`takenRaw|${el}`) : sumEn(`takenRaw|${el}`)), 0);
+  // Step 5j: one magical kind (it was an element each).
+  const magTaken = (side: "cls" | "en") => (side === "cls" ? sumCls("taken|magical") : sumEn("taken|magical"));
+  const magRaw = (side: "cls" | "en") => (side === "cls" ? sumCls("takenRaw|magical") : sumEn("takenRaw|magical"));
   const stats = {
     "HP: party HP lost a fight, share of max": div(sumCls("taken") - sumCls("soaked"), get(t, "partyHp|mob") + get(t, "partyHp|boss")),
     "MP: spent a fight as a share of the party's pools": div(sumCls("mpSpent"), fights * 3 * mean(cls.map((k) => c.classes.get(k)!.stats.max_mp))),
     "MP regen: regained as a share of spent": div(sumCls("mpGot"), sumCls("mpSpent")),
     "Attack / Magic: physical share of the party's damage": div(sumCls("dmgk|physical"), sumCls("dmg")), "Attack / Magic: magical share of the party's damage": div(sumCls("dmgk|magical"), sumCls("dmg")), "untyped (statuses, Thorns) share of the party's damage": div(sumCls("dmgk|untyped"), sumCls("dmg")),
     "Armor: share of physical damage the party's Armor took off": 1 - div(sumCls("taken|physical"), sumCls("takenRaw|physical")), "Armor: share of physical damage the foes' Armor took off": 1 - div(sumEn("taken|physical"), sumEn("takenRaw|physical")),
-    "Resistances: share of magical damage the party's resistances took off": 1 - div(magTaken("cls"), magRaw("cls")), "Resistances: share the foes' resistances took off": 1 - div(magTaken("en"), magRaw("en")),
+    "Magic resist: share of magical damage the party's Magic resist took off": 1 - div(magTaken("cls"), magRaw("cls")), "Magic resist: share the foes' Magic resist took off": 1 - div(magTaken("en"), magRaw("en")),
     "Crit chance: share of the party's hits that crit": div(sumCls("crit"), sumCls("hits")), "Crit damage: crits' share of the party's damage": div(sumCls("critDmg"), sumCls("dmg")),
     "Evasion: share of hits on the party dodged": div(sumCls("dodged"), sumCls("hitsTaken")), "Evasion: share of the party's hits dodged by foes": div(sumEn("dodged"), sumEn("hitsTaken")),
     "Accuracy: the Ranger's and Hawk's eye wearers' miss rate": div(get(t, "cls|ranger|miss"), get(t, "cls|ranger|hits") + get(t, "cls|ranger|miss")),

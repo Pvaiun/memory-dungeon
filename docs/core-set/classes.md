@@ -8,40 +8,44 @@ Oct 23, 2026 · @Paul Suddaby
 
 *Updated Oct 28, 2026, by the feel pass (step 5g, closed at the director's word after playing): every ability's cooldown word reassigned on five words (a new quick word for the repeat applicators and top-ups, self-buffs on words longer than the buff lasts, the nukes long, the revives very long), every MP cost a third dearer, crits rarer and smaller (and the Geomancer's and Assassin's crit damage fixed), the Bard reworked (HP and Armor 3, Refrain that heals and gives MP, War ballad and Allegro back in place of Anthem and Chorus), Frost arrow for Fire arrow, the Frostweaver's Shatterpoint for Brittle, Phalanx at half speed for double damage, Cure a quick top-up, Lifesteal lower, and the Clarity givers and the heals waiting for need. Each ability below gives its cooldown word, wind-up word and MP cost as they stand. `steps/05-core-set/5g-feel/` has the reasons, and `DECISIONS.md` (Step 5g) the decisions.*
 
+*Updated Oct 29, 2026, by the cleanup (step 5j, on the director's rules from step 5i, with no balancing): elements are themes only, so every ability deals physical or magical damage (Frost arrow, Burning fist and Blood drain are physical now), the four classes' elemental resistances and weaknesses are gone, every class wears kinds in four slots (weapon kinds, armor types and offhand kinds, in place of weapon kinds and an armor weight), six classes arrive with a new weapon, the Hexer has Attack 3, and the Geomancer's Tremor scales from Armor. `steps/05-core-set/5j-cleanup/` has the full list and the director's tie-breaks.*
+
 The 16 core classes for the first playable. The rules and vocabulary they build on are in *Core set: rules and vocabulary*; the gear and formation pieces are in *Core set: gear and formation lists*; the challenges named in the tests and parties are in *Core set: enemies*.
 
 ## The classes
 
 The core set is 16 classes. Players start with the Knight, Cleric and Ranger, a party that clears Fundamental content but struggles with most Specialist bosses; the other 13 are unlocks.
 
-| Class | Role | Damage | Elements |
-| --- | --- | --- | --- |
-| Knight (starter) | Protector | Physical | – |
-| Cleric (starter) | Healer | Magical | Light |
-| Ranger (starter) | Wears down tough targets | Both | Ice |
-| Bramble knight | Thorns tank | Physical, plus Thorns and Bleed | Earth (staff) |
-| Hoplite | Bodyguard who opens foes up | Physical | – |
-| Paladin | Shelter against magic | Both | Light |
-| Valkyrie | Storm spear who heals and revives | Both | Wind, Light (staff) |
-| Bard | Party tempo | Both | Light (staff) |
-| Hexer | Curser | Magical | Ice, Dark (staffs) |
-| Monk | Sunders with a blur of blows | Both | Fire |
-| Assassin | Burst killer | Physical | – |
-| Vampire | Drains to outlast | Both | Dark |
-| Pyromancer | Ramping Burn | Magical | Fire, Lightning (staff) |
-| Frostweaver | Freezes and shatters | Magical | Ice, Wind (staff) |
-| Stormcaller | Shocks every foe | Magical | Lightning, Wind (staff) |
-| Geomancer | Hits hardest behind stone | Magical | Earth, Fire (staff) |
+| Class | Role | Damage |
+| --- | --- | --- |
+| Knight (starter) | Protector | Physical |
+| Cleric (starter) | Healer | Magical |
+| Ranger (starter) | Wears down tough targets | Physical |
+| Bramble knight | Thorns tank | Both, plus Thorns and Bleed |
+| Hoplite | Bodyguard who opens foes up | Physical |
+| Paladin | Shelter against magic | Magical |
+| Valkyrie | Storm spear who heals and revives | Both |
+| Bard | Party tempo | Both |
+| Hexer | Curser | Both |
+| Monk | Sunders with a blur of blows | Physical |
+| Assassin | Burst killer | Physical |
+| Vampire | Drains to outlast | Physical |
+| Pyromancer | Ramping Burn | Magical |
+| Frostweaver | Freezes and shatters | Magical |
+| Stormcaller | Shocks every foe | Magical |
+| Geomancer | Hits hardest behind stone | Both |
 
-Not in the core set for now: Berserker (the first to add next: Might, Lifesteal and Sunder on an axe), Samurai, Spellblade, Dark knight, Time mage, Dancer, Alchemist and the rest of the class pool. Each can be built later from these pieces. If 16 proves too many to test, the Hoplite is the first to cut, and Aegis would wait for a later class or a boss.
+Damage follows the weapons since step 5j (Oct 29, 2026): basic attacks take their weapon kind's type, and a class whose weapons are all one type deals that type with its abilities too. The Ranger, Monk and Vampire are all physical now and the Paladin all magical (all four were both); the Bramble knight, Hexer and Geomancer deal both (they were physical, magical and magical). Until then an Elements column listed each class's elements, its second staffs in brackets; elements are themes now, kept in names and flavour (Firebolt, Frost lance).
+
+Not in the core set for now: Berserker (the first to add next: Might, Lifesteal and Sunder on an axe, a great weapon now), Samurai, Spellblade (the Hexer's new theme since step 5i), Dark knight, Time mage, Dancer, Alchemist and the rest of the class pool. Each can be built later from these pieces. If 16 proves too many to test, the Hoplite is the first to cut, and Aegis would wait for a later class or a boss.
 
 ### Conventions in class descriptions
 
-- **Stats** run from 1 to 5: 1 is very low, 3 average, 5 very high. Special stats and resistances are zero unless a class lists them.
-- **Armor weight** is the heaviest armor the class can wear; the weight rules are under Gear in *Core set: rules and vocabulary*.
+- **Stats** run from 1 to 5: 1 is very low, 3 average, 5 very high. Special stats are zero unless a class lists them. No class has Magic resist of its own (Ward gives it); the four classes' elemental resistances and weaknesses went in step 5j.
+- **Gear.** A class wears kinds in four slots: its weapon kinds (it arrives with the plain weapon of the first), its armor types (Plate, Mail, Leather or Robes, and only those), its offhand kinds, and any amulet. The bow, great weapon and staff are two-handed and empty the offhand. A weapon kind sets its basic attacks' speed and damage type: the dagger, fist weapons, sword, spear, bow and great weapon are physical; the rune sword, mace, wand, rod and staff magical. A mythic piece fits one class in any slot (none exists yet). The rules are under Gear in *Core set: rules and vocabulary*, and who shares which kind is in the "Gear" section of `steps/05-core-set/5i-synergy/builds.md`. (Until Oct 29, 2026, an armor weight: the heaviest armor a class could wear, or anything lighter.)
 - **Timing.** Cooldowns are quick, short, medium, long or very long (14, 22, 30, 40 and 56 ticks since step 5g). Wind-ups (cast speed, in other docs) are quick, normal, long or very long (1, 3, 6 and 8 ticks). Basic attacks have no wind-up by default. The word follows the ability's job (step 5g, the director's): abilities meant to repeat, such as stack applicators and top-up heals, are quick; a buff a unit puts on itself has a cooldown longer than the buff lasts, so it lapses before it comes back; the big nukes are long and the revives very long.
 - **MP costs** are set by hand on each ability (Oct 26, 2026; the director's: no rule from a stat to a cost), on one ladder in two tiers (step 5f), a third dearer since step 5g: a skill (the physical classes' and the Valkyrie's spear) costs 200, 325, 500 or 750 MP, and a spell (the healers', the Bard's, Hexer's and Paladin's, the mages', the Vampire's dark arts) 450, 650, 1,000 or 1,500. Blood drain, at 125, is the one cost off the ladder. The casters' spells cost several times the walls' and fighters' skills, so casters run short of MP and wear MP gear, and walls rarely do. Pyre costs the most. The revives (Raise, Valhalla) cost 650 since step 5h (the director's: they were 1,500 and almost never cast).
-- **Damage and stacks.** Every ability that deals damage says what the damage scales from. Every ability that adds a stacking status says how many stacks (a few, several or many) and what sets that number. Statuses that don't stack have one fixed size.
+- **Damage and stacks.** Every ability that deals damage says its type and what the damage scales from. Physical damage meets Armor and Evasion; magical meets Magic resist and is never dodged; a status's own damage (Burn, Shock, Chill's shatter, Bleed, Thorns) is untyped. No damage has an element (step 5j, the director's rule). Every ability that adds a stacking status says how many stacks (a few, several or many) and what sets that number. Statuses that don't stack have one fixed size.
 - **Firing, Fizzle statuses and target phrases** are defined in *Core set: rules and vocabulary*, under Combat system: Time and actions, and Targeting.
 - **Tests.** Each class ends with a test: one fight against a challenge it should answer, traced through its kit.
 
@@ -59,7 +63,7 @@ Not in the core set for now: Berserker (the first to add next: Might, Lifesteal 
 | Paladin | 4 | 3.3 | 0 | 3 | 4 | 4 | 2 | 4 |
 | Valkyrie | 3 | 1.5 | 0 | 4 | 3 | 3 | 3 | 3 |
 | Bard | 3 | 2.4 | 0 | 3 | 3 | 3 | 2 | 1 |
-| Hexer | 2 | 1.7 | 0 | 1 | 4 | 1 | 2 | 1 |
+| Hexer | 2 | 1.7 | 0 | 3 | 4 | 1 | 2 | 1 |
 | Monk | 3 | 0.75 | 0 | 3.7 | 1 | 2 | 2 | 2 |
 | Assassin | 2 | 1.45 | 0 | 5 | 1 | 2 | 5 | 1 |
 | Vampire | 4 | 1.7 | 0 | 4 | 2 | 2 | 2 | 3 |
@@ -68,9 +72,11 @@ Not in the core set for now: Berserker (the first to add next: Might, Lifesteal 
 | Stormcaller | 2 | 2.3 | 0 | 1 | 4 | 1 | 2 | 1 |
 | Geomancer | 3 | 2.3 | 0 | 3 | 4 | 4 | 4 | 3 |
 
-Crit is Crit chance. Resistances and special stats are listed with each class below. Step 5f (Oct 27, 2026, the director's): the Knight at HP 5 and Armor 4 (the health tank beside the Hoplite's plate; HP 4 was 5c's try), the Hoplite at Attack 4 and Aggro 5, the Monk at Attack 3.7, Crit 2 and Aggro 2, the Paladin and Bramble knight at Aggro 4 and 5, and the casters, the Cleric, the Bard and the Hexer at Aggro 1, so a draw-by-Aggro party leaves its back line alone. Step 5e's HP 3 on the Bard, Hexer and Assassin is reverted: not HP.
+Crit is Crit chance. Special stats are listed with each class below. Step 5f (Oct 27, 2026, the director's): the Knight at HP 5 and Armor 4 (the health tank beside the Hoplite's plate; HP 4 was 5c's try), the Hoplite at Attack 4 and Aggro 5, the Monk at Attack 3.7, Crit 2 and Aggro 2, the Paladin and Bramble knight at Aggro 4 and 5, and the casters, the Cleric, the Bard and the Hexer at Aggro 1, so a draw-by-Aggro party leaves its back line alone. Step 5e's HP 3 on the Bard, Hexer and Assassin is reverted: not HP.
 
 Step 5g (Oct 28, 2026, the director's): the Bard at HP 3 and Armor 3 (a buffer that deals little damage needn't be glass). Crit chance 1 to 5 is 3%, 5%, 9%, 16% and 20% (was 4% a point: crits were too common, and 8% on a Cleric or 12% on a Valkyrie read as crit engines). Crit damage medium and high add 25 and 50 to the base ×1.5, so a high crit deals ×2 (were 50 and 100; until step 5g a bug had the Geomancer's and Assassin's crits at ×1). Lifesteal medium and high are 10% and 20% (were 15% and 30%).
+
+Step 5j (Oct 29, 2026, the director's tie-break): the Hexer at Attack 3 (was 1), so its dagger works; its Magic stays 4, so its kit, all from Magic, is untouched.
 
 ## Starting classes
 
@@ -80,7 +86,7 @@ The starters cover every Fundamental challenge between them: a wall, a healer an
 
 **Role:** protector. **Plan:** starts every fight behind its own Shield, Guards whoever is lowest, calls every foe onto itself while an ally regains its mana, and bashes a foe with the weight of its own body.
 
-**Weapons:** sword, axe. **Armor weight:** heavy. **Special stats:** none. **Resistances:** none.
+**Weapons:** sword, great weapon. **Armor:** Plate. **Offhands:** kite shield, horn. **Special stats:** none. (Until Oct 29, 2026: a sword or axe, in armor up to heavy.)
 
 - **Passive – Vanguard.** It starts every fight behind a Shield that scales from its max HP. (Sworn, Taunt when an ally fell, until Oct 27, 2026: it rarely fired, and too late.)
 - **Fortify.** Applies Guard to the ally with the lowest share of max HP. Long cooldown, quick wind-up, 325 MP.
@@ -93,7 +99,7 @@ The starters cover every Fundamental challenge between them: a wall, a healer an
 
 **Role:** healer. **Plan:** mends whoever is lowest with quick, small heals, lifts a curse and wraps the ally in Regen, raises the fallen, and prays twice as fast when its own life is in danger. An active healer that spends MP: it has no free heal.
 
-**Weapons:** Light staff. **Armor weight:** light. **Special stats:** none. **Resistances:** none.
+**Weapons:** mace, staff. **Armor:** Robes. **Offhands:** relic, bell. **Special stats:** none. (Until Oct 29, 2026: the Light staff, which became the mace, in light armor.)
 
 - **Passive – Last rites.** Below 30% of its max HP, its cooldowns are halved; healed back to 30% or more, they return to normal. (Encore, immunity to Silence, until Oct 27, 2026: two enemies in the roster silence. Until Oct 28, a bug kept the halving on for the rest of the fight.)
 - **Renew.** Cleanses an ally with a debuff and applies Regen to it; with no ally debuffed, Regen on the ally with the lowest share of max HP. Medium cooldown, normal wind-up, 650 MP.
@@ -108,11 +114,11 @@ Until Oct 25, 2026 it had Mercy (each Light hit healed the lowest ally for half 
 
 **Role:** wears down tough targets. **Plan:** looses barbed, cold and rending arrows at whatever stands in front, while its plain arrows fly past any guard and open the wounds.
 
-**Weapons:** bow, dagger. **Armor weight:** medium. **Special stats:** Accuracy medium. **Resistances:** none.
+**Weapons:** bow, dagger. **Armor:** Leather. **Offhands:** totem. **Special stats:** Accuracy medium. (Until Oct 29, 2026: the same weapons, in armor up to medium.)
 
 - **Passive – Hunter's eye.** Its basic attacks ignore Taunt: they go to a random foe, Taunting or not.
 - **Barbed arrow.** Deals light physical damage that scales from Attack to a random foe, and adds several Bleed; stacks scale from Attack. Quick cooldown, quick wind-up, 200 MP. (Venom arrow, with Poison, until Oct 26, 2026.)
-- **Frost arrow.** Deals light Ice damage that scales from Attack to the foe with the most Chill, and adds a few Chill; stacks scale from Attack. Quick cooldown, quick wind-up, 200 MP. A second source of Chill, so the Hexer and Frostweaver reach a shatter sooner. (Fire arrow, a heavy hit with many Burn on a medium cooldown, until Oct 28, 2026: it out-burned the Pyromancer, and made the Ranger a unit of three nukes.)
+- **Frost arrow.** Deals light physical damage that scales from Attack to the foe with the most Chill, and adds a few Chill; stacks scale from Attack. Quick cooldown, quick wind-up, 200 MP. A second source of Chill, so the Hexer and Frostweaver reach a shatter sooner. (Fire arrow, a heavy hit with many Burn on a medium cooldown, until Oct 28, 2026: it out-burned the Pyromancer, and made the Ranger a unit of three nukes. Ice damage, magical, until Oct 29: the Ranger's weapons are all physical, so its abilities are too.)
 - **Rending arrow.** Deals physical damage that scales from Attack to the foe with the most Sunder, and adds a few Sunder; stacks scale from Attack. Short cooldown, normal wind-up, 325 MP. (A heavy hit adding several Sunder until Oct 28, 2026.)
 
 *Test, Shield wall:* its arrows have no Seek, so they go to the Taunting, Guarded foe, which gets Bleed, Chill and Sunder, and the Sunder raises the damage it takes, offsetting some of its Guard. Its basic attacks ignore Taunt and land on the fragile dealers behind. Against a lone boss, everything stacks on one target.
@@ -125,7 +131,7 @@ Six classes that win through the party: a tank that punishes, a bodyguard, a she
 
 **Role:** thorns tank. **Plan:** draws every foe onto its thorns, where each attacker is left bleeding for the party's blows, regrows whoever is lowest, and lashes out with the thorns themselves.
 
-**Weapons:** sword, Earth staff. **Armor weight:** heavy. **Special stats:** Thorns high. **Resistances:** weak to Fire.
+**Weapons:** sword, staff. **Armor:** Plate, Mail. **Offhands:** totem. **Special stats:** Thorns high. (Until Oct 29, 2026: a sword or Earth staff, in armor up to heavy, and weak to Fire.)
 
 - **Passive – Briar.** Each time its Thorns damage a foe, that foe gets a few Bleed; stacks scale from Armor.
 - **Thicket.** Applies Taunt and Guard to itself. Medium cooldown, quick wind-up, 200 MP.
@@ -138,7 +144,7 @@ Six classes that win through the party: a tank that punishes, a bodyguard, a she
 
 **Role:** bodyguard who opens foes up. **Plan:** plants its great shield beside the most vulnerable ally to catch the killing blow, locks shields with it, and leaves foes sundered with slow, crushing blows.
 
-**Weapons:** spear, sword. **Armor weight:** heavy. **Special stats:** none. **Resistances:** none.
+**Weapons:** spear, great weapon. **Armor:** Plate. **Offhands:** round shield. **Special stats:** none. (Until Oct 29, 2026: a spear or sword, in armor up to heavy.)
 
 - **Passive – Phalanx.** Its basic attacks come half as often and deal double damage. (A third as often for triple damage until Oct 28, 2026: one swing a fight.)
 - **Aspis.** Applies Aegis to the ally with the lowest share of max HP. Long cooldown, quick wind-up, 500 MP.
@@ -151,12 +157,12 @@ Six classes that win through the party: a tank that punishes, a bodyguard, a she
 
 **Role:** shelter against magic. **Plan:** shelters the party from spells and curses, and brings down slow, heavy, burning judgement, half again as hard on any foe that holds a buff.
 
-**Weapons:** sword, Light staff. **Armor weight:** heavy. **Special stats:** none. **Resistances:** resists Light.
+**Weapons:** rune sword, mace. **Armor:** Mail, Plate. **Offhands:** kite shield, lantern. **Special stats:** none. (Until Oct 29, 2026: a sword, which it arrived with, or a Light staff, in armor up to heavy, and resistant to Light.)
 
 - **Passive – Judgement.** Its hits deal half again as much damage to foes with a buff. (Double until Oct 27, 2026.)
 - **Sanctuary.** Applies Ward to every ally. Long cooldown, long wind-up, 1,000 MP.
 - **Absolve.** Cleanses and heals itself and the other ally with the lowest share of max HP; the heal scales from Magic. Waits until an ally is below max HP. Medium cooldown, normal wind-up, 650 MP. (A cleanse alone, waiting for a debuff, until Oct 27, 2026.)
-- **Smite.** Deals heavy Light damage that scales from Magic to the foe with the highest Attack or Magic, and adds several Burn; stacks scale from Magic. Medium cooldown, long wind-up, 650 MP. (Long cooldown and no Burn until Oct 26, 2026; a very long wind-up until Oct 28: the Paladin died in it.)
+- **Smite.** Deals heavy magical damage that scales from Magic to the foe with the highest Attack or Magic, and adds several Burn; stacks scale from Magic. Medium cooldown, long wind-up, 650 MP. (Long cooldown and no Burn until Oct 26, 2026; a very long wind-up until Oct 28: the Paladin died in it.)
 
 *Test, Nuker:* Sanctuary's Ward cuts the heavy spell across the party, and Absolve lifts whatever it leaves behind. Against a Buffer's allies, every hit lands half again as hard while their buffs last; beside a Hexer that strips those buffs, it loses that edge. Smite's long wind-up is its weakness: a fast fight may end before it lands.
 
@@ -164,10 +170,10 @@ Six classes that win through the party: a tank that punishes, a bodyguard, a she
 
 **Role:** storm spear who heals and revives. **Plan:** a storm-borne spear that reaches past any guard and Shocks what it hits, mends the wounded, and snatches the fallen back ready to fight.
 
-**Weapons:** spear, sword, Light staff. **Armor weight:** medium. **Special stats:** none. **Resistances:** none.
+**Weapons:** spear, rune sword. **Armor:** Mail, Leather. **Offhands:** round shield, relic. **Special stats:** none. (Until Oct 29, 2026: a spear, sword or Light staff, in armor up to medium.)
 
 - **Passive – Einherjar.** Allies it revives come back with all their actions ready, instead of on cooldown.
-- **Gale spear.** Has Seek. Three quick hits on a random foe that isn't Taunting; each deals Wind damage that scales from Attack and adds a few Shock, with stacks that scale from Attack. Quick cooldown, quick wind-up, 200 MP.
+- **Gale spear.** Has Seek. Three quick hits on a random foe that isn't Taunting; each deals magical damage that scales from Attack and adds a few Shock, with stacks that scale from Attack. Quick cooldown, quick wind-up, 200 MP.
 - **Rally.** Heals the ally with the lowest share of max HP; the amount scales from Magic. Waits until an ally is below 80% of its max HP. Medium cooldown, normal wind-up, 650 MP.
 - **Valhalla.** Revives a random knocked-out ally with a tenth of its max HP. Waits until an ally is knocked out. Very long cooldown, quick wind-up, 650 MP.
 
@@ -177,9 +183,9 @@ Six classes that win through the party: a tank that punishes, a bodyguard, a she
 
 **Role:** party tempo. **Plan:** a caster at the back whose every note mends an ally a little and gives another mana, with a ballad that steadies the whole party, an allegro that quickens it, and thunder that shocks every foe.
 
-**Weapons:** dagger, bow, Light staff. **Armor weight:** medium. **Special stats:** none. **Resistances:** none.
+**Weapons:** bow, wand. **Armor:** Leather, Robes. **Offhands:** horn, tome. **Special stats:** none. (Until Oct 29, 2026: a dagger, which it arrived with, a bow or a Light staff, in armor up to medium. The dagger went with the gear's cap of two shared kinds: with it, the Bard and Ranger would share three.)
 
-- **Passive – Refrain.** Each of its basic attacks that lands heals a random ally and gives a random ally MP, each 30% of the damage the attack dealt, so its weapon is a choice against a foe's Armor and resistance. (Encore, which went to the Cleric, until Oct 25, 2026; MP alone, a flat amount and then one that grew with Attack, until Oct 28.)
+- **Passive – Refrain.** Each of its basic attacks that lands heals a random ally and gives a random ally MP, each 30% of the damage the attack dealt, so its weapon, a physical bow or a magical wand, is a choice against a foe's Armor and Magic resist. (Encore, which went to the Cleric, until Oct 25, 2026; MP alone, a flat amount and then one that grew with Attack, until Oct 28.)
 - **War ballad.** Adds a few Might to every ally; stacks scale from Magic. Quick cooldown, quick wind-up, 450 MP.
 - **Allegro.** Applies Haste to every ally. Long cooldown, quick wind-up, 650 MP.
 - **Thunder chord.** Adds several Shock to every foe; stacks scale from Magic. Short cooldown, normal wind-up, 650 MP. (Lullaby, Slow on a random foe, until Oct 26, 2026; many Shock until Oct 28: one geared chord reached Shock's cap.)
@@ -192,9 +198,9 @@ Step 5f merged War ballad and Allegro into Anthem (Haste and Might on a random a
 
 **Role:** curser. **Plan:** the debuff bot, the Bard's counterpart: burns and shocks every foe a little so the party's statuses pile up, weakens and sunders the most dangerous one, chills whatever it strikes, and silences a foe mid-cast. (Oct 27, 2026; before: single-target curses that rarely mattered.)
 
-**Weapons:** Ice staff, Dark staff. **Armor weight:** light. **Special stats:** Siphon medium. **Resistances:** none.
+**Weapons:** dagger, rune sword. **Armor:** Mail. **Offhands:** idol. **Special stats:** Siphon medium. Re-themed as a spellblade at the director's word (step 5i), and changed only as far as its weapons need: Attack 3 (was 1), so its dagger works. The director names it later. (Until Oct 29, 2026: an Ice or Dark staff, in light armor.)
 
-- **Passive – Cold hex.** Its basic attacks add a few Chill, whatever staff it carries; stacks scale from Magic. (A third fewer until Oct 28, 2026: alone, it could never reach a shatter.)
+- **Passive – Cold hex.** Its basic attacks add a few Chill, whatever weapon it carries; stacks scale from Magic. (A third fewer until Oct 28, 2026: alone, it could never reach a shatter.)
 - **Malison.** Adds a few Burn and a few Shock to every foe; stacks scale from Magic. Short cooldown, normal wind-up, 450 MP. (Hush, Silence on one foe, until Oct 27, 2026: it interrupted a cast 0.06 times an application.)
 - **Unmake.** Applies Silence to the casting foe with the highest Attack or Magic and strips its buffs. Waits until a foe is in a wind-up. Medium cooldown, quick wind-up, 650 MP. (Unravel, one buff off one foe, until Oct 27, 2026; the director's rework also named a buffed foe as a trigger, which the engine's conditions can't join with "or": casting alone, for now.)
 - **Enfeeble.** Applies Weaken and adds a few Sunder to the foe with the highest Attack or Magic; stacks scale from Magic. Quick cooldown, normal wind-up, 450 MP. (Slow until Oct 27, 2026: Chill covers it. Several Sunder until Oct 28: half of Sunder's cap in one cast.)
@@ -209,20 +215,20 @@ Three damage dealers, each beating armor its own way: the Monk with Sunder, the 
 
 **Role:** sunders with a blur of blows. **Plan:** every blow leaves the foe a little more open, Flow keeps it fast, burning fists pile onto the hottest foe, and a pressure point drops the most dangerous one for a moment.
 
-**Weapons:** fist weapons, spear. **Armor weight:** medium. **Special stats:** Evasion high, Double strike medium. **Resistances:** none.
+**Weapons:** fist weapons, spear. **Armor:** Leather. **Offhands:** bell. **Special stats:** Evasion high, Double strike medium. (Until Oct 29, 2026: the same weapons, in armor up to medium.)
 
 - **Passive – Iron palm.** Its basic attacks, and the second strike of its Double strike, add a few Sunder; stacks scale from Attack.
 - **Flow.** Applies Haste to itself. Long cooldown, quick wind-up, 200 MP.
-- **Burning fist.** Three quick hits on the foe with the most Burn; each deals Fire damage that scales from Attack and adds a few Burn (three fifths of the word since step 5g: one cast made the Monk a bigger Burn engine than the Pyromancer), with stacks that scale from Attack. Quick cooldown, quick wind-up, 200 MP.
+- **Burning fist.** Three quick hits on the foe with the most Burn; each deals physical damage that scales from Attack and adds a few Burn (three fifths of the word since step 5g: one cast made the Monk a bigger Burn engine than the Pyromancer), with stacks that scale from Attack. Quick cooldown, quick wind-up, 200 MP. (Fire damage, magical, until Oct 29, 2026: the Monk's weapons are all physical, so its abilities are too.)
 - **Pressure point.** Has Seek. Deals physical damage that scales from Attack to the foe with the highest Attack or Magic, and applies Stun. Medium cooldown, normal wind-up, 325 MP.
 
-*Test, Armored shell:* its first double strikes barely scratch the shell, but each adds Sunder, so every hit after lands harder, and Flow speeds them up. With a spear, its double strikes also break Bulwark.
+*Test, Armored shell:* its first double strikes barely scratch the shell, but each adds Sunder, so every hit after lands harder, and Flow speeds them up. Its strikes also chip Bulwark, as every hit has since Oct 29, 2026 (until then only piercing and Wind hits did, so it needed a spear).
 
 ### Assassin
 
 **Role:** burst killer. **Plan:** slips out of sight, picks off the weakest foe past any guard, leaves every crit a bleeding wound, and silences the back line.
 
-**Weapons:** dagger, sword. **Armor weight:** medium. **Special stats:** Crit damage high, Evasion medium. **Resistances:** none.
+**Weapons:** dagger, sword. **Armor:** Leather. **Offhands:** vial. **Special stats:** Crit damage high, Evasion medium. (Until Oct 29, 2026: the same weapons, in armor up to medium.)
 
 - **Passive – Lacerate.** Each of its crits adds several Bleed to the foe; stacks scale from Attack. (Shadow strike, every hit a crit while Hidden, until Oct 26, 2026.)
 - **Vanish.** Applies Hidden to itself. Waits until it isn't Hidden. Short cooldown, quick wind-up, 200 MP.
@@ -235,10 +241,10 @@ Three damage dealers, each beating armor its own way: the Monk with Sunder, the 
 
 **Role:** drains to outlast. **Plan:** feeds on everything it hits: the harder it hits, the more it heals, its prey is left weakened, and it bleeds its own life into an ally's wounds and mana. (Oct 27, 2026: an exotic class, at the director's word, rather than a Lifesteal cut.)
 
-**Weapons:** sword, fist weapons (claws), Dark staff. **Armor weight:** medium. **Special stats:** Lifesteal high. **Resistances:** weak to Light, resists Dark.
+**Weapons:** fist weapons (claws), great weapon. **Armor:** Mail. **Offhands:** vial, idol. **Special stats:** Lifesteal high. (Until Oct 29, 2026: a sword, which it arrived with, fist weapons or a Dark staff, in armor up to medium; weak to Light and resistant to Dark.)
 
 - **Passive – Bloodlust.** While it's below half of its max HP, its Lifesteal is doubled. (Step 5g, the director's: healing back from the brink is the identity, not sustain all fight, so Lifesteal is lower and the doubling stays.)
-- **Blood drain.** Deals Dark damage that scales from max HP to a random foe, and applies Weaken. Quick cooldown, quick wind-up, 125 MP.
+- **Blood drain.** Deals physical damage that scales from max HP to a random foe, and applies Weaken. Quick cooldown, quick wind-up, 125 MP. (Dark damage, magical, until Oct 29, 2026: the Vampire's weapons are all physical, so its abilities are too.)
 - **Blood gift.** Spends a fifth of its max HP to heal the other ally with the lowest share of max HP for as much, and gives it Clarity. Waits until another ally is below 80% of its max HP and the Vampire itself is at 35% of its max HP or more, so the price never kills it. Medium cooldown, normal wind-up, 450 MP. (Wither, Rot on the lowest foe, until Oct 27, 2026: one enemy in the roster heals.)
 - **Frenzy.** Adds several Might to itself; stacks scale from Attack. Medium cooldown, quick wind-up, 450 MP.
 
@@ -246,43 +252,43 @@ Three damage dealers, each beating armor its own way: the Monk with Sunder, the 
 
 ## Mages
 
-Four mages, each on its element's job: Fire ramps, Ice freezes and shatters, Lightning spreads, Earth crits from behind its Shields. Burn, Chill and Shock each have a source outside their mage, so the mage is the strongest source, not the only one.
+Four mages, each on its theme's job: Fire ramps, Ice freezes and shatters, Lightning spreads, Earth crits from behind its Shields. The elements are themes, not damage, since Oct 29, 2026. The Geomancer is re-themed as an earth fighter (step 5i) and stays here until the director names it. Burn, Chill and Shock each have a source outside their mage, so the mage is the strongest source, not the only one.
 
 ### Pyromancer
 
 **Role:** ramping Burn. **Plan:** every strike adds Burn, bolts pile more onto the hottest foe, and a pyre lands on it.
 
-**Weapons:** Fire staff, Lightning staff. **Armor weight:** light. **Special stats:** none. **Resistances:** none.
+**Weapons:** staff, wand. **Armor:** Robes. **Offhands:** lantern. **Special stats:** none. (Until Oct 29, 2026: a Fire staff, which became the staff, or a Lightning staff, in light armor.)
 
-- **Passive – Kindling.** Its basic attacks add a few Burn, whatever staff it carries; stacks scale from Magic.
-- **Firebolt.** Deals Fire damage that scales from Magic to the foe with the most Burn, and adds several Burn; stacks scale from Magic. Quick cooldown, normal wind-up, 450 MP.
-- **Fireball.** Deals Fire damage that scales from Magic to every foe, and adds a few Burn to each; stacks scale from Magic. Medium cooldown, long wind-up, 1,000 MP.
-- **Pyre.** Deals heavy Fire damage to the foe with the most Burn; the damage scales from Magic and rises by 200 with each Burn stack on that foe (300 until Oct 28, 2026, when Burn lost its cap). The Burn stays. Long cooldown, very long wind-up, 1,500 MP.
+- **Passive – Kindling.** Its basic attacks add a few Burn, whatever weapon it carries; stacks scale from Magic.
+- **Firebolt.** Deals magical damage that scales from Magic to the foe with the most Burn, and adds several Burn; stacks scale from Magic. Quick cooldown, normal wind-up, 450 MP.
+- **Fireball.** Deals magical damage that scales from Magic to every foe, and adds a few Burn to each; stacks scale from Magic. Medium cooldown, long wind-up, 1,000 MP.
+- **Pyre.** Deals heavy magical damage to the foe with the most Burn; the damage scales from Magic and rises by 200 with each Burn stack on that foe (300 until Oct 28, 2026, when Burn lost its cap). The Burn stays. Long cooldown, very long wind-up, 1,500 MP.
 
-*Test, Two states:* in the Armor phase its fire lands in full. In the resistance phase its hits do little, but Burn still lands and ticks. With a Monk or Hexer adding Burn too, it stays high through both phases.
+*Test, Two states:* in the Armor phase its fire lands in full. In the Magic resist phase its hits do little, but Burn, untyped, still lands and ticks. With a Monk or Hexer adding Burn too, it stays high through both phases.
 
 ### Frostweaver
 
 **Role:** freezes and shatters. **Plan:** buries foes in Chill until it shatters into damage and a Stun, leaves the shattered foe sundered for the party, and spends the time it buys keeping an ally's mana flowing.
 
-**Weapons:** Ice staff, Wind staff. **Armor weight:** light. **Special stats:** none. **Resistances:** resists Ice.
+**Weapons:** rod, staff. **Armor:** Robes. **Offhands:** tome. **Special stats:** none. (Until Oct 29, 2026: an Ice staff, which it arrived with, or a Wind staff, in light armor, and resistant to Ice.)
 
-- **Passive – Shatterpoint.** When a foe's Chill shatters (at its cap, for Ice damage and a Stun), that foe takes several Sunder; stacks scale from Magic. (Brittle, 12% more damage for each Chill stack on the target, until Oct 28, 2026, when Chill became a shatter.)
-- **Frost lance.** Deals Ice damage that scales from Magic to the foe with the most Chill, and adds several Chill (about half of a shatter at base Magic, so one lance never shatters a foe alone); stacks scale from Magic. Quick cooldown, normal wind-up, 450 MP.
-- **Blizzard.** Deals Ice damage that scales from Magic to every foe, and adds a few Chill to each (a little under half the word); stacks scale from Magic. Medium cooldown, long wind-up, 1,000 MP.
+- **Passive – Shatterpoint.** When a foe's Chill shatters (at its cap, for untyped damage and a Stun), that foe takes several Sunder; stacks scale from Magic. (Brittle, 12% more damage for each Chill stack on the target, until Oct 28, 2026, when Chill became a shatter.)
+- **Frost lance.** Deals magical damage that scales from Magic to the foe with the most Chill, and adds several Chill (about half of a shatter at base Magic, so one lance never shatters a foe alone); stacks scale from Magic. Quick cooldown, normal wind-up, 450 MP.
+- **Blizzard.** Deals magical damage that scales from Magic to every foe, and adds a few Chill to each (a little under half the word); stacks scale from Magic. Medium cooldown, long wind-up, 1,000 MP.
 - **Stillness.** Applies Clarity to the ally with the least MP among those under half their max MP, or, with nobody under half, the ally with the least, and adds a few Chill to every foe; stacks scale from Magic. Medium cooldown, quick wind-up, 650 MP. (Clarity alone until Oct 28, 2026; a random ally on a long cooldown until Oct 27.)
 
-*Test, Skirmisher:* Blizzard, Frost lance and Stillness build Chill on the fast foes, slowing them, until it shatters for Ice damage and a Stun, and Shatterpoint leaves the foe sundered for the party. Its own basic attacks add no Chill, but Chill thaws slowly, so it builds between casts. With a Hexer or Ranger adding Chill too, the shatters come sooner.
+*Test, Skirmisher:* Blizzard, Frost lance and Stillness build Chill on the fast foes, slowing them, until it shatters for damage and a Stun, and Shatterpoint leaves the foe sundered for the party. Its own basic attacks add no Chill, but Chill thaws slowly, so it builds between casts. With a Hexer or Ranger adding Chill too, the shatters come sooner.
 
 ### Stormcaller
 
 **Role:** Shocks every foe. **Plan:** rains quick strikes across every foe so the fast and the many hurt themselves by acting, and charges itself up to strike faster.
 
-**Weapons:** Lightning staff, Wind staff. **Armor weight:** light. **Special stats:** none. **Resistances:** none.
+**Weapons:** wand, rod. **Armor:** Robes. **Offhands:** bell. **Special stats:** none. (Until Oct 29, 2026: a Lightning staff, which became the wand, or a Wind staff, in light armor.)
 
 - **Passive – Arc.** Each of its basic attacks also hits a second, random foe, and adds a few Shock to both; stacks scale from Magic.
-- **Chain lightning.** Deals Lightning damage that scales from Magic to a random foe, then to up to three other random foes, and adds a few Shock to each; stacks scale from Magic. Quick cooldown, quick wind-up, 650 MP.
-- **Thunderstorm.** Deals Lightning damage that scales from Magic to every foe, and adds a few Shock to each; stacks scale from Magic. Medium cooldown, normal wind-up, 1,000 MP.
+- **Chain lightning.** Deals magical damage that scales from Magic to a random foe, then to up to three other random foes, and adds a few Shock to each; stacks scale from Magic. Quick cooldown, quick wind-up, 650 MP.
+- **Thunderstorm.** Deals magical damage that scales from Magic to every foe, and adds a few Shock to each; stacks scale from Magic. Medium cooldown, normal wind-up, 1,000 MP.
 - **Static charge.** Applies Haste to itself. Long cooldown, quick wind-up, 650 MP.
 
 *Test, Swarm:* Arc, Chain lightning and Thunderstorm Shock all eight foes, and every time one acts, Shock hurts it. Against a lone Nuker it's weak: one slow caster barely sets off Shock, and Arc has no second foe.
@@ -291,12 +297,12 @@ Four mages, each on its element's job: Fire ramps, Ice freezes and shatters, Lig
 
 **Role:** hits hardest behind stone. **Plan:** wraps itself and an ally in stone; while its own Shield holds, its rocks crit far more often and far harder, and a tremor drops a foe now and then.
 
-**Weapons:** Earth staff, Fire staff, axe. **Armor weight:** heavy. **Special stats:** Crit damage high. **Resistances:** none.
+**Weapons:** great weapon, rune sword. **Armor:** Plate. **Offhands:** totem. **Special stats:** Crit damage high. Re-themed as an earth fighter at the director's word (step 5i), and changed only as far as its weapons need: Tremor scales from Armor. The director names it later. (Until Oct 29, 2026: an Earth staff, which it arrived with, a Fire staff or an axe, in armor up to heavy.)
 
 - **Passive – Bedrock.** While its Shield pool is above zero, its crit chance is doubled.
 - **Earthen shell.** Applies Shield to itself and to the other ally with the lowest share of max HP; the amount scales from Armor. Medium cooldown, normal wind-up, 650 MP.
-- **Rockfall.** Deals Earth damage that scales from Armor to a random foe. Short cooldown, long wind-up, 450 MP.
-- **Tremor.** Deals Earth damage that scales from Magic to a random foe, and applies Stun. Long cooldown, very long wind-up, 1,000 MP.
+- **Rockfall.** Deals magical damage that scales from Armor to a random foe. Short cooldown, long wind-up, 450 MP.
+- **Tremor.** Deals magical damage that scales from Armor to a random foe, and applies Stun. Long cooldown, very long wind-up, 1,000 MP. (From Magic until Oct 29, 2026: the director's tie-break for the earth fighter, as Rockfall and Earthen shell scale.)
 
 *Test, Hit counter:* the boss strikes back every few hits it takes. The Geomancer lands few hits, but while its Shield holds they crit often and hard, so the counter rarely fires. A Shield breaks once hits use up its pool, so the Geomancer crits most while a Knight keeps foes off it. Area damage or a Stalker turns them off. (Until Oct 27, 2026, the Knight's Protect also turned its crits back on.)
 
@@ -361,8 +367,8 @@ Every piece is used, by a class or an enemy. Fundamentals sit in 2 to 5 classes 
 
 - **Built-up statuses on basic attacks.** Each has a basic-attack source: Burn (Pyromancer), Chill (Hexer), Shock (Stormcaller) and Sunder (Monk).
 - **Effects that reach every ally:** Sanctuary, War ballad and Allegro. (Prayer did too, until Oct 25, 2026.) Thunder chord, Malison and Stillness's Chill reach every foe.
-- **Scaling from a stat other than Attack or Magic** (obvious targets for gear later): Shield bash (max HP), Bramble lash (Thorns), Backstab (Crit chance), Blood drain and Blood gift (max HP), Rockfall (Armor), and the Shield amounts of Vanguard (max HP) and Earthen shell (Armor).
-- **Elements:** Fire (Pyromancer, Monk), Earth (Geomancer), Ice (Frostweaver, Ranger), Lightning (Stormcaller), Wind (Valkyrie), Light (Cleric, Paladin) and Dark (Vampire). Second staffs spread them further.
+- **Scaling from a stat other than Attack or Magic** (obvious targets for gear later): Shield bash (max HP), Bramble lash (Thorns), Backstab (Crit chance), Blood drain and Blood gift (max HP), Rockfall and Tremor (Armor), and the Shield amounts of Vanguard (max HP) and Earthen shell (Armor).
+- **Damage types:** a class whose weapons are all physical (Knight, Hoplite, Ranger, Monk, Assassin, Vampire) deals physical damage with its abilities, and one whose weapons are all magical (Cleric, Paladin, Pyromancer, Frostweaver, Stormcaller) magical; the five with both keep each ability's own type (the Valkyrie's Gale spear and the Geomancer's Rockfall and Tremor magical, the Bramble lash physical). Burn, Shock, Chill's shatter, Bleed and Thorns are untyped. (Until Oct 29, 2026, an Elements line here listed which classes dealt Fire, Earth, Ice, Lightning, Wind, Light and Dark, with second staffs spreading them further; elements are themes now.)
 - **Physical answers to defences:** Sunder (Monk, Ranger, Hoplite) raises the damage a foe takes from every hit, and Crit damage (Assassin) beats heavy Armor; Accuracy (Ranger) beats high Evasion.
 
 ## New mechanics and things to watch

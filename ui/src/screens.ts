@@ -15,7 +15,7 @@ import {
 } from "./journey.js";
 import { celebrate } from "./celebrate.js";
 import { anyNewEnemy, known, look, metCount, newEnemy } from "./bestiary.js";
-import { abilityBlock, basicLine, canUse, classHead, classPassive, codeSpans, enemySheet, gearRow, memberFor, portraitEl, role, section, specialLines, statGrid } from "./sheet.js";
+import { abilityBlock, basicLine, canUse, classHead, classPassive, codeSpans, enemySheet, gearRow, lockedRow, memberFor, portraitEl, role, section, SLOTS, specialLines, statGrid, twoHanded, type GearSlot } from "./sheet.js";
 import { enemyEl, enemyThumb } from "./pixel.js";
 import { weaponOf } from "../../src/engine/combat/fight.js";
 import { foesOnStage, partyOnStage, stageEl, Strip, STRIP_H, themeOf } from "./battle/scene.js";
@@ -398,8 +398,10 @@ function unit(arg?: unknown): Child[] {
   };
   const sp = specialLines(member.stats);
   const back = () => { orderPick = null; go(unitFrom); };
-  // NEW on a slot when new gear fits it; opening the sheet sees the class and what it wears.
-  const gearRows = (["weapon", "armor", "amulet"] as const).map((s) => {
+  // NEW on a slot when new gear fits it; opening the sheet sees the class and what it wears. Step 5j: four slots, the
+  // offhand locked under a two-handed weapon.
+  const gearRows = SLOTS.map((s) => {
+    if (s === "offhand" && twoHanded(g)) return lockedRow(s);
     const r = gearRow(g[s] ? gearOf(g[s]) : null, s, member.stats, () => go("gear", { cls: id, slot: s }));
     if (newGearFor(id, s)) r.lastElementChild?.before(newTag());
     return r;
@@ -419,14 +421,14 @@ function unit(arg?: unknown): Child[] {
       canUse(id),
       section("ABILITIES", orderPick === null ? null : h("span", { class: "hi" }, "SWAP WITH?")),
       ...order.map((a, i) => abilityBlock(c.abilities.get(a)!, member.stats, designer, { n: i + 1, onN: () => onN(i), cur: orderPick === i, target: orderPick !== null && orderPick !== i })),
-      basicLine(weaponOf(c, member.weapon), member.stats),
+      basicLine(weaponOf(c, member.weapon), member.stats, { ref: member.weapon }),
     ),
   ];
 }
 
 // ─── Gear: what fits a class in a slot ───
 function gear(arg?: unknown): Child[] {
-  const { cls: id, slot } = (arg as { cls: string; slot: "weapon" | "armor" | "amulet" }) ?? {};
+  const { cls: id, slot } = (arg as { cls: string; slot: GearSlot }) ?? {};
   if (!c.classes.has(id)) return home();
   const member = memberFor(id);
   const current = gearFor(id)[slot];
@@ -438,6 +440,8 @@ function gear(arg?: unknown): Child[] {
     const g = { ...(setup.gear[id] ?? {}) };
     if (gid) g[slot] = gid;
     else delete g[slot];
+    // Step 5j: a two-handed weapon empties the offhand.
+    if (slot === "weapon" && twoHanded(g)) delete g.offhand;
     setup.gear[id] = g;
     save();
     leave();
@@ -472,7 +476,7 @@ function classesScreen(): Child[] {
   ];
 }
 const rankClass = (rank: string) => (rank === "boss" ? "gold" : rank === "elite" ? "debuff" : "");
-/** The bestiary: each enemy's likeness, name and rank, its HP, and the elements it's weak to at a glance. */
+/** The bestiary: each enemy's likeness, name and rank; its page has the rest. */
 function bestiary(): Child[] {
   return [
     header("BESTIARY", () => go("home"), playMode() === "free" ? `${enemies.length}` : `${metCount()}/${enemies.length}`),

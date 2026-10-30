@@ -80,7 +80,7 @@ export function fitting(c: Content, cls: string, slot: string, owned: Owned, nee
     const g = c.gear.get(id);
     if (!g || g.slot !== slot || !canEquip(k, g)) return false;
     for (const nd of needs) {
-      if ("armor" in nd && slot === "armor" && g.weight !== nd.armor) return false;
+      if ("armor" in nd && slot === "armor" && g.armor !== nd.armor) return false;
       if ("weapons" in nd && slot === "weapon" && !(g.weapon?.kind && nd.weapons.includes(g.weapon.kind))) return false;
     }
     return true;

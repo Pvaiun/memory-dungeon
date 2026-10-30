@@ -7,10 +7,9 @@
  * decides how long from the beat's weight.
  */
 import type { CUnit } from "../../../src/engine/combat/fight.js";
-import { weaponOf } from "../../../src/engine/combat/fight.js";
 import { c, disp } from "../content.js";
-import { abilityTag, weaponInfo } from "../describe.js";
-import { ELEMENTS, enemyDisplayName } from "../art.js";
+import { abilityTag, damageTypeOf } from "../describe.js";
+import { enemyDisplayName, weaponLook } from "../art.js";
 import type { Ev } from "./driver.js";
 
 export type Tone = "act" | "hit" | "crit" | "heal" | "buff" | "debuff" | "bad" | "good" | "sys" | "quiet";
@@ -22,7 +21,17 @@ export type Beat = { at: number; kind: BeatKind; lines: Line[]; actor?: string; 
 export type Lookup = { unit: (id: string) => CUnit | undefined; name: (id: string) => string };
 
 const MAX_LINES = 4;
-const BITERS = new Set(["wolf", "snow_wolf", "snake", "bat", "hellhound", "leech"]);
+
+/**
+ * Step 5j: every foe carries some Magic resist (10% a regular one, 15% an elite, 25% a boss, the ghosts 75%), and the
+ * engine words every magical hit it cuts RESIST. Said on every spell at a bandit, the word stops meaning anything, so a
+ * hit reads RESIST only when Magic resist took a quarter of it or more (a boss, a ghost, a unit under Ward).
+ */
+export function resisted(ev: Ev): boolean {
+  if (ev.word !== "RESIST") return false;
+  const raw = ev.raw as number | undefined, amount = (ev.amount as number) || 0;
+  return !raw || amount * 4 <= raw * 3;
+}
 
 export class Narrator {
   private open: Beat | null = null;
@@ -68,7 +77,7 @@ export class Narrator {
   private sname(id: string): string {
     return c.statuses.get(id)?.name ?? id;
   }
-  /** What a unit's action is, for its icon: the ability's element or kind, or its weapon's. */
+  /** What a unit's action looks like, for its icon and effect: the ability's look, or its weapon's (art.ts). */
   tagOf(by: string, act: string): string {
     if (act !== "basic") {
       const ab = c.abilities.get(act);
@@ -76,8 +85,7 @@ export class Narrator {
     }
     const u = this.L.unit(by);
     if (!u) return "physical";
-    if (u.side === "enemy" && BITERS.has(u.ref)) return "bite";
-    return weaponInfo(weaponOf(c, u.weapon), null).tag;
+    return weaponLook(u.weapon, u.side === "enemy" ? u.ref : undefined);
   }
 
   push(ev: Ev) {
@@ -186,8 +194,8 @@ export class Narrator {
     const by = String(ev.by), name = this.n(by);
     if (ev.kind === "basic") return `${name} attacks!`;
     const ab = c.abilities.get(String(ev.act));
-    const tag = ab ? abilityTag(ab) : "physical";
-    const verb = ELEMENTS.includes(tag) ? "casts" : "uses";
+    // A spell is cast, anything else used: the verb follows the damage type, not the look.
+    const verb = ab && damageTypeOf(ab) === "magical" ? "casts" : "uses";
     const targets = ev.targets as string[];
     const first = ab?.do[0];
     const on = targets.length === 1 && targets[0] !== by && first && first.op !== "damage" && first.op !== "summon" ? ` on ${this.n(targets[0])}` : "";
@@ -210,8 +218,8 @@ export class Narrator {
     else if (n <= 0 && s > 0) text = `${t}'s Shield soaks ${s}.`;
     else {
       const soak = s > 0 ? ` Shield soaks ${s}.` : "";
-      if (word === "RESIST") text = `${t} resists: takes ${n}.${soak}`;
-      else text = `${crit ? "Critical! " : ""}${t} takes ${n}${crit ? "!" : "."}${word === "WEAK" ? " Weak!" : ""}${soak}`;
+      if (resisted(ev)) text = `${t} resists: takes ${n}.${soak}`;
+      else text = `${crit ? "Critical! " : ""}${t} takes ${n}${crit ? "!" : "."}${soak}`;
     }
     this.add(ev, { text, tone: crit ? "crit" : isStatus ? "debuff" : "hit" }, kind);
   }
@@ -230,7 +238,6 @@ export class Narrator {
   private heal(ev: Ev) {
     const t = this.n(ev.target), src = String(ev.src), n = disp(ev.amount as number);
     const isStatus = c.statuses.has(src);
-    if (ev.word === "ABSORB") return this.add(ev, { text: `${t} absorbs it and heals ${n}!`, tone: "heal" }, "act");
     if (isStatus && n <= 0) return;
     let text: string;
     if (src === "regen") text = `${t} regenerates ${n}.`;

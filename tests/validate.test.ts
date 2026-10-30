@@ -74,34 +74,41 @@ test("schema: step 1's rule language and vocabulary are gone", () => {
 test("schema: enemies have no placement", () => expectIssue("schema", (p) => (p.dungeons[0].stages[0].enemies[0] = { enemy: "ash_wolf", row: "front" })));
 test("ids are unique within a collection", () => expectIssue("id.duplicate", (p) => p.perks.push(clone(p.perks[0]))));
 test("references resolve", () => expectIssue("ref.missing", (p) => (find(p.abilities, "barbed_arrows").do[0].apply[0].status = "poison")));
-test("elements must exist", () => expectIssue("ref.missing", (p) => (find(p.abilities, "radiance").do[0].element = "thunder")));
+test("schema: elements and physical subtypes are gone (step 5j)", () => {
+  expectIssue("schema", (p) => (find(p.abilities, "radiance").do[0].element = "holy"));
+  expectIssue("schema", (p) => (find(p.abilities, "cleave").do[0].subtype = "slash"));
+  expectIssue("schema", (p) => (p.elements = [{ id: "holy", name: "Holy" }]));
+});
 
 // ─── The design's Part 2 ability cards ───────────────────────────────────────
 
-test("cards: Shield Bash (physical, blunt, scales with Armor) is valid", () => card(hit({ type: "physical", subtype: "blunt", amount: scale("armor") })));
-test("cards: Fire Bolt (magical, fire, scales with Magic) is valid", () => card(hit({ type: "magical", element: "fire", amount: scale("magic") })));
-test("cards: Storm Ward (magical, scales with Armor) is valid: no stat is tied to a damage type", () => card(hit({ type: "magical", element: "holy", amount: scale("armor") })));
-test("cards: Fire Slash (physical with an element) is invalid: physical instances have no element", () =>
-  card(hit({ type: "physical", subtype: "slash", element: "fire" }), "instance.physical"));
-test("cards: Strike (physical with no subtype) is invalid: every physical instance has a subtype", () => card(hit({ type: "physical" }), "instance.physical"));
-test("cards: no stat is tied to a damage type: Ember Strike (magical, from Attack) and a slash from Magic are valid", () => {
-  card(hit({ type: "magical", element: "fire", amount: scale("attack") }));
-  card(hit({ type: "physical", subtype: "slash", amount: scale("magic") }));
+test("cards: Shield Bash (physical, scales with Armor) is valid", () => card(hit({ type: "physical", amount: scale("armor") })));
+test("cards: Fire Bolt (magical, scales with Magic) is valid: a fire theme lives in its name only", () => card(hit({ type: "magical", amount: scale("magic") })));
+test("cards: Storm Ward (magical, scales with Armor) is valid: no stat is tied to a damage type", () => card(hit({ type: "magical", amount: scale("armor") })));
+test("cards: Fire Slash (physical with an element) is invalid: there are no elements", () => card(hit({ type: "physical", element: "fire" }), "schema"));
+test("cards: Strike (physical) and Bolt (magical) need nothing else: no subtype, no element", () => {
+  card(hit({ type: "physical" }));
+  card(hit({ type: "magical" }));
+});
+test("cards: no stat is tied to a damage type: Ember Strike (magical, from Attack) and a physical hit from Magic are valid", () => {
+  card(hit({ type: "magical", amount: scale("attack") }));
+  card(hit({ type: "physical", amount: scale("magic") }));
 });
 test("cards: a hit can scale from several stats: a Shield Bash from 0.7 × Armor + 0.3 × Attack", () =>
-  card(hit({ type: "physical", subtype: "blunt", amount: { scale: [{ ratio: 0.7, stat: "armor" }, { ratio: 0.3, stat: "attack" }] } })));
+  card(hit({ type: "physical", amount: { scale: [{ ratio: 0.7, stat: "armor" }, { ratio: 0.3, stat: "attack" }] } })));
 test("cards: a weapon states its own damage; nothing scales it by default", () => expectIssue("schema", (p) => delete find(p.gear, "ash_staff").weapon.amount));
-test("cards: Bolt (magical with no element) is invalid: every magical instance has an element", () => card(hit({ type: "magical" }), "instance.magical"));
 test("cards: an action can't produce untyped damage: only pulses and reactions can", () => card(hit({ type: "none" }), "instance.untyped"));
-test("cards: riders follow the same rules as hits", () =>
-  card(hit({ type: "physical", subtype: "slash", riders: [{ type: "physical", element: "fire", amount: 5 }] }), "instance.physical"));
-test("cards: a weapon follows them too, through its kind", () => expectIssue("instance.magical", (p) => delete find(p.weaponKinds, "holy_staff").element));
+test("cards: riders follow the same rules as hits", () => card(hit({ type: "physical", riders: [{ type: "none", amount: 5 }] }), "instance.untyped"));
+test("cards: a weapon kind states its type and hands, and nothing else (step 5j)", () => {
+  expectIssue("schema", (p) => delete find(p.weaponKinds, "holy_staff").hands);
+  expectIssue("schema", (p) => (find(p.weaponKinds, "holy_staff").element = "holy"));
+});
 
 // ─── The core set's additions ────────────────────────────────────────────────
 
 test("scales: a condition can be a source, and a live stat can multiply a term; an event amount says whose stat multiplies it", () => {
-  card(hit({ type: "physical", subtype: "slash", amount: { scale: [{ ratio: 10, when: { buffs: true }, of: "target" }] } }));
-  card(hit({ type: "physical", subtype: "slash", amount: { scale: [{ ratio: 1, stat: "attack", times: { stat: "crit_chance" } }] } }));
+  card(hit({ type: "physical", amount: { scale: [{ ratio: 10, when: { buffs: true }, of: "target" }] } }));
+  card(hit({ type: "physical", amount: { scale: [{ ratio: 1, stat: "attack", times: { stat: "crit_chance" } }] } }));
   const status = (x: object) => (p: any) => p.statuses.push({ id: "probe", name: "PROBE", label: "buff", show: "icon", stacking: "refresh", ...x });
   expectIssue("scale.times", status({ reactions: [{ on: { event: "hit_lands" }, do: [{ op: "heal", amount: { scale: [{ ratio: 0.01, amount: true, times: { stat: "attack" } }] }, to: "self" }] }] }));
   const p = clone(PACK) as any;
@@ -109,11 +116,11 @@ test("scales: a condition can be a source, and a live stat can multiply a term; 
   assert.deepEqual(codes(validatePack(p).issues, "error"), []);
 });
 test("targeting: ifNone needs a where; exclude belongs to extra targets, not an action's own rule; by can be the highest of several stats", () => {
-  card({ target: { side: "foes", ifNone: "any" }, ...hit({ type: "physical", subtype: "slash" }) }, "target.ifNone");
-  card({ target: { side: "foes", exclude: "targets" }, ...hit({ type: "physical", subtype: "slash" }) }, "target.exclude");
-  card({ do: [{ op: "damage", type: "physical", subtype: "slash", amount: 1 }, { op: "damage", type: "physical", subtype: "slash", amount: 1, to: { side: "foes", exclude: "targets", count: 3 } }] });
-  card({ target: { side: "foes", pick: "highest", by: { stats: ["attack", "magic"] } }, ...hit({ type: "physical", subtype: "slash" }) });
-  card({ target: { side: "foes", pick: "highest", by: { stats: ["attack", "luck"] } }, ...hit({ type: "physical", subtype: "slash" }) }, "ref.missing");
+  card({ target: { side: "foes", ifNone: "any" }, ...hit({ type: "physical" }) }, "target.ifNone");
+  card({ target: { side: "foes", exclude: "targets" }, ...hit({ type: "physical" }) }, "target.exclude");
+  card({ do: [{ op: "damage", type: "physical", amount: 1 }, { op: "damage", type: "physical", amount: 1, to: { side: "foes", exclude: "targets", count: 3 } }] });
+  card({ target: { side: "foes", pick: "highest", by: { stats: ["attack", "magic"] } }, ...hit({ type: "physical" }) });
+  card({ target: { side: "foes", pick: "highest", by: { stats: ["attack", "luck"] } }, ...hit({ type: "physical" }) }, "ref.missing");
 });
 test("revive: targets knocked-out units, through the ability's rule or its own", () => {
   card({ target: { side: "allies", where: { ko: true } }, do: [{ op: "revive", hp: 10 }] });
@@ -141,9 +148,9 @@ test("statuses: seek covers basic, ability or all; a strike's rule and stat are 
 });
 test("events: tags filter hit events only, and a damage event can name the status that dealt it", () => {
   const status = (x: object) => (p: any) => p.statuses.push({ id: "probe", name: "PROBE", label: "buff", show: "sheet", stacking: "refresh", ...x });
-  expectIssue("event.tags", status({ reactions: [{ on: { event: "ko", tags: ["pierce"] }, do: [{ op: "heal", amount: 1, to: "holder" }] }] }));
+  expectIssue("event.tags", status({ reactions: [{ on: { event: "ko", tags: ["physical"] }, do: [{ op: "heal", amount: 1, to: "holder" }] }] }));
   const p = clone(PACK) as any;
-  status({ reactions: [{ on: { event: "damage_dealt", status: "thorns" }, do: [{ op: "apply", status: "bleed", to: "other" }] }, { on: { event: "hit_taken", tags: ["pierce", "holy"] }, do: [{ op: "heal", amount: 1, to: "holder" }] }] })(p);
+  status({ reactions: [{ on: { event: "damage_dealt", status: "thorns" }, do: [{ op: "apply", status: "bleed", to: "other" }] }, { on: { event: "hit_taken", tags: ["physical", "magical"] }, do: [{ op: "heal", amount: 1, to: "holder" }] }] })(p);
   assert.deepEqual(codes(validatePack(p).issues, "error"), []);
 });
 test("weapons: a piece names a kind, or an enemy's weapon states type and cooldown itself", () => {
@@ -165,18 +172,18 @@ test("stats: '+20 Crit chance' is a valid flat change; '+20% Crit chance' isn't,
   assert.equal(validatePack(p).errors, 0);
   expectIssue("stat.pct", (q) => (find(q.gear, "bone_charm").stats = [{ stat: "crit_chance", pct: 20 }]));
 });
-test("stats: family members such as resist:<element> take flat changes only", () => expectIssue("stat.pct", (p) => (find(p.gear, "bone_charm").stats = [{ stat: "resist:fire", pct: 20 }])));
+test("stats: family members such as immune:status:<status> take flat changes only", () => expectIssue("stat.pct", (p) => (find(p.gear, "bone_charm").stats = [{ stat: "immune:status:bleed", pct: 20 }])));
 test("stats: Aggro's floor must be above 0, since weighted picks fail when every candidate is at 0", () => expectIssue("stat.aggroFloor", (p) => (find(p.stats, "aggro").floor = 0)));
 test("stats: the engine's stats are in the registry, with the right kind", () => {
   expectIssue("stat.engine", (p) => (p.stats = p.stats.filter((s: any) => s.id !== "armor")));
   expectIssue("stat.engine", (p) => (find(p.stats, "evasion").kind = "amount"));
 });
 test("stats: a family member must name something real", () => {
-  expectIssue("ref.missing", (p) => (find(p.enemies, "bog_wight").stats["resist:thunder"] = 10));
+  expectIssue("ref.missing", (p) => (find(p.enemies, "bog_wight").stats["immune:status:thunder"] = 10));
+  expectIssue("stat.family", (p) => (find(p.enemies, "bog_wight").stats["resist:holy"] = 10));
   expectIssue("stat.family", (p) => (find(p.enemies, "grey_mother").stats["immune:kind:sleep"] = 1));
   expectIssue("stat.family", (p) => (find(p.enemies, "grey_mother").stats["immune:everything"] = 1));
 });
-test("stats: an element can't take a name that's already a tag", () => expectIssue("element.reserved", (p) => p.elements.push({ id: "blunt", name: "Blunt" })));
 test("timings count whole sub-ticks, so at most 3 decimals", () => expectIssue("timing.precision", (p) => (find(p.abilities, "cleave").cooldown = 12.0005)));
 
 // ─── Statuses ────────────────────────────────────────────────────────────────
@@ -227,7 +234,7 @@ test("statuses: event filters fit their events", () => {
 });
 test("status damage is untyped by convention, but a pulse can be typed, and any stat can scale it", () => {
   const p = clone(PACK) as any;
-  find(p.statuses, "bleed").pulse.do[0] = { op: "damage", type: "physical", subtype: "slash", amount: { scale: [{ ratio: 0.3, stat: "attack", of: "source" }] } };
+  find(p.statuses, "bleed").pulse.do[0] = { op: "damage", type: "physical", amount: { scale: [{ ratio: 0.3, stat: "attack", of: "source" }] } };
   find(p.statuses, "rot").pulse.do[0].amount = { scale: [{ ratio: 0.3, stat: "magic", of: "source" }] };
   assert.deepEqual(codes(validatePack(p).issues, "error"), []);
 });
@@ -242,7 +249,7 @@ test("status numbers can read stats; heals, shields and typed counterattacks sca
   find(p.statuses, "bleed").pulse.do[0].amount = { scale: [{ ratio: 0.5, stat: "armor", of: "source" }] };
   p.statuses.push({ id: "regen", name: "REGEN", label: "buff", show: "icon", stacking: "refresh", duration: 10, pulse: { every: 2, do: [{ op: "heal", amount: { scale: [{ ratio: 0.2, stat: "magic", of: "source" }] } }] } });
   find(p.abilities, "mend").do.push({ op: "apply", status: "regen" });
-  assert.deepEqual(codes(validatePack(p).issues, "error"), [], "the worked example's Blessed Ward (shield stacks from Magic) and Riposte (a pierce counter from Attack) stay valid too");
+  assert.deepEqual(codes(validatePack(p).issues, "error"), [], "the worked example's Blessed Ward (shield stacks from Magic) and Riposte (a physical counter from Attack) stay valid too");
 });
 test("statuses: a tag nothing carries is reported", () => expectIssue("tag.unknown", status({ boosts: [{ tag: "thunder", pct: 10 }] }), { level: "warning" }));
 test("targeting: picking the lowest or highest needs 'by'", () => expectIssue("target.by", (p) => delete find(p.abilities, "lunge").target.by));
@@ -269,10 +276,33 @@ test("gear: powerful pieces come from unlocks, ordinary ones from drops or the s
   expectIssue("gear.source", (p) => (find(p.gear, "ullrs_yew").source = "drop"));
   expectIssue("gear.source", (p) => (find(p.gear, "bone_charm").source = "unlock"));
 });
-test("gear: armor has a weight and nothing else does; only weapons set a basic attack", () => {
-  expectIssue("gear.weight", (p) => delete find(p.gear, "studded_jerkin").weight);
-  expectIssue("gear.weight", (p) => (find(p.gear, "bone_charm").weight = "light"));
+test("gear: armor has an armor type and nothing else does; offhands have a kind; only weapons set a basic attack", () => {
+  expectIssue("gear.armor", (p) => delete find(p.gear, "studded_jerkin").armor);
+  expectIssue("gear.armor", (p) => (find(p.gear, "bone_charm").armor = "light"));
+  expectIssue("ref.missing", (p) => (find(p.gear, "studded_jerkin").armor = "chainmail"));
+  expectIssue("gear.offhand", (p) => p.gear.push({ id: "board", name: "Board", text: "-", slot: "offhand", tier: "ordinary", source: "drop" }));
+  expectIssue("gear.offhand", (p) => (find(p.gear, "bone_charm").offhand = "buckler"));
   expectIssue("gear.weapon", (p) => (find(p.gear, "bone_charm").weapon = { kind: "sword", amount: 1 }));
+});
+test("classes: every class has a one-handed kind, so it can always hold an offhand; its armor types and offhand kinds exist", () => {
+  expectIssue("class.oneHanded", (p) => (find(p.weaponKinds, "sword").hands = 2));
+  expectIssue("ref.missing", (p) => (find(p.classes, "warrior").offhands = ["tower_shield"]));
+  expectIssue("ref.missing", (p) => (find(p.classes, "warrior").armor = ["plate"]));
+});
+test("parties, step 5j: a class wears only its armor types; a two-handed weapon empties the offhand; a mythic fits its one class, one a unit", () => {
+  const p = clone(PACK) as any;
+  p.gear.push({ id: "buckler_a", name: "Buckler", text: "-", slot: "offhand", tier: "ordinary", source: "drop", offhand: "buckler" });
+  p.gear.push({ id: "myth_a", name: "Myth", text: "-", slot: "amulet", tier: "powerful", source: "unlock", mythic: "warrior" });
+  p.gear.push({ id: "myth_b", name: "Myth", text: "-", slot: "offhand", tier: "powerful", source: "unlock", mythic: "warrior" });
+  assert.deepEqual(codes(validatePack(p).issues, "error"), []);
+  const party = (gear: Record<string, string>, cls = "warrior") => ({ formation: PARTY.formation, units: [{ ...PARTY.units[0], class: cls, abilities: cls === "warrior" ? PARTY.units[0].abilities : find(p.classes, cls).abilities.slice(0, p.design.abilitiesEquipped), gear }] });
+  assert.deepEqual(codes(checkParty(p, party({ weapon: "notched_blade", offhand: "buckler_a", amulet: "myth_a" }))), []);
+  assert.deepEqual(codes(checkParty(p, party({ weapon: "notched_blade", armor: "studded_jerkin" }, "cleric"))), ["party.gearClass", "party.gearClass"]);
+  find(p.weaponKinds, "sword").hands = 2;
+  assert.deepEqual(codes(checkParty(p, party({ weapon: "notched_blade", offhand: "buckler_a" }))), ["party.twoHanded"]);
+  find(p.weaponKinds, "sword").hands = 1;
+  assert.deepEqual(codes(checkParty(p, party({ weapon: "notched_blade", amulet: "myth_a", offhand: "myth_b" }))), ["party.mythics"]);
+  assert.deepEqual(codes(checkParty(p, party({ weapon: "ullrs_yew", amulet: "myth_a" }, "ranger"))), ["party.gearClass"]);
 });
 test("gear: a class without a plain weapon of its first kind is reported", () => expectIssue("gear.plain", () => {}, { level: "warning" }));
 test("loot tables drop only drop gear", () => expectIssue("loot.source", (p) => p.dungeons[0].loot.replay.table.push({ gear: "ullrs_yew", weight: 1 })));

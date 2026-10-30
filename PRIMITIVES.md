@@ -1,8 +1,8 @@
 # Engine primitives
 
-Generated from `src/schema.ts` (schema 0.6) by `npm run docs`. Do not edit by hand.
+Generated from `src/schema.ts` (schema 0.7) by `npm run docs`. Do not edit by hand.
 
-The engine runs the core set's combat system (`docs/core-set/rules-and-vocabulary.md`) on step 4's machinery (`steps/04-combat-concepts/design.md`), whose finer rules stand where the core set is silent. This is the closed set of building blocks it runs on. Each needs engine code, so adding one is a schema version bump plus an engine change. Stats, weapon kinds, statuses, elements, abilities and everything else are registries in the pack, and grow without touching the schema. The numbers in the content are first values, placeholders until the balance pass.
+The engine runs the core set's combat system (`docs/core-set/rules-and-vocabulary.md`) on step 4's machinery (`steps/04-combat-concepts/design.md`), whose finer rules stand where the core set is silent. This is the closed set of building blocks it runs on. Each needs engine code, so adding one is a schema version bump plus an engine change. Stats, weapon kinds, armor types, offhand kinds, statuses, abilities and everything else are registries in the pack, and grow without touching the schema. The numbers in the content are first values, placeholders until the balance pass.
 
 ## How a fight runs
 
@@ -13,27 +13,22 @@ Time is counted in sub-ticks, 1000 per tick. Each moment is the next sub-tick on
 
 A unit that becomes ready, or whose action becomes available, because of something resolved in steps 2 or 3 starts on the next sub-tick. Reactions resolve on the sub-tick after their event. A fight ends the moment either side is fully KO'd. Knocked-out party units join later fights knocked out, so a revive can raise them; summoned units join mid-fight with every action on cooldown.
 
-## Gear slots and armor weights
+## Gear slots
 
 | Slot | Meaning |
 | --- | --- |
-| `weapon` | Sets the basic attack through its weapon kind. A class can use only its kinds. |
-| `armor` | Light, medium or heavy. A class can wear its heaviest weight or anything lighter. |
+| `weapon` | Sets the basic attack through its weapon kind. A class can use only its kinds. A two-handed weapon empties the offhand. |
+| `armor` | Of an armor type. A class wears only its types. |
+| `offhand` | Of an offhand kind. A class holds only its kinds, and nothing under a two-handed weapon. |
 | `amulet` | No restrictions. |
 
-| Weight | Meaning |
-| --- | --- |
-| `light` | Anyone can wear it. |
-| `medium` | Medium and heavy classes. |
-| `heavy` | Heavy classes only. |
-
-A weapon belongs to a kind (a registry: speed, damage type and element), and a class lists the kinds it can use and the heaviest armor it can wear.
+A weapon belongs to a kind (a registry: speed, damage type and hands), a piece of armor to an armor type and an offhand to an offhand kind (registries of names). A class lists the weapon kinds, armor types and offhand kinds it can use. A two-handed weapon empties the offhand. A mythic piece fits one class, in any slot, and a unit wears one at most.
 
 ## Effects (in actions, pulses, triggers and reactions)
 
 | Op | Fields | Meaning |
 | --- | --- | --- |
-| `damage` | `type`, `subtype`, `element`, `amount`, `hits`, `riders`, `apply`, `to` | Deals damage. In an action, each hit is a hit; in a pulse or reaction it is not, and fires no hit events. |
+| `damage` | `type`, `amount`, `hits`, `riders`, `apply`, `to` | Deals damage. In an action, each hit is a hit; in a pulse or reaction it is not, and fires no hit events. |
 | `heal` | `amount`, `to` | Restores HP, never above max. Never mitigated. |
 | `mp` | `amount`, `to` | Restores MP (positive) or drains it (negative). |
 | `apply` | `status`, `stacks`, `duration`, `chance`, `to` | Applies a status, by its stacking mode. |
@@ -59,11 +54,11 @@ Or a targeting rule. Extra targets after an action's first ignore Taunt.
 
 | Type | Meaning |
 | --- | --- |
-| `physical` | Has exactly one subtype and no element. Meets Evasion and Armor. |
-| `magical` | Has exactly one element and no subtype. Meets that element's Resistance: below 0 WEAK, above 0 RESIST, 100 IMMUNE, above 100 ABSORB (heals instead, and applies nothing). |
-| `none` | Untyped: never meets Evasion or Armor; meets Resistance only if it carries an element. Not allowed in actions; the usual type for a status's own damage. |
+| `physical` | Meets Evasion and Armor. |
+| `magical` | Meets Magic resist, a percentage: above 0 RESIST, 100 IMMUNE. Never dodged. |
+| `none` | Untyped: never dodged, never reduced by Armor or Magic resist. Not allowed in actions; the type of a status's own damage. |
 
-Physical subtypes: `slash`, `pierce`, `blunt`. Elements are a registry in the pack.
+There are no elements and no physical subtypes (step 5j): an element is a theme in a name, never a mechanic.
 
 ## Numbers
 
@@ -94,8 +89,6 @@ A number is a plain number, or `{ base, scale: [...] }`: base + Σ ratio × sour
 | `label` | Drives removal, conditions and the batch its pulses resolve in. |
 | `show` | icon: on the HP bar with its total. sheet: listed on the unit sheet. stat: shown as a stat. |
 | `tags` | Tags that boosts (on its applications' stacks) and damage-taken modifiers (on its pulses) can name. |
-| `element` | Its damage pulses meet this element's Resistance. Full Resistance makes the unit immune to it. |
-| `subtype` | Used only for damage-taken modifiers on its pulses. |
 | `stacking` |  |
 | `perSource` | Per source mode: each source keeps its own copy, using `stacking`. |
 | `duration` | Absent: permanent, until the fight ends. |
@@ -109,7 +102,6 @@ A number is a plain number, or `{ base, scale: [...] }`: base + Σ ratio × sour
 | `block` | Blocks the next damage above this percent of the holder's max HP, from any source, after mitigation and before absorbs; then the status ends (Aegis). |
 | `lockout` |  |
 | `riders` | Adds a rider to the holder's hits that carry `on`. |
-| `convert` | Changes the element of the holder's magical instances, or the subtype of its physical ones. |
 | `seek` | The holder's actions carrying this tag (basic, ability or all) have Seek: their first pick ignores Taunt. |
 | `strike` | After each of the holder's basic attacks: one more hit with the weapon's damage, of kind extra, at `to`. Extra strikes don't chain. |
 | `pulse` | A repeating effect. Intensity: its trigger. |
@@ -128,7 +120,7 @@ A number is a plain number, or `{ base, scale: [...] }`: base + Σ ratio × sour
 | `absorb` | An absorb, such as a shield. |
 | `block` | A block: the next damage above a share of max HP is blocked, then the status ends (Aegis). |
 | `lockout` | A lockout. Tag: what it covers. |
-| `action_change` | A rider added to the holder's actions, a change of element or subtype, Seek, or an extra strike. |
+| `action_change` | A rider added to the holder's actions, Seek, or an extra strike. |
 | `pulse` | A repeating effect. |
 | `reaction` | A reaction, or an Intensity event trigger. |
 
@@ -141,8 +133,6 @@ A number is a plain number, or `{ base, scale: [...] }`: base + Σ ratio × sour
 | `extra` | Hits from extra strikes (Double strike's second strike, Arc's second hit): hits, but not basic attacks. |
 | `physical` | Physical hits (and actions with one). |
 | `magical` | Magical hits (and actions with one). |
-| `<subtype>` | slash, pierce or blunt. |
-| `<element>` | Any element in the pack. |
 | `<status>` | A status's id: reaches that status's pulses ("+20% Burn damage"). |
 | `<status tag>` | A tag a status carries, which reaches its pulses. |
 | `healing` | Boosts only: heals. |
@@ -156,7 +146,7 @@ A number is a plain number, or `{ base, scale: [...] }`: base + Σ ratio × sour
 | `action_start` | An action starts. Whose: the acting unit. Has `kind`. |
 | `action_resolve` | An action resolves. Whose: the acting unit. Has `kind`. |
 | `action_interrupted` | An action in cast time is canceled by an interrupting lockout. Whose: the casting unit. Has `kind`. |
-| `hit_lands` | A hit lands (not evaded or absorbed), riders included. Whose: the attacker; other: the target. Has `kind`, `tags` and `amount`. |
+| `hit_lands` | A hit lands (not evaded), riders included. Whose: the attacker; other: the target. Has `kind`, `tags` and `amount`. |
 | `hit_taken` | A hit lands on this unit. Whose: the target; other: the attacker. Has `kind`, `tags` and `amount`. |
 | `hit_evaded` | This unit evades a hit. Whose: the target; other: the attacker. Has `kind` and `tags`. |
 | `hit_missed` | A hit is evaded. Whose: the attacker; other: the target. Has `kind` and `tags`. |
@@ -175,7 +165,7 @@ A number is a plain number, or `{ base, scale: [...] }`: base + Σ ratio × sour
 | --- | --- |
 | `whose` |  |
 | `kind` | Action and hit events only. |
-| `tags` | Hit events only: the hit carries at least one of these tags (its kind, type, subtype or element, and "crit" when it crits). |
+| `tags` | Hit events only: the hit carries at least one of these tags (its kind and type, and "crit" when it crits). |
 | `status` | Status events, and damage events: the status whose pulse or reaction dealt the damage. |
 | `cause` | status_ended only. Default: every cause. |
 
@@ -257,7 +247,7 @@ An action's `target` is `foe` (default targeting: a foe by Aggro, under the Hidd
 | `magic` | amount | Scales only what states it. By convention, magical things do. |
 | `armor` | amount | Reduces each physical hit: to hit² ÷ (hit + ruleset.armorK × Armor) when armorK is set; else a flat ruleset.armorRatio × Armor, down to 0 (BLOCKED). |
 | `aggro` | amount | Default targeting picks foes weighted by draw: Aggro through ruleset.draw's curve, or Aggro itself without one. Its floor must be above 0. |
-| `resist` | points | General Resistance, in percent, added to every element's own resist:<element>. Negative shows WEAK, positive RESIST, 100 IMMUNE, above 100 ABSORB. |
+| `magic_resist` | points | Magic resist, in percent: cuts each magical hit or pulse by that share. Positive shows RESIST, 100 IMMUNE. |
 | `attack_speed` | points | Basic attack cooldown ÷ (1 + stat/100), down to its recovery. Haste, Slow and Chill act through it. |
 | `cooldown_reduction` | points | Ability cooldowns ÷ (1 + stat/100). |
 | `cast_time_reduction` | points | Cast times ÷ (1 + stat/100). |
@@ -275,7 +265,6 @@ Every other stat (MP regen, Thorns, Lifesteal, Siphon, Double strike and the res
 
 | Key | Meaning |
 | --- | --- |
-| `resist:<element>` | Resistance to one element, in percent, added to the general resist. |
 | `immune:status:<status>` | Above 0: immune to that status. |
 | `immune:kind:<kind>` | Above 0: immune to every status containing that effect kind. |
 | `immune:kind:<kind>:<tag>` | Above 0: immune to statuses containing that effect kind with that tag (a lockout's `covers`, a stat change's stat, a boost's or modifier's tag). |

@@ -12,17 +12,17 @@
  */
 import { SUBTICKS } from "../../../src/schema.js";
 import type { CUnit } from "../../../src/engine/combat/fight.js";
-import { weaponOf } from "../../../src/engine/combat/fight.js";
+import { resolveWeapon, weaponOf } from "../../../src/engine/combat/fight.js";
 import { c, className, disp, fightName, runName, shortName } from "../content.js";
-import { ELEMENT_COLOR, enemyName, STATUS_STYLE, TAG_ICON, type Pose } from "../art.js";
+import { enemyName, STATUS_STYLE, TAG_ICON, TYPE_COLOR, type Pose } from "../art.js";
 import { bar, button, clear, h, nav, win, type Child } from "../dom.js";
 import { nextSeed, party as partyLoadout, save, setup } from "../state.js";
-import { abilityTag, statusText, weaponInfo } from "../describe.js";
+import { damageTypeOf, statusText } from "../describe.js";
 import { drawDigits, enemyThumb, iconEl, iconOf, OUTLINE, statusEl } from "../pixel.js";
 import { classHead, classSheet, enemySheet, portraitEl } from "../sheet.js";
 import type { Member } from "../../../src/engine/combat/rules.js";
 import { Driver, type Ev } from "./driver.js";
-import { Narrator, type Beat, type Line, type Tone } from "./narrate.js";
+import { Narrator, resisted, type Beat, type Line, type Tone } from "./narrate.js";
 import { Scene, shieldOf, themeOf, W, H } from "./scene.js";
 import { setMusic, setSound, sfx } from "./audio.js";
 import { go } from "../screens.js";
@@ -269,16 +269,11 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
 
   // ─── Events → visuals ───
   const lastStatusFx = new Map<string, number>();
-  const elementOf = (ev: Ev): string | null => {
-    const src = String(ev.src);
-    if (src === "basic") {
-      const u = driver.unit(String(ev.by));
-      return u ? weaponInfo(weaponOf(c, u.weapon), null).element ?? null : null;
-    }
-    const ab = c.abilities.get(src);
-    if (!ab) return null;
-    const tag = abilityTag(ab);
-    return ELEMENT_COLOR[tag] ? tag : null;
+  /** An action's damage type: its weapon's for a basic attack, its first damage effect's for an ability (null: none). */
+  const actType = (unit: CUnit | undefined, act: string): "physical" | "magical" | null => {
+    if (act === "basic") return unit ? resolveWeapon(c, weaponOf(c, unit.weapon)).type : null;
+    const ab = c.abilities.get(act);
+    return ab ? damageTypeOf(ab) : null;
   };
   function show(ev: Ev) {
     const at = ev.at as number | undefined;
@@ -308,12 +303,13 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         const isBasic = ev.kind === "basic";
         const tag = narrator.tagOf(by, String(ev.act));
         const unit = driver.unit(by);
-        const bow = !!unit && c.gear.get(unit.weapon)?.weapon?.kind === "bow";
-        if (v?.side === "party") scene.pose(by, poseFor(isBasic, tag, bow), 520);
+        const kind = unit ? c.gear.get(unit.weapon)?.weapon?.kind : undefined;
+        const type = actType(unit, String(ev.act));
+        if (v?.side === "party") scene.pose(by, poseFor(isBasic, type, kind), 520);
         scene.lunge(by);
-        const fxTag = isBasic && tag === "pierce" && bow ? "arrow" : tag;
+        const fxTag = isBasic && tag === "pierce" && kind === "bow" ? "arrow" : tag;
         for (const t of targets) scene.effectFor(t, fxTag, targets.length <= 2);
-        if (!isBasic && ELEMENT_COLOR[tag]) sfx.magic();
+        if (!isBasic && type === "magical") sfx.magic();
         break;
       }
       case "fail":
@@ -334,7 +330,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         const isStatus = c.statuses.has(src);
         if (isStatus && disp(amount) <= 0) break;
         const target = String(ev.target);
-        scene.number(target, `+${disp(amount)}`, { color: "#7ee07e", big: !isStatus, icon: src === "regen" ? "regen" : undefined, sub: ev.word === "ABSORB" ? "ABSORB" : ev.crit ? "CRITICAL" : undefined });
+        scene.number(target, `+${disp(amount)}`, { color: "#7ee07e", big: !isStatus, icon: src === "regen" ? "regen" : undefined, sub: ev.crit ? "CRITICAL" : undefined });
         if (!isStatus) {
           scene.effectFor(target, "heal");
           sfx.heal();
@@ -407,10 +403,18 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     }
   }
 
-  function poseFor(isBasic: boolean, tag: string, bow: boolean): Pose {
-    if (bow && (tag === "pierce" || tag === "arrow")) return "missile";
-    if (isBasic) return tag === "pierce" || tag === "arrow" ? "thrust" : tag === "slash" || tag === "blunt" || tag === "bite" ? "swing" : "spell";
-    if (["slash", "pierce", "blunt"].includes(tag)) return "skill";
+  /**
+   * A party member's pose for an action: a basic attack by its weapon's kind (a bow draws, a dagger or a spear thrusts, a
+   * wand, rod or staff casts, the rest swing); a physical ability is a skill (drawn from a bow), anything else a spell.
+   */
+  function poseFor(isBasic: boolean, type: "physical" | "magical" | null, kind: string | undefined): Pose {
+    if (isBasic) {
+      if (kind === "bow") return "missile";
+      if (kind === "dagger" || kind === "spear") return "thrust";
+      if (kind === "wand" || kind === "rod" || kind === "staff") return "spell";
+      return kind || type === "physical" ? "swing" : "spell";
+    }
+    if (type === "physical") return kind === "bow" ? "missile" : "skill";
     return "spell";
   }
 
@@ -435,11 +439,12 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     const crit = !!ev.crit;
     const shown = disp(amount + soaked);
     if (isStatus && shown <= 0) return;
-    const el = isStatus ? null : elementOf(ev);
+    // A hit's number in its damage type's colour (physical white, magical violet); a status's in its own.
     const style = isStatus ? STATUS_STYLE[src] : null;
-    const color = crit ? "#ffd54a" : style ? style.color : el ? ELEMENT_COLOR[el] : "#ffffff";
-    const sub = crit ? "CRITICAL" : word === "WEAK" ? "WEAK!" : word === "RESIST" ? "RESIST" : soaked && amount ? "SHIELD" : soaked ? "SOAKED" : undefined;
-    scene.number(target, `${shown}${crit ? "!" : ""}`, { color, big: !isStatus, sub, subColor: crit ? "#ffd54a" : word === "WEAK" ? "#ff7b6b" : word === "RESIST" ? "#8e99b8" : "#a8e8ff", icon: isStatus && c.statuses.has(src) ? src : undefined });
+    const color = crit ? "#ffd54a" : style ? style.color : TYPE_COLOR[String(ev.kind)] ?? "#ffffff";
+    const resist = resisted(ev);
+    const sub = crit ? "CRITICAL" : resist ? "RESIST" : soaked && amount ? "SHIELD" : soaked ? "SOAKED" : undefined;
+    scene.number(target, `${shown}${crit ? "!" : ""}`, { color, big: !isStatus, sub, subColor: crit ? "#ffd54a" : resist ? "#8e99b8" : "#a8e8ff", icon: isStatus && c.statuses.has(src) ? src : undefined });
     if (!isStatus || amount >= 100) scene.hit(target);
     if (!isStatus) (crit ? sfx.crit : sfx.hit)();
     else sfx.status();

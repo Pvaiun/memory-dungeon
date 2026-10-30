@@ -51,7 +51,9 @@ export const status = (id: string): StatusT => c.statuses.get(id)!;
 export const enemy = (id: string): EnemyT => c.enemies.get(id)!;
 export const gearOf = (id: string): GearT => c.gear.get(id)!;
 export const kindOf = (id: string): WeaponKindT => c.weaponKinds.get(id)!;
-export const elementName = (id: string): string => c.pack.elements.find((e) => e.id === id)?.name ?? id;
+/** An armor type's or an offhand kind's name (step 5j). */
+export const armorName = (id: string): string => c.pack.armorTypes.find((k) => k.id === id)?.name ?? id;
+export const offhandName = (id: string): string => c.pack.offhandKinds.find((k) => k.id === id)?.name ?? id;
 
 // ─── Names and codes ───
 
@@ -97,13 +99,12 @@ export const fightName = (s: { name?: string; id: string }) => (s.name ?? s.id).
 export const STAT_CODE: Record<string, string> = {
   max_hp: "HP", max_mp: "MP", mp_regen: "REG", attack: "ATK", magic: "MAG", armor: "ARM", crit_chance: "CRT", aggro: "AGG",
   evasion: "EVA", accuracy: "ACC", crit_multiplier: "CRD", double_strike: "DBL", thorns: "THN", lifesteal: "LFS", siphon: "SPH",
-  healing_received: "HEAL", attack_speed: "SPD", cooldown_reduction: "CDR", cast_time_reduction: "CAST", resist: "RES",
+  healing_received: "HEAL", attack_speed: "SPD", cooldown_reduction: "CDR", cast_time_reduction: "CAST",
+  // Step 5j: one resistance, to magic, so three letters like ARM beside it.
+  magic_resist: "RES",
 };
-export const ELEMENT_CODE: Record<string, string> = { fire: "FIRE", ice: "ICE", lightning: "LTNG", wind: "WIND", earth: "EARTH", light: "LIGHT", dark: "DARK" };
 export function statCode(key: string): string {
   if (STAT_CODE[key]) return STAT_CODE[key];
-  // "WIND RES", not "WIND": the director read a bare element on gear as a stat (wind-up).
-  if (key.startsWith("resist:")) return `${ELEMENT_CODE[key.slice(7)] ?? key.slice(7).toUpperCase()} RES`;
   if (key.startsWith("immune:")) return `NO ${key.slice(7).toUpperCase()}`;
   return key.toUpperCase().slice(0, 4);
 }
@@ -117,7 +118,7 @@ export const statusCode = (id: string): string => STATUS_CODE[id] ?? (c.statuses
 /** A stat's value as shown: amounts at the display scale, percent stats as they are. */
 export function showStat(key: string, v: number): string {
   const def = c.stats.get(key);
-  if (key === "crit_chance" || def?.kind === "points" || key.startsWith("resist")) return `${Math.round(v)}%`;
+  if (key === "crit_chance" || def?.kind === "points") return `${Math.round(v)}%`;
   // Aggro is on its own scale, centred on 100 (the director's rule): shown as it is.
   if (key === "aggro") return `${Math.round(v)}`;
   return `${disp(v)}`;

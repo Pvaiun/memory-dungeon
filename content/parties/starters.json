@@ -2,7 +2,7 @@
   "formation": "neutral",
   "units": [
     { "class": "knight", "position": "a", "abilities": ["fortify", "stand_fast", "shield_bash"], "gear": { "weapon": "plain_sword" } },
-    { "class": "cleric", "position": "b", "abilities": ["renew", "cure", "raise"], "gear": { "weapon": "plain_light_staff" } },
+    { "class": "cleric", "position": "b", "abilities": ["renew", "cure", "raise"], "gear": { "weapon": "plain_mace" } },
     { "class": "ranger", "position": "c", "abilities": ["barbed_arrow", "frost_arrow", "rending_arrow"], "gear": { "weapon": "plain_bow" } }
   ]
 }

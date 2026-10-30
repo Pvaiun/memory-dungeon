@@ -51,7 +51,7 @@ export type Compiled = {
   kinds: [string, string | null][];
   /** Its pulses damage the holder. */
   harms: boolean;
-  /** Tags its pulses carry: its id, its tags, its element and subtype. */
+  /** Tags its pulses carry: its id and its tags. */
   tags: string[];
 };
 
@@ -89,11 +89,11 @@ export function compile(s: StatusT): Compiled {
   if (s.absorb) kinds.push(["absorb", null]);
   if (s.block) kinds.push(["block", null]);
   if (s.lockout) kinds.push(["lockout", s.lockout.covers]);
-  if (s.riders?.length || s.convert || s.seek || s.strike) kinds.push(["action_change", null]);
+  if (s.riders?.length || s.seek || s.strike) kinds.push(["action_change", null]);
   if (s.pulse) kinds.push(["pulse", null]);
   if (s.reactions?.length || s.trigger) kinds.push(["reaction", null]);
   const harms = (s.pulse?.do ?? []).some((e) => e.op === "damage" && (e.to ?? "holder") === "holder");
-  const tags = [s.id, ...(s.tags ?? []), ...(s.element ? [s.element] : []), ...(s.subtype ? [s.subtype] : [])];
+  const tags = [s.id, ...(s.tags ?? [])];
   out = { nums, cap, kinds, harms, tags };
   compiled.set(s, out);
   return out;

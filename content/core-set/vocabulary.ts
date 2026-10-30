@@ -1,9 +1,9 @@
 /**
  * The core set's vocabulary (docs/core-set/rules-and-vocabulary.md): the stat
- * registry, elements, weapon kinds, the 22 statuses, the statuses that special
- * stats bring, the ruleset and the design block.
+ * registry, weapon kinds, armor types and offhand kinds, the 22 statuses, the
+ * statuses that special stats bring, the ruleset and the design block.
  */
-import type { ContentPack, StatDefT, StatusT, WeaponKindT } from "../../src/schema.js";
+import type { ContentPack, GearKindT, StatDefT, StatusT, WeaponKindT } from "../../src/schema.js";
 import { KIND_SPEED, MP_REGEN, P, RULES, SPEED, STATUS, pts } from "./scale.js";
 
 const TIMING = ["attack_speed", "cooldown_reduction", "cast_time_reduction"] as const;
@@ -17,7 +17,7 @@ export const stats: StatDefT[] = [
   { id: "magic", name: "Magic", kind: "amount", default: 0, floor: 0 },
   { id: "armor", name: "Armor", kind: "amount", default: 0, floor: 0, note: `A physical hit deals hit² ÷ (hit + ${RULES.armorK} × Armor): nearly linear against big hits, never a blank.` },
   { id: "aggro", name: "Aggro", kind: "amount", default: 100, floor: 1, note: "Centred on 100 (a word n is 70 + 10n, a gear or formation step 10), never below 1. Foes pick by draw, which comes from Aggro through ruleset.draw: an ordinary unit draws 100, none more than 300 or less than 33." },
-  { id: "resist", name: "Resistance", kind: "points", default: 0, floor: -100, cap: 200, note: "Past 100 the damage heals instead: absorption, a class and boss trait." },
+  { id: "magic_resist", name: "Magic resist", kind: "points", default: 0, floor: 0, cap: 100, note: "Step 5j: cuts each magical hit or pulse by this share; 100 is immune. Foes carry it by rank, and Ward gives it." },
   { id: "attack_speed", name: "Attack speed", kind: "points", default: 0, floor: -300, cap: 300, note: "Hidden behind Haste, Slow and Chill." },
   { id: "cooldown_reduction", name: "Cooldown reduction", kind: "points", default: 0, floor: -300, cap: 300, note: "Hidden behind Haste, Slow and Chill." },
   { id: "cast_time_reduction", name: "Cast time reduction", kind: "points", default: 0, floor: -300, cap: 300, note: "Hidden behind Haste, Slow and Chill." },
@@ -35,30 +35,41 @@ export const stats: StatDefT[] = [
   { id: "power", name: "Power", kind: "points", default: 0, floor: -90, note: "Damage dealt by hits and reactions, +%. Only a dungeon's foes modifier sets it: how a campaign trial makes its foes hit harder." },
 ];
 
-export const elements = [
-  { id: "fire", name: "Fire" },
-  { id: "earth", name: "Earth" },
-  { id: "ice", name: "Ice" },
-  { id: "lightning", name: "Lightning" },
-  { id: "wind", name: "Wind" },
-  { id: "light", name: "Light" },
-  { id: "dark", name: "Dark" },
+/** Step 5j (builds.md, Gear): eleven kinds, each a speed, a damage type and hands. The elemental staves are gone. */
+export const weaponKinds: WeaponKindT[] = [
+  { id: "dagger", name: "Dagger", type: "physical", cooldown: KIND_SPEED.dagger, hands: 1 },
+  { id: "fist", name: "Fist weapons", type: "physical", cooldown: KIND_SPEED.fist, hands: 1 },
+  { id: "sword", name: "Sword", type: "physical", cooldown: KIND_SPEED.sword, hands: 1 },
+  { id: "spear", name: "Spear", type: "physical", cooldown: KIND_SPEED.spear, hands: 1 },
+  { id: "bow", name: "Bow", type: "physical", cooldown: KIND_SPEED.bow, hands: 2 },
+  { id: "great_weapon", name: "Great weapon", type: "physical", cooldown: KIND_SPEED.great_weapon, hands: 2, note: "Axes, hammers, pikes and scythes." },
+  { id: "rune_sword", name: "Rune sword", type: "magical", cooldown: KIND_SPEED.rune_sword, hands: 1 },
+  { id: "mace", name: "Mace", type: "magical", cooldown: KIND_SPEED.mace, hands: 1 },
+  { id: "wand", name: "Wand", type: "magical", cooldown: KIND_SPEED.wand, hands: 1 },
+  { id: "rod", name: "Rod", type: "magical", cooldown: KIND_SPEED.rod, hands: 1 },
+  { id: "staff", name: "Staff", type: "magical", cooldown: KIND_SPEED.staff, hands: 2 },
 ];
 
-export const weaponKinds: WeaponKindT[] = [
-  { id: "dagger", name: "Dagger", type: "physical", subtype: "pierce", cooldown: KIND_SPEED.dagger },
-  { id: "fist", name: "Fist weapons", type: "physical", subtype: "blunt", cooldown: KIND_SPEED.fist },
-  { id: "sword", name: "Sword", type: "physical", subtype: "slash", cooldown: KIND_SPEED.sword },
-  { id: "bow", name: "Bow", type: "physical", subtype: "pierce", cooldown: KIND_SPEED.bow },
-  { id: "spear", name: "Spear", type: "physical", subtype: "pierce", cooldown: KIND_SPEED.spear },
-  { id: "axe", name: "Axe", type: "physical", subtype: "blunt", cooldown: KIND_SPEED.axe },
-  { id: "fire_staff", name: "Fire staff", type: "magical", element: "fire", cooldown: KIND_SPEED.fire_staff },
-  { id: "lightning_staff", name: "Lightning staff", type: "magical", element: "lightning", cooldown: KIND_SPEED.lightning_staff },
-  { id: "wind_staff", name: "Wind staff", type: "magical", element: "wind", cooldown: KIND_SPEED.wind_staff },
-  { id: "earth_staff", name: "Earth staff", type: "magical", element: "earth", cooldown: KIND_SPEED.earth_staff },
-  { id: "ice_staff", name: "Ice staff", type: "magical", element: "ice", cooldown: KIND_SPEED.ice_staff },
-  { id: "light_staff", name: "Light staff", type: "magical", element: "light", cooldown: KIND_SPEED.light_staff },
-  { id: "dark_staff", name: "Dark staff", type: "magical", element: "dark", cooldown: KIND_SPEED.dark_staff },
+/** Step 5j (builds.md, Gear): four armor types in place of the weights; a class wears only its own. */
+export const armorTypes: GearKindT[] = [
+  { id: "plate", name: "Plate" },
+  { id: "mail", name: "Mail" },
+  { id: "leather", name: "Leather" },
+  { id: "robes", name: "Robes" },
+];
+
+/** Step 5j (builds.md, Gear): ten offhand kinds of two or three classes each. No pieces yet: the next pass makes them. */
+export const offhandKinds: GearKindT[] = [
+  { id: "kite_shield", name: "Kite shield" },
+  { id: "round_shield", name: "Round shield" },
+  { id: "horn", name: "Horn" },
+  { id: "tome", name: "Tome" },
+  { id: "lantern", name: "Lantern" },
+  { id: "relic", name: "Relic" },
+  { id: "bell", name: "Bell" },
+  { id: "totem", name: "Totem" },
+  { id: "vial", name: "Vial" },
+  { id: "idol", name: "Idol" },
 ];
 /** The speed word of a kind, for weapon damage. */
 export const speedOf = (kind: string): "fast" | "medium" | "slow" => {
@@ -88,16 +99,16 @@ export const vocabulary: StatusT[] = [
   { id: "haste", name: "HASTE", text: "Faster in everything.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.haste.duration, stats: timing(STATUS.haste.speed) },
   { id: "taunt", name: "TAUNT", text: "Foes must pick it.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.taunt.duration, stats: [{ stat: "forced", flat: 1 }] },
   // Specialist
-  // Step 5g round 6 (the director's): the elemental statuses meet their element's resistance (Burn Fire, Shock Lightning, Chill's shatter Ice); Bleed stays untyped.
-  { id: "burn", name: "BURN", text: "Burns for each stack, then dies down. Fire.", label: "debuff", show: "icon", stacking: "intensity", pulse: { every: STATUS.burn.every, do: [{ op: "damage", type: "magical", element: "fire", amount: STATUS.burn.perStack }] }, drop: { fraction: STATUS.burn.drop } },
+  // Step 5j (the director's rule of Oct 29): a status's own damage is untyped and never resisted (Burn, Shock, Bleed, Chill's shatter, Thorns).
+  { id: "burn", name: "BURN", text: "Burns for each stack, then dies down.", label: "debuff", show: "icon", stacking: "intensity", pulse: { every: STATUS.burn.every, do: [{ op: "damage", type: "none", amount: STATUS.burn.perStack }] }, drop: { fraction: STATUS.burn.drop } },
   {
     id: "chill", name: "CHILL", text: "Slower for each stack; thaws one stack at a time. At 12 it shatters: damage for each stack, a Stun, and the Chill is spent.", label: "debuff", show: "icon", stacking: "intensity",
     cap: STATUS.chill.cap, stats: timing(STATUS.chill.perStack), pulse: { every: STATUS.chill.every }, drop: { count: 1 },
     // Step 5g round 5 (the director's): the shatter.
-    reactions: [{ on: { event: "status_capped", status: "chill" }, do: [{ op: "damage", type: "magical", element: "ice", amount: { scale: [{ ratio: STATUS.chill.shatter, stacks: "chill", of: "holder" }] }, to: "holder" }, { op: "apply", status: "stun", to: "holder" }, { op: "remove", label: "debuff", status: "chill", to: "holder" }] }],
+    reactions: [{ on: { event: "status_capped", status: "chill" }, do: [{ op: "damage", type: "none", amount: { scale: [{ ratio: STATUS.chill.shatter, stacks: "chill", of: "holder" }] }, to: "holder" }, { op: "apply", status: "stun", to: "holder" }, { op: "remove", label: "debuff", status: "chill", to: "holder" }] }],
   },
-  { id: "shock", name: "SHOCK", text: "Hurts for each stack every time it acts. Lightning.", label: "debuff", show: "icon", stacking: "intensity", cap: STATUS.shock.cap, trigger: { on: { event: "action_resolve" }, do: [{ op: "damage", type: "magical", element: "lightning", amount: STATUS.shock.perStack, to: "holder" }] }, drop: { fraction: STATUS.shock.drop } },
-  { id: "ward", name: "WARD", text: "Resists every element.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.ward.duration, stats: [{ stat: "resist", flat: STATUS.ward.resist }] },
+  { id: "shock", name: "SHOCK", text: "Hurts for each stack every time it acts.", label: "debuff", show: "icon", stacking: "intensity", cap: STATUS.shock.cap, trigger: { on: { event: "action_resolve" }, do: [{ op: "damage", type: "none", amount: STATUS.shock.perStack, to: "holder" }] }, drop: { fraction: STATUS.shock.drop } },
+  { id: "ward", name: "WARD", text: "Magic resist up.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.ward.duration, stats: [{ stat: "magic_resist", flat: STATUS.ward.magicResist }] },
   // Step 5g round 9 (the director's): Sunder is a damage-taken ramp, not an Armor strip. Foes carry 1,000 to 3,000 Armor, so two stacks stripped a
   // minion bare and the other eighteen showed nothing; as +1.5% a stack to every kind of damage it reads on every foe and gives the Hexer and the Monk a ramp.
   { id: "sunder", name: "SUNDER", text: "Takes more damage for each stack.", label: "debuff", show: "icon", stacking: "intensity", cap: STATUS.sunder.cap, taken: [{ pct: STATUS.sunder.perStack }], pulse: { every: STATUS.sunder.every }, drop: { count: 1 } },
@@ -112,8 +123,9 @@ export const vocabulary: StatusT[] = [
     reactions: [{ on: { event: "status_ended", status: "doom", cause: ["expired"] }, do: [{ op: "damage", type: "none", amount: { scale: [{ ratio: STATUS.doom.share, stat: "max_hp", of: "holder" }] }, to: "holder" }] }],
   },
   {
-    id: "bulwark", name: "BULWARK", text: "Piercing and Wind hits chip it; at zero it breaks.", label: "buff", show: "icon", stacking: "intensity",
-    trigger: { on: { event: "hit_taken", tags: ["pierce", "wind"] } }, drop: { count: 1 },
+    // Step 5j (the brief's default, the director's OK): every hit chips it (it was piercing and Wind hits).
+    id: "bulwark", name: "BULWARK", text: "Every hit chips it; at zero it breaks.", label: "buff", show: "icon", stacking: "intensity",
+    trigger: { on: { event: "hit_taken" } }, drop: { count: 1 },
     reactions: [{ on: { event: "status_ended", status: "bulwark", cause: ["stacks"] }, do: [{ op: "apply", status: "bulwark_broken", to: "holder" }] }],
   },
   {
@@ -150,7 +162,7 @@ export const ruleset: ContentPack["ruleset"] = {
   armorRatio: RULES.armorRatio,
   armorK: RULES.armorK,
   taken: { floor: -75, cap: 200 },
-  unarmed: { type: "physical", subtype: "blunt", cooldown: SPEED.medium, amount: { base: 100, scale: [{ ratio: 0.2, stat: "attack" }] } },
+  unarmed: { type: "physical", cooldown: SPEED.medium, amount: { base: 100, scale: [{ ratio: 0.2, stat: "attack" }] } },
   maxEnemies: RULES.maxEnemies,
   lostCast: RULES.lostCast,
   opening: RULES.opening,

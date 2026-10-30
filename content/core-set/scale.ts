@@ -7,7 +7,7 @@
  *
  * Amount stats are stored at 1,000 per point of the scale (HP 2 is 2,000), as
  * docs/core-set/README.md asks. Stats counted in percent (Crit chance, Evasion,
- * Accuracy, resistances, Lifesteal, Siphon, Double strike) are stored in percent
+ * Accuracy, Magic resist, Lifesteal, Siphon, Double strike) are stored in percent
  * points, since a percentage can't be ×1,000.
  */
 import type { NumT } from "../../src/schema.js";
@@ -45,9 +45,13 @@ export const crit = (n: number): number => {
  * Step 5g round 9 (the director's, after playing): 5f's intervals (half again main's) were "way too far"; "go 80% back" with more variance.
  * Main's dagger 5.3 to axe 10.7; 5f's 8.0 to 16.1; now 5.6 to 12.8 (a spread of 2.3, was 2.0), the ice staff fastest for the Chill it lays.
  */
+/**
+ * Step 5j (the gear's eleven kinds, the director's defaults): the kinds that carry over keep their intervals (the axe's for the great
+ * weapon); the wand takes the middle of the fast staves' (6.0 to 7.2), the staff the fire staff's; the rune sword and the rod sit between
+ * the sword, bow and spear, and the mace is slow, as the gear table says (the Light staff it replaces was medium, 9.8).
+ */
 export const KIND_SPEED: Record<string, number> = {
-  ice_staff: 6.0, dagger: 5.6, fist: 6.0, wind_staff: 6.5, dark_staff: 6.8, lightning_staff: 7.2, sword: 8.2, bow: 8.8, spear: 9.4,
-  light_staff: 9.8, earth_staff: 11.0, fire_staff: 11.6, axe: 12.8,
+  dagger: 5.6, fist: 6.0, wand: 6.6, sword: 8.2, rune_sword: 8.5, bow: 8.8, rod: 9.1, spear: 9.4, mace: 11.0, staff: 11.6, great_weapon: 12.8,
 };
 /** A swing's size is (base + ratio × stat) × its cooldown ÷ this: per tick, the old medium swing's. */
 /** Step 5f round 2: 14 (was 10): a swing is sized by its interval ÷ this, so every kind deals about 30% less a tick, and fights have room. */
@@ -331,23 +335,16 @@ export const SPECIAL_KEY: Record<SpecialStat, string> = {
   evasion: "evasion", accuracy: "accuracy", crit_damage: "crit_multiplier", double_strike: "double_strike", thorns: "thorns", lifesteal: "lifesteal", siphon: "siphon",
 };
 
-// ─── Resistances, in percent ─────────────────────────────────────────────────
+// ─── Magic resist, in percent ────────────────────────────────────────────────
 
 /** Step 5f (the director's): blanket resistance by rank, so spells meet something where swings meet Armor; the untyped statuses are the way through. */
 /** Step 5g: minions 10. Armor 1 takes 31% off a dagger's swing and nothing off a staff's; a little resistance on every rank narrows the gap between physical and magical basics. */
+/** Step 5j: one Magic resist, by rank (it was resistance to every element). Weaknesses, one element's resistance, themes and absorption are gone. */
 export const RANK_RESIST = { minion: 10, elite: 15, boss: 25 } as const;
 
 export const RESIST = {
-  /** A class or enemy that "resists" an element. */
-  resists: 50,
-  /** "Weak to". */
-  weak: -50,
-  /** The Ghost's "high against every element": most spells print slivers, nothing is immune. */
+  /** The Ghost's Magic resist, in place of its rank's: most spells print slivers, nothing is immune. */
   high: 75,
-  /** "Absorbs": past full, the excess heals. */
-  absorbs: 150,
-  /** A piece of gear that "resists" an element: short of full on its own. */
-  gear: 30,
 };
 
 // ─── Gear steps ──────────────────────────────────────────────────────────────
@@ -437,7 +434,7 @@ export const STATUS = {
    * top builds (was 23%), so it stays at 60.
    */
   shock: { perStack: 80, drop: 0.5, cap: 40 }, // Round 3: 80 (was 100): the Stormcaller dealt 64% of its party's damage over 61 fights, the next class 47%; one Chain lightning's Shock on four foes was most of it. // Step 5g: 100 a stack and the cap back at 40 as a safety (one Chain lightning put 25 to 30 on each of four foes and each paid 3,000 to 3,600 as it acted); applications are 8 to 14 now. // Step 5f: 120 a stack, cap 30 (were 70 and 40): a trigger at 10 stacks is 1,200, past a swing.
-  ward: { resist: 40, duration: 30 }, // Step 5f: 40 for 30 ticks.
+  ward: { magicResist: 40, duration: 30 }, // Step 5f: 40 for 30 ticks. Step 5j: Magic resist (was resistance to every element).
   sunder: { perStack: 1.5, every: 4, cap: 20 }, // Round 9 (the director's): +1.5% damage taken a stack, +30% at the cap (was −600 Armor a stack: foes carry 1,000 to 3,000, so two stacks stripped a minion and the rest showed nothing). // Step 5f: a cap (the Silent One carried 235). Armor's floor is 0, so it never went past.
   silence: { duration: 16 }, // Step 5f: 16 (was 8: Hush interrupted a cast 0.06 times an application).
   /** Step 5e: 20 ticks (was 14). Vanish is on the long cooldown (36), so the Assassin was Hidden 14 ticks in 36 at best, and it died at tick 18 in 45 of 100 fights. */

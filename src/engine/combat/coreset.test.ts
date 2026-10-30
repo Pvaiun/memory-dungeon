@@ -11,7 +11,7 @@ import { arena, weapons } from "./arena.js";
 import { drawOf } from "./fight.js";
 
 const BAG = { name: "Bag", stats: { max_hp: 1_000_000 } };
-const dmg = (amount: number, extra: object = {}) => ({ op: "damage", type: "physical", subtype: "blunt", amount, ...extra });
+const dmg = (amount: number, extra: object = {}) => ({ op: "damage", type: "physical", amount, ...extra });
 const taunt = { id: "taunt", name: "TAUNT", label: "buff", show: "icon", stacking: "refresh", stats: [{ stat: "forced", flat: 1 }] };
 const hidden = { id: "hidden", name: "HIDDEN", label: "buff", show: "icon", stacking: "refresh", unremovable: true, stats: [{ stat: "forbidden", flat: 1 }] };
 const burn = { id: "burn", name: "BURN", label: "debuff", show: "icon", stacking: "intensity", pulse: { every: 2, do: [{ op: "damage", type: "none", amount: 1 }] }, drop: { fraction: 0.5 } };
@@ -240,18 +240,17 @@ test("aegis: blocks the next damage above 25% of max HP, after mitigation and be
   assert.deepEqual(b.hits("Victim").map((e) => e.word), ["AEGIS"]);
 });
 
-test("absorption: resistance past full heals by the excess share, applies no status and doesn't count as a hit landing", () => {
-  const bolt = { id: "bolt", cast: 0, cooldown: 10, do: [{ op: "damage", type: "magical", element: "fire", amount: 40, apply: [{ status: "burn", stacks: 3 }] }] };
+test("magic resist, step 5j: a hit at full Magic resist deals nothing (IMMUNE) but still lands: its statuses apply and it counts as a hit; nothing absorbs", () => {
+  const bolt = { id: "bolt", cast: 0, cooldown: 10, do: [{ op: "damage", type: "magical", amount: 40, apply: [{ status: "burn", stacks: 3 }] }] };
   const leech = { id: "leech", name: "Leech", label: "buff", show: "sheet", stacking: "refresh", unremovable: true, reactions: [{ on: { event: "hit_lands" }, do: [{ op: "heal", amount: 1, to: "self" }] }] };
   const a = arena({
     party: [{ name: "Pyro", stats: { max_hp: 100 }, hp: 50, abilities: ["bolt"], statuses: ["leech"] }],
-    enemies: [{ name: "Giant", stats: { max_hp: 100, "resist:fire": 150 }, hp: 60 }],
-    stats: [{ id: "resist", cap: 200 }], statuses: [burn, leech], abilities: [bolt],
+    enemies: [{ name: "Giant", stats: { max_hp: 100, magic_resist: 100 }, hp: 60 }],
+    statuses: [burn, leech], abilities: [bolt],
   }).to(11);
-  assert.equal(a.unit("Giant").hp, 80, "heals half of 40");
-  assert.deepEqual(a.entries("heal").map((e) => [e.target, e.amount, e.word]), [["e1", 20, "ABSORB"]]);
-  assert.equal(a.has("Giant", "burn").length, 0);
-  assert.equal(a.unit("Pyro").hp, 50, "no hit landed, so nothing reacted to one");
+  assert.deepEqual(a.hits("Giant").filter((e) => e.src === "bolt").map((e) => [e.amount, e.word]), [[0, "IMMUNE"]]);
+  assert.equal(a.has("Giant", "burn").length, 1, "a status a hit carries lands even when the hit is fully resisted");
+  assert.equal(a.unit("Pyro").hp, 51, "the hit landed, so Leech reacted to it");
 });
 
 test("armor: each physical hit loses armorRatio × Armor; a fully absorbed hit shows BLOCKED and still applies its status", () => {
@@ -274,7 +273,7 @@ test("armor: each physical hit loses armorRatio × Armor; a fully absorbed hit s
 test("armor, step 5c: with armorK a physical hit deals hit² ÷ (hit + k × Armor): nearly linear for big hits, never a blank, magic untouched", () => {
   const swing = (attack: number, armor: number, type: "physical" | "magical" = "physical") =>
     arena({
-      party: [{ name: "A", stats: { attack }, weapon: { ...weapons.dagger, ...(type === "magical" ? { type, element: "fire", subtype: undefined } : {}) } }],
+      party: [{ name: "A", stats: { attack }, weapon: { ...weapons.dagger, ...(type === "magical" ? { type } : {}) } }],
       enemies: [{ name: "Wall", stats: { max_hp: 100_000, armor } }],
       ruleset: { armorRatio: 0.1, armorFloor: 25, armorK: 1 },
     }).to(8).hits("Wall").map((e) => [e.amount, e.word])[0];
@@ -289,7 +288,7 @@ test("armor, step 5c: with armorK a physical hit deals hit² ÷ (hit + k × Armo
 
 test("bleed, step 5c: each hit its holder takes deals X per stack, untyped and past Armor, then the stacks drop; the hit that applies it doesn't set it off", () => {
   const bleed = { id: "bleed", name: "BLEED", label: "debuff", show: "icon", stacking: "intensity", trigger: { on: { event: "hit_taken" }, do: [{ op: "damage", type: "none", amount: 10, to: "holder" }] }, drop: { fraction: 0.5 } };
-  const cut = { id: "cut", cast: 0, cooldown: 100, do: [{ op: "damage", type: "physical", subtype: "slash", amount: 1, apply: [{ status: "bleed", stacks: 8 }] }] };
+  const cut = { id: "cut", cast: 0, cooldown: 100, do: [{ op: "damage", type: "physical", amount: 1, apply: [{ status: "bleed", stacks: 8 }] }] };
   const a = arena({
     party: [{ name: "Cutter", abilities: ["cut"] }, { name: "Hitter", stats: { attack: 5 }, weapon: { ...weapons.dagger, cooldown: 4 } }],
     enemies: [{ name: "Wall", stats: { max_hp: 100_000, armor: 1000 } }],
@@ -400,7 +399,7 @@ test("target phrases: the highest of Attack or Magic, a capped Shield skipped, a
 // ─── Reactions and events ────────────────────────────────────────────────────
 
 test("a unit's statuses that survive its KO can react to it (Volatile): the blast goes off even though the unit is down", () => {
-  const volatile = { id: "volatile", name: "Volatile", label: "buff", show: "sheet", stacking: "refresh", unremovable: true, survivesKO: true, reactions: [{ on: { event: "ko" }, do: [{ op: "damage", type: "magical", element: "fire", amount: 30, to: { side: "foes", pick: "all" } }] }] };
+  const volatile = { id: "volatile", name: "Volatile", label: "buff", show: "sheet", stacking: "refresh", unremovable: true, survivesKO: true, reactions: [{ on: { event: "ko" }, do: [{ op: "damage", type: "magical", amount: 30, to: { side: "foes", pick: "all" } }] }] };
   const a = arena({
     party: [{ name: "Hero", stats: { max_hp: 100, attack: 50 }, weapon: weapons.dagger }, { name: "Friend", stats: { max_hp: 100 } }],
     enemies: [{ name: "Bomb", stats: { max_hp: 10 }, statuses: ["volatile"] }, { name: "Other", stats: { max_hp: 1000 } }],
@@ -411,16 +410,16 @@ test("a unit's statuses that survive its KO can react to it (Volatile): the blas
   assert.deepEqual(a.hits("Friend").map((e) => e.amount), [30]);
 });
 
-test("event filters: a trigger on hits that carry a tag (Bulwark breaks to piercing or Wind), and a reaction to damage dealt by a named status (Briar)", () => {
-  const bulwark = { id: "bulwark", name: "BULWARK", label: "buff", show: "icon", stacking: "intensity", trigger: { on: { event: "hit_taken", tags: ["pierce", "wind"] } }, drop: { count: 1 } };
+test("event filters: a trigger on hits that carry a tag (a Bulwark only magical hits chip), and a reaction to damage dealt by a named status (Briar)", () => {
+  const bulwark = { id: "bulwark", name: "BULWARK", label: "buff", show: "icon", stacking: "intensity", trigger: { on: { event: "hit_taken", tags: ["magical"] } }, drop: { count: 1 } };
   const a = arena({
-    party: [{ name: "Ranger", weapon: weapons.dagger }, { name: "Knight", weapon: weapons.sword }],
+    party: [{ name: "Ranger", weapon: { ...weapons.dagger, type: "magical" } }, { name: "Knight", weapon: weapons.sword }],
     enemies: [{ name: "Titan", stats: { max_hp: 1_000_000 }, statuses: ["bulwark"] }],
     statuses: [bulwark],
   });
   a.unit("Titan").statuses[0].stacks = 3000;
   a.to(16);
-  // Two dagger hits (8, 16) remove two stacks; the sword's slash at 12 doesn't.
+  // Two magical dagger hits (8, 16) remove two stacks; the sword's physical hit at 12 doesn't.
   assert.equal(a.has("Titan", "bulwark")[0].stacks, 1000);
   const thorns = { id: "spikes", name: "Spikes", label: "buff", show: "sheet", stacking: "refresh", unremovable: true, reactions: [{ on: { event: "hit_taken" }, do: [{ op: "damage", type: "none", amount: 2, to: "other" }] }] };
   const briar = { id: "briar", name: "Briar", label: "buff", show: "sheet", stacking: "refresh", unremovable: true, reactions: [{ on: { event: "damage_dealt", status: "spikes" }, do: [{ op: "apply", status: "burn", stacks: 2, to: "other" }] }] };
