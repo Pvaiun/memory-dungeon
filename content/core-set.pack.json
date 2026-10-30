@@ -2166,6 +2166,1137 @@
    "single": true
   },
   {
+   "id": "weeping_kris",
+   "name": "Weeping kris",
+   "text": "Its first hit on each foe adds a few Bleed.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands"
+     },
+     "if": {
+      "unit": "other",
+      "where": {
+       "lacks": "weeping_kris_mark"
+      }
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0007,
+          "stat": "attack",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      },
+      {
+       "op": "apply",
+       "status": "weeping_kris_mark",
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "weeping_kris_mark",
+   "name": "Wept",
+   "text": "The Weeping kris has opened its wound.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh",
+   "perSource": {}
+  },
+  {
+   "id": "misericorde",
+   "name": "Misericorde",
+   "text": "Its basic attacks ignore Taunt.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "seek": "basic"
+  },
+  {
+   "id": "thousandth_cut",
+   "name": "Thousandth cut",
+   "text": "Each hit it lands adds a Cut.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "cuts",
+       "stacks": 1,
+       "to": "self"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "quietus",
+   "name": "Quietus",
+   "text": "Its hits on a foe that hasn't acted yet always crit, for twice the usual bonus.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "crits": [
+    {
+     "when": {
+      "acted": false
+     },
+     "chance": 100,
+     "bonus": 100
+    }
+   ]
+  },
+  {
+   "id": "wildcat_claws",
+   "name": "Wildcat claws",
+   "text": "Hasted when each fight starts.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "haste",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "brass_knuckles",
+   "name": "Brass knuckles",
+   "text": "Its extra strikes add a few Sunder.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "extra"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "sunder",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0007,
+          "stat": "attack",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "gorged_claws",
+   "name": "Gorged claws",
+   "text": "Below half HP, its basic attacks come a third faster.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hp_lost"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "gorged_claws_on",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpBelow": 50
+        }
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "healed"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "gorged_claws_on",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpAtLeast": 50
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "gorged_claws_on",
+   "name": "GORGED",
+   "text": "Basic attacks a third faster.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "fizzle",
+   "stats": [
+    {
+     "stat": "attack_speed",
+     "flat": 33
+    }
+   ]
+  },
+  {
+   "id": "flurry_wraps",
+   "name": "Flurry wraps",
+   "text": "Its extra strikes can strike again, up to twice, each a fifth weaker.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "strike": {
+    "scale": "double_strike",
+    "to": "target",
+    "chain": {
+     "times": 2,
+     "share": 80
+    }
+   }
+  },
+  {
+   "id": "still_hand",
+   "name": "Still hand",
+   "text": "Its hits on a Stunned or Silenced foe always crit and add several Sunder. When it Stuns a foe, its ability with the longest cooldown left is ready.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "crits": [
+    {
+     "when": {
+      "hasAny": [
+       "stun",
+       "silence"
+      ]
+     },
+     "chance": 100
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands"
+     },
+     "if": {
+      "unit": "other",
+      "where": {
+       "hasAny": [
+        "stun",
+        "silence"
+       ]
+      }
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "sunder",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0013,
+          "stat": "attack",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_gained",
+      "status": "stun",
+      "whose": "foe",
+      "other": "holder"
+     },
+     "do": [
+      {
+       "op": "cooldown",
+       "which": "longest",
+       "set": "ready",
+       "to": "self"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "clarion_blade",
+   "name": "Clarion blade",
+   "text": "Taunts when each fight starts.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "taunt",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "sweeping_blade",
+   "name": "Sweeping blade",
+   "text": "Its basic attacks also hit a second, random foe for half.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "strike": {
+    "to": {
+     "side": "foes",
+     "pick": "random",
+     "exclude": "targets"
+    },
+    "share": 50
+   }
+  },
+  {
+   "id": "drawn_steel",
+   "name": "Drawn steel",
+   "text": "Its first basic attack of each fight comes at once and always crits.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "cooldown",
+       "which": "basic",
+       "set": "ready",
+       "to": "holder"
+      },
+      {
+       "op": "apply",
+       "status": "drawn_steel_first",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "drawn_steel_first",
+   "name": "Drawn",
+   "text": "Its first basic attack always crits.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "crits": [
+    {
+     "tag": "basic",
+     "chance": 100
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "action_resolve",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "drawn_steel_first",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "oathkeeper",
+   "name": "Oathkeeper",
+   "text": "While it Taunts, its basic attacks also hit every other foe.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "status_gained",
+      "status": "taunt"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "oathkeeper_sweep",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "taunt"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "oathkeeper_sweep",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "oathkeeper_sweep",
+   "name": "Oath",
+   "text": "Its basic attacks also hit every other foe.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "strike": {
+    "to": {
+     "side": "foes",
+     "pick": "all",
+     "exclude": "targets"
+    }
+   }
+  },
+  {
+   "id": "gravemark",
+   "name": "Gravemark",
+   "text": "Its hits on a Marked foe deal half again as much. If no foe is Marked, its basic attacks Mark. When a Marked foe falls, the weakest is Marked.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 50,
+        "when": {
+         "has": "marked"
+        },
+        "of": "target"
+       }
+      ]
+     }
+    },
+    {
+     "tag": "magical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 50,
+        "when": {
+         "has": "marked"
+        },
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "if": {
+      "side": "foes",
+      "where": {
+       "has": "marked"
+      },
+      "atMost": 0
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "marked",
+       "to": "other"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "marked",
+      "cause": [
+       "ko"
+      ],
+      "whose": "foe"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "marked",
+       "to": {
+        "side": "foes",
+        "pick": "lowest",
+        "by": "hp"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ox_tongue_spear",
+   "name": "Ox-tongue spear",
+   "text": "Its crits add a few Sunder.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "tags": [
+       "crit"
+      ]
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "sunder",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0007,
+          "stat": "attack",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "trophy_spear",
+   "name": "Trophy spear",
+   "text": "When it lands a killing blow, it's Guarded.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "ko",
+      "whose": "foe",
+      "other": "holder"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "guard",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "hunting_spear",
+   "name": "Hunting spear",
+   "text": "When it lands a killing blow, its ability with the longest cooldown left is ready.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "ko",
+      "whose": "foe",
+      "other": "holder"
+     },
+     "do": [
+      {
+       "op": "cooldown",
+       "which": "longest",
+       "set": "ready",
+       "to": "self"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "glaive",
+   "name": "Glaive",
+   "text": "Its basic attacks also hit the foe with the most HP for half.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "strike": {
+    "to": {
+     "side": "foes",
+     "pick": "highest",
+     "by": "hp",
+     "exclude": "targets"
+    },
+    "share": 50
+   }
+  },
+  {
+   "id": "pike_wall",
+   "name": "Pike wall",
+   "text": "When a foe hits an ally with less Armor, it strikes that foe.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_taken",
+      "whose": "ally"
+     },
+     "if": {
+      "unit": "owner",
+      "where": {
+       "lower": {
+        "stat": "armor"
+       }
+      }
+     },
+     "do": [
+      {
+       "op": "strike",
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "storm_pike",
+   "name": "Storm pike",
+   "text": "Each hit it lands adds a Charge. At 10, its next basic attack calls lightning on every foe.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "charge",
+       "stacks": 1,
+       "to": "self"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_capped",
+      "status": "charge"
+     },
+     "if": {
+      "side": "self",
+      "where": {
+       "atCap": "charge"
+      }
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "storm_pike_ready",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "storm_pike_ready",
+   "name": "Storm",
+   "text": "Its next basic attack that lands calls lightning on every foe.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "damage",
+       "type": "magical",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.29,
+          "stat": "attack",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": {
+        "side": "foes",
+        "pick": "all"
+       }
+      },
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "charge",
+       "to": "holder"
+      },
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "storm_pike_ready",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "snaring_bow",
+   "name": "Snaring bow",
+   "text": "Each basic attack Slows a foe that's winding up.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "action_resolve",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "slow",
+       "to": {
+        "side": "foes",
+        "where": {
+         "casting": true
+        },
+        "pick": "highest",
+        "by": {
+         "stats": [
+          "attack",
+          "magic"
+         ]
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "broadhead_bow",
+   "name": "Broadhead bow",
+   "text": "Its crits add a few Bleed.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "tags": [
+       "crit"
+      ]
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0007,
+          "stat": "attack",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "huntsmans_bow",
+   "name": "Huntsman's bow",
+   "text": "Its hits on a Marked foe deal a third more.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 33,
+        "when": {
+         "has": "marked"
+        },
+        "of": "target"
+       }
+      ]
+     }
+    },
+    {
+     "tag": "magical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 33,
+        "when": {
+         "has": "marked"
+        },
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "volley_bow",
+   "name": "Volley bow",
+   "text": "Its first basic attack of each fight, and every fifth after it, is a volley.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "volley_bow_volley",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "action_resolve",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "volley_bow_count",
+       "stacks": 1,
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "volley_bow_volley",
+   "name": "Volley",
+   "text": "Its next basic attack also looses a full arrow at every other foe.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "strike": {
+    "to": {
+     "side": "foes",
+     "pick": "all",
+     "exclude": "targets"
+    }
+   },
+   "reactions": [
+    {
+     "on": {
+      "event": "action_resolve",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "volley_bow_volley",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "volley_bow_count",
+   "name": "Volley count",
+   "text": "Basic attacks since the last volley.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "intensity",
+   "unremovable": true,
+   "cap": 5,
+   "trigger": {
+    "on": {
+     "event": "status_capped",
+     "status": "volley_bow_count"
+    },
+    "do": [
+     {
+      "op": "apply",
+      "status": "volley_bow_volley",
+      "to": "holder"
+     }
+    ]
+   },
+   "drop": "all"
+  },
+  {
+   "id": "executioners_longbow",
+   "name": "Executioner's longbow",
+   "text": "Its basic attacks ignore Taunt, and deal more the less HP their target has, up to double below a tenth.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "seek": "basic",
+   "boosts": [
+    {
+     "tag": "basic",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 25,
+        "when": {
+         "hpBelow": 75
+        },
+        "of": "target"
+       },
+       {
+        "ratio": 25,
+        "when": {
+         "hpBelow": 50
+        },
+        "of": "target"
+       },
+       {
+        "ratio": 25,
+        "when": {
+         "hpBelow": 25
+        },
+        "of": "target"
+       },
+       {
+        "ratio": 25,
+        "when": {
+         "hpBelow": 10
+        },
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "roaring_axe",
+   "name": "Roaring axe",
+   "text": "Starts each fight with a few Might.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "might",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0007,
+          "stat": "attack",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ironbound_hammer",
+   "name": "Ironbound hammer",
+   "text": "Starts each fight behind a Shield of a fifth of its Attack.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "shield",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.2,
+          "stat": "attack",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "icebreaker",
+   "name": "Icebreaker",
+   "text": "Its hits on a Stunned foe deal double.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 100,
+        "when": {
+         "has": "stun"
+        },
+        "of": "target"
+       }
+      ]
+     }
+    },
+    {
+     "tag": "magical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 100,
+        "when": {
+         "has": "stun"
+        },
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "worldbreaker",
+   "name": "Worldbreaker",
+   "text": "Its basic attacks deal triple.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "boosts": [
+    {
+     "tag": "basic",
+     "pct": 200
+    }
+   ]
+  },
+  {
    "id": "wayfinder",
    "name": "Wayfinder",
    "text": "Its basic attacks ignore Taunt.",
@@ -6576,6 +7707,1439 @@
      ]
     }
    }
+  },
+  {
+   "id": "keen_dirk",
+   "name": "Keen dirk",
+   "text": "Crit chance +2.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "crit_chance",
+     "flat": 5
+    }
+   ],
+   "weapon": {
+    "kind": "dagger",
+    "amount": {
+     "base": 245,
+     "scale": [
+      {
+       "ratio": 0.06999999999999999,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "common"
+  },
+  {
+   "id": "parrying_dagger",
+   "name": "Parrying dagger",
+   "text": "Evasion medium, Accuracy medium.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "evasion",
+     "flat": 20
+    },
+    {
+     "stat": "accuracy",
+     "flat": 20
+    }
+   ],
+   "weapon": {
+    "kind": "dagger",
+    "amount": {
+     "base": 245,
+     "scale": [
+      {
+       "ratio": 0.06999999999999999,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "common"
+  },
+  {
+   "id": "weeping_kris",
+   "name": "Weeping kris",
+   "text": "Crit chance +1. Its first hit on each foe adds a few Bleed (from Attack).",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    }
+   ],
+   "statuses": [
+    "weeping_kris"
+   ],
+   "weapon": {
+    "kind": "dagger",
+    "amount": {
+     "base": 245,
+     "scale": [
+      {
+       "ratio": 0.06999999999999999,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "uncommon"
+  },
+  {
+   "id": "misericorde",
+   "name": "Misericorde",
+   "text": "Attack +1. Its basic attacks ignore Taunt.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "statuses": [
+    "misericorde"
+   ],
+   "weapon": {
+    "kind": "dagger",
+    "amount": {
+     "base": 245,
+     "scale": [
+      {
+       "ratio": 0.06999999999999999,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "uncommon"
+  },
+  {
+   "id": "notched_knife",
+   "name": "Notched knife",
+   "text": "Its basic attacks and extra strikes add a few Bleed (from Attack).",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "weapon": {
+    "kind": "dagger",
+    "amount": {
+     "base": 245,
+     "scale": [
+      {
+       "ratio": 0.06999999999999999,
+       "stat": "attack"
+      }
+     ]
+    },
+    "apply": [
+     {
+      "status": "bleed",
+      "stacks": {
+       "scale": [
+        {
+         "ratio": 0.0007,
+         "stat": "attack",
+         "of": "self"
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "rarity": "rare"
+  },
+  {
+   "id": "marking_knife",
+   "name": "Marking knife",
+   "text": "Attack +1. Its basic attacks Mark their target.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "weapon": {
+    "kind": "dagger",
+    "amount": {
+     "base": 245,
+     "scale": [
+      {
+       "ratio": 0.06999999999999999,
+       "stat": "attack"
+      }
+     ]
+    },
+    "apply": [
+     {
+      "status": "marked"
+     }
+    ]
+   },
+   "rarity": "rare"
+  },
+  {
+   "id": "thousandth_cut",
+   "name": "Thousandth cut",
+   "text": "Each hit it lands adds a Cut, kept for the rest of the fight, up to 25. Its hits deal 2% more for each Cut.",
+   "slot": "weapon",
+   "tier": "powerful",
+   "source": "unlock",
+   "statuses": [
+    "thousandth_cut"
+   ],
+   "weapon": {
+    "kind": "dagger",
+    "amount": {
+     "base": 245,
+     "scale": [
+      {
+       "ratio": 0.06999999999999999,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "legendary"
+  },
+  {
+   "id": "quietus",
+   "name": "Quietus",
+   "text": "Its hits on a foe that hasn't acted yet this fight always crit, and those crits add twice the usual bonus.",
+   "slot": "weapon",
+   "tier": "powerful",
+   "source": "unlock",
+   "statuses": [
+    "quietus"
+   ],
+   "weapon": {
+    "kind": "dagger",
+    "amount": {
+     "base": 245,
+     "scale": [
+      {
+       "ratio": 0.06999999999999999,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "legendary"
+  },
+  {
+   "id": "mantis_claws",
+   "name": "Mantis claws",
+   "text": "Double strike medium, Evasion medium.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "double_strike",
+     "flat": 25
+    },
+    {
+     "stat": "evasion",
+     "flat": 20
+    }
+   ],
+   "weapon": {
+    "kind": "fist",
+    "amount": {
+     "base": 263,
+     "scale": [
+      {
+       "ratio": 0.07500000000000001,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "common"
+  },
+  {
+   "id": "red_talons",
+   "name": "Red talons",
+   "text": "Lifesteal medium, Attack +1.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "lifesteal",
+     "flat": 10
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "weapon": {
+    "kind": "fist",
+    "amount": {
+     "base": 263,
+     "scale": [
+      {
+       "ratio": 0.07500000000000001,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "common"
+  },
+  {
+   "id": "wildcat_claws",
+   "name": "Wildcat claws",
+   "text": "Attack +1. Hasted when each fight starts.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "statuses": [
+    "wildcat_claws"
+   ],
+   "weapon": {
+    "kind": "fist",
+    "amount": {
+     "base": 263,
+     "scale": [
+      {
+       "ratio": 0.07500000000000001,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "uncommon"
+  },
+  {
+   "id": "brass_knuckles",
+   "name": "Brass knuckles",
+   "text": "Double strike medium. Its extra strikes add a few Sunder (from Attack).",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "double_strike",
+     "flat": 25
+    }
+   ],
+   "statuses": [
+    "brass_knuckles"
+   ],
+   "weapon": {
+    "kind": "fist",
+    "amount": {
+     "base": 263,
+     "scale": [
+      {
+       "ratio": 0.07500000000000001,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "uncommon"
+  },
+  {
+   "id": "rime_knuckles",
+   "name": "Rime knuckles",
+   "text": "Its basic attacks and extra strikes add a few Chill (from Attack).",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "weapon": {
+    "kind": "fist",
+    "amount": {
+     "base": 263,
+     "scale": [
+      {
+       "ratio": 0.07500000000000001,
+       "stat": "attack"
+      }
+     ]
+    },
+    "apply": [
+     {
+      "status": "chill",
+      "stacks": {
+       "scale": [
+        {
+         "ratio": 0.0007,
+         "stat": "attack",
+         "of": "self"
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "rarity": "rare"
+  },
+  {
+   "id": "gorged_claws",
+   "name": "Gorged claws",
+   "text": "Lifesteal medium. Below half HP, its basic attacks come a third faster.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "lifesteal",
+     "flat": 10
+    }
+   ],
+   "statuses": [
+    "gorged_claws"
+   ],
+   "weapon": {
+    "kind": "fist",
+    "amount": {
+     "base": 263,
+     "scale": [
+      {
+       "ratio": 0.07500000000000001,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "rare"
+  },
+  {
+   "id": "flurry_wraps",
+   "name": "Flurry wraps",
+   "text": "Double strike medium. Its extra strikes can strike again: each one rolls Double strike for one more, at most two more after the first, and each is a fifth weaker than the strike before it.",
+   "slot": "weapon",
+   "tier": "powerful",
+   "source": "unlock",
+   "stats": [
+    {
+     "stat": "double_strike",
+     "flat": 25
+    }
+   ],
+   "statuses": [
+    "flurry_wraps"
+   ],
+   "weapon": {
+    "kind": "fist",
+    "amount": {
+     "base": 263,
+     "scale": [
+      {
+       "ratio": 0.07500000000000001,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "legendary"
+  },
+  {
+   "id": "still_hand",
+   "name": "Still hand",
+   "text": "Its hits on a Stunned or Silenced foe always crit and add several Sunder (from Attack). When it Stuns a foe, its ability with the longest cooldown left is ready at once.",
+   "slot": "weapon",
+   "tier": "powerful",
+   "source": "unlock",
+   "statuses": [
+    "still_hand"
+   ],
+   "weapon": {
+    "kind": "fist",
+    "amount": {
+     "base": 263,
+     "scale": [
+      {
+       "ratio": 0.07500000000000001,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "legendary"
+  },
+  {
+   "id": "arming_sword",
+   "name": "Arming sword",
+   "text": "Attack +2.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 2000
+    }
+   ],
+   "weapon": {
+    "kind": "sword",
+    "amount": {
+     "base": 359,
+     "scale": [
+      {
+       "ratio": 0.1025,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "common"
+  },
+  {
+   "id": "gilded_sword",
+   "name": "Gilded sword",
+   "text": "HP +1, Aggro +1.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": 500
+    },
+    {
+     "stat": "aggro",
+     "flat": 10
+    }
+   ],
+   "weapon": {
+    "kind": "sword",
+    "amount": {
+     "base": 359,
+     "scale": [
+      {
+       "ratio": 0.1025,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "common"
+  },
+  {
+   "id": "clarion_blade",
+   "name": "Clarion blade",
+   "text": "HP +1. Taunts when each fight starts.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
+   "statuses": [
+    "clarion_blade"
+   ],
+   "weapon": {
+    "kind": "sword",
+    "amount": {
+     "base": 359,
+     "scale": [
+      {
+       "ratio": 0.1025,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "uncommon"
+  },
+  {
+   "id": "nettle_blade",
+   "name": "Nettle blade",
+   "text": "Thorns medium. Its basic attacks deal extra damage equal to half its Thorns.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "thorns",
+     "flat": 150
+    }
+   ],
+   "weapon": {
+    "kind": "sword",
+    "amount": {
+     "base": 359,
+     "scale": [
+      {
+       "ratio": 0.1025,
+       "stat": "attack"
+      },
+      {
+       "ratio": 0.5,
+       "stat": "thorns",
+       "of": "self"
+      }
+     ]
+    }
+   },
+   "rarity": "uncommon"
+  },
+  {
+   "id": "sweeping_blade",
+   "name": "Sweeping blade",
+   "text": "Its basic attacks also hit a second, random foe for half.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "statuses": [
+    "sweeping_blade"
+   ],
+   "weapon": {
+    "kind": "sword",
+    "amount": {
+     "base": 359,
+     "scale": [
+      {
+       "ratio": 0.1025,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "rare"
+  },
+  {
+   "id": "drawn_steel",
+   "name": "Drawn steel",
+   "text": "Crit damage medium. Its first basic attack of each fight comes at once and always crits.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "crit_multiplier",
+     "flat": 25
+    }
+   ],
+   "statuses": [
+    "drawn_steel"
+   ],
+   "weapon": {
+    "kind": "sword",
+    "amount": {
+     "base": 359,
+     "scale": [
+      {
+       "ratio": 0.1025,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "rare"
+  },
+  {
+   "id": "oathkeeper",
+   "name": "Oathkeeper",
+   "text": "While it Taunts, its basic attacks also hit every other foe.",
+   "slot": "weapon",
+   "tier": "powerful",
+   "source": "unlock",
+   "statuses": [
+    "oathkeeper"
+   ],
+   "weapon": {
+    "kind": "sword",
+    "amount": {
+     "base": 359,
+     "scale": [
+      {
+       "ratio": 0.1025,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "legendary"
+  },
+  {
+   "id": "gravemark",
+   "name": "Gravemark",
+   "text": "Its hits on a Marked foe deal half again as much. If no foe is Marked, its basic attacks Mark their target. When a Marked foe falls, the foe with the lowest HP is Marked.",
+   "slot": "weapon",
+   "tier": "powerful",
+   "source": "unlock",
+   "statuses": [
+    "gravemark"
+   ],
+   "weapon": {
+    "kind": "sword",
+    "amount": {
+     "base": 359,
+     "scale": [
+      {
+       "ratio": 0.1025,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "legendary"
+  },
+  {
+   "id": "ironwood_spear",
+   "name": "Ironwood spear",
+   "text": "Armor +1, Attack +1.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "armor",
+     "flat": 1000
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "weapon": {
+    "kind": "spear",
+    "amount": {
+     "base": 411,
+     "scale": [
+      {
+       "ratio": 0.11750000000000001,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "common"
+  },
+  {
+   "id": "partisan",
+   "name": "Partisan",
+   "text": "Crit chance +1, Attack +1.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "weapon": {
+    "kind": "spear",
+    "amount": {
+     "base": 411,
+     "scale": [
+      {
+       "ratio": 0.11750000000000001,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "common"
+  },
+  {
+   "id": "ox_tongue_spear",
+   "name": "Ox-tongue spear",
+   "text": "Crit chance +1. Its crits add a few Sunder (from Attack).",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    }
+   ],
+   "statuses": [
+    "ox_tongue_spear"
+   ],
+   "weapon": {
+    "kind": "spear",
+    "amount": {
+     "base": 411,
+     "scale": [
+      {
+       "ratio": 0.11750000000000001,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "uncommon"
+  },
+  {
+   "id": "trophy_spear",
+   "name": "Trophy spear",
+   "text": "Attack +1. When it lands a killing blow, it's Guarded.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "statuses": [
+    "trophy_spear"
+   ],
+   "weapon": {
+    "kind": "spear",
+    "amount": {
+     "base": 411,
+     "scale": [
+      {
+       "ratio": 0.11750000000000001,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "uncommon"
+  },
+  {
+   "id": "hunting_spear",
+   "name": "Hunting spear",
+   "text": "When it lands a killing blow, its ability with the longest cooldown left is ready at once.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "statuses": [
+    "hunting_spear"
+   ],
+   "weapon": {
+    "kind": "spear",
+    "amount": {
+     "base": 411,
+     "scale": [
+      {
+       "ratio": 0.11750000000000001,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "rare"
+  },
+  {
+   "id": "glaive",
+   "name": "Glaive",
+   "text": "Its basic attacks also hit the foe with the most HP for half. If that foe is the target, they hit the foe with the next most.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "statuses": [
+    "glaive"
+   ],
+   "weapon": {
+    "kind": "spear",
+    "amount": {
+     "base": 411,
+     "scale": [
+      {
+       "ratio": 0.11750000000000001,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "rare"
+  },
+  {
+   "id": "pike_wall",
+   "name": "Pike wall",
+   "text": "When a foe hits an ally with less Armor than the wearer, the wearer strikes that foe with its spear.",
+   "slot": "weapon",
+   "tier": "powerful",
+   "source": "unlock",
+   "statuses": [
+    "pike_wall"
+   ],
+   "weapon": {
+    "kind": "spear",
+    "amount": {
+     "base": 411,
+     "scale": [
+      {
+       "ratio": 0.11750000000000001,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "legendary"
+  },
+  {
+   "id": "storm_pike",
+   "name": "Storm pike",
+   "text": "Each hit it lands adds a Charge, up to 10. At 10, its next basic attack that lands also calls lightning on every foe (light magical damage, from Attack) and spends the Charges.",
+   "slot": "weapon",
+   "tier": "powerful",
+   "source": "unlock",
+   "statuses": [
+    "storm_pike"
+   ],
+   "weapon": {
+    "kind": "spear",
+    "amount": {
+     "base": 411,
+     "scale": [
+      {
+       "ratio": 0.11750000000000001,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "legendary"
+  },
+  {
+   "id": "recurve_bow",
+   "name": "Recurve bow",
+   "text": "Attack +2, Crit damage medium.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 2000
+    },
+    {
+     "stat": "crit_multiplier",
+     "flat": 25
+    }
+   ],
+   "weapon": {
+    "kind": "bow",
+    "amount": {
+     "base": 385,
+     "scale": [
+      {
+       "ratio": 0.11000000000000001,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "common"
+  },
+  {
+   "id": "yew_bow",
+   "name": "Yew bow",
+   "text": "Accuracy medium, Crit chance +1, Aggro −1.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "accuracy",
+     "flat": 20
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    },
+    {
+     "stat": "aggro",
+     "flat": -10
+    }
+   ],
+   "weapon": {
+    "kind": "bow",
+    "amount": {
+     "base": 385,
+     "scale": [
+      {
+       "ratio": 0.11000000000000001,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "common"
+  },
+  {
+   "id": "snaring_bow",
+   "name": "Snaring bow",
+   "text": "Attack +1, Accuracy medium. Each time it looses a basic attack while a foe is winding up, that foe is Slowed (the one with the highest Attack or Magic, if several are).",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "accuracy",
+     "flat": 20
+    }
+   ],
+   "statuses": [
+    "snaring_bow"
+   ],
+   "weapon": {
+    "kind": "bow",
+    "amount": {
+     "base": 385,
+     "scale": [
+      {
+       "ratio": 0.11000000000000001,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "uncommon"
+  },
+  {
+   "id": "broadhead_bow",
+   "name": "Broadhead bow",
+   "text": "Crit chance +1, Attack +1. Its crits add a few Bleed (from Attack).",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "statuses": [
+    "broadhead_bow"
+   ],
+   "weapon": {
+    "kind": "bow",
+    "amount": {
+     "base": 385,
+     "scale": [
+      {
+       "ratio": 0.11000000000000001,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "uncommon"
+  },
+  {
+   "id": "huntsmans_bow",
+   "name": "Huntsman's bow",
+   "text": "Its basic attacks Mark their target. Its hits on a Marked foe deal a third more.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "statuses": [
+    "huntsmans_bow"
+   ],
+   "weapon": {
+    "kind": "bow",
+    "amount": {
+     "base": 385,
+     "scale": [
+      {
+       "ratio": 0.11000000000000001,
+       "stat": "attack"
+      }
+     ]
+    },
+    "apply": [
+     {
+      "status": "marked"
+     }
+    ]
+   },
+   "rarity": "rare"
+  },
+  {
+   "id": "frostbite_bow",
+   "name": "Frostbite bow",
+   "text": "Its basic attacks add a few Chill (from Attack). On a foe with 8 or more Chill, they add a few Sunder too.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "weapon": {
+    "kind": "bow",
+    "amount": {
+     "base": 385,
+     "scale": [
+      {
+       "ratio": 0.11000000000000001,
+       "stat": "attack"
+      }
+     ]
+    },
+    "apply": [
+     {
+      "status": "chill",
+      "stacks": {
+       "scale": [
+        {
+         "ratio": 0.0007,
+         "stat": "attack",
+         "of": "self"
+        }
+       ]
+      }
+     },
+     {
+      "status": "sunder",
+      "stacks": {
+       "scale": [
+        {
+         "ratio": 0.0007,
+         "when": {
+          "stacks": {
+           "status": "chill",
+           "atLeast": 8
+          }
+         },
+         "of": "target",
+         "times": {
+          "stat": "attack",
+          "of": "self"
+         }
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "rarity": "rare"
+  },
+  {
+   "id": "volley_bow",
+   "name": "Volley bow",
+   "text": "Its first basic attack of each fight, and every fifth after it, is a volley: it also looses a full arrow at every other foe.",
+   "slot": "weapon",
+   "tier": "powerful",
+   "source": "unlock",
+   "statuses": [
+    "volley_bow"
+   ],
+   "weapon": {
+    "kind": "bow",
+    "amount": {
+     "base": 385,
+     "scale": [
+      {
+       "ratio": 0.11000000000000001,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "legendary"
+  },
+  {
+   "id": "executioners_longbow",
+   "name": "Executioner's longbow",
+   "text": "Its basic attacks ignore Taunt, and deal more the less HP their target has: +25% below three quarters, +50% below half, +75% below a quarter, double below a tenth.",
+   "slot": "weapon",
+   "tier": "powerful",
+   "source": "unlock",
+   "statuses": [
+    "executioners_longbow"
+   ],
+   "weapon": {
+    "kind": "bow",
+    "amount": {
+     "base": 385,
+     "scale": [
+      {
+       "ratio": 0.11000000000000001,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "legendary"
+  },
+  {
+   "id": "bearded_axe",
+   "name": "Bearded axe",
+   "text": "Attack +1, Crit chance +1, Crit damage medium.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    },
+    {
+     "stat": "crit_multiplier",
+     "flat": 25
+    }
+   ],
+   "weapon": {
+    "kind": "great_weapon",
+    "amount": {
+     "base": 560,
+     "scale": [
+      {
+       "ratio": 0.16000000000000003,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "common"
+  },
+  {
+   "id": "poleaxe",
+   "name": "Poleaxe",
+   "text": "HP +2, Attack +1.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": 1000
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "weapon": {
+    "kind": "great_weapon",
+    "amount": {
+     "base": 560,
+     "scale": [
+      {
+       "ratio": 0.16000000000000003,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "common"
+  },
+  {
+   "id": "roaring_axe",
+   "name": "Roaring axe",
+   "text": "Attack +1, Crit damage medium. Starts each fight with a few Might (from Attack).",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "crit_multiplier",
+     "flat": 25
+    }
+   ],
+   "statuses": [
+    "roaring_axe"
+   ],
+   "weapon": {
+    "kind": "great_weapon",
+    "amount": {
+     "base": 560,
+     "scale": [
+      {
+       "ratio": 0.16000000000000003,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "uncommon"
+  },
+  {
+   "id": "ironbound_hammer",
+   "name": "Ironbound hammer",
+   "text": "Attack +1, HP +1. Starts each fight behind a Shield of a fifth of its Attack.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
+   "statuses": [
+    "ironbound_hammer"
+   ],
+   "weapon": {
+    "kind": "great_weapon",
+    "amount": {
+     "base": 560,
+     "scale": [
+      {
+       "ratio": 0.16000000000000003,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "uncommon"
+  },
+  {
+   "id": "icebreaker",
+   "name": "Icebreaker",
+   "text": "Attack +1. Its hits on a Stunned foe deal double.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "statuses": [
+    "icebreaker"
+   ],
+   "weapon": {
+    "kind": "great_weapon",
+    "amount": {
+     "base": 560,
+     "scale": [
+      {
+       "ratio": 0.16000000000000003,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "rare"
+  },
+  {
+   "id": "heartsplitter",
+   "name": "Heartsplitter",
+   "text": "HP +2. Its basic attacks scale from max HP in place of Attack.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": 1000
+    }
+   ],
+   "weapon": {
+    "kind": "great_weapon",
+    "amount": {
+     "base": 280,
+     "scale": [
+      {
+       "ratio": 0.24,
+       "stat": "max_hp"
+      }
+     ]
+    }
+   },
+   "rarity": "rare"
+  },
+  {
+   "id": "cornerstone_maul",
+   "name": "Cornerstone maul",
+   "text": "Its basic attacks deal extra damage equal to half its Shield. Swinging never spends the Shield.",
+   "slot": "weapon",
+   "tier": "powerful",
+   "source": "unlock",
+   "weapon": {
+    "kind": "great_weapon",
+    "amount": {
+     "base": 560,
+     "scale": [
+      {
+       "ratio": 0.16000000000000003,
+       "stat": "attack"
+      },
+      {
+       "ratio": 0.5,
+       "stacks": "shield",
+       "of": "self"
+      }
+     ]
+    }
+   },
+   "rarity": "legendary"
+  },
+  {
+   "id": "worldbreaker",
+   "name": "Worldbreaker",
+   "text": "Its basic attacks come half as often, deal triple, and Stun their target.",
+   "slot": "weapon",
+   "tier": "powerful",
+   "source": "unlock",
+   "stats": [
+    {
+     "stat": "attack_speed",
+     "flat": -100
+    }
+   ],
+   "statuses": [
+    "worldbreaker"
+   ],
+   "weapon": {
+    "kind": "great_weapon",
+    "amount": {
+     "base": 560,
+     "scale": [
+      {
+       "ratio": 0.16000000000000003,
+       "stat": "attack"
+      }
+     ]
+    },
+    "apply": [
+     {
+      "status": "stun"
+     }
+    ]
+   },
+   "rarity": "legendary"
   },
   {
    "id": "runed_saber",
