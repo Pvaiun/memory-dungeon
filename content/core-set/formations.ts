@@ -492,8 +492,10 @@ const legendary: Entry[] = [
   ),
   entry(
     formation("The forge", "legendary", "The longer the fight, the hotter everyone burns; but the forge is slow to light.", thrice({ name: "Forgehand" }), { statuses: ["the_forge"] }),
-    // G3's Heat, one every 4 ticks (+30% by tick 40, the cap at tick 60); Slow at its own 24 ticks when each fight starts.
-    [held("the_forge", "The forge", "Gains a Heat every 4 ticks. Slowed when each fight starts.", { pulse: { every: 4, do: [give("heat", "holder", 1)] }, reactions: [atStart(give("slow"))] })],
+    // G3's Heat, one every 2 ticks (+36% by tick 24, the cap at tick 30); Slow at its own 24 ticks when each fight starts.
+    // Step 5i, step 5, the build's one correction: every 2 ticks (the fill's 4). At 4 the self-Slow outweighed the Heat in every fight the
+    // build test played (Bonfire's far end won 86% in Neutral, 68% in The forge: −17 points), and Heat never reaches Burn.
+    [held("the_forge", "The forge", "Gains a Heat every 2 ticks. Slowed when each fight starts.", { pulse: { every: 2, do: [give("heat", "holder", 1)] }, reactions: [atStart(give("slow"))] })],
     "Bonfire 3 ●●●, Landslide ●●, Pact ●",
   ),
   entry(

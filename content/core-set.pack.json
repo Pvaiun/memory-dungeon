@@ -3146,13 +3146,13 @@
   {
    "id": "the_forge",
    "name": "The forge",
-   "text": "Gains a Heat every 4 ticks. Slowed when each fight starts.",
+   "text": "Gains a Heat every 2 ticks. Slowed when each fight starts.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
    "pulse": {
-    "every": 4,
+    "every": 2,
     "do": [
      {
       "op": "apply",
