@@ -126,10 +126,10 @@ Every card ends: *Fits Paladin, Valkyrie, Vampire, Hexer, Bramble knight.*
 - **Builds:** Pact 1, Cuts 1. It pays by the count of hits, not their size: a drink for small, fast hits where Lifesteal favours big ones.
 
 **Reprisal hauberk** · Mail · uncommon
-- **Card:** HP +1. The first time each foe hits the wearer in a fight, that foe takes damage equal to 17% of the wearer's max HP.
-- **Numbers:** a touch (0.17) of max HP, untyped, once per foe per fight (765 at HP 4.5).
-- **Hooks:** `hit_taken` → apply REPRISAL to `other`: Fizzle, unremovable, all fight, knows its source, no icon. REPRISAL reacts to its own `status_gained` with `damage` (type none) to holder, 0.17 × max HP of source: Blood price's pattern. Fizzle keeps it to once a foe.
-- **Builds:** Toll 1 (a swarm pays as it arrives), Harvest 1 (every foe of a full field pays once).
+- **Card:** HP +1. The first three foes to hit the wearer each fight each take damage equal to 17% of its max HP.
+- **Numbers:** a touch (0.17) of max HP, untyped, once each for the first three different foes that hit it in a fight (765 at HP 4.5; 2,295 at most). (Second-round ruling: it was every foe, once.)
+- **Hooks:** `fight_start` → apply REPRISALS (Intensity, 3 stacks, no icon) to self. `hit_taken` → apply REPRISAL to `other` while the wearer holds REPRISALS (**NEW 2**, a condition on the holder for a reaction): Fizzle, unremovable, all fight, knows its source, no icon. REPRISAL reacts to its own `status_gained` with `damage` (type none) to holder, 0.17 × max HP of source, and removes one REPRISALS stack from `source`: Blood price's pattern. Fizzle keeps it to once a foe.
+- **Builds:** Toll 1 (a swarm's first arrivals pay), Harvest 1 (three of a full field pay at once).
 
 **Silvered hauberk** · Mail · uncommon
 - **Card:** Magic +1. The first magical hit the wearer takes each fight deals half.

@@ -70,7 +70,7 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 ### Quietus · dagger · legendary
 - **Card:** Dagger. Fits Assassin, Ranger, Hexer. Its hits on a foe that hasn't acted yet this fight always crit, and those crits add twice the usual bonus.
 - **Weapon:** medium, medium, Attack.
-- **Numbers:** crit chance 100 against such a foe. The crit bonus doubles: ×1.5 becomes ×2, with Crit damage medium ×1.75 becomes ×2.5, and with high ×2 becomes ×3 (the Assassin). A foe's first action comes 20% to 60% into its first interval, so the window is a few ticks per foe. A foe Stunned before it acts stays in the window, and summoned foes enter it.
+- **Numbers:** crit chance 100 against such a foe. The crit bonus doubles: ×1.5 becomes ×2, with Crit damage medium ×1.75 becomes ×2.5, and with high ×2 becomes ×3 (the Assassin). These always-crits win over Gambler's coin (G17). A foe's first action comes 20% to 60% into its first interval, so the window is a few ticks per foe. A foe Stunned before it acts stays in the window, and summoned foes enter it.
 - **Hooks:** NEW B (crit by a condition on the target: always crit, and a bigger crit bonus) and NEW C (a unit condition, "hasn't acted this fight", false once its first action resolves).
 - **Builds:** Ambush 3 ●●●, Hunt ●● (the back row).
 
@@ -130,7 +130,7 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 ### Still hand · fist weapons · legendary
 - **Card:** Fist weapons. Fits Monk, Vampire. Its hits on a Stunned or Silenced foe always crit and add several Sunder (from Attack). When it Stuns a foe, its ability with the longest cooldown left is ready at once.
 - **Weapon:** medium, medium, Attack.
-- **Numbers:** crit chance 100 against a Stunned or Silenced foe. Several Sunder a hit: 4.8 at Attack 3.7, 5.2 at 4. This isn't a rider on every hit, only on hits against a held foe. Over a Stun's 8 ticks the Monk lands about 2 swings, their extra strikes and a Burning fist, enough to take Sunder to its cap of 20, which sheds a stack every 4 ticks once the window closes. "Ready" pays no MP: the ability still needs its cost. A shatter's Stun doesn't count for the second sentence, because the Chill applies it to its own holder. Pressure point's own hit lands before its Stun, so that hit doesn't crit.
+- **Numbers:** crit chance 100 against a Stunned or Silenced foe, which wins over Gambler's coin (G17). Several Sunder a hit: 4.8 at Attack 3.7, 5.2 at 4. This isn't a rider on every hit, only on hits against a held foe. Over a Stun's 8 ticks the Monk lands about 2 swings, their extra strikes and a Burning fist, enough to take Sunder to its cap of 20, which sheds a stack every 4 ticks once the window closes. "Ready" pays no MP: the ability still needs its cost. A shatter's Stun doesn't count for the second sentence, because the Chill applies it to its own holder. Pressure point's own hit lands before its Stun, so that hit doesn't crit.
 - **Hooks:** NEW B (crit on a target that has any of Stun or Silence) with addition 15 ("has any of"). The Sunder is a piece status: `hit_lands` → `apply` sunder, stacks 1.3 × Attack (`times` Attack, `when` the target has any of stun or silence), `to: other`. The second sentence is `status_gained` (stun, whose: foe) where the applier is the holder (NEW A) → addition 1 (make ready the holder's ability with the most cooldown left).
 - **Builds:** Lockdown 3 ●●●, Snap ●● (a shatter Stuns).
 
@@ -176,7 +176,7 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 ### Drawn steel · sword · rare
 - **Card:** Sword. Fits Knight, Bramble knight, Assassin. Crit damage medium. Its first basic attack of each fight comes at once and always crits.
 - **Weapon:** medium, medium, Attack.
-- **Numbers:** Crit damage +25 (the step, since one crit a fight is thin), so the first swing crits at ×1.75, or ×2.25 on the Assassin. "At once" means the basic attack is ready at tick 0, but an ability that's ready then still goes first, by slot order.
+- **Numbers:** Crit damage +25 (the step, since one crit a fight is thin), so the first swing crits at ×1.75, or ×2.25 on the Assassin. That crit wins over Gambler's coin (G17). "At once" means the basic attack is ready at tick 0, but an ability that's ready then still goes first, by slot order.
 - **Hooks:** addition 1 (make the basic attack's timer ready at `fight_start`). The crit is NEW B by kind: a fight-start status that gives crit chance 100 to `basic` hits and ends on the holder's `action_resolve` of kind `basic`. Without NEW B, a plain crit chance 100 that ends on the first action would also crit an ability that goes first.
 - **Builds:** Ambush 2 ●●●, Landslide ● (the first blow).
 

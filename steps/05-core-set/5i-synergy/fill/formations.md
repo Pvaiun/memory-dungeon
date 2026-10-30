@@ -386,6 +386,16 @@ I read "once it falls" as "while it's down". If the Peak is raised, the Foothill
 7. **The Scythes against The storm front:** settled by the formations ruling. The Scythes' basic attacks hit every foe for a fifth each.
 8. **Names:** settled by the formations ruling. The "Rod" seats are Beacon, and the common Anvil is Heavy line.
 
+Second round:
+
+9. **Hammer and anvil's Hammer:** settled by the second round ("too strong, or out of range"). It's at attack speed −100, half as often, as the Millstone writes it. Its triple stays under G14, as a swing shape that swings half as often.
+10. **Reaping line's Scythes:** settled by the second round and G5. They're a swing shape, and their hits on the other foes are damage only.
+11. **Hearth's Torch:** settled by the second round. Only its basic attacks add a Burn to each burning foe.
+12. **Blood oath's Donor:** settled by the second round and G9. Its heals on the Bleeder are half again, not double.
+13. **Blood oath's Bleeder:** settled by G12. Its price is HP paid, not damage: no Shield soaks it, nothing reacts to it, and it stops at 1 HP (it stopped at a tenth before).
+14. **Names:** settled by the second round's cards and names. Gaol's Warden is the Turnkey, and Heavy line's Hammer is the Bruiser.
+15. **The wheel's turn:** settled by G13. It turns every 22 ticks, first at tick 11.
+
 ## NEW
 
 1. **Seats as targets and event sources:** "the unit in a named seat" and "the next seat" (the Mason, Relay, The choir, Thorn hedge's Thorns). Engine 13 reads who sits in a seat; this is the other half.
@@ -396,7 +406,7 @@ I read "once it falls" as "while it's down". If the Peak is raised, the Foothill
 6. **One party count, shown once** and kept in step after a revive (The hurricane): small, mostly interface.
 7. **Engine 14 extended** from costs, stacks and cooldowns to an ability's wait and target (Gaol's Watcher, Hammer and anvil's Mason).
 8. **No MP gained in a fight,** from any source (The choir, from its ruling): small, beside "heals from others blocked".
-9. **Basic attacks aimed by a rule,** here every foe (the Scythes, from their ruling). It's on the lead's gathered list.
+9. **An extra strike spread over every other foe that carries damage only** (the Scythes, from their rulings). The lead's gathered list has "extra strikes sized and spread over several foes".
 
 ## Least sure
 
