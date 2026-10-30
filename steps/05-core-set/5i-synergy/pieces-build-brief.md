@@ -34,7 +34,7 @@ The lead splits the volume among parallel agents with bounded shares: the engine
   - **Which pieces carry each build, and which never matter.**
   - **A feel read** of fights from several builds (`npx tsx src/rogue-feel.ts`).
 - **The gate:** a short report for the director. It shows the rhythm read and the strength table for all builds, what lands and what doesn't, and the fixes you propose. The director plays it. Update `CLAUDE.md`'s Status, commit, push and stop.
-- **Next, its own pass:** balancing, then the difficulty pass aimed harder than today (the director: "I am 100% sure the game is going to be dramatically too easy with that pass").
+- **Next, its own pass:** balancing (with the levers at the end of `fill-rulings.md`; statuses stay universal), then the difficulty pass aimed harder than today (the director: "I am 100% sure the game is going to be dramatically too easy with that pass").
 
 ## Read first
 
