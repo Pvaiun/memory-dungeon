@@ -88,6 +88,8 @@ Settings → MODE → ROGUE. The home menu then shows ROGUE (the run's act, or h
 
 Settings gains GIVE UP THE RUN and RESET ROGUE in rogue mode.
 
+**SAVE RUN** (on the run's end screen, beside DONE) downloads the run's record as a JSON file, for balancing: every choice with what was offered beside it (the pending decision, its options, the pick, what it did), every free action (gear, seats, formation, ability order, swaps, supplies, dismissals, drops), the party exactly as it entered each fight (stats with gear and seats, HP, MP, cooldowns, the roster and bag around it) and how each fight ended, plus the run as it ended. Every run keeps it (`src/rogue-record.ts`, wrapping `src/rogue.ts`'s calls; the simulations record nothing); a run begun before this starts its record from where it was, with the whole run as it stood. If the browser's storage fills, the record is dropped before the run is.
+
 ## The battle screen
 
 One field, 270×228, on a backdrop composed from the director's tilesets, one per dungeon (the road through the pines, the crypt's bricks and candles, the fire mine's lava brick and lava stream, the ice pass, the storm tower's blue stone, the deep crypt in violet, the tower top's battlements under rain and stars). **The party stands on the left at the packs' own size, with its weapons in hand; the foes stand on the right at theirs, which is bigger**: the director asked for the earlier scale (heroes at twice their size, monsters shrunk when crowded) to be inverted. A foe's sprite is never shrunk unless the fight has seven or more; small creatures (wisps, drones, mini slimes) are drawn small. Up to three foes stand in a loose triangle; four to six in a staggered front and back row; a boss stands in front with its followers to its left.
