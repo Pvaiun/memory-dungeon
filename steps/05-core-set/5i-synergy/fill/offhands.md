@@ -788,31 +788,32 @@ The spine's rule: commons lean Siphon, Magic, HP; uncommons MP on a kill, a litt
 
 ## CHALLENGES
 
-Each one is settled; the line says by which ruling (`../fill-rulings.md`).
-1. **"Short" Taunt and Haste:** settled by G1. Short is half a status's own length: Reveille's Clarity is short, and so are the Haste on Bull's horn and the Weaken on Dazzling lantern. (Bull's horn's Taunt and Mending icon's Regen were short too, until the second round replaced them.)
-2. **Warding bell's start beat:** settled by the offhands ruling. The first lift is at tick 11, then every 22.
-3. **Phalanx shield, strong everywhere on the Hoplite:** settled by the offhands ruling. The cut holds while the holder is above half its HP.
-4. **Idol of binding's double:** settled by G9 and the offhands ruling: half again. G1 also lets its Slow last as long as the Weaken (20 ticks), as the spine wrote.
-5. **Earthmother totem's cap:** settled by the offhands ruling. A third larger, with the cap unchanged; a break gives a few Might, not Guard.
-6. **Annotated grimoire's loop:** settled by the offhands ruling. A cast it made free doesn't make another.
-7. **Fanged idol, a small Leech idol:** settled by the offhands ruling. Its crits add Rot.
-8. **Crimson dregs, a small Bloodsworn mail:** settled by the offhands ruling. Lifesteal medium on hits against a bleeding foe.
-9. **"Thorns" as an uncommon:** settled by G6 and the offhands ruling. Spinebark pole keeps its target.
-10. **Bear fetish repeating the Plate uncommon:** settled by G7. The first ally to drop below half each fight is Guarded.
-11. **The lantern's Ward and the bell's Haste at the start** (not raised by me; the lead's): settled by G7. Dazzling lantern takes a short Weaken on the most dangerous foe, and Quickening chime takes a dodge that brings its next basic attack sooner.
-12. **The round shield's short Taunt when an ally drops below half** (the lead's, after Red ribbon took that shape on the amulet): settled by G7. Linebreaker takes Attack +1 and +20% on hits against a Taunting foe.
-
-From the second round of rulings:
-13. **Gatekeeper's kite repeating Carapace charm** (a Shield at the start): settled by G7 (second round). While its holder Taunts, it takes a tenth less damage.
-14. **Bull's horn repeating Clarion blade** (a Taunt at the start, for the Knight): settled by G7 (second round). Attack +1, and the first foe to fall each fight Hastes every ally briefly.
-15. **Mending icon repeating Mender's mace** (a Regen at the start, for the Cleric): settled by G7 (second round). Renamed Charnel icon: each foe's fall heals the ally lowest in HP share for 6% of its max HP.
-16. **Comrade's targe:** settled by the second round's ruling. The Guard goes to the other ally drawing the most, never the holder.
-17. **Ironclad kite's name:** settled by the second round's ruling. It's the Pavise.
-18. **Withering idol, Weaken on every swing:** settled by the second round's ruling. One basic attack in three.
-19. **Funeral bell's two Fervor a fall:** settled by the second round's ruling and G11. One Fervor a fall, at most one stack every 2 ticks.
-20. **Wick's two Heat a fall:** settled by G11. One Heat a fall, at most one stack every 2 ticks.
-21. **"Every so often":** settled by G13. Bell of the hour and the Idol of the hungry dark beat at tick 11, then every 22, as the Warding bell does.
-22. **HP prices (Blood vial, Bloodlust draught):** settled by G12. Lost at once, not damage, nothing reacts, never below 1 HP. The Blood vial no longer waits; the draught's price no longer wakes below-half pieces.
+Each one is settled, and the line says how (`../fill-rulings.md`). The third round, the director's word, replaces the first two where they differ: statuses are universal, and there are no balancing rules.
+1. **"Short" Taunt and Haste:** settled by the director: universal statuses. Every status a piece gives lasts its own length: Reveille's Clarity (16 ticks), Bull's horn's Haste (20), Dazzling lantern's Weaken (20). Nothing else in the share lost its idea for it.
+2. **Warding bell's start beat:** kept from the offhands ruling (it lifted nothing). The first lift is at tick 11, then every 22.
+3. **Phalanx shield, strong everywhere on the Hoplite:** undone: no balancing rules. Back to the spine's line, whatever the holder's HP.
+4. **Idol of binding's double:** undone: no balancing rules. Double again. Its Slow: settled by the director: universal statuses. Slow lasts its own 24 ticks, so the spine's "for as long" keeps its idea as a Slow that lands with each Weaken and outlasts it by 4 ticks.
+5. **Earthmother totem's cap:** settled by the director: universal statuses (the cap is the Shield's own). A third larger, with the cap unchanged; a break gives a few Might, not Guard (kept: the overlap with the Knight's Grudge).
+6. **Annotated grimoire's loop:** kept (a loop fix). A cast it made free doesn't make another.
+7. **Fanged idol, a small Leech idol:** kept (a small and a big version of one thing). Its crits add Rot.
+8. **Crimson dregs, a small Bloodsworn mail:** kept (an overlap fix). Lifesteal medium on hits against a bleeding foe.
+9. **"Thorns" as an uncommon:** kept (G6). Spinebark pole keeps its target.
+10. **Bear fetish repeating the Plate uncommon:** kept (G7). The first ally to drop below half each fight is Guarded.
+11. **The lantern's Ward and the bell's Haste at the start** (the lead's): kept (G7). Dazzling lantern Weakens the most dangerous foe at the start (at Weaken's own length now), and Quickening chime brings its next basic attack sooner on each dodge.
+12. **The round shield's Taunt when an ally drops below half** (the lead's, after Red ribbon took that shape): kept (G7). Linebreaker takes Attack +1 and +20% on hits against a Taunting foe.
+13. **Gatekeeper's kite repeating Carapace charm:** kept (G7). While its holder Taunts, it takes a tenth less damage.
+14. **Bull's horn repeating Clarion blade:** kept (G7). Attack +1, and the first foe to fall each fight Hastes every ally (at Haste's own length now).
+15. **Mending icon repeating Mender's mace:** kept (G7). Renamed Charnel icon: each foe's fall heals the ally lowest in HP share for 6% of its max HP.
+16. **Comrade's targe:** kept (a target fix). The Guard goes to the other ally drawing the most, never the holder.
+17. **Ironclad kite's name:** kept (a name fix). It's the Pavise.
+18. **Withering idol, one swing in three:** undone: no balancing rules. Every basic attack Weakens again.
+19. **Funeral bell:** its one Fervor a fall is kept (the second round listed it as a card fix, so I kept it, though my first number was two); its rate limit is undone: no balancing rules.
+20. **Wick's Heat:** undone: no balancing rules. Two Heat a burning foe's fall again, with no rate limit.
+21. **"Every so often":** kept (G13). Bell of the hour and the Idol of the hungry dark beat at tick 11, then every 22, as the Warding bell does.
+22. **HP prices (Blood vial, Bloodlust draught):** kept (G12). Lost at once, not damage, nothing reacts, never below 1 HP.
+23. **War horn's and Rallying horn's "many" Might:** undone: no balancing rules. Many (7) again.
+24. **Last page sparing bosses:** undone: no balancing rules. A boss below a tenth falls too.
+25. **Bloodlust draught and Bloodlust adding:** undone: no balancing rules. They multiply again (Lifesteal high to 80% below half).
 
 ## NEW
 
@@ -825,7 +826,6 @@ Beyond the spine's list and the physical weapons' lettered needs (I use their NE
 6. **Moving a status** from one unit to another, with its stacks and time left (Idol of the hungry dark).
 7. **"Past full" for MP** as well as HP, on addition 8 (Leech idol).
 8. **Einherjar as a rule on every revive the Valkyrie makes,** not a field on Valhalla (Shield of the chosen; Bones of the returned's trade). G10 keeps Einherjar as the exception.
-9. **A unit condition on rank, "not a boss"** (Last page, after its ruling).
 
 ## Least sure
 
@@ -834,4 +834,4 @@ Beyond the spine's list and the physical weapons' lettered needs (I use their NE
 3. **Close pairs within a kind,** kept because their triggers differ: Reveille and Echo horn (MP to the neediest, once at the start or on every cast), Abridged lexicon and Annotated grimoire (cheaper own casts, or a free one passed on), Waking bell and Warding bell (one Silence answered, or a debuff lifted on a beat).
 4. **Treatise on the field is thin:** among tome holders, only the Frostweaver's Blizzard and two versions hit every foe, and those hits are touch-sized.
 
-Settled by the rulings and dropped from this list: Phalanx shield's strength (the offhands ruling), Mending icon's free Regen (G1 made it short; the second round replaced it), Last page on bosses (the offhands ruling), the Bloodlust draught's multiplied Lifesteal (the offhands ruling), Comrade's targe's reading (the offhands ruling), and the Wild hunt totem's spreading Marks (G2: one Mark per unit).
+Dropped from this list: Comrade's targe's reading (a target fix), the Wild hunt totem's spreading Marks (G2: one Mark per unit) and Mending icon (replaced). Phalanx shield's strength, Last page on bosses and the Bloodlust draught's 80% Lifesteal are back as they were; by the director's word, their strength is the balance pass's question.

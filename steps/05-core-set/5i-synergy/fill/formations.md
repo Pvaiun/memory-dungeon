@@ -355,13 +355,12 @@ I read "once it falls" as "while it's down". If the Peak is raised, the Foothill
 **Builds:** Landslide 3 ●●● (a Geomancer or Knight as the Peak, with its Armor in its stone and its blows), Toll 3 ●● (an anchor that Taunts all fight).
 
 ### The storm front · legendary
-**Card:** "Every single-target hit the party lands is a tenth softer, and also strikes the healthiest other foe, for a quarter."
+**Card:** "Every single-target hit the party lands also strikes the healthiest other foe, for a quarter."
 - **Thunderhead** ×3 · nothing.
 
 **Party effect:** each hit from a basic attack or a single-target ability also hits the foe with the most current HP other than the first target (with one foe, nothing). The second hit is a quarter of the first, before mitigation, and meets that foe's own Armor or Magic resist. It's a hit (an extra strike, so it never chains) and carries nothing of the first hit's riders or statuses.
-**Gives up:** a tenth of every single-target hit, all of it against a lone foe.
 **Shape:** every blow chips the biggest foe, so the field sinks together.
-**Hooks:** a −10 boost on single-target hits, and engine 9 (a reaction that strikes), sized from the triggering hit (**NEW** 4), aimed at `{ side: foes, pick: highest, by: hp, exclude }`.
+**Hooks:** engine 9 (a reaction that strikes), sized from the triggering hit (**NEW** 4), aimed at `{ side: foes, pick: highest, by: hp, exclude }`.
 **Builds:** Harvest 3 ●●● (the field falls together), Cuts ● (many small hits, each with an echo).
 
 ### The vise · legendary
