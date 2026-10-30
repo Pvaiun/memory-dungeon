@@ -26,7 +26,9 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the ten offhand kinds,
   - inside the Taunt rule: while a foe Taunts, only basic attacks with Seek (the Ranger's Hunter's eye) follow the Mark past it.
 - **Heat** (G3), on the Wick: +3% damage a stack, up to 15, kept all fight.
 - **Fervor** (G4), on the Funeral bell: +5% damage a stack, up to 20, kept all fight and through a knockout.
-- No counter raises a status's damage (the status rule).
+- **Counters** (G11): a counter gains at most one stack every 2 ticks, however many triggers fire. No counter raises a status's damage (the status rule).
+- **Paying HP** (G12): the payer loses that much HP at once. It isn't damage: no Shield soaks it, nothing reacts to it, and it never takes the payer below 1 HP (addition 4).
+- **"Every so often"** (G13): every 22 ticks, the first at tick 11, unless a line states its own number.
 
 | Kind | Common | Common | Uncommon | Uncommon | Rare | Rare | Legendary | Legendary |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -413,11 +415,11 @@ The spine's rule: commons lean Magic, HP, MP; uncommons a few Burn on every foe 
 - **Card:** Lantern. Fits Paladin, Pyromancer. When a burning foe falls, all its Burn passes to the foe with the most HP, and its holder gains Heat.
 - **Numbers:**
   - Every stack the fallen foe held, to the living foe with the most current HP.
-  - 2 Heat a burning foe's fall: +6% damage on its hits each time, up to Heat's cap of 15 (+45%, G3).
+  - One Heat a burning foe's fall: +3% damage on its hits each time, up to Heat's cap of 15 (+45%, G3). It was two; G11 allows a counter one stack every 2 ticks, so a pack falling together gives one stack per 2 ticks.
   - Any burning foe counts, whoever lit it.
 - **Hooks:**
   - The piece's status: `status_ended` (burn, cause `ko`, whose `foe`): a foe's statuses end just before its `ko` event, as the Gravemark's hook relies on.
-  - → `apply` burn with the ended status's stacks (addition 5: reading a dying foe's stacks), `to: { side: foes, pick: highest, by: hp }`; `apply` heat 2, `to: holder`.
+  - → `apply` burn with the ended status's stacks (addition 5: reading a dying foe's stacks), `to: { side: foes, pick: highest, by: hp }`; `apply` heat 1, `to: holder`.
 - **Builds:** Bonfire 3 ●●● (fire that outlives its foe).
 
 #### Lamp of vigil · lantern · legendary
@@ -556,18 +558,18 @@ The spine's rule: commons lean MP regen, Evasion, Magic or Attack; uncommons a s
 #### Bell of the hour · bell · legendary
 - **Card:** Bell. Fits Monk, Cleric, Stormcaller. Every so often, its holder's ability with the longest cooldown left comes a few ticks closer.
 - **Numbers:**
-  - Every quick beat (14 ticks), 5 ticks closer: about a third more casts, spread over whichever ability is furthest off.
-  - A 40-tick fight has 2 or 3 beats, an 80-tick fight 5. Cooldowns carry between fights, so the ticks it buys carry too.
-- **Hooks:** the piece's status: a `pulse` every 14 → addition 1 (refund 5 ticks) on the holder's ability with the most cooldown left (the selection is addition 14's).
+  - Every 22 ticks, the first at tick 11 (G13; it was every 14), 5 ticks closer: about a fifth more casts, spread over whichever ability is furthest off.
+  - A 40-tick fight has 2 beats (ticks 11 and 33), an 80-tick fight 4. Cooldowns carry between fights, so the ticks it buys carry too.
+- **Hooks:** the piece's status: a beat at tick 11, then a `pulse` every 22 (as the Warding bell's) → addition 1 (refund 5 ticks) on the holder's ability with the most cooldown left (the selection is addition 14's).
 - **Builds:** Overflow 3 ●●, Lockdown 3 ●● (the Monk's Pressure point comes round), Cuts ●.
 
 #### Funeral bell · bell · legendary
 - **Card:** Bell. Fits Monk, Cleric, Stormcaller. When any unit falls, friend or foe, every ally still standing gains Fervor. It rings for its holder's own fall too.
 - **Numbers:**
-  - A few Fervor, flat: 2 a fall, at Fervor's numbers (G4: +5% damage a stack, up to 20, kept all fight and through a knockout).
-  - A regular fight's three or four kills before the last make +30% to +40% by its end. Each ally's fall gives the survivors +10% more.
+  - One Fervor a fall (the second round's ruling), at Fervor's numbers (G4: +5% damage a stack, up to 20, kept all fight and through a knockout). Falls within 2 ticks of each other give one stack between them (G11).
+  - A regular fight's three or four kills before the last make +15% to +20% by its end. Each ally's fall gives the survivors +5% more.
   - Once its holder is down, it's silent until it's revived.
-- **Hooks:** the piece's status, which survives its holder's knockout: `ko` (whose `any`) → `apply` fervor 2, `to: { side: allies, pick: all }`. A fallen unit's statuses can react to its own `ko` today, so the holder's fall rings.
+- **Hooks:** the piece's status, which survives its holder's knockout: `ko` (whose `any`) → `apply` fervor 1, `to: { side: allies, pick: all }`. A fallen unit's statuses can react to its own `ko` today, so the holder's fall rings.
 - **Builds:** Phoenix 3 ●●●, Hunt ●●, Harvest ●: it rings for both sides.
 
 ---
@@ -671,13 +673,13 @@ The spine's rule: commons lean Lifesteal, Crit chance, Attack; uncommons crits t
 - **Builds:** Pact 1 ● (Lifesteal), Cuts 1 ● (Bleed on every hit), Toll 1 ● (Briar's bleeding attackers).
 
 #### Blood vial · vial · rare
-- **Card:** Vial. Fits Assassin, Vampire. Its holder's abilities cost half their MP, plus HP equal to their full cost. An ability waits while that price would knock its holder out.
+- **Card:** Vial. Fits Assassin, Vampire. Its holder's abilities cost half their MP, plus HP equal to their full cost. The HP price never takes it below 1 HP.
 - **Numbers:**
   - Frenzy: 450 MP becomes 225 MP and 450 HP (11% of a Vampire at HP 4).
   - Garrote: 325 becomes 163 and 325 HP (16% of an Assassin at HP 2).
   - Blood drain: 125 becomes 63 and 125.
-  - The HP is paid as a price, not damage: no Shield soaks it.
-- **Hooks:** addition 3 (cost −50) and addition 4 (HP as a cost), both through addition 14 on the holder's own abilities.
+  - The HP is paid as G12 defines it: lost at once, not damage, so no Shield soaks it and nothing reacts to it, and never below 1 HP. A holder at 1 HP casts for half the MP alone.
+- **Hooks:** addition 3 (cost −50) and addition 4 (HP as a cost, G12), both through addition 14 on the holder's own abilities.
 - **Builds:** Pact 2 ●●●, Phoenix ●.
 
 #### Venom vial · vial · rare
@@ -706,7 +708,7 @@ The spine's rule: commons lean Lifesteal, Crit chance, Attack; uncommons crits t
   - On the Vampire, the draught's doubling and Bloodlust's add, never multiply (the offhands ruling): each adds the Vampire's base Lifesteal once, so below half with both it has three times its base. Lifesteal high (20%) becomes 60%, not 80%.
   - On the Assassin (Lifesteal 0 of its own) it doubles only what gear gives.
 - **Hooks:**
-  - The piece's status: `fight_start` → an HP price down to 50% (addition 4, as a price, not damage: no Shield soaks it, and `hp_lost` fires so below-half pieces hear it).
+  - The piece's status: `fight_start` → an HP price down to 50% (addition 4, as G12 defines it: lost at once, not damage, so no Shield soaks it and nothing reacts to it). It leaves the holder at exactly half, not below, so below-half pieces wake on its first HP lost in the fight.
   - `apply` a status with Lifesteal + the holder's base Lifesteal, removed on `healed` where `hpAtLeast: 100`.
   - Bloodlust's own status must then add the base too, not the current value (it reads the holder's Lifesteal at application today, which would count the draught's). The base is the Lifesteal from the class and gear, before either doubling.
 - **Builds:** Pact 3 ●●●, Cuts ●.
@@ -745,9 +747,11 @@ The spine's rule: commons lean Siphon, Magic, HP; uncommons MP on a kill, a litt
 - **Builds:** Hunt 1 ● (the back row's healers), Pact 1 ● (a drain race won).
 
 #### Withering idol · idol · rare
-- **Card:** Idol. Fits Hexer, Vampire. Its holder's basic attacks Weaken their target, and its hits on a Weakened foe deal a little more.
-- **Numbers:** Weaken at its own numbers. +15% on the holder's hits, both damage types, against a Weakened foe.
-- **Hooks:** the piece's status: `hit_lands` (kind `basic`, whose `holder`) → `apply` weaken, `to: other`; a boost on `physical` and `magical`, `{ ratio: 15, when: { has: weaken }, of: target }`.
+- **Card:** Idol. Fits Hexer, Vampire. One in three of its holder's basic attacks Weakens its target, and its hits on a Weakened foe deal a little more.
+- **Numbers:**
+  - A 33% chance on each basic attack that lands (the second round's ruling, as the Humbling mace and the Glacial rod), so a lone boss is Weakened in windows, not all fight.
+  - Weaken at its own numbers. +15% on the holder's hits, both damage types, against a Weakened foe.
+- **Hooks:** the piece's status: `hit_lands` (kind `basic`, whose `holder`) → `apply` weaken, `chance: 33`, `to: other`; a boost on `physical` and `magical`, `{ ratio: 15, when: { has: weaken }, of: target }`.
 - **Builds:** Toll 2 ●●, Lockdown 2 ●●, Pact ●.
 
 #### Leech idol · idol · rare
@@ -774,11 +778,11 @@ The spine's rule: commons lean Siphon, Magic, HP; uncommons MP on a kill, a litt
 #### Idol of the hungry dark ✦ · idol · legendary
 - **Card:** Idol. Fits Hexer, Vampire. Every so often, it takes one buff from a foe and gives it to its holder.
 - **Numbers:**
-  - Every short beat (22 ticks): 1 or 2 in a regular fight, 3 in a boss fight.
+  - Every 22 ticks, the first at tick 11 (G13): 2 in a regular fight (ticks 11 and 33), 3 or 4 in a boss fight.
   - The newest buff a foe can lose (passives and Hidden can't be taken), from a random foe holding one. It arrives as it was: its stacks, and its time left.
   - Stolen Taunt makes the holder Taunt. Stolen Bulwark chips on the holder's own hits taken and breaks into a Stun. That's the chaos it's for.
 - **Hooks:**
-  - The piece's status: a `pulse` every 22 → take one removable buff from `{ side: foes, where: { buffs: true }, pick: random }` and put it on the holder.
+  - The piece's status: a beat at tick 11, then a `pulse` every 22 → take one removable buff from `{ side: foes, where: { buffs: true }, pick: random }` and put it on the holder.
   - **NEW:** moving a status from one unit to another, keeping its stacks and time left. Today `remove` and `apply` can't carry a status's state across.
 - **Builds:** exotic: it answers self-buffing bosses (the Hexer's Dispel on a clock) and gives back whatever they had.
 
@@ -787,7 +791,7 @@ The spine's rule: commons lean Siphon, Magic, HP; uncommons MP on a kill, a litt
 ## CHALLENGES
 
 Each one is settled; the line says by which ruling (`../fill-rulings.md`).
-1. **"Short" Taunt and Haste:** settled by G1. Short is half a status's own length: Bull's horn's Taunt is 10 ticks, and Reveille's Clarity and Mending icon's Regen are short too.
+1. **"Short" Taunt and Haste:** settled by G1. Short is half a status's own length: Reveille's Clarity is short, and so are the Haste on Bull's horn and the Weaken on Dazzling lantern. (Bull's horn's Taunt and Mending icon's Regen were short too, until the second round replaced them.)
 2. **Warding bell's start beat:** settled by the offhands ruling. The first lift is at tick 11, then every 22.
 3. **Phalanx shield, strong everywhere on the Hoplite:** settled by the offhands ruling. The cut holds while the holder is above half its HP.
 4. **Idol of binding's double:** settled by G9 and the offhands ruling: half again. G1 also lets its Slow last as long as the Weaken (20 ticks), as the spine wrote.
@@ -799,6 +803,18 @@ Each one is settled; the line says by which ruling (`../fill-rulings.md`).
 10. **Bear fetish repeating the Plate uncommon:** settled by G7. The first ally to drop below half each fight is Guarded.
 11. **The lantern's Ward and the bell's Haste at the start** (not raised by me; the lead's): settled by G7. Dazzling lantern takes a short Weaken on the most dangerous foe, and Quickening chime takes a dodge that brings its next basic attack sooner.
 12. **The round shield's short Taunt when an ally drops below half** (the lead's, after Red ribbon took that shape on the amulet): settled by G7. Linebreaker takes Attack +1 and +20% on hits against a Taunting foe.
+
+From the second round of rulings:
+13. **Gatekeeper's kite repeating Carapace charm** (a Shield at the start): settled by G7 (second round). While its holder Taunts, it takes a tenth less damage.
+14. **Bull's horn repeating Clarion blade** (a Taunt at the start, for the Knight): settled by G7 (second round). Attack +1, and the first foe to fall each fight Hastes every ally briefly.
+15. **Mending icon repeating Mender's mace** (a Regen at the start, for the Cleric): settled by G7 (second round). Renamed Charnel icon: each foe's fall heals the ally lowest in HP share for 6% of its max HP.
+16. **Comrade's targe:** settled by the second round's ruling. The Guard goes to the other ally drawing the most, never the holder.
+17. **Ironclad kite's name:** settled by the second round's ruling. It's the Pavise.
+18. **Withering idol, Weaken on every swing:** settled by the second round's ruling. One basic attack in three.
+19. **Funeral bell's two Fervor a fall:** settled by the second round's ruling and G11. One Fervor a fall, at most one stack every 2 ticks.
+20. **Wick's two Heat a fall:** settled by G11. One Heat a fall, at most one stack every 2 ticks.
+21. **"Every so often":** settled by G13. Bell of the hour and the Idol of the hungry dark beat at tick 11, then every 22, as the Warding bell does.
+22. **HP prices (Blood vial, Bloodlust draught):** settled by G12. Lost at once, not damage, nothing reacts, never below 1 HP. The Blood vial no longer waits; the draught's price no longer wakes below-half pieces.
 
 ## NEW
 
@@ -820,4 +836,4 @@ Beyond the spine's list and the physical weapons' lettered needs (I use their NE
 3. **Close pairs within a kind,** kept because their triggers differ: Reveille and Echo horn (MP to the neediest, once at the start or on every cast), Abridged lexicon and Annotated grimoire (cheaper own casts, or a free one passed on), Waking bell and Warding bell (one Silence answered, or a debuff lifted on a beat).
 4. **Treatise on the field is thin:** among tome holders, only the Frostweaver's Blizzard and two versions hit every foe, and those hits are touch-sized.
 
-Settled by the rulings and dropped from this list: Phalanx shield's strength (the offhands ruling), Mending icon's free Regen (G1 makes it short), Last page on bosses (the offhands ruling), the Bloodlust draught's multiplied Lifesteal (the offhands ruling), Comrade's targe's reading (the offhands ruling), and the Wild hunt totem's spreading Marks (G2: one Mark per unit).
+Settled by the rulings and dropped from this list: Phalanx shield's strength (the offhands ruling), Mending icon's free Regen (G1 made it short; the second round replaced it), Last page on bosses (the offhands ruling), the Bloodlust draught's multiplied Lifesteal (the offhands ruling), Comrade's targe's reading (the offhands ruling), and the Wild hunt totem's spreading Marks (G2: one Mark per unit).
