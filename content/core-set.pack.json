@@ -1139,6 +1139,18 @@
    "seek": "basic"
   },
   {
+   "id": "einherjar",
+   "name": "Einherjar",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Allies it revives come back with every action ready.",
+   "revives": {
+    "ready": true
+   }
+  },
+  {
    "id": "briar",
    "name": "Briar",
    "label": "buff",
@@ -3394,6 +3406,3049 @@
      ]
     }
    ]
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Starts every fight behind a bigger Shield from its max HP.",
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "shield",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.28,
+          "stat": "max_hp",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "holder"
+      }
+     ]
+    }
+   ],
+   "id": "vanguard__p",
+   "name": "Vanguard+"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Starts every fight behind a Shield from its max HP; so does the other ally with the lowest Aggro.",
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "shield",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.2,
+          "stat": "max_hp",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "holder"
+      },
+      {
+       "op": "apply",
+       "status": "shield",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.2,
+          "stat": "max_hp",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": {
+        "side": "others",
+        "pick": "lowest",
+        "by": {
+         "stat": "aggro"
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "id": "vanguard__a",
+   "name": "Stonewall"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Starts every fight behind a Shield from its max HP. When it breaks, it Taunts and is Guarded.",
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "shield",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.2,
+          "stat": "max_hp",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "shield",
+      "cause": [
+       "stacks"
+      ]
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "taunt",
+       "to": "holder"
+      },
+      {
+       "op": "apply",
+       "status": "guard",
+       "to": "holder"
+      }
+     ]
+    }
+   ],
+   "id": "vanguard__b",
+   "name": "Grudge"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Starts every fight behind a bigger Shield from its max HP; so does the other ally with the lowest Aggro.",
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "shield",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.28,
+          "stat": "max_hp",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "holder"
+      },
+      {
+       "op": "apply",
+       "status": "shield",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.28,
+          "stat": "max_hp",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": {
+        "side": "others",
+        "pick": "lowest",
+        "by": {
+         "stat": "aggro"
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "id": "vanguard__ap",
+   "name": "Stonewall+"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Starts every fight behind a bigger Shield from its max HP. When it breaks, it Taunts and is Guarded.",
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "shield",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.28,
+          "stat": "max_hp",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "shield",
+      "cause": [
+       "stacks"
+      ]
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "taunt",
+       "to": "holder"
+      },
+      {
+       "op": "apply",
+       "status": "guard",
+       "to": "holder"
+      }
+     ]
+    }
+   ],
+   "id": "vanguard__bp",
+   "name": "Grudge+"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Cooldowns halved below 40% HP.",
+   "reactions": [
+    {
+     "on": {
+      "event": "hp_lost"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "last_rites_on",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpBelow": 40
+        }
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "healed"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "last_rites_on",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpAtLeast": 40
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "id": "last_rites__p",
+   "name": "Last rites+"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Cooldowns halved while it or any ally is below 30% HP.",
+   "reactions": [
+    {
+     "on": {
+      "event": "hp_lost"
+     },
+     "if": {
+      "side": "allies",
+      "where": {
+       "hpBelow": 30
+      }
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "last_rites_on",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "hp_lost",
+      "whose": "ally"
+     },
+     "if": {
+      "side": "allies",
+      "where": {
+       "hpBelow": 30
+      }
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "last_rites_on",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived"
+     },
+     "if": {
+      "side": "allies",
+      "where": {
+       "hpBelow": 30
+      }
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "last_rites_on",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived",
+      "whose": "ally"
+     },
+     "if": {
+      "side": "allies",
+      "where": {
+       "hpBelow": 30
+      }
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "last_rites_on",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "healed"
+     },
+     "if": {
+      "side": "allies",
+      "where": {
+       "hpBelow": 30
+      },
+      "atMost": 0
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "last_rites_on",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "healed",
+      "whose": "ally"
+     },
+     "if": {
+      "side": "allies",
+      "where": {
+       "hpBelow": 30
+      },
+      "atMost": 0
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "last_rites_on",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "ko",
+      "whose": "ally"
+     },
+     "if": {
+      "side": "allies",
+      "where": {
+       "hpBelow": 30
+      },
+      "atMost": 0
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "last_rites_on",
+       "to": "holder"
+      }
+     ]
+    }
+   ],
+   "id": "last_rites__a",
+   "name": "Shared rites"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Cooldowns halved below 30% HP, and for 20 ticks after an ally falls.",
+   "reactions": [
+    {
+     "on": {
+      "event": "hp_lost"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "last_rites_on",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpBelow": 30
+        }
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "healed"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "last_rites_on",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpAtLeast": 30
+        }
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "ko",
+      "whose": "ally"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "rite_of_passage",
+       "to": "holder"
+      }
+     ]
+    }
+   ],
+   "id": "last_rites__b",
+   "name": "Rite of passage"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Cooldowns halved while it or any ally is below 40% HP.",
+   "reactions": [
+    {
+     "on": {
+      "event": "hp_lost"
+     },
+     "if": {
+      "side": "allies",
+      "where": {
+       "hpBelow": 40
+      }
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "last_rites_on",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "hp_lost",
+      "whose": "ally"
+     },
+     "if": {
+      "side": "allies",
+      "where": {
+       "hpBelow": 40
+      }
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "last_rites_on",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived"
+     },
+     "if": {
+      "side": "allies",
+      "where": {
+       "hpBelow": 40
+      }
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "last_rites_on",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived",
+      "whose": "ally"
+     },
+     "if": {
+      "side": "allies",
+      "where": {
+       "hpBelow": 40
+      }
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "last_rites_on",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "healed"
+     },
+     "if": {
+      "side": "allies",
+      "where": {
+       "hpBelow": 40
+      },
+      "atMost": 0
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "last_rites_on",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "healed",
+      "whose": "ally"
+     },
+     "if": {
+      "side": "allies",
+      "where": {
+       "hpBelow": 40
+      },
+      "atMost": 0
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "last_rites_on",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "ko",
+      "whose": "ally"
+     },
+     "if": {
+      "side": "allies",
+      "where": {
+       "hpBelow": 40
+      },
+      "atMost": 0
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "last_rites_on",
+       "to": "holder"
+      }
+     ]
+    }
+   ],
+   "id": "last_rites__ap",
+   "name": "Shared rites+"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Cooldowns halved below 40% HP, and for 20 ticks after an ally falls.",
+   "reactions": [
+    {
+     "on": {
+      "event": "hp_lost"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "last_rites_on",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpBelow": 40
+        }
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "healed"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "last_rites_on",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpAtLeast": 40
+        }
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "ko",
+      "whose": "ally"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "rite_of_passage",
+       "to": "holder"
+      }
+     ]
+    }
+   ],
+   "id": "last_rites__bp",
+   "name": "Rite of passage+"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Basic attacks ignore Taunt, and deal 15% more to foes that aren't Taunting.",
+   "seek": "basic",
+   "boosts": [
+    {
+     "tag": "basic",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 15,
+        "when": {
+         "lacks": "taunt"
+        },
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ],
+   "id": "hunters_eye__p",
+   "name": "Hunter's eye+"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Basic attacks ignore Taunt and go to the foe lowest in HP share.",
+   "seek": "basic",
+   "aim": {
+    "rule": {
+     "side": "foes",
+     "pick": "lowest",
+     "by": "hp_share"
+    }
+   },
+   "id": "hunters_eye__a",
+   "name": "Quarry"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Basic attacks ignore Taunt and go to a foe in a wind-up when there is one.",
+   "seek": "basic",
+   "aim": {
+    "rule": {
+     "side": "foes",
+     "where": {
+      "casting": true
+     },
+     "pick": "highest",
+     "by": {
+      "stats": [
+       "attack",
+       "magic"
+      ]
+     }
+    }
+   },
+   "id": "hunters_eye__b",
+   "name": "Overwatch"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Basic attacks ignore Taunt, go to the foe lowest in HP share, and deal 15% more to foes that aren't Taunting.",
+   "seek": "basic",
+   "aim": {
+    "rule": {
+     "side": "foes",
+     "pick": "lowest",
+     "by": "hp_share"
+    }
+   },
+   "boosts": [
+    {
+     "tag": "basic",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 15,
+        "when": {
+         "lacks": "taunt"
+        },
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ],
+   "id": "hunters_eye__ap",
+   "name": "Quarry+"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Basic attacks ignore Taunt, go to a foe in a wind-up when there is one, and deal 15% more to foes that aren't Taunting.",
+   "seek": "basic",
+   "aim": {
+    "rule": {
+     "side": "foes",
+     "where": {
+      "casting": true
+     },
+     "pick": "highest",
+     "by": {
+      "stats": [
+       "attack",
+       "magic"
+      ]
+     }
+    }
+   },
+   "boosts": [
+    {
+     "tag": "basic",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 15,
+        "when": {
+         "lacks": "taunt"
+        },
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ],
+   "id": "hunters_eye__bp",
+   "name": "Overwatch+"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Foes its Thorns wound start to bleed, more.",
+   "reactions": [
+    {
+     "on": {
+      "event": "damage_dealt",
+      "status": "thorns"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.00098,
+          "stat": "armor",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "damage_dealt",
+      "status": "heartwood_mail"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.00098,
+          "stat": "armor",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    }
+   ],
+   "id": "briar__p",
+   "name": "Briar+"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Foes its Thorns wound bleed, and heal it a little with each action while they bleed.",
+   "reactions": [
+    {
+     "on": {
+      "event": "damage_dealt",
+      "status": "thorns"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0007,
+          "stat": "armor",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      },
+      {
+       "op": "apply",
+       "status": "bloodroot",
+       "to": "other"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "damage_dealt",
+      "status": "heartwood_mail"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0007,
+          "stat": "armor",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      },
+      {
+       "op": "apply",
+       "status": "bloodroot",
+       "to": "other"
+      }
+     ]
+    }
+   ],
+   "id": "briar__a",
+   "name": "Bloodroot"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Its Thorns strike a second, random foe too, and both bleed.",
+   "reactions": [
+    {
+     "on": {
+      "event": "damage_dealt",
+      "status": "thorns"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0007,
+          "stat": "armor",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "damage_dealt",
+      "status": "heartwood_mail"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0007,
+          "stat": "armor",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "damage_dealt",
+      "status": "briar__b"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0007,
+          "stat": "armor",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "damage_dealt",
+      "status": "thorns"
+     },
+     "do": [
+      {
+       "op": "damage",
+       "type": "none",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 1,
+          "stat": "thorns",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": {
+        "side": "foes",
+        "pick": "random",
+        "exclude": "other"
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "damage_dealt",
+      "status": "heartwood_mail"
+     },
+     "do": [
+      {
+       "op": "damage",
+       "type": "none",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 1,
+          "stat": "thorns",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": {
+        "side": "foes",
+        "pick": "random",
+        "exclude": "other"
+       }
+      }
+     ]
+    }
+   ],
+   "id": "briar__b",
+   "name": "Spreading thorns"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Foes its Thorns wound bleed more, and heal it a little with each action while they bleed.",
+   "reactions": [
+    {
+     "on": {
+      "event": "damage_dealt",
+      "status": "thorns"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.00098,
+          "stat": "armor",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      },
+      {
+       "op": "apply",
+       "status": "bloodroot",
+       "to": "other"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "damage_dealt",
+      "status": "heartwood_mail"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.00098,
+          "stat": "armor",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      },
+      {
+       "op": "apply",
+       "status": "bloodroot",
+       "to": "other"
+      }
+     ]
+    }
+   ],
+   "id": "briar__ap",
+   "name": "Bloodroot+"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Its Thorns strike a second, random foe too, and both bleed more.",
+   "reactions": [
+    {
+     "on": {
+      "event": "damage_dealt",
+      "status": "thorns"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.00098,
+          "stat": "armor",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "damage_dealt",
+      "status": "heartwood_mail"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.00098,
+          "stat": "armor",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "damage_dealt",
+      "status": "briar__bp"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.00098,
+          "stat": "armor",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "damage_dealt",
+      "status": "thorns"
+     },
+     "do": [
+      {
+       "op": "damage",
+       "type": "none",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 1,
+          "stat": "thorns",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": {
+        "side": "foes",
+        "pick": "random",
+        "exclude": "other"
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "damage_dealt",
+      "status": "heartwood_mail"
+     },
+     "do": [
+      {
+       "op": "damage",
+       "type": "none",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 1,
+          "stat": "thorns",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": {
+        "side": "foes",
+        "pick": "random",
+        "exclude": "other"
+       }
+      }
+     ]
+    }
+   ],
+   "id": "briar__bp",
+   "name": "Spreading thorns+"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Basic attacks half as often, for a little more than double damage.",
+   "stats": [
+    {
+     "stat": "attack_speed",
+     "flat": -100
+    }
+   ],
+   "boosts": [
+    {
+     "tag": "basic",
+     "pct": 140
+    }
+   ],
+   "id": "phalanx__p",
+   "name": "Phalanx+"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Basic attacks half as often, for double damage; the first of each fight at once, for triple.",
+   "stats": [
+    {
+     "stat": "attack_speed",
+     "flat": -100
+    }
+   ],
+   "boosts": [
+    {
+     "tag": "basic",
+     "pct": 100
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "cooldown",
+       "which": "basic",
+       "set": "ready",
+       "to": "holder"
+      },
+      {
+       "op": "apply",
+       "status": "opening_thrust",
+       "to": "holder"
+      }
+     ]
+    }
+   ],
+   "id": "phalanx__a",
+   "name": "Opening thrust"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Basic attacks half as often, for double damage, with Armor added.",
+   "stats": [
+    {
+     "stat": "attack_speed",
+     "flat": -100
+    }
+   ],
+   "boosts": [
+    {
+     "tag": "basic",
+     "pct": 100
+    }
+   ],
+   "riders": [
+    {
+     "on": "basic",
+     "add": {
+      "type": "physical",
+      "amount": {
+       "scale": [
+        {
+         "ratio": 0.05875,
+         "when": {
+          "weapon": [
+           "spear"
+          ]
+         },
+         "of": "holder",
+         "times": {
+          "stat": "armor",
+          "of": "holder"
+         }
+        },
+        {
+         "ratio": 0.08,
+         "when": {
+          "weapon": [
+           "great_weapon"
+          ]
+         },
+         "of": "holder",
+         "times": {
+          "stat": "armor",
+          "of": "holder"
+         }
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "id": "phalanx__b",
+   "name": "Shieldbearer"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Basic attacks half as often, for a little more than double damage; the first of each fight at once, for more than triple.",
+   "stats": [
+    {
+     "stat": "attack_speed",
+     "flat": -100
+    }
+   ],
+   "boosts": [
+    {
+     "tag": "basic",
+     "pct": 140
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "cooldown",
+       "which": "basic",
+       "set": "ready",
+       "to": "holder"
+      },
+      {
+       "op": "apply",
+       "status": "opening_thrust",
+       "to": "holder"
+      }
+     ]
+    }
+   ],
+   "id": "phalanx__ap",
+   "name": "Opening thrust+"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Basic attacks half as often, for a little more than double damage, with Armor added.",
+   "stats": [
+    {
+     "stat": "attack_speed",
+     "flat": -100
+    }
+   ],
+   "boosts": [
+    {
+     "tag": "basic",
+     "pct": 140
+    }
+   ],
+   "riders": [
+    {
+     "on": "basic",
+     "add": {
+      "type": "physical",
+      "amount": {
+       "scale": [
+        {
+         "ratio": 0.05875,
+         "when": {
+          "weapon": [
+           "spear"
+          ]
+         },
+         "of": "holder",
+         "times": {
+          "stat": "armor",
+          "of": "holder"
+         }
+        },
+        {
+         "ratio": 0.08,
+         "when": {
+          "weapon": [
+           "great_weapon"
+          ]
+         },
+         "of": "holder",
+         "times": {
+          "stat": "armor",
+          "of": "holder"
+         }
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "id": "phalanx__bp",
+   "name": "Shieldbearer+"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Hits deal 70% more to foes with a buff.",
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 70,
+        "when": {
+         "buffs": true
+        },
+        "of": "target"
+       }
+      ]
+     }
+    },
+    {
+     "tag": "magical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 70,
+        "when": {
+         "buffs": true
+        },
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ],
+   "id": "judgement__p",
+   "name": "Judgement+"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Hits deal half again as much to foes with a debuff.",
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 50,
+        "when": {
+         "debuffs": true
+        },
+        "of": "target"
+       }
+      ]
+     }
+    },
+    {
+     "tag": "magical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 50,
+        "when": {
+         "debuffs": true
+        },
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ],
+   "id": "judgement__a",
+   "name": "Inquisition"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Hits deal half again as much to the foe with the highest Attack or Magic.",
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 50,
+        "when": {
+         "top": {
+          "stats": [
+           "attack",
+           "magic"
+          ]
+         }
+        },
+        "of": "target"
+       }
+      ]
+     }
+    },
+    {
+     "tag": "magical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 50,
+        "when": {
+         "top": {
+          "stats": [
+           "attack",
+           "magic"
+          ]
+         }
+        },
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ],
+   "id": "judgement__b",
+   "name": "Sentence"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Hits deal 70% more to foes with a debuff.",
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 70,
+        "when": {
+         "debuffs": true
+        },
+        "of": "target"
+       }
+      ]
+     }
+    },
+    {
+     "tag": "magical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 70,
+        "when": {
+         "debuffs": true
+        },
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ],
+   "id": "judgement__ap",
+   "name": "Inquisition+"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Hits deal 70% more to the foe with the highest Attack or Magic.",
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 70,
+        "when": {
+         "top": {
+          "stats": [
+           "attack",
+           "magic"
+          ]
+         }
+        },
+        "of": "target"
+       }
+      ]
+     }
+    },
+    {
+     "tag": "magical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 70,
+        "when": {
+         "top": {
+          "stats": [
+           "attack",
+           "magic"
+          ]
+         }
+        },
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ],
+   "id": "judgement__bp",
+   "name": "Sentence+"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Allies it revives come back with every action ready, and a small Shield.",
+   "revives": {
+    "ready": true
+   },
+   "reactions": [
+    {
+     "on": {
+      "event": "revived",
+      "whose": "ally",
+      "other": "holder"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "shield",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.15,
+          "stat": "max_hp",
+          "of": "target"
+         }
+        ]
+       },
+       "to": "owner"
+      }
+     ]
+    }
+   ],
+   "id": "einherjar__p",
+   "name": "Einherjar+"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Allies it revives come back with every action ready, and Guarded.",
+   "revives": {
+    "ready": true
+   },
+   "reactions": [
+    {
+     "on": {
+      "event": "revived",
+      "whose": "ally",
+      "other": "holder"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "guard",
+       "to": "owner"
+      }
+     ]
+    }
+   ],
+   "id": "einherjar__a",
+   "name": "Chosen"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "While it stands, every ally deals a fifth more to foes below half their HP.",
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "chooser_of_the_slain",
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "chooser_of_the_slain",
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived",
+      "whose": "ally"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "chooser_of_the_slain",
+       "to": "owner"
+      }
+     ]
+    }
+   ],
+   "id": "einherjar__b",
+   "name": "Chooser of the slain"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Allies it revives come back with every action ready, Guarded, and a small Shield.",
+   "revives": {
+    "ready": true
+   },
+   "reactions": [
+    {
+     "on": {
+      "event": "revived",
+      "whose": "ally",
+      "other": "holder"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "guard",
+       "to": "owner"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived",
+      "whose": "ally",
+      "other": "holder"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "shield",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.15,
+          "stat": "max_hp",
+          "of": "target"
+         }
+        ]
+       },
+       "to": "owner"
+      }
+     ]
+    }
+   ],
+   "id": "einherjar__ap",
+   "name": "Chosen+"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "While it stands, every ally deals a fifth more to foes below half their HP. Allies it revives come back with a small Shield.",
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "chooser_of_the_slain",
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "chooser_of_the_slain",
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived",
+      "whose": "ally"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "chooser_of_the_slain",
+       "to": "owner"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived",
+      "whose": "ally",
+      "other": "holder"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "shield",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.15,
+          "stat": "max_hp",
+          "of": "target"
+         }
+        ]
+       },
+       "to": "owner"
+      }
+     ]
+    }
+   ],
+   "id": "einherjar__bp",
+   "name": "Chooser of the slain+"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Basic attacks heal a random ally and give a random ally MP, each a bigger share of the damage dealt.",
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "heal",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.42,
+          "amount": true
+         }
+        ]
+       },
+       "to": {
+        "side": "allies",
+        "pick": "random"
+       }
+      },
+      {
+       "op": "mp",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.42,
+          "amount": true
+         }
+        ]
+       },
+       "to": {
+        "side": "allies",
+        "pick": "random"
+       }
+      }
+     ]
+    }
+   ],
+   "id": "refrain__p",
+   "name": "Refrain+"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Basic attacks heal the ally lowest in HP and give MP to the ally lowest in MP, each a share of the damage dealt.",
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "heal",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.3,
+          "amount": true
+         }
+        ]
+       },
+       "to": {
+        "side": "allies",
+        "pick": "lowest",
+        "by": "hp_share"
+       }
+      },
+      {
+       "op": "mp",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.3,
+          "amount": true
+         }
+        ]
+       },
+       "to": {
+        "side": "allies",
+        "pick": "lowest",
+        "by": "mp_share"
+       }
+      }
+     ]
+    }
+   ],
+   "id": "refrain__a",
+   "name": "Harmony"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Basic attacks give a random ally a few Might, and a random ally MP, a share of the damage dealt.",
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "might",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0007,
+          "stat": "magic",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": {
+        "side": "allies",
+        "pick": "random"
+       }
+      },
+      {
+       "op": "mp",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.3,
+          "amount": true
+         }
+        ]
+       },
+       "to": {
+        "side": "allies",
+        "pick": "random"
+       }
+      }
+     ]
+    }
+   ],
+   "id": "refrain__b",
+   "name": "Battle song"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Basic attacks heal the ally lowest in HP and give MP to the ally lowest in MP, each a bigger share of the damage dealt.",
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "heal",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.42,
+          "amount": true
+         }
+        ]
+       },
+       "to": {
+        "side": "allies",
+        "pick": "lowest",
+        "by": "hp_share"
+       }
+      },
+      {
+       "op": "mp",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.42,
+          "amount": true
+         }
+        ]
+       },
+       "to": {
+        "side": "allies",
+        "pick": "lowest",
+        "by": "mp_share"
+       }
+      }
+     ]
+    }
+   ],
+   "id": "refrain__ap",
+   "name": "Harmony+"
+  },
+  {
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "text": "Basic attacks give a random ally Might, and a random ally MP, a bigger share of the damage dealt.",
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "might",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.00098,
+          "stat": "magic",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": {
+        "side": "allies",
+        "pick": "random"
+       }
+      },
+      {
+       "op": "mp",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.42,
+          "amount": true
+         }
+        ]
+       },
+       "to": {
+        "side": "allies",
+        "pick": "random"
+       }
+      }
+     ]
+    }
+   ],
+   "id": "refrain__bp",
+   "name": "Battle song+"
+  },
+  {
+   "id": "hold_the_line",
+   "name": "HOLD THE LINE",
+   "text": "Thorns up.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "refresh",
+   "duration": 20,
+   "stats": [
+    {
+     "stat": "thorns",
+     "flat": 150
+    }
+   ]
+  },
+  {
+   "id": "rite_of_passage",
+   "name": "RITE OF PASSAGE",
+   "text": "Cooldowns halved.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "refresh",
+   "duration": 20,
+   "stats": [
+    {
+     "stat": "cooldown_reduction",
+     "flat": 100
+    }
+   ]
+  },
+  {
+   "id": "battle_prayer",
+   "name": "BATTLE PRAYER",
+   "text": "Its next basic attack deals extra magical damage.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "refresh",
+   "riders": [
+    {
+     "on": "basic",
+     "add": {
+      "type": "magical",
+      "amount": {
+       "scale": [
+        {
+         "ratio": 0.35,
+         "stat": "magic",
+         "of": "holder"
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "battle_prayer",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "battle_prayer_plus",
+   "name": "BATTLE PRAYER",
+   "text": "Its next basic attack deals extra magical damage.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "refresh",
+   "riders": [
+    {
+     "on": "basic",
+     "add": {
+      "type": "magical",
+      "amount": {
+       "scale": [
+        {
+         "ratio": 0.49,
+         "stat": "magic",
+         "of": "holder"
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "battle_prayer_plus",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "bloodroot",
+   "name": "BLOODROOT",
+   "text": "Each action it takes heals the one whose thorns rooted it.",
+   "label": "debuff",
+   "show": "icon",
+   "stacking": "refresh",
+   "perSource": {
+    "endsWithSource": true
+   },
+   "reactions": [
+    {
+     "on": {
+      "event": "action_resolve"
+     },
+     "actor": "source",
+     "do": [
+      {
+       "op": "heal",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.015,
+          "stat": "max_hp",
+          "of": "source"
+         }
+        ]
+       },
+       "to": "source"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "bleed"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "debuff",
+       "status": "bloodroot",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "overgrowth",
+   "name": "OVERGROWTH",
+   "text": "Thorns doubled.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "refresh",
+   "duration": 40,
+   "stats": [
+    {
+     "stat": "thorns",
+     "flat": {
+      "scale": [
+       {
+        "ratio": 1,
+        "stat": "thorns",
+        "of": "holder"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "overgrowth_again",
+   "name": "OVERGROWTH",
+   "text": "Taunts once more when its Taunt runs out.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh",
+   "reactions": [
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "taunt",
+      "cause": [
+       "expired"
+      ]
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "taunt",
+       "to": "holder"
+      },
+      {
+       "op": "remove",
+       "label": "marker",
+       "status": "overgrowth_again",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "deep_roots",
+   "name": "DEEP ROOTS",
+   "text": "Thorns up.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "refresh",
+   "duration": 24,
+   "stats": [
+    {
+     "stat": "thorns",
+     "flat": 150
+    }
+   ]
+  },
+  {
+   "id": "rebuke",
+   "name": "REBUKE",
+   "text": "Counts the hits it takes.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_taken"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "rebuke_count",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "rebuke_count",
+   "name": "REBUKE",
+   "text": "Hits taken since its last lash.",
+   "label": "marker",
+   "show": "icon",
+   "stacking": "intensity"
+  },
+  {
+   "id": "opening_thrust",
+   "name": "OPENING THRUST",
+   "text": "Its first basic attack deals more.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "refresh",
+   "boosts": [
+    {
+     "tag": "basic",
+     "pct": 100
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "opening_thrust",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "hit_missed",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "opening_thrust",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "chooser_of_the_slain",
+   "name": "CHOOSER",
+   "text": "Deals a fifth more to foes below half their HP.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "refresh",
+   "perSource": {
+    "endsWithSource": true
+   },
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 20,
+        "when": {
+         "hpBelow": 50
+        },
+        "of": "target"
+       }
+      ]
+     }
+    },
+    {
+     "tag": "magical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 20,
+        "when": {
+         "hpBelow": 50
+        },
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "dawn_muster",
+   "name": "DAWN MUSTER",
+   "text": "At a fight's start, if an ally is down, Valhalla is ready at once.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "if": {
+      "side": "allies",
+      "where": {
+       "ko": true
+      }
+     },
+     "do": [
+      {
+       "op": "cooldown",
+       "which": {
+        "ability": [
+         "valhalla"
+        ]
+       },
+       "set": "ready",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "horn_of_the_keep",
+   "name": "Horn of the keep",
+   "text": "Hits taken give an ally MP; a Taunt that runs out during an ally's wind-up comes back.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_taken"
+     },
+     "do": [
+      {
+       "op": "mp",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.1,
+          "amount": true
+         }
+        ]
+       },
+       "to": {
+        "side": "others",
+        "pick": "lowest",
+        "by": "mp_share"
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "taunt",
+      "cause": [
+       "expired"
+      ]
+     },
+     "if": {
+      "side": "others",
+      "where": {
+       "casting": true
+      }
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "taunt",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "halo_of_the_saint",
+   "name": "Halo of the saint",
+   "text": "Keeps its overhealing while an ally is down, to raise it.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "overhealed",
+      "whose": "any",
+      "other": "holder"
+     },
+     "if": {
+      "side": "allies",
+      "where": {
+       "ko": true
+      }
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "halo_of_the_saint_kept",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 1,
+          "amount": true
+         }
+        ]
+       },
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_capped",
+      "status": "halo_of_the_saint_kept"
+     },
+     "do": [
+      {
+       "op": "revive",
+       "hp": {
+        "scale": [
+         {
+          "ratio": 1,
+          "stacks": "halo_of_the_saint_kept",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": {
+        "side": "allies",
+        "where": {
+         "ko": true
+        }
+       }
+      },
+      {
+       "op": "remove",
+       "label": "marker",
+       "status": "halo_of_the_saint_kept",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "halo_of_the_saint_kept",
+   "name": "HALO",
+   "text": "Healing kept for a fallen ally.",
+   "label": "marker",
+   "show": "icon",
+   "stacking": "intensity",
+   "cap": {
+    "scale": [
+     {
+      "ratio": 0.25,
+      "stat": "max_hp",
+      "of": "holder"
+     }
+    ]
+   }
+  },
+  {
+   "id": "huntmasters_quiver",
+   "name": "Huntmaster's quiver",
+   "text": "Its abilities aim past any guard at the lowest foe; a kill on a foe they hit halves its cooldowns left.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "mods": [
+    {
+     "target": {
+      "side": "foes",
+      "pick": "lowest",
+      "by": "hp"
+     },
+     "seek": true,
+     "apply": [
+      {
+       "status": "huntmasters_quiver_mark"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "huntmasters_quiver_mark",
+   "name": "QUARRY",
+   "text": "Hit by the Huntmaster's quiver: its fall halves the hunter's cooldowns left.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh",
+   "perSource": {},
+   "survivesKO": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "ko"
+     },
+     "actor": "source",
+     "do": [
+      {
+       "op": "cooldown",
+       "which": "abilities",
+       "set": {
+        "times": 50
+       },
+       "to": "source"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "heartwood_mail",
+   "name": "Heartwood mail",
+   "text": "Its Thorns strike whoever hits an ally.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_taken",
+      "whose": "ally"
+     },
+     "do": [
+      {
+       "op": "damage",
+       "type": "none",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 1,
+          "stat": "thorns",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "damage_dealt",
+      "status": "heartwood_mail"
+     },
+     "if": {
+      "side": "self",
+      "where": {
+       "has": "briar"
+      }
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0007,
+          "stat": "armor",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "the_last_wall",
+   "name": "The last wall",
+   "text": "A blow its Aegis blocks is struck back, and Aspis is ready.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "aegis",
+      "cause": [
+       "spent"
+      ],
+      "whose": "any",
+      "source": "holder"
+     },
+     "do": [
+      {
+       "op": "damage",
+       "type": "none",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 1,
+          "amount": true
+         }
+        ]
+       },
+       "to": "other"
+      },
+      {
+       "op": "cooldown",
+       "which": {
+        "ability": [
+         "aspis"
+        ]
+       },
+       "set": "ready",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "chains_of_light",
+   "name": "Chains of light",
+   "text": "Smite Silences; hits on a Stunned or Silenced foe heal the lowest ally.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "mods": [
+    {
+     "of": {
+      "ability": [
+       "smite"
+      ]
+     },
+     "apply": [
+      {
+       "status": "silence"
+      }
+     ]
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands"
+     },
+     "if": {
+      "unit": "other",
+      "where": {
+       "hasAny": [
+        "stun",
+        "silence"
+       ]
+      }
+     },
+     "do": [
+      {
+       "op": "heal",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.5,
+          "amount": true
+         }
+        ]
+       },
+       "to": {
+        "side": "allies",
+        "pick": "lowest",
+        "by": "hp_share"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "stormspear",
+   "name": "Stormspear",
+   "text": "Basic attacks ignore Taunt.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "seek": "basic"
+  },
+  {
+   "id": "metronome",
+   "name": "Metronome",
+   "text": "Counts the party's hits; at 20, its songs are ready.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "metronome_count",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "hit_lands",
+      "whose": "ally"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "metronome_count",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_capped",
+      "status": "metronome_count"
+     },
+     "do": [
+      {
+       "op": "cooldown",
+       "which": {
+        "ability": [
+         "war_ballad",
+         "allegro",
+         "thunder_chord"
+        ]
+       },
+       "set": "ready",
+       "to": "holder"
+      },
+      {
+       "op": "remove",
+       "label": "marker",
+       "status": "metronome_count",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "metronome_count",
+   "name": "BEAT",
+   "text": "The party's hits, counted to 20.",
+   "label": "marker",
+   "show": "icon",
+   "stacking": "intensity",
+   "cap": 20
   }
  ],
  "classes": [
@@ -3661,7 +6716,10 @@
    ],
    "passive": {
     "name": "Einherjar",
-    "text": "Allies it revives come back with all their actions ready, instead of on cooldown."
+    "text": "Allies it revives come back with all their actions ready, instead of on cooldown.",
+    "statuses": [
+     "einherjar"
+    ]
    },
    "abilities": [
     "gale_spear",
@@ -4683,7 +7741,7 @@
    "id": "valhalla",
    "class": "valkyrie",
    "name": "Valhalla",
-   "text": "Revives a random knocked-out ally with a tenth of its HP, every action ready.",
+   "text": "Revives a random knocked-out ally with a tenth of its HP.",
    "cooldown": 63,
    "cast": 1,
    "mp": 650,
@@ -4710,8 +7768,7 @@
         "of": "target"
        }
       ]
-     },
-     "ready": true
+     }
     }
    ]
   },
@@ -6353,9 +9410,4750 @@
      "count": 2
     }
    ]
+  },
+  {
+   "id": "fortify__p",
+   "class": "knight",
+   "name": "Fortify+",
+   "text": "Guards the ally with the lowest share of HP.",
+   "cooldown": 27.5,
+   "cast": 1,
+   "mp": 325,
+   "target": {
+    "side": "allies",
+    "pick": "lowest",
+    "by": "hp_share"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "guard"
+    }
+   ]
+  },
+  {
+   "id": "fortify__a",
+   "class": "knight",
+   "name": "Stone guard",
+   "text": "Guards the other ally with the most Armor, and gives it a Shield from the Knight's Armor.",
+   "cooldown": 36.6,
+   "cast": 1,
+   "mp": 325,
+   "target": {
+    "side": "others",
+    "pick": "highest",
+    "by": {
+     "stat": "armor"
+    }
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "guard"
+    },
+    {
+     "op": "apply",
+     "status": "shield",
+     "stacks": {
+      "scale": [
+       {
+        "ratio": 0.25,
+        "stat": "armor",
+        "of": "self"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "fortify__b",
+   "class": "knight",
+   "name": "Cover",
+   "text": "Guards another ally in a wind-up. With nobody else casting, the other ally with the lowest share of HP.",
+   "cooldown": 36.6,
+   "cast": 1,
+   "mp": 325,
+   "target": {
+    "side": "others",
+    "where": {
+     "casting": true
+    },
+    "ifNone": "any",
+    "pick": "lowest",
+    "by": "hp_share"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "guard"
+    }
+   ]
+  },
+  {
+   "id": "fortify__ap",
+   "class": "knight",
+   "name": "Stone guard+",
+   "text": "Guards the other ally with the most Armor, and gives it a Shield from the Knight's Armor.",
+   "cooldown": 27.5,
+   "cast": 1,
+   "mp": 325,
+   "target": {
+    "side": "others",
+    "pick": "highest",
+    "by": {
+     "stat": "armor"
+    }
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "guard"
+    },
+    {
+     "op": "apply",
+     "status": "shield",
+     "stacks": {
+      "scale": [
+       {
+        "ratio": 0.25,
+        "stat": "armor",
+        "of": "self"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "fortify__bp",
+   "class": "knight",
+   "name": "Cover+",
+   "text": "Guards another ally in a wind-up. With nobody else casting, the other ally with the lowest share of HP.",
+   "cooldown": 27.5,
+   "cast": 1,
+   "mp": 325,
+   "target": {
+    "side": "others",
+    "where": {
+     "casting": true
+    },
+    "ifNone": "any",
+    "pick": "lowest",
+    "by": "hp_share"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "guard"
+    }
+   ]
+  },
+  {
+   "id": "stand_fast__p",
+   "class": "knight",
+   "name": "Stand fast+",
+   "text": "Taunts, and gives Clarity to the ally with the least MP.",
+   "cooldown": 29.4,
+   "cast": 1,
+   "mp": 125,
+   "target": "self",
+   "do": [
+    {
+     "op": "apply",
+     "status": "taunt"
+    },
+    {
+     "op": "apply",
+     "status": "clarity",
+     "to": {
+      "side": "allies",
+      "where": {
+       "mpBelow": 50
+      },
+      "ifNone": "any",
+      "pick": "lowest",
+      "by": "mp_share"
+     }
+    }
+   ]
+  },
+  {
+   "id": "stand_fast__a",
+   "class": "knight",
+   "name": "Rally the well",
+   "text": "Gives Clarity to every ally under half its MP. Waits until one is. No Taunt.",
+   "cooldown": 29.4,
+   "cast": 1,
+   "mp": 200,
+   "target": {
+    "side": "allies",
+    "where": {
+     "mpBelow": 50
+    },
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "clarity"
+    }
+   ],
+   "if": {
+    "side": "allies",
+    "where": {
+     "mpBelow": 50
+    }
+   }
+  },
+  {
+   "id": "stand_fast__b",
+   "class": "knight",
+   "name": "Hold the line",
+   "text": "Taunts, and has Thorns for as long as the Taunt. No Clarity.",
+   "cooldown": 29.4,
+   "cast": 1,
+   "mp": 200,
+   "target": "self",
+   "do": [
+    {
+     "op": "apply",
+     "status": "taunt"
+    },
+    {
+     "op": "apply",
+     "status": "hold_the_line"
+    }
+   ]
+  },
+  {
+   "id": "stand_fast__ap",
+   "class": "knight",
+   "name": "Rally the well+",
+   "text": "Gives Clarity to every ally under half its MP. Waits until one is. No Taunt.",
+   "cooldown": 29.4,
+   "cast": 1,
+   "mp": 125,
+   "target": {
+    "side": "allies",
+    "where": {
+     "mpBelow": 50
+    },
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "clarity"
+    }
+   ],
+   "if": {
+    "side": "allies",
+    "where": {
+     "mpBelow": 50
+    }
+   }
+  },
+  {
+   "id": "stand_fast__bp",
+   "class": "knight",
+   "name": "Hold the line+",
+   "text": "Taunts, and has Thorns for as long as the Taunt. No Clarity.",
+   "cooldown": 29.4,
+   "cast": 1,
+   "mp": 125,
+   "target": "self",
+   "do": [
+    {
+     "op": "apply",
+     "status": "taunt"
+    },
+    {
+     "op": "apply",
+     "status": "hold_the_line"
+    }
+   ]
+  },
+  {
+   "id": "shield_bash__p",
+   "class": "knight",
+   "name": "Shield bash+",
+   "text": "Bashes a foe with the shield, which scales from max HP, and Stuns it.",
+   "cooldown": 32.9,
+   "cast": 1,
+   "mp": 325,
+   "target": {
+    "side": "foes",
+    "where": {
+     "lacks": "stun"
+    },
+    "ifNone": "any"
+   },
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.406,
+        "stat": "max_hp"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "stun"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "shield_bash__a",
+   "class": "knight",
+   "name": "Measured blow",
+   "text": "Waits for a foe to start a wind-up, then bashes the casting foe with the highest Attack or Magic, scaling from max HP, and Stuns it. The Stun holds the wind-up where it is.",
+   "cooldown": 32.9,
+   "cast": 1,
+   "mp": 325,
+   "target": {
+    "side": "foes",
+    "where": {
+     "casting": true,
+     "lacks": "stun"
+    },
+    "ifNone": "any",
+    "pick": "highest",
+    "by": {
+     "stats": [
+      "attack",
+      "magic"
+     ]
+    }
+   },
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.29,
+        "stat": "max_hp"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "stun"
+      }
+     ]
+    }
+   ],
+   "if": {
+    "side": "foes",
+    "where": {
+     "casting": true
+    }
+   }
+  },
+  {
+   "id": "shield_bash__b",
+   "class": "knight",
+   "name": "Crushing bash",
+   "text": "Bashes a random foe for double, scaling from max HP and its current Shield together. No Stun. A longer cooldown.",
+   "cooldown": 43.8,
+   "cast": 1,
+   "mp": 325,
+   "target": "foe",
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.58,
+        "stat": "max_hp"
+       },
+       {
+        "ratio": 0.58,
+        "stacks": "shield",
+        "of": "self"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "shield_bash__ap",
+   "class": "knight",
+   "name": "Measured blow+",
+   "text": "Waits for a foe to start a wind-up, then bashes the casting foe with the highest Attack or Magic, scaling from max HP, and Stuns it. The Stun holds the wind-up where it is.",
+   "cooldown": 32.9,
+   "cast": 1,
+   "mp": 325,
+   "target": {
+    "side": "foes",
+    "where": {
+     "casting": true,
+     "lacks": "stun"
+    },
+    "ifNone": "any",
+    "pick": "highest",
+    "by": {
+     "stats": [
+      "attack",
+      "magic"
+     ]
+    }
+   },
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.406,
+        "stat": "max_hp"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "stun"
+      }
+     ]
+    }
+   ],
+   "if": {
+    "side": "foes",
+    "where": {
+     "casting": true
+    }
+   }
+  },
+  {
+   "id": "shield_bash__bp",
+   "class": "knight",
+   "name": "Crushing bash+",
+   "text": "Bashes a random foe for double, scaling from max HP and its current Shield together. No Stun. A longer cooldown.",
+   "cooldown": 43.8,
+   "cast": 1,
+   "mp": 325,
+   "target": "foe",
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.812,
+        "stat": "max_hp"
+       },
+       {
+        "ratio": 0.812,
+        "stacks": "shield",
+        "of": "self"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "renew__p",
+   "class": "cleric",
+   "name": "Renew+",
+   "text": "Cleanses an ally with a debuff and gives it Regen; with nobody debuffed, Regen on the lowest ally.",
+   "cooldown": 29.3,
+   "cast": 3,
+   "mp": 450,
+   "target": {
+    "side": "allies",
+    "where": {
+     "debuffs": true
+    },
+    "ifNone": "any",
+    "pick": "lowest",
+    "by": "hp_share"
+   },
+   "do": [
+    {
+     "op": "remove",
+     "label": "debuff"
+    },
+    {
+     "op": "apply",
+     "status": "regen"
+    }
+   ]
+  },
+  {
+   "id": "renew__a",
+   "class": "cleric",
+   "name": "Font",
+   "text": "Cleanses an ally with a debuff and gives it Regen and Clarity; with nobody debuffed, the ally with the lowest share of HP.",
+   "cooldown": 29.3,
+   "cast": 3,
+   "mp": 650,
+   "target": {
+    "side": "allies",
+    "where": {
+     "debuffs": true
+    },
+    "ifNone": "any",
+    "pick": "lowest",
+    "by": "hp_share"
+   },
+   "do": [
+    {
+     "op": "remove",
+     "label": "debuff"
+    },
+    {
+     "op": "apply",
+     "status": "regen"
+    },
+    {
+     "op": "apply",
+     "status": "clarity"
+    }
+   ]
+  },
+  {
+   "id": "renew__b",
+   "class": "cleric",
+   "name": "Anchor's blessing",
+   "text": "Cleanses the ally foes are most drawn to and gives it Regen.",
+   "cooldown": 29.3,
+   "cast": 3,
+   "mp": 650,
+   "target": {
+    "side": "allies",
+    "where": {
+     "has": "taunt"
+    },
+    "ifNone": "any",
+    "pick": "highest",
+    "by": {
+     "stat": "aggro"
+    }
+   },
+   "do": [
+    {
+     "op": "remove",
+     "label": "debuff"
+    },
+    {
+     "op": "apply",
+     "status": "regen"
+    }
+   ]
+  },
+  {
+   "id": "renew__ap",
+   "class": "cleric",
+   "name": "Font+",
+   "text": "Cleanses an ally with a debuff and gives it Regen and Clarity; with nobody debuffed, the ally with the lowest share of HP.",
+   "cooldown": 29.3,
+   "cast": 3,
+   "mp": 450,
+   "target": {
+    "side": "allies",
+    "where": {
+     "debuffs": true
+    },
+    "ifNone": "any",
+    "pick": "lowest",
+    "by": "hp_share"
+   },
+   "do": [
+    {
+     "op": "remove",
+     "label": "debuff"
+    },
+    {
+     "op": "apply",
+     "status": "regen"
+    },
+    {
+     "op": "apply",
+     "status": "clarity"
+    }
+   ]
+  },
+  {
+   "id": "renew__bp",
+   "class": "cleric",
+   "name": "Anchor's blessing+",
+   "text": "Cleanses the ally foes are most drawn to and gives it Regen.",
+   "cooldown": 29.3,
+   "cast": 3,
+   "mp": 450,
+   "target": {
+    "side": "allies",
+    "where": {
+     "has": "taunt"
+    },
+    "ifNone": "any",
+    "pick": "highest",
+    "by": {
+     "stat": "aggro"
+    }
+   },
+   "do": [
+    {
+     "op": "remove",
+     "label": "debuff"
+    },
+    {
+     "op": "apply",
+     "status": "regen"
+    }
+   ]
+  },
+  {
+   "id": "cure__p",
+   "class": "cleric",
+   "name": "Cure+",
+   "text": "A quick, small heal on the lowest ally.",
+   "cooldown": 14.4,
+   "cast": 1,
+   "mp": 450,
+   "if": {
+    "side": "allies",
+    "where": {
+     "hpBelow": 80
+    }
+   },
+   "target": {
+    "side": "allies",
+    "pick": "lowest",
+    "by": "hp_share"
+   },
+   "do": [
+    {
+     "op": "heal",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.49,
+        "stat": "magic"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "cure__a",
+   "class": "cleric",
+   "name": "Triage",
+   "text": "Waits until an ally is below 40% of its max HP, then heals it for twice as much.",
+   "cooldown": 14.4,
+   "cast": 1,
+   "mp": 450,
+   "if": {
+    "side": "allies",
+    "where": {
+     "hpBelow": 40
+    }
+   },
+   "target": {
+    "side": "allies",
+    "pick": "lowest",
+    "by": "hp_share"
+   },
+   "do": [
+    {
+     "op": "heal",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.7,
+        "stat": "magic"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "cure__b",
+   "class": "cleric",
+   "name": "Battle prayer",
+   "text": "Heals the ally with the lowest share of HP. Its next basic attack deals the same amount again as extra magical damage.",
+   "cooldown": 14.4,
+   "cast": 1,
+   "mp": 450,
+   "if": {
+    "side": "allies",
+    "where": {
+     "hpBelow": 80
+    }
+   },
+   "target": {
+    "side": "allies",
+    "pick": "lowest",
+    "by": "hp_share"
+   },
+   "do": [
+    {
+     "op": "heal",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.35,
+        "stat": "magic"
+       }
+      ]
+     }
+    },
+    {
+     "op": "apply",
+     "status": "battle_prayer",
+     "to": "self"
+    }
+   ]
+  },
+  {
+   "id": "cure__ap",
+   "class": "cleric",
+   "name": "Triage+",
+   "text": "Waits until an ally is below 40% of its max HP, then heals it for twice as much.",
+   "cooldown": 14.4,
+   "cast": 1,
+   "mp": 450,
+   "if": {
+    "side": "allies",
+    "where": {
+     "hpBelow": 40
+    }
+   },
+   "target": {
+    "side": "allies",
+    "pick": "lowest",
+    "by": "hp_share"
+   },
+   "do": [
+    {
+     "op": "heal",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.98,
+        "stat": "magic"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "cure__bp",
+   "class": "cleric",
+   "name": "Battle prayer+",
+   "text": "Heals the ally with the lowest share of HP. Its next basic attack deals the same amount again as extra magical damage.",
+   "cooldown": 14.4,
+   "cast": 1,
+   "mp": 450,
+   "if": {
+    "side": "allies",
+    "where": {
+     "hpBelow": 80
+    }
+   },
+   "target": {
+    "side": "allies",
+    "pick": "lowest",
+    "by": "hp_share"
+   },
+   "do": [
+    {
+     "op": "heal",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.49,
+        "stat": "magic"
+       }
+      ]
+     }
+    },
+    {
+     "op": "apply",
+     "status": "battle_prayer_plus",
+     "to": "self"
+    }
+   ]
+  },
+  {
+   "id": "raise__p",
+   "class": "cleric",
+   "name": "Raise+",
+   "text": "Revives a random knocked-out ally with half its HP.",
+   "cooldown": 55.9,
+   "cast": 8,
+   "mp": 650,
+   "if": {
+    "side": "allies",
+    "where": {
+     "ko": true
+    }
+   },
+   "target": {
+    "side": "allies",
+    "where": {
+     "ko": true
+    }
+   },
+   "do": [
+    {
+     "op": "revive",
+     "hp": {
+      "scale": [
+       {
+        "ratio": 0.7,
+        "stat": "max_hp",
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "raise__a",
+   "class": "cleric",
+   "name": "Martyr's raise",
+   "text": "Pays half its current HP to revive a random knocked-out ally with that much. Costs no MP.",
+   "cooldown": 55.9,
+   "cast": 8,
+   "mp": 0,
+   "if": {
+    "side": "allies",
+    "where": {
+     "ko": true
+    }
+   },
+   "target": {
+    "side": "allies",
+    "where": {
+     "ko": true
+    }
+   },
+   "do": [
+    {
+     "op": "revive",
+     "hp": {
+      "scale": [
+       {
+        "ratio": 0.5,
+        "hp": "current",
+        "of": "self"
+       }
+      ]
+     }
+    },
+    {
+     "op": "pay",
+     "hp": {
+      "scale": [
+       {
+        "ratio": 0.5,
+        "hp": "current",
+        "of": "self"
+       }
+      ]
+     },
+     "to": "self"
+    }
+   ]
+  },
+  {
+   "id": "raise__b",
+   "class": "cleric",
+   "name": "Ward of life",
+   "text": "Waits until an ally is knocked out or below a third of its max HP. Revives a random knocked-out ally with half its HP, and gives the lowest ally below a third a Shield of a third of its max HP.",
+   "cooldown": 55.9,
+   "cast": 3,
+   "mp": 650,
+   "if": {
+    "any": [
+     {
+      "side": "allies",
+      "where": {
+       "ko": true
+      }
+     },
+     {
+      "side": "allies",
+      "where": {
+       "hpBelow": 33
+      }
+     }
+    ]
+   },
+   "target": "self",
+   "do": [
+    {
+     "op": "revive",
+     "hp": {
+      "scale": [
+       {
+        "ratio": 0.5,
+        "stat": "max_hp",
+        "of": "target"
+       }
+      ]
+     },
+     "to": {
+      "side": "allies",
+      "where": {
+       "ko": true
+      }
+     }
+    },
+    {
+     "op": "apply",
+     "status": "shield",
+     "stacks": {
+      "scale": [
+       {
+        "ratio": 0.3333333333333333,
+        "stat": "max_hp",
+        "of": "target"
+       }
+      ]
+     },
+     "to": {
+      "side": "allies",
+      "where": {
+       "hpBelow": 33
+      },
+      "pick": "lowest",
+      "by": "hp_share"
+     }
+    }
+   ]
+  },
+  {
+   "id": "raise__ap",
+   "class": "cleric",
+   "name": "Martyr's raise+",
+   "text": "Pays half its current HP to revive a random knocked-out ally with two fifths more than that. Costs no MP.",
+   "cooldown": 55.9,
+   "cast": 8,
+   "mp": 0,
+   "if": {
+    "side": "allies",
+    "where": {
+     "ko": true
+    }
+   },
+   "target": {
+    "side": "allies",
+    "where": {
+     "ko": true
+    }
+   },
+   "do": [
+    {
+     "op": "revive",
+     "hp": {
+      "scale": [
+       {
+        "ratio": 0.7,
+        "hp": "current",
+        "of": "self"
+       }
+      ]
+     }
+    },
+    {
+     "op": "pay",
+     "hp": {
+      "scale": [
+       {
+        "ratio": 0.5,
+        "hp": "current",
+        "of": "self"
+       }
+      ]
+     },
+     "to": "self"
+    }
+   ]
+  },
+  {
+   "id": "raise__bp",
+   "class": "cleric",
+   "name": "Ward of life+",
+   "text": "Waits until an ally is knocked out or below a third of its max HP. Revives a random knocked-out ally with half its HP, and gives the lowest ally below a third a Shield of a third of its max HP.",
+   "cooldown": 55.9,
+   "cast": 3,
+   "mp": 650,
+   "if": {
+    "any": [
+     {
+      "side": "allies",
+      "where": {
+       "ko": true
+      }
+     },
+     {
+      "side": "allies",
+      "where": {
+       "hpBelow": 33
+      }
+     }
+    ]
+   },
+   "target": "self",
+   "do": [
+    {
+     "op": "revive",
+     "hp": {
+      "scale": [
+       {
+        "ratio": 0.7,
+        "stat": "max_hp",
+        "of": "target"
+       }
+      ]
+     },
+     "to": {
+      "side": "allies",
+      "where": {
+       "ko": true
+      }
+     }
+    },
+    {
+     "op": "apply",
+     "status": "shield",
+     "stacks": {
+      "scale": [
+       {
+        "ratio": 0.4666666666666666,
+        "stat": "max_hp",
+        "of": "target"
+       }
+      ]
+     },
+     "to": {
+      "side": "allies",
+      "where": {
+       "hpBelow": 33
+      },
+      "pick": "lowest",
+      "by": "hp_share"
+     }
+    }
+   ]
+  },
+  {
+   "id": "barbed_arrow__p",
+   "class": "ranger",
+   "name": "Barbed arrow+",
+   "text": "A barbed arrow at a random foe, adding several Bleed.",
+   "cooldown": 14.6,
+   "cast": 1,
+   "mp": 200,
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.29,
+        "stat": "attack"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0036399999999999996,
+          "stat": "attack"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "barbed_arrow__a",
+   "class": "ranger",
+   "name": "Deep barbs",
+   "text": "A barbed arrow at the foe with the most Bleed, adding many.",
+   "cooldown": 14.6,
+   "cast": 1,
+   "mp": 200,
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.29,
+        "stat": "attack"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0046,
+          "stat": "attack"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "target": {
+    "side": "foes",
+    "pick": "highest",
+    "by": {
+     "stacks": "bleed"
+    }
+   }
+  },
+  {
+   "id": "barbed_arrow__b",
+   "class": "ranger",
+   "name": "Scatter barbs",
+   "text": "Barbed arrows at three different foes, each a touch of damage and a few Bleed.",
+   "cooldown": 14.6,
+   "cast": 1,
+   "mp": 200,
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.17,
+        "stat": "attack"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0014,
+          "stat": "attack"
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.17,
+        "stat": "attack"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0014,
+          "stat": "attack"
+         }
+        ]
+       }
+      }
+     ],
+     "to": {
+      "side": "foes",
+      "pick": "random",
+      "count": 2,
+      "exclude": "targets"
+     }
+    }
+   ]
+  },
+  {
+   "id": "barbed_arrow__ap",
+   "class": "ranger",
+   "name": "Deep barbs+",
+   "text": "A barbed arrow at the foe with the most Bleed, adding many.",
+   "cooldown": 14.6,
+   "cast": 1,
+   "mp": 200,
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.29,
+        "stat": "attack"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0064399999999999995,
+          "stat": "attack"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "target": {
+    "side": "foes",
+    "pick": "highest",
+    "by": {
+     "stacks": "bleed"
+    }
+   }
+  },
+  {
+   "id": "barbed_arrow__bp",
+   "class": "ranger",
+   "name": "Scatter barbs+",
+   "text": "Barbed arrows at three different foes, each a touch of damage and a few Bleed.",
+   "cooldown": 14.6,
+   "cast": 1,
+   "mp": 200,
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.17,
+        "stat": "attack"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.00196,
+          "stat": "attack"
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.17,
+        "stat": "attack"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.00196,
+          "stat": "attack"
+         }
+        ]
+       }
+      }
+     ],
+     "to": {
+      "side": "foes",
+      "pick": "random",
+      "count": 2,
+      "exclude": "targets"
+     }
+    }
+   ]
+  },
+  {
+   "id": "frost_arrow__p",
+   "class": "ranger",
+   "name": "Frost arrow+",
+   "text": "A quick, cold arrow at the foe with the most Chill, adding a few.",
+   "cooldown": 15.3,
+   "cast": 1,
+   "mp": 200,
+   "target": {
+    "side": "foes",
+    "pick": "highest",
+    "by": {
+     "stacks": "chill"
+    }
+   },
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.29,
+        "stat": "attack"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "chill",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.00098,
+          "stat": "attack"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "frost_arrow__a",
+   "class": "ranger",
+   "name": "Pinning arrow",
+   "text": "A quick arrow at the foe with the highest Attack or Magic, which is Slowed. No Chill.",
+   "cooldown": 15.3,
+   "cast": 1,
+   "mp": 200,
+   "target": {
+    "side": "foes",
+    "pick": "highest",
+    "by": {
+     "stats": [
+      "attack",
+      "magic"
+     ]
+    }
+   },
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.29,
+        "stat": "attack"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "slow"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "frost_arrow__b",
+   "class": "ranger",
+   "name": "Hail",
+   "text": "A quick arrow at the foe with the most Chill, and one Chill on every foe.",
+   "cooldown": 15.3,
+   "cast": 1,
+   "mp": 200,
+   "target": {
+    "side": "foes",
+    "pick": "highest",
+    "by": {
+     "stacks": "chill"
+    }
+   },
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.29,
+        "stat": "attack"
+       }
+      ]
+     }
+    },
+    {
+     "op": "apply",
+     "status": "chill",
+     "stacks": 1,
+     "to": {
+      "side": "foes",
+      "pick": "all"
+     }
+    }
+   ]
+  },
+  {
+   "id": "frost_arrow__ap",
+   "class": "ranger",
+   "name": "Pinning arrow+",
+   "text": "A quick arrow at the foe with the highest Attack or Magic, which is Slowed. No Chill.",
+   "cooldown": 15.3,
+   "cast": 1,
+   "mp": 200,
+   "target": {
+    "side": "foes",
+    "pick": "highest",
+    "by": {
+     "stats": [
+      "attack",
+      "magic"
+     ]
+    }
+   },
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.406,
+        "stat": "attack"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "slow"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "frost_arrow__bp",
+   "class": "ranger",
+   "name": "Hail+",
+   "text": "A quick arrow at the foe with the most Chill, and a little more than one Chill on every foe.",
+   "cooldown": 15.3,
+   "cast": 1,
+   "mp": 200,
+   "target": {
+    "side": "foes",
+    "pick": "highest",
+    "by": {
+     "stacks": "chill"
+    }
+   },
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.29,
+        "stat": "attack"
+       }
+      ]
+     }
+    },
+    {
+     "op": "apply",
+     "status": "chill",
+     "stacks": 1.4,
+     "to": {
+      "side": "foes",
+      "pick": "all"
+     }
+    }
+   ]
+  },
+  {
+   "id": "rending_arrow__p",
+   "class": "ranger",
+   "name": "Rending arrow+",
+   "text": "An arrow at the foe with the most Sunder, adding a few.",
+   "cooldown": 19.1,
+   "cast": 3,
+   "mp": 325,
+   "target": {
+    "side": "foes",
+    "pick": "highest",
+    "by": {
+     "stacks": "sunder"
+    }
+   },
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.5,
+        "stat": "attack"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "sunder",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.00196,
+          "stat": "attack"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "rending_arrow__a",
+   "class": "ranger",
+   "name": "Armor breaker",
+   "text": "An arrow at the foe with the most Armor, adding several Sunder.",
+   "cooldown": 19.1,
+   "cast": 3,
+   "mp": 325,
+   "target": {
+    "side": "foes",
+    "pick": "highest",
+    "by": {
+     "stat": "armor"
+    }
+   },
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.5,
+        "stat": "attack"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "sunder",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0026,
+          "stat": "attack"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "rending_arrow__b",
+   "class": "ranger",
+   "name": "Gutting arrow",
+   "text": "An arrow at the foe with the lowest HP. Half again as much below half its HP, double below a quarter. No Sunder.",
+   "cooldown": 19.1,
+   "cast": 3,
+   "mp": 325,
+   "target": {
+    "side": "foes",
+    "pick": "lowest",
+    "by": "hp"
+   },
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.5,
+        "stat": "attack"
+       },
+       {
+        "ratio": 0.25,
+        "when": {
+         "hpBelow": 50
+        },
+        "of": "target",
+        "times": {
+         "stat": "attack",
+         "of": "self"
+        }
+       },
+       {
+        "ratio": 0.25,
+        "when": {
+         "hpBelow": 25
+        },
+        "of": "target",
+        "times": {
+         "stat": "attack",
+         "of": "self"
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "rending_arrow__ap",
+   "class": "ranger",
+   "name": "Armor breaker+",
+   "text": "An arrow at the foe with the most Armor, adding several Sunder.",
+   "cooldown": 19.1,
+   "cast": 3,
+   "mp": 325,
+   "target": {
+    "side": "foes",
+    "pick": "highest",
+    "by": {
+     "stat": "armor"
+    }
+   },
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.5,
+        "stat": "attack"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "sunder",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0036399999999999996,
+          "stat": "attack"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "rending_arrow__bp",
+   "class": "ranger",
+   "name": "Gutting arrow+",
+   "text": "An arrow at the foe with the lowest HP. Half again as much below half its HP, double below a quarter. No Sunder.",
+   "cooldown": 19.1,
+   "cast": 3,
+   "mp": 325,
+   "target": {
+    "side": "foes",
+    "pick": "lowest",
+    "by": "hp"
+   },
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.7,
+        "stat": "attack"
+       },
+       {
+        "ratio": 0.35,
+        "when": {
+         "hpBelow": 50
+        },
+        "of": "target",
+        "times": {
+         "stat": "attack",
+         "of": "self"
+        }
+       },
+       {
+        "ratio": 0.35,
+        "when": {
+         "hpBelow": 25
+        },
+        "of": "target",
+        "times": {
+         "stat": "attack",
+         "of": "self"
+        }
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "thicket__p",
+   "class": "bramble_knight",
+   "name": "Thicket+",
+   "text": "Taunts and Guards itself.",
+   "cooldown": 20.7,
+   "cast": 1,
+   "mp": 200,
+   "target": "self",
+   "do": [
+    {
+     "op": "apply",
+     "status": "taunt"
+    },
+    {
+     "op": "apply",
+     "status": "guard"
+    }
+   ]
+  },
+  {
+   "id": "thicket__a",
+   "class": "bramble_knight",
+   "name": "Overgrowth",
+   "text": "Taunts itself twice over, and doubles its Thorns while the Taunts last. No Guard.",
+   "cooldown": 52.8,
+   "cast": 1,
+   "mp": 325,
+   "target": "self",
+   "do": [
+    {
+     "op": "apply",
+     "status": "taunt"
+    },
+    {
+     "op": "remove",
+     "label": "buff",
+     "status": "overgrowth",
+     "to": "self"
+    },
+    {
+     "op": "apply",
+     "status": "overgrowth"
+    },
+    {
+     "op": "apply",
+     "status": "overgrowth_again"
+    }
+   ]
+  },
+  {
+   "id": "thicket__b",
+   "class": "bramble_knight",
+   "name": "Grove",
+   "text": "Guards every ally. No Taunt.",
+   "cooldown": 37.7,
+   "cast": 1,
+   "mp": 325,
+   "target": {
+    "side": "allies",
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "guard"
+    }
+   ]
+  },
+  {
+   "id": "thicket__ap",
+   "class": "bramble_knight",
+   "name": "Overgrowth+",
+   "text": "Taunts itself twice over, and doubles its Thorns while the Taunts last. No Guard.",
+   "cooldown": 37.7,
+   "cast": 1,
+   "mp": 325,
+   "target": "self",
+   "do": [
+    {
+     "op": "apply",
+     "status": "taunt"
+    },
+    {
+     "op": "remove",
+     "label": "buff",
+     "status": "overgrowth",
+     "to": "self"
+    },
+    {
+     "op": "apply",
+     "status": "overgrowth"
+    },
+    {
+     "op": "apply",
+     "status": "overgrowth_again"
+    }
+   ]
+  },
+  {
+   "id": "thicket__bp",
+   "class": "bramble_knight",
+   "name": "Grove+",
+   "text": "Guards every ally. No Taunt.",
+   "cooldown": 28.3,
+   "cast": 1,
+   "mp": 325,
+   "target": {
+    "side": "allies",
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "guard"
+    }
+   ]
+  },
+  {
+   "id": "regrowth__p",
+   "class": "bramble_knight",
+   "name": "Regrowth+",
+   "text": "Regen on the lowest ally.",
+   "cooldown": 29.2,
+   "cast": 3,
+   "mp": 200,
+   "target": {
+    "side": "allies",
+    "pick": "lowest",
+    "by": "hp_share"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "regen"
+    }
+   ]
+  },
+  {
+   "id": "regrowth__a",
+   "class": "bramble_knight",
+   "name": "Deep roots",
+   "text": "Regen on itself, and Thorns up while it heals.",
+   "cooldown": 29.2,
+   "cast": 3,
+   "mp": 325,
+   "target": "self",
+   "do": [
+    {
+     "op": "apply",
+     "status": "regen"
+    },
+    {
+     "op": "apply",
+     "status": "deep_roots"
+    }
+   ]
+  },
+  {
+   "id": "regrowth__b",
+   "class": "bramble_knight",
+   "name": "Blossom",
+   "text": "Regen on every ally.",
+   "cooldown": 38.9,
+   "cast": 3,
+   "mp": 500,
+   "target": {
+    "side": "allies",
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "regen"
+    }
+   ]
+  },
+  {
+   "id": "regrowth__ap",
+   "class": "bramble_knight",
+   "name": "Deep roots+",
+   "text": "Regen on itself, and Thorns up while it heals.",
+   "cooldown": 29.2,
+   "cast": 3,
+   "mp": 200,
+   "target": "self",
+   "do": [
+    {
+     "op": "apply",
+     "status": "regen"
+    },
+    {
+     "op": "apply",
+     "status": "deep_roots"
+    }
+   ]
+  },
+  {
+   "id": "regrowth__bp",
+   "class": "bramble_knight",
+   "name": "Blossom+",
+   "text": "Regen on every ally.",
+   "cooldown": 38.9,
+   "cast": 3,
+   "mp": 325,
+   "target": {
+    "side": "allies",
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "regen"
+    }
+   ]
+  },
+  {
+   "id": "bramble_lash__p",
+   "class": "bramble_knight",
+   "name": "Bramble lash+",
+   "text": "Lashes a random foe with its thorns.",
+   "cooldown": 12,
+   "cast": 1,
+   "mp": 200,
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 6.3,
+        "stat": "thorns"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "bramble_lash__a",
+   "class": "bramble_knight",
+   "name": "Whipping vines",
+   "text": "Lashes every foe with its thorns, for half.",
+   "cooldown": 18.9,
+   "cast": 1,
+   "mp": 325,
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 2.25,
+        "stat": "thorns"
+       }
+      ]
+     }
+    }
+   ],
+   "target": {
+    "side": "foes",
+    "pick": "all"
+   }
+  },
+  {
+   "id": "bramble_lash__b",
+   "class": "bramble_knight",
+   "name": "Rebuke",
+   "text": "Waits until it's been hit five times since its last lash, then lashes a random foe for double.",
+   "cooldown": 12,
+   "cast": 1,
+   "mp": 200,
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 9,
+        "stat": "thorns"
+       }
+      ]
+     }
+    },
+    {
+     "op": "remove",
+     "label": "marker",
+     "status": "rebuke_count",
+     "to": "self"
+    }
+   ],
+   "if": {
+    "side": "self",
+    "where": {
+     "stacks": {
+      "status": "rebuke_count",
+      "atLeast": 5
+     }
+    }
+   },
+   "statuses": [
+    "rebuke"
+   ]
+  },
+  {
+   "id": "bramble_lash__ap",
+   "class": "bramble_knight",
+   "name": "Whipping vines+",
+   "text": "Lashes every foe with its thorns, for half.",
+   "cooldown": 18.9,
+   "cast": 1,
+   "mp": 325,
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 3.15,
+        "stat": "thorns"
+       }
+      ]
+     }
+    }
+   ],
+   "target": {
+    "side": "foes",
+    "pick": "all"
+   }
+  },
+  {
+   "id": "bramble_lash__bp",
+   "class": "bramble_knight",
+   "name": "Rebuke+",
+   "text": "Waits until it's been hit five times since its last lash, then lashes a random foe for double.",
+   "cooldown": 12,
+   "cast": 1,
+   "mp": 200,
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 12.6,
+        "stat": "thorns"
+       }
+      ]
+     }
+    },
+    {
+     "op": "remove",
+     "label": "marker",
+     "status": "rebuke_count",
+     "to": "self"
+    }
+   ],
+   "if": {
+    "side": "self",
+    "where": {
+     "stacks": {
+      "status": "rebuke_count",
+      "atLeast": 5
+     }
+    }
+   },
+   "statuses": [
+    "rebuke"
+   ]
+  },
+  {
+   "id": "aspis__p",
+   "class": "hoplite",
+   "name": "Aspis+",
+   "text": "Aegis on the lowest ally.",
+   "cooldown": 31.8,
+   "cast": 1,
+   "mp": 500,
+   "if": {
+    "side": "allies",
+    "where": {
+     "lacks": "aegis"
+    }
+   },
+   "target": {
+    "side": "allies",
+    "pick": "lowest",
+    "by": "hp_share",
+    "where": {
+     "lacks": "aegis"
+    }
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "aegis"
+    }
+   ]
+  },
+  {
+   "id": "aspis__a",
+   "class": "hoplite",
+   "name": "Watch the anchor",
+   "text": "Aegis on the ally with the most Aggro that holds none.",
+   "cooldown": 42.4,
+   "cast": 1,
+   "mp": 500,
+   "if": {
+    "side": "allies",
+    "where": {
+     "lacks": "aegis"
+    }
+   },
+   "target": {
+    "side": "allies",
+    "where": {
+     "lacks": "aegis"
+    },
+    "pick": "highest",
+    "by": {
+     "stat": "aggro"
+    }
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "aegis"
+    }
+   ]
+  },
+  {
+   "id": "aspis__b",
+   "class": "hoplite",
+   "name": "Shield wall",
+   "text": "Aegis on every ally.",
+   "cooldown": 59.4,
+   "cast": 1,
+   "mp": 750,
+   "if": {
+    "side": "allies",
+    "where": {
+     "lacks": "aegis"
+    }
+   },
+   "target": {
+    "side": "allies",
+    "where": {
+     "lacks": "aegis"
+    },
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "aegis"
+    }
+   ]
+  },
+  {
+   "id": "aspis__ap",
+   "class": "hoplite",
+   "name": "Watch the anchor+",
+   "text": "Aegis on the ally with the most Aggro that holds none.",
+   "cooldown": 31.8,
+   "cast": 1,
+   "mp": 500,
+   "if": {
+    "side": "allies",
+    "where": {
+     "lacks": "aegis"
+    }
+   },
+   "target": {
+    "side": "allies",
+    "where": {
+     "lacks": "aegis"
+    },
+    "pick": "highest",
+    "by": {
+     "stat": "aggro"
+    }
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "aegis"
+    }
+   ]
+  },
+  {
+   "id": "aspis__bp",
+   "class": "hoplite",
+   "name": "Shield wall+",
+   "text": "Aegis on every ally.",
+   "cooldown": 42.4,
+   "cast": 1,
+   "mp": 750,
+   "if": {
+    "side": "allies",
+    "where": {
+     "lacks": "aegis"
+    }
+   },
+   "target": {
+    "side": "allies",
+    "where": {
+     "lacks": "aegis"
+    },
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "aegis"
+    }
+   ]
+  },
+  {
+   "id": "paired_guard__p",
+   "class": "hoplite",
+   "name": "Paired guard+",
+   "text": "Guards itself and the other lowest ally.",
+   "cooldown": 40.4,
+   "cast": 3,
+   "mp": 200,
+   "target": "self",
+   "do": [
+    {
+     "op": "apply",
+     "status": "guard"
+    },
+    {
+     "op": "apply",
+     "status": "guard",
+     "to": {
+      "side": "others",
+      "pick": "lowest",
+      "by": "hp_share"
+     }
+    }
+   ]
+  },
+  {
+   "id": "paired_guard__a",
+   "class": "hoplite",
+   "name": "Line of shields",
+   "text": "Guards both other allies. Not itself.",
+   "cooldown": 40.4,
+   "cast": 3,
+   "mp": 325,
+   "target": {
+    "side": "others",
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "guard"
+    }
+   ]
+  },
+  {
+   "id": "paired_guard__b",
+   "class": "hoplite",
+   "name": "Guard the blade",
+   "text": "Guards itself and the other ally with the highest Attack or Magic.",
+   "cooldown": 40.4,
+   "cast": 3,
+   "mp": 325,
+   "target": "self",
+   "do": [
+    {
+     "op": "apply",
+     "status": "guard"
+    },
+    {
+     "op": "apply",
+     "status": "guard",
+     "to": {
+      "side": "others",
+      "pick": "highest",
+      "by": {
+       "stats": [
+        "attack",
+        "magic"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "paired_guard__ap",
+   "class": "hoplite",
+   "name": "Line of shields+",
+   "text": "Guards both other allies. Not itself.",
+   "cooldown": 40.4,
+   "cast": 3,
+   "mp": 200,
+   "target": {
+    "side": "others",
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "guard"
+    }
+   ]
+  },
+  {
+   "id": "paired_guard__bp",
+   "class": "hoplite",
+   "name": "Guard the blade+",
+   "text": "Guards itself and the other ally with the highest Attack or Magic.",
+   "cooldown": 40.4,
+   "cast": 3,
+   "mp": 200,
+   "target": "self",
+   "do": [
+    {
+     "op": "apply",
+     "status": "guard"
+    },
+    {
+     "op": "apply",
+     "status": "guard",
+     "to": {
+      "side": "others",
+      "pick": "highest",
+      "by": {
+       "stats": [
+        "attack",
+        "magic"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "spear_thrust__p",
+   "class": "hoplite",
+   "name": "Spear thrust+",
+   "text": "A thrust at a random foe that adds a few Sunder.",
+   "cooldown": 34,
+   "cast": 6,
+   "mp": 325,
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 1.54,
+        "stat": "attack"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "sunder",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0014,
+          "stat": "attack"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "spear_thrust__a",
+   "class": "hoplite",
+   "name": "Skewer",
+   "text": "A thrust through a random foe and on into the foe with the most HP, each for three quarters, each adding a few Sunder.",
+   "cooldown": 34,
+   "cast": 6,
+   "mp": 325,
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.8,
+        "stat": "attack"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "sunder",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0014,
+          "stat": "attack"
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.8,
+        "stat": "attack"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "sunder",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0014,
+          "stat": "attack"
+         }
+        ]
+       }
+      }
+     ],
+     "to": {
+      "side": "foes",
+      "pick": "highest",
+      "by": "hp",
+      "exclude": "targets"
+     }
+    }
+   ]
+  },
+  {
+   "id": "spear_thrust__b",
+   "class": "hoplite",
+   "name": "Hunter's thrust",
+   "text": "A thrust past any guard at the foe with the lowest HP, adding a few Sunder.",
+   "cooldown": 34,
+   "cast": 6,
+   "mp": 325,
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 1.1,
+        "stat": "attack"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "sunder",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0014,
+          "stat": "attack"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "seek": true,
+   "target": {
+    "side": "foes",
+    "pick": "lowest",
+    "by": "hp"
+   }
+  },
+  {
+   "id": "spear_thrust__ap",
+   "class": "hoplite",
+   "name": "Skewer+",
+   "text": "A thrust through a random foe and on into the foe with the most HP, each for three quarters, each adding a few Sunder.",
+   "cooldown": 34,
+   "cast": 6,
+   "mp": 325,
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 1.12,
+        "stat": "attack"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "sunder",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0014,
+          "stat": "attack"
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 1.12,
+        "stat": "attack"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "sunder",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0014,
+          "stat": "attack"
+         }
+        ]
+       }
+      }
+     ],
+     "to": {
+      "side": "foes",
+      "pick": "highest",
+      "by": "hp",
+      "exclude": "targets"
+     }
+    }
+   ]
+  },
+  {
+   "id": "spear_thrust__bp",
+   "class": "hoplite",
+   "name": "Hunter's thrust+",
+   "text": "A thrust past any guard at the foe with the lowest HP, adding a few Sunder.",
+   "cooldown": 34,
+   "cast": 6,
+   "mp": 325,
+   "do": [
+    {
+     "op": "damage",
+     "type": "physical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 1.54,
+        "stat": "attack"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "sunder",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0014,
+          "stat": "attack"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "seek": true,
+   "target": {
+    "side": "foes",
+    "pick": "lowest",
+    "by": "hp"
+   }
+  },
+  {
+   "id": "sanctuary__p",
+   "class": "paladin",
+   "name": "Sanctuary+",
+   "text": "Ward on every ally.",
+   "cooldown": 27.2,
+   "cast": 6,
+   "mp": 1000,
+   "target": {
+    "side": "allies",
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "ward"
+    }
+   ]
+  },
+  {
+   "id": "sanctuary__a",
+   "class": "paladin",
+   "name": "Sanctum",
+   "text": "Ward and a Shield from Magic on every ally.",
+   "cooldown": 36.2,
+   "cast": 6,
+   "mp": 1500,
+   "target": {
+    "side": "allies",
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "ward"
+    },
+    {
+     "op": "apply",
+     "status": "shield",
+     "stacks": {
+      "scale": [
+       {
+        "ratio": 0.25,
+        "stat": "magic",
+        "of": "self"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "sanctuary__b",
+   "class": "paladin",
+   "name": "Consecration",
+   "text": "Ward on every ally, and a few Burn on every foe.",
+   "cooldown": 36.2,
+   "cast": 6,
+   "mp": 1000,
+   "target": {
+    "side": "allies",
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "ward"
+    },
+    {
+     "op": "apply",
+     "status": "burn",
+     "stacks": {
+      "scale": [
+       {
+        "ratio": 0.0014,
+        "stat": "magic"
+       }
+      ]
+     },
+     "to": {
+      "side": "foes",
+      "pick": "all"
+     }
+    }
+   ]
+  },
+  {
+   "id": "sanctuary__ap",
+   "class": "paladin",
+   "name": "Sanctum+",
+   "text": "Ward and a Shield from Magic on every ally.",
+   "cooldown": 27.2,
+   "cast": 6,
+   "mp": 1500,
+   "target": {
+    "side": "allies",
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "ward"
+    },
+    {
+     "op": "apply",
+     "status": "shield",
+     "stacks": {
+      "scale": [
+       {
+        "ratio": 0.25,
+        "stat": "magic",
+        "of": "self"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "sanctuary__bp",
+   "class": "paladin",
+   "name": "Consecration+",
+   "text": "Ward on every ally, and a few Burn on every foe.",
+   "cooldown": 27.2,
+   "cast": 6,
+   "mp": 1000,
+   "target": {
+    "side": "allies",
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "ward"
+    },
+    {
+     "op": "apply",
+     "status": "burn",
+     "stacks": {
+      "scale": [
+       {
+        "ratio": 0.0014,
+        "stat": "magic"
+       }
+      ]
+     },
+     "to": {
+      "side": "foes",
+      "pick": "all"
+     }
+    }
+   ]
+  },
+  {
+   "id": "absolve__p",
+   "class": "paladin",
+   "name": "Absolve+",
+   "text": "Cleanses and heals itself and the lowest other ally; the heal scales from Magic.",
+   "cooldown": 30.7,
+   "cast": 3,
+   "mp": 650,
+   "if": {
+    "side": "allies",
+    "where": {
+     "hpBelow": 100
+    }
+   },
+   "target": "self",
+   "do": [
+    {
+     "op": "remove",
+     "label": "debuff"
+    },
+    {
+     "op": "heal",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.56,
+        "stat": "magic"
+       }
+      ]
+     }
+    },
+    {
+     "op": "remove",
+     "label": "debuff",
+     "to": {
+      "side": "others",
+      "pick": "lowest",
+      "by": "hp_share"
+     }
+    },
+    {
+     "op": "heal",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.56,
+        "stat": "magic"
+       }
+      ]
+     },
+     "to": {
+      "side": "others",
+      "pick": "lowest",
+      "by": "hp_share"
+     }
+    }
+   ]
+  },
+  {
+   "id": "absolve__a",
+   "class": "paladin",
+   "name": "Penance",
+   "text": "Cleanses and heals both other allies for twice as much, and pays a fifth of each heal in its own HP. Not itself.",
+   "cooldown": 30.7,
+   "cast": 3,
+   "mp": 650,
+   "if": [
+    {
+     "side": "others",
+     "where": {
+      "hpBelow": 100
+     }
+    },
+    {
+     "side": "self",
+     "where": {
+      "hpAtLeast": 35
+     }
+    }
+   ],
+   "target": {
+    "side": "others",
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "remove",
+     "label": "debuff"
+    },
+    {
+     "op": "heal",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.8,
+        "stat": "magic"
+       }
+      ]
+     }
+    },
+    {
+     "op": "pay",
+     "hp": {
+      "scale": [
+       {
+        "ratio": 0.16,
+        "count": "targets",
+        "times": {
+         "stat": "magic",
+         "of": "self"
+        }
+       }
+      ]
+     },
+     "to": "self"
+    }
+   ]
+  },
+  {
+   "id": "absolve__b",
+   "class": "paladin",
+   "name": "Absolution",
+   "text": "Waits until an ally falls, then revives a random knocked-out ally with a fifth of its HP.",
+   "cooldown": 57.3,
+   "cast": 3,
+   "mp": 650,
+   "if": {
+    "side": "allies",
+    "where": {
+     "ko": true
+    }
+   },
+   "target": {
+    "side": "allies",
+    "where": {
+     "ko": true
+    }
+   },
+   "do": [
+    {
+     "op": "revive",
+     "hp": {
+      "scale": [
+       {
+        "ratio": 0.2,
+        "stat": "max_hp",
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "absolve__ap",
+   "class": "paladin",
+   "name": "Penance+",
+   "text": "Cleanses and heals both other allies for twice as much, and pays a fifth of each heal in its own HP. Not itself.",
+   "cooldown": 30.7,
+   "cast": 3,
+   "mp": 650,
+   "if": [
+    {
+     "side": "others",
+     "where": {
+      "hpBelow": 100
+     }
+    },
+    {
+     "side": "self",
+     "where": {
+      "hpAtLeast": 35
+     }
+    }
+   ],
+   "target": {
+    "side": "others",
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "remove",
+     "label": "debuff"
+    },
+    {
+     "op": "heal",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 1.12,
+        "stat": "magic"
+       }
+      ]
+     }
+    },
+    {
+     "op": "pay",
+     "hp": {
+      "scale": [
+       {
+        "ratio": 0.224,
+        "count": "targets",
+        "times": {
+         "stat": "magic",
+         "of": "self"
+        }
+       }
+      ]
+     },
+     "to": "self"
+    }
+   ]
+  },
+  {
+   "id": "absolve__bp",
+   "class": "paladin",
+   "name": "Absolution+",
+   "text": "Waits until an ally falls, then revives a random knocked-out ally with a fifth of its HP.",
+   "cooldown": 57.3,
+   "cast": 3,
+   "mp": 650,
+   "if": {
+    "side": "allies",
+    "where": {
+     "ko": true
+    }
+   },
+   "target": {
+    "side": "allies",
+    "where": {
+     "ko": true
+    }
+   },
+   "do": [
+    {
+     "op": "revive",
+     "hp": {
+      "scale": [
+       {
+        "ratio": 0.28,
+        "stat": "max_hp",
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "smite__p",
+   "class": "paladin",
+   "name": "Smite+",
+   "text": "Heavy magical damage to the foe with the highest Attack or Magic, adding several Burn.",
+   "cooldown": 29.1,
+   "cast": 6,
+   "mp": 650,
+   "target": {
+    "side": "foes",
+    "pick": "highest",
+    "by": {
+     "stats": [
+      "attack",
+      "magic"
+     ]
+    }
+   },
+   "do": [
+    {
+     "op": "damage",
+     "type": "magical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.7,
+        "stat": "magic"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "burn",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0026,
+          "stat": "magic"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "smite__a",
+   "class": "paladin",
+   "name": "Hammer of dawn",
+   "text": "Magical damage to the foe with the highest Attack or Magic, which is Stunned. No Burn.",
+   "cooldown": 29.1,
+   "cast": 6,
+   "mp": 650,
+   "target": {
+    "side": "foes",
+    "pick": "highest",
+    "by": {
+     "stats": [
+      "attack",
+      "magic"
+     ]
+    },
+    "where": {
+     "lacks": "stun"
+    },
+    "ifNone": "any"
+   },
+   "do": [
+    {
+     "op": "damage",
+     "type": "magical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.5,
+        "stat": "magic"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "stun"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "smite__b",
+   "class": "paladin",
+   "name": "Pyre of judgement",
+   "text": "Magical damage to every burning foe, half as hard, adding a few Burn to each. Waits until a foe burns.",
+   "cooldown": 29.1,
+   "cast": 6,
+   "mp": 650,
+   "target": {
+    "side": "foes",
+    "where": {
+     "has": "burn"
+    },
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "damage",
+     "type": "magical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.25,
+        "stat": "magic"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "burn",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0014,
+          "stat": "magic"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "if": {
+    "side": "foes",
+    "where": {
+     "has": "burn"
+    }
+   }
+  },
+  {
+   "id": "smite__ap",
+   "class": "paladin",
+   "name": "Hammer of dawn+",
+   "text": "Magical damage to the foe with the highest Attack or Magic, which is Stunned. No Burn.",
+   "cooldown": 29.1,
+   "cast": 6,
+   "mp": 650,
+   "target": {
+    "side": "foes",
+    "pick": "highest",
+    "by": {
+     "stats": [
+      "attack",
+      "magic"
+     ]
+    },
+    "where": {
+     "lacks": "stun"
+    },
+    "ifNone": "any"
+   },
+   "do": [
+    {
+     "op": "damage",
+     "type": "magical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.7,
+        "stat": "magic"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "stun"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "smite__bp",
+   "class": "paladin",
+   "name": "Pyre of judgement+",
+   "text": "Magical damage to every burning foe, half as hard, adding a few Burn to each. Waits until a foe burns.",
+   "cooldown": 29.1,
+   "cast": 6,
+   "mp": 650,
+   "target": {
+    "side": "foes",
+    "where": {
+     "has": "burn"
+    },
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "damage",
+     "type": "magical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.35,
+        "stat": "magic"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "burn",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0014,
+          "stat": "magic"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "if": {
+    "side": "foes",
+    "where": {
+     "has": "burn"
+    }
+   }
+  },
+  {
+   "id": "gale_spear__p",
+   "class": "valkyrie",
+   "name": "Gale spear+",
+   "text": "Three quick magical hits on a foe that isn't Taunting, each adding a few Shock.",
+   "cooldown": 14.3,
+   "cast": 1,
+   "mp": 200,
+   "seek": true,
+   "target": {
+    "side": "foes",
+    "where": {
+     "lacks": "taunt"
+    },
+    "ifNone": "any"
+   },
+   "do": [
+    {
+     "op": "damage",
+     "type": "magical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.126,
+        "stat": "attack"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "shock",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0007,
+          "stat": "attack"
+         }
+        ]
+       }
+      }
+     ],
+     "hits": 3
+    }
+   ]
+  },
+  {
+   "id": "gale_spear__a",
+   "class": "valkyrie",
+   "name": "Gale storm",
+   "text": "Three quick magical hits on three different foes, the first past any guard, each adding a few Shock.",
+   "cooldown": 14.3,
+   "cast": 1,
+   "mp": 200,
+   "seek": true,
+   "target": {
+    "side": "foes",
+    "where": {
+     "lacks": "taunt"
+    },
+    "ifNone": "any"
+   },
+   "do": [
+    {
+     "op": "damage",
+     "type": "magical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.09,
+        "stat": "attack"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "shock",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0007,
+          "stat": "attack"
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "op": "damage",
+     "type": "magical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.09,
+        "stat": "attack"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "shock",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0007,
+          "stat": "attack"
+         }
+        ]
+       }
+      }
+     ],
+     "to": {
+      "side": "foes",
+      "pick": "random",
+      "count": 2,
+      "exclude": "targets"
+     }
+    }
+   ]
+  },
+  {
+   "id": "gale_spear__b",
+   "class": "valkyrie",
+   "name": "Spear of the hunt",
+   "text": "Three quick magical hits past any guard on the foe with the lowest HP, each adding a few Shock.",
+   "cooldown": 14.3,
+   "cast": 1,
+   "mp": 200,
+   "seek": true,
+   "target": {
+    "side": "foes",
+    "pick": "lowest",
+    "by": "hp"
+   },
+   "do": [
+    {
+     "op": "damage",
+     "type": "magical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.09,
+        "stat": "attack"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "shock",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0007,
+          "stat": "attack"
+         }
+        ]
+       }
+      }
+     ],
+     "hits": 3
+    }
+   ]
+  },
+  {
+   "id": "gale_spear__ap",
+   "class": "valkyrie",
+   "name": "Gale storm+",
+   "text": "Three quick magical hits on three different foes, the first past any guard, each adding a few Shock.",
+   "cooldown": 14.3,
+   "cast": 1,
+   "mp": 200,
+   "seek": true,
+   "target": {
+    "side": "foes",
+    "where": {
+     "lacks": "taunt"
+    },
+    "ifNone": "any"
+   },
+   "do": [
+    {
+     "op": "damage",
+     "type": "magical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.126,
+        "stat": "attack"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "shock",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0007,
+          "stat": "attack"
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "op": "damage",
+     "type": "magical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.126,
+        "stat": "attack"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "shock",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0007,
+          "stat": "attack"
+         }
+        ]
+       }
+      }
+     ],
+     "to": {
+      "side": "foes",
+      "pick": "random",
+      "count": 2,
+      "exclude": "targets"
+     }
+    }
+   ]
+  },
+  {
+   "id": "gale_spear__bp",
+   "class": "valkyrie",
+   "name": "Spear of the hunt+",
+   "text": "Three quick magical hits past any guard on the foe with the lowest HP, each adding a few Shock.",
+   "cooldown": 14.3,
+   "cast": 1,
+   "mp": 200,
+   "seek": true,
+   "target": {
+    "side": "foes",
+    "pick": "lowest",
+    "by": "hp"
+   },
+   "do": [
+    {
+     "op": "damage",
+     "type": "magical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.126,
+        "stat": "attack"
+       }
+      ]
+     },
+     "apply": [
+      {
+       "status": "shock",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0007,
+          "stat": "attack"
+         }
+        ]
+       }
+      }
+     ],
+     "hits": 3
+    }
+   ]
+  },
+  {
+   "id": "rally__p",
+   "class": "valkyrie",
+   "name": "Rally+",
+   "text": "Heals the lowest ally; the amount scales from Magic.",
+   "cooldown": 27.2,
+   "cast": 3,
+   "mp": 650,
+   "if": {
+    "side": "allies",
+    "where": {
+     "hpBelow": 80
+    }
+   },
+   "target": {
+    "side": "allies",
+    "pick": "lowest",
+    "by": "hp_share"
+   },
+   "do": [
+    {
+     "op": "heal",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.63,
+        "stat": "magic"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "rally__a",
+   "class": "valkyrie",
+   "name": "Battle hymn",
+   "text": "Heals the ally with the lowest share of HP, and Hastes it.",
+   "cooldown": 27.2,
+   "cast": 3,
+   "mp": 650,
+   "if": {
+    "side": "allies",
+    "where": {
+     "hpBelow": 80
+    }
+   },
+   "target": {
+    "side": "allies",
+    "pick": "lowest",
+    "by": "hp_share"
+   },
+   "do": [
+    {
+     "op": "heal",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.45,
+        "stat": "magic"
+       }
+      ]
+     }
+    },
+    {
+     "op": "apply",
+     "status": "haste"
+    }
+   ]
+  },
+  {
+   "id": "rally__b",
+   "class": "valkyrie",
+   "name": "Last stand",
+   "text": "Waits until an ally is below 30% of its max HP, then heals it for double, and the Valkyrie Taunts.",
+   "cooldown": 27.2,
+   "cast": 3,
+   "mp": 650,
+   "if": {
+    "side": "allies",
+    "where": {
+     "hpBelow": 30
+    }
+   },
+   "target": {
+    "side": "allies",
+    "pick": "lowest",
+    "by": "hp_share"
+   },
+   "do": [
+    {
+     "op": "heal",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.9,
+        "stat": "magic"
+       }
+      ]
+     }
+    },
+    {
+     "op": "apply",
+     "status": "taunt",
+     "to": "self"
+    }
+   ]
+  },
+  {
+   "id": "rally__ap",
+   "class": "valkyrie",
+   "name": "Battle hymn+",
+   "text": "Heals the ally with the lowest share of HP, and Hastes it.",
+   "cooldown": 27.2,
+   "cast": 3,
+   "mp": 650,
+   "if": {
+    "side": "allies",
+    "where": {
+     "hpBelow": 80
+    }
+   },
+   "target": {
+    "side": "allies",
+    "pick": "lowest",
+    "by": "hp_share"
+   },
+   "do": [
+    {
+     "op": "heal",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 0.63,
+        "stat": "magic"
+       }
+      ]
+     }
+    },
+    {
+     "op": "apply",
+     "status": "haste"
+    }
+   ]
+  },
+  {
+   "id": "rally__bp",
+   "class": "valkyrie",
+   "name": "Last stand+",
+   "text": "Waits until an ally is below 30% of its max HP, then heals it for double, and the Valkyrie Taunts.",
+   "cooldown": 27.2,
+   "cast": 3,
+   "mp": 650,
+   "if": {
+    "side": "allies",
+    "where": {
+     "hpBelow": 30
+    }
+   },
+   "target": {
+    "side": "allies",
+    "pick": "lowest",
+    "by": "hp_share"
+   },
+   "do": [
+    {
+     "op": "heal",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 1.26,
+        "stat": "magic"
+       }
+      ]
+     }
+    },
+    {
+     "op": "apply",
+     "status": "taunt",
+     "to": "self"
+    }
+   ]
+  },
+  {
+   "id": "valhalla__p",
+   "class": "valkyrie",
+   "name": "Valhalla+",
+   "text": "Revives a random knocked-out ally with a tenth of its HP.",
+   "cooldown": 63,
+   "cast": 1,
+   "mp": 650,
+   "if": {
+    "side": "allies",
+    "where": {
+     "ko": true
+    }
+   },
+   "target": {
+    "side": "allies",
+    "where": {
+     "ko": true
+    }
+   },
+   "do": [
+    {
+     "op": "revive",
+     "hp": {
+      "scale": [
+       {
+        "ratio": 0.14,
+        "stat": "max_hp",
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "valhalla__a",
+   "class": "valkyrie",
+   "name": "Flight of the valkyries",
+   "text": "Revives every knocked-out ally with a tenth of its HP.",
+   "cooldown": 78.8,
+   "cast": 1,
+   "mp": 650,
+   "if": {
+    "side": "allies",
+    "where": {
+     "ko": true
+    }
+   },
+   "target": {
+    "side": "allies",
+    "where": {
+     "ko": true
+    },
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "revive",
+     "hp": {
+      "scale": [
+       {
+        "ratio": 0.1,
+        "stat": "max_hp",
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "valhalla__b",
+   "class": "valkyrie",
+   "name": "Dawn muster",
+   "text": "Revives a random knocked-out ally with a tenth of its HP. At a fight's start, if an ally is down from an earlier fight, it's ready at once, whatever its cooldown.",
+   "cooldown": 63,
+   "cast": 1,
+   "mp": 650,
+   "if": {
+    "side": "allies",
+    "where": {
+     "ko": true
+    }
+   },
+   "target": {
+    "side": "allies",
+    "where": {
+     "ko": true
+    }
+   },
+   "do": [
+    {
+     "op": "revive",
+     "hp": {
+      "scale": [
+       {
+        "ratio": 0.1,
+        "stat": "max_hp",
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ],
+   "statuses": [
+    "dawn_muster"
+   ]
+  },
+  {
+   "id": "valhalla__ap",
+   "class": "valkyrie",
+   "name": "Flight of the valkyries+",
+   "text": "Revives every knocked-out ally with a tenth of its HP.",
+   "cooldown": 78.8,
+   "cast": 1,
+   "mp": 650,
+   "if": {
+    "side": "allies",
+    "where": {
+     "ko": true
+    }
+   },
+   "target": {
+    "side": "allies",
+    "where": {
+     "ko": true
+    },
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "revive",
+     "hp": {
+      "scale": [
+       {
+        "ratio": 0.14,
+        "stat": "max_hp",
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "valhalla__bp",
+   "class": "valkyrie",
+   "name": "Dawn muster+",
+   "text": "Revives a random knocked-out ally with a tenth of its HP. At a fight's start, if an ally is down from an earlier fight, it's ready at once, whatever its cooldown.",
+   "cooldown": 63,
+   "cast": 1,
+   "mp": 650,
+   "if": {
+    "side": "allies",
+    "where": {
+     "ko": true
+    }
+   },
+   "target": {
+    "side": "allies",
+    "where": {
+     "ko": true
+    }
+   },
+   "do": [
+    {
+     "op": "revive",
+     "hp": {
+      "scale": [
+       {
+        "ratio": 0.14,
+        "stat": "max_hp",
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ],
+   "statuses": [
+    "dawn_muster"
+   ]
+  },
+  {
+   "id": "war_ballad__p",
+   "class": "bard",
+   "name": "War ballad+",
+   "text": "A few Might on every ally.",
+   "cooldown": 16,
+   "cast": 1,
+   "mp": 450,
+   "target": {
+    "side": "allies",
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "might",
+     "stacks": {
+      "scale": [
+       {
+        "ratio": 0.00196,
+        "stat": "magic"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "war_ballad__a",
+   "class": "bard",
+   "name": "Lament",
+   "text": "Might to every ally below half its HP, twice as many. Waits until an ally is below half.",
+   "cooldown": 16,
+   "cast": 1,
+   "mp": 450,
+   "target": {
+    "side": "allies",
+    "where": {
+     "hpBelow": 50
+    },
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "might",
+     "stacks": {
+      "scale": [
+       {
+        "ratio": 0.0028,
+        "stat": "magic"
+       }
+      ]
+     }
+    }
+   ],
+   "if": {
+    "side": "allies",
+    "where": {
+     "hpBelow": 50
+    }
+   }
+  },
+  {
+   "id": "war_ballad__b",
+   "class": "bard",
+   "name": "Marching song",
+   "text": "Every ally's next basic attack comes at once. No Might.",
+   "cooldown": 16,
+   "cast": 1,
+   "mp": 450,
+   "target": {
+    "side": "allies",
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "cooldown",
+     "which": "basic",
+     "set": "ready"
+    }
+   ]
+  },
+  {
+   "id": "war_ballad__ap",
+   "class": "bard",
+   "name": "Lament+",
+   "text": "Might to every ally below half its HP, twice as many. Waits until an ally is below half.",
+   "cooldown": 16,
+   "cast": 1,
+   "mp": 450,
+   "target": {
+    "side": "allies",
+    "where": {
+     "hpBelow": 50
+    },
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "might",
+     "stacks": {
+      "scale": [
+       {
+        "ratio": 0.00392,
+        "stat": "magic"
+       }
+      ]
+     }
+    }
+   ],
+   "if": {
+    "side": "allies",
+    "where": {
+     "hpBelow": 50
+    }
+   }
+  },
+  {
+   "id": "war_ballad__bp",
+   "class": "bard",
+   "name": "Marching song+",
+   "text": "Every ally's next basic attack comes at once. No Might.",
+   "cooldown": 12,
+   "cast": 1,
+   "mp": 450,
+   "target": {
+    "side": "allies",
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "cooldown",
+     "which": "basic",
+     "set": "ready"
+    }
+   ]
+  },
+  {
+   "id": "allegro__p",
+   "class": "bard",
+   "name": "Allegro+",
+   "text": "Haste on every ally.",
+   "cooldown": 31.9,
+   "cast": 1,
+   "mp": 650,
+   "target": {
+    "side": "allies",
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "haste"
+    }
+   ]
+  },
+  {
+   "id": "allegro__a",
+   "class": "bard",
+   "name": "Rubato",
+   "text": "Haste on every ally, and each ally's ability with the longest cooldown left comes 4 ticks closer.",
+   "cooldown": 42.5,
+   "cast": 1,
+   "mp": 650,
+   "target": {
+    "side": "allies",
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "haste"
+    },
+    {
+     "op": "cooldown",
+     "which": "longest",
+     "set": {
+      "less": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "allegro__b",
+   "class": "bard",
+   "name": "Accelerando",
+   "text": "Haste on the ally that attacks fastest.",
+   "cooldown": 23.4,
+   "cast": 1,
+   "mp": 450,
+   "target": {
+    "side": "allies",
+    "pick": "lowest",
+    "by": "swing"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "haste"
+    }
+   ]
+  },
+  {
+   "id": "allegro__ap",
+   "class": "bard",
+   "name": "Rubato+",
+   "text": "Haste on every ally, and each ally's ability with the longest cooldown left comes 4 ticks closer.",
+   "cooldown": 31.9,
+   "cast": 1,
+   "mp": 650,
+   "target": {
+    "side": "allies",
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "haste"
+    },
+    {
+     "op": "cooldown",
+     "which": "longest",
+     "set": {
+      "less": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "allegro__bp",
+   "class": "bard",
+   "name": "Accelerando+",
+   "text": "Haste on the ally that attacks fastest.",
+   "cooldown": 14.9,
+   "cast": 1,
+   "mp": 450,
+   "target": {
+    "side": "allies",
+    "pick": "lowest",
+    "by": "swing"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "haste"
+    }
+   ]
+  },
+  {
+   "id": "thunder_chord__p",
+   "class": "bard",
+   "name": "Thunder chord+",
+   "text": "Several Shock on every foe.",
+   "cooldown": 24.2,
+   "cast": 3,
+   "mp": 650,
+   "target": {
+    "side": "foes",
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "shock",
+     "stacks": {
+      "scale": [
+       {
+        "ratio": 0.0036399999999999996,
+        "stat": "magic"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "thunder_chord__a",
+   "class": "bard",
+   "name": "Resonance",
+   "text": "Magical damage to every foe for each Shock it holds. Adds no Shock. Waits until a foe holds Shock.",
+   "cooldown": 24.2,
+   "cast": 3,
+   "mp": 650,
+   "target": {
+    "side": "foes",
+    "where": {
+     "has": "shock"
+    },
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "damage",
+     "type": "magical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 60,
+        "stacks": "shock",
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ],
+   "if": {
+    "side": "foes",
+    "where": {
+     "has": "shock"
+    }
+   }
+  },
+  {
+   "id": "thunder_chord__b",
+   "class": "bard",
+   "name": "Lullaby",
+   "text": "Slows every foe. No Shock.",
+   "cooldown": 44.1,
+   "cast": 3,
+   "mp": 650,
+   "target": {
+    "side": "foes",
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "slow"
+    }
+   ]
+  },
+  {
+   "id": "thunder_chord__ap",
+   "class": "bard",
+   "name": "Resonance+",
+   "text": "Magical damage to every foe for each Shock it holds. Adds no Shock. Waits until a foe holds Shock.",
+   "cooldown": 24.2,
+   "cast": 3,
+   "mp": 650,
+   "target": {
+    "side": "foes",
+    "where": {
+     "has": "shock"
+    },
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "damage",
+     "type": "magical",
+     "amount": {
+      "scale": [
+       {
+        "ratio": 84,
+        "stacks": "shock",
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ],
+   "if": {
+    "side": "foes",
+    "where": {
+     "has": "shock"
+    }
+   }
+  },
+  {
+   "id": "thunder_chord__bp",
+   "class": "bard",
+   "name": "Lullaby+",
+   "text": "Slows every foe. No Shock.",
+   "cooldown": 33,
+   "cast": 3,
+   "mp": 650,
+   "target": {
+    "side": "foes",
+    "pick": "all"
+   },
+   "do": [
+    {
+     "op": "apply",
+     "status": "slow"
+    }
+   ]
   }
  ],
- "upgrades": [],
+ "upgrades": [
+  {
+   "id": "vanguard",
+   "class": "knight",
+   "kind": "passive",
+   "power": "A Shield two fifths bigger.",
+   "a": {
+    "name": "Stonewall",
+    "text": "Starts every fight behind a Shield from its max HP. The other ally with the lowest Aggro starts behind a Shield of the same size."
+   },
+   "b": {
+    "name": "Grudge",
+    "text": "Starts every fight behind a Shield from its max HP. When its Shield breaks, it Taunts and is Guarded."
+   }
+  },
+  {
+   "id": "fortify",
+   "class": "knight",
+   "kind": "ability",
+   "power": "Comes round sooner.",
+   "a": {
+    "name": "Stone guard",
+    "text": "Guards the other ally with the most Armor, and gives it a Shield from the Knight's Armor."
+   },
+   "b": {
+    "name": "Cover",
+    "text": "Guards another ally in a wind-up. With nobody else casting, the other ally with the lowest share of HP."
+   }
+  },
+  {
+   "id": "stand_fast",
+   "class": "knight",
+   "kind": "ability",
+   "power": "Costs less MP.",
+   "a": {
+    "name": "Rally the well",
+    "text": "Gives Clarity to every ally under half its MP. Waits until one is. No Taunt."
+   },
+   "b": {
+    "name": "Hold the line",
+    "text": "Taunts, and has Thorns for as long as the Taunt. No Clarity."
+   }
+  },
+  {
+   "id": "shield_bash",
+   "class": "knight",
+   "kind": "ability",
+   "power": "Deals two fifths more damage.",
+   "a": {
+    "name": "Measured blow",
+    "text": "Waits for a foe to start a wind-up, then bashes the casting foe with the highest Attack or Magic, scaling from max HP, and Stuns it. The Stun holds the wind-up where it is."
+   },
+   "b": {
+    "name": "Crushing bash",
+    "text": "Bashes a random foe for double, scaling from max HP and its current Shield together. No Stun. A longer cooldown."
+   }
+  },
+  {
+   "id": "last_rites",
+   "class": "cleric",
+   "kind": "passive",
+   "power": "The line is at 40% of max HP, not 30%.",
+   "a": {
+    "name": "Shared rites",
+    "text": "While it or any ally is below 30% of max HP, its cooldowns are halved."
+   },
+   "b": {
+    "name": "Rite of passage",
+    "text": "Below 30% of its max HP, its cooldowns are halved. When an ally falls, they're halved for 20 ticks too."
+   }
+  },
+  {
+   "id": "renew",
+   "class": "cleric",
+   "kind": "ability",
+   "power": "Costs less MP.",
+   "a": {
+    "name": "Font",
+    "text": "Cleanses an ally with a debuff and gives it Regen and Clarity; with nobody debuffed, the ally with the lowest share of HP."
+   },
+   "b": {
+    "name": "Anchor's blessing",
+    "text": "Cleanses the ally foes are most drawn to and gives it Regen."
+   }
+  },
+  {
+   "id": "cure",
+   "class": "cleric",
+   "kind": "ability",
+   "power": "Heals two fifths more.",
+   "a": {
+    "name": "Triage",
+    "text": "Waits until an ally is below 40% of its max HP, then heals it for twice as much."
+   },
+   "b": {
+    "name": "Battle prayer",
+    "text": "Heals the ally with the lowest share of HP. Its next basic attack deals the same amount again as extra magical damage."
+   }
+  },
+  {
+   "id": "raise",
+   "class": "cleric",
+   "kind": "ability",
+   "power": "The raised ally comes back with two fifths more HP.",
+   "a": {
+    "name": "Martyr's raise",
+    "text": "Pays half its current HP to revive a random knocked-out ally with that much. Costs no MP."
+   },
+   "b": {
+    "name": "Ward of life",
+    "text": "Waits until an ally is knocked out or below a third of its max HP. Revives a random knocked-out ally with half its HP, and gives the lowest ally below a third a Shield of a third of its max HP."
+   }
+  },
+  {
+   "id": "hunters_eye",
+   "class": "ranger",
+   "kind": "passive",
+   "power": "Its basic attacks also deal 15% more to foes that aren't Taunting.",
+   "a": {
+    "name": "Quarry",
+    "text": "Basic attacks ignore Taunt and go to the foe with the lowest share of its max HP."
+   },
+   "b": {
+    "name": "Overwatch",
+    "text": "Basic attacks ignore Taunt, and go to a foe in a wind-up when there is one."
+   }
+  },
+  {
+   "id": "barbed_arrow",
+   "class": "ranger",
+   "kind": "ability",
+   "power": "Adds two fifths more Bleed.",
+   "a": {
+    "name": "Deep barbs",
+    "text": "A barbed arrow at the foe with the most Bleed, adding many."
+   },
+   "b": {
+    "name": "Scatter barbs",
+    "text": "Barbed arrows at three different foes, each a touch of damage and a few Bleed."
+   }
+  },
+  {
+   "id": "frost_arrow",
+   "class": "ranger",
+   "kind": "ability",
+   "power": "Adds two fifths more Chill (Pinning arrow: deals two fifths more damage).",
+   "a": {
+    "name": "Pinning arrow",
+    "text": "A quick arrow at the foe with the highest Attack or Magic, which is Slowed. No Chill."
+   },
+   "b": {
+    "name": "Hail",
+    "text": "A quick arrow at the foe with the most Chill, and one Chill on every foe."
+   }
+  },
+  {
+   "id": "rending_arrow",
+   "class": "ranger",
+   "kind": "ability",
+   "power": "Adds two fifths more Sunder (Gutting arrow: deals two fifths more damage).",
+   "a": {
+    "name": "Armor breaker",
+    "text": "An arrow at the foe with the most Armor, adding several Sunder."
+   },
+   "b": {
+    "name": "Gutting arrow",
+    "text": "An arrow at the foe with the lowest HP. Half again as much below half its HP, double below a quarter. No Sunder."
+   }
+  },
+  {
+   "id": "briar",
+   "class": "bramble_knight",
+   "kind": "passive",
+   "power": "Two fifths more Bleed.",
+   "a": {
+    "name": "Bloodroot",
+    "text": "Foes its Thorns wound start to bleed. While a foe bleeds, each action it takes heals the Bramble knight a little."
+   },
+   "b": {
+    "name": "Spreading thorns",
+    "text": "When its Thorns strike, they strike a second, random foe too, and both start to bleed."
+   }
+  },
+  {
+   "id": "thicket",
+   "class": "bramble_knight",
+   "kind": "ability",
+   "power": "Comes round sooner.",
+   "a": {
+    "name": "Overgrowth",
+    "text": "Taunts itself twice over, and doubles its Thorns while the Taunts last. No Guard."
+   },
+   "b": {
+    "name": "Grove",
+    "text": "Guards every ally. No Taunt."
+   }
+  },
+  {
+   "id": "regrowth",
+   "class": "bramble_knight",
+   "kind": "ability",
+   "power": "Costs less MP.",
+   "a": {
+    "name": "Deep roots",
+    "text": "Regen on itself, and Thorns up while it heals."
+   },
+   "b": {
+    "name": "Blossom",
+    "text": "Regen on every ally."
+   }
+  },
+  {
+   "id": "bramble_lash",
+   "class": "bramble_knight",
+   "kind": "ability",
+   "power": "Deals two fifths more damage.",
+   "a": {
+    "name": "Whipping vines",
+    "text": "Lashes every foe with its thorns, for half."
+   },
+   "b": {
+    "name": "Rebuke",
+    "text": "Waits until it's been hit five times since its last lash, then lashes a random foe for double."
+   }
+  },
+  {
+   "id": "phalanx",
+   "class": "hoplite",
+   "kind": "passive",
+   "power": "Its basic attacks deal a little more than double: × 2.4.",
+   "a": {
+    "name": "Opening thrust",
+    "text": "Basic attacks come half as often and deal double. The first of each fight comes at once and deals triple."
+   },
+   "b": {
+    "name": "Shieldbearer",
+    "text": "Basic attacks come half as often and deal double. Armor adds to them half as much as Attack does."
+   }
+  },
+  {
+   "id": "aspis",
+   "class": "hoplite",
+   "kind": "ability",
+   "power": "Comes round sooner.",
+   "a": {
+    "name": "Watch the anchor",
+    "text": "Aegis on the ally with the most Aggro that holds none."
+   },
+   "b": {
+    "name": "Shield wall",
+    "text": "Aegis on every ally."
+   }
+  },
+  {
+   "id": "paired_guard",
+   "class": "hoplite",
+   "kind": "ability",
+   "power": "Costs less MP.",
+   "a": {
+    "name": "Line of shields",
+    "text": "Guards both other allies. Not itself."
+   },
+   "b": {
+    "name": "Guard the blade",
+    "text": "Guards itself and the other ally with the highest Attack or Magic."
+   }
+  },
+  {
+   "id": "spear_thrust",
+   "class": "hoplite",
+   "kind": "ability",
+   "power": "Deals two fifths more damage.",
+   "a": {
+    "name": "Skewer",
+    "text": "A thrust through a random foe and on into the foe with the most HP, each for three quarters, each adding a few Sunder."
+   },
+   "b": {
+    "name": "Hunter's thrust",
+    "text": "A thrust past any guard at the foe with the lowest HP, adding a few Sunder."
+   }
+  },
+  {
+   "id": "judgement",
+   "class": "paladin",
+   "kind": "passive",
+   "power": "The bonus is +70%, not half again.",
+   "a": {
+    "name": "Inquisition",
+    "text": "Its hits deal half again as much to foes with a debuff."
+   },
+   "b": {
+    "name": "Sentence",
+    "text": "Its hits deal half again as much to the foe with the highest Attack or Magic."
+   }
+  },
+  {
+   "id": "sanctuary",
+   "class": "paladin",
+   "kind": "ability",
+   "power": "Comes round sooner.",
+   "a": {
+    "name": "Sanctum",
+    "text": "Ward and a Shield from Magic on every ally."
+   },
+   "b": {
+    "name": "Consecration",
+    "text": "Ward on every ally, and a few Burn on every foe."
+   }
+  },
+  {
+   "id": "absolve",
+   "class": "paladin",
+   "kind": "ability",
+   "power": "Heals two fifths more (Absolution: raises with two fifths more HP).",
+   "a": {
+    "name": "Penance",
+    "text": "Cleanses and heals both other allies for twice as much, and pays a fifth of each heal in its own HP. Not itself."
+   },
+   "b": {
+    "name": "Absolution",
+    "text": "Waits until an ally falls, then revives a random knocked-out ally with a fifth of its HP."
+   }
+  },
+  {
+   "id": "smite",
+   "class": "paladin",
+   "kind": "ability",
+   "power": "Deals two fifths more damage.",
+   "a": {
+    "name": "Hammer of dawn",
+    "text": "Magical damage to the foe with the highest Attack or Magic, which is Stunned. No Burn."
+   },
+   "b": {
+    "name": "Pyre of judgement",
+    "text": "Magical damage to every burning foe, half as hard, adding a few Burn to each. Waits until a foe burns."
+   }
+  },
+  {
+   "id": "einherjar",
+   "class": "valkyrie",
+   "kind": "passive",
+   "power": "Allies it revives also come back with a small Shield.",
+   "a": {
+    "name": "Chosen",
+    "text": "Allies it revives come back with all their actions ready, and Guarded."
+   },
+   "b": {
+    "name": "Chooser of the slain",
+    "text": "While it stands, every ally deals a fifth more to foes below half their HP. Allies it revives come back on cooldown, as anyone's do."
+   }
+  },
+  {
+   "id": "gale_spear",
+   "class": "valkyrie",
+   "kind": "ability",
+   "power": "Deals two fifths more damage.",
+   "a": {
+    "name": "Gale storm",
+    "text": "Three quick magical hits on three different foes, the first past any guard, each adding a few Shock."
+   },
+   "b": {
+    "name": "Spear of the hunt",
+    "text": "Three quick magical hits past any guard on the foe with the lowest HP, each adding a few Shock."
+   }
+  },
+  {
+   "id": "rally",
+   "class": "valkyrie",
+   "kind": "ability",
+   "power": "Heals two fifths more.",
+   "a": {
+    "name": "Battle hymn",
+    "text": "Heals the ally with the lowest share of HP, and Hastes it."
+   },
+   "b": {
+    "name": "Last stand",
+    "text": "Waits until an ally is below 30% of its max HP, then heals it for double, and the Valkyrie Taunts."
+   }
+  },
+  {
+   "id": "valhalla",
+   "class": "valkyrie",
+   "kind": "ability",
+   "power": "The raised ally comes back with two fifths more HP.",
+   "a": {
+    "name": "Flight of the valkyries",
+    "text": "Revives every knocked-out ally with a tenth of its HP."
+   },
+   "b": {
+    "name": "Dawn muster",
+    "text": "Revives a random knocked-out ally with a tenth of its HP. At a fight's start, if an ally is down from an earlier fight, it's ready at once, whatever its cooldown."
+   }
+  },
+  {
+   "id": "refrain",
+   "class": "bard",
+   "kind": "passive",
+   "power": "A bigger share: 42% of the damage dealt, not 30% (Battle song: two fifths more Might too).",
+   "a": {
+    "name": "Harmony",
+    "text": "Each basic attack that lands heals the ally with the lowest share of its HP and gives MP to the ally with the lowest share of its MP, each 30% of the damage dealt."
+   },
+   "b": {
+    "name": "Battle song",
+    "text": "Each basic attack that lands gives a random ally a few Might, and gives a random ally MP, 30% of the damage dealt."
+   }
+  },
+  {
+   "id": "war_ballad",
+   "class": "bard",
+   "kind": "ability",
+   "power": "Two fifths more Might (Marching song: comes round sooner).",
+   "a": {
+    "name": "Lament",
+    "text": "Might to every ally below half its HP, twice as many. Waits until an ally is below half."
+   },
+   "b": {
+    "name": "Marching song",
+    "text": "Every ally's next basic attack comes at once. No Might."
+   }
+  },
+  {
+   "id": "allegro",
+   "class": "bard",
+   "kind": "ability",
+   "power": "Comes round sooner.",
+   "a": {
+    "name": "Rubato",
+    "text": "Haste on every ally, and each ally's ability with the longest cooldown left comes 4 ticks closer."
+   },
+   "b": {
+    "name": "Accelerando",
+    "text": "Haste on the ally that attacks fastest."
+   }
+  },
+  {
+   "id": "thunder_chord",
+   "class": "bard",
+   "kind": "ability",
+   "power": "Two fifths more Shock (Resonance: two fifths more damage a stack; Lullaby: comes round sooner).",
+   "a": {
+    "name": "Resonance",
+    "text": "Magical damage to every foe for each Shock it holds. Adds no Shock. Waits until a foe holds Shock."
+   },
+   "b": {
+    "name": "Lullaby",
+    "text": "Slows every foe. No Shock."
+   }
+  }
+ ],
  "gear": [
   {
    "id": "plain_dagger",
@@ -7688,6 +15486,143 @@
     }
    },
    "rarity": "legendary"
+  },
+  {
+   "id": "horn_of_the_keep",
+   "name": "Horn of the keep",
+   "text": "Every hit the Knight takes gives the other ally with the least MP a tenth of the hit's damage as MP. When the Knight's Taunt runs out while another ally is in a wind-up, it Taunts again.",
+   "slot": "offhand",
+   "tier": "powerful",
+   "source": "unlock",
+   "offhand": "horn",
+   "statuses": [
+    "horn_of_the_keep"
+   ],
+   "mythic": "knight",
+   "rarity": "mythic"
+  },
+  {
+   "id": "halo_of_the_saint",
+   "name": "Halo of the saint",
+   "text": "While an ally is knocked out, the part of the Cleric's heals that would go past full is kept. When it reaches a quarter of the Cleric's max HP, a fallen ally stands with that much.",
+   "slot": "amulet",
+   "tier": "powerful",
+   "source": "unlock",
+   "statuses": [
+    "halo_of_the_saint"
+   ],
+   "mythic": "cleric",
+   "rarity": "mythic"
+  },
+  {
+   "id": "huntmasters_quiver",
+   "name": "Huntmaster's quiver",
+   "text": "All the Ranger's abilities aim past any guard at the foe with the lowest HP. When a foe one of them hit falls, the cooldowns left on its abilities are halved.",
+   "slot": "armor",
+   "tier": "powerful",
+   "source": "unlock",
+   "armor": "leather",
+   "statuses": [
+    "huntmasters_quiver"
+   ],
+   "mythic": "ranger",
+   "rarity": "mythic"
+  },
+  {
+   "id": "heartwood_mail",
+   "name": "Heartwood mail",
+   "text": "Whenever a hit lands on any ally, the Bramble knight's Thorns strike the attacker too.",
+   "slot": "armor",
+   "tier": "powerful",
+   "source": "unlock",
+   "armor": "mail",
+   "statuses": [
+    "heartwood_mail"
+   ],
+   "mythic": "bramble_knight",
+   "rarity": "mythic"
+  },
+  {
+   "id": "the_last_wall",
+   "name": "The last wall",
+   "text": "When an Aegis the Hoplite gave blocks a blow, the attacker takes the blocked damage, and Aspis is ready again at once.",
+   "slot": "offhand",
+   "tier": "powerful",
+   "source": "unlock",
+   "offhand": "round_shield",
+   "statuses": [
+    "the_last_wall"
+   ],
+   "mythic": "hoplite",
+   "rarity": "mythic"
+  },
+  {
+   "id": "chains_of_light",
+   "name": "Chains of light",
+   "text": "Smite also Silences its target. The Paladin's hits on a Stunned or Silenced foe heal the ally with the lowest share of HP for half the damage dealt.",
+   "slot": "offhand",
+   "tier": "powerful",
+   "source": "unlock",
+   "offhand": "lantern",
+   "statuses": [
+    "chains_of_light"
+   ],
+   "mythic": "paladin",
+   "rarity": "mythic"
+  },
+  {
+   "id": "stormspear",
+   "name": "Stormspear",
+   "text": "A medium, magical, one-handed spear. Its basic attacks scale from Attack, ignore Taunt, and add a few Shock.",
+   "slot": "weapon",
+   "tier": "powerful",
+   "source": "unlock",
+   "statuses": [
+    "stormspear"
+   ],
+   "mythic": "valkyrie",
+   "weapon": {
+    "amount": {
+     "base": 372,
+     "scale": [
+      {
+       "ratio": 0.10625000000000001,
+       "stat": "attack"
+      }
+     ]
+    },
+    "type": "magical",
+    "hands": 1,
+    "cooldown": 8.5,
+    "apply": [
+     {
+      "status": "shock",
+      "stacks": {
+       "scale": [
+        {
+         "ratio": 0.0007,
+         "stat": "attack"
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "rarity": "mythic"
+  },
+  {
+   "id": "metronome",
+   "name": "Metronome",
+   "text": "Counts every hit the party lands. At 20, War ballad, Allegro and Thunder chord are ready at once, and the count starts again.",
+   "slot": "offhand",
+   "tier": "powerful",
+   "source": "unlock",
+   "offhand": "horn",
+   "statuses": [
+    "metronome"
+   ],
+   "mythic": "bard",
+   "rarity": "mythic"
   }
  ],
  "formations": [
