@@ -374,42 +374,46 @@ I read "once it falls" as "while it's down". If the Peak is raised, the Foothill
 
 ---
 
-## CHALLENGES, settled
+## CHALLENGES, settled or undone
 
-1. **Long march's short Regen:** settled by G1. It stays a short Regen of 8 ticks, as written.
-2. **The forge's Slow for a moment:** settled by G1. It stays a Slow of 8 ticks, as written.
-3. **Thorn hedge's brief Weaken:** settled by G1. It stays a Weaken of 6 ticks, as written.
-4. **Thorn hedge's Thorns high:** settled by the formations ruling. Thorns are medium, and section 9's "in Plate" note goes.
-5. **Hoarfrost line's triple:** settled by the formations ruling. The Breaker deals double.
-6. **Hammer and anvil's Hammer stacking with other reshapes:** settled by G5. A unit takes one swing shape, and the seat gives Attack or Magic +1 instead.
-7. **The Scythes against The storm front:** settled by the formations ruling. The Scythes' basic attacks hit every foe for a fifth each.
-8. **Names:** settled by the formations ruling. The "Rod" seats are Beacon, and the common Anvil is Heavy line.
-
-Second round:
-
-9. **Hammer and anvil's Hammer:** settled by the second round ("too strong, or out of range"). It's at attack speed −100, half as often, as the Millstone writes it. Its triple stays under G14, as a swing shape that swings half as often.
-10. **Reaping line's Scythes:** settled by the second round and G5. They're a swing shape, and their hits on the other foes are damage only.
-11. **Hearth's Torch:** settled by the second round. Only its basic attacks add a Burn to each burning foe.
-12. **Blood oath's Donor:** settled by the second round and G9. Its heals on the Bleeder are half again, not double.
-13. **Blood oath's Bleeder:** settled by G12. Its price is HP paid, not damage: no Shield soaks it, nothing reacts to it, and it stops at 1 HP (it stopped at a tenth before).
-14. **Names:** settled by the second round's cards and names. Gaol's Warden is the Turnkey, and Heavy line's Hammer is the Bruiser.
-15. **The wheel's turn:** settled by G13. It turns every 22 ticks, first at tick 11.
+1. **Long march's short Regen:** settled by the director: universal statuses. Regen at its own 24 ticks.
+2. **The forge's Slow for a moment:** settled by the director: universal statuses. Slow at its own 24 ticks.
+3. **Thorn hedge's brief Weaken:** settled by the director: universal statuses. Weaken at its own 20 ticks.
+4. **Thorn hedge's Thorns high:** undone: no balancing rules. Thorns high, as the spine wrote. Section 9's "in Plate" note is the lead's to settle.
+5. **Hoarfrost line's triple:** undone: no balancing rules. The Breaker deals triple.
+6. **Hammer and anvil's Hammer with other reshapes:** undone: no balancing rules. The seat's reshape multiplies with any other.
+7. **The Scythes against The storm front:** settled by the formations ruling, and kept: it was a small and a big version of one thing. The Scythes' basic attacks hit every foe for a fifth each.
+8. **Names:** settled by the formations ruling, and kept. The "Rod" seats are Beacon, and the common Anvil is Heavy line.
+9. **Hammer and anvil's Hammer at attack speed −100:** kept: that's "half as often" in the engine.
+10. **Reaping line's Scythes as a swing shape, with damage-only extra hits:** undone: no balancing rules. Every hit carries the basic attack's riders.
+11. **Hearth's Torch on basic attacks only:** undone: no balancing rules. It works on every hit.
+12. **Blood oath's Donor at half again:** undone: no balancing rules. Its heals on the Bleeder are doubled.
+13. **Blood oath's Bleeder's price:** settled by G12, and kept. HP paid, not damage, stopping at 1 HP.
+14. **Names:** settled by the second round's cards and names, and kept. Gaol's Warden is the Turnkey, and Heavy line's Hammer is the Bruiser.
+15. **The wheel's turn:** settled by G13, and kept. Every 22 ticks, first at tick 11.
+16. **The undying once a fight:** undone: no balancing rules. Each fall heals the others to full.
+17. **The choir's give-up widened to all MP:** undone: no balancing rules. As the spine wrote: no MP from MP regen.
+18. **The storm front's first hit a tenth less:** undone: no balancing rules. Hits at full.
 
 ## NEW
 
 1. **Seats as targets and event sources:** "the unit in a named seat" and "the next seat" (the Mason, Relay, The choir, Thorn hedge's Thorns). Engine 13 reads who sits in a seat; this is the other half.
 2. **A party condition:** "an ally is knocked out", read live and at a fight's start (Vigil's Mourners; The mountain when the Peak starts down).
 3. **Heals from other units don't land** (The undying's Martyr).
-4. **A strike sized from the hit that set it off,** a share of its damage before mitigation (The storm front; the Scythes no longer need it): a small extension of engine 9.
+4. **A strike sized from the hit that set it off,** a share of its damage before mitigation (The storm front): a small extension of engine 9.
 5. **Reading the MP cost just paid** (Relay's Well; the Brimming rod needs it too): small, beside engine 3.
 6. **One party count, shown once** and kept in step after a revive (The hurricane): small, mostly interface.
 7. **Engine 14 extended** from costs, stacks and cooldowns to an ability's wait and target (Gaol's Watcher, Hammer and anvil's Mason).
-8. **No MP gained in a fight,** from any source (The choir, from its ruling): small, beside "heals from others blocked".
-9. **An extra strike spread over every other foe that carries damage only** (the Scythes, from their rulings). The lead's gathered list has "extra strikes sized and spread over several foes".
+8. **Basic attacks aimed by a rule,** here every foe (the Scythes). It's on the lead's gathered list.
 
 ## Least sure
 
-1. **The pack.** Focus fire helps most parties, so "gives up anything that spreads" may not cost enough. If it doesn't, basic attacks could also lose their extra targets. G2 settled the Mark's length: 14 ticks outlasts the Lead's swing.
-2. **Skirmish line.** Against many small blows, the Armor it takes away costs about what the dodges save (Scatter's lesson, 5a); it pays against big blows and with the dodge pieces.
-3. **Relay's name** echoes the director's "relay is too complicated".
-Settled by the rulings and taken off this list: the storm front's cost (a tenth less), the choir's cost (no MP from anything else), Heat's numbers (G3), and the undying's repeated falls (once a fight).
+1. **The pack.** Focus fire helps most parties, so "gives up anything that spreads" may not cost enough. G2 settled the Mark's length: 14 ticks outlasts the Lead's swing.
+2. **The storm front** adds about a quarter to any party's single-target damage whenever two or more foes stand, and costs nothing.
+3. **The choir.** No class regains MP by itself since 5h, so "gives up regen" costs only regen gear and seats; in a three-caster party most casts are free.
+4. **The undying.** Each revive lets the Martyr fall again and heal the others to full again.
+5. **Long march and The forge at full length.** A 48% Regen on everyone every fight is what made Caravan +20 in 5e. A 24-tick Slow costs most of a regular fight.
+6. **Skirmish line.** Against many small blows, the Armor it takes away costs about what the dodges save (Scatter's lesson, 5a); it pays against big blows and with the dodge pieces.
+7. **Relay's name** echoes the director's "relay is too complicated".
+
+Heat's numbers, once least sure, stay settled by G3.
