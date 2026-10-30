@@ -184,7 +184,8 @@ test("rogue: no legendary piece twice in a run while others are left", () => {
 });
 
 test("rogue (5i, the retire): with no piece in a pool, an offer that would be one is another kind or nothing, and nothing breaks", () => {
-  const c = loadContent(raw);
+  // The pack with its stock emptied (the new pieces joined it in the build's second wave): only the plain weapons.
+  const c = loadContent({ ...(raw as object), gear: (raw as { gear: { source: string }[] }).gear.filter((g) => g.source === "starter") });
   const run = newRogue(c, { seed: 17, leader: "knight" });
   while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
   for (const rar of ["common", "uncommon", "rare", "legendary"] as const) assert.equal(rollItem(c, run, rngFor(17, rar), rar), null);
