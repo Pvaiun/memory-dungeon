@@ -504,10 +504,9 @@ To check, not yet new: whether a knocked-out unit can be given a timed status (P
 
 ## Least sure
 
-1. **Matins robe** (Clarity at every fight's start): 24% of max MP a fight, about three MP regen steps, on an uncommon, under 5h's scarce MP. The strongest uncommon here; the staff's and horn's uncommons share it.
-2. **Gambler's coin:** the Geomancer's Bedrock doubles it to 100% (every hit a crit behind a Shield), and the Assassin's Backstab, which scales from crit chance, grows by two and a half times. Chaos, or one exotic too many.
-3. **Blood covenant's rate:** a share of HP for the same share of MP is exact (a pool for a pool) but makes walls pay hard (Stand fast is a fifth of the Knight's small pool, so a fifth of its HP). The other reading, half the MP cost in HP, lets walls cast almost free.
-4. **Thornheart plate and Rubble plate against swarms:** both get large on six to eight foes; Thornheart reaches +300 Thorns in about a dozen ticks there.
-5. **Stats beside two lines:** Windrunner's garb carries Evasion 20 the line didn't give (three of its five wearers never dodge without it). Echo charm carries no Double strike, since Wasp charm would then be its small version, so it does nothing on a unit without extra strikes (in kit, only the Monk and the Stormcaller have them).
-6. **Heat's numbers** (+3% a stack, cap 15) are set here first; Wick, The forge and Ember palms need the same ones.
-7. **Duplicates across kinds,** each from the spine's table, that the lead may want to split: Holdfast and the totem's Guard below half; Glyphed robe and the staff's Shield from Magic; Courier's coat, Hare's foot and the fist and bell uncommons' Haste at the start; Silvered hauberk and the rune sword's, mace's and lantern's Ward at the start; Red ribbon and Mocking mail (a rare that is the uncommon's Taunt plus Aggro +20).
+The rulings settled Matins robe's Clarity and the duplicates across kinds (G7), Gambler's coin and Windrunner's Evasion (their rulings) and Heat (G3). The rest stands, with one new item.
+
+1. **Blood covenant's rate:** a share of HP for the same share of MP is exact (a pool for a pool) but makes walls pay hard (Stand fast is a fifth of the Knight's small pool, so a fifth of its HP). The other reading, half the MP cost in HP, lets walls cast almost free.
+2. **Thornheart plate against swarms:** it reaches +300 Thorns in about a dozen ticks on six to eight foes.
+3. **Echo charm carries no Double strike,** since Wasp charm would then be its small version, so it does nothing on a unit without extra strikes (in kit, only the Monk and the Stormcaller have them).
+4. **New, written under G7 and not yet read:** Courier's coat (Haste below half), Silvered hauberk (the first magical hit halved), Matins robe (the first ability free), Glyphed robe (a Shield each cast). Red ribbon's new Taunt below half is the round shield's uncommon effect too, and the Hoplite and Valkyrie wear both.

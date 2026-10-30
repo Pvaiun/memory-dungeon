@@ -542,7 +542,9 @@ The spine's rule: commons lean MP regen, Evasion, Magic or Attack; uncommons a s
   - The first lift at tick 11, then every short beat (22 ticks) after: ticks 11, 33, 55, 77 (the offhands ruling; statuses end with each fight, so a lift at the start found nothing).
   - 2 lifts in a regular fight, 3 or 4 in a boss fight.
   - The newest debuff. Doom counts.
-- **Hooks:** the piece's status: a `pulse` every 22, its first at tick 11 (a pulse offset: today a pulse's first beat comes one interval in, so the first lift is a `fight_start` reaction applying an 11-tick timer whose end starts the pulse) → `remove` label `debuff`, count 1, `to: { side: allies, where: { debuffs: true }, pick: highest, by: debuffs }`.
+- **Hooks:**
+  - The piece's status: `fight_start` → `apply` an 11-tick timer. When it ends, the first lift fires and a status with a `pulse` every 22 begins.
+  - Each lift: `remove` label `debuff`, count 1, `to: { side: allies, where: { debuffs: true }, pick: highest, by: debuffs }`.
 - **Builds:** Toll 2 ●●, Lockdown ●, Pact ●.
 
 #### Bell of the hour · bell · legendary
@@ -566,7 +568,7 @@ The spine's rule: commons lean MP regen, Evasion, Magic or Attack; uncommons a s
 
 ## Totem (Bramble knight, Ranger, Geomancer)
 
-The spine's rule: commons lean Armor, Attack, Thorns; uncommons Thorns, a Guard once a fight when its holder drops below half. The eight: thorns given to whoever draws, wounds on attackers, stone at the start, Shields that grow, and a hunt with a pack's reward.
+The spine's rule: commons lean Armor, Attack, Thorns; uncommons Thorns, a Guard once a fight when its holder drops below half. Under G7 the Guard goes to the first ally to drop below half (Plate keeps the holder's own). The eight: thorns given to whoever draws, a Guard for whoever breaks first, wounds on attackers, stone at the start, Shields that grow, and a hunt with a pack's reward.
 
 #### Standing stone · totem · common
 - **Card:** Totem. Fits Bramble knight, Ranger, Geomancer. Armor +2.
