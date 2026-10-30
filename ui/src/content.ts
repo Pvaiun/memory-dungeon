@@ -50,6 +50,14 @@ export const ability = (id: string): AbilityT => c.abilities.get(id)!;
 export const status = (id: string): StatusT => c.statuses.get(id)!;
 export const enemy = (id: string): EnemyT => c.enemies.get(id)!;
 export const gearOf = (id: string): GearT => c.gear.get(id)!;
+/**
+ * Step 5i: a status the player sees as an icon (on the field, in the messages, in a unit's state): shown as one, and not a
+ * marker, which is bookkeeping (a count, a once-a-fight flag) and hidden as hidden statuses are; `designer` lists markers too.
+ */
+export const shownAsIcon = (id: string, designer = false): boolean => {
+  const d = c.statuses.get(id);
+  return !!d && d.show === "icon" && (designer || d.label !== "marker");
+};
 export const kindOf = (id: string): WeaponKindT => c.weaponKinds.get(id)!;
 /** An armor type's or an offhand kind's name (step 5j). */
 export const armorName = (id: string): string => c.pack.armorTypes.find((k) => k.id === id)?.name ?? id;
@@ -103,9 +111,11 @@ export const STAT_CODE: Record<string, string> = {
   // Step 5j: one resistance, to magic, so three letters like ARM beside it.
   magic_resist: "RES",
 };
+/** What an immunity stat keeps off: "immune:status:silence" and "immune:silence" are both Silence (the status's id). */
+export const immuneTo = (key: string): string => key.replace(/^immune:(status:)?/, "");
 export function statCode(key: string): string {
   if (STAT_CODE[key]) return STAT_CODE[key];
-  if (key.startsWith("immune:")) return `NO ${key.slice(7).toUpperCase()}`;
+  if (key.startsWith("immune:")) return `NO ${immuneTo(key).toUpperCase()}`;
   return key.toUpperCase().slice(0, 4);
 }
 const STATUS_CODE: Record<string, string> = {

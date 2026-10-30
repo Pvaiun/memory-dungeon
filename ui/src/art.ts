@@ -90,8 +90,6 @@ export function weaponArt(gearId: string | undefined): string | undefined {
   const kind = c.gear.get(gearId)?.weapon?.kind;
   return kind ? manifest.weapons[`plain_${kind}`] : undefined;
 }
-/** A legendary amulet of the rogue mode shows the icon of the rule it carries (an hourglass, a lantern, a skull). */
-export const amuletStatus = (g: GearT): string | null => (g.slot === "amulet" && g.statuses?.[0]?.startsWith("lg_") && manifest.statuses[g.statuses[0]] ? g.statuses[0] : null);
 
 // ─── Actor sheets: RPG Maker MV sideview layout, 18 poses × 3 frames ───
 export const POSE = { walk: 0, wait: 1, chant: 2, guard: 3, damage: 4, evade: 5, thrust: 6, swing: 7, missile: 8, skill: 9, spell: 10, item: 11, escape: 12, victory: 13, dying: 14, abnormal: 15, sleep: 16, dead: 17 } as const;
@@ -143,7 +141,7 @@ const KIND_LOOK: Record<string, string> = {
 };
 const weaponKindLook = (wp: WeaponT | undefined): string => (wp?.kind && KIND_LOOK[wp.kind]) || (wp && resolveWeapon(c, wp).type === "magical" ? "magical" : "blunt");
 /** An ability's look, when it deals damage: its theme or motion, else its damage type. */
-export const abilityLook = (id: string, type: "physical" | "magical"): string => ABILITY_LOOK[id] ?? type;
+export const abilityLook = (id: string, type: "physical" | "magical"): string => ABILITY_LOOK[id.replace(/__\w+$/, "")] ?? type;
 /** A basic attack's look, from its weapon's ref (a gear id, "enemy:<id>" or "unarmed"), or a foe's own. */
 export function weaponLook(ref: string, enemy?: string): string {
   if (enemy && ENEMY_LOOK[enemy]) return ENEMY_LOOK[enemy];
@@ -176,7 +174,7 @@ const OFFHAND_CELL: Record<string, [Cell, Shade]> = {
 const AMULET_CELL: Cell = [20, 4];
 const shade = (cell: Cell, s: Shade): Cell => [cell[0] + SHADE[s], cell[1]];
 
-/** The iconset cell for a piece of gear: its kind's or type's icon, physical weapons blue and magical ones purple, gold for powerful pieces. */
+/** The iconset cell for a piece of gear: its kind's or type's icon, physical weapons blue and magical ones purple, gold for legendary and mythic pieces. */
 export function gearIcon(g: GearT): Cell {
   const gold = g.tier === "powerful";
   if (g.slot === "weapon") return kindIcon(g.weapon?.kind ?? "sword", gold);
@@ -214,4 +212,13 @@ export const STATUS_STYLE: Record<string, { color: string; light?: string }> = {
   silence: { color: "#b8b8c8" }, hidden: { color: "#9aa0b4", light: "#ffffff" }, rot: { color: "#a8c050" }, clarity: { color: "#86cfff", light: "#ffffff" }, aegis: { color: "#ffd54a", light: "#fff8d0" },
   doom: { color: "#ff4a6a", light: "#ffd0d8" }, bulwark: { color: "#c9d3e0" }, bulwark_broken: { color: "#ff7b6b" }, ice_crust: { color: "#8ae6ff", light: "#ffffff" },
   bloodlust_on: { color: "#ff4a6a", light: "#ffb0b8" }, bedrock_on: { color: "#dcae6e", light: "#f8e0b0" }, generic: { color: "#c8c8d8" },
+  // Step 5i: Marked and the counters, in their stand-in icons' colours.
+  marked: { color: "#f05a4a" }, cuts: { color: "#c8d2e0" }, heat: { color: "#f05a4a" }, spite: { color: "#e8284e" }, tempo: { color: "#6ea0f0" },
+  surge: { color: "#c46ef0" }, fervor: { color: "#fad040" }, charge: { color: "#8ae6ff" },
 };
+/** A status's colour: its own, else a buff's cool or a debuff's warm (step 5i: the new statuses have no entry of their own). */
+export function statusStyle(id: string): { color: string; light?: string } {
+  if (STATUS_STYLE[id]) return STATUS_STYLE[id];
+  const label = c.statuses.get(id)?.label;
+  return label === "buff" ? { color: "#86cfff" } : label === "debuff" ? { color: "#ffa062" } : STATUS_STYLE.generic;
+}

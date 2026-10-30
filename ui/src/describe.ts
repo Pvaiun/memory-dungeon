@@ -205,7 +205,10 @@ export function scalesOf(n: NumT | undefined, stacks = false): Scale[] {
       if (stacks) out.push({ text: code, stat: s.stat });
       else if (def?.kind === "points") out.push({ text: `${short(s.ratio / DISPLAY_DIV)}×${code}`, stat: s.stat });
       else out.push({ text: `${Math.round(s.ratio * 100)}% ${code}`, stat: s.stat });
-    } else if (s.stacks) out.push({ text: `+${short(s.ratio / DISPLAY_DIV)} PER ${status(s.stacks).name.toUpperCase()}` });
+    }
+    // A Shield's stacks are its points, so a share of it reads like a stat's ("58% SHIELD", step 5i's Crushing bash).
+    else if (s.stacks && status(s.stacks).absorb) out.push({ text: `${Math.round(s.ratio * 100)}% ${status(s.stacks).name.toUpperCase()}` });
+    else if (s.stacks) out.push({ text: `+${short(s.ratio / DISPLAY_DIV)} PER ${status(s.stacks).name.toUpperCase()}` });
   }
   return out;
 }
@@ -289,7 +292,7 @@ export function statusText(d: StatusT): string[] {
   if (d.text) out.push(d.text);
   const mode = d.stacking === "refresh" ? "reapplying refreshes it" : d.stacking === "fizzle" ? "can't be reapplied while it lasts" : "stacks";
   const dur = d.duration ? `${d.duration} ticks` : "until the fight ends";
-  out.push(`${d.label === "buff" ? "Buff" : "Debuff"}, ${dur}; ${mode}.`);
+  out.push(`${d.label === "buff" ? "Buff" : d.label === "marker" ? "Marker" : "Debuff"}, ${dur}; ${mode}.`);
   for (const s of d.stats ?? []) {
     const flat = typeof s.flat === "number" ? s.flat : undefined;
     const pct = typeof s.pct === "number" ? s.pct : undefined;
