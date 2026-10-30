@@ -6754,7 +6754,7 @@
   {
    "id": "skyspear",
    "name": "Skyspear",
-   "text": "Storm and Light at once.",
+   "text": "Steel and spell at once.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -6840,7 +6840,7 @@
   {
    "id": "brand_staff",
    "name": "Brand staff",
-   "text": "Fire, and more of it.",
+   "text": "A hotter flame: more Magic.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -6892,7 +6892,7 @@
   {
    "id": "storm_rod",
    "name": "Storm rod",
-   "text": "Lightning, and more of it.",
+   "text": "A louder storm: more Magic.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -7192,7 +7192,7 @@
   {
    "id": "nightstaff",
    "name": "Nightstaff",
-   "text": "Dark, and more of it.",
+   "text": "A longer night: more Magic.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",

@@ -146,7 +146,7 @@ export const EVENTS = {
   action_start: "An action starts. Whose: the acting unit. Has `kind`.",
   action_resolve: "An action resolves. Whose: the acting unit. Has `kind`.",
   action_interrupted: "An action in cast time is canceled by an interrupting lockout. Whose: the casting unit. Has `kind`.",
-  hit_lands: "A hit lands (not evaded or absorbed), riders included. Whose: the attacker; other: the target. Has `kind`, `tags` and `amount`.",
+  hit_lands: "A hit lands (not evaded), riders included. Whose: the attacker; other: the target. Has `kind`, `tags` and `amount`.",
   hit_taken: "A hit lands on this unit. Whose: the target; other: the attacker. Has `kind`, `tags` and `amount`.",
   hit_evaded: "This unit evades a hit. Whose: the target; other: the attacker. Has `kind` and `tags`.",
   hit_missed: "A hit is evaded. Whose: the attacker; other: the target. Has `kind` and `tags`.",
@@ -300,7 +300,7 @@ const applyFields = {
   duration: z.union([Ticks, z.literal("permanent")]).optional().describe("Default: the status's own. 0 only for an instant lockout."),
   chance: z.number().min(0).max(100).optional().describe("Percent, rolled on the applier's dice. Default: guaranteed."),
 };
-/** A status attached to a hit: applies whenever the hit occurs, even if BLOCKED or IMMUNE; never if evaded or absorbed. */
+/** A status attached to a hit: applies whenever the hit occurs, even if BLOCKED or IMMUNE; never if evaded. */
 export const HitApply = z.strictObject(applyFields);
 
 export const Effect = z

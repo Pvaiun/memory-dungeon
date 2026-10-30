@@ -63,7 +63,7 @@ export function needText(c: Content, nd: NeedT): string {
   if ("includes" in nd) return `Bring the ${list(nd.includes.map((id) => c.classes.get(id)?.name ?? id))}`;
   if ("excludes" in nd) return `No ${either(nd.excludes.map((id) => c.classes.get(id)?.name ?? id))}`;
   if ("formation" in nd) return `Stand in ${c.formations.get(nd.formation)?.name ?? nd.formation}`;
-  if ("armor" in nd) return nd.armor === "none" ? "Nobody wears armor" : `Everyone in ${nd.armor} armor`;
+  if ("armor" in nd) return nd.armor === "none" ? "Nobody wears armor" : `Everyone in ${(c.pack.armorTypes.find((t) => t.id === nd.armor)?.name ?? nd.armor).toLowerCase()}`;
   if ("weapons" in nd) return `Every weapon a ${either(nd.weapons.map((k) => (c.weaponKinds.get(k)?.name ?? k).toLowerCase()))}`;
   return nd.size === 1 ? "Go alone" : `A party of ${["", "one", "two", "three", "four", "five"][nd.size] ?? nd.size} at most`;
 }

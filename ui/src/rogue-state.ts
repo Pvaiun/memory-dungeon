@@ -5,7 +5,7 @@
  * with the same dice and the same party, so leaving a fight changes nothing.
  */
 import { combat, type Member as EngineMember } from "../../src/engine/combat/rules.js";
-import { finish, freshMeta, member, migrate, newRogue, partyOf, registerGear, type RogueMeta, type RogueRun } from "../../src/rogue.js";
+import { ROGUE_VERSION, finish, freshMeta, member, migrate, newRogue, partyOf, registerGear, type RogueMeta, type RogueRun } from "../../src/rogue.js";
 import { canEquip } from "../../src/validate.js";
 import { manifest } from "./art.js";
 import { c } from "./content.js";
@@ -21,16 +21,16 @@ function load(): Saved {
     const v = JSON.parse(raw) as Partial<Saved>;
     const meta = { ...freshMeta(), ...(v.meta ?? {}) };
     meta.owned = meta.owned.filter((id) => c.classes.has(id));
-    const run = v.run && v.run.v === 1 && !stale(v.run) ? migrate(v.run) : null;
+    const run = v.run && v.run.v === ROGUE_VERSION && !stale(v.run) ? migrate(v.run) : null;
     return { run, meta, last: v.last ?? null };
   } catch {
     return { run: null, meta: freshMeta() };
   }
 }
 /**
- * A run saved under rules the content no longer has (step 5j took out the elemental pieces and affixes, the axe and the
- * plain staffs, and moved pieces to kinds some classes can't use): its pieces can't be built, or a member wears one
- * that no longer fits, and the run is set aside. The leaders, the heat and the record stay.
+ * A run saved under rules the content no longer has (a run from before step 5j carries an older ROGUE_VERSION; this guards
+ * any later change of content within one): its pieces can't be built, or a member wears one that no longer fits, and the
+ * run is set aside. The leaders, the heat and the record stay.
  */
 function stale(run: RogueRun): boolean {
   try {

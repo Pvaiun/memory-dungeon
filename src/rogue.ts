@@ -15,7 +15,8 @@ import { int, next, rngFor, shuffle, type Rng } from "./engine/rng.js";
 import type { AbilityT, DungeonT, EffectT, FoesT, GearT, NumT, Party, RarityT, RogueEventT, RogueFightT, RogueNodeKindT, RogueRegionT, RogueT, EventOpT, SupplyIdT } from "./schema.js";
 import { canEquip, handsOf } from "./validate.js";
 
-export const ROGUE_VERSION = 1;
+/** Step 5j: 2. A run saved before the cleanup holds pieces and affixes the content no longer has, so it's set aside. */
+export const ROGUE_VERSION = 2;
 /** Step 5j: four slots. The offhand stays empty until the next pass makes its pieces. */
 export type Slot = "weapon" | "armor" | "offhand" | "amulet";
 export const SLOT_LIST: Slot[] = ["weapon", "armor", "offhand", "amulet"];

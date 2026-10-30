@@ -146,7 +146,7 @@ A number is a plain number, or `{ base, scale: [...] }`: base + Σ ratio × sour
 | `action_start` | An action starts. Whose: the acting unit. Has `kind`. |
 | `action_resolve` | An action resolves. Whose: the acting unit. Has `kind`. |
 | `action_interrupted` | An action in cast time is canceled by an interrupting lockout. Whose: the casting unit. Has `kind`. |
-| `hit_lands` | A hit lands (not evaded or absorbed), riders included. Whose: the attacker; other: the target. Has `kind`, `tags` and `amount`. |
+| `hit_lands` | A hit lands (not evaded), riders included. Whose: the attacker; other: the target. Has `kind`, `tags` and `amount`. |
 | `hit_taken` | A hit lands on this unit. Whose: the target; other: the attacker. Has `kind`, `tags` and `amount`. |
 | `hit_evaded` | This unit evades a hit. Whose: the target; other: the attacker. Has `kind` and `tags`. |
 | `hit_missed` | A hit is evaded. Whose: the attacker; other: the target. Has `kind` and `tags`. |
