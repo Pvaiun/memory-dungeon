@@ -6540,6 +6540,2213 @@
    ]
   },
   {
+   "id": "portcullis",
+   "name": "PORTCULLIS",
+   "text": "While the wearer is above half its HP, it draws far more (Aggro +20).",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "portcullis_on",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpAtLeast": 50
+        }
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "portcullis_on",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpAtLeast": 50
+        }
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "healed"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "portcullis_on",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpAtLeast": 50
+        }
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "hp_lost"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "portcullis_on",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpBelow": 50
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "portcullis_on",
+   "name": "PORTCULLIS",
+   "text": "Draws far more.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "fizzle",
+   "stats": [
+    {
+     "stat": "aggro",
+     "flat": 20
+    }
+   ]
+  },
+  {
+   "id": "keystone_cuirass",
+   "name": "KEYSTONE CUIRASS",
+   "text": "Its basic attacks deal 2% more for every 1,000 Armor it has.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "boosts": [
+    {
+     "tag": "basic",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 0.002,
+        "stat": "armor",
+        "of": "holder"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "holdfast",
+   "name": "HOLDFAST",
+   "text": "The first time each fight the wearer drops below half its HP, it's Guarded.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hp_lost"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "guard",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpBelow": 50,
+         "lacks": "holdfast_used"
+        }
+       }
+      },
+      {
+       "op": "apply",
+       "status": "holdfast_used",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpBelow": 50
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "holdfast_used",
+   "name": "HOLDFAST",
+   "text": "Spent for this fight.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "fizzle",
+   "survivesKO": true
+  },
+  {
+   "id": "bastion_plate",
+   "name": "BASTION PLATE",
+   "text": "Starts every fight Guarded.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "guard",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "hoarfrost_plate",
+   "name": "HOARFROST PLATE",
+   "text": "Foes that hit the wearer gain 2 Chill.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_taken"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "chill",
+       "to": "other",
+       "stacks": 2
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "challengers_plate",
+   "name": "CHALLENGER'S PLATE",
+   "text": "Taunts when the fight starts, and again whenever an ally falls.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "taunt",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "ko",
+      "whose": "ally"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "taunt",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "rubble_plate",
+   "name": "RUBBLE PLATE",
+   "text": "When the wearer's Shield breaks, every foe takes damage equal to the most that Shield held since it last broke, and a Shield of a quarter of that is rebuilt.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "shield",
+      "cause": [
+       "stacks"
+      ]
+     },
+     "do": [
+      {
+       "op": "damage",
+       "type": "none",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 1,
+          "amount": true
+         }
+        ]
+       },
+       "to": {
+        "side": "foes",
+        "pick": "all"
+       }
+      },
+      {
+       "op": "apply",
+       "status": "shield",
+       "to": "holder",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.25,
+          "amount": true
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "thornheart_plate",
+   "name": "THORNHEART PLATE",
+   "text": "Each hit the wearer takes adds 1 Spite (+15 Thorns a stack, up to 20) for the rest of the fight.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_taken"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "spite",
+       "to": "holder",
+       "stacks": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "last_bastion",
+   "name": "LAST BASTION",
+   "text": "Once a fight, a blow that would knock the wearer out leaves it at 1 HP and Guarded instead. Until it's healed back above half its HP, its hits deal double. After a won fight, it's at no less than a fifth of its HP.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "last_bastion_floor",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "last_bastion_floor",
+      "cause": [
+       "spent"
+      ]
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "guard",
+       "to": "holder"
+      },
+      {
+       "op": "apply",
+       "status": "last_bastion_on",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "healed"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "last_bastion_on",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpAtLeast": 50
+        }
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "fight_won"
+     },
+     "do": [
+      {
+       "op": "heal",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.2,
+          "stat": "max_hp",
+          "of": "holder"
+         },
+         {
+          "ratio": -1,
+          "hp": "current",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": {
+        "side": "self",
+        "where": {
+         "hpBelow": 20
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "last_bastion_floor",
+   "name": "LAST BASTION",
+   "text": "The next blow that would knock it out leaves it at 1 HP.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "fizzle",
+   "unremovable": true,
+   "floor": {
+    "spend": true
+   }
+  },
+  {
+   "id": "last_bastion_on",
+   "name": "BASTION",
+   "text": "Its hits deal double.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "fizzle",
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": 100
+    },
+    {
+     "tag": "magical",
+     "pct": 100
+    }
+   ]
+  },
+  {
+   "id": "tithing_hauberk",
+   "name": "TITHING HAUBERK",
+   "text": "Each hit the wearer lands heals it for 1.5% of its max HP.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands"
+     },
+     "do": [
+      {
+       "op": "heal",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.015,
+          "stat": "max_hp",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "self"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "reprisal_hauberk",
+   "name": "REPRISAL HAUBERK",
+   "text": "The first time each foe hits the wearer in a fight, that foe takes damage equal to 17% of the wearer's max HP.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_taken"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "reprisal_hauberk_mark",
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "reprisal_hauberk_mark",
+   "name": "REPRISAL",
+   "text": "Has paid for hitting the wearer.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "fizzle",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "status_gained",
+      "status": "reprisal_hauberk_mark"
+     },
+     "actor": "source",
+     "do": [
+      {
+       "op": "damage",
+       "type": "none",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.17,
+          "stat": "max_hp",
+          "of": "source"
+         }
+        ]
+       },
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "silvered_hauberk",
+   "name": "SILVERED HAUBERK",
+   "text": "The first magical hit the wearer takes each fight deals half.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "silvered_hauberk_on",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "silvered_hauberk_on",
+   "name": "SILVERED",
+   "text": "The next magical hit it takes deals half.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "fizzle",
+   "taken": [
+    {
+     "tag": "magical",
+     "pct": -50
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_taken",
+      "tags": [
+       "magical"
+      ]
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "silvered_hauberk_on",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "static_mail",
+   "name": "STATIC MAIL",
+   "text": "Foes that hit the wearer gain 2 Shock.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_taken"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "shock",
+       "to": "other",
+       "stacks": 2
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "mocking_mail",
+   "name": "MOCKING MAIL",
+   "text": "Taunts when the fight starts.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "taunt",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "bloodsworn_mail",
+   "name": "BLOODSWORN MAIL",
+   "text": "Below half its HP, the wearer has Lifesteal 10% and its hits deal a quarter more.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "bloodsworn_mail_on",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpBelow": 50
+        }
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "bloodsworn_mail_on",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpBelow": 50
+        }
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "hp_lost"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "bloodsworn_mail_on",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpBelow": 50
+        }
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "healed"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "bloodsworn_mail_on",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpAtLeast": 50
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "bloodsworn_mail_on",
+   "name": "BLOODSWORN",
+   "text": "Lifesteal 10%, and its hits deal a quarter more.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "fizzle",
+   "stats": [
+    {
+     "stat": "lifesteal",
+     "flat": 10
+    }
+   ],
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": 25
+    },
+    {
+     "tag": "magical",
+     "pct": 25
+    }
+   ]
+  },
+  {
+   "id": "sanguine_mail",
+   "name": "SANGUINE MAIL",
+   "text": "Below half its HP, healing the wearer receives is doubled. Above half, it's halved.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "sanguine_mail_on",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpBelow": 50
+        }
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "sanguine_mail_on",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpBelow": 50
+        }
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "hp_lost"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "sanguine_mail_on",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpBelow": 50
+        }
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "healed"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "sanguine_mail_on",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpAtLeast": 50
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "sanguine_mail_on",
+   "name": "SANGUINE",
+   "text": "Healing it receives is doubled.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "fizzle",
+   "stats": [
+    {
+     "stat": "healing_received",
+     "flat": 150
+    }
+   ]
+  },
+  {
+   "id": "mantle_of_the_fallen",
+   "name": "MANTLE OF THE FALLEN",
+   "text": "When an ally falls, the wearer is Hasted and Guarded and gains 4 Might. When an ally is revived, the wearer heals it for a third of its max HP.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "ko",
+      "whose": "ally"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "haste",
+       "to": "holder"
+      },
+      {
+       "op": "apply",
+       "status": "guard",
+       "to": "holder"
+      },
+      {
+       "op": "apply",
+       "status": "might",
+       "to": "holder",
+       "stacks": 4
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived",
+      "whose": "ally"
+     },
+     "do": [
+      {
+       "op": "heal",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.3333333333333333,
+          "stat": "max_hp",
+          "of": "target"
+         }
+        ]
+       },
+       "to": "owner"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "hexweave_mail",
+   "name": "HEXWEAVE MAIL",
+   "text": "The wearer's hits deal 10% more to a foe for each debuff it holds.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 10,
+        "count": "debuffs",
+        "of": "target"
+       }
+      ]
+     }
+    },
+    {
+     "tag": "magical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 10,
+        "count": "debuffs",
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "couriers_coat",
+   "name": "COURIER'S COAT",
+   "text": "The first time each fight the wearer drops below half its HP, it's Hasted.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hp_lost"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "haste",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpBelow": 50,
+         "lacks": "couriers_coat_used"
+        }
+       }
+      },
+      {
+       "op": "apply",
+       "status": "couriers_coat_used",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpBelow": 50
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "couriers_coat_used",
+   "name": "COURIER",
+   "text": "Spent for this fight.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "fizzle",
+   "survivesKO": true
+  },
+  {
+   "id": "mottled_hide",
+   "name": "MOTTLED HIDE",
+   "text": "While the wearer is below half its HP, it draws far less (Aggro −20).",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "mottled_hide_on",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpBelow": 50
+        }
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "mottled_hide_on",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpBelow": 50
+        }
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "hp_lost"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "mottled_hide_on",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpBelow": 50
+        }
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "healed"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "mottled_hide_on",
+       "to": {
+        "side": "self",
+        "where": {
+         "hpAtLeast": 50
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "mottled_hide_on",
+   "name": "MOTTLED",
+   "text": "Draws far less.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "fizzle",
+   "stats": [
+    {
+     "stat": "aggro",
+     "flat": -20
+    }
+   ]
+  },
+  {
+   "id": "warpaint_jerkin",
+   "name": "WARPAINT JERKIN",
+   "text": "Starts every fight with a few Might, from its Attack.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "might",
+       "to": "holder",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0007,
+          "stat": "attack",
+          "of": "holder"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "duelists_leathers",
+   "name": "DUELIST'S LEATHERS",
+   "text": "Each time the wearer dodges a hit, it strikes the attacker with its weapon.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_evaded"
+     },
+     "do": [
+      {
+       "op": "strike",
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "shadow_cloak",
+   "name": "SHADOW CLOAK",
+   "text": "Hidden when the fight starts. The wearer's hits deal half again as much while it's Hidden.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "hidden",
+       "to": "holder"
+      }
+     ]
+    }
+   ],
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 50,
+        "when": {
+         "has": "hidden"
+        },
+        "of": "holder"
+       }
+      ]
+     }
+    },
+    {
+     "tag": "magical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 50,
+        "when": {
+         "has": "hidden"
+        },
+        "of": "holder"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "trackers_coat",
+   "name": "TRACKER'S COAT",
+   "text": "The wearer's abilities have Seek.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "seek": "ability"
+  },
+  {
+   "id": "windrunners_garb",
+   "name": "WINDRUNNER'S GARB",
+   "text": "Each dodge adds 1 Tempo (+5% speed in everything a stack, up to 10) for the rest of the fight. Each hit the wearer takes spends half its Tempo.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_evaded"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "tempo",
+       "to": "holder",
+       "stacks": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pack_leaders_coat",
+   "name": "PACK LEADER'S COAT",
+   "text": "When the wearer lands a killing blow, every ally's next basic attack comes at once.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "ko",
+      "whose": "foe",
+      "other": "holder"
+     },
+     "do": [
+      {
+       "op": "cooldown",
+       "which": "basic",
+       "set": "ready",
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "frostwalkers_furs",
+   "name": "FROSTWALKER'S FURS",
+   "text": "When a foe's Chill shatters, the wearer is Hasted, and its next hit adds a Chill to every foe.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "status_capped",
+      "status": "chill",
+      "whose": "foe"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "haste",
+       "to": "holder"
+      },
+      {
+       "op": "apply",
+       "status": "frostwalkers_furs_on",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "frostwalkers_furs_on",
+   "name": "FROSTWALK",
+   "text": "Its next hit adds a Chill to every foe.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "refresh",
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "chill",
+       "to": {
+        "side": "foes",
+        "pick": "all"
+       },
+       "stacks": 1
+      },
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "frostwalkers_furs_on",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "matins_robe",
+   "name": "MATINS ROBE",
+   "text": "The first ability the wearer casts each fight costs no MP.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "matins_robe_on",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "matins_robe_on",
+   "name": "MATINS",
+   "text": "Its next ability costs no MP.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "fizzle",
+   "mods": [
+    {
+     "mp": -100
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "action_resolve",
+      "kind": "ability"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "matins_robe_on",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "wallflowers_robe",
+   "name": "WALLFLOWER'S ROBE",
+   "text": "Draws far less (Aggro −20) until the first hit lands on it each fight.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "wallflowers_robe_on",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "wallflowers_robe_on",
+   "name": "UNNOTICED",
+   "text": "Draws far less until a hit lands on it.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "fizzle",
+   "stats": [
+    {
+     "stat": "aggro",
+     "flat": -20
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_taken"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "wallflowers_robe_on",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "glyphed_robe",
+   "name": "GLYPHED ROBE",
+   "text": "Each ability the wearer finishes casting gives it a Shield of a tenth of its Magic.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "action_resolve",
+      "kind": "ability"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "shield",
+       "to": "holder",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.1,
+          "stat": "magic",
+          "of": "holder"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "kindled_robes",
+   "name": "KINDLED ROBES",
+   "text": "While any foe has Burn, the wearer gains 1 Heat every 4 ticks (+3% damage a stack, up to 15) for the rest of the fight.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "pulse": {
+    "every": 4,
+    "if": {
+     "side": "foes",
+     "where": {
+      "has": "burn"
+     }
+    },
+    "do": [
+     {
+      "op": "apply",
+      "status": "heat",
+      "to": "holder",
+      "stacks": 1
+     }
+    ]
+   }
+  },
+  {
+   "id": "weavers_robes",
+   "name": "WEAVER'S ROBES",
+   "text": "When an ally finishes casting an ability, the wearer's next ability costs a fifth less MP.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "action_resolve",
+      "kind": "ability",
+      "whose": "ally"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "weavers_robes_on",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "weavers_robes_on",
+   "name": "WOVEN",
+   "text": "Its next ability costs a fifth less MP.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "refresh",
+   "mods": [
+    {
+     "mp": -20
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "action_resolve",
+      "kind": "ability"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "weavers_robes_on",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "archmages_mantle",
+   "name": "ARCHMAGE'S MANTLE",
+   "text": "The wearer's abilities cost half again as much MP, deal half again as much damage, heal half again as much, and add half again as many stacks.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "mods": [
+    {
+     "mp": 50,
+     "heal": 50,
+     "stacks": {
+      "pct": 50
+     }
+    }
+   ],
+   "boosts": [
+    {
+     "tag": "ability",
+     "pct": 50
+    }
+   ]
+  },
+  {
+   "id": "stormweave",
+   "name": "STORMWEAVE",
+   "text": "Each of the wearer's actions that hits three or more foes adds 1 Surge (+5% damage a stack, up to 10) for the rest of the fight.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "action_resolve",
+      "countAtLeast": 3
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "surge",
+       "to": "holder",
+       "stacks": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "vestments_of_return",
+   "name": "VESTMENTS OF RETURN",
+   "text": "While the wearer stands, every ally revived comes back behind a Shield of half its max HP.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "revived",
+      "whose": "ally"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "shield",
+       "to": "owner",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.5,
+          "stat": "max_hp",
+          "of": "target"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "red_ribbon",
+   "name": "RED RIBBON",
+   "text": "The first time an ally drops below half its HP each fight, the wearer Taunts.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hp_lost",
+      "whose": "ally"
+     },
+     "if": [
+      {
+       "unit": "owner",
+       "where": {
+        "hpBelow": 50
+       }
+      },
+      {
+       "side": "self",
+       "where": {
+        "lacks": "red_ribbon_used"
+       }
+      }
+     ],
+     "do": [
+      {
+       "op": "apply",
+       "status": "taunt",
+       "to": "holder"
+      },
+      {
+       "op": "apply",
+       "status": "red_ribbon_used",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "red_ribbon_used",
+   "name": "RED RIBBON",
+   "text": "Spent for this fight.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "fizzle",
+   "survivesKO": true
+  },
+  {
+   "id": "carapace_charm",
+   "name": "CARAPACE CHARM",
+   "text": "Starts every fight behind a Shield of 15% of its max HP.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "shield",
+       "to": "holder",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.15,
+          "stat": "max_hp",
+          "of": "holder"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "hares_foot",
+   "name": "HARE'S FOOT",
+   "text": "Starts every fight Hasted.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "haste",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "batwing_charm",
+   "name": "BATWING CHARM",
+   "text": "Hits from the wearer's abilities heal it for 10% of their damage.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "ability"
+     },
+     "do": [
+      {
+       "op": "heal",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.1,
+          "amount": true
+         }
+        ]
+       },
+       "to": "self"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "urchin_shell",
+   "name": "URCHIN SHELL",
+   "text": "While the wearer holds a Shield, it has Thorns 150.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "status_gained",
+      "status": "shield"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "urchin_shell_on",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "shield"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "urchin_shell_on",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "urchin_shell_on",
+   "name": "URCHIN",
+   "text": "Thorns 150.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "fizzle",
+   "stats": [
+    {
+     "stat": "thorns",
+     "flat": 150
+    }
+   ]
+  },
+  {
+   "id": "wasp_charm",
+   "name": "WASP CHARM",
+   "text": "While the wearer is Hasted, it has Double strike 25%.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "status_gained",
+      "status": "haste"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "wasp_charm_on",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "haste"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "wasp_charm_on",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "wasp_charm_on",
+   "name": "WASP",
+   "text": "Double strike 25%.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "fizzle",
+   "stats": [
+    {
+     "stat": "double_strike",
+     "flat": 25
+    }
+   ]
+  },
+  {
+   "id": "millstone",
+   "name": "MILLSTONE",
+   "text": "Basic attacks deal two and a quarter times as much.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "boosts": [
+    {
+     "tag": "basic",
+     "pct": 125
+    }
+   ]
+  },
+  {
+   "id": "hummingbird_charm",
+   "name": "HUMMINGBIRD CHARM",
+   "text": "Basic attacks deal 45% as much.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "boosts": [
+    {
+     "tag": "basic",
+     "pct": -55
+    }
+   ]
+  },
+  {
+   "id": "echo_charm",
+   "name": "ECHO CHARM",
+   "text": "The wearer's extra strikes apply what its basic attacks apply: statuses and on-hit effects. Not damage boosts or Lifesteal.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "echo": true
+  },
+  {
+   "id": "opportunists_charm",
+   "name": "OPPORTUNIST'S CHARM",
+   "text": "Hits on a Stunned or Silenced foe deal a third more.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 33,
+        "when": {
+         "hasAny": [
+          "stun",
+          "silence"
+         ]
+        },
+        "of": "target"
+       }
+      ]
+     }
+    },
+    {
+     "tag": "magical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 33,
+        "when": {
+         "hasAny": [
+          "stun",
+          "silence"
+         ]
+        },
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "bounty_charm",
+   "name": "BOUNTY CHARM",
+   "text": "When the wearer lands a killing blow, it gains 2 Might and its next basic attack comes at once.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "ko",
+      "whose": "foe",
+      "other": "holder"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "might",
+       "to": "holder",
+       "stacks": 2
+      },
+      {
+       "op": "cooldown",
+       "which": "basic",
+       "set": "ready",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "martyrs_locket",
+   "name": "MARTYR'S LOCKET",
+   "text": "When the wearer falls, every other ally heals a fifth of its max HP and is Hasted.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "survivesKO": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "ko"
+     },
+     "do": [
+      {
+       "op": "heal",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.2,
+          "stat": "max_hp",
+          "of": "target"
+         }
+        ]
+       },
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
+      },
+      {
+       "op": "apply",
+       "status": "haste",
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "heart_of_winter",
+   "name": "HEART OF WINTER",
+   "text": "Every hit the wearer lands adds a Chill.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "chill",
+       "to": "other",
+       "stacks": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ember_heart",
+   "name": "EMBER HEART",
+   "text": "When a burning foe falls, every other foe gains a third of its Burn.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "burn",
+      "whose": "foe",
+      "cause": [
+       "ko"
+      ]
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "burn",
+       "to": {
+        "side": "foes",
+        "pick": "all"
+       },
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.3333333333333333,
+          "amount": true
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "phoenix_ember",
+   "name": "PHOENIX EMBER",
+   "text": "Once a fight, when the wearer falls, it stands up 4 ticks later with a fifth of its HP.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "survivesKO": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "ko"
+     },
+     "do": [
+      {
+       "op": "revive",
+       "hp": {
+        "scale": [
+         {
+          "ratio": 0.2,
+          "stat": "max_hp",
+          "of": "target"
+         }
+        ]
+       },
+       "after": 4,
+       "to": {
+        "side": "self",
+        "where": {
+         "ko": true,
+         "lacks": "phoenix_ember_used"
+        }
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived",
+      "other": "holder"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "phoenix_ember_used",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "phoenix_ember_used",
+   "name": "PHOENIX EMBER",
+   "text": "Spent for this fight.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "fizzle",
+   "survivesKO": true
+  },
+  {
+   "id": "ready_stance",
+   "name": "READY STANCE",
+   "text": "The wearer's abilities start every fight at least half charged.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "cooldown",
+       "which": "abilities",
+       "set": {
+        "atMost": 50
+       },
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "blood_covenant",
+   "name": "BLOOD COVENANT",
+   "text": "The wearer's abilities cost HP in place of MP: the same share of its max HP as they'd cost of its max MP. It won't cast one that would leave it below a tenth of its HP.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "mods": [
+    {
+     "mp": -100,
+     "hp": {
+      "pct": 100,
+      "share": true,
+      "floor": 10
+     }
+    }
+   ]
+  },
+  {
+   "id": "gamblers_coin",
+   "name": "GAMBLER'S COIN",
+   "text": "The wearer's crit chance is about 50%. Its hits that don't crit deal half; its crits deal what a crit always does. Hits that always crit still do.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "set": [
+    {
+     "stat": "crit_chance",
+     "value": 50
+    }
+   ],
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": -50
+    },
+    {
+     "tag": "magical",
+     "pct": -50
+    }
+   ],
+   "stats": [
+    {
+     "stat": "crit_multiplier",
+     "flat": {
+      "scale": [
+       {
+        "ratio": 1,
+        "stat": "crit_multiplier",
+        "of": "holder"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
    "id": "gatekeepers_kite",
    "name": "Gatekeeper's kite",
    "text": "While its holder Taunts, it takes a tenth less damage.",
@@ -22781,6 +24988,1202 @@
     }
    },
    "rarity": "legendary"
+  },
+  {
+   "id": "ironclad",
+   "name": "Ironclad",
+   "text": "Armor +2.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "plate",
+   "stats": [
+    {
+     "stat": "armor",
+     "flat": 2000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "crested_plate",
+   "name": "Crested plate",
+   "text": "HP +1, Aggro +1.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "plate",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": 500
+    },
+    {
+     "stat": "aggro",
+     "flat": 10
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "bristled_plate",
+   "name": "Bristled plate",
+   "text": "Thorns 150, Armor +1.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "plate",
+   "stats": [
+    {
+     "stat": "thorns",
+     "flat": 150
+    },
+    {
+     "stat": "armor",
+     "flat": 1000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "portcullis",
+   "name": "Portcullis",
+   "text": "Thorns 150. While the wearer is above half its HP, it draws far more (Aggro +20).",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "plate",
+   "stats": [
+    {
+     "stat": "thorns",
+     "flat": 150
+    }
+   ],
+   "rarity": "uncommon",
+   "statuses": [
+    "portcullis"
+   ]
+  },
+  {
+   "id": "keystone_cuirass",
+   "name": "Keystone cuirass",
+   "text": "Armor +1. Its basic attacks deal 2% more for every 1,000 Armor it has.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "plate",
+   "stats": [
+    {
+     "stat": "armor",
+     "flat": 1000
+    }
+   ],
+   "rarity": "uncommon",
+   "statuses": [
+    "keystone_cuirass"
+   ]
+  },
+  {
+   "id": "holdfast",
+   "name": "Holdfast",
+   "text": "HP +1. The first time each fight the wearer drops below half its HP, it's Guarded.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "plate",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
+   "rarity": "uncommon",
+   "statuses": [
+    "holdfast"
+   ]
+  },
+  {
+   "id": "bastion_plate",
+   "name": "Bastion plate",
+   "text": "Starts every fight Guarded.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "plate",
+   "rarity": "rare",
+   "statuses": [
+    "bastion_plate"
+   ]
+  },
+  {
+   "id": "hoarfrost_plate",
+   "name": "Hoarfrost plate",
+   "text": "Foes that hit the wearer gain 2 Chill.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "plate",
+   "rarity": "rare",
+   "statuses": [
+    "hoarfrost_plate"
+   ]
+  },
+  {
+   "id": "challengers_plate",
+   "name": "Challenger's plate",
+   "text": "Taunts when the fight starts, and again whenever an ally falls.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "plate",
+   "rarity": "rare",
+   "statuses": [
+    "challengers_plate"
+   ]
+  },
+  {
+   "id": "rubble_plate",
+   "name": "Rubble plate",
+   "text": "When the wearer's Shield breaks, every foe takes damage equal to the most that Shield held since it last broke, and a Shield of a quarter of that is rebuilt.",
+   "slot": "armor",
+   "tier": "powerful",
+   "source": "unlock",
+   "armor": "plate",
+   "rarity": "legendary",
+   "statuses": [
+    "rubble_plate"
+   ]
+  },
+  {
+   "id": "thornheart_plate",
+   "name": "Thornheart plate",
+   "text": "Each hit the wearer takes adds 1 Spite (+15 Thorns a stack, up to 20) for the rest of the fight.",
+   "slot": "armor",
+   "tier": "powerful",
+   "source": "unlock",
+   "armor": "plate",
+   "rarity": "legendary",
+   "statuses": [
+    "thornheart_plate"
+   ]
+  },
+  {
+   "id": "last_bastion",
+   "name": "Last bastion",
+   "text": "Once a fight, a blow that would knock the wearer out leaves it at 1 HP and Guarded instead. Until it's healed back above half its HP, its hits deal double. After a won fight, it's at no less than a fifth of its HP.",
+   "slot": "armor",
+   "tier": "powerful",
+   "source": "unlock",
+   "armor": "plate",
+   "rarity": "legendary",
+   "statuses": [
+    "last_bastion"
+   ]
+  },
+  {
+   "id": "inscribed_hauberk",
+   "name": "Inscribed hauberk",
+   "text": "Attack +1, Magic +1.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "mail",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "magic",
+     "flat": 1000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "lamprey_mail",
+   "name": "Lamprey mail",
+   "text": "HP +1, Lifesteal 10%.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "mail",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": 500
+    },
+    {
+     "stat": "lifesteal",
+     "flat": 10
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "thick_byrnie",
+   "name": "Thick byrnie",
+   "text": "HP +2.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "mail",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": 1000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "tithing_hauberk",
+   "name": "Tithing hauberk",
+   "text": "Attack +1. Each hit the wearer lands heals it for 1.5% of its max HP.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "mail",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "rarity": "uncommon",
+   "statuses": [
+    "tithing_hauberk"
+   ]
+  },
+  {
+   "id": "reprisal_hauberk",
+   "name": "Reprisal hauberk",
+   "text": "HP +1. The first time each foe hits the wearer in a fight, that foe takes damage equal to 17% of the wearer's max HP.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "mail",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
+   "rarity": "uncommon",
+   "statuses": [
+    "reprisal_hauberk"
+   ]
+  },
+  {
+   "id": "silvered_hauberk",
+   "name": "Silvered hauberk",
+   "text": "Magic +1. The first magical hit the wearer takes each fight deals half.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "mail",
+   "stats": [
+    {
+     "stat": "magic",
+     "flat": 1000
+    }
+   ],
+   "rarity": "uncommon",
+   "statuses": [
+    "silvered_hauberk"
+   ]
+  },
+  {
+   "id": "static_mail",
+   "name": "Static mail",
+   "text": "Foes that hit the wearer gain 2 Shock.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "mail",
+   "rarity": "rare",
+   "statuses": [
+    "static_mail"
+   ]
+  },
+  {
+   "id": "mocking_mail",
+   "name": "Mocking mail",
+   "text": "Aggro +20. Taunts when the fight starts.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "mail",
+   "stats": [
+    {
+     "stat": "aggro",
+     "flat": 20
+    }
+   ],
+   "rarity": "rare",
+   "statuses": [
+    "mocking_mail"
+   ]
+  },
+  {
+   "id": "bloodsworn_mail",
+   "name": "Bloodsworn mail",
+   "text": "Below half its HP, the wearer has Lifesteal 10% and its hits deal a quarter more.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "mail",
+   "rarity": "rare",
+   "statuses": [
+    "bloodsworn_mail"
+   ]
+  },
+  {
+   "id": "sanguine_mail",
+   "name": "Sanguine mail",
+   "text": "Below half its HP, healing the wearer receives is doubled. Above half, it's halved.",
+   "slot": "armor",
+   "tier": "powerful",
+   "source": "unlock",
+   "armor": "mail",
+   "stats": [
+    {
+     "stat": "healing_received",
+     "flat": -50
+    }
+   ],
+   "rarity": "legendary",
+   "statuses": [
+    "sanguine_mail"
+   ]
+  },
+  {
+   "id": "mantle_of_the_fallen",
+   "name": "Mantle of the fallen",
+   "text": "When an ally falls, the wearer is Hasted and Guarded and gains 4 Might. When an ally is revived, the wearer heals it for a third of its max HP.",
+   "slot": "armor",
+   "tier": "powerful",
+   "source": "unlock",
+   "armor": "mail",
+   "rarity": "legendary",
+   "statuses": [
+    "mantle_of_the_fallen"
+   ]
+  },
+  {
+   "id": "hexweave_mail",
+   "name": "Hexweave mail",
+   "text": "The wearer's hits deal 10% more to a foe for each debuff it holds.",
+   "slot": "armor",
+   "tier": "powerful",
+   "source": "unlock",
+   "armor": "mail",
+   "rarity": "legendary",
+   "statuses": [
+    "hexweave_mail"
+   ]
+  },
+  {
+   "id": "tumblers_vest",
+   "name": "Tumbler's vest",
+   "text": "Evasion 20, Attack +1.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "leather",
+   "stats": [
+    {
+     "stat": "evasion",
+     "flat": 20
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "footpads_jerkin",
+   "name": "Footpad's jerkin",
+   "text": "Crit chance +3%, Attack +1.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "leather",
+   "stats": [
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "spotters_coat",
+   "name": "Spotter's coat",
+   "text": "Accuracy 20, Crit chance +3%.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "leather",
+   "stats": [
+    {
+     "stat": "accuracy",
+     "flat": 20
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "couriers_coat",
+   "name": "Courier's coat",
+   "text": "Attack +1. The first time each fight the wearer drops below half its HP, it's Hasted.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "leather",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "rarity": "uncommon",
+   "statuses": [
+    "couriers_coat"
+   ]
+  },
+  {
+   "id": "mottled_hide",
+   "name": "Mottled hide",
+   "text": "Evasion 20. While the wearer is below half its HP, it draws far less (Aggro −20).",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "leather",
+   "stats": [
+    {
+     "stat": "evasion",
+     "flat": 20
+    }
+   ],
+   "rarity": "uncommon",
+   "statuses": [
+    "mottled_hide"
+   ]
+  },
+  {
+   "id": "warpaint_jerkin",
+   "name": "Warpaint jerkin",
+   "text": "Crit chance +3%. Starts every fight with a few Might, from its Attack.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "leather",
+   "stats": [
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    }
+   ],
+   "rarity": "uncommon",
+   "statuses": [
+    "warpaint_jerkin"
+   ]
+  },
+  {
+   "id": "duelists_leathers",
+   "name": "Duelist's leathers",
+   "text": "Evasion 20. Each time the wearer dodges a hit, it strikes the attacker with its weapon.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "leather",
+   "stats": [
+    {
+     "stat": "evasion",
+     "flat": 20
+    }
+   ],
+   "rarity": "rare",
+   "statuses": [
+    "duelists_leathers"
+   ]
+  },
+  {
+   "id": "shadow_cloak",
+   "name": "Shadow cloak",
+   "text": "Hidden when the fight starts. The wearer's hits deal half again as much while it's Hidden.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "leather",
+   "rarity": "rare",
+   "statuses": [
+    "shadow_cloak"
+   ]
+  },
+  {
+   "id": "trackers_coat",
+   "name": "Tracker's coat",
+   "text": "Aggro −10. The wearer's abilities have Seek.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "leather",
+   "stats": [
+    {
+     "stat": "aggro",
+     "flat": -10
+    }
+   ],
+   "rarity": "rare",
+   "statuses": [
+    "trackers_coat"
+   ]
+  },
+  {
+   "id": "windrunners_garb",
+   "name": "Windrunner's garb",
+   "text": "Evasion 20. Each dodge adds 1 Tempo (+5% speed in everything a stack, up to 10) for the rest of the fight. Each hit the wearer takes spends half its Tempo.",
+   "slot": "armor",
+   "tier": "powerful",
+   "source": "unlock",
+   "armor": "leather",
+   "stats": [
+    {
+     "stat": "evasion",
+     "flat": 20
+    }
+   ],
+   "rarity": "legendary",
+   "statuses": [
+    "windrunners_garb"
+   ]
+  },
+  {
+   "id": "pack_leaders_coat",
+   "name": "Pack leader's coat",
+   "text": "When the wearer lands a killing blow, every ally's next basic attack comes at once.",
+   "slot": "armor",
+   "tier": "powerful",
+   "source": "unlock",
+   "armor": "leather",
+   "rarity": "legendary",
+   "statuses": [
+    "pack_leaders_coat"
+   ]
+  },
+  {
+   "id": "frostwalkers_furs",
+   "name": "Frostwalker's furs",
+   "text": "When a foe's Chill shatters, the wearer is Hasted, and its next hit adds a Chill to every foe.",
+   "slot": "armor",
+   "tier": "powerful",
+   "source": "unlock",
+   "armor": "leather",
+   "rarity": "legendary",
+   "statuses": [
+    "frostwalkers_furs"
+   ]
+  },
+  {
+   "id": "magisters_robe",
+   "name": "Magister's robe",
+   "text": "Magic +2.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "robes",
+   "stats": [
+    {
+     "stat": "magic",
+     "flat": 2000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "wayfarers_habit",
+   "name": "Wayfarer's habit",
+   "text": "MP +1, MP regen +1.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "robes",
+   "stats": [
+    {
+     "stat": "max_mp",
+     "flat": 1000
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "hermits_cowl",
+   "name": "Hermit's cowl",
+   "text": "Magic +1, Aggro −1.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "robes",
+   "stats": [
+    {
+     "stat": "magic",
+     "flat": 1000
+    },
+    {
+     "stat": "aggro",
+     "flat": -10
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "matins_robe",
+   "name": "Matins robe",
+   "text": "Magic +1. The first ability the wearer casts each fight costs no MP.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "robes",
+   "stats": [
+    {
+     "stat": "magic",
+     "flat": 1000
+    }
+   ],
+   "rarity": "uncommon",
+   "statuses": [
+    "matins_robe"
+   ]
+  },
+  {
+   "id": "wallflowers_robe",
+   "name": "Wallflower's robe",
+   "text": "HP +1. Draws far less (Aggro −20) until the first hit lands on it each fight.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "robes",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
+   "rarity": "uncommon",
+   "statuses": [
+    "wallflowers_robe"
+   ]
+  },
+  {
+   "id": "glyphed_robe",
+   "name": "Glyphed robe",
+   "text": "MP regen +1. Each ability the wearer finishes casting gives it a Shield of a tenth of its Magic.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "robes",
+   "stats": [
+    {
+     "stat": "mp_regen",
+     "flat": 3000
+    }
+   ],
+   "rarity": "uncommon",
+   "statuses": [
+    "glyphed_robe"
+   ]
+  },
+  {
+   "id": "kindled_robes",
+   "name": "Kindled robes",
+   "text": "While any foe has Burn, the wearer gains 1 Heat every 4 ticks (+3% damage a stack, up to 15) for the rest of the fight.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "robes",
+   "rarity": "rare",
+   "statuses": [
+    "kindled_robes"
+   ]
+  },
+  {
+   "id": "quiet_robes",
+   "name": "Quiet robes",
+   "text": "Aggro −10. Can't be Silenced.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "robes",
+   "stats": [
+    {
+     "stat": "aggro",
+     "flat": -10
+    },
+    {
+     "stat": "immune:status:silence",
+     "flat": 1
+    }
+   ],
+   "rarity": "rare"
+  },
+  {
+   "id": "weavers_robes",
+   "name": "Weaver's robes",
+   "text": "When an ally finishes casting an ability, the wearer's next ability costs a fifth less MP.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "robes",
+   "rarity": "rare",
+   "statuses": [
+    "weavers_robes"
+   ]
+  },
+  {
+   "id": "archmages_mantle",
+   "name": "Archmage's mantle",
+   "text": "The wearer's abilities cost half again as much MP, deal half again as much damage, heal half again as much, and add half again as many stacks.",
+   "slot": "armor",
+   "tier": "powerful",
+   "source": "unlock",
+   "armor": "robes",
+   "rarity": "legendary",
+   "statuses": [
+    "archmages_mantle"
+   ]
+  },
+  {
+   "id": "stormweave",
+   "name": "Stormweave",
+   "text": "Each of the wearer's actions that hits three or more foes adds 1 Surge (+5% damage a stack, up to 10) for the rest of the fight.",
+   "slot": "armor",
+   "tier": "powerful",
+   "source": "unlock",
+   "armor": "robes",
+   "rarity": "legendary",
+   "statuses": [
+    "stormweave"
+   ]
+  },
+  {
+   "id": "vestments_of_return",
+   "name": "Vestments of return",
+   "text": "While the wearer stands, every ally revived comes back behind a Shield of half its max HP.",
+   "slot": "armor",
+   "tier": "powerful",
+   "source": "unlock",
+   "armor": "robes",
+   "rarity": "legendary",
+   "statuses": [
+    "vestments_of_return"
+   ]
+  },
+  {
+   "id": "lodestone",
+   "name": "Lodestone",
+   "text": "HP +1, Aggro +1.",
+   "slot": "amulet",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": 500
+    },
+    {
+     "stat": "aggro",
+     "flat": 10
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "whetstone",
+   "name": "Whetstone",
+   "text": "Attack +1, Crit chance +3%.",
+   "slot": "amulet",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "moonstone",
+   "name": "Moonstone",
+   "text": "Magic +1, Aggro −1.",
+   "slot": "amulet",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "magic",
+     "flat": 1000
+    },
+    {
+     "stat": "aggro",
+     "flat": -10
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "ironstone",
+   "name": "Ironstone",
+   "text": "Armor +1, Attack +1.",
+   "slot": "amulet",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "armor",
+     "flat": 1000
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "dewstone",
+   "name": "Dewstone",
+   "text": "MP regen +1, MP +1.",
+   "slot": "amulet",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "mp_regen",
+     "flat": 3000
+    },
+    {
+     "stat": "max_mp",
+     "flat": 1000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "quicksilver",
+   "name": "Quicksilver",
+   "text": "Evasion 20, HP +1.",
+   "slot": "amulet",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "evasion",
+     "flat": 20
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "red_ribbon",
+   "name": "Red ribbon",
+   "text": "Armor +1. The first time an ally drops below half its HP each fight, the wearer Taunts.",
+   "slot": "amulet",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "armor",
+     "flat": 1000
+    }
+   ],
+   "rarity": "uncommon",
+   "statuses": [
+    "red_ribbon"
+   ]
+  },
+  {
+   "id": "carapace_charm",
+   "name": "Carapace charm",
+   "text": "HP +1. Starts every fight behind a Shield of 15% of its max HP.",
+   "slot": "amulet",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
+   "rarity": "uncommon",
+   "statuses": [
+    "carapace_charm"
+   ]
+  },
+  {
+   "id": "hares_foot",
+   "name": "Hare's foot",
+   "text": "Magic +1. Starts every fight Hasted.",
+   "slot": "amulet",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "magic",
+     "flat": 1000
+    }
+   ],
+   "rarity": "uncommon",
+   "statuses": [
+    "hares_foot"
+   ]
+  },
+  {
+   "id": "batwing_charm",
+   "name": "Batwing charm",
+   "text": "Attack +1. Hits from the wearer's abilities heal it for 10% of their damage.",
+   "slot": "amulet",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "rarity": "uncommon",
+   "statuses": [
+    "batwing_charm"
+   ]
+  },
+  {
+   "id": "urchin_shell",
+   "name": "Urchin shell",
+   "text": "Aggro +1. While the wearer holds a Shield, it has Thorns 150.",
+   "slot": "amulet",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "aggro",
+     "flat": 10
+    }
+   ],
+   "rarity": "uncommon",
+   "statuses": [
+    "urchin_shell"
+   ]
+  },
+  {
+   "id": "wasp_charm",
+   "name": "Wasp charm",
+   "text": "Crit chance +3%. While the wearer is Hasted, it has Double strike 25%.",
+   "slot": "amulet",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    }
+   ],
+   "rarity": "uncommon",
+   "statuses": [
+    "wasp_charm"
+   ]
+  },
+  {
+   "id": "millstone",
+   "name": "Millstone",
+   "text": "Basic attacks come half as often and deal two and a quarter times as much.",
+   "slot": "amulet",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "attack_speed",
+     "flat": -100
+    }
+   ],
+   "rarity": "rare",
+   "statuses": [
+    "millstone"
+   ]
+  },
+  {
+   "id": "hummingbird_charm",
+   "name": "Hummingbird charm",
+   "text": "Basic attacks come twice as often and deal 45% as much.",
+   "slot": "amulet",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "attack_speed",
+     "flat": 100
+    }
+   ],
+   "rarity": "rare",
+   "statuses": [
+    "hummingbird_charm"
+   ]
+  },
+  {
+   "id": "echo_charm",
+   "name": "Echo charm",
+   "text": "The wearer's extra strikes apply what its basic attacks apply: statuses and on-hit effects. Not damage boosts or Lifesteal.",
+   "slot": "amulet",
+   "tier": "ordinary",
+   "source": "drop",
+   "rarity": "rare",
+   "statuses": [
+    "echo_charm"
+   ]
+  },
+  {
+   "id": "opportunists_charm",
+   "name": "Opportunist's charm",
+   "text": "Hits on a Stunned or Silenced foe deal a third more.",
+   "slot": "amulet",
+   "tier": "ordinary",
+   "source": "drop",
+   "rarity": "rare",
+   "statuses": [
+    "opportunists_charm"
+   ]
+  },
+  {
+   "id": "bounty_charm",
+   "name": "Bounty charm",
+   "text": "When the wearer lands a killing blow, it gains 2 Might and its next basic attack comes at once.",
+   "slot": "amulet",
+   "tier": "ordinary",
+   "source": "drop",
+   "rarity": "rare",
+   "statuses": [
+    "bounty_charm"
+   ]
+  },
+  {
+   "id": "martyrs_locket",
+   "name": "Martyr's locket",
+   "text": "When the wearer falls, every other ally heals a fifth of its max HP and is Hasted.",
+   "slot": "amulet",
+   "tier": "ordinary",
+   "source": "drop",
+   "rarity": "rare",
+   "statuses": [
+    "martyrs_locket"
+   ]
+  },
+  {
+   "id": "heart_of_winter",
+   "name": "Heart of winter",
+   "text": "Every hit the wearer lands adds a Chill.",
+   "slot": "amulet",
+   "tier": "powerful",
+   "source": "unlock",
+   "rarity": "legendary",
+   "statuses": [
+    "heart_of_winter"
+   ]
+  },
+  {
+   "id": "ember_heart",
+   "name": "Ember heart",
+   "text": "When a burning foe falls, every other foe gains a third of its Burn.",
+   "slot": "amulet",
+   "tier": "powerful",
+   "source": "unlock",
+   "rarity": "legendary",
+   "statuses": [
+    "ember_heart"
+   ]
+  },
+  {
+   "id": "phoenix_ember",
+   "name": "Phoenix ember",
+   "text": "HP −1. Once a fight, when the wearer falls, it stands up 4 ticks later with a fifth of its HP.",
+   "slot": "amulet",
+   "tier": "powerful",
+   "source": "unlock",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": -500
+    }
+   ],
+   "rarity": "legendary",
+   "statuses": [
+    "phoenix_ember"
+   ]
+  },
+  {
+   "id": "ready_stance",
+   "name": "Ready stance",
+   "text": "The wearer's abilities start every fight at least half charged. Its cooldowns are a fifth longer.",
+   "slot": "amulet",
+   "tier": "powerful",
+   "source": "unlock",
+   "stats": [
+    {
+     "stat": "cooldown_reduction",
+     "flat": -16.7
+    }
+   ],
+   "note": "Cooldown reduction −16.7 (cooldowns ×1.2, a fifth longer, as the card says), not the fill's −20 (×1.25).",
+   "rarity": "legendary",
+   "statuses": [
+    "ready_stance"
+   ]
+  },
+  {
+   "id": "blood_covenant",
+   "name": "Blood covenant",
+   "text": "The wearer's abilities cost HP in place of MP: the same share of its max HP as they'd cost of its max MP. It won't cast one that would leave it below a tenth of its HP.",
+   "slot": "amulet",
+   "tier": "powerful",
+   "source": "unlock",
+   "rarity": "legendary",
+   "statuses": [
+    "blood_covenant"
+   ]
+  },
+  {
+   "id": "gamblers_coin",
+   "name": "Gambler's coin",
+   "text": "The wearer's crit chance is about 50%. Its hits that don't crit deal half; its crits deal what a crit always does. Hits that always crit still do.",
+   "slot": "amulet",
+   "tier": "powerful",
+   "source": "unlock",
+   "rarity": "legendary",
+   "statuses": [
+    "gamblers_coin"
+   ]
   },
   {
    "id": "pavise",
