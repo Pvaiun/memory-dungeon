@@ -57,7 +57,8 @@ type PieceOpts = {
 export function piece(o: PieceOpts): GearT {
   const g: GearT = {
     id: idOf(o.name), name: o.name, text: o.text, slot: o.slot,
-    tier: o.rarity === "legendary" || o.rarity === "mythic" ? "powerful" : "ordinary", source: "drop",
+    // The validator's tiers: an ordinary piece drops, a powerful one (legendary, mythic) is an unlock. Neither changes play in the rogue.
+    ...(o.rarity === "legendary" || o.rarity === "mythic" ? { tier: "powerful" as const, source: "unlock" as const } : { tier: "ordinary" as const, source: "drop" as const }),
     ...(o.slot === "armor" && o.kind ? { armor: o.kind } : {}),
     ...(o.slot === "offhand" && o.kind ? { offhand: o.kind } : {}),
     ...(o.stats?.length ? { stats: o.stats } : {}),
