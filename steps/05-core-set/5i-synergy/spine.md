@@ -68,27 +68,27 @@ The fill writes these from the rule, inside the kind. Commons are two steps (thr
 | Fist weapons | Double strike, Attack, Evasion, Lifesteal | a short Haste at the fight's start; extra strikes that carry a little Sunder |
 | Sword | Attack, HP, Aggro | a short Taunt at the fight's start; Thorns |
 | Spear | Attack, Armor, Crit chance | a little Sunder on crits; a Guard after a killing blow |
-| Bow (two hands) | Attack, Accuracy, Crit damage | abilities with Seek; a little Chill on a foe in a wind-up |
+| Bow (two hands) | Attack, Accuracy, Crit damage | abilities with Seek; a little Bleed on crits |
 | Great weapon (two hands) | Attack, HP, Crit damage | a few Might at the fight's start; a Shield at the start from Attack |
 | Rune sword | Magic, Attack, Armor | basic attacks that ignore Taunt; a Ward at the fight's start |
-| Mace | Magic, HP, MP regen | basic attacks that heal the lowest ally a little; a chance to Weaken |
+| Mace | Magic, HP, MP regen | a Regen on the lowest ally at the start; a Ward at the start |
 | Wand | Magic, MP, Double strike | a little Shock on basic attacks; a little MP back on a crit |
 | Rod | Magic, MP regen, HP | a little Chill on basic attacks; a Clarity once a fight below a third of MP |
-| Staff (two hands) | Magic, MP, HP | abilities that add one more stack than they would; a Shield at the start from Magic |
-| Plate | Armor, HP, Aggro, Thorns | a short Taunt at the start with Thorns; a Shield at the start from Armor; a Guard once a fight below half HP |
-| Mail | HP, Attack, Magic, Lifesteal | Lifesteal below half HP; Thorns; a Ward at the start |
-| Leather | Evasion, Crit chance, Accuracy, Attack | Hidden for the first ticks; a short Haste at the start; Aggro down with Evasion |
-| Robes | MP, MP regen, Magic, Aggro down | a Clarity at the start; a little MP when an ally casts; a Shield at the start from Magic |
+| Staff (two hands) | Magic, MP, HP | a Clarity at the start; a Shield at the start from Magic |
+| Plate | Armor, HP, Aggro, Thorns | Thorns with Aggro up; a Shield at the start from Armor; a Guard once a fight below half HP |
+| Mail | HP, Attack, Magic, Lifesteal | Lifesteal; Thorns; a Ward at the start |
+| Leather | Evasion, Crit chance, Accuracy, Attack | a short Haste at the start; Evasion with Aggro down; a few Might at the start |
+| Robes | MP, MP regen, Magic, Aggro down | a Clarity at the start; HP with Aggro down; a Shield at the start from Magic |
 | Kite shield | Armor, HP, Aggro | a Shield at the start from max HP; a Guard on the lowest ally at the start |
 | Round shield | Armor, Attack, HP | a Guard at the start; a short Taunt when an ally drops below half |
-| Horn | Aggro, MP regen, Attack or Magic | a few Might on every ally at the start; a Clarity on the least-MP ally at the start |
+| Horn | Aggro, MP regen, Attack or Magic | a Clarity on the least-MP ally at the start; a short Taunt at the start |
 | Tome | Magic, MP, MP regen | a few Chill on every foe at the start; abilities that cost a little less |
 | Lantern | Magic, HP, MP | a few Burn on every foe at the start; a Ward at the start |
 | Relic | Magic, MP regen, HP | heals that also cleanse one debuff; a Regen on the lowest ally at the start |
 | Bell | MP regen, Evasion, Magic or Attack | a short Haste at the start; a Silence answer (one cleanse of Silence a fight) |
-| Totem | Armor, Attack, Thorns | attackers take a little Bleed; a Shield at the start from Armor |
-| Vial | Lifesteal, Crit chance, Attack | crits that heal a little; a little Bleed on basic attacks |
-| Idol | Siphon, Magic, HP | basic attacks with a chance to Weaken; MP on a kill |
+| Totem | Armor, Attack, Thorns | Thorns; a Guard once a fight when its holder drops below half |
+| Vial | Lifesteal, Crit chance, Attack | crits that heal a little; Lifesteal below half HP |
+| Idol | Siphon, Magic, HP | MP on a kill; a little Siphon on crits |
 | Amulet | one each: HP, Attack, Magic, Armor, MP regen, Evasion (two steps of mixed stats) | one each: Taunt at the start, a Shield at the start, Haste at the start, Lifesteal, Thorns, Double strike (a step and a small version) |
 
 An uncommon never carries a rare's effect at a smaller size in the same kind: the best choices are between builds, not between a small and a big version of one thing.
@@ -96,7 +96,7 @@ An uncommon never carries a rare's effect at a smaller size in the same kind: th
 ### New statuses and words
 
 - **Marked** (a debuff on a foe): the party's basic attacks pick a Marked foe while it lives. Its abilities still follow their own targeting. A short duration, Refresh. It's the Hunt's focus, and the only new word a player learns in this pass.
-- **Counters,** shown as an icon with a number on the holder, kept for the fight: **Cuts** (hits landed), **Heat** (power that builds), **Spite** (Thorns that grow), **Tempo** (speed that builds), **Surge** (many-foe hits), **Fervor** (falls and returns). Each is one status of its own with one fixed meaning, so they don't stack into each other.
+- **Counters,** shown as an icon with a number on the holder, kept for the fight: **Cuts** (hits landed), **Heat** (power that builds), **Spite** (Thorns that grow), **Tempo** (speed that builds), **Surge** (many-foe hits), **Fervor** (falls and returns), **Charge** (hits saved for one blow, then spent). Each is one status of its own with one fixed meaning, so they don't stack into each other.
 - Everything else uses today's statuses and stats.
 
 ### Engine additions
@@ -104,7 +104,7 @@ An uncommon never carries a rare's effect at a smaller size in the same kind: th
 `builds.md` listed seven; the pieces need these, each with its first users:
 1. **Changing a cooldown or an attack timer:** refund some ticks, or make ready (Hunting spear, Still hand, Bell of the hour, Pack leader's coat; the Hunt, Lockdown, Overflow, Ambush).
 2. **Marked:** a debuff that makes a foe the pick of the party's basic attacks (Marking knife, Huntsman's bow; the Hunt).
-3. **Changing an MP cost** (a stat: costs × (1 + stat/100); the Weaver's robes, Annotated grimoire, Archmage's mantle, Wellspring rod; Overflow, Phoenix).
+3. **Changing an MP cost** (a stat: costs × (1 + stat/100); the Weaver's robes, Annotated grimoire, Archmage's mantle, Brimming rod; Overflow, Phoenix).
 4. **HP as a cost:** an ability paid in HP, in full or in part (Blood vial, Blood covenant; Pact).
 5. **Reading the other unit of an event,** such as a dying foe's Burn, to pass it on (Wick, Ember heart; Bonfire).
 6. **The count of foes an action hit** (Stormweave, Supercell; Harvest).
@@ -119,7 +119,9 @@ An uncommon never carries a rare's effect at a smaller size in the same kind: th
 15. **Small: "has any of"** as a condition (a foe Stunned or Silenced or Weakened).
 16. **Small: Shields received,** a stat beside healing received (Earthmother totem).
 
-**Two rules every piece keeps:** Aegis stays the Hoplite's signature (no piece or version gives it to anyone else), and nothing makes a unit Hidden and Taunting at once (the fill checks the Taunt-at-start and Hidden-at-start pieces and versions against each other).
+17. **Small, a rule: Taunt ends Hidden.** A unit that gains Taunt stops being Hidden, and Hidden doesn't land on a Taunting unit. Today no unit can be both by content alone; with Taunt and Hidden on gear, versions and seats, a rule is simpler than checking every pair.
+
+**Aegis stays the Hoplite's signature:** no piece or version gives it to anyone else.
 
 ---
 
@@ -137,7 +139,7 @@ Each kind's wearers are in brackets. A weapon's kind sets its speed, damage type
 - **Rime knuckles** · rare · basic attacks and extra strikes add a few Chill. · Snap 2 ●●● (your Monk run), Cuts → Snap (the door), Lockdown ●
 - **Gorged claws** · rare · Lifesteal medium; below half HP, basic attacks come a third faster. · Pact 2 ●●●, Cuts ●●, Phoenix ●
 - **Flurry wraps** · legendary · Double strike medium, and an extra strike can strike again, up to twice, each a little weaker (the one piece that chains extra strikes). · Cuts 3 ●●●, Snap ●● (more Chill hits), Pact ●● (more drinking)
-- **Still hand** · legendary · hits on a Stunned or Silenced foe crit and add several Sunder; when the wearer Stuns a foe, its quickest ability is ready. · Lockdown 3 ●●●, Snap ●● (a shatter Stuns)
+- **Still hand** · legendary · hits on a Stunned or Silenced foe crit and add several Sunder; when the wearer Stuns a foe, its ability with the longest cooldown left is ready. · Lockdown 3 ●●●, Snap ●● (a shatter Stuns)
 
 ### Sword (Knight, Bramble knight, Assassin): medium, physical, one hand
 - **Sweeping blade** · rare · basic attacks also hit a second foe for half. · Harvest 2 ●●● (the physical route), Cuts ●
@@ -166,7 +168,7 @@ Each kind's wearers are in brackets. A weapon's kind sets its speed, damage type
 ### Rune sword (Paladin, Valkyrie, Hexer, Geomancer): medium, magical, one hand
 - **Spellbinder** · rare · after each ability the wearer casts, its next basic attack deals double. · Overflow 2 ●● (the spellblade's rhythm), Ambush ●, Lockdown ●
 - **Bane of the bound** · rare · hits on a Weakened or Silenced foe deal half again as much. · Lockdown 2 ●●●, Toll ●● (Weaken), Pact ●
-- **Hexblade** · legendary · basic attacks add one more stack of each built-up status the target already holds (Burn, Chill, Shock, Bleed, Sunder). · Bonfire ●●, Snap ●●, Toll ●●, Lockdown ●: a curser's blade, worth something to every status party and most to none
+- **Hexblade** · legendary · basic attacks add one more stack of each built-up status the target already holds (Burn, Chill, Shock, Bleed, Sunder). · Snap 2 ●●, Bonfire 2 ●●, Toll ●●, Lockdown ●: a curser's blade, worth something to every status party
 - **Dawnblade** · legendary · each fall and each return in the party gives the wearer Fervor (more damage, kept all fight). · Phoenix 3 ●●● (strongest the second time round), Pact ●
 
 ### Mace (Cleric, Paladin): slow, magical, one hand
@@ -185,13 +187,13 @@ Each kind's wearers are in brackets. A weapon's kind sets its speed, damage type
 - **Glacial rod** · rare · basic attacks Slow their target. · Lockdown 2 ●●● (a hold that never shatters), Snap ●
 - **Lightning rod** · rare · the wearer's abilities that hit several foes hit each of them once more, for a quarter. · Harvest 2 ●●●, Overflow ●
 - **Winter's chain** · legendary · when a foe's Chill shatters, every other foe gains a few Chill. · Snap 3 ●●● (chain shatters), Harvest ●●
-- **Wellspring rod** · legendary · each ability the wearer casts gives the ally with the least MP a tenth of its cost; while the wearer holds over half its MP, its abilities cost a quarter less. · Overflow 3 ●●●, Lockdown ●●
+- **Brimming rod** · legendary · each ability the wearer casts gives the ally with the least MP a tenth of its cost; while the wearer holds over half its MP, its abilities cost a quarter less. · Overflow 3 ●●●, Lockdown ●●
 
 ### Staff (Cleric, Frostweaver, Pyromancer, Bramble knight): slow, magical, two hands
 - **Banked staff** · rare · the wearer's abilities add half again as many Burn, Chill and Shock stacks. · Bonfire 2 ●●●, Snap 2 ●●, Harvest ●
 - **Rootstaff** · rare · Thorns medium, and the wearer's Thorns heal it for the damage they deal. · Toll 2 ●●●, Pact ●●
 - **Cataclysm staff** · legendary · every third ability the wearer casts is cast twice; the second is free. · Harvest 3 ●●●, Overflow 3 ●●, Bonfire ●●
-- **Cinderheart staff** ✦ · legendary · basic attacks consume a burning foe's Burn and deal its damage at once. · the flare against Bonfire's ramp: Bonfire ●● (a short-fight fire), Harvest ●; exotic in feel
+- **Cinderheart staff** ✦ · legendary · basic attacks consume a burning foe's Burn and deal at once all it would have dealt. · the flare against Bonfire's ramp: Bonfire ●● (a short-fight fire), Harvest ●; exotic in feel
 
 ---
 
@@ -200,7 +202,7 @@ Each kind's wearers are in brackets. A weapon's kind sets its speed, damage type
 ### Plate (Knight, Hoplite, Geomancer, Bramble knight, Paladin)
 - **Bastion plate** · rare · starts every fight Guarded. · Landslide 2 ●●● (Guard reaches the units whose kit scales from Armor), Toll 2 ●●, Bonfire ●● (the keeper)
 - **Hoarfrost plate** · rare · foes that hit the wearer gain a few Chill. · Toll 2 ●●● and Snap ●● (the frozen gate), Lockdown ●
-- **Challenger's plate** · rare · Taunts for the fight's first ticks, and again whenever an ally falls. · Toll 2 ●●, Phoenix ●● (it chooses who falls next), Bonfire ●●, Harvest ●
+- **Challenger's plate** · rare · Taunts for the fight's first ticks, and again whenever an ally falls. · Toll 2 ●●, Phoenix 2 ●● (it chooses who falls next), Bonfire ●●, Harvest ●
 - **Rubble plate** · legendary · when the wearer's Shield breaks, every foe takes untyped damage equal to the Shield's cap, and a quarter of it is rebuilt. · Landslide 3 ●●● (the break as the blow), Toll ●●
 - **Thornheart plate** · legendary · each hit the wearer takes adds Spite: more Thorns, kept all fight. · Toll 3 ●●● (Thorns that grow with the beating), Landslide ●
 - **Last bastion** · legendary · once a fight, a blow that would knock the wearer out leaves it at 1 HP and Guarded; until it's healed above half, its hits deal double. After a won fight it ends at no less than a fifth of its HP. · Phoenix 3 ●●, Pact 3 ●● (low HP as power), Toll ●●
@@ -208,15 +210,15 @@ Each kind's wearers are in brackets. A weapon's kind sets its speed, damage type
 ### Mail (Paladin, Valkyrie, Vampire, Hexer, Bramble knight)
 - **Static mail** · rare · foes that hit the wearer gain a few Shock. · Toll 2 ●●●, Harvest ●
 - **Mocking mail** · rare · Taunts for the fight's first ticks; Aggro up. · Toll 1 to 2 ●●● (an anchor for four classes that can't Taunt), Phoenix ●● (the martyr), Bonfire ●
-- **Bloodsworn mail** · rare · below half HP, Lifesteal medium and hits a quarter harder. · Pact 2 ●●●, Phoenix ●●
+- **Bloodsworn mail** · rare · below half HP, Lifesteal medium and hits a quarter harder. · Pact 2 ●●●, Phoenix 2 ●●
 - **Sanguine mail** · legendary · below half HP, healing the wearer receives is doubled; above half, it's halved. · Pact 3 ●●● (the see-saw as a rule), Phoenix ●
 - **Mantle of the fallen** · legendary · when an ally falls, the wearer gains Haste, Guard and several Might; when one is revived, the wearer heals it for a third of its max HP. · Phoenix 3 ●●●, Toll ●
-- **Hexweave mail** · legendary · the wearer's hits deal a little more to a foe for each debuff on it. · Bonfire ●●, Snap ●●, Toll ●●, Lockdown ●●: strong only where foes carry many debuffs; gives up: nothing against a clean foe
+- **Hexweave mail** · legendary · the wearer's hits deal a little more to a foe for each debuff on it. · Lockdown 3 ●●, Bonfire ●●, Snap ●●, Toll ●●: strong only where foes carry many debuffs
 
 ### Leather (Ranger, Monk, Assassin, Bard, Valkyrie)
 - **Duelist's leathers** · rare · Evasion medium, and each dodge strikes back with the wearer's weapon. · Toll 2 ●●● (the dancer's riposte), Cuts 2 ●●
 - **Shadow cloak** · rare · Hidden for the fight's first ticks; hits from Hidden deal half again as much. · Ambush 2 ●●●, Hunt ●●, Phoenix ●
-- **Tracker's coat** · rare · the wearer's abilities have Seek, and its basic attacks pick the foe with the lowest HP. · Hunt 2 ●●●, Ambush ●●, Lockdown ● (reaching the caster)
+- **Tracker's coat** · rare · the wearer's abilities have Seek; Aggro down. · Hunt 2 ●●●, Ambush ●●, Lockdown ● (reaching the caster)
 - **Windrunner's garb** · legendary · each dodge adds Tempo (faster in everything, kept all fight); each hit taken spends half of it. · Cuts 3 ●●●, Toll 3 ●● (the dancer's rhythm)
 - **Pack leader's coat** · legendary · when the wearer lands a killing blow, every ally's next basic attack comes at once. · Hunt 3 ●●●, Ambush ●●, Harvest ●
 - **Frostwalker's furs** · legendary · whenever a foe's Chill shatters, the wearer is Hasted and its next hit adds a Chill to every foe. · Snap 3 ●●● (a shatter that seeds the next, for the Monk and the Bard), Cuts ●●
@@ -237,10 +239,10 @@ Each kind's wearers are in brackets. A weapon's kind sets its speed, damage type
 - **Rubble shield** · rare · when the holder's Shield breaks, its attacker is Stunned. · Lockdown 2 ●●● (a lock on another clock), Landslide 2 ●●, Toll ●
 - **Humbling shield** · rare · the first time each foe hits the holder, that foe is Weakened. · Toll 2 ●●●, Lockdown ●●, Pact ●
 - **Spiked bulwark** · legendary · Thorns that scale from the holder's Armor. · Toll 3 ●●● and Landslide 3 ●●● (the door: the stone wall becomes a thorn wall)
-- **Oathbound shield** · legendary · when an ally would take a hit above a quarter of its max HP, the holder takes it instead. · Toll ●●, Phoenix ●●, Bonfire ●● (the keeper), Lockdown ●: a bodyguard for every party with something fragile, and the holder pays for it in HP
+- **Oathbound shield** · legendary · when an ally would take a hit above a quarter of its max HP, the holder takes it instead. · Toll 2 ●●, Bonfire 2 ●● (the keeper), Phoenix ●●, Lockdown ●: a bodyguard that pays in its own HP
 
 ### Round shield (Hoplite, Valkyrie)
-- **Paired shields** · rare · when the holder Guards or Aegises an ally, it gains the same. · Toll ●●, Bonfire ●●, Landslide ●
+- **Paired shields** · rare · whenever the holder is Guarded, so is the ally lowest in HP share. · Toll 2 ●●, Bonfire ●●, Landslide ●
 - **Hunter's buckler** · rare · when the holder lands a killing blow, it gains Haste and a Shield. · Hunt 2 ●●, Ambush ●
 - **Phalanx shield** · legendary · while the holder stands, allies with less Armor than it take a fifth less damage; the holder deals a fifth less. · Bonfire 3 ●●● (the early fight held), Harvest ●● (the full field held), Toll ●●; gives up: its own damage
 - **Shield of the chosen** · legendary · once a fight, when an ally falls, the holder raises it at once with a tenth of its HP. · Phoenix 3 ●●● (a return that doesn't wait for an ability, and a revive for the Hoplite)
@@ -267,30 +269,30 @@ Each kind's wearers are in brackets. A weapon's kind sets its speed, damage type
 - **Saint's knucklebone** · rare · each heal the holder gives also gives the healed ally a few Might. · Pact 2 ●●●, Phoenix ●, Toll ●
 - **Reliquary of mercy** · rare · the holder's revives cost half and wind up in a moment. · Phoenix 2 ●●●, Ambush ● (Raise first)
 - **Phylactery** · legendary · the part of the holder's heals that would go past full becomes a Shield on the healed ally. · Pact 3 ●●● (healing that turns into more), Landslide ●●, Phoenix ●●
-- **Bones of the returned** · legendary · allies the holder revives come back with every action ready, and Hasted. · Phoenix 3 ●●●, Ambush ●● (the second volley)
+- **Bones of the returned** · legendary · allies the holder revives come back with all their HP, and with every ability on full cooldown. · Phoenix 3 ●● (the sturdy return), Pact ●
 
 ### Bell (Monk, Cleric, Stormcaller)
 - **Tempo bell** · rare · each time the holder gains Haste, the ally with the slowest basic attack gains it too. · Cuts 2 ●●● (Flow and Static charge become a pacer's), Overflow ●
-- **Warding bell** · rare · at the fight's start and every so often after, it lifts one debuff from the ally holding the most. · Toll ●●, Lockdown ●, Pact ●
-- **Bell of the hour** · legendary · every few ticks, the holder's quickest ability comes off cooldown. · Overflow 3 ●●, Lockdown 3 ●● (locks come round), Cuts ●●
-- **Funeral bell** ✦ · legendary · when any unit falls, friend or foe, every ally gains Fervor. · Phoenix ●●●, Hunt ●●, Harvest ●; exotic in feel: it rings for both sides
+- **Warding bell** · rare · at the fight's start and every so often after, it lifts one debuff from the ally holding the most. · Toll 2 ●●, Lockdown ●, Pact ●
+- **Bell of the hour** · legendary · every so often, the holder's ability with the longest cooldown left comes a few ticks closer. · Overflow 3 ●●, Lockdown 3 ●● (the Monk's Pressure point comes round), Cuts ●
+- **Funeral bell** · legendary · when any unit falls, friend or foe, every ally gains Fervor. · Phoenix 3 ●●●, Hunt ●●, Harvest ●: it rings for both sides
 
 ### Totem (Bramble knight, Ranger, Geomancer)
 - **Briar totem** · rare · foes that hit the holder gain a few Bleed. · Toll 2 ●●●, Cuts ●
 - **Stone totem** · rare · starts every fight behind a Shield from its Armor. · Landslide 2 ●●● (Bedrock from the first tick), Ambush ●●
-- **Earthmother totem** · legendary · every Shield in the party is a third larger; when one breaks, its holder is Guarded. · Landslide 3 ●●●, Phoenix ●●, Toll ●
+- **Earthmother totem** · legendary · every Shield an ally gains is a third larger, its cap too; when one breaks, its holder is Guarded. · Landslide 3 ●●●, Phoenix ●●, Toll ●
 - **Wild hunt totem** · legendary · the holder's basic attacks Mark; each kill the party lands gives every ally a few Might. · Hunt 3 ●●●, Ambush ●
 
 ### Vial (Assassin, Vampire)
 - **Blood vial** · rare · the holder's abilities cost half their MP and some HP. · Pact 2 ●●●, Phoenix ●
 - **Venom vial** · rare · crits add several Bleed, and the holder crits more often on a bleeding foe. · Cuts 2 ●●, Hunt ●●, Ambush ●
 - **Vial of the last breath** · legendary · once a fight, when the holder falls, it stands up a few ticks later with a third of its HP. · Phoenix 3 ●●● (a return for the Assassin and Vampire)
-- **Bloodlust draught** ✦ · legendary · the holder starts every fight at half HP (it pays), and its Lifesteal is doubled until it's full. · Pact 3 ●●●, Cuts ●; exotic in feel
+- **Bloodlust draught** · legendary · the holder starts every fight at half HP (it pays), and its Lifesteal is doubled until it's full. · Pact 3 ●●●, Cuts ●
 
 ### Idol (Hexer, Vampire)
 - **Withering idol** · rare · basic attacks Weaken their target, and the holder's hits on a Weakened foe deal a little more. · Toll 2 ●●, Lockdown 2 ●●, Pact ●
 - **Leech idol** · rare · Siphon medium; MP it drains past full goes to the ally with the least. · Overflow 2 ●●●, Pact ●
-- **Idol of binding** · legendary · foes the holder Weakens can't crit, and their wind-ups take twice as long. · Lockdown 3 ●●●, Toll ●●
+- **Idol of binding** · legendary · foes the holder Weakens are also Slowed for as long, and the holder's hits on a foe that's both deal double. · Lockdown 3 ●●●, Toll ●●
 - **Idol of the hungry dark** ✦ · legendary · every so often, it steals one buff from a foe and gives it to the holder. · exotic: answers self-buffing bosses (the Hexer's Dispel on a clock) and gives back whatever they had
 
 ---
@@ -301,7 +303,7 @@ An amulet never names one class's ability. Its pieces are the web's widest stran
 
 - **Millstone** · rare · basic attacks come half as often and deal more than double. · Landslide 2 ●●● (any unit becomes a hammer), Ambush ●, Lockdown ●
 - **Hummingbird charm** · rare · basic attacks come twice as often and deal less than half. · Cuts 2 ●●●, Snap ●● and Bonfire ●● (riders twice as often). The same lever pulled the other way: a choice between builds.
-- **Echo charm** · rare · the wearer's extra strikes carry everything its basic attacks carry. · Cuts 2 ●●●, Snap ●● (Cold hex), Bonfire ● (Kindling), Toll ● (Refrain)
+- **Echo charm** · rare · the wearer's extra strikes carry everything its basic attacks carry. · Cuts 2 ●●●, Bonfire ● (Kindling on a wand with Double strike), Toll ● (Refrain), Snap ●
 - **Opportunist's charm** · rare · hits on a Stunned or Silenced foe deal a third more. · Lockdown 2 ●●●, Snap ●● (after a shatter), Landslide ●
 - **Bounty charm** · rare · each kill the wearer lands gives it a few Might, and its next basic attack comes at once. · Hunt 2 ●●● (each step speeds the next, on any class), Ambush ●, Bonfire ●
 - **Martyr's locket** · rare · when the wearer falls, every ally is healed a fifth of its max HP and Hasted. · Phoenix 2 ●●●, Toll ● (the anchor's fall)
@@ -316,13 +318,13 @@ An amulet never names one class's ability. Its pieces are the web's widest stran
 
 ## 6. Formations
 
-**32 and Neutral:** 11 common, 12 rare, 9 legendary. Commons lean on the roles builds share and plain party effects; rares are lopsided and read who sits where; legendaries change how the party fights. Each build is helped by at least five, in different ways (section 9), and no build needs one.
+**32 and Neutral:** 11 common, 12 rare, 9 legendary. Commons lean on the roles builds share and plain party effects; rares are lopsided and read who sits where; legendaries change how the party fights. Each build is helped by at least four, most by five or more, in different ways (section 9), and no build needs one.
 
 A seat line reads: **Seat** (what it does to whoever sits there).
 
 ### Common
 - **Shieldwall** · **Wall** (draws far more, Armor up), two **Behind** (draw less). · Toll 1 ●●, Landslide 1 ●●, Bonfire 1 ●●, Harvest ●, Phoenix ●
-- **Anvil** · **Hammer** (basic attacks half as often, more than double), **Holder** (draws more, HP up), **Free** (nothing). · Landslide 1 ●●●, Snap ●● (the breaker), Ambush ● (the opener)
+- **Anvil** · **Hammer** (Attack and Crit damage up, draws less), **Holder** (draws more, HP up), **Free** (nothing). · Landslide 1 ●●●, Snap ●● (the breaker), Ambush ● (the opener)
 - **Skirmish line** · three seats, each Evasion medium and Armor down. · Cuts 1 ●●, Toll ● (the dancer)
 - **Spur** · **Pacer** (the other two start each fight Hasted), two **Blades** (attack speed up, HP down). · Cuts 1 ●●●, Bonfire ●● (stokers), Ambush ●
 - **Wellspring** · **Source** (MP regen up two steps, Magic down), two **Spenders** (abilities cost a tenth less). · Overflow 1 ●●●, Lockdown ●●, Bonfire ●
@@ -330,31 +332,31 @@ A seat line reads: **Seat** (what it does to whoever sits there).
 - **First light** · seats plain; every ally's abilities start each fight a few ticks more charged, and every ally's Armor is a step lower. · Ambush 1 ●●●, Lockdown ●
 - **Arrowhead** · **Point** (crit up, draws more), two **Flanks** (crit up). · Ambush 1 ●●, Hunt 1 ●●, Landslide ●
 - **Ring of steel** · **Rod** (draws far more, Thorns medium), two **Reapers** (Attack and Magic up). · Harvest 1 ●●, Toll 1 ●●
-- **Vigil** · **Martyr** (draws more, HP down), **Reviver** (MP regen up), **Survivor** (Armor up); when an ally falls, the others gain a small Shield. · Phoenix 1 ●●●, Toll ●
-- **Watchtower** · **Watcher** (wind-ups faster), **Gaoler** (draws more), **Keeper** (cooldowns a little shorter). · Lockdown 1 ●●, Overflow ●
+- **Vigil** · **Martyr** (draws more, HP down), two **Mourners** (Attack and Magic up while an ally lies fallen). · Phoenix 1 ●●●, Toll ●
+- **Watchtower** · **Lookout** (cooldowns a little shorter), two **Sentries** (Armor up, draw a little more). · Lockdown 1 ●●, Overflow ●
 
 ### Rare
 - **Hammer and anvil** · **Anvil** (draws more, Guarded at the start), **Hammer** (with a slow weapon: swings half as often for triple; otherwise: Attack up), **Mason** (its Shields and Guards go to the Hammer first). · Landslide 2 ●●●, Snap ●●, Lockdown ●
 - **Hunting party** · **Marker** (its basic attacks Mark), **Chaser** (Seek on everything it does), **Warden** (Taunts at the start). · Hunt 2 ●●●, Lockdown ●
-- **Hearth** · **Keeper** (Taunt and Guard at the start), **Stoker** (Hasted at the start, attack speed up), **Torch** (when its target falls, its Burn passes to a random foe). · Bonfire 2 ●●●
-- **Hoarfrost line** · two **Frost** seats (basic attacks add a Chill), **Breaker** (hits on a Stunned foe deal double). · Snap 2 ●●●, Lockdown ●●
-- **Lightning rod** · **Rod** (Taunts all fight, Thorns medium, heals it receives halved), two **Scythes** (single-target hits also hit a second foe for a quarter). · Harvest 2 ●●●, Toll ●●
+- **Hearth** · **Keeper** (Taunt and Guard at the start), **Stoker** (Hasted at the start, attack speed up), **Torch** (its hits add a Burn to every foe that's already burning). · Bonfire 2 ●●●, Harvest ●
+- **Hoarfrost line** · two **Frost** seats (basic attacks add a Chill), **Breaker** (when a foe's Chill shatters, its next hit deals triple). · Snap 2 ●●●, Lockdown ●
+- **Reaping line** · **Rod** (Taunts all fight, Thorns medium, heals it receives halved), two **Scythes** (single-target hits also hit a second foe for a quarter). · Harvest 2 ●●●, Toll ●●
 - **Relay** · **Well** (each ability it casts gives the next seat MP), two **Spenders** (when the seat before casts, its next ability comes a few ticks closer). · Overflow 2 ●●●
-- **Gaol** · **Watcher** (its abilities that Stun or Silence wait for a wind-up), **Gaoler** (draws far more), **Warden** (hits on a Stunned or Silenced foe deal more). · Lockdown 2 ●●●
-- **Thorn hedge** · **Anchor** (draws far more, Thorns high; in Plate, Thorns from its Armor), two **Thorns** seats (foes that hit the Anchor are Weakened briefly). · Toll 2 ●●●, Landslide ●
+- **Gaol** · **Watcher** (its abilities that Stun or Silence wait for a wind-up), **Gaoler** (draws far more), **Warden** (when any foe is Stunned or Silenced, its cooldowns come a few ticks closer). · Lockdown 2 ●●● (locks that come round), Overflow ●
+- **Thorn hedge** · **Anchor** (draws far more, Thorns high), two **Thorns** seats (foes that hit the Anchor are Weakened briefly). · Toll 2 ●●●, Landslide ●
 - **Blood oath** · **Bleeder** (loses a little HP every tick, hits half again as hard), **Drinker** (Lifesteal medium), **Donor** (its heals on the Bleeder are doubled). · Pact 2 ●●●
-- **Pyre of heroes** · **Martyr** (draws far more; when it falls, every ally gains Might and Haste), **Reviver** (revives cost half), **Survivor** (Guarded when an ally falls). · Phoenix 2 ●●●
+- **Pyre of heroes** · **Martyr** (draws far more; when it falls, every ally gains Might and Haste), **Reviver** (draws far less, can't be Silenced), **Survivor** (Guarded when an ally falls). · Phoenix 2 ●●●
 - **Knives drawn** · **Opener** (its first action deals double), **Second** (Hasted at the start), **Rear guard** (a Shield at the start, draws more after the first few ticks). · Ambush 2 ●●●, Hunt ●
 - **The wheel** ✦ · **Wall** (draws more, Armor up), **Blade** (attack speed and crit up), **Well** (MP regen and healing received up); every so often the effects turn: each unit takes the next seat's. · exotic: a party that changes shape on a clock
 
 ### Legendary
-- **The pack** · every ally's basic attacks go to the foe the first seat last hit; when it falls, everyone's next basic attack comes at once. · Hunt 3 ●●●, Lockdown ●; gives up: anything that spreads
+- **The pack** · every ally's basic attacks go to the foe the first seat last hit; when that foe falls, the first seat's abilities come a few ticks closer. · Hunt 3 ●●●, Lockdown ●; gives up: anything that spreads
 - **The forge** · the party gains Heat every few ticks, all fight; everyone starts each fight Slowed for a moment. · Bonfire 3 ●●● (the party's own heat), Landslide ●●, Pact ●; gives up: the start
 - **The ambuscade** · every seat's first action comes at once and deals double; after the first few ticks, everyone deals a sixth less. · Ambush 3 ●●●, Cuts ●; gives up: the tail
 - **The choir** · each ability one seat casts makes the next seat's next ability free; nobody regains MP from MP regen. · Overflow 3 ●●●, Lockdown ●●; gives up: regen
-- **The undying** · once a fight each, a fallen member stands up a few ticks later with a fifth of its HP; while anyone lies fallen, the party deals a fifth less. · Phoenix 3 ●●●, Pact ●●
+- **The undying** · **Martyr** (draws far more, can't be healed by others); when it falls, the other two heal to full, and it stands at the next fight's start with half its HP. · Phoenix 3 ●●●, Pact ●●
 - **The hurricane** · every hit the party lands adds to one shared count; at its mark, every ally is Hasted and the count starts again. · Cuts 3 ●●●, Snap ●● (riders come faster)
-- **The mountain** · **Peak** (Taunts all fight; its Shields and Guard are doubled); the other two deal a third more while it stands, and take double once it falls. · Landslide 3 ●●●, Toll 3 ●●
+- **The mountain** · **Peak** (Taunts all fight, Armor and HP up two steps); the other two deal a third more while it stands, and take double once it falls. · Landslide 3 ●●●, Toll 3 ●●
 - **The storm front** · every single-target hit in the party also hits the foe with the most HP, for a quarter. · Harvest 3 ●●● (the field falls together), Cuts ●
 - **The vise** · when a foe is Stunned or Silenced, every ally's basic attacks go to it and deal more. · Lockdown 3 ●●●, Snap ●● (every shatter a target)
 
@@ -370,24 +372,24 @@ Written after sections 2 to 6 and against them: no version copies a piece. Where
 
 ### Knight
 - **Vanguard** (a Shield at the start from max HP) · + a bigger Shield. · **A, Stonewall:** the ally with the lowest Aggro starts behind the same Shield (Landslide's mason, Ambush's rear guard). · **B, Grudge:** when its Shield breaks, the Knight Taunts and is Guarded (Toll, Lockdown).
-- **Fortify** (Guard on the ally lowest in HP) · + cooldown shorter. · **A, Bulwark:** Guards the ally with the most Armor, and adds a Shield from the Knight's Armor (Landslide: Guard on the Armor-scaler). · **B, Cover:** Guards the ally in the longest wind-up; with nobody casting, the lowest (Bonfire, Overflow, Lockdown: casters kept standing through their casts).
-- **Stand fast** (Taunt, and Clarity on the ally lowest in MP) · + cheaper. · **A, Rally the well:** no Taunt; Clarity on every ally under half MP (Overflow's wellspring). · **B, Challenge:** Taunt, and every foe that hits the Knight while it Taunts is Weakened; no Clarity (Toll, Lockdown).
+- **Fortify** (Guard on the ally lowest in HP) · + cooldown shorter. · **A, Stone guard:** Guards the ally with the most Armor, and adds a Shield from the Knight's Armor (Landslide: Guard on the Armor-scaler). · **B, Cover:** Guards the ally in the longest wind-up; with nobody casting, the lowest (Bonfire, Overflow, Lockdown: casters kept standing through their casts).
+- **Stand fast** (Taunt, and Clarity on the ally lowest in MP) · + cheaper. · **A, Rally the well:** no Taunt; Clarity on every ally under half MP (Overflow's wellspring). · **B, Hold the line:** Taunt, with Thorns medium while it lasts; no Clarity (Toll).
 - **Shield bash** (from max HP, Stun, a random foe) · + more damage. · **A, Measured blow:** waits for a foe in a wind-up and aims at it (Lockdown's watcher). · **B, Crushing bash:** no Stun; deals double, from max HP and its Shield together, on a longer cooldown (Landslide's blow).
 
 ### Cleric
-- **Last rites** (cooldowns halved below 30% HP) · + the line at 40%. · **A, Shared rites:** its cooldowns are halved while any ally is below 30% (Toll, Phoenix, Pact: it answers others' danger). · **B, Final rite:** when the Cleric falls, every ally is healed a third and cleansed (Phoenix's martyr).
-- **Renew** (cleanse and Regen) · + cheaper. · **A, Wellspring:** gives Clarity too (Overflow). · **B, Anchor's blessing:** always goes to the ally drawing the most (Toll's warden).
+- **Last rites** (cooldowns halved below 30% HP) · + the line at 40%. · **A, Shared rites:** its cooldowns are halved while any ally is below 30% (Toll, Phoenix, Pact: it answers others' danger). · **B, Rite of passage:** when an ally falls, the Cleric's cooldowns are halved for a while (Phoenix: the fall as a turn).
+- **Renew** (cleanse and Regen) · + cheaper. · **A, Font:** gives Clarity too (Overflow). · **B, Anchor's blessing:** always goes to the ally drawing the most (Toll's warden).
 - **Cure** (a quick top-up below 80%) · + a bigger heal. · **A, Triage:** waits until an ally is below 40%, then heals twice as much (Pact and Phoenix: the drop caught). · **B, Battle prayer:** heals, and the Cleric's next basic attack deals the same amount (Pact, Landslide: healing turned into a blow).
-- **Raise** (revives at half HP) · + more HP. · **A, Swift raise:** quick wind-up and cheaper, revives with a fifth (Phoenix's fast return, Ambush's Raise first). · **B, Ward of life:** can be cast on a living ally below a third: a Shield of a third of its max HP; still raises the fallen (Toll, Pact: a revive that also prevents).
+- **Raise** (revives at half HP) · + more HP. · **A, Martyr's raise:** the Cleric pays half its current HP, and the raised ally comes back with that much (Pact, Phoenix: life passed on). · **B, Ward of life:** can be cast on a living ally below a third: a Shield of a third of its max HP; still raises the fallen (Toll, Pact: a revive that also prevents).
 
 ### Ranger
-- **Hunter's eye** (basic attacks ignore Taunt) · + basic attacks deal a little more to foes not Taunting. · **A, Quarry:** basic attacks pick the foe lowest in HP share (Hunt). · **B, Volley:** every fourth basic attack hits every foe (Harvest, Ambush).
+- **Hunter's eye** (basic attacks ignore Taunt) · + basic attacks deal a little more to foes not Taunting. · **A, Quarry:** basic attacks pick the foe lowest in HP share (Hunt). · **B, Overwatch:** basic attacks go to a foe in a wind-up when there is one (Lockdown: a door).
 - **Barbed arrow** (light, several Bleed) · + more Bleed. · **A, Deep barbs:** aims at the foe with the most Bleed, adds many (Hunt, Cuts: one bleeding target). · **B, Scatter barbs:** hits three random foes, a few Bleed each (Harvest, Toll).
 - **Frost arrow** (light, a few Chill, the most Chill) · + more Chill. · **A, Pinning arrow:** Slows its target in place of Chill (Lockdown: a hold that never bursts). · **B, Hail:** one Chill on every foe (Snap, spread wide).
 - **Rending arrow** (a few Sunder, the most Sunder) · + more Sunder. · **A, Armor breaker:** aims at the foe with the most Armor, adds several Sunder (Cuts and Landslide against Armor). · **B, Gutting arrow:** aims at the foe lowest in HP, deals more the lower it is; no Sunder (Hunt's finisher).
 
 ### Bramble knight
-- **Briar** (Thorns open Bleed) · + more Bleed. · **A, Sap:** its Thorns heal it for the damage they deal (Toll, Pact). · **B, Spreading thorns:** its Thorns also strike a second foe (Harvest's rod).
+- **Briar** (Thorns open Bleed) · + more Bleed. · **A, Bloodroot:** a foe bleeding from Briar heals the Bramble knight a little each time it acts (Pact, Toll). · **B, Spreading thorns:** its Thorns also strike a second foe (Harvest's rod).
 - **Thicket** (Taunt and Guard on itself) · + cooldown shorter. · **A, Overgrowth:** a longer Taunt and doubled Thorns while it lasts; no Guard (Toll's glass thorn). · **B, Grove:** Guards every ally; no Taunt (Landslide, Bonfire, Harvest: the field held).
 - **Regrowth** (Regen on the lowest ally) · + cheaper. · **A, Deep roots:** always on itself, with Thorns up while it ticks (Toll). · **B, Blossom:** Regen on every ally, half as long (Pact, Harvest).
 - **Bramble lash** (from Thorns, a random foe) · + more damage. · **A, Whipping vines:** hits every foe, for half (Harvest's physical sweep). · **B, Rebuke:** waits until it's been hit five times since its last cast, and deals double (Toll: damage that follows the foe).
@@ -402,7 +404,7 @@ Written after sections 2 to 6 and against them: no version copies a piece. Where
 - **Judgement** (half again against buffed foes) · + a bigger bonus. · **A, Inquisition:** the bonus is against foes with a debuff instead (Lockdown, Bonfire, Toll: every curse is a buff now). · **B, Sentence:** the bonus is against the foe with the highest Attack or Magic (Hunt: the dangerous one).
 - **Sanctuary** (Ward on every ally) · + cooldown shorter. · **A, Sanctum:** Ward and a Shield from Magic on every ally (Phoenix's survivors, Harvest's held field). · **B, Consecration:** also adds a few Burn to every foe (Bonfire, Harvest).
 - **Absolve** (cleanse and heal itself and the lowest) · + a bigger heal. · **A, Penance:** heals only others, and gives them Might (Pact: healing into power). · **B, Absolution:** waits until an ally falls, and raises it with a fifth of its HP (Phoenix: a revive for one more class).
-- **Smite** (heavy, Burn, the strongest foe) · + more damage. · **A, Hammer of dawn:** Stuns its target; no Burn (Lockdown). · **B, Pyre of judgement:** hits every burning foe, half as hard (Bonfire, Harvest).
+- **Smite** (heavy, Burn, the strongest foe) · + more damage. · **A, Hammer of dawn:** Stuns its target; no Burn (Lockdown, Landslide: the rare blow that staggers). · **B, Pyre of judgement:** hits every burning foe, half as hard (Bonfire, Harvest).
 
 ### Valkyrie
 - **Einherjar** (revived allies come back ready) · + they come back with a small Shield. · **A, Chosen:** revived allies also come back Hasted and with Might (Phoenix). · **B, Chooser of the slain:** in place of Einherjar, every ally deals a fifth more to foes below half HP (Hunt, Harvest: the finish).
@@ -412,45 +414,45 @@ Written after sections 2 to 6 and against them: no version copies a piece. Where
 
 ### Bard
 - **Refrain** (basic attacks heal and give MP) · + a bigger share. · **A, Harmony:** the heal and the MP go to the ally with the least of each (Overflow, Pact). · **B, Battle song:** a few Might in place of the heal (Landslide, Cuts).
-- **War ballad** (a few Might to every ally) · + more Might. · **A, Ballad of one:** many Might to the ally with the slowest basic attack only (Landslide's hammer). · **B, Marching song:** every ally's next basic attack comes at once; no Might (Cuts, Ambush).
-- **Allegro** (Haste on every ally) · + cooldown shorter. · **A, Overture:** cast at the fight's start whatever its cooldown (Ambush). · **B, Accelerando:** Haste on the one ally that acts fastest, on a short cooldown (Cuts' pacer).
+- **War ballad** (a few Might to every ally) · + more Might. · **A, Lament:** Might only to allies below half HP, twice as many (Pact, Phoenix: the low as the strong). · **B, Marching song:** every ally's next basic attack comes at once; no Might (Cuts, Ambush).
+- **Allegro** (Haste on every ally) · + cooldown shorter. · **A, Rubato:** Haste on every ally, and each ally's ability with the longest cooldown left comes a few ticks closer (Overflow, Lockdown). · **B, Accelerando:** Haste on the one ally that acts fastest, on a short cooldown (Cuts' pacer).
 - **Thunder chord** (several Shock on every foe) · + more Shock. · **A, Resonance:** deals magical damage to every foe for each Shock it holds; adds none (Harvest). · **B, Lullaby:** Slows every foe; no Shock (Lockdown, Toll: fewer blows, all of them still landing).
 
 ### Hexer
 - **Cold hex** (basic attacks add Chill) · + more Chill. · **A, Hex of flames:** Burn in place of Chill (Bonfire's stoker). · **B, Deep cold:** Chill only on the foe with the most, twice as much (Snap: one foe walked to the shatter).
-- **Malison** (Burn and Shock on every foe) · + more of both. · **A, Plague:** adds a few Bleed too (Toll, Cuts). · **B, Focused curse:** all of it on the foe with the highest Attack or Magic, three times as much (Bonfire, Lockdown).
+- **Malison** (Burn and Shock on every foe) · + more of both. · **A, Plague:** adds a few Bleed too (Toll, Cuts, Harvest). · **B, Focused curse:** all of it on the foe with the highest Attack or Magic, three times as much (Bonfire, Lockdown).
 - **Unmake** (Silence a casting foe, strip its buffs) · + cooldown shorter. · **A, Silence all:** Silences every foe in a wind-up (Lockdown). · **B, Broken spell:** deals magical damage for each buff stripped, and gives the Hexer MP for each (Overflow).
-- **Enfeeble** (Weaken and Sunder, the strongest foe) · + more Sunder. · **A, Wither:** Weakens every foe; no Sunder (Toll). · **B, Expose:** many Sunder on the foe lowest in HP; no Weaken (Hunt, Cuts).
+- **Enfeeble** (Weaken and Sunder, the strongest foe) · + more Sunder. · **A, Wither:** Weakens every foe; no Sunder (Toll, Lockdown). · **B, Expose:** many Sunder on the foe lowest in HP; no Weaken (Hunt, Cuts).
 
 ### Monk
-- **Iron palm** (basic attacks and extra strikes add Sunder) · + more Sunder. · **A, Frost palm:** Chill in place of Sunder (Snap: your Monk run, as a choice). · **B, Drinking palm:** hits on a Sundered foe heal the Monk for a share of the damage (Pact).
+- **Iron palm** (basic attacks and extra strikes add Sunder) · + more Sunder. · **A, Hundred hands:** the hits of its abilities add Sunder too (Cuts: every hit counts). · **B, Drinking palm:** hits on a Sundered foe heal the Monk for a share of the damage (Pact).
 - **Flow** (Haste on itself) · + cooldown shorter. · **A, Flow state:** each hit while Hasted makes the Haste last a little longer (Cuts). · **B, Stillness of mind:** Evasion high and a short Taunt in place of Haste (Toll's dancer).
-- **Burning fist** (three hits, Burn) · + more Burn. · **A, Frost fist:** Chill in place of Burn, at the foe with the most Chill (Snap; your idea). · **B, Flurry:** five smaller hits at random foes, each with a little Burn (Cuts, Harvest).
+- **Burning fist** (three hits, Burn) · + more Burn. · **A, Frost fist:** Chill in place of Burn, at the foe with the most Chill (Snap; your idea). · **B, Fanned flames:** five smaller hits on the foe with the most Burn, each adding a little Burn (Bonfire, Cuts).
 - **Pressure point** (Stun the strongest foe, Seek) · + more damage. · **A, Lingering point:** when its Stun ends, the foe is Slowed (Lockdown: a window that closes slowly). · **B, Vital strike:** no Stun; triple damage on the foe lowest in HP (Hunt).
 
 ### Assassin
-- **Lacerate** (crits add Bleed) · + more Bleed. · **A, Opening wound:** its first hit on each foe crits (Ambush). · **B, Rupture:** its crits set off the target's Bleed at once, all of it (Hunt's burst).
-- **Vanish** (Hidden on itself) · + cooldown shorter. · **A, Smoke screen:** Hidden on the ally lowest in HP share (Phoenix, Toll: the fragile one hidden). · **B, Shadow step:** its first hit after Hidden ends deals triple (Ambush).
-- **Backstab** (from crit chance, the lowest foe, Seek) · + more damage. · **A, Coup de grâce:** a kill makes it ready again (Hunt). · **B, Bleeding edge:** three hits, each adding Bleed (Cuts).
+- **Lacerate** (crits add Bleed) · + more Bleed. · **A, Opening wound:** its first hit on each foe crits (Ambush). · **B, Rupture:** its crits set off the target's Bleed at once: one hit's worth of Bleed damage for every stack, then the Bleed closes (Hunt's burst).
+- **Vanish** (Hidden on itself) · + cooldown shorter. · **A, Smoke screen:** Hidden on the ally lowest in HP share that isn't Taunting (Phoenix, Toll: the fragile one hidden). · **B, Shadow step:** its first hit after Hidden ends deals triple (Ambush).
+- **Backstab** (from crit chance, the lowest foe, Seek) · + more damage. · **A, Coup de grâce:** a kill makes it ready again (Hunt). · **B, From the shadows:** waits until the Assassin is Hidden, and deals double (Ambush: Vanish, then the knife).
 - **Garrote** (Silence, Seek) · + cheaper. · **A, Choke:** waits for a foe in a wind-up and aims at it (Lockdown). · **B, Garrote wire:** no Silence; Rot and many Bleed on its target (Hunt against healers: the anti-heal nobody had).
 
 ### Vampire
 - **Bloodlust** (Lifesteal doubled below half) · + Lifesteal up below half. · **A, Shared feast:** below half, its Lifesteal also heals the ally lowest in HP share (Pact's donor). · **B, Undying thirst:** once a fight, falling below a tenth makes it unkillable for a moment, with Lifesteal tripled (Phoenix, Pact).
-- **Blood drain** (from max HP, Weaken) · + more damage. · **A, Exsanguinate:** costs HP in place of MP, deals double (Pact). · **B, Drain the well:** Siphon in place of Weaken, given to the ally lowest in MP (Overflow).
-- **Blood gift** (pay HP to heal and Clarity another) · + a bigger heal. · **A, Blood pact:** heals every ally for a third as much (Pact, Harvest). · **B, Lifeblood:** waits until an ally falls, and raises it with the HP it pays (Phoenix).
+- **Blood drain** (from max HP, Weaken) · + more damage. · **A, Bloodletting:** many Bleed in place of Weaken (Pact, Cuts). · **B, Drain the well:** Siphon in place of Weaken, given to the ally lowest in MP (Overflow).
+- **Blood gift** (pay HP to heal and Clarity another) · + a bigger heal. · **A, Blood for mana:** gives MP in place of HP: what the Vampire pays goes to the ally lowest in MP (Overflow, Pact). · **B, Lifeblood:** waits until an ally falls, and raises it with the HP it pays (Phoenix).
 - **Frenzy** (several Might on itself) · + more Might. · **A, Feeding frenzy:** Lifesteal up while the Might lasts (Pact). · **B, Blood rage:** the Might goes to the ally with the highest Attack or Magic (Landslide's hammer, Cuts).
 
 ### Pyromancer
 - **Kindling** (basic attacks add Burn) · + more Burn. · **A, Wildfire:** basic attacks add Burn to the target and a random other foe (Harvest). · **B, Searing:** basic attacks add Burn only to the foe with the most, twice as much (Bonfire's focus).
-- **Firebolt** (Burn on the most burning foe) · + more Burn. · **A, Firestorm:** three bolts at three random foes (Harvest). · **B, Flash bolt:** a quick wind-up at half the cost, half the Burn (Overflow, Cuts' magical torrent).
-- **Fireball** (every foe, a few Burn) · + more damage. · **A, Conflagration:** many Burn on every foe, on a longer cooldown (Bonfire). · **B, Flashfire:** a quick wind-up, smaller, on a short cooldown (Cuts' magical torrent, Overflow).
-- **Pyre** (heavy, more for each Burn) · + more damage. · **A, Funeral pyre:** hits every foe, half as hard, each by its own Burn (Harvest; your Wildfire idea). · **B, Spent fire:** consumes the Burn, and the Pyromancer regains MP for each stack (Overflow).
+- **Firebolt** (Burn on the most burning foe) · + more Burn. · **A, Slow burn:** half the damage, twice the Burn (Bonfire: a fire that lasts). · **B, Flash bolt:** a quick wind-up at half the cost, half the Burn (Overflow, Cuts' magical torrent).
+- **Fireball** (every foe, a few Burn) · + more damage. · **A, Conflagration:** many Burn on every foe, on a longer cooldown (Bonfire, Harvest). · **B, Flashfire:** a quick wind-up, smaller, on a short cooldown (Cuts' magical torrent, Overflow).
+- **Pyre** (heavy, more for each Burn) · + more damage. · **A, Funeral pyre:** hits every foe, half as hard, each by its own Burn (Harvest; your Wildfire idea). · **B, Pyre of the fallen:** when a burning foe falls, Pyre comes a few ticks closer (Bonfire: each kill sooner than the last).
 
 ### Frostweaver
-- **Shatterpoint** (a shatter adds Sunder) · + more Sunder. · **A, Brittle:** a shattered foe's Stun lasts twice as long (Lockdown). · **B, Splinters:** a shatter deals a third of its damage to every other foe (Harvest, Snap).
+- **Shatterpoint** (a shatter adds Sunder) · + more Sunder. · **A, Brittle:** a shattered foe is Silenced too (Lockdown). · **B, Splinters:** a shatter deals a third of its damage to every other foe (Harvest, Snap).
 - **Frost lance** (Chill, the most Chill) · + more Chill. · **A, Ice spear:** aims at the foe with the highest Attack or Magic, and Slows it (Lockdown). · **B, Icicles:** three lances at three foes, a few Chill each (Snap spread wide).
 - **Blizzard** (every foe, a few Chill) · + more damage. · **A, Whiteout:** no damage, twice the Chill (Snap, Lockdown). · **B, Avalanche:** more damage to foes with Chill, the more Chill the more; adds none (Snap's breaker, Harvest).
-- **Stillness** (Clarity, and Chill on every foe) · + cheaper. · **A, Deep calm:** Clarity on every ally under half MP; no Chill (Overflow). · **B, Frozen moment:** Chill only on foes in a wind-up, three times as much (Lockdown).
+- **Stillness** (Clarity, and Chill on every foe) · + cheaper. · **A, Deep calm:** Clarity on every ally under half MP; no Chill (Overflow). · **B, Frozen moment:** Chill only on foes in a wind-up, three times as much (Lockdown, Snap).
 
 ### Stormcaller
 - **Arc** (a second foe, Shock both) · + more Shock. · **A, Forked arc:** two more foes in place of one (Harvest). · **B, Static grip:** the second hit goes to the same foe (Cuts, Hunt).
@@ -474,55 +476,56 @@ One per class, crimson, offered in act II and III boss boons. Each fits one clas
 | --- | --- | --- | --- |
 | Knight | **Horn of the keep** · offhand | Every hit the Knight takes gives the ally with the least MP a little MP, and Stand fast's Taunt lasts while any ally is casting. | Overflow 3 ●●●, Toll ●● (a wall whose beating feeds the casters: the door between them) |
 | Cleric | **Halo of the saint** · amulet | The part of the Cleric's heals that would go past full goes to the fallen; enough of it raises them. | Phoenix 3 ●●● |
-| Ranger | **Huntmaster's quiver** · offhand | All the Ranger's abilities aim at the foe lowest in HP; when it falls, the Ranger's cooldowns come down by half. | Hunt 3 ●●● |
+| Ranger | **Huntmaster's quiver** · armor | All the Ranger's abilities aim at the foe lowest in HP; when it falls, the Ranger's cooldowns come down by half. | Hunt 3 ●●● |
 | Bramble knight | **Heartwood mail** · armor | Every hit on any ally sets off the Bramble knight's Thorns too. | Toll 3 ●●● (thorns on the whole party) |
 | Hoplite | **The last wall** · offhand | A blow the Hoplite's Aegis blocks is struck back at its attacker in full, and Aspis is ready again. | Toll 3 ●●, Bonfire 3 ●● (the keeper) |
-| Paladin | **Sunforged blade** · weapon (medium, magical, one hand) | Basic attacks add several Burn, and Judgement counts Burn as a buff. | Bonfire 3 ●●● |
+| Paladin | **Chains of light** · offhand | Smite Silences its target too, and the Paladin's hits on a Silenced or Stunned foe heal the ally lowest in HP share for a share of the damage. | Lockdown 3 ●●●, Pact ● |
 | Valkyrie | **Stormspear** · weapon (medium, magical, one hand) | Every basic attack is a Gale spear's hit: it ignores Taunt and adds a few Shock. | Cuts 3 ●●, Hunt 3 ●● (the storm spear past every front) |
-| Bard | **Metronome** · offhand | Every twentieth hit the party lands makes the Bard's songs ready. | Cuts 3 ●●● (the blur sets the tempo) |
+| Bard | **Metronome** · offhand | Every twentieth hit the party lands makes War ballad, Allegro and Thunder chord ready. | Cuts 3 ●●● (the blur sets the tempo) |
 | Hexer | **The witch-blade** · weapon (fast, magical, one hand) | After each ability the Hexer casts, its next three basic attacks hit every foe that holds a debuff. | Snap 3 ●●● (Cold hex on every cursed foe), Harvest ●● |
-| Monk | **Ember palms** · weapon (fast, physical, one hand) | Every hit the Monk lands adds a Burn, and it gains Heat for each burning foe. | Bonfire 3 ●●●, Cuts ●● |
+| Monk | **Ember palms** · weapon (fast, physical, one hand) | Every hit the Monk lands adds a Burn, and every few ticks it gains Heat for each burning foe. | Bonfire 3 ●●●, Cuts ●● |
 | Assassin | **Night's edge** · armor | A kill hides the Assassin for a moment, and its hits from Hidden always crit. | Hunt 3 ●●●, Ambush ●● |
 | Vampire | **Thrall's chalice** · offhand | When an ally falls, the Vampire heals to full, and the fallen rises the next time the Vampire lands a kill. | Phoenix 3 ●●●, Pact ●● |
 | Pyromancer | **Crown of embers** · amulet | While the Pyromancer stands, every ally's hits add a Burn. | Bonfire 3 ●●● (the party as the fire) |
 | Frostweaver | **Glacier's heart** · armor | When a foe's Chill shatters, the Frostweaver puts half of it back. | Snap 3 ●●● (shatters on a beat that speeds up) |
-| Stormcaller | **Eye of the tempest** · weapon (fast, magical, one hand) | Every hit the Stormcaller lands jumps to one more foe, and a foe that falls with Shock passes it to every other foe. | Harvest 3 ●●● |
+| Stormcaller | **Eye of the tempest** · weapon (fast, magical, one hand) | Every hit the Stormcaller lands jumps to one more foe, and a foe that falls with Shock gives each other foe half of it. | Harvest 3 ●●● |
 | Geomancer | **Mountain's crown** · amulet | The Geomancer's crits rebuild its Shield by the damage they deal. | Landslide 3 ●●● |
 
-First pulls: Bonfire three (the Paladin, Monk and Pyromancer), Toll, Hunt and Phoenix two each, Cuts, Snap, Harvest, Landslide and Overflow one. Ambush and Pact are only second pulls, and Lockdown has none: it reaches its far end through gear and upgrades (section 9). If you want a mythic for each, the Hexer's is the one I'd move to Lockdown.
+First pulls: Toll, Hunt, Phoenix, Bonfire, Cuts and Snap two each (the Hoplite's and the Valkyrie's counted where they lean first), Harvest, Landslide, Overflow and Lockdown one: sixteen. Ambush and Pact are only second pulls; they reach their far ends through gear and upgrades (section 9).
 
 ---
 
 ## 9. The web, checked across all twelve
 
-Counted from this spine's own lines (pieces and formations tagged with a rung, versions by the builds they name). "Wearers" is how many of the 16 classes can wear at least one of the build's pieces.
+Counted from this spine's own lines, after the fresh read's fixes. Rungs 2 and 3: pieces and formations tagged with that rung. Versions: how many A or B versions name the build, and from how many classes. Formations: those worth some or a lot to it, then those worth a little. Wearers: how many of the 16 classes can wear at least one piece worth some or a lot to it, amulets left out (everyone wears those).
 
 ### Every rung, and its routes
 
 | Build | Rung 1: what most runs find | Rung 2: specific pieces | Rung 3: the far end | Versions (classes) | Mythic | Formations | Wearers |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Landslide | the Knight's and Geomancer's Shields, any great weapon; Plate and great-weapon commons | 7, in every slot (Bastion plate, War horn, Stone totem, Millstone, Hammer and anvil) | 6 (Cornerstone maul, Worldbreaker, Rubble plate, Spiked bulwark, Earthmother totem, The mountain) | 16 (8) | Geomancer | 5 | 12 |
-| Cuts | daggers, fists, wands; Double strike and Evasion commons | 6 (Notched knife, Duelist's leathers, Tempo bell, Hummingbird and Echo charms) | 5 (Thousandth cut, Flurry wraps, Flicker wand, Windrunner's garb, The hurricane) | 16 (9) | Bard, Valkyrie | 5, two a little | 14 |
-| Bonfire | four classes' Burn; lantern and wand uncommons | 5 (Spark wand, Banked staff, Kindled robes, Bellows lantern, Hearth) | 5 (Sunhammer, Wick, Ember heart, Phalanx shield, The forge) | 11 (6) | Paladin, Monk, Pyromancer | 5 | 14 |
-| Snap | the Frostweaver; Chill uncommons on rods, bows, tomes | 6 (Rime knuckles, Frostbite bow, Icebreaker, Primer of frost, Hoarfrost line) | 3 (Winter's chain, Frostwalker's furs, Heart of winter) | 11 (5) | Frostweaver, Hexer | 5 | 16 |
-| Hunt | Seek in four kits, the Ranger; Seek uncommons | 9 (Marking knife, Hunting spear, Huntsman's bow, Tracker's coat, Bounty charm) | 5 (Gravemark, Executioner's longbow, Pack leader's coat, Wild hunt totem, The pack) | 15 (8) | Ranger, Assassin | 4 | 15 |
-| Harvest | three Area mages | 7 (Sweeping blade, Glaive, Chain wand, Lightning rod, Treatise on the field) | 7 (Oathkeeper, Storm pike, Cataclysm staff, Stormweave, Last page, The storm front) | 26 (12) | Stormcaller | 4 | 16 |
-| Ambush | slot order; Haste, Hidden and Taunt-at-start uncommons | 4 (Drawn steel, Shadow cloak, War horn, Knives drawn) | 5 (Quietus, Volley bow, Horn of the charge, Ready stance, The ambuscade) | 10 (7) | (second pull: Assassin) | 6 | 16 |
-| Overflow | MP regen commons; three Clarity givers | 6 (Weaver's robes, Echo horn, Leech idol, Quiet robes, Relay) | 6 (Wellspring rod, Archmage's mantle, Annotated grimoire, Cataclysm staff, Bell of the hour, The choir) | 12 (8) | Knight | 4 | 13 |
-| Lockdown | six classes' Stun or Silence | 8 (Icebreaker, Bane of the bound, Humbling mace, Glacial rod, Opportunist's charm, Gaol) | 5 (Still hand, Worldbreaker, Bell of the hour, Idol of binding, The vise) | 18 (9) | none | 3, and seven a little | 16 |
-| Toll | the Bramble knight, two Taunters; Thorns commons, Taunt uncommons | 11 (Hoarfrost plate, Static mail, Duelist's leathers, Briar totem, Humbling shield) | 6 (Oathkeeper, Pike wall, Thornheart plate, Spiked bulwark, Windrunner's garb, The mountain) | 20 (12) | Bramble knight, Hoplite | 5, three a little | 16 |
-| Pact | Lifesteal commons; the Vampire | 7 (Gorged claws, Heartsplitter, Bloodsworn mail, Saint's knucklebone, Blood vial, Blood oath) | 6 (Martyr's maul, Sanguine mail, Phylactery, Bloodlust draught, Blood covenant, Last bastion) | 16 (7) | Vampire (second) | 4 | 14 |
-| Phoenix | two revives, phoenix feathers | 4 (Lamp of vigil, Reliquary of mercy, Martyr's locket, Pyre of heroes) | 10 (Dawnblade, Mantle of the fallen, Vestments of return, Shield of the chosen, Bones of the returned, Vial of the last breath, Phoenix ember, The undying) | 14 (6) | Cleric, Vampire | 5 | 16 |
+| Landslide | the Knight's and Geomancer's Shields, any great weapon; Plate and great-weapon commons | 7 (Heartsplitter, Bastion plate, Rubble shield, War horn, Stone totem, Millstone, …) | 6 (Cornerstone maul, Worldbreaker, Rubble plate, Spiked bulwark, Earthmother totem, The mountain) | 16 (9) | Geomancer | 5, and 2 a little | 11 |
+| Cuts | daggers, fists, wands; Double strike and Evasion commons | 6 (Notched knife, Duelist's leathers, Tempo bell, Venom vial, Hummingbird charm, Echo charm) | 5 (Thousandth cut, Flurry wraps, Flicker wand, Windrunner's garb, The hurricane) | 17 (8) | Bard, Valkyrie | 3, and 2 a little | 12 |
+| Bonfire | four classes' Burn; lantern and wand uncommons | 7 (Hexblade, Spark wand, Banked staff, Kindled robes, Oathbound shield, Bellows lantern, …) | 5 (Sunhammer, Phalanx shield, Wick, Ember heart, The forge) | 14 (7) | Monk, Pyromancer | 4, and 1 a little | 13 |
+| Snap | the Frostweaver; Chill uncommons on rods, bows, tomes | 7 (Rime knuckles, Frostbite bow, Icebreaker, Hexblade, Banked staff, Primer of frost, …) | 3 (Winter's chain, Frostwalker's furs, Heart of winter) | 11 (5) | Frostweaver, Hexer | 5 | 16 |
+| Hunt | Seek in four kits, the Ranger; Seek uncommons | 9 (Notched knife, Marking knife, Hunting spear, Huntsman's bow, Tracker's coat, Hunter's buckler, …) | 5 (Gravemark, Executioner's longbow, Pack leader's coat, Wild hunt totem, The pack) | 15 (8) | Ranger, Assassin | 3, and 1 a little | 15 |
+| Harvest | three Area mages | 7 (Sweeping blade, Glaive, Volley bow, Chain wand, Lightning rod, Treatise on the field, …) | 7 (Oathkeeper, Storm pike, Cataclysm staff, Stormweave, Last page, Ember heart, …) | 24 (11) | Stormcaller | 3, and 2 a little | 13 |
+| Ambush | slot order; Haste, Hidden and Taunt-at-start uncommons | 4 (Drawn steel, Shadow cloak, War horn, Knives drawn) | 5 (Quietus, Volley bow, Horn of the charge, Ready stance, The ambuscade) | 8 (5) | (second: Assassin) | 4, and 2 a little | 10 |
+| Overflow | MP regen commons; three Clarity givers | 6 (Spellbinder, Quiet robes, Weaver's robes, Echo horn, Leech idol, Relay) | 6 (Brimming rod, Cataclysm staff, Archmage's mantle, Annotated grimoire, Bell of the hour, The choir) | 13 (8) | Knight | 3, and 2 a little | 13 |
+| Lockdown | six classes' Stun or Silence | 8 (Icebreaker, Bane of the bound, Humbling mace, Glacial rod, Rubble shield, Withering idol, …) | 6 (Still hand, Worldbreaker, Hexweave mail, Bell of the hour, Idol of binding, The vise) | 20 (9) | Paladin | 5, and 5 a little | 14 |
+| Toll | the Bramble knight, two Taunters; Thorns commons, Taunt uncommons | 14 (Humbling mace, Rootstaff, Bastion plate, Hoarfrost plate, Challenger's plate, Static mail, …) | 6 (Oathkeeper, Pike wall, Thornheart plate, Windrunner's garb, Spiked bulwark, The mountain) | 20 (12) | Bramble knight, Hoplite | 5, and 3 a little | 16 |
+| Pact | Lifesteal commons; the Vampire | 7 (Gorged claws, Heartsplitter, Censer mace, Bloodsworn mail, Saint's knucklebone, Blood vial, …) | 6 (Martyr's maul, Last bastion, Sanguine mail, Phylactery, Bloodlust draught, Blood covenant) | 18 (7) | (second: Vampire) | 3, and 1 a little | 13 |
+| Phoenix | two revives, phoenix feathers | 6 (Challenger's plate, Bloodsworn mail, Lamp of vigil, Reliquary of mercy, Martyr's locket, Pyre of heroes) | 11 (Dawnblade, Last bastion, Mantle of the fallen, Vestments of return, Shield of the chosen, Rallying horn, …) | 15 (7) | Cleric, Vampire | 3, and 2 a little | 16 |
 
-- **Every rung has more than one route,** through at least three slots and at least two class groups, and every build reaches into all five places (weapon, armor, offhand, amulet, formation).
-- **Thin spots:** Snap's far end (three pieces, but two mythics and a version); Ambush's and Phoenix's second rung (four each, plus uncommons and versions). Harvest has the most versions, since "spread it" is the natural alternative for many abilities; I moved some of those to Ambush, Snap and Cuts; Harvest still gets the most (26), many as a second pull, since holding the full field and spreading a hit are each a natural version.
-- **Lockdown has no mythic.** It doesn't need one to reach its far end; if you want each build to have one, the Hexer's moves to it.
+- **Every rung has more than one route:** each second and third rung reaches at least three of the five places (weapon, armor, offhand, amulet, formation), and every build reaches all five somewhere.
+- **Thin spots:** Snap's far end (three pieces, with two mythics and a version beside them); Ambush's second rung (four, plus uncommons and versions) and its reach (ten classes); Overflow's amulet (only Blood covenant, a little). Harvest still has the most versions (24, from 11 classes), since holding the full field and spreading a hit are each a natural version.
+- **The upgrade needs in `builds.md`:** every ability it names has a version toward its build except five: Fortify toward the Toll, Gale spear toward Ambush, Chain lightning toward Harvest, Sanctuary toward Lockdown, Renew toward Pact or Phoenix. Each of those builds gets its versions from other abilities, and these five pull elsewhere.
+- **Ambush and Pact have no mythic of their own,** only second pulls (the Assassin's, the Vampire's). Both reach their far end through gear and versions.
 
 ### The shared needs, met once and paid off several times
 
 | Need (`builds.md`) | Met by | Pays off in |
 | --- | --- | --- |
-| Taunt on gear | Challenger's plate, Mocking mail, sword, Plate and amulet uncommons, Thorn hedge, Lightning rod | Toll, Landslide, Phoenix, Harvest, Bonfire |
+| Taunt on gear | Challenger's plate, Mocking mail, sword, Plate and amulet uncommons, Thorn hedge, Reaping line | Toll, Landslide, Phoenix, Harvest, Bonfire |
 | Payoffs on a Stunned or Silenced foe | Icebreaker, Opportunist's charm, Still hand, Bane of the bound, Hoarfrost line, The vise, Gaol | Lockdown, Snap, Landslide |
 | A dodge that pays | Duelist's leathers, Windrunner's garb | Cuts, Toll (both Leather: see section 11) |
 | Riders on every hit, extra strikes too | Notched knife, Rime knuckles, Echo charm, Flurry wraps, Flicker wand, Heart of winter | Cuts, Snap, Bonfire |
@@ -533,7 +536,7 @@ Counted from this spine's own lines (pieces and formations tagged with a rung, v
 | Effects at the fight's start | Bastion plate, Stone totem, War horn, Shadow cloak, Drawn steel, Horn of the charge, First light, and many uncommons | Ambush, Landslide, Phoenix |
 | Reactions to a fall or a return | Challenger's plate, Mantle of the fallen, Rallying horn, Dawnblade, Martyr's locket, Funeral bell, Vigil, Pyre of heroes | Phoenix, Toll |
 | Seek on gear | Tracker's coat, Executioner's longbow, dagger and rune-sword uncommons, Hunting party | Hunt, Ambush, Lockdown |
-| Changing an MP cost | Weaver's robes, Annotated grimoire, Archmage's mantle, Wellspring rod, Reliquary of mercy, Wellspring, The choir | Overflow, Phoenix, Lockdown |
+| Changing an MP cost | Weaver's robes, Annotated grimoire, Archmage's mantle, Brimming rod, Reliquary of mercy, Wellspring, The choir | Overflow, Phoenix, Lockdown |
 
 ### The doors
 
@@ -546,7 +549,7 @@ Every door in `builds.md` has at least two pieces that matter to both sides:
 - **Landslide into the Toll, through Armor:** Spiked bulwark, Thorn hedge (Thorns from Armor in Plate), Bastion plate.
 - **Landslide into Ambush, through the stone at the start:** Stone totem, War horn, Drawn steel, Phalanx's version A.
 - **Pact into Phoenix, through low HP:** Last bastion, Bloodsworn mail, Martyr's maul, Bloodlust's version B.
-- **Overflow into Lockdown, through MP and cooldowns:** Annotated grimoire, Wellspring rod, Bell of the hour, The choir.
+- **Overflow into Lockdown, through MP and cooldowns:** Annotated grimoire, Brimming rod, Bell of the hour, The choir.
 - **Overflow into Bonfire, through hungry casts:** Archmage's mantle, Cataclysm staff.
 
 New doors the pieces made: **the Toll into Overflow** (the Knight's mythic: a beating that feeds the casters), **Bonfire into Harvest** (Ember heart spreads the fire the Wick focuses), **Landslide into Lockdown** (Worldbreaker, Rubble shield).
@@ -555,12 +558,12 @@ The builds nobody planned are all possible: the frozen gate (Hoarfrost plate bes
 
 ### Exotics
 
-Seven belong to no build: the **Wildmagic wand**, the **Cinderheart staff** (a flare that undoes Bonfire's ramp), the **Funeral bell** (it rings for both sides), the **Bloodlust draught**, the **Idol of the hungry dark**, **Gambler's coin** and **The wheel**. Two more sit near: the **Hexblade** and **Hexweave mail**, worth something to every status party and a lot to none.
+Five belong to no build: the **Wildmagic wand**, the **Cinderheart staff** (a flare that undoes Bonfire's ramp), the **Idol of the hungry dark**, **Gambler's coin** and **The wheel**. Two more sit near: the **Hexblade** and **Hexweave mail**, worth something to every status party and a lot to none. The **Funeral bell** and the **Bloodlust draught** started as exotics and are Phoenix's and Pact's now.
 
 ### Nothing fenced off
 
-- Every build has pieces in every slot and a formation, wearable by 12 to 16 classes.
-- The narrowest are Landslide (12 classes can wear one of its pieces) and Overflow (13). Both are the builds whose classes cluster (Plate wearers, Robes wearers), and both have an amulet (Millstone; none for Overflow: see section 11).
+- Every build has pieces in every slot and a formation, and pieces worth something to it that 10 to 16 classes can wear.
+- The narrowest are Ambush (10 classes) and Landslide (11): Ambush's openers sit on the fast and the hidden, Landslide's stone on Plate and great weapons. Both have an amulet anyone can wear (Ready stance, Millstone).
 - 110 of the 120 rare and legendary pieces matter to two builds or more, by different amounts.
 
 ---
@@ -583,12 +586,12 @@ Twenty lines, picked across the range: typical ones, the extremes, and the ones 
 - **Archmage's mantle** (Robes, legendary): every ability costs half again as much and does half again as much. Strong for any caster; it pays in fuel.
 - **Horn of the charge** (horn, legendary): every ally Hasted and acting at once at the start; the holder starts with everything on cooldown.
 - **Blood covenant** (amulet, legendary): abilities cost HP in place of MP, on any class.
-- **Funeral bell** ✦ (bell, legendary): when anyone falls, friend or foe, every ally gains Fervor.
+- **Funeral bell** (bell, legendary): when anyone falls, friend or foe, every ally gains Fervor. Phoenix's, but it rings for both sides.
 - **The wheel** ✦ (formation, rare): the seats' effects turn every so often.
 - **Einherjar, version B** (Valkyrie): the passive is replaced outright: every ally deals more to foes below half HP. A version can change what a passive is.
 
 **Least sure (?)**
-- ? **Marked** (Marking knife, Huntsman's bow, Wild hunt totem, Hunting party, The pack): one new word for the player, and the Hunt rests on it.
+- ? **Marked** (Marking knife, Huntsman's bow, Signal lantern, Wild hunt totem, Hunting party): one new word for the player, and the Hunt rests on it.
 - ? **Spellbinder** (rune sword, rare): after each cast, the next basic attack deals double. Overflow's rung 2 for a spellblade, but it reads more like a rhythm than a mana flow.
 - ? **Phalanx shield** (round shield, legendary): allies with less Armor take a fifth less while the holder stands. Bonfire's keeper as an aura: it might be strong everywhere.
 - ? **Raise, version B** (Cleric): castable on a living ally below a third for a big Shield, still raising the fallen. Two jobs on one very long cooldown.
@@ -603,9 +606,9 @@ Twenty lines, picked across the range: typical ones, the extremes, and the ones 
 1. **The stock is even quarters** (60 of each rarity), with the plain weapons outside the 240. Offers keep weighting rarity, so a run sees under half the legendaries.
 2. **Commons carry no effect,** only stats. Uncommons are where the first rungs live. Your "only legendaries are interesting" is answered by uncommons and rares, not commons.
 3. **An upgrade is two trainings:** the power step and the version, in either order. A fully trained class is eight trainings, about twice what a run gives today; the build step sizes the training a run offers.
-4. **One new word, Marked,** and six counters (Cuts, Heat, Spite, Tempo, Surge, Fervor), each its own status. Fewer counters are possible: Heat and Surge could be one.
+4. **One new word, Marked,** and seven counters (Cuts, Heat, Spite, Tempo, Surge, Fervor, and the Storm pike's Charge), each its own status. Fewer are possible: Heat and Surge could be one, and Charge could be Cuts spent.
 5. **32 formations and Neutral** (today 10): 11 common, 12 rare, 9 legendary.
-6. **Three rules bent, each by one or two pieces:** extra strikes that chain (Flurry wraps), a hit taken for an ally (Oathbound shield), effects after a won fight (Lamp of vigil, Last bastion).
+6. **Three rules bent, each by one or two pieces:** extra strikes that chain (Flurry wraps), a hit taken for an ally (Oathbound shield), effects after a won fight (Lamp of vigil, Last bastion, The undying). **One rule added:** Taunt ends Hidden (engine 17).
 7. **No piece grants an ability.** Effects are reactions, pulses, riders and rule changes, so "more abilities per class" stays out of this step.
 
 **Least sure:**
@@ -615,8 +618,8 @@ Twenty lines, picked across the range: typical ones, the extremes, and the ones 
 4. **Two-handers** are written to be worth a weapon and an offhand (bigger commons, paired effects). Whether the Volley bow or Cataclysm staff is worth giving up a lantern or tome is a test, not a design.
 5. **Phoenix's far end is crowded** (ten pieces) and its second rung thin (four). Several returns stacked on one unit (Phoenix ember, Vial of the last breath, Shield of the chosen) could make a party that can't lose its first member.
 6. **Harvest gets the most versions** (26, from 12 classes), because "spread it" is the natural other side of many single-target abilities.
-7. **Lockdown has no mythic.**
-8. **Exotics are seven,** under the one in ten I'd aim for. The fill can add an exotic per offhand kind if you want more chaos.
+7. **Ambush and Pact have no mythic of their own.** The Paladin's went to Lockdown after the fresh read (its first draft repeated a mace).
+8. **Exotics are five,** half the one in ten I'd aim for. The fill can add one per offhand kind if you want more chaos.
 
 ## 12. After your read: the fill
 
