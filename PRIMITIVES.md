@@ -152,7 +152,7 @@ A scale's `count` (step 5i):
 | `crits` | Step 5i: crits by condition on the holder's hits. |
 | `echo` | Step 5i: the holder's extra strikes are heard as basic attacks by its statuses' reactions and triggers that name kind basic, unless that status also names kind extra for the same event, or gives strikes itself. Boosts still see them as extra. |
 | `set` | Step 5i: after every other change, the holder's stat is this value while it holds the status. |
-| `cover` | Step 5i: when a hit on another living ally would deal it more than share % of its max HP, after its mitigation and before its block and absorbs, the holder takes the whole hit instead: it resolves again against the holder, statuses and riders included. A hit moves once. |
+| `cover` | Step 5i: when a hit on another living ally would deal it more than share % of its max HP, after its mitigation and before its block and absorbs, the holder takes the whole hit instead: it resolves again against the holder, statuses and riders included, keeping its crit and without a second dodge. A hit moves once. |
 | `floor` | Step 5i: the holder's HP can't fall below 1 while it holds this: a blow that would knock it out leaves it at 1, and nothing falls. |
 | `heals` | Step 5i: only its own heals land on the holder (its abilities, its Lifesteal, its statuses' reactions); heals from others, a Regen they gave included, restore nothing. |
 | `revives` | Step 5i: every revive the holder makes, from its abilities and its statuses' reactions alike (Einherjar). |

@@ -14,7 +14,7 @@
 import type { Content } from "./engine/run.js";
 import { rngFor, shuffle } from "./engine/rng.js";
 import { canEquip } from "./validate.js";
-import { equip, itemGear, member, newItem, newRogue, recruit, registerGear, rogue, rollItem, rollKnown, seat, setFormation, upgraded, type RogueRun, type Slot } from "./rogue.js";
+import { equip, itemGear, member, newItem, newRogue, recruit, registerGear, rogue, rollItem, rollKnown, seat, setFormation, SLOT_LIST, stockOf, upgradeOf, type RogueRun, type Slot } from "./rogue.js";
 import { kitUp } from "./rogue-ai.js";
 import type { RarityT } from "./schema.js";
 
@@ -133,11 +133,8 @@ export function buildRoster(c: Content, r: Roster, act: number, tier: Tier | "ea
     const known = lv.random ? rollKnown(c, rngFor(rep * 101 + i, `start:${r.id}:${cls}:${tier}`), cls, Math.floor(lv.known)) : ORDER[cls].slice(0, Math.floor(lv.known) + (i < Math.round((lv.known % 1) * r.classes.length) ? 1 : 0));
     recruit(c, run, cls, 100, known);
     const m = member(run, cls);
-    for (const a of known.slice(0, lv.plus)) {
-      const up = upgraded(c, a).id;
-      m.known = m.known.map((x) => (x === a ? up : x));
-      m.order = m.order.map((x) => (x === a ? up : x));
-    }
+    // Step 5i: an ability "upgraded" is one with its power step (the generic + rule is gone), where the content has its upgrade.
+    for (const a of known.slice(0, lv.plus)) if (upgradeOf(c, a)) m.trained = { ...(m.trained ?? {}), [a]: { power: true } };
     // Cooldowns as a run carries them between fights (step 5g), measured over the rosters' third to sixth fights in a row: 0.38
     // of a cooldown left on average whatever its length, and a revive ready 88% of the time, since it waits for a knockout most
     // fights never bring. (Every ability uncharged, as before, kept Raise and Valhalla from being ready when anyone fell, and
@@ -153,10 +150,8 @@ export function buildRoster(c: Content, r: Roster, act: number, tier: Tier | "ea
   // Ordinary gear: six pieces of the level's rarity each member can wear, the best of them worn.
   const rng = rngFor(1000 + act * 10 + ["easy", "normal", "elite", "boss", "early"].indexOf(tier), `parties:${r.id}`);
   if (lv.gear) for (const cls of r.classes) for (let i = 0; i < 6; i++) { const it = rollItem(c, run, rng, lv.gear, false, false, cls); if (it) run.items.push(it); }
-  // A legendary piece carries two affixes, as one found in a run does (while affixes exist: none since step 5i's retire).
-  const affixes = rogue(c).affixes.map((a) => a.id);
-  const two = (i: number) => (affixes.length ? [affixes[(i * 7 + act * 3) % affixes.length], affixes[(i * 7 + act * 3 + 5) % affixes.length]] : []);
-  const legend = [...r.legendaries, ...extraLegendaries(c, r, lv.legendaries - r.legendaries.length)].slice(0, lv.legendaries).map((l, i) => ({ ...l, item: newItem(run, l.piece, "legendary", two(i)) }));
+  // Step 5i: a legendary piece is fixed (no affixes).
+  const legend = [...r.legendaries, ...extraLegendaries(c, r, lv.legendaries - r.legendaries.length)].slice(0, lv.legendaries).map((l) => ({ ...l, item: newItem(run, l.piece, "legendary") }));
   for (const l of legend) run.items.push(l.item);
   registerGear(c, run);
   kitUp(c, run);
@@ -167,7 +162,7 @@ export function buildRoster(c: Content, r: Roster, act: number, tier: Tier | "ea
   // Round 6: at most `pieces` ordinary pieces a member (an amulet goes first, then armor; the weapon stays).
   if (lv.pieces !== undefined) for (const m of run.roster) {
     const ordinary = (s: Slot) => { const uid = m.gear[s]; const it = uid ? run.items.find((x) => x.uid === uid) : undefined; return !!it && it.rarity !== "legendary" && !it.base.startsWith("plain_"); };
-    for (const s of ["amulet", "armor"] as Slot[]) if ((["weapon", "armor", "amulet"] as Slot[]).filter(ordinary).length > lv.pieces && ordinary(s)) delete m.gear[s];
+    for (const s of ["amulet", "offhand", "armor"] as Slot[]) if (SLOT_LIST.filter(ordinary).length > lv.pieces && ordinary(s)) delete m.gear[s];
   }
   // Only what's worn stays: the rest of the offers weren't taken.
   const worn = new Set(run.roster.flatMap((m) => Object.values(m.gear)));
@@ -183,21 +178,21 @@ export function buildRoster(c: Content, r: Roster, act: number, tier: Tier | "ea
 }
 /**
  * Round 6: legendaries past a roster's hand-picked three, by a stated rule: the fighting three in turn (then the bench), each a
- * piece aimed at it (`aims`) that it can wear, in a slot no legendary of its own fills yet, not already held; first in the pool's
- * order, shuffled by the roster's own dice.
+ * piece it can wear (step 5i: the aims are gone), in a slot no legendary of its own fills yet, not already held; first in the
+ * stock's order, shuffled by the roster's own dice.
  */
 function extraLegendaries(c: Content, r: Roster, n: number): { piece: string; for: string }[] {
   const out: { piece: string; for: string }[] = [];
   if (n <= 0) return out;
-  const pool = shuffle(rngFor(7, `extra:${r.id}`), [...rogue(c).legendaries]);
+  const pool = shuffle(rngFor(7, `extra:${r.id}`), stockOf(c).all.filter((g) => g.rarity === "legendary").map((g) => g.id));
   const held = [...r.legendaries];
-  const slotOf = (id: string) => c.gear.get(id)?.slot ?? rogue(c).gear.find((g) => g.id === id)?.slot;
+  const slotOf = (id: string) => c.gear.get(id)?.slot;
   const order = [0, 1, 2, 0, 1, 2, 3, 4, 0, 1, 2].map((i) => r.classes[i]);
   for (const cls of order) {
     if (out.length >= n) break;
     const k = c.classes.get(cls)!;
     const taken = new Set(held.filter((l) => l.for === cls).map((l) => slotOf(l.piece)));
-    const piece = pool.find((id) => rogue(c).aims?.[id]?.includes(cls) && !held.some((l) => l.piece === id) && !taken.has(slotOf(id)) && canEquip(k, c.gear.get(id) ?? rogue(c).gear.find((g) => g.id === id)!));
+    const piece = pool.find((id) => !held.some((l) => l.piece === id) && !taken.has(slotOf(id)) && canEquip(k, c.gear.get(id)!));
     if (!piece) continue;
     held.push({ piece, for: cls });
     out.push({ piece, for: cls });
@@ -250,7 +245,7 @@ function sheet(c: Content): string {
   }
   out.push("", "## The rosters", "");
   for (const r of ROSTERS) {
-    out.push(`### ${r.id}: ${r.note}`, "", `Fighting: ${r.classes.slice(0, 3).map(name).join(", ")} (${c.formations.get(r.formation)!.name}); bench: ${r.classes.slice(3).map(name).join(", ")}. Legendaries, in the order found: ${r.legendaries.map((l) => `${c.gear.get(l.piece)?.name ?? (rogue(c).gear.find((g) => g.id === l.piece)?.name ?? l.piece)} (${name(l.for)})`).join(", ")}.`, "");
+    out.push(`### ${r.id}: ${r.note}`, "", `Fighting: ${r.classes.slice(0, 3).map(name).join(", ")} (${c.formations.get(r.formation)!.name}); bench: ${r.classes.slice(3).map(name).join(", ")}. Legendaries, in the order found: ${r.legendaries.map((l) => `${c.gear.get(l.piece)?.name ?? l.piece} (${name(l.for)})`).join(", ")}.`, "");
     const run = buildRoster(c, r, 2, "boss");
     out.push("At act II's boss:", "");
     for (const m of run.roster) {

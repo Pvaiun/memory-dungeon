@@ -14,11 +14,11 @@ import { mythicGear, pieceGear, pieceStatuses, upgradeAbilities, upgrades } from
 import { ROGUE_CONFIG, ROGUE_EVENTS, ROGUE_REGIONS } from "./rogue.js";
 
 /**
- * The rogue mode's block. Step 5i (the retire share): no loot of its own until the new pieces land: no rogue pieces, an
- * empty legendary pool with no aims, no affixes.
+ * The rogue mode's block. Step 5i: no loot of its own: its stock is the pack's pieces (each fixed at its rarity) and mythics,
+ * its formations the pack's, each with its rarity.
  */
 function rogueBlock(): NonNullable<ContentPack["rogue"]> {
-  return { config: ROGUE_CONFIG, regions: ROGUE_REGIONS, gear: [], legendaries: [], affixes: [], events: ROGUE_EVENTS };
+  return { config: ROGUE_CONFIG, regions: ROGUE_REGIONS, events: ROGUE_EVENTS };
 }
 
 export function buildPack(): unknown {

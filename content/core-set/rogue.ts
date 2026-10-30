@@ -46,9 +46,19 @@ export const ROGUE_CONFIG: RogueConfigT = {
   benchMp: 50,
   /** A fresh ability (a starting unit's, a recruit's, one just learned) starts with this share of its cooldown already run. */
   fresh: 50,
-  /** The Muster: a pick of one of two recruits. The Drill ground: one of two formations, or two members trained. */
+  /**
+   * The Muster: a pick of one of two recruits. The Drill ground: one of two formations, or members trained. Step 5i (the director's:
+   * a fresh unit needs about ten trainings now, so every training opportunity gives three): three trained (was two).
+   */
   muster: { offers: 2 },
-  drill: { offers: 2, train: 2 },
+  drill: { offers: 2, train: 3 },
+  /** Step 5i: a lesson (a captive's or a stranger's) trains three members, each once (was one), as every training opportunity. */
+  lesson: 3,
+  /**
+   * Step 5i (builds.md, "Gear"): an offered piece's slot comes first, weapons and offhands 30% each, armor 25%, amulets 15%; then a
+   * class, as step 5h (the roster's, a third of spoils and chests for classes off it), a kind it wears there, the rarity, a piece.
+   */
+  slots: { weapon: 30, offhand: 30, armor: 25, amulet: 15 },
   /** Formation offers roll a rarity by act. */
   formationOdds: [{ common: 70, rare: 28, legendary: 2 }, { common: 45, rare: 45, legendary: 10 }, { common: 25, rare: 55, legendary: 20 }],
   /**
@@ -88,7 +98,9 @@ export const ROGUE_CONFIG: RogueConfigT = {
     // Round 6 (the director's: choices between kinds "too often"): mixed picks in 15% of fights (were 40%).
     // Round 6, the 12-floor map: a regular fight's pieces 6% legendary (were 13%), so legendaries offered a run hold with twice the fights.
     // Round 6 (batch 3): a mixed pick can hold a sealed piece (rare or better, unseen) or a bundle (a common piece and a supply).
-    fight: { count: 3, rarity: { common: 35, uncommon: 32, rare: 27, legendary: 6 }, tome: 0, recruit: 0, supply: 0, mixed: 15, mix: { tome: 30, formation: 25, recruit: 0, sealed: 25, bundle: 20 } },
+    // Step 5i (builds.md, "Gear": a third more gear for the fourth slot, about 37 pieces taken and 110 seen a run; the director: "It's
+    // better to have too much than not enough"): 70% of regular fights pay a second pick of three pieces (`extra`).
+    fight: { count: 3, rarity: { common: 35, uncommon: 32, rare: 27, legendary: 6 }, tome: 0, recruit: 0, supply: 0, mixed: 15, mix: { tome: 30, formation: 25, recruit: 0, sealed: 25, bundle: 20 }, extra: 70 },
     // Round 6 (the director's: "elites have a pick of a legendary and a pick of a formation"; formations "came too late in most runs"):
     // a pick of three legendaries, one aimed at the party, then a pick of two formations. Was a legendary won outright, then a pick
     // of three rares and legendaries.
@@ -96,8 +108,13 @@ export const ROGUE_CONFIG: RogueConfigT = {
     // A third of offered gear is for a class not in the roster, so a piece can make you want a class (was none: 0.05 a run).
     offRoster: 33,
   },
-  /** The boss's boon: pick one of a legendary piece, a formation and a recruit. The next act starts restored, and everyone learns. */
-  boon: { count: 3, seat: false }, // Step 5h round 6: seats come with each act (benchByAct), not from the boon.
+  /**
+   * The boss's boon: pick one of a legendary piece, a formation and a recruit. The next act starts restored, and everyone learns.
+   * Step 5h round 6: seats come with each act (benchByAct), not from the boon. Step 5i (builds.md: mythics "offered in act II and
+   * III boss boons"): the boons that open acts II and III (after act I's and act II's bosses; act III's ends the run) offer a mythic
+   * in the legendary piece's place, for a roster member's class, the party first, while one is left that the run doesn't hold.
+   */
+  boon: { count: 3, seat: false, mythic: [2, 3] },
   /** A chest: one piece, rare or better, and some gold; or a cage, a recruit with a piece suited to it. */
   // Round 6: a chest's piece legendary 30 times in 80 (was 45), rare the rest.
   treasure: { rarity: { common: 0, uncommon: 0, rare: 50, legendary: 30 }, gold: [15, 35], cage: 20 },
@@ -109,6 +126,7 @@ export const ROGUE_CONFIG: RogueConfigT = {
   // again) or TRAIN (`train` members). The stranger can be taken in or turned away for a lesson, apart from the pick.
   // Then (the director's, on the first build: "decrease the free MP share right off the bat ... We weren't trying to give more free
   // MP. We were trying to give less of a terrible choice"): the free MP 10% (was 25%); REST still gives 25% of each.
+  // Step 5i: TRAIN trains three members, each once: learning an ability, or an ability's or the passive's power step or version.
   campfire: { hp: 25, mp: 25, revive: 25, auto: { hp: 25, mp: 10, revive: 25 }, train: 3, stranger: 30 },
   // Round 6 (the director's: recruits too hard to get in act I; "the thematic tying of humans or people to recruits ... as long as
   // it's not every other fight"): after a won fight with people in it, sometimes a captive, free on top of the spoils: taken in (at
@@ -128,7 +146,8 @@ export const ROGUE_CONFIG: RogueConfigT = {
   /** Prices, in gold. A piece sells for `sell` % of its price. Services are once a visit. */
   prices: { common: 45, uncommon: 70, rare: 110, legendary: 190, recruit: 120, formation: 100, learn: 60, upgrade: 80, trainStep: 30, supply: { potion: 35, tonic: 35, phoenix: 60 }, sell: 35 },
   // Step 5h round 6 (the director's): the shop always has all three supplies (was two of the three).
-  shop: { gear: { common: 2, uncommon: 2, rare: 1, legendary: 1 }, legendaryByAct: [1, 2, 2], recruits: 1, formations: 1, supplies: 3 },
+  // Step 5i (a third more gear): 8 pieces in act I and 9 after (were 6 and 7): a common and a rare more.
+  shop: { gear: { common: 3, uncommon: 2, rare: 2, legendary: 1 }, legendaryByAct: [1, 2, 2], recruits: 1, formations: 1, supplies: 3 },
   /** Supplies, used between fights: the bag holds this many. */
   /**
    * Step 5g round 6 (the director's): a potion heals one member, a tonic refills one member's MP (the old tonic healed the whole party 30%, the
@@ -306,7 +325,7 @@ export const ROGUE_EVENTS: RogueEvent[] = [
     id: "wounded_traveller", name: "A Wounded Traveller", text: "Someone lies hurt by the road, a weapon still in hand. They look like they can fight.",
     options: [
       { id: "take", label: "TAKE THEM IN", text: "They join you, hurt: a third of their HP.", do: [{ op: "recruit", hp: 33 }] },
-      { id: "lesson", label: "A LESSON", text: "Patched up, they show one of yours a trick before they go: one member learns an ability or makes one better.", do: [{ op: "train", n: 1 }] },
+      { id: "lesson", label: "A LESSON", text: "Patched up, they show yours a few tricks before they go: three members each learn an ability or train one.", do: [{ op: "train", n: 3 }] },
       { id: "rob", label: "TAKE THEIR PURSE", text: "+40 gold.", do: [{ op: "gold", amount: 40 }] },
       { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
     ],
@@ -329,7 +348,7 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   {
     id: "forge", name: "An Abandoned Forge", text: "The coals are still warm. A smith could make something better here.",
     options: [
-      { id: "temper", label: "TEMPER A PIECE", text: "A piece of your choice gains a rarity: common to uncommon, uncommon to rare.", do: [{ op: "temper" }] },
+      { id: "temper", label: "TEMPER A PIECE", text: "A common or uncommon piece of yours becomes one of the next rarity, of its kind.", do: [{ op: "temper" }] },
       { id: "scrap", label: "SCRAP FOR GOLD", text: "+30 gold from the scrap heap.", do: [{ op: "gold", amount: 30 }] },
     ],
   },
@@ -337,7 +356,7 @@ export const ROGUE_EVENTS: RogueEvent[] = [
     id: "old_master", name: "The Old Master", text: "An old fighter sits by a fire. \"I could teach one of you something. It will hurt.\"",
     options: [
       { id: "learn", label: "LEARN THE HARD WAY", text: "One member learns an ability; everyone loses 10% of max HP.", do: [{ op: "learn" }, { op: "hp", pct: -10 }] },
-      { id: "polish", label: "PAY 50 TO PRACTISE", text: "One member's ability gets better (+).", gold: 50, do: [{ op: "upgrade" }] },
+      { id: "polish", label: "PAY 50 TO PRACTISE", text: "One member trains an ability or its passive: a power step or a version.", gold: 50, do: [{ op: "upgrade" }] },
       { id: "leave", label: "LEAVE HIM BE", text: "Nothing happens.", do: [] },
     ],
   },
@@ -383,18 +402,18 @@ export const ROGUE_EVENTS: RogueEvent[] = [
     id: "deserter", name: "A Deserter", text: "A soldier slumps against a milestone, still in uniform. \"I'm done with them. Not with fighting.\"",
     options: [
       { id: "take", label: "TAKE THEM IN", text: "They join you at half HP, with an uncommon piece suited to them.", do: [{ op: "recruit", hp: 50, gear: "uncommon" }] },
-      { id: "lesson", label: "A LESSON", text: "They teach one of yours their drill and walk on: one member learns an ability or makes one better.", do: [{ op: "train", n: 1 }] },
+      { id: "lesson", label: "A LESSON", text: "They teach yours their drill and walk on: three members each learn an ability or train one.", do: [{ op: "train", n: 3 }] },
       { id: "turn", label: "TURN THEM IN", text: "+50 gold.", do: [{ op: "gold", amount: 50 }] },
     ],
     variants: [
       { options: [
         { id: "take", label: "TAKE THEM IN", text: "They join you at half HP, with an uncommon piece suited to them.", do: [{ op: "recruit", hp: 50, gear: "uncommon" }] },
-        { id: "lesson", label: "A LESSON", text: "They teach one of yours their drill and walk on: one member learns an ability or makes one better.", do: [{ op: "train", n: 1 }] },
+        { id: "lesson", label: "A LESSON", text: "They teach yours their drill and walk on: three members each learn an ability or train one.", do: [{ op: "train", n: 3 }] },
         { id: "turn", label: "TURN THEM IN", text: "+50 gold.", do: [{ op: "gold", amount: 50 }] },
       ] },
       { text: "An officer, by the look of the blade at their hip, bleeding from a wound they won't explain.", options: [
         { id: "take", label: "TAKE THEM IN", text: "They join you at a third of their HP, knowing two abilities, with a rare piece suited to them.", do: [{ op: "recruit", hp: 33, known: 2, gear: "rare" }] },
-        { id: "lesson", label: "A LESSON", text: "They teach one of yours an officer's drill and walk on: one member learns an ability or makes one better.", do: [{ op: "train", n: 1 }] },
+        { id: "lesson", label: "A LESSON", text: "They teach yours an officer's drill and walk on: three members each learn an ability or train one.", do: [{ op: "train", n: 3 }] },
         { id: "blade", label: "TAKE THE BLADE", text: "A rare piece; they limp off.", do: [{ op: "gear", rarity: "rare" }] },
       ] },
     ],
@@ -474,16 +493,16 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   {
     id: "training_hall", name: "A Training Hall", text: "Practice dummies, a rack of blunted weapons, and a sergeant with a whistle.",
     options: [
-      { id: "train", label: "TRAIN FOR 50", text: "Two members each learn an ability or make one better (+).", gold: 50, do: [{ op: "train", n: 2 }] },
+      { id: "train", label: "TRAIN FOR 50", text: "Three members each learn an ability or train one.", gold: 50, do: [{ op: "train", n: 3 }] },
       { id: "watch", label: "WATCH", text: "One member learns an ability.", do: [{ op: "learn" }] },
     ],
     variants: [
       { options: [
-        { id: "train", label: "TRAIN FOR 50", text: "Two members each learn an ability or make one better (+).", gold: 50, do: [{ op: "train", n: 2 }] },
+        { id: "train", label: "TRAIN FOR 50", text: "Three members each learn an ability or train one.", gold: 50, do: [{ op: "train", n: 3 }] },
         { id: "watch", label: "WATCH", text: "One member learns an ability.", do: [{ op: "learn" }] },
       ] },
       { text: "The sergeant drills anyone who walks in, for free, and hard.", options: [
-        { id: "train", label: "TAKE THE DRILL", text: "Two members each learn an ability or make one better (+); everyone loses 15% of max HP.", do: [{ op: "hp", pct: -15 }, { op: "train", n: 2 }] },
+        { id: "train", label: "TAKE THE DRILL", text: "Three members each learn an ability or train one; everyone loses 15% of max HP.", do: [{ op: "hp", pct: -15 }, { op: "train", n: 3 }] },
         { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
       ] },
     ],
@@ -494,18 +513,18 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   {
     id: "master_smith", name: "The Master Smith", text: "A smith with a portable forge and a price for everything. \"Bring me anything. I'll make it better.\"",
     options: [
-      { id: "temper", label: "TEMPER", text: "A common or uncommon piece of yours gains a rarity.", gold: 40, do: [{ op: "temper" }] },
-      { id: "reforge", label: "REFORGE", text: "A rare piece of yours is reforged into a legendary of its slot.", gold: 120, do: [{ op: "temper", from: ["rare"] }] },
+      { id: "temper", label: "TEMPER", text: "A common or uncommon piece of yours becomes one of the next rarity, of its kind.", gold: 40, do: [{ op: "temper" }] },
+      { id: "reforge", label: "REFORGE", text: "A rare piece of yours is reforged into a legendary of its kind.", gold: 120, do: [{ op: "temper", from: ["rare"] }] },
       { id: "scrap", label: "SELL HIM SCRAP", text: "+40 gold.", do: [{ op: "gold", amount: 40 }] },
     ],
     variants: [
       { options: [
-        { id: "temper", label: "TEMPER", text: "A common or uncommon piece of yours gains a rarity.", gold: 40, do: [{ op: "temper" }] },
-        { id: "reforge", label: "REFORGE", text: "A rare piece of yours is reforged into a legendary of its slot.", gold: 120, do: [{ op: "temper", from: ["rare"] }] },
+        { id: "temper", label: "TEMPER", text: "A common or uncommon piece of yours becomes one of the next rarity, of its kind.", gold: 40, do: [{ op: "temper" }] },
+        { id: "reforge", label: "REFORGE", text: "A rare piece of yours is reforged into a legendary of its kind.", gold: 120, do: [{ op: "temper", from: ["rare"] }] },
         { id: "scrap", label: "SELL HIM SCRAP", text: "+40 gold.", do: [{ op: "gold", amount: 40 }] },
       ] },
       { text: "The smith is drunk, cheerful and working for free. \"Give it here. I'll make it sing.\"", options: [
-        { id: "try", label: "LET HIM TRY", text: "A piece of yours gains a rarity (a rare one becomes a legendary of its slot). Half the time it cracks and is lost.", do: [{ op: "temper", from: ["common", "uncommon", "rare"], risk: 50 }] },
+        { id: "try", label: "LET HIM TRY", text: "A piece of yours becomes one of the next rarity, of its kind (a rare one a legendary). Half the time it cracks and is lost.", do: [{ op: "temper", from: ["common", "uncommon", "rare"], risk: 50 }] },
         { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
       ] },
     ],
@@ -533,16 +552,16 @@ export const ROGUE_EVENTS: RogueEvent[] = [
     id: "old_soldier", name: "An Old Soldier", text: "A grey-haired soldier sharpening a blade by the road. \"Still got some fight in me. Or some sense, if you'd rather.\"",
     options: [
       { id: "take", label: "TAKE HIM IN", text: "He joins you, knowing two abilities.", do: [{ op: "recruit", known: 2 }] },
-      { id: "lesson", label: "A LESSON", text: "Two members each learn an ability or make one better; he stays by the road.", do: [{ op: "train", n: 2 }] },
+      { id: "lesson", label: "A LESSON", text: "Three members each learn an ability or train one; he stays by the road.", do: [{ op: "train", n: 3 }] },
     ],
     variants: [
       { options: [
         { id: "take", label: "TAKE HIM IN", text: "He joins you, knowing two abilities.", do: [{ op: "recruit", known: 2 }] },
-        { id: "lesson", label: "A LESSON", text: "Two members each learn an ability or make one better; he stays by the road.", do: [{ op: "train", n: 2 }] },
+        { id: "lesson", label: "A LESSON", text: "Three members each learn an ability or train one; he stays by the road.", do: [{ op: "train", n: 3 }] },
       ] },
       { text: "An old soldier with a limp, too slow to march with anyone, too proud to beg.", options: [
         { id: "take", label: "TAKE HIM IN", text: "He joins you at half HP, knowing two abilities, with an uncommon piece suited to him.", do: [{ op: "recruit", known: 2, hp: 50, gear: "uncommon" }] },
-        { id: "lesson", label: "A LESSON", text: "One member learns an ability or makes one better.", do: [{ op: "train", n: 1 }] },
+        { id: "lesson", label: "A LESSON", text: "Three members each learn an ability or train one.", do: [{ op: "train", n: 3 }] },
         { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
       ] },
     ],
@@ -621,12 +640,12 @@ export const ROGUE_EVENTS: RogueEvent[] = [
     id: "duelling_ground", name: "A Duelling Ground", text: "A ring of stakes, a champion inside it, and a crowd that wants blood.",
     options: [
       { id: "challenge", label: "CHALLENGE THE CHAMPION", text: "A hard fight, with an elite's spoils: a legendary, then a formation.", do: [{ op: "fight", tier: "elite" }] },
-      { id: "watch", label: "WATCH", text: "One member learns an ability or makes one better from the champion's form.", do: [{ op: "train", n: 1 }] },
+      { id: "watch", label: "WATCH", text: "Three members each learn an ability or train one from the champion's form.", do: [{ op: "train", n: 3 }] },
     ],
     variants: [
       { options: [
         { id: "challenge", label: "CHALLENGE THE CHAMPION", text: "A hard fight, with an elite's spoils: a legendary, then a formation.", do: [{ op: "fight", tier: "elite" }] },
-        { id: "watch", label: "WATCH", text: "One member learns an ability or makes one better from the champion's form.", do: [{ op: "train", n: 1 }] },
+        { id: "watch", label: "WATCH", text: "Three members each learn an ability or train one from the champion's form.", do: [{ op: "train", n: 3 }] },
       ] },
       { text: "An empty ring. The last champion's gear hangs on a stake under a sign: TAKE IT IF YOU CAN LIFT IT.", options: [
         { id: "lift", label: "LIFT IT", text: "A legendary piece; everyone loses 20% of max HP.", do: [{ op: "hp", pct: -20 }, { op: "gear", rarity: "legendary" }] },

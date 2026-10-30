@@ -77,7 +77,13 @@ export function compile(s: StatusT): Compiled {
   for (const t of s.taken ?? []) add(t, t.pct);
   for (const r of s.riders ?? []) add(r, r.add.amount);
   const effects = [...(s.pulse?.do ?? []), ...(s.trigger?.do ?? []), ...(s.reactions ?? []).flatMap((r) => r.do)];
-  for (const e of effects) add(e, numOf(e));
+  for (const e of effects) {
+    add(e, numOf(e));
+    // Step 5i (share H, X38): each status a `one` can pick carries its own stacks.
+    if (e.op === "one") for (const x of e.of) add(x, x.stacks ?? 1);
+  }
+  // Step 5i (share H, X35): a reviver's rule's HP.
+  if (s.revives?.hp !== undefined) add(s.revives, s.revives.hp);
   let cap = -1;
   if (s.cap !== undefined) {
     cap = nums.length;
@@ -114,6 +120,7 @@ function numOf(e: { op: string } & Record<string, unknown>): NumT {
     case "apply":
       return (e.stacks as NumT | undefined) ?? 1;
     case "revive":
+    case "pay":
       return e.hp as NumT;
     default:
       return 0;

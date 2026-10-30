@@ -26,6 +26,8 @@ import type { AbilityT, DungeonT, GearT, Party } from "./schema.js";
 import { patch } from "./sim/content.js";
 import { combos, makeBuild, ORDERS, seat, slotted, STYLES } from "./sim/kits.js";
 import { canEquip } from "./validate.js";
+/** Step 5i: the rogue has no pieces of its own any more (its stock is the pack's pieces, in pack.gear), so its legendary probes are empty. */
+const rogueGear = (_c: Content): GearT[] => [];
 
 const T = 1000; // sub-ticks a tick
 type Tally = Record<string, number>;
@@ -146,7 +148,7 @@ export function gearProbe(c: Content, cls: string, trios: string[][], owned: Ret
   const plain = c.pack.gear.find((g) => g.slot === "weapon" && g.source === "starter" && g.weapon?.kind === c.classes.get(cls)!.weapons[0])!.id;
   const mine = trios.filter((t) => t.includes(cls)).slice(0, refs);
   const f = c.formations.get("neutral")!;
-  const pieces = ["none", ...["weapon", "armor", "amulet"].flatMap((slot) => wearable(c, cls, slot)), ...rogue(c).gear.filter((g) => canEquip(c.classes.get(cls)!, g)).map((g) => g.id)];
+  const pieces = ["none", ...["weapon", "armor", "amulet"].flatMap((slot) => wearable(c, cls, slot)), ...rogueGear(c).filter((g) => canEquip(c.classes.get(cls)!, g)).map((g) => g.id)];
   const out: { piece: string; party: Party }[] = [];
   for (const piece of pieces) for (const trio of mine) {
     const kit = makeBuild(c, trio, "neutral", "plain", owned, []);
@@ -177,7 +179,7 @@ export function formationProbe(c: Content, trios: string[][], owned: ReturnType<
 const legTurn = new Map<string, number>();
 export function withLegendaries(c: Content, p: Party, _i: number): Party {
   registerGear(c);
-  const legs = rogue(c).gear;
+  const legs = rogueGear(c);
   if (!legs.length) return p;
   return {
     ...p,
@@ -798,7 +800,7 @@ export function compute(c: Content, t: Tally, setName: string): Sheet {
   // Gear: each piece against its slot's mean for the same class, weighted by wearings.
   const gear: Lines = {};
   registerGear(c);
-  const pieces = [...c.pack.gear, ...rogue(c).gear.filter((g) => !c.pack.gear.some((x) => x.id === g.id))];
+  const pieces = [...c.pack.gear, ...rogueGear(c).filter((g) => !c.pack.gear.some((x) => x.id === g.id))];
   const slotOf = new Map<string, string>(pieces.map((g) => [g.id, g.slot]));
   for (const slot of ["weapon", "armor", "amulet"]) slotOf.set(`none:${slot}`, slot);
   const gearIds = keys(t, "gearc|");
@@ -988,7 +990,7 @@ export function judge(c: Content, sh: Sheet, setName: string): Flag[] {
     if (e.rank === "boss") { flag("boss", e.id, e.name, "boss.signature", line.signature, `casts its signature move ${r2(line.signature)} times a fight`); flag("boss", e.id, e.name, "boss.kos", line.kos, `knocks out ${r2(line.kos)} party members a fight`); }
   }
   registerGear(c);
-  for (const g of [...c.pack.gear, ...rogue(c).gear]) {
+  for (const g of [...c.pack.gear, ...rogueGear(c)]) {
     const line = sh.gear[g.id];
     if (line) flag("gear", g.id, g.name, "gear.worn", line.worn, `worn in ${line.worn} unit-fights`);
   }
@@ -1010,7 +1012,7 @@ export function computeProbes(c: Content, tallies: Record<string, Tally>): { gea
     flags.push({ kind, id, name, band, value, set: "probe", severity: (value < b.lo ? b.lo - value : value - b.hi) / width, text });
   };
   registerGear(c);
-  const pieces = [...c.pack.gear, ...rogue(c).gear.filter((g) => !c.pack.gear.some((x) => x.id === g.id))];
+  const pieces = [...c.pack.gear, ...rogueGear(c).filter((g) => !c.pack.gear.some((x) => x.id === g.id))];
   const slotOf = (g: string) => pieces.find((x) => x.id === g)?.slot ?? "none";
   // Gear: per class, each piece's win rate and the wearer's per-fight numbers, against the bare unit and the slot's mean.
   type Row = { win: number; dmg: number; taken: number; ko: number; heal: number; runs: number };
@@ -1130,7 +1132,7 @@ export function writeSheet(c: Content, sheets: Record<string, Sheet>, pooled: Sh
 
   out.push(`\n## 6. Gear\n`);
   registerGear(c);
-  const pieces = [...c.pack.gear, ...rogue(c).gear.filter((g) => !c.pack.gear.some((x) => x.id === g.id))];
+  const pieces = [...c.pack.gear, ...rogueGear(c).filter((g) => !c.pack.gear.some((x) => x.id === g.id))];
   const gearRows = pieces.map((g) => {
     const f = (s: Sheet) => s.gear[g.id];
     const p = probes.gear[g.id];

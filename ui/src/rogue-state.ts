@@ -34,15 +34,13 @@ function load(): Saved {
  */
 function stale(run: RogueRun): boolean {
   try {
-    registerGear(c);
-    const affixes = new Set(c.pack.rogue?.affixes.map((a) => a.id) ?? []);
-    // Every piece the run holds or offers (a pending pick's items too).
-    const pieces: { base: string; affixes: string[] }[] = [];
+    // Every piece the run holds or offers (a pending pick's items too). Step 5i: a piece is fixed (no affixes).
+    const pieces: { base: string }[] = [];
     JSON.stringify(run, (_k, v: unknown) => {
-      if (v && typeof v === "object" && "uid" in v && "base" in v && Array.isArray((v as { affixes?: unknown }).affixes)) pieces.push(v as unknown as { base: string; affixes: string[] });
+      if (v && typeof v === "object" && "uid" in v && "base" in v && "rarity" in v) pieces.push(v as unknown as { base: string });
       return v;
     });
-    if (pieces.some((it) => !c.gear.has(it.base) || it.affixes.some((a) => !affixes.has(a)))) return true;
+    if (pieces.some((it) => !c.gear.has(it.base))) return true;
     if (run.roster.some((m) => !c.classes.has(m.cls))) return true;
     registerGear(c, run);
     return run.roster.some((m) => Object.values(m.gear).some((uid) => { const g = uid ? c.gear.get(uid) : undefined; return !g || !canEquip(c.classes.get(m.cls)!, g); }));
@@ -69,7 +67,7 @@ export const lastRun = () => s.last ?? null;
 /** Makes a run's items and upgrades lookups: content ids for its pieces, and each weapon's sprite from its base piece. */
 export function prepare(run: RogueRun) {
   registerGear(c, run);
-  for (const g of c.pack.rogue?.gear ?? []) if (g.weapon?.kind && !manifest.weapons[g.id]) manifest.weapons[g.id] = manifest.weapons[`plain_${g.weapon.kind}`];
+  for (const g of c.pack.gear) if (g.weapon?.kind && !manifest.weapons[g.id]) manifest.weapons[g.id] = manifest.weapons[`plain_${g.weapon.kind}`];
   for (const it of run.items) {
     const base = c.gear.get(it.base);
     if (base?.weapon?.kind && !manifest.weapons[it.uid]) manifest.weapons[it.uid] = manifest.weapons[it.base] ?? manifest.weapons[`plain_${base.weapon.kind}`];

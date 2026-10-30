@@ -695,7 +695,7 @@ test("X20: a Chill boost reading the receiver's Chill makes a 4-stack applicatio
 // Each needs a payload H fills: the breaker and the blocked amount from `take` (X1), a knockout's killer and kind (X29),
 // an action's MP paid and hits landed (X29), and the landed set on Ctx (X8's count: hit).
 
-test.skip("after H: a Shield emptied names the foe whose hit emptied it; an Aegis that stops a 900 blow ends with 900 and the attacker", () => {
+test("after H: a Shield emptied names the foe whose hit emptied it; an Aegis that stops a 900 blow ends with 900 and the attacker", () => {
   const shield = buff("shield", { stacking: "intensity", absorb: true });
   const aegis = buff("aegis", { block: { share: 5 } });
   const ear = buff("ear", {
@@ -717,7 +717,7 @@ test.skip("after H: a Shield emptied names the foe whose hit emptied it; an Aegi
   assert.equal(tally(make("aegis"), "Brute"), 900);
 });
 
-test.skip("after H: a ko reaction with other: holder fires on the holder's own kills, not an ally's; with kind on the killing hit", () => {
+test("after H: a ko reaction with other: holder fires on the holder's own kills, not an ally's; with kind on the killing hit", () => {
   const trophy = buff("trophy", { reactions: [{ on: { event: "ko", whose: "foe", other: "holder" }, do: [count()] }, { on: { event: "ko", whose: "foe", kind: "ability" }, do: [count("self", "tally2")] }] });
   const kill = now("kill", { target: lowestHp, do: [{ op: "damage", type: "magical", amount: 1000 }] });
   const a = arena({
@@ -733,7 +733,7 @@ test.skip("after H: a ko reaction with other: holder fires on the holder's own k
   assert.equal(tally(a, "Hunter", "tally2"), 2, "both kills were an ability's");
 });
 
-test.skip("after H: action_resolve carries the MP paid and the foes hit, for amountAtLeast and countAtLeast", () => {
+test("after H: action_resolve carries the MP paid and the foes hit, for amountAtLeast and countAtLeast", () => {
   const weave = buff("weave", { reactions: [{ on: { event: "action_resolve", amountAtLeast: 1 }, do: [count()] }, { on: { event: "action_resolve", countAtLeast: 3 }, do: [count("self", "tally2")] }] });
   const storm = now("storm", { mp: 400, target: { side: "foes", pick: "all" }, do: [{ op: "damage", type: "magical", amount: 1 }] });
   const poke = now("poke", { do: [{ op: "damage", type: "magical", amount: 1 }] });
@@ -747,7 +747,7 @@ test.skip("after H: action_resolve carries the MP paid and the foes hit, for amo
   assert.deepEqual([tally(a, "Mage"), tally(a, "Mage", "tally2")], [1, 1]);
 });
 
-test.skip("after H: a final mp effect of 120 a foe hit after a four-foe chain gives 480 (count: hit)", () => {
+test("after H: a final mp effect of 120 a foe hit after a four-foe chain gives 480 (count: hit)", () => {
   const chain = now("chain", {
     target: { side: "foes", pick: "random" },
     do: [{ op: "damage", type: "magical", amount: 1 }, { op: "damage", type: "magical", amount: 1, to: { side: "foes", pick: "random", count: 3, exclude: "targets" } }, { op: "mp", amount: { scale: [{ ratio: 120, count: "hit" }] }, to: "self" }],

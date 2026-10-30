@@ -458,7 +458,7 @@ export const Effect = z
       .strictObject({
         op: z.literal("strike"),
         share: z.number().positive().optional().describe("Percent of the damage it's sized from. Default 100."),
-        of: z.enum(["weapon", "hit"]).optional().describe("weapon (the default): the actor's basic attack's damage against each target. hit: the raw amount of the hit that set the reaction off (before Armor or Magic resist), in that hit's damage type."),
+        of: z.enum(["weapon", "hit"]).optional().describe("weapon (the default): the actor's basic attack against each target, its damage with the weapon's riders and statuses, as an extra strike's. hit: the raw amount of the hit that set the reaction off (before Armor or Magic resist), in that hit's damage type."),
         to: To.optional(),
       })
       .describe("Step 5i, reactions only: a hit of kind extra by the actor at each target (the dodge's riposte, the blow returned for an ally). It can crit and be dodged, meets Armor or Magic resist, and fires hit events; it never brings extra strikes of its own."),
@@ -605,7 +605,7 @@ export const Status = z.strictObject({
       chain: z
         .strictObject({ times: PosInt, share: z.number().positive().max(100) })
         .optional()
-        .describe("Step 5i: each strike that lands rolls `chance` again for one more, at most `times` more after the first, each share % of the one before. The one bend of \"extra strikes don't chain\"."),
+        .describe("Step 5i: each strike that lands rolls `chance` again for one more, at most `times` more after the first, each share % of the one before. It takes the place of a plain strike on the unit that reads the same `scale` stat (Flurry wraps over Double strike), so a swing rolls that chance once. The one bend of \"extra strikes don't chain\"."),
     })
     .optional()
     .describe("After each of the holder's basic attacks: one more hit with the weapon's damage, of kind extra, at `to`. Extra strikes don't chain."),
@@ -656,7 +656,7 @@ export const Status = z.strictObject({
   cover: z
     .strictObject({ share: z.number().gt(0).max(100) })
     .optional()
-    .describe("Step 5i: when a hit on another living ally would deal it more than share % of its max HP, after its mitigation and before its block and absorbs, the holder takes the whole hit instead: it resolves again against the holder, statuses and riders included. A hit moves once."),
+    .describe("Step 5i: when a hit on another living ally would deal it more than share % of its max HP, after its mitigation and before its block and absorbs, the holder takes the whole hit instead: it resolves again against the holder, statuses and riders included, keeping its crit and without a second dodge. A hit moves once."),
   floor: z
     .strictObject({ spend: z.literal(true).optional().describe("The status ends (cause spent) the first time it holds a blow.") })
     .optional()
@@ -1064,6 +1064,7 @@ const Spoils = z.strictObject({
   trophy: z.boolean().optional().describe("A legendary piece is won outright, on top of the pick."),
   aimed: z.number().int().min(0).optional().describe("Step 5h round 6: the first this many offers are pieces aimed at someone in the party."),
   formations: z.number().int().min(0).optional().describe("Step 5h round 6: a second pick follows, of this many formations (an elite's)."),
+  extra: Pct.optional().describe("Step 5i: chance, in percent, that a second pick of `count` pieces follows the first (gear only, from the same rarity table): a third more gear for the fourth slot."),
   mixed: Pct.optional().describe("Step 5h: chance, in percent, that the pick mixes kinds: one piece of gear, then offers rolled from `mix` (the rest stay gear)."),
   mix: z.strictObject({ tome: z.number().min(0), formation: z.number().min(0), recruit: z.number().min(0), sealed: z.number().min(0).optional().describe("Step 5h round 6: a piece whose rarity (rare or better) and name stay hidden until taken."), bundle: z.number().min(0).optional().describe("Step 5h round 6: a common piece and a potion or a tonic together.") }).optional().describe("Weights of the other kinds in a mixed pick."),
 });
@@ -1082,7 +1083,6 @@ export const RogueConfig = z.strictObject({
   fresh: Pct.optional().describe("Step 5h: share of its cooldown already run for a fresh ability: a starting unit's, a recruit's, one just learned."),
   muster: z.strictObject({ offers: PosInt }).optional().describe("Step 5h: the Muster's pick of recruits."),
   drill: z.strictObject({ offers: PosInt, train: PosInt }).optional().describe("Step 5h: the Drill ground's pick of formations, or this many members trained."),
-  formationRarity: z.record(Id, Rarity).optional().describe("Step 5h: each formation's rarity (provisional until step 5i); unlisted ones are common."),
   formationOdds: z.array(z.strictObject({ common: z.number().min(0), rare: z.number().min(0), legendary: z.number().min(0) })).min(1).optional().describe("By act: the rarity a formation offer rolls."),
   map: z.strictObject({
     floors: PosInt,
@@ -1098,7 +1098,13 @@ export const RogueConfig = z.strictObject({
   }),
   gold: z.strictObject({ fight: IntRange, elite: IntRange, boss: IntRange, perAct: z.number().int().min(0) }),
   spoils: z.strictObject({ fight: Spoils, elite: Spoils, offRoster: Pct.describe("Step 5h: share of offered gear (spoils, chests, events; not the shop or a trophy) rolled for classes not in the roster, where there is such a piece.") }),
-  boon: z.strictObject({ count: PosInt, seat: z.boolean().optional().describe("Step 5h: a seat at camp is among the options, while there's one to win.") }),
+  boon: z.strictObject({
+    count: PosInt,
+    seat: z.boolean().optional().describe("Step 5h: a seat at camp is among the options, while there's one to win."),
+    mythic: z.array(PosInt).optional().describe("Step 5i: the acts whose opening boon (the boss's before them) offers a mythic in place of its legendary piece: one for a roster member's class (the party first) that the run doesn't hold, while one is left."),
+  }),
+  slots: z.strictObject({ weapon: z.number().min(0), armor: z.number().min(0), offhand: z.number().min(0), amulet: z.number().min(0) }).optional().describe("Step 5i: an offered piece's slot is rolled first, by these weights; then a class (the roster's, or one off it by `spoils.offRoster`), a kind it wears in that slot, the rarity, and a piece of that kind and rarity. Absent: every slot alike."),
+  lesson: PosInt.optional().describe("Step 5i: members a lesson (a captive's or a stranger's) trains, each once (default 3)."),
   treasure: z.strictObject({ rarity: RarityOdds, gold: IntRange, cage: Pct.optional().describe("Step 5h: chance the chest is a cage: a recruit with a piece suited to it.") }),
   campfire: z.strictObject({
     hp: Pct, mp: Pct, revive: Pct,
@@ -1143,9 +1149,6 @@ export const RogueRegion = z.strictObject({
 });
 export type RogueRegionT = z.infer<typeof RogueRegion>;
 
-export const RogueAffix = z.strictObject({ id: Id, prefix: Text, suffix: Text, stats: z.array(FixedStat).min(1) });
-export type RogueAffixT = z.infer<typeof RogueAffix>;
-
 export type EventOpT =
   | { op: "gold"; amount: number }
   | { op: "hp"; pct: number; one?: boolean }
@@ -1174,11 +1177,11 @@ export const EventOp: z.ZodType<EventOpT> = z.lazy(() =>
     z.strictObject({ op: z.literal("recruit"), hp: Pct.optional(), known: z.number().int().min(1).max(3).optional(), gear: Rarity.optional(), healer: z.boolean().optional().describe("Step 5h round 6: a class that heals or raises others.") }),
     z.strictObject({ op: z.literal("learn") }),
     z.strictObject({ op: z.literal("upgrade") }),
-    z.strictObject({ op: z.literal("temper"), from: z.array(Rarity).optional().describe("Step 5h round 6: the rarities a piece can be tempered from (default common, uncommon); a rare is reforged into a legendary of its slot."), risk: Pct.optional().describe("Step 5h round 6: chance the piece cracks and is lost instead.") }),
+    z.strictObject({ op: z.literal("temper"), from: z.array(Rarity).optional().describe("Step 5h round 6: the rarities a piece can be tempered from (default common, uncommon). Step 5i: a piece becomes a piece of the next rarity of its slot and kind that its wearer can wear (a rare one a legendary)."), risk: Pct.optional().describe("Step 5h round 6: chance the piece cracks and is lost instead.") }),
     z.strictObject({ op: z.literal("revive"), pct: Pct }).describe("Step 5h round 6: every fallen member rises at this share of HP."),
     z.strictObject({ op: z.literal("formation"), rarity: Rarity.optional() }),
     z.strictObject({ op: z.literal("seat") }),
-    z.strictObject({ op: z.literal("train"), n: PosInt }),
+    z.strictObject({ op: z.literal("train"), n: PosInt }).describe("Step 5i: n members (three, as every training opportunity) each take one training: learn an ability, or an ability's or the passive's power step or version."),
     z.strictObject({ op: z.literal("muster"), n: PosInt, known: z.number().int().min(1).max(3).optional(), gear: Rarity.optional().describe("Step 5h round 6: each carries a piece of this rarity suited to it.") }),
     z.strictObject({ op: z.literal("trade") }),
     z.strictObject({ op: z.literal("supply"), id: SupplyId }),
@@ -1200,10 +1203,6 @@ export type RogueEventT = z.infer<typeof RogueEvent>;
 export const Rogue = z.strictObject({
   config: RogueConfig,
   regions: z.array(RogueRegion).min(1),
-  gear: z.array(Gear).describe("Legendary pieces that only the rogue mode drops (the core set's own powerful pieces are in pack.gear)."),
-  legendaries: z.array(Id).describe("The legendary pool, by gear id, in pack.gear or rogue.gear."),
-  aims: z.record(Id, z.array(Id).min(1)).optional().describe("Who each legendary piece is for, by class id: an elite's trophy comes from pieces aimed at the party, and a recruit leans toward a class a piece in the bag is for. Never shown (step 5h round 6, the director's: the FOR line “ruins the discovery”)."),
-  affixes: z.array(RogueAffix),
   events: z.array(RogueEvent).min(1),
 });
 export type RogueT = z.infer<typeof Rogue>;
