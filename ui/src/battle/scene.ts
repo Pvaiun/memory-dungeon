@@ -127,12 +127,12 @@ export function backdrop(theme: string, h = H): HTMLCanvasElement {
 const WAIT_FRAMES = [0, 1, 2, 1];
 /** The backdrops with a sky, which get stars at night. */
 const OUTDOOR = new Set(["old_road", "ice_pass", "tower_top"]);
-/** The icon statuses a unit shows, Shield last, with the count to draw. */
+/** The icon statuses a unit shows, Shield last, with the count to draw (step 5i: never a marker, which is bookkeeping). */
 export function shownStatuses(u: CUnit): { id: string; count: number | null }[] {
   const out: { id: string; count: number | null }[] = [];
   for (const s of u.statuses) {
     const d = c.statuses.get(s.id);
-    if (!d || d.show !== "icon" || d.absorb) continue;
+    if (!d || d.show !== "icon" || d.absorb || d.label === "marker") continue;
     if (out.some((o) => o.id === s.id)) continue;
     out.push({ id: s.id, count: d.stacking === "intensity" ? Math.floor(s.stacks / SUBTICKS) : null });
   }
@@ -267,6 +267,10 @@ export class Scene {
     this.numbers = [];
     this.fx = [];
     for (const v of this.units.values()) (v.cast = null), v.pops.clear(), (v.fades = []);
+  }
+  /** Is this status's icon already shown under the unit? (Step 5i: a count's later stacks only move its number.) */
+  showsIcon(id: string, status: string): boolean {
+    return !!this.units.get(id)?.stsTold.has(status);
   }
   /** A status landed on a unit: its icon pops in. */
   statusPop(id: string, status: string) {

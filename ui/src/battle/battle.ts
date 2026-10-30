@@ -13,8 +13,8 @@
 import { SUBTICKS } from "../../../src/schema.js";
 import type { CUnit } from "../../../src/engine/combat/fight.js";
 import { resolveWeapon, weaponOf } from "../../../src/engine/combat/fight.js";
-import { c, className, disp, fightName, runName, shortName } from "../content.js";
-import { enemyName, STATUS_STYLE, TAG_ICON, TYPE_COLOR, type Pose } from "../art.js";
+import { c, className, disp, fightName, runName, shortName, shownAsIcon } from "../content.js";
+import { enemyName, statusStyle, TAG_ICON, TYPE_COLOR, type Pose } from "../art.js";
 import { bar, button, clear, h, nav, win, type Child } from "../dom.js";
 import { nextSeed, party as partyLoadout, save, setup } from "../state.js";
 import { damageTypeOf, statusText } from "../describe.js";
@@ -22,7 +22,7 @@ import { drawDigits, enemyThumb, iconEl, iconOf, OUTLINE, statusEl } from "../pi
 import { classHead, classSheet, enemySheet, portraitEl } from "../sheet.js";
 import type { Member } from "../../../src/engine/combat/rules.js";
 import { Driver, type Ev } from "./driver.js";
-import { Narrator, resisted, type Beat, type Line, type Tone } from "./narrate.js";
+import { COUNTS, Narrator, resisted, type Beat, type Line, type Tone } from "./narrate.js";
 import { Scene, shieldOf, themeOf, W, H } from "./scene.js";
 import { setMusic, setSound, sfx } from "./audio.js";
 import { go } from "../screens.js";
@@ -269,6 +269,8 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
 
   // ─── Events → visuals ───
   const lastStatusFx = new Map<string, number>();
+  /** Statuses that landed RESISTED (step 5i, control resistance), by unit, status and moment, until their "status" event shows. */
+  const resistedNow = new Set<string>();
   /** An action's damage type: its weapon's for a basic attack, its first damage effect's for an ability (null: none). */
   const actType = (unit: CUnit | undefined, act: string): "physical" | "magical" | null => {
     if (act === "basic") return unit ? resolveWeapon(c, weaponOf(c, unit.weapon)).type : null;
@@ -337,12 +339,19 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         }
         break;
       }
+      case "resisted":
+        // Step 5i: control resistance on a boss. The status still lands, shorter: its name rises with RESISTED under it.
+        resistedNow.add(`${String(ev.unit)}:${String(ev.status)}:${String(at)}`);
+        break;
       case "status": {
         const d = c.statuses.get(String(ev.status))!;
-        if (d.show !== "icon") break;
+        if (!shownAsIcon(d.id)) break;
         const unit = String(ev.unit);
-        const style = STATUS_STYLE[d.id] ?? STATUS_STYLE.generic;
-        scene.number(unit, d.name.toUpperCase(), { color: style.color, icon: d.id });
+        // Step 5i: a count's later stacks move only the number under its icon.
+        if (COUNTS.has(d.id) && scene.showsIcon(unit, d.id)) break;
+        const style = statusStyle(d.id);
+        const resist = resistedNow.delete(`${unit}:${d.id}:${String(at)}`);
+        scene.number(unit, d.name.toUpperCase(), { color: style.color, icon: d.id, ...(resist ? { sub: "RESISTED", subColor: "#8e99b8" } : {}) });
         scene.statusPop(unit, d.id);
         const key = `${unit}:${d.id}`;
         if (vwall - (lastStatusFx.get(key) ?? -9999) > 700) {
@@ -354,11 +363,12 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       }
       case "status_end": {
         const d = c.statuses.get(String(ev.status));
-        if (d?.show === "icon" && ev.cause !== "ko" && ev.cause !== "fight_end") scene.statusFade(String(ev.unit), d.id);
+        if (d && shownAsIcon(d.id) && ev.cause !== "ko" && ev.cause !== "fight_end") scene.statusFade(String(ev.unit), d.id);
         break;
       }
       case "immune":
-        scene.number(String(ev.unit), "IMMUNE", { color: "#8e99b8" });
+        // Step 5i: a boss's control resistance at its cap reads the same word, in the debuffs' warm colour.
+        scene.number(String(ev.unit), "IMMUNE", { color: ev.why === "control" ? "#ffa062" : "#8e99b8" });
         break;
       case "interrupt": {
         const v = scene.units.get(String(ev.unit));
@@ -440,7 +450,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     const shown = disp(amount + soaked);
     if (isStatus && shown <= 0) return;
     // A hit's number in its damage type's colour (physical white, magical violet); a status's in its own.
-    const style = isStatus ? STATUS_STYLE[src] : null;
+    const style = isStatus && c.statuses.has(src) ? statusStyle(src) : null;
     const color = crit ? "#ffd54a" : style ? style.color : TYPE_COLOR[String(ev.kind)] ?? "#ffffff";
     const resist = resisted(ev);
     const sub = crit ? "CRITICAL" : resist ? "RESIST" : soaked && amount ? "SHIELD" : soaked ? "SOAKED" : undefined;
@@ -624,7 +634,8 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       isParty || designer ? h("span", { class: "mp" }, `MP ${disp(u.mp)}`) : null,
     ));
     if (casting) body.append(h("div", { class: "line hi" }, `CASTING ${castName}`, h("span", { class: "dim r" }, `${Math.max(0, Math.ceil((u.cast!.end - vt) / SUBTICKS))}T`)));
-    const sts = u.statuses.filter((s) => c.statuses.get(s.id)?.show === "icon");
+    // Markers (step 5i) are bookkeeping, hidden as hidden statuses are; designer view lists them.
+    const sts = u.statuses.filter((s) => shownAsIcon(s.id, designer));
     if (sts.length) body.append(h("div", { class: "section" }, "STATUSES"));
     for (const s of sts) {
       const d = c.statuses.get(s.id)!;
@@ -633,15 +644,16 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       body.append(h("div", { class: "st" },
         statusEl(s.id, n),
         h("div", { class: "grow" },
-          h("div", { class: "line" }, h("span", { class: `grow trunc ${d.label === "buff" ? "buff" : "debuff"}` }, d.name.toUpperCase(), n !== null ? h("span", { class: "dim" }, d.absorb ? ` ${n}` : ` ×${n}`) : null), h("span", { class: "dim" }, left)),
+          h("div", { class: "line" }, h("span", { class: `grow trunc ${d.label === "buff" ? "buff" : d.label === "marker" ? "dim" : "debuff"}` }, d.name.toUpperCase(), n !== null ? h("span", { class: "dim" }, d.absorb ? ` ${n}` : ` ×${n}`) : null), h("span", { class: "dim" }, left)),
           h("div", { class: "text dim small wrap" }, d.text ?? statusText(d).slice(1).join(" ")),
         ),
       ));
     }
     if (isParty) {
       const member = { ...u, abilities: u.acts.filter((a) => a.id !== "basic").map((a) => a.id) } as unknown as Member;
-      const gear = driver.input.party.units.find((x) => x.class === u.ref)?.gear ?? {};
-      body.append(...(classSheet(u.ref, designer, member, gear).filter(Boolean) as Node[]));
+      const pu = driver.input.party.units.find((x) => x.class === u.ref);
+      // Step 5i: a trained passive plays as its form (PartyUnit.passive).
+      body.append(...(classSheet(u.ref, designer, member, pu?.gear ?? {}, pu?.passive).filter(Boolean) as Node[]));
     } else {
       body.append(...(enemySheet(c.enemies.get(u.ref)!, designer, u.stats, u.stats.power ?? 0).filter(Boolean) as Node[]));
     }

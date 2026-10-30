@@ -7,7 +7,7 @@
  * decides how long from the beat's weight.
  */
 import type { CUnit } from "../../../src/engine/combat/fight.js";
-import { c, disp } from "../content.js";
+import { c, disp, shownAsIcon } from "../content.js";
 import { abilityTag, damageTypeOf } from "../describe.js";
 import { enemyDisplayName, weaponLook } from "../art.js";
 import type { Ev } from "./driver.js";
@@ -32,6 +32,13 @@ export function resisted(ev: Ev): boolean {
   const raw = ev.raw as number | undefined, amount = (ev.amount as number) || 0;
   return !raw || amount * 4 <= raw * 3;
 }
+
+/**
+ * Step 5i: counts, which a unit gains a stack of on every hit or every few ticks (the seven counters, the Hurricane's wind,
+ * Flow state's hits). Said once, when the first stack lands; after that only the number under the icon moves, or the window
+ * would fill with them.
+ */
+export const COUNTS = new Set(["cuts", "heat", "spite", "tempo", "surge", "fervor", "charge", "the_hurricane_count", "flow_state_count"]);
 
 export class Narrator {
   private open: Beat | null = null;
@@ -74,6 +81,10 @@ export class Narrator {
   private n(id: unknown): string {
     return this.L.name(String(id));
   }
+  /** Counts a unit holds whose first stack has been told (step 5i), by unit and status. */
+  private counting = new Set<string>();
+  /** Control statuses the engine has just said land RESISTED (step 5i), by unit and status, until their line is written. */
+  private resists = new Map<string, Ev>();
   private sname(id: string): string {
     return c.statuses.get(id)?.name ?? id;
   }
@@ -143,8 +154,14 @@ export class Narrator {
       case "status_end":
         this.statusEnd(ev);
         break;
+      case "resisted":
+        // Step 5i, control resistance on bosses: the engine says so just before the status lands, shorter; its line says RESISTED.
+        this.resists.set(`${String(ev.unit)}:${String(ev.status)}`, ev);
+        break;
       case "immune":
-        this.add(ev, { text: `${this.n(ev.unit)} is immune to ${String(ev.name)}.`, tone: "sys" });
+        // Step 5i: a boss whose control resistance is full shrugs the status off; anything else is immune by nature.
+        if (ev.why === "control") this.add(ev, { text: `${this.n(ev.unit)} is immune to ${String(ev.name)} now!`, tone: "bad" });
+        else this.add(ev, { text: `${this.n(ev.unit)} is immune to ${String(ev.name)}.`, tone: "sys" });
         break;
       case "enrage":
         this.add(ev, { text: "The fight drags on: every blow lands harder!", tone: "bad" });
@@ -249,26 +266,39 @@ export class Narrator {
 
   private status(ev: Ev) {
     const d = c.statuses.get(String(ev.status));
-    if (!d || d.show !== "icon") return;
+    const res = this.resists.get(`${String(ev.unit)}:${String(ev.status)}`);
+    this.resists.delete(`${String(ev.unit)}:${String(ev.status)}`);
+    // Markers (step 5i) are bookkeeping, hidden as hidden statuses are.
+    if (!d || !shownAsIcon(d.id)) return;
     const unit = String(ev.unit), t = this.n(unit);
     const total = ev.total as number | null;
     const n = total === null ? null : d.id === "shield" ? disp(Math.floor(total)) : Math.round(total);
-    const phrase = gainPhrase(d.id, n, d.name);
+    const plain = gainPhrase(d.id, n, d.name);
+    const phrase = res ? `${plain.replace(/!$/, "")}: resisted!` : plain;
+    const evs = res ? [res, ev] : [ev];
+    // A count builds quietly: its first stack is a line, the rest only its number on the field.
+    const key = `${unit}:${d.id}`;
+    if (COUNTS.has(d.id)) {
+      if (this.counting.has(key)) return this.silent(ev);
+      this.counting.add(key);
+    }
     const tone: Tone = d.label === "buff" ? "buff" : "debuff";
     // Folds into the target's hit in the same beat: "BANDIT A TAKES 18 AND BURNS (7)."
     const b = this.open;
     const last = b?.lines[b.lines.length - 1];
     if (b && last && b.at === ev.at && last.tone !== "act" && !last.text.includes(" and ") && last.text.length + phrase.length < 44 && last.events.some((e) => e.t === "dmg" && e.target === unit && e.word !== "MISS" && e.part !== "pulse")) {
       last.text = `${last.text.replace(/[.!]$/, "")} and ${phrase}${/!$/.test(phrase) ? "" : "."}`;
-      last.events.push(ev);
+      last.events.push(...evs);
       return;
     }
     this.add(ev, { text: `${t} ${phrase}${/!$/.test(phrase) ? "" : "."}`, tone });
+    if (res) this.open?.lines[this.open.lines.length - 1]?.events.unshift(res);
   }
 
   private statusEnd(ev: Ev) {
     const d = c.statuses.get(String(ev.status));
-    if (!d || d.show !== "icon") return;
+    this.counting.delete(`${String(ev.unit)}:${String(ev.status)}`);
+    if (!d || !shownAsIcon(d.id)) return;
     const cause = String(ev.cause);
     if (cause === "ko" || cause === "fight_end") return;
     const what = cause === "removed" ? (d.label === "buff" ? "is dispelled" : "is cleansed") : cause === "spent" ? "is spent" : cause === "stacks" ? (d.id === "shield" ? "breaks" : "fades") : "wears off";

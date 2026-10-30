@@ -15,7 +15,7 @@ import {
 } from "./journey.js";
 import { celebrate } from "./celebrate.js";
 import { anyNewEnemy, known, look, metCount, newEnemy } from "./bestiary.js";
-import { abilityBlock, basicLine, canUse, classHead, classPassive, codeSpans, enemySheet, gearRow, lockedRow, memberFor, portraitEl, role, section, SLOTS, specialLines, statGrid, twoHanded, type GearSlot } from "./sheet.js";
+import { abilityBlock, basicLine, canUse, classHead, classPassive, codeSpans, enemySheet, formationNote, gearRow, lockedRow, memberFor, portraitEl, RARITY_TONE, role, seatCodes, seatNotes, section, SLOTS, specialLines, statGrid, twoHanded, type GearSlot } from "./sheet.js";
 import { enemyEl, enemyThumb } from "./pixel.js";
 import { weaponOf } from "../../src/engine/combat/fight.js";
 import { foesOnStage, partyOnStage, stageEl, Strip, STRIP_H, themeOf } from "./battle/scene.js";
@@ -323,14 +323,15 @@ function party(): Child[] {
   const cards = [0, 1, 2].map((i) => {
     const id = setup.party[i];
     const pos = f.positions[i];
-    const codes = codeSpans(pos.stats);
+    // Step 5i: a seat whose statuses say what it does has no "no change".
+    const codes = seatCodes(pos);
     // Something picked: the slots it can go to pulse.
     const target = pickClass !== null || (pickSlot !== null && pickSlot !== i);
     return h("div", { class: `win card${i === pickSlot ? " cur" : ""}${target ? " target" : ""}`, onClick: () => tapSlot(i) },
       h("div", { class: "slot" }, `${i + 1} ${pos.name}`),
       id ? h("div", { class: "portrait" }, portraitEl(id, "slot")) : h("div", { class: "empty" }, "EMPTY"),
       h("div", { class: "name" }, id ? shortName(id) : "---"),
-      h("div", { class: "codes" }, ...(codes.length ? codes : [h("span", { class: "dim" }, "no change")])),
+      h("div", { class: "codes" }, ...codes),
     );
   });
   const picked = pickSlot !== null ? setup.party[pickSlot] : pickClass ?? undefined;
@@ -342,8 +343,9 @@ function party(): Child[] {
   return [
     header("PARTY", () => go(...partyFrom), `${setup.party.length}/3`),
     win("",
-      h("div", { class: "line" }, prev, h("span", { class: "grow center hi", onClick: () => go("formation") }, f.name), anyNewFormation() ? newTag() : null, next),
-      h("div", { class: "text dim small wrap" }, f.text, f.statuses?.length ? ` ${f.statuses.map((s) => c.statuses.get(s)!.text).join(" ")}` : ""),
+      // Step 5i: the formation's name in its rarity's colour (the gear's), and what its seats' own statuses do.
+      h("div", { class: "line" }, prev, h("span", { class: `grow center ${RARITY_TONE[f.rarity ?? "common"] || "hi"}`, onClick: () => go("formation") }, f.name), anyNewFormation() ? newTag() : null, next),
+      h("div", { class: "text dim small wrap" }, f.text, formationNote(f), seatNotes(f) ? ` ${seatNotes(f)}` : ""),
     ),
     h("div", { class: "cards" }, ...cards),
     h("div", { class: "btns even" }, sheetBtn, removeBtn),
@@ -364,7 +366,8 @@ function formation(): Child[] {
       const cur = fm.id === setup.formation;
       return h("div", { class: `row${cur ? " cur" : ""}`, style: "min-height:3rem", onClick: () => { setup.formation = fm.id; save(); go("party"); } },
         h("span", { class: "cursor" }, cur ? "▶" : ""),
-        h("div", { class: "grow trunc" }, h("div", { class: "line" }, fm.name, newFormation(fm.id) ? newTag() : null), h("div", { class: "text dim small wrap" }, fm.text)));
+        // Step 5i: each formation's rarity, in the gear's colours.
+        h("div", { class: "grow trunc" }, h("div", { class: "line" }, h("span", { class: `grow trunc ${RARITY_TONE[fm.rarity ?? "common"]}` }, `${fm.rarity === "legendary" ? "★" : ""}${fm.name}`), fm.rarity && fm.rarity !== "common" ? h("span", { class: `small ${RARITY_TONE[fm.rarity]}` }, fm.rarity.toUpperCase()) : null, newFormation(fm.id) ? newTag() : null), h("div", { class: "text dim small wrap" }, fm.text)));
     }), moreToFind(formations.length - fms.length)),
   ];
   // Opening the list shows them all: their NEW tags go after this look.
@@ -451,7 +454,8 @@ function gear(arg?: unknown): Child[] {
     win("list scroll",
       slot !== "weapon" ? h("div", { class: `gear-row${!current ? " equipped" : ""}`, onClick: () => choose(null) }, h("span", { class: "art" }, ""), h("div", { class: "grow" }, h("div", { class: "line" }, h("span", { class: "dim grow" }, "NOTHING"), !current ? h("span", { class: "tag" }, "EQUIPPED") : null))) : null,
       ...fits.map((gid) => {
-        const r = gearRow(gearOf(gid), slot, member.stats, () => choose(gid), false);
+        // Step 5i: who can wear it, the party first.
+        const r = gearRow(gearOf(gid), slot, member.stats, () => choose(gid), false, setup.party);
         if (newGear(gid)) r.querySelector(".grow .line")?.append(newTag());
         if (gid === current) {
           r.classList.add("equipped");
