@@ -458,7 +458,7 @@ export const Effect = z
       .strictObject({
         op: z.literal("strike"),
         share: z.number().positive().optional().describe("Percent of the damage it's sized from. Default 100."),
-        of: z.enum(["weapon", "hit"]).optional().describe("weapon (the default): the actor's basic attack's damage against each target. hit: the raw amount of the hit that set the reaction off (before Armor or Magic resist), in that hit's damage type."),
+        of: z.enum(["weapon", "hit"]).optional().describe("weapon (the default): the actor's basic attack against each target, its damage with the weapon's riders and statuses, as an extra strike's. hit: the raw amount of the hit that set the reaction off (before Armor or Magic resist), in that hit's damage type."),
         to: To.optional(),
       })
       .describe("Step 5i, reactions only: a hit of kind extra by the actor at each target (the dodge's riposte, the blow returned for an ally). It can crit and be dodged, meets Armor or Magic resist, and fires hit events; it never brings extra strikes of its own."),
@@ -605,7 +605,7 @@ export const Status = z.strictObject({
       chain: z
         .strictObject({ times: PosInt, share: z.number().positive().max(100) })
         .optional()
-        .describe("Step 5i: each strike that lands rolls `chance` again for one more, at most `times` more after the first, each share % of the one before. The one bend of \"extra strikes don't chain\"."),
+        .describe("Step 5i: each strike that lands rolls `chance` again for one more, at most `times` more after the first, each share % of the one before. It takes the place of a plain strike on the unit that reads the same `scale` stat (Flurry wraps over Double strike), so a swing rolls that chance once. The one bend of \"extra strikes don't chain\"."),
     })
     .optional()
     .describe("After each of the holder's basic attacks: one more hit with the weapon's damage, of kind extra, at `to`. Extra strikes don't chain."),
@@ -656,7 +656,7 @@ export const Status = z.strictObject({
   cover: z
     .strictObject({ share: z.number().gt(0).max(100) })
     .optional()
-    .describe("Step 5i: when a hit on another living ally would deal it more than share % of its max HP, after its mitigation and before its block and absorbs, the holder takes the whole hit instead: it resolves again against the holder, statuses and riders included. A hit moves once."),
+    .describe("Step 5i: when a hit on another living ally would deal it more than share % of its max HP, after its mitigation and before its block and absorbs, the holder takes the whole hit instead: it resolves again against the holder, statuses and riders included, keeping its crit and without a second dodge. A hit moves once."),
   floor: z
     .strictObject({ spend: z.literal(true).optional().describe("The status ends (cause spent) the first time it holds a blow.") })
     .optional()

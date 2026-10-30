@@ -993,7 +993,7 @@
                 "exclusiveMinimum": 0
               },
               "chain": {
-                "description": "Step 5i: each strike that lands rolls `chance` again for one more, at most `times` more after the first, each share % of the one before. The one bend of \"extra strikes don't chain\".",
+                "description": "Step 5i: each strike that lands rolls `chance` again for one more, at most `times` more after the first, each share % of the one before. It takes the place of a plain strike on the unit that reads the same `scale` stat (Flurry wraps over Double strike), so a swing rolls that chance once. The one bend of \"extra strikes don't chain\".",
                 "type": "object",
                 "properties": {
                   "times": {
@@ -1728,7 +1728,7 @@
             }
           },
           "cover": {
-            "description": "Step 5i: when a hit on another living ally would deal it more than share % of its max HP, after its mitigation and before its block and absorbs, the holder takes the whole hit instead: it resolves again against the holder, statuses and riders included. A hit moves once.",
+            "description": "Step 5i: when a hit on another living ally would deal it more than share % of its max HP, after its mitigation and before its block and absorbs, the holder takes the whole hit instead: it resolves again against the holder, statuses and riders included, keeping its crit and without a second dodge. A hit moves once.",
             "type": "object",
             "properties": {
               "share": {
@@ -6518,7 +6518,7 @@
               "exclusiveMinimum": 0
             },
             "of": {
-              "description": "weapon (the default): the actor's basic attack's damage against each target. hit: the raw amount of the hit that set the reaction off (before Armor or Magic resist), in that hit's damage type.",
+              "description": "weapon (the default): the actor's basic attack against each target, its damage with the weapon's riders and statuses, as an extra strike's. hit: the raw amount of the hit that set the reaction off (before Armor or Magic resist), in that hit's damage type.",
               "type": "string",
               "enum": [
                 "weapon",

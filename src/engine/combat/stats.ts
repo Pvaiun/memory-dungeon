@@ -75,7 +75,13 @@ export function compile(s: StatusT): Compiled {
   for (const t of s.taken ?? []) add(t, t.pct);
   for (const r of s.riders ?? []) add(r, r.add.amount);
   const effects = [...(s.pulse?.do ?? []), ...(s.trigger?.do ?? []), ...(s.reactions ?? []).flatMap((r) => r.do)];
-  for (const e of effects) add(e, numOf(e));
+  for (const e of effects) {
+    add(e, numOf(e));
+    // Step 5i (share H, X38): each status a `one` can pick carries its own stacks.
+    if (e.op === "one") for (const x of e.of) add(x, x.stacks ?? 1);
+  }
+  // Step 5i (share H, X35): a reviver's rule's HP.
+  if (s.revives?.hp !== undefined) add(s.revives, s.revives.hp);
   let cap = -1;
   if (s.cap !== undefined) {
     cap = nums.length;
@@ -87,9 +93,10 @@ export function compile(s: StatusT): Compiled {
   for (const b of s.boosts ?? []) kinds.push(["boost", b.tag]);
   for (const t of s.taken ?? []) kinds.push(["taken", t.tag ?? null]);
   if (s.absorb) kinds.push(["absorb", null]);
-  if (s.block) kinds.push(["block", null]);
+  // Step 5i (share H): an HP floor or a cover is a block's kind; ability changes, crit rules and a reviver's rule an action change's (KINDS).
+  if (s.block || s.floor || s.cover) kinds.push(["block", null]);
   if (s.lockout) kinds.push(["lockout", s.lockout.covers]);
-  if (s.riders?.length || s.seek || s.strike) kinds.push(["action_change", null]);
+  if (s.riders?.length || s.seek || s.strike || s.mods || s.crits || s.revives) kinds.push(["action_change", null]);
   if (s.pulse) kinds.push(["pulse", null]);
   if (s.reactions?.length || s.trigger) kinds.push(["reaction", null]);
   const harms = (s.pulse?.do ?? []).some((e) => e.op === "damage" && (e.to ?? "holder") === "holder");
@@ -109,6 +116,7 @@ function numOf(e: { op: string } & Record<string, unknown>): NumT {
     case "apply":
       return (e.stacks as NumT | undefined) ?? 1;
     case "revive":
+    case "pay":
       return e.hp as NumT;
     default:
       return 0;

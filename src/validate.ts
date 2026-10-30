@@ -282,7 +282,7 @@ class Combat {
     if (typeof a.duration === "number") this.ticks(a.duration, `${path}.duration`);
   }
 
-  effect(e: S.EffectT, path: string, where: Where, st: S.StatusT | null, action?: S.AbilityT) {
+  effect(e: S.EffectT, path: string, where: Where, st: S.StatusT | null, action?: S.AbilityT, on?: S.EventSpecT) {
     const inStatus = !!st;
     const to = "to" in e ? e.to : undefined;
     if (typeof to === "object") this.rule(to, `${path}.to`, { where });
@@ -335,10 +335,13 @@ class Combat {
       case "revive": {
         this.num(e.hp, `${path}.hp`, where, inStatus);
         this.ticks(e.after, `${path}.after`);
-        // Its targets must be knocked-out units: a rule asking for ko, or an action whose own target rule does.
+        // Its targets must be knocked-out units: a rule asking for ko, or an action whose own target rule does, or (step 5i) the
+        // unit a reaction to `ko` is about, which has just fallen ("raises the ally that just fell").
         const asks = (rule: unknown) => typeof rule === "object" && rule !== null && (rule as S.TargetRuleT).where?.ko === true;
-        const ok = typeof to === "object" ? asks(to) : (to === undefined || to === "target") && where === "action" && asks(action?.target);
-        if (!ok) this.r.error("revive.target", path, `a revive targets knocked-out units: its rule (or the ability's target) must ask for 'ko: true'`);
+        const ok = typeof to === "object"
+          ? asks(to)
+          : ((to === undefined || to === "target") && where === "action" && asks(action?.target)) || (to === "owner" && where === "reaction" && on?.event === "ko");
+        if (!ok) this.r.error("revive.target", path, `a revive targets knocked-out units: its rule (or the ability's target) must ask for 'ko: true', or a reaction to ko names its owner`);
         break;
       }
       case "summon":
@@ -535,7 +538,7 @@ class Combat {
           this.r.warn("reaction.anyEnding", `${p}.reactions[${j}].on`, `a reaction to status_ended with no status fires for every status that ends on the unit; name one (its own id, for "when I end")`);
         }
         x.on.tags?.forEach((t, k) => tag(t, `${p}.reactions[${j}].on.tags[${k}]`));
-        x.do.forEach((e, k) => this.effect(e, `${p}.reactions[${j}].do[${k}]`, "reaction", st));
+        x.do.forEach((e, k) => this.effect(e, `${p}.reactions[${j}].do[${k}]`, "reaction", st, undefined, x.on));
       });
       const empty = !st.stats && !st.boosts && !st.taken && !st.absorb && !st.block && !st.lockout && !st.riders && !st.seek && !st.strike && !st.pulse && !st.trigger && !st.reactions
         && !st.focus && !st.aim && !st.mods && !st.crits && !st.echo && !st.set && !st.cover && !st.floor && !st.heals && !st.revives;
