@@ -193,14 +193,13 @@ A seat's stat step is 1.25 gear steps (`FORMATION_STEP` in `content/core-set/for
 
 ### Reaping line · rare
 **Card:** "One holds the whole field on itself; two reap through it."
-- **Rod** · "Taunts all fight. Thorns. Heals on it are halved." Taunt, given again each time it ends; Thorns medium (150); healing received −50.
-- **Scythe** ×2 · "Its single-target hits also hit a second foe, for a quarter." Each hit from a basic attack or a single-target ability also hits a second, random foe for a quarter of the first hit before mitigation, which then meets the second foe's own Armor or Magic resist. It's a hit (an extra strike, so it never chains) and carries nothing of the first hit's riders or statuses.
+- **Beacon** · "Taunts all fight. Thorns. Heals on it are halved." Taunt, given again each time it ends; Thorns medium (150); healing received −50.
+- **Scythe** ×2 · "Its basic attacks hit every foe, for a fifth each." Each basic attack is an Area hit on every foe at a fifth of its usual damage, so Taunt and Hidden don't steer it. Each of those hits is a basic-attack hit and carries what its basic attacks carry. That totals 160% of a swing against eight foes, 100% against five, and 40% against two.
 
 **Party effect:** none.
-**Shape:** a lightning rod and two scythes. The field stays on one unit, which pays for it in healing.
-**Hooks:** Rod: a seat status reacting to `fight_start` and to `status_ended` (taunt) by applying Taunt; `thorns` and `healing_received`. Scythe: engine 9 (a reaction that strikes), sized from the triggering hit (**NEW** 4).
-**CHALLENGE:** the Scythes are a small version of The storm front, and "Rod" reads as a weapon kind. See CHALLENGES 7 and 8.
-**Builds:** Harvest 2 ●●● (the rod and two scythes), Toll ●● (an anchor that Taunts all fight with thorns).
+**Shape:** a beacon and two scythes. The field stays on one unit, which pays for it in healing, while the scythes sink every foe evenly: worth most against a crowd, less against a few.
+**Hooks:** Beacon: a seat status reacting to `fight_start` and to `status_ended` (taunt) by applying Taunt; `thorns` and `healing_received`. Scythe: its basic attacks aimed by a rule, `{ side: foes, pick: all }` (**NEW** 9), with a −80 `basic` boost.
+**Builds:** Harvest 2 ●●● (the beacon and two scythes), Toll ●● (an anchor that Taunts all fight with thorns).
 
 ### Relay · rare
 **Card:** "Each cast passes something down the line: mana to the second seat, and a quicker next ability to the third."
@@ -227,13 +226,12 @@ A seat's stat step is 1.25 gear steps (`FORMATION_STEP` in `content/core-set/for
 
 ### Thorn hedge · rare
 **Card:** "A thorned wall that draws the blows, and two who make every attacker pay."
-- **Anchor** · "Draws far more. Thorns, high." Aggro +25, Thorns high (300).
-- **Thorns** ×2 · "A foe that hits the Anchor is Weakened, briefly." When a foe's hit lands on the Anchor, the unit in this seat Weakens that foe for 6 ticks.
+- **Anchor** · "Draws far more. Thorns." Aggro +25, Thorns medium (150).
+- **Thorns** ×2 · "A foe that hits the Anchor is Weakened, briefly." When a foe's hit lands on the Anchor, the unit in this seat Weakens that foe for 6 ticks (G1: shorter than half Weaken's own 20, as written).
 
 **Party effect:** none.
 **Shape:** a hedge: one unit to strike, and two that make striking it hurt. If both Thorns seats fall, the Weaken stops.
 **Hooks:** Anchor: seat `stats`. Thorns: a seat status reacting to `hit_taken` on the Anchor (whose: ally, narrowed to the Anchor's seat, **NEW** 1), applying Weaken to the attacker (`other`).
-**CHALLENGE:** Thorns high on a rare, section 9's description of this formation, and "Weakened briefly". See CHALLENGES 3 and 4.
 **Builds:** Toll 2 ●●● (an anchor that draws and returns, with Weaken on its attackers), Landslide ● (a plated wall).
 
 ### Blood oath · rare

@@ -387,7 +387,7 @@ Magic 5, HP 2, MP 3,800. Staff (slow, two hands) or wand (fast), both magical; R
 
 **Now:** Deals magical damage that scales from Magic to the foe with the most Burn, and adds several Burn; stacks scale from Magic. (Quick, normal wind-up, 450 MP; a light hit, 1,450; 13 Burn.)
 
-**Power step:** more Burn: two fifths more (18.2). On Slow burn, two fifths more of its own Burn; on Flash bolt, of its halved Burn (9.1).
+**Power step:** more Burn: two fifths more (18.2). On Slow burn, two fifths more of its own Burn (27.3); on Flash bolt, of its halved Burn (9.1).
 
 **A, Slow burn**
 - **Card:** Deals half the magical damage, scaling from Magic, to the foe with the most Burn, and adds half again the Burn; stacks scale from Magic.
@@ -507,11 +507,10 @@ Magic 4, HP 2, MP 2,300. Rod (medium) or staff (slow, two hands), both magical; 
 **Power step:** cheaper: 650 → 450. The same on both versions.
 
 **A, Deep calm**
-- **Card:** Applies Clarity to every ally under half its max MP. Waits until one is. No Chill.
-- **Numbers:** Clarity at its own numbers on each.
-- **Hooks:** `if: {side: allies, where: {mpBelow: 50}}`; `target: {side: allies, where: {mpBelow: 50}, pick: all}`.
-- **Builds:** Overflow (the wellspring).
-- **CHALLENGE:** this is the Knight's Rally the well (part 1, Stand fast A) to the word, at three times the price. Two classes reaching the wellspring is fine; one effect on two kits isn't. I'd make Deep calm "Clarity on the ally with the least MP, and Stillness comes round on the short word (22)": a faster single well beside the Knight's wide one.
+- **Card:** Applies Clarity to the ally with the least MP, and the Frostweaver's next ability costs nothing. No Chill.
+- **Numbers:** Clarity at its own numbers. The next ability the Frostweaver casts, whatever it is, is free (a Blizzard saves 1,000). The spine's "Clarity on every ally under half" was the Knight's Rally the well word for word; this is the ruling's shape.
+- **Hooks:** `target: {side: allies, pick: lowest, by: mp_share}`, `apply clarity`; a kit state on self, one stack, MP cost −100 (engine 3, through engine 14), spent on its next ability's `action_resolve`.
+- **Builds:** Overflow (the wellspring that also feeds its own next cast).
 
 **B, Frozen moment**
 - **Card:** Waits until a foe is in a wind-up. Applies Clarity as before, and adds Chill only to foes in a wind-up, three times as many; stacks scale from Magic.

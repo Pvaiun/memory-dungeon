@@ -201,11 +201,11 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
 
 **Now:** Deals light physical damage that scales from Attack to a random foe, and adds several Bleed; stacks scale from Attack. (1,160 and 10.4 Bleed at Attack 4. Quick, quick wind-up, 200 MP.)
 
-**Power step:** more Bleed: two fifths more (14.6). On A, of A's many; on B, on each of the three.
+**Power step:** more Bleed: two fifths more (14.6). The same on A; on B, on each of the three.
 
 **A, Deep barbs**
-- **Card:** A barbed arrow at the foe with the most Bleed, adding many.
-- **Numbers:** many Bleed from Attack (18.4; power step 25.8).
+- **Card:** A barbed arrow at the foe with the most Bleed, adding several.
+- **Numbers:** several Bleed from Attack, as the base (10.4; power step 14.6): "many" in the spine's line is several under G8, so the version is its aim.
 - **Hooks:** `target: {side: foes, pick: highest, by: {stacks: bleed}}` (a random foe when none bleeds; the Taunt rule applies).
 - **Builds:** Hunt, Cuts (one bleeding target that every hit in the party bursts).
 
@@ -280,10 +280,10 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
 **Power step:** cooldown shorter: one word. Base medium → short; A very long → long (then its Taunts never lapse); B long → medium.
 
 **A, Overgrowth**
-- **Card:** Taunts itself twice over, and doubles its Thorns while the Taunts last. No Guard.
-- **Numbers:** two Taunts back to back (40 ticks); Thorns doubled for those 40 ticks (+300 at high, read when it lands). Very long cooldown (56), 325 MP: Taunted 40 of every 56 ticks, and all the time with the power step.
-- **Hooks:** `do: apply taunt; apply overgrowth` (a buff, 40 ticks, `stats: thorns + its own Thorns`, with a reaction on `status_ended`, `status: taunt`, `cause: [expired]` that applies Taunt once more). The Taunt keeps its own 20 ticks; "longer" is a second one (see least sure).
-- **Builds:** Toll (the glass thorn: everything comes to it, with nothing to blunt it, and everything pays twice).
+- **Card:** Taunts itself twice over, and its Thorns are half again as strong while the Taunts last. No Guard.
+- **Numbers:** two Taunts back to back (40 ticks); Thorns half again for those 40 ticks (+150 at high, read when it lands). Very long cooldown (56), 325 MP: Taunted 40 of every 56 ticks, and all the time with the power step. The spine's "doubled" is half again under G9, since the power step keeps the Taunts up all fight.
+- **Hooks:** `do: apply taunt; apply overgrowth` (a buff, 40 ticks, `stats: thorns + half its own Thorns`, with a reaction on `status_ended`, `status: taunt`, `cause: [expired]` that applies Taunt once more). The Taunt keeps its own 20 ticks; "longer" is a second one (see least sure).
+- **Builds:** Toll (the glass thorn: everything comes to it, with nothing to blunt it, and everything pays more).
 
 **B, Grove**
 - **Card:** Guards every ally. No Taunt.

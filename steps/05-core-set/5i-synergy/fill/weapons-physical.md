@@ -188,10 +188,10 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 - **Builds:** Toll 3 ●●●, Harvest 3 ●●● (the rod that sweeps), Landslide ●.
 
 ### Gravemark · sword · legendary
-- **Card:** Sword. Fits Knight, Bramble knight, Assassin. Its hits on a Marked foe deal half again as much. When a Marked foe falls, the foe with the lowest HP is Marked.
+- **Card:** Sword. Fits Knight, Bramble knight, Assassin. Its hits on a Marked foe deal half again as much. If no foe is Marked, its basic attacks Mark their target. When a Marked foe falls, the foe with the lowest HP is Marked.
 - **Weapon:** medium, medium, Attack.
-- **Numbers:** +50% on its hits (both damage types) against a Marked foe. The new Mark is the status's own (assumed 10 ticks, Refresh). Gravemark Marks nothing at the start: the party needs a marker. See "least sure".
-- **Hooks:** a boost on both tags, `when: { has: marked }, of: target`. A reaction on `status_ended` (marked, cause `ko`, whose: foe) → `apply` marked to `{ side: foes, pick: lowest, by: hp }`. This works today because a foe's statuses end with cause `ko` just before its `ko` event. Addition 2.
+- **Numbers:** +50% on its hits (both damage types) against a Marked foe. Marks are the status's own (G2: 14 ticks, Refresh, one Mark a unit). Alone it Marks the first foe it hits, Marks the weakest when that foe falls, and follows its own Marks: the far end works without a partner (the lead's ruling). A marker in the party (Marking knife, Huntsman's bow, a totem, a lantern, the Hunting party's seat) means it Marks nothing itself, and only follows and jumps. While a foe Taunts, the wearer's basic attacks (no Seek) go to the Taunter, so it Marks the Taunter first.
+- **Hooks:** a boost on both tags, `when: { has: marked }, of: target`. A reaction on `hit_lands` of kind `basic` → `apply` marked, `to: other`, with an `if` that no foe holds Marked (the gathered list's "a side's state as a reaction's `if`", NEW G). A reaction on `status_ended` (marked, cause `ko`, whose: foe) → `apply` marked to `{ side: foes, pick: lowest, by: hp }`. That last one works today because a foe's statuses end with cause `ko` just before its `ko` event. Addition 2.
 - **Builds:** Hunt 3 ●●● (a kill that resets the hunt).
 
 ---
@@ -241,10 +241,10 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 - **Builds:** Harvest 2 ●●● (evening out), Landslide ●.
 
 ### Pike wall · spear · legendary
-- **Card:** Spear. Fits Hoplite, Valkyrie, Monk. When a foe hits an ally with less Armor than the wearer, the wearer strikes that foe with its spear.
+- **Card:** Spear. Fits Hoplite, Valkyrie, Monk. When a foe hits an ally with less Armor than the wearer, the wearer strikes that foe with its spear, at most once every 3 ticks.
 - **Weapon:** medium, medium, Attack.
-- **Numbers:** each strike is a full swing (881 at Attack 4), as an extra strike: physical, and it can crit, be dodged and carry what extra strikes carry. There's no limit as the line is written. See CHALLENGE 2.
-- **Hooks:** `hit_taken` (whose: ally), where the ally's Armor is below the holder's (NEW E) → addition 9 (a reaction that strikes, at `other`).
+- **Numbers:** each strike is a full swing (881 at Attack 4), as an extra strike: physical, and it can crit, be dodged and carry what extra strikes carry. There's at most one strike every 3 ticks (the lead's ruling): at most about 13 in a 40-tick fight, around 11,500 at Attack 4, against a swarm on a Taunter. Unlimited, it would have been up to 35 strikes and 30,000.
+- **Hooks:** `hit_taken` (whose: ally), where the ally's Armor is below the holder's (NEW E) → addition 9 (a reaction that strikes, at `other`), with a 3-tick cooldown on the reaction (NEW F).
 - **Builds:** Toll 3 ●●● (a warden that returns blows aimed at others), Landslide ●●, Bonfire ● (the keeper).
 
 ### Storm pike · spear · legendary

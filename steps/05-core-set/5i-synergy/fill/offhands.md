@@ -9,18 +9,23 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the ten offhand kinds,
 - **Numbers** use the scale's words, with values from `content/core-set/scale.ts`:
   - a step is 1,000 of Attack, Magic, Armor or MP; 500 of HP; 10 of Aggro; 3,000 of MP regen (about 21 MP every 4 ticks); 3 points of Crit chance;
   - special stats at medium: Evasion 20, Thorns 150, Lifesteal 10%, Siphon 10%.
-  - Every status keeps its own numbers (`rules-and-vocabulary.md`): Guard +3,000 Armor for 28 ticks, Taunt 20 ticks, Haste 20, Ward 30, Regen 48% of max HP over 24, Clarity 24% of max MP over 16, Weaken −30% for 20, Slow 24, Stun 8, Silence 16, Might 6% a stack (cap 15, one spent per action), a Shield's pool capped at half max HP.
-  - Stacks read off a stat at a passive's rate (a few 0.7, several 1.3, many 2.3 for each point of the stat), or a flat word (one 1, a few 2, several 4, many 7) where nothing scales.
+  - Every status keeps its own numbers (`rules-and-vocabulary.md`): Guard +3,000 Armor for 28 ticks, Taunt 20 ticks, Haste 20, Ward 30, Regen 48% of max HP over 24, Clarity 24% of max MP over 16, Weaken −30% for 20, Slow 24, Stun 8, Silence 16, Rot −60% healing for 20, Might 6% a stack (cap 15, one spent per action), a Shield's pool capped at half max HP.
+  - A status can be applied for less than its own length, never more (G1). "Short" is half its own length.
+  - Stacks read off a stat at a passive's rate (a few 0.7, several 1.3 for each point of the stat), or a flat word (one 1, a few 2, several 4) where nothing scales. A single application lands at most "several" (G8).
 - **Hooks** use `PRIMITIVES.md`'s terms. "The piece's status" is the permanent, unremovable status a piece brings at the fight's start (gear's `statuses`). "A fight-long marker" is the usual once-a-fight bookkeeping: a status the reaction checks with `lacks`.
   - Engine additions are the spine's (section 1) by number.
   - Where another share already named a need, I use its name: the physical weapons' NEW A (the killer named on a `ko` event, the applier on `status_gained`; it extends addition 5), NEW B (crit by a condition on the target) and NEW E (comparing two units' stats).
   - My own needs beyond those are marked **NEW** and gathered at the end.
 - **Builds** for the rares and legendaries are the spine's. For commons and uncommons, they're the builds whose first rung the piece serves.
 
-**Shared words these pieces lean on.** Each status's numbers are set once, by the lead.
-- **Marked** (addition 2): Signal lantern, Wild hunt totem. I use the physical weapons' assumption: 10 ticks, Refresh, inside the Taunt rule, a pick by draw among several Marked foes.
-- **Fervor** (Funeral bell): as the magical weapons define it, 5% more damage a stack, cap 20, surviving a knockout.
-- **Heat** (Wick): nobody has numbers yet. I'd propose 4% more damage on hits a stack, cap 15. Kindled robes and The forge give it on a timer, so their rate sets the cap.
+**Shared words these pieces lean on,** as the lead set them.
+- **Marked** (G2; addition 2), on the Signal lantern and the Wild hunt totem:
+  - a debuff on a foe, 14 ticks, Refresh;
+  - the party's basic attacks pick a Marked foe, by draw among several;
+  - each unit keeps one Mark: a new Mark it applies moves its old one;
+  - inside the Taunt rule: while a foe Taunts, only basic attacks with Seek (the Ranger's Hunter's eye) follow the Mark past it.
+- **Heat** (G3), on the Wick: +3% damage a stack, up to 15, kept all fight.
+- **Fervor** (G4), on the Funeral bell: +5% damage a stack, up to 20, kept all fight and through a knockout.
 - No counter raises a status's damage (the status rule).
 
 | Kind | Common | Common | Uncommon | Uncommon | Rare | Rare | Legendary | Legendary |
@@ -29,7 +34,7 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the ten offhand kinds,
 | Round shield | Bronze buckler | Linden shield | Comrade's targe | Guardian's round | Paired shields | Hunter's buckler | Phalanx shield | Shield of the chosen |
 | Horn | Ram's horn | Ivory horn | Reveille | Bull's horn | War horn | Echo horn | Horn of the charge | Rallying horn |
 | Tome | Scholar's codex | Hymnal | Snowbound folio | Abridged lexicon | Primer of frost | Treatise on the field | Last page | Annotated grimoire |
-| Lantern | Brass lantern | Hooded lantern | Pitch lantern | Votive lantern | Bellows lantern | Signal lantern | Wick | Lamp of vigil |
+| Lantern | Brass lantern | Hooded lantern | Pitch lantern | Dazzling lantern | Bellows lantern | Signal lantern | Wick | Lamp of vigil |
 | Relic | Shrine token | Blessed knot | Holy water | Mending icon | Saint's knucklebone | Reliquary of mercy | Phylactery | Bones of the returned |
 | Bell | Temple bell | Prayer bell | Quickening chime | Waking bell | Tempo bell | Warding bell | Bell of the hour | Funeral bell |
 | Totem | Standing stone | Hawthorn fetish | Spinebark pole | Bear fetish | Briar totem | Stone totem | Earthmother totem | Wild hunt totem |
