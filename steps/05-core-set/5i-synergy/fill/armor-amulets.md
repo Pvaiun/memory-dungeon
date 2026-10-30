@@ -1,15 +1,15 @@
 # The fill: armor and amulets
 
-Oct 30, 2026. One share of the fill (`../fill-brief.md`): the four armor types and the amulets, 72 pieces. Commons and uncommons are new, written from the spine's table (section 1, "Commons and uncommons, kind by kind"); rares and legendaries are the spine's lines (sections 3 and 5), written in full and in its order. The lead's rulings (`../fill-rulings.md`, G1 to G10 and "Armor and amulets") are applied; where one changed a piece, the piece says so. Engine needs beyond the spine's list carry a **NEW**, gathered at the end with the challenges and what I'm least sure of.
+Oct 30, 2026. One share of the fill (`../fill-brief.md`): the four armor types and the amulets, 72 pieces. Commons and uncommons are new, written from the spine's table (section 1, "Commons and uncommons, kind by kind"); rares and legendaries are the spine's lines (sections 3 and 5), written in full and in its order. The lead's rulings (`../fill-rulings.md`) are applied as the third round, the director's word, leaves them: statuses are universal, and no rule is made for balance, so every change made for strength or size is undone. Where a kept ruling changed a piece, the piece says so. Engine needs beyond the spine's list carry a **NEW**, gathered at the end with the challenges and what I'm least sure of.
 
 ## Words used below
 
 - **Steps:** +1 of a stat is 1,000; HP half a point (500); Aggro ±10; MP regen 3,000 of the stat (about 21 MP every 4 ticks, 7% of a 3,000 pool over a 40-tick fight); Crit chance +1 is 3 points, +2 is 5.
 - **Special stats:** medium is Evasion 20, Accuracy 20, Crit damage +25, Double strike 25%, Thorns 150, Lifesteal 10%; high is 35, 35, +50, 40%, 300, 20%.
-- **Statuses at their own numbers** (`rules-and-vocabulary.md`): Guard (Armor +3,000, 28 ticks), Haste (+40% speed, 20 ticks), Taunt (20), Ward (Magic resist +40, 30), Hidden (10), Clarity (6% of max MP every 4 ticks for 16, 24% in all), Might (6% a stack, one spent an action, cap 15), Shield (a pool capped at half max HP). Burn, Chill and Shock as their table says. No piece here changes a status's size or scaling. A piece may apply a status for less than its own length, never more; "short" is half its length (ruling G1).
+- **Statuses at their own numbers** (`rules-and-vocabulary.md`): Guard (Armor +3,000, 28 ticks), Haste (+40% speed, 20 ticks), Taunt (20), Ward (Magic resist +40, 30), Hidden (10), Clarity (6% of max MP every 4 ticks for 16, 24% in all), Might (6% a stack, one spent an action, cap 15), Shield (a pool capped at half max HP). Burn, Chill and Shock as their table says. Statuses are universal (the director, third round): no piece here changes a status's size, length or scaling.
 - **Marked** (ruling G2): a debuff on a foe, 14 ticks, Refresh; the party's basic attacks pick a Marked foe (among several, by draw), within the Taunt rule. Used here only as one of Hexweave mail's debuffs.
 - **Flat stacks:** one 1, a few 2, several 4, many 7. Where a piece reads stacks off a stat, it says which.
-- **The counters this share needs** (each its own status, an icon with a number, ending with the fight; each gains at most one stack every 2 ticks, however many triggers fire: ruling G11):
+- **The counters this share needs** (each its own status, an icon with a number, ending with the fight):
   - **Spite** (Thornheart plate): +15 Thorns a stack, cap 20.
   - **Tempo** (Windrunner's garb): +5% speed a stack, as Haste (attacks, cooldowns, wind-ups), cap 10; each hit taken spends half.
   - **Heat** (Kindled robes; ruling G3, the same in every share): +3% damage a stack, up to 15, kept all fight. Like any boost, it never raises a status's own damage.
@@ -85,7 +85,7 @@ Every card ends: *Fits Knight, Hoplite, Geomancer, Bramble knight, Paladin.*
 
 **Thornheart plate** · Plate · legendary
 - **Card:** Each hit the wearer takes adds 1 Spite (+15 Thorns a stack, up to 20) for the rest of the fight.
-- **Numbers:** Spite as above: +300 Thorns at the cap, Thorns high's worth, on top of any Thorns it has. No Thorns of its own. At most one Spite every 2 ticks (G11), so even a swarm takes 40 ticks to cap it, and a boss about a whole fight: it grows at the fight's pace, not the swarm's.
+- **Numbers:** Spite as above: +300 Thorns at the cap, Thorns high's worth, on top of any Thorns it has. No Thorns of its own. A swarm caps it in a dozen ticks, a boss in about half a fight: the cap is why short and long fights stay close.
 - **Hooks:** `hit_taken` → apply `spite` (1) to self. SPITE: Intensity, cap 20, `stats` thorns +15 a stack, an icon.
 - **Builds:** Toll 3 ●●●, Landslide ●.
 
@@ -126,10 +126,10 @@ Every card ends: *Fits Paladin, Valkyrie, Vampire, Hexer, Bramble knight.*
 - **Builds:** Pact 1, Cuts 1. It pays by the count of hits, not their size: a drink for small, fast hits where Lifesteal favours big ones.
 
 **Reprisal hauberk** · Mail · uncommon
-- **Card:** HP +1. The first three foes to hit the wearer each fight each take damage equal to 17% of its max HP.
-- **Numbers:** a touch (0.17) of max HP, untyped, once each for the first three different foes that hit it in a fight (765 at HP 4.5; 2,295 at most). (Second-round ruling: it was every foe, once.)
-- **Hooks:** `fight_start` → apply REPRISALS (Intensity, 3 stacks, no icon) to self. `hit_taken` → apply REPRISAL to `other` while the wearer holds REPRISALS (**NEW 2**, a condition on the holder for a reaction): Fizzle, unremovable, all fight, knows its source, no icon. REPRISAL reacts to its own `status_gained` with `damage` (type none) to holder, 0.17 × max HP of source, and removes one REPRISALS stack from `source`: Blood price's pattern. Fizzle keeps it to once a foe.
-- **Builds:** Toll 1 (a swarm's first arrivals pay), Harvest 1 (three of a full field pay at once).
+- **Card:** HP +1. The first time each foe hits the wearer in a fight, that foe takes damage equal to 17% of the wearer's max HP.
+- **Numbers:** a touch (0.17) of max HP, untyped, once per foe per fight (765 at HP 4.5). (The second round's cut to the first three foes is undone: no balancing rules.)
+- **Hooks:** `hit_taken` → apply REPRISAL to `other`: Fizzle, unremovable, all fight, knows its source, no icon. REPRISAL reacts to its own `status_gained` with `damage` (type none) to holder, 0.17 × max HP of source: Blood price's pattern. Fizzle keeps it to once a foe.
+- **Builds:** Toll 1 (a swarm pays as it arrives), Harvest 1 (every foe of a full field pays once).
 
 **Silvered hauberk** · Mail · uncommon
 - **Card:** Magic +1. The first magical hit the wearer takes each fight deals half.
@@ -168,9 +168,9 @@ Every card ends: *Fits Paladin, Valkyrie, Vampire, Hexer, Bramble knight.*
 - **Builds:** Phoenix 3 ●●●, Toll ●.
 
 **Hexweave mail** · Mail · legendary
-- **Card:** The wearer's hits deal 5% more to a foe for each debuff it holds, up to six debuffs.
-- **Numbers:** +5% a debuff, +30% at most (six debuffs). Marked counts, as G2 defines it. (Second-round ruling: it was 10% a debuff, uncapped.)
-- **Hooks:** `boosts` (physical and magical), pct scaled from the target's count of debuffs, capped at 6: counting a unit's debuffs is an engine addition (in the rulings' gathered list, under Conditions), not a sum of `when` terms.
+- **Card:** The wearer's hits deal 10% more to a foe for each debuff it holds.
+- **Numbers:** +10% a debuff, no cap: five debuffs, half again as much. Marked counts, as G2 defines it. (The second round's +5% to six debuffs is undone: no balancing rules.)
+- **Hooks:** `boosts` (physical and magical), pct scaled from the target's count of debuffs: counting a unit's debuffs stays an engine addition (in the rulings' gathered list, under Conditions).
 - **Builds:** Lockdown 3 ●●, Bonfire ●●, Snap ●●, Toll ●●: strong only where foes carry many debuffs.
 
 ---
@@ -235,7 +235,7 @@ Every card ends: *Fits Ranger, Monk, Assassin, Bard, Valkyrie.*
 
 **Windrunner's garb** · Leather · legendary
 - **Card:** Evasion 20. Each dodge adds 1 Tempo (+5% speed in everything a stack, up to 10) for the rest of the fight. Each hit the wearer takes spends half its Tempo.
-- **Numbers:** Tempo as above (+50% at the cap, a little past Haste), at most one stack every 2 ticks (G11). Evasion medium isn't in the spine's line; the lead's ruling keeps it, since three of the five Leather classes have no Evasion and the piece does nothing without dodges.
+- **Numbers:** Tempo as above (+50% at the cap, a little past Haste). Evasion medium isn't in the spine's line; the lead's ruling keeps it, since three of the five Leather classes have no Evasion and the piece does nothing without dodges.
 - **Hooks:** `hit_evaded` → apply `tempo` (1) to self. TEMPO: Intensity, cap 10, `stats` attack speed, cooldown reduction and cast time reduction +5 a stack; `trigger` on `hit_taken` with `drop` fraction 0.5 (Bleed's shape).
 - **Builds:** Cuts 3 ●●●, Toll 3 ●● (the dancer's rhythm).
 
@@ -276,9 +276,9 @@ Every card ends: *Fits Cleric, Pyromancer, Frostweaver, Stormcaller, Bard.*
 - **Builds:** Harvest 1, Bonfire 1, Overflow 1.
 
 **Matins robe** · Robes · uncommon
-- **Card:** Magic +1. The first ability the wearer casts each fight costs half its MP.
-- **Numbers:** Magic +1,000; one half-price cast a fight (225 saved on a Firebolt, 500 on a Fireball). (Ruling G7: Clarity at the start stays on the staff, which three Robes classes also hold. Second-round ruling: half, not free.)
-- **Hooks:** `fight_start` → apply MATINS (MP cost −50, through engine 3's stat) to self; `action_resolve` (kind ability, holder) → remove MATINS, after the cost is paid: Weaver's robes' shape (engines 3 and 14).
+- **Card:** Magic +1. The first ability the wearer casts each fight costs no MP.
+- **Numbers:** Magic +1,000; one free cast a fight, worth its cost (450 for a Firebolt, 1,000 for a Fireball). (Ruling G7: Clarity at the start stays on the staff, which three Robes classes also hold. The second round's half cost is undone: no balancing rules.)
+- **Hooks:** `fight_start` → apply MATINS (MP cost −100, through engine 3's stat) to self; `action_resolve` (kind ability, holder) → remove MATINS, after the cost is paid: Weaver's robes' shape (engines 3 and 14).
 - **Builds:** Overflow 1, Bonfire 1 (the first feeding cast), Ambush 1 (a spell in the opening).
 
 **Wallflower's robe** · Robes · uncommon
@@ -319,7 +319,7 @@ Every card ends: *Fits Cleric, Pyromancer, Frostweaver, Stormcaller, Bard.*
 
 **Stormweave** · Robes · legendary
 - **Card:** Each of the wearer's actions that hits three or more foes adds 1 Surge (+5% damage a stack, up to 10) for the rest of the fight.
-- **Numbers:** Surge as above, at most one stack every 2 ticks (G11). A Stormcaller earns 3 or 4 in a regular fight, 7 or 8 in a boss fight. Only actions that deal damage hit, so Thunder chord (Shock alone) adds none.
+- **Numbers:** Surge as above. A Stormcaller earns 3 or 4 in a regular fight, 7 or 8 in a boss fight. Only actions that deal damage hit, so Thunder chord (Shock alone) adds none.
 - **Hooks:** `action_resolve` reading the count of foes the action hit (engine 6), three or more → apply `surge` (1) to self. SURGE: Intensity, cap 10, `boosts` +5 physical and magical a stack.
 - **Builds:** Harvest 3 ●●●, Snap ●.
 
@@ -372,9 +372,9 @@ Every card ends: *Fits everyone.* No amulet names a class's ability.
 - **Builds:** Cuts 1, Toll 1 (the dancer).
 
 **Red ribbon** · amulet · uncommon
-- **Card:** Armor +1. The first time an ally drops below half its HP each fight, the wearer Taunts briefly.
-- **Numbers:** Armor +1,000; a short Taunt (10 ticks, half its own: ruling G1), once a fight. (Ruling G7: it was a Taunt at the start.)
-- **Hooks:** `hp_lost` (whose: ally) → apply `taunt` (10 ticks) and a marker RIBBON (Fizzle, all fight, no icon) to self, if another ally is below 50% (**NEW 2**, a side's condition on a reaction) and it lacks RIBBON. Engine 17: the Taunt ends a Hidden.
+- **Card:** Armor +1. The first time an ally drops below half its HP each fight, the wearer Taunts.
+- **Numbers:** Armor +1,000; Taunt at its own length (20 ticks: statuses are universal), once a fight. (Ruling G7: it was a Taunt at the start.)
+- **Hooks:** `hp_lost` (whose: ally) → apply `taunt` and a marker RIBBON (Fizzle, all fight, no icon) to self, if another ally is below 50% (**NEW 2**, a side's condition on a reaction) and it lacks RIBBON. Engine 17: the Taunt ends a Hidden.
 - **Builds:** Toll 1, Bonfire 1 (the keeper), Pact 1 (the blows drawn off the hurt ally).
 
 **Carapace charm** · amulet · uncommon
@@ -384,8 +384,8 @@ Every card ends: *Fits everyone.* No amulet names a class's ability.
 - **Builds:** Landslide 1 (Bedrock lit and a break armed from the first tick), Ambush 1 (the rear guard), Phoenix 1 (the survivors).
 
 **Hare's foot** · amulet · uncommon
-- **Card:** Magic +1. Starts every fight Hasted briefly.
-- **Numbers:** Magic +1,000; a short Haste at the fight's start (10 ticks, half its own: ruling G1).
+- **Card:** Magic +1. Starts every fight Hasted.
+- **Numbers:** Magic +1,000; Haste at the fight's start, at its own length (20 ticks: statuses are universal).
 - **Hooks:** `fight_start` → apply `haste` to self.
 - **Builds:** Ambush 1, Bonfire 1, Overflow 1, Cuts 1.
 
@@ -409,14 +409,14 @@ Every card ends: *Fits everyone.* No amulet names a class's ability.
 
 **Millstone** · amulet · rare
 - **Card:** Basic attacks come half as often and deal two and a quarter times as much.
-- **Numbers:** attack speed −100 (half as often); basic attacks +125%. Extra strikes keep their size.
-- **Hooks:** a stat change (attack_speed −100); `boosts` tag basic +125. Ruling G5, one swing shape per unit: on a unit that already has one (its passive, as the Hoplite's Phalanx, or a piece earlier in slot order), it gives Attack or Magic +1 instead, its weapon's stat.
+- **Numbers:** attack speed −100 (half as often); basic attacks +125%. Extra strikes keep their size. It works whatever else the unit holds: on the Hoplite, with Phalanx, a third as often, for 3.25× (G5 withdrawn).
+- **Hooks:** a stat change (attack_speed −100); `boosts` tag basic +125.
 - **Builds:** Landslide 2 ●●● (any unit becomes a hammer), Ambush ●, Lockdown ●.
 
 **Hummingbird charm** · amulet · rare
 - **Card:** Basic attacks come twice as often and deal 45% as much.
 - **Numbers:** attack speed +100; basic attacks −55%.
-- **Hooks:** a stat change (attack_speed +100); `boosts` tag basic −55. Ruling G5: on a unit that already has a swing shape, it gives Attack or Magic +1 instead, its weapon's stat.
+- **Hooks:** a stat change (attack_speed +100); `boosts` tag basic −55. It works whatever else the unit holds (G5 withdrawn).
 - **Builds:** Cuts 2 ●●●, Snap ●● and Bonfire ●● (riders twice as often). Millstone's lever pulled the other way.
 
 **Echo charm** · amulet · rare
@@ -483,38 +483,40 @@ Every card ends: *Fits everyone.* No amulet names a class's ability.
 
 ## CHALLENGES
 
-All are settled by the lead's rulings: my five, then the second round's changes.
+Every line is settled, by a kept ruling, by the director's universal statuses, or undone because the rulings make no rules for balance (the third round).
 
-1. **Rubble plate's loop:** settled by the ruling under "Armor and amulets": the blast equals the most the Shield held since it last broke, and a quarter of that is rebuilt.
+1. **Rubble plate's loop:** settled by the ruling under "Armor and amulets" (a loop fix, kept): the blast equals the most the Shield held since it last broke, and a quarter of that is rebuilt.
 2. **Vestments of return, a Cleric-only piece:** settled by the ruling under "Armor and amulets": its Shield goes to every ally revived while the wearer stands.
 3. **The uncommons made from stats:** settled by G6: they keep their small effects.
-4. **The short Haste and Taunt at the start:** settled by G1: a short status is half its length (Hare's foot and Red ribbon at 10 ticks; Courier's coat changed under G7).
+4. **The short Haste and Taunt at the start:** settled by the director: universal statuses. Hare's foot's Haste and Red ribbon's Taunt run their own 20 ticks; Courier's coat changed under G7.
 5. **Phoenix ember's Ambush tag:** settled by G10: dropped.
 6. **Keystone cuirass, a small Stone totem:** settled by the second round's G7 line: its basic attacks deal 2% more for every 1,000 Armor.
-7. **Vestments of return's cheap, quick revives:** settled by the second round: they were Reliquary of mercy's and go; only the Shield on revived allies stays.
-8. **Hexweave mail's size:** settled by the second round: +5% a debuff, up to six, with counting debuffs as an engine addition.
-9. **Matins robe's free cast:** settled by the second round: half cost.
-10. **Reprisal hauberk on a full field:** settled by the second round: the first three foes that hit it each fight.
+7. **Vestments of return's cheap, quick revives:** settled by the second round (an overlap fix, kept): they were Reliquary of mercy's and go; only the Shield on revived allies stays.
+8. **Hexweave mail's size:** undone: no balancing rules. Back to +10% a debuff, uncapped; counting debuffs stays an engine need.
+9. **Matins robe's free cast:** undone: no balancing rules. The first ability each fight is free again.
+10. **Reprisal hauberk on a full field:** undone: no balancing rules. Every foe that hits it pays once.
 11. **Gambler's coin against sure crits:** settled by G17: hits that always crit still do, and the card says so.
-12. **Echo charm's card:** settled by the second round: it names what carries (statuses and on-hit effects), not damage boosts or Lifesteal.
-13. **Thornheart plate's speed against swarms, and Tempo's and Surge's:** settled by G11: at most one stack every 2 ticks.
+12. **Echo charm's card:** settled by the second round (a card fix, kept): it names what carries (statuses and on-hit effects), not damage boosts or Lifesteal.
+13. **Thornheart plate's speed against swarms, and Tempo's and Surge's:** undone: no balancing rules. No rate limit on Spite, Tempo or Surge.
 14. **Blood covenant's HP price:** settled by G12: paid at once, not damage, never below 1 HP.
+15. **Millstone and Hummingbird charm on a unit that already reshapes its swings:** undone: no balancing rules (G5 withdrawn). They work whatever else the unit holds.
 
 ## NEW
 
 1. **An HP floor:** a status that leaves its holder at 1 HP when a blow would knock it out, then ends (Last bastion; also the Vampire's Undying thirst). Today only a revive answers a knockout, and it counts as a fall.
-2. **A side's condition on a pulse or reaction,** as an ability's `if` (Kindled robes: "while any foe has Burn"; Red ribbon: "an ally below half"; Reprisal hauberk: "while it holds a reprisal"). Statuses can't check a side today.
+2. **A side's condition on a pulse or reaction,** as an ability's `if` (Kindled robes: "while any foe has Burn"; Red ribbon: "an ally below half"). Statuses can't check a side today.
 3. **Extra strikes heard as basic attacks** by the wearer's riders and reactions (Kindling, Cold hex, Iron palm, Refrain, any piece's "basic attacks add"), never by what grants a strike (Double strike, Arc), so nothing chains (Echo charm). Engine 10 is a different bend.
 4. **A killing blow:** the `ko` event naming the unit whose damage knocked it out. Today it names nobody (`ev("ko", u, null)` in `fight.ts`). Pack leader's coat and Bounty charm need it, as do the spine's Hunting spear, Hunter's buckler, Night's edge and Coup de grâce. It may belong under engine 5.
 5. **A stat set to a value,** after every other change (Gambler's coin's 50%). A flat change read once can fake it, but later changes (Bedrock, a seat) would land on top.
 6. **The most a Shield held since it last broke** (Rubble plate, under the lead's ruling).
 
-To check, not yet new: whether a knocked-out unit can be given a timed status (Phoenix ember and Vial of the last breath stand up a few ticks later); if not, a delayed self-revive. Details inside listed additions: engine 4 reads Blood covenant's cost as a share of max MP, paid as G12 defines it; engine 3's cost stat needs a floor at free (stacked discounts, such as Matins robe and Reliquary of mercy on one Cleric's first Raise, reach −100%); engine 14 needs ability heals apart from all heals (Archmage's mantle). Hexweave mail's debuff count is the rulings' "counting a unit's debuffs".
+To check, not yet new: whether a knocked-out unit can be given a timed status (Phoenix ember and Vial of the last breath stand up a few ticks later); if not, a delayed self-revive. Details inside listed additions: engine 4 reads Blood covenant's cost as a share of max MP, paid as G12 defines it; engine 3's cost stat needs a floor at free (stacked discounts, such as Matins robe and Reliquary of mercy on one Cleric's first Raise, reach −150%); engine 14 needs ability heals apart from all heals (Archmage's mantle). Hexweave mail's debuff count is the rulings' "counting a unit's debuffs".
 
 ## Least sure
 
-The rulings settled Matins robe's Clarity and the duplicates across kinds (G7), Gambler's coin and Windrunner's Evasion (their rulings), Heat (G3) and Thornheart plate against swarms (G11). The rest stands, with one new item.
+The rulings settled Matins robe's Clarity and the duplicates across kinds (G7), Gambler's coin and Windrunner's Evasion (their rulings) and Heat (G3). With G11 withdrawn, Thornheart plate against swarms is back. The rest stands, with one new item. None of these asks for a cut now: they're for the balance pass to watch.
 
 1. **Blood covenant's rate:** a share of HP for the same share of MP is exact (a pool for a pool) but makes walls pay hard (Stand fast is a fifth of the Knight's small pool, so a fifth of its HP). The other reading, half the MP cost in HP, lets walls cast almost free.
-2. **Echo charm carries no Double strike,** since Wasp charm would then be its small version, so it does nothing on a unit without extra strikes (in kit, only the Monk and the Stormcaller have them).
-3. **New under the rulings and not yet read:** Courier's coat (Haste below half), Silvered hauberk (the first magical hit halved), Matins robe (the first ability at half cost), Glyphed robe (a Shield each cast), Keystone cuirass (basic attacks from Armor). Red ribbon's new Taunt below half is the round shield's uncommon effect too, and the Hoplite and Valkyrie wear both.
+2. **Thornheart plate against swarms:** it reaches +300 Thorns in about a dozen ticks on six to eight foes.
+3. **Echo charm carries no Double strike,** since Wasp charm would then be its small version, so it does nothing on a unit without extra strikes (in kit, only the Monk and the Stormcaller have them).
+4. **New under the rulings and not yet read:** Courier's coat (Haste below half), Silvered hauberk (the first magical hit halved), Matins robe (the first ability free), Glyphed robe (a Shield each cast), Keystone cuirass (basic attacks from Armor). Red ribbon's new Taunt below half is the round shield's uncommon effect too, and the Hoplite and Valkyrie wear both.

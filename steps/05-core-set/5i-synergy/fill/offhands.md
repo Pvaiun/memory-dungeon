@@ -2,7 +2,7 @@
 
 Oct 30, 2026. One share of the fill (`../fill-brief.md`): the ten offhand kinds, eight pieces each, 80 in all, in the spine's order. In each kind, two commons and two uncommons are new, designed from the spine's rule for the kind (`spine.md` section 1, the commons-and-uncommons table); the two rares and two legendaries are the spine's lines (section 4), written in full.
 
-**The lead's rulings are applied** (`../fill-rulings.md`: G1 to G10 and "The offhands", then the second round's G11 to G17 and its lines naming offhand pieces). Where a ruling changed a piece, its entry says which. The CHALLENGES list at the end now says which ruling settled each item.
+**The lead's rulings are applied** (`../fill-rulings.md`: the first two rounds, then the third, the director's word, which replaces them where they differ: statuses are universal, and no balancing rules, so every change made for strength or size is undone). Where a ruling changed a piece, its entry says which. The CHALLENGES list at the end now says which ruling settled each item.
 
 **How to read a piece.**
 - **Card** is what the player reads. "Its holder" is the unit holding the offhand. Every card names its kind and who can hold it.
@@ -10,8 +10,9 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the ten offhand kinds,
   - a step is 1,000 of Attack, Magic, Armor or MP; 500 of HP; 10 of Aggro; 3,000 of MP regen (about 21 MP every 4 ticks); 3 points of Crit chance;
   - special stats at medium: Evasion 20, Thorns 150, Lifesteal 10%, Siphon 10%.
   - Every status keeps its own numbers (`rules-and-vocabulary.md`): Guard +3,000 Armor for 28 ticks, Taunt 20 ticks, Haste 20, Ward 30, Regen 48% of max HP over 24, Clarity 24% of max MP over 16, Weaken −30% for 20, Slow 24, Stun 8, Silence 16, Rot −60% healing for 20, Might 6% a stack (cap 15, one spent per action), a Shield's pool capped at half max HP.
-  - A status can be applied for less than its own length, never more (G1). "Short" is half its own length.
-  - Stacks read off a stat at a passive's rate (a few 0.7, several 1.3 for each point of the stat), or a flat word (one 1, a few 2, several 4) where nothing scales. A single application lands at most "several" (G8).
+  - Statuses are universal (the director's word, third round): a piece applies a status at its own length, never shorter or longer.
+  - Stacks read off a stat at a passive's rate (a few 0.7, several 1.3, many 2.3 for each point of the stat), or a flat word (one 1, a few 2, several 4, many 7) where nothing scales.
+  - Numbers are first values; strength is the balance pass's (the director's word, third round).
 - **Hooks** use `PRIMITIVES.md`'s terms. "The piece's status" is the permanent, unremovable status a piece brings at the fight's start (gear's `statuses`). "A fight-long marker" is the usual once-a-fight bookkeeping: a status the reaction checks with `lacks`.
   - Engine additions are the spine's (section 1) by number.
   - Where another share already named a need, I use its name: the physical weapons' NEW A (the killer named on a `ko` event, the applier on `status_gained`; it extends addition 5), NEW B (crit by a condition on the target) and NEW E (comparing two units' stats).
@@ -26,7 +27,7 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the ten offhand kinds,
   - inside the Taunt rule: while a foe Taunts, only basic attacks with Seek (the Ranger's Hunter's eye) follow the Mark past it.
 - **Heat** (G3), on the Wick: +3% damage a stack, up to 15, kept all fight.
 - **Fervor** (G4), on the Funeral bell: +5% damage a stack, up to 20, kept all fight and through a knockout.
-- **Counters** (G11): a counter gains at most one stack every 2 ticks, however many triggers fire. No counter raises a status's damage (the status rule).
+- **Counters** have no rate limit (G11 is withdrawn). No counter raises a status's damage (the status rule).
 - **Paying HP** (G12): the payer loses that much HP at once. It isn't damage: no Shield soaks it, nothing reacts to it, and it never takes the payer below 1 HP (addition 4).
 - **"Every so often"** (G13): every 22 ticks, the first at tick 11, unless a line states its own number.
 
@@ -179,15 +180,14 @@ The spine's rule: commons lean Armor, Attack, HP; uncommons a Guard at the start
 - **Builds:** Hunt 2 ●●, Ambush ●.
 
 #### Phalanx shield · round shield · legendary
-- **Card:** Round shield. Fits Hoplite, Valkyrie. While its holder is above half its HP, allies with less Armor than it take a fifth less damage. Its holder always deals a fifth less.
+- **Card:** Round shield. Fits Hoplite, Valkyrie. While its holder stands, allies with less Armor than it take a fifth less damage. Its holder deals a fifth less.
 - **Numbers:**
-  - −20% damage taken, of every kind, status damage included, while the holder is above half its HP (the offhands ruling). When the holder drops below half, the cover lifts; healed back above, it returns.
-  - −20% on the holder's own hits, all fight.
+  - −20% damage taken, of every kind, status damage included, whatever the holder's HP (the third round undid the "above half" line).
+  - −20% on the holder's own hits.
   - At Armor 5 the Hoplite covers almost anyone; a Valkyrie at Armor 3 covers the casters and the light fighters.
 - **Hooks:**
   - The piece's status gives each other ally a per-source aura that ends with the holder (`endsWithSource`): `taken: [{ pct: -20 }]`.
-  - The aura holds only while that ally's Armor is below the holder's (NEW E, comparing two units' stats, shared with the Pike wall) and the holder is at half its HP or more.
-  - The second condition is Bloodlust's pattern on the holder: `hp_lost` removes the cover where the holder is below 50; `healed` restores it where it's at 50 or more.
+  - The aura holds only while that ally's Armor is below the holder's (NEW E, comparing two units' stats, shared with the Pike wall).
   - The holder: `boosts` −20 on `physical` and `magical`.
 - **Builds:** Bonfire 3 ●●● (the early fight held), Harvest ●● (the full field held), Toll ●●; gives up: its own damage.
 
@@ -221,30 +221,30 @@ The spine's rule: commons lean Aggro, MP regen, Attack or Magic; uncommons a Cla
 - **Builds:** Overflow 1 ● (MP regen), Harvest 1 ● (Thunder chord's Shock reads Magic).
 
 #### Reveille · horn · uncommon
-- **Card:** Horn. Fits Knight, Bard. Magic +1. At the start of every fight, the ally with the least MP gains a short Clarity.
+- **Card:** Horn. Fits Knight, Bard. Magic +1. At the start of every fight, the ally with the least MP gains Clarity.
 - **Numbers:**
   - Magic +1 (1,000).
-  - A short Clarity (G1): 8 ticks, half its own, so two pulses, 12% of that ally's max MP.
-  - MP carries between fights and no class regains it in a fight, so this is the party's driest caster topped up a little once a fight.
-- **Hooks:** the piece's status: `fight_start` → `apply` clarity, duration 8, `to: { side: allies, pick: lowest, by: mp_share }`.
+  - Clarity at its own numbers (statuses are universal): 24% of that ally's max MP over 16 ticks.
+  - MP carries between fights and no class regains it in a fight, so this is the party's driest caster topped up once a fight.
+- **Hooks:** the piece's status: `fight_start` → `apply` clarity, `to: { side: allies, pick: lowest, by: mp_share }`.
 - **Builds:** Overflow 1 ●, Lockdown 1 ● (MP for the locks), Bonfire 1 ● (the feeding casts).
 
 #### Bull's horn · horn · uncommon
-- **Card:** Horn. Fits Knight, Bard. Attack +1. The first time in a fight that a foe falls, every ally is briefly Hasted.
+- **Card:** Horn. Fits Knight, Bard. Attack +1. The first time in a fight that a foe falls, every ally is Hasted.
 - **Numbers:**
   - Attack +1 (1,000).
-  - A short Haste (G1): 10 ticks, half its own, on every standing ally, once a fight.
+  - Haste at its own numbers (statuses are universal: 20 ticks) on every standing ally, on the fight's first kill only (that's the piece's trigger, not a cap).
   - It replaces the Taunt at the start, which repeated the sword's Clarion blade for the Knight (G7, second round). No other kind the Knight or the Bard wears answers a kill.
-- **Hooks:** the piece's status: `ko` (whose `foe`) → `apply` haste, duration 10, `to: { side: allies, pick: all }`, while the holder lacks a fight-long marker, which the reaction then applies.
+- **Hooks:** the piece's status: `ko` (whose `foe`) → `apply` haste, `to: { side: allies, pick: all }`, while the holder lacks a fight-long marker, which the reaction then applies.
 - **Builds:** Hunt 1 ● (the first kill speeds the next), Cuts 1 ● (speed), Ambush 1 ● (the volley's first kill hastens the tail).
 
 #### War horn · horn · rare
-- **Card:** Horn. Fits Knight, Bard. At the start of every fight, the ally with the slowest basic attack gains several Might.
+- **Card:** Horn. Fits Knight, Bard. At the start of every fight, the ally with the slowest basic attack gains many Might.
 - **Numbers:**
-  - Several Might, flat: 4 stacks (+24%), spent one an action. The spine's "many" is "several" under G8 (a single application).
-  - On a Hoplite's Phalanx (a great weapon's 12.8 ticks, halved again) that's its first four swings, about half a regular fight.
+  - Many Might, flat: 7 stacks (+42%), spent one an action (the spine's word; G8 is withdrawn).
+  - On a Hoplite's Phalanx (a great weapon's 12.8 ticks, halved again) that's most of a fight's swings.
 - **Hooks:**
-  - The piece's status: `fight_start` → `apply` might, stacks 4, `to:` the ally with the slowest basic attack.
+  - The piece's status: `fight_start` → `apply` might, stacks 7, `to:` the ally with the slowest basic attack.
   - **NEW** (small, shared with the Tempo bell): a pick by basic-attack interval (the weapon's cooldown after Attack speed), "slowest basic attack".
 - **Builds:** Landslide 2 ●●● (Might on the hammer), Ambush 2 ●●.
 
@@ -270,14 +270,14 @@ The spine's rule: commons lean Aggro, MP regen, Attack or Magic; uncommons a Cla
 - **Builds:** Ambush 3 ●●●, Cuts ●●; gives up: the holder's own opening.
 
 #### Rallying horn · horn · legendary
-- **Card:** Horn. Fits Knight, Bard. When an ally falls (its holder too), every ally still standing gains Haste and a Shield. When an ally is revived, it gains several Might.
+- **Card:** Horn. Fits Knight, Bard. When an ally falls (its holder too), every ally still standing gains Haste and a Shield. When an ally is revived, it gains many Might.
 - **Numbers:**
   - Haste at its own numbers.
   - A Shield of a fifth of each ally's own max HP.
-  - Several Might, flat: 4 on the revived (the spine's "many", under G8).
+  - Many Might, flat: 7 on the revived (the spine's word; G8 is withdrawn).
 - **Hooks:**
   - The piece's status, which survives its holder's knockout, so it rings for the holder's own fall: `ko` (whose `holder` and whose `ally`) → `apply` haste and shield (`{ ratio: 0.2, stat: max_hp, of: target }`), `to: { side: allies, pick: all }`.
-  - `revived` (whose `holder` and whose `ally`) → `apply` might 4, `to: owner`.
+  - `revived` (whose `holder` and whose `ally`) → `apply` might 7, `to: owner`.
 - **Builds:** Phoenix 3 ●●●, Toll ●.
 
 ---
@@ -331,14 +331,13 @@ The spine's rule: commons lean Magic, MP, MP regen; uncommons a few Chill on eve
 - **Builds:** Harvest 2 ●●● (evening out).
 
 #### Last page · tome · legendary
-- **Card:** Tome. Fits Frostweaver, Bard. When a foe falls, every foe below a tenth of its HP falls too, except a boss.
+- **Card:** Tome. Fits Frostweaver, Bard. When a foe falls, every foe below a tenth of its HP falls too.
 - **Numbers:**
   - Below 10% of max HP.
   - Every fall it causes checks again, so a field of low foes goes down at once.
-  - Bosses are spared (the offhands ruling); any fall, a boss's adds included, still sets it off.
+  - Bosses aren't spared (the third round undid "not bosses"): a boss below a tenth falls when one of its adds does.
 - **Hooks:**
-  - The piece's status: `ko` (whose: `foe`) → `damage` of type `none`, amount `{ ratio: 1, hp: current, of: target } + { ratio: 1, stacks: shield, of: target }`, `to: { side: foes, where: { hpBelow: 10, not a boss }, pick: all }`.
-  - **NEW** (small): a unit condition on rank, "not a boss".
+  - The piece's status: `ko` (whose: `foe`) → `damage` of type `none`, amount `{ ratio: 1, hp: current, of: target } + { ratio: 1, stacks: shield, of: target }`, `to: { side: foes, where: { hpBelow: 10 }, pick: all }`.
   - It isn't a hit, and nothing reacts to it as one.
   - A foe whose damage-taken cut leaves it a sliver would survive. If that ever happens, a knockout effect is cleaner than damage.
 - **Builds:** Harvest 3 ●●● (the finisher), Snap ●● (a shatter starts a chain), Bonfire ●.
@@ -384,12 +383,12 @@ The spine's rule: commons lean Magic, HP, MP; uncommons a few Burn on every foe 
 - **Builds:** Bonfire 1 ●, Harvest 1 ●, Ambush 1 ●.
 
 #### Dazzling lantern · lantern · uncommon
-- **Card:** Lantern. Fits Paladin, Pyromancer. HP +1. At the start of every fight, the foe with the highest Attack or Magic is briefly Weakened.
+- **Card:** Lantern. Fits Paladin, Pyromancer. HP +1. At the start of every fight, the foe with the highest Attack or Magic is Weakened.
 - **Numbers:**
   - HP +1 (500).
-  - A short Weaken (G1): −30% damage for 10 ticks, half its own, once a fight.
+  - Weaken at its own numbers (statuses are universal): −30% damage for 20 ticks, at each fight's start.
   - It takes the edge off the opening blows of the foe most likely to land them. None of the other kinds the Paladin and the Pyromancer wear has a Weaken at the start (G7: it replaces the Ward at the start).
-- **Hooks:** the piece's status: `fight_start` → `apply` weaken, duration 10, `to: { side: foes, pick: highest, by: { stats: [attack, magic] } }`.
+- **Hooks:** the piece's status: `fight_start` → `apply` weaken, `to: { side: foes, pick: highest, by: { stats: [attack, magic] } }`.
 - **Builds:** Bonfire 1 ● (the early danger), Toll 1 ● (Weaken), Lockdown 1 ● (a disabled foe from the first tick).
 
 #### Bellows lantern · lantern · rare
@@ -415,11 +414,11 @@ The spine's rule: commons lean Magic, HP, MP; uncommons a few Burn on every foe 
 - **Card:** Lantern. Fits Paladin, Pyromancer. When a burning foe falls, all its Burn passes to the foe with the most HP, and its holder gains Heat.
 - **Numbers:**
   - Every stack the fallen foe held, to the living foe with the most current HP.
-  - One Heat a burning foe's fall: +3% damage on its hits each time, up to Heat's cap of 15 (+45%, G3). It was two; G11 allows a counter one stack every 2 ticks, so a pack falling together gives one stack per 2 ticks.
+  - Two Heat a burning foe's fall: +6% damage on its hits each time, up to Heat's cap of 15 (+45%, G3). G11 is withdrawn, so a pack falling together gives two each.
   - Any burning foe counts, whoever lit it.
 - **Hooks:**
   - The piece's status: `status_ended` (burn, cause `ko`, whose `foe`): a foe's statuses end just before its `ko` event, as the Gravemark's hook relies on.
-  - → `apply` burn with the ended status's stacks (addition 5: reading a dying foe's stacks), `to: { side: foes, pick: highest, by: hp }`; `apply` heat 1, `to: holder`.
+  - → `apply` burn with the ended status's stacks (addition 5: reading a dying foe's stacks), `to: { side: foes, pick: highest, by: hp }`; `apply` heat 2, `to: holder`.
 - **Builds:** Bonfire 3 ●●● (fire that outlives its foe).
 
 #### Lamp of vigil · lantern · legendary
@@ -566,7 +565,7 @@ The spine's rule: commons lean MP regen, Evasion, Magic or Attack; uncommons a s
 #### Funeral bell · bell · legendary
 - **Card:** Bell. Fits Monk, Cleric, Stormcaller. When any unit falls, friend or foe, every ally still standing gains Fervor. It rings for its holder's own fall too.
 - **Numbers:**
-  - One Fervor a fall (the second round's ruling), at Fervor's numbers (G4: +5% damage a stack, up to 20, kept all fight and through a knockout). Falls within 2 ticks of each other give one stack between them (G11).
+  - One Fervor a fall (the second round's card fix), at Fervor's numbers (G4: +5% damage a stack, up to 20, kept all fight and through a knockout). No rate limit (G11 is withdrawn): falls together give one each.
   - A regular fight's three or four kills before the last make +15% to +20% by its end. Each ally's fall gives the survivors +5% more.
   - Once its holder is down, it's silent until it's revived.
 - **Hooks:** the piece's status, which survives its holder's knockout: `ko` (whose `any`) → `apply` fervor 1, `to: { side: allies, pick: all }`. A fallen unit's statuses can react to its own `ko` today, so the holder's fall rings.
@@ -705,12 +704,11 @@ The spine's rule: commons lean Lifesteal, Crit chance, Attack; uncommons crits t
 - **Numbers:**
   - Above half at a fight's start, it pays down to half; at or below half, it pays nothing.
   - The doubling ends the first time it's healed to full, and doesn't come back that fight.
-  - On the Vampire, the draught's doubling and Bloodlust's add, never multiply (the offhands ruling): each adds the Vampire's base Lifesteal once, so below half with both it has three times its base. Lifesteal high (20%) becomes 60%, not 80%.
+  - On the Vampire, the draught's doubling and Bloodlust's multiply (the third round undid "add"): below half with both, Lifesteal high (20%) becomes 80%.
   - On the Assassin (Lifesteal 0 of its own) it doubles only what gear gives.
 - **Hooks:**
   - The piece's status: `fight_start` → an HP price down to 50% (addition 4, as G12 defines it: lost at once, not damage, so no Shield soaks it and nothing reacts to it). It leaves the holder at exactly half, not below, so below-half pieces wake on its first HP lost in the fight.
-  - `apply` a status with Lifesteal + the holder's base Lifesteal, removed on `healed` where `hpAtLeast: 100`.
-  - Bloodlust's own status must then add the base too, not the current value (it reads the holder's Lifesteal at application today, which would count the draught's). The base is the Lifesteal from the class and gear, before either doubling.
+  - `apply` a status with Lifesteal + the holder's Lifesteal (Bloodlust's own pattern), removed on `healed` where `hpAtLeast: 100`. Bloodlust reads the holder's Lifesteal as it stands, the draught's included, so the two multiply.
 - **Builds:** Pact 3 ●●●, Cuts ●.
 
 ---
@@ -747,11 +745,11 @@ The spine's rule: commons lean Siphon, Magic, HP; uncommons MP on a kill, a litt
 - **Builds:** Hunt 1 ● (the back row's healers), Pact 1 ● (a drain race won).
 
 #### Withering idol · idol · rare
-- **Card:** Idol. Fits Hexer, Vampire. One in three of its holder's basic attacks Weakens its target, and its hits on a Weakened foe deal a little more.
+- **Card:** Idol. Fits Hexer, Vampire. Its holder's basic attacks Weaken their target, and its hits on a Weakened foe deal a little more.
 - **Numbers:**
-  - A 33% chance on each basic attack that lands (the second round's ruling, as the Humbling mace and the Glacial rod), so a lone boss is Weakened in windows, not all fight.
+  - Every basic attack that lands (the third round undid "one in three"). A lone boss stays Weakened most of the fight.
   - Weaken at its own numbers. +15% on the holder's hits, both damage types, against a Weakened foe.
-- **Hooks:** the piece's status: `hit_lands` (kind `basic`, whose `holder`) → `apply` weaken, `chance: 33`, `to: other`; a boost on `physical` and `magical`, `{ ratio: 15, when: { has: weaken }, of: target }`.
+- **Hooks:** the piece's status: `hit_lands` (kind `basic`, whose `holder`) → `apply` weaken, `to: other`; a boost on `physical` and `magical`, `{ ratio: 15, when: { has: weaken }, of: target }`.
 - **Builds:** Toll 2 ●●, Lockdown 2 ●●, Pact ●.
 
 #### Leech idol · idol · rare
@@ -765,14 +763,14 @@ The spine's rule: commons lean Siphon, Magic, HP; uncommons MP on a kill, a litt
 - **Builds:** Overflow 2 ●●●, Pact ●.
 
 #### Idol of binding · idol · legendary
-- **Card:** Idol. Fits Hexer, Vampire. Foes its holder Weakens are also Slowed for as long, and its hits on a foe that's both deal half again as much.
+- **Card:** Idol. Fits Hexer, Vampire. Foes its holder Weakens are also Slowed, and its hits on a foe that's both deal double.
 - **Numbers:**
-  - Slow for as long as the Weaken it came with: 20 ticks, under Slow's own 24 (G1 allows the shorter).
-  - +50% on its hits, both types, against a foe that has both (G9: the holder keeps the condition up all fight with a quick Enfeeble or Blood drain, so half again, not double).
+  - Slow at its own numbers (statuses are universal): 24 ticks, so it lands with each Weaken and outlasts it by 4. The spine's "for as long" keeps its idea that way (CHALLENGE 4).
+  - +100% on its hits, both types, against a foe that has both (the third round undid "half again").
   - The Weakens come from Enfeeble (the Hexer's, quick), Blood drain (the Vampire's, quick) and Weaken from other pieces.
 - **Hooks:**
-  - The piece's status: `status_gained` (weaken, whose `foe`) where the applier is the holder (NEW A) → `apply` slow, duration 20, `to: owner`.
-  - A boost `{ ratio: 50, when: { has: [weaken, slow] }, of: target }`.
+  - The piece's status: `status_gained` (weaken, whose `foe`) where the applier is the holder (NEW A) → `apply` slow, `to: owner`.
+  - A boost `{ ratio: 100, when: { has: [weaken, slow] }, of: target }`.
 - **Builds:** Lockdown 3 ●●●, Toll ●●.
 
 #### Idol of the hungry dark ✦ · idol · legendary

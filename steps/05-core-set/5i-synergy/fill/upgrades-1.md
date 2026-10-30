@@ -2,7 +2,7 @@
 
 Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `spine.md` sections 7 and 8, inside `fill-brief.md`'s rules and ranges: the Knight, Cleric, Ranger, Bramble knight, Hoplite, Paladin, Valkyrie and Bard. 32 entries (8 passives, 24 abilities), each with a power step and two versions (64 versions), then 8 mythics. The lists the brief asks for (CHALLENGES, NEW, least sure) are at the end.
 
-**The lead's rulings are applied** (`fill-rulings.md`, Oct 30): the global rulings G1 to G10 and the section "Upgrades, first eight classes". Where an entry changed, it says which ruling changed it.
+**The lead's rulings are applied** (`fill-rulings.md`, Oct 30), as the director's third round leaves them: statuses are universal (no shorter or longer status), and no balancing rules (every change made for strength or size is undone, back to the spine's line or this file's first number). What stays: Marked defined once (G2), the revive default (G10), paying HP (G12), mythics without stat steps (G15), and the overlap, target and wearer fixes. Where an entry changed, it says which ruling changed it.
 
 ## How to read an entry
 
@@ -18,8 +18,8 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
   - **Hooks:** in `PRIMITIVES.md`'s terms; engine additions by their number in `spine.md` section 1; **NEW** where the list doesn't have it.
   - **Builds:** as the spine gives them, with what the version does there.
 - **Words for time:** cooldowns quick 14, short 22, medium 30, long 40, very long 56 ticks (moved up to 15% by id, as today); wind-ups quick 1, normal 3, long 6, very long 8.
-- **Stacks** follow `scale.ts`: an ability's "a few" is 1.4 a point of its stat, "several" 2.6; a passive's on a hit is half that. No version lands "many" in one cast (G8).
-- **A status's length** is its own, or half of it where a line says "short" or "briefly" (G1), never more.
+- **Stacks** follow `scale.ts`: an ability's "a few" is 1.4 a point of its stat, "several" 2.6, "many" 4.6; a passive's on a hit is half that.
+- **A status's length** is always its own (the director: statuses are universal).
 - **A version is content:** a new ability under its own id, as today's `upgraded()` makes the "+" one, or, for a passive, a new passive status in the class's place. Training a passive is a run-layer change (today only abilities train), listed under NEW.
 - **One phrase this share adds,** used by three versions: **the ally foes are most drawn to** means a Taunting ally if there is one (the one with the most Aggro among several), otherwise the ally with the most Aggro. As a rule: `{side: allies, where: {has: taunt}, ifNone: any, pick: highest, by: {stat: aggro}}`.
 
@@ -201,11 +201,11 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
 
 **Now:** Deals light physical damage that scales from Attack to a random foe, and adds several Bleed; stacks scale from Attack. (1,160 and 10.4 Bleed at Attack 4. Quick, quick wind-up, 200 MP.)
 
-**Power step:** more Bleed: two fifths more (14.6). The same on A; on B, on each of the three.
+**Power step:** more Bleed: two fifths more (14.6). On A, of A's many (25.8); on B, on each of the three.
 
 **A, Deep barbs**
-- **Card:** A barbed arrow at the foe with the most Bleed, adding several.
-- **Numbers:** several Bleed from Attack, as the base (10.4; power step 14.6): "many" in the spine's line is several under G8, so the version is its aim.
+- **Card:** A barbed arrow at the foe with the most Bleed, adding many.
+- **Numbers:** many Bleed from Attack (18.4; power step 25.8), as the spine's line.
 - **Hooks:** `target: {side: foes, pick: highest, by: {stacks: bleed}}` (a random foe when none bleeds; the Taunt rule applies).
 - **Builds:** Hunt, Cuts (one bleeding target that every hit in the party bursts).
 
@@ -280,10 +280,10 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
 **Power step:** cooldown shorter: one word. Base medium → short; A very long → long (then its Taunts never lapse); B long → medium.
 
 **A, Overgrowth**
-- **Card:** Taunts itself twice over, and its Thorns are half again as strong while the Taunts last. No Guard.
-- **Numbers:** two Taunts back to back (40 ticks); Thorns half again for those 40 ticks (+150 at high, read when it lands). Very long cooldown (56), 325 MP: Taunted 40 of every 56 ticks, and all the time with the power step. The spine's "doubled" is half again under G9, since the power step keeps the Taunts up all fight.
-- **Hooks:** `do: apply taunt; apply overgrowth` (a buff, 40 ticks, `stats: thorns + half its own Thorns`, with a reaction on `status_ended`, `status: taunt`, `cause: [expired]` that applies Taunt once more). The Taunt keeps its own 20 ticks; "longer" is a second one (see least sure).
-- **Builds:** Toll (the glass thorn: everything comes to it, with nothing to blunt it, and everything pays more).
+- **Card:** Taunts itself twice over, and doubles its Thorns while the Taunts last. No Guard.
+- **Numbers:** two Taunts back to back, each at Taunt's own 20 ticks (40 in all); Thorns doubled for those 40 ticks (+300 at high, read when it lands). Very long cooldown (56), 325 MP: Taunted 40 of every 56 ticks, and all the time with the power step.
+- **Hooks:** `do: apply taunt; apply overgrowth` (a buff, 40 ticks, `stats: thorns + its own Thorns`, with a reaction on `status_ended`, `status: taunt`, `cause: [expired]` that applies Taunt once more). The Taunt keeps its own 20 ticks; "longer" is a second one (see least sure).
+- **Builds:** Toll (the glass thorn: everything comes to it, with nothing to blunt it, and everything pays twice).
 
 **B, Grove**
 - **Card:** Guards every ally. No Taunt.
@@ -295,7 +295,7 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
 
 **Now:** Applies Regen to the ally with the lowest share of max HP. (Medium, normal wind-up, 325 MP.)
 
-**Power step:** cheaper: 325 → 200. The same on both versions.
+**Power step:** cheaper: one rung. Base and A 325 → 200; B 500 → 325.
 
 **A, Deep roots**
 - **Card:** Regen on itself, and Thorns up while it heals.
@@ -304,9 +304,9 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
 - **Builds:** Toll (the anchor mends itself and bites harder while it does).
 
 **B, Blossom**
-- **Card:** Regen on every ally, lasting half as long.
-- **Numbers:** a short Regen on every ally, half its own length (G1): 12 ticks, three pulses, 24% of max HP each. Medium, 325 MP, as the base.
-- **Hooks:** `target: {side: allies, pick: all}`, `apply regen, duration: 12`.
+- **Card:** Regen on every ally.
+- **Numbers:** Regen at its own numbers (24 ticks, 48% of max HP) on every ally. Long cooldown (40, was medium), 500 MP (was 325). The spine's "half as long" can't be (statuses are universal), so the line keeps its idea, the whole party mended in place of one, by coming less often and costing more.
+- **Hooks:** `target: {side: allies, pick: all}`, `apply regen`.
 - **Builds:** Pact, Harvest (the whole party mended while it holds the full field).
 
 ### Bramble lash
@@ -324,7 +324,7 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
 **B, Rebuke**
 - **Card:** Waits until it's been hit five times since its last lash, then lashes a random foe for double.
 - **Numbers:** 9 × Thorns (2,700). The quick cooldown still applies after each lash.
-- **Hooks:** a hidden count on the Bramble knight (an Intensity status gaining a stack on `hit_taken`, at most one every 2 ticks under G11, so five take at least 10 ticks even in a swarm); `if: {side: self, where: {stacks: {status: rebuke_count, atLeast: 5}}}`; the lash removes the count.
+- **Hooks:** a hidden count on the Bramble knight (an Intensity status gaining a stack on `hit_taken`); `if: {side: self, where: {stacks: {status: rebuke_count, atLeast: 5}}}`; the lash removes the count.
 - **Builds:** Toll (damage that follows the foe: the more it's struck, the more it lashes).
 
 ---
@@ -335,14 +335,12 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
 
 **Now:** Its basic attacks come half as often and deal double damage.
 
-**Power step:** a little more than double: × 2.4 (Phalanx's boost +140%, was +100%). On A, the first swing with the rest. On B, the Armor part grows with the rest.
-
-**One swing shape (G5):** Phalanx, in either version, is the Hoplite's swing shape and comes first. A Millstone, Hummingbird charm, Worldbreaker or Hammer seat on the Hoplite gives Attack +1 instead of its shape.
+**Power step:** a little more than double: × 2.4 (Phalanx's boost +140%, was +100%). On A, its first swing becomes × 3.4. On B, the Armor part grows with the rest.
 
 **A, Opening thrust**
-- **Card:** Basic attacks come half as often and deal double. The first of each fight comes at once.
-- **Numbers:** the first swing deals double, as every Phalanx swing does: the spine's triple is past the ceiling (G14). What the version adds is the timing: a doubled swing on the first tick, where it would have come 7 to 15 ticks in.
-- **Hooks:** a reaction on `fight_start`: engine 1 (the attack timer made ready). No boost of its own.
+- **Card:** Basic attacks come half as often and deal double. The first of each fight comes at once and deals triple.
+- **Numbers:** the first swing × 3.
+- **Hooks:** a reaction on `fight_start`: engine 1 (the attack timer made ready) and `apply opening_thrust` (a buff, `boosts: basic +100%`, which adds to Phalanx's as boosts do, removed by a reaction on the holder's first `hit_lands`, `kind: basic`, or its first `hit_missed`).
 - **Builds:** Ambush (the opener), Landslide (one huge blow, struck first).
 
 **B, Shieldbearer**
@@ -534,9 +532,9 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
 - **Builds:** Cuts, Pact (the hurt one comes back faster, and a Lifesteal unit drinks faster).
 
 **B, Last stand**
-- **Card:** Waits until an ally is below 30% of its max HP, then heals it for double, and the Valkyrie Taunts briefly.
-- **Numbers:** 0.9 of Magic (2,700); waits for 30% (was 80%). A short Taunt, half its own length (G1): 10 ticks. A Valhalla at a tenth sets it off at once. The Taunt is the lead's ruling, so it no longer repeats Cure's Triage.
-- **Hooks:** `if: {side: allies, where: {hpBelow: 30}}`; `do: heal; apply taunt, duration: 10, to: self`. A Taunt ends Hidden (engine 17).
+- **Card:** Waits until an ally is below 30% of its max HP, then heals it for double, and the Valkyrie Taunts.
+- **Numbers:** 0.9 of Magic (2,700); waits for 30% (was 80%). Taunt at its own 20 ticks. A Valhalla at a tenth sets it off at once. The Taunt is the lead's ruling, so it no longer repeats Cure's Triage.
+- **Hooks:** `if: {side: allies, where: {hpBelow: 30}}`; `do: heal; apply taunt, to: self`. A Taunt ends Hidden (engine 17).
 - **Builds:** Phoenix, Pact (from the brink: the Valkyrie stands over the one she saved and draws the blows off it).
 
 ### Valhalla
@@ -583,11 +581,11 @@ Oct 30, 2026. The upgrades and mythics of eight classes, written in full from `s
 
 **Now:** Adds a few Might to every ally; stacks scale from Magic. (4.2 at Magic 3. Quick, quick wind-up, 450 MP.)
 
-**Power step:** more Might: two fifths more (5.9). On A, of A's half again (8.8). On B, which gives no Might, a quarter off its cooldown (14 → 10.5), today's rule for an ability with no amount.
+**Power step:** more Might: two fifths more (5.9). On A, of A's doubled (11.8). On B, which gives no Might, a quarter off its cooldown (14 → 10.5), today's rule for an ability with no amount.
 
 **A, Lament**
-- **Card:** Might to every ally below half its HP, half again as many. Waits until an ally is below half.
-- **Numbers:** 6.3 Might each. The spine's "twice as many" is half again under G9: a Pact party keeps its members below half most of a fight.
+- **Card:** Might to every ally below half its HP, twice as many. Waits until an ally is below half.
+- **Numbers:** 8.4 Might each.
 - **Hooks:** `if: {side: allies, where: {hpBelow: 50}}`; `target: {side: allies, where: {hpBelow: 50}, pick: all}`.
 - **Builds:** Pact, Phoenix (the low as the strong).
 
@@ -669,9 +667,9 @@ Each fits one class, sits in its slot, and a unit wears one at most. Offered in 
 
 ### The last wall · Hoplite · offhand
 
-- **Card:** Fits the Hoplite. The first time an Aegis from each Aspis blocks a blow, the attacker takes the blocked damage, up to half the Hoplite's max HP, and Aspis is ready again at once.
-- **Numbers:** the blocked amount, untyped (not dodged, not reduced), at most half the Hoplite's max HP (2,000 at HP 4), once per Aspis cast (with Shield wall, the first of its Aegis to block). Aspis still costs its MP when it's cast again. The cap and the once are the lead's ruling.
-- **Hooks:** each Aspis cast puts a hidden marker on the Hoplite; the return needs it and spends it (an `if` on the reaction, NEW 1). Engine 1 (Aspis made ready). **NEW:** an event when a block is spent that carries the blocked amount and the attacker (`status_ended` with `cause: spent` has neither). Can't be held under a great weapon.
+- **Card:** Fits the Hoplite. When an Aegis the Hoplite gave blocks a blow, the attacker takes the blocked damage, and Aspis is ready again at once.
+- **Numbers:** the full blocked amount, untyped (not dodged, not reduced). Aspis still costs its MP when it's cast again.
+- **Hooks:** engine 1 (Aspis made ready). **NEW:** an event when a block is spent that carries the blocked amount and the attacker (`status_ended` with `cause: spent` has neither). Can't be held under a great weapon.
 - **Pulls toward:** Toll 3 ●●, Bonfire 3 ●● (the keeper).
 
 ### Chains of light · Paladin · offhand
@@ -691,34 +689,37 @@ Each fits one class, sits in its slot, and a unit wears one at most. Offered in 
 ### Metronome · Bard · offhand
 
 - **Card:** Fits the Bard. Counts every hit the party lands. At 20, War ballad, Allegro and Thunder chord are ready at once, and the count starts again.
-- **Numbers:** 20 hits, extra strikes and each hit of a multi-hit ability included (Thorns and status damage aren't hits). The count gains at most one every 2 ticks (G11), so a beat comes at most every 40 ticks: about that often for a blur party (a hit a tick), about every 60 for a slow one (a hit in three ticks). The songs still cost their MP (450, 650 and 650 as today), and only the ones the Bard knows.
-- **Hooks:** a count on the Bard (an Intensity status, cap 20) gaining a stack on `hit_lands` from the holder and from `whose: ally`, at most one every 2 ticks (G11); at the cap, engine 1 makes the three ready by name (**NEW**, as above) and the count is spent. Can't be held under a bow.
+- **Numbers:** 20 hits, extra strikes and each hit of a multi-hit ability included (Thorns and status damage aren't hits). A blur party lands about one hit a tick, a slow one about one in three. The songs still cost their MP (450, 650 and 650 as today), and only the ones the Bard knows.
+- **Hooks:** a count on the Bard (an Intensity status, cap 20) gaining a stack on `hit_lands` from the holder and from `whose: ally`; at the cap, engine 1 makes the three ready by name (**NEW**, as above) and the count is spent. Can't be held under a bow.
 - **Pulls toward:** Cuts 3 ●●● (the blur sets the tempo).
 
 ---
 
 ## CHALLENGES
 
-Each settled by the lead's rulings (`fill-rulings.md`):
-1. **Blossom:** settled by G1. A status can be applied for less than its own length, so the spine's line stands: Regen on every ally for 12 ticks.
-2. **Triage and Last stand:** settled by "Upgrades, first eight classes". Last stand heals double and the Valkyrie Taunts at half length (G1, 10 ticks).
+Each as the rulings and the director's third round leave it (`fill-rulings.md`):
+1. **Blossom:** settled by the director: universal statuses. The spine's half-length Regen can't be, so Blossom is my first proposal: the whole Regen on every ally, long cooldown, 500 MP.
+2. **Triage and Last stand:** settled by the lead (an overlap fix): Last stand heals double and the Valkyrie Taunts. Settled by the director: universal statuses, so the Taunt is its own 20 ticks.
 3. **Stand fast's power step:** settled at 125 MP.
 4. **Flight of the valkyries:** settled at 70 ticks.
 5. **Martyr's raise:** settled: it costs HP and no MP.
 6. **Stone guard:** settled: the other ally with the most Armor.
 7. **Horn of the keep:** settled: the other ally with the least MP.
 8. **Huntmaster's quiver:** settled: its abilities have Seek.
-
-Settled in the second round:
-9. **Opening thrust:** settled by G14: its first swing deals double, as every Phalanx swing does; the version is the timing (a swing on the first tick).
-10. **Martyr's raise and Penance:** settled by G12: the HP is lost at once, isn't damage, no Shield soaks it, nothing reacts to it (so the payment doesn't set off Last rites), and it never takes the payer below 1 HP.
-11. **Metronome and Rebuke's count:** settled by G11: each gains at most one every 2 ticks, so a Metronome beat comes at most every 40 ticks.
+9. **Opening thrust:** undone: no balancing rules. Its first swing is triple again (G14 withdrawn).
+10. **Martyr's raise and Penance:** settled by G12: the HP is lost at once, isn't damage, no Shield soaks it, nothing reacts to it (so the payment doesn't set off Last rites), and it never takes the payer below 1 HP. Penance's heal for HP, in place of Might, is an overlap fix and stays.
+11. **Metronome and Rebuke's count:** undone: no balancing rules. Both count every hit (G11 withdrawn).
 12. **The mythics' stats:** settled by G15: none of the eight carries a stat step (no change; the Stormspear's damage is its weapon's).
+13. **Deep barbs:** undone: no balancing rules. Many Bleed again (G8 withdrawn).
+14. **Overgrowth's Thorns and Lament's Might:** undone: no balancing rules. Doubled again (G9 withdrawn).
+15. **The last wall:** undone: no balancing rules. It returns every blocked blow in full, uncapped.
+16. **Phalanx's one swing shape:** undone: no balancing rules (G5 withdrawn). Phalanx stacks with any other swing shape the Hoplite wears.
+17. **Chosen:** settled by the lead (an overlap fix): revived allies come back ready and Guarded. It stays.
 
 ## NEW
 
 Engine needs beyond the spine's list:
-1. **An `if` on reactions:** a test of a side or of the event's other unit, as an ability's `if` tests a side. For Shared rites, Horn of the keep, Chains of light, and The last wall's once per Aspis.
+1. **An `if` on reactions:** a test of a side or of the event's other unit, as an ability's `if` tests a side. For Shared rites, Horn of the keep, Chains of light.
 2. **Basic attacks with a target rule from a passive:** Quarry and Overwatch. Engine 2 aims basic attacks by a status; this aims them by a rule. The pack and The vise (formations) need the same.
 3. **Two target `by`s:** the wind-up left (Cover) and the basic attack's interval (Accelerando). Cover also needs a rule whose fallback picks by something else.
 4. **A condition "is its side's highest by a stat"** (Sentence).
@@ -732,11 +733,11 @@ Engine needs beyond the spine's list:
 
 ## Least sure
 
-Settled by the rulings and taken off: Pinning arrow and Lullaby (the balance pass watches them), The last wall (capped and once per Aspis), the near-repeats (Penance and Chosen changed, and the Earthmother totem gives Might, not Guard).
+Taken off: Pinning arrow, Lullaby and The last wall (questions of strength, for the balance pass, at the director's word), and the near-repeats (Penance and Chosen changed, and the Earthmother totem gives Might, not Guard).
 
 - **Heartwood mail** against swarms (the spine's own worry), worst beside Spreading thorns: every hit on any ally returns 300 to its attacker and 300 to another foe, both bleeding.
-- **Metronome** against the Bard's 2,400 MP: a full beat costs 1,750. With G11 a beat comes at most every 40 ticks, so it empties the Bard more slowly, but it may still read as a mythic that empties its wearer.
-- **Shieldbearer** at a third more a swing, rising with Plate, Guard and Stone guard, outclasses Opening thrust everywhere but Ambush, more so now that Opening thrust is only its timing (G14). Opening thrust may want something else on its first swing that isn't a triple or Drawn steel's crit.
+- **Metronome** against the Bard's 2,400 MP: a full beat costs 1,750, so it may spend the Bard dry in one fight. That fits "MP is fuel", but it may read as a mythic that empties its wearer.
+- **Shieldbearer** at a third more a swing, rising with Plate, Guard and Stone guard, may outclass Opening thrust everywhere but Ambush.
 - **Inquisition:** in any status party (Smite's own Burn included), the bonus is on nearly all fight.
 - **Taunts that last longer** are written as Taunt applied again: Overgrowth's second Taunt, Horn of the keep's renewal. Taunt keeps its own 20 ticks; check that this reads as the line meant.
 - **Ward of life** puts a Shield and a revive on one very long cooldown; the shorter wind-up (normal) also makes its raise faster.

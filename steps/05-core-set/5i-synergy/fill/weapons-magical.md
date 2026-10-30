@@ -118,10 +118,10 @@ Fits: Cleric, Paladin. Slow (11 ticks), magical, one hand.
 - **Builds:** Overflow 1 ● (MP regen commons), Phoenix 1 ● (the reviver's 650-MP Raise).
 
 ### Mender's mace · mace · uncommon
-- **Card:** +1 HP. At the start of each fight, the ally with the lowest share of max HP gains a short Regen.
+- **Card:** +1 HP. At the start of each fight, the ally with the lowest share of max HP gains Regen.
 - **Weapon:** damage medium, ratio medium, from Magic.
-- **Numbers:** max HP +500. A short Regen (G1): Regen's 8% of max HP every 4 ticks, for 12 ticks (half its 24), 24% in all. HP carries between fights, so it goes to whoever came out of the last fight worst. With everyone at full, it goes to any ally.
-- **Hooks:** a granted status with a reaction on `fight_start` that applies `regen` with `duration: 12` to `{ side: "allies", pick: "lowest", by: "hp_share" }`. Existing primitives.
+- **Numbers:** max HP +500. Regen is its own: 8% of max HP every 4 ticks for 24 ticks, 48% in all. HP carries between fights, so it goes to whoever came out of the last fight worst. With everyone at full, it goes to any ally.
+- **Hooks:** a granted status with a reaction on `fight_start` that applies `regen` to `{ side: "allies", pick: "lowest", by: "hp_share" }`. Existing primitives.
 - **Builds:** Pact 1 ●, Phoenix 1 ● (a member raised low starts the next fight mending), Toll 1 ● (the anchor).
 
 ### Prior's mace · mace · uncommon
@@ -132,10 +132,10 @@ Fits: Cleric, Paladin. Slow (11 ticks), magical, one hand.
 - **Builds:** Toll 1 ● (the anchor), Bonfire 1 ● (the keeper), Harvest 1 ● (the rod that draws the field).
 
 ### Humbling mace · mace · rare
-- **Card:** One in three of the wearer's basic attacks Weakens its target.
+- **Card:** The wearer's basic attacks Weaken their target.
 - **Weapon:** damage medium, ratio medium, from Magic.
-- **Numbers:** a 33% chance on each basic attack that lands (the lead's ruling: one in three, so a lone boss is Weakened in windows, not all fight). Weaken is its own: −30% damage dealt for 20 ticks, Refresh. The mace swings every 11 ticks, about every 15 for a Cleric between casts, so a boss is Weakened about 40% to 45% of the fight.
-- **Hooks:** a reaction on `hit_lands` (kind `basic`) that applies `weaken` with `chance: 33` to `other`. Existing primitives.
+- **Numbers:** Weaken is its own: −30% damage dealt for 20 ticks, Refresh. The mace swings every 11 ticks (about every 15 for a Cleric between casts), so a foe it keeps hitting, such as a lone boss, stays Weakened.
+- **Hooks:** a reaction on `hit_lands` (kind `basic`) that applies `weaken` to `other`. Existing primitives.
 - **Builds:** Lockdown 2 ●●●, Toll 2 ●●, Pact ●.
 
 ### Censer mace · mace · rare
@@ -146,32 +146,32 @@ Fits: Cleric, Paladin. Slow (11 ticks), magical, one hand.
 - **Builds:** Pact 2 ●●, Toll ●● (the anchor kept up), Phoenix ●.
 
 ### Sunhammer · mace · legendary
-- **Card:** The wearer's basic attacks add a few Burn. When a burning foe falls, the wearer's next basic attack also strikes every other foe, and those strikes add a few Burn too.
+- **Card:** The wearer's basic attacks add several Burn. When a burning foe falls, the wearer's next basic attack also strikes every other foe, and those strikes add several Burn too.
 - **Weapon:** damage medium, ratio medium, from Magic.
 - **Numbers:**
-  - **The Burn:** a few from Magic, about 2.8 at Magic 4, on each basic attack (the lead's ruling: a few, not the spine's several, inside the rule for a rider on every hit).
+  - **The Burn:** several from Magic, about 5 at Magic 4, on each basic attack, as the spine says. On a mace swinging every 11 ticks it comes to about the same Burn a tick as a few on a wand (0.12 against 0.11 a point of Magic).
   - **The sweep:** one strike on every other foe at the weapon's full damage, about 1,030 each.
     - It's primed once: more burning kills before the swing add nothing.
     - It's spent by the next basic attack.
 - **Hooks:**
-  - **The Burn:** a reaction on `hit_lands` (kind `basic`) that applies `burn` (a few, Magic of the holder) to `other`.
+  - **The Burn:** a reaction on `hit_lands` (kind `basic`) that applies `burn` (several, Magic of the holder) to `other`.
   - **Priming the sweep:** a reaction on `ko` (whose `foe`) when the fallen foe held Burn as it fell (engine 5) applies `sunburst` to the holder.
   - **`sunburst`** is a Fizzle buff with:
     - `strike` to `{ side: "foes", pick: "all", exclude: "targets" }`;
-    - a reaction on `hit_lands` (kind `extra`) that adds a few Burn;
+    - a reaction on `hit_lands` (kind `extra`) that adds several Burn;
     - a reaction on `action_resolve` (kind `basic`) that removes it.
   - **NEW** (shared with the Chain wand): an extra strike whose rule picks several foes strikes each of them. Today `strikes` takes only the first pick.
 - **Builds:** Bonfire 3 ●●●, Harvest ●●.
 
 ### Martyr's maul · mace · legendary
-- **Card:** The wearer's basic attacks deal more the lower its HP: a quarter more below 70%, half again below 50%, three quarters more below 30%, and double below 10%. Below 30% HP, each basic attack also heals the wearer for the damage it dealt.
+- **Card:** The wearer's basic attacks deal more the lower its HP: half again as much below 70%, double below 50%, two and a half times below 30%, and triple below 10%. Below 30% HP, each basic attack also heals the wearer for the damage it dealt.
 - **Weapon:** damage medium, ratio medium, from Magic.
 - **Numbers:**
-  - +25% at each of 70, 50, 30 and 10% of max HP, up to double. G14 makes triple past the ceiling; the spine said up to triple at a tenth. That's nearly even: about +25% for each further fifth of HP lost.
+  - +50% at each of 70, 50, 30 and 10% of max HP, up to triple at a tenth, as the spine says. That's nearly even: about +50% for each further fifth of HP lost.
   - The heal is 100% of the damage dealt, after Magic resist.
-  - A Cleric (HP 2) at a quarter of its HP swings for about 1,800 and heals about 1,600: from 25% to full in one swing. A Paladin (HP 4) goes from 25% to about 65%.
+  - A Cleric (HP 2) at a quarter of its HP swings for about 2,500 and heals about that much: from 25% to full in one swing. A Paladin (HP 4) goes from 25% to about 80%.
 - **Hooks:**
-  - Boosts on `basic`, with the pct as four terms `{ ratio: 25, when: { hpBelow: X }, of: "holder" }` for X = 70, 50, 30 and 10.
+  - Boosts on `basic`, with the pct as four terms `{ ratio: 50, when: { hpBelow: X }, of: "holder" }` for X = 70, 50, 30 and 10.
   - A reaction on `hit_lands` (kind `basic`) that heals `{ scale: [{ ratio: 1, amount: true }] }` to `{ side: "self", where: { hpBelow: 30 } }`.
   - Existing primitives.
 - **Builds:** Pact 3 ●●●, Phoenix ●● (Last rites' Cleric: below 30% its cooldowns halve as well).
@@ -280,20 +280,20 @@ Fits: Frostweaver, Stormcaller. Medium (9.1 ticks), magical, one hand.
 - **Builds:** Snap 1 ●●, Lockdown 1 ● (the slow on the way up).
 
 ### Cistern rod · rod · uncommon
-- **Card:** +1 HP. Once a fight, when the wearer has less than a third of its MP (at the fight's start, or after it casts), it gains a short Clarity.
+- **Card:** +1 HP. Once a fight, when the wearer has less than a third of its MP (at the fight's start, or after it casts), it gains Clarity.
 - **Weapon:** damage medium, ratio medium, from Magic.
-- **Numbers:** max HP +500. A short Clarity whenever it fires (G1, the lead's second-round ruling): Clarity's 6% of max MP every 4 ticks, for 8 ticks (half its 16), 12% in all. Once a fight; a revived wearer can have it again.
+- **Numbers:** max HP +500. Clarity is its own: 6% of max MP every 4 ticks for 16 ticks, 24% in all. Once a fight (my first design: it's the effect's shape, a reserve tapped once, not a cut for strength); a revived wearer can have it again.
 - **Hooks:**
-  - Reactions on `fight_start` and on `action_resolve` (kind `ability`). Each applies `clarity` with `duration: 8` to `{ side: "self", where: { mpBelow: 33, lacks: "cistern_spent" } }`, then a hidden marker `cistern_spent` to the same.
+  - Reactions on `fight_start` and on `action_resolve` (kind `ability`). Each applies `clarity` to `{ side: "self", where: { mpBelow: 33, lacks: "cistern_spent" } }`, then a hidden marker `cistern_spent` to the same.
   - The marker ends with the fight or a knockout.
   - Existing primitives.
 - **Builds:** Overflow 1 ●● (the cliff softened), Bonfire 1 ●, Lockdown 1 ●, Harvest 1 ●.
 
 ### Glacial rod · rod · rare
-- **Card:** One in three of the wearer's basic attacks Slows its target.
+- **Card:** The wearer's basic attacks Slow their target.
 - **Weapon:** damage medium, ratio medium, from Magic.
-- **Numbers:** a 33% chance on each basic attack that lands (the lead's ruling: one in three, so a lone boss is Slowed in stretches, not all fight). Slow is its own: −40% speed in everything for 24 ticks, Refresh, and it adds to Chill's slow. The rod swings every 9.1 ticks, so a boss is Slowed about 60% of the fight.
-- **Hooks:** a reaction on `hit_lands` (kind `basic`) that applies `slow` with `chance: 33` to `other`. Existing primitives.
+- **Numbers:** Slow is its own: −40% speed in everything for 24 ticks, Refresh, and it adds to Chill's slow. The rod swings every 9.1 ticks, so a foe it keeps hitting, such as a lone boss, stays Slowed.
+- **Hooks:** a reaction on `hit_lands` (kind `basic`) that applies `slow` to `other`. Existing primitives.
 - **Builds:** Lockdown 2 ●●● (a hold that never shatters), Snap ●.
 
 ### Lightning rod · rod · rare
@@ -354,10 +354,10 @@ Fits: Cleric, Frostweaver, Pyromancer, Bramble knight. Slow (11.6 ticks), magica
 - **Builds:** Overflow 1 ●, Bonfire 1 ● (the hungry casts), Phoenix 1 ● (the Cleric's revives).
 
 ### Shepherd's staff · staff · uncommon
-- **Card:** +1 Magic, +1 HP. At the start of each fight, the ally with the least MP gains a short Clarity.
+- **Card:** +1 Magic, +1 HP. At the start of each fight, the ally with the least MP gains Clarity.
 - **Weapon:** damage medium, ratio medium, from Magic.
-- **Numbers:** Magic +1,000, max HP +500. A short Clarity (G1): Clarity's 6% of max MP every 4 ticks, for 8 ticks (half its 16), 12% in all. MP carries between fights, so it goes to whoever spent the most.
-- **Hooks:** a granted status with a reaction on `fight_start` that applies `clarity` with `duration: 8` to `{ side: "allies", pick: "lowest", by: "mp_share" }`. Existing primitives.
+- **Numbers:** Magic +1,000, max HP +500. Clarity is its own: 6% of max MP every 4 ticks for 16 ticks, 24% in all. MP carries between fights, so it goes to whoever spent the most.
+- **Hooks:** a granted status with a reaction on `fight_start` that applies `clarity` to `{ side: "allies", pick: "lowest", by: "mp_share" }`. Existing primitives.
 - **Builds:** Overflow 1 ●●, Bonfire 1 ●, Phoenix 1 ●, Lockdown 1 ●.
 
 ### Canopy staff · staff · uncommon
@@ -416,17 +416,20 @@ Fits: Cleric, Frostweaver, Pyromancer, Bramble knight. Slow (11.6 ticks), magica
 
 ## CHALLENGES
 
-Every item is settled by the lead's rulings (`../fill-rulings.md`) and applied above. Items 1 to 4 are from the first round, 5 to 10 from the second.
-1. **Humbling mace and Glacial rod** (a permanent Weaken or Slow on a lone boss): settled by "The magical weapons": one basic attack in three applies it.
-2. **Wildmagic wand** (one stack, the uncommon's size): settled by "The magical weapons": a few (2) of the random status a swing.
+Every item is settled and applied above, as the director's third round (`../fill-rulings.md`) leaves the lead's rulings.
+1. **Humbling mace and Glacial rod** (a permanent Weaken or Slow on a lone boss): undone: no balancing rules. Every basic attack applies it again, as the spine says.
+2. **Wildmagic wand** (one stack, the uncommon's size): settled by "The magical weapons", kept in the third round: a few (2) of the random status a swing.
 3. **Uncommon effects repeated on kinds that share wearers** (the staff's against Robes', the Ward at the start on four kinds): settled by G7. The staff, rune sword and mace keep theirs; Robes, Mail and the lantern change.
 4. **Section 9's wand uncommons on Bonfire's first rung:** settled by "The magical weapons": the wand is off Bonfire's first rung.
-5. **Dawnblade's 4 Fervor at once:** settled by G11 (a counter gains at most one stack every 2 ticks): the 4 arrive one every 2 ticks.
-6. **Martyr's maul's triple at a tenth:** settled by G14 (triple is past the ceiling): +25% a step, up to double.
+5. **Dawnblade's 4 Fervor at once:** undone: no balancing rules. G11 is withdrawn, so the 4 arrive at once.
+6. **Martyr's maul's triple at a tenth:** undone: no balancing rules. G14 is withdrawn: +50% a step, up to triple, as the spine says.
 7. **The staff's uncommons at two steps:** settled by G16 (two-handers' uncommons carry two steps and their effect).
-8. **Cistern rod's Clarity at full length:** settled by the second round's "Too strong" ruling: short (G1) whenever it fires.
+8. **Cistern rod's Clarity:** settled by the director: universal statuses. Clarity is at its own length again.
 9. **Prior's mace and Canopy staff** changed the spine's table lines (the Ward to the ally drawing most, a second Shield target): settled by "Cards and names": they stand.
 10. **Mender's mace against the relic's Mending icon:** settled by "Same cards in two places": the relic changes, and Mender's mace stays.
+11. **Mender's mace's Regen and Shepherd's staff's Clarity at the fight's start:** settled by the director: universal statuses. Both are at their own length again.
+12. **Sunhammer's Burn:** undone: no balancing rules. Several a swing again, as the spine says.
+13. **The Censer mace,** a free heal in the old Mercy's shape: undone: no balancing rules. It stays as written, for the balance pass.
 
 ## NEW
 
@@ -439,8 +442,7 @@ Every item is settled by the lead's rulings (`../fill-rulings.md`) and applied a
 
 ## Least sure
 
-Five of the first list were settled by rulings and are gone: the Censer mace (it stays, for the balance pass to watch), the full Regen and Clarity at the start (short, G1), Fervor's definition (G4), Sunhammer's Burn (a few), and the staff's two-step uncommons (G16).
+Five of the first list are settled and gone. Three went to the director's word that balance waits for its pass: the Censer mace, the size of a whole Regen or Clarity at every start, and Sunhammer's several Burn a swing. The other two went to rulings: Fervor's definition (G4) and the staff's two-step uncommons (G16).
 1. **Brimming rod's gift** of 45 to 100 MP a cast may read as bookkeeping in the log. If it does, a fifth.
-2. **Chain wand on the Stormcaller:** every swing hits four foes, all of them Shocked. Beside Stormweave, every swing is an action that hits three or more foes and adds Surge. G11 holds Surge to one stack every 2 ticks, and a wand's 6.6-tick swing stays under that.
+2. **Chain wand on the Stormcaller:** every swing hits four foes, all of them Shocked. Beside Stormweave, every swing is an action that hits three or more foes and adds Surge.
 3. **Hexblade at one stack** is small, except on the Hexer, which feeds three of the five itself.
-4. **Dawnblade under G11:** I read the limit as spacing a gain of 4 over 8 ticks. If the engine drops the extra stacks instead, Dawnblade is one Fervor (+5%) a fall and needs re-sizing.

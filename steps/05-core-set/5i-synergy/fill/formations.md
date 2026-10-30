@@ -4,7 +4,7 @@ Oct 30, 2026. The 32 formations of `spine.md` section 6, written in full and in 
 
 Each formation gives its rarity, the **card** (one line, as the player reads it), its three **seats** (the seat's text as the player reads it, then the numbers), its **party effect** if it has one, its **shape** (what the three seats add up to), its **hooks** and its **builds**.
 
-**Updated Oct 30 with the lead's rulings** (`fill-rulings.md`): the global rulings G1 to G10 and the section "The formations". The challenges they settled are listed at the end.
+**Updated Oct 30 with the lead's rulings** (`fill-rulings.md`), in three rounds. The third round is the director's, and it wins where the rounds differ: statuses are universal, and there are no balancing rules (synergies may be overpowered; the balance pass comes after the build). The challenges each round settled, and those it undid, are listed at the end.
 
 ## The words, as numbers
 
@@ -24,7 +24,7 @@ A seat's stat step is 1.25 gear steps (`FORMATION_STEP` in `content/core-set/for
 | Abilities cost less | the cost stat (engine 3) | −10 is a tenth less |
 | Evasion, Thorns, Lifesteal, Crit damage | medium 20; medium 150, high 300; medium 10%; medium +25 | |
 
-**Statuses keep their own numbers:** Taunt 20 ticks, Guard +3,000 Armor for 28, Haste +40 speed for 20, Slow −40 for 24, Weaken −30% for 20, Stun 8, Silence 16, Regen 8% of max HP every 4 ticks for 24, Might 6% a stack (one spent per action, cap 15), a Shield's cap half its holder's max HP. **G1:** a status can be applied for less than its own length, never more; "short" is half its own length, and a shorter length written here stands. **"Taunts all fight"** is Taunt at the start, given again each time it ends, so Taunt is never applied for longer than its own length.
+**Statuses keep their own numbers:** Taunt 20 ticks, Guard +3,000 Armor for 28, Haste +40 speed for 20, Slow −40 for 24, Weaken −30% for 20, Stun 8, Silence 16, Regen 8% of max HP every 4 ticks for 24, Might 6% a stack (one spent per action, cap 15), a Shield's cap half its holder's max HP. **Statuses are universal** (the director, third round): a formation applies a status at its own length, never shorter or longer. **"Taunts all fight"** is Taunt at the start, given again each time it ends, so Taunt keeps its own length.
 
 **Marked (G2):** a debuff on a foe, 14 ticks, Refresh. The party's basic attacks pick a Marked foe, by draw among several. Each unit keeps one Mark: a new Mark it applies moves its old one. Abilities follow their own targeting. While a foe Taunts, only basic attacks with Seek follow the Mark past it. **Heat (G3):** +3% damage a stack, up to 15, kept all fight. No formation uses Fervor.
 
@@ -87,12 +87,12 @@ A seat's stat step is 1.25 gear steps (`FORMATION_STEP` in `content/core-set/for
 **Builds:** Overflow 1 ●●●, Lockdown ●● (cheaper locks), Bonfire ● (the feeding casts).
 
 ### Long march · common
-**Card:** "Pace yourselves: everyone mends in each fight's first ticks, and hits a little softer."
+**Card:** "Pace yourselves: everyone starts each fight with Regen, and hits a little softer."
 - **Marcher** ×3 · nothing.
 
-**Party effect:** when each fight starts, every ally gains a short Regen: 8 ticks, two pulses of 8%, 16% of its max HP (G1: shorter than half its own 24, as written). Every ally deals 10% less damage, all fight.
-**Shape:** even and steady: a little health back every fight, paid for in every fight's damage.
-**Hooks:** a formation status reacting to `fight_start` with `apply` regen (duration 8), and a −10 boost on all the holder's hits.
+**Party effect:** when each fight starts, every ally gains Regen at its own length: 24 ticks, six pulses of 8%, 48% of its max HP. The spine's "short" goes, since statuses are universal. Every ally deals 10% less damage, all fight.
+**Shape:** even and steady: health back every fight, paid for in every fight's damage.
+**Hooks:** a formation status reacting to `fight_start` with `apply` regen (its own length), and a −10 boost on all the holder's hits.
 **Builds:** Pact 1 ●● (refilling what the pact costs), Toll ● (the anchor topped up), Phoenix ● (a unit back at low HP survives the next fight).
 
 ### First light · common
@@ -151,12 +151,12 @@ A seat's stat step is 1.25 gear steps (`FORMATION_STEP` in `content/core-set/for
 ### Hammer and anvil · rare
 **Card:** "One takes the blows, one strikes like a falling hill, one builds stone around the striker."
 - **Anvil** · "Draws more. Guarded when each fight starts." Aggro +13; Guard at the fight's start, at its own numbers.
-- **Hammer** · reads its weapon. "With a slow weapon: basic attacks come half as often and deal triple. Otherwise: Attack up." With a great weapon, mace or staff: attack speed −100 (half as often, as the Millstone writes it) and +200% on its basic attacks' hits. Triple stays: like the Worldbreaker's, it's a swing shape that swings half as often (G14). With any other weapon: Attack +1,250. Under G5 the seat's reshape is one swing shape among the others, and a unit takes one: its passive's first, then its pieces' in slot order, then the seat's. A unit that already has a shape (Phalanx, the Millstone, the Hummingbird charm, the Worldbreaker) gets its weapon's stat +1 (Attack or Magic +1,250) from this seat instead.
+- **Hammer** · reads its weapon. "With a slow weapon: basic attacks come half as often and deal triple. Otherwise: Attack up." With a great weapon, mace or staff: attack speed −100 (half as often, as the engine reads it) and +200% on its basic attacks' hits. With any other weapon: Attack +1,250. It multiplies with every other reshape the unit holds (Phalanx, the Millstone, the Hummingbird charm, the Worldbreaker). A Hoplite with a great weapon here swings once every 51 ticks for six times a swing.
 - **Mason** · "Its Shields and Guards on an ally go to the Hammer first." When one of the Mason's abilities or pieces gives a Shield or a Guard to an ally other than itself, its first pick is the Hammer, if the Hammer can take it (a Shield at its cap passes to the usual target). Examples: a Geomancer's Earthen shell covers itself and the Hammer, a Knight's Fortify Guards the Hammer, a Hoplite's Paired guard covers itself and the Hammer.
 
 **Party effect:** none.
 **Shape:** the most lopsided rare: one huge swing, one wall, and one builder whose stone goes to the swing.
-**Hooks:** Anvil: a seat status reacting to `fight_start`. Hammer: engine 13 (reads its weapon kind's speed), then `attack_speed` and a `basic` boost, which exist, and one swing shape per unit (G5). Mason: engine 13 (reads abilities that give a Shield or Guard) and engine 14, which changes an ability's target here (**NEW** 7), with the Hammer named by its seat (**NEW** 1).
+**Hooks:** Anvil: a seat status reacting to `fight_start`. Hammer: engine 13 (reads its weapon kind's speed), then `attack_speed` and a `basic` boost, which exist. Mason: engine 13 (reads abilities that give a Shield or Guard) and engine 14, which changes an ability's target here (**NEW** 7), with the Hammer named by its seat (**NEW** 1).
 **Builds:** Landslide 2 ●●● (the hammer seat, with stone on it for the Cornerstone maul and Bedrock), Snap ●● (the smash after a shatter), Lockdown ● (one big swing in a window).
 
 ### Hunting party · rare
@@ -174,31 +174,31 @@ A seat's stat step is 1.25 gear steps (`FORMATION_STEP` in `content/core-set/for
 **Card:** "One holds the door, one feeds the fire, one carries it to every burning foe."
 - **Keeper** · "Taunts and is Guarded when each fight starts." Taunt and Guard, at their own numbers.
 - **Stoker** · "Hasted when each fight starts. Basic attacks a fifth faster." Haste; `attack_speed` +20.
-- **Torch** · "Each of its basic attacks adds a Burn to every foe that's already burning." One Burn on each burning foe, for every basic attack it lands. Abilities, extra strikes, Thorns and statuses don't.
+- **Torch** · "Each of its hits adds a Burn to every foe that's already burning." One Burn on each burning foe, for every hit it lands (basic attacks, abilities and extra strikes; not Thorns or statuses).
 
 **Party effect:** none.
-**Shape:** the danger on the Keeper while the fire catches, the speed on the Stoker, the spread on the Torch, on the Torch's own beat: a fast weapon spreads the fire more often.
-**Hooks:** Keeper and Stoker: seat statuses reacting to `fight_start`. Torch: a reaction to `hit_lands` (whose: holder, kind: basic) applying one burn to `{ side: foes, where: { has: burn }, pick: all }`. Nothing new.
+**Shape:** the danger on the Keeper while the fire catches, the speed on the Stoker, the spread on the Torch. An Area hit on five foes is five hits: a Torch's Fireball on five burning foes adds five Burn to each.
+**Hooks:** Keeper and Stoker: seat statuses reacting to `fight_start`. Torch: a reaction to `hit_lands` (whose: holder) applying one burn to `{ side: foes, where: { has: burn }, pick: all }`. Nothing new.
 **Builds:** Bonfire 2 ●●● (keeper, stoker and torch), Harvest ● (fire on the whole field).
 
 ### Hoarfrost line · rare
 **Card:** "Two lay frost with every blow; the third waits to break what freezes."
 - **Frost** ×2 · "Basic attacks add a Chill." One Chill for each basic attack that lands.
-- **Breaker** · "When any foe's Chill shatters, its next hit deals double." +100% on its next hit (the first hit of its next action), kept until it lands. A second shatter before then adds nothing.
+- **Breaker** · "When any foe's Chill shatters, its next hit deals triple." +200% on its next hit (the first hit of its next action), kept until it lands. A second shatter before then adds nothing.
 
 **Party effect:** none.
 **Shape:** two feeders and a hammer on a fuse.
-**Hooks:** Frost: a rider on `basic` applying one chill. Breaker: a reaction to `status_capped` (whose: foe, status chill) applies a hidden buff (Refresh) with a +100 boost, which removes itself on the holder's next `hit_lands`. Nothing new.
+**Hooks:** Frost: a rider on `basic` applying one chill. Breaker: a reaction to `status_capped` (whose: foe, status chill) applies a hidden buff (Refresh) with a +200 boost, which removes itself on the holder's next `hit_lands`. Nothing new.
 **Builds:** Snap 2 ●●● (Chill on two units' basic attacks, and a payoff after each shatter), Lockdown ● (the shatter's Stun as a window).
 
 ### Reaping line · rare
 **Card:** "One holds the whole field on itself; two reap through it."
 - **Beacon** · "Taunts all fight. Thorns. Heals on it are halved." Taunt, given again each time it ends; Thorns medium (150); healing received −50.
-- **Scythe** ×2 · "Its basic attacks hit every foe, for a fifth each." Each basic attack hits its usual target for a fifth of its usual damage, carrying what its basic attacks carry. It also hits every other foe for a fifth, damage only: those extra hits carry no riders or statuses. That totals 160% of a swing against eight foes, 100% against five, and 40% against two. It's a swing shape (G5): a unit that already has one (Phalanx, the Millstone, the Hummingbird charm, the Worldbreaker) gets its weapon's stat +1 (Attack or Magic +1,250) from this seat instead.
+- **Scythe** ×2 · "Its basic attacks hit every foe, for a fifth each." Each basic attack is an Area hit on every foe at a fifth of its usual damage, so Taunt and Hidden don't steer it. Each of those hits is a basic-attack hit and carries what its basic attacks carry, riders and statuses included. That totals 160% of a swing against eight foes, 100% against five, and 40% against two. It multiplies with any other reshape the unit holds.
 
 **Party effect:** none.
 **Shape:** a beacon and two scythes. The field stays on one unit, which pays for it in healing, while the scythes sink every foe evenly: worth most against a crowd, less against a few.
-**Hooks:** Beacon: a seat status reacting to `fight_start` and to `status_ended` (taunt) by applying Taunt; `thorns` and `healing_received`. Scythe: a −80 `basic` boost, plus an extra strike spread over every other foe (`{ side: foes, pick: all, exclude }`) that carries damage only (**NEW** 9), under one swing shape per unit (G5).
+**Hooks:** Beacon: a seat status reacting to `fight_start` and to `status_ended` (taunt) by applying Taunt; `thorns` and `healing_received`. Scythe: its basic attacks aimed by a rule, `{ side: foes, pick: all }` (**NEW** 8), with a −80 `basic` boost.
 **Builds:** Harvest 2 ●●● (the beacon and two scythes), Toll ●● (an anchor that Taunts all fight with thorns).
 
 ### Relay · rare
@@ -226,8 +226,8 @@ A seat's stat step is 1.25 gear steps (`FORMATION_STEP` in `content/core-set/for
 
 ### Thorn hedge · rare
 **Card:** "A thorned wall that draws the blows, and two who make every attacker pay."
-- **Anchor** · "Draws far more. Thorns." Aggro +25, Thorns medium (150).
-- **Thorns** ×2 · "A foe that hits the Anchor is Weakened, briefly." When a foe's hit lands on the Anchor, the unit in this seat Weakens that foe for 6 ticks (G1: shorter than half Weaken's own 20, as written).
+- **Anchor** · "Draws far more. Thorns, high." Aggro +25, Thorns high (300).
+- **Thorns** ×2 · "A foe that hits the Anchor is Weakened." When a foe's hit lands on the Anchor, the unit in this seat Weakens that foe, at Weaken's own 20 ticks. The spine's "briefly" goes, since statuses are universal. Each hit gives the Weaken again, so a foe that keeps striking the Anchor stays Weakened.
 
 **Party effect:** none.
 **Shape:** a hedge: one unit to strike, and two that make striking it hurt. If both Thorns seats fall, the Weaken stops.
@@ -238,11 +238,11 @@ A seat's stat step is 1.25 gear steps (`FORMATION_STEP` in `content/core-set/for
 **Card:** "One bleeds for power, one drinks it back, one pours life into the bleeder."
 - **Bleeder** · "Loses a little HP every tick. Its hits deal half again as much." It pays 0.5% of its max HP a tick (20% over a 40-tick fight, 40% over 80). Under G12 the price is HP lost at once: it isn't damage, no Shield soaks it, nothing reacts to it, and it never takes the Bleeder below 1 HP. Its hits deal +50%.
 - **Drinker** · "Lifesteal." Lifesteal medium (10%).
-- **Donor** · "Its heals on the Bleeder are half again as big." Direct heals the Donor casts on the Bleeder +50% (G9: the Bleeder is there all fight). A Regen it applies is an ordinary Regen, since statuses keep their numbers.
+- **Donor** · "Its heals on the Bleeder are doubled." Direct heals the Donor casts on the Bleeder are doubled. A Regen it applies is an ordinary Regen, since statuses keep their numbers.
 
 **Party effect:** none.
 **Shape:** life moving through three hands: one spends it, one takes it from foes, one gives it.
-**Hooks:** Bleeder: a seat status pulsing every tick that pays HP (engine 4, as G12 defines it); a +50 boost on all its hits. Drinker: `lifesteal`. Donor: a `healing` boost of +50, scaled by `when` the healed unit holds the Bleeder's hidden seat status (`of: target`, as Judgement reads its target). Nothing new.
+**Hooks:** Bleeder: a seat status pulsing every tick that pays HP (engine 4, as G12 defines it); a +50 boost on all its hits. Drinker: `lifesteal`. Donor: a `healing` boost of +100, scaled by `when` the healed unit holds the Bleeder's hidden seat status (`of: target`, as Judgement reads its target). Nothing new.
 **Builds:** Pact 2 ●●● (the bleeder, the drinker and the donor).
 
 ### Pyre of heroes · rare
@@ -297,10 +297,10 @@ A seat's stat step is 1.25 gear steps (`FORMATION_STEP` in `content/core-set/for
 **Card:** "The longer the fight, the hotter everyone burns; but the forge is slow to light."
 - **Forgehand** ×3 · nothing.
 
-**Party effect:** every 4 ticks, every ally gains a Heat. When each fight starts, every ally is Slowed for 8 ticks (G1: shorter than half Slow's own 24, as written).
-**Heat (G3):** +3% damage a stack on the holder's hits, up to 15, kept all fight. One stack every 4 ticks is inside G11's one every 2. Here that's +30% by tick 40 and the cap (+45%) at tick 60, so a 40-tick and an 80-tick fight end about half apart. Like any boost, it doesn't raise Burn's damage.
-**Gives up:** the start: 8 ticks at −40% speed, while the foes are fresh.
-**Hooks:** a formation status pulsing every 4 ticks that applies one Heat (a new counter, section 1), and a reaction to `fight_start` applying Slow for 8 ticks.
+**Party effect:** every 4 ticks, every ally gains a Heat. When each fight starts, every ally is Slowed at Slow's own length, 24 ticks. The spine's "for a moment" goes, since statuses are universal; the line still gives up the start, now most of a regular fight's.
+**Heat (G3):** +3% damage a stack on the holder's hits, up to 15, kept all fight. Here that's +30% by tick 40 and the cap (+45%) at tick 60, so a 40-tick and an 80-tick fight end about half apart. Like any boost, it doesn't raise Burn's damage.
+**Gives up:** the start: 24 ticks at −40% speed, while the foes are fresh.
+**Hooks:** a formation status pulsing every 4 ticks that applies one Heat (a new counter, section 1), and a reaction to `fight_start` applying Slow at its own length.
 **Builds:** Bonfire 3 ●●● (the party's own heat), Landslide ●● (power that isn't spent, so the slowest hitter keeps all of it), Pact ● (long fights).
 
 ### The ambuscade · legendary
@@ -314,14 +314,14 @@ A seat's stat step is 1.25 gear steps (`FORMATION_STEP` in `content/core-set/for
 **Builds:** Ambush 3 ●●● (an opening that clears a room), Cuts ● (fast hitters' first swings).
 
 ### The choir · legendary
-**Card:** "Each ability a voice casts makes the next voice's next ability free. In a fight, nobody gains MP any other way."
+**Card:** "Each ability a voice casts makes the next voice's next ability free. Nobody regains MP from MP regen."
 - **First voice**, **Second voice**, **Third voice** (a ring: the first follows the third) · "When the voice before casts an ability, this voice's next ability is free."
 
-**Party effect:** in a fight, no ally gains MP from anything (MP regen, Clarity, Refrain, Siphon): its only mana is the casts the choir makes free. Between fights, tonics and the bench work as usual.
+**Party effect:** every ally's MP regen is 0. Every other source of MP still works: Clarity, Refrain, Siphon, tonics, the bench.
 A free cast waits on its voice until that voice casts. A second cue before then adds nothing. A free cast cues the next voice like any other cast.
-**Gives up:** MP from anything else.
-**Shape:** a round: the casting passes from voice to voice. A voice that casts twice in a row pays for the second, out of a pool nothing refills until the fight ends.
-**Hooks:** a reaction to `action_resolve` (kind: ability) applies a hidden Cue (Refresh) to the next seat's unit (**NEW** 1). The Cue sets the cost of the holder's next ability to 0 and ends when it resolves (engine 3, through engine 14). No MP gained in a fight (**NEW** 8).
+**Gives up:** regen.
+**Shape:** a round: the casting passes from voice to voice. A voice that casts twice in a row pays for the second.
+**Hooks:** a reaction to `action_resolve` (kind: ability) applies a hidden Cue (Refresh) to the next seat's unit (**NEW** 1). The Cue sets the cost of the holder's next ability to 0 and ends when it resolves (engine 3, through engine 14). The formation's `stats`: MP regen −100%.
 **Builds:** Overflow 3 ●●● (casts that pay for the next), Lockdown ●● (free locks).
 
 ### The undying · legendary

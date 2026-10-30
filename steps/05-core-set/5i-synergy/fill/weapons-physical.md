@@ -62,10 +62,10 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 - **Builds:** Hunt 2 ●●●, Cuts ●.
 
 ### Thousandth cut · dagger · legendary
-- **Card:** Dagger. Fits Assassin, Ranger, Hexer. Each hit it lands adds a Cut, at most one every 2 ticks, kept for the rest of the fight, up to 25. Its hits deal 2% more for each Cut.
+- **Card:** Dagger. Fits Assassin, Ranger, Hexer. Each hit it lands adds a Cut, kept for the rest of the fight, up to 25. Its hits deal 2% more for each Cut.
 - **Weapon:** medium, medium, Attack.
-- **Numbers:** +2% a Cut on its hits (physical and magical), with a cap of 25 Cuts (+50%) and no decay. Basic attacks, extra strikes and ability hits all count, but a counter gains at most one stack every 2 ticks (G11). An extra strike that lands with its swing, or a three-hit ability, gives one Cut, so the count follows the wearer's actions more than its hits. Status damage is neither counted nor boosted. A dagger unit without Haste lands 9 or 10 counted hits in a 40-tick fight (+18% to +20% by its end). A Hasted blur lands about 14 (+28%) and reaches the cap near tick 70, so its 40-tick and 80-tick fights end a little under twice apart.
-- **Hooks:** the counter **Cuts**, intensity, cap 25, shown as an icon with its number, with a boost on both damage tags of 2 × its own stacks (`of: holder`). A piece status reacts to `hit_lands` of any kind → `apply` cuts, 1 stack, `to: self`, under G11's gain limit (NEW H).
+- **Numbers:** +2% a Cut on its hits (physical and magical), with a cap of 25 Cuts (+50%) and no decay. Basic attacks, extra strikes and ability hits all count. Status damage is neither counted nor boosted. A dagger unit without Haste or Double strike lands about 7 to 12 hits in a 40-tick fight, so it ends that fight at +14% to +24% and an 80-tick fight at about twice that. A blur (Haste and Double strike) reaches the cap around tick 60, so its 40-tick and 80-tick fights end about half apart.
+- **Hooks:** the counter **Cuts**, intensity, cap 25, shown as an icon with its number, with a boost on both damage tags of 2 × its own stacks (`of: holder`). A piece status reacts to `hit_lands` of any kind → `apply` cuts, 1 stack, `to: self`.
 - **Builds:** Cuts 3 ●●●, Snap ●● (the Hexer's Cold hex hits), Hunt ●.
 
 ### Quietus · dagger · legendary
@@ -94,10 +94,10 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 - **Builds:** Pact 1 (Lifesteal on a fast hitter), Cuts ●.
 
 ### Wildcat claws · fist weapons · uncommon
-- **Card:** Fist weapons. Fits Monk, Vampire. Attack +1. Starts each fight with a short Haste.
+- **Card:** Fist weapons. Fits Monk, Vampire. Attack +1. Hasted when each fight starts.
 - **Weapon:** medium, medium, Attack.
-- **Numbers:** Attack +1,000. Haste at +40 speed (its own) for 10 ticks, half its own 20 (G1). That's about a quarter of a regular fight. The fist weapons keep Haste at the start (G7).
-- **Hooks:** a piece status: `fight_start` → `apply` haste, `duration: 10`, `to: holder`.
+- **Numbers:** Attack +1,000. Haste at its own numbers (+40 speed for 20 ticks, about half a regular fight), since statuses are universal. The fist weapons keep Haste at the start (G7).
+- **Hooks:** a piece status: `fight_start` → `apply` haste, `to: holder`.
 - **Builds:** Cuts 1, Ambush 1 (the hastened second), Bonfire ● (a stoker), Snap ● (a frost seat that acts often).
 
 ### Brass knuckles · fist weapons · uncommon
@@ -154,10 +154,10 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 - **Builds:** Toll 1, Landslide 1 (the blows kept on the stone), Bonfire ● (the keeper), Phoenix ● (the martyr).
 
 ### Clarion blade · sword · uncommon
-- **Card:** Sword. Fits Knight, Bramble knight, Assassin. HP +1. Starts each fight with a short Taunt.
+- **Card:** Sword. Fits Knight, Bramble knight, Assassin. HP +1. Taunts when each fight starts.
 - **Weapon:** medium, medium, Attack.
-- **Numbers:** HP +500. Taunt for 10 ticks, half its own 20 (G1), so it covers the fight's opening, not half of it. It stays beside Mocking mail (G7), and only the Bramble knight can wear both. On the Assassin it costs Vanish its first 10 ticks: Taunt ends Hidden, and Hidden doesn't land on a Taunting unit.
-- **Hooks:** a piece status: `fight_start` → `apply` taunt, `duration: 10`, `to: holder`. Addition 17 (Taunt ends Hidden).
+- **Numbers:** HP +500. Taunt at its own 20 ticks, about half a regular fight, since statuses are universal. It stays beside Mocking mail (G7), and only the Bramble knight can wear both. On the Assassin it costs Vanish its first 20 ticks: Taunt ends Hidden, and Hidden doesn't land on a Taunting unit.
+- **Hooks:** a piece status: `fight_start` → `apply` taunt, `to: holder`. Addition 17 (Taunt ends Hidden).
 - **Builds:** Toll 1 (an anchor from the first tick), Bonfire 1 (the keeper holds the early fight), Landslide ●, Harvest ● (the rod).
 
 ### Nettle blade · sword · uncommon
@@ -182,10 +182,10 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 - **Builds:** Ambush 2 ●●●, Landslide ● (the first blow).
 
 ### Oathkeeper · sword · legendary
-- **Card:** Sword. Fits Knight, Bramble knight, Assassin. While it Taunts, its basic attacks also hit every other foe for half.
+- **Card:** Sword. Fits Knight, Bramble knight, Assassin. While it Taunts, its basic attacks also hit every other foe.
 - **Weapon:** medium, medium, Attack.
-- **Numbers:** each other foe takes half a swing (385 at Attack 4) as an extra strike (the lead's second-round ruling; it was a full swing). These strikes ignore Taunt, reach Hidden foes and can be dodged. Taunt's own 20 ticks from Stand fast or Thicket put it on for about two thirds of a fight.
-- **Hooks:** a piece status: `status_gained` (taunt) → `apply` a sweep status; `status_ended` (taunt) → `remove` it. The sweep status has `strike` to every other foe (`side: foes, pick: all, exclude: targets`), sized at half. That needs NEW D: today a strike takes only the first unit its rule picks, at full size.
+- **Numbers:** each other foe takes a full swing (769 at Attack 4) as an extra strike. These strikes ignore Taunt, reach Hidden foes and can be dodged. Taunt's own 20 ticks from Stand fast or Thicket put it on for about two thirds of a fight.
+- **Hooks:** a piece status: `status_gained` (taunt) → `apply` a sweep status; `status_ended` (taunt) → `remove` it. The sweep status has `strike` to every other foe (`side: foes, pick: all, exclude: targets`). That needs NEW D: today a strike takes only the first unit its rule picks.
 - **Builds:** Toll 3 ●●●, Harvest 3 ●●● (the rod that sweeps), Landslide ●.
 
 ### Gravemark · sword · legendary
@@ -242,17 +242,17 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 - **Builds:** Harvest 2 ●●● (evening out), Landslide ●.
 
 ### Pike wall · spear · legendary
-- **Card:** Spear. Fits Hoplite, Valkyrie, Monk. When a foe hits an ally with less Armor than the wearer, the wearer strikes that foe with its spear, at most once every 3 ticks.
+- **Card:** Spear. Fits Hoplite, Valkyrie, Monk. When a foe hits an ally with less Armor than the wearer, the wearer strikes that foe with its spear.
 - **Weapon:** medium, medium, Attack.
-- **Numbers:** each strike is a full swing (881 at Attack 4), as an extra strike: physical, and it can crit, be dodged and carry what extra strikes carry. There's at most one strike every 3 ticks (the lead's ruling): at most about 13 in a 40-tick fight, around 11,500 at Attack 4, against a swarm on a Taunter. Unlimited, it would have been up to 35 strikes and 30,000.
-- **Hooks:** `hit_taken` (whose: ally), where the ally's Armor is below the holder's (NEW E) → addition 9 (a reaction that strikes, at `other`), with a 3-tick cooldown on the reaction (NEW F).
+- **Numbers:** each strike is a full swing (881 at Attack 4), as an extra strike: physical, and it can crit, be dodged and carry what extra strikes carry. It has no limit, as the spine wrote it. Against a swarm on a Taunter it can strike up to about 35 times in a regular fight, around 30,000 at Attack 4. That's for the balance pass to judge.
+- **Hooks:** `hit_taken` (whose: ally), where the ally's Armor is below the holder's (NEW E) → addition 9 (a reaction that strikes, at `other`).
 - **Builds:** Toll 3 ●●● (a warden that returns blows aimed at others), Landslide ●●, Bonfire ● (the keeper).
 
 ### Storm pike · spear · legendary
-- **Card:** Spear. Fits Hoplite, Valkyrie, Monk. Each hit it lands adds a Charge, at most one every 2 ticks, up to 6. At 6, its next basic attack that lands also calls lightning on every foe (light magical damage, from Attack) and spends the Charges.
+- **Card:** Spear. Fits Hoplite, Valkyrie, Monk. Each hit it lands adds a Charge, up to 10. At 10, its next basic attack that lands also calls lightning on every foe (light magical damage, from Attack) and spends the Charges.
 - **Weapon:** medium, medium, Attack. The spear's own damage stays physical.
-- **Numbers:** the lightning is light: 0.29 × Attack, so 1,160 to each foe at Attack 4 before Magic resist (10, 15 or 25 by rank). That's bigger than a Thunderstorm's touch, and free. A counter gains at most one stack every 2 ticks (G11), so Gale spear's three hits give one Charge. The cap is 6 Charges (the lead's ruling; it was 10 before G11), so the storm comes about as often as it did before G11. On a Valkyrie (Gale spear on a quick cooldown, plus swings) Charges come at about 0.18 a tick, or one storm every 33 ticks: about one in a regular fight, two in a boss fight. On a Monk with a spear it's one every 42 ticks, and on the Hoplite (Phalanx) about one every 75. The lightning is a reaction's damage, so it's not a hit: no crit, no Lifesteal, and it adds no Charges (it can't feed itself). Hits that land while the Charges stand at 6 add nothing. Charge has a cap and is spent, so it grows with a fight's length, never compounds.
-- **Hooks:** the counter **Charge**, intensity, cap 6, shown. A piece status: `hit_lands` of any kind → `apply` charge 1 to self, under G11's gain limit (NEW H). `status_capped` (charge) → `apply` a ready status. The ready status: `hit_lands` of kind `basic` → `damage` magical, 0.29 × Attack, to every foe; `remove` charge; `remove` itself.
+- **Numbers:** the lightning is light: 0.29 × Attack, so 1,160 to each foe at Attack 4 before Magic resist (10, 15 or 25 by rank). That's bigger than a Thunderstorm's touch, free, and comes about once every 30 ticks on a Valkyrie (Gale spear's three hits on a quick cooldown, plus swings). That makes about one storm in a regular fight and two or three in a boss fight. The lightning is a reaction's damage, so it's not a hit: no crit, no Lifesteal, and it adds no Charges (it can't feed itself). Hits that land while the Charges stand at 10 add nothing. Charge has a cap and is spent, so it grows with a fight's length, never compounds.
+- **Hooks:** the counter **Charge**, intensity, cap 10, shown. A piece status: `hit_lands` of any kind → `apply` charge 1 to self. `status_capped` (charge) → `apply` a ready status. The ready status: `hit_lands` of kind `basic` → `damage` magical, 0.29 × Attack, to every foe; `remove` charge; `remove` itself.
 - **Builds:** Harvest 3 ●●●, Cuts ●●.
 
 ---
@@ -274,11 +274,11 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 - **Builds:** Hunt 1 (the back row, the dodgers), Cuts ●.
 
 ### Snaring bow · bow · uncommon
-- **Card:** Bow, two hands. Fits Ranger, Bard. Attack +1, Accuracy medium. Each time it looses a basic attack while a foe is winding up, that foe gains a short Slow (the one with the highest Attack or Magic, if several are).
+- **Card:** Bow, two hands. Fits Ranger, Bard. Attack +1, Accuracy medium. Each time it looses a basic attack while a foe is winding up, that foe is Slowed (the one with the highest Attack or Magic, if several are).
 - **Weapon:** medium, medium, Attack.
-- **Numbers:** Attack +1,000, Accuracy +20 (the two-hander's two steps, G16). Slow is its own −40 speed, for 12 ticks (half its own 24, G1). It stretches what's left of the wind-up, so a cast 3 ticks from landing takes about 4, and it slows the foe's swings and cooldowns for the 12 ticks. With a foe winding up, a bow swing every 8.8 ticks slows a boss's big move about half the times it comes. It slows whoever is casting, whether or not the arrow hits that foe. With nobody winding up, it does nothing.
+- **Numbers:** Attack +1,000, Accuracy +20 (the two-hander's two steps, G16). Slow is at its own numbers (−40 speed for 24 ticks), since statuses are universal. It stretches what's left of the wind-up, so a cast 3 ticks from landing takes about 4, and it slows the foe's swings and cooldowns for the 24 ticks. With a foe winding up, a bow swing every 8.8 ticks slows a boss's big move about half the times it comes. It slows whoever is casting, whether or not the arrow hits that foe. With nobody winding up, it does nothing.
 - **Why it changed:** the second round's G7 ruling. The Skyshot bow's Seek on abilities repeated Tracker's coat for the Ranger and Bard, so the bow's uncommon changed, and so did its name. It differs from the Glacial rod (its basic attacks Slow their target, one in three; worn by other classes) and from Pinning arrow (a Ranger version that Slows the arrow's own target).
-- **Hooks:** a piece status: `action_resolve` of kind `basic` → `apply` slow, `duration: 12`, `to: { side: foes, where: { casting: true }, pick: highest, by: { stats: [attack, magic] } }`, with no `ifNone`, so nobody is picked when no foe is casting. All of this exists (`casting` since engine 0.13).
+- **Hooks:** a piece status: `action_resolve` of kind `basic` → `apply` slow, `to: { side: foes, where: { casting: true }, pick: highest, by: { stats: [attack, magic] } }`, with no `ifNone`, so nobody is picked when no foe is casting. All of this exists (`casting` since engine 0.13).
 - **Builds:** Lockdown 1 (a slow that holds a big move back without bursting), Toll ● (fewer blows), Hunt ● (the back-row caster).
 
 ### Broadhead bow · bow · uncommon
@@ -372,9 +372,8 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 ### Worldbreaker · great weapon · legendary
 - **Card:** Great weapon, two hands. Fits Knight, Hoplite, Geomancer, Vampire. Its basic attacks come half as often, deal triple, and Stun their target.
 - **Weapon:** medium, medium, Attack.
-- **Numbers:** attack speed −100 (a swing every 25.6 ticks), +200% on basic attacks, and Stun on each swing that lands (its own 8 ticks, Fizzle). At Attack 4 a swing is 3,600 before crit, every 25.6 ticks: 1.5 times a plain great weapon's damage a tick, and a foe Stunned about a third of the time. Riders on basic attacks fire half as often. The triple stays under G14: it's a swing shape that swings half as often.
-- **One swing shape (G5):** half as often for triple is a swing shape, so a unit takes only one. A passive's shape comes first, then the first piece's in slot order. The Stun goes with the shape (the lead's correction), since a Stun on every swing at normal speed would be a lock. On a unit that already has a shape, Worldbreaker gives Attack +1 and nothing else. On the Hoplite, Phalanx keeps its shape: it swings every 25.6 ticks for double, with no Stun. On the other three wearers the weapon comes first, so it beats a Millstone, a Hummingbird charm or a Hammer seat, and each of those gives Attack +1 instead.
-- **Hooks:** stats `attack_speed` −100, a boost on tag `basic` of +200 and the weapon's own `apply` of stun, all three under the one-shape rule (G5, in the gathered list). They all give way together to Attack +1.
+- **Numbers:** attack speed −100 (a swing every 25.6 ticks), +200% on basic attacks, and Stun on each swing that lands (its own 8 ticks, Fizzle). At Attack 4 a swing is 3,600 before crit, every 25.6 ticks: 1.5 times a plain great weapon's damage a tick, and a foe Stunned about a third of the time. Riders on basic attacks fire half as often. Its shape and Stun hold whatever else the unit holds, so it stacks with Phalanx or Millstone (see "least sure").
+- **Hooks:** stats `attack_speed` −100, a boost on tag `basic` of +200, and the weapon's own `apply` of stun.
 - **Builds:** Landslide 3 ●●● (the heaviest swing), Lockdown 3 ●●.
 
 ---
@@ -382,15 +381,15 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 ## CHALLENGES
 
 1. **Weeping kris as a small Notched knife:** settled by the physical weapons' ruling (its first hit on each foe adds a few Bleed).
-2. **Pike wall with no limit:** settled by the physical weapons' ruling (at most once every 3 ticks).
-3. **Short Haste and Taunt at the start:** settled by G1 (half length, 10 ticks). G7 keeps the fist weapons' Haste and the sword's Taunt.
-
-4. **Nettle blade, a special stat alone on an uncommon:** settled by G6 (Thorns is its step, and its effect is half its Thorns added to each swing; it lost Aggro +1).
-5. **Skyshot bow repeating Tracker's coat:** settled by the second round's G7 (now the Snaring bow: a short Slow on a foe winding up).
-6. **Oathkeeper's reach at full swings:** settled by the second round's ruling (its sweep hits every other foe for half).
-7. **Cuts and Charge growing with every hit of a swarm or a multi-hit:** settled by G11 (at most one stack every 2 ticks).
-8. **Always-crits against Gambler's coin (Quietus, Still hand, Drawn steel):** settled by G17 (the always-crit wins).
-9. **Two-handers' uncommons at two steps:** settled by G16. Worldbreaker's triple is kept by G14.
+2. **Pike wall with no limit:** undone: no balancing rules. It's uncapped again, as the spine wrote it.
+3. **Short Haste and Taunt at the start:** settled by the director: universal statuses. Both last their own 20 ticks (Wildcat claws, Clarion blade), and G7 keeps both pieces. "At the start" still makes sense at full length, so nothing else changes.
+4. **Nettle blade, a special stat alone on an uncommon:** settled by G6, kept (Thorns is its step, and its effect is half its Thorns added to each swing; it lost Aggro +1).
+5. **Skyshot bow repeating Tracker's coat:** settled by the second round's G7, kept (now the Snaring bow). Its Slow is settled by the director: universal statuses, at its own 24 ticks.
+6. **Oathkeeper's sweep at half:** undone: no balancing rules. It hits every other foe for a full swing again.
+7. **Cuts and Charge with a rate limit, and Storm pike's cap of 6:** undone: no balancing rules. There's no rate limit, and Storm pike is back at 10 Charges.
+8. **Worldbreaker under one swing shape:** undone: no balancing rules (G5 is withdrawn). Its shape and Stun hold whatever else the unit holds.
+9. **Always-crits against Gambler's coin (Quietus, Still hand, Drawn steel):** settled by G17, kept (the always-crit wins).
+10. **Two-handers' uncommons at two steps:** settled by G16, kept. G14 is withdrawn, and Worldbreaker's triple is the spine's line anyway.
 
 ## NEW (engine needs beyond the spine's list)
 
@@ -399,15 +398,15 @@ Oct 30, 2026. One share of the fill (`../fill-brief.md`): the dagger, fist weapo
 - **C. "Hasn't acted this fight"** as a unit condition: true until the unit's first action resolves. Mine: Quietus.
 - **D. Extra strikes, sized and spread.** `strike` takes a share of the weapon's damage (half, a quarter, 80%), and a rule that picks several foes strikes each of them (today `strikes()` takes only the first unit the rule picks). Mine: Sweeping blade, Glaive, Oathkeeper, Volley bow, and Flurry wraps' weakening. Elsewhere: Chain wand, The storm front, the Reaping line's Scythes.
 - **E. Comparing two units' stats** as a condition (an ally with less Armor than the wearer). Mine: Pike wall. Elsewhere: Phalanx shield.
-- **F. A cooldown on a reaction** (fires at most once every N ticks). Needed now that the ruling caps Pike wall at one strike every 3 ticks.
+- **F. A cooldown on a reaction** (fires at most once every N ticks). No longer needed by this share: Pike wall's cap is undone.
 - **G. A side's state as a reaction's `if`** (no foe is Marked). It's in the lead's gathered list. Mine: Gravemark, from the ruling.
-- **H. A counter's gain limit** (G11): a counter gains at most one stack every 2 ticks, however many triggers fire. Mine: Thousandth cut (Cuts), Storm pike (Charge). Every share's counters use it.
+- **H. A counter's gain limit:** withdrawn with G11. Nothing here needs it.
 
 ## Least sure
 
 1. **Marked's own numbers:** settled by G2.
 2. **Gravemark Marks nothing itself:** settled by the physical weapons' ruling (if no foe is Marked, it Marks).
-3. **Worldbreaker on the Hoplite, or with Millstone:** settled by G5 (one swing shape a unit). The Stun goes with the shape, and a unit that already has one gets Attack +1 only.
+3. **Worldbreaker on the Hoplite, or with Millstone.** With G5 withdrawn, the slowings add up again: a swing every 38 ticks for four times the damage, with a Stun, close to the "statue" the director rejected in 5g. It's a choice the player makes, and it's for the balance pass to judge.
 4. **Two-handers' worth.** The uncommons' two steps are settled by G16. The single-effect rares with a step or two are still my reading. The Volley bow (one volley in a regular fight) and the Executioner's longbow (half its effect redundant on the Ranger) may not be worth an offhand. That's a test.
-5. **Oathkeeper's reach:** settled by the second round (its sweep hits for half).
-6. **Storm pike's lightning:** its rate is settled by the lead's ruling (Charge cap 6, so about one storm in a regular fight on a Valkyrie, as before G11). Its size is still my pick: light damage from Attack on every foe, free, bigger than a mage's Area touch.
+5. **Oathkeeper's reach.** On a Taunter with Stand fast or Thicket, it sweeps every foe for about two thirds of every fight at full swings. Against swarms that may outweigh both the Harvest and Toll pieces around it. That's for the balance pass to judge.
+6. **Storm pike's lightning** is light damage from Attack on every foe, free, about once in 30 ticks at 10 Charges. That's bigger than a mage's Area touch, on purpose for a far end, but it's the size I'm least sure of.
