@@ -78,10 +78,10 @@ Every card ends: *Fits Knight, Hoplite, Geomancer, Bramble knight, Paladin.*
 
 **Rubble plate** · Plate · legendary
 - **Card:** When the wearer's Shield breaks, every foe takes damage equal to the Shield's cap (half the wearer's max HP), and a Shield of a quarter of that is rebuilt.
-- **Numbers:** untyped damage of 0.5 × max HP to every foe (2,750 on a Knight at HP 5 with a plate step); a rebuilt Shield of 0.125 × max HP.
+- **Numbers:** untyped damage of 0.5 × max HP to every foe (2,500 on a Knight at HP 5); a rebuilt Shield of 0.125 × max HP.
 - **Hooks:** `status_ended` (status: shield, cause: stacks) → `damage` (type none, not a hit) to `{ side: "foes", pick: "all" }`, 0.5 × max HP of holder; then apply `shield` to self, 0.125 × max HP. A Dispel (cause: removed) doesn't set it off.
 - **Builds:** Landslide 3 ●●●, Toll ●●.
-- **CHALLENGE:** the rebuilt quarter loops. It breaks to about one swing, and each break blasts the whole cap again: against a pack hitting a Taunting Knight, every foe takes 2,750 every tick or two. My change: every foe takes damage equal to the most the Shield held since it last broke, and a quarter of that is rebuilt. A rebuilt Shield that breaks unrefilled then blasts for a quarter, a sixteenth, and so on, so a Shield's blasts add up to about a third more than its size, and every fresh Shield (Vanguard, Earthen shell, Keystone cuirass) arms a full one. Needs NEW 6.
+- **CHALLENGE:** the rebuilt quarter loops. It breaks to about one swing, and each break blasts the whole cap again: against a pack hitting a Taunting Knight, every foe takes 2,500 every tick or two. My change: every foe takes damage equal to the most the Shield held since it last broke, and a quarter of that is rebuilt. A rebuilt Shield that breaks unrefilled then blasts for a quarter, a sixteenth, and so on, so a Shield's blasts add up to about a third more than its size, and every fresh Shield (Vanguard, Earthen shell, Keystone cuirass) arms a full one. Needs NEW 6.
 
 **Thornheart plate** · Plate · legendary
 - **Card:** Each hit the wearer takes adds 1 Spite (+15 Thorns a stack, up to 20) for the rest of the fight.
@@ -170,7 +170,7 @@ Every card ends: *Fits Paladin, Valkyrie, Vampire, Hexer, Bramble knight.*
 **Hexweave mail** · Mail · legendary
 - **Card:** The wearer's hits deal 10% more to a foe for each debuff it holds.
 - **Numbers:** +10% a debuff: five debuffs, half again as much.
-- **Hooks:** `boosts` (physical and magical) as a sum of `when` terms read on the target, one for each debuff (Bleed, Weaken, Stun, Slow, Burn, Chill, Shock, Sunder, Silence, Rot, Doom, Marked), each worth 10: Judgement's shape, no new primitive.
+- **Hooks:** `boosts` (physical and magical) as a sum of `when` terms read on the target, one for each debuff the party can lay (Bleed, Weaken, Stun, Slow, Burn, Chill, Shock, Sunder, Silence, Rot, Marked), each worth 10: Judgement's shape, no new primitive.
 - **Builds:** Lockdown 3 ●●, Bonfire ●●, Snap ●●, Toll ●●: strong only where foes carry many debuffs.
 
 ---
@@ -380,7 +380,7 @@ Every card ends: *Fits everyone.* No amulet names a class's ability.
 
 **Carapace charm** · amulet · uncommon
 - **Card:** HP +1. Starts every fight behind a Shield of 15% of its max HP.
-- **Numbers:** max HP +500; a Shield of 0.15 × max HP (450 on an HP 2 caster, 825 on an HP 5 wall).
+- **Numbers:** max HP +500; a Shield of 0.15 × max HP, the step included (375 on an HP 2 caster, 825 on an HP 5 wall).
 - **Hooks:** `fight_start` → apply `shield` to self, from max HP (of holder).
 - **Builds:** Landslide 1 (Bedrock lit and a break armed from the first tick), Ambush 1 (the rear guard), Phoenix 1 (the survivors).
 
@@ -507,6 +507,6 @@ To check, not yet new: whether a knocked-out unit can be given a timed status (P
 2. **Gambler's coin:** the Geomancer's Bedrock doubles it to 100% (every hit a crit behind a Shield), and the Assassin's Backstab, which scales from crit chance, grows by two and a half times. Chaos, or one exotic too many.
 3. **Blood covenant's rate:** a share of HP for the same share of MP is exact (a pool for a pool) but makes walls pay hard (Stand fast is a fifth of the Knight's small pool, so a fifth of its HP). The other reading, half the MP cost in HP, lets walls cast almost free.
 4. **Thornheart plate and Rubble plate against swarms:** both get large on six to eight foes; Thornheart reaches +300 Thorns in about a dozen ticks there.
-5. **Windrunner's garb carries Evasion 20 the line didn't give,** and Echo charm carries no Double strike: with it, Wasp charm would be its small version, so it does nothing on a unit without extra strikes.
+5. **Stats beside two lines:** Windrunner's garb carries Evasion 20 the line didn't give (three of its five wearers never dodge without it). Echo charm carries no Double strike, since Wasp charm would then be its small version, so it does nothing on a unit without extra strikes (in kit, only the Monk and the Stormcaller have them).
 6. **Heat's numbers** (+3% a stack, cap 15) are set here first; Wick, The forge and Ember palms need the same ones.
 7. **Duplicates across kinds,** each from the spine's table, that the lead may want to split: Holdfast and the totem's Guard below half; Glyphed robe and the staff's Shield from Magic; Courier's coat, Hare's foot and the fist and bell uncommons' Haste at the start; Silvered hauberk and the rune sword's, mace's and lantern's Ward at the start; Red ribbon and Mocking mail (a rare that is the uncommon's Taunt plus Aggro +20).
