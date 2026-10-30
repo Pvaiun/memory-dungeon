@@ -2164,6 +2164,1236 @@
    "duration": 14,
    "focus": true,
    "single": true
+  },
+  {
+   "id": "wayfinder",
+   "name": "Wayfinder",
+   "text": "Its basic attacks ignore Taunt.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "seek": "basic"
+  },
+  {
+   "id": "sigil_blade",
+   "name": "Sigil blade",
+   "text": "Gains Ward at the start of each fight.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "ward",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "spellbinder",
+   "name": "Spellbinder",
+   "text": "After each ability it casts, its next basic attack deals double damage.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "action_resolve",
+      "kind": "ability"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "spellbound",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "spellbound",
+   "name": "SPELLBOUND",
+   "text": "Its next basic attack deals double damage.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "fizzle",
+   "boosts": [
+    {
+     "tag": "basic",
+     "pct": 100
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "action_resolve",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "spellbound",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "bane_of_the_bound",
+   "name": "Bane of the bound",
+   "text": "Its hits deal half again as much to a foe that is Weakened or Silenced.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 50,
+        "when": {
+         "hasAny": [
+          "weaken",
+          "silence"
+         ]
+        },
+        "of": "target"
+       }
+      ]
+     }
+    },
+    {
+     "tag": "magical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 50,
+        "when": {
+         "hasAny": [
+          "weaken",
+          "silence"
+         ]
+        },
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "hexblade",
+   "name": "Hexblade",
+   "text": "Its basic attacks add one more stack of each of Burn, Chill, Shock, Bleed and Sunder their target already holds.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "burn",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 1,
+          "when": {
+           "has": "burn"
+          },
+          "of": "target"
+         }
+        ]
+       },
+       "to": "other"
+      },
+      {
+       "op": "apply",
+       "status": "chill",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 1,
+          "when": {
+           "has": "chill"
+          },
+          "of": "target"
+         }
+        ]
+       },
+       "to": "other"
+      },
+      {
+       "op": "apply",
+       "status": "shock",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 1,
+          "when": {
+           "has": "shock"
+          },
+          "of": "target"
+         }
+        ]
+       },
+       "to": "other"
+      },
+      {
+       "op": "apply",
+       "status": "bleed",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 1,
+          "when": {
+           "has": "bleed"
+          },
+          "of": "target"
+         }
+        ]
+       },
+       "to": "other"
+      },
+      {
+       "op": "apply",
+       "status": "sunder",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 1,
+          "when": {
+           "has": "sunder"
+          },
+          "of": "target"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "dawnblade",
+   "name": "Dawnblade",
+   "text": "Gains 4 Fervor each time an ally falls or is revived, and 8 when it is revived itself.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "survivesKO": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "ko",
+      "whose": "ally"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "fervor",
+       "stacks": 4,
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived",
+      "whose": "ally"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "fervor",
+       "stacks": 4,
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "fervor",
+       "stacks": 8,
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "menders_mace",
+   "name": "Mender's mace",
+   "text": "At the start of each fight, the ally with the lowest share of max HP gains Regen.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "regen",
+       "to": {
+        "side": "allies",
+        "pick": "lowest",
+        "by": "hp_share"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "priors_mace",
+   "name": "Prior's mace",
+   "text": "At the start of each fight, the ally with the most Aggro gains Ward.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "ward",
+       "to": {
+        "side": "allies",
+        "pick": "highest",
+        "by": {
+         "stat": "aggro"
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "humbling_mace",
+   "name": "Humbling mace",
+   "text": "Its basic attacks Weaken their target.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "weaken",
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "censer_mace",
+   "name": "Censer mace",
+   "text": "Each of its basic attacks that lands heals the ally with the lowest share of max HP for a third of the damage dealt.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "heal",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.33,
+          "amount": true
+         }
+        ]
+       },
+       "to": {
+        "side": "allies",
+        "pick": "lowest",
+        "by": "hp_share"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "sunhammer",
+   "name": "Sunhammer",
+   "text": "Its basic attacks add several Burn. When a burning foe falls, its next basic attack also strikes every other foe.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "burn",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0013,
+          "stat": "magic",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "burn",
+      "cause": [
+       "ko"
+      ],
+      "whose": "foe"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "sunburst",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "sunburst",
+   "name": "SUNBURST",
+   "text": "Its next basic attack also strikes every other foe, and those strikes add several Burn.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "fizzle",
+   "strike": {
+    "to": {
+     "side": "foes",
+     "pick": "all",
+     "exclude": "targets"
+    }
+   },
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "extra"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "burn",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0013,
+          "stat": "magic",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "action_resolve",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "sunburst",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "martyrs_maul",
+   "name": "Martyr's maul",
+   "text": "Its basic attacks deal more the lower its HP; below 30% HP they also heal it for the damage dealt.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "boosts": [
+    {
+     "tag": "basic",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 50,
+        "when": {
+         "hpBelow": 70
+        },
+        "of": "holder"
+       },
+       {
+        "ratio": 50,
+        "when": {
+         "hpBelow": 50
+        },
+        "of": "holder"
+       },
+       {
+        "ratio": 50,
+        "when": {
+         "hpBelow": 30
+        },
+        "of": "holder"
+       },
+       {
+        "ratio": 50,
+        "when": {
+         "hpBelow": 10
+        },
+        "of": "holder"
+       }
+      ]
+     }
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "heal",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 1,
+          "amount": true
+         }
+        ]
+       },
+       "to": {
+        "side": "self",
+        "where": {
+         "hpBelow": 30
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "jolt_wand",
+   "name": "Jolt wand",
+   "text": "Its basic attacks add one Shock.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "shock",
+       "stacks": 1,
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "glint_wand",
+   "name": "Glint wand",
+   "text": "When one of its hits crits, it regains 6% of its max MP.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "tags": [
+       "crit"
+      ]
+     },
+     "do": [
+      {
+       "op": "mp",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.06,
+          "stat": "max_mp",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "spark_wand",
+   "name": "Spark wand",
+   "text": "Its basic attacks add a few Burn.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "burn",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0007,
+          "stat": "magic",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "chain_wand",
+   "name": "Chain wand",
+   "text": "Its basic attacks also strike two other foes, each for half.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "strike": {
+    "to": {
+     "side": "foes",
+     "pick": "random",
+     "count": 2,
+     "exclude": "targets"
+    },
+    "share": 50
+   }
+  },
+  {
+   "id": "flicker_wand",
+   "name": "Flicker wand",
+   "text": "Its extra strikes add a few Shock.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "extra"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "shock",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0007,
+          "stat": "magic",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "wildmagic_wand",
+   "name": "Wildmagic wand",
+   "text": "Each of its basic attacks adds a few stacks of a random one of Burn, Chill, Shock, Bleed and Sunder.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "one",
+       "of": [
+        {
+         "status": "burn",
+         "stacks": 2
+        },
+        {
+         "status": "chill",
+         "stacks": 2
+        },
+        {
+         "status": "shock",
+         "stacks": 2
+        },
+        {
+         "status": "bleed",
+         "stacks": 2
+        },
+        {
+         "status": "sunder",
+         "stacks": 2
+        }
+       ],
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "sleet_rod",
+   "name": "Sleet rod",
+   "text": "Its basic attacks add one Chill.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "chill",
+       "stacks": 1,
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "cistern_rod",
+   "name": "Cistern rod",
+   "text": "Once a fight, when it has less than a third of its MP at the fight's start or after it casts, it gains Clarity.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "clarity",
+       "to": {
+        "side": "self",
+        "where": {
+         "mpBelow": 33,
+         "lacks": "cistern_spent"
+        }
+       }
+      },
+      {
+       "op": "apply",
+       "status": "cistern_spent",
+       "to": {
+        "side": "self",
+        "where": {
+         "mpBelow": 33,
+         "lacks": "cistern_spent"
+        }
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "action_resolve",
+      "kind": "ability"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "clarity",
+       "to": {
+        "side": "self",
+        "where": {
+         "mpBelow": 33,
+         "lacks": "cistern_spent"
+        }
+       }
+      },
+      {
+       "op": "apply",
+       "status": "cistern_spent",
+       "to": {
+        "side": "self",
+        "where": {
+         "mpBelow": 33,
+         "lacks": "cistern_spent"
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "cistern_spent",
+   "name": "CISTERN",
+   "text": "Its Cistern rod has given its Clarity this fight.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "fizzle"
+  },
+  {
+   "id": "glacial_rod",
+   "name": "Glacial rod",
+   "text": "Its basic attacks Slow their target.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "slow",
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lightning_rod",
+   "name": "Lightning rod",
+   "text": "When one of its abilities hits several foes at once, each of those hits lands again for a quarter of its damage.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "ability",
+      "tags": [
+       "area"
+      ]
+     },
+     "do": [
+      {
+       "op": "strike",
+       "share": 25,
+       "of": "hit",
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "winters_chain",
+   "name": "Winter's chain",
+   "text": "When a foe's Chill shatters, every other foe gains a few Chill.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "status_capped",
+      "status": "chill",
+      "whose": "foe"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "chill",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.0007,
+          "stat": "magic",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": {
+        "side": "foes",
+        "pick": "all",
+        "exclude": "owner"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "brimming_rod",
+   "name": "Brimming rod",
+   "text": "Each ability it casts gives the ally with the least MP a tenth of its cost in MP. While it has more than half its MP, its abilities cost a quarter less.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "mods": [
+    {
+     "mp": -25,
+     "if": {
+      "mpAtLeast": 50
+     }
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "action_resolve",
+      "kind": "ability"
+     },
+     "do": [
+      {
+       "op": "mp",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 0.1,
+          "amount": true
+         }
+        ]
+       },
+       "to": {
+        "side": "allies",
+        "pick": "lowest",
+        "by": "mp_share"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "shepherds_staff",
+   "name": "Shepherd's staff",
+   "text": "At the start of each fight, the ally with the least MP gains Clarity.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "clarity",
+       "to": {
+        "side": "allies",
+        "pick": "lowest",
+        "by": "mp_share"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "canopy_staff",
+   "name": "Canopy staff",
+   "text": "At the start of each fight, it and the other ally with the least max HP each gain a Shield from its Magic.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "shield",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.12,
+          "stat": "magic",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": "holder"
+      },
+      {
+       "op": "apply",
+       "status": "shield",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.12,
+          "stat": "magic",
+          "of": "holder"
+         }
+        ]
+       },
+       "to": {
+        "side": "others",
+        "pick": "lowest",
+        "by": {
+         "stat": "max_hp"
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "banked_staff",
+   "name": "Banked staff",
+   "text": "Its abilities add half again as many Burn, Chill and Shock stacks.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "mods": [
+    {
+     "stacks": {
+      "pct": 50,
+      "statuses": [
+       "burn",
+       "chill",
+       "shock"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "rootstaff",
+   "name": "Rootstaff",
+   "text": "Its Thorns heal it for the damage they deal.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "damage_dealt",
+      "status": "thorns"
+     },
+     "do": [
+      {
+       "op": "heal",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 1,
+          "amount": true
+         }
+        ]
+       },
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "cataclysm_staff",
+   "name": "Cataclysm staff",
+   "text": "Every third ability it casts is cast twice; the second cast is free.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "action_resolve",
+      "kind": "ability",
+      "repeat": false
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "cataclysm_count",
+       "stacks": 1,
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "action_resolve",
+      "kind": "ability",
+      "repeat": false
+     },
+     "if": {
+      "side": "self",
+      "where": {
+       "stacks": {
+        "status": "cataclysm_count",
+        "atLeast": 3
+       }
+      }
+     },
+     "do": [
+      {
+       "op": "recast"
+      },
+      {
+       "op": "remove",
+       "label": "marker",
+       "status": "cataclysm_count",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "cataclysm_count",
+   "name": "CATACLYSM",
+   "text": "Abilities cast toward the next repeat.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "intensity"
+  },
+  {
+   "id": "cinderheart_staff",
+   "name": "Cinderheart staff",
+   "text": "Its basic attacks consume their target's Burn and deal at once all the damage it would have dealt.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "damage",
+       "type": "none",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 350,
+          "stacks": "burn",
+          "of": "target"
+         }
+        ]
+       },
+       "to": "other"
+      },
+      {
+       "op": "remove",
+       "label": "debuff",
+       "status": "burn",
+       "to": "other"
+      }
+     ]
+    }
+   ]
   }
  ],
  "classes": [
@@ -5346,6 +6576,1118 @@
      ]
     }
    }
+  },
+  {
+   "id": "runed_saber",
+   "name": "Runed saber",
+   "text": "+1 Magic, +1 Attack.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "magic",
+     "flat": 1000
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "weapon": {
+    "kind": "rune_sword",
+    "amount": {
+     "base": 372,
+     "scale": [
+      {
+       "ratio": 0.10625000000000001,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "common"
+  },
+  {
+   "id": "cairn_blade",
+   "name": "Cairn blade",
+   "text": "+1 Magic, +1 Armor.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "magic",
+     "flat": 1000
+    },
+    {
+     "stat": "armor",
+     "flat": 1000
+    }
+   ],
+   "weapon": {
+    "kind": "rune_sword",
+    "amount": {
+     "base": 372,
+     "scale": [
+      {
+       "ratio": 0.10625000000000001,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "common"
+  },
+  {
+   "id": "wayfinder",
+   "name": "Wayfinder",
+   "text": "+1 Magic. The wearer's basic attacks ignore Taunt.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "magic",
+     "flat": 1000
+    }
+   ],
+   "statuses": [
+    "wayfinder"
+   ],
+   "weapon": {
+    "kind": "rune_sword",
+    "amount": {
+     "base": 372,
+     "scale": [
+      {
+       "ratio": 0.10625000000000001,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "uncommon"
+  },
+  {
+   "id": "sigil_blade",
+   "name": "Sigil blade",
+   "text": "+1 Armor. At the start of each fight, the wearer gains Ward.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "armor",
+     "flat": 1000
+    }
+   ],
+   "statuses": [
+    "sigil_blade"
+   ],
+   "weapon": {
+    "kind": "rune_sword",
+    "amount": {
+     "base": 372,
+     "scale": [
+      {
+       "ratio": 0.10625000000000001,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "uncommon"
+  },
+  {
+   "id": "spellbinder",
+   "name": "Spellbinder",
+   "text": "After each ability the wearer casts, its next basic attack deals double damage.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "statuses": [
+    "spellbinder"
+   ],
+   "weapon": {
+    "kind": "rune_sword",
+    "amount": {
+     "base": 372,
+     "scale": [
+      {
+       "ratio": 0.10625000000000001,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "rare"
+  },
+  {
+   "id": "bane_of_the_bound",
+   "name": "Bane of the bound",
+   "text": "The wearer's hits deal half again as much to a foe that is Weakened or Silenced.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "statuses": [
+    "bane_of_the_bound"
+   ],
+   "weapon": {
+    "kind": "rune_sword",
+    "amount": {
+     "base": 372,
+     "scale": [
+      {
+       "ratio": 0.10625000000000001,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "rare"
+  },
+  {
+   "id": "hexblade",
+   "name": "Hexblade",
+   "text": "The wearer's basic attacks add one more stack of each of Burn, Chill, Shock, Bleed and Sunder that their target already holds.",
+   "slot": "weapon",
+   "tier": "powerful",
+   "source": "unlock",
+   "statuses": [
+    "hexblade"
+   ],
+   "weapon": {
+    "kind": "rune_sword",
+    "amount": {
+     "base": 372,
+     "scale": [
+      {
+       "ratio": 0.10625000000000001,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "legendary"
+  },
+  {
+   "id": "dawnblade",
+   "name": "Dawnblade",
+   "text": "Each time an ally falls or is revived, the wearer gains 4 Fervor. When the wearer itself is revived, it gains 8. Fervor: the holder deals 5% more damage a stack, up to 20, for the rest of the fight.",
+   "slot": "weapon",
+   "tier": "powerful",
+   "source": "unlock",
+   "statuses": [
+    "dawnblade"
+   ],
+   "note": "Its own fall counts on its own return (engine spec section 6.1: a knocked-out unit can't gain a status).",
+   "weapon": {
+    "kind": "rune_sword",
+    "amount": {
+     "base": 372,
+     "scale": [
+      {
+       "ratio": 0.10625000000000001,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "legendary"
+  },
+  {
+   "id": "morningstar",
+   "name": "Morningstar",
+   "text": "+2 Magic.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "magic",
+     "flat": 2000
+    }
+   ],
+   "weapon": {
+    "kind": "mace",
+    "amount": {
+     "base": 481,
+     "scale": [
+      {
+       "ratio": 0.1375,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "common"
+  },
+  {
+   "id": "friars_mace",
+   "name": "Friar's mace",
+   "text": "+1 HP, +1 MP regen.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": 500
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
+    }
+   ],
+   "weapon": {
+    "kind": "mace",
+    "amount": {
+     "base": 481,
+     "scale": [
+      {
+       "ratio": 0.1375,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "common"
+  },
+  {
+   "id": "menders_mace",
+   "name": "Mender's mace",
+   "text": "+1 HP. At the start of each fight, the ally with the lowest share of max HP gains Regen.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
+   "statuses": [
+    "menders_mace"
+   ],
+   "weapon": {
+    "kind": "mace",
+    "amount": {
+     "base": 481,
+     "scale": [
+      {
+       "ratio": 0.1375,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "uncommon"
+  },
+  {
+   "id": "priors_mace",
+   "name": "Prior's mace",
+   "text": "+1 Magic. At the start of each fight, the ally with the most Aggro gains Ward.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "magic",
+     "flat": 1000
+    }
+   ],
+   "statuses": [
+    "priors_mace"
+   ],
+   "weapon": {
+    "kind": "mace",
+    "amount": {
+     "base": 481,
+     "scale": [
+      {
+       "ratio": 0.1375,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "uncommon"
+  },
+  {
+   "id": "humbling_mace",
+   "name": "Humbling mace",
+   "text": "The wearer's basic attacks Weaken their target.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "statuses": [
+    "humbling_mace"
+   ],
+   "weapon": {
+    "kind": "mace",
+    "amount": {
+     "base": 481,
+     "scale": [
+      {
+       "ratio": 0.1375,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "rare"
+  },
+  {
+   "id": "censer_mace",
+   "name": "Censer mace",
+   "text": "Each of the wearer's basic attacks that lands heals the ally with the lowest share of max HP for a third of the damage it dealt.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "statuses": [
+    "censer_mace"
+   ],
+   "weapon": {
+    "kind": "mace",
+    "amount": {
+     "base": 481,
+     "scale": [
+      {
+       "ratio": 0.1375,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "rare"
+  },
+  {
+   "id": "sunhammer",
+   "name": "Sunhammer",
+   "text": "The wearer's basic attacks add several Burn. When a burning foe falls, the wearer's next basic attack also strikes every other foe, and those strikes add several Burn too.",
+   "slot": "weapon",
+   "tier": "powerful",
+   "source": "unlock",
+   "statuses": [
+    "sunhammer"
+   ],
+   "weapon": {
+    "kind": "mace",
+    "amount": {
+     "base": 481,
+     "scale": [
+      {
+       "ratio": 0.1375,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "legendary"
+  },
+  {
+   "id": "martyrs_maul",
+   "name": "Martyr's maul",
+   "text": "The wearer's basic attacks deal more the lower its HP: half again as much below 70%, double below 50%, two and a half times below 30%, and triple below 10%. Below 30% HP, each basic attack also heals the wearer for the damage it dealt.",
+   "slot": "weapon",
+   "tier": "powerful",
+   "source": "unlock",
+   "statuses": [
+    "martyrs_maul"
+   ],
+   "weapon": {
+    "kind": "mace",
+    "amount": {
+     "base": 481,
+     "scale": [
+      {
+       "ratio": 0.1375,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "legendary"
+  },
+  {
+   "id": "whipcrack_wand",
+   "name": "Whipcrack wand",
+   "text": "Double strike medium, +1 Magic.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "double_strike",
+     "flat": 25
+    },
+    {
+     "stat": "magic",
+     "flat": 1000
+    }
+   ],
+   "weapon": {
+    "kind": "wand",
+    "amount": {
+     "base": 289,
+     "scale": [
+      {
+       "ratio": 0.0825,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "common"
+  },
+  {
+   "id": "birch_wand",
+   "name": "Birch wand",
+   "text": "+1 Magic, +1 MP.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "magic",
+     "flat": 1000
+    },
+    {
+     "stat": "max_mp",
+     "flat": 1000
+    }
+   ],
+   "weapon": {
+    "kind": "wand",
+    "amount": {
+     "base": 289,
+     "scale": [
+      {
+       "ratio": 0.0825,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "common"
+  },
+  {
+   "id": "jolt_wand",
+   "name": "Jolt wand",
+   "text": "+1 Magic. The wearer's basic attacks add one Shock.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "magic",
+     "flat": 1000
+    }
+   ],
+   "statuses": [
+    "jolt_wand"
+   ],
+   "weapon": {
+    "kind": "wand",
+    "amount": {
+     "base": 289,
+     "scale": [
+      {
+       "ratio": 0.0825,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "uncommon"
+  },
+  {
+   "id": "glint_wand",
+   "name": "Glint wand",
+   "text": "+1 Crit chance. When one of the wearer's hits crits, the wearer regains 6% of its max MP.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    }
+   ],
+   "statuses": [
+    "glint_wand"
+   ],
+   "weapon": {
+    "kind": "wand",
+    "amount": {
+     "base": 289,
+     "scale": [
+      {
+       "ratio": 0.0825,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "uncommon"
+  },
+  {
+   "id": "spark_wand",
+   "name": "Spark wand",
+   "text": "The wearer's basic attacks add a few Burn.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "statuses": [
+    "spark_wand"
+   ],
+   "weapon": {
+    "kind": "wand",
+    "amount": {
+     "base": 289,
+     "scale": [
+      {
+       "ratio": 0.0825,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "rare"
+  },
+  {
+   "id": "chain_wand",
+   "name": "Chain wand",
+   "text": "The wearer's basic attacks also strike two other foes, each for half.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "statuses": [
+    "chain_wand"
+   ],
+   "weapon": {
+    "kind": "wand",
+    "amount": {
+     "base": 289,
+     "scale": [
+      {
+       "ratio": 0.0825,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "rare"
+  },
+  {
+   "id": "flicker_wand",
+   "name": "Flicker wand",
+   "text": "Double strike high. The wearer's extra strikes add a few Shock.",
+   "slot": "weapon",
+   "tier": "powerful",
+   "source": "unlock",
+   "stats": [
+    {
+     "stat": "double_strike",
+     "flat": 40
+    }
+   ],
+   "statuses": [
+    "flicker_wand"
+   ],
+   "weapon": {
+    "kind": "wand",
+    "amount": {
+     "base": 289,
+     "scale": [
+      {
+       "ratio": 0.0825,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "legendary"
+  },
+  {
+   "id": "wildmagic_wand",
+   "name": "Wildmagic wand",
+   "text": "Each of the wearer's basic attacks adds a few stacks of a random one of Burn, Chill, Shock, Bleed and Sunder.",
+   "slot": "weapon",
+   "tier": "powerful",
+   "source": "unlock",
+   "statuses": [
+    "wildmagic_wand"
+   ],
+   "weapon": {
+    "kind": "wand",
+    "amount": {
+     "base": 289,
+     "scale": [
+      {
+       "ratio": 0.0825,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "legendary"
+  },
+  {
+   "id": "dowsing_rod",
+   "name": "Dowsing rod",
+   "text": "+2 MP regen.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "mp_regen",
+     "flat": 6000
+    }
+   ],
+   "weapon": {
+    "kind": "rod",
+    "amount": {
+     "base": 398,
+     "scale": [
+      {
+       "ratio": 0.11375,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "common"
+  },
+  {
+   "id": "ironbark_rod",
+   "name": "Ironbark rod",
+   "text": "+1 Magic, +1 HP.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "magic",
+     "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
+   "weapon": {
+    "kind": "rod",
+    "amount": {
+     "base": 398,
+     "scale": [
+      {
+       "ratio": 0.11375,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "common"
+  },
+  {
+   "id": "sleet_rod",
+   "name": "Sleet rod",
+   "text": "+1 Magic. The wearer's basic attacks add one Chill.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "magic",
+     "flat": 1000
+    }
+   ],
+   "statuses": [
+    "sleet_rod"
+   ],
+   "weapon": {
+    "kind": "rod",
+    "amount": {
+     "base": 398,
+     "scale": [
+      {
+       "ratio": 0.11375,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "uncommon"
+  },
+  {
+   "id": "cistern_rod",
+   "name": "Cistern rod",
+   "text": "+1 HP. Once a fight, when the wearer has less than a third of its MP (at the fight's start, or after it casts), it gains Clarity.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
+   "statuses": [
+    "cistern_rod"
+   ],
+   "weapon": {
+    "kind": "rod",
+    "amount": {
+     "base": 398,
+     "scale": [
+      {
+       "ratio": 0.11375,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "uncommon"
+  },
+  {
+   "id": "glacial_rod",
+   "name": "Glacial rod",
+   "text": "The wearer's basic attacks Slow their target.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "statuses": [
+    "glacial_rod"
+   ],
+   "weapon": {
+    "kind": "rod",
+    "amount": {
+     "base": 398,
+     "scale": [
+      {
+       "ratio": 0.11375,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "rare"
+  },
+  {
+   "id": "lightning_rod",
+   "name": "Lightning rod",
+   "text": "When one of the wearer's abilities hits several foes at once, each of those hits lands again on its foe for a quarter of the damage.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "statuses": [
+    "lightning_rod"
+   ],
+   "note": "Echoes `area` hits (engine spec section 6.4): Chain lightning's bounces, not its first strike; Thunderstorm and Blizzard throughout.",
+   "weapon": {
+    "kind": "rod",
+    "amount": {
+     "base": 398,
+     "scale": [
+      {
+       "ratio": 0.11375,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "rare"
+  },
+  {
+   "id": "winters_chain",
+   "name": "Winter's chain",
+   "text": "When a foe's Chill shatters, every other foe gains a few Chill.",
+   "slot": "weapon",
+   "tier": "powerful",
+   "source": "unlock",
+   "statuses": [
+    "winters_chain"
+   ],
+   "weapon": {
+    "kind": "rod",
+    "amount": {
+     "base": 398,
+     "scale": [
+      {
+       "ratio": 0.11375,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "legendary"
+  },
+  {
+   "id": "brimming_rod",
+   "name": "Brimming rod",
+   "text": "Each ability the wearer casts gives the ally with the least MP a tenth of that ability's cost in MP. While the wearer has more than half its MP, its abilities cost a quarter less.",
+   "slot": "weapon",
+   "tier": "powerful",
+   "source": "unlock",
+   "statuses": [
+    "brimming_rod"
+   ],
+   "note": "The gift is a tenth of the MP the cast paid (action_resolve's amount, engine spec X29), so 7.5% of the listed cost while the quarter off holds.",
+   "weapon": {
+    "kind": "rod",
+    "amount": {
+     "base": 398,
+     "scale": [
+      {
+       "ratio": 0.11375,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "legendary"
+  },
+  {
+   "id": "ashwood_staff",
+   "name": "Ashwood staff",
+   "text": "+2 Magic, +1 HP.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "magic",
+     "flat": 2000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
+   "weapon": {
+    "kind": "staff",
+    "amount": {
+     "base": 508,
+     "scale": [
+      {
+       "ratio": 0.145,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "common"
+  },
+  {
+   "id": "moonwater_staff",
+   "name": "Moonwater staff",
+   "text": "+2 MP, +1 Magic.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "max_mp",
+     "flat": 2000
+    },
+    {
+     "stat": "magic",
+     "flat": 1000
+    }
+   ],
+   "weapon": {
+    "kind": "staff",
+    "amount": {
+     "base": 508,
+     "scale": [
+      {
+       "ratio": 0.145,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "common"
+  },
+  {
+   "id": "shepherds_staff",
+   "name": "Shepherd's staff",
+   "text": "+1 Magic, +1 HP. At the start of each fight, the ally with the least MP gains Clarity.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "magic",
+     "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
+   "statuses": [
+    "shepherds_staff"
+   ],
+   "weapon": {
+    "kind": "staff",
+    "amount": {
+     "base": 508,
+     "scale": [
+      {
+       "ratio": 0.145,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "uncommon"
+  },
+  {
+   "id": "canopy_staff",
+   "name": "Canopy staff",
+   "text": "+1 Magic, +1 HP. At the start of each fight, the wearer and the other ally with the least max HP each gain a Shield from the wearer's Magic.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "magic",
+     "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
+   "statuses": [
+    "canopy_staff"
+   ],
+   "weapon": {
+    "kind": "staff",
+    "amount": {
+     "base": 508,
+     "scale": [
+      {
+       "ratio": 0.145,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "uncommon"
+  },
+  {
+   "id": "banked_staff",
+   "name": "Banked staff",
+   "text": "+1 Magic. The wearer's abilities add half again as many Burn, Chill and Shock stacks.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "magic",
+     "flat": 1000
+    }
+   ],
+   "statuses": [
+    "banked_staff"
+   ],
+   "weapon": {
+    "kind": "staff",
+    "amount": {
+     "base": 508,
+     "scale": [
+      {
+       "ratio": 0.145,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "rare"
+  },
+  {
+   "id": "rootstaff",
+   "name": "Rootstaff",
+   "text": "Thorns medium. The wearer's Thorns heal it for the damage they deal.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "thorns",
+     "flat": 150
+    }
+   ],
+   "statuses": [
+    "rootstaff"
+   ],
+   "weapon": {
+    "kind": "staff",
+    "amount": {
+     "base": 508,
+     "scale": [
+      {
+       "ratio": 0.145,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "rare"
+  },
+  {
+   "id": "cataclysm_staff",
+   "name": "Cataclysm staff",
+   "text": "Every third ability the wearer casts is cast twice. The second cast is free.",
+   "slot": "weapon",
+   "tier": "powerful",
+   "source": "unlock",
+   "statuses": [
+    "cataclysm_staff"
+   ],
+   "weapon": {
+    "kind": "staff",
+    "amount": {
+     "base": 508,
+     "scale": [
+      {
+       "ratio": 0.145,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "legendary"
+  },
+  {
+   "id": "cinderheart_staff",
+   "name": "Cinderheart staff",
+   "text": "The wearer's basic attacks consume their target's Burn and deal at once all the damage it would have dealt.",
+   "slot": "weapon",
+   "tier": "powerful",
+   "source": "unlock",
+   "statuses": [
+    "cinderheart_staff"
+   ],
+   "note": "The flare is 350 a stack: Burn's damage a stack × the sum of its decay at 20 stacks, read from scale.ts.",
+   "weapon": {
+    "kind": "staff",
+    "amount": {
+     "base": 508,
+     "scale": [
+      {
+       "ratio": 0.145,
+       "stat": "magic"
+      }
+     ]
+    }
+   },
+   "rarity": "legendary"
   }
  ],
  "formations": [
