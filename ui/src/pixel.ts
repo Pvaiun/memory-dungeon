@@ -16,7 +16,7 @@
  * crowded fights can shrink them further with the same filter and an outline.
  */
 import { c } from "./content.js";
-import { image, manifest, POSE, statusStyle, weaponArt, type Pose } from "./art.js";
+import { image, manifest, POSE, statusStyle, TAG_ICON, weaponArt, type Pose } from "./art.js";
 
 export const FRAME_W = 270;
 export const OUTLINE = "#14141e";
@@ -332,22 +332,64 @@ export function iconOf(row: number, col: number, tint?: string): HTMLCanvasEleme
 }
 export const iconEl = (cell: readonly [number, number], scale = 1, tint?: string) => canvasEl(iconOf(cell[0], cell[1], tint), scale, "icon");
 
+// ─── Ability icons: the director's skill pack, 32×32 art pixels each (Oct 31, 2026) ───
+const abilityIcons = new Map<string, HTMLCanvasElement | null>();
+/** An ability's own icon, by its id (a trained form, "<id>__a", shows its base's), or undefined when it has none. */
+export function abilityIconOf(id: string): HTMLCanvasElement | undefined {
+  const base = id.replace(/__\w+$/, "");
+  let cv = abilityIcons.get(base);
+  if (cv === undefined) {
+    const file = manifest.abilities?.[base];
+    const img = file ? image(file) : undefined;
+    cv = null;
+    if (img?.complete && img.naturalWidth) {
+      cv = cv2d(img.naturalWidth, img.naturalHeight);
+      cv.getContext("2d")!.drawImage(img, 0, 0);
+    }
+    abilityIcons.set(base, cv);
+  }
+  return cv ?? undefined;
+}
+/** An action's icon: an ability's own (32 square), else its look's iconset cell (16 square). */
+export function actionIconOf(tag: string, act?: string): HTMLCanvasElement {
+  const own = act && act !== "basic" ? abilityIconOf(act) : undefined;
+  if (own) return own;
+  const cell = TAG_ICON[tag] ?? TAG_ICON.physical;
+  return iconOf(cell[0], cell[1]);
+}
+/** An action's icon as an element, the size a 16-pixel icon at `scale` would be (an ability's 32-pixel icon shows its detail). */
+export function actionIconEl(tag: string, act?: string, scale = 1): HTMLCanvasElement {
+  const cv = actionIconOf(tag, act);
+  return canvasEl(cv, (scale * 16) / cv.width, "icon");
+}
+/** An action's icon at the iconset's 16 pixels, for scenes where it stands among 16-pixel art (a tome on the ground). */
+export function actionIcon16(tag: string, act?: string): HTMLCanvasElement {
+  const cv = actionIconOf(tag, act);
+  return cv.width === 16 ? cv : downscale(cv, 2, 0, 0, cv.width, cv.height, { align: false });
+}
+
 // ─── Status icons: the pack's 16×16, recoloured per status by the asset tool ───
-/** The pack draws each status in the middle 14×14 of a 16×16 tile; the empty border is cut, so icons sit tighter. */
-export const STATUS_ICON = 14;
+/**
+ * Status icons are the director's skill and status pack's (Oct 31, 2026), cut by the asset tool to the middle 20×20 of
+ * their art. The few left from the old pack (a 16×16 tile drawn in its middle 14×14) sit centred in the same box.
+ */
+export const STATUS_ICON = 20;
 const statusIcons = new Map<string, HTMLCanvasElement>();
 export function statusIconOf(id: string): HTMLCanvasElement {
   let cv = statusIcons.get(id);
   if (cv) return cv;
-  const img = manifest.statuses[id] ? image(manifest.statuses[id]) : undefined;
+  // A trained form ("<id>__a") shows its base's icon.
+  const file = manifest.statuses[id] ?? manifest.statuses[id.replace(/__\w+$/, "")];
+  const img = file ? image(file) : undefined;
   cv = cv2d(STATUS_ICON, STATUS_ICON);
   const g = cv.getContext("2d")!;
-  if (img) g.drawImage(img, 1, 1, STATUS_ICON, STATUS_ICON, 0, 0, STATUS_ICON, STATUS_ICON);
+  if (img && img.naturalWidth === STATUS_ICON) g.drawImage(img, 0, 0);
+  else if (img) g.drawImage(img, 1, 1, 14, 14, (STATUS_ICON - 14) / 2, (STATUS_ICON - 14) / 2, 14, 14);
   else {
     // No icon in the pack: a coloured tile with the status's first letter.
     g.fillStyle = statusStyle(id).color;
     g.fillRect(0, 0, STATUS_ICON, STATUS_ICON);
-    drawText(g, (c.statuses.get(id)?.name ?? id).slice(0, 1).toUpperCase(), 3, 3, OUTLINE);
+    drawText(g, (c.statuses.get(id)?.name ?? id).slice(0, 1).toUpperCase(), (STATUS_ICON - 8) / 2, (STATUS_ICON - 8) / 2, OUTLINE);
   }
   statusIcons.set(id, cv);
   return cv;
@@ -406,18 +448,20 @@ export function drawChest(ctx: CanvasRenderingContext2D, x: number, feet: number
  * An action's icon as the battle's party rows draw it at a fight's start: shaded from the top by the share of its
  * cooldown still to run, with the ticks to go in the corner. On a sheet it says when the ability first comes round.
  */
-export function pipEl(cell: readonly [number, number], left: number, total: number, scale = 1): HTMLCanvasElement {
-  const cv = cv2d(16, 16);
+export function pipEl(icon: HTMLCanvasElement, left: number, total: number, scale = 1): HTMLCanvasElement {
+  // An ability's own icon is 32 pixels to the iconset's 16: drawn at the same size, with digits as big as the 16's.
+  const n = icon.width, k = n / 16;
+  const cv = cv2d(n, n);
   const g = cv.getContext("2d")!;
-  g.drawImage(iconOf(cell[0], cell[1]), 0, 0);
+  g.drawImage(icon, 0, 0);
   const share = Math.max(0, Math.min(1, left / Math.max(1, total)));
   if (share > 0) {
     g.fillStyle = "rgba(10, 12, 24, 0.72)";
-    g.fillRect(0, 0, 16, Math.round(16 * share));
+    g.fillRect(0, 0, n, Math.round(n * share));
     const t = String(Math.min(99, Math.round(left)));
-    drawDigits(g, t, 16 - (t.length * 4 - 1) - 1, 10, "#ffffff", OUTLINE);
+    drawDigits(g, t, n - (t.length * 4 - 1) * k - k, 10 * k, "#ffffff", OUTLINE, k);
   }
-  return canvasEl(cv, scale, "icon");
+  return canvasEl(cv, scale / k, "icon");
 }
 
 // ─── Backdrops: a 270×224 scene per dungeon, composed from the tilesets by the asset tool ───

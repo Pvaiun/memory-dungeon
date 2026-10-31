@@ -540,8 +540,9 @@ export class Scene {
       const tw = n.text.length * 8 * scale;
       let x = n.x;
       if (n.icon) {
-        ctx.drawImage(statusIconOf(n.icon), Math.round(x - tw / 2 - 18), Math.round(y) + (n.big ? 0 : -4));
-        x += 9;
+        // The icon left of the text with a gap of 4, centred on its line (8 high, 16 when big).
+        ctx.drawImage(statusIconOf(n.icon), Math.round(x - tw / 2 - STATUS_ICON - 4), Math.round(y + ((n.big ? 16 : 8) - STATUS_ICON) / 2));
+        x += (STATUS_ICON + 4) / 2;
       }
       drawText(ctx, n.text, x, y, n.color, n.outline === undefined ? OUTLINE : n.outline, "center", scale);
       if (n.sub) drawText(ctx, n.sub, n.x, y + (n.big ? 17 : 9), n.subColor ?? "#ffd54a", OUTLINE, "center");

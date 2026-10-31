@@ -27,9 +27,9 @@ const choice = (label: string, sub: string, onClick: () => void) => button(h("sp
 import { abilityBlock, basicLine, canUse, classHead, classPassive, codeSpans, ENEMY_STATS, enemyStats, formationNote, gearRow, hitsWith, lockedRow, RARITY_TONE, role, seatCodes, seatLines, seatNotes, section, sizeEl, SLOTS, specialLines, statGrid, tk, twoHanded, type GearSlot } from "./sheet.js";
 import { abilityInfo, abilityTag, sizeParts, sizeText, type Stats } from "./describe.js";
 import { campEl, foesOnStage, partyInLine, partyOnStage, stageEl, themeOf, type StageActor, type StageOpts } from "./battle/scene.js";
-import { gearIcon, TAG_ICON, type Pose } from "./art.js";
+import { gearIcon, type Pose } from "./art.js";
 import { weaponOf } from "../../src/engine/combat/fight.js";
-import { actorEl, enemyThumb, faceEl, iconEl, iconOf, weaponIcon } from "./pixel.js";
+import { actionIcon16, actorEl, enemyThumb, faceEl, iconEl, iconOf, weaponIcon } from "./pixel.js";
 import { enemyDisplayName } from "./art.js";
 import type { Cell } from "./art.js";
 import { current, endRun, fighter, lastRun, meta, nextSeed, saveRogue, setHeat, startRun, vitals } from "./rogue-state.js";
@@ -151,7 +151,7 @@ function lootActors(run: RogueRun, offers: Offer[], gold: boolean, h: number, x0
     else if (o.kind === "gear" || o.kind === "bundle") {
       const g = c.gear.get(o.item.uid) ?? itemGear(c, o.item);
       arts.push((g.slot === "weapon" ? weaponIcon(g.id) : null) ?? cell(gearIcon(g)));
-    } else if (o.kind === "tome") arts.push(cell(TAG_ICON[abilityTag(c.abilities.get(o.ability)!)] ?? TAG_ICON.physical));
+    } else if (o.kind === "tome") arts.push(actionIcon16(abilityTag(c.abilities.get(o.ability)!), o.ability));
     else if (o.kind === "recruit") arts.push(o.cls);
     else if (o.kind === "formation") arts.push(cell(FORMATION_ICON));
     else if (o.kind === "seat") arts.push(cell(ICON.campfire));
