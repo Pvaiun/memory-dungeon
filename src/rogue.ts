@@ -145,9 +145,8 @@ export type RogueRun = {
 export function migrate(run: RogueRun): RogueRun {
   run.seen ??= [];
   run.met ??= [];
-  // Step 5g: the old party tonic is the potion, the old ether the tonic.
-  const OLD: Record<string, SupplyIdT> = { ether: "tonic", tonic: "potion" };
-  run.supplies = run.supplies.map((s) => OLD[s as string] ?? s);
+  // (Step 5g renamed the supplies here, the old tonic to the potion and the ether to the tonic, but a save from then carries an
+  // older ROGUE_VERSION and is set aside; run on every load, the rename turned each of today's tonics into a potion.)
   return run;
 }
 
