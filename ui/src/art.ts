@@ -15,6 +15,8 @@ export type Manifest = {
   classes: Record<string, string>;
   enemies: Record<string, { file: string; w: number; h: number; scale: number; name?: string }>;
   statuses: Record<string, string>;
+  /** An ability's own icon by base id (the director's skill pack, Oct 31, 2026): 32×32, one pixel per art pixel. */
+  abilities?: Record<string, string>;
   vfx: Record<string, { file: string; frames: number }>;
   /** Weapon strips by gear id: three frames of 48×32, drawn in the hand of a party member. */
   weapons: Record<string, string>;
@@ -40,11 +42,12 @@ export async function loadArt(): Promise<void> {
   manifest.weapons ??= {};
   manifest.faces ??= {};
   manifest.backdrops ??= {};
+  manifest.abilities ??= {};
   // Step 5j: the new kinds' plain pieces borrow a strip until the director's art arrives.
   for (const [id, from] of Object.entries(WEAPON_STAND_INS)) if (!manifest.weapons[id] && manifest.weapons[from]) manifest.weapons[id] = manifest.weapons[from];
   const files = [
     ...Object.values(manifest.classes), ...Object.values(manifest.enemies).map((e) => e.file), ...Object.values(manifest.vfx).map((v) => v.file), manifest.iconset,
-    ...Object.values(manifest.statuses), ...Object.values(manifest.weapons), ...Object.values(manifest.faces), ...Object.values(manifest.backdrops),
+    ...Object.values(manifest.statuses), ...Object.values(manifest.abilities), ...Object.values(manifest.weapons), ...Object.values(manifest.faces), ...Object.values(manifest.backdrops),
     ...(manifest.campfire ? [manifest.campfire.file] : []), ...(manifest.chest ? [manifest.chest.file] : []),
   ];
   await Promise.all(files.map(load));

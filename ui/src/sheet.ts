@@ -18,7 +18,7 @@ import { abilityInfo, abilityTag, damageTypeOf, evalNum, scalesOf, sizeParts, st
 import { gearIcon, SLOT_ICON, TAG_ICON, weaponLook } from "./art.js";
 import { canEquip, handsOf } from "../../src/validate.js";
 import { h, type Child } from "./dom.js";
-import { actorEl, faceEl, iconEl, pipEl, statusEl, weaponEl } from "./pixel.js";
+import { actionIconOf, actorEl, faceEl, iconEl, pipEl, statusEl, weaponEl } from "./pixel.js";
 import { gearFor, party, setup, soloParty } from "./state.js";
 
 /** The four gear slots, in the order the sheets list them (step 5j). */
@@ -263,14 +263,13 @@ export function gearRow(g: GearT | null, slot: string, stats: Stats | null, onCl
 export function abilityBlock(a: AbilityT, stats: Stats | null, designer: boolean, opts: { n?: number; onN?: () => void; cur?: boolean; target?: boolean; dmgMult?: number; opening?: boolean } = {}): HTMLElement {
   const i = abilityInfo(a, stats);
   const tag = abilityTag(a);
-  const cell = TAG_ICON[tag] ?? TAG_ICON.physical;
   // Step 5c: an ability starts a fight charged by its slot (ruleset.opening.slots), so its first use is part of the plan.
   const head0 = opts.n !== undefined && opts.opening !== false ? headStart(c.pack.ruleset.opening, i.cooldown, opts.n - 1) : undefined;
   const first = head0 !== undefined ? Math.max(0, i.cooldown - head0) : 0;
   const head = h("div", { class: "head" },
     // With another number picked, this one pulses: it's where the next tap goes.
     opts.n !== undefined ? h("span", { class: `n${opts.target ? " target" : ""}`, onClick: opts.onN }, String(opts.n)) : null,
-    h("span", { class: "pip" }, pipEl(cell, first, i.cooldown, ICON_SCALE)),
+    h("span", { class: "pip" }, pipEl(actionIconOf(tag, a.id), first, i.cooldown, ICON_SCALE)),
     h("div", { class: "grow" },
       h("div", { class: `trunc ${damageTypeOf(a) === "magical" ? "magic" : tag === "heal" || tag === "revive" || tag === "cleanse" ? "good" : ""}` }, i.name.toUpperCase()),
       h("div", { class: "cost" },

@@ -13,7 +13,8 @@ import { enemyDisplayName, weaponLook } from "../art.js";
 import type { Ev } from "./driver.js";
 
 export type Tone = "act" | "hit" | "crit" | "heal" | "buff" | "debuff" | "bad" | "good" | "sys" | "quiet";
-export type Line = { text: string; tone: Tone; tag?: string; events: Ev[] };
+/** `tag` is the action's look; `act` the ability it is, for its own icon. */
+export type Line = { text: string; tone: Tone; tag?: string; act?: string; events: Ev[] };
 export type BeatKind = "intro" | "cast" | "act" | "tick" | "misc" | "end";
 /** `weight` is reading time in units of one plain line; `actor` is who acts, for the field. */
 export type Beat = { at: number; kind: BeatKind; lines: Line[]; actor?: string; weight: number; /** Shown on the field as the beat opens, with no line (MP gained). */ quiet?: Ev[] };
@@ -111,7 +112,7 @@ export class Narrator {
       }
       case "cast": {
         const what = ev.act === "basic" ? "readies a blow" : `readies ${String(ev.name)}`;
-        const line: Omit<Line, "events"> = { text: `${this.n(ev.by)} ${what}…`, tone: "act", tag: this.tagOf(String(ev.by), String(ev.act)) };
+        const line: Omit<Line, "events"> = { text: `${this.n(ev.by)} ${what}…`, tone: "act", tag: this.tagOf(String(ev.by), String(ev.act)), act: String(ev.act) };
         const b = this.open;
         if (b && b.kind === "cast" && b.at === at && b.lines.length < 3) {
           b.lines.push({ ...line, events: [ev] });
@@ -125,7 +126,7 @@ export class Narrator {
       }
       case "act": {
         const b = this.start("act", at, String(ev.by));
-        b.lines.push({ text: this.actText(ev), tone: "act", tag: this.tagOf(String(ev.by), String(ev.act)), events: [ev] });
+        b.lines.push({ text: this.actText(ev), tone: "act", tag: this.tagOf(String(ev.by), String(ev.act)), act: String(ev.act), events: [ev] });
         b.weight += 1;
         break;
       }

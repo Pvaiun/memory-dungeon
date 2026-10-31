@@ -14,11 +14,11 @@ import { SUBTICKS } from "../../../src/schema.js";
 import type { CUnit } from "../../../src/engine/combat/fight.js";
 import { resolveWeapon, weaponOf } from "../../../src/engine/combat/fight.js";
 import { c, className, disp, fightName, runName, shortName, shownAsIcon } from "../content.js";
-import { enemyName, statusStyle, TAG_ICON, TYPE_COLOR, type Pose } from "../art.js";
+import { enemyName, statusStyle, TYPE_COLOR, type Pose } from "../art.js";
 import { bar, button, clear, h, nav, win, type Child } from "../dom.js";
 import { nextSeed, party as partyLoadout, save, setup } from "../state.js";
 import { damageTypeOf, statusText } from "../describe.js";
-import { drawDigits, enemyThumb, iconEl, iconOf, OUTLINE, statusEl } from "../pixel.js";
+import { actionIconEl, actionIconOf, drawDigits, enemyThumb, OUTLINE, statusEl } from "../pixel.js";
 import { classHead, classSheet, enemySheet, portraitEl } from "../sheet.js";
 import type { Member } from "../../../src/engine/combat/rules.js";
 import { Driver, type Ev } from "./driver.js";
@@ -48,7 +48,7 @@ const bigButton = (label: Child, onClick: () => void, sub?: string) => {
   return b;
 };
 
-type Hist = { tick: number; text: string; tone: Tone; tag?: string };
+type Hist = { tick: number; text: string; tone: Tone; tag?: string; act?: string };
 
 export function startBattle(frame: HTMLElement, screen: HTMLElement, args: BattleArgs): () => void {
   // The rogue mode's fight: its run's pending fight, with the party's HP and MP carried in, played once.
@@ -204,12 +204,12 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     linesEl.append(el);
     p.typed = 0;
     p.charAt = Math.max(p.charAt, vwall);
-    history.push({ tick: Math.floor(p.beat.at / SUBTICKS), text: line.text, tone: line.tone, tag: line.tag });
+    history.push({ tick: Math.floor(p.beat.at / SUBTICKS), text: line.text, tone: line.tone, tag: line.tag, act: line.act });
     if (history.length > 600) history.shift();
     for (const ev of line.events) show(ev);
   }
   function lineEl(line: Line, full: boolean): HTMLElement {
-    return h("div", { class: `l ${line.tone}` }, line.tag && TAG_ICON[line.tag] ? iconEl(TAG_ICON[line.tag]) : null, h("span", { class: "t" }, full ? line.text : ""));
+    return h("div", { class: `l ${line.tone}` }, line.tag ? actionIconEl(line.tag, line.act) : null, h("span", { class: "t" }, full ? line.text : ""));
   }
   /** Types the beat out: a line's characters appear at the typing speed, then the next line starts. */
   function stepBeat() {
@@ -549,7 +549,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       const total = a.id === "basic" ? weaponOf(c, u.weapon).cooldown ?? 1 : c.abilities.get(a.id)?.cooldown ?? 1;
       const left = Math.max(0, (a.ready - vt) / SUBTICKS);
       const share = Math.min(1, left / Math.max(1, total));
-      return { ...p, tag: narrator.tagOf(u.id, a.id), share: Math.round(share * 32) / 32, left: Math.ceil(left), ready: left <= 0 && !u.cast, casting: u.cast?.act === p.i };
+      return { ...p, act: a.id, tag: narrator.tagOf(u.id, a.id), share: Math.round(share * 32) / 32, left: Math.ceil(left), ready: left <= 0 && !u.cast, casting: u.cast?.act === p.i };
     });
     const ko = scene.units.get(u.id)?.downTold ?? u.ko;
     const key = ko ? "ko" : parts.map((p) => `${p.tag}:${p.share}:${p.left}:${p.ready ? 1 : 0}:${p.casting ? blink : "-"}`).join("|");
@@ -562,8 +562,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     for (const p of parts) {
       const big = p.size === BIG;
       const y = big ? 2 : Math.round((CD_H - SMALL) / 2);
-      const cell = TAG_ICON[p.tag] ?? TAG_ICON.physical;
-      g.drawImage(iconOf(cell[0], cell[1]), p.x, y, p.size, p.size);
+      g.drawImage(actionIconOf(p.tag, p.act), p.x, y, p.size, p.size);
       if (p.share > 0 && !p.casting) {
         g.fillStyle = "rgba(10, 12, 24, 0.72)";
         g.fillRect(p.x, y, p.size, Math.round(p.size * p.share));
@@ -667,7 +666,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     const body = h("div", { class: "log" });
     let lastTick = -1;
     for (const l of history) {
-      body.append(h("div", { class: `l ${l.tone}` }, h("span", { class: "t" }, l.tick !== lastTick ? `T${l.tick}` : ""), l.tag && TAG_ICON[l.tag] ? iconEl(TAG_ICON[l.tag]) : null, h("span", null, l.text)));
+      body.append(h("div", { class: `l ${l.tone}` }, h("span", { class: "t" }, l.tick !== lastTick ? `T${l.tick}` : ""), l.tag ? actionIconEl(l.tag, l.act) : null, h("span", null, l.text)));
       lastTick = l.tick;
     }
     if (!history.length) body.append(h("div", { class: "l dim" }, "NOTHING YET"));
