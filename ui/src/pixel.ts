@@ -404,11 +404,11 @@ export function drawDigits(ctx: CanvasRenderingContext2D, s: string, x: number, 
     cx += 4 * scale;
   }
 }
-/** A status icon with its stack count in the bottom-right corner (over 99 shows as 99). */
+/** A status icon with its stack count in the bottom-right corner (over 999 shows as 999). */
 export function drawStatus(ctx: CanvasRenderingContext2D, id: string, x: number, y: number, count?: number | null) {
   ctx.drawImage(statusIconOf(id), x, y);
   if (count !== undefined && count !== null && count > 1) {
-    const s = String(Math.min(99, Math.floor(count)));
+    const s = String(Math.min(999, Math.floor(count)));
     const w = s.length * 4 - 1;
     drawDigits(ctx, s, x + STATUS_ICON + 1 - w, y + STATUS_ICON - 4, "#ffffff", OUTLINE);
   }
