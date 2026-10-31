@@ -6,7 +6,8 @@
  */
 import { combat, type Member as EngineMember } from "../../src/engine/combat/rules.js";
 import { ROGUE_VERSION, finish, freshMeta, member, migrate, newRogue, partyOf, registerGear, type RogueMeta, type RogueRun } from "../../src/rogue.js";
-import { beginRecord, recordAbandon } from "../../src/rogue-record.js";
+import { beginRecord, recordAbandon, recordResume } from "../../src/rogue-record.js";
+import { BUILD } from "./update.js";
 import { canEquip } from "../../src/validate.js";
 import { manifest } from "./art.js";
 import { c } from "./content.js";
@@ -23,6 +24,8 @@ function load(): Saved {
     const meta = { ...freshMeta(), ...(v.meta ?? {}) };
     meta.owned = meta.owned.filter((id) => c.classes.has(id));
     const run = v.run && v.run.v === ROGUE_VERSION && !stale(v.run) ? migrate(v.run) : null;
+    // The record notes each time the run is picked up again, and under which build (the check lists the builds a run was played under).
+    if (run) recordResume(run, BUILD);
     return { run, meta, last: v.last ?? null };
   } catch {
     return { run: null, meta: freshMeta() };
@@ -70,7 +73,7 @@ export function current(): RogueRun | null {
   if (s.run) {
     prepare(s.run);
     // Every run keeps a record for balancing (a run begun before records started from where it stands).
-    beginRecord(s.run);
+    beginRecord(s.run, BUILD);
   }
   return s.run;
 }
@@ -102,7 +105,7 @@ export function startRun(leader: string, heat: number): RogueRun {
   const seed = nextSeed();
   delete s.meta.next;
   s.run = newRogue(c, { seed, leader, heat });
-  beginRecord(s.run);
+  beginRecord(s.run, BUILD);
   s.last = null;
   prepare(s.run);
   saveRogue();

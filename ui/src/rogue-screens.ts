@@ -8,8 +8,9 @@ import {
   actRoll, bench, bossFoes, canManage, eventView as eventOfRun, formationRarity, itemGear, itemOf, leaderKnown, learnOptions, member, options, reachable,
   bagRoom, rogue, seatsOf, sellPrice, trainOptions, trainPrice, improveOptions, parseTraining, passiveOf, formOf, trainingId, upgradeOf, wearer, type Item, type MapNode, type Member, type Offer, type RogueRun, type Trained, type Training,
 } from "../../src/rogue.js";
-import { choose, discard, dismiss, equip, exportRecord, seat, setFormation, setOrder, swap, useSupply } from "../../src/rogue-record.js";
+import { checkRecord, choose, discard, dismiss, equip, exportRecord, seat, setFormation, setOrder, swap, useSupply } from "../../src/rogue-record.js";
 import { BUILD } from "./update.js";
+import type { RecordCheck } from "../../src/rogue-record.js";
 import { canEquip } from "../../src/validate.js";
 import { plainWeapon } from "../../src/sim/parties.js";
 import type { AbilityT, RogueNodeKindT } from "../../src/schema.js";
@@ -783,12 +784,31 @@ function overView(run: RogueRun): Child[] {
       h("div", { class: "line small dim wrap" }, `${run.stats.fights} FIGHTS · ${run.stats.elites} ELITES · ${run.stats.gold}G EARNED`),
       won ? h("div", { class: "line small hi wrap" }, `${run.party.map(shortName).join(", ")} CAN NOW LEAD A RUN`) : null),
     win("scroll", section("THE ROAD"), ...run.notes.map((n) => h("div", { class: "text small wrap" }, h("span", { class: "dim" }, `${ROMAN[n.act]}.${n.floor} `), n.text))),
+    recordLine(run),
     actions(button("DONE", () => { const r = endRun(); go("rogue"); if (r.won) cheer(r.unlocked, r.heat); }, "hi"), button("SAVE RUN", () => saveRunFile(run))),
   ];
 }
+/** The record's check (a replay of the whole run from its record), once per finished run: it takes a moment, so it runs after the screen is drawn. */
+let checked: { key: string; check: RecordCheck | null } | null = null;
+const checkKey = (run: RogueRun) => `${run.seed}:${(run as { record?: unknown[] }).record?.length ?? 0}`;
+function recordCheck(run: RogueRun): RecordCheck | null {
+  const key = checkKey(run);
+  if (checked?.key !== key) {
+    checked = { key, check: null };
+    setTimeout(() => { if (checked?.key !== key) return; checked.check = checkRecord(c, run); if (current() === run && run.pending.kind === "over") redraw(); }, 50);
+  }
+  return checked.check;
+}
+function recordLine(run: RogueRun) {
+  const ch = recordCheck(run);
+  const tone = !ch ? "dim" : ch.verdict === "good" ? "good" : ch.verdict === "partial" ? "hi" : "bad";
+  return win("", h("div", { class: `line small wrap ${tone}` }, ch ? ch.text : "CHECKING THE RECORD…"),
+    ch && ch.builds.length > 1 ? h("div", { class: "line small dim wrap" }, `PLAYED ACROSS ${ch.builds.length} BUILDS`) : null,
+    ch && ch.reloads ? h("div", { class: "line small dim wrap" }, `${ch.reloads} FIGHT${ch.reloads > 1 ? "S" : ""} RESTARTED AFTER A RELOAD (COUNTED ONCE)`) : null);
+}
 /** The run's record (every choice, what was offered, the party before every fight) downloaded as a file, for balancing. */
 function saveRunFile(run: RogueRun) {
-  const blob = new Blob([exportRecord(run, BUILD)], { type: "application/json" });
+  const blob = new Blob([exportRecord(c, run, BUILD, recordCheck(run) ?? undefined)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const a = h("a", { href: url, download: `rogue-run-${new Date().toISOString().slice(0, 16).replace(/[:T]/g, "-")}-${run.pending.kind === "over" && run.pending.won ? "won" : "lost"}.json` }) as HTMLAnchorElement;
   document.body.append(a);
