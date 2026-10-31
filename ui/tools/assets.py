@@ -263,58 +263,6 @@ STAND_INS = {
     "the_witch_blade_swings": (286, "purple"), "nights_edge_strike": (207, "purple"), "thralls_chalice_debt": (94, "purple"),
     "crown_of_embers_aura": (304, "orange"),
 }
-# Oct 31, 2026: the director's "64x64 Elemental Skill Variants and Status Effects" pack (32×32 art at 2×) replaces
-# these icons for every status it maps; the ones it doesn't (the retired legendary rules') keep the old pack's.
-# A status → (icon number in its ui_status_magic_icons set, a ramp from RAMPS or None to keep the pack's colours). The
-# set's small icons are about 18 art pixels; each is cut to the middle STATUS_BOX² of its art.
-STATUS_BOX = 20
-NEW_STATUS = {
-    # the statuses every fight shows
-    "bleed": (17, None), "regen": (37, None), "shield": (54, None), "might": (47, "red"), "weaken": (47, "purple"),
-    "guard": (58, None), "stun": (23, None), "slow": (40, "blue"), "haste": (60, None), "taunt": (38, None),
-    "burn": (33, None), "chill": (34, None), "shock": (28, None), "ward": (56, None), "sunder": (48, None),
-    "silence": (20, None), "hidden": (36, "gray"), "rot": (15, None), "clarity": (51, None), "aegis": (57, "gold"),
-    "doom": (31, None), "bulwark": (52, None), "bulwark_broken": (52, "red"), "ice_crust": (34, "steel"),
-    "marked": (59, None),
-    # the counters
-    "cuts": (24, "steel"), "heat": (33, "red"), "spite": (38, "crimson"), "tempo": (32, "blue"), "surge": (28, "purple"),
-    "fervor": (21, "gold"), "charge": (28, "ice"),
-    # class passives, on the sheets (a trained form shows its base's)
-    "vanguard": (58, "steel"), "last_rites": (32, "purple"), "hunters_eye": (59, "green"), "briar": (24, "green"),
-    "phalanx": (46, "brown"), "judgement": (39, "gold"), "einherjar": (32, "gold"), "refrain": (21, "blue"),
-    "cold_hex": (34, "purple"), "iron_palm": (47, "brown"), "lacerate": (17, "crimson"), "bloodlust": (35, "crimson"),
-    "kindling": (33, None), "shatterpoint": (34, "steel"), "arc": (28, None), "bedrock": (52, "gold"),
-    # foes' passives
-    "venom": (15, None), "fire_bite": (33, None), "split": (16, "orange"), "volatile": (26, None), "rime": (34, None),
-    "ice_crust_passive": (34, "steel"), "frozen_core": (51, "ice"), "static": (28, None), "vengeance": (22, "red"),
-    # shown as stats
-    "mp_regen": (51, None), "thorns": (24, "green"), "lifesteal": (21, "crimson"), "siphon": (51, "purple"), "double_strike": (39, "steel"),
-    # passives that light up in a fight
-    "last_rites_on": (32, "purple"), "bloodlust_on": (35, None), "bloodlust_on_plus": (35, None), "bedrock_on": (52, "gold"),
-    "bedrock_on_plus": (52, "gold"),
-    # formations
-    "vigil_mourning": (25, None), "the_wheel_wall": (46, "steel"), "the_wheel_wall_opening": (46, "steel"),
-    "the_wheel_blade": (39, "gold"), "the_wheel_blade_opening": (39, "gold"), "the_wheel_well": (15, "ice"),
-    "the_wheel_well_opening": (15, "ice"), "the_hurricane_count": (60, "green"), "the_mountain_strength": (47, "brown"),
-    "the_mountain_exposed": (48, "brown"),
-    # weapons, armor, offhands, amulets
-    "gorged_claws_on": (35, "red"), "spellbound": (51, "purple"), "sunburst": (23, "orange"), "portcullis_on": (52, "steel"),
-    "last_bastion_on": (46, "red"), "silvered_hauberk_on": (58, None), "bloodsworn_mail_on": (17, "crimson"),
-    "sanguine_mail_on": (21, "crimson"), "mottled_hide_on": (36, "brown"), "frostwalkers_furs_on": (34, None),
-    "matins_robe_on": (44, "gold"), "wallflowers_robe_on": (36, "purple"), "weavers_robes_on": (41, None),
-    "urchin_shell_on": (24, "brown"), "wasp_charm_on": (26, "yellow"),
-    # upgrades and mythics
-    "hold_the_line": (46, "steel"), "rite_of_passage": (32, "crimson"), "battle_prayer": (44, "purple"),
-    "battle_prayer_plus": (44, "purple"), "bloodroot": (37, "crimson"), "overgrowth": (37, None), "deep_roots": (37, "brown"),
-    "opening_thrust": (39, "steel"), "chooser_of_the_slain": (31, "gold"), "flow_state_count": (15, "green"),
-    "stillness_of_mind": (51, "ice"), "shadow_step_strike": (36, "purple"), "shared_feast_on": (21, "gold"),
-    "shared_feast_on_plus": (21, "gold"), "undying_thirst": (31, "crimson"), "undying_thirst_plus": (31, "crimson"),
-    "feeding_frenzy": (22, "red"), "deep_calm_free": (51, "purple"), "static_field": (28, None), "static_field_plus": (28, None),
-    "overcharge_charges": (60, "purple"), "storm_shield": (54, "yellow"), "faultline": (48, "gold"), "rampart": (58, "steel"),
-    "the_witch_blade_swings": (39, "purple"), "nights_edge_strike": (24, "purple"), "thralls_chalice_debt": (16, None),
-    "crown_of_embers_aura": (35, "orange"), "rebuke_count": (22, None), "halo_of_the_saint_kept": (21, "gold"),
-    "metronome_count": (32, None),
-}
 DRAWN = dict(STATUSES)
 STATUSES.update(STAND_INS)
 SOURCE_RAMP = [(48, 15, 10), (85, 15, 10), (155, 26, 10), (239, 105, 47), (239, 216, 161)]
@@ -337,8 +285,6 @@ def recolor(im, ramp, source=SOURCE_RAMP):
 if STATUS:
     ensure(OUT / "status")
     for sid, (n, ramp) in STATUSES.items():
-        if sid in NEW_STATUS:
-            continue
         im = Image.open(STATUS / f"Status_effect1_1_{n:02d}.png").convert("RGBA")
         recolor(im, RAMPS[ramp]).save(OUT / "status" / f"{sid}.png")
         manifest["statuses"][sid] = f"status/{sid}.png"
@@ -347,8 +293,6 @@ else:
     print("statuses: pack not found, kept")
     # The stand-ins, from the committed icons: each from one already drawn with the same icon number, its ramp swapped.
     for sid, (n, ramp) in STAND_INS.items():
-        if sid in NEW_STATUS:
-            continue
         src = next((k for k, (m, _) in DRAWN.items() if m == n and (OUT / "status" / f"{k}.png").exists()), None)
         if not src:
             raise SystemExit(f"no committed icon {n} for the stand-in {sid}")
@@ -357,9 +301,8 @@ else:
         manifest["statuses"][sid] = f"status/{sid}.png"
     print(f"statuses: {len(STAND_INS)} stand-ins from the committed icons")
 
-# ─── The director's skill and status pack (Oct 31, 2026): 64×64 icons, 32×32 art at 2× ───
+# ─── The director's skill and status pack (Oct 31, 2026): 64×64 icons, 32×32 art at 2×; its skill icons for the abilities ───
 SKILLS = find_dir("elemental_skill_icon_variants")
-STATUS_NEW = find_dir("ui_status_magic_icons")
 # Its skill icons come in themes, each the same 54 motifs in a row: gold (light) from icon 41, crimson (blood) from
 # 107, tan (earth, steel and plain blows) from 173, fire from 247. A theme the pack doesn't draw (ice, lightning, magic,
 # steel, nature, wind) is the gold one recoloured. A motif is its number in the gold row, 41 to 94.
@@ -412,14 +355,11 @@ def half(im):
     """The pack's 2× art back to one pixel per art pixel (every 2×2 block is one colour)."""
     return im.resize((im.width // 2, im.height // 2), Image.NEAREST)
 
-def recolor_lum(im, ramp, keep_outline=False):
-    """Recolours by brightness: the icon's colours, darkest to lightest, spread over the ramp. With keep_outline, the
-    darkest colour (the status icons' outline) stays as drawn."""
+def recolor_lum(im, ramp):
+    """Recolours by brightness: the icon's colours, darkest to lightest, spread over the ramp."""
     px = im.load()
     lum = lambda c: 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]
     cols = sorted({px[x, y][:3] for y in range(im.height) for x in range(im.width) if px[x, y][3]}, key=lum)
-    if keep_outline:
-        cols = cols[1:]
     if not cols:
         return im
     lo, hi = lum(cols[0]), lum(cols[-1])
@@ -434,26 +374,6 @@ def recolor_lum(im, ramp, keep_outline=False):
                 px[x, y] = (*lut[(r, g, b)], a)
     return im
 
-def box(im, n):
-    """The middle n×n of an icon's drawing, centred on what's drawn."""
-    bb = im.getbbox() or (0, 0, im.width, im.height)
-    cx, cy = (bb[0] + bb[2]) // 2, (bb[1] + bb[3]) // 2
-    out = Image.new("RGBA", (n, n), (0, 0, 0, 0))
-    out.paste(im.crop((cx - n // 2, cy - n // 2, cx - n // 2 + n, cy - n // 2 + n)), (0, 0))
-    return out
-
-if STATUS_NEW:
-    ensure(OUT / "status")
-    pre = next(STATUS_NEW.glob("*_001.png")).name[:-8]
-    for sid, (n, ramp) in NEW_STATUS.items():
-        im = half(Image.open(STATUS_NEW / f"{pre}_{n:03d}.png").convert("RGBA"))
-        if ramp:
-            im = recolor_lum(im, NEW_RAMPS[ramp][1:], keep_outline=True)
-        box(im, STATUS_BOX).save(OUT / "status" / f"{sid}.png")
-        manifest["statuses"][sid] = f"status/{sid}.png"
-    print(f"statuses: {len(NEW_STATUS)} icons from the skill and status pack")
-else:
-    print("skill and status pack: status icons not found, kept")
 
 if SKILLS:
     ensure(OUT / "abilities")

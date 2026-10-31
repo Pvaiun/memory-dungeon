@@ -369,27 +369,21 @@ export function actionIcon16(tag: string, act?: string): HTMLCanvasElement {
 }
 
 // ─── Status icons: the pack's 16×16, recoloured per status by the asset tool ───
-/**
- * Status icons are the director's skill and status pack's (Oct 31, 2026), cut by the asset tool to the middle 20×20 of
- * their art. The few left from the old pack (a 16×16 tile drawn in its middle 14×14) sit centred in the same box.
- */
-export const STATUS_ICON = 20;
+/** The pack draws each status in the middle 14×14 of a 16×16 tile; the empty border is cut, so icons sit tighter. */
+export const STATUS_ICON = 14;
 const statusIcons = new Map<string, HTMLCanvasElement>();
 export function statusIconOf(id: string): HTMLCanvasElement {
   let cv = statusIcons.get(id);
   if (cv) return cv;
-  // A trained form ("<id>__a") shows its base's icon.
-  const file = manifest.statuses[id] ?? manifest.statuses[id.replace(/__\w+$/, "")];
-  const img = file ? image(file) : undefined;
+  const img = manifest.statuses[id] ? image(manifest.statuses[id]) : undefined;
   cv = cv2d(STATUS_ICON, STATUS_ICON);
   const g = cv.getContext("2d")!;
-  if (img && img.naturalWidth === STATUS_ICON) g.drawImage(img, 0, 0);
-  else if (img) g.drawImage(img, 1, 1, 14, 14, (STATUS_ICON - 14) / 2, (STATUS_ICON - 14) / 2, 14, 14);
+  if (img) g.drawImage(img, 1, 1, STATUS_ICON, STATUS_ICON, 0, 0, STATUS_ICON, STATUS_ICON);
   else {
     // No icon in the pack: a coloured tile with the status's first letter.
     g.fillStyle = statusStyle(id).color;
     g.fillRect(0, 0, STATUS_ICON, STATUS_ICON);
-    drawText(g, (c.statuses.get(id)?.name ?? id).slice(0, 1).toUpperCase(), (STATUS_ICON - 8) / 2, (STATUS_ICON - 8) / 2, OUTLINE);
+    drawText(g, (c.statuses.get(id)?.name ?? id).slice(0, 1).toUpperCase(), 3, 3, OUTLINE);
   }
   statusIcons.set(id, cv);
   return cv;

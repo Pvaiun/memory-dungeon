@@ -389,15 +389,7 @@
   "the_witch_blade_swings": "status/the_witch_blade_swings.png",
   "nights_edge_strike": "status/nights_edge_strike.png",
   "thralls_chalice_debt": "status/thralls_chalice_debt.png",
-  "crown_of_embers_aura": "status/crown_of_embers_aura.png",
-  "vanguard": "status/vanguard.png",
-  "last_rites": "status/last_rites.png",
-  "einherjar": "status/einherjar.png",
-  "shatterpoint": "status/shatterpoint.png",
-  "the_mountain_exposed": "status/the_mountain_exposed.png",
-  "rebuke_count": "status/rebuke_count.png",
-  "halo_of_the_saint_kept": "status/halo_of_the_saint_kept.png",
-  "metronome_count": "status/metronome_count.png"
+  "crown_of_embers_aura": "status/crown_of_embers_aura.png"
  },
  "vfx": {
   "fire1": {
