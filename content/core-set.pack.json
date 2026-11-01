@@ -41365,11 +41365,11 @@
    },
    "knobs": [
     {
-     "mob": 0,
+     "mob": -25,
      "step": 4.5,
      "early": 28.3,
-     "elite": 0,
-     "boss": 0
+     "elite": -25,
+     "boss": -15
     },
     {
      "mob": 0,
