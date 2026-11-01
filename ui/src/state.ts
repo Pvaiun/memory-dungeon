@@ -30,6 +30,9 @@ export function applyHeadStart(hs: [number, number, number]) {
   const o = c.pack.ruleset.opening;
   if (o) o.slots = [...hs];
 }
+/** The SPEED choices, shared by Settings and the battle's speed button. */
+export const SPEEDS = [1, 1.5, 2, 2.5, 3, 4, 5] as const;
+
 /** The HIT PAUSE choices, as shares of the base hold (half a second plus a third per line, at 1×). */
 export const HIT_PAUSES = [0.25, 0.5, 0.75, 1] as const;
 
@@ -83,7 +86,7 @@ function load(): Setup {
     delete (s.settings as { bigNumbers?: boolean }).bigNumbers;
     if (!(NUMBER_SCALES as readonly number[]).includes(s.settings.numbers)) s.settings.numbers = DEFAULT_NUMBERS;
     if (!(HIT_PAUSES as readonly number[]).includes(s.settings.hitPause)) s.settings.hitPause = fresh().settings.hitPause;
-    if (![1, 1.5, 2, 2.5, 3, 4, 5].includes(s.settings.speed)) s.settings.speed = 1;
+    if (!(SPEEDS as readonly number[]).includes(s.settings.speed)) s.settings.speed = 1;
     if (s.settings.theme !== "night" && s.settings.theme !== "day") s.settings.theme = "night";
     if (!["faces", "sprites", "mixed"].includes(s.settings.portraits)) s.settings.portraits = "mixed";
     if (!Array.isArray(s.settings.headStart) || s.settings.headStart.length !== 3 || !s.settings.headStart.every((n) => (HEAD_STARTS as readonly number[]).includes(n))) s.settings.headStart = [0, 0, 0];
