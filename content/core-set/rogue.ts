@@ -169,7 +169,10 @@ export const ROGUE_CONFIG: RogueConfigT = {
     // from, one random ability each, a piece each and a legendary) need their knobs a median 85 lower on floor 4 than at the
     // reference floor 7, against act I's middle as a run on the 12-floor map has it (two abilities, two legendaries). (First
     // measured at 25.7 against a weaker middle and a party with no gear: the director then won act I four times of four.)
-    { mob: 0, step: 4.5, early: 28.3, elite: 0, boss: 0 },
+    // Oct 31 (the director's play: act I won once in about a dozen runs, lost at Night Wolves, the Ogre Bridge and floor 9's
+    // archers): a snap cut, untested by simulation, to make act I playable: fights and elites −25, the boss −15 (roughly
+    // undoing most of round 6's +30 to +38 / +18, which came after act I read as trivial).
+    { mob: -25, step: 4.5, early: 28.3, elite: -25, boss: -15 },
     { mob: 0, step: 4.5, elite: 0, boss: 0 },
     { mob: 0, step: 4.5, elite: 0, boss: 0 },
   ],
