@@ -41,7 +41,7 @@ export type BattleArgs = { dungeon: string; seed?: number; node?: string; rogue?
 /** Engine milliseconds per tick at 1×; the typing speed and the time a beat stays once typed. */
 const TICK_MS = 500;
 const CHAR_MS = 26, BEAT_BASE = 520, BEAT_LINE = 300;
-const SPEEDS = [1, 2, 4] as const;
+const SPEEDS = [1, 1.5, 2, 2.5, 3, 4, 5] as const;
 /** The main action at a fight's end and at the campfire: big, in the message window's place, under the field. */
 const bigButton = (label: Child, onClick: () => void, sub?: string) => {
   const b = button(h("span", { class: "big-label" }, label, sub ? h("span", { class: "sub" }, sub) : null), onClick, "hi big");
@@ -142,7 +142,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   const narrator = new Narrator({ unit: (id) => driver.unit(id), name: nameOf });
 
   // ─── Clock, speed and beats ───
-  let speed: number = SPEEDS.includes(setup.settings.speed as 1 | 2 | 4) ? setup.settings.speed : 1;
+  let speed: number = (SPEEDS as readonly number[]).includes(setup.settings.speed) ? setup.settings.speed : 1;
   let paused = false;
   let stepping = false;
   let vwall = 0;
@@ -166,8 +166,8 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     renderCtl();
   };
   const pauseBtn = button("II", () => setPaused(!paused));
-  // One button for the speed: each tap goes 1×, 2×, 4×, round again.
-  const speedBtn = button("1×", () => { speed = SPEEDS[(SPEEDS.indexOf(speed as 1 | 2 | 4) + 1) % SPEEDS.length]; setup.settings.speed = speed; save(); renderCtl(); }, "speed");
+  // One button for the speed: each tap steps through SPEEDS, round again.
+  const speedBtn = button("1×", () => { speed = SPEEDS[((SPEEDS as readonly number[]).indexOf(speed) + 1) % SPEEDS.length]; setup.settings.speed = speed; save(); renderCtl(); }, "speed");
   const renderCtl = () => {
     pauseBtn.textContent = paused ? "▶" : "II";
     pauseBtn.className = paused ? "on" : "";
@@ -187,8 +187,9 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     queue.push(...narrator.take());
   }
   const charMs = () => (speed >= 4 ? 0 : CHAR_MS / speed);
-  /** How long a typed beat stays: the base hold, scaled by Settings → HIT PAUSE, at the speed set. */
-  const holdFor = (b: Beat) => ((BEAT_BASE + BEAT_LINE * b.weight) * (setup.settings.hitPause ?? 1)) / speed;
+  /** How long a typed beat stays: the base hold, scaled by Settings → HIT PAUSE, shrinking with the square root of the speed
+   *  (anchored at 1.5×), not its inverse: slow speeds hold a little less than before, fast ones keep a visible pause. */
+  const holdFor = (b: Beat) => ((BEAT_BASE + BEAT_LINE * b.weight) * (setup.settings.hitPause ?? 1)) / Math.sqrt(1.5 * speed);
   function startBeat(b: Beat) {
     clear(linesEl);
     playing = { beat: b, shown: 0, typed: 0, charAt: vwall, lineEls: [], typedAt: null, hold: holdFor(b) };
@@ -909,7 +910,9 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     else if (e.key === "n" || e.key === "." || e.key === "Enter") { advance(); }
     else if (e.key === "1") { speed = 1; renderCtl(); }
     else if (e.key === "2") { speed = 2; renderCtl(); }
-    else if (e.key === "3" || e.key === "4") { speed = 4; renderCtl(); }
+    else if (e.key === "3") { speed = 3; renderCtl(); }
+    else if (e.key === "4") { speed = 4; renderCtl(); }
+    else if (e.key === "5") { speed = 5; renderCtl(); }
     else if (e.key === "s") fastForward();
     else if (e.key === "l") openLog();
     else if (e.key === "Escape") { if (overlay) closeOverlay(true); }
