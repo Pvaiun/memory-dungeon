@@ -24,7 +24,7 @@ const actions = (main: HTMLButtonElement | null, ...more: (HTMLButtonElement | n
 };
 /** A choice as a big button: its word and, under it, what it does. */
 const choice = (label: string, sub: string, onClick: () => void) => button(h("span", { class: "big-label" }, label, sub ? h("span", { class: "sub" }, sub) : null), onClick, "hi big");
-import { abilityBlock, basicLine, canUse, classHead, classPassive, codeSpans, ENEMY_STATS, enemyStats, formationNote, gearRow, hitsWith, lockedRow, RARITY_TONE, role, seatCodes, seatLines, seatNotes, section, sizeEl, SLOTS, specialLines, statGrid, tk, twoHanded, type GearSlot } from "./sheet.js";
+import { aggShares, abilityBlock, basicLine, canUse, classHead, classPassive, codeSpans, ENEMY_STATS, enemyStats, formationNote, gearRow, hitsWith, lockedRow, RARITY_TONE, role, seatCodes, seatLines, seatNotes, section, sizeEl, SLOTS, specialLines, statGrid, tk, twoHanded, type GearSlot } from "./sheet.js";
 import { abilityInfo, abilityTag, sizeParts, sizeText, type Stats } from "./describe.js";
 import { campEl, foesOnStage, partyInLine, partyOnStage, stageEl, themeOf, type StageActor, type StageOpts } from "./battle/scene.js";
 import { gearIcon, type Pose } from "./art.js";
@@ -830,6 +830,7 @@ export function rpartyScreen(): Child[] {
   const setF = (i: number) => { setFormation(c, run, run.formations[(i + run.formations.length) % run.formations.length]); saveRogue(); go("rparty", undefined, true); };
   const prev = button("◀", () => setF(fi - 1), "sm"), nxt = button("▶", () => setF(fi + 1), "sm");
   prev.disabled = nxt.disabled = run.formations.length < 2 || !manage;
+  const agg = aggShares(run.party.map((cls) => (vitals(run, cls).ko ? null : fighter(run, cls).stats.aggro ?? 100)));
   const cards = run.party.map((cls, i) => {
     const pos = f.positions[i];
     const v = vitals(run, cls);
@@ -840,7 +841,8 @@ export function rpartyScreen(): Child[] {
       else { const o = [...run.party]; [o[seatPick], o[i]] = [o[i], o[seatPick]]; seat(c, run, o); seatPick = null; saveRogue(); }
       go("rparty", undefined, true);
     } },
-      h("div", { class: "slot" }, `${i + 1} ${pos.name}`),
+      h("div", { class: "slot" }, pos.name),
+      agg[i] ? h("div", { class: "slot dim" }, agg[i]) : null,
       h("div", { class: "portrait" }, faceEl(cls)),
       h("div", { class: "name" }, shortName(cls)),
       v.ko ? h("div", { class: "bad" }, "KO") : bar(v.hp / v.maxHp),

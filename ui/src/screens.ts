@@ -15,7 +15,7 @@ import {
 } from "./journey.js";
 import { celebrate } from "./celebrate.js";
 import { anyNewEnemy, known, look, metCount, newEnemy } from "./bestiary.js";
-import { abilityBlock, basicLine, canUse, classHead, classPassive, codeSpans, enemySheet, formationNote, gearRow, lockedRow, memberFor, portraitEl, RARITY_TONE, role, seatCodes, seatNotes, section, SLOTS, specialLines, statGrid, twoHanded, type GearSlot } from "./sheet.js";
+import { aggShares, abilityBlock, basicLine, canUse, classHead, classPassive, codeSpans, enemySheet, formationNote, gearRow, lockedRow, memberFor, portraitEl, RARITY_TONE, role, seatCodes, seatNotes, section, SLOTS, specialLines, statGrid, twoHanded, type GearSlot } from "./sheet.js";
 import { enemyEl, enemyThumb } from "./pixel.js";
 import { weaponOf } from "../../src/engine/combat/fight.js";
 import { foesOnStage, partyOnStage, stageEl, Strip, STRIP_H, themeOf } from "./battle/scene.js";
@@ -320,6 +320,7 @@ function party(): Child[] {
   const prev = button("◀", () => setFormation(fi - 1), "sm"), next = button("▶", () => setFormation(fi + 1), "sm");
   prev.disabled = next.disabled = fms.length < 2;
   const roster = classes.filter((k) => ownsClass(k.id));
+  const agg = aggShares([0, 1, 2].map((i) => (setup.party[i] ? memberFor(setup.party[i]).stats.aggro ?? 100 : null)));
   const cards = [0, 1, 2].map((i) => {
     const id = setup.party[i];
     const pos = f.positions[i];
@@ -328,7 +329,8 @@ function party(): Child[] {
     // Something picked: the slots it can go to pulse.
     const target = pickClass !== null || (pickSlot !== null && pickSlot !== i);
     return h("div", { class: `win card${i === pickSlot ? " cur" : ""}${target ? " target" : ""}`, onClick: () => tapSlot(i) },
-      h("div", { class: "slot" }, `${i + 1} ${pos.name}`),
+      h("div", { class: "slot" }, pos.name),
+      agg[i] ? h("div", { class: "slot dim" }, agg[i]) : null,
       id ? h("div", { class: "portrait" }, portraitEl(id, "slot")) : h("div", { class: "empty" }, "EMPTY"),
       h("div", { class: "name" }, id ? shortName(id) : "---"),
       h("div", { class: "codes" }, ...codes),

@@ -12,7 +12,7 @@
 import { headStart } from "../../src/engine/combat/stats.js";
 import type { AbilityT, EnemyT, FormationT, GearT, WeaponT } from "../../src/schema.js";
 import { combat, type Member } from "../../src/engine/combat/rules.js";
-import { resolveWeapon, weaponOf } from "../../src/engine/combat/fight.js";
+import { drawOf, resolveWeapon, weaponOf } from "../../src/engine/combat/fight.js";
 import { armorName, c, cls, disp, immuneTo, kindOf, offhandName, SHEET_STATS, shortName, SPECIAL_STATS, showStat, statCode, status, tagline } from "./content.js";
 import { abilityInfo, abilityTag, damageTypeOf, evalNum, scalesOf, sizeParts, statusText, TYPE_TONE, TYPE_WORD, type Scale, type SizePart, type Stats } from "./describe.js";
 import { gearIcon, SLOT_ICON, TAG_ICON, weaponLook } from "./art.js";
@@ -31,6 +31,13 @@ export function memberFor(id: string): Member {
   const p = inParty ? party() : soloParty(id);
   const members = combat.party(c, { dungeon: c.pack.progression.dungeonOrder[0], party: p, seed: 1 }) as Member[];
   return members.find((m) => m.ref === id)!;
+}
+
+/** Each seat's share of the foes' picks (the draw rule on its unit's Aggro), as "AGG 40%"; null where the seat is empty or down. */
+export function aggShares(aggros: (number | null)[]): (string | null)[] {
+  const w = aggros.map((a) => (a === null ? 0 : drawOf(c.pack.ruleset, a)));
+  const t = w.reduce((x, y) => x + y, 0);
+  return aggros.map((a, i) => (a === null || !t ? null : `AGG ${Math.round((100 * w[i]) / t)}%`));
 }
 
 /** What stands for a class in a menu: its face or its figure with its weapon, by the PORTRAITS setting; `slot` is the party screen's cards. */
