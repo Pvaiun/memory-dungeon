@@ -8,7 +8,7 @@ import { foesText, meets, needText, rewardsOf, unmet } from "../../src/campaign.
 import { c, className, classes, cls as classOf, dungeons, enemies, fightName, formations, gearOf, NUMBER_SCALES, runName, setNumberScale, shortName } from "./content.js";
 import { enemyDisplayName } from "./art.js";
 import { button, h, header, nav, row, settleBack, win, type Child } from "./dom.js";
-import { abilitiesFor, applyHeadStart, gearFor, HEAD_STARTS, HIT_PAUSES, party as partyLoadout, reset, resetJourneyLoadout, save, setup, useMode } from "./state.js";
+import { abilitiesFor, applyHeadStart, gearFor, HEAD_STARTS, HIT_PAUSES, SPEEDS, party as partyLoadout, reset, resetJourneyLoadout, save, setup, useMode } from "./state.js";
 import {
   anyNewClass, anyNewFormation, anyNewGear, cleared, currentIndex, hasJourney, markSeen, newClass, newFormation, newGear, newGearFor, newNode, nodes, onJourney,
   ownsClass, ownsFormation, ownsGear, resetJourney, setCleared, mode as playMode, onRogue,
@@ -532,7 +532,7 @@ function settings(): Child[] {
     win("list scroll",
       row([h("span", { class: "grow" }, "MODE"), h("span", { class: playMode() === "free" ? "" : "hi" }, playMode() === "journey" ? "JOURNEY" : playMode() === "rogue" ? "ROGUE" : "FREE PLAY")], () => { const m = playMode(); useMode(m === "journey" ? "free" : m === "free" ? "rogue" : hasJourney ? "journey" : "free"); refresh(); }, { cursor: false }),
       row([h("span", { class: "grow" }, "THEME"), h("span", null, s.theme.toUpperCase())], () => { s.theme = s.theme === "night" ? "day" : "night"; setTheme(s.theme); save(); refresh(); }, { cursor: false }),
-      cycle("SPEED", [1, 2, 4], s.speed, (v) => `${v}×`, (v) => (s.speed = v)),
+      cycle("SPEED", [...SPEEDS], s.speed, (v) => `${v}×`, (v) => (s.speed = v)),
       cycle("HIT PAUSE", HIT_PAUSES, s.hitPause as (typeof HIT_PAUSES)[number], (v) => `${Math.round(v * 100)}%`, (v) => (s.hitPause = v)),
       toggle("SOUND", "sound"),
       toggle("MUSIC", "music"),

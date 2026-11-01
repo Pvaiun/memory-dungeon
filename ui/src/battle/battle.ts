@@ -16,7 +16,7 @@ import { resolveWeapon, weaponOf } from "../../../src/engine/combat/fight.js";
 import { c, className, disp, fightName, runName, shortName, shownAsIcon } from "../content.js";
 import { enemyName, statusStyle, TYPE_COLOR, type Pose } from "../art.js";
 import { bar, button, clear, h, nav, win, type Child } from "../dom.js";
-import { nextSeed, party as partyLoadout, save, setup } from "../state.js";
+import { nextSeed, party as partyLoadout, save, setup, SPEEDS } from "../state.js";
 import { damageTypeOf, statusText } from "../describe.js";
 import { actionIconEl, actionIconOf, drawDigits, enemyThumb, OUTLINE, statusEl } from "../pixel.js";
 import { classHead, classSheet, enemySheet, portraitEl } from "../sheet.js";
@@ -41,7 +41,6 @@ export type BattleArgs = { dungeon: string; seed?: number; node?: string; rogue?
 /** Engine milliseconds per tick at 1×; the typing speed and the time a beat stays once typed. */
 const TICK_MS = 500;
 const CHAR_MS = 26, BEAT_BASE = 520, BEAT_LINE = 300;
-const SPEEDS = [1, 1.5, 2, 2.5, 3, 4, 5] as const;
 /** The main action at a fight's end and at the campfire: big, in the message window's place, under the field. */
 const bigButton = (label: Child, onClick: () => void, sub?: string) => {
   const b = button(h("span", { class: "big-label" }, label, sub ? h("span", { class: "sub" }, sub) : null), onClick, "hi big");
