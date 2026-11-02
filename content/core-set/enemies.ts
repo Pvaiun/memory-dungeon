@@ -4,7 +4,7 @@
  * Magic, Armor, Crit, Aggro, as the document lists them.
  */
 import type { AbilityT, EnemyT, StatusT, WeaponT } from "../../src/schema.js";
-import { ENEMY_COOLDOWN, COST, ENEMY_HIT, ENEMY_SPEED_FACTOR, ENEMY_SWING, FLAT_STACKS, HIT, RANK_RESIST, RESIST, REVIVE, SPECIAL, SPEED, STATUS, WINDUP, BOSS_HP, crit, jitter, aggroOf, pts, type SwingWord } from "./scale.js";
+import { ENEMY_COOLDOWN, COST, KIND_SPEED, RULES, ENEMY_HIT, ENEMY_SPEED_FACTOR, ENEMY_SWING, FLAT_STACKS, HIT, RANK_RESIST, RESIST, REVIVE, SPECIAL, SPEED, STATUS, WINDUP, BOSS_HP, crit, jitter, aggroOf, pts, type SwingWord } from "./scale.js";
 import { T } from "./classes.js";
 import { speedOf } from "./vocabulary.js";
 
@@ -125,7 +125,14 @@ const archer = enemy("archer", "Archer", "Hits hard, falls fast.", "minion", lin
 const snake = enemy("snake", "Snake", "Its bite leaves a bleeding wound.", "minion", line(2, 0, 0, 2, 0, 0, 2, 1), basic("dagger", "weak"), { statuses: ["venom"] });
 const shieldman = enemy("shieldman", "Shieldman", "Hides behind a big shield.", "elite", line(10, 3, 2, 2, 0, 5, 1, 4), basic("sword"), { abilities: ["shield_up", "shield_slam"] }); // Step 5g: a slam that Stuns in Brace's place (an elite that dealt 708 an appearance and wasted 36 ticks).
 // Step 5g round 3: a massive swing (was heavy): on a 16-tick axe with a 6-tick wind-up the elite swung three times in 35 ticks for a minion's damage a tick.
-const ogre = enemy("ogre", "Ogre", "Big, slow, and swings a tree.", "elite", line(16, 2, 1, 6, 0, 2, 2, 4), basic("great_weapon", "massive", { cast: WINDUP.long }), { abilities: ["flatten"], note: "Its basic attack has a long wind-up: an exception to the no-wind-up default." });
+/**
+ * The Ogre's (and the Troll's) slow swing. Until Nov 2, 2026 it had a long wind-up, the one basic attack in the game with one; at the
+ * director's word no basic attack winds up (a wind-up reads as an ability, and Silence and Unmake reacted to a swing they couldn't
+ * stop), so the wind-up's ticks moved into the cooldown and the swing keeps its rhythm: every 12.8 + 6 = 18.8 ticks, with the
+ * recovery after it held at the great weapon's (0.25 × 12.8), so Flatten waits no longer after a swing than before.
+ */
+const OGRE_SWING = { cooldown: KIND_SPEED.great_weapon + WINDUP.long, recovery: RULES.basicRecovery * KIND_SPEED.great_weapon };
+const ogre = enemy("ogre", "Ogre", "Big, slow, and swings a tree.", "elite", line(16, 2, 1, 6, 0, 2, 2, 4), basic("great_weapon", "massive", OGRE_SWING), { abilities: ["flatten"], note: "Its basic attack comes slowly: the great weapon's cooldown plus a long wind-up's ticks." });
 const ogreChief = enemy("ogre_chief", "Ogre Chief", "The biggest ogre, with the biggest club.", "boss", line(60, 4, 2, 12, 0, 3, 2, 4), basic("great_weapon", "heavy"), { abilities: ["crush"] });
 
 const skeleton = enemy("skeleton", "Skeleton", "Old bones in heavy armor.", "minion", line(3, 0, 0, 3, 0, 8, 2, 3), basic("sword", "normal", { cooldown: SPEED.slow }), { abilities: ["brace"] }); // Step 5g: it braces (Guard on itself).
