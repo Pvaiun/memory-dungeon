@@ -26,7 +26,8 @@ export type UV = {
   hpTold: number; downTold: boolean;
   /** The statuses the messages have told it gained and not yet lost, in that order; their last stack counts. */
   stsTold: Set<string>; stsLast: Map<string, number | null>; stsGone: Map<string, number>;
-  cast: { name: string; start: number; end: number } | null;
+  /** The wind-up being told: `held` are the stretches a Stun pauses it (the engine's `hold`), when the bar stands still. */
+  cast: { name: string; start: number; end: number; held?: [number, number][] } | null;
   numberStack: number; numberAt: number;
   /** When each status landed (for its pop) and statuses that just ended (for their fade). */
   pops: Map<string, number>; fades: { id: string; until: number }[];
@@ -479,7 +480,12 @@ export class Scene {
       // The wind-up as a thin upright bar beside the figure, filling from the bottom: left of a party member (measured
       // from the pose it's in, so it clears the step back a wind-up takes), right of a foe. It never sits where the
       // unit above keeps its status icons.
-      const p = Math.max(0, Math.min(1, (this.driver.vt - v.cast.start) / Math.max(1, v.cast.end - v.cast.start)));
+      // A Stun holds the wind-up (the engine's `hold`): the bar stands still, greyed, through the held stretch, then fills on from there.
+      const vt = this.driver.vt;
+      const held = v.cast.held ?? [];
+      const heldBy = (t: number) => held.reduce((n, [a, b]) => n + Math.max(0, Math.min(t, b) - a), 0);
+      const frozen = held.some(([a, b]) => vt >= a && vt < b);
+      const p = Math.max(0, Math.min(1, (vt - v.cast.start - heldBy(vt)) / Math.max(1, v.cast.end - v.cast.start - heldBy(v.cast.end))));
       const bh = Math.min(28, Math.max(14, v.h - 10));
       const left = v.side === "party" ? x + Math.floor(actorSpan(v.ref, v.pose)[0]) - 4 : x + Math.round(v.w / 2) + 2;
       const bx = Math.max(1, Math.min(W - 3, left));
@@ -488,7 +494,7 @@ export class Scene {
       ctx.fillRect(bx - 1, by - 1, 4, bh + 2);
       ctx.fillStyle = "#3a3a4a";
       ctx.fillRect(bx, by, 2, bh);
-      ctx.fillStyle = "#ffd54a";
+      ctx.fillStyle = frozen ? "#8e99b8" : "#ffd54a";
       const fill = Math.round(bh * p);
       ctx.fillRect(bx, by + bh - fill, 2, fill);
     }

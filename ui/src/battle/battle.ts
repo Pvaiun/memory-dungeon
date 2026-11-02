@@ -371,6 +371,16 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         // Step 5i: a boss's control resistance at its cap reads the same word, in the debuffs' warm colour.
         scene.number(String(ev.unit), "IMMUNE", { color: ev.why === "control" ? "#ffa062" : "#8e99b8" });
         break;
+      case "hold": {
+        // A Stun holds a wind-up: it waits out the Stun, then carries on from where it was. The bar stands still meanwhile.
+        const v = scene.units.get(String(ev.unit));
+        if (v?.cast) {
+          const ends = ev.ends as number;
+          v.cast = { ...v.cast, held: [...(v.cast.held ?? []), [at!, at! + ends - v.cast.end]], end: ends };
+        }
+        scene.number(String(ev.unit), "HELD", { color: "#8e99b8" });
+        break;
+      }
       case "interrupt": {
         const v = scene.units.get(String(ev.unit));
         if (v) v.cast = null;
