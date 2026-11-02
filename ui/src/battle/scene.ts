@@ -30,7 +30,7 @@ export type UV = {
   /** The statuses the messages have told it gained and not yet lost, in that order; their last stack counts. */
   stsTold: Set<string>; stsLast: Map<string, number | null>; stsGone: Map<string, number>;
   /** The wind-up being told: `held` are the stretches a Stun pauses it (the engine's `hold`), when the bar stands still. */
-  cast: { name: string; start: number; end: number; basic?: boolean; held?: [number, number][] } | null;
+  cast: { name: string; start: number; end: number; held?: [number, number][] } | null;
   /** A wind-up just interrupted (Silence): the bar drains in red from where it stood, until `until` (wall time). */
   broke?: { p: number; until: number };
   numberStack: number; numberAt: number;
@@ -502,7 +502,7 @@ export class Scene {
     if ((v.cast || broke) && !v.downTold) {
       // The wind-up as a thin upright bar beside the figure, filling from the bottom: left of a party member (measured
       // from the pose it's in, so it clears the step back a wind-up takes), right of a foe. It never sits where the
-      // unit above keeps its status icons. Gold for an ability, pale for a basic attack (Silence stops only the gold).
+      // unit above keeps its status icons.
       // A Stun holds the wind-up (the engine's `hold`): the bar stands still, greyed, through the held stretch, then fills on from there.
       // An interrupted wind-up (Silence) drains in red from where it stood before the next one shows.
       let p: number, colour: string;
@@ -513,7 +513,7 @@ export class Scene {
         const cast = v.cast!;
         p = this.windup(cast);
         const vt = this.driver.vt;
-        colour = (cast.held ?? []).some(([a, b]) => vt >= a && vt < b) ? "#7f8db0" : cast.basic ? "#e4e6ee" : "#ffd54a";
+        colour = (cast.held ?? []).some(([a, b]) => vt >= a && vt < b) ? "#8e99b8" : "#ffd54a";
       }
       const bh = Math.min(28, Math.max(14, v.h - 10));
       const left = v.side === "party" ? x + Math.floor(actorSpan(v.ref, v.pose)[0]) - 4 : x + Math.round(v.w / 2) + 2;

@@ -293,7 +293,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       }
       case "cast": {
         const v = scene.units.get(String(ev.by));
-        if (v) v.cast = { name: String(ev.name), start: at!, end: ev.ends as number, basic: ev.act === "basic" };
+        if (v) v.cast = { name: String(ev.name), start: at!, end: ev.ends as number };
         if (v?.side === "party") scene.pose(v.id, "chant", 0);
         sfx.cast();
         break;

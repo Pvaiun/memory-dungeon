@@ -241,7 +241,7 @@ Hides behind a big shield. **Challenge:** anchors the Shield wall group.
 
 Big, slow, and swings a tree. **Challenge:** Brute; carries the set's enemy Stun.
 
-**Stats:** HP 16, MP 2, MP regen 1, Attack 6, Magic 0, Armor 2, Crit 2, Aggro 4. **Basic attack:** slow, massive, blunt, with a long wind-up (an exception to the no-wind-up default).
+**Stats:** HP 16, MP 2, MP regen 1, Attack 6, Magic 0, Armor 2, Crit 2, Aggro 4. **Basic attack:** massive, blunt, and slower than any other great weapon (every 18.8 ticks: the great weapon's 12.8 plus the 6 of the long wind-up it had until Nov 2, 2026), with no wind-up: no basic attack has one.
 
 - **Flatten.** Deals heavy blunt damage to a random foe and applies Stun. Medium cooldown, long wind-up.
 

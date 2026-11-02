@@ -37961,12 +37961,13 @@
    "weapon": {
     "kind": "great_weapon",
     "amount": 1600,
-    "cast": 6
+    "cooldown": 18.8,
+    "recovery": 3.2
    },
    "abilities": [
     "flatten"
    ],
-   "note": "Its basic attack has a long wind-up: an exception to the no-wind-up default."
+   "note": "Its basic attack comes slowly: the great weapon's cooldown plus a long wind-up's ticks."
   },
   {
    "id": "ogre_chief",
@@ -38654,7 +38655,8 @@
    "weapon": {
     "kind": "great_weapon",
     "amount": 1600,
-    "cast": 6
+    "cooldown": 18.8,
+    "recovery": 3.2
    },
    "abilities": [
     "flatten"
