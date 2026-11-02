@@ -14,9 +14,6 @@ import { manifest, VFX_FOR, type Pose } from "../art.js";
 import { actorSpan, backdropImage, drawActor, drawCampfire, drawChest, drawEnemy, drawStatus, drawText, enemyK, enemySprite, FRAME_W, OUTLINE, STATUS_ICON, statusIconOf, vfxSprite } from "../pixel.js";
 import type { Driver } from "./driver.js";
 
-/** How long an interrupted wind-up's bar takes to drain, in ms. */
-const BROKE_MS = 700;
-
 export const W = FRAME_W, H = 228;
 
 export type UV = {
@@ -31,8 +28,6 @@ export type UV = {
   stsTold: Set<string>; stsLast: Map<string, number | null>; stsGone: Map<string, number>;
   /** The wind-up being told: `held` are the stretches a Stun pauses it (the engine's `hold`), when the bar stands still. */
   cast: { name: string; start: number; end: number; held?: [number, number][] } | null;
-  /** A wind-up just interrupted (Silence): the bar drains in red from where it stood, until `until` (wall time). */
-  broke?: { p: number; until: number };
   numberStack: number; numberAt: number;
   /** When each status landed (for its pop) and statuses that just ended (for their fade). */
   pops: Map<string, number>; fades: { id: string; until: number }[];
@@ -187,7 +182,7 @@ export class Scene {
     this.units.set(u.id, {
       id: u.id, side: u.side, ref: u.ref, name: u.name, x: 0, y: 0, w: s ? s.width : 26, h: s ? s.height : 40, k,
       pose: u.ko ? "dead" : "wait", poseUntil: 0, lungeUntil: 0, shakeUntil: 0, flashUntil: 0, alpha: u.ko && !party ? 0 : 1, gone: !!u.gone,
-      hpShown: u.hp, shieldShown: 0, hpTold: u.hp, downTold: u.ko, stsTold: new Set(shownStatuses(u).map((x) => x.id)), stsLast: new Map(), stsGone: new Map(), cast: null, broke: undefined, numberStack: 0, numberAt: 0, pops: new Map(), fades: [],
+      hpShown: u.hp, shieldShown: 0, hpTold: u.hp, downTold: u.ko, stsTold: new Set(shownStatuses(u).map((x) => x.id)), stsLast: new Map(), stsGone: new Map(), cast: null, numberStack: 0, numberAt: 0, pops: new Map(), fades: [],
     });
   }
 
@@ -252,7 +247,6 @@ export class Scene {
     if (!v) return;
     v.downTold = true;
     v.cast = null;
-    v.broke = undefined;
     if (v.side === "party") {
       v.pose = "dead";
       v.poseUntil = 0;
@@ -273,7 +267,7 @@ export class Scene {
   clearTransient() {
     this.numbers = [];
     this.fx = [];
-    for (const v of this.units.values()) (v.cast = null), (v.broke = undefined), v.pops.clear(), (v.fades = []);
+    for (const v of this.units.values()) (v.cast = null), v.pops.clear(), (v.fades = []);
   }
   /** Is this status's icon already shown under the unit? (Step 5i: a count's later stacks only move its number.) */
   showsIcon(id: string, status: string): boolean {
@@ -300,7 +294,6 @@ export class Scene {
     v.fades.push({ id: status, until: this.wall + 450 });
   }
 
-  /** A number or word over a unit; stacked numbers on the same unit spread out. */
   /** How far a wind-up has filled, 0 to 1, not counting the stretches a Stun held it. */
   windup(cast: NonNullable<UV["cast"]>): number {
     const vt = this.driver.vt;
@@ -309,14 +302,7 @@ export class Scene {
     return Math.max(0, Math.min(1, (vt - cast.start - heldBy(vt)) / Math.max(1, cast.end - cast.start - heldBy(cast.end))));
   }
 
-  /** A wind-up interrupted: its bar drains in red from where it stood. */
-  interrupted(id: string) {
-    const v = this.units.get(id);
-    if (!v?.cast) return;
-    v.broke = { p: this.windup(v.cast), until: this.wall + BROKE_MS };
-    v.cast = null;
-  }
-
+  /** A number or word over a unit; stacked numbers on the same unit spread out. */
   number(id: string, text: string, o: NumOpts = {}) {
     const v = this.units.get(id);
     if (!v) return;
@@ -498,23 +484,14 @@ export class Scene {
         });
       }
     }
-    const broke = v.broke && v.broke.until > this.wall ? v.broke : null;
-    if ((v.cast || broke) && !v.downTold) {
+    if (v.cast && !v.downTold) {
       // The wind-up as a thin upright bar beside the figure, filling from the bottom: left of a party member (measured
       // from the pose it's in, so it clears the step back a wind-up takes), right of a foe. It never sits where the
       // unit above keeps its status icons.
       // A Stun holds the wind-up (the engine's `hold`): the bar stands still, greyed, through the held stretch, then fills on from there.
-      // An interrupted wind-up (Silence) drains in red from where it stood before the next one shows.
-      let p: number, colour: string;
-      if (broke) {
-        p = broke.p * Math.max(0, (broke.until - this.wall) / BROKE_MS);
-        colour = "#ff5a4a";
-      } else {
-        const cast = v.cast!;
-        p = this.windup(cast);
-        const vt = this.driver.vt;
-        colour = (cast.held ?? []).some(([a, b]) => vt >= a && vt < b) ? "#8e99b8" : "#ffd54a";
-      }
+      const vt = this.driver.vt;
+      const p = this.windup(v.cast);
+      const colour = (v.cast.held ?? []).some(([a, b]) => vt >= a && vt < b) ? "#8e99b8" : "#ffd54a";
       const bh = Math.min(28, Math.max(14, v.h - 10));
       const left = v.side === "party" ? x + Math.floor(actorSpan(v.ref, v.pose)[0]) - 4 : x + Math.round(v.w / 2) + 2;
       const bx = Math.max(1, Math.min(W - 3, left));

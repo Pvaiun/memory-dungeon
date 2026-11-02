@@ -382,7 +382,8 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         break;
       }
       case "interrupt": {
-        scene.interrupted(String(ev.unit));
+        const v = scene.units.get(String(ev.unit));
+        if (v) v.cast = null;
         scene.number(String(ev.unit), "STOPPED", { color: "#ff7b6b" });
         break;
       }
