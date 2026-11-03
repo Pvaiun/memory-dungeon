@@ -1,6 +1,6 @@
 /**
  * Step 5i, step 5: the upgrades of the Knight, Cleric, Ranger, Bramble knight, Hoplite, Paladin, Valkyrie and Bard (a power step and two versions for each ability and passive, as five forms
- * each) and their mythics, from steps/05-core-set/5i-synergy/fill/upgrades-1.md with fill-rulings.md (its third round wins).
+ * each) and their mythics, from step 5i's fill (its design, kept in git history).
  * `upgrades` joins the pack's upgrades, `abilities` (the ability forms) its abilities, `statuses` (passive forms and helpers, and the mythics' statuses) its
  * statuses, `mythics` its gear and the rogue's stock; `builds` is designer data, never in the pack.
  *

@@ -10,7 +10,7 @@
  *
  * Step 5i (the build's retire share): the rogue's own loot is gone: its 29 legendary pieces (21 armors and amulets, 8
  * weapons) and the 27 statuses behind them, the legendary pool and its aims, the 16 affixes, and the provisional formation
- * rarities. The pieces, formations and upgrades of steps/05-core-set/5i-synergy/fill/ take their place.
+ * rarities. Step 5i's pieces, formations and upgrades take their place.
  */
 import type { RogueConfigT, RogueNodeKindT } from "../../src/schema.js";
 import { enc } from "./dungeons.js";

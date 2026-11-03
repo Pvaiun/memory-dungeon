@@ -1,8 +1,8 @@
 /**
  * The fight: the core set's combat system (docs/core-set/rules-and-vocabulary.md),
- * on step 4's machinery (steps/04-combat-concepts/design.md), run on sub-ticks.
- * Section numbers in comments refer to step 4's design, whose finer rules
- * still stand where the core set is silent.
+ * on step 4's machinery, run on sub-ticks. Section numbers in comments refer to
+ * step 4's design (steps/04-combat-concepts/design.md, in git history); where the
+ * core set is silent, what this code does stands.
  *
  * A fight is plain data, so a run can be saved mid-fight. Each `step` plays one
  * moment, the next sub-tick on which anything happens, in this order:

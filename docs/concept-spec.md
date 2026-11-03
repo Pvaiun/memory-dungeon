@@ -1,6 +1,6 @@
 # Memory Dungeon Game: Concept Spec
 
-Oct 14, 2026 · brought in line with `DECISIONS.md` Oct 21, 2026
+Oct 14, 2026
 
 > **Where this stands (Oct 23, 2026).** This is the full game, and the pitch stands. What's being built right now is the core set (`docs/core-set/`): a vertical slice the director designed, with the rules, combat, classes, gear, formations and enemies, its progression still to be decided (starting with none), and without the quest board or reward streams. Where the core set differs from this spec (party size, class count, gear and formation slots, abilities per class), the core set is what's built, and this spec is brought back in line once the slice has shown what holds. `DECISIONS.md` has the decision.
 >
@@ -10,7 +10,7 @@ Oct 14, 2026 · brought in line with `DECISIONS.md` Oct 21, 2026
 >
 > **Oct 29, 2026:** two kinds of damage, physical (against Armor and Evasion) and magical (against one Magic resist, never dodged); a status's own damage is never resisted; elements are themes, not mechanics. Gear sits in four slots (weapon, armor, offhand, amulet): each class wears its own weapon kinds, armor types and offhand kinds, the amulet is open to everyone, and a mythic piece fits one class. That's this spec's class-specific and generic slots, made concrete. `DECISIONS.md` has the detail.
 
-This is the game at a high level. `DECISIONS.md` holds the detail and the reasons, and this spec is kept in line with it (see `method.md`). If the two ever differ, `DECISIONS.md` wins, and this spec gets fixed.
+This is the game at a high level. The director's standing direction is `docs/rules.md`; if the two ever differ, the rules win and this spec gets fixed.
 
 ## Purpose and principles
 
@@ -89,7 +89,7 @@ Dungeons are linear, about five minutes long, and fully automatic apart from per
 
 - **Linear progression.** The player plays the next dungeon. A cleared dungeon can only be replayed through its challenges.
 - **A run.** A series of fights ending in a boss, with resources wearing down across the fights.
-- **Automatic combat.** No manual abilities, no programmed AI, no button mashing. Fights run on a shared clock: every action has a cast time, a cooldown and a recovery, and units act whenever they're ready. Units mostly attack by simple, traditional habits, and abilities carry their own targeting. `steps/04-combat-concepts/design.md` has the rules.
+- **Automatic combat.** No manual abilities, no programmed AI, no button mashing. Fights run on a shared clock: every action has a cast time, a cooldown and a recovery, and units act whenever they're ready. Units mostly attack by simple, traditional habits, and abilities carry their own targeting.
 - **Perk picks.** 3 to 4 picks per run, between fights. Each dungeon has a themed pool of 10 to 15 perks. The player knows the pool's families before going in, but not which perks will appear or in what order, so they build a party to match the dungeon. Each pick offers 3 perks. Perks come in two rarities: regular, and a very rare premium perk that is either a stronger version or a unique one.
 - **Perks amplify the build.** They boost what the party brought rather than replace it. Some modify an equipped ability for that run only, such as "Ranger's counterattack also applies bleed."
 - **Fixed formation.** The formation can't change mid-run; solving it is part of preparation.

@@ -3,7 +3,7 @@
  *
  * Step 5i (the build's retire share): every other piece is gone (the 33 named weapons, the 7 powerful ones, the 17 armors
  * and the 17 amulets of docs/core-set/gear-and-formation-lists.md). The director: "I would not keep any loot that we have
- * now just for the sake of keeping it." The pieces of steps/05-core-set/5i-synergy/fill/ take their place.
+ * now just for the sake of keeping it." Step 5i's pieces take their place.
  */
 import type { GearT, NumT } from "../../src/schema.js";
 import { KIND_SPEED, PER_PERCENT, SWING_REF, WEAPON, type Level } from "./scale.js";

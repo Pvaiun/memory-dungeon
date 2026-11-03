@@ -1,5 +1,5 @@
 /**
- * Step 5i, step 5: the ten offhand kinds' 80 pieces, from steps/05-core-set/5i-synergy/fill/offhands.md with fill-rulings.md (its third round wins).
+ * Step 5i, step 5: the ten offhand kinds' 80 pieces, from step 5i's fill (its design, kept in git history).
  * `gear` joins the pack's gear and the rogue's stock; `statuses` the pack's statuses; `builds` is designer data, never in the pack.
  *
  * Each kind in the spine's order: two commons, two uncommons, two rares, two legendaries. Every number is the fill's word, from

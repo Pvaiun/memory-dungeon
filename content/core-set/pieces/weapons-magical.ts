@@ -1,6 +1,6 @@
 /**
- * Step 5i, step 5: the five magical weapon kinds' 40 pieces, from steps/05-core-set/5i-synergy/fill/weapons-magical.md with
- * fill-rulings.md (its third round wins) and build/engine-spec.md (its section 6 fixes Dawnblade and the Lightning rod).
+ * Step 5i, step 5: the five magical weapon kinds' 40 pieces, from step 5i's fill (its design, kept in git history)
+ * and steps/05-core-set/5i-synergy/build/engine-spec.md (its section 6 fixes Dawnblade and the Lightning rod).
  * `gear` joins the pack's gear and the rogue's stock; `statuses` the pack's statuses; `builds` is designer data, never in the pack.
  *
  * Every weapon here hits as its kind's plain weapon does (damage medium, ratio medium, from Magic: `piece()`'s default); no piece

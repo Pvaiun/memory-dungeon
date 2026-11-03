@@ -1,5 +1,5 @@
 /**
- * Step 5i, step 5: the statuses several content shares use, defined once (fill-rulings.md G2 to G4, and the counters each
+ * Step 5i, step 5: the statuses several content shares use, defined once (the fill's rulings G2 to G4, and the counters each
  * share's fill names). The spine's one new word, Marked, and its seven counters: each counter is one status with one fixed
  * meaning, an icon with a number on its holder, kept for the fight. A piece decides who gets one and when; never what it does.
  */

@@ -21,7 +21,7 @@ The slice is the first version of the game, not the whole of it. The full game g
 | `gear-and-formation-lists.md` | The build axes; the weapons, armor and amulets; the 10 formations; a coverage check; what to watch | **Out of date:** its pieces and formations were replaced by step 5i's (see Status) |
 | `enemies-encounters-and-dungeons.md` | The enemy scale and fixed rules; 61 challenges; 29 enemies with a test each; 27 encounters; 7 dungeons, played in order | In |
 
-The director wrote them, and they're the approved design: the core set's work starts at the method's build-and-tune stage (`docs/method.md`). They're written to stand on their own and refer to one another by title (*Core set: classes*).
+The director wrote them, and they're the approved design, so work on them starts at build and tune. They're written to stand on their own and refer to one another by title (*Core set: classes*).
 
 Changes to them go through the director and are written into the documents. The rules the enemies document added (summoning, no unit leaving a fight alive, enemy-only Doom and Bulwark, two enemy-only target phrases) are folded into `rules-and-vocabulary.md`, which wins where the two differ. Its known-gaps list at the end holds the open questions.
 
@@ -30,7 +30,6 @@ Changes to them go through the director and are written into the documents. The 
 - **The concept spec** (`docs/concept-spec.md`) is the full game. Where the core set differs from it (party size, class count, gear slots, formation slots, abilities per class), the core set is what gets built, and the spec is brought back in line once the slice has shown what holds.
 - **Steps 1 to 3** built the schema, the headless engine and the simulation harness (`src/`). They're the machinery the core set runs on, not design.
 - **Step 4** built the director's first combat design into the engine (`src/engine/combat/`, with its building blocks in `PRIMITIVES.md`). The core set's rules supersede it where they differ.
-- **Steps 5 to 12 of the design plan** (`docs/design-plan.md`) were replaced by the core set. The plan's later steps describe the full game and are revisited after the slice.
 - **Numbers.** The core set's numbers are a relative scale (stats from 1 to 5, gear steps of +1 or +2, cooldowns short to long). First values and the balance pass by simulation are part of building it. **In the data, every number on that scale is multiplied by 1,000** (HP 2 is 2,000, a boss's HP 90 is 90,000), so percentages such as crits and Regen ticks stay whole, and the display divides it back down by a factor tuned for feel.
 
 ## Status

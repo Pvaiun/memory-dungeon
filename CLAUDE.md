@@ -4,18 +4,15 @@
 
 Design work for an optional game tab in Memory, the director's personal ADHD memory app. The game is a party-based JRPG dungeon crawler with automatic combat. In the full game, real-life quests pay unlocks and dungeons pay gear; that pitch (`docs/concept-spec.md`) stands. Everything here is design: a schema, a headless engine and simulations used to design the game. None of it runs in Memory yet.
 
-**What's being built now is the core set** (`docs/core-set/`): a vertical slice of the game that the director designed as four documents, covering the rules and combat system, 16 classes, gear and formations, and enemies. Its progression is the rogue mode, a roguelite run of three acts; free play keeps everything available as a sandbox, and the campaign (a road of 20 nodes, step 5a) is retired. The quest board, reward streams and unlocks, the ADHD side, stay out of it. The full game grows out of it later, in ways not yet known. The core set replaced the design plan's steps 5 to 12, which turned out too interlocked to design one at a time.
+**What's being built now is the core set** (`docs/core-set/`): a vertical slice of the game that the director designed as four documents, covering the rules and combat system, 16 classes, gear and formations, and enemies. Its progression is the rogue mode, a roguelite run of three acts; free play keeps everything available as a sandbox, and the campaign (a road of 20 nodes, step 5a) is retired. The quest board, reward streams and unlocks, the ADHD side, stay out of it. The full game grows out of it later, in ways not yet known.
 
-It's also a test of a way of making games. The director sets the vision. AI designs, generates content and tunes it, using simulation in place of most playtest rounds. `docs/method.md` is that method, and every design step follows it.
+The director sets the vision. AI designs, generates content and tunes it, using simulation in place of most playtest rounds.
 
 - `docs/core-set/`: the vertical slice, the current target. Its `README.md` says what's in, what's out, and how it relates to everything else. **Read it before any work on the game.**
 - `content/core-set/`: the core set as content, generated: `scale.ts` holds every first value by name, the other files hold the classes, gear, formations, enemies and dungeons in the documents' words, and `npm run content` writes `content/core-set.pack.json`, which the engine, tests and studies read. `content/core-set/tests.ts` is the documents' own test trios, which `npm run smoke` plays.
 - `ui/`: the visual interface (Vite, plain TypeScript) on the engine, a retro JRPG screen in colour that runs on a phone: a party screen (party, formation and gear in one), unit sheets, a bestiary, and a battle screen that tells a fight in short English messages as it plays. `ui/README.md` says what it shows, how the art is mapped and how it's published. `npm run ui` serves it; GitHub Pages hosts it.
-- `docs/method.md`: how every step is done. **Read it before starting or resuming a step.**
-- `DECISIONS.md`: what's been decided, step by step, with the detail and reasons. The concept spec is kept in line with it (see the method); if they ever differ, `DECISIONS.md` wins and the spec gets fixed.
+- `docs/rules.md`: the director's standing direction, one page, with what was tried and rejected. **Read it before any design or tuning work.** It wins over the design documents where they differ.
 - `docs/concept-spec.md`: the full game, at a high level: what it is and why. Where the core set differs from it, the core set is what's built.
-- `docs/design-plan.md`: the original 24-step plan. Steps 1 to 4 are done, 5 to 12 were replaced by the core set, and 13 onward describe the full game's later work. Kept as the record of where the game is headed.
-- `docs/primer.md`: the game and where it stands, for a reader with no repo access. Keep it current (see the method).
 - `steps/`: working folders for open work only: step 5i's design and build report (`05-core-set/5i-synergy/`), and three designs not yet folded into the core set's documents (step 4's combat design, the rogue mode's `5d-rogue/design.md` and the roster's `5h-roster/`). A closed step's history is in git, not here.
 - `PRIMITIVES.md`: the engine's building blocks as they stand (the core set's combat on step 4's machinery), generated from the schema.
 - `docs/memory-app-overview.md`: how Memory works today.
@@ -25,13 +22,16 @@ It's also a test of a way of making games. The director sets the vision. AI desi
 
 ## How to work
 
-- **Follow the method.** Each step runs intent, then design, then build and tune, and each stage ends with the director. Don't move past a stage's gate, or start the next step, without them. The core set's documents are its approved design, so its work starts at build and tune, in the order the director sets.
-- **Intent first.** Don't propose a design until the director's intent for the step is recorded, and never write their intent for them.
+- **Steps and gates.** Work comes in steps, in the order the director sets. A step that designs something runs three stages: the director's intent, then a design they approve, then build and tune. Each stage ends with the director: don't move past a gate, or start the next step, without them. Work the director has already designed starts at build.
+- **Intent first.** Don't propose a design until the director's intent for the step is recorded, and never write their intent for them. Record it short: what they want, quoting them only where the wording matters.
+- **A step's folder is scratch.** `steps/<slug>/` holds the open step's intent, design and report while it runs. When the step closes, fold what lasts into the design documents and `docs/rules.md`, and delete the folder. Keep no tuning trails or logs; generated output goes to `out/`, which git ignores.
+- **The report** is what the director reads at a gate: short and plain, leading with the decisions needed (a challenge with both versions' numbers), then what was built and what changed from the design, what the numbers say and how sure, and the samples worth looking at.
 - **Be a designer, not an order-taker.** Direction is guidance. Challenge direction that doesn't fit the game: in the design, before anything is built, and in tuning, as soon as the evidence shows it. Bring reasons or numbers. Never change a direction silently, and never grind around one that's the real problem.
-- **Trust by sample.** The director reviews rules, samples and the intent map, not the full volume. Show what you're least sure about, not just your best work.
+- **Trust by sample.** The director reviews rules and samples, not the full volume. Show what you're least sure about, not just your best work.
 - **Flag, don't guess.** When the core set or the concept spec is inconsistent or underspecified, say so. If a step can't wait, state the assumption plainly and continue.
+- **Briefs for agents give intent and ranges, never examples:** an agent copies any example it's given. The director's own notes often hold illustrations made up on the spot: read them for the intent behind them.
 - **Design before implementation.** Don't integrate anything into Memory until the design steps are done. Code here (engine, harness) serves the design, so keep it small and don't polish it.
-- **Placeholders.** Everything in `fixtures/` is placeholder: the worked example is the machinery's test fixture. The core set's numbers in `content/core-set/scale.ts` are first values on the documents' relative scale, put in the ballpark by a short tuning pass, not balanced. Don't present any of these as decided beyond what `DECISIONS.md` and the core set record.
+- **Placeholders.** Everything in `fixtures/` is placeholder: the worked example is the machinery's test fixture. The core set's numbers in `content/core-set/scale.ts` are first values on the documents' relative scale, not balanced. Don't present any of these as decided beyond what `docs/rules.md` and the core set record.
 
 ## Status
 
@@ -43,7 +43,6 @@ What's true now (Nov 3, 2026). Replace what's done rather than adding to it; his
   - **Aggro by doubling** (Nov 3): every 25 Aggro doubles a party member's draw (`ruleset.partyDraw`, engine 0.18), so a unit built to draw fire takes most foes' picks; nothing re-tuned.
 - **Next:** the director plays it; then the balance pass, then a harder difficulty pass.
 - **The tools** (each file's header says how to run it): `npm run balance` (the balance sheet; run it after any numbers change, before the knobs); `npm run rogue:calibrate` (each fight's knob against the hand-built rosters of `src/rogue-parties.ts`; `--climb`) and `npm run rogue:tune`; `npm run rogue` (whole runs with the simulated player, `src/rogue-ai.ts`); `npx tsx src/build-test.ts` (the twelve builds side by side, on the parties of `src/build-parties.ts`); `npx tsx src/piece-check.ts` (every item does what its card says); `npx tsx src/rogue-feel.ts` (fight logs for a feel read; the reader's brief is `docs/feel-reader.md`); `npx tsx src/rogue-acts.ts` (the act road); `npx tsx src/rogue-play.ts` (the AI playtester's game). The `src/campaign-*.ts` tools are the retired campaign's.
-- **Context packs:** for steps that take an intent interview, `npm run pack -- N` joins the step's brief with the primer, the interviewer guide (`docs/interviewer.md`) and the step's plan entry into `steps/NN-slug/pack.md`, which the director can paste into any chat.
 - **Session pattern:** a piece of work can take one session or several; its `steps/` folder is the handoff. Each session ends at a gate by updating this Status section (what's true now, not a log), committing, and stopping for the director.
 
 ## The director's preferences
@@ -52,7 +51,7 @@ What's true now (Nov 3, 2026). Replace what's done rather than adding to it; his
 - Direction is guidance, not law. They expect a designer to push back with evidence, and would rather hear it early than after a lot of wheel-spinning.
 - Design before code. Code that serves the design stays small; avoid bug-fixing spirals.
 - Mechanics map onto a few numerical systems (stats, statuses, damage types, flags, targeting). No bespoke words acting as locks, and no complexity that eats the player's brainpower, such as positional targeting.
-- Content will come from human-given phrases and gimmicks, which AI interprets, filters and number-crunches through simulation. That's the method applied to content; the input tooling gets built when the work needs it.
+- Content will come from human-given phrases and gimmicks, which AI interprets, filters and number-crunches through simulation. That's how content gets made; the input tooling gets built when the work needs it.
 
 ## Tech
 

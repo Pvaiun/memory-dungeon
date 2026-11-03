@@ -1,7 +1,7 @@
 /**
  * The core set's formations: Neutral, the starter, and the 32 of step 5i (11 common, 12 rare, 9 legendary).
  *
- * Written from steps/05-core-set/5i-synergy/fill/formations.md, with fill-rulings.md winning where they differ (its third round,
+ * Written from step 5i's fill (its design, kept in git history), its rulings winning where they differ (its third round,
  * the director's, over the first two). A seat is a position: its own stats, and the statuses it gives the unit sitting there.
  * A formation's own stats and statuses are its party effect, given to every unit in it. Statuses are universal: nothing here
  * applies one for less or more than its own length. Where the engine doesn't act on a field yet, it's written in the shape
@@ -15,7 +15,7 @@ import { idOf, pieceStatus, type Build, type BuildTag, type Builds } from "./pie
 import { marked } from "./pieces/shared.js";
 import { AGGRO_STEP, FLAT_STACKS, SPECIAL, crit, stepFor } from "./scale.js";
 
-// ─── The words, as numbers (fill/formations.md, "The words, as numbers") ──────
+// ─── The words, as numbers (the fill's "The words, as numbers") ──────
 
 /** A seat's stat step: one and a quarter gear steps (step 5f round 4), as today's formations had it. */
 export const FORMATION_STEP = 1.25;

@@ -1,6 +1,6 @@
 /**
- * Step 5i, step 5: the six physical weapon kinds' 48 pieces, from steps/05-core-set/5i-synergy/fill/weapons-physical.md with
- * fill-rulings.md (its third round wins: no balancing rules, statuses at their own length). Hooks are today's primitives or the
+ * Step 5i, step 5: the six physical weapon kinds' 48 pieces, from step 5i's fill (its design, kept in git history):
+ * no balancing rules, statuses at their own length. Hooks are today's primitives or the
  * engine spec's additions (build/engine-spec.md, X1 onward), which the engine shares are building beside this share.
  *
  * `gear` joins the pack's gear and the rogue's stock; `statuses` the pack's statuses; `builds` is designer data, never in the pack.

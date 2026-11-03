@@ -5,7 +5,7 @@
  * Where it comes from (all under steps/05-core-set/5i-synergy/): each build's routes are the three `builds.md` names for it, read
  * through its "Gear" section (the elemental staves gone, the Hexer a spellblade, the Geomancer an earth fighter); the rungs are
  * `builds.md`'s "What it asks of a run" and `spine.md` section 9; each piece, formation, version and mythic is the fill's
- * (`fill/`, with `fill-rulings.md`), by the id the content shares derive from its name. `build/parties.md` says the rules and
+ * (step 5i's design, in git history), by the id the content shares derive from its name. `build/parties.md` says the rules and
  * what was thin. Nothing here is balanced: a route is what the documents name, not what wins.
  *
  * The rungs:
@@ -66,7 +66,7 @@ export const BUILDS: Record<BuildId, string> = {
   ambush: "Ambush", overflow: "Overflow", lockdown: "Lockdown", toll: "The Toll", pact: "Blood Pact", phoenix: "Phoenix",
 };
 
-/** Each formation's seats in order, by the content's position ids (the fill's names, `fill/formations.md`; twin seats `_a`, `_b`, `_c`), and its rarity. */
+/** Each formation's seats in order, by the content's position ids (the fill's names; twin seats `_a`, `_b`, `_c`), and its rarity. */
 export const FORMATION_SEATS: Record<string, { rarity: "common" | "rare" | "legendary"; seats: [string, string, string] }> = {
   neutral: { rarity: "common", seats: ["a", "b", "c"] },
   shieldwall: { rarity: "common", seats: ["wall", "behind_a", "behind_b"] },
@@ -103,7 +103,7 @@ export const FORMATION_SEATS: Record<string, { rarity: "common" | "rare" | "lege
   the_vise: { rarity: "legendary", seats: ["jaw_a", "screw", "jaw_b"] },
 };
 
-/** The 16 mythics (`spine.md` section 8, `fill/upgrades-1.md` and `-2.md`): the class each fits and the slot it sits in. */
+/** The 16 mythics (`spine.md` section 8): the class each fits and the slot it sits in. */
 export const MYTHICS: Record<string, { cls: string; slot: Slot }> = {
   horn_of_the_keep: { cls: "knight", slot: "offhand" },
   halo_of_the_saint: { cls: "cleric", slot: "amulet" },

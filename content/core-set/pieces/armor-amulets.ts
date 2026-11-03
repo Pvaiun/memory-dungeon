@@ -1,6 +1,6 @@
 /**
- * Step 5i, step 5: the four armor types' 48 pieces and the 24 amulets, from steps/05-core-set/5i-synergy/fill/armor-amulets.md with
- * fill-rulings.md (its third round wins) and build/engine-spec.md (the shapes, numbered X1 onward, and its section 6's fixes).
+ * Step 5i, step 5: the four armor types' 48 pieces and the 24 amulets, from step 5i's fill (its design, kept in git history)
+ * and steps/05-core-set/5i-synergy/build/engine-spec.md (the shapes, numbered X1 onward, and its section 6's fixes).
  * `gear` joins the pack's gear and the rogue's stock; `statuses` the pack's statuses; `builds` is designer data, never in the pack.
  *
  * Every number is the fill's. Statuses are applied at their own length (universal), and nothing here is balanced. A piece's own

@@ -4,8 +4,8 @@
  * Three layers of checks:
  *   1. Shape: the zod schema (types, required fields, closed sets).
  *   2. Meaning: every reference resolves, and content follows the combat
- *      rules for what's valid (steps/04-combat-concepts/design.md and
- *      docs/core-set/rules-and-vocabulary.md): an action's damage is
+ *      rules for what's valid (docs/core-set/rules-and-vocabulary.md):
+ *      an action's damage is
  *      physical or magical, percent changes only on amount stats, a weapon
  *      belongs to a kind, a piece fits its kind's classes, and so on.
  *   3. Design rules from the core set, driven by the pack's `design` block.
