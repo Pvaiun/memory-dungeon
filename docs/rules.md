@@ -44,7 +44,3 @@ Where a rule and a design document disagree, this page wins and the document get
 - **Test with hand-built parties** (`src/rogue-parties.ts`, `src/build-parties.ts`), not the simulated player.
 - **The coming difficulty pass aims harder than today.**
 - **Checks sized to the need:** run the tests, studies and reads needed to know something, and skip the rest.
-
-## Tried and rejected
-
-`docs/tried-and-rejected.md` lists what was built and measured, then dropped, with the conditions each failed under. Read it before proposing a change to the rules or the numbers.

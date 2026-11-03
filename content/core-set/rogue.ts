@@ -387,10 +387,9 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   {
     id: "camp", name: "An Empty Camp", text: "Someone left in a hurry: the fire is still burning, the bedrolls still laid out.",
     options: [
-      { id: "camp", label: "MAKE CAMP", text: "A campfire: rest, focus, raise or train.", do: [{ op: "camp" }] },
-      { id: "search", label: "SEARCH THE PACKS", text: "A potion, a tonic or a phoenix feather, and 20 gold.", do: [{ op: "gold", amount: 20 }, { op: "chance", pct: 40, then: [{ op: "supply", id: "potion" }], else: [{ op: "chance", pct: 50, then: [{ op: "supply", id: "tonic" }], else: [{ op: "supply", id: "phoenix" }] }] }] },
+      { id: "camp", label: "MAKE CAMP", text: "A campfire: everyone recovers and the fallen rise, then rest or train.", do: [{ op: "camp" }] },
+      { id: "search", label: "SEARCH THE PACKS", text: "20 gold, and a potion, a tonic or a phoenix feather (with someone down, the feather raises them at half HP).", do: [{ op: "gold", amount: 20 }, { op: "chance", pct: 40, then: [{ op: "supply", id: "potion" }], else: [{ op: "chance", pct: 50, then: [{ op: "supply", id: "tonic" }], else: [{ op: "supply", id: "phoenix" }] }] }] },
     ],
-    // Step 5h round 6: its version with a seat at camp is gone (seats come with each act).
   },
   {
     id: "pilgrims", name: "Pilgrims", text: "A band of pilgrims with a healer among them. \"For a donation…\"",
@@ -617,7 +616,7 @@ export const ROGUE_EVENTS: RogueEvent[] = [
         { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
       ] },
       { text: "A hospital overrun with wounded. The surgeon looks up: \"You. Hands. Now.\"", options: [
-        { id: "help", label: "HELP OUT", text: "Everyone loses 15% of max MP. A potion and a phoenix feather, from the stores.", do: [{ op: "mp", pct: -15 }, { op: "supply", id: "potion" }, { op: "supply", id: "phoenix" }] },
+        { id: "help", label: "HELP OUT", text: "Everyone loses 15% of max MP. A potion and a phoenix feather from the stores (with someone down, the feather raises them at half HP).", do: [{ op: "mp", pct: -15 }, { op: "supply", id: "potion" }, { op: "supply", id: "phoenix" }] },
         { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
       ] },
     ],

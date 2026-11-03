@@ -21,6 +21,7 @@ The rules are `src/rogue.ts`, pure and deterministic: a run is plain data (`Rogu
 - **The draft:** two picks of one from three of the other classes (`start.picks`, `start.offers`). While nobody heals or raises others, each draft offers one who does (`start.healer`).
 - **What a class knows is rolled.** A starting unit knows one of its three abilities at random, Raise and Valhalla included. A recruit knows one, two or three, weighted by act (`recruits.known`); a boss's recruit knows at least two, and some events set the number. A fresh ability (a starting unit's, a recruit's, one just learned) starts with `fresh` % of its cooldown run.
 - **The roster:** a party of three (`party`) and seats at camp, the bench: two in act I, three in act II, four in act III (`benchByAct`), each new act bringing its seat.
+- **Recruits come one at a time:** a recruit is there to take or turn down (a captive or a stranger can teach a lesson instead), never a pick among several, except at two events (Mercenaries, the Prisoner Convoy). The start's draft is the only regular pick.
 - **A recruit** joins with its class's plain weapon at full HP and MP (unless its offer says less), into the party if a seat is free, else to camp. Offers come with a full roster too: the player sends someone at camp home first (never the leader; their gear stays in the bag). An offer never repeats a class in the roster, and a class that could wear a bagged legendary nobody can wear is three times as likely.
 - **Between rooms**, a fight's preview included, everything is free: swap a party member with one at camp, step one back or fill an empty seat, reorder seats, change formation, move gear, set each member's ability order (leaving some out), use supplies, drop a piece, send someone home. Nothing can be done during a fight.
 
@@ -57,9 +58,7 @@ Every win pays gold by tier (`gold.fight`, `gold.elite`, `gold.boss`, plus `gold
 
 **Chest.** Every room on floor 7: gold (`treasure.gold`) and a piece (`treasure.rarity`), or, `treasure.cage` % of the time, a recruit with a piece suited to it.
 
-**Event (?).** One of `ROGUE_EVENTS`, none met twice until all have been; most roll one of their versions. An option is a list of verbs: gold, HP, MP, gear, recruit, learn, upgrade, temper, revive, formation, seat, train, muster (a pick of recruits), trade, supply, fight, camp, chance. What happens at once comes first; a choice, training, camp or fight waits at the end. An option needs the gold it costs and can't be picked if it can't happen now. An event's fight comes from the normal or elite pool and pays that tier's spoils.
-
-**Kinds with no place on the map.** The rules still have the Muster (a pick of two recruits) and the Drill ground (two formations, or three members trained), but nothing in `map` places them. The Muster's pick serves the recruiting events.
+**Event (?).** One of `ROGUE_EVENTS`, none met twice until all have been; most roll one of their versions. An option is a list of verbs: gold, HP, MP, gear, recruit, muster (a pick of recruits), learn, upgrade, train, temper, revive, formation, trade, supply, fight, camp, chance. What happens at once comes first; a choice, training, camp or fight waits at the end. An option needs the gold it costs and can't be picked if it can't happen now. An event's fight comes from the normal or elite pool and pays that tier's spoils.
 
 ## Loot
 

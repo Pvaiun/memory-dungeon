@@ -42919,7 +42919,7 @@
      {
       "id": "camp",
       "label": "MAKE CAMP",
-      "text": "A campfire: rest, focus, raise or train.",
+      "text": "A campfire: everyone recovers and the fallen rise, then rest or train.",
       "do": [
        {
         "op": "camp"
@@ -42929,7 +42929,7 @@
      {
       "id": "search",
       "label": "SEARCH THE PACKS",
-      "text": "A potion, a tonic or a phoenix feather, and 20 gold.",
+      "text": "20 gold, and a potion, a tonic or a phoenix feather (with someone down, the feather raises them at half HP).",
       "do": [
        {
         "op": "gold",
@@ -44217,7 +44217,7 @@
        {
         "id": "help",
         "label": "HELP OUT",
-        "text": "Everyone loses 15% of max MP. A potion and a phoenix feather, from the stores.",
+        "text": "Everyone loses 15% of max MP. A potion and a phoenix feather from the stores (with someone down, the feather raises them at half HP).",
         "do": [
          {
           "op": "mp",
