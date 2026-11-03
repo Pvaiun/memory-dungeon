@@ -344,6 +344,44 @@ test("draw, the director's Aggro rule: foes pick by draw, Aggro through a curve 
   assert.equal(drawOf({}, 37), 37, "without the curve, Aggro itself");
 });
 
+test("party draw (Nov 3, 2026): a party unit's draw doubles every 25 Aggro, climbs evenly between, held from Aggro 25 to 200; enemies keep the curve", () => {
+  const r = { draw: { centre: 100, k: 50, max: 3 }, partyDraw: { centre: 100, double: 25, floor: 25, cap: 200 } };
+  const table: [number, number][] = [[1, 12.5], [25, 12.5], [50, 25], [75, 50], [80, 60], [100, 100], [110, 140], [120, 180], [125, 200], [150, 400], [165, 640], [185, 1120], [200, 1600], [500, 1600]];
+  for (const [aggro, want] of table) assert.equal(drawOf(r, aggro, "party"), want, `Aggro ${aggro}`);
+  assert.equal(Math.round(drawOf(r, 120, "enemy")), 157, "an enemy unit's draw is still the curve's");
+  assert.equal(Math.round(drawOf(r, 120)), 157, "and the curve is the default");
+  assert.equal(Math.round(drawOf({ draw: r.draw }, 120, "party")), 157, "without partyDraw, a party unit uses the curve");
+  // A Knight beside two casters at 80: 60% as it comes, 84% with a far-more seat and two Aggro pieces, 90% with four.
+  const share = (xs: number[]) => xs.map((a) => Math.round((100 * drawOf(r, a, "party")) / xs.reduce((t, b) => t + drawOf(r, b, "party"), 0)));
+  assert.deepEqual(share([120, 80, 80]), [60, 20, 20]);
+  assert.deepEqual(share([165, 80, 80]), [84, 8, 8]);
+  assert.deepEqual(share([185, 80, 80]), [90, 5, 5]);
+});
+
+test("party draw in a fight: foes pick an Aggro-stacked party member about 84% of the time, and partyDraw doesn't touch the party's picks among foes", () => {
+  const foePicks: string[] = [];
+  const partyPicks: string[] = [];
+  const ruleset = { draw: { centre: 100, k: 50, max: 3 }, partyDraw: { centre: 100, double: 25, floor: 25, cap: 200 } };
+  for (let seed = 1; seed <= 400; seed++) {
+    const a = arena({
+      party: [{ name: "Wall", stats: { aggro: 165 } }, { name: "Cleric", stats: { aggro: 80 } }, { name: "Pyro", stats: { aggro: 80 } }],
+      enemies: [{ name: "Foe", weapon: weapons.dagger }],
+      ruleset, seed,
+    }).to(8);
+    foePicks.push(String(a.entries("act").find((e) => e.by === "e1")!.targets));
+    const b = arena({
+      party: [{ name: "Foe", weapon: weapons.dagger }],
+      enemies: [{ name: "Wall", stats: { aggro: 170 } }, { name: "Caster", stats: { aggro: 50 } }, { name: "Other", stats: { aggro: 50 } }],
+      ruleset, seed,
+    }).to(8);
+    partyPicks.push(String(b.entries("act")[0].targets));
+  }
+  const wall = share(foePicks, "p1");
+  assert.ok(wall > 0.79 && wall < 0.89, `the stacked member about 84% (${wall})`);
+  const caster = share(partyPicks, "e2");
+  assert.ok(caster > 0.11 && caster < 0.21, `among foes, the curve as before: the caster about 16% (${caster})`);
+});
+
 test("draw in a fight: picks follow draw, so a Veiled caster is still picked about a sixth of the time beside a wall", () => {
   const picks: string[] = [];
   for (let seed = 1; seed <= 400; seed++) {

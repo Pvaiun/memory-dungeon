@@ -790,8 +790,22 @@ function value(w: W, x: CUnit, by: NonNullable<S.TargetRuleT["by"]>): number {
   return total(x, by.stacks) / SUBTICKS;
 }
 
-/** A unit's draw: how strongly it pulls a foe's pick (ruleset.draw), from its Aggro. Without the curve, Aggro itself. */
-export function drawOf(r: Pick<S.ContentPack["ruleset"], "draw">, aggro: number): number {
+/**
+ * A unit's draw: how strongly it pulls a foe's pick, from its Aggro. A party unit's comes from ruleset.partyDraw when the
+ * ruleset has one (Nov 3, 2026: doubling every so many points, held between a floor and a cap); otherwise, and for enemy
+ * units always, from ruleset.draw's curve, so the party picks among its foes as before. Without either, Aggro itself.
+ */
+export function drawOf(r: Pick<S.ContentPack["ruleset"], "draw" | "partyDraw">, aggro: number, side: CUnit["side"] = "enemy"): number {
+  const p = side === "party" ? r.partyDraw : undefined;
+  if (p) {
+    // centre × 2^n × (1 + f): whole doublings by halving or doubling (exact), then an even climb to the next. No powers (guard.test.ts).
+    const n = (Math.min(p.cap, Math.max(p.floor, aggro)) - p.centre) / p.double;
+    const whole = Math.floor(n);
+    let base = p.centre;
+    for (let i = 0; i < whole; i++) base *= 2;
+    for (let i = 0; i > whole; i--) base /= 2;
+    return base * (1 + (n - whole));
+  }
   const c = r.draw;
   if (!c) return Math.max(0, aggro);
   const d = Math.abs(aggro - c.centre);
@@ -799,7 +813,7 @@ export function drawOf(r: Pick<S.ContentPack["ruleset"], "draw">, aggro: number)
 }
 
 function weightedPick(w: W, u: CUnit, pool: CUnit[], what: string): CUnit {
-  const weights = pool.map((x) => drawOf(w.c.pack.ruleset, stat(w, x, "aggro")));
+  const weights = pool.map((x) => drawOf(w.c.pack.ruleset, stat(w, x, "aggro"), x.side));
   const sum = weights.reduce((a, b) => a + b, 0);
   const r = next(u.rng) * sum;
   w.log?.({ t: "roll", vis: "hidden", at: w.f.now, by: u.id, what, roll: r, of: sum });

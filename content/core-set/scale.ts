@@ -184,6 +184,16 @@ export const RULES = {
    */
   draw: { centre: 100, k: 50, max: 3 },
   /**
+   * Nov 3, 2026 (the director's): foes pick among the party by this, not the curve above, which flattened at three times an
+   * ordinary unit: beside two casters, a defender wearing every Aggro source reached about 64% of picks, and from the second
+   * piece on each gained a point or less. Players mostly build one unit to draw fire and rarely build to avoid it, so that
+   * unit takes most picks on its own: every 25 Aggro doubles its draw (a far-more seat, +25, doubles it; a gear step, +10, is
+   * about a third more). Beside two casters at 80, a Knight at 120 draws 60%, with a far-more seat and two Aggro pieces
+   * 84%, with four 90%. Held between Aggro 25 and 200, an eighth and 16 times an ordinary unit. The party's picks among
+   * foes keep the curve above.
+   */
+  partyDraw: { centre: 100, double: 25, floor: 25, cap: 200 },
+  /**
    * Past 300 ticks, everyone deals 25% more damage, and 25% more again every 30 ticks (campaign pass). An AI playtester
    * met a Vampire and two Bone Priests healing each other to the 5,000-tick safety stop, and Ghouls raising each other
    * for 2,600 ticks: minutes of watching nothing. Boss fights end in 100 to 250.

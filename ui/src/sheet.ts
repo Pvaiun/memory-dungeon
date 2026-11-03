@@ -35,7 +35,7 @@ export function memberFor(id: string): Member {
 
 /** Each seat's share of the foes' picks (the draw rule on its unit's Aggro), as "AGG 40%"; null where the seat is empty or down. */
 export function aggShares(aggros: (number | null)[]): (string | null)[] {
-  const w = aggros.map((a) => (a === null ? 0 : drawOf(c.pack.ruleset, a)));
+  const w = aggros.map((a) => (a === null ? 0 : drawOf(c.pack.ruleset, a, "party")));
   const t = w.reduce((x, y) => x + y, 0);
   return aggros.map((a, i) => (a === null || !t ? null : `AGG ${Math.round((100 * w[i]) / t)}%`));
 }
