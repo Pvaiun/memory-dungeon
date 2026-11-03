@@ -317,7 +317,7 @@ An action's `target` is `foe` (default targeting: a foe by Aggro, under the Hidd
 
 | Pick | Meaning |
 | --- | --- |
-| `aggro` | `count` units at random, weighted by draw (Aggro through ruleset.draw). The default for foes. |
+| `aggro` | `count` units at random, weighted by draw (a party unit's Aggro through ruleset.partyDraw, an enemy's through ruleset.draw). The default for foes. |
 | `random` | `count` units at random. The default otherwise. |
 | `lowest` | `count` units with the lowest `by`; ties at random. |
 | `highest` | `count` units with the highest `by`; ties at random. |
@@ -377,7 +377,7 @@ Basic attacks pick in this order (step 5i): an `aim` with `first` the attacker h
 | `attack` | amount | Scales only what states it. By convention, physical things do. |
 | `magic` | amount | Scales only what states it. By convention, magical things do. |
 | `armor` | amount | Reduces each physical hit: to hit² ÷ (hit + ruleset.armorK × Armor) when armorK is set; else a flat ruleset.armorRatio × Armor, down to 0 (BLOCKED). |
-| `aggro` | amount | Default targeting picks foes weighted by draw: Aggro through ruleset.draw's curve, or Aggro itself without one. Its floor must be above 0. |
+| `aggro` | amount | Default targeting picks foes weighted by draw: a party unit's Aggro through ruleset.partyDraw (doubling), an enemy's through ruleset.draw's curve, or Aggro itself without either. Its floor must be above 0. |
 | `magic_resist` | points | Magic resist, in percent: cuts each magical hit or pulse by that share. Positive shows RESIST, 100 IMMUNE. |
 | `attack_speed` | points | Basic attack cooldown ÷ (1 + stat/100), down to its recovery. Haste, Slow and Chill act through it. |
 | `cooldown_reduction` | points | Ability cooldowns ÷ (1 + stat/100). |

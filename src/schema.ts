@@ -104,7 +104,7 @@ export const ENGINE_STATS = {
   attack: ["amount", "Scales only what states it. By convention, physical things do."],
   magic: ["amount", "Scales only what states it. By convention, magical things do."],
   armor: ["amount", "Reduces each physical hit: to hit² ÷ (hit + ruleset.armorK × Armor) when armorK is set; else a flat ruleset.armorRatio × Armor, down to 0 (BLOCKED)."],
-  aggro: ["amount", "Default targeting picks foes weighted by draw: Aggro through ruleset.draw's curve, or Aggro itself without one. Its floor must be above 0."],
+  aggro: ["amount", "Default targeting picks foes weighted by draw: a party unit's Aggro through ruleset.partyDraw (doubling), an enemy's through ruleset.draw's curve, or Aggro itself without either. Its floor must be above 0."],
   magic_resist: ["points", "Magic resist, in percent: cuts each magical hit or pulse by that share. Positive shows RESIST, 100 IMMUNE."],
   attack_speed: ["points", "Basic attack cooldown ÷ (1 + stat/100), down to its recovery. Haste, Slow and Chill act through it."],
   cooldown_reduction: ["points", "Ability cooldowns ÷ (1 + stat/100)."],
@@ -222,7 +222,7 @@ export const SIDES = {
 export const Side = z.enum(keys(SIDES));
 
 export const PICKS = {
-  aggro: "`count` units at random, weighted by draw (Aggro through ruleset.draw). The default for foes.",
+  aggro: "`count` units at random, weighted by draw (a party unit's Aggro through ruleset.partyDraw, an enemy's through ruleset.draw). The default for foes.",
   random: "`count` units at random. The default otherwise.",
   lowest: "`count` units with the lowest `by`; ties at random.",
   highest: "`count` units with the highest `by`; ties at random.",
@@ -807,7 +807,16 @@ export const Ruleset = z.strictObject({
   draw: z
     .strictObject({ centre: z.number().positive(), k: z.number().positive(), max: z.number().min(1) })
     .optional()
-    .describe("Foes pick in proportion to draw, not Aggro. With d how far a unit's Aggro is from `centre`: above it, draw = centre × (k + max × d) ÷ (k + d); below it, centre × (k + d) ÷ (k + max × d). An ordinary unit draws `centre`; none draws more than `max` times that or less than 1 ÷ max; +d and −d cancel. `k` sets how much the first steps count. Absent: picks weighted by Aggro itself."),
+    .describe("Foes pick in proportion to draw, not Aggro. With d how far a unit's Aggro is from `centre`: above it, draw = centre × (k + max × d) ÷ (k + d); below it, centre × (k + d) ÷ (k + max × d). An ordinary unit draws `centre`; none draws more than `max` times that or less than 1 ÷ max; +d and −d cancel. `k` sets how much the first steps count. Absent: picks weighted by Aggro itself. With `partyDraw`, this curve is for enemy units only (the party's picks among its foes)."),
+  partyDraw: z
+    .strictObject({
+      centre: z.number().positive().describe("The Aggro of an ordinary unit, which draws this much."),
+      double: z.number().positive().describe("Every this many points of Aggro above `centre` doubles a unit's draw, and every this many below halves it; between two doublings it climbs evenly."),
+      floor: z.number().positive().describe("Aggro below this counts as this."),
+      cap: z.number().positive().describe("Aggro above this counts as this."),
+    })
+    .optional()
+    .describe("Nov 3, 2026 (the director's): how strongly a party unit draws foes' picks, in place of `draw`'s curve, which flattens at a few times an ordinary unit's. Aggro held between `floor` and `cap`; draw = centre × 2^n × (1 + f), with n whole doublings from `centre` and f the share of the next one. An Aggro-stacked unit can take most of the picks on its own. Absent: party units use `draw` too."),
   stagger: Ticks.optional().describe("Copies of the same enemy start a fight this many ticks apart, one after another, so identical foes don't act in lockstep. Absent or 0: they start together."),
   lostCast: z
     .enum(["retry", "cooldown"])

@@ -2,6 +2,8 @@
 
 Oct 23, 2026 · @Paul Suddaby
 
+*Updated Nov 3, 2026 (the director's): foes pick among the party by a new draw, doubling every 25 Aggro, so a unit built to draw fire takes most of the picks on its own (Aggro and draw); the party's picks among foes are unchanged.*
+
 *Updated Oct 29, 2026, by the cleanup (step 5j, the director's rules from step 5i built into the base game, nothing balanced): two kinds of damage (physical against Evasion and Armor, magical against one Magic resist and never dodged), a status's own damage untyped, no elements or physical subtypes as mechanics (an element is a theme only), no weaknesses or absorption, Ward giving Magic resist, every hit chipping Bulwark, foes' Magic resist by rank, and gear in four slots (eleven weapon kinds, each a speed, a damage type and hands; four armor types in place of the weights; ten offhand kinds; mythic pieces that fit one class). `steps/05-core-set/5j-cleanup/` has the change list (`build.md`) and the report.*
 
 *Updated Oct 28, 2026, by the feel pass (step 5g, closed at the director's word after playing): the words for time with a new quick word and the long wind-up at 8, weapons' intervals and swings (base up, scaling down), crits rarer and smaller, ability cooldowns that carry from fight to fight with no head start, mana dearer, the enrage sooner, Armor and themed elemental resistance on every foe, and the status numbers in the table below (Burn uncapped and Fire, Shock Lightning, Chill a slow that shatters at its cap, Sunder as damage taken, Regen, Clarity, Might and Doom). `steps/05-core-set/5g-feel/` has the reasons, and `DECISIONS.md` (Step 5g) the decisions.*
@@ -98,7 +100,10 @@ Fights run in real time, in ticks, with no orders: each unit acts on its own, fr
 - **Hidden rule.** Foes can't pick a Hidden unit as a target, by any targeting, Seek included; only their all-foes effects (Area) reach it. Its allies can still pick it. No unit in the first pass is both Hidden and Taunting.
 - Basic attacks have no targeting rules: they always use the default, a random foe under the Taunt rule. Passives can change this: the Ranger's Hunter's eye ignores Taunt, and the Stormcaller's Arc adds a hit on a second, random foe.
 
-**Aggro and draw** (the director's rule, Oct 26, 2026). Aggro is centred on 100: a class's or enemy's Aggro word n (1 to 5) is 70 + 10n (80, 90, 100, 110, 120), and gear and formation slots add ±10 a step. Aggro is never below 1. Foes don't pick in proportion to Aggro but to draw: with d how far a unit's Aggro is from 100, draw = 100 × (50 + 3d) ÷ (50 + d) above 100, and 100 × (50 + d) ÷ (50 + 3d) below it. An ordinary unit draws 100; none draws more than three times that, or less than a third; +d and −d cancel. A unit's chance to be picked is its draw over the total draw of the units that can be picked. Aggro 80 draws 64, 90 75, 110 133, 120 157, 140 189; a Knight, Cleric and Ranger at 140, 60 and 70 are picked 63%, 18% and 19% of the time.
+**Aggro and draw** (the director's rule, Oct 26, 2026; the party's side changed Nov 3, 2026). Aggro is centred on 100: a class's or enemy's Aggro word n (1 to 5) is 70 + 10n (80, 90, 100, 110, 120), and gear and formation slots add ±10 a step (a seat ±13 or ±25). Aggro is never below 1. Units aren't picked in proportion to Aggro but to draw, and a unit's chance to be picked is its draw over the total draw of the units that can be picked. An ordinary unit (Aggro 100) draws 100.
+
+- **Foes picking a party member** (Nov 3, 2026, the director's: a unit built to draw fire takes most of the picks by itself; building to avoid them is the rarer case). Every 25 Aggro doubles a party unit's draw, and every 25 below 100 halves it; between two doublings it climbs evenly. Aggro counts as 25 at least and 200 at most, so a party unit draws between an eighth and 16 times an ordinary unit's. Aggro 80 draws 60, 110 140, 120 180, 125 200, 145 360, 150 400, 165 640, 185 1,120. A far-more seat (+25) doubles a unit's draw; a gear step (+10) adds a third to two fifths more. Beside a Cleric and a Pyromancer at 80, a Knight at 120 is picked 60% of the time, with a far-more seat 75%, with a far-more seat and two Aggro pieces 84%, with four 90%. Until then the curve below held party units too, and a defender stacking every source reached about 64%.
+- **The party picking a foe.** The curve as it was: with d how far a unit's Aggro is from 100, draw = 100 × (50 + 3d) ÷ (50 + d) above 100, and 100 × (50 + d) ÷ (50 + 3d) below it. None draws more than three times an ordinary unit, or less than a third; +d and −d cancel. Aggro 80 draws 64, 90 75, 110 133, 120 157, 140 189.
 
 The target phrases in ability descriptions each mean exactly this, and are used word for word. "An ally" always includes the caster, unless the phrase says "other".
 
@@ -352,7 +357,7 @@ Four slots, each with its own kinds (step 5j, from the gear's design in step 5i,
 
 ## Floors and caps
 
-- Aggro never goes below 1, and draw keeps every unit between a third and three times an ordinary unit's pull, so no unit becomes unpickable, or the only pick, by numbers alone; that's Hidden's and Taunt's job. Every other stat floors at zero, and HP at one.
+- Aggro never goes below 1, and draw keeps every party unit between an eighth and 16 times an ordinary unit's pull (every foe between a third and three times), so no unit becomes unpickable, or the only pick, by numbers alone; that's Hidden's and Taunt's job. Every other stat floors at zero, and HP at one.
 - Evasion and Crit chance have caps, set in balancing and expected to sit far out of reach.
 - Magic resist floors at 0, so nothing is weak to magic, and caps at 100, immunity; nothing absorbs. Magic resist from gear and formations stops short of 100: immunity is for a foe's own line to name, and none does today.
 
