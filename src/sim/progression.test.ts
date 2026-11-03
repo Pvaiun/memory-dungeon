@@ -14,7 +14,7 @@ test("progression: the benchmark keeps up, every stuck week is sorted, and no wa
   const r = runProgression(s, pack, rules);
   // With real combat (step 4), the optimizer sometimes clears a dungeon with a lucky win by a party the
   // benchmark rates unwinnable (a solo Warrior in the Phalanx). More budget or seeds didn't close it; the
-  // benchmark's search shape is a later step's. See steps/04-combat-concepts/report.md. Under the core set's
+  // benchmark's search shape is a later step's. Under the core set's
   // rules (the Taunt rule on stated targeting, units starting with only their weapon) the placeholder
   // fixture's gap widened a little, so the bar is 1 in 10 here; the real check is on the core set's content.
   const weeks = r.players.filter((p) => p.kind === "optimizer").reduce((n, p) => n + p.weeks.length, 0);

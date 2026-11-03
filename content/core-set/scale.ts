@@ -32,7 +32,7 @@ export const crit = (n: number): number => {
 // ─── Timing, in ticks ────────────────────────────────────────────────────────
 
 /**
- * Pacing pass (steps/05-core-set/5b-pacing): every weapon kind swings on its own cooldown, so a party's basic attacks don't land on one
+ * Pacing pass (step 5b): every weapon kind swings on its own cooldown, so a party's basic attacks don't land on one
  * tick. They were three speeds (6, 10 and 16 ticks). A swing's size follows its cooldown (see SWING_REF), so every kind
  * deals about the same per tick.
  */

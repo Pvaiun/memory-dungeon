@@ -9,7 +9,7 @@
  * has found (`LEVELS`). A fractional `known` means some members know one more: 1.4 is two of the five on their second ability. Ordinary gear is filled by a stated rule: each member is offered six pieces of the level's rarity
  * it can wear, and the gear scorer equips the best (a pick of three, twice); the legendaries go to the member each is for.
  *
- *   npx tsx src/rogue-parties.ts      writes steps/05-core-set/5h-roster/parties.md, every roster at every level
+ *   npx tsx src/rogue-parties.ts      writes out/rogue-parties.md, every roster at every level
  */
 import type { Content } from "./engine/run.js";
 import { rngFor, shuffle } from "./engine/rng.js";
@@ -258,9 +258,10 @@ function sheet(c: Content): string {
 }
 
 if (/rogue-parties\.(ts|mjs)$/.test(process.argv[1] ?? "")) void (async () => {
-  const { readFileSync, writeFileSync } = await import("node:fs");
+  const { mkdirSync, readFileSync, writeFileSync } = await import("node:fs");
   const { loadContent } = await import("./engine/run.js");
   const c = loadContent(JSON.parse(readFileSync("content/core-set.pack.json", "utf8")));
-  writeFileSync("steps/05-core-set/5h-roster/parties.md", sheet(c) + "\n");
-  console.log("wrote steps/05-core-set/5h-roster/parties.md");
+  mkdirSync("out", { recursive: true });
+  writeFileSync("out/rogue-parties.md", sheet(c) + "\n");
+  console.log("wrote out/rogue-parties.md");
 })();

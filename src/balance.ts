@@ -1,5 +1,5 @@
 /**
- * The balance sheet (steps/05-core-set/5e-balance): what happens inside fights, read from the logs, for every class,
+ * The balance sheet (step 5e): what happens inside fights, read from the logs, for every class,
  * ability, status, enemy, gear piece and formation in the pack, in both modes, at frozen knobs and fixed seeds.
  *
  * A fixed spread of parties (every trio sampled evenly, every formation, every piece of gear a class can wear, plus the

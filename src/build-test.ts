@@ -1,6 +1,6 @@
 /**
  * Step 5i, step 5 (the build's test): all twelve builds on one set of the rogue's own fights, side by side
- * (`steps/05-core-set/5i-synergy/pieces-build-brief.md`, "How to test"). It measures; it doesn't balance.
+ * It measures; it doesn't balance.
  *
  * - **The parties:** the hand-built parties of `src/build-parties.ts` (12 builds, 3 routes each, 3 rungs, each in its formation
  *   and in Neutral), fielded as the engine's `Party`: abilities in slot order, each trained ability as its form, a trained

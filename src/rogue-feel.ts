@@ -1,5 +1,5 @@
 /**
- * The feel tool for the rogue mode (steps/05-core-set/5g-feel): the simulated player plays whole runs with every fight
+ * The feel tool for the rogue mode (step 5g; the reader's brief is docs/feel-reader.md): the simulated player plays whole runs with every fight
  * logged, and a spread of those fights (each act, regular fights early and late, elites, bosses, with parties that cover
  * the classes) is written out as reading packs for a feel reader: the fight tick by tick in the designer's view (both
  * sides' HP, MP spent and gained, every status with its stacks), with the party's kit at the top and a tally at the
