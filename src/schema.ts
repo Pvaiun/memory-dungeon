@@ -1051,7 +1051,7 @@ export const Campaign = z.strictObject({
 export type CampaignT = z.infer<typeof Campaign>;
 
 // ─────────────────────────────────────────────────────────────────────────────
-// The rogue mode: a roguelite on Slay the Spire's structure (steps/05-core-set/5d-rogue).
+// The rogue mode: a roguelite on Slay the Spire's structure (docs/core-set/rogue-mode.md).
 // Its rules are src/rogue.ts; this is the data they read.
 // ─────────────────────────────────────────────────────────────────────────────
 

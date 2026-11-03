@@ -1,5 +1,5 @@
 /**
- * The rogue mode (steps/05-core-set/5d-rogue): the core set as a roguelite. A run is three acts on Slay the Spire's
+ * The rogue mode (docs/core-set/rogue-mode.md): the core set as a roguelite. A run is three acts on Slay the Spire's
  * structure: a map of branching paths through a themed region, a boss at its end, and the next region picked from two.
  * The party is a leader the player owns plus two drafted companions; it grows through gear, abilities learned one at a
  * time, formations, and classes recruited along the way. HP, MP and knockouts carry from fight to fight; campfires and
@@ -66,7 +66,7 @@ export const ROGUE_CONFIG: RogueConfigT = {
    * (Slay the Spire's generator). Fixed floors; then room odds for the rest, with elites and campfires kept off the first
    * floors, and no elite, campfire or shop straight after another of its kind.
    *
-   * Step 5h round 6 (the director's: two fights before a boss, "the map is filled with sort of dead spots"; design-round-6.md):
+   * Step 5h round 6 (the director's: two fights before a boss, "the map is filled with sort of dead spots"):
    * 12 floors (were 9), the Muster and the Drill ground folded into other rewards, campfires guaranteed only before the boss
    * (about two more a map, on about a third of paths); a path has 4.9 regular fights and 0.9 elites (were 2.1 and 0.7).
    * `easyTo`: the easy pool's last floor (a start's fights, floors 1 to 3). `ref`: each pool's reference floor, where its fights'
@@ -121,7 +121,7 @@ export const ROGUE_CONFIG: RogueConfigT = {
   /** The campfire: one pick of REST, FOCUS, RAISE or TRAIN (two members); those at camp get half a REST whatever the pick. */
   // Step 5h: the bench's MP comes after every fight now, so the camp's share is HP only; the reserves rule is gone (a wipe is
   // a wipe, now that the party can be changed before any fight); a stranger at the fire sometimes asks to join.
-  // Round 6 (the director's: four options, three of them sustain, RAISE often forced, so TRAIN never; design-round-6.md §3): on
+  // Round 6 (the director's: four options, three of them sustain, RAISE often forced, so TRAIN never): on
   // arrival everyone, party and camp, recovers `auto` (HP and MP, the fallen rise); then one pick of two, REST (everyone `hp` and `mp`
   // again) or TRAIN (`train` members). The stranger can be taken in or turned away for a lesson, apart from the pick.
   // Then (the director's, on the first build: "decrease the free MP share right off the bat ... We weren't trying to give more free
@@ -163,7 +163,7 @@ export const ROGUE_CONFIG: RogueConfigT = {
    * elite's on top, and the boss's. Each region adds its own (below). Set by the rogue tuning (npm run rogue).
    */
   // Round 6: the climb stretched over 12 floors (6 a floor → 4.5), so an act's top floor is as hard as floor 9 was. `early`: the
-  // climb below a pool's reference floor, act I's measured against a party a few rooms in (design-round-6.md §8).
+  // climb below a pool's reference floor, act I's measured against a party a few rooms in.
   knobs: [
     // early: measured (npm run rogue:calibrate -- --climb): act I's regular fights against a party a few rooms in (four to pick
     // from, one random ability each, a piece each and a legendary) need their knobs a median 85 lower on floor 4 than at the
@@ -512,7 +512,7 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   },
   // Step 5h round 6 (the director's: events are "probably the coolest part of the game ... I wish there was more of these"; a path
   // meets about three an act on the 12-floor map): ten more, leaning on what they liked (a recruit carrying something, raising a
-  // piece's rarity, risk against reward) and the shapes they named (an unknown reward, a bundle). design-round-6.md §6.
+  // piece's rarity, risk against reward) and the shapes they named (an unknown reward, a bundle).
   {
     id: "master_smith", name: "The Master Smith", text: "A smith with a portable forge and a price for everything. \"Bring me anything. I'll make it better.\"",
     options: [

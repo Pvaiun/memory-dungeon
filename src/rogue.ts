@@ -1,5 +1,5 @@
 /**
- * The rogue mode (steps/05-core-set/5d-rogue): a run as plain data, moved forward one decision at a time. Three acts on
+ * The rogue mode (docs/core-set/rogue-mode.md): a run as plain data, moved forward one decision at a time. Three acts on
  * Slay the Spire's structure: an act is a map of branching paths through a themed region, from a first fight to a boss;
  * the player picks each next room. The party is a leader the player owns and two drafted companions. HP, MP and
  * knockouts carry from fight to fight; campfires, the shop, supplies and a few events are the only relief, and each new

@@ -2,13 +2,7 @@
 
 Oct 14, 2026
 
-> **Where this stands (Oct 23, 2026).** This is the full game, and the pitch stands. What's being built right now is the core set (`docs/core-set/`): a vertical slice the director designed, with the rules, combat, classes, gear, formations and enemies, its progression still to be decided (starting with none), and without the quest board or reward streams. Where the core set differs from this spec (party size, class count, gear and formation slots, abilities per class), the core set is what's built, and this spec is brought back in line once the slice has shown what holds. `DECISIONS.md` has the decision.
->
-> **Since then (Oct 26, 2026):** the slice has a campaign, a road of 20 nodes that unlocks it one step at a time (its first progression), and its rules changed in play: one campfire a run between fights, Bleed in place of Poison, Armor's formula, Aggro picked by draw, MP costs set by hand. They're in the core set's documents and `DECISIONS.md` (Step 5). How the campaign meets this spec's progression (quest unlocks, perk picks between fights) is for later.
->
-> **Oct 28, 2026:** no control during fights, ever (the director's: a team should win or lose as a team, not because a button was pressed at the right moment); preparation is the game. The campaign is retired; the rogue mode is the game, with a roster to rotate (MP drains by fighting and comes back on the bench) and builds that synergize. `DECISIONS.md` has the detail.
->
-> **Oct 29, 2026:** two kinds of damage, physical (against Armor and Evasion) and magical (against one Magic resist, never dodged); a status's own damage is never resisted; elements are themes, not mechanics. Gear sits in four slots (weapon, armor, offhand, amulet): each class wears its own weapon kinds, armor types and offhand kinds, the amulet is open to everyone, and a mythic piece fits one class. That's this spec's class-specific and generic slots, made concrete. `DECISIONS.md` has the detail.
+> **Where this stands.** This is the full game, and the pitch stands. What's being built now is the core set (`docs/core-set/`), a vertical slice without the quest board or reward streams. Its game is the rogue mode, with no control during fights: preparation is the game. Where the core set differs from this spec (party size, class count, gear slots, abilities per class, two kinds of damage with elements as themes only), the core set is what's built, and this spec is brought back in line once the slice has shown what holds.
 
 This is the game at a high level. The director's standing direction is `docs/rules.md`; if the two ever differ, the rules win and this spec gets fixed.
 

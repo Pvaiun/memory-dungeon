@@ -19,6 +19,7 @@ The slice is the first version of the game, not the whole of it. The full game g
 | `rules-and-vocabulary.md` | The game rules, the combat system, targeting, damage (physical and magical), the eleven weapon kinds, the statuses, special stats and effects, the gear rules (four slots, armor types, offhand kinds, mythics) and formation rules, floors and caps; elements as themes only | In |
 | `classes.md` | The 16 classes: stats, passives, abilities and a test fight each; parties of 3 against sample challenges; the tier check; what to watch | In |
 | `gear-and-formation-lists.md` | The build axes; the weapons, armor and amulets; the 10 formations; a coverage check; what to watch | **Out of date:** its pieces and formations were replaced by step 5i's (see Status) |
+| `rogue-mode.md` | How a run works: its acts, map and rooms, the party and bench, what carries between fights, loot and training, difficulty | Current |
 | `enemies-encounters-and-dungeons.md` | The enemy scale and fixed rules; 61 challenges; 29 enemies with a test each; 27 encounters; 7 dungeons, played in order | In |
 
 The director wrote them, and they're the approved design, so work on them starts at build and tune. They're written to stand on their own and refer to one another by title (*Core set: classes*).

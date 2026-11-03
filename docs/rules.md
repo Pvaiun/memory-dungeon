@@ -38,6 +38,8 @@ Where a rule and a design document disagree, this page wins and the document get
 ## Balance and testing
 
 - **Balance from what happens in fights** (who does what share of what, the economy of a fight) before win rates. Win rates set difficulty, last. The rogue mode breaks ties.
+- **Numbers, not behaviour.** Fix a problem by the amount applied, the cost, the cooldown or the duration, never by a new rule that changes what a thing does (a cap that binds on one hit, a target rule that leaves out the caster). A behaviour change that could read as esoteric goes to the director first.
+- **Read fights, not only averages.** A tick-by-tick read of real fights (`src/rogue-feel.ts`, `docs/feel-reader.md`) finds what the balance sheet's averages hide.
 - **Balance is its own pass.** While making content, make no balancing rules: synergies may be overpowered.
 - **Test with hand-built parties** (`src/rogue-parties.ts`, `src/build-parties.ts`), not the simulated player.
 - **The coming difficulty pass aims harder than today.**
@@ -45,4 +47,4 @@ Where a rule and a design document disagree, this page wins and the document get
 
 ## Tried and rejected
 
-To be filled in.
+`docs/tried-and-rejected.md` lists what was built and measured, then dropped, with the conditions each failed under. Read it before proposing a change to the rules or the numbers.
