@@ -16,12 +16,12 @@ import type { ContentPack, EventOpT, GearT } from "./schema.js";
 const raw = JSON.parse(readFileSync("content/core-set.pack.json", "utf8"));
 
 /**
- * Step 5i: the rules that roll, wear, temper and train bring their own content, in a copy of the pack, so they hold whatever the
+ * The rules that roll, wear, temper and train bring their own content, in a copy of the pack, so they hold whatever the
  * content shares have merged: a stock of fixed pieces in the spine's shape (each weapon kind 2 of each rarity, each armor type 3,
  * each offhand kind 2, amulets 6; stat pieces, a plain weapon's swing for the weapons), with `fx_heart` (a common +HP amulet) among
- * them; a mythic for every class; three formations to win, one of each rarity; and, until the content's own are in, upgrades (a
+ * them; a mythic for every class; three formations to win, one of each rarity; and, when the content has none, upgrades (a
  * power step and two versions, as five forms) for the Knight's three abilities and its passive, and the Pyromancer's Firebolt.
- * `withoutLoot` is the pack with no stock at all (the retire share's case).
+ * `withoutLoot` is the pack with no stock at all.
  */
 const HEART = 1000;
 const RARS = ["common", "uncommon", "rare", "legendary"] as const;
@@ -46,7 +46,7 @@ function fixturePack(o: { drop?: (g: GearT) => boolean } = {}): ContentPack {
   for (const k of pack.classes) add({ id: `fx_myth_${k.id}`, name: `${k.name}'s mythic`, slot: "amulet", rarity: "mythic", mythic: k.id, stats: [{ stat: "max_hp", flat: 2000 }] });
   const neutral = pack.formations.find((f) => f.id === "neutral")!;
   for (const [id, rarity] of [["fx_wedge", "common"], ["fx_line", "rare"], ["fx_ring", "legendary"]] as const) pack.formations.push({ ...structuredClone(neutral), id, name: id, source: "unlock", rarity });
-  // The content's own upgrades once they're in (the forms' ids are fixed either way); these until then.
+  // The content's own upgrades when it has them (the forms' ids are fixed either way); these otherwise.
   if (pack.upgrades?.length) return pack;
   pack.upgrades = UPGRADED.map(([id, cls, kind]) => ({ id, class: cls, kind, power: "More of the same.", a: { name: "Wide", text: "It reaches further." }, b: { name: "Deep", text: "It digs deeper." } }));
   for (const [id, , kind] of UPGRADED)
@@ -697,7 +697,7 @@ test("rogue (5h round 6): a captive after some fights against people: taken in a
 });
 
 test("rogue (5h round 6): every option of every event's every version plays through to the map", () => {
-  // Step 5i: with the fixture's stock every option can be picked; with no stock at all, the options that need none play too.
+  // With the fixture's stock every option can be picked; with no stock at all, the options that need none play too.
   for (const [c, least] of [[withLoot(), 60], [withoutLoot(), 30]] as const) {
     const ai = aiPlayer({}, 3);
     let played = 0;
