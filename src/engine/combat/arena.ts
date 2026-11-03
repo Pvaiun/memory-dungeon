@@ -34,7 +34,7 @@ const IDLE: S.WeaponT = { type: "physical", cooldown: 100_000, amount: 0 };
 /** 1 × the wielder's Attack: the usual scaling for a physical weapon, which every weapon states for itself. */
 export const ATK = { scale: [{ ratio: 1, stat: "attack" }] } satisfies S.NumT;
 
-/** Weapons from the design's examples. */
+/** Sample weapons. */
 export const weapons = {
   dagger: { type: "physical", cooldown: 8, amount: ATK },
   axe: { type: "physical", cooldown: 20, amount: ATK },

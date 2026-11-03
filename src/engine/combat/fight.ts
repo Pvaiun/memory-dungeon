@@ -1,16 +1,14 @@
 /**
  * The fight: the core set's combat system (docs/core-set/rules-and-vocabulary.md),
- * on step 4's machinery, run on sub-ticks. Section numbers in comments refer to
- * step 4's design (steps/04-combat-concepts/design.md, in git history); where the
- * core set is silent, what this code does stands.
+ * run on sub-ticks. Where the core set is silent, what this code does stands.
  *
  * A fight is plain data, so a run can be saved mid-fight. Each `step` plays one
  * moment, the next sub-tick on which anything happens, in this order:
  *   1. units that are ready start their first available action;
  *   2. everything due resolves one item at a time: the party batch, then the
  *      enemy batch; within a batch, pulses, then reactions, then actions, each
- *      in slot order, then in order of creation (section 2);
- *   3. statuses whose last sub-tick this is end (section 7.8).
+ *      in slot order, then in order of creation;
+ *   3. statuses whose last sub-tick this is end.
  * A unit that becomes ready, or whose action becomes available, because of
  * something resolved in steps 2 or 3 starts on the next sub-tick.
  */
@@ -26,7 +24,7 @@ import {
 
 /**
  * A status on a unit. `stacks` is the Intensity total in thousandths; `nums` the numbers fixed at application.
- * `peak` (step 5i, X1): an absorb's most stacks since it was applied, in thousandths, which its ending reports.
+ * `peak`: an absorb's most stacks since it was applied, in thousandths, which its ending reports.
  */
 export type SInst = { uid: number; id: string; src: string | null; at: number; end: number; stacks: number; nums: number[]; peak?: number };
 /** An action a unit can take: its equipped abilities in slot order, then "basic". `ready` is when its cooldown ends. */
@@ -44,7 +42,7 @@ export type CUnit = Unit & {
   pct: Record<string, number>;
   /** Statuses applied at fight start and again on revival: passive, gear, formation, perks, or an enemy's own. */
   start: string[];
-  /** Step 5g: ticks of cooldown each ability had left when the last fight ended (a party unit's; carried by the run or the rogue). */
+  /** Ticks of cooldown each ability had left when the last fight ended (a party unit's; carried by the run or the rogue). */
   cooldowns?: Record<string, number>;
   /** Where the basic attack comes from: a gear id, "enemy:<id>", or "unarmed". */
   weapon: string;
@@ -54,17 +52,17 @@ export type CUnit = Unit & {
   /** When recovery ends. */
   busy: number;
   statuses: SInst[];
-  /** Step 5i (X13): its seat, the id of its position in the party's formation. Enemies and summoned units sit in none. */
+  /** Its seat, the id of its position in the party's formation. Enemies and summoned units sit in none. */
   seat?: string;
-  /** Step 5i (X19): hidden control-resistance stacks, on an enemy of a rank ruleset.control lists. */
+  /** Hidden control-resistance stacks, on an enemy of a rank ruleset.control lists. */
   ctrl?: number;
-  /** Step 5i (X5): one of its actions has resolved this fight. */
+  /** One of its actions has resolved this fight. */
   acted?: boolean;
 };
 
 /**
- * Step 5i (X29): what an event carries beyond its units, amount and tags, kept on the reaction that answers it
- * (X28's strike of a hit, X21's `which: event`, X39's recast) and read by X2's filters.
+ * What an event carries beyond its units, amount and tags, kept on the reaction that answers it
+ * (a reaction's strike of a hit, the cooldown effect's `which: event`, a recast) and read by event filters.
  */
 export type Carried = {
   /** Hits: the raw amount, after boosts, damage taken and crit, before Armor or Magic resist. */
@@ -75,7 +73,7 @@ export type Carried = {
   count: number;
   /** Action events: the action's id (an ability's, or "basic"). */
   ability: string | null;
-  /** Action events: a recast's repeat (X39). */
+  /** Action events: a recast's repeat. */
   repeat: boolean;
 };
 export const CARRIED_NONE: Carried = { raw: 0, dtype: null, count: 0, ability: null, repeat: false };
@@ -99,9 +97,9 @@ export type Item =
       /** The actor is KO'd and reacting to its own KO. */
       dead: boolean;
     } & Carried)
-  /** Step 5i (X19): one control-resistance stack drains from `unit`. */
+  /** One control-resistance stack drains from `unit`. */
   | (ItemBase & { k: "drain" })
-  /** Step 5i (X34): a revive on a timer: `unit` stands at `at`, if it's still down and the fight goes on. */
+  /** A revive on a timer: `unit` stands at `at`, if it's still down and the fight goes on. */
   | (ItemBase & { k: "revive"; by: string; hp: number; ready: boolean });
 
 export type CFight = Omit<Fight, "units"> & {
@@ -117,11 +115,11 @@ export const LIMITS = { ticks: 5000, moments: 200_000 };
 const NEVER = Number.MAX_SAFE_INTEGER;
 const SUBTICKS = S.SUBTICKS;
 
-/** `after`: step 5i (X36): the fight_won reactions are resolving, so a knockout among them doesn't start them again. */
+/** `after`: the fight_won reactions are resolving, so a knockout among them doesn't start them again. */
 type W = { f: CFight; c: Content; log?: (e: Entry) => void; depth: number; after?: boolean };
 export const world = (c: Content, f: CFight, log?: (e: Entry) => void): W => ({ f, c, log, depth: 0 });
 
-/** Step 5i (share H): which of the new status fields any status in the content uses, so fights without them skip their checks. */
+/** Which of these status fields any status in the content uses, so fights without them skip their checks. */
 type Feats = { mods: boolean; crits: boolean; cover: boolean; floor: boolean; heals: boolean; revives: boolean };
 const featCache = new WeakMap<Content, Feats>();
 function feats(c: Content): Feats {
@@ -161,12 +159,12 @@ function push(w: W, it: Item) {
 }
 const before = (a: Item, b: Item) => (a.at - b.at || a.b - b.b || a.g - b.g || a.slot - b.slot || a.seq - b.seq) < 0;
 
-// ─── Stats (section 4) ──────────────────────────────────────────────────────
+// ─── Stats ──────────────────────────────────────────────────────────────────
 
 /**
- * Every stat: base, plus static changes (gear, passive, formation, perks), plus statuses. Step 5i: a live stat change
- * (X18) is worked out in a second pass, from the holder's stats as they stand without it (given `w`, as a fight's
- * refresh gives it; without, only its fixed part counts); then a status that sets a stat (X17) has the last word.
+ * Every stat: base, plus static changes (gear, passive, formation, perks), plus statuses. A live stat change is
+ * worked out in a second pass, from the holder's stats as they stand without it (given `w`, as a fight's refresh
+ * gives it; without, only its fixed part counts); then a status that sets a stat has the last word.
  */
 export function derive(c: Content, u: Pick<CUnit, "base" | "flat" | "pct">, statuses: readonly SInst[] = [], w?: W): Record<string, number> {
   let flat = u.flat, pct = u.pct;
@@ -236,11 +234,11 @@ function refresh(w: W, u: CUnit) {
     if ((now[sd.id] ?? 0) > 0 && !has.length && !u.ko) applyStatus(w, u, u, def(w, sd.brings), { stacks: 1, rng: u });
     else if ((now[sd.id] ?? 0) <= 0) for (const s of has) endStatus(w, u, s, "removed");
   }
-  // Step 5i (X15): Taunt ends Hidden. The moment a unit Taunts, every status that makes it unpickable ends, unremovable or not.
+  // Taunt ends Hidden. The moment a unit Taunts, every status that makes it unpickable ends, unremovable or not.
   if (!u.ko && taunting(w, u)) for (const s of u.statuses.slice()) if (forbids(def(w, s.id))) endStatus(w, u, s, "removed");
 }
 
-/** When a timing stat changes, every running timer it affects is rescaled: remaining × old speed ÷ new speed (section 2). */
+/** When a timing stat changes, every running timer it affects is rescaled: remaining × old speed ÷ new speed. */
 function retime(w: W, u: CUnit, old: Record<string, number>, now: Record<string, number>) {
   const t = w.f.now;
   u.acts.forEach((a, i) => {
@@ -267,14 +265,14 @@ type OfT = NonNullable<S.ScaleT["of"]>;
 type Who = (of: OfT) => CUnit | null;
 
 /**
- * Step 5i (X8): what an action's number can count beyond units' state: its targets, and the units on the other side
- * its hits have landed on so far (the action's Ctx keeps `landed`, X29). Ctx fits this shape.
+ * What an action's number can count beyond units' state: its targets, and the units on the other side
+ * its hits have landed on so far (the action's Ctx keeps `landed`). Ctx fits this shape.
  */
 type Reading = { targets: readonly CUnit[]; landed?: readonly CUnit[] };
 
 /**
  * One term of a number: the source read from `u` (or the event amount), times a live stat if the scale says so, times the ratio.
- * A condition (`when`) is read against the reading unit (X4's `lower`): the acting unit, or a status's holder.
+ * A condition (`when`) is read against the reading unit (for `lower`): the acting unit, or a status's holder.
  */
 function term(w: W, s: S.ScaleT, u: CUnit | null, amount: number, who: Who, act?: Reading): number {
   let v: number;
@@ -295,14 +293,14 @@ function term(w: W, s: S.ScaleT, u: CUnit | null, amount: number, who: Who, act?
   return v * s.ratio;
 }
 
-/** X8: a unit's buffs or debuffs (markers never count), or the units on its side (or its foes') that pass a test. */
+/** A unit's buffs or debuffs (markers never count), or the units on its side (or its foes') that pass a test. */
 function countOf(w: W, u: CUnit, c: Exclude<NonNullable<S.ScaleT["count"]>, "targets" | "hit">): number {
   if (c === "buffs" || c === "debuffs") return u.statuses.filter((s) => def(w, s.id).label === c.slice(0, -1)).length;
   const seat = c.seat;
   return sideOf(w, u, c.side, c.where?.ko === true).filter((x) => (seat === undefined || inSeat(w, u, x, seat)) && (!c.where || passes(w, x, c.where, u))).length;
 }
 
-/** A number in an action: `self` is the acting unit, `target` the unit the effect lands on, `act` the action (X8's counts). */
+/** A number in an action: `self` is the acting unit, `target` the unit the effect lands on, `act` the action (for counts). */
 function aval(w: W, n: S.NumT, self: CUnit, target: CUnit | null, act?: Reading): number {
   const who: Who = (of) => (of === "target" ? target : of === "self" ? self : null);
   let v = baseOf(n);
@@ -335,7 +333,7 @@ function sval(w: W, x: StatusNums, owner: object, n: S.NumT, target: CUnit | nul
   return v;
 }
 
-/** The unit's boosts that match any of `tags`, added together (section 5). A boost can read the unit being hit. */
+/** The unit's boosts that match any of `tags`, added together. A boost can read the unit being hit. */
 function boostOf(w: W, u: CUnit, tags: readonly string[], target: CUnit | null): number {
   let b = 0;
   for (const s of u.statuses) {
@@ -357,7 +355,7 @@ function takenOf(w: W, u: CUnit, tags: readonly string[]): number {
   return Math.min(cap, Math.max(floor, t));
 }
 
-// ─── Actions (sections 2 and 3) ─────────────────────────────────────────────
+// ─── Actions ────────────────────────────────────────────────────────────────
 
 type HitKind = "basic" | "ability" | "extra";
 type ActDef = {
@@ -369,13 +367,13 @@ type ActDef = {
   cooldown: number;
   recovery: number;
   if: S.ConditionT[] | null;
-  /** Step 5i (X41): `if` holds when any one of its conditions does, not every one. */
+  /** `if` holds when any one of its conditions does, not every one. */
   any: boolean;
   target: Target;
   seek: boolean;
   effects: S.EffectT[];
   tags: string[];
-  /** Step 5i (X24): what its effects do, for ability changes by `does`: damage, heal, revive, and each status it applies. */
+  /** What its effects do, for ability changes by `does`: damage, heal, revive, and each status it applies. */
   does: ReadonlySet<string>;
 };
 const NOTHING: ReadonlySet<string> = new Set();
@@ -427,14 +425,14 @@ function actDef(w: W, u: CUnit, i: number): ActDef {
   return d;
 }
 
-/** An ability's `if`: conditions that must all hold, or (step 5i, X41: `{ any }`) at least one. */
+/** An ability's `if`: conditions that must all hold, or (`{ any }`) at least one. */
 function allOf(c: S.AbilityT["if"]): { list: S.ConditionT[] | null; any: boolean } {
   if (!c) return { list: null, any: false };
   if ("any" in c) return { list: c.any, any: true };
   return { list: [c].flat(), any: false };
 }
 
-/** X24: what an ability's effects do: "damage", "heal", "revive", and every status it applies (an apply, a hit's apply, a `one`). */
+/** What an ability's effects do: "damage", "heal", "revive", and every status it applies (an apply, a hit's apply, a `one`). */
 function doesOf(effects: readonly S.EffectT[]): Set<string> {
   const out = new Set<string>();
   for (const e of effects) {
@@ -448,7 +446,7 @@ function doesOf(effects: readonly S.EffectT[]): Set<string> {
   return out;
 }
 
-// ─── Ability changes (step 5i: build/engine-spec.md X22 to X24) ─────────────
+// ─── Ability changes ────────────────────────────────────────────────────────
 
 /** An ability's changes from its unit's statuses, gathered for one use. Costs, stacks and heals add; the newest status's cast or target wins. */
 type Mods = {
@@ -493,10 +491,10 @@ function modsOf(w: W, u: CUnit, d: ActDef): Mods | null {
   return m;
 }
 
-/** X22: the MP cost after its changes, which add up: −100 is free, and it never falls below 0. */
+/** The MP cost after its changes, which add up: −100 is free, and it never falls below 0. */
 const mpCost = (d: ActDef, m: Mods | null) => (m?.mp ? Math.max(0, Math.floor((d.mp * (100 + m.mp)) / 100)) : d.mp);
 
-/** X23: an HP price on top of the MP: pct % of its own MP cost (before MP changes), point for point, or as the same share of max HP. */
+/** An HP price on top of the MP: pct % of its own MP cost (before MP changes), point for point, or as the same share of max HP. */
 function hpPrice(u: CUnit, d: ActDef, m: Mods | null): number {
   if (!m?.hp.length) return 0;
   let p = 0;
@@ -507,13 +505,13 @@ function hpPrice(u: CUnit, d: ActDef, m: Mods | null): number {
   return Math.floor(p);
 }
 
-/** X23's floor: the ability waits rather than leave its unit below the highest floor its HP prices set. */
+/** The HP price's floor: the ability waits rather than leave its unit below the highest floor its HP prices set. */
 function priceFits(u: CUnit, d: ActDef, m: Mods): boolean {
   const floor = m.hp.reduce((f, h) => Math.max(f, h.floor ?? 0), 0);
   return floor <= 0 || (u.hp - hpPrice(u, d, m)) * 100 >= floor * u.stats.max_hp;
 }
 
-/** X24: how many more stacks an application adds, from the ability's changes, on top of the applier's boosts. */
+/** How many more stacks an application adds, from the ability's changes, on top of the applier's boosts. */
 function stackMult(w: W, m: Mods | null | undefined, status: string): number {
   if (!m?.stacks.length) return 1;
   let p = 0;
@@ -543,13 +541,13 @@ function seeks(w: W, u: CUnit, d: ActDef) {
   });
 }
 
-/** Off cooldown, affordable, its condition holds, and no lockout covers it. Step 5i: its changes' cost, waits and HP floor too. */
+/** Off cooldown, affordable, its condition holds, and no lockout covers it; its changes' cost, waits and HP floor count too. */
 function available(w: W, u: CUnit, i: number): boolean {
   if (u.acts[i].ready > w.f.now) return false;
   const d = actDef(w, u, i);
   const m = modsOf(w, u, d);
   if (u.mp < mpCost(d, m)) return false;
-  // Step 5g: an ability may wait for several conditions at once (Blood gift: an ally hurt, and itself above the price). Step 5i (X41): or for any one.
+  // An ability may wait for several conditions at once (Blood gift: an ally hurt, and itself above the price), or for any one.
   if (d.if && !(d.any ? d.if.some((cnd) => holds(w, u, cnd)) : d.if.every((cnd) => holds(w, u, cnd)))) return false;
   if (m && !(m.wait.every((cnd) => holds(w, u, cnd)) && priceFits(u, d, m))) return false;
   return !lockedOut(w, u, d);
@@ -557,7 +555,7 @@ function available(w: W, u: CUnit, i: number): boolean {
 
 function start(w: W, u: CUnit, i: number) {
   const d = actDef(w, u, i);
-  // Step 5i (X24): a change can set its wind-up, before cast-time reduction.
+  // A change can set its wind-up, before cast-time reduction.
   const cast = modsOf(w, u, d)?.cast;
   const t = scaled(cast != null ? sub(cast) : d.cast, speedOf(stat(w, u, "cast_time_reduction")));
   u.cast = { act: i, end: w.f.now + t };
@@ -572,12 +570,12 @@ function cooldownOf(w: W, u: CUnit, d: ActDef) {
     : scaled(d.cooldown, speedOf(stat(w, u, "cooldown_reduction")));
 }
 
-/** Targets are chosen, and MP is paid, when the action resolves (section 3). */
+/** Targets are chosen, and MP is paid, when the action resolves. */
 function resolve(w: W, u: CUnit, i: number) {
   const d = actDef(w, u, i);
   u.cast = null;
   const fail = (why: string) => w.log?.({ t: "fail", vis: "player", at: w.f.now, by: u.id, act: d.id, name: d.name, why });
-  // Step 5i (X22 to X24): its changes, read as it resolves: the cost it pays, its target rule, Seek, and what its hits and heals carry.
+  // Its changes, read as it resolves: the cost it pays, its target rule, Seek, and what its hits and heals carry.
   const m = modsOf(w, u, d);
   const mp = mpCost(d, m);
   if (u.mp < mp) {
@@ -588,7 +586,7 @@ function resolve(w: W, u: CUnit, i: number) {
     return;
   }
   const targets = choose(w, u, m?.target ?? d.target, !!m?.seek || seeks(w, u, d), d.kind);
-  // A stated rule that finds nobody when the action resolves: no MP spent and no cooldown (step 4's rule). Under
+  // A stated rule that finds nobody when the action resolves: no MP spent and no cooldown. Under
   // ruleset.lostCast "cooldown" the unit spends the action's recovery, so two Ghouls reaching for one corpse don't
   // loop, but a Purify whose Stun ended mid-cast isn't locked out for a whole cooldown.
   if (!targets.length) {
@@ -600,7 +598,7 @@ function resolve(w: W, u: CUnit, i: number) {
     u.mp -= mp;
     w.log?.({ t: "mp", vis: "hidden", at: w.f.now, target: u.id, amount: -mp, mp: u.mp });
   }
-  // X23: an HP price on top of the MP, paid with it.
+  // An HP price on top of the MP, paid with it.
   const price = hpPrice(u, d, m);
   if (price > 0) pay(w, u, price);
   w.log?.({ t: "act", vis: "player", at: w.f.now, by: u.id, act: d.id, name: d.name, kind: d.kind, targets: targets.map((x) => x.id) });
@@ -610,7 +608,7 @@ function resolve(w: W, u: CUnit, i: number) {
   perform(w, u, d, targets, m, mp, false);
 }
 
-/** An action's effects, its extra strikes and its action_resolve: as it resolves, or again for a recast's repeat (X39). */
+/** An action's effects, its extra strikes and its action_resolve: as it resolves, or again for a recast's repeat. */
 function perform(w: W, u: CUnit, d: ActDef, targets: CUnit[], m: Mods | null, paid: number, repeat: boolean) {
   const ctx: Ctx = { actor: u, kind: d.kind, targets, id: d.id, st: null, dead: false, landed: [], repeat, mod: m };
   for (const e of d.effects) {
@@ -619,12 +617,12 @@ function perform(w: W, u: CUnit, d: ActDef, targets: CUnit[], m: Mods | null, pa
   }
   if (d.kind === "basic") strikes(w, u, d, targets, ctx);
   if (w.f.result || u.ko) return;
-  // Step 5i (X29): what it did: the MP it paid, the units on the other side its hits landed on, which action, and whether it's a repeat.
+  // What it did: the MP it paid, the units on the other side its hits landed on, which action, and whether it's a repeat.
   fire(w, ev("action_resolve", u, null, { kind: d.kind, amount: paid, count: ctx.landed!.length, ability: d.id, repeat }));
 }
 
 /**
- * Step 5i (X39): in a reaction to its holder's own action_resolve, the action that set it off resolves again at once:
+ * In a reaction to its holder's own action_resolve, the action that set it off resolves again at once:
  * no wind-up, no MP or HP price, its cooldown and recovery untouched, its targets chosen afresh by its own rule (its
  * changes included). The repeat fires its own action_resolve, marked as a repeat.
  */
@@ -651,9 +649,9 @@ function strikeRoll(w: W, u: CUnit, chance: number): boolean {
 
 /**
  * Extra strikes after a basic attack (Double strike, Arc): one more hit with the weapon's damage, of kind extra, which never chains.
- * Step 5i: each strike deals `share` % of the weapon's damage (X26); a rule that picks several units strikes each, in its order, and
- * those strikes are `area` (X26); a `chain` rolls the chance again after each strike that lands, at most `times` more, each `share` %
- * of the one before (X27), in place of a plain strike reading the same stat. Their hits count among the action's landed units.
+ * Each strike deals `share` % of the weapon's damage; a rule that picks several units strikes each, in its order, and
+ * those strikes are `area`; a `chain` rolls the chance again after each strike that lands, at most `times` more, each `share` %
+ * of the one before, in place of a plain strike reading the same stat. Their hits count among the action's landed units.
  */
 function strikes(w: W, u: CUnit, d: ActDef, targets: CUnit[], ctx: Ctx) {
   const e = d.effects[0] as S.DamageEffectT;
@@ -686,12 +684,12 @@ function strikes(w: W, u: CUnit, d: ActDef, targets: CUnit[], ctx: Ctx) {
   }
 }
 
-// ─── Targeting (section 6, and the core set's Taunt and Hidden rules) and conditions (section 7.10) ──
+// ─── Targeting (and the core set's Taunt and Hidden rules) and conditions ───
 
-/** Whether `x` passes a test. `ref` is the reading unit (step 5i, X4's `lower`): the acting unit, a reaction's actor, a pulse's holder. */
+/** Whether `x` passes a test. `ref` is the reading unit (for `lower`): the acting unit, a reaction's actor, a pulse's holder. */
 function passes(w: W, x: CUnit, c: S.UnitCondT, ref?: CUnit | null): boolean {
   if (c.ko !== undefined && x.ko !== c.ko) return false;
-  // Step 5i: has any of (X4), a stat lower than the reader's (X4), acted (X5), the top of its side (X6), wields a kind (X7).
+  // Has any of, a stat lower than the reader's, acted, the top of its side, wields a kind.
   if (c.hasAny !== undefined && !c.hasAny.some((id) => x.statuses.some((s) => s.id === id))) return false;
   if (c.lower !== undefined && !(ref && stat(w, x, c.lower.stat) < stat(w, ref, c.lower.stat))) return false;
   if (c.acted !== undefined && !!x.acted !== c.acted) return false;
@@ -699,7 +697,7 @@ function passes(w: W, x: CUnit, c: S.UnitCondT, ref?: CUnit | null): boolean {
   if (c.weapon !== undefined && !c.weapon.includes(weaponOf(w.c, x.weapon).kind ?? "")) return false;
   if (c.hpBelow !== undefined && !(x.hp * 100 < c.hpBelow * x.stats.max_hp)) return false;
   if (c.hpAtLeast !== undefined && !(x.hp * 100 >= c.hpAtLeast * x.stats.max_hp)) return false;
-  // Step 5g: MP as a share of max MP (Clarity waits for an ally who needs it). A unit with no MP pool is never "below".
+  // MP as a share of max MP (Clarity waits for an ally who needs it). A unit with no MP pool is never "below".
   if (c.mpBelow !== undefined && !(x.stats.max_mp > 0 && x.mp * 100 < c.mpBelow * x.stats.max_mp)) return false;
   if (c.mpAtLeast !== undefined && !(x.stats.max_mp <= 0 || x.mp * 100 >= c.mpAtLeast * x.stats.max_mp)) return false;
   if (c.has !== undefined && !ids(c.has).every((id) => x.statuses.some((s) => s.id === id))) return false;
@@ -714,7 +712,7 @@ function passes(w: W, x: CUnit, c: S.UnitCondT, ref?: CUnit | null): boolean {
   return true;
 }
 
-/** X6: no living unit on its side has more of the highest of these stats; ties pass. */
+/** No living unit on its side has more of the highest of these stats; ties pass. */
 function onTop(w: W, x: CUnit, stats: readonly string[]): boolean {
   const best = (u: CUnit) => Math.max(...stats.map((k) => stat(w, u, k)));
   const v = best(x);
@@ -722,7 +720,7 @@ function onTop(w: W, x: CUnit, stats: readonly string[]): boolean {
 }
 
 /**
- * X13: the seat a seat field names, read from `reader`'s place: a position id as written, or `next` / `previous`, the
+ * The seat a seat field names, read from `reader`'s place: a position id as written, or `next` / `previous`, the
  * seat after or before the reader's by slot order, wrapping round and skipping empty seats. Null: nobody (the reader
  * sits in no seat, or nobody else does).
  */
@@ -766,7 +764,7 @@ function visibleFoes(w: W, u: CUnit): CUnit[] {
   return seen.length ? seen : all;
 }
 
-/** At least `atLeast` units on the side pass (default 1, or 0 when `atMost` is given), and (step 5i) no more than `atMost`, in its seat if it names one. */
+/** At least `atLeast` units on the side pass (default 1, or 0 when `atMost` is given), and no more than `atMost`, in its seat if it names one. */
 function holds(w: W, u: CUnit, c: S.ConditionT) {
   const ko = c.where.ko === true;
   let pool = c.side === "foes" && !ko ? visibleFoes(w, u) : sideOf(w, u, c.side, ko);
@@ -780,7 +778,7 @@ function value(w: W, x: CUnit, by: NonNullable<S.TargetRuleT["by"]>): number {
   if (by === "hp_share") return x.stats.max_hp > 0 ? x.hp / x.stats.max_hp : 0;
   if (by === "mp_share") return x.stats.max_mp > 0 ? x.mp / x.stats.max_mp : 1;
   if (by === "buffs" || by === "debuffs") return x.statuses.filter((s) => def(w, s.id).label === by.slice(0, -1)).length;
-  // Step 5i (X9): the basic attack's interval now, its cooldown after Attack speed: highest is the slowest.
+  // The basic attack's interval now, its cooldown after Attack speed: highest is the slowest.
   if (by === "swing") {
     const i = x.acts.findIndex((a) => a.id === "basic");
     return i < 0 ? 0 : cooldownOf(w, x, actDef(w, x, i));
@@ -792,8 +790,8 @@ function value(w: W, x: CUnit, by: NonNullable<S.TargetRuleT["by"]>): number {
 
 /**
  * A unit's draw: how strongly it pulls a foe's pick, from its Aggro. A party unit's comes from ruleset.partyDraw when the
- * ruleset has one (Nov 3, 2026: doubling every so many points, held between a floor and a cap); otherwise, and for enemy
- * units always, from ruleset.draw's curve, so the party picks among its foes as before. Without either, Aggro itself.
+ * ruleset has one (doubling every so many points, held between a floor and a cap); otherwise, and for enemy units
+ * always (the party's picks among its foes), from ruleset.draw's curve. Without either, Aggro itself.
  */
 export function drawOf(r: Pick<S.ContentPack["ruleset"], "draw" | "partyDraw">, aggro: number, side: CUnit["side"] = "enemy"): number {
   const p = side === "party" ? r.partyDraw : undefined;
@@ -847,7 +845,7 @@ type PickOpts = {
   main: boolean;
   /** The action's chosen targets, for `exclude`. */
   targets: readonly CUnit[];
-  /** Step 5i (X10), reactions: the event's other unit and the unit it's about, for `exclude`. */
+  /** Reactions: the event's other unit and the unit it's about, for `exclude`. */
   other?: CUnit | null;
   owner?: CUnit | null;
 };
@@ -857,7 +855,7 @@ function byRule(w: W, u: CUnit, r: S.TargetRuleT, o: PickOpts): CUnit[] {
   // Hidden units can't be picked by any rule but `all`, unless every foe is Hidden.
   let pool = r.side === "foes" && !ko && r.pick !== "all" ? visibleFoes(w, u) : sideOf(w, u, r.side, ko);
   if (r.exclude === "targets") pool = pool.filter((x) => !o.targets.includes(x));
-  // Step 5i: skip the event's other unit or owner (X10); only the unit in a seat (X13).
+  // Skip the event's other unit or owner; only the unit in a seat.
   else if (r.exclude === "other") pool = pool.filter((x) => x !== o.other);
   else if (r.exclude === "owner") pool = pool.filter((x) => x !== o.owner);
   if (r.seat !== undefined) pool = pool.filter((x) => inSeat(w, u, x, r.seat!));
@@ -892,7 +890,7 @@ function byRule(w: W, u: CUnit, r: S.TargetRuleT, o: PickOpts): CUnit[] {
   return out;
 }
 
-/** An action's targets as it resolves. `kind` (step 5i): a basic attack picks in the order `basicPick` gives. */
+/** An action's targets as it resolves. `kind`: a basic attack picks in the order `basicPick` gives. */
 function choose(w: W, u: CUnit, t: Target, seek: boolean, kind?: ActDef["kind"]): CUnit[] {
   if (t === "self") return u.ko ? [] : [u];
   if (t === "ally") {
@@ -904,7 +902,7 @@ function choose(w: W, u: CUnit, t: Target, seek: boolean, kind?: ActDef["kind"])
 }
 
 /**
- * Step 5i (X11, X12): a basic attack picks, in order, by an aim the attacker holds that comes first; a foe holding a
+ * A basic attack picks, in order, by an aim the attacker holds that comes first; a foe holding a
  * focus (Marked); by its other aims; then the default. A step that finds nobody passes to the next. An aim's rule is an
  * action's own (the Taunt rule applies, unless the attack has Seek), and an all-pick hits every unit it finds.
  */
@@ -920,7 +918,7 @@ function basicPick(w: W, u: CUnit, seek: boolean): CUnit[] {
   return aimed(true) ?? focused(w, u, seek) ?? aimed(false) ?? defaultFoe(w, u, seek);
 }
 
-/** X11: a foe holding a focus status that can be picked, by draw among several; a Taunting foe still takes the pick unless the attack has Seek. */
+/** A foe holding a focus status that can be picked, by draw among several; a Taunting foe still takes the pick unless the attack has Seek. */
 function focused(w: W, u: CUnit, seek: boolean): CUnit[] | null {
   const seen = visibleFoes(w, u);
   let pool = seen.filter((x) => x.statuses.some((s) => def(w, s.id).focus));
@@ -949,11 +947,11 @@ type Ctx = {
   id: string;
   /** The actor is KO'd and reacting to its own KO (Volatile). */
   dead: boolean;
-  /** Step 5i (X29): an action's units on the other side its hits have landed on so far, each once (`count: hit` reads it). */
+  /** An action's units on the other side its hits have landed on so far, each once (`count: hit` reads it). */
   landed?: CUnit[];
-  /** Step 5i (X39): a recast's repeat. */
+  /** A recast's repeat. */
   repeat?: boolean;
-  /** Step 5i (X22 to X24): an ability's changes, as read when it resolved. */
+  /** An ability's changes, as read when it resolved. */
   mod?: Mods | null;
   st: null | {
     d: S.StatusT;
@@ -962,7 +960,7 @@ type Ctx = {
     src: string | null;
     per: number;
     other: CUnit | null;
-    /** Reactions: the unit the event is about (step 5g: the holder of a status that just reached its cap). */
+    /** Reactions: the unit the event is about (for status_capped, the holder of the status that just reached its cap). */
     owner: CUnit | null;
     amount: number;
     /** A pulse or trigger: no unit's boosts reach it. A reaction reads its actor's boosts now. */
@@ -1001,7 +999,7 @@ function run(w: W, ctx: Ctx, e: S.EffectT) {
   }
   if (e.op === "recast") return recast(w, ctx);
   const ts = targetsOf(w, ctx, e);
-  // Step 5i (X29): a damage effect aimed at two or more units at once makes `area` hits.
+  // A damage effect aimed at two or more units at once makes `area` hits.
   const area = ts.length >= 2;
   for (const t of ts) {
     if (w.f.result || (ctx.actor.ko && !ctx.dead)) return;
@@ -1018,19 +1016,19 @@ function run(w: W, ctx: Ctx, e: S.EffectT) {
       case "mp": {
         const v = Math.trunc(num(w, ctx, e, e.amount, t));
         t.mp = Math.min(t.stats.max_mp, Math.max(0, t.mp + v));
-        // Log only (step 5h round 6): who gave it, from what, and whether a status's pulse (regen, Clarity) or an action or reaction.
+        // Log only: who gave it, from what, and whether a status's pulse (regen, Clarity) or an action or reaction.
         w.log?.({ t: "mp", vis: "hidden", at: w.f.now, target: t.id, amount: v, mp: t.mp, by: ctx.actor.id, src: ctx.id, part: ctx.st ? (ctx.st.fixedBoost ? "pulse" : "reaction") : "action" });
         break;
       }
       case "apply":
-        // Step 5i (X24): an ability's changes can add stacks to its applications.
+        // An ability's changes can add stacks to its applications.
         applyStatus(w, ctx.actor, t, def(w, e.status), { stacks: num(w, ctx, e, e.stacks ?? 1, t) * stackMult(w, ctx.mod, e.status), duration: e.duration, chance: e.chance, rng: ctx.actor });
         break;
       case "remove":
         remove(w, ctx.actor, t, e);
         break;
       case "revive": {
-        // Step 5i (X35): the reviver's own rule wins over the effect's ready and HP; (X34) `after` stands the unit up later.
+        // The reviver's own rule wins over the effect's ready and HP; `after` stands the unit up later.
         const rule = reviverRule(w, ctx.actor, t);
         const hp = rule.hp ?? num(w, ctx, e, e.hp, t);
         const ready = rule.ready ?? e.ready ?? false;
@@ -1051,7 +1049,7 @@ function run(w: W, ctx: Ctx, e: S.EffectT) {
         reactionStrike(w, ctx, t, e, area);
         break;
       case "one": {
-        // Step 5i (X38): one of these statuses, picked at random on the actor's dice, for each target.
+        // One of these statuses, picked at random on the actor's dice, for each target.
         const ap = e.of[randomIndex(w, ctx.actor, e.of.length, "one")];
         applyStatus(w, ctx.actor, t, def(w, ap.status), { stacks: num(w, ctx, ap, ap.stacks ?? 1, t) * stackMult(w, ctx.mod, ap.status), duration: ap.duration, chance: ap.chance, rng: ctx.actor });
         break;
@@ -1061,7 +1059,7 @@ function run(w: W, ctx: Ctx, e: S.EffectT) {
 }
 
 /**
- * Step 5i (X21): changes the cooldown left on a unit's basic attack or abilities. `longest` and `soonest` pick among the
+ * Changes the cooldown left on a unit's basic attack or abilities. `longest` and `soonest` pick among the
  * abilities still cooling down (ties: slot order); `event` is the action behind the reaction's event; by id, each with its
  * trained forms. A wind-up under way carries on, and ready still needs MP and conditions. The basic attack's full cooldown is its swing.
  */
@@ -1094,7 +1092,7 @@ function cooldowns(w: W, ctx: Ctx, t: CUnit, e: Extract<S.EffectT, { op: "cooldo
   }
 }
 
-/** Step 5i (X23, G12): HP as a price: lost at once, but not damage, so no Shield soaks it, no Armor cuts it and nothing reacts. Never below 1 HP. */
+/** HP as a price: lost at once, but not damage, so no Shield soaks it, no Armor cuts it and nothing reacts. Never below 1 HP. */
 function pay(w: W, t: CUnit, amount: number) {
   const v = Math.min(Math.floor(amount), t.hp - 1);
   if (v <= 0 || t.ko) return;
@@ -1103,7 +1101,7 @@ function pay(w: W, t: CUnit, amount: number) {
 }
 
 /**
- * Step 5i (X28), reactions only: a hit of kind extra by the actor, sized `share` % of its basic attack's damage against the
+ * Reactions only: a hit of kind extra by the actor, sized `share` % of its basic attack's damage against the
  * target (`of: weapon`, the weapon's riders and statuses with it, as an extra strike's), or of the raw amount of the hit that
  * set the reaction off, in that hit's damage type, with nothing of that hit's (`of: hit`). It can crit and be dodged, meets
  * Armor or Magic resist and fires hit events; it never brings extra strikes. A fallen actor strikes nothing.
@@ -1117,7 +1115,7 @@ function reactionStrike(w: W, ctx: Ctx, t: CUnit, e: Extract<S.EffectT, { op: "s
   if (eff) hit(w, { actor: a, kind: "extra", targets: [t], id: ctx.id, st: null, dead: false, landed: [] }, t, eff, { share: e.share, area });
 }
 
-/** Step 5i (X35): the reviver's rule over every revive it makes: `ready` false wins over true; the newest rule's HP. */
+/** The reviver's rule over every revive it makes: `ready` false wins over true; the newest rule's HP. */
 function reviverRule(w: W, by: CUnit, t: CUnit): { ready?: boolean; hp?: number } {
   if (!feats(w.c).revives) return {};
   let ready: boolean | undefined, hp: number | undefined;
@@ -1130,7 +1128,7 @@ function reviverRule(w: W, by: CUnit, t: CUnit): { ready?: boolean; hp?: number 
   return { ready, hp };
 }
 
-/** Step 5i (X34): a revive on a timer. The unit stands `after` ticks from now, if it's still down and the fight goes on; the reviver needn't stand. */
+/** A revive on a timer. The unit stands `after` ticks from now, if it's still down and the fight goes on; the reviver needn't stand. */
 function later(w: W, by: CUnit, t: CUnit, hp: number, ready: boolean, after: number) {
   const at = w.f.now + sub(after);
   push(w, { k: "revive", at, b: batch(t.side), g: 1, slot: t.slot, seq: w.f.seq++, unit: t.id, by: by.id, hp: Math.floor(hp), ready });
@@ -1167,7 +1165,7 @@ function critRoll(w: W, rng: CUnit, chance: number, multiplier: number): number 
 
 type Calc = { amount: number; word: string | null; crit: boolean; raw: number };
 
-/** Resolution order steps 2 to 6 (section 5): amount, boosts, damage-taken modifiers, crit, mitigation. Whole points, rounded down. */
+/** The resolution order: amount, boosts, damage-taken modifiers, crit, mitigation. Whole points, rounded down. */
 function calc(w: W, t: CUnit, p: Part, raw: number, tags: readonly string[], boost: number, crit: number): Calc {
   let x = raw * (1 + boost / 100) * (1 + takenOf(w, t, tags) / 100);
   if (crit) x = (x * crit) / 100;
@@ -1185,7 +1183,7 @@ function calc(w: W, t: CUnit, p: Part, raw: number, tags: readonly string[], boo
     if (y <= 0 && x > 0) word = "BLOCKED";
     x = y;
   } else if (p.type === "magical") {
-    // Step 5j: one Magic resist for every magical hit and pulse, a percentage (its stat's floor and cap hold it between 0 and full).
+    // One Magic resist for every magical hit and pulse, a percentage (its stat's floor and cap hold it between 0 and full).
     const r = stat(w, t, "magic_resist");
     if (r >= 100) (x = 0), (word = "IMMUNE");
     else if (r > 0) (x = x * (1 - r / 100)), (word = "RESIST");
@@ -1197,8 +1195,8 @@ function calc(w: W, t: CUnit, p: Part, raw: number, tags: readonly string[], boo
 }
 
 /**
- * Steps 7 and 8: a block (Aegis) stops damage above its share outright; absorbs soak in the order they were first applied; the rest comes off HP.
- * Step 5i: `by` is the unit whose damage this is, for the statuses it ends (X1); an HP floor holds a blow that would knock the unit out (X31).
+ * After mitigation, a block (Aegis) stops damage above its share outright; absorbs soak in the order they were first applied; the rest comes off HP.
+ * `by` is the unit whose damage this is, for the statuses it ends; an HP floor holds a blow that would knock the unit out.
  */
 function take(w: W, t: CUnit, amount: number, by: CUnit | null = null): { soaked: number; lost: number; blocked: boolean } {
   if (amount > 0) {
@@ -1222,7 +1220,7 @@ function take(w: W, t: CUnit, amount: number, by: CUnit | null = null): { soaked
     if (s.stacks < SUBTICKS) broken.push(s);
   }
   let lost = Math.min(left, t.hp);
-  // X31: while it holds an HP floor, a blow that would knock it out leaves it at 1, and nothing falls. A floor that spends
+  // While it holds an HP floor, a blow that would knock it out leaves it at 1, and nothing falls. A floor that spends
   // ends (cause spent) with the blow it held; one that doesn't is used first.
   let held: SInst | null = null, stopped = 0;
   if (lost > 0 && lost >= t.hp && feats(w.c).floor) {
@@ -1240,7 +1238,7 @@ function take(w: W, t: CUnit, amount: number, by: CUnit | null = null): { soaked
   return { soaked, lost, blocked: false };
 }
 
-/** X31: the floor that holds a blow: one that never spends, else the oldest that does. */
+/** The floor that holds a blow: one that never spends, else the oldest that does. */
 function floorOf(w: W, t: CUnit): SInst | null {
   let spending: SInst | null = null;
   for (const s of t.statuses) {
@@ -1263,14 +1261,14 @@ function logDamage(w: W, by: CUnit | null, t: CUnit, src: string, part: string, 
   });
 }
 
-/** Step 5i: how a hit is sized and aimed. `share`: percent of its own damage (X26 to X28, default 100); `area`: its effect is aimed at two or more units (X29); `moved`: a cover already took it (X30). */
+/** How a hit is sized and aimed. `share`: percent of its own damage (default 100); `area`: its effect is aimed at two or more units; `moved`: a cover already took it. */
 type HitOpts = { share?: number; area?: boolean; moved?: boolean };
 const AREA = ["area"], NONE: string[] = [];
 
 /**
- * A hit from an action or an extra strike, with its riders and attached statuses (sections 5 and 7.2). Returns whether it
- * landed (wasn't evaded). Step 5i: crits by condition (X25); a cover takes a big hit for an ally (X30); the hit's raw amount
- * and type ride on its events (X29); an ability's changes add statuses and stacks (X24).
+ * A hit from an action or an extra strike, with its riders and attached statuses. Returns whether it landed (wasn't
+ * evaded). Crits can depend on a condition; a cover takes a big hit for an ally; the hit's raw amount and type ride on its
+ * events; an ability's changes add statuses and stacks.
  */
 function hit(w: W, ctx: Ctx, t0: CUnit, e: S.DamageEffectT, o: HitOpts = {}): boolean {
   const a = ctx.actor, kind = ctx.kind!;
@@ -1307,7 +1305,7 @@ function hit(w: W, ctx: Ctx, t0: CUnit, e: S.DamageEffectT, o: HitOpts = {}): bo
     rider && dodge && p.type === "physical" && evaded(w, a, x) ? null : calc(w, x, p, raw, partTags(kind, p, extra), boostOf(w, a, partTags(kind, p, extra), x) + power, crit),
   );
   let results = resultsOn(t, parts, true);
-  // X30: a big hit on an ally moves, once, to a unit that covers it, and resolves again against that unit (its own mitigation, block,
+  // A big hit on an ally moves, once, to a unit that covers it, and resolves again against that unit (its own mitigation, block,
   // absorbs and HP; the hit's riders and statuses with it), keeping its crit and without a second dodge.
   if (!o.moved && feats(w.c).cover) {
     const c = coverOf(w, t, results);
@@ -1334,14 +1332,14 @@ function hit(w: W, ctx: Ctx, t0: CUnit, e: S.DamageEffectT, o: HitOpts = {}): bo
     if (t.hp <= 0) ko(w, t, a, kind);
   }
   if (w.f.result) return true;
-  // The hit's events carry "crit" when it crits, for reactions to crits (the Assassin's). Step 5i: and its raw amount and type (X28).
+  // The hit's events carry "crit" when it crits, for reactions to crits (the Assassin's), and its raw amount and type.
   const evTags = crit ? [...tags, "crit"] : tags;
   const raw = results[0]?.raw ?? 0;
   fire(w, ev("hit_lands", a, t, { kind, tags: evTags, amount: dealt, raw, dtype: main.type }));
   fire(w, ev("hit_taken", t, a, { kind, tags: evTags, amount: dealt, raw, dtype: main.type }));
   damageEvents(w, a, t, dealt, lost, null);
   // The hit's statuses land after its events, so a status set off by being hit (Bleed) waits for the next hit.
-  // Step 5i (X24): an ability's changes add statuses after its own, and stacks to each.
+  // An ability's changes add statuses after its own, and stacks to each.
   if (!t.ko && !w.f.result) {
     for (const ap of [...(e.apply ?? []), ...(ctx.mod?.apply ?? [])]) {
       applyStatus(w, a, t, def(w, ap.status), { stacks: aval(w, ap.stacks ?? 1, a, t, ctx) * stackMult(w, ctx.mod, ap.status), duration: ap.duration, chance: ap.chance, rng: a });
@@ -1351,7 +1349,7 @@ function hit(w: W, ctx: Ctx, t0: CUnit, e: S.DamageEffectT, o: HitOpts = {}): bo
 }
 
 /**
- * Step 5i (X25): a hit's crit chance and multiplier. The attacker's crit rules that match the hit's tags and the unit hit
+ * A hit's crit chance and multiplier. The attacker's crit rules that match the hit's tags and the unit hit
  * add their chance after every stat change (100 always crits), and make the crit bonus, the part above ×1, `bonus` % larger.
  */
 function critOf(w: W, a: CUnit, t: CUnit, tags: readonly string[]): [number, number] {
@@ -1370,7 +1368,7 @@ function critOf(w: W, a: CUnit, t: CUnit, tags: readonly string[]): [number, num
 }
 
 /**
- * Step 5i (X30): the first other living unit on the hit unit's side, in slot order, whose cover this hit exceeds: more than
+ * The first other living unit on the hit unit's side, in slot order, whose cover this hit exceeds: more than
  * its share of the hit unit's max HP, after mitigation and before block and absorbs.
  */
 function coverOf(w: W, t: CUnit, results: readonly (Calc | null)[]): CUnit | null {
@@ -1394,7 +1392,7 @@ function damageEvents(w: W, by: CUnit | null, t: CUnit, dealt: number, lost: num
   if (lost > 0) fire(w, ev("hp_lost", t, null, { amount: lost }));
 }
 
-/** Damage from a pulse, reaction or trigger: not a hit, so no hit events and no crit unless its status turns crits on (sections 7.5 and 8). */
+/** Damage from a pulse, reaction or trigger: not a hit, so no hit events and no crit unless its status turns crits on. */
 function strike(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
   const st = ctx.st!;
   const d = st.d;
@@ -1414,7 +1412,7 @@ function strike(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
   }
   const r = calc(w, t, p, raw, tags, st.fixedBoost ? 0 : boostOf(w, ctx.actor, tags, t) + stat(w, ctx.actor, "power") + enrage(w), crit);
   const by = st.fixedBoost ? (d.perSource ? unit(w, st.src) : null) : ctx.actor;
-  // Step 5i (X1): a pulse empties or spends a status as nobody; a reaction as its actor. (X29): a knockout names `by`.
+  // A pulse empties or spends a status as nobody; a reaction as its actor. A knockout names `by`.
   const tk = take(w, t, r.amount, st.fixedBoost ? null : ctx.actor);
   // `from`: who applied the status, for reading a fight's damage by source (the log only).
   logDamage(w, by, t, d.id, st.fixedBoost ? "pulse" : "reaction", r, tk, st.src, dmgKind(p));
@@ -1423,10 +1421,10 @@ function strike(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
 }
 
 /**
- * Heals have no type and are never mitigated; they take healing boosts, Healing received, and crit from actions (section 5).
- * Step 5i: the healer is the actor, or for a pulse or trigger the unit that applied its status (a Regen another gave), when
- * known. A holder of `heals: own` takes only its own heals (X33). An ability's changes heal more (X24). The part past full
- * fires overhealed (X32). Both events carry an action's kind (X29).
+ * Heals have no type and are never mitigated; they take healing boosts, Healing received, and crit from actions.
+ * The healer is the actor, or for a pulse or trigger the unit that applied its status (a Regen another gave), when
+ * known. A holder of `heals: own` takes only its own heals. An ability's changes heal more. The part past full
+ * fires overhealed. Both events carry an action's kind.
  */
 function heal(w: W, ctx: Ctx, t: CUnit, raw: number) {
   const st = ctx.st;
@@ -1448,7 +1446,7 @@ function heal(w: W, ctx: Ctx, t: CUnit, raw: number) {
   if (amount > restored) fire(w, ev("overhealed", t, healer, { amount: amount - restored, kind }));
 }
 
-// ─── Statuses (section 7) ───────────────────────────────────────────────────
+// ─── Statuses ───────────────────────────────────────────────────────────────
 
 function immune(w: W, u: CUnit, d: S.StatusT): boolean {
   const on = (k: string) => stat(w, u, k) > 0;
@@ -1469,15 +1467,15 @@ export function applyStatus(w: W, by: CUnit, to: CUnit, d: S.StatusT, o: ApplyOp
     w.log?.({ t: "roll", vis: "hidden", at: f.now, by: o.rng.id, what: "apply", status: d.id, chance: o.chance, roll });
     if (roll >= o.chance) return;
   }
-  // Step 5i: an Intensity application of no stacks does nothing, not even an IMMUNE (see below).
+  // An Intensity application of no stacks does nothing, not even an IMMUNE (see below).
   if (isIntensity(d) && o.stacks <= 0) return;
   if (immune(w, to, d)) {
     w.log?.({ t: "immune", vis: "player", at: f.now, unit: to.id, status: d.id, name: d.name });
     return;
   }
-  // Step 5i (X15): a status that hides its holder doesn't land on a Taunting unit (no IMMUNE: it just doesn't land).
+  // A status that hides its holder doesn't land on a Taunting unit (no IMMUNE: it just doesn't land).
   if (forbids(d) && taunting(w, to)) return;
-  // Step 5i (X19): a boss's control resistance, the one exception to universal statuses: at its cap the control doesn't
+  // A boss's control resistance, the one exception to universal statuses: at its cap the control doesn't
   // land at all, and from `resist.at` stacks it lands for a share of its own length.
   const ctl = controlOf(w, to, d);
   if (ctl && (to.ctrl ?? 0) >= ctl.cap) {
@@ -1486,7 +1484,7 @@ export function applyStatus(w: W, by: CUnit, to: CUnit, d: S.StatusT, o: ApplyOp
   }
   const dur = o.duration ?? d.duration ?? "permanent";
   if (dur === 0) {
-    // An instant lockout only interrupts, and leaves no status (section 7.3).
+    // An instant lockout only interrupts, and leaves no status.
     if (d.lockout?.interrupt) interrupt(w, to, d.lockout.covers);
     return;
   }
@@ -1495,22 +1493,22 @@ export function applyStatus(w: W, by: CUnit, to: CUnit, d: S.StatusT, o: ApplyOp
   const cp = compile(d);
   const nums = cp.nums.map(({ n, stat: isStat }) => fixed(w, n, by, to, isStat));
   // Only the stacks an application adds can scale: from the applier's stated scaling, and its boosts that name
-  // the status or one of its tags (section 7.5). The applier's boosts never reach the status's own numbers, but
-  // (step 5i, X20) they can read the unit receiving the stacks.
+  // the status or one of its tags. The applier's boosts never reach the status's own numbers, but they can read
+  // the unit receiving the stacks.
   const add = isIntensity(d) ? Math.floor(o.stacks * (1 + boostOf(w, by, [d.id, ...(d.tags ?? [])], to) / 100) * SUBTICKS) : 0;
   const cur = to.statuses.find((s) => s.id === d.id && (!d.perSource || s.src === by.id));
   if (cur && d.stacking === "fizzle") return;
-  // An Intensity status exists only at 1 stack or more, and (step 5i) an application that adds no stacks does nothing at
+  // An Intensity status exists only at 1 stack or more, and an application that adds no stacks does nothing at
   // all: no log, no event, no fresh duration (Frostbite bow's Sunder, whose count is 0 below 8 Chill).
   if (isIntensity(d) && (add <= 0 || (!cur && Math.min(add, capOf(w, d, nums, to)) < SUBTICKS))) return;
-  // Step 5i (X11): each applier keeps one copy of a `single` status: this one ends the copy it gave anywhere else.
+  // Each applier keeps one copy of a `single` status: this one ends the copy it gave anywhere else.
   if (d.single) for (const o2 of f.units) if (o2 !== to) for (const s of o2.statuses.slice()) if (s.id === d.id && s.src === by.id) endStatus(w, o2, s, "removed", { other: by });
   if (to.ko || f.result) return;
   if (ctl) controlled(w, to, d, ctl, resisted, end);
   if (cur) {
     const before = cur.stacks;
     if (d.stacking === "refresh") {
-      // The new application replaces the old: its duration, its numbers and its source (section 7.6).
+      // The new application replaces the old: its duration, its numbers and its source.
       cur.end = end;
       cur.nums = nums;
       cur.src = by.id;
@@ -1521,7 +1519,7 @@ export function applyStatus(w: W, by: CUnit, to: CUnit, d: S.StatusT, o: ApplyOp
     gained(w, to, d, cur, by, cur.stacks - before);
     return;
   }
-  // A status with one applier at a time knows it; a shared Intensity total has no single source (section 7.6).
+  // A status with one applier at a time knows it; a shared Intensity total has no single source.
   const inst: SInst = { uid: f.seq++, id: d.id, src: d.perSource || !isIntensity(d) ? by.id : null, at: f.now, end, stacks: 0, nums };
   inst.stacks = isIntensity(d) ? Math.min(capOf(w, d, nums, to), add) : 0;
   to.statuses.push(inst);
@@ -1529,10 +1527,10 @@ export function applyStatus(w: W, by: CUnit, to: CUnit, d: S.StatusT, o: ApplyOp
   gained(w, to, d, inst, by, inst.stacks);
 }
 
-/** X15: the status makes its holder unpickable (Hidden). */
+/** The status makes its holder unpickable (Hidden). */
 const forbids = (d: S.StatusT) => !!d.stats?.some((ch) => ch.stat === "forbidden");
 
-/** X19: the control-resistance rule that covers `d` landing on `u`, or null: an enemy of a listed rank, and a listed status. */
+/** The control-resistance rule that covers `d` landing on `u`, or null: an enemy of a listed rank, and a listed status. */
 function controlOf(w: W, u: CUnit, d: S.StatusT): S.ControlT | null {
   const c = w.c.pack.ruleset.control;
   if (!c || u.side !== "enemy" || !c.statuses.includes(d.id)) return null;
@@ -1540,13 +1538,13 @@ function controlOf(w: W, u: CUnit, d: S.StatusT): S.ControlT | null {
   return rank && c.ranks.includes(rank) ? c : null;
 }
 
-/** X19: a control landed on a resisting unit: RESISTED if it was shortened, then one more stack (to the cap). */
+/** A control landed on a resisting unit: RESISTED if it was shortened, then one more stack (to the cap). */
 function controlled(w: W, u: CUnit, d: S.StatusT, c: S.ControlT, resisted: boolean, end: number) {
   if (resisted) w.log?.({ t: "resisted", vis: "player", at: w.f.now, unit: u.id, status: d.id, name: d.name, end });
   setControl(w, u, c, Math.min(c.cap, (u.ctrl ?? 0) + 1));
 }
 
-/** X19: control stacks change; a stack drains `drain` ticks after the last change, and every change restarts the wait. */
+/** Control stacks change; a stack drains `drain` ticks after the last change, and every change restarts the wait. */
 function setControl(w: W, u: CUnit, c: S.ControlT, n: number) {
   u.ctrl = n;
   w.log?.({ t: "control", vis: "hidden", at: w.f.now, unit: u.id, stacks: n });
@@ -1559,7 +1557,7 @@ function drain(w: W, it: Extract<Item, { k: "drain" }>) {
   if (u && c && u.ctrl) setControl(w, u, c, u.ctrl - 1);
 }
 
-/** An application landed. `added`: the stacks it added, in thousandths (Intensity only), which the event reports (X1). */
+/** An application landed. `added`: the stacks it added, in thousandths (Intensity only), which the event reports. */
 function gained(w: W, to: CUnit, d: S.StatusT, s: SInst, by?: CUnit, added = 0) {
   if (d.absorb) s.peak = Math.max(s.peak ?? 0, s.stacks);
   w.log?.({
@@ -1569,20 +1567,20 @@ function gained(w: W, to: CUnit, d: S.StatusT, s: SInst, by?: CUnit, added = 0) 
   if (d.stats) refresh(w, to);
   if (d.lockout?.interrupt) interrupt(w, to, d.lockout.covers);
   if (d.lockout?.pause && s.end !== -1) hold(w, to, d.lockout.covers, s.end - w.f.now);
-  // Step 5i (X1): other is the applier, and an Intensity application says how many stacks it added.
+  // Other is the applier, and an Intensity application says how many stacks it added.
   fire(w, ev("status_gained", to, by ?? null, { status: d.id, amount: added / SUBTICKS, src: by?.id ?? null }));
-  // Step 5g: an Intensity status that stands at its cap after an application has capped (Chill shatters). Other: the applier.
+  // An Intensity status that stands at its cap after an application has capped (Chill shatters). Other: the applier.
   if (isIntensity(d) && compile(d).cap >= 0 && s.stacks >= capOf(w, d, s.nums, to) && to.statuses.includes(s)) fire(w, ev("status_capped", to, by ?? null, { status: d.id, src: by?.id ?? null }));
 }
 
 const capOf = (w: W, d: S.StatusT, nums: number[], holder: CUnit) =>
   compile(d).cap < 0 ? Number.MAX_SAFE_INTEGER : Math.floor(sval(w, { d, nums, holder, actor: holder, amount: 0 }, d, d.cap!, null) * SUBTICKS);
 
-/** A debuff's pulse resolves in the batch of the holder's foes; a buff's, or (step 5i) a marker's, in its own side's (section 7.5). */
+/** A debuff's pulse resolves in the batch of the holder's foes; a buff's, or a marker's, in its own side's. */
 const pulseBatch = (holder: CUnit, d: S.StatusT) => (d.label === "debuff" ? batch(foeSide(holder)) : batch(holder.side));
 
 /**
- * Who ended a status, and what its ending reports (step 5i, X1). `other`: the unit whose damage emptied or spent it
+ * Who ended a status, and what its ending reports. `other`: the unit whose damage emptied or spent it
  * (`take` passes it), or whose effect removed it. `amount`: the damage a block stopped (`take` passes it
  * for cause spent); otherwise the engine works it out: an absorb emptied (cause stacks) reports its peak, and every
  * other ending the stacks it held.
@@ -1603,7 +1601,7 @@ function endStatus(w: W, u: CUnit, s: SInst, cause: S.CauseT, by: Ending = {}) {
 
 /**
  * An interrupting lockout cancels a cast it covers, as if the unit were KO'd mid-cast: no MP spent, and by default
- * no cooldown (section 7.3); under ruleset.lostCast "cooldown" the action goes on cooldown.
+ * no cooldown; under ruleset.lostCast "cooldown" the action goes on cooldown.
  */
 function interrupt(w: W, u: CUnit, lockout: string) {
   if (!u.cast) return;
@@ -1629,7 +1627,7 @@ function hold(w: W, u: CUnit, lockout: string, ticks: number) {
   w.log?.({ t: "hold", vis: "player", at: w.f.now, unit: u.id, act: d.id, name: d.name, ends: u.cast.end });
 }
 
-/** Removes buffs or debuffs, newest first or at random, skipping unremovable ones and a dispel-immune unit's buffs (section 7.9). */
+/** Removes buffs or debuffs, newest first or at random, skipping unremovable ones and a dispel-immune unit's buffs. */
 function remove(w: W, by: CUnit, t: CUnit, e: Extract<S.EffectT, { op: "remove" }>) {
   if (e.label === "buff" && stat(w, t, "immune:dispel") > 0) {
     w.log?.({ t: "immune", vis: "player", at: w.f.now, unit: t.id, status: "dispel", name: "Dispel" });
@@ -1650,13 +1648,13 @@ function remove(w: W, by: CUnit, t: CUnit, e: Extract<S.EffectT, { op: "remove" 
   }
   for (const s of hit) {
     endStatus(w, t, s, "removed", { other: by });
-    // Step 5i (X37): a moved status passes to the acting unit as it was.
+    // A moved status passes to the acting unit as it was.
     if (e.move) give(w, by, s);
   }
 }
 
 /**
- * Step 5i (X37): a status taken from another unit lands on `to` as it was: its stacks, numbers, source and time left. Not on
+ * A status taken from another unit lands on `to` as it was: its stacks, numbers, source and time left. Not on
  * a unit immune to it. A copy `to` already holds takes it by its stacking mode, as an application would.
  */
 function give(w: W, to: CUnit, s: SInst) {
@@ -1685,7 +1683,7 @@ function give(w: W, to: CUnit, s: SInst) {
   gained(w, to, d, inst, to, isIntensity(d) ? inst.stacks : 0);
 }
 
-/** On each trigger the total drops by a fraction (rounding down) or a count; the status ends below 1 stack (section 7.7, as decided Oct 20). */
+/** On each trigger the total drops by a fraction (rounding down) or a count; the status ends below 1 stack. */
 function drop(w: W, u: CUnit, s: SInst, d: S.StatusT) {
   if (!d.drop) return;
   s.stacks = d.drop === "all" ? 0 : "fraction" in d.drop ? Math.floor(s.stacks * (1 - d.drop.fraction)) : Math.max(0, s.stacks - sub(d.drop.count));
@@ -1701,7 +1699,7 @@ function pulse(w: W, it: Extract<Item, { k: "pulse" }>) {
   const every = sub(d.pulse!.every);
   // Reapplying changes the end time, not the rhythm, so the next pulse is always queued; it's skipped if the status has gone.
   push(w, { ...it, at: it.at + every, seq: w.f.seq++ });
-  // Step 5i (X3): a pulse whose conditions fail does nothing that beat, but an Intensity drop still happens.
+  // A pulse whose conditions fail does nothing that beat, but an Intensity drop still happens.
   if (!d.pulse!.if || [d.pulse!.if].flat().every((c) => holds(w, h, c))) {
     const ctx: Ctx = {
       actor: h, kind: null, targets: [], id: d.id, dead: false,
@@ -1717,18 +1715,18 @@ function pulse(w: W, it: Extract<Item, { k: "pulse" }>) {
   if (isIntensity(d) && h.statuses.includes(s)) drop(w, h, s, d);
 }
 
-// ─── Events and reactions (sections 7.11 and 8) ─────────────────────────────
+// ─── Events and reactions ───────────────────────────────────────────────────
 
 /**
  * An event. `other` names who did it where it's known: the attacker or target of a hit, the healer, the reviver,
- * the applier of a status (step 5i, X1), the unit whose damage emptied or spent a status or whose effect removed it,
- * and (share H, X29) the unit whose damage knocked a unit out.
+ * the applier of a status, the unit whose damage emptied or spent a status or whose effect removed it, and the
+ * unit whose damage knocked a unit out.
  */
 export type Ev = {
   e: S.EventSpecT["event"];
   owner: CUnit;
   other: CUnit | null;
-  /** Action and hit events; (X29) ko, healed and overhealed: the kind of the hit or action behind it. */
+  /** Action and hit events; ko, healed and overhealed: the kind of the hit or action behind it. */
   kind: HitKind | null;
   /** Hit events: the hit's tags (kind and type, crit, area). */
   tags: string[];
@@ -1736,14 +1734,14 @@ export type Ev = {
   status: string | null;
   cause: string | null;
   /**
-   * Hits and damage: what was dealt. Heals: what was restored. status_gained (X1): the stacks it added, Intensity only.
-   * status_ended (X1): the stacks it held as it ended, but an absorb emptied (cause stacks) its peak, and a block (spent)
-   * the damage it stopped. action_resolve (X29): the MP it paid.
+   * Hits and damage: what was dealt. Heals: what was restored. status_gained: the stacks it added, Intensity only.
+   * status_ended: the stacks it held as it ended, but an absorb emptied (cause stacks) its peak, and a block (spent)
+   * the damage it stopped. action_resolve: the MP it paid.
    */
   amount: number;
   /** The status that just ended, so its own reactions to its ending still run. */
   ending: SInst | null;
-  /** Status events (X2's `source`): who applied it, this application's applier, or the instance's source. */
+  /** Status events (for the `source` filter): who applied it, this application's applier, or the instance's source. */
   src: string | null;
 } & Carried;
 
@@ -1753,12 +1751,12 @@ const ev = (e: Ev["e"], owner: CUnit, other: CUnit | null, x: EvX = {}): Ev => (
   src: x.src ?? null, raw: x.raw ?? 0, dtype: x.dtype ?? null, count: x.count ?? 0, ability: x.ability ?? null, repeat: x.repeat ?? false,
 });
 
-/** Who `x` is from the holder's side (X2's `other`): any (there is one), the holder itself, an ally, a foe. */
+/** Who `x` is from the holder's side (for the `other` filter): any (there is one), the holder itself, an ally, a foe. */
 const related = (who: S.EventSpecT["whose"], x: CUnit | null, holder: CUnit) =>
   !!x && (who === "any" || (who === "holder" ? x === holder : who === "ally" ? x !== holder && x.side === holder.side : x.side !== holder.side));
 
 /**
- * Whether a status hears an event. `d` is the listening status, for X16's echo: an extra strike the holder made is
+ * Whether a status hears an event. `d` is the listening status, for echo: an extra strike the holder made is
  * heard as a basic attack by its own statuses, but not by one that names kind extra for the same event or gives strikes.
  */
 function matches(w: W, spec: S.EventSpecT, e: Ev, holder: CUnit, d?: S.StatusT): boolean {
@@ -1782,8 +1780,8 @@ function matches(w: W, spec: S.EventSpecT, e: Ev, holder: CUnit, d?: S.StatusT):
 }
 
 /**
- * X16: the kind a status hears an event as. An echoing holder's own extra strikes are basic attacks to it, with two
- * exceptions. A status gives strikes itself through `strike` or (X28) a reaction that strikes: one that strikes on a
+ * The kind a status hears an event as. An echoing holder's own extra strikes are basic attacks to it, with two
+ * exceptions. A status gives strikes itself through `strike` or a reaction that strikes: one that strikes on a
  * basic attack would otherwise hear its own strike as one and loop.
  */
 function echoed(w: W, e: Ev, holder: CUnit, d: S.StatusT): HitKind | null {
@@ -1845,14 +1843,14 @@ function fire(w: W, e: Ev) {
   w.depth--;
 }
 
-/** An Intensity event trigger: its effects use the total from this moment and resolve next sub-tick; the drop is immediate (section 7.7). */
+/** An Intensity event trigger: its effects use the total from this moment and resolve next sub-tick; the drop is immediate. */
 function trigger(w: W, h: CUnit, s: SInst, d: S.StatusT, e: Ev) {
   if (d.trigger!.do?.length && !h.ko) queueReaction(w, h, h, s, d, -1, s.stacks / SUBTICKS, e, false);
   fire(w, ev("status_triggered", h, null, { status: d.id, src: s.src }));
   if (h.statuses.includes(s)) drop(w, h, s, d);
 }
 
-/** A reaction resolves on the sub-tick after its event, in the acting unit's batch (section 8). */
+/** A reaction resolves on the sub-tick after its event, in the acting unit's batch. */
 function queueReaction(w: W, actor: CUnit, holder: CUnit, s: SInst, d: S.StatusT, which: number, per: number, e: Ev, dead: boolean) {
   push(w, {
     k: "react", at: w.f.now + 1, b: batch(actor.side), g: 1, slot: actor.slot, seq: w.f.seq++, unit: actor.id,
@@ -1872,7 +1870,7 @@ function react(w: W, it: Extract<Item, { k: "react" }>) {
     d, nums: it.nums, holder: unit(w, it.holder)!, src: it.src, per: it.per, other: unit(w, it.other), owner: unit(w, it.owner), amount: it.amount, fixedBoost: it.which < 0,
     raw: it.raw, dtype: it.dtype, count: it.count, ability: it.ability, repeat: it.repeat,
   };
-  // Step 5i (X3): a reaction's tests are read as it resolves, not when its event fired; one that fails does nothing.
+  // A reaction's tests are read as it resolves, not when its event fired; one that fails does nothing.
   if (r?.if && ![r.if].flat().every((t) => passesTest(w, actor, t, st))) return;
   const ctx: Ctx = { actor, kind: null, targets: [], id: d.id, dead: it.dead, st };
   for (const e of effects) {
@@ -1881,7 +1879,7 @@ function react(w: W, it: Extract<Item, { k: "react" }>) {
   }
 }
 
-/** X3: one of a reaction's tests: a side's state read from the actor's side, or the event's other unit or owner passing a test. */
+/** One of a reaction's tests: a side's state read from the actor's side, or the event's other unit or owner passing a test. */
 function passesTest(w: W, actor: CUnit, t: S.TestT, st: NonNullable<Ctx["st"]>): boolean {
   if ("unit" in t) {
     const x = t.unit === "other" ? st.other : st.owner;
@@ -1890,7 +1888,7 @@ function passesTest(w: W, actor: CUnit, t: S.TestT, st: NonNullable<Ctx["st"]>):
   return holds(w, actor, t);
 }
 
-// ─── KO, revival, leaving and joining (section 1, and the core set's revive and summoning) ──
+// ─── KO, revival, leaving and joining (and the core set's revive and summoning) ──
 
 /** Ends a unit's statuses as it leaves play, and the Per source statuses it gave that end with it. */
 function strip(w: W, u: CUnit, all: boolean) {
@@ -1898,7 +1896,7 @@ function strip(w: W, u: CUnit, all: boolean) {
   for (const o of w.f.units) for (const s of o.statuses.slice()) if (s.src === u.id && def(w, s.id).perSource?.endsWithSource) endStatus(w, o, s, "ko");
 }
 
-/** Step 5i (X29): `by` is the unit whose damage knocked it out, when known, and `kind` the hit's kind, both on the ko event. */
+/** `by` is the unit whose damage knocked it out, when known, and `kind` the hit's kind, both on the ko event. */
 function ko(w: W, u: CUnit, by: CUnit | null = null, kind: HitKind | null = null) {
   if (u.ko) return;
   u.ko = true;
@@ -1915,7 +1913,7 @@ function ko(w: W, u: CUnit, by: CUnit | null = null, kind: HitKind | null = null
 }
 
 /**
- * Step 5i (X36): the moment the last foe falls, before statuses end, each party unit's fight_won, fallen ones included.
+ * The moment the last foe falls, before statuses end, each party unit's fight_won, fallen ones included.
  * Its reactions resolve at once (the fight is over: no next sub-tick), in slot order, while the result waits; a fallen
  * unit's statuses (those that survived its knockout) act for it. Then the result stands, and endFight carries HP as ever.
  * Intensity triggers don't hear it.
@@ -2059,7 +2057,7 @@ function begin(w: W) {
   for (const u of f.units) u.acts.forEach((a, i) => {
     const d = actDef(w, u, i);
     const cd = cooldownOf(w, u, d);
-    // Step 5g (the director's): a party ability's cooldown carries from the last fight (what was left when it ended, or its full cooldown
+    // A party ability's cooldown carries from the last fight (what was left when it ended, or its full cooldown
     // the first time), and the slot's head start comes off that: slots as flat ticks, or slotShares as a share of the cooldown.
     const carried = u.side === "party" && d.kind === "ability" && u.cooldowns?.[d.id] !== undefined ? Math.min(cd, sub(u.cooldowns[d.id])) : cd;
     if (open?.slotShares?.length && u.side === "party" && d.kind === "ability") a.ready = Math.max(0, carried - Math.round(cd * (open.slotShares[i] ?? 0)));
@@ -2115,7 +2113,7 @@ export function step(w: W) {
     else if (it.k === "react") react(w, it);
     else if (it.k === "drain") drain(w, it);
     else if (it.k === "revive") {
-      // Step 5i (X34): a revive on a timer stands its unit up, if nothing has raised it meanwhile.
+      // A revive on a timer stands its unit up, if nothing has raised it meanwhile.
       const t = unit(w, it.unit)!;
       if (t.ko && !t.gone) revive(w, unit(w, it.by) ?? t, t, it.hp, it.ready);
     }

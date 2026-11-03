@@ -1,6 +1,5 @@
 /**
- * Step 4's functionality tests, part 3: statuses, reactions and what the
- * player sees (design sections 7, 8 and 10), mostly the design's Part 2 examples.
+ * Functionality tests, part 3: statuses, reactions and what the player sees.
  */
 import { test } from "vitest";
 import assert from "node:assert/strict";
@@ -24,7 +23,7 @@ const BURN = debuff("burn", { stacking: "intensity", pulse: { every: 2, do: [{ o
 const STUN = debuff("stun", { duration: 3, lockout: { covers: "all", interrupt: true } });
 const METEOR = { id: "meteor", mp: 10, cast: 30, cooldown: 1, do: [{ op: "damage", type: "magical", amount: 100 }] };
 
-// ─── Applying statuses (7.2) ────────────────────────────────────────────────
+// ─── Applying statuses ──────────────────────────────────────────────────────
 
 test("apply: a status takes effect as soon as its item resolves: a dagger's three hits each add Armor break to Armor 8, and meet Armor 8, 6 and 4", () => {
   const a = arena({ party: [{ name: "Rogue", weapon: { ...weapons.dagger, hits: 3, amount: 10, apply: [{ status: "armor_break" }] } }], enemies: [{ name: "T", stats: { max_hp: 1e6, armor: 8 } }], statuses: [ARMOR_BREAK] }).to(8);
@@ -56,7 +55,7 @@ test("apply: statuses can't be applied to KO'd units: a lethal hit's attached st
   assert.equal(a.entries("status", (e) => e.status === "mark").length, 0);
 });
 
-// ─── Immunity (7.2) ─────────────────────────────────────────────────────────
+// ─── Immunity ───────────────────────────────────────────────────────────────
 
 const FREEZE = debuff("freeze", { duration: 5, lockout: { covers: "all", interrupt: true }, stats: [{ stat: "magic_resist", flat: -20 }] });
 const SILENCE = debuff("silence", { duration: 5, lockout: { covers: "ability", interrupt: true } });
@@ -99,7 +98,7 @@ test("immunity: immunity stats for a named status, all debuffs, and all damage (
   assert.deepEqual(b.entries("immune").map((e) => e.status), ["stun"]);
 });
 
-// ─── Lockouts (7.3) ─────────────────────────────────────────────────────────
+// ─── Lockouts ───────────────────────────────────────────────────────────────
 
 test("lockouts: a mage stunned 3 ticks into Meteor's 30-tick cast loses Meteor: no MP spent, no cooldown; its other cooldowns keep running", () => {
   const zap = { id: "zap", cast: 0, cooldown: 20, do: [{ op: "damage", type: "physical", amount: 1 }] };
@@ -173,7 +172,7 @@ test("lockouts: lockouts don't stop reactions: a stunned unit's reactions still 
   assert.deepEqual(a.hits("Foe").map((e) => [e.at, e.amount]), [[at(8) + 1, 3]]);
 });
 
-// ─── Action changes (7.4) ───────────────────────────────────────────────────
+// ─── Action changes ─────────────────────────────────────────────────────────
 
 test("action changes: a weapon enchant adds a magical rider to the holder's basic attacks, scaled from the holder's stats", () => {
   const oil = buff("flame_oil", { riders: [{ on: "basic", add: { type: "magical", amount: { scale: [{ ratio: 0.5, stat: "attack", of: "holder" }] } } }] });
@@ -189,7 +188,7 @@ test("action changes: a rider can name the source's stat instead, fixed when the
   assert.deepEqual(a.hits("Bag").map((e) => [e.part, e.amount]), [["hit", 20], ["rider", 15]]);
 });
 
-// ─── Repeating effects (7.5) ────────────────────────────────────────────────
+// ─── Repeating effects ──────────────────────────────────────────────────────
 
 /** Apply `stacks` of Burn to the Bag at tick 1, and return its pulses. */
 function burn(stacks: number, extra: { statuses?: string[]; more?: unknown[] } = {}) {
@@ -313,7 +312,7 @@ test("pulses: pulses don't crit, even from a unit with 100% crit; a status can t
   assert.deepEqual(a.hits("Bag").map((e) => [e.src, e.amount, e.crit]), [["plain", 10, false], ["sharp", 20, true], ["plain", 10, false], ["sharp", 20, true]]);
 });
 
-// ─── Stacking (7.6) ─────────────────────────────────────────────────────────
+// ─── Stacking ───────────────────────────────────────────────────────────────
 
 const SLOW = debuff("slow", { stats: [{ stat: "attack_speed", flat: { scale: [{ ratio: -1, stat: "magic", of: "source" }] } }] });
 
@@ -362,7 +361,7 @@ test("stacking: three hits applying a Refresh status refresh it three times; an 
   assert.equal(a.has("Bag", "armor_break")[0].stacks, 5000);
 });
 
-// ─── Intensity triggers (7.7) ───────────────────────────────────────────────
+// ─── Intensity triggers ─────────────────────────────────────────────────────
 
 test("intensity: Shock deals damage to its holder per stack when the holder basic attacks, on the next sub-tick, then halves", () => {
   const shock = debuff("shock", { stacking: "intensity", trigger: { on: { event: "action_resolve", kind: "basic" }, do: [{ op: "damage", type: "none", amount: 1, to: "holder" }] }, drop: { fraction: 0.5 } });
@@ -414,7 +413,7 @@ test("intensity: Sleep is a stun whose stacks go to 0 when the holder takes dama
   assert.deepEqual(a.acts("Foe"), [20.001, 28.001]);
 });
 
-// ─── Sources and auras (7.6, 7.8) ───────────────────────────────────────────
+// ─── Sources and auras ──────────────────────────────────────────────────────
 
 test("per source: two Paladins each give a permanent aura that ends with its giver; when one is KO'd its copy ends and the other's stays", () => {
   const aura = buff("aura", { perSource: { endsWithSource: true }, stats: [{ stat: "attack", flat: 5 }] });
@@ -446,7 +445,7 @@ test("per source: a mark that heals its applier when the holder is hit: each app
   assert.deepEqual(a.entries("heal").map((e) => [e.at, e.target]), [[at(8) + 1, "p1"], [at(8) + 1, "p2"]]);
 });
 
-// ─── Duration and removal (7.8, 7.9) ────────────────────────────────────────
+// ─── Duration and removal ───────────────────────────────────────────────────
 
 test("duration: a status lasting 10 ticks affects everything that resolves up to and including its 10th tick", () => {
   const plate = buff("plate", { duration: 10, stats: [{ stat: "armor", flat: 100 }] });
@@ -482,7 +481,7 @@ test("KO: a KO'd unit's own statuses end, except those flagged to survive a KO; 
   assert.equal(a.has("Foe", "mark").length, 1);
 });
 
-// ─── Conditions and targeting (7.10) ────────────────────────────────────────
+// ─── Conditions and targeting ───────────────────────────────────────────────
 
 test("conditions: an ability with condition 'an ally has a lockout covering all actions' starts only while an ally is stunned", () => {
   const rescue = { id: "rescue", cast: 0, cooldown: 1, if: { side: "others", where: { kind: { kind: "lockout", tag: "all" } } }, target: { side: "others", where: { kind: { kind: "lockout" } } }, do: [{ op: "remove", label: "debuff", kind: "lockout" }] };
@@ -505,7 +504,7 @@ test("targeting: rules can read statuses: 'a foe without Burn', 'the ally with t
   assert.deepEqual(b.unit("B").statuses.map((s) => s.id).filter((s) => s !== "mp_regen"), ["d1"]);
 });
 
-// ─── Events and reactions (7.11, 8) ─────────────────────────────────────────
+// ─── Events and reactions ───────────────────────────────────────────────────
 
 test("reactions: a hit triggers a reaction that deals damage back on the next sub-tick, never the same one; it isn't a hit", () => {
   const thorns = buff("spikes", { show: "sheet", reactions: [{ on: { event: "hit_taken" }, do: [{ op: "damage", type: "physical", amount: 4, to: "other" }] }] });
@@ -558,7 +557,7 @@ test("reactions: a status can listen to its holder's allies and foes: a wolf tur
   assert.equal(a.has("W1", "rabid").length, 0);
 });
 
-// ─── Stats that bring statuses (7.1) ────────────────────────────────────────
+// ─── Stats that bring statuses ──────────────────────────────────────────────
 
 test("stats: a buff that raises MP regen from 0 brings the status MP regen needs, and the unit starts restoring MP; at 0 again it loses it", () => {
   const focus = buff("focus", { duration: 10, stats: [{ stat: "mp_regen", flat: 3 }] });
@@ -583,7 +582,7 @@ test("stats: a unit holds the status a stat brings while the stat is above 0, so
   assert.equal(a.has("A", "mp_regen")[0].at, at(1), "a fresh copy, with a fresh rhythm");
 });
 
-// ─── What the player sees (section 10) ──────────────────────────────────────
+// ─── What the player sees ───────────────────────────────────────────────────
 
 test("display: each status declares its presentation; icon statuses show in the fight, sheet and stat ones don't; IMMUNE shows, a failed chance roll doesn't", () => {
   const icon = debuff("poison", { duration: 4, pulse: { every: 2, do: [{ op: "damage", type: "none", amount: 3 }] } }), sheet = debuff("hex", { show: "sheet", duration: 4, stats: [{ stat: "armor", flat: -1 }] });

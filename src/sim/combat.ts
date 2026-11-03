@@ -205,7 +205,7 @@ export function strictness(ps: readonly { colour: string; wins: { value: number 
 }
 
 /**
- * Step 2's four numbers, on the best parties: the best picks with hindsight
+ * The four perk numbers, on the best parties: the best picks with hindsight
  * (the best path on each seed), the best a player could know (a priority list
  * learned on the first half of the seeds, played on the second), random picks
  * (the average path) and the worst. Measured on the second half of the seeds.

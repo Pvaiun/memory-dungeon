@@ -1,10 +1,8 @@
 /**
- * Memory Dungeon Game: content schema, v0.7 (the core set).
+ * Memory Dungeon Game: content schema (the core set, docs/core-set/).
  *
- * One data format for everything the engine runs on. Step 4 replaced schema
- * 0.3's turn-based rule language with the director's combat design; the core
- * set (docs/core-set/) builds on it: fights run on ticks, and everything that
- * happens on an event or a timer is a status. Content is built from
+ * One data format for everything the engine runs on. Fights run on ticks, and
+ * everything that happens on an event or a timer is a status. Content is built from
  *   - stats (a registry, plus the immune:... families),
  *   - weapon kinds (speed, damage type and hands, shared by gear and enemies),
  *     armor types and offhand kinds (who wears what),
@@ -17,28 +15,15 @@
  *   - `name`, `text`: player-facing. The engine never reads them.
  *   - `note`: designer-only. Never shown, never read by the engine.
  *
- * Schema 0.6 dropped step 1's verbs, traits and keyholes: the core set's own
- * vocabulary (statuses, special stats, effects and challenges) replaces them,
- * and lives in the documents, not the data. Perks stay in the tech, unused by
- * the core set, which has no progression yet.
+ * The core set's vocabulary (statuses, special stats, effects and challenges)
+ * lives in the documents, not the data. Perks stay in the tech, unused by the
+ * core set.
  *
- * Schema 0.7 (step 5j, the director's rule of Oct 29, 2026): two kinds of
- * damage and nothing else. Physical meets Armor and Evasion; magical meets
- * Magic resist and is never dodged; a status's own damage is untyped. No
- * elements and no physical subtypes. Gear in four slots (weapon, armor,
- * offhand, amulet), with armor types and offhand kinds, two-handed weapons,
- * and mythic pieces that fit one class.
- *
- * Schema 0.8 (step 5i's build, steps/05-core-set/5i-synergy/build/engine-spec.md):
- * the shapes the gear, formations, upgrades and mythics need. Marked and
- * basic attacks aimed by a rule; markers that are neither buff nor debuff;
- * events that name who did it (the killer, the applier, the breaker) and the
- * tests and filters that read them; seats; ability changes (MP and HP costs,
- * wind-ups, stacks, heals, aim) by what an ability does or by name; crits by
- * condition; extra strikes sized and spread, and strikes fired by reactions;
- * cooldown changes; HP paid; HP floors; revives on a timer; the moment a fight
- * is won; control resistance on bosses; rarities on gear and formations; and
- * the pack's upgrades, each with five forms under fixed ids.
+ * Two kinds of damage and nothing else: physical meets Armor and Evasion;
+ * magical meets Magic resist and is never dodged; a status's own damage is
+ * untyped. Gear is in four slots (weapon, armor, offhand, amulet), with armor
+ * types and offhand kinds, two-handed weapons, and mythic pieces that fit one
+ * class.
  */
 import * as z from "zod";
 
@@ -230,7 +215,7 @@ export const PICKS = {
 } as const;
 export const Pick = z.enum(keys(PICKS));
 
-/** Step 5i: a status's label. A marker is bookkeeping: no remove by buff or debuff lifts it, and no count of buffs or debuffs sees it. */
+/** A status's label. A marker is bookkeeping: no remove by buff or debuff lifts it, and no count of buffs or debuffs sees it. */
 export const LABELS = {
   buff: "Helps its holder. Removed by effects that remove buffs (Dispel); counted by `buffs`.",
   debuff: "Hurts its holder. Removed by effects that remove debuffs (Cleanse); counted by `debuffs`. Its pulses resolve in the batch of the holder's foes.",
@@ -238,7 +223,7 @@ export const LABELS = {
 } as const;
 export const Label = z.enum(keys(LABELS));
 
-/** Step 5i: the closed sets of the `cooldown` effect. */
+/** The closed sets of the `cooldown` effect. */
 export const COOLDOWN_WHICH = {
   basic: "The basic attack's timer.",
   abilities: "Each of its equipped abilities.",
@@ -255,7 +240,7 @@ export const COOLDOWN_SET = {
   "{ atMost }": "Its cooldown left at most atMost % of its full cooldown (\"at least half charged\": 50).",
 } as const;
 
-/** Step 5i: the five forms an upgrade has, each content under a fixed id: `<id>__<form>`. */
+/** The five forms an upgrade has, each content under a fixed id: `<id>__<form>`. */
 export const UPGRADE_FORMS = {
   p: "The power step: more of the same.",
   a: "Version A.",
@@ -272,7 +257,7 @@ export const formBase = (id: string) => {
   return i > 0 && id.slice(i + 2) in UPGRADE_FORMS ? id.slice(0, i) : id;
 };
 
-/** Step 5i: what a scale's `count` counts. */
+/** What a scale's `count` counts. */
 export const COUNTS = {
   buffs: "The buffs the unit read holds.",
   debuffs: "The debuffs the unit read holds.",
@@ -340,7 +325,7 @@ export const Value = z.union([
   z.strictObject({ stacks: Id }),
 ]);
 
-/** Step 5i: a seat in the party's formation, by its position id, or next / previous by slot order (wrapping round). */
+/** A seat in the party's formation, by its position id, or next / previous by slot order (wrapping round). */
 const Seat = Id;
 const SEAT = "Step 5i: the unit in this seat of the party's formation (a position id), or `next` / `previous`: the seat after or before the reading unit's, by slot order, wrapping round and skipping empty seats.";
 
@@ -369,7 +354,7 @@ export const Condition = z.strictObject({
 }).meta({ id: "Condition" });
 export type ConditionT = z.infer<typeof Condition>;
 
-/** Step 5i: a test of one of a reaction's event units. */
+/** A test of one of a reaction's event units. */
 export const EventUnitTest = z
   .strictObject({ unit: z.enum(["other", "owner"]).describe("other: the event's other unit (as `to: other`); owner: the unit the event is about (as `to: owner`)."), where: UnitCond.describe("What it must pass.") })
   .describe("Reactions only: the event's other unit, or the unit it's about, passes `where` (\"the foe it hit is Sundered\", \"the ally that took the hit is below half\").");
@@ -518,14 +503,14 @@ export const Reaction = z.strictObject({
   do: z.array(Effect).min(1).describe("Each effect states its target (`to`)."),
 });
 
-/** Step 5i: which abilities an ability change reaches. Both fields given: both must hold. */
+/** Which abilities an ability change reaches. Both fields given: both must hold. */
 export const AbilityFilter = z.strictObject({
   ability: z.array(Id).min(1).optional().describe("These abilities by id, each with its trained forms (a mythic naming its class's ability)."),
   does: z.array(Id).min(1).optional().describe("Abilities whose effects do one of these: revive, heal or damage, or apply this status (stun, silence, shield, guard...)."),
 });
 export type AbilityFilterT = z.infer<typeof AbilityFilter>;
 
-/** Step 5i: a change to the holder's own abilities (spine additions 3, 4 and 14), read each time one is used. */
+/** A change to the holder's own abilities, read each time one is used. */
 export const AbilityMod = z.strictObject({
   of: AbilityFilter.optional().describe("Absent: every ability the holder has."),
   if: UnitCond.optional().describe("The holder passes this when the ability is checked and when it pays (\"while it holds over half its MP\")."),
@@ -551,7 +536,7 @@ export const AbilityMod = z.strictObject({
 });
 export type AbilityModT = z.infer<typeof AbilityMod>;
 
-/** Step 5i: crits by condition, for the holder's hits. */
+/** Crits by condition, for the holder's hits. */
 export const CritRule = z.strictObject({
   tag: Tag.optional().describe("Only hits carrying this tag (basic, ability, extra, physical, magical, area)."),
   when: UnitCond.optional().describe("Only hits on a unit that passes this, read as the hit lands."),
@@ -760,7 +745,7 @@ export const Design = z.strictObject({
 /** An enemy's rank. */
 export const Rank = z.enum(["minion", "elite", "boss"]);
 
-/** Step 5i (the director's, Oct 30): bosses resist repeated control, the one exception to universal statuses. */
+/** Bosses resist repeated control, the one exception to universal statuses. */
 export const Control = z
   .strictObject({
     ranks: z.array(Rank).min(1).describe("Enemies of these ranks resist control."),
@@ -872,10 +857,10 @@ export const ClassDef = z.strictObject({
   note: Note.optional(),
 }).describe("A class is a unit. The player owns at most one of each and can field it once per party.");
 
-/** Step 5j: mythic, above legendary, for a piece that fits one class. Step 5i: every piece's own rarity. */
+/** Every piece's own rarity. Mythic, above legendary, is for a piece that fits one class. */
 export const Rarity = z.enum(["common", "uncommon", "rare", "legendary", "mythic"]);
 export type RarityT = z.infer<typeof Rarity>;
-/** Step 5i: a formation's rarity. Neutral is common; no formation is mythic. */
+/** A formation's rarity. Neutral is common; no formation is mythic. */
 export const FormationRarity = z.enum(["common", "rare", "legendary"]);
 export type FormationRarityT = z.infer<typeof FormationRarity>;
 
@@ -1055,10 +1040,10 @@ export type CampaignT = z.infer<typeof Campaign>;
 // Its rules are src/rogue.ts; this is the data they read.
 // ─────────────────────────────────────────────────────────────────────────────
 
-/** Step 5h: the Muster (a pick of recruits) and the Drill ground (a pick of formations, or training). */
+/** The Muster (a pick of recruits) and the Drill ground (a pick of formations, or training). */
 export const RogueNodeKind = z.enum(["fight", "elite", "event", "campfire", "shop", "treasure", "boss", "muster", "drill"]);
 export type RogueNodeKindT = z.infer<typeof RogueNodeKind>;
-/** Step 5g (the director's): a potion heals one unit, a tonic restores one unit's MP (the old tonic healed the party, the old ether its MP). */
+/** A potion heals one unit, a tonic restores one unit's MP. */
 export const SupplyId = z.enum(["potion", "tonic", "phoenix"]);
 export type SupplyIdT = z.infer<typeof SupplyId>;
 const Pct = z.number().min(0).max(100);
@@ -1131,7 +1116,7 @@ export const RogueConfig = z.strictObject({
   }),
   shop: z.strictObject({ gear: RarityOdds.describe("How many pieces of each rarity."), legendaryByAct: z.array(z.number().int().min(0)).optional().describe("Step 5h: legendary pieces a visit, by act (in place of gear.legendary)."), recruits: z.number().int().min(0), formations: z.number().int().min(0), supplies: z.number().int().min(0) }),
   supplies: z.strictObject({ potion: z.strictObject({ hp: Pct }), tonic: z.strictObject({ mp: Pct }), phoenix: z.strictObject({ revive: Pct }) }),
-  /** Step 5g (the director's): after every won fight the party is handed these, free, up to the bag. */
+  /** After every won fight the party is handed these, free, up to the bag. */
   drops: z.array(SupplyId).optional().describe("Round 9: offered as a choice of one after every won fight."),
   bag: z.strictObject({ potion: z.number().int().min(0), tonic: z.number().int().min(0), phoenix: z.number().int().min(0) }).describe("Supplies carried at most, a slot a kind."),
   knobs: z.array(z.strictObject({ mob: z.number(), step: z.number(), early: z.number().optional().describe("Step 5h round 6: the climb a floor below a pool's reference floor (default `step`)."), elite: z.number(), boss: z.number() })).min(1).describe("Per act, added to each fight's own knob (HP +k %, damage +k/2.5 %): regular fights, the rise per floor from each pool's reference floor, elites, the boss."),
@@ -1217,7 +1202,7 @@ export const Rogue = z.strictObject({
 export type RogueT = z.infer<typeof Rogue>;
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Upgrades (step 5i): each ability and passive's power step and two versions
+// Upgrades: each ability and passive's power step and two versions
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const UpgradeVersion = z.strictObject({ name: Text, text: Text.describe("Its card, as the training screen reads it.") });

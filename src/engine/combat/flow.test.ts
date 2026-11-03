@@ -1,7 +1,6 @@
 /**
- * Step 4's functionality tests, part 1: fight flow, timing, same sub-tick
- * order, actions, targeting and KOs (design sections 1 to 3 and 6). Most tests
- * are the design's Part 2 examples, named as it names them.
+ * Functionality tests, part 1: fight flow, timing, same sub-tick order,
+ * actions, targeting and KOs.
  */
 import { test } from "vitest";
 import assert from "node:assert/strict";
@@ -12,7 +11,7 @@ const fire = (cast: number, cooldown: number) => ({ id: "fire", cast, cooldown, 
 const dmg = (amount: number) => ({ op: "damage", type: "physical", amount });
 const share = (xs: unknown[], x: unknown) => xs.filter((y) => y === x).length / xs.length;
 
-// ─── Timing (section 2) ─────────────────────────────────────────────────────
+// ─── Timing ─────────────────────────────────────────────────────────────────
 
 test("timing: a dagger (cooldown 8) and Fire (cooldown 40): the first swing is at tick 8, and Fire comes up every 45 ticks", () => {
   const a = arena({ party: [{ name: "Mage", weapon: weapons.dagger, abilities: ["fire"] }], enemies: [BAG], abilities: [fire(5, 40)] }).to(140);
@@ -98,7 +97,7 @@ test("timing: by default a basic attack has no cast time, and an ability has the
   assert.deepEqual(a.entries("cast", (e) => e.act === "zap").map((e) => [e.at, e.ends]), [[10_000, 11_000]]);
 });
 
-// ─── Same sub-tick order (section 2) ────────────────────────────────────────
+// ─── Same sub-tick order ────────────────────────────────────────────────────
 
 test("order: the Knight and an Ogre land lethal hits on each other on the same sub-tick; the party batch resolves first, so the Ogre is KO'd and loses its action", () => {
   const a = arena({
@@ -163,7 +162,7 @@ test("order: within a batch, pulses resolve first, then reactions, then actions;
   assert.deepEqual(at8, ["poison on e1", "spikes on e1", "p1 acts", "basic on e1"]);
 });
 
-// ─── Actions (section 3) ────────────────────────────────────────────────────
+// ─── Actions ────────────────────────────────────────────────────────────────
 
 test("actions: MP is paid when an action resolves; if the unit can't pay then, the action fizzles: no effect, no MP spent, but the cooldown starts (the core set's rule)", () => {
   const bolt = { id: "bolt", mp: 10, cast: 5, cooldown: 10, do: [dmg(50)] };
@@ -200,7 +199,7 @@ test("actions: an action whose stated targeting finds nobody when it resolves fa
   assert.equal(b.hits("Bag").length, 0);
 });
 
-// ─── Targeting (section 6) ──────────────────────────────────────────────────
+// ─── Targeting ──────────────────────────────────────────────────────────────
 
 /** Who an enemy's default-targeted attacks land on, over about 2,000 attacks. */
 function targets(party: { name: string; stats: Record<string, number> }[], enemy: object = {}) {
@@ -270,7 +269,7 @@ test("targeting: an enemy channels Smash; during the cast the Knight forces targ
   assert.deepEqual(a.hits("Knight").map((e) => e.amount), [5]);
 });
 
-// ─── KOs and the end of a fight (section 1) ─────────────────────────────────
+// ─── KOs and the end of a fight ─────────────────────────────────────────────
 
 test("KO: a unit KO'd mid-cast loses the action: no MP is spent and its cooldown hasn't started", () => {
   const smash = { id: "smash", mp: 10, cast: 10, cooldown: 1, do: [dmg(5)] };

@@ -1,5 +1,5 @@
 /**
- * Step 5i's engine additions, share H ("what happens"): X21 to X41 and R4 of
+ * The engine additions for what happens: X21 to X41 and R4 of
  * steps/05-core-set/5i-synergy/build/engine-spec.md, each with at least the spec's own test.
  * Every status and ability a test needs is defined here, so nothing waits for content.
  */

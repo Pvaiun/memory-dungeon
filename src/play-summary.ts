@@ -47,10 +47,10 @@ export function summary(log: Entry[], nameOf: (src: string) => string = (x) => x
     else if (e.t === "dmg" && typeof e.amount === "number") {
       const tg = String(e.target);
       if (e.word && e.by && side.get(String(e.by)) === "party") add(f.words, `${String(e.word)} on ${names.get(tg)!.replace(/ [A-Z]$/, "")}`, 1);
-      // Damage counts up to the HP the target had left: overkill on a dying bat isn't damage dealt (a playtester's 21,881 on four bats).
+      // Damage counts up to the HP the target had left: overkill on a dying bat isn't damage dealt.
       const real = Math.min(e.amount, Math.max(0, f.hp.get(tg) ?? e.amount));
       f.hp.set(tg, e.hp as number);
-      // A status's damage (a pulse, or a reaction such as Doom's toll) names who laid it, not its holder: "doom from Valkyrie" read as suicide.
+      // A status's damage (a pulse, or a reaction such as Doom's toll) names who laid it, not its holder.
       const laid = e.from && names.has(String(e.from)) ? `, laid by ${names.get(String(e.from))}` : "";
       if (e.amount > 0) last.set(tg, `${e.part === "pulse" || e.part === "reaction" ? `${nameOf(String(e.src))} (a status${laid})` : `${nameOf(String(e.src))} from ${e.by ? names.get(String(e.by)) ?? "?" : "?"}`}, ${e.amount}${e.kind ? ` ${e.kind}` : ""}`);
       if (side.get(tg) === "party") {
@@ -88,7 +88,7 @@ export function summary(log: Entry[], nameOf: (src: string) => string = (x) => x
       const sideOf = (x: string) => side.get([...names].find(([, nm]) => x.startsWith(`${nm} `))?.[0] ?? "");
       const down = f.down.filter((x) => sideOf(x) !== "enemy");
       if (down.length) out.push(`  Knocked out: ${down.join(", ")}.`);
-      // How each foe fell, so a win reads as more than a tick count (an AI playtester's ask).
+      // How each foe fell, so a win reads as more than a tick count.
       const felled = f.down.filter((x) => sideOf(x) === "enemy");
       if (felled.length) out.push(`  Foes felled: ${felled.join(", ")}.`);
       const fmt = (m: Map<string, number>) => [...m].map(([k, v]) => `${k} ${v}`).join(", ");

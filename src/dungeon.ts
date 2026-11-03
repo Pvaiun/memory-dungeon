@@ -1,5 +1,5 @@
 /**
- * Run a dungeon from the command line, with step 4's combat.
+ * Run a dungeon from the command line.
  *
  *   tsx src/dungeon.ts [--seed N] [--party <party.json>] [--dungeon <id>] [--pick first|random]
  *                      [--first-clear] [--player] [--json]

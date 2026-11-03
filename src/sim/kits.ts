@@ -11,8 +11,8 @@ import type { Owned } from "../campaign.js";
 
 /**
  * What each class's kit multiplies, per gear step (an amount stat's +1, Crit chance's 5%, a special stat at medium).
- * `basic` is how much its basic attack is worth (Refrain, Phalanx, Kindling, Arc and Iron palm ride on it). Step 5c: casters
- * weigh MP regen as much as Magic (their spells cost twice what they did), the Magic-1 classes not at all.
+ * `basic` is how much its basic attack is worth (Refrain, Phalanx, Kindling, Arc and Iron palm ride on it). Casters
+ * weigh MP regen as much as Magic, the Magic-1 classes not at all.
  * Aggro is negative for the fragile, who want fewer hits, and positive for the walls.
  */
 export const PROFILES: Record<string, { w: Record<string, number>; basic: number }> = {
@@ -137,7 +137,7 @@ export function seat(c: Content, classes: readonly string[], formation: string, 
 }
 
 /**
- * The order abilities are slotted in (step 5c: the first starts a fight most charged): the documents' order, or the shortest
+ * The order abilities are slotted in (the first starts a fight most charged): the documents' order, or the shortest
  * cooldown first, which casts most.
  */
 export type Order = "doc" | "quick";

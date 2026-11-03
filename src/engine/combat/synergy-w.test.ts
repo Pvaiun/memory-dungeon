@@ -1,11 +1,7 @@
 /**
- * Step 5i's engine additions, share W ("who and when"): X1 to X20 of
+ * The engine additions for who and when: X1 to X20 of
  * steps/05-core-set/5i-synergy/build/engine-spec.md, each with at least the spec's
  * test. Every status a test needs is written inline, so nothing here waits for content.
- *
- * The tests at the end are skipped: each needs a payload that share H fills (the breaker
- * from `take`, a knockout's killer, an action's MP paid and hits landed, Ctx's landed set).
- * Un-skip them at the merge.
  */
 import { test } from "vitest";
 import assert from "node:assert/strict";
@@ -691,8 +687,8 @@ test("X20: a Chill boost reading the receiver's Chill makes a 4-stack applicatio
   assert.equal(tally(a, "Bag", "chill"), 14);
 });
 
-// ─── After the merge with share H (un-skip then) ─────────────────────────────
-// Each needs a payload H fills: the breaker and the blocked amount from `take` (X1), a knockout's killer and kind (X29),
+// ─── Payloads from what happens ──────────────────────────────────────────────
+// Each needs a payload: the breaker and the blocked amount from `take` (X1), a knockout's killer and kind (X29),
 // an action's MP paid and hits landed (X29), and the landed set on Ctx (X8's count: hit).
 
 test("after H: a Shield emptied names the foe whose hit emptied it; an Aegis that stops a 900 blow ends with 900 and the attacker", () => {

@@ -142,7 +142,7 @@ test("revive: raises a knocked-out ally with the stated HP, its fight-start stat
   const raise = { id: "raise", cast: 0, cooldown: 10, if: { side: "allies", where: { ko: true } }, target: { side: "allies", where: { ko: true }, pick: "random" }, do: [{ op: "revive", hp: { scale: [{ ratio: 0.5, stat: "max_hp", of: "target" }] } }] };
   const valhalla = { ...raise, id: "valhalla", do: [{ op: "revive", hp: 1, ready: true }] };
   const guard = { id: "guard", name: "G", label: "buff", show: "sheet", stacking: "refresh", unremovable: true, stats: [{ stat: "armor", flat: 5 }] };
-  // A unit made ready by something that resolved this moment starts on the next sub-tick (step 4's rule).
+  // A unit made ready by something that resolved this moment starts on the next sub-tick.
   for (const [id, hp, firstSwing] of [["raise", 50, 18], ["valhalla", 1, 10.001]] as const) {
     const a = arena({
       party: [{ name: "Cleric", abilities: [id] }, { name: "Fallen", stats: { max_hp: 100 }, weapon: weapons.dagger, statuses: ["guard"], ko: true }],
@@ -557,7 +557,7 @@ test("stat changes can read the holder's own stat once, at application: Bedrock 
   assert.equal(a.unit("Geo").stats.crit_chance, 20, "and Bedrock is off again");
 });
 
-// ─── Step 5g: head starts by share, several conditions, MP conditions, the capped event and the owner word ──
+// ─── Head starts by share, several conditions, MP conditions, the capped event and the owner word ──
 
 test("opening.slotShares: a party ability starts charged by a share of its own cooldown, by slot", () => {
   const quick = { id: "quick", cast: 0, cooldown: 20, do: [dmg(1)] };

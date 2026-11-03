@@ -1,7 +1,7 @@
 /**
  * The run machinery: a run as plain data, moved forward one step at a time,
  * pausing whenever it needs a decision. None of it depends on the battle
- * system, which plugs in as `Rules` (step 4's combat, in combat/).
+ * system, which plugs in as `Rules` (in combat/).
  */
 import type { AbilityT, ClassDefT, ContentPack, DungeonT, EnemyT, FormationT, GearT, Party, PerkT, StatDefT, StatusT, WeaponKindT } from "../schema.js";
 import { checkParty, validatePack } from "../validate.js";
@@ -9,7 +9,7 @@ import { fingerprint, int, rngFor, type Rng } from "./rng.js";
 import type { Entry } from "./log.js";
 
 /** Bump on any change that can change a run's outcome: old records stop replaying. */
-export const ENGINE_VERSION = "0.18"; // Nov 3, 2026 (the director's): foes pick among the party by ruleset.partyDraw (draw doubles every 25 Aggro), the party among foes by the old curve. 0.17: Step 5i (build/engine-spec.md): the engine additions X1 to X41 for the gear, formations, upgrades and mythics, and control resistance on bosses (ruleset.control). 0.16: Step 5j (the director's rule of Oct 29): two kinds of damage, no elements or subtypes; magical damage meets one Magic resist, no absorption; a status's own damage is untyped; a weapon's hands. 0.15: Step 5g (the director's): a party unit's ability cooldowns carry from fight to fight like its HP and MP (Member.cooldowns), with the slot's head start taken off what remains. 0.14: slotShares, `if` as several conditions, mpBelow/mpAtLeast, status_capped, `owner`.
+export const ENGINE_VERSION = "0.18";
 
 // ─── Content, loaded and checked once ───────────────────────────────────────
 
