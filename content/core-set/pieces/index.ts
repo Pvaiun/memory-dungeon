@@ -1,5 +1,5 @@
 /**
- * Step 5i, step 5: every content share's items gathered, for the pack (pack.ts) and the tools (the test, aiming drops).
+ * Every content file's items gathered, for the pack (pack.ts) and the tools (the test, aiming drops).
  */
 import type { AbilityT, GearT, StatusT, UpgradeT } from "../../../src/schema.js";
 import type { Builds } from "./kit.js";

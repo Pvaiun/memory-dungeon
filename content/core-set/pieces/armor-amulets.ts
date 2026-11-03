@@ -1,9 +1,9 @@
 /**
- * Step 5i, step 5: the four armor types' 48 pieces and the 24 amulets, from step 5i's fill (its design, kept in git history)
- * and steps/05-core-set/5i-synergy/build/engine-spec.md (the shapes, numbered X1 onward, and its section 6's fixes).
+ * The four armor types' 48 pieces and the 24 amulets, in the shapes of steps/05-core-set/5i-synergy/build/engine-spec.md
+ * (numbered X1 onward, with its section 6's fixes).
  * `gear` joins the pack's gear and the rogue's stock; `statuses` the pack's statuses; `builds` is designer data, never in the pack.
  *
- * Every number is the fill's. Statuses are applied at their own length (universal), and nothing here is balanced. A piece's own
+ * Statuses are applied at their own length (universal), and nothing here is balanced. A piece's own
  * statuses take its id, or its id with a suffix: `_on` for a state it switches on and off, `_used` for a once-a-fight marker,
  * `_mark` for the marker it leaves on a foe. Heat, Spite, Tempo and Surge are shared.ts's.
  */
@@ -39,8 +39,8 @@ const used = (id: string, name: string): StatusT =>
 
 /**
  * Bloodlust's pattern, either way round: a state held while the wearer is below half its HP (or at half or more). Set at the
- * fight's start and on a revive too, since HP carries from fight to fight: the fill's hooks set it only on a heal or a lost
- * HP, so a wearer who started a fight below half had the card turned over until its first hit.
+ * fight's start and on a revive too, since HP carries from fight to fight: set only on a heal or a lost HP, a wearer who
+ * started a fight below half would have the card turned over until its first hit.
  */
 function whileHp(stateId: string, below: boolean): ReactionT[] {
   const inside: UnitCondT = below ? { hpBelow: HALF } : { hpAtLeast: HALF };
@@ -609,7 +609,7 @@ amulet({
 });
 amulet({
   name: "Ready stance", rarity: "legendary", text: "The wearer's abilities start every fight at least half charged. Its cooldowns are a fifth longer.",
-  // −16.7 makes cooldowns ×1.2, a fifth longer, as the card and the spine say (cooldowns ÷ (1 + stat/100)); the fill's −20 is ×1.25.
+  // −16.7 makes cooldowns ×1.2, a fifth longer, as the card and the spine say (cooldowns ÷ (1 + stat/100)); −20 would be ×1.25.
   stats: [{ stat: "cooldown_reduction", flat: -16.7 }],
   rule: {
     text: "The wearer's abilities start every fight at least half charged.",
@@ -623,7 +623,7 @@ amulet({
   text: "The wearer's abilities cost HP in place of MP: the same share of its max HP as they'd cost of its max MP. It won't cast one that would leave it below a tenth of its HP.",
   rule: {
     text: "The wearer's abilities cost HP in place of MP: the same share of its max HP as they'd cost of its max MP. It won't cast one that would leave it below a tenth of its HP.",
-    // X22 and X23: free of MP, and the cost paid as a share of max HP (G12), waiting rather than going below a tenth.
+    // X22 and X23: free of MP, and the cost paid as a share of max HP, waiting rather than going below a tenth.
     body: { mods: [{ mp: -100, hp: { pct: 100, share: true, floor: 10 } }] },
   },
   tags: [at("pact", 3, 3), at("overflow", null, 1)],
@@ -633,7 +633,7 @@ amulet({
   text: "The wearer's crit chance is about 50%. Its hits that don't crit deal half; its crits deal what a crit always does. Hits that always crit still do.",
   rule: {
     text: "The wearer's crit chance is about 50%. Its hits that don't crit deal half; its crits deal what a crit always does. Hits that always crit still do.",
-    // X17 sets the chance after every other stat change (Bedrock doesn't double it); crit rules (X25) add after it (G17), hence
+    // X17 sets the chance after every other stat change (Bedrock doesn't double it); crit rules (X25) add after it, hence
     // "about" on the card (spec section 6.6). Every hit −50%, and the crit multiplier doubled (Bedrock's shape, read at the
     // fight's start), so a crit lands at its usual size.
     body: {

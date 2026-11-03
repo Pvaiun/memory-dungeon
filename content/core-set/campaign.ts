@@ -1,5 +1,5 @@
 /**
- * The campaign (step 5a, retired; the rogue mode is the game): the core set as a road to walk. The player starts with the
+ * The campaign (retired; the rogue mode is the game): the core set as a road to walk. The player starts with the
  * Knight, Cleric and Ranger in the Neutral formation and the first run. Each node is cleared once,
  * pays a fixed reward once and reveals the next: the seven runs of the enemies document, remixes
  * built from the same enemies, and trials that set needs on the party.
@@ -14,15 +14,14 @@ import knobs from "./campaign-knobs.json" with { type: "json" };
 
 /**
  * A node's difficulty knob, k, found by the campaign tuning (npm run campaign -- --tune) and kept in campaign-knobs.json:
- * its foes have k% more HP and deal k/2 % more damage; a negative k takes k% off their HP and k/2 % off their damage.
- * A hard node is mostly a longer one, and an easy one a shorter one: when damage rose as fast as HP, every regular swing
- * two-shot a 2-HP caster; when it fell as fast (pacing pass), a boss eased to −55 lost its spikes as well as its length.
+ * its foes have k% more HP and deal k ÷ 2.5 % more damage; a negative k takes k% off their HP and k ÷ 2.5 % off their damage (each at most 80).
+ * Damage moves slower than HP, so a hard node is mostly a longer one and an easy one a shorter one: damage as steep as HP
+ * would let a hard node's swings two-shot a caster, and strip an eased boss of its spikes as well as its length.
  */
 export const knobFoes = (k: number): Pick<FoesT, "hp" | "power"> =>
   k > 0 ? { hp: Math.round(k), power: Math.round(k / 2.5) } : k < 0 ? { hp: Math.max(-80, Math.round(k)), power: Math.max(-80, Math.round(k / 2.5)) } : {};
 /**
- * A node's two knobs (pacing pass): one for its regular fights, one for its boss. With one knob for both, the tuner set it
- * so the boss could be beaten, and the regular fights went soft ("the bandits at the start do 2 damage to you").
+ * A node's two knobs: one for its regular fights, one for its boss, so easing a boss doesn't soften the regular fights.
  * A plain number sets both.
  */
 export type Knob = { mob: number; boss: number };
@@ -52,10 +51,8 @@ type Node = {
 };
 
 /**
- * Step 5i (the build's retire share): the campaign is retired, and the old gear and formations with it. Every reward that
- * named a retired piece or formation is gone (the plain rune sword stays), and so are the needs that could no longer be met:
- * the Escort, Scatter and Caravan formations (the Ogre Brothers, the Wild Hunt, the Long Road) and Iron Wall's Plate (no
- * armor exists to meet it). Texts stay as they were.
+ * Rewards and needs that named gear or formations no longer in the game are gone, but the texts aren't changed, so some name
+ * what a node no longer asks for or gives.
  */
 const NODES: Node[] = [
   // ─── Act I: the Old Road ──────────────────────────────────────────────────
@@ -108,8 +105,7 @@ const NODES: Node[] = [
       text: "The Crypt's bone store.",
       fights: [
         enc("bone_wall", "Bone Wall", [5, "skeleton"]),
-        // Two Ghosts and two Skeletons: magic can't touch the one, steel can't touch the other, and the Monk's fists break the
-        // armor. Three Ghosts were a wall for the Monk the node asks for (its Burning fist is Fire, which they resist).
+        // Two Ghosts and two Skeletons: magic can't touch the one, steel can't touch the other, and the Monk's fists break the armor.
         enc("haunted_hall", "Haunted Hall", [2, "ghost"], [2, "skeleton"]),
         enc("dead_watch", "The Dead Watch", [2, "skeleton"], [1, "witch"], [1, "ghost"]),
         enc("reapers_court", "The Reaper's Court", [1, "reaper"], [2, "skeleton"]),
@@ -186,7 +182,7 @@ const NODES: Node[] = [
         enc("glacier_king", "The Glacier King", [1, "ice_titan"], [2, "snow_wolf"]),
       ],
     },
-    classes: ["stormcaller"], gear: ["plain_rune_sword"], // Step 5j: the plain rune sword (the Valkyrie's second kind) in the wind staff's place.
+    classes: ["stormcaller"], gear: ["plain_rune_sword"],
   },
   {
     id: "wild_hunt", name: "The Wild Hunt", kind: "trial",
@@ -303,7 +299,7 @@ const runs: Record<string, true> = { old_road: true, crypt: true, fire_mine: tru
 /** The campaign's own runs: a node's remixed fights, or a spine run with the node's foes. */
 export const campaignDungeons: DungeonT[] = [];
 /** A spine run that a node changes (foes) is copied under the node's id; otherwise the node plays it as is. */
-// One campfire a run, in the middle, as the director asked (withCampfire, in dungeons.ts): it splits the run's attrition in two, so each regular fight can hit harder.
+// One campfire a run, in the middle (withCampfire, in dungeons.ts): it splits the run's attrition in two, so each regular fight can hit harder.
 
 export function campaignWith(spine: DungeonT[]): CampaignT {
   campaignDungeons.length = 0;

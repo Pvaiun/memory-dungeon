@@ -9,7 +9,7 @@ import { KIND_SPEED, MP_REGEN, P, RULES, SPEED, STATUS, pts } from "./scale.js";
 const TIMING = ["attack_speed", "cooldown_reduction", "cast_time_reduction"] as const;
 
 export const stats: StatDefT[] = [
-  // Step 5f: a floor of half a point. Last stand's Martyr slot and Glass heart together took an HP-2 class to 0 max HP, and a Raise brought it back at 0.
+  // A floor of half a point, so stacked HP cuts can't take a unit to 0 max HP.
   { id: "max_hp", name: "HP", kind: "amount", default: pts(1), floor: pts(1) / 2 },
   { id: "max_mp", name: "MP", kind: "amount", default: 0, floor: 0 },
   { id: "mp_regen", name: "MP regen", kind: "amount", default: 0, floor: 0, brings: "mp_regen", note: `MP restored every ${MP_REGEN.every} ticks, through the status it brings.` },
@@ -35,7 +35,7 @@ export const stats: StatDefT[] = [
   { id: "power", name: "Power", kind: "points", default: 0, floor: -90, note: "Damage dealt by hits and reactions, +%. Only a dungeon's foes modifier sets it: how a campaign trial makes its foes hit harder." },
 ];
 
-/** Step 5j (builds.md, Gear): eleven kinds, each a speed, a damage type and hands. The elemental staves are gone. */
+/** Eleven weapon kinds, each a speed, a damage type and hands (builds.md, Gear). */
 export const weaponKinds: WeaponKindT[] = [
   { id: "dagger", name: "Dagger", type: "physical", cooldown: KIND_SPEED.dagger, hands: 1 },
   { id: "fist", name: "Fist weapons", type: "physical", cooldown: KIND_SPEED.fist, hands: 1 },
@@ -50,7 +50,7 @@ export const weaponKinds: WeaponKindT[] = [
   { id: "staff", name: "Staff", type: "magical", cooldown: KIND_SPEED.staff, hands: 2 },
 ];
 
-/** Step 5j (builds.md, Gear): four armor types in place of the weights; a class wears only its own. */
+/** Four armor types; a class wears only its own (builds.md, Gear). */
 export const armorTypes: GearKindT[] = [
   { id: "plate", name: "Plate" },
   { id: "mail", name: "Mail" },
@@ -58,7 +58,7 @@ export const armorTypes: GearKindT[] = [
   { id: "robes", name: "Robes" },
 ];
 
-/** Step 5j (builds.md, Gear): ten offhand kinds of two or three classes each. No pieces yet: the next pass makes them. */
+/** Ten offhand kinds, of two or three classes each (builds.md, Gear). */
 export const offhandKinds: GearKindT[] = [
   { id: "kite_shield", name: "Kite shield" },
   { id: "round_shield", name: "Round shield" },
@@ -74,7 +74,7 @@ export const offhandKinds: GearKindT[] = [
 /** The speed word of a kind, for weapon damage. */
 export const speedOf = (kind: string): "fast" | "medium" | "slow" => {
   const cd = weaponKinds.find((k) => k.id === kind)!.cooldown ?? SPEED.medium;
-  return cd < 7.5 ? "fast" : cd > 10.5 ? "slow" : "medium"; // Round 9: the thresholds moved with the intervals (were 10.2 and 14.4).
+  return cd < 7.5 ? "fast" : cd > 10.5 ? "slow" : "medium";
 };
 
 const timing = (n: number) => TIMING.map((stat) => ({ stat, flat: n }));
@@ -83,14 +83,14 @@ const bothKinds = (pct: number) => [{ tag: "physical", pct }, { tag: "magical", 
 /** The 22 statuses of the vocabulary. */
 export const vocabulary: StatusT[] = [
   // Fundamental
-  // Step 5c (the director's): Bleed replaces Poison. Nothing on its own and no duration; each hit the holder takes opens it.
+  // Nothing on its own and no duration; each hit the holder takes opens it.
   {
     id: "bleed", name: "BLEED", text: "Each hit it takes deals damage for each stack, then a third of the stacks close.", label: "debuff", show: "icon", stacking: "intensity",
     trigger: { on: { event: "hit_taken" }, do: [{ op: "damage", type: "none", amount: STATUS.bleed.perStack, to: "holder" }] }, drop: { fraction: STATUS.bleed.drop },
   },
   { id: "regen", name: "REGEN", text: "Recovers health over time.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.regen.duration, pulse: { every: STATUS.regen.every, do: [{ op: "heal", amount: { scale: [{ ratio: STATUS.regen.share, stat: "max_hp", of: "holder" }] } }] } },
   { id: "shield", name: "SHIELD", text: "Soaks damage before health.", label: "buff", show: "icon", stacking: "intensity", absorb: true, cap: { scale: [{ ratio: STATUS.shield.capShare, stat: "max_hp", of: "holder" }] } },
-  // Step 5f (the director's): a stack is spent each time the holder acts, not on a timer.
+  // A stack is spent each time the holder acts, not on a timer.
   { id: "might", name: "MIGHT", text: "Deals more damage per stack; each action spends a stack.", label: "buff", show: "icon", stacking: "intensity", boosts: bothKinds(STATUS.might.perStack), cap: STATUS.might.cap, trigger: { on: { event: "action_resolve" } }, drop: { count: 1 } },
   { id: "weaken", name: "WEAKEN", text: "Deals less damage.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.weaken.duration, boosts: bothKinds(STATUS.weaken.pct) },
   { id: "guard", name: "GUARD", text: "Armor up.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.guard.duration, stats: [{ stat: "armor", flat: STATUS.guard.armor }] },
@@ -99,18 +99,18 @@ export const vocabulary: StatusT[] = [
   { id: "haste", name: "HASTE", text: "Faster in everything.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.haste.duration, stats: timing(STATUS.haste.speed) },
   { id: "taunt", name: "TAUNT", text: "Foes must pick it.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.taunt.duration, stats: [{ stat: "forced", flat: 1 }] },
   // Specialist
-  // Step 5j (the director's rule of Oct 29): a status's own damage is untyped and never resisted (Burn, Shock, Bleed, Chill's shatter, Thorns).
+  // A status's own damage is untyped and never resisted (Burn, Shock, Bleed, Chill's shatter, Thorns).
   { id: "burn", name: "BURN", text: "Burns for each stack, then dies down.", label: "debuff", show: "icon", stacking: "intensity", pulse: { every: STATUS.burn.every, do: [{ op: "damage", type: "none", amount: STATUS.burn.perStack }] }, drop: { fraction: STATUS.burn.drop } },
   {
     id: "chill", name: "CHILL", text: "Slower for each stack; thaws one stack at a time. At 12 it shatters: damage for each stack, a Stun, and the Chill is spent.", label: "debuff", show: "icon", stacking: "intensity",
     cap: STATUS.chill.cap, stats: timing(STATUS.chill.perStack), pulse: { every: STATUS.chill.every }, drop: { count: 1 },
-    // Step 5g round 5 (the director's): the shatter.
+    // The shatter.
     reactions: [{ on: { event: "status_capped", status: "chill" }, do: [{ op: "damage", type: "none", amount: { scale: [{ ratio: STATUS.chill.shatter, stacks: "chill", of: "holder" }] }, to: "holder" }, { op: "apply", status: "stun", to: "holder" }, { op: "remove", label: "debuff", status: "chill", to: "holder" }] }],
   },
   { id: "shock", name: "SHOCK", text: "Hurts for each stack every time it acts.", label: "debuff", show: "icon", stacking: "intensity", cap: STATUS.shock.cap, trigger: { on: { event: "action_resolve" }, do: [{ op: "damage", type: "none", amount: STATUS.shock.perStack, to: "holder" }] }, drop: { fraction: STATUS.shock.drop } },
   { id: "ward", name: "WARD", text: "Magic resist up.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.ward.duration, stats: [{ stat: "magic_resist", flat: STATUS.ward.magicResist }] },
-  // Step 5g round 9 (the director's): Sunder is a damage-taken ramp, not an Armor strip. Foes carry 1,000 to 3,000 Armor, so two stacks stripped a
-  // minion bare and the other eighteen showed nothing; as +1.5% a stack to every kind of damage it reads on every foe and gives the Hexer and the Monk a ramp.
+  // A damage-taken ramp, not an Armor strip (foes carry too little Armor for a strip to show past two stacks): it reads on every
+  // foe and gives the Hexer and the Monk a ramp.
   { id: "sunder", name: "SUNDER", text: "Takes more damage for each stack.", label: "debuff", show: "icon", stacking: "intensity", cap: STATUS.sunder.cap, taken: [{ pct: STATUS.sunder.perStack }], pulse: { every: STATUS.sunder.every }, drop: { count: 1 } },
   { id: "silence", name: "SILENCE", text: "Can't use abilities.", label: "debuff", show: "icon", stacking: "fizzle", duration: STATUS.silence.duration, lockout: { covers: "ability", interrupt: true } },
   { id: "hidden", name: "HIDDEN", text: "Foes can't pick it.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.hidden.duration, unremovable: true, stats: [{ stat: "forbidden", flat: 1 }] },
@@ -123,7 +123,6 @@ export const vocabulary: StatusT[] = [
     reactions: [{ on: { event: "status_ended", status: "doom", cause: ["expired"] }, do: [{ op: "damage", type: "none", amount: { scale: [{ ratio: STATUS.doom.share, stat: "max_hp", of: "holder" }] }, to: "holder" }] }],
   },
   {
-    // Step 5j (the brief's default, the director's OK): every hit chips it (it was piercing and Wind hits).
     id: "bulwark", name: "BULWARK", text: "Every hit chips it; at zero it breaks.", label: "buff", show: "icon", stacking: "intensity",
     trigger: { on: { event: "hit_taken" } }, drop: { count: 1 },
     reactions: [{ on: { event: "status_ended", status: "bulwark", cause: ["stacks"] }, do: [{ op: "apply", status: "bulwark_broken", to: "holder" }] }],

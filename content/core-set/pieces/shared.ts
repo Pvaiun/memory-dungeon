@@ -1,7 +1,7 @@
 /**
- * Step 5i, step 5: the statuses several content shares use, defined once (the fill's rulings G2 to G4, and the counters each
- * share's fill names). The spine's one new word, Marked, and its seven counters: each counter is one status with one fixed
- * meaning, an icon with a number on its holder, kept for the fight. A piece decides who gets one and when; never what it does.
+ * The statuses several content files use, defined once: the spine's one new word, Marked, and its seven counters. Each counter
+ * is one status with one fixed meaning, an icon with a number on its holder, kept for the fight. A piece decides who gets one
+ * and when; never what it does.
  */
 import type { StatusT } from "../../../src/schema.js";
 
@@ -9,7 +9,6 @@ const both = (pct: number) => [{ tag: "physical", pct }, { tag: "magical", pct }
 const counter = (id: string, name: string, text: string, body: Partial<StatusT>): StatusT =>
   ({ id, name, text, label: "buff", show: "icon", stacking: "intensity", unremovable: true, ...body }) as StatusT;
 
-/** The counters' numbers, from the fill (Cuts: weapons-physical; Spite, Tempo, Surge: armor-amulets; Heat G3; Fervor G4; Charge: Storm pike). */
 export const COUNTER = {
   cuts: { pct: 2, cap: 25 },
   heat: { pct: 3, cap: 15 },
@@ -35,7 +34,7 @@ export const counters: StatusT[] = [
 ];
 
 /**
- * Marked (G2): a debuff on a foe, 14 ticks, Refresh. The party's basic attacks pick a Marked foe (by draw among several) inside the
+ * Marked: a debuff on a foe, 14 ticks, Refresh. The party's basic attacks pick a Marked foe (by draw among several) inside the
  * Taunt rule; each unit keeps one Mark, so a new one it applies moves its old one. `focus` and `single` are the spec's X11
  * (build/engine-spec.md).
  */

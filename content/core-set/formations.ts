@@ -1,28 +1,23 @@
 /**
- * The core set's formations: Neutral, the starter, and the 32 of step 5i (11 common, 12 rare, 9 legendary).
+ * The core set's formations: Neutral, the starter, and 32 more (11 common, 12 rare, 9 legendary).
  *
- * Written from step 5i's fill (its design, kept in git history), its rulings winning where they differ (its third round,
- * the director's, over the first two). A seat is a position: its own stats, and the statuses it gives the unit sitting there.
- * A formation's own stats and statuses are its party effect, given to every unit in it. Statuses are universal: nothing here
- * applies one for less or more than its own length. Where the engine doesn't act on a field yet, it's written in the shape
- * build/engine-spec.md gives (X numbers in the comments), for wave 3 to check against the merged engine.
- *
- * Step 5i (the build's retire share): the nine old formations (Vanguard, Champion, Ambush, Tortoise, Scatter, Blitz, Caravan,
- * Last stand, Escort) and their four statuses went before this file was written.
+ * A seat is a position: its own stats, and the statuses it gives the unit sitting there. A formation's own stats and statuses
+ * are its party effect, given to every unit in it. Statuses are universal: nothing here applies one for less or more than its
+ * own length. The X numbers in the comments are the engine features of steps/05-core-set/5i-synergy/build/engine-spec.md.
  */
 import type { ConditionT, EffectT, EventSpecT, FixedStatT, FormationT, NumT, ReactionT, StatusT, TargetRuleT, TestT, ToT, UnitCondT } from "../../src/schema.js";
 import { idOf, pieceStatus, type Build, type BuildTag, type Builds } from "./pieces/kit.js";
 import { marked } from "./pieces/shared.js";
 import { AGGRO_STEP, FLAT_STACKS, SPECIAL, crit, stepFor } from "./scale.js";
 
-// ─── The words, as numbers (the fill's "The words, as numbers") ──────
+// ─── The words, as numbers ───────────────────────────────────────────────────
 
-/** A seat's stat step: one and a quarter gear steps (step 5f round 4), as today's formations had it. */
+/** A seat's stat step: one and a quarter gear steps. */
 export const FORMATION_STEP = 1.25;
 type Change = { stat: string; flat: number };
 /**
  * n seat steps of a stat (a negative n gives it up): Attack, Magic and Armor 1,250, HP 625, Aggro 13, MP regen 3,750 a step.
- * Halves round away from zero, so "draws less" is −13 as the fill's table has it (Math.round alone gave −12).
+ * Halves round away from zero, so "draws less" is −13 (Math.round alone gives −12).
  */
 const st = (stat: string, n: number): Change => {
   const v = n * FORMATION_STEP * stepFor(stat);
@@ -30,7 +25,7 @@ const st = (stat: string, n: number): Change => {
 };
 /** Crit chance in seat steps: "crits more" +3.5, "crits far more" +7. */
 const critSt = (n: number): Change => ({ stat: "crit_chance", flat: crit(n * FORMATION_STEP) });
-/** Special stats sit at their words, unscaled (as Scatter's Decoy did). */
+/** Special stats sit at their words, unscaled. */
 const EVASION: Change = { stat: "evasion", flat: SPECIAL.evasion.medium };
 const THORNS: Change = { stat: "thorns", flat: SPECIAL.thorns.medium };
 const THORNS_HIGH: Change = { stat: "thorns", flat: SPECIAL.thorns.high };
@@ -99,7 +94,7 @@ const twice = (s: Seat): Seat[] => [s, s];
 const thrice = (s: Seat): Seat[] => [s, s, s];
 
 const BUILDS: Build[] = ["landslide", "cuts", "bonfire", "snap", "hunt", "harvest", "ambush", "overflow", "lockdown", "toll", "pact", "phoenix"];
-/** An item's **Builds** line, as the fill writes it ("Toll 1 ●●, Harvest ●"): each build, its rung if named, and its worth in dots. */
+/** An item's **Builds** line ("Toll 1 ●●, Harvest ●"): each build, its rung if named, and its worth in dots. */
 function tags(line: string): BuildTag[] {
   if (!line) return [];
   return line.split(",").map((part) => {
@@ -246,7 +241,7 @@ const PARTS = {
   well: { name: "WELL", text: "Regains MP in fights. Heals on it are stronger.", stats: [st("mp_regen", 1), STRONGER_HEALS], next: "wall" },
 } as const;
 /**
- * A part of the Wheel (G13: it turns every 22 ticks, first at tick 11). Statuses are universal, so the first turn is a part of its
+ * A part of the Wheel (it turns every 22 ticks, first at tick 11). Statuses are universal, so the first turn is a part of its
  * own whose length is 11: each seat starts the fight holding its opening part; when a part runs out, its holder takes the next
  * seat's part for 22. A unit knocked out drops off the wheel; on a revive its seat gives it its opening part again.
  */
@@ -264,7 +259,7 @@ const rare: Entry[] = [
     formation("Hammer and anvil", "rare", "One takes the blows, one strikes like a falling hill, one builds stone around the striker.", [
       { name: "Anvil", text: "Draws more. Guarded when each fight starts.", stats: [st("aggro", 1)], statuses: ["hammer_and_anvil_anvil"] },
       { name: "Hammer", text: "With a slow weapon: basic attacks come half as often and deal triple. Otherwise: Attack up.", statuses: ["hammer_and_anvil_hammer"] },
-      // The spec's simpler shape (engine-spec.md section 4), in place of the fill's "go to the Hammer first".
+      // The spec's simpler shape (engine-spec.md section 4), in place of spine.md's "go to the Hammer first".
       { name: "Mason", text: "When it gives another ally a Shield or a Guard, the Hammer gains the same.", statuses: ["hammer_and_anvil_mason"] },
     ]),
     [
@@ -296,7 +291,7 @@ const rare: Entry[] = [
       { name: "Warden", text: "Taunts when each fight starts.", statuses: ["hunting_party_warden"] },
     ]),
     [
-      // G2 and X11: Marked is shared; each swing moves the Marker's one Mark to the foe it hits.
+      // X11: Marked is shared; each swing moves the Marker's one Mark to the foe it hits.
       held("hunting_party_marker", "Marker", "Its basic attacks Mark their target.", { reactions: [react(on("hit_lands", { kind: "basic" }), give(marked.id, "other"))] }),
       held("hunting_party_chaser", "Chaser", "Everything it does has Seek.", { seek: "all" }),
       held("hunting_party_warden", "Warden", "Taunts when each fight starts.", { reactions: [atStart(give("taunt"))] }),
@@ -405,7 +400,7 @@ const rare: Entry[] = [
       { name: "Donor", text: "Its heals on the Bleeder are doubled.", statuses: ["blood_oath_donor"] },
     ]),
     [
-      // X23 (G12): HP paid, not damage: no Shield soaks it, nothing reacts to it, never below 1 HP. 0.5% of max HP a tick.
+      // X23: HP paid, not damage: no Shield soaks it, nothing reacts to it, never below 1 HP. 0.5% of max HP a tick.
       held("blood_oath_bleeder", "Bleeder", "Pays 0.5% of its max HP every tick, never below 1. Its hits deal half again as much.", {
         pulse: { every: 1, do: [{ op: "pay", hp: { scale: [{ ratio: 0.005, stat: "max_hp", of: "holder" }] }, to: "holder" }] },
         boosts: hits(50),
@@ -442,7 +437,7 @@ const rare: Entry[] = [
       held("knives_drawn_opener", "Opener", "Its first action each fight deals double.", { reactions: [atStart(give("knives_drawn_opening"))] }),
       oneUse("knives_drawn_opening", "OPENER", "Its first action deals double.", on("action_resolve"), { boosts: hits(100) }),
       held("knives_drawn_second", "Second", "Hasted when each fight starts.", { reactions: [atStart(give("haste"))] }),
-      // A Shield of 15% of max HP at the start (between Escort's 12% and Vanguard's 20%); Aggro +13 from tick 6, for the rest of the fight.
+      // A Shield of 15% of max HP at the start; Aggro +13 from tick 6, for the rest of the fight.
       held("knives_drawn_rear_guard", "Rear guard", "Starts each fight behind a Shield. From tick 6, draws more.", {
         reactions: [
           atStart(give("shield", "holder", { scale: [{ ratio: 0.15, stat: "max_hp", of: "holder" }] }), give("knives_drawn_rear_guard_wait")),
@@ -478,7 +473,7 @@ const legendary: Entry[] = [
       ...twice({ name: "Packmate" }),
     ]),
     [
-      // Only its basic attacks' and single-target abilities' hits Mark (X2 notTags: no area hits, no extra strikes). G2: its one
+      // Only its basic attacks' and single-target abilities' hits Mark (X2 notTags: no area hits, no extra strikes). Its one
       // Mark moves with each, so the party's basic attacks follow its last target. A Marked foe that falls with the Lead's Mark
       // (X2 source) brings its abilities 5 ticks closer.
       held("the_pack_lead", "Lead", "Its hits Mark their target. When the foe it Marked falls, its abilities come 5 ticks closer.", {
@@ -492,9 +487,7 @@ const legendary: Entry[] = [
   ),
   entry(
     formation("The forge", "legendary", "The longer the fight, the hotter everyone burns; but the forge is slow to light.", thrice({ name: "Forgehand" }), { statuses: ["the_forge"] }),
-    // G3's Heat, one every 2 ticks (+36% by tick 24, the cap at tick 30); Slow at its own 24 ticks when each fight starts.
-    // Step 5i, step 5, the build's one correction: every 2 ticks (the fill's 4). At 4 the self-Slow outweighed the Heat in every fight the
-    // build test played (Bonfire's far end won 86% in Neutral, 68% in The forge: −17 points), and Heat never reaches Burn.
+    // Heat, one every 2 ticks (+36% by tick 24, the cap at tick 30); Slow at its own 24 ticks when each fight starts.
     [held("the_forge", "The forge", "Gains a Heat every 2 ticks. Slowed when each fight starts.", { pulse: { every: 2, do: [give("heat", "holder", 1)] }, reactions: [atStart(give("slow"))] })],
     "Bonfire 3 ●●●, Landslide ●●, Pact ●",
   ),
@@ -550,7 +543,7 @@ const legendary: Entry[] = [
     ]),
     [
       // X33: only its own heals land. Each fall heals the others to full (again after every revive). X36: down when a fight is won,
-      // it stands with half its max HP, every ability on full cooldown (G10). The status survives the KO, so the unit that fell in
+      // it stands with half its max HP, every ability on full cooldown. The status survives the KO, so the unit that fell in
       // this seat is the one that stands; one moved into the seat while down never held it.
       held("the_undying_martyr", "Martyr", "Can't be healed by others. When it falls, the others heal to full. Down when a fight is won, it stands with half its HP.", {
         heals: "own",
@@ -569,7 +562,7 @@ const legendary: Entry[] = [
     }),
     [
       // Each ally keeps a copy of the count; every party hit adds one to each (its own, and its allies'). The copies stay in step
-      // but for a revived ally's, which starts afresh. A single count shown once is the interface's (NEW 6).
+      // but for a revived ally's, which starts afresh. A single count shown once is the interface's.
       held("the_hurricane", "The hurricane", "Every hit the party lands winds the storm. At 30, Hasted, and it winds again.", {
         reactions: [react(on("hit_lands"), give("the_hurricane_count", "holder", 1)), react(on("hit_lands", { whose: "ally" }), give("the_hurricane_count", "holder", 1))],
       }),
@@ -587,7 +580,7 @@ const legendary: Entry[] = [
       ...twice({ name: "Foothill", text: "While the Peak stands, deals a third more. While it's down, takes double.", statuses: ["the_mountain_foothill"] }),
     ]),
     [
-      // The fill's hooks: the Peak gives the two below an aura that ends with it (Per source), exposes them when it falls, and
+      // The Peak gives the two below an aura that ends with it (Per source), exposes them when it falls, and
       // lifts that and gives the aura again when it stands. Its status survives the KO so it can answer both.
       held("the_mountain_peak", "Peak", "Taunts all fight. While it stands, the others deal a third more; while it's down, they take double.", {
         survivesKO: true,
@@ -650,5 +643,5 @@ export const formations: FormationT[] = [neutral, ...entries.map((e) => e.format
 /** Every status behind a seat or a formation's effect. */
 export const effects: StatusT[] = entries.flatMap((e) => e.statuses);
 
-/** Designer data, never in the pack: which builds and rungs each formation serves, from the fill's **Builds** lines. */
+/** Designer data, never in the pack: which builds and rungs each formation serves, from its **Builds** line. */
 export const builds: Builds = Object.fromEntries(entries.map((e) => [e.formation.id, e.builds]));

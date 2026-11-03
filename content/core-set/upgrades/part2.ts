@@ -1,13 +1,13 @@
 /**
- * Step 5i, step 5: the upgrades of the Hexer, Monk, Assassin, Vampire, Pyromancer, Frostweaver, Stormcaller and Geomancer (a power step and two versions for each ability and passive, as five forms
- * each) and their mythics, from step 5i's fill (its design, kept in git history).
+ * The upgrades of the Hexer, Monk, Assassin, Vampire, Pyromancer, Frostweaver, Stormcaller and Geomancer (a power step and two versions for each ability and passive, as five forms
+ * each) and their mythics.
  * `upgrades` joins the pack's upgrades, `abilities` (the ability forms) its abilities, `statuses` (passive forms and helpers,
  * and the mythics' statuses) its statuses, `mythics` its gear and the rogue's stock; `builds` is designer data, never in the pack.
  *
  * Each form is built from the class's own ability or passive in classes.ts, so a form keeps everything of the base it doesn't
- * name. The power step is the training rule's "two fifths more" (src/rogue.ts, UPGRADE) of the amount the fill names, or a
- * cooldown a word shorter (by the base's own id, so its jitter stays), or a rung cheaper. Every number is the fill's.
- * Hooks use the engine spec's additions (build/engine-spec.md, X1 onward); the engine acts on them once wave 2's engine lands.
+ * name. The power step is the training rule's "two fifths more" of the amount the card names, or a cooldown a word shorter
+ * (by the base's own id, so its jitter stays), or a rung cheaper.
+ * Hooks use the engine spec's additions (build/engine-spec.md, X1 onward).
  */
 import type { AbilityT, EffectT, GearT, NumT, ReactionT, StatusT, TargetRuleT, ToT, UpgradeT } from "../../../src/schema.js";
 import { abilities as baseAbilities, classes, passives, T } from "../classes.js";
@@ -16,7 +16,7 @@ import { own, piece, pieceStatus, type Build, type BuildTag, type Builds } from 
 
 // ─── Words and helpers ───────────────────────────────────────────────────────
 
-/** The power step's "more": two fifths more (src/rogue.ts, UPGRADE.amount). */
+/** The power step's "more": two fifths more. */
 const POWER = 1.4;
 /** Cold hex's own multiplier on the few word (classes.ts): enough Chill for a Hexer to reach a shatter alone. */
 const COLD_HEX = 1.3;
@@ -64,9 +64,9 @@ const passiveCard = (cls: string) => classes.find((c) => c.id === cls)!.passive!
 
 type Ver = {
   name: string;
-  /** Its card, the fill's, word for word. */
+  /** Its card. */
   text: string;
-  /** The builds it serves, in the fill's order: the first is worth 2 to it, the rest 1. */
+  /** The builds it serves, in order: the first is worth 2 to it, the rest 1. */
   builds: Build[];
   /** What the power step adds to this version's card, where it differs from the upgrade's own power card. */
   plus?: string;
@@ -342,7 +342,7 @@ abilityUp({
   form: (v, _k, plus) => ({
     ...(plus ? { mp: 200 } : {}),
     ...(v === "a" ? { if: { side: "foes", where: { casting: true } }, target: T.castingFoe } : {}),
-    // No longer skips Silenced foes.
+    // Unlike the base, it doesn't skip Silenced foes.
     ...(v === "b" ? { target: T.notTauntingFoe, do: [phys(hitOf("attack", "normal"), { apply: [{ status: "rot" }, { status: "bleed", stacks: stacks("many", "attack") }] })] } : {}),
   }),
 });
@@ -412,7 +412,7 @@ helper(marker("drain_the_well", "DRAIN THE WELL", "Its ability's hit drains MP f
   }],
 }));
 
-/** Blood gift's price (G12, X23): a fifth of its max HP, paid, not damage. */
+/** Blood gift's price (X23): a fifth of its max HP, paid, not damage. */
 const PRICE = 0.2;
 const price: EffectT = { op: "pay", hp: from("max_hp", PRICE), to: "self" };
 abilityUp({
@@ -427,7 +427,7 @@ abilityUp({
       do: [price, { op: "mp", amount: from("max_hp", PRICE * k) }, apply("clarity")],
     }
       : v === "b" ? {
-        // The revives' word and price; every action on its full cooldown (G10).
+        // The revives' word and price; every action on its full cooldown.
         cooldown: cd("very_long", "blood_gift"), mp: 650,
         if: [{ side: "allies", where: { ko: true } }, { side: "self", where: { hpAtLeast: 35 } }],
         target: T.koAlly,
@@ -790,7 +790,7 @@ helper(kit("nights_edge_strike", "NIGHT'S EDGE", "Its next hit deals double dama
   reactions: [{ on: { event: "hit_lands" }, do: [removeMine("nights_edge_strike")] }],
 }));
 
-// Vampire: each ally's fall heals it to full and adds a debt; each killing blow it lands while in debt raises a fallen ally (G10: on cooldown).
+// Vampire: each ally's fall heals it to full and adds a debt; each killing blow it lands while in debt raises a fallen ally (on cooldown).
 mythic({
   name: "Thrall's chalice", slot: "offhand", rarity: "mythic", mythic: "vampire",
   text: "When an ally falls, the Vampire heals to full. The next time the Vampire lands a killing blow, a fallen ally rises with a quarter of its max HP.",

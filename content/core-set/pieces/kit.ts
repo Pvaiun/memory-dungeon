@@ -1,5 +1,5 @@
 /**
- * Step 5i, step 5: the helpers every content share writes its items with, so the 240 pieces, 32 formations, 64 upgrades
+ * The helpers every content file writes its items with, so the 240 pieces, 32 formations, 64 upgrades
  * and 16 mythics read alike. Numbers come from scale.ts's words; nothing here decides a value.
  */
 import type { GearT, NumT, StatusT, WeaponT } from "../../../src/schema.js";
@@ -70,7 +70,6 @@ export function piece(o: PieceOpts): GearT {
     const kind = o.weapon?.kind ?? o.kind;
     g.weapon = { ...(kind ? { kind } : {}), amount: kind ? weaponHit(kind) : 0, ...o.weapon } as WeaponT;
   }
-  // Gear.rarity lands with schema 0.8; set it this way so the file compiles on either side of that change.
   (g as GearT & { rarity?: Rarity }).rarity = o.rarity;
   return g;
 }

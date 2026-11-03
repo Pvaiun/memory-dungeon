@@ -1,12 +1,12 @@
 /**
- * Step 5i, step 5: the upgrades of the Knight, Cleric, Ranger, Bramble knight, Hoplite, Paladin, Valkyrie and Bard (a power step and two versions for each ability and passive, as five forms
- * each) and their mythics, from step 5i's fill (its design, kept in git history).
+ * The upgrades of the Knight, Cleric, Ranger, Bramble knight, Hoplite, Paladin, Valkyrie and Bard (a power step and two versions for each ability and passive, as five forms
+ * each) and their mythics.
  * `upgrades` joins the pack's upgrades, `abilities` (the ability forms) its abilities, `statuses` (passive forms and helpers, and the mythics' statuses) its
  * statuses, `mythics` its gear and the rogue's stock; `builds` is designer data, never in the pack.
  *
- * Every form is built from its class's ability or passive as classes.ts has it: a form changes only what its line changes. The power step is the
- * fill's (two fifths more of an amount or stacks, one cooldown word shorter, or one rung down the MP ladder), and lands on a version as the fill says.
- * Engine additions are written in build/engine-spec.md's shapes (X1 onward); the engine acts on them once wave 2's engine shares land.
+ * Every form is built from its class's ability or passive as classes.ts has it: a form changes only what its line changes. The power step is
+ * two fifths more of an amount or stacks, one cooldown word shorter, or one rung down the MP ladder.
+ * Engine additions are written in build/engine-spec.md's shapes (X1 onward).
  */
 import type { AbilityT, EffectT, GearT, NumT, ReactionT, StatusT, TargetRuleT, ToT, UpgradeT } from "../../../src/schema.js";
 import { formId, type UpgradeFormT } from "../../../src/schema.js";
@@ -36,7 +36,7 @@ const both = (pct: NumT) => [{ tag: "physical", pct }, { tag: "magical", pct }];
 /** A status's stat read off its holder: `of: holder`, as a status must say. */
 const ofHolder = (ratio: number, stat: string): NumT => ({ scale: [{ ratio, stat, of: "holder" }] });
 
-/** The phrase "the ally foes are most drawn to" (upgrades-1.md): a Taunting ally if there is one (the most Aggro among several), otherwise the most Aggro. */
+/** The phrase "the ally foes are most drawn to": a Taunting ally if there is one (the most Aggro among several), otherwise the most Aggro. */
 const DRAWN: TargetRuleT = { side: "allies", where: { has: "taunt" }, ifNone: "any", pick: "highest", by: { stat: "aggro" } };
 
 const baseAbility = (id: string): AbilityT => {
@@ -92,7 +92,7 @@ const marker = (id: string, name: string, text: string, body: Partial<StatusT>):
 const ups: ReturnType<typeof abilityUpgrade | typeof passiveUpgrade>[] = [];
 const helpers: StatusT[] = [];
 const buildTags: Builds = {};
-/** Designer data: version A's and B's builds, on their forms with and without the power step (worth ●● each; the fill names builds, not worth). */
+/** Designer data: version A's and B's builds, on their forms with and without the power step (worth ●● each). */
 function tag(id: string, a: Build[], b: Build[]) {
   for (const [f, list] of [["a", a], ["ap", a], ["b", b], ["bp", b]] as const) buildTags[formId(id, f)] = list.map((build) => ({ build, worth: 2 }));
 }
@@ -119,8 +119,8 @@ tag("vanguard", ["landslide", "ambush"], ["toll", "lockdown"]);
   /** Stone guard: the other ally with the most Armor, Guarded and given a Shield of a quarter of the Knight's Armor, read when it lands. */
   const stoneGuard: Changes = { target: { side: "others", pick: "highest", by: { stat: "armor" } }, do: [apply("guard"), apply("shield", { stacks: { scale: [{ ratio: 0.25, stat: "armor", of: "self" }] } })] };
   /**
-   * Cover: another ally in a wind-up; with nobody else casting, the other ally with the lowest share of HP. The fill's "the one with the most wind-up
-   * left" has no `by` in the schema (no engine addition names it), so among two casters it's the one lower in HP: the rule's fallback does the rest.
+   * Cover: another ally in a wind-up; with nobody else casting, the other ally with the lowest share of HP. "The one with the most wind-up left"
+   * has no `by` in the schema, so among two casters it's the one lower in HP: the rule's fallback does the rest.
    */
   const cover: Changes = { target: { side: "others", where: { casting: true }, ifNone: "any", pick: "lowest", by: "hp_share" } };
   ups.push(abilityUpgrade("knight", "fortify", {
@@ -183,7 +183,7 @@ tag("vanguard", ["landslide", "ambush"], ["toll", "lockdown"]);
 {
   const on = apply("last_rites_on", { to: "holder" });
   const off = removeBuff("last_rites_on");
-  /** Today's pair, at a line: below it the cooldowns halve; healed back to it, they return. */
+  /** The base's pair, at a line: below it the cooldowns halve; healed back to it, they return. */
   const own = (line: number): ReactionT[] => [
     { on: { event: "hp_lost" }, do: [apply("last_rites_on", { to: { side: "self", where: { hpBelow: line } } })] },
     { on: { event: "healed" }, do: [removeBuff("last_rites_on", { side: "self", where: { hpAtLeast: line } })] },
@@ -258,7 +258,7 @@ tag("vanguard", ["landslide", "ambush"], ["toll", "lockdown"]);
 
 {
   const raiseHp = (ratio: number): NumT => ({ scale: [{ ratio, stat: "max_hp", of: "target" }] });
-  /** Martyr's raise (X23, G12): the revive reads the Cleric's HP first, then the Cleric pays half its current HP. No MP. */
+  /** Martyr's raise (X23): the revive reads the Cleric's HP first, then the Cleric pays half its current HP. No MP. */
   const martyr = (ratio: number): Changes => ({
     mp: 0,
     do: [{ op: "revive", hp: { scale: [{ ratio, hp: "current", of: "self" }] } }, { op: "pay", hp: { scale: [{ ratio: 0.5, hp: "current", of: "self" }] }, to: "self" }],
@@ -375,7 +375,7 @@ tag("vanguard", ["landslide", "ambush"], ["toll", "lockdown"]);
 {
   /**
    * Briar's Bleed on each blow its Thorns deal. Every form also hears Heartwood mail's strikes (the mythic's Thorns on the attackers of allies), which
-   * the fill has Briar follow; the base Briar is classes.ts's, so the mythic itself bleeds for it (see Heartwood mail).
+   * Briar follows; the base Briar is classes.ts's, so the mythic itself bleeds for it (see Heartwood mail).
    */
   const bleedOn = (status: string, k: number, more: EffectT[] = []): ReactionT => ({ on: { event: "damage_dealt", status }, do: [apply("bleed", { stacks: own("few", "armor", k), to: "other" }), ...more] });
   const THORNS = ["thorns", "heartwood_mail"];
@@ -507,7 +507,7 @@ tag("vanguard", ["landslide", "ambush"], ["toll", "lockdown"]);
 
 {
   /**
-   * Watch the anchor: Aegis on the ally with the most Aggro that holds none. The fill's phrase (a Taunting ally first) can't sit beside the Fizzle
+   * Watch the anchor: Aegis on the ally with the most Aggro that holds none. DRAWN's phrase (a Taunting ally first) can't sit beside the Fizzle
    * rule in one target rule: `ifNone: any` drops the `lacks`, and the Aegis would fizzle on the anchor that already holds one.
    */
   const anchor: Changes = { target: { side: "allies", where: { lacks: "aegis" }, pick: "highest", by: { stat: "aggro" } } };
@@ -594,7 +594,7 @@ tag("vanguard", ["landslide", "ambush"], ["toll", "lockdown"]);
 {
   const heal = (ratio: number, to?: TargetRuleT): EffectT => ({ op: "heal", amount: from("magic", ratio), ...(to ? { to } : {}) });
   const absolve = (ratio: number): Changes => ({ do: [{ op: "remove", label: "debuff" }, heal(ratio), { op: "remove", label: "debuff", to: T.otherLowestShareAlly }, heal(ratio, T.otherLowestShareAlly)] });
-  /** Penance: both other allies, cleansed and healed for twice as much; the Paladin pays a fifth of each heal in HP (X23, G12), so the price counts the allies healed (X8). */
+  /** Penance: both other allies, cleansed and healed for twice as much; the Paladin pays a fifth of each heal in HP (X23), so the price counts the allies healed (X8). */
   const penance = (ratio: number): Changes => ({
     if: [{ side: "others", where: { hpBelow: 100 } }, { side: "self", where: { hpAtLeast: 35 } }],
     target: { side: "others", pick: "all" },
@@ -801,7 +801,7 @@ tag("vanguard", ["landslide", "ambush"], ["toll", "lockdown"]);
 }
 
 // ═══ Mythics ═════════════════════════════════════════════════════════════════
-// One per class, no stat steps (G15). A piece's text is its effect only: the interface shows its slot and its one class.
+// One per class, no stat steps. A piece's text is its effect only: the interface shows its slot and its one class.
 
 const mythicStatuses: StatusT[] = [];
 const mythicGear: GearT[] = [];

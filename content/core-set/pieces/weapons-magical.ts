@@ -1,6 +1,6 @@
 /**
- * Step 5i, step 5: the five magical weapon kinds' 40 pieces, from step 5i's fill (its design, kept in git history)
- * and steps/05-core-set/5i-synergy/build/engine-spec.md (its section 6 fixes Dawnblade and the Lightning rod).
+ * The five magical weapon kinds' 40 pieces; steps/05-core-set/5i-synergy/build/engine-spec.md section 6 fixes Dawnblade and the
+ * Lightning rod.
  * `gear` joins the pack's gear and the rogue's stock; `statuses` the pack's statuses; `builds` is designer data, never in the pack.
  *
  * Every weapon here hits as its kind's plain weapon does (damage medium, ratio medium, from Magic: `piece()`'s default); no piece
@@ -20,11 +20,7 @@ const onBasic = (...effects: EffectT[]) => ({ on: { event: "hit_lands" as const,
 /** A reaction at the fight's start. */
 const atStart = (...effects: EffectT[]) => ({ on: { event: "fight_start" as const }, do: effects });
 
-/**
- * One weapon of a kind, through `piece()`. A stand-in until kit.ts or the validator settles it: `piece()` gives a legendary tier
- * powerful and source drop, which the validator's pre-5i rule refuses (powerful comes only from unlock), so a powerful piece here
- * says unlock, as the repo's fixtures do. The rogue's ordinary pool skips powerful pieces either way, so nothing plays differently.
- */
+/** One weapon of a kind, through `piece()`. A powerful piece says source unlock, as the validator asks. */
 function weapon(name: string, kind: string, rarity: Rarity, text: string, rest: { stats?: Change[]; statuses?: string[]; note?: string } = {}): GearT {
   const g = piece({ name, kind, rarity, text, slot: "weapon", ...(rest.stats ? { stats: rest.stats } : {}), ...(rest.statuses ? { statuses: rest.statuses } : {}), ...(rest.note ? { note: rest.note } : {}) });
   return g.tier === "powerful" ? { ...g, source: "unlock" } : g;
@@ -37,7 +33,7 @@ const ifHeld = (status: string) => ({ scale: [{ ratio: 1, when: { has: status },
 
 /**
  * Cinderheart staff: what one stack of Burn deals over its whole life, read from Burn's own numbers (its damage a stack × the sum of
- * its decay, a stack dropping by its share each pulse until under one), at the fill's 20 stacks: 55 × 6.36, about 350.
+ * its decay, a stack dropping by its share each pulse until under one), at 20 stacks: 55 × 6.36, about 350.
  */
 const BURN_LIFE = (() => {
   const ref = 20;
@@ -244,7 +240,7 @@ export const gear: GearT[] = [
     { statuses: ["cinderheart_staff"], note: `The flare is ${BURN_LIFE} a stack: Burn's damage a stack × the sum of its decay at 20 stacks, read from scale.ts.` }),
 ];
 
-// ─── Designer data: the builds each piece serves (the fill's Builds lines) ──
+// ─── Designer data: the builds each piece serves ─────────────────────────────
 
 const t = (build: Build, worth: BuildTag["worth"], rung?: BuildTag["rung"]): BuildTag => ({ build, worth, ...(rung ? { rung } : {}) });
 

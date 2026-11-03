@@ -1,7 +1,6 @@
 /**
- * Step 5i, step 5: the six physical weapon kinds' 48 pieces, from step 5i's fill (its design, kept in git history):
- * no balancing rules, statuses at their own length. Hooks are today's primitives or the
- * engine spec's additions (build/engine-spec.md, X1 onward), which the engine shares are building beside this share.
+ * The six physical weapon kinds' 48 pieces: no balancing rules, statuses at their own length. Hooks are the engine's
+ * primitives or the engine spec's additions (steps/05-core-set/5i-synergy/build/engine-spec.md, X1 onward).
  *
  * `gear` joins the pack's gear and the rogue's stock; `statuses` the pack's statuses; `builds` is designer data, never in the pack.
  */
@@ -23,7 +22,7 @@ const onStart = (...effects: EffectT[]): ReactionT => ({ on: { event: "fight_sta
 const helper = (id: string, name: string, text: string, body: Partial<StatusT>): StatusT =>
   ({ id, name, text, label: "buff", show: "sheet", stacking: "refresh", ...body }) as StatusT;
 
-/** The fill's Builds line, as written ("Cuts 2 ●●●, Hunt 1, Toll ●"): a rung with no dots is worth ● there. */
+/** A Builds line, as written ("Cuts 2 ●●●, Hunt 1, Toll ●"): a rung with no dots is worth ● there. */
 const BUILD_NAMES: Record<string, Build> = {
   landslide: "landslide", cuts: "cuts", bonfire: "bonfire", snap: "snap", hunt: "hunt", harvest: "harvest",
   ambush: "ambush", overflow: "overflow", lockdown: "lockdown", toll: "toll", pact: "pact", phoenix: "phoenix",
@@ -54,8 +53,8 @@ add(piece({ name: "Keen dirk", kind: "dagger", slot: "weapon", rarity: "common",
 add(piece({ name: "Parrying dagger", kind: "dagger", slot: "weapon", rarity: "common", text: "Evasion medium, Accuracy medium.", stats: [sp("evasion", "medium"), sp("accuracy", "medium")] }), [], "Cuts 1, Toll ●");
 
 {
-  // The fill's hook gave the Bleed 0 stacks once the foe holds the mark; a reaction test (X3) skips the whole reaction instead,
-  // so later hits make no empty Bleed application. The mark is a marker (X14): no Cleanse or Dispel lifts it.
+  // Once the foe holds the mark, a reaction test (X3) skips the whole reaction, so later hits make no empty Bleed application.
+  // The mark is a marker (X14): no Cleanse or Dispel lifts it.
   const id = idOf("Weeping kris"), mark = `${id}_mark`;
   add(
     piece({ name: "Weeping kris", kind: "dagger", slot: "weapon", rarity: "uncommon", text: "Crit chance +1. Its first hit on each foe adds a few Bleed (from Attack).", stats: [critStep(1)], statuses: [id] }),
@@ -144,8 +143,8 @@ add(
 
 add(
   piece({ name: "Flurry wraps", kind: "fist", slot: "weapon", rarity: "legendary", text: "Double strike medium. Its extra strikes can strike again: each one rolls Double strike for one more, at most two more after the first, and each is a fifth weaker than the strike before it.", stats: [sp("double_strike", "medium")], statuses: ["flurry_wraps"] }),
-  // X27: the chain. Its strike rolls Double strike as the stat's own does; the engine is asked (the report) to let this chained
-  // strike take the place of the plain Double strike's on its holder, so a swing rolls Double strike once.
+  // X27: the chain. Its strike rolls Double strike as the stat's own does, and takes the place of the plain Double strike's on
+  // its holder, so a swing rolls Double strike once.
   [pieceStatus("flurry_wraps", "Flurry wraps", "Its extra strikes can strike again, up to twice, each a fifth weaker.", { strike: { scale: "double_strike", to: "target", chain: { times: 2, share: 80 } } })],
   "Cuts 3 ●●●, Snap ●●, Pact ●●",
 );
@@ -156,7 +155,7 @@ add(
     pieceStatus("still_hand", "Still hand", "Its hits on a Stunned or Silenced foe always crit and add several Sunder. When it Stuns a foe, its ability with the longest cooldown left is ready.", {
       crits: [{ when: { hasAny: ["stun", "silence"] }, chance: 100 }], // X4 (hasAny), X25
       reactions: [
-        // The fill wrote the Sunder as stacks × a condition (0 off a held foe); a reaction test (X3) skips it instead.
+        // A reaction test (X3) adds the Sunder only to a held foe.
         { on: { event: "hit_lands" }, if: { unit: "other", where: { hasAny: ["stun", "silence"] } }, do: [apply("sunder", "other", own("several", "attack"))] },
         // X1/X2: a Stun the holder applied (a Chill shatter's Stun is its holder's own, so it doesn't count). X21: ready.
         { on: { event: "status_gained", status: "stun", whose: "foe", other: "holder" }, do: [{ op: "cooldown", which: "longest", set: "ready", to: "self" }] },
@@ -281,7 +280,7 @@ add(
 
 add(
   piece({ name: "Pike wall", kind: "spear", slot: "weapon", rarity: "legendary", text: "When a foe hits an ally with less Armor than the wearer, the wearer strikes that foe with its spear.", statuses: ["pike_wall"] }),
-  // X3 and X4 (the ally that took the hit has less Armor than the wearer), X28 (a reaction that strikes). No limit (third round).
+  // X3 and X4 (the ally that took the hit has less Armor than the wearer), X28 (a reaction that strikes). No limit.
   [pieceStatus("pike_wall", "Pike wall", "When a foe hits an ally with less Armor, it strikes that foe.", {
     reactions: [{ on: { event: "hit_taken", whose: "ally" }, if: { unit: "owner", where: { lower: { stat: "armor" } } }, do: [{ op: "strike", to: "other" }] }],
   })],
@@ -433,7 +432,7 @@ add(
 add(
   piece({
     name: "Worldbreaker", kind: "great_weapon", slot: "weapon", rarity: "legendary", text: "Its basic attacks come half as often, deal triple, and Stun their target.",
-    // Attack speed −100 is half as often. Its shape and Stun hold whatever else the unit holds (third round: G5 withdrawn).
+    // Attack speed −100 is half as often. Its shape and Stun hold whatever else the unit holds.
     stats: [{ stat: "attack_speed", flat: -100 }], statuses: ["worldbreaker"], weapon: { apply: [{ status: "stun" }] },
   }),
   [pieceStatus("worldbreaker", "Worldbreaker", "Its basic attacks deal triple.", { boosts: [{ tag: "basic", pct: 200 }] })],

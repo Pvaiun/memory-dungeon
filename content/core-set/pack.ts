@@ -14,8 +14,8 @@ import { mythicGear, pieceGear, pieceStatuses, upgradeAbilities, upgrades } from
 import { ROGUE_CONFIG, ROGUE_EVENTS, ROGUE_REGIONS } from "./rogue.js";
 
 /**
- * The rogue mode's block. Step 5i: no loot of its own: its stock is the pack's pieces (each fixed at its rarity) and mythics,
- * its formations the pack's, each with its rarity.
+ * The rogue mode's block. No loot of its own: its stock is the pack's pieces (each fixed at its rarity) and mythics, its
+ * formations the pack's, each with its rarity.
  */
 function rogueBlock(): NonNullable<ContentPack["rogue"]> {
   return { config: ROGUE_CONFIG, regions: ROGUE_REGIONS, events: ROGUE_EVENTS };
