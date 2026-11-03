@@ -7,8 +7,10 @@
  * - A party unit's stats are its class's, plus stat grants from its class
  *   passive, gear, formation slot, formation and perks.
  * - Statuses from those are applied at each fight start.
- * - HP and MP carry between fights, and nothing restores them. A knocked-out
- *   unit joins later fights knocked out, until something revives it.
+ * - HP and MP carry between fights. Only a campfire stage or an optional
+ *   restore after a won fight (`ruleset.run.restore`) gives them back. A
+ *   knocked-out unit joins later fights knocked out, until something revives it.
+ *   (The rogue mode keeps its own HP and MP between fights: src/rogue.ts.)
  * - Each unit draws from its own dice: party units by class, enemies by
  *   their place in the fight. The same seed brings the same luck to the same
  *   unit, whatever else is in the fight.
