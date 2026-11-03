@@ -21,7 +21,7 @@ import { h, type Child } from "./dom.js";
 import { actionIconOf, actorEl, faceEl, iconEl, pipEl, statusEl, weaponEl } from "./pixel.js";
 import { gearFor, party, setup, soloParty } from "./state.js";
 
-/** The four gear slots, in the order the sheets list them (step 5j). */
+/** The four gear slots, in the order the sheets list them. */
 export const SLOTS = ["weapon", "armor", "offhand", "amulet"] as const;
 export type GearSlot = (typeof SLOTS)[number];
 
@@ -121,15 +121,15 @@ export function codeSpans(stats: { stat: string; flat?: number; pct?: number }[]
 type Seat = FormationT["positions"][number];
 /**
  * What a formation's own statuses do to everyone, after its text (" Starts each fight with Regen."), in designer view only:
- * since step 5i a formation's text is its card and says the same (the hurricane read twice), so a player reads it once.
+ * a formation's text is its card and says the same, so a player reads it once.
  */
 export const formationNote = (f: FormationT): string => (setup.settings.designer && f.statuses?.length ? ` ${f.statuses.map((s) => c.statuses.get(s)?.text ?? "").join(" ")}` : "");
-/** A seat's stat changes as codes on a card; "no change" only when it has neither codes nor statuses of its own (step 5i). */
+/** A seat's stat changes as codes on a card; "no change" only when it has neither codes nor statuses of its own. */
 export function seatCodes(p: Seat): Child[] {
   const codes = codeSpans(p.stats);
   return codes.length ? codes : p.statuses?.length ? [] : [h("span", { class: "dim" }, "no change")];
 }
-/** A formation's seats as lines, twin seats once with ×2: the name, the stat changes, and what its statuses do (step 5i). */
+/** A formation's seats as lines, twin seats once with ×2: the name, the stat changes, and what its statuses do. */
 export function seatLines(f: FormationT): HTMLElement[] {
   const seen = new Map<string, { p: Seat; n: number }>();
   for (const p of f.positions) {
@@ -170,9 +170,9 @@ export function sizeEl(parts: SizePart[]): HTMLElement | null {
     p.scales.length ? " " : null, scaleEl(p.scales),
   ]));
 }
-/** A whole number of ticks: the director's "round it, even if it's off by a bit". */
+/** A whole number of ticks, rounded even if it's off by a bit. */
 export const tk = (t: number) => String(Math.max(t > 0 ? 1 : 0, Math.round(t)));
-/** A timing in words, as the director asked: "CD 8", "CAST 3". */
+/** A timing in words: "CD 8", "CAST 3". */
 const timing = (label: string, n: string) => h("span", { class: "nowrap" }, `${label} ${n}`);
 /** The sheets' ability icons: between the font's size and double it. */
 const ICON_SCALE = 1.5;
@@ -193,8 +193,8 @@ export function weaponCode(g: GearT, stats: Stats | null): Child[] {
   return [h("span", { class: "wcode" }, w.value ? h("span", { class: "ink" }, w.value) : null, h("span", { class: w.tone }, w.word)), scaleEl(w.scales), timing("CD", tk(w.cooldown)), w.hands === 2 ? h("span", { class: "nowrap" }, "2H") : null];
 }
 /**
- * A piece's card beyond its numbers (step 5i): the piece's own text for anything above common (its effect, in the content's
- * words); a common piece's text only restates its codes. Before rarities, a powerful piece's sentence.
+ * A piece's card beyond its numbers: the piece's own text for anything above common (its effect, in the content's
+ * words); a common piece's text only restates its codes. A piece with no rarity: its sentence when it's powerful.
  */
 export function gearEffect(g: GearT): string | null {
   if (g.rarity) return g.rarity === "common" ? null : g.text;
@@ -203,12 +203,12 @@ export function gearEffect(g: GearT): string | null {
 
 /** The rarities' colours, the same everywhere a rarity shows: uncommon green, rare blue, legendary gold, mythic crimson. */
 export const RARITY_TONE: Record<string, string> = { common: "", uncommon: "good", rare: "buff", legendary: "gold", mythic: "mythic" };
-/** A piece's colour, by its rarity (mythic crimson, the director's pick); a piece with none, gold when powerful. */
+/** A piece's colour, by its rarity; a piece with none, gold when powerful. */
 export const pieceTone = (g: GearT) => (g.rarity ? RARITY_TONE[g.rarity] : g.mythic ? "mythic" : g.tier === "powerful" ? "gold" : "");
 /** A ★ before a legendary or mythic piece's name. */
 const starred = (g: GearT) => (g.rarity ? g.rarity === "legendary" || g.rarity === "mythic" : g.tier === "powerful");
 
-/** A piece's kind in words (step 5i, on every card): its weapon kind, armor type or offhand kind, or AMULET. */
+/** A piece's kind in words (on every card): its weapon kind, armor type or offhand kind, or AMULET. */
 export function kindName(g: GearT): string {
   if (g.slot === "weapon") return g.weapon?.kind ? kindOf(g.weapon.kind).name : "weapon";
   if (g.slot === "armor") return g.armor ? armorName(g.armor) : "armor";
@@ -216,7 +216,7 @@ export function kindName(g: GearT): string {
   return "amulet";
 }
 /**
- * Who can wear a piece (step 5i, on every card): FITS, then the members of `roster` who can, then every other class that can,
+ * Who can wear a piece (on every card): FITS, then the members of `roster` who can, then every other class that can,
  * dimmed; EVERYONE for an amulet; a mythic names its one class. When nobody in the roster can, it says so first, in the
  * debuffs' colour.
  */
@@ -230,7 +230,7 @@ export function wearersLine(g: GearT, roster: readonly string[]): HTMLElement {
     ...names(mine, g.mythic ? "mythic" : "ink"), mine.length && rest.length ? h("span", { class: "dim" }, "·") : null, ...names(rest, "dim"));
 }
 
-/** A slot that can't be filled: the offhand under a two-handed weapon (step 5j). */
+/** A slot that can't be filled: the offhand under a two-handed weapon. */
 export function lockedRow(slot: string): HTMLElement {
   return h("div", { class: "gear-row locked" }, h("span", { class: "art" }, iconEl(SLOT_ICON[slot] ?? TAG_ICON.physical)), h("div", { class: "grow trunc" }, h("div", { class: "line" }, h("span", { class: "dim" }, slot.toUpperCase())), h("div", { class: "line small dim" }, "LOCKED")));
 }
@@ -240,7 +240,7 @@ export const twoHanded = (gear: Record<string, string | undefined>) => !!gear.we
 /**
  * A piece of gear as a card: its sprite or icon (glowing in its rarity's colour), its name (★ legendary or mythic, in the
  * rarity's colour), then its rarity and kind with a weapon's hit and speed and the stat codes; with `who`, the line of who
- * can wear it, the roster first (step 5i); then what it does, in the content's words.
+ * can wear it, the roster first; then what it does, in the content's words.
  */
 export function gearRow(g: GearT | null, slot: string, stats: Stats | null, onClick?: () => void, arrow = true, who?: readonly string[]): HTMLElement {
   const slotName = h("span", { class: "dim" }, slot.toUpperCase());
@@ -270,7 +270,7 @@ export function gearRow(g: GearT | null, slot: string, stats: Stats | null, onCl
 export function abilityBlock(a: AbilityT, stats: Stats | null, designer: boolean, opts: { n?: number; onN?: () => void; cur?: boolean; target?: boolean; dmgMult?: number; opening?: boolean } = {}): HTMLElement {
   const i = abilityInfo(a, stats);
   const tag = abilityTag(a);
-  // Step 5c: an ability starts a fight charged by its slot (ruleset.opening.slots), so its first use is part of the plan.
+  // An ability starts a fight charged by its slot (ruleset.opening.slots), so its first use is part of the plan.
   const head0 = opts.n !== undefined && opts.opening !== false ? headStart(c.pack.ruleset.opening, i.cooldown, opts.n - 1) : undefined;
   const first = head0 !== undefined ? Math.max(0, i.cooldown - head0) : 0;
   const head = h("div", { class: "head" },
@@ -317,7 +317,7 @@ export function passiveBlock(name: string, text: string, icon?: string | null, m
   ];
 }
 /**
- * A class's passive: its own, or the Valkyrie's Einherjar. Step 5i: `form`, the status a trained passive plays as (a
+ * A class's passive: its own, or the Valkyrie's Einherjar. `form`, the status a trained passive plays as (a
  * version's name, "+" for the power step), shown in its place under the passive's icon.
  */
 export function classPassive(id: string, designer = false, form?: string): Child[] {

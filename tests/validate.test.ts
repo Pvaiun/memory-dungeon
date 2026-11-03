@@ -80,7 +80,7 @@ test("schema: elements and physical subtypes are gone (step 5j)", () => {
   expectIssue("schema", (p) => (p.elements = [{ id: "holy", name: "Holy" }]));
 });
 
-// ─── The design's Part 2 ability cards ───────────────────────────────────────
+// ─── Ability cards ───────────────────────────────────────────────────────────
 
 test("cards: Shield Bash (physical, scales with Armor) is valid", () => card(hit({ type: "physical", amount: scale("armor") })));
 test("cards: Fire Bolt (magical, scales with Magic) is valid: a fire theme lives in its name only", () => card(hit({ type: "magical", amount: scale("magic") })));
@@ -369,7 +369,7 @@ test("party: copies of gear can be shared up to the count owned", () => {
   assert.deepEqual(codes(checkParty(PACK, party, { dungeon: DUNGEON, owned: owned(1) })), ["party.gearCount"]);
 });
 
-// ─── Step 5i: schema 0.8's references (steps/05-core-set/5i-synergy/build/engine-spec.md) ──
+// ─── Upgrades, rarity and reactions (steps/05-core-set/5i-synergy/build/engine-spec.md) ──
 
 const FORMS = ["p", "a", "b", "ap", "bp"];
 /** The warrior's Cleave with all five forms, and a passive status with all five, each skipped if named. */

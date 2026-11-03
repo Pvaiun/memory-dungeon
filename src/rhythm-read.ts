@@ -7,8 +7,6 @@
  * quarter, its lowest HP, and where its damage comes from (basic attacks, abilities, each status, Thorns, the shatter).
  *
  *   npx tsx src/rhythm-read.ts [--seeds 20] [--off -50] [--trio landslide,toll]
- *
- * Step 4 swaps the trios for the builds' hand-built parties.
  */
 import { readFileSync } from "node:fs";
 import { advance, loadContent } from "./engine/run.js";
@@ -23,7 +21,7 @@ const OFF = Number(opt("--off") ?? -50);
 const c = loadContent(JSON.parse(readFileSync("content/core-set.pack.json", "utf8")));
 const R = rogue(c);
 
-/** Each build's nearest party with today's classes (builds.md, its first route or closest). */
+/** Each build's nearest party with the content's classes (builds.md, its first route or closest). */
 const TRIOS: Record<string, string[]> = {
   landslide: ["knight", "geomancer", "hoplite"],
   bonfire: ["knight", "pyromancer", "hexer"],

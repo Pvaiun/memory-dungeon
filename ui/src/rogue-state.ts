@@ -32,13 +32,12 @@ function load(): Saved {
   }
 }
 /**
- * A run saved under rules the content no longer has (a run from before step 5j carries an older ROGUE_VERSION; this guards
- * any later change of content within one): its pieces can't be built, or a member wears one that no longer fits, and the
- * run is set aside. The leaders, the heat and the record stay.
+ * A run saved under content that has changed within its ROGUE_VERSION: its pieces can't be built, or a member wears one
+ * that no longer fits, and the run is set aside. The leaders, the heat and the record stay.
  */
 function stale(run: RogueRun): boolean {
   try {
-    // Every piece the run holds or offers (a pending pick's items too). Step 5i: a piece is fixed (no affixes).
+    // Every piece the run holds or offers (a pending pick's items too). A piece is fixed (no affixes).
     const pieces: { base: string }[] = [];
     JSON.stringify(run, (_k, v: unknown) => {
       if (v && typeof v === "object" && "uid" in v && "base" in v && "rarity" in v) pieces.push(v as unknown as { base: string });
@@ -72,7 +71,7 @@ export function saveRogue() {
 export function current(): RogueRun | null {
   if (s.run) {
     prepare(s.run);
-    // Every run keeps a record for balancing (a run begun before records started from where it stands).
+    // Every run keeps a record for balancing; a run without one starts it from where it stands.
     beginRecord(s.run, BUILD);
   }
   return s.run;
@@ -91,7 +90,7 @@ export function prepare(run: RogueRun) {
 }
 
 /**
- * The next run's dice (step 5h round 6): drawn once and kept until a run starts, so the start screen can show the ability each
+ * The next run's dice: drawn once and kept until a run starts, so the start screen can show the ability each
  * leader would set out knowing, and leaving the screen doesn't re-roll it. A run started (or abandoned after) draws new ones.
  */
 export function nextSeed(): number {

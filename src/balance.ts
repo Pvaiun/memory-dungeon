@@ -1,5 +1,5 @@
 /**
- * The balance sheet (step 5e): what happens inside fights, read from the logs, for every class,
+ * The balance sheet: what happens inside fights, read from the logs, for every class,
  * ability, status, enemy, gear piece and formation in the pack, in both modes, at frozen knobs and fixed seeds.
  *
  * A fixed spread of parties (every trio sampled evenly, every formation, every piece of gear a class can wear, plus the
@@ -26,7 +26,7 @@ import type { AbilityT, DungeonT, GearT, Party } from "./schema.js";
 import { patch } from "./sim/content.js";
 import { combos, makeBuild, ORDERS, seat, slotted, STYLES } from "./sim/kits.js";
 import { canEquip } from "./validate.js";
-/** Step 5i: the rogue has no pieces of its own any more (its stock is the pack's pieces, in pack.gear), so its legendary probes are empty. */
+/** The rogue has no pieces of its own (its stock is the pack's pieces, in pack.gear), so its legendary probes are empty. */
 const rogueGear = (_c: Content): GearT[] => [];
 
 const T = 1000; // sub-ticks a tick
@@ -77,7 +77,7 @@ export function fightSets(c: Content, sets: SetId[]): Fight[] {
 
 /**
  * The spread: `trios` trios picked so every class appears about equally often, each in a formation (round robin over all
- * ten), seated by the kit weights, and twice: once wearing a rotation of every piece its class can wear (so what nobody
+ * of them), seated by the kit weights, and twice: once wearing a rotation of every piece its class can wear (so what nobody
  * picks is still measured), once in the campaign tuning's sensible kit. Ability order alternates between the documents'
  * and the shortest cooldown first.
  */
@@ -869,7 +869,7 @@ export function compute(c: Content, t: Tally, setName: string): Sheet {
   // Every stat a unit carries, with what it did.
   const sumCls = (m: string) => cls.reduce((a, k) => a + get(t, `cls|${k}|${m}`), 0);
   const sumEn = (m: string) => ens.reduce((a, e) => a + get(t, `en|${e.id}|${m}`), 0);
-  // Step 5j: one magical kind (it was an element each).
+  // Magic is one damage kind, with no elements.
   const magTaken = (side: "cls" | "en") => (side === "cls" ? sumCls("taken|magical") : sumEn("taken|magical"));
   const magRaw = (side: "cls" | "en") => (side === "cls" ? sumCls("takenRaw|magical") : sumEn("takenRaw|magical"));
   const stats = {

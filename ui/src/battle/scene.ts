@@ -128,7 +128,7 @@ export function backdrop(theme: string, h = H): HTMLCanvasElement {
 const WAIT_FRAMES = [0, 1, 2, 1];
 /** The backdrops with a sky, which get stars at night. */
 const OUTDOOR = new Set(["old_road", "ice_pass", "tower_top"]);
-/** The icon statuses a unit shows, Shield last, with the count to draw (step 5i: never a marker, which is bookkeeping). */
+/** The icon statuses a unit shows, Shield last, with the count to draw (never a marker, which is bookkeeping). */
 export function shownStatuses(u: CUnit): { id: string; count: number | null }[] {
   const out: { id: string; count: number | null }[] = [];
   for (const s of u.statuses) {
@@ -269,7 +269,7 @@ export class Scene {
     this.fx = [];
     for (const v of this.units.values()) (v.cast = null), v.pops.clear(), (v.fades = []);
   }
-  /** Is this status's icon already shown under the unit? (Step 5i: a count's later stacks only move its number.) */
+  /** Is this status's icon already shown under the unit? (A count's later stacks only move its number.) */
   showsIcon(id: string, status: string): boolean {
     return !!this.units.get(id)?.stsTold.has(status);
   }

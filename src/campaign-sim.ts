@@ -343,7 +343,7 @@ function mutate(c: Content, p: Party, owned: ReturnType<typeof ownedAt>, needs: 
   return { formation: p.formation, units: p.units.map((x, i) => (i === u ? { ...x, abilities: rot } : x)) };
 }
 
-/** A rebuilt party keeps the ability order its members had in the parent (step 5c: the order is part of a build). */
+/** A rebuilt party keeps the ability order its members had in the parent (the order is part of a build). */
 function keepOrders(child: Party | null, parent: Party): Party | null {
   if (!child) return null;
   return { ...child, units: child.units.map((u) => ({ ...u, abilities: parent.units.find((x) => x.class === u.class)?.abilities ?? u.abilities })) };
@@ -364,7 +364,7 @@ function carryOver(c: Content, prev: Party, owned: ReturnType<typeof ownedAt>, n
 // ─── Tuning ─────────────────────────────────────────────────────────────────
 
 /**
- * Finds the node's two knobs (pacing pass). First its regular fights alone (the boss and the campfire left out): the
+ * Finds the node's two knobs. First its regular fights alone (the boss and the campfire left out): the
  * hardest foes at which a good share of the sensible builds (`mobShare`, about two and a half times the node's share)
  * still win half their runs of them, and the best builds nearly always do (`mobTarget`), so the regular fights wear a
  * party down and stop some. Then, with those fixed, the boss on full runs: the hardest boss at which `share` of the
@@ -417,8 +417,7 @@ async function tuneNode(c: Content, pool: Pool, i: number, o: { builds: number; 
   let boss = await bisect(o.knob.boss, (k) => check({ dungeon: node.dungeon, foes: foesAt(mob), bossFoes: foesAt(k) }, o.share, o.target));
   let r = await searchNode(c, pool, i, { builds: o.builds, climb: o.climb, foes: foesAt(mob), bossFoes: foesAt(boss), carryFrom: o.carryFrom });
   // The check that keeps the road passable: the best build, scored on fresh seeds, must hold the target. If it doesn't
-  // (the bisection read noisy 24-seed rates), ease the boss and search again. A playtester got stuck on a node that
-  // passed the bisection with its best build at 75%.
+  // (the bisection reads noisy 24-seed rates), ease the boss and search again.
   for (let n = 0; n < 5 && r.best.rate < o.target - 0.04; n++) {
     boss = Math.round(boss - Math.max(8, Math.abs(boss) * 0.12));
     r = await searchNode(c, pool, i, { builds: o.builds, climb: o.climb, foes: foesAt(mob), bossFoes: foesAt(boss), carryFrom: o.carryFrom });
@@ -466,8 +465,7 @@ async function main() {
   /**
    * The share of a node's builds that must win at least half their runs: a ramp, so the first three nodes teach
    * (three in ten builds win), one in eight on nodes 4 to 9, one in eleven from node 10, and one in twenty for the
-   * finale. At one in five everywhere, an AI playtester cleared 17 of 20 nodes on the first try; at one in 25 for the
-   * Tower Top, one got stuck there. --share overrides it.
+   * finale. --share overrides it.
    */
   const shareAt = (i: number) => (opt("--share") ? Number(opt("--share")) : i < 3 ? 0.3 : i < 9 ? 0.12 : i < cp.nodes.length - 1 ? 0.09 : 0.05);
   const saved: Record<string, number | Knob> = JSON.parse(readFileSync(KNOBS, "utf8"));

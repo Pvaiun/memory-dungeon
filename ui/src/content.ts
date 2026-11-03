@@ -13,8 +13,7 @@ import type { AbilityT, ClassDefT, DungeonT, EnemyT, FormationT, GearT, StatusT,
 
 /**
  * The NUMBERS setting: how many times the documents' scale the numbers show, ×1 being 10 a point (the Knight's HP 4
- * shows as 40). Measured over the campaign's runs, the share of status ticks and of heals that show as 1 or 0: ×1, 23%
- * and 46%; ×1.6, 17% and 38%; ×2, 15% and 23%; ×2.5, 6% and 2%; ×3 (the default, a basic hit near 24), 4% and 2%.
+ * shows as 40). The default, ×3 (a basic hit near 24), is where few status ticks and heals show as 1 or 0.
  */
 export const NUMBER_SCALES = [1, 1.3, 1.6, 2, 2.5, 3, 4, 5, 10] as const;
 export const DEFAULT_NUMBERS = 3;
@@ -51,7 +50,7 @@ export const status = (id: string): StatusT => c.statuses.get(id)!;
 export const enemy = (id: string): EnemyT => c.enemies.get(id)!;
 export const gearOf = (id: string): GearT => c.gear.get(id)!;
 /**
- * Step 5i: a status the player sees as an icon (on the field, in the messages, in a unit's state): shown as one, and not a
+ * A status the player sees as an icon (on the field, in the messages, in a unit's state): shown as one, and not a
  * marker, which is bookkeeping (a count, a once-a-fight flag) and hidden as hidden statuses are; `designer` lists markers too.
  */
 export const shownAsIcon = (id: string, designer = false): boolean => {
@@ -59,7 +58,7 @@ export const shownAsIcon = (id: string, designer = false): boolean => {
   return !!d && d.show === "icon" && (designer || d.label !== "marker");
 };
 export const kindOf = (id: string): WeaponKindT => c.weaponKinds.get(id)!;
-/** An armor type's or an offhand kind's name (step 5j). */
+/** An armor type's or an offhand kind's name. */
 export const armorName = (id: string): string => c.pack.armorTypes.find((k) => k.id === id)?.name ?? id;
 export const offhandName = (id: string): string => c.pack.offhandKinds.find((k) => k.id === id)?.name ?? id;
 
@@ -72,7 +71,7 @@ export const shortName = (id: string): string => SHORT[id] ?? (c.classes.get(id)
 export const className = (id: string): string => c.classes.get(id)?.name ?? id;
 /**
  * Each class in one sentence, for its sheet's head, the class list and the celebration. The interface's own words:
- * the content's text opens with a role word ("Curser.", "Healer.") that read as a label, not a line.
+ * the content's text opens with a role word ("Curser.", "Healer.") that reads as a label, not a line.
  */
 const TAGLINE: Record<string, string> = {
   knight: "Guards the weakest ally and pulls foes onto itself.",
@@ -108,7 +107,7 @@ export const STAT_CODE: Record<string, string> = {
   max_hp: "HP", max_mp: "MP", mp_regen: "REG", attack: "ATK", magic: "MAG", armor: "ARM", crit_chance: "CRT", aggro: "AGG",
   evasion: "EVA", accuracy: "ACC", crit_multiplier: "CRD", double_strike: "DBL", thorns: "THN", lifesteal: "LFS", siphon: "SPH",
   healing_received: "HEAL", attack_speed: "SPD", cooldown_reduction: "CDR", cast_time_reduction: "CAST",
-  // Step 5j: one resistance, to magic, so three letters like ARM beside it.
+  // One resistance, to magic, so three letters like ARM beside it.
   magic_resist: "RES",
 };
 /** What an immunity stat keeps off: "immune:status:silence" and "immune:silence" are both Silence (the status's id). */
@@ -129,7 +128,7 @@ export const statusCode = (id: string): string => STATUS_CODE[id] ?? (c.statuses
 export function showStat(key: string, v: number): string {
   const def = c.stats.get(key);
   if (key === "crit_chance" || def?.kind === "points") return `${Math.round(v)}%`;
-  // Aggro is on its own scale, centred on 100 (the director's rule): shown as it is.
+  // Aggro is on its own scale, centred on 100: shown as it is.
   if (key === "aggro") return `${Math.round(v)}`;
   return `${disp(v)}`;
 }

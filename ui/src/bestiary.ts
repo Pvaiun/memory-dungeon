@@ -1,8 +1,8 @@
 /**
  * The bestiary's record, a Pokédex's: the enemies met in a fight (in any mode), and which of those have been looked
  * at, for their NEW tags. In the journey and the rogue mode an enemy not met yet is a silhouette and ???; free play,
- * the sandbox, shows them all. Kept in localStorage under its own key. An install from before the record starts with
- * every enemy of the journey's cleared runs met, so a player who got far doesn't find an empty book.
+ * the sandbox, shows them all. Kept in localStorage under its own key. A first load starts with every enemy of the
+ * journey's cleared runs met, so a player who got far doesn't find an empty book.
  */
 import { c } from "./content.js";
 import { cleared, mode, nodes } from "./journey.js";

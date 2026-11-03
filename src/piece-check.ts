@@ -1,5 +1,5 @@
 /**
- * The piece check (step 5i, step 5): does every item do what its card
+ * The piece check: does every item do what its card
  * says? Each gear piece, mythic, formation and upgrade form is fielded on a party of three that can carry it, and plays a
  * fixed set of the rogue's own fights at their knobs on fixed seeds, logged, beside the same party without it (the control).
  *

@@ -20,7 +20,7 @@ export type Portraits = "faces" | "sprites" | "mixed";
 export type Settings = {
   speed: number; step: boolean; partyBars: boolean; sound: boolean; music: boolean; designer: boolean; autoContinue: boolean; theme: string;
   numbers: number; hitPause: number; seedLock: boolean; portraits: Portraits;
-  /** Step 5g round 9 (the director's): the ticks each ability slot starts charged by (first, second, third), for them to try; zero by default. */
+  /** The ticks each ability slot starts charged by (first, second, third); zero by default. */
   headStart: [number, number, number];
 };
 /** The HEAD START choices, in ticks. */
@@ -40,7 +40,7 @@ export const HIT_PAUSES = [0.25, 0.5, 0.75, 1] as const;
 export type Loadout = { party: string[]; formation: string; gear: Record<string, Record<string, string>> };
 
 export type Setup = Loadout & {
-  /** The mode the loadout in use belongs to; `other` is the other mode's. An install from before the journey has none: its loadout is free play's. */
+  /** The mode the loadout in use belongs to; `other` is the other mode's. An older save has none: its loadout is free play's. */
   mode?: Mode;
   other?: Loadout;
   abilities: Record<string, string[]>;
@@ -79,7 +79,7 @@ function load(): Setup {
     const s = { ...fresh(), ...stored, mode: stored.mode === "rogue" ? "free" : stored.mode ?? "free" };
     const old = s.settings as Partial<Settings> & { tickMs?: number; palette?: string; bigNumbers?: boolean };
     s.settings = { ...fresh().settings, ...old };
-    // NUMBERS was SMALL, MEDIUM or BIG (×1, ×3, ×10) before it took a multiplier, and a BIG NUMBERS switch before that.
+    // An older save holds NUMBERS as SMALL, MEDIUM or BIG (×1, ×3, ×10), or as a BIG NUMBERS switch.
     const named: Record<string, number> = { small: 1, medium: 3, big: 10 };
     const was = old.numbers as unknown;
     s.settings.numbers = typeof was === "number" ? was : typeof was === "string" ? named[was] ?? DEFAULT_NUMBERS : old.bigNumbers ? 10 : DEFAULT_NUMBERS;
@@ -152,7 +152,7 @@ export function gearFor(cls: string): Record<string, string> {
     const plain = plainWeapon(c, cls);
     if (plain) g.weapon = plain;
   }
-  // Step 5j: a two-handed weapon leaves no hand for an offhand.
+  // A two-handed weapon leaves no hand for an offhand.
   if (g.offhand && handsOf(c.pack, c.gear.get(g.weapon ?? "")) === 2) delete g.offhand;
   return g;
 }

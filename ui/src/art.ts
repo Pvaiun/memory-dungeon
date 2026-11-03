@@ -15,7 +15,7 @@ export type Manifest = {
   classes: Record<string, string>;
   enemies: Record<string, { file: string; w: number; h: number; scale: number; name?: string }>;
   statuses: Record<string, string>;
-  /** An ability's own icon by base id (the director's skill pack, Oct 31, 2026): 32×32, one pixel per art pixel. */
+  /** An ability's own icon by base id: 32×32, one pixel per art pixel. */
   abilities?: Record<string, string>;
   vfx: Record<string, { file: string; frames: number }>;
   /** Weapon strips by gear id: three frames of 48×32, drawn in the hand of a party member. */
@@ -43,7 +43,7 @@ export async function loadArt(): Promise<void> {
   manifest.faces ??= {};
   manifest.backdrops ??= {};
   manifest.abilities ??= {};
-  // Step 5j: the new kinds' plain pieces borrow a strip until the director's art arrives.
+  // The plain pieces of kinds with no art of their own borrow a strip.
   for (const [id, from] of Object.entries(WEAPON_STAND_INS)) if (!manifest.weapons[id] && manifest.weapons[from]) manifest.weapons[id] = manifest.weapons[from];
   const files = [
     ...Object.values(manifest.classes), ...Object.values(manifest.enemies).map((e) => e.file), ...Object.values(manifest.vfx).map((v) => v.file), manifest.iconset,
@@ -76,10 +76,10 @@ export function enemyName(ref: string, unitName: string): string {
 }
 export const enemyDisplayName = (ref: string): string => manifest?.enemies[ref]?.name ?? c.enemies.get(ref)?.name ?? ref;
 /**
- * Stand-in strips for the plain pieces of the kinds step 5j added, from the strips the packs already gave, until the
- * director supplies their own: the great weapon holds the old axe; the rune sword the Oathblade's glowing blade; the mace,
- * the wand, the rod and the staff the old plain staffs whose look fits who carries them first (the Light staff went to the
- * mace; the Stormcaller's wand, the Frostweaver's rod, the Pyromancer's staff).
+ * Stand-in strips for the plain pieces of kinds with no art of their own, from the strips the packs give: the great
+ * weapon holds the axe; the rune sword the Oathblade's glowing blade; the mace, the wand, the rod and the staff the plain
+ * staffs whose look fits who carries them first (the Light staff for the mace; the Stormcaller's wand, the Frostweaver's
+ * rod, the Pyromancer's staff).
  */
 const WEAPON_STAND_INS: Record<string, string> = {
   plain_great_weapon: "plain_axe", plain_rune_sword: "oathblade", plain_mace: "plain_light_staff",
@@ -108,11 +108,10 @@ export const VFX_FOR: Record<string, string> = {
 
 // ─── Looks: themes, art only ───
 /*
- * Step 5j (the director's rule of Oct 29, 2026): two kinds of damage and no elements or physical subtypes as mechanics.
- * An element survives only as a theme, so the battle keeps its fire, ice and lightning effects and icons, and the hits
- * keep their slash, thrust and impact, by id here, in the art: the data no longer says. A look picks an action's icon,
- * its effect on the target and nothing else; what defends against it is its damage type, which the sheets and the
- * numbers show. These are the looks the data had before the rule.
+ * Two kinds of damage, and no elements or physical subtypes as mechanics. An element is only a theme: the battle's fire,
+ * ice and lightning effects and icons, and the hits' slash, thrust and impact, are set by id here, in the art, since the
+ * data doesn't say. A look picks an action's icon, its effect on the target and nothing else; what defends against it is
+ * its damage type, which the sheets and the numbers show.
  */
 const ABILITY_LOOK: Record<string, string> = {
   shield_bash: "blunt", barbed_arrow: "pierce", frost_arrow: "ice", rending_arrow: "pierce", bramble_lash: "pierce", spear_thrust: "pierce",
@@ -129,7 +128,7 @@ const ENEMY_LOOK: Record<string, string> = {
   fire_imp: "fire", fire_giant: "fire", ice_spirit: "ice", wisp: "lightning", drone: "lightning", soldier: "lightning", storm_queen: "lightning", storm_king: "lightning",
   lava_slime: "blunt", mini_slime: "blunt", bomb_bug: "blunt",
 };
-/** A piece's own look: the old staffs' themes, kept by piece (a rogue run's item takes its base piece's). */
+/** A piece's own look: a magic weapon's theme, by piece (a rogue run's item takes its base piece's). */
 const PIECE_LOOK: Record<string, string> = {
   plain_staff: "fire", plain_wand: "lightning", plain_rod: "ice", plain_mace: "light",
   brand_staff: "fire", ember_staff: "fire", storm_rod: "lightning", grounding_rod: "lightning", zephyr_staff: "wind", tailwind_staff: "wind",
@@ -161,7 +160,7 @@ export type Cell = readonly [number, number];
 /** Colour rows of the iconset's weapon, armour and trinket sets: blue, orange, purple, yellow, brown. */
 const SHADE = { blue: 0, orange: 1, purple: 2, yellow: 3, brown: 4 } as const;
 type Shade = keyof typeof SHADE;
-/** Weapon kinds: a cell in the blue row of weapon set A (row 25) or B (row 30). Stand-ins for the step 5j kinds until the director's art. */
+/** Weapon kinds: a cell in the blue row of weapon set A (row 25) or B (row 30); some are stand-ins until a kind has its own art. */
 const KIND_CELL: Record<string, Cell> = {
   dagger: [25, 0], sword: [25, 7], bow: [25, 3], spear: [25, 14], fist: [25, 2], great_weapon: [30, 0],
   rune_sword: [25, 12], mace: [30, 7], wand: [25, 5], rod: [30, 8], staff: [25, 10],
@@ -169,7 +168,7 @@ const KIND_CELL: Record<string, Cell> = {
 /** Armor types: a cell in the blue row of the armour set (row 15), and its shade. */
 const ARMOR_CELL: Record<string, Cell> = { plate: [15, 7], mail: [15, 12], leather: [15, 8], robes: [15, 9] };
 const ARMOR_SHADE: Record<string, Shade> = { plate: "blue", mail: "blue", leather: "brown", robes: "purple" };
-/** Offhand kinds (step 5j; no pieces yet): stand-ins from the trinket and weapon sets, in their shade. */
+/** Offhand kinds: stand-ins from the trinket and weapon sets, in their shade. */
 const OFFHAND_CELL: Record<string, [Cell, Shade]> = {
   kite_shield: [[20, 6], "blue"], round_shield: [[30, 12], "brown"], horn: [[25, 8], "yellow"], tome: [[20, 12], "purple"], lantern: [[20, 10], "yellow"],
   relic: [[35, 6], "yellow"], bell: [[20, 9], "yellow"], totem: [[20, 14], "brown"], vial: [[20, 8], "purple"], idol: [[20, 15], "purple"],
@@ -215,11 +214,11 @@ export const STATUS_STYLE: Record<string, { color: string; light?: string }> = {
   silence: { color: "#b8b8c8" }, hidden: { color: "#9aa0b4", light: "#ffffff" }, rot: { color: "#a8c050" }, clarity: { color: "#86cfff", light: "#ffffff" }, aegis: { color: "#ffd54a", light: "#fff8d0" },
   doom: { color: "#ff4a6a", light: "#ffd0d8" }, bulwark: { color: "#c9d3e0" }, bulwark_broken: { color: "#ff7b6b" }, ice_crust: { color: "#8ae6ff", light: "#ffffff" },
   bloodlust_on: { color: "#ff4a6a", light: "#ffb0b8" }, bedrock_on: { color: "#dcae6e", light: "#f8e0b0" }, generic: { color: "#c8c8d8" },
-  // Step 5i: Marked and the counters, in their stand-in icons' colours.
+  // Marked and the counters, in their stand-in icons' colours.
   marked: { color: "#f05a4a" }, cuts: { color: "#c8d2e0" }, heat: { color: "#f05a4a" }, spite: { color: "#e8284e" }, tempo: { color: "#6ea0f0" },
   surge: { color: "#c46ef0" }, fervor: { color: "#fad040" }, charge: { color: "#8ae6ff" },
 };
-/** A status's colour: its own, else a buff's cool or a debuff's warm (step 5i: the new statuses have no entry of their own). */
+/** A status's colour: its own, else a buff's cool or a debuff's warm. */
 export function statusStyle(id: string): { color: string; light?: string } {
   if (STATUS_STYLE[id]) return STATUS_STYLE[id];
   const label = c.statuses.get(id)?.label;

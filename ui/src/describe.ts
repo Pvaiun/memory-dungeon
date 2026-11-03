@@ -32,7 +32,7 @@ export function evalNum(n: NumT, stats: Stats | null, target: Stats | null = nul
 const fmtRatio = (r: number) => (Number.isInteger(r) ? String(r) : String(Number(r.toFixed(3))));
 export const statWord = (key: string) => c.stats.get(key)?.name ?? key;
 
-// ─── Damage types (step 5j): physical meets Armor and Evasion, magical meets Magic resist, a status's own damage is untyped ───
+// ─── Damage types: physical meets Armor and Evasion, magical meets Magic resist, a status's own damage is untyped ───
 export type DamageType = "physical" | "magical" | "none";
 /** A damage type as a sheet shows it, and its colour class (the stylesheet's --phys and --magic). */
 export const TYPE_WORD: Record<DamageType, string> = { physical: "PHYSICAL", magical: "MAGICAL", none: "UNTYPED" };
@@ -49,7 +49,7 @@ export function amountText(n: NumT, stats: Stats | null, target: Stats | null = 
   const parts: string[] = [];
   if (stats || typeof n === "number") {
     parts.push(`≈ ${disp(value)}`);
-    // Worked out, the number hid what it grows with (Bramble lash's Thorns read as a bare number): name the stats.
+    // A worked-out number alone hides what it grows with: name the stats.
     const from = typeof n === "number" ? [] : [...new Set(n.scale.flatMap((s) => (s.stat && (!s.of || s.of === "self" || s.of === "holder") ? [statWord(s.stat)] : [])))];
     if (from.length) parts.push(`from ${from.join(" and ")}`);
   } else parts.push(describeScale(n));
@@ -122,7 +122,7 @@ function whereText(w: TargetRuleT["where"]): string {
 
 export function conditionText(a: AbilityT): string | null {
   if (!a.if) return null;
-  // Step 5g: several conditions, all of which must hold; step 5i: or any one of them.
+  // Several conditions: all of them must hold, or any one of them.
   const any = "any" in a.if;
   const parts = ("any" in a.if ? a.if.any : [a.if].flat()).map((cnd) => {
     const side = cnd.side === "foes" ? "foe" : "ally";
@@ -206,7 +206,7 @@ export function scalesOf(n: NumT | undefined, stacks = false): Scale[] {
       else if (def?.kind === "points") out.push({ text: `${short(s.ratio / DISPLAY_DIV)}×${code}`, stat: s.stat });
       else out.push({ text: `${Math.round(s.ratio * 100)}% ${code}`, stat: s.stat });
     }
-    // A Shield's stacks are its points, so a share of it reads like a stat's ("58% SHIELD", step 5i's Crushing bash).
+    // A Shield's stacks are its points, so a share of it reads like a stat's ("58% SHIELD").
     else if (s.stacks && status(s.stacks).absorb) out.push({ text: `${Math.round(s.ratio * 100)}% ${status(s.stacks).name.toUpperCase()}` });
     else if (s.stacks) out.push({ text: `+${short(s.ratio / DISPLAY_DIV)} PER ${status(s.stacks).name.toUpperCase()}` });
   }
@@ -218,7 +218,7 @@ const short = (v: number) => (v >= 10 ? String(Math.round(v)) : String(Math.roun
 export type SizePart = { value?: string; word: string; tone?: string; scales: Scale[]; chance?: number };
 /**
  * An ability's size for one unit, in parts: what each hit deals and its kind, a heal, a shield, the stacks it adds,
- * and the stats each grows with. Slay the Spire prints a card's numbers; the director also wanted to see what to gear for.
+ * and the stats each grows with. Slay the Spire prints a card's numbers; this also shows what to gear for.
  */
 export function sizeParts(a: AbilityT, stats: Stats, dmgMult = 1): SizePart[] {
   const out: SizePart[] = [];

@@ -1,5 +1,5 @@
 /**
- * Sound: the director's retro effects pack and two tracks, as small mp3s in
+ * Sound: a retro effects pack and two tracks, as small mp3s in
  * public/audio/ (ui/README.md says which file plays for what). Effects and
  * music have their own switches (Settings). Browsers only start audio after a
  * tap, so music that couldn't start waits for the next tap. In the background (another app, the phone locked) the music

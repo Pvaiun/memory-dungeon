@@ -113,7 +113,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   const cursorEl = h("span", { class: "cursor-dq" }, "▼");
   const msgEl = win("msg", linesEl, cursorEl);
   const partyEl = win("party list");
-  // The foes are on the field (tap one to inspect it): the list of their names under the party is gone, the tick sits with the controls.
+  // The foes are on the field (tap one to inspect it); the tick sits with the controls.
   const tick = h("span", { class: "tick" }, "T", h("b", null, "0"));
   const ctl = h("div", { class: "ctl" });
   // At a fight's end and at the campfire, the main action takes the message window's place, under the field; the
@@ -155,9 +155,8 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   let playing: Playing | null = null;
   const history: Hist[] = [];
 
-  // One pause (STEP, which did the same, is gone): II stops the fight, ▶ plays it on, and paused, a tap on the message
-  // window or Enter plays one beat. The pause is remembered like the speed (`settings.step`): a fight left paused
-  // starts the next one paused.
+  // One pause: II stops the fight, ▶ plays it on, and paused, a tap on the message window or Enter plays one beat.
+  // The pause is remembered like the speed (`settings.step`): a fight left paused starts the next one paused.
   const setPaused = (on: boolean) => {
     paused = on;
     stepping = false;
@@ -187,7 +186,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   }
   const charMs = () => (speed >= 4 ? 0 : CHAR_MS / speed);
   /** How long a typed beat stays: the base hold, scaled by Settings → HIT PAUSE, shrinking with the square root of the speed
-   *  (anchored at 1.5×), not its inverse: slow speeds hold a little less than before, fast ones keep a visible pause. */
+   *  (anchored at 1.5×), not its inverse, so fast speeds keep a visible pause. */
   const holdFor = (b: Beat) => ((BEAT_BASE + BEAT_LINE * b.weight) * (setup.settings.hitPause ?? 1)) / Math.sqrt(1.5 * speed);
   function startBeat(b: Beat) {
     clear(linesEl);
@@ -270,7 +269,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
 
   // ─── Events → visuals ───
   const lastStatusFx = new Map<string, number>();
-  /** Statuses that landed RESISTED (step 5i, control resistance), by unit, status and moment, until their "status" event shows. */
+  /** Statuses that landed RESISTED (control resistance), by unit, status and moment, until their "status" event shows. */
   const resistedNow = new Set<string>();
   /** An action's damage type: its weapon's for a basic attack, its first damage effect's for an ability (null: none). */
   const actType = (unit: CUnit | undefined, act: string): "physical" | "magical" | null => {
@@ -323,7 +322,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         showDamage(ev);
         break;
       case "mp":
-        // Step 5h round 6: MP gained shows on the field, blue, like a heal.
+        // MP gained shows on the field, blue, like a heal.
         scene.number(String(ev.target), `+${disp(ev.amount as number)}`, { color: "#6fb4ff", sub: "MP" });
         break;
       case "heal": {
@@ -341,14 +340,14 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         break;
       }
       case "resisted":
-        // Step 5i: control resistance on a boss. The status still lands, shorter: its name rises with RESISTED under it.
+        // Control resistance on a boss. The status still lands, shorter: its name rises with RESISTED under it.
         resistedNow.add(`${String(ev.unit)}:${String(ev.status)}:${String(at)}`);
         break;
       case "status": {
         const d = c.statuses.get(String(ev.status))!;
         if (!shownAsIcon(d.id)) break;
         const unit = String(ev.unit);
-        // Step 5i: a count's later stacks move only the number under its icon.
+        // A count's later stacks move only the number under its icon.
         if (COUNTS.has(d.id) && scene.showsIcon(unit, d.id)) break;
         const style = statusStyle(d.id);
         const resist = resistedNow.delete(`${unit}:${d.id}:${String(at)}`);
@@ -368,7 +367,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         break;
       }
       case "immune":
-        // Step 5i: a boss's control resistance at its cap reads the same word, in the debuffs' warm colour.
+        // A boss's control resistance at its cap reads the same word, in the debuffs' warm colour.
         scene.number(String(ev.unit), "IMMUNE", { color: ev.why === "control" ? "#ffa062" : "#8e99b8" });
         break;
       case "hold": {
@@ -644,7 +643,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       isParty || designer ? h("span", { class: "mp" }, `MP ${disp(u.mp)}`) : null,
     ));
     if (casting) body.append(h("div", { class: "line hi" }, `CASTING ${castName}`, h("span", { class: "dim r" }, `${Math.max(0, Math.ceil((u.cast!.end - vt) / SUBTICKS))}T`)));
-    // Markers (step 5i) are bookkeeping, hidden as hidden statuses are; designer view lists them.
+    // Markers are bookkeeping, hidden as hidden statuses are; designer view lists them.
     const sts = u.statuses.filter((s) => shownAsIcon(s.id, designer));
     if (sts.length) body.append(h("div", { class: "section" }, "STATUSES"));
     for (const s of sts) {
@@ -662,7 +661,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     if (isParty) {
       const member = { ...u, abilities: u.acts.filter((a) => a.id !== "basic").map((a) => a.id) } as unknown as Member;
       const pu = driver.input.party.units.find((x) => x.class === u.ref);
-      // Step 5i: a trained passive plays as its form (PartyUnit.passive).
+      // A trained passive plays as its form (PartyUnit.passive).
       body.append(...(classSheet(u.ref, designer, member, pu?.gear ?? {}, pu?.passive).filter(Boolean) as Node[]));
     } else {
       body.append(...(enemySheet(c.enemies.get(u.ref)!, designer, u.stats, u.stats.power ?? 0).filter(Boolean) as Node[]));

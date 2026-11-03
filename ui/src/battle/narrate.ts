@@ -24,7 +24,7 @@ export type Lookup = { unit: (id: string) => CUnit | undefined; name: (id: strin
 const MAX_LINES = 4;
 
 /**
- * Step 5j: every foe carries some Magic resist (10% a regular one, 15% an elite, 25% a boss, the ghosts 75%), and the
+ * Every foe carries some Magic resist (10% a regular one, 15% an elite, 25% a boss, the ghosts 75%), and the
  * engine words every magical hit it cuts RESIST. Said on every spell at a bandit, the word stops meaning anything, so a
  * hit reads RESIST only when Magic resist took a quarter of it or more (a boss, a ghost, a unit under Ward).
  */
@@ -35,7 +35,7 @@ export function resisted(ev: Ev): boolean {
 }
 
 /**
- * Step 5i: counts, which a unit gains a stack of on every hit or every few ticks (the seven counters, the Hurricane's wind,
+ * Counts, which a unit gains a stack of on every hit or every few ticks (the seven counters, the Hurricane's wind,
  * Flow state's hits). Said once, when the first stack lands; after that only the number under the icon moves, or the window
  * would fill with them.
  */
@@ -82,9 +82,9 @@ export class Narrator {
   private n(id: unknown): string {
     return this.L.name(String(id));
   }
-  /** Counts a unit holds whose first stack has been told (step 5i), by unit and status. */
+  /** Counts a unit holds whose first stack has been told, by unit and status. */
   private counting = new Set<string>();
-  /** Control statuses the engine has just said land RESISTED (step 5i), by unit and status, until their line is written. */
+  /** Control statuses the engine has just said land RESISTED, by unit and status, until their line is written. */
   private resists = new Map<string, Ev>();
   private sname(id: string): string {
     return c.statuses.get(id)?.name ?? id;
@@ -140,9 +140,8 @@ export class Narrator {
         this.heal(ev);
         break;
       case "mp": {
-        // Step 5h round 6 (the director's: MP gained in a fight "isn't shown anywhere"): a status's pulse (MP regen, Clarity) is a
-        // number on the field only, or the window would fill with ticks; any other gain (Siphon, a song, the Soul jar, a gift) is
-        // a line too.
+        // A status's pulse (MP regen, Clarity) is a number on the field only, or the window would fill with ticks; any other
+        // gain (Siphon, a song, the Soul jar, a gift) is a line too.
         const n = disp(ev.amount as number);
         if (n <= 0) break;
         if (ev.part === "pulse") this.silent(ev);
@@ -156,11 +155,11 @@ export class Narrator {
         this.statusEnd(ev);
         break;
       case "resisted":
-        // Step 5i, control resistance on bosses: the engine says so just before the status lands, shorter; its line says RESISTED.
+        // Control resistance on bosses: the engine says so just before the status lands, shorter; its line says RESISTED.
         this.resists.set(`${String(ev.unit)}:${String(ev.status)}`, ev);
         break;
       case "immune":
-        // Step 5i: a boss whose control resistance is full shrugs the status off; anything else is immune by nature.
+        // A boss whose control resistance is full shrugs the status off; anything else is immune by nature.
         if (ev.why === "control") this.add(ev, { text: `${this.n(ev.unit)} is immune to ${String(ev.name)} now!`, tone: "bad" });
         else this.add(ev, { text: `${this.n(ev.unit)} is immune to ${String(ev.name)}.`, tone: "sys" });
         break;
@@ -269,7 +268,7 @@ export class Narrator {
     const d = c.statuses.get(String(ev.status));
     const res = this.resists.get(`${String(ev.unit)}:${String(ev.status)}`);
     this.resists.delete(`${String(ev.unit)}:${String(ev.status)}`);
-    // Markers (step 5i) are bookkeeping, hidden as hidden statuses are.
+    // Markers are bookkeeping, hidden as hidden statuses are.
     if (!d || !shownAsIcon(d.id)) return;
     const unit = String(ev.unit), t = this.n(unit);
     const total = ev.total as number | null;
