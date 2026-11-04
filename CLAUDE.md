@@ -41,7 +41,7 @@ Design work for a party-based JRPG dungeon crawler with automatic combat, where 
 What's true now (Nov 4, 2026). Replace what's done rather than adding to it; history is in git.
 
 - **The game is built and approved as it stands:** the rogue mode (`docs/core-set/rogue-mode.md`; the interface's Settings → MODE → ROGUE) with 16 classes, 240 gear pieces, 16 mythics, 32 formations and Neutral, and 64 ability upgrades. Engine 0.18, schema 0.8. The campaign is retired; free play stays as the sandbox.
-- **Nothing is balanced yet.** How the builds measure on the approved loot is in `docs/gear-design/builds.md` (Where the builds stand). The fights' knobs were calibrated against the old loot.
+- **Nothing is balanced yet.**
 - **The tools** (each file's header says how to run it):
   - `npm run balance`: the balance sheet. Run it after any numbers change, before the knobs.
   - `npm run rogue:calibrate`: each fight's knob against the hand-built rosters of `src/rogue-parties.ts` (`--climb`); then `npm run rogue:tune`.
