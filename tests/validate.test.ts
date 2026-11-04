@@ -74,7 +74,7 @@ test("schema: step 1's rule language and vocabulary are gone", () => {
 test("schema: enemies have no placement", () => expectIssue("schema", (p) => (p.dungeons[0].stages[0].enemies[0] = { enemy: "ash_wolf", row: "front" })));
 test("ids are unique within a collection", () => expectIssue("id.duplicate", (p) => p.perks.push(clone(p.perks[0]))));
 test("references resolve", () => expectIssue("ref.missing", (p) => (find(p.abilities, "barbed_arrows").do[0].apply[0].status = "poison")));
-test("schema: elements and physical subtypes are gone (step 5j)", () => {
+test("schema: no elements or physical subtypes", () => {
   expectIssue("schema", (p) => (find(p.abilities, "radiance").do[0].element = "holy"));
   expectIssue("schema", (p) => (find(p.abilities, "cleave").do[0].subtype = "slash"));
   expectIssue("schema", (p) => (p.elements = [{ id: "holy", name: "Holy" }]));
@@ -99,7 +99,7 @@ test("cards: a hit can scale from several stats: a Shield Bash from 0.7 × Armor
 test("cards: a weapon states its own damage; nothing scales it by default", () => expectIssue("schema", (p) => delete find(p.gear, "ash_staff").weapon.amount));
 test("cards: an action can't produce untyped damage: only pulses and reactions can", () => card(hit({ type: "none" }), "instance.untyped"));
 test("cards: riders follow the same rules as hits", () => card(hit({ type: "physical", riders: [{ type: "none", amount: 5 }] }), "instance.untyped"));
-test("cards: a weapon kind states its type and hands, and nothing else (step 5j)", () => {
+test("cards: a weapon kind states its type and hands, and nothing else", () => {
   expectIssue("schema", (p) => delete find(p.weaponKinds, "holy_staff").hands);
   expectIssue("schema", (p) => (find(p.weaponKinds, "holy_staff").element = "holy"));
 });
@@ -289,7 +289,7 @@ test("classes: every class has a one-handed kind, so it can always hold an offha
   expectIssue("ref.missing", (p) => (find(p.classes, "warrior").offhands = ["tower_shield"]));
   expectIssue("ref.missing", (p) => (find(p.classes, "warrior").armor = ["plate"]));
 });
-test("parties, step 5j: a class wears only its armor types; a two-handed weapon empties the offhand; a mythic fits its one class, one a unit", () => {
+test("parties: a class wears only its armor types; a two-handed weapon empties the offhand; a mythic fits its one class, one a unit", () => {
   const p = clone(PACK) as any;
   p.gear.push({ id: "buckler_a", name: "Buckler", text: "-", slot: "offhand", tier: "ordinary", source: "drop", offhand: "buckler" });
   p.gear.push({ id: "myth_a", name: "Myth", text: "-", slot: "amulet", tier: "powerful", source: "unlock", mythic: "warrior" });
@@ -434,7 +434,7 @@ test("control resistance names statuses that exist, and resists below its cap", 
   expectIssue("ruleset.control", (p) => (p.ruleset.control = { ...control, statuses: [p.statuses[0].id], resist: { at: 4, pct: 50 } }));
 });
 
-test("step 5i's reaction words: seats exist, other and owner exclusions and strikes belong to reactions, markers are lifted by name", () => {
+test("reaction words: seats exist, other and owner exclusions and strikes belong to reactions, markers are lifted by name", () => {
   expectIssue("seat.unknown", probe({ reactions: [{ on: { event: "hit_taken", whose: "ally", seat: "nowhere" }, do: [{ op: "apply", status: "probe", to: "self" }] }] }));
   card({ target: { side: "foes", pick: "random" }, do: [{ op: "damage", type: "physical", amount: 1, to: { side: "foes", exclude: "other" } }] }, "target.exclude");
   card({ do: [{ op: "strike", to: "self" }] }, "strike.where");

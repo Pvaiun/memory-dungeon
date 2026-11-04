@@ -240,7 +240,7 @@ test("aegis: blocks the next damage above 25% of max HP, after mitigation and be
   assert.deepEqual(b.hits("Victim").map((e) => e.word), ["AEGIS"]);
 });
 
-test("magic resist, step 5j: a hit at full Magic resist deals nothing (IMMUNE) but still lands: its statuses apply and it counts as a hit; nothing absorbs", () => {
+test("magic resist: a hit at full Magic resist deals nothing (IMMUNE) but still lands: its statuses apply and it counts as a hit; nothing absorbs", () => {
   const bolt = { id: "bolt", cast: 0, cooldown: 10, do: [{ op: "damage", type: "magical", amount: 40, apply: [{ status: "burn", stacks: 3 }] }] };
   const leech = { id: "leech", name: "Leech", label: "buff", show: "sheet", stacking: "refresh", unremovable: true, reactions: [{ on: { event: "hit_lands" }, do: [{ op: "heal", amount: 1, to: "self" }] }] };
   const a = arena({
@@ -270,7 +270,7 @@ test("armor: each physical hit loses armorRatio × Armor; a fully absorbed hit s
   assert.equal(b.has("Knight", "poison").length, 1);
 });
 
-test("armor, step 5c: with armorK a physical hit deals hit² ÷ (hit + k × Armor): nearly linear for big hits, never a blank, magic untouched", () => {
+test("armor: with armorK a physical hit deals hit² ÷ (hit + k × Armor): nearly linear for big hits, never a blank, magic untouched", () => {
   const swing = (attack: number, armor: number, type: "physical" | "magical" = "physical") =>
     arena({
       party: [{ name: "A", stats: { attack }, weapon: { ...weapons.dagger, ...(type === "magical" ? { type } : {}) } }],
@@ -286,7 +286,7 @@ test("armor, step 5c: with armorK a physical hit deals hit² ÷ (hit + k × Armo
   assert.ok(more.every((x, i) => i === 0 || x < more[i - 1]), `every point of Armor still helps (${more})`);
 });
 
-test("bleed, step 5c: each hit its holder takes deals X per stack, untyped and past Armor, then the stacks drop; the hit that applies it doesn't set it off", () => {
+test("bleed: each hit its holder takes deals X per stack, untyped and past Armor, then the stacks drop; the hit that applies it doesn't set it off", () => {
   const bleed = { id: "bleed", name: "BLEED", label: "debuff", show: "icon", stacking: "intensity", trigger: { on: { event: "hit_taken" }, do: [{ op: "damage", type: "none", amount: 10, to: "holder" }] }, drop: { fraction: 0.5 } };
   const cut = { id: "cut", cast: 0, cooldown: 100, do: [{ op: "damage", type: "physical", amount: 1, apply: [{ status: "bleed", stacks: 8 }] }] };
   const a = arena({
@@ -307,7 +307,7 @@ test("bleed, step 5c: each hit its holder takes deals X per stack, untyped and p
   assert.equal(a.entries("dmg", (e) => e.src === "bleed" && e.part === "hit").length, 0, "a pop isn't a hit");
 });
 
-test("crit tag, step 5c: a hit's events carry 'crit' when it crits, so a reaction can answer crits alone (the Assassin's Lacerate)", () => {
+test("crit tag: a hit's events carry 'crit' when it crits, so a reaction can answer crits alone (the Assassin's Lacerate)", () => {
   const mark = { id: "mark", name: "MARK", label: "debuff", show: "icon", stacking: "intensity" };
   const lacerate = { id: "lacerate", name: "L", label: "buff", show: "sheet", stacking: "refresh", unremovable: true, reactions: [{ on: { event: "hit_lands", tags: ["crit"] }, do: [{ op: "apply", status: "mark", stacks: 1, to: "other" }] }] };
   const run = (crit: number) => arena({
@@ -319,7 +319,7 @@ test("crit tag, step 5c: a hit's events carry 'crit' when it crits, so a reactio
   assert.equal(never.has("Bag", "mark").length, 0, "no crits, no marks");
 });
 
-test("opening slots, step 5c: a party unit's abilities start charged by the order they're slotted in; basic attacks and foes still roll", () => {
+test("opening slots: a party unit's abilities start charged by the order they're slotted in; basic attacks and foes still roll", () => {
   const ab = (id: string) => ({ id, cast: 0, cooldown: 40, target: "self", do: [{ op: "mp", amount: 0 }] });
   const a = arena({
     party: [{ name: "Hero", abilities: ["one", "two", "three"] }],
@@ -332,7 +332,7 @@ test("opening slots, step 5c: a party unit's abilities start charged by the orde
   assert.ok(foe >= 12 && foe <= 28, `a foe's ability still rolls a third to two thirds (${foe})`);
 });
 
-test("draw, the director's Aggro rule: foes pick by draw, Aggro through a curve centred on 100, between a third and three times an ordinary unit's", () => {
+test("draw: foes pick by draw, Aggro through a curve centred on 100, between a third and three times an ordinary unit's", () => {
   const r = { draw: { centre: 100, k: 50, max: 3 } };
   const table: [number, number][] = [[1, 43], [40, 48], [60, 53], [80, 64], [90, 75], [100, 100], [110, 133], [120, 157], [140, 189], [160, 209], [200, 233]];
   for (const [aggro, want] of table) assert.equal(Math.round(drawOf(r, aggro)), want, `Aggro ${aggro}`);
@@ -344,7 +344,7 @@ test("draw, the director's Aggro rule: foes pick by draw, Aggro through a curve 
   assert.equal(drawOf({}, 37), 37, "without the curve, Aggro itself");
 });
 
-test("party draw (Nov 3, 2026): a party unit's draw doubles every 25 Aggro, climbs evenly between, held from Aggro 25 to 200; enemies keep the curve", () => {
+test("party draw: a party unit's draw doubles every 25 Aggro, climbs evenly between, held from Aggro 25 to 200; enemies keep the curve", () => {
   const r = { draw: { centre: 100, k: 50, max: 3 }, partyDraw: { centre: 100, double: 25, floor: 25, cap: 200 } };
   const table: [number, number][] = [[1, 12.5], [25, 12.5], [50, 25], [75, 50], [80, 60], [100, 100], [110, 140], [120, 180], [125, 200], [150, 400], [165, 640], [185, 1120], [200, 1600], [500, 1600]];
   for (const [aggro, want] of table) assert.equal(drawOf(r, aggro, "party"), want, `Aggro ${aggro}`);

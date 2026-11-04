@@ -43,7 +43,7 @@ test("timing: Meteor has cast time 30; a basic attack that comes off cooldown mi
   const meteor = { id: "meteor", cast: 30, cooldown: 10, do: [dmg(1)] };
   const a = arena({ party: [{ name: "Mage", weapon: weapons.dagger, abilities: ["meteor"] }], enemies: [BAG], abilities: [meteor] }).to(43);
   assert.deepEqual(a.acts("Mage", "meteor"), [40]);
-  assert.deepEqual(a.acts("Mage", "basic"), [8, 43], "abilities recover for the ruleset's 3 ticks (decided Oct 20)");
+  assert.deepEqual(a.acts("Mage", "basic"), [8, 43], "abilities recover for the ruleset's 3 ticks");
 });
 
 test("timing: abilities have a default recovery, about a sword's (3 ticks in the worked example); an ability can state its own", () => {

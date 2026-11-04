@@ -74,7 +74,7 @@ test("immunity: a boss immune to lockouts covering all actions is hit by Freeze;
   assert.equal(a.has("Boss", "silence").length, 1);
 });
 
-test("immunity: Magic resist never stops a status (step 5j): at full Magic resist a Freeze still lands, for its whole duration", () => {
+test("immunity: Magic resist never stops a status: at full Magic resist a Freeze still lands, for its whole duration", () => {
   const run = (resist: number) => {
     const a = arena({ party: [{ name: "Mage", abilities: ["cast"] }], enemies: [{ name: "T", stats: { max_hp: 1e6, magic_resist: resist } }], statuses: [FREEZE], abilities: [giver("cast", "freeze")] });
     readyAt(a, "Mage", "cast", 1);
@@ -203,7 +203,7 @@ test("pulses: Burn triggers every 2 ticks for 1 fire damage per stack, then halv
   assert.deepEqual(a.hits("Bag").slice(0, 4).map((e) => [e.at, e.amount]), [[at(3), 10], [at(5), 5], [at(7), 2], [at(9), 1]]);
 });
 
-test("intensity: a status ends when its total falls below 1 stack (decided Oct 20): 10 Burn stacks pulse 4 times, never for 0", () => {
+test("intensity: a status ends when its total falls below 1 stack: 10 Burn stacks pulse 4 times, never for 0", () => {
   const a = burn(10);
   assert.deepEqual(a.hits("Bag").map((e) => e.amount), [10, 5, 2, 1]);
   assert.deepEqual(a.entries("status_end").map((e) => [e.at, e.cause]), [[at(9), "stacks"]]);

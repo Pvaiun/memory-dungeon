@@ -462,7 +462,7 @@ test("rogue (5i): whole runs play to their end on the fixture's stock, trainings
   }
 });
 
-test("rogue (5h round 6): a campfire heals everyone a share and raises the fallen on arrival; then REST or TRAIN; swaps stay open until LEAVE", () => {
+test("rogue: a campfire heals everyone a share and raises the fallen on arrival; then REST or TRAIN; swaps stay open until LEAVE", () => {
   const c = loadContent(raw);
   const run = newRogue(c, { seed: 13, leader: "knight" });
   while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
@@ -611,7 +611,7 @@ test("rogue: one standing at camp fills an empty seat between rooms; while the p
   }
 });
 
-test("rogue (5h round 6): a potion and a tonic at the start; the leader's roll is known before the run; act I recruits know one or two; a seat with each act", () => {
+test("rogue: a potion and a tonic at the start; the leader's roll is known before the run; act I recruits know one or two; a seat with each act", () => {
   const c = loadContent(raw);
   const run = newRogue(c, { seed: 77, leader: "cleric" });
   assert.deepEqual([...run.supplies].sort(), ["potion", "tonic"]);
@@ -623,7 +623,7 @@ test("rogue (5h round 6): a potion and a tonic at the start; the leader's roll i
   assert.equal(seatsOf(c, run), 3, "a seat with act II");
 });
 
-test("rogue (5h round 6): TRAIN can be backed out of until someone is trained, and the campfire's pick is only spent then", () => {
+test("rogue: TRAIN can be backed out of until someone is trained, and the campfire's pick is only spent then", () => {
   const c = loadContent(raw);
   const run = newRogue(c, { seed: 19, leader: "knight" });
   while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
@@ -653,7 +653,7 @@ test("rogue (5h round 6): TRAIN can be backed out of until someone is trained, a
   }
 });
 
-test("rogue (5h round 6): a captive after some fights against people: taken in at half HP, a lesson, or let go; elites give a pick of legendaries then of formations", () => {
+test("rogue: a captive after some fights against people: taken in at half HP, a lesson, or let go; elites give a pick of legendaries then of formations", () => {
   const c = withLoot();
   let captives = 0, rows = 0, lessons = 0;
   for (let seed = 1; seed <= 60; seed++) {
@@ -696,7 +696,7 @@ test("rogue (5h round 6): a captive after some fights against people: taken in a
   assert.equal((run.pending as { offers: { kind: string }[] }).offers.filter((o) => o.kind === "formation").length, 2);
 });
 
-test("rogue (5h round 6): every option of every event's every version plays through to the map", () => {
+test("rogue: every option of every event's every version plays through to the map", () => {
   // With the fixture's stock every option can be picked; with no stock at all, the options that need none play too.
   for (const [c, least] of [[withLoot(), 60], [withoutLoot(), 30]] as const) {
     const ai = aiPlayer({}, 3);
