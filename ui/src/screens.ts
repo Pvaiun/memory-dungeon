@@ -17,7 +17,7 @@ import { foesOnStage, partyOnStage, stageEl, Strip, STRIP_H, themeOf } from "./b
 import { startBattle, type BattleArgs } from "./battle/battle.js";
 import { music, setMusic, setSound, sfx } from "./battle/audio.js";
 import { bindRogue, rbossScreen, rclassScreen, rgearScreen, rogueMenuLine, rogueScreen, rpartyScreen, runitScreen } from "./rogue-screens.js";
-import { abandonRun, current as rogueRun, resetRogue } from "./rogue-state.js";
+import { abandonRun, current as rogueRun, resetRogue } from "./rogue/state.js";
 
 export type Screen = "home" | "fight" | "party" | "formation" | "unit" | "gear" | "classes" | "bestiary" | "enemy" | "settings" | "battle" | "rogue" | "rparty" | "runit" | "rgear" | "rboss" | "rclass";
 

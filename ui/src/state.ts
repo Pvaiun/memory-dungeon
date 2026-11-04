@@ -1,7 +1,7 @@
 /**
  * What the player set up: party, formation, gear, ability order and
  * settings, for free play. Kept in localStorage, so a reload keeps the build.
- * The rogue mode keeps its party in its run (rogue-state.ts).
+ * The rogue mode keeps its party in its run (rogue/state.ts).
  */
 import type { Party } from "../../src/schema.js";
 import { c, classes, DEFAULT_NUMBERS, formations, NUMBER_SCALES } from "./content.js";

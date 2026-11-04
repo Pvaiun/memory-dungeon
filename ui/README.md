@@ -7,7 +7,7 @@ A phone-sized browser interface on the headless engine: the rogue mode, free pla
 - **Locally:** `npm run ui` serves it at http://localhost:5173 and prints a network URL for a phone on the same Wi-Fi. `npm run ui:build` writes `ui/dist` (ignored by git).
 - **On the phone:** every push to `main` builds and publishes it to GitHub Pages at https://pvaiun.github.io/memory-dungeon/ (`.github/workflows/pages.yml`). Chrome's "Add to Home screen" installs it full-screen (`public/manifest.webmanifest`).
 - **Updates reach the phone by themselves.** Each build's id (the commit) is compiled in and written to `version.json` (`vite.config.ts`). When the app starts and whenever it comes back to the front, `src/update.ts` reads that file past every cache. On a newer build it reloads under `?v=<build>`: never mid-fight, and once a build so a stubborn cache can't loop it. Assets load with the build id on their URLs. Don't tell the director to clear the browser: that wipes the save.
-- **Saves** are in localStorage (`src/state.ts`, `src/mode.ts`, `src/rogue-state.ts`). A rogue run saved under another `ROGUE_VERSION` is set aside on load.
+- **Saves** are in localStorage (`src/state.ts`, `src/mode.ts`, `src/rogue/state.ts`). A rogue run saved under another `ROGUE_VERSION` is set aside on load.
 
 ## The look
 

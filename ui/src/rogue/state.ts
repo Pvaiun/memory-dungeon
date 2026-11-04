@@ -4,13 +4,13 @@
  * record). Kept in localStorage under its own key. A fight is saved as pending: a reload replays it from its start,
  * with the same dice and the same party, so leaving a fight changes nothing.
  */
-import { combat, type Member as EngineMember } from "../../src/engine/combat/rules.js";
-import { ROGUE_VERSION, finish, freshMeta, member, migrate, newRogue, partyOf, registerGear, type RogueMeta, type RogueRun } from "../../src/rogue.js";
-import { beginRecord, recordAbandon, recordResume } from "../../src/rogue/record.js";
-import { BUILD } from "./update.js";
-import { canEquip } from "../../src/validate.js";
-import { manifest } from "./art.js";
-import { c } from "./content.js";
+import { combat, type Member as EngineMember } from "../../../src/engine/combat/rules.js";
+import { ROGUE_VERSION, finish, freshMeta, member, migrate, newRogue, partyOf, registerGear, type RogueMeta, type RogueRun } from "../../../src/rogue.js";
+import { beginRecord, recordAbandon, recordResume } from "../../../src/rogue/record.js";
+import { BUILD } from "../update.js";
+import { canEquip } from "../../../src/validate.js";
+import { manifest } from "../art.js";
+import { c } from "../content.js";
 
 const KEY = "memory-dungeon.rogue.v1";
 type Saved = { run: RogueRun | null; meta: RogueMeta; last?: { won: boolean; unlocked: string[]; heat: boolean } | null };
