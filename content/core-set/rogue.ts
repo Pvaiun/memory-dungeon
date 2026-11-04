@@ -378,16 +378,16 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   {
     id: "mercenaries", name: "Mercenaries", text: "A company of sellswords around a crossroads fire. \"Coin first.\"",
     options: [
-      { id: "hire", label: "HIRE ONE FOR 60", text: "A sellsword joins.", gold: 60, do: [{ op: "recruit" }] },
+      { id: "hire", label: "HIRE ONE FOR 60", text: "Pick one of three recruits.", gold: 60, do: [{ op: "muster", n: 3 }] },
       { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
     ],
     variants: [
       { options: [
-        { id: "hire", label: "HIRE ONE FOR 60", text: "A sellsword joins.", gold: 60, do: [{ op: "recruit" }] },
+        { id: "hire", label: "HIRE ONE FOR 60", text: "Pick one of three recruits.", gold: 60, do: [{ op: "muster", n: 3 }] },
         { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
       ] },
       { text: "Veterans, scarred and expensive. \"We know our trade.\"", options: [
-        { id: "hire", label: "HIRE ONE FOR 110", text: "A veteran joins, knowing all three abilities.", gold: 110, do: [{ op: "recruit", known: 3 }] },
+        { id: "hire", label: "HIRE ONE FOR 110", text: "Pick one of two recruits who know all three abilities.", gold: 110, do: [{ op: "muster", n: 2, known: 3 }] },
         { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
       ] },
     ],
@@ -486,18 +486,18 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   {
     id: "prisoner_convoy", name: "A Prisoner Convoy", text: "Three prisoners in chains on a cart, their confiscated gear in a sack beside the guards.",
     options: [
-      { id: "free", label: "FREE ONE", text: "A prisoner joins, with an uncommon piece from the sack. The guards attack: a fight.", do: [{ op: "recruit", gear: "uncommon" }, { op: "fight", tier: "normal" }] },
-      { id: "bribe", label: "BRIBE THE GUARDS", text: "A prisoner joins, with an uncommon piece from the sack. No fight.", gold: 60, do: [{ op: "recruit", gear: "uncommon" }] },
+      { id: "free", label: "FREE ONE", text: "Pick one of three prisoners, each with a piece from the sack. The guards attack: a fight.", do: [{ op: "muster", n: 3, gear: "uncommon" }, { op: "fight", tier: "normal" }] },
+      { id: "bribe", label: "BRIBE THE GUARDS", text: "Pick one of three prisoners, each with a piece from the sack. No fight.", gold: 60, do: [{ op: "muster", n: 3, gear: "uncommon" }] },
       { id: "ride", label: "RIDE ON", text: "Nothing happens.", do: [] },
     ],
     variants: [
       { options: [
-        { id: "free", label: "FREE ONE", text: "A prisoner joins, with an uncommon piece from the sack. The guards attack: a fight.", do: [{ op: "recruit", gear: "uncommon" }, { op: "fight", tier: "normal" }] },
-        { id: "bribe", label: "BRIBE THE GUARDS", text: "A prisoner joins, with an uncommon piece from the sack. No fight.", gold: 60, do: [{ op: "recruit", gear: "uncommon" }] },
+        { id: "free", label: "FREE ONE", text: "Pick one of three prisoners, each with a piece from the sack. The guards attack: a fight.", do: [{ op: "muster", n: 3, gear: "uncommon" }, { op: "fight", tier: "normal" }] },
+        { id: "bribe", label: "BRIBE THE GUARDS", text: "Pick one of three prisoners, each with a piece from the sack. No fight.", gold: 60, do: [{ op: "muster", n: 3, gear: "uncommon" }] },
         { id: "ride", label: "RIDE ON", text: "Nothing happens.", do: [] },
       ] },
       { text: "A convoy of hardened convicts under heavy guard. One wears an old company's colours.", options: [
-        { id: "free", label: "FREE ONE", text: "A convict joins, knowing two abilities and carrying a rare piece. The escort attacks: a hard fight, with an elite's spoils.", do: [{ op: "recruit", known: 2, gear: "rare" }, { op: "fight", tier: "elite" }] },
+        { id: "free", label: "FREE ONE", text: "Pick one of three, each knowing two abilities and carrying a rare piece. The escort attacks: a hard fight, with an elite's spoils.", do: [{ op: "muster", n: 3, known: 2, gear: "rare" }, { op: "fight", tier: "elite" }] },
         { id: "ride", label: "RIDE ON", text: "Nothing happens.", do: [] },
       ] },
     ],

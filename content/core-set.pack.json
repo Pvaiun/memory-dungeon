@@ -43125,11 +43125,12 @@
      {
       "id": "hire",
       "label": "HIRE ONE FOR 60",
-      "text": "A sellsword joins.",
+      "text": "Pick one of three recruits.",
       "gold": 60,
       "do": [
        {
-        "op": "recruit"
+        "op": "muster",
+        "n": 3
        }
       ]
      },
@@ -43146,11 +43147,12 @@
        {
         "id": "hire",
         "label": "HIRE ONE FOR 60",
-        "text": "A sellsword joins.",
+        "text": "Pick one of three recruits.",
         "gold": 60,
         "do": [
          {
-          "op": "recruit"
+          "op": "muster",
+          "n": 3
          }
         ]
        },
@@ -43168,11 +43170,12 @@
        {
         "id": "hire",
         "label": "HIRE ONE FOR 110",
-        "text": "A veteran joins, knowing all three abilities.",
+        "text": "Pick one of two recruits who know all three abilities.",
         "gold": 110,
         "do": [
          {
-          "op": "recruit",
+          "op": "muster",
+          "n": 2,
           "known": 3
          }
         ]
@@ -43653,10 +43656,11 @@
      {
       "id": "free",
       "label": "FREE ONE",
-      "text": "A prisoner joins, with an uncommon piece from the sack. The guards attack: a fight.",
+      "text": "Pick one of three prisoners, each with a piece from the sack. The guards attack: a fight.",
       "do": [
        {
-        "op": "recruit",
+        "op": "muster",
+        "n": 3,
         "gear": "uncommon"
        },
        {
@@ -43668,11 +43672,12 @@
      {
       "id": "bribe",
       "label": "BRIBE THE GUARDS",
-      "text": "A prisoner joins, with an uncommon piece from the sack. No fight.",
+      "text": "Pick one of three prisoners, each with a piece from the sack. No fight.",
       "gold": 60,
       "do": [
        {
-        "op": "recruit",
+        "op": "muster",
+        "n": 3,
         "gear": "uncommon"
        }
       ]
@@ -43690,10 +43695,11 @@
        {
         "id": "free",
         "label": "FREE ONE",
-        "text": "A prisoner joins, with an uncommon piece from the sack. The guards attack: a fight.",
+        "text": "Pick one of three prisoners, each with a piece from the sack. The guards attack: a fight.",
         "do": [
          {
-          "op": "recruit",
+          "op": "muster",
+          "n": 3,
           "gear": "uncommon"
          },
          {
@@ -43705,11 +43711,12 @@
        {
         "id": "bribe",
         "label": "BRIBE THE GUARDS",
-        "text": "A prisoner joins, with an uncommon piece from the sack. No fight.",
+        "text": "Pick one of three prisoners, each with a piece from the sack. No fight.",
         "gold": 60,
         "do": [
          {
-          "op": "recruit",
+          "op": "muster",
+          "n": 3,
           "gear": "uncommon"
          }
         ]
@@ -43728,10 +43735,11 @@
        {
         "id": "free",
         "label": "FREE ONE",
-        "text": "A convict joins, knowing two abilities and carrying a rare piece. The escort attacks: a hard fight, with an elite's spoils.",
+        "text": "Pick one of three, each knowing two abilities and carrying a rare piece. The escort attacks: a hard fight, with an elite's spoils.",
         "do": [
          {
-          "op": "recruit",
+          "op": "muster",
+          "n": 3,
           "known": 2,
           "gear": "rare"
          },
