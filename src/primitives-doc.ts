@@ -34,7 +34,7 @@ out.push(
 
 h("Gear slots");
 table(S.SLOTS, "Slot");
-out.push("", "A weapon belongs to a kind (a registry: speed, damage type and hands), a piece of armor to an armor type and an offhand to an offhand kind (registries of names). A class lists the weapon kinds, armor types and offhand kinds it can use. A two-handed weapon empties the offhand. A mythic piece fits one class, in any slot, and a unit wears one at most. Step 5i: every piece has its own fixed rarity (common, uncommon, rare, legendary, mythic: no affixes), and every formation its own (common, rare, legendary).");
+out.push("", "A weapon belongs to a kind (a registry: speed, damage type and hands), a piece of armor to an armor type and an offhand to an offhand kind (registries of names). A class lists the weapon kinds, armor types and offhand kinds it can use. A two-handed weapon empties the offhand. A mythic piece fits one class, in any slot, and a unit wears one at most. Every piece has its own fixed rarity (common, uncommon, rare, legendary, mythic: no affixes), and every formation its own (common, rare, legendary).");
 
 h("Effects (in actions, pulses, triggers and reactions)");
 out.push("| Op | Fields | Meaning |", "| --- | --- | --- |");
@@ -54,14 +54,14 @@ table(S.TO, "To");
 
 h("Damage types");
 table(S.TYPES, "Type");
-out.push("", "There are no elements and no physical subtypes (step 5j): an element is a theme in a name, never a mechanic.");
+out.push("", "There are no elements and no physical subtypes: an element is a theme in a name, never a mechanic.");
 
 h("Numbers");
 out.push("A number is a plain number, or `{ base, scale: [...] }`: base + Σ ratio × source (× times). A scale reads one of `stat`, `hp` (current or missing), `stacks` (a status's Intensity total), `amount` (a reaction's event amount) or `when` (1 if a condition holds), from:", "");
 table(S.SCALE_OF, "Of");
 out.push("");
 fields(S.Scale);
-out.push("", "A scale's `count` (step 5i):", "");
+out.push("", "A scale's `count`:", "");
 table(S.COUNTS, "Count");
 
 h("Status fields");
@@ -75,13 +75,13 @@ fields(S.Reaction);
 out.push("", "A reaction's `if` is a condition (below), or a test of one of its event's units:", "");
 fields(S.EventUnitTest);
 
-h("Ability changes (a status's `mods`, step 5i)");
+h("Ability changes (a status's `mods`)");
 out.push("Each change reaches the holder's own abilities, read each time one is used: when it's checked, when it starts, when it pays, when it picks, when it hits.", "");
 fields(S.AbilityMod);
 out.push("", "Its `of`:", "");
 fields(S.AbilityFilter);
 
-h("Crits by condition (a status's `crits`, step 5i)");
+h("Crits by condition (a status's `crits`)");
 fields(S.CritRule);
 
 h("Effect kinds (for immunity, removal and conditions)");
@@ -109,8 +109,8 @@ out.push("");
 table(S.PICKS, "Pick");
 out.push("");
 fields(S.TargetRule, ["side", "pick"]);
-out.push("", `\`by\` (for lowest and highest): \`hp\`, \`hp_share\`, \`mp_share\`, \`buffs\`, \`debuffs\`, \`swing\` (step 5i: the basic attack's interval now; highest is the slowest), \`{ stat }\`, \`{ stats }\` (the highest of several) or \`{ stacks }\`.`);
-out.push("", "Basic attacks pick in this order (step 5i): an `aim` with `first` the attacker holds; a foe holding a `focus` status (Marked); its other `aim`; the default. Each step that finds nobody passes to the next.");
+out.push("", `\`by\` (for lowest and highest): \`hp\`, \`hp_share\`, \`mp_share\`, \`buffs\`, \`debuffs\`, \`swing\` (the basic attack's interval now; highest is the slowest), \`{ stat }\`, \`{ stats }\` (the highest of several) or \`{ stacks }\`.`);
+out.push("", "Basic attacks pick in this order: an `aim` with `first` the attacker holds; a foe holding a `focus` status (Marked); its other `aim`; the default. Each step that finds nobody passes to the next.");
 
 h("Conditions (an ability's `if`, a pulse's or reaction's `if`)");
 fields(S.Condition, ["side", "where"]);
@@ -125,11 +125,11 @@ out.push("", "Every other stat (MP regen, Thorns, Lifesteal, Siphon, Double stri
 h("Stat families");
 table(S.STAT_FAMILIES, "Key");
 
-h("Control resistance (`ruleset.control`, step 5i)");
+h("Control resistance (`ruleset.control`)");
 out.push(S.Control.description ?? "", "");
 fields(S.Control);
 
-h("Upgrades (`upgrades`, step 5i)");
+h("Upgrades (`upgrades`)");
 out.push(S.Upgrade.description ?? "", "");
 fields(S.Upgrade);
 out.push("", "Its five forms, each content under the id `<id>__<form>`: an ability of the class for an ability's upgrade, a status for a passive's. A party unit equips a form in its ability's place, and names its passive's form in `passive`.", "");

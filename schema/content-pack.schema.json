@@ -368,7 +368,7 @@
               }
             },
             "slotShares": {
-              "description": "Step 5g: as slots, but as a share of each ability's own cooldown (0.75 is three quarters charged), so a slow ability's head start is long too. Wins over slots when both are set.",
+              "description": "As slots, but as a share of each ability's own cooldown (0.75 is three quarters charged), so a slow ability's head start is long too. Wins over slots when both are set.",
               "type": "array",
               "items": {
                 "type": "number",
@@ -384,7 +384,7 @@
           "additionalProperties": false
         },
         "draw": {
-          "description": "Foes pick in proportion to draw, not Aggro. With d how far a unit's Aggro is from `centre`: above it, draw = centre × (k + max × d) ÷ (k + d); below it, centre × (k + d) ÷ (k + max × d). An ordinary unit draws `centre`; none draws more than `max` times that or less than 1 ÷ max; +d and −d cancel. `k` sets how much the first steps count. Absent: picks weighted by Aggro itself.",
+          "description": "Foes pick in proportion to draw, not Aggro. With d how far a unit's Aggro is from `centre`: above it, draw = centre × (k + max × d) ÷ (k + d); below it, centre × (k + d) ÷ (k + max × d). An ordinary unit draws `centre`; none draws more than `max` times that or less than 1 ÷ max; +d and −d cancel. `k` sets how much the first steps count. Absent: picks weighted by Aggro itself. With `partyDraw`, this curve is for enemy units only (the party's picks among its foes).",
           "type": "object",
           "properties": {
             "centre": {
@@ -407,6 +407,39 @@
           ],
           "additionalProperties": false
         },
+        "partyDraw": {
+          "description": "How strongly a party unit draws foes' picks, in place of `draw`'s curve, which flattens at a few times an ordinary unit's. Aggro held between `floor` and `cap`; draw = centre × 2^n × (1 + f), with n whole doublings from `centre` and f the share of the next one. An Aggro-stacked unit can take most of the picks on its own. Absent: party units use `draw` too.",
+          "type": "object",
+          "properties": {
+            "centre": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "The Aggro of an ordinary unit, which draws this much."
+            },
+            "double": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Every this many points of Aggro above `centre` doubles a unit's draw, and every this many below halves it; between two doublings it climbs evenly."
+            },
+            "floor": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Aggro below this counts as this."
+            },
+            "cap": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Aggro above this counts as this."
+            }
+          },
+          "required": [
+            "centre",
+            "double",
+            "floor",
+            "cap"
+          ],
+          "additionalProperties": false
+        },
         "stagger": {
           "description": "Copies of the same enemy start a fight this many ticks apart, one after another, so identical foes don't act in lockstep. Absent or 0: they start together.",
           "type": "number",
@@ -421,7 +454,7 @@
           ]
         },
         "control": {
-          "description": "Step 5i: control resistance on bosses. Absent: none.",
+          "description": "Control resistance on bosses. Absent: none.",
           "type": "object",
           "properties": {
             "ranks": {
@@ -755,7 +788,7 @@
               "debuff",
               "marker"
             ],
-            "description": "Drives removal, conditions and the batch its pulses resolve in. marker (step 5i): neither buff nor debuff."
+            "description": "Drives removal, conditions and the batch its pulses resolve in. marker: neither buff nor debuff."
           },
           "show": {
             "type": "string",
@@ -823,7 +856,7 @@
                   "$ref": "#/$defs/Num"
                 },
                 "live": {
-                  "description": "Step 5i: read whenever the holder's stats are worked out, from its other stats as they stand without this change (Thorns from Armor, Guard included), not once at application.",
+                  "description": "Read whenever the holder's stats are worked out, from its other stats as they stand without this change (Thorns from Armor, Guard included), not once at application.",
                   "type": "boolean",
                   "const": true
                 }
@@ -985,15 +1018,15 @@
                     "$ref": "#/$defs/TargetRule"
                   }
                 ],
-                "description": "The same target, or a rule (Arc: a second, random foe, excluding the target). Step 5i: a rule that picks several units strikes each of them (every other foe)."
+                "description": "The same target, or a rule (Arc: a second, random foe, excluding the target). A rule that picks several units strikes each of them (every other foe)."
               },
               "share": {
-                "description": "Step 5i: percent of the weapon's damage each strike deals. Default 100.",
+                "description": "Percent of the weapon's damage each strike deals. Default 100.",
                 "type": "number",
                 "exclusiveMinimum": 0
               },
               "chain": {
-                "description": "Step 5i: each strike that lands rolls `chance` again for one more, at most `times` more after the first, each share % of the one before. It takes the place of a plain strike on the unit that reads the same `scale` stat (Flurry wraps over Double strike), so a swing rolls that chance once. The one bend of \"extra strikes don't chain\".",
+                "description": "Each strike that lands rolls `chance` again for one more, at most `times` more after the first, each share % of the one before. It takes the place of a plain strike on the unit that reads the same `scale` stat (Flurry wraps over Double strike), so a swing rolls that chance once. The one bend of \"extra strikes don't chain\".",
                 "type": "object",
                 "properties": {
                   "times": {
@@ -1035,7 +1068,7 @@
                 }
               },
               "if": {
-                "description": "Step 5i: a pulse whose conditions fail does nothing that beat (\"while any foe burns\"); an Intensity drop still happens.",
+                "description": "A pulse whose conditions fail does nothing that beat (\"while any foe burns\"); an Intensity drop still happens.",
                 "anyOf": [
                   {
                     "$ref": "#/$defs/Condition"
@@ -1097,7 +1130,7 @@
                     ]
                   },
                   "kind": {
-                    "description": "Action and hit events, and (step 5i) ko, healed and overhealed: the kind of the action or hit behind it.",
+                    "description": "Action and hit events, and ko, healed and overhealed: the kind of the action or hit behind it.",
                     "type": "string",
                     "enum": [
                       "basic",
@@ -1115,7 +1148,7 @@
                     }
                   },
                   "notTags": {
-                    "description": "Step 5i, hit events only: the hit carries none of these (`area`: a single-target hit).",
+                    "description": "Hit events only: the hit carries none of these (`area`: a single-target hit).",
                     "minItems": 1,
                     "type": "array",
                     "items": {
@@ -1145,7 +1178,7 @@
                     }
                   },
                   "other": {
-                    "description": "Step 5i: who the event's other unit is, from the holder's side: holder (a kill it landed, a status it applied, a heal or revive it gave), ally, foe, or any (there is one).",
+                    "description": "Who the event's other unit is, from the holder's side: holder (a kill it landed, a status it applied, a heal or revive it gave), ally, foe, or any (there is one).",
                     "type": "string",
                     "enum": [
                       "holder",
@@ -1155,27 +1188,27 @@
                     ]
                   },
                   "source": {
-                    "description": "Step 5i, status events only: the status was applied by the holder (a Mark it gave, an Aegis it gave).",
+                    "description": "Status events only: the status was applied by the holder (a Mark it gave, an Aegis it gave).",
                     "type": "string",
                     "const": "holder"
                   },
                   "seat": {
-                    "description": "Step 5i: the unit the event is about sits in this seat of the party's formation (a position id, or next / previous from the holder's).",
+                    "description": "The unit the event is about sits in this seat of the party's formation (a position id, or next / previous from the holder's).",
                     "type": "string",
                     "pattern": "^[a-z][a-z0-9_]*$"
                   },
                   "amountAtLeast": {
-                    "description": "Step 5i: the event's amount is at least this (\"a cast that paid MP\": 1).",
+                    "description": "The event's amount is at least this (\"a cast that paid MP\": 1).",
                     "type": "number"
                   },
                   "countAtLeast": {
-                    "description": "Step 5i, action_resolve only: its hits landed on at least this many units of the other side.",
+                    "description": "action_resolve only: its hits landed on at least this many units of the other side.",
                     "type": "integer",
                     "minimum": 1,
                     "maximum": 9007199254740991
                   },
                   "repeat": {
-                    "description": "Step 5i, action events only: true matches only a recast's repeat, false only ordinary actions. Default: both.",
+                    "description": "Action events only: true matches only a recast's repeat, false only ordinary actions. Default: both.",
                     "type": "boolean"
                   }
                 },
@@ -1297,7 +1330,7 @@
                       ]
                     },
                     "kind": {
-                      "description": "Action and hit events, and (step 5i) ko, healed and overhealed: the kind of the action or hit behind it.",
+                      "description": "Action and hit events, and ko, healed and overhealed: the kind of the action or hit behind it.",
                       "type": "string",
                       "enum": [
                         "basic",
@@ -1315,7 +1348,7 @@
                       }
                     },
                     "notTags": {
-                      "description": "Step 5i, hit events only: the hit carries none of these (`area`: a single-target hit).",
+                      "description": "Hit events only: the hit carries none of these (`area`: a single-target hit).",
                       "minItems": 1,
                       "type": "array",
                       "items": {
@@ -1345,7 +1378,7 @@
                       }
                     },
                     "other": {
-                      "description": "Step 5i: who the event's other unit is, from the holder's side: holder (a kill it landed, a status it applied, a heal or revive it gave), ally, foe, or any (there is one).",
+                      "description": "Who the event's other unit is, from the holder's side: holder (a kill it landed, a status it applied, a heal or revive it gave), ally, foe, or any (there is one).",
                       "type": "string",
                       "enum": [
                         "holder",
@@ -1355,27 +1388,27 @@
                       ]
                     },
                     "source": {
-                      "description": "Step 5i, status events only: the status was applied by the holder (a Mark it gave, an Aegis it gave).",
+                      "description": "Status events only: the status was applied by the holder (a Mark it gave, an Aegis it gave).",
                       "type": "string",
                       "const": "holder"
                     },
                     "seat": {
-                      "description": "Step 5i: the unit the event is about sits in this seat of the party's formation (a position id, or next / previous from the holder's).",
+                      "description": "The unit the event is about sits in this seat of the party's formation (a position id, or next / previous from the holder's).",
                       "type": "string",
                       "pattern": "^[a-z][a-z0-9_]*$"
                     },
                     "amountAtLeast": {
-                      "description": "Step 5i: the event's amount is at least this (\"a cast that paid MP\": 1).",
+                      "description": "The event's amount is at least this (\"a cast that paid MP\": 1).",
                       "type": "number"
                     },
                     "countAtLeast": {
-                      "description": "Step 5i, action_resolve only: its hits landed on at least this many units of the other side.",
+                      "description": "action_resolve only: its hits landed on at least this many units of the other side.",
                       "type": "integer",
                       "minimum": 1,
                       "maximum": 9007199254740991
                     },
                     "repeat": {
-                      "description": "Step 5i, action events only: true matches only a recast's repeat, false only ordinary actions. Default: both.",
+                      "description": "Action events only: true matches only a recast's repeat, false only ordinary actions. Default: both.",
                       "type": "boolean"
                     }
                   },
@@ -1393,7 +1426,7 @@
                   ]
                 },
                 "if": {
-                  "description": "Step 5i: checked when the reaction resolves, every one must hold: a side's state (as an ability's `if`, read from the actor's side) or a test of the event's other unit or owner. When one fails, the reaction does nothing.",
+                  "description": "Checked when the reaction resolves, every one must hold: a side's state (as an ability's `if`, read from the actor's side) or a test of the event's other unit or owner. When one fails, the reaction does nothing.",
                   "anyOf": [
                     {
                       "anyOf": [
@@ -1478,17 +1511,17 @@
             }
           },
           "focus": {
-            "description": "Step 5i, Marked: the holder's foes' basic attacks pick a holder while one can be picked, by draw among several, under the Taunt rule (Seek follows it past a Taunting foe). Abilities keep their own targeting.",
+            "description": "Marked: the holder's foes' basic attacks pick a holder while one can be picked, by draw among several, under the Taunt rule (Seek follows it past a Taunting foe). Abilities keep their own targeting.",
             "type": "boolean",
             "const": true
           },
           "single": {
-            "description": "Step 5i, Marked: each applier keeps one copy: applying it to a unit ends the copy that applier gave anywhere else. Statuses that know their source only.",
+            "description": "Marked: each applier keeps one copy: applying it to a unit ends the copy that applier gave anywhere else. Statuses that know their source only.",
             "type": "boolean",
             "const": true
           },
           "aim": {
-            "description": "Step 5i: the holder's basic attacks pick by this rule. When it finds nobody, the next in line picks: a Marked foe, then the default.",
+            "description": "The holder's basic attacks pick by this rule. When it finds nobody, the next in line picks: a Marked foe, then the default.",
             "type": "object",
             "properties": {
               "rule": {
@@ -1507,7 +1540,7 @@
             "additionalProperties": false
           },
           "mods": {
-            "description": "Step 5i: changes to the holder's own abilities, read each time one is used. An Intensity status's changes don't grow with its stacks.",
+            "description": "Changes to the holder's own abilities, read each time one is used. An Intensity status's changes don't grow with its stacks.",
             "minItems": 1,
             "type": "array",
             "items": {
@@ -1554,7 +1587,7 @@
                     "pct": {
                       "type": "number",
                       "exclusiveMinimum": 0,
-                      "description": "Percent of the ability's own MP cost (before `mp` changes), paid in HP as the pay effect pays (G12)."
+                      "description": "Percent of the ability's own MP cost (before `mp` changes), paid in HP as the pay effect pays."
                     },
                     "share": {
                       "description": "Paid as the same share of max HP as the cost is of max MP, not point for point.",
@@ -1673,7 +1706,7 @@
             }
           },
           "crits": {
-            "description": "Step 5i: crits by condition on the holder's hits.",
+            "description": "Crits by condition on the holder's hits.",
             "minItems": 1,
             "type": "array",
             "items": {
@@ -1701,12 +1734,12 @@
             }
           },
           "echo": {
-            "description": "Step 5i: the holder's extra strikes are heard as basic attacks by its statuses' reactions and triggers that name kind basic, unless that status also names kind extra for the same event, or gives strikes itself. Boosts still see them as extra.",
+            "description": "The holder's extra strikes are heard as basic attacks by its statuses' reactions and triggers that name kind basic, unless that status also names kind extra for the same event, or gives strikes itself. Boosts still see them as extra.",
             "type": "boolean",
             "const": true
           },
           "set": {
-            "description": "Step 5i: after every other change, the holder's stat is this value while it holds the status.",
+            "description": "After every other change, the holder's stat is this value while it holds the status.",
             "minItems": 1,
             "type": "array",
             "items": {
@@ -1728,7 +1761,7 @@
             }
           },
           "cover": {
-            "description": "Step 5i: when a hit on another living ally would deal it more than share % of its max HP, after its mitigation and before its block and absorbs, the holder takes the whole hit instead: it resolves again against the holder, statuses and riders included, keeping its crit and without a second dodge. A hit moves once.",
+            "description": "When a hit on another living ally would deal it more than share % of its max HP, after its mitigation and before its block and absorbs, the holder takes the whole hit instead: it resolves again against the holder, statuses and riders included, keeping its crit and without a second dodge. A hit moves once.",
             "type": "object",
             "properties": {
               "share": {
@@ -1743,7 +1776,7 @@
             "additionalProperties": false
           },
           "floor": {
-            "description": "Step 5i: the holder's HP can't fall below 1 while it holds this: a blow that would knock it out leaves it at 1, and nothing falls.",
+            "description": "The holder's HP can't fall below 1 while it holds this: a blow that would knock it out leaves it at 1, and nothing falls.",
             "type": "object",
             "properties": {
               "spend": {
@@ -1755,12 +1788,12 @@
             "additionalProperties": false
           },
           "heals": {
-            "description": "Step 5i: only its own heals land on the holder (its abilities, its Lifesteal, its statuses' reactions); heals from others, a Regen they gave included, restore nothing.",
+            "description": "Only its own heals land on the holder (its abilities, its Lifesteal, its statuses' reactions); heals from others, a Regen they gave included, restore nothing.",
             "type": "string",
             "const": "own"
           },
           "revives": {
-            "description": "Step 5i: every revive the holder makes, from its abilities and its statuses' reactions alike (Einherjar).",
+            "description": "Every revive the holder makes, from its abilities and its statuses' reactions alike (Einherjar).",
             "type": "object",
             "properties": {
               "ready": {
@@ -1977,7 +2010,7 @@
             "minimum": 0
           },
           "if": {
-            "description": "Checked when the action starts: what the ability waits for. Several conditions must all hold (step 5g); `any` (step 5i): at least one must.",
+            "description": "Checked when the action starts: what the ability waits for. Several conditions must all hold; `any`: at least one must.",
             "anyOf": [
               {
                 "$ref": "#/$defs/Condition"
@@ -2035,7 +2068,7 @@
             }
           },
           "statuses": {
-            "description": "Step 5i: statuses its unit holds while the ability is equipped, applied at fight start and on a revive as gear's are (a version that listens all fight).",
+            "description": "Statuses its unit holds while the ability is equipped, applied at fight start and on a revive as gear's are (a version that listens all fight).",
             "minItems": 1,
             "type": "array",
             "items": {
@@ -2060,7 +2093,7 @@
       }
     },
     "upgrades": {
-      "description": "Step 5i: one for each ability and passive that can be trained. Absent: none.",
+      "description": "One for each ability and passive that can be trained. Absent: none.",
       "type": "array",
       "items": {
         "type": "object",
@@ -2177,7 +2210,7 @@
             ]
           },
           "rarity": {
-            "description": "Step 5i: the piece's own rarity, fixed: no affixes at any rarity. mythic exactly when it names a `mythic` class.",
+            "description": "The piece's own rarity, fixed: no affixes at any rarity. mythic exactly when it names a `mythic` class.",
             "type": "string",
             "enum": [
               "common",
@@ -2406,7 +2439,7 @@
             "description": "Player-facing text. The engine never reads it."
           },
           "rarity": {
-            "description": "Step 5i: its rarity (Neutral common), in place of the rogue config's provisional formationRarity.",
+            "description": "Its rarity (Neutral common).",
             "type": "string",
             "enum": [
               "common",
@@ -3654,7 +3687,7 @@
                   "type": "boolean"
                 },
                 "supplies": {
-                  "description": "Step 5h round 6: supplies in the bag at the start.",
+                  "description": "Supplies in the bag at the start.",
                   "type": "array",
                   "items": {
                     "type": "string",
@@ -3675,7 +3708,7 @@
               "description": "Gold at the start; the draft after the leader: `picks` picks of one from `offers` classes."
             },
             "firstAbility": {
-              "description": "Before step 5h: the ability each class knew on joining. Step 5h rolls what a class knows instead.",
+              "description": "The ability each class would know on joining. Not read: what a class knows is rolled.",
               "type": "object",
               "propertyNames": {
                 "type": "string",
@@ -3708,16 +3741,16 @@
               "type": "integer",
               "minimum": 0,
               "maximum": 9007199254740991,
-              "description": "Seats at camp at a run's start, besides the party (step 5h: two)."
+              "description": "Seats at camp at a run's start, besides the party (two in the core set)."
             },
             "benchMax": {
-              "description": "Step 5h: seats at camp at most; the others are won (a boon's seat, an event).",
+              "description": "Seats at camp at most; the others are won (a boon's seat, an event).",
               "type": "integer",
               "minimum": 0,
               "maximum": 9007199254740991
             },
             "benchByAct": {
-              "description": "Step 5h round 6: seats at camp by act; a new act brings the run up to its act's (never down).",
+              "description": "Seats at camp by act; a new act brings the run up to its act's (never down).",
               "minItems": 1,
               "type": "array",
               "items": {
@@ -3757,19 +3790,19 @@
               "additionalProperties": false
             },
             "benchMp": {
-              "description": "Step 5h: share of max MP a member regains after each won fight it sat out (from the max it last fought with).",
+              "description": "Share of max MP a member regains after each won fight it sat out (from the max it last fought with).",
               "type": "number",
               "minimum": 0,
               "maximum": 100
             },
             "fresh": {
-              "description": "Step 5h: share of its cooldown already run for a fresh ability: a starting unit's, a recruit's, one just learned.",
+              "description": "Share of its cooldown already run for a fresh ability: a starting unit's, a recruit's, one just learned.",
               "type": "number",
               "minimum": 0,
               "maximum": 100
             },
             "muster": {
-              "description": "Step 5h: the Muster's pick of recruits.",
+              "description": "The Muster's pick of recruits.",
               "type": "object",
               "properties": {
                 "offers": {
@@ -3784,7 +3817,7 @@
               "additionalProperties": false
             },
             "drill": {
-              "description": "Step 5h: the Drill ground's pick of formations, or this many members trained.",
+              "description": "The Drill ground's pick of formations, or this many members trained.",
               "type": "object",
               "properties": {
                 "offers": {
@@ -3901,19 +3934,19 @@
                   }
                 },
                 "easyTo": {
-                  "description": "Step 5h round 6: the easy pool's last floor (default 2).",
+                  "description": "The easy pool's last floor (default 2).",
                   "type": "integer",
                   "minimum": 1,
                   "maximum": 9007199254740991
                 },
                 "campPaths": {
-                  "description": "Step 5h round 6: mid-act campfires are added until at least this share of the ways up pass one before the last floor.",
+                  "description": "Mid-act campfires are added until at least this share of the ways up pass one before the last floor.",
                   "type": "number",
                   "minimum": 0,
                   "maximum": 100
                 },
                 "ref": {
-                  "description": "Step 5h round 6: each pool's reference floor, where its fights' own knobs hold (default 1, 5, 6).",
+                  "description": "Each pool's reference floor, where its fights' own knobs hold (default 1, 5, 6).",
                   "type": "object",
                   "properties": {
                     "easy": {
@@ -4089,25 +4122,25 @@
                       "type": "boolean"
                     },
                     "aimed": {
-                      "description": "Step 5h round 6: the first this many offers are pieces aimed at someone in the party.",
+                      "description": "The first this many offers are pieces aimed at someone in the party.",
                       "type": "integer",
                       "minimum": 0,
                       "maximum": 9007199254740991
                     },
                     "formations": {
-                      "description": "Step 5h round 6: a second pick follows, of this many formations (an elite's).",
+                      "description": "A second pick follows, of this many formations (an elite's).",
                       "type": "integer",
                       "minimum": 0,
                       "maximum": 9007199254740991
                     },
                     "extra": {
-                      "description": "Step 5i: chance, in percent, that a second pick of `count` pieces follows the first (gear only, from the same rarity table): a third more gear for the fourth slot.",
+                      "description": "Chance, in percent, that a second pick of `count` pieces follows the first (gear only, from the same rarity table): a third more gear for the fourth slot.",
                       "type": "number",
                       "minimum": 0,
                       "maximum": 100
                     },
                     "mixed": {
-                      "description": "Step 5h: chance, in percent, that the pick mixes kinds: one piece of gear, then offers rolled from `mix` (the rest stay gear).",
+                      "description": "Chance, in percent, that the pick mixes kinds: one piece of gear, then offers rolled from `mix` (the rest stay gear).",
                       "type": "number",
                       "minimum": 0,
                       "maximum": 100
@@ -4129,12 +4162,12 @@
                           "minimum": 0
                         },
                         "sealed": {
-                          "description": "Step 5h round 6: a piece whose rarity (rare or better) and name stay hidden until taken.",
+                          "description": "A piece whose rarity (rare or better) and name stay hidden until taken.",
                           "type": "number",
                           "minimum": 0
                         },
                         "bundle": {
-                          "description": "Step 5h round 6: a common piece and a potion or a tonic together.",
+                          "description": "A common piece and a potion or a tonic together.",
                           "type": "number",
                           "minimum": 0
                         }
@@ -4221,25 +4254,25 @@
                       "type": "boolean"
                     },
                     "aimed": {
-                      "description": "Step 5h round 6: the first this many offers are pieces aimed at someone in the party.",
+                      "description": "The first this many offers are pieces aimed at someone in the party.",
                       "type": "integer",
                       "minimum": 0,
                       "maximum": 9007199254740991
                     },
                     "formations": {
-                      "description": "Step 5h round 6: a second pick follows, of this many formations (an elite's).",
+                      "description": "A second pick follows, of this many formations (an elite's).",
                       "type": "integer",
                       "minimum": 0,
                       "maximum": 9007199254740991
                     },
                     "extra": {
-                      "description": "Step 5i: chance, in percent, that a second pick of `count` pieces follows the first (gear only, from the same rarity table): a third more gear for the fourth slot.",
+                      "description": "Chance, in percent, that a second pick of `count` pieces follows the first (gear only, from the same rarity table): a third more gear for the fourth slot.",
                       "type": "number",
                       "minimum": 0,
                       "maximum": 100
                     },
                     "mixed": {
-                      "description": "Step 5h: chance, in percent, that the pick mixes kinds: one piece of gear, then offers rolled from `mix` (the rest stay gear).",
+                      "description": "Chance, in percent, that the pick mixes kinds: one piece of gear, then offers rolled from `mix` (the rest stay gear).",
                       "type": "number",
                       "minimum": 0,
                       "maximum": 100
@@ -4261,12 +4294,12 @@
                           "minimum": 0
                         },
                         "sealed": {
-                          "description": "Step 5h round 6: a piece whose rarity (rare or better) and name stay hidden until taken.",
+                          "description": "A piece whose rarity (rare or better) and name stay hidden until taken.",
                           "type": "number",
                           "minimum": 0
                         },
                         "bundle": {
-                          "description": "Step 5h round 6: a common piece and a potion or a tonic together.",
+                          "description": "A common piece and a potion or a tonic together.",
                           "type": "number",
                           "minimum": 0
                         }
@@ -4292,7 +4325,7 @@
                   "type": "number",
                   "minimum": 0,
                   "maximum": 100,
-                  "description": "Step 5h: share of offered gear (spoils, chests, events; not the shop or a trophy) rolled for classes not in the roster, where there is such a piece."
+                  "description": "Share of offered gear (spoils, chests, events; not the shop or a trophy) rolled for classes not in the roster, where there is such a piece."
                 }
               },
               "required": [
@@ -4311,11 +4344,11 @@
                   "maximum": 9007199254740991
                 },
                 "seat": {
-                  "description": "Step 5h: a seat at camp is among the options, while there's one to win.",
+                  "description": "A seat at camp is among the options, while there's one to win.",
                   "type": "boolean"
                 },
                 "mythic": {
-                  "description": "Step 5i: the acts whose opening boon (the boss's before them) offers a mythic in place of its legendary piece: one for a roster member's class (the party first) that the run doesn't hold, while one is left.",
+                  "description": "The acts whose opening boon (the boss's before them) offers a mythic in place of its legendary piece: one for a roster member's class (the party first) that the run doesn't hold, while one is left.",
                   "type": "array",
                   "items": {
                     "type": "integer",
@@ -4330,7 +4363,7 @@
               "additionalProperties": false
             },
             "slots": {
-              "description": "Step 5i: an offered piece's slot is rolled first, by these weights; then a class (the roster's, or one off it by `spoils.offRoster`), a kind it wears in that slot, the rarity, and a piece of that kind and rarity. Absent: every slot alike.",
+              "description": "An offered piece's slot is rolled first, by these weights; then a class (the roster's, or one off it by `spoils.offRoster`), a kind it wears in that slot, the rarity, and a piece of that kind and rarity. Absent: every slot alike.",
               "type": "object",
               "properties": {
                 "weapon": {
@@ -4359,7 +4392,7 @@
               "additionalProperties": false
             },
             "lesson": {
-              "description": "Step 5i: members a lesson (a captive's or a stranger's) trains, each once (default 3).",
+              "description": "Members a lesson (a captive's or a stranger's) trains, each once (default 3).",
               "type": "integer",
               "minimum": 1,
               "maximum": 9007199254740991
@@ -4414,7 +4447,7 @@
                   "maxItems": 2
                 },
                 "cage": {
-                  "description": "Step 5h: chance the chest is a cage: a recruit with a piece suited to it.",
+                  "description": "Chance the chest is a cage: a recruit with a piece suited to it.",
                   "type": "number",
                   "minimum": 0,
                   "maximum": 100
@@ -4451,19 +4484,19 @@
                   "maximum": 100
                 },
                 "train": {
-                  "description": "Step 5h: members TRAIN teaches or upgrades (default one).",
+                  "description": "Members TRAIN teaches or upgrades (default one).",
                   "type": "integer",
                   "minimum": 1,
                   "maximum": 9007199254740991
                 },
                 "stranger": {
-                  "description": "Step 5h: chance a stranger at the fire asks to join.",
+                  "description": "Chance a stranger at the fire asks to join.",
                   "type": "number",
                   "minimum": 0,
                   "maximum": 100
                 },
                 "auto": {
-                  "description": "Step 5h round 6: on arrival everyone recovers this (HP and MP, the fallen rise); then one pick, REST (`hp` and `mp` again, everyone) or TRAIN. Without it, the old pick of REST, FOCUS, RAISE or TRAIN.",
+                  "description": "On arrival everyone recovers this (HP and MP, the fallen rise); then one pick, REST (`hp` and `mp` again, everyone) or TRAIN. Without it, one pick of REST, FOCUS, RAISE or TRAIN.",
                   "type": "object",
                   "properties": {
                     "hp": {
@@ -4498,7 +4531,7 @@
               "additionalProperties": false
             },
             "captive": {
-              "description": "Step 5h round 6: after a won fight with any of `people` in it, a captive this often (never two fights running), taken in at `hp`%, or a lesson.",
+              "description": "After a won fight with any of `people` in it, a captive this often (never two fights running), taken in at `hp`%, or a lesson.",
               "type": "object",
               "properties": {
                 "chance": {
@@ -4639,7 +4672,7 @@
                   "description": "How many pieces of each rarity."
                 },
                 "legendaryByAct": {
-                  "description": "Step 5h: legendary pieces a visit, by act (in place of gear.legendary).",
+                  "description": "Legendary pieces a visit, by act (in place of gear.legendary).",
                   "type": "array",
                   "items": {
                     "type": "integer",
@@ -4725,7 +4758,7 @@
               "additionalProperties": false
             },
             "drops": {
-              "description": "Round 9: offered as a choice of one after every won fight.",
+              "description": "Offered as a choice of one after every won fight.",
               "type": "array",
               "items": {
                 "type": "string",
@@ -4776,7 +4809,7 @@
                     "type": "number"
                   },
                   "early": {
-                    "description": "Step 5h round 6: the climb a floor below a pool's reference floor (default `step`).",
+                    "description": "The climb a floor below a pool's reference floor (default `step`).",
                     "type": "number"
                   },
                   "elite": {
@@ -5150,7 +5183,7 @@
                 }
               },
               "variants": {
-                "description": "Step 5h: versions of the event; one is rolled on entering, its text and options in place of the first's.",
+                "description": "Versions of the event; one is rolled on entering, its text and options in place of the first's.",
                 "type": "array",
                 "items": {
                   "type": "object",
@@ -5266,7 +5299,7 @@
           "maximum": 100
         },
         "mpBelow": {
-          "description": "MP below this share of max MP (step 5g: what a Clarity waits for). A unit with no MP pool never passes.",
+          "description": "MP below this share of max MP (what a Clarity waits for). A unit with no MP pool never passes.",
           "type": "number",
           "minimum": 0,
           "maximum": 100
@@ -5375,7 +5408,7 @@
           "pattern": "^[a-z][a-z0-9_]*$"
         },
         "casting": {
-          "description": "true: in an action's wind-up right now (step 5f: what Unmake waits for). false: not.",
+          "description": "true: in an action's wind-up right now (what Unmake waits for). false: not.",
           "type": "boolean"
         },
         "ko": {
@@ -5383,7 +5416,7 @@
           "type": "boolean"
         },
         "hasAny": {
-          "description": "Step 5i: has at least one of these statuses (Stunned or Silenced).",
+          "description": "Has at least one of these statuses (Stunned or Silenced).",
           "minItems": 1,
           "type": "array",
           "items": {
@@ -5392,7 +5425,7 @@
           }
         },
         "lower": {
-          "description": "Step 5i: this stat is lower than the reading unit's: the acting unit in an action, a reaction's actor, a pulse's holder (an ally with less Armor than the wearer).",
+          "description": "This stat is lower than the reading unit's: the acting unit in an action, a reaction's actor, a pulse's holder (an ally with less Armor than the wearer).",
           "type": "object",
           "properties": {
             "stat": {
@@ -5406,11 +5439,11 @@
           "additionalProperties": false
         },
         "acted": {
-          "description": "Step 5i: true once one of its actions has resolved this fight; false until then (a unit summoned mid-fight starts false).",
+          "description": "true once one of its actions has resolved this fight; false until then (a unit summoned mid-fight starts false).",
           "type": "boolean"
         },
         "top": {
-          "description": "Step 5i: no living unit on its side has more of the highest of these stats (\"the foe with the highest Attack or Magic\"); ties pass.",
+          "description": "No living unit on its side has more of the highest of these stats (\"the foe with the highest Attack or Magic\"); ties pass.",
           "type": "object",
           "properties": {
             "stats": {
@@ -5428,7 +5461,7 @@
           "additionalProperties": false
         },
         "weapon": {
-          "description": "Step 5i: wields a weapon of one of these kinds (an enemy's weapon by its kind, if it names one).",
+          "description": "Wields a weapon of one of these kinds (an enemy's weapon by its kind, if it names one).",
           "minItems": 1,
           "type": "array",
           "items": {
@@ -5487,7 +5520,7 @@
                     "$ref": "#/$defs/UnitCond"
                   },
                   "count": {
-                    "description": "Step 5i: a count, as COUNTS says: the unit's buffs or debuffs, an action's targets or the units its hits landed on, or the units on a side that pass a test.",
+                    "description": "A count, as COUNTS says: the unit's buffs or debuffs, an action's targets or the units its hits landed on, or the units on a side that pass a test.",
                     "anyOf": [
                       {
                         "type": "string",
@@ -5593,7 +5626,7 @@
           "const": "any"
         },
         "exclude": {
-          "description": "targets: skip the action's chosen targets (\"a second, random foe\", \"up to three other foes\"). Step 5i, reactions only: other or owner, skip the event's other unit or the unit it's about (\"every other foe\", \"a random foe other than the one it hit\").",
+          "description": "targets: skip the action's chosen targets (\"a second, random foe\", \"up to three other foes\"). Reactions only: other or owner, skip the event's other unit or the unit it's about (\"every other foe\", \"a random foe other than the one it hit\").",
           "type": "string",
           "enum": [
             "targets",
@@ -5602,7 +5635,7 @@
           ]
         },
         "seat": {
-          "description": "Step 5i: the unit in this seat of the party's formation (a position id), or `next` / `previous`: the seat after or before the reading unit's, by slot order, wrapping round and skipping empty seats.",
+          "description": "The unit in this seat of the party's formation (a position id), or `next` / `previous`: the seat after or before the reading unit's, by slot order, wrapping round and skipping empty seats.",
           "type": "string",
           "pattern": "^[a-z][a-z0-9_]*$"
         },
@@ -5629,7 +5662,7 @@
                 "debuffs",
                 "swing"
               ],
-              "description": "swing (step 5i): the basic attack's interval now, its cooldown after Attack speed; highest is the slowest."
+              "description": "swing: the basic attack's interval now, its cooldown after Attack speed; highest is the slowest."
             },
             {
               "type": "object",
@@ -5953,7 +5986,7 @@
                 "debuff",
                 "marker"
               ],
-              "description": "buff or debuff; marker (step 5i) only with `status`, to lift one's own bookkeeping."
+              "description": "buff or debuff; marker only with `status`, to lift one's own bookkeeping."
             },
             "status": {
               "type": "string",
@@ -5992,7 +6025,7 @@
               ]
             },
             "move": {
-              "description": "Step 5i: each status removed passes to the acting unit as it was, its stacks and time left with it, unless the actor is immune to it (a buff stolen).",
+              "description": "Each status removed passes to the acting unit as it was, its stacks and time left with it, unless the actor is immune to it (a buff stolen).",
               "type": "boolean",
               "const": true
             },
@@ -6038,7 +6071,7 @@
               "type": "boolean"
             },
             "after": {
-              "description": "Step 5i: the unit stands this many ticks later instead, if the fight hasn't ended and nothing has raised it meanwhile; the reviver needn't be standing then (\"stands up a few ticks later\").",
+              "description": "The unit stands this many ticks later instead, if the fight hasn't ended and nothing has raised it meanwhile; the reviver needn't be standing then (\"stands up a few ticks later\").",
               "type": "number",
               "exclusiveMinimum": 0
             },
@@ -6185,7 +6218,7 @@
             "set"
           ],
           "additionalProperties": false,
-          "description": "Step 5i: changes the cooldown left on a unit's basic attack or abilities: ready now, a full cooldown, some ticks closer, a share of what's left, or at most a share of its full one. A wind-up already under way carries on."
+          "description": "Changes the cooldown left on a unit's basic attack or abilities: ready now, a full cooldown, some ticks closer, a share of what's left, or at most a share of its full one. A wind-up already under way carries on."
         },
         {
           "type": "object",
@@ -6223,7 +6256,7 @@
             "to"
           ],
           "additionalProperties": false,
-          "description": "Step 5i: a price in HP (G12): lost at once, not damage, so no Shield soaks it, no Armor cuts it and nothing reacts to it; it never takes the payer below 1 HP. An ability's HP price is this effect on itself, after whatever reads its HP first."
+          "description": "A price in HP: lost at once, not damage, so no Shield soaks it, no Armor cuts it and nothing reacts to it; it never takes the payer below 1 HP. An ability's HP price is this effect on itself, after whatever reads its HP first."
         },
         {
           "type": "object",
@@ -6268,7 +6301,7 @@
             "op"
           ],
           "additionalProperties": false,
-          "description": "Step 5i, reactions only: a hit of kind extra by the actor at each target (the dodge's riposte, the blow returned for an ally). It can crit and be dodged, meets Armor or Magic resist, and fires hit events; it never brings extra strikes of its own."
+          "description": "Reactions only: a hit of kind extra by the actor at each target (the dodge's riposte, the blow returned for an ally). It can crit and be dodged, meets Armor or Magic resist, and fires hit events; it never brings extra strikes of its own."
         },
         {
           "type": "object",
@@ -6342,7 +6375,7 @@
             "of"
           ],
           "additionalProperties": false,
-          "description": "Step 5i: applies one of these statuses, picked at random on the actor's dice."
+          "description": "Applies one of these statuses, picked at random on the actor's dice."
         },
         {
           "type": "object",
@@ -6356,7 +6389,7 @@
             "op"
           ],
           "additionalProperties": false,
-          "description": "Step 5i, reactions to the holder's own action_resolve only: the action that set it off resolves again at once, with no wind-up and no MP, choosing its targets afresh by its own rule, its cooldown untouched. The repeat fires its own action events, which `repeat: false` filters skip."
+          "description": "Reactions to the holder's own action_resolve only: the action that set it off resolves again at once, with no wind-up and no MP, choosing its targets afresh by its own rule, its cooldown untouched. The repeat fires its own action events, which `repeat: false` filters skip."
         },
         {
           "type": "object",
@@ -6450,13 +6483,13 @@
           "maximum": 9007199254740991
         },
         "atMost": {
-          "description": "Step 5i: at most this many pass (0: none does, \"no foe is Marked\").",
+          "description": "At most this many pass (0: none does, \"no foe is Marked\").",
           "type": "integer",
           "minimum": 0,
           "maximum": 9007199254740991
         },
         "seat": {
-          "description": "Step 5i: the unit in this seat of the party's formation (a position id), or `next` / `previous`: the seat after or before the reading unit's, by slot order, wrapping round and skipping empty seats.",
+          "description": "The unit in this seat of the party's formation (a position id), or `next` / `previous`: the seat after or before the reading unit's, by slot order, wrapping round and skipping empty seats.",
           "type": "string",
           "pattern": "^[a-z][a-z0-9_]*$"
         }
@@ -6577,7 +6610,7 @@
               ]
             },
             "healer": {
-              "description": "Step 5h round 6: a class that heals or raises others.",
+              "description": "A class that heals or raises others.",
               "type": "boolean"
             }
           },
@@ -6620,7 +6653,7 @@
               "const": "temper"
             },
             "from": {
-              "description": "Step 5h round 6: the rarities a piece can be tempered from (default common, uncommon). Step 5i: a piece becomes a piece of the next rarity of its slot and kind that its wearer can wear (a rare one a legendary).",
+              "description": "The rarities a piece can be tempered from (default common, uncommon). A piece becomes a piece of the next rarity of its slot and kind that its wearer can wear (a rare one a legendary).",
               "type": "array",
               "items": {
                 "type": "string",
@@ -6634,7 +6667,7 @@
               }
             },
             "risk": {
-              "description": "Step 5h round 6: chance the piece cracks and is lost instead.",
+              "description": "Chance the piece cracks and is lost instead.",
               "type": "number",
               "minimum": 0,
               "maximum": 100
@@ -6663,7 +6696,7 @@
             "pct"
           ],
           "additionalProperties": false,
-          "description": "Step 5h round 6: every fallen member rises at this share of HP."
+          "description": "Every fallen member rises at this share of HP."
         },
         {
           "type": "object",
@@ -6719,7 +6752,7 @@
             "n"
           ],
           "additionalProperties": false,
-          "description": "Step 5i: n members (three, as every training opportunity) each take one training: learn an ability, or an ability's or the passive's power step or version."
+          "description": "n members (three, as every training opportunity) each take one training: learn an ability, or an ability's or the passive's power step or version."
         },
         {
           "type": "object",
@@ -6739,7 +6772,7 @@
               "maximum": 3
             },
             "gear": {
-              "description": "Step 5h round 6: each carries a piece of this rarity suited to it.",
+              "description": "Each carries a piece of this rarity suited to it.",
               "type": "string",
               "enum": [
                 "common",

@@ -113,13 +113,13 @@ export const STAT_FAMILIES = {
 } as const;
 
 export const KINDS = {
-  stat: "A stat change, or (step 5i) a stat set to a value. Tag: the stat.",
+  stat: "A stat change, or a stat set to a value. Tag: the stat.",
   boost: "A damage or healing boost. Tag: the boost's tag.",
   taken: "A damage-taken modifier. Tag: its tag, if any.",
   absorb: "An absorb, such as a shield.",
-  block: "A block: the next damage above a share of max HP is blocked, then the status ends (Aegis). Step 5i: an HP floor or a cover too.",
+  block: "A block: the next damage above a share of max HP is blocked, then the status ends (Aegis). Also an HP floor or a cover.",
   lockout: "A lockout. Tag: what it covers.",
-  action_change: "A rider added to the holder's actions, Seek, or an extra strike. Step 5i: an aim, ability changes, crits by condition, echo, or a rule for its revives.",
+  action_change: "A rider added to the holder's actions, Seek, an extra strike, an aim, ability changes, crits by condition, echo, or a rule for its revives.",
   pulse: "A repeating effect.",
   reaction: "A reaction, or an Intensity event trigger.",
 } as const;
@@ -131,7 +131,7 @@ export const TAGS = {
   extra: "Hits from extra strikes (Double strike's second strike, Arc's second hit): hits, but not basic attacks.",
   physical: "Physical hits (and actions with one).",
   magical: "Magical hits (and actions with one).",
-  area: "Step 5i: hits from a damage effect aimed at two or more units at once (an Area spell, a basic attack aimed at every foe). A hit without it is a single-target hit.",
+  area: "Hits from a damage effect aimed at two or more units at once (an Area spell, a basic attack aimed at every foe). A hit without it is a single-target hit.",
   "<status>":"A status's id: reaches that status's pulses (\"+20% Burn damage\").",
   "<status tag>": "A tag a status carries, which reaches its pulses.",
   healing: "Boosts only: heals.",
@@ -141,7 +141,7 @@ export const TAGS = {
 export const EVENTS = {
   fight_start: "The fight begins. Whose: every unit.",
   action_start: "An action starts. Whose: the acting unit. Has `kind`.",
-  action_resolve: "An action resolves. Whose: the acting unit. Has `kind`, `amount` (step 5i: the MP it paid) and `count` (step 5i: the units on the other side its hits landed on).",
+  action_resolve: "An action resolves. Whose: the acting unit. Has `kind`, `amount` (the MP it paid) and `count` (the units on the other side its hits landed on).",
   action_interrupted: "An action in cast time is canceled by an interrupting lockout. Whose: the casting unit. Has `kind`.",
   hit_lands: "A hit lands (not evaded), riders included. Whose: the attacker; other: the target. Has `kind`, `tags` and `amount`.",
   hit_taken: "A hit lands on this unit. Whose: the target; other: the attacker. Has `kind`, `tags` and `amount`.",
@@ -150,15 +150,15 @@ export const EVENTS = {
   damage_dealt: "Damage is dealt, including what an absorb soaks. Whose: the dealer, when known; other: the receiver. Has `amount`, and `status` when a status's pulse or reaction dealt it.",
   damage_taken: "Damage is taken, including what an absorb soaks. Whose: the receiver; other: the dealer, when known. Has `amount`, and `status` when a status's pulse or reaction dealt it.",
   hp_lost: "HP is lost. Whose: the unit. Has `amount`. HP paid as a price (the pay effect) isn't lost this way and fires nothing.",
-  healed: "Healing is received. Whose: the healed unit; other: the healer, when known. Has `amount` (HP restored), and `kind` when an action healed (step 5i: \"a heal given\" is this event with `other: holder`).",
-  overhealed: "Step 5i: healing that would go past max HP. Whose: the healed unit; other: the healer, when known. Has `amount` (the part past full) and `kind` when an action healed.",
-  status_gained: "A status is applied (each application, refreshes and added stacks included). Whose: the holder; other (step 5i): the applier. Has `status`, and `amount`: the stacks it added (Intensity only).",
+  healed: "Healing is received. Whose: the healed unit; other: the healer, when known. Has `amount` (HP restored), and `kind` when an action healed (\"a heal given\" is this event with `other: holder`).",
+  overhealed: "Healing that would go past max HP. Whose: the healed unit; other: the healer, when known. Has `amount` (the part past full) and `kind` when an action healed.",
+  status_gained: "A status is applied (each application, refreshes and added stacks included). Whose: the holder; other: the applier. Has `status`, and `amount`: the stacks it added (Intensity only).",
   status_triggered: "A status pulses, or an Intensity status's trigger fires. Whose: the holder. Has `status`.",
-  status_ended: "A status ends. Whose: the holder. Has `status` and `cause`. Step 5i: `amount` is the stacks it held as it ended (an Intensity total), but the most an absorb held when damage emptied it (cause stacks), and the damage a block stopped (cause spent); other is the unit whose damage emptied or spent it, or whose effect removed it.",
-  status_capped: "An Intensity status stands at its cap after an application (step 5g: Chill shatters). Whose: the holder; other: the applier. Has `status`.",
-  ko: "A unit is KO'd. Whose: that unit; other (step 5i): the unit whose damage knocked it out, when known, with `kind` when a hit did it. The unit's own statuses that survive a KO can still react to it.",
+  status_ended: "A status ends. Whose: the holder. Has `status` and `cause`. `amount` is the stacks it held as it ended (an Intensity total), but the most an absorb held when damage emptied it (cause stacks), and the damage a block stopped (cause spent); other is the unit whose damage emptied or spent it, or whose effect removed it.",
+  status_capped: "An Intensity status stands at its cap after an application (where Chill shatters). Whose: the holder; other: the applier. Has `status`.",
+  ko: "A unit is KO'd. Whose: that unit; other: the unit whose damage knocked it out, when known, with `kind` when a hit did it. The unit's own statuses that survive a KO can still react to it.",
   revived: "A unit is revived. Whose: that unit; other: the reviver.",
-  fight_won: "Step 5i: the fight is won, the moment the last foe falls, before statuses end. Whose: every party unit, fallen ones included. Its reactions resolve at once, in slot order, and a fallen unit's statuses that survive a KO act for it.",
+  fight_won: "The fight is won, the moment the last foe falls, before statuses end. Whose: every party unit, fallen ones included. Its reactions resolve at once, in slot order, and a fallen unit's statuses that survive a KO act for it.",
 } as const;
 export const EventName = z.enum(keys(EVENTS));
 
@@ -182,7 +182,7 @@ export const Cause = z.enum(keys(CAUSES));
 export type CauseT = z.infer<typeof Cause>;
 
 export const SCALE_OF = {
-  self: "Actions: the acting unit. The default for stats in actions, and (step 5i) for a count of a side's units.",
+  self: "Actions: the acting unit. The default for stats in actions, and for a count of a side's units.",
   target: "Actions: the unit the effect lands on. Boosts: the unit being hit. The default for hp, stacks, conditions and counts of buffs or debuffs in actions.",
   source: "Statuses that know their source (not a shared Intensity total): the unit that applied it, read once at application.",
   holder: "Statuses: the holder, read each time the number is used (stat changes: once, at application). The default for hp, stacks and conditions in statuses; stats must say whose.",
@@ -195,7 +195,7 @@ export const TO = {
   holder: "Statuses: the holder. The default for pulses.",
   source: "Statuses that know their source (Refresh, Fizzle, Per source): the unit that applied it.",
   other: "Reactions: the event's other unit (the attacker for hit_taken, the target for hit_lands). Nothing if unknown.",
-  owner: "Reactions: the unit the event is about, whoever holds the reacting status (the holder of a status that just capped, the unit knocked out). Step 5g.",
+  owner: "Reactions: the unit the event is about, whoever holds the reacting status (the holder of a status that just capped, the unit knocked out).",
 } as const;
 
 export const SIDES = {
@@ -219,7 +219,7 @@ export const Pick = z.enum(keys(PICKS));
 export const LABELS = {
   buff: "Helps its holder. Removed by effects that remove buffs (Dispel); counted by `buffs`.",
   debuff: "Hurts its holder. Removed by effects that remove debuffs (Cleanse); counted by `debuffs`. Its pulses resolve in the batch of the holder's foes.",
-  marker: "Step 5i: neither. Bookkeeping such as \"once a fight\" or \"already hit by it\": only a remove that names it lifts it, no immunity to debuffs stops it, and nothing counts it as a buff or debuff. Its pulses resolve in its holder's own batch.",
+  marker: "Neither. Bookkeeping such as \"once a fight\" or \"already hit by it\": only a remove that names it lifts it, no immunity to debuffs stops it, and nothing counts it as a buff or debuff. Its pulses resolve in its holder's own batch.",
 } as const;
 export const Label = z.enum(keys(LABELS));
 
@@ -274,7 +274,7 @@ export const COUNTS = {
 export const UnitCond = z.strictObject({
   hpBelow: z.number().min(0).max(100).optional().describe("HP below this percent of max HP."),
   hpAtLeast: z.number().min(0).max(100).optional(),
-  mpBelow: z.number().min(0).max(100).optional().describe("MP below this share of max MP (step 5g: what a Clarity waits for). A unit with no MP pool never passes."),
+  mpBelow: z.number().min(0).max(100).optional().describe("MP below this share of max MP (what a Clarity waits for). A unit with no MP pool never passes."),
   mpAtLeast: z.number().min(0).max(100).optional(),
   has: z.union([Id, z.array(Id).min(1)]).optional().describe("Has this status (or every one of these)."),
   lacks: z.union([Id, z.array(Id).min(1)]).optional().describe("Doesn't have this status (or any of these)."),
@@ -284,13 +284,13 @@ export const UnitCond = z.strictObject({
   stacks: z.strictObject({ status: Id, atLeast: z.number() }).optional().describe("A status's Intensity total, in stacks."),
   atCap: Id.optional().describe("Holds this Intensity status at its cap."),
   belowCap: Id.optional().describe("Doesn't hold this Intensity status at its cap (or at all)."),
-  casting: z.boolean().optional().describe("true: in an action's wind-up right now (step 5f: what Unmake waits for). false: not."),
+  casting: z.boolean().optional().describe("true: in an action's wind-up right now (what Unmake waits for). false: not."),
   ko: z.boolean().optional().describe("true: knocked out, still in the fight. Sides list living units unless a rule asks for this. Default: living."),
-  hasAny: z.array(Id).min(1).optional().describe("Step 5i: has at least one of these statuses (Stunned or Silenced)."),
-  lower: z.strictObject({ stat: StatKey }).optional().describe("Step 5i: this stat is lower than the reading unit's: the acting unit in an action, a reaction's actor, a pulse's holder (an ally with less Armor than the wearer)."),
-  acted: z.boolean().optional().describe("Step 5i: true once one of its actions has resolved this fight; false until then (a unit summoned mid-fight starts false)."),
-  top: z.strictObject({ stats: z.array(StatKey).min(1) }).optional().describe("Step 5i: no living unit on its side has more of the highest of these stats (\"the foe with the highest Attack or Magic\"); ties pass."),
-  weapon: z.array(Id).min(1).optional().describe("Step 5i: wields a weapon of one of these kinds (an enemy's weapon by its kind, if it names one)."),
+  hasAny: z.array(Id).min(1).optional().describe("Has at least one of these statuses (Stunned or Silenced)."),
+  lower: z.strictObject({ stat: StatKey }).optional().describe("This stat is lower than the reading unit's: the acting unit in an action, a reaction's actor, a pulse's holder (an ally with less Armor than the wearer)."),
+  acted: z.boolean().optional().describe("true once one of its actions has resolved this fight; false until then (a unit summoned mid-fight starts false)."),
+  top: z.strictObject({ stats: z.array(StatKey).min(1) }).optional().describe("No living unit on its side has more of the highest of these stats (\"the foe with the highest Attack or Magic\"); ties pass."),
+  weapon: z.array(Id).min(1).optional().describe("Wields a weapon of one of these kinds (an enemy's weapon by its kind, if it names one)."),
 }).meta({ id: "UnitCond" });
 export type UnitCondT = z.infer<typeof UnitCond>;
 
@@ -305,7 +305,7 @@ export const Scale = z
     count: z
       .union([z.enum(["buffs", "debuffs", "targets", "hit"]), z.strictObject({ side: Side, where: UnitCond.optional(), seat: Id.optional() })])
       .optional()
-      .describe("Step 5i: a count, as COUNTS says: the unit's buffs or debuffs, an action's targets or the units its hits landed on, or the units on a side that pass a test."),
+      .describe("A count, as COUNTS says: the unit's buffs or debuffs, an action's targets or the units its hits landed on, or the units on a side that pass a test."),
     times: z.strictObject({ stat: StatKey, of: Of.optional() }).optional().describe("Multiplies the term by a stat, read live: \"X% per point of Y\" (Lifesteal, Siphon)."),
     of: Of.optional(),
   })
@@ -319,7 +319,7 @@ export const Num = z.union([z.number(), z.strictObject({ base: z.number().option
 export type NumT = z.infer<typeof Num>;
 
 export const Value = z.union([
-  z.enum(["hp", "hp_share", "mp_share", "buffs", "debuffs", "swing"]).describe("swing (step 5i): the basic attack's interval now, its cooldown after Attack speed; highest is the slowest."),
+  z.enum(["hp", "hp_share", "mp_share", "buffs", "debuffs", "swing"]).describe("swing: the basic attack's interval now, its cooldown after Attack speed; highest is the slowest."),
   z.strictObject({ stat: StatKey }),
   z.strictObject({ stats: z.array(StatKey).min(1) }).describe("The highest of these stats (\"the foe with the highest Attack or Magic\")."),
   z.strictObject({ stacks: Id }),
@@ -327,7 +327,7 @@ export const Value = z.union([
 
 /** A seat in the party's formation, by its position id, or next / previous by slot order (wrapping round). */
 const Seat = Id;
-const SEAT = "Step 5i: the unit in this seat of the party's formation (a position id), or `next` / `previous`: the seat after or before the reading unit's, by slot order, wrapping round and skipping empty seats.";
+const SEAT = "The unit in this seat of the party's formation (a position id), or `next` / `previous`: the seat after or before the reading unit's, by slot order, wrapping round and skipping empty seats.";
 
 export const TargetRule = z.strictObject({
   side: Side,
@@ -336,7 +336,7 @@ export const TargetRule = z.strictObject({
   exclude: z
     .enum(["targets", "other", "owner"])
     .optional()
-    .describe("targets: skip the action's chosen targets (\"a second, random foe\", \"up to three other foes\"). Step 5i, reactions only: other or owner, skip the event's other unit or the unit it's about (\"every other foe\", \"a random foe other than the one it hit\")."),
+    .describe("targets: skip the action's chosen targets (\"a second, random foe\", \"up to three other foes\"). Reactions only: other or owner, skip the event's other unit or the unit it's about (\"every other foe\", \"a random foe other than the one it hit\")."),
   seat: Seat.optional().describe(SEAT),
   pick: Pick.optional(),
   by: Value.optional().describe("Required for lowest and highest."),
@@ -349,7 +349,7 @@ export const Condition = z.strictObject({
   side: Side,
   where: UnitCond,
   atLeast: PosInt.optional().describe("At least this many pass. Default 1, or 0 when atMost is given."),
-  atMost: z.number().int().min(0).optional().describe("Step 5i: at most this many pass (0: none does, \"no foe is Marked\")."),
+  atMost: z.number().int().min(0).optional().describe("At most this many pass (0: none does, \"no foe is Marked\")."),
   seat: Seat.optional().describe(SEAT),
 }).meta({ id: "Condition" });
 export type ConditionT = z.infer<typeof Condition>;
@@ -402,13 +402,13 @@ export const Effect = z
     z
       .strictObject({
         op: z.literal("remove"),
-        label: Label.describe("buff or debuff; marker (step 5i) only with `status`, to lift one's own bookkeeping."),
+        label: Label.describe("buff or debuff; marker only with `status`, to lift one's own bookkeeping."),
         status: Id.optional(),
         kind: Kind.optional(),
         tag: Tag.optional(),
         count: PosInt.optional().describe("Default: all."),
         order: z.enum(["newest", "random"]).optional().describe("Which go first when fewer than all are removed. Default newest."),
-        move: z.literal(true).optional().describe("Step 5i: each status removed passes to the acting unit as it was, its stacks and time left with it, unless the actor is immune to it (a buff stolen)."),
+        move: z.literal(true).optional().describe("Each status removed passes to the acting unit as it was, its stacks and time left with it, unless the actor is immune to it (a buff stolen)."),
         to: To.optional(),
       })
       .describe("Removes buffs or debuffs, optionally narrowed to a named status or an effect kind. Unremovable statuses stay, and so do the buffs of a unit with immune:dispel."),
@@ -417,7 +417,7 @@ export const Effect = z
         op: z.literal("revive"),
         hp: Num.describe("HP the unit comes back with (`target` is the revived unit)."),
         ready: z.boolean().optional().describe("true: every action ready. Default: every action on cooldown, as at the start of a fight. The reviver's `revives` (a status field) wins over this."),
-        after: z.number().positive().optional().describe("Step 5i: the unit stands this many ticks later instead, if the fight hasn't ended and nothing has raised it meanwhile; the reviver needn't be standing then (\"stands up a few ticks later\")."),
+        after: z.number().positive().optional().describe("The unit stands this many ticks later instead, if the fight hasn't ended and nothing has raised it meanwhile; the reviver needn't be standing then (\"stands up a few ticks later\")."),
         to: To.optional(),
       })
       .describe("Raises a knocked-out unit, one knocked out in an earlier fight included. Its targets must ask for `ko: true`."),
@@ -435,10 +435,10 @@ export const Effect = z
           .describe("What happens to them, as COOLDOWN_SET says."),
         to: To.optional(),
       })
-      .describe("Step 5i: changes the cooldown left on a unit's basic attack or abilities: ready now, a full cooldown, some ticks closer, a share of what's left, or at most a share of its full one. A wind-up already under way carries on."),
+      .describe("Changes the cooldown left on a unit's basic attack or abilities: ready now, a full cooldown, some ticks closer, a share of what's left, or at most a share of its full one. A wind-up already under way carries on."),
     z
       .strictObject({ op: z.literal("pay"), hp: Num.describe("HP paid. Negative pays nothing."), to: To })
-      .describe("Step 5i: a price in HP (G12): lost at once, not damage, so no Shield soaks it, no Armor cuts it and nothing reacts to it; it never takes the payer below 1 HP. An ability's HP price is this effect on itself, after whatever reads its HP first."),
+      .describe("A price in HP: lost at once, not damage, so no Shield soaks it, no Armor cuts it and nothing reacts to it; it never takes the payer below 1 HP. An ability's HP price is this effect on itself, after whatever reads its HP first."),
     z
       .strictObject({
         op: z.literal("strike"),
@@ -446,13 +446,13 @@ export const Effect = z
         of: z.enum(["weapon", "hit"]).optional().describe("weapon (the default): the actor's basic attack against each target, its damage with the weapon's riders and statuses, as an extra strike's. hit: the raw amount of the hit that set the reaction off (before Armor or Magic resist), in that hit's damage type."),
         to: To.optional(),
       })
-      .describe("Step 5i, reactions only: a hit of kind extra by the actor at each target (the dodge's riposte, the blow returned for an ally). It can crit and be dodged, meets Armor or Magic resist, and fires hit events; it never brings extra strikes of its own."),
+      .describe("Reactions only: a hit of kind extra by the actor at each target (the dodge's riposte, the blow returned for an ally). It can crit and be dodged, meets Armor or Magic resist, and fires hit events; it never brings extra strikes of its own."),
     z
       .strictObject({ op: z.literal("one"), of: z.array(HitApply).min(2).describe("The statuses to pick from, each with its own stacks."), to: To.optional() })
-      .describe("Step 5i: applies one of these statuses, picked at random on the actor's dice."),
+      .describe("Applies one of these statuses, picked at random on the actor's dice."),
     z
       .strictObject({ op: z.literal("recast") })
-      .describe("Step 5i, reactions to the holder's own action_resolve only: the action that set it off resolves again at once, with no wind-up and no MP, choosing its targets afresh by its own rule, its cooldown untouched. The repeat fires its own action events, which `repeat: false` filters skip."),
+      .describe("Reactions to the holder's own action_resolve only: the action that set it off resolves again at once, with no wind-up and no MP, choosing its targets afresh by its own rule, its cooldown untouched. The repeat fires its own action events, which `repeat: false` filters skip."),
     z
       .strictObject({ op: z.literal("summon"), enemy: Id, count: PosInt.optional().describe("Default 1.") })
       .describe("Brings new units into the fight on the actor's side, up to ruleset.maxEnemies living units on that side. They enter with every action on cooldown."),
@@ -473,7 +473,7 @@ export const StatChange = z.strictObject({
   stat: StatKey,
   flat: Num.optional(),
   pct: Num.optional(),
-  live: z.literal(true).optional().describe("Step 5i: read whenever the holder's stats are worked out, from its other stats as they stand without this change (Thorns from Armor, Guard included), not once at application."),
+  live: z.literal(true).optional().describe("Read whenever the holder's stats are worked out, from its other stats as they stand without this change (Thorns from Armor, Guard included), not once at application."),
 });
 /** A stat change from gear, a passive, a formation or a perk. Plain numbers. */
 export const FixedStat = z.strictObject({ stat: StatKey, flat: z.number().optional(), pct: z.number().optional() });
@@ -482,24 +482,24 @@ export type FixedStatT = z.infer<typeof FixedStat>;
 export const EventSpec = z.strictObject({
   event: EventName,
   whose: Whose.optional(),
-  kind: z.enum(["basic", "ability", "extra"]).optional().describe("Action and hit events, and (step 5i) ko, healed and overhealed: the kind of the action or hit behind it."),
+  kind: z.enum(["basic", "ability", "extra"]).optional().describe("Action and hit events, and ko, healed and overhealed: the kind of the action or hit behind it."),
   tags: z.array(Tag).min(1).optional().describe("Hit events only: the hit carries at least one of these tags (its kind and type, \"crit\" when it crits, \"area\" when its effect is aimed at several units)."),
-  notTags: z.array(Tag).min(1).optional().describe("Step 5i, hit events only: the hit carries none of these (`area`: a single-target hit)."),
+  notTags: z.array(Tag).min(1).optional().describe("Hit events only: the hit carries none of these (`area`: a single-target hit)."),
   status: Id.optional().describe("Status events, and damage events: the status whose pulse or reaction dealt the damage."),
   cause: z.array(Cause).min(1).optional().describe("status_ended only. Default: every cause."),
-  other: Whose.optional().describe("Step 5i: who the event's other unit is, from the holder's side: holder (a kill it landed, a status it applied, a heal or revive it gave), ally, foe, or any (there is one)."),
-  source: z.literal("holder").optional().describe("Step 5i, status events only: the status was applied by the holder (a Mark it gave, an Aegis it gave)."),
-  seat: Seat.optional().describe("Step 5i: the unit the event is about sits in this seat of the party's formation (a position id, or next / previous from the holder's)."),
-  amountAtLeast: z.number().optional().describe("Step 5i: the event's amount is at least this (\"a cast that paid MP\": 1)."),
-  countAtLeast: PosInt.optional().describe("Step 5i, action_resolve only: its hits landed on at least this many units of the other side."),
-  repeat: z.boolean().optional().describe("Step 5i, action events only: true matches only a recast's repeat, false only ordinary actions. Default: both."),
+  other: Whose.optional().describe("Who the event's other unit is, from the holder's side: holder (a kill it landed, a status it applied, a heal or revive it gave), ally, foe, or any (there is one)."),
+  source: z.literal("holder").optional().describe("Status events only: the status was applied by the holder (a Mark it gave, an Aegis it gave)."),
+  seat: Seat.optional().describe("The unit the event is about sits in this seat of the party's formation (a position id, or next / previous from the holder's)."),
+  amountAtLeast: z.number().optional().describe("The event's amount is at least this (\"a cast that paid MP\": 1)."),
+  countAtLeast: PosInt.optional().describe("action_resolve only: its hits landed on at least this many units of the other side."),
+  repeat: z.boolean().optional().describe("Action events only: true matches only a recast's repeat, false only ordinary actions. Default: both."),
 });
 export type EventSpecT = z.infer<typeof EventSpec>;
 
 export const Reaction = z.strictObject({
   on: EventSpec,
   actor: z.enum(["holder", "source"]).optional().describe("Who acts. source only for statuses that know their source. Default holder."),
-  if: z.union([Test, z.array(Test).min(1)]).optional().describe("Step 5i: checked when the reaction resolves, every one must hold: a side's state (as an ability's `if`, read from the actor's side) or a test of the event's other unit or owner. When one fails, the reaction does nothing."),
+  if: z.union([Test, z.array(Test).min(1)]).optional().describe("Checked when the reaction resolves, every one must hold: a side's state (as an ability's `if`, read from the actor's side) or a test of the event's other unit or owner. When one fails, the reaction does nothing."),
   do: z.array(Effect).min(1).describe("Each effect states its target (`to`)."),
 });
 
@@ -517,7 +517,7 @@ export const AbilityMod = z.strictObject({
   mp: z.number().min(-100).optional().describe("Percent change to its MP cost: −20 a fifth less, −100 free, +50 half again. Changes add up; the cost never falls below 0."),
   hp: z
     .strictObject({
-      pct: z.number().positive().describe("Percent of the ability's own MP cost (before `mp` changes), paid in HP as the pay effect pays (G12)."),
+      pct: z.number().positive().describe("Percent of the ability's own MP cost (before `mp` changes), paid in HP as the pay effect pays."),
       share: z.literal(true).optional().describe("Paid as the same share of max HP as the cost is of max MP, not point for point."),
       floor: z.number().min(0).max(100).optional().describe("The ability waits rather than leave the holder below this percent of its max HP."),
     })
@@ -549,7 +549,7 @@ export const Status = z.strictObject({
   id: Id,
   name: Text.describe("Shown on its icon or sheet line, e.g. BURN."),
   text: Text.optional(),
-  label: Label.describe("Drives removal, conditions and the batch its pulses resolve in. marker (step 5i): neither buff nor debuff."),
+  label: Label.describe("Drives removal, conditions and the batch its pulses resolve in. marker: neither buff nor debuff."),
   show: z.enum(["icon", "sheet", "stat"]).describe("icon: on the HP bar with its total. sheet: listed on the unit sheet. stat: shown as a stat."),
   tags: z.array(Tag).optional().describe("Tags that boosts (on its applications' stacks) and damage-taken modifiers (on its pulses) can name."),
   stacking: z.enum(["refresh", "fizzle", "intensity"]),
@@ -585,12 +585,12 @@ export const Status = z.strictObject({
     .strictObject({
       chance: z.number().min(0).max(100).optional().describe("Percent, rolled on the holder's dice. Default: always."),
       scale: StatKey.optional().describe("A stat read live whose value is added to `chance` (Double strike)."),
-      to: z.union([z.literal("target"), TargetRule]).describe("The same target, or a rule (Arc: a second, random foe, excluding the target). Step 5i: a rule that picks several units strikes each of them (every other foe)."),
-      share: z.number().positive().optional().describe("Step 5i: percent of the weapon's damage each strike deals. Default 100."),
+      to: z.union([z.literal("target"), TargetRule]).describe("The same target, or a rule (Arc: a second, random foe, excluding the target). A rule that picks several units strikes each of them (every other foe)."),
+      share: z.number().positive().optional().describe("Percent of the weapon's damage each strike deals. Default 100."),
       chain: z
         .strictObject({ times: PosInt, share: z.number().positive().max(100) })
         .optional()
-        .describe("Step 5i: each strike that lands rolls `chance` again for one more, at most `times` more after the first, each share % of the one before. It takes the place of a plain strike on the unit that reads the same `scale` stat (Flurry wraps over Double strike), so a swing rolls that chance once. The one bend of \"extra strikes don't chain\"."),
+        .describe("Each strike that lands rolls `chance` again for one more, at most `times` more after the first, each share % of the one before. It takes the place of a plain strike on the unit that reads the same `scale` stat (Flurry wraps over Double strike), so a swing rolls that chance once. The one bend of \"extra strikes don't chain\"."),
     })
     .optional()
     .describe("After each of the holder's basic attacks: one more hit with the weapon's damage, of kind extra, at `to`. Extra strikes don't chain."),
@@ -598,7 +598,7 @@ export const Status = z.strictObject({
     .strictObject({
       every: z.number().positive(),
       do: z.array(Effect).optional().describe("Absent: the pulse is only a timer, for an Intensity drop."),
-      if: z.union([Condition, z.array(Condition).min(1)]).optional().describe("Step 5i: a pulse whose conditions fail does nothing that beat (\"while any foe burns\"); an Intensity drop still happens."),
+      if: z.union([Condition, z.array(Condition).min(1)]).optional().describe("A pulse whose conditions fail does nothing that beat (\"while any foe burns\"); an Intensity drop still happens."),
     })
     .optional()
     .describe("A repeating effect. Intensity: its trigger."),
@@ -615,45 +615,45 @@ export const Status = z.strictObject({
   focus: z
     .literal(true)
     .optional()
-    .describe("Step 5i, Marked: the holder's foes' basic attacks pick a holder while one can be picked, by draw among several, under the Taunt rule (Seek follows it past a Taunting foe). Abilities keep their own targeting."),
+    .describe("Marked: the holder's foes' basic attacks pick a holder while one can be picked, by draw among several, under the Taunt rule (Seek follows it past a Taunting foe). Abilities keep their own targeting."),
   single: z
     .literal(true)
     .optional()
-    .describe("Step 5i, Marked: each applier keeps one copy: applying it to a unit ends the copy that applier gave anywhere else. Statuses that know their source only."),
+    .describe("Marked: each applier keeps one copy: applying it to a unit ends the copy that applier gave anywhere else. Statuses that know their source only."),
   aim: z
     .strictObject({
       rule: TargetRule.describe("Its Taunt rule is an action's own; an all-pick hits every unit it finds, each hit a basic attack's."),
       first: z.literal(true).optional().describe("Ahead of a Marked foe. Without it, a Marked foe comes first."),
     })
     .optional()
-    .describe("Step 5i: the holder's basic attacks pick by this rule. When it finds nobody, the next in line picks: a Marked foe, then the default."),
-  mods: z.array(AbilityMod).min(1).optional().describe("Step 5i: changes to the holder's own abilities, read each time one is used. An Intensity status's changes don't grow with its stacks."),
-  crits: z.array(CritRule).min(1).optional().describe("Step 5i: crits by condition on the holder's hits."),
+    .describe("The holder's basic attacks pick by this rule. When it finds nobody, the next in line picks: a Marked foe, then the default."),
+  mods: z.array(AbilityMod).min(1).optional().describe("Changes to the holder's own abilities, read each time one is used. An Intensity status's changes don't grow with its stacks."),
+  crits: z.array(CritRule).min(1).optional().describe("Crits by condition on the holder's hits."),
   echo: z
     .literal(true)
     .optional()
-    .describe("Step 5i: the holder's extra strikes are heard as basic attacks by its statuses' reactions and triggers that name kind basic, unless that status also names kind extra for the same event, or gives strikes itself. Boosts still see them as extra."),
+    .describe("The holder's extra strikes are heard as basic attacks by its statuses' reactions and triggers that name kind basic, unless that status also names kind extra for the same event, or gives strikes itself. Boosts still see them as extra."),
   set: z
     .array(z.strictObject({ stat: StatKey, value: z.number() }))
     .min(1)
     .optional()
-    .describe("Step 5i: after every other change, the holder's stat is this value while it holds the status."),
+    .describe("After every other change, the holder's stat is this value while it holds the status."),
   cover: z
     .strictObject({ share: z.number().gt(0).max(100) })
     .optional()
-    .describe("Step 5i: when a hit on another living ally would deal it more than share % of its max HP, after its mitigation and before its block and absorbs, the holder takes the whole hit instead: it resolves again against the holder, statuses and riders included, keeping its crit and without a second dodge. A hit moves once."),
+    .describe("When a hit on another living ally would deal it more than share % of its max HP, after its mitigation and before its block and absorbs, the holder takes the whole hit instead: it resolves again against the holder, statuses and riders included, keeping its crit and without a second dodge. A hit moves once."),
   floor: z
     .strictObject({ spend: z.literal(true).optional().describe("The status ends (cause spent) the first time it holds a blow.") })
     .optional()
-    .describe("Step 5i: the holder's HP can't fall below 1 while it holds this: a blow that would knock it out leaves it at 1, and nothing falls."),
-  heals: z.literal("own").optional().describe("Step 5i: only its own heals land on the holder (its abilities, its Lifesteal, its statuses' reactions); heals from others, a Regen they gave included, restore nothing."),
+    .describe("The holder's HP can't fall below 1 while it holds this: a blow that would knock it out leaves it at 1, and nothing falls."),
+  heals: z.literal("own").optional().describe("Only its own heals land on the holder (its abilities, its Lifesteal, its statuses' reactions); heals from others, a Regen they gave included, restore nothing."),
   revives: z
     .strictObject({
       ready: z.boolean().optional().describe("true: every action ready; false: every action on cooldown. It wins over the revive's own `ready`, and false wins over true."),
       hp: Num.optional().describe("The HP they come back with, in place of the revive's (target is the revived unit)."),
     })
     .optional()
-    .describe("Step 5i: every revive the holder makes, from its abilities and its statuses' reactions alike (Einherjar)."),
+    .describe("Every revive the holder makes, from its abilities and its statuses' reactions alike (Einherjar)."),
   note: Note.optional(),
 });
 export type StatusT = z.infer<typeof Status>;
@@ -713,11 +713,11 @@ export const Ability = z.strictObject({
   if: z
     .union([Condition, z.array(Condition).min(1), z.strictObject({ any: z.array(Condition).min(2) })])
     .optional()
-    .describe("Checked when the action starts: what the ability waits for. Several conditions must all hold (step 5g); `any` (step 5i): at least one must."),
+    .describe("Checked when the action starts: what the ability waits for. Several conditions must all hold; `any`: at least one must."),
   target: Target.optional().describe("foe (default): a foe by Aggro, under the Taunt rule. ally: a random ally. Or a stated rule. Chosen when the action resolves."),
   seek: z.boolean().optional().describe("Its first pick ignores Taunt."),
   do: z.array(Effect).min(1),
-  statuses: z.array(Id).min(1).optional().describe("Step 5i: statuses its unit holds while the ability is equipped, applied at fight start and on a revive as gear's are (a version that listens all fight)."),
+  statuses: z.array(Id).min(1).optional().describe("Statuses its unit holds while the ability is equipped, applied at fight start and on a revive as gear's are (a version that listens all fight)."),
   note: Note.optional(),
 });
 export type AbilityT = z.infer<typeof Ability>;
@@ -785,7 +785,7 @@ export const Ruleset = z.strictObject({
       min: z.number().min(0).max(1),
       max: z.number().min(0).max(1),
       slots: z.array(z.number().min(0)).optional().describe("A party unit's abilities start this many ticks charged, by the order they're slotted in (first, second, third), in place of the roll: the order is the player's to choose. Its basic attack still rolls."),
-      slotShares: z.array(z.number().min(0).max(1)).optional().describe("Step 5g: as slots, but as a share of each ability's own cooldown (0.75 is three quarters charged), so a slow ability's head start is long too. Wins over slots when both are set."),
+      slotShares: z.array(z.number().min(0).max(1)).optional().describe("As slots, but as a share of each ability's own cooldown (0.75 is three quarters charged), so a slow ability's head start is long too. Wins over slots when both are set."),
     })
     .optional()
     .describe("At fight start each action is already partly charged: it's first ready after a share of its cooldown, rolled between min and max on the unit's dice for each action (but see slots). Absent: every action starts a fight on its full cooldown."),
@@ -801,13 +801,13 @@ export const Ruleset = z.strictObject({
       cap: z.number().positive().describe("Aggro above this counts as this."),
     })
     .optional()
-    .describe("Nov 3, 2026 (the director's): how strongly a party unit draws foes' picks, in place of `draw`'s curve, which flattens at a few times an ordinary unit's. Aggro held between `floor` and `cap`; draw = centre × 2^n × (1 + f), with n whole doublings from `centre` and f the share of the next one. An Aggro-stacked unit can take most of the picks on its own. Absent: party units use `draw` too."),
+    .describe("How strongly a party unit draws foes' picks, in place of `draw`'s curve, which flattens at a few times an ordinary unit's. Aggro held between `floor` and `cap`; draw = centre × 2^n × (1 + f), with n whole doublings from `centre` and f the share of the next one. An Aggro-stacked unit can take most of the picks on its own. Absent: party units use `draw` too."),
   stagger: Ticks.optional().describe("Copies of the same enemy start a fight this many ticks apart, one after another, so identical foes don't act in lockstep. Absent or 0: they start together."),
   lostCast: z
     .enum(["retry", "cooldown"])
     .optional()
     .describe("An action interrupted in its wind-up, or whose targets are gone when it resolves. retry (the default): no MP, no cooldown, so it can start again at once. cooldown: no MP, but an interrupted action goes on cooldown, as a cast that fizzles for MP does, and one that found no target costs the unit its recovery."),
-  control: Control.optional().describe("Step 5i: control resistance on bosses. Absent: none."),
+  control: Control.optional().describe("Control resistance on bosses. Absent: none."),
   run: z.strictObject({
     defeatedUnits: z.enum(["stay_down"]).describe("Knocked-out units stay down between fights until something revives them."),
     restore: z
@@ -869,7 +869,7 @@ export const Gear = z.strictObject({
   name: Text,
   text: Text,
   slot: Slot,
-  rarity: Rarity.optional().describe("Step 5i: the piece's own rarity, fixed: no affixes at any rarity. mythic exactly when it names a `mythic` class."),
+  rarity: Rarity.optional().describe("The piece's own rarity, fixed: no affixes at any rarity. mythic exactly when it names a `mythic` class."),
   tier: z.enum(["ordinary", "powerful"]).describe("ordinary: drops in dungeons, sidegrades. powerful: task rewards, a different build."),
   source: z.enum(["starter", "drop", "unlock"]),
   armor: Id.optional().describe("Armor only: its armor type."),
@@ -901,7 +901,7 @@ export const Formation = z.strictObject({
   id: Id,
   name: Text,
   text: Text,
-  rarity: FormationRarity.optional().describe("Step 5i: its rarity (Neutral common), in place of the rogue config's provisional formationRarity."),
+  rarity: FormationRarity.optional().describe("Its rarity (Neutral common)."),
   source: UnlockSource,
   positions: z.array(Position),
   ...grants,
@@ -1056,27 +1056,27 @@ const Spoils = z.strictObject({
   supply: Pct.describe("Chance an offer is a supply."),
   legendaries: z.number().int().min(0).optional().describe("How many of the offers are always a legendary piece."),
   trophy: z.boolean().optional().describe("A legendary piece is won outright, on top of the pick."),
-  aimed: z.number().int().min(0).optional().describe("Step 5h round 6: the first this many offers are pieces aimed at someone in the party."),
-  formations: z.number().int().min(0).optional().describe("Step 5h round 6: a second pick follows, of this many formations (an elite's)."),
-  extra: Pct.optional().describe("Step 5i: chance, in percent, that a second pick of `count` pieces follows the first (gear only, from the same rarity table): a third more gear for the fourth slot."),
-  mixed: Pct.optional().describe("Step 5h: chance, in percent, that the pick mixes kinds: one piece of gear, then offers rolled from `mix` (the rest stay gear)."),
-  mix: z.strictObject({ tome: z.number().min(0), formation: z.number().min(0), recruit: z.number().min(0), sealed: z.number().min(0).optional().describe("Step 5h round 6: a piece whose rarity (rare or better) and name stay hidden until taken."), bundle: z.number().min(0).optional().describe("Step 5h round 6: a common piece and a potion or a tonic together.") }).optional().describe("Weights of the other kinds in a mixed pick."),
+  aimed: z.number().int().min(0).optional().describe("The first this many offers are pieces aimed at someone in the party."),
+  formations: z.number().int().min(0).optional().describe("A second pick follows, of this many formations (an elite's)."),
+  extra: Pct.optional().describe("Chance, in percent, that a second pick of `count` pieces follows the first (gear only, from the same rarity table): a third more gear for the fourth slot."),
+  mixed: Pct.optional().describe("Chance, in percent, that the pick mixes kinds: one piece of gear, then offers rolled from `mix` (the rest stay gear)."),
+  mix: z.strictObject({ tome: z.number().min(0), formation: z.number().min(0), recruit: z.number().min(0), sealed: z.number().min(0).optional().describe("A piece whose rarity (rare or better) and name stay hidden until taken."), bundle: z.number().min(0).optional().describe("A common piece and a potion or a tonic together.") }).optional().describe("Weights of the other kinds in a mixed pick."),
 });
 const KnownOdds = z.array(z.number().min(0)).length(3).describe("Weights for knowing one, two or three abilities.");
 
 export const RogueConfig = z.strictObject({
-  start: z.strictObject({ gold: z.number().int().min(0), offers: PosInt, picks: z.number().int().min(0), known: PosInt.optional().describe("Abilities a class knows on joining in act I (default 1); one more an act after."), healer: z.boolean().optional().describe("While the party has nobody who heals others, each draft offers one who does."), supplies: z.array(SupplyId).optional().describe("Step 5h round 6: supplies in the bag at the start.") }).describe("Gold at the start; the draft after the leader: `picks` picks of one from `offers` classes."),
-  firstAbility: z.record(Id, Id).optional().describe("Before step 5h: the ability each class knew on joining. Step 5h rolls what a class knows instead."),
+  start: z.strictObject({ gold: z.number().int().min(0), offers: PosInt, picks: z.number().int().min(0), known: PosInt.optional().describe("Abilities a class knows on joining in act I (default 1); one more an act after."), healer: z.boolean().optional().describe("While the party has nobody who heals others, each draft offers one who does."), supplies: z.array(SupplyId).optional().describe("Supplies in the bag at the start.") }).describe("Gold at the start; the draft after the leader: `picks` picks of one from `offers` classes."),
+  firstAbility: z.record(Id, Id).optional().describe("The ability each class would know on joining. Not read: what a class knows is rolled."),
   startKnown: z.record(Id, PosInt).optional().describe("Classes that join knowing more than start.known abilities in act I, by class."),
   party: PosInt,
-  bench: z.number().int().min(0).describe("Seats at camp at a run's start, besides the party (step 5h: two)."),
-  benchMax: z.number().int().min(0).optional().describe("Step 5h: seats at camp at most; the others are won (a boon's seat, an event)."),
-  benchByAct: z.array(z.number().int().min(0)).min(1).optional().describe("Step 5h round 6: seats at camp by act; a new act brings the run up to its act's (never down)."),
+  bench: z.number().int().min(0).describe("Seats at camp at a run's start, besides the party (two in the core set)."),
+  benchMax: z.number().int().min(0).optional().describe("Seats at camp at most; the others are won (a boon's seat, an event)."),
+  benchByAct: z.array(z.number().int().min(0)).min(1).optional().describe("Seats at camp by act; a new act brings the run up to its act's (never down)."),
   recruits: z.strictObject({ offers: PosInt, known: z.array(KnownOdds).min(1).describe("By act: how many abilities a recruit knows, rolled at random from its three.") }).optional(),
-  benchMp: Pct.optional().describe("Step 5h: share of max MP a member regains after each won fight it sat out (from the max it last fought with)."),
-  fresh: Pct.optional().describe("Step 5h: share of its cooldown already run for a fresh ability: a starting unit's, a recruit's, one just learned."),
-  muster: z.strictObject({ offers: PosInt }).optional().describe("Step 5h: the Muster's pick of recruits."),
-  drill: z.strictObject({ offers: PosInt, train: PosInt }).optional().describe("Step 5h: the Drill ground's pick of formations, or this many members trained."),
+  benchMp: Pct.optional().describe("Share of max MP a member regains after each won fight it sat out (from the max it last fought with)."),
+  fresh: Pct.optional().describe("Share of its cooldown already run for a fresh ability: a starting unit's, a recruit's, one just learned."),
+  muster: z.strictObject({ offers: PosInt }).optional().describe("The Muster's pick of recruits."),
+  drill: z.strictObject({ offers: PosInt, train: PosInt }).optional().describe("The Drill ground's pick of formations, or this many members trained."),
   formationOdds: z.array(z.strictObject({ common: z.number().min(0), rare: z.number().min(0), legendary: z.number().min(0) })).min(1).optional().describe("By act: the rarity a formation offer rolls."),
   map: z.strictObject({
     floors: PosInt,
@@ -1086,40 +1086,40 @@ export const RogueConfig = z.strictObject({
     odds: z.record(z.string(), z.number().min(0)).describe("Room odds for the other floors, by kind."),
     lateFrom: PosInt.describe("Elites and campfires only from this floor."),
     ensure: z.record(z.string(), z.number().int().min(0)).optional().describe("Rooms of a kind an act has at least, where the rules allow."),
-    easyTo: PosInt.optional().describe("Step 5h round 6: the easy pool's last floor (default 2)."),
-    campPaths: Pct.optional().describe("Step 5h round 6: mid-act campfires are added until at least this share of the ways up pass one before the last floor."),
-    ref: z.strictObject({ easy: PosInt, normal: PosInt, elite: PosInt }).optional().describe("Step 5h round 6: each pool's reference floor, where its fights' own knobs hold (default 1, 5, 6)."),
+    easyTo: PosInt.optional().describe("The easy pool's last floor (default 2)."),
+    campPaths: Pct.optional().describe("Mid-act campfires are added until at least this share of the ways up pass one before the last floor."),
+    ref: z.strictObject({ easy: PosInt, normal: PosInt, elite: PosInt }).optional().describe("Each pool's reference floor, where its fights' own knobs hold (default 1, 5, 6)."),
   }),
   gold: z.strictObject({ fight: IntRange, elite: IntRange, boss: IntRange, perAct: z.number().int().min(0) }),
-  spoils: z.strictObject({ fight: Spoils, elite: Spoils, offRoster: Pct.describe("Step 5h: share of offered gear (spoils, chests, events; not the shop or a trophy) rolled for classes not in the roster, where there is such a piece.") }),
+  spoils: z.strictObject({ fight: Spoils, elite: Spoils, offRoster: Pct.describe("Share of offered gear (spoils, chests, events; not the shop or a trophy) rolled for classes not in the roster, where there is such a piece.") }),
   boon: z.strictObject({
     count: PosInt,
-    seat: z.boolean().optional().describe("Step 5h: a seat at camp is among the options, while there's one to win."),
-    mythic: z.array(PosInt).optional().describe("Step 5i: the acts whose opening boon (the boss's before them) offers a mythic in place of its legendary piece: one for a roster member's class (the party first) that the run doesn't hold, while one is left."),
+    seat: z.boolean().optional().describe("A seat at camp is among the options, while there's one to win."),
+    mythic: z.array(PosInt).optional().describe("The acts whose opening boon (the boss's before them) offers a mythic in place of its legendary piece: one for a roster member's class (the party first) that the run doesn't hold, while one is left."),
   }),
-  slots: z.strictObject({ weapon: z.number().min(0), armor: z.number().min(0), offhand: z.number().min(0), amulet: z.number().min(0) }).optional().describe("Step 5i: an offered piece's slot is rolled first, by these weights; then a class (the roster's, or one off it by `spoils.offRoster`), a kind it wears in that slot, the rarity, and a piece of that kind and rarity. Absent: every slot alike."),
-  lesson: PosInt.optional().describe("Step 5i: members a lesson (a captive's or a stranger's) trains, each once (default 3)."),
-  treasure: z.strictObject({ rarity: RarityOdds, gold: IntRange, cage: Pct.optional().describe("Step 5h: chance the chest is a cage: a recruit with a piece suited to it.") }),
+  slots: z.strictObject({ weapon: z.number().min(0), armor: z.number().min(0), offhand: z.number().min(0), amulet: z.number().min(0) }).optional().describe("An offered piece's slot is rolled first, by these weights; then a class (the roster's, or one off it by `spoils.offRoster`), a kind it wears in that slot, the rarity, and a piece of that kind and rarity. Absent: every slot alike."),
+  lesson: PosInt.optional().describe("Members a lesson (a captive's or a stranger's) trains, each once (default 3)."),
+  treasure: z.strictObject({ rarity: RarityOdds, gold: IntRange, cage: Pct.optional().describe("Chance the chest is a cage: a recruit with a piece suited to it.") }),
   campfire: z.strictObject({
     hp: Pct, mp: Pct, revive: Pct,
     camp: Pct.optional().describe("The share of REST those standing at camp get, whatever the pick (default all)."),
-    train: PosInt.optional().describe("Step 5h: members TRAIN teaches or upgrades (default one)."),
-    stranger: Pct.optional().describe("Step 5h: chance a stranger at the fire asks to join."),
-    auto: z.strictObject({ hp: Pct, mp: Pct, revive: Pct }).optional().describe("Step 5h round 6: on arrival everyone recovers this (HP and MP, the fallen rise); then one pick, REST (`hp` and `mp` again, everyone) or TRAIN. Without it, the old pick of REST, FOCUS, RAISE or TRAIN."),
+    train: PosInt.optional().describe("Members TRAIN teaches or upgrades (default one)."),
+    stranger: Pct.optional().describe("Chance a stranger at the fire asks to join."),
+    auto: z.strictObject({ hp: Pct, mp: Pct, revive: Pct }).optional().describe("On arrival everyone recovers this (HP and MP, the fallen rise); then one pick, REST (`hp` and `mp` again, everyone) or TRAIN. Without it, one pick of REST, FOCUS, RAISE or TRAIN."),
   }),
-  captive: z.strictObject({ chance: Pct, hp: Pct, people: z.array(Id) }).optional().describe("Step 5h round 6: after a won fight with any of `people` in it, a captive this often (never two fights running), taken in at `hp`%, or a lesson."),
+  captive: z.strictObject({ chance: Pct, hp: Pct, people: z.array(Id) }).optional().describe("After a won fight with any of `people` in it, a captive this often (never two fights running), taken in at `hp`%, or a lesson."),
   prices: z.strictObject({
     common: z.number().int().min(0), uncommon: z.number().int().min(0), rare: z.number().int().min(0), legendary: z.number().int().min(0),
     recruit: z.number().int().min(0), formation: z.number().int().min(0), learn: z.number().int().min(0), upgrade: z.number().int().min(0),
     trainStep: z.number().int().min(0).optional().describe("A shop's training can be bought again in the same visit, each time this much dearer (learning and upgrading alike); without it, once each a visit."),
     supply: z.record(z.string(), z.number().int().min(0)), sell: Pct,
   }),
-  shop: z.strictObject({ gear: RarityOdds.describe("How many pieces of each rarity."), legendaryByAct: z.array(z.number().int().min(0)).optional().describe("Step 5h: legendary pieces a visit, by act (in place of gear.legendary)."), recruits: z.number().int().min(0), formations: z.number().int().min(0), supplies: z.number().int().min(0) }),
+  shop: z.strictObject({ gear: RarityOdds.describe("How many pieces of each rarity."), legendaryByAct: z.array(z.number().int().min(0)).optional().describe("Legendary pieces a visit, by act (in place of gear.legendary)."), recruits: z.number().int().min(0), formations: z.number().int().min(0), supplies: z.number().int().min(0) }),
   supplies: z.strictObject({ potion: z.strictObject({ hp: Pct }), tonic: z.strictObject({ mp: Pct }), phoenix: z.strictObject({ revive: Pct }) }),
-  /** After every won fight the party is handed these, free, up to the bag. */
-  drops: z.array(SupplyId).optional().describe("Round 9: offered as a choice of one after every won fight."),
+  /** After every won fight the party picks one of these; a kind whose slot in the bag is full isn't offered. */
+  drops: z.array(SupplyId).optional().describe("Offered as a choice of one after every won fight."),
   bag: z.strictObject({ potion: z.number().int().min(0), tonic: z.number().int().min(0), phoenix: z.number().int().min(0) }).describe("Supplies carried at most, a slot a kind."),
-  knobs: z.array(z.strictObject({ mob: z.number(), step: z.number(), early: z.number().optional().describe("Step 5h round 6: the climb a floor below a pool's reference floor (default `step`)."), elite: z.number(), boss: z.number() })).min(1).describe("Per act, added to each fight's own knob (HP +k %, damage +k/2.5 %): regular fights, the rise per floor from each pool's reference floor, elites, the boss."),
+  knobs: z.array(z.strictObject({ mob: z.number(), step: z.number(), early: z.number().optional().describe("The climb a floor below a pool's reference floor (default `step`)."), elite: z.number(), boss: z.number() })).min(1).describe("Per act, added to each fight's own knob (HP +k %, damage +k/2.5 %): regular fights, the rise per floor from each pool's reference floor, elites, the boss."),
   heat: z.strictObject({ per: z.number(), max: z.number().int().min(0) }),
   shape: z.record(z.string(), z.strictObject({ hp: z.number(), power: z.number() })).optional().describe("By tier (fight, elite, boss): HP % and damage % added to every foe on top of the knob, so a tier's fights can be longer and softer at the same cost."),
   growFrom: PosInt.describe("From this floor, each pack of two or more may gain one more foe."),
@@ -1168,15 +1168,15 @@ export const EventOp: z.ZodType<EventOpT> = z.lazy(() =>
     z.strictObject({ op: z.literal("hp"), pct: z.number(), one: z.boolean().optional() }),
     z.strictObject({ op: z.literal("mp"), pct: z.number() }),
     z.strictObject({ op: z.literal("gear"), rarity: Rarity }),
-    z.strictObject({ op: z.literal("recruit"), hp: Pct.optional(), known: z.number().int().min(1).max(3).optional(), gear: Rarity.optional(), healer: z.boolean().optional().describe("Step 5h round 6: a class that heals or raises others.") }),
+    z.strictObject({ op: z.literal("recruit"), hp: Pct.optional(), known: z.number().int().min(1).max(3).optional(), gear: Rarity.optional(), healer: z.boolean().optional().describe("A class that heals or raises others.") }),
     z.strictObject({ op: z.literal("learn") }),
     z.strictObject({ op: z.literal("upgrade") }),
-    z.strictObject({ op: z.literal("temper"), from: z.array(Rarity).optional().describe("Step 5h round 6: the rarities a piece can be tempered from (default common, uncommon). Step 5i: a piece becomes a piece of the next rarity of its slot and kind that its wearer can wear (a rare one a legendary)."), risk: Pct.optional().describe("Step 5h round 6: chance the piece cracks and is lost instead.") }),
-    z.strictObject({ op: z.literal("revive"), pct: Pct }).describe("Step 5h round 6: every fallen member rises at this share of HP."),
+    z.strictObject({ op: z.literal("temper"), from: z.array(Rarity).optional().describe("The rarities a piece can be tempered from (default common, uncommon). A piece becomes a piece of the next rarity of its slot and kind that its wearer can wear (a rare one a legendary)."), risk: Pct.optional().describe("Chance the piece cracks and is lost instead.") }),
+    z.strictObject({ op: z.literal("revive"), pct: Pct }).describe("Every fallen member rises at this share of HP."),
     z.strictObject({ op: z.literal("formation"), rarity: Rarity.optional() }),
     z.strictObject({ op: z.literal("seat") }),
-    z.strictObject({ op: z.literal("train"), n: PosInt }).describe("Step 5i: n members (three, as every training opportunity) each take one training: learn an ability, or an ability's or the passive's power step or version."),
-    z.strictObject({ op: z.literal("muster"), n: PosInt, known: z.number().int().min(1).max(3).optional(), gear: Rarity.optional().describe("Step 5h round 6: each carries a piece of this rarity suited to it.") }),
+    z.strictObject({ op: z.literal("train"), n: PosInt }).describe("n members (three, as every training opportunity) each take one training: learn an ability, or an ability's or the passive's power step or version."),
+    z.strictObject({ op: z.literal("muster"), n: PosInt, known: z.number().int().min(1).max(3).optional(), gear: Rarity.optional().describe("Each carries a piece of this rarity suited to it.") }),
     z.strictObject({ op: z.literal("trade") }),
     z.strictObject({ op: z.literal("supply"), id: SupplyId }),
     z.strictObject({ op: z.literal("fight"), tier: z.enum(["normal", "elite"]) }),
@@ -1190,7 +1190,7 @@ export const RogueEvent = z.strictObject({
   name: Text,
   text: Text,
   options: z.array(EventOption).min(1),
-  variants: z.array(z.strictObject({ text: Text.optional(), options: z.array(EventOption).min(1) })).optional().describe("Step 5h: versions of the event; one is rolled on entering, its text and options in place of the first's."),
+  variants: z.array(z.strictObject({ text: Text.optional(), options: z.array(EventOption).min(1) })).optional().describe("Versions of the event; one is rolled on entering, its text and options in place of the first's."),
 });
 export type RogueEventT = z.infer<typeof RogueEvent>;
 
@@ -1238,7 +1238,7 @@ export const ContentPack = z.strictObject({
   statuses: z.array(Status),
   classes: z.array(ClassDef),
   abilities: z.array(Ability),
-  upgrades: z.array(Upgrade).optional().describe("Step 5i: one for each ability and passive that can be trained. Absent: none."),
+  upgrades: z.array(Upgrade).optional().describe("One for each ability and passive that can be trained. Absent: none."),
   gear: z.array(Gear),
   formations: z.array(Formation),
   enemies: z.array(Enemy),
@@ -1263,8 +1263,8 @@ export type ContentPack = z.infer<typeof ContentPack>;
 export const PartyUnit = z.strictObject({
   class: Id,
   position: Id,
-  abilities: z.array(Id).describe("Equipped abilities, in slot order: a class ability, or (step 5i) the trained form of one (<id>__p, __a, __b, __ap or __bp)."),
-  passive: Id.optional().describe("Step 5i: the trained form of its class passive (<passive>__p, __a, __b, __ap or __bp): a status that takes the passive status's place at fight start and on a revive. Absent: the class's own."),
+  abilities: z.array(Id).describe("Equipped abilities, in slot order: a class ability, or the trained form of one (<id>__p, __a, __b, __ap or __bp)."),
+  passive: Id.optional().describe("The trained form of its class passive (<passive>__p, __a, __b, __ap or __bp): a status that takes the passive status's place at fight start and on a revive. Absent: the class's own."),
   gear: z.record(Id, Id).describe("Slot (weapon, armor, offhand, amulet) to gear id."),
 });
 export const Party = z.strictObject({
