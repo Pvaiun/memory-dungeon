@@ -35,7 +35,7 @@ export const stats: StatDefT[] = [
   { id: "power", name: "Power", kind: "points", default: 0, floor: -90, note: "Damage dealt by hits and reactions, +%. Only a dungeon's foes modifier sets it: how a campaign trial makes its foes hit harder." },
 ];
 
-/** Eleven weapon kinds, each a speed, a damage type and hands (builds.md, Gear). */
+/** Eleven weapon kinds, each a speed, a damage type and hands (rules-and-vocabulary.md, Gear). */
 export const weaponKinds: WeaponKindT[] = [
   { id: "dagger", name: "Dagger", type: "physical", cooldown: KIND_SPEED.dagger, hands: 1 },
   { id: "fist", name: "Fist weapons", type: "physical", cooldown: KIND_SPEED.fist, hands: 1 },
@@ -50,7 +50,7 @@ export const weaponKinds: WeaponKindT[] = [
   { id: "staff", name: "Staff", type: "magical", cooldown: KIND_SPEED.staff, hands: 2 },
 ];
 
-/** Four armor types; a class wears only its own (builds.md, Gear). */
+/** Four armor types; a class wears only its own (rules-and-vocabulary.md, Gear). */
 export const armorTypes: GearKindT[] = [
   { id: "plate", name: "Plate" },
   { id: "mail", name: "Mail" },
@@ -58,7 +58,7 @@ export const armorTypes: GearKindT[] = [
   { id: "robes", name: "Robes" },
 ];
 
-/** Ten offhand kinds, of two or three classes each (builds.md, Gear). */
+/** Ten offhand kinds, of two or three classes each (rules-and-vocabulary.md, Gear). */
 export const offhandKinds: GearKindT[] = [
   { id: "kite_shield", name: "Kite shield" },
   { id: "round_shield", name: "Round shield" },

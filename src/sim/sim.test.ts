@@ -1,7 +1,7 @@
 /**
  * The harness, against the design's predictions: the same study gives the
  * same numbers, no made-up effects, real effects show, shared seeds pay off,
- * and reading packs don't leak stats. Progression is in progression.test.ts.
+ * and reading packs don't leak stats.
  */
 import { test } from "vitest";
 import { readFileSync } from "node:fs";

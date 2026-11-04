@@ -9,7 +9,7 @@ A party-based dungeon crawler in the style of classic JRPGs, with fully automati
 ### Units and classes
 
 - **Every unit is a class.** A party holds at most one of each, three to a party; the tech keeps room for five. Units don't level up. The Knight, Cleric and Ranger are the starters.
-- **A class has** a passive only it has, abilities, and the kinds of gear it can wear: weapon kinds, armor types and offhand kinds (see Gear). In the core set each class is a skeleton: two weapon kinds, a passive, three abilities and a plan. The full game will give classes more.
+- **A class has** a passive only it has, abilities, and the kinds of gear it can wear: weapon kinds, armor types and offhand kinds (see Gear). Each class is a skeleton: two weapon kinds, a passive, three abilities and a plan. Classes may get more later.
 - **A unit's weapon sets its basic attack.** The weapon's kind sets its speed and its damage type. A basic attack is plain damage of that type; only passives and statuses add anything to it.
 - **An ability can be physical or magical,** as its description says. A class whose weapon kinds are all physical, or all magical, deals that type with its abilities too; a class with one of each can mix them.
 - **Passives and abilities change how a unit behaves,** rather than just adding numbers. They're mostly bespoke, but built from the core set's pieces. A passive can keep its own hidden state, with no icon, as long as its effect shows in the numbers.
@@ -81,6 +81,7 @@ Fights run in real time, in ticks, with no orders: each unit acts on its own, fr
   - Targets after the first (Arc's second hit, Chain lightning's other foes) ignore Taunt.
   - When several units Taunt, foes pick among them weighted by draw.
 - **The Hidden rule.** Foes can't pick a Hidden unit as a target by any targeting, Seek included; only their all-foes effects (Area) reach it. Its allies can still pick it.
+- **Taunt ends Hidden.** A unit that gains Taunt stops being Hidden, and Hidden doesn't land on a Taunting unit.
 
 **Aggro and draw.** Aggro is centred on 100. A class's or enemy's Aggro word sets it, and gear and seats move it in steps (`aggroOf`, `AGGRO_STEP`). Aggro is never below 1. A unit's chance to be picked is its draw over the total draw of the units that can be picked, and an ordinary unit (Aggro 100) draws 100.
 
@@ -223,7 +224,7 @@ The Fundamental pieces were chosen for how they interact: pieces that answer, un
 
 ## Vocabulary: statuses
 
-The vocabulary is 22 statuses, 7 special stats and 6 effects; step 5i's pieces add Marked and a few counters (Cuts, Heat, Spite and others), in `content/core-set/pieces/shared.ts`.
+The vocabulary is 22 statuses, 7 special stats and 6 effects. The pieces add Marked and seven counters (*Core set: gear*).
 
 | Kind | Fundamental | Specialist | Signature | Total |
 | --- | --- | --- | --- | --- |
@@ -316,7 +317,7 @@ Built up and kept up: Burn and Bleed for damage, Chill for control (its once-app
 
 ## Gear
 
-The four slots and who wears what. The pieces themselves, and the rules for what each rarity carries, are step 5i's design (`steps/05-core-set/5i-synergy/spine.md`, section 1), built and awaiting the director's sign-off.
+The four slots and who wears what. What each rarity carries, and the rules for pieces, formations, upgrades and mythics, are in *Core set: gear*.
 
 - **Slots.** Each unit wears a weapon, armor, an offhand and an amulet. Gear is fixed, never generated, and any number of units can wear copies of the same piece. A class arrives with the plain weapon of its first kind, and its other slots start empty. Slots have no job: any kind of effect can sit in any slot, and only weapons carry behaviour of their own (a speed, a damage type and hands).
 - **Who wears what.** A class wears only its own kinds: two weapon kinds, one or two armor types (Plate, Mail, Leather, Robes) and one or two of the ten offhand kinds. Amulets fit everyone. Every class has a one-handed weapon kind, so it can always hold an offhand, and no two classes share more than two kinds. A kind's name says who can hold it, not what its pieces do. *Core set: classes* gives each class's kinds.

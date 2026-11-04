@@ -39,7 +39,7 @@ Damage follows the weapons: basic attacks take their weapon kind's type, and a c
 
 ## Starting classes
 
-The starters cover every Fundamental challenge between them: a wall, a healer and an archer. They have no Might, Haste, Silence, Dispel or Area, so most Specialist bosses need an unlock.
+The starters cover every Fundamental challenge between them: a wall, a healer and an archer. They have no Might, Haste, Silence, Dispel or Area, so most Specialist bosses need another class.
 
 ### Knight
 
@@ -151,7 +151,7 @@ Six classes that win through the party: a tank that punishes, a bodyguard, a she
 
 ### Hexer
 
-**Role:** curser. **Plan:** the debuff bot, the Bard's counterpart: burns and shocks every foe a little so the party's statuses pile up, weakens and sunders the most dangerous one, chills whatever it strikes, and silences a foe mid-cast. Re-themed as a spellblade (step 5i), and changed only as far as its weapons need; the director names it later.
+**Role:** curser. **Plan:** the debuff bot, the Bard's counterpart: burns and shocks every foe a little so the party's statuses pile up, weakens and sunders the most dangerous one, chills whatever it strikes, and silences a foe mid-cast. Re-themed as a spellblade, and changed only as far as its weapons need; the director names it later.
 
 **Weapons:** dagger, rune sword. **Armor:** Mail. **Offhands:** idol. **Special stats:** Siphon medium.
 
@@ -207,7 +207,7 @@ Three damage dealers, each beating armor its own way: the Monk with Sunder, the 
 
 ## Mages
 
-Four mages, each on its theme's job: fire ramps, ice freezes and shatters, lightning spreads, earth crits from behind its Shields. The elements are themes, not damage. The Geomancer is re-themed as an earth fighter (step 5i) and stays here until the director names it. Burn, Chill and Shock each have a source outside their mage, so the mage is the strongest source, not the only one.
+Four mages, each on its theme's job: fire ramps, ice freezes and shatters, lightning spreads, earth crits from behind its Shields. The elements are themes, not damage. The Geomancer is re-themed as an earth fighter and stays here until the director names it. Burn, Chill and Shock each have a source outside their mage, so the mage is the strongest source, not the only one.
 
 ### Pyromancer
 

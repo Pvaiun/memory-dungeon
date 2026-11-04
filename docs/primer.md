@@ -4,9 +4,9 @@ The least you need to know to work on the game. Read it first, then open a detai
 
 ## What this is
 
-- **The full game** is an optional tab in Memory, the director's ADHD memory app: real-life quests pay unlocks, dungeons pay gear (`docs/concept-spec.md`). None of that is built here.
-- **What's built is the core set:** a vertical slice of the game part. That's the combat rules, 16 classes, gear and formations, 29 enemies, and the **rogue mode** as its progression. Free play keeps everything available as a sandbox, and the campaign is retired. There's no quest board, and nothing about Memory.
-- **It's all design.** A schema, a headless engine, simulations and a phone-sized interface, used to design the game. Nothing runs in Memory yet, and nothing is balanced.
+- **The game** is a party-based JRPG dungeon crawler with automatic combat, played on a phone-sized browser interface.
+- **The core set is the game's content:** the combat rules, 16 classes, gear, formations, upgrades and mythics, 29 enemies, and the **rogue mode**, which is the game. Free play keeps everything available as a sandbox, and the campaign is retired.
+- **The repo designs it:** a schema, a headless engine, simulations and the interface. Everything is built and approved. Nothing is balanced yet: the balance pass is next (`CLAUDE.md`, Status).
 
 ## How it plays
 
@@ -72,7 +72,7 @@ The least you need to know to work on the game. Read it first, then open a detai
   There are 240 pieces, 16 mythics and a plain weapon of each kind. Every piece is fixed, with no random affixes. A card says what the piece does and who can wear it, never what it's for.
 - **A formation** is three seats and maybe a party effect. A seat changes the stats of whoever sits in it, or gives it statuses. There's no battlefield geometry: Aggro on the seats is what makes a front line. A run starts with Neutral (three empty seats), and there are 32 more: common, rare and legendary.
 - **Training** is learning an ability, or taking an ability's or passive's power step, or one of its two versions (A or B). Every ability and passive has a power step and two versions: 64 upgrades in all.
-- **Builds.** A build is a way to play you can watch: someone watching can tell which build is playing and what it's waiting for. Twelve builds stand, and the gear, formations and upgrades were designed backwards from them:
+- **Builds.** A build is a way to play you can watch: someone watching can tell which build is playing and what it's waiting for. There are twelve, and the gear, formations and upgrades were designed backwards from them (*Core set: builds*):
   - **Landslide:** a few huge blows from behind stone.
   - **Thousand Cuts:** a dense stream of tiny hits and dodges.
   - **Bonfire:** Burn that climbs all fight and passes from foe to foe.
@@ -122,10 +122,9 @@ The least you need to know to work on the game. Read it first, then open a detai
 | A class's design: its plan, kit, tests, and which parties beat what | `docs/core-set/classes.md`; its numbers in `content/core-set/classes.ts` |
 | An enemy's design, and the list of challenges | `docs/core-set/enemies.md`; numbers in `content/core-set/enemies.ts`; free play's encounters and dungeons in `dungeons.ts`; their test trios in `tests.ts` |
 | How a run works | `docs/core-set/rogue-mode.md`; numbers in `content/core-set/rogue.ts` and `rogue-knobs.json` |
-| Gear, formations, upgrades and mythics as built | Their card text in `content/core-set/pieces/`, `formations.ts` and `upgrades/` |
-| Why the gear is as it is | Step 5i's design, awaiting the director's sign-off: the builds in `steps/05-core-set/5i-synergy/builds.md` (each build's section, and "The web"); the rules for each rarity and the per-kind lines in `spine.md` |
+| The twelve builds: each one's rhythm, threads, routes and rungs, and how they connect | `docs/core-set/builds.md`; the routes as test parties in `src/build-parties.ts` |
+| Gear, formations, upgrades and mythics: what each rarity is, the stock, what a formation or upgrade may do | `docs/core-set/gear.md`; each item and its card text in `content/core-set/pieces/`, `formations.ts` and `upgrades/` |
 | Any number | `content/core-set/scale.ts` |
 | What content can express | `PRIMITIVES.md` (generated from `src/schema.ts`) |
 | The interface | `ui/README.md` |
 | The tools, and what's open right now | `CLAUDE.md` (Status) |
-| The quest board, Memory, the full game | `docs/concept-spec.md`, `docs/memory-stack.md`, `docs/memory-app-overview.md`, `docs/memory-design-spec.md`: only for that work |

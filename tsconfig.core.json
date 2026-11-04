@@ -1,5 +1,5 @@
 {
-  // Game logic that will move into Memory's Worker or browser bundle.
+  // Game logic that runs in the browser bundle.
   // No Node types here, so a Node-only API (fs, process, Buffer) fails the
   // typecheck. Add new game-logic folders here. Tests run in Node and are
   // checked by tsconfig.json instead.

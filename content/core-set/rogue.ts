@@ -46,7 +46,7 @@ export const ROGUE_CONFIG: RogueConfigT = {
   /** A lesson (a captive's or a stranger's) trains three members, each once, as every training opportunity does. */
   lesson: 3,
   /**
-   * An offered piece's slot comes first (builds.md, "Gear"); then a class (the roster's, a third of spoils and chests for classes
+   * An offered piece's slot comes first (rogue-mode.md, Loot); then a class (the roster's, a third of spoils and chests for classes
    * off it), a kind it wears there, the rarity, a piece.
    */
   slots: { weapon: 30, offhand: 30, armor: 25, amulet: 15 },
@@ -81,7 +81,7 @@ export const ROGUE_CONFIG: RogueConfigT = {
     // A pick of three: gear, or in `mixed` % of fights gear mixed with other kinds; no supplies (every won fight already drops
     // one); no recruits (they have their own rooms). A mixed pick can hold a sealed piece (rare or better, unseen) or a bundle
     // (a common piece and a supply). `extra` % of regular fights pay a second pick of three pieces (a third more gear, for the
-    // fourth slot; builds.md, "Gear").
+    // fourth slot).
     fight: { count: 3, rarity: { common: 35, uncommon: 32, rare: 27, legendary: 6 }, tome: 0, recruit: 0, supply: 0, mixed: 15, mix: { tome: 30, formation: 25, recruit: 0, sealed: 25, bundle: 20 }, extra: 70 },
     // A pick of three legendaries, one aimed at the party, then a pick of two formations.
     elite: { count: 3, aimed: 1, rarity: { common: 0, uncommon: 0, rare: 0, legendary: 100 }, tome: 0, recruit: 0, supply: 0, formations: 2 },

@@ -2,7 +2,7 @@
 
 The director's standing direction for the game. Direction is guidance, not law: challenge any of it with evidence. Until it's changed here, it stands. Keep this page to what holds now: when the director changes a rule, rewrite the line. Don't add history.
 
-Where a rule and a design document disagree, this page wins and the document gets fixed. The full game's direction (the quest board, Memory) is in `docs/concept-spec.md`; Memory's tech constraints are in `docs/memory-stack.md`.
+Where a rule and a design document disagree, this page wins and the document gets fixed.
 
 ## The game
 
@@ -25,7 +25,7 @@ Where a rule and a design document disagree, this page wins and the document get
 
 ## Builds, gear and formations
 
-- **A build is a way to play you can watch:** someone watching a fight can tell which build is playing and what it's waiting for. It has a rhythm, it's woven from several threads (never one keyword turned up), and builds spread across rhythms. The twelve builds in `steps/05-core-set/5i-synergy/builds.md` stand.
+- **A build is a way to play you can watch:** someone watching a fight can tell which build is playing and what it's waiting for. It has a rhythm, it's woven from several threads (never one keyword turned up), and builds spread across rhythms. The twelve builds in `docs/core-set/builds.md` stand.
 - **What a build asks is a range,** from what most runs find, giving back a little, to specific pieces giving back far more. It pays something before it's complete. It can be reached by more than one route, and pieces form a web, not bundles. There's room for exotics and chaos: a run finds its build in what it's given.
 - **A good piece is worth a lot somewhere and little elsewhere.** A piece strong everywhere gives something up, designed for it. The best choices are between things good for different builds.
 - **Gear has four slots** (weapon, armor, offhand, amulet), and slots have no job. Only weapons carry inherent behaviour (a speed, a damage type and hands). Every class has an offhand and a one-handed weapon. The amulet fits everyone. A mythic fits one class.
