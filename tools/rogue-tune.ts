@@ -1,5 +1,5 @@
 /**
- * The rogue mode's run-level tuning: the calibration (src/rogue-calibrate.ts) gives each fight its knob against
+ * The rogue mode's run-level tuning: the calibration (tools/rogue-calibrate.ts) gives each fight its knob against
  * snapshots of parties; this checks the result where it counts, in whole runs, and corrects it. Each round plays many
  * runs with the simulated player, then moves:
  *   - each boss's knob toward its act's target share of the parties that reach it (as they arrive),

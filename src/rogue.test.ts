@@ -9,7 +9,7 @@ import {
   newItem, newRogue, options, parseTraining, partyOf, priceOf, reachable, recruit, recruitKnown, rogue, rollItem, seatsOf, startFight, stockOf, swap, temperInto, train, trainingsFor,
   trainOptions, usable, whyNot, wearer, type RogueRun,
 } from "./rogue.js";
-import { aiPlayer, playRogue } from "./rogue-ai.js";
+import { aiPlayer, playRogue } from "./sim/rogue-ai.js";
 import { canEquip, checkParty } from "./validate.js";
 import type { ContentPack, EventOpT, GearT } from "./schema.js";
 

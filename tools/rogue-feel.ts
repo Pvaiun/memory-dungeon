@@ -6,9 +6,9 @@
  * bottom (each unit's actions, its damage by source, the statuses' share). A summary of every fight played goes beside
  * the packs: the short simulation that sits next to the read.
  *
- *   npx tsx src/rogue-feel.ts [--runs 48] [--heat 0] [--packs 10] [--focus frostweaver,hexer] [--player] [--rosters] [--fights id,id] [--out out/feel] [--set path=value]...
+ *   npx tsx tools/rogue-feel.ts [--runs 48] [--heat 0] [--packs 10] [--focus frostweaver,hexer] [--player] [--rosters] [--fights id,id] [--out out/feel] [--set path=value]...
  *
- * --rosters reads the hand-built rosters (src/rogue-parties.ts) instead of the simulated player's runs: every roster
+ * --rosters reads the hand-built rosters (tools/rogue-parties.ts) instead of the simulated player's runs: every roster
  * at every act's and tier's power level meets a fight of each region's pool, fielding a good three of five for it (tried
  * on other dice), as the calibration measures. --fights snake_pit,bomb_nest plays only those fights (each roster at their tier).
  *
@@ -18,17 +18,17 @@
  * with the last's.
  */
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { advance, loadContent, type Content } from "./engine/run.js";
-import { combat, type Member as EngineMember } from "./engine/combat/rules.js";
-import type { Entry } from "./engine/log.js";
-import { autoFight, choose, endFight, foesFor, knobFor, newRogue, partyOf, registerGear, rogue, startFight, type FightTier, type RogueRun } from "./rogue.js";
-import { aiPlayer, hpShare } from "./rogue-ai.js";
+import { advance, loadContent, type Content } from "../src/engine/run.js";
+import { combat, type Member as EngineMember } from "../src/engine/combat/rules.js";
+import type { Entry } from "../src/engine/log.js";
+import { autoFight, choose, endFight, foesFor, knobFor, newRogue, partyOf, registerGear, rogue, startFight, type FightTier, type RogueRun } from "../src/rogue.js";
+import { aiPlayer, hpShare } from "../src/sim/rogue-ai.js";
 import { LEVELS, PICK, ROSTERS, buildRoster, trios, type Tier as PTier } from "./rogue-parties.js";
-import { int as rint, rngFor } from "./engine/rng.js";
+import { int as rint, rngFor } from "../src/engine/rng.js";
 import { parsePatches } from "./rogue-sim.js";
-import { patch } from "./sim/content.js";
-import { SUBTICKS, type AbilityT, type GearT, type NumT, type Party } from "./schema.js";
-import { headStart } from "./engine/combat/stats.js";
+import { patch } from "../src/sim/content.js";
+import { SUBTICKS, type AbilityT, type GearT, type NumT, type Party } from "../src/schema.js";
+import { headStart } from "../src/engine/combat/stats.js";
 
 const args = process.argv.slice(2);
 const opt = (k: string) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : undefined; };

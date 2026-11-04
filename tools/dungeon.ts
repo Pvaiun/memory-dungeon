@@ -1,21 +1,21 @@
 /**
  * Run a dungeon from the command line.
  *
- *   tsx src/dungeon.ts [--seed N] [--party <party.json>] [--dungeon <id>] [--pick first|random]
+ *   tsx tools/dungeon.ts [--seed N] [--party <party.json>] [--dungeon <id>] [--pick first|random]
  *                      [--first-clear] [--player] [--json]
- *   tsx src/dungeon.ts --explore [--seed N] [--party ...]
- *   tsx src/dungeon.ts --bench
- *   tsx src/dungeon.ts --digest     (one fingerprint of 10,000 runs' logs: compare it across JS engines,
- *                                    e.g. `bun src/dungeon.ts --digest` runs on Safari's engine)
+ *   tsx tools/dungeon.ts --explore [--seed N] [--party ...]
+ *   tsx tools/dungeon.ts --bench
+ *   tsx tools/dungeon.ts --digest     (one fingerprint of 10,000 runs' logs: compare it across JS engines,
+ *                                    e.g. `bun tools/dungeon.ts --digest` runs on Safari's engine)
  */
 import { readFileSync } from "node:fs";
 import { gzipSync } from "node:zlib";
-import { explore } from "./engine/explore.js";
-import { playerView, printLog } from "./engine/log.js";
-import { firstOption, loadContent, play, randomPicker, type RunInput } from "./engine/run.js";
-import { fingerprint } from "./engine/rng.js";
-import { parties } from "./engine/testkit.js";
-import { combat } from "./engine/combat/rules.js";
+import { explore } from "../src/engine/explore.js";
+import { playerView, printLog } from "../src/engine/log.js";
+import { firstOption, loadContent, play, randomPicker, type RunInput } from "../src/engine/run.js";
+import { fingerprint } from "../src/engine/rng.js";
+import { parties } from "../src/engine/testkit.js";
+import { combat } from "../src/engine/combat/rules.js";
 
 const args = process.argv.slice(2);
 const opt = (name: string, def: string) => {

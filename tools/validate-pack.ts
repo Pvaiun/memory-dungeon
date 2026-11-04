@@ -1,11 +1,11 @@
 /**
  * Validate a content pack, and optionally a party loadout against it.
  *
- *   tsx src/cli.ts <pack.json> [--complete] [--party <party.json> [--dungeon <id>]] [--json]
+ *   tsx tools/validate-pack.ts <pack.json> [--complete] [--party <party.json> [--dungeon <id>]] [--json]
  */
 import { readFileSync } from "node:fs";
-import { checkParty, unmetConstraints, validatePack, type Issue } from "./validate.js";
-import { Party } from "./schema.js";
+import { checkParty, unmetConstraints, validatePack, type Issue } from "../src/validate.js";
+import { Party } from "../src/schema.js";
 
 const args = process.argv.slice(2);
 const flag = (name: string) => args.includes(name);
@@ -15,7 +15,7 @@ const opt = (name: string) => {
 };
 const packPath = args.find((a, i) => !a.startsWith("--") && !["--party", "--dungeon"].includes(args[i - 1]));
 if (!packPath) {
-  console.error("usage: tsx src/cli.ts <pack.json> [--complete] [--party <party.json> [--dungeon <id>]] [--json]");
+  console.error("usage: tsx tools/validate-pack.ts <pack.json> [--complete] [--party <party.json> [--dungeon <id>]] [--json]");
   process.exit(2);
 }
 

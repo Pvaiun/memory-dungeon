@@ -13,14 +13,14 @@
  */
 import { readFileSync, mkdirSync, writeFileSync } from "node:fs";
 import { encounterTests, runTests } from "../content/core-set/tests.js";
-import { combat } from "./engine/combat/rules.js";
-import { firstOption, play as playRun } from "./engine/run.js";
-import { playerView, printLog } from "./engine/log.js";
-import { build } from "./sim/content.js";
-import { measure, probe } from "./sim/measure.js";
-import { everything, gearFor, make } from "./sim/parties.js";
-import type { NumT, Party } from "./schema.js";
-import { quantile } from "./sim/sure.js";
+import { combat } from "../src/engine/combat/rules.js";
+import { firstOption, play as playRun } from "../src/engine/run.js";
+import { playerView, printLog } from "../src/engine/log.js";
+import { build } from "../src/sim/content.js";
+import { measure, probe } from "../src/sim/measure.js";
+import { everything, gearFor, make } from "../src/sim/parties.js";
+import type { NumT, Party } from "../src/schema.js";
+import { quantile } from "../src/sim/sure.js";
 
 const args = process.argv.slice(2);
 // --log <stage>: print one fight's player log (the encounter's "beats" trio, or --trio a,b,c) and stop.

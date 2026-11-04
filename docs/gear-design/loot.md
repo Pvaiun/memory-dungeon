@@ -2,7 +2,7 @@
 
 The rules the loot is made by: what each rarity is, how much there is, how commons and uncommons are written, and what formations, upgrades and mythics may do. The philosophy behind them is in *Gear design: philosophy*, and the builds they serve in *Gear design: the builds*. The slots, the kinds and who wears what are under Gear in *Core set: rules and vocabulary*; how loot is offered in a run is in *Core set: the rogue mode*.
 
-Every piece, formation, upgrade and mythic is data with its card text: `content/core-set/pieces/`, `formations.ts` and `upgrades/` (the mythics are in `upgrades/`, beside their class's upgrades). `npx tsx src/gear-slots.ts` counts who shares which kinds, and `npx tsx src/piece-check.ts` checks that every item does what its card says.
+Every piece, formation, upgrade and mythic is data with its card text: `content/core-set/pieces/`, `formations.ts` and `upgrades/` (the mythics are in `upgrades/`, beside their class's upgrades). `npx tsx tools/gear-slots.ts` counts who shares which kinds, and `npx tsx tools/piece-check.ts` checks that every item does what its card says.
 
 ## Rarity
 

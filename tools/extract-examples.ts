@@ -1,6 +1,6 @@
 /** Writes fixtures/by-type/*.json: one worked example of each type, pulled from the worked example pack. */
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import type { ContentPack } from "./schema.js";
+import type { ContentPack } from "../src/schema.js";
 
 const pack: ContentPack = JSON.parse(readFileSync("fixtures/hollow.pack.json", "utf8"));
 const pick = <T extends { id: string }>(arr: T[], ...ids: string[]) =>

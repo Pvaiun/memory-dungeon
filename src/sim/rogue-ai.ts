@@ -8,15 +8,15 @@
  * generic reading, with no table of pieces); formations by their seats' stats and rarity; trainings by a few flat values.
  * Class values start as rules of thumb and are replaced by what the simulations measure.
  */
-import type { Content } from "./engine/run.js";
-import { int, next, rngFor, type Rng } from "./engine/rng.js";
-import { PROFILES, scoreGear } from "./sim/kits.js";
-import { canEquip, handsOf } from "./validate.js";
+import type { Content } from "../engine/run.js";
+import { int, next, rngFor, type Rng } from "../engine/rng.js";
+import { PROFILES, scoreGear } from "./kits.js";
+import { canEquip, handsOf } from "../validate.js";
 import {
   bench, choose, equip, formationRarity, trainPrice, itemGear, learnOptions, maxOf, member, options, parseTraining, registerGear, reachable, seat, setFormation, swap,
   twoHanded, useSupply, wearer, type Item, type MapNode, type Offer, type RogueRun, type Slot, SLOT_LIST,
-} from "./rogue.js";
-import type { RarityT } from "./schema.js";
+} from "../rogue.js";
+import type { RarityT } from "../schema.js";
 
 export type Dials = {
   /** Elite appetite: 0 avoids elites, 1 takes them when healthy, 2 seeks them. */

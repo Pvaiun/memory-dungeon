@@ -123,7 +123,7 @@ The least you need to know to work on the game. Read it first, then open a detai
 | An enemy's design, and the list of challenges | `docs/core-set/enemies.md`; numbers in `content/core-set/enemies.ts`; free play's encounters and dungeons in `dungeons.ts`; their test trios in `tests.ts` |
 | How a run works | `docs/core-set/rogue-mode.md`; numbers in `content/core-set/rogue.ts` and `rogue-knobs.json` |
 | Designing or changing gear, formations, upgrades or mythics | `docs/gear-design/philosophy.md` first: the director's intent, rhythm, what makes a piece good, and how loot is made |
-| The twelve builds: rhythm, threads, routes, rungs, needs, and the web between them | `docs/gear-design/builds.md`; the routes as test parties in `src/build-parties.ts` |
+| The twelve builds: rhythm, threads, routes, rungs, needs, and the web between them | `docs/gear-design/builds.md`; the routes as test parties in `tools/build-parties.ts` |
 | The loot's rules: each rarity, the stock, writing pieces, formations, upgrades, mythics, levers held back | `docs/gear-design/loot.md`; each item and its card text in `content/core-set/pieces/`, `formations.ts` and `upgrades/` |
 | Any number | `content/core-set/scale.ts` |
 | What content can express | `PRIMITIVES.md` (generated from `src/schema.ts`) |

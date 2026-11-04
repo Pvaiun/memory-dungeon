@@ -2,7 +2,7 @@
 
 The twelve builds the gear, formations, upgrades and mythics were designed backwards from, and the web between them. They stand (`docs/rules.md`). What a build is, and what rhythm means, is in *Gear design: philosophy*; the rules the loot follows are in *Gear design: the loot*.
 
-Each build has three routes (trios of classes that carry it) at three rungs, as hand-built test parties in `src/build-parties.ts`, and `npx tsx src/build-test.ts` plays them side by side. Which builds each piece serves is designer data (`PIECE_BUILDS` in `content/core-set/pieces/index.ts`) and never reaches a card.
+Each build has three routes (trios of classes that carry it) at three rungs, as hand-built test parties in `tools/build-parties.ts`, and `npx tsx tools/build-test.ts` plays them side by side. Which builds each piece serves is designer data (`PIECE_BUILDS` in `content/core-set/pieces/index.ts`) and never reaches a card.
 
 ## The rhythm space
 

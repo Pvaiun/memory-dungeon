@@ -1,5 +1,5 @@
 /**
- * The rogue mode's simulation: whole runs played by the simulated player (src/rogue-ai.ts), many at once, and the numbers
+ * The rogue mode's simulation: whole runs played by the simulated player (src/sim/rogue-ai.ts), many at once, and the numbers
  * that say whether the run is a good climb: how often it's won, where it's lost (act, and fight, elite or boss), how
  * much HP the party brings to each boss, how gold flows, what gets picked, and which classes and pieces win.
  *
@@ -12,13 +12,13 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { availableParallelism } from "node:os";
 import { Worker, isMainThread, parentPort, workerData } from "node:worker_threads";
-import { loadContent, type Content } from "./engine/run.js";
-import { autoFight, member, newItem, newRogue, rollItem, take, type RogueRun } from "./rogue.js";
-import { rngFor } from "./engine/rng.js";
-import type { RarityT } from "./schema.js";
-import { aiPlayer, hpShare, mpShare, type Dials } from "./rogue-ai.js";
-import { patch, type Patch } from "./sim/content.js";
-import { choose } from "./rogue.js";
+import { loadContent, type Content } from "../src/engine/run.js";
+import { autoFight, member, newItem, newRogue, rollItem, take, type RogueRun } from "../src/rogue.js";
+import { rngFor } from "../src/engine/rng.js";
+import type { RarityT } from "../src/schema.js";
+import { aiPlayer, hpShare, mpShare, type Dials } from "../src/sim/rogue-ai.js";
+import { patch, type Patch } from "../src/sim/content.js";
+import { choose } from "../src/rogue.js";
 
 export type Job = { seeds: number[]; leaders: string[]; heat: number; dials: Partial<Dials>; diary?: boolean; gift?: Record<string, number> };
 export type RunRec = {
@@ -37,7 +37,7 @@ export function playOne(c: Content, seed: number, leader: string, heat: number, 
   const run = newRogue(c, { seed, leader, heat });
   // A what-if: pieces of a rarity, or gold, handed over at the start.
   const grng = rngFor(seed, "gift");
-  // (piece:<id> hands over that legendary piece, to price its rule alone: npx tsx src/rogue-legendaries.ts.)
+  // (piece:<id> hands over that legendary piece, to price its rule alone: npx tsx tools/rogue-legendaries.ts.)
   for (const [k, n] of Object.entries(gift)) for (let i = 0; i < n; i++) {
     if (k === "gold") run.gold += 1;
     else if (k.startsWith("piece:")) take(c, run, { kind: "gear", item: newItem(run, k.slice(6), "legendary") });

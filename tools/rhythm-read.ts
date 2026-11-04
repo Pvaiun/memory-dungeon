@@ -6,13 +6,13 @@
  * the first foe dies and how spread out the kills are (as shares of the fight), the share of the damage it takes in each
  * quarter, its lowest HP, and where its damage comes from (basic attacks, abilities, each status, Thorns, the shatter).
  *
- *   npx tsx src/rhythm-read.ts [--seeds 20] [--off -50] [--trio landslide,toll]
+ *   npx tsx tools/rhythm-read.ts [--seeds 20] [--off -50] [--trio landslide,toll]
  */
 import { readFileSync } from "node:fs";
-import { advance, loadContent } from "./engine/run.js";
-import { combat } from "./engine/combat/rules.js";
-import type { Entry } from "./engine/log.js";
-import { foesFor, member, newRogue, recruit, rogue, startFight, type FightTier, type RogueRun } from "./rogue.js";
+import { advance, loadContent } from "../src/engine/run.js";
+import { combat } from "../src/engine/combat/rules.js";
+import type { Entry } from "../src/engine/log.js";
+import { foesFor, member, newRogue, recruit, rogue, startFight, type FightTier, type RogueRun } from "../src/rogue.js";
 
 const args = process.argv.slice(2);
 const opt = (k: string) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : undefined; };

@@ -9,7 +9,7 @@
  *    of theirs), and a boss, against parties as they arrived, wins its target share of fights. The same parties and dice at every knob, so the curve is smooth.
  * 3. The knobs go to content/core-set/rogue-knobs.json; `npm run content` puts them in the pack.
  *
- * By default the parties are the hand-built rosters of src/rogue-parties.ts at each act's and tier's power level, not the
+ * By default the parties are the hand-built rosters of tools/rogue-parties.ts at each act's and tier's power level, not the
  * simulated player's snapshots (`--snapshots` uses those). Each roster fields a good
  * three of five for each fight (the trio a quarter down the ranking, `--pick`), chosen on other dice at the fight's knob, as a
  * player uses the bench against a preview;
@@ -22,12 +22,12 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { availableParallelism } from "node:os";
 import { Worker, isMainThread, parentPort, workerData } from "node:worker_threads";
-import { loadContent, type Content } from "./engine/run.js";
-import { autoFight, foesFor, newRogue, rogue, type RogueRun } from "./rogue.js";
-import { aiPlayer, hpShare } from "./rogue-ai.js";
+import { loadContent, type Content } from "../src/engine/run.js";
+import { autoFight, foesFor, newRogue, rogue, type RogueRun } from "../src/rogue.js";
+import { aiPlayer, hpShare } from "../src/sim/rogue-ai.js";
 import { LEVELS, PICK, ROSTERS, buildRoster, trios, type Roster } from "./rogue-parties.js";
-import { choose } from "./rogue.js";
-import type { RogueFightT } from "./schema.js";
+import { choose } from "../src/rogue.js";
+import type { RogueFightT } from "../src/schema.js";
 
 /** What each tier should cost, by act: a regular fight or elite, in points of party HP %; a boss, the share of fights it wins. */
 export const TARGETS = {
@@ -110,7 +110,7 @@ type Result = { key: string; knob: number; cost: number; lost: number };
  * Each roster fields a good three of five (PICK) for this fight at knob `k`, tried on other dice (two fights a trio),
  * seated in the roster's preference order.
  */
-/** Each roster's three for a fight, tried on two throws of other dice: the one PICK of the way down the ranking (src/rogue-parties.ts). */
+/** Each roster's three for a fight, tried on two throws of other dice: the one PICK of the way down the ranking (tools/rogue-parties.ts). */
 function pickTrios(c: Content, snaps: Snap[], fight: RogueFightT, k: number, tier: Tier, pick: number) {
   snaps.forEach((s, i) => {
     if (!s.roster) return;

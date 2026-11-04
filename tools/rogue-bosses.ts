@@ -3,16 +3,16 @@
  * logged. Per boss: fights, wins, length, and per fight its abilities cast, the casts Silence cost it (interrupts) and
  * the stuns that held a wind-up. The question it answers: are bosses locked out of their big moves?
  *
- *   npx tsx src/rogue-bosses.ts [--runs 300] [--set path=json ...] [--dials k=v,...]
+ *   npx tsx tools/rogue-bosses.ts [--runs 300] [--set path=json ...] [--dials k=v,...]
  */
 import { readFileSync } from "node:fs";
-import { advance, loadContent } from "./engine/run.js";
-import { combat } from "./engine/combat/rules.js";
-import type { Entry } from "./engine/log.js";
-import { choose, endFight, newRogue, startFight } from "./rogue.js";
-import { aiPlayer } from "./rogue-ai.js";
+import { advance, loadContent } from "../src/engine/run.js";
+import { combat } from "../src/engine/combat/rules.js";
+import type { Entry } from "../src/engine/log.js";
+import { choose, endFight, newRogue, startFight } from "../src/rogue.js";
+import { aiPlayer } from "../src/sim/rogue-ai.js";
 import { parseDials, parsePatches } from "./rogue-sim.js";
-import { patch } from "./sim/content.js";
+import { patch } from "../src/sim/content.js";
 
 const args = process.argv.slice(2);
 const opt = (k: string) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : undefined; };

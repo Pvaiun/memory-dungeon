@@ -6,7 +6,7 @@
  * never meets an offhand); the kinds two members of each build route can both wear; and the kinds every route of a build can wear.
  * Amulets fit everyone and are left out of the overlaps.
  *
- *   npx tsx src/gear-slots.ts
+ *   npx tsx tools/gear-slots.ts
  *
  * Edit the tables to try a change and recount. Nothing here touches the engine or the content.
  */

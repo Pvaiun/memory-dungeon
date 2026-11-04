@@ -41,8 +41,8 @@ The philosophy behind these lines, and the director's intent in their words, are
 
 - **Balance from what happens in fights** (who does what share of what, the economy of a fight) before win rates. Win rates set difficulty, last. The rogue mode breaks ties.
 - **Numbers, not behaviour.** Fix a problem by the amount applied, the cost, the cooldown or the duration, never by a new rule that changes what a thing does (a cap that binds on one hit, a target rule that leaves out the caster). A behaviour change that could read as esoteric goes to the director first.
-- **Read fights, not only averages.** A tick-by-tick read of real fights (`src/rogue-feel.ts`, `docs/feel-reader.md`) finds what the balance sheet's averages hide.
+- **Read fights, not only averages.** A tick-by-tick read of real fights (`tools/rogue-feel.ts`, `docs/feel-reader.md`) finds what the balance sheet's averages hide.
 - **Balance is its own pass.** While making content, make no balancing rules: synergies may be overpowered.
-- **Test with hand-built parties** (`src/rogue-parties.ts`, `src/build-parties.ts`), not the simulated player.
+- **Test with hand-built parties** (`tools/rogue-parties.ts`, `tools/build-parties.ts`), not the simulated player.
 - **The coming difficulty pass aims harder than today.**
 - **Checks sized to the need:** run the tests, studies and reads needed to know something, and skip the rest.

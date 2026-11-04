@@ -15,16 +15,16 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { availableParallelism } from "node:os";
 import { Worker, isMainThread, parentPort, workerData } from "node:worker_threads";
-import { combat } from "./engine/combat/rules.js";
-import type { CFight } from "./engine/combat/fight.js";
-import type { Entry } from "./engine/log.js";
-import { advanceOnce, answer, loadContent, newRun, type Content, type Picker, type Run } from "./engine/run.js";
-import { next, rngFor } from "./engine/rng.js";
-import { foesFor, knobFor, refFloors, registerGear, rogue, type RogueRun } from "./rogue.js";
-import type { AbilityT, DungeonT, GearT, Party } from "./schema.js";
-import { patch } from "./sim/content.js";
-import { combos, makeBuild, ORDERS, seat, slotted, STYLES } from "./sim/kits.js";
-import { canEquip } from "./validate.js";
+import { combat } from "../src/engine/combat/rules.js";
+import type { CFight } from "../src/engine/combat/fight.js";
+import type { Entry } from "../src/engine/log.js";
+import { advanceOnce, answer, loadContent, newRun, type Content, type Picker, type Run } from "../src/engine/run.js";
+import { next, rngFor } from "../src/engine/rng.js";
+import { foesFor, knobFor, refFloors, registerGear, rogue, type RogueRun } from "../src/rogue.js";
+import type { AbilityT, DungeonT, GearT, Party } from "../src/schema.js";
+import { patch } from "../src/sim/content.js";
+import { combos, makeBuild, ORDERS, seat, slotted, STYLES } from "../src/sim/kits.js";
+import { canEquip } from "../src/validate.js";
 /** The rogue has no pieces of its own (its stock is the pack's pieces, in pack.gear), so its legendary probes are empty. */
 const rogueGear = (_c: Content): GearT[] => [];
 

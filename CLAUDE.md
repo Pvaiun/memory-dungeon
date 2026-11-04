@@ -44,13 +44,13 @@ What's true now (Nov 4, 2026). Replace what's done rather than adding to it; his
 - **Nothing is balanced yet.**
 - **The tools** (each file's header says how to run it):
   - `npm run balance`: the balance sheet. Run it after any numbers change, before the knobs.
-  - `npm run rogue:calibrate`: each fight's knob against the hand-built rosters of `src/rogue-parties.ts` (`--climb`); then `npm run rogue:tune`.
-  - `npm run rogue`: whole runs with the simulated player (`src/rogue-ai.ts`).
-  - `npx tsx src/build-test.ts`: the twelve builds side by side, on the parties of `src/build-parties.ts`.
-  - `npx tsx src/piece-check.ts`: every item does what its card says.
-  - `npx tsx src/rogue-feel.ts`: fight logs for a feel read; the reader's brief is `docs/feel-reader.md`.
-  - `npx tsx src/rogue-acts.ts`: the act road.
-  - `npx tsx src/rogue-play.ts`: the AI playtester's game.
+  - `npm run rogue:calibrate`: each fight's knob against the hand-built rosters of `tools/rogue-parties.ts` (`--climb`); then `npm run rogue:tune`.
+  - `npm run rogue`: whole runs with the simulated player (`src/sim/rogue-ai.ts`).
+  - `npx tsx tools/build-test.ts`: the twelve builds side by side, on the parties of `tools/build-parties.ts`.
+  - `npx tsx tools/piece-check.ts`: every item does what its card says.
+  - `npx tsx tools/rogue-feel.ts`: fight logs for a feel read; the reader's brief is `docs/feel-reader.md`.
+  - `npx tsx tools/rogue-acts.ts`: the act road.
+  - `npx tsx tools/rogue-play.ts`: the AI playtester's game.
 - **Session pattern:** a piece of work can take one session or several; its `steps/` folder is the handoff. Each session ends at a gate by updating this Status section (what's true now, not a log), committing, and stopping for the director.
 
 ## The director's preferences

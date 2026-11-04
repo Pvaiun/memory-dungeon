@@ -3,34 +3,34 @@
  * player's moves. The run is saved to a file between commands. Enemy stats stay hidden; a fight is told as a short
  * summary of what a player would have watched.
  *
- *   npx tsx src/rogue-play.ts new <leader> [--seed N] [--save file]      start a run (leaders: knight, cleric, ranger)
- *   npx tsx src/rogue-play.ts look                                       where the run stands, and what it's waiting on
- *   npx tsx src/rogue-play.ts pick <option>                              answer it (a room, an offer, "fight", ...)
- *   npx tsx src/rogue-play.ts map                                        the act's whole map
- *   npx tsx src/rogue-play.ts boss                                       the act's boss and what it does
- *   npx tsx src/rogue-play.ts party                                      the roster: stats, gear, abilities, the bag
- *   npx tsx src/rogue-play.ts class <id>                                 a class's sheet: passive, every ability
- *   npx tsx src/rogue-play.ts equip <class> <weapon|armor|amulet> <item|none>
- *   npx tsx src/rogue-play.ts formation <id>     seat <a,b,c>     order <class> <ability,...|none>   (abilities left out aren't brought)
- *   npx tsx src/rogue-play.ts use <potion|tonic|phoenix> [class]   swap <party member> <member at camp>
+ *   npx tsx tools/rogue-play.ts new <leader> [--seed N] [--save file]      start a run (leaders: knight, cleric, ranger)
+ *   npx tsx tools/rogue-play.ts look                                       where the run stands, and what it's waiting on
+ *   npx tsx tools/rogue-play.ts pick <option>                              answer it (a room, an offer, "fight", ...)
+ *   npx tsx tools/rogue-play.ts map                                        the act's whole map
+ *   npx tsx tools/rogue-play.ts boss                                       the act's boss and what it does
+ *   npx tsx tools/rogue-play.ts party                                      the roster: stats, gear, abilities, the bag
+ *   npx tsx tools/rogue-play.ts class <id>                                 a class's sheet: passive, every ability
+ *   npx tsx tools/rogue-play.ts equip <class> <weapon|armor|amulet> <item|none>
+ *   npx tsx tools/rogue-play.ts formation <id>     seat <a,b,c>     order <class> <ability,...|none>   (abilities left out aren't brought)
+ *   npx tsx tools/rogue-play.ts use <potion|tonic|phoenix> [class]   swap <party member> <member at camp>
  *     (swap: any time outside a fight)
- *   npx tsx src/rogue-play.ts glossary                                   what each status shown in a fight does
+ *   npx tsx tools/rogue-play.ts glossary                                   what each status shown in a fight does
  *
  * --save picks the file (default out/rogue-play/run.json); every command takes it.
  */
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { advance, loadContent, type Content } from "./engine/run.js";
-import { combat } from "./engine/combat/rules.js";
-import type { Entry } from "./engine/log.js";
+import { advance, loadContent, type Content } from "../src/engine/run.js";
+import { combat } from "../src/engine/combat/rules.js";
+import type { Entry } from "../src/engine/log.js";
 import {
   actRoll, bagRoom, bench, bossFoes, canManage, choose, discard, dismiss, endFight, equip, eventView, formationRarity, itemGear, itemOf, maxOf, seatsOf, trainOptions, member, newRogue, options, reachable, registerGear, rogue,
   learnOptions, migrate, seat, sellPrice, improveOptions, unlearned, formOf, whyNot, setFormation, setOrder, startFight, swap, trainPrice, parseTraining, trainingText, useSupply, wearer, type Item, type Offer, type RogueRun, type Slot,
-} from "./rogue.js";
-import type { AbilityT, NumT } from "./schema.js";
-import { canEquip } from "./validate.js";
+} from "../src/rogue.js";
+import type { AbilityT, NumT } from "../src/schema.js";
+import { canEquip } from "../src/validate.js";
 import { summary } from "./play-summary.js";
-import { combat as rules, type Member as EngineMember } from "./engine/combat/rules.js";
-import { headStart } from "./engine/combat/stats.js";
+import { combat as rules, type Member as EngineMember } from "../src/engine/combat/rules.js";
+import { headStart } from "../src/engine/combat/stats.js";
 
 const c = loadContent(JSON.parse(readFileSync("content/core-set.pack.json", "utf8")));
 const argv = process.argv.slice(2);

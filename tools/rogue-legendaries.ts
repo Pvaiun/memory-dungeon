@@ -9,8 +9,8 @@
 import { readFileSync } from "node:fs";
 import { availableParallelism } from "node:os";
 import { isMainThread } from "node:worker_threads";
-import { loadContent } from "./engine/run.js";
-import { stockOf } from "./rogue.js";
+import { loadContent } from "../src/engine/run.js";
+import { stockOf } from "../src/rogue.js";
 import { many, Pool } from "./rogue-sim.js";
 
 async function main() {

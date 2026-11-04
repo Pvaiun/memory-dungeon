@@ -51,14 +51,14 @@ Every point in that space is open. The builds spread across it, and two builds r
 
 **The pieces make the rhythms.** Before the loot was designed, a read of the builds' nearest parties with plain kits found every party playing nearly the same fight: the same share of damage in each quarter, the same lumpiness, the same first kill. The kits alone don't make rhythms, so the loot has to.
 
-**How a rhythm is measured.** `npx tsx src/rhythm-read.ts` (plain kits) and `npx tsx src/build-test.ts` (the builds' test parties) read each party's fights for:
+**How a rhythm is measured.** `npx tsx tools/rhythm-read.ts` (plain kits) and `npx tsx tools/build-test.ts` (the builds' test parties) read each party's fights for:
 - the share of the party's damage in each quarter of a fight;
 - the share dealt by its biggest tenth of hits (lumpiness);
 - when the first foe dies and how spread out the kills are;
 - the share of the damage it takes in each quarter, and its lowest HP;
 - where its damage comes from (basic attacks, abilities, each status, Thorns, the shatter).
 
-Averages can hide a rhythm: a surge after a fall or a lock's window can vanish in a quarter's average. Where the numbers can't tell, a feel read can (`npx tsx src/rogue-feel.ts`).
+Averages can hide a rhythm: a surge after a fall or a lock's window can vanish in a quarter's average. Where the numbers can't tell, a feel read can (`npx tsx tools/rogue-feel.ts`).
 
 ## How builds come together
 
@@ -90,7 +90,7 @@ How the four slots do it:
 - **Only weapons carry behaviour of their own:** a speed, a damage type and hands. A two-hander empties the offhand, so its pieces are worth a weapon and an offhand.
 - **Every piece fits exactly its kind's classes,** and every class has a kind in every slot, including a one-handed weapon, so it can always use an offhand.
 - **Two classes share at most two kinds,** so every class's loot is mostly its own. Armor groups classes by weight, and weapons and offhands cut across those groups.
-- **Apart where it counts:** most pairs of kinds from different slots never meet on one unit, so pieces in them can be strong together without ever stacking. `npx tsx src/gear-slots.ts` counts the widths and overlaps after any change.
+- **Apart where it counts:** most pairs of kinds from different slots never meet on one unit, so pieces in them can be strong together without ever stacking. `npx tsx tools/gear-slots.ts` counts the widths and overlaps after any change.
 
 ## Formations
 
@@ -127,5 +127,5 @@ The method that made the current loot, for the next round:
 3. **The spine.** One line for every rare, legendary, formation, upgrade and mythic, built backwards from the builds and written all together, so the web is designed rather than found. Commons and uncommons get a rule per kind, not lines. The director approves it on a sample.
 4. **The fill.** Parallel agents write the numbers, card text and engine needs for their share, briefed with intent and ranges, never examples (an agent copies any example it's given). Each ends with its challenges and what it's least sure of.
 5. **Rulings.** The lead reads the whole fill together and rules on every challenge. Rules about balance are left out, held back as levers for the balance pass.
-6. **Build and measure.** The content goes in, and every build is played on hand-built test parties (`src/build-parties.ts`): `npx tsx src/build-test.ts` for rhythm, strength by rung and what carries each build, and `npx tsx src/piece-check.ts` for whether every item does what its card says.
+6. **Build and measure.** The content goes in, and every build is played on hand-built test parties (`tools/build-parties.ts`): `npx tsx tools/build-test.ts` for rhythm, strength by rung and what carries each build, and `npx tsx tools/piece-check.ts` for whether every item does what its card says.
 7. **The director plays it,** and their read is the gate.

@@ -1,7 +1,7 @@
 /** Writes language-neutral JSON Schemas for content packs and party loadouts. */
 import { mkdirSync, writeFileSync } from "node:fs";
 import * as z from "zod";
-import { ContentPack, Party } from "./schema.js";
+import { ContentPack, Party } from "../src/schema.js";
 
 mkdirSync("schema", { recursive: true });
 for (const [name, s] of [["content-pack", ContentPack], ["party", Party]] as const) {

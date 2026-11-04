@@ -1,5 +1,5 @@
 /** Prints PRIMITIVES.md: the closed sets of engine primitives, generated from the schema. */
-import * as S from "./schema.js";
+import * as S from "../src/schema.js";
 
 const out: string[] = [];
 const h = (t: string) => out.push(`\n## ${t}\n`);

@@ -5,7 +5,7 @@
  *
  * Fielding. Everyone knows its class's three abilities, in the class's order, with cooldowns 60% charged (as a run carries
  * them), full HP and MP, a plain weapon and nothing else, in Neutral. The carrier is the class a build party wears the piece
- * on (src/build-parties.ts), else the first class that can wear it; its companions are that build party's, else two of the
+ * on (tools/build-parties.ts), else the first class that can wear it; its companions are that build party's, else two of the
  * Knight, the Cleric and the Ranger. A piece goes in its slot (a weapon's control is the plain weapon of its kind; an
  * offhand's carrier holds a one-handed plain weapon); a formation seats a build party that uses it, else the three
  * starters, against Neutral; an ability form takes its ability's place, a passive form is `PartyUnit.passive`.
@@ -26,7 +26,7 @@
  * wins; of the upgrade forms only power steps are read so, a version being a trade against its base); a power step weaker
  * than its base per cast; untested (a form, or a passive form's hooks, whose base never fired in these fights either).
  *
- *   npx tsx src/piece-check.ts [--only <ids or a share>] [--seeds 3] [--quick] [--workers 4] [--out out/piece-check] [--show]
+ *   npx tsx tools/piece-check.ts [--only <ids or a share>] [--seeds 3] [--quick] [--workers 4] [--out out/piece-check] [--show]
  *
  * --only takes a share (physical, magical, armor, offhands, formations, upgrades1, upgrades2) or ids: a piece, a mythic, a
  * formation, an upgrade (its five forms) or one form, comma-separated. --quick: one seed, and one regular fight, the elite
@@ -36,12 +36,12 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { availableParallelism } from "node:os";
 import { fork, type ChildProcess } from "node:child_process";
-import { combat, type Member as EngineMember } from "./engine/combat/rules.js";
-import type { Entry } from "./engine/log.js";
-import { ENGINE_VERSION, advance, loadContent, newRun, type Content } from "./engine/run.js";
-import { fightDungeon, foesFor, knobFor, refFloors, rogue, type FightTier, type RogueRun } from "./rogue.js";
-import { SUBTICKS, type EffectT, type FormationT, type GearT, type Party, type PartyUnitT, type RogueFightT, type StatusT, type UpgradeT } from "./schema.js";
-import { canEquip, checkParty, handsOf } from "./validate.js";
+import { combat, type Member as EngineMember } from "../src/engine/combat/rules.js";
+import type { Entry } from "../src/engine/log.js";
+import { ENGINE_VERSION, advance, loadContent, newRun, type Content } from "../src/engine/run.js";
+import { fightDungeon, foesFor, knobFor, refFloors, rogue, type FightTier, type RogueRun } from "../src/rogue.js";
+import { SUBTICKS, type EffectT, type FormationT, type GearT, type Party, type PartyUnitT, type RogueFightT, type StatusT, type UpgradeT } from "../src/schema.js";
+import { canEquip, checkParty, handsOf } from "../src/validate.js";
 import { BUILD_PARTIES } from "./build-parties.js";
 import * as physical from "../content/core-set/pieces/weapons-physical.js";
 import * as magical from "../content/core-set/pieces/weapons-magical.js";

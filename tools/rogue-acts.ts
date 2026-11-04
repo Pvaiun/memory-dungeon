@@ -1,5 +1,5 @@
 /**
- * The MP economy, checked on the hand-built rosters (src/rogue-parties.ts) rather than whole simulated runs.
+ * The MP economy, checked on the hand-built rosters (tools/rogue-parties.ts) rather than whole simulated runs.
  *
  * - Endurance: each roster's three fight its region's regular fights one after another from full MP, with HP made whole
  *   each fight and nothing else restored, until each member is under a third of its MP. The target: two or three fights
@@ -12,14 +12,14 @@
  *     campfire: the free share, then TRAIN if the party is over 60% HP and 50% MP and the boss isn't next, else REST.
  *   It reports how often the bench is used, how often a fighter goes in under a third of its MP, and the losses.
  *
- *   npx tsx src/rogue-acts.ts [--acts 1,2,3] [--rosters id,id] [--set path=value ...]
+ *   npx tsx tools/rogue-acts.ts [--acts 1,2,3] [--rosters id,id] [--set path=value ...]
  */
 import { readFileSync } from "node:fs";
-import { loadContent, type Content } from "./engine/run.js";
-import { int, rngFor } from "./engine/rng.js";
-import { arriveCamp, autoFight, choose, foesFor, knobFor, maxOf, member, rogue, useSupply, type FightTier, type RogueRun } from "./rogue.js";
+import { loadContent, type Content } from "../src/engine/run.js";
+import { int, rngFor } from "../src/engine/rng.js";
+import { arriveCamp, autoFight, choose, foesFor, knobFor, maxOf, member, rogue, useSupply, type FightTier, type RogueRun } from "../src/rogue.js";
 import { ROSTERS, buildRoster, type Roster } from "./rogue-parties.js";
-import { patch, type Patch } from "./sim/content.js";
+import { patch, type Patch } from "../src/sim/content.js";
 
 const args = process.argv.slice(2);
 const opt = (name: string) => { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : undefined; };

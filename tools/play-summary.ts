@@ -1,9 +1,9 @@
 /**
- * A fight as a player remembers it, for the AI playtester's command line (src/rogue-play.ts):
+ * A fight as a player remembers it, for the AI playtester's command line (tools/rogue-play.ts):
  * per fight, how it went, who fell, what the foes did, what the party dealt and took. Enemy stats stay hidden; foes'
  * HP shows as a share, as their bars do on screen.
  */
-import type { Entry } from "./engine/log.js";
+import type { Entry } from "../src/engine/log.js";
 
 /** A player's memory of a run: per fight, how it went, who fell, what the foes did, what the party dealt and took. */
 export function summary(log: Entry[], nameOf: (src: string) => string = (x) => x.replace(/_/g, " ")): string {
