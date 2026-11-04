@@ -8,8 +8,7 @@ import * as physical from "./weapons-physical.js";
 import * as magical from "./weapons-magical.js";
 import * as armor from "./armor-amulets.js";
 import * as offhands from "./offhands.js";
-import * as part1 from "../upgrades/part1.js";
-import * as part2 from "../upgrades/part2.js";
+import { first as part1, second as part2 } from "../upgrades/index.js";
 import { builds as formationBuilds } from "../formations.js";
 
 const shares = [physical, magical, armor, offhands];

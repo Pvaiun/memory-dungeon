@@ -47,8 +47,7 @@ import * as physical from "../content/core-set/pieces/weapons-physical.js";
 import * as magical from "../content/core-set/pieces/weapons-magical.js";
 import * as armor from "../content/core-set/pieces/armor-amulets.js";
 import * as offhands from "../content/core-set/pieces/offhands.js";
-import * as part1 from "../content/core-set/upgrades/part1.js";
-import * as part2 from "../content/core-set/upgrades/part2.js";
+import { first as part1, second as part2 } from "../content/core-set/upgrades/index.js";
 
 const PACK = "content/core-set.pack.json";
 
