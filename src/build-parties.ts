@@ -2,7 +2,7 @@
  * The build test's hand-built parties for every route of every one of the twelve builds, at each of its
  * three rungs, so the twelve can be played side by side on one set of the rogue's fights. Data only: no engine, no Node.
  *
- * Where it comes from: each build's routes and rungs are the three that `docs/core-set/builds.md` names for it; each piece,
+ * Where it comes from: each build's routes and rungs are the three that `docs/gear-design/builds.md` names for it; each piece,
  * formation, version and mythic goes by the id the content derives from its name. Nothing here is balanced: a route is what
  * the documents name, not what wins.
  *
@@ -54,7 +54,7 @@ export type Route = {
   build: BuildId;
   id: string;
   classes: [string, string, string];
-  /** What it's built around, in the words of `docs/core-set/builds.md`. */
+  /** What it's built around, in the words of `docs/gear-design/builds.md`. */
   note: string;
   rungs: [Party, Party, Party];
 };
@@ -101,7 +101,7 @@ export const FORMATION_SEATS: Record<string, { rarity: "common" | "rare" | "lege
   the_vise: { rarity: "legendary", seats: ["jaw_a", "screw", "jaw_b"] },
 };
 
-/** The 16 mythics (`docs/core-set/gear.md`, Mythics): the class each fits and the slot it sits in. */
+/** The 16 mythics (`docs/gear-design/loot.md`, Mythics): the class each fits and the slot it sits in. */
 export const MYTHICS: Record<string, { cls: string; slot: Slot }> = {
   horn_of_the_keep: { cls: "knight", slot: "offhand" },
   halo_of_the_saint: { cls: "cleric", slot: "amulet" },

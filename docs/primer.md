@@ -6,7 +6,7 @@ The least you need to know to work on the game. Read it first, then open a detai
 
 - **The game** is a party-based JRPG dungeon crawler with automatic combat, played on a phone-sized browser interface.
 - **The core set is the game's content:** the combat rules, 16 classes, gear, formations, upgrades and mythics, 29 enemies, and the **rogue mode**, which is the game. Free play keeps everything available as a sandbox, and the campaign is retired.
-- **The repo designs it:** a schema, a headless engine, simulations and the interface. Everything is built and approved. Nothing is balanced yet: the balance pass is next (`CLAUDE.md`, Status).
+- **The repo designs it:** a schema, a headless engine, simulations and the interface. Everything is built and approved, and nothing is balanced yet.
 
 ## How it plays
 
@@ -72,7 +72,7 @@ The least you need to know to work on the game. Read it first, then open a detai
   There are 240 pieces, 16 mythics and a plain weapon of each kind. Every piece is fixed, with no random affixes. A card says what the piece does and who can wear it, never what it's for.
 - **A formation** is three seats and maybe a party effect. A seat changes the stats of whoever sits in it, or gives it statuses. There's no battlefield geometry: Aggro on the seats is what makes a front line. A run starts with Neutral (three empty seats), and there are 32 more: common, rare and legendary.
 - **Training** is learning an ability, or taking an ability's or passive's power step, or one of its two versions (A or B). Every ability and passive has a power step and two versions: 64 upgrades in all.
-- **Builds.** A build is a way to play you can watch: someone watching can tell which build is playing and what it's waiting for. There are twelve, and the gear, formations and upgrades were designed backwards from them (*Core set: builds*):
+- **Builds.** A build is a way to play you can watch: someone watching can tell which build is playing and what it's waiting for. There are twelve, and the gear, formations and upgrades were designed backwards from them (*Gear design: the builds*). The gear design isn't finished: its philosophy is in `docs/gear-design/`.
   - **Landslide:** a few huge blows from behind stone.
   - **Thousand Cuts:** a dense stream of tiny hits and dodges.
   - **Bonfire:** Burn that climbs all fight and passes from foe to foe.
@@ -122,8 +122,9 @@ The least you need to know to work on the game. Read it first, then open a detai
 | A class's design: its plan, kit, tests, and which parties beat what | `docs/core-set/classes.md`; its numbers in `content/core-set/classes.ts` |
 | An enemy's design, and the list of challenges | `docs/core-set/enemies.md`; numbers in `content/core-set/enemies.ts`; free play's encounters and dungeons in `dungeons.ts`; their test trios in `tests.ts` |
 | How a run works | `docs/core-set/rogue-mode.md`; numbers in `content/core-set/rogue.ts` and `rogue-knobs.json` |
-| The twelve builds: each one's rhythm, threads, routes and rungs, and how they connect | `docs/core-set/builds.md`; the routes as test parties in `src/build-parties.ts` |
-| Gear, formations, upgrades and mythics: what each rarity is, the stock, what a formation or upgrade may do | `docs/core-set/gear.md`; each item and its card text in `content/core-set/pieces/`, `formations.ts` and `upgrades/` |
+| Designing or changing gear, formations, upgrades or mythics | `docs/gear-design/philosophy.md` first: the director's intent, rhythm, what makes a piece good, and how loot is made |
+| The twelve builds: rhythm, threads, routes, rungs, needs, the web between them, and how they measure | `docs/gear-design/builds.md`; the routes as test parties in `src/build-parties.ts` |
+| The loot's rules: each rarity, the stock, writing pieces, formations, upgrades, mythics, levers held back | `docs/gear-design/loot.md`; each item and its card text in `content/core-set/pieces/`, `formations.ts` and `upgrades/` |
 | Any number | `content/core-set/scale.ts` |
 | What content can express | `PRIMITIVES.md` (generated from `src/schema.ts`) |
 | The interface | `ui/README.md` |

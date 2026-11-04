@@ -224,7 +224,7 @@ The Fundamental pieces were chosen for how they interact: pieces that answer, un
 
 ## Vocabulary: statuses
 
-The vocabulary is 22 statuses, 7 special stats and 6 effects. The pieces add Marked and seven counters (*Core set: gear*).
+The vocabulary is 22 statuses, 7 special stats and 6 effects. The pieces add Marked and seven counters (*Gear design: the loot*).
 
 | Kind | Fundamental | Specialist | Signature | Total |
 | --- | --- | --- | --- | --- |
@@ -317,7 +317,7 @@ Built up and kept up: Burn and Bleed for damage, Chill for control (its once-app
 
 ## Gear
 
-The four slots and who wears what. What each rarity carries, and the rules for pieces, formations, upgrades and mythics, are in *Core set: gear*.
+The four slots and who wears what. What each rarity carries, and the rules for pieces, formations, upgrades and mythics, are in *Gear design: the loot*; the philosophy behind them, in *Gear design: philosophy*.
 
 - **Slots.** Each unit wears a weapon, armor, an offhand and an amulet. Gear is fixed, never generated, and any number of units can wear copies of the same piece. A class arrives with the plain weapon of its first kind, and its other slots start empty. Slots have no job: any kind of effect can sit in any slot, and only weapons carry behaviour of their own (a speed, a damage type and hands).
 - **Who wears what.** A class wears only its own kinds: two weapon kinds, one or two armor types (Plate, Mail, Leather, Robes) and one or two of the ten offhand kinds. Amulets fit everyone. Every class has a one-handed weapon kind, so it can always hold an offhand, and no two classes share more than two kinds. A kind's name says who can hold it, not what its pieces do. *Core set: classes* gives each class's kinds.

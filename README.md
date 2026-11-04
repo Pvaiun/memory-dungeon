@@ -1,4 +1,4 @@
-# Memory Dungeon Game: design
+# Dungeon Game: design
 
 A party-based JRPG dungeon crawler with automatic combat, where preparation is the game. Its content is the **core set** (the rules, classes, gear, formations, enemies and the rogue mode, a roguelite run of three acts); free play keeps everything available as a sandbox. This repo designs it: a schema, a headless engine, simulations and a phone-sized interface.
 

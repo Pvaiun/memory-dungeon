@@ -1,4 +1,4 @@
-# Memory Dungeon Game: design repo
+# Dungeon Game: design repo
 
 ## What this is
 
@@ -8,15 +8,15 @@ Design work for a party-based JRPG dungeon crawler with automatic combat, where 
 
 - `docs/primer.md`: the game in brief, and the map of where everything is.
 - `docs/rules.md`: the director's standing direction, one page. It wins over the design documents where they differ.
-- `docs/core-set/`: the detailed reference.
+- `docs/core-set/`: the detailed reference for the game as built. They give words and behaviour; the numbers are in the content.
   - `rules-and-vocabulary.md`: the combat rules and vocabulary.
   - `classes.md`: the classes.
-  - `builds.md`: the twelve builds.
-  - `gear.md`: gear, formations, upgrades and mythics.
   - `enemies.md`: the enemies and challenges.
   - `rogue-mode.md`: the rogue mode.
-
-  They give words and behaviour; the numbers are in the content.
+- `docs/gear-design/`: the design of gear, formations, ability upgrades and mythics, which isn't finished. Read it before any work on them.
+  - `philosophy.md`: the director's intent, rhythm, what makes a piece good, and how loot is made.
+  - `builds.md`: the twelve builds the loot is designed backwards from.
+  - `loot.md`: the rules the loot is made by.
 - `content/core-set/`: the core set as content. `scale.ts` holds every first value by name; the other files hold the classes, gear, formations, upgrades, enemies, dungeons and the rogue mode, with each item's card text. `npm run content` writes `content/core-set.pack.json`, which the engine, tests and studies read.
 - `ui/`: the interface (Vite, plain TypeScript), a retro JRPG screen that runs on a phone. `ui/README.md` has the details; `npm run ui` serves it, and GitHub Pages hosts it.
 - `steps/`: working folders for open work only, one per step (none is open today). A closed step's history is in git, not here.
@@ -41,12 +41,7 @@ Design work for a party-based JRPG dungeon crawler with automatic combat, where 
 What's true now (Nov 4, 2026). Replace what's done rather than adding to it; history is in git.
 
 - **The game is built and approved as it stands:** the rogue mode (`docs/core-set/rogue-mode.md`; the interface's Settings → MODE → ROGUE) with 16 classes, 240 gear pieces, 16 mythics, 32 formations and Neutral, and 64 ability upgrades. Engine 0.18, schema 0.8. The campaign is retired; free play stays as the sandbox.
-- **Next: the balance pass, then a harder difficulty pass.** Nothing is balanced yet. What the last measurements showed (`npx tsx src/build-test.ts`, `npx tsx src/piece-check.ts`), as starting points:
-  - **Cold Snap is far above the other builds.** At its top rung on act III's fights it wins 97%, and the others win 35% to 73%. Chain shatters across packs carry it; the first lever to try is Winter's chain giving a single Chill to each other foe.
-  - **For half the builds the top rung isn't stronger** (Lockdown, Phoenix, Harvest, Thousand Cuts, the Hunt). The likely cause is that a common carries two stat steps and a rare or legendary at most one. The lever would be a stat step on every rare and legendary.
-  - **Items that don't pull their weight.** 195 of the 461 items in the test parties never move a result past noise, mostly versions and power steps. 24 make their party worse: The forge (its party-wide Slow costs more than its Heat gives, and Heat never reaches Burn), Blood covenant, Horn of the charge, and some versions.
-  - **The simulated player wins 0 of 60 runs,** most ending in act I: the fights' knobs were calibrated against the old loot. The difficulty pass recalibrates against the hand-built rosters.
-  - **No feel read yet** of the current game (`npx tsx src/rogue-feel.ts`, `docs/feel-reader.md`).
+- **Nothing is balanced yet.** How the builds measure on the approved loot is in `docs/gear-design/builds.md` (Where the builds stand). The fights' knobs were calibrated against the old loot.
 - **The tools** (each file's header says how to run it):
   - `npm run balance`: the balance sheet. Run it after any numbers change, before the knobs.
   - `npm run rogue:calibrate`: each fight's knob against the hand-built rosters of `src/rogue-parties.ts` (`--climb`); then `npm run rogue:tune`.

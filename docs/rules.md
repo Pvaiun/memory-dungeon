@@ -25,7 +25,9 @@ Where a rule and a design document disagree, this page wins and the document get
 
 ## Builds, gear and formations
 
-- **A build is a way to play you can watch:** someone watching a fight can tell which build is playing and what it's waiting for. It has a rhythm, it's woven from several threads (never one keyword turned up), and builds spread across rhythms. The twelve builds in `docs/core-set/builds.md` stand.
+The philosophy behind these lines, and the director's intent in their words, are in `docs/gear-design/philosophy.md`.
+
+- **A build is a way to play you can watch:** someone watching a fight can tell which build is playing and what it's waiting for. It has a rhythm, it's woven from several threads (never one keyword turned up), and builds spread across rhythms. The twelve builds in `docs/gear-design/builds.md` stand.
 - **What a build asks is a range,** from what most runs find, giving back a little, to specific pieces giving back far more. It pays something before it's complete. It can be reached by more than one route, and pieces form a web, not bundles. There's room for exotics and chaos: a run finds its build in what it's given.
 - **A good piece is worth a lot somewhere and little elsewhere.** A piece strong everywhere gives something up, designed for it. The best choices are between things good for different builds.
 - **Gear has four slots** (weapon, armor, offhand, amulet), and slots have no job. Only weapons carry inherent behaviour (a speed, a damage type and hands). Every class has an offhand and a one-handed weapon. The amulet fits everyone. A mythic fits one class.

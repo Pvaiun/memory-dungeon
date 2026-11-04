@@ -1,6 +1,8 @@
-# Core set: gear, formations, upgrades and mythics
+# Gear design: the loot
 
-How the loot is designed: what each rarity is, how much there is, and what formations, upgrades and mythics may do. The slots, the kinds and who wears what are under Gear in *Core set: rules and vocabulary*; how loot is offered in a run is in *Core set: the rogue mode*. Every piece, formation, upgrade and mythic is data with its card text: `content/core-set/pieces/`, `formations.ts` and `upgrades/` (the mythics are in `upgrades/`, beside their class's upgrades). They were designed backwards from the twelve builds (*Core set: builds*). `npx tsx src/gear-slots.ts` counts who shares which kinds; `npx tsx src/piece-check.ts` checks that every item does what its card says.
+The rules the loot is made by: what each rarity is, how much there is, how commons and uncommons are written, and what formations, upgrades and mythics may do. The philosophy behind them is in *Gear design: philosophy*, and the builds they serve in *Gear design: the builds*. The slots, the kinds and who wears what are under Gear in *Core set: rules and vocabulary*; how loot is offered in a run is in *Core set: the rogue mode*.
+
+Every piece, formation, upgrade and mythic is data with its card text: `content/core-set/pieces/`, `formations.ts` and `upgrades/` (the mythics are in `upgrades/`, beside their class's upgrades). `npx tsx src/gear-slots.ts` counts who shares which kinds, and `npx tsx src/piece-check.ts` checks that every item does what its card says.
 
 ## Rarity
 
@@ -82,9 +84,23 @@ Commons and uncommons are written from a rule per kind, not designed one by one:
 - **One rule is added:** Taunt ends Hidden. A unit that gains Taunt stops being Hidden, and Hidden doesn't land on a Taunting unit.
 - **What no piece does:** grant an ability, give Aegis (it stays the Hoplite's), or apply a status for less or more than its own length.
 
+## Rules for writing pieces
+
+Rules that hold for every piece, version and mythic, kept from the rulings on the fill. None of them is about balance.
+- **Every uncommon carries an effect.** A special stat alone is a common's step.
+- **One uncommon effect per wearer group:** two kinds worn by the same classes don't share an uncommon effect.
+- **Two-handers' uncommons** carry two steps and their effect, so they're worth a weapon and an offhand.
+- **Mythics carry no stat steps** unless the line's shape needs one.
+- **A revive** brings its ally back with every ability on full cooldown, whoever revives, unless Einherjar or a piece says otherwise.
+- **Paying HP** means losing that much HP at once. It isn't damage, so no Shield soaks it and nothing reacts to it, and it can't take the payer below 1 HP.
+- **"Every so often"** is the short cooldown word, unless a line states its own.
+- **Hits that always crit** win over Gambler's coin, and its card says so.
+- **Each new status or counter is defined once,** for every piece that uses it (Marked, Heat, Fervor and the rest in `pieces/shared.ts`).
+- **Same card, two places:** where two items would read the same, one changes. The best choices are between builds.
+
 ## Formations
 
-A formation is a shape: three seats and, if it wants, rules of its own. It gives a squad an identity. It joins the web of builds through seat roles that many builds share (*Core set: builds*, The web), and through an identity of its own, which is what makes it more than a sum of seats. Neutral is the start, and there are 32 more: 11 common, 12 rare and 9 legendary. Each build is helped by at least four, in different ways, and no build needs one.
+A formation is a shape: three seats and, if it wants, rules of its own. It gives a squad an identity. It joins the web of builds through seat roles that many builds share (*Gear design: the builds*, The web), and through an identity of its own, which is what makes it more than a sum of seats. Neutral is the start, and there are 32 more: 11 common, 12 rare and 9 legendary. Each build is helped by at least four, in different ways, and no build needs one.
 
 **What a formation may be.** A range, not a menu: any formation takes what its shape needs.
 - **What a seat can change** about the unit in it: stats and special stats; statuses, at the start or on a trigger; how the unit acts (what it aims at, how fast it acts, what it waits for); what its hits carry; how it reacts. A seat can also do nothing.
@@ -128,8 +144,33 @@ One per class, shown in crimson and offered in the boss boons that open acts II 
 
 Ambush and Blood Pact have no mythic of their own; they reach their far ends through gear and upgrades.
 
-## To watch
+## Levers held back for balance
 
-- **Two-handers:** whether a two-hander's piece is worth giving up an offhand is a test, not a design.
+At the director's word, the loot was made with no balancing rules: synergies may be overpowered. These rules were proposed during the fill and withdrawn, and they're kept as levers for a balance pass, to reach for only if the numbers call for them. Statuses stay universal: no lever shortens or lengthens a status.
+- **One swing shape per unit.** Phalanx, the Millstone, the Hummingbird charm, the Worldbreaker and the Hammer seats each reshape a unit's basic attacks, and today two shapes on one unit add up. The lever: a unit takes one shape, and each other shape on it gives a stat step instead.
+- **No "many" in a single application:** one cast or hit lands at most "several", and "many" is for build-up over a fight.
+- **Half again in place of double** where a party can hold the condition all fight.
+- **A counter gains at most a stack every couple of ticks,** however many triggers fire, so against a pack it grows at a fight's pace, not a swarm's.
+- **No triples** outside the Worldbreaker.
+- **Item cuts:** the fill's first, smaller versions of items that went back to the spine's line (a limit on Pike wall, Oathkeeper at half, Withering idol and the Humbling mace one swing in three, Thrall's chalice once a fight, a cap on Supercell, and others).
+- **Locks that hold a lone boss all fight** (Withering idol, the Humbling mace, the Glacial rod, Deep cold, Thorn hedge): the design's own answer is bosses that resist repeated control, which is in, not shorter locks.
+
+## Decisions to know, and what's least sure
+
+**Decisions in the loot that might not be expected,** each one a line to change:
+- **The stock is even quarters** (sixty of each rarity), with the plain weapons outside it.
+- **Commons carry no effect,** only stats. Uncommons are where the first rungs live.
+- **An upgrade is two trainings,** the power step and the version, in either order.
+- **One new word, Marked, and seven counters,** each its own status. Fewer are possible: Heat and Surge could be one, and Charge could be Cuts spent.
+- **Three rules bent, one added** (see New words, and the rules the pieces bend).
+- **No piece grants an ability,** so more abilities per class stays out.
+
+**Least sure:**
+- **Overflow** leans on the engine most (cost changes, an ally's cast as a trigger). If a link reads as bookkeeping in the fight log, it fails.
+- **Ambush's tail** may still be all or nothing.
 - **The dodge that pays lives only on Leather** (Duelist's leathers, Windrunner's garb), so no Mail or Plate unit can dance.
-- **Exotics are few** (five), half the one in ten that would give a run its chaos.
+- **Two-handers:** whether a two-hander's piece is worth giving up an offhand is a test, not a design.
+- **Phoenix's far end is crowded** and its second rung thin. Several returns stacked on one unit could make a party that can't lose its first member.
+- **Harvest gets the most versions,** because "spread it" is the natural other side of many single-target abilities.
+- **Ambush and Blood Pact have no mythic of their own.**
+- **Exotics are five,** half the one in ten that would give a run its chaos.

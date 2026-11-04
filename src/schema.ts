@@ -1,5 +1,5 @@
 /**
- * Memory Dungeon Game: content schema (the core set, docs/core-set/).
+ * Dungeon Game: content schema (the core set, docs/core-set/).
  *
  * One data format for everything the engine runs on. Fights run on ticks, and
  * everything that happens on an event or a timer is a status. Content is built from
