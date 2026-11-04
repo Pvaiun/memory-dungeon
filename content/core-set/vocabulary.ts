@@ -17,7 +17,7 @@ export const stats: StatDefT[] = [
   { id: "magic", name: "Magic", kind: "amount", default: 0, floor: 0 },
   { id: "armor", name: "Armor", kind: "amount", default: 0, floor: 0, note: `A physical hit deals hit² ÷ (hit + ${RULES.armorK} × Armor): nearly linear against big hits, never a blank.` },
   { id: "aggro", name: "Aggro", kind: "amount", default: 100, floor: 1, note: "Centred on 100 (a word n is 70 + 10n, a gear or formation step 10), never below 1. Foes pick party members by draw from ruleset.partyDraw: an ordinary unit draws 100, and every 25 Aggro doubles it (halves it below 100), from Aggro 25 (12.5) to 200 (1,600). The party picks among foes by ruleset.draw's curve: none draws more than 300 or less than 33." },
-  { id: "magic_resist", name: "Magic resist", kind: "points", default: 0, floor: 0, cap: 100, note: "Step 5j: cuts each magical hit or pulse by this share; 100 is immune. Foes carry it by rank, and Ward gives it." },
+  { id: "magic_resist", name: "Magic resist", kind: "points", default: 0, floor: 0, cap: 100, note: "Cuts each magical hit or pulse by this share; 100 is immune. Foes carry it by rank, and Ward gives it." },
   { id: "attack_speed", name: "Attack speed", kind: "points", default: 0, floor: -300, cap: 300, note: "Hidden behind Haste, Slow and Chill." },
   { id: "cooldown_reduction", name: "Cooldown reduction", kind: "points", default: 0, floor: -300, cap: 300, note: "Hidden behind Haste, Slow and Chill." },
   { id: "cast_time_reduction", name: "Cast time reduction", kind: "points", default: 0, floor: -300, cap: 300, note: "Hidden behind Haste, Slow and Chill." },
