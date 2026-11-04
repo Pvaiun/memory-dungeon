@@ -369,7 +369,7 @@ test("party: copies of gear can be shared up to the count owned", () => {
   assert.deepEqual(codes(checkParty(PACK, party, { dungeon: DUNGEON, owned: owned(1) })), ["party.gearCount"]);
 });
 
-// ─── Upgrades, rarity and reactions (steps/05-core-set/5i-synergy/build/engine-spec.md) ──
+// ─── Upgrades, rarity and reactions ──
 
 const FORMS = ["p", "a", "b", "ap", "bp"];
 /** The warrior's Cleave with all five forms, and a passive status with all five, each skipped if named. */

@@ -35,8 +35,7 @@ export const counters: StatusT[] = [
 
 /**
  * Marked: a debuff on a foe, 14 ticks, Refresh. The party's basic attacks pick a Marked foe (by draw among several) inside the
- * Taunt rule; each unit keeps one Mark, so a new one it applies moves its old one. `focus` and `single` are the spec's X11
- * (build/engine-spec.md).
+ * Taunt rule; each unit keeps one Mark, so a new one it applies moves its old one (the status's `focus` and `single`).
  */
 export const MARKED = { duration: 14 } as const;
 export const marked: StatusT = { id: "marked", name: "MARKED", text: "The party's basic attacks go to it.", label: "debuff", show: "icon", stacking: "refresh", duration: MARKED.duration, focus: true, single: true };

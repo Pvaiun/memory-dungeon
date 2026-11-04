@@ -221,7 +221,7 @@ export const abilities: A[] = [
   a("vampire", "blood_gift", "Blood gift", "Spends a fifth of its max HP to heal the lowest other ally for as much, and gives it Clarity.", {
     // It waits until the Vampire itself is at 35% HP or more, so the price (a fifth) never kills it.
     ...timing("medium", "normal"), mp: 450, if: [{ side: "others", where: { hpBelow: 80 } }, { side: "self", where: { hpAtLeast: 35 } }], target: T.otherLowestShareAlly,
-    // The price is paid with `pay` (engine-spec X23), HP lost at once, not damage: no Shield soaks it, nothing reacts, never below 1 HP.
+    // The price is paid with `pay`, HP lost at once, not damage: no Shield soaks it, nothing reacts, never below 1 HP.
     do: [{ op: "pay", hp: from("max_hp", 0.2), to: "self" }, { op: "heal", amount: from("max_hp", 0.2) }, apply("clarity")],
   }),
   a("vampire", "frenzy", "Frenzy", "Several Might on itself.", { ...timing("medium", "quick"), mp: 450, target: "self", do: [apply("might", { stacks: stacks("several", "attack") })] }),
