@@ -318,7 +318,7 @@ export const classes: ClassDefT[] = [
   }),
 ];
 /**
- * Each class's MP pool, in points, set by how many regular fights it lasts from full (`npx tsx src/rogue-acts.ts`, the
+ * Each class's MP pool, in points, set by how many regular fights it lasts from full (`npx tsx tools/rogue-acts.ts`, the
  * endurance line): every class runs dry in about two or three fights, casters and walls close together, erring scarce. MP
  * comes back on the bench, never in a fight by itself. The pool, not the cost ladder, is the class's MP identity.
  */

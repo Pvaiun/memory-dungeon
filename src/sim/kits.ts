@@ -1,13 +1,11 @@
 /**
- * Sensible builds from what a player owns, for the campaign simulations: a kit per class (a weapon, armor and
- * amulet scored against what its kit multiplies), a formation with its slots handed out by the same scores,
- * and the party's needs respected. Not a player model: a fast way to cover the space a thoughtful player
- * would try, so the search can sample it and then climb from the best.
+ * Sensible builds from everything in the pack, for the simulations: a kit per class (a weapon, armor and amulet
+ * scored against what its kit multiplies) and a formation with its slots handed out by the same scores. Not a
+ * player model: a fast way to cover the space a thoughtful player would try.
  */
 import type { Content } from "../engine/run.js";
-import type { NeedT, NumT, Party } from "../schema.js";
+import type { NumT, Party } from "../schema.js";
 import { canEquip } from "../validate.js";
-import type { Owned } from "../campaign.js";
 
 /**
  * What each class's kit multiplies, per gear step (an amount stat's +1, Crit chance's 5%, a special stat at medium).
@@ -73,30 +71,19 @@ export function scoreGear(c: Content, cls: string, id: string, style: Style): nu
   return n;
 }
 
-/** The pieces a class can wear in a slot, from what's owned, under the needs. */
-export function fitting(c: Content, cls: string, slot: string, owned: Owned, needs: readonly NeedT[]): string[] {
+/** The pieces of the pack a class can wear in a slot. */
+function fitting(c: Content, cls: string, slot: string): string[] {
   const k = c.classes.get(cls)!;
-  return owned.gear.filter((id) => {
-    const g = c.gear.get(id);
-    if (!g || g.slot !== slot || !canEquip(k, g)) return false;
-    for (const nd of needs) {
-      if ("armor" in nd && slot === "armor" && g.armor !== nd.armor) return false;
-      if ("weapons" in nd && slot === "weapon" && !(g.weapon?.kind && nd.weapons.includes(g.weapon.kind))) return false;
-    }
-    return true;
-  });
+  return c.pack.gear.filter((g) => g.slot === slot && canEquip(k, g)).map((g) => g.id);
 }
 
-/** The best kit for a class in a style, or null when the needs can't be met (no armor of the weight, no weapon of the kind). */
-export function kit(c: Content, cls: string, owned: Owned, needs: readonly NeedT[], style: Style): Record<string, string> | null {
+/** The best kit for a class in a style, or null when it has no weapon to wear. */
+function kit(c: Content, cls: string, style: Style): Record<string, string> | null {
   const out: Record<string, string> = {};
-  const noArmor = needs.some((nd) => "armor" in nd && nd.armor === "none");
-  const mustArmor = needs.some((nd) => "armor" in nd && nd.armor !== "none");
   for (const slot of ["weapon", "armor", "amulet"]) {
-    if (slot === "armor" && noArmor) continue;
-    const fits = fitting(c, cls, slot, owned, needs);
+    const fits = fitting(c, cls, slot);
     if (!fits.length) {
-      if (slot === "weapon" || (slot === "armor" && mustArmor)) return null;
+      if (slot === "weapon") return null;
       continue;
     }
     let best = fits[0], bs = -Infinity;
@@ -105,7 +92,7 @@ export function kit(c: Content, cls: string, owned: Owned, needs: readonly NeedT
       if (s > bs) (bs = s), (best = id);
     }
     // Armor and amulets are worn only when they're worth something to this class.
-    if (slot === "weapon" || mustArmor || bs > 0) out[slot] = best;
+    if (slot === "weapon" || bs > 0) out[slot] = best;
   }
   return out;
 }
@@ -147,14 +134,14 @@ export function slotted(c: Content, cls: string, order: Order = "doc"): string[]
   return order === "doc" ? own : own.slice().sort((a, b) => c.abilities.get(a)!.cooldown - c.abilities.get(b)!.cooldown);
 }
 
-/** A whole build: seated, kitted, abilities in the documents' order (or the shortest cooldown first). Null if some class can't meet the needs. */
-export function makeBuild(c: Content, classes: readonly string[], formation: string, style: Style, owned: Owned, needs: readonly NeedT[], order?: string[], abOrder: Order = "doc"): Party | null {
+/** A whole build: seated, kitted, abilities in the documents' order (or the shortest cooldown first). Null if some class has no weapon. */
+export function makeBuild(c: Content, classes: readonly string[], formation: string, style: Style, order?: string[], abOrder: Order = "doc"): Party | null {
   const f = c.formations.get(formation)!;
   const seated = order ?? seat(c, classes, formation, style);
   const units = [];
   for (let i = 0; i < seated.length; i++) {
     const cls = seated[i];
-    const gear = kit(c, cls, owned, needs, style);
+    const gear = kit(c, cls, style);
     if (!gear) return null;
     units.push({ class: cls, position: f.positions[i].id, abilities: slotted(c, cls, abOrder), gear });
   }
@@ -170,33 +157,4 @@ export function combos<T>(xs: readonly T[], k: number): T[][] {
   };
   go(0, []);
   return out;
-}
-
-/** The parties a node allows: every trio (or smaller, under a size need) of owned classes that meets its class needs. */
-export function trios(owned: Owned, needs: readonly NeedT[], size = 3): string[][] {
-  const max = Math.min(size, ...needs.flatMap((nd) => ("size" in nd ? [nd.size] : [])));
-  const inc = needs.flatMap((nd) => ("includes" in nd ? nd.includes : []));
-  const exc = needs.flatMap((nd) => ("excludes" in nd ? nd.excludes : []));
-  const pool = owned.classes.filter((x) => !exc.includes(x));
-  const n = Math.min(max, pool.length);
-  return combos(pool, n).filter((t) => inc.every((x) => t.includes(x)));
-}
-
-/** "Knight, Cleric, Ranger in Vanguard (sturdy): sword/plate/–". */
-export function describe(c: Content, p: Party): string {
-  const f = c.formations.get(p.formation)?.name ?? p.formation;
-  const units = p.units.map((u) => `${c.classes.get(u.class)!.name}[${["weapon", "armor", "amulet"].map((s) => (u.gear[s] ? c.gear.get(u.gear[s])!.name : "–")).join("/")}]`);
-  return `${units.join(", ")} in ${f}`;
-}
-
-/** A saved build brought up to date: a member whose abilities aren't its class's any more (a class redesign) gets the class's own order. */
-export function current(c: Content, p: Party): Party {
-  return {
-    ...p,
-    units: p.units.map((u) => {
-      const own = c.classes.get(u.class)!.abilities;
-      const same = u.abilities.length === own.length && u.abilities.every((a) => own.includes(a));
-      return same ? u : { ...u, abilities: own.slice() };
-    }),
-  };
 }

@@ -88,7 +88,7 @@ A run starts with Neutral. Formations are common, rare or legendary (`content/co
 
 - **A fight's knob** adds its own (`rogue-knobs.json`), its act's for its tier (`knobs`), its region's (each region's `knob`), a climb a floor from its pool's reference floor (`map.ref`, `knobs[].step`, `early` below it; not for bosses) and the heat. A knob k gives foes k % more HP and k ÷ 2.5 % more damage (`knobFoes` in `src/rogue.ts`); each tier's `shape` adds HP and damage on top.
 - **Heat:** a won run opens the next level; the start screen picks any open level. Each adds `heat.per` to every knob. Heat 0 is the game as tuned.
-- **Knobs are measured, not set:** `npm run rogue:calibrate` against the hand-built rosters (`src/rogue-parties.ts`), then `npm run rogue:tune` over whole runs of the simulated player.
+- **Knobs are measured, not set:** `npm run rogue:calibrate` against the hand-built rosters (`tools/rogue-parties.ts`), then `npm run rogue:tune` over whole runs of the simulated player.
 
 ## The end of a run
 

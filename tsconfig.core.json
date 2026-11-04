@@ -1,13 +1,13 @@
 {
-  // Game logic that runs in the browser bundle.
-  // No Node types here, so a Node-only API (fs, process, Buffer) fails the
-  // typecheck. Add new game-logic folders here. Tests run in Node and are
-  // checked by tsconfig.json instead.
+  // Everything in src/ is game logic or the simulation library: pure TypeScript
+  // that runs in the browser. No Node types here, so a Node-only API (fs,
+  // process, Buffer) fails the typecheck. Node code goes in tools/. Tests run
+  // in Node and are checked by tsconfig.json instead.
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "lib": ["ES2022", "DOM"],
     "types": []
   },
-  "include": ["src/schema.ts", "src/validate.ts", "src/campaign.ts", "src/rogue.ts", "src/rogue-record.ts", "src/engine", "src/sim"],
+  "include": ["src"],
   "exclude": ["**/*.test.ts"]
 }

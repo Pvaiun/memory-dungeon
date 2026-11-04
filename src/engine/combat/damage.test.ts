@@ -6,7 +6,6 @@ import assert from "node:assert/strict";
 import { arena, weapons, type Spec } from "./arena.js";
 
 const BAG = { name: "Bag", stats: { max_hp: 1_000_000 } };
-const DUMMY = { name: "Dummy", stats: { max_hp: 1_000_000 } };
 /** One basic attack per tick, so a fight gives many rolls. */
 const rapid = (w: object = {}) => ({ ...weapons.dagger, cooldown: 1, ...w });
 const status = (id: string, x: object) => ({ id, name: id.toUpperCase(), label: "buff", show: "icon", stacking: "refresh", ...x });

@@ -7,7 +7,7 @@ Where a rule and a design document disagree, this page wins and the document get
 ## The game
 
 - **No control during fights.** Preparation is the game: a team wins or loses as a team, not because a button was pressed at the right moment. More potion types, a rewind or test fight (the Hourglass) and more abilities per class are for later, at the director's word.
-- **The rogue mode is the game** (`docs/core-set/rogue-mode.md`). Free play is the sandbox; the campaign is retired.
+- **The rogue mode is the game** (`docs/core-set/rogue-mode.md`). Free play is the sandbox.
 - **A few numerical systems:** mechanics map onto stats, statuses, damage types, flags and targeting. No bespoke words acting as locks. No battlefield geometry (no rows, no reach) and no positional targeting.
 - **A class is a unit:** a party holds at most one of each, three to a party.
 - **Bad choices are part of a roguelike.** Weak options (Raise, Valhalla) are rolled like any other.
@@ -41,8 +41,8 @@ The philosophy behind these lines, and the director's intent in their words, are
 
 - **Balance from what happens in fights** (who does what share of what, the economy of a fight) before win rates. Win rates set difficulty, last. The rogue mode breaks ties.
 - **Numbers, not behaviour.** Fix a problem by the amount applied, the cost, the cooldown or the duration, never by a new rule that changes what a thing does (a cap that binds on one hit, a target rule that leaves out the caster). A behaviour change that could read as esoteric goes to the director first.
-- **Read fights, not only averages.** A tick-by-tick read of real fights (`src/rogue-feel.ts`, `docs/feel-reader.md`) finds what the balance sheet's averages hide.
+- **Read fights, not only averages.** A tick-by-tick read of real fights (`tools/rogue-feel.ts`, `docs/feel-reader.md`) finds what the balance sheet's averages hide.
 - **Balance is its own pass.** While making content, make no balancing rules: synergies may be overpowered.
-- **Test with hand-built parties** (`src/rogue-parties.ts`, `src/build-parties.ts`), not the simulated player.
+- **Test with hand-built parties** (`tools/rogue-parties.ts`, `tools/build-parties.ts`), not the simulated player.
 - **The coming difficulty pass aims harder than today.**
 - **Checks sized to the need:** run the tests, studies and reads needed to know something, and skip the rest.

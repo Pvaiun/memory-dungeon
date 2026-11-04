@@ -32,7 +32,7 @@ export const stats: StatDefT[] = [
   { id: "lifesteal", name: "Lifesteal", kind: "points", default: 0, floor: 0, brings: "lifesteal" },
   { id: "siphon", name: "Siphon", kind: "points", default: 0, floor: 0, brings: "siphon" },
   { id: "double_strike", name: "Double strike", kind: "points", default: 0, floor: 0, cap: 100, brings: "double_strike" },
-  { id: "power", name: "Power", kind: "points", default: 0, floor: -90, note: "Damage dealt by hits and reactions, +%. Only a dungeon's foes modifier sets it: how a campaign trial makes its foes hit harder." },
+  { id: "power", name: "Power", kind: "points", default: 0, floor: -90, note: "Damage dealt by hits and reactions, +%. Only a dungeon's foes modifier sets it: how a fight's knob makes its foes hit harder." },
 ];
 
 /** Eleven weapon kinds, each a speed, a damage type and hands (rules-and-vocabulary.md, Gear). */

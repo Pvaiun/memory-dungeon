@@ -26,17 +26,14 @@ import { COUNTS, Narrator, resisted, type Beat, type Line, type Tone } from "./n
 import { Scene, shieldOf, themeOf, W, H } from "./scene.js";
 import { setMusic, setSound, sfx } from "./audio.js";
 import { go } from "../screens.js";
-import { clear as clearNode, isCurrent, nodes, onJourney } from "../journey.js";
-import { celebrate } from "../celebrate.js";
 import { meet } from "../bestiary.js";
 import { advanceOnce } from "../../../src/engine/run.js";
 import { combat } from "../../../src/engine/combat/rules.js";
 import { FIGHT_DUNGEON, partyOf } from "../../../src/rogue.js";
-import { endFight as endRogueFight, startFight as startRogueFight } from "../../../src/rogue-record.js";
-import { current as rogueRun, saveRogue } from "../rogue-state.js";
+import { endFight as endRogueFight, startFight as startRogueFight } from "../../../src/rogue/record.js";
+import { current as rogueRun, saveRogue } from "../rogue/state.js";
 
-/** `node`: the journey node it was started from. Winning that node's whole run, while it's the one to clear, clears it; its single fights are practice. */
-export type BattleArgs = { dungeon: string; seed?: number; node?: string; rogue?: boolean };
+export type BattleArgs = { dungeon: string; seed?: number; rogue?: boolean };
 
 /** Engine milliseconds per tick at 1×; the typing speed and the time a beat stays once typed. */
 const TICK_MS = 500;
@@ -74,25 +71,13 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   // A rogue fight is drawn in its region (every rogue fight shares one dungeon id, which the theme cache would pin).
   const theme = rogue ? themeOf(rogue.region) : themeOf(args.dungeon);
   const single = args.dungeon.includes("~") || !!rogue;
-  const nodeAt = args.node ? nodes().findIndex((n) => n.id === args.node) : -1;
-  /** Does winning this run clear a node? Only the whole run of the node to clear next, in the journey. */
-  const pays = nodeAt >= 0 && !single && onJourney() && isCurrent(args.node!);
-  let clearedNow = false, celebrated = false;
-  const cheer = () => { celebrated = true; celebrate(frame, nodeAt); };
-  /** Records the clear as soon as the engine has the last fight won, before the story catches up, so a reload can't lose it. */
-  const checkClear = () => {
-    if (pays && !clearedNow && driver.phase === "won" && driver.fightNo >= driver.fightTotal) clearedNow = clearNode(nodeAt);
-  };
-  /** Out of the fight: back to the node it came from, or home. */
+  /** Out of the fight: back to the run's map, or home. */
   const exit = () => {
     if (rogue && driver.fight?.result) return rogueOn();
     stop();
-    if (rogue) return go("rogue");
-    if (clearedNow && !celebrated) (go("journey"), cheer());
-    else if (args.node) go("node", args.node);
-    else go("home");
+    go(rogue ? "rogue" : "home");
   };
-  const exitLabel = rogue ? "MAP" : args.node ? "JOURNEY" : "MENU";
+  const exitLabel = rogue ? "MAP" : "MENU";
   /** The rogue mode: the fight's end goes back to the run, which moves on to its spoils or its end. */
   let rogueDone = false;
   const rogueOn = () => {
@@ -716,7 +701,6 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   function endOfFight() {
     if (ended) return;
     ended = true;
-    checkClear();
     const f = driver.fight!;
     const won = f.result === "won";
     if (!endPlayed) playEnd(won);
@@ -737,21 +721,17 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     let main: HTMLButtonElement;
     const more: HTMLButtonElement[] = [];
     if (rogue) main = bigButton(won ? "ONWARD" : "THE END", () => rogueOn());
-    else if (clearedNow) main = bigButton("JOURNEY", () => { stop(); go("journey"); if (!celebrated) cheer(); });
     else if (won && !last) (main = bigButton("NEXT FIGHT", () => nextFight(), `${driver.fightNo + 1}/${driver.fightTotal}`)), more.push(button(exitLabel, exit));
     else if (won) (main = bigButton(exitLabel, exit)), more.push(button("AGAIN", () => restart()));
     else (main = bigButton("RETRY", () => restart())), more.push(button(exitLabel, exit));
     more.push(button("LOG", () => openLog()));
-    const note = clearedNow ? h("div", { class: "line hi" }, "CLEARED!")
-      : args.node && won && last ? h("div", { class: "line dim small" }, single ? "PRACTICE" : "REPLAY") : null;
     setTimeout(() => {
       if (stopped || !ended) return;
       showFight(false);
       resultEl.append(win("result", h("div", { class: "line" }, h("span", { class: `grow ${won ? "good" : "bad"}` }, title), h("span", { class: "dim" }, `${where} T${f.round}`)), main));
-      lowerEl.append(win("summary", table, note, h("div", { class: "btns even", style: "margin-top:.5rem" }, ...more)));
+      lowerEl.append(win("summary", table, h("div", { class: "btns even", style: "margin-top:.5rem" }, ...more)));
     }, 900);
     if (won && !last && !rogue && setup.settings.autoContinue) setTimeout(() => { if (!stopped && ended) nextFight(); }, 2200);
-    if (clearedNow) setTimeout(() => { if (!stopped && !celebrated) cheer(); }, 1700);
   }
   /** Damage dealt and taken, healing done and actions resolved, per unit, from this fight's log. */
   function fightTally(): Map<string, Tally> {
@@ -903,7 +883,6 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
           if (queue.length) startBeat(queue.shift()!);
         }
       }
-      checkClear();
       if ((driver.phase === "won" || driver.phase === "lost") && !playing && !queue.length && !driver.pending.length) endOfFight();
     } else if (playing && playing.typedAt !== null) cursorEl.style.visibility = Math.floor(now / 400) % 2 ? "hidden" : "visible";
     scene.frame(vwall);
