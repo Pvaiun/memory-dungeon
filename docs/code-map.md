@@ -2,6 +2,8 @@
 
 Where the code is, so you can open the right file first. Every source file is listed below, and `tests/code-map.test.ts` fails when one is missing or gone. Each file's header comment says the rest.
 
+**Keep it true.** Whenever you add, move, rename, split or delete a source file, or change what one is for, change its line here in the same commit. The test catches a missing or stale file; only you can catch a line that no longer says what the file does.
+
 **The layout.**
 - **`src/`** is the game: pure TypeScript that also runs in the browser (`tsconfig.core.json` rejects Node APIs there).
 - **`tools/`** holds the Node command lines that measure it.
