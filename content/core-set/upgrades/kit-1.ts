@@ -17,9 +17,6 @@ export const cd = (word: CD, id: string) => jitter(COOLDOWN[word], id);
 /** The power step on the quick word, which has none below it: a quarter off. Whole sub-ticks. */
 export const quarterOff = (t: number) => Math.round(t * 0.75 * 1000) / 1000;
 export const r6 = (x: number) => Math.round(x * 1e6) / 1e6;
-/** n × k: every part of a number, for "two fifths more" (× 1.4) and "twice as much". */
-const times = (n: NumT, k: number): NumT =>
-  typeof n === "number" ? r6(n * k) : { ...(n.base !== undefined ? { base: r6(n.base * k) } : {}), scale: n.scale.map((t) => ({ ...t, ratio: r6(t.ratio * k) })) };
 export const MORE = 1.4;
 
 export const apply = (status: string, extra: Partial<Extract<EffectT, { op: "apply" }>> = {}): EffectT => ({ op: "apply", status, ...extra }) as EffectT;

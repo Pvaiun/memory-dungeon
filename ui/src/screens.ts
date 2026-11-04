@@ -10,7 +10,7 @@ import { button, h, header, nav, row, settleBack, win, type Child } from "./dom.
 import { abilitiesFor, applyHeadStart, gearFor, HEAD_STARTS, HIT_PAUSES, SPEEDS, reset, save, setup } from "./state.js";
 import { onRogue, setMode } from "./mode.js";
 import { anyNewEnemy, known, look, metCount, newEnemy } from "./bestiary.js";
-import { aggShares, abilityBlock, basicLine, canUse, classHead, classPassive, codeSpans, enemySheet, formationNote, gearRow, lockedRow, memberFor, portraitEl, RARITY_TONE, role, seatCodes, seatNotes, section, SLOTS, specialLines, statGrid, twoHanded, type GearSlot } from "./sheet.js";
+import { aggShares, abilityBlock, basicLine, canUse, classHead, classPassive, enemySheet, formationNote, gearRow, lockedRow, memberFor, portraitEl, RARITY_TONE, role, seatCodes, seatNotes, section, SLOTS, specialLines, statGrid, twoHanded, type GearSlot } from "./sheet.js";
 import { enemyEl, enemyThumb } from "./pixel.js";
 import { weaponOf } from "../../src/engine/combat/fight.js";
 import { foesOnStage, partyOnStage, stageEl, Strip, STRIP_H, themeOf } from "./battle/scene.js";

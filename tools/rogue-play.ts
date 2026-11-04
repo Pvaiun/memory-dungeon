@@ -19,7 +19,7 @@
  * --save picks the file (default out/rogue-play/run.json); every command takes it.
  */
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { advance, loadContent, type Content } from "../src/engine/run.js";
+import { advance, loadContent } from "../src/engine/run.js";
 import { combat } from "../src/engine/combat/rules.js";
 import type { Entry } from "../src/engine/log.js";
 import {
@@ -313,7 +313,6 @@ function fighterOf(run: RogueRun, cls: string): EngineMember {
   const seatNo = run.party.indexOf(cls);
   return (rules.party(c, { dungeon: "rogue_fight", party: seatNo >= 0 ? { formation: run.formation, units: run.party.map((x, i) => ({ class: x, position: f.positions[i].id, abilities: [...member(run, x).order], gear: Object.fromEntries(Object.entries(member(run, x).gear)) as Record<string, string> })) } : { formation: "neutral", units: [{ class: cls, position: "a", abilities: [...m.order], gear: Object.fromEntries(Object.entries(m.gear)) as Record<string, string> }] }, seed: 1 }) as EngineMember[]).find((x) => x.ref === cls)!;
 }
-const statsOf = (run: RogueRun, cls: string) => fighterOf(run, cls).stats as Record<string, number>;
 /** The act's boss and what it does, so the last campfire's swap can answer it. */
 const bossWords = (run: RogueRun) => `${run.boss.name}: ${[...new Set(run.boss.enemies)].map((e) => bestiary(e, bossFoes(c, run).power ?? 0)).join(" ")}`;
 /** Max HP and MP that a change of gear, seat or formation moved (current HP and MP stay, capped at the new max). */

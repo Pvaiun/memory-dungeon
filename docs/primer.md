@@ -128,4 +128,5 @@ The least you need to know to work on the game. Read it first, then open a detai
 | Any number | `content/core-set/scale.ts` |
 | What content can express | `PRIMITIVES.md` (generated from `src/schema.ts`) |
 | The interface | `ui/README.md` |
+| The code: what each file is, and where to start | `docs/code-map.md` |
 | The tools, and what's open right now | `CLAUDE.md` (Status) |

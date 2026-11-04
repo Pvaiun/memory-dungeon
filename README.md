@@ -2,7 +2,7 @@
 
 A party-based JRPG dungeon crawler with automatic combat, where preparation is the game. Its content is the **core set** (the rules, classes, gear, formations, enemies and the rogue mode, a roguelite run of three acts); free play keeps everything available as a sandbox. This repo designs it: a schema, a headless engine, simulations and a phone-sized interface.
 
-Start with `docs/primer.md` (how the game works, and where everything is), then `CLAUDE.md` (how to work, and where things stand) and `docs/rules.md` (the director's standing direction).
+Start with `docs/primer.md` (how the game works, and where everything is), then `CLAUDE.md` (how to work, and where things stand) and `docs/rules.md` (the director's standing direction). Before opening code, read `docs/code-map.md`.
 
 ```
 npm install

@@ -211,7 +211,6 @@ function offerValue(c: Content, d: Dials, run: RogueRun, o: Offer): number {
 
 // ─── The route ─────────────────────────────────────────────────────────────
 
-type Est = { h: number; v: number };
 /** A rough walk of a path: HP spent and gained, and what the rooms are worth. Elites cost more and pay more; low HP makes fights frightening. */
 function walk(c: Content, d: Dials, run: RogueRun, path: MapNode[], h0: number): number {
   let h = h0, v = 0, gold = run.gold;

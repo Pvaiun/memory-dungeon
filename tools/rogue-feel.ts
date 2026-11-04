@@ -21,7 +21,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { advance, loadContent, type Content } from "../src/engine/run.js";
 import { combat, type Member as EngineMember } from "../src/engine/combat/rules.js";
 import type { Entry } from "../src/engine/log.js";
-import { autoFight, choose, endFight, foesFor, knobFor, newRogue, partyOf, registerGear, rogue, startFight, type FightTier, type RogueRun } from "../src/rogue.js";
+import { autoFight, choose, endFight, foesFor, knobFor, newRogue, partyOf, rogue, startFight, type FightTier, type RogueRun } from "../src/rogue.js";
 import { aiPlayer, hpShare } from "../src/sim/rogue-ai.js";
 import { LEVELS, PICK, ROSTERS, buildRoster, trios, type Tier as PTier } from "./rogue-parties.js";
 import { int as rint, rngFor } from "../src/engine/rng.js";
