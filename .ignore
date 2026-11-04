@@ -1,0 +1,8 @@
+# Kept out of searches (ripgrep and the agents' search tools read this file; git doesn't).
+# Generated or bulky files whose every line repeats a source: search the source instead.
+# A search that names one of these paths, or filters by its type (*.json), still reaches it.
+content/core-set.pack.json
+schema/content-pack.schema.json
+fixtures/*.pack.json
+package-lock.json
+ui/public/assets/manifest.json
