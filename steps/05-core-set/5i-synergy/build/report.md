@@ -147,7 +147,7 @@ A piece check (`npx tsx src/piece-check.ts`) played all 608 items against the sa
 ## Not done
 
 - **The feel read:** the agent reading fights tick by tick was stopped by the weekly usage limit before it wrote anything. Its partial work is in its worktree. Run it next session, or let your play be the feel read.
-- **The documents:** the core set's gear and formation list (`docs/core-set/gear-and-formation-lists.md`), `DECISIONS.md` and the primer still describe the old loot. They're brought in line after your sign-off, as the method says.
+- **The documents:** the core set's gear and formation list (`docs/core-set/gear-and-formation-lists.md`) still describes the old loot. It's brought in line after your sign-off.
 
 ## Method notes
 

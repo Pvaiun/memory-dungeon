@@ -4,10 +4,9 @@
  *
  *   npx tsx src/campaign-probe.ts [--nodes 1-20] [--seeds 16] [--only knight] [--variant "name:path=value;path=value"] ...
  *
- * A variant's "first=<ability>" moves that ability to the front of every member's order that has it (the playtesters
- * put the Knight's Shield bash first; the simulation's kits keep the documents' order). --only keeps the builds
- * with that class. "gear=<class>:<slot>:<gear>" puts that piece on that class in every build (Prayer beads on the
- * Knight, as the playtesters wore them), ignoring whether it's owned yet.
+ * A variant's "first=<ability>" moves that ability to the front of every member's order that has it (the simulation's
+ * kits keep the documents' order). --only keeps the builds with that class. "gear=<class>:<slot>:<gear>" puts that
+ * piece on that class in every build, ignoring whether it's owned yet.
  *
  * Per variant: the same builds' wins, node by node (the knobs as shipped, so a variant's effect shows as wins).
  * For the shipped rules: the bosses' big moves (wind-ups of 4 ticks or more) started, interrupted and landed, and

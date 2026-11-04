@@ -1,6 +1,6 @@
 /**
  * The campaign: a fixed road of runs, cleared one at a time, each paying a fixed
- * reward once and revealing the next (the progression experiment, steps/05-core-set/5a-campaign).
+ * reward once and revealing the next (retired: the rogue mode is the game).
  *
  * Pure TypeScript with no Node APIs: the interface and the simulations both read it.
  * The data is the pack's `campaign` block; this file answers what's owned when a
@@ -106,8 +106,7 @@ export const nodeIndex = (c: Content, id: string) => campaign(c).nodes.findIndex
 /**
  * The simulations' choice at a decision: at a campfire, a fallen member back (raise, the one with the most max HP) when
  * anyone is down; else HP back (rest) when anyone standing is below a third of their max HP, or the standing party has less
- * of its HP left than of its MP; else MP back (focus). Anything else, the first option. (A playtester saw the average alone
- * pick FOCUS with the tank on a tenth of its HP.)
+ * of its HP left than of its MP; else MP back (focus). Anything else, the first option.
  */
 export const simPick: Picker = (d, run) => {
   if (d.kind !== "campfire") return d.options[0];

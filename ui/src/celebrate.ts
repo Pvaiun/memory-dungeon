@@ -58,7 +58,7 @@ function cards(i: number): Card[] {
     out.push({
       top: "NEW FORMATION!",
       body: [
-        // Step 5i: in its rarity's colour, with what its seats' own statuses do.
+        // In its rarity's colour, with what its seats' own statuses do.
         h("div", { class: `cele-name ${RARITY_TONE[f.rarity ?? "common"]}` }, f.name),
         h("div", { class: "text dim small wrap center" }, f.text, formationNote(f), seatNotes(f) ? ` ${seatNotes(f)}` : ""),
         h("div", { class: "cele-slots" }, ...f.positions.map((pos, j) => h("div", { class: "slotline" }, h("span", { class: "dim" }, `${j + 1} ${pos.name}`), h("span", { class: "codes" }, ...seatCodes(pos))))),

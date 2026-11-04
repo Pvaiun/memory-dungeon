@@ -45,8 +45,8 @@ export const encounters = {
 
 export const stage = (f: Fight, boss = false) => ({ kind: "fight" as const, id: f.id, name: f.name, enemies: f.enemies, ...(boss ? { boss: true } : {}) });
 /**
- * One campfire a run, after half the regular fights (rounded up): REST, FOCUS or RAISE (the campaign, Oct 25–26, 2026). Step 5e
- * puts it in the spine runs too: the rules document says every run has one, and free play played these runs without it.
+ * One campfire a run, after half the regular fights (rounded up): REST, FOCUS or RAISE. The rules document says every run has
+ * one.
  */
 export function withCampfire(stages: DungeonT["stages"]): DungeonT["stages"] {
   if (stages.some((s) => s.kind === "campfire")) return stages;

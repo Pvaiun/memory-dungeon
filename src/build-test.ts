@@ -1,14 +1,13 @@
 /**
- * Step 5i, step 5 (the build's test): all twelve builds on one set of the rogue's own fights, side by side
- * (`steps/05-core-set/5i-synergy/pieces-build-brief.md`, "How to test"). It measures; it doesn't balance.
+ * The build test: all twelve builds on one set of the rogue's own fights, side by side. It measures; it doesn't balance.
  *
  * - **The parties:** the hand-built parties of `src/build-parties.ts` (12 builds, 3 routes each, 3 rungs, each in its formation
  *   and in Neutral), fielded as the engine's `Party`: abilities in slot order, each trained ability as its form, a trained
  *   passive as `passive`, gear by slot; every one checked by `checkParty` before anything plays.
  * - **The fights:** for each act, a fixed sample of its regions' regular fights (the normal pool), elites and bosses, at their
  *   knobs as a run meets them at heat 0 (`knobFor` at the pool's reference floor; a boss at its own), on fixed seeds, the same
- *   for every party. Each fight from full HP and MP, every ability carried about 60% charged and a revive ready (5h's measure,
- *   `buildRoster`). Rung 1 plays act I's set, rung 2 act II's, rung 3 act III's; every rung also plays act II's, so the rungs
+ *   for every party. Each fight from full HP and MP, every ability carried about 60% charged and a revive ready (as
+ *   `buildRoster` sets it). Rung 1 plays act I's set, rung 2 act II's, rung 3 act III's; every rung also plays act II's, so the rungs
  *   compare on the same fights.
  * - **What it reads:** the rhythm read as `src/rhythm-read.ts` reads it (damage by quarter, the biggest tenth of hits, the first
  *   kill and the spread of kills, damage taken by quarter, the lowest HP, damage by source, MP spent), the strength table (win
@@ -153,7 +152,7 @@ function sourceOf(c: Content, e: Entry): string {
 export function play(c: Content, party: EParty, f: FightSpec, seed: number, log: boolean): Rec {
   fightDungeon(c, { node: "build-test", tier: f.tier, fight: f.fight, foes: f.foes, seed });
   const er: Run = newRun(c, combat, { dungeon: FIGHT_DUNGEON, party, seed }, { checked: true, log });
-  // Full HP and MP (the engine's start); every ability about 60% charged, a revive ready (5h's measure, as `buildRoster` sets it).
+  // Full HP and MP (the engine's start); every ability about 60% charged, a revive ready (as `buildRoster` sets it).
   for (const em of er.party as EngineMember[]) {
     em.cooldowns = Object.fromEntries(em.abilities.map((a) => {
       const d = c.abilities.get(a)!;

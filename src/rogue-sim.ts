@@ -37,7 +37,7 @@ export function playOne(c: Content, seed: number, leader: string, heat: number, 
   const run = newRogue(c, { seed, leader, heat });
   // A what-if: pieces of a rarity, or gold, handed over at the start.
   const grng = rngFor(seed, "gift");
-  // (piece:<id> hands over that legendary piece without affixes, to price its rule alone: npx tsx src/rogue-legendaries.ts.)
+  // (piece:<id> hands over that legendary piece, to price its rule alone: npx tsx src/rogue-legendaries.ts.)
   for (const [k, n] of Object.entries(gift)) for (let i = 0; i < n; i++) {
     if (k === "gold") run.gold += 1;
     else if (k.startsWith("piece:")) take(c, run, { kind: "gear", item: newItem(run, k.slice(6), "legendary") });

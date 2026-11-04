@@ -1,8 +1,8 @@
 /**
  * Measuring runs. A probe wraps the battle system and watches each fight's HP,
  * without changing anything it does. It reads only what the run loop itself
- * reads from a fight (its units' side, HP and max HP), so step 4's combat
- * should plug in unchanged.
+ * reads from a fight (its units' side, HP and max HP), so any battle system
+ * plugs in unchanged.
  */
 import { advance, answer, copyRun, newRun, play, type Content, type Fight, type Picker, type Rules, type Run, type RunInput } from "../engine/run.js";
 import type { Party } from "../schema.js";
@@ -102,7 +102,7 @@ export function measure(c: Content, pr: Probe, input: RunInput, picker: Picker):
 }
 
 /**
- * Every combination of perk picks on one seed, like step 2's explorer, with
+ * Every combination of perk picks on one seed, like the engine's explorer, with
  * each path measured. Only the last fight's details are kept for a path that
  * branched after its earlier fights.
  */

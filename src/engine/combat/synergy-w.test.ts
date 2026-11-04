@@ -1,11 +1,9 @@
 /**
- * Step 5i's engine additions, share W ("who and when"): X1 to X20 of
- * steps/05-core-set/5i-synergy/build/engine-spec.md, each with at least the spec's
- * test. Every status a test needs is written inline, so nothing here waits for content.
- *
- * The tests at the end are skipped: each needs a payload that share H fills (the breaker
- * from `take`, a knockout's killer, an action's MP paid and hits landed, Ctx's landed set).
- * Un-skip them at the merge.
+ * The engine's building blocks for who and when (PRIMITIVES.md), each in a small fight: what events name, event filters, tests
+ * on reactions and pulses, conditions, counts, picks by swing, rules that skip the event's units, Marked, aimed basic attacks,
+ * seats, markers, Taunt ending Hidden, extra strikes heard as basic attacks, stats set or read live, control resistance on
+ * bosses, boosts that read the unit receiving, and the payloads hits, knockouts and actions carry. Every status a test needs is
+ * written inline, so nothing here waits for content.
  */
 import { test } from "vitest";
 import assert from "node:assert/strict";
@@ -37,9 +35,9 @@ const readyAt = (a: ReturnType<typeof arena>, unit: string, ability: string, tic
 const lowestHp = { side: "foes", pick: "lowest", by: "hp" };
 const rapid = (amount = 100) => ({ type: "physical" as const, cooldown: 2, amount });
 
-// ─── X1. Events name who did it ──────────────────────────────────────────────
+// ─── Events name who did it ──────────────────────────────────────────────────
 
-test("X1: a Shield emptied by damage ends with its peak as the amount", () => {
+test("a Shield emptied by damage ends with its peak as the amount", () => {
   const shield = buff("shield", { stacking: "intensity", absorb: true });
   const ear = buff("ear", { reactions: [{ on: { event: "status_ended", status: "shield", cause: ["stacks"] }, do: [countAmount()] }] });
   const a = arena({
@@ -53,7 +51,7 @@ test("X1: a Shield emptied by damage ends with its peak as the amount", () => {
   assert.equal(tally(a, "Wall"), 500, "it held 500 at its peak, though it held 200 when the blow came");
 });
 
-test("X1: a foe knocked out with 7 Burn ends its Burn with amount 7 (cause ko)", () => {
+test("a foe knocked out with 7 Burn ends its Burn with amount 7 (cause ko)", () => {
   const burn = debuff("burn", { stacking: "intensity" });
   const wick = buff("wick", { reactions: [{ on: { event: "status_ended", status: "burn", whose: "foe", cause: ["ko"] }, do: [countAmount()] }] });
   const a = arena({
@@ -69,7 +67,7 @@ test("X1: a foe knocked out with 7 Burn ends its Burn with amount 7 (cause ko)",
   assert.equal(tally(a, "Pyro"), 7);
 });
 
-test("X1: a status removed names the remover as other; status_gained names the applier and the stacks it added, after the cap", () => {
+test("a status removed names the remover as other; status_gained names the applier and the stacks it added, after the cap", () => {
   const weak = debuff("weak");
   const ear = buff("ear", { reactions: [{ on: { event: "status_ended", status: "weak", cause: ["removed"] }, do: [count("other")] }] });
   const cleanse = now("cleanse", { target: { side: "allies", where: { has: "weak" } }, do: [{ op: "remove", label: "debuff" }] });
@@ -114,9 +112,9 @@ test("an Intensity application of no stacks does nothing: no log, no event, no f
   assert.deepEqual([b.acts("Z", "z").length, b.entries("immune").length], [1, 0]);
 });
 
-// ─── X2. Event filters ───────────────────────────────────────────────────────
+// ─── Event filters ───────────────────────────────────────────────────────────
 
-test("X2: healed with other: holder hears the holder's heal of an ally, not the ally's own Lifesteal", () => {
+test("healed with other: holder hears the holder's heal of an ally, not the ally's own Lifesteal", () => {
   const leech = buff("leech", { reactions: [{ on: { event: "hit_lands" }, do: [{ op: "heal", amount: 10, to: "self" }] }] });
   const ear = buff("ear", { reactions: [{ on: { event: "healed", whose: "ally", other: "holder" }, do: [count()] }] });
   const mend = { id: "mend", cast: 0, recovery: 0, cooldown: 5, target: { side: "others", pick: "lowest", by: "hp_share" }, do: [{ op: "heal", amount: 100 }] };
@@ -129,7 +127,7 @@ test("X2: healed with other: holder hears the holder's heal of an ally, not the 
   assert.equal(tally(a, "Healer"), given);
 });
 
-test("X2: other: foe and any; source: holder on status events; notTags and amountAtLeast on hits", () => {
+test("event filters: other: foe and any; source: holder on status events; notTags and amountAtLeast on hits", () => {
   // source: only the wards this unit gave, as they land and as they end.
   const ward = buff("ward", { duration: 4 });
   const mine = buff("mine", {
@@ -171,9 +169,9 @@ test("X2: other: foe and any; source: holder on status events; notTags and amoun
   assert.equal(tally(b, "Striker", "tally3"), 2 * (physical + magical), "every hit landed on a foe, and every hit the foe took from anyone; none on an ally");
 });
 
-// ─── X3. Tests on reactions and pulses ───────────────────────────────────────
+// ─── Tests on reactions and pulses ───────────────────────────────────────────
 
-test("X3: a reaction's test of the other unit: heals only on hits against a Sundered foe, read as the reaction resolves", () => {
+test("a reaction's test of the other unit: heals only on hits against a Sundered foe, read as the reaction resolves", () => {
   const sunder = debuff("sunder");
   const drink = buff("drink", { reactions: [{ on: { event: "hit_lands" }, if: { unit: "other", where: { has: "sunder" } }, do: [{ op: "heal", amount: 10, to: "self" }] }] });
   const a = arena({
@@ -192,7 +190,7 @@ test("X3: a reaction's test of the other unit: heals only on hits against a Sund
   assert.deepEqual([b.hits("T").length, b.entries("heal").length], [1, 1]);
 });
 
-test("X3: a reaction's test of a side's state, read from the actor's side; failing, the reaction does nothing", () => {
+test("a reaction's test of a side's state, read from the actor's side; failing, the reaction does nothing", () => {
   const vigil = buff("vigil", { reactions: [{ on: { event: "hit_taken" }, if: { side: "allies", where: { ko: true } }, do: [count()] }] });
   const run = (down: boolean) =>
     arena({
@@ -206,7 +204,7 @@ test("X3: a reaction's test of a side's state, read from the actor's side; faili
   assert.ok(up.hits("Watch").length + up.hits("Other").length === 4);
 });
 
-test("X3: a pulse with a condition adds Heat only while a foe burns; an Intensity pulse that fails still drops", () => {
+test("a pulse with a condition adds Heat only while a foe burns; an Intensity pulse that fails still drops", () => {
   const burn = debuff("burn", { duration: 6 });
   const heat = buff("heat", { stacking: "intensity" });
   const kindled = buff("kindled", { pulse: { every: 2, if: { side: "foes", where: { has: "burn" } }, do: [{ op: "apply", status: "heat" }] } });
@@ -226,7 +224,7 @@ test("X3: a pulse with a condition adds Heat only while a foe burns; an Intensit
   assert.equal(b.has("Palm", "heat").length, 0);
 });
 
-test("X3: Condition.atMost: an ability that waits while no foe is Marked (atMost 0), and atMost without atLeast", () => {
+test("Condition.atMost: an ability that waits while no foe is Marked (atMost 0), and atMost without atLeast", () => {
   const mark = debuff("mark");
   const solo = { id: "solo", cast: 0, recovery: 0, cooldown: 5, if: { side: "foes", where: { has: "mark" }, atMost: 0 }, do: [{ op: "damage", type: "magical", amount: 1 }] };
   const few = { id: "few", cast: 0, recovery: 0, cooldown: 5, if: { side: "foes", where: { has: "mark" }, atMost: 1 }, do: [{ op: "damage", type: "magical", amount: 1 }] };
@@ -242,9 +240,9 @@ test("X3: Condition.atMost: an ability that waits while no foe is Marked (atMost
   assert.equal(run("few", 2).acts("Hunter", "few").length, 0);
 });
 
-// ─── X4. Has any of; a stat lower than the reader's ──────────────────────────
+// ─── Has any of; a stat lower than the reader's ──────────────────────────────
 
-test("X4: a boost when the target has any of Stun or Silence reaches a Silenced foe and a Stunned one, not a Slowed one", () => {
+test("a boost when the target has any of Stun or Silence reaches a Silenced foe and a Stunned one, not a Slowed one", () => {
   const [stun, silence, slow] = ["stun", "silence", "slow"].map((id) => debuff(id));
   const vise = buff("vise", { boosts: [{ tag: "basic", pct: { scale: [{ ratio: 100, when: { hasAny: ["stun", "silence"] }, of: "target" }] } }] });
   const a = arena({
@@ -258,7 +256,7 @@ test("X4: a boost when the target has any of Stun or Silence reaches a Silenced 
   }
 });
 
-test("X4: a rule for allies with less Armor than the actor picks the ally with Armor 2 and skips the one with 6 when the actor has 5", () => {
+test("a rule for allies with less Armor than the actor picks the ally with Armor 2 and skips the one with 6 when the actor has 5", () => {
   const aura = buff("aura");
   const a = arena({
     party: [{ name: "Phalanx", stats: { armor: 5 }, abilities: ["cover"] }, { name: "Light", stats: { armor: 2 } }, { name: "Heavy", stats: { armor: 6 } }],
@@ -270,9 +268,9 @@ test("X4: a rule for allies with less Armor than the actor picks the ally with A
   assert.deepEqual([a.has("Light", "aura").length, a.has("Heavy", "aura").length, a.has("Phalanx", "aura").length], [1, 0, 0]);
 });
 
-// ─── X5. Hasn't acted this fight ─────────────────────────────────────────────
+// ─── Hasn't acted this fight ─────────────────────────────────────────────────
 
-test("X5: a boost on a foe that hasn't acted reaches its hits taken before its first action and not after", () => {
+test("a boost on a foe that hasn't acted reaches its hits taken before its first action and not after", () => {
   const quietus = buff("quietus", { boosts: [{ tag: "basic", pct: { scale: [{ ratio: 100, when: { acted: false }, of: "target" }] } }] });
   const a = arena({
     party: [{ name: "Quick", weapon: rapid(), statuses: ["quietus"] }],
@@ -287,9 +285,9 @@ test("X5: a boost on a foe that hasn't acted reaches its hits taken before its f
   assert.equal(a.unit("Sleeper").acted, true);
 });
 
-// ─── X6. The top of its side ─────────────────────────────────────────────────
+// ─── The top of its side ─────────────────────────────────────────────────────
 
-test("X6: of foes with Attack 3, 5 and 5, the two at 5 are the top of their side and the 3 isn't", () => {
+test("of foes with Attack 3, 5 and 5, the two at 5 are the top of their side and the 3 isn't", () => {
   const sentence = debuff("sentence");
   const a = arena({
     party: [{ name: "Judge", abilities: ["judge"] }],
@@ -301,9 +299,9 @@ test("X6: of foes with Attack 3, 5 and 5, the two at 5 are the top of their side
   assert.deepEqual(["F0", "F1", "F2"].map((f) => a.has(f, "sentence").length), [0, 1, 1]);
 });
 
-// ─── X7. Wields a kind ───────────────────────────────────────────────────────
+// ─── Wields a kind ───────────────────────────────────────────────────────────
 
-test("X7: a seat status whose Attack speed change is when it wields a great weapon slows the axe and not the sword", () => {
+test("a seat status whose Attack speed change is when it wields a great weapon slows the axe and not the sword", () => {
   const hammer = buff("hammer", { stats: [{ stat: "attack_speed", flat: { scale: [{ ratio: -50, when: { weapon: ["great_weapon"] } }] } }] });
   const a = arena({
     party: [{ name: "Axe", weapon: { ...weapons.axe, kind: "great_weapon" }, statuses: ["hammer"] }, { name: "Sword", weapon: { ...weapons.sword, kind: "sword" }, statuses: ["hammer"] }],
@@ -313,9 +311,9 @@ test("X7: a seat status whose Attack speed change is when it wields a great weap
   assert.equal(a.unit("Sword").stats.attack_speed, 0);
 });
 
-// ─── X8. Counts as numbers ───────────────────────────────────────────────────
+// ─── Counts as numbers ───────────────────────────────────────────────────────
 
-test("X8: a boost of 10% a debuff on the target deals +30% to a foe with three debuffs and a marker", () => {
+test("a boost of 10% a debuff on the target deals +30% to a foe with three debuffs and a marker", () => {
   const ds = ["d1", "d2", "d3"].map((id) => debuff(id));
   const seen = marker("seen");
   const hexweave = buff("hexweave", { boosts: [{ tag: "basic", pct: { scale: [{ ratio: 10, count: "debuffs", of: "target" }] } }] });
@@ -326,7 +324,7 @@ test("X8: a boost of 10% a debuff on the target deals +30% to a foe with three d
   assert.deepEqual(a.hits("Bag").map((e) => e.amount), [1300]);
 });
 
-test("X8: an action counts its targets, and the units on a side that pass a test (from the actor's side by default)", () => {
+test("an action counts its targets, and the units on a side that pass a test (from the actor's side by default)", () => {
   const burn = debuff("burn");
   const surge = now("surge", { target: { side: "foes", pick: "all" }, do: [{ op: "damage", type: "magical", amount: 1 }, { op: "mp", amount: { scale: [{ ratio: 120, count: "targets" }] }, to: "self" }] });
   const tally_ = now("reckon", { target: "self", do: [{ op: "mp", amount: { scale: [{ ratio: 100, count: { side: "foes", where: { has: "burn" } } }] } }] });
@@ -341,9 +339,9 @@ test("X8: an action counts its targets, and the units on a side that pass a test
   assert.deepEqual(a.entries("mp", (e) => e.part === "action").map((e) => [e.src, e.amount]), [["surge", 360], ["reckon", 200]]);
 });
 
-// ─── X9. Pick by swing ───────────────────────────────────────────────────────
+// ─── Pick by swing ───────────────────────────────────────────────────────────
 
-test("X9: of allies with a dagger and an axe, highest by swing picks the axe; Hasted, still the axe unless its swing falls under the dagger's", () => {
+test("of allies with a dagger and an axe, highest by swing picks the axe; Hasted, still the axe unless its swing falls under the dagger's", () => {
   const drum = buff("drum");
   const run = (haste: number) => {
     const a = arena({
@@ -359,9 +357,9 @@ test("X9: of allies with a dagger and an axe, highest by swing picks the axe; Ha
   assert.equal(run(200), "Dagger", "6.7 ticks against 8");
 });
 
-// ─── X10. Skip the event's units ─────────────────────────────────────────────
+// ─── Skip the event's units ──────────────────────────────────────────────────
 
-test("X10: a status_capped reaction applying Chill to every foe but the owner reaches every foe but the one that capped", () => {
+test("a status_capped reaction applying Chill to every foe but the owner reaches every foe but the one that capped", () => {
   const chill = debuff("chill", { stacking: "intensity", cap: 3 });
   const splinters = buff("splinters", { reactions: [{ on: { event: "status_capped", whose: "foe", status: "chill" }, do: [{ op: "apply", status: "chill", to: { side: "foes", pick: "all", exclude: "owner" } }] }] });
   const a = arena({
@@ -374,7 +372,7 @@ test("X10: a status_capped reaction applying Chill to every foe but the owner re
   assert.deepEqual(["F0", "F1", "F2"].map((f) => tally(a, f, "chill")), [3, 1, 1]);
 });
 
-test("X10: exclude other skips the attacker", () => {
+test("exclude other skips the attacker", () => {
   const tag = debuff("tag");
   const thorns = buff("spread", { reactions: [{ on: { event: "hit_taken" }, do: [{ op: "apply", status: "tag", to: { side: "foes", pick: "all", exclude: "other" } }] }] });
   const a = arena({
@@ -385,13 +383,13 @@ test("X10: exclude other skips the attacker", () => {
   assert.deepEqual(["Hitter", "B1", "B2"].map((f) => a.has(f, "tag").length), [0, 1, 1]);
 });
 
-// ─── X11. Marked ─────────────────────────────────────────────────────────────
+// ─── Marked ──────────────────────────────────────────────────────────────────
 
 const MARKED = debuff("marked", { focus: true, single: true });
 const TAUNT = buff("taunt", { stats: [{ stat: "forced", flat: 1 }] });
 const SEEKING = buff("seeking", { seek: "basic" });
 
-test("X11: with B Marked a sword's swings all go to B; with A Taunting they go to A, and with Seek to B", () => {
+test("with B Marked a sword's swings all go to B; with A Taunting they go to A, and with Seek to B", () => {
   const run = (a: string[], sword: string[]) =>
     arena({
       party: [{ name: "Sword", weapon: weapons.sword, statuses: sword }],
@@ -411,7 +409,7 @@ test("X11: with B Marked a sword's swings all go to B; with A Taunting they go t
   assert.ok(spells.hits("A").length > 20 && spells.hits("B").length > 20);
 });
 
-test("X11: each applier keeps one copy of a single status: marking A ends the Mark it gave B", () => {
+test("each applier keeps one copy of a single status: marking A ends the Mark it gave B", () => {
   const a = arena({
     party: [{ name: "Marker", abilities: ["mark_b", "mark_a"] }, { name: "Other", abilities: ["mark_b2"] }],
     enemies: [{ name: "A", stats: { max_hp: 100 } }, { name: "B", stats: { max_hp: 200 } }, { name: "C", stats: { max_hp: 300 } }],
@@ -433,9 +431,9 @@ test("X11: each applier keeps one copy of a single status: marking A ends the Ma
   assert.deepEqual(a.entries("status_end", (e) => e.status === "marked").map((e) => [e.unit, e.cause]), [["e2", "removed"]]);
 });
 
-// ─── X12. Basic attacks aimed by a rule ──────────────────────────────────────
+// ─── Basic attacks aimed by a rule ───────────────────────────────────────────
 
-test("X12: an aim at every foe, first, hits all three foes with each swing; an aim at the lowest HP share comes after a Mark unless it's first", () => {
+test("an aim at every foe, first, hits all three foes with each swing; an aim at the lowest HP share comes after a Mark unless it's first", () => {
   const sweep = buff("sweep", { aim: { rule: { side: "foes", pick: "all" }, first: true } });
   const a = arena({
     party: [{ name: "Scythe", weapon: weapons.sword, statuses: ["sweep"] }],
@@ -454,7 +452,7 @@ test("X12: an aim at every foe, first, hits all three foes with each swing; an a
   assert.deepEqual(["Hurt", "Marked", "Other"].map((f) => quarry(true).hits(f).length), [2, 0, 0]);
 });
 
-test("X12: an aim that finds nobody passes to the next step", () => {
+test("an aim that finds nobody passes to the next step", () => {
   const vise = buff("vise", { aim: { rule: { side: "foes", where: { has: "stun" } }, first: true } });
   const a = arena({
     party: [{ name: "Vise", weapon: weapons.sword, statuses: ["vise"] }],
@@ -463,9 +461,9 @@ test("X12: an aim that finds nobody passes to the next step", () => {
   assert.deepEqual([a.hits("A").length, a.hits("B").length], [0, 2]);
 });
 
-// ─── X13. Seats ──────────────────────────────────────────────────────────────
+// ─── Seats ───────────────────────────────────────────────────────────────────
 
-test("X13: a reaction on action_resolve with seat previous fires for slot 1 when slot 0 casts, and for slot 0 when slot 2 casts", () => {
+test("a reaction on action_resolve with seat previous fires for slot 1 when slot 0 casts, and for slot 0 when slot 2 casts", () => {
   const relay = buff("relay", { reactions: [{ on: { event: "action_resolve", whose: "ally", kind: "ability", seat: "previous" }, do: [count()] }] });
   const a = arena({
     party: [{ name: "P0", abilities: ["go"], statuses: ["relay"] }, { name: "P1", statuses: ["relay"] }, { name: "P2", abilities: ["go"], statuses: ["relay"] }],
@@ -480,7 +478,7 @@ test("X13: a reaction on action_resolve with seat previous fires for slot 1 when
   assert.deepEqual(["P0", "P1", "P2"].map((p) => tally(a, p)), [1, 1, 0]);
 });
 
-test("X13: a rule and a condition narrowed to a seat, by id or as the next one; enemies sit in none; the party's seats come from its positions", () => {
+test("a rule and a condition narrowed to a seat, by id or as the next one; enemies sit in none; the party's seats come from its positions", () => {
   const cue = buff("cue");
   const a = arena({
     party: [{ name: "P0", abilities: ["next", "back", "waits"] }, { name: "P1" }, { name: "P2", stats: { max_hp: 1000 }, hp: 400 }],
@@ -507,9 +505,9 @@ test("X13: a rule and a condition narrowed to a seat, by id or as the next one; 
   assert.deepEqual(units.map((u) => u.seat), ["shield", "left_hunter"]);
 });
 
-// ─── X14. Markers ────────────────────────────────────────────────────────────
+// ─── Markers ─────────────────────────────────────────────────────────────────
 
-test("X14: a foe holding a marker and no debuff fails debuffs: true and survives a Cleanse; a remove that names it lifts it", () => {
+test("a foe holding a marker and no debuff fails debuffs: true and survives a Cleanse; a remove that names it lifts it", () => {
   const seen = marker("seen");
   const a = arena({
     party: [{ name: "Cleric", abilities: ["pick", "cleanse", "lift"] }],
@@ -530,7 +528,7 @@ test("X14: a foe holding a marker and no debuff fails debuffs: true and survives
   assert.equal(a.has("Bag", "seen").length, 0);
 });
 
-test("X14: no immunity to debuffs stops a marker, and its pulses resolve in its holder's own batch", () => {
+test("no immunity to debuffs stops a marker, and its pulses resolve in its holder's own batch", () => {
   const watch = marker("watch", { pulse: { every: 5 } });
   const a = arena({
     party: [{ name: "P", statuses: ["watch"] }],
@@ -542,9 +540,9 @@ test("X14: no immunity to debuffs stops a marker, and its pulses resolve in its 
   assert.deepEqual([batchOf("P"), batchOf("Bag")], [0, 1]);
 });
 
-// ─── X15. Taunt ends Hidden ──────────────────────────────────────────────────
+// ─── Taunt ends Hidden ───────────────────────────────────────────────────────
 
-test("X15: a Hidden unit that gains Taunt loses Hidden at once; Hidden applied to a Taunting unit doesn't land", () => {
+test("a Hidden unit that gains Taunt loses Hidden at once; Hidden applied to a Taunting unit doesn't land", () => {
   const hidden = buff("hidden", { unremovable: true, stats: [{ stat: "forbidden", flat: 1 }] });
   const a = arena({
     party: [{ name: "Rogue", abilities: ["taunt_me"], statuses: ["hidden"] }],
@@ -565,9 +563,9 @@ test("X15: a Hidden unit that gains Taunt loses Hidden at once; Hidden applied t
   assert.equal(b.entries("immune").length, 0);
 });
 
-// ─── X16. Extra strikes heard as basic attacks ───────────────────────────────
+// ─── Extra strikes heard as basic attacks ────────────────────────────────────
 
-test("X16: with echo a Double strike's second hit sets off a basic hit_lands rider, and a basic boost doesn't reach it", () => {
+test("with echo a Double strike's second hit sets off a basic hit_lands rider, and a basic boost doesn't reach it", () => {
   const burn = debuff("burn", { stacking: "intensity" });
   const double = buff("double", { strike: { to: "target" } });
   const echo = buff("echo", { echo: true });
@@ -594,9 +592,9 @@ test("X16: with echo a Double strike's second hit sets off a basic hit_lands rid
   assert.equal(tally(b, "Monk", "tally2"), 1);
 });
 
-// ─── X17. A stat set to a value ──────────────────────────────────────────────
+// ─── A stat set to a value ───────────────────────────────────────────────────
 
-test("X17: a unit with crit chance 20 and the set reads 50; a doubling leaves it at 50", () => {
+test("a unit with crit chance 20 and a `set` of 50 reads 50; a doubling leaves it at 50", () => {
   const coin = buff("coin", { set: [{ stat: "crit_chance", value: 50 }] });
   const bedrock = buff("bedrock", { stats: [{ stat: "crit_chance", pct: 100 }] });
   const a = arena({
@@ -606,9 +604,9 @@ test("X17: a unit with crit chance 20 and the set reads 50; a doubling leaves it
   assert.deepEqual(["Gambler", "Both", "Doubled"].map((u) => a.unit(u).stats.crit_chance), [50, 50, 40]);
 });
 
-// ─── X18. A stat read live from another ──────────────────────────────────────
+// ─── A stat read live from another ───────────────────────────────────────────
 
-test("X18: Thorns from 5% of Armor read 200 at Armor 4,000 and 350 the moment Guard lands; read once, they stay at 200", () => {
+test("Thorns from 5% of Armor read 200 at Armor 4,000 and 350 the moment Guard lands; read once, they stay at 200", () => {
   const scale = { scale: [{ ratio: 0.05, stat: "armor", of: "holder" }] };
   const spiked = buff("spiked", { stats: [{ stat: "thorns", flat: scale, live: true }] });
   const fixed = buff("fixed", { stats: [{ stat: "thorns", flat: scale }] });
@@ -626,7 +624,7 @@ test("X18: Thorns from 5% of Armor read 200 at Armor 4,000 and 350 the moment Gu
   assert.deepEqual(run("fixed"), [200, 200, 200]);
 });
 
-// ─── X19. Control resistance on bosses ───────────────────────────────────────
+// ─── Control resistance on bosses ────────────────────────────────────────────
 
 const CONTROL = { ranks: ["boss" as const], statuses: ["stun", "silence", "slow"], resist: { at: 2, pct: 50 }, cap: 4, drain: 22 };
 const STUN = debuff("stun", { stacking: "fizzle", duration: 8, lockout: { covers: "all", pause: true } });
@@ -640,7 +638,7 @@ function controlArena(rank: "boss" | "minion", waits: boolean) {
 }
 const stuns = (a: ReturnType<typeof arena>) => a.entries("status", (e) => e.status === "stun").map((e) => ((e.end as number) - (e.at as number)) / 1000);
 
-test("X19: five Stuns on a boss in quick succession last 8, 8, 4 and 4 ticks, then IMMUNE; 22 ticks after the last change it's at 3 and the next lasts 4", () => {
+test("five Stuns on a boss in quick succession last 8, 8, 4 and 4 ticks, then IMMUNE; 22 ticks after the last change it's at 3 and the next lasts 4", () => {
   const a = controlArena("boss", true).to(50);
   assert.deepEqual(stuns(a), [8, 8, 4, 4, 4]);
   const immune = a.entries("immune");
@@ -654,7 +652,7 @@ test("X19: five Stuns on a boss in quick succession last 8, 8, 4 and 4 ticks, th
   assert.equal(a.unit("Boss").ctrl, 4);
 });
 
-test("X19: a Stun that fizzles on a Stunned boss adds nothing; a minion is never resisted", () => {
+test("a Stun that fizzles on a Stunned boss adds nothing; a minion is never resisted", () => {
   const a = controlArena("boss", false).to(12);
   assert.deepEqual(stuns(a), [8, 8]);
   assert.ok(a.entries("act").length >= 10, "the Stunner kept casting into the Stun");
@@ -666,7 +664,7 @@ test("X19: a Stun that fizzles on a Stunned boss adds nothing; a minion is never
   assert.equal(m.unit("Boss").ctrl, undefined);
 });
 
-test("X19: a stack drains every 22 ticks once the control stops, back to none", () => {
+test("control resistance: a stack drains every 22 ticks once the control stops, back to none", () => {
   const a = controlArena("boss", true).to(1);
   a.unit("Stunner").acts.find((x) => x.id === "stun_it")!.ready = at(10_000);
   a.to(80);
@@ -674,9 +672,9 @@ test("X19: a stack drains every 22 ticks once the control stops, back to none", 
   assert.equal(a.f.queue.filter((it) => it.k === "drain").length, 0);
 });
 
-// ─── X20. Applications' boosts read the unit receiving ───────────────────────
+// ─── Applications' boosts read the unit receiving ────────────────────────────
 
-test("X20: a Chill boost reading the receiver's Chill makes a 4-stack application on a foe holding 8 Chill add 6", () => {
+test("a Chill boost reading the receiver's Chill makes a 4-stack application on a foe holding 8 Chill add 6", () => {
   const chill = debuff("chill", { stacking: "intensity" });
   const primer = buff("primer", { boosts: [{ tag: "chill", pct: { scale: [{ ratio: 6.25, stacks: "chill", of: "target" }] } }] });
   const a = arena({
@@ -691,11 +689,11 @@ test("X20: a Chill boost reading the receiver's Chill makes a 4-stack applicatio
   assert.equal(tally(a, "Bag", "chill"), 14);
 });
 
-// ─── After the merge with share H (un-skip then) ─────────────────────────────
-// Each needs a payload H fills: the breaker and the blocked amount from `take` (X1), a knockout's killer and kind (X29),
-// an action's MP paid and hits landed (X29), and the landed set on Ctx (X8's count: hit).
+// ─── Event payloads: breakers, killers, MP paid and hits landed ──────────────
+// Each needs a payload: the breaker and the blocked amount from `take`, a knockout's killer and kind,
+// an action's MP paid and hits landed, and the landed set on Ctx (for `count: hit`).
 
-test("after H: a Shield emptied names the foe whose hit emptied it; an Aegis that stops a 900 blow ends with 900 and the attacker", () => {
+test("a Shield emptied names the foe whose hit emptied it; an Aegis that stops a 900 blow ends with 900 and the attacker", () => {
   const shield = buff("shield", { stacking: "intensity", absorb: true });
   const aegis = buff("aegis", { block: { share: 5 } });
   const ear = buff("ear", {
@@ -717,7 +715,7 @@ test("after H: a Shield emptied names the foe whose hit emptied it; an Aegis tha
   assert.equal(tally(make("aegis"), "Brute"), 900);
 });
 
-test("after H: a ko reaction with other: holder fires on the holder's own kills, not an ally's; with kind on the killing hit", () => {
+test("a ko reaction with other: holder fires on the holder's own kills, not an ally's; with kind on the killing hit", () => {
   const trophy = buff("trophy", { reactions: [{ on: { event: "ko", whose: "foe", other: "holder" }, do: [count()] }, { on: { event: "ko", whose: "foe", kind: "ability" }, do: [count("self", "tally2")] }] });
   const kill = now("kill", { target: lowestHp, do: [{ op: "damage", type: "magical", amount: 1000 }] });
   const a = arena({
@@ -733,7 +731,7 @@ test("after H: a ko reaction with other: holder fires on the holder's own kills,
   assert.equal(tally(a, "Hunter", "tally2"), 2, "both kills were an ability's");
 });
 
-test("after H: action_resolve carries the MP paid and the foes hit, for amountAtLeast and countAtLeast", () => {
+test("action_resolve carries the MP paid and the foes hit, for amountAtLeast and countAtLeast", () => {
   const weave = buff("weave", { reactions: [{ on: { event: "action_resolve", amountAtLeast: 1 }, do: [count()] }, { on: { event: "action_resolve", countAtLeast: 3 }, do: [count("self", "tally2")] }] });
   const storm = now("storm", { mp: 400, target: { side: "foes", pick: "all" }, do: [{ op: "damage", type: "magical", amount: 1 }] });
   const poke = now("poke", { do: [{ op: "damage", type: "magical", amount: 1 }] });
@@ -747,7 +745,7 @@ test("after H: action_resolve carries the MP paid and the foes hit, for amountAt
   assert.deepEqual([tally(a, "Mage"), tally(a, "Mage", "tally2")], [1, 1]);
 });
 
-test("after H: a final mp effect of 120 a foe hit after a four-foe chain gives 480 (count: hit)", () => {
+test("a final mp effect of 120 a foe hit after a four-foe chain gives 480 (count: hit)", () => {
   const chain = now("chain", {
     target: { side: "foes", pick: "random" },
     do: [{ op: "damage", type: "magical", amount: 1 }, { op: "damage", type: "magical", amount: 1, to: { side: "foes", pick: "random", count: 3, exclude: "targets" } }, { op: "mp", amount: { scale: [{ ratio: 120, count: "hit" }] }, to: "self" }],

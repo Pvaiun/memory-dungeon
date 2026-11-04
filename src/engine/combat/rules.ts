@@ -1,14 +1,16 @@
 /**
- * The battle system, plugged into the run machinery as `Rules`. It replaces
- * step 2's stand-in. The fight itself is in fight.ts; this file builds units
- * from content, carries HP, MP and knockouts between fights, and runs perk
- * offers and loot (unused by the core set, which has no progression yet).
+ * The battle system, plugged into the run machinery as `Rules`. The fight
+ * itself is in fight.ts; this file builds units from content, carries HP, MP
+ * and knockouts between fights, and runs perk offers and loot (unused by the
+ * core set).
  *
  * - A party unit's stats are its class's, plus stat grants from its class
  *   passive, gear, formation slot, formation and perks.
  * - Statuses from those are applied at each fight start.
- * - HP and MP carry between fights, and nothing restores them. A knocked-out
- *   unit joins later fights knocked out, until something revives it.
+ * - HP and MP carry between fights. Only a campfire stage or an optional
+ *   restore after a won fight (`ruleset.run.restore`) gives them back. A
+ *   knocked-out unit joins later fights knocked out, until something revives it.
+ *   (The rogue mode keeps its own HP and MP between fights: src/rogue.ts.)
  * - Each unit draws from its own dice: party units by class, enemies by
  *   their place in the fight. The same seed brings the same luck to the same
  *   unit, whatever else is in the fight.
@@ -22,7 +24,7 @@ import { derive, makeUnit, resolveWeapon, step, world, type CFight, type CUnit }
 export type Member = Unit & {
   mp: number;
   slot: number;
-  /** Step 5i (X13): the id of its position in the party's formation. */
+  /** The id of its position in the party's formation. */
   seat?: string;
   base: Record<string, number>;
   flat: Record<string, number>;
@@ -30,7 +32,7 @@ export type Member = Unit & {
   start: string[];
   weapon: string;
   abilities: string[];
-  /** Step 5g: ticks of cooldown each ability had left when the last fight ended; the next fight starts from there. */
+  /** Ticks of cooldown each ability had left when the last fight ended; the next fight starts from there. */
   cooldowns?: Record<string, number>;
 };
 
@@ -66,20 +68,20 @@ export const combat: Rules = {
       const slot = f.positions.findIndex((p) => p.id === pu.position);
       const m = { flat: {}, pct: {}, start: [] as string[] };
       grant(m, cls.passive);
-      // Step 5i (R4): a trained passive's form takes its base status's place; the passive's stat grants stay.
+      // A trained passive's form takes its base status's place; the passive's stat grants stay.
       if (pu.passive) {
         const k = m.start.indexOf(formBase(pu.passive));
         if (k >= 0) m.start[k] = pu.passive;
         else m.start.push(pu.passive);
       }
-      // Step 5j: a two-handed weapon empties the offhand, so an offhand under one gives nothing.
+      // A two-handed weapon empties the offhand, so an offhand under one gives nothing.
       const held = pu.gear.weapon ? c.gear.get(pu.gear.weapon)?.weapon : undefined;
       const twoHanded = !!held && resolveWeapon(c, held).hands === 2;
       const gear = Object.keys(SLOTS).flatMap((s) => (pu.gear[s] && !(s === "offhand" && twoHanded) ? [c.gear.get(pu.gear[s])!] : []));
       for (const g of gear) grant(m, g);
       grant(m, f.positions[slot]);
       grant(m, f);
-      // Step 5i (X40): each equipped ability (a trained form included) brings its statuses, applied at fight start and on a revive.
+      // Each equipped ability (a trained form included) brings its statuses, applied at fight start and on a revive.
       for (const a of pu.abilities) m.start.push(...(c.abilities.get(a)?.statuses ?? []));
       const base = { ...cls.stats };
       const stats = derive(c, { base, ...m });
@@ -123,9 +125,9 @@ export const combat: Rules = {
       if (!u) continue;
       m.hp = u.ko ? 0 : Math.min(u.hp, m.stats.max_hp);
       m.mp = Math.min(u.mp, m.stats.max_mp);
-      // Step 5g (the director's): cooldowns carry like HP and MP, so a run's abilities drift apart and a revive can wait ready between fights.
+      // Cooldowns carry like HP and MP, so a run's abilities drift apart and a revive can wait ready between fights.
       m.cooldowns = Object.fromEntries(u.acts.filter((a) => a.id !== "basic").map((a) => [a.id, Math.max(0, (a.ready - (f as CFight).now) / SUBTICKS)]));
-      // A what-if the campaign tuning priced (ruleset.run.restore); the core set restores nothing.
+      // An optional restore after a won fight (ruleset.run.restore); the core set restores nothing.
       if (restore && m.hp > 0) {
         m.hp = Math.min(m.stats.max_hp, m.hp + Math.floor((m.stats.max_hp * (restore.hp ?? 0)) / 100));
         m.mp = Math.min(m.stats.max_mp, m.mp + Math.floor((m.stats.max_mp * (restore.mp ?? 0)) / 100));

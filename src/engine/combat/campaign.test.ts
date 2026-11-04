@@ -1,5 +1,5 @@
 /**
- * The campaign's engine changes (steps/05-core-set/5a-campaign): a dungeon's change to every foe, and a lost cast going on
+ * The campaign's engine rules: a dungeon's change to every foe, and a lost cast going on
  * cooldown under ruleset.lostCast; and the campaign helpers the interface and simulations share.
  */
 import { test } from "vitest";
@@ -68,9 +68,9 @@ test("campaign: what's owned grows by each node's rewards, a new class brings it
   assert.ok(rewardsOf(c, i).gear.includes("plain_staff"));
   const everything = ownedAt(c, cp.nodes.length);
   assert.equal(everything.classes.length, c.pack.classes.length);
-  // Step 5i: the retired campaign owns the plain weapons; the new pieces are the rogue's and free play's.
+  // The retired campaign owns only the plain weapons; the other pieces are the rogue's and free play's.
   assert.equal(everything.gear.length, c.pack.gear.filter((g) => g.source === "starter").length);
-  // Step 5i (the retire): no node needs a formation now (theirs were retired), so a trial is given one here.
+  // No node needs a formation, so a trial is given one here.
   const trial = { ...cp.nodes.find((n) => n.kind === "trial")!, needs: [{ formation: "wedge" }] };
   const party = { formation: "neutral", units: [{ class: "knight", position: "left", abilities: [], gear: {} }] };
   assert.ok(unmet(c, trial, party).length > 0);
@@ -110,8 +110,7 @@ test("a pausing lockout (Stun): a wind-up under way waits it out and then lands,
 test("campfire: the run pauses for a choice between two fights; REST gives back HP, FOCUS MP, to everyone standing", () => {
   const pack = structuredClone(raw);
   const d = pack.dungeons.find((x: { id: string }) => x.id === "cmp_old_road");
-  // The campfire's mechanism, not the run's balance: foes made weak enough that the starters reach it (step 5h's smaller MP
-  // pools left the retired campaign's knobs too hard for them).
+  // The campfire's mechanism, not the run's balance: foes made weak enough that the starters reach it.
   d.foes = { ...(d.foes ?? {}), hp: -80, power: -80 };
   assert.ok(d.stages.some((s: { kind: string }) => s.kind === "campfire"), "every campaign run has a campfire");
   const at = d.stages.findIndex((s: { kind: string }) => s.kind === "campfire");

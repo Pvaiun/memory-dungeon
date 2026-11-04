@@ -1,6 +1,5 @@
 /**
- * Step 4's functionality tests, part 2: stats, damage, healing and shields
- * (design sections 4 and 5), mostly the design's Part 2 examples.
+ * Functionality tests, part 2: stats, damage, healing and shields.
  */
 import { test } from "vitest";
 import assert from "node:assert/strict";
@@ -21,7 +20,7 @@ function strike(attacker: Spec, target: Spec, extra: { statuses?: unknown[]; abi
   return hits.filter((e) => e.at === hits[0]?.at);
 }
 
-// ─── Stats (section 4) ──────────────────────────────────────────────────────
+// ─── Stats ──────────────────────────────────────────────────────────────────
 
 test("stats: base Attack 50, gear +10 Attack and a status giving +20% Attack make (50 + 10) × 1.2 = 72", () => {
   const might = status("might", { stats: [{ stat: "attack", pct: 20 }] });
@@ -91,7 +90,7 @@ test("accuracy: Blind (Accuracy −30) misses 30% of the time against a target w
   near(miss(-30, 70), 0.75, 0.03);
 });
 
-// ─── Magic resist (step 5j: one stat, in place of an element's resistance) ──
+// ─── Magic resist ───────────────────────────────────────────────────────────
 
 test("magic resist: 30 cuts a magical hit by 30% (RESIST) and 100 makes it IMMUNE; it floors at 0, so there's no weakness", () => {
   const bolt = { weapon: { type: "magical" as const, cooldown: 10, amount: 100 } };
@@ -185,7 +184,7 @@ test("riders: a storm staff's magical hit can't be evaded, so its physical rider
 
 test("riders: a rider counts as part of its hit: hit events fire once per hit, riders included", () => {
   const count = status("count", { reactions: [{ on: { event: "hit_lands" }, do: [{ op: "heal", amount: 1, to: "self" }] }] });
-  // A starts hurt, so the heal it counts with lands (step 5g: a heal of nothing is no longer logged).
+  // A starts hurt, so the heal it counts with lands: a heal of nothing isn't logged.
   const a = arena({ party: [{ name: "A", stats: { attack: 30, magic: 10 }, hp: 50, weapon: FLAME_SWORD, statuses: ["count"] }], enemies: [{ name: "T", stats: { max_hp: 1e9 } }], statuses: [count] }).to(13);
   assert.equal(a.hits("T").length, 2);
   assert.equal(a.entries("heal").length, 1);

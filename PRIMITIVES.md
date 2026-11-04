@@ -2,7 +2,7 @@
 
 Generated from `src/schema.ts` (schema 0.8) by `npm run docs`. Do not edit by hand.
 
-The engine runs the core set's combat system (`docs/core-set/rules-and-vocabulary.md`) on step 4's machinery (`steps/04-combat-concepts/design.md`), whose finer rules stand where the core set is silent. This is the closed set of building blocks it runs on. Each needs engine code, so adding one is a schema version bump plus an engine change. Stats, weapon kinds, armor types, offhand kinds, statuses, abilities and everything else are registries in the pack, and grow without touching the schema. The numbers in the content are first values, placeholders until the balance pass.
+The engine runs the core set's combat system (`docs/core-set/rules-and-vocabulary.md`); where that document is silent, what the engine does stands. This is the closed set of building blocks it runs on. Each needs engine code, so adding one is a schema version bump plus an engine change. Stats, weapon kinds, armor types, offhand kinds, statuses, abilities and everything else are registries in the pack, and grow without touching the schema. The numbers in the content are first values, placeholders until the balance pass.
 
 ## How a fight runs
 
@@ -22,7 +22,7 @@ A unit that becomes ready, or whose action becomes available, because of somethi
 | `offhand` | Of an offhand kind. A class holds only its kinds, and nothing under a two-handed weapon. |
 | `amulet` | No restrictions. |
 
-A weapon belongs to a kind (a registry: speed, damage type and hands), a piece of armor to an armor type and an offhand to an offhand kind (registries of names). A class lists the weapon kinds, armor types and offhand kinds it can use. A two-handed weapon empties the offhand. A mythic piece fits one class, in any slot, and a unit wears one at most. Step 5i: every piece has its own fixed rarity (common, uncommon, rare, legendary, mythic: no affixes), and every formation its own (common, rare, legendary).
+A weapon belongs to a kind (a registry: speed, damage type and hands), a piece of armor to an armor type and an offhand to an offhand kind (registries of names). A class lists the weapon kinds, armor types and offhand kinds it can use. A two-handed weapon empties the offhand. A mythic piece fits one class, in any slot, and a unit wears one at most. Every piece has its own fixed rarity (common, uncommon, rare, legendary, mythic: no affixes), and every formation its own (common, rare, legendary).
 
 ## Effects (in actions, pulses, triggers and reactions)
 
@@ -34,11 +34,11 @@ A weapon belongs to a kind (a registry: speed, damage type and hands), a piece o
 | `apply` | `status`, `stacks`, `duration`, `chance`, `to` | Applies a status, by its stacking mode. |
 | `remove` | `label`, `status`, `kind`, `tag`, `count`, `order`, `move`, `to` | Removes buffs or debuffs, optionally narrowed to a named status or an effect kind. Unremovable statuses stay, and so do the buffs of a unit with immune:dispel. |
 | `revive` | `hp`, `ready`, `after`, `to` | Raises a knocked-out unit, one knocked out in an earlier fight included. Its targets must ask for `ko: true`. |
-| `cooldown` | `which`, `set`, `to` | Step 5i: changes the cooldown left on a unit's basic attack or abilities: ready now, a full cooldown, some ticks closer, a share of what's left, or at most a share of its full one. A wind-up already under way carries on. |
-| `pay` | `hp`, `to` | Step 5i: a price in HP (G12): lost at once, not damage, so no Shield soaks it, no Armor cuts it and nothing reacts to it; it never takes the payer below 1 HP. An ability's HP price is this effect on itself, after whatever reads its HP first. |
-| `strike` | `share`, `of`, `to` | Step 5i, reactions only: a hit of kind extra by the actor at each target (the dodge's riposte, the blow returned for an ally). It can crit and be dodged, meets Armor or Magic resist, and fires hit events; it never brings extra strikes of its own. |
-| `one` | `of`, `to` | Step 5i: applies one of these statuses, picked at random on the actor's dice. |
-| `recast` |  | Step 5i, reactions to the holder's own action_resolve only: the action that set it off resolves again at once, with no wind-up and no MP, choosing its targets afresh by its own rule, its cooldown untouched. The repeat fires its own action events, which `repeat: false` filters skip. |
+| `cooldown` | `which`, `set`, `to` | Changes the cooldown left on a unit's basic attack or abilities: ready now, a full cooldown, some ticks closer, a share of what's left, or at most a share of its full one. A wind-up already under way carries on. |
+| `pay` | `hp`, `to` | A price in HP: lost at once, not damage, so no Shield soaks it, no Armor cuts it and nothing reacts to it; it never takes the payer below 1 HP. An ability's HP price is this effect on itself, after whatever reads its HP first. |
+| `strike` | `share`, `of`, `to` | Reactions only: a hit of kind extra by the actor at each target (the dodge's riposte, the blow returned for an ally). It can crit and be dodged, meets Armor or Magic resist, and fires hit events; it never brings extra strikes of its own. |
+| `one` | `of`, `to` | Applies one of these statuses, picked at random on the actor's dice. |
+| `recast` |  | Reactions to the holder's own action_resolve only: the action that set it off resolves again at once, with no wind-up and no MP, choosing its targets afresh by its own rule, its cooldown untouched. The repeat fires its own action events, which `repeat: false` filters skip. |
 | `summon` | `enemy`, `count` | Brings new units into the fight on the actor's side, up to ruleset.maxEnemies living units on that side. They enter with every action on cooldown. |
 | `replace` | `enemy`, `count`, `to` | Each target leaves the fight (not a knockout: its statuses end, nothing reacts to a KO) and `count` new units take its place, up to the cap. |
 
@@ -73,7 +73,7 @@ Or a targeting rule. Extra targets after an action's first ignore Taunt.
 | `holder` | Statuses: the holder. The default for pulses. |
 | `source` | Statuses that know their source (Refresh, Fizzle, Per source): the unit that applied it. |
 | `other` | Reactions: the event's other unit (the attacker for hit_taken, the target for hit_lands). Nothing if unknown. |
-| `owner` | Reactions: the unit the event is about, whoever holds the reacting status (the holder of a status that just capped, the unit knocked out). Step 5g. |
+| `owner` | Reactions: the unit the event is about, whoever holds the reacting status (the holder of a status that just capped, the unit knocked out). |
 
 ## Damage types
 
@@ -83,7 +83,7 @@ Or a targeting rule. Extra targets after an action's first ignore Taunt.
 | `magical` | Meets Magic resist, a percentage: above 0 RESIST, 100 IMMUNE. Never dodged. |
 | `none` | Untyped: never dodged, never reduced by Armor or Magic resist. Not allowed in actions; the type of a status's own damage. |
 
-There are no elements and no physical subtypes (step 5j): an element is a theme in a name, never a mechanic.
+There are no elements and no physical subtypes: an element is a theme in a name, never a mechanic.
 
 ## Numbers
 
@@ -91,7 +91,7 @@ A number is a plain number, or `{ base, scale: [...] }`: base + Σ ratio × sour
 
 | Of | Meaning |
 | --- | --- |
-| `self` | Actions: the acting unit. The default for stats in actions, and (step 5i) for a count of a side's units. |
+| `self` | Actions: the acting unit. The default for stats in actions, and for a count of a side's units. |
 | `target` | Actions: the unit the effect lands on. Boosts: the unit being hit. The default for hp, stacks, conditions and counts of buffs or debuffs in actions. |
 | `source` | Statuses that know their source (not a shared Intensity total): the unit that applied it, read once at application. |
 | `holder` | Statuses: the holder, read each time the number is used (stat changes: once, at application). The default for hp, stacks and conditions in statuses; stats must say whose. |
@@ -104,11 +104,11 @@ A number is a plain number, or `{ base, scale: [...] }`: base + Σ ratio × sour
 | `stacks` | A status's Intensity total, in stacks. |
 | `amount` | Reactions only: the event's amount. |
 | `when` | 1 if the condition holds for the unit read (`of`), else 0: scaling from a condition instead of a stat. |
-| `count` | Step 5i: a count, as COUNTS says: the unit's buffs or debuffs, an action's targets or the units its hits landed on, or the units on a side that pass a test. |
+| `count` | A count, as COUNTS says: the unit's buffs or debuffs, an action's targets or the units its hits landed on, or the units on a side that pass a test. |
 | `times` | Multiplies the term by a stat, read live: "X% per point of Y" (Lifesteal, Siphon). |
 | `of` |  |
 
-A scale's `count` (step 5i):
+A scale's `count`:
 
 | Count | Meaning |
 | --- | --- |
@@ -122,7 +122,7 @@ A scale's `count` (step 5i):
 
 | Field | Meaning |
 | --- | --- |
-| `label` | Drives removal, conditions and the batch its pulses resolve in. marker (step 5i): neither buff nor debuff. |
+| `label` | Drives removal, conditions and the batch its pulses resolve in. marker: neither buff nor debuff. |
 | `show` | icon: on the HP bar with its total. sheet: listed on the unit sheet. stat: shown as a stat. |
 | `tags` | Tags that boosts (on its applications' stacks) and damage-taken modifiers (on its pulses) can name. |
 | `stacking` |  |
@@ -145,17 +145,17 @@ A scale's `count` (step 5i):
 | `drop` | Intensity only: how far the total drops on each trigger. |
 | `crit` | Turns crits on for its pulses, a rare exception. fromSource: statuses that know their source only, the source's crit stats and dice. |
 | `reactions` |  |
-| `focus` | Step 5i, Marked: the holder's foes' basic attacks pick a holder while one can be picked, by draw among several, under the Taunt rule (Seek follows it past a Taunting foe). Abilities keep their own targeting. |
-| `single` | Step 5i, Marked: each applier keeps one copy: applying it to a unit ends the copy that applier gave anywhere else. Statuses that know their source only. |
-| `aim` | Step 5i: the holder's basic attacks pick by this rule. When it finds nobody, the next in line picks: a Marked foe, then the default. |
-| `mods` | Step 5i: changes to the holder's own abilities, read each time one is used. An Intensity status's changes don't grow with its stacks. |
-| `crits` | Step 5i: crits by condition on the holder's hits. |
-| `echo` | Step 5i: the holder's extra strikes are heard as basic attacks by its statuses' reactions and triggers that name kind basic, unless that status also names kind extra for the same event, or gives strikes itself. Boosts still see them as extra. |
-| `set` | Step 5i: after every other change, the holder's stat is this value while it holds the status. |
-| `cover` | Step 5i: when a hit on another living ally would deal it more than share % of its max HP, after its mitigation and before its block and absorbs, the holder takes the whole hit instead: it resolves again against the holder, statuses and riders included, keeping its crit and without a second dodge. A hit moves once. |
-| `floor` | Step 5i: the holder's HP can't fall below 1 while it holds this: a blow that would knock it out leaves it at 1, and nothing falls. |
-| `heals` | Step 5i: only its own heals land on the holder (its abilities, its Lifesteal, its statuses' reactions); heals from others, a Regen they gave included, restore nothing. |
-| `revives` | Step 5i: every revive the holder makes, from its abilities and its statuses' reactions alike (Einherjar). |
+| `focus` | Marked: the holder's foes' basic attacks pick a holder while one can be picked, by draw among several, under the Taunt rule (Seek follows it past a Taunting foe). Abilities keep their own targeting. |
+| `single` | Marked: each applier keeps one copy: applying it to a unit ends the copy that applier gave anywhere else. Statuses that know their source only. |
+| `aim` | The holder's basic attacks pick by this rule. When it finds nobody, the next in line picks: a Marked foe, then the default. |
+| `mods` | Changes to the holder's own abilities, read each time one is used. An Intensity status's changes don't grow with its stacks. |
+| `crits` | Crits by condition on the holder's hits. |
+| `echo` | The holder's extra strikes are heard as basic attacks by its statuses' reactions and triggers that name kind basic, unless that status also names kind extra for the same event, or gives strikes itself. Boosts still see them as extra. |
+| `set` | After every other change, the holder's stat is this value while it holds the status. |
+| `cover` | When a hit on another living ally would deal it more than share % of its max HP, after its mitigation and before its block and absorbs, the holder takes the whole hit instead: it resolves again against the holder, statuses and riders included, keeping its crit and without a second dodge. A hit moves once. |
+| `floor` | The holder's HP can't fall below 1 while it holds this: a blow that would knock it out leaves it at 1, and nothing falls. |
+| `heals` | Only its own heals land on the holder (its abilities, its Lifesteal, its statuses' reactions); heals from others, a Regen they gave included, restore nothing. |
+| `revives` | Every revive the holder makes, from its abilities and its statuses' reactions alike (Einherjar). |
 
 ## Status labels
 
@@ -163,7 +163,7 @@ A scale's `count` (step 5i):
 | --- | --- |
 | `buff` | Helps its holder. Removed by effects that remove buffs (Dispel); counted by `buffs`. |
 | `debuff` | Hurts its holder. Removed by effects that remove debuffs (Cleanse); counted by `debuffs`. Its pulses resolve in the batch of the holder's foes. |
-| `marker` | Step 5i: neither. Bookkeeping such as "once a fight" or "already hit by it": only a remove that names it lifts it, no immunity to debuffs stops it, and nothing counts it as a buff or debuff. Its pulses resolve in its holder's own batch. |
+| `marker` | Neither. Bookkeeping such as "once a fight" or "already hit by it": only a remove that names it lifts it, no immunity to debuffs stops it, and nothing counts it as a buff or debuff. Its pulses resolve in its holder's own batch. |
 
 ## Reactions
 
@@ -171,7 +171,7 @@ A scale's `count` (step 5i):
 | --- | --- |
 | `on` |  |
 | `actor` | Who acts. source only for statuses that know their source. Default holder. |
-| `if` | Step 5i: checked when the reaction resolves, every one must hold: a side's state (as an ability's `if`, read from the actor's side) or a test of the event's other unit or owner. When one fails, the reaction does nothing. |
+| `if` | Checked when the reaction resolves, every one must hold: a side's state (as an ability's `if`, read from the actor's side) or a test of the event's other unit or owner. When one fails, the reaction does nothing. |
 | `do` | Each effect states its target (`to`). |
 
 A reaction's `if` is a condition (below), or a test of one of its event's units:
@@ -181,7 +181,7 @@ A reaction's `if` is a condition (below), or a test of one of its event's units:
 | `unit` | other: the event's other unit (as `to: other`); owner: the unit the event is about (as `to: owner`). |
 | `where` | What it must pass. |
 
-## Ability changes (a status's `mods`, step 5i)
+## Ability changes (a status's `mods`)
 
 Each change reaches the holder's own abilities, read each time one is used: when it's checked, when it starts, when it pays, when it picks, when it hits.
 
@@ -206,7 +206,7 @@ Its `of`:
 | `ability` | These abilities by id, each with its trained forms (a mythic naming its class's ability). |
 | `does` | Abilities whose effects do one of these: revive, heal or damage, or apply this status (stun, silence, shield, guard...). |
 
-## Crits by condition (a status's `crits`, step 5i)
+## Crits by condition (a status's `crits`)
 
 | Field | Meaning |
 | --- | --- |
@@ -219,13 +219,13 @@ Its `of`:
 
 | Kind | Meaning |
 | --- | --- |
-| `stat` | A stat change, or (step 5i) a stat set to a value. Tag: the stat. |
+| `stat` | A stat change, or a stat set to a value. Tag: the stat. |
 | `boost` | A damage or healing boost. Tag: the boost's tag. |
 | `taken` | A damage-taken modifier. Tag: its tag, if any. |
 | `absorb` | An absorb, such as a shield. |
-| `block` | A block: the next damage above a share of max HP is blocked, then the status ends (Aegis). Step 5i: an HP floor or a cover too. |
+| `block` | A block: the next damage above a share of max HP is blocked, then the status ends (Aegis). Also an HP floor or a cover. |
 | `lockout` | A lockout. Tag: what it covers. |
-| `action_change` | A rider added to the holder's actions, Seek, or an extra strike. Step 5i: an aim, ability changes, crits by condition, echo, or a rule for its revives. |
+| `action_change` | A rider added to the holder's actions, Seek, an extra strike, an aim, ability changes, crits by condition, echo, or a rule for its revives. |
 | `pulse` | A repeating effect. |
 | `reaction` | A reaction, or an Intensity event trigger. |
 
@@ -238,7 +238,7 @@ Its `of`:
 | `extra` | Hits from extra strikes (Double strike's second strike, Arc's second hit): hits, but not basic attacks. |
 | `physical` | Physical hits (and actions with one). |
 | `magical` | Magical hits (and actions with one). |
-| `area` | Step 5i: hits from a damage effect aimed at two or more units at once (an Area spell, a basic attack aimed at every foe). A hit without it is a single-target hit. |
+| `area` | Hits from a damage effect aimed at two or more units at once (an Area spell, a basic attack aimed at every foe). A hit without it is a single-target hit. |
 | `<status>` | A status's id: reaches that status's pulses ("+20% Burn damage"). |
 | `<status tag>` | A tag a status carries, which reaches its pulses. |
 | `healing` | Boosts only: heals. |
@@ -250,7 +250,7 @@ Its `of`:
 | --- | --- |
 | `fight_start` | The fight begins. Whose: every unit. |
 | `action_start` | An action starts. Whose: the acting unit. Has `kind`. |
-| `action_resolve` | An action resolves. Whose: the acting unit. Has `kind`, `amount` (step 5i: the MP it paid) and `count` (step 5i: the units on the other side its hits landed on). |
+| `action_resolve` | An action resolves. Whose: the acting unit. Has `kind`, `amount` (the MP it paid) and `count` (the units on the other side its hits landed on). |
 | `action_interrupted` | An action in cast time is canceled by an interrupting lockout. Whose: the casting unit. Has `kind`. |
 | `hit_lands` | A hit lands (not evaded), riders included. Whose: the attacker; other: the target. Has `kind`, `tags` and `amount`. |
 | `hit_taken` | A hit lands on this unit. Whose: the target; other: the attacker. Has `kind`, `tags` and `amount`. |
@@ -259,30 +259,30 @@ Its `of`:
 | `damage_dealt` | Damage is dealt, including what an absorb soaks. Whose: the dealer, when known; other: the receiver. Has `amount`, and `status` when a status's pulse or reaction dealt it. |
 | `damage_taken` | Damage is taken, including what an absorb soaks. Whose: the receiver; other: the dealer, when known. Has `amount`, and `status` when a status's pulse or reaction dealt it. |
 | `hp_lost` | HP is lost. Whose: the unit. Has `amount`. HP paid as a price (the pay effect) isn't lost this way and fires nothing. |
-| `healed` | Healing is received. Whose: the healed unit; other: the healer, when known. Has `amount` (HP restored), and `kind` when an action healed (step 5i: "a heal given" is this event with `other: holder`). |
-| `overhealed` | Step 5i: healing that would go past max HP. Whose: the healed unit; other: the healer, when known. Has `amount` (the part past full) and `kind` when an action healed. |
-| `status_gained` | A status is applied (each application, refreshes and added stacks included). Whose: the holder; other (step 5i): the applier. Has `status`, and `amount`: the stacks it added (Intensity only). |
+| `healed` | Healing is received. Whose: the healed unit; other: the healer, when known. Has `amount` (HP restored), and `kind` when an action healed ("a heal given" is this event with `other: holder`). |
+| `overhealed` | Healing that would go past max HP. Whose: the healed unit; other: the healer, when known. Has `amount` (the part past full) and `kind` when an action healed. |
+| `status_gained` | A status is applied (each application, refreshes and added stacks included). Whose: the holder; other: the applier. Has `status`, and `amount`: the stacks it added (Intensity only). |
 | `status_triggered` | A status pulses, or an Intensity status's trigger fires. Whose: the holder. Has `status`. |
-| `status_ended` | A status ends. Whose: the holder. Has `status` and `cause`. Step 5i: `amount` is the stacks it held as it ended (an Intensity total), but the most an absorb held when damage emptied it (cause stacks), and the damage a block stopped (cause spent); other is the unit whose damage emptied or spent it, or whose effect removed it. |
-| `status_capped` | An Intensity status stands at its cap after an application (step 5g: Chill shatters). Whose: the holder; other: the applier. Has `status`. |
-| `ko` | A unit is KO'd. Whose: that unit; other (step 5i): the unit whose damage knocked it out, when known, with `kind` when a hit did it. The unit's own statuses that survive a KO can still react to it. |
+| `status_ended` | A status ends. Whose: the holder. Has `status` and `cause`. `amount` is the stacks it held as it ended (an Intensity total), but the most an absorb held when damage emptied it (cause stacks), and the damage a block stopped (cause spent); other is the unit whose damage emptied or spent it, or whose effect removed it. |
+| `status_capped` | An Intensity status stands at its cap after an application (where Chill shatters). Whose: the holder; other: the applier. Has `status`. |
+| `ko` | A unit is KO'd. Whose: that unit; other: the unit whose damage knocked it out, when known, with `kind` when a hit did it. The unit's own statuses that survive a KO can still react to it. |
 | `revived` | A unit is revived. Whose: that unit; other: the reviver. |
-| `fight_won` | Step 5i: the fight is won, the moment the last foe falls, before statuses end. Whose: every party unit, fallen ones included. Its reactions resolve at once, in slot order, and a fallen unit's statuses that survive a KO act for it. |
+| `fight_won` | The fight is won, the moment the last foe falls, before statuses end. Whose: every party unit, fallen ones included. Its reactions resolve at once, in slot order, and a fallen unit's statuses that survive a KO act for it. |
 
 | Field | Meaning |
 | --- | --- |
 | `whose` |  |
-| `kind` | Action and hit events, and (step 5i) ko, healed and overhealed: the kind of the action or hit behind it. |
+| `kind` | Action and hit events, and ko, healed and overhealed: the kind of the action or hit behind it. |
 | `tags` | Hit events only: the hit carries at least one of these tags (its kind and type, "crit" when it crits, "area" when its effect is aimed at several units). |
-| `notTags` | Step 5i, hit events only: the hit carries none of these (`area`: a single-target hit). |
+| `notTags` | Hit events only: the hit carries none of these (`area`: a single-target hit). |
 | `status` | Status events, and damage events: the status whose pulse or reaction dealt the damage. |
 | `cause` | status_ended only. Default: every cause. |
-| `other` | Step 5i: who the event's other unit is, from the holder's side: holder (a kill it landed, a status it applied, a heal or revive it gave), ally, foe, or any (there is one). |
-| `source` | Step 5i, status events only: the status was applied by the holder (a Mark it gave, an Aegis it gave). |
-| `seat` | Step 5i: the unit the event is about sits in this seat of the party's formation (a position id, or next / previous from the holder's). |
-| `amountAtLeast` | Step 5i: the event's amount is at least this ("a cast that paid MP": 1). |
-| `countAtLeast` | Step 5i, action_resolve only: its hits landed on at least this many units of the other side. |
-| `repeat` | Step 5i, action events only: true matches only a recast's repeat, false only ordinary actions. Default: both. |
+| `other` | Who the event's other unit is, from the holder's side: holder (a kill it landed, a status it applied, a heal or revive it gave), ally, foe, or any (there is one). |
+| `source` | Status events only: the status was applied by the holder (a Mark it gave, an Aegis it gave). |
+| `seat` | The unit the event is about sits in this seat of the party's formation (a position id, or next / previous from the holder's). |
+| `amountAtLeast` | The event's amount is at least this ("a cast that paid MP": 1). |
+| `countAtLeast` | action_resolve only: its hits landed on at least this many units of the other side. |
+| `repeat` | Action events only: true matches only a recast's repeat, false only ordinary actions. Default: both. |
 
 ## Event `whose`
 
@@ -327,22 +327,22 @@ An action's `target` is `foe` (default targeting: a foe by Aggro, under the Hidd
 | --- | --- |
 | `where` |  |
 | `ifNone` | When `where` leaves nobody, use the whole side instead ("if every foe is Taunting, any foe"). |
-| `exclude` | targets: skip the action's chosen targets ("a second, random foe", "up to three other foes"). Step 5i, reactions only: other or owner, skip the event's other unit or the unit it's about ("every other foe", "a random foe other than the one it hit"). |
-| `seat` | Step 5i: the unit in this seat of the party's formation (a position id), or `next` / `previous`: the seat after or before the reading unit's, by slot order, wrapping round and skipping empty seats. |
+| `exclude` | targets: skip the action's chosen targets ("a second, random foe", "up to three other foes"). Reactions only: other or owner, skip the event's other unit or the unit it's about ("every other foe", "a random foe other than the one it hit"). |
+| `seat` | The unit in this seat of the party's formation (a position id), or `next` / `previous`: the seat after or before the reading unit's, by slot order, wrapping round and skipping empty seats. |
 | `by` | Required for lowest and highest. |
 | `count` | Default 1. |
 
-`by` (for lowest and highest): `hp`, `hp_share`, `mp_share`, `buffs`, `debuffs`, `swing` (step 5i: the basic attack's interval now; highest is the slowest), `{ stat }`, `{ stats }` (the highest of several) or `{ stacks }`.
+`by` (for lowest and highest): `hp`, `hp_share`, `mp_share`, `buffs`, `debuffs`, `swing` (the basic attack's interval now; highest is the slowest), `{ stat }`, `{ stats }` (the highest of several) or `{ stacks }`.
 
-Basic attacks pick in this order (step 5i): an `aim` with `first` the attacker holds; a foe holding a `focus` status (Marked); its other `aim`; the default. Each step that finds nobody passes to the next.
+Basic attacks pick in this order: an `aim` with `first` the attacker holds; a foe holding a `focus` status (Marked); its other `aim`; the default. Each step that finds nobody passes to the next.
 
 ## Conditions (an ability's `if`, a pulse's or reaction's `if`)
 
 | Field | Meaning |
 | --- | --- |
 | `atLeast` | At least this many pass. Default 1, or 0 when atMost is given. |
-| `atMost` | Step 5i: at most this many pass (0: none does, "no foe is Marked"). |
-| `seat` | Step 5i: the unit in this seat of the party's formation (a position id), or `next` / `previous`: the seat after or before the reading unit's, by slot order, wrapping round and skipping empty seats. |
+| `atMost` | At most this many pass (0: none does, "no foe is Marked"). |
+| `seat` | The unit in this seat of the party's formation (a position id), or `next` / `previous`: the seat after or before the reading unit's, by slot order, wrapping round and skipping empty seats. |
 
 ## Unit conditions (`where`, an ability's `if`, and a scale's `when`)
 
@@ -350,7 +350,7 @@ Basic attacks pick in this order (step 5i): an `aim` with `first` the attacker h
 | --- | --- |
 | `hpBelow` | HP below this percent of max HP. |
 | `hpAtLeast` |  |
-| `mpBelow` | MP below this share of max MP (step 5g: what a Clarity waits for). A unit with no MP pool never passes. |
+| `mpBelow` | MP below this share of max MP (what a Clarity waits for). A unit with no MP pool never passes. |
 | `mpAtLeast` |  |
 | `has` | Has this status (or every one of these). |
 | `lacks` | Doesn't have this status (or any of these). |
@@ -360,13 +360,13 @@ Basic attacks pick in this order (step 5i): an `aim` with `first` the attacker h
 | `stacks` | A status's Intensity total, in stacks. |
 | `atCap` | Holds this Intensity status at its cap. |
 | `belowCap` | Doesn't hold this Intensity status at its cap (or at all). |
-| `casting` | true: in an action's wind-up right now (step 5f: what Unmake waits for). false: not. |
+| `casting` | true: in an action's wind-up right now (what Unmake waits for). false: not. |
 | `ko` | true: knocked out, still in the fight. Sides list living units unless a rule asks for this. Default: living. |
-| `hasAny` | Step 5i: has at least one of these statuses (Stunned or Silenced). |
-| `lower` | Step 5i: this stat is lower than the reading unit's: the acting unit in an action, a reaction's actor, a pulse's holder (an ally with less Armor than the wearer). |
-| `acted` | Step 5i: true once one of its actions has resolved this fight; false until then (a unit summoned mid-fight starts false). |
-| `top` | Step 5i: no living unit on its side has more of the highest of these stats ("the foe with the highest Attack or Magic"); ties pass. |
-| `weapon` | Step 5i: wields a weapon of one of these kinds (an enemy's weapon by its kind, if it names one). |
+| `hasAny` | Has at least one of these statuses (Stunned or Silenced). |
+| `lower` | This stat is lower than the reading unit's: the acting unit in an action, a reaction's actor, a pulse's holder (an ally with less Armor than the wearer). |
+| `acted` | true once one of its actions has resolved this fight; false until then (a unit summoned mid-fight starts false). |
+| `top` | No living unit on its side has more of the highest of these stats ("the foe with the highest Attack or Magic"); ties pass. |
+| `weapon` | Wields a weapon of one of these kinds (an enemy's weapon by its kind, if it names one). |
 
 ## Stats the engine reads
 
@@ -403,7 +403,7 @@ Every other stat (MP regen, Thorns, Lifesteal, Siphon, Double strike and the res
 | `immune:damage` | Above 0: takes no damage (IMMUNE), and so is immune to statuses that deal damage. |
 | `immune:dispel` | Above 0: none of its buffs can be removed. |
 
-## Control resistance (`ruleset.control`, step 5i)
+## Control resistance (`ruleset.control`)
 
 Control resistance: hidden stacks, no icon.
 
@@ -415,7 +415,7 @@ Control resistance: hidden stacks, no icon.
 | `cap` | The most stacks. At the cap they don't land at all, the battle text says IMMUNE, and they add no stack. |
 | `drain` | One stack drains away this many ticks after the last stack was gained or lost, so a party that isn't chaining control sits near zero. |
 
-## Upgrades (`upgrades`, step 5i)
+## Upgrades (`upgrades`)
 
 Training is learning an ability, taking an ability's or the passive's power step, or taking its version A or B; the power step and a version are two trainings, in either order, and the version and its power step together are the `ap` or `bp` form.
 

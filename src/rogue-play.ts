@@ -13,7 +13,7 @@
  *   npx tsx src/rogue-play.ts equip <class> <weapon|armor|amulet> <item|none>
  *   npx tsx src/rogue-play.ts formation <id>     seat <a,b,c>     order <class> <ability,...|none>   (abilities left out aren't brought)
  *   npx tsx src/rogue-play.ts use <potion|tonic|phoenix> [class]   swap <party member> <member at camp>
- *     (swap: at a campfire; any time between rooms for a fallen party member and someone standing at camp)
+ *     (swap: any time outside a fight)
  *   npx tsx src/rogue-play.ts glossary                                   what each status shown in a fight does
  *
  * --save picks the file (default out/rogue-play/run.json); every command takes it.
@@ -52,7 +52,7 @@ function save(run: RogueRun) {
 // ─── Words ──────────────────────────────────────────────────────────────────
 
 const ROMAN = ["", "I", "II", "III"];
-/** What each stat does, in a player's words (a playtester found the glossary covered statuses only). */
+/** What each stat does, in a player's words. */
 const STAT_WORDS: [string, string][] = [
   ["max_hp, max_mp", "HP and MP. Gear that raises the max raises current HP or MP with it, and takes it away when it comes off: what's missing stays missing."],
   ["mp_regen", "MP regained over a fight."],
@@ -72,7 +72,7 @@ const STAT_WORDS: [string, string][] = [
 const pts = (n: number) => Math.round(n / 100) / 10;
 const statWord = (stat: string, v: number) => {
   const pct = /crit|evasion|accuracy|double|lifesteal|siphon|resist/.test(stat);
-  // HP and MP in the numbers the party shows (an AI playtester read "max_hp +0.5" as half a point); the rest on the documents' 1-5 scale.
+  // HP and MP in the numbers the party shows; the rest on the documents' 1-5 scale.
   // Aggro is on its own scale, centred on 100: shown as it is.
   const real = stat === "max_hp" || stat === "max_mp" || stat === "aggro";
   return `${stat.replace("crit_multiplier", "crit_damage")} ${v > 0 ? "+" : ""}${pct ? `${v}%` : real ? v : pts(v)}`;
@@ -85,7 +85,7 @@ function sizeOf(a: AbilityT, st: Record<string, number>, mult = 1): string {
     const d = c.statuses.get(id)!;
     if (d.stacking !== "intensity") return d.name;
     const v = Math.round(val(n, st) * 10) / 10;
-    // Past a status's cap, the cap (a playtester saw "+25.5 CHILL" on foes that hold 8).
+    // Past a status's cap, the cap.
     return typeof d.cap === "number" && v > d.cap ? `${d.cap} ${d.name} (the most it holds)` : `${v} ${d.name}`;
   };
   for (const e of a.do) {
@@ -103,7 +103,7 @@ const codes = (stats: { stat: string; flat?: number }[] = []) => stats.map((s) =
 function gearWords(g: ReturnType<typeof itemGear> | undefined): string {
   if (!g) return "nothing";
   const kind = g.weapon?.kind ? `${g.weapon.kind}` : g.armor ? `${g.armor} armor` : g.offhand ? `${g.offhand} offhand` : g.slot;
-  // A rogue legendary's rule is its status's text; its own text says the same in other words (the Hourglass read twice).
+  // A rogue legendary's rule is its status's text; its own text says the same in other words, so only one is shown.
   const fx = [g.tier === "powerful" && !(g.statuses ?? []).some((id) => id.startsWith("lg_")) ? g.text : "", ...(g.statuses ?? []).map((id) => c.statuses.get(id)?.text)].filter(Boolean).join(" ");
   return `${g.name} (${kind}${g.stats?.length ? `; ${codes(g.stats)}` : ""}${fx ? `; ${fx}` : ""})`;
 }
@@ -113,7 +113,7 @@ function offerWords(run: RogueRun, o: Offer): string {
   if (o.kind === "gear") {
     const g = c.gear.get(o.item.uid) ?? itemGear(c, o.item);
     const fits = run.roster.filter((m) => canEquip(c.classes.get(m.cls)!, g)).map((m) => m.cls);
-    // Step 5h round 6: no FOR line (the director's: it "ruins the discovery"); who fits it stays.
+    // No FOR line (it would spoil the discovery); who fits it stays.
     return `gear: ${o.item.rarity} ${gearWords(g)}. Fits: ${fits.join(", ") || "nobody in the roster yet"}.`;
   }
   if (o.kind === "bundle") return `a bundle: ${offerWords(run, { kind: "gear", item: o.item })} And ${o.supply === "potion" ? "a potion" : "a tonic"}.`;
@@ -293,7 +293,7 @@ function bestiary(id: string, power = 0): string {
   const kind = en.weapon?.kind ? c.weaponKinds.get(en.weapon.kind)?.type ?? "physical" : en.weapon?.type ?? "physical";
   return `${en.name}${en.rank !== "minion" ? ` (${en.rank})` : ""}: ${en.text} Attacks: ${kind}.${acts.length ? ` Abilities: ${acts.join("; ")}.` : ""}${pas.length ? ` ${pas.join(" ")}` : ""}${res.length ? ` ${res.join(", ")}.` : ""}`;
 }
-/** Step 5i: what a training does, in the content's words: an ability to learn, or a power step's or a version's card. */
+/** What a training does, in the content's words: an ability to learn, or a power step's or a version's card. */
 function upText(opt: string): string {
   const t = parseTraining(opt);
   if (!t) return opt;
@@ -332,7 +332,7 @@ function partyWords(run: RogueRun): string {
     const s = fighterOf(run, m.cls).stats;
     out.push(`${m.cls} (${k.name})${seatNo >= 0 ? `, slot ${seatNo + 1} ${f.positions[seatNo].name}` : ", at camp"}: ${vit(run, m.cls)}. Attack ${pts(s.attack)}, Magic ${pts(s.magic)}, Armor ${pts(s.armor)}, Crit ${s.crit_chance}%, Aggro ${Math.round(s.aggro)}, MP regen ${pts(s.mp_regen)}.`);
     for (const slot of ["weapon", "armor", "offhand", "amulet"] as Slot[]) out.push(`  ${slot}: ${m.gear[slot] ? itemWords(itemOf(run, m.gear[slot]!)!) : "nothing"}`);
-    // Step 5i: a trained ability plays as its form.
+    // A trained ability plays as its form.
     const ab = (a: string) => c.abilities.get(formOf(m, a)) ?? c.abilities.get(a)!;
     const left = m.known.filter((a) => !m.order.includes(a));
     out.push(`  abilities, in slot order: ${m.order.map((a, i) => `${formOf(m, a)} (${ab(a).name}, MP ${ab(a).mp ?? 0}, every ${Math.round(ab(a).cooldown)} ticks, first ready about t${Math.max(0, Math.round(ab(a).cooldown - headStart(c.pack.ruleset.opening, ab(a).cooldown, i)))}${sizeOf(ab(a), s) ? `; ${sizeOf(ab(a), s)}` : ""})`).join("; ") || "none"}${left.length ? `. Left out of fights: ${left.join(", ")}` : ""}${unlearned(c, m).length ? `. Not learned yet: ${unlearned(c, m).join(", ")}` : ""}.`);
@@ -433,8 +433,8 @@ if (cmd === "new") {
     case "formation": { const before = vits(run); out = canManage(run) && setFormation(c, run, rest[0]) ? `Formation: ${rest[0]}.${moved(before, run)}` : "Not owned, or not now."; break; }
     case "seat": { const before = vits(run); out = canManage(run) && rest[0] && seat(c, run, rest[0].split(",")) ? `Seats: ${run.party.join(", ")}.${moved(before, run)}` : "Name the same party members, in the new order, with commas: seat <a,b,c>."; break; }
     case "order": {
-      // "none" brings no ability at all (step 5i: known abilities are base ids; a trained one plays as its form). Names separated
-      // by spaces were read as one list and left the rest out silently (a playtester): commas only.
+      // "none" brings no ability at all (known abilities are base ids; a trained one plays as its form). Commas only: names
+      // separated by spaces would be read as one list, leaving the rest out silently.
       if (rest.length > 2) { out = "Use commas, no spaces: order <class> <ability,ability,...> (or none)."; break; }
       const m = member(run, rest[0]);
       const ids = !m || rest[1] === "none" ? [] : (rest[1] ?? "").split(",").filter(Boolean).map((a) => a);

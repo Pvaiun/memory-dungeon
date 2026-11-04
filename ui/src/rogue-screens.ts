@@ -1,7 +1,7 @@
 /**
  * The rogue mode's screens. `rogue` shows whatever the run is waiting on: the leader and the draft, the map, the
  * spoils of a fight, a boss's boon, a chest, the shop, a campfire, an event, a level-up, the next region, the end.
- * `rparty`, `runit` and `rgear` manage the party any time outside a fight: gear, seats, who's in and who's at camp (step 5h).
+ * `rparty`, `runit` and `rgear` manage the party any time outside a fight: gear, seats, who's in and who's at camp.
  * Every choice goes to src/rogue.ts, is saved, and the screen redraws from the run.
  */
 import {
@@ -62,21 +62,20 @@ const KIND_TEXT: Record<RogueNodeKindT, string> = {
   muster: "PICK ONE OF TWO RECRUITS",
   drill: `PICK ONE OF TWO FORMATIONS, OR TRAIN ${rogue(c).config.drill?.train ?? 3}`,
 };
-// Step 5g: a potion heals one member, a tonic refills one member's MP (the neediest; a choice of member is the next step).
+// A potion heals one member, a tonic refills one member's MP.
 const SUPPLY_ICON: Record<string, Cell> = { potion: [21, 7], tonic: [20, 7], phoenix: [21, 14] };
 const SUPPLY_TEXT: Record<string, string> = { potion: "ONE MEMBER +30% HP", tonic: "ONE MEMBER +50% MP", phoenix: "A FALLEN MEMBER UP, 50% HP" };
 const held = (run: RogueRun, id: string) => run.supplies.filter((x) => x === id).length;
-/** Step 5j: mythic in crimson, the director's pick (step 5i: offered in the boss's boons that open acts II and III). */
+/** Mythic in crimson (offered in the boss's boons that open acts II and III). */
 const RARITY_CLASS = RARITY_TONE;
 const ROMAN = ["", "I", "II", "III", "IV"];
 const gold = (n: number) => h("span", { class: "gold" }, `${n}G`);
 
-/** The roster, the party first: who a piece's card lists first among those who can wear it (step 5i). */
+/** The roster, the party first: who a piece's card lists first among those who can wear it. */
 const rosterOrder = (run: RogueRun) => [...run.party, ...bench(run)];
 /**
- * A run's item as a gear card (its rarity, kind and numbers, `gearRow`), with who wears it at the right. Step 5i: with
- * `who` (the default), the line of who can wear it, the roster first; never what it's for (round 6, the director's: "the
- * signposting who the designer had in mind ... ruins the discovery").
+ * A run's item as a gear card (its rarity, kind and numbers, `gearRow`), with who wears it at the right. With `who` (the
+ * default), the line of who can wear it, the roster first; never what it's for, which would spoil the discovery.
  */
 function itemRow(run: RogueRun, it: Item, onClick?: () => void, opts: { arrow?: boolean; stats?: Record<string, number> | null; right?: HTMLElement | null; who?: boolean } = {}): HTMLElement {
   const g = c.gear.get(it.uid) ?? itemGear(c, it);
@@ -86,11 +85,11 @@ function itemRow(run: RogueRun, it: Item, onClick?: () => void, opts: { arrow?: 
   if (right) r.querySelector(".grow .line")?.append(right);
   return r;
 }
-/** A training's button: LEARN an ability, TRAIN a power step or a version (step 5i). */
+/** A training's button: LEARN an ability, TRAIN a power step or a version. */
 const trainWord = (opt: string) => (parseTraining(opt)?.verb === "learn" ? "LEARN" : "TRAIN");
 /** An offer as a card's body. */
 function offerBody(run: RogueRun, o: Offer): Child[] {
-  // Round 6 (the director's: "an unknown reward, or even bundles"): a sealed piece shows only its slot; a bundle, its piece and its supply.
+  // A sealed piece shows only its slot; a bundle, its piece and its supply.
   if (o.kind === "gear" && o.sealed) {
     const g = c.gear.get(o.item.uid) ?? itemGear(c, o.item);
     return [h("div", { class: "line" }, iconEl(ICON.treasure), h("span", { class: "grow hi" }, `SEALED ${g.slot.toUpperCase()}`)), h("div", { class: "line small dim wrap" }, "RARE OR BETTER · SHOWN WHEN TAKEN")];
@@ -105,9 +104,9 @@ function offerBody(run: RogueRun, o: Offer): Child[] {
   if (o.kind === "recruit") {
     const k = classOf(o.cls);
     const known = o.known ?? [];
-    // Step 5h: a recruit's rarity is what it knows (one, two or all three), shown as the gear's rarity colours.
+    // A recruit's rarity is what it knows (one, two or all three), shown as the gear's rarity colours.
     const rar = known.length >= 3 ? "legendary" : known.length === 2 ? "rare" : "common";
-    // Round 6 (the director's: "can't inspect recruits on any screens"): a tap on the face opens the class with what this one knows.
+    // A tap on the face opens the class with what this one knows.
     const face = h("span", { style: "cursor:pointer", onClick: (e?: Event) => { e?.stopPropagation(); go("rclass", { cls: o.cls, known }); } }, faceEl(o.cls));
     return [h("div", { class: "line" }, face, h("div", { class: "grow" }, h("div", { class: RARITY_CLASS[rar] || "hi" }, `RECRUIT: ${k.name.toUpperCase()}`), h("div", { class: "text dim small wrap" }, role(o.cls)))),
       h("div", { class: "line small wrap" }, h("span", { class: "dim" }, `KNOWS ${known.length}/3: `), known.map((a) => c.abilities.get(a)!.name.toUpperCase()).join(", ")),
@@ -115,7 +114,7 @@ function offerBody(run: RogueRun, o: Offer): Child[] {
       run.party.length >= 3 ? h("div", { class: "line small dim" }, "JOINS AT CAMP") : null];
   }
   if (o.kind === "formation") {
-    // Step 5i: a formation's rarity in the gear's colours (common, rare, legendary), and what each seat does.
+    // A formation's rarity in the gear's colours (common, rare, legendary), and what each seat does.
     const f = c.formations.get(o.id)!;
     const rar = formationRarity(c, o.id);
     return [h("div", { class: "line wrap" }, h("span", { class: RARITY_CLASS[rar] || "hi" }, `${rar === "legendary" ? "★" : ""}FORMATION: ${f.name.toUpperCase()}`), rar !== "common" ? h("span", { class: `small r ${RARITY_CLASS[rar]}` }, rar.toUpperCase()) : null), h("div", { class: "text dim small wrap" }, f.text, formationNote(f)), ...seatLines(f)];
@@ -192,7 +191,7 @@ function pickOrSave(run: RogueRun, pick: string) {
   saveRogue();
   sfx.tap();
   redraw();
-  // What the pick did, said once (an event's gain was silent to a playtester).
+  // What the pick did, said once, so an event's gain isn't silent.
   const news = run.notes.slice(before).map((n) => n.text).filter((t) => !/^(Took|Bought|Act )/.test(t));
   if (news.length && frameEl) toast(frameEl, news.join(" "), 2600);
 }
@@ -239,7 +238,7 @@ function startView(): Child[] {
   const m = meta();
   const owned = m.owned;
   if (!leaderPick || !owned.includes(leaderPick)) leaderPick = owned[0];
-  // Round 6 (the director's): the ability each leader would set out knowing, shown before the pick (the run's dice are kept).
+  // The ability each leader would set out knowing, shown before the pick (the run's dice are kept).
   const seed = nextSeed();
   const knows = (id: string) => leaderKnown(c, seed, id);
   const last = lastRun();
@@ -264,7 +263,7 @@ function draftView(run: RogueRun): Child[] {
   if (p.kind !== "draft") return [];
   if (!draftPick || !p.offers.includes(draftPick)) draftPick = p.offers[0];
   const n = rogue(c).config.start.picks - p.left + 1;
-  // Step 5h (the director's): each offer joins knowing one ability, rolled when offered and shown here.
+  // Each offer joins knowing one ability, rolled when offered and shown here.
   const knows = (id: string) => p.known?.[id] ?? [];
   return [
     header(`COMPANION ${n}/${rogue(c).config.start.picks}`, () => go("home")),
@@ -329,7 +328,7 @@ function mapView(run: RogueRun): Child[] {
     actions(picked ? button(`ENTER ${KIND_NAME[picked.kind]}`, () => { const id = picked.id; mapPick = null; pickOrSave(run, id); }, "hi") : null, button("PARTY", () => go("rparty"))),
   ];
 }
-/** The supplies carried, one button each (step 5h round 6: on the map, the party screen and a fight's preview, wherever swaps are). */
+/** The supplies carried, one button each (on the map, the party screen and a fight's preview, wherever swaps are). */
 function supplyRow(run: RogueRun, after: () => void = redraw): HTMLElement | null {
   if (!run.supplies.length || !canManage(run)) return null;
   return h("div", { class: "btns" }, ...run.supplies.map((id) => button(h("span", null, iconEl(SUPPLY_ICON[id]), id.toUpperCase()), () => useSupplyView(run, id, after), "sm")));
@@ -340,7 +339,7 @@ function useSupplyView(run: RogueRun, id: "potion" | "tonic" | "phoenix", after:
     if (!down.length) return confirm("NOBODY IS DOWN", "", "OK", () => {});
     return confirm("PHOENIX FEATHER", `${className(down[0].cls).toUpperCase()} UP, 50% HP`, "USE", () => { useSupply(c, run, id, down[0].cls); saveRogue(); sfx.heal(); after(); });
   }
-  // Round 9 (the director's): the player picks who drinks it ("the feature doesn't work without that").
+  // The player picks who drinks it.
   pickMember(run, id === "potion" ? "POTION: WHO DRINKS IT?" : "TONIC: WHO DRINKS IT?", id === "potion" ? "hp" : "mp", (cls) => { useSupply(c, run, id, cls); saveRogue(); sfx.heal(); after(); });
 }
 /** A standing party member to pick, with the bar the supply would fill; cancel closes it. */
@@ -353,7 +352,7 @@ function pickMember(run: RogueRun, title: string, which: "hp" | "mp", onPick: (c
   const box = h("div", { class: "overlay dialog" }, win("", h("div", { class: "line hi" }, title), ...rows, h("div", { class: "btns", style: "margin-top:.75rem" }, button("CANCEL", () => box.remove()))));
   frameEl.append(box);
 }
-/** Round 9 (the director's): after a won fight, one supply of the two, not one of each. */
+/** After a won fight, one supply of the two. */
 function dropView(run: RogueRun): Child[] {
   const p = run.pending;
   if (p.kind !== "drop") return [];
@@ -453,7 +452,7 @@ function rewardView(run: RogueRun): Child[] {
   ];
 }
 
-// ─── A captive (round 6) ───────────────────────────────────────────────────
+// ─── A captive ──────────────────────────────────────────────────────────────
 
 /** A captive freed from the fight: taken in (hurt), a lesson for one member, or let go; on top of the spoils. */
 function captiveView(run: RogueRun): Child[] {
@@ -511,12 +510,12 @@ function shopView(run: RogueRun): Child[] {
   ];
 }
 /**
- * One thing training can do (step 5i: learn an ability, or a power step or a version), as its option's id, with its button's
+ * One thing training can do (learn an ability, or a power step or a version), as its option's id, with its button's
  * label; `onClick` null shows the label without a button (the shop, short of gold).
  */
 type TrainEntry = { opt: string; label: string; onClick: (() => void) | null };
 /**
- * Step 5h (the director's: "a nested menu rather than a flat list"): training in two levels, the same everywhere it happens
+ * Training in two levels, the same everywhere it happens
  * (the campfire's TRAIN, events, lessons, the drill, the shop). First the roster, each member with how many things it can
  * learn or train; then that member's training (`trainMember`). A level-up has one member and opens on it.
  */
@@ -540,7 +539,7 @@ function trainPicker(run: RogueRun, entries: TrainEntry[]): Child[] {
   ];
 }
 /**
- * Step 5i: one member's training. Each of its class's abilities in order, then its passive, under its name as it plays now
+ * One member's training. Each of its class's abilities in order, then its passive, under its name as it plays now
  * (a version's name; "+" once it has the power step), with everything that can be done to it as a card: LEARN for an
  * ability not known yet (the ability's own card); the power step (+) and versions A and B, each with the upgrade's own card
  * and, for an ability, the numbers it changes for this member. What this opportunity offers has its button; what's taken
@@ -619,9 +618,8 @@ function changeLines(was: AbilityT, now: AbilityT, stats: Stats): Child[] {
 // ─── The campfire ──────────────────────────────────────────────────────────
 
 /**
- * The campfire: one pick of REST, FOCUS, RAISE or TRAIN (three members, in the nested training screen). Step 5h: swaps live on
- * the party screen any time outside a fight, so the camp's SWAP tab is gone; a stranger at the fire can be taken in whatever
- * the pick.
+ * The campfire: one pick of REST, FOCUS, RAISE or TRAIN (three members, in the nested training screen). Swaps are on the
+ * party screen, not here; a stranger at the fire can be taken in whatever the pick.
  */
 function campView(run: RogueRun): Child[] {
   const p = run.pending;
@@ -629,7 +627,7 @@ function campView(run: RogueRun): Child[] {
   const k = rogue(c).config.campfire;
   const opts = options(c, run);
   const body: Child[] = [];
-  // Round 6 (the director's): the share everyone got on arriving, then one pick of two, REST or TRAIN.
+  // The share everyone got on arriving, then one pick of two, REST or TRAIN.
   if (k.auto) body.push(h("div", { class: "line small good wrap" }, `EVERYONE +${k.auto.hp}% HP AND +${k.auto.mp}% MP · THE FALLEN UP AT ${k.auto.revive}%`));
   if (p.used) body.push(h("div", { class: "line hi" }, "PICK MADE"));
   else if (k.auto) body.push(h("div", { class: "actions" },
@@ -640,7 +638,7 @@ function campView(run: RogueRun): Child[] {
     choice("FOCUS", `+${k.mp}% MP`, () => pickOrSave(run, "focus")),
     ...opts.filter((x) => x.startsWith("raise:")).map((o) => choice(`RAISE ${shortName(o.slice(6))}`, `${k.revive}% HP`, () => pickOrSave(run, o))),
     opts.includes("train") ? choice("TRAIN", `${k.train ?? 1} MEMBERS LEARN OR TRAIN`, () => { trainWho = null; pickOrSave(run, "train"); }) : null));
-  // The stranger: taken in, or (round 6) turned away for a lesson; neither uses the pick.
+  // The stranger: taken in, or turned away for a lesson; neither uses the pick.
   const stranger = p.stranger ? win("roffer", h("div", { class: "line hi" }, "A STRANGER AT THE FIRE"), ...offerBody(run, p.stranger),
     h("div", { class: "btns" }, button("TAKE THEM IN", () => pickOrSave(run, "recruit"), opts.includes("recruit") ? "hi sm" : "sm"), opts.includes("lesson") ? button("A LESSON", () => { trainWho = null; pickOrSave(run, "lesson"); }, "sm") : null),
     opts.includes("recruit") ? null : h("div", { class: "line dim small" }, "ROSTER FULL: SEND SOMEONE HOME (PARTY)")) : null;
@@ -662,7 +660,7 @@ function row2(label: string, text: string, onClick: () => void): HTMLElement {
 function eventScreen(run: RogueRun): Child[] {
   const p = run.pending;
   if (p.kind !== "event") return [];
-  // Step 5h: the version of the event met this time.
+  // The version of the event met this time.
   const ev = eventOfRun(c, p);
   const opts = options(c, run);
   return [
@@ -691,7 +689,7 @@ function chooseView(run: RogueRun): Child[] {
   return [header(title, () => go("home")), win("scroll", ...rows)];
 }
 
-// ─── The Muster and the Drill ground (step 5h) ─────────────────────────────
+// ─── The Muster and the Drill ground ───────────────────────────────────────
 
 let roomPick: number | null = null;
 function roomView(run: RogueRun): Child[] {
@@ -724,8 +722,7 @@ function trainView(run: RogueRun): Child[] {
   return [
     header(p.why === "captive" || p.why === "stranger" ? "A LESSON" : "TRAINING", () => go("home"), h("span", { class: "dim" }, `${p.left} TO GO`)),
     win("scroll", ...trainPicker(run, entries)),
-    // Round 6 (the director's: "you try to see what the available upgrades are and get locked in"): BACK to the room, its pick
-    // unspent, until someone is trained.
+    // BACK to the room, its pick unspent, until someone is trained, so looking at the upgrades doesn't lock the player in.
     actions(options(c, run).includes("back") ? button("BACK", () => { trainWho = null; pickOrSave(run, "back"); }, "hi") : button("DONE", () => { trainWho = null; pickOrSave(run, "done"); }, "hi")),
   ];
 }
@@ -738,7 +735,7 @@ function levelView(run: RogueRun): Child[] {
   const cls = p.queue[0];
   const m = member(run, cls);
   const opts = options(c, run);
-  // Step 5i: the options are trainings (learn, a power step, a version) for this one member, in the training screen, or gold.
+  // The options are trainings (learn, a power step, a version) for this one member, in the training screen, or gold.
   const entries: TrainEntry[] = opts.filter((o) => o !== "gold").map((o) => ({ opt: o, label: trainWord(o), onClick: () => pickOrSave(run, o) }));
   return [
     header("LEVEL UP", () => go("home"), h("span", { class: "dim" }, `${p.queue.length} TO GO`)),
@@ -756,7 +753,7 @@ function levelView(run: RogueRun): Child[] {
 function regionView(run: RogueRun): Child[] {
   const p = run.pending;
   if (p.kind !== "region") return [];
-  // Round 6: a seat at camp comes with the new act.
+  // A seat at camp comes with the new act.
   const by = rogue(c).config.benchByAct;
   const seats = by?.[Math.min(run.act + 1, by.length) - 1] ?? 0;
   return [
@@ -851,12 +848,12 @@ export function rpartyScreen(): Child[] {
     );
   });
   const camp = bench(run);
-  // Step 5h: any time outside a fight. A party card picked, then someone at camp: they trade places.
+  // Any time outside a fight. A party card picked, then someone at camp: they trade places.
   const picked = seatPick !== null ? run.party[seatPick] : null;
   const into = (cls: string) => { if (!picked) return; swap(c, run, picked, cls); seatPick = null; saveRogue(); go("rparty", undefined, true); };
   return [
     header("PARTY", () => { seatPick = null; go("rogue"); }, `ACT ${ROMAN[run.act]}`),
-    // Step 5i: the formation's name in its rarity's colour; what its seats' own statuses do, under its text.
+    // The formation's name in its rarity's colour; what its seats' own statuses do, under its text.
     win("", h("div", { class: "line" }, prev, h("span", { class: `grow center ${RARITY_CLASS[formationRarity(c, run.formation)] || "hi"}` }, f.name), nxt), h("div", { class: "text dim small wrap" }, f.text, formationNote(f), seatNotes(f) ? ` ${seatNotes(f)}` : "")),
     h("div", { class: "cards" }, ...cards),
     supplyRow(run, () => go("rparty", undefined, true)),
@@ -891,7 +888,7 @@ export function runitScreen(arg?: unknown): Child[] {
   const manage = canManage(run);
   const sp = specialLines(fm.stats);
   const locked = c.classes.get(cls)!.abilities.filter((a) => !m.known.includes(a));
-  // Step 5i: a trained ability shows as its form.
+  // A trained ability shows as its form.
   const formAb = (a: string) => c.abilities.get(formOf(m, a)) ?? c.abilities.get(a)!;
   const onN = (i: number) => {
     if (!manage) return;
@@ -904,7 +901,7 @@ export function runitScreen(arg?: unknown): Child[] {
   const out = m.known.filter((a) => !m.order.includes(a));
   const bringBack = (a: string) => { if (!manage) return; setOrder(run, cls, [...m.order, a]); orderPick = null; saveRogue(); go("runit", cls, true); };
   const v = vitals(run, cls);
-  // Step 5h: any time outside a fight, a party member can step back to camp, and one at camp can be sent home (never the leader).
+  // Any time outside a fight, a party member can step back to camp, and one at camp can be sent home (never the leader).
   const inParty = run.party.includes(cls);
   const move = !manage ? null
     : inParty ? (run.party.length > 1 ? button("TO CAMP", () => { swap(c, run, cls, null); saveRogue(); go("rparty"); }, "sm") : null)
@@ -912,15 +909,15 @@ export function runitScreen(arg?: unknown): Child[] {
   return [
     header(k.name, () => { orderPick = null; go("rparty"); }, inParty ? h("span", { class: "hi small" }, `SLOT ${run.party.indexOf(cls) + 1}`) : h("span", { class: "dim small" }, "AT CAMP")),
     move ? h("div", { class: "btns" }, move) : null,
-    // The run's weapon in hand (the head had shown the journey's or free play's).
+    // The run's weapon in hand, not the journey's or free play's.
     win("", classHead(cls, h("div", { class: "line small" }, v.ko ? h("span", { class: "bad" }, "KO") : h("span", null, `HP ${disp(v.hp)}/${disp(v.maxHp)}`), h("span", { class: "mp" }, `  MP ${disp(v.mp)}/${disp(v.maxMp)}`)), m.gear.weapon)),
     win("", statGrid(fm.stats, k.stats, setup.settings.designer), sp.length ? h("div", { class: "text up small wrap", style: "margin-top:.25rem" }, ...sp.flatMap((s, i) => (i ? [" · ", s] : [s]))) : null),
     win("scroll",
       section("PASSIVE"),
-      // Step 5i: a trained passive shows as its form.
+      // A trained passive shows as its form.
       ...classPassive(cls, setup.settings.designer, passiveOf(c, cls) ? formOf(m, passiveOf(c, cls)!) : undefined),
       section("GEAR"),
-      // Step 5j: four slots; under a two-handed weapon the offhand reads locked.
+      // Four slots; under a two-handed weapon the offhand reads locked.
       ...SLOTS.map((s) => {
         if (s === "offhand" && twoHanded(m.gear)) return lockedRow(s);
         const uid = m.gear[s];
@@ -941,7 +938,7 @@ export function runitScreen(arg?: unknown): Child[] {
   ];
 }
 
-/** A recruit on offer, as a sheet (round 6): its class, its passive, what it would join knowing, and what it could learn later. */
+/** A recruit on offer, as a sheet: its class, its passive, what it would join knowing, and what it could learn later. */
 export function rclassScreen(arg?: unknown): Child[] {
   const { cls, known } = (arg as { cls: string; known: string[] }) ?? { cls: "", known: [] };
   if (!c.classes.has(cls)) return rogueScreen();
@@ -965,8 +962,8 @@ export function rgearScreen(arg?: unknown): Child[] {
   const pick = (uid: string | null) => { equip(c, run, cls, slot, uid); saveRogue(); go("runit", cls); };
   const rarityOrder = { mythic: -1, legendary: 0, rare: 1, uncommon: 2, common: 3 };
   fits.sort((a, b) => rarityOrder[a.rarity] - rarityOrder[b.rarity]);
-  // Round 6 (the director's: "you keep accidentally equipping the gear that's on someone else"): what it wears now, then the
-  // bag's pieces, then pieces someone else wears, dimmed under their face; taking one of those asks first.
+  // What it wears now, then the bag's pieces, then pieces someone else wears, dimmed under their face; taking one of those
+  // asks first, so nobody's gear is taken by accident.
   const worn = (it: Item) => { const w = wearer(run, it.uid); return w && w !== cls ? w : null; };
   const row = (it: Item) => {
     const w = worn(it);

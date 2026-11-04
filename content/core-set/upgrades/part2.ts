@@ -1,13 +1,13 @@
 /**
- * Step 5i, step 5: the upgrades of the Hexer, Monk, Assassin, Vampire, Pyromancer, Frostweaver, Stormcaller and Geomancer (a power step and two versions for each ability and passive, as five forms
- * each) and their mythics, from steps/05-core-set/5i-synergy/fill/upgrades-2.md with fill-rulings.md (its third round wins).
+ * The upgrades of the Hexer, Monk, Assassin, Vampire, Pyromancer, Frostweaver, Stormcaller and Geomancer (a power step and two versions for each ability and passive, as five forms
+ * each) and their mythics.
  * `upgrades` joins the pack's upgrades, `abilities` (the ability forms) its abilities, `statuses` (passive forms and helpers,
  * and the mythics' statuses) its statuses, `mythics` its gear and the rogue's stock; `builds` is designer data, never in the pack.
  *
  * Each form is built from the class's own ability or passive in classes.ts, so a form keeps everything of the base it doesn't
- * name. The power step is the training rule's "two fifths more" (src/rogue.ts, UPGRADE) of the amount the fill names, or a
- * cooldown a word shorter (by the base's own id, so its jitter stays), or a rung cheaper. Every number is the fill's.
- * Hooks use the engine spec's additions (build/engine-spec.md, X1 onward); the engine acts on them once wave 2's engine lands.
+ * name. The power step is the training rule's "two fifths more" of the amount the card names, or a cooldown a word shorter
+ * (by the base's own id, so its jitter stays), or a rung cheaper.
+ * The hooks are the engine's primitives (PRIMITIVES.md).
  */
 import type { AbilityT, EffectT, GearT, NumT, ReactionT, StatusT, TargetRuleT, ToT, UpgradeT } from "../../../src/schema.js";
 import { abilities as baseAbilities, classes, passives, T } from "../classes.js";
@@ -16,7 +16,7 @@ import { own, piece, pieceStatus, type Build, type BuildTag, type Builds } from 
 
 // ─── Words and helpers ───────────────────────────────────────────────────────
 
-/** The power step's "more": two fifths more (src/rogue.ts, UPGRADE.amount). */
+/** The power step's "more": two fifths more. */
 const POWER = 1.4;
 /** Cold hex's own multiplier on the few word (classes.ts): enough Chill for a Hexer to reach a shatter alone. */
 const COLD_HEX = 1.3;
@@ -64,9 +64,9 @@ const passiveCard = (cls: string) => classes.find((c) => c.id === cls)!.passive!
 
 type Ver = {
   name: string;
-  /** Its card, the fill's, word for word. */
+  /** Its card. */
   text: string;
-  /** The builds it serves, in the fill's order: the first is worth 2 to it, the rest 1. */
+  /** The builds it serves, in order: the first is worth 2 to it, the rest 1. */
   builds: Build[];
   /** What the power step adds to this version's card, where it differs from the upgrade's own power card. */
   plus?: string;
@@ -119,7 +119,7 @@ function passiveUp(u: Up<StatusT>) {
 
 /** A kit state: a status a kit keeps on a unit, shown on its icon, never a new word for the player (it takes its version's name). */
 const kit = (id: string, name: string, text: string, body: Partial<StatusT>): StatusT => ({ id, name, text, label: "buff", show: "icon", stacking: "refresh", ...body }) as StatusT;
-/** Bookkeeping: neither buff nor debuff, lifted only by name (X14). */
+/** Bookkeeping: neither buff nor debuff, lifted only by name. */
 const marker = (id: string, name: string, text: string, body: Partial<StatusT>): StatusT => ({ id, name, text, label: "marker", show: "sheet", stacking: "refresh", ...body }) as StatusT;
 const helper = (s: StatusT) => statuses.push(tidy(s));
 
@@ -170,13 +170,13 @@ abilityUp({
     ...(v === "b"
       ? {
         do: [
-          // Read before the strip: a light hit for each buff the target holds (X8), and a marker holding the count, which pays the Hexer.
+          // Read before the strip: a light hit for each buff the target holds, and a marker holding the count, which pays the Hexer.
           magic({ scale: [{ ratio: HIT.light, count: "buffs", of: "target", times: { stat: "magic", of: "self" } }] }),
           apply("broken_spell", { stacks: { scale: [{ ratio: 1, count: "buffs", of: "target" }] } }),
           apply("silence"),
           { op: "remove", label: "buff" } as EffectT,
         ],
-        note: "Fix (the fill's hook can't reach it): in an action, a number read `of: target` reads the unit the effect lands on, so an `mp` effect to the Hexer can't count the foe's buffs. The count rides a one-tick marker on the foe (broken_spell), whose reaction pays its source 200 MP a stack.",
+        note: "In an action, a number read `of: target` reads the unit the effect lands on, so an `mp` effect to the Hexer can't count the foe's buffs. The count rides a one-tick marker on the foe (broken_spell), whose reaction pays its source 200 MP a stack.",
       }
       : {}),
   }),
@@ -207,7 +207,7 @@ passiveUp({
   b: { name: "Drinking palm", text: "Its basic attacks, and the second strike of its Double strike, add a few Sunder; stacks scale from Attack. Its hits on a Sundered foe heal it for a tenth of the damage.", builds: ["pact"] },
   form: (v, k) => ({
     reactions: [
-      // First, so its test reads the foe as the hit found it, before this hit's own Sunder lands (X3).
+      // First, so its test reads the foe as the hit found it, before this hit's own Sunder lands.
       ...(v === "b" ? [{ on: { event: "hit_lands" }, if: { unit: "other", where: { has: "sunder" } }, do: [{ op: "heal", amount: { scale: [{ ratio: SPECIAL.lifesteal.medium / 100, amount: true }] }, to: "self" }] } as ReactionT] : []),
       sunderOn("basic", k),
       sunderOn("extra", k),
@@ -277,7 +277,7 @@ passiveUp({
   a: { name: "Opening wound", text: "Its first hit on each foe always crits. Each of its crits adds several Bleed to the foe; stacks scale from Attack.", builds: ["ambush"] },
   b: { name: "Rupture", text: "Each of its crits sets off the foe's Bleed once more, for each stack, and the Bleed closes; then it adds several Bleed; stacks scale from Attack.", builds: ["hunt"] },
   form: (v, k) => ({
-    // Opening wound: hits on a foe it hasn't yet landed a hit on always crit (X25: chance after every stat change, so Gambler's coin too).
+    // Opening wound: hits on a foe it hasn't yet landed a hit on always crit (a crit rule: chance after every stat change, so Gambler's coin too).
     ...(v === "a" ? { crits: [{ when: { lacks: "opening_wound" }, chance: 100 }] } : {}),
     reactions: [
       {
@@ -324,11 +324,11 @@ abilityUp({
   a: { name: "Coup de grâce", text: "Has Seek. Deals physical damage that scales from Crit chance to the foe with the lowest current HP. When it knocks that foe out, Backstab is ready again.", builds: ["hunt"] },
   b: { name: "From the shadows", text: "Has Seek. Waits until the Assassin is Hidden. Deals double physical damage that scales from Crit chance to the foe with the lowest current HP.", builds: ["ambush"] },
   form: (v, k) => ({
-    ...(v === "a" ? { statuses: ["coup_de_grace"], note: "A kill the Assassin lands with any ability readies Backstab (Garrote's too): the ko event names the killer and the hit's kind (X2, X29), not which ability." } : {}),
+    ...(v === "a" ? { statuses: ["coup_de_grace"], note: "A kill the Assassin lands with any ability readies Backstab (Garrote's too): the ko event names the killer and the hit's kind, not which ability." } : {}),
     ...(v === "b" ? { if: { side: "self", where: { has: "hidden" } }, do: [phys(from("crit_chance", HIT.normal * 2 * k))] } : { do: [phys(hitOf("crit_chance", "normal", k))] }),
   }),
 });
-// Brought by the ability (X40): a kill the Assassin lands with an ability (X2, X29) makes Backstab ready (X21). No limit but MP.
+// Brought by the ability: a kill the Assassin lands with an ability makes Backstab ready. No limit but MP.
 helper(kit("coup_de_grace", "COUP DE GRÂCE", "A kill with an ability makes Backstab ready again.", {
   show: "sheet", unremovable: true,
   reactions: [{ on: { event: "ko", whose: "foe", other: "holder", kind: "ability" }, do: [{ op: "cooldown", which: { ability: ["backstab"] }, set: "ready", to: "self" }] }],
@@ -342,7 +342,7 @@ abilityUp({
   form: (v, _k, plus) => ({
     ...(plus ? { mp: 200 } : {}),
     ...(v === "a" ? { if: { side: "foes", where: { casting: true } }, target: T.castingFoe } : {}),
-    // No longer skips Silenced foes.
+    // Unlike the base, it doesn't skip Silenced foes.
     ...(v === "b" ? { target: T.notTauntingFoe, do: [phys(hitOf("attack", "normal"), { apply: [{ status: "rot" }, { status: "bleed", stacks: stacks("many", "attack") }] })] } : {}),
   }),
 });
@@ -353,14 +353,14 @@ abilityUp({
 const lustOn = (id: string, name: string, times: number, extra: Partial<StatusT> = {}): StatusT =>
   kit(id, name, times === 1 ? "Lifesteal doubled." : "Lifesteal two and a half times its own.", { stacking: "fizzle", stats: [{ stat: "lifesteal", flat: { scale: [{ ratio: times, stat: "lifesteal", of: "holder" }] } }], ...extra });
 const feast: ReactionT = {
-  // The other ally lowest in HP share gets as much as the Vampire drinks: Lifesteal's own shape (X3's times, read live).
+  // The other ally lowest in HP share gets as much as the Vampire drinks: Lifesteal's own shape (its `times`, read live).
   on: { event: "hit_lands" },
   do: [{ op: "heal", amount: { scale: [{ ratio: 0.01, amount: true, times: { stat: "lifesteal", of: "holder" } }] }, to: T.otherLowestShareAlly }],
 };
 helper(lustOn("bloodlust_on_plus", "BLOODLUST", 1.5));
 helper(lustOn("shared_feast_on", "SHARED FEAST", 1, { text: "Lifesteal doubled; each hit it lands heals the ally lowest in HP as much as it drank.", reactions: [feast] }));
 helper(lustOn("shared_feast_on_plus", "SHARED FEAST", 1.5, { text: "Lifesteal two and a half times its own; each hit it lands heals the ally lowest in HP as much as it drank.", reactions: [feast] }));
-// Undying thirst: for 5 ticks, an HP floor (X31) and Lifesteal three times its own in place of the doubling (or of the power step's two and a
+// Undying thirst: for 5 ticks, an HP floor and Lifesteal three times its own in place of the doubling (or of the power step's two and a
 // half): read once as it lands, on top of the on-state Bloodlust has just given it (half again of 40, or a fifth of 50).
 const UNDYING = 5;
 const thirst = (id: string, ratio: number): StatusT =>
@@ -412,7 +412,7 @@ helper(marker("drain_the_well", "DRAIN THE WELL", "Its ability's hit drains MP f
   }],
 }));
 
-/** Blood gift's price (G12, X23): a fifth of its max HP, paid, not damage. */
+/** Blood gift's price: a fifth of its max HP, paid, not damage. */
 const PRICE = 0.2;
 const price: EffectT = { op: "pay", hp: from("max_hp", PRICE), to: "self" };
 abilityUp({
@@ -427,7 +427,7 @@ abilityUp({
       do: [price, { op: "mp", amount: from("max_hp", PRICE * k) }, apply("clarity")],
     }
       : v === "b" ? {
-        // The revives' word and price; every action on its full cooldown (G10).
+        // The revives' word and price; every action on its full cooldown.
         cooldown: cd("very_long", "blood_gift"), mp: 650,
         if: [{ side: "allies", where: { ko: true } }, { side: "self", where: { hpAtLeast: 35 } }],
         target: T.koAlly,
@@ -461,7 +461,7 @@ passiveUp({
   form: (v, k) => ({
     reactions: [{
       on: { event: "hit_lands", kind: "basic" },
-      do: v === "a" ? [burnTo("other", k), burnTo({ side: "foes", pick: "random", exclude: "other" }, k)] // X10: a random foe other than the one it hit.
+      do: v === "a" ? [burnTo("other", k), burnTo({ side: "foes", pick: "random", exclude: "other" }, k)] // A random foe other than the one it hit.
         : v === "b" ? [burnTo(T.mostFoe("burn"), 2 * k)]
           : [burnTo("other", k)],
     }],
@@ -504,7 +504,7 @@ abilityUp({
     v === "a" ? { target: T.everyFoe, do: [magic(pyreHit(0.5, k))] }
       : { ...(v === "b" ? { statuses: ["pyre_of_the_fallen"] } : {}), do: [magic(pyreHit(1, k))] },
 });
-// Brought by the ability (X40): a foe's Burn ending with its holder's knockout (section 5: status_ended, cause ko), whoever killed it, brings Pyre 4 ticks closer (X21).
+// Brought by the ability: a foe's Burn ending with its holder's knockout (status_ended, cause ko), whoever killed it, brings Pyre 4 ticks closer.
 helper(kit("pyre_of_the_fallen", "PYRE OF THE FALLEN", "Whenever a burning foe falls, Pyre comes closer.", {
   show: "sheet", unremovable: true,
   reactions: [{ on: { event: "status_ended", status: "burn", cause: ["ko"], whose: "foe" }, do: [{ op: "cooldown", which: { ability: ["pyre"] }, set: { less: 4 }, to: "self" }] }],
@@ -588,7 +588,7 @@ passiveUp({
   a: { name: "Forked arc", text: "Each of its basic attacks also hits two other random foes, and adds a few Shock to all three; stacks scale from Magic.", builds: ["harvest"] },
   b: { name: "Static grip", text: "Each of its basic attacks strikes its target twice, and adds a few Shock with each; stacks scale from Magic.", builds: ["cuts", "hunt"] },
   form: (v, k) => ({
-    // X26: a strike rule that picks several foes strikes each of them.
+    // A strike rule that picks several foes strikes each of them.
     strike: { to: v === "a" ? { side: "foes", pick: "random", count: 2, exclude: "targets" } : v === "b" ? "target" : T.secondFoe },
     reactions: [shockOn("basic", k), shockOn("extra", k)],
   }),
@@ -608,7 +608,7 @@ abilityUp({
       return { target: T.lowestHpFoe, do: [first, again, again, again] };
     }
     const rest = magic(hitOf("magic", "touch", k), { apply: chainShock, to: T.threeOtherFoes });
-    // X8: 120 MP for each foe its hits landed on, read after the hits.
+    // 120 MP for each foe its hits landed on (`count: hit`), read after the hits.
     return { do: [first, rest, ...(v === "b" ? [{ op: "mp", amount: { scale: [{ ratio: 120, count: "hit" }] }, to: "self" } as EffectT] : [])] };
   },
 });
@@ -620,7 +620,7 @@ abilityUp({
   a: { name: "Supercell", text: "Deals magical damage that scales from Magic to every foe, 12% more for each foe it hits, and adds a few Shock to each; stacks scale from Magic.", builds: ["harvest"], plus: "40% more damage." },
   b: { name: "Static field", text: "For 20 ticks, every foe that lands a hit on an ally takes a bolt of magical damage that scales from Magic. Deals no damage itself and adds no Shock.", builds: ["toll"], plus: "Its bolts deal 40% more." },
   form: (v, k, plus) =>
-    // X8: +12% of the hit for each of the action's targets (uncapped).
+    // +12% of the hit for each of the action's targets (`count: targets`, uncapped).
     v === "a" ? { do: [magic({ scale: [{ ratio: HIT.touch * k, stat: "magic" }, { ratio: 0.12 * HIT.touch * k, count: "targets", times: { stat: "magic", of: "self" } }] }, { apply: stormShock })] }
       : v === "b" ? { target: T.everyAlly, do: [apply(plus ? "static_field_plus" : "static_field")] }
         : { do: [magic(hitOf("magic", "touch", k), { apply: stormShock })] },
@@ -661,7 +661,7 @@ helper(kit("storm_shield", "STORM SHIELD", "Thorns and Aggro up.", { duration: 2
 helper(kit("bedrock_on_plus", "BEDROCK", "Crit chance doubled, and Crit damage up.", {
   stacking: "fizzle", stats: [{ stat: "crit_chance", flat: { scale: [{ ratio: 1, stat: "crit_chance", of: "holder" }] } }, { stat: "crit_multiplier", flat: SPECIAL.crit_damage.medium }],
 }));
-// Faultline: the next hit always crits (X25, so Gambler's coin too), at three times (the Geomancer's own crit is twice).
+// Faultline: the next hit always crits (a crit rule, so Gambler's coin too), at three times (the Geomancer's own crit is twice).
 helper(kit("faultline", "FAULTLINE", "Its next hit crits for triple damage.", {
   stacking: "fizzle", stats: [{ stat: "crit_multiplier", flat: 100 }], crits: [{ chance: 100 }],
   reactions: [{ on: { event: "hit_lands" }, do: [removeMine("faultline")] }],
@@ -742,7 +742,7 @@ const mythic = (m: Parameters<typeof piece>[0], pulls: BuildTag[]) => {
 };
 const pull = (build: Build, worth: BuildTag["worth"], rung?: 3): BuildTag => ({ build, worth, ...(rung ? { rung } : {}) });
 
-// Hexer: after each ability, three swings that hit every foe holding a debuff (X12: an all-pick aim, each hit a basic attack's).
+// Hexer: after each ability, three swings that hit every foe holding a debuff (an all-pick aim, each hit a basic attack's).
 const WITCH_SWINGS = 3;
 mythic({
   name: "The witch-blade", slot: "weapon", rarity: "mythic", mythic: "hexer",
@@ -760,7 +760,7 @@ helper(kit("the_witch_blade_swings", "THE WITCH-BLADE", "Its basic attacks hit e
   trigger: { on: { event: "action_resolve", kind: "basic" } }, drop: { count: 1 },
 }));
 
-// Monk: a Burn on every hit; every 5 ticks a Heat for each burning foe, up to three (the spec's shape, X3: three pulses, at one, two and three).
+// Monk: a Burn on every hit; every 5 ticks a Heat for each burning foe, up to three (three pulses, each with an `if`: at one, two and three).
 const EMBER_EVERY = 5;
 const emberHeat = (atLeast: number) => ({ every: EMBER_EVERY, if: { side: "foes" as const, where: { has: "burn" }, ...(atLeast > 1 ? { atLeast } : {}) }, do: [apply("heat", { stacks: 1, to: "holder" })] });
 mythic({
@@ -776,7 +776,7 @@ helper(pieceStatus("ember_palms", "Ember palms", "Every hit it lands adds a Burn
 helper(pieceStatus("ember_palms_two", "Ember palms", "A second Heat while two foes burn.", { pulse: emberHeat(2) }));
 helper(pieceStatus("ember_palms_three", "Ember palms", "A third Heat while three foes burn.", { pulse: emberHeat(3) }));
 
-// Assassin: a killing blow it lands (X2, X29) hides it, at Hidden's own length if it isn't Hidden already, and doubles its next hit.
+// Assassin: a killing blow it lands hides it, at Hidden's own length if it isn't Hidden already, and doubles its next hit.
 mythic({
   name: "Night's edge", slot: "armor", rarity: "mythic", mythic: "assassin",
   text: "When the Assassin lands a killing blow, it's Hidden for a moment, and its next hit deals double damage.",
@@ -790,7 +790,7 @@ helper(kit("nights_edge_strike", "NIGHT'S EDGE", "Its next hit deals double dama
   reactions: [{ on: { event: "hit_lands" }, do: [removeMine("nights_edge_strike")] }],
 }));
 
-// Vampire: each ally's fall heals it to full and adds a debt; each killing blow it lands while in debt raises a fallen ally (G10: on cooldown).
+// Vampire: each ally's fall heals it to full and adds a debt; each killing blow it lands while in debt raises a fallen ally (on cooldown).
 mythic({
   name: "Thrall's chalice", slot: "offhand", rarity: "mythic", mythic: "vampire",
   text: "When an ally falls, the Vampire heals to full. The next time the Vampire lands a killing blow, a fallen ally rises with a quarter of its max HP.",
@@ -838,14 +838,14 @@ helper(pieceStatus("glaciers_heart", "Glacier's heart", "Whenever a foe's Chill 
   reactions: [{ on: { event: "status_ended", status: "chill", cause: ["removed"], whose: "foe" }, do: [apply("chill", { stacks: STATUS.chill.cap / 2, to: "owner" })] }],
 }));
 
-// Stormcaller: each basic attack's and ability's hit strikes one more random foe for half its raw damage (X28); the jump, an extra
-// hit, doesn't jump again. A foe dying with Shock gives every other foe half of it (spec section 6: status_ended, cause ko, its amount, X1).
+// Stormcaller: each basic attack's and ability's hit strikes one more random foe for half its raw damage (a reaction that strikes); the jump, an extra
+// hit, doesn't jump again. A foe dying with Shock gives every other foe half of it (status_ended, cause ko, its amount).
 mythic({
   name: "Eye of the tempest", slot: "weapon", rarity: "mythic", mythic: "stormcaller",
   text: "Every hit the Stormcaller lands jumps to one more random foe for half its damage. When a foe falls holding Shock, every other foe gains half of it.",
   weapon: { type: "magical", hands: 1, cooldown: 6.6, amount: ownHit(6.6, "magic") },
   statuses: ["eye_of_the_tempest"],
-  note: "Only basic attacks' and abilities' hits jump. A jump is an extra hit (X28), and a reaction to extra hits would hear its own jumps and loop, so Arc's and Double strike's extra strikes don't jump either.",
+  note: "Only basic attacks' and abilities' hits jump. A jump is an extra hit, and a reaction to extra hits would hear its own jumps and loop, so Arc's and Double strike's extra strikes don't jump either.",
 }, [pull("harvest", 3, 3)]);
 const jump = (kind: "basic" | "ability"): ReactionT => ({ on: { event: "hit_lands", kind }, do: [{ op: "strike", share: 50, of: "hit", to: { side: "foes", pick: "random", exclude: "other" } }] });
 helper(pieceStatus("eye_of_the_tempest", "Eye of the tempest", "Every hit it lands jumps to one more foe for half; a foe that falls with Shock gives every other foe half of it.", {

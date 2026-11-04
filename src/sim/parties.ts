@@ -24,9 +24,8 @@ export const everything = (c: Content): Owned => ({
 });
 
 /**
- * A party's colour: the broad kind of party it is. FOR NOW, it's the set of
- * classes in it (step 3's placeholder, kept through the core set's build). A
- * later step may replace it with something that reads the party's answers.
+ * A party's colour: the broad kind of party it is. For now, a placeholder:
+ * the set of classes in it.
  */
 export type Colour = (c: Content, p: Party) => string;
 export const classColour: Colour = (c, p) => [...new Set(p.units.map((u) => u.class))].sort().join("+");

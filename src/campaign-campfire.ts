@@ -1,5 +1,5 @@
 /**
- * The campfire's three choices, weighed by playing each (step 5c): every run of each node's best builds that reaches the
+ * The campfire's three choices, weighed by playing each: every run of each node's best builds that reaches the
  * campfire is copied at it and finished once per option (REST, FOCUS, each RAISE), on the same dice. A choice is useful
  * when it's the one that wins: the share of visits each option wins where the others don't is what this measures, with
  * how often the simulations' picker (simPick) chose a winning option.

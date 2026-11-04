@@ -134,7 +134,7 @@ export function readingPack(c: Content, rules: Rules, r: Reading, n: number): st
         out.push(`${e.result === "won" ? "Won" : "Lost"} at t${Number((lastAt / 1000).toFixed(1))}.`);
         break;
       case "offer": {
-        // Step 5f: the campfire's offer (REST / FOCUS / RAISE) is a decision too, not a perk; it printed "undefined (undefined)".
+        // The campfire's offer (REST / FOCUS / RAISE) is a decision too, not a perk.
         const opts = e.options as string[];
         const camp = opts.every((id) => !perkName(id));
         const word = (id: string) => (perkName(id) ? `${perkName(id)!.name} (${perkName(id)!.text})` : id.replace(/^camp:/, "").replace(/:/g, " ").toUpperCase());

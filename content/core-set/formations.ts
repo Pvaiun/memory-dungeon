@@ -1,28 +1,23 @@
 /**
- * The core set's formations: Neutral, the starter, and the 32 of step 5i (11 common, 12 rare, 9 legendary).
+ * The core set's formations: Neutral, the starter, and 32 more (11 common, 12 rare, 9 legendary).
  *
- * Written from steps/05-core-set/5i-synergy/fill/formations.md, with fill-rulings.md winning where they differ (its third round,
- * the director's, over the first two). A seat is a position: its own stats, and the statuses it gives the unit sitting there.
- * A formation's own stats and statuses are its party effect, given to every unit in it. Statuses are universal: nothing here
- * applies one for less or more than its own length. Where the engine doesn't act on a field yet, it's written in the shape
- * build/engine-spec.md gives (X numbers in the comments), for wave 3 to check against the merged engine.
- *
- * Step 5i (the build's retire share): the nine old formations (Vanguard, Champion, Ambush, Tortoise, Scatter, Blitz, Caravan,
- * Last stand, Escort) and their four statuses went before this file was written.
+ * A seat is a position: its own stats, and the statuses it gives the unit sitting there. A formation's own stats and statuses
+ * are its party effect, given to every unit in it. Statuses are universal: nothing here applies one for less or more than its
+ * own length.
  */
 import type { ConditionT, EffectT, EventSpecT, FixedStatT, FormationT, NumT, ReactionT, StatusT, TargetRuleT, TestT, ToT, UnitCondT } from "../../src/schema.js";
 import { idOf, pieceStatus, type Build, type BuildTag, type Builds } from "./pieces/kit.js";
 import { marked } from "./pieces/shared.js";
 import { AGGRO_STEP, FLAT_STACKS, SPECIAL, crit, stepFor } from "./scale.js";
 
-// ─── The words, as numbers (fill/formations.md, "The words, as numbers") ──────
+// ─── The words, as numbers ───────────────────────────────────────────────────
 
-/** A seat's stat step: one and a quarter gear steps (step 5f round 4), as today's formations had it. */
+/** A seat's stat step: one and a quarter gear steps. */
 export const FORMATION_STEP = 1.25;
 type Change = { stat: string; flat: number };
 /**
  * n seat steps of a stat (a negative n gives it up): Attack, Magic and Armor 1,250, HP 625, Aggro 13, MP regen 3,750 a step.
- * Halves round away from zero, so "draws less" is −13 as the fill's table has it (Math.round alone gave −12).
+ * Halves round away from zero, so "draws less" is −13 (Math.round alone gives −12).
  */
 const st = (stat: string, n: number): Change => {
   const v = n * FORMATION_STEP * stepFor(stat);
@@ -30,7 +25,7 @@ const st = (stat: string, n: number): Change => {
 };
 /** Crit chance in seat steps: "crits more" +3.5, "crits far more" +7. */
 const critSt = (n: number): Change => ({ stat: "crit_chance", flat: crit(n * FORMATION_STEP) });
-/** Special stats sit at their words, unscaled (as Scatter's Decoy did). */
+/** Special stats sit at their words, unscaled. */
 const EVASION: Change = { stat: "evasion", flat: SPECIAL.evasion.medium };
 const THORNS: Change = { stat: "thorns", flat: SPECIAL.thorns.medium };
 const THORNS_HIGH: Change = { stat: "thorns", flat: SPECIAL.thorns.high };
@@ -56,7 +51,7 @@ const react = (spec: EventSpecT, ...effects: EffectT[]): ReactionT => ({ on: spe
 const atStart = (...effects: EffectT[]): ReactionT => react(on("fight_start"), ...effects);
 /** A boost on all the holder's hits. */
 const hits = (pct: NumT) => [{ tag: "physical", pct }, { tag: "magical", pct }];
-/** Some of the holder's cooldowns this many ticks closer (X21). */
+/** Some of the holder's cooldowns this many ticks closer. */
 const closer = (which: "abilities" | "soonest", less: number): EffectT => ({ op: "cooldown", which, set: { less }, to: "holder" });
 const OTHERS: TargetRuleT = { side: "others", pick: "all" };
 /** "Taunts all fight": Taunt when each fight starts, again each time it ends while the unit stands, and again on a revive (Taunt keeps its own 20 ticks). */
@@ -71,7 +66,7 @@ const held = pieceStatus;
 /** A one-use state: one stack, spent on the event (so a second before then adds nothing, and the next hit or action takes it, not the one after). */
 const oneUse = (id: string, name: string, text: string, spentOn: EventSpecT, body: Partial<StatusT>): StatusT =>
   ({ id, name, text, label: "buff", show: "sheet", stacking: "intensity", cap: 1, trigger: { on: spentOn }, drop: "all", ...body }) as StatusT;
-/** A timer: bookkeeping that only ends (X14's marker), for "after the first few ticks". */
+/** A timer: bookkeeping that only ends (a marker), for "after the first few ticks". */
 const timer = (id: string, name: string, duration: number): StatusT => ({ id, name, label: "marker", show: "sheet", stacking: "refresh", duration });
 
 type Seat = { name: string; text?: string; stats?: Change[]; statuses?: string[] };
@@ -99,7 +94,7 @@ const twice = (s: Seat): Seat[] => [s, s];
 const thrice = (s: Seat): Seat[] => [s, s, s];
 
 const BUILDS: Build[] = ["landslide", "cuts", "bonfire", "snap", "hunt", "harvest", "ambush", "overflow", "lockdown", "toll", "pact", "phoenix"];
-/** An item's **Builds** line, as the fill writes it ("Toll 1 ●●, Harvest ●"): each build, its rung if named, and its worth in dots. */
+/** An item's **Builds** line ("Toll 1 ●●, Harvest ●"): each build, its rung if named, and its worth in dots. */
 function tags(line: string): BuildTag[] {
   if (!line) return [];
   return line.split(",").map((part) => {
@@ -165,7 +160,7 @@ const common: Entry[] = [
       { name: "Source", text: "Regains MP in fights. Magic down.", stats: [st("mp_regen", 2), st("magic", -1)] },
       ...twice({ name: "Spender", text: "Abilities cost a tenth less MP.", statuses: ["wellspring_spender"] }),
     ]),
-    // X22: an MP cost change on every ability.
+    // An MP cost change on every ability.
     [held("wellspring_spender", "Spender", "Abilities cost a tenth less MP.", { mods: [{ mp: -10 }] })],
     "Overflow 1 ●●●, Lockdown ●●, Bonfire ●",
   ),
@@ -180,7 +175,7 @@ const common: Entry[] = [
       stats: [st("armor", -1)],
       statuses: ["first_light"],
     }),
-    // X21: 5 ticks off each ability's cooldown, on top of what it carried from the last fight.
+    // A cooldown change: 5 ticks off each ability's cooldown, on top of what it carried from the last fight.
     [held("first_light", "First light", "Its abilities start each fight 5 ticks closer to ready.", { reactions: [atStart(closer("abilities", 5))] })],
     "Ambush 1 ●●●, Lockdown ●",
   ),
@@ -206,7 +201,7 @@ const common: Entry[] = [
       ...twice({ name: "Mourner", text: "While an ally is down, Attack and Magic up two steps.", statuses: ["vigil_mourner"] }),
     ]),
     [
-      // X3: tests on reactions. One who fell in an earlier fight counts, so the fight's start checks too.
+      // Tests on reactions. One who fell in an earlier fight counts, so the fight's start checks too.
       held("vigil_mourner", "Mourner", "While an ally is down, Attack and Magic up two steps.", {
         reactions: [
           { on: on("fight_start"), if: ALLY_DOWN, do: [give("vigil_mourning")] },
@@ -234,7 +229,7 @@ const common: Entry[] = [
 /** The slow kinds: the Hammer seat's swing shape. */
 const SLOW: UnitCondT = { weapon: ["great_weapon", "mace", "staff"] };
 const CASTING_FOE: ConditionT = { side: "foes", where: { casting: true } };
-/** The Mason gave it: the applier (X1, the event's other) holds the Mason's status, and the unit that gained it isn't the Mason (X3 tests). */
+/** The Mason gave it, as a reaction's tests: the applier (the event's other) holds the Mason's status, and the unit that gained it isn't the Mason. */
 const MASON_GAVE: TestT[] = [
   { unit: "other", where: { has: "hammer_and_anvil_mason" } },
   { unit: "owner", where: { lacks: "hammer_and_anvil_mason" } },
@@ -246,7 +241,7 @@ const PARTS = {
   well: { name: "WELL", text: "Regains MP in fights. Heals on it are stronger.", stats: [st("mp_regen", 1), STRONGER_HEALS], next: "wall" },
 } as const;
 /**
- * A part of the Wheel (G13: it turns every 22 ticks, first at tick 11). Statuses are universal, so the first turn is a part of its
+ * A part of the Wheel (it turns every 22 ticks, first at tick 11). Statuses are universal, so the first turn is a part of its
  * own whose length is 11: each seat starts the fight holding its opening part; when a part runs out, its holder takes the next
  * seat's part for 22. A unit knocked out drops off the wheel; on a revive its seat gives it its opening part again.
  */
@@ -264,20 +259,19 @@ const rare: Entry[] = [
     formation("Hammer and anvil", "rare", "One takes the blows, one strikes like a falling hill, one builds stone around the striker.", [
       { name: "Anvil", text: "Draws more. Guarded when each fight starts.", stats: [st("aggro", 1)], statuses: ["hammer_and_anvil_anvil"] },
       { name: "Hammer", text: "With a slow weapon: basic attacks come half as often and deal triple. Otherwise: Attack up.", statuses: ["hammer_and_anvil_hammer"] },
-      // The spec's simpler shape (engine-spec.md section 4), in place of the fill's "go to the Hammer first".
       { name: "Mason", text: "When it gives another ally a Shield or a Guard, the Hammer gains the same.", statuses: ["hammer_and_anvil_mason"] },
     ]),
     [
       held("hammer_and_anvil_anvil", "Anvil", "Guarded when each fight starts.", { reactions: [atStart(give("guard"))] }),
       held("hammer_and_anvil_hammer", "Hammer", "With a great weapon, mace or staff: basic attacks half as often, for triple damage. Otherwise: Attack up. Gains the Shields and Guards the Mason gives another ally.", {
-        // X7: the weapon read once at application. Attack speed −100 is "half as often" in the engine; +200% is triple.
+        // The weapon it wields, read once at application. Attack speed −100 is "half as often" in the engine; +200% is triple.
         stats: [
           { stat: "attack_speed", flat: { scale: [{ ratio: -100, when: SLOW, of: "holder" }] } },
           { stat: "attack", flat: { base: st("attack", 1).flat, scale: [{ ratio: -st("attack", 1).flat, when: SLOW, of: "holder" }] } },
         ],
         boosts: [{ tag: "basic", pct: { scale: [{ ratio: 200, when: SLOW, of: "holder" }] } }],
-        // The Mason's line, heard by the Hammer: an ally other than the Hammer gains a Guard or a Shield whose applier (X1) holds
-        // the Mason's status, and isn't the Mason itself (X3 tests). A Shield copies the stacks it added (X1's amount). On the
+        // The Mason's line, heard by the Hammer: an ally other than the Hammer gains a Guard or a Shield whose applier holds
+        // the Mason's status, and isn't the Mason itself (the reaction's tests). A Shield copies the stacks it added (the event's amount). On the
         // Hammer, not the Mason, so the copy never sets itself off again, whichever filters the engine reads.
         reactions: [
           { on: on("status_gained", { whose: "ally", status: "guard" }), if: MASON_GAVE, do: [give("guard")] },
@@ -296,7 +290,7 @@ const rare: Entry[] = [
       { name: "Warden", text: "Taunts when each fight starts.", statuses: ["hunting_party_warden"] },
     ]),
     [
-      // G2 and X11: Marked is shared; each swing moves the Marker's one Mark to the foe it hits.
+      // Marked is shared; each swing moves the Marker's one Mark to the foe it hits.
       held("hunting_party_marker", "Marker", "Its basic attacks Mark their target.", { reactions: [react(on("hit_lands", { kind: "basic" }), give(marked.id, "other"))] }),
       held("hunting_party_chaser", "Chaser", "Everything it does has Seek.", { seek: "all" }),
       held("hunting_party_warden", "Warden", "Taunts when each fight starts.", { reactions: [atStart(give("taunt"))] }),
@@ -341,7 +335,7 @@ const rare: Entry[] = [
     ]),
     [
       held("reaping_line_beacon", "Beacon", "Taunts all fight.", { reactions: TAUNTS_ALL_FIGHT }),
-      // X12: every foe, ahead of a Mark, each a basic attack's hit with its riders and statuses; a fifth of its damage each.
+      // An aim for its basic attacks: every foe, ahead of a Mark, each a basic attack's hit with its riders and statuses; a fifth of its damage each.
       held("reaping_line_scythe", "Scythe", "Its basic attacks hit every foe, for a fifth each.", {
         aim: { rule: { side: "foes", pick: "all" }, first: true },
         boosts: [{ tag: "basic", pct: -80 }],
@@ -356,11 +350,11 @@ const rare: Entry[] = [
       { name: "Spender", text: "When the second seat casts, this seat's next ability comes 4 ticks closer.", statuses: ["relay_third"] },
     ]),
     [
-      // X29: action_resolve carries the MP paid; X13: the second seat by its position id.
+      // action_resolve carries the MP paid; the second seat goes by its position id.
       held("relay_well", "Well", "Each ability it casts gives the second seat a third of its cost in MP.", {
         reactions: [react(on("action_resolve", { kind: "ability" }), { op: "mp", amount: { scale: [{ ratio: 1 / 3, amount: true }] }, to: { side: "others", seat: "spender_a" } })],
       }),
-      // "Its next ability" is the one with the least cooldown left (X21 soonest).
+      // "Its next ability" is the one with the least cooldown left (`soonest`).
       held("relay_second", "Spender", "When the Well casts, its next ability comes 4 ticks closer.", {
         reactions: [react(on("action_resolve", { whose: "ally", kind: "ability", seat: "well" }), closer("soonest", 4))],
       }),
@@ -377,7 +371,7 @@ const rare: Entry[] = [
       { name: "Turnkey", text: "Whenever any foe is Stunned or Silenced, its abilities come 3 ticks closer.", statuses: ["gaol_turnkey"] },
     ]),
     [
-      // X24: a wait and a target on the abilities that Stun or Silence: the casting foe with the highest Attack or Magic, under the
+      // Ability changes: a wait and a target on the abilities that Stun or Silence: the casting foe with the highest Attack or Magic, under the
       // Taunt rule unless the ability has Seek.
       held("gaol_watcher", "Watcher", "Its abilities that Stun or Silence wait for a foe's wind-up, and aim at it.", {
         mods: [{ of: { does: ["stun", "silence"] }, wait: CASTING_FOE, target: { ...CASTING_FOE, pick: "highest", by: { stats: ["attack", "magic"] } } }],
@@ -394,7 +388,7 @@ const rare: Entry[] = [
       { name: "Anchor", text: "Draws far more. Thorns, high.", stats: [st("aggro", 2), THORNS_HIGH] },
       ...twice({ name: "Thorns", text: "A foe that hits the Anchor is Weakened.", statuses: ["thorn_hedge_thorns"] }),
     ]),
-    // X13: hits taken by the unit in the Anchor seat. Weaken at its own 20 ticks; each hit gives it again.
+    // Hits taken by the unit in the Anchor seat. Weaken at its own 20 ticks; each hit gives it again.
     [held("thorn_hedge_thorns", "Thorns", "A foe that hits the Anchor is Weakened.", { reactions: [react(on("hit_taken", { whose: "ally", seat: "anchor" }), give("weaken", "other"))] })],
     "Toll 2 ●●●, Landslide ●",
   ),
@@ -405,7 +399,7 @@ const rare: Entry[] = [
       { name: "Donor", text: "Its heals on the Bleeder are doubled.", statuses: ["blood_oath_donor"] },
     ]),
     [
-      // X23 (G12): HP paid, not damage: no Shield soaks it, nothing reacts to it, never below 1 HP. 0.5% of max HP a tick.
+      // HP paid, not damage: no Shield soaks it, nothing reacts to it, never below 1 HP. 0.5% of max HP a tick.
       held("blood_oath_bleeder", "Bleeder", "Pays 0.5% of its max HP every tick, never below 1. Its hits deal half again as much.", {
         pulse: { every: 1, do: [{ op: "pay", hp: { scale: [{ ratio: 0.005, stat: "max_hp", of: "holder" }] }, to: "holder" }] },
         boosts: hits(50),
@@ -442,7 +436,7 @@ const rare: Entry[] = [
       held("knives_drawn_opener", "Opener", "Its first action each fight deals double.", { reactions: [atStart(give("knives_drawn_opening"))] }),
       oneUse("knives_drawn_opening", "OPENER", "Its first action deals double.", on("action_resolve"), { boosts: hits(100) }),
       held("knives_drawn_second", "Second", "Hasted when each fight starts.", { reactions: [atStart(give("haste"))] }),
-      // A Shield of 15% of max HP at the start (between Escort's 12% and Vanguard's 20%); Aggro +13 from tick 6, for the rest of the fight.
+      // A Shield of 15% of max HP at the start; Aggro +13 from tick 6, for the rest of the fight.
       held("knives_drawn_rear_guard", "Rear guard", "Starts each fight behind a Shield. From tick 6, draws more.", {
         reactions: [
           atStart(give("shield", "holder", { scale: [{ ratio: 0.15, stat: "max_hp", of: "holder" }] }), give("knives_drawn_rear_guard_wait")),
@@ -478,9 +472,9 @@ const legendary: Entry[] = [
       ...twice({ name: "Packmate" }),
     ]),
     [
-      // Only its basic attacks' and single-target abilities' hits Mark (X2 notTags: no area hits, no extra strikes). G2: its one
+      // Only its basic attacks' and single-target abilities' hits Mark (`notTags`: no area hits, no extra strikes). Its one
       // Mark moves with each, so the party's basic attacks follow its last target. A Marked foe that falls with the Lead's Mark
-      // (X2 source) brings its abilities 5 ticks closer.
+      // (the `source` filter) brings its abilities 5 ticks closer.
       held("the_pack_lead", "Lead", "Its hits Mark their target. When the foe it Marked falls, its abilities come 5 ticks closer.", {
         reactions: [
           react(on("hit_lands", { notTags: ["area", "extra"] }), give(marked.id, "other")),
@@ -492,9 +486,7 @@ const legendary: Entry[] = [
   ),
   entry(
     formation("The forge", "legendary", "The longer the fight, the hotter everyone burns; but the forge is slow to light.", thrice({ name: "Forgehand" }), { statuses: ["the_forge"] }),
-    // G3's Heat, one every 2 ticks (+36% by tick 24, the cap at tick 30); Slow at its own 24 ticks when each fight starts.
-    // Step 5i, step 5, the build's one correction: every 2 ticks (the fill's 4). At 4 the self-Slow outweighed the Heat in every fight the
-    // build test played (Bonfire's far end won 86% in Neutral, 68% in The forge: −17 points), and Heat never reaches Burn.
+    // Heat, one every 2 ticks (+36% by tick 24, the cap at tick 30); Slow at its own 24 ticks when each fight starts.
     [held("the_forge", "The forge", "Gains a Heat every 2 ticks. Slowed when each fight starts.", { pulse: { every: 2, do: [give("heat", "holder", 1)] }, reactions: [atStart(give("slow"))] })],
     "Bonfire 3 ●●●, Landslide ●●, Pact ●",
   ),
@@ -503,7 +495,7 @@ const legendary: Entry[] = [
       statuses: ["the_ambuscade"],
     }),
     [
-      // X21: the basic attack ready at the start. The first action doubles; from tick 6 every hit is a sixth softer (−17%).
+      // The basic attack ready at the start. The first action doubles; from tick 6 every hit is a sixth softer (−17%).
       held("the_ambuscade", "The ambuscade", "Its basic attack is ready when each fight starts, and its first action deals double. From tick 6, it deals a sixth less.", {
         reactions: [
           atStart({ op: "cooldown", which: "basic", set: "ready", to: "holder" }, give("the_ambuscade_opening"), give("the_ambuscade_wait")),
@@ -529,8 +521,8 @@ const legendary: Entry[] = [
       { stats: [{ stat: "mp_regen", pct: -100 }], statuses: ["the_choir"] },
     ),
     [
-      // X13: the next seat by slot order (a ring: the first follows the third), skipping empty seats. X22: the Cue makes the
-      // next ability free and is spent when one resolves; a second Cue before then adds nothing.
+      // The next seat by slot order (a ring: the first follows the third), skipping empty seats. The Cue, an MP cost change,
+      // makes the next ability free and is spent when one resolves; a second Cue before then adds nothing.
       held("the_choir", "The choir", "Each ability it casts makes the next voice's next ability free.", {
         reactions: [react(on("action_resolve", { kind: "ability" }), give("the_choir_cue", { side: "others", seat: "next" }))],
       }),
@@ -549,8 +541,8 @@ const legendary: Entry[] = [
       ...twice({ name: "Spared" }),
     ]),
     [
-      // X33: only its own heals land. Each fall heals the others to full (again after every revive). X36: down when a fight is won,
-      // it stands with half its max HP, every ability on full cooldown (G10). The status survives the KO, so the unit that fell in
+      // Only its own heals land. Each fall heals the others to full (again after every revive). Down when a fight is won,
+      // it stands with half its max HP, every ability on full cooldown. The status survives the KO, so the unit that fell in
       // this seat is the one that stands; one moved into the seat while down never held it.
       held("the_undying_martyr", "Martyr", "Can't be healed by others. When it falls, the others heal to full. Down when a fight is won, it stands with half its HP.", {
         heals: "own",
@@ -569,7 +561,7 @@ const legendary: Entry[] = [
     }),
     [
       // Each ally keeps a copy of the count; every party hit adds one to each (its own, and its allies'). The copies stay in step
-      // but for a revived ally's, which starts afresh. A single count shown once is the interface's (NEW 6).
+      // but for a revived ally's, which starts afresh. A single count shown once is the interface's.
       held("the_hurricane", "The hurricane", "Every hit the party lands winds the storm. At 30, Hasted, and it winds again.", {
         reactions: [react(on("hit_lands"), give("the_hurricane_count", "holder", 1)), react(on("hit_lands", { whose: "ally" }), give("the_hurricane_count", "holder", 1))],
       }),
@@ -587,7 +579,7 @@ const legendary: Entry[] = [
       ...twice({ name: "Foothill", text: "While the Peak stands, deals a third more. While it's down, takes double.", statuses: ["the_mountain_foothill"] }),
     ]),
     [
-      // The fill's hooks: the Peak gives the two below an aura that ends with it (Per source), exposes them when it falls, and
+      // The Peak gives the two below an aura that ends with it (Per source), exposes them when it falls, and
       // lifts that and gives the aura again when it stands. Its status survives the KO so it can answer both.
       held("the_mountain_peak", "Peak", "Taunts all fight. While it stands, the others deal a third more; while it's down, they take double.", {
         survivesKO: true,
@@ -600,7 +592,7 @@ const legendary: Entry[] = [
           react(on("revived", { whose: "ally" }), give("the_mountain_strength", "owner")),
         ],
       }),
-      // A fight that starts with the Peak already down, or a return while it's down (X3 and X13: a test on the unit in the Peak's seat).
+      // A fight that starts with the Peak already down, or a return while it's down (a reaction's test on the unit in the Peak's seat).
       held("the_mountain_foothill", "Foothill", "While the Peak stands, deals a third more. While it's down, takes double.", {
         reactions: [
           { on: on("fight_start"), if: PEAK_DOWN, do: [give("the_mountain_exposed")] },
@@ -618,7 +610,7 @@ const legendary: Entry[] = [
       statuses: ["the_storm_front"],
     }),
     [
-      // X28 and X29: a quarter of the raw hit, in its damage type, at the foe with the most HP but the one it hit (X10). The strike
+      // A reaction that strikes: a quarter of the raw hit, in its damage type, at the foe with the most HP but the one it hit. The strike
       // is an extra strike, so it never chains (notTags extra), and carries nothing of the first hit's.
       held("the_storm_front", "The storm front", "Each single-target hit it lands also strikes the healthiest other foe, for a quarter.", {
         reactions: [react(on("hit_lands", { notTags: ["area", "extra"] }), { op: "strike", share: 25, of: "hit", to: { side: "foes", pick: "highest", by: "hp", exclude: "other" } })],
@@ -631,7 +623,7 @@ const legendary: Entry[] = [
       statuses: ["the_vise"],
     }),
     [
-      // X12 and X4: basic attacks go to a Stunned or Silenced foe (at random among several, under the Taunt rule, ahead of a Mark).
+      // An aim: basic attacks go to a Stunned or Silenced foe (at random among several, under the Taunt rule, ahead of a Mark).
       held("the_vise", "The vise", "Its basic attacks go to a Stunned or Silenced foe, and deal 40% more to one.", {
         aim: { rule: { side: "foes", where: LOCKED, pick: "random" }, first: true },
         boosts: [{ tag: "basic", pct: { scale: [{ ratio: 40, when: LOCKED, of: "target" }] } }],
@@ -650,5 +642,5 @@ export const formations: FormationT[] = [neutral, ...entries.map((e) => e.format
 /** Every status behind a seat or a formation's effect. */
 export const effects: StatusT[] = entries.flatMap((e) => e.statuses);
 
-/** Designer data, never in the pack: which builds and rungs each formation serves, from the fill's **Builds** lines. */
+/** Designer data, never in the pack: which builds and rungs each formation serves, from its **Builds** line. */
 export const builds: Builds = Object.fromEntries(entries.map((e) => [e.formation.id, e.builds]));

@@ -65,7 +65,7 @@ const bigHit: number[] = []; // largest single hit on a party member per boss fi
 const losses = new Map<string, number>();
 const lossMp: number[] = [], lossTicks: number[] = [];
 let runs = 0, won = 0, enraged = 0;
-// Step 5c: MP. Time each class spends with an ability off cooldown that it can't pay for ("starved"), and with nothing to
+// MP: time each class spends with an ability off cooldown that it can't pay for ("starved"), and with nothing to
 // cast for want of MP, by fight in the run; MP at each fight's start; casts by slot, and the first cast's tick, in regular fights.
 const starved = new Map<string, number>(), alive = new Map<string, number>(); // "cleric|3" (fight 3 of the run)
 const mpAt = new Map<string, number>(), mpN = new Map<string, number>(); // "cleric|3": MP share at the fight's start

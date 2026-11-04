@@ -16,12 +16,12 @@ import type { ContentPack, EventOpT, GearT } from "./schema.js";
 const raw = JSON.parse(readFileSync("content/core-set.pack.json", "utf8"));
 
 /**
- * Step 5i: the rules that roll, wear, temper and train bring their own content, in a copy of the pack, so they hold whatever the
+ * The rules that roll, wear, temper and train bring their own content, in a copy of the pack, so they hold whatever the
  * content shares have merged: a stock of fixed pieces in the spine's shape (each weapon kind 2 of each rarity, each armor type 3,
  * each offhand kind 2, amulets 6; stat pieces, a plain weapon's swing for the weapons), with `fx_heart` (a common +HP amulet) among
- * them; a mythic for every class; three formations to win, one of each rarity; and, until the content's own are in, upgrades (a
+ * them; a mythic for every class; three formations to win, one of each rarity; and, when the content has none, upgrades (a
  * power step and two versions, as five forms) for the Knight's three abilities and its passive, and the Pyromancer's Firebolt.
- * `withoutLoot` is the pack with no stock at all (the retire share's case).
+ * `withoutLoot` is the pack with no stock at all.
  */
 const HEART = 1000;
 const RARS = ["common", "uncommon", "rare", "legendary"] as const;
@@ -46,7 +46,7 @@ function fixturePack(o: { drop?: (g: GearT) => boolean } = {}): ContentPack {
   for (const k of pack.classes) add({ id: `fx_myth_${k.id}`, name: `${k.name}'s mythic`, slot: "amulet", rarity: "mythic", mythic: k.id, stats: [{ stat: "max_hp", flat: 2000 }] });
   const neutral = pack.formations.find((f) => f.id === "neutral")!;
   for (const [id, rarity] of [["fx_wedge", "common"], ["fx_line", "rare"], ["fx_ring", "legendary"]] as const) pack.formations.push({ ...structuredClone(neutral), id, name: id, source: "unlock", rarity });
-  // The content's own upgrades once they're in (the forms' ids are fixed either way); these until then.
+  // The content's own upgrades when it has them (the forms' ids are fixed either way); these otherwise.
   if (pack.upgrades?.length) return pack;
   pack.upgrades = UPGRADED.map(([id, cls, kind]) => ({ id, class: cls, kind, power: "More of the same.", a: { name: "Wide", text: "It reaches further." }, b: { name: "Deep", text: "It digs deeper." } }));
   for (const [id, , kind] of UPGRADED)
@@ -462,7 +462,7 @@ test("rogue (5i): whole runs play to their end on the fixture's stock, trainings
   }
 });
 
-test("rogue (5h round 6): a campfire heals everyone a share and raises the fallen on arrival; then REST or TRAIN; swaps stay open until LEAVE", () => {
+test("rogue: a campfire heals everyone a share and raises the fallen on arrival; then REST or TRAIN; swaps stay open until LEAVE", () => {
   const c = loadContent(raw);
   const run = newRogue(c, { seed: 13, leader: "knight" });
   while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
@@ -611,7 +611,7 @@ test("rogue: one standing at camp fills an empty seat between rooms; while the p
   }
 });
 
-test("rogue (5h round 6): a potion and a tonic at the start; the leader's roll is known before the run; act I recruits know one or two; a seat with each act", () => {
+test("rogue: a potion and a tonic at the start; the leader's roll is known before the run; act I recruits know one or two; a seat with each act", () => {
   const c = loadContent(raw);
   const run = newRogue(c, { seed: 77, leader: "cleric" });
   assert.deepEqual([...run.supplies].sort(), ["potion", "tonic"]);
@@ -623,7 +623,7 @@ test("rogue (5h round 6): a potion and a tonic at the start; the leader's roll i
   assert.equal(seatsOf(c, run), 3, "a seat with act II");
 });
 
-test("rogue (5h round 6): TRAIN can be backed out of until someone is trained, and the campfire's pick is only spent then", () => {
+test("rogue: TRAIN can be backed out of until someone is trained, and the campfire's pick is only spent then", () => {
   const c = loadContent(raw);
   const run = newRogue(c, { seed: 19, leader: "knight" });
   while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
@@ -653,7 +653,7 @@ test("rogue (5h round 6): TRAIN can be backed out of until someone is trained, a
   }
 });
 
-test("rogue (5h round 6): a captive after some fights against people: taken in at half HP, a lesson, or let go; elites give a pick of legendaries then of formations", () => {
+test("rogue: a captive after some fights against people: taken in at half HP, a lesson, or let go; elites give a pick of legendaries then of formations", () => {
   const c = withLoot();
   let captives = 0, rows = 0, lessons = 0;
   for (let seed = 1; seed <= 60; seed++) {
@@ -696,8 +696,8 @@ test("rogue (5h round 6): a captive after some fights against people: taken in a
   assert.equal((run.pending as { offers: { kind: string }[] }).offers.filter((o) => o.kind === "formation").length, 2);
 });
 
-test("rogue (5h round 6): every option of every event's every version plays through to the map", () => {
-  // Step 5i: with the fixture's stock every option can be picked; with no stock at all, the options that need none play too.
+test("rogue: every option of every event's every version plays through to the map", () => {
+  // With the fixture's stock every option can be picked; with no stock at all, the options that need none play too.
   for (const [c, least] of [[withLoot(), 60], [withoutLoot(), 30]] as const) {
     const ai = aiPlayer({}, 3);
     let played = 0;

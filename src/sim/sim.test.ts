@@ -1,8 +1,7 @@
 /**
- * The harness, against the design's predictions, on step 4's combat: the same
- * study gives the same numbers, no made-up effects, real effects show, shared
- * seeds pay off, and reading packs don't leak stats. Progression is in
- * progression.test.ts.
+ * The harness, against the design's predictions: the same study gives the
+ * same numbers, no made-up effects, real effects show, shared seeds pay off,
+ * and reading packs don't leak stats. Progression is in progression.test.ts.
  */
 import { test } from "vitest";
 import { readFileSync } from "node:fs";

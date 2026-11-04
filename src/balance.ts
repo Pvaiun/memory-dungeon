@@ -1,5 +1,5 @@
 /**
- * The balance sheet (steps/05-core-set/5e-balance): what happens inside fights, read from the logs, for every class,
+ * The balance sheet: what happens inside fights, read from the logs, for every class,
  * ability, status, enemy, gear piece and formation in the pack, in both modes, at frozen knobs and fixed seeds.
  *
  * A fixed spread of parties (every trio sampled evenly, every formation, every piece of gear a class can wear, plus the
@@ -26,7 +26,7 @@ import type { AbilityT, DungeonT, GearT, Party } from "./schema.js";
 import { patch } from "./sim/content.js";
 import { combos, makeBuild, ORDERS, seat, slotted, STYLES } from "./sim/kits.js";
 import { canEquip } from "./validate.js";
-/** Step 5i: the rogue has no pieces of its own any more (its stock is the pack's pieces, in pack.gear), so its legendary probes are empty. */
+/** The rogue has no pieces of its own (its stock is the pack's pieces, in pack.gear), so its legendary probes are empty. */
 const rogueGear = (_c: Content): GearT[] => [];
 
 const T = 1000; // sub-ticks a tick
@@ -77,7 +77,7 @@ export function fightSets(c: Content, sets: SetId[]): Fight[] {
 
 /**
  * The spread: `trios` trios picked so every class appears about equally often, each in a formation (round robin over all
- * ten), seated by the kit weights, and twice: once wearing a rotation of every piece its class can wear (so what nobody
+ * of them), seated by the kit weights, and twice: once wearing a rotation of every piece its class can wear (so what nobody
  * picks is still measured), once in the campaign tuning's sensible kit. Ability order alternates between the documents'
  * and the shortest cooldown first.
  */
@@ -616,8 +616,8 @@ export const BANDS: Record<string, { lo: number; hi: number; unit: string; why: 
   "class.ko": { lo: 0, hi: 2.2, unit: "× the median class", why: "Knockouts per fight against the median class. The casters are fragile by design (HP 2), so up to about twice the median is their shape; past 2.2 a class is a liability nobody brings." },
   "class.takenWall": { lo: 1.1, hi: 2.4, unit: "× an average unit, per tick alive", why: "A wall's job is to be hit (Aggro 4–5, plate). Below 1.1 it isn't drawing; above 2.4 it takes everything and the draw rule's 'between a third and three times' is doing nothing for the others." },
   "class.takenOther": { lo: 0.35, hi: 1.25, unit: "× an average unit, per tick alive", why: "A dealer or support that takes more than 1.25 average units' damage per tick is the one being hit while the wall stands by; below 0.35 it can't be reached (the draw floor is a third)." },
-  "class.starvedCaster": { lo: 0.03, hi: 0.3, unit: "share of time (campaign runs)", on: "campaign", why: "5c (the director's): casters are hungry, so some time with a spell ready and no MP is the design (above 3%); past 30% the caster is a basic-attacker with a staff. Read on the campaign's runs, where MP carries from fight to fight." },
-  "class.starvedOther": { lo: 0, hi: 0.08, unit: "share of time (campaign runs)", on: "campaign", why: "5c (the director's): walls and fighters rarely run dry. Past 8% their cheap skills aren't cheap." },
+  "class.starvedCaster": { lo: 0.03, hi: 0.3, unit: "share of time (campaign runs)", on: "campaign", why: "Casters are hungry, so some time with a spell ready and no MP is the design (above 3%); past 30% the caster is a basic-attacker with a staff. Read on the campaign's runs, where MP carries from fight to fight." },
+  "class.starvedOther": { lo: 0, hi: 0.08, unit: "share of time (campaign runs)", on: "campaign", why: "Walls and fighters rarely run dry. Past 8% their cheap skills aren't cheap." },
   "class.casts": { lo: 1.6, hi: 6, unit: "casts a regular fight", why: "Three slotted abilities in a fight of 30 to 40 ticks on 24/32/42 cooldowns with slotted head starts: fewer than 1.6 casts a fight and the kit isn't playing (5c: 'those cooldowns are too long'); more than 6 and basic attacks are gone (5b's complaint)." },
   "ability.castsMob": { lo: 0.45, hi: 3, unit: "casts a regular fight owned", why: "An ability slotted by a standing member should fire in most regular fights; under 0.45 it fires in fewer than half, and the slot is dead (useless). Over 3 it's the unit's whole rhythm." },
   "ability.castsBoss": { lo: 0.9, hi: 6, unit: "casts a boss fight owned", why: "A boss fight is about one and a half regular fights long (5b); every slotted ability should come at least once, or it's a slot wasted where it matters most." },
@@ -869,7 +869,7 @@ export function compute(c: Content, t: Tally, setName: string): Sheet {
   // Every stat a unit carries, with what it did.
   const sumCls = (m: string) => cls.reduce((a, k) => a + get(t, `cls|${k}|${m}`), 0);
   const sumEn = (m: string) => ens.reduce((a, e) => a + get(t, `en|${e.id}|${m}`), 0);
-  // Step 5j: one magical kind (it was an element each).
+  // Magic is one damage kind, with no elements.
   const magTaken = (side: "cls" | "en") => (side === "cls" ? sumCls("taken|magical") : sumEn("taken|magical"));
   const magRaw = (side: "cls" | "en") => (side === "cls" ? sumCls("takenRaw|magical") : sumEn("takenRaw|magical"));
   const stats = {

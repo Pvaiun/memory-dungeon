@@ -4,8 +4,8 @@
  * Three layers of checks:
  *   1. Shape: the zod schema (types, required fields, closed sets).
  *   2. Meaning: every reference resolves, and content follows the combat
- *      rules for what's valid (steps/04-combat-concepts/design.md and
- *      docs/core-set/rules-and-vocabulary.md): an action's damage is
+ *      rules for what's valid (docs/core-set/rules-and-vocabulary.md):
+ *      an action's damage is
  *      physical or magical, percent changes only on amount stats, a weapon
  *      belongs to a kind, a piece fits its kind's classes, and so on.
  *   3. Design rules from the core set, driven by the pack's `design` block.
@@ -128,10 +128,10 @@ function checkDesign(pack: Pack, r: Report) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// The combat rule language (design sections 3 to 8, and the core set's additions)
+// The combat rule language
 // ─────────────────────────────────────────────────────────────────────────────
 
-/** An Intensity total that every applier adds into: it has no single source (section 7.6). */
+/** An Intensity total that every applier adds into: it has no single source. */
 const shared = (st: S.StatusT) => st.stacking === "intensity" && !st.perSource;
 
 /** Where a number, effect or rule sits: in an action, a status's pulse or trigger, or a reaction. */
@@ -142,13 +142,13 @@ const HIT_EVENTS = ["hit_lands", "hit_taken", "hit_evaded", "hit_missed"];
 const STATUS_EVENTS = ["status_gained", "status_triggered", "status_ended", "status_capped"];
 const DAMAGE_EVENTS = ["damage_dealt", "damage_taken"];
 const RESERVED_TAGS = ["basic", "ability", "extra", "physical", "magical", "none", "healing", "all", "crit", "area"];
-/** Step 5i: events with a kind besides action and hit events (the killing hit's, the healing action's). */
+/** Events with a kind besides action and hit events (the killing hit's, the healing action's). */
 const KIND_EVENTS = [...ACTION_EVENTS, ...HIT_EVENTS, "ko", "healed", "overhealed"];
-/** Step 5i: events that carry an amount. */
+/** Events that carry an amount. */
 const AMOUNT_EVENTS = ["action_resolve", "hit_lands", "hit_taken", ...DAMAGE_EVENTS, "hp_lost", "healed", "overhealed", "status_gained", "status_ended"];
-/** Step 5i: the relative seats a seat field can name; no formation's position may take these ids. */
+/** The relative seats a seat field can name; no formation's position may take these ids. */
 const RELATIVE_SEATS = ["next", "previous"];
-/** Step 5i: what an ability filter's `does` can name besides a status. */
+/** What an ability filter's `does` can name besides a status. */
 const DOES = ["revive", "heal", "damage"];
 
 class Combat {
@@ -211,7 +211,7 @@ class Combat {
     });
   }
 
-  /** The design's rules for a damage instance (sections 5 and 7.5). */
+  /** The rules for a damage instance. */
   instance(i: { type: string; amount: S.NumT }, path: string, where: Where, inStatus: boolean) {
     if (i.type === "none" && where === "action") {
       this.r.error("instance.untyped", `${path}.type`, `every damage instance an action produces is physical or magical`);
@@ -233,14 +233,14 @@ class Combat {
         if (st.stacking !== "intensity" || st.cap === undefined) this.r.error("cond.cap", `${path}.${k}`, `'${id}' isn't an Intensity status with a cap`);
       }
     }
-    // Step 5i: any of several statuses, a stat against the reading unit's, the top of a side, a weapon kind.
+    // Any of several statuses, a stat against the reading unit's, the top of a side, a weapon kind.
     c.hasAny?.forEach((id, i) => this.w.ref("statuses", id, `${path}.hasAny[${i}]`, "status"));
     if (c.lower) this.statKey(c.lower.stat, `${path}.lower.stat`);
     c.top?.stats.forEach((k, i) => this.statKey(k, `${path}.top.stats[${i}]`));
     c.weapon?.forEach((k, i) => this.w.ref("weaponKinds", k, `${path}.weapon[${i}]`, "weapon kind"));
   }
 
-  /** Step 5i: a seat names a position some formation has, or a relative seat. */
+  /** A seat names a position some formation has, or a relative seat. */
   seat(id: string, path: string) {
     if (RELATIVE_SEATS.includes(id)) return;
     if (!this.pack.formations.some((f) => f.positions.some((p) => p.id === id))) this.r.error("seat.unknown", path, `no formation has a seat '${id}' (or use ${RELATIVE_SEATS.join(" or ")})`);
@@ -335,7 +335,7 @@ class Combat {
       case "revive": {
         this.num(e.hp, `${path}.hp`, where, inStatus);
         this.ticks(e.after, `${path}.after`);
-        // Its targets must be knocked-out units: a rule asking for ko, or an action whose own target rule does, or (step 5i) the
+        // Its targets must be knocked-out units: a rule asking for ko, or an action whose own target rule does, or the
         // unit a reaction to `ko` is about, which has just fallen ("raises the ally that just fell").
         const asks = (rule: unknown) => typeof rule === "object" && rule !== null && (rule as S.TargetRuleT).where?.ko === true;
         const ok = typeof to === "object"
@@ -359,7 +359,7 @@ class Combat {
       this.w.ref("statuses", spec.status, `${path}.status`, "status");
     }
     if (spec.cause && spec.event !== "status_ended") this.r.error("event.cause", `${path}.cause`, `only status_ended has a cause`);
-    // Step 5i: the filters that read who did it, where it sits, and the event's numbers.
+    // The filters that read who did it, where it sits, and the event's numbers.
     if (spec.source && !STATUS_EVENTS.includes(spec.event)) this.r.error("event.source", `${path}.source`, `only status events have a status whose source can be read`);
     if (spec.other && ["fight_start", "fight_won", "action_start", "action_resolve", "action_interrupted", "hp_lost", "status_triggered"].includes(spec.event)) this.r.error("event.other", `${path}.other`, `'${spec.event}' has no other unit`);
     if (spec.amountAtLeast !== undefined && !AMOUNT_EVENTS.includes(spec.event)) this.r.error("event.amount", `${path}.amountAtLeast`, `'${spec.event}' carries no amount`);
@@ -368,7 +368,7 @@ class Combat {
     if (spec.seat) this.seat(spec.seat, `${path}.seat`);
   }
 
-  /** Step 5i: a status's changes to its holder's abilities. */
+  /** A status's changes to its holder's abilities. */
   mod(m: S.AbilityModT, path: string) {
     m.of?.ability?.forEach((id, i) => this.w.ref("abilities", id, `${path}.of.ability[${i}]`, "ability"));
     m.of?.does?.forEach((id, i) => DOES.includes(id) || this.w.ref("statuses", id, `${path}.of.does[${i}]`, `status (or ${DOES.join(", ")})`));
@@ -419,7 +419,7 @@ class Combat {
     this.ticks(rs.abilityCast, "ruleset.abilityCast");
     this.ticks(rs.abilityRecovery, "ruleset.abilityRecovery");
     if (rs.taken.floor > rs.taken.cap) this.r.error("ruleset.taken", "ruleset.taken", `floor is above cap`);
-    // Step 5i: control resistance names statuses that exist, and resists before it's immune.
+    // Control resistance names statuses that exist, and resists before it's immune.
     if (rs.control) {
       rs.control.statuses.forEach((id, i) => this.w.ref("statuses", id, `ruleset.control.statuses[${i}]`, "status"));
       if (rs.control.resist.at >= rs.control.cap) this.r.error("ruleset.control", "ruleset.control.resist.at", `control is resisted from ${rs.control.resist.at} stacks, but immune at ${rs.control.cap}: resist below the cap`);
@@ -496,7 +496,7 @@ class Combat {
         if (typeof st.strike.to === "object") this.rule(st.strike.to, `${p}.strike.to`);
         if (st.strike.chain && st.strike.chance === undefined && !st.strike.scale) this.r.warn("strike.chain", `${p}.strike.chain`, `a strike that always lands would always chain to its most`);
       }
-      // Step 5i: Marked, aims, ability changes, crits, stats set, revives.
+      // Marked, aims, ability changes, crits, stats set, revives.
       if (st.single && shared(st)) this.r.error("status.single", `${p}.single`, `a shared Intensity total has no applier to keep one copy each; make it Refresh, Fizzle or Per source`);
       if (st.focus && st.label === "buff") this.r.warn("status.focus", `${p}.focus`, `a focus draws the holder's foes' basic attacks: usually a debuff (Marked)`);
       if (st.aim) this.rule(st.aim.rule, `${p}.aim.rule`, { main: true });
@@ -542,7 +542,7 @@ class Combat {
       });
       const empty = !st.stats && !st.boosts && !st.taken && !st.absorb && !st.block && !st.lockout && !st.riders && !st.seek && !st.strike && !st.pulse && !st.trigger && !st.reactions
         && !st.focus && !st.aim && !st.mods && !st.crits && !st.echo && !st.set && !st.cover && !st.floor && !st.heals && !st.revives;
-      // Step 5i: a marker is bookkeeping, read by name, so it may have no effects of its own.
+      // A marker is bookkeeping, read by name, so it may have no effects of its own.
       if (empty && st.label !== "marker") this.r.warn("status.empty", p, `status '${st.id}' has no effects`);
     });
     this.shared = false;
@@ -577,7 +577,7 @@ function checkUnits(pack: Pack, ix: Index, w: Walker, r: Report, c: Combat) {
     c.grants(cl.passive, `${p}.passive`);
     cl.weapons.forEach((k, j) => w.ref("weaponKinds", k, `${p}.weapons[${j}]`, "weapon kind"));
     if (new Set(cl.weapons).size !== cl.weapons.length) r.error("class.weapons", `${p}.weapons`, `a weapon kind is listed twice`);
-    // Step 5j (builds.md, Gear): every class has a one-handed kind, so it can always hold an offhand.
+    // Every class has a one-handed kind, so it can always hold an offhand.
     if (!cl.weapons.some((k) => ix.get<S.WeaponKindT>("weaponKinds", k)?.hands === 1)) r.error("class.oneHanded", `${p}.weapons`, `'${cl.id}' has no one-handed weapon kind, so it could never hold an offhand`);
     cl.armor.forEach((k, j) => w.ref("armorTypes", k, `${p}.armor[${j}]`, "armor type"));
     if (new Set(cl.armor).size !== cl.armor.length) r.error("class.armor", `${p}.armor`, `an armor type is listed twice`);
@@ -596,7 +596,7 @@ function checkUnits(pack: Pack, ix: Index, w: Walker, r: Report, c: Combat) {
     });
   });
 
-  // Step 5i: an upgrade's forms are reached by training, not listed by their class.
+  // An upgrade's forms are reached by training, not listed by their class.
   const forms = new Set((pack.upgrades ?? []).filter((u) => u.kind === "ability").flatMap((u) => Object.keys(S.UPGRADE_FORMS).map((f) => S.formId(u.id, f as S.UpgradeFormT))));
   pack.abilities.forEach((a, i) => {
     const used = pack.classes.some((cl) => cl.abilities.includes(a.id)) || pack.enemies.some((e) => e.abilities?.includes(a.id)) || forms.has(a.id);
@@ -604,7 +604,7 @@ function checkUnits(pack: Pack, ix: Index, w: Walker, r: Report, c: Combat) {
   });
 }
 
-// ─── Upgrades (step 5i) ──────────────────────────────────────────────────────
+// ─── Upgrades ────────────────────────────────────────────────────────────────
 
 /**
  * Every upgrade names a class and one of its abilities or its passive status, at most once, and its five forms are
@@ -643,9 +643,9 @@ function checkUpgrades(pack: Pack, ix: Index, w: Walker, r: Report) {
 function checkGear(pack: Pack, ix: Index, w: Walker, r: Report, c: Combat) {
   pack.gear.forEach((g, i) => {
     const p = `gear[${i}]`;
-    // Step 5j: a mythic fits one class whatever its kind, so it may have none (a mythic weapon states its own speed, type and hands).
+    // A mythic fits one class whatever its kind, so it may have none (a mythic weapon states its own speed, type and hands).
     if (g.mythic) w.ref("classes", g.mythic, `${p}.mythic`, "class");
-    // Step 5i: a piece's rarity is mythic exactly when it names its class.
+    // A piece's rarity is mythic exactly when it names its class.
     if (g.rarity && (g.rarity === "mythic") !== !!g.mythic) r.error("gear.rarity", `${p}.rarity`, g.mythic ? `a mythic piece's rarity is mythic` : `only a piece that names its class with 'mythic' is mythic`);
     if (g.slot === "weapon") {
       if (!g.weapon) r.error("gear.weapon", p, `a weapon sets the basic attack: give it 'weapon'`);
@@ -888,7 +888,7 @@ function checkRogue(pack: Pack, w: Walker, r: Report, rg: S.RogueT) {
     w.ref("classes", cls, `rogue.config.firstAbility.${cls}`, "class");
     if (!pack.classes.find((k) => k.id === cls)?.abilities.includes(ab)) r.error("rogue.ability", `rogue.config.firstAbility.${cls}`, `'${ab}' isn't one of ${cls}'s abilities`);
   });
-  // Step 5h: the act odds cover every act. Step 5i: a formation's rarity is its own (Formation.rarity), and the rogue has no loot of
+  // The act odds cover every act. A formation's rarity is its own (Formation.rarity), and the rogue has no loot of
   // its own: its stock is the pack's pieces, each fixed at its rarity.
   if (rg.config.formationOdds && rg.config.formationOdds.length < acts) r.error("rogue.act", "rogue.config.formationOdds", `odds for ${rg.config.formationOdds.length} acts, but the config has ${acts}`);
   if (rg.config.recruits && rg.config.recruits.known.length < acts) r.error("rogue.act", "rogue.config.recruits.known", `odds for ${rg.config.recruits.known.length} acts, but the config has ${acts}`);
@@ -983,7 +983,7 @@ export function canEquip(cls: S.ClassDefT, g: S.GearT): boolean {
   return true;
 }
 
-/** Step 5j: a weapon's hands (its own, or its kind's). A two-handed weapon empties the offhand. */
+/** A weapon's hands (its own, or its kind's). A two-handed weapon empties the offhand. */
 export function handsOf(pack: Pack, g: S.GearT | undefined): 1 | 2 {
   if (!g?.weapon) return 1;
   return g.weapon.hands ?? pack.weaponKinds.find((k) => k.id === g.weapon!.kind)?.hands ?? 1;
@@ -1029,7 +1029,7 @@ export function checkParty(pack: Pack, raw: unknown, opts: { dungeon?: string; o
     positions.add(u.position);
 
     if (u.abilities.length !== d.abilitiesEquipped) r.error("party.abilities", `${p}.abilities`, `${u.abilities.length} abilities equipped; units equip ${d.abilitiesEquipped}`);
-    // Step 5i: a trained form stands for its ability, so two forms of one ability are the ability twice.
+    // A trained form stands for its ability, so two forms of one ability are the ability twice.
     if (new Set(u.abilities.map(S.formBase)).size !== u.abilities.length) r.error("party.abilities", `${p}.abilities`, `an ability is equipped twice`);
     const upgraded = (id: string, kind: S.UpgradeT["kind"]) => (pack.upgrades ?? []).some((x) => x.id === S.formBase(id) && x.class === u.class && x.kind === kind);
     u.abilities.forEach((a, j) => {
@@ -1056,7 +1056,7 @@ export function checkParty(pack: Pack, raw: unknown, opts: { dungeon?: string; o
       else if (!canEquip(cls, g)) r.error("party.gearClass", gp, misfit(cls, g));
       gearUse.set(gid, (gearUse.get(gid) ?? 0) + 1);
     }
-    // Step 5j: a two-handed weapon empties the offhand; a unit wears one mythic at most.
+    // A two-handed weapon empties the offhand; a unit wears one mythic at most.
     if (u.gear.offhand && handsOf(pack, ix.get<S.GearT>("gear", u.gear.weapon ?? "")) === 2) r.error("party.twoHanded", `${p}.gear.offhand`, `a two-handed weapon leaves no hand for an offhand`);
     const mythics = Object.values(u.gear).filter((gid) => ix.get<S.GearT>("gear", gid)?.mythic);
     if (mythics.length > 1) r.error("party.mythics", `${p}.gear`, `a unit wears one mythic at most (${mythics.join(", ")})`);

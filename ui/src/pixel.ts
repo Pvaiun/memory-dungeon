@@ -8,7 +8,7 @@
  * phone one logical pixel is four device pixels. 1rem is 8 logical pixels,
  * one row of the 8px font.
  *
- * The director's packs are pixel art drawn at three image pixels per art
+ * The art packs are pixel art drawn at three image pixels per art
  * pixel (the iconset at two). `downscale` recovers the art's pixels by taking
  * the commonest colour of each block, aligned to the art's own grid, so
  * sprites keep their palettes instead of being averaged or dithered. The actor
@@ -332,7 +332,7 @@ export function iconOf(row: number, col: number, tint?: string): HTMLCanvasEleme
 }
 export const iconEl = (cell: readonly [number, number], scale = 1, tint?: string) => canvasEl(iconOf(cell[0], cell[1], tint), scale, "icon");
 
-// ─── Ability icons: the director's skill pack, 32×32 art pixels each (Oct 31, 2026) ───
+// ─── Ability icons: the skill pack, 32×32 art pixels each ───
 const abilityIcons = new Map<string, HTMLCanvasElement | null>();
 /** An ability's own icon, by its id (a trained form, "<id>__a", shows its base's), or undefined when it has none. */
 export function abilityIconOf(id: string): HTMLCanvasElement | undefined {

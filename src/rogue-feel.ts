@@ -1,5 +1,5 @@
 /**
- * The feel tool for the rogue mode (steps/05-core-set/5g-feel): the simulated player plays whole runs with every fight
+ * The feel tool for the rogue mode (the reader's brief is docs/feel-reader.md): the simulated player plays whole runs with every fight
  * logged, and a spread of those fights (each act, regular fights early and late, elites, bosses, with parties that cover
  * the classes) is written out as reading packs for a feel reader: the fight tick by tick in the designer's view (both
  * sides' HP, MP spent and gained, every status with its stacks), with the party's kit at the top and a tally at the
@@ -8,7 +8,7 @@
  *
  *   npx tsx src/rogue-feel.ts [--runs 48] [--heat 0] [--packs 10] [--focus frostweaver,hexer] [--player] [--rosters] [--fights id,id] [--out out/feel] [--set path=value]...
  *
- * Step 5h: --rosters reads the hand-built rosters (src/rogue-parties.ts) instead of the simulated player's runs: every roster
+ * --rosters reads the hand-built rosters (src/rogue-parties.ts) instead of the simulated player's runs: every roster
  * at every act's and tier's power level meets a fight of each region's pool, fielding a good three of five for it (tried
  * on other dice), as the calibration measures. --fights snake_pit,bomb_nest plays only those fights (each roster at their tier).
  *
@@ -53,7 +53,7 @@ type Rec = {
 // ─── Playing ─────────────────────────────────────────────────────────────────
 
 const recs: Rec[] = [];
-// Step 5h: the hand-built rosters, each fielding a good three for the fight (PICK).
+// The hand-built rosters, each fielding a good three for the fight (PICK).
 if (args.includes("--rosters")) for (const act of [1, 2, 3]) for (const reg of rogue(c).regions.filter((g) => g.act === act)) for (const pt of ["easy", "normal", "elite", "boss"] as PTier[]) ROSTERS.forEach((ro, ri) => {
   const pool = pt === "boss" ? reg.bosses : reg[pt];
   // --fights: those fights wherever their region's pool holds them, else a fight of the pool by the dice.
@@ -63,7 +63,7 @@ if (args.includes("--rosters")) for (const act of [1, 2, 3]) for (const reg of r
   const floor = pt === "easy" ? 1 : pt === "boss" ? 10 : 5;
   const at = (run: RogueRun, seed: number) => { run.region = reg.id; run.floor = floor; run.pending = { kind: "fight", node: "feel", tier, fight, foes: foesFor(c, tier, knobFor(c, run, tier, floor, fight)), seed }; };
   const base = buildRoster(c, ro, act, pt);
-  // Each trio on two throws of the dice (one throw picked worse trios: the act I bosses won 7 of 12), and the one PICK of the
+  // Each trio on two throws of the dice (one throw picks worse trios), and the one PICK of the
   // way down the ranking fielded, as the calibration does: a good pick from the preview, not the perfect one.
   const ranked = trios(ro, LEVELS[act][pt].roster ?? 5).map((trio) => {
     let cost = 0;
@@ -93,7 +93,7 @@ for (let s = 1; s <= (args.includes("--rosters") ? 0 : RUNS); s++) {
   const seed = 9000 + s;
   const run = newRogue(c, { seed, leader: LEADERS[s % LEADERS.length], heat: HEAT });
   // Half the drafts at random (every class gets seen), half by the player's own scoring (a wall and a healer where it can), so the parties are
-  // closer to a player's than pure chance: at noise 1 the reads were of parties that arrived broken.
+  // closer to a player's than pure chance (at noise 1 they arrive broken).
   const ai = aiPlayer(PLAYER ? {} : { noise: 0.5, noisy: ["draft"] }, seed);
   for (let i = 0; i < 3000 && run.pending.kind !== "over"; i++) {
     ai.prepare(c, run);
@@ -254,9 +254,9 @@ function readLog(r: Rec): Read {
     }
     t.short = short / end;
   });
-  // Round 9 (the director's tells): party casts that begin on the same tick as another party member's, and casts that follow the same unit's
-  // previous cast with no basic attack between (the unit "stalling out by casting multiple abilities back to back"); `stall` counts the
-  // ticks a unit spent in such chains past its first cast.
+  // Party casts that begin on the same tick as another party member's, and casts that follow the same unit's previous cast
+  // with no basic attack between (the unit stalling out, casting abilities back to back); `stall` counts the ticks a unit spent
+  // in such chains past its first cast.
   const begins = r.log.filter((e) => e.t === "cast" && units.get(String(e.by))?.side === "party");
   const partyActs = r.log.filter((e) => e.t === "act" && units.get(String(e.by))?.side === "party");
   const byTick = new Map<string, Set<string>>();
@@ -282,7 +282,7 @@ const pc = (a: number, b: number) => (b ? `${Math.round((100 * a) / b)}%` : "–
 const val = (n: NumT | undefined, st: Record<string, number>) => (n === undefined ? 1 : typeof n === "number" ? n : (n.base ?? 0) + n.scale.reduce((t, x) => t + (x.stat && x.of !== "target" ? x.ratio * (st[x.stat] ?? 0) : 0), 0));
 function sizeOf(a: AbilityT, st: Record<string, number>): string {
   const out: string[] = [];
-  // Past a status's cap, the cap; a Shield past half the unit's max HP, that half (the feel read: "ability text doesn't match what lands").
+  // Past a status's cap, the cap; a Shield past half the unit's max HP, that half: what lands, not what the text says.
   const stacks = (id: string, n: NumT | undefined) => {
     const d = c.statuses.get(id)!;
     if (d.stacking !== "intensity") return d.name;
@@ -354,7 +354,7 @@ function pack(r: Rec, n: number): string {
   // Which MP entries are an ability's cost (the act entry follows at once), so a drain (Siphon) can be told apart and shown.
   const costAt = new Set<Entry>();
   r.log.forEach((e, i) => { const n = r.log[i + 1]; if (e.t === "mp" && Number(e.amount) < 0 && n?.t === "act" && n.by === e.target && n.at === e.at) costAt.add(e); });
-  // The statuses each unit holds, for annotating hits (the reads: Weaken, Might, Guard and Chill "exist only in arithmetic").
+  // The statuses each unit holds, for annotating hits, so Weaken, Might, Guard and Chill show in the reading, not only in the arithmetic.
   const held = new Map<string, Map<string, number>>();
   const holds = (id: unknown, st: string) => held.get(String(id))?.get(st);
   const pace = (id: unknown) => {
@@ -525,7 +525,7 @@ function summary(): string {
       const t = rd.ut.get(u.id)!;
       const row = (classRows[u.ref] ??= { fights: 0, dealt: 0, share: 0, basic: 0, abil: 0, status: 0, healed: 0, taken: 0, ko: 0, downAt: [], spent: 0, gained: 0, left: [], fizz: 0, short: [], hpIn: [], mpIn: [] });
       row.short.push(t.short);
-      // The state the unit arrived in (the reads' "fights lost before they start").
+      // The state the unit arrived in (a fight can be lost before it starts).
       { const mm = r.members[i]; if (mm) { row.hpIn.push(mm.maxHp ? mm.hp / mm.maxHp : 1); if (mm.maxMp > 0) row.mpIn.push(mm.mp / mm.maxMp); } }
       const dealt = Object.values(t.dealt).reduce((a, b) => a + b, 0);
       const basic = t.dealt.basic ?? 0;

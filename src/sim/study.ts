@@ -14,12 +14,12 @@ const base = {
   heldOut: z.boolean().default(false),
   content: z.strictObject({
     pack: z.string(),
-    /** PLACEHOLDER for step 3: copies of the first dungeon, enemies scaled by each number. */
+    /** PLACEHOLDER: copies of the first dungeon, enemies scaled by each number. */
     ladder: z.array(z.number().positive()).optional(),
   }),
   /** Versions run side by side on the same seeds. The first is the baseline. */
   variants: z.array(z.strictObject({ name: z.string(), patch: z.array(PatchZ).default([]) })).default([{ name: "as is", patch: [] }]),
-  /** What counts as "can win": a share of tries. A placeholder until step 14 sets targets. */
+  /** What counts as "can win": a share of tries. A placeholder. */
   bar: z.number().min(0).max(1).default(0.5),
   /** Expected ranges for headline numbers. A number outside its range is flagged in the digest. */
   expect: z.array(z.strictObject({ key: z.string(), between: z.tuple([z.number(), z.number()]) })).default([]),

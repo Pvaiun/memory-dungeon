@@ -1,8 +1,7 @@
 /**
  * How bosses fight in rogue runs, read from their logs: the simulated player plays whole runs, and each boss fight is
  * logged. Per boss: fights, wins, length, and per fight its abilities cast, the casts Silence cost it (interrupts) and
- * the stuns that held a wind-up. The question it answers: are bosses locked out of their big moves (AI playtests,
- * rounds 16 and 24)?
+ * the stuns that held a wind-up. The question it answers: are bosses locked out of their big moves?
  *
  *   npx tsx src/rogue-bosses.ts [--runs 300] [--set path=json ...] [--dials k=v,...]
  */

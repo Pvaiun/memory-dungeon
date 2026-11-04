@@ -1,12 +1,12 @@
 /**
- * Step 5i, step 5: the upgrades of the Knight, Cleric, Ranger, Bramble knight, Hoplite, Paladin, Valkyrie and Bard (a power step and two versions for each ability and passive, as five forms
- * each) and their mythics, from steps/05-core-set/5i-synergy/fill/upgrades-1.md with fill-rulings.md (its third round wins).
+ * The upgrades of the Knight, Cleric, Ranger, Bramble knight, Hoplite, Paladin, Valkyrie and Bard (a power step and two versions for each ability and passive, as five forms
+ * each) and their mythics.
  * `upgrades` joins the pack's upgrades, `abilities` (the ability forms) its abilities, `statuses` (passive forms and helpers, and the mythics' statuses) its
  * statuses, `mythics` its gear and the rogue's stock; `builds` is designer data, never in the pack.
  *
- * Every form is built from its class's ability or passive as classes.ts has it: a form changes only what its line changes. The power step is the
- * fill's (two fifths more of an amount or stacks, one cooldown word shorter, or one rung down the MP ladder), and lands on a version as the fill says.
- * Engine additions are written in build/engine-spec.md's shapes (X1 onward); the engine acts on them once wave 2's engine shares land.
+ * Every form is built from its class's ability or passive as classes.ts has it: a form changes only what its line changes. The power step is
+ * two fifths more of an amount or stacks, one cooldown word shorter, or one rung down the MP ladder.
+ * The hooks are the engine's primitives (PRIMITIVES.md).
  */
 import type { AbilityT, EffectT, GearT, NumT, ReactionT, StatusT, TargetRuleT, ToT, UpgradeT } from "../../../src/schema.js";
 import { formId, type UpgradeFormT } from "../../../src/schema.js";
@@ -36,7 +36,7 @@ const both = (pct: NumT) => [{ tag: "physical", pct }, { tag: "magical", pct }];
 /** A status's stat read off its holder: `of: holder`, as a status must say. */
 const ofHolder = (ratio: number, stat: string): NumT => ({ scale: [{ ratio, stat, of: "holder" }] });
 
-/** The phrase "the ally foes are most drawn to" (upgrades-1.md): a Taunting ally if there is one (the most Aggro among several), otherwise the most Aggro. */
+/** The phrase "the ally foes are most drawn to": a Taunting ally if there is one (the most Aggro among several), otherwise the most Aggro. */
 const DRAWN: TargetRuleT = { side: "allies", where: { has: "taunt" }, ifNone: "any", pick: "highest", by: { stat: "aggro" } };
 
 const baseAbility = (id: string): AbilityT => {
@@ -86,13 +86,13 @@ function passiveUpgrade(cls: string, id: string, u: { power: string; a: Version;
 
 /** A helper status a version brings or applies: a buff with an icon unless it says otherwise. */
 const helper = (id: string, name: string, text: string, body: Partial<StatusT>): StatusT => ({ id, name, text, label: "buff", show: "icon", stacking: "refresh", ...body }) as StatusT;
-/** Bookkeeping (X14): neither buff nor debuff, lifted only by a remove that names it. */
+/** Bookkeeping, a marker: neither buff nor debuff, lifted only by a remove that names it. */
 const marker = (id: string, name: string, text: string, body: Partial<StatusT>): StatusT => ({ id, name, text, label: "marker", show: "sheet", stacking: "refresh", ...body }) as StatusT;
 
 const ups: ReturnType<typeof abilityUpgrade | typeof passiveUpgrade>[] = [];
 const helpers: StatusT[] = [];
 const buildTags: Builds = {};
-/** Designer data: version A's and B's builds, on their forms with and without the power step (worth ●● each; the fill names builds, not worth). */
+/** Designer data: version A's and B's builds, on their forms with and without the power step (worth ●● each). */
 function tag(id: string, a: Build[], b: Build[]) {
   for (const [f, list] of [["a", a], ["ap", a], ["b", b], ["bp", b]] as const) buildTags[formId(id, f)] = list.map((build) => ({ build, worth: 2 }));
 }
@@ -119,8 +119,8 @@ tag("vanguard", ["landslide", "ambush"], ["toll", "lockdown"]);
   /** Stone guard: the other ally with the most Armor, Guarded and given a Shield of a quarter of the Knight's Armor, read when it lands. */
   const stoneGuard: Changes = { target: { side: "others", pick: "highest", by: { stat: "armor" } }, do: [apply("guard"), apply("shield", { stacks: { scale: [{ ratio: 0.25, stat: "armor", of: "self" }] } })] };
   /**
-   * Cover: another ally in a wind-up; with nobody else casting, the other ally with the lowest share of HP. The fill's "the one with the most wind-up
-   * left" has no `by` in the schema (no engine addition names it), so among two casters it's the one lower in HP: the rule's fallback does the rest.
+   * Cover: another ally in a wind-up; with nobody else casting, the other ally with the lowest share of HP. "The one with the most wind-up left"
+   * has no `by` in the schema, so among two casters it's the one lower in HP: the rule's fallback does the rest.
    */
   const cover: Changes = { target: { side: "others", where: { casting: true }, ifNone: "any", pick: "lowest", by: "hp_share" } };
   ups.push(abilityUpgrade("knight", "fortify", {
@@ -183,12 +183,12 @@ tag("vanguard", ["landslide", "ambush"], ["toll", "lockdown"]);
 {
   const on = apply("last_rites_on", { to: "holder" });
   const off = removeBuff("last_rites_on");
-  /** Today's pair, at a line: below it the cooldowns halve; healed back to it, they return. */
+  /** The base's pair, at a line: below it the cooldowns halve; healed back to it, they return. */
   const own = (line: number): ReactionT[] => [
     { on: { event: "hp_lost" }, do: [apply("last_rites_on", { to: { side: "self", where: { hpBelow: line } } })] },
     { on: { event: "healed" }, do: [removeBuff("last_rites_on", { side: "self", where: { hpAtLeast: line } })] },
   ];
-  /** Shared rites (X3): the same, read off the whole side, whenever anyone's HP moves, falls or returns. */
+  /** Shared rites: the same, read off the whole side, whenever anyone's HP moves, falls or returns. */
   const shared = (line: number): ReactionT[] => {
     const low = { side: "allies" as const, where: { hpBelow: line } };
     const none = { side: "allies" as const, where: { hpBelow: line }, atMost: 0 };
@@ -258,14 +258,14 @@ tag("vanguard", ["landslide", "ambush"], ["toll", "lockdown"]);
 
 {
   const raiseHp = (ratio: number): NumT => ({ scale: [{ ratio, stat: "max_hp", of: "target" }] });
-  /** Martyr's raise (X23, G12): the revive reads the Cleric's HP first, then the Cleric pays half its current HP. No MP. */
+  /** Martyr's raise: the revive reads the Cleric's HP first, then the Cleric pays half its current HP (a price, not damage). No MP. */
   const martyr = (ratio: number): Changes => ({
     mp: 0,
     do: [{ op: "revive", hp: { scale: [{ ratio, hp: "current", of: "self" }] } }, { op: "pay", hp: { scale: [{ ratio: 0.5, hp: "current", of: "self" }] }, to: "self" }],
   });
   /**
-   * Ward of life (X41 in full): waits for a fallen ally or one below a third. Each part has its own target, and an effect has no condition of its
-   * own, so when both hold it does both: it raises the fallen and shields the lowest ally below a third.
+   * Ward of life: waits for either condition (`if: { any }`), a fallen ally or one below a third. Each part has its own target, and an
+   * effect has no condition of its own, so when both hold it does both: it raises the fallen and shields the lowest ally below a third.
    */
   const ward = (raise: number, shield: number): Changes => ({
     cast: WINDUP.normal,
@@ -375,7 +375,7 @@ tag("vanguard", ["landslide", "ambush"], ["toll", "lockdown"]);
 {
   /**
    * Briar's Bleed on each blow its Thorns deal. Every form also hears Heartwood mail's strikes (the mythic's Thorns on the attackers of allies), which
-   * the fill has Briar follow; the base Briar is classes.ts's, so the mythic itself bleeds for it (see Heartwood mail).
+   * Briar follows; the base Briar is classes.ts's, so the mythic itself bleeds for it (see Heartwood mail).
    */
   const bleedOn = (status: string, k: number, more: EffectT[] = []): ReactionT => ({ on: { event: "damage_dealt", status }, do: [apply("bleed", { stacks: own("few", "armor", k), to: "other" }), ...more] });
   const THORNS = ["thorns", "heartwood_mail"];
@@ -389,7 +389,7 @@ tag("vanguard", ["landslide", "ambush"], ["toll", "lockdown"]);
       { on: { event: "status_ended", status: "bleed" }, do: [{ op: "remove", label: "debuff", status: "bloodroot", to: "holder" }] },
     ],
   });
-  /** Spreading thorns: each Thorns strike also strikes a random other foe for the full Thorns (X10). It's the form's own damage, so it never chains, and Briar bleeds it too. */
+  /** Spreading thorns: each Thorns strike also strikes a random other foe for the full Thorns. It's the form's own damage, so it never chains, and Briar bleeds it too. */
   const spreading = (self: string, k: number): ReactionT[] => [
     ...THORNS.map((s) => bleedOn(s, k)),
     bleedOn(self, k),
@@ -456,7 +456,7 @@ tag("vanguard", ["landslide", "ambush"], ["toll", "lockdown"]);
 {
   const lash = (ratio: number) => phys({ scale: [{ ratio, stat: "thorns" }] });
   const vines = (ratio: number): Changes => ({ cooldown: cd("short", "bramble_lash"), mp: 325, target: T.everyFoe, do: [lash(ratio)] });
-  /** Rebuke: waits for five hits taken since its last lash (a count the ability brings, X40), then lashes for double and spends the count. */
+  /** Rebuke: waits for five hits taken since its last lash (a count the ability brings), then lashes for double and spends the count. */
   const rebuke = (ratio: number): Changes => ({
     if: { side: "self", where: { stacks: { status: "rebuke_count", atLeast: 5 } } },
     statuses: ["rebuke"],
@@ -483,13 +483,13 @@ tag("vanguard", ["landslide", "ambush"], ["toll", "lockdown"]);
 
 {
   const phalanx = (boost: number) => ({ stats: [{ stat: "attack_speed", flat: -100 }], boosts: [{ tag: "basic", pct: boost }] });
-  /** Opening thrust: the basic attack's timer made ready at the start (X21), and +100% on the first swing, which adds to Phalanx's. */
+  /** Opening thrust: the basic attack's timer made ready at the start, and +100% on the first swing, which adds to Phalanx's. */
   const opening: ReactionT = { on: { event: "fight_start" }, do: [{ op: "cooldown", which: "basic", set: "ready", to: "holder" }, apply("opening_thrust", { to: "holder" })] };
   helpers.push(helper("opening_thrust", "OPENING THRUST", "Its first basic attack deals more.", {
     boosts: [{ tag: "basic", pct: 100 }],
     reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [removeBuff("opening_thrust")] }, { on: { event: "hit_missed", kind: "basic" }, do: [removeBuff("opening_thrust")] }],
   }));
-  /** Shieldbearer: a tenth of its Armor on each swing, sized by the held kind's interval as a swing is (X7 reads the kind), then Phalanx's boost. */
+  /** Shieldbearer: a tenth of its Armor on each swing, sized by the held kind's interval as a swing is (a `weapon` test reads the kind), then Phalanx's boost. */
   const sized = (kind: string) => r6((0.1 * KIND_SPEED[kind]) / SWING_REF);
   const bearer: NonNullable<StatusT["riders"]> = [{ on: "basic", add: { type: "physical", amount: { scale: ["spear", "great_weapon"].map((kind) => ({ ratio: sized(kind), when: { weapon: [kind] }, of: "holder" as const, times: { stat: "armor", of: "holder" as const } })) } } }];
   ups.push(passiveUpgrade("hoplite", "phalanx", {
@@ -507,7 +507,7 @@ tag("vanguard", ["landslide", "ambush"], ["toll", "lockdown"]);
 
 {
   /**
-   * Watch the anchor: Aegis on the ally with the most Aggro that holds none. The fill's phrase (a Taunting ally first) can't sit beside the Fizzle
+   * Watch the anchor: Aegis on the ally with the most Aggro that holds none. DRAWN's phrase (a Taunting ally first) can't sit beside the Fizzle
    * rule in one target rule: `ifNone: any` drops the `lacks`, and the Aegis would fizzle on the anchor that already holds one.
    */
   const anchor: Changes = { target: { side: "allies", where: { lacks: "aegis" }, pick: "highest", by: { stat: "aggro" } } };
@@ -594,7 +594,7 @@ tag("vanguard", ["landslide", "ambush"], ["toll", "lockdown"]);
 {
   const heal = (ratio: number, to?: TargetRuleT): EffectT => ({ op: "heal", amount: from("magic", ratio), ...(to ? { to } : {}) });
   const absolve = (ratio: number): Changes => ({ do: [{ op: "remove", label: "debuff" }, heal(ratio), { op: "remove", label: "debuff", to: T.otherLowestShareAlly }, heal(ratio, T.otherLowestShareAlly)] });
-  /** Penance: both other allies, cleansed and healed for twice as much; the Paladin pays a fifth of each heal in HP (X23, G12), so the price counts the allies healed (X8). */
+  /** Penance: both other allies, cleansed and healed for twice as much; the Paladin pays a fifth of each heal in HP, so the price counts the allies healed. */
   const penance = (ratio: number): Changes => ({
     if: [{ side: "others", where: { hpBelow: 100 } }, { side: "self", where: { hpAtLeast: 35 } }],
     target: { side: "others", pick: "all" },
@@ -640,7 +640,7 @@ tag("vanguard", ["landslide", "ambush"], ["toll", "lockdown"]);
 
 {
   const READY = { revives: { ready: true } } as const;
-  /** The power step: a Shield of 15% of the revived ally's max HP, on every revive the Valkyrie gives (X2's `other: holder`). */
+  /** The power step: a Shield of 15% of the revived ally's max HP, on every revive the Valkyrie gives (`other: holder`). */
   const small: ReactionT = { on: { event: "revived", whose: "ally", other: "holder" }, do: [apply("shield", { stacks: { scale: [{ ratio: 0.15, stat: "max_hp", of: "target" }] }, to: "owner" })] };
   const chosen: ReactionT = { on: { event: "revived", whose: "ally", other: "holder" }, do: [apply("guard", { to: "owner" })] };
   /** Chooser of the slain: an aura on every ally while the Valkyrie stands (Per source, ends with it), given again when it or an ally stands up. */
@@ -706,7 +706,7 @@ tag("vanguard", ["landslide", "ambush"], ["toll", "lockdown"]);
   const raise = (ratio: number): EffectT => ({ op: "revive", hp: { scale: [{ ratio, stat: "max_hp", of: "target" }] } });
   /** Flight of the valkyries: every fallen ally, on a cooldown a quarter past very long (70 ticks, moved by Valhalla's id as every cooldown is). */
   const flight = (ratio: number): Changes => ({ cooldown: jitter(70, "valhalla"), target: { side: "allies", where: { ko: true }, pick: "all" }, do: [raise(ratio)] });
-  /** Dawn muster: the ability brings a listener (X40) that makes Valhalla ready at a fight's start while an ally is down (X3, X21). */
+  /** Dawn muster: the ability brings a listener that makes Valhalla ready at a fight's start while an ally is down. */
   const dawn = (ratio: number): Changes => ({ statuses: ["dawn_muster"], do: [raise(ratio)] });
   helpers.push(marker("dawn_muster", "DAWN MUSTER", "At a fight's start, if an ally is down, Valhalla is ready at once.", {
     unremovable: true,
@@ -765,7 +765,7 @@ tag("vanguard", ["landslide", "ambush"], ["toll", "lockdown"]);
 
 {
   const rubato: Changes = { do: [apply("haste"), { op: "cooldown", which: "longest", set: { less: 4 } }] };
-  /** Accelerando: Haste on the ally whose basic attack comes most often now (X9's `swing`, lowest first). */
+  /** Accelerando: Haste on the ally whose basic attack comes most often now (by `swing`, lowest first). */
   const accelerando: Changes = { cooldown: cd("short", "allegro"), mp: 450, target: { side: "allies", pick: "lowest", by: "swing" } };
   ups.push(abilityUpgrade("bard", "allegro", {
     power: "Comes round sooner.",
@@ -801,7 +801,7 @@ tag("vanguard", ["landslide", "ambush"], ["toll", "lockdown"]);
 }
 
 // ═══ Mythics ═════════════════════════════════════════════════════════════════
-// One per class, no stat steps (G15). A piece's text is its effect only: the interface shows its slot and its one class.
+// One per class, no stat steps. A piece's text is its effect only: the interface shows its slot and its one class.
 
 const mythicStatuses: StatusT[] = [];
 const mythicGear: GearT[] = [];
@@ -813,7 +813,7 @@ function mythic(o: Omit<Parameters<typeof piece>[0], "rarity"> & { mythic: strin
   mythicBuilds[g.id] = tags;
 }
 
-// Knight: Horn of the keep. Section 6 of the spec: a status doesn't know which ability applied it, so any Taunt the Knight loses while another ally casts comes back.
+// Knight: Horn of the keep. A status doesn't know which ability applied it, so any Taunt the Knight loses while another ally casts comes back.
 mythic(
   { name: "Horn of the keep", slot: "offhand", kind: "horn", mythic: "knight", statuses: ["horn_of_the_keep"],
     text: "Every hit the Knight takes gives the other ally with the least MP a tenth of the hit's damage as MP. When the Knight's Taunt runs out while another ally is in a wind-up, it Taunts again." },
@@ -826,7 +826,7 @@ mythic(
   [{ build: "overflow", rung: 3, worth: 3 }, { build: "toll", worth: 2 }],
 );
 
-// Cleric: Halo of the saint. Section 6 of the spec: a fallen unit can't hold a status, so the count is the Cleric's, filled by `overhealed` (X32) while an ally is down (X3).
+// Cleric: Halo of the saint. A fallen unit can't hold a status, so the count is the Cleric's, filled by `overhealed` while an ally is down.
 mythic(
   { name: "Halo of the saint", slot: "amulet", mythic: "cleric", statuses: ["halo_of_the_saint"],
     text: "While an ally is knocked out, the part of the Cleric's heals that would go past full is kept. When it reaches a quarter of the Cleric's max HP, a fallen ally stands with that much." },
@@ -845,7 +845,7 @@ mythic(
   [{ build: "phoenix", rung: 3, worth: 3 }],
 );
 
-// Ranger: Huntmaster's quiver. Its abilities re-aimed past any guard at the lowest HP (X24, every ability the Ranger has), marking what they hit; a marked foe's fall halves the Ranger's cooldowns left (X21).
+// Ranger: Huntmaster's quiver. Its abilities re-aimed past any guard at the lowest HP (an ability change on every ability the Ranger has), marking what they hit; a marked foe's fall halves the Ranger's cooldowns left.
 mythic(
   { name: "Huntmaster's quiver", slot: "armor", kind: "leather", mythic: "ranger", statuses: ["huntmasters_quiver"],
     text: "All the Ranger's abilities aim past any guard at the foe with the lowest HP. When a foe one of them hit falls, the cooldowns left on its abilities are halved." },
@@ -874,7 +874,7 @@ mythic(
   [{ build: "toll", rung: 3, worth: 3 }],
 );
 
-// Hoplite: The last wall. An Aegis it gave that's spent (X1: the blocked amount and the attacker; X2: `source: holder`) strikes back in full, and Aspis is ready (X21).
+// Hoplite: The last wall. An Aegis it gave that's spent (`source: holder`; its end carries the blocked amount and the attacker) strikes back in full, and Aspis is ready.
 mythic(
   { name: "The last wall", slot: "offhand", kind: "round_shield", mythic: "hoplite", statuses: ["the_last_wall"],
     text: "When an Aegis the Hoplite gave blocks a blow, the attacker takes the blocked damage, and Aspis is ready again at once." },
@@ -887,7 +887,7 @@ mythic(
   [{ build: "toll", rung: 3, worth: 2 }, { build: "bonfire", rung: 3, worth: 2 }],
 );
 
-// Paladin: Chains of light. Smite (every form) Silences what it hits (X24 by name); hits on a Stunned or Silenced foe heal the lowest ally for half (X3, X4).
+// Paladin: Chains of light. Smite (every form) Silences what it hits (an ability change by name); hits on a Stunned or Silenced foe heal the lowest ally for half.
 mythic(
   { name: "Chains of light", slot: "offhand", kind: "lantern", mythic: "paladin", statuses: ["chains_of_light"],
     text: "Smite also Silences its target. The Paladin's hits on a Stunned or Silenced foe heal the ally with the lowest share of HP for half the damage dealt." },
@@ -907,7 +907,7 @@ mythic(
   [{ build: "cuts", rung: 3, worth: 2 }, { build: "hunt", rung: 3, worth: 2 }],
 );
 
-// Bard: Metronome. A count of the party's hits (extra strikes and each hit of a multi-hit ability included); at 20 the three songs are ready (X21 by name) and the count is spent.
+// Bard: Metronome. A count of the party's hits (extra strikes and each hit of a multi-hit ability included); at 20 the three songs are ready (by name) and the count is spent.
 mythic(
   { name: "Metronome", slot: "offhand", kind: "horn", mythic: "bard", statuses: ["metronome"],
     text: "Counts every hit the party lands. At 20, War ballad, Allegro and Thunder chord are ready at once, and the count starts again." },

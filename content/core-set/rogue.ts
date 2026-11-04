@@ -1,5 +1,5 @@
 /**
- * The rogue mode (steps/05-core-set/5d-rogue): the core set as a roguelite. A run is three acts on Slay the Spire's
+ * The rogue mode (docs/core-set/rogue-mode.md): the core set as a roguelite. A run is three acts on Slay the Spire's
  * structure: a map of branching paths through a themed region, a boss at its end, and the next region picked from two.
  * The party is a leader the player owns plus two drafted companions; it grows through gear, abilities learned one at a
  * time, formations, and classes recruited along the way. HP, MP and knockouts carry from fight to fight; campfires and
@@ -7,10 +7,6 @@
  *
  * This file is the content: the regions and their encounters, the events and every number the run uses. src/rogue.ts
  * is the rules that read it.
- *
- * Step 5i (the build's retire share): the rogue's own loot is gone: its 29 legendary pieces (21 armors and amulets, 8
- * weapons) and the 27 statuses behind them, the legendary pool and its aims, the 16 affixes, and the provisional formation
- * rarities. The pieces, formations and upgrades of steps/05-core-set/5i-synergy/fill/ take their place.
  */
 import type { RogueConfigT, RogueNodeKindT } from "../../src/schema.js";
 import { enc } from "./dungeons.js";
@@ -20,26 +16,21 @@ import fightKnobs from "./rogue-knobs.json" with { type: "json" };
 
 export const ROGUE_CONFIG: RogueConfigT = {
   /** Gold at the start, and the draft: the leader (an owned class), then this many picks of one from `offers` classes. */
-  start: { gold: 60, offers: 3, picks: 2, healer: true, supplies: ["potion", "tonic"] }, // Step 5h round 6 (the director's): a potion and a tonic at the start, so the first fight can be recovered from.
+  start: { gold: 60, offers: 3, picks: 2, healer: true, supplies: ["potion", "tonic"] }, // A potion and a tonic at the start, so the first fight can be recovered from.
   /**
-   * Step 5h (the director's): what a class knows is rolled. A starting unit (the leader, the draft) knows one of its three
-   * abilities at random; a recruit one, two or all three, the odds by act (`recruits.known`). Raise and Valhalla are rolled
-   * like any other: a bad roll is a pick the player can decline. (Before: a fixed first ability per class, one more an act.)
+   * What a class knows is rolled. A starting unit (the leader, the draft) knows one of its three abilities at random; a recruit
+   * one, two or all three, the odds by act (`recruits.known`). Raise and Valhalla are rolled like any other: a bad roll is a
+   * pick the player can decline.
    */
-  /**
-   * Party of three; two seats at camp at the start, up to four. Step 5h round 6 (the director's: choosing a seat over a reward
-   * "never felt remotely appropriate"): a seat comes with each new act, three at camp in act II and four in act III (was a boon's
-   * option or an event's).
-   */
+  /** Party of three; two seats at camp at the start, up to four: a seat comes with each new act. */
   party: 3,
   bench: 2,
   benchMax: 4,
   benchByAct: [2, 3, 4],
   /**
-   * Recruits are offered one of two (the director's: one of three let every run gun for the same party). Known: by act, weights for
-   * one, two, three. Step 5h round 6 (the director's: "recruits shouldn't be able to know all 3 abilities in act 1, no matter the
-   * luck"): act I rolls one or two (was 5% three). The events that promise all three (the Veterans, the Rival Company) keep it, at
-   * their word: rare, named moments.
+   * Recruits are offered one of two (one of three lets every run aim for the same party). Known: by act, weights for one, two,
+   * three; act I never rolls three, whatever the luck. The events that promise all three (the Veterans, the Rival Company) keep
+   * it, at their word: rare, named moments.
    */
   recruits: { offers: 2, known: [[70, 30, 0], [35, 45, 20], [15, 45, 40]] },
   /** After each won fight, those who sat it out regain this share of max MP (flat, like a tonic; no gear touches it). */
@@ -47,16 +38,16 @@ export const ROGUE_CONFIG: RogueConfigT = {
   /** A fresh ability (a starting unit's, a recruit's, one just learned) starts with this share of its cooldown already run. */
   fresh: 50,
   /**
-   * The Muster: a pick of one of two recruits. The Drill ground: one of two formations, or members trained. Step 5i (the director's:
-   * a fresh unit needs about ten trainings now, so every training opportunity gives three): three trained (was two).
+   * The Muster: a pick of one of two recruits. The Drill ground: one of two formations, or members trained (a fresh unit needs
+   * about ten trainings, so every training opportunity gives three).
    */
   muster: { offers: 2 },
   drill: { offers: 2, train: 3 },
-  /** Step 5i: a lesson (a captive's or a stranger's) trains three members, each once (was one), as every training opportunity. */
+  /** A lesson (a captive's or a stranger's) trains three members, each once, as every training opportunity does. */
   lesson: 3,
   /**
-   * Step 5i (builds.md, "Gear"): an offered piece's slot comes first, weapons and offhands 30% each, armor 25%, amulets 15%; then a
-   * class, as step 5h (the roster's, a third of spoils and chests for classes off it), a kind it wears there, the rarity, a piece.
+   * An offered piece's slot comes first (builds.md, "Gear"); then a class (the roster's, a third of spoils and chests for classes
+   * off it), a kind it wears there, the rarity, a piece.
    */
   slots: { weapon: 30, offhand: 30, armor: 25, amulet: 15 },
   /** Formation offers roll a rarity by act. */
@@ -64,13 +55,9 @@ export const ROGUE_CONFIG: RogueConfigT = {
   /**
    * The map of an act: `floors` floors and the boss above them, `width` columns, `paths` paths walked up from the bottom
    * (Slay the Spire's generator). Fixed floors; then room odds for the rest, with elites and campfires kept off the first
-   * floors, and no elite, campfire or shop straight after another of its kind.
-   *
-   * Step 5h round 6 (the director's: two fights before a boss, "the map is filled with sort of dead spots"; design-round-6.md):
-   * 12 floors (were 9), the Muster and the Drill ground folded into other rewards, campfires guaranteed only before the boss
-   * (about two more a map, on about a third of paths); a path has 4.9 regular fights and 0.9 elites (were 2.1 and 0.7).
-   * `easyTo`: the easy pool's last floor (a start's fights, floors 1 to 3). `ref`: each pool's reference floor, where its fights'
-   * own knobs hold; the act's climb (`knobs[].step`, and `early` below the reference) moves them from there.
+   * floors, and no elite, campfire or shop straight after another of its kind. Campfires are guaranteed only before the boss.
+   * `easyTo`: the easy pool's last floor (a start's fights). `ref`: each pool's reference floor, where its fights' own knobs
+   * hold; the act's climb (`knobs[].step`, and `early` below the reference) moves them from there.
    */
   map: {
     floors: 12, width: 5, paths: 5,
@@ -78,116 +65,85 @@ export const ROGUE_CONFIG: RogueConfigT = {
     odds: { fight: 50, event: 27, elite: 11, campfire: 6, shop: 4 } as Record<string, number>,
     lateFrom: 5,
     ensure: { shop: 2, elite: 2, campfire: 2 },
-    // Round 6 (the director's: "75 or 80% of paths should pass one"): mid-act campfires added until 60% of the ways up pass one, which
-    // lands at 79% of paths over many maps (a map's median 78%), since one campfire serves many ways up.
+    // Mid-act campfires are added until this % of the ways up pass one; since one campfire serves many ways up, that's about
+    // 79% of paths over many maps.
     campPaths: 60,
     easyTo: 3,
     ref: { easy: 1, normal: 7, elite: 8 },
   },
-  /** Gold for a win: [min, max], plus `perAct` × (act − 1). Round 6: a regular fight 7–12 (was 12–20), with twice the fights. */
+  /** Gold for a win: [min, max], plus `perAct` × (act − 1). */
   gold: { fight: [7, 12], elite: [50, 65], boss: [90, 110], perAct: 5 },
   /**
    * Spoils: after a fight, pick one of `count` (or none). Each is gear unless it rolls a tome (a member learns an
-   * ability) or a recruit. An elite also pays a trophy, a legendary piece won outright (Slay the Spire's elite relic). Gear rolls its rarity from the table. `usable`: the share of gear rolled from what someone
-   * in the roster can use; the rest is anything (the piece that wants a class you don't have yet).
+   * ability) or a recruit. Gear rolls its rarity from the table.
    */
   spoils: {
-    // Step 5h (the director's: enough loot to fill the seats and build; legendaries "by orders of magnitude"): a pick of three,
-    // gear in 60% of fights and mixed with a tome or a formation in 40%; no supplies (every won fight already drops one); no
-    // recruits (they have their own rooms). A full run should take about 28 pieces and 12 legendaries (design.md).
-    // Round 6 (the director's: choices between kinds "too often"): mixed picks in 15% of fights (were 40%).
-    // Round 6, the 12-floor map: a regular fight's pieces 6% legendary (were 13%), so legendaries offered a run hold with twice the fights.
-    // Round 6 (batch 3): a mixed pick can hold a sealed piece (rare or better, unseen) or a bundle (a common piece and a supply).
-    // Step 5i (builds.md, "Gear": a third more gear for the fourth slot, about 37 pieces taken and 110 seen a run; the director: "It's
-    // better to have too much than not enough"): 70% of regular fights pay a second pick of three pieces (`extra`).
+    // A pick of three: gear, or in `mixed` % of fights gear mixed with other kinds; no supplies (every won fight already drops
+    // one); no recruits (they have their own rooms). A mixed pick can hold a sealed piece (rare or better, unseen) or a bundle
+    // (a common piece and a supply). `extra` % of regular fights pay a second pick of three pieces (a third more gear, for the
+    // fourth slot; builds.md, "Gear").
     fight: { count: 3, rarity: { common: 35, uncommon: 32, rare: 27, legendary: 6 }, tome: 0, recruit: 0, supply: 0, mixed: 15, mix: { tome: 30, formation: 25, recruit: 0, sealed: 25, bundle: 20 }, extra: 70 },
-    // Round 6 (the director's: "elites have a pick of a legendary and a pick of a formation"; formations "came too late in most runs"):
-    // a pick of three legendaries, one aimed at the party, then a pick of two formations. Was a legendary won outright, then a pick
-    // of three rares and legendaries.
+    // A pick of three legendaries, one aimed at the party, then a pick of two formations.
     elite: { count: 3, aimed: 1, rarity: { common: 0, uncommon: 0, rare: 0, legendary: 100 }, tome: 0, recruit: 0, supply: 0, formations: 2 },
-    // A third of offered gear is for a class not in the roster, so a piece can make you want a class (was none: 0.05 a run).
+    // A third of offered gear is for a class not in the roster, so a piece can make you want a class.
     offRoster: 33,
   },
   /**
    * The boss's boon: pick one of a legendary piece, a formation and a recruit. The next act starts restored, and everyone learns.
-   * Step 5h round 6: seats come with each act (benchByAct), not from the boon. Step 5i (builds.md: mythics "offered in act II and
-   * III boss boons"): the boons that open acts II and III (after act I's and act II's bosses; act III's ends the run) offer a mythic
-   * in the legendary piece's place, for a roster member's class, the party first, while one is left that the run doesn't hold.
+   * Seats come with each act (`benchByAct`), not from the boon. The boons that open acts II and III (after act I's and act II's
+   * bosses; act III's ends the run) offer a mythic in the legendary piece's place, for a roster member's class, the party first,
+   * while one is left that the run doesn't hold.
    */
   boon: { count: 3, seat: false, mythic: [2, 3] },
   /** A chest: one piece, rare or better, and some gold; or a cage, a recruit with a piece suited to it. */
-  // Round 6: a chest's piece legendary 30 times in 80 (was 45), rare the rest.
   treasure: { rarity: { common: 0, uncommon: 0, rare: 50, legendary: 30 }, gold: [15, 35], cage: 20 },
-  /** The campfire: one pick of REST, FOCUS, RAISE or TRAIN (two members); those at camp get half a REST whatever the pick. */
-  // Step 5h: the bench's MP comes after every fight now, so the camp's share is HP only; the reserves rule is gone (a wipe is
-  // a wipe, now that the party can be changed before any fight); a stranger at the fire sometimes asks to join.
-  // Round 6 (the director's: four options, three of them sustain, RAISE often forced, so TRAIN never; design-round-6.md §3): on
-  // arrival everyone, party and camp, recovers `auto` (HP and MP, the fallen rise); then one pick of two, REST (everyone `hp` and `mp`
-  // again) or TRAIN (`train` members). The stranger can be taken in or turned away for a lesson, apart from the pick.
-  // Then (the director's, on the first build: "decrease the free MP share right off the bat ... We weren't trying to give more free
-  // MP. We were trying to give less of a terrible choice"): the free MP 10% (was 25%); REST still gives 25% of each.
-  // Step 5i: TRAIN trains three members, each once: learning an ability, or an ability's or the passive's power step or version.
-  campfire: { hp: 25, mp: 25, revive: 25, auto: { hp: 25, mp: 10, revive: 25 }, train: 3, stranger: 30 },
-  // Round 6 (the director's: recruits too hard to get in act I; "the thematic tying of humans or people to recruits ... as long as
-  // it's not every other fight"): after a won fight with people in it, sometimes a captive, free on top of the spoils: taken in (at
-  // `hp`%), turned into a lesson, or let go. Never two fights running.
-  captive: { chance: 20, hp: 50, people: ["bandit", "archer", "shieldman", "witch", "soldier"] },
-  // Snakes' packs never grow, and act I's regular fights hold two (round 29: the Viper Den and the Snake Pit ended 9% and
-  // 7% of the act I runs meeting them, every other act I fight 2% or less, with their knobs already at the floor: the
-  // regular fights' extra HP gives a snake more hits, and Bleed doesn't shrink with the knob).
-  // Step 5h: with a bench to pick from before every fight, the fights softened for a fixed party of three come back as
-  // puzzles: snake packs grow again, the Snake Pit and the Viper Den hold three and four snakes (as first built), and the
-  // Fire Mine a new elite, the Bomb Nest: three Bomb Bugs (the enemies document: "three together wipe" a party not built for
-  // them). Three cost a quarter of a counter-picked party's HP at the knob's floor, an elite's cost, so they're an elite and
-  // the regular Bomb Room and the Powder Room keep two.
-  neverGrow: [],
-  /** A level-up can be taken as gold instead (one with a single thing left to learn or upgrade was no choice). */
-  levelGold: 40,
-  /** Prices, in gold. A piece sells for `sell` % of its price. Services are once a visit. */
-  prices: { common: 45, uncommon: 70, rare: 110, legendary: 190, recruit: 120, formation: 100, learn: 60, upgrade: 80, trainStep: 30, supply: { potion: 35, tonic: 35, phoenix: 60 }, sell: 35 },
-  // Step 5h round 6 (the director's): the shop always has all three supplies (was two of the three).
-  // Step 5i (a third more gear): 8 pieces in act I and 9 after (were 6 and 7): a common and a rare more.
-  shop: { gear: { common: 3, uncommon: 2, rare: 2, legendary: 1 }, legendaryByAct: [1, 2, 2], recruits: 1, formations: 1, supplies: 3 },
-  /** Supplies, used between fights: the bag holds this many. */
   /**
-   * Step 5g round 6 (the director's): a potion heals one member, a tonic refills one member's MP (the old tonic healed the whole party 30%, the
-   * old ether gave it 50% MP), and every won fight hands the party one of each, free, up to a bag of five. Between-fight recovery is the
+   * The campfire. On arrival everyone, party and camp, recovers `auto` (HP and MP, the fallen rise); then one pick of two, REST
+   * (everyone `hp` and `mp` again) or TRAIN (`train` members, each once: learning an ability, or an ability's or the passive's
+   * power step or version). A stranger at the fire sometimes asks to join; it can be taken in or turned away for a lesson, apart
+   * from the pick.
+   */
+  campfire: { hp: 25, mp: 25, revive: 25, auto: { hp: 25, mp: 10, revive: 25 }, train: 3, stranger: 30 },
+  // After a won fight with people in it, sometimes a captive, free on top of the spoils: taken in (at `hp`%), turned into a
+  // lesson, or let go. Never two fights running.
+  captive: { chance: 20, hp: 50, people: ["bandit", "archer", "shieldman", "witch", "soldier"] },
+  neverGrow: [],
+  /** A level-up can be taken as gold instead (one with a single thing left to learn or upgrade is no choice). */
+  levelGold: 40,
+  /** Prices, in gold. A piece sells for `sell` % of its price. Each training bought in a visit costs `trainStep` more than the last. */
+  prices: { common: 45, uncommon: 70, rare: 110, legendary: 190, recruit: 120, formation: 100, learn: 60, upgrade: 80, trainStep: 30, supply: { potion: 35, tonic: 35, phoenix: 60 }, sell: 35 },
+  shop: { gear: { common: 3, uncommon: 2, rare: 2, legendary: 1 }, legendaryByAct: [1, 2, 2], recruits: 1, formations: 1, supplies: 3 },
+  /**
+   * Supplies, used between fights: a potion heals one member, a tonic refills one member's MP. Between-fight recovery is the
    * player's to spend, and mana is scarce enough that the tonics matter.
    */
-  supplies: { potion: { hp: 30 }, tonic: { mp: 50 }, phoenix: { revive: 50 } }, // Round 8: the tonic half a pool (was 35%).
-  // Round 9 (the director's): a won fight offers a choice of one, and the bag has a slot a kind (two potions, two tonics), so one economy can't crowd out the other.
+  supplies: { potion: { hp: 30 }, tonic: { mp: 50 }, phoenix: { revive: 50 } },
+  // A won fight offers a choice of one, and the bag holds this many of each kind, so one economy can't crowd out the other.
   drops: ["potion", "tonic"],
   bag: { potion: 2, tonic: 2, phoenix: 2 },
   /**
-   * The foes, in percent (the campaign's knob: HP +k %, damage +k/2.5 %): per act, the first floor's, the rise per floor, an
+   * The foes, in percent (the knob: HP +k %, damage +k/2.5 %): per act, the first floor's, the rise per floor, an
    * elite's on top, and the boss's. Each region adds its own (below). Set by the rogue tuning (npm run rogue).
    */
-  // Round 6: the climb stretched over 12 floors (6 a floor → 4.5), so an act's top floor is as hard as floor 9 was. `early`: the
-  // climb below a pool's reference floor, act I's measured against a party a few rooms in (design-round-6.md §8).
+  // `early`: the climb below a pool's reference floor, act I's measured against a party a few rooms in.
   knobs: [
     // early: measured (npm run rogue:calibrate -- --climb): act I's regular fights against a party a few rooms in (four to pick
     // from, one random ability each, a piece each and a legendary) need their knobs a median 85 lower on floor 4 than at the
-    // reference floor 7, against act I's middle as a run on the 12-floor map has it (two abilities, two legendaries). (First
-    // measured at 25.7 against a weaker middle and a party with no gear: the director then won act I four times of four.)
-    // Oct 31 (the director's play: act I won once in about a dozen runs, lost at Night Wolves, the Ogre Bridge and floor 9's
-    // archers): a snap cut, untested by simulation, to make act I playable: fights and elites −25, the boss −15 (roughly
-    // undoing most of round 6's +30 to +38 / +18, which came after act I read as trivial).
+    // reference floor 7, against act I's middle (two abilities, two legendaries).
+    // Act I's mob, elite and boss offsets are a hand cut, not yet checked by simulation.
     { mob: -25, step: 4.5, early: 28.3, elite: -25, boss: -15 },
     { mob: 0, step: 4.5, elite: 0, boss: 0 },
     { mob: 0, step: 4.5, elite: 0, boss: 0 },
   ],
   /**
-   * Regular fights are longer and softer than the knob alone makes them: their foes have this much more HP and deal this
-   * much less damage, and the calibration sets each fight's knob on top, so a fight costs what it did and lasts longer
-   * (at the knob alone they lasted 21 to 25 ticks, half the campaign's, and a third slotted ability fired in one fight in three).
+   * Regular fights and elites are longer and softer than the knob alone makes them: their foes have this much more HP and deal
+   * this much less damage (percent), and the calibration sets each fight's knob on top, so a fight keeps its cost and lasts
+   * longer. Bosses keep the knob alone.
    */
-  // Step 5g round 3 (the feel reads: "fight length is ungoverned and tiers don't differ"; regular fights 15 to 116 ticks, elites shorter than
-  // regular fights with 1.8 knockouts each): regular fights +50% HP and −25% damage (were +80 and −30), elites +30% and −20% (had no shape),
-  // so an elite is a longer, less spiky fight at the same cost. Bosses keep the knob alone.
-  shape: { fight: { hp: 40, power: -10 }, elite: { hp: 15, power: -10 } }, // Round 9 (the director's: "weak monsters basically just don't do anything ... 200 damage to a unit with 5,000 health"): less HP, full damage (were +50 / −25 and +15 / −15). // Round 5: elites +15 / −15 (were +30 / −20: four ghouls at 160,000 HP read as a wall).
+  shape: { fight: { hp: 40, power: -10 }, elite: { hp: 15, power: -10 } },
   /** Heat: each level adds this to every knob (about 6 points of the simulated player's wins a level). Won runs open the next. */
   heat: { per: 4, max: 10 },
-  /** Later floors' fights grow: from this floor, each pack of two or more may gain one more (to the cap of 8). Round 6: floor 8 of 12 (was 6 of 9). */
+  /** Later floors' fights grow: from this floor, each pack of two or more may gain one more (to the cap of 8). */
   growFrom: 8,
 };
 
@@ -387,10 +343,9 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   {
     id: "camp", name: "An Empty Camp", text: "Someone left in a hurry: the fire is still burning, the bedrolls still laid out.",
     options: [
-      { id: "camp", label: "MAKE CAMP", text: "A campfire: rest, focus, raise or train.", do: [{ op: "camp" }] },
-      { id: "search", label: "SEARCH THE PACKS", text: "A potion, a tonic or a phoenix feather, and 20 gold.", do: [{ op: "gold", amount: 20 }, { op: "chance", pct: 40, then: [{ op: "supply", id: "potion" }], else: [{ op: "chance", pct: 50, then: [{ op: "supply", id: "tonic" }], else: [{ op: "supply", id: "phoenix" }] }] }] },
+      { id: "camp", label: "MAKE CAMP", text: "A campfire: everyone recovers and the fallen rise, then rest or train.", do: [{ op: "camp" }] },
+      { id: "search", label: "SEARCH THE PACKS", text: "20 gold, and a potion, a tonic or a phoenix feather (with someone down, the feather raises them at half HP).", do: [{ op: "gold", amount: 20 }, { op: "chance", pct: 40, then: [{ op: "supply", id: "potion" }], else: [{ op: "chance", pct: 50, then: [{ op: "supply", id: "tonic" }], else: [{ op: "supply", id: "phoenix" }] }] }] },
     ],
-    // Step 5h round 6: its version with a seat at camp is gone (seats come with each act).
   },
   {
     id: "pilgrims", name: "Pilgrims", text: "A band of pilgrims with a healer among them. \"For a donation…\"",
@@ -399,8 +354,7 @@ export const ROGUE_EVENTS: RogueEvent[] = [
       { id: "leave", label: "PASS BY", text: "Nothing happens.", do: [] },
     ],
   },
-  // Step 5h: the Drill Yard and the Fallen Standard became the Drill ground (a room) and the Old Banner. Six events around the
-  // roster, each rolling one of its versions on entering, so a known event can still surprise.
+  // Six events around the roster, each rolling one of its versions on entering, so a known event can still surprise.
   {
     id: "deserter", name: "A Deserter", text: "A soldier slumps against a milestone, still in uniform. \"I'm done with them. Not with fighting.\"",
     options: [
@@ -510,9 +464,6 @@ export const ROGUE_EVENTS: RogueEvent[] = [
       ] },
     ],
   },
-  // Step 5h round 6 (the director's: events are "probably the coolest part of the game ... I wish there was more of these"; a path
-  // meets about three an act on the 12-floor map): ten more, leaning on what they liked (a recruit carrying something, raising a
-  // piece's rarity, risk against reward) and the shapes they named (an unknown reward, a bundle). design-round-6.md §6.
   {
     id: "master_smith", name: "The Master Smith", text: "A smith with a portable forge and a price for everything. \"Bring me anything. I'll make it better.\"",
     options: [
@@ -617,7 +568,7 @@ export const ROGUE_EVENTS: RogueEvent[] = [
         { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
       ] },
       { text: "A hospital overrun with wounded. The surgeon looks up: \"You. Hands. Now.\"", options: [
-        { id: "help", label: "HELP OUT", text: "Everyone loses 15% of max MP. A potion and a phoenix feather, from the stores.", do: [{ op: "mp", pct: -15 }, { op: "supply", id: "potion" }, { op: "supply", id: "phoenix" }] },
+        { id: "help", label: "HELP OUT", text: "Everyone loses 15% of max MP. A potion and a phoenix feather from the stores (with someone down, the feather raises them at half HP).", do: [{ op: "mp", pct: -15 }, { op: "supply", id: "potion" }, { op: "supply", id: "phoenix" }] },
         { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
       ] },
     ],

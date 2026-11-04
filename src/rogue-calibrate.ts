@@ -3,14 +3,14 @@
  * knob, so that an act's fights cost about what their tier should and its bosses kill about as often as they should.
  *
  * 1. Snapshots: the simulated player plays runs at the current numbers; the party before each fight is kept, by act
- *    and by the floors each pool is met on (easy: 1–2, normal: 3–8, elite: 4–8, boss: the boss).
+ *    and by the floors each pool is met on (easy: 1–3, normal: 4–12, elite: 5–12, boss: the boss).
  * 2. For each fight: its knob is bisected until a regular fight or an elite, against those parties with their HP made
  *    whole (their MP as it was), costs its target share of the party's HP (net of healing, a fallen member counting as all
  *    of theirs), and a boss, against parties as they arrived, wins its target share of fights. The same parties and dice at every knob, so the curve is smooth.
  * 3. The knobs go to content/core-set/rogue-knobs.json; `npm run content` puts them in the pack.
  *
- * Step 5h (the director's): by default the parties are the hand-built rosters of src/rogue-parties.ts at each act's and
- * tier's power level, not the simulated player's snapshots (`--snapshots` brings those back). Each roster fields a good
+ * By default the parties are the hand-built rosters of src/rogue-parties.ts at each act's and tier's power level, not the
+ * simulated player's snapshots (`--snapshots` uses those). Each roster fields a good
  * three of five for each fight (the trio a quarter down the ranking, `--pick`), chosen on other dice at the fight's knob, as a
  * player uses the bench against a preview;
  * the knob is set against those trios, then the trios are chosen again at the new knob and the knob refined.
@@ -31,16 +31,12 @@ import type { RogueFightT } from "./schema.js";
 
 /** What each tier should cost, by act: a regular fight or elite, in points of party HP %; a boss, the share of fights it wins. */
 export const TARGETS = {
-  // Step 5g round 9 (the director's: "weak monsters basically just don't do anything", and potions and tonics are the run's sustain now): a
-  // regular fight costs a few points more than before (easy 10 / 11 / 12, normal 15 / 16 / 17, elite 22 / 23 / 24), at the shape's fuller damage.
-  // Step 5h round 6 (the director's: act III "brain dead easy when I played it"; "I would boost it a little bit"): act III's targets a
-  // step up (were 14, 20, 27 and 45), on top of its rosters carrying the reward plan's legendaries.
   easy: [12, 13, 16],
   normal: [18, 19, 23],
   elite: [25, 26, 30],
   /**
-   * A boss's wins against parties as they arrive, in percent. Raised from 12, 20 and 25 at the director's word (Oct 26): a
-   * first win should be an achievement, about 20% of the simulated player's runs at heat 0, with the extra on the bosses.
+   * A boss's wins against parties as they arrive, in percent: a first win should be an achievement, about 20% of the
+   * simulated player's runs at heat 0, with most of the difficulty on the bosses.
    */
   boss: [22, 35, 52],
 };
@@ -49,8 +45,8 @@ type Tier = keyof typeof TARGETS;
 type Snap = { run: RogueRun; act: number; floor: number; tier: string; roster?: Roster; ptier?: Tier; roster4?: boolean };
 
 /**
- * Step 5h: the hand-built rosters, at every act's and tier's power level; each `reps` times (each copy on its own dice). Round 6:
- * a level of random starts (`random`) builds each copy with its own roll of abilities; `climb` puts act I's early level (a party a
+ * The hand-built rosters, at every act's and tier's power level; each `reps` times (each copy on its own dice). A level of
+ * random starts (`random`) builds each copy with its own roll of abilities; `climb` puts act I's early level (a party a
  * few rooms in) in the regular fights' place.
  */
 function partySnaps(c: Content, reps: number, climb = false): Snap[] {
@@ -111,7 +107,7 @@ type Task = { region: string; act: number; tier: Tier; fight: RogueFightT; pick:
 type Result = { key: string; knob: number; cost: number; lost: number };
 
 /**
- * Step 5h: each roster fields a good three of five (PICK) for this fight at knob `k`, tried on other dice (two fights a trio),
+ * Each roster fields a good three of five (PICK) for this fight at knob `k`, tried on other dice (two fights a trio),
  * seated in the roster's preference order.
  */
 /** Each roster's three for a fight, tried on two throws of other dice: the one PICK of the way down the ranking (src/rogue-parties.ts). */
@@ -167,7 +163,7 @@ async function main() {
   const raw = JSON.parse(readFileSync("content/core-set.pack.json", "utf8"));
   const c = loadContent(raw);
   const t0 = Date.now();
-  // Round 6, `--climb`: act I's regular fights calibrated against a party a few rooms in (the early level) and compared with their
+  // `--climb`: act I's regular fights calibrated against a party a few rooms in (the early level) and compared with their
   // knobs, to set act I's climb below the reference floor (`knobs[0].early`). Nothing is written.
   const climb = args.includes("--climb");
   const snaps = args.includes("--snapshots") ? snapshots(c, Number(opt("--runs") ?? 200)) : partySnaps(c, Number(opt("--reps") ?? 3), climb);

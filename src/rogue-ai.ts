@@ -4,8 +4,8 @@
  * a fast, steady player whose win rate measures the run's difficulty, and whose dials (skill, greed, random picks)
  * measure what each decision is worth.
  *
- * Gear goes by the campaign's kit weights (src/sim/kits.ts) for its stats and swing, plus a step for its rarity (step 5i: a
- * plain, generic reading, with no table of pieces); formations by their seats' stats and rarity; trainings by a few flat values.
+ * Gear goes by the campaign's kit weights (src/sim/kits.ts) for its stats and swing, plus a step for its rarity (a plain,
+ * generic reading, with no table of pieces); formations by their seats' stats and rarity; trainings by a few flat values.
  * Class values start as rules of thumb and are replaced by what the simulations measure.
  */
 import type { Content } from "./engine/run.js";
@@ -27,7 +27,7 @@ export type Dials = {
   noisy: string[];
   /** Never equips anything beyond the plain weapon: prices gear. */
   noGear: boolean;
-  /** Never trades a fallen member for one at camp between rooms (the rule before round 25), to price it. */
+  /** Never trades a fallen member for one at camp between rooms, to price it. */
   noBenchSwap?: boolean;
   /** A piece (by base id) kept on whichever party member it suits best, all run: to price a piece's rule. */
   lock?: string;
@@ -37,7 +37,7 @@ export type Dials = {
 
 /**
  * What a class is worth to a party, in gear steps: half its win rate as leader with random companions, in percent, plus one
- * (240 runs each, tuning round 6).
+ * (240 runs each).
  */
 export const CLASS_VALUE: Record<string, number> = {
   monk: 11, vampire: 10.5, knight: 7.5, bramble_knight: 7, valkyrie: 7, paladin: 6.5, pyromancer: 6, stormcaller: 6, geomancer: 5.5, ranger: 5,
@@ -50,7 +50,7 @@ const HEALERS = new Set(["cleric", "valkyrie", "bramble_knight", "vampire"]);
 const CASTERS = new Set(["cleric", "paladin", "hexer", "frostweaver", "stormcaller", "geomancer", "pyromancer"]);
 
 /**
- * Step 5i: what a piece's rarity adds, in gear steps, on top of its stats: a plain, generic reading of its effect (pieces below
+ * What a piece's rarity adds, in gear steps, on top of its stats: a plain, generic reading of its effect (pieces below
  * legendary carry effects too; a mythic rewrites a class). No table of pieces: the simulated player isn't tuned on.
  */
 export const RARITY_VALUE: Record<RarityT, number> = { common: 0, uncommon: 0.8, rare: 1.6, legendary: 2.5, mythic: 3.5 };
@@ -80,7 +80,7 @@ export function kitUp(c: Content, run: RogueRun, lock?: string): number {
     if (who) equip(c, run, who, g.slot as Slot, locked.uid);
   }
   // Start from nothing but weapons, then fill: a weapon slot can't be empty, so weapons go first.
-  // Step 5i: a two-handed weapon costs what the offhand it empties was worth, and an offhand under one isn't tried; a move the
+  // A two-handed weapon costs what the offhand it empties was worth, and an offhand under one isn't tried; a move the
   // rules refuse is set aside, not the end of the kitting.
   const refused = new Set<string>();
   for (let moves = 0; moves < 300; moves++) {
@@ -118,7 +118,7 @@ export function kitUp(c: Content, run: RogueRun, lock?: string): number {
 
 // ─── Formation and seats ───────────────────────────────────────────────────
 
-/** Step 5i: what a formation's rarity adds, in gear steps, on top of its seats' stats (a generic reading of its effect). Neutral adds nothing. */
+/** What a formation's rarity adds, in gear steps, on top of its seats' stats (a generic reading of its effect). Neutral adds nothing. */
 const FORMATION_VALUE: Record<string, number> = { common: 0.8, rare: 1.6, legendary: 2.5 };
 const formationValue = (c: Content, id: string) => (id === "neutral" ? 0 : FORMATION_VALUE[formationRarity(c, id)]);
 function slotValue(c: Content, cls: string, stats: { stat: string; flat?: number }[] | undefined): number {
@@ -181,7 +181,7 @@ function recruitValue(d: Dials, run: RogueRun, cls: string): number {
 }
 /** A learned ability, in gear steps: a third of a class's kit. */
 const ABILITY_VALUE = 4;
-/** Step 5i: a power step or a version, in gear steps: about half a learned ability. */
+/** A power step or a version, in gear steps: about half a learned ability. */
 const TRAIN_VALUE = 2;
 /** A training (an option's id), in gear steps: learning, else a power step or a version; for a member at camp, less. */
 function trainingValue(run: RogueRun, opt: string): number {
@@ -261,7 +261,7 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
       }
       // Empty seats are filled by whoever stands at camp.
       for (const cls of bench(run).filter((x) => !member(run, x).ko)) swap(c, run, cls, null);
-      // Step 5h: before a fight, a member under a third of its MP rests, and the fullest one at camp with more than half takes
+      // Before a fight, a member under a third of its MP rests, and the fullest one at camp with more than half takes
       // its seat (a plain rotation rule; the simulated player isn't tuned on, but its runs should hold together).
       if (run.pending.kind === "fight" && !run.pending.begun) {
         const mpOf = (cls: string) => { const mx = maxOf(c, run, cls, "max_mp"); return mx > 0 ? 1 - member(run, cls).missMp / mx : 1; };
@@ -277,7 +277,7 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
     // Supplies before a room: HP if the party is low, MP if casters are dry, a phoenix for the fallen.
     const down = run.party.filter((cls) => member(run, cls).ko);
     if (down.length && run.supplies.includes("phoenix")) useSupply(c, run, "phoenix", down[0]);
-    // Step 5g: a potion to a member under half HP, a tonic to one under 40% MP (the neediest first), as many as the bag holds.
+    // A potion to a member under half HP, a tonic to one under 40% MP (the neediest first), as many as the bag holds.
     const need = (stat: "hp" | "mp", below: number) => run.party.map((cls) => member(run, cls)).filter((m) => !m.ko && maxOf(c, run, m.cls, stat === "hp" ? "max_hp" : "max_mp") > 0)
       .map((m) => ({ cls: m.cls, s: 1 - (stat === "hp" ? m.missHp : m.missMp) / maxOf(c, run, m.cls, stat === "hp" ? "max_hp" : "max_mp") })).filter((x) => x.s < below).sort((a, b) => a.s - b.s);
     for (const x of need("hp", 0.5)) if (run.supplies.includes("potion")) useSupply(c, run, "potion", x.cls);
@@ -317,7 +317,7 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
         return best;
       }
       case "drop": {
-        // Round 9: the kind the party has fewer of; a tie goes to the resource the party is lower on (HP share against MP share).
+        // The kind the party has fewer of; a tie goes to the resource the party is lower on (HP share against MP share).
         const held = (id: string) => run.supplies.filter((x) => x === id).length;
         const hp = hpShare(c, run), mp = mpShare(c, run);
         return [...opts].sort((a, b) => held(a) - held(b) || (a === "potion" ? hp : mp) - (b === "potion" ? hp : mp))[0];
@@ -350,7 +350,7 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
   }
 
   /**
-   * Step 5i: the training worth most (learning first, then a power step, then a version, a party member's before one at camp), in
+   * The training worth most (learning first, then a power step, then a version, a party member's before one at camp), in
    * the options' order; between a version A and B, a coin.
    */
   function pickTraining(c: Content, run: RogueRun, opts: string[]): string {
@@ -371,11 +371,11 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
       if (better && sc(better) > sc(out) + (m.ko ? -100 : 1.5)) swap(c, run, out, better);
     }
     if (opts.includes("recruit")) return "recruit";
-    // Round 6: a stranger it has no room for teaches instead; the pick made, it leaves.
+    // A stranger it has no room for teaches instead; the pick made, it leaves.
     if (opts.includes("lesson")) return "lesson";
     if (opts.includes("leave")) return "leave";
     if (!opts.includes("focus")) {
-      // Round 6: the free share is in; TRAIN when the party is in fair shape and the boss isn't next, else REST.
+      // The free share is in; TRAIN when the party is in fair shape and the boss isn't next, else REST.
       const nextBoss = reachable(run).some((n) => n.kind === "boss");
       return opts.includes("train") && hpShare(c, run) > 0.6 && share(c, run, "mp") > 0.5 && !nextBoss ? "train" : "rest";
     }
@@ -386,7 +386,7 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
     const nextBoss = reachable(run).some((n) => n.kind === "boss");
     if (h < 0.55 || (nextBoss && h < 0.8)) return "rest";
     if (mp < 0.35 && run.party.filter((x) => CASTERS.has(x)).length >= 1) return "focus";
-    // Step 5h: TRAIN (two members) when a party member has something to learn, or the party is healthy.
+    // TRAIN when a party member has something to learn, or the party is healthy.
     if (opts.includes("train") && (learnOptions(c, run).some((o) => run.party.includes(o.split(":")[0])) || h > 0.7)) return "train";
     return "rest";
   }
@@ -413,7 +413,7 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
         if (!run.party.includes(rest[0])) continue;
         v = 4; price = trainPrice(c, p, "learn");
       } else if (verb === "power" || verb === "version") {
-        // Step 5i: a power step or a version, at the upgrade price.
+        // A power step or a version, at the upgrade price.
         if (!run.party.includes(rest[0])) continue;
         v = trainingValue(run, o); price = trainPrice(c, p, "upgrade");
       } else continue;

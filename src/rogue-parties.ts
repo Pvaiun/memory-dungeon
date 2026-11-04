@@ -1,5 +1,5 @@
 /**
- * Step 5h (the director's): tuning on hand-built, representative parties instead of the simulated player's snapshots. A
+ * Tuning on hand-built, representative parties instead of the simulated player's snapshots. A
  * rules-of-thumb player can't come near a human who builds well, so each fight is measured against rosters a careful
  * player could have at that point of a run.
  *
@@ -9,7 +9,7 @@
  * has found (`LEVELS`). A fractional `known` means some members know one more: 1.4 is two of the five on their second ability. Ordinary gear is filled by a stated rule: each member is offered six pieces of the level's rarity
  * it can wear, and the gear scorer equips the best (a pick of three, twice); the legendaries go to the member each is for.
  *
- *   npx tsx src/rogue-parties.ts      writes steps/05-core-set/5h-roster/parties.md, every roster at every level
+ *   npx tsx src/rogue-parties.ts      writes out/rogue-parties.md, every roster at every level
  */
 import type { Content } from "./engine/run.js";
 import { rngFor, shuffle } from "./engine/rng.js";
@@ -51,8 +51,7 @@ export const ORDER: Record<string, string[]> = {
 };
 
 /** Twelve rosters, every class fighting in at least one and most in two or three, each built around something. */
-// Step 5i (the build's retire share): the old loot is gone, so every roster stands in Neutral with no legendaries for now (each
-// had a formation and three hand-picked legendaries); the build's parties share rebuilds them on the new pieces.
+// For now every roster stands in Neutral with no hand-picked legendaries.
 export const ROSTERS: Roster[] = [
   { id: "wall-fire", note: "A wall, a Burn caster and a healer; a Ranger and a Monk to rotate in.", classes: ["knight", "pyromancer", "cleric", "ranger", "monk"], formation: "neutral", legendaries: [] },
   { id: "chill-engine", note: "The director's build: Chill on the Monk's basic attacks, paid off by the Frostweaver's shatter.", classes: ["monk", "frostweaver", "bard", "hexer", "valkyrie"], formation: "neutral", legendaries: [] },
@@ -69,7 +68,7 @@ export const ROSTERS: Roster[] = [
 ];
 
 /**
- * The power level by act and tier, under step 5h's reward plan (design.md): abilities known and upgraded per member, the
+ * The power level by act and tier: abilities known and upgraded per member, the
  * rarity of ordinary gear (none: plain weapon only) and how many of the roster's legendaries it has. HP and MP on arrival
  * are the calibration's assumptions: regular fights and elites are measured from full HP with MP as rotation leaves it
  * (about 70%), a boss with the party as it arrives (85% HP, 80% MP after a campfire).
@@ -77,39 +76,33 @@ export const ROSTERS: Roster[] = [
 export type Level = { known: number; plus: number; gear: RarityT | null; legendaries: number; hp: number; mp: number; roster?: number; random?: boolean; pieces?: number };
 export const LEVELS: Record<number, Record<Tier, Level> & { early?: Level }> = {
   1: {
-    // `roster`: members to pick from (round 4): a run starts with three and its recruits come from floor 2, so act I's first
+    // `roster`: members to pick from: a run starts with three and its recruits come from floor 2, so act I's first
     // floors have three, its middle four, its boss five.
-    // Round 6 (`random`): act I's easy pool (floors 1 to 3) is set against a real start: each member knowing one ability rolled at
-    // random (a fresh roll each play) and half charged, not its best first ability 60% charged. Those paid two thirds of what a
-    // random start paid (12 to 15% of HP against 17 to 22%).
+    // `random`: act I's easy pool (floors 1 to 3) is set against a real start: each member knowing one ability rolled at random
+    // (a fresh roll each play) and half charged.
     easy: { known: 1, plus: 0, gear: null, legendaries: 0, hp: 100, mp: 100, roster: 3, random: true },
-    // Round 6: a party a few rooms in, where the regular fights start (floor 4): four to pick from, one random ability each, a piece
+    // A party a few rooms in, where the regular fights start (floor 4): four to pick from, one random ability each, a piece
     // each. Only for measuring act I's climb below the regular fights' reference floor (`npm run rogue:calibrate -- --climb`).
-    // (First measured with no gear, which set the climb far too steep: the director won act I four times of four, "trivially".)
     // Rounded up like the rest (the simulated player's party wears 0.4 legendaries and 2.3 ordinary pieces on floors 4 to 6).
     early: { known: 1, plus: 0, gear: "common", pieces: 1, legendaries: 1, hp: 100, mp: 70, roster: 4, random: true },
-    // Round 4: act I's middle as a careful player has it on floors 3 to 8 (the first elite on floor 4 or 5, its trophy often the
-    // run's first legendary): most members still on their first ability, a few pieces of common gear.
-    // Round 6, after the director won act I four times of four, "trivially": act I's levels from what a run holds on the 12-floor
-    // map, measured over 300 of the simulated player's runs (the party of three, each member's abilities; legendaries worn; ordinary
-    // pieces): floors 7 to 11 2.0 abilities, 1.4 legendaries, 3.6 pieces; its elites 1.75, 0.8, 3.1; its boss 2.3, 1.9, 4.0, five in
-    // the roster. Rounded up, since a human outplays it, and `pieces` caps the ordinary gear each member wears (the gear rule had
-    // filled every seat). Were: 1.4 / 1.6 / 2 abilities, no legendary until one at the boss, full common kits.
+    // Act I's levels from what a run holds, measured over 300 of the simulated player's runs (the party of three, each member's
+    // abilities; legendaries worn; ordinary pieces): floors 7 to 11 2.0 abilities, 1.4 legendaries, 3.6 pieces; its elites 1.75,
+    // 0.8, 3.1; its boss 2.3, 1.9, 4.0, five in the roster. Rounded up, since a human outplays it, and `pieces` caps the ordinary
+    // gear each member wears.
     normal: { known: 2, plus: 0, gear: "common", pieces: 2, legendaries: 2, hp: 100, mp: 70, roster: 4 },
     elite: { known: 2, plus: 0, gear: "common", pieces: 2, legendaries: 2, hp: 100, mp: 70, roster: 4 },
     boss: { known: 2.4, plus: 0, gear: "uncommon", pieces: 2, legendaries: 3, hp: 85, mp: 80 },
   },
-  // Round 6, the same measure: act II's parties wear 2.3 / 2.9 / 3.2 legendaries (early, middle, boss) with 0.5 / 1.1 / 1.6 abilities
-  // upgraded each, so a legendary and an upgrade more than these had (were 1 / 2 / 2 / 3 legendaries, 0 / 0 / 1 / 1 upgraded).
+  // The same measure: act II's parties wear 2.3 / 2.9 / 3.2 legendaries (early, middle, boss) with 0.5 / 1.1 / 1.6 abilities
+  // upgraded each.
   2: {
     easy: { known: 3, plus: 0, gear: "uncommon", legendaries: 3, hp: 100, mp: 100 },
     normal: { known: 3, plus: 1, gear: "uncommon", legendaries: 3, hp: 100, mp: 70 },
     elite: { known: 3, plus: 1, gear: "rare", legendaries: 3, hp: 100, mp: 70 },
     boss: { known: 3, plus: 2, gear: "rare", legendaries: 4, hp: 85, mp: 80 },
   },
-  // Round 6 (the director's: act III "extremely easy ... almost no risk"): act III's rosters carry what the reward plan hands a run
-  // by then (about four legendaries taken an act, so about eight on arriving), six or seven of them worn (were three: every
-  // roster's hand-picked pieces). Their three, then more by a stated rule (`extraLegendaries`).
+  // Act III's rosters carry what a run holds by then (about four legendaries taken an act, so about eight on arriving), six or
+  // seven of them worn: the roster's own, then more by a stated rule (`extraLegendaries`).
   3: {
     easy: { known: 3, plus: 1, gear: "rare", legendaries: 6, hp: 100, mp: 100 },
     normal: { known: 3, plus: 1, gear: "rare", legendaries: 6, hp: 100, mp: 70 },
@@ -121,7 +114,7 @@ export const LEVELS: Record<number, Record<Tier, Level> & { early?: Level }> = {
 /** A roster at an act's and tier's power level, as a run: all five in the roster, the first three in the party. */
 export function buildRoster(c: Content, r: Roster, act: number, tier: Tier | "early", rep = 0): RogueRun {
   const lv = tier === "early" ? LEVELS[act].early! : LEVELS[act][tier];
-  // A seed of its own per roster and level, so their items' ids never collide (the feel tool once printed another roster's gear).
+  // A seed of its own per roster and level, so their items' ids never collide.
   const run = newRogue(c, { seed: 100 + ROSTERS.findIndex((x) => x.id === r.id) * 20 + act * 5 + ["easy", "normal", "elite", "boss", "early"].indexOf(tier), leader: r.classes[0] });
   run.act = act;
   run.roster = [];
@@ -133,14 +126,13 @@ export function buildRoster(c: Content, r: Roster, act: number, tier: Tier | "ea
     const known = lv.random ? rollKnown(c, rngFor(rep * 101 + i, `start:${r.id}:${cls}:${tier}`), cls, Math.floor(lv.known)) : ORDER[cls].slice(0, Math.floor(lv.known) + (i < Math.round((lv.known % 1) * r.classes.length) ? 1 : 0));
     recruit(c, run, cls, 100, known);
     const m = member(run, cls);
-    // Step 5i: an ability "upgraded" is one with its power step (the generic + rule is gone), where the content has its upgrade.
+    // An ability "upgraded" is one with its power step, where the content has its upgrade.
     for (const a of known.slice(0, lv.plus)) if (upgradeOf(c, a)) m.trained = { ...(m.trained ?? {}), [a]: { power: true } };
-    // Cooldowns as a run carries them between fights (step 5g), measured over the rosters' third to sixth fights in a row: 0.38
-    // of a cooldown left on average whatever its length, and a revive ready 88% of the time, since it waits for a knockout most
-    // fights never bring. (Every ability uncharged, as before, kept Raise and Valhalla from being ready when anyone fell, and
-    // understated every roster's opening: the bosses' knobs had been set too soft.)
+    // Cooldowns as a run carries them between fights, measured over the rosters' third to sixth fights in a row: 0.38 of a
+    // cooldown left on average whatever its length, and a revive ready 88% of the time, since it waits for a knockout most
+    // fights never bring.
     m.cooldowns = Object.fromEntries(m.known.map((a) => { const d = c.abilities.get(a)!; return [a, d.do.some((op) => op.op === "revive") ? 0 : Math.round(d.cooldown * 40) / 100]; }));
-    // A real start's abilities are fresh: half charged (round 6).
+    // A real start's abilities are fresh: half charged.
     if (lv.random) m.cooldowns = Object.fromEntries(m.known.map((a) => [a, Math.round(c.abilities.get(a)!.cooldown * (100 - (rogue(c).config.fresh ?? 0))) / 100]));
   });
   run.party = r.classes.slice(0, 3);
@@ -150,7 +142,7 @@ export function buildRoster(c: Content, r: Roster, act: number, tier: Tier | "ea
   // Ordinary gear: six pieces of the level's rarity each member can wear, the best of them worn.
   const rng = rngFor(1000 + act * 10 + ["easy", "normal", "elite", "boss", "early"].indexOf(tier), `parties:${r.id}`);
   if (lv.gear) for (const cls of r.classes) for (let i = 0; i < 6; i++) { const it = rollItem(c, run, rng, lv.gear, false, false, cls); if (it) run.items.push(it); }
-  // Step 5i: a legendary piece is fixed (no affixes).
+  // A legendary piece is fixed (no affixes).
   const legend = [...r.legendaries, ...extraLegendaries(c, r, lv.legendaries - r.legendaries.length)].slice(0, lv.legendaries).map((l) => ({ ...l, item: newItem(run, l.piece, "legendary") }));
   for (const l of legend) run.items.push(l.item);
   registerGear(c, run);
@@ -159,7 +151,7 @@ export function buildRoster(c: Content, r: Roster, act: number, tier: Tier | "ea
     const g = c.gear.get(l.item.uid) ?? itemGear(c, l.item);
     equip(c, run, l.for, g.slot as Slot, l.item.uid);
   }
-  // Round 6: at most `pieces` ordinary pieces a member (an amulet goes first, then armor; the weapon stays).
+  // At most `pieces` ordinary pieces a member (an amulet goes first, then armor; the weapon stays).
   if (lv.pieces !== undefined) for (const m of run.roster) {
     const ordinary = (s: Slot) => { const uid = m.gear[s]; const it = uid ? run.items.find((x) => x.uid === uid) : undefined; return !!it && it.rarity !== "legendary" && !it.base.startsWith("plain_"); };
     for (const s of ["amulet", "offhand", "armor"] as Slot[]) if (SLOT_LIST.filter(ordinary).length > lv.pieces && ordinary(s)) delete m.gear[s];
@@ -177,9 +169,9 @@ export function buildRoster(c: Content, r: Roster, act: number, tier: Tier | "ea
   return run;
 }
 /**
- * Round 6: legendaries past a roster's hand-picked three, by a stated rule: the fighting three in turn (then the bench), each a
- * piece it can wear (step 5i: the aims are gone), in a slot no legendary of its own fills yet, not already held; first in the
- * stock's order, shuffled by the roster's own dice.
+ * Legendaries past a roster's hand-picked ones, by a stated rule: the fighting three in turn (then the bench), each a piece it
+ * can wear, in a slot no legendary of its own fills yet, not already held; first in the stock's order, shuffled by the roster's
+ * own dice.
  */
 function extraLegendaries(c: Content, r: Roster, n: number): { piece: string; for: string }[] {
   const out: { piece: string; for: string }[] = [];
@@ -208,10 +200,9 @@ const maxHp = (c: Content, run: RogueRun, cls: string) => maxOf(c, run, cls, "ma
 const maxMp = (c: Content, run: RogueRun, cls: string) => maxOf(c, run, cls, "max_mp");
 
 /**
- * How a roster picks its three for a fight (round 5): the trios ranked by what they pay on two throws of other dice, and the one
+ * How a roster picks its three for a fight: the trios ranked by what they pay on two throws of other dice, and the one
  * PICK of the way down fielded: the 3rd of ten, the 2nd of four, the only one of one. A good pick from the preview, not the perfect
- * one: the best of ten, played out on the fight itself, is a pick no player can make. In act II's regular fights it paid 15% of HP
- * where the 3rd paid 26%, the roster's own first three 31% and the median trio 43%.
+ * one: the best of ten, played out on the fight itself, is a pick no player can make.
  */
 export const PICK = 0.25;
 
@@ -228,11 +219,11 @@ export function trios(r: Roster, n = 5): string[][] {
 function sheet(c: Content): string {
   const name = (id: string) => c.classes.get(id)?.name ?? id;
   const out: string[] = [
-    "# Step 5h: the hand-built rosters",
+    "# The hand-built rosters",
     "",
-    "Generated by `npx tsx src/rogue-parties.ts` from `src/rogue-parties.ts`. Every fight's difficulty is set against these rosters, not against the simulated player's parties (the director's call: a rules-of-thumb player can't come near a human). Twelve rosters of five, three fighting and two on the bench, each built around something. For each fight the calibrator lets each roster field a good three of five for that fight, the way a player uses the bench against a preview: the trios ranked by what they pay on other dice, and the one a quarter of the way down fielded (the 3rd of ten, the 2nd of four), not the best, which no player could pick. Every ability starts a fight as a run carries it: about 60% charged, a revive ready.",
+    "Generated by `npx tsx src/rogue-parties.ts` from `src/rogue-parties.ts`. Every fight's difficulty is set against these rosters, not against the simulated player's parties: a rules-of-thumb player can't come near a human. Twelve rosters of five, three fighting and two on the bench, each built around something. For each fight the calibrator lets each roster field a good three of five for that fight, the way a player uses the bench against a preview: the trios ranked by what they pay on other dice, and the one a quarter of the way down fielded (the 3rd of ten, the 2nd of four), not the best, which no player could pick. Every ability starts a fight as a run carries it: about 60% charged, a revive ready.",
     "",
-    "What's picked by hand: the classes, the formation and seats, each class's ability order, and three legendary pieces. What follows a stated rule: ordinary gear (each member is offered six pieces of the level's rarity it can wear, and the best are worn: a pick of three, twice), the power level by act and tier, and (round 6) act III's further legendaries, as many as the reward plan hands a run by then: the fighting three in turn, each a piece aimed at it in a slot no legendary of its own fills yet.",
+    "What's picked by hand: the classes, the formation and seats, each class's ability order, and three legendary pieces. What follows a stated rule: ordinary gear (each member is offered six pieces of the level's rarity it can wear, and the best are worn: a pick of three, twice), the power level by act and tier, and act III's further legendaries, as many as the reward plan hands a run by then: the fighting three in turn, each a piece aimed at it in a slot no legendary of its own fills yet.",
     "",
     "## Power level by act and tier",
     "",
@@ -258,9 +249,10 @@ function sheet(c: Content): string {
 }
 
 if (/rogue-parties\.(ts|mjs)$/.test(process.argv[1] ?? "")) void (async () => {
-  const { readFileSync, writeFileSync } = await import("node:fs");
+  const { mkdirSync, readFileSync, writeFileSync } = await import("node:fs");
   const { loadContent } = await import("./engine/run.js");
   const c = loadContent(JSON.parse(readFileSync("content/core-set.pack.json", "utf8")));
-  writeFileSync("steps/05-core-set/5h-roster/parties.md", sheet(c) + "\n");
-  console.log("wrote steps/05-core-set/5h-roster/parties.md");
+  mkdirSync("out", { recursive: true });
+  writeFileSync("out/rogue-parties.md", sheet(c) + "\n");
+  console.log("wrote out/rogue-parties.md");
 })();

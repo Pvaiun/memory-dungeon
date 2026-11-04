@@ -1,16 +1,15 @@
 /**
- * Step 5h: the MP economy, checked on the hand-built rosters (src/rogue-parties.ts) rather than whole simulated runs.
+ * The MP economy, checked on the hand-built rosters (src/rogue-parties.ts) rather than whole simulated runs.
  *
  * - Endurance: each roster's three fight its region's regular fights one after another from full MP, with HP made whole
- *   each fight and nothing else restored, until each member is under a third of its MP. How many fights each class lasts
- *   is the director's target: two or three for every class, casters and walls close together.
- * - The road: each roster plays an act's fights in order (two easy, a regular, an elite, two regular, a campfire, a
- *   regular, an elite, a campfire, the boss) at the act's power level, with stated rules:
+ *   each fight and nothing else restored, until each member is under a third of its MP. The target: two or three fights
+ *   for every class, casters and walls close together.
+ * - The road: each roster plays an act's fights in order (`ROAD`) at the act's power level, with stated rules:
  *     rotation: before each fight, those under a third of their MP (or knocked out) sit out, and the first three of the
  *       roster's preference order who can fight do;
  *     supplies (with tonics): after each won fight, a tonic if anyone is under 40% MP, else a potion (two of each at most);
  *       before each fight, a tonic to the preferred member under half its MP, potions to fighters under half their HP;
- *     campfire: REST if the party is under 70% HP, else FOCUS.
+ *     campfire: the free share, then TRAIN if the party is over 60% HP and 50% MP and the boss isn't next, else REST.
  *   It reports how often the bench is used, how often a fighter goes in under a third of its MP, and the losses.
  *
  *   npx tsx src/rogue-acts.ts [--acts 1,2,3] [--rosters id,id] [--set path=value ...]
@@ -60,8 +59,8 @@ function endurance(c: Content, r: Roster, act: number, region: string): Record<s
 
 type RoadRec = { fights: number; benched: number; dryIn: number; lost: number; tonics: number; mpIn: number[]; lostBy: Record<string, number>; camps: number; trained: number };
 /**
- * Round 6, the 12-floor map: a typical path (4.9 regular fights and 0.9 elites; the generator's measure) with the campfire before
- * the boss; `--midcamp` adds the mid-act campfire about a third of paths pass. (Before: two easy, four regular, two elites, two campfires.)
+ * A typical path (4.9 regular fights and 0.9 elites; the generator's measure) with the campfire before the boss; `--midcamp`
+ * adds a mid-act campfire.
  */
 const ROAD: (["easy" | "normal" | "elite" | "boss", number] | "camp")[] = [["easy", 1], ["easy", 3], ["normal", 4], ["normal", 6], ["elite", 8], ["normal", 9], ["normal", 10], "camp", ["boss", 13]];
 const MIDCAMP: typeof ROAD = [["easy", 1], ["easy", 3], ["normal", 4], ["normal", 6], ["elite", 8], "camp", ["normal", 9], ["normal", 10], "camp", ["boss", 13]];
@@ -78,7 +77,7 @@ function road(c: Content, r: Roster, act: number, region: string, tonics: boolea
   for (const s of args.includes("--midcamp") ? MIDCAMP : ROAD) {
     step++;
     if (s === "camp") {
-      // Round 6: the campfire as built (the free share for everyone, the fallen up), then the stated pick: TRAIN when the party is
+      // The campfire as built (the free share for everyone, the fallen up), then the stated pick: TRAIN when the party is
       // over 60% HP and 50% MP and the boss isn't next (it isn't played out: the roster's kit stays), else REST.
       rec.camps++;
       arriveCamp(c, run, `road${step}`);

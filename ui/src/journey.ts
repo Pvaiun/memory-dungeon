@@ -4,7 +4,7 @@
  * owned is the start plus every cleared node's rewards. Kept in localStorage
  * under its own key: the nodes cleared (a count, with their ids), what's been
  * seen (for NEW badges) and the mode, journey or free play (everything owned,
- * the old sandbox). Free play has no NEW badges and pays nothing.
+ * the sandbox). Free play has no NEW badges and pays nothing.
  */
 import { campaign, everything, nodeIndex, ownedAt, type Owned } from "../../src/campaign.js";
 import type { CampaignNodeT } from "../../src/schema.js";

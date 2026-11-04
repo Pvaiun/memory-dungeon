@@ -1,5 +1,5 @@
 /**
- * What each legendary piece's rule is worth: whole runs with that piece (without affixes) handed over at the start and
+ * What each legendary piece's rule is worth: whole runs with that piece handed over at the start and
  * kept on the party member it suits best all run, against the same seeds with nothing handed over. Counted only on the
  * seeds where someone in the final party wore it (a staff with no staff-user can't be judged). Prints, per piece, the
  * change in win rate on those seeds and how often it could be worn.
@@ -20,7 +20,7 @@ async function main() {
   const c = loadContent(raw);
   const runs = Number(opt("--runs") ?? 1000);
   const leaders = ["knight", "cleric", "ranger"];
-  // Step 5i: the stock's legendary pieces (the rogue's own legendary pool is gone).
+  // The stock's legendary pieces.
   const ids = opt("--only")?.split(",") ?? stockOf(c).all.filter((g) => g.rarity === "legendary").map((g) => g.id);
   const pool = new Pool(raw, Number(opt("--workers") ?? availableParallelism()));
   const base = await many(pool, runs, { leaders });

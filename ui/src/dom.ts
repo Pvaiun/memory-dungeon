@@ -38,7 +38,6 @@ export const row = (children: Child[], onClick?: () => void, opts: { cur?: boole
     opts.cursor === false ? null : h("span", { class: "cursor" }, opts.cur ? "▶" : ""),
     ...children);
 
-/** A screen header: ◀ and the title, tappable to go back; `right` sits at the end. */
 /**
  * What the phone's back button does: close the open overlay if there is one, else the screen's own back
  * (its header's ◀, or a fight's leave prompt). Screens and overlays set these as they open; main.ts listens.
@@ -48,7 +47,7 @@ export const nav: { back: (() => void) | null; overlay: (() => void) | null } = 
 /*
  * How the back button is caught. The app keeps one history entry above the page's own, and adds it only on a tap or a
  * key: Chrome marks the entry below one added without the user's touch as skippable, so an entry re-added after a back
- * press made the next back skip straight out of the app. Instead, a back press lands on the page's entry, the app does
+ * press would make the next back skip straight out of the app. Instead, a back press lands on the page's entry, the app does
  * its back, and steps forward onto its kept entry again (a step, not a new entry, so nothing is marked). At home with
  * nothing open the app stays on the page's entry, and the next back leaves.
  */

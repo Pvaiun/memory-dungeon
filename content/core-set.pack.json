@@ -167,7 +167,7 @@
    "default": 0,
    "floor": 0,
    "cap": 100,
-   "note": "Step 5j: cuts each magical hit or pulse by this share; 100 is immune. Foes carry it by rank, and Ward gives it."
+   "note": "Cuts each magical hit or pulse by this share; 100 is immune. Foes carry it by rank, and Ward gives it."
   },
   {
    "id": "attack_speed",
@@ -25553,7 +25553,7 @@
      "label": "buff"
     }
    ],
-   "note": "Fix (the fill's hook can't reach it): in an action, a number read `of: target` reads the unit the effect lands on, so an `mp` effect to the Hexer can't count the foe's buffs. The count rides a one-tick marker on the foe (broken_spell), whose reaction pays its source 200 MP a stack."
+   "note": "In an action, a number read `of: target` reads the unit the effect lands on, so an `mp` effect to the Hexer can't count the foe's buffs. The count rides a one-tick marker on the foe (broken_spell), whose reaction pays its source 200 MP a stack."
   },
   {
    "id": "unmake__ap",
@@ -25654,7 +25654,7 @@
      "label": "buff"
     }
    ],
-   "note": "Fix (the fill's hook can't reach it): in an action, a number read `of: target` reads the unit the effect lands on, so an `mp` effect to the Hexer can't count the foe's buffs. The count rides a one-tick marker on the foe (broken_spell), whose reaction pays its source 200 MP a stack."
+   "note": "In an action, a number read `of: target` reads the unit the effect lands on, so an `mp` effect to the Hexer can't count the foe's buffs. The count rides a one-tick marker on the foe (broken_spell), whose reaction pays its source 200 MP a stack."
   },
   {
    "id": "enfeeble__p",
@@ -26496,7 +26496,7 @@
    "statuses": [
     "coup_de_grace"
    ],
-   "note": "A kill the Assassin lands with any ability readies Backstab (Garrote's too): the ko event names the killer and the hit's kind (X2, X29), not which ability."
+   "note": "A kill the Assassin lands with any ability readies Backstab (Garrote's too): the ko event names the killer and the hit's kind, not which ability."
   },
   {
    "id": "backstab__b",
@@ -26564,7 +26564,7 @@
    "statuses": [
     "coup_de_grace"
    ],
-   "note": "A kill the Assassin lands with any ability readies Backstab (Garrote's too): the ko event names the killer and the hit's kind (X2, X29), not which ability."
+   "note": "A kill the Assassin lands with any ability readies Backstab (Garrote's too): the ko event names the killer and the hit's kind, not which ability."
   },
   {
    "id": "backstab__bp",
@@ -32538,7 +32538,7 @@
    "statuses": [
     "dawnblade"
    ],
-   "note": "Its own fall counts on its own return (engine spec section 6.1: a knocked-out unit can't gain a status).",
+   "note": "Its own fall counts on its own return (a knocked-out unit can't gain a status).",
    "weapon": {
     "kind": "rune_sword",
     "amount": {
@@ -33143,7 +33143,7 @@
    "statuses": [
     "lightning_rod"
    ],
-   "note": "Echoes `area` hits (engine spec section 6.4): Chain lightning's bounces, not its first strike; Thunderstorm and Blizzard throughout.",
+   "note": "Echoes `area` hits (a damage effect aimed at two or more units): Chain lightning's bounces, not its first strike; Thunderstorm and Blizzard throughout.",
    "weapon": {
     "kind": "rod",
     "amount": {
@@ -33192,7 +33192,7 @@
    "statuses": [
     "brimming_rod"
    ],
-   "note": "The gift is a tenth of the MP the cast paid (action_resolve's amount, engine spec X29), so 7.5% of the listed cost while the quarter off holds.",
+   "note": "The gift is a tenth of the MP the cast paid (action_resolve's amount), so 7.5% of the listed cost while the quarter off holds.",
    "weapon": {
     "kind": "rod",
     "amount": {
@@ -34612,7 +34612,7 @@
      "flat": -16.7
     }
    ],
-   "note": "Cooldown reduction −16.7 (cooldowns ×1.2, a fifth longer, as the card says), not the fill's −20 (×1.25).",
+   "note": "Cooldown reduction −16.7 makes cooldowns ×1.2, a fifth longer, as the card says; −20 would make them ×1.25.",
    "rarity": "legendary",
    "statuses": [
     "ready_stance"
@@ -36206,7 +36206,7 @@
     "eye_of_the_tempest"
    ],
    "mythic": "stormcaller",
-   "note": "Only basic attacks' and abilities' hits jump. A jump is an extra hit (X28), and a reaction to extra hits would hear its own jumps and loop, so Arc's and Double strike's extra strikes don't jump either.",
+   "note": "Only basic attacks' and abilities' hits jump. A jump is an extra hit, and a reaction to extra hits would hear its own jumps and loop, so Arc's and Double strike's extra strikes don't jump either.",
    "weapon": {
     "amount": {
      "base": 289,
@@ -42919,7 +42919,7 @@
      {
       "id": "camp",
       "label": "MAKE CAMP",
-      "text": "A campfire: rest, focus, raise or train.",
+      "text": "A campfire: everyone recovers and the fallen rise, then rest or train.",
       "do": [
        {
         "op": "camp"
@@ -42929,7 +42929,7 @@
      {
       "id": "search",
       "label": "SEARCH THE PACKS",
-      "text": "A potion, a tonic or a phoenix feather, and 20 gold.",
+      "text": "20 gold, and a potion, a tonic or a phoenix feather (with someone down, the feather raises them at half HP).",
       "do": [
        {
         "op": "gold",
@@ -44217,7 +44217,7 @@
        {
         "id": "help",
         "label": "HELP OUT",
-        "text": "Everyone loses 15% of max MP. A potion and a phoenix feather, from the stores.",
+        "text": "Everyone loses 15% of max MP. A potion and a phoenix feather from the stores (with someone down, the feather raises them at half HP).",
         "do": [
          {
           "op": "mp",

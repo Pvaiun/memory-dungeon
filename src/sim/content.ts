@@ -1,7 +1,7 @@
 /**
  * What a study plays: the content pack, any changes to it (a variant, such as
  * "the Ranger with double HP"), single fights pulled out of dungeons, and the
- * step 3 placeholder ladder.
+ * placeholder ladder.
  */
 import { loadContent, type Content } from "../engine/run.js";
 import type { DungeonT, EnemyT } from "../schema.js";
@@ -32,9 +32,9 @@ export function patch(raw: unknown, changes: readonly Patch[]): unknown {
 }
 
 /**
- * PLACEHOLDER, for step 3's sample reports only: copies of the first dungeon
- * with its enemies scaled, as a ladder from weak to strong. Each copy keeps the
- * dungeon's challenges. Thrown away when real dungeons arrive.
+ * PLACEHOLDER, for sample reports only: copies of the first dungeon with its
+ * enemies scaled, as a ladder from weak to strong. Each copy keeps the
+ * dungeon's challenges.
  */
 export function ladder(raw: unknown, scales: readonly number[]): unknown {
   const pack = structuredClone(raw) as { enemies: EnemyT[]; dungeons: DungeonT[]; progression: { dungeonOrder: string[] } };

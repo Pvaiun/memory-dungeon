@@ -1,12 +1,12 @@
 /**
- * Step 5i, step 5 (the build's test): the hand-built parties for every route of every one of the twelve builds, at each of its
+ * The build test's hand-built parties for every route of every one of the twelve builds, at each of its
  * three rungs, so the twelve can be played side by side on one set of the rogue's fights. Data only: no engine, no Node.
  *
  * Where it comes from (all under steps/05-core-set/5i-synergy/): each build's routes are the three `builds.md` names for it, read
- * through its "Gear" section (the elemental staves gone, the Hexer a spellblade, the Geomancer an earth fighter); the rungs are
- * `builds.md`'s "What it asks of a run" and `spine.md` section 9; each piece, formation, version and mythic is the fill's
- * (`fill/`, with `fill-rulings.md`), by the id the content shares derive from its name. `build/parties.md` says the rules and
- * what was thin. Nothing here is balanced: a route is what the documents name, not what wins.
+ * through its "Gear" section (the Hexer a spellblade, the Geomancer an earth fighter); the rungs are `builds.md`'s "What it
+ * asks of a run" and `spine.md` section 9; each piece, formation, version and mythic goes by the id the content shares derive
+ * from its name. `build/parties.md` says the rules and what was thin. Nothing here is balanced: a route is what the
+ * documents name, not what wins.
  *
  * The rungs:
  * - **Rung 1, act I:** what most runs find. Commons and uncommons in the build's kinds, with their first-rung effects; a common
@@ -32,7 +32,7 @@ export type Training = { ability: string; power: boolean; version?: "a" | "b" };
 export type Gear = { weapon: string; armor: string; offhand?: string; amulet: string };
 export type Member = {
   cls: string;
-  /** The formation seat it sits in, by the content's position id (the fill's seat name; twin seats `_a`, `_b`, `_c`). Neutral's are `a`, `b`, `c`. */
+  /** The formation seat it sits in, by the content's position id (twin seats `_a`, `_b`, `_c`). Neutral's are `a`, `b`, `c`. */
   seat: string;
   /** Its three abilities, in slot order: the first is cast first when several are ready. */
   abilities: [string, string, string];
@@ -66,7 +66,7 @@ export const BUILDS: Record<BuildId, string> = {
   ambush: "Ambush", overflow: "Overflow", lockdown: "Lockdown", toll: "The Toll", pact: "Blood Pact", phoenix: "Phoenix",
 };
 
-/** Each formation's seats in order, by the content's position ids (the fill's names, `fill/formations.md`; twin seats `_a`, `_b`, `_c`), and its rarity. */
+/** Each formation's seats in order, by the content's position ids (twin seats `_a`, `_b`, `_c`), and its rarity. */
 export const FORMATION_SEATS: Record<string, { rarity: "common" | "rare" | "legendary"; seats: [string, string, string] }> = {
   neutral: { rarity: "common", seats: ["a", "b", "c"] },
   shieldwall: { rarity: "common", seats: ["wall", "behind_a", "behind_b"] },
@@ -103,7 +103,7 @@ export const FORMATION_SEATS: Record<string, { rarity: "common" | "rare" | "lege
   the_vise: { rarity: "legendary", seats: ["jaw_a", "screw", "jaw_b"] },
 };
 
-/** The 16 mythics (`spine.md` section 8, `fill/upgrades-1.md` and `-2.md`): the class each fits and the slot it sits in. */
+/** The 16 mythics (`spine.md` section 8): the class each fits and the slot it sits in. */
 export const MYTHICS: Record<string, { cls: string; slot: Slot }> = {
   horn_of_the_keep: { cls: "knight", slot: "offhand" },
   halo_of_the_saint: { cls: "cleric", slot: "amulet" },

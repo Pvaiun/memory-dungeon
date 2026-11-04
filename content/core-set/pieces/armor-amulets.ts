@@ -1,9 +1,8 @@
 /**
- * Step 5i, step 5: the four armor types' 48 pieces and the 24 amulets, from steps/05-core-set/5i-synergy/fill/armor-amulets.md with
- * fill-rulings.md (its third round wins) and build/engine-spec.md (the shapes, numbered X1 onward, and its section 6's fixes).
+ * The four armor types' 48 pieces and the 24 amulets, built from the engine's primitives (PRIMITIVES.md).
  * `gear` joins the pack's gear and the rogue's stock; `statuses` the pack's statuses; `builds` is designer data, never in the pack.
  *
- * Every number is the fill's. Statuses are applied at their own length (universal), and nothing here is balanced. A piece's own
+ * Statuses are applied at their own length (universal), and nothing here is balanced. A piece's own
  * statuses take its id, or its id with a suffix: `_on` for a state it switches on and off, `_used` for a once-a-fight marker,
  * `_mark` for the marker it leaves on a foe. Heat, Spite, Tempo and Surge are shared.ts's.
  */
@@ -33,14 +32,14 @@ const ofAmount = (ratio: number): NumT => ({ scale: [{ ratio, amount: true }] })
 /** A state a piece switches on and off: a buff with an icon (Bloodlust's pattern), Fizzle unless it says otherwise. */
 const state = (id: string, name: string, text: string, body: Partial<StatusT>): StatusT =>
   ({ id, name, text, label: "buff", show: "icon", stacking: "fizzle", ...body }) as StatusT;
-/** A once-a-fight marker (X14): neither buff nor debuff, kept through a knockout so a revive doesn't give the piece back. */
+/** A once-a-fight marker: neither buff nor debuff, kept through a knockout so a revive doesn't give the piece back. */
 const used = (id: string, name: string): StatusT =>
   ({ id, name, text: "Spent for this fight.", label: "marker", show: "sheet", stacking: "fizzle", survivesKO: true }) as StatusT;
 
 /**
  * Bloodlust's pattern, either way round: a state held while the wearer is below half its HP (or at half or more). Set at the
- * fight's start and on a revive too, since HP carries from fight to fight: the fill's hooks set it only on a heal or a lost
- * HP, so a wearer who started a fight below half had the card turned over until its first hit.
+ * fight's start and on a revive too, since HP carries from fight to fight: set only on a heal or a lost HP, a wearer who
+ * started a fight below half would have the card turned over until its first hit.
  */
 function whileHp(stateId: string, below: boolean): ReactionT[] {
   const inside: UnitCondT = below ? { hpBelow: HALF } : { hpAtLeast: HALF };
@@ -149,7 +148,7 @@ plate({
   rule: {
     text: "When the wearer's Shield breaks, every foe takes damage equal to the most that Shield held since it last broke, and a Shield of a quarter of that is rebuilt.",
     body: {
-      // X1: a Shield emptied by damage ends (cause stacks) with its peak as the amount. A Dispel (cause removed) doesn't set it off.
+      // A Shield emptied by damage ends (cause stacks) with its peak as the amount. A Dispel (cause removed) doesn't set it off.
       reactions: [when({ event: "status_ended", status: "shield", cause: ["stacks"] }, { op: "damage", type: "none", amount: ofAmount(1), to: everyFoe }, give("shield", "holder", ofAmount(0.25)))],
     },
   },
@@ -171,13 +170,13 @@ plate({
         when({ event: "fight_start" }, give("last_bastion_floor", "holder")),
         when({ event: "status_ended", status: "last_bastion_floor", cause: ["spent"] }, give("guard", "holder"), give("last_bastion_on", "holder")),
         when({ event: "healed" }, lift("last_bastion_on", self({ hpAtLeast: HALF }))),
-        // X36: up to a fifth of its max HP, if it's below that.
+        // After a won fight: up to a fifth of its max HP, if it's below that.
         when({ event: "fight_won" }, { op: "heal", amount: { scale: [{ ratio: 0.2, stat: "max_hp", of: "holder" }, { ratio: -1, hp: "current", of: "holder" }] }, to: self({ hpBelow: 20 }) }),
       ],
     },
   },
   more: [
-    // X31: a floor that's spent on the first blow it holds.
+    // An HP floor that's spent on the first blow it holds.
     state("last_bastion_floor", "LAST BASTION", "The next blow that would knock it out leaves it at 1 HP.", { show: "sheet", unremovable: true, floor: { spend: true } }),
     state("last_bastion_on", "BASTION", "Its hits deal double.", { boosts: both(100) }),
   ],
@@ -266,7 +265,7 @@ mail({
 });
 mail({
   name: "Hexweave mail", rarity: "legendary", text: "The wearer's hits deal 10% more to a foe for each debuff it holds.",
-  // X8: a count of the target's debuffs (markers never count; Marked does).
+  // A count of the target's debuffs (markers never count; Marked does).
   rule: { text: "The wearer's hits deal 10% more to a foe for each debuff it holds.", body: { boosts: both({ scale: [{ ratio: 10, count: "debuffs", of: "target" }] }) } },
   tags: [at("lockdown", 3, 2), at("bonfire", null, 2), at("snap", null, 2), at("toll", null, 2)],
 });
@@ -301,7 +300,7 @@ leather({
 leather({
   name: "Duelist's leathers", rarity: "rare", text: "Evasion 20. Each time the wearer dodges a hit, it strikes the attacker with its weapon.",
   stats: [sp("evasion", "medium")],
-  // X28: one swing of its weapon at the attacker, a hit of kind extra.
+  // A reaction that strikes: one swing of its weapon at the attacker, a hit of kind extra.
   rule: { text: "Each time the wearer dodges a hit, it strikes the attacker with its weapon.", body: { reactions: [when({ event: "hit_evaded" }, { op: "strike", to: "other" })] } },
   tags: [at("toll", 2, 3), at("cuts", 2, 2)],
 });
@@ -334,7 +333,7 @@ leather({
   name: "Pack leader's coat", rarity: "legendary", text: "When the wearer lands a killing blow, every ally's next basic attack comes at once.",
   rule: {
     text: "When the wearer lands a killing blow, every ally's next basic attack comes at once.",
-    // X2 and X29: a kill the holder landed; X21: the basic attack's timer made ready.
+    // A kill the holder landed (`other: holder`); the basic attack's timer made ready.
     body: { reactions: [when({ event: "ko", whose: "foe", other: "holder" }, { op: "cooldown", which: "basic", set: "ready", to: everyAlly })] },
   },
   tags: [at("hunt", 3, 3), at("ambush", null, 2), at("harvest", null, 1)],
@@ -365,7 +364,7 @@ robes({
   stats: [st("magic", 1)],
   rule: { text: "The first ability the wearer casts each fight costs no MP.", body: { reactions: [when({ event: "fight_start" }, give("matins_robe_on", "holder"))] } },
   more: [
-    // X22: free while held; lifted once a cast has resolved (and paid nothing).
+    // An MP cost change: free while held; lifted once a cast has resolved (and paid nothing).
     state("matins_robe_on", "MATINS", "Its next ability costs no MP.", {
       mods: [{ mp: -100 }],
       reactions: [when({ event: "action_resolve", kind: "ability" }, lift("matins_robe_on", "holder"))],
@@ -399,7 +398,7 @@ robes({
   name: "Kindled robes", rarity: "rare", text: "While any foe has Burn, the wearer gains 1 Heat every 4 ticks (+3% damage a stack, up to 15) for the rest of the fight.",
   rule: {
     text: "While any foe has Burn, the wearer gains 1 Heat every 4 ticks (+3% damage a stack, up to 15) for the rest of the fight.",
-    // X3: a pulse that does nothing on a beat when no foe burns.
+    // A pulse with an `if`: it does nothing on a beat when no foe burns.
     body: { pulse: { every: 4, if: { side: "foes", where: { has: "burn" } }, do: [give("heat", "holder", FLAT_STACKS.one)] } },
   },
   tags: [at("bonfire", 2, 3), at("harvest", null, 1)],
@@ -431,7 +430,7 @@ robes({
   text: "The wearer's abilities cost half again as much MP, deal half again as much damage, heal half again as much, and add half again as many stacks.",
   rule: {
     text: "The wearer's abilities cost half again as much MP, deal half again as much damage, heal half again as much, and add half again as many stacks.",
-    // X22 and X24: the cost, the heals and every Intensity status its abilities apply; a boost on its abilities' hits.
+    // Ability changes to the cost, the heals and every Intensity status its abilities apply; a boost on its abilities' hits.
     body: { mods: [{ mp: 50, heal: 50, stacks: { pct: 50 } }], boosts: [{ tag: "ability", pct: 50 }] },
   },
   tags: [at("overflow", 3, 3), at("bonfire", null, 2), at("harvest", null, 2)],
@@ -440,7 +439,7 @@ robes({
   name: "Stormweave", rarity: "legendary", text: "Each of the wearer's actions that hits three or more foes adds 1 Surge (+5% damage a stack, up to 10) for the rest of the fight.",
   rule: {
     text: "Each of the wearer's actions that hits three or more foes adds 1 Surge (+5% damage a stack, up to 10) for the rest of the fight.",
-    // X2 and X29: the count of foes the action's hits landed on.
+    // The `countAtLeast` filter: the count of foes the action's hits landed on.
     body: { reactions: [when({ event: "action_resolve", countAtLeast: 3 }, give("surge", "holder", FLAT_STACKS.one))] },
   },
   tags: [at("harvest", 3, 3), at("snap", null, 1)],
@@ -468,7 +467,7 @@ amulet({
   stats: [st("armor", 1)],
   rule: {
     text: "The first time an ally drops below half its HP each fight, the wearer Taunts.",
-    // X3: the ally that lost HP (the event's owner) is below half, and the wearer hasn't Taunted for it this fight.
+    // A reaction's `if`: the ally that lost HP (the event's owner) is below half, and the wearer hasn't Taunted for it this fight.
     body: {
       reactions: [{
         on: { event: "hp_lost", whose: "ally" },
@@ -583,7 +582,7 @@ amulet({
   name: "Ember heart", rarity: "legendary", text: "When a burning foe falls, every other foe gains a third of its Burn.",
   rule: {
     text: "When a burning foe falls, every other foe gains a third of its Burn.",
-    // Spec section 6.3: the dying foe's Burn ends (cause ko) before its ko event, with its stacks as the amount (X1).
+    // The dying foe's Burn ends (cause ko) before its ko event, with its stacks as the amount.
     body: { reactions: [when({ event: "status_ended", status: "burn", whose: "foe", cause: ["ko"] }, give("burn", everyFoe, ofAmount(1 / 3)))] },
   },
   tags: [at("bonfire", 3, 2), at("harvest", 3, 2)],
@@ -593,8 +592,8 @@ amulet({
   stats: [st("max_hp", -1)],
   rule: {
     text: "Once a fight, when the wearer falls, it stands up 4 ticks later with a fifth of its HP.",
-    // Spec section 6.1: a fallen unit can't gain a status, so its fall schedules its own return (X34) unless the marker is there,
-    // and the marker is set when it stands again by its own hand (X2's `other: holder` on revived). As every revive, it comes back
+    // A fallen unit can't gain a status, so its fall schedules its own return (a revive on a timer) unless the marker is there,
+    // and the marker is set when it stands again by its own hand (`other: holder` on revived). As every revive, it comes back
     // with its actions on full cooldown.
     body: {
       survivesKO: true,
@@ -609,13 +608,13 @@ amulet({
 });
 amulet({
   name: "Ready stance", rarity: "legendary", text: "The wearer's abilities start every fight at least half charged. Its cooldowns are a fifth longer.",
-  // −16.7 makes cooldowns ×1.2, a fifth longer, as the card and the spine say (cooldowns ÷ (1 + stat/100)); the fill's −20 is ×1.25.
+  // −16.7 makes cooldowns ×1.2, a fifth longer, as the card and the spine say (cooldowns ÷ (1 + stat/100)); −20 would be ×1.25.
   stats: [{ stat: "cooldown_reduction", flat: -16.7 }],
   rule: {
     text: "The wearer's abilities start every fight at least half charged.",
     body: { reactions: [when({ event: "fight_start" }, { op: "cooldown", which: "abilities", set: { atMost: 50 }, to: "holder" })] },
   },
-  note: "Cooldown reduction −16.7 (cooldowns ×1.2, a fifth longer, as the card says), not the fill's −20 (×1.25).",
+  note: "Cooldown reduction −16.7 makes cooldowns ×1.2, a fifth longer, as the card says; −20 would make them ×1.25.",
   tags: [at("ambush", 3, 3), at("phoenix", null, 2)],
 });
 amulet({
@@ -623,7 +622,7 @@ amulet({
   text: "The wearer's abilities cost HP in place of MP: the same share of its max HP as they'd cost of its max MP. It won't cast one that would leave it below a tenth of its HP.",
   rule: {
     text: "The wearer's abilities cost HP in place of MP: the same share of its max HP as they'd cost of its max MP. It won't cast one that would leave it below a tenth of its HP.",
-    // X22 and X23: free of MP, and the cost paid as a share of max HP (G12), waiting rather than going below a tenth.
+    // Free of MP, and the cost paid as an HP price, a share of max HP, waiting rather than going below a tenth.
     body: { mods: [{ mp: -100, hp: { pct: 100, share: true, floor: 10 } }] },
   },
   tags: [at("pact", 3, 3), at("overflow", null, 1)],
@@ -633,8 +632,8 @@ amulet({
   text: "The wearer's crit chance is about 50%. Its hits that don't crit deal half; its crits deal what a crit always does. Hits that always crit still do.",
   rule: {
     text: "The wearer's crit chance is about 50%. Its hits that don't crit deal half; its crits deal what a crit always does. Hits that always crit still do.",
-    // X17 sets the chance after every other stat change (Bedrock doesn't double it); crit rules (X25) add after it (G17), hence
-    // "about" on the card (spec section 6.6). Every hit −50%, and the crit multiplier doubled (Bedrock's shape, read at the
+    // `set` fixes the chance after every other stat change (Bedrock doesn't double it); crit rules add after it, hence
+    // "about" on the card. Every hit −50%, and the crit multiplier doubled (Bedrock's shape, read at the
     // fight's start), so a crit lands at its usual size.
     body: {
       set: [{ stat: "crit_chance", value: 50 }],

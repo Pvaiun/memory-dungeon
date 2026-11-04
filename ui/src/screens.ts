@@ -324,7 +324,7 @@ function party(): Child[] {
   const cards = [0, 1, 2].map((i) => {
     const id = setup.party[i];
     const pos = f.positions[i];
-    // Step 5i: a seat whose statuses say what it does has no "no change".
+    // A seat whose statuses say what it does has no "no change".
     const codes = seatCodes(pos);
     // Something picked: the slots it can go to pulse.
     const target = pickClass !== null || (pickSlot !== null && pickSlot !== i);
@@ -345,7 +345,7 @@ function party(): Child[] {
   return [
     header("PARTY", () => go(...partyFrom), `${setup.party.length}/3`),
     win("",
-      // Step 5i: the formation's name in its rarity's colour (the gear's), and what its seats' own statuses do.
+      // The formation's name in its rarity's colour (the gear's), and what its seats' own statuses do.
       h("div", { class: "line" }, prev, h("span", { class: `grow center ${RARITY_TONE[f.rarity ?? "common"] || "hi"}`, onClick: () => go("formation") }, f.name), anyNewFormation() ? newTag() : null, next),
       h("div", { class: "text dim small wrap" }, f.text, formationNote(f), seatNotes(f) ? ` ${seatNotes(f)}` : ""),
     ),
@@ -359,7 +359,7 @@ function party(): Child[] {
   ];
 }
 
-// ─── Formation: the ten to choose from (the owned ones, in the journey) ───
+// ─── Formation: the ones to choose from (the owned ones, in the journey) ───
 function formation(): Child[] {
   const fms = formations.filter((fm) => ownsFormation(fm.id));
   const out = [
@@ -368,7 +368,7 @@ function formation(): Child[] {
       const cur = fm.id === setup.formation;
       return h("div", { class: `row${cur ? " cur" : ""}`, style: "min-height:3rem", onClick: () => { setup.formation = fm.id; save(); go("party"); } },
         h("span", { class: "cursor" }, cur ? "▶" : ""),
-        // Step 5i: each formation's rarity, in the gear's colours.
+        // Each formation's rarity, in the gear's colours.
         h("div", { class: "grow trunc" }, h("div", { class: "line" }, h("span", { class: `grow trunc ${RARITY_TONE[fm.rarity ?? "common"]}` }, `${fm.rarity === "legendary" ? "★" : ""}${fm.name}`), fm.rarity && fm.rarity !== "common" ? h("span", { class: `small ${RARITY_TONE[fm.rarity]}` }, fm.rarity.toUpperCase()) : null, newFormation(fm.id) ? newTag() : null), h("div", { class: "text dim small wrap" }, fm.text)));
     }), moreToFind(formations.length - fms.length)),
   ];
@@ -403,7 +403,7 @@ function unit(arg?: unknown): Child[] {
   };
   const sp = specialLines(member.stats);
   const back = () => { orderPick = null; go(unitFrom); };
-  // NEW on a slot when new gear fits it; opening the sheet sees the class and what it wears. Step 5j: four slots, the
+  // NEW on a slot when new gear fits it; opening the sheet sees the class and what it wears. Four slots, the
   // offhand locked under a two-handed weapon.
   const gearRows = SLOTS.map((s) => {
     if (s === "offhand" && twoHanded(g)) return lockedRow(s);
@@ -445,7 +445,7 @@ function gear(arg?: unknown): Child[] {
     const g = { ...(setup.gear[id] ?? {}) };
     if (gid) g[slot] = gid;
     else delete g[slot];
-    // Step 5j: a two-handed weapon empties the offhand.
+    // A two-handed weapon empties the offhand.
     if (slot === "weapon" && twoHanded(g)) delete g.offhand;
     setup.gear[id] = g;
     save();
@@ -456,7 +456,7 @@ function gear(arg?: unknown): Child[] {
     win("list scroll",
       slot !== "weapon" ? h("div", { class: `gear-row${!current ? " equipped" : ""}`, onClick: () => choose(null) }, h("span", { class: "art" }, ""), h("div", { class: "grow" }, h("div", { class: "line" }, h("span", { class: "dim grow" }, "NOTHING"), !current ? h("span", { class: "tag" }, "EQUIPPED") : null))) : null,
       ...fits.map((gid) => {
-        // Step 5i: who can wear it, the party first.
+        // Who can wear it, the party first.
         const r = gearRow(gearOf(gid), slot, member.stats, () => choose(gid), false, setup.party);
         if (newGear(gid)) r.querySelector(".grow .line")?.append(newTag());
         if (gid === current) {
