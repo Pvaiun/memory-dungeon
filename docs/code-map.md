@@ -122,7 +122,11 @@ tools/                       the Node command lines; each header says how to run
   rogue-play.ts              the rogue mode as a command line, for an AI playtester
   play-summary.ts            a fight as a player remembers it, for rogue-play
   build-test.ts              the twelve builds side by side
-  build-parties.ts           the builds' hand-built parties: every route (ROUTES) at every rung
+  build-parties.ts           the builds' hand-built parties, gathered (ROUTES, BUILD_PARTIES, ALL_PARTIES)
+  build-parties/
+    kit.ts                   their types, the builds' names, formation seats, mythics, and the helpers routes are written with
+    landslide.ts, cuts.ts, bonfire.ts, snap.ts, hunt.ts, harvest.ts   one build each: its three routes at three rungs
+    ambush.ts, overflow.ts, lockdown.ts, toll.ts, pact.ts, phoenix.ts   one build each
   rhythm-read.ts             does a party play the fight its build says it does?
   piece-check.ts             does every item do what its card says?
   gear-slots.ts              the gear slots' counts: who wears which kinds
