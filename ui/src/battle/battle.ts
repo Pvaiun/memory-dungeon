@@ -30,7 +30,7 @@ import { meet } from "../bestiary.js";
 import { advanceOnce } from "../../../src/engine/run.js";
 import { combat } from "../../../src/engine/combat/rules.js";
 import { FIGHT_DUNGEON, partyOf } from "../../../src/rogue.js";
-import { endFight as endRogueFight, startFight as startRogueFight } from "../../../src/rogue-record.js";
+import { endFight as endRogueFight, startFight as startRogueFight } from "../../../src/rogue/record.js";
 import { current as rogueRun, saveRogue } from "../rogue-state.js";
 
 export type BattleArgs = { dungeon: string; seed?: number; rogue?: boolean };

@@ -1,17 +1,17 @@
 import { readFileSync } from "node:fs";
 import { test } from "vitest";
 import assert from "node:assert/strict";
-import { loadContent, type Content } from "./engine/run.js";
-import type { Member as EngineMember } from "./engine/combat/rules.js";
-import { rngFor } from "./engine/rng.js";
+import { loadContent, type Content } from "../engine/run.js";
+import type { Member as EngineMember } from "../engine/combat/rules.js";
+import { rngFor } from "../engine/rng.js";
 import {
   autoFight, bench, choose, discard, dismiss, endFight, equip, eventView, finish, formationRarity, freshMeta, heals, improveOptions, itemGear, kindOf, leaderKnown, learn, makeMap, maxOf, member,
   newItem, newRogue, options, parseTraining, partyOf, priceOf, reachable, recruit, recruitKnown, rogue, rollItem, seatsOf, startFight, stockOf, swap, temperInto, train, trainingsFor,
   trainOptions, usable, whyNot, wearer, type RogueRun,
-} from "./rogue.js";
-import { aiPlayer, playRogue } from "./sim/rogue-ai.js";
-import { canEquip, checkParty } from "./validate.js";
-import type { ContentPack, EventOpT, GearT } from "./schema.js";
+} from "../rogue.js";
+import { aiPlayer, playRogue } from "../sim/rogue-ai.js";
+import { canEquip, checkParty } from "../validate.js";
+import type { ContentPack, EventOpT, GearT } from "../schema.js";
 
 const raw = JSON.parse(readFileSync("content/core-set.pack.json", "utf8"));
 

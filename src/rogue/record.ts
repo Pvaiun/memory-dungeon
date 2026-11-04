@@ -7,13 +7,13 @@
  * and the state they were made in. Each wrapper here calls src/rogue.ts's own function and writes an entry when it did
  * something. The interface imports these in place of rogue.ts's.
  */
-import { ENGINE_VERSION, advance, type Content, type Run } from "./engine/run.js";
-import { combat, type Member as EngineMember } from "./engine/combat/rules.js";
+import { ENGINE_VERSION, advance, type Content, type Run } from "../engine/run.js";
+import { combat, type Member as EngineMember } from "../engine/combat/rules.js";
 import {
   ROGUE_VERSION, newRogue, registerGear, choose as chooseRaw, discard as discardRaw, dismiss as dismissRaw, endFight as endFightRaw, equip as equipRaw, eventView, member, options, reachable,
   seat as seatRaw, setFormation as setFormationRaw, setOrder as setOrderRaw, startFight as startFightRaw, swap as swapRaw, useSupply as useSupplyRaw, type RogueRun, type Slot,
-} from "./rogue.js";
-import type { SupplyIdT } from "./schema.js";
+} from "../rogue.js";
+import type { SupplyIdT } from "../schema.js";
 
 export type RecordEntry = { i: number; t: string; act: number; floor: number; at: string | null; gold: number; [k: string]: unknown };
 type Recorded = RogueRun & { record?: RecordEntry[] };

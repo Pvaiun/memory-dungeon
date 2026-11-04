@@ -6,7 +6,7 @@
  */
 import { combat, type Member as EngineMember } from "../../src/engine/combat/rules.js";
 import { ROGUE_VERSION, finish, freshMeta, member, migrate, newRogue, partyOf, registerGear, type RogueMeta, type RogueRun } from "../../src/rogue.js";
-import { beginRecord, recordAbandon, recordResume } from "../../src/rogue-record.js";
+import { beginRecord, recordAbandon, recordResume } from "../../src/rogue/record.js";
 import { BUILD } from "./update.js";
 import { canEquip } from "../../src/validate.js";
 import { manifest } from "./art.js";

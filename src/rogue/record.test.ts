@@ -1,9 +1,9 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { advance, loadContent } from "./engine/run.js";
-import { combat } from "./engine/combat/rules.js";
-import { member, newRogue, options, type RogueRun } from "./rogue.js";
-import { beginRecord, checkRecord, choose, endFight, recordResume, setOrder, startFight, type RecordEntry } from "./rogue-record.js";
+import { advance, loadContent } from "../engine/run.js";
+import { combat } from "../engine/combat/rules.js";
+import { member, newRogue, options, type RogueRun } from "../rogue.js";
+import { beginRecord, checkRecord, choose, endFight, recordResume, setOrder, startFight, type RecordEntry } from "./record.js";
 
 const c = loadContent(JSON.parse(readFileSync("content/core-set.pack.json", "utf8")));
 type Recorded = RogueRun & { record: RecordEntry[] };
@@ -66,7 +66,7 @@ describe("a run's record", () => {
 
 describe("a saved run loaded again", () => {
   it("keeps its supplies (a reload had turned every tonic into a potion)", async () => {
-    const { migrate } = await import("./rogue.js");
+    const { migrate } = await import("../rogue.js");
     const run = newRogue(c, { seed: 3, leader: "knight" });
     run.supplies = ["potion", "tonic", "tonic"];
     expect(migrate(structuredClone(run)).supplies).toEqual(["potion", "tonic", "tonic"]);

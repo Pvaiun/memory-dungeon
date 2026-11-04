@@ -8,9 +8,9 @@ import {
   actRoll, bench, bossFoes, canManage, eventView as eventOfRun, formationRarity, itemGear, itemOf, leaderKnown, learnOptions, member, options, reachable,
   bagRoom, rogue, seatsOf, sellPrice, trainOptions, trainPrice, improveOptions, parseTraining, passiveOf, formOf, trainingId, upgradeOf, wearer, type Item, type MapNode, type Member, type Offer, type RogueRun, type Trained, type Training,
 } from "../../src/rogue.js";
-import { checkRecord, choose, discard, dismiss, equip, exportRecord, seat, setFormation, setOrder, swap, useSupply } from "../../src/rogue-record.js";
+import { checkRecord, choose, discard, dismiss, equip, exportRecord, seat, setFormation, setOrder, swap, useSupply } from "../../src/rogue/record.js";
 import { BUILD } from "./update.js";
-import type { RecordCheck } from "../../src/rogue-record.js";
+import type { RecordCheck } from "../../src/rogue/record.js";
 import { canEquip } from "../../src/validate.js";
 import { plainWeapon } from "../../src/sim/parties.js";
 import type { AbilityT, RogueNodeKindT } from "../../src/schema.js";
