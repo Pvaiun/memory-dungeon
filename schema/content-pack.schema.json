@@ -1848,7 +1848,7 @@
               "starter",
               "unlock"
             ],
-            "description": "starter: owned from the start. unlock: a reward from a real-life quest. The core set makes everything available."
+            "description": "starter: owned from the start (the starting classes, the plain weapons). unlock: everything else, found or earned in play. Free play makes everything available."
           },
           "stats": {
             "type": "object",
@@ -2226,7 +2226,7 @@
               "ordinary",
               "powerful"
             ],
-            "description": "ordinary: drops in dungeons, sidegrades. powerful: task rewards, a different build."
+            "description": "ordinary: drops, sidegrades at a similar power. powerful: a different build, or a bigger bundle that gives something up."
           },
           "source": {
             "type": "string",
@@ -2453,7 +2453,7 @@
               "starter",
               "unlock"
             ],
-            "description": "starter: owned from the start. unlock: a reward from a real-life quest. The core set makes everything available."
+            "description": "starter: owned from the start (the starting classes, the plain weapons). unlock: everything else, found or earned in play. Free play makes everything available."
           },
           "positions": {
             "type": "array",

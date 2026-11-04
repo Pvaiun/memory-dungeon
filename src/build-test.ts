@@ -321,7 +321,7 @@ function strengthOf(recs: Rec[]): Strength {
   };
 }
 
-/** Each build's row of the rhythm table (`builds.md`, "The rhythm space"): damage over a fight, danger, what it spends. */
+/** Each build's row of the rhythm table (`docs/gear-design/builds.md`, "The rhythm space"): damage over a fight, danger, what it spends. */
 const RHYTHM_TABLE: Record<BuildId, [string, string, string]> = {
   landslide: ["a few huge blows at uneven moments", "steady, soaked by stone; spikes when it breaks", "MP, on stone that saves its HP"],
   cuts: ["a dense, even stream from the first tick", "even; dodges decide it", "HP: little casting, light bodies"],
@@ -527,7 +527,7 @@ async function main() {
     const r = rhythm.get(b)!;
     L.push(`| ${name(b)} | ${r.q.map(pct).join(" / ")} | ${pct(r.top10)} | ${pct(r.firstKill)} | ${pct(r.spread)} | ${r.taken.map(pct).join(" / ")} | ${pct(r.low)} | ${srcLine(r)} | ${pct(r.mp)} | ${pct(r.paid)} | ${Math.round(r.T)} |`);
   }
-  L.push("", "Beside the rhythm table (`builds.md`, \"The rhythm space\"):", "");
+  L.push("", "Beside the rhythm table (`docs/gear-design/builds.md`, \"The rhythm space\"):", "");
   L.push("| Build | Damage over a fight (the table) | Damage by quarter | Danger (the table) | Taken by quarter | Spends (the table) | MP / paid |", "| --- | --- | --- | --- | --- | --- | --- |");
   for (const b of buildIds) {
     const r = rhythm.get(b)!, [dmg, danger, spends] = RHYTHM_TABLE[b as BuildId];

@@ -1,5 +1,5 @@
 /**
- * The rhythm read (steps/05-core-set/5i-synergy, builds.md): does a party play the fight its build says it does? Each trio, with
+ * The rhythm read (docs/gear-design/builds.md): does a party play the fight its build says it does? Each trio, with
  * plain weapons, every ability known, no gear, the Neutral formation and cooldowns 60% charged (as a run carries them), plays a
  * few rogue fights at their calibrated knob plus an offset (ungeared parties lose at the real knob). For each trio and fight:
  * the share of the party's damage in each quarter of the fight, the share dealt by its biggest tenth of hits (lumpiness), when

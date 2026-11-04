@@ -6,8 +6,7 @@
  * write the words on top.
  */
 import type { CombatResults, TargetResult } from "./combat.js";
-import type { PlayerLog, ProgressionResults, Versus } from "./progression.js";
-import { BLOCKS, num, pct, rangeNum, rangePct, said, type Comparison } from "./sure.js";
+import { BLOCKS, num, pct, rangePct, said, type Comparison } from "./sure.js";
 
 export type Headline = Record<string, number>;
 
@@ -35,19 +34,6 @@ export function combatHeadline(r: CombatResults): Headline {
   return h;
 }
 
-export function progressionHeadline(r: ProgressionResults): Headline {
-  const h: Headline = {};
-  for (const k of r.summaries) {
-    h[`${k.kind}|dungeons by the last week`] = k.byWeek.at(-1)!.dungeons.value;
-    h[`${k.kind}|stuck weeks`] = k.stuckWeeks;
-    h[`${k.kind}|walled by quests`] = k.byQuests;
-    h[`${k.kind}|walls`] = k.walls.count;
-  }
-  h["benchmark behind the optimizer"] = r.benchmarkBehind;
-  return h;
-}
-
-/** Changes since the last run, and numbers outside their expected range. */
 function changesAndFlags(now: Headline, before: Headline | null, expect: { key: string; between: [number, number] }[]): string[] {
   const out: string[] = [];
   const flags = expect.filter((e) => now[e.key] === undefined || now[e.key] < e.between[0] || now[e.key] > e.between[1]);
@@ -108,33 +94,6 @@ export function combatDigest(r: CombatResults, ms: number, engine: string, befor
 
 const lastFight = (t: TargetResult) => Object.keys(t.parties[0]?.rounds ?? {}).at(-1) ?? "";
 
-export function progressionDigest(r: ProgressionResults, ms: number, engine: string, before: Headline | null, versus: Versus[] = []): string {
-  const s = r.study;
-  const [opt, cas] = r.summaries;
-  const L: string[] = [runLine(r, ms, engine), `${s.players} players of each kind × ${s.weeks} weeks · board ${s.board[0]}–${s.board[1]} · optimizer ${pct(s.optimizer.quests)} of quests, ${s.optimizer.tries} tries a week · casual ${s.casual.quests.join("–")} quests, ${s.casual.runs.join("–")} runs`, ""];
-  L.push("Dungeons cleared by week (mean)   unlocks owned (optimizer)   share stuck: optimizer, casual");
-  L.push("  week  optimizer  benchmark  casual");
-  opt.byWeek.forEach((w, i) => {
-    const c = cas.byWeek[i];
-    L.push(`  ${String(w.week).padStart(4)}  ${num(w.dungeons.value).padStart(9)}  ${num(w.benchmark!.value).padStart(9)}  ${num(c.dungeons.value).padStart(6)}   ${num(w.owned.value).padStart(4)}   ${pct(w.stuck).padStart(4)} ${pct(c.stuck).padStart(4)}`);
-  });
-  for (const k of r.summaries) {
-    const n = s.players * s.weeks;
-    L.push(`${k.kind}: stuck ${k.stuckWeeks} of ${n} weeks: by quests ${k.byQuests}, by play ${k.byPlay.total} (owns a winner ${k.byPlay.ownsWinner}, challenges left ${k.byPlay.challengesLeft})`);
-    L.push(`  walls ${k.walls.count}, ${rangeNum(k.walls.weeks)} weeks, longest ${k.walls.longest}; sorted → ended: ${Object.entries(k.walls.sortedThenEnded).sort((a, b) => b[1] - a[1]).map(([b, x]) => `${b} ${x}`).join("; ") || "–"}`);
-    L.push(`  board ran dry for ${k.dry.players} players, median week ${k.dry.median ?? "–"}; choices matter for ${k.matters.players} players, median week ${k.matters.median ?? "–"}${k.perksChange !== null ? `; perks change the result at walls on ${pct(k.perksChange)} of seeds` : ""}`);
-  }
-  L.push(`Optimizer vs casual, dungeon-weeks: ${said(r.optimizerVsCasual)}. Benchmark behind the optimizer: ${r.benchmarkBehind} player-weeks`);
-  L.push(`Benchmark: ${r.bench.questions.toLocaleString("en")} questions, ${r.bench.runs.toLocaleString("en")} runs, at most ${r.bench.maxRuns} each (budget ${s.benchmark.budget}); ran out ${r.bench.budgetOut} times`);
-  for (const v of versus)
-    L.push(`${v.name} vs ${s.variants[0].name}: optimizer dungeon-weeks ${brief(v.optimizer)}, casual ${brief(v.casual)}; optimizer stuck weeks ${v.stuck[0]} → ${v.stuck[1]}, walled by quests ${v.byQuests[0]} → ${v.byQuests[1]}`);
-  L.push(`Strictness, colours / tweaks that win: ${r.dungeons.map((d) => `${short(d.name).replace("Hollow ", "H")} ${d.strictness.winning.length}/${d.strictness.colours}, ${d.strictness.tweaksWinning}/${d.strictness.tweaks}`).join(" · ")}`);
-  L.push(...changesAndFlags(progressionHeadline(r), before, s.expect));
-  return L.join("\n");
-}
-
-// ─── Drafts for the director ────────────────────────────────────────────────
-
 export function combatDraft(r: CombatResults, engine: string, fights: string[]): string {
   const base = r.variants[0];
   const dungeons = base.targets.filter((t) => !t.target.challenge);
@@ -173,75 +132,4 @@ export function combatDraft(r: CombatResults, engine: string, fights: string[]):
     `**How it was run:** ${r.study.seeds} seeds per party, ${r.runs.toLocaleString("en")} runs, engine ${engine}, ${r.rules}, content ${r.content.id}, versions: ${r.study.variants.map((v) => v.name).join(", ")}. Tables in the data file.`,
     "",
   ].join("\n");
-}
-
-export function progressionDraft(r: ProgressionResults, engine: string): string {
-  const [opt, cas] = r.summaries;
-  const n = r.study.players * r.study.weeks;
-  const max = Math.max(...opt.byWeek.map((w) => w.benchmark!.value), 1);
-  const chart = opt.byWeek.map((w, i) => `${String(w.week).padStart(3)}  ${(bar(w.dungeons.value, max, 8) + " " + num(w.dungeons.value)).padEnd(13)} ${(bar(w.benchmark!.value, max, 8) + " " + num(w.benchmark!.value)).padEnd(13)} ${bar(cas.byWeek[i].dungeons.value, max, 8)} ${num(cas.byWeek[i].dungeons.value)}`);
-  const names = new Map(r.dungeons.map((d) => [d.id, short(d.name)]));
-  const sample = typical(r.players.filter((p) => p.kind === "optimizer"));
-  const casual = typical(r.players.filter((p) => p.kind === "casual"));
-  return [
-    `# Progression: ${r.study.id}`,
-    "",
-    "## In short",
-    "",
-    "<!-- The AI writes a few sentences, words first, each saying how sure it is. The facts: -->",
-    ...r.summaries.map((k) => `- ${k.kind}: ${num(k.byWeek.at(-1)!.dungeons.value)} of ${r.dungeons.length} dungeons by week ${r.study.weeks}. Stuck ${k.stuckWeeks} of ${n} player-weeks: ${k.byQuests} walled by quests, ${k.byPlay.total} by play (${k.byPlay.ownsWinner} owned a party that wins, ${k.byPlay.challengesLeft} had challenges left). ${k.walls.count} walls, ${rangeNum(k.walls.weeks)} weeks long, the longest ${k.walls.longest}; ended by ${Object.entries(k.walls.brokeBy).map(([b, x]) => `${b} ${x}`).join(", ") || "nothing"}.`),
-    `- The benchmark was behind the optimizer in ${r.benchmarkBehind} player-weeks. The optimizer beat the casual player: ${said(r.optimizerVsCasual)}.`,
-    `- Strictness: ${r.dungeons.map((d) => `${short(d.name)}, ${d.strictness.winning.length} of ${d.strictness.colours} colours`).join("; ")}.`,
-    "",
-    "## Questions for you",
-    "",
-    "<!-- Only where a call is subjective. -->",
-    "",
-    "## Stories",
-    "",
-    `<!-- A typical optimizer's weeks (player ${sample.seed}), as facts for a short diary: -->`,
-    ...diary(sample, names),
-    "",
-    `<!-- A typical casual player's weeks (player ${casual.seed}): -->`,
-    ...diary(casual, names),
-    "",
-    "## Charts",
-    "",
-    "**Dungeons cleared by week, with the same unlocks**",
-    "```",
-    "week  optimizer     benchmark     casual",
-    ...chart,
-    "```",
-    "",
-    `**How it was run:** ${r.study.players} players of each kind, ${r.study.weeks} weeks, ${r.runs.toLocaleString("en")} runs, engine ${engine}, ${r.rules}, content ${r.content.id}. Tables in the data file.`,
-    "",
-  ].join("\n");
-}
-
-/** The player whose dungeon curve is closest to the median player's. */
-function typical(ps: PlayerLog[]): PlayerLog {
-  const curve = (p: PlayerLog) => p.weeks.map((w) => w.dungeons);
-  const med = ps[0].weeks.map((_, j) => [...ps.map((p) => p.weeks[j].dungeons)].sort((a, b) => a - b)[Math.floor(ps.length / 2)]);
-  const dist = (p: PlayerLog) => curve(p).reduce((s, x, j) => s + Math.abs(x - med[j]), 0) + p.seed / 1e6;
-  return [...ps].sort((a, b) => dist(a) - dist(b))[0];
-}
-
-function diary(p: PlayerLog, names: Map<string, string>): string[] {
-  const out: string[] = [];
-  const quiet = { weeks: [] as number[], challengeLosses: 0 };
-  const s = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
-  for (const w of p.weeks) {
-    if (!w.quests && !w.cleared.length && !Object.keys(w.losses).length) {
-      quiet.weeks.push(w.week);
-      quiet.challengeLosses += w.challengeLosses;
-      continue;
-    }
-    const losses = Object.entries(w.losses).map(([d, l]) => `Lost ${names.get(d)} ${s(l.n, "time")} (best: ${l.best.party}, out in ${l.best.lostIn.replace(/_/g, " ")} with the enemy on ${pct(l.best.enemyLeft)})`);
-    const cleared = w.cleared.filter((k) => !k.includes(":")).map((k) => `${names.get(k)} (${w.winners[k]?.replace(/ \(.*\)$/, "")})`);
-    const chs = w.cleared.filter((k) => k.includes(":")).length;
-    out.push(`- Week ${w.week}: ${w.quests} of ${s(w.board, "quest")}${w.unlocks.length ? `, got ${w.unlocks.join(", ")}` : ""}. ${s(w.tries, "run")}.${cleared.length ? ` Cleared ${cleared.join(", ")}.` : ""}${chs ? ` ${s(chs, "challenge")} won.` : ""}${w.challengeLosses ? ` ${s(w.challengeLosses, "challenge")} lost.` : ""}${losses.length ? ` ${losses.join("; ")}.` : ""}${w.wall ? ` Stuck: walled by ${w.wall}${w.why ? ` (${w.why})` : ""}.` : ""}${w.benchmark !== undefined ? ` Benchmark: ${w.benchmark} dungeons.` : ""}`);
-  }
-  if (quiet.weeks.length)
-    out.push(`- ${s(quiet.weeks.length, "quiet week")} (from week ${quiet.weeks[0]}): nothing new on the board and no dungeon left.${quiet.challengeLosses ? ` It lost ${s(quiet.challengeLosses, "challenge run")}.` : ""}`);
-  return out;
 }

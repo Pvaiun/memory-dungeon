@@ -142,7 +142,7 @@ function home(): Child[] {
     ["settings", "SETTINGS", "", false],
   ];
   return [
-    h("div", { class: "title-big" }, "MEMORY", h("br"), "DUNGEON"),
+    h("div", { class: "title-big" }, "DUNGEON", h("br"), "GAME"),
     stripEl(),
     h("div", { class: "menu-wrap" },
       win("list menu", ...items.map(([s, label, sub, isNew]) => h("div", { class: "row", onClick: () => go(s) }, h("span", { class: "cursor" }, "▶"), h("div", { class: "grow" }, h("div", { class: "line" }, label, isNew ? newTag() : null), sub ? h("div", { class: "text dim small trunc" }, sub) : null)))),

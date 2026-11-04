@@ -1,5 +1,5 @@
 /**
- * Memory Dungeon Game: content schema (the core set, docs/core-set/).
+ * Dungeon Game: content schema (the core set, docs/core-set/).
  *
  * One data format for everything the engine runs on. Fights run on ticks, and
  * everything that happens on an event or a timer is a status. Content is built from
@@ -833,7 +833,7 @@ export const StatDef = z.strictObject({
 // Content
 // ─────────────────────────────────────────────────────────────────────────────
 
-const UnlockSource = z.enum(["starter", "unlock"]).describe("starter: owned from the start. unlock: a reward from a real-life quest. The core set makes everything available.");
+const UnlockSource = z.enum(["starter", "unlock"]).describe("starter: owned from the start (the starting classes, the plain weapons). unlock: everything else, found or earned in play. Free play makes everything available.");
 
 export const StatBlock = z.record(StatKey, z.number()).describe("Stat key to base value. Missing stats use the registry's default.");
 
@@ -870,7 +870,7 @@ export const Gear = z.strictObject({
   text: Text,
   slot: Slot,
   rarity: Rarity.optional().describe("The piece's own rarity, fixed: no affixes at any rarity. mythic exactly when it names a `mythic` class."),
-  tier: z.enum(["ordinary", "powerful"]).describe("ordinary: drops in dungeons, sidegrades. powerful: task rewards, a different build."),
+  tier: z.enum(["ordinary", "powerful"]).describe("ordinary: drops, sidegrades at a similar power. powerful: a different build, or a bigger bundle that gives something up."),
   source: z.enum(["starter", "drop", "unlock"]),
   armor: Id.optional().describe("Armor only: its armor type."),
   offhand: Id.optional().describe("Offhands only: its offhand kind."),

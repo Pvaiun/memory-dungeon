@@ -1,6 +1,6 @@
 # The interface
 
-A phone-sized browser interface on the headless engine: the rogue mode, free play, the party screen, unit sheets, a bestiary and a battle screen that tells each fight one message at a time. It's a design tool, not Memory's game tab. It's Vite and plain TypeScript with no framework. It imports the engine as is (`src/engine/`, `src/sim/`) and only reads the engine's state and log, so it never changes a fight: what it shows is what the engine plays. `npm run typecheck` checks it (`tsc -p ui`).
+A phone-sized browser interface on the headless engine: the rogue mode, free play, the party screen, unit sheets, a bestiary and a battle screen that tells each fight one message at a time. It's Vite and plain TypeScript with no framework. It imports the engine as is (`src/engine/`, `src/sim/`) and only reads the engine's state and log, so it never changes a fight: what it shows is what the engine plays. `npm run typecheck` checks it (`tsc -p ui`).
 
 ## Running it
 
