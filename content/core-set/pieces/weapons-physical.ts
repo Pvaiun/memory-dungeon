@@ -1,6 +1,6 @@
 /**
  * The six physical weapon kinds' 48 pieces: no balancing rules, statuses at their own length. Hooks are the engine's
- * primitives or the engine spec's additions (steps/05-core-set/5i-synergy/build/engine-spec.md, X1 onward).
+ * primitives (PRIMITIVES.md).
  *
  * `gear` joins the pack's gear and the rogue's stock; `statuses` the pack's statuses; `builds` is designer data, never in the pack.
  */
@@ -53,8 +53,8 @@ add(piece({ name: "Keen dirk", kind: "dagger", slot: "weapon", rarity: "common",
 add(piece({ name: "Parrying dagger", kind: "dagger", slot: "weapon", rarity: "common", text: "Evasion medium, Accuracy medium.", stats: [sp("evasion", "medium"), sp("accuracy", "medium")] }), [], "Cuts 1, Toll ●");
 
 {
-  // Once the foe holds the mark, a reaction test (X3) skips the whole reaction, so later hits make no empty Bleed application.
-  // The mark is a marker (X14): no Cleanse or Dispel lifts it.
+  // Once the foe holds the mark, a reaction's `if` skips the whole reaction, so later hits make no empty Bleed application.
+  // The mark is a marker: no Cleanse or Dispel lifts it.
   const id = idOf("Weeping kris"), mark = `${id}_mark`;
   add(
     piece({ name: "Weeping kris", kind: "dagger", slot: "weapon", rarity: "uncommon", text: "Crit chance +1. Its first hit on each foe adds a few Bleed (from Attack).", stats: [critStep(1)], statuses: [id] }),
@@ -94,7 +94,7 @@ add(
 
 add(
   piece({ name: "Quietus", kind: "dagger", slot: "weapon", rarity: "legendary", text: "Its hits on a foe that hasn't acted yet this fight always crit, and those crits add twice the usual bonus.", statuses: ["quietus"] }),
-  // X5 (acted) and X25 (crits by condition).
+  // A crit rule on a foe that hasn't `acted`.
   [pieceStatus("quietus", "Quietus", "Its hits on a foe that hasn't acted yet always crit, for twice the usual bonus.", { crits: [{ when: { acted: false }, chance: 100, bonus: 100 }] })],
   "Ambush 3 ●●●, Hunt ●●",
 );
@@ -143,7 +143,7 @@ add(
 
 add(
   piece({ name: "Flurry wraps", kind: "fist", slot: "weapon", rarity: "legendary", text: "Double strike medium. Its extra strikes can strike again: each one rolls Double strike for one more, at most two more after the first, and each is a fifth weaker than the strike before it.", stats: [sp("double_strike", "medium")], statuses: ["flurry_wraps"] }),
-  // X27: the chain. Its strike rolls Double strike as the stat's own does, and takes the place of the plain Double strike's on
+  // A chain: its strike rolls Double strike as the stat's own does, and takes the place of the plain Double strike's on
   // its holder, so a swing rolls Double strike once.
   [pieceStatus("flurry_wraps", "Flurry wraps", "Its extra strikes can strike again, up to twice, each a fifth weaker.", { strike: { scale: "double_strike", to: "target", chain: { times: 2, share: 80 } } })],
   "Cuts 3 ●●●, Snap ●●, Pact ●●",
@@ -153,11 +153,11 @@ add(
   piece({ name: "Still hand", kind: "fist", slot: "weapon", rarity: "legendary", text: "Its hits on a Stunned or Silenced foe always crit and add several Sunder (from Attack). When it Stuns a foe, its ability with the longest cooldown left is ready at once.", statuses: ["still_hand"] }),
   [
     pieceStatus("still_hand", "Still hand", "Its hits on a Stunned or Silenced foe always crit and add several Sunder. When it Stuns a foe, its ability with the longest cooldown left is ready.", {
-      crits: [{ when: { hasAny: ["stun", "silence"] }, chance: 100 }], // X4 (hasAny), X25
+      crits: [{ when: { hasAny: ["stun", "silence"] }, chance: 100 }],
       reactions: [
-        // A reaction test (X3) adds the Sunder only to a held foe.
+        // A reaction's `if` adds the Sunder only to a held foe.
         { on: { event: "hit_lands" }, if: { unit: "other", where: { hasAny: ["stun", "silence"] } }, do: [apply("sunder", "other", own("several", "attack"))] },
-        // X1/X2: a Stun the holder applied (a Chill shatter's Stun is its holder's own, so it doesn't count). X21: ready.
+        // A Stun the holder applied (a Chill shatter's Stun is its holder's own, so it doesn't count) readies the longest cooldown.
         { on: { event: "status_gained", status: "stun", whose: "foe", other: "holder" }, do: [{ op: "cooldown", which: "longest", set: "ready", to: "self" }] },
       ],
     }),
@@ -173,7 +173,7 @@ add(piece({ name: "Gilded sword", kind: "sword", slot: "weapon", rarity: "common
 
 add(
   piece({ name: "Clarion blade", kind: "sword", slot: "weapon", rarity: "uncommon", text: "HP +1. Taunts when each fight starts.", stats: [st("max_hp", 1)], statuses: ["clarion_blade"] }),
-  // Taunt at its own length (statuses are universal); X15 ends Hidden when it lands.
+  // Taunt at its own length (statuses are universal); Taunt ends Hidden when it lands.
   [pieceStatus("clarion_blade", "Clarion blade", "Taunts when each fight starts.", { reactions: [onStart(apply("taunt", "holder"))] })],
   "Toll 1, Bonfire 1, Landslide ●, Harvest ●",
 );
@@ -192,13 +192,13 @@ add(
 
 add(
   piece({ name: "Sweeping blade", kind: "sword", slot: "weapon", rarity: "rare", text: "Its basic attacks also hit a second, random foe for half.", statuses: ["sweeping_blade"] }),
-  // X26: a strike sized at half.
+  // An extra strike sized at half.
   [pieceStatus("sweeping_blade", "Sweeping blade", "Its basic attacks also hit a second, random foe for half.", { strike: { to: { side: "foes", pick: "random", exclude: "targets" }, share: 50 } })],
   "Harvest 2 ●●●, Cuts ●",
 );
 
 {
-  // X21 makes the basic attack ready at the start; X25 crits basic hits until the first basic attack resolves.
+  // The basic attack made ready at the start, and a crit rule on basic hits until the first basic attack resolves.
   const first = "drawn_steel_first";
   add(
     piece({ name: "Drawn steel", kind: "sword", slot: "weapon", rarity: "rare", text: "Crit damage medium. Its first basic attack of each fight comes at once and always crits.", stats: [sp("crit_damage", "medium")], statuses: ["drawn_steel"] }),
@@ -223,7 +223,7 @@ add(
           { on: { event: "status_ended", status: "taunt" }, do: [removeBuff(sweep)] },
         ],
       }),
-      // X26: a strike rule that picks several foes strikes each, at full swings.
+      // A strike rule that picks several foes strikes each, at full swings.
       helper(sweep, "Oath", "Its basic attacks also hit every other foe.", { strike: { to: { side: "foes", pick: "all", exclude: "targets" } } }),
     ],
     "Toll 3 ●●●, Harvest 3 ●●●, Landslide ●",
@@ -236,7 +236,7 @@ add(
     pieceStatus("gravemark", "Gravemark", "Its hits on a Marked foe deal half again as much. If no foe is Marked, its basic attacks Mark. When a Marked foe falls, the weakest is Marked.", {
       boosts: bothTags(against(50, { has: "marked" })),
       reactions: [
-        // X3: no foe is Marked.
+        // A reaction's `if`: no foe is Marked.
         { on: { event: "hit_lands", kind: "basic" }, if: { side: "foes", where: { has: "marked" }, atMost: 0 }, do: [apply("marked", "other")] },
         { on: { event: "status_ended", status: "marked", cause: ["ko"], whose: "foe" }, do: [apply("marked", { side: "foes", pick: "lowest", by: "hp" })] },
       ],
@@ -259,28 +259,27 @@ add(
 
 add(
   piece({ name: "Trophy spear", kind: "spear", slot: "weapon", rarity: "uncommon", text: "Attack +1. When it lands a killing blow, it's Guarded.", stats: [st("attack", 1)], statuses: ["trophy_spear"] }),
-  // X1/X2: a kill the holder landed.
+  // A kill the holder landed (`other: holder`).
   [pieceStatus("trophy_spear", "Trophy spear", "When it lands a killing blow, it's Guarded.", { reactions: [{ on: { event: "ko", whose: "foe", other: "holder" }, do: [apply("guard", "holder")] }] })],
   "Hunt 1, Ambush ●, Harvest ●",
 );
 
 add(
   piece({ name: "Hunting spear", kind: "spear", slot: "weapon", rarity: "rare", text: "When it lands a killing blow, its ability with the longest cooldown left is ready at once.", statuses: ["hunting_spear"] }),
-  // X1/X2 and X21.
   [pieceStatus("hunting_spear", "Hunting spear", "When it lands a killing blow, its ability with the longest cooldown left is ready.", { reactions: [{ on: { event: "ko", whose: "foe", other: "holder" }, do: [{ op: "cooldown", which: "longest", set: "ready", to: "self" }] }] })],
   "Hunt 2 ●●●, Ambush ●●, Harvest ●",
 );
 
 add(
   piece({ name: "Glaive", kind: "spear", slot: "weapon", rarity: "rare", text: "Its basic attacks also hit the foe with the most HP for half. If that foe is the target, they hit the foe with the next most.", statuses: ["glaive"] }),
-  // X26: a strike sized at half.
+  // An extra strike sized at half.
   [pieceStatus("glaive", "Glaive", "Its basic attacks also hit the foe with the most HP for half.", { strike: { to: { side: "foes", pick: "highest", by: "hp", exclude: "targets" }, share: 50 } })],
   "Harvest 2 ●●●, Landslide ●",
 );
 
 add(
   piece({ name: "Pike wall", kind: "spear", slot: "weapon", rarity: "legendary", text: "When a foe hits an ally with less Armor than the wearer, the wearer strikes that foe with its spear.", statuses: ["pike_wall"] }),
-  // X3 and X4 (the ally that took the hit has less Armor than the wearer), X28 (a reaction that strikes). No limit.
+  // A reaction's `if` with a `lower` test (the ally that took the hit has less Armor than the wearer), and a reaction that strikes. No limit.
   [pieceStatus("pike_wall", "Pike wall", "When a foe hits an ally with less Armor, it strikes that foe.", {
     reactions: [{ on: { event: "hit_taken", whose: "ally" }, if: { unit: "owner", where: { lower: { stat: "armor" } } }, do: [{ op: "strike", to: "other" }] }],
   })],
@@ -295,7 +294,7 @@ add(
       pieceStatus("storm_pike", "Storm pike", "Each hit it lands adds a Charge. At 10, its next basic attack calls lightning on every foe.", {
         reactions: [
           { on: { event: "hit_lands" }, do: [apply("charge", "self", 1)] },
-          // The X3 test keeps a capped event that resolves after the Charges were spent from readying a second storm.
+          // The reaction's `if` keeps a capped event that resolves after the Charges were spent from readying a second storm.
           { on: { event: "status_capped", status: "charge" }, if: { side: "self", where: { atCap: "charge" } }, do: [apply(ready, "holder")] },
         ],
       }),
@@ -363,7 +362,7 @@ add(
       pieceStatus("volley_bow", "Volley bow", "Its first basic attack of each fight, and every fifth after it, is a volley.", {
         reactions: [onStart(apply(volley, "holder")), { on: { event: "action_resolve", kind: "basic" }, do: [apply(count, "holder", 1)] }],
       }),
-      // X26: a strike rule that picks several foes strikes each, at full arrows.
+      // A strike rule that picks several foes strikes each, at full arrows.
       helper(volley, "Volley", "Its next basic attack also looses a full arrow at every other foe.", {
         strike: { to: { side: "foes", pick: "all", exclude: "targets" } },
         reactions: [{ on: { event: "action_resolve", kind: "basic" }, do: [removeBuff(volley)] }],

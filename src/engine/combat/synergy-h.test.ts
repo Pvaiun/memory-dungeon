@@ -1,7 +1,9 @@
 /**
- * The engine additions for what happens: X21 to X41 and R4 of
- * steps/05-core-set/5i-synergy/build/engine-spec.md, each with at least the spec's own test.
- * Every status and ability a test needs is defined here, so nothing waits for content.
+ * The engine's building blocks for what happens (PRIMITIVES.md), each in a small fight: cooldown and timer changes, MP and HP
+ * prices, ability changes, crits by condition, extra strikes and strikes fired by reactions, what hits, actions, heals and
+ * knockouts carry, taking a hit for an ally, HP floors, overhealing, heals from others blocked, timed revives, a reviver's rule,
+ * after a won fight, moving a status, one status at random, recasting, "or" between conditions, abilities that bring statuses,
+ * and trained forms in a party. Every status and ability a test needs is defined here, so nothing waits for content.
  */
 import { test } from "vitest";
 import assert from "node:assert/strict";
@@ -30,9 +32,9 @@ const NEVER = { side: "foes", where: { ko: true } };
 const TAUNT = { forced: 1 };
 const swing = (attack: number, w: S.WeaponT = weapons.sword) => ({ stats: { attack, max_hp: 1e6 }, weapon: w });
 
-// ─── X21: cooldown and timer changes ────────────────────────────────────────
+// ─── Cooldown and timer changes ─────────────────────────────────────────────
 
-test("X21: at tick 10 a unit whose Fireball has 20 ticks left gets 5 ticks off its longest cooldown, and casts at 25, not 30", () => {
+test("at tick 10 a unit whose Fireball has 20 ticks left gets 5 ticks off its longest cooldown, and casts at 25, not 30", () => {
   const fireball = device("fireball", { do: [{ op: "damage", type: "magical", amount: 1 }] });
   const chime = device("chime", { target: "self", do: [{ op: "cooldown", which: "longest", set: { less: 5 }, to: { side: "others" } }] });
   const play = (bell: boolean) => {
@@ -45,14 +47,14 @@ test("X21: at tick 10 a unit whose Fireball has 20 ticks left gets 5 ticks off i
   assert.deepEqual(play(true), [25]);
 });
 
-test("X21: `which: basic, set: ready` makes a unit swing on the next sub-tick", () => {
+test("`which: basic, set: ready` makes a unit swing on the next sub-tick", () => {
   const horn = device("horn", { target: "self", do: [{ op: "cooldown", which: "basic", set: "ready", to: { side: "others" } }] });
   const a = arena({ party: [{ name: "Axe", ...swing(10, weapons.axe) }, { name: "Horn", abilities: ["horn"] }], enemies: [BAG], abilities: [horn] });
   readyAt(a, "Horn", "horn", 5);
   assert.deepEqual(a.to(30).acts("Axe", "basic"), [5.001, 25.001], "it swings at once, then its swing runs again from there");
 });
 
-test("X21: soonest, every ability, a share of what's left, at most a share of the full cooldown, full, and by id with its forms", () => {
+test("cooldown changes: soonest, every ability, a share of what's left, at most a share of the full cooldown, full, and by id with its forms", () => {
   // T's two abilities never come off cooldown by themselves (they wait for a fallen foe), so only the effect moves them.
   const x = { id: "x", cooldown: 40, if: NEVER, do: [{ op: "damage", type: "physical", amount: 1 }] };
   const y = { id: "y__a", cooldown: 60, if: NEVER, do: [{ op: "damage", type: "physical", amount: 1 }] };
@@ -73,7 +75,7 @@ test("X21: soonest, every ability, a share of what's left, at most a share of th
   assert.deepEqual(left({ ability: ["y"] }, "ready"), [10, 0], "y's trained form is reached by its base id");
 });
 
-test("X21: `which: event` in a reaction to an action readies the ability that set it off", () => {
+test("`which: event` in a reaction to an action readies the ability that set it off", () => {
   const zap = device("zap", { cooldown: 50, do: [{ op: "damage", type: "physical", amount: 1 }] });
   const again = buff("again", { reactions: [{ on: { event: "action_resolve", kind: "ability" }, do: [{ op: "cooldown", which: "event", set: "ready", to: "self" }] }] });
   const a = arena({ party: [{ name: "Z", abilities: ["zap"], statuses: ["again"] }], enemies: [BAG], abilities: [zap], statuses: [again] });
@@ -81,7 +83,7 @@ test("X21: `which: event` in a reaction to an action readies the ability that se
   assert.deepEqual(a.to(10.003).acts("Z", "zap"), [10, 10.002]);
 });
 
-// ─── X22: MP cost changes ───────────────────────────────────────────────────
+// ─── MP cost changes ────────────────────────────────────────────────────────
 
 const BOLT = device("bolt", { mp: 400, do: [{ op: "damage", type: "magical", amount: 1 }] });
 function cast(mods: unknown[], mp: number, maxMp = 1000) {
@@ -91,7 +93,7 @@ function cast(mods: unknown[], mp: number, maxMp = 1000) {
   return { casts: a.acts("Mage", "bolt").length, mp: a.unit("Mage").mp, a };
 }
 
-test("X22: a 400 MP ability with a −20 change costs 320; with −100 it casts at 0 MP; a change for other abilities leaves it at 400", () => {
+test("a 400 MP ability with a −20 change costs 320; with −100 it casts at 0 MP; a change for other abilities leaves it at 400", () => {
   assert.deepEqual([cast([{ mp: -20 }], 320).casts, cast([{ mp: -20 }], 320).mp], [1, 0]);
   assert.equal(cast([{ mp: -20 }], 319).casts, 0, "it waits for 320");
   assert.deepEqual([cast([{ mp: -100 }], 0).casts, cast([{ mp: -100 }], 0).mp], [1, 0]);
@@ -100,15 +102,15 @@ test("X22: a 400 MP ability with a −20 change costs 320; with −100 it casts 
   assert.equal(cast([{ mp: 50 }], 1000).mp, 400, "+50 is half again: 600");
 });
 
-test("X22: Brimming's change holds while its holder is above half its MP: 300 at 60%, 400 at 40%", () => {
+test("Brimming's change holds while its holder is above half its MP: 300 at 60%, 400 at 40%", () => {
   const brim = [{ mp: -25, if: { mpAtLeast: 50 } }];
   assert.equal(cast(brim, 600).mp, 300);
   assert.equal(cast(brim, 400).mp, 0);
 });
 
-// ─── X23: HP as a price ─────────────────────────────────────────────────────
+// ─── HP as a price ──────────────────────────────────────────────────────────
 
-test("X23: a unit at 1,000 HP behind a Shield pays 400: HP 600, Shield untouched, nothing reacts; paying 2,000 leaves 1", () => {
+test("a unit at 1,000 HP behind a Shield pays 400: HP 600, Shield untouched, nothing reacts; paying 2,000 leaves 1", () => {
   const shield = buff("shield", { stacking: "intensity", absorb: true });
   const hurt = buff("hurt", { reactions: [{ on: { event: "hp_lost" }, do: [{ op: "apply", status: "felt", to: "holder" }] }, { on: { event: "damage_taken" }, do: [{ op: "apply", status: "felt", to: "holder" }] }] });
   const run = (hp: number) => {
@@ -125,7 +127,7 @@ test("X23: a unit at 1,000 HP behind a Shield pays 400: HP 600, Shield untouched
   assert.equal(run(2000).unit("P").hp, 1);
 });
 
-test("X23: an ability's HP price, point for point or as a share, paid with its MP; the floor makes it wait", () => {
+test("an ability's HP price, point for point or as a share, paid with its MP; the floor makes it wait", () => {
   const price = (hp: object, startHp: number) => {
     const a = arena({ party: [{ name: "P", stats: { max_hp: 5000, max_mp: 1000 }, hp: startHp, abilities: ["bolt"], statuses: ["mod"] }], enemies: [BAG], abilities: [BOLT], statuses: [buff("mod", { mods: [{ hp }] })] });
     readyAt(a, "P", "bolt", 1);
@@ -138,9 +140,9 @@ test("X23: an ability's HP price, point for point or as a share, paid with its M
   assert.equal(price({ pct: 100, share: true, floor: 10 }, 2499).casts, 0, "it waits rather than go below a tenth");
 });
 
-// ─── X24: abilities changed by what they do, or by name ─────────────────────
+// ─── Abilities changed by what they do, or by name ──────────────────────────
 
-test("X24: a Smite with Chains of light Silences its target, a trained Smite too; another ability doesn't", () => {
+test("a Smite with Chains of light Silences its target, a trained Smite too; another ability doesn't", () => {
   const silence = debuff("silence", { duration: 20, lockout: { covers: "ability", interrupt: true } });
   const chains = buff("chains", { mods: [{ of: { ability: ["smite"] }, apply: [{ status: "silence" }] }] });
   const hitWith = (ability: string) => {
@@ -154,7 +156,7 @@ test("X24: a Smite with Chains of light Silences its target, a trained Smite too
   assert.equal(hitWith("jab"), 0);
 });
 
-test("X24: a revive with Reliquary of mercy winds up in 1 tick; a Firebolt with Banked staff adds 15 Burn where it added 10", () => {
+test("a revive with Reliquary of mercy winds up in 1 tick; a Firebolt with Banked staff adds 15 Burn where it added 10", () => {
   const raise = { id: "raise", cast: 10, recovery: 0, cooldown: 1000, if: { side: "allies", where: { ko: true } }, target: { side: "allies", where: { ko: true } }, do: [{ op: "revive", hp: 100 }] };
   const reliquary = buff("reliquary", { mods: [{ of: { does: ["revive"] }, cast: 1 }] });
   const a = arena({ party: [{ name: "C", abilities: ["raise"], statuses: ["reliquary"] }, { name: "Down", ko: true }], enemies: [BAG], abilities: [raise], statuses: [reliquary] });
@@ -175,7 +177,7 @@ test("X24: a revive with Reliquary of mercy winds up in 1 tick; a Firebolt with 
   assert.equal(burnFrom(["banked"]), 15);
 });
 
-test("X24: a change's own target rule and Seek (past a Taunt), what it waits for, and its heals", () => {
+test("an ability change's own target rule and Seek (past a Taunt), what it waits for, and its heals", () => {
   const shot = device("shot", { do: [{ op: "damage", type: "physical", amount: 1 }] });
   const quiver = (seek: boolean) => buff("quiver", { mods: [{ target: { side: "foes", pick: "lowest", by: "hp" }, ...(seek ? { seek: true } : {}) }] });
   const shoot = (seek: boolean) => {
@@ -201,9 +203,9 @@ test("X24: a change's own target rule and Seek (past a Taunt), what it waits for
   assert.equal(h.to(1).unit("Hurt").hp, 650);
 });
 
-// ─── X25: crits by condition ────────────────────────────────────────────────
+// ─── Crits by condition ─────────────────────────────────────────────────────
 
-test("X25: with crit chance 0 every hit on a Stunned foe crits and none on another; at crit chance 50 the Stunned foe still always crits", () => {
+test("with crit chance 0 every hit on a Stunned foe crits and none on another; at crit chance 50 the Stunned foe still always crits", () => {
   const stun = debuff("stun", { lockout: { covers: "all" } });
   const still = buff("still", { crits: [{ when: { has: "stun" }, chance: 100 }] });
   const run = (chance: number) => {
@@ -224,28 +226,28 @@ test("X25: with crit chance 0 every hit on a Stunned foe crits and none on anoth
   assert.ok(share > 0.4 && share < 0.6, `${share}`);
 });
 
-test("X25: a crit rule's bonus makes the part above ×1 larger (×1.5 into ×2), and its tag narrows it", () => {
+test("a crit rule's bonus makes the part above ×1 larger (×1.5 into ×2), and its tag narrows it", () => {
   const sure = (tag: string) => buff("sure", { crits: [{ tag, chance: 100, bonus: 100 }] });
   const hitFor = (tag: string) => arena({ party: [{ name: "P", ...swing(100), statuses: ["sure"] }], enemies: [BAG], statuses: [sure(tag)] }).to(12).hits("Bag").map((e) => e.amount);
   assert.deepEqual(hitFor("basic"), [200]);
   assert.deepEqual(hitFor("magical"), [100]);
 });
 
-// ─── X26, X27: extra strikes sized, spread and chained ──────────────────────
+// ─── Extra strikes sized, spread and chained ────────────────────────────────
 
-test("X26: a strike at every other foe for half, from a 1,000 swing, hits each other foe for 500 (as area hits)", () => {
+test("a strike at every other foe for half, from a 1,000 swing, hits each other foe for 500 (as area hits)", () => {
   const sweep = buff("sweep", { stacking: "refresh", strike: { to: { side: "foes", pick: "all", exclude: "targets" }, share: 50 } });
   const a = arena({ party: [{ name: "P", ...swing(1000), statuses: ["sweep"] }], enemies: [{ name: "A", stats: { max_hp: 1e6, ...TAUNT } }, { name: "B", stats: { max_hp: 1e6 } }, { name: "C", stats: { max_hp: 1e6 } }], statuses: [sweep] }).to(12);
   assert.deepEqual(["A", "B", "C"].map((n) => a.hits(n).map((e) => [e.part, e.amount])), [[["hit", 1000]], [["extra", 500]], [["extra", 500]]]);
 });
 
-test("X27: a chain of two more at 80% after a 1,000 swing brings strikes of 1,000, 800 and 640", () => {
+test("a chain of two more at 80% after a 1,000 swing brings strikes of 1,000, 800 and 640", () => {
   const flurry = buff("flurry", { strike: { to: "target", chance: 100, chain: { times: 2, share: 80 } } });
   const a = arena({ party: [{ name: "P", ...swing(1000), statuses: ["flurry"] }], enemies: [BAG], statuses: [flurry] }).to(12);
   assert.deepEqual(a.hits("Bag").map((e) => e.amount), [1000, 1000, 800, 640]);
 });
 
-test("X27: a chained strike reading Double strike takes the plain Double strike's place: one roll a swing, chaining from there (Flurry wraps)", () => {
+test("a chained strike reading Double strike takes the plain Double strike's place: one roll a swing, chaining from there (Flurry wraps)", () => {
   // Double strike as the core set has it: a stat that brings a strike status reading it. Flurry wraps adds a chained strike reading the same stat.
   const ds = buff("double_strike", { unremovable: true, strike: { to: "target", scale: "double_strike" } });
   const flurry = buff("flurry", { strike: { to: "target", scale: "double_strike", chain: { times: 2, share: 80 } } });
@@ -262,9 +264,9 @@ test("X27: a chained strike reading Double strike takes the plain Double strike'
   assert.ok(Math.abs(rolls - 1.75) < 0.05, `${rolls} strike rolls a swing, want 1.75`);
 });
 
-// ─── X28: strikes fired by reactions ────────────────────────────────────────
+// ─── Strikes fired by reactions ─────────────────────────────────────────────
 
-test("X28: a dodge strikes back at the attacker with a basic attack's hit, which can crit", () => {
+test("a dodge strikes back at the attacker with a basic attack's hit, which can crit", () => {
   const riposte = buff("riposte", { reactions: [{ on: { event: "hit_evaded" }, do: [{ op: "strike", to: "other" }] }] });
   const a = arena({
     party: [{ name: "Duelist", stats: { attack: 100, evasion: 100, crit_chance: 100 }, weapon: { ...weapons.dagger, cooldown: 1000 }, statuses: ["riposte"] }],
@@ -274,7 +276,7 @@ test("X28: a dodge strikes back at the attacker with a basic attack's hit, which
   assert.deepEqual(a.hits("Brute").map((e) => [e.part, e.amount, e.crit, e.at]), [["extra", 150, true, at(12) + 1]]);
 });
 
-test("X28: a quarter of a 1,000 raw magical hit (before the first foe's Magic resist) strikes the next foe, less its own", () => {
+test("a quarter of a 1,000 raw magical hit (before the first foe's Magic resist) strikes the next foe, less its own", () => {
   const storm = buff("storm", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [{ op: "strike", of: "hit", share: 25, to: { side: "foes", pick: "highest", by: "hp" } }] }] });
   const a = arena({
     party: [{ name: "P", stats: { magic: 1000 }, weapon: { type: "magical", cooldown: 12, amount: { scale: [{ ratio: 1, stat: "magic" }] } }, statuses: ["storm"] }],
@@ -284,9 +286,9 @@ test("X28: a quarter of a 1,000 raw magical hit (before the first foe's Magic re
   assert.deepEqual(a.hits("B").map((e) => [e.part, e.amount]), [["extra", 200]]);
 });
 
-// ─── X29: what hits, actions, heals and knockouts carry ─────────────────────
+// ─── What hits, actions, heals and knockouts carry ──────────────────────────
 
-test("X29: a Fireball's hits carry `area` and a Firebolt's don't, for boosts and for event filters alike", () => {
+test("a Fireball's hits carry `area` and a Firebolt's don't, for boosts and for event filters alike", () => {
   const fireball = device("fireball", { target: { side: "foes", pick: "all" }, do: [{ op: "damage", type: "magical", amount: 100 }] });
   const firebolt = device("firebolt", { do: [{ op: "damage", type: "magical", amount: 100 }] });
   const treatise = buff("treatise", { boosts: [{ tag: "area", pct: 100 }], reactions: [{ on: { event: "hit_lands", tags: ["area"] }, do: [{ op: "apply", status: "wide", to: "self" }] }] });
@@ -300,7 +302,7 @@ test("X29: a Fireball's hits carry `area` and a Firebolt's don't, for boosts and
   assert.deepEqual(run("firebolt"), { dmg: [100], wide: 0 });
 });
 
-test("X29: a knockout names its killer: a hit's attacker (with its kind), a Per source status's source, nobody for a shared Burn, the Thorns holder", () => {
+test("a knockout names its killer: a hit's attacker (with its kind), a Per source status's source, nobody for a shared Burn, the Thorns holder", () => {
   // The Witness marks whoever the ko event names as its other.
   const witness = buff("witness", { reactions: [
     { on: { event: "ko", whose: "any" }, do: [{ op: "apply", status: "killer", to: "other" }] },
@@ -327,7 +329,7 @@ test("X29: a knockout names its killer: a hit's attacker (with its kind), a Per 
   assert.deepEqual(kill({ stats: { thorns: 1000, max_hp: 1e6, ...TAUNT } }), { killer: 1, basic: 0, witness: 0 }, "Thorns: its holder");
 });
 
-test("X29: action_resolve after a 400 MP cast on three foes carries 400 and 3; heals carry their action's kind", () => {
+test("action_resolve after a 400 MP cast on three foes carries 400 and 3; heals carry their action's kind", () => {
   const nova = device("nova", { mp: 400, target: { side: "foes", pick: "all" }, do: [{ op: "damage", type: "magical", amount: 1 }] });
   const meter = buff("meter", { reactions: [
     { on: { event: "action_resolve", kind: "ability" }, do: [{ op: "apply", status: "paid", stacks: byAmount, to: "self" }] },
@@ -349,9 +351,9 @@ test("X29: action_resolve after a 400 MP cast on three foes carries 400 and 3; h
   assert.equal(stacks(h, "P", "by_ability"), 1, "only the Mend's heal carries kind ability");
 });
 
-// ─── X1's call from take: the breaker and the blocked amount ───────────────
+// ─── Shields and Aegis ended by hits: the breaker and the blocked amount ───
 
-test("X1 (take's part): an Aegis that stops a 900 blow ends naming the attacker and 900; a Shield broken by a hit names the hitter", () => {
+test("an Aegis that stops a 900 blow ends naming the attacker and 900; a Shield broken by a hit names the hitter", () => {
   const aegis = buff("aegis", { stacking: "fizzle", block: { share: 25 } });
   const shield = buff("shield", { stacking: "intensity", absorb: true });
   const watch = buff("watch", { reactions: [
@@ -366,9 +368,9 @@ test("X1 (take's part): an Aegis that stops a 900 blow ends naming the attacker 
   assert.equal(run("shield").has("Brute", "broke").length, 1);
 });
 
-// ─── X30: taking a hit for an ally ──────────────────────────────────────────
+// ─── Taking a hit for an ally ───────────────────────────────────────────────
 
-test("X30: a 3,000 hit on an ally with 4,000 max HP lands on the cover; a 900 hit doesn't move; two covers don't pass it back", () => {
+test("a 3,000 hit on an ally with 4,000 max HP lands on the cover; a 900 hit doesn't move; two covers don't pass it back", () => {
   const oath = buff("oath", { cover: { share: 25 } });
   const run = (attack: number, both = false) => {
     const a = arena({
@@ -382,9 +384,9 @@ test("X30: a 3,000 hit on an ally with 4,000 max HP lands on the cover; a 900 hi
   assert.deepEqual(run(3000, true), [["Holder", 3000]], "the Holder's own cover doesn't send it on");
 });
 
-// ─── X31: HP floors ─────────────────────────────────────────────────────────
+// ─── HP floors ──────────────────────────────────────────────────────────────
 
-test("X31: a 5,000 blow on a unit with 1,200 HP and a spending floor leaves it at 1 and ends the floor; the next blow knocks it out", () => {
+test("a 5,000 blow on a unit with 1,200 HP and a spending floor leaves it at 1 and ends the floor; the next blow knocks it out", () => {
   const bastion = buff("bastion", { floor: { spend: true } });
   const a = arena({ party: [{ name: "P", stats: { max_hp: 1200 }, statuses: ["bastion"] }, { name: "Spare", stats: { max_hp: 1e6 } }], enemies: [{ name: "Brute", ...swing(5000) }], statuses: [bastion] });
   a.unit("P").stats.aggro = 1e6;
@@ -398,9 +400,9 @@ test("X31: a 5,000 blow on a unit with 1,200 HP and a spending floor leaves it a
   assert.equal(b.unit("P").hp, 1, "a floor that doesn't spend holds every blow");
 });
 
-// ─── X32: overhealing ───────────────────────────────────────────────────────
+// ─── Overhealing ────────────────────────────────────────────────────────────
 
-test("X32: a 1,000 heal on a unit 300 below full fires healed 300 and overhealed 700; on a full unit, overhealed 1,000 alone", () => {
+test("a 1,000 heal on a unit 300 below full fires healed 300 and overhealed 700; on a full unit, overhealed 1,000 alone", () => {
   const ear = buff("ear", { reactions: [
     { on: { event: "healed" }, do: [{ op: "apply", status: "got", stacks: byAmount, to: "holder" }] },
     { on: { event: "overhealed" }, do: [{ op: "apply", status: "over", stacks: byAmount, to: "holder" }] },
@@ -416,9 +418,9 @@ test("X32: a 1,000 heal on a unit 300 below full fires healed 300 and overhealed
   assert.deepEqual(run(5000), [0, 1000]);
 });
 
-// ─── X33: heals from others blocked ─────────────────────────────────────────
+// ─── Heals from others blocked ──────────────────────────────────────────────
 
-test("X33: an ally's Cure on a holder of `heals: own` restores nothing, nor a Regen the ally gave; its own Lifesteal and its own Regen heal", () => {
+test("an ally's Cure on a holder of `heals: own` restores nothing, nor a Regen the ally gave; its own Lifesteal and its own Regen heal", () => {
   const own = buff("own", { heals: "own" });
   const leech = buff("leech", { reactions: [{ on: { event: "hit_lands" }, do: [{ op: "heal", amount: 50, to: "self" }] }] });
   const regen = buff("regen", { duration: 10, pulse: { every: 2, do: [{ op: "heal", amount: 10 }] } });
@@ -437,9 +439,9 @@ test("X33: an ally's Cure on a holder of `heals: own` restores nothing, nor a Re
   assert.ok(a.entries("heal").some((e) => e.src === "regen" && e.amount === 10), "its own Regen heals");
 });
 
-// ─── X34: revives on a timer ────────────────────────────────────────────────
+// ─── Revives on a timer ─────────────────────────────────────────────────────
 
-test("X34: a unit knocked out at tick 10 with a timed revive stands 4 ticks later with 20% HP, every action on cooldown; if the fight is won first, it stays down", () => {
+test("a unit knocked out at tick 10 with a timed revive stands 4 ticks later with 20% HP, every action on cooldown; if the fight is won first, it stays down", () => {
   const phoenix = buff("phoenix", { survivesKO: true, reactions: [{ on: { event: "ko" }, do: [{ op: "revive", hp: { scale: [{ ratio: 0.2, stat: "max_hp", of: "target" }] }, after: 4, to: "self" }] }] });
   const zap = { id: "zap", cooldown: 30, if: NEVER, do: [{ op: "damage", type: "physical", amount: 1 }] };
   const run = (finisher: object) => arena({
@@ -455,9 +457,9 @@ test("X34: a unit knocked out at tick 10 with a timed revive stands 4 ticks late
   assert.ok(b.unit("Bird").ko && !b.entries("revive").length, "won at tick 12: it stays down");
 });
 
-// ─── X35: a reviver's rule ──────────────────────────────────────────────────
+// ─── A reviver's rule ───────────────────────────────────────────────────────
 
-test("X35: a reviver with `revives: { ready: true }` raises an ally ready, by ability or by reaction; with Bones too, on cooldown at full HP", () => {
+test("a reviver with `revives: { ready: true }` raises an ally ready, by ability or by reaction; with Bones too, on cooldown at full HP", () => {
   const raise = device("raise", { if: { side: "allies", where: { ko: true } }, target: { side: "allies", where: { ko: true } }, do: [{ op: "revive", hp: 100 }] });
   const einherjar = buff("einherjar", { revives: { ready: true } });
   const bones = buff("bones", { revives: { ready: false, hp: { scale: [{ ratio: 1, stat: "max_hp", of: "target" }] } } });
@@ -497,9 +499,9 @@ test("revive to owner: a reaction to an ally's ko raises the ally that just fell
   assert.deepEqual(check({ event: "hit_taken", whose: "ally" }), ["revive.target"]);
 });
 
-// ─── X36: after a won fight ─────────────────────────────────────────────────
+// ─── After a won fight ──────────────────────────────────────────────────────
 
-test("X36: a party wins with one member down; a Lamp holder's fight_won revive leaves it at 25% when the next fight starts", () => {
+test("a party wins with one member down; a Lamp holder's fight_won revive leaves it at 25% when the next fight starts", () => {
   const lamp = buff("lamp", { reactions: [{ on: { event: "fight_won" }, do: [{ op: "revive", hp: { scale: [{ ratio: 0.25, stat: "max_hp", of: "target" }] }, to: { side: "allies", where: { ko: true } } }] }] });
   const a = arena({ party: [{ name: "Lamp", ...swing(1000), statuses: ["lamp"] }, { name: "Down", stats: { max_hp: 4000 }, ko: true }], enemies: [{ name: "Foe", stats: { max_hp: 500 } }], statuses: [lamp] }).run();
   assert.equal(a.f.result, "won");
@@ -509,7 +511,7 @@ test("X36: a party wins with one member down; a Lamp holder's fight_won revive l
   assert.equal(m.hp, 1000, "endFight carries it standing");
 });
 
-test("X36: a fallen unit's status that survives its knockout acts for it when the fight is won (The undying's Martyr)", () => {
+test("a fallen unit's status that survives its knockout acts for it when the fight is won (The undying's Martyr)", () => {
   const undying = buff("undying", { survivesKO: true, reactions: [{ on: { event: "fight_won" }, do: [{ op: "revive", hp: { scale: [{ ratio: 0.5, stat: "max_hp", of: "target" }] }, to: "self" }] }] });
   const a = arena({
     party: [{ name: "Martyr", stats: { max_hp: 1000, ...TAUNT }, statuses: ["undying"] }, { name: "Axe", ...swing(1000, weapons.axe) }],
@@ -520,9 +522,9 @@ test("X36: a fallen unit's status that survives its knockout acts for it when th
   assert.deepEqual([a.unit("Martyr").ko, a.unit("Martyr").hp], [false, 500]);
 });
 
-// ─── X37: moving a status ───────────────────────────────────────────────────
+// ─── Moving a status ────────────────────────────────────────────────────────
 
-test("X37: a foe's Might 6 with 10 ticks left is taken: the foe has none, the taker has Might 6 ending at the same tick", () => {
+test("a foe's Might 6 with 10 ticks left is taken: the foe has none, the taker has Might 6 ending at the same tick", () => {
   const might = buff("might", { stacking: "intensity", duration: 30, boosts: [{ tag: "physical", pct: 8 }] });
   const pump = device("pump", { target: "self", do: [{ op: "apply", status: "might", stacks: 6 }] });
   const take = device("take", { do: [{ op: "remove", label: "buff", status: "might", move: true }] });
@@ -540,9 +542,9 @@ test("X37: a foe's Might 6 with 10 ticks left is taken: the foe has none, the ta
   assert.deepEqual([immune.has("Foe", "might").length, immune.has("Thief", "might").length], [0, 0], "an immune taker strips it and gets nothing");
 });
 
-// ─── X38: one of several statuses at random ─────────────────────────────────
+// ─── One of several statuses at random ──────────────────────────────────────
 
-test("X38: over 1,000 swings each of five statuses lands about 200 times, one a swing", () => {
+test("over 1,000 swings each of five statuses lands about 200 times, one a swing", () => {
   const ids = ["a1", "a2", "a3", "a4", "a5"];
   const wand = buff("wand", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [{ op: "one", of: ids.map((status) => ({ status, stacks: 2 })), to: "other" }] }] });
   const a = arena({ party: [{ name: "P", stats: { attack: 1 }, weapon: { ...weapons.dagger, cooldown: 1 }, statuses: ["wand"] }], enemies: [BAG], statuses: [wand, ...ids.map((id) => debuff(id, { stacking: "intensity" }))] }).to(1000.5);
@@ -554,9 +556,9 @@ test("X38: over 1,000 swings each of five statuses lands about 200 times, one a 
   assert.equal(stacks(a, "Bag", "a1"), counts[0] * 2, "each with its own stacks");
 });
 
-// ─── X39: recasting ─────────────────────────────────────────────────────────
+// ─── Recasting ──────────────────────────────────────────────────────────────
 
-test("X39: a third Fireball resolves twice, the second free, and the count starts again at 0", () => {
+test("a third Fireball resolves twice, the second free, and the count starts again at 0", () => {
   // The count: two casts fill the tally, which primes the third and empties; the primed cast recasts and clears what the third added.
   const staff = buff("staff", { reactions: [{ on: { event: "action_resolve", kind: "ability", repeat: false }, do: [{ op: "apply", status: "tally", to: "self" }] }] });
   const count = buff("tally", { stacking: "intensity", cap: 2, reactions: [{ on: { event: "status_capped", status: "tally" }, do: [{ op: "apply", status: "primed", to: "holder" }, { op: "remove", label: "buff", status: "tally", to: "holder" }] }] });
@@ -568,9 +570,9 @@ test("X39: a third Fireball resolves twice, the second free, and the count start
   assert.equal(a.unit("Mage").acts[0].ready, at(70), "its cooldown runs from the cast, not the repeat");
 });
 
-// ─── X41: "or" between an ability's conditions ──────────────────────────────
+// ─── "or" between an ability's conditions ───────────────────────────────────
 
-test("X41: an ability waiting for any of \"an ally down\" and \"an ally below a third\" waits while neither holds, and casts as soon as either does", () => {
+test("an ability waiting for any of \"an ally down\" and \"an ally below a third\" waits while neither holds, and casts as soon as either does", () => {
   const ward = device("ward", { cooldown: 5, if: { any: [{ side: "allies", where: { ko: true } }, { side: "allies", where: { hpBelow: 33 } }] }, target: "self", do: [{ op: "heal", amount: 1 }] });
   const a = arena({ party: [{ name: "C", abilities: ["ward"] }, { name: "Ally", stats: { max_hp: 900 } }], enemies: [BAG], abilities: [ward] });
   readyAt(a, "C", "ward", 1);
@@ -585,7 +587,7 @@ test("X41: an ability waiting for any of \"an ally down\" and \"an ally below a 
   assert.deepEqual(a.acts("C", "ward"), [(now + 1) / 1000], "below a third: it casts on the next sub-tick");
 });
 
-// ─── X40, R4: abilities that bring statuses, trained forms, through the party ─
+// ─── Abilities that bring statuses, trained forms, through the party ──────────
 
 /** The fixture pack with a Warrior passive (Grit) and Cleave upgraded, every form present, and Cleave bringing a status. */
 function trainedPack(): Content {
@@ -607,7 +609,7 @@ const warriorParty = (x: Partial<S.PartyUnitT>): S.Party => {
   return p;
 };
 
-test("R4, X40: checkParty accepts an ability's form and the passive's form; the form takes the passive's place, and its stat grants stay", () => {
+test("checkParty accepts an ability's form and the passive's form; the form takes the passive's place, and its stat grants stay", () => {
   const c = trainedPack();
   const party = warriorParty({ passive: "grit__a", abilities: ["cleave__b", "stand_guard", "shield_bash"] });
   assert.deepEqual(checkParty(c.pack, party).filter((i) => i.level === "error"), []);
@@ -621,7 +623,7 @@ test("R4, X40: checkParty accepts an ability's form and the passive's form; the 
   assert.ok(!m.start.includes("cleaver"), "a form brings only its own statuses");
 });
 
-test("X40: a unit with an ability that brings a status holds it from tick 0; without the ability equipped, it doesn't", () => {
+test("a unit with an ability that brings a status holds it from tick 0; without the ability equipped, it doesn't", () => {
   const c = trainedPack();
   const holds = (party: S.Party) => {
     const run = newRun(c, combat, { dungeon: "hollow_of_the_grey_mother", party, seed: 3 });

@@ -1,6 +1,5 @@
 /**
- * The five magical weapon kinds' 40 pieces; steps/05-core-set/5i-synergy/build/engine-spec.md section 6 fixes Dawnblade and the
- * Lightning rod.
+ * The five magical weapon kinds' 40 pieces.
  * `gear` joins the pack's gear and the rogue's stock; `statuses` the pack's statuses; `builds` is designer data, never in the pack.
  *
  * Every weapon here hits as its kind's plain weapon does (damage medium, ratio medium, from Magic: `piece()`'s default); no piece
@@ -65,7 +64,7 @@ export const statuses: StatusT[] = [
   pieceStatus("hexblade", "Hexblade", "Its basic attacks add one more stack of each of Burn, Chill, Shock, Bleed and Sunder their target already holds.", {
     reactions: [onBasic(...["burn", "chill", "shock", "bleed", "sunder"].map((s) => apply(s, "other", ifHeld(s))))],
   }),
-  // Engine spec section 6.1: a knocked-out unit can't gain a status, so its own fall is counted on its own return (8 at once).
+  // A knocked-out unit can't gain a status, so its own fall is counted on its own return (8 at once).
   pieceStatus("dawnblade", "Dawnblade", "Gains 4 Fervor each time an ally falls or is revived, and 8 when it is revived itself.", {
     survivesKO: true,
     reactions: [
@@ -87,7 +86,7 @@ export const statuses: StatusT[] = [
   pieceStatus("sunhammer", "Sunhammer", "Its basic attacks add several Burn. When a burning foe falls, its next basic attack also strikes every other foe.", {
     reactions: [
       onBasic(apply("burn", "other", own("several", "magic"))),
-      // A foe's statuses end, cause ko, just before its ko event (engine spec section 5): a burning foe has fallen.
+      // A foe's statuses end, cause ko, just before its ko event: a burning foe has fallen.
       { on: { event: "status_ended", status: "burn", cause: ["ko"], whose: "foe" }, do: [apply("sunburst", "holder")] },
     ],
   }),
@@ -128,7 +127,7 @@ export const statuses: StatusT[] = [
   }),
   { id: "cistern_spent", name: "CISTERN", text: "Its Cistern rod has given its Clarity this fight.", label: "marker", show: "sheet", stacking: "fizzle" },
   pieceStatus("glacial_rod", "Glacial rod", "Its basic attacks Slow their target.", { reactions: [onBasic(apply("slow", "other"))] }),
-  // Engine spec section 6.4: the echo answers `area` hits (a damage effect aimed at two or more units): Chain lightning's bounces, not its first strike.
+  // The echo answers `area` hits (a damage effect aimed at two or more units): Chain lightning's bounces, not its first strike.
   pieceStatus("lightning_rod", "Lightning rod", "When one of its abilities hits several foes at once, each of those hits lands again for a quarter of its damage.", {
     reactions: [{ on: { event: "hit_lands", kind: "ability", tags: ["area"] }, do: [{ op: "strike", share: 25, of: "hit", to: "other" }] }],
   }),
@@ -188,7 +187,7 @@ export const gear: GearT[] = [
   weapon("Hexblade", "rune_sword", "legendary", "The wearer's basic attacks add one more stack of each of Burn, Chill, Shock, Bleed and Sunder that their target already holds.", { statuses: ["hexblade"] }),
   weapon("Dawnblade", "rune_sword", "legendary",
     "Each time an ally falls or is revived, the wearer gains 4 Fervor. When the wearer itself is revived, it gains 8. Fervor: the holder deals 5% more damage a stack, up to 20, for the rest of the fight.",
-    { statuses: ["dawnblade"], note: "Its own fall counts on its own return (engine spec section 6.1: a knocked-out unit can't gain a status)." }),
+    { statuses: ["dawnblade"], note: "Its own fall counts on its own return (a knocked-out unit can't gain a status)." }),
 
   // Mace: Cleric, Paladin. Slow (11 ticks), magical, one hand.
   weapon("Morningstar", "mace", "common", "+2 Magic.", { stats: [st("magic", 2)] }),
@@ -221,11 +220,11 @@ export const gear: GearT[] = [
   weapon("Cistern rod", "rod", "uncommon", "+1 HP. Once a fight, when the wearer has less than a third of its MP (at the fight's start, or after it casts), it gains Clarity.", { stats: [st("max_hp", 1)], statuses: ["cistern_rod"] }),
   weapon("Glacial rod", "rod", "rare", "The wearer's basic attacks Slow their target.", { statuses: ["glacial_rod"] }),
   weapon("Lightning rod", "rod", "rare", "When one of the wearer's abilities hits several foes at once, each of those hits lands again on its foe for a quarter of the damage.",
-    { statuses: ["lightning_rod"], note: "Echoes `area` hits (engine spec section 6.4): Chain lightning's bounces, not its first strike; Thunderstorm and Blizzard throughout." }),
+    { statuses: ["lightning_rod"], note: "Echoes `area` hits (a damage effect aimed at two or more units): Chain lightning's bounces, not its first strike; Thunderstorm and Blizzard throughout." }),
   weapon("Winter's chain", "rod", "legendary", "When a foe's Chill shatters, every other foe gains a few Chill.", { statuses: ["winters_chain"] }),
   weapon("Brimming rod", "rod", "legendary",
     "Each ability the wearer casts gives the ally with the least MP a tenth of that ability's cost in MP. While the wearer has more than half its MP, its abilities cost a quarter less.",
-    { statuses: ["brimming_rod"], note: "The gift is a tenth of the MP the cast paid (action_resolve's amount, engine spec X29), so 7.5% of the listed cost while the quarter off holds." }),
+    { statuses: ["brimming_rod"], note: "The gift is a tenth of the MP the cast paid (action_resolve's amount), so 7.5% of the listed cost while the quarter off holds." }),
 
   // Staff: Cleric, Frostweaver, Pyromancer, Bramble knight. Slow (11.6 ticks), magical, two hands.
   weapon("Ashwood staff", "staff", "common", "+2 Magic, +1 HP.", { stats: [st("magic", 2), st("max_hp", 1)] }),
@@ -270,7 +269,7 @@ export const builds: Builds = {
   spark_wand: [t("bonfire", 3, 2), t("cuts", 2)],
   chain_wand: [t("harvest", 3, 2), t("cuts", 2), t("toll", 1)],
   flicker_wand: [t("cuts", 3, 3), t("harvest", 1), t("toll", 1)],
-  // An exotic: a little to every status build, a lot to none (spine section 9).
+  // An exotic: a little to every status build, a lot to none.
   wildmagic_wand: [],
 
   dowsing_rod: [t("overflow", 2, 1), t("lockdown", 1, 1)],
