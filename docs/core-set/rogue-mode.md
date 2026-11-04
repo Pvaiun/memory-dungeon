@@ -9,7 +9,7 @@ The rules are `src/rogue.ts`, pure and deterministic: a run is plain data (`Rogu
 ## A run's shape
 
 - **Three acts.** Act I is the Old Road. At each act's end the road forks: two of the next act's regions at random, each shown with its boss. Act II is the Crypt, the Fire Mine or the Ice Pass; act III the Storm Tower, the Deep Crypt or the Tower Top.
-- **A region** has four pools of fights (easy, normal, elite, bosses), made from the foes of *Core set: enemies, encounters and dungeons*. The act's boss is drawn as the act begins and shown from the start, so the party can be built toward it.
+- **A region** has four pools of fights (easy, normal, elite, bosses), made from the foes of *Core set: enemies*. The act's boss is drawn as the act begins and shown from the start, so the party can be built toward it.
 - **The map** is Slay the Spire's generator: 12 floors on 5 columns, 5 paths walked up from the bottom without crossing, and the boss above (`map.floors`, `map.width`, `map.paths`). The player picks each next room from those joined to the last.
   - Floor 1 is all fights, floor 7 all chests, floor 12 all campfires (`map.fixed`).
   - Other floors roll from `map.odds` (fight, event, elite, campfire, shop): no elite or campfire before floor `map.lateFrom`, none of elite, campfire or shop straight after its own kind, and rooms with a shared parent differ where they can. Each map has at least `map.ensure` of some kinds, and mid-act campfires are added until `map.campPaths` % of the ways up pass one.

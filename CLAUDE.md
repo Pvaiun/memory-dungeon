@@ -2,22 +2,18 @@
 
 ## What this is
 
-Design work for an optional game tab in Memory, the director's personal ADHD memory app. The game is a party-based JRPG dungeon crawler with automatic combat. In the full game, real-life quests pay unlocks and dungeons pay gear; that pitch (`docs/concept-spec.md`) stands. Everything here is design: a schema, a headless engine and simulations used to design the game. None of it runs in Memory yet.
+Design work for an optional game tab in Memory, the director's personal ADHD memory app: a party-based JRPG dungeon crawler with automatic combat. What's built is the **core set**, a vertical slice of the game whose progression is the rogue mode. Everything here is design (a schema, a headless engine, simulations and an interface), and none of it runs in Memory yet. The director sets the vision; AI designs, generates content and tunes it, using simulation in place of most playtest rounds.
 
-**What's being built now is the core set** (`docs/core-set/`): a vertical slice of the game that the director designed as four documents, covering the rules and combat system, 16 classes, gear and formations, and enemies. Its progression is the rogue mode, a roguelite run of three acts; free play keeps everything available as a sandbox, and the campaign (a road of 20 nodes, step 5a) is retired. The quest board, reward streams and unlocks, the ADHD side, stay out of it. The full game grows out of it later, in ways not yet known.
+**Read `docs/primer.md` first:** how the game works, in one short read, and where to look for anything else. Read `docs/rules.md` before any design or tuning work. Open a detailed document only for the part the work needs.
 
-The director sets the vision. AI designs, generates content and tunes it, using simulation in place of most playtest rounds.
-
-- `docs/core-set/`: the vertical slice, the current target. Its `README.md` says what's in, what's out, and how it relates to everything else. **Read it before any work on the game.**
-- `content/core-set/`: the core set as content, generated: `scale.ts` holds every first value by name, the other files hold the classes, gear, formations, enemies and dungeons in the documents' words, and `npm run content` writes `content/core-set.pack.json`, which the engine, tests and studies read. `content/core-set/tests.ts` is the documents' own test trios, which `npm run smoke` plays.
-- `ui/`: the visual interface (Vite, plain TypeScript) on the engine, a retro JRPG screen in colour that runs on a phone: a party screen (party, formation and gear in one), unit sheets, a bestiary, and a battle screen that tells a fight in short English messages as it plays. `ui/README.md` says what it shows, how the art is mapped and how it's published. `npm run ui` serves it; GitHub Pages hosts it.
-- `docs/rules.md`: the director's standing direction, one page. **Read it before any design or tuning work.** It wins over the design documents where they differ.
-- `docs/concept-spec.md`: the full game, at a high level: what it is and why. Where the core set differs from it, the core set is what's built.
-- `steps/`: working folders for open work only. Today that's step 5i's (`05-core-set/5i-synergy/`): its design (`spine.md`, `builds.md`), the engine spec and the build's report, until the director signs it off and it's written into the core set's documents. A closed step's history is in git, not here.
-- `PRIMITIVES.md`: the engine's building blocks as they stand (the core set's combat on step 4's machinery), generated from the schema.
-- `docs/memory-app-overview.md`: how Memory works today.
-- `docs/memory-stack.md`: how Memory is built (stack, data, AI pattern, limits) and what that means for the game.
-- `docs/memory-design-spec.md`: Memory's own design spec, copied from `Pvaiun/memoryapp`. The quest board steps work from it.
+- `docs/primer.md`: the game in brief, and the map of where everything is.
+- `docs/rules.md`: the director's standing direction, one page. It wins over the design documents where they differ.
+- `docs/core-set/`: the detailed reference. It holds the combat rules and vocabulary (`rules-and-vocabulary.md`), the classes (`classes.md`), the enemies and challenges (`enemies.md`) and the rogue mode (`rogue-mode.md`). They give words and behaviour; the numbers are in the content.
+- `content/core-set/`: the core set as content. `scale.ts` holds every first value by name; the other files hold the classes, gear, formations, upgrades, enemies, dungeons and the rogue mode, with each item's card text. `npm run content` writes `content/core-set.pack.json`, which the engine, tests and studies read.
+- `ui/`: the interface (Vite, plain TypeScript), a retro JRPG screen that runs on a phone. `ui/README.md` has the details; `npm run ui` serves it, and GitHub Pages hosts it.
+- `steps/`: working folders for open work only. Today that's step 5i's (`05-core-set/5i-synergy/`): its design (`spine.md`, `builds.md`), the engine spec and the build's report, until the director signs it off and it's written into the core set's documents. They're large: read only the sections the work needs (the primer's map says which). A closed step's history is in git, not here.
+- `PRIMITIVES.md`: the engine's building blocks (what content can express), generated from the schema.
+- `docs/concept-spec.md` (the full game) and `docs/memory-app-overview.md`, `docs/memory-stack.md` and `docs/memory-design-spec.md` (Memory itself): only for quest-board or integration work.
 - Memory's code lives in `Pvaiun/memoryapp`. Never change it from here. Read it only to check that the design fits its tech stack.
 
 ## How to work
@@ -25,6 +21,7 @@ The director sets the vision. AI designs, generates content and tunes it, using 
 - **Steps and gates.** Work comes in steps, in the order the director sets. A step that designs something runs three stages: the director's intent, then a design they approve, then build and tune. Each stage ends with the director: don't move past a gate, or start the next step, without them. Work the director has already designed starts at build.
 - **Intent first.** Don't propose a design until the director's intent for the step is recorded, and never write their intent for them. Record it short: what they want, quoting them only where the wording matters.
 - **A step's folder is scratch.** `steps/<slug>/` holds the open step's intent, design and report while it runs. When the step closes, fold what lasts into the design documents and `docs/rules.md`, and delete the folder. Keep no tuning trails or logs; generated output goes to `out/`, which git ignores.
+- **Documents hold words, data holds numbers.** A design document says what a thing does and why, in the scale's words. Its sizes, costs, timings and stat lines live in `content/core-set/` alone, so name the constant rather than copying a value. Documents keep no history (no "until Oct 28", no "was"): git has it. When a change lands, rewrite the line.
 - **The report** is what the director reads at a gate: short and plain, leading with the decisions needed (a challenge with both versions' numbers), then what was built and what changed from the design, what the numbers say and how sure, and the samples worth looking at.
 - **Be a designer, not an order-taker.** Direction is guidance. Challenge direction that doesn't fit the game: in the design, before anything is built, and in tuning, as soon as the evidence shows it. Bring reasons or numbers. Never change a direction silently, and never grind around one that's the real problem.
 - **Trust by sample.** The director reviews rules and samples, not the full volume. Show what you're least sure about, not just your best work.

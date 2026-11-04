@@ -1,5 +1,5 @@
 /**
- * The 29 enemies, their adds and reskins (docs/core-set/enemies-encounters-and-dungeons.md),
+ * The 29 enemies, their adds and reskins (docs/core-set/enemies.md),
  * with their abilities and passives. Stat lines are HP, MP, MP regen, Attack,
  * Magic, Armor, Crit, Aggro, as the document lists them.
  */

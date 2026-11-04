@@ -1,5 +1,5 @@
 /**
- * The 27 encounters and 7 dungeons (docs/core-set/enemies-encounters-and-dungeons.md).
+ * The 27 encounters and 7 dungeons (docs/core-set/enemies.md, Encounters).
  * Dungeons are played in order, with no progression between them.
  */
 import type { DungeonT } from "../../src/schema.js";

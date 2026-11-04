@@ -1,7 +1,7 @@
 /**
  * The documents' own tests, as data: for each encounter, a trio that should beat
  * it and one that should fail for the challenge's own reason
- * (docs/core-set/enemies-encounters-and-dungeons.md, Encounters), and for each
+ * (docs/core-set/enemies.md, Encounters), and for each
  * run the trios that should clear it. `npm run smoke` plays them.
  */
 export type EncounterTest = { dungeon: string; stage: string; poses: string; beats: string[]; fails?: string[] };

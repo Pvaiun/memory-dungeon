@@ -4,7 +4,7 @@ Design work for an optional game tab in Memory, the director's personal ADHD mem
 
 What's being built right now is the **core set**: a vertical slice of that game, set out in `docs/core-set/` (the rules, combat, classes, gear, formations, enemies and the rogue mode). The rogue mode, a roguelite run of three acts, is the game; free play keeps everything available as a sandbox. The quest board and reward streams stay out of it.
 
-Start with `CLAUDE.md` (how to work, and where things stand), then `docs/rules.md` (the director's standing direction) and `docs/core-set/README.md` (the slice).
+Start with `docs/primer.md` (how the game works, and where everything is), then `CLAUDE.md` (how to work, and where things stand) and `docs/rules.md` (the director's standing direction).
 
 ```
 npm install

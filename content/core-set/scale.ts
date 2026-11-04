@@ -6,7 +6,7 @@
  * so tuning changes a constant here and regenerates the pack.
  *
  * Amount stats are stored at 1,000 per point of the scale (HP 2 is 2,000), as
- * docs/core-set/README.md asks. Stats counted in percent (Crit chance, Evasion,
+ * docs/primer.md (Numbers) says. Stats counted in percent (Crit chance, Evasion,
  * Accuracy, Magic resist, Lifesteal, Siphon, Double strike) are stored in percent
  * points, since a percentage can't be ×1,000.
  */
