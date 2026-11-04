@@ -1,9 +1,9 @@
-/** The Assassin's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit-2.ts. */
+/** The Assassin's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit.ts. */
 import { from, HIT, stacks, STATUS } from "../scale.js";
 import type { EffectT, ReactionT, TargetRuleT } from "../../../src/schema.js";
 import { own } from "../pieces/kit.js";
 import { T } from "../classes.js";
-import { abilityUp, apply, baseAbility, both, helper, hitOf, kit, marker, passiveUp, phys, removeMine } from "./kit-2.js";
+import { abilityUp, apply, baseAbility, both, helper, hitOf, kit, marker, passiveUp, phys, removeMine } from "./kit.js";
 
 // ─── Assassin ────────────────────────────────────────────────────────────────
 

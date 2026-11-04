@@ -28,7 +28,7 @@
  *
  *   npx tsx tools/piece-check.ts [--only <ids or a share>] [--seeds 3] [--quick] [--workers 4] [--out out/piece-check] [--show]
  *
- * --only takes a share (physical, magical, armor, offhands, formations, upgrades1, upgrades2) or ids: a piece, a mythic, a
+ * --only takes a share (physical, magical, armor, offhands, formations, upgrades) or ids: a piece, a mythic, a
  * formation, an upgrade (its five forms) or one form, comma-separated. --quick: one seed, and one regular fight, the elite
  * and the boss of each act. --show prints each item's fielded party and control as JSON, and plays nothing. Output:
  * out/piece-check/report.md and report.json. Child processes do the playing (worker threads don't get tsx's loader).
@@ -47,7 +47,7 @@ import * as physical from "../content/core-set/pieces/weapons-physical.js";
 import * as magical from "../content/core-set/pieces/weapons-magical.js";
 import * as armor from "../content/core-set/pieces/armor-amulets.js";
 import * as offhands from "../content/core-set/pieces/offhands.js";
-import { first as part1, second as part2 } from "../content/core-set/upgrades/index.js";
+import * as ups from "../content/core-set/upgrades/index.js";
 
 const PACK = "content/core-set.pack.json";
 
@@ -267,8 +267,7 @@ const SHARES = {
   armor: "Armor and amulets",
   offhands: "Offhands",
   formations: "Formations",
-  upgrades1: "Upgrades, part 1 (and mythics)",
-  upgrades2: "Upgrades, part 2 (and mythics)",
+  upgrades: "Upgrades (and mythics)",
 } as const;
 type Share = keyof typeof SHARES;
 const FORMS = ["p", "a", "b", "ap", "bp"] as const;
@@ -458,10 +457,8 @@ function allItems(c: Content): Item[] {
     ...pieces("armor", armor.gear),
     ...pieces("offhands", offhands.gear),
     ...c.pack.formations.filter((f) => f.id !== "neutral").map((f) => formationItem(c, f)),
-    ...part1.upgrades.flatMap((u) => formItems(c, u, "upgrades1")),
-    ...pieces("upgrades1", part1.mythics),
-    ...part2.upgrades.flatMap((u) => formItems(c, u, "upgrades2")),
-    ...pieces("upgrades2", part2.mythics),
+    ...ups.upgrades.flatMap((u) => formItems(c, u, "upgrades")),
+    ...pieces("upgrades", ups.mythics),
   ];
 }
 

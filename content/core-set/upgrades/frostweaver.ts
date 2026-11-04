@@ -1,9 +1,9 @@
-/** The Frostweaver's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit-2.ts. */
+/** The Frostweaver's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit.ts. */
 import { HIT, stacks, STATUS } from "../scale.js";
 import { own } from "../pieces/kit.js";
 import type { EffectT, TargetRuleT } from "../../../src/schema.js";
 import { T } from "../classes.js";
-import { abilityUp, apply, BLIZZARD_CHILL, helper, hitOf, kit, LANCE_CHILL, magic, marker, passiveUp, STILLNESS_CHILL } from "./kit-2.js";
+import { abilityUp, apply, BLIZZARD_CHILL, helper, hitOf, kit, LANCE_CHILL, magic, marker, passiveUp, STILLNESS_CHILL } from "./kit.js";
 
 // ─── Frostweaver ─────────────────────────────────────────────────────────────
 

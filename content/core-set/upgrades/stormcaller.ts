@@ -1,9 +1,9 @@
-/** The Stormcaller's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit-2.ts. */
+/** The Stormcaller's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit.ts. */
 import type { EffectT, ReactionT, StatusT } from "../../../src/schema.js";
 import { own } from "../pieces/kit.js";
 import { AGGRO_STEP, HIT, SHOCK_STACKS, SPECIAL, stacks } from "../scale.js";
 import { T } from "../classes.js";
-import { abilityUp, apply, cd, helper, hitOf, kit, magic, marker, passiveUp, POWER, removeMine } from "./kit-2.js";
+import { abilityUp, apply, cd, helper, hitOf, kit, magic, marker, passiveUp, POWER, removeMine } from "./kit.js";
 
 // ─── Stormcaller ─────────────────────────────────────────────────────────────
 

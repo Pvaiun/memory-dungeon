@@ -161,12 +161,10 @@ content/
       index.ts               every item gathered, for the pack and the tools
     upgrades/                each ability's and passive's power step and two versions, and the mythics
       index.ts               gathers them, in order
-      kit-1.ts               the helpers the first eight classes' files use
+      kit.ts                 the helpers every class's file writes its upgrades with: one form(v, k, plus) gives all five forms and their cards
       knight.ts, cleric.ts, ranger.ts, bramble-knight.ts, hoplite.ts, paladin.ts, valkyrie.ts, bard.ts   one class each
-      mythics-1.ts           those eight classes' mythics
-      kit-2.ts               the helpers the other eight classes' files use
       hexer.ts, monk.ts, assassin.ts, vampire.ts, pyromancer.ts, frostweaver.ts, stormcaller.ts, geomancer.ts   one class each
-      mythics-2.ts           those eight classes' mythics
+      mythics.ts             the 16 mythics, one per class
   parties/
     starters.json            the starter trio, for npm run dungeon
 ui/

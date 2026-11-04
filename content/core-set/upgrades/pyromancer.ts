@@ -1,9 +1,9 @@
-/** The Pyromancer's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit-2.ts. */
+/** The Pyromancer's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit.ts. */
 import type { EffectT, NumT, ToT } from "../../../src/schema.js";
 import { own } from "../pieces/kit.js";
 import { BURN_STACKS, from, HIT, stacks, WINDUP } from "../scale.js";
 import { T } from "../classes.js";
-import { abilityUp, apply, cd, helper, hitOf, kit, magic, passiveUp } from "./kit-2.js";
+import { abilityUp, apply, cd, helper, hitOf, kit, magic, passiveUp } from "./kit.js";
 
 // ─── Pyromancer ──────────────────────────────────────────────────────────────
 

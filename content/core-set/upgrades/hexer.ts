@@ -1,9 +1,9 @@
-/** The Hexer's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit-2.ts. */
+/** The Hexer's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit.ts. */
 import { own } from "../pieces/kit.js";
 import { BURN_STACKS, HIT, stacks } from "../scale.js";
 import { T } from "../classes.js";
 import type { EffectT, TargetRuleT } from "../../../src/schema.js";
-import { abilityUp, apply, cd, COLD_HEX, helper, magic, marker, passiveUp } from "./kit-2.js";
+import { abilityUp, apply, cd, COLD_HEX, helper, magic, marker, passiveUp } from "./kit.js";
 
 // ─── Hexer ───────────────────────────────────────────────────────────────────
 

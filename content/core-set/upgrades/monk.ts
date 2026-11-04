@@ -1,9 +1,9 @@
-/** The Monk's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit-2.ts. */
+/** The Monk's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit.ts. */
 import type { ReactionT } from "../../../src/schema.js";
 import { own } from "../pieces/kit.js";
 import { from, HIT, SPECIAL, stacks, STATUS } from "../scale.js";
 import { T } from "../classes.js";
-import { abilityUp, apply, cd, FIST_BURN, helper, hitOf, kit, marker, passiveUp, phys } from "./kit-2.js";
+import { abilityUp, apply, cd, FIST_BURN, helper, hitOf, kit, marker, passiveUp, phys } from "./kit.js";
 
 // ─── Monk ────────────────────────────────────────────────────────────────────
 

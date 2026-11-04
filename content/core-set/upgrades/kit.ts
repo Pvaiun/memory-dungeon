@@ -1,11 +1,14 @@
 /**
- * The helpers the other eight classes' upgrades are written with (Hexer, Monk, Assassin, Vampire, Pyromancer, Frostweaver,
- * Stormcaller, Geomancer), and the lists their files add to. Each form is built from the class's own ability or passive in
- * classes.ts, so a form keeps everything of the base it doesn't name. The power step is the training rule's "two fifths
- * more" of the amount the card names, or a cooldown a word shorter (by the base's own id, so its jitter stays), or a rung
- * cheaper. The hooks are the engine's primitives (PRIMITIVES.md).
+ * The helpers every class's upgrades are written with, and the lists their files add to (index.ts gathers them). An
+ * upgrade is a power step and two versions (A and B) of an ability or a passive, as five forms: the power step alone
+ * (`p`), each version (`a`, `b`), and each version with the power step (`ap`, `bp`). Each form is built from the class's
+ * own ability or passive in classes.ts, so a form keeps everything of the base it doesn't name. A file writes one
+ * function, `form(v, k, plus)`, for all five: `k` is POWER on a form with the power step, so "two fifths more" is `× k`;
+ * a step that isn't a multiplier (a cooldown word shorter, a rung cheaper) reads `plus`. A form's card is its version's
+ * (or the base's) with the power step's line added, the upgrade's own `power` or the version's `plus` where it differs.
+ * The hooks are the engine's primitives (PRIMITIVES.md).
  */
-import type { AbilityT, EffectT, GearT, NumT, StatusT, ToT, UpgradeT } from "../../../src/schema.js";
+import type { AbilityT, EffectT, GearT, NumT, StatusT, TargetRuleT, ToT, UpgradeT } from "../../../src/schema.js";
 import { COOLDOWN, from, HIT, type HitWord, jitter } from "../scale.js";
 import { abilities as baseAbilities, classes, passives } from "../classes.js";
 import type { Build, Builds, BuildTag } from "../pieces/kit.js";
@@ -28,7 +31,7 @@ type V = "" | "a" | "b";
 const FORMS: [Form, V, boolean][] = [["p", "", true], ["a", "a", false], ["b", "b", false], ["ap", "a", true], ["bp", "b", true]];
 const formId = (id: string, f: Form) => `${id}__${f}`;
 
-export const apply = (status: string, extra: { stacks?: NumT; to?: ToT } = {}): EffectT => ({ op: "apply", status, ...extra }) as EffectT;
+export const apply = (status: string, extra: Partial<Extract<EffectT, { op: "apply" }>> = {}): EffectT => ({ op: "apply", status, ...extra }) as EffectT;
 export const phys = (amount: NumT, extra: object = {}): EffectT => ({ op: "damage", type: "physical", amount, ...extra }) as EffectT;
 export const magic = (amount: NumT, extra: object = {}): EffectT => ({ op: "damage", type: "magical", amount, ...extra }) as EffectT;
 export const removeMine = (status: string, label: "buff" | "debuff" | "marker" = "buff", to: ToT = "holder"): EffectT => ({ op: "remove", label, status, to }) as EffectT;
@@ -36,7 +39,14 @@ export const removeMine = (status: string, label: "buff" | "debuff" | "marker" =
 export const hitOf = (stat: string, word: HitWord, k = 1): NumT => from(stat, HIT[word] * k);
 /** A cooldown word, moved by the base ability's id as classes.ts moves the base's, so a form keeps its ability's place in the spread. */
 export const cd = (word: keyof typeof COOLDOWN, baseId: string) => jitter(COOLDOWN[word], baseId);
-export const both = (pct: number) => [{ tag: "physical", pct }, { tag: "magical", pct }];
+export const both = (pct: NumT) => [{ tag: "physical", pct }, { tag: "magical", pct }];
+/** A status's stat read off its holder: `of: holder`, as a status must say. */
+export const ofHolder = (ratio: number, stat: string): NumT => ({ scale: [{ ratio, stat, of: "holder" }] });
+/** The phrase "the ally foes are most drawn to": a Taunting ally if there is one (the most Aggro among several), otherwise the most Aggro. */
+export const DRAWN: TargetRuleT = { side: "allies", where: { has: "taunt" }, ifNone: "any", pick: "highest", by: { stat: "aggro" } };
+/** The power step on the quick word, which has none below it: a quarter off. Whole sub-ticks. */
+export const quarterOff = (t: number) => Math.round(t * 0.75 * 1000) / 1000;
+export const r6 = (x: number) => Math.round(x * 1e6) / 1e6;
 
 /** Rounds away float noise (0.40599999 → 0.406), so the pack reads cleanly. */
 export function tidy<T>(x: T): T {

@@ -1,8 +1,8 @@
-/** The Vampire's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit-2.ts. */
+/** The Vampire's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit.ts. */
 import type { EffectT, ReactionT, StatusT } from "../../../src/schema.js";
 import { T } from "../classes.js";
 import { from, SPECIAL, stacks } from "../scale.js";
-import { abilityUp, apply, cd, helper, kit, marker, passiveUp, phys, removeMine } from "./kit-2.js";
+import { abilityUp, apply, cd, helper, kit, marker, passiveUp, phys, removeMine } from "./kit.js";
 
 // ─── Vampire ─────────────────────────────────────────────────────────────────
 

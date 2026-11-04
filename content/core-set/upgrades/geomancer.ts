@@ -1,8 +1,8 @@
-/** The Geomancer's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit-2.ts. */
+/** The Geomancer's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit.ts. */
 import { from, HIT, SPECIAL, STATUS, WINDUP } from "../scale.js";
 import type { ReactionT, TargetRuleT } from "../../../src/schema.js";
 import { T } from "../classes.js";
-import { abilityUp, apply, cd, helper, hitOf, kit, magic, passiveUp, removeMine } from "./kit-2.js";
+import { abilityUp, apply, cd, helper, hitOf, kit, magic, passiveUp, removeMine } from "./kit.js";
 
 // ─── Geomancer ───────────────────────────────────────────────────────────────
 
