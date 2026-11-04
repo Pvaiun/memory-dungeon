@@ -4,7 +4,7 @@
  * a fast, steady player whose win rate measures the run's difficulty, and whose dials (skill, greed, random picks)
  * measure what each decision is worth.
  *
- * Gear goes by the campaign's kit weights (src/sim/kits.ts) for its stats and swing, plus a step for its rarity (a plain,
+ * Gear goes by the kit weights (src/sim/kits.ts) for its stats and swing, plus a step for its rarity (a plain,
  * generic reading, with no table of pieces); formations by their seats' stats and rarity; trainings by a few flat values.
  * Class values start as rules of thumb and are replaced by what the simulations measure.
  */

@@ -1,5 +1,5 @@
 /**
- * A fight as a player remembers it, for the AI playtesters' command lines (src/campaign-play.ts, src/rogue-play.ts):
+ * A fight as a player remembers it, for the AI playtester's command line (src/rogue-play.ts):
  * per fight, how it went, who fell, what the foes did, what the party dealt and took. Enemy stats stay hidden; foes'
  * HP shows as a share, as their bars do on screen.
  */

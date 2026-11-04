@@ -2,9 +2,8 @@ import { loadArt } from "./art.js";
 import { h, initBack } from "./dom.js";
 import { buildFont, fitScale, FONT } from "./pixel.js";
 import { setNumberScale } from "./content.js";
-import { sanitize, save, setup } from "./state.js";
-import { go, mount, refresh, screen, setTheme } from "./screens.js";
-import { setCleared } from "./journey.js";
+import { setup } from "./state.js";
+import { go, mount, screen, setTheme } from "./screens.js";
 import { checkForUpdate } from "./update.js";
 
 fitScale();
@@ -34,8 +33,6 @@ document.addEventListener("visibilitychange", () => { if (!document.hidden) void
 // Hooks for scripted screenshots: window.__battle("old_road~ogre_bridge") starts that fight; window.__go("party") opens a screen.
 (window as unknown as { __battle: (d: string, seed?: number) => void }).__battle = (d: string, seed?: number) => go("battle", { dungeon: d, seed });
 (window as unknown as { __go: (s: string, arg?: unknown) => void }).__go = (s: string, arg?: unknown) => go(s as Parameters<typeof go>[0], arg);
-// window.__journey(5): the journey with its first five nodes cleared (nothing marked seen), for screenshots.
-(window as unknown as { __journey: (n: number) => void }).__journey = (n: number) => { setCleared(n); sanitize(); save(); refresh(); };
 
 // A gallery of every sprite as drawn, for checking the art: window.__gallery().
 import { classes, enemies } from "./content.js";

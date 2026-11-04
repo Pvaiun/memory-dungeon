@@ -1,6 +1,6 @@
 /**
- * The campaign's engine rules: a dungeon's change to every foe, and a lost cast going on
- * cooldown under ruleset.lostCast; and the campaign helpers the interface and simulations share.
+ * A run's engine rules: a dungeon's change to every foe, a lost cast going on cooldown under
+ * ruleset.lostCast, the stagger, the enrage, Stun's pause and the campfire between fights.
  */
 import { test } from "vitest";
 import assert from "node:assert/strict";
@@ -9,7 +9,6 @@ import { arena } from "./arena.js";
 import { combat } from "./rules.js";
 import { advanceOnce, loadContent, newRun } from "../run.js";
 import type { CFight } from "./fight.js";
-import { campaign, meets, ownedAt, rewardsOf, unmet } from "../../campaign.js";
 
 const at = (ticks: number) => ticks * 1000;
 const debuff = (id: string, x: object) => ({ id, name: id.toUpperCase(), label: "debuff", show: "icon", stacking: "refresh", ...x });
@@ -57,27 +56,6 @@ test("foes: a dungeon's change to every foe raises their HP, sets their power an
   assert.ok(f.units.filter((u) => u.side === "party").every((u) => !u.statuses.some((s) => s.id === "haste") && (u.stats.power ?? 0) === 0), "the party is untouched");
 });
 
-test("campaign: what's owned grows by each node's rewards, a new class brings its plain weapon, and needs are checked", () => {
-  const c = loadContent(raw);
-  const cp = campaign(c);
-  const start = ownedAt(c, 0);
-  assert.deepEqual(start.classes, ["knight", "cleric", "ranger"]);
-  assert.ok(start.gear.includes("plain_sword") && start.gear.includes("plain_bow"));
-  const i = cp.nodes.findIndex((n) => n.rewards.classes.includes("pyromancer"));
-  assert.ok(ownedAt(c, i + 1).classes.includes("pyromancer") && !ownedAt(c, i).classes.includes("pyromancer"));
-  assert.ok(rewardsOf(c, i).gear.includes("plain_staff"));
-  const everything = ownedAt(c, cp.nodes.length);
-  assert.equal(everything.classes.length, c.pack.classes.length);
-  // The retired campaign owns only the plain weapons; the other pieces are the rogue's and free play's.
-  assert.equal(everything.gear.length, c.pack.gear.filter((g) => g.source === "starter").length);
-  // No node needs a formation, so a trial is given one here.
-  const trial = { ...cp.nodes.find((n) => n.kind === "trial")!, needs: [{ formation: "wedge" }] };
-  const party = { formation: "neutral", units: [{ class: "knight", position: "left", abilities: [], gear: {} }] };
-  assert.ok(unmet(c, trial, party).length > 0);
-  assert.ok(meets(c, { armor: "none" }, party));
-  assert.ok(!meets(c, { includes: ["cleric"] }, party));
-});
-
 test("stagger: copies of the same enemy start a fight 1.5 ticks apart, so a pack ripples instead of volleying", () => {
   const pack = structuredClone(raw);
   delete pack.ruleset.opening; // the opening roll adds to each copy's start; this test reads the stagger alone
@@ -109,10 +87,10 @@ test("a pausing lockout (Stun): a wind-up under way waits it out and then lands,
 
 test("campfire: the run pauses for a choice between two fights; REST gives back HP, FOCUS MP, to everyone standing", () => {
   const pack = structuredClone(raw);
-  const d = pack.dungeons.find((x: { id: string }) => x.id === "cmp_old_road");
+  const d = pack.dungeons.find((x: { id: string }) => x.id === "old_road");
   // The campfire's mechanism, not the run's balance: foes made weak enough that the starters reach it.
   d.foes = { ...(d.foes ?? {}), hp: -80, power: -80 };
-  assert.ok(d.stages.some((s: { kind: string }) => s.kind === "campfire"), "every campaign run has a campfire");
+  assert.ok(d.stages.some((s: { kind: string }) => s.kind === "campfire"), "every run has a campfire");
   const at = d.stages.findIndex((s: { kind: string }) => s.kind === "campfire");
   assert.equal(at, Math.ceil(d.stages.filter((s: { kind: string; boss?: boolean }) => s.kind === "fight" && !s.boss).length / 2), "after half the regular fights");
   const c = loadContent(pack);
@@ -120,9 +98,9 @@ test("campfire: the run pauses for a choice between two fights; REST gives back 
   let reached = 0;
   for (const pick of ["rest", "focus"]) {
     // The first seed on which this party reaches the campfire.
-    let run = newRun(c, combat, { dungeon: "cmp_old_road", party, seed: 1 }, { checked: true });
+    let run = newRun(c, combat, { dungeon: "old_road", party, seed: 1 }, { checked: true });
     for (let seed = 1; seed < 40; seed++) {
-      run = newRun(c, combat, { dungeon: "cmp_old_road", party, seed }, { checked: true });
+      run = newRun(c, combat, { dungeon: "old_road", party, seed }, { checked: true });
       while (!run.pending && !run.outcome) advanceOnce(c, combat, run);
       if (run.pending) break;
     }
@@ -146,11 +124,11 @@ test("campfire: the run pauses for a choice between two fights; REST gives back 
 test("campfire RAISE: the fallen member of the player's choice stands up with its share of max HP; nobody else changes", () => {
   const c = loadContent(raw);
   const party = { formation: "neutral", units: [{ class: "knight", position: "left", abilities: ["fortify", "stand_fast", "shield_bash"], gear: { weapon: "plain_sword" } }, { class: "cleric", position: "center", abilities: ["renew", "cure", "raise"], gear: { weapon: "plain_mace" } }, { class: "ranger", position: "right", abilities: ["barbed_arrow", "frost_arrow", "rending_arrow"], gear: { weapon: "plain_bow" } }] };
-  const run = newRun(c, combat, { dungeon: "cmp_old_road", party, seed: 1 }, { checked: true });
+  const run = newRun(c, combat, { dungeon: "old_road", party, seed: 1 }, { checked: true });
   const m = run.party as unknown as { id: string; hp: number; mp: number; stats: Record<string, number> }[];
   m[1].hp = 0;
   m[2].hp = 0;
-  const st = c.dungeons.get("cmp_old_road")!.stages.find((s) => s.kind === "campfire")!;
+  const st = c.dungeons.get("old_road")!.stages.find((s) => s.kind === "campfire")!;
   const d = combat.stage({ c, run, log: undefined } as never, st, null as never)!;
   assert.deepEqual(d.options, ["rest", "focus", "raise:p2", "raise:p3"]);
   const knight = m[0].hp;

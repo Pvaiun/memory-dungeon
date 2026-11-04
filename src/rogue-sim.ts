@@ -7,7 +7,7 @@
  *                  [--noisy spoils,map] [--json out/rogue/x.json] [--workers N] [--diary seed]
  *
  * `--set` patches the pack ("rogue/config/knobs/0/mob=-40"); `--dials` the player. `--diary N` prints one run's notes.
- * Bundled by esbuild like the campaign tuning, so worker threads can load it.
+ * Bundled by esbuild like the other tuners, so worker threads can load it.
  */
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { availableParallelism } from "node:os";

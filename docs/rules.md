@@ -7,7 +7,7 @@ Where a rule and a design document disagree, this page wins and the document get
 ## The game
 
 - **No control during fights.** Preparation is the game: a team wins or loses as a team, not because a button was pressed at the right moment. More potion types, a rewind or test fight (the Hourglass) and more abilities per class are for later, at the director's word.
-- **The rogue mode is the game** (`docs/core-set/rogue-mode.md`). Free play is the sandbox; the campaign is retired.
+- **The rogue mode is the game** (`docs/core-set/rogue-mode.md`). Free play is the sandbox.
 - **A few numerical systems:** mechanics map onto stats, statuses, damage types, flags and targeting. No bespoke words acting as locks. No battlefield geometry (no rows, no reach) and no positional targeting.
 - **A class is a unit:** a party holds at most one of each, three to a party.
 - **Bad choices are part of a roguelike.** Weak options (Raise, Valhalla) are rolled like any other.

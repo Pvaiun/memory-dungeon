@@ -104,7 +104,7 @@ export type Item =
 
 export type CFight = Omit<Fight, "units"> & {
   units: CUnit[]; now: number; seq: number; queue: Item[]; moments: number; begun: boolean; seed: number;
-  /** The dungeon's change to every foe (a campaign trial's): applied to each enemy as it's made, summons included. */
+  /** The dungeon's change to every foe (a fight's knob): applied to each enemy as it's made, summons included. */
   foes?: S.FoesT;
   /** The enrage has been announced (ruleset.enrage). */
   enraged?: boolean;

@@ -5,7 +5,7 @@ The least you need to know to work on the game. Read it first, then open a detai
 ## What this is
 
 - **The game** is a party-based JRPG dungeon crawler with automatic combat, played on a phone-sized browser interface.
-- **The core set is the game's content:** the combat rules, 16 classes, gear, formations, upgrades and mythics, 29 enemies, and the **rogue mode**, which is the game. Free play keeps everything available as a sandbox, and the campaign is retired.
+- **The core set is the game's content:** the combat rules, 16 classes, gear, formations, upgrades and mythics, 29 enemies, and the **rogue mode**, which is the game. Free play keeps everything available as a sandbox.
 - **The repo designs it:** a schema, a headless engine, simulations and the interface. Everything is built and approved, and nothing is balanced yet.
 
 ## How it plays

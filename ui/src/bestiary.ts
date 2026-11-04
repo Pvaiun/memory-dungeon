@@ -1,11 +1,10 @@
 /**
  * The bestiary's record, a Pokédex's: the enemies met in a fight (in any mode), and which of those have been looked
- * at, for their NEW tags. In the journey and the rogue mode an enemy not met yet is a silhouette and ???; free play,
- * the sandbox, shows them all. Kept in localStorage under its own key. A first load starts with every enemy of the
- * journey's cleared runs met, so a player who got far doesn't find an empty book.
+ * at, for their NEW tags. In the rogue mode an enemy not met yet is a silhouette and ???; free play, the sandbox, shows
+ * them all. Kept in localStorage under its own key.
  */
 import { c } from "./content.js";
-import { cleared, mode, nodes } from "./journey.js";
+import { mode } from "./mode.js";
 
 const KEY = "memory-dungeon.bestiary.v1";
 type Rec = { met: string[]; seen: string[] };
@@ -21,10 +20,7 @@ function load(): Rec {
   } catch {
     /* private mode: start empty */
   }
-  // First load: what the journey's cleared runs met, already looked at.
-  const met = new Set<string>();
-  for (const n of nodes().slice(0, cleared())) for (const s of c.dungeons.get(n.dungeon)?.stages ?? []) if (s.kind === "fight") for (const e of s.enemies) met.add(e);
-  return { met: [...met], seen: [...met] };
+  return { met: [], seen: [] };
 }
 function save() {
   try {

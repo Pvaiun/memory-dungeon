@@ -3,11 +3,11 @@
  * ability, status, enemy, gear piece and formation in the pack, in both modes, at frozen knobs and fixed seeds.
  *
  * A fixed spread of parties (every trio sampled evenly, every formation, every piece of gear a class can wear, plus the
- * sensible kits the campaign tuning uses) plays every campaign node's run and every rogue fight at its calibrated knob.
+ * sensible kits) plays every free-play run and every rogue fight at its calibrated knob.
  * Each line is compared with the others of its kind and flagged at both ends against bands written down with their
  * reasons (BANDS below). Win rates are context here, never the measure: the knobs absorb them.
  *
- *   npm run balance [-- --trios 48] [--seeds 1] [--sets campaign,rogue] [--set path=value]... [--out out/balance] [--workers N]
+ *   npm run balance [-- --trios 48] [--seeds 1] [--sets rogue,free] [--set path=value]... [--out out/balance] [--workers N]
  *
  * Output: out/balance/sheet.md (the sheet and the flags), sheet.json (every number), and the flags on screen.
  * Bundled by esbuild like the other tuners, so worker threads can load it.
@@ -15,11 +15,10 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { availableParallelism } from "node:os";
 import { Worker, isMainThread, parentPort, workerData } from "node:worker_threads";
-import { campaign, everything, simPick } from "./campaign.js";
 import { combat } from "./engine/combat/rules.js";
 import type { CFight } from "./engine/combat/fight.js";
 import type { Entry } from "./engine/log.js";
-import { advanceOnce, answer, loadContent, newRun, type Content, type Run } from "./engine/run.js";
+import { advanceOnce, answer, loadContent, newRun, type Content, type Picker, type Run } from "./engine/run.js";
 import { next, rngFor } from "./engine/rng.js";
 import { foesFor, knobFor, refFloors, registerGear, rogue, type RogueRun } from "./rogue.js";
 import type { AbilityT, DungeonT, GearT, Party } from "./schema.js";
@@ -34,21 +33,20 @@ type Tally = Record<string, number>;
 const add = (t: Tally, k: string, v = 1) => { t[k] = (t[k] ?? 0) + v; };
 const get = (t: Tally, k: string) => t[k] ?? 0;
 
-type SetId = "campaign" | "rogue" | "free";
-/** One thing to play: a dungeon (a campaign node's run, a free-play run at the documents' numbers, or a rogue fight as a one-stage dungeon). */
+type SetId = "rogue" | "free";
+/** One thing to play: a dungeon (a free-play run at the documents' numbers, or a rogue fight as a one-stage dungeon). */
 type Fight = { set: SetId; id: string; name: string; dungeon: string; kind: "run" | "fight"; probe: boolean };
 type Job = { set: string; dungeon: string; party: Party; kind: "spread" | "kit" | "probe"; seeds: number[] };
 
 // ─── The fights ─────────────────────────────────────────────────────────────
 
 /**
- * Every campaign node's run at the pack's knobs; the seven free-play runs at the documents' numbers (no knob: the enemies as
- * designed); and every rogue fight at its calibrated knob (heat 0, its pool's reference floor). `probe` marks the shorter
- * list the gear and formation probes play: the campaign, the free runs and the rogue bosses.
+ * The seven free-play runs at the documents' numbers (no knob: the enemies as designed); and every rogue fight at its
+ * calibrated knob (heat 0, its pool's reference floor). `probe` marks the shorter list the gear and formation probes play:
+ * the free runs and the rogue bosses.
  */
 export function fightSets(c: Content, sets: SetId[]): Fight[] {
   const out: Fight[] = [];
-  if (sets.includes("campaign")) for (const n of campaign(c).nodes) out.push({ set: "campaign", id: n.id, name: n.name, dungeon: n.dungeon, kind: "run", probe: true });
   if (sets.includes("free")) for (const id of c.pack.progression.dungeonOrder) out.push({ set: "free", id, name: c.dungeons.get(id)!.name, dungeon: id, kind: "run", probe: true });
   if (sets.includes("rogue")) {
     registerGear(c);
@@ -78,7 +76,7 @@ export function fightSets(c: Content, sets: SetId[]): Fight[] {
 /**
  * The spread: `trios` trios picked so every class appears about equally often, each in a formation (round robin over all
  * of them), seated by the kit weights, and twice: once wearing a rotation of every piece its class can wear (so what nobody
- * picks is still measured), once in the campaign tuning's sensible kit. Ability order alternates between the documents'
+ * picks is still measured), once in a sensible kit (src/sim/kits.ts). Ability order alternates between the documents'
  * and the shortest cooldown first.
  */
 export function partySpread(c: Content, trios: number, seed = 5): { parties: { party: Party; kind: "spread" | "kit" }[]; trios: string[][] } {
@@ -103,7 +101,6 @@ export function partySpread(c: Content, trios: number, seed = 5): { parties: { p
     picked.push(t);
     for (const x of t) count.set(x, count.get(x)! + 1);
   }
-  const owned = everything(c);
   const forms = c.pack.formations.map((f) => f.id);
   const out: { party: Party; kind: "spread" | "kit" }[] = [];
   // The rotation: for each class, every piece of every slot comes round in turn (an empty armor or amulet slot too, as a kit may leave it).
@@ -130,7 +127,7 @@ export function partySpread(c: Content, trios: number, seed = 5): { parties: { p
       return { class: cls, position: f.positions[j].id, abilities: slotted(c, cls, abOrder), gear };
     });
     out.push({ party: { formation, units }, kind: "spread" });
-    const kit = makeBuild(c, trio, formation, STYLES[i % STYLES.length], owned, [], undefined, ORDERS[(i + 1) % ORDERS.length]);
+    const kit = makeBuild(c, trio, formation, STYLES[i % STYLES.length], undefined, ORDERS[(i + 1) % ORDERS.length]);
     if (kit) out.push({ party: kit, kind: "kit" });
   });
   return { parties: out, trios: picked };
@@ -143,7 +140,7 @@ const wearable = (c: Content, cls: string, slot: string) => c.pack.gear.filter((
  * beside fixed kitted companions in Neutral. The same companions and seeds for every piece, so a piece's number is its own.
  * The baseline is the bare unit; `none` names it.
  */
-export function gearProbe(c: Content, cls: string, trios: string[][], owned: ReturnType<typeof everything>, refs = 4): { piece: string; party: Party }[] {
+export function gearProbe(c: Content, cls: string, trios: string[][], refs = 4): { piece: string; party: Party }[] {
   registerGear(c);
   const plain = c.pack.gear.find((g) => g.slot === "weapon" && g.source === "starter" && g.weapon?.kind === c.classes.get(cls)!.weapons[0])!.id;
   const mine = trios.filter((t) => t.includes(cls)).slice(0, refs);
@@ -151,7 +148,7 @@ export function gearProbe(c: Content, cls: string, trios: string[][], owned: Ret
   const pieces = ["none", ...["weapon", "armor", "amulet"].flatMap((slot) => wearable(c, cls, slot)), ...rogueGear(c).filter((g) => canEquip(c.classes.get(cls)!, g)).map((g) => g.id)];
   const out: { piece: string; party: Party }[] = [];
   for (const piece of pieces) for (const trio of mine) {
-    const kit = makeBuild(c, trio, "neutral", "plain", owned, []);
+    const kit = makeBuild(c, trio, "neutral", "plain");
     if (!kit) continue;
     const g = piece === "none" ? undefined : c.gear.get(piece)!;
     const units = trio.map((k, j) => {
@@ -166,10 +163,10 @@ export function gearProbe(c: Content, cls: string, trios: string[][], owned: Ret
 }
 
 /** The formation probe: the same kitted parties in every formation (seated by the kit weights each time), so a formation's number is paired. */
-export function formationProbe(c: Content, trios: string[][], owned: ReturnType<typeof everything>, n = 40): { formation: string; party: Party }[] {
+export function formationProbe(c: Content, trios: string[][], n = 40): { formation: string; party: Party }[] {
   const out: { formation: string; party: Party }[] = [];
   for (const trio of trios.slice(0, n)) for (const f of c.pack.formations) {
-    const kit = makeBuild(c, trio, f.id, "plain", owned, []);
+    const kit = makeBuild(c, trio, f.id, "plain");
     if (kit) out.push({ formation: f.id, party: kit });
   }
   return out;
@@ -225,6 +222,22 @@ function abilityShape(a: AbilityT): { applies: Set<string>; removes: boolean; ki
   const kind = dmg ? "damage" : heal ? "heal" : revive ? "revive" : shield ? "shield" : control ? "control" : removes ? "cleanse" : debuff ? "debuff" : buff ? "buff" : "other";
   return { applies, removes, kind };
 }
+
+/**
+ * The simulations' choice at a decision: at a campfire, a fallen member back (raise, the one with the most max HP) when
+ * anyone is down; else HP back (rest) when anyone standing is below a third of their max HP, or the standing party has less
+ * of its HP left than of its MP; else MP back (focus). Anything else, the first option.
+ */
+const simPick: Picker = (d, run) => {
+  if (d.kind !== "campfire") return d.options[0];
+  const party = run.party as unknown as { id: string; hp: number; mp: number; stats: Record<string, number> }[];
+  const raise = d.options.filter((o) => o.startsWith("raise:")).map((o) => party.find((m) => m.id === o.slice(6))!).sort((a, b) => b.stats.max_hp - a.stats.max_hp);
+  if (raise.length) return `raise:${raise[0].id}`;
+  const up = party.filter((m) => m.hp > 0);
+  if (up.some((m) => m.hp * 3 < m.stats.max_hp)) return "rest";
+  const share = (k: "hp" | "mp") => up.reduce((a, m) => a + m[k] / Math.max(1, m.stats[`max_${k}`]), 0) / Math.max(1, up.length);
+  return share("hp") <= share("mp") ? "rest" : "focus";
+};
 
 /** Plays one run a moment at a time (so MP starvation can be read between moments), then reads its log into the tally. */
 function playAndTally(c: Content, job: Job, seed: number, t: Tally) {
@@ -616,8 +629,8 @@ export const BANDS: Record<string, { lo: number; hi: number; unit: string; why: 
   "class.ko": { lo: 0, hi: 2.2, unit: "× the median class", why: "Knockouts per fight against the median class. The casters are fragile by design (HP 2), so up to about twice the median is their shape; past 2.2 a class is a liability nobody brings." },
   "class.takenWall": { lo: 1.1, hi: 2.4, unit: "× an average unit, per tick alive", why: "A wall's job is to be hit (Aggro 4–5, plate). Below 1.1 it isn't drawing; above 2.4 it takes everything and the draw rule's 'between a third and three times' is doing nothing for the others." },
   "class.takenOther": { lo: 0.35, hi: 1.25, unit: "× an average unit, per tick alive", why: "A dealer or support that takes more than 1.25 average units' damage per tick is the one being hit while the wall stands by; below 0.35 it can't be reached (the draw floor is a third)." },
-  "class.starvedCaster": { lo: 0.03, hi: 0.3, unit: "share of time (campaign runs)", on: "campaign", why: "Casters are hungry, so some time with a spell ready and no MP is the design (above 3%); past 30% the caster is a basic-attacker with a staff. Read on the campaign's runs, where MP carries from fight to fight." },
-  "class.starvedOther": { lo: 0, hi: 0.08, unit: "share of time (campaign runs)", on: "campaign", why: "Walls and fighters rarely run dry. Past 8% their cheap skills aren't cheap." },
+  "class.starvedCaster": { lo: 0.03, hi: 0.3, unit: "share of time (free play)", on: "free", why: "Casters are hungry, so some time with a spell ready and no MP is the design (above 3%); past 30% the caster is a basic-attacker with a staff. Read on free play's runs, where MP carries from fight to fight." },
+  "class.starvedOther": { lo: 0, hi: 0.08, unit: "share of time (free play)", on: "free", why: "Walls and fighters rarely run dry. Past 8% their cheap skills aren't cheap." },
   "class.casts": { lo: 1.6, hi: 6, unit: "casts a regular fight", why: "Three slotted abilities in a fight of 30 to 40 ticks on 24/32/42 cooldowns with slotted head starts: fewer than 1.6 casts a fight and the kit isn't playing (5c: 'those cooldowns are too long'); more than 6 and basic attacks are gone (5b's complaint)." },
   "ability.castsMob": { lo: 0.45, hi: 3, unit: "casts a regular fight owned", why: "An ability slotted by a standing member should fire in most regular fights; under 0.45 it fires in fewer than half, and the slot is dead (useless). Over 3 it's the unit's whole rhythm." },
   "ability.castsBoss": { lo: 0.9, hi: 6, unit: "casts a boss fight owned", why: "A boss fight is about one and a half regular fights long (5b); every slotted ability should come at least once, or it's a slot wasted where it matters most." },
@@ -1090,7 +1103,7 @@ export function writeSheet(c: Content, sheets: Record<string, Sheet>, pooled: Sh
   const out: string[] = [];
   const sets = Object.keys(sheets);
   const both = (get: (s: Sheet) => number, fmt: (x: number) => string) => sets.map((s) => fmt(get(sheets[s]))).join(" / ");
-  out.push(`# Balance sheet\n\n${info}\n\nEvery group of numbers is ${sets.join(" / ")}: the campaign's twenty runs at their knobs; the rogue's fights at their calibrated knobs (heat 0); free play, the seven runs at the documents' numbers with no knob. Flags are judged on the pooled numbers (each mode counting once: the three sets' rates averaged), except where a band names a set (the enemies in free play, MP in the campaign's runs, gear and formations in their probes).\n`);
+  out.push(`# Balance sheet\n\n${info}\n\nEvery group of numbers is ${sets.join(" / ")}: the rogue's fights at their calibrated knobs (heat 0); free play, the seven runs at the documents' numbers with no knob. Flags are judged on the pooled numbers (each mode counting once: the three sets' rates averaged), except where a band names a set (the enemies and MP in free play, gear and formations in their probes).\n`);
   const ranked = allFlags(sheets, pooled, probes);
   out.push(`## Flags (${ranked.length}), worst first\n`);
   out.push(table(["#", "kind", "what", "measure", "band", "finding"], ranked.map((f, i) => [String(i + 1), f.kind, f.name, `${r2(f.value)} ${BANDS[f.band].unit}`, `${r2(BANDS[f.band].lo)}–${Number.isFinite(BANDS[f.band].hi) ? r2(BANDS[f.band].hi) : "∞"}`, f.text])));
@@ -1166,7 +1179,7 @@ const args = process.argv.slice(2);
 const opt = (name: string) => { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : undefined; };
 
 async function main() {
-  const sets = (opt("--sets") ?? "campaign,rogue,free").split(",") as SetId[];
+  const sets = (opt("--sets") ?? "rogue,free").split(",") as SetId[];
   const probesOn = opt("--probes") !== "off";
   const patches = args.flatMap((a, i) => (a === "--set" ? [args[i + 1]] : [])).map((x) => ({ path: x.slice(0, x.indexOf("=")), set: JSON.parse(x.slice(x.indexOf("=") + 1)) }));
   const raw = patch(JSON.parse(readFileSync(opt("--pack") ?? "content/core-set.pack.json", "utf8")), patches);
@@ -1189,11 +1202,10 @@ async function main() {
   for (const f of fights) spread.forEach((p, i) => run(f.set, { dungeon: f.dungeon, party: f.set === "rogue" && p.kind === "spread" ? withLegendaries(c, p.party, i) : p.party, kind: p.kind }));
   let probeRuns = 0;
   if (probesOn) {
-    const owned = everything(c);
     const probeFights = fights.filter((f) => f.probe);
     const probeSeeds = [seeds[0]];
-    for (const { formation, party } of formationProbe(c, picked, owned)) for (const f of probeFights) { run(`probe:form:${formation}`, { dungeon: f.dungeon, party, kind: "probe" }, probeSeeds); probeRuns++; }
-    for (const k of c.pack.classes) for (const { piece, party } of gearProbe(c, k.id, picked, owned)) for (const f of probeFights) { run(`probe:gear:${k.id}:${piece}`, { dungeon: f.dungeon, party, kind: "probe" }, probeSeeds); probeRuns++; }
+    for (const { formation, party } of formationProbe(c, picked)) for (const f of probeFights) { run(`probe:form:${formation}`, { dungeon: f.dungeon, party, kind: "probe" }, probeSeeds); probeRuns++; }
+    for (const k of c.pack.classes) for (const { piece, party } of gearProbe(c, k.id, picked)) for (const f of probeFights) { run(`probe:gear:${k.id}:${piece}`, { dungeon: f.dungeon, party, kind: "probe" }, probeSeeds); probeRuns++; }
   }
   await Promise.all(jobs);
   pool.close();
@@ -1202,7 +1214,7 @@ async function main() {
   const all = poolSheets(c, sheets);
   const probes = computeProbes(c, tallies);
   const secs = ((Date.now() - t0) / 1000).toFixed(0);
-  const info = `${spread.length} parties (${trios} trios, each as a gear rotation and as a sensible kit) × ${fights.filter((f) => f.set === "campaign").length} campaign runs, ${fights.filter((f) => f.set === "free").length} free-play runs and ${fights.filter((f) => f.set === "rogue").length} rogue fights × ${seeds.length} seed${seeds.length > 1 ? "s" : ""}, plus ${probeRuns} probe runs (every piece on every class that can wear it, and every formation, on the same parties): ${n} runs, ${all.context.fights} fights in the main sets, in ${secs} s. Content ${c.pack.id}#${c.fingerprint}.`;
+  const info = `${spread.length} parties (${trios} trios, each as a gear rotation and as a sensible kit) × ${fights.filter((f) => f.set === "free").length} free-play runs and ${fights.filter((f) => f.set === "rogue").length} rogue fights × ${seeds.length} seed${seeds.length > 1 ? "s" : ""}, plus ${probeRuns} probe runs (every piece on every class that can wear it, and every formation, on the same parties): ${n} runs, ${all.context.fights} fights in the main sets, in ${secs} s. Content ${c.pack.id}#${c.fingerprint}.`;
   mkdirSync(outDir, { recursive: true });
   const md = writeSheet(c, sheets, all, probes, info);
   writeFileSync(`${outDir}/sheet.md`, md + "\n");

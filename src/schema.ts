@@ -27,7 +27,7 @@
  */
 import * as z from "zod";
 
-export const SCHEMA_VERSION = "0.8" as const;
+export const SCHEMA_VERSION = "0.9" as const;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Primitives
@@ -983,7 +983,7 @@ export const Foes = z
     statuses: z.array(Id).optional().describe("Applied to every foe at fight start, after its own."),
     text: Text.optional().describe("What the player is told about it."),
   })
-  .describe("A change to every foe in a dungeon: how a campaign trial or remix makes its foes tougher. The engine applies it at each fight start and to summons.");
+  .describe("A change to every foe in a dungeon: how a fight's knob makes its foes tougher. The engine applies it at each fight start and to summons.");
 export type FoesT = z.infer<typeof Foes>;
 
 export const Dungeon = z.strictObject({
@@ -999,41 +999,6 @@ export const Dungeon = z.strictObject({
   challenges: z.array(Challenge).default([]).describe("Fixed sequence. Clearing one reveals the next. The core set has none yet."),
   note: Note.optional(),
 });
-
-// ─────────────────────────────────────────────────────────────────────────────
-// The campaign: a fixed road of dungeons and trials, each cleared once, each
-// paying a fixed reward and revealing the next (the progression experiment).
-// ─────────────────────────────────────────────────────────────────────────────
-
-export const Need = z
-  .union([
-    z.strictObject({ includes: z.array(Id).min(1) }).describe("The party brings every one of these classes."),
-    z.strictObject({ excludes: z.array(Id).min(1) }).describe("The party brings none of these classes."),
-    z.strictObject({ formation: Id }).describe("The party stands in this formation."),
-    z.strictObject({ armor: Id }).describe("Every member wears armor of this type (or \"none\": no armor)."),
-    z.strictObject({ weapons: z.array(Id).min(1) }).describe("Every member's weapon is of one of these kinds."),
-    z.strictObject({ size: PosInt }).describe("The party has at most this many members."),
-  ])
-  .describe("A requirement a trial sets on the party. Only things the player can see and change in the menus.");
-export type NeedT = z.infer<typeof Need>;
-
-export const CampaignNode = z.strictObject({
-  id: Id,
-  name: Text,
-  kind: z.enum(["dungeon", "remix", "trial"]).describe("dungeon: one of the seven runs. remix: a new run from the same enemies. trial: a run with requirements."),
-  dungeon: Id.describe("The run it plays."),
-  text: Text.describe("The node's line, as the player reads it."),
-  needs: z.array(Need).default([]),
-  rewards: z.strictObject({ classes: z.array(Id).default([]), formations: z.array(Id).default([]), gear: z.array(Id).default([]) }),
-  note: Note.optional(),
-});
-export type CampaignNodeT = z.infer<typeof CampaignNode>;
-
-export const Campaign = z.strictObject({
-  start: z.strictObject({ classes: z.array(Id).min(1), formations: z.array(Id).min(1), gear: z.array(Id) }).describe("Owned at the start. A class's plain weapon always comes with it."),
-  nodes: z.array(CampaignNode).min(1).describe("In order. Clearing one pays its rewards once and reveals the next."),
-});
-export type CampaignT = z.infer<typeof Campaign>;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // The rogue mode: a roguelite on Slay the Spire's structure (docs/core-set/rogue-mode.md).
@@ -1251,7 +1216,6 @@ export const ContentPack = z.strictObject({
     gear: z.array(Id),
   }),
   progression: z.strictObject({ dungeonOrder: z.array(Id).min(1) }),
-  campaign: Campaign.optional(),
   rogue: Rogue.optional(),
 });
 export type ContentPack = z.infer<typeof ContentPack>;

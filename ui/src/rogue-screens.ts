@@ -909,7 +909,7 @@ export function runitScreen(arg?: unknown): Child[] {
   return [
     header(k.name, () => { orderPick = null; go("rparty"); }, inParty ? h("span", { class: "hi small" }, `SLOT ${run.party.indexOf(cls) + 1}`) : h("span", { class: "dim small" }, "AT CAMP")),
     move ? h("div", { class: "btns" }, move) : null,
-    // The run's weapon in hand, not the journey's or free play's.
+    // The run's weapon in hand, not free play's.
     win("", classHead(cls, h("div", { class: "line small" }, v.ko ? h("span", { class: "bad" }, "KO") : h("span", null, `HP ${disp(v.hp)}/${disp(v.maxHp)}`), h("span", { class: "mp" }, `  MP ${disp(v.mp)}/${disp(v.maxMp)}`)), m.gear.weapon)),
     win("", statGrid(fm.stats, k.stats, setup.settings.designer), sp.length ? h("div", { class: "text up small wrap", style: "margin-top:.25rem" }, ...sp.flatMap((s, i) => (i ? [" · ", s] : [s]))) : null),
     win("scroll",
