@@ -18,22 +18,22 @@ const readyAt = (a: ReturnType<typeof arena>, unit: string, ability: string, tic
 };
 const near = (x: number, want: number, tol = 0.035) => assert.ok(Math.abs(x - want) < tol, `${x.toFixed(3)} isn't near ${want.toFixed(3)}`);
 
-const ARMOR_BREAK = debuff("armor_break", { stacking: "intensity", stats: [{ stat: "armor", flat: -2 }] });
+const ARMOR_BREAK = debuff("armor_break", { stacking: "intensity", stats: [{ stat: "defense", flat: -2 }] });
 const BURN = debuff("burn", { stacking: "intensity", pulse: { every: 2, do: [{ op: "damage", type: "none", amount: 1 }] }, drop: { fraction: 0.5 } });
 const STUN = debuff("stun", { duration: 3, lockout: { covers: "all", interrupt: true } });
-const METEOR = { id: "meteor", mp: 10, cast: 30, cooldown: 1, do: [{ op: "damage", type: "magical", amount: 100 }] };
+const METEOR = { id: "meteor", mp: 10, cast: 30, cooldown: 1, do: [{ op: "damage", type: "physical", amount: 100 }] };
 
 // ─── Applying statuses ──────────────────────────────────────────────────────
 
-test("apply: a status takes effect as soon as its item resolves: a dagger's three hits each add Armor break to Armor 8, and meet Armor 8, 6 and 4", () => {
-  const a = arena({ party: [{ name: "Rogue", weapon: { ...weapons.dagger, hits: 3, amount: 10, apply: [{ status: "armor_break" }] } }], enemies: [{ name: "T", stats: { max_hp: 1e6, armor: 8 } }], statuses: [ARMOR_BREAK] }).to(8);
+test("apply: a status takes effect as soon as its item resolves: a dagger's three hits each add Armor break to Defense 8, and meet Defense 8, 6 and 4", () => {
+  const a = arena({ party: [{ name: "Rogue", weapon: { ...weapons.dagger, hits: 3, amount: 10, apply: [{ status: "armor_break" }] } }], enemies: [{ name: "T", stats: { max_hp: 1e6, defense: 8 } }], statuses: [ARMOR_BREAK] }).to(8);
   assert.deepEqual(a.hits("T").map((e) => e.amount), [2, 4, 6]);
   assert.equal(a.has("T", "armor_break")[0].stacks, 3000, "three applications from one action count as three");
 });
 
 test("apply: a status attached to a hit applies even when the hit deals nothing (BLOCKED), and never when it's evaded", () => {
   const mark = debuff("mark", { stats: [{ stat: "aggro", flat: 1 }] });
-  const a = arena({ party: [{ name: "A", stats: { accuracy: -100 }, weapon: rapid({ amount: 1, apply: [{ status: "mark" }] }) }], enemies: [{ name: "T", stats: { max_hp: 1e6, armor: 8, evasion: 50 } }], statuses: [mark] }).to(400);
+  const a = arena({ party: [{ name: "A", stats: { accuracy: -100 }, weapon: rapid({ amount: 1, apply: [{ status: "mark" }] }) }], enemies: [{ name: "T", stats: { max_hp: 1e6, defense: 8, evasion: 50 } }], statuses: [mark] }).to(400);
   const landed = a.hits("T").filter((e) => e.word === "BLOCKED").length, missed = a.hits("T").filter((e) => e.word === "MISS").length;
   assert.ok(landed > 100 && missed > 100);
   assert.equal(a.entries("status", (e) => e.status === "mark").length, landed);
@@ -57,32 +57,21 @@ test("apply: statuses can't be applied to KO'd units: a lethal hit's attached st
 
 // ─── Immunity ───────────────────────────────────────────────────────────────
 
-const FREEZE = debuff("freeze", { duration: 5, lockout: { covers: "all", interrupt: true }, stats: [{ stat: "magic_resist", flat: -20 }] });
+const FREEZE = debuff("freeze", { duration: 5, lockout: { covers: "all", interrupt: true }, stats: [{ stat: "defense", flat: -20 }] });
 const SILENCE = debuff("silence", { duration: 5, lockout: { covers: "ability", interrupt: true } });
 
 test("immunity: a boss immune to lockouts covering all actions is hit by Freeze; the whole Freeze is blocked and shows IMMUNE, but it can still be silenced", () => {
   const a = arena({
     party: [{ name: "Mage", abilities: ["cast_freeze", "cast_silence"] }],
-    enemies: [{ name: "Boss", stats: { max_hp: 1e6, magic_resist: 30, "immune:kind:lockout:all": 1 } }],
+    enemies: [{ name: "Boss", stats: { max_hp: 1e6, defense: 30, "immune:kind:lockout:all": 1 } }],
     statuses: [FREEZE, SILENCE], abilities: [giver("cast_freeze", "freeze"), giver("cast_silence", "silence")],
   });
   readyAt(a, "Mage", "cast_freeze", 1);
   readyAt(a, "Mage", "cast_silence", 2);
   a.to(2);
   assert.deepEqual(a.entries("immune").map((e) => e.status), ["freeze"]);
-  assert.equal(a.unit("Boss").stats.magic_resist, 30, "the Magic resist shred is blocked with the rest");
+  assert.equal(a.unit("Boss").stats.defense, 30, "the Defense shred is blocked with the rest");
   assert.equal(a.has("Boss", "silence").length, 1);
-});
-
-test("immunity: Magic resist never stops a status: at full Magic resist a Freeze still lands, for its whole duration", () => {
-  const run = (resist: number) => {
-    const a = arena({ party: [{ name: "Mage", abilities: ["cast"] }], enemies: [{ name: "T", stats: { max_hp: 1e6, magic_resist: resist } }], statuses: [FREEZE], abilities: [giver("cast", "freeze")] });
-    readyAt(a, "Mage", "cast", 1);
-    return a.to(1);
-  };
-  const full = run(100);
-  assert.equal(full.entries("immune").length, 0);
-  assert.equal(full.has("T", "freeze")[0].end, at(6), "Magic resist doesn't change a status's duration");
 });
 
 test("immunity: immunity stats for a named status, all debuffs, and all damage (Invulnerable)", () => {
@@ -128,11 +117,11 @@ test("lockouts: a silenced unit basic-attacks; a unit both silenced and disarmed
   assert.equal(both.entries("act").length, 0);
 });
 
-test("lockouts: a lockout can cover something narrower, such as magical actions", () => {
-  const smother = debuff("smother", { lockout: { covers: "magical" } });
-  const frost = { id: "frost", cast: 0, cooldown: 5, do: [{ op: "damage", type: "physical", amount: 1 }] };
-  const a = arena({ party: [{ name: "A", stats: { max_mp: 100 }, abilities: ["meteor", "frost"], statuses: ["smother"] }], enemies: [BAG], statuses: [smother], abilities: [METEOR, frost] }).to(20);
-  assert.ok(a.entries("act").length > 0 && a.entries("act").every((e) => e.act === "frost"));
+test("lockouts: a lockout can cover something narrower, such as actions with a hit (physical)", () => {
+  const smother = debuff("smother", { lockout: { covers: "physical" } });
+  const mend = { id: "mend", cast: 0, cooldown: 5, target: "self", do: [{ op: "heal", amount: 1 }] };
+  const a = arena({ party: [{ name: "A", stats: { max_mp: 100 }, abilities: ["meteor", "mend"], statuses: ["smother"] }], enemies: [BAG], statuses: [smother], abilities: [METEOR, mend] }).to(20);
+  assert.ok(a.entries("act").length > 0 && a.entries("act").every((e) => e.act === "mend"));
 });
 
 test("lockouts: Interrupt is an instant lockout: it leaves no status, and the interrupted unit is ready at once and may restart the same cast", () => {
@@ -174,15 +163,15 @@ test("lockouts: lockouts don't stop reactions: a stunned unit's reactions still 
 
 // ─── Action changes ─────────────────────────────────────────────────────────
 
-test("action changes: a weapon enchant adds a magical rider to the holder's basic attacks, scaled from the holder's stats", () => {
-  const oil = buff("flame_oil", { riders: [{ on: "basic", add: { type: "magical", amount: { scale: [{ ratio: 0.5, stat: "attack", of: "holder" }] } } }] });
+test("action changes: a weapon enchant adds a rider to the holder's basic attacks, scaled from the holder's stats", () => {
+  const oil = buff("flame_oil", { riders: [{ on: "basic", add: { type: "physical", amount: { scale: [{ ratio: 0.5, stat: "attack", of: "holder" }] } } }] });
   const a = arena({ party: [{ name: "A", stats: { attack: 20 }, weapon: weapons.dagger, statuses: ["flame_oil"] }], enemies: [BAG], statuses: [oil] }).to(8);
   assert.deepEqual(a.hits("Bag").map((e) => [e.part, e.amount]), [["hit", 20], ["rider", 10]]);
 });
 
 test("action changes: a rider can name the source's stat instead, fixed when the status was applied", () => {
-  const blessing = buff("blessing", { riders: [{ on: "physical", add: { type: "magical", amount: { scale: [{ ratio: 1, stat: "magic", of: "source" }] } } }] });
-  const a = arena({ party: [{ name: "Fighter", stats: { attack: 20 }, weapon: weapons.axe }, { name: "Priest", stats: { magic: 15 }, abilities: ["bless"] }], enemies: [BAG], statuses: [blessing], abilities: [{ ...giver("bless", "blessing"), target: { side: "others" } }] });
+  const blessing = buff("blessing", { riders: [{ on: "physical", add: { type: "physical", amount: { scale: [{ ratio: 1, stat: "attack", of: "source" }] } } }] });
+  const a = arena({ party: [{ name: "Fighter", stats: { attack: 20 }, weapon: weapons.axe }, { name: "Priest", stats: { attack: 15 }, abilities: ["bless"] }], enemies: [BAG], statuses: [blessing], abilities: [{ ...giver("bless", "blessing"), target: { side: "others" } }] });
   readyAt(a, "Priest", "bless", 1);
   a.to(20);
   assert.deepEqual(a.hits("Bag").map((e) => [e.part, e.amount]), [["hit", 20], ["rider", 15]]);
@@ -224,39 +213,39 @@ test("pulses: two Mages each apply 6 Burn stacks to the same enemy, and it has o
   assert.deepEqual(a.has("Bag", "burn").map((s) => s.stacks), [12_000]);
 });
 
-test("pulses: Bleed is untyped repeating damage: its 5-damage pulses get through Armor 8 and can't be evaded", () => {
+test("pulses: Bleed is untyped repeating damage: its 5-damage pulses get through Defense 8 and can't be evaded", () => {
   const bleed = debuff("bleed", { duration: 20, pulse: { every: 2, do: [{ op: "damage", type: "none", amount: 5 }] } });
-  const a = arena({ party: [{ name: "A", abilities: ["cut"] }], enemies: [{ name: "T", stats: { max_hp: 1e6, armor: 8, evasion: 75 } }], statuses: [bleed], abilities: [giver("cut", "bleed")] });
+  const a = arena({ party: [{ name: "A", abilities: ["cut"] }], enemies: [{ name: "T", stats: { max_hp: 1e6, defense: 8, evasion: 75 } }], statuses: [bleed], abilities: [giver("cut", "bleed")] });
   readyAt(a, "A", "cut", 1);
   a.to(21);
   assert.deepEqual(a.hits("T").map((e) => e.amount), [5, 5, 5, 5, 5, 5, 5, 5, 5, 5]);
 });
 
-test("pulses: no applier's boost reaches a status's own numbers: +physical, +20% Poison and +20% magical all leave Poison at 10", () => {
+test("pulses: no applier's boost reaches a status's own numbers: +physical and +20% Poison both leave Poison at 10", () => {
   const poison = debuff("poison", { duration: 10, pulse: { every: 2, do: [{ op: "damage", type: "none", amount: 10 }] } });
-  const boosts = buff("boosts", { show: "sheet", boosts: [{ tag: "physical", pct: 50 }, { tag: "poison", pct: 20 }, { tag: "magical", pct: 20 }] });
+  const boosts = buff("boosts", { show: "sheet", boosts: [{ tag: "physical", pct: 50 }, { tag: "poison", pct: 20 }] });
   const a = arena({ party: [{ name: "A", abilities: ["sting"], statuses: ["boosts"] }], enemies: [BAG], statuses: [poison, boosts], abilities: [giver("sting", "poison")] });
   readyAt(a, "A", "sting", 1);
   a.to(5);
   assert.deepEqual(a.hits("Bag").map((e) => e.amount), [10, 10]);
 });
 
-test("pulses: for Intensity, the applier's boosts that name the status add stacks; a damage kind's don't: +20% Burn and +20% magical turn 10 stacks into 12", () => {
-  const boosts = buff("boosts", { show: "sheet", boosts: [{ tag: "burn", pct: 20 }, { tag: "magical", pct: 20 }] });
+test("pulses: for Intensity, the applier's boosts that name the status add stacks; a damage kind's don't: +20% Burn and +20% physical turn 10 stacks into 12", () => {
+  const boosts = buff("boosts", { show: "sheet", boosts: [{ tag: "burn", pct: 20 }, { tag: "physical", pct: 20 }] });
   const a = burn(10, { statuses: ["boosts"], more: [boosts] });
   assert.equal(a.hits("Bag")[0].amount, 12);
 });
 
-test("pulses: the holder's side is read at each pulse (its Magic resist, for a pulse typed magical), while the applier's stats are fixed at application", () => {
-  const rot = debuff("rot", { duration: 20, pulse: { every: 2, do: [{ op: "damage", type: "magical", amount: { scale: [{ ratio: 1, stat: "magic", of: "source" }] } }] } });
-  const a = arena({ party: [{ name: "A", stats: { magic: 10 }, abilities: ["curse"] }], enemies: [{ name: "T", stats: { max_hp: 1e6 } }], statuses: [rot], abilities: [giver("curse", "rot")] });
+test("pulses: the holder's side is read at each pulse (its Defense, for a pulse typed physical), while the applier's stats are fixed at application", () => {
+  const rot = debuff("rot", { duration: 20, pulse: { every: 2, do: [{ op: "damage", type: "physical", amount: { scale: [{ ratio: 1, stat: "attack", of: "source" }] } }] } });
+  const a = arena({ party: [{ name: "A", stats: { attack: 10 }, abilities: ["curse"] }], enemies: [{ name: "T", stats: { max_hp: 1e6 } }], statuses: [rot], abilities: [giver("curse", "rot")] });
   readyAt(a, "A", "curse", 1);
   a.to(3);
-  a.unit("A").base.magic = 1000;
-  a.unit("A").stats.magic = 1000;
-  a.unit("T").stats.magic_resist = 50;
+  a.unit("A").base.attack = 1000;
+  a.unit("A").stats.attack = 1000;
+  a.unit("T").stats.defense = 5;
   a.to(5);
-  assert.deepEqual(a.hits("T").map((e) => [e.amount, e.word]), [[10, null], [5, "RESIST"]]);
+  assert.deepEqual(a.hits("T").map((e) => [e.amount, e.word]), [[10, null], [5, null]]);
 });
 
 test("pulses: a party Mage's Burn on an enemy pulses in the party batch, and keeps pulsing with its fixed numbers after the Mage is KO'd", () => {
@@ -314,11 +303,11 @@ test("pulses: pulses don't crit, even from a unit with 100% crit; a status can t
 
 // ─── Stacking ───────────────────────────────────────────────────────────────
 
-const SLOW = debuff("slow", { stats: [{ stat: "attack_speed", flat: { scale: [{ ratio: -1, stat: "magic", of: "source" }] } }] });
+const SLOW = debuff("slow", { stats: [{ stat: "attack_speed", flat: { scale: [{ ratio: -1, stat: "attack", of: "source" }] } }] });
 
 test("stacking: Refresh: a reapplication replaces the old one: −20 for 10 ticks, then −30 for 4, then −20 for 10 from its first applier", () => {
   const a = arena({
-    party: [{ name: "Weak", stats: { magic: 20 }, abilities: ["s1", "s3"] }, { name: "Strong", stats: { magic: 30 }, abilities: ["s2"] }],
+    party: [{ name: "Weak", stats: { attack: 20 }, abilities: ["s1", "s3"] }, { name: "Strong", stats: { attack: 30 }, abilities: ["s2"] }],
     enemies: [BAG], statuses: [SLOW],
     abilities: [giver("s1", "slow", { duration: 10 }), giver("s2", "slow", { duration: 4 }), giver("s3", "slow", { duration: 10 })],
   });
@@ -336,7 +325,7 @@ test("stacking: Refresh: a reapplication replaces the old one: −20 for 10 tick
 });
 
 test("stacking: a Fizzle status reapplied while present fails, with nothing shown", () => {
-  const ward = buff("ward", { stacking: "fizzle", duration: 10, stats: [{ stat: "armor", flat: 5 }] });
+  const ward = buff("ward", { stacking: "fizzle", duration: 10, stats: [{ stat: "defense", flat: 5 }] });
   const a = arena({ party: [{ name: "A", abilities: ["w1", "w2"] }], enemies: [BAG], statuses: [ward], abilities: [{ ...giver("w1", "ward"), target: "self" }, { ...giver("w2", "ward", { duration: 30 }), target: "self" }] });
   readyAt(a, "A", "w1", 1);
   readyAt(a, "A", "w2", 2);
@@ -448,13 +437,13 @@ test("per source: a mark that heals its applier when the holder is hit: each app
 // ─── Duration and removal ───────────────────────────────────────────────────
 
 test("duration: a status lasting 10 ticks affects everything that resolves up to and including its 10th tick", () => {
-  const plate = buff("plate", { duration: 10, stats: [{ stat: "armor", flat: 100 }] });
+  const plate = buff("plate", { duration: 10, stats: [{ stat: "defense", flat: 100 }] });
   const a = arena({ party: [{ name: "A", stats: { max_hp: 1e6 }, statuses: ["plate"] }], enemies: [{ name: "F1", weapon: { ...weapons.dagger, cooldown: 10, amount: 10 } }, { name: "F2", weapon: { ...weapons.dagger, cooldown: 10.001, amount: 10 } }], statuses: [plate] }).to(11);
   assert.deepEqual(a.hits("A").map((e) => [e.at, e.word]), [[at(10), "BLOCKED"], [at(10) + 1, null]]);
 });
 
 test("removal: a cleanse that removes one debuff takes the newest; it can narrow to an effect kind; unremovable statuses stay", () => {
-  const poison = debuff("poison", { stats: [{ stat: "armor", flat: -1 }] }), curse = debuff("curse", { unremovable: true, stats: [{ stat: "armor", flat: -1 }] });
+  const poison = debuff("poison", { stats: [{ stat: "defense", flat: -1 }] }), curse = debuff("curse", { unremovable: true, stats: [{ stat: "defense", flat: -1 }] });
   const cleanse = { id: "cleanse", cast: 0, recovery: 0, cooldown: 1000, target: "self", do: [{ op: "remove", label: "debuff", count: 1 }] };
   const unstun = { id: "unstun", cast: 0, recovery: 0, cooldown: 1000, target: "self", do: [{ op: "remove", label: "debuff", kind: "lockout" }] };
   const purge = { id: "purge", cast: 0, recovery: 0, cooldown: 1000, target: "self", do: [{ op: "remove", label: "debuff" }] };
@@ -472,7 +461,7 @@ test("removal: a cleanse that removes one debuff takes the newest; it can narrow
 });
 
 test("KO: a KO'd unit's own statuses end, except those flagged to survive a KO; statuses it applied to others stay", () => {
-  const mark = debuff("mark", { stats: [{ stat: "aggro", flat: 1 }] }), oath = buff("oath", { survivesKO: true, stats: [{ stat: "armor", flat: 1 }] }), vigor = buff("vigor", { stats: [{ stat: "armor", flat: 1 }] });
+  const mark = debuff("mark", { stats: [{ stat: "aggro", flat: 1 }] }), oath = buff("oath", { survivesKO: true, stats: [{ stat: "defense", flat: 1 }] }), vigor = buff("vigor", { stats: [{ stat: "defense", flat: 1 }] });
   const a = arena({ party: [{ name: "Mage", stats: { max_hp: 10, aggro: 1e6 }, statuses: ["oath", "vigor"], abilities: ["m"] }, { name: "Tank", stats: { max_hp: 1e6 } }], enemies: [{ name: "Foe", stats: { max_hp: 1e6, attack: 100 }, weapon: weapons.dagger }], statuses: [mark, oath, vigor], abilities: [giver("m", "mark")] });
   readyAt(a, "Mage", "m", 1);
   a.to(8);
@@ -498,7 +487,7 @@ test("targeting: rules can read statuses: 'a foe without Burn', 'the ally with t
   const ignite = { id: "ignite", cast: 0, recovery: 0, cooldown: 1, target: { side: "foes", where: { lacks: "burn" } }, do: [{ op: "apply", status: "burn", stacks: 100 }] };
   const a = arena({ party: [{ name: "Mage", abilities: ["ignite"] }], enemies: [{ name: "E1", stats: { max_hp: 1e6 } }, { name: "E2", stats: { max_hp: 1e6 } }, { name: "E3", stats: { max_hp: 1e6 } }], statuses: [BURN], abilities: [ignite] }).to(3);
   assert.deepEqual(a.entries("status").map((e) => e.unit).sort(), ["e1", "e2", "e3"]);
-  const d1 = debuff("d1", { stats: [{ stat: "armor", flat: -1 }] }), d2 = debuff("d2", { stats: [{ stat: "armor", flat: -1 }] });
+  const d1 = debuff("d1", { stats: [{ stat: "defense", flat: -1 }] }), d2 = debuff("d2", { stats: [{ stat: "defense", flat: -1 }] });
   const purify = { id: "purify", cast: 0, cooldown: 5, target: { side: "allies", pick: "highest", by: "debuffs" }, do: [{ op: "remove", label: "debuff", count: 1 }] };
   const b = arena({ party: [{ name: "Cleric", abilities: ["purify"] }, { name: "A", statuses: ["d1"] }, { name: "B", statuses: ["d1", "d2"] }], enemies: [BAG], statuses: [d1, d2], abilities: [purify] }).to(5);
   assert.deepEqual(b.unit("B").statuses.map((s) => s.id).filter((s) => s !== "mp_regen"), ["d1"]);
@@ -508,7 +497,7 @@ test("targeting: rules can read statuses: 'a foe without Burn', 'the ally with t
 
 test("reactions: a hit triggers a reaction that deals damage back on the next sub-tick, never the same one; it isn't a hit", () => {
   const thorns = buff("spikes", { show: "sheet", reactions: [{ on: { event: "hit_taken" }, do: [{ op: "damage", type: "physical", amount: 4, to: "other" }] }] });
-  const a = arena({ party: [{ name: "A", stats: { max_hp: 1e6 }, statuses: ["spikes"] }], enemies: [{ name: "Foe", stats: { max_hp: 1e6, armor: 1 }, weapon: weapons.dagger, statuses: ["spikes"] }], statuses: [thorns] }).to(9);
+  const a = arena({ party: [{ name: "A", stats: { max_hp: 1e6 }, statuses: ["spikes"] }], enemies: [{ name: "Foe", stats: { max_hp: 1e6, defense: 1 }, weapon: weapons.dagger, statuses: ["spikes"] }], statuses: [thorns] }).to(9);
   assert.deepEqual(a.hits("Foe").map((e) => [e.at, e.part, e.amount]), [[at(8) + 1, "reaction", 3]]);
   assert.equal(a.hits("A").length, 1, "the reflected damage isn't a hit, so the Foe's own spikes don't answer it");
 });
@@ -585,7 +574,7 @@ test("stats: a unit holds the status a stat brings while the stat is above 0, so
 // ─── What the player sees ───────────────────────────────────────────────────
 
 test("display: each status declares its presentation; icon statuses show in the fight, sheet and stat ones don't; IMMUNE shows, a failed chance roll doesn't", () => {
-  const icon = debuff("poison", { duration: 4, pulse: { every: 2, do: [{ op: "damage", type: "none", amount: 3 }] } }), sheet = debuff("hex", { show: "sheet", duration: 4, stats: [{ stat: "armor", flat: -1 }] });
+  const icon = debuff("poison", { duration: 4, pulse: { every: 2, do: [{ op: "damage", type: "none", amount: 3 }] } }), sheet = debuff("hex", { show: "sheet", duration: 4, stats: [{ stat: "defense", flat: -1 }] });
   const a = arena({
     party: [{ name: "A", stats: { max_mp: 10, mp_regen: 1 }, abilities: ["p", "h", "s", "miss"] }],
     enemies: [{ name: "T", stats: { max_hp: 1e6, "immune:status:stun": 1 } }], statuses: [icon, sheet, STUN],

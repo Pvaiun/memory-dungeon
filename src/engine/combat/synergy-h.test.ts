@@ -35,7 +35,7 @@ const swing = (attack: number, w: S.WeaponT = weapons.sword) => ({ stats: { atta
 // ─── Cooldown and timer changes ─────────────────────────────────────────────
 
 test("at tick 10 a unit whose Fireball has 20 ticks left gets 5 ticks off its longest cooldown, and casts at 25, not 30", () => {
-  const fireball = device("fireball", { do: [{ op: "damage", type: "magical", amount: 1 }] });
+  const fireball = device("fireball", { do: [{ op: "damage", type: "physical", amount: 1 }] });
   const chime = device("chime", { target: "self", do: [{ op: "cooldown", which: "longest", set: { less: 5 }, to: { side: "others" } }] });
   const play = (bell: boolean) => {
     const a = arena({ party: [{ name: "Mage", abilities: ["fireball"] }, { name: "Bell", abilities: bell ? ["chime"] : [] }], enemies: [BAG], abilities: [fireball, chime] });
@@ -85,7 +85,7 @@ test("`which: event` in a reaction to an action readies the ability that set it 
 
 // ─── MP cost changes ────────────────────────────────────────────────────────
 
-const BOLT = device("bolt", { mp: 400, do: [{ op: "damage", type: "magical", amount: 1 }] });
+const BOLT = device("bolt", { mp: 400, do: [{ op: "damage", type: "physical", amount: 1 }] });
 function cast(mods: unknown[], mp: number, maxMp = 1000) {
   const a = arena({ party: [{ name: "Mage", stats: { max_mp: maxMp }, mp, abilities: ["bolt"], statuses: ["mod"] }], enemies: [BAG], abilities: [BOLT], statuses: [buff("mod", { mods })] });
   readyAt(a, "Mage", "bolt", 1);
@@ -146,7 +146,7 @@ test("a Smite with Chains of light Silences its target, a trained Smite too; ano
   const silence = debuff("silence", { duration: 20, lockout: { covers: "ability", interrupt: true } });
   const chains = buff("chains", { mods: [{ of: { ability: ["smite"] }, apply: [{ status: "silence" }] }] });
   const hitWith = (ability: string) => {
-    const ab = device(ability, { do: [{ op: "damage", type: "magical", amount: 10 }] });
+    const ab = device(ability, { do: [{ op: "damage", type: "physical", amount: 10 }] });
     const a = arena({ party: [{ name: "P", abilities: [ability], statuses: ["chains"] }], enemies: [BAG], abilities: [ab], statuses: [silence, chains] });
     readyAt(a, "P", ability, 1);
     return a.to(1).has("Bag", "silence").length;
@@ -166,7 +166,7 @@ test("a revive with Reliquary of mercy winds up in 1 tick; a Firebolt with Banke
   assert.deepEqual(a.entries("revive").map((e) => e.at), [at(2)]);
 
   const burn = debuff("burn", { stacking: "intensity" });
-  const firebolt = device("firebolt", { do: [{ op: "damage", type: "magical", amount: 1, apply: [{ status: "burn", stacks: 10 }] }] });
+  const firebolt = device("firebolt", { do: [{ op: "damage", type: "physical", amount: 1, apply: [{ status: "burn", stacks: 10 }] }] });
   const banked = buff("banked", { mods: [{ stacks: { pct: 50, statuses: ["burn"] } }] });
   const burnFrom = (st: string[]) => {
     const b = arena({ party: [{ name: "P", abilities: ["firebolt"], statuses: st }], enemies: [BAG], abilities: [firebolt], statuses: [burn, banked] });
@@ -189,7 +189,7 @@ test("an ability change's own target rule and Seek (past a Taunt), what it waits
   assert.deepEqual(shoot(false), ["Wall"], "without Seek, the Taunt rule holds");
 
   const kick = device("kick", { do: [{ op: "damage", type: "physical", amount: 1 }] });
-  const meteor = { id: "meteor", cast: 10, recovery: 0, cooldown: 1000, do: [{ op: "damage", type: "magical", amount: 1 }] };
+  const meteor = { id: "meteor", cast: 10, recovery: 0, cooldown: 1000, do: [{ op: "damage", type: "physical", amount: 1 }] };
   const watcher = buff("watcher", { mods: [{ wait: { side: "foes", where: { casting: true } } }] });
   const w = arena({ party: [{ name: "P", abilities: ["kick"], statuses: ["watcher"] }], enemies: [{ name: "Caster", stats: { max_hp: 1e6 }, abilities: ["meteor"] }], abilities: [kick, meteor], statuses: [watcher] });
   readyAt(w, "P", "kick", 1);
@@ -230,7 +230,7 @@ test("a crit rule's bonus makes the part above ×1 larger (×1.5 into ×2), and 
   const sure = (tag: string) => buff("sure", { crits: [{ tag, chance: 100, bonus: 100 }] });
   const hitFor = (tag: string) => arena({ party: [{ name: "P", ...swing(100), statuses: ["sure"] }], enemies: [BAG], statuses: [sure(tag)] }).to(12).hits("Bag").map((e) => e.amount);
   assert.deepEqual(hitFor("basic"), [200]);
-  assert.deepEqual(hitFor("magical"), [100]);
+  assert.deepEqual(hitFor("ability"), [100]);
 });
 
 // ─── Extra strikes sized, spread and chained ────────────────────────────────
@@ -276,11 +276,11 @@ test("a dodge strikes back at the attacker with a basic attack's hit, which can 
   assert.deepEqual(a.hits("Brute").map((e) => [e.part, e.amount, e.crit, e.at]), [["extra", 150, true, at(12) + 1]]);
 });
 
-test("a quarter of a 1,000 raw magical hit (before the first foe's Magic resist) strikes the next foe, less its own", () => {
+test("a quarter of a 1,000 raw hit (before the first foe's Defense) strikes the next foe, less its own", () => {
   const storm = buff("storm", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [{ op: "strike", of: "hit", share: 25, to: { side: "foes", pick: "highest", by: "hp" } }] }] });
   const a = arena({
-    party: [{ name: "P", stats: { magic: 1000 }, weapon: { type: "magical", cooldown: 12, amount: { scale: [{ ratio: 1, stat: "magic" }] } }, statuses: ["storm"] }],
-    enemies: [{ name: "A", stats: { max_hp: 1e6, magic_resist: 50, ...TAUNT } }, { name: "B", stats: { max_hp: 2e6, magic_resist: 20 } }], statuses: [storm],
+    party: [{ name: "P", stats: { attack: 1000 }, weapon: { type: "physical", cooldown: 12, amount: { scale: [{ ratio: 1, stat: "attack" }] } }, statuses: ["storm"] }],
+    enemies: [{ name: "A", stats: { max_hp: 1e6, defense: 500, ...TAUNT } }, { name: "B", stats: { max_hp: 2e6, defense: 50 } }], statuses: [storm],
   }).to(13);
   assert.deepEqual(a.hits("A").map((e) => e.amount), [500]);
   assert.deepEqual(a.hits("B").map((e) => [e.part, e.amount]), [["extra", 200]]);
@@ -289,8 +289,8 @@ test("a quarter of a 1,000 raw magical hit (before the first foe's Magic resist)
 // ─── What hits, actions, heals and knockouts carry ──────────────────────────
 
 test("a Fireball's hits carry `area` and a Firebolt's don't, for boosts and for event filters alike", () => {
-  const fireball = device("fireball", { target: { side: "foes", pick: "all" }, do: [{ op: "damage", type: "magical", amount: 100 }] });
-  const firebolt = device("firebolt", { do: [{ op: "damage", type: "magical", amount: 100 }] });
+  const fireball = device("fireball", { target: { side: "foes", pick: "all" }, do: [{ op: "damage", type: "physical", amount: 100 }] });
+  const firebolt = device("firebolt", { do: [{ op: "damage", type: "physical", amount: 100 }] });
   const treatise = buff("treatise", { boosts: [{ tag: "area", pct: 100 }], reactions: [{ on: { event: "hit_lands", tags: ["area"] }, do: [{ op: "apply", status: "wide", to: "self" }] }] });
   const run = (ab: string) => {
     const a = arena({ party: [{ name: "P", abilities: [ab], statuses: ["treatise"] }], enemies: [BAG, BAG, BAG], abilities: [fireball, firebolt], statuses: [treatise, tally("wide")] });
@@ -330,7 +330,7 @@ test("a knockout names its killer: a hit's attacker (with its kind), a Per sourc
 });
 
 test("action_resolve after a 400 MP cast on three foes carries 400 and 3; heals carry their action's kind", () => {
-  const nova = device("nova", { mp: 400, target: { side: "foes", pick: "all" }, do: [{ op: "damage", type: "magical", amount: 1 }] });
+  const nova = device("nova", { mp: 400, target: { side: "foes", pick: "all" }, do: [{ op: "damage", type: "physical", amount: 1 }] });
   const meter = buff("meter", { reactions: [
     { on: { event: "action_resolve", kind: "ability" }, do: [{ op: "apply", status: "paid", stacks: byAmount, to: "self" }] },
     { on: { event: "action_resolve", countAtLeast: 3 }, do: [{ op: "apply", status: "three", to: "self" }] },
@@ -563,7 +563,7 @@ test("a third Fireball resolves twice, the second free, and the count starts aga
   const staff = buff("staff", { reactions: [{ on: { event: "action_resolve", kind: "ability", repeat: false }, do: [{ op: "apply", status: "tally", to: "self" }] }] });
   const count = buff("tally", { stacking: "intensity", cap: 2, reactions: [{ on: { event: "status_capped", status: "tally" }, do: [{ op: "apply", status: "primed", to: "holder" }, { op: "remove", label: "buff", status: "tally", to: "holder" }] }] });
   const primed = buff("primed", { reactions: [{ on: { event: "action_resolve", kind: "ability", repeat: false }, do: [{ op: "recast" }, { op: "remove", label: "buff", status: "primed", to: "holder" }, { op: "remove", label: "buff", status: "tally", to: "holder" }] }] });
-  const fireball = device("fireball", { mp: 100, cooldown: 10, do: [{ op: "damage", type: "magical", amount: 1 }] });
+  const fireball = device("fireball", { mp: 100, cooldown: 10, do: [{ op: "damage", type: "physical", amount: 1 }] });
   const a = arena({ party: [{ name: "Mage", stats: { max_mp: 10_000 }, abilities: ["fireball"], statuses: ["staff"] }], enemies: [BAG], abilities: [fireball], statuses: [staff, count, primed] }).to(65);
   assert.deepEqual(a.acts("Mage", "fireball"), [10, 20, 30, 30.001, 40, 50, 60, 60.001]);
   assert.equal(a.entries("mp", (e) => e.amount === -100).length, 6, "the repeats are free");
@@ -593,7 +593,7 @@ test("an ability waiting for any of \"an ally down\" and \"an ally below a third
 function trainedPack(): Content {
   const p = structuredClone(hollow) as unknown as S.ContentPack;
   const forms = Object.keys(S.UPGRADE_FORMS) as S.UpgradeFormT[];
-  const st = (id: string, armor: number) => ({ id, name: id.toUpperCase(), label: "buff", show: "sheet", stacking: "refresh", unremovable: true, stats: [{ stat: "armor", flat: armor }] }) as S.StatusT;
+  const st = (id: string, defense: number) => ({ id, name: id.toUpperCase(), label: "buff", show: "sheet", stacking: "refresh", unremovable: true, stats: [{ stat: "defense", flat: defense }] }) as S.StatusT;
   p.classes.find((c) => c.id === "warrior")!.passive = { name: "Grit", text: "-", stats: [{ stat: "aggro", flat: 5 }], statuses: ["grit"] };
   p.statuses.push(st("grit", 1), ...forms.map((f, i) => st(S.formId("grit", f), 10 + i)), st("cleaver", 100));
   const cleave = p.abilities.find((a) => a.id === "cleave")!;

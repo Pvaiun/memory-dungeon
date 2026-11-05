@@ -28,7 +28,7 @@ test("lostCast cooldown: an interrupted cast spends no MP but goes on cooldown, 
 });
 
 test("lostCast cooldown: an action whose targets are gone when it resolves costs the unit its recovery, so it doesn't loop as fast", () => {
-  const zap = { id: "zap", cast: 2, cooldown: 10, target: { side: "foes", where: { has: "mark" } }, do: [{ op: "damage", type: "magical", amount: 1 }] };
+  const zap = { id: "zap", cast: 2, cooldown: 10, target: { side: "foes", where: { has: "mark" } }, do: [{ op: "damage", type: "physical", amount: 1 }] };
   const mark = debuff("mark", {});
   const run = (lostCast: "retry" | "cooldown") => arena({ party: [{ name: "A", abilities: ["zap"] }], enemies: [{ name: "T", stats: { max_hp: 1e6 } }], statuses: [mark], abilities: [zap], ruleset: { lostCast } }).to(21);
   const loops = run("retry").entries("fail", (e) => e.act === "zap").length;

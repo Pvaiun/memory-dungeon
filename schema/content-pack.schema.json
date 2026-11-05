@@ -4,7 +4,7 @@
   "properties": {
     "schemaVersion": {
       "type": "string",
-      "const": "0.9"
+      "const": "0.10"
     },
     "id": {
       "type": "string",
@@ -164,16 +164,16 @@
         "armorRatio": {
           "type": "number",
           "minimum": 0,
-          "description": "Each physical hit loses armorRatio × the target's Armor, as a flat amount."
+          "description": "Each physical hit loses armorRatio × the target's Defense, as a flat amount."
         },
         "armorFloor": {
-          "description": "Armor can't take a physical hit below this % of its size. Absent or 0: enough Armor blanks a hit. Ignored when armorK is set.",
+          "description": "Defense can't take a physical hit below this % of its size. Absent or 0: enough Defense blanks a hit. Ignored when armorK is set.",
           "type": "number",
           "minimum": 0,
           "maximum": 100
         },
         "armorK": {
-          "description": "Armor by the Path of Exile formula: a physical hit deals hit² ÷ (hit + armorK × Armor), so Armor is nearly linear against big hits and never blanks one. Replaces armorRatio and armorFloor when above 0; absent or 0, the flat cut.",
+          "description": "Defense by the Path of Exile formula: a physical hit deals hit² ÷ (hit + armorK × Defense), so Defense is nearly linear against big hits and never blanks one. Replaces armorRatio and armorFloor when above 0; absent or 0, the flat cut.",
           "type": "number",
           "minimum": 0
         },
@@ -205,8 +205,7 @@
             "type": {
               "type": "string",
               "enum": [
-                "physical",
-                "magical"
+                "physical"
               ]
             },
             "hands": {
@@ -254,7 +253,6 @@
                     "type": "string",
                     "enum": [
                       "physical",
-                      "magical",
                       "none"
                     ]
                   },
@@ -667,8 +665,7 @@
           "type": {
             "type": "string",
             "enum": [
-              "physical",
-              "magical"
+              "physical"
             ]
           },
           "cooldown": {
@@ -856,7 +853,7 @@
                   "$ref": "#/$defs/Num"
                 },
                 "live": {
-                  "description": "Read whenever the holder's stats are worked out, from its other stats as they stand without this change (Thorns from Armor, Guard included), not once at application.",
+                  "description": "Read whenever the holder's stats are worked out, from its other stats as they stand without this change (Thorns from Defense, Guard included), not once at application.",
                   "type": "boolean",
                   "const": true
                 }
@@ -966,7 +963,6 @@
                       "type": "string",
                       "enum": [
                         "physical",
-                        "magical",
                         "none"
                       ]
                     },
@@ -1713,7 +1709,7 @@
               "type": "object",
               "properties": {
                 "tag": {
-                  "description": "Only hits carrying this tag (basic, ability, extra, physical, magical, area).",
+                  "description": "Only hits carrying this tag (basic, ability, extra, physical, area).",
                   "type": "string",
                   "pattern": "^[a-z][a-z0-9_]*(:[a-z0-9_]+)*$"
                 },
@@ -2258,8 +2254,7 @@
               "type": {
                 "type": "string",
                 "enum": [
-                  "physical",
-                  "magical"
+                  "physical"
                 ]
               },
               "hands": {
@@ -2307,7 +2302,6 @@
                       "type": "string",
                       "enum": [
                         "physical",
-                        "magical",
                         "none"
                       ]
                     },
@@ -2635,8 +2629,7 @@
               "type": {
                 "type": "string",
                 "enum": [
-                  "physical",
-                  "magical"
+                  "physical"
                 ]
               },
               "hands": {
@@ -2684,7 +2677,6 @@
                       "type": "string",
                       "enum": [
                         "physical",
-                        "magical",
                         "none"
                       ]
                     },
@@ -5186,7 +5178,7 @@
           }
         },
         "lower": {
-          "description": "This stat is lower than the reading unit's: the acting unit in an action, a reaction's actor, a pulse's holder (an ally with less Armor than the wearer).",
+          "description": "This stat is lower than the reading unit's: the acting unit in an action, a reaction's actor, a pulse's holder (an ally with less Defense than the wearer).",
           "type": "object",
           "properties": {
             "stat": {
@@ -5204,7 +5196,7 @@
           "type": "boolean"
         },
         "top": {
-          "description": "No living unit on its side has more of the highest of these stats (\"the foe with the highest Attack or Magic\"); ties pass.",
+          "description": "No living unit on its side has more of the highest of these stats (\"the foe with the highest Attack\"); ties pass.",
           "type": "object",
           "properties": {
             "stats": {
@@ -5454,7 +5446,7 @@
                 "stats"
               ],
               "additionalProperties": false,
-              "description": "The highest of these stats (\"the foe with the highest Attack or Magic\")."
+              "description": "The highest of these stats (\"the foe with the highest Attack\")."
             },
             {
               "type": "object",
@@ -5496,7 +5488,6 @@
               "type": "string",
               "enum": [
                 "physical",
-                "magical",
                 "none"
               ]
             },
@@ -5519,7 +5510,6 @@
                     "type": "string",
                     "enum": [
                       "physical",
-                      "magical",
                       "none"
                     ]
                   },
@@ -6017,7 +6007,7 @@
             "to"
           ],
           "additionalProperties": false,
-          "description": "A price in HP: lost at once, not damage, so no Shield soaks it, no Armor cuts it and nothing reacts to it; it never takes the payer below 1 HP. An ability's HP price is this effect on itself, after whatever reads its HP first."
+          "description": "A price in HP: lost at once, not damage, so no Shield soaks it, no Defense cuts it and nothing reacts to it; it never takes the payer below 1 HP. An ability's HP price is this effect on itself, after whatever reads its HP first."
         },
         {
           "type": "object",
@@ -6032,7 +6022,7 @@
               "exclusiveMinimum": 0
             },
             "of": {
-              "description": "weapon (the default): the actor's basic attack against each target, its damage with the weapon's riders and statuses, as an extra strike's. hit: the raw amount of the hit that set the reaction off (before Armor or Magic resist), in that hit's damage type.",
+              "description": "weapon (the default): the actor's basic attack against each target, its damage with the weapon's riders and statuses, as an extra strike's. hit: the raw amount of the hit that set the reaction off (before Defense), in that hit's damage type.",
               "type": "string",
               "enum": [
                 "weapon",
@@ -6062,7 +6052,7 @@
             "op"
           ],
           "additionalProperties": false,
-          "description": "Reactions only: a hit of kind extra by the actor at each target (the dodge's riposte, the blow returned for an ally). It can crit and be dodged, meets Armor or Magic resist, and fires hit events; it never brings extra strikes of its own."
+          "description": "Reactions only: a hit of kind extra by the actor at each target (the dodge's riposte, the blow returned for an ally). It can crit and be dodged, meets Defense, and fires hit events; it never brings extra strikes of its own."
         },
         {
           "type": "object",

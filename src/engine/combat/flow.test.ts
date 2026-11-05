@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { arena, weapons } from "./arena.js";
 
 const BAG = { name: "Bag", stats: { max_hp: 1_000_000 } };
-const fire = (cast: number, cooldown: number) => ({ id: "fire", cast, cooldown, do: [{ op: "damage", type: "magical", amount: 10 }] });
+const fire = (cast: number, cooldown: number) => ({ id: "fire", cast, cooldown, do: [{ op: "damage", type: "physical", amount: 10 }] });
 const dmg = (amount: number) => ({ op: "damage", type: "physical", amount });
 const share = (xs: unknown[], x: unknown) => xs.filter((y) => y === x).length / xs.length;
 
@@ -193,7 +193,7 @@ test("actions: Cure checks its condition when it starts and picks its target whe
 
 test("actions: an action whose stated targeting finds nobody when it resolves fails, like one it can't pay for", () => {
   const purge = { id: "purge", cast: 2, cooldown: 10, target: { side: "foes", where: { has: "mark" } }, do: [dmg(5)] };
-  const mark = { id: "mark", name: "MARK", label: "debuff", show: "icon", stacking: "refresh", stats: [{ stat: "armor", flat: 0 }] };
+  const mark = { id: "mark", name: "MARK", label: "debuff", show: "icon", stacking: "refresh", stats: [{ stat: "defense", flat: 0 }] };
   const b = arena({ party: [{ name: "A", abilities: ["purge"] }], enemies: [BAG], statuses: [mark], abilities: [purge] }).to(12);
   assert.deepEqual(b.entries("fail").map((e) => e.why), ["target"]);
   assert.equal(b.hits("Bag").length, 0);
@@ -302,8 +302,8 @@ test("KO: the fight is lost when every party unit is KO'd", () => {
 });
 
 test("KO: there's no time limit, but a fight nothing can end stops as a loss: a safety stop, not a design rule", () => {
-  // Nobody can hurt anybody: armor eats every hit.
-  const a = arena({ party: [{ name: "A", stats: { armor: 100 }, weapon: weapons.dagger }], enemies: [{ name: "B", stats: { armor: 100 }, weapon: weapons.dagger }] }).run();
+  // Nobody can hurt anybody: Defense eats every hit.
+  const a = arena({ party: [{ name: "A", stats: { defense: 100 }, weapon: weapons.dagger }], enemies: [{ name: "B", stats: { defense: 100 }, weapon: weapons.dagger }] }).run();
   assert.equal(a.f.result, "lost");
   assert.deepEqual(a.entries("stop").map((e) => e.why), ["timeout"]);
   // Nobody can act at all.
