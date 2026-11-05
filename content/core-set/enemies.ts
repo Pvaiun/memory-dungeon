@@ -23,10 +23,10 @@ const basic = (kind: string, word: SwingWord = "normal", extra: Partial<WeaponT>
 const MULTI_SHARE = 0.6;
 const flurry = (kind: string, word: SwingWord = "normal", extra: Partial<WeaponT> = {}): WeaponT => ({ kind, amount: Math.round(MULTI_SHARE * swing(speedOf(kind), word)), hits: 2, ...extra });
 /**
- * The casters' touches (the Bone Priest, Witch, Lich, Wraith and Fire Imp) and the Wisp's and Drone's sparks: a normal swing, since
- * a weak one into a wall's Defense is a sliver, and a caster's touch should still be worth stopping.
+ * The casters' touches (the Bone Priest, Witch, Lich, Wraith, Fire Imp and Ice Spirit) and the Wisp's and Drone's sparks: a heavy
+ * swing, since a lighter one into a wall's Defense is a sliver, and a caster's touch should still be worth stopping.
  */
-const CASTER_TOUCH: SwingWord = "normal";
+const CASTER_TOUCH: SwingWord = "heavy";
 /** A basic attack with no kind of its own (a touch, a slam): its speed. */
 const touch = (speed: keyof typeof SPEED, word: SwingWord = "normal", extra: Partial<WeaponT> = {}): WeaponT => ({
   type: "physical", cooldown: SPEED[speed], amount: swing(speed, word), ...extra,
@@ -147,7 +147,7 @@ const bombBug = enemy("bomb_bug", "Bomb Bug", "Explodes when it dies.", "minion"
 const fireImp = enemy("fire_imp", "Fire Imp", "Cheers its friends on.", "minion", line(3, 5, 3, 3, 1, 2, 1), touch("medium", CASTER_TOUCH), { abilities: ["cheer"] });
 const fireGiant = enemy("fire_giant", "Fire Giant", "Lord of the furnace.", "boss", line(95, 10, 3, 14, 5, 2, 4), basic("staff", "heavy"), { abilities: ["brand", "kindle", "inferno"] });
 
-const iceSpirit = enemy("ice_spirit", "Ice Spirit", "Living ice: its touch chills.", "minion", line(5, 0, 0, 4, 1, 2, 2), touch("medium"), { statuses: ["rime"] });
+const iceSpirit = enemy("ice_spirit", "Ice Spirit", "Living ice: its touch chills.", "minion", line(5, 0, 0, 4, 1, 2, 2), touch("medium", CASTER_TOUCH), { statuses: ["rime"] });
 const iceGolem = enemy("ice_golem", "Ice Golem", "Every hit thickens its ice.", "elite", line(14, 0, 0, 5, 2, 2, 3), basic("great_weapon", "heavy"), { abilities: ["brace"], statuses: ["ice_crust_passive"] });
 const iceTitan = enemy("ice_titan", "Ice Titan", "A walking glacier.", "boss", { ...line(110, 6, 2, 14, 6, 2, 4), "immune:dispel": 1 }, basic("great_weapon", "massive"), { abilities: ["hailstorm"], statuses: ["frozen_core"] });
 

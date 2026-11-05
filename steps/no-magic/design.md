@@ -32,7 +32,7 @@ What the prototype builds, in the scale's words. Numbers are in `content/core-se
 ## Enemies
 
 - **No Magic resist anywhere.** Each foe's Attack is the higher of its old Attack and Magic, except the Reaper and the Silent One, whose Magic fed nothing and who keep their Attack. The Ice Titan's Hailstorm share is cut so it lands its old size from the Titan's higher Attack.
-- **Their spells are hits now:** the Lich's Soulfire, the Fire Giant's Brand and Inferno, the Hailstorm, the Tempest, the Bomb Bug's blast and every caster's touch can be dodged and meet Defense.
+- **Their spells are hits now:** the Lich's Soulfire, the Fire Giant's Brand and Inferno, the Hailstorm, the Tempest, the Bomb Bug's blast and every caster's touch can be dodged and meet Defense. So the casters' touches (and the Wisp's and Drone's sparks) are a heavy swing (`CASTER_TOUCH`), and Brand, Hailstorm, Tempest and the blast are larger shares (`ENEMY_HIT`), so each still costs what it did.
 - **The Ghost (and the Ice Ghost) is Incorporeal:** it takes half of every hit, and a status's own damage in full (`INCORPOREAL`). The challenge Spellward becomes **Incorporeal**, answered by statuses (Burn, Bleed, Shock, a shatter, Thorns) and Sunder.
 - **Challenges whose answer was "Magic"** (Armored shell, Dodger, Duelist, Hardening hide, Shield wall, Mixed defenses) lose it: the answers left are big hits, Crit damage, Sunder, Accuracy and statuses, as each one's list already says. Two states (not built) swaps between very high Defense and Incorporeal.
 
