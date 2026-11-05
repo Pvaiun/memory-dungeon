@@ -60,7 +60,7 @@ export const enemyStatuses: StatusT[] = [
   passive("fire_bite", "Fire bite", "Its bites burn.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("burn", { stacks: FLAT_STACKS.one, to: "other" })] }] }),
   passive("split", "Split", "Below half HP it splits in two.", { reactions: [{ on: { event: "hp_lost" }, do: [{ op: "replace", enemy: "mini_slime", count: 2, to: { side: "self", where: { hpBelow: 50 } } }] }] }),
   // The Ghost's challenge: hits print slivers, a status's own damage lands in full.
-  passive("incorporeal", "Incorporeal", "Takes a quarter of every hit; its burns, bleeds and shocks hurt it in full.", { taken: [{ tag: "physical", pct: INCORPOREAL.hits }] }),
+  passive("incorporeal", "Incorporeal", "Takes half of every hit; its burns, bleeds and shocks hurt it in full.", { taken: [{ tag: "physical", pct: INCORPOREAL.hits }] }),
   passive("volatile", "Volatile", "Explodes when it dies.", {
     survivesKO: true,
     reactions: [{ on: { event: "ko" }, do: [{ op: "damage", type: "physical", amount: { scale: [{ ratio: ENEMY_HIT.volatile, stat: "attack", of: "holder" }] }, to: T.everyFoe }, apply("burn", { stacks: FLAT_STACKS.few, to: T.everyFoe })] }],

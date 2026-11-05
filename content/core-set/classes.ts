@@ -83,7 +83,7 @@ export const passives: StatusT[] = [
     ],
   }),
   { id: "last_rites_on", name: "LAST RITES", text: "Cooldowns halved.", label: "buff", show: "icon", stacking: "fizzle", stats: [{ stat: "cooldown_reduction", flat: 100 }] },
-  // A share of the damage dealt, so the Bard's weapon is a choice against the foe's Defense and resistance.
+  // A share of the damage dealt, so the Bard's weapon is a choice against the foe's Defense.
   passive("refrain", "Refrain", { text: "Basic attacks heal a random ally and give a random ally MP, each a share of the damage dealt.", reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [
     { op: "heal", amount: { scale: [{ ratio: STATUS.refrain.share, amount: true }] }, to: { side: "allies", pick: "random" } },
     { op: "mp", amount: { scale: [{ ratio: STATUS.refrain.share, amount: true }] }, to: { side: "allies", pick: "random" } },

@@ -14,8 +14,8 @@ Where a rule and a design document disagree, this page wins and the document get
 
 ## Combat
 
-- **Two kinds of damage.** Physical meets Armor (the Path of Exile formula) and Evasion; magical meets Magic resist (a percentage) and is never dodged. A status's own damage (Burn, Shock, Bleed, Chill's shatter, Thorns) is untyped and never resisted. There are no elements and no physical subtypes as mechanics: an element is a theme only (names, art, a class's flavour).
-- **Every amount states its own scaling,** and nothing scales by default. No stat is tied to a damage type.
+- **One kind of hit.** Every hit meets Evasion and Defense (the Path of Exile formula). A status's own damage (Burn, Shock, Bleed, Chill's shatter, Thorns) is untyped: Evasion and Defense never meet it, and it's the one way past them. There are no elements and no subtypes of hit as mechanics: an element is a theme only (names, art, a class's flavour).
+- **Every amount states its own scaling,** and nothing scales by default. Attack is the one offensive stat, and anything can scale from any stat.
 - **A status scales by its stacks, never by its applier.** The applier sets only how many stacks it adds. A Burn stack is a Burn stack, whoever applied it, and a status's damage belongs to its holder (no lifesteal from it).
 - **Statuses are universal:** nothing applies a status for less or more than its own length. The one exception is bosses' control resistance (Stun, Silence and Slow, Chill's stun included): hidden stacks shorten them and then make the boss immune, and the stacks fall over time.
 - **MP costs are set by hand on each ability,** with no rule from a stat to a cost.
@@ -30,7 +30,7 @@ The philosophy behind these lines, and the director's intent in their words, are
 - **A build is a way to play you can watch:** someone watching a fight can tell which build is playing and what it's waiting for. It has a rhythm, it's woven from several threads (never one keyword turned up), and builds spread across rhythms. The twelve builds in `docs/gear-design/builds.md` stand.
 - **What a build asks is a range,** from what most runs find, giving back a little, to specific pieces giving back far more. It pays something before it's complete. It can be reached by more than one route, and pieces form a web, not bundles. There's room for exotics and chaos: a run finds its build in what it's given.
 - **A good piece is worth a lot somewhere and little elsewhere.** A piece strong everywhere gives something up, designed for it. The best choices are between things good for different builds.
-- **Gear has four slots** (weapon, armor, offhand, amulet), and slots have no job. Only weapons carry inherent behaviour (a speed, a damage type and hands). Every class has an offhand and a one-handed weapon. The amulet fits everyone. A mythic fits one class.
+- **Gear has four slots** (weapon, armor, offhand, amulet), and slots have no job. Only weapons carry inherent behaviour (a speed, a swing and hands). Every class has an offhand and a one-handed weapon. The amulet fits everyone. A mythic fits one class.
 - **A card says what a piece does and who can wear it** (FITS), never what it's "for": signposting ruins discovery. Every effect is phrased so the player knows what will happen.
 - **Rarity is mostly specificity:** how far a piece bends the game. Power grows by act but stays narrow. Rare and legendary pieces have no random affixes, and lower tiers carry effects too.
 - **Plenty of loot:** better too much than not enough.

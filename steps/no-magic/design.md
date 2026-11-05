@@ -17,7 +17,7 @@ What the prototype builds, in the scale's words. Numbers are in `content/core-se
 
 - **The six striking kinds** (dagger, fist, sword, spear, bow, great weapon) swing as before: base and ratio at medium.
 - **The five focus kinds** (rune sword, mace, wand, rod, staff) swing lighter, base and ratio at low (about half the swing), and **every piece of a focus kind carries +1 Attack** on top of its own stats (`FOCUS`). The card shows the total ("Attack +3." on the Morningstar, which gave Magic +2). So a blade hits harder, and a focus makes everything that scales from Attack bigger: abilities, heals, stacks.
-- The choice matters for the classes that wear one of each (Hexer, Valkyrie, Geomancer, Bard, Bramble knight, Paladin: rune sword or mace).
+- The choice matters for the five classes that wear one of each: the Hexer, Valkyrie, Geomancer, Bard and Bramble knight. The Paladin's two kinds (rune sword, mace) are both focuses.
 
 ## Gear
 
@@ -33,7 +33,7 @@ What the prototype builds, in the scale's words. Numbers are in `content/core-se
 
 - **No Magic resist anywhere.** Each foe's Attack is the higher of its old Attack and Magic, except the Reaper and the Silent One, whose Magic fed nothing and who keep their Attack. The Ice Titan's Hailstorm share is cut so it lands its old size from the Titan's higher Attack.
 - **Their spells are hits now:** the Lich's Soulfire, the Fire Giant's Brand and Inferno, the Hailstorm, the Tempest, the Bomb Bug's blast and every caster's touch can be dodged and meet Defense.
-- **The Ghost (and the Ice Ghost) is Incorporeal:** it takes a quarter of every hit, and a status's own damage in full (`INCORPOREAL`). The challenge Spellward becomes **Incorporeal**, answered by statuses (Burn, Bleed, Shock, a shatter, Thorns) and Sunder.
+- **The Ghost (and the Ice Ghost) is Incorporeal:** it takes half of every hit, and a status's own damage in full (`INCORPOREAL`). The challenge Spellward becomes **Incorporeal**, answered by statuses (Burn, Bleed, Shock, a shatter, Thorns) and Sunder.
 - **Challenges whose answer was "Magic"** (Armored shell, Dodger, Duelist, Hardening hide, Shield wall, Mixed defenses) lose it: the answers left are big hits, Crit damage, Sunder, Accuracy and statuses, as each one's list already says. Two states (not built) swaps between very high Defense and Incorporeal.
 
 ## Open questions this raises (for the report)

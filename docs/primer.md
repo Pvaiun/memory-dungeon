@@ -30,7 +30,7 @@ The least you need to know to work on the game. Read it first, then open a detai
 | Ranger (starter) | Wears down tough targets | Vampire | Drains to outlast |
 | Bramble knight | Thorns tank | Pyromancer | Ramping Burn |
 | Hoplite | Bodyguard who opens foes up | Frostweaver | Freezes and shatters |
-| Paladin | Shelter against magic | Stormcaller | Shocks every foe |
+| Paladin | Shelter | Stormcaller | Shocks every foe |
 | Valkyrie | Storm spear who heals and revives | Geomancer | Hits hardest behind stone |
 | Bard | Party tempo | Hexer | Curser |
 
@@ -38,10 +38,9 @@ The least you need to know to work on the game. Read it first, then open a detai
 
 - **Time.** A fight runs in real time, counted in ticks, and nobody gives orders. Every action (a basic attack or an ability) has a wind-up, a cooldown and a recovery. Basic attacks never wind up. A free unit uses its first ready ability in the order it was slotted, otherwise its basic attack. An ability is ready when it's off cooldown, its condition holds and the unit has the MP. Past a set time, an enrage makes everyone hit harder, so no fight stalls.
 - **MP is fuel.** No class regains MP in a fight by itself. Regen comes only from gear and a formation seat, plus a few abilities and statuses. Builds differ in whether they spend HP or MP.
-- **Damage comes in two kinds.**
-  - **Physical** can be dodged (Evasion) and is cut by Armor.
-  - **Magical** is cut by Magic resist, a percentage, and is never dodged.
-  - **A status's own damage** (Burn, Bleed, Shock…) is untyped and never resisted.
+- **One kind of hit.**
+  - **Every hit** can be dodged (Evasion) and is cut by Defense.
+  - **A status's own damage** (Burn, Bleed, Shock…) is untyped: Evasion and Defense never meet it.
 
   There are no elements as mechanics: fire, ice and the rest are themes only. Every amount says what stat it scales from; nothing scales by default.
 - **Targeting.** Foes pick party members at random, weighted by **draw**, which comes from Aggro. Every 25 Aggro doubles a party member's draw, so a unit built to draw fire takes most of the picks. The party picks foes on a gentler curve.
@@ -60,7 +59,7 @@ The least you need to know to work on the game. Read it first, then open a detai
 ## Gear, formations and training
 
 - **Gear has four slots:** weapon, armor, offhand and amulet. Slots have no job, and only weapons carry behaviour of their own.
-  - **Weapons:** eleven kinds, each a speed, a damage type and one or two hands. The kind sets the unit's basic attack. A two-hander (bow, great weapon, staff) leaves the offhand empty.
+  - **Weapons:** eleven kinds, each a speed, a swing and one or two hands: six striking kinds, and five focus kinds that swing lighter but carry Attack. The kind sets the unit's basic attack. A two-hander (bow, great weapon, staff) leaves the offhand empty.
   - **Who wears what:** each class wears two weapon kinds, one or two of the four armor types and one or two of the ten offhand kinds. The amulet fits everyone.
 - **Rarity is specificity.**
   - **Common:** stats.
@@ -89,7 +88,7 @@ The least you need to know to work on the game. Read it first, then open a detai
 ## Enemies
 
 - **Enemies use the class rules:** the same stats, statuses and target phrases.
-- **Ranks:** minion, elite and boss. Every foe carries some Armor and some Magic resist, more by rank. A boss has a signature move or gimmick, and resists repeated control.
+- **Ranks:** minion, elite and boss. Every foe carries some Defense, more by rank. A boss has a signature move or gimmick, and resists repeated control.
 - **Each enemy is built on a challenge,** a puzzle that a party answers with the strengths in its own kit. Raw power can partly make up for a missing strength.
 - **Fights:** at most 8 foes. Some enemies summon more, and nobody leaves a fight alive.
 - **Regions:** the 29 enemies live in seven regions, and each act is one of them. Act I is the Old Road. Act II is the Crypt, the Fire Mine or the Ice Pass. Act III is the Storm Tower, the Deep Crypt or the Tower Top.
