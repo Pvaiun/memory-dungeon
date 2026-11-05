@@ -33,13 +33,12 @@ const formId = (id: string, f: Form) => `${id}__${f}`;
 
 export const apply = (status: string, extra: Partial<Extract<EffectT, { op: "apply" }>> = {}): EffectT => ({ op: "apply", status, ...extra }) as EffectT;
 export const phys = (amount: NumT, extra: object = {}): EffectT => ({ op: "damage", type: "physical", amount, ...extra }) as EffectT;
-export const magic = (amount: NumT, extra: object = {}): EffectT => ({ op: "damage", type: "magical", amount, ...extra }) as EffectT;
 export const removeMine = (status: string, label: "buff" | "debuff" | "marker" = "buff", to: ToT = "holder"): EffectT => ({ op: "remove", label, status, to }) as EffectT;
 /** An ability's hit, by its word, times k. */
 export const hitOf = (stat: string, word: HitWord, k = 1): NumT => from(stat, HIT[word] * k);
 /** A cooldown word, moved by the base ability's id as classes.ts moves the base's, so a form keeps its ability's place in the spread. */
 export const cd = (word: keyof typeof COOLDOWN, baseId: string) => jitter(COOLDOWN[word], baseId);
-export const both = (pct: NumT) => [{ tag: "physical", pct }, { tag: "magical", pct }];
+export const both = (pct: NumT) => [{ tag: "physical", pct }];
 /** A status's stat read off its holder: `of: holder`, as a status must say. */
 export const ofHolder = (ratio: number, stat: string): NumT => ({ scale: [{ ratio, stat, of: "holder" }] });
 /** The phrase "the ally foes are most drawn to": a Taunting ally if there is one (the most Aggro among several), otherwise the most Aggro. */

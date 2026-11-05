@@ -12,7 +12,7 @@ import { critStep, idOf, own, piece, pieceStatus, sp, st, weaponHit, type Build,
 
 /** Stacks from the wearer's Attack on its weapon's own hit (an action: the swinging unit is `self`). */
 const swingStacks = (word: StackWord): NumT => ({ scale: [{ ratio: STACKS[word] / P, stat: "attack", of: "self" }] });
-const bothTags = (pct: NumT) => [{ tag: "physical", pct }, { tag: "magical", pct }];
+const bothTags = (pct: NumT) => [{ tag: "physical", pct }];
 /** "+pct% against a foe that passes `when`": a boost that reads the unit being hit. */
 const against = (pct: number, when: UnitCondT): NumT => ({ scale: [{ ratio: pct, when, of: "target" }] });
 const apply = (status: string, to: ToT, stacks?: NumT): EffectT => ({ op: "apply", status, ...(stacks !== undefined ? { stacks } : {}), to });
@@ -247,7 +247,7 @@ add(
 
 // ─── Spear (Hoplite, Valkyrie, Monk): medium, physical, one hand ───────────
 
-add(piece({ name: "Ironwood spear", kind: "spear", slot: "weapon", rarity: "common", text: "Armor +1, Attack +1.", stats: [st("armor", 1), st("attack", 1)] }), [], "Toll 1, Bonfire 1, Landslide ●");
+add(piece({ name: "Ironwood spear", kind: "spear", slot: "weapon", rarity: "common", text: "Defense +1, Attack +1.", stats: [st("defense", 1), st("attack", 1)] }), [], "Toll 1, Bonfire 1, Landslide ●");
 
 add(piece({ name: "Partisan", kind: "spear", slot: "weapon", rarity: "common", text: "Crit chance +1, Attack +1.", stats: [critStep(1), st("attack", 1)] }), [], "Hunt 1, Ambush 1");
 
@@ -278,10 +278,10 @@ add(
 );
 
 add(
-  piece({ name: "Pike wall", kind: "spear", slot: "weapon", rarity: "legendary", text: "When a foe hits an ally with less Armor than the wearer, the wearer strikes that foe with its spear.", statuses: ["pike_wall"] }),
-  // A reaction's `if` with a `lower` test (the ally that took the hit has less Armor than the wearer), and a reaction that strikes. No limit.
-  [pieceStatus("pike_wall", "Pike wall", "When a foe hits an ally with less Armor, it strikes that foe.", {
-    reactions: [{ on: { event: "hit_taken", whose: "ally" }, if: { unit: "owner", where: { lower: { stat: "armor" } } }, do: [{ op: "strike", to: "other" }] }],
+  piece({ name: "Pike wall", kind: "spear", slot: "weapon", rarity: "legendary", text: "When a foe hits an ally with less Defense than the wearer, the wearer strikes that foe with its spear.", statuses: ["pike_wall"] }),
+  // A reaction's `if` with a `lower` test (the ally that took the hit has less Defense than the wearer), and a reaction that strikes. No limit.
+  [pieceStatus("pike_wall", "Pike wall", "When a foe hits an ally with less Defense, it strikes that foe.", {
+    reactions: [{ on: { event: "hit_taken", whose: "ally" }, if: { unit: "owner", where: { lower: { stat: "defense" } } }, do: [{ op: "strike", to: "other" }] }],
   })],
   "Toll 3 ●●●, Landslide ●●, Bonfire ●",
 );
@@ -289,7 +289,7 @@ add(
 {
   const ready = "storm_pike_ready";
   add(
-    piece({ name: "Storm pike", kind: "spear", slot: "weapon", rarity: "legendary", text: "Each hit it lands adds a Charge, up to 10. At 10, its next basic attack that lands also calls lightning on every foe (light magical damage, from Attack) and spends the Charges.", statuses: ["storm_pike"] }),
+    piece({ name: "Storm pike", kind: "spear", slot: "weapon", rarity: "legendary", text: "Each hit it lands adds a Charge, up to 10. At 10, its next basic attack that lands also calls lightning on every foe (light damage, from Attack) and spends the Charges.", statuses: ["storm_pike"] }),
     [
       pieceStatus("storm_pike", "Storm pike", "Each hit it lands adds a Charge. At 10, its next basic attack calls lightning on every foe.", {
         reactions: [
@@ -302,7 +302,7 @@ add(
         reactions: [{
           on: { event: "hit_lands", kind: "basic" },
           do: [
-            { op: "damage", type: "magical", amount: { scale: [{ ratio: HIT.light, stat: "attack", of: "holder" }] }, to: { side: "foes", pick: "all" } },
+            { op: "damage", type: "physical", amount: { scale: [{ ratio: HIT.light, stat: "attack", of: "holder" }] }, to: { side: "foes", pick: "all" } },
             removeBuff("charge"),
             removeBuff(ready),
           ],
@@ -320,10 +320,10 @@ add(piece({ name: "Recurve bow", kind: "bow", slot: "weapon", rarity: "common", 
 add(piece({ name: "Yew bow", kind: "bow", slot: "weapon", rarity: "common", text: "Accuracy medium, Crit chance +1, Aggro −1.", stats: [sp("accuracy", "medium"), critStep(1), st("aggro", -1)] }), [], "Hunt 1, Cuts ●");
 
 add(
-  piece({ name: "Snaring bow", kind: "bow", slot: "weapon", rarity: "uncommon", text: "Attack +1, Accuracy medium. Each time it looses a basic attack while a foe is winding up, that foe is Slowed (the one with the highest Attack or Magic, if several are).", stats: [st("attack", 1), sp("accuracy", "medium")], statuses: ["snaring_bow"] }),
+  piece({ name: "Snaring bow", kind: "bow", slot: "weapon", rarity: "uncommon", text: "Attack +1, Accuracy medium. Each time it looses a basic attack while a foe is winding up, that foe is Slowed (the one with the highest Attack, if several are).", stats: [st("attack", 1), sp("accuracy", "medium")], statuses: ["snaring_bow"] }),
   // No ifNone: with nobody winding up, nobody is picked.
   [pieceStatus("snaring_bow", "Snaring bow", "Each basic attack Slows a foe that's winding up.", {
-    reactions: [{ on: { event: "action_resolve", kind: "basic" }, do: [apply("slow", { side: "foes", where: { casting: true }, pick: "highest", by: { stats: ["attack", "magic"] } })] }],
+    reactions: [{ on: { event: "action_resolve", kind: "basic" }, do: [apply("slow", { side: "foes", where: { casting: true }, pick: "highest", by: { stats: ["attack"] } })] }],
   })],
   "Lockdown 1, Toll ●, Hunt ●",
 );

@@ -5,7 +5,7 @@
  */
 import type { StatusT } from "../../../src/schema.js";
 
-const both = (pct: number) => [{ tag: "physical", pct }, { tag: "magical", pct }];
+const both = (pct: number) => [{ tag: "physical", pct }];
 const counter = (id: string, name: string, text: string, body: Partial<StatusT>): StatusT =>
   ({ id, name, text, label: "buff", show: "icon", stacking: "intensity", unremovable: true, ...body }) as StatusT;
 

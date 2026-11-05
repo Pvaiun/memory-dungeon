@@ -16,7 +16,7 @@ import { AGGRO_STEP, FLAT_STACKS, SPECIAL, crit, stepFor } from "./scale.js";
 export const FORMATION_STEP = 1.25;
 type Change = { stat: string; flat: number };
 /**
- * n seat steps of a stat (a negative n gives it up): Attack, Magic and Armor 1,250, HP 625, Aggro 13, MP regen 3,750 a step.
+ * n seat steps of a stat (a negative n gives it up): Attack and Defense 1,250, HP 625, Aggro 13, MP regen 3,750 a step.
  * Halves round away from zero, so "draws less" is −13 (Math.round alone gives −12).
  */
 const st = (stat: string, n: number): Change => {
@@ -50,7 +50,7 @@ const on = (event: EventSpecT["event"], spec: Omit<EventSpecT, "event"> = {}): E
 const react = (spec: EventSpecT, ...effects: EffectT[]): ReactionT => ({ on: spec, do: effects });
 const atStart = (...effects: EffectT[]): ReactionT => react(on("fight_start"), ...effects);
 /** A boost on all the holder's hits. */
-const hits = (pct: NumT) => [{ tag: "physical", pct }, { tag: "magical", pct }];
+const hits = (pct: NumT) => [{ tag: "physical", pct }];
 /** Some of the holder's cooldowns this many ticks closer. */
 const closer = (which: "abilities" | "soonest", less: number): EffectT => ({ op: "cooldown", which, set: { less }, to: "holder" });
 const OTHERS: TargetRuleT = { side: "others", pick: "all" };
@@ -127,7 +127,7 @@ const NO_ALLY_DOWN: ConditionT = { side: "others", where: { ko: true }, atMost: 
 const common: Entry[] = [
   entry(
     formation("Shieldwall", "common", "One stands in front with its shield up; two stand behind it.", [
-      { name: "Wall", text: "Draws far more. Armor up two steps.", stats: [st("aggro", 2), st("armor", 2)] },
+      { name: "Wall", text: "Draws far more. Defense up two steps.", stats: [st("aggro", 2), st("defense", 2)] },
       ...twice({ name: "Behind", text: "Draws less.", stats: [st("aggro", -1)] }),
     ]),
     [],
@@ -143,7 +143,7 @@ const common: Entry[] = [
     "Landslide 1 ●●●, Snap ●●, Ambush ●",
   ),
   entry(
-    formation("Skirmish line", "common", "Three light fighters who'd rather not be hit at all.", thrice({ name: "Skirmisher", text: "Dodges. Armor down.", stats: [EVASION, st("armor", -1)] })),
+    formation("Skirmish line", "common", "Three light fighters who'd rather not be hit at all.", thrice({ name: "Skirmisher", text: "Dodges. Defense down.", stats: [EVASION, st("defense", -1)] })),
     [],
     "Cuts 1 ●●, Toll ●",
   ),
@@ -157,7 +157,7 @@ const common: Entry[] = [
   ),
   entry(
     formation("Wellspring", "common", "One regains mana all through the fight; two spend less of theirs.", [
-      { name: "Source", text: "Regains MP in fights. Magic down.", stats: [st("mp_regen", 2), st("magic", -1)] },
+      { name: "Source", text: "Regains MP in fights. Attack down.", stats: [st("mp_regen", 2), st("attack", -1)] },
       ...twice({ name: "Spender", text: "Abilities cost a tenth less MP.", statuses: ["wellspring_spender"] }),
     ]),
     // An MP cost change on every ability.
@@ -172,7 +172,7 @@ const common: Entry[] = [
   ),
   entry(
     formation("First light", "common", "Up before dawn: everyone's abilities start each fight closer to ready, in lighter kit.", thrice({ name: "Riser" }), {
-      stats: [st("armor", -1)],
+      stats: [st("defense", -1)],
       statuses: ["first_light"],
     }),
     // A cooldown change: 5 ticks off each ability's cooldown, on top of what it carried from the last fight.
@@ -190,7 +190,7 @@ const common: Entry[] = [
   entry(
     formation("Ring of steel", "common", "One draws the field onto its spikes; two cut it down.", [
       { name: "Beacon", text: "Draws far more. Thorns.", stats: [st("aggro", 2), THORNS] },
-      ...twice({ name: "Reaper", text: "Attack and Magic up.", stats: [st("attack", 1), st("magic", 1)] }),
+      ...twice({ name: "Reaper", text: "Attack up.", stats: [st("attack", 1)] }),
     ]),
     [],
     "Harvest 1 ●●, Toll 1 ●●",
@@ -198,11 +198,11 @@ const common: Entry[] = [
   entry(
     formation("Vigil", "common", "One stands where the blows fall. While anyone lies fallen, the two who keep watch hit harder.", [
       { name: "Martyr", text: "Draws more. HP down.", stats: [st("aggro", 1), st("max_hp", -1)] },
-      ...twice({ name: "Mourner", text: "While an ally is down, Attack and Magic up two steps.", statuses: ["vigil_mourner"] }),
+      ...twice({ name: "Mourner", text: "While an ally is down, Attack up two steps.", statuses: ["vigil_mourner"] }),
     ]),
     [
       // Tests on reactions. One who fell in an earlier fight counts, so the fight's start checks too.
-      held("vigil_mourner", "Mourner", "While an ally is down, Attack and Magic up two steps.", {
+      held("vigil_mourner", "Mourner", "While an ally is down, Attack up two steps.", {
         reactions: [
           { on: on("fight_start"), if: ALLY_DOWN, do: [give("vigil_mourning")] },
           { on: on("revived"), if: ALLY_DOWN, do: [give("vigil_mourning")] },
@@ -210,14 +210,14 @@ const common: Entry[] = [
           { on: on("revived", { whose: "ally" }), if: NO_ALLY_DOWN, do: [{ op: "remove", label: "buff", status: "vigil_mourning", to: "holder" }] },
         ],
       }),
-      { id: "vigil_mourning", name: "MOURNING", text: "Attack and Magic up while an ally is down.", label: "buff", show: "icon", stacking: "refresh", stats: [st("attack", 2), st("magic", 2)] },
+      { id: "vigil_mourning", name: "MOURNING", text: "Attack up while an ally is down.", label: "buff", show: "icon", stacking: "refresh", stats: [st("attack", 2)] },
     ],
     "Phoenix 1 ●●●, Toll ●",
   ),
   entry(
     formation("Watchtower", "common", "One keeps watch from the tower; two stand guard below it.", [
       { name: "Lookout", text: "Abilities come round a little faster.", stats: [LITTLE_SOONER] },
-      ...twice({ name: "Sentry", text: "Armor up. Draws a little more.", stats: [st("armor", 1), DRAWS_A_LITTLE] }),
+      ...twice({ name: "Sentry", text: "Defense up. Draws a little more.", stats: [st("defense", 1), DRAWS_A_LITTLE] }),
     ]),
     [],
     "Lockdown 1 ●●, Overflow ●",
@@ -236,7 +236,7 @@ const MASON_GAVE: TestT[] = [
 ];
 /** The Wheel's parts, each the next seat's: Wall → Blade → Well → Wall. */
 const PARTS = {
-  wall: { name: "WALL", text: "Draws more. Armor up.", stats: [st("aggro", 1), st("armor", 1)], next: "blade" },
+  wall: { name: "WALL", text: "Draws more. Defense up.", stats: [st("aggro", 1), st("defense", 1)], next: "blade" },
   blade: { name: "BLADE", text: "Basic attacks a fifth faster. Crits more.", stats: [FIFTH_FASTER, critSt(1)], next: "well" },
   well: { name: "WELL", text: "Regains MP in fights. Heals on it are stronger.", stats: [st("mp_regen", 1), STRONGER_HEALS], next: "wall" },
 } as const;
@@ -371,10 +371,10 @@ const rare: Entry[] = [
       { name: "Turnkey", text: "Whenever any foe is Stunned or Silenced, its abilities come 3 ticks closer.", statuses: ["gaol_turnkey"] },
     ]),
     [
-      // Ability changes: a wait and a target on the abilities that Stun or Silence: the casting foe with the highest Attack or Magic, under the
+      // Ability changes: a wait and a target on the abilities that Stun or Silence: the casting foe with the highest Attack, under the
       // Taunt rule unless the ability has Seek.
       held("gaol_watcher", "Watcher", "Its abilities that Stun or Silence wait for a foe's wind-up, and aim at it.", {
-        mods: [{ of: { does: ["stun", "silence"] }, wait: CASTING_FOE, target: { ...CASTING_FOE, pick: "highest", by: { stats: ["attack", "magic"] } } }],
+        mods: [{ of: { does: ["stun", "silence"] }, wait: CASTING_FOE, target: { ...CASTING_FOE, pick: "highest", by: { stats: ["attack"] } } }],
       }),
       // Every lock counts, a shatter's Stun and its own included. Stun and Silence fizzle on a foe that holds them, so it's bounded.
       held("gaol_turnkey", "Turnkey", "Whenever any foe is Stunned or Silenced, its abilities come 3 ticks closer.", {
@@ -450,7 +450,7 @@ const rare: Entry[] = [
   ),
   entry(
     formation("The wheel", "rare", "Every so often the wheel turns, and each unit takes the next seat's part.", [
-      { name: "Wall", text: "Draws more. Armor up.", statuses: ["the_wheel_wall_opening"] },
+      { name: "Wall", text: "Draws more. Defense up.", statuses: ["the_wheel_wall_opening"] },
       { name: "Blade", text: "Basic attacks a fifth faster. Crits more.", statuses: ["the_wheel_blade_opening"] },
       { name: "Well", text: "Regains MP in fights. Heals on it are stronger.", statuses: ["the_wheel_well_opening"] },
     ]),
@@ -575,7 +575,7 @@ const legendary: Entry[] = [
   ),
   entry(
     formation("The mountain", "legendary", "One stands like a mountain. While it stands, the two below strike a third harder; while it's down, they take double.", [
-      { name: "Peak", text: "Taunts all fight. Armor and HP up two steps.", stats: [st("armor", 2), st("max_hp", 2)], statuses: ["the_mountain_peak"] },
+      { name: "Peak", text: "Taunts all fight. Defense and HP up two steps.", stats: [st("defense", 2), st("max_hp", 2)], statuses: ["the_mountain_peak"] },
       ...twice({ name: "Foothill", text: "While the Peak stands, deals a third more. While it's down, takes double.", statuses: ["the_mountain_foothill"] }),
     ]),
     [

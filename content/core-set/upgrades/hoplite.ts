@@ -12,14 +12,14 @@ import { abilityUp, apply, cd, helper, kit, passiveUp, phys, r6, removeMine } fr
     boosts: [{ tag: "basic", pct: 100 }],
     reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [removeMine("opening_thrust")] }, { on: { event: "hit_missed", kind: "basic" }, do: [removeMine("opening_thrust")] }],
   }));
-  /** Shieldbearer: a tenth of its Armor on each swing, sized by the held kind's interval as a swing is (a `weapon` test reads the kind), then Phalanx's boost. */
+  /** Shieldbearer: a tenth of its Defense on each swing, sized by the held kind's interval as a swing is (a `weapon` test reads the kind), then Phalanx's boost. */
   const sized = (kind: string) => r6((0.1 * KIND_SPEED[kind]) / SWING_REF);
-  const bearer: NonNullable<StatusT["riders"]> = [{ on: "basic", add: { type: "physical", amount: { scale: ["spear", "great_weapon"].map((kind) => ({ ratio: sized(kind), when: { weapon: [kind] }, of: "holder" as const, times: { stat: "armor", of: "holder" as const } })) } } }];
+  const bearer: NonNullable<StatusT["riders"]> = [{ on: "basic", add: { type: "physical", amount: { scale: ["spear", "great_weapon"].map((kind) => ({ ratio: sized(kind), when: { weapon: [kind] }, of: "holder" as const, times: { stat: "defense", of: "holder" as const } })) } } }];
   passiveUp({
     id: "phalanx", cls: "hoplite",
     power: "Its basic attacks deal a little more than double: × 2.4.",
     a: { name: "Opening thrust", text: "Basic attacks come half as often and deal double. The first of each fight comes at once and deals triple.", builds: ["ambush", "landslide"] },
-    b: { name: "Shieldbearer", text: "Basic attacks come half as often and deal double. Armor adds to them half as much as Attack does.", builds: ["landslide"] },
+    b: { name: "Shieldbearer", text: "Basic attacks come half as often and deal double. Defense adds to them half as much as Attack does.", builds: ["landslide"] },
     form: (v, _k, plus) => ({ ...phalanx(plus ? 140 : 100), ...(v === "a" ? { reactions: [opening] } : v === "b" ? { riders: bearer } : {}) }),
   });
 }
@@ -45,12 +45,12 @@ import { abilityUp, apply, cd, helper, kit, passiveUp, phys, r6, removeMine } fr
 
 {
   const line: Partial<AbilityT> = { target: { side: "others", pick: "all" }, do: [apply("guard")] };
-  const blade: Partial<AbilityT> = { do: [apply("guard"), apply("guard", { to: { side: "others", pick: "highest", by: { stats: ["attack", "magic"] } } })] };
+  const blade: Partial<AbilityT> = { do: [apply("guard"), apply("guard", { to: { side: "others", pick: "highest", by: { stats: ["attack"] } } })] };
   abilityUp({
     id: "paired_guard", cls: "hoplite",
     power: "Costs less MP.",
     a: { name: "Line of shields", text: "Guards both other allies. Not itself.", builds: ["harvest", "bonfire"] },
-    b: { name: "Guard the blade", text: "Guards itself and the other ally with the highest Attack or Magic.", builds: ["hunt", "ambush"] },
+    b: { name: "Guard the blade", text: "Guards itself and the other ally with the highest Attack.", builds: ["hunt", "ambush"] },
     form: (v, _k, plus) => ({ ...(v === "a" ? line : v === "b" ? blade : {}), ...(plus ? { mp: 200 } : {}) }),
   });
 }

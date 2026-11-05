@@ -23,7 +23,7 @@ const partTags = (kind: string | null, p: Part, extra: readonly string[] = []) =
   return [...out, ...extra];
 };
 
-/** Physical only: one roll per hit (or physical rider) on the attacker's dice. */
+/** Hits only: one roll per hit (or rider) on the attacker's dice. */
 function evaded(w: W, a: CUnit, t: CUnit): boolean {
   const cap = w.c.stats.get("evasion")?.cap ?? 100;
   const chance = Math.min(cap, Math.max(0, stat(w, t, "evasion") - stat(w, a, "accuracy")));
@@ -50,24 +50,19 @@ type Calc = { amount: number; word: string | null; crit: boolean; raw: number };
 function calc(w: W, t: CUnit, p: Part, raw: number, tags: readonly string[], boost: number, crit: number): Calc {
   let x = raw * (1 + boost / 100) * (1 + takenOf(w, t, tags) / 100);
   if (crit) x = (x * crit) / 100;
-  // The amount before Armor or Magic resist, for the log only: what mitigation took off.
+  // The amount before Defense, for the log only: what mitigation took off.
   const preMit = x;
   let word: string | null = null;
   if (p.type === "physical") {
     const k = w.c.pack.ruleset.armorK;
-    const armor = stat(w, t, "armor");
-    // ruleset.armorK: the Path of Exile formula, hit² ÷ (hit + k × Armor): nearly linear against big hits, and it never
-    // blanks a small one. Otherwise a flat armorRatio × Armor, which ruleset.armorFloor keeps above a share of the hit.
+    const armor = stat(w, t, "defense");
+    // ruleset.armorK: the Path of Exile formula, hit² ÷ (hit + k × Defense): nearly linear against big hits, and it never
+    // blanks a small one. Otherwise a flat armorRatio × Defense, which ruleset.armorFloor keeps above a share of the hit.
     const y = k
       ? (x > 0 && armor > 0 ? (x * x) / (x + k * armor) : x)
       : Math.max((x * (w.c.pack.ruleset.armorFloor ?? 0)) / 100, x - armor * w.c.pack.ruleset.armorRatio);
     if (y <= 0 && x > 0) word = "BLOCKED";
     x = y;
-  } else if (p.type === "magical") {
-    // One Magic resist for every magical hit and pulse, a percentage (its stat's floor and cap hold it between 0 and full).
-    const r = stat(w, t, "magic_resist");
-    if (r >= 100) (x = 0), (word = "IMMUNE");
-    else if (r > 0) (x = x * (1 - r / 100)), (word = "RESIST");
   }
   const raw0 = Math.max(0, Math.floor(preMit));
   x = Math.max(0, Math.floor(x));
@@ -133,7 +128,7 @@ function floorOf(w: W, t: CUnit): SInst | null {
 
 const shield = (w: W, u: CUnit) => u.statuses.reduce((s, x) => (def(w, x.id).absorb ? s + Math.floor(x.stacks / SUBTICKS) : s), 0);
 
-/** What a piece of damage was, for the log: "physical", "magical" or "untyped". */
+/** What a piece of damage was, for the log: "physical" or "untyped". */
 const dmgKind = (p: Part) => (p.type === "none" ? "untyped" : p.type);
 function logDamage(w: W, by: CUnit | null, t: CUnit, src: string, part: string, r: Calc, tk: { soaked: number; blocked: boolean }, from?: string | null, kind?: string) {
   w.log?.({

@@ -1,7 +1,7 @@
 /** The schema's primitives (ids, text, numbers, the sub-tick) and its closed sets: each needs engine code, so adding one is a schema version bump. */
 import * as z from "zod";
 
-export const SCHEMA_VERSION = "0.9" as const;
+export const SCHEMA_VERSION = "0.10" as const;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Primitives
@@ -40,9 +40,8 @@ export function keys<T extends Record<string, string>>(o: T) {
 export const SUBTICKS = 1000;
 
 export const TYPES = {
-  physical: "Meets Evasion and Armor.",
-  magical: "Meets Magic resist, a percentage: above 0 RESIST, 100 IMMUNE. Never dodged.",
-  none: "Untyped: never dodged, never reduced by Armor or Magic resist. Not allowed in actions; the type of a status's own damage.",
+  physical: "A hit: meets Evasion and Defense. Every hit is physical.",
+  none: "Untyped: never dodged, never reduced by Defense. Not allowed in actions; the type of a status's own damage.",
 } as const;
 export const DamageType = z.enum(keys(TYPES));
 
@@ -60,17 +59,15 @@ export type SlotT = z.infer<typeof Slot>;
 export const ENGINE_STATS = {
   max_hp: ["amount", "Max HP. A unit is KO'd at 0 HP."],
   max_mp: ["amount", "Max MP. Abilities cost MP, paid when they resolve."],
-  attack: ["amount", "Scales only what states it. By convention, physical things do."],
-  magic: ["amount", "Scales only what states it. By convention, magical things do."],
-  armor: ["amount", "Reduces each physical hit: to hit² ÷ (hit + ruleset.armorK × Armor) when armorK is set; else a flat ruleset.armorRatio × Armor, down to 0 (BLOCKED)."],
+  attack: ["amount", "Scales only what states it."],
+  defense: ["amount", "Reduces each hit: to hit² ÷ (hit + ruleset.armorK × Defense) when armorK is set; else a flat ruleset.armorRatio × Defense, down to 0 (BLOCKED)."],
   aggro: ["amount", "Default targeting picks foes weighted by draw: a party unit's Aggro through ruleset.partyDraw (doubling), an enemy's through ruleset.draw's curve, or Aggro itself without either. Its floor must be above 0."],
-  magic_resist: ["points", "Magic resist, in percent: cuts each magical hit or pulse by that share. Positive shows RESIST, 100 IMMUNE."],
   attack_speed: ["points", "Basic attack cooldown ÷ (1 + stat/100), down to its recovery. Haste, Slow and Chill act through it."],
   cooldown_reduction: ["points", "Ability cooldowns ÷ (1 + stat/100)."],
   cast_time_reduction: ["points", "Cast times ÷ (1 + stat/100)."],
   crit_chance: ["points", "Percent chance that an action's damage or heal crits."],
   crit_multiplier: ["points", "A crit multiplies by this percent (150 is ×1.5). Crit damage raises it."],
-  evasion: ["points", "Percent chance to evade a physical hit, after Accuracy, under its cap."],
+  evasion: ["points", "Percent chance to evade a hit, after Accuracy, under its cap."],
   accuracy: ["points", "Reduces the target's Evasion, down to 0. Negative adds to it."],
   healing_received: ["points", "Heals received × (1 + stat/100). Rot lowers it."],
   forced: ["points", "Above 0: Taunting. A foe's first pick must go to a Taunting unit unless its action has Seek."],
@@ -103,8 +100,7 @@ export const TAGS = {
   basic: "Hits from basic attacks; for lockouts and Seek, basic attacks.",
   ability: "Hits from abilities; for lockouts and Seek, abilities.",
   extra: "Hits from extra strikes (Double strike's second strike, Arc's second hit): hits, but not basic attacks.",
-  physical: "Physical hits (and actions with one).",
-  magical: "Magical hits (and actions with one).",
+  physical: "Every hit (and actions with one): not a status's own damage.",
   area: "Hits from a damage effect aimed at two or more units at once (an Area spell, a basic attack aimed at every foe). A hit without it is a single-target hit.",
   "<status>":"A status's id: reaches that status's pulses (\"+20% Burn damage\").",
   "<status tag>": "A tag a status carries, which reaches its pulses.",

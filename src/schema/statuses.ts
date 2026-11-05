@@ -12,7 +12,7 @@ export const StatChange = z.strictObject({
   stat: StatKey,
   flat: Num.optional(),
   pct: Num.optional(),
-  live: z.literal(true).optional().describe("Read whenever the holder's stats are worked out, from its other stats as they stand without this change (Thorns from Armor, Guard included), not once at application."),
+  live: z.literal(true).optional().describe("Read whenever the holder's stats are worked out, from its other stats as they stand without this change (Thorns from Defense, Guard included), not once at application."),
 });
 /** A stat change from gear, a passive, a formation or a perk. Plain numbers. */
 export const FixedStat = z.strictObject({ stat: StatKey, flat: z.number().optional(), pct: z.number().optional() });
@@ -77,7 +77,7 @@ export type AbilityModT = z.infer<typeof AbilityMod>;
 
 /** Crits by condition, for the holder's hits. */
 export const CritRule = z.strictObject({
-  tag: Tag.optional().describe("Only hits carrying this tag (basic, ability, extra, physical, magical, area)."),
+  tag: Tag.optional().describe("Only hits carrying this tag (basic, ability, extra, physical, area)."),
   when: UnitCond.optional().describe("Only hits on a unit that passes this, read as the hit lands."),
   chance: z.number().optional().describe("Points added to the hit's crit chance, after every stat change (100: it always crits, whatever else holds, Gambler's coin included)."),
   bonus: z.number().optional().describe("Percent more crit bonus, the part of the crit multiplier above ×1: 100 makes ×1.5 into ×2."),

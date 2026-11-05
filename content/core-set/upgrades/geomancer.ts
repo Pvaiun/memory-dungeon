@@ -2,7 +2,7 @@
 import { from, HIT, SPECIAL, STATUS, WINDUP } from "../scale.js";
 import type { ReactionT, TargetRuleT } from "../../../src/schema.js";
 import { T } from "../classes.js";
-import { abilityUp, apply, cd, helper, hitOf, kit, magic, passiveUp, removeMine } from "./kit.js";
+import { abilityUp, apply, cd, helper, hitOf, kit, passiveUp, phys, removeMine } from "./kit.js";
 
 // ─── Geomancer ───────────────────────────────────────────────────────────────
 
@@ -35,43 +35,43 @@ passiveUp({
 abilityUp({
   id: "earthen_shell", cls: "geomancer",
   power: "A shorter cooldown.",
-  a: { name: "Stone skin", text: "Applies a smaller Shield to every ally; the amount scales from Armor.", builds: ["landslide", "phoenix"] },
+  a: { name: "Stone skin", text: "Applies a smaller Shield to every ally; the amount scales from Defense.", builds: ["landslide", "phoenix"] },
   b: { name: "Rampart", text: "Applies Shield and Guard to itself. While that Guard lasts, the first time its Shield breaks it's rebuilt at once. No Shield for an ally.", builds: ["landslide", "toll"] },
   form: (v, _k, plus) => ({
     ...(plus ? { cooldown: cd("short", "earthen_shell") } : {}),
-    ...(v === "a" ? { target: { side: "allies", where: { belowCap: "shield" }, pick: "all" } as TargetRuleT, do: [apply("shield", { stacks: from("armor", 0.35) })] } : {}),
-    ...(v === "b" ? { target: "self" as const, do: [apply("shield", { stacks: from("armor", 1.0) }), apply("guard"), apply("rampart")] } : {}),
+    ...(v === "a" ? { target: { side: "allies", where: { belowCap: "shield" }, pick: "all" } as TargetRuleT, do: [apply("shield", { stacks: from("defense", 0.35) })] } : {}),
+    ...(v === "b" ? { target: "self" as const, do: [apply("shield", { stacks: from("defense", 1.0) }), apply("guard"), apply("rampart")] } : {}),
   }),
 });
-// One use, for the Guard's length: the first time the Shield breaks, it's built again from Armor (Guard's included), the cap untouched.
+// One use, for the Guard's length: the first time the Shield breaks, it's built again from Defense (Guard's included), the cap untouched.
 helper(kit("rampart", "RAMPART", "The first time its Shield breaks, it's rebuilt at once.", {
   duration: STATUS.guard.duration,
-  reactions: [{ on: { event: "status_ended", status: "shield", cause: ["stacks"] }, do: [apply("shield", { stacks: { scale: [{ ratio: 1.0, stat: "armor", of: "holder" }] }, to: "holder" }), removeMine("rampart")] }],
+  reactions: [{ on: { event: "status_ended", status: "shield", cause: ["stacks"] }, do: [apply("shield", { stacks: { scale: [{ ratio: 1.0, stat: "defense", of: "holder" }] }, to: "holder" }), removeMine("rampart")] }],
 }));
 
 abilityUp({
   id: "rockfall", cls: "geomancer",
   power: "40% more damage.",
-  a: { name: "Boulder", text: "Deals double magical damage that scales from Armor to the foe with the most HP, with a longer wind-up.", builds: ["landslide"] },
-  b: { name: "Rockslide", text: "Deals magical damage that scales from Armor to every foe, half as much.", builds: ["harvest", "snap"] },
+  a: { name: "Boulder", text: "Deals double damage that scales from Defense to the foe with the most HP, with a longer wind-up.", builds: ["landslide"] },
+  b: { name: "Rockslide", text: "Deals damage that scales from Defense to every foe, half as much.", builds: ["harvest", "snap"] },
   form: (v, k) =>
     // Both take the medium cooldown and 650 MP, so a double hit or an Area one doesn't double the spell's output.
-    v === "a" ? { cast: WINDUP.very_long, cooldown: cd("medium", "rockfall"), mp: 650, target: { side: "foes", pick: "highest", by: "hp" }, do: [magic(from("armor", HIT.normal * 2 * k))] }
-      : v === "b" ? { cooldown: cd("medium", "rockfall"), mp: 650, target: T.everyFoe, do: [magic(from("armor", (HIT.normal / 2) * k))] }
-        : { do: [magic(hitOf("armor", "normal", k))] },
+    v === "a" ? { cast: WINDUP.very_long, cooldown: cd("medium", "rockfall"), mp: 650, target: { side: "foes", pick: "highest", by: "hp" }, do: [phys(from("defense", HIT.normal * 2 * k))] }
+      : v === "b" ? { cooldown: cd("medium", "rockfall"), mp: 650, target: T.everyFoe, do: [phys(from("defense", (HIT.normal / 2) * k))] }
+        : { do: [phys(hitOf("defense", "normal", k))] },
 });
 
 abilityUp({
   id: "tremor", cls: "geomancer",
   power: "40% more damage.",
-  a: { name: "Aftershock", text: "Deals magical damage that scales from Armor to a random foe, and Stuns every foe.", builds: ["lockdown", "snap"] },
-  b: { name: "Fissure", text: "Deals magical damage that scales from Armor to a Stunned foe, triple; with no foe Stunned, to a random foe. A shorter wind-up. No Stun.", builds: ["landslide", "snap"] },
+  a: { name: "Aftershock", text: "Deals damage that scales from Defense to a random foe, and Stuns every foe.", builds: ["lockdown", "snap"] },
+  b: { name: "Fissure", text: "Deals damage that scales from Defense to a Stunned foe, triple; with no foe Stunned, to a random foe. A shorter wind-up. No Stun.", builds: ["landslide", "snap"] },
   form: (v, k) =>
     // Statuses are universal: the Stun at its own 8 ticks on every foe (Fizzle skips those already Stunned).
-    v === "a" ? { do: [magic(hitOf("armor", "normal", k)), apply("stun", { to: T.everyFoe })] }
+    v === "a" ? { do: [phys(hitOf("defense", "normal", k)), apply("stun", { to: T.everyFoe })] }
       : v === "b" ? {
         cast: WINDUP.normal, target: { side: "foes", where: { has: "stun" }, ifNone: "any" },
-        do: [magic({ scale: [{ ratio: HIT.normal * k, stat: "armor" }, { ratio: HIT.normal * 2 * k, when: { has: "stun" }, of: "target", times: { stat: "armor", of: "self" } }] })],
+        do: [phys({ scale: [{ ratio: HIT.normal * k, stat: "defense" }, { ratio: HIT.normal * 2 * k, when: { has: "stun" }, of: "target", times: { stat: "defense", of: "self" } }] })],
       }
-        : { do: [magic(hitOf("armor", "normal", k), { apply: [{ status: "stun" }] })] },
+        : { do: [phys(hitOf("defense", "normal", k), { apply: [{ status: "stun" }] })] },
 });

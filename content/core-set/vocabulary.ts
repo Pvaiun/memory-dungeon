@@ -14,10 +14,8 @@ export const stats: StatDefT[] = [
   { id: "max_mp", name: "MP", kind: "amount", default: 0, floor: 0 },
   { id: "mp_regen", name: "MP regen", kind: "amount", default: 0, floor: 0, brings: "mp_regen", note: `MP restored every ${MP_REGEN.every} ticks, through the status it brings.` },
   { id: "attack", name: "Attack", kind: "amount", default: 0, floor: 0 },
-  { id: "magic", name: "Magic", kind: "amount", default: 0, floor: 0 },
-  { id: "armor", name: "Armor", kind: "amount", default: 0, floor: 0, note: `A physical hit deals hit² ÷ (hit + ${RULES.armorK} × Armor): nearly linear against big hits, never a blank.` },
+  { id: "defense", name: "Defense", kind: "amount", default: 0, floor: 0, note: `A hit deals hit² ÷ (hit + ${RULES.armorK} × Defense): nearly linear against big hits, never a blank. A status's own damage never meets it.` },
   { id: "aggro", name: "Aggro", kind: "amount", default: 100, floor: 1, note: "Centred on 100 (a word n is 70 + 10n, a gear or formation step 10), never below 1. Foes pick party members by draw from ruleset.partyDraw: an ordinary unit draws 100, and every 25 Aggro doubles it (halves it below 100), from Aggro 25 (12.5) to 200 (1,600). The party picks among foes by ruleset.draw's curve: none draws more than 300 or less than 33." },
-  { id: "magic_resist", name: "Magic resist", kind: "points", default: 0, floor: 0, cap: 100, note: "Cuts each magical hit or pulse by this share; 100 is immune. Foes carry it by rank, and Ward gives it." },
   { id: "attack_speed", name: "Attack speed", kind: "points", default: 0, floor: -300, cap: 300, note: "Hidden behind Haste, Slow and Chill." },
   { id: "cooldown_reduction", name: "Cooldown reduction", kind: "points", default: 0, floor: -300, cap: 300, note: "Hidden behind Haste, Slow and Chill." },
   { id: "cast_time_reduction", name: "Cast time reduction", kind: "points", default: 0, floor: -300, cap: 300, note: "Hidden behind Haste, Slow and Chill." },
@@ -43,11 +41,11 @@ export const weaponKinds: WeaponKindT[] = [
   { id: "spear", name: "Spear", type: "physical", cooldown: KIND_SPEED.spear, hands: 1 },
   { id: "bow", name: "Bow", type: "physical", cooldown: KIND_SPEED.bow, hands: 2 },
   { id: "great_weapon", name: "Great weapon", type: "physical", cooldown: KIND_SPEED.great_weapon, hands: 2, note: "Axes, hammers, pikes and scythes." },
-  { id: "rune_sword", name: "Rune sword", type: "magical", cooldown: KIND_SPEED.rune_sword, hands: 1 },
-  { id: "mace", name: "Mace", type: "magical", cooldown: KIND_SPEED.mace, hands: 1 },
-  { id: "wand", name: "Wand", type: "magical", cooldown: KIND_SPEED.wand, hands: 1 },
-  { id: "rod", name: "Rod", type: "magical", cooldown: KIND_SPEED.rod, hands: 1 },
-  { id: "staff", name: "Staff", type: "magical", cooldown: KIND_SPEED.staff, hands: 2 },
+  { id: "rune_sword", name: "Rune sword", type: "physical", cooldown: KIND_SPEED.rune_sword, hands: 1 },
+  { id: "mace", name: "Mace", type: "physical", cooldown: KIND_SPEED.mace, hands: 1 },
+  { id: "wand", name: "Wand", type: "physical", cooldown: KIND_SPEED.wand, hands: 1 },
+  { id: "rod", name: "Rod", type: "physical", cooldown: KIND_SPEED.rod, hands: 1 },
+  { id: "staff", name: "Staff", type: "physical", cooldown: KIND_SPEED.staff, hands: 2 },
 ];
 
 /** Four armor types; a class wears only its own (rules-and-vocabulary.md, Gear). */
@@ -78,7 +76,7 @@ export const speedOf = (kind: string): "fast" | "medium" | "slow" => {
 };
 
 const timing = (n: number) => TIMING.map((stat) => ({ stat, flat: n }));
-const bothKinds = (pct: number) => [{ tag: "physical", pct }, { tag: "magical", pct }];
+const hits = (pct: number) => [{ tag: "physical", pct }];
 
 /** The 22 statuses of the vocabulary. */
 export const vocabulary: StatusT[] = [
@@ -91,9 +89,9 @@ export const vocabulary: StatusT[] = [
   { id: "regen", name: "REGEN", text: "Recovers health over time.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.regen.duration, pulse: { every: STATUS.regen.every, do: [{ op: "heal", amount: { scale: [{ ratio: STATUS.regen.share, stat: "max_hp", of: "holder" }] } }] } },
   { id: "shield", name: "SHIELD", text: "Soaks damage before health.", label: "buff", show: "icon", stacking: "intensity", absorb: true, cap: { scale: [{ ratio: STATUS.shield.capShare, stat: "max_hp", of: "holder" }] } },
   // A stack is spent each time the holder acts, not on a timer.
-  { id: "might", name: "MIGHT", text: "Deals more damage per stack; each action spends a stack.", label: "buff", show: "icon", stacking: "intensity", boosts: bothKinds(STATUS.might.perStack), cap: STATUS.might.cap, trigger: { on: { event: "action_resolve" } }, drop: { count: 1 } },
-  { id: "weaken", name: "WEAKEN", text: "Deals less damage.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.weaken.duration, boosts: bothKinds(STATUS.weaken.pct) },
-  { id: "guard", name: "GUARD", text: "Armor up.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.guard.duration, stats: [{ stat: "armor", flat: STATUS.guard.armor }] },
+  { id: "might", name: "MIGHT", text: "Deals more damage per stack; each action spends a stack.", label: "buff", show: "icon", stacking: "intensity", boosts: hits(STATUS.might.perStack), cap: STATUS.might.cap, trigger: { on: { event: "action_resolve" } }, drop: { count: 1 } },
+  { id: "weaken", name: "WEAKEN", text: "Deals less damage.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.weaken.duration, boosts: hits(STATUS.weaken.pct) },
+  { id: "guard", name: "GUARD", text: "Defense up.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.guard.duration, stats: [{ stat: "defense", flat: STATUS.guard.defense }] },
   { id: "stun", name: "STUN", text: "Can't act. A wind-up already under way waits it out, then carries on.", label: "debuff", show: "icon", stacking: "fizzle", duration: STATUS.stun.duration, lockout: { covers: "all", pause: true } },
   { id: "slow", name: "SLOW", text: "Slower in everything.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.slow.duration, stats: timing(STATUS.slow.speed) },
   { id: "haste", name: "HASTE", text: "Faster in everything.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.haste.duration, stats: timing(STATUS.haste.speed) },
@@ -108,8 +106,9 @@ export const vocabulary: StatusT[] = [
     reactions: [{ on: { event: "status_capped", status: "chill" }, do: [{ op: "damage", type: "none", amount: { scale: [{ ratio: STATUS.chill.shatter, stacks: "chill", of: "holder" }] }, to: "holder" }, { op: "apply", status: "stun", to: "holder" }, { op: "remove", label: "debuff", status: "chill", to: "holder" }] }],
   },
   { id: "shock", name: "SHOCK", text: "Hurts for each stack every time it acts.", label: "debuff", show: "icon", stacking: "intensity", cap: STATUS.shock.cap, trigger: { on: { event: "action_resolve" }, do: [{ op: "damage", type: "none", amount: STATUS.shock.perStack, to: "holder" }] }, drop: { fraction: STATUS.shock.drop } },
-  { id: "ward", name: "WARD", text: "Magic resist up.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.ward.duration, stats: [{ stat: "magic_resist", flat: STATUS.ward.magicResist }] },
-  // A damage-taken ramp, not an Armor strip (foes carry too little Armor for a strip to show past two stacks): it reads on every
+  // A cut to the hits it takes, never to a status's own damage: Guard adds Defense, which big hits punch through; Ward cuts every hit alike.
+  { id: "ward", name: "WARD", text: "Takes less damage from hits.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.ward.duration, taken: [{ tag: "physical", pct: STATUS.ward.hits }] },
+  // A damage-taken ramp, not a Defense strip (foes carry too little Defense for a strip to show past two stacks): it reads on every
   // foe and gives the Hexer and the Monk a ramp.
   { id: "sunder", name: "SUNDER", text: "Takes more damage for each stack.", label: "debuff", show: "icon", stacking: "intensity", cap: STATUS.sunder.cap, taken: [{ pct: STATUS.sunder.perStack }], pulse: { every: STATUS.sunder.every }, drop: { count: 1 } },
   { id: "silence", name: "SILENCE", text: "Can't use abilities.", label: "debuff", show: "icon", stacking: "fizzle", duration: STATUS.silence.duration, lockout: { covers: "ability", interrupt: true } },

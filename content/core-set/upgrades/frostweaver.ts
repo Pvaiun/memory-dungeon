@@ -3,7 +3,7 @@ import { HIT, stacks, STATUS } from "../scale.js";
 import { own } from "../pieces/kit.js";
 import type { EffectT, TargetRuleT } from "../../../src/schema.js";
 import { T } from "../classes.js";
-import { abilityUp, apply, BLIZZARD_CHILL, helper, hitOf, kit, LANCE_CHILL, magic, marker, passiveUp, STILLNESS_CHILL } from "./kit.js";
+import { abilityUp, apply, BLIZZARD_CHILL, helper, hitOf, kit, LANCE_CHILL, marker, passiveUp, phys, STILLNESS_CHILL } from "./kit.js";
 
 // ─── Frostweaver ─────────────────────────────────────────────────────────────
 
@@ -12,13 +12,13 @@ const SPLINTERS = (STATUS.chill.shatter * STATUS.chill.cap) / 3;
 passiveUp({
   id: "shatterpoint", cls: "frostweaver",
   power: "A shatter adds 40% more Sunder.",
-  a: { name: "Brittle", text: "When a foe's Chill shatters, that foe takes several Sunder and is Silenced; stacks scale from Magic.", builds: ["lockdown"] },
-  b: { name: "Splinters", text: "When a foe's Chill shatters, that foe takes several Sunder, and every other foe takes a third of the shatter's damage; stacks scale from Magic.", builds: ["harvest", "snap"] },
+  a: { name: "Brittle", text: "When a foe's Chill shatters, that foe takes several Sunder and is Silenced; stacks scale from Attack.", builds: ["lockdown"] },
+  b: { name: "Splinters", text: "When a foe's Chill shatters, that foe takes several Sunder, and every other foe takes a third of the shatter's damage; stacks scale from Attack.", builds: ["harvest", "snap"] },
   form: (v, k) => ({
     reactions: [{
       on: { event: "status_capped", status: "chill", whose: "foe" },
       do: [
-        apply("sunder", { stacks: own("several", "magic", k), to: "owner" }),
+        apply("sunder", { stacks: own("several", "attack", k), to: "owner" }),
         ...(v === "a" ? [apply("silence", { to: "owner" })] : []),
         ...(v === "b" ? [{ op: "damage", type: "none", amount: SPLINTERS, to: { side: "foes", pick: "all", exclude: "owner" } } as EffectT] : []),
       ],
@@ -26,41 +26,41 @@ passiveUp({
   }),
 });
 
-const lanceChill = (word: "few" | "several", mult: number) => [{ status: "chill", stacks: stacks(word, "magic", mult) }];
+const lanceChill = (word: "few" | "several", mult: number) => [{ status: "chill", stacks: stacks(word, "attack", mult) }];
 abilityUp({
   id: "frost_lance", cls: "frostweaver",
   power: "40% more Chill.",
-  a: { name: "Ice spear", text: "Deals magical damage that scales from Magic to the foe with the highest Attack or Magic, adds several Chill and Slows it; stacks scale from Magic.", builds: ["lockdown"] },
-  b: { name: "Icicles", text: "Three lances at the three foes with the most Chill: each deals smaller magical damage that scales from Magic and adds a few Chill; stacks scale from Magic.", builds: ["snap"] },
+  a: { name: "Ice spear", text: "Deals damage that scales from Attack to the foe with the highest Attack, adds several Chill and Slows it; stacks scale from Attack.", builds: ["lockdown"] },
+  b: { name: "Icicles", text: "Three lances at the three foes with the most Chill: each deals smaller damage that scales from Attack and adds a few Chill; stacks scale from Attack.", builds: ["snap"] },
   form: (v, k) =>
-    v === "a" ? { target: T.highestAMFoe, do: [magic(hitOf("magic", "light"), { apply: [...lanceChill("several", LANCE_CHILL * k), { status: "slow" }] })] } // No Seek.
-      : v === "b" ? { target: { side: "foes", pick: "highest", by: { stacks: "chill" }, count: 3 }, do: [magic(hitOf("magic", "touch"), { apply: lanceChill("few", LANCE_CHILL * k) })] }
-        : { do: [magic(hitOf("magic", "light"), { apply: lanceChill("several", LANCE_CHILL * k) })] },
+    v === "a" ? { target: T.highestAMFoe, do: [phys(hitOf("attack", "light"), { apply: [...lanceChill("several", LANCE_CHILL * k), { status: "slow" }] })] } // No Seek.
+      : v === "b" ? { target: { side: "foes", pick: "highest", by: { stacks: "chill" }, count: 3 }, do: [phys(hitOf("attack", "touch"), { apply: lanceChill("few", LANCE_CHILL * k) })] }
+        : { do: [phys(hitOf("attack", "light"), { apply: lanceChill("several", LANCE_CHILL * k) })] },
 });
 
 abilityUp({
   id: "blizzard", cls: "frostweaver",
   power: "40% more damage; if it deals none, 40% more Chill.",
-  a: { name: "Whiteout", text: "Adds a few Chill to every foe, twice as many as Blizzard's; stacks scale from Magic. Deals no damage.", builds: ["snap", "lockdown"], plus: "40% more Chill." },
-  b: { name: "Avalanche", text: "Deals magical damage that scales from Magic to every foe, rising by 150 with each Chill stack on that foe. Adds no Chill.", builds: ["snap", "harvest"], plus: "40% more damage." },
+  a: { name: "Whiteout", text: "Adds a few Chill to every foe, twice as many as Blizzard's; stacks scale from Attack. Deals no damage.", builds: ["snap", "lockdown"], plus: "40% more Chill." },
+  b: { name: "Avalanche", text: "Deals damage that scales from Attack to every foe, rising by 150 with each Chill stack on that foe. Adds no Chill.", builds: ["snap", "harvest"], plus: "40% more damage." },
   form: (v, k) =>
-    v === "a" ? { do: [apply("chill", { stacks: stacks("few", "magic", BLIZZARD_CHILL * 2 * k) })] }
-      : v === "b" ? { do: [magic({ scale: [{ ratio: HIT.touch * k, stat: "magic" }, { ratio: 150 * k, stacks: "chill", of: "target" }] })] }
-        : { do: [magic(hitOf("magic", "touch", k), { apply: [{ status: "chill", stacks: stacks("few", "magic", BLIZZARD_CHILL) }] })] },
+    v === "a" ? { do: [apply("chill", { stacks: stacks("few", "attack", BLIZZARD_CHILL * 2 * k) })] }
+      : v === "b" ? { do: [phys({ scale: [{ ratio: HIT.touch * k, stat: "attack" }, { ratio: 150 * k, stacks: "chill", of: "target" }] })] }
+        : { do: [phys(hitOf("attack", "touch", k), { apply: [{ status: "chill", stacks: stacks("few", "attack", BLIZZARD_CHILL) }] })] },
 });
 
 abilityUp({
   id: "stillness", cls: "frostweaver",
   power: "It costs less MP.",
   a: { name: "Deep calm", text: "Applies Clarity to the ally with the least MP, and the Frostweaver's next ability costs nothing. No Chill.", builds: ["overflow"] },
-  b: { name: "Frozen moment", text: "Waits until a foe is in a wind-up. Applies Clarity as before, and adds Chill only to foes in a wind-up, three times as many; stacks scale from Magic.", builds: ["lockdown", "snap"] },
+  b: { name: "Frozen moment", text: "Waits until a foe is in a wind-up. Applies Clarity as before, and adds Chill only to foes in a wind-up, three times as many; stacks scale from Attack.", builds: ["lockdown", "snap"] },
   form: (v, _k, plus) => ({
     ...(plus ? { mp: 450 } : {}),
     ...(v === "a" ? { target: T.lowestMpAlly, do: [apply("clarity"), apply("deep_calm", { to: "self" })] } : {}),
     ...(v === "b" ? {
       if: { side: "foes", where: { casting: true } },
       target: { side: "foes", where: { casting: true }, pick: "all" } as TargetRuleT,
-      do: [apply("chill", { stacks: stacks("few", "magic", STILLNESS_CHILL * 3) }), apply("clarity", { to: T.needsMpAlly })],
+      do: [apply("chill", { stacks: stacks("few", "attack", STILLNESS_CHILL * 3) }), apply("clarity", { to: T.needsMpAlly })],
     } : {}),
   }),
 });

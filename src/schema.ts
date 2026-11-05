@@ -19,9 +19,8 @@
  * lives in the documents, not the data. Perks stay in the tech, unused by the
  * core set.
  *
- * Two kinds of damage and nothing else: physical meets Armor and Evasion;
- * magical meets Magic resist and is never dodged; a status's own damage is
- * untyped. Gear is in four slots (weapon, armor, offhand, amulet), with armor
+ * One kind of hit and nothing else: every hit meets Defense and Evasion; a
+ * status's own damage is untyped and never resisted. Gear is in four slots (weapon, armor, offhand, amulet), with armor
  * types and offhand kinds, two-handed weapons, and mythic pieces that fit one
  * class.
  *

@@ -154,8 +154,8 @@ content/
     pieces/                  the 240 pieces
       kit.ts                 the helpers pieces, formations and upgrades are written with
       shared.ts              statuses several files use (Marked and its counters)
-      weapons-physical.ts    the six physical weapon kinds' 48 pieces
-      weapons-magical.ts     the five magical weapon kinds' 40 pieces
+      weapons-physical.ts    the six striking kinds' 48 pieces (dagger, fist, sword, spear, bow, great weapon): full swings
+      weapons-focus.ts       the five focus kinds' 40 pieces (rune sword, mace, wand, rod, staff): lighter swings, Attack on every piece
       armor-amulets.ts       the four armor types' 48 pieces and the 24 amulets
       offhands.ts            the ten offhand kinds' 80 pieces
       index.ts               every item gathered, for the pack and the tools

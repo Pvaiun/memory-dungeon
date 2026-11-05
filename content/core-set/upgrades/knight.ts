@@ -21,8 +21,8 @@ passiveUp({
 });
 
 {
-  /** Stone guard: the other ally with the most Armor, Guarded and given a Shield of a quarter of the Knight's Armor, read when it lands. */
-  const stoneGuard: Partial<AbilityT> = { target: { side: "others", pick: "highest", by: { stat: "armor" } }, do: [apply("guard"), apply("shield", { stacks: { scale: [{ ratio: 0.25, stat: "armor", of: "self" }] } })] };
+  /** Stone guard: the other ally with the most Defense, Guarded and given a Shield of a quarter of the Knight's Defense, read when it lands. */
+  const stoneGuard: Partial<AbilityT> = { target: { side: "others", pick: "highest", by: { stat: "defense" } }, do: [apply("guard"), apply("shield", { stacks: { scale: [{ ratio: 0.25, stat: "defense", of: "self" }] } })] };
   /**
    * Cover: another ally in a wind-up; with nobody else casting, the other ally with the lowest share of HP. "The one with the most wind-up left"
    * has no `by` in the schema, so among two casters it's the one lower in HP: the rule's fallback does the rest.
@@ -31,7 +31,7 @@ passiveUp({
   abilityUp({
     id: "fortify", cls: "knight",
     power: "Comes round sooner.",
-    a: { name: "Stone guard", text: "Guards the other ally with the most Armor, and gives it a Shield from the Knight's Armor.", builds: ["landslide"] },
+    a: { name: "Stone guard", text: "Guards the other ally with the most Defense, and gives it a Shield from the Knight's Defense.", builds: ["landslide"] },
     b: { name: "Cover", text: "Guards another ally in a wind-up. With nobody else casting, the other ally with the lowest share of HP.", builds: ["bonfire", "overflow", "lockdown"] },
     form: (v, _k, plus) => ({ ...(v === "a" ? stoneGuard : v === "b" ? cover : {}), ...(plus ? { cooldown: cd("medium", "fortify") } : {}) }),
   });
@@ -55,7 +55,7 @@ passiveUp({
   const stun = { apply: [{ status: "stun" }] };
   const measured = (ratio: number): Partial<AbilityT> => ({
     if: { side: "foes", where: { casting: true } },
-    target: { side: "foes", where: { casting: true, lacks: "stun" }, ifNone: "any", pick: "highest", by: { stats: ["attack", "magic"] } },
+    target: { side: "foes", where: { casting: true, lacks: "stun" }, ifNone: "any", pick: "highest", by: { stats: ["attack"] } },
     do: [bash(ratio, stun)],
   });
   /** Crushing bash: from max HP and its Shield together, double; it reads the Shield and doesn't spend it. A random foe: no Stun to aim. */
@@ -66,7 +66,7 @@ passiveUp({
   abilityUp({
     id: "shield_bash", cls: "knight",
     power: "Deals two fifths more damage.",
-    a: { name: "Measured blow", text: "Waits for a foe to start a wind-up, then bashes the casting foe with the highest Attack or Magic, scaling from max HP, and Stuns it. The Stun holds the wind-up where it is.", builds: ["lockdown"] },
+    a: { name: "Measured blow", text: "Waits for a foe to start a wind-up, then bashes the casting foe with the highest Attack, scaling from max HP, and Stuns it. The Stun holds the wind-up where it is.", builds: ["lockdown"] },
     b: { name: "Crushing bash", text: "Bashes a random foe for double, scaling from max HP and its current Shield together. No Stun. A longer cooldown.", builds: ["landslide"] },
     form: (v, k) => (v === "a" ? measured(0.29 * k) : v === "b" ? crushing(0.58 * k) : { do: [bash(0.29 * k, stun)] }),
   });

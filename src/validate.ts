@@ -6,7 +6,7 @@
  *   2. Meaning: every reference resolves, and content follows the combat
  *      rules for what's valid (docs/core-set/rules-and-vocabulary.md):
  *      an action's damage is
- *      physical or magical, percent changes only on amount stats, a weapon
+ *      physical, percent changes only on amount stats, a weapon
  *      belongs to a kind, a piece fits its kind's classes, and so on.
  *   3. Design rules from the core set, driven by the pack's `design` block.
  *

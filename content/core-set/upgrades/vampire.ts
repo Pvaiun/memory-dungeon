@@ -97,9 +97,9 @@ abilityUp({
   id: "frenzy", cls: "vampire",
   power: "40% more Might.",
   a: { name: "Feeding frenzy", text: "Adds several Might to itself; stacks scale from Attack. While it holds Might, its Lifesteal is 10 higher.", builds: ["pact"] },
-  b: { name: "Blood rage", text: "Adds several Might to the other ally with the highest Attack or Magic; stacks scale from the Vampire's Attack.", builds: ["landslide", "cuts"] },
+  b: { name: "Blood rage", text: "Adds several Might to the other ally with the highest Attack; stacks scale from the Vampire's Attack.", builds: ["landslide", "cuts"] },
   form: (v, k) =>
-    v === "b" ? { target: { side: "others", pick: "highest", by: { stats: ["attack", "magic"] } }, do: [apply("might", { stacks: stacks("several", "attack", k) })] }
+    v === "b" ? { target: { side: "others", pick: "highest", by: { stats: ["attack"] } }, do: [apply("might", { stacks: stacks("several", "attack", k) })] }
       : { do: [apply("might", { stacks: stacks("several", "attack", k) }), ...(v === "a" ? [apply("feeding_frenzy", { to: "self" })] : [])] },
 });
 helper(kit("feeding_frenzy", "FEEDING FRENZY", "Lifesteal up while it holds Might.", {

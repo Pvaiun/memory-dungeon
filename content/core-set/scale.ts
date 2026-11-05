@@ -7,7 +7,7 @@
  *
  * Amount stats are stored at 1,000 per point of the scale (HP 2 is 2,000), as
  * docs/primer.md (Numbers) says. Stats counted in percent (Crit chance, Evasion,
- * Accuracy, Magic resist, Lifesteal, Siphon, Double strike) are stored in percent
+ * Accuracy, Lifesteal, Siphon, Double strike) are stored in percent
  * points, since a percentage can't be ×1,000.
  */
 import type { NumT } from "../../src/schema.js";
@@ -71,13 +71,13 @@ export const RULES = {
    * an ability sits in, in ticks; with cooldowns carrying, none is needed.
    */
   opening: { min: 0.2, max: 0.6, slots: [0, 0, 0] },
-  /** The flat cut: each physical hit loses this share of the target's Armor. */
+  /** The flat cut: each hit loses this share of the target's Defense. */
   armorRatio: 0.12,
-  /** The flat cut's floor: Armor can't take a hit below this percent of its size. */
+  /** The flat cut's floor: Defense can't take a hit below this percent of its size. */
   armorFloor: 25,
   /**
-   * Armor by the Path of Exile formula, hit² ÷ (hit + k × Armor), in place of the flat cut and its floor. Nearly linear against
-   * big hits, and it never blanks a small one, so stacking more Armor always helps.
+   * Defense by the Path of Exile formula, hit² ÷ (hit + k × Defense), in place of the flat cut and its floor. Nearly linear against
+   * big hits, and it never blanks a small one, so stacking more Defense always helps.
    */
   armorK: 0.25,
   maxEnemies: 8,
@@ -135,6 +135,13 @@ export const WEAPON = {
   speedFactor: { fast: 0.6, medium: 1, slow: 1.6 },
 } as const;
 export type Level = keyof typeof WEAPON.base;
+/**
+ * The focus kinds (staff, wand, rod, mace, rune sword) trade swing for stat: a lighter basic attack (its base and ratio at these
+ * words, where the blade kinds swing at medium and medium) and Attack on every piece of the kind, which feeds whatever scales from
+ * Attack (abilities, stacks, heals). A blade hits harder; a focus makes everything else bigger.
+ */
+export const FOCUS = { kinds: ["rune_sword", "mace", "wand", "rod", "staff"], base: "low" as Level, ratio: "low" as Level, attack: 1 };
+export const isFocus = (kind: string | undefined) => !!kind && FOCUS.kinds.includes(kind);
 
 /** An ability's hit, as a share of its scaling stat. Touch is for abilities whose point is the status they apply. */
 export const HIT = { touch: 0.17, light: 0.29, normal: 0.5, heavy: 0.85 } as const;
@@ -142,7 +149,7 @@ export type HitWord = keyof typeof HIT;
 
 /**
  * An enemy's basic attack is set by its words alone (weak, normal, heavy, massive), per swing; its speed word
- * sets how often it swings, and its Attack and Magic feed only its abilities. A boss's standout Attack would
+ * sets how often it swings, and its Attack feeds only its abilities. A boss's standout Attack would
  * otherwise make its plain swing bigger than its signature blow.
  */
 export const ENEMY_SWING = { weak: 500, normal: 700, heavy: 1100, massive: 1600 } as const;
@@ -159,7 +166,7 @@ export type SwingWord = keyof typeof ENEMY_SWING;
  */
 export const BOSS_HP = 0.55;
 
-/** Enemy abilities' shares of Attack or Magic, chosen against party HP (2,000 to 5,000). */
+/** Enemy abilities' shares of Attack, chosen against party HP (2,000 to 5,000). */
 export const ENEMY_HIT = {
   /** Flatten: a heavy blow that Stuns. Nearly kills a caster. */
   flatten: 0.4,
@@ -176,9 +183,9 @@ export const ENEMY_HIT = {
    * calibration cuts the Fire Giant's HP until it dies before the Inferno lands, a race and not a boss.
    */
   inferno: 0.15,
-  /** Hailstorm: a raidwide the Cleric can mend. */
-  hailstorm: 0.18,
-  /** Tempest: three bolts at random party members, each this share of Magic. */
+  /** Hailstorm: a raidwide the Cleric can mend, sized against the Titan's high Attack. */
+  hailstorm: 0.103,
+  /** Tempest: three bolts at random party members, each this share of Attack. */
   tempest: 0.045,
   /** Reap: the Reaper's three scythe slashes at random party members, each this share of its Attack. */
   reap: 0.2,
@@ -233,18 +240,13 @@ export const SPECIAL_KEY: Record<SpecialStat, string> = {
   evasion: "evasion", accuracy: "accuracy", crit_damage: "crit_multiplier", double_strike: "double_strike", thorns: "thorns", lifesteal: "lifesteal", siphon: "siphon",
 };
 
-// ─── Magic resist, in percent ────────────────────────────────────────────────
+// ─── Hits taken, in percent ──────────────────────────────────────────────────
 
 /**
- * Magic resist by rank, so spells meet something where swings meet Armor; the untyped statuses are the way through. A little on
- * every rank narrows the gap between physical and magical basics.
+ * The Ghost's Incorporeal: every hit it takes is cut by this share, and a status's own damage isn't. Most hits print slivers;
+ * Burn, Bleed, Shock, a shatter and Thorns are the way through.
  */
-export const RANK_RESIST = { minion: 10, elite: 15, boss: 25 } as const;
-
-export const RESIST = {
-  /** The Ghost's Magic resist, in place of its rank's: most spells print slivers, nothing is immune. */
-  high: 75,
-};
+export const INCORPOREAL = { hits: -75 };
 
 // ─── Gear steps ──────────────────────────────────────────────────────────────
 
@@ -270,8 +272,8 @@ export const stepFor = (stat: string) => (stat === "max_hp" ? HP_STEP : stat ===
 
 export const STATUS = {
   /**
-   * Bleed does nothing on its own and never runs out; each hit its holder takes deals this much per stack (untyped, past Armor
-   * and resistance, not a hit), then the stacks drop by this share: an inverse Shock, that pays a party for keeping up the
+   * Bleed does nothing on its own and never runs out; each hit its holder takes deals this much per stack (untyped, past Defense,
+   * not a hit), then the stacks drop by this share: an inverse Shock, that pays a party for keeping up the
    * pressure. Sized so it's about as big a share of its classes' damage as Burn and Shock are of theirs.
    */
   bleed: { perStack: 120, drop: 1 / 3 },
@@ -281,7 +283,7 @@ export const STATUS = {
   /** Might spends with action, not time: one stack each time the holder acts (vocabulary.ts). */
   might: { perStack: 6, cap: 15 },
   weaken: { pct: -30, duration: 20 },
-  guard: { armor: pts(3), duration: 28 },
+  guard: { defense: pts(3), duration: 28 },
   /**
    * A Stun pauses a wind-up rather than cancelling it (Silence is the interrupt), and lasts long enough to take a foe out of
    * the fight for a moment.
@@ -305,7 +307,8 @@ export const STATUS = {
   chill: { cap: 12, perStack: -4, every: 14, shatter: 250 },
   /** The cap is a safety: uncapped, a slow foe gathers enough Shock to pay a fight's worth of damage for one action. */
   shock: { perStack: 80, drop: 0.5, cap: 40 },
-  ward: { magicResist: 40, duration: 30 },
+  /** Ward cuts the hits its holder takes by this share; a status's own damage still lands in full. */
+  ward: { hits: -20, duration: 30 },
   sunder: { perStack: 1.5, every: 4, cap: 20 }, // +1.5% damage taken a stack, +30% at the cap.
   silence: { duration: 16 },
   hidden: { duration: 10 },
