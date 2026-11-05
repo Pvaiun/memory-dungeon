@@ -136,11 +136,11 @@ export const WEAPON = {
 } as const;
 export type Level = keyof typeof WEAPON.base;
 /**
- * The focus kinds (staff, wand, rod, mace, rune sword) trade swing for stat: a lighter basic attack (its base and ratio at these
- * words, where the blade kinds swing at medium and medium) and Attack on every piece of the kind, which feeds whatever scales from
- * Attack (abilities, stacks, heals). A blade hits harder; a focus makes everything else bigger.
+ * The focus kinds (staff, wand, rod, mace, rune sword) swing lighter: a low base where the striking kinds' is medium, at the same
+ * ratio, so a focus's swing grows with Attack as a blade's does but starts small, and Defense takes more of each blow. Nothing is
+ * added to make up for it: a focus is worn for what its piece carries (the casters' stats, MP and MP regen, cast effects).
  */
-export const FOCUS = { kinds: ["rune_sword", "mace", "wand", "rod", "staff"], base: "low" as Level, ratio: "low" as Level, attack: 1 };
+export const FOCUS = { kinds: ["rune_sword", "mace", "wand", "rod", "staff"], base: "low" as Level, ratio: "medium" as Level };
 export const isFocus = (kind: string | undefined) => !!kind && FOCUS.kinds.includes(kind);
 
 /** An ability's hit, as a share of its scaling stat. Touch is for abilities whose point is the status they apply. */

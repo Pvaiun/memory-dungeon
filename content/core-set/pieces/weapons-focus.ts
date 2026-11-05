@@ -2,12 +2,12 @@
  * The five focus kinds' 40 pieces (rune sword, mace, wand, rod, staff).
  * `gear` joins the pack's gear and the rogue's stock; `statuses` the pack's statuses; `builds` is designer data, never in the pack.
  *
- * Every weapon here hits as its kind's plain weapon does (a focus's lighter swing, from Attack: `piece()`'s default) and carries the
- * focus's Attack on top of its own stats (scale.ts FOCUS; the card shows the total); no piece changes its kind's speed or hands. Every status a card names is at its own length (statuses are universal).
+ * Every weapon here hits as its kind's plain weapon does (a focus's lighter swing, from Attack: `piece()`'s default, scale.ts FOCUS);
+ * no piece changes its kind's speed or hands. Every status a card names is at its own length (statuses are universal).
  * Heat and Fervor are shared.ts's.
  */
 import type { EffectT, GearT, NumT, StatusT, TargetRuleT, ToT } from "../../../src/schema.js";
-import { FLAT_STACKS, FOCUS, STATUS } from "../scale.js";
+import { FLAT_STACKS, STATUS } from "../scale.js";
 import { critStep, own, piece, pieceStatus, sp, st, type Build, type BuildTag, type Builds, type Change, type Rarity } from "./kit.js";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -19,15 +19,9 @@ const onBasic = (...effects: EffectT[]) => ({ on: { event: "hit_lands" as const,
 /** A reaction at the fight's start. */
 const atStart = (...effects: EffectT[]) => ({ on: { event: "fight_start" as const }, do: effects });
 
-/** The focus's Attack, added to a piece's own Attack (or put first). */
-const withFocus = (stats: Change[] = []): Change[] => {
-  const atk = stats.find((c) => c.stat === "attack");
-  const add = st("attack", FOCUS.attack);
-  return atk ? stats.map((c) => (c === atk ? { stat: "attack", flat: c.flat + add.flat } : c)) : [add, ...stats];
-};
-/** One weapon of a kind, through `piece()`, with the focus's Attack. A powerful piece says source unlock, as the validator asks. */
+/** One weapon of a kind, through `piece()`. A powerful piece says source unlock, as the validator asks. */
 function weapon(name: string, kind: string, rarity: Rarity, text: string, rest: { stats?: Change[]; statuses?: string[]; note?: string } = {}): GearT {
-  const g = piece({ name, kind, rarity, text, slot: "weapon", stats: withFocus(rest.stats), ...(rest.statuses ? { statuses: rest.statuses } : {}), ...(rest.note ? { note: rest.note } : {}) });
+  const g = piece({ name, kind, rarity, text, slot: "weapon", ...(rest.stats ? { stats: rest.stats } : {}), ...(rest.statuses ? { statuses: rest.statuses } : {}), ...(rest.note ? { note: rest.note } : {}) });
   return g.tier === "powerful" ? { ...g, source: "unlock" } : g;
 }
 
@@ -184,64 +178,64 @@ function cistern(): EffectT[] {
 
 export const gear: GearT[] = [
   // Rune sword: Paladin, Valkyrie, Hexer, Geomancer. Medium (8.5 ticks), a focus, one hand.
-  weapon("Runed saber", "rune_sword", "common", "Attack +2, Crit chance +1.", { stats: [st("attack", 1), critStep(1)] }),
-  weapon("Cairn blade", "rune_sword", "common", "Attack +2, Defense +1.", { stats: [st("attack", 1), st("defense", 1)] }),
-  weapon("Wayfinder", "rune_sword", "uncommon", "Attack +2. The wearer's basic attacks ignore Taunt.", { stats: [st("attack", 1)], statuses: ["wayfinder"] }),
-  weapon("Sigil blade", "rune_sword", "uncommon", "Attack +1, Defense +1. At the start of each fight, the wearer gains Ward.", { stats: [st("defense", 1)], statuses: ["sigil_blade"] }),
-  weapon("Spellbinder", "rune_sword", "rare", "Attack +1. After each ability the wearer casts, its next basic attack deals double damage.", { statuses: ["spellbinder"] }),
-  weapon("Bane of the bound", "rune_sword", "rare", "Attack +1. The wearer's hits deal half again as much to a foe that is Weakened or Silenced.", { statuses: ["bane_of_the_bound"] }),
-  weapon("Hexblade", "rune_sword", "legendary", "Attack +1. The wearer's basic attacks add one more stack of each of Burn, Chill, Shock, Bleed and Sunder that their target already holds.", { statuses: ["hexblade"] }),
+  weapon("Runed saber", "rune_sword", "common", "Attack +1, Crit chance +1.", { stats: [st("attack", 1), critStep(1)] }),
+  weapon("Cairn blade", "rune_sword", "common", "Attack +1, Defense +1.", { stats: [st("attack", 1), st("defense", 1)] }),
+  weapon("Wayfinder", "rune_sword", "uncommon", "Attack +1. The wearer's basic attacks ignore Taunt.", { stats: [st("attack", 1)], statuses: ["wayfinder"] }),
+  weapon("Sigil blade", "rune_sword", "uncommon", "Defense +1. At the start of each fight, the wearer gains Ward.", { stats: [st("defense", 1)], statuses: ["sigil_blade"] }),
+  weapon("Spellbinder", "rune_sword", "rare", "After each ability the wearer casts, its next basic attack deals double damage.", { statuses: ["spellbinder"] }),
+  weapon("Bane of the bound", "rune_sword", "rare", "The wearer's hits deal half again as much to a foe that is Weakened or Silenced.", { statuses: ["bane_of_the_bound"] }),
+  weapon("Hexblade", "rune_sword", "legendary", "The wearer's basic attacks add one more stack of each of Burn, Chill, Shock, Bleed and Sunder that their target already holds.", { statuses: ["hexblade"] }),
   weapon("Dawnblade", "rune_sword", "legendary",
-    "Attack +1. Each time an ally falls or is revived, the wearer gains 4 Fervor. When the wearer itself is revived, it gains 8. Fervor: the holder deals 5% more damage a stack, up to 20, for the rest of the fight.",
+    "Each time an ally falls or is revived, the wearer gains 4 Fervor. When the wearer itself is revived, it gains 8. Fervor: the holder deals 5% more damage a stack, up to 20, for the rest of the fight.",
     { statuses: ["dawnblade"], note: "Its own fall counts on its own return (a knocked-out unit can't gain a status)." }),
 
   // Mace: Cleric, Paladin. Slow (11 ticks), a focus, one hand.
-  weapon("Morningstar", "mace", "common", "Attack +3.", { stats: [st("attack", 2)] }),
-  weapon("Friar's mace", "mace", "common", "Attack +1, HP +1, MP regen +1.", { stats: [st("max_hp", 1), st("mp_regen", 1)] }),
-  weapon("Mender's mace", "mace", "uncommon", "Attack +1, HP +1. At the start of each fight, the ally with the lowest share of max HP gains Regen.", { stats: [st("max_hp", 1)], statuses: ["menders_mace"] }),
-  weapon("Prior's mace", "mace", "uncommon", "Attack +2. At the start of each fight, the ally with the most Aggro gains Ward.", { stats: [st("attack", 1)], statuses: ["priors_mace"] }),
-  weapon("Humbling mace", "mace", "rare", "Attack +1. The wearer's basic attacks Weaken their target.", { statuses: ["humbling_mace"] }),
-  weapon("Censer mace", "mace", "rare", "Attack +1. Each of the wearer's basic attacks that lands heals the ally with the lowest share of max HP for a third of the damage it dealt.", { statuses: ["censer_mace"] }),
+  weapon("Morningstar", "mace", "common", "Attack +2.", { stats: [st("attack", 2)] }),
+  weapon("Friar's mace", "mace", "common", "HP +1, MP regen +1.", { stats: [st("max_hp", 1), st("mp_regen", 1)] }),
+  weapon("Mender's mace", "mace", "uncommon", "HP +1. At the start of each fight, the ally with the lowest share of max HP gains Regen.", { stats: [st("max_hp", 1)], statuses: ["menders_mace"] }),
+  weapon("Prior's mace", "mace", "uncommon", "Attack +1. At the start of each fight, the ally with the most Aggro gains Ward.", { stats: [st("attack", 1)], statuses: ["priors_mace"] }),
+  weapon("Humbling mace", "mace", "rare", "The wearer's basic attacks Weaken their target.", { statuses: ["humbling_mace"] }),
+  weapon("Censer mace", "mace", "rare", "Each of the wearer's basic attacks that lands heals the ally with the lowest share of max HP for a third of the damage it dealt.", { statuses: ["censer_mace"] }),
   weapon("Sunhammer", "mace", "legendary",
-    "Attack +1. The wearer's basic attacks add several Burn. When a burning foe falls, the wearer's next basic attack also strikes every other foe, and those strikes add several Burn too.",
+    "The wearer's basic attacks add several Burn. When a burning foe falls, the wearer's next basic attack also strikes every other foe, and those strikes add several Burn too.",
     { statuses: ["sunhammer"] }),
   weapon("Martyr's maul", "mace", "legendary",
-    "Attack +1. The wearer's basic attacks deal more the lower its HP: half again as much below 70%, double below 50%, two and a half times below 30%, and triple below 10%. Below 30% HP, each basic attack also heals the wearer for the damage it dealt.",
+    "The wearer's basic attacks deal more the lower its HP: half again as much below 70%, double below 50%, two and a half times below 30%, and triple below 10%. Below 30% HP, each basic attack also heals the wearer for the damage it dealt.",
     { statuses: ["martyrs_maul"] }),
 
   // Wand: Pyromancer, Stormcaller, Bard. Fast (6.6 ticks), a focus, one hand.
-  weapon("Whipcrack wand", "wand", "common", "Attack +2, Double strike medium.", { stats: [sp("double_strike", "medium"), st("attack", 1)] }),
-  weapon("Birch wand", "wand", "common", "Attack +2, MP +1.", { stats: [st("attack", 1), st("max_mp", 1)] }),
-  weapon("Jolt wand", "wand", "uncommon", "Attack +2. The wearer's basic attacks add one Shock.", { stats: [st("attack", 1)], statuses: ["jolt_wand"] }),
-  weapon("Glint wand", "wand", "uncommon", "Attack +1, Crit chance +1. When one of the wearer's hits crits, the wearer regains 6% of its max MP.", { stats: [critStep(1)], statuses: ["glint_wand"] }),
-  weapon("Spark wand", "wand", "rare", "Attack +1. The wearer's basic attacks add a few Burn.", { statuses: ["spark_wand"] }),
-  weapon("Chain wand", "wand", "rare", "Attack +1. The wearer's basic attacks also strike two other foes, each for half.", { statuses: ["chain_wand"] }),
-  weapon("Flicker wand", "wand", "legendary", "Attack +1, Double strike high. The wearer's extra strikes add a few Shock.", { stats: [sp("double_strike", "high")], statuses: ["flicker_wand"] }),
-  weapon("Wildmagic wand", "wand", "legendary", "Attack +1. Each of the wearer's basic attacks adds a few stacks of a random one of Burn, Chill, Shock, Bleed and Sunder.", { statuses: ["wildmagic_wand"] }),
+  weapon("Whipcrack wand", "wand", "common", "Attack +1, Double strike medium.", { stats: [sp("double_strike", "medium"), st("attack", 1)] }),
+  weapon("Birch wand", "wand", "common", "Attack +1, MP +1.", { stats: [st("attack", 1), st("max_mp", 1)] }),
+  weapon("Jolt wand", "wand", "uncommon", "Attack +1. The wearer's basic attacks add one Shock.", { stats: [st("attack", 1)], statuses: ["jolt_wand"] }),
+  weapon("Glint wand", "wand", "uncommon", "Crit chance +1. When one of the wearer's hits crits, the wearer regains 6% of its max MP.", { stats: [critStep(1)], statuses: ["glint_wand"] }),
+  weapon("Spark wand", "wand", "rare", "The wearer's basic attacks add a few Burn.", { statuses: ["spark_wand"] }),
+  weapon("Chain wand", "wand", "rare", "The wearer's basic attacks also strike two other foes, each for half.", { statuses: ["chain_wand"] }),
+  weapon("Flicker wand", "wand", "legendary", "Double strike high. The wearer's extra strikes add a few Shock.", { stats: [sp("double_strike", "high")], statuses: ["flicker_wand"] }),
+  weapon("Wildmagic wand", "wand", "legendary", "Each of the wearer's basic attacks adds a few stacks of a random one of Burn, Chill, Shock, Bleed and Sunder.", { statuses: ["wildmagic_wand"] }),
 
   // Rod: Frostweaver, Stormcaller. Medium (9.1 ticks), a focus, one hand.
-  weapon("Dowsing rod", "rod", "common", "Attack +1, MP regen +2.", { stats: [st("mp_regen", 2)] }),
-  weapon("Ironbark rod", "rod", "common", "Attack +2, HP +1.", { stats: [st("attack", 1), st("max_hp", 1)] }),
-  weapon("Sleet rod", "rod", "uncommon", "Attack +2. The wearer's basic attacks add one Chill.", { stats: [st("attack", 1)], statuses: ["sleet_rod"] }),
-  weapon("Cistern rod", "rod", "uncommon", "Attack +1, HP +1. Once a fight, when the wearer has less than a third of its MP (at the fight's start, or after it casts), it gains Clarity.", { stats: [st("max_hp", 1)], statuses: ["cistern_rod"] }),
-  weapon("Glacial rod", "rod", "rare", "Attack +1. The wearer's basic attacks Slow their target.", { statuses: ["glacial_rod"] }),
-  weapon("Lightning rod", "rod", "rare", "Attack +1. When one of the wearer's abilities hits several foes at once, each of those hits lands again on its foe for a quarter of the damage.",
+  weapon("Dowsing rod", "rod", "common", "MP regen +2.", { stats: [st("mp_regen", 2)] }),
+  weapon("Ironbark rod", "rod", "common", "Attack +1, HP +1.", { stats: [st("attack", 1), st("max_hp", 1)] }),
+  weapon("Sleet rod", "rod", "uncommon", "Attack +1. The wearer's basic attacks add one Chill.", { stats: [st("attack", 1)], statuses: ["sleet_rod"] }),
+  weapon("Cistern rod", "rod", "uncommon", "HP +1. Once a fight, when the wearer has less than a third of its MP (at the fight's start, or after it casts), it gains Clarity.", { stats: [st("max_hp", 1)], statuses: ["cistern_rod"] }),
+  weapon("Glacial rod", "rod", "rare", "The wearer's basic attacks Slow their target.", { statuses: ["glacial_rod"] }),
+  weapon("Lightning rod", "rod", "rare", "When one of the wearer's abilities hits several foes at once, each of those hits lands again on its foe for a quarter of the damage.",
     { statuses: ["lightning_rod"], note: "Echoes `area` hits (a damage effect aimed at two or more units): Chain lightning's bounces, not its first strike; Thunderstorm and Blizzard throughout." }),
-  weapon("Winter's chain", "rod", "legendary", "Attack +1. When a foe's Chill shatters, every other foe gains a few Chill.", { statuses: ["winters_chain"] }),
+  weapon("Winter's chain", "rod", "legendary", "When a foe's Chill shatters, every other foe gains a few Chill.", { statuses: ["winters_chain"] }),
   weapon("Brimming rod", "rod", "legendary",
-    "Attack +1. Each ability the wearer casts gives the ally with the least MP a tenth of that ability's cost in MP. While the wearer has more than half its MP, its abilities cost a quarter less.",
+    "Each ability the wearer casts gives the ally with the least MP a tenth of that ability's cost in MP. While the wearer has more than half its MP, its abilities cost a quarter less.",
     { statuses: ["brimming_rod"], note: "The gift is a tenth of the MP the cast paid (action_resolve's amount), so 7.5% of the listed cost while the quarter off holds." }),
 
   // Staff: Cleric, Frostweaver, Pyromancer, Bramble knight. Slow (11.6 ticks), a focus, two hands.
-  weapon("Ashwood staff", "staff", "common", "Attack +3, HP +1.", { stats: [st("attack", 2), st("max_hp", 1)] }),
-  weapon("Moonwater staff", "staff", "common", "Attack +2, MP +2.", { stats: [st("max_mp", 2), st("attack", 1)] }),
-  weapon("Shepherd's staff", "staff", "uncommon", "Attack +2, HP +1. At the start of each fight, the ally with the least MP gains Clarity.", { stats: [st("attack", 1), st("max_hp", 1)], statuses: ["shepherds_staff"] }),
-  weapon("Canopy staff", "staff", "uncommon", "Attack +2, HP +1. At the start of each fight, the wearer and the other ally with the least max HP each gain a Shield from the wearer's Attack.",
+  weapon("Ashwood staff", "staff", "common", "Attack +2, HP +1.", { stats: [st("attack", 2), st("max_hp", 1)] }),
+  weapon("Moonwater staff", "staff", "common", "Attack +1, MP +2.", { stats: [st("max_mp", 2), st("attack", 1)] }),
+  weapon("Shepherd's staff", "staff", "uncommon", "Attack +1, HP +1. At the start of each fight, the ally with the least MP gains Clarity.", { stats: [st("attack", 1), st("max_hp", 1)], statuses: ["shepherds_staff"] }),
+  weapon("Canopy staff", "staff", "uncommon", "Attack +1, HP +1. At the start of each fight, the wearer and the other ally with the least max HP each gain a Shield from the wearer's Attack.",
     { stats: [st("attack", 1), st("max_hp", 1)], statuses: ["canopy_staff"] }),
-  weapon("Banked staff", "staff", "rare", "Attack +2. The wearer's abilities add half again as many Burn, Chill and Shock stacks.", { stats: [st("attack", 1)], statuses: ["banked_staff"] }),
-  weapon("Rootstaff", "staff", "rare", "Attack +1, Thorns medium. The wearer's Thorns heal it for the damage they deal.", { stats: [sp("thorns", "medium")], statuses: ["rootstaff"] }),
-  weapon("Cataclysm staff", "staff", "legendary", "Attack +1. Every third ability the wearer casts is cast twice. The second cast is free.", { statuses: ["cataclysm_staff"] }),
-  weapon("Cinderheart staff", "staff", "legendary", "Attack +1. The wearer's basic attacks consume their target's Burn and deal at once all the damage it would have dealt.",
+  weapon("Banked staff", "staff", "rare", "Attack +1. The wearer's abilities add half again as many Burn, Chill and Shock stacks.", { stats: [st("attack", 1)], statuses: ["banked_staff"] }),
+  weapon("Rootstaff", "staff", "rare", "Thorns medium. The wearer's Thorns heal it for the damage they deal.", { stats: [sp("thorns", "medium")], statuses: ["rootstaff"] }),
+  weapon("Cataclysm staff", "staff", "legendary", "Every third ability the wearer casts is cast twice. The second cast is free.", { statuses: ["cataclysm_staff"] }),
+  weapon("Cinderheart staff", "staff", "legendary", "The wearer's basic attacks consume their target's Burn and deal at once all the damage it would have dealt.",
     { statuses: ["cinderheart_staff"], note: `The flare is ${BURN_LIFE} a stack: Burn's damage a stack × the sum of its decay at 20 stacks, read from scale.ts.` }),
 ];
 

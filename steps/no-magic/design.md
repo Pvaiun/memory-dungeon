@@ -16,7 +16,7 @@ What the prototype builds, in the scale's words. Numbers are in `content/core-se
 ## Weapons: striking and focus
 
 - **The six striking kinds** (dagger, fist, sword, spear, bow, great weapon) swing as before: base and ratio at medium.
-- **The five focus kinds** (rune sword, mace, wand, rod, staff) swing lighter, base and ratio at low (about half the swing), and **every piece of a focus kind carries +1 Attack** on top of its own stats (`FOCUS`). The card shows the total ("Attack +3." on the Morningstar, which gave Magic +2). So a blade hits harder, and a focus makes everything that scales from Attack bigger: abilities, heals, stacks.
+- **The five focus kinds** (rune sword, mace, wand, rod, staff) swing lighter: a low base at the same ratio (`FOCUS`), so the swing grows with Attack as a blade's does but starts small, and Defense takes more of each blow. Nothing is added to make up for it: a focus is worn for what its piece carries, and focus pieces lean to the casters' stats (Attack, MP, MP regen) and cast effects, as they already did. So a blade hits harder and beats Defense better; a focus piece is chosen for its stats and its effect. Rare and legendary focus pieces are their effects alone.
 - The choice matters for the five classes that wear one of each: the Hexer, Valkyrie, Geomancer, Bard and Bramble knight. The Paladin's two kinds (rune sword, mace) are both focuses.
 
 ## Gear

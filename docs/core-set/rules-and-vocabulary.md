@@ -163,7 +163,7 @@ Eleven kinds, each a speed, a swing (striking or focus) and hands. Every class u
 | Rod | Medium | Focus | One | Frostweaver, Stormcaller |
 | Staff | Slow | Focus | Two | Cleric, Frostweaver, Pyromancer, Bramble knight |
 
-A second kind changes basic attacks, and a focus kind brings its Attack too; passives that work on basic attacks keep working. A Pyromancer with the fast wand adds Burn more often than with its slow staff, but each hit is weaker.
+A second kind changes basic attacks: a focus kind swings lighter, from a smaller base at the same scaling (`FOCUS`), so Defense takes more of each blow. Passives that work on basic attacks keep working. A Pyromancer with the fast wand adds Burn more often than with its slow staff, but each hit is weaker.
 
 ### Stats every unit has
 

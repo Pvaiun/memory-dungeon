@@ -6,19 +6,19 @@ Numbers below are the balance sheet's: 96 parties, every free-play run and rogue
 
 ## Decisions for you
 
-1. **Keep the direction?** I think yes. The conversion is faithful where it should be: the Old Road, whose foes were all physical, calibrates to the same knobs as before (normal fights 35 → 32, its bosses −6 → −11). Rogue fights won at calibrated knobs went from 80% to 82%. Class damage shares moved a little, not a lot. The one real shift is item 2.
+1. **Keep the direction?** I think yes. The conversion is faithful where it should be: the Old Road, whose foes were all physical, calibrates to the same knobs as before (normal fights 35 → 32, its bosses −6 → −7). Rogue fights won at calibrated knobs went from 80% to 81%. Class damage shares moved a little, not a lot. The one real shift is item 2.
 
 2. **Walls are stronger everywhere, and fights run longer.** This is the price of one defense stat. Spells used to slip past a wall's Armor; now the wall's Defense cuts them too, and its formula cuts small hits hardest.
    - Damage cut on the Knight: 41% → 57%.
    - Win points over Neutral for the wall formations:
      | Formation | Before | Now |
      | --- | --- | --- |
-     | The mountain | +15 | +23 |
-     | The choir | +12 | +20 |
-     | Heavy line | +13 | +19 |
-     | Hearth | +10 | +17 |
-     | Shieldwall | under the band | +11 |
-   - Fight length: regular fights 45 → 51 ticks, bosses 66 → 76. Fights reaching the enrage went from 10 to 73 (of 9,696). The party is out of MP 8% → 14% of the time.
+     | The mountain | +15 | +21 |
+     | Heavy line | +13 | +16 |
+     | The choir | +12 | +15 |
+     | Hearth | +10 | +14 |
+     | Shieldwall | under the band | +9 |
+   - Fight length: regular fights 45 → 50 ticks, bosses 66 → 76. Fights reaching the enrage went from 10 to 49 (of 9,696). The party is out of MP 8% → 13% of the time.
    - The knobs can't fix length, because they raise foe HP along with damage.
    - **Options:**
      - (a) Accept it: walls answer hits, statuses answer walls. Lean on big blows and statuses in enemy design.
@@ -26,18 +26,18 @@ Numbers below are the balance sheet's: 96 parties, every free-play run and rogue
      - (c) Trim the walls' own Defense and Guard (`STATUS.guard`).
    - **I'd test (c) next.** The excess is in walls drawing hits, not in Defense as a whole: foes' Defense took 27% of the party's hits, about what Armor and Magic resist took before (25% and 18%). Option (b) would also move the Old Road, which matches today.
 
-3. **Burn and Shock grew past their band.** Every focus piece's +1 Attack raises every stack by a fifth to a quarter, and the casters' swings shrank. Each status's share of its appliers' damage, against a band that tops out at 35%:
-   - Burn: 33% → 40%
-   - Shock: 30% → 42%
+3. **Burn and Shock sit just over their band.** Their stacks are the same size as before; what shrank is the rest of their appliers' damage (lighter swings, and hits that now meet Defense). Each status's share of its appliers' damage, against a band that tops out at 35%:
+   - Burn: 33% → 37%
+   - Shock: 30% → 37%
 
-   I'd trim `BURN_STACKS` and `SHOCK_STACKS` by about a fifth rather than cut the focus Attack, since the Attack is what makes the weapon choice mean something.
+   That's close enough to leave for the balance pass.
 
-4. **Three casters came out weaker, all through their swings.**
-   - The Frostweaver is the weakest dealer: 0.72 → 0.59× the average unit's damage, and parties with it win 13 points less (14 before).
+4. **Three casters came out weaker.**
+   - The Frostweaver was already the weakest dealer and still is: 0.72 → 0.59× the average unit's damage, and parties with it win 14 points less (14 before too).
    - The Stormcaller is newly flagged: its parties win 11 points less. Arc rides on its basic attack, which is now a light focus swing into Defense.
-   - The Cleric is newly flagged: its parties win 10 points less. Its damage halved (0.46 → 0.25×); its healing went up.
+   - The Cleric is newly flagged: its parties win 10 points less. Its damage went 0.46 → 0.34×; its healing went up.
 
-   **Options:** soften the focus swing for everyone (`FOCUS.ratio` back to medium), or fix the three one by one. The weapon probes say the trade is close to fair. For the five classes that can wear both kinds, the striking weapon now wins by 1–2 points, about the noise. So I'd fix the three one by one rather than move `FOCUS`.
+   They're weak in every weapon version I tried (below), so a weapon rule isn't their fix. I'd fix the three one by one.
 
 5. **The Ghost is Incorporeal:** it takes half of every hit, and statuses hurt it in full (`INCORPOREAL`).
    - At three-quarters off, it outlived everything in its fights (2.5× the median minion's life). At half it lives 1.8×; as Spellward it lived 1.5×.
@@ -53,13 +53,31 @@ Numbers below are the balance sheet's: 96 parties, every free-play run and rogue
    - The starters still answer all three Crypt challenges, through the Ranger alone.
    - Do you want a Fundamental answer to Dodgers, such as Accuracy on more commons?
 
+## The focus weapons: is +1 Attack on every piece right?
+
+No. I first gave every focus piece +1 Attack on top of a half-weight swing, then tested it against three alternatives, all at the same knobs.
+
+| | A: +1 on every piece, half swing | B: +1 on the Attack pieces only | C: no +1, lighter base only | D: no +1, half swing |
+| --- | --- | --- | --- | --- |
+| Stormcaller, win points | −14 | −17 | −15 | −16 |
+| Frostweaver, win points | −18 | −20 | −20 | −22 |
+| Cleric, win points | −13 | −14 | −14 | −16 |
+| Cleric, damage × average | 0.25 | 0.24 | 0.34 | 0.22 |
+| Burn, Shock: share of appliers' damage | 40%, 42% | 40%, 42% | 37%, 37% | 40%, 40% |
+| Regular fight, ticks | 51 | 52 | 50 | 52 |
+
+- **The blanket +1 bought the weak casters 2–4 win points** (A against D) and little else.
+- **It also wasn't what pushed Burn and Shock up:** D, with no +1, has them at 40% too. The light swing did that.
+- **C plays within noise of A** and is the simpler design. It keeps rares and legendaries as effects alone ("rarity is specificity"), and it gives the Cleric, Paladin, Valkyrie and Geomancer more of their own damage.
+- **So the prototype is now C.** A focus swings from a smaller base at a blade's ratio. That's the tool's flavour in ratio and scaling: a light swing that Defense eats more of. The stock carries the rest: focus pieces lean to Attack, MP, MP regen and cast effects, as they already did.
+- **For the five classes that wear both kinds,** the striking weapon wins by 2–4 points on average, close to the noise. The Bramble knight prefers its staff.
+
 ## What was built, and my calls beyond your words
 
 - **Classes:** each class's Attack is the higher of its old Attack and Magic. Rally's share is trimmed so the Valkyrie's heal stays its size (`RALLY`).
 - **Weapons:**
   - The six striking kinds swing as before.
-  - The five focus kinds (rune sword, mace, wand, rod, staff) swing at about half: base and ratio at low (`FOCUS`).
-  - Every focus piece carries +1 Attack, and its card shows the total ("Attack +3." on the Morningstar).
+  - The five focus kinds (rune sword, mace, wand, rod, staff) swing from a low base at the same ratio (`FOCUS`): about three quarters of a blade's swing for a caster.
 - **Gear:**
   - Every +Magic is +Attack. A piece that gave both trades the second point for HP or Crit.
   - Armor types already leaned the way you asked, so nothing moved between them.

@@ -59,7 +59,7 @@ The least you need to know to work on the game. Read it first, then open a detai
 ## Gear, formations and training
 
 - **Gear has four slots:** weapon, armor, offhand and amulet. Slots have no job, and only weapons carry behaviour of their own.
-  - **Weapons:** eleven kinds, each a speed, a swing and one or two hands: six striking kinds, and five focus kinds that swing lighter but carry Attack. The kind sets the unit's basic attack. A two-hander (bow, great weapon, staff) leaves the offhand empty.
+  - **Weapons:** eleven kinds, each a speed, a swing and one or two hands: six striking kinds, and five focus kinds that swing lighter, whose pieces lean to the casters' stats. The kind sets the unit's basic attack. A two-hander (bow, great weapon, staff) leaves the offhand empty.
   - **Who wears what:** each class wears two weapon kinds, one or two of the four armor types and one or two of the ten offhand kinds. The amulet fits everyone.
 - **Rarity is specificity.**
   - **Common:** stats.

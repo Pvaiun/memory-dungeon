@@ -4,7 +4,6 @@
 import type { GearT, NumT } from "../../src/schema.js";
 import { FOCUS, KIND_SPEED, PER_PERCENT, SWING_REF, WEAPON, isFocus, type Level } from "./scale.js";
 import { weaponKinds } from "./vocabulary.js";
-import { st } from "./pieces/kit.js";
 
 /** A weapon's hit: its kind's speed factor × (base + ratio × stat). */
 export function weaponHit(kind: string, base: Level, ratio: Level, stat: string): NumT {
@@ -13,14 +12,13 @@ export function weaponHit(kind: string, base: Level, ratio: Level, stat: string)
   return { base: Math.round(f * WEAPON.base[base]), scale: [{ ratio: f * WEAPON.ratio[ratio] * (PER_PERCENT[stat] ?? 1), stat }] };
 }
 /**
- * One plain weapon per kind: medium damage and ratio from Attack, nothing carried; a focus kind swings lighter and carries its Attack
- * (scale.ts FOCUS). Each class arrives with its first kind's.
+ * One plain weapon per kind: medium damage and ratio from Attack, nothing carried; a focus kind swings lighter (scale.ts FOCUS). Each
+ * class arrives with its first kind's.
  */
 const plain: GearT[] = weaponKinds.map((k) => ({
   id: `plain_${k.id}`, name: k.name, slot: "weapon", tier: "ordinary", source: "starter",
-  ...(isFocus(k.id)
-    ? { text: `A plain ${k.name.toLowerCase()}. Attack +${FOCUS.attack}.`, stats: [st("attack", FOCUS.attack)], weapon: { kind: k.id, amount: weaponHit(k.id, FOCUS.base, FOCUS.ratio, "attack") } }
-    : { text: `A plain ${k.name.toLowerCase()}.`, weapon: { kind: k.id, amount: weaponHit(k.id, "medium", "medium", "attack") } }),
+  text: `A plain ${k.name.toLowerCase()}.`,
+  weapon: { kind: k.id, amount: isFocus(k.id) ? weaponHit(k.id, FOCUS.base, FOCUS.ratio, "attack") : weaponHit(k.id, "medium", "medium", "attack") },
 }));
 
 export const gear: GearT[] = [...plain];

@@ -25,7 +25,7 @@ The Knight, Cleric and Ranger are the starters: a party that clears Fundamental 
 | Stormcaller | Shocks every foe | Focus |
 | Geomancer | Hits hardest behind stone | Both |
 
-A striking weapon swings harder; a focus weapon swings lighter and carries Attack (`FOCUS`), which makes everything that scales from Attack bigger: abilities, heals and stacks.
+A striking weapon swings harder; a focus weapon swings lighter (`FOCUS`), and its pieces lean to what casters want: Attack, MP, MP regen and cast effects.
 
 **Not in the core set for now:** the Berserker (the first to add next: Might, Lifesteal and Sunder on a great weapon), the Samurai, Spellblade (the Hexer's new theme), Dark knight, Time mage, Dancer, Alchemist and the rest of the class pool. Each can be built later from these pieces. If 16 proves too many to test, the Hoplite is the first to cut, and Aegis would wait for a later class or a boss.
 
@@ -287,7 +287,7 @@ Every piece of the vocabulary is used by a class or an enemy (`classes.ts`, `ene
 - **Built-up statuses on basic attacks.** Each has a basic-attack source: Burn (Pyromancer), Chill (Hexer), Shock (Stormcaller) and Sunder (Monk).
 - **Effects that reach every ally:** Sanctuary, War ballad and Allegro. Thunder chord, Malison and Stillness's Chill reach every foe.
 - **Scaling from a stat other than Attack,** the obvious target for gear: Shield bash (max HP), Bramble lash (Thorns), Backstab (Crit chance), Blood drain and Blood gift (max HP), Rockfall and Tremor (Defense), and the Shield amounts of Vanguard (max HP) and Earthen shell (Defense).
-- **Striking and focus.** Six classes wear only striking weapons (Knight, Hoplite, Ranger, Monk, Assassin, Vampire), and five only focus weapons (Cleric, Paladin, Pyromancer, Frostweaver, Stormcaller). The five with one of each (Bramble knight, Valkyrie, Bard, Hexer, Geomancer) choose between a harder swing and more Attack for their abilities.
+- **Striking and focus.** Six classes wear only striking weapons (Knight, Hoplite, Ranger, Monk, Assassin, Vampire), and five only focus weapons (Cleric, Paladin, Pyromancer, Frostweaver, Stormcaller). The five with one of each (Bramble knight, Valkyrie, Bard, Hexer, Geomancer) choose between a harder swing and what a focus piece carries.
 - **Answers to defences.** Sunder (Monk, Ranger, Hoplite) raises the damage a foe takes from every hit, Crit damage (Assassin) beats high Defense, Accuracy (Ranger) beats high Evasion, and a status's own damage meets neither Defense nor Evasion.
 
 ## To watch in simulation
