@@ -3,7 +3,7 @@ import type { EffectT, NumT, ToT } from "../../../src/schema.js";
 import { own } from "../pieces/kit.js";
 import { BURN_STACKS, from, HIT, stacks, WINDUP } from "../scale.js";
 import { T } from "../classes.js";
-import { abilityUp, apply, cd, helper, hitOf, kit, magic, passiveUp } from "./kit.js";
+import { abilityUp, apply, cd, helper, hitOf, kit, magic, passiveUp, pierce } from "./kit.js";
 
 // ─── Pyromancer ──────────────────────────────────────────────────────────────
 
@@ -53,11 +53,11 @@ const pyreHit = (share: number, k: number): NumT => ({ scale: [{ ratio: HIT.heav
 abilityUp({
   id: "pyre", cls: "pyromancer",
   power: "40% more damage.",
-  a: { name: "Funeral pyre", text: "Deals magical damage to every foe; the damage scales from Magic and rises by 100 with each Burn stack on that foe. The Burn stays.", builds: ["harvest"] },
-  b: { name: "Pyre of the fallen", text: "Deals heavy magical damage to the foe with the most Burn; the damage scales from Magic and rises by 200 with each Burn stack on that foe. The Burn stays. Whenever a burning foe falls, Pyre comes 4 ticks closer.", builds: ["bonfire"] },
+  a: { name: "Funeral pyre", text: "Deals piercing damage to every foe; the damage scales from Magic and rises by 100 with each Burn stack on that foe. The Burn stays.", builds: ["harvest"] },
+  b: { name: "Pyre of the fallen", text: "Deals heavy piercing damage to the foe with the most Burn; the damage scales from Magic and rises by 200 with each Burn stack on that foe. The Burn stays. Whenever a burning foe falls, Pyre comes 4 ticks closer.", builds: ["bonfire"] },
   form: (v, k) =>
-    v === "a" ? { target: T.everyFoe, do: [magic(pyreHit(0.5, k))] }
-      : { ...(v === "b" ? { statuses: ["pyre_of_the_fallen"] } : {}), do: [magic(pyreHit(1, k))] },
+    v === "a" ? { target: T.everyFoe, do: [pierce(pyreHit(0.5, k))] }
+      : { ...(v === "b" ? { statuses: ["pyre_of_the_fallen"] } : {}), do: [pierce(pyreHit(1, k))] },
 });
 // Brought by the ability: a foe's Burn ending with its holder's knockout (status_ended, cause ko), whoever killed it, brings Pyre 4 ticks closer.
 helper(kit("pyre_of_the_fallen", "PYRE OF THE FALLEN", "Whenever a burning foe falls, Pyre comes closer.", {

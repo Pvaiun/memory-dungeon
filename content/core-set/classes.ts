@@ -16,6 +16,8 @@ const timing = (cd: CD, wu: WU) => ({ cooldown: COOLDOWN[cd], cast: WINDUP[wu] }
 /** Two kinds of damage, no elements or subtypes. An element is a theme in a name, never a mechanic. */
 const phys = (amount: NumT, extra: object = {}) => ({ op: "damage", type: "physical", amount, ...extra }) as const;
 const magic = (amount: NumT, extra: object = {}) => ({ op: "damage", type: "magical", amount, ...extra }) as const;
+/** Piercing: untyped damage, which meets neither Armor nor Evasion, as a status's own. Only for a payoff that cashes in a status. */
+const pierce = (amount: NumT, extra: object = {}) => ({ op: "damage", type: "none", amount, ...extra }) as const;
 const hit = (stat: string, word: HitWord) => from(stat, HIT[word]);
 const apply = (status: string, extra: object = {}) => ({ op: "apply", status, ...extra }) as const;
 
@@ -228,9 +230,9 @@ export const abilities: A[] = [
   // Pyromancer
   a("pyromancer", "firebolt", "Firebolt", "A bolt of fire at the foe with the most Burn, adding several.", { ...timing("quick", "normal"), mp: 450, target: T.mostFoe("burn"), do: [magic(hit("magic", "light"), { apply: [{ status: "burn", stacks: stacks("several", "magic", BURN_STACKS) }] })] }),
   a("pyromancer", "fireball", "Fireball", "A ball of fire on every foe, adding a few Burn to each.", { ...timing("medium", "long"), mp: 1000, target: T.everyFoe, do: [magic(hit("magic", "touch"), { apply: [{ status: "burn", stacks: stacks("few", "magic", BURN_STACKS) }] })] }),
-  a("pyromancer", "pyre", "Pyre", "Heavy magical damage on the foe with the most Burn, rising with each stack. The Burn stays.", {
+  a("pyromancer", "pyre", "Pyre", "Heavy piercing damage on the foe with the most Burn, rising with each stack: it ignores Armor and can't be dodged. The Burn stays.", {
     // 200 a stack of Burn: the ramp's payoff, not a second ramp.
-    ...timing("long", "very_long"), mp: 1500, target: T.mostFoe("burn"), do: [magic({ scale: [{ ratio: HIT.heavy, stat: "magic" }, { ratio: 200, stacks: "burn", of: "target" }] })],
+    ...timing("long", "very_long"), mp: 1500, target: T.mostFoe("burn"), do: [pierce({ scale: [{ ratio: HIT.heavy, stat: "magic" }, { ratio: 200, stacks: "burn", of: "target" }] })],
   }),
   // Frostweaver
   // About 6 Chill a lance at Magic 4, so a shatter takes more than one cast.

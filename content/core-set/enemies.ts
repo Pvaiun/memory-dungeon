@@ -4,7 +4,7 @@
  * Magic, Armor, Crit, Aggro, as the document lists them.
  */
 import type { AbilityT, EnemyT, StatusT, WeaponT } from "../../src/schema.js";
-import { ENEMY_COOLDOWN, COST, KIND_SPEED, RULES, ENEMY_HIT, ENEMY_SPEED_FACTOR, ENEMY_SWING, FLAT_STACKS, RANK_RESIST, RESIST, REVIVE, SPECIAL, SPEED, STATUS, WINDUP, BOSS_HP, crit, jitter, aggroOf, pts, type SwingWord } from "./scale.js";
+import { ENEMY_COOLDOWN, COST, KIND_SPEED, RULES, ENEMY_HIT, ENEMY_SPEED_FACTOR, ENEMY_SWING, FLAT_STACKS, INCORPOREAL, REVIVE, SPECIAL, SPEED, STATUS, WINDUP, BOSS_HP, crit, jitter, aggroOf, pts, type SwingWord } from "./scale.js";
 import { T } from "./classes.js";
 import { speedOf } from "./vocabulary.js";
 
@@ -33,10 +33,10 @@ const line = (hp: number, mp: number, regen: number, atk: number, mag: number, a
 /** Every enemy carries at least this much Armor, so small hits and big hits mean something against everyone; the floor is minimal. */
 const ARMOR_FLOOR = { minion: pts(1), elite: pts(2), boss: pts(3) } as const;
 const enemy = (id: string, name: string, text: string, rank: EnemyT["rank"], stats: Record<string, number>, weapon: WeaponT, o: { abilities?: string[]; statuses?: string[]; note?: string } = {}): EnemyT => ({
-  // Every foe carries its rank's Magic resist, as it carries Armor; a foe that names its own (the Ghost) keeps it.
+  // No foe carries Magic resist: every hit meets Armor and Evasion (ruleset.magical), and statuses meet neither.
   id, name, text, rank,
   stats: {
-    ...("magic_resist" in stats ? {} : { magic_resist: RANK_RESIST[rank] }), ...stats,
+    ...stats,
     armor: Math.max(stats.armor ?? 0, ARMOR_FLOOR[rank]),
     ...(rank === "boss" ? { max_hp: Math.round(stats.max_hp * BOSS_HP) } : {}),
   },
@@ -58,6 +58,8 @@ export const enemyStatuses: StatusT[] = [
     survivesKO: true,
     reactions: [{ on: { event: "ko" }, do: [{ op: "damage", type: "magical", amount: { scale: [{ ratio: ENEMY_HIT.volatile, stat: "magic", of: "holder" }] }, to: T.everyFoe }, apply("burn", { stacks: FLAT_STACKS.few, to: T.everyFoe })] }],
   }),
+  // The ghosts: hits pass through, afflictions don't. A foe for statuses and piercing payoffs, whatever the party swings or casts.
+  passive("incorporeal", "Incorporeal", "Hits pass through it: they deal much less. Statuses hurt it in full.", { taken: [{ tag: "physical", pct: INCORPOREAL.hitTaken }, { tag: "magical", pct: INCORPOREAL.hitTaken }] }),
   passive("rime", "Rime", "Its touch chills.", { reactions: [{ on: { event: "hit_lands" }, do: [apply("chill", { stacks: FLAT_STACKS.one, to: "other" })] }] }),
   passive("ice_crust_passive", "Ice crust", "Every hit it takes thickens its ice.", { reactions: [{ on: { event: "hit_taken" }, do: [apply("ice_crust", { to: "holder" })] }] }),
   { id: "ice_crust", name: "CRUST", text: "Armor up for each stack; thaws when the hits stop.", label: "buff", show: "icon", stacking: "intensity", unremovable: true, duration: STATUS.ice_crust.duration, cap: STATUS.ice_crust.cap, stats: [{ stat: "armor", flat: STATUS.ice_crust.perStack }] },
@@ -124,7 +126,7 @@ const ogreChief = enemy("ogre_chief", "Ogre Chief", "The biggest ogre, with the 
 
 const skeleton = enemy("skeleton", "Skeleton", "Old bones in heavy armor.", "minion", line(3, 0, 0, 3, 0, 8, 2, 3), basic("sword", "normal", { cooldown: SPEED.slow }), { abilities: ["brace"] });
 const bat = enemy("bat", "Bat", "Fast, and hard to hit.", "minion", { ...line(2, 0, 0, 2, 0, 0, 2, 2), evasion: SPECIAL.evasion.high }, basic("dagger", "weak"));
-const ghost = enemy("ghost", "Ghost", "Magic passes right through it.", "minion", { ...line(6, 0, 0, 0, 3, 0, 2, 2), magic_resist: RESIST.high }, touch("magical", "medium"));
+const ghost = enemy("ghost", "Ghost", "Blades and spells pass right through it.", "minion", line(6, 0, 0, 0, 3, 0, 2, 2), touch("magical", "medium"), { statuses: ["incorporeal"] });
 const bonePriest = enemy("bone_priest", "Bone Priest", "Heals the other dead.", "minion", line(3, 6, 3, 0, 7, 1, 2, 1), touch("magical", "medium", "weak"), { abilities: ["mend"] });
 const witch = enemy("witch", "Witch", "Curses the whole party.", "minion", line(3, 5, 3, 0, 4, 0, 2, 2), touch("magical", "medium", "weak"), { abilities: ["curse"] });
 const lich = enemy("lich", "Lich", "A dead wizard with one big spell.", "minion", line(2, 6, 2, 0, 7, 0, 2, 2), touch("magical", "medium", "weak"), { abilities: ["soulfire", "dark_ward"] });
@@ -160,5 +162,5 @@ export const enemies: EnemyT[] = [
   reskin(wolf, "snow_wolf", "Snow Wolf", "Hunts in packs, in the snow."),
   reskin(ogre, "troll", "Troll", "Big, slow, and swings a tree, under the ground."),
   reskin(shieldman, "mummy", "Mummy", "Hides behind a big, old shield."),
-  reskin(ghost, "ice_ghost", "Ice Ghost", "Magic passes right through it, cold as it is."),
+  reskin(ghost, "ice_ghost", "Ice Ghost", "Blades and spells pass right through it, cold as it is."),
 ];

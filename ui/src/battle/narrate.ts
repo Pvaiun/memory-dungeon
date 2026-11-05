@@ -24,9 +24,8 @@ export type Lookup = { unit: (id: string) => CUnit | undefined; name: (id: strin
 const MAX_LINES = 4;
 
 /**
- * Every foe carries some Magic resist (10% a regular one, 15% an elite, 25% a boss, the ghosts 75%), and the
- * engine words every magical hit it cuts RESIST. Said on every spell at a bandit, the word stops meaning anything, so a
- * hit reads RESIST only when Magic resist took a quarter of it or more (a boss, a ghost, a unit under Ward).
+ * The engine words every magical hit Magic resist cuts RESIST (in the core set nothing carries it: every hit meets Armor).
+ * Said on every small cut, the word stops meaning anything, so a hit reads RESIST only when Magic resist took a quarter of it or more.
  */
 export function resisted(ev: Ev): boolean {
   if (ev.word !== "RESIST") return false;

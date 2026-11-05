@@ -13,7 +13,7 @@ The Knight, Cleric and Ranger are the starters: a party that clears Fundamental 
 | Ranger (starter) | Wears down tough targets | Physical |
 | Bramble knight | Thorns tank | Both, plus Thorns and Bleed |
 | Hoplite | Bodyguard who opens foes up | Physical |
-| Paladin | Shelter against magic | Magical |
+| Paladin | Shelter against afflictions | Magical |
 | Valkyrie | Storm spear who heals and revives | Both |
 | Bard | Party tempo | Both |
 | Hexer | Curser | Both |
@@ -31,7 +31,7 @@ Damage follows the weapons: basic attacks take their weapon kind's type, and a c
 
 ### Conventions
 
-- **Stats** run from 1 to 5: 1 is very low, 3 average, 5 very high. Special stats are zero unless a class lists them. No class has Magic resist of its own (Ward gives it). No class regains MP in a fight by itself, and a class's MP pool is set by how many regular fights it lasts from full: two or three for every class, erring scarce.
+- **Stats** run from 1 to 5: 1 is very low, 3 average, 5 very high. Special stats are zero unless a class lists them. No class has Magic resist: every hit meets Armor, and Ward is the shelter against afflictions. No class regains MP in a fight by itself, and a class's MP pool is set by how many regular fights it lasts from full: two or three for every class, erring scarce.
 - **Gear.** Each class below lists its weapon kinds (it arrives with the plain weapon of the first), its armor types and its offhand kinds; any amulet fits. The rules are under Gear in *Core set: rules and vocabulary*.
 - **Timing and MP.** Every ability has a cooldown word, a wind-up word and an MP cost, all in `classes.ts`. The word follows the job: abilities that repeat (stack applicators, top-up heals) are quick, a self-buff's cooldown is longer than the buff lasts, the big nukes are long and the revives very long. Casters' spells cost several times the walls' and fighters' skills, so casters run short of MP and wear MP gear, and walls rarely do.
 - **Damage and stacks.** Every ability that deals damage says its type and what it scales from. Every ability that adds a stacking status says how many stacks (a few, several or many) and which stat sets the number. Statuses that don't stack have one fixed size.
@@ -117,11 +117,11 @@ Six classes that win through the party: a tank that punishes, a bodyguard, a she
 **Weapons:** rune sword, mace. **Armor:** Mail, Plate. **Offhands:** kite shield, lantern. **Special stats:** none.
 
 - **Passive – Judgement.** Its hits deal half again as much damage to foes with a buff.
-- **Sanctuary.** Applies Ward to every ally.
+- **Sanctuary.** Applies Ward to every ally: less damage from statuses and piercing payoffs.
 - **Absolve.** Cleanses and heals itself and the other ally with the lowest share of max HP; the heal scales from Magic. Waits until an ally is below max HP.
 - **Smite.** Deals heavy magical damage that scales from Magic to the foe with the highest Attack or Magic, and adds several Burn; stacks scale from Magic. A long wind-up.
 
-*Test, Nuker:* Sanctuary's Ward cuts the heavy spell across the party, and Absolve lifts whatever it leaves behind. Against a Buffer's allies, every hit lands half again as hard while their buffs last; beside a Hexer that strips those buffs, it loses that edge. Smite's long wind-up is its weakness: a fast fight may end before it lands.
+*Test, Nuker:* the party's Armor meets the heavy spell, Sanctuary's Ward cuts the Burn and Shock that come with the casters' hits, and Absolve lifts whatever it leaves behind. Against a Buffer's allies, every hit lands half again as hard while their buffs last; beside a Hexer that strips those buffs, it loses that edge. Smite's long wind-up is its weakness: a fast fight may end before it lands.
 
 ### Valkyrie
 
@@ -218,7 +218,7 @@ Four mages, each on its theme's job: fire ramps, ice freezes and shatters, light
 - **Passive – Kindling.** Its basic attacks add a few Burn, whatever weapon it carries; stacks scale from Magic.
 - **Firebolt.** Deals magical damage that scales from Magic to the foe with the most Burn, and adds several Burn; stacks scale from Magic.
 - **Fireball.** Deals magical damage that scales from Magic to every foe, and adds a few Burn to each; stacks scale from Magic.
-- **Pyre.** Deals heavy magical damage to the foe with the most Burn; the damage scales from Magic and rises with each Burn stack on that foe. The Burn stays. The dearest ability in the set.
+- **Pyre.** Deals heavy piercing damage, which ignores Armor and can't be dodged, to the foe with the most Burn; the damage scales from Magic and rises with each Burn stack on that foe. The Burn stays. The dearest ability in the set.
 
 *Test, Two states:* in the Armor phase its fire lands in full. In the Magic resist phase its hits do little, but Burn, untyped, still lands and ticks. With a Monk or Hexer adding Burn too, it stays high through both phases.
 

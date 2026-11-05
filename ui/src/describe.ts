@@ -32,10 +32,10 @@ export function evalNum(n: NumT, stats: Stats | null, target: Stats | null = nul
 const fmtRatio = (r: number) => (Number.isInteger(r) ? String(r) : String(Number(r.toFixed(3))));
 export const statWord = (key: string) => c.stats.get(key)?.name ?? key;
 
-// ─── Damage types: physical meets Armor and Evasion, magical meets Magic resist, a status's own damage is untyped ───
+// ─── Damage types: every hit meets Armor and Evasion (physical and magical are its theme); a status's own damage, and a payoff's, pierces ───
 export type DamageType = "physical" | "magical" | "none";
 /** A damage type as a sheet shows it, and its colour class (the stylesheet's --phys and --magic). */
-export const TYPE_WORD: Record<DamageType, string> = { physical: "PHYSICAL", magical: "MAGICAL", none: "UNTYPED" };
+export const TYPE_WORD: Record<DamageType, string> = { physical: "PHYSICAL", magical: "MAGICAL", none: "PIERCING" };
 export const TYPE_TONE: Record<DamageType, string> = { physical: "phys", magical: "magic", none: "" };
 /** What an ability's damage is: the type of its first damage effect, or null for one that deals none. */
 export function damageTypeOf(a: AbilityT): "physical" | "magical" | null {
@@ -158,10 +158,10 @@ export function effectText(e: EffectT, stats: Stats | null, inAction = true): st
   const to = "to" in e && e.to ? (typeof e.to === "string" ? (e.to === "target" ? "" : e.to === "self" ? " on itself" : e.to === "holder" ? "" : e.to === "other" ? " on the attacker" : " on its source") : ` on ${targetPhrase(e.to)}`) : "";
   switch (e.op) {
     case "damage": {
-      const kind = e.type === "none" ? "untyped damage" : `${e.type} damage`;
+      const kind = e.type === "none" ? "piercing damage" : `${e.type} damage`;
       const hits = e.hits && e.hits > 1 ? `${e.hits} hits of ` : "";
       const apply = (e.apply ?? []).map((a) => `applies ${status(a.status).name}${a.stacks !== undefined ? ` (${stacksText(a.stacks, stats, a.status)})` : ""}${a.chance !== undefined && a.chance < 100 ? `, ${a.chance}% chance` : ""}`);
-      const riders = (e.riders ?? []).map((r) => `plus ${r.type === "none" ? "untyped" : r.type} ${amountText(r.amount, stats)}`);
+      const riders = (e.riders ?? []).map((r) => `plus ${r.type === "none" ? "piercing" : r.type} ${amountText(r.amount, stats)}`);
       return [`${hits}${kind}${to}: ${amountText(e.amount, stats)}`, ...riders, ...apply].join("; ");
     }
     case "heal":
@@ -300,7 +300,7 @@ export function statusText(d: StatusT): string[] {
     out.push(`${statWord(s.stat)} ${flat !== undefined ? (isPts ? `${flat >= 0 ? "+" : ""}${flat}` : `${flat >= 0 ? "+" : ""}${disp(flat)}`) : ""}${pct !== undefined ? `${pct >= 0 ? "+" : ""}${pct}%` : ""}${d.stacking === "intensity" ? " per stack" : ""}`);
   }
   for (const b of d.boosts ?? []) out.push(`${b.tag} damage ${typeof b.pct === "number" ? `${b.pct >= 0 ? "+" : ""}${b.pct}%` : "scaled"}${d.stacking === "intensity" ? " per stack" : ""}`);
-  for (const t of d.taken ?? []) out.push(`${t.tag ?? "all"} damage taken ${typeof t.pct === "number" ? `${t.pct >= 0 ? "+" : ""}${t.pct}%` : "changed"}`);
+  for (const t of d.taken ?? []) out.push(`${t.tag === "none" ? "piercing" : (t.tag ?? "all")} damage taken ${typeof t.pct === "number" ? `${t.pct >= 0 ? "+" : ""}${t.pct}%` : "changed"}`);
   if (d.absorb) out.push(`Soaks damage, one point per stack, before HP${typeof d.cap === "object" ? `; cap ${Math.round((d.cap.scale[0]?.ratio ?? 0) * 100)}% of max HP` : ""}.`);
   if (d.block) out.push(`Blocks the next damage above ${d.block.share}% of max HP, then ends.`);
   if (d.lockout) out.push(`Locks out ${d.lockout.covers === "all" ? "every action" : `${d.lockout.covers} actions`}${d.lockout.interrupt ? ", cancelling a wind-up" : ""}.`);

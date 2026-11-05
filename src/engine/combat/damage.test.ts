@@ -104,6 +104,33 @@ test("magic resist: Armor doesn't touch magic, and Magic resist doesn't touch a 
   assert.deepEqual(strike({ weapon: { ...weapons.axe, amount: 100 } }, { stats: { magic_resist: 50 } }).map((e) => e.amount), [100]);
 });
 
+test("one defence (ruleset.magical: armor): a magical hit meets Armor and Evasion as a physical one does, and Magic resist cuts nothing", () => {
+  const first = (weapon: Spec["weapon"], stats: Record<string, number>) => {
+    const a = arena({ ruleset: { magical: "armor" }, party: [{ name: "A", weapon }], enemies: [{ name: "T", stats: { max_hp: 1_000_000, ...stats } }] });
+    a.to(20);
+    const [e] = a.hits("T");
+    return { amount: e!.amount as number, word: e!.word as string | null };
+  };
+  const bolt = { type: "magical" as const, cooldown: 10, amount: 100 };
+  const axe = { ...weapons.axe, amount: 100 };
+  assert.equal(first(bolt, { armor: 50 }).amount, first(axe, { armor: 50 }).amount);
+  assert.ok(first(bolt, { armor: 50 }).amount < 100);
+  assert.equal(first(bolt, { magic_resist: 50 }).amount, 100);
+  assert.equal(first(bolt, { evasion: 100 }).word, "MISS");
+});
+
+test("piercing: an action's untyped damage meets neither Armor nor Evasion, and a damage-taken modifier can name it by the tag none", () => {
+  const pyre = { id: "pyre", cast: 0, cooldown: 10, do: [{ op: "damage", type: "none", amount: 100 }] };
+  const ward = status("ward", { taken: [{ tag: "none", pct: -40 }] });
+  const once = (stats: Record<string, number>, statuses?: string[]) => {
+    const a = arena({ abilities: [pyre], statuses: [ward], party: [{ name: "A", abilities: ["pyre"], weapon: { ...weapons.axe, cooldown: 1000 } }], enemies: [{ name: "T", stats: { max_hp: 1_000_000, ...stats }, ...(statuses ? { statuses } : {}) }] });
+    a.to(20);
+    return { amount: a.hits("T")[0]!.amount };
+  };
+  assert.equal(once({ armor: 500, evasion: 100 }).amount, 100);
+  assert.equal(once({}, ["ward"]).amount, 60);
+});
+
 // ─── Boosts and damage-taken modifiers ──────────────────────────────────────
 
 const FIRE_BOLT = { id: "fire_bolt", cast: 0, cooldown: 10, do: [{ op: "damage", type: "magical", amount: 100 }] };

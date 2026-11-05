@@ -178,7 +178,7 @@ function dropView(run: RogueRun): Child[] {
 
 /**
  * A fight's foes as the preview shows them, with this fight's changes to HP and damage: each kind's likeness, name and
- * count, its HP, ATK, MAG, ARM and Magic resist, what it hits with, and its abilities with
+ * count, its HP, ATK, MAG and ARM, what it hits with, and its abilities with
  * their sizes, so a boss's big move can be planned for (Slay the Spire shows intents).
  */
 export function foeLines(enemies: string[], foes: { hp?: number; power?: number } = {}): Child[] {

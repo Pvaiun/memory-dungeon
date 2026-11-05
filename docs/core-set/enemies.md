@@ -10,7 +10,7 @@ The enemy side: the rules every enemy keeps, the challenges an enemy can pose, a
   - **Bosses** run 8 to 14 in their standout stats, and 60 to 120 HP on the line; a boss has only a share of its line's HP (`BOSS_HP`).
   - All of it states relative intent; simulation sets the final values.
 - **A stat line is complete,** and a 0 marks a stat the enemy doesn't use. MP 0 means no abilities that cost MP; a foe's self-buffs (Brace, Take aim, Dark ward, Tolling, Kindle) are free.
-- **Every enemy carries some Armor and some Magic resist,** more by rank (minion, elite, boss): `RANK_RESIST` and the Armor floor in `enemies.ts`. The Ghost carries far more Magic resist in its rank's place. There are no weaknesses, no resistance to one element and no absorption: a foe's theme (human, beast, undead, fire, ice, storm…) is flavour only.
+- **Every enemy carries some Armor,** more by rank (minion, elite, boss): the Armor floor in `enemies.ts`. No enemy carries Magic resist: its spells meet the party's Armor, and the party's spells meet its own. There are no weaknesses, no resistance to one element and no absorption: a foe's theme (human, beast, undead, fire, ice, storm…) is flavour only.
 - **Bosses resist repeated control:** Stun, Silence and Slow shorten on them and then stop landing for a while (`RULES.control`).
 - **Abilities and timing.** Enemy abilities scale from Attack (physical) or Magic (magical), unless an ability says otherwise, as Volatile does. Enemy cooldowns are short, medium or long, each moved a little by its id (`ENEMY_COOLDOWN`). A boss's signature blows and spells sit on the short word and its summons on medium, so it casts its moves two or three times a fight.
 - **Fights.** A fight holds at most 8 foes, and summoning counts toward that (Split, Call drones, Rally). No unit leaves a fight alive.
@@ -32,7 +32,7 @@ The original design gave Poison as the Fundamental answer to Armored shell, Dodg
 | Armored shell | Fundamental | Low HP, heavy Armor. | Magic, Sunder, Crit damage | Skeleton |
 | Dodger | Fundamental | High Evasion. | Magic, Accuracy | Bat |
 | Duelist | Specialist | High Evasion; each dodge strikes the attacker back. Flurries feed it; Double strike is the trap. | Guard; magic, Accuracy | – |
-| Spellward | Fundamental | High Magic resist. | Physical damage | Ghost |
+| Incorporeal | Fundamental | Every hit, swing or spell, deals much less (`INCORPOREAL`). | Burn, Shock, Bleed, Chill; piercing payoffs | Ghost |
 | Hardening hide | Specialist | Each hit it takes raises its Armor for a while, so flurries make it tougher. Few heavy hits are the answer. | Magic, Sunder, Crit damage, Phalanx | Ice Golem |
 
 ### Regular enemies: pace
@@ -110,7 +110,7 @@ The original design gave Poison as the Fundamental answer to Armored shell, Dodg
 | Shield wall | Fundamental | A Taunting, Guarded unit protects fragile dealers. | Area; Seek, Sunder, magic | Bandit Camp; Lich Lair |
 | Swarm | Fundamental | Up to 8 weak, fast units. A magical swarm answers to Area, Ward, Thorns and healing; Guard and Evasion assume a physical one. | Area, Guard, Evasion, Slow; Thorns, Shock | Wolf Pack; Wisp Cloud |
 | Healer and brutes | Fundamental | A Healer keeps tough units alive; two Healers is the harder form. | Stun, Might; Silence, Rot, Siphon, Backstab | Grave Watch |
-| Mixed defenses | Fundamental | An Armored shell, a Spellward and a Dodger together. | Both damage kinds, Sunder, Accuracy | Dark Hall |
+| Mixed defenses | Fundamental | An Armored shell, an Incorporeal and a Dodger together. | Both damage kinds, Sunder, Accuracy | Dark Hall |
 | Linked pack | Specialist | Each unit revives a fallen packmate after a few seconds; all must fall inside the window. | Area, Stun; Silence, spread Burn, Chill or Shock | Ghoul Pit |
 | Vengeful pair | Specialist | When one falls, the other gains many Might or heals to full. | Area, Weaken, Shield; Dispel, Burn on both | – |
 | Bomb pack | Specialist | Several Bombs; blasts together wipe, so they must fall one at a time. Area is the wrong pick. | Shield, Heal, Regen, single-target damage; Ward, Aegis | Bomb Room |
@@ -147,7 +147,7 @@ The dead: the second mixed gauntlet.
 
 - **Skeleton.** Old bones in heavy armor. *Armored shell*. **Brace:** Guard on itself.
 - **Bat.** Fast, and hard to hit. *Dodger*: Evasion high.
-- **Ghost.** Magic passes right through it. *Spellward*: far more Magic resist than its rank's. It returns in the Ice Pass as the Ice Ghost.
+- **Ghost.** Blades and spells pass right through it. *Incorporeal*: every hit it takes deals much less; statuses hurt it in full. It returns in the Ice Pass as the Ice Ghost.
 - **Bone Priest.** Heals the other dead. *Healer*. **Mend:** a heal on the ally with the lowest share of max HP, about a party's damage output, so a fight against it is a mirror until the priest is stopped.
 - **Witch.** Curses the whole party. *Curser*. **Curse:** Weaken and Slow on every foe, after a long wind-up.
 - **Lich.** A dead wizard with one big spell. *Nuker*. **Soulfire:** heavy magical damage to a random foe after a very long wind-up, enough to delete a caster. **Dark ward:** Ward on itself, free, so it never takes the Soulfire's MP.

@@ -79,7 +79,7 @@ const TAGLINE: Record<string, string> = {
   ranger: "Wears down tough foes with barbed and burning arrows.",
   bramble_knight: "Draws foes onto its thorns and leaves them bleeding.",
   hoplite: "Shields the most vulnerable ally and cracks armor.",
-  paladin: "Wards the party against magic and smites the strong.",
+  paladin: "Wards the party against afflictions and smites the strong.",
   valkyrie: "A storm spear that heals and brings back the fallen.",
   bard: "Speeds up and empowers the party, and shocks every foe.",
   hexer: "Curses the most dangerous foe into a crawl.",

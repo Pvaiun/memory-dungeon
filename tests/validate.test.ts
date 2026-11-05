@@ -97,8 +97,8 @@ test("cards: no stat is tied to a damage type: Ember Strike (magical, from Attac
 test("cards: a hit can scale from several stats: a Shield Bash from 0.7 × Armor + 0.3 × Attack", () =>
   card(hit({ type: "physical", amount: { scale: [{ ratio: 0.7, stat: "armor" }, { ratio: 0.3, stat: "attack" }] } })));
 test("cards: a weapon states its own damage; nothing scales it by default", () => expectIssue("schema", (p) => delete find(p.gear, "ash_staff").weapon.amount));
-test("cards: an action can't produce untyped damage: only pulses and reactions can", () => card(hit({ type: "none" }), "instance.untyped"));
-test("cards: riders follow the same rules as hits", () => card(hit({ type: "physical", riders: [{ type: "none", amount: 5 }] }), "instance.untyped"));
+test("cards: an action can deal untyped damage, which pierces: a status's payoff struck as a hit", () => card(hit({ type: "none" })));
+test("cards: riders follow the same rules as hits", () => card(hit({ type: "physical", riders: [{ type: "none", amount: 5 }] })));
 test("cards: a weapon kind states its type and hands, and nothing else", () => {
   expectIssue("schema", (p) => delete find(p.weaponKinds, "holy_staff").hands);
   expectIssue("schema", (p) => (find(p.weaponKinds, "holy_staff").element = "holy"));

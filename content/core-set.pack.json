@@ -35,6 +35,7 @@
   "abilityRecovery": 2,
   "armorRatio": 0.12,
   "armorK": 0.25,
+  "magical": "armor",
   "taken": {
    "floor": -75,
    "cap": 200
@@ -150,7 +151,7 @@
    "kind": "amount",
    "default": 0,
    "floor": 0,
-   "note": "A physical hit deals hit² ÷ (hit + 0.25 × Armor): nearly linear against big hits, never a blank."
+   "note": "Every hit, physical or magical, deals hit² ÷ (hit + 0.25 × Armor): nearly linear against big hits, never a blank. A status's damage never meets it."
   },
   {
    "id": "aggro",
@@ -167,7 +168,7 @@
    "default": 0,
    "floor": 0,
    "cap": 100,
-   "note": "Cuts each magical hit or pulse by this share; 100 is immune. Foes carry it by rank, and Ward gives it."
+   "note": "Unused in the core set: magical hits meet Armor (ruleset.magical), and nothing carries it."
   },
   {
    "id": "attack_speed",
@@ -746,15 +747,15 @@
   {
    "id": "ward",
    "name": "WARD",
-   "text": "Magic resist up.",
+   "text": "Takes less damage from statuses and piercing blows.",
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
    "duration": 30,
-   "stats": [
+   "taken": [
     {
-     "stat": "magic_resist",
-     "flat": 40
+     "tag": "none",
+     "pct": -40
     }
    ]
   },
@@ -3876,6 +3877,25 @@
        }
       }
      ]
+    }
+   ]
+  },
+  {
+   "id": "incorporeal",
+   "name": "Incorporeal",
+   "text": "Hits pass through it: they deal much less. Statuses hurt it in full.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "taken": [
+    {
+     "tag": "physical",
+     "pct": -60
+    },
+    {
+     "tag": "magical",
+     "pct": -60
     }
    ]
   },
@@ -19825,7 +19845,7 @@
    "id": "pyre",
    "class": "pyromancer",
    "name": "Pyre",
-   "text": "Heavy magical damage on the foe with the most Burn, rising with each stack. The Burn stays.",
+   "text": "Heavy piercing damage on the foe with the most Burn, rising with each stack: it ignores Armor and can't be dodged. The Burn stays.",
    "cooldown": 44.9,
    "cast": 8,
    "mp": 1500,
@@ -19839,7 +19859,7 @@
    "do": [
     {
      "op": "damage",
-     "type": "magical",
+     "type": "none",
      "amount": {
       "scale": [
        {
@@ -25077,7 +25097,7 @@
    "id": "thunder_chord__a",
    "class": "bard",
    "name": "Resonance",
-   "text": "Magical damage to every foe for each Shock it holds. Adds no Shock. Waits until a foe holds Shock.",
+   "text": "Piercing damage to every foe for each Shock it holds. Adds no Shock. Waits until a foe holds Shock.",
    "cooldown": 24.2,
    "cast": 3,
    "mp": 650,
@@ -25091,7 +25111,7 @@
    "do": [
     {
      "op": "damage",
-     "type": "magical",
+     "type": "none",
      "amount": {
       "scale": [
        {
@@ -25133,7 +25153,7 @@
    "id": "thunder_chord__ap",
    "class": "bard",
    "name": "Resonance+",
-   "text": "Magical damage to every foe for each Shock it holds. Adds no Shock. Waits until a foe holds Shock. Two fifths more damage a stack.",
+   "text": "Piercing damage to every foe for each Shock it holds. Adds no Shock. Waits until a foe holds Shock. Two fifths more damage a stack.",
    "cooldown": 24.2,
    "cast": 3,
    "mp": 650,
@@ -25147,7 +25167,7 @@
    "do": [
     {
      "op": "damage",
-     "type": "magical",
+     "type": "none",
      "amount": {
       "scale": [
        {
@@ -27834,7 +27854,7 @@
    "id": "pyre__p",
    "class": "pyromancer",
    "name": "Pyre+",
-   "text": "Heavy magical damage on the foe with the most Burn, rising with each stack. The Burn stays. 40% more damage.",
+   "text": "Heavy piercing damage on the foe with the most Burn, rising with each stack: it ignores Armor and can't be dodged. The Burn stays. 40% more damage.",
    "cooldown": 44.9,
    "cast": 8,
    "mp": 1500,
@@ -27848,7 +27868,7 @@
    "do": [
     {
      "op": "damage",
-     "type": "magical",
+     "type": "none",
      "amount": {
       "scale": [
        {
@@ -27869,7 +27889,7 @@
    "id": "pyre__a",
    "class": "pyromancer",
    "name": "Funeral pyre",
-   "text": "Deals magical damage to every foe; the damage scales from Magic and rises by 100 with each Burn stack on that foe. The Burn stays.",
+   "text": "Deals piercing damage to every foe; the damage scales from Magic and rises by 100 with each Burn stack on that foe. The Burn stays.",
    "cooldown": 44.9,
    "cast": 8,
    "mp": 1500,
@@ -27880,7 +27900,7 @@
    "do": [
     {
      "op": "damage",
-     "type": "magical",
+     "type": "none",
      "amount": {
       "scale": [
        {
@@ -27901,7 +27921,7 @@
    "id": "pyre__b",
    "class": "pyromancer",
    "name": "Pyre of the fallen",
-   "text": "Deals heavy magical damage to the foe with the most Burn; the damage scales from Magic and rises by 200 with each Burn stack on that foe. The Burn stays. Whenever a burning foe falls, Pyre comes 4 ticks closer.",
+   "text": "Deals heavy piercing damage to the foe with the most Burn; the damage scales from Magic and rises by 200 with each Burn stack on that foe. The Burn stays. Whenever a burning foe falls, Pyre comes 4 ticks closer.",
    "cooldown": 44.9,
    "cast": 8,
    "mp": 1500,
@@ -27915,7 +27935,7 @@
    "do": [
     {
      "op": "damage",
-     "type": "magical",
+     "type": "none",
      "amount": {
       "scale": [
        {
@@ -27939,7 +27959,7 @@
    "id": "pyre__ap",
    "class": "pyromancer",
    "name": "Funeral pyre+",
-   "text": "Deals magical damage to every foe; the damage scales from Magic and rises by 100 with each Burn stack on that foe. The Burn stays. 40% more damage.",
+   "text": "Deals piercing damage to every foe; the damage scales from Magic and rises by 100 with each Burn stack on that foe. The Burn stays. 40% more damage.",
    "cooldown": 44.9,
    "cast": 8,
    "mp": 1500,
@@ -27950,7 +27970,7 @@
    "do": [
     {
      "op": "damage",
-     "type": "magical",
+     "type": "none",
      "amount": {
       "scale": [
        {
@@ -27971,7 +27991,7 @@
    "id": "pyre__bp",
    "class": "pyromancer",
    "name": "Pyre of the fallen+",
-   "text": "Deals heavy magical damage to the foe with the most Burn; the damage scales from Magic and rises by 200 with each Burn stack on that foe. The Burn stays. Whenever a burning foe falls, Pyre comes 4 ticks closer. 40% more damage.",
+   "text": "Deals heavy piercing damage to the foe with the most Burn; the damage scales from Magic and rises by 200 with each Burn stack on that foe. The Burn stays. Whenever a burning foe falls, Pyre comes 4 ticks closer. 40% more damage.",
    "cooldown": 44.9,
    "cast": 8,
    "mp": 1500,
@@ -27985,7 +28005,7 @@
    "do": [
     {
      "op": "damage",
-     "type": "magical",
+     "type": "none",
      "amount": {
       "scale": [
        {
@@ -28305,7 +28325,7 @@
    "id": "blizzard__b",
    "class": "frostweaver",
    "name": "Avalanche",
-   "text": "Deals magical damage that scales from Magic to every foe, rising by 150 with each Chill stack on that foe. Adds no Chill.",
+   "text": "Deals piercing damage that scales from Magic to every foe, rising by 150 with each Chill stack on that foe. Adds no Chill.",
    "cooldown": 26.5,
    "cast": 6,
    "mp": 1000,
@@ -28316,7 +28336,7 @@
    "do": [
     {
      "op": "damage",
-     "type": "magical",
+     "type": "none",
      "amount": {
       "scale": [
        {
@@ -28364,7 +28384,7 @@
    "id": "blizzard__bp",
    "class": "frostweaver",
    "name": "Avalanche+",
-   "text": "Deals magical damage that scales from Magic to every foe, rising by 150 with each Chill stack on that foe. Adds no Chill. 40% more damage.",
+   "text": "Deals piercing damage that scales from Magic to every foe, rising by 150 with each Chill stack on that foe. Adds no Chill. 40% more damage.",
    "cooldown": 26.5,
    "cast": 6,
    "mp": 1000,
@@ -28375,7 +28395,7 @@
    "do": [
     {
      "op": "damage",
-     "type": "magical",
+     "type": "none",
      "amount": {
       "scale": [
        {
@@ -30224,7 +30244,7 @@
    "power": "Two fifths more Shock; if it adds none, two fifths more damage, or if it deals none, it comes round sooner.",
    "a": {
     "name": "Resonance",
-    "text": "Magical damage to every foe for each Shock it holds. Adds no Shock. Waits until a foe holds Shock."
+    "text": "Piercing damage to every foe for each Shock it holds. Adds no Shock. Waits until a foe holds Shock."
    },
    "b": {
     "name": "Lullaby",
@@ -30504,11 +30524,11 @@
    "power": "40% more damage.",
    "a": {
     "name": "Funeral pyre",
-    "text": "Deals magical damage to every foe; the damage scales from Magic and rises by 100 with each Burn stack on that foe. The Burn stays."
+    "text": "Deals piercing damage to every foe; the damage scales from Magic and rises by 100 with each Burn stack on that foe. The Burn stays."
    },
    "b": {
     "name": "Pyre of the fallen",
-    "text": "Deals heavy magical damage to the foe with the most Burn; the damage scales from Magic and rises by 200 with each Burn stack on that foe. The Burn stays. Whenever a burning foe falls, Pyre comes 4 ticks closer."
+    "text": "Deals heavy piercing damage to the foe with the most Burn; the damage scales from Magic and rises by 200 with each Burn stack on that foe. The Burn stays. Whenever a burning foe falls, Pyre comes 4 ticks closer."
    }
   },
   {
@@ -30550,7 +30570,7 @@
    },
    "b": {
     "name": "Avalanche",
-    "text": "Deals magical damage that scales from Magic to every foe, rising by 150 with each Chill stack on that foe. Adds no Chill."
+    "text": "Deals piercing damage that scales from Magic to every foe, rising by 150 with each Chill stack on that foe. Adds no Chill."
    }
   },
   {
@@ -37838,7 +37858,6 @@
    "text": "Hunts in packs.",
    "rank": "minion",
    "stats": {
-    "magic_resist": 10,
     "max_hp": 2000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -37860,7 +37879,6 @@
    "text": "A common road thug.",
    "rank": "minion",
    "stats": {
-    "magic_resist": 10,
     "max_hp": 4000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -37881,7 +37899,6 @@
    "text": "Hits hard, falls fast.",
    "rank": "minion",
    "stats": {
-    "magic_resist": 10,
     "max_hp": 2000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -37905,7 +37922,6 @@
    "text": "Its bite leaves a bleeding wound.",
    "rank": "minion",
    "stats": {
-    "magic_resist": 10,
     "max_hp": 2000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -37929,7 +37945,6 @@
    "text": "Hides behind a big shield.",
    "rank": "elite",
    "stats": {
-    "magic_resist": 15,
     "max_hp": 10000,
     "max_mp": 3000,
     "mp_regen": 2000,
@@ -37954,7 +37969,6 @@
    "text": "Big, slow, and swings a tree.",
    "rank": "elite",
    "stats": {
-    "magic_resist": 15,
     "max_hp": 16000,
     "max_mp": 2000,
     "mp_regen": 1000,
@@ -37981,7 +37995,6 @@
    "text": "The biggest ogre, with the biggest club.",
    "rank": "boss",
    "stats": {
-    "magic_resist": 25,
     "max_hp": 33000,
     "max_mp": 4000,
     "mp_regen": 2000,
@@ -38005,7 +38018,6 @@
    "text": "Old bones in heavy armor.",
    "rank": "minion",
    "stats": {
-    "magic_resist": 10,
     "max_hp": 3000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -38030,7 +38042,6 @@
    "text": "Fast, and hard to hit.",
    "rank": "minion",
    "stats": {
-    "magic_resist": 10,
     "max_hp": 2000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -38049,7 +38060,7 @@
   {
    "id": "ghost",
    "name": "Ghost",
-   "text": "Magic passes right through it.",
+   "text": "Blades and spells pass right through it.",
    "rank": "minion",
    "stats": {
     "max_hp": 6000,
@@ -38059,14 +38070,16 @@
     "magic": 3000,
     "armor": 1000,
     "crit_chance": 5,
-    "aggro": 90,
-    "magic_resist": 75
+    "aggro": 90
    },
    "weapon": {
     "type": "magical",
     "cooldown": 8.7,
     "amount": 700
-   }
+   },
+   "statuses": [
+    "incorporeal"
+   ]
   },
   {
    "id": "bone_priest",
@@ -38074,7 +38087,6 @@
    "text": "Heals the other dead.",
    "rank": "minion",
    "stats": {
-    "magic_resist": 10,
     "max_hp": 3000,
     "max_mp": 6000,
     "mp_regen": 3000,
@@ -38099,7 +38111,6 @@
    "text": "Curses the whole party.",
    "rank": "minion",
    "stats": {
-    "magic_resist": 10,
     "max_hp": 3000,
     "max_mp": 5000,
     "mp_regen": 3000,
@@ -38124,7 +38135,6 @@
    "text": "A dead wizard with one big spell.",
    "rank": "minion",
    "stats": {
-    "magic_resist": 10,
     "max_hp": 2000,
     "max_mp": 6000,
     "mp_regen": 2000,
@@ -38150,7 +38160,6 @@
    "text": "Ghouls dig each other back up.",
    "rank": "minion",
    "stats": {
-    "magic_resist": 10,
     "max_hp": 8000,
     "max_mp": 3000,
     "mp_regen": 2000,
@@ -38174,7 +38183,6 @@
    "text": "Death, with a scythe and a bell.",
    "rank": "boss",
    "stats": {
-    "magic_resist": 25,
     "max_hp": 46750,
     "max_mp": 8000,
     "mp_regen": 3000,
@@ -38199,7 +38207,6 @@
    "text": "Steals voices.",
    "rank": "minion",
    "stats": {
-    "magic_resist": 10,
     "max_hp": 4000,
     "max_mp": 5000,
     "mp_regen": 3000,
@@ -38224,7 +38231,6 @@
    "text": "Its silence falls on everyone.",
    "rank": "boss",
    "stats": {
-    "magic_resist": 25,
     "max_hp": 49500,
     "max_mp": 10000,
     "mp_regen": 3000,
@@ -38249,7 +38255,6 @@
    "text": "A fire dog; its bite burns.",
    "rank": "minion",
    "stats": {
-    "magic_resist": 10,
     "max_hp": 3000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -38274,7 +38279,6 @@
    "text": "Cut it in half and you get two.",
    "rank": "elite",
    "stats": {
-    "magic_resist": 15,
     "max_hp": 14000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -38299,7 +38303,6 @@
    "text": "Half a slime, still hungry.",
    "rank": "minion",
    "stats": {
-    "magic_resist": 10,
     "max_hp": 7000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -38321,7 +38324,6 @@
    "text": "Explodes when it dies.",
    "rank": "minion",
    "stats": {
-    "magic_resist": 10,
     "max_hp": 6000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -38346,7 +38348,6 @@
    "text": "Cheers its friends on.",
    "rank": "minion",
    "stats": {
-    "magic_resist": 10,
     "max_hp": 3000,
     "max_mp": 5000,
     "mp_regen": 3000,
@@ -38371,7 +38372,6 @@
    "text": "Lord of the furnace.",
    "rank": "boss",
    "stats": {
-    "magic_resist": 25,
     "max_hp": 52250,
     "max_mp": 10000,
     "mp_regen": 3000,
@@ -38397,7 +38397,6 @@
    "text": "Living ice: its touch chills.",
    "rank": "minion",
    "stats": {
-    "magic_resist": 10,
     "max_hp": 5000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -38422,7 +38421,6 @@
    "text": "Every hit thickens its ice.",
    "rank": "elite",
    "stats": {
-    "magic_resist": 15,
     "max_hp": 14000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -38449,7 +38447,6 @@
    "text": "A walking glacier.",
    "rank": "boss",
    "stats": {
-    "magic_resist": 25,
     "max_hp": 60500,
     "max_mp": 6000,
     "mp_regen": 2000,
@@ -38477,7 +38474,6 @@
    "text": "A tiny spark with a temper.",
    "rank": "minion",
    "stats": {
-    "magic_resist": 10,
     "max_hp": 1000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -38501,7 +38497,6 @@
    "text": "Drinks mana.",
    "rank": "minion",
    "stats": {
-    "magic_resist": 10,
     "max_hp": 3000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -38523,7 +38518,6 @@
    "text": "Queen of the storm drones.",
    "rank": "boss",
    "stats": {
-    "magic_resist": 25,
     "max_hp": 46750,
     "max_mp": 10000,
     "mp_regen": 4000,
@@ -38549,7 +38543,6 @@
    "text": "The queen's drone: it buzzes in front of her.",
    "rank": "minion",
    "stats": {
-    "magic_resist": 10,
     "max_hp": 2000,
     "max_mp": 2000,
     "mp_regen": 2000,
@@ -38573,7 +38566,6 @@
    "text": "The Storm Queen's mate. Hurt his soldiers and he gets angry.",
    "rank": "boss",
    "stats": {
-    "magic_resist": 25,
     "max_hp": 55000,
     "max_mp": 10000,
     "mp_regen": 4000,
@@ -38601,7 +38593,6 @@
    "text": "The king's soldier: it stands in front of him.",
    "rank": "minion",
    "stats": {
-    "magic_resist": 10,
     "max_hp": 9000,
     "max_mp": 2000,
     "mp_regen": 2000,
@@ -38625,7 +38616,6 @@
    "text": "Hunts in packs, in the snow.",
    "rank": "minion",
    "stats": {
-    "magic_resist": 10,
     "max_hp": 2000,
     "max_mp": 0,
     "mp_regen": 0,
@@ -38648,7 +38638,6 @@
    "text": "Big, slow, and swings a tree, under the ground.",
    "rank": "elite",
    "stats": {
-    "magic_resist": 15,
     "max_hp": 16000,
     "max_mp": 2000,
     "mp_regen": 1000,
@@ -38675,7 +38664,6 @@
    "text": "Hides behind a big, old shield.",
    "rank": "elite",
    "stats": {
-    "magic_resist": 15,
     "max_hp": 10000,
     "max_mp": 3000,
     "mp_regen": 2000,
@@ -38698,7 +38686,7 @@
   {
    "id": "ice_ghost",
    "name": "Ice Ghost",
-   "text": "Magic passes right through it, cold as it is.",
+   "text": "Blades and spells pass right through it, cold as it is.",
    "rank": "minion",
    "stats": {
     "max_hp": 6000,
@@ -38708,14 +38696,16 @@
     "magic": 3000,
     "armor": 1000,
     "crit_chance": 5,
-    "aggro": 90,
-    "magic_resist": 75
+    "aggro": 90
    },
    "weapon": {
     "type": "magical",
     "cooldown": 8.7,
     "amount": 700
    },
+   "statuses": [
+    "incorporeal"
+   ],
    "note": "A reskin of the Ghost: the same numbers."
   }
  ],
@@ -39532,8 +39522,8 @@
     "name": "The Old Road",
     "act": 1,
     "knob": {
-     "mob": 0,
-     "elite": 0,
+     "mob": -24,
+     "elite": -24,
      "boss": 0
     },
     "text": "Bandits, wolves and snakes on the road out of town, and ogres at the bridges.",
@@ -39546,7 +39536,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": -57
+      "knob": -65
      },
      {
       "id": "wolves",
@@ -39557,7 +39547,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 7
+      "knob": 0
      },
      {
       "id": "snake_grass",
@@ -39567,7 +39557,7 @@
        "snake",
        "snake"
       ],
-      "knob": -17
+      "knob": -31
      },
      {
       "id": "road_thugs",
@@ -39578,7 +39568,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": -57
+      "knob": -61
      }
     ],
     "normal": [
@@ -39593,7 +39583,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 150
+      "knob": 131
      },
      {
       "id": "snake_pit",
@@ -39605,7 +39595,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 54
+      "knob": 30
      },
      {
       "id": "bandit_camp",
@@ -39616,7 +39606,7 @@
        "archer",
        "bandit"
       ],
-      "knob": -2
+      "knob": -22
      },
      {
       "id": "night_wolves",
@@ -39630,7 +39620,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 125
+      "knob": 116
      },
      {
       "id": "archers_nest",
@@ -39641,7 +39631,7 @@
        "archer",
        "archer"
       ],
-      "knob": -22
+      "knob": -42
      },
      {
       "id": "viper_den",
@@ -39654,7 +39644,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 21
+      "knob": 7
      },
      {
       "id": "bandit_horde",
@@ -39666,7 +39656,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 35
+      "knob": 2
      }
     ],
     "elite": [
@@ -39678,7 +39668,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 60
+      "knob": 32
      },
      {
       "id": "twin_ogres",
@@ -39687,7 +39677,7 @@
        "ogre",
        "ogre"
       ],
-      "knob": 28
+      "knob": -5
      },
      {
       "id": "war_camp",
@@ -39698,7 +39688,7 @@
        "archer",
        "ogre"
       ],
-      "knob": -7
+      "knob": -32
      }
     ],
     "bosses": [
@@ -39710,7 +39700,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 50
+      "knob": 16
      },
      {
       "id": "packmaster",
@@ -39722,7 +39712,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 47
+      "knob": 14
      },
      {
       "id": "chiefs_return",
@@ -39731,7 +39721,7 @@
        "ogre_chief",
        "ogre"
       ],
-      "knob": 5
+      "knob": -4
      }
     ]
    },
@@ -39740,8 +39730,8 @@
     "name": "The Crypt",
     "act": 2,
     "knob": {
-     "mob": 0,
-     "elite": 0,
+     "mob": -50,
+     "elite": -50,
      "boss": 0
     },
     "text": "Armored bones, bats you can't hit, ghosts magic can't touch, and Death with a bell.",
@@ -39754,7 +39744,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 258
+      "knob": 169
      },
      {
       "id": "bat_roost",
@@ -39765,7 +39755,7 @@
        "bat",
        "bat"
       ],
-      "knob": 233
+      "knob": 202
      },
      {
       "id": "wailing",
@@ -39774,7 +39764,7 @@
        "ghost",
        "ghost"
       ],
-      "knob": 46
+      "knob": 137
      }
     ],
     "normal": [
@@ -39787,7 +39777,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 201
+      "knob": 124
      },
      {
       "id": "dark_hall",
@@ -39798,7 +39788,7 @@
        "bat",
        "bat"
       ],
-      "knob": 137
+      "knob": 127
      },
      {
       "id": "curse_room",
@@ -39808,7 +39798,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 280
+      "knob": 193
      },
      {
       "id": "haunted_hall",
@@ -39819,7 +39809,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 50
+      "knob": 51
      },
      {
       "id": "bone_wall",
@@ -39831,7 +39821,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 209
+      "knob": 77
      },
      {
       "id": "dead_watch",
@@ -39842,7 +39832,7 @@
        "witch",
        "ghost"
       ],
-      "knob": 89
+      "knob": 88
      }
     ],
     "elite": [
@@ -39855,7 +39845,7 @@
        "ghoul",
        "ghoul"
       ],
-      "knob": 121
+      "knob": 19
      },
      {
       "id": "lich_lair",
@@ -39864,7 +39854,7 @@
        "lich",
        "mummy"
       ],
-      "knob": 241
+      "knob": 93
      },
      {
       "id": "grave_watch",
@@ -39874,7 +39864,7 @@
        "troll",
        "troll"
       ],
-      "knob": 64
+      "knob": -25
      }
     ],
     "bosses": [
@@ -39886,7 +39876,7 @@
        "bat",
        "bat"
       ],
-      "knob": 48
+      "knob": 14
      },
      {
       "id": "reapers_court",
@@ -39896,7 +39886,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 43
+      "knob": 0
      }
     ]
    },
@@ -39905,8 +39895,8 @@
     "name": "The Fire Mine",
     "act": 2,
     "knob": {
-     "mob": 0,
-     "elite": 0,
+     "mob": -33,
+     "elite": -33,
      "boss": 0
     },
     "text": "Everything here burns, and the lord of the furnace casts a fire that ends parties.",
@@ -39920,7 +39910,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -27
+      "knob": -7
      },
      {
       "id": "fuse_room",
@@ -39930,7 +39920,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -79
+      "knob": 25
      },
      {
       "id": "imp_and_hound",
@@ -39940,7 +39930,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 35
+      "knob": 120
      }
     ],
     "normal": [
@@ -39954,7 +39944,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -3
+      "knob": -8
      },
      {
       "id": "bomb_room",
@@ -39965,7 +39955,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -118
+      "knob": -14
      },
      {
       "id": "imp_kennel",
@@ -39976,7 +39966,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 31
+      "knob": 86
      },
      {
       "id": "hound_run",
@@ -39989,7 +39979,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -29
+      "knob": -40
      },
      {
       "id": "slag_heap",
@@ -39999,7 +39989,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 135
+      "knob": 53
      },
      {
       "id": "miners",
@@ -40010,7 +40000,7 @@
        "bandit",
        "bomb_bug"
       ],
-      "knob": 63
+      "knob": 87
      }
     ],
     "elite": [
@@ -40021,7 +40011,7 @@
        "lava_slime",
        "lava_slime"
       ],
-      "knob": 163
+      "knob": 13
      },
      {
       "id": "imp_court",
@@ -40033,7 +40023,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 91
+      "knob": 30
      },
      {
       "id": "powder_room",
@@ -40043,7 +40033,7 @@
        "bomb_bug",
        "ogre"
       ],
-      "knob": -3
+      "knob": -31
      },
      {
       "id": "bomb_nest",
@@ -40053,7 +40043,7 @@
        "bomb_bug",
        "bomb_bug"
       ],
-      "knob": -77
+      "knob": -21
      }
     ],
     "bosses": [
@@ -40063,7 +40053,7 @@
       "enemies": [
        "fire_giant"
       ],
-      "knob": -3
+      "knob": 1
      },
      {
       "id": "giants_forge",
@@ -40073,7 +40063,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -29
+      "knob": -16
      },
      {
       "id": "giants_wrath",
@@ -40083,7 +40073,7 @@
        "fire_imp",
        "fire_imp"
       ],
-      "knob": -26
+      "knob": -11
      }
     ]
    },
@@ -40092,8 +40082,8 @@
     "name": "The Ice Pass",
     "act": 2,
     "knob": {
-     "mob": 0,
-     "elite": 0,
+     "mob": -50,
+     "elite": -50,
      "boss": 0
     },
     "text": "Every fight asks what kind of hit you make, and a Titan of ice waits at the top.",
@@ -40107,7 +40097,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 293
+      "knob": 315
      },
      {
       "id": "spirits",
@@ -40116,7 +40106,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 96
+      "knob": 237
      },
      {
       "id": "cold_ghosts",
@@ -40125,7 +40115,7 @@
        "ice_ghost",
        "ice_ghost"
       ],
-      "knob": 47
+      "knob": 131
      }
     ],
     "normal": [
@@ -40140,7 +40130,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 277
+      "knob": 222
      },
      {
       "id": "ice_heart",
@@ -40150,7 +40140,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 65
+      "knob": 152
      },
      {
       "id": "whiteout",
@@ -40160,7 +40150,7 @@
        "ice_ghost",
        "ice_spirit"
       ],
-      "knob": 47
+      "knob": 86
      },
      {
       "id": "ghost_lights",
@@ -40170,7 +40160,7 @@
        "ice_ghost",
        "ice_ghost"
       ],
-      "knob": 29
+      "knob": 52
      },
      {
       "id": "long_pack",
@@ -40184,7 +40174,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 237
+      "knob": 190
      },
      {
       "id": "drift",
@@ -40195,7 +40185,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 100
+      "knob": 170
      }
     ],
     "elite": [
@@ -40206,7 +40196,7 @@
        "ice_golem",
        "ice_golem"
       ],
-      "knob": 150
+      "knob": 43
      },
      {
       "id": "golem_gate",
@@ -40216,7 +40206,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 106
+      "knob": 52
      },
      {
       "id": "frost_trolls",
@@ -40227,7 +40217,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 12
+      "knob": -34
      }
     ],
     "bosses": [
@@ -40237,7 +40227,7 @@
       "enemies": [
        "ice_titan"
       ],
-      "knob": 48
+      "knob": 39
      },
      {
       "id": "glacier_king",
@@ -40247,7 +40237,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 38
+      "knob": 20
      }
     ]
    },
@@ -40256,8 +40246,8 @@
     "name": "The Storm Tower",
     "act": 3,
     "knob": {
-     "mob": 0,
-     "elite": 0,
+     "mob": 35,
+     "elite": 35,
      "boss": 0
     },
     "text": "Clouds of sparks, leeches that drink mana, and a queen behind a wall of drones.",
@@ -40272,7 +40262,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 108
+      "knob": 148
      },
      {
       "id": "leeches",
@@ -40283,7 +40273,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 197
+      "knob": 111
      },
      {
       "id": "drones",
@@ -40293,7 +40283,7 @@
        "drone",
        "drone"
       ],
-      "knob": 320
+      "knob": 349
      }
     ],
     "normal": [
@@ -40310,7 +40300,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 90
+      "knob": 123
      },
      {
       "id": "wisp_nest",
@@ -40323,7 +40313,7 @@
        "leech",
        "leech"
       ],
-      "knob": 125
+      "knob": 97
      },
      {
       "id": "leech_den",
@@ -40334,7 +40324,7 @@
        "leech",
        "leech"
       ],
-      "knob": 227
+      "knob": 83
      },
      {
       "id": "drone_wall",
@@ -40347,7 +40337,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 123
+      "knob": 158
      },
      {
       "id": "storm_front",
@@ -40360,7 +40350,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 138
+      "knob": 81
      }
     ],
     "elite": [
@@ -40373,7 +40363,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 138
+      "knob": 86
      },
      {
       "id": "sniper_ridge",
@@ -40385,7 +40375,7 @@
        "archer",
        "archer"
       ],
-      "knob": 81
+      "knob": 3
      },
      {
       "id": "lich_pair",
@@ -40395,7 +40385,7 @@
        "lich",
        "lich"
       ],
-      "knob": 150
+      "knob": 64
      }
     ],
     "bosses": [
@@ -40407,7 +40397,7 @@
        "drone",
        "drone"
       ],
-      "knob": 117
+      "knob": 106
      },
      {
       "id": "hive_queen",
@@ -40419,7 +40409,7 @@
        "drone",
        "drone"
       ],
-      "knob": 96
+      "knob": 111
      }
     ]
    },
@@ -40428,8 +40418,8 @@
     "name": "The Deep Crypt",
     "act": 3,
     "knob": {
-     "mob": 0,
-     "elite": 0,
+     "mob": 18,
+     "elite": 18,
      "boss": 0
     },
     "text": "Beneath the Crypt, something takes every voice. Power that isn't an ability is the key.",
@@ -40442,7 +40432,7 @@
        "skeleton",
        "ghost"
       ],
-      "knob": 178
+      "knob": 80
      },
      {
       "id": "whispers",
@@ -40451,7 +40441,7 @@
        "wraith",
        "wraith"
       ],
-      "knob": 350
+      "knob": 338
      },
      {
       "id": "diggers",
@@ -40461,7 +40451,7 @@
        "ghoul",
        "ghoul"
       ],
-      "knob": 208
+      "knob": 35
      }
     ],
     "normal": [
@@ -40473,7 +40463,7 @@
        "troll",
        "troll"
       ],
-      "knob": 65
+      "knob": -53
      },
      {
       "id": "lich_lair",
@@ -40482,7 +40472,7 @@
        "lich",
        "mummy"
       ],
-      "knob": 202
+      "knob": 71
      },
      {
       "id": "silent_hall",
@@ -40493,7 +40483,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 200
+      "knob": 75
      },
      {
       "id": "quiet_hall",
@@ -40504,7 +40494,7 @@
        "ghost",
        "ghost"
       ],
-      "knob": 38
+      "knob": 25
      },
      {
       "id": "coven",
@@ -40515,7 +40505,7 @@
        "wraith",
        "wraith"
       ],
-      "knob": 116
+      "knob": 120
      },
      {
       "id": "ghoul_feast",
@@ -40526,7 +40516,7 @@
        "ghoul",
        "ghoul"
       ],
-      "knob": 167
+      "knob": 2
      }
     ],
     "elite": [
@@ -40538,7 +40528,7 @@
        "bone_priest",
        "troll"
       ],
-      "knob": 178
+      "knob": 34
      },
      {
       "id": "lich_court",
@@ -40549,7 +40539,7 @@
        "lich",
        "lich"
       ],
-      "knob": 115
+      "knob": 27
      },
      {
       "id": "tomb_lords",
@@ -40559,7 +40549,7 @@
        "mummy",
        "witch"
       ],
-      "knob": 136
+      "knob": 25
      }
     ],
     "bosses": [
@@ -40569,7 +40559,7 @@
       "enemies": [
        "silent_one"
       ],
-      "knob": 98
+      "knob": 52
      },
      {
       "id": "silent_court",
@@ -40579,7 +40569,7 @@
        "bone_priest",
        "bone_priest"
       ],
-      "knob": 67
+      "knob": 21
      }
     ]
    },
@@ -40588,8 +40578,8 @@
     "name": "The Tower Top",
     "act": 3,
     "knob": {
-     "mob": 0,
-     "elite": 0,
+     "mob": 38,
+     "elite": 38,
      "boss": 0
     },
     "text": "Above the storm: the queen's drones, the king's soldiers, and the king who rages when they fall.",
@@ -40604,7 +40594,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 138
+      "knob": 151
      },
      {
       "id": "guard_post",
@@ -40613,7 +40603,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 308
+      "knob": 192
      },
      {
       "id": "top_drones",
@@ -40623,7 +40613,7 @@
        "drone",
        "drone"
       ],
-      "knob": 337
+      "knob": 346
      }
     ],
     "normal": [
@@ -40640,7 +40630,7 @@
        "leech",
        "leech"
       ],
-      "knob": 98
+      "knob": 49
      },
      {
       "id": "wisp_nest",
@@ -40653,7 +40643,7 @@
        "leech",
        "leech"
       ],
-      "knob": 125
+      "knob": 97
      },
      {
       "id": "barracks",
@@ -40663,7 +40653,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 188
+      "knob": 93
      },
      {
       "id": "drone_wall",
@@ -40676,7 +40666,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 123
+      "knob": 158
      },
      {
       "id": "watch",
@@ -40687,7 +40677,7 @@
        "drone",
        "drone"
       ],
-      "knob": 165
+      "knob": 126
      }
     ],
     "elite": [
@@ -40699,7 +40689,7 @@
        "drone",
        "drone"
       ],
-      "knob": 81
+      "knob": -9
      },
      {
       "id": "honour_guard",
@@ -40710,7 +40700,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 138
+      "knob": 86
      },
      {
       "id": "leech_den",
@@ -40722,7 +40712,7 @@
        "leech",
        "leech"
       ],
-      "knob": 216
+      "knob": 86
      }
     ],
     "bosses": [
@@ -40732,7 +40722,7 @@
       "enemies": [
        "storm_king"
       ],
-      "knob": 65
+      "knob": 25
      },
      {
       "id": "kings_guard",
@@ -40742,7 +40732,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 13
+      "knob": -1
      }
     ]
    }

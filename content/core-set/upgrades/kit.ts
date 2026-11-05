@@ -34,6 +34,8 @@ const formId = (id: string, f: Form) => `${id}__${f}`;
 export const apply = (status: string, extra: Partial<Extract<EffectT, { op: "apply" }>> = {}): EffectT => ({ op: "apply", status, ...extra }) as EffectT;
 export const phys = (amount: NumT, extra: object = {}): EffectT => ({ op: "damage", type: "physical", amount, ...extra }) as EffectT;
 export const magic = (amount: NumT, extra: object = {}): EffectT => ({ op: "damage", type: "magical", amount, ...extra }) as EffectT;
+/** Piercing damage: untyped, so it meets neither Armor nor Evasion, as a status's own does. Kept for payoffs that cash in a status. */
+export const pierce = (amount: NumT, extra: object = {}): EffectT => ({ op: "damage", type: "none", amount, ...extra }) as EffectT;
 export const removeMine = (status: string, label: "buff" | "debuff" | "marker" = "buff", to: ToT = "holder"): EffectT => ({ op: "remove", label, status, to }) as EffectT;
 /** An ability's hit, by its word, times k. */
 export const hitOf = (stat: string, word: HitWord, k = 1): NumT => from(stat, HIT[word] * k);

@@ -6,7 +6,7 @@
  * ability as a card: its icon (shaded until it first comes round, as the
  * battle's rows draw it), its cost and cooldown as icons and numbers, the
  * documents' sentence, and its size for this unit with what it grows with
- * ("150 MAGICAL (125% MAG)"). Enemies get the same parts plus their Magic resist.
+ * ("150 MAGICAL (125% MAG)"). Enemies get the same parts.
  * Designer view adds the worked-out numbers from describe.ts.
  */
 import { headStart } from "../../src/engine/combat/stats.js";
@@ -82,7 +82,7 @@ export function statGrid(stats: Stats, base: Stats | null, designer: boolean, ke
       cells.push(cell(statCode(key), showStat(key, v)));
     }
   }
-  // A class's sheet: Magic resist only once something gives it (gear, a seat, Ward); a foe's sheets name it in their keys.
+  // A class's sheet: Magic resist only once something gives it (gear or a seat; the core set gives none).
   if (base && !keys.includes("magic_resist") && stats.magic_resist) {
     const d = stats.magic_resist - (base.magic_resist ?? 0);
     cells.push(cell(statCode("magic_resist"), showStat("magic_resist", stats.magic_resist), d ? h("i", { class: d > 0 ? "good" : "bad" }, `${d > 0 ? "+" : ""}${Math.round(d)}%`) : undefined));
@@ -364,8 +364,8 @@ export function hitsWith(e: EnemyT): Child[] {
   const order = (["physical", "magical"] as const).filter((t) => types.has(t));
   return order.flatMap((t, i) => [i ? h("span", { class: "dim" }, "·") : null, h("span", { class: `nowrap ${TYPE_TONE[t]}` }, TYPE_WORD[t])]);
 }
-/** The enemy stats a player reads: how much HP, how hard it hits each way, how much Armor and Magic resist. */
-export const ENEMY_STATS = ["max_hp", "attack", "magic", "armor", "magic_resist"] as const;
+/** The enemy stats a player reads: how much HP, how hard it hits each way, how much Armor. (No foe carries Magic resist: every hit meets Armor.) */
+export const ENEMY_STATS = ["max_hp", "attack", "magic", "armor"] as const;
 
 /**
  * Everything about an enemy, for the bestiary and a fight's inspect window: its line, its stats (`live` for a fight's

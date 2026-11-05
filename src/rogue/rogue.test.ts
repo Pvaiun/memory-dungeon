@@ -494,7 +494,7 @@ test("rogue: a campfire heals everyone a share and raises the fallen on arrival;
 test("rogue (5h): a wipe ends the run, whoever is at camp; after a won fight, those who sat it out regain a share of their MP", () => {
   const c = loadContent(raw);
   for (const boss of [false, true]) {
-    const run = newRogue(c, { seed: 14, leader: "knight" });
+    const run = newRogue(c, { seed: 14, leader: "ranger" }); // Not the Knight: its starting Shield can carry a 1-HP party through an easy first fight.
     while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
     recruit(c, run, c.pack.classes.map((k) => k.id).find((id) => !run.party.includes(id))!);
     choose(c, run, reachable(run)[0].id);
@@ -502,7 +502,7 @@ test("rogue (5h): a wipe ends the run, whoever is at camp; after a won fight, th
     if (boss) (p.fight = { ...run.boss }), (p.tier = "boss");
     for (const cls of run.party) member(run, cls).missHp = 99999;
     autoFight(c, run);
-    assert.equal(run.pending.kind, "over");
+    assert.equal(run.pending.kind, "over", `boss ${boss}`);
   }
   const run = newRogue(c, { seed: 21, leader: "knight" });
   while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);

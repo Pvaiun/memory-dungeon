@@ -43,8 +43,9 @@ Design work for a party-based JRPG dungeon crawler with automatic combat, where 
 
 What's true now (Nov 4, 2026). Replace what's done rather than adding to it; history is in git.
 
-- **The game is built and approved as it stands:** the rogue mode (`docs/core-set/rogue-mode.md`; the interface's Settings → MODE → ROGUE) with 16 classes, 240 gear pieces, 16 mythics, 32 formations and Neutral, and 64 ability upgrades. Engine 0.18, schema 0.9. Free play stays as the sandbox.
+- **The game is built and approved as it stands:** the rogue mode (`docs/core-set/rogue-mode.md`; the interface's Settings → MODE → ROGUE) with 16 classes, 240 gear pieces, 16 mythics, 32 formations and Neutral, and 64 ability upgrades. Engine 0.19, schema 0.9. Free play stays as the sandbox.
 - **Nothing is balanced yet.**
+- **Open step: one defence** (`steps/one-defence/report.md`), on trial on its branch for the director to play. Every hit meets Armor and Evasion, nothing carries Magic resist, afflictions and the payoffs that cash one in pierce, and Ward guards against them. It waits on the director's verdict.
 - **The tools** (each file's header says how to run it):
   - `npm run balance`: the balance sheet. Run it after any numbers change, before the knobs.
   - `npm run rogue:calibrate`: each fight's knob against the hand-built rosters of `tools/rogue-parties.ts` (`--climb`); then `npm run rogue:tune`.
