@@ -3,7 +3,7 @@ import { HIT, stacks, STATUS } from "../scale.js";
 import { own } from "../pieces/kit.js";
 import type { EffectT, TargetRuleT } from "../../../src/schema.js";
 import { T } from "../classes.js";
-import { abilityUp, apply, BLIZZARD_CHILL, helper, hitOf, kit, LANCE_CHILL, magic, marker, passiveUp, STILLNESS_CHILL } from "./kit.js";
+import { abilityUp, apply, BLIZZARD_CHILL, helper, hitOf, kit, LANCE_CHILL, magic, marker, pierce, passiveUp, STILLNESS_CHILL } from "./kit.js";
 
 // ─── Frostweaver ─────────────────────────────────────────────────────────────
 
@@ -42,10 +42,10 @@ abilityUp({
   id: "blizzard", cls: "frostweaver",
   power: "40% more damage; if it deals none, 40% more Chill.",
   a: { name: "Whiteout", text: "Adds a few Chill to every foe, twice as many as Blizzard's; stacks scale from Magic. Deals no damage.", builds: ["snap", "lockdown"], plus: "40% more Chill." },
-  b: { name: "Avalanche", text: "Deals magical damage that scales from Magic to every foe, rising by 150 with each Chill stack on that foe. Adds no Chill.", builds: ["snap", "harvest"], plus: "40% more damage." },
+  b: { name: "Avalanche", text: "Deals piercing damage that scales from Magic to every foe, rising by 150 with each Chill stack on that foe. Adds no Chill.", builds: ["snap", "harvest"], plus: "40% more damage." },
   form: (v, k) =>
     v === "a" ? { do: [apply("chill", { stacks: stacks("few", "magic", BLIZZARD_CHILL * 2 * k) })] }
-      : v === "b" ? { do: [magic({ scale: [{ ratio: HIT.touch * k, stat: "magic" }, { ratio: 150 * k, stacks: "chill", of: "target" }] })] }
+      : v === "b" ? { do: [pierce({ scale: [{ ratio: HIT.touch * k, stat: "magic" }, { ratio: 150 * k, stacks: "chill", of: "target" }] })] }
         : { do: [magic(hitOf("magic", "touch", k), { apply: [{ status: "chill", stacks: stacks("few", "magic", BLIZZARD_CHILL) }] })] },
 });
 

@@ -88,9 +88,7 @@ export class Combat {
 
   /** The rules for a damage instance. */
   instance(i: { type: string; amount: S.NumT }, path: string, where: Where, inStatus: boolean) {
-    if (i.type === "none" && where === "action") {
-      this.r.error("instance.untyped", `${path}.type`, `every damage instance an action produces is physical or magical`);
-    }
+    // An action's damage may be untyped: it pierces, meeting neither Armor, Evasion nor Magic resist (a status's own damage, struck as a hit).
     this.num(i.amount, `${path}.amount`, where, inStatus);
   }
 

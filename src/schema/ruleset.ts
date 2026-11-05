@@ -54,6 +54,10 @@ export const Ruleset = z.strictObject({
   armorRatio: z.number().min(0).describe("Each physical hit loses armorRatio × the target's Armor, as a flat amount."),
   armorFloor: z.number().min(0).max(100).optional().describe("Armor can't take a physical hit below this % of its size. Absent or 0: enough Armor blanks a hit. Ignored when armorK is set."),
   armorK: z.number().min(0).optional().describe("Armor by the Path of Exile formula: a physical hit deals hit² ÷ (hit + armorK × Armor), so Armor is nearly linear against big hits and never blanks one. Replaces armorRatio and armorFloor when above 0; absent or 0, the flat cut."),
+  magical: z
+    .enum(["resist", "armor"])
+    .optional()
+    .describe("What a magical hit meets. resist (the default): Magic resist, and it is never dodged. armor: Armor and Evasion, as a physical hit does, so every hit meets the same defences and Magic resist cuts nothing."),
   taken: z.strictObject({ floor: z.number(), cap: z.number() }).describe("Bounds on a unit's total damage-taken modifier, in percent."),
   unarmed: Weapon.describe("The basic attack of a unit with no weapon."),
   maxEnemies: PosInt.describe("Most living units on the enemy side, summons included."),

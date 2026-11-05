@@ -38,10 +38,10 @@ The least you need to know to work on the game. Read it first, then open a detai
 
 - **Time.** A fight runs in real time, counted in ticks, and nobody gives orders. Every action (a basic attack or an ability) has a wind-up, a cooldown and a recovery. Basic attacks never wind up. A free unit uses its first ready ability in the order it was slotted, otherwise its basic attack. An ability is ready when it's off cooldown, its condition holds and the unit has the MP. Past a set time, an enrage makes everyone hit harder, so no fight stalls.
 - **MP is fuel.** No class regains MP in a fight by itself. Regen comes only from gear and a formation seat, plus a few abilities and statuses. Builds differ in whether they spend HP or MP.
-- **Damage comes in two kinds.**
-  - **Physical** can be dodged (Evasion) and is cut by Armor.
-  - **Magical** is cut by Magic resist, a percentage, and is never dodged.
-  - **A status's own damage** (Burn, Bleed, Shock…) is untyped and never resisted.
+- **Hits and afflictions.**
+  - **Every hit,** a swing or a spell, can be dodged (Evasion) and is cut by Armor, for the party and foes alike. Physical and magical are a hit's theme, and a tag gear can name. Nothing has Magic resist.
+  - **A status's own damage** (Burn, Bleed, Shock…), and the few payoffs that cash one in (Pyre), pierce: never dodged, never cut by Armor. Ward is the defence against it.
+  - So Attack strikes and Magic afflicts: the casters' answer to Armor is what they apply.
 
   There are no elements as mechanics: fire, ice and the rest are themes only. Every amount says what stat it scales from; nothing scales by default.
 - **Targeting.** Foes pick party members at random, weighted by **draw**, which comes from Aggro. Every 25 Aggro doubles a party member's draw, so a unit built to draw fire takes most of the picks. The party picks foes on a gentler curve.
@@ -89,7 +89,7 @@ The least you need to know to work on the game. Read it first, then open a detai
 ## Enemies
 
 - **Enemies use the class rules:** the same stats, statuses and target phrases.
-- **Ranks:** minion, elite and boss. Every foe carries some Armor and some Magic resist, more by rank. A boss has a signature move or gimmick, and resists repeated control.
+- **Ranks:** minion, elite and boss. Every foe carries some Armor, more by rank. A boss has a signature move or gimmick, and resists repeated control.
 - **Each enemy is built on a challenge,** a puzzle that a party answers with the strengths in its own kit. Raw power can partly make up for a missing strength.
 - **Fights:** at most 8 foes. Some enemies summon more, and nobody leaves a fight alive.
 - **Regions:** the 29 enemies live in seven regions, and each act is one of them. Act I is the Old Road. Act II is the Crypt, the Fire Mine or the Ice Pass. Act III is the Storm Tower, the Deep Crypt or the Tower Top.

@@ -15,9 +15,9 @@ export const stats: StatDefT[] = [
   { id: "mp_regen", name: "MP regen", kind: "amount", default: 0, floor: 0, brings: "mp_regen", note: `MP restored every ${MP_REGEN.every} ticks, through the status it brings.` },
   { id: "attack", name: "Attack", kind: "amount", default: 0, floor: 0 },
   { id: "magic", name: "Magic", kind: "amount", default: 0, floor: 0 },
-  { id: "armor", name: "Armor", kind: "amount", default: 0, floor: 0, note: `A physical hit deals hit² ÷ (hit + ${RULES.armorK} × Armor): nearly linear against big hits, never a blank.` },
+  { id: "armor", name: "Armor", kind: "amount", default: 0, floor: 0, note: `Every hit, physical or magical, deals hit² ÷ (hit + ${RULES.armorK} × Armor): nearly linear against big hits, never a blank. A status's damage never meets it.` },
   { id: "aggro", name: "Aggro", kind: "amount", default: 100, floor: 1, note: "Centred on 100 (a word n is 70 + 10n, a gear or formation step 10), never below 1. Foes pick party members by draw from ruleset.partyDraw: an ordinary unit draws 100, and every 25 Aggro doubles it (halves it below 100), from Aggro 25 (12.5) to 200 (1,600). The party picks among foes by ruleset.draw's curve: none draws more than 300 or less than 33." },
-  { id: "magic_resist", name: "Magic resist", kind: "points", default: 0, floor: 0, cap: 100, note: "Cuts each magical hit or pulse by this share; 100 is immune. Foes carry it by rank, and Ward gives it." },
+  { id: "magic_resist", name: "Magic resist", kind: "points", default: 0, floor: 0, cap: 100, note: "Unused in the core set: magical hits meet Armor (ruleset.magical), and nothing carries it." },
   { id: "attack_speed", name: "Attack speed", kind: "points", default: 0, floor: -300, cap: 300, note: "Hidden behind Haste, Slow and Chill." },
   { id: "cooldown_reduction", name: "Cooldown reduction", kind: "points", default: 0, floor: -300, cap: 300, note: "Hidden behind Haste, Slow and Chill." },
   { id: "cast_time_reduction", name: "Cast time reduction", kind: "points", default: 0, floor: -300, cap: 300, note: "Hidden behind Haste, Slow and Chill." },
@@ -108,7 +108,7 @@ export const vocabulary: StatusT[] = [
     reactions: [{ on: { event: "status_capped", status: "chill" }, do: [{ op: "damage", type: "none", amount: { scale: [{ ratio: STATUS.chill.shatter, stacks: "chill", of: "holder" }] }, to: "holder" }, { op: "apply", status: "stun", to: "holder" }, { op: "remove", label: "debuff", status: "chill", to: "holder" }] }],
   },
   { id: "shock", name: "SHOCK", text: "Hurts for each stack every time it acts.", label: "debuff", show: "icon", stacking: "intensity", cap: STATUS.shock.cap, trigger: { on: { event: "action_resolve" }, do: [{ op: "damage", type: "none", amount: STATUS.shock.perStack, to: "holder" }] }, drop: { fraction: STATUS.shock.drop } },
-  { id: "ward", name: "WARD", text: "Magic resist up.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.ward.duration, stats: [{ stat: "magic_resist", flat: STATUS.ward.magicResist }] },
+  { id: "ward", name: "WARD", text: "Takes less damage from statuses and piercing blows.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.ward.duration, taken: [{ tag: "none", pct: STATUS.ward.untypedTaken }] },
   // A damage-taken ramp, not an Armor strip (foes carry too little Armor for a strip to show past two stacks): it reads on every
   // foe and gives the Hexer and the Monk a ramp.
   { id: "sunder", name: "SUNDER", text: "Takes more damage for each stack.", label: "debuff", show: "icon", stacking: "intensity", cap: STATUS.sunder.cap, taken: [{ pct: STATUS.sunder.perStack }], pulse: { every: STATUS.sunder.every }, drop: { count: 1 } },
@@ -160,6 +160,7 @@ export const ruleset: ContentPack["ruleset"] = {
   abilityRecovery: RULES.abilityRecovery,
   armorRatio: RULES.armorRatio,
   armorK: RULES.armorK,
+  magical: RULES.magical,
   taken: { floor: -75, cap: 200 },
   unarmed: { type: "physical", cooldown: SPEED.medium, amount: { base: 100, scale: [{ ratio: 0.2, stat: "attack" }] } },
   maxEnemies: RULES.maxEnemies,

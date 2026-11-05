@@ -80,6 +80,11 @@ export const RULES = {
    * big hits, and it never blanks a small one, so stacking more Armor always helps.
    */
   armorK: 0.25,
+  /**
+   * One set of defences for every hit: a magical hit meets Armor and Evasion as a physical one does, and nothing carries
+   * Magic resist. Magical is a theme and a tag gear can name. What pierces is a status's damage, and the few payoffs that strike with it.
+   */
+  magical: "armor" as const,
   maxEnemies: 8,
   /**
    * An interrupted cast goes on cooldown, and one whose targets are gone costs its recovery: an interrupt in Inferno's
@@ -233,18 +238,10 @@ export const SPECIAL_KEY: Record<SpecialStat, string> = {
   evasion: "evasion", accuracy: "accuracy", crit_damage: "crit_multiplier", double_strike: "double_strike", thorns: "thorns", lifesteal: "lifesteal", siphon: "siphon",
 };
 
-// ─── Magic resist, in percent ────────────────────────────────────────────────
+// ─── Hit resist, in percent ──────────────────────────────────────────────────
 
-/**
- * Magic resist by rank, so spells meet something where swings meet Armor; the untyped statuses are the way through. A little on
- * every rank narrows the gap between physical and magical basics.
- */
-export const RANK_RESIST = { minion: 10, elite: 15, boss: 25 } as const;
-
-export const RESIST = {
-  /** The Ghost's Magic resist, in place of its rank's: most spells print slivers, nothing is immune. */
-  high: 75,
-};
+/** Incorporeal (the ghosts): every hit, swing or spell, deals this much less; statuses and piercing payoffs hurt in full. */
+export const INCORPOREAL = { hitTaken: -60 };
 
 // ─── Gear steps ──────────────────────────────────────────────────────────────
 
@@ -305,7 +302,8 @@ export const STATUS = {
   chill: { cap: 12, perStack: -4, every: 14, shatter: 250 },
   /** The cap is a safety: uncapped, a slow foe gathers enough Shock to pay a fight's worth of damage for one action. */
   shock: { perStack: 80, drop: 0.5, cap: 40 },
-  ward: { magicResist: 40, duration: 30 },
+  /** Ward: the defence against what Armor never meets. Less damage from statuses and piercing payoffs, by this percent. */
+  ward: { untypedTaken: -40, duration: 30 },
   sunder: { perStack: 1.5, every: 4, cap: 20 }, // +1.5% damage taken a stack, +30% at the cap.
   silence: { duration: 16 },
   hidden: { duration: 10 },

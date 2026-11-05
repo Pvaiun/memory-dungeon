@@ -19,11 +19,15 @@ import { passes } from "./targeting.js";
 type Part = { type: S.InstanceT["type"] };
 const partTags = (kind: string | null, p: Part, extra: readonly string[] = []) => {
   const out = kind ? [kind] : [];
-  if (p.type !== "none") out.push(p.type);
+  // Untyped damage carries the reserved tag none, so a damage-taken modifier can name it (the core set's Ward).
+  out.push(p.type);
   return [...out, ...extra];
 };
 
-/** Physical only: one roll per hit (or physical rider) on the attacker's dice. */
+/** Whether a hit of this type meets Armor and Evasion: physical always; magical too under ruleset.magical "armor". */
+const armored = (w: W, p: Part) => p.type === "physical" || (p.type === "magical" && w.c.pack.ruleset.magical === "armor");
+
+/** Physical only (and magical under ruleset.magical "armor"): one roll per hit (or such a rider) on the attacker's dice. */
 function evaded(w: W, a: CUnit, t: CUnit): boolean {
   const cap = w.c.stats.get("evasion")?.cap ?? 100;
   const chance = Math.min(cap, Math.max(0, stat(w, t, "evasion") - stat(w, a, "accuracy")));
@@ -53,7 +57,7 @@ function calc(w: W, t: CUnit, p: Part, raw: number, tags: readonly string[], boo
   // The amount before Armor or Magic resist, for the log only: what mitigation took off.
   const preMit = x;
   let word: string | null = null;
-  if (p.type === "physical") {
+  if (armored(w, p)) {
     const k = w.c.pack.ruleset.armorK;
     const armor = stat(w, t, "armor");
     // ruleset.armorK: the Path of Exile formula, hit² ÷ (hit + k × Armor): nearly linear against big hits, and it never
@@ -172,7 +176,7 @@ export function hit(w: W, ctx: Ctx, t0: CUnit, e: S.DamageEffectT, o: HitOpts = 
   };
   let t = t0;
   let parts = partsOn(t);
-  if (main.type === "physical" && evaded(w, a, t)) {
+  if (armored(w, main) && evaded(w, a, t)) {
     w.log?.({ t: "dmg", vis: "player", at: w.f.now, by: a.id, target: t.id, src: ctx.id, part: "hit", amount: 0, soaked: 0, word: "MISS", crit: false, hp: t.hp, shield: shield(w, t) });
     fire(w, ev("hit_evaded", t, a, { kind, tags }));
     fire(w, ev("hit_missed", a, t, { kind, tags }));
@@ -183,7 +187,7 @@ export function hit(w: W, ctx: Ctx, t0: CUnit, e: S.DamageEffectT, o: HitOpts = 
   const crit = critRoll(w, a, chance, multiplier);
   const power = stat(w, a, "power") + enrage(w);
   const resultsOn = (x: CUnit, ps: typeof parts, dodge: boolean) => ps.map(({ p, raw, rider }) =>
-    rider && dodge && p.type === "physical" && evaded(w, a, x) ? null : calc(w, x, p, raw, partTags(kind, p, extra), boostOf(w, a, partTags(kind, p, extra), x) + power, crit),
+    rider && dodge && armored(w, p) && evaded(w, a, x) ? null : calc(w, x, p, raw, partTags(kind, p, extra), boostOf(w, a, partTags(kind, p, extra), x) + power, crit),
   );
   let results = resultsOn(t, parts, true);
   // A big hit on an ally moves, once, to a unit that covers it, and resolves again against that unit (its own mitigation, block,
@@ -280,7 +284,7 @@ export function strike(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
   const p: Part = { type: e.type };
   const tags = partTags(null, p, compile(d).tags);
   const raw = num(w, ctx, e, e.amount, t);
-  if (p.type === "physical" && evaded(w, ctx.actor, t)) {
+  if (armored(w, p) && evaded(w, ctx.actor, t)) {
     w.log?.({ t: "dmg", vis: "player", at: w.f.now, by: ctx.actor.id, target: t.id, src: d.id, part: "reaction", amount: 0, soaked: 0, word: "MISS", crit: false, hp: t.hp, shield: shield(w, t) });
     return;
   }

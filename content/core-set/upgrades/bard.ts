@@ -2,7 +2,7 @@
 import type { AbilityT, NumT, ReactionT, TargetRuleT, ToT } from "../../../src/schema.js";
 import { stacks, STATUS } from "../scale.js";
 import { own } from "../pieces/kit.js";
-import { abilityUp, apply, cd, magic, passiveUp, quarterOff, r6 } from "./kit.js";
+import { abilityUp, apply, cd, magic, passiveUp, pierce, quarterOff, r6 } from "./kit.js";
 
 {
   const share = (k: number): NumT => ({ scale: [{ ratio: r6(STATUS.refrain.share * k), amount: true }] });
@@ -54,16 +54,16 @@ import { abilityUp, apply, cd, magic, passiveUp, quarterOff, r6 } from "./kit.js
 }
 
 {
-  /** Resonance: magical damage for each Shock a foe holds, read off the foe, on every foe that holds some. The Shock stays. */
+  /** Resonance: piercing damage for each Shock a foe holds, read off the foe, on every foe that holds some. The Shock stays. */
   const resonance = (perStack: number): Partial<AbilityT> => ({
     if: { side: "foes", where: { has: "shock" } }, target: { side: "foes", where: { has: "shock" }, pick: "all" },
-    do: [magic({ scale: [{ ratio: perStack, stacks: "shock", of: "target" }] })],
+    do: [pierce({ scale: [{ ratio: perStack, stacks: "shock", of: "target" }] })],
   });
   const lullaby: Partial<AbilityT> = { cooldown: cd("long", "thunder_chord"), do: [apply("slow")] };
   abilityUp({
     id: "thunder_chord", cls: "bard",
     power: "Two fifths more Shock; if it adds none, two fifths more damage, or if it deals none, it comes round sooner.",
-    a: { name: "Resonance", text: "Magical damage to every foe for each Shock it holds. Adds no Shock. Waits until a foe holds Shock.", builds: ["harvest"], plus: "Two fifths more damage a stack." },
+    a: { name: "Resonance", text: "Piercing damage to every foe for each Shock it holds. Adds no Shock. Waits until a foe holds Shock.", builds: ["harvest"], plus: "Two fifths more damage a stack." },
     b: { name: "Lullaby", text: "Slows every foe. No Shock.", builds: ["lockdown", "toll"], plus: "Comes round sooner." },
     form: (v, k, plus) =>
       v === "a" ? resonance(60 * k)

@@ -27,7 +27,7 @@ export const encounterTests: EncounterTest[] = [
   { dungeon: "fire_mine", stage: "fire_giant", poses: "Interrupt check", beats: ["frostweaver", "knight", "cleric"], fails: ["pyromancer", "ranger", "vampire"] },
   { dungeon: "ice_pass", stage: "golem_hall", poses: "Hardening hide", beats: ["geomancer", "hoplite", "cleric"], fails: ["monk", "bard", "vampire"] },
   { dungeon: "ice_pass", stage: "ice_heart", poses: "Elemental", beats: ["pyromancer", "knight", "cleric"], fails: ["frostweaver", "hexer", "valkyrie"] },
-  { dungeon: "ice_pass", stage: "whiteout", poses: "Spellward + Elemental", beats: ["monk", "ranger", "knight"], fails: ["hexer", "frostweaver", "stormcaller"] },
+  { dungeon: "ice_pass", stage: "whiteout", poses: "Incorporeal + Elemental", beats: ["monk", "ranger", "knight"], fails: ["hexer", "frostweaver", "stormcaller"] },
   { dungeon: "ice_pass", stage: "ice_titan", poses: "Break shield + Raidwide", beats: ["ranger", "valkyrie", "cleric"], fails: ["knight", "geomancer", "pyromancer"] },
   { dungeon: "storm_tower", stage: "wisp_cloud", poses: "Swarm, magical", beats: ["stormcaller", "cleric", "bramble_knight"], fails: ["monk", "assassin", "valkyrie"] },
   { dungeon: "storm_tower", stage: "wisp_nest", poses: "Swarm + Mana thief", beats: ["bramble_knight", "knight", "ranger"], fails: ["pyromancer", "hexer", "cleric"] },
