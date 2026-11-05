@@ -15,7 +15,7 @@ A phone-sized browser interface on the headless engine: the rogue mode, free pla
 - **Colour carries meaning only:**
   - HP bars go green, yellow, red, and MP is blue;
   - buffs are cool and debuffs warm;
-  - physical damage is pale and magical violet;
+  - a hit's damage is pale;
   - powerful gear is gold and mythic crimson.
 - **The font** is Press Start 2P (`public/fonts/`), rasterized once for the field's numbers and words.
 - **Numbers on screen:** the data stores 1,000 a point of the documents' scale. Settings → NUMBERS picks how many the interface shows a point (`NUMBER_SCALES` in `src/content.ts`, 3× by default).

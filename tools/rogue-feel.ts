@@ -292,7 +292,7 @@ function sizeOf(a: AbilityT, st: Record<string, number>): string {
   const shieldOf = (n: NumT | undefined) => { const v = val(n, st), cap = (st.max_hp ?? 0) / 2; return v > cap && cap > 0 ? `${n0(cap)} shield (half its max HP)` : `${n0(v)} shield`; };
   for (const e of a.do) {
     if (e.op === "damage") {
-      const kind = e.type === "none" ? "untyped" : e.type;
+      const kind = e.type === "none" ? "untyped damage" : "damage";
       const v = Math.round(val(e.amount, st));
       out.push(`${v ? `${n0(v)} ` : ""}${kind}${e.hits && e.hits > 1 ? ` x${e.hits}` : ""}${(e.apply ?? []).map((x) => ` + ${x.status === "shield" ? shieldOf(x.stacks) : stacks(x.status, x.stacks)}`).join("")}`);
     } else if (e.op === "heal") out.push(`heals ${n0(val(e.amount, st))}`);
@@ -327,7 +327,7 @@ function pack(r: Rec, n: number): string {
     const m = r.members[i];
     const k = c.classes.get(u.class)!;
     const st = m.stats;
-    out.push(`- **${k.name}** (slot ${i + 1}): HP ${n0(m.hp)}/${n0(m.maxHp)}, MP ${n0(m.mp)}/${n0(m.maxMp)}. Attack ${pts(st.attack)}, Magic ${pts(st.magic)}, Armor ${pts(st.armor)}, Crit ${st.crit_chance}%, Aggro ${Math.round(st.aggro)}, MP regen ${pts(st.mp_regen)}. Passive: ${k.passive?.name ?? "Einherjar"}: ${k.passive?.text ?? "allies it revives come back ready."}`);
+    out.push(`- **${k.name}** (slot ${i + 1}): HP ${n0(m.hp)}/${n0(m.maxHp)}, MP ${n0(m.mp)}/${n0(m.maxMp)}. Attack ${pts(st.attack)}, Defense ${pts(st.defense)}, Crit ${st.crit_chance}%, Aggro ${Math.round(st.aggro)}, MP regen ${pts(st.mp_regen)}. Passive: ${k.passive?.name ?? "Einherjar"}: ${k.passive?.text ?? "allies it revives come back ready."}`);
     out.push(`  - Gear: ${(["weapon", "armor", "amulet"] as const).map((s) => `${s}: ${gearWords(u.gear[s] ? c.gear.get(u.gear[s]!) : undefined)}`).join("; ")}.`);
     const abs = u.abilities.map((a, j) => { const ab = c.abilities.get(a)!; return `${ab.name} (MP ${ab.mp ?? 0}, every ${Math.round(ab.cooldown)}t, wind-up ${ab.cast ?? c.pack.ruleset.abilityCast}t, ready at ~t${Math.max(0, Math.round(firstReady(m.cooldowns, a, ab.cooldown, j)))}${m.cooldowns?.[a] !== undefined ? " (carried)" : ""}: ${sizeOf(ab, st) || ab.text})`; });
     out.push(`  - Abilities in slot order: ${abs.join("; ") || "none"}.`);
@@ -338,7 +338,7 @@ function pack(r: Rec, n: number): string {
     const acts = (en.abilities ?? []).map((a) => { const ab = c.abilities.get(a)!; return `${ab.name} (every ${Math.round(ab.cooldown)}t, wind-up ${ab.cast ?? c.pack.ruleset.abilityCast}t: ${ab.text} ${sizeOf(ab, en.stats as Record<string, number>)})`; });
     const pas = (en.statuses ?? []).map((s) => `${c.statuses.get(s)!.name}: ${c.statuses.get(s)!.text}`);
     const res = Object.entries(en.stats).filter(([k]) => k.startsWith("resist")).map(([k, v]) => `${k} ${v}`);
-    out.push(`- **${en.name}** (${en.rank}): ${en.text} HP ${n0(en.stats.max_hp)} before the knob, Armor ${pts(en.stats.armor ?? 0)}, Attack ${pts(en.stats.attack ?? 0)}, Magic ${pts(en.stats.magic ?? 0)}.${acts.length ? ` Abilities: ${acts.join("; ")}.` : ""}${pas.length ? ` ${pas.join(" ")}` : ""}${res.length ? ` Resist: ${res.join(", ")}.` : ""}`);
+    out.push(`- **${en.name}** (${en.rank}): ${en.text} HP ${n0(en.stats.max_hp)} before the knob, Defense ${pts(en.stats.defense ?? 0)}, Attack ${pts(en.stats.attack ?? 0)}.${acts.length ? ` Abilities: ${acts.join("; ")}.` : ""}${pas.length ? ` ${pas.join(" ")}` : ""}${res.length ? ` Resist: ${res.join(", ")}.` : ""}`);
   }
   out.push("", "## Tick by tick", "");
   const who = (id: unknown) => rd.units.get(String(id))?.name ?? String(id);
@@ -601,7 +601,7 @@ for (const st of c.pack.statuses) if (st.show === "icon") {
   if (drop && typeof drop === "object" && "count" in drop) bits.push(`loses ${(drop as { count: number }).count} stack each time`);
   gl.push(`- ${st.name}: ${st.text ?? ""}${bits.length ? ` (${bits.join("; ")})` : ""}`);
 }
-gl.push("", "Time: a tick is the unit; a regular fight is meant to run about 45 ticks and a boss fight about 80. Basic attacks swing every 8 to 16 ticks by weapon kind. Ability cooldown words: short 16, medium 28, long 44, very long 60 ticks; wind-ups 1, 3, 6 or 10 ticks. Abilities start a fight partly charged by slot (8, 4, 0 ticks of head start).", "Stats: HP, MP, Attack, Magic, Armor on a 1 to 5 scale (shown ×1,000 in the data: HP 2 is 2,000). Armor cuts a physical hit to hit² ÷ (hit + 0.25 × Armor). Elites carry 15 and bosses 25 resistance to every element. Aggro: foes pick by draw; an ordinary unit draws 100, a Knight (Aggro 120) about 157, a caster (Aggro 80) about 64; Taunt forces the pick, Hidden forbids it.");
+gl.push("", "Time: a tick is the unit; a regular fight is meant to run about 45 ticks and a boss fight about 80. Basic attacks swing every 8 to 16 ticks by weapon kind. Ability cooldown words: short 16, medium 28, long 44, very long 60 ticks; wind-ups 1, 3, 6 or 10 ticks. Abilities start a fight partly charged by slot (8, 4, 0 ticks of head start).", `Stats: HP, MP, Attack, Defense on a 1 to 5 scale (shown ×1,000 in the data: HP 2 is 2,000). Every hit scales from Attack, and Defense cuts it to hit² ÷ (hit + ${c.pack.ruleset.armorK ?? 0} × Defense); a status's own damage (Burn, Bleed, Shock) gets past Defense. Aggro: foes pick by draw; an ordinary unit draws 100, a Knight (Aggro 120) about 157, a caster (Aggro 80) about 64; Taunt forces the pick, Hidden forbids it.`);
 writeFileSync(`${OUT}/glossary.md`, gl.join("\n") + "\n");
 console.log(index.join("\n"));
 console.log(`\nWrote ${picked.length} packs and summary.md to ${OUT}/ (${recs.length} fights from ${RUNS} runs; ${recs.filter((r) => r.tier === "boss").length} boss fights; runs won: ${recs.filter((r) => r.tier === "boss" && r.act === 3 && r.won).length}).`);

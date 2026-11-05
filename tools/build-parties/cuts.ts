@@ -40,7 +40,7 @@ export const routes: Route[] = [
       ["vampire", "squall_c", [vp("blood_drain", "a"), vp("frenzy", "b")], g("flurry_wraps", "tithing_hauberk", "venom_vial", "hares_foot")],
     ]],
   ]),
-  route("cuts", "stormcaller-hexer-pyromancer", "The magical torrent: fast wands on the Stormcaller and the Pyromancer that slip past Armor, beside the Hexer on a dagger.", {
+  route("cuts", "stormcaller-hexer-pyromancer", "The casters' torrent: fast wands on the Stormcaller and the Pyromancer, beside the Hexer on a dagger.", {
     stormcaller: ["static_charge", "chain_lightning", "thunderstorm"], hexer: ["malison", "enfeeble", "unmake"], pyromancer: ["firebolt", "fireball", "pyre"],
   }, [
     ["spur", [

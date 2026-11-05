@@ -177,20 +177,20 @@ export const ENEMY_HIT = {
   /** Soulfire: deletes a caster. */
   soulfire: 0.6,
   /** Brand: steady pressure. */
-  brand: 0.11,
+  brand: 0.14,
   /**
    * Inferno: a blast on the whole party, to be interrupted. Kept short of killing a caster outright: when it does, the
    * calibration cuts the Fire Giant's HP until it dies before the Inferno lands, a race and not a boss.
    */
   inferno: 0.15,
-  /** Hailstorm: a raidwide the Cleric can mend, sized against the Titan's high Attack. */
-  hailstorm: 0.103,
-  /** Tempest: three bolts at random party members, each this share of Attack. */
-  tempest: 0.045,
+  /** Hailstorm: a raidwide the Cleric can mend, sized against the Titan's high Attack and the party's Defense. */
+  hailstorm: 0.13,
+  /** Tempest: three bolts at random party members, each this share of Attack: each one meets Defense, so none is a sliver. */
+  tempest: 0.07,
   /** Reap: the Reaper's three scythe slashes at random party members, each this share of its Attack. */
   reap: 0.2,
   /** Volatile: one blast behind Shields is fine; three together wipe. */
-  volatile: 0.15,
+  volatile: 0.2,
 } as const;
 
 /**
@@ -243,10 +243,10 @@ export const SPECIAL_KEY: Record<SpecialStat, string> = {
 // ─── Hits taken, in percent ──────────────────────────────────────────────────
 
 /**
- * The Ghost's Incorporeal: every hit it takes is cut by this share, and a status's own damage isn't. Most hits print slivers;
- * Burn, Bleed, Shock, a shatter and Thorns are the way through.
+ * The Ghost's Incorporeal: every hit it takes is cut by this share, and a status's own damage isn't. Hits print halves;
+ * Burn, Bleed, Shock, a shatter and Thorns are the way through. Much more and a Ghost outlasts everything else in its fight.
  */
-export const INCORPOREAL = { hits: -75 };
+export const INCORPOREAL = { hits: -50 };
 
 // ─── Gear steps ──────────────────────────────────────────────────────────────
 

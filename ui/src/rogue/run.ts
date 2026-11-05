@@ -4,7 +4,7 @@ import { current, lastRun, meta, nextSeed, saveRogue, setHeat, startRun, vitals 
 import { bossFoes, canManage, leaderKnown, type MapNode, reachable, rogue, type RogueRun } from "../../../src/rogue.js";
 import { c, className, cls as classOf, disp, shortName } from "../content.js";
 import { enemyThumb, faceEl, iconEl } from "../pixel.js";
-import { abilityBlock, classHead, classPassive, ENEMY_STATS, enemyStats, hitsWith, section, sizeEl, statGrid } from "../sheet.js";
+import { abilityBlock, classHead, classPassive, ENEMY_STATS, enemyStats, section, sizeEl, statGrid } from "../sheet.js";
 import { plainWeapon } from "../../../src/sim/parties.js";
 import { setup } from "../state.js";
 import { sfx } from "../battle/audio.js";
@@ -178,7 +178,7 @@ function dropView(run: RogueRun): Child[] {
 
 /**
  * A fight's foes as the preview shows them, with this fight's changes to HP and damage: each kind's likeness, name and
- * count, its HP, ATK, MAG, ARM and Magic resist, what it hits with, and its abilities with
+ * count, its HP, ATK and DEF (and any special stat, such as Evasion), and its abilities with
  * their sizes, so a boss's big move can be planned for (Slay the Spire shows intents).
  */
 export function foeLines(enemies: string[], foes: { hp?: number; power?: number } = {}): Child[] {
@@ -193,7 +193,6 @@ export function foeLines(enemies: string[], foes: { hp?: number; power?: number 
     return h("div", { class: "foe" },
       h("div", { class: "line" }, h("span", { class: "foe-art" }, enemyThumb(id, 24)), h("span", { class: `grow trunc ${en.rank === "boss" ? "gold" : en.rank === "elite" ? "debuff" : ""}` }, `${enemyDisplayName(id).toUpperCase()}${n(id) > 1 ? ` ×${n(id)}` : ""}`)),
       statGrid(st, null, false, ENEMY_STATS),
-      h("div", { class: "line wrap small" }, h("span", { class: "dim" }, "HITS WITH"), ...hitsWith(en)),
       ...acts);
   });
 }

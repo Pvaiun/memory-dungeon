@@ -79,7 +79,7 @@ const TAGLINE: Record<string, string> = {
   ranger: "Wears down tough foes with barbed and burning arrows.",
   bramble_knight: "Draws foes onto its thorns and leaves them bleeding.",
   hoplite: "Shields the most vulnerable ally and cracks armor.",
-  paladin: "Wards the party against magic and smites the strong.",
+  paladin: "Shelters the party and smites the strong.",
   valkyrie: "A storm spear that heals and brings back the fallen.",
   bard: "Speeds up and empowers the party, and shocks every foe.",
   hexer: "Curses the most dangerous foe into a crawl.",
@@ -104,11 +104,9 @@ export const runName = (d: DungeonT) => d.name.replace(/^Run \d+: /, "");
 export const fightName = (s: { name?: string; id: string }) => (s.name ?? s.id).replace(/^\d+\. /, "");
 
 export const STAT_CODE: Record<string, string> = {
-  max_hp: "HP", max_mp: "MP", mp_regen: "REG", attack: "ATK", magic: "MAG", armor: "ARM", crit_chance: "CRT", aggro: "AGG",
+  max_hp: "HP", max_mp: "MP", mp_regen: "REG", attack: "ATK", defense: "DEF", crit_chance: "CRT", aggro: "AGG",
   evasion: "EVA", accuracy: "ACC", crit_multiplier: "CRD", double_strike: "DBL", thorns: "THN", lifesteal: "LFS", siphon: "SPH",
   healing_received: "HEAL", attack_speed: "SPD", cooldown_reduction: "CDR", cast_time_reduction: "CAST",
-  // One resistance, to magic, so three letters like ARM beside it.
-  magic_resist: "RES",
 };
 /** What an immunity stat keeps off: "immune:status:silence" and "immune:silence" are both Silence (the status's id). */
 export const immuneTo = (key: string): string => key.replace(/^immune:(status:)?/, "");
@@ -133,5 +131,5 @@ export function showStat(key: string, v: number): string {
   return `${disp(v)}`;
 }
 /** The sheet's stats, in order. */
-export const SHEET_STATS = ["max_hp", "max_mp", "mp_regen", "attack", "magic", "armor", "crit_chance", "aggro"];
+export const SHEET_STATS = ["max_hp", "max_mp", "mp_regen", "attack", "defense", "crit_chance", "aggro"];
 export const SPECIAL_STATS = ["evasion", "accuracy", "crit_multiplier", "double_strike", "thorns", "lifesteal", "siphon", "healing_received", "attack_speed", "cooldown_reduction", "cast_time_reduction"];

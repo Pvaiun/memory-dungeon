@@ -5,7 +5,7 @@
  */
 import type { AbilityT, EffectT, NumT, StatusT, TargetRuleT } from "../../src/schema.js";
 import { c, DISPLAY_DIV, disp, enemy, status, statCode } from "./content.js";
-import { abilityLook, enemyDisplayName } from "./art.js";
+import { abilityLook, enemyDisplayName, isTheme } from "./art.js";
 
 export type Stats = Record<string, number>;
 
@@ -32,16 +32,15 @@ export function evalNum(n: NumT, stats: Stats | null, target: Stats | null = nul
 const fmtRatio = (r: number) => (Number.isInteger(r) ? String(r) : String(Number(r.toFixed(3))));
 export const statWord = (key: string) => c.stats.get(key)?.name ?? key;
 
-// ─── Damage types: physical meets Armor and Evasion, magical meets Magic resist, a status's own damage is untyped ───
-export type DamageType = "physical" | "magical" | "none";
-/** A damage type as a sheet shows it, and its colour class (the stylesheet's --phys and --magic). */
-export const TYPE_WORD: Record<DamageType, string> = { physical: "PHYSICAL", magical: "MAGICAL", none: "UNTYPED" };
-export const TYPE_TONE: Record<DamageType, string> = { physical: "phys", magical: "magic", none: "" };
-/** What an ability's damage is: the type of its first damage effect, or null for one that deals none. */
-export function damageTypeOf(a: AbilityT): "physical" | "magical" | null {
-  for (const e of a.do) if (e.op === "damage" && e.type !== "none") return e.type;
-  return null;
-}
+// ─── Damage: every hit meets Evasion and Defense; a status's own damage is untyped ───
+export type DamageType = "physical" | "none";
+/** A hit's damage as a sheet shows it, and its colour class (the stylesheet's --phys). One kind of hit, so the word just says damage. */
+export const TYPE_WORD: Record<DamageType, string> = { physical: "DMG", none: "UNTYPED" };
+export const TYPE_TONE: Record<DamageType, string> = { physical: "phys", none: "" };
+/** Does an ability deal damage (a hit)? */
+export const dealsDamage = (a: AbilityT): boolean => a.do.some((e) => e.op === "damage" && e.type !== "none");
+/** A spell: a damaging ability whose look is a theme, not a weapon's motion (art.ts). It's cast, with the spell's pose and sound. */
+export const isSpell = (a: AbilityT): boolean => dealsDamage(a) && isTheme(abilityLook(a.id));
 
 /** A damage or heal amount for display: "≈ 110, from Attack" with its scaling in words. */
 export function amountText(n: NumT, stats: Stats | null, target: Stats | null = null): string {
@@ -61,7 +60,7 @@ function describeScale(n: NumT): string {
   return [n.base ? String(disp(n.base)) : "", ...n.scale.map((s) => (s.stat ? `${fmtRatio(s.ratio)} × ${statWord(s.stat)}` : ""))].filter(Boolean).join(" + ");
 }
 
-/** Stacks an application adds: "≈ 4 stacks (scales from Magic)". */
+/** Stacks an application adds: "≈ 4 stacks (from Attack)". */
 export function stacksText(n: NumT | undefined, stats: Stats | null, statusId?: string): string {
   if (n === undefined) return "1 stack";
   const { value } = evalNum(n, stats);
@@ -158,10 +157,10 @@ export function effectText(e: EffectT, stats: Stats | null, inAction = true): st
   const to = "to" in e && e.to ? (typeof e.to === "string" ? (e.to === "target" ? "" : e.to === "self" ? " on itself" : e.to === "holder" ? "" : e.to === "other" ? " on the attacker" : " on its source") : ` on ${targetPhrase(e.to)}`) : "";
   switch (e.op) {
     case "damage": {
-      const kind = e.type === "none" ? "untyped damage" : `${e.type} damage`;
+      const kind = e.type === "none" ? "untyped damage" : "damage";
       const hits = e.hits && e.hits > 1 ? `${e.hits} hits of ` : "";
       const apply = (e.apply ?? []).map((a) => `applies ${status(a.status).name}${a.stacks !== undefined ? ` (${stacksText(a.stacks, stats, a.status)})` : ""}${a.chance !== undefined && a.chance < 100 ? `, ${a.chance}% chance` : ""}`);
-      const riders = (e.riders ?? []).map((r) => `plus ${r.type === "none" ? "untyped" : r.type} ${amountText(r.amount, stats)}`);
+      const riders = (e.riders ?? []).map((r) => `plus ${r.type === "none" ? "untyped " : ""}damage ${amountText(r.amount, stats)}`);
       return [`${hits}${kind}${to}: ${amountText(e.amount, stats)}`, ...riders, ...apply].join("; ");
     }
     case "heal":
@@ -190,7 +189,7 @@ export function effectText(e: EffectT, stats: Stats | null, inAction = true): st
 
 // ─── Abilities ───
 /**
- * What an amount grows with, the way a MOBA tooltip says it: "125% MAG" for a share of one of the unit's stats, "8×CRT"
+ * What an amount grows with, the way a MOBA tooltip says it: "125% ATK" for a share of one of the unit's stats, "8×CRT"
  * for a percent stat, "+9 PER BURN" for stacks on the target. The stat's code doubles as its colour on the sheet.
  */
 export type Scale = { text: string; stat?: string };
@@ -201,7 +200,7 @@ export function scalesOf(n: NumT | undefined, stacks = false): Scale[] {
     if (s.stat && s.of !== "target") {
       const def = c.stats.get(s.stat);
       const code = statCode(s.stat);
-      // Stacks scale too (Burn from Magic), but a share of a stat means nothing for a count: just the stat.
+      // Stacks scale too (Burn from Attack), but a share of a stat means nothing for a count: just the stat.
       if (stacks) out.push({ text: code, stat: s.stat });
       else if (def?.kind === "points") out.push({ text: `${short(s.ratio / DISPLAY_DIV)}×${code}`, stat: s.stat });
       else out.push({ text: `${Math.round(s.ratio * 100)}% ${code}`, stat: s.stat });
@@ -245,7 +244,7 @@ export function sizeParts(a: AbilityT, stats: Stats, dmgMult = 1): SizePart[] {
   return out;
 }
 
-/** An ability's size as plain words, for a before-and-after: "150 MAGICAL + 10 BURN". */
+/** An ability's size as plain words, for a before-and-after: "150 DMG + 10 BURN". */
 export const sizeText = (parts: SizePart[]) => parts.map((p) => `${p.value ? `${p.value} ` : ""}${p.word}`).join(" + ");
 
 export type AbilityInfo = {
@@ -272,10 +271,9 @@ export function abilityInfo(a: AbilityT, stats: Stats | null): AbilityInfo {
   };
 }
 
-/** What an ability looks like, for its icon and VFX: a damaging one's look (art.ts: a theme or a motion, else its type), or what it does. */
+/** What an ability looks like, for its icon and VFX: a damaging one's look (art.ts: a theme or a motion, else a plain hit's), or what it does. */
 export function abilityTag(a: AbilityT): string {
-  const type = damageTypeOf(a);
-  if (type) return abilityLook(a.id, type);
+  if (dealsDamage(a)) return abilityLook(a.id);
   const first = a.do[0];
   if (first.op === "heal") return "heal";
   if (first.op === "revive") return "revive";
@@ -299,8 +297,8 @@ export function statusText(d: StatusT): string[] {
     const isPts = c.stats.get(s.stat)?.kind === "points";
     out.push(`${statWord(s.stat)} ${flat !== undefined ? (isPts ? `${flat >= 0 ? "+" : ""}${flat}` : `${flat >= 0 ? "+" : ""}${disp(flat)}`) : ""}${pct !== undefined ? `${pct >= 0 ? "+" : ""}${pct}%` : ""}${d.stacking === "intensity" ? " per stack" : ""}`);
   }
-  for (const b of d.boosts ?? []) out.push(`${b.tag} damage ${typeof b.pct === "number" ? `${b.pct >= 0 ? "+" : ""}${b.pct}%` : "scaled"}${d.stacking === "intensity" ? " per stack" : ""}`);
-  for (const t of d.taken ?? []) out.push(`${t.tag ?? "all"} damage taken ${typeof t.pct === "number" ? `${t.pct >= 0 ? "+" : ""}${t.pct}%` : "changed"}`);
+  for (const b of d.boosts ?? []) out.push(`${tagWord(b.tag)} damage ${typeof b.pct === "number" ? `${b.pct >= 0 ? "+" : ""}${b.pct}%` : "scaled"}${d.stacking === "intensity" ? " per stack" : ""}`);
+  for (const t of d.taken ?? []) out.push(`${tagWord(t.tag)} damage taken ${typeof t.pct === "number" ? `${t.pct >= 0 ? "+" : ""}${t.pct}%` : "changed"}`);
   if (d.absorb) out.push(`Soaks damage, one point per stack, before HP${typeof d.cap === "object" ? `; cap ${Math.round((d.cap.scale[0]?.ratio ?? 0) * 100)}% of max HP` : ""}.`);
   if (d.block) out.push(`Blocks the next damage above ${d.block.share}% of max HP, then ends.`);
   if (d.lockout) out.push(`Locks out ${d.lockout.covers === "all" ? "every action" : `${d.lockout.covers} actions`}${d.lockout.interrupt ? ", cancelling a wind-up" : ""}.`);
@@ -315,6 +313,8 @@ export function statusText(d: StatusT): string[] {
   if (d.unremovable) out.push("Can't be removed.");
   return out;
 }
+/** A damage tag in words: the physical tag is every hit (Ward's and Incorporeal's cut), no tag all damage, statuses' own included. */
+const tagWord = (tag: string | undefined) => (tag === "physical" ? "hit" : tag ?? "all");
 const dropText = (drop: NonNullable<StatusT["drop"]>) => (drop === "all" ? "ends" : "fraction" in drop ? `loses ${Math.round(drop.fraction * 100)}% of its stacks` : `loses ${drop.count} stack${drop.count === 1 ? "" : "s"}`);
 
 export const enemyText = (id: string) => enemy(id).text;

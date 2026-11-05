@@ -40,7 +40,7 @@ export const routes: Route[] = [
       ["frostweaver", "thunderhead_c", [vp("blizzard", "b"), vp("shatterpoint", "b")], g("lightning_rod", "archmages_mantle", "last_page", "batwing_charm")],
     ]],
   ]),
-  route("harvest", "knight-valkyrie-hoplite", "The physical harvest: a Knight and a Valkyrie on blades that sweep, and a Hoplite; it doesn't exist yet and is built from pieces.", {
+  route("harvest", "knight-valkyrie-hoplite", "The blades' harvest: a Knight and a Valkyrie on blades that sweep, and a Hoplite; it doesn't exist yet and is built from pieces.", {
     knight: ["stand_fast", "shield_bash", "fortify"], valkyrie: ["gale_spear", "rally", "valhalla"], hoplite: ["spear_thrust", "aspis", "paired_guard"],
   }, [
     ["ring_of_steel", [
