@@ -6,19 +6,21 @@
  * ability as a card: its icon (shaded until it first comes round, as the
  * battle's rows draw it), its cost and cooldown as icons and numbers, the
  * documents' sentence, and its size for this unit with what it grows with
- * ("150 MAGICAL (125% MAG)"). Enemies get the same parts plus their Magic resist.
+ * ("150 MAGICAL (125% MAG)"); a class's sheet ends with every upgrade it can train in the rogue mode, to read.
+ * Enemies get the same parts plus their Magic resist.
  * Designer view adds the worked-out numbers from describe.ts.
  */
 import { headStart } from "../../src/engine/combat/stats.js";
-import type { AbilityT, EnemyT, FormationT, GearT, WeaponT } from "../../src/schema.js";
+import { formId, type AbilityT, type EnemyT, type FormationT, type GearT, type WeaponT } from "../../src/schema.js";
 import { combat, type Member } from "../../src/engine/combat/rules.js";
 import { drawOf, resolveWeapon, weaponOf } from "../../src/engine/combat/fight.js";
 import { armorName, c, cls, disp, immuneTo, kindOf, offhandName, SHEET_STATS, shortName, SPECIAL_STATS, showStat, statCode, status, tagline } from "./content.js";
-import { abilityInfo, abilityTag, damageTypeOf, evalNum, scalesOf, sizeParts, statusText, TYPE_TONE, TYPE_WORD, type Scale, type SizePart, type Stats } from "./describe.js";
+import { abilityInfo, abilityTag, damageTypeOf, evalNum, scalesOf, sizeParts, sizeText, statusText, TYPE_TONE, TYPE_WORD, type Scale, type SizePart, type Stats } from "./describe.js";
 import { gearIcon, SLOT_ICON, TAG_ICON, weaponLook } from "./art.js";
 import { canEquip, handsOf } from "../../src/validate.js";
 import { h, type Child } from "./dom.js";
-import { actionIconOf, actorEl, faceEl, iconEl, pipEl, statusEl, weaponEl } from "./pixel.js";
+import { actionIconEl, actionIconOf, actorEl, faceEl, iconEl, pipEl, statusEl, weaponEl } from "./pixel.js";
+import { passiveOf, upgradeOf } from "../../src/rogue.js";
 import { gearFor, party, setup, soloParty } from "./state.js";
 
 /** The four gear slots, in the order the sheets list them. */
@@ -304,6 +306,56 @@ export function basicLine(wp: WeaponT, stats: Stats | null, opts: { mult?: numbe
       h("div", { class: "grow" }, h("div", null, "ATTACK"), h("div", { class: "cost" }, timing("CD", tk(w.cooldown))))),
     h("div", { class: "size" }, value ? `${value} ` : "", h("span", { class: w.tone }, w.word), w.scales.length ? " " : null, scaleEl(w.scales)),
   );
+}
+
+/** What an ability's form changes for a unit: MP, cooldown and wind-up as "CD 28→21" (green better), then its new size. */
+export function changeLines(was: AbilityT, now: AbilityT, stats: Stats): Child[] {
+  const a = abilityInfo(was, stats), b = abilityInfo(now, stats);
+  const cmp = (label: string, x: number, y: number, show: (n: number) => string) =>
+    show(x) !== show(y) ? h("span", { class: `nowrap ${y < x ? "good" : "bad"}` }, `${label} ${show(x)}→${show(y)}`) : null;
+  const cost = [cmp("MP", a.mp ?? 0, b.mp ?? 0, (n) => String(disp(n))), cmp("CD", a.cooldown, b.cooldown, tk), cmp("CAST", a.cast, b.cast, tk)].filter(Boolean);
+  const out: Child[] = cost.length ? [h("div", { class: "size changes" }, ...cost)] : [];
+  const sizeWas = sizeText(sizeParts(was, stats)), sizeNow = sizeText(sizeParts(now, stats));
+  if (sizeNow && sizeNow !== sizeWas) {
+    const el = sizeEl(sizeParts(now, stats));
+    el?.prepend(h("span", { class: "dim" }, "→ "));
+    out.push(el);
+  }
+  return out;
+}
+
+/**
+ * Every upgrade a class can train in the rogue mode, to read (a class's sheet): a line on how training works, then each
+ * ability in its class's order and the passive, under its icon and name, with the power step (+) and versions A and B as
+ * cards: the chip, the name of the form it leads to, the upgrade's own card and, for an ability with `stats`, what it
+ * changes in this unit's numbers.
+ */
+export function upgradeList(id: string, stats: Stats | null): Child[] {
+  const k = cls(id);
+  const pid = passiveOf(c, id);
+  const out: Child[] = [];
+  for (const base of [...k.abilities, ...(pid ? [pid] : [])]) {
+    const u = upgradeOf(c, base);
+    if (!u) continue;
+    const ab = u.kind === "ability" ? c.abilities.get(base) : undefined;
+    const name = ab?.name ?? k.passive?.name ?? c.statuses.get(base)?.name ?? base;
+    out.push(h("div", { class: "line", style: "margin-top:.5rem" },
+      ab ? actionIconEl(abilityTag(ab), ab.id) : statusEl(base),
+      h("span", { class: "grow trunc hi" }, name.toUpperCase()),
+      ab ? null : h("span", { class: "dim small" }, "PASSIVE")));
+    const cards = [["+", "p", u.power], ["A", "a", u.a.text], ["B", "b", u.b.text]] as const;
+    for (const [chip, form, text] of cards) {
+      const fid = formId(base, form);
+      const fab = ab ? c.abilities.get(fid) : undefined;
+      const fname = (ab ? fab?.name : c.statuses.get(fid)?.name) ?? fid;
+      out.push(h("div", { class: "ab" },
+        h("div", { class: "head" }, h("span", { class: "chip" }, chip), h("span", { class: "grow trunc" }, fname.toUpperCase())),
+        h("div", { class: "body" }, text),
+        ...(ab && fab && stats ? changeLines(ab, fab, stats) : [])));
+    }
+  }
+  if (!out.length) return [];
+  return [section("UPGRADES", "ROGUE TRAINING"), h("div", { class: "text dim wrap small" }, "Each ability and the passive trains a power step (+) and one of its two versions (A or B)."), ...out];
 }
 
 /** A section title with a note at its right. */

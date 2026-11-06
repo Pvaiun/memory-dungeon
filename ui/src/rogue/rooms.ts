@@ -4,13 +4,12 @@
  */
 import { actRoll, bagRoom, bossFoes, eventView as eventOfRun, formOf, improveOptions, itemOf, learnOptions, member, type Member, options, parseTraining, passiveOf, rogue, type RogueRun, seatsOf, sellPrice, type Trained, type Training, trainingId, trainOptions, trainPrice, upgradeOf, wearer } from "../../../src/rogue.js";
 import { button, type Child, h, header, win } from "../dom.js";
-import { c, disp, shortName } from "../content.js";
+import { c, shortName } from "../content.js";
 import { faceEl, iconEl } from "../pixel.js";
 import { fighter } from "./state.js";
-import { abilityBlock, classHead, section, sizeEl, tk } from "../sheet.js";
+import { abilityBlock, changeLines, classHead, section } from "../sheet.js";
 import { setup } from "../state.js";
-import { abilityInfo, sizeParts, sizeText, type Stats } from "../describe.js";
-import type { AbilityT } from "../../../src/schema.js";
+import type { Stats } from "../describe.js";
 import { campEl, themeOf } from "../battle/scene.js";
 import { actions, choice, go, gold, ICON, itemRow, lootActors, offerBody, partyActors, partyStrip, pickOrSave, redraw, ROMAN, scene, standoff, trainWord } from "./parts.js";
 import { foeLines } from "./run.js";
@@ -200,22 +199,6 @@ function upgradeCards(m: Member, id: string, stats: Stats | null, by: Map<string
       ability && !m.known.includes(id) ? null : h("div", { class: "body" }, text), ...nums);
   });
 }
-/** What an ability's form changes for this member: MP, cooldown and wind-up as "CD 28→21" (green better), then its new size. */
-function changeLines(was: AbilityT, now: AbilityT, stats: Stats): Child[] {
-  const a = abilityInfo(was, stats), b = abilityInfo(now, stats);
-  const cmp = (label: string, x: number, y: number, show: (n: number) => string) =>
-    show(x) !== show(y) ? h("span", { class: `nowrap ${y < x ? "good" : "bad"}` }, `${label} ${show(x)}→${show(y)}`) : null;
-  const cost = [cmp("MP", a.mp ?? 0, b.mp ?? 0, (n) => String(disp(n))), cmp("CD", a.cooldown, b.cooldown, tk), cmp("CAST", a.cast, b.cast, tk)].filter(Boolean);
-  const out: Child[] = cost.length ? [h("div", { class: "size changes" }, ...cost)] : [];
-  const sizeWas = sizeText(sizeParts(was, stats)), sizeNow = sizeText(sizeParts(now, stats));
-  if (sizeNow && sizeNow !== sizeWas) {
-    const el = sizeEl(sizeParts(now, stats));
-    el?.prepend(h("span", { class: "dim" }, "→ "));
-    out.push(el);
-  }
-  return out;
-}
-
 // ─── The campfire ──────────────────────────────────────────────────────────
 
 /**
