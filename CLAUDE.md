@@ -45,6 +45,7 @@ What's true now (Nov 4, 2026). Replace what's done rather than adding to it; his
 
 - **The game is built and approved as it stands:** the rogue mode (`docs/core-set/rogue-mode.md`; the interface's Settings → MODE → ROGUE) with 16 classes, 240 gear pieces, 16 mythics, 32 formations and Neutral, and 64 ability upgrades. Engine 0.19, schema 0.10. Free play stays as the sandbox.
 - **Open: the one-kind-of-damage prototype** (`steps/no-magic/`, on its own branch). Magic and Magic resist are gone; Armor is Defense; the focus weapon kinds swing lighter. Built, tested and given a first balance pass; at the gate with the director (`report.md`).
+- **Open: classes and gear without Magic** (`steps/classes-and-gear/`, on top of the prototype). The weapons are settled in design (`weapons.md`). Stat lines and the upgrade audit are drafted (`design.md`). Offhands wait on the director's intent. At the design gate (`report.md`); nothing built.
 - **Nothing is balanced yet.**
 - **The tools** (each file's header says how to run it):
   - `npm run balance`: the balance sheet. Run it after any numbers change, before the knobs.
