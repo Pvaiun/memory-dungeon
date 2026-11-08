@@ -58,3 +58,7 @@ They ran the same exercise with another agent and list the calls they liked bett
 - **Confirmed:** a kind's words are its default, and a piece may step up or down the trade, so pieces of one kind don't all swing alike.
 - **Every piece of loot, or the vast majority, carries stats at every rarity.**
 - **The interface shows a weapon's damage per tick,** or the swing variation is unreadable to the player.
+
+## Sequencing (Nov 8)
+
+- **Build this pass now, on the current gear,** then redesign the builds, then the loot: one thing at a time, by the director's word. The current twelve builds aren't all working and will be redesigned on the new classes.

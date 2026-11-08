@@ -445,7 +445,7 @@ Designer's calls still open to being overruled:
 
 ## What the build step has to do
 
-Not this step's work, listed so the design is honest about its cost.
+Not this step's work, listed so the design is honest about its cost. **The sequence, by the director's word:** build this pass on the current gear first, then redesign the builds on the new classes, then the loot. So this pass spends least on what the builds pass will redo: the new kinds' commons and uncommons are written by their profiles, since those survive any builds redesign, and their rares and legendaries are a first fill flagged for the builds pass. The twelve builds stop being a standing rule when this step closes (`docs/rules.md`), and the build test runs on minimally repaired routes for the measurements only.
 
 - **Kinds:** the vocabulary's weapon table (twelve kinds; rod gone, fist renamed claws, axe and hammer added; rune sword and mace slow), `KIND_SPEED` for the new kinds, the classes' kinds, the gear-slots tool's tables.
 - **Swings:** `WEAPON` grows per-kind words (`SWING_POWER`, `SWING_SCALING`, `KIND_BUDGET`), `weaponHit` reads them, the plain weapons follow, and the exchange rate is measured first (`npx tsx tools/build-test.ts` with a stat step against a swing step, class by class).
