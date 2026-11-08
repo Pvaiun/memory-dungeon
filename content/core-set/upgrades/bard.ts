@@ -2,7 +2,7 @@
 import type { AbilityT, NumT, ReactionT, TargetRuleT, ToT } from "../../../src/schema.js";
 import { stacks, STATUS } from "../scale.js";
 import { own } from "../pieces/kit.js";
-import { abilityUp, apply, cd, passiveUp, phys, quarterOff, r6 } from "./kit.js";
+import { abilityUp, apply, cd, helper, kit, passiveUp, r6 } from "./kit.js";
 
 {
   const share = (k: number): NumT => ({ scale: [{ ratio: r6(STATUS.refrain.share * k), amount: true }] });
@@ -24,16 +24,14 @@ import { abilityUp, apply, cd, passiveUp, phys, quarterOff, r6 } from "./kit.js"
 {
   const might = (k: number) => apply("might", { stacks: stacks("few", "attack", k) });
   const lament = (k: number): Partial<AbilityT> => ({ if: { side: "allies", where: { hpBelow: 50 } }, target: { side: "allies", where: { hpBelow: 50 }, pick: "all" }, do: [might(k)] });
-  const marching: Partial<AbilityT> = { do: [{ op: "cooldown", which: "basic", set: "ready" }] };
+  /** Rousing chorus: a few Might on every ally, and a few more on the one whose basic attack comes slowest (by `swing`, the highest), spent slowest. */
+  const chorus = (k: number): Partial<AbilityT> => ({ do: [might(k), apply("might", { stacks: stacks("few", "attack", k), to: { side: "allies", pick: "highest", by: "swing" } })] });
   abilityUp({
     id: "war_ballad", cls: "bard",
-    power: "Two fifths more Might; if it gives none, it comes round sooner.",
-    a: { name: "Lament", text: "Might to every ally below half its HP, twice as many. Waits until an ally is below half.", builds: ["pact", "phoenix"], plus: "Two fifths more Might." },
-    b: { name: "Marching song", text: "Every ally's next basic attack comes at once. No Might.", builds: ["cuts", "ambush"], plus: "Comes round sooner." },
-    form: (v, k, plus) =>
-      v === "a" ? lament(2 * k)
-        : v === "b" ? { ...marching, ...(plus ? { cooldown: quarterOff(cd("quick", "war_ballad")) } : {}) }
-          : { do: [might(k)] },
+    power: "Two fifths more Might.",
+    a: { name: "Lament", text: "Might to every ally below half its HP, twice as many. Waits until an ally is below half.", builds: ["pact", "phoenix"] },
+    b: { name: "Rousing chorus", text: "A few Might on every ally, and twice as many on the ally with the slowest basic attack.", builds: ["landslide", "cuts"] },
+    form: (v, k) => (v === "a" ? lament(2 * k) : v === "b" ? chorus(k) : { do: [might(k)] }),
   });
 }
 
@@ -54,20 +52,27 @@ import { abilityUp, apply, cd, passiveUp, phys, quarterOff, r6 } from "./kit.js"
 }
 
 {
-  /** Resonance: damage for each Shock a foe holds, read off the foe, on every foe that holds some. The Shock stays. */
-  const resonance = (perStack: number): Partial<AbilityT> => ({
-    if: { side: "foes", where: { has: "shock" } }, target: { side: "foes", where: { has: "shock" }, pick: "all" },
-    do: [phys({ scale: [{ ratio: perStack, stacks: "shock", of: "target" }] })],
-  });
-  const lullaby: Partial<AbilityT> = { cooldown: cd("long", "thunder_chord"), do: [apply("slow")] };
+  /** Reprise: in place of the repeat, the ally's ability with the longest cooldown left is ready at once. */
+  const reprise: Partial<AbilityT> = { do: [{ op: "cooldown", which: "longest", set: "ready" }] };
+  /**
+   * Cadenza: the Bard's own next three basic attacks come at once: three Refrains in a breath. The first is readied as the count
+   * lands; each swing spends a count (the trigger, which runs first) and readies the next while any is left (the reaction's `if`).
+   */
+  const CADENZA = 3;
+  const cadenza: Partial<AbilityT> = { target: "self", do: [apply("cadenza", { stacks: CADENZA })] };
+  helper(kit("cadenza", "CADENZA", "Its next basic attacks come at once.", {
+    stacking: "intensity", cap: CADENZA,
+    trigger: { on: { event: "action_resolve", kind: "basic" } }, drop: { count: 1 },
+    reactions: [
+      { on: { event: "status_gained", status: "cadenza" }, do: [{ op: "cooldown", which: "basic", set: "ready", to: "holder" }] },
+      { on: { event: "action_resolve", kind: "basic" }, if: { side: "self", where: { stacks: { status: "cadenza", atLeast: 1 } } }, do: [{ op: "cooldown", which: "basic", set: "ready", to: "holder" }] },
+    ],
+  }));
   abilityUp({
-    id: "thunder_chord", cls: "bard",
-    power: "Two fifths more Shock; if it adds none, two fifths more damage, or if it deals none, it comes round sooner.",
-    a: { name: "Resonance", text: "Damage to every foe for each Shock it holds. Adds no Shock. Waits until a foe holds Shock.", builds: ["harvest"], plus: "Two fifths more damage a stack." },
-    b: { name: "Lullaby", text: "Slows every foe. No Shock.", builds: ["lockdown", "toll"], plus: "Comes round sooner." },
-    form: (v, k, plus) =>
-      v === "a" ? resonance(60 * k)
-        : v === "b" ? { ...lullaby, ...(plus ? { cooldown: cd("medium", "thunder_chord") } : {}) }
-          : { do: [apply("shock", { stacks: stacks("several", "attack", k) })] },
+    id: "encore", cls: "bard",
+    power: "Comes round sooner.",
+    a: { name: "Reprise", text: "The other ally with the highest Attack has its ability with the longest cooldown left ready at once. No repeat.", builds: ["overflow", "lockdown"] },
+    b: { name: "Cadenza", text: "No Encore for an ally: the Bard's own next three basic attacks come at once.", builds: ["cuts", "landslide"] },
+    form: (v, _k, plus) => ({ ...(v === "a" ? reprise : v === "b" ? cadenza : {}), ...(plus ? { cooldown: cd("short", "encore") } : {}) }),
   });
 }

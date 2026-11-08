@@ -9,11 +9,11 @@
  * ("150 DMG (125% ATK)"). Enemies get the same parts.
  * Designer view adds the worked-out numbers from describe.ts.
  */
-import { headStart } from "../../src/engine/combat/stats.js";
+import { headStart, speedOf } from "../../src/engine/combat/stats.js";
 import type { AbilityT, EnemyT, FormationT, GearT, WeaponT } from "../../src/schema.js";
 import { combat, type Member } from "../../src/engine/combat/rules.js";
 import { drawOf, resolveWeapon, weaponOf } from "../../src/engine/combat/fight.js";
-import { armorName, c, cls, disp, immuneTo, kindOf, offhandName, SHEET_STATS, shortName, SPECIAL_STATS, showStat, statCode, status, tagline } from "./content.js";
+import { armorName, c, cls, disp, DISPLAY_DIV, immuneTo, kindOf, offhandName, SHEET_STATS, shortName, SPECIAL_STATS, showStat, statCode, status, tagline } from "./content.js";
 import { abilityInfo, abilityTag, evalNum, scalesOf, sizeParts, statusText, TYPE_TONE, TYPE_WORD, type Scale, type SizePart, type Stats } from "./describe.js";
 import { gearIcon, SLOT_ICON, TAG_ICON, weaponLook } from "./art.js";
 import { canEquip, handsOf } from "../../src/validate.js";
@@ -174,18 +174,29 @@ const ICON_SCALE = 1.5;
 
 /**
  * What a weapon's basic attack is, worked out for a unit: its look (`ref`, the weapon's gear id or "enemy:<id>", picks
- * its icon), its damage, how often, whether it takes both hands, what it hits for and what it grows with.
+ * its icon), its damage per hit and per tick (the swing done, before Defense, for this holder), how often, whether it takes
+ * both hands, what it hits for and what it grows with. The per-tick figure is what makes two kinds' swings comparable.
  */
-export function weaponParts(wp: WeaponT, stats: Stats | null, ref?: string): { tag: string; word: string; tone: string; cooldown: number; hands: 1 | 2; value: string | null; scales: Scale[] } {
+export function weaponParts(wp: WeaponT, stats: Stats | null, ref?: string, mult = 1): { tag: string; word: string; tone: string; cooldown: number; hands: 1 | 2; value: string | null; perTick: string | null; scales: Scale[] } {
   const r = resolveWeapon(c, wp);
-  const value = stats ? `${wp.hits && wp.hits > 1 ? `${wp.hits}×` : ""}${disp(evalNum(wp.amount, stats).value)}` : null;
-  return { tag: ref ? weaponLook(ref) : r.type, word: TYPE_WORD[r.type], tone: TYPE_TONE[r.type], cooldown: r.cooldown, hands: r.hands, value, scales: scalesOf(wp.amount) };
+  const hits = wp.hits && wp.hits > 1 ? wp.hits : 1;
+  const amount = stats ? evalNum(wp.amount, stats).value * mult : null;
+  const value = amount !== null ? `${hits > 1 ? `${hits}×` : ""}${disp(amount)}` : null;
+  // Per tick: every hit of a swing, over the swing's interval after the holder's Attack speed, on the display scale with a decimal.
+  const speed = stats ? speedOf(stats.attack_speed ?? 0) : [1, 1];
+  const interval = (r.cooldown * speed[1]) / speed[0];
+  const perTick = amount !== null ? (Math.round(((amount * hits) / interval / DISPLAY_DIV) * 10) / 10).toFixed(1) : null;
+  return { tag: ref ? weaponLook(ref) : r.type, word: TYPE_WORD[r.type], tone: TYPE_TONE[r.type], cooldown: r.cooldown, hands: r.hands, value, perTick, scales: scalesOf(wp.amount) };
 }
-/** A weapon's hit, what it grows with, how often, and 2H when it takes both hands: "33 DMG", "(23% ATK)", "CD 8", "2H"; each part kept whole when the line wraps. */
+/** A weapon's hit, its damage per tick, what it grows with, how often, and 2H when it takes both hands: "33 DMG", "4.1/T", "(23% ATK)", "CD 8", "2H"; each part kept whole when the line wraps. */
 export function weaponCode(g: GearT, stats: Stats | null): Child[] {
   if (!g.weapon) return [];
   const w = weaponParts(g.weapon, stats, g.id);
-  return [h("span", { class: "wcode" }, w.value ? h("span", { class: "ink" }, w.value) : null, h("span", { class: w.tone }, w.word)), scaleEl(w.scales), timing("CD", tk(w.cooldown)), w.hands === 2 ? h("span", { class: "nowrap" }, "2H") : null];
+  return [
+    h("span", { class: "wcode" }, w.value ? h("span", { class: "ink" }, w.value) : null, h("span", { class: w.tone }, w.word)),
+    w.perTick ? h("span", { class: "nowrap hi" }, `${w.perTick}/T`) : null,
+    scaleEl(w.scales), timing("CD", tk(w.cooldown)), w.hands === 2 ? h("span", { class: "nowrap" }, "2H") : null,
+  ];
 }
 /**
  * A piece's card beyond its numbers: the piece's own text for anything above common (its effect, in the content's
@@ -290,14 +301,13 @@ export function abilityBlock(a: AbilityT, stats: Stats | null, designer: boolean
   return h("div", { class: `ab${opts.cur ? " cur" : ""}` }, head, ...body);
 }
 
-/** The basic attack a weapon gives, worked out for a unit's stats: type, cooldown, hit, what it grows with; `ref` gives its look. */
+/** The basic attack a weapon gives, worked out for a unit's stats: type, cooldown, hit, damage per tick, what it grows with; `ref` gives its look. */
 export function basicLine(wp: WeaponT, stats: Stats | null, opts: { mult?: number; slot?: boolean; ref?: string } = {}): HTMLElement {
-  const w = weaponParts(wp, stats, opts.ref);
-  const value = stats && opts.mult && opts.mult !== 1 ? `${wp.hits && wp.hits > 1 ? `${wp.hits}×` : ""}${disp(evalNum(wp.amount, stats).value * opts.mult)}` : w.value;
+  const w = weaponParts(wp, stats, opts.ref, opts.mult ?? 1);
   return h("div", { class: "ab" },
     h("div", { class: "head" }, opts.slot === false ? null : h("span", { class: "n dim" }, "·"), h("span", { class: "pip" }, iconEl(TAG_ICON[w.tag] ?? TAG_ICON.physical, ICON_SCALE)),
-      h("div", { class: "grow" }, h("div", null, "ATTACK"), h("div", { class: "cost" }, timing("CD", tk(w.cooldown))))),
-    h("div", { class: "size" }, value ? `${value} ` : "", h("span", { class: w.tone }, w.word), w.scales.length ? " " : null, scaleEl(w.scales)),
+      h("div", { class: "grow" }, h("div", null, "ATTACK"), h("div", { class: "cost" }, timing("CD", tk(w.cooldown)), w.perTick ? h("span", { class: "nowrap hi" }, `${w.perTick}/T`) : null))),
+    h("div", { class: "size" }, w.value ? `${w.value} ` : "", h("span", { class: w.tone }, w.word), w.scales.length ? " " : null, scaleEl(w.scales)),
   );
 }
 

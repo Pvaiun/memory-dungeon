@@ -1,6 +1,6 @@
 /** The Hoplite's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit.ts. */
 import type { AbilityT, ReactionT, StatusT } from "../../../src/schema.js";
-import { from, KIND_SPEED, stacks, SWING_REF } from "../scale.js";
+import { from, HIT, KIND_SPEED, stacks, SWING_REF } from "../scale.js";
 import { T } from "../classes.js";
 import { abilityUp, apply, cd, helper, kit, passiveUp, phys, r6, removeMine } from "./kit.js";
 
@@ -44,26 +44,30 @@ import { abilityUp, apply, cd, helper, kit, passiveUp, phys, r6, removeMine } fr
 }
 
 {
-  const line: Partial<AbilityT> = { target: { side: "others", pick: "all" }, do: [apply("guard")] };
-  const blade: Partial<AbilityT> = { do: [apply("guard"), apply("guard", { to: { side: "others", pick: "highest", by: { stats: ["attack"] } } })] };
+  /** Othismos: the shove from Defense on every foe, a few Sunder each (from Defense too); Breach one foe, the most Defense, for triple with several. */
+  const shove = (ratio: number, word: "few" | "several", k: number) => phys(from("defense", ratio), { apply: [{ status: "sunder", stacks: stacks(word, "defense", k) }] });
   abilityUp({
-    id: "paired_guard", cls: "hoplite",
-    power: "Costs less MP.",
-    a: { name: "Line of shields", text: "Guards both other allies. Not itself.", builds: ["harvest", "bonfire"] },
-    b: { name: "Guard the blade", text: "Guards itself and the other ally with the highest Attack.", builds: ["hunt", "ambush"] },
-    form: (v, _k, plus) => ({ ...(v === "a" ? line : v === "b" ? blade : {}), ...(plus ? { mp: 200 } : {}) }),
+    id: "othismos", cls: "hoplite",
+    power: "Adds two fifths more Sunder.",
+    a: { name: "Locked shields", text: "The shove, and the Hoplite and the ally with the lowest share of HP are Guarded.", builds: ["toll", "harvest"] },
+    b: { name: "Breach", text: "One foe only, the one with the most Defense, for triple, adding several Sunder.", builds: ["landslide", "hunt"] },
+    form: (v, k) =>
+      v === "a" ? { do: [shove(HIT.light, "few", k), apply("guard", { to: "self" }), apply("guard", { to: T.lowestShareAlly })] }
+        : v === "b" ? { target: { side: "foes", pick: "highest", by: { stat: "defense" } }, do: [shove(HIT.light * 3, "several", k)] }
+          : { do: [shove(HIT.light, "few", k)] },
   });
 }
 
 {
   const thrust = (ratio: number, extra: object = {}) => phys(from("attack", ratio), { apply: [{ status: "sunder", stacks: stacks("few", "attack") }], ...extra });
   const skewer = (ratio: number): Partial<AbilityT> => ({ do: [thrust(ratio), thrust(ratio, { to: { side: "foes", pick: "highest", by: "hp", exclude: "targets" } })] });
-  const hunters = (ratio: number): Partial<AbilityT> => ({ seek: true, target: T.lowestHpFoe, do: [thrust(ratio)] });
+  /** Disarm: the bodyguard's own act. Weaken on the most dangerous foe, and no Sunder. */
+  const disarm = (ratio: number): Partial<AbilityT> => ({ target: T.highestAMFoe, do: [phys(from("attack", ratio), { apply: [{ status: "weaken" }] })] });
   abilityUp({
     id: "spear_thrust", cls: "hoplite",
     power: "Deals two fifths more damage.",
     a: { name: "Skewer", text: "A thrust through a random foe and on into the foe with the most HP, each for three quarters, each adding a few Sunder.", builds: ["harvest"] },
-    b: { name: "Hunter's thrust", text: "A thrust past any guard at the foe with the lowest HP, adding a few Sunder.", builds: ["hunt"] },
-    form: (v, k) => (v === "a" ? skewer(0.8 * k) : v === "b" ? hunters(1.1 * k) : { do: [thrust(1.1 * k)] }),
+    b: { name: "Disarm", text: "A thrust at the foe with the highest Attack, which is Weakened. No Sunder.", builds: ["lockdown", "hunt"] },
+    form: (v, k) => (v === "a" ? skewer(0.8 * k) : v === "b" ? disarm(1.1 * k) : { do: [thrust(1.1 * k)] }),
   });
 }

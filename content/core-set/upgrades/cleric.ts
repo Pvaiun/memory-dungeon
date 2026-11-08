@@ -54,7 +54,9 @@ import { abilityUp, apply, DRAWN, helper, kit, ofHolder, passiveUp, removeMine }
 
 {
   const heal = (ratio: number): EffectT => ({ op: "heal", amount: from("attack", ratio) });
-  const triage = (ratio: number): Partial<AbilityT> => ({ if: { side: "allies", where: { hpBelow: 40 } }, do: [heal(ratio)] });
+  /** Triage heals from the Cleric's own max HP, twice Cure's size at the line: the mender gives of its body. */
+  const TRIAGE = 1.0;
+  const triage = (k: number): Partial<AbilityT> => ({ if: { side: "allies", where: { hpBelow: 40 } }, do: [{ op: "heal", amount: from("max_hp", TRIAGE * k) }] });
   /** Battle prayer: the next basic attack carries the heal's amount again as damage, once (Refresh: a second Cure doesn't add a second). */
   const prayer = (id: string, ratio: number) =>
     kit(id, "BATTLE PRAYER", "Its next basic attack deals extra damage.", {
@@ -66,10 +68,10 @@ import { abilityUp, apply, DRAWN, helper, kit, ofHolder, passiveUp, removeMine }
   abilityUp({
     id: "cure", cls: "cleric",
     power: "Heals two fifths more.",
-    a: { name: "Triage", text: "Waits until an ally is below 40% of its max HP, then heals it for twice as much.", builds: ["pact", "phoenix"] },
+    a: { name: "Triage", text: "Waits until an ally is below 40% of its max HP, then heals it for twice as much, from the Cleric's own max HP.", builds: ["pact", "phoenix"] },
     b: { name: "Battle prayer", text: "Heals the ally with the lowest share of HP. Its next basic attack deals the same amount again as extra damage.", builds: ["pact", "landslide"] },
     form: (v, k, plus) =>
-      v === "a" ? triage(0.7 * k)
+      v === "a" ? triage(k)
         : v === "b" ? { do: [heal(0.35 * k), apply(plus ? "battle_prayer_plus" : "battle_prayer", { to: "self" })] }
           : { do: [heal(0.35 * k)] },
   });
@@ -85,6 +87,7 @@ import { abilityUp, apply, DRAWN, helper, kit, ofHolder, passiveUp, removeMine }
   /**
    * Ward of life: waits for either condition (`if: { any }`), a fallen ally or one below a third. Each part has its own target, and an
    * effect has no condition of its own, so when both hold it does both: it raises the fallen and shields the lowest ally below a third.
+   * The Shield reads the Cleric's own max HP (everything scales from the user).
    */
   const ward = (raise: number, shield: number): Partial<AbilityT> => ({
     cast: WINDUP.normal,
@@ -92,14 +95,14 @@ import { abilityUp, apply, DRAWN, helper, kit, ofHolder, passiveUp, removeMine }
     target: "self",
     do: [
       { op: "revive", hp: raiseHp(raise), to: T.koAlly },
-      apply("shield", { stacks: { scale: [{ ratio: shield, stat: "max_hp", of: "target" }] }, to: { side: "allies", where: { hpBelow: 33 }, pick: "lowest", by: "hp_share" } }),
+      apply("shield", { stacks: { scale: [{ ratio: shield, stat: "max_hp", of: "self" }] }, to: { side: "allies", where: { hpBelow: 33 }, pick: "lowest", by: "hp_share" } }),
     ],
   });
   abilityUp({
     id: "raise", cls: "cleric",
     power: "The raised ally comes back with two fifths more HP.",
     a: { name: "Martyr's raise", text: "Pays half its current HP to revive a random knocked-out ally with that much. Costs no MP.", builds: ["pact", "phoenix"] },
-    b: { name: "Ward of life", text: "Waits until an ally is knocked out or below a third of its max HP. Revives a random knocked-out ally with half its HP, and gives the lowest ally below a third a Shield of a third of its max HP.", builds: ["toll", "pact"],
+    b: { name: "Ward of life", text: "Waits until an ally is knocked out or below a third of its max HP. Revives a random knocked-out ally with half its HP, and gives the lowest ally below a third a Shield of a third of the Cleric's max HP.", builds: ["toll", "pact"],
       plus: "The raised ally comes back with two fifths more HP, and the Shield is two fifths bigger." },
     form: (v, k) => (v === "a" ? martyr(0.5 * k) : v === "b" ? ward(0.5 * k, k / 3) : { do: [{ op: "revive", hp: raiseHp(0.5 * k) }] }),
   });

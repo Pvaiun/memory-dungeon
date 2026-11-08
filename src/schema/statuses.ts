@@ -80,6 +80,7 @@ export const CritRule = z.strictObject({
   tag: Tag.optional().describe("Only hits carrying this tag (basic, ability, extra, physical, area)."),
   when: UnitCond.optional().describe("Only hits on a unit that passes this, read as the hit lands."),
   chance: z.number().optional().describe("Points added to the hit's crit chance, after every stat change (100: it always crits, whatever else holds, Gambler's coin included)."),
+  times: z.number().min(0).optional().describe("The hit's crit chance, after every stat change, is multiplied by this before any `chance` is added (3: tripled against the foes `when` names)."),
   bonus: z.number().optional().describe("Percent more crit bonus, the part of the crit multiplier above ×1: 100 makes ×1.5 into ×2."),
 });
 export type CritRuleT = z.infer<typeof CritRule>;

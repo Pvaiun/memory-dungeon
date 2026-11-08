@@ -2,6 +2,7 @@
  * The four armor types' 48 pieces and the 24 amulets, built from the engine's primitives (PRIMITIVES.md).
  * `gear` joins the pack's gear and the rogue's stock; `statuses` the pack's statuses; `builds` is designer data, never in the pack.
  *
+ * Every piece carries stats at every rarity (the standard budget, kit.ts): a rare's or legendary's step sits beside its effect.
  * Statuses are applied at their own length (universal), and nothing here is balanced. A piece's own
  * statuses take its id, or its id with a suffix: `_on` for a state it switches on and off, `_used` for a once-a-fight marker,
  * `_mark` for the marker it leaves on a foe. Heat, Spite, Tempo and Surge are shared.ts's.
@@ -124,17 +125,17 @@ plate({
 });
 
 plate({
-  name: "Bastion plate", rarity: "rare", text: "Starts every fight Guarded.",
+  name: "Bastion plate", rarity: "rare", text: "Defense +1. Starts every fight Guarded.", stats: [st("defense", 1)],
   rule: { text: "Starts every fight Guarded.", body: { reactions: [when({ event: "fight_start" }, give("guard", "holder"))] } },
   tags: [at("landslide", 2, 3), at("toll", 2, 2), at("bonfire", null, 2)],
 });
 plate({
-  name: "Hoarfrost plate", rarity: "rare", text: "Foes that hit the wearer gain 2 Chill.",
+  name: "Hoarfrost plate", rarity: "rare", text: "HP +1. Foes that hit the wearer gain 2 Chill.", stats: [st("max_hp", 1)],
   rule: { text: "Foes that hit the wearer gain 2 Chill.", body: { reactions: [when({ event: "hit_taken" }, give("chill", "other", FLAT_STACKS.few))] } },
   tags: [at("toll", 2, 3), at("snap", null, 2), at("lockdown", null, 1)],
 });
 plate({
-  name: "Challenger's plate", rarity: "rare", text: "Taunts when the fight starts, and again whenever an ally falls.",
+  name: "Challenger's plate", rarity: "rare", text: "Aggro +1. Taunts when the fight starts, and again whenever an ally falls.", stats: [st("aggro", 1)],
   rule: {
     text: "Taunts when the fight starts, and again whenever an ally falls.",
     body: { reactions: [when({ event: "fight_start" }, give("taunt", "holder")), when({ event: "ko", whose: "ally" }, give("taunt", "holder"))] },
@@ -144,7 +145,7 @@ plate({
 
 plate({
   name: "Rubble plate", rarity: "legendary",
-  text: "When the wearer's Shield breaks, every foe takes damage equal to the most that Shield held since it last broke, and a Shield of a quarter of that is rebuilt.",
+  text: "Defense +1. When the wearer's Shield breaks, every foe takes damage equal to the most that Shield held since it last broke, and a Shield of a quarter of that is rebuilt.", stats: [st("defense", 1)],
   rule: {
     text: "When the wearer's Shield breaks, every foe takes damage equal to the most that Shield held since it last broke, and a Shield of a quarter of that is rebuilt.",
     body: {
@@ -155,13 +156,13 @@ plate({
   tags: [at("landslide", 3, 3), at("toll", null, 2)],
 });
 plate({
-  name: "Thornheart plate", rarity: "legendary", text: "Each hit the wearer takes adds 1 Spite (+15 Thorns a stack, up to 20) for the rest of the fight.",
+  name: "Thornheart plate", rarity: "legendary", text: "Thorns 150. Each hit the wearer takes adds 1 Spite (+15 Thorns a stack, up to 20) for the rest of the fight.", stats: [sp("thorns", "medium")],
   rule: { text: "Each hit the wearer takes adds 1 Spite (+15 Thorns a stack, up to 20) for the rest of the fight.", body: { reactions: [when({ event: "hit_taken" }, give("spite", "holder", FLAT_STACKS.one))] } },
   tags: [at("toll", 3, 3), at("landslide", null, 1)],
 });
 plate({
   name: "Last bastion", rarity: "legendary",
-  text: "Once a fight, a blow that would knock the wearer out leaves it at 1 HP and Guarded instead. Until it's healed back above half its HP, its hits deal double. After a won fight, it's at no less than a fifth of its HP.",
+  text: "HP +1. Once a fight, a blow that would knock the wearer out leaves it at 1 HP and Guarded instead. Until it's healed back above half its HP, its hits deal double. After a won fight, it's at no less than a fifth of its HP.", stats: [st("max_hp", 1)],
   rule: {
     text: "Once a fight, a blow that would knock the wearer out leaves it at 1 HP and Guarded instead. Until it's healed back above half its HP, its hits deal double. After a won fight, it's at no less than a fifth of its HP.",
     body: {
@@ -183,7 +184,7 @@ plate({
   tags: [at("phoenix", 3, 2), at("pact", 3, 2), at("toll", null, 2)],
 });
 
-// ─── Mail (Paladin, Valkyrie, Vampire, Hexer, Bramble knight) ─────────────────
+// ─── Mail (Paladin, Valkyrie, Vampire, Hexer, Bramble knight, Frostweaver) ─────
 
 mail({ name: "Inscribed hauberk", rarity: "common", text: "Attack +1, HP +1.", stats: [st("attack", 1), st("max_hp", 1)], tags: first("lockdown", "bonfire", "cuts") });
 mail({ name: "Lamprey mail", rarity: "common", text: "HP +1, Lifesteal 10%.", stats: [st("max_hp", 1), sp("lifesteal", "medium")], tags: first("pact", "cuts") });
@@ -223,7 +224,7 @@ mail({
 });
 
 mail({
-  name: "Static mail", rarity: "rare", text: "Foes that hit the wearer gain 2 Shock.",
+  name: "Static mail", rarity: "rare", text: "Attack +1. Foes that hit the wearer gain 2 Shock.", stats: [st("attack", 1)],
   rule: { text: "Foes that hit the wearer gain 2 Shock.", body: { reactions: [when({ event: "hit_taken" }, give("shock", "other", FLAT_STACKS.few))] } },
   tags: [at("toll", 2, 3), at("harvest", null, 1)],
 });
@@ -235,15 +236,15 @@ mail({
   tags: [at("toll", 1, 3), at("toll", 2, 3), at("phoenix", null, 2), at("bonfire", null, 1)],
 });
 mail({
-  name: "Bloodsworn mail", rarity: "rare", text: "Below half its HP, the wearer has Lifesteal 10% and its hits deal a quarter more.",
+  name: "Bloodsworn mail", rarity: "rare", text: "HP +1. Below half its HP, the wearer has Lifesteal 10% and its hits deal a quarter more.", stats: [st("max_hp", 1)],
   rule: { text: "Below half its HP, the wearer has Lifesteal 10% and its hits deal a quarter more.", body: { reactions: whileHp("bloodsworn_mail_on", true) } },
   more: [state("bloodsworn_mail_on", "BLOODSWORN", "Lifesteal 10%, and its hits deal a quarter more.", { stats: [sp("lifesteal", "medium")], boosts: both(25) })],
   tags: [at("pact", 2, 3), at("phoenix", 2, 2)],
 });
 
 mail({
-  name: "Sanguine mail", rarity: "legendary", text: "Below half its HP, healing the wearer receives is doubled. Above half, it's halved.",
-  stats: [{ stat: "healing_received", flat: -50 }],
+  name: "Sanguine mail", rarity: "legendary", text: "HP +1. Below half its HP, healing the wearer receives is doubled. Above half, it's halved.",
+  stats: [st("max_hp", 1), { stat: "healing_received", flat: -50 }],
   rule: { text: "Below half its HP, healing the wearer receives is doubled. Above half, it's halved.", body: { reactions: whileHp("sanguine_mail_on", true) } },
   // On top of the piece's −50: +100 in all, double.
   more: [state("sanguine_mail_on", "SANGUINE", "Healing it receives is doubled.", { stats: [{ stat: "healing_received", flat: 150 }] })],
@@ -251,7 +252,7 @@ mail({
 });
 mail({
   name: "Mantle of the fallen", rarity: "legendary",
-  text: "When an ally falls, the wearer is Hasted and Guarded and gains 4 Might. When an ally is revived, the wearer heals it for a third of its max HP.",
+  text: "Attack +1. When an ally falls, the wearer is Hasted and Guarded and gains 4 Might. When an ally is revived, the wearer heals it for a third of its max HP.", stats: [st("attack", 1)],
   rule: {
     text: "When an ally falls, the wearer is Hasted and Guarded and gains 4 Might. When an ally is revived, the wearer heals it for a third of its max HP.",
     body: {
@@ -264,13 +265,13 @@ mail({
   tags: [at("phoenix", 3, 3), at("toll", null, 1)],
 });
 mail({
-  name: "Hexweave mail", rarity: "legendary", text: "The wearer's hits deal 10% more to a foe for each debuff it holds.",
+  name: "Hexweave mail", rarity: "legendary", text: "Attack +1. The wearer's hits deal 10% more to a foe for each debuff it holds.", stats: [st("attack", 1)],
   // A count of the target's debuffs (markers never count; Marked does).
   rule: { text: "The wearer's hits deal 10% more to a foe for each debuff it holds.", body: { boosts: both({ scale: [{ ratio: 10, count: "debuffs", of: "target" }] }) } },
   tags: [at("lockdown", 3, 2), at("bonfire", null, 2), at("snap", null, 2), at("toll", null, 2)],
 });
 
-// ─── Leather (Ranger, Monk, Assassin, Bard, Valkyrie) ─────────────────────────
+// ─── Leather (Ranger, Monk, Assassin, Bard, Valkyrie, Stormcaller) ────────────
 
 leather({ name: "Tumbler's vest", rarity: "common", text: "Evasion 20, Attack +1.", stats: [sp("evasion", "medium"), st("attack", 1)], tags: first("cuts", "toll") });
 leather({ name: "Footpad's jerkin", rarity: "common", text: "Crit chance +3%, Attack +1.", stats: [critStep(1), st("attack", 1)], tags: first("ambush", "hunt") });
@@ -305,7 +306,7 @@ leather({
   tags: [at("toll", 2, 3), at("cuts", 2, 2)],
 });
 leather({
-  name: "Shadow cloak", rarity: "rare", text: "Hidden when the fight starts. The wearer's hits deal half again as much while it's Hidden.",
+  name: "Shadow mantle", rarity: "rare", text: "Crit chance +3%. Hidden when the fight starts. The wearer's hits deal half again as much while it's Hidden.", stats: [critStep(1)],
   rule: {
     text: "Hidden when the fight starts. The wearer's hits deal half again as much while it's Hidden.",
     body: { reactions: [when({ event: "fight_start" }, give("hidden", "holder"))], boosts: both({ scale: [{ ratio: 50, when: { has: "hidden" }, of: "holder" }] }) },
@@ -330,7 +331,7 @@ leather({
   tags: [at("cuts", 3, 3), at("toll", 3, 2)],
 });
 leather({
-  name: "Pack leader's coat", rarity: "legendary", text: "When the wearer lands a killing blow, every ally's next basic attack comes at once.",
+  name: "Pack leader's coat", rarity: "legendary", text: "Attack +1. When the wearer lands a killing blow, every ally's next basic attack comes at once.", stats: [st("attack", 1)],
   rule: {
     text: "When the wearer lands a killing blow, every ally's next basic attack comes at once.",
     // A kill the holder landed (`other: holder`); the basic attack's timer made ready.
@@ -339,7 +340,7 @@ leather({
   tags: [at("hunt", 3, 3), at("ambush", null, 2), at("harvest", null, 1)],
 });
 leather({
-  name: "Frostwalker's furs", rarity: "legendary", text: "When a foe's Chill shatters, the wearer is Hasted, and its next hit adds a Chill to every foe.",
+  name: "Frostwalker's furs", rarity: "legendary", text: "Evasion 20. When a foe's Chill shatters, the wearer is Hasted, and its next hit adds a Chill to every foe.", stats: [sp("evasion", "medium")],
   rule: {
     text: "When a foe's Chill shatters, the wearer is Hasted, and its next hit adds a Chill to every foe.",
     body: { reactions: [when({ event: "status_capped", status: "chill", whose: "foe" }, give("haste", "holder"), give("frostwalkers_furs_on", "holder"))] },
@@ -395,7 +396,7 @@ robes({
 });
 
 robes({
-  name: "Kindled robes", rarity: "rare", text: "While any foe has Burn, the wearer gains 1 Heat every 4 ticks (+3% damage a stack, up to 15) for the rest of the fight.",
+  name: "Kindled robes", rarity: "rare", text: "Attack +1. While any foe has Burn, the wearer gains 1 Heat every 4 ticks (+3% damage a stack, up to 15) for the rest of the fight.", stats: [st("attack", 1)],
   rule: {
     text: "While any foe has Burn, the wearer gains 1 Heat every 4 ticks (+3% damage a stack, up to 15) for the rest of the fight.",
     // A pulse with an `if`: it does nothing on a beat when no foe burns.
@@ -409,7 +410,7 @@ robes({
   tags: [at("overflow", 2, 2), at("lockdown", null, 2), at("phoenix", null, 2)],
 });
 robes({
-  name: "Weaver's robes", rarity: "rare", text: "When an ally finishes casting an ability, the wearer's next ability costs a fifth less MP.",
+  name: "Weaver's robes", rarity: "rare", text: "MP regen +1. When an ally finishes casting an ability, the wearer's next ability costs a fifth less MP.", stats: [st("mp_regen", 1)],
   rule: {
     text: "When an ally finishes casting an ability, the wearer's next ability costs a fifth less MP.",
     body: { reactions: [when({ event: "action_resolve", kind: "ability", whose: "ally" }, give("weavers_robes_on", "holder"))] },
@@ -427,7 +428,7 @@ robes({
 
 robes({
   name: "Archmage's mantle", rarity: "legendary",
-  text: "The wearer's abilities cost half again as much MP, deal half again as much damage, heal half again as much, and add half again as many stacks.",
+  text: "MP +1. The wearer's abilities cost half again as much MP, deal half again as much damage, heal half again as much, and add half again as many stacks.", stats: [st("max_mp", 1)],
   rule: {
     text: "The wearer's abilities cost half again as much MP, deal half again as much damage, heal half again as much, and add half again as many stacks.",
     // Ability changes to the cost, the heals and every Intensity status its abilities apply; a boost on its abilities' hits.
@@ -436,7 +437,7 @@ robes({
   tags: [at("overflow", 3, 3), at("bonfire", null, 2), at("harvest", null, 2)],
 });
 robes({
-  name: "Stormweave", rarity: "legendary", text: "Each of the wearer's actions that hits three or more foes adds 1 Surge (+5% damage a stack, up to 10) for the rest of the fight.",
+  name: "Stormweave", rarity: "legendary", text: "Attack +1. Each of the wearer's actions that hits three or more foes adds 1 Surge (+5% damage a stack, up to 10) for the rest of the fight.", stats: [st("attack", 1)],
   rule: {
     text: "Each of the wearer's actions that hits three or more foes adds 1 Surge (+5% damage a stack, up to 10) for the rest of the fight.",
     // The `countAtLeast` filter: the count of foes the action's hits landed on.
@@ -445,7 +446,7 @@ robes({
   tags: [at("harvest", 3, 3), at("snap", null, 1)],
 });
 robes({
-  name: "Vestments of return", rarity: "legendary", text: "While the wearer stands, every ally revived comes back behind a Shield of half its max HP.",
+  name: "Vestments of return", rarity: "legendary", text: "MP regen +1. While the wearer stands, every ally revived comes back behind a Shield of half its max HP.", stats: [st("mp_regen", 1)],
   rule: {
     text: "While the wearer stands, every ally revived comes back behind a Shield of half its max HP.",
     body: { reactions: [when({ event: "revived", whose: "ally" }, give("shield", "owner", share(STATUS.shield.capShare, "max_hp", "target")))] },
@@ -533,29 +534,29 @@ amulet({
 });
 
 amulet({
-  name: "Millstone", rarity: "rare", text: "Basic attacks come half as often and deal two and a quarter times as much.",
-  stats: [{ stat: "attack_speed", flat: -100 }],
+  name: "Millstone", rarity: "rare", text: "Attack +1. Basic attacks come half as often and deal two and a quarter times as much.",
+  stats: [st("attack", 1), { stat: "attack_speed", flat: -100 }],
   rule: { text: "Basic attacks deal two and a quarter times as much.", body: { boosts: [{ tag: "basic", pct: 125 }] } },
   tags: [at("landslide", 2, 3), at("ambush", null, 1), at("lockdown", null, 1)],
 });
 amulet({
-  name: "Hummingbird charm", rarity: "rare", text: "Basic attacks come twice as often and deal 45% as much.",
-  stats: [{ stat: "attack_speed", flat: 100 }],
+  name: "Hummingbird charm", rarity: "rare", text: "Evasion 20. Basic attacks come twice as often and deal 45% as much.",
+  stats: [sp("evasion", "medium"), { stat: "attack_speed", flat: 100 }],
   rule: { text: "Basic attacks deal 45% as much.", body: { boosts: [{ tag: "basic", pct: -55 }] } },
   tags: [at("cuts", 2, 3), at("snap", null, 2), at("bonfire", null, 2)],
 });
 amulet({
-  name: "Echo charm", rarity: "rare", text: "The wearer's extra strikes apply what its basic attacks apply: statuses and on-hit effects. Not damage boosts or Lifesteal.",
+  name: "Echo charm", rarity: "rare", text: "Attack +1. The wearer's extra strikes apply what its basic attacks apply: statuses and on-hit effects. Not damage boosts or Lifesteal.", stats: [st("attack", 1)],
   rule: { text: "The wearer's extra strikes apply what its basic attacks apply: statuses and on-hit effects. Not damage boosts or Lifesteal.", body: { echo: true } },
   tags: [at("cuts", 2, 3), at("bonfire", null, 1), at("toll", null, 1), at("snap", null, 1)],
 });
 amulet({
-  name: "Opportunist's charm", rarity: "rare", text: "Hits on a Stunned or Silenced foe deal a third more.",
+  name: "Opportunist's charm", rarity: "rare", text: "Crit chance +3%. Hits on a Stunned or Silenced foe deal a third more.", stats: [critStep(1)],
   rule: { text: "Hits on a Stunned or Silenced foe deal a third more.", body: { boosts: both({ scale: [{ ratio: 33, when: { hasAny: ["stun", "silence"] }, of: "target" }] }) } },
   tags: [at("lockdown", 2, 3), at("snap", null, 2), at("landslide", null, 1)],
 });
 amulet({
-  name: "Bounty charm", rarity: "rare", text: "When the wearer lands a killing blow, it gains 2 Might and its next basic attack comes at once.",
+  name: "Bounty charm", rarity: "rare", text: "Attack +1. When the wearer lands a killing blow, it gains 2 Might and its next basic attack comes at once.", stats: [st("attack", 1)],
   rule: {
     text: "When the wearer lands a killing blow, it gains 2 Might and its next basic attack comes at once.",
     body: { reactions: [when({ event: "ko", whose: "foe", other: "holder" }, give("might", "holder", FLAT_STACKS.few), { op: "cooldown", which: "basic", set: "ready", to: "holder" })] },
@@ -563,7 +564,7 @@ amulet({
   tags: [at("hunt", 2, 3), at("ambush", null, 1), at("bonfire", null, 1)],
 });
 amulet({
-  name: "Martyr's locket", rarity: "rare", text: "When the wearer falls, every other ally heals a fifth of its max HP and is Hasted.",
+  name: "Martyr's locket", rarity: "rare", text: "HP +1. When the wearer falls, every other ally heals a fifth of its max HP and is Hasted.", stats: [st("max_hp", 1)],
   rule: {
     text: "When the wearer falls, every other ally heals a fifth of its max HP and is Hasted.",
     // It survives the knockout to answer it; the fallen wearer isn't among the living allies.
@@ -573,13 +574,13 @@ amulet({
 });
 
 amulet({
-  name: "Heart of winter", rarity: "legendary", text: "Every hit the wearer lands adds a Chill.",
+  name: "Heart of winter", rarity: "legendary", text: "Attack +1. Every hit the wearer lands adds a Chill.", stats: [st("attack", 1)],
   rule: { text: "Every hit the wearer lands adds a Chill.", body: { reactions: [when({ event: "hit_lands" }, give("chill", "other", FLAT_STACKS.one))] } },
   // "Cuts → Snap (the door)": the way from one into the other.
   tags: [at("snap", 3, 3), at("lockdown", null, 2), at("cuts", null, 1)],
 });
 amulet({
-  name: "Ember heart", rarity: "legendary", text: "When a burning foe falls, every other foe gains a third of its Burn.",
+  name: "Ember heart", rarity: "legendary", text: "Attack +1. When a burning foe falls, every other foe gains a third of its Burn.", stats: [st("attack", 1)],
   rule: {
     text: "When a burning foe falls, every other foe gains a third of its Burn.",
     // The dying foe's Burn ends (cause ko) before its ko event, with its stacks as the amount.
@@ -588,8 +589,8 @@ amulet({
   tags: [at("bonfire", 3, 2), at("harvest", 3, 2)],
 });
 amulet({
-  name: "Phoenix ember", rarity: "legendary", text: "HP −1. Once a fight, when the wearer falls, it stands up 4 ticks later with a fifth of its HP.",
-  stats: [st("max_hp", -1)],
+  name: "Phoenix ember", rarity: "legendary", text: "Attack +1, HP −1. Once a fight, when the wearer falls, it stands up 4 ticks later with a fifth of its HP.",
+  stats: [st("attack", 1), st("max_hp", -1)],
   rule: {
     text: "Once a fight, when the wearer falls, it stands up 4 ticks later with a fifth of its HP.",
     // A fallen unit can't gain a status, so its fall schedules its own return (a revive on a timer) unless the marker is there,
@@ -607,9 +608,9 @@ amulet({
   tags: [at("phoenix", 3, 3), at("pact", null, 2)],
 });
 amulet({
-  name: "Ready stance", rarity: "legendary", text: "The wearer's abilities start every fight at least half charged. Its cooldowns are a fifth longer.",
+  name: "Ready stance", rarity: "legendary", text: "Attack +1. The wearer's abilities start every fight at least half charged. Its cooldowns are a fifth longer.",
   // −16.7 makes cooldowns ×1.2, a fifth longer, as the card and the spine say (cooldowns ÷ (1 + stat/100)); −20 would be ×1.25.
-  stats: [{ stat: "cooldown_reduction", flat: -16.7 }],
+  stats: [st("attack", 1), { stat: "cooldown_reduction", flat: -16.7 }],
   rule: {
     text: "The wearer's abilities start every fight at least half charged.",
     body: { reactions: [when({ event: "fight_start" }, { op: "cooldown", which: "abilities", set: { atMost: 50 }, to: "holder" })] },
@@ -619,7 +620,7 @@ amulet({
 });
 amulet({
   name: "Blood covenant", rarity: "legendary",
-  text: "The wearer's abilities cost HP in place of MP: the same share of its max HP as they'd cost of its max MP. It won't cast one that would leave it below a tenth of its HP.",
+  text: "HP +1. The wearer's abilities cost HP in place of MP: the same share of its max HP as they'd cost of its max MP. It won't cast one that would leave it below a tenth of its HP.", stats: [st("max_hp", 1)],
   rule: {
     text: "The wearer's abilities cost HP in place of MP: the same share of its max HP as they'd cost of its max MP. It won't cast one that would leave it below a tenth of its HP.",
     // Free of MP, and the cost paid as an HP price, a share of max HP, waiting rather than going below a tenth.
@@ -629,7 +630,7 @@ amulet({
 });
 amulet({
   name: "Gambler's coin", rarity: "legendary",
-  text: "The wearer's crit chance is about 50%. Its hits that don't crit deal half; its crits deal what a crit always does. Hits that always crit still do.",
+  text: "Attack +1. The wearer's crit chance is about 50%. Its hits that don't crit deal half; its crits deal what a crit always does. Hits that always crit still do.", stats: [st("attack", 1)],
   rule: {
     text: "The wearer's crit chance is about 50%. Its hits that don't crit deal half; its crits deal what a crit always does. Hits that always crit still do.",
     // `set` fixes the chance after every other stat change (Bedrock doesn't double it); crit rules add after it, hence

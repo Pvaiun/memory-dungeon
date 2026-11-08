@@ -4,7 +4,7 @@
  */
 import type { GearT, NumT, StatusT, WeaponT } from "../../../src/schema.js";
 import { weaponKinds } from "../vocabulary.js";
-import { FOCUS, KIND_SPEED, P, PER_PERCENT, SPECIAL, SPECIAL_KEY, STACKS, SWING_REF, WEAPON, crit, isFocus, stepFor, type Level, type SpecialLevel, type SpecialStat, type StackWord } from "../scale.js";
+import { KIND_BUDGET, KIND_WORDS, P, SPECIAL, SPECIAL_KEY, STACKS, SWING_TRADE, crit, stepFor, swingOf, type KindWords, type SpecialLevel, type SpecialStat, type StackWord } from "../scale.js";
 
 /** An item's id from its name: lower case, apostrophes dropped, every other run of non-letters and non-digits an underscore. */
 export const idOf = (name: string): string =>
@@ -18,11 +18,37 @@ export const sp = (s: SpecialStat, level: SpecialLevel): Change => ({ stat: SPEC
 /** Crit chance in steps: +1 is 3 points, +2 is 5. */
 export const critStep = (n: number): Change => ({ stat: "crit_chance", flat: crit(n) });
 
-/** A weapon's hit: its kind's speed factor × (base + ratio × stat), the same rule as the plain weapons. A focus kind swings lighter (scale.ts FOCUS). */
-export function weaponHit(kind: string, base: Level = isFocus(kind) ? FOCUS.base : "medium", ratio: Level = isFocus(kind) ? FOCUS.ratio : "medium", stat = "attack"): NumT {
-  const f = KIND_SPEED[kind] / SWING_REF;
-  return { base: Math.round(f * WEAPON.base[base]), scale: [{ ratio: f * WEAPON.ratio[ratio] * (PER_PERCENT[stat] ?? 1), stat }] };
+/**
+ * A weapon's hit: its kind's swing by its words (scale.ts KIND_WORDS), the same rule as the plain weapons. A piece may step along
+ * the trade (`trade`: a heavier swing for a step fewer, a lighter one for a step more, scale.ts SWING_TRADE), take a different
+ * scaling, or swing from another stat in place of Attack (the Heartsplitter's max HP).
+ */
+export function weaponHit(kind: string, o: Partial<KindWords> & { trade?: Trade; stat?: string } = {}): NumT {
+  const n = swingOf(kind, o, o.stat ?? "attack") as Exclude<NumT, number>;
+  if (!o.trade) return n;
+  const m = o.trade === "heavy" ? SWING_TRADE : 1 / SWING_TRADE;
+  return { base: Math.round((n.base ?? 0) * m), scale: n.scale.map((t) => ({ ...t, ratio: Math.round(t.ratio * m * 1e6) / 1e6 })) };
 }
+export type Trade = "heavy" | "light";
+/** The stat steps a kind's pieces carry at a rarity (scale.ts KIND_BUDGET), a step fewer for a heavy piece and one more for a light one. */
+export const budgetOf = (kind: string, rarity: Rarity, trade?: Trade): number =>
+  rarity === "mythic" ? 0 : Math.max(0, KIND_BUDGET[KIND_WORDS[kind].budget][rarity] + (trade === "heavy" ? -1 : trade === "light" ? 1 : 0));
+/**
+ * How many steps a piece's stats are: an amount stat's steps (HP's half points, Aggro's tens, MP regen's own), Crit chance's
+ * table, a special stat at medium one and at high two. A stat that shapes a piece (the Worldbreaker's slow swing) or a price
+ * (the Phoenix ember's HP) counts none; Aggro down counts, since the casters want it.
+ */
+export function stepsOf(stats: readonly Change[] = []): number {
+  let n = 0;
+  for (const c of stats) {
+    if (c.stat === "crit_chance") n += c.flat >= crit(2) ? 2 : c.flat > 0 ? 1 : 0;
+    else if (c.stat in SPECIAL_LEVELS) n += c.flat >= SPECIAL_LEVELS[c.stat].high ? 2 : c.flat >= SPECIAL_LEVELS[c.stat].medium ? 1 : 0;
+    else if (c.stat === "aggro") n += Math.round(Math.abs(c.flat) / stepFor(c.stat)); // Aggro down is a step the casters want.
+    else if (["max_hp", "max_mp", "mp_regen", "attack", "defense"].includes(c.stat) && c.flat > 0) n += Math.round(c.flat / stepFor(c.stat));
+  }
+  return n;
+}
+const SPECIAL_LEVELS: Record<string, { medium: number; high: number }> = Object.fromEntries((Object.keys(SPECIAL) as SpecialStat[]).map((s) => [SPECIAL_KEY[s], SPECIAL[s]]));
 
 /** Stacks from the holder's stat, read when a piece's status fires (a passive's words: a few 0.7 a point, several 1.3, many 2.3). */
 export const own = (word: StackWord, stat: string, mult = 1): NumT => ({ scale: [{ ratio: (mult * STACKS[word]) / P, stat, of: "holder" }] });
@@ -45,8 +71,10 @@ type PieceOpts = {
   stats?: Change[];
   /** The piece's statuses, given at every fight's start (piece statuses: buffs on the sheet, unremovable). */
   statuses?: string[];
-  /** Weapons: the hit (default medium, medium from Attack, lighter for a focus kind), and anything else the weapon states (riders, apply, a mythic's own cooldown). */
+  /** Weapons: the hit (default: its kind's swing by its words), and anything else the weapon states (riders, apply, a mythic's own cooldown). */
   weapon?: Partial<WeaponT>;
+  /** Weapons: a step along the trade. heavy: a harder swing for a stat step fewer; light: a lighter swing for one more. The card says it. */
+  trade?: Trade;
   /** A mythic: the one class it fits. */
   mythic?: string;
   note?: string;
@@ -66,7 +94,17 @@ export function piece(o: PieceOpts): GearT {
   };
   if (o.slot === "weapon") {
     const kind = o.weapon?.kind ?? o.kind;
-    g.weapon = { ...(kind ? { kind } : {}), amount: kind ? weaponHit(kind) : 0, ...o.weapon } as WeaponT;
+    g.weapon = { ...(kind ? { kind } : {}), amount: kind ? weaponHit(kind, { trade: o.trade }) : 0, ...o.weapon } as WeaponT;
+    // Every piece carries its kind's steps at its rarity (the director's rule: stats at every rarity, and the kind's budget says how many).
+    if (kind && o.rarity !== "mythic" && stepsOf(o.stats) !== budgetOf(kind, o.rarity, o.trade)) {
+      throw new Error(`${o.name}: a ${o.rarity} ${kind} carries ${budgetOf(kind, o.rarity, o.trade)} stat steps, not ${stepsOf(o.stats)}`);
+    }
+  } else if (o.rarity !== "mythic") {
+    // An offhand, armor or amulet has no swing to trade against: the standard budget, exact for an offhand's kind and a common or
+    // uncommon of any slot; a rare or legendary armor or amulet carries at least its step beside the effect that is its shape.
+    const want = KIND_BUDGET.standard[o.rarity], have = stepsOf(o.stats);
+    const exact = o.slot === "offhand" || o.rarity === "common" || o.rarity === "uncommon";
+    if (exact ? have !== want : have < want) throw new Error(`${o.name}: a ${o.rarity} ${o.slot} carries ${exact ? "" : "at least "}${want} stat steps, not ${have}`);
   }
   (g as GearT & { rarity?: Rarity }).rarity = o.rarity;
   return g;

@@ -1,6 +1,6 @@
 # Engine primitives
 
-Generated from `src/schema.ts` (schema 0.10) by `npm run docs`. Do not edit by hand.
+Generated from `src/schema.ts` (schema 0.11) by `npm run docs`. Do not edit by hand.
 
 The engine runs the core set's combat system (`docs/core-set/rules-and-vocabulary.md`); where that document is silent, what the engine does stands. This is the closed set of building blocks it runs on. Each needs engine code, so adding one is a schema version bump plus an engine change. Stats, weapon kinds, armor types, offhand kinds, statuses, abilities and everything else are registries in the pack, and grow without touching the schema. The numbers in the content are first values, placeholders until the balance pass.
 
@@ -212,6 +212,7 @@ Its `of`:
 | `tag` | Only hits carrying this tag (basic, ability, extra, physical, area). |
 | `when` | Only hits on a unit that passes this, read as the hit lands. |
 | `chance` | Points added to the hit's crit chance, after every stat change (100: it always crits, whatever else holds, Gambler's coin included). |
+| `times` | The hit's crit chance, after every stat change, is multiplied by this before any `chance` is added (3: tripled against the foes `when` names). |
 | `bonus` | Percent more crit bonus, the part of the crit multiplier above ×1: 100 makes ×1.5 into ×2. |
 
 ## Effect kinds (for immunity, removal and conditions)

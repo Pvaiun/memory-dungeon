@@ -10,12 +10,16 @@ Where a rule and a design document disagree, this page wins and the document get
 - **The rogue mode is the game** (`docs/core-set/rogue-mode.md`). Free play is the sandbox.
 - **A few numerical systems:** mechanics map onto stats, statuses, damage types, flags and targeting. No bespoke words acting as locks. No battlefield geometry (no rows, no reach) and no positional targeting.
 - **A class is a unit:** a party holds at most one of each, three to a party.
-- **Bad choices are part of a roguelike.** Weak options (Raise, Valhalla) are rolled like any other.
+- **A class has a trunk and three identities, and each identity is viable:** its versions split toward them, every identity has at least two, and no identity is the class. No two classes share a base ability, and a passive works in every fight.
+- **Bad choices are part of a roguelike.** Weak options (Raise, a revive learned first) are rolled like any other.
 
 ## Combat
 
 - **One kind of hit.** Every hit meets Evasion and Defense (the Path of Exile formula). A status's own damage (Burn, Shock, Bleed, Chill's shatter, Thorns) is untyped: Evasion and Defense never meet it, and it's the one way past them. There are no elements and no subtypes of hit as mechanics: an element is a theme only (names, art, a class's flavour).
-- **Every amount states its own scaling,** and nothing scales by default. Attack is the one offensive stat, and anything can scale from any stat.
+- **Every amount states its own scaling,** and nothing scales by default. Attack is the one offensive stat, and anything can scale from any stat. Everything scales from the user, never the target; revives excepted.
+- **The three speed stats are stats like any other,** in class lines and on gear: Attack speed, Cooldown, Cast speed.
+- **The Chill class doesn't Slow:** Slow is a player status like any other, but no Frostweaver ability applies it, and no ability triggers a shatter: Chill is its slow and detonates itself.
+- **A status runs its own course.** No ability spends, shortens or sets off a status early; a payoff reads the stacks and leaves them.
 - **A status scales by its stacks, never by its applier.** The applier sets only how many stacks it adds. A Burn stack is a Burn stack, whoever applied it, and a status's damage belongs to its holder (no lifesteal from it).
 - **Statuses are universal:** nothing applies a status for less or more than its own length. The one exception is bosses' control resistance (Stun, Silence and Slow, Chill's stun included): hidden stacks shorten them and then make the boss immune, and the stacks fall over time.
 - **MP costs are set by hand on each ability,** with no rule from a stat to a cost.
@@ -31,6 +35,9 @@ The philosophy behind these lines, and the director's intent in their words, are
 - **What a build asks is a range,** from what most runs find, giving back a little, to specific pieces giving back far more. It pays something before it's complete. It can be reached by more than one route, and pieces form a web, not bundles. There's room for exotics and chaos: a run finds its build in what it's given.
 - **A good piece is worth a lot somewhere and little elsewhere.** A piece strong everywhere gives something up, designed for it. The best choices are between things good for different builds.
 - **Gear has four slots** (weapon, armor, offhand, amulet), and slots have no job. Only weapons carry inherent behaviour (a speed, a swing and hands). Every class has an offhand and a one-handed weapon. The amulet fits everyone. A mythic fits one class.
+- **Weapon and offhand kinds follow one set of rules:** at most three classes a kind, two kinds a class, two classes share at most one kind of a slot, and every wearer reads the kind's signature stat, so every piece of a kind is relevant to every class that can wear it. Armor types stay the four weight classes. Accuracy is never a signature stat; Attack is never the signature of an Attack-heavy kind.
+- **A weapon kind is its words:** how hard it swings per tick, how much of that is the wearer's Attack, and how many stats its pieces carry; a kind pays for its swing in stats or the other way round, a two-hander takes both sides, and a piece may step along the trade. The interface shows a weapon's damage per tick.
+- **Every piece carries stats at every rarity,** and higher rarity is generally better.
 - **A card says what a piece does and who can wear it** (FITS), never what it's "for": signposting ruins discovery. Every effect is phrased so the player knows what will happen.
 - **Rarity is mostly specificity:** how far a piece bends the game. Power grows by act but stays narrow. Rare and legendary pieces have no random affixes, and lower tiers carry effects too.
 - **Plenty of loot:** better too much than not enough.

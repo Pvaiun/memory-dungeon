@@ -7,13 +7,13 @@ export const routes: Route[] = [
   }, [
     ["heavy_line", [
       ["ranger", "bruiser", [], g("recurve_bow", "footpads_jerkin", null, "whetstone")],
-      ["hexer", "holder", [], g("keen_dirk", "inscribed_hauberk", "night_mask", "wasp_charm")],
-      ["frostweaver", "free", [], g("sleet_rod", "magisters_robe", "snowbound_folio", "moonstone")],
+      ["hexer", "holder", [], g("whipcrack_wand", "inscribed_hauberk", "night_mask", "wasp_charm")],
+      ["frostweaver", "free", [], g("sleet_blade", "magisters_robe", "snowbound_folio", "moonstone")],
     ]],
     ["hoarfrost_line", [
-      ["hexer", "frost_a", [v("cold_hex", "b")], g("keen_dirk", "inscribed_hauberk", "night_mask", "hummingbird_charm")],
+      ["hexer", "frost_a", [v("cold_hex", "b")], g("whipcrack_wand", "inscribed_hauberk", "night_mask", "hummingbird_charm")],
       ["ranger", "frost_b", [v("frost_arrow", "b")], g("frostbite_bow", "footpads_jerkin", null, "whetstone")],
-      ["frostweaver", "breaker", [v("frost_lance", "b"), v("blizzard", "b")], g("sleet_rod", "magisters_robe", "primer_of_frost", "opportunists_charm")],
+      ["frostweaver", "breaker", [v("frost_lance", "b"), v("blizzard", "b")], g("sleet_blade", "magisters_robe", "primer_of_frost", "opportunists_charm")],
     ]],
     ["hoarfrost_line", [
       ["hexer", "frost_a", [vp("cold_hex", "b")], g("the_witch_blade", "hexweave_mail", "night_mask", "hummingbird_charm")],
@@ -22,7 +22,7 @@ export const routes: Route[] = [
     ]],
   ]),
   route("snap", "monk-bard-frostweaver", "The director's run: the Frostweaver between a Monk and a Bard carrying Chill on their weapons.", {
-    monk: ["burning_fist", "flow", "pressure_point"], bard: ["allegro", "war_ballad", "thunder_chord"], frostweaver: ["frost_lance", "blizzard", "stillness"],
+    monk: ["burning_fist", "flow", "pressure_point"], bard: ["allegro", "war_ballad", "encore"], frostweaver: ["frost_lance", "blizzard", "stillness"],
   }, [
     ["heavy_line", [
       ["monk", "bruiser", [], g("wildcat_claws", "tumblers_vest", "temple_bell", "wasp_charm")],
@@ -44,12 +44,12 @@ export const routes: Route[] = [
     geomancer: ["tremor", "rockfall", "earthen_shell"], monk: ["burning_fist", "flow", "pressure_point"], hexer: ["malison", "enfeeble", "unmake"],
   }, [
     ["heavy_line", [
-      ["geomancer", "bruiser", [], g("bearded_axe", "ironclad", null, "whetstone")],
+      ["geomancer", "bruiser", [], g("bardiche", "ironclad", null, "whetstone")],
       ["monk", "holder", [], g("wildcat_claws", "tumblers_vest", "temple_bell", "wasp_charm")],
-      ["hexer", "free", [], g("keen_dirk", "inscribed_hauberk", "night_mask", "moonstone")],
+      ["hexer", "free", [], g("whipcrack_wand", "inscribed_hauberk", "night_mask", "moonstone")],
     ]],
     ["hoarfrost_line", [
-      ["hexer", "frost_a", [v("cold_hex", "b")], g("keen_dirk", "inscribed_hauberk", "night_mask", "hummingbird_charm")],
+      ["hexer", "frost_a", [v("cold_hex", "b")], g("whipcrack_wand", "inscribed_hauberk", "night_mask", "hummingbird_charm")],
       ["monk", "frost_b", [v("burning_fist", "a")], g("rime_knuckles", "tumblers_vest", "temple_bell", "wasp_charm")],
       ["geomancer", "breaker", [v("tremor", "b")], g("icebreaker", "hoarfrost_plate", null, "opportunists_charm")],
     ]],

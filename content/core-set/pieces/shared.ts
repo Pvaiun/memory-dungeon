@@ -1,9 +1,10 @@
 /**
- * The statuses several content files use, defined once: the spine's one new word, Marked, and its seven counters. Each counter
- * is one status with one fixed meaning, an icon with a number on its holder, kept for the fight. A piece decides who gets one
- * and when; never what it does.
+ * The statuses several content files use, defined once: the spine's seven counters. Each counter is one status with one
+ * fixed meaning, an icon with a number on its holder, kept for the fight. A piece decides who gets one and when; never what
+ * it does. Marked, which the pieces also use, is the vocabulary's.
  */
 import type { StatusT } from "../../../src/schema.js";
+import { vocabulary } from "../vocabulary.js";
 
 const both = (pct: number) => [{ tag: "physical", pct }];
 const counter = (id: string, name: string, text: string, body: Partial<StatusT>): StatusT =>
@@ -33,11 +34,7 @@ export const counters: StatusT[] = [
   counter("charge", "CHARGE", "Hits saved for one blow.", { cap: COUNTER.charge.cap, unremovable: false }),
 ];
 
-/**
- * Marked: a debuff on a foe, 14 ticks, Refresh. The party's basic attacks pick a Marked foe (by draw among several) inside the
- * Taunt rule; each unit keeps one Mark, so a new one it applies moves its old one (the status's `focus` and `single`).
- */
-export const MARKED = { duration: 14 } as const;
-export const marked: StatusT = { id: "marked", name: "MARKED", text: "The party's basic attacks go to it.", label: "debuff", show: "icon", stacking: "refresh", duration: MARKED.duration, focus: true, single: true };
+/** Marked is the vocabulary's (a class applies it: the Paladin's Condemn); the pieces and formations reach it here. */
+export const marked: StatusT = vocabulary.find((s) => s.id === "marked")!;
 
-export const sharedStatuses: StatusT[] = [...counters, marked];
+export const sharedStatuses: StatusT[] = [...counters];

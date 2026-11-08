@@ -1,8 +1,10 @@
 /**
- * The ten offhand kinds' 80 pieces.
+ * The thirteen offhand kinds' 104 pieces, by the weapon rules (steps/class-identity: Offhand kinds): each kind two or three
+ * classes that all read its signature stat, every class two kinds. An offhand has no swing, so a kind is its stat profile, its
+ * flavour and who shares it; every piece carries the standard budget of steps at its rarity (kit.ts), leaning to the profile.
  * `gear` joins the pack's gear and the rogue's stock; `statuses` the pack's statuses; `builds` is designer data, never in the pack.
  *
- * Each kind in the spine's order: two commons, two uncommons, two rares, two legendaries. Every number is a word from scale.ts.
+ * Each kind in the vocabulary's order: two commons, two uncommons, two rares, two legendaries. Every number is a word from scale.ts.
  * The hooks are the engine's primitives (PRIMITIVES.md). A heal given reads the healed ally as `owner`; a fallen unit gains no
  * status, so the Vial of the last breath marks itself when it stands again, and tests `lacks` on the fall. Marked, Heat and
  * Fervor are shared.ts's.
@@ -100,7 +102,7 @@ function offhand(kind: string, rarity: Rarity, name: string, o: { stats?: Change
   builds[id] = tags(o.builds);
 }
 
-// ─── Kite shield (Knight, Paladin) ──────────────────────────────────────────
+// ─── Kite shield (Knight, Paladin, Geomancer): Defense; HP, Aggro, Thorns, Attack ──
 
 offhand("kite_shield", "common", "Pavise", { stats: [st("defense", 2)], says: "Defense +2.", builds: "Landslide 1 ●, Toll 1 ●" });
 offhand("kite_shield", "common", "Banner kite", { stats: [st("max_hp", 1), st("aggro", 1)], says: "HP +1, Aggro +1.", builds: "Toll 1 ●, Landslide 1 ●" });
@@ -122,14 +124,14 @@ offhand("kite_shield", "rare", "Rubble shield", {
   builds: "Lockdown 2 ●●●, Landslide 2 ●●, Toll ●",
 });
 offhand("kite_shield", "rare", "Humbling shield", {
-  does: "The first time each foe hits its holder, that foe is Weakened.",
+  stats: [st("max_hp", 1)], says: "HP +1.", does: "The first time each foe hits its holder, that foe is Weakened.",
   status: { reactions: [{ on: on("hit_taken"), if: { unit: "other", where: { lacks: "humbling_shield_humbled" } }, do: [apply("weaken", "other"), apply("humbling_shield_humbled", "other")] }] },
   more: [marker("humbling_shield_humbled", "Humbled", "Already Weakened by a Humbling shield this fight.")],
   builds: "Toll 2 ●●●, Lockdown ●●, Pact ●",
 });
 // Thorns read live from Defense (a `live` stat change), so Guard counts the moment it lands.
 offhand("kite_shield", "legendary", "Spiked bulwark", {
-  does: "Thorns from its holder's Defense: each foe that hits it takes a twentieth of its Defense back.",
+  stats: [st("defense", 1)], says: "Defense +1.", does: "Thorns from its holder's Defense: each foe that hits it takes a twentieth of its Defense back.",
   status: { stats: [{ stat: "thorns", flat: { scale: [{ ratio: 0.05, stat: "defense", of: "holder" }] }, live: true }] },
   builds: "Toll 3 ●●●, Landslide 3 ●●●",
 });
@@ -139,7 +141,7 @@ offhand("kite_shield", "legendary", "Oathbound shield", {
   builds: "Toll 2 ●●, Bonfire 2 ●●, Phoenix ●●, Lockdown ●",
 });
 
-// ─── Round shield (Hoplite, Valkyrie) ───────────────────────────────────────
+// ─── Round shield (Hoplite, Bramble knight, Valkyrie): HP; Defense, Attack, Aggro, Crit chance ──
 
 offhand("round_shield", "common", "Bronze buckler", { stats: [st("defense", 1), st("attack", 1)], says: "Defense +1, Attack +1.", builds: "Landslide 1 ●, Hunt 1 ●" });
 offhand("round_shield", "common", "Linden shield", { stats: [st("max_hp", 2)], says: "HP +2.", builds: "Toll 1 ●, Pact 1 ●" });
@@ -168,7 +170,7 @@ offhand("round_shield", "rare", "Hunter's buckler", {
 // holder) is revived; it ends with the holder.
 const phalanxAura: ReactionT["do"] = [apply("phalanx_shield_aura", { side: "others", where: { lower: { stat: "defense" } }, pick: "all" })];
 offhand("round_shield", "legendary", "Phalanx shield", {
-  does: "While its holder stands, allies with less Defense than it take a fifth less damage. Its holder deals a fifth less.",
+  stats: [st("max_hp", 1)], says: "HP +1.", does: "While its holder stands, allies with less Defense than it take a fifth less damage. Its holder deals a fifth less.",
   status: {
     boosts: [{ tag: "physical", pct: -20 }],
     reactions: [
@@ -183,7 +185,7 @@ offhand("round_shield", "legendary", "Phalanx shield", {
 // The fallen ally by rule: the validator asks a revive's rule for ko, so `to: owner` (the unit that just fell) can't be written.
 // With another ally already down from an earlier fight, the raise can land on either.
 offhand("round_shield", "legendary", "Shield of the chosen", {
-  does: "Once a fight, when another ally falls, its holder raises it at once with a tenth of its HP.",
+  stats: [st("max_hp", 1)], says: "HP +1.", does: "Once a fight, when another ally falls, its holder raises it at once with a tenth of its HP.",
   status: {
     reactions: [{
       on: on("ko", { whose: "ally" }), if: notYet("shield_of_the_chosen_spent"),
@@ -194,7 +196,7 @@ offhand("round_shield", "legendary", "Shield of the chosen", {
   builds: "Phoenix 3 ●●●",
 });
 
-// ─── Horn (Knight, Bard) ────────────────────────────────────────────────────
+// ─── Horn (Knight, Hoplite): Aggro; HP, Defense, Attack, MP regen ────────────
 
 offhand("horn", "common", "Ram's horn", { stats: [st("aggro", 1), st("attack", 1)], says: "Aggro +1, Attack +1.", builds: "Toll 1 ●, Landslide 1 ●" });
 offhand("horn", "common", "Ivory horn", { stats: [st("mp_regen", 1), st("attack", 1)], says: "MP regen +1, Attack +1.", builds: "Overflow 1 ●, Harvest 1 ●" });
@@ -212,19 +214,19 @@ offhand("horn", "uncommon", "Bull's horn", {
 });
 // By `swing`: the slowest basic attack is the highest.
 offhand("horn", "rare", "War horn", {
-  does: "At the start of every fight, the ally with the slowest basic attack gains many Might.",
+  stats: [st("aggro", 1)], says: "Aggro +1.", does: "At the start of every fight, the ally with the slowest basic attack gains many Might.",
   status: { reactions: [{ on: on("fight_start"), do: [apply("might", { side: "allies", pick: "highest", by: "swing" }, FLAT_STACKS.many)] }] },
   builds: "Landslide 2 ●●●, Ambush 2 ●●",
 });
 const echo: EffectT[] = [{ op: "mp", amount: share(0.05, "max_mp", "target"), to: R.leastMp }];
 offhand("horn", "rare", "Echo horn", {
-  does: "Each time an ally finishes casting an ability, the ally with the least MP gains a little MP.",
+  stats: [st("mp_regen", 1)], says: "MP regen +1.", does: "Each time an ally finishes casting an ability, the ally with the least MP gains a little MP.",
   status: { reactions: [{ on: on("action_resolve", { kind: "ability" }), do: echo }, { on: on("action_resolve", { whose: "ally", kind: "ability" }), do: echo }] },
   builds: "Overflow 2 ●●●, Lockdown ●, Bonfire ●",
 });
 // Every ally's basic attack ready at once; the holder's abilities on their full cooldowns.
 offhand("horn", "legendary", "Horn of the charge", {
-  does: "At the start of every fight, every ally is Hasted and its first action comes at once. Its holder starts every fight with every ability on cooldown.",
+  stats: [st("max_hp", 1)], says: "HP +1.", does: "At the start of every fight, every ally is Hasted and its first action comes at once. Its holder starts every fight with every ability on cooldown.",
   status: {
     reactions: [{
       on: on("fight_start"),
@@ -236,7 +238,7 @@ offhand("horn", "legendary", "Horn of the charge", {
 // It survives its holder's fall, so it rings for that fall too.
 const rally: EffectT[] = [apply("haste", R.allies), apply("shield", R.allies, share(0.2, "max_hp", "target"))];
 offhand("horn", "legendary", "Rallying horn", {
-  does: "When an ally falls (its holder too), every ally still standing gains Haste and a Shield. When an ally is revived, it gains many Might.",
+  stats: [st("defense", 1)], says: "Defense +1.", does: "When an ally falls (its holder too), every ally still standing gains Haste and a Shield. When an ally is revived, it gains many Might.",
   status: {
     survivesKO: true,
     reactions: [
@@ -249,10 +251,10 @@ offhand("horn", "legendary", "Rallying horn", {
   builds: "Phoenix 3 ●●●, Toll ●",
 });
 
-// ─── Tome (Frostweaver, Bard) ───────────────────────────────────────────────
+// ─── Tome (Bard, Hexer, Frostweaver): Cooldown; Attack, MP, MP regen, Cast speed ──
 
 offhand("tome", "common", "Scholar's codex", { stats: [st("attack", 2)], says: "Attack +2.", builds: "Snap 1 ●, Harvest 1 ●" });
-offhand("tome", "common", "Hymnal", { stats: [st("max_mp", 1), st("mp_regen", 1)], says: "MP +1, MP regen +1.", builds: "Overflow 1 ●" });
+offhand("tome", "common", "Hymnal", { stats: [sp("cooldown", "medium"), st("mp_regen", 1)], says: "Cooldown medium, MP regen +1.", builds: "Overflow 1 ●" });
 offhand("tome", "uncommon", "Snowbound folio", {
   stats: [st("attack", 1)], says: "Attack +1.", does: "At the start of every fight, every foe gains a few Chill.",
   status: { reactions: [{ on: on("fight_start"), do: [apply("chill", R.foes, own("few", "attack"))] }] },
@@ -266,7 +268,7 @@ offhand("tome", "uncommon", "Abridged lexicon", {
 // A boost on its Chill that reads the foe receiving it, a quarter for every four stacks held (6.25% a stack). "One more stack
 // for every four" would be an absolute add, which no field gives, so the card says it as the engine does.
 offhand("tome", "rare", "Primer of frost", {
-  does: "Each time its holder adds Chill to a foe, it adds a quarter more for every four stacks the foe already holds.",
+  stats: [sp("cooldown", "medium")], says: "Cooldown medium.", does: "Each time its holder adds Chill to a foe, it adds a quarter more for every four stacks the foe already holds.",
   status: { boosts: [{ tag: "chill", pct: { scale: [{ ratio: 6.25, stacks: "chill", of: "target" }] } }] },
   builds: "Snap 2 ●●●",
 });
@@ -279,7 +281,7 @@ offhand("tome", "rare", "Treatise on the field", {
 });
 // Untyped damage of all its HP and Shield: not a hit, and nothing reacts to it as one. Every fall it causes checks again.
 offhand("tome", "legendary", "Last page", {
-  does: "When a foe falls, every foe below a tenth of its HP falls too.",
+  stats: [st("attack", 1)], says: "Attack +1.", does: "When a foe falls, every foe below a tenth of its HP falls too.",
   status: {
     reactions: [{
       on: on("ko", { whose: "foe" }),
@@ -291,7 +293,7 @@ offhand("tome", "legendary", "Last page", {
 // The `amountAtLeast` filter: only a cast that paid MP makes a free one, so a cast it made free doesn't make another. The
 // token is a marker, so no Dispel takes it; any ally's next ability spends every copy.
 offhand("tome", "legendary", "Annotated grimoire", {
-  does: "Each ability its holder pays for makes the next ability any ally casts free.",
+  stats: [sp("cooldown", "medium")], says: "Cooldown medium.", does: "Each ability its holder pays for makes the next ability any ally casts free.",
   status: { reactions: [{ on: on("action_resolve", { kind: "ability", amountAtLeast: 1 }), do: [apply("annotated_grimoire_free", R.allies)] }] },
   more: [marker("annotated_grimoire_free", "Free cast", "Its next ability costs no MP.", {
     mods: [{ mp: -100 }],
@@ -300,10 +302,10 @@ offhand("tome", "legendary", "Annotated grimoire", {
   builds: "Overflow 3 ●●●, Lockdown ●●",
 });
 
-// ─── Lantern (Paladin, Pyromancer) ──────────────────────────────────────────
+// ─── Lantern (Cleric, Pyromancer): Cast speed; Attack, MP, HP, Cooldown ────────
 
 offhand("lantern", "common", "Brass lantern", { stats: [st("attack", 1), st("max_hp", 1)], says: "Attack +1, HP +1.", builds: "Bonfire 1 ●, Harvest 1 ●" });
-offhand("lantern", "common", "Hooded lantern", { stats: [st("max_mp", 2)], says: "MP +2.", builds: "Overflow 1 ●, Bonfire 1 ●" });
+offhand("lantern", "common", "Hooded lantern", { stats: [st("max_mp", 1), sp("cast_speed", "medium")], says: "MP +1, Cast speed medium.", builds: "Overflow 1 ●, Bonfire 1 ●" });
 offhand("lantern", "uncommon", "Pitch lantern", {
   stats: [st("attack", 1)], says: "Attack +1.", does: "At the start of every fight, every foe gains a few Burn.",
   status: { reactions: [{ on: on("fight_start"), do: [apply("burn", R.foes, own("few", "attack"))] }] },
@@ -317,19 +319,19 @@ offhand("lantern", "uncommon", "Dazzling lantern", {
 });
 // Reads the foe's Burn: under one stack on a foe that holds none, nothing lands, so it needs no test.
 offhand("lantern", "rare", "Bellows lantern", {
-  does: "Each hit its holder lands on a burning foe adds Burn: a tenth of what the foe holds.",
+  stats: [sp("cast_speed", "medium")], says: "Cast speed medium.", does: "Each hit its holder lands on a burning foe adds Burn: a tenth of what the foe holds.",
   status: { reactions: [{ on: on("hit_lands"), do: [apply("burn", "other", { scale: [{ ratio: 0.1, stacks: "burn", of: "target" }] })] }] },
   builds: "Bonfire 2 ●●●",
 });
 // The `notTags: [area]` filter: an ability aimed at every foe would mark them all, which marks nothing.
 offhand("lantern", "rare", "Signal lantern", {
-  does: "A foe its holder hits with an ability is Marked. Abilities that hit every foe don't Mark.",
+  stats: [st("attack", 1)], says: "Attack +1.", does: "A foe its holder hits with an ability is Marked. Abilities that hit every foe don't Mark.",
   status: { reactions: [{ on: on("hit_lands", { kind: "ability", notTags: ["area"] }), do: [apply("marked", "other")] }] },
   builds: "Hunt 2 ●●, Bonfire ●●",
 });
 // A foe's statuses end (cause ko) just before its ko, carrying the stacks they held.
 offhand("lantern", "legendary", "Wick", {
-  does: "When a burning foe falls, all its Burn passes to the foe with the most HP, and its holder gains Heat.",
+  stats: [sp("cast_speed", "medium")], says: "Cast speed medium.", does: "When a burning foe falls, all its Burn passes to the foe with the most HP, and its holder gains Heat.",
   status: {
     reactions: [{
       on: on("status_ended", { whose: "foe", status: "burn", cause: ["ko"] }),
@@ -340,12 +342,12 @@ offhand("lantern", "legendary", "Wick", {
 });
 // Only a standing holder's lamp acts: its status doesn't survive a fall.
 offhand("lantern", "legendary", "Lamp of vigil", {
-  does: "After each won fight, one fallen ally stands up with a quarter of its HP.",
+  stats: [st("max_hp", 1)], says: "HP +1.", does: "After each won fight, one fallen ally stands up with a quarter of its HP.",
   status: { reactions: [{ on: on("fight_won"), do: [{ op: "revive", hp: share(0.25, "max_hp", "target"), to: R.fallen }] }] },
   builds: "Phoenix 2 ●●●, Pact ●",
 });
 
-// ─── Relic (Cleric, Valkyrie) ───────────────────────────────────────────────
+// ─── Relic (Cleric, Paladin): MP regen; HP, Attack, Cast speed, Defense ─────────
 
 offhand("relic", "common", "Shrine token", { stats: [st("mp_regen", 2)], says: "MP regen +2.", builds: "Overflow 1 ●, Phoenix 1 ●" });
 offhand("relic", "common", "Blessed knot", { stats: [st("attack", 1), st("max_hp", 1)], says: "Attack +1, HP +1.", builds: "Pact 1 ●, Phoenix 1 ●" });
@@ -363,33 +365,33 @@ offhand("relic", "uncommon", "Charnel icon", {
   builds: "Hunt 1 ●, Pact 1 ●, Phoenix 1 ●",
 });
 offhand("relic", "rare", "Saint's knucklebone", {
-  does: "Each time one of its holder's abilities heals an ally, that ally gains a few Might.",
+  stats: [st("mp_regen", 1)], says: "MP regen +1.", does: "Each time one of its holder's abilities heals an ally, that ally gains a few Might.",
   status: { reactions: [{ on: healGiven({ kind: "ability" }), do: [apply("might", "owner", own("few", "attack"))] }] },
   builds: "Pact 2 ●●●, Phoenix ●, Toll ●",
 });
 // An MP and wind-up change on its abilities that revive.
 offhand("relic", "rare", "Reliquary of mercy", {
-  does: "Its holder's revives cost half their MP and wind up in a moment.",
+  stats: [sp("cast_speed", "medium")], says: "Cast speed medium.", does: "Its holder's revives cost half their MP and wind up in a moment.",
   status: { mods: [{ of: { does: ["revive"] }, mp: -50, cast: 1 }] },
   builds: "Phoenix 2 ●●●, Ambush ●",
 });
 // Overhealing from every heal the holder gives, its Lifesteal and the Regens it applied included.
 offhand("relic", "legendary", "Phylactery", {
-  does: "The part of its holder's heals that would go past full becomes a Shield on the healed ally.",
+  stats: [st("max_hp", 1)], says: "HP +1.", does: "The part of its holder's heals that would go past full becomes a Shield on the healed ally.",
   status: { reactions: [{ on: on("overhealed", { whose: "any", other: "holder" }), do: [apply("shield", "owner", ofAmount(1))] }] },
   builds: "Pact 3 ●●●, Landslide ●●, Phoenix ●●",
 });
-// A reviver's rule: it wins over Einherjar's readiness.
+// A reviver's rule: it wins over the Einherjar version's readiness.
 offhand("relic", "legendary", "Bones of the returned", {
-  does: "Allies its holder revives come back with all their HP, and with every ability on full cooldown.",
+  stats: [st("mp_regen", 1)], says: "MP regen +1.", does: "Allies its holder revives come back with all their HP, and with every ability on full cooldown.",
   status: { revives: { ready: false, hp: share(1, "max_hp", "target") } },
   builds: "Phoenix 3 ●●, Pact ●",
 });
 
-// ─── Bell (Monk, Cleric, Stormcaller) ───────────────────────────────────────
+// ─── Bell (Bard, Monk, Stormcaller): Attack speed; Attack, Evasion, Double strike, MP regen ──
 
 offhand("bell", "common", "Temple bell", { stats: [sp("evasion", "medium"), st("attack", 1)], says: "Evasion medium, Attack +1.", builds: "Cuts 1 ●, Toll 1 ●" });
-offhand("bell", "common", "Prayer bell", { stats: [st("mp_regen", 1), st("attack", 1)], says: "MP regen +1, Attack +1.", builds: "Overflow 1 ●, Harvest 1 ●" });
+offhand("bell", "common", "Prayer bell", { stats: [sp("attack_speed", "medium"), st("attack", 1)], says: "Attack speed medium, Attack +1.", builds: "Cuts 1 ●, Harvest 1 ●" });
 // A dodge that pays, not a Haste at the start (the fist weapons').
 offhand("bell", "uncommon", "Quickening chime", {
   stats: [sp("evasion", "medium")], says: "Evasion medium.", does: "Each time its holder dodges a hit, its next basic attack comes a little sooner.",
@@ -410,31 +412,31 @@ offhand("bell", "uncommon", "Waking bell", {
 });
 // By `swing`, the slowest first. No fallback when every other ally is Hasted, so two Tempo bells can't pass Haste back and forth.
 offhand("bell", "rare", "Tempo bell", {
-  does: "Each time its holder gains Haste, the other ally with the slowest basic attack that isn't Hasted gains it too.",
+  stats: [sp("attack_speed", "medium")], says: "Attack speed medium.", does: "Each time its holder gains Haste, the other ally with the slowest basic attack that isn't Hasted gains it too.",
   status: { reactions: [{ on: on("status_gained", { status: "haste" }), do: [apply("haste", { side: "others", where: { lacks: "haste" }, pick: "highest", by: "swing" })] }] },
   builds: "Cuts 2 ●●●, Overflow ●",
 });
 const warding = everySoOften("warding_bell", "Warding bell", [{ op: "remove", label: "debuff", count: 1, to: { side: "allies", where: { debuffs: true }, pick: "highest", by: "debuffs" } }]);
 offhand("bell", "rare", "Warding bell", {
-  does: "Every so often, it lifts one debuff from the ally holding the most.",
+  stats: [st("mp_regen", 1)], says: "MP regen +1.", does: "Every so often, it lifts one debuff from the ally holding the most.",
   status: { reactions: warding.reactions }, more: warding.more,
   builds: "Toll 2 ●●, Lockdown ●, Pact ●",
 });
 // The ability with the `longest` cooldown left: 5 ticks closer each beat.
 const hour = everySoOften("bell_of_the_hour", "Bell of the hour", [{ op: "cooldown", which: "longest", set: { less: 5 }, to: "holder" }]);
 offhand("bell", "legendary", "Bell of the hour", {
-  does: "Every so often, its holder's ability with the longest cooldown left comes a few ticks closer.",
+  stats: [sp("attack_speed", "medium")], says: "Attack speed medium.", does: "Every so often, its holder's ability with the longest cooldown left comes a few ticks closer.",
   status: { reactions: hour.reactions }, more: hour.more,
   builds: "Overflow 3 ●●, Lockdown 3 ●●, Cuts ●",
 });
 // It survives its holder's fall, so it rings for that fall too; once down, it's silent until its holder is revived.
 offhand("bell", "legendary", "Funeral bell", {
-  does: "When any unit falls, friend or foe, every ally still standing gains Fervor. It rings for its holder's own fall too.",
+  stats: [st("attack", 1)], says: "Attack +1.", does: "When any unit falls, friend or foe, every ally still standing gains Fervor. It rings for its holder's own fall too.",
   status: { survivesKO: true, reactions: [{ on: on("ko", { whose: "any" }), do: [apply("fervor", R.allies, FLAT_STACKS.one)] }] },
   builds: "Phoenix 3 ●●●, Hunt ●●, Harvest ●",
 });
 
-// ─── Totem (Bramble knight, Ranger, Geomancer) ──────────────────────────────
+// ─── Totem (Bramble knight, Stormcaller): Thorns; Defense, Aggro, HP, Attack ────
 
 offhand("totem", "common", "Standing stone", { stats: [st("defense", 2)], says: "Defense +2.", builds: "Landslide 1 ●, Toll 1 ●" });
 offhand("totem", "common", "Hawthorn fetish", { stats: [st("attack", 1), sp("thorns", "medium")], says: "Attack +1, Thorns medium.", builds: "Toll 1 ●, Hunt 1 ●" });
@@ -454,12 +456,12 @@ offhand("totem", "uncommon", "Bear fetish", {
   builds: "Toll 1 ●, Pact 1 ●, Phoenix 1 ●",
 });
 offhand("totem", "rare", "Briar totem", {
-  does: "Foes that hit its holder gain a few Bleed.",
+  stats: [sp("thorns", "medium")], says: "Thorns medium.", does: "Foes that hit its holder gain a few Bleed.",
   status: { reactions: [{ on: on("hit_taken"), do: [apply("bleed", "other", own("few", "defense"))] }] },
   builds: "Toll 2 ●●●, Cuts ●",
 });
 offhand("totem", "rare", "Stone totem", {
-  does: "Its holder starts every fight behind a Shield from its Defense.",
+  stats: [st("defense", 1)], says: "Defense +1.", does: "Its holder starts every fight behind a Shield from its Defense.",
   status: { reactions: [{ on: on("fight_start"), do: [apply("shield", "holder", { scale: [{ ratio: 0.5, stat: "defense", of: "holder" }] })] }] },
   builds: "Landslide 2 ●●●, Ambush ●●",
 });
@@ -471,7 +473,7 @@ offhand("totem", "rare", "Stone totem", {
 const earthmotherAura: ReactionT["do"] = [apply("earthmother_totem_aura", R.allies)];
 const brokenShield = (whose: "holder" | "ally"): ReactionT => ({ on: on("status_ended", { whose, status: "shield", cause: ["stacks"] }), do: [apply("might", "owner", FLAT_STACKS.few)] });
 offhand("totem", "legendary", "Earthmother totem", {
-  does: "While its holder stands, every Shield an ally gains is a third larger. When an ally's Shield breaks, that ally gains a few Might.",
+  stats: [st("max_hp", 1)], says: "HP +1.", does: "While its holder stands, every Shield an ally gains is a third larger. When an ally's Shield breaks, that ally gains a few Might.",
   status: {
     reactions: [
       { on: on("fight_start"), do: earthmotherAura },
@@ -484,18 +486,14 @@ offhand("totem", "legendary", "Earthmother totem", {
   more: [given("earthmother_totem_aura", "Earthmother", "The Shields it gives are a third larger while the Earthmother totem's holder stands.", { perSource: { endsWithSource: true }, boosts: [{ tag: "shield", pct: 33 }] })],
   builds: "Landslide 3 ●●●, Phoenix ●●, Toll ●",
 });
-offhand("totem", "legendary", "Wild hunt totem", {
-  does: "Its holder's basic attacks Mark their target. Each time a foe falls, every ally gains a few Might.",
-  status: {
-    reactions: [
-      { on: on("hit_lands", { kind: "basic" }), do: [apply("marked", "other")] },
-      { on: on("ko", { whose: "foe" }), do: [apply("might", R.allies, FLAT_STACKS.few)] },
-    ],
-  },
-  builds: "Hunt 3 ●●●, Ambush ●",
+// The live wire: a hit on its holder shocks the whole field (one stack each, flat, so a swarm pays as a boss does).
+offhand("totem", "legendary", "Thunderhead totem", {
+  stats: [st("aggro", 1)], says: "Aggro +1.", does: "Each hit its holder takes adds a Shock to every foe.",
+  status: { reactions: [{ on: on("hit_taken"), do: [apply("shock", R.foes, FLAT_STACKS.one)] }] },
+  builds: "Toll 3 ●●●, Harvest ●●",
 });
 
-// ─── Vial (Assassin, Vampire) ───────────────────────────────────────────────
+// ─── Vial (Vampire, Assassin): Lifesteal; Attack, Crit chance, Crit damage, HP ──
 
 offhand("vial", "common", "Red tincture", { stats: [sp("lifesteal", "medium"), st("attack", 1)], says: "Lifesteal medium, Attack +1.", builds: "Pact 1 ●, Cuts 1 ●" });
 offhand("vial", "common", "Hemlock phial", { stats: [critStep(1), st("attack", 1)], says: "Crit +1, Attack +1.", builds: "Ambush 1 ●, Hunt 1 ●, Cuts 1 ●" });
@@ -512,20 +510,20 @@ offhand("vial", "uncommon", "Crimson dregs", {
 });
 // Half the MP, and an HP price equal to the full cost, never below 1.
 offhand("vial", "rare", "Blood vial", {
-  does: "Its holder's abilities cost half their MP, plus HP equal to their full cost. The HP price never takes it below 1 HP.",
+  stats: [st("max_hp", 1)], says: "HP +1.", does: "Its holder's abilities cost half their MP, plus HP equal to their full cost. The HP price never takes it below 1 HP.",
   status: { mods: [{ mp: -50, hp: { pct: 100 } }] },
   builds: "Pact 2 ●●●, Phoenix ●",
 });
 // A crit rule: two crit steps on a bleeding foe.
 offhand("vial", "rare", "Venom vial", {
-  does: "Its holder's crits add several Bleed, and it crits more often on a bleeding foe.",
+  stats: [sp("crit_damage", "medium")], says: "Crit damage medium.", does: "Its holder's crits add several Bleed, and it crits more often on a bleeding foe.",
   status: { reactions: [{ on: on("hit_lands", { tags: ["crit"] }), do: [apply("bleed", "other", own("several", "attack"))] }], crits: [{ when: { has: "bleed" }, chance: crit(2) }] },
   builds: "Cuts 2 ●●, Hunt ●●, Ambush ●",
 });
 // A revive on a timer. A fallen unit gains no status, so it marks itself when its own return stands it up (a revive it gave
 // itself, not an ally's Raise), and tests `lacks` on the fall.
 offhand("vial", "legendary", "Vial of the last breath", {
-  does: "Once a fight, when its holder falls, it stands up a few ticks later with a third of its HP.",
+  stats: [st("max_hp", 1)], says: "HP +1.", does: "Once a fight, when its holder falls, it stands up a few ticks later with a third of its HP.",
   status: {
     survivesKO: true,
     reactions: [
@@ -538,7 +536,7 @@ offhand("vial", "legendary", "Vial of the last breath", {
 });
 // It pays down to half at the fight's start (an HP price, not damage). The doubling is Bloodlust's own pattern, so on the Vampire the two multiply.
 offhand("vial", "legendary", "Bloodlust draught", {
-  does: "Its holder starts every fight at half its HP (it pays), and its Lifesteal is doubled until it's full.",
+  stats: [sp("lifesteal", "medium")], says: "Lifesteal medium.", does: "Its holder starts every fight at half its HP (it pays), and its Lifesteal is doubled until it's full.",
   status: {
     reactions: [{
       on: on("fight_start"),
@@ -556,7 +554,7 @@ offhand("vial", "legendary", "Bloodlust draught", {
   builds: "Pact 3 ●●●, Cuts ●",
 });
 
-// ─── Idol (Hexer, Vampire) ──────────────────────────────────────────────────
+// ─── Idol (Hexer, Vampire): Siphon; Attack, HP, MP, Lifesteal ──────────────────
 
 offhand("idol", "common", "Night mask", { stats: [sp("siphon", "medium"), st("attack", 1)], says: "Siphon medium, Attack +1.", builds: "Overflow 1 ●, Pact 1 ●" });
 offhand("idol", "common", "Carved effigy", { stats: [st("max_hp", 2)], says: "HP +2.", builds: "Pact 1 ●, Toll 1 ●" });
@@ -567,13 +565,14 @@ offhand("idol", "uncommon", "Carrion idol", {
 });
 // Rot on crits, not a small Siphon on crits (that would be a small Leech idol).
 offhand("idol", "uncommon", "Fanged idol", {
-  stats: [critStep(1)], says: "Crit +1.", does: "Its holder's crits Rot their target.",
+  stats: [sp("lifesteal", "medium")], says: "Lifesteal medium.", does: "Its holder's crits Rot their target.",
   status: { reactions: [{ on: on("hit_lands", { tags: ["crit"] }), do: [apply("rot", "other")] }] },
   builds: "Hunt 1 ●, Pact 1 ●",
 });
+// The Weaken on swings is the Hexer's own now (Withering hex); the idol pays for a Weakened foe.
 offhand("idol", "rare", "Withering idol", {
-  does: "Its holder's basic attacks Weaken their target, and its hits on a Weakened foe deal a little more.",
-  status: { reactions: [{ on: on("hit_lands", { kind: "basic" }), do: [apply("weaken", "other")] }], boosts: vs(15, { has: "weaken" }) },
+  stats: [st("attack", 1)], says: "Attack +1.", does: "Its holder's hits on a Weakened foe deal a third more.",
+  status: { boosts: vs(33, { has: "weaken" }) },
   builds: "Toll 2 ●●, Lockdown 2 ●●, Pact ●",
 });
 /**
@@ -592,7 +591,7 @@ offhand("idol", "rare", "Leech idol", {
 });
 // A Weaken the holder applied (`other: holder` on the foe's status_gained). Slow at its own length outlasts the Weaken by 4.
 offhand("idol", "legendary", "Idol of binding", {
-  does: "Foes its holder Weakens are also Slowed, and its hits on a foe that's both deal double.",
+  stats: [sp("siphon", "medium")], says: "Siphon medium.", does: "Foes its holder Weakens are also Slowed, and its hits on a foe that's both deal double.",
   status: {
     reactions: [{ on: on("status_gained", { whose: "foe", status: "weaken", other: "holder" }), do: [apply("slow", "owner")] }],
     boosts: vs(100, { has: ["weaken", "slow"] }),
@@ -602,7 +601,145 @@ offhand("idol", "legendary", "Idol of binding", {
 // The newest buff a foe can lose, moved (`move`) with its stacks and time left. Unremovable buffs (passives, Hidden) stay.
 const hungry = everySoOften("idol_of_the_hungry_dark", "Idol of the hungry dark", [{ op: "remove", label: "buff", count: 1, move: true, to: { side: "foes", where: { buffs: true }, pick: "random" } }]);
 offhand("idol", "legendary", "Idol of the hungry dark", {
-  does: "Every so often, it takes one buff from a foe and gives it to its holder.",
+  stats: [st("max_mp", 1)], says: "MP +1.", does: "Every so often, it takes one buff from a foe and gives it to its holder.",
   status: { reactions: hungry.reactions }, more: hungry.more,
   builds: "",
+});
+
+// ─── Orb (Pyromancer, Frostweaver): MP; Attack, MP regen, Cast speed, Cooldown ─────
+// The mages' MP: for the dearest spells in the set.
+
+offhand("orb", "common", "Glass orb", { stats: [st("max_mp", 2)], says: "MP +2.", builds: "Overflow 1 ●, Bonfire 1 ●" });
+offhand("orb", "common", "Ember orb", { stats: [st("attack", 1), sp("cast_speed", "medium")], says: "Attack +1, Cast speed medium.", builds: "Bonfire 1 ●, Snap 1 ●" });
+// `soonest`: the ability with the least cooldown left that isn't ready yet.
+offhand("orb", "uncommon", "Scrying orb", {
+  stats: [st("max_mp", 1)], says: "MP +1.", does: "At the start of every fight, its holder's ability nearest to ready comes at once.",
+  status: { reactions: [{ on: on("fight_start"), do: [{ op: "cooldown", which: "soonest", set: "ready", to: "holder" }] }] },
+  builds: "Ambush 1 ●, Overflow 1 ●, Snap 1 ●",
+});
+offhand("orb", "uncommon", "Mana pearl", {
+  stats: [st("mp_regen", 1)], says: "MP regen +1.", does: "Each time a foe falls, its holder regains 8% of its max MP.",
+  status: { reactions: [{ on: on("ko", { whose: "foe" }), do: [{ op: "mp", amount: share(0.08, "max_mp", "holder"), to: "holder" }] }] },
+  builds: "Overflow 1 ●, Harvest 1 ●, Bonfire 1 ●",
+});
+offhand("orb", "rare", "Orb of the long winter", {
+  stats: [sp("cooldown", "medium")], says: "Cooldown medium.", does: "When a foe's Chill shatters, its holder's ability with the longest cooldown left comes 8 ticks closer.",
+  status: { reactions: [{ on: on("status_capped", { status: "chill", whose: "foe" }), do: [{ op: "cooldown", which: "longest", set: { less: 8 }, to: "holder" }] }] },
+  builds: "Snap 2 ●●●, Lockdown ●",
+});
+offhand("orb", "rare", "Smouldering orb", {
+  stats: [st("attack", 1)], says: "Attack +1.", does: "When a burning foe falls, every other foe gains a few Burn (from its holder's Attack).",
+  status: { reactions: [{ on: on("status_ended", { whose: "foe", status: "burn", cause: ["ko"] }), do: [apply("burn", { side: "foes", pick: "all", exclude: "owner" }, own("few", "attack"))] }] },
+  builds: "Bonfire 2 ●●●, Harvest ●●",
+});
+// Free while it holds Clarity: the deep calm's far end.
+offhand("orb", "legendary", "The deep well", {
+  stats: [st("max_mp", 1)], says: "MP +1.", does: "While its holder holds Clarity, its abilities cost no MP.",
+  status: { mods: [{ mp: -100, if: { has: "clarity" } }] },
+  builds: "Overflow 3 ●●●, Snap ●●",
+});
+// Once a fight: the first ordinary cast resolves again (a recast); the marker is spent by it.
+offhand("orb", "legendary", "Orb of the second sun", {
+  stats: [sp("cast_speed", "medium")], says: "Cast speed medium.", does: "The first ability its holder casts each fight is cast twice; the second cast is free.",
+  status: { reactions: [{ on: on("fight_start"), do: [apply("orb_of_the_second_sun_ready", "holder")] }] },
+  more: [marker("orb_of_the_second_sun_ready", "Second sun", "Its next ability is cast twice.", {
+    reactions: [{ on: on("action_resolve", { kind: "ability", repeat: false }), do: [{ op: "recast" }, { op: "remove", label: "marker", status: "orb_of_the_second_sun_ready", to: "holder" }] }],
+  })],
+  builds: "Bonfire 3 ●●, Harvest 3 ●●, Overflow ●●",
+});
+
+// ─── Trophy (Ranger, Assassin, Geomancer): Crit damage; Crit chance, Attack, Accuracy, Defense ──
+// A pelt, a skull, a geode: the crit hunters'.
+
+offhand("trophy", "common", "Wolf pelt", { stats: [sp("crit_damage", "medium"), critStep(1)], says: "Crit damage medium, Crit chance +1.", builds: "Hunt 1 ●, Ambush 1 ●" });
+offhand("trophy", "common", "Geode", { stats: [st("defense", 1), st("attack", 1)], says: "Defense +1, Attack +1.", builds: "Landslide 1 ●, Hunt 1 ●" });
+offhand("trophy", "uncommon", "Hunter's skull", {
+  stats: [critStep(1)], says: "Crit chance +1.", does: "Each killing blow its holder lands adds a Heat (+3% damage a stack, up to 15) for the rest of the fight.",
+  status: { reactions: killsByHit({ do: [apply("heat", "holder", FLAT_STACKS.one)] }) },
+  builds: "Hunt 1 ●, Ambush 1 ●",
+});
+offhand("trophy", "uncommon", "Eagle feather", {
+  stats: [sp("accuracy", "medium")], says: "Accuracy medium.", does: "Its holder's crits Slow their target.",
+  status: { reactions: [{ on: on("hit_lands", { tags: ["crit"] }), do: [apply("slow", "other")] }] },
+  builds: "Lockdown 1 ●, Hunt 1 ●",
+});
+offhand("trophy", "rare", "Ogre's tusk", {
+  stats: [sp("crit_damage", "medium")], says: "Crit damage medium.", does: "Its holder's hits on a foe above half its HP deal a third more.",
+  status: { boosts: vs(33, { hpAtLeast: 50 }) },
+  builds: "Ambush 2 ●●●, Landslide ●●",
+});
+offhand("trophy", "rare", "Giant's knucklebone", {
+  stats: [st("defense", 1)], says: "Defense +1.", does: "Its holder's crits Guard it.",
+  status: { reactions: [{ on: on("hit_lands", { tags: ["crit"] }), do: [apply("guard", "holder")] }] },
+  builds: "Landslide 2 ●●●, Toll ●",
+});
+// The crit's follow-through is untyped: past Defense.
+offhand("trophy", "legendary", "Dragon's tooth", {
+  stats: [sp("crit_damage", "medium")], says: "Crit damage medium.", does: "Its holder's crits strike again for a third of their damage, past Defense.",
+  status: { reactions: [{ on: on("hit_lands", { tags: ["crit"] }), do: [{ op: "damage", type: "none", amount: ofAmount(1 / 3), to: "other" }] }] },
+  builds: "Landslide 3 ●●●, Hunt ●●, Ambush ●●",
+});
+offhand("trophy", "legendary", "The king's head", {
+  stats: [critStep(1)], says: "Crit chance +1.", does: "When its holder lands a killing blow, every ally's crit chance is doubled for a while.",
+  status: { reactions: killsByHit({ do: [apply("kings_head_on", R.allies)] }) },
+  more: [given("kings_head_on", "CROWNED", "Crit chance doubled.", { duration: 10, stats: [{ stat: "crit_chance", flat: { scale: [{ ratio: 1, stat: "crit_chance", of: "holder" }] } }] })],
+  builds: "Hunt 3 ●●●, Ambush ●●",
+});
+
+// ─── Cloak (Valkyrie, Monk, Ranger): Evasion; Attack, Crit chance, Attack speed, Defense ──
+// Evasion for the quick: the Valkyrie's is a swan-feather cloak, the Ranger's and Monk's their own.
+
+offhand("cloak", "common", "Traveller's cloak", { stats: [sp("evasion", "medium"), st("attack", 1)], says: "Evasion medium, Attack +1.", builds: "Cuts 1 ●, Hunt 1 ●" });
+offhand("cloak", "common", "Swan-feather cloak", { stats: [sp("evasion", "medium"), st("defense", 1)], says: "Evasion medium, Defense +1.", builds: "Toll 1 ●, Cuts 1 ●" });
+offhand("cloak", "uncommon", "Hooded cloak", {
+  stats: [sp("attack_speed", "medium")], says: "Attack speed medium.", does: "Each time its holder dodges a hit, it gains a few Might (from Attack).",
+  status: { reactions: [{ on: on("hit_evaded"), do: [apply("might", "holder", own("few", "attack"))] }] },
+  builds: "Cuts 1 ●, Toll 1 ●",
+});
+offhand("cloak", "uncommon", "Feathered cloak", {
+  stats: [sp("evasion", "medium")], says: "Evasion medium.", does: "The first time each fight its holder drops below half its HP, it's Hidden.",
+  status: { reactions: [{ on: on("hp_lost"), if: [{ side: "self", where: { hpBelow: 50, lacks: "feathered_cloak_spent" } }], do: [apply("hidden", "holder"), apply("feathered_cloak_spent", "holder")] }] },
+  more: [marker("feathered_cloak_spent", "Feathered cloak (spent)", "Its Hidden is spent this fight.")],
+  builds: "Cuts 1 ●, Phoenix 1 ●, Hunt 1 ●",
+});
+offhand("cloak", "rare", "Dancer's cloak", {
+  stats: [st("attack", 1)], says: "Attack +1.", does: "Each time its holder dodges a hit, its ability nearest to ready comes 3 ticks closer.",
+  status: { reactions: [{ on: on("hit_evaded"), do: [{ op: "cooldown", which: "soonest", set: { less: 3 }, to: "holder" }] }] },
+  builds: "Cuts 2 ●●●, Toll ●●",
+});
+// Bloodlust's pattern, the other way round: more Evasion while its holder is above three quarters.
+offhand("cloak", "rare", "Cloak of leaves", {
+  stats: [sp("evasion", "medium")], says: "Evasion medium.", does: "While its holder is above three quarters of its HP, its Evasion is 15 higher.",
+  status: {
+    reactions: [
+      { on: on("fight_start"), do: [apply("cloak_of_leaves_on", { side: "self", where: { hpAtLeast: 75 } })] },
+      { on: on("revived"), do: [apply("cloak_of_leaves_on", { side: "self", where: { hpAtLeast: 75 } })] },
+      { on: on("healed"), do: [apply("cloak_of_leaves_on", { side: "self", where: { hpAtLeast: 75 } })] },
+      { on: on("hp_lost"), do: [{ op: "remove", label: "buff", status: "cloak_of_leaves_on", to: { side: "self", where: { hpBelow: 75 } } }] },
+    ],
+  },
+  more: [{ id: "cloak_of_leaves_on", name: "LEAVES", text: "Evasion up.", label: "buff", show: "icon", stacking: "fizzle", stats: [{ stat: "evasion", flat: 15 }] }],
+  builds: "Cuts 2 ●●, Hunt ●",
+});
+// An HP floor spent on the first blow it holds; the holder goes Hidden as it's spent.
+offhand("cloak", "legendary", "Swan's grace", {
+  stats: [sp("evasion", "medium")], says: "Evasion medium.", does: "Once a fight, the blow that would knock its holder out leaves it at 1 HP and Hidden.",
+  status: {
+    reactions: [
+      { on: on("fight_start"), do: [apply("swans_grace_floor", "holder")] },
+      { on: on("status_ended", { status: "swans_grace_floor", cause: ["spent"] }), do: [apply("hidden", "holder")] },
+    ],
+  },
+  more: [{ id: "swans_grace_floor", name: "SWAN'S GRACE", text: "The next blow that would knock it out leaves it at 1 HP.", label: "buff", show: "sheet", stacking: "fizzle", unremovable: true, floor: { spend: true } }],
+  builds: "Phoenix 3 ●●●, Cuts ●●, Toll ●",
+});
+// Each dodge: the next swing at once, and it strikes twice (a one-shot strike rule, spent by the swing).
+offhand("cloak", "legendary", "Tempest cloak", {
+  stats: [sp("attack_speed", "medium")], says: "Attack speed medium.", does: "Each time its holder dodges a hit, its next basic attack comes at once and strikes twice.",
+  status: { reactions: [{ on: on("hit_evaded"), do: [{ op: "cooldown", which: "basic", set: "ready", to: "holder" }, apply("tempest_cloak_on", "holder")] }] },
+  more: [{
+    id: "tempest_cloak_on", name: "TEMPEST", text: "Its next basic attack strikes twice.", label: "buff", show: "icon", stacking: "fizzle",
+    strike: { to: "target" }, reactions: [{ on: on("action_resolve", { kind: "basic" }), do: [{ op: "remove", label: "buff", status: "tempest_cloak_on", to: "holder" }] }],
+  }],
+  builds: "Cuts 3 ●●●, Toll ●●",
 });

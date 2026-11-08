@@ -3,7 +3,7 @@
  * Every number comes from scale.ts; the words are the documents'.
  */
 import type { AbilityT, ClassDefT, NumT, StatusT, TargetRuleT } from "../../src/schema.js";
-import { BURN_STACKS, SHOCK_STACKS, COOLDOWN, HIT, REVIVE, SPECIAL, SPECIAL_KEY, STACKS, STATUS, WINDUP, crit, from, jitter, aggroOf, pts, stacks, type HitWord, type SpecialLevel, type SpecialStat, type StackWord } from "./scale.js";
+import { BURN_STACKS, SHOCK_STACKS, COOLDOWN, HIT, KIT, REVIVE, SPECIAL, SPECIAL_KEY, STACKS, STATUS, WINDUP, crit, from, jitter, aggroOf, pts, stacks, type HitWord, type SpecialLevel, type SpecialStat, type StackWord } from "./scale.js";
 import { P } from "./vocabulary.js";
 
 type CD = keyof typeof COOLDOWN;
@@ -32,6 +32,9 @@ export const T = {
   lowestShareAlly: { side: "allies", pick: "lowest", by: "hp_share" } satisfies TargetRuleT,
   otherLowestShareAlly: { side: "others", pick: "lowest", by: "hp_share" } satisfies TargetRuleT,
   highestAMAlly: { side: "allies", pick: "highest", by: { stats: ["attack"] } } satisfies TargetRuleT,
+  otherHighestAMAlly: { side: "others", pick: "highest", by: { stats: ["attack"] } } satisfies TargetRuleT,
+  /** A foe in a wind-up, else the foe with the highest Attack (Unmake, which waits for a cast or a buff). */
+  castingElseHighestAMFoe: { side: "foes", where: { casting: true }, ifNone: "any", pick: "highest", by: { stats: ["attack"] } } satisfies TargetRuleT,
   /** The ally with the least MP, for the Clarity givers. */
   lowestMpAlly: { side: "allies", pick: "lowest", by: "mp_share" } satisfies TargetRuleT,
   /** The ally with the least MP among those under half; with nobody under half, the least all the same (a preference, never a skip). */
@@ -45,6 +48,10 @@ export const T = {
   everyFoe: { side: "foes", pick: "all" } satisfies TargetRuleT,
   everyAlly: { side: "allies", pick: "all" } satisfies TargetRuleT,
 };
+/** Of a hit's or application's target: 1 if it holds the status, else 0 (Malison deepens what a foe already holds). */
+const ifHeld = (status: string): NumT => ({ scale: [{ ratio: 1, when: { has: status }, of: "target" }] });
+/** The afflictions Malison deepens: the built-up statuses, one more stack of each a foe holds. */
+export const DEEPENED = ["burn", "chill", "shock", "sunder"] as const;
 /** The Fizzle rule: skip targets that already hold the status; `ifNone: any` for abilities that also deal damage. */
 const lacking = (rule: TargetRuleT, status: string | string[], fallback = false): TargetRuleT => ({ ...rule, where: { ...(rule.where ?? {}), lacks: status }, ...(fallback ? { ifNone: "any" as const } : {}) });
 const waitsFor = (side: TargetRuleT["side"], where: NonNullable<TargetRuleT["where"]>) => ({ if: { side, where } });
@@ -68,12 +75,14 @@ const bothKinds = (pct: StatusT["boosts"] extends (infer B)[] | undefined ? (B e
 
 export const passives: StatusT[] = [
   passive("vanguard", "Vanguard", { text: "Starts every fight behind a Shield from its max HP.", reactions: [{ on: { event: "fight_start" }, do: [apply("shield", { stacks: { scale: [{ ratio: 0.2, stat: "max_hp", of: "holder" }] }, to: "holder" })] }] }),
-  passive("hunters_eye", "Hunter's eye", { text: "Basic attacks ignore Taunt.", seek: "basic" }),
-  // Einherjar is a status, so it can be trained.
-  passive("einherjar", "Einherjar", { text: "Allies it revives come back with every action ready.", revives: { ready: true } }),
+  // Two crit steps on basic attacks alone: the marksman's crits, which the dagger's and bow's signatures feed.
+  passive("hunters_eye", "Hunter's eye", { text: "Basic attacks ignore Taunt and crit more often.", seek: "basic", crits: [{ tag: "basic", chance: crit(KIT.hunterCrit) }] }),
+  // Survivable by attacking: the Shield grows as she fights and is spent as she's hit. It reads Attack (bigger hits) and max HP (the cap).
+  passive("shieldmaiden", "Shieldmaiden", { text: "Each hit it lands gives it a Shield of a share of the damage dealt.", reactions: [{ on: { event: "hit_lands" }, do: [apply("shield", { stacks: { scale: [{ ratio: KIT.shieldmaiden, amount: true }] }, to: "holder" })] }] }),
   passive("briar", "Briar", { text: "Foes its Thorns wound start to bleed.", reactions: [{ on: { event: "damage_dealt", status: "thorns" }, do: [apply("bleed", { stacks: own("few", "defense"), to: "other" })] }] }),
   passive("phalanx", "Phalanx", { text: "Basic attacks half as often, for double damage.", stats: [{ stat: "attack_speed", flat: -100 }], boosts: [{ tag: "basic", pct: 100 }] }),
-  passive("judgement", "Judgement", { text: "Hits deal half again as much to foes with a buff.", boosts: bothKinds({ scale: [{ ratio: 50, when: { buffs: true }, of: "target" }] }) }),
+  // The judge: a buff or a debuff, either one, half again (a foe holding both isn't doubled: the second term asks for no debuff).
+  passive("judgement", "Judgement", { text: "Hits deal half again as much to foes with a buff or a debuff.", boosts: bothKinds({ scale: [{ ratio: 50, when: { debuffs: true }, of: "target" }, { ratio: 50, when: { buffs: true, debuffs: false }, of: "target" }] }) }),
   // Bloodlust's pattern.
   passive("last_rites", "Last rites", {
     text: "Cooldowns halved below 30% HP.",
@@ -105,7 +114,8 @@ export const passives: StatusT[] = [
     ],
   }),
   { id: "bloodlust_on", name: "BLOODLUST", text: "Lifesteal doubled.", label: "buff", show: "icon", stacking: "fizzle", stats: [{ stat: "lifesteal", flat: { scale: [{ ratio: 1, stat: "lifesteal", of: "holder" }] } }] },
-  passive("kindling", "Kindling", { text: "Basic attacks add a few Burn.", reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("burn", { stacks: own("few", "attack", BURN_STACKS), to: "other" })] }] }),
+  // Burn stoked by its casts, not its swings: the caster. With no foe burning, the pick falls on any foe.
+  passive("stoke", "Stoke", { text: "Each ability it casts adds a few Burn to the foe with the most Burn.", reactions: [{ on: { event: "action_resolve", kind: "ability" }, do: [apply("burn", { stacks: own("few", "attack", BURN_STACKS), to: T.mostFoe("burn") })] }] }),
   passive("shatterpoint", "Shatterpoint", { text: "When a foe's Chill shatters, it takes several Sunder.", reactions: [{ on: { event: "status_capped", status: "chill", whose: "foe" }, do: [apply("sunder", { stacks: own("several", "attack"), to: "owner" })] }] }),
   passive("arc", "Arc", {
     text: "Basic attacks also hit a second foe, and Shock both.",
@@ -123,6 +133,14 @@ export const passives: StatusT[] = [
     ],
   }),
   { id: "bedrock_on", name: "BEDROCK", text: "Crit chance doubled.", label: "buff", show: "icon", stacking: "fizzle", stats: [{ stat: "crit_chance", flat: { scale: [{ ratio: 1, stat: "crit_chance", of: "holder" }] } }] },
+  // ─── Kit statuses the base abilities apply ───
+  // Encore: the ally's next ability resolves again at once, free (a recast), and the Encore is spent. The repeat's own event skips it.
+  { id: "encore", name: "ENCORE", text: "Its next ability is cast twice; the second cast is free.", label: "buff", show: "icon", stacking: "refresh", reactions: [{ on: { event: "action_resolve", kind: "ability", repeat: false }, do: [{ op: "recast" }, { op: "remove", label: "buff", status: "encore", to: "holder" }] }] },
+  // Thunderstorm: the party's storm. Each ally's swings add Shock sized from the Stormcaller's Attack (the status knows its source).
+  { id: "thunderstorm_storm", name: "THUNDERSTORM", text: "Its basic attacks add a few Shock.", label: "buff", show: "icon", stacking: "refresh", perSource: {}, duration: KIT.storm.duration,
+    reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("shock", { stacks: { scale: [{ ratio: (STACKS.few * SHOCK_STACKS) / P, stat: "attack", of: "source" }] }, to: "other" })] }] },
+  // Static charge: Attack speed, not Haste (the Monk's Flow is Haste).
+  { id: "static_charge_on", name: "CHARGED", text: "Basic attacks come faster.", label: "buff", show: "icon", stacking: "refresh", duration: KIT.staticCharge.duration, stats: [{ stat: "attack_speed", flat: KIT.staticCharge.speed }] },
 ];
 
 // ─── Abilities ───────────────────────────────────────────────────────────────
@@ -132,8 +150,6 @@ export const passives: StatusT[] = [
 // which cost more: the more a unit is a caster, the more mana matters.
 type A = Omit<AbilityT, "class"> & { class: string };
 // Each ability's cooldown is its word's, moved by its id (scale.ts, jitter), so no two in a kit are the same.
-/** Rally's share of Attack: the Valkyrie's Attack is its spear's, above what its heal is sized for. */
-export const RALLY = 0.34;
 const a = (cls: string, id: string, name: string, text: string, body: Partial<AbilityT> & { do: AbilityT["do"]; cooldown: number }): A => ({ id, class: cls, name, text, ...body, cooldown: jitter(body.cooldown, id) });
 
 export const abilities: A[] = [
@@ -170,11 +186,17 @@ export const abilities: A[] = [
   a("bramble_knight", "bramble_lash", "Bramble lash", "Lashes a random foe with its thorns.", { ...timing("quick", "quick"), mp: 200, do: [phys({ scale: [{ ratio: 4.5, stat: "thorns" }] })] }),
   // Hoplite
   a("hoplite", "aspis", "Aspis", "Aegis on the lowest ally.", { ...timing("long", "quick"), mp: 500, ...waitsFor("allies", { lacks: "aegis" }), target: lacking(T.lowestShareAlly, "aegis"), do: [apply("aegis")] }),
-  a("hoplite", "paired_guard", "Paired guard", "Guards itself and the other lowest ally.", { ...timing("long", "normal"), mp: 325, target: "self", do: [apply("guard"), apply("guard", { to: T.otherLowestShareAlly })] }),
+  // The shove: the bruiser's Defense as damage on every foe, with Sunder from the same stat. No Taunt anywhere in the kit.
+  a("hoplite", "othismos", "Othismos", "A shove with the whole shield: damage scaling from Defense to every foe, adding a few Sunder to each.", {
+    ...timing("medium", "long"), mp: 500, target: T.everyFoe, do: [phys(hit("defense", "light"), { apply: [{ status: "sunder", stacks: stacks("few", "defense") }] })],
+  }),
   // Bigger than a normal hit: Phalanx boosts the Hoplite's swing, not the thrust.
   a("hoplite", "spear_thrust", "Spear thrust", "A thrust at a random foe that adds a few Sunder.", { ...timing("medium", "long"), mp: 325, do: [phys(from("attack", 1.1), { apply: [{ status: "sunder", stacks: stacks("few", "attack") }] })] }),
   // Paladin
-  a("paladin", "sanctuary", "Sanctuary", "Ward on every ally.", { ...timing("long", "long"), mp: 1000, target: T.everyAlly, do: [apply("ward")] }),
+  // Condemn: Marked is a debuff, so the Mark turns Judgement on, and the party's volley lands on the judged.
+  a("paladin", "condemn", "Condemn", "Marks the foe with the highest Attack, and every ally's next basic attack comes at once.", {
+    ...timing("medium", "quick"), mp: 650, target: T.highestAMFoe, do: [apply("marked"), { op: "cooldown", which: "basic", set: "ready", to: T.everyAlly }],
+  }),
   a("paladin", "absolve", "Absolve", "Cleanses and heals itself and the lowest other ally; the heal scales from Attack.", {
     ...timing("medium", "normal"), mp: 650, ...waitsFor("allies", { hpBelow: 100 }), target: "self",
     do: [{ op: "remove", label: "debuff" }, { op: "heal", amount: from("attack", 0.4) }, { op: "remove", label: "debuff", to: T.otherLowestShareAlly }, { op: "heal", amount: from("attack", 0.4), to: T.otherLowestShareAlly }],
@@ -186,21 +208,28 @@ export const abilities: A[] = [
   a("valkyrie", "gale_spear", "Gale spear", "Three quick hits on a foe that isn't Taunting, each adding a few Shock.", {
     ...timing("quick", "quick"), mp: 200, seek: true, target: T.notTauntingFoe, do: [phys(from("attack", 0.09), { hits: 3, apply: [{ status: "shock", stacks: stacks("few", "attack", 0.5) }] })],
   }),
-  a("valkyrie", "rally", "Rally", "Heals the lowest ally; the amount scales from Attack.", {
-    ...timing("medium", "normal"), mp: 650, ...waitsFor("allies", { hpBelow: 80 }), target: T.lowestShareAlly, do: [{ op: "heal", amount: from("attack", RALLY) }],
+  // Choosing: the heal and the revive in one. Each part has its own target, so with an ally down and another hurt it does both.
+  a("valkyrie", "choosing", "Choosing", "Heals the lowest ally; the amount scales from Attack. If an ally is down, raises it with a tenth of its HP.", {
+    ...timing("medium", "normal"), mp: 650, if: { any: [{ side: "allies", where: { hpBelow: 80 } }, { side: "allies", where: { ko: true } }] }, target: T.lowestShareAlly,
+    do: [{ op: "heal", amount: from("attack", KIT.choosing) }, { op: "revive", hp: { scale: [{ ratio: REVIVE.tenth, stat: "max_hp", of: "target" }] }, to: T.koAlly }],
   }),
-  // "Every action ready" is Einherjar's (its passive status's `revives`), so a Valkyrie trained to Chooser of the slain raises on cooldown.
-  a("valkyrie", "valhalla", "Valhalla", "Revives a random knocked-out ally with a tenth of its HP.", {
-    ...timing("very_long", "quick"), mp: 650, ...waitsFor("allies", { ko: true }), target: T.koAlly, do: [{ op: "revive", hp: { scale: [{ ratio: REVIVE.tenth, stat: "max_hp", of: "target" }] } }],
+  // Gale spear stacks the Shock, Skyfall cashes it and leaves it: the storm spear's beat.
+  a("valkyrie", "skyfall", "Skyfall", "A heavy blow from above on the foe with the most Shock, rising with each Shock stack on it. The Shock stays.", {
+    ...timing("medium", "normal"), mp: 325, target: T.mostFoe("shock"), do: [phys({ scale: [{ ratio: HIT.heavy, stat: "attack" }, { ratio: KIT.skyfallPerShock, stacks: "shock", of: "target" }] })],
   }),
   // Bard
   a("bard", "war_ballad", "War ballad", "A few Might on every ally.", { ...timing("quick", "quick"), mp: 450, target: T.everyAlly, do: [apply("might", { stacks: stacks("few", "attack") })] }),
   a("bard", "allegro", "Allegro", "Haste on every ally.", { ...timing("long", "quick"), mp: 650, target: T.everyAlly, do: [apply("haste")] }),
-  a("bard", "thunder_chord", "Thunder chord", "Several Shock on every foe.", { ...timing("short", "normal"), mp: 650, target: T.everyFoe, do: [apply("shock", { stacks: stacks("several", "attack") })] }),
+  // The conductor's verb: an ally's next spell sounds twice.
+  a("bard", "encore", "Encore", "The other ally with the highest Attack casts its next ability twice; the second cast is free.", { ...timing("medium", "quick"), mp: 650, target: T.otherHighestAMAlly, do: [apply("encore")] }),
   // Hexer
-  a("hexer", "malison", "Malison", "A few Burn and a few Shock on every foe.", { ...timing("short", "normal"), mp: 450, target: T.everyFoe, do: [apply("burn", { stacks: stacks("few", "attack") }), apply("shock", { stacks: stacks("few", "attack") })] }),
-  a("hexer", "unmake", "Unmake", "Silences the casting foe with the highest Attack and strips its buffs. Waits for a foe to cast.", {
-    ...timing("medium", "quick"), mp: 650, ...waitsFor("foes", { casting: true }), target: T.castingFoe, do: [apply("silence"), { op: "remove", label: "buff" }],
+  // The status amplifier: one more stack of each affliction a foe holds (nothing lands on a foe that holds none), and Bleed of its own.
+  a("hexer", "malison", "Malison", "Deepens every affliction each foe holds: one more stack of each of Burn, Chill, Shock and Sunder it already has, and a few Bleed.", {
+    ...timing("short", "normal"), mp: 450, target: T.everyFoe, do: [...DEEPENED.map((st) => apply(st, { stacks: ifHeld(st) })), apply("bleed", { stacks: stacks("few", "attack") })],
+  }),
+  // It waits for a cast or a buff. A caster is the pick; with none casting, the foe with the highest Attack (usually the buffed one).
+  a("hexer", "unmake", "Unmake", "Silences the casting foe with the highest Attack and strips its buffs. Waits for a foe to cast or to hold a buff.", {
+    ...timing("medium", "quick"), mp: 650, if: { any: [{ side: "foes", where: { casting: true } }, { side: "foes", where: { buffs: true } }] }, target: T.castingElseHighestAMFoe, do: [apply("silence"), { op: "remove", label: "buff" }],
   }),
   a("hexer", "enfeeble", "Enfeeble", "Weakens the foe with the highest Attack and adds a few Sunder.", { ...timing("quick", "normal"), mp: 450, target: T.highestAMFoe, do: [apply("weaken"), apply("sunder", { stacks: stacks("few", "attack") })] }),
   // Monk
@@ -247,8 +276,9 @@ export const abilities: A[] = [
       phys(hit("attack", "touch"), { apply: [{ status: "shock", stacks: stacks("few", "attack", SHOCK_STACKS) }], to: T.threeOtherFoes }),
     ],
   }),
-  a("stormcaller", "thunderstorm", "Thunderstorm", "Lightning on every foe, adding a few Shock to each.", { ...timing("medium", "normal"), mp: 1000, target: T.everyFoe, do: [phys(hit("attack", "touch"), { apply: [{ status: "shock", stacks: stacks("few", "attack", SHOCK_STACKS) }] })] }),
-  a("stormcaller", "static_charge", "Static charge", "Haste on itself.", { ...timing("long", "quick"), mp: 650, target: "self", do: [apply("haste")] }),
+  // The party's storm: Shock on every ally's swings for a while, not a nuke (Fireball is the nuke, Blizzard the field's Chill).
+  a("stormcaller", "thunderstorm", "Thunderstorm", "For a while, every ally's basic attacks add a few Shock; stacks scale from the Stormcaller's Attack.", { ...timing("medium", "normal"), mp: 650, target: T.everyAlly, do: [apply("thunderstorm_storm")] }),
+  a("stormcaller", "static_charge", "Static charge", "Its basic attacks come faster for a while.", { ...timing("long", "quick"), mp: 650, target: "self", do: [apply("static_charge_on")] }),
   // Geomancer
   a("geomancer", "earthen_shell", "Earthen shell", "Shields itself and the other lowest ally; the amount scales from Defense.", {
     ...timing("medium", "normal"), mp: 650, ...waitsFor("allies", { belowCap: "shield" }), target: "self",
@@ -268,55 +298,55 @@ const p = (status: string, name: string, text: string) => ({ name, text, statuse
 
 export const classes: ClassDefT[] = [
   cls("knight", "Knight", "Protector. Starts every fight behind its own Shield, Guards whoever is lowest, calls every foe onto itself while an ally regains its mana, and bashes a foe with the weight of its own body.", {
-    source: "starter", stats: stat(5, 2, 2, 3, 4, 2, 5), weapons: ["sword", "great_weapon"], armor: ["plate"], offhands: ["kite_shield", "horn"], passive: p("vanguard", "Vanguard", "It starts every fight behind a Shield that scales from its max HP."),
+    source: "starter", stats: stat(5, 2, 2, 2, 4, 1, 5), weapons: ["sword", "hammer"], armor: ["plate"], offhands: ["kite_shield", "horn"], passive: p("vanguard", "Vanguard", "It starts every fight behind a Shield that scales from its max HP."),
   }),
   cls("cleric", "Cleric", "Healer. Mends whoever is lowest with quick, small heals, lifts a curse and wraps the ally in Regen, raises the fallen, and prays twice as fast when its own life is in danger.", {
-    source: "starter", stats: stat(2, 5, 4, 4, 2, 2, 1), weapons: ["mace", "staff"], armor: ["robes"], offhands: ["relic", "bell"], passive: p("last_rites", "Last rites", "Below 30% of its max HP, its cooldowns are halved."),
+    source: "starter", stats: stat(2, 5, 4, 3, 2, 1, 1), weapons: ["mace", "staff"], armor: ["robes"], offhands: ["relic", "lantern"], passive: p("last_rites", "Last rites", "Below 30% of its max HP, its cooldowns are halved."),
   }),
-  cls("ranger", "Ranger", "Wears down tough targets. Looses barbed, cold and rending arrows at whatever stands in front, while its plain arrows fly past any guard and open the wounds.", {
-    source: "starter", stats: { ...stat(3, 3, 3, 4, 2, 3, 2), ...special("accuracy", "medium") }, weapons: ["bow", "dagger"], armor: ["leather"], offhands: ["totem"], passive: p("hunters_eye", "Hunter's eye", "Its basic attacks ignore Taunt."),
+  cls("ranger", "Ranger", "The marksman. Looses barbed, cold and rending arrows at whatever stands in front, while its plain arrows fly past any guard, crit for a living and open the wounds.", {
+    source: "starter", stats: { ...stat(3, 3, 3, 4, 2, 4, 2), ...special("accuracy", "medium") }, weapons: ["bow", "dagger"], armor: ["leather"], offhands: ["trophy", "cloak"], passive: p("hunters_eye", "Hunter's eye", "Its basic attacks ignore Taunt and crit more often."),
   }),
   cls("bramble_knight", "Bramble knight", "Thorns tank. Draws every foe onto its thorns, where each attacker is left bleeding for the party's blows, regrows whoever is lowest, and lashes out with the thorns themselves.", {
-    stats: { ...stat(5, 2, 2, 3, 3, 2, 5), ...special("thorns", "high") }, weapons: ["sword", "staff"], armor: ["plate", "mail"], offhands: ["totem"], passive: p("briar", "Briar", "Each time its Thorns damage a foe, that foe gets a few Bleed; stacks scale from Defense."),
+    stats: { ...stat(5, 2, 2, 2, 3, 1, 5), ...special("thorns", "high") }, weapons: ["hammer", "mace"], armor: ["plate", "mail"], offhands: ["totem", "round_shield"], passive: p("briar", "Briar", "Each time its Thorns damage a foe, that foe gets a few Bleed; stacks scale from Defense."),
   }),
-  cls("hoplite", "Hoplite", "Bodyguard who opens foes up. Plants its great shield beside the most vulnerable ally to catch the killing blow, locks shields with it, and leaves foes sundered with slow, crushing blows.", {
-    stats: stat(4, 2, 2, 4, 5, 2, 5), weapons: ["spear", "great_weapon"], armor: ["plate"], offhands: ["round_shield"], passive: p("phalanx", "Phalanx", "Its basic attacks come half as often and deal double damage."),
+  cls("hoplite", "Hoplite", "The bruiser. Slow double swings, a thrust that opens one foe up, a shove with the whole shield that sunders every foe, and an Aegis on the ally about to take the killing blow. Very tanky and hits hard; nothing it does draws fire.", {
+    stats: stat(4, 2, 2, 5, 5, 2, 3), weapons: ["spear", "great_weapon"], armor: ["plate"], offhands: ["round_shield", "horn"], passive: p("phalanx", "Phalanx", "Its basic attacks come half as often and deal double damage."),
   }),
-  cls("paladin", "Paladin", "Shelter. Wards the party against the blows that land, lifts its curses, and brings down slow, heavy, burning judgement, half again as hard on any foe that holds a buff.", {
-    stats: { ...stat(4, 3, 3, 4, 4, 2, 4) }, weapons: ["rune_sword", "mace"], armor: ["mail", "plate"], offhands: ["kite_shield", "lantern"], passive: p("judgement", "Judgement", "Its hits deal half again as much damage to foes with a buff."),
+  cls("paladin", "Paladin", "The judge: helper of the righteous, killer of the wicked. Its hits land half again as hard on any foe that holds a buff or a debuff; it condemns one foe and the whole party strikes it; it lifts curses and heals; and it brings down a slow, heavy, burning Smite.", {
+    stats: { ...stat(4, 3, 3, 4, 4, 2, 3) }, weapons: ["mace", "great_weapon"], armor: ["mail", "plate"], offhands: ["kite_shield", "relic"], passive: p("judgement", "Judgement", "Its hits deal half again as much damage to foes with a buff or a debuff."),
   }),
-  cls("valkyrie", "Valkyrie", "Storm spear who heals and revives. A storm-borne spear that reaches past any guard and Shocks what it hits, mends the wounded, and snatches the fallen back ready to fight.", {
-    stats: stat(3, 3, 3, 4, 3, 3, 3), weapons: ["spear", "rune_sword"], armor: ["mail", "leather"], offhands: ["round_shield", "relic"], passive: p("einherjar", "Einherjar", "Allies it revives come back with all their actions ready, instead of on cooldown."),
+  cls("valkyrie", "Valkyrie", "The shieldmaiden: a quick, survivable damage dealer, not a tank. Her spear builds her Shield as it strikes, three quick hits reach past any guard and shock what they hit, a heavy blow from above cashes the Shock in, and she chooses the slain: one ability mends the lowest ally or raises a fallen one.", {
+    stats: { ...stat(3, 3, 3, 4, 3, 3, 2), ...special("cooldown", "medium") }, weapons: ["spear", "sword"], armor: ["mail", "leather"], offhands: ["round_shield", "cloak"], passive: p("shieldmaiden", "Shieldmaiden", "Each hit it lands gives it a Shield of a share of the damage dealt."),
   }),
-  cls("bard", "Bard", "Party tempo. A caster at the back whose every note mends an ally a little and gives another mana, with a ballad that steadies the whole party, an allegro that quickens it, and thunder that shocks every foe.", {
-    stats: stat(3, 4, 3, 3, 3, 2, 1), weapons: ["bow", "wand"], armor: ["leather", "robes"], offhands: ["horn", "tome"], passive: p("refrain", "Refrain", "Each of its basic attacks that lands heals a random ally and gives a random ally MP, each a share of the damage dealt."),
+  cls("bard", "Bard", "Party tempo. A caster at the back whose every note mends an ally a little and gives another mana, with a ballad that steadies the party, an allegro that quickens it, and an encore that makes an ally's next spell sound twice.", {
+    stats: { ...stat(3, 4, 3, 3, 2, 2, 1), ...special("cooldown", "medium") }, weapons: ["bow", "wand"], armor: ["leather", "robes"], offhands: ["tome", "bell"], passive: p("refrain", "Refrain", "Each of its basic attacks that lands heals a random ally and gives a random ally MP, each a share of the damage dealt."),
   }),
-  cls("hexer", "Hexer", "Curser. The debuff bot: burns and shocks every foe a little so the party's statuses pile up, weakens and sunders the most dangerous one, chills whatever it strikes, and silences a foe mid-cast.", {
-    stats: { ...stat(2, 4, 3, 4, 1, 2, 1), ...special("siphon", "medium") }, weapons: ["dagger", "rune_sword"], armor: ["mail"], offhands: ["idol"], passive: p("cold_hex", "Cold hex", "Its basic attacks add a few Chill, whatever weapon it carries; stacks scale from Attack."),
+  cls("hexer", "Hexer", "The spellblade. A blade that carries curses: its swing chills, its curses deepen every affliction a foe already holds, it weakens and sunders the most dangerous one, and it silences a foe mid-cast and strips what it holds.", {
+    stats: { ...stat(3, 4, 3, 4, 2, 2, 1), ...special("siphon", "medium") }, weapons: ["wand", "sword"], armor: ["mail"], offhands: ["tome", "idol"], passive: p("cold_hex", "Cold hex", "Its basic attacks add a few Chill, whatever weapon it carries; stacks scale from Attack."),
   }),
   cls("monk", "Monk", "Sunders with a blur of blows. Every blow leaves the foe a little more open, Flow keeps it fast, burning fists pile onto the hottest foe, and a pressure point drops the most dangerous one for a moment.", {
-    stats: { ...stat(3, 2, 3, 4, 2, 2, 2), attack: 3700, ...special("evasion", "high"), ...special("double_strike", "medium") }, weapons: ["fist", "spear"], armor: ["leather"], offhands: ["bell"],
+    stats: { ...stat(3, 2, 3, 4, 1, 2, 2), ...special("evasion", "high"), ...special("double_strike", "medium") }, weapons: ["claws", "spear"], armor: ["leather"], offhands: ["bell", "cloak"],
     passive: p("iron_palm", "Iron palm", "Its basic attacks, and the second strike of its Double strike, add a few Sunder; stacks scale from Attack."),
   }),
   cls("assassin", "Assassin", "Burst killer. Slips out of sight, picks off the weakest foe past any guard, leaves every crit a bleeding wound, and silences the back line.", {
-    stats: { ...stat(2, 3, 3, 5, 2, 5, 1), ...special("crit_damage", "high"), ...special("evasion", "medium") }, weapons: ["dagger", "sword"], armor: ["leather"], offhands: ["vial"],
+    stats: { ...stat(2, 3, 3, 5, 1, 5, 1), ...special("crit_damage", "high"), ...special("evasion", "medium") }, weapons: ["dagger", "axe"], armor: ["leather"], offhands: ["vial", "trophy"],
     passive: p("lacerate", "Lacerate", "Each of its crits adds several Bleed to the foe; stacks scale from Attack."),
   }),
   cls("vampire", "Vampire", "Drains to outlast. Feeds on everything it hits: the harder it hits, the more it heals, its prey is left weakened, and it bleeds its own life into an ally's wounds and mana.", {
-    stats: { ...stat(4, 2, 2, 4, 2, 2, 3), ...special("lifesteal", "high") }, weapons: ["fist", "great_weapon"], armor: ["mail"], offhands: ["vial", "idol"],
+    stats: { ...stat(4, 2, 2, 4, 2, 2, 3), ...special("lifesteal", "high") }, weapons: ["claws", "axe"], armor: ["mail"], offhands: ["vial", "idol"],
     passive: p("bloodlust", "Bloodlust", "While it's below half of its max HP, its Lifesteal is doubled."),
   }),
-  cls("pyromancer", "Pyromancer", "Ramping Burn. Every strike adds Burn, bolts pile more onto the hottest foe, and a pyre lands on it.", {
-    stats: stat(2, 5, 2, 5, 1, 2, 1), weapons: ["staff", "wand"], armor: ["robes"], offhands: ["lantern"], passive: p("kindling", "Kindling", "Its basic attacks add a few Burn, whatever weapon it carries; stacks scale from Attack."),
+  cls("pyromancer", "Pyromancer", "The glass cannon of long casts. Every spell it casts stokes the fire on the hottest foe, bolts pile more onto it, a fireball spreads it, and a pyre lands.", {
+    stats: { ...stat(2, 5, 2, 5, 1, 2, 1), ...special("cast_speed", "medium") }, weapons: ["staff", "wand"], armor: ["robes"], offhands: ["lantern", "orb"], passive: p("stoke", "Stoke", "Each ability it casts adds a few Burn to the foe with the most Burn; stacks scale from Attack."),
   }),
-  cls("frostweaver", "Frostweaver", "Freezes and shatters. Buries foes in Chill until it shatters into damage and a Stun, leaves the shattered foe sundered for the party, and spends the time it buys keeping an ally's mana flowing.", {
-    stats: { ...stat(2, 4, 3, 4, 2, 2, 1) }, weapons: ["rod", "staff"], armor: ["robes"], offhands: ["tome"], passive: p("shatterpoint", "Shatterpoint", "When a foe's Chill shatters, that foe takes several Sunder; stacks scale from Attack."),
+  cls("frostweaver", "Frostweaver", "The ice wall: a chunky supporting mage, and the Chill applier. It lays Chill on the field and on the most-chilled foe until the Chill itself shatters, leaves the shattered foe sundered, and keeps an ally's mana flowing while the frost builds.", {
+    stats: { ...stat(3, 4, 3, 3, 3, 2, 2) }, weapons: ["staff", "rune_sword"], armor: ["robes", "mail"], offhands: ["tome", "orb"], passive: p("shatterpoint", "Shatterpoint", "When a foe's Chill shatters, that foe takes several Sunder; stacks scale from Attack."),
   }),
-  cls("stormcaller", "Stormcaller", "Shocks every foe. Rains quick strikes across every foe so the fast and the many hurt themselves by acting, and charges itself up to strike faster.", {
-    stats: stat(2, 3, 3, 4, 1, 2, 1), weapons: ["wand", "rod"], armor: ["robes"], offhands: ["bell"], passive: p("arc", "Arc", "Each of its basic attacks also hits a second, random foe, and adds a few Shock to both; stacks scale from Attack."),
+  cls("stormcaller", "Stormcaller", "The striker among the mages. Each swing arcs to a second foe, lightning chains, a storm puts Shock on every ally's swings, and it charges itself to swing faster.", {
+    stats: { ...stat(2, 3, 3, 4, 1, 2, 1), ...special("attack_speed", "medium") }, weapons: ["claws", "rune_sword"], armor: ["robes", "leather"], offhands: ["totem", "bell"], passive: p("arc", "Arc", "Each of its basic attacks also hits a second, random foe, and adds a few Shock to both; stacks scale from Attack."),
   }),
   cls("geomancer", "Geomancer", "Hits hardest behind stone. Wraps itself and an ally in stone; while its own Shield holds, its rocks crit far more often and far harder, and a tremor drops a foe now and then.", {
-    stats: { ...stat(3, 3, 3, 4, 4, 4, 3), ...special("crit_damage", "high") }, weapons: ["great_weapon", "rune_sword"], armor: ["plate"], offhands: ["totem"], passive: p("bedrock", "Bedrock", "While its Shield pool is above zero, its crit chance is doubled."),
+    stats: { ...stat(3, 3, 3, 3, 5, 4, 3), ...special("crit_damage", "high") }, weapons: ["hammer", "great_weapon"], armor: ["plate"], offhands: ["kite_shield", "trophy"], passive: p("bedrock", "Bedrock", "While its Shield pool is above zero, its crit chance is doubled."),
   }),
 ];
 /**

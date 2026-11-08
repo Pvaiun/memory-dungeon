@@ -1,33 +1,21 @@
 /** The Valkyrie's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit.ts. */
-import type { AbilityT, EffectT, ReactionT, StatusT, ToT } from "../../../src/schema.js";
-import { RALLY, T } from "../classes.js";
-import { from, jitter, stacks } from "../scale.js";
-import { abilityUp, apply, both, helper, kit, marker, passiveUp, phys } from "./kit.js";
+import type { AbilityT, EffectT, ReactionT, StatusT } from "../../../src/schema.js";
+import { T } from "../classes.js";
+import { from, HIT, KIT, REVIVE, stacks } from "../scale.js";
+import { abilityUp, apply, both, helper, kit, passiveUp, phys } from "./kit.js";
 
 {
-  const READY = { revives: { ready: true } } as const;
-  /** The power step: a Shield of 15% of the revived ally's max HP, on every revive the Valkyrie gives (`other: holder`). */
-  const small: ReactionT = { on: { event: "revived", whose: "ally", other: "holder" }, do: [apply("shield", { stacks: { scale: [{ ratio: 0.15, stat: "max_hp", of: "target" }] }, to: "owner" })] };
-  const chosen: ReactionT = { on: { event: "revived", whose: "ally", other: "holder" }, do: [apply("guard", { to: "owner" })] };
-  /** Chooser of the slain: an aura on every ally while the Valkyrie stands (Per source, ends with it), given again when it or an ally stands up. */
-  const aura = (to: ToT) => apply("chooser_of_the_slain", { to });
-  const chooser: ReactionT[] = [
-    { on: { event: "fight_start" }, do: [aura(T.everyAlly)] },
-    { on: { event: "revived" }, do: [aura(T.everyAlly)] },
-    { on: { event: "revived", whose: "ally" }, do: [aura("owner")] },
-  ];
-  helper(kit("chooser_of_the_slain", "CHOOSER", "Deals a fifth more to foes below half their HP.", {
-    perSource: { endsWithSource: true }, boosts: both({ scale: [{ ratio: 20, when: { hpBelow: 50 }, of: "target" }] }) as StatusT["boosts"],
-  }));
+  /** The Shield from each hit landed: a share of the damage dealt, to the Valkyrie or (Shield-sister) to the ally lowest in HP share. */
+  const shieldOn = (ratio: number, to: "holder" | typeof T.lowestShareAlly): ReactionT => ({ on: { event: "hit_lands" }, do: [apply("shield", { stacks: { scale: [{ ratio, amount: true }] }, to })] });
   passiveUp({
-    id: "einherjar", cls: "valkyrie",
-    power: "Allies it revives also come back with a small Shield.",
-    a: { name: "Chosen", text: "Allies it revives come back with all their actions ready, and Guarded.", builds: ["phoenix"] },
-    b: { name: "Chooser of the slain", text: "While it stands, every ally deals a fifth more to foes below half their HP. Allies it revives come back on cooldown, as anyone's do.", builds: ["hunt", "harvest"] },
-    // Chooser of the slain gives up the ready revive.
-    form: (v, _k, plus) =>
-      v === "b" ? { revives: undefined, reactions: [...chooser, ...(plus ? [small] : [])] }
-        : { ...READY, reactions: [...(v === "a" ? [chosen] : []), ...(plus ? [small] : [])] },
+    id: "shieldmaiden", cls: "valkyrie",
+    power: "A bigger share: two fifths more Shield from each hit.",
+    a: { name: "Chooser of the slain", text: "No Shield. Its hits deal a fifth more to foes below half their HP.", builds: ["hunt", "harvest"], plus: "Its hits deal 28% more to such foes, not a fifth." },
+    b: { name: "Shield-sister", text: "Each hit it lands gives the ally with the lowest share of HP a Shield of a share of the damage dealt, instead of itself.", builds: ["toll", "pact"] },
+    // Chooser of the slain gives the Shield up: offence in place of defence, and the power step has nothing to grow.
+    form: (v, k) =>
+      v === "a" ? { reactions: [], boosts: both({ scale: [{ ratio: 20 * k, when: { hpBelow: 50 }, of: "target" }] }) as StatusT["boosts"] }
+        : { reactions: [shieldOn(KIT.shieldmaiden * k, v === "b" ? T.lowestShareAlly : "holder")] },
   });
 }
 
@@ -48,32 +36,42 @@ import { abilityUp, apply, both, helper, kit, marker, passiveUp, phys } from "./
 
 {
   const heal = (ratio: number): EffectT => ({ op: "heal", amount: from("attack", ratio) });
-  const hymn = (ratio: number): Partial<AbilityT> => ({ do: [heal(ratio), apply("haste")] });
-  const stand = (ratio: number): Partial<AbilityT> => ({ if: { side: "allies", where: { hpBelow: 30 } }, do: [heal(ratio), apply("taunt", { to: "self" })] });
+  const raise = (ratio: number): EffectT => ({ op: "revive", hp: { scale: [{ ratio, stat: "max_hp", of: "target" }] }, to: T.koAlly });
+  /** Einherjar: the old passive, now a choice. The ability brings a listener whose rule readies every action of an ally it raises. */
+  helper(kit("einherjar", "EINHERJAR", "Allies it raises come back with every action ready.", { show: "sheet", unremovable: true, revives: { ready: true } }));
+  /** Over the fallen: she stands over the one she chose; the Taunt and Guard are the kit's one Aggro read. */
+  const over = (k: number): Partial<AbilityT> => ({
+    if: { any: [{ side: "allies", where: { hpBelow: 30 } }, { side: "allies", where: { ko: true } }] },
+    do: [heal(2 * KIT.choosing * k), raise(REVIVE.tenth * k), apply("taunt", { to: "self" }), apply("guard", { to: "self" })],
+  });
   abilityUp({
-    id: "rally", cls: "valkyrie",
-    power: "Heals two fifths more.",
-    a: { name: "Battle hymn", text: "Heals the ally with the lowest share of HP, and Hastes it.", builds: ["cuts", "pact"] },
-    b: { name: "Last stand", text: "Waits until an ally is below 30% of its max HP, then heals it for double, and the Valkyrie Taunts.", builds: ["phoenix", "pact"] },
-    form: (v, k) => (v === "a" ? hymn(RALLY * k) : v === "b" ? stand(2 * RALLY * k) : { do: [heal(RALLY * k)] }),
+    id: "choosing", cls: "valkyrie",
+    power: "Heals, or raises with, two fifths more.",
+    a: { name: "Einherjar", text: "Heals the lowest ally, or raises a fallen one with a tenth of its HP. An ally it raises comes back with every action ready.", builds: ["phoenix", "ambush"] },
+    b: { name: "Over the fallen", text: "Waits until an ally is below 30% of its HP or down. Heals it for double, or raises it; the Valkyrie Taunts and is Guarded, standing over the one she chose.", builds: ["toll", "phoenix"] },
+    form: (v, k) =>
+      v === "a" ? { statuses: ["einherjar"], do: [heal(KIT.choosing * k), raise(REVIVE.tenth * k)] }
+        : v === "b" ? over(k)
+          : { do: [heal(KIT.choosing * k), raise(REVIVE.tenth * k)] },
   });
 }
 
 {
-  const raise = (ratio: number): EffectT => ({ op: "revive", hp: { scale: [{ ratio, stat: "max_hp", of: "target" }] } });
-  /** Flight of the valkyries: every fallen ally, on a cooldown a quarter past very long (70 ticks, moved by Valhalla's id as every cooldown is). */
-  const flight = (ratio: number): Partial<AbilityT> => ({ cooldown: jitter(70, "valhalla"), target: { side: "allies", where: { ko: true }, pick: "all" }, do: [raise(ratio)] });
-  /** Dawn muster: the ability brings a listener that makes Valhalla ready at a fight's start while an ally is down. */
-  const dawn = (ratio: number): Partial<AbilityT> => ({ statuses: ["dawn_muster"], do: [raise(ratio)] });
-  helper(marker("dawn_muster", "DAWN MUSTER", "At a fight's start, if an ally is down, Valhalla is ready at once.", {
-    unremovable: true,
-    reactions: [{ on: { event: "fight_start" }, if: { side: "allies", where: { ko: true } }, do: [{ op: "cooldown", which: { ability: ["valhalla"] }, set: "ready", to: "holder" }] }],
-  }));
+  /** Skyfall: a heavy hit plus KIT.skyfallPerShock a Shock stack on its target; Thunderclap half of both on every shocked foe. */
+  const fall = (share: number, k: number) => phys({ scale: [{ ratio: HIT.heavy * share * k, stat: "attack" }, { ratio: KIT.skyfallPerShock * share * k, stacks: "shock", of: "target" }] });
+  /** Valkyrie's descent: past any guard at the lowest foe, double below a quarter of its HP, and no Shock bonus. `times` reads her Attack. */
+  const descent = (k: number): Partial<AbilityT> => ({
+    seek: true, target: T.lowestHpFoe,
+    do: [phys({ scale: [{ ratio: HIT.heavy * k, stat: "attack" }, { ratio: HIT.heavy * k, when: { hpBelow: 25 }, of: "target", times: { stat: "attack", of: "self" } }] })],
+  });
   abilityUp({
-    id: "valhalla", cls: "valkyrie",
-    power: "The raised ally comes back with two fifths more HP.",
-    a: { name: "Flight of the valkyries", text: "Revives every knocked-out ally with a tenth of its HP.", builds: ["phoenix"] },
-    b: { name: "Dawn muster", text: "Revives a random knocked-out ally with a tenth of its HP. At a fight's start, if an ally is down from an earlier fight, it's ready at once, whatever its cooldown.", builds: ["ambush", "phoenix"] },
-    form: (v, k) => (v === "a" ? flight(0.1 * k) : v === "b" ? dawn(0.1 * k) : { do: [raise(0.1 * k)] }),
+    id: "skyfall", cls: "valkyrie",
+    power: "Deals two fifths more damage.",
+    a: { name: "Thunderclap", text: "Skyfall on every foe that holds Shock, half as hard on each, rising with each one's Shock. Waits until a foe holds Shock.", builds: ["harvest"] },
+    b: { name: "Valkyrie's descent", text: "Skyfall past any guard on the foe with the lowest HP, double below a quarter of its HP. No Shock bonus.", builds: ["hunt"] },
+    form: (v, k) =>
+      v === "a" ? { if: { side: "foes", where: { has: "shock" } }, target: { side: "foes", where: { has: "shock" }, pick: "all" }, do: [fall(0.5, k)] }
+        : v === "b" ? descent(k)
+          : { do: [fall(1, k)] },
   });
 }

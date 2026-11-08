@@ -2,7 +2,7 @@
 import type { EffectT, ReactionT, StatusT } from "../../../src/schema.js";
 import { T } from "../classes.js";
 import { from, SPECIAL, stacks } from "../scale.js";
-import { abilityUp, apply, cd, helper, kit, marker, passiveUp, phys, removeMine } from "./kit.js";
+import { abilityUp, apply, cd, helper, kit, marker, passiveUp, phys, r6, removeMine } from "./kit.js";
 
 // ─── Vampire ─────────────────────────────────────────────────────────────────
 
@@ -50,10 +50,10 @@ passiveUp({
 abilityUp({
   id: "blood_drain", cls: "vampire",
   power: "40% more damage.",
-  a: { name: "Bloodletting", text: "Deals physical damage that scales from max HP to a random foe, and adds many Bleed; stacks scale from max HP. No Weaken.", builds: ["pact", "cuts"] },
+  a: { name: "Savage drain", text: "Three quick hits on a random foe, each a third of the damage, scaling from max HP, each drinking; the foe is Weakened.", builds: ["cuts", "pact"] },
   b: { name: "Drain the well", text: "Deals physical damage that scales from max HP to a random foe, and drains MP from it: a quarter of the damage dealt, given to the ally with the least MP. No Weaken.", builds: ["overflow"] },
   form: (v, k) =>
-    v === "a" ? { do: [phys(from("max_hp", 0.4 * k), { apply: [{ status: "bleed", stacks: stacks("many", "max_hp") }] })] }
+    v === "a" ? { do: [phys(from("max_hp", r6((0.4 * k) / 3)), { hits: 3, apply: [{ status: "weaken" }] })] }
       // A one-tick marker on the Vampire hears the cast's own hit and drains as Siphon does.
       : v === "b" ? { do: [apply("drain_the_well", { to: "self" }), phys(from("max_hp", 0.4 * k))] }
         : { do: [phys(from("max_hp", 0.4 * k), { apply: [{ status: "weaken" }] })] },
@@ -97,11 +97,13 @@ abilityUp({
   id: "frenzy", cls: "vampire",
   power: "40% more Might.",
   a: { name: "Feeding frenzy", text: "Adds several Might to itself; stacks scale from Attack. While it holds Might, its Lifesteal is 10 higher.", builds: ["pact"] },
-  b: { name: "Blood rage", text: "Adds several Might to the other ally with the highest Attack; stacks scale from the Vampire's Attack.", builds: ["landslide", "cuts"] },
-  form: (v, k) =>
-    v === "b" ? { target: { side: "others", pick: "highest", by: { stats: ["attack"] } }, do: [apply("might", { stacks: stacks("several", "attack", k) })] }
-      : { do: [apply("might", { stacks: stacks("several", "attack", k) }), ...(v === "a" ? [apply("feeding_frenzy", { to: "self" })] : [])] },
+  b: { name: "Bloodthirst", text: "Adds several Might to itself; stacks scale from Attack. While it holds Might, its basic attacks come a third faster.", builds: ["cuts", "pact"] },
+  form: (v, k) => ({ do: [apply("might", { stacks: stacks("several", "attack", k) }), ...(v === "a" ? [apply("feeding_frenzy", { to: "self" })] : v === "b" ? [apply("bloodthirst", { to: "self" })] : [])] }),
 });
+helper(kit("bloodthirst", "BLOODTHIRST", "Basic attacks a third faster while it holds Might.", {
+  stats: [{ stat: "attack_speed", flat: 33 }],
+  reactions: [{ on: { event: "status_ended", status: "might" }, do: [removeMine("bloodthirst")] }],
+}));
 helper(kit("feeding_frenzy", "FEEDING FRENZY", "Lifesteal up while it holds Might.", {
   stats: [{ stat: "lifesteal", flat: SPECIAL.lifesteal.medium }],
   reactions: [{ on: { event: "status_ended", status: "might" }, do: [removeMine("feeding_frenzy")] }],

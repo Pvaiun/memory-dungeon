@@ -42,8 +42,8 @@ The original design gave Poison as the Fundamental answer to Armored shell, Dodg
 | Skirmisher | Fundamental | Very fast, weak hits. | Guard, Evasion, Slow; Thorns, Chill, Shock | Wolf, Hellhound |
 | Brute | Fundamental | Slow, crushing hits with a visible wind-up. | Taunt, Stun, Weaken, Shield, Evasion; Aegis | Ogre |
 | Glass cannon | Fundamental | Very high Attack, very low HP and Defense. A stat line. | Shield, Stun, Guard, Evasion, Weaken; lowest-HP targeting | Archer |
-| Nuker | Fundamental | A long, visible cast of a heavy spell. | Stun, Shield; Silence, Ward, Siphon, Aegis | Lich |
-| Bomb | Specialist | Grows stronger, then explodes on the party when it dies or after a wind-up. This set's Bomb explodes on death, so Stun answers only a wind-up variant. | Might, Haste, Shield; Ward, Aegis (Stun: wind-up variant only) | Bomb Bug |
+| Nuker | Fundamental | A long, visible cast of a heavy spell. | Stun, Shield; Silence, Siphon, Aegis | Lich |
+| Bomb | Specialist | Grows stronger, then explodes on the party when it dies or after a wind-up. This set's Bomb explodes on death, so Stun answers only a wind-up variant. | Might, Haste, Shield; Aegis (Stun: wind-up variant only) | Bomb Bug |
 
 ### Regular enemies: support
 
@@ -51,7 +51,7 @@ The original design gave Poison as the Fundamental answer to Armored shell, Dodg
 | --- | --- | --- | --- | --- |
 | Healer | Fundamental | Heals its most hurt ally. | Stun, Might; Silence, Rot, Siphon | Bone Priest |
 | Raiser | Specialist | Revives a fallen ally with a very long cast; waits for a knockout. | Stun, Area; Silence, Seek, highest-Attack targeting | – |
-| Buffer | Specialist | Gives its allies Might, Haste, Guard, Ward or Shield. | Stun; Dispel, Silence | Fire Imp |
+| Buffer | Specialist | Gives its allies Might, Haste, Guard or Shield. | Stun; Dispel, Silence | Fire Imp |
 | Regenerator | Specialist | Heals itself with Regen and Lifesteal. | Might; Rot, Dispel | – |
 
 ### Regular enemies: statuses
@@ -79,10 +79,10 @@ The original design gave Poison as the Fundamental answer to Armored shell, Dodg
 | Challenge | Tier | In a fight | Answers | Built as |
 | --- | --- | --- | --- | --- |
 | Damage race | Specialist | Gains a stack of Might every few seconds. | Might, Haste; Burn, Crit damage, Double strike, Dispel | – |
-| Escalating attack | Specialist | One ability grows per cast; tempo answers it, Dispel doesn't. | Stun, Slow, Shield; Silence, Chill, Ward | – |
-| Interrupt check | Specialist | A long cast that nearly wipes the party. | Stun, Shield; Silence, Ward | Fire Giant |
+| Escalating attack | Specialist | One ability grows per cast; tempo answers it, Dispel doesn't. | Stun, Slow, Shield; Silence, Chill | – |
+| Interrupt check | Specialist | A long cast that nearly wipes the party. | Stun, Shield; Silence | Fire Giant |
 | Break shield | Signature | Has Bulwark: every hit chips it. | Haste, many hits; Double strike | Ice Titan |
-| Shield check | Specialist | A large self-Shield plus a very long cast; the cast cancels if the Shield breaks first. | Stun, Shield; Dispel, Crit damage, heavy single hits, Ward | – |
+| Shield check | Specialist | A large self-Shield plus a very long cast; the cast cancels if the Shield breaks first. | Stun, Shield; Dispel, Crit damage, heavy single hits | – |
 | Two states | Specialist | Swaps between very high Defense and Incorporeal. | Burn, Sunder, Bleed | – |
 | Buff stacker | Specialist | Keeps buffing itself on short cooldowns. | Weaken; Dispel, Judgement, Sunder vs Guard, Accuracy vs Evasion | – |
 | Purifier | Specialist | Cleanses itself every so often. | Bleed reapplied; Burn, Chill and Sunder from basic attacks, plain damage | – |
@@ -92,9 +92,9 @@ The original design gave Poison as the Fundamental answer to Armored shell, Dodg
 | Tank buster | Fundamental | A huge, visible wind-up on its current target. | Taunt, Guard, Shield, Weaken, Stun, Evasion; Aegis, Revive | Ogre Chief |
 | Tank swap | Specialist | Each hit Sunders its target. | Taunt, Guard, Cleanse, Heal | – |
 | Skips the tank | Specialist | Its big strike has Seek, to the highest-HP non-Taunter. | Guard and Shield on a second unit, Evasion; Aegis | – |
-| Fickle | Specialist | Seek attacks ignoring Aggro: every hit a uniform random foe. | Guard, Shield, Heal, Regen, Evasion across the party; Ward, Hidden | – |
-| Raidwide | Fundamental | Regular hits on the whole party. | Heal, Regen, Weaken; Ward, Chill | Ice Titan (Hailstorm) |
-| Anti-heal | Specialist | Puts Rot on the party. | Shield, Cleanse, Weaken, Guard, Evasion; Ward | – |
+| Fickle | Specialist | Seek attacks ignoring Aggro: every hit a uniform random foe. | Guard, Shield, Heal, Regen, Evasion across the party; Hidden | – |
+| Raidwide | Fundamental | Regular hits on the whole party. | Heal, Regen, Weaken; Guard, Chill | Ice Titan (Hailstorm) |
+| Anti-heal | Specialist | Puts Rot on the party. | Shield, Cleanse, Weaken, Guard, Evasion | – |
 | Silence field | Specialist | After a visible wind-up, Silences every ally; Cleanse abilities are Silenced too. | Stun on the wind-up; basic-attack passives | Silent One |
 | Buff stripper | Specialist | Every so often Dispels every buff on every ally. | Short-cooldown reapplication, Evasion; Hidden, special stats, passives | – |
 | Executioner | Signature | Puts Doom on a unit; an execute variant hits the lowest ally instead. | Cleanse, Shield; Aegis, Revive | Reaper |
@@ -108,12 +108,12 @@ The original design gave Poison as the Fundamental answer to Armored shell, Dodg
 | Challenge | Tier | In a fight | Answers | Built as |
 | --- | --- | --- | --- | --- |
 | Shield wall | Fundamental | A Taunting, Guarded unit protects fragile dealers. | Area; Seek, Sunder, heavy single hits | Bandit Camp; Lich Lair |
-| Swarm | Fundamental | Up to 8 weak, fast units. | Area, Guard, Evasion, Slow; Thorns, Shock, Ward | Wolf Pack; Wisp Cloud |
+| Swarm | Fundamental | Up to 8 weak, fast units. | Area, Guard, Evasion, Slow; Thorns, Shock | Wolf Pack; Wisp Cloud |
 | Healer and brutes | Fundamental | A Healer keeps tough units alive; two Healers is the harder form. | Stun, Might; Silence, Rot, Siphon, Backstab | Grave Watch |
 | Mixed defenses | Fundamental | An Armored shell, an Incorporeal foe and a Dodger together. | Status damage, Sunder, Accuracy | Dark Hall |
 | Linked pack | Specialist | Each unit revives a fallen packmate after a few seconds; all must fall inside the window. | Area, Stun; Silence, spread Burn, Chill or Shock | Ghoul Pit |
 | Vengeful pair | Specialist | When one falls, the other gains many Might or heals to full. | Area, Weaken, Shield; Dispel, Burn on both | – |
-| Bomb pack | Specialist | Several Bombs; blasts together wipe, so they must fall one at a time. Area is the wrong pick. | Shield, Heal, Regen, single-target damage; Ward, Aegis | Bomb Room |
+| Bomb pack | Specialist | Several Bombs; blasts together wipe, so they must fall one at a time. Area is the wrong pick. | Shield, Heal, Regen, single-target damage; Aegis | Bomb Room |
 
 ### Runs
 
@@ -150,7 +150,7 @@ The dead: the second mixed gauntlet.
 - **Ghost.** Blows pass right through it. *Incorporeal*: it takes much less from every hit, and its Burn, Bleed and Shock in full. It returns in the Ice Pass as the Ice Ghost.
 - **Bone Priest.** Heals the other dead. *Healer*. **Mend:** a heal on the ally with the lowest share of max HP, about a party's damage output, so a fight against it is a mirror until the priest is stopped.
 - **Witch.** Curses the whole party. *Curser*. **Curse:** Weaken and Slow on every foe, after a long wind-up.
-- **Lich.** A dead wizard with one big spell. *Nuker*. **Soulfire:** heavy damage to a random foe after a very long wind-up, enough to delete a caster. **Dark ward:** Ward on itself, free, so it never takes the Soulfire's MP.
+- **Lich.** A dead wizard with one big spell. *Nuker*. **Soulfire:** heavy damage to a random foe after a very long wind-up, enough to delete a caster. **Dark ward:** Guard on itself, free, so it never takes the Soulfire's MP.
 - **Ghoul.** Ghouls dig each other back up: three or four together are the *Linked pack* group. **Raise:** revives a random knocked-out ally at a share of its HP, with every action on cooldown.
 - **Reaper (boss).** Death, with a scythe and a bell. *Executioner*: it owns Doom. **Death bell:** Doom on a random foe, skipping one already Doomed. **Reap:** three scythe slashes, each at a random foe (two may land on one).
 
@@ -170,11 +170,11 @@ A long grind of Burn attrition. Fire is the region's theme, not a mechanic.
   - The Mini Slimes count toward the 8-foe cap and don't split again.
   - They enter as new units: the slime's statuses don't pass to them, and their basic attacks start on cooldown.
   - Being replaced isn't a knockout.
-- **Bomb Bug.** Explodes when it dies. *Bomb*; several are the *Bomb pack*. **Volatile:** knocked out, it deals damage from its Attack to every foe and adds a few Burn to each. The blast isn't a hit, but it meets what a hit meets: it can be dodged, and Defense, Ward, Shields and Aegis reduce or block it.
+- **Bomb Bug.** Explodes when it dies. *Bomb*; several are the *Bomb pack*. **Volatile:** knocked out, it deals damage from its Attack to every foe and adds a few Burn to each. The blast isn't a hit, but it meets what a hit meets: it can be dodged, and Defense, Shields and Aegis reduce or block it.
 - **Fire Imp.** Cheers its friends on. *Buffer*. **Cheer:** several Might, and Haste, on the ally with the highest Attack.
 - **Fire Giant (boss).** Lord of the furnace. *Interrupt check*.
   - **Brand:** damage to a random foe and a few Burn, for steady pressure.
-  - **Kindle:** several Might and a Ward on itself; the Inferno follows.
+  - **Kindle:** several Might and a Guard on itself; the Inferno follows.
   - **Inferno:** a very long cast that waits until the Giant has kindled. It deals damage to every foe, with its Might on top, and adds several Burn to each. It's kept short of killing a caster outright, so the fight is a boss and not a race.
 
 ### Ice Pass

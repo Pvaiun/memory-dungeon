@@ -4,16 +4,13 @@
  * what it pulls toward (a build, its worth, its rung) to its builds.
  */
 import type { NumT, ReactionT } from "../../../src/schema.js";
-import { KIND_SPEED, stacks, STATUS, SWING_REF, WEAPON } from "../scale.js";
+import { KIND_SPEED, stacks, STATUS, swingAt } from "../scale.js";
 import { type Build, type BuildTag, own, piece, pieceStatus, weaponHit } from "../pieces/kit.js";
 import { T } from "../classes.js";
 import { apply, both, builds, helper, kit, marker, mythics, ofHolder, removeMine, tidy } from "./kit.js";
 
-/** A mythic weapon's hit at its own speed: a plain weapon's medium base and ratio, sized by its interval as every kind's is (kit.ts weaponHit). */
-const ownHit = (cooldown: number, stat: string): NumT => {
-  const f = cooldown / SWING_REF;
-  return { base: Math.round(f * WEAPON.base.medium), scale: [{ ratio: f * WEAPON.ratio.medium, stat }] };
-};
+/** A mythic weapon's hit at its own speed: a full, even swing, sized by its interval as every kind's is (scale.ts swingAt). */
+const ownHit = (cooldown: number, stat: string): NumT => swingAt(cooldown, "full", "even", stat);
 const mythic = (m: Parameters<typeof piece>[0], pulls: BuildTag[]) => {
   const g = tidy(piece(m));
   mythics.push(g);
@@ -79,7 +76,7 @@ helper(pieceStatus("the_last_wall", "The last wall", "A blow its Aegis blocks is
   }));
 
 // Paladin: Chains of light. Smite (every form) Silences what it hits (an ability change by name); hits on a Stunned or Silenced foe heal the lowest ally for half.
-mythic({ name: "Chains of light", slot: "offhand", rarity: "mythic", kind: "lantern", mythic: "paladin", statuses: ["chains_of_light"],
+mythic({ name: "Chains of light", slot: "offhand", rarity: "mythic", kind: "relic", mythic: "paladin", statuses: ["chains_of_light"],
     text: "Smite also Silences its target. The Paladin's hits on a Stunned or Silenced foe heal the ally with the lowest share of HP for half the damage dealt." }, [pull("lockdown", 3, 3), pull("pact", 1)]);
 helper(pieceStatus("chains_of_light", "Chains of light", "Smite Silences; hits on a Stunned or Silenced foe heal the lowest ally.", {
     mods: [{ of: { ability: ["smite"] }, apply: [{ status: "silence" }] }],
@@ -88,18 +85,18 @@ helper(pieceStatus("chains_of_light", "Chains of light", "Smite Silences; hits o
 
 // Valkyrie: Stormspear. A weapon of its own: the rune sword's speed, one hand; damage at medium from Attack; a Gale spear hit's Shock; Seek on basic attacks.
 mythic({ name: "Stormspear", slot: "weapon", rarity: "mythic", mythic: "valkyrie", statuses: ["stormspear"],
-    text: "A medium, one-handed spear. Its basic attacks scale from Attack, ignore Taunt, and add a few Shock.",
-    weapon: { type: "physical", hands: 1, cooldown: KIND_SPEED.rune_sword, amount: weaponHit("rune_sword", "medium", "medium", "attack"), apply: [{ status: "shock", stacks: stacks("few", "attack", 0.5) }] } }, [pull("cuts", 2, 3), pull("hunt", 2, 3)]);
+    text: "A medium, one-handed spear with a spear's swing. Its basic attacks ignore Taunt and add a few Shock.",
+    weapon: { type: "physical", hands: 1, cooldown: KIND_SPEED.spear, amount: weaponHit("spear"), apply: [{ status: "shock", stacks: stacks("few", "attack", 0.5) }] } }, [pull("cuts", 2, 3), pull("hunt", 2, 3)]);
 helper(pieceStatus("stormspear", "Stormspear", "Basic attacks ignore Taunt.", { seek: "basic" }));
 
 // Bard: Metronome. A count of the party's hits (extra strikes and each hit of a multi-hit ability included); at 20 the three songs are ready (by name) and the count is spent.
-mythic({ name: "Metronome", slot: "offhand", rarity: "mythic", kind: "horn", mythic: "bard", statuses: ["metronome"],
-    text: "Counts every hit the party lands. At 20, War ballad, Allegro and Thunder chord are ready at once, and the count starts again." }, [pull("cuts", 3, 3)]);
+mythic({ name: "Metronome", slot: "offhand", rarity: "mythic", kind: "bell", mythic: "bard", statuses: ["metronome"],
+    text: "Counts every hit the party lands. At 20, War ballad, Allegro and Encore are ready at once, and the count starts again." }, [pull("cuts", 3, 3)]);
 helper(pieceStatus("metronome", "Metronome", "Counts the party's hits; at 20, its songs are ready.", {
       reactions: [
         { on: { event: "hit_lands" }, do: [apply("metronome_count", { to: "holder" })] },
         { on: { event: "hit_lands", whose: "ally" }, do: [apply("metronome_count", { to: "holder" })] },
-        { on: { event: "status_capped", status: "metronome_count" }, do: [{ op: "cooldown", which: { ability: ["war_ballad", "allegro", "thunder_chord"] }, set: "ready", to: "holder" }, removeMine("metronome_count", "marker")] },
+        { on: { event: "status_capped", status: "metronome_count" }, do: [{ op: "cooldown", which: { ability: ["war_ballad", "allegro", "encore"] }, set: "ready", to: "holder" }, removeMine("metronome_count", "marker")] },
       ],
     }));
 helper(marker("metronome_count", "BEAT", "The party's hits, counted to 20.", { show: "icon", stacking: "intensity", cap: 20 }));

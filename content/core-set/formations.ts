@@ -227,7 +227,7 @@ const common: Entry[] = [
 // ─── Rare ────────────────────────────────────────────────────────────────────
 
 /** The slow kinds: the Hammer seat's swing shape. */
-const SLOW: UnitCondT = { weapon: ["great_weapon", "mace", "staff"] };
+const SLOW: UnitCondT = { weapon: ["rune_sword", "hammer", "mace", "staff", "great_weapon"] };
 const CASTING_FOE: ConditionT = { side: "foes", where: { casting: true } };
 /** The Mason gave it, as a reaction's tests: the applier (the event's other) holds the Mason's status, and the unit that gained it isn't the Mason. */
 const MASON_GAVE: TestT[] = [
@@ -263,7 +263,7 @@ const rare: Entry[] = [
     ]),
     [
       held("hammer_and_anvil_anvil", "Anvil", "Guarded when each fight starts.", { reactions: [atStart(give("guard"))] }),
-      held("hammer_and_anvil_hammer", "Hammer", "With a great weapon, mace or staff: basic attacks half as often, for triple damage. Otherwise: Attack up. Gains the Shields and Guards the Mason gives another ally.", {
+      held("hammer_and_anvil_hammer", "Hammer", "With a slow weapon (rune sword, hammer, mace, staff or great weapon): basic attacks half as often, for triple damage. Otherwise: Attack up. Gains the Shields and Guards the Mason gives another ally.", {
         // The weapon it wields, read once at application. Attack speed −100 is "half as often" in the engine; +200% is triple.
         stats: [
           { stat: "attack_speed", flat: { scale: [{ ratio: -100, when: SLOW, of: "holder" }] } },

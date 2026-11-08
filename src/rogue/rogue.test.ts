@@ -123,7 +123,7 @@ test("rogue (5i): a piece is fixed: an item is its piece under its own id, at th
     assert.equal(g.name, base.name);
     assert.deepEqual(g.stats, base.stats);
   }
-  assert.equal(stockOf(c).all.length, 240);
+  assert.equal(stockOf(c).all.length, 272);
   assert.ok(!stockOf(c).all.some((g) => g.source === "starter" || g.mythic));
   assert.equal(stockOf(c).mythics.length, c.pack.classes.length);
 });

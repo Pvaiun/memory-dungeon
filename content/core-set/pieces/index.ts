@@ -4,15 +4,15 @@
 import type { AbilityT, GearT, StatusT, UpgradeT } from "../../../src/schema.js";
 import type { Builds } from "./kit.js";
 import { sharedStatuses } from "./shared.js";
-import * as physical from "./weapons-physical.js";
-import * as focus from "./weapons-focus.js";
+import * as scaling from "./weapons-scaling.js";
+import * as base from "./weapons-base.js";
 import * as armor from "./armor-amulets.js";
 import * as offhands from "./offhands.js";
 import * as ups from "../upgrades/index.js";
 import { builds as formationBuilds } from "../formations.js";
 
-const shares = [physical, focus, armor, offhands];
-/** The 240 pieces. */
+const shares = [scaling, base, armor, offhands];
+/** The 272 pieces: 96 weapons, 48 armor, 104 offhands, 24 amulets. */
 export const pieceGear: GearT[] = shares.flatMap((s) => s.gear);
 /** The 16 mythics. */
 export const mythicGear: GearT[] = ups.mythics;

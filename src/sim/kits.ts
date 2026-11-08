@@ -14,32 +14,32 @@ import { canEquip } from "../validate.js";
  * Aggro is negative for the fragile, who want fewer hits, and positive for the walls.
  */
 export const PROFILES: Record<string, { w: Record<string, number>; basic: number }> = {
-  knight: { w: { max_hp: 3, defense: 3, aggro: 1, attack: 0.5 }, basic: 0.5 },
-  cleric: { w: { attack: 2.5, mp_regen: 3, max_mp: 1.5, max_hp: 1.5, crit_chance: 0.5, defense: 0.5, aggro: -1 }, basic: 1 },
-  ranger: { w: { attack: 3, crit_multiplier: 1, crit_chance: 1, accuracy: 0.5, max_hp: 1.2, double_strike: 1, defense: 0.5, aggro: -0.5 }, basic: 2 },
+  knight: { w: { max_hp: 3, defense: 3, aggro: 1, attack: 0.8 }, basic: 0.8 },
+  cleric: { w: { attack: 2, mp_regen: 3, max_mp: 1.5, max_hp: 2, cast_time_reduction: 1, defense: 0.5, aggro: -1 }, basic: 0.8 },
+  ranger: { w: { attack: 3, crit_multiplier: 1.5, crit_chance: 1.5, accuracy: 0.5, attack_speed: 1, max_hp: 1.2, evasion: 0.5, defense: 0.5, aggro: -0.5 }, basic: 2 },
   bramble_knight: { w: { thorns: 3, max_hp: 2.5, defense: 1.5, aggro: 1, attack: 0.5 }, basic: 0.5 },
-  hoplite: { w: { attack: 2, defense: 2, max_hp: 2, crit_multiplier: 1, aggro: 0.5, crit_chance: 0.5 }, basic: 2.5 },
-  paladin: { w: { attack: 2.5, defense: 1.5, max_hp: 1.5, max_mp: 1, mp_regen: 2 }, basic: 1 },
-  valkyrie: { w: { attack: 2.5, max_hp: 1.5, defense: 0.8, mp_regen: 1 }, basic: 1 },
-  bard: { w: { attack: 2, mp_regen: 2, max_hp: 1.5, defense: 0.5, aggro: -1 }, basic: 1 },
-  hexer: { w: { attack: 2, mp_regen: 3, max_mp: 1, siphon: 1.5, max_hp: 1.5, aggro: -1 }, basic: 1.5 },
-  monk: { w: { attack: 3, double_strike: 2, evasion: 1.5, crit_chance: 1, max_hp: 1, defense: 0.5 }, basic: 2.5 },
-  assassin: { w: { crit_chance: 3, crit_multiplier: 2, attack: 2, evasion: 1, max_hp: 1, aggro: -0.5 }, basic: 1.5 },
-  vampire: { w: { max_hp: 2.5, attack: 2, lifesteal: 2, defense: 0.8 }, basic: 1.5 },
-  pyromancer: { w: { attack: 3, mp_regen: 3, max_mp: 1.5, max_hp: 1.5, aggro: -1, defense: 0.3 }, basic: 1.5 },
-  frostweaver: { w: { attack: 3, mp_regen: 2.5, max_mp: 1, max_hp: 1.5, aggro: -0.7, defense: 0.3 }, basic: 1 },
-  stormcaller: { w: { attack: 3, max_hp: 1.5, mp_regen: 2.5, max_mp: 1, aggro: -1, defense: 0.3 }, basic: 2 },
-  geomancer: { w: { defense: 3, attack: 1.5, crit_chance: 2, crit_multiplier: 1.5, max_hp: 1.5, mp_regen: 2 }, basic: 1 },
+  hoplite: { w: { attack: 2.5, defense: 2.5, max_hp: 2, crit_multiplier: 1, aggro: 0.5, crit_chance: 0.5 }, basic: 2.5 },
+  paladin: { w: { attack: 2.5, defense: 1.5, max_hp: 1.5, max_mp: 1, mp_regen: 2, crit_chance: 0.8 }, basic: 1.2 },
+  valkyrie: { w: { attack: 2.5, max_hp: 1.5, defense: 0.8, cooldown_reduction: 1.5, evasion: 0.8, aggro: 0.3 }, basic: 1.5 },
+  bard: { w: { attack: 2, mp_regen: 2, cooldown_reduction: 2, attack_speed: 0.8, max_hp: 1.5, defense: 0.5, aggro: -1 }, basic: 1 },
+  hexer: { w: { attack: 2, mp_regen: 2.5, cooldown_reduction: 1.5, max_mp: 1, siphon: 1.5, max_hp: 1.5, aggro: -1 }, basic: 1.5 },
+  monk: { w: { attack: 3, double_strike: 2, evasion: 1.5, attack_speed: 1.5, crit_chance: 1, max_hp: 1, defense: 0.5 }, basic: 2.5 },
+  assassin: { w: { crit_chance: 3, crit_multiplier: 2, attack: 2, lifesteal: 1, evasion: 1, max_hp: 1, aggro: -0.5 }, basic: 1.5 },
+  vampire: { w: { max_hp: 2.5, attack: 2, lifesteal: 2, double_strike: 1, defense: 0.8 }, basic: 1.5 },
+  pyromancer: { w: { attack: 3, mp_regen: 3, max_mp: 1.5, cast_time_reduction: 2, max_hp: 1.5, aggro: -1, defense: 0.3 }, basic: 0.8 },
+  frostweaver: { w: { attack: 2.5, mp_regen: 2.5, max_mp: 1, max_hp: 2, defense: 1, cooldown_reduction: 1, aggro: -0.5 }, basic: 1 },
+  stormcaller: { w: { attack: 3, attack_speed: 2, double_strike: 1.5, max_hp: 1.5, mp_regen: 2, max_mp: 1, aggro: -1, defense: 0.3 }, basic: 2 },
+  geomancer: { w: { defense: 3, attack: 1.5, crit_chance: 2, crit_multiplier: 1.5, max_hp: 1.5, mp_regen: 2 }, basic: 1.2 },
 };
 
 /** One gear step of each stat. */
-const STEP: Record<string, number> = { crit_chance: 5, evasion: 20, accuracy: 20, double_strike: 25, lifesteal: 15, siphon: 10, crit_multiplier: 50, thorns: 150, aggro: 10 };
+const STEP: Record<string, number> = { crit_chance: 5, evasion: 20, accuracy: 20, double_strike: 25, lifesteal: 15, siphon: 10, crit_multiplier: 50, thorns: 150, aggro: 10, attack_speed: 15, cooldown_reduction: 15, cast_time_reduction: 15 };
 const stepOf = (stat: string) => STEP[stat] ?? (stat.startsWith("resist") ? 30 : stat === "max_hp" ? 500 : 1000);
 
 /** A style shifts the weights: sturdy doubles HP and Defense, sharp the damage stats. */
 export type Style = "plain" | "sturdy" | "sharp";
 export const STYLES: Style[] = ["plain", "sturdy", "sharp"];
-const DAMAGE = new Set(["attack", "crit_chance", "crit_multiplier", "double_strike", "thorns"]);
+const DAMAGE = new Set(["attack", "crit_chance", "crit_multiplier", "double_strike", "thorns", "attack_speed"]);
 
 function weight(cls: string, stat: string, style: Style): number {
   const p = PROFILES[cls];

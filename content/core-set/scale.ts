@@ -29,12 +29,13 @@ export const crit = (n: number): number => {
 
 /**
  * Every weapon kind swings on its own cooldown, in ticks, so a party's basic attacks don't land on one tick. A swing's size
- * follows its cooldown (see SWING_REF), so every kind deals about the same per tick.
+ * follows its cooldown (see SWING_REF), and its kind's words (KIND_WORDS) say how hard it hits per tick and how much of that
+ * is its wearer's Attack. Fast is under 7.5 ticks, slow over 10.5 (vocabulary.ts speedOf).
  */
 export const KIND_SPEED: Record<string, number> = {
-  dagger: 5.6, fist: 6.0, wand: 6.6, sword: 8.2, rune_sword: 8.5, bow: 8.8, rod: 9.1, spear: 9.4, mace: 11.0, staff: 11.6, great_weapon: 12.8,
+  dagger: 5.6, claws: 6.0, wand: 6.6, sword: 8.2, bow: 8.8, axe: 9.0, spear: 9.4, rune_sword: 10.7, mace: 11.0, staff: 11.6, hammer: 11.9, great_weapon: 12.8,
 };
-/** A swing's size is (base + ratio × stat) × its cooldown ÷ this. */
+/** A swing's size is its per-SWING_REF-ticks amount × its cooldown ÷ this. */
 export const SWING_REF = 16;
 /** The documents' speed words, for enemies' touches and a kind's damage word: between the kinds' cooldowns, so they don't line up either. */
 export const SPEED = { fast: 6.5, medium: 8.7, slow: 11.3 } as const;
@@ -128,20 +129,60 @@ export const MP_REGEN = { every: 4, share: 0.007 };
 
 // ─── Damage ──────────────────────────────────────────────────────────────────
 
-/** A weapon's hit: speedFactor × (base + ratio × stat). Fast kinds hit for less, slow kinds for more. The base is about half of a swing at Attack 4. */
-export const WEAPON = {
-  base: { low: 350, medium: 700, high: 1200 },
-  ratio: { low: 0.1, medium: 0.2, high: 0.3 },
-  speedFactor: { fast: 0.6, medium: 1, slow: 1.6 },
-} as const;
-export type Level = keyof typeof WEAPON.base;
 /**
- * The focus kinds (staff, wand, rod, mace, rune sword) swing lighter: a low base where the striking kinds' is medium, at the same
- * ratio, so a focus's swing grows with Attack as a blade's does but starts small, and Defense takes more of each blow. Nothing is
- * added to make up for it: a focus is worn for what its piece carries (the casters' stats, MP and MP regen, cast effects).
+ * A kind's swing, in three words (steps/class-identity: Swings and budgets). SWING.full is what a full swing deals per SWING_REF ticks
+ * at the reference Attack; the swing word scales it (SWING_POWER), the scaling word says what share of it is the wearer's Attack at
+ * that reference (SWING_SCALING: a base-heavy swing works for any wearer, an Attack-heavy one rewards stacking Attack), and the
+ * budget word says how many stat steps the kind's pieces carry at each rarity (KIND_BUDGET). A kind pays for its swing in budget
+ * or the other way round; a two-hander takes both sides, being worth a weapon and an offhand. Attack is never the signature of an
+ * Attack-heavy kind. The words are a kind's default: a piece may step along the trade (a heavy piece swings harder for a step fewer).
  */
-export const FOCUS = { kinds: ["rune_sword", "mace", "wand", "rod", "staff"], base: "low" as Level, ratio: "medium" as Level };
-export const isFocus = (kind: string | undefined) => !!kind && FOCUS.kinds.includes(kind);
+export const SWING = { full: 1500, refAttack: pts(4) } as const;
+export const SWING_POWER = { light: 0.8, full: 1, heavy: 1.2 } as const;
+export const SWING_SCALING = { base_heavy: 0.3, even: 0.5, attack_heavy: 0.7 } as const;
+/** A piece's step along the trade: a heavy piece swings this much harder for a stat step fewer, a light piece this much lighter for one more. */
+export const SWING_TRADE = 1.2;
+/** Stat steps a kind's pieces carry, by rarity (the loot's rule: a common's are its stats, the rest sit beside an effect). */
+export const KIND_BUDGET = {
+  lean: { common: 1, uncommon: 1, rare: 0, legendary: 0 },
+  standard: { common: 2, uncommon: 1, rare: 1, legendary: 1 },
+  rich: { common: 3, uncommon: 2, rare: 2, legendary: 2 },
+} as const;
+export type SwingWordK = keyof typeof SWING_POWER;
+export type ScalingWord = keyof typeof SWING_SCALING;
+export type BudgetWord = keyof typeof KIND_BUDGET;
+export type KindWords = { swing: SwingWordK; scaling: ScalingWord; budget: BudgetWord };
+export const KIND_WORDS: Record<string, KindWords> = {
+  dagger: { swing: "light", scaling: "attack_heavy", budget: "standard" },
+  claws: { swing: "light", scaling: "even", budget: "standard" },
+  wand: { swing: "light", scaling: "base_heavy", budget: "rich" },
+  rune_sword: { swing: "full", scaling: "base_heavy", budget: "standard" },
+  sword: { swing: "full", scaling: "even", budget: "standard" },
+  spear: { swing: "full", scaling: "even", budget: "standard" },
+  axe: { swing: "heavy", scaling: "attack_heavy", budget: "lean" },
+  hammer: { swing: "heavy", scaling: "base_heavy", budget: "lean" },
+  mace: { swing: "light", scaling: "base_heavy", budget: "rich" },
+  bow: { swing: "heavy", scaling: "attack_heavy", budget: "standard" },
+  great_weapon: { swing: "heavy", scaling: "even", budget: "rich" },
+  staff: { swing: "light", scaling: "base_heavy", budget: "rich" },
+};
+/**
+ * A swing at an interval: (base + ratio × stat) per hit, sized so a swing every `cooldown` ticks deals the words' amount per
+ * SWING_REF ticks. The scaling stat is Attack unless a piece swaps it (the Heartsplitter's max HP); a percent stat is converted.
+ */
+export function swingAt(cooldown: number, swing: SwingWordK, scaling: ScalingWord, stat = "attack"): NumT {
+  const f = cooldown / SWING_REF;
+  const total = SWING.full * SWING_POWER[swing];
+  const share = SWING_SCALING[scaling];
+  return { base: Math.round(f * total * (1 - share)), scale: [{ ratio: r6((f * total * share * (PER_PERCENT[stat] ?? 1)) / SWING.refAttack), stat }] };
+}
+/** A kind's swing by its words, or with a piece's own words where it steps along the trade. */
+export const swingOf = (kind: string, words: Partial<KindWords> = {}, stat = "attack"): NumT =>
+  swingAt(KIND_SPEED[kind], words.swing ?? KIND_WORDS[kind].swing, words.scaling ?? KIND_WORDS[kind].scaling, stat);
+/** A swing's damage per tick for a unit's stat, as the interface shows it. */
+export const perTick = (amount: NumT, cooldown: number, stats: Record<string, number>): number =>
+  (typeof amount === "number" ? amount : (amount.base ?? 0) + amount.scale.reduce((a, t) => a + (t.stat ? t.ratio * (stats[t.stat] ?? 0) : 0), 0)) / cooldown;
+const r6 = (x: number) => Math.round(x * 1e6) / 1e6;
 
 /** An ability's hit, as a share of its scaling stat. Touch is for abilities whose point is the status they apply. */
 export const HIT = { touch: 0.17, light: 0.29, normal: 0.5, heavy: 0.85 } as const;
@@ -231,6 +272,13 @@ export const SPECIAL = {
   thorns: { medium: 150, high: 300 },
   lifesteal: { medium: 10, high: 20 },
   siphon: { medium: 10, high: 20 },
+  /**
+   * The three speed stats, stats like any other in a class line and on gear: Attack speed (basic attacks sooner), Cooldown
+   * (abilities round sooner), Cast speed (shorter wind-ups). Haste is 40 in all three at once; a medium word is a lasting share of one.
+   */
+  attack_speed: { medium: 15, high: 30 },
+  cooldown: { medium: 15, high: 30 },
+  cast_speed: { medium: 15, high: 30 },
 } as const;
 export type SpecialStat = keyof typeof SPECIAL;
 export type SpecialLevel = "medium" | "high";
@@ -238,7 +286,26 @@ export type SpecialLevel = "medium" | "high";
 /** The engine stat a special stat word maps to. */
 export const SPECIAL_KEY: Record<SpecialStat, string> = {
   evasion: "evasion", accuracy: "accuracy", crit_damage: "crit_multiplier", double_strike: "double_strike", thorns: "thorns", lifesteal: "lifesteal", siphon: "siphon",
+  attack_speed: "attack_speed", cooldown: "cooldown_reduction", cast_speed: "cast_time_reduction",
 };
+
+// ─── The kits' own words ─────────────────────────────────────────────────────
+
+/** Sizes the base kits name beyond the shared words (classes.ts); the versions' own sit beside them in upgrades/. */
+export const KIT = {
+  /** Shieldmaiden: the share of each hit's damage the Valkyrie gains as a Shield. */
+  shieldmaiden: 0.25,
+  /** Choosing's heal, as a share of Attack: under the Cleric's Cure, since it also raises. */
+  choosing: 0.28,
+  /** Skyfall: damage per Shock stack on its target, on top of a heavy hit. */
+  skyfallPerShock: 150,
+  /** Hunter's eye: crit steps added to the Ranger's basic attacks. */
+  hunterCrit: 2,
+  /** Thunderstorm: how long the party's swings carry the storm's Shock. */
+  storm: { duration: 20 },
+  /** Static charge: Attack speed for a while (Haste is 40 in all three speeds; this is one of them, higher). */
+  staticCharge: { speed: 50, duration: 20 },
+} as const;
 
 // ─── Hits taken, in percent ──────────────────────────────────────────────────
 
@@ -307,9 +374,9 @@ export const STATUS = {
   chill: { cap: 12, perStack: -4, every: 14, shatter: 250 },
   /** The cap is a safety: uncapped, a slow foe gathers enough Shock to pay a fight's worth of damage for one action. */
   shock: { perStack: 80, drop: 0.5, cap: 40 },
-  /** Ward cuts the hits its holder takes by this share; a status's own damage still lands in full. */
-  ward: { hits: -20, duration: 30 },
   sunder: { perStack: 1.5, every: 4, cap: 20 }, // +1.5% damage taken a stack, +30% at the cap.
+  /** Marked: the party's basic attacks go to its holder while it lasts (the Paladin's Condemn, the Hunt's pieces). */
+  marked: { duration: 14 },
   silence: { duration: 16 },
   hidden: { duration: 10 },
   rot: { healing: -60, duration: 20 },

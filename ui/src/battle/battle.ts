@@ -404,14 +404,14 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
 
   /**
    * A party member's pose for an action (`ab` absent: a basic attack): a basic attack by its weapon's kind (a bow draws, a
-   * dagger or a spear thrusts, a wand, rod or staff casts, the rest swing); a damaging ability drawn from a bow, a weapon
+   * dagger or a spear thrusts, a wand or staff casts, the rest swing); a damaging ability drawn from a bow, a weapon
    * skill (a motion's look) a skill, anything else a spell (a theme's look, or no damage).
    */
   function poseFor(ab: AbilityT | undefined, kind: string | undefined): Pose {
     if (!ab) {
       if (kind === "bow") return "missile";
       if (kind === "dagger" || kind === "spear") return "thrust";
-      if (kind === "wand" || kind === "rod" || kind === "staff") return "spell";
+      if (kind === "wand" || kind === "staff") return "spell";
       return "swing";
     }
     if (dealsDamage(ab) && kind === "bow") return "missile";

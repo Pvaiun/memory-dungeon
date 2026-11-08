@@ -7,19 +7,19 @@ import { abilityUp, apply, cd, helper, hitOf, kit, passiveUp, phys } from "./kit
 
 // ─── Pyromancer ──────────────────────────────────────────────────────────────
 
-const burnTo = (to: ToT, mult: number): EffectT => apply("burn", { stacks: own("few", "attack", BURN_STACKS * mult), to });
+/** Stoke: Burn from the Pyromancer's Attack, on the hottest foe (base), on every burning foe at half (Wildfire), or on its swings' targets (Kindling). */
+const stoke = (to: ToT, mult: number): EffectT => apply("burn", { stacks: own("few", "attack", BURN_STACKS * mult), to });
 passiveUp({
-  id: "kindling", cls: "pyromancer",
-  power: "Its basic attacks add 40% more Burn.",
-  a: { name: "Wildfire", text: "Its basic attacks add a few Burn to their target and to a random other foe; stacks scale from Attack.", builds: ["harvest"] },
-  b: { name: "Searing", text: "Its basic attacks add Burn only to the foe with the most Burn, twice as many; stacks scale from Attack.", builds: ["bonfire"] },
+  id: "stoke", cls: "pyromancer",
+  power: "Each cast stokes two fifths more Burn.",
+  a: { name: "Kindling", text: "Its basic attacks add a few Burn to their target, in place of its casts; stacks scale from Attack.", builds: ["cuts", "overflow"] },
+  b: { name: "Wildfire", text: "Each ability it casts adds a few Burn to every burning foe, half as much to each; stacks scale from Attack.", builds: ["harvest"] },
   form: (v, k) => ({
-    reactions: [{
-      on: { event: "hit_lands", kind: "basic" },
-      do: v === "a" ? [burnTo("other", k), burnTo({ side: "foes", pick: "random", exclude: "other" }, k)] // A random foe other than the one it hit.
-        : v === "b" ? [burnTo(T.mostFoe("burn"), 2 * k)]
-          : [burnTo("other", k)],
-    }],
+    reactions: [
+      v === "a" ? { on: { event: "hit_lands", kind: "basic" }, do: [stoke("other", k)] }
+        : v === "b" ? { on: { event: "action_resolve", kind: "ability" }, do: [stoke({ side: "foes", where: { has: "burn" }, pick: "all" }, 0.5 * k)] }
+          : { on: { event: "action_resolve", kind: "ability" }, do: [stoke(T.mostFoe("burn"), k)] },
+    ],
   }),
 });
 
@@ -39,10 +39,11 @@ abilityUp({
 abilityUp({
   id: "fireball", cls: "pyromancer",
   power: "40% more damage.",
-  a: { name: "Conflagration", text: "Deals damage that scales from Attack to every foe, and adds many Burn to each; stacks scale from Attack. A longer cooldown.", builds: ["bonfire", "harvest"] },
+  a: { name: "Conflagration", text: "A very long wind-up: deals damage that scales from Attack to every foe, and adds many Burn to each; stacks scale from Attack.", builds: ["bonfire", "harvest"] },
   b: { name: "Flashfire", text: "A quick blast: deals damage that scales from Attack to every foe, smaller, and adds a little Burn to each; stacks scale from Attack.", builds: ["cuts", "overflow"] },
   form: (v, k) =>
-    v === "a" ? { cooldown: cd("long", "fireball"), do: [phys(hitOf("attack", "touch", k), { apply: [{ status: "burn", stacks: stacks("many", "attack", BURN_STACKS) }] })] }
+    // The ritualist's cast: the long wind-up is the cost, which Cast speed pays down.
+    v === "a" ? { cast: WINDUP.very_long, do: [phys(hitOf("attack", "touch", k), { apply: [{ status: "burn", stacks: stacks("many", "attack", BURN_STACKS) }] })] }
       : v === "b" ? { cooldown: cd("short", "fireball"), cast: WINDUP.quick, mp: 650, do: [phys(from("attack", 0.1 * k), { apply: [{ status: "burn", stacks: stacks("few", "attack", BURN_STACKS * 0.6) }] })] }
         : { do: [phys(hitOf("attack", "touch", k), { apply: [{ status: "burn", stacks: stacks("few", "attack", BURN_STACKS) }] })] },
 });
