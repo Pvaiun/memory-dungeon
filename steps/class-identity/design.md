@@ -243,6 +243,8 @@ The sword replaces the mace. A damage dealer reads Attack in everything she does
 - **Skyfall:** a heavy blow from above on the foe with the most Shock; the damage scales from Attack and rises with each Shock stack on that foe. The Shock stays. Medium cooldown, normal wind-up. Gale spear stacks the Shock, Skyfall cashes it: the storm spear's beat, and the single-target Shock payoff no class has (the Bard's Resonance is every foe's). Power step: deals two fifths more. A **Thunderclap:** Skyfall on every foe that holds Shock, half as hard. B **Valkyrie's descent:** Skyfall past any guard on the foe with the lowest HP, double below a quarter of its HP; no Shock bonus.
 - **Retired:** Einherjar as the passive, Rally, Valhalla, Flight of the valkyries, Battle hymn, Chosen, Chooser of the slain as an aura (Chooser's blessing is dropped; the self version lives on as the passive's A). Dawn muster goes too.
 
+**Upgrades:** Gale spear kept (Gale storm, Spear of the hunt); Shieldmaiden's, Choosing's and Skyfall's versions are above. Over the fallen carries the kit's one Aggro read, as the findings accepted for a version.
+
 **Watch:** Choosing is a revive on a medium cooldown where the documents give revives the very long word. It's also the heal, and it brings a tenth, so the word fits; the balance pass may lengthen it. The Shieldmaiden's Shield-from-damage shares a thread with the Geomancer's mythic (Mountain's crown rebuilds its Shield on crits); the loot step decides whether the mythic moves.
 
 ### Bard
@@ -366,7 +368,7 @@ The findings' list, after this design. Every signature of every weapon and offha
 | Attack speed | the basic-attack riders: Hexer (Cold hex), Stormcaller (Arc, its own), Ranger (Hunter's eye), Bard (Refrain), Monk (Iron palm), Paladin (Zeal), Valkyrie (Shieldmaiden), Vampire (Bloodthirst), Pyromancer (the Kindling version). |
 | Cast speed | Pyromancer (its own; Pyre, Conflagration), Frostweaver (Blizzard), Cleric (Raise), Paladin (Smite), Geomancer (Tremor), Hoplite (Othismos). |
 | Cooldown | the classes that lead with abilities: Bard (its own), Valkyrie (its own), Hexer, Pyromancer, Cleric (Last rites). |
-| Aggro | the walls (Knight, Bramble knight), Valkyrie (Last stand), Monk (Stillness of mind), Hoplite (the tanky bruiser the spear turns into a wall). |
+| Aggro | the walls (Knight, Bramble knight), Valkyrie (Over the fallen), Monk (Stillness of mind), Hoplite (the tanky bruiser the spear turns into a wall). |
 | Lifesteal | Vampire (Bloodlust, Feeding frenzy), Assassin (Bleed them dry). |
 | MP regen | Frostweaver, Stormcaller, Cleric, Paladin: dear spells and no free heal. |
 | MP | Pyromancer, Frostweaver: the dearest spells in the set. |
