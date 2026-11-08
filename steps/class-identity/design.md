@@ -1,6 +1,6 @@
 # Design: class identity after Magic
 
-The third draft, carrying the director's answers on the first two (`intent.md`). It reads with the director's findings document (the weapon rules, the twelve kinds, their stat profiles). Nothing here is built, and no number is final: sizes belong to `content/core-set/scale.ts` when the build step comes.
+The fourth draft, carrying the director's answers on the first three (`intent.md`): the offhands now get the weapon method. It reads with the director's findings document (the weapon rules, the twelve kinds, their stat profiles). Nothing here is built, and no number is final: sizes belong to `content/core-set/scale.ts` when the build step comes.
 
 ## The frame
 
@@ -14,7 +14,7 @@ The third draft, carrying the director's answers on the first two (`intent.md`).
 
 **New rules this design proposes** (for `docs/rules.md` if kept):
 - **A class has two or three identities, and each is viable.** Its versions split toward them; no identity is the class.
-- **Offhand and armor kinds are loot groups, not levers.** Two to six classes with a shared flavour and a stat lean for their commons; no signature stat and no job. The sharing rule counts weapons only.
+- **Offhand kinds follow the weapon rules.** Every piece of a kind is relevant to every class that can wear it: at most three wearers a kind, every wearer reads the kind's signature stat, two classes share at most one offhand kind, and every class has two. Slots still have no job: the kind says what stats a piece leans to, never what it's for. **Armor types stay loot groups** (the weight classes) until the director says otherwise.
 - **The three speed stats are stats like any other,** on gear and in class lines: Attack speed (basic attacks sooner), Cooldown (abilities round sooner), Cast speed (shorter wind-ups).
 - **No two classes share a base ability,** and **a passive works in every fight:** a passive that waits for a rare event (Einherjar) isn't an identity.
 
@@ -66,22 +66,48 @@ Corrections to the findings:
 
 ## Offhand kinds
 
-**Unchanged: ten kinds, the same wearers.** Offhands have no job and no signature, so an offhand kind is only who shares its loot and what its commons lean to. Checked against the identities below, every class's offhand leans to something one of its identities wants, and every pairing still shares a flavour. Nothing forces a new kind, and a change for its own sake would churn eighty pieces.
+**Thirteen kinds, two a class, by the weapon rules.** The director's read of the game as built: the bell's wearers (Monk, Cleric, Stormcaller) never want the same stats, so a bell with Evasion is a Monk tool and a bell with MP regen a Cleric tool, and ten classes had one offhand kind and no other. The weapon method fixes both: a kind is two or three classes that all read its signature stat, two classes share at most one offhand kind, and every class has two kinds, so the offhand is a choice the way the weapon is. An offhand has no swing, so a kind's whole identity is its stat profile, its flavour and who shares it. Classes with a two-hander give the slot up on that side; their offhand pairs with their one-hander.
 
-| Kind | Wearers | Commons lean | Why it fits |
-| --- | --- | --- | --- |
-| Kite shield | Knight, Paladin | Defense, HP, Aggro | the two heavy protectors |
-| Round shield | Hoplite, Valkyrie | Defense, Attack, HP | the spear-and-shield pair |
-| Horn | Knight, Bard | Aggro, MP regen, Attack | the Knight's Clarity, the Bard's songs |
-| Tome | Frostweaver, Bard | Attack, MP, MP regen | the scholars |
-| Lantern | Paladin, Pyromancer | Attack, HP, MP | light and fire |
-| Relic | Cleric, Valkyrie | Attack, MP regen, HP | the two who raise the fallen |
-| Bell | Monk, Cleric, Stormcaller | MP regen, Evasion, Attack | the quick and the devout; Evasion for the striker Stormcaller |
-| Totem | Bramble knight, Ranger, Geomancer | Defense, Attack, Thorns | the wilds and the earth |
-| Vial | Assassin, Vampire | Lifesteal, Crit chance, Attack | the two who bleed foes; it carries the Lifesteal the axe makes a signature |
-| Idol | Hexer, Vampire | Siphon, Attack, HP | the dark pair |
+| Kind | Signature | Common | Never | Worn by |
+| --- | --- | --- | --- | --- |
+| Kite shield | Defense | HP, Aggro, Thorns, Attack | Evasion, Attack speed, Double strike | Knight, Paladin, Geomancer |
+| Round shield | HP | Defense, Attack, Aggro, Crit chance | Evasion, Cast speed | Hoplite, Bramble knight, Valkyrie |
+| Horn | Aggro | HP, Defense, Attack, MP regen | Evasion, Crit damage | Knight, Hoplite |
+| Totem | Thorns | Defense, Aggro, HP, Attack | Evasion, Crit chance, Cast speed | Bramble knight, Stormcaller |
+| Relic | MP regen | HP, Attack, Cast speed, Defense | Evasion, Double strike, Crit damage | Cleric, Paladin |
+| Lantern | Cast speed | Attack, MP, HP, Cooldown | Evasion, Double strike, Aggro | Cleric, Pyromancer |
+| Tome | Cooldown | Attack, MP, MP regen, Cast speed | Defense, Thorns, Aggro | Bard, Hexer, Frostweaver |
+| Orb | MP | Attack, MP regen, Cast speed, Cooldown | Defense, Thorns, Aggro, Lifesteal | Pyromancer, Frostweaver |
+| Idol | Siphon | Attack, HP, MP, Lifesteal | Defense, Aggro, Cast speed | Hexer, Vampire |
+| Vial | Lifesteal | Attack, Crit chance, Crit damage, HP | Defense, Aggro, MP regen | Vampire, Assassin |
+| Trophy | Crit damage | Crit chance, Attack, Accuracy, Defense | Aggro, MP regen, Cast speed | Ranger, Assassin, Geomancer |
+| Bell | Attack speed | Attack, Evasion, Double strike, MP regen | Defense, Thorns, Aggro | Bard, Monk, Stormcaller |
+| Cloak | Evasion | Attack, Crit chance, Attack speed, Defense | Thorns, MP regen, Cast speed | Valkyrie, Monk, Ranger |
 
-The Monk and Stormcaller now share claws and the bell, the Assassin and Vampire the axe and the vial: two kinds each, allowed since the sharing rule counts weapons only. If the director wants those pairs further apart, the Stormcaller's bell and the Assassin's vial are the pieces to move; nothing here depends on them.
+| Class | Offhands | What each gives it |
+| --- | --- | --- |
+| Knight | kite shield, horn | Defense for the stone wall; Aggro for the anchor |
+| Cleric | relic, lantern | MP regen for a healer with no free heal; Cast speed for Raise |
+| Ranger | trophy, cloak | Crit damage for the marksman; Evasion for a light body at the back |
+| Bramble knight | totem, round shield | Thorns for the anchor; HP for the body its Regen heals |
+| Hoplite | round shield, horn | HP for the bruiser's body; Aggro, with the spear, is where a run makes it the wall |
+| Paladin | kite shield, relic | Defense for the bulwark; MP regen for its dear spells |
+| Valkyrie | round shield, cloak | HP for the Shield's cap; Evasion for the swan-feather cloak: survivable, not a tank |
+| Bard | tome, bell | Cooldown for the songs; Attack speed for Refrain |
+| Hexer | tome, idol | Cooldown for the torrent; Siphon for the witch-hunter |
+| Monk | bell, cloak | Attack speed for the blur; Evasion for the dancer |
+| Assassin | vial, trophy | Lifesteal for the drinker; Crit damage for the ambusher |
+| Vampire | vial, idol | Lifesteal for the drinker; Siphon and HP for the blood-well |
+| Pyromancer | lantern, orb | Cast speed for Pyre; MP for the dearest spells in the set |
+| Frostweaver | tome, orb | Cooldown for the lock; MP for the deep calm |
+| Stormcaller | totem, bell | Thorns for the live wire; Attack speed for the striker |
+| Geomancer | kite shield, trophy | Defense for the stone; Crit damage for the crit behind it |
+
+What changed and why:
+- **Three new kinds:** the orb (the mages' MP), the trophy (a pelt, a skull, a geode: the crit hunters') and the cloak (Evasion for the quick; the Valkyrie's is a swan-feather cloak, the Ranger's and Monk's their own). Thirteen kinds, a hundred and four pieces, twenty-four to write.
+- **Kinds that lost a wearer who didn't read them:** the bell loses the Cleric (its Attack speed is for riders on basic attacks: Refrain, Iron palm, Arc), the horn loses the Bard (it wants Aggro down), the totem loses the Ranger and Geomancer (neither reads Thorns), the relic loses the Valkyrie (no longer a healer), the lantern loses the Paladin and the round shield gains the Bramble knight, the kite shield the Geomancer, the tome the Hexer.
+- **Checked:** every kind has two or three wearers, every class two kinds, no two classes share more than one offhand kind, and every wearer reads its kinds' signatures (the *Who reads what* table). Eleven pairs share a weapon kind and an offhand kind across slots (the Monk and Stormcaller claws and bell, the Pyromancer and Frostweaver staff and orb, and so on), which the findings allow and which keeps each pair's loot close where their play is close.
+- **The thinnest reads:** the Vampire's Siphon (its blood-well versions move MP, and the idol's HP and Lifesteal commons are its own), the Ranger's Evasion (survival for a light body), the Paladin's Defense (a Plate wearer's survival).
 
 ## Armor
 
@@ -138,19 +164,19 @@ Each sheet: the trunk in a line; the identities, each with what you watch, what 
 
 ### Cleric
 
-**Trunk.** Quick top-ups, a cleanse and Regen, a slow raise, prayers twice as fast when its own life is in danger. Spends MP for every heal. Kinds: mace (HP), staff (Cast speed) · Robes · relic, bell.
+**Trunk.** Quick top-ups, a cleanse and Regen, a slow raise, prayers twice as fast when its own life is in danger. Spends MP for every heal. Kinds: mace (HP), staff (Cast speed) · Robes · relic, lantern.
 
-- **The mender** (Blood Pact, Phoenix). Heals that give of its own body. Mace, relic. Versions: Triage, Martyr's raise, Shared rites.
-- **The anchor's priest** (the Toll). Keeps one wall standing. Mace (Thorns common), bell. Versions: Anchor's blessing, Ward of life, Rite of passage.
-- **The font** (Overflow). Mana as much as health. Staff (MP regen common), bell. Versions: Font, Battle prayer.
+- **The mender** (Blood Pact, Phoenix). Heals that give of its own body, and a quicker raise. Mace, lantern. Versions: Triage, Martyr's raise, Shared rites.
+- **The anchor's priest** (the Toll). Keeps one wall standing. Mace (Thorns common), relic. Versions: Anchor's blessing, Ward of life, Rite of passage.
+- **The font** (Overflow). Mana as much as health. Staff (MP regen common), or the mace with the relic. Versions: Font, Battle prayer.
 
 **Kit:** unchanged. **Upgrades:** all kept but two scalings. Triage **heals from the Cleric's max HP** (twice as much, below 40%): it **reads** HP. Ward of life's Shield **scales from the Cleric's max HP,** not the raised ally's: the user-scaling rule. Martyr's raise already reads HP, paying the Cleric's own.
 
 ### Ranger
 
-**Trunk.** Arrows that bleed, chill and sunder whatever stands in front; plain arrows past any guard that crit for a living. Kinds: bow (Crit damage), dagger (Crit chance) · Leather · totem.
+**Trunk.** Arrows that bleed, chill and sunder whatever stands in front; plain arrows past any guard that crit for a living. Kinds: bow (Crit damage), dagger (Crit chance) · Leather · trophy, cloak.
 
-- **The hunter** (the Hunt). One foe at a time, the weakest first. Dagger, Leather. Versions: Quarry, Deep barbs, Gutting arrow.
+- **The hunter** (the Hunt). One foe at a time, the weakest first. Dagger with the trophy or the cloak, Leather. Versions: Quarry, Deep barbs, Gutting arrow.
 - **The overwatch** (Lockdown). Shoots the one winding up. Bow. Versions: Overwatch, Pinning arrow, Armor breaker.
 - **The spreader** (Harvest, Cold Snap). A barb on everything. Bow (Attack speed common). Versions: Scatter barbs, Hail.
 
@@ -158,17 +184,17 @@ Each sheet: the trunk in a line; the identities, each with what you watch, what 
 
 ### Bramble knight
 
-**Trunk.** Draws every foe onto its thorns, where each attacker bleeds; regrows the lowest; lashes with the thorns themselves. Kinds: hammer (Defense), mace (HP) · Plate, Mail · totem.
+**Trunk.** Draws every foe onto its thorns, where each attacker bleeds; regrows the lowest; lashes with the thorns themselves. Kinds: hammer (Defense), mace (HP) · Plate, Mail · totem, round shield.
 
 - **The anchor** (the Toll). Hammer (Thorns common), Plate, totem. Versions: Bloodroot (**reads** HP), Overgrowth, Deep roots, Rebuke.
-- **The field of thorns** (Harvest). Everything that hits it, and everything near, bleeds. Either kind. Versions: Spreading thorns, Whipping vines.
-- **The grove-keeper** (Landslide, Blood Pact as support). Guard and Regen for the party. Mace, Mail. Versions: Grove, Blossom.
+- **The field of thorns** (Harvest). Everything that hits it, and everything near, bleeds. Either kind, totem. Versions: Spreading thorns, Whipping vines.
+- **The grove-keeper** (Landslide, Blood Pact as support). Guard and Regen for the party. Mace, round shield, Mail. Versions: Grove, Blossom.
 
 **Kit:** unchanged. **Upgrades:** all kept. Briar reads Defense in the base. **Watch:** the flattest weapon pair in the set (see Third kinds).
 
 ### Hoplite
 
-**Trunk.** The game's bruiser: slow double swings, a thrust that opens one foe up, a slow charge that strikes every foe, and an Aegis on the ally about to take the killing blow. Very tanky, big hits, team support, and it draws no fire through its abilities: that's its weakness, and the spear is where a run buys the draw. Kinds: spear (Aggro), great weapon (Attack) · Plate · round shield.
+**Trunk.** The game's bruiser: slow double swings, a thrust that opens one foe up, a slow charge that strikes every foe, and an Aegis on the ally about to take the killing blow. Very tanky, big hits, team support, and it draws no fire through its abilities: that's its weakness, and the spear and the horn are where a run buys the draw. Kinds: spear (Aggro), great weapon (Attack) · Plate · round shield, horn.
 
 - **The bruiser** (Landslide, Ambush). The biggest swings in the party. Great weapon, Plate. Versions: Opening thrust, Shieldbearer (**reads** Defense), Shield advance.
 - **The line-breaker** (Harvest). Hits that carry through the whole line. Spear, round shield. Versions: Skewer, Breaking charge, Shield wall.
@@ -183,11 +209,11 @@ Each sheet: the trunk in a line; the identities, each with what you watch, what 
 
 ### Paladin
 
-**Trunk.** A tanky supporting damage dealer. Its hits land half again as hard on debuffed foes; its faith shields the whole party from its own Attack; it lifts curses and heals; it brings down a slow, heavy, burning Smite. Ward is retired. Kinds: mace (HP), great weapon (Attack) · Mail, Plate · kite shield, lantern.
+**Trunk.** A tanky supporting damage dealer. Its hits land half again as hard on debuffed foes; its faith shields the whole party from its own Attack; it lifts curses and heals; it brings down a slow, heavy, burning Smite. Ward is retired. Kinds: mace (HP), great weapon (Attack) · Mail, Plate · kite shield, relic.
 
-- **The crusader** (Bonfire, Harvest). Shields, then fire. Great weapon, lantern, Mail. Versions: Zeal, Consecration, Pyre of judgement.
+- **The crusader** (Bonfire, Harvest). Shields, then fire. Great weapon, Mail. Versions: Zeal, Consecration, Pyre of judgement.
 - **The bulwark** (Landslide, Lockdown). Shields from its own body, a Stun from the sky, and crits on the condemned. Mace, kite shield, Plate. Versions: Bulwark of faith (**reads** HP), Hammer of dawn, Verdict.
-- **The penitent** (Blood Pact, Phoenix). Heals paid in its own blood, and a raise. Mace, lantern. Versions: Penance (**reads** HP), Absolution.
+- **The penitent** (Blood Pact, Phoenix). Heals paid in its own blood, and a raise. Mace, relic. Versions: Penance (**reads** HP), Absolution.
 
 **Kit:** two changes.
 - **Judgement: its hits deal half again as much to foes with a debuff** (the old Inquisition, by the director's word: few foes buff themselves). Power step: +70%. A **Zeal:** the bonus, and its basic attacks add a few Burn (from Attack) to a foe that holds a debuff. B **Verdict:** the bonus, and its crit chance is tripled against a foe that holds a debuff. Both versions keep the fantasy whole and add to it, as the director asked; Sentence (the bonus moved to the highest-Attack foe) goes. Verdict **reads** Crit chance, which the Paladin's kinds carry as a common.
@@ -197,14 +223,14 @@ Each sheet: the trunk in a line; the identities, each with what you watch, what 
 
 ### Valkyrie
 
-**Trunk.** The offensive shieldmaiden: a quick, survivable damage dealer, not a tank. Her spear builds her shield as it strikes; three quick hits reach past any guard and shock what they hit; a heavy blow from above cashes the Shock in; and she chooses the slain: one ability mends the lowest ally or raises a fallen one. Kinds: spear (Aggro), sword (Attack) · Mail, Leather · round shield, relic.
+**Trunk.** The offensive shieldmaiden: a quick, survivable damage dealer, not a tank. Her spear builds her shield as it strikes; three quick hits reach past any guard and shock what they hit; a heavy blow from above cashes the Shock in; and she chooses the slain: one ability mends the lowest ally or raises a fallen one. Kinds: spear (Aggro), sword (Attack) · Mail, Leather · round shield, cloak.
 
-The sword replaces the mace. A damage dealer reads Attack in everything she does, and the sword's commons (HP, Defense, Crit chance) are the shieldmaiden's "relatively survivable"; the mace's HP and MP regen were the healer's, and she isn't one any more. Spear and sword with a round shield is the Norse picture. The mace falls to three wearers and the findings' exception disappears; the sword rises to three (Knight, Hexer, Valkyrie), each pair sharing it alone.
+The sword replaces the mace. A damage dealer reads Attack in everything she does, and the sword's commons (HP, Defense, Crit chance) are the shieldmaiden's "relatively survivable"; the mace's HP and MP regen were the healer's, and she isn't one any more. Spear and sword with a round shield, or a swan-feather cloak, is the Norse picture. The mace falls to three wearers and the findings' exception disappears; the sword rises to three (Knight, Hexer, Valkyrie), each pair sharing it alone.
 
-- **The storm spear** (the Hunt, Thousand Cuts). Shock, then the sky falls. Spear, Leather, round shield. Versions: Spear of the hunt, Valkyrie's descent, Chooser of the slain.
-- **The shield-sister** (the Toll, Blood Pact). Her shield on whoever needs it, a Taunt when an ally is nearly down. Sword, Mail, relic. Versions: Shield-sister, Last stand (**reads** Aggro), Gale storm.
+- **The storm spear** (the Hunt, Thousand Cuts). Shock, then the sky falls. Spear, Leather, cloak. Versions: Spear of the hunt, Valkyrie's descent, Chooser of the slain.
+- **The shield-sister** (the Toll, Blood Pact). Her shield on whoever needs it, a Taunt when an ally is nearly down. Sword, Mail, round shield. Versions: Shield-sister, Last stand (**reads** Aggro), Gale storm.
 - **The thunderhead** (Harvest). Shock on everything, then every shocked foe struck at once. Spear. Versions: Gale storm, Thunderclap.
-- **The reviver** (Phoenix). A build a run can go for, not the class. Relic. Versions: Einherjar, Dawn muster.
+- **The reviver** (Phoenix). A build a run can go for, not the class; its pieces are the loot's, not a kind's. Versions: Einherjar, Dawn muster.
 
 **Kit:** rebuilt around Gale spear, as the director asked.
 - **Passive, Shieldmaiden:** each hit she lands gives her a Shield of a share of the damage dealt. Survivable by attacking: her Shield bar grows as she fights and is spent as she's hit, and it soaks a status's damage too. It reads Attack (bigger hits, bigger shield) and HP (the Shield's cap). Power step: a bigger share. A **Chooser of the slain:** no Shield; her hits deal a fifth more to foes below half their HP (offense in place of defence). B **Shield-sister:** the Shield goes to the ally with the lowest share of HP instead of her.
@@ -217,19 +243,19 @@ The sword replaces the mace. A damage dealer reads Attack in everything she does
 
 ### Bard
 
-**Trunk.** Every note mends and refuels; a ballad steadies the party, an allegro quickens it, thunder makes every foe pay for acting. Its Cooldown is its tempo, now in its line. Kinds: bow (Crit damage), wand (Cooldown) · Leather, Robes · horn, tome.
+**Trunk.** Every note mends and refuels; a ballad steadies the party, an allegro quickens it, thunder makes every foe pay for acting. Its Cooldown is its tempo, now in its line. Kinds: bow (Crit damage), wand (Cooldown) · Leather, Robes · tome, bell.
 
-- **The pacer** (Thousand Cuts, Landslide). Might and Haste where they count. Bow, Leather, horn. Versions: Battle song, Marching song, Accelerando.
+- **The pacer** (Thousand Cuts, Landslide). Might and Haste where they count. Bow, or the wand with the bell; Leather. Versions: Battle song, Marching song, Accelerando.
 - **The wellspring** (Overflow). Mana round the party. Wand, Robes, tome. Versions: Harmony, Rubato.
-- **The dirge** (Harvest, Lockdown). Shock that comes due, and a Slow on everyone. Wand. Versions: Resonance, Lullaby.
+- **The dirge** (Harvest, Lockdown). Shock that comes due, and a Slow on everyone. Wand, tome. Versions: Resonance, Lullaby.
 
 **Kit:** unchanged. **Upgrades:** all kept. Refrain reads Crit damage: a crit is the biggest hit, and Refrain is a share of it.
 
 ### Hexer
 
-**Trunk.** A blade that carries curses: its swing chills, its curses burn, shock, weaken and sunder, and it silences a foe mid-cast and strips what it was given. Re-themed as a spellblade; the director names it. Kinds: wand (Cooldown), sword (Attack) · Mail · idol. Two identities, both to stand; neither feels viable today, and the director has taken both structural adds below.
+**Trunk.** A blade that carries curses: its swing chills, its curses burn, shock, weaken and sunder, and it silences a foe mid-cast and strips what it was given. Re-themed as a spellblade; the director names it. Kinds: wand (Cooldown), sword (Attack) · Mail · tome, idol. Two identities, both to stand; neither feels viable today, and the director has taken both structural adds below.
 
-- **The status torrent** (Harvest, Bonfire, Cold Snap). Six statuses on the field, each a little, all scaling from Attack; the wand brings them round faster, the sword makes each bigger. Versions: Hex of flames, Deep cold, Plague, Focused curse. What it lacks: a payoff of its own. The statuses' own damage is the payoff, and it's the balance pass's to size; the structural add is Culmination (below), which pays for every debuff on a foe.
+- **The status torrent** (Harvest, Bonfire, Cold Snap). Six statuses on the field, each a little, all scaling from Attack; the wand and the tome bring them round faster, the sword makes each bigger. Versions: Hex of flames, Deep cold, Plague, Focused curse. What it lacks: a payoff of its own. The statuses' own damage is the payoff, and it's the balance pass's to size; the structural add is Culmination (below), which pays for every debuff on a foe.
 - **The witch-hunter** (Lockdown, the Toll). Shuts casters and buffers down, weakens everything. Sword, idol (Siphon). Versions: Silence all, Broken spell, Wither, Culmination. What it lacks: Unmake fires only on a cast, so against a pack with no caster the hunter has nothing to hunt, and its payoff is the party's (Weaken, Sunder, Silence make everyone else's fight easier) with none of its own. Two structural adds: Unmake's condition widens, and Culmination.
 
 **Kit:** one change. **Unmake waits until a foe is in a wind-up or holds a buff,** and aims at the casting foe with the highest Attack, else the buffed one. The classes document records that the director's design named both triggers and the engine couldn't join them with "or"; it can now (`if: { any }`, used by Ward of life). The hunter fires in every fight that has a caster or a buff.
@@ -237,19 +263,19 @@ The sword replaces the mace. A damage dealer reads Attack in everything she does
 
 ### Monk
 
-**Trunk.** Every blow leaves the foe more open, Flow keeps it fast, burning fists pile onto the hottest foe, a pressure point drops the most dangerous one. Kinds: claws (Double strike), spear (Aggro) · Leather · bell.
+**Trunk.** Every blow leaves the foe more open, Flow keeps it fast, burning fists pile onto the hottest foe, a pressure point drops the most dangerous one. Kinds: claws (Double strike), spear (Aggro) · Leather · bell, cloak.
 
 - **The blur** (Thousand Cuts). Claws, bell. Versions: Hundred hands, Flow state, Fanned flames.
-- **The dancer** (the Toll). Taunts and dodges, and the attackers pay. Spear (Aggro), Leather. Versions: Stillness of mind (**reads** Aggro), Drinking palm.
+- **The dancer** (the Toll). Taunts and dodges, and the attackers pay. Spear (Aggro), cloak (Evasion), Leather. Versions: Stillness of mind (**reads** Aggro), Drinking palm.
 - **The point-striker** (Lockdown, the Hunt, Cold Snap). Spear. Versions: Lingering point, Vital strike, Frost fist.
 
 **Kit:** unchanged; Flow keeps Haste, and the Stormcaller's duplicate changes. **Upgrades:** all kept.
 
 ### Assassin
 
-**Trunk.** Slips out of sight, picks off the weakest past any guard, leaves every crit a wound, silences the back line. Kinds: dagger (Crit chance), axe (Lifesteal) · Leather · vial.
+**Trunk.** Slips out of sight, picks off the weakest past any guard, leaves every crit a wound, silences the back line. Kinds: dagger (Crit chance), axe (Lifesteal) · Leather · vial, trophy.
 
-- **The ambusher** (Ambush). Everything in the first moment. Dagger. Versions: Opening wound, Shadow step, From the shadows.
+- **The ambusher** (Ambush). Everything in the first moment. Dagger, trophy. Versions: Opening wound, Shadow step, From the shadows.
 - **The hunter** (the Hunt). Kill, reset, kill. Dagger or axe. Versions: Rupture, Coup de grâce, Smoke screen.
 - **The drinker** (Blood Pact, Lockdown). A fragile class buying its sustain from the kill. Axe, vial. Versions: Bleed them dry (**reads** Lifesteal), Choke.
 
@@ -267,53 +293,53 @@ The sword replaces the mace. A damage dealer reads Attack in everything she does
 
 ### Pyromancer
 
-**Trunk.** The glass cannon of long wind-ups: every strike adds Burn, bolts pile onto the hottest foe, a pyre lands. The one mage with no speed stat, because its slowness is the point. Kinds: staff (Cast speed), wand (Cooldown) · Robes · lantern.
+**Trunk.** The glass cannon of long wind-ups: every strike adds Burn, bolts pile onto the hottest foe, a pyre lands. The one mage with no speed stat, because its slowness is the point. Kinds: staff (Cast speed), wand (Cooldown) · Robes · lantern, orb.
 
 - **The pyre-keeper** (Bonfire). Staff. Versions: Searing, Slow burn, Conflagration, Pyre of the fallen.
-- **The field-burner** (Harvest). Staff or wand, lantern. Versions: Wildfire, Funeral pyre.
-- **The flash-caster** (Thousand Cuts, Overflow). Wand. Versions: Flash bolt, Flashfire.
+- **The field-burner** (Harvest). The staff, or the wand with the lantern. Versions: Wildfire, Funeral pyre.
+- **The flash-caster** (Thousand Cuts, Overflow). Wand, orb. Versions: Flash bolt, Flashfire.
 
 **Kit:** unchanged. **Upgrades:** all kept; they already split by kind.
 
 ### Frostweaver
 
-**Trunk.** Decides when foes act: Chill slows them a little more with every stack and shatters into damage and a Stun, the shattered foe is left sundered, and the time it buys goes to an ally's mana. Its power is in the lock, not the number: Attack 3, Cast speed in its line. Kinds: staff (Cast speed), rune sword (MP regen) · Robes · tome.
+**Trunk.** Decides when foes act: Chill slows them a little more with every stack and shatters into damage and a Stun, the shattered foe is left sundered, and the time it buys goes to an ally's mana. Its power is in the lock, not the number: Attack 3, Cast speed in its line. Kinds: staff (Cast speed), rune sword (MP regen) · Robes · tome, orb.
 
-- **The shatterer** (Cold Snap). Staff, tome. Versions: Splinters, Icicles, Whiteout, Avalanche.
-- **The lock** (Lockdown). Rune sword. Versions: Brittle, Ice spear, Frozen moment.
-- **The deep calm** (Overflow). Rune sword, tome. Versions: Deep calm, Frozen moment.
+- **The shatterer** (Cold Snap). Staff. Versions: Splinters, Icicles, Whiteout, Avalanche.
+- **The lock** (Lockdown). Rune sword, tome. Versions: Brittle, Ice spear, Frozen moment.
+- **The deep calm** (Overflow). Rune sword, orb. Versions: Deep calm, Frozen moment.
 
 **Kit:** unchanged. **Upgrades:** all kept. **Watch:** the weakest dealer in the prototype; its identities are sound and its numbers are the balance pass's.
 
 ### Stormcaller
 
-**Trunk.** Everything it does is quick and spreads: each swing arcs to a second foe, lightning chains, a storm shocks everyone, and it charges itself to swing faster. The striker among the mages. Kinds: claws (Double strike), rune sword (MP regen) · Robes, Leather · bell.
+**Trunk.** Everything it does is quick and spreads: each swing arcs to a second foe, lightning chains, a storm shocks everyone, and it charges itself to swing faster. The striker among the mages. Kinds: claws (Double strike), rune sword (MP regen) · Robes, Leather · totem, bell.
 
 - **The storm** (Harvest). Rune sword, Robes. Versions: Forked arc, Supercell, Recharge.
 - **The striker** (Thousand Cuts, the Hunt). Claws, Leather, bell. Versions: Static grip, Ball lightning, Overcharge.
-- **The live wire** (the Toll). Struck, it strikes back. Either kind, Robes. Versions: Static field, Storm shield.
+- **The live wire** (the Toll). Struck, it strikes back. Either kind, totem, Robes. Versions: Static field, Storm shield.
 
 **Kit:** one change. **Static charge: its basic attacks come faster for a while** (Attack speed, not Haste). Today it's "Haste on itself", the Monk's Flow word for word; this is the storm's own word and it reads the claws: more swings, more Double strike, more Arc. **Upgrades:** Arc, Chain lightning and Thunderstorm kept. Static charge: Overcharge keeps its idea on the new base (while the charge lasts, its next three abilities cost no MP); Storm shield kept.
 
 ### Geomancer
 
-**Trunk.** Wraps itself and an ally in stone, and while its own stone holds its blows crit far more often and far harder. Defense is its spell stat; the great weapon is where its Attack comes from. Kinds: hammer (Defense), great weapon (Attack) · Plate · totem.
+**Trunk.** Wraps itself and an ally in stone, and while its own stone holds its blows crit far more often and far harder. Defense is its spell stat; the great weapon is where its Attack comes from. Kinds: hammer (Defense), great weapon (Attack) · Plate · kite shield, trophy.
 
 - **The landslide** (Landslide). Great weapon. Versions: Faultline, Boulder, Fissure, Rampart.
-- **The quake** (Lockdown, Cold Snap). Hammer. Versions: Stunning crits, Aftershock.
-- **The stone-skin** (Harvest, Phoenix as support). Hammer, totem. Versions: Stone skin, Rockslide.
+- **The quake** (Lockdown, Cold Snap). Hammer, trophy. Versions: Stunning crits, Aftershock.
+- **The stone-skin** (Harvest, Phoenix as support). Hammer, kite shield. Versions: Stone skin, Rockslide.
 
 **Kit:** unchanged. **Upgrades:** all kept. **Watch:** with the Knight's sword, the thinnest Attack read in the set: the swing, which Bedrock's doubled crits and Faultline's triple land on. Boulder is the version that could take Attack as its scaling if the read proves too thin in play.
 
 ## Who reads what
 
-The findings' list, after this design. Every signature of every kind is read by every wearer, in the base kit or a version.
+The findings' list, after this design. Every signature of every weapon and offhand kind is read by every wearer, in the base kit, a version, or the survival of a body built for it.
 
 | Stat | Read by |
 | --- | --- |
 | Attack | nearly every hit and stack; the Cleric's Cure, the Paladin's Sanctuary and heals, the Vampire's Frenzy, the Hoplite's Phalanx charge, the Hexer's Culmination, the Valkyrie's Shieldmaiden, Choosing and Skyfall. The Knight and Geomancer read it in the swing, and the Knight in Crushing bash. |
-| HP | Knight (Vanguard, Shield bash), Vampire (Blood drain, Blood gift), Cleric (Martyr's raise, Triage, Ward of life), Paladin (Bulwark of faith, Penance), Bramble knight (Regen, Bloodroot), Valkyrie (the Shield's cap), the walls' survival. |
-| Defense | Geomancer (Earthen shell, Rockfall, Tremor), Bramble knight (Briar), Knight (Stone guard), Hoplite (Shieldbearer), the walls' survival. |
+| HP | Knight (Vanguard, Shield bash), Vampire (Blood drain, Blood gift), Cleric (Martyr's raise, Triage, Ward of life), Paladin (Bulwark of faith, Penance), Bramble knight (Regen, Bloodroot), Valkyrie (the Shield's cap), Hoplite and the walls' survival. |
+| Defense | Geomancer (Earthen shell, Rockfall, Tremor), Bramble knight (Briar), Knight (Stone guard), Hoplite (Shieldbearer), Paladin and the walls' survival. |
 | Crit chance | Assassin (Backstab, Lacerate), Geomancer (Bedrock), Ranger (Hunter's eye), Paladin (Verdict). |
 | Crit damage | Assassin, Geomancer, Ranger (Hunter's eye), Bard (Refrain). |
 | Double strike | Monk (Iron palm), Stormcaller (Arc), Vampire (more drinking). |
@@ -322,22 +348,25 @@ The findings' list, after this design. Every signature of every kind is read by 
 | Cooldown | the classes that lead with abilities: Bard (its own), Valkyrie (its own), Hexer, Pyromancer, Cleric (Last rites). |
 | Aggro | the walls (Knight, Bramble knight), Valkyrie (Last stand), Monk (Stillness of mind), Hoplite (the tanky bruiser the spear turns into a wall). |
 | Lifesteal | Vampire (Bloodlust, Feeding frenzy), Assassin (Bleed them dry). |
-| MP regen | Frostweaver, Stormcaller: the dearest spells after the Pyromancer's. |
-| Thorns | Bramble knight; Knight (Hold the line), Stormcaller (Storm shield). |
-| Evasion | Monk, Assassin, the Stormcaller's leather; Monk (Stillness of mind). |
-| Siphon | Hexer. |
+| MP regen | Frostweaver, Stormcaller, Cleric, Paladin: dear spells and no free heal. |
+| MP | Pyromancer, Frostweaver: the dearest spells in the set. |
+| Thorns | Bramble knight; Stormcaller (Storm shield, the live wire), Knight (Hold the line). |
+| Evasion | Monk (its own, Stillness of mind), Assassin, Valkyrie and Ranger (light bodies kept standing), the Stormcaller's leather. |
+| Siphon | Hexer; Vampire (its blood-well versions move MP). |
 | Accuracy | Ranger. Never a signature. |
 
 ## Decisions
 
 Settled by the director across the three drafts: a class has several identities and the design serves each; Sanctuary as a Shield from Attack; Judgement on debuffed foes, with Zeal and Verdict; the Hoplite's second guard replaced by Phalanx charge, with Shield advance and Breaking charge, no Taunt in its kit; Einherjar retired and the Valkyrie rebuilt as the offensive shieldmaiden (Shieldmaiden, Gale spear, Choosing, Skyfall) on spear and sword; the Hexer's two structural adds.
 
+New in this draft and wanting a word: **the offhand kinds by the weapon rules,** thirteen kinds, two a class, with the orb, the trophy and the cloak new; the profiles and wearers are tabled under *Offhand kinds*, and the pairings with the thinnest fantasy are the Geomancer's trophy (a geode) and the Monk's cloak.
+
 Designer's calls, open to being overruled at the gate:
 - **Hunter's eye crits more often** on basic attacks (the Ranger's crit read in the base).
 - **Static charge is Attack speed, not Haste.**
 - **The speed stats enter four lines:** Bard and Valkyrie Cooldown, Frostweaver Cast speed, Stormcaller Attack speed.
 - **The Stormcaller wears Leather as well as Robes.**
-- **Offhand kinds and armor types unchanged** otherwise.
+- **Armor types unchanged.** They have five or six wearers each and the same mismatch the bell had (a Bard doesn't want Leather's Evasion); whether they get the same pass, which means more types, is the director's call.
 - **The stat lines** as tabled.
 - **No third kinds now;** the Bramble knight first if one is wanted.
 - **Scaling fixed to the user** where a class's own content read the target: Ward of life's Shield.
@@ -348,9 +377,9 @@ Designer's calls, open to being overruled at the gate:
 Not this step's work, listed so the design is honest about its cost.
 
 - **Kinds:** the vocabulary's weapon table (twelve kinds; rod gone, fist renamed claws, axe and hammer added; rune sword and mace slow), `KIND_SPEED` for the new kinds, the classes' kinds, the gear-slots tool's tables.
-- **Pieces:** eight rod pieces rehomed; sixteen axe and hammer pieces written to the kinds' profiles; the loot stock table (twelve weapon kinds, ninety-six pieces); the commons-and-uncommons lean table rewritten from the findings' profiles. The sword's and mace's wearer lists change on every card.
+- **Pieces:** eight rod pieces rehomed; sixteen axe and hammer pieces written to the kinds' profiles; twenty-four offhand pieces written for the orb, trophy and cloak, and the eighty existing offhands re-read against their kinds' new profiles and wearers (the bell's Cleric pieces, the horn's Bard pieces, the totem's Ranger and Geomancer pieces move or change); the loot stock table (twelve weapon kinds, thirteen offhand kinds); the commons-and-uncommons lean table rewritten from both profile tables. Wearer lists change on many cards, and the Shadow cloak (a leather rare) wants a new name.
 - **Ward retired:** Sanctuary (above), Sigil blade and Prior's mace (new uncommon effects), the Lich's Dark ward and the Fire Giant's Kindle (Guard or Shield in its place), the Buffer's list, and every challenge whose answers name Ward.
-- **Mythics touched:** Stormspear (the Valkyrie's) still fits the storm spear. The last wall (the Hoplite's) reads Aspis, which stays. Mountain's crown (the Geomancer's) shares a thread with Shieldmaiden; the loot step decides. None depends on Einherjar, Rally, Valhalla or Paired guard; the Valkyrie's build parties and routes in `tools/build-parties/` and `docs/gear-design/builds.md` (Phoenix's routes, Valhalla and Rally in the border table) need rewriting.
+- **Mythics touched:** Stormspear (the Valkyrie's) still fits the storm spear. The last wall (the Hoplite's) reads Aspis, which stays. Mountain's crown (the Geomancer's) shares a thread with Shieldmaiden; the loot step decides. Two offhand mythics sit in kinds their class no longer wears: Metronome (a horn, the Bard's) and Chains of light (a lantern, the Paladin's) take a kind their class wears, or none, as a mythic may. None depends on Einherjar, Rally, Valhalla or Paired guard; the Valkyrie's build parties and routes in `tools/build-parties/` and `docs/gear-design/builds.md` (Phoenix's routes, Valhalla and Rally in the border table) need rewriting.
 - **Scaling from the user, on pieces:** several pieces heal or shield from the receiving ally's max HP (Rallying horn, Charnel icon, Martyr's locket, Mantle of the fallen, Vestments of return). The director's rule is for classes here; whether it reaches pieces is their call, flagged.
 - **Engine:** a class line carrying a speed stat (a `SPECIAL` entry and the sheet showing it); a heal-or-revive ability (two effects, each with its own target, as Ward of life already does). Nothing else new: crit steps on basic attacks, Attack speed self-buffs, Lifesteal doubling, Shield from a hit's damage, "or" conditions and per-stack and per-debuff scaling all exist.
 - **Documents at close:** `classes.md` (every changed line), `rules-and-vocabulary.md` (the weapon table, Ward, the speed stats), `loot.md` (stock, leans), `builds.md` (the Valkyrie's routes and border abilities), `philosophy.md` (slots), `rules.md` (the frame's rules, the findings' weapon rules), the code map if files split.
@@ -359,7 +388,8 @@ Not this step's work, listed so the design is honest about its cost.
 ## Checks
 
 - **The four weapon rules hold with no exception.** Wearers a kind: 2 to 3. No two classes share more than one weapon kind (checked pair by pair; the sword's three wearers each share it alone). Every class has a one-handed kind. No class has three.
-- **Every signature is read by every wearer,** per *Who reads what*. The thinnest reads are the Knight's and Geomancer's Attack (the swing), both flagged.
+- **The offhand rules hold:** thirteen kinds of two or three wearers, two a class, no pair sharing more than one, checked by script.
+- **Every signature is read by every wearer,** per *Who reads what*. The thinnest reads are the Knight's and Geomancer's Attack (the swing), the Vampire's Siphon and the Ranger's Evasion, all flagged.
 - **No two classes share a base ability** once Static charge changes, and **every passive works in every fight** once Einherjar goes.
 - **Every class has two or three identities,** each with a kind that leans to it and at least two versions that make it.
 - **The three mages differ in kinds, armor and line:** staff and wand in robes at Attack 5; staff and rune sword in robes at Attack 3 with Cast speed; claws and rune sword in robes or leather with Attack speed.
