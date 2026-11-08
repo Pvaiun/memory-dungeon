@@ -21,18 +21,18 @@ The least you need to know to work on the game. Read it first, then open a detai
 ## Units
 
 - **A class is a unit.** A party holds at most one of each class. Units don't level up. Gear, formations and training make them stronger.
-- **A class has** stats on a scale of 1 to 5, a passive only it has, three abilities, and the kinds of gear it can wear. In the rogue mode a unit starts knowing some of its abilities, at random, and learns the rest by training.
+- **A class has** stats on a scale of 1 to 5, a passive only it has, three abilities, and the kinds of gear it can wear. It has a trunk (its base kit) and three identities a run can build it toward, each with versions, a weapon kind and loot that lean to it. In the rogue mode a unit starts knowing some of its abilities, at random, and learns the rest by training.
 
 | Class | Role | Class | Role |
 | --- | --- | --- | --- |
 | Knight (starter) | Protector | Monk | Sunders with a blur of blows |
 | Cleric (starter) | Healer | Assassin | Burst killer |
-| Ranger (starter) | Wears down tough targets | Vampire | Drains to outlast |
-| Bramble knight | Thorns tank | Pyromancer | Ramping Burn |
-| Hoplite | Bodyguard who opens foes up | Frostweaver | Freezes and shatters |
-| Paladin | Shelter | Stormcaller | Shocks every foe |
-| Valkyrie | Storm spear who heals and revives | Geomancer | Hits hardest behind stone |
-| Bard | Party tempo | Hexer | Curser |
+| Ranger (starter) | The marksman | Vampire | Drains to outlast |
+| Bramble knight | Thorns tank | Pyromancer | The glass cannon of long casts |
+| Hoplite | The bruiser | Frostweaver | The ice wall that shatters |
+| Paladin | The judge | Stormcaller | The striker among the mages |
+| Valkyrie | The shieldmaiden | Geomancer | Hits hardest behind stone |
+| Bard | Party tempo | Hexer | The spellblade |
 
 ## A fight
 
@@ -50,17 +50,17 @@ The least you need to know to work on the game. Read it first, then open a detai
   - **Area** hits everyone.
 
   An ability can name its own target with a fixed phrase ("the ally with the lowest share of max HP").
-- **Statuses.** Everything that happens on an event or a timer is a status (22 of them), and there are 7 special stats and 6 effects. A status does the same thing whoever applies it: the applier sets only how many stacks it adds. Its length is its own, with one exception: bosses resist repeated Stun, Silence and Slow. The families:
+- **Statuses.** Everything that happens on an event or a timer is a status (22 of them), and there are 10 special stats (the three speed stats among them) and 6 effects. A status does the same thing whoever applies it: the applier sets only how many stacks it adds. Its length is its own, with one exception: bosses resist repeated Stun, Silence and Slow. The families:
   - **The staples:** Regen, Shield, Might, Weaken, Guard, Stun, Slow, Haste, Taunt, Bleed.
   - **Built up over a fight, and draining away:** Burn, Chill (it shatters at its cap), Shock, Sunder.
-  - **The rest:** Ward, Silence, Hidden, Rot, Clarity, Aegis, and Doom and Bulwark, which only enemies use.
+  - **The rest:** Marked, Silence, Hidden, Rot, Clarity, Aegis, and Doom and Bulwark, which only enemies use.
 - **Tiers** say how widely a piece appears. A Fundamental is in many classes and the first fights, a Specialist in a few, and a Signature belongs to one class or boss and bends a rule.
 
 ## Gear, formations and training
 
 - **Gear has four slots:** weapon, armor, offhand and amulet. Slots have no job, and only weapons carry behaviour of their own.
-  - **Weapons:** eleven kinds, each a speed, a swing and one or two hands: six striking kinds, and five focus kinds that swing lighter, whose pieces lean to the casters' stats. The kind sets the unit's basic attack. A two-hander (bow, great weapon, staff) leaves the offhand empty.
-  - **Who wears what:** each class wears two weapon kinds, one or two of the four armor types and one or two of the ten offhand kinds. The amulet fits everyone.
+  - **Weapons:** twelve kinds, each a speed, one or two hands and three words: how hard it swings per tick, how much of that is the wearer's Attack, and how many stats its pieces carry. A kind pays for a heavy swing in stats, or the other way round. The kind sets the unit's basic attack, and the interface shows its damage per tick. A two-hander (bow, great weapon, staff) leaves the offhand empty.
+  - **Who wears what:** each class wears two weapon kinds, one or two of the four armor types and two of the thirteen offhand kinds. At most three classes share a kind, two classes share at most one kind of a slot, and every wearer reads the kind's signature stat. The amulet fits everyone.
 - **Rarity is specificity.**
   - **Common:** stats.
   - **Uncommon:** a small, general effect.
@@ -68,7 +68,7 @@ The least you need to know to work on the game. Read it first, then open a detai
   - **Legendary:** bends a rule.
   - **Mythic:** rewrites one class. Each class has one, and a unit wears one at most.
 
-  There are 240 pieces, 16 mythics and a plain weapon of each kind. Every piece is fixed, with no random affixes. A card says what the piece does and who can wear it, never what it's for.
+  Every piece carries stats at every rarity. There are 272 pieces, 16 mythics and a plain weapon of each kind. Every piece is fixed, with no random affixes. A card says what the piece does and who can wear it, never what it's for.
 - **A formation** is three seats and maybe a party effect. A seat changes the stats of whoever sits in it, or gives it statuses. There's no battlefield geometry: Aggro on the seats is what makes a front line. A run starts with Neutral (three empty seats), and there are 32 more: common, rare and legendary.
 - **Training** is learning an ability, or taking an ability's or passive's power step, or one of its two versions (A or B). Every ability and passive has a power step and two versions: 64 upgrades in all.
 - **Builds.** A build is a way to play you can watch: someone watching can tell which build is playing and what it's waiting for. There are twelve, and the gear, formations and upgrades were designed backwards from them (*Gear design: the builds*). The gear design isn't finished: its philosophy is in `docs/gear-design/`.

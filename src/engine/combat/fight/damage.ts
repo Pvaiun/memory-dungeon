@@ -225,21 +225,24 @@ export function hit(w: W, ctx: Ctx, t0: CUnit, e: S.DamageEffectT, o: HitOpts = 
 }
 
 /**
- * A hit's crit chance and multiplier. The attacker's crit rules that match the hit's tags and the unit hit
- * add their chance after every stat change (100 always crits), and make the crit bonus, the part above ×1, `bonus` % larger.
+ * A hit's crit chance and multiplier. The attacker's crit rules that match the hit's tags and the unit hit multiply the
+ * chance after every stat change (`times`, all of them together), then add their points (100 always crits), and make the
+ * crit bonus, the part above ×1, `bonus` % larger.
  */
 function critOf(w: W, a: CUnit, t: CUnit, tags: readonly string[]): [number, number] {
   let chance = stat(w, a, "crit_chance");
   const mult = stat(w, a, "crit_multiplier");
   if (!feats(w.c).crits) return [chance, mult];
-  let bonus = 0;
+  let bonus = 0, add = 0, times = 1;
   for (const s of a.statuses) {
     for (const r of def(w, s.id).crits ?? []) {
       if ((r.tag && !tags.includes(r.tag)) || (r.when && !passes(w, t, r.when, a))) continue;
-      chance += r.chance ?? 0;
+      add += r.chance ?? 0;
+      times *= r.times ?? 1;
       bonus += r.bonus ?? 0;
     }
   }
+  chance = chance * times + add;
   return [chance, bonus ? 100 + ((mult - 100) * (100 + bonus)) / 100 : mult];
 }
 

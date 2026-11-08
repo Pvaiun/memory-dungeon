@@ -8,11 +8,14 @@ import { add, type Job, T, type Tally } from "./plays.js";
 
 // ─── Playing and reading ────────────────────────────────────────────────────
 
-/** The classes document's roles, for the bands: the two walls draw (Aggro 4 and 5); the Hoplite (a bodyguard) and the Paladin (a shelter) stand at Aggro 3 beside the party, so they're judged as supports. */
+/** The classes document's roles, for the bands: the two walls draw (Aggro 5); the Paladin (the judge) stands at Aggro 3 beside the party and heals, so it's judged as a support; the Hoplite (the bruiser) and the Valkyrie (the shieldmaiden) are dealers by design. */
+
+/** The four gear slots a unit wears, as the tally credits a unit's doings to each piece it holds (or to the empty slot). */
+const GEAR_SLOTS = ["weapon", "armor", "offhand", "amulet"] as const;
 export const ROLE: Record<string, "wall" | "support" | "dealer"> = {
-  knight: "wall", bramble_knight: "wall", hoplite: "support", paladin: "support",
-  cleric: "support", bard: "support", hexer: "support", valkyrie: "support",
-  ranger: "dealer", monk: "dealer", assassin: "dealer", vampire: "dealer", pyromancer: "dealer", frostweaver: "dealer", stormcaller: "dealer", geomancer: "dealer",
+  knight: "wall", bramble_knight: "wall", paladin: "support",
+  cleric: "support", bard: "support", hexer: "support",
+  hoplite: "dealer", valkyrie: "dealer", ranger: "dealer", monk: "dealer", assassin: "dealer", vampire: "dealer", pyromancer: "dealer", frostweaver: "dealer", stormcaller: "dealer", geomancer: "dealer",
 };
 export const CASTERS = new Set(["cleric", "paladin", "hexer", "frostweaver", "stormcaller", "geomancer", "pyromancer", "bard", "valkyrie"]);
 
@@ -101,7 +104,7 @@ function readLog(c: Content, run: Run, job: Job, t: Tally) {
   add(t, `form|${party.formation}|runs`); if (won) add(t, `form|${party.formation}|won`);
   for (const u of party.units) {
     add(t, `cls|${u.class}|runs`); if (won) add(t, `cls|${u.class}|won`);
-    for (const slot of ["weapon", "armor", "amulet"]) {
+    for (const slot of GEAR_SLOTS) {
       const g = u.gear[slot] ?? `none:${slot}`;
       add(t, `gearc|${g}|${u.class}|runs`); if (won) add(t, `gearc|${g}|${u.class}|won`);
       if (job.kind === "kit") add(t, `gear|${g}|kit`);
@@ -150,7 +153,7 @@ function readLog(c: Content, run: Run, job: Job, t: Tally) {
             add(t, `cls|${u.ref}|fights|${kind}`); add(t, `cls|${u.ref}|maxHp`, u.max); add(t, `partyHp|${kind}`, u.max);
             const m = member(u.id);
             m.abilities.forEach((a, sl) => { add(t, `ab|${a}|owned|${kind}`); add(t, `ab|${a}|slot|${sl}|owned`); });
-            for (const slot of ["weapon", "armor", "amulet"]) { const g = m.gear[slot] ?? `none:${slot}`; add(t, `gear|${g}|worn`); add(t, `gearc|${g}|${u.ref}|worn`); }
+            for (const slot of GEAR_SLOTS) { const g = m.gear[slot] ?? `none:${slot}`; add(t, `gear|${g}|worn`); add(t, `gearc|${g}|${u.ref}|worn`); }
             add(t, `form|${party.formation}|fights`);
           } else {
             add(t, `en|${u.ref}|n`);
@@ -231,7 +234,7 @@ function readLog(c: Content, run: Run, job: Job, t: Tally) {
           if (srcKey === "basic" && owner) { const g = member(owner).gear.weapon ?? "none:weapon"; add(t, `gear|${g}|swingDmg`, amt); }
           if (srcKey.startsWith("ab:")) { add(t, `ab|${src}|dmg`, amt); if (isHit) { add(t, `ab|${src}|hits`); if (e.crit) add(t, `ab|${src}|crit`); } }
           if (part === "pulse" || part === "reaction") add(t, `st|${src}|dmg`, amt);
-          if (owner) { const m = member(owner); for (const slot of ["weapon", "armor", "amulet"]) { const g = m.gear[slot] ?? `none:${slot}`; add(t, `gear|${g}|dmg`, amt); add(t, `gearc|${g}|${oref}|dmg`, amt); } }
+          if (owner) { const m = member(owner); for (const slot of GEAR_SLOTS) { const g = m.gear[slot] ?? `none:${slot}`; add(t, `gear|${g}|dmg`, amt); add(t, `gearc|${g}|${oref}|dmg`, amt); } }
           add(t, `form|${party.formation}|dmg`, amt);
         } else if (dside === "enemy") {
           if (oref) { add(t, `en|${oref}|dmg`, amt); if (srcKey.startsWith("ab:")) add(t, `eab|${src}|dmg`, amt); }
@@ -245,7 +248,7 @@ function readLog(c: Content, run: Run, job: Job, t: Tally) {
           if (soaked) add(t, `cls|${r}|soaked`, soaked);
           if (word === "AEGIS") add(t, `cls|${r}|aegis`);
           if (isHit) { add(t, `cls|${r}|hitsTaken`); if (holdsStatus(tgt, "taunt")) add(t, `st|taunt|tauntHits`); }
-          const m = member(tgt); for (const slot of ["weapon", "armor", "amulet"]) { const g = m.gear[slot] ?? `none:${slot}`; add(t, `gear|${g}|taken`, amt); add(t, `gearc|${g}|${r}|taken`, amt); }
+          const m = member(tgt); for (const slot of GEAR_SLOTS) { const g = m.gear[slot] ?? `none:${slot}`; add(t, `gear|${g}|taken`, amt); add(t, `gearc|${g}|${r}|taken`, amt); }
           add(t, `form|${party.formation}|taken`, amt); add(t, `taken|${kind}`, amt);
           if (by && !isParty(by)) add(t, `en|${ref.get(by)}|dealtToParty`, amt);
         } else if (tside === "enemy") {
@@ -274,7 +277,7 @@ function readLog(c: Content, run: Run, job: Job, t: Tally) {
           const r = ref.get(by)!;
           add(t, `cls|${r}|healGiven`, amt); add(t, `cls|${r}|heal|${src}`, amt);
           if (c.abilities.has(src)) add(t, `ab|${src}|heal`, amt); else add(t, `st|${src}|heal`, amt);
-          const m = member(by); for (const slot of ["weapon", "armor", "amulet"]) { const g = m.gear[slot] ?? `none:${slot}`; add(t, `gear|${g}|heal`, amt); add(t, `gearc|${g}|${r}|heal`, amt); }
+          const m = member(by); for (const slot of GEAR_SLOTS) { const g = m.gear[slot] ?? `none:${slot}`; add(t, `gear|${g}|heal`, amt); add(t, `gearc|${g}|${r}|heal`, amt); }
         } else if (by && !isParty(by) && e.word !== "ABSORB") { if (c.abilities.has(src)) add(t, `eab|${src}|heal`, amt); add(t, `en|${ref.get(by)}|healGiven`, amt); }
         break;
       }
@@ -336,7 +339,7 @@ function readLog(c: Content, run: Run, job: Job, t: Tally) {
         if (isParty(u)) {
           const r = ref.get(u)!;
           add(t, `cls|${r}|ko`); add(t, `cls|${r}|koAt`, at / T); died.add(u); standing.delete(u);
-          const m = member(u); for (const slot of ["weapon", "armor", "amulet"]) { const g = m.gear[slot] ?? `none:${slot}`; add(t, `gear|${g}|ko`); add(t, `gearc|${g}|${r}|ko`); }
+          const m = member(u); for (const slot of GEAR_SLOTS) { const g = m.gear[slot] ?? `none:${slot}`; add(t, `gear|${g}|ko`); add(t, `gearc|${g}|${r}|ko`); }
           add(t, `form|${party.formation}|ko`); add(t, `ko|${kind}`);
         } else {
           const r = ref.get(u)!;

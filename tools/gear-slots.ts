@@ -14,35 +14,39 @@
 type Kind = { classes: string[]; cell?: string };
 
 const WEAPONS: Record<string, Kind> = {
-  dagger: { cell: "fast one-hand physical", classes: ["assassin", "ranger", "hexer"] },
-  fist_weapons: { cell: "fast one-hand physical", classes: ["monk", "vampire"] },
-  sword: { cell: "medium one-hand physical", classes: ["knight", "bramble_knight", "assassin"] },
-  spear: { cell: "medium one-hand physical", classes: ["hoplite", "valkyrie", "monk"] },
-  bow: { cell: "medium two-hand physical", classes: ["ranger", "bard"] },
-  great_weapon: { cell: "slow two-hand physical", classes: ["knight", "hoplite", "geomancer", "vampire"] },
-  rune_sword: { cell: "medium one-hand focus", classes: ["paladin", "valkyrie", "hexer", "geomancer"] },
-  mace: { cell: "slow one-hand focus", classes: ["cleric", "paladin"] },
-  wand: { cell: "fast one-hand focus", classes: ["pyromancer", "stormcaller", "bard"] },
-  rod: { cell: "medium one-hand focus", classes: ["frostweaver", "stormcaller"] },
-  staff: { cell: "slow two-hand focus", classes: ["cleric", "frostweaver", "pyromancer", "bramble_knight"] },
+  dagger: { cell: "fast one-hand light attack-heavy", classes: ["ranger", "assassin"] },
+  claws: { cell: "fast one-hand light even", classes: ["monk", "vampire", "stormcaller"] },
+  wand: { cell: "fast one-hand light base-heavy", classes: ["bard", "hexer", "pyromancer"] },
+  sword: { cell: "medium one-hand full even", classes: ["knight", "hexer", "valkyrie"] },
+  spear: { cell: "medium one-hand full even", classes: ["hoplite", "valkyrie", "monk"] },
+  axe: { cell: "medium one-hand heavy attack-heavy", classes: ["vampire", "assassin"] },
+  bow: { cell: "medium two-hand heavy attack-heavy", classes: ["ranger", "bard"] },
+  rune_sword: { cell: "slow one-hand full base-heavy", classes: ["frostweaver", "stormcaller"] },
+  hammer: { cell: "slow one-hand heavy base-heavy", classes: ["knight", "bramble_knight", "geomancer"] },
+  mace: { cell: "slow one-hand light base-heavy", classes: ["cleric", "paladin", "bramble_knight"] },
+  staff: { cell: "slow two-hand light base-heavy", classes: ["cleric", "pyromancer", "frostweaver"] },
+  great_weapon: { cell: "slow two-hand heavy even", classes: ["hoplite", "paladin", "geomancer"] },
 };
 const ARMOR: Record<string, Kind> = {
   plate: { classes: ["knight", "hoplite", "geomancer", "bramble_knight", "paladin"] },
-  mail: { classes: ["paladin", "valkyrie", "vampire", "hexer", "bramble_knight"] },
-  leather: { classes: ["ranger", "monk", "assassin", "bard", "valkyrie"] },
+  mail: { classes: ["paladin", "valkyrie", "vampire", "hexer", "bramble_knight", "frostweaver"] },
+  leather: { classes: ["ranger", "monk", "assassin", "bard", "valkyrie", "stormcaller"] },
   robes: { classes: ["cleric", "pyromancer", "frostweaver", "stormcaller", "bard"] },
 };
 const OFFHANDS: Record<string, Kind> = {
-  kite_shield: { classes: ["knight", "paladin"] },
-  round_shield: { classes: ["hoplite", "valkyrie"] },
-  horn: { classes: ["knight", "bard"] },
-  tome: { classes: ["frostweaver", "bard"] },
-  lantern: { classes: ["paladin", "pyromancer"] },
-  relic: { classes: ["cleric", "valkyrie"] },
-  bell: { classes: ["monk", "cleric", "stormcaller"] },
-  totem: { classes: ["bramble_knight", "ranger", "geomancer"] },
-  vial: { classes: ["assassin", "vampire"] },
+  kite_shield: { classes: ["knight", "paladin", "geomancer"] },
+  round_shield: { classes: ["hoplite", "bramble_knight", "valkyrie"] },
+  horn: { classes: ["knight", "hoplite"] },
+  totem: { classes: ["bramble_knight", "stormcaller"] },
+  relic: { classes: ["cleric", "paladin"] },
+  lantern: { classes: ["cleric", "pyromancer"] },
+  tome: { classes: ["bard", "hexer", "frostweaver"] },
+  orb: { classes: ["pyromancer", "frostweaver"] },
   idol: { classes: ["hexer", "vampire"] },
+  vial: { classes: ["vampire", "assassin"] },
+  trophy: { classes: ["ranger", "assassin", "geomancer"] },
+  bell: { classes: ["bard", "monk", "stormcaller"] },
+  cloak: { classes: ["valkyrie", "monk", "ranger"] },
 };
 
 /** builds.md's routes: three parties per build. */
@@ -87,6 +91,22 @@ for (const c of CLASSES) {
   const share = near.n / kindsOf.get(c)!.size;
   console.log(`${c.padEnd(16)} ${String(kindsOf.get(c)!.size).padStart(5)}  ${String(others.filter((o) => shared(c, o) > 0).length).padStart(11)}  ` +
     `${`${near.o} ${Math.round(share * 100)}%`.padEnd(24)}${share > 0.5 ? "!" : " "} ${pattern}`);
+}
+
+// The weapon and offhand rules (steps/class-identity): two or three wearers a kind, two kinds a class, one in hand, no pair sharing two kinds of a slot.
+for (const [slot, kinds] of [["weapon", WEAPONS], ["offhand", OFFHANDS]] as const) {
+  const bad: string[] = [];
+  for (const [id, k] of Object.entries(kinds)) if (k.classes.length < 2 || k.classes.length > 3) bad.push(`${id} has ${k.classes.length} wearers`);
+  for (const c of CLASSES) {
+    const n = Object.values(kinds).filter((k) => k.classes.includes(c)).length;
+    if (n !== 2) bad.push(`${c} has ${n} ${slot} kinds`);
+    if (slot === "weapon" && !Object.values(kinds).some((k) => k.classes.includes(c) && k.cell?.includes("one-hand"))) bad.push(`${c} has no one-handed kind`);
+  }
+  for (let i = 0; i < CLASSES.length; i++) for (let j = i + 1; j < CLASSES.length; j++) {
+    const both = Object.entries(kinds).filter(([, k]) => k.classes.includes(CLASSES[i]) && k.classes.includes(CLASSES[j])).map(([id]) => id);
+    if (both.length > 1) bad.push(`${CLASSES[i]} and ${CLASSES[j]} share ${slot} kinds ${both.join(" and ")}`);
+  }
+  console.log(`\nThe ${slot} rules: ${bad.length ? bad.join("; ") : "hold"}`);
 }
 
 const pairs = CLASSES.flatMap((a, i) => CLASSES.slice(i + 1).map((b) => shared(a, b)));

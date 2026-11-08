@@ -1,6 +1,6 @@
 /** The Knight's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit.ts. */
 import type { AbilityT, EffectT, ReactionT } from "../../../src/schema.js";
-import { from, SPECIAL, STATUS } from "../scale.js";
+import { from, SPECIAL, stacks, STATUS } from "../scale.js";
 import { abilityUp, apply, cd, helper, kit, ofHolder, passiveUp, phys } from "./kit.js";
 
 const vanguardShield = (ratio: number): EffectT => apply("shield", { stacks: ofHolder(ratio, "max_hp"), to: "holder" });
@@ -23,17 +23,14 @@ passiveUp({
 {
   /** Stone guard: the other ally with the most Defense, Guarded and given a Shield of a quarter of the Knight's Defense, read when it lands. */
   const stoneGuard: Partial<AbilityT> = { target: { side: "others", pick: "highest", by: { stat: "defense" } }, do: [apply("guard"), apply("shield", { stacks: { scale: [{ ratio: 0.25, stat: "defense", of: "self" }] } })] };
-  /**
-   * Cover: another ally in a wind-up; with nobody else casting, the other ally with the lowest share of HP. "The one with the most wind-up left"
-   * has no `by` in the schema, so among two casters it's the one lower in HP: the rule's fallback does the rest.
-   */
-  const cover: Partial<AbilityT> = { target: { side: "others", where: { casting: true }, ifNone: "any", pick: "lowest", by: "hp_share" } };
+  /** Valor: Guards itself and gains several Might from Attack: the sword finally has something in the kit to feed. */
+  const valor: Partial<AbilityT> = { target: "self", do: [apply("guard"), apply("might", { stacks: stacks("several", "attack") })] };
   abilityUp({
     id: "fortify", cls: "knight",
     power: "Comes round sooner.",
     a: { name: "Stone guard", text: "Guards the other ally with the most Defense, and gives it a Shield from the Knight's Defense.", builds: ["landslide"] },
-    b: { name: "Cover", text: "Guards another ally in a wind-up. With nobody else casting, the other ally with the lowest share of HP.", builds: ["bonfire", "overflow", "lockdown"] },
-    form: (v, _k, plus) => ({ ...(v === "a" ? stoneGuard : v === "b" ? cover : {}), ...(plus ? { cooldown: cd("medium", "fortify") } : {}) }),
+    b: { name: "Valor", text: "Guards itself and gains several Might; stacks scale from Attack.", builds: ["lockdown", "landslide"] },
+    form: (v, _k, plus) => ({ ...(v === "a" ? stoneGuard : v === "b" ? valor : {}), ...(plus ? { cooldown: cd("medium", "fortify") } : {}) }),
   });
 }
 

@@ -75,14 +75,14 @@ export function enemyName(ref: string, unitName: string): string {
 }
 export const enemyDisplayName = (ref: string): string => manifest?.enemies[ref]?.name ?? c.enemies.get(ref)?.name ?? ref;
 /**
- * Stand-in strips for the plain pieces of kinds with no art of their own, from the strips the packs give: the great
- * weapon holds the axe; the rune sword the Oathblade's glowing blade; the mace, the wand, the rod and the staff the plain
- * staffs whose look fits who carries them first (the Light staff for the mace; the Stormcaller's wand, the Frostweaver's
- * rod, the Pyromancer's staff).
+ * Stand-in strips for the plain pieces of kinds with no art of their own, from the strips the packs give: the great weapon and
+ * the axe hold the axe; the hammer the Earthshaker's maul; the rune sword the Oathblade's glowing blade; the claws the dagger's
+ * strip; the mace, the wand and the staff the plain staffs whose look fits who carries them first (the Light staff for the mace;
+ * the Bard's and Hexer's lightning wand, the Pyromancer's fire staff).
  */
 const WEAPON_STAND_INS: Record<string, string> = {
-  plain_great_weapon: "plain_axe", plain_rune_sword: "oathblade", plain_mace: "plain_light_staff",
-  plain_wand: "plain_lightning_staff", plain_rod: "plain_ice_staff", plain_staff: "plain_fire_staff",
+  plain_great_weapon: "plain_axe", plain_axe: "plain_axe", plain_hammer: "earthshaker", plain_rune_sword: "oathblade", plain_claws: "plain_dagger", plain_mace: "plain_light_staff",
+  plain_wand: "plain_lightning_staff", plain_staff: "plain_fire_staff",
 };
 /** A weapon's strip: its own, or for a rogue run's item, its base piece's, or else its kind's plain piece's. */
 export function weaponArt(gearId: string | undefined): string | undefined {
@@ -129,7 +129,7 @@ const ENEMY_LOOK: Record<string, string> = {
 };
 /** A piece's own look: a caster's weapon's theme, by piece (a rogue run's item takes its base piece's). */
 const PIECE_LOOK: Record<string, string> = {
-  plain_staff: "fire", plain_wand: "lightning", plain_rod: "ice", plain_mace: "light",
+  plain_staff: "fire", plain_wand: "lightning", plain_rune_sword: "ice", plain_mace: "light",
   brand_staff: "fire", ember_staff: "fire", storm_rod: "lightning", grounding_rod: "lightning", zephyr_staff: "wind", tailwind_staff: "wind",
   granite_staff: "earth", rootstaff: "earth", heartwood_staff: "earth", rime_staff: "ice", hoarfrost_staff: "ice", glacier_staff: "ice",
   sunstaff: "light", dawn_staff: "light", chapel_staff: "light", templar_staff: "light", nightstaff: "dark", leech_staff: "dark", sanguine_staff: "dark",
@@ -137,8 +137,8 @@ const PIECE_LOOK: Record<string, string> = {
 };
 /** A weapon kind's look: how its swing lands. */
 const KIND_LOOK: Record<string, string> = {
-  dagger: "pierce", fist: "blunt", sword: "slash", spear: "pierce", bow: "pierce", great_weapon: "blunt",
-  rune_sword: "slash", mace: "blunt", wand: "arcane", rod: "arcane", staff: "arcane",
+  dagger: "pierce", claws: "slash", sword: "slash", spear: "pierce", axe: "slash", bow: "pierce", great_weapon: "blunt",
+  rune_sword: "slash", hammer: "blunt", mace: "blunt", wand: "arcane", staff: "arcane",
 };
 const weaponKindLook = (wp: WeaponT | undefined): string => (wp?.kind && KIND_LOOK[wp.kind]) || "blunt";
 /** An ability's look, when it deals damage: its theme or motion, else a plain hit's. */
@@ -161,8 +161,8 @@ const SHADE = { blue: 0, orange: 1, purple: 2, yellow: 3, brown: 4 } as const;
 type Shade = keyof typeof SHADE;
 /** Weapon kinds: a cell in the blue row of weapon set A (row 25) or B (row 30); some are stand-ins until a kind has its own art. */
 const KIND_CELL: Record<string, Cell> = {
-  dagger: [25, 0], sword: [25, 7], bow: [25, 3], spear: [25, 14], fist: [25, 2], great_weapon: [30, 0],
-  rune_sword: [25, 12], mace: [30, 7], wand: [25, 5], rod: [30, 8], staff: [25, 10],
+  dagger: [25, 0], claws: [25, 2], sword: [25, 7], spear: [25, 14], axe: [30, 0], bow: [25, 3], great_weapon: [30, 0],
+  rune_sword: [25, 12], hammer: [30, 7], mace: [30, 7], wand: [25, 5], staff: [25, 10],
 };
 /** Armor types: a cell in the blue row of the armour set (row 15), and its shade. */
 const ARMOR_CELL: Record<string, Cell> = { plate: [15, 7], mail: [15, 12], leather: [15, 8], robes: [15, 9] };
@@ -171,6 +171,7 @@ const ARMOR_SHADE: Record<string, Shade> = { plate: "blue", mail: "blue", leathe
 const OFFHAND_CELL: Record<string, [Cell, Shade]> = {
   kite_shield: [[20, 6], "blue"], round_shield: [[30, 12], "brown"], horn: [[25, 8], "yellow"], tome: [[20, 12], "purple"], lantern: [[20, 10], "yellow"],
   relic: [[35, 6], "yellow"], bell: [[20, 9], "yellow"], totem: [[20, 14], "brown"], vial: [[20, 8], "purple"], idol: [[20, 15], "purple"],
+  orb: [[20, 4], "purple"], trophy: [[20, 15], "brown"], cloak: [[15, 8], "blue"],
 };
 const AMULET_CELL: Cell = [20, 4];
 const shade = (cell: Cell, s: Shade): Cell => [cell[0] + SHADE[s], cell[1]];
@@ -190,7 +191,7 @@ export function gearIcon(g: GearT): Cell {
   return shade(AMULET_CELL, gold ? "yellow" : "blue");
 }
 /** The casters' weapon kinds, drawn purple by kind (art only: their hits are everyone's). */
-const CASTER_KINDS = new Set(["rune_sword", "mace", "wand", "rod", "staff"]);
+const CASTER_KINDS = new Set(["rune_sword", "mace", "wand", "staff"]);
 /** A weapon kind's cell: a caster's purple, the rest blue (gold for a powerful piece). */
 export function kindIcon(kind: string, gold = false): Cell {
   return shade(KIND_CELL[kind] ?? KIND_CELL.sword, gold ? "yellow" : CASTER_KINDS.has(kind) ? "purple" : "blue");
@@ -210,7 +211,7 @@ export const MISC_ICON = { skull: [10, 1], star: [9, 13], boss: [9, 3], question
 export const STATUS_STYLE: Record<string, { color: string; light?: string }> = {
   bleed: { color: "#e8384a", light: "#ffc0c8" }, regen: { color: "#7ee07e" }, shield: { color: "#6ec8ff", light: "#e8f8ff" }, might: { color: "#ff6e5a" }, weaken: { color: "#ffa062" },
   guard: { color: "#d8dde8" }, stun: { color: "#ffe14d" }, slow: { color: "#ffa062" }, haste: { color: "#6ef0e0" }, taunt: { color: "#ff5a5a" },
-  burn: { color: "#ff7a3c", light: "#ffe14d" }, chill: { color: "#8ae6ff" }, shock: { color: "#ffe14d", light: "#ffffff" }, ward: { color: "#c892ff", light: "#f0e0ff" }, sunder: { color: "#dcae6e" },
+  burn: { color: "#ff7a3c", light: "#ffe14d" }, chill: { color: "#8ae6ff" }, shock: { color: "#ffe14d", light: "#ffffff" }, sunder: { color: "#dcae6e" },
   silence: { color: "#b8b8c8" }, hidden: { color: "#9aa0b4", light: "#ffffff" }, rot: { color: "#a8c050" }, clarity: { color: "#86cfff", light: "#ffffff" }, aegis: { color: "#ffd54a", light: "#fff8d0" },
   doom: { color: "#ff4a6a", light: "#ffd0d8" }, bulwark: { color: "#c9d3e0" }, bulwark_broken: { color: "#ff7b6b" }, ice_crust: { color: "#8ae6ff", light: "#ffffff" },
   bloodlust_on: { color: "#ff4a6a", light: "#ffb0b8" }, bedrock_on: { color: "#dcae6e", light: "#f8e0b0" }, generic: { color: "#c8c8d8" },

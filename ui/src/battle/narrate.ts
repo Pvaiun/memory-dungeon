@@ -326,7 +326,7 @@ export function gainPhrase(id: string, n: number | null, name: string): string {
     case "burn": return `burns${N}`;
     case "chill": return `is chilled${N}`;
     case "shock": return `is shocked${N}`;
-    case "ward": return "is warded";
+    case "marked": return "is marked";
     case "sunder": return `is sundered${N}`;
     case "silence": return "is silenced!";
     case "hidden": return "vanishes!";

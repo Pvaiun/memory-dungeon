@@ -7,11 +7,13 @@ import { abilityUp, apply, baseAbility, both, helper, hitOf, kit, marker, passiv
 
 // ─── Assassin ────────────────────────────────────────────────────────────────
 
+/** Rupture: the share of Bleed's per-hit damage a crit deals for each stack. */
+const RUPTURE = 0.5;
 passiveUp({
   id: "lacerate", cls: "assassin",
   power: "Its crits add 40% more Bleed.",
   a: { name: "Opening wound", text: "Its first hit on each foe always crits. Each of its crits adds several Bleed to the foe; stacks scale from Attack.", builds: ["ambush"] },
-  b: { name: "Rupture", text: "Each of its crits sets off the foe's Bleed once more, for each stack, and the Bleed closes; then it adds several Bleed; stacks scale from Attack.", builds: ["hunt"] },
+  b: { name: "Rupture", text: "Each of its crits deals extra damage for each Bleed the foe holds, and the Bleed stays; then it adds several Bleed; stacks scale from Attack.", builds: ["hunt"] },
   form: (v, k) => ({
     // Opening wound: hits on a foe it hasn't yet landed a hit on always crit (a crit rule: chance after every stat change, so Gambler's coin too).
     ...(v === "a" ? { crits: [{ when: { lacks: "opening_wound" }, chance: 100 }] } : {}),
@@ -19,11 +21,8 @@ passiveUp({
       {
         on: { event: "hit_lands", tags: ["crit"] },
         do: [
-          // Rupture: Bleed's own per-hit damage for each stack left after the crit's own hit, then the Bleed closes, then Lacerate's Bleed.
-          ...(v === "b" ? [
-            { op: "damage", type: "none", amount: { scale: [{ ratio: STATUS.bleed.perStack, stacks: "bleed", of: "target" }] }, to: "other" } as EffectT,
-            removeMine("bleed", "debuff", "other"),
-          ] : []),
+          // Rupture: half of Bleed's own per-hit damage for each stack the foe holds after the crit's own hit; the Bleed stays (a status runs its own course).
+          ...(v === "b" ? [{ op: "damage", type: "none", amount: { scale: [{ ratio: RUPTURE * STATUS.bleed.perStack, stacks: "bleed", of: "target" }] }, to: "other" } as EffectT] : []),
           apply("bleed", { stacks: own("several", "attack", k), to: "other" }),
         ],
       },
@@ -70,15 +69,18 @@ helper(kit("coup_de_grace", "COUP DE GRÂCE", "A kill with an ability makes Back
   reactions: [{ on: { event: "ko", whose: "foe", other: "holder", kind: "ability" }, do: [{ op: "cooldown", which: { ability: ["backstab"] }, set: "ready", to: "self" }] }],
 }));
 
+/** Bleed them dry: the drinker's reach. Its Lifesteal is doubled for a while (read live off its own). */
+const DRY = 20;
+helper(kit("bleed_them_dry", "BLED DRY", "Lifesteal doubled.", { duration: DRY, stats: [{ stat: "lifesteal", flat: { scale: [{ ratio: 1, stat: "lifesteal", of: "holder" }] } }] }));
 abilityUp({
   id: "garrote", cls: "assassin",
   power: "It costs less MP.",
   a: { name: "Choke", text: "Has Seek. Waits until a foe is in a wind-up. Deals physical damage that scales from Attack to the casting foe with the highest Attack, and applies Silence.", builds: ["lockdown"] },
-  b: { name: "Garrote wire", text: "Has Seek. Deals physical damage that scales from Attack to a random foe that isn't Taunting, applies Rot, and adds many Bleed; stacks scale from Attack. No Silence.", builds: ["hunt"] },
+  b: { name: "Bleed them dry", text: "Has Seek. Deals physical damage that scales from Attack to a random foe that isn't Taunting, applies Rot and adds many Bleed; stacks scale from Attack. The Assassin's Lifesteal is doubled for a while. No Silence.", builds: ["pact", "hunt"] },
   form: (v, _k, plus) => ({
     ...(plus ? { mp: 200 } : {}),
     ...(v === "a" ? { if: { side: "foes", where: { casting: true } }, target: T.castingFoe } : {}),
     // Unlike the base, it doesn't skip Silenced foes.
-    ...(v === "b" ? { target: T.notTauntingFoe, do: [phys(hitOf("attack", "normal"), { apply: [{ status: "rot" }, { status: "bleed", stacks: stacks("many", "attack") }] })] } : {}),
+    ...(v === "b" ? { target: T.notTauntingFoe, do: [phys(hitOf("attack", "normal"), { apply: [{ status: "rot" }, { status: "bleed", stacks: stacks("many", "attack") }] }), apply("bleed_them_dry", { to: "self" })] } : {}),
   }),
 });

@@ -86,7 +86,7 @@ export const enemyAbilities: AbilityT[] = [
   a("brace", "Brace", "Guards itself.", { ...timing("medium", "quick"), mp: 0, target: "self", do: [apply("guard")] }), // Free, as the Skeleton and Golem carry no MP.
   // Simple buffs on foes, so Judgement, Unmake and Dispel have targets.
   a("take_aim", "Take aim", "Several Might on itself.", { ...timing("medium", "quick"), mp: 0, target: "self", do: [apply("might", { stacks: FLAT_STACKS.several })] }),
-  a("dark_ward", "Dark ward", "Wards itself.", { ...timing("medium", "quick"), mp: 0, target: "self", do: [apply("ward")] }), // Free, so it never takes the Soulfire's MP.
+  a("dark_ward", "Dark ward", "Guards itself.", { ...timing("medium", "quick"), mp: 0, target: "self", do: [apply("guard")] }), // Free, so it never takes the Soulfire's MP. Guard: Ward is gone.
   a("shield_slam", "Shield slam", "A blow with the shield that Stuns.", { ...timing("medium", "normal"), target: { side: "foes", where: { lacks: "stun" }, ifNone: "any" }, do: [{ op: "damage", type: "physical", amount: fromStat("attack", 1.0), apply: [{ status: "stun" }] }] }),
   a("flatten", "Flatten", "A heavy blow that Stuns.", { ...timing("medium", "long"), target: { side: "foes", where: { lacks: "stun" }, ifNone: "any" }, do: [{ op: "damage", type: "physical", amount: fromStat("attack", ENEMY_HIT.flatten), apply: [{ status: "stun" }] }] }),
   a("crush", "Crush", "A massive blow.", { ...timing("short", "very_long"), do: [{ op: "damage", type: "physical", amount: fromStat("attack", ENEMY_HIT.crush) }] }),
@@ -99,7 +99,7 @@ export const enemyAbilities: AbilityT[] = [
   // Bosses have behaviours of their own; the one-shot is the Ogre Chief's alone.
   a("reap", "Reap", "Three scythe slashes at random foes.", { ...timing("medium", "normal"), target: { side: "foes", pick: "random" }, do: [1, 2, 3].map(() => ({ op: "damage" as const, type: "physical" as const, amount: fromStat("attack", ENEMY_HIT.reap), to: { side: "foes" as const, pick: "random" as const } })) }),
   a("tolling", "Tolling", "Many Might and Haste on itself: its swings come faster and harder.", { ...timing("short", "quick"), mp: 0, target: "self", do: [apply("might", { stacks: FLAT_STACKS.many }), apply("haste")] }),
-  a("kindle", "Kindle", "Several Might and a Ward on itself; the Inferno follows.", { ...timing("medium", "quick"), mp: 0, target: "self", do: [apply("might", { stacks: FLAT_STACKS.several }), apply("ward")] }),
+  a("kindle", "Kindle", "Several Might and a Guard on itself; the Inferno follows.", { ...timing("medium", "quick"), mp: 0, target: "self", do: [apply("might", { stacks: FLAT_STACKS.several }), apply("guard")] }),
   a("mute", "Mute", "Silences the foe with the highest Attack.", { ...timing("medium", "normal"), if: { side: "foes", where: { lacks: "silence" } }, target: { ...T.highestAMFoe, where: { lacks: "silence" } }, do: [apply("silence")] }),
   // On the medium word: a shorter one keeps the party silenced most of a fight.
   a("quiet", "Quiet", "Silences every foe.", { ...timing("medium", "long"), target: T.everyFoe, do: [apply("silence")] }),

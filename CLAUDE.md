@@ -19,7 +19,7 @@ Design work for a party-based JRPG dungeon crawler with automatic combat, where 
   - `loot.md`: the rules the loot is made by.
 - `docs/code-map.md`: where the code is, one line a file, and where to start for each kind of change. Read it before opening code, rather than listing folders.
 - `src/`: the game, pure TypeScript that also runs in the browser: the engine, the rogue mode, the schema, the validator and the simulation library. `tools/`: the Node command lines that measure it.
-- `content/core-set/`: the core set as content. `scale.ts` holds every first value by name; the other files hold the classes, gear, formations, upgrades, enemies, dungeons and the rogue mode, with each item's card text. `npm run content` writes `content/core-set.pack.json`, which the engine, tests and studies read.
+- `content/core-set/`: the core set as content. `scale.ts` holds every first value by name (the weapon kinds' swing words and budgets among them); the other files hold the classes, gear, formations, upgrades, enemies, dungeons and the rogue mode, with each item's card text. `npm run content` writes `content/core-set.pack.json`, which the engine, tests and studies read.
 - `ui/`: the interface (Vite, plain TypeScript), a retro JRPG screen that runs on a phone. `ui/README.md` has the details; `npm run ui` serves it, and GitHub Pages hosts it.
 - `steps/`: working folders for open work only, one per step. A closed step's history is in git, not here.
 - `PRIMITIVES.md`: the engine's building blocks (what content can express), generated from the schema.
@@ -41,18 +41,19 @@ Design work for a party-based JRPG dungeon crawler with automatic combat, where 
 
 ## Status
 
-What's true now (Nov 4, 2026). Replace what's done rather than adding to it; history is in git.
+What's true now (Nov 8, 2026). Replace what's done rather than adding to it; history is in git.
 
-- **The game is built and approved as it stands:** the rogue mode (`docs/core-set/rogue-mode.md`; the interface's Settings → MODE → ROGUE) with 16 classes, 240 gear pieces, 16 mythics, 32 formations and Neutral, and 64 ability upgrades. Engine 0.19, schema 0.10. Free play stays as the sandbox.
-- **Open: the one-kind-of-damage prototype** (`steps/no-magic/`, on its own branch). Magic and Magic resist are gone; Armor is Defense; the focus weapon kinds swing lighter. Built, tested and given a first balance pass; at the gate with the director (`report.md`).
-- **Open: class identity after Magic** (`steps/class-identity/`, on the prototype's branch). The design is approved: a trunk and two or three identities a class; twelve weapon kinds and thirteen offhand kinds by the same rules (every wearer reads the kind's signature), the Valkyrie on spear and sword; armor unchanged; new stat lines with the speed stats in four of them; and the kit and version changes (Paladin, Hoplite, Valkyrie, Hexer, Ranger, Stormcaller). Next: build and tune on the current gear, costed in `design.md`; then the builds are redesigned on the new classes, then the loot. Nothing built yet.
+- **The game is built and approved as it stands:** the rogue mode (`docs/core-set/rogue-mode.md`; the interface's Settings → MODE → ROGUE) with 16 classes, 272 gear pieces, 16 mythics, 32 formations and Neutral, and 64 ability upgrades. Engine 0.20, schema 0.11. Free play stays as the sandbox.
+- **Open: the one-kind-of-damage prototype** (`steps/no-magic/`, on its own branch). Magic and Magic resist are gone; Armor is Defense; the focus weapon kinds swing lighter. At the gate with the director (`report.md`).
+- **Open: class identity after Magic** (`steps/class-identity/`, on the prototype's branch). The approved design is built on the current gear: twelve weapon kinds and thirteen offhand kinds by one set of rules, each kind's swing in three words (`KIND_WORDS` in `scale.ts`), stats on every piece at every rarity on a ladder that rises by rarity (`KIND_BUDGET`; the cards' stat words come from the stats), the new stat lines with the speed stats in four of them, the kit changes (Hoplite, Paladin, Valkyrie, Bard, Hexer, Pyromancer, Stormcaller, Ranger) and the versions; Ward retired, Marked in the vocabulary. The director's answers from the first gate are in (the ladder, Choosing on one target, Unmake on a cast alone); the second report is at the gate (`report.md`). Next, by their word: the builds redesigned on the new classes, then the loot; the knobs, the Frostweaver and sample parties against sample fights wait for the balance pass.
 - **Nothing is balanced yet.**
 - **The tools** (each file's header says how to run it):
   - `npm run balance`: the balance sheet. Run it after any numbers change, before the knobs.
   - `npm run rogue:calibrate`: each fight's knob against the hand-built rosters of `tools/rogue-parties.ts` (`--climb`); then `npm run rogue:tune`.
   - `npm run rogue`: whole runs with the simulated player (`src/sim/rogue-ai.ts`).
-  - `npx tsx tools/build-test.ts`: the twelve builds side by side, on the parties of `tools/build-parties.ts`.
+  - `npx tsx tools/build-test.ts`: the twelve builds side by side, on the parties of `tools/build-parties.ts` (stand-in pieces where a class's kinds changed; the builds pass rewrites them).
   - `npx tsx tools/piece-check.ts`: every item does what its card says.
+  - `npx tsx tools/gear-slots.ts`: who wears which kinds, and whether the weapon and offhand rules hold.
   - `npx tsx tools/rogue-feel.ts`: fight logs for a feel read; the reader's brief is `docs/feel-reader.md`.
   - `npx tsx tools/rogue-acts.ts`: the act road.
   - `npx tsx tools/rogue-play.ts`: the AI playtester's game.

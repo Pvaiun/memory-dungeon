@@ -116,6 +116,7 @@ tools/                       the Node command lines; each header says how to run
   rogue-tune.ts              npm run rogue:tune: run-level tuning on top of the calibration
   rogue-parties.ts           the hand-built rosters the calibration measures against
   rogue-legendaries.ts       npm run rogue:legendaries: what each legendary piece's rule is worth
+  swing-rate.ts              a stat step against a swing step, class by class: the weapon kinds' exchange rate
   rogue-bosses.ts            how bosses fight in runs: casts, interrupts, held wind-ups
   rogue-acts.ts              the act road and the MP economy, on the rosters
   rogue-feel.ts              fight logs for a feel read (the reader's brief: docs/feel-reader.md)
@@ -139,25 +140,25 @@ tools/                       the Node command lines; each header says how to run
   extract-examples.ts        npm run examples: one worked example of each type, into fixtures/by-type/
 content/
   core-set/                  the core set as TypeScript; npm run content writes the pack
-    scale.ts                 every first value by name: the documents' words as numbers
+    scale.ts                 every first value by name: the documents' words as numbers, the kinds' swing words and budgets
     vocabulary.ts            stats, weapon kinds, armor types, offhand kinds, the ruleset, the design block, core statuses
     classes.ts               the 16 classes: stats, passives, abilities
     enemies.ts               the 29 enemies, their adds and reskins
     dungeons.ts              the encounters, and free play's 7 dungeons
     formations.ts            Neutral and the 32 formations
-    gear.ts                  the 11 plain weapons
+    gear.ts                  the 12 plain weapons
     rogue.ts                 the rogue mode's numbers, regions and events
     rogue-knobs.json         each rogue fight's knob (written by npm run rogue:calibrate)
     tests.ts                 the documents' own test trios, for npm run smoke
     pack.ts                  assembles the pack
     build.ts                 npm run content: validates and writes the pack
-    pieces/                  the 240 pieces
-      kit.ts                 the helpers pieces, formations and upgrades are written with
-      shared.ts              statuses several files use (Marked and its counters)
-      weapons-physical.ts    the six striking kinds' 48 pieces (dagger, fist, sword, spear, bow, great weapon): full swings
-      weapons-focus.ts       the five focus kinds' 40 pieces (rune sword, mace, wand, rod, staff): lighter swings
+    pieces/                  the 272 pieces
+      kit.ts                 the helpers pieces, formations and upgrades are written with; the swing trade, the budget check and the stat words a card opens with
+      shared.ts              statuses several files use (the counters; Marked is the vocabulary's)
+      weapons-scaling.ts     the seven kinds whose swing grows with Attack (dagger, claws, sword, spear, axe, bow, great weapon): 56 pieces
+      weapons-base.ts        the five base-heavy kinds' 40 pieces (wand, rune sword, hammer, mace, staff): a swing for any wearer
       armor-amulets.ts       the four armor types' 48 pieces and the 24 amulets
-      offhands.ts            the ten offhand kinds' 80 pieces
+      offhands.ts            the thirteen offhand kinds' 104 pieces
       index.ts               every item gathered, for the pack and the tools
     upgrades/                each ability's and passive's power step and two versions, and the mythics
       index.ts               gathers them, in order

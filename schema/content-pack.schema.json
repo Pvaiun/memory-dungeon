@@ -4,7 +4,7 @@
   "properties": {
     "schemaVersion": {
       "type": "string",
-      "const": "0.10"
+      "const": "0.11"
     },
     "id": {
       "type": "string",
@@ -1720,6 +1720,11 @@
                 "chance": {
                   "description": "Points added to the hit's crit chance, after every stat change (100: it always crits, whatever else holds, Gambler's coin included).",
                   "type": "number"
+                },
+                "times": {
+                  "description": "The hit's crit chance, after every stat change, is multiplied by this before any `chance` is added (3: tripled against the foes `when` names).",
+                  "type": "number",
+                  "minimum": 0
                 },
                 "bonus": {
                   "description": "Percent more crit bonus, the part of the crit multiplier above ×1: 100 makes ×1.5 into ×2.",
@@ -5374,7 +5379,7 @@
           "$ref": "#/$defs/UnitCond"
         },
         "ifNone": {
-          "description": "When `where` leaves nobody, use the whole side instead (\"if every foe is Taunting, any foe\").",
+          "description": "When `where` leaves nobody, use the whole side instead (\"if every foe is Taunting, any foe\"). With `ko: true`, nobody fallen means the living side, by the rule's other tests (\"a fallen ally, else the lowest\").",
           "type": "string",
           "const": "any"
         },

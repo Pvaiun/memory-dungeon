@@ -68,7 +68,7 @@ const SEAT = "The unit in this seat of the party's formation (a position id), or
 export const TargetRule = z.strictObject({
   side: Side,
   where: UnitCond.optional(),
-  ifNone: z.literal("any").optional().describe("When `where` leaves nobody, use the whole side instead (\"if every foe is Taunting, any foe\")."),
+  ifNone: z.literal("any").optional().describe("When `where` leaves nobody, use the whole side instead (\"if every foe is Taunting, any foe\"). With `ko: true`, nobody fallen means the living side, by the rule's other tests (\"a fallen ally, else the lowest\")."),
   exclude: z
     .enum(["targets", "other", "owner"])
     .optional()

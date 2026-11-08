@@ -33,19 +33,20 @@ export const stats: StatDefT[] = [
   { id: "power", name: "Power", kind: "points", default: 0, floor: -90, note: "Damage dealt by hits and reactions, +%. Only a dungeon's foes modifier sets it: how a fight's knob makes its foes hit harder." },
 ];
 
-/** Eleven weapon kinds, each a speed, a damage type and hands (rules-and-vocabulary.md, Gear). */
+/** Twelve weapon kinds, each a speed, a damage type and hands (rules-and-vocabulary.md, Weapons); their swing words are scale.ts's KIND_WORDS. */
 export const weaponKinds: WeaponKindT[] = [
   { id: "dagger", name: "Dagger", type: "physical", cooldown: KIND_SPEED.dagger, hands: 1 },
-  { id: "fist", name: "Fist weapons", type: "physical", cooldown: KIND_SPEED.fist, hands: 1 },
+  { id: "claws", name: "Claws", type: "physical", cooldown: KIND_SPEED.claws, hands: 1, note: "Knuckles, claws, cestus." },
+  { id: "wand", name: "Wand", type: "physical", cooldown: KIND_SPEED.wand, hands: 1 },
   { id: "sword", name: "Sword", type: "physical", cooldown: KIND_SPEED.sword, hands: 1 },
   { id: "spear", name: "Spear", type: "physical", cooldown: KIND_SPEED.spear, hands: 1 },
+  { id: "axe", name: "Axe", type: "physical", cooldown: KIND_SPEED.axe, hands: 1, note: "The great weapon's one-handed cousin." },
   { id: "bow", name: "Bow", type: "physical", cooldown: KIND_SPEED.bow, hands: 2 },
-  { id: "great_weapon", name: "Great weapon", type: "physical", cooldown: KIND_SPEED.great_weapon, hands: 2, note: "Axes, hammers, pikes and scythes." },
   { id: "rune_sword", name: "Rune sword", type: "physical", cooldown: KIND_SPEED.rune_sword, hands: 1 },
+  { id: "hammer", name: "Hammer", type: "physical", cooldown: KIND_SPEED.hammer, hands: 1, note: "The great weapon's one-handed cousin." },
   { id: "mace", name: "Mace", type: "physical", cooldown: KIND_SPEED.mace, hands: 1 },
-  { id: "wand", name: "Wand", type: "physical", cooldown: KIND_SPEED.wand, hands: 1 },
-  { id: "rod", name: "Rod", type: "physical", cooldown: KIND_SPEED.rod, hands: 1 },
   { id: "staff", name: "Staff", type: "physical", cooldown: KIND_SPEED.staff, hands: 2 },
+  { id: "great_weapon", name: "Great weapon", type: "physical", cooldown: KIND_SPEED.great_weapon, hands: 2, note: "Greataxes, mauls, pikes and scythes." },
 ];
 
 /** Four armor types; a class wears only its own (rules-and-vocabulary.md, Gear). */
@@ -56,18 +57,21 @@ export const armorTypes: GearKindT[] = [
   { id: "robes", name: "Robes" },
 ];
 
-/** Ten offhand kinds, of two or three classes each (rules-and-vocabulary.md, Gear). */
+/** Thirteen offhand kinds, of two or three classes each, by the weapon rules (rules-and-vocabulary.md, Gear). */
 export const offhandKinds: GearKindT[] = [
   { id: "kite_shield", name: "Kite shield" },
   { id: "round_shield", name: "Round shield" },
   { id: "horn", name: "Horn" },
-  { id: "tome", name: "Tome" },
-  { id: "lantern", name: "Lantern" },
-  { id: "relic", name: "Relic" },
-  { id: "bell", name: "Bell" },
   { id: "totem", name: "Totem" },
-  { id: "vial", name: "Vial" },
+  { id: "relic", name: "Relic" },
+  { id: "lantern", name: "Lantern" },
+  { id: "tome", name: "Tome" },
+  { id: "orb", name: "Orb" },
   { id: "idol", name: "Idol" },
+  { id: "vial", name: "Vial" },
+  { id: "trophy", name: "Trophy" },
+  { id: "bell", name: "Bell" },
+  { id: "cloak", name: "Cloak" },
 ];
 /** The speed word of a kind, for weapon damage. */
 export const speedOf = (kind: string): "fast" | "medium" | "slow" => {
@@ -106,13 +110,16 @@ export const vocabulary: StatusT[] = [
     reactions: [{ on: { event: "status_capped", status: "chill" }, do: [{ op: "damage", type: "none", amount: { scale: [{ ratio: STATUS.chill.shatter, stacks: "chill", of: "holder" }] }, to: "holder" }, { op: "apply", status: "stun", to: "holder" }, { op: "remove", label: "debuff", status: "chill", to: "holder" }] }],
   },
   { id: "shock", name: "SHOCK", text: "Hurts for each stack every time it acts.", label: "debuff", show: "icon", stacking: "intensity", cap: STATUS.shock.cap, trigger: { on: { event: "action_resolve" }, do: [{ op: "damage", type: "none", amount: STATUS.shock.perStack, to: "holder" }] }, drop: { fraction: STATUS.shock.drop } },
-  // A cut to the hits it takes, never to a status's own damage: Guard adds Defense, which big hits punch through; Ward cuts every hit alike.
-  { id: "ward", name: "WARD", text: "Takes less damage from hits.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.ward.duration, taken: [{ tag: "physical", pct: STATUS.ward.hits }] },
   // A damage-taken ramp, not a Defense strip (foes carry too little Defense for a strip to show past two stacks): it reads on every
   // foe and gives the Hexer and the Monk a ramp.
   { id: "sunder", name: "SUNDER", text: "Takes more damage for each stack.", label: "debuff", show: "icon", stacking: "intensity", cap: STATUS.sunder.cap, taken: [{ pct: STATUS.sunder.perStack }], pulse: { every: STATUS.sunder.every }, drop: { count: 1 } },
   { id: "silence", name: "SILENCE", text: "Can't use abilities.", label: "debuff", show: "icon", stacking: "fizzle", duration: STATUS.silence.duration, lockout: { covers: "ability", interrupt: true } },
   { id: "hidden", name: "HIDDEN", text: "Foes can't pick it.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.hidden.duration, unremovable: true, stats: [{ stat: "forbidden", flat: 1 }] },
+  /**
+   * Marked: a debuff on a foe. The party's basic attacks pick a Marked foe (by draw among several) inside the Taunt rule; each
+   * unit keeps one Mark, so a new one it applies moves its old one (`focus` and `single`).
+   */
+  { id: "marked", name: "MARKED", text: "The party's basic attacks go to it.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.marked.duration, focus: true, single: true },
   { id: "rot", name: "ROT", text: "Heals less.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.rot.duration, stats: [{ stat: "healing_received", flat: STATUS.rot.healing }] },
   { id: "clarity", name: "CLARITY", text: "Recovers MP over time.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.clarity.duration, pulse: { every: STATUS.clarity.every, do: [{ op: "mp", amount: { scale: [{ ratio: STATUS.clarity.share, stat: "max_mp", of: "holder" }] } }] } },
   // Signature

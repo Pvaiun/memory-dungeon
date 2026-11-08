@@ -1,7 +1,7 @@
 /** The Hexer's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit.ts. */
 import { own } from "../pieces/kit.js";
-import { BURN_STACKS, HIT, stacks } from "../scale.js";
-import { T } from "../classes.js";
+import { BURN_STACKS, stacks } from "../scale.js";
+import { DEEPENED, T } from "../classes.js";
 import type { EffectT, TargetRuleT } from "../../../src/schema.js";
 import { abilityUp, apply, cd, COLD_HEX, helper, marker, passiveUp, phys } from "./kit.js";
 
@@ -11,61 +11,53 @@ passiveUp({
   id: "cold_hex", cls: "hexer",
   power: "Its basic attacks add 40% more.",
   a: { name: "Hex of flames", text: "Its basic attacks add a few Burn, whatever weapon it carries; stacks scale from Attack.", builds: ["bonfire"] },
-  b: { name: "Deep cold", text: "Its basic attacks add Chill only to the foe with the most Chill, twice as many; stacks scale from Attack.", builds: ["snap"] },
+  b: { name: "Withering hex", text: "Its basic attacks Weaken their target in place of the Chill.", builds: ["toll", "lockdown"], plus: "" },
   form: (v, k) => ({
     reactions: [{
       on: { event: "hit_lands", kind: "basic" },
       do: [
         v === "a" ? apply("burn", { stacks: own("few", "attack", BURN_STACKS * k), to: "other" }) // Kindling's own size: the Pyromancer's stays the bigger.
-          : v === "b" ? apply("chill", { stacks: own("few", "attack", COLD_HEX * 2 * k), to: T.mostFoe("chill") }) // Wherever the swing landed; with none chilled, a random foe.
+          : v === "b" ? apply("weaken", { to: "other" }) // Weaken at its own length: a lock on the swing's target, nothing to grow.
             : apply("chill", { stacks: own("few", "attack", COLD_HEX * k), to: "other" }),
       ],
     }],
   }),
 });
 
+/** Malison deepens: one more stack of each affliction a foe holds (0 on a foe without it), and a few Bleed of its own. */
+const deepen = (k: number, to?: TargetRuleT) => DEEPENED.map((st) => apply(st, { stacks: { scale: [{ ratio: k, when: { has: st }, of: "target" }] }, ...(to ? { to } : {}) }));
 abilityUp({
   id: "malison", cls: "hexer",
   power: "40% more of every status it adds.",
-  a: { name: "Plague", text: "Adds a few Burn, a few Shock and a few Bleed to every foe; stacks scale from Attack.", builds: ["cuts", "harvest", "toll"] },
-  b: { name: "Focused curse", text: "Adds Burn and Shock to the foe with the highest Attack, three times as many; stacks scale from Attack.", builds: ["bonfire", "lockdown"] },
+  a: { name: "Plague", text: "Deepens every affliction each foe holds, and adds a few Burn, a few Shock and a few Bleed of its own to every foe; stacks scale from Attack.", builds: ["bonfire", "harvest", "cuts"] },
+  b: { name: "Focused curse", text: "Deepens the afflictions of the foe with the highest Attack alone, three times over, and adds it a few Bleed, three times as many; stacks scale from Attack.", builds: ["lockdown", "hunt"] },
   form: (v, k) =>
     v === "b"
-      ? { target: T.highestAMFoe, do: [apply("burn", { stacks: stacks("few", "attack", 3 * k) }), apply("shock", { stacks: stacks("few", "attack", 3 * k) })] } // No Seek: a Taunting foe catches it first.
+      ? { target: T.highestAMFoe, do: [...deepen(3 * k), apply("bleed", { stacks: stacks("few", "attack", 3 * k) })] } // No Seek: a Taunting foe catches it first.
       : {
-        ...(v === "a" ? { mp: 650 } : {}), // A rung up, for the third status.
-        do: [apply("burn", { stacks: stacks("few", "attack", k) }), apply("shock", { stacks: stacks("few", "attack", k) }), ...(v === "a" ? [apply("bleed", { stacks: stacks("few", "attack", k) })] : [])],
+        ...(v === "a" ? { mp: 650 } : {}), // A rung up, for the statuses of its own.
+        do: [...deepen(k), apply("bleed", { stacks: stacks("few", "attack", k) }), ...(v === "a" ? [apply("burn", { stacks: stacks("few", "attack", k) }), apply("shock", { stacks: stacks("few", "attack", k) })] : [])],
       },
 });
 
+/** Mana burn: the share of the foe's MP it drains, which the Hexer gains (a marker on the foe pays its source, as a number read `of: target` can't reach the caster). */
+const MANA_BURN = 0.2;
 abilityUp({
   id: "unmake", cls: "hexer",
   power: "A shorter cooldown.",
   a: { name: "Silence all", text: "Silences every foe in a wind-up and strips their buffs. Waits until a foe is in a wind-up.", builds: ["lockdown"] },
-  b: {
-    name: "Broken spell", builds: ["overflow"],
-    text: "Silences the casting foe with the highest Attack and strips its buffs. For each buff stripped, that foe takes light damage that scales from Attack, and the Hexer regains 200 MP. Waits until a foe is in a wind-up.",
-  },
+  b: { name: "Mana burn", text: "Silences the casting foe with the highest Attack and strips its buffs, and drains a fifth of its MP, which the Hexer gains. Waits until a foe is in a wind-up.", builds: ["overflow", "lockdown"] },
   form: (v, _k, plus) => ({
     ...(plus ? { cooldown: cd("short", "unmake") } : {}),
     ...(v === "a" ? { target: { side: "foes", where: { casting: true }, pick: "all" } as TargetRuleT } : {}), // An all-pick: the Taunt and Hidden rules don't apply.
     ...(v === "b"
-      ? {
-        do: [
-          // Read before the strip: a light hit for each buff the target holds, and a marker holding the count, which pays the Hexer.
-          phys({ scale: [{ ratio: HIT.light, count: "buffs", of: "target", times: { stat: "attack", of: "self" } }] }),
-          apply("broken_spell", { stacks: { scale: [{ ratio: 1, count: "buffs", of: "target" }] } }),
-          apply("silence"),
-          { op: "remove", label: "buff" } as EffectT,
-        ],
-        note: "In an action, a number read `of: target` reads the unit the effect lands on, so an `mp` effect to the Hexer can't count the foe's buffs. The count rides a one-tick marker on the foe (broken_spell), whose reaction pays its source 200 MP a stack.",
-      }
+      ? { do: [{ op: "mp", amount: { scale: [{ ratio: -MANA_BURN, stat: "max_mp", of: "target" }] } } as EffectT, apply("mana_burn"), apply("silence"), { op: "remove", label: "buff" } as EffectT] }
       : {}),
   }),
 });
-helper(marker("broken_spell", "BROKEN SPELL", "The Hexer that broke its spell regains MP for each buff it stripped.", {
-  stacking: "intensity", perSource: {}, duration: 1,
-  reactions: [{ on: { event: "status_gained", status: "broken_spell" }, actor: "source", do: [{ op: "mp", amount: { scale: [{ ratio: 200, stacks: "broken_spell", of: "holder" }] }, to: "source" }] }],
+helper(marker("mana_burn", "MANA BURN", "The Hexer that burned its mana gains a share of it.", {
+  perSource: {}, duration: 1,
+  reactions: [{ on: { event: "status_gained", status: "mana_burn" }, actor: "source", do: [{ op: "mp", amount: { scale: [{ ratio: MANA_BURN, stat: "max_mp", of: "holder" }] }, to: "source" }] }],
 }));
 
 abilityUp({

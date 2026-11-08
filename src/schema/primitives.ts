@@ -1,7 +1,7 @@
 /** The schema's primitives (ids, text, numbers, the sub-tick) and its closed sets: each needs engine code, so adding one is a schema version bump. */
 import * as z from "zod";
 
-export const SCHEMA_VERSION = "0.10" as const;
+export const SCHEMA_VERSION = "0.11" as const;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Primitives

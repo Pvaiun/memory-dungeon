@@ -379,7 +379,7 @@ export class Combat {
       st.crits?.forEach((x, j) => {
         tag(x.tag, `${p}.crits[${j}].tag`);
         if (x.when) this.unitCond(x.when, `${p}.crits[${j}].when`);
-        if (x.chance === undefined && x.bonus === undefined) this.r.error("crit.empty", `${p}.crits[${j}]`, `a crit rule adds chance, bonus or both`);
+        if (x.chance === undefined && x.bonus === undefined && x.times === undefined) this.r.error("crit.empty", `${p}.crits[${j}]`, `a crit rule adds chance, multiplies it, adds bonus, or several of these`);
       });
       st.set?.forEach((x, j) => this.statKey(x.stat, `${p}.set[${j}].stat`));
       if (st.revives?.hp !== undefined) this.num(st.revives.hp, `${p}.revives.hp`, "action", false);

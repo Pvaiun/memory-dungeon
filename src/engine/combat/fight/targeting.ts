@@ -186,7 +186,14 @@ export function byRule(w: W, u: CUnit, r: S.TargetRuleT, o: PickOpts): CUnit[] {
   if (r.seat !== undefined) pool = pool.filter((x) => inSeat(w, u, x, r.seat!));
   if (r.where) {
     const kept = pool.filter((x) => passes(w, x, r.where!, u));
-    pool = kept.length || r.ifNone !== "any" ? kept : pool;
+    if (kept.length || r.ifNone !== "any") pool = kept;
+    else if (ko) {
+      // A rule for the fallen with nobody fallen: the living side instead, by the rule's other tests (Choosing: the fallen first, else the lowest).
+      const { ko: _ko, ...rest } = r.where;
+      const alive = r.side === "foes" && r.pick !== "all" ? visibleFoes(w, u) : sideOf(w, u, r.side, false);
+      const keptAlive = Object.keys(rest).length ? alive.filter((x) => passes(w, x, rest, u)) : alive;
+      pool = keptAlive.length ? keptAlive : alive;
+    }
   }
   let pick = r.pick ?? (r.side === "foes" ? "aggro" : "random");
   if (pick === "all") return pool;

@@ -10,28 +10,30 @@ Rarity is specificity, not size: how far a piece bends the game. A rare can be b
 
 | Rarity | What it is | Stats | Effect |
 | --- | --- | --- | --- |
-| **Common** | Fills a slot and carries a build's first stats. | Two steps, leaning by kind; three on a two-hander. A special stat at medium is a step. | None. |
-| **Uncommon** | A build's first rung: a small effect most runs find. | One step. | One small, general effect on a thread (a rider, a start-of-fight status, a small reaction), with no condition on a class. Each one helps two to four builds a little. |
-| **Rare** | A build's second rung: specific, often conditional. | None, or one step where the effect alone is thin. | One designed effect, worth a lot to one or two builds and little elsewhere. |
-| **Legendary** | A build's far end, or an exotic: it bends a rule. | Only where the shape needs them. | A rule change, a new trigger or a payoff that grows. Strong where it fits; where it's strong in many places, it gives something up. |
+| **Common** | Fills a slot and carries a build's first stats. | One step as the standard, two on a rich kind (`KIND_BUDGET`). A special stat at medium is a step, at high two. | None. |
+| **Uncommon** | A build's first rung: a small effect most runs find. | Two steps as the standard, one on a lean kind, three on a rich one. | One small, general effect on a thread (a rider, a start-of-fight status, a small reaction), with no condition on a class. Each one helps two to four builds a little. |
+| **Rare** | A build's second rung: specific, often conditional. | Three steps as the standard, two on a lean kind, four on a rich one, beside the effect. | One designed effect, worth a lot to one or two builds and little elsewhere. |
+| **Legendary** | A build's far end, or an exotic: it bends a rule. | Four steps as the standard, three on a lean kind, five on a rich one, beside the effect. The only rarity where a special stat is high. | A rule change, a new trigger or a payoff that grows. Strong where it fits; where it's strong in many places, it gives something up. |
 | **Mythic** | Rewrites one class, past any one ability. | As its shape needs. | One per class (see Mythics). |
+
+Every piece carries stats at every rarity, each rarity carries a step more than the last, and higher rarity is generally better: a rare or legendary carries its steps beside its effect, not instead of it. A weapon kind's budget word moves the ladder a step down or up (*Core set: rules and vocabulary*, Weapons); armor, offhands and amulets take the standard ladder. A piece's stats lean to its kind's profile, the signature first. The content checks every piece against its budget as the pack is built, and a card's first sentence is its stats in words, written from them.
 
 - **No random affixes,** at any rarity: every piece is fixed. Tempering turns a piece into one of the next rarity, in the same kind, that fits the same wearer.
 - **No piece says what it's for.** Which builds a piece serves is the designer's (`PIECE_BUILDS`), used to aim drops, and never on a card.
 - **An uncommon never carries a rare's effect at a smaller size** in the same kind: the best choices are between builds, not between a small and a big version of one thing.
-- **Two-handers** (bow, great weapon, staff) are worth a weapon and an offhand: their commons carry three steps, and their rares and legendaries pair two effects or carry a bigger one.
+- **Two-handers** (bow, great weapon, staff) are worth a weapon and an offhand: the great weapon and the staff take both sides of the swing trade (a heavy swing or the most stats, and a rich budget), and their rares and legendaries pair two effects or carry a bigger one. The bow is the exception: a heavy, Attack-heavy swing at a one-hander's budget, and the marksman pays with the offhand.
 
 ## The stock
 
 | Slot | A kind holds | Common | Uncommon | Rare | Legendary | In all |
 | --- | --- | --- | --- | --- | --- | --- |
-| Weapon (11 kinds) | 8 | 2 | 2 | 2 | 2 | 88 |
+| Weapon (12 kinds) | 8 | 2 | 2 | 2 | 2 | 96 |
 | Armor (4 types) | 12 | 3 | 3 | 3 | 3 | 48 |
-| Offhand (10 kinds) | 8 | 2 | 2 | 2 | 2 | 80 |
+| Offhand (13 kinds) | 8 | 2 | 2 | 2 | 2 | 104 |
 | Amulet | 24 | 6 | 6 | 6 | 6 | 24 |
-| **All** | | **60** | **60** | **60** | **60** | **240** |
+| **All** | | **68** | **68** | **68** | **68** | **272** |
 
-Plus the 11 plain weapons (the starters, and the cheapest drops) and the 16 mythics. The stock is even quarters because offers already weight rarity; the split decides how often the same piece comes back. A run sees under half of the legendaries, so two runs toward one build get there through different pieces.
+Plus the 12 plain weapons (the starters, and the cheapest drops) and the 16 mythics. The axe, hammer, orb, trophy and cloak are the newest kinds: their commons and uncommons are written to their profiles, and their rares and legendaries are a first fill for the builds pass to redo. The stock is even quarters because offers already weight rarity; the split decides how often the same piece comes back. A run sees under half of the legendaries, so two runs toward one build get there through different pieces.
 
 ## Sizes, for new pieces
 
@@ -45,40 +47,44 @@ The ranges a new piece is written in, so balance mostly holds:
 
 ## Commons and uncommons by kind
 
-Commons and uncommons are written from a rule per kind, not designed one by one: commons lean on these stats, and uncommons carry one of these small effects.
+Commons and uncommons are written from a rule per kind, not designed one by one: commons lean on the kind's signature stat and its common stats, the kind's profile (*Core set: rules and vocabulary*, Weapons and Gear), and uncommons carry one of these small effects. Every wearer of a kind reads its signature stat, so a kind's pieces suit each of its two or three wearers.
 
-| Kind | Commons lean | Uncommons' small effects |
-| --- | --- | --- |
-| Dagger | Crit chance, Attack, Accuracy, Evasion | a crit that opens a little Bleed; basic attacks that ignore Taunt |
-| Fist weapons | Double strike, Attack, Evasion, Lifesteal | a short Haste at the fight's start; extra strikes that carry a little Sunder |
-| Sword | Attack, HP, Aggro | a short Taunt at the start; Thorns |
-| Spear | Attack, Defense, Crit chance | a little Sunder on crits; a Guard after a killing blow |
-| Bow | Attack, Accuracy, Crit damage | abilities with Seek; a little Bleed on crits |
-| Great weapon | Attack, HP, Crit damage | a few Might at the start; a Shield at the start from Attack |
-| Rune sword | Attack, Defense, Crit chance | basic attacks that ignore Taunt; a Ward at the start |
-| Mace | Attack, HP, MP regen | a Regen on the lowest ally at the start; a Ward at the start |
-| Wand | Attack, MP, Double strike | a little Shock on basic attacks; a little MP back on a crit |
-| Rod | Attack, MP regen, HP | a little Chill on basic attacks; a Clarity once a fight below a third of MP |
-| Staff | Attack, MP, HP | a Clarity at the start; a Shield at the start from Attack |
-| Plate | Defense, HP, Aggro, Thorns | Thorns with Aggro up; a Shield at the start from Defense; a Guard once a fight below half HP |
-| Mail | HP, Attack, Lifesteal | Lifesteal; Thorns; a Ward at the start |
-| Leather | Evasion, Crit chance, Accuracy, Attack | a short Haste at the start; Evasion with Aggro down; a few Might at the start |
-| Robes | MP, MP regen, Attack, Aggro down | a Clarity at the start; HP with Aggro down; a Shield at the start from Attack |
-| Kite shield | Defense, HP, Aggro | a Shield at the start from max HP; a Guard on the lowest ally at the start |
-| Round shield | Defense, Attack, HP | a Guard at the start; a short Taunt when an ally drops below half |
-| Horn | Aggro, MP regen, Attack | a Clarity on the least-MP ally at the start; a short Taunt at the start |
-| Tome | Attack, MP, MP regen | a few Chill on every foe at the start; abilities that cost a little less |
-| Lantern | Attack, HP, MP | a few Burn on every foe at the start; a Ward at the start |
-| Relic | Attack, MP regen, HP | heals that also cleanse one debuff; a Regen on the lowest ally at the start |
-| Bell | MP regen, Evasion, Attack | a short Haste at the start; one cleanse of Silence a fight |
-| Totem | Defense, Attack, Thorns | Thorns; a Guard once a fight when its holder drops below half |
-| Vial | Lifesteal, Crit chance, Attack | crits that heal a little; Lifesteal below half HP |
-| Idol | Siphon, Attack, HP | MP on a kill; a little Siphon on crits |
-| Amulet | one each: HP, Defense, MP regen, Evasion, and two with Attack (two steps of mixed stats) | one each: Taunt at the start, a Shield at the start, Haste at the start, Lifesteal, Thorns, Double strike (a step and a small version) |
+| Kind | Signature | Commons lean | Uncommons' small effects |
+| --- | --- | --- | --- |
+| Dagger | Crit chance | Attack speed, Evasion, Crit damage, Attack | a crit that opens a little Bleed; basic attacks that ignore Taunt |
+| Claws | Double strike | Attack speed, Lifesteal, Evasion | a short Haste at the fight's start; extra strikes that carry a little Sunder |
+| Wand | Cooldown | Cast speed, MP regen, Attack, Attack speed | a little Shock on basic attacks; a little MP back on a crit |
+| Sword | Attack | HP, Defense, Crit chance, Aggro | a short Taunt at the start; half again on a foe in a wind-up |
+| Spear | Aggro | Defense, Attack, Crit chance, HP | a little Sunder on crits; a Guard after a killing blow |
+| Axe | Lifesteal | Attack, Crit damage, HP | a few Might on a killing blow; a drink from a foe below half |
+| Bow | Crit damage | Crit chance, Attack, Attack speed | a Slow on a foe winding up; a little Bleed on crits |
+| Rune sword | MP regen | Cooldown, MP, HP, Siphon | a little Chill on basic attacks; a Shield at the start from max MP |
+| Hammer | Defense | HP, Aggro, Crit damage, Thorns | swings that carry a share of Defense; a Shield from Defense on each hit |
+| Mace | HP | Defense, MP regen, Cooldown, Thorns | a Regen on the lowest ally at the start; a little healing on each cast |
+| Staff | Cast speed | Cooldown, MP, MP regen, HP | a Clarity at the start; a Shield at the start from Attack |
+| Great weapon | Attack | HP, Crit damage, Lifesteal, Aggro | a few Might at the start; a Shield at the start from Attack |
+| Plate | (by weight) | Defense, HP, Aggro, Thorns | Thorns with Aggro up; a Shield at the start from Defense; a Guard once a fight below half HP |
+| Mail | (by weight) | HP, Attack, Lifesteal | Lifesteal; Thorns; the first hit taken at half |
+| Leather | (by weight) | Evasion, Crit chance, Accuracy, Attack | a short Haste below half; Evasion with Aggro down; a few Might at the start |
+| Robes | (by weight) | MP, MP regen, Attack, Aggro down | a first cast free; HP with Aggro down; a Shield after each cast from Attack |
+| Kite shield | Defense | HP, Aggro, Thorns, Attack | less damage while Taunting; a Guard on the lowest ally at the start |
+| Round shield | HP | Defense, Attack, Aggro, Crit chance | a Guard on the other anchor at the start; a fifth more on a Taunting foe |
+| Horn | Aggro | HP, Defense, Attack, MP regen | a Clarity on the least-MP ally at the start; Haste on the first kill |
+| Totem | Thorns | Defense, Aggro, HP, Attack | Thorns on the anchor for the fight; a Guard once a fight when an ally drops below half |
+| Relic | MP regen | HP, Attack, Cast speed, Defense | heals that also cleanse one debuff; a mend on each fall |
+| Lantern | Cast speed | Attack, MP, HP, Cooldown | a few Burn on every foe at the start; a Weaken on the most dangerous at the start |
+| Tome | Cooldown | Attack, MP, MP regen, Cast speed | a few Chill on every foe at the start; abilities that cost a little less |
+| Orb | MP | Attack, MP regen, Cast speed, Cooldown | the nearest ability ready at the start; MP back on each foe's fall |
+| Idol | Siphon | Attack, HP, MP, Lifesteal | MP on a kill; Rot on crits |
+| Vial | Lifesteal | Attack, Crit chance, Crit damage, HP | crits that heal a little; a drink from a bleeding foe |
+| Trophy | Crit damage | Crit chance, Attack, Accuracy, Defense | Heat on each kill; a Slow on crits |
+| Bell | Attack speed | Attack, Evasion, Double strike, MP regen | a dodge that quickens the next swing; one cleanse of Silence a fight |
+| Cloak | Evasion | Attack, Crit chance, Attack speed, Defense | a few Might on each dodge; Hidden once a fight below half |
+| Amulet | (everyone) | one each: HP, Defense, MP regen, Evasion, and two with Attack (two steps of mixed stats) | one each: Taunt at the start, a Shield at the start, Haste at the start, Lifesteal, Thorns, Double strike (a step and a small version) |
 
 ## New words, and the rules the pieces bend
 
-- **Marked** is the one new status a player learns: a debuff on a foe that makes it the pick of the party's basic attacks while it lives. Its abilities still follow their own targeting. It lasts a short while, and reapplying it refreshes it. It's the Hunt's focus.
+- **Marked** is the vocabulary's now (the Paladin's Condemn applies it): a debuff on a foe that makes it the pick of the party's basic attacks while it lasts. The Hunt's pieces apply it too.
 - **Counters,** shown as an icon with a number on the holder and kept for the fight: Cuts (hits landed), Heat (power that builds), Spite (Thorns that grow), Tempo (speed that builds), Surge (many-foe hits), Fervor (falls and returns) and Charge (hits saved for one blow, then spent). Each is a status of its own with one fixed meaning, so they don't stack into each other. They're in `pieces/shared.ts`.
 - **Three rules are bent, each by one or two pieces:** extra strikes that chain (Flurry wraps), a hit taken for an ally (Oathbound shield), and effects after a won fight, before statuses end (Lamp of vigil, Last bastion, The undying).
 - **One rule is added:** Taunt ends Hidden. A unit that gains Taunt stops being Hidden, and Hidden doesn't land on a Taunting unit.
@@ -89,13 +95,13 @@ Commons and uncommons are written from a rule per kind, not designed one by one:
 Rules that hold for every piece, version and mythic, kept from the rulings on the fill. None of them is about balance.
 - **Every uncommon carries an effect.** A special stat alone is a common's step.
 - **One uncommon effect per wearer group:** two kinds worn by the same classes don't share an uncommon effect.
-- **Two-handers' uncommons** carry two steps and their effect, so they're worth a weapon and an offhand.
+- **Every piece carries its kind's budget of steps** at its rarity, a rare's or legendary's beside its effect; a piece that steps along the swing trade says so on its card ("a heavier swing").
 - **Mythics carry no stat steps** unless the line's shape needs one.
-- **A revive** brings its ally back with every ability on full cooldown, whoever revives, unless Einherjar or a piece says otherwise.
+- **A revive** brings its ally back with every ability on full cooldown, whoever revives, unless the Valkyrie's Einherjar version or a piece says otherwise.
 - **Paying HP** means losing that much HP at once. It isn't damage, so no Shield soaks it and nothing reacts to it, and it can't take the payer below 1 HP.
 - **"Every so often"** is the short cooldown word, unless a line states its own.
 - **Hits that always crit** win over Gambler's coin, and its card says so.
-- **Each new status or counter is defined once,** for every piece that uses it (Marked, Heat, Fervor and the rest in `pieces/shared.ts`).
+- **Each new status or counter is defined once,** for every piece that uses it (Heat, Fervor and the rest in `pieces/shared.ts`; Marked in the vocabulary).
 - **Same card, two places:** where two items would read the same, one changes. The best choices are between builds.
 
 ## Formations
@@ -130,9 +136,9 @@ One per class, shown in crimson and offered in the boss boons that open acts II 
 | Ranger | Huntmaster's quiver | armor | the Hunt |
 | Bramble knight | Heartwood mail | armor | the Toll |
 | Hoplite | The last wall | offhand | the Toll, Bonfire |
-| Paladin | Chains of light | offhand | Lockdown |
-| Valkyrie | Stormspear | weapon | Thousand Cuts, the Hunt |
-| Bard | Metronome | offhand | Thousand Cuts |
+| Paladin | Chains of light | offhand (relic) | Lockdown |
+| Valkyrie | Stormspear | weapon (a spear's swing) | Thousand Cuts, the Hunt |
+| Bard | Metronome | offhand (bell) | Thousand Cuts |
 | Hexer | The witch-blade | weapon | Cold Snap, Harvest |
 | Monk | Ember palms | weapon | Bonfire |
 | Assassin | Night's edge | armor | the Hunt, Ambush |
@@ -152,16 +158,16 @@ At the director's word, the loot was made with no balancing rules: synergies may
 - **Half again in place of double** where a party can hold the condition all fight.
 - **A counter gains at most a stack every couple of ticks,** however many triggers fire, so against a pack it grows at a fight's pace, not a swarm's.
 - **No triples** outside the Worldbreaker.
-- **Item cuts:** the fill's first, smaller versions of items that went back to the spine's line (a limit on Pike wall, Oathkeeper at half, Withering idol and the Humbling mace one swing in three, Thrall's chalice once a fight, a cap on Supercell, and others).
-- **Locks that hold a lone boss all fight** (Withering idol, the Humbling mace, the Glacial rod, Deep cold, Thorn hedge): the design's own answer is bosses that resist repeated control, which is in, not shorter locks.
+- **Item cuts:** the fill's first, smaller versions of items that went back to the spine's line (a limit on Pike wall, Oathkeeper at half, Thrall's chalice once a fight, and others).
+- **Locks that hold a lone boss all fight** (the Withering hex version, Thorn hedge): the design's own answer is bosses that resist repeated control, which is in, not shorter locks.
 
 ## Decisions to know, and what's least sure
 
 **Decisions in the loot that might not be expected,** each one a line to change:
-- **The stock is even quarters** (sixty of each rarity), with the plain weapons outside it.
-- **Commons carry no effect,** only stats. Uncommons are where the first rungs live.
+- **The stock is even quarters** (sixty-eight of each rarity), with the plain weapons outside it.
+- **Commons carry no effect,** only stats, and every rarity carries stats. Uncommons are where the first rungs live.
 - **An upgrade is two trainings,** the power step and the version, in either order.
-- **One new word, Marked, and seven counters,** each its own status. Fewer are possible: Heat and Surge could be one, and Charge could be Cuts spent.
+- **Seven counters,** each its own status. Fewer are possible: Heat and Surge could be one, and Charge could be Cuts spent.
 - **Three rules bent, one added** (see New words, and the rules the pieces bend).
 - **No piece grants an ability,** so more abilities per class stays out.
 

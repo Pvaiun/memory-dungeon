@@ -1,29 +1,43 @@
 /** The Paladin's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit.ts. */
-import type { AbilityT, EffectT, StatusT, TargetRuleT } from "../../../src/schema.js";
-import { from, stacks } from "../scale.js";
+import type { AbilityT, EffectT, ReactionT, StatusT, TargetRuleT } from "../../../src/schema.js";
+import { own } from "../pieces/kit.js";
+import { BURN_STACKS, from, stacks } from "../scale.js";
 import { T } from "../classes.js";
 import { abilityUp, apply, both, cd, passiveUp, phys, r6 } from "./kit.js";
 
 {
-  const bonus = (ratio: number, when: object) => ({ boosts: both({ scale: [{ ratio, when, of: "target" }] }) as StatusT["boosts"] });
+  /** The judge's bonus: half again (the power step +70%) on a foe with a debuff, or with a buff and no debuff, so one holding both isn't doubled. */
+  const judged = (ratio: number): StatusT["boosts"] => both({ scale: [{ ratio, when: { debuffs: true }, of: "target" }, { ratio, when: { buffs: true, debuffs: false }, of: "target" }] }) as StatusT["boosts"];
+  /** Zeal: its basic attacks add a few Burn to a judged foe (a reaction's `if` tests the foe hit for either). Two reactions, one each, so a foe with both gets one. */
+  const zeal: ReactionT[] = [
+    { on: { event: "hit_lands", kind: "basic" }, if: { unit: "other", where: { debuffs: true } }, do: [apply("burn", { stacks: own("few", "attack", BURN_STACKS), to: "other" })] },
+    { on: { event: "hit_lands", kind: "basic" }, if: { unit: "other", where: { buffs: true, debuffs: false } }, do: [apply("burn", { stacks: own("few", "attack", BURN_STACKS), to: "other" })] },
+  ];
+  /** Verdict: its crit chance is tripled against a judged foe. Two rules, so a foe holding both a buff and a debuff is tripled once. */
+  const verdict: StatusT["crits"] = [{ when: { debuffs: true }, times: 3 }, { when: { buffs: true, debuffs: false }, times: 3 }];
   passiveUp({
     id: "judgement", cls: "paladin",
     power: "The bonus is +70%, not half again.",
-    a: { name: "Inquisition", text: "Its hits deal half again as much to foes with a debuff.", builds: ["lockdown", "bonfire", "toll"] },
-    b: { name: "Sentence", text: "Its hits deal half again as much to the foe with the highest Attack.", builds: ["hunt"] },
-    form: (v, _k, plus) => bonus(plus ? 70 : 50, v === "a" ? { debuffs: true } : v === "b" ? { top: { stats: ["attack"] } } : { buffs: true }),
+    a: { name: "Zeal", text: "Its hits deal half again as much to foes with a buff or a debuff, and its basic attacks add a few Burn to such a foe; stacks scale from Attack.", builds: ["bonfire", "toll"] },
+    b: { name: "Verdict", text: "Its hits deal half again as much to foes with a buff or a debuff, and its crit chance is tripled against such a foe.", builds: ["hunt", "lockdown"] },
+    form: (v, _k, plus) => ({
+      boosts: judged(plus ? 70 : 50),
+      ...(v === "a" ? { reactions: zeal } : {}),
+      ...(v === "b" ? { crits: verdict } : {}),
+    }),
   });
 }
 
 {
-  const sanctum: Partial<AbilityT> = { mp: 1500, do: [apply("ward"), apply("shield", { stacks: { scale: [{ ratio: 0.25, stat: "attack", of: "self" }] } })] };
-  const consecration: Partial<AbilityT> = { do: [apply("ward"), apply("burn", { stacks: stacks("few", "attack"), to: T.everyFoe })] };
+  const volley: EffectT = { op: "cooldown", which: "basic", set: "ready", to: T.everyAlly };
+  const challenge: Partial<AbilityT> = { do: [apply("marked"), apply("taunt", { to: "self" })] };
+  const swift: Partial<AbilityT> = { target: { side: "foes", pick: "lowest", by: "hp_share" } as TargetRuleT, do: [apply("marked"), volley] };
   abilityUp({
-    id: "sanctuary", cls: "paladin",
+    id: "condemn", cls: "paladin",
     power: "Comes round sooner.",
-    a: { name: "Sanctum", text: "Ward and a Shield from Attack on every ally.", builds: ["phoenix", "harvest"] },
-    b: { name: "Consecration", text: "Ward on every ally, and a few Burn on every foe.", builds: ["bonfire", "harvest"] },
-    form: (v, _k, plus) => ({ ...(v === "a" ? sanctum : v === "b" ? consecration : {}), ...(plus ? { cooldown: cd("medium", "sanctuary") } : {}) }),
+    a: { name: "Challenge", text: "Marks the foe with the highest Attack, and the Paladin Taunts. No volley.", builds: ["toll", "landslide"] },
+    b: { name: "Swift justice", text: "Marks the foe with the lowest share of its HP, and every ally's next basic attack comes at once.", builds: ["hunt", "harvest"] },
+    form: (v, _k, plus) => ({ ...(v === "a" ? challenge : v === "b" ? swift : {}), ...(plus ? { cooldown: cd("short", "condemn") } : {}) }),
   });
 }
 

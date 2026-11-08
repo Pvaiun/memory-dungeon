@@ -1,6 +1,6 @@
 # Gear design: the builds
 
-The twelve builds the gear, formations, upgrades and mythics were designed backwards from, and the web between them. They stand (`docs/rules.md`). What a build is, and what rhythm means, is in *Gear design: philosophy*; the rules the loot follows are in *Gear design: the loot*.
+The twelve builds the gear, formations, upgrades and mythics were designed backwards from, and the web between them. They stand (`docs/rules.md`) until the builds pass redesigns them on the classes as they are now (`CLAUDE.md`, Status): the routes and rungs below are the ones the hand-built parties still test, with stand-in pieces where a class's kinds changed. What a build is, and what rhythm means, is in *Gear design: philosophy*; the rules the loot follows are in *Gear design: the loot*.
 
 Each build has three routes (trios of classes that carry it) at three rungs, as hand-built test parties in `tools/build-parties.ts`, and `npx tsx tools/build-test.ts` plays them side by side. Which builds each piece serves is designer data (`PIECE_BUILDS` in `content/core-set/pieces/index.ts`) and never reaches a card.
 
@@ -80,7 +80,7 @@ The twelve come in pairs from opposite sides of the space:
   - Evasion as defence, and the dodge as a trigger;
   - Lifesteal on every hit;
   - the status torrent: fast hits that each leave Burn, Shock or Chill, whose own damage never meets Defense; the same rhythm with another answer to Defense (a second route, not a second build).
-- **Routes:** Bard, Monk, Assassin · Valkyrie, Ranger, Vampire · the status torrent: Stormcaller and Pyromancer on wands, Hexer on a dagger.
+- **Routes:** Bard, Monk, Assassin · Valkyrie, Ranger, Vampire · the status torrent: Stormcaller on claws, Pyromancer and Hexer on wands.
 - **Seats it likes:** a pacer that speeds the others; two blades that act more often and hit smaller.
 - **Rungs:**
   1. Fast weapons and a little Double strike: steady chip, and little else.
@@ -115,7 +115,7 @@ The twelve come in pairs from opposite sides of the space:
 - **Needs:**
   - **Pieces:** something that passes Burn from a dying foe to the next; power that builds in the party as a fight goes on; a choice between a fire that lasts and a fire that flares.
   - **Formations:** the keeper and the torch, and formations that pay more the longer a fight runs.
-  - **Upgrades:** versions of Firebolt, Fireball, Pyre, Kindling, Burning fist, Smite and Malison that hold the fire up, pass it on, or flare it.
+  - **Upgrades:** versions of Firebolt, Fireball, Pyre, Stoke, Burning fist, Smite and Malison that hold the fire up, pass it on, or flare it.
 - **Far end:** fire that outlives its foe, and heat that never stops building.
 
 ## Cold Snap
@@ -190,7 +190,7 @@ The twelve come in pairs from opposite sides of the space:
 - **Needs:**
   - **Pieces:** blows that reach a second foe or every foe; aiming at the healthiest foe; a finisher for every foe below a line; a payoff that grows with how many foes one action hit.
   - **Formations:** the lightning rod, and formations that reward hitting many foes at once.
-  - **Upgrades:** versions of Arc, Chain lightning, Thunderstorm, Fireball, Blizzard, Thunder chord and Malison that even the field rather than pile on one.
+  - **Upgrades:** versions of Arc, Chain lightning, Thunderstorm, Fireball, Blizzard, Othismos and Malison that even the field rather than pile on one.
 - **Far end:** a sweep for units that aren't mages, and a finisher for the whole field.
 
 ## Ambush
@@ -333,7 +333,7 @@ The twelve come in pairs from opposite sides of the space:
 - **Shrugs at:** Doom. Against the Reaper, a Doomed unit is just the next turn.
 - **Fears:** burst that drops two at once, and a Silence on the reviver.
 - **Threads:**
-  - revives, and Einherjar's return with everything ready;
+  - revives, and the Valkyrie's Einherjar version, a return with everything ready;
   - an ally's fall as a trigger;
   - a revive as a trigger;
   - low HP as power (Last rites, Bloodlust): a unit near the end is at its best;
@@ -347,9 +347,9 @@ The twelve come in pairs from opposite sides of the space:
   2. Reactions to a fall and to a return. Each death is a power spike.
   3. A martyr who returns ready and stronger, and returns that cost less. A party that's strongest the second time round.
 - **Needs:**
-  - **Pieces:** reactions to an ally's fall and to a revive; returns that don't rest on a reviver's ability firing at the right moment, in a fight and between fights (with fights automatic, Raise and Valhalla won't always fire when they're needed); a return with everything ready for more than the Valkyrie; something that makes coming back at low HP survivable into the next fight.
+  - **Pieces:** reactions to an ally's fall and to a revive; returns that don't rest on a reviver's ability firing at the right moment, in a fight and between fights (with fights automatic, Raise and Choosing won't always fire when they're needed); a return with everything ready for more than the Valkyrie; something that makes coming back at low HP survivable into the next fight.
   - **Formations:** the martyr and survivor seats, and formations that answer a fall.
-  - **Upgrades:** a revive for one more class, and versions of Raise, Valhalla, Einherjar and Last rites.
+  - **Upgrades:** a revive for one more class, and versions of Raise, Choosing and Last rites.
 - **Far end:** a return stronger than the fall, and a fall that doesn't stay.
 - **Watch:** its far end is crowded and its second rung thin. Several returns stacked on one unit could make a party that can't lose its first member.
 
@@ -423,7 +423,7 @@ Needs met once and paid off in several builds. Each build wants the same need fo
 | Effects at the fight's start | Ambush, for the volley; Landslide, for the stone; Phoenix, for the survivors' cover | Bastion plate, Stone totem, War horn, Shadow cloak, Drawn steel, Horn of the charge, First light, and many uncommons |
 | Reactions to a fall or a return | Phoenix, as its turns; the Toll, when the anchor falls and someone must take its place | Challenger's plate, Mantle of the fallen, Rallying horn, Dawnblade, Martyr's locket, Funeral bell, Vigil, Pyre of heroes |
 | Seek on gear | the Hunt, for reach; Ambush, so the volley isn't caught by the front; Lockdown, to reach the caster behind a wall | Tracker's coat, Executioner's longbow, dagger and rune-sword uncommons, Hunting party |
-| Changing an MP cost | Overflow, as its engine; Phoenix, for cheaper returns; Lockdown, for more locks | Weaver's robes, Annotated grimoire, Archmage's mantle, Brimming rod, Reliquary of mercy, Wellspring, The choir |
+| Changing an MP cost | Overflow, as its engine; Phoenix, for cheaper returns; Lockdown, for more locks | Weaver's robes, Annotated grimoire, Archmage's mantle, Brimming blade, Reliquary of mercy, Wellspring, The choir |
 
 ### Seat roles the builds share
 
@@ -452,7 +452,7 @@ Where a run drifts from one build to another: each door has at least two pieces 
 - **Landslide into Ambush, through the stone at the start.** Shields and Might at the first tick, on the slowest hitter: the one huge blow, struck first. Stone totem, War horn, Drawn steel, Phalanx's version A.
 - **Landslide into Lockdown:** Worldbreaker, Rubble shield.
 - **Blood Pact into Phoenix, through low HP.** A pact party that falls and comes back. Last bastion, Bloodsworn mail, Martyr's maul, Bloodlust's version B.
-- **Overflow into Lockdown, through MP and cooldowns.** Mana that feeds locks instead of damage. Annotated grimoire, Brimming rod, Bell of the hour, The choir.
+- **Overflow into Lockdown, through MP and cooldowns.** Mana that feeds locks instead of damage. Annotated grimoire, Brimming blade, Bell of the hour, The choir.
 - **Overflow into Bonfire, through hungry casts.** Mana makes the fire catch sooner. Archmage's mantle, Cataclysm staff.
 - **Bonfire into Harvest:** Ember heart spreads the fire the Wick focuses.
 - **The Toll into Overflow:** the Knight's mythic, a beating that feeds the casters.
@@ -475,11 +475,11 @@ These abilities sit on a border, so their two versions have somewhere to go.
 | Earthen shell | Landslide and Phoenix (the survivors) |
 | Thicket | the Toll and Landslide |
 | Fortify | Landslide (Guard on the Defense-scaler) and the Toll (Guard on the anchor) |
-| Aspis, Paired guard | the Toll (over the anchor) and Bonfire (holding the early fight) |
+| Aspis, Othismos | the Toll (over the anchor) and Harvest (the whole line sundered) |
 | Frost lance | Cold Snap and Lockdown |
 | Pyre | Bonfire (on the hottest foe) and Harvest (on every foe, half as hard) |
 | Smite | Landslide (the rare blow) and Bonfire (the fire) |
-| Sanctuary | Lockdown (what slips through) and Harvest (holding the whole field's pressure) |
+| Condemn | the Hunt (the judged foe) and the Toll (Challenge: the wicked come to it) |
 | Malison | Bonfire and Harvest |
 | Arc | Harvest and Thousand Cuts |
 | Chain lightning | Harvest and Overflow |
@@ -488,7 +488,7 @@ These abilities sit on a border, so their two versions have somewhere to go.
 | Gale spear | the Hunt and Thousand Cuts |
 | Refrain | Overflow and Thousand Cuts |
 | Blood gift | Blood Pact and Overflow |
-| Rally, Renew | Blood Pact (the drop caught) and Phoenix (the return kept standing) |
+| Choosing, Renew | Blood Pact (the drop caught) and Phoenix (the return kept standing) |
 | Raise | Phoenix and Ambush |
 | Enfeeble | the Toll and Lockdown |
 | Flow | Thousand Cuts and the Toll (the dancer) |

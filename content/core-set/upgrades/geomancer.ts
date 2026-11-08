@@ -2,7 +2,7 @@
 import { from, HIT, SPECIAL, STATUS, WINDUP } from "../scale.js";
 import type { ReactionT, TargetRuleT } from "../../../src/schema.js";
 import { T } from "../classes.js";
-import { abilityUp, apply, cd, helper, hitOf, kit, passiveUp, phys, removeMine } from "./kit.js";
+import { abilityUp, apply, cd, helper, hitOf, kit, marker, passiveUp, phys, removeMine } from "./kit.js";
 
 // ─── Geomancer ───────────────────────────────────────────────────────────────
 
@@ -53,13 +53,18 @@ abilityUp({
   id: "rockfall", cls: "geomancer",
   power: "40% more damage.",
   a: { name: "Boulder", text: "Deals double damage that scales from Defense to the foe with the most HP, with a longer wind-up.", builds: ["landslide"] },
-  b: { name: "Rockslide", text: "Deals damage that scales from Defense to every foe, half as much.", builds: ["harvest", "snap"] },
+  b: { name: "Rock shelter", text: "Deals damage that scales from Defense to a random foe, and the ally with the lowest share of HP gains a Shield as large as the damage dealt.", builds: ["landslide", "phoenix"] },
   form: (v, k) =>
-    // Both take the medium cooldown and 650 MP, so a double hit or an Area one doesn't double the spell's output.
+    // Boulder takes the medium cooldown and 650 MP, so a double hit doesn't double the spell's output.
     v === "a" ? { cast: WINDUP.very_long, cooldown: cd("medium", "rockfall"), mp: 650, target: { side: "foes", pick: "highest", by: "hp" }, do: [phys(from("defense", HIT.normal * 2 * k))] }
-      : v === "b" ? { cooldown: cd("medium", "rockfall"), mp: 650, target: T.everyFoe, do: [phys(from("defense", (HIT.normal / 2) * k))] }
+      // A one-tick marker on the Geomancer hears the cast's own hit and shelters the lowest ally for as much.
+      : v === "b" ? { do: [apply("rock_shelter", { to: "self" }), phys(hitOf("defense", "normal", k))] }
         : { do: [phys(hitOf("defense", "normal", k))] },
 });
+helper(marker("rock_shelter", "ROCK SHELTER", "Its ability's hit shelters the lowest ally for as much.", {
+  duration: 1,
+  reactions: [{ on: { event: "hit_lands", kind: "ability" }, do: [apply("shield", { stacks: { scale: [{ ratio: 1, amount: true }] }, to: T.lowestShareAlly })] }],
+}));
 
 abilityUp({
   id: "tremor", cls: "geomancer",
