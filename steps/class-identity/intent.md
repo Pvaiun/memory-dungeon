@@ -51,3 +51,10 @@ They ran the same exercise with another agent and list the calls they liked bett
 ## The director on the sixth draft (Nov 8)
 
 - **Approved** ("amazing"). One thing left: weapon kinds vary only in swing speed and stats, so every kind converges on the same damage per tick and the same stat budget, and it reads flat. Their suspicion: vary the other parameters too, base damage against scaling, damage against stat budget, between kinds or within a kind. Design the levers and decide how to apply them; the sizing can follow.
+
+## The director on the swings (Nov 8)
+
+- **Attack stays a common stat on the Attack-heavy kinds.** Attack as the *signature* of an Attack-heavy swing would be the mistake; as a common it isn't always there, so the choice stands. The correction I asked for is withdrawn.
+- **Confirmed:** a kind's words are its default, and a piece may step up or down the trade, so pieces of one kind don't all swing alike.
+- **Every piece of loot, or the vast majority, carries stats at every rarity.**
+- **The interface shows a weapon's damage per tick,** or the swing variation is unreadable to the player.
