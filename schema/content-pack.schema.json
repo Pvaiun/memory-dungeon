@@ -5379,7 +5379,7 @@
           "$ref": "#/$defs/UnitCond"
         },
         "ifNone": {
-          "description": "When `where` leaves nobody, use the whole side instead (\"if every foe is Taunting, any foe\").",
+          "description": "When `where` leaves nobody, use the whole side instead (\"if every foe is Taunting, any foe\"). With `ko: true`, nobody fallen means the living side, by the rule's other tests (\"a fallen ally, else the lowest\").",
           "type": "string",
           "const": "any"
         },

@@ -19184,7 +19184,7 @@
   {
    "id": "hexer",
    "name": "Hexer",
-   "text": "The spellblade. A blade that carries curses: its swing chills, its curses deepen every affliction a foe already holds, it weakens and sunders the most dangerous one, and it silences a foe mid-cast and strips what it holds.",
+   "text": "The spellblade. A blade that carries curses: its swing chills, its curses deepen every affliction a foe already holds, it weakens and sunders the most dangerous one, and it silences a foe mid-cast and strips its buffs.",
    "source": "unlock",
    "stats": {
     "max_hp": 3000,
@@ -20153,7 +20153,7 @@
    "id": "choosing",
    "class": "valkyrie",
    "name": "Choosing",
-   "text": "Heals the lowest ally; the amount scales from Attack. If an ally is down, raises it with a tenth of its HP.",
+   "text": "Chooses one ally: a fallen one, raised with a tenth of its HP; else the lowest, healed from Attack.",
    "cooldown": 31.8,
    "cast": 3,
    "mp": 650,
@@ -20175,6 +20175,10 @@
    },
    "target": {
     "side": "allies",
+    "where": {
+     "ko": true
+    },
+    "ifNone": "any",
     "pick": "lowest",
     "by": "hp_share"
    },
@@ -20200,12 +20204,6 @@
         "of": "target"
        }
       ]
-     },
-     "to": {
-      "side": "allies",
-      "where": {
-       "ko": true
-      }
      }
     }
    ]
@@ -20406,32 +20404,21 @@
    "id": "unmake",
    "class": "hexer",
    "name": "Unmake",
-   "text": "Silences the casting foe with the highest Attack and strips its buffs. Waits for a foe to cast or to hold a buff.",
+   "text": "Silences the casting foe with the highest Attack and strips its buffs. Waits for a foe to cast.",
    "cooldown": 31.3,
    "cast": 1,
    "mp": 650,
    "if": {
-    "any": [
-     {
-      "side": "foes",
-      "where": {
-       "casting": true
-      }
-     },
-     {
-      "side": "foes",
-      "where": {
-       "buffs": true
-      }
-     }
-    ]
+    "side": "foes",
+    "where": {
+     "casting": true
+    }
    },
    "target": {
     "side": "foes",
     "where": {
      "casting": true
     },
-    "ifNone": "any",
     "pick": "highest",
     "by": {
      "stats": [
@@ -25456,7 +25443,7 @@
    "id": "choosing__p",
    "class": "valkyrie",
    "name": "Choosing+",
-   "text": "Heals the lowest ally; the amount scales from Attack. If an ally is down, raises it with a tenth of its HP. Heals, or raises with, two fifths more.",
+   "text": "Chooses one ally: a fallen one, raised with a tenth of its HP; else the lowest, healed from Attack. Heals, or raises with, two fifths more.",
    "cooldown": 31.8,
    "cast": 3,
    "mp": 650,
@@ -25478,6 +25465,10 @@
    },
    "target": {
     "side": "allies",
+    "where": {
+     "ko": true
+    },
+    "ifNone": "any",
     "pick": "lowest",
     "by": "hp_share"
    },
@@ -25503,12 +25494,6 @@
         "of": "target"
        }
       ]
-     },
-     "to": {
-      "side": "allies",
-      "where": {
-       "ko": true
-      }
      }
     }
    ]
@@ -25517,7 +25502,7 @@
    "id": "choosing__a",
    "class": "valkyrie",
    "name": "Einherjar",
-   "text": "Heals the lowest ally, or raises a fallen one with a tenth of its HP. An ally it raises comes back with every action ready.",
+   "text": "Chooses one ally: a fallen one, raised with a tenth of its HP and every action ready; else the lowest, healed.",
    "cooldown": 31.8,
    "cast": 3,
    "mp": 650,
@@ -25539,6 +25524,10 @@
    },
    "target": {
     "side": "allies",
+    "where": {
+     "ko": true
+    },
+    "ifNone": "any",
     "pick": "lowest",
     "by": "hp_share"
    },
@@ -25564,12 +25553,6 @@
         "of": "target"
        }
       ]
-     },
-     "to": {
-      "side": "allies",
-      "where": {
-       "ko": true
-      }
      }
     }
    ],
@@ -25581,7 +25564,7 @@
    "id": "choosing__b",
    "class": "valkyrie",
    "name": "Over the fallen",
-   "text": "Waits until an ally is below 30% of its HP or down. Heals it for double, or raises it; the Valkyrie Taunts and is Guarded, standing over the one she chose.",
+   "text": "Waits until an ally is below 30% of its HP or down. Chooses one: a fallen one, raised; else the lowest, healed for double. The Valkyrie Taunts and is Guarded, standing over the one she chose.",
    "cooldown": 31.8,
    "cast": 3,
    "mp": 650,
@@ -25603,6 +25586,10 @@
    },
    "target": {
     "side": "allies",
+    "where": {
+     "ko": true
+    },
+    "ifNone": "any",
     "pick": "lowest",
     "by": "hp_share"
    },
@@ -25628,12 +25615,6 @@
         "of": "target"
        }
       ]
-     },
-     "to": {
-      "side": "allies",
-      "where": {
-       "ko": true
-      }
      }
     },
     {
@@ -25652,7 +25633,7 @@
    "id": "choosing__ap",
    "class": "valkyrie",
    "name": "Einherjar+",
-   "text": "Heals the lowest ally, or raises a fallen one with a tenth of its HP. An ally it raises comes back with every action ready. Heals, or raises with, two fifths more.",
+   "text": "Chooses one ally: a fallen one, raised with a tenth of its HP and every action ready; else the lowest, healed. Heals, or raises with, two fifths more.",
    "cooldown": 31.8,
    "cast": 3,
    "mp": 650,
@@ -25674,6 +25655,10 @@
    },
    "target": {
     "side": "allies",
+    "where": {
+     "ko": true
+    },
+    "ifNone": "any",
     "pick": "lowest",
     "by": "hp_share"
    },
@@ -25699,12 +25684,6 @@
         "of": "target"
        }
       ]
-     },
-     "to": {
-      "side": "allies",
-      "where": {
-       "ko": true
-      }
      }
     }
    ],
@@ -25716,7 +25695,7 @@
    "id": "choosing__bp",
    "class": "valkyrie",
    "name": "Over the fallen+",
-   "text": "Waits until an ally is below 30% of its HP or down. Heals it for double, or raises it; the Valkyrie Taunts and is Guarded, standing over the one she chose. Heals, or raises with, two fifths more.",
+   "text": "Waits until an ally is below 30% of its HP or down. Chooses one: a fallen one, raised; else the lowest, healed for double. The Valkyrie Taunts and is Guarded, standing over the one she chose. Heals, or raises with, two fifths more.",
    "cooldown": 31.8,
    "cast": 3,
    "mp": 650,
@@ -25738,6 +25717,10 @@
    },
    "target": {
     "side": "allies",
+    "where": {
+     "ko": true
+    },
+    "ifNone": "any",
     "pick": "lowest",
     "by": "hp_share"
    },
@@ -25763,12 +25746,6 @@
         "of": "target"
        }
       ]
-     },
-     "to": {
-      "side": "allies",
-      "where": {
-       "ko": true
-      }
      }
     },
     {
@@ -26883,32 +26860,21 @@
    "id": "unmake__p",
    "class": "hexer",
    "name": "Unmake+",
-   "text": "Silences the casting foe with the highest Attack and strips its buffs. Waits for a foe to cast or to hold a buff. A shorter cooldown.",
+   "text": "Silences the casting foe with the highest Attack and strips its buffs. Waits for a foe to cast. A shorter cooldown.",
    "cooldown": 22.9,
    "cast": 1,
    "mp": 650,
    "if": {
-    "any": [
-     {
-      "side": "foes",
-      "where": {
-       "casting": true
-      }
-     },
-     {
-      "side": "foes",
-      "where": {
-       "buffs": true
-      }
-     }
-    ]
+    "side": "foes",
+    "where": {
+     "casting": true
+    }
    },
    "target": {
     "side": "foes",
     "where": {
      "casting": true
     },
-    "ifNone": "any",
     "pick": "highest",
     "by": {
      "stats": [
@@ -26931,32 +26897,21 @@
    "id": "unmake__a",
    "class": "hexer",
    "name": "Silence all",
-   "text": "Silences every foe in a wind-up and strips their buffs. Waits until a foe is in a wind-up or holds a buff.",
+   "text": "Silences every foe in a wind-up and strips their buffs. Waits until a foe is in a wind-up.",
    "cooldown": 31.3,
    "cast": 1,
    "mp": 650,
    "if": {
-    "any": [
-     {
-      "side": "foes",
-      "where": {
-       "casting": true
-      }
-     },
-     {
-      "side": "foes",
-      "where": {
-       "buffs": true
-      }
-     }
-    ]
+    "side": "foes",
+    "where": {
+     "casting": true
+    }
    },
    "target": {
     "side": "foes",
     "where": {
      "casting": true
     },
-    "ifNone": "any",
     "pick": "all"
    },
    "do": [
@@ -26974,32 +26929,21 @@
    "id": "unmake__b",
    "class": "hexer",
    "name": "Mana burn",
-   "text": "Silences the casting foe with the highest Attack and strips its buffs, and drains a fifth of its MP, which the Hexer gains. Waits until a foe is in a wind-up or holds a buff.",
+   "text": "Silences the casting foe with the highest Attack and strips its buffs, and drains a fifth of its MP, which the Hexer gains. Waits until a foe is in a wind-up.",
    "cooldown": 31.3,
    "cast": 1,
    "mp": 650,
    "if": {
-    "any": [
-     {
-      "side": "foes",
-      "where": {
-       "casting": true
-      }
-     },
-     {
-      "side": "foes",
-      "where": {
-       "buffs": true
-      }
-     }
-    ]
+    "side": "foes",
+    "where": {
+     "casting": true
+    }
    },
    "target": {
     "side": "foes",
     "where": {
      "casting": true
     },
-    "ifNone": "any",
     "pick": "highest",
     "by": {
      "stats": [
@@ -27038,32 +26982,21 @@
    "id": "unmake__ap",
    "class": "hexer",
    "name": "Silence all+",
-   "text": "Silences every foe in a wind-up and strips their buffs. Waits until a foe is in a wind-up or holds a buff. A shorter cooldown.",
+   "text": "Silences every foe in a wind-up and strips their buffs. Waits until a foe is in a wind-up. A shorter cooldown.",
    "cooldown": 22.9,
    "cast": 1,
    "mp": 650,
    "if": {
-    "any": [
-     {
-      "side": "foes",
-      "where": {
-       "casting": true
-      }
-     },
-     {
-      "side": "foes",
-      "where": {
-       "buffs": true
-      }
-     }
-    ]
+    "side": "foes",
+    "where": {
+     "casting": true
+    }
    },
    "target": {
     "side": "foes",
     "where": {
      "casting": true
     },
-    "ifNone": "any",
     "pick": "all"
    },
    "do": [
@@ -27081,32 +27014,21 @@
    "id": "unmake__bp",
    "class": "hexer",
    "name": "Mana burn+",
-   "text": "Silences the casting foe with the highest Attack and strips its buffs, and drains a fifth of its MP, which the Hexer gains. Waits until a foe is in a wind-up or holds a buff. A shorter cooldown.",
+   "text": "Silences the casting foe with the highest Attack and strips its buffs, and drains a fifth of its MP, which the Hexer gains. Waits until a foe is in a wind-up. A shorter cooldown.",
    "cooldown": 22.9,
    "cast": 1,
    "mp": 650,
    "if": {
-    "any": [
-     {
-      "side": "foes",
-      "where": {
-       "casting": true
-      }
-     },
-     {
-      "side": "foes",
-      "where": {
-       "buffs": true
-      }
-     }
-    ]
+    "side": "foes",
+    "where": {
+     "casting": true
+    }
    },
    "target": {
     "side": "foes",
     "where": {
      "casting": true
     },
-    "ifNone": "any",
     "pick": "highest",
     "by": {
      "stats": [
@@ -31554,11 +31476,11 @@
    "power": "Heals, or raises with, two fifths more.",
    "a": {
     "name": "Einherjar",
-    "text": "Heals the lowest ally, or raises a fallen one with a tenth of its HP. An ally it raises comes back with every action ready."
+    "text": "Chooses one ally: a fallen one, raised with a tenth of its HP and every action ready; else the lowest, healed."
    },
    "b": {
     "name": "Over the fallen",
-    "text": "Waits until an ally is below 30% of its HP or down. Heals it for double, or raises it; the Valkyrie Taunts and is Guarded, standing over the one she chose."
+    "text": "Waits until an ally is below 30% of its HP or down. Chooses one: a fallen one, raised; else the lowest, healed for double. The Valkyrie Taunts and is Guarded, standing over the one she chose."
    }
   },
   {
@@ -31666,11 +31588,11 @@
    "power": "A shorter cooldown.",
    "a": {
     "name": "Silence all",
-    "text": "Silences every foe in a wind-up and strips their buffs. Waits until a foe is in a wind-up or holds a buff."
+    "text": "Silences every foe in a wind-up and strips their buffs. Waits until a foe is in a wind-up."
    },
    "b": {
     "name": "Mana burn",
-    "text": "Silences the casting foe with the highest Attack and strips its buffs, and drains a fifth of its MP, which the Hexer gains. Waits until a foe is in a wind-up or holds a buff."
+    "text": "Silences the casting foe with the highest Attack and strips its buffs, and drains a fifth of its MP, which the Hexer gains. Waits until a foe is in a wind-up."
    }
   },
   {
@@ -32324,14 +32246,14 @@
   {
    "id": "keen_dirk",
    "name": "Keen dirk",
-   "text": "Crit chance +2.",
+   "text": "Crit chance +1.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
      "stat": "crit_chance",
-     "flat": 5
+     "flat": 3
     }
    ],
    "weapon": {
@@ -32351,7 +32273,7 @@
   {
    "id": "parrying_dagger",
    "name": "Parrying dagger",
-   "text": "Evasion medium, Attack speed medium.",
+   "text": "Evasion medium.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -32359,10 +32281,6 @@
     {
      "stat": "evasion",
      "flat": 20
-    },
-    {
-     "stat": "attack_speed",
-     "flat": 15
     }
    ],
    "weapon": {
@@ -32382,7 +32300,7 @@
   {
    "id": "weeping_kris",
    "name": "Weeping kris",
-   "text": "Crit chance +1. Its first hit on each foe adds a few Bleed (from Attack).",
+   "text": "Crit chance +1, Attack speed medium. Its first hit on each foe adds a few Bleed (from Attack).",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -32390,6 +32308,10 @@
     {
      "stat": "crit_chance",
      "flat": 3
+    },
+    {
+     "stat": "attack_speed",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -32412,7 +32334,7 @@
   {
    "id": "misericorde",
    "name": "Misericorde",
-   "text": "Attack +1. Its basic attacks ignore Taunt.",
+   "text": "Attack +1, Crit chance +1. Its basic attacks ignore Taunt.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -32420,6 +32342,10 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "statuses": [
@@ -32442,7 +32368,7 @@
   {
    "id": "notched_knife",
    "name": "Notched knife",
-   "text": "Attack speed medium. Its basic attacks and extra strikes add a few Bleed (from Attack).",
+   "text": "Attack speed medium, Crit chance +1, Evasion medium. Its basic attacks and extra strikes add a few Bleed (from Attack).",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -32450,6 +32376,14 @@
     {
      "stat": "attack_speed",
      "flat": 15
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    },
+    {
+     "stat": "evasion",
+     "flat": 20
     }
    ],
    "weapon": {
@@ -32483,7 +32417,7 @@
   {
    "id": "marking_knife",
    "name": "Marking knife",
-   "text": "Attack +1. Its basic attacks Mark their target.",
+   "text": "Attack +1, Crit chance +1, Evasion medium. Its basic attacks Mark their target.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -32491,6 +32425,14 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    },
+    {
+     "stat": "evasion",
+     "flat": 20
     }
    ],
    "weapon": {
@@ -32515,7 +32457,7 @@
   {
    "id": "thousandth_cut",
    "name": "Thousandth cut",
-   "text": "Attack speed medium. Each hit it lands adds a Cut, kept for the rest of the fight, up to 25. Its hits deal 2% more for each Cut.",
+   "text": "Attack speed medium, Crit chance +2, Evasion medium. Each hit it lands adds a Cut, kept for the rest of the fight, up to 25. Its hits deal 2% more for each Cut.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -32523,6 +32465,14 @@
     {
      "stat": "attack_speed",
      "flat": 15
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 5
+    },
+    {
+     "stat": "evasion",
+     "flat": 20
     }
    ],
    "statuses": [
@@ -32545,7 +32495,7 @@
   {
    "id": "quietus",
    "name": "Quietus",
-   "text": "Crit damage medium. Its hits on a foe that hasn't acted yet this fight always crit, and those crits add twice the usual bonus.",
+   "text": "Crit damage medium, Crit chance +2, Evasion medium. Its hits on a foe that hasn't acted yet this fight always crit, and those crits add twice the usual bonus.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -32553,6 +32503,14 @@
     {
      "stat": "crit_multiplier",
      "flat": 25
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 5
+    },
+    {
+     "stat": "evasion",
+     "flat": 20
     }
    ],
    "statuses": [
@@ -32575,7 +32533,7 @@
   {
    "id": "mantis_claws",
    "name": "Mantis claws",
-   "text": "Double strike medium, Evasion medium.",
+   "text": "Double strike medium.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -32583,10 +32541,6 @@
     {
      "stat": "double_strike",
      "flat": 25
-    },
-    {
-     "stat": "evasion",
-     "flat": 20
     }
    ],
    "weapon": {
@@ -32606,7 +32560,7 @@
   {
    "id": "red_talons",
    "name": "Red talons",
-   "text": "Lifesteal medium, Attack speed medium.",
+   "text": "Lifesteal medium.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -32614,10 +32568,6 @@
     {
      "stat": "lifesteal",
      "flat": 10
-    },
-    {
-     "stat": "attack_speed",
-     "flat": 15
     }
    ],
    "weapon": {
@@ -32637,7 +32587,7 @@
   {
    "id": "wildcat_claws",
    "name": "Wildcat claws",
-   "text": "Evasion medium. Hasted when each fight starts.",
+   "text": "Evasion medium, Double strike medium. Hasted when each fight starts.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -32645,6 +32595,10 @@
     {
      "stat": "evasion",
      "flat": 20
+    },
+    {
+     "stat": "double_strike",
+     "flat": 25
     }
    ],
    "statuses": [
@@ -32667,7 +32621,7 @@
   {
    "id": "brass_knuckles",
    "name": "Brass knuckles",
-   "text": "Double strike medium. Its extra strikes add a few Sunder (from Attack).",
+   "text": "Double strike medium, Lifesteal medium. Its extra strikes add a few Sunder (from Attack).",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -32675,6 +32629,10 @@
     {
      "stat": "double_strike",
      "flat": 25
+    },
+    {
+     "stat": "lifesteal",
+     "flat": 10
     }
    ],
    "statuses": [
@@ -32697,7 +32655,7 @@
   {
    "id": "rime_knuckles",
    "name": "Rime knuckles",
-   "text": "Attack speed medium. Its basic attacks and extra strikes add a few Chill (from Attack).",
+   "text": "Attack speed medium, Double strike medium, Lifesteal medium. Its basic attacks and extra strikes add a few Chill (from Attack).",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -32705,6 +32663,14 @@
     {
      "stat": "attack_speed",
      "flat": 15
+    },
+    {
+     "stat": "double_strike",
+     "flat": 25
+    },
+    {
+     "stat": "lifesteal",
+     "flat": 10
     }
    ],
    "weapon": {
@@ -32738,7 +32704,7 @@
   {
    "id": "gorged_claws",
    "name": "Gorged claws",
-   "text": "Lifesteal medium. Below half HP, its basic attacks come a third faster.",
+   "text": "Lifesteal medium, Double strike medium, Evasion medium. Below half HP, its basic attacks come a third faster.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -32746,6 +32712,14 @@
     {
      "stat": "lifesteal",
      "flat": 10
+    },
+    {
+     "stat": "double_strike",
+     "flat": 25
+    },
+    {
+     "stat": "evasion",
+     "flat": 20
     }
    ],
    "statuses": [
@@ -32768,14 +32742,22 @@
   {
    "id": "flurry_wraps",
    "name": "Flurry wraps",
-   "text": "Double strike medium. Its extra strikes can strike again: each one rolls Double strike for one more, at most two more after the first, and each is a fifth weaker than the strike before it.",
+   "text": "Double strike high, Attack speed medium, Lifesteal medium. Its extra strikes can strike again: each one rolls Double strike for one more, at most two more after the first, and each is a fifth weaker than the strike before it.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
    "stats": [
     {
      "stat": "double_strike",
-     "flat": 25
+     "flat": 40
+    },
+    {
+     "stat": "attack_speed",
+     "flat": 15
+    },
+    {
+     "stat": "lifesteal",
+     "flat": 10
     }
    ],
    "statuses": [
@@ -32798,7 +32780,7 @@
   {
    "id": "still_hand",
    "name": "Still hand",
-   "text": "Evasion medium. Its hits on a Stunned or Silenced foe always crit and add several Sunder (from Attack). When it Stuns a foe, its ability with the longest cooldown left is ready at once.",
+   "text": "Evasion medium, Double strike high, Lifesteal medium. Its hits on a Stunned or Silenced foe always crit and add several Sunder (from Attack). When it Stuns a foe, its ability with the longest cooldown left is ready at once.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -32806,6 +32788,14 @@
     {
      "stat": "evasion",
      "flat": 20
+    },
+    {
+     "stat": "double_strike",
+     "flat": 40
+    },
+    {
+     "stat": "lifesteal",
+     "flat": 10
     }
    ],
    "statuses": [
@@ -32828,14 +32818,14 @@
   {
    "id": "arming_sword",
    "name": "Arming sword",
-   "text": "Attack +2.",
+   "text": "Attack +1.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
      "stat": "attack",
-     "flat": 2000
+     "flat": 1000
     }
    ],
    "weapon": {
@@ -32855,7 +32845,7 @@
   {
    "id": "gilded_sword",
    "name": "Gilded sword",
-   "text": "HP +1, Aggro +1.",
+   "text": "HP +1.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -32863,10 +32853,6 @@
     {
      "stat": "max_hp",
      "flat": 500
-    },
-    {
-     "stat": "aggro",
-     "flat": 10
     }
    ],
    "weapon": {
@@ -32886,7 +32872,7 @@
   {
    "id": "clarion_blade",
    "name": "Clarion blade",
-   "text": "HP +1. Taunts when each fight starts.",
+   "text": "HP +1, Attack +1. Taunts when each fight starts.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -32894,6 +32880,10 @@
     {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -32916,13 +32906,17 @@
   {
    "id": "vigilant_blade",
    "name": "Vigilant blade",
-   "text": "Defense +1. Its basic attacks on a foe in a wind-up deal half again as much.",
+   "text": "Defense +1, Attack +1. Its basic attacks on a foe in a wind-up deal half again as much.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
      "stat": "defense",
+     "flat": 1000
+    },
+    {
+     "stat": "attack",
      "flat": 1000
     }
    ],
@@ -32946,13 +32940,21 @@
   {
    "id": "sweeping_blade",
    "name": "Sweeping blade",
-   "text": "Attack +1. Its basic attacks also hit a second, random foe for half.",
+   "text": "Attack +1, HP +1, Defense +1. Its basic attacks also hit a second, random foe for half.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
      "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    },
+    {
+     "stat": "defense",
      "flat": 1000
     }
    ],
@@ -32976,7 +32978,7 @@
   {
    "id": "drawn_steel",
    "name": "Drawn steel",
-   "text": "Crit chance +1. Its first basic attack of each fight comes at once and always crits.",
+   "text": "Crit chance +1, Attack +1, Defense +1. Its first basic attack of each fight comes at once and always crits.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -32984,6 +32986,14 @@
     {
      "stat": "crit_chance",
      "flat": 3
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -33006,7 +33016,7 @@
   {
    "id": "oathkeeper",
    "name": "Oathkeeper",
-   "text": "HP +1. While it Taunts, its basic attacks also hit every other foe.",
+   "text": "HP +1, Attack +2, Defense +1. While it Taunts, its basic attacks also hit every other foe.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -33014,6 +33024,14 @@
     {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "attack",
+     "flat": 2000
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -33036,14 +33054,22 @@
   {
    "id": "gravemark",
    "name": "Gravemark",
-   "text": "Attack +1. Its hits on a Marked foe deal half again as much. If no foe is Marked, its basic attacks Mark their target. When a Marked foe falls, the foe with the lowest HP is Marked.",
+   "text": "Attack +2, Defense +1, Crit chance +1. Its hits on a Marked foe deal half again as much. If no foe is Marked, its basic attacks Mark their target. When a Marked foe falls, the foe with the lowest HP is Marked.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
    "stats": [
     {
      "stat": "attack",
+     "flat": 2000
+    },
+    {
+     "stat": "defense",
      "flat": 1000
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "statuses": [
@@ -33066,17 +33092,13 @@
   {
    "id": "ironwood_spear",
    "name": "Ironwood spear",
-   "text": "Defense +1, Attack +1.",
+   "text": "Defense +1.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
      "stat": "defense",
-     "flat": 1000
-    },
-    {
-     "stat": "attack",
      "flat": 1000
     }
    ],
@@ -33097,7 +33119,7 @@
   {
    "id": "partisan",
    "name": "Partisan",
-   "text": "Crit chance +1, Aggro +1.",
+   "text": "Crit chance +1.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -33105,10 +33127,6 @@
     {
      "stat": "crit_chance",
      "flat": 3
-    },
-    {
-     "stat": "aggro",
-     "flat": 10
     }
    ],
    "weapon": {
@@ -33128,7 +33146,7 @@
   {
    "id": "ox_tongue_spear",
    "name": "Ox-tongue spear",
-   "text": "Crit chance +1. Its crits add a few Sunder (from Attack).",
+   "text": "Crit chance +1, Aggro +1. Its crits add a few Sunder (from Attack).",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -33136,6 +33154,10 @@
     {
      "stat": "crit_chance",
      "flat": 3
+    },
+    {
+     "stat": "aggro",
+     "flat": 10
     }
    ],
    "statuses": [
@@ -33158,7 +33180,7 @@
   {
    "id": "trophy_spear",
    "name": "Trophy spear",
-   "text": "Attack +1. When it lands a killing blow, it's Guarded.",
+   "text": "Attack +1, Aggro +1. When it lands a killing blow, it's Guarded.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -33166,6 +33188,10 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "aggro",
+     "flat": 10
     }
    ],
    "statuses": [
@@ -33188,13 +33214,21 @@
   {
    "id": "hunting_spear",
    "name": "Hunting spear",
-   "text": "Attack +1. When it lands a killing blow, its ability with the longest cooldown left is ready at once.",
+   "text": "Attack +1, Aggro +1, Defense +1. When it lands a killing blow, its ability with the longest cooldown left is ready at once.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
      "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "aggro",
+     "flat": 10
+    },
+    {
+     "stat": "defense",
      "flat": 1000
     }
    ],
@@ -33218,7 +33252,7 @@
   {
    "id": "glaive",
    "name": "Glaive",
-   "text": "Aggro +1. Its basic attacks also hit the foe with the most HP for half. If that foe is the target, they hit the foe with the next most.",
+   "text": "Aggro +1, Attack +1, Crit chance +1. Its basic attacks also hit the foe with the most HP for half. If that foe is the target, they hit the foe with the next most.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -33226,6 +33260,14 @@
     {
      "stat": "aggro",
      "flat": 10
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "statuses": [
@@ -33248,13 +33290,21 @@
   {
    "id": "pike_wall",
    "name": "Pike wall",
-   "text": "Defense +1. When a foe hits an ally with less Defense than the wearer, the wearer strikes that foe with its spear.",
+   "text": "Defense +1, Aggro +2, Attack +1. When a foe hits an ally with less Defense than the wearer, the wearer strikes that foe with its spear.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
    "stats": [
     {
      "stat": "defense",
+     "flat": 1000
+    },
+    {
+     "stat": "aggro",
+     "flat": 20
+    },
+    {
+     "stat": "attack",
      "flat": 1000
     }
    ],
@@ -33278,7 +33328,7 @@
   {
    "id": "storm_pike",
    "name": "Storm pike",
-   "text": "Attack +1. Each hit it lands adds a Charge, up to 10. At 10, its next basic attack that lands also calls lightning on every foe (light damage, from Attack) and spends the Charges.",
+   "text": "Attack +1, Aggro +2, Crit chance +1. Each hit it lands adds a Charge, up to 10. At 10, its next basic attack that lands also calls lightning on every foe (light damage, from Attack) and spends the Charges.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -33286,6 +33336,14 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "aggro",
+     "flat": 20
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "statuses": [
@@ -33422,10 +33480,20 @@
   {
    "id": "executioners_axe",
    "name": "Executioner's axe",
-   "text": "Its hits on a foe below a quarter of its HP deal double.",
+   "text": "Lifesteal medium, Attack +1. Its hits on a foe below a quarter of its HP deal double.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
+   "stats": [
+    {
+     "stat": "lifesteal",
+     "flat": 10
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
    "statuses": [
     "executioners_axe"
    ],
@@ -33446,10 +33514,20 @@
   {
    "id": "thirsting_axe",
    "name": "Thirsting axe",
-   "text": "Each killing blow it lands heals it for a fifth of its max HP.",
+   "text": "Lifesteal medium, Crit damage medium. Each killing blow it lands heals it for a fifth of its max HP.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
+   "stats": [
+    {
+     "stat": "lifesteal",
+     "flat": 10
+    },
+    {
+     "stat": "crit_multiplier",
+     "flat": 25
+    }
+   ],
    "statuses": [
     "thirsting_axe"
    ],
@@ -33470,10 +33548,24 @@
   {
    "id": "the_red_feast",
    "name": "The Red Feast",
-   "text": "Its hits heal it for a fifth of the damage they deal, and whatever a heal would take past full becomes a Shield on it.",
+   "text": "Lifesteal medium, Attack +1, Crit damage medium. Its hits heal it for a fifth of the damage they deal, and whatever a heal would take past full becomes a Shield on it.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
+   "stats": [
+    {
+     "stat": "lifesteal",
+     "flat": 10
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "crit_multiplier",
+     "flat": 25
+    }
+   ],
    "statuses": [
     "the_red_feast"
    ],
@@ -33494,7 +33586,7 @@
   {
    "id": "headsmans_axe",
    "name": "Headsman's axe",
-   "text": "Its basic attacks come half as often and deal double. A killing blow it lands readies its next basic attack at once.",
+   "text": "Lifesteal medium, Crit damage medium, HP +1. Its basic attacks come half as often and deal double. A killing blow it lands readies its next basic attack at once.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -33502,6 +33594,18 @@
     {
      "stat": "attack_speed",
      "flat": -100
+    },
+    {
+     "stat": "lifesteal",
+     "flat": 10
+    },
+    {
+     "stat": "crit_multiplier",
+     "flat": 25
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -33524,7 +33628,7 @@
   {
    "id": "recurve_bow",
    "name": "Recurve bow",
-   "text": "Attack +1, Crit damage medium.",
+   "text": "Attack +1.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -33532,10 +33636,6 @@
     {
      "stat": "attack",
      "flat": 1000
-    },
-    {
-     "stat": "crit_multiplier",
-     "flat": 25
     }
    ],
    "weapon": {
@@ -33555,7 +33655,7 @@
   {
    "id": "yew_bow",
    "name": "Yew bow",
-   "text": "Crit chance +1, Attack speed medium.",
+   "text": "Crit chance +1.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -33563,10 +33663,6 @@
     {
      "stat": "crit_chance",
      "flat": 3
-    },
-    {
-     "stat": "attack_speed",
-     "flat": 15
     }
    ],
    "weapon": {
@@ -33586,7 +33682,7 @@
   {
    "id": "snaring_bow",
    "name": "Snaring bow",
-   "text": "Attack +1. Each time it looses a basic attack while a foe is winding up, that foe is Slowed (the one with the highest Attack, if several are).",
+   "text": "Attack +1, Crit damage medium. Each time it looses a basic attack while a foe is winding up, that foe is Slowed (the one with the highest Attack, if several are).",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -33594,6 +33690,10 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "crit_multiplier",
+     "flat": 25
     }
    ],
    "statuses": [
@@ -33616,7 +33716,7 @@
   {
    "id": "broadhead_bow",
    "name": "Broadhead bow",
-   "text": "Crit chance +1. Its crits add a few Bleed (from Attack).",
+   "text": "Crit chance +1, Crit damage medium. Its crits add a few Bleed (from Attack).",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -33624,6 +33724,10 @@
     {
      "stat": "crit_chance",
      "flat": 3
+    },
+    {
+     "stat": "crit_multiplier",
+     "flat": 25
     }
    ],
    "statuses": [
@@ -33646,7 +33750,7 @@
   {
    "id": "huntsmans_bow",
    "name": "Huntsman's bow",
-   "text": "Attack +1. Its basic attacks Mark their target. Its hits on a Marked foe deal a third more.",
+   "text": "Attack +1, Crit damage medium, Crit chance +1. Its basic attacks Mark their target. Its hits on a Marked foe deal a third more.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -33654,6 +33758,14 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "crit_multiplier",
+     "flat": 25
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "statuses": [
@@ -33681,7 +33793,7 @@
   {
    "id": "frostbite_bow",
    "name": "Frostbite bow",
-   "text": "Crit damage medium. Its basic attacks add a few Chill (from Attack). On a foe with 8 or more Chill, they add a few Sunder too.",
+   "text": "Crit damage medium, Attack +1, Attack speed medium. Its basic attacks add a few Chill (from Attack). On a foe with 8 or more Chill, they add a few Sunder too.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -33689,6 +33801,14 @@
     {
      "stat": "crit_multiplier",
      "flat": 25
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "attack_speed",
+     "flat": 15
     }
    ],
    "weapon": {
@@ -33743,7 +33863,7 @@
   {
    "id": "volley_bow",
    "name": "Volley bow",
-   "text": "Attack speed medium. Its first basic attack of each fight, and every fifth after it, is a volley: it also looses a full arrow at every other foe.",
+   "text": "Attack speed medium, Crit damage high, Crit chance +1. Its first basic attack of each fight, and every fifth after it, is a volley: it also looses a full arrow at every other foe.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -33751,6 +33871,14 @@
     {
      "stat": "attack_speed",
      "flat": 15
+    },
+    {
+     "stat": "crit_multiplier",
+     "flat": 50
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "statuses": [
@@ -33773,14 +33901,22 @@
   {
    "id": "executioners_longbow",
    "name": "Executioner's longbow",
-   "text": "Crit damage medium. Its basic attacks ignore Taunt, and deal more the less HP their target has: +25% below three quarters, +50% below half, +75% below a quarter, double below a tenth.",
+   "text": "Crit damage high, Attack +1, Attack speed medium. Its basic attacks ignore Taunt, and deal more the less HP their target has: +25% below three quarters, +50% below half, +75% below a quarter, double below a tenth.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
    "stats": [
     {
      "stat": "crit_multiplier",
-     "flat": 25
+     "flat": 50
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "attack_speed",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -33803,7 +33939,7 @@
   {
    "id": "bardiche",
    "name": "Bardiche",
-   "text": "A heavy bardiche. Attack +1, Crit damage medium.",
+   "text": "A heavier swing. Attack +1.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -33811,10 +33947,6 @@
     {
      "stat": "attack",
      "flat": 1000
-    },
-    {
-     "stat": "crit_multiplier",
-     "flat": 25
     }
    ],
    "weapon": {
@@ -33834,17 +33966,13 @@
   {
    "id": "poleaxe",
    "name": "Poleaxe",
-   "text": "HP +2, Attack +1.",
+   "text": "HP +2.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
      "stat": "max_hp",
-     "flat": 1000
-    },
-    {
-     "stat": "attack",
      "flat": 1000
     }
    ],
@@ -33865,7 +33993,7 @@
   {
    "id": "roaring_greataxe",
    "name": "Roaring greataxe",
-   "text": "Attack +1, Crit damage medium. Starts each fight with a few Might (from Attack).",
+   "text": "Attack +1, Crit damage medium, HP +1. Starts each fight with a few Might (from Attack).",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -33877,6 +34005,10 @@
     {
      "stat": "crit_multiplier",
      "flat": 25
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -33899,7 +34031,7 @@
   {
    "id": "ironbound_maul",
    "name": "Ironbound maul",
-   "text": "Attack +1, HP +1. Starts each fight behind a Shield of a fifth of its Attack.",
+   "text": "Attack +1, HP +1, Lifesteal medium. Starts each fight behind a Shield of a fifth of its Attack.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -33911,6 +34043,10 @@
     {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "lifesteal",
+     "flat": 10
     }
    ],
    "statuses": [
@@ -33933,18 +34069,22 @@
   {
    "id": "icebreaker",
    "name": "Icebreaker",
-   "text": "Attack +1, HP +1. Its hits on a Stunned foe deal double.",
+   "text": "Attack +2, HP +1, Crit damage medium. Its hits on a Stunned foe deal double.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
      "stat": "attack",
-     "flat": 1000
+     "flat": 2000
     },
     {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "crit_multiplier",
+     "flat": 25
     }
    ],
    "statuses": [
@@ -33967,7 +34107,7 @@
   {
    "id": "heartsplitter",
    "name": "Heartsplitter",
-   "text": "HP +2. Its basic attacks scale from max HP in place of Attack.",
+   "text": "HP +2, Attack +1, Crit damage medium. Its basic attacks scale from max HP in place of Attack.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -33975,6 +34115,14 @@
     {
      "stat": "max_hp",
      "flat": 1000
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "crit_multiplier",
+     "flat": 25
     }
    ],
    "weapon": {
@@ -33994,18 +34142,22 @@
   {
    "id": "cornerstone_maul",
    "name": "Cornerstone maul",
-   "text": "HP +1, Attack +1. Its basic attacks deal extra damage equal to half its Shield. Swinging never spends the Shield.",
+   "text": "HP +2, Attack +2, Crit damage medium. Its basic attacks deal extra damage equal to half its Shield. Swinging never spends the Shield.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
    "stats": [
     {
      "stat": "max_hp",
-     "flat": 500
+     "flat": 1000
     },
     {
      "stat": "attack",
-     "flat": 1000
+     "flat": 2000
+    },
+    {
+     "stat": "crit_multiplier",
+     "flat": 25
     }
    ],
    "weapon": {
@@ -34030,14 +34182,14 @@
   {
    "id": "worldbreaker",
    "name": "Worldbreaker",
-   "text": "Attack +1, Aggro +1. Its basic attacks come half as often, deal triple, and Stun their target.",
+   "text": "Attack +2, Aggro +1, Crit damage high. Its basic attacks come half as often, deal triple, and Stun their target.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
    "stats": [
     {
      "stat": "attack",
-     "flat": 1000
+     "flat": 2000
     },
     {
      "stat": "aggro",
@@ -34046,6 +34198,10 @@
     {
      "stat": "attack_speed",
      "flat": -100
+    },
+    {
+     "stat": "crit_multiplier",
+     "flat": 50
     }
    ],
    "statuses": [
@@ -34073,7 +34229,7 @@
   {
    "id": "whipcrack_wand",
    "name": "Whipcrack wand",
-   "text": "Cooldown medium, Attack +1, Attack speed medium.",
+   "text": "Cooldown medium, Attack +1.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -34085,10 +34241,6 @@
     {
      "stat": "attack",
      "flat": 1000
-    },
-    {
-     "stat": "attack_speed",
-     "flat": 15
     }
    ],
    "weapon": {
@@ -34108,7 +34260,7 @@
   {
    "id": "birch_wand",
    "name": "Birch wand",
-   "text": "Attack +1, MP regen +1, Cast speed medium.",
+   "text": "Attack +1, MP regen +1.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -34120,10 +34272,6 @@
     {
      "stat": "mp_regen",
      "flat": 3000
-    },
-    {
-     "stat": "cast_time_reduction",
-     "flat": 15
     }
    ],
    "weapon": {
@@ -34143,7 +34291,7 @@
   {
    "id": "jolt_wand",
    "name": "Jolt wand",
-   "text": "Attack +1, Cooldown medium. The wearer's basic attacks add one Shock.",
+   "text": "Attack +1, Cooldown medium, Cast speed medium. The wearer's basic attacks add one Shock.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -34154,6 +34302,10 @@
     },
     {
      "stat": "cooldown_reduction",
+     "flat": 15
+    },
+    {
+     "stat": "cast_time_reduction",
      "flat": 15
     }
    ],
@@ -34177,7 +34329,7 @@
   {
    "id": "glint_wand",
    "name": "Glint wand",
-   "text": "Cast speed medium, MP regen +1. When one of the wearer's hits crits, the wearer regains 6% of its max MP.",
+   "text": "Cast speed medium, MP regen +1, Cooldown medium. When one of the wearer's hits crits, the wearer regains 6% of its max MP.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -34189,6 +34341,10 @@
     {
      "stat": "mp_regen",
      "flat": 3000
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -34211,7 +34367,7 @@
   {
    "id": "spark_wand",
    "name": "Spark wand",
-   "text": "Attack +1, Attack speed medium. The wearer's basic attacks add a few Burn.",
+   "text": "Attack +1, Attack speed medium, Cooldown medium, Cast speed medium. The wearer's basic attacks add a few Burn.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -34222,6 +34378,14 @@
     },
     {
      "stat": "attack_speed",
+     "flat": 15
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": 15
+    },
+    {
+     "stat": "cast_time_reduction",
      "flat": 15
     }
    ],
@@ -34245,7 +34409,7 @@
   {
    "id": "chain_wand",
    "name": "Chain wand",
-   "text": "Cooldown medium, Attack +1. The wearer's basic attacks also strike two other foes, each for half.",
+   "text": "Cooldown medium, Attack +1, MP regen +1, Cast speed medium. The wearer's basic attacks also strike two other foes, each for half.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -34257,6 +34421,14 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
+    },
+    {
+     "stat": "cast_time_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -34279,7 +34451,7 @@
   {
    "id": "flicker_wand",
    "name": "Flicker wand",
-   "text": "Double strike high. The wearer's extra strikes add a few Shock.",
+   "text": "Double strike high, Cooldown high, Cast speed medium. The wearer's extra strikes add a few Shock.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -34287,6 +34459,14 @@
     {
      "stat": "double_strike",
      "flat": 40
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": 30
+    },
+    {
+     "stat": "cast_time_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -34309,18 +34489,22 @@
   {
    "id": "wildmagic_wand",
    "name": "Wildmagic wand",
-   "text": "Cooldown medium, Cast speed medium. Each of the wearer's basic attacks adds a few stacks of a random one of Burn, Chill, Shock, Bleed and Sunder.",
+   "text": "Cooldown high, Cast speed medium, MP regen +2. Each of the wearer's basic attacks adds a few stacks of a random one of Burn, Chill, Shock, Bleed and Sunder.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
    "stats": [
     {
      "stat": "cooldown_reduction",
-     "flat": 15
+     "flat": 30
     },
     {
      "stat": "cast_time_reduction",
      "flat": 15
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 6000
     }
    ],
    "statuses": [
@@ -34343,7 +34527,7 @@
   {
    "id": "runed_saber",
    "name": "Runed saber",
-   "text": "MP regen +1, HP +1.",
+   "text": "MP regen +1.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -34351,10 +34535,6 @@
     {
      "stat": "mp_regen",
      "flat": 3000
-    },
-    {
-     "stat": "max_hp",
-     "flat": 500
     }
    ],
    "weapon": {
@@ -34374,7 +34554,7 @@
   {
    "id": "cairn_blade",
    "name": "Cairn blade",
-   "text": "MP +1, Cooldown medium.",
+   "text": "MP +1.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -34382,10 +34562,6 @@
     {
      "stat": "max_mp",
      "flat": 1000
-    },
-    {
-     "stat": "cooldown_reduction",
-     "flat": 15
     }
    ],
    "weapon": {
@@ -34405,7 +34581,7 @@
   {
    "id": "sleet_blade",
    "name": "Sleet blade",
-   "text": "MP regen +1. The wearer's basic attacks add one Chill.",
+   "text": "MP regen +1, Cooldown medium. The wearer's basic attacks add one Chill.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -34413,6 +34589,10 @@
     {
      "stat": "mp_regen",
      "flat": 3000
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -34435,7 +34615,7 @@
   {
    "id": "sigil_blade",
    "name": "Sigil blade",
-   "text": "HP +1. At the start of each fight, the wearer gains a Shield of a fifth of its max MP.",
+   "text": "HP +1, MP regen +1. At the start of each fight, the wearer gains a Shield of a fifth of its max MP.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -34443,6 +34623,10 @@
     {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
     }
    ],
    "statuses": [
@@ -34465,7 +34649,7 @@
   {
    "id": "spellbinder",
    "name": "Spellbinder",
-   "text": "MP regen +1. After each ability the wearer casts, its next basic attack deals double damage.",
+   "text": "MP regen +1, Cooldown medium, MP +1. After each ability the wearer casts, its next basic attack deals double damage.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -34473,6 +34657,14 @@
     {
      "stat": "mp_regen",
      "flat": 3000
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": 15
+    },
+    {
+     "stat": "max_mp",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -34495,7 +34687,7 @@
   {
    "id": "conductors_blade",
    "name": "Conductor's blade",
-   "text": "Cooldown medium. When one of the wearer's abilities hits several foes at once, each of those hits lands again on its foe for a quarter of the damage.",
+   "text": "Cooldown medium, MP regen +1, HP +1. When one of the wearer's abilities hits several foes at once, each of those hits lands again on its foe for a quarter of the damage.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -34503,6 +34695,14 @@
     {
      "stat": "cooldown_reduction",
      "flat": 15
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -34526,14 +34726,22 @@
   {
    "id": "winters_chain",
    "name": "Winter's chain",
-   "text": "MP regen +1. When a foe's Chill shatters, every other foe gains a few Chill.",
+   "text": "MP regen +2, Cooldown medium, MP +1. When a foe's Chill shatters, every other foe gains a few Chill.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
    "stats": [
     {
      "stat": "mp_regen",
-     "flat": 3000
+     "flat": 6000
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": 15
+    },
+    {
+     "stat": "max_mp",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -34556,7 +34764,7 @@
   {
    "id": "brimming_blade",
    "name": "Brimming blade",
-   "text": "MP +1. Each ability the wearer casts gives the ally with the least MP a tenth of that ability's cost in MP. While the wearer has more than half its MP, its abilities cost a quarter less.",
+   "text": "MP +1, MP regen +2, HP +1. Each ability the wearer casts gives the ally with the least MP a tenth of that ability's cost in MP. While the wearer has more than half its MP, its abilities cost a quarter less.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -34564,6 +34772,14 @@
     {
      "stat": "max_mp",
      "flat": 1000
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 6000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -34614,7 +34830,7 @@
   {
    "id": "horsemans_hammer",
    "name": "Horseman's hammer",
-   "text": "A lighter hammer. HP +1, Aggro +1.",
+   "text": "A lighter swing. HP +1, Aggro +1.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -34707,10 +34923,20 @@
   {
    "id": "bellringer",
    "name": "Bellringer",
-   "text": "The wearer's basic attacks on a foe in a wind-up Stun it.",
+   "text": "Defense +1, HP +1. The wearer's basic attacks on a foe in a wind-up Stun it.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
+   "stats": [
+    {
+     "stat": "defense",
+     "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
    "statuses": [
     "bellringer"
    ],
@@ -34731,10 +34957,20 @@
   {
    "id": "rootstone_hammer",
    "name": "Rootstone hammer",
-   "text": "The wearer's basic attacks add a few Sunder, from its Defense.",
+   "text": "Defense +1, Aggro +1. The wearer's basic attacks add a few Sunder, from its Defense.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
+   "stats": [
+    {
+     "stat": "defense",
+     "flat": 1000
+    },
+    {
+     "stat": "aggro",
+     "flat": 10
+    }
+   ],
    "statuses": [
     "rootstone_hammer"
    ],
@@ -34755,10 +34991,24 @@
   {
    "id": "mountainfall",
    "name": "Mountainfall",
-   "text": "The wearer's basic attacks deal extra damage equal to a fifth of its max HP.",
+   "text": "Defense +1, HP +1, Aggro +1. The wearer's basic attacks deal extra damage equal to a fifth of its max HP.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
+   "stats": [
+    {
+     "stat": "defense",
+     "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    },
+    {
+     "stat": "aggro",
+     "flat": 10
+    }
+   ],
    "weapon": {
     "kind": "hammer",
     "amount": {
@@ -34781,10 +35031,24 @@
   {
    "id": "grudgebearer",
    "name": "Grudgebearer",
-   "text": "Each hit the wearer takes adds a Charge, up to 10. Its basic attacks deal a tenth more for each Charge, and spend them.",
+   "text": "Defense +1, Aggro +1, Crit damage medium. Each hit the wearer takes adds a Charge, up to 10. Its basic attacks deal a tenth more for each Charge, and spend them.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
+   "stats": [
+    {
+     "stat": "defense",
+     "flat": 1000
+    },
+    {
+     "stat": "aggro",
+     "flat": 10
+    },
+    {
+     "stat": "crit_multiplier",
+     "flat": 25
+    }
+   ],
    "statuses": [
     "grudgebearer"
    ],
@@ -34805,7 +35069,7 @@
   {
    "id": "morningstar",
    "name": "Morningstar",
-   "text": "HP +1, Defense +1, MP regen +1.",
+   "text": "HP +1, Defense +1.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -34817,10 +35081,6 @@
     {
      "stat": "defense",
      "flat": 1000
-    },
-    {
-     "stat": "mp_regen",
-     "flat": 3000
     }
    ],
    "weapon": {
@@ -34840,7 +35100,7 @@
   {
    "id": "friars_mace",
    "name": "Friar's mace",
-   "text": "HP +1, MP regen +1, Cooldown medium.",
+   "text": "HP +1, MP regen +1.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -34852,10 +35112,6 @@
     {
      "stat": "mp_regen",
      "flat": 3000
-    },
-    {
-     "stat": "cooldown_reduction",
-     "flat": 15
     }
    ],
    "weapon": {
@@ -34875,7 +35131,7 @@
   {
    "id": "menders_mace",
    "name": "Mender's mace",
-   "text": "HP +1, MP regen +1. At the start of each fight, the ally with the lowest share of max HP gains Regen.",
+   "text": "HP +1, MP regen +1, Defense +1. At the start of each fight, the ally with the lowest share of max HP gains Regen.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -34887,6 +35143,10 @@
     {
      "stat": "mp_regen",
      "flat": 3000
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -34909,7 +35169,7 @@
   {
    "id": "priors_mace",
    "name": "Prior's mace",
-   "text": "HP +1, Cooldown medium. Each ability the wearer casts heals it for 3% of its max HP.",
+   "text": "HP +1, Cooldown medium, MP regen +1. Each ability the wearer casts heals it for 3% of its max HP.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -34921,6 +35181,10 @@
     {
      "stat": "cooldown_reduction",
      "flat": 15
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
     }
    ],
    "statuses": [
@@ -34943,7 +35207,7 @@
   {
    "id": "penitents_mace",
    "name": "Penitent's mace",
-   "text": "Thorns medium, HP +1. Each hit the wearer takes heals the ally with the lowest share of max HP for a tenth of the damage.",
+   "text": "Thorns medium, HP +2, Defense +1. Each hit the wearer takes heals the ally with the lowest share of max HP for a tenth of the damage.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -34954,7 +35218,11 @@
     },
     {
      "stat": "max_hp",
-     "flat": 500
+     "flat": 1000
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -34977,18 +35245,22 @@
   {
    "id": "censer_mace",
    "name": "Censer mace",
-   "text": "HP +1, MP regen +1. Each of the wearer's basic attacks that lands heals the ally with the lowest share of max HP for a third of the damage it dealt.",
+   "text": "HP +2, MP regen +1, Cooldown medium. Each of the wearer's basic attacks that lands heals the ally with the lowest share of max HP for a third of the damage it dealt.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
      "stat": "max_hp",
-     "flat": 500
+     "flat": 1000
     },
     {
      "stat": "mp_regen",
      "flat": 3000
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -35011,18 +35283,22 @@
   {
    "id": "sunhammer",
    "name": "Sunhammer",
-   "text": "HP +1, MP regen +1. The wearer's basic attacks add several Burn. When a burning foe falls, the wearer's next basic attack also strikes every other foe, and those strikes add several Burn too.",
+   "text": "HP +2, MP regen +1, Defense +2. The wearer's basic attacks add several Burn. When a burning foe falls, the wearer's next basic attack also strikes every other foe, and those strikes add several Burn too.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
    "stats": [
     {
      "stat": "max_hp",
-     "flat": 500
+     "flat": 1000
     },
     {
      "stat": "mp_regen",
      "flat": 3000
+    },
+    {
+     "stat": "defense",
+     "flat": 2000
     }
    ],
    "statuses": [
@@ -35045,18 +35321,22 @@
   {
    "id": "martyrs_mace",
    "name": "Martyr's mace",
-   "text": "HP +1, Defense +1. The wearer's basic attacks deal more the lower its HP: half again as much below 70%, double below 50%, two and a half times below 30%, and triple below 10%. Below 30% HP, each basic attack also heals the wearer for the damage it dealt.",
+   "text": "HP +2, Defense +1, MP regen +2. The wearer's basic attacks deal more the lower its HP: half again as much below 70%, double below 50%, two and a half times below 30%, and triple below 10%. Below 30% HP, each basic attack also heals the wearer for the damage it dealt.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
    "stats": [
     {
      "stat": "max_hp",
-     "flat": 500
+     "flat": 1000
     },
     {
      "stat": "defense",
      "flat": 1000
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 6000
     }
    ],
    "statuses": [
@@ -35079,7 +35359,7 @@
   {
    "id": "ashwood_staff",
    "name": "Ashwood staff",
-   "text": "Cast speed medium, HP +1, MP regen +1.",
+   "text": "Cast speed medium, HP +1.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -35091,10 +35371,6 @@
     {
      "stat": "max_hp",
      "flat": 500
-    },
-    {
-     "stat": "mp_regen",
-     "flat": 3000
     }
    ],
    "weapon": {
@@ -35114,7 +35390,7 @@
   {
    "id": "moonwater_staff",
    "name": "Moonwater staff",
-   "text": "MP +2, Cooldown medium.",
+   "text": "MP +2.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -35122,10 +35398,6 @@
     {
      "stat": "max_mp",
      "flat": 2000
-    },
-    {
-     "stat": "cooldown_reduction",
-     "flat": 15
     }
    ],
    "weapon": {
@@ -35145,7 +35417,7 @@
   {
    "id": "shepherds_staff",
    "name": "Shepherd's staff",
-   "text": "Cast speed medium, HP +1. At the start of each fight, the ally with the least MP gains Clarity.",
+   "text": "Cast speed medium, HP +1, Cooldown medium. At the start of each fight, the ally with the least MP gains Clarity.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -35157,6 +35429,10 @@
     {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -35179,7 +35455,7 @@
   {
    "id": "canopy_staff",
    "name": "Canopy staff",
-   "text": "HP +1, MP regen +1. At the start of each fight, the wearer and the other ally with the least max HP each gain a Shield from the wearer's Attack.",
+   "text": "HP +1, MP regen +1, Cast speed medium. At the start of each fight, the wearer and the other ally with the least max HP each gain a Shield from the wearer's Attack.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -35191,6 +35467,10 @@
     {
      "stat": "mp_regen",
      "flat": 3000
+    },
+    {
+     "stat": "cast_time_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -35213,7 +35493,7 @@
   {
    "id": "banked_staff",
    "name": "Banked staff",
-   "text": "Cast speed medium, Cooldown medium. The wearer's abilities add half again as many Burn, Chill and Shock stacks.",
+   "text": "Cast speed medium, Cooldown medium, MP +1, MP regen +1. The wearer's abilities add half again as many Burn, Chill and Shock stacks.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -35225,6 +35505,14 @@
     {
      "stat": "cooldown_reduction",
      "flat": 15
+    },
+    {
+     "stat": "max_mp",
+     "flat": 1000
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
     }
    ],
    "statuses": [
@@ -35247,7 +35535,7 @@
   {
    "id": "cistern_staff",
    "name": "Cistern staff",
-   "text": "MP +1, HP +1. Once a fight, when the wearer has less than a third of its MP (at the fight's start, or after it casts), it gains Clarity.",
+   "text": "MP +1, HP +1, Cast speed medium, Cooldown medium. Once a fight, when the wearer has less than a third of its MP (at the fight's start, or after it casts), it gains Clarity.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -35259,6 +35547,14 @@
     {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "cast_time_reduction",
+     "flat": 15
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -35281,18 +35577,22 @@
   {
    "id": "cataclysm_staff",
    "name": "Cataclysm staff",
-   "text": "Cast speed medium, MP +1. Every third ability the wearer casts is cast twice. The second cast is free.",
+   "text": "Cast speed high, MP +1, Cooldown high. Every third ability the wearer casts is cast twice. The second cast is free.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
    "stats": [
     {
      "stat": "cast_time_reduction",
-     "flat": 15
+     "flat": 30
     },
     {
      "stat": "max_mp",
      "flat": 1000
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": 30
     }
    ],
    "statuses": [
@@ -35315,18 +35615,22 @@
   {
    "id": "cinderheart_staff",
    "name": "Cinderheart staff",
-   "text": "Cast speed medium, MP regen +1. The wearer's basic attacks consume their target's Burn and deal at once all the damage it would have dealt.",
+   "text": "Cast speed high, MP regen +1, MP +2. The wearer's basic attacks consume their target's Burn and deal at once all the damage it would have dealt.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
    "stats": [
     {
      "stat": "cast_time_reduction",
-     "flat": 15
+     "flat": 30
     },
     {
      "stat": "mp_regen",
      "flat": 3000
+    },
+    {
+     "stat": "max_mp",
+     "flat": 2000
     }
    ],
    "statuses": [
@@ -35350,7 +35654,7 @@
   {
    "id": "ironclad",
    "name": "Ironclad",
-   "text": "Defense +2.",
+   "text": "Defense +1.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -35358,7 +35662,7 @@
    "stats": [
     {
      "stat": "defense",
-     "flat": 2000
+     "flat": 1000
     }
    ],
    "rarity": "common"
@@ -35366,7 +35670,7 @@
   {
    "id": "crested_plate",
    "name": "Crested plate",
-   "text": "HP +1, Aggro +1.",
+   "text": "HP +1.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -35375,10 +35679,6 @@
     {
      "stat": "max_hp",
      "flat": 500
-    },
-    {
-     "stat": "aggro",
-     "flat": 10
     }
    ],
    "rarity": "common"
@@ -35386,7 +35686,23 @@
   {
    "id": "bristled_plate",
    "name": "Bristled plate",
-   "text": "Thorns 150, Defense +1.",
+   "text": "Thorns medium.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "plate",
+   "stats": [
+    {
+     "stat": "thorns",
+     "flat": 150
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "portcullis",
+   "name": "Portcullis",
+   "text": "Thorns medium, Defense +1. While the wearer is above half its HP, it draws far more (Aggro +20).",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -35399,22 +35715,6 @@
     {
      "stat": "defense",
      "flat": 1000
-    }
-   ],
-   "rarity": "common"
-  },
-  {
-   "id": "portcullis",
-   "name": "Portcullis",
-   "text": "Thorns 150. While the wearer is above half its HP, it draws far more (Aggro +20).",
-   "slot": "armor",
-   "tier": "ordinary",
-   "source": "drop",
-   "armor": "plate",
-   "stats": [
-    {
-     "stat": "thorns",
-     "flat": 150
     }
    ],
    "rarity": "uncommon",
@@ -35425,7 +35725,7 @@
   {
    "id": "keystone_cuirass",
    "name": "Keystone cuirass",
-   "text": "Defense +1. Its basic attacks deal 2% more for every 1,000 Defense it has.",
+   "text": "Defense +1, Aggro +1. Its basic attacks deal 2% more for every 1,000 Defense it has.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -35434,6 +35734,10 @@
     {
      "stat": "defense",
      "flat": 1000
+    },
+    {
+     "stat": "aggro",
+     "flat": 10
     }
    ],
    "rarity": "uncommon",
@@ -35444,7 +35748,7 @@
   {
    "id": "holdfast",
    "name": "Holdfast",
-   "text": "HP +1. The first time each fight the wearer drops below half its HP, it's Guarded.",
+   "text": "HP +1, Defense +1. The first time each fight the wearer drops below half its HP, it's Guarded.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -35453,6 +35757,10 @@
     {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
     }
    ],
    "rarity": "uncommon",
@@ -35463,7 +35771,7 @@
   {
    "id": "bastion_plate",
    "name": "Bastion plate",
-   "text": "Defense +1. Starts every fight Guarded.",
+   "text": "Defense +1, HP +1, Aggro +1. Starts every fight Guarded.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -35472,6 +35780,14 @@
     {
      "stat": "defense",
      "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    },
+    {
+     "stat": "aggro",
+     "flat": 10
     }
    ],
    "rarity": "rare",
@@ -35482,7 +35798,7 @@
   {
    "id": "hoarfrost_plate",
    "name": "Hoarfrost plate",
-   "text": "HP +1. Foes that hit the wearer gain 2 Chill.",
+   "text": "HP +1, Defense +1, Thorns medium. Foes that hit the wearer gain 2 Chill.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -35491,6 +35807,14 @@
     {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
+    },
+    {
+     "stat": "thorns",
+     "flat": 150
     }
    ],
    "rarity": "rare",
@@ -35501,7 +35825,7 @@
   {
    "id": "challengers_plate",
    "name": "Challenger's plate",
-   "text": "Aggro +1. Taunts when the fight starts, and again whenever an ally falls.",
+   "text": "Aggro +1, Defense +1, Thorns medium. Taunts when the fight starts, and again whenever an ally falls.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -35510,6 +35834,14 @@
     {
      "stat": "aggro",
      "flat": 10
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
+    },
+    {
+     "stat": "thorns",
+     "flat": 150
     }
    ],
    "rarity": "rare",
@@ -35520,7 +35852,7 @@
   {
    "id": "rubble_plate",
    "name": "Rubble plate",
-   "text": "Defense +1. When the wearer's Shield breaks, every foe takes damage equal to the most that Shield held since it last broke, and a Shield of a quarter of that is rebuilt.",
+   "text": "Defense +2, HP +1, Aggro +1. When the wearer's Shield breaks, every foe takes damage equal to the most that Shield held since it last broke, and a Shield of a quarter of that is rebuilt.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
@@ -35528,7 +35860,15 @@
    "stats": [
     {
      "stat": "defense",
-     "flat": 1000
+     "flat": 2000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    },
+    {
+     "stat": "aggro",
+     "flat": 10
     }
    ],
    "rarity": "legendary",
@@ -35539,7 +35879,7 @@
   {
    "id": "thornheart_plate",
    "name": "Thornheart plate",
-   "text": "Thorns 150. Each hit the wearer takes adds 1 Spite (+15 Thorns a stack, up to 20) for the rest of the fight.",
+   "text": "Thorns medium, Defense +2, Aggro +1. Each hit the wearer takes adds 1 Spite (+15 Thorns a stack, up to 20) for the rest of the fight.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
@@ -35548,6 +35888,14 @@
     {
      "stat": "thorns",
      "flat": 150
+    },
+    {
+     "stat": "defense",
+     "flat": 2000
+    },
+    {
+     "stat": "aggro",
+     "flat": 10
     }
    ],
    "rarity": "legendary",
@@ -35558,7 +35906,7 @@
   {
    "id": "last_bastion",
    "name": "Last bastion",
-   "text": "HP +1. Once a fight, a blow that would knock the wearer out leaves it at 1 HP and Guarded instead. Until it's healed back above half its HP, its hits deal double. After a won fight, it's at no less than a fifth of its HP.",
+   "text": "HP +1, Defense +2, Thorns medium. Once a fight, a blow that would knock the wearer out leaves it at 1 HP and Guarded instead. Until it's healed back above half its HP, its hits deal double. After a won fight, it's at no less than a fifth of its HP.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
@@ -35567,6 +35915,14 @@
     {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "defense",
+     "flat": 2000
+    },
+    {
+     "stat": "thorns",
+     "flat": 150
     }
    ],
    "rarity": "legendary",
@@ -35577,7 +35933,55 @@
   {
    "id": "inscribed_hauberk",
    "name": "Inscribed hauberk",
-   "text": "Attack +1, HP +1.",
+   "text": "Attack +1.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "mail",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "lamprey_mail",
+   "name": "Lamprey mail",
+   "text": "HP +1.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "mail",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "thick_byrnie",
+   "name": "Thick byrnie",
+   "text": "Defense +1.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "mail",
+   "stats": [
+    {
+     "stat": "defense",
+     "flat": 1000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "tithing_hauberk",
+   "name": "Tithing hauberk",
+   "text": "Attack +1, HP +1. Each hit the wearer lands heals it for 1.5% of its max HP.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -35592,12 +35996,15 @@
      "flat": 500
     }
    ],
-   "rarity": "common"
+   "rarity": "uncommon",
+   "statuses": [
+    "tithing_hauberk"
+   ]
   },
   {
-   "id": "lamprey_mail",
-   "name": "Lamprey mail",
-   "text": "HP +1, Lifesteal 10%.",
+   "id": "reprisal_hauberk",
+   "name": "Reprisal hauberk",
+   "text": "HP +1, Lifesteal medium. The first time each foe hits the wearer in a fight, that foe takes damage equal to 17% of the wearer's max HP.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -35612,57 +36019,6 @@
      "flat": 10
     }
    ],
-   "rarity": "common"
-  },
-  {
-   "id": "thick_byrnie",
-   "name": "Thick byrnie",
-   "text": "HP +2.",
-   "slot": "armor",
-   "tier": "ordinary",
-   "source": "drop",
-   "armor": "mail",
-   "stats": [
-    {
-     "stat": "max_hp",
-     "flat": 1000
-    }
-   ],
-   "rarity": "common"
-  },
-  {
-   "id": "tithing_hauberk",
-   "name": "Tithing hauberk",
-   "text": "Attack +1. Each hit the wearer lands heals it for 1.5% of its max HP.",
-   "slot": "armor",
-   "tier": "ordinary",
-   "source": "drop",
-   "armor": "mail",
-   "stats": [
-    {
-     "stat": "attack",
-     "flat": 1000
-    }
-   ],
-   "rarity": "uncommon",
-   "statuses": [
-    "tithing_hauberk"
-   ]
-  },
-  {
-   "id": "reprisal_hauberk",
-   "name": "Reprisal hauberk",
-   "text": "HP +1. The first time each foe hits the wearer in a fight, that foe takes damage equal to 17% of the wearer's max HP.",
-   "slot": "armor",
-   "tier": "ordinary",
-   "source": "drop",
-   "armor": "mail",
-   "stats": [
-    {
-     "stat": "max_hp",
-     "flat": 500
-    }
-   ],
    "rarity": "uncommon",
    "statuses": [
     "reprisal_hauberk"
@@ -35671,7 +36027,7 @@
   {
    "id": "silvered_hauberk",
    "name": "Silvered hauberk",
-   "text": "Attack +1. The first hit the wearer takes each fight deals half.",
+   "text": "Attack +1, Defense +1. The first hit the wearer takes each fight deals half.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -35679,6 +36035,10 @@
    "stats": [
     {
      "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "defense",
      "flat": 1000
     }
    ],
@@ -35690,7 +36050,7 @@
   {
    "id": "static_mail",
    "name": "Static mail",
-   "text": "Attack +1. Foes that hit the wearer gain 2 Shock.",
+   "text": "Attack +1, HP +1, Lifesteal medium. Foes that hit the wearer gain 2 Shock.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -35699,6 +36059,14 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    },
+    {
+     "stat": "lifesteal",
+     "flat": 10
     }
    ],
    "rarity": "rare",
@@ -35709,7 +36077,7 @@
   {
    "id": "mocking_mail",
    "name": "Mocking mail",
-   "text": "Aggro +20. Taunts when the fight starts.",
+   "text": "Aggro +2, HP +1. Taunts when the fight starts.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -35718,6 +36086,10 @@
     {
      "stat": "aggro",
      "flat": 20
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "rarity": "rare",
@@ -35728,7 +36100,7 @@
   {
    "id": "bloodsworn_mail",
    "name": "Bloodsworn mail",
-   "text": "HP +1. Below half its HP, the wearer has Lifesteal 10% and its hits deal a quarter more.",
+   "text": "HP +1, Defense +1, Attack +1. Below half its HP, the wearer has Lifesteal 10% and its hits deal a quarter more.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -35737,6 +36109,14 @@
     {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
     }
    ],
    "rarity": "rare",
@@ -35747,7 +36127,7 @@
   {
    "id": "sanguine_mail",
    "name": "Sanguine mail",
-   "text": "HP +1. Below half its HP, healing the wearer receives is doubled. Above half, it's halved.",
+   "text": "HP +2, Attack +1, Lifesteal medium. Below half its HP, healing the wearer receives is doubled. Above half, it's halved.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
@@ -35755,11 +36135,19 @@
    "stats": [
     {
      "stat": "max_hp",
-     "flat": 500
+     "flat": 1000
     },
     {
      "stat": "healing_received",
      "flat": -50
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "lifesteal",
+     "flat": 10
     }
    ],
    "rarity": "legendary",
@@ -35770,7 +36158,7 @@
   {
    "id": "mantle_of_the_fallen",
    "name": "Mantle of the fallen",
-   "text": "Attack +1. When an ally falls, the wearer is Hasted and Guarded and gains 4 Might. When an ally is revived, the wearer heals it for a third of its max HP.",
+   "text": "Attack +1, HP +2, Defense +1. When an ally falls, the wearer is Hasted and Guarded and gains 4 Might. When an ally is revived, the wearer heals it for a third of its max HP.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
@@ -35778,6 +36166,14 @@
    "stats": [
     {
      "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 1000
+    },
+    {
+     "stat": "defense",
      "flat": 1000
     }
    ],
@@ -35789,7 +36185,7 @@
   {
    "id": "hexweave_mail",
    "name": "Hexweave mail",
-   "text": "Attack +1. The wearer's hits deal 10% more to a foe for each debuff it holds.",
+   "text": "Attack +1, Defense +2, Lifesteal medium. The wearer's hits deal 10% more to a foe for each debuff it holds.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
@@ -35798,6 +36194,14 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "defense",
+     "flat": 2000
+    },
+    {
+     "stat": "lifesteal",
+     "flat": 10
     }
    ],
    "rarity": "legendary",
@@ -35808,7 +36212,7 @@
   {
    "id": "tumblers_vest",
    "name": "Tumbler's vest",
-   "text": "Evasion 20, Attack +1.",
+   "text": "Evasion medium.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -35817,10 +36221,6 @@
     {
      "stat": "evasion",
      "flat": 20
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
     }
    ],
    "rarity": "common"
@@ -35828,7 +36228,7 @@
   {
    "id": "footpads_jerkin",
    "name": "Footpad's jerkin",
-   "text": "Crit chance +3%, Attack +1.",
+   "text": "Crit chance +1.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -35837,10 +36237,6 @@
     {
      "stat": "crit_chance",
      "flat": 3
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
     }
    ],
    "rarity": "common"
@@ -35848,7 +36244,7 @@
   {
    "id": "spotters_coat",
    "name": "Spotter's coat",
-   "text": "Accuracy 20, Crit chance +3%.",
+   "text": "Accuracy medium.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -35857,10 +36253,6 @@
     {
      "stat": "accuracy",
      "flat": 20
-    },
-    {
-     "stat": "crit_chance",
-     "flat": 3
     }
    ],
    "rarity": "common"
@@ -35868,7 +36260,7 @@
   {
    "id": "couriers_coat",
    "name": "Courier's coat",
-   "text": "Attack +1. The first time each fight the wearer drops below half its HP, it's Hasted.",
+   "text": "Attack +1, Evasion medium. The first time each fight the wearer drops below half its HP, it's Hasted.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -35877,6 +36269,10 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "evasion",
+     "flat": 20
     }
    ],
    "rarity": "uncommon",
@@ -35887,7 +36283,7 @@
   {
    "id": "mottled_hide",
    "name": "Mottled hide",
-   "text": "Evasion 20. While the wearer is below half its HP, it draws far less (Aggro −20).",
+   "text": "Evasion medium, Accuracy medium. While the wearer is below half its HP, it draws far less (Aggro −20).",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -35895,6 +36291,10 @@
    "stats": [
     {
      "stat": "evasion",
+     "flat": 20
+    },
+    {
+     "stat": "accuracy",
      "flat": 20
     }
    ],
@@ -35906,7 +36306,7 @@
   {
    "id": "warpaint_jerkin",
    "name": "Warpaint jerkin",
-   "text": "Crit chance +3%. Starts every fight with a few Might, from its Attack.",
+   "text": "Crit chance +1, Evasion medium. Starts every fight with a few Might, from its Attack.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -35915,6 +36315,10 @@
     {
      "stat": "crit_chance",
      "flat": 3
+    },
+    {
+     "stat": "evasion",
+     "flat": 20
     }
    ],
    "rarity": "uncommon",
@@ -35925,7 +36329,7 @@
   {
    "id": "duelists_leathers",
    "name": "Duelist's leathers",
-   "text": "Evasion 20. Each time the wearer dodges a hit, it strikes the attacker with its weapon.",
+   "text": "Evasion medium, Crit chance +1, Accuracy medium. Each time the wearer dodges a hit, it strikes the attacker with its weapon.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -35933,6 +36337,14 @@
    "stats": [
     {
      "stat": "evasion",
+     "flat": 20
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    },
+    {
+     "stat": "accuracy",
      "flat": 20
     }
    ],
@@ -35944,7 +36356,7 @@
   {
    "id": "shadow_mantle",
    "name": "Shadow mantle",
-   "text": "Crit chance +3%. Hidden when the fight starts. The wearer's hits deal half again as much while it's Hidden.",
+   "text": "Crit chance +1, Evasion medium, Attack +1. Hidden when the fight starts. The wearer's hits deal half again as much while it's Hidden.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -35953,6 +36365,14 @@
     {
      "stat": "crit_chance",
      "flat": 3
+    },
+    {
+     "stat": "evasion",
+     "flat": 20
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
     }
    ],
    "rarity": "rare",
@@ -35963,7 +36383,7 @@
   {
    "id": "trackers_coat",
    "name": "Tracker's coat",
-   "text": "Aggro −10. The wearer's abilities have Seek.",
+   "text": "Aggro −1, Evasion medium, Attack +1. The wearer's abilities have Seek.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -35972,6 +36392,14 @@
     {
      "stat": "aggro",
      "flat": -10
+    },
+    {
+     "stat": "evasion",
+     "flat": 20
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
     }
    ],
    "rarity": "rare",
@@ -35982,7 +36410,7 @@
   {
    "id": "windrunners_garb",
    "name": "Windrunner's garb",
-   "text": "Evasion 20. Each dodge adds 1 Tempo (+5% speed in everything a stack, up to 10) for the rest of the fight. Each hit the wearer takes spends half its Tempo.",
+   "text": "Evasion high, Crit chance +1, Accuracy medium. Each dodge adds 1 Tempo (+5% speed in everything a stack, up to 10) for the rest of the fight. Each hit the wearer takes spends half its Tempo.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
@@ -35990,6 +36418,14 @@
    "stats": [
     {
      "stat": "evasion",
+     "flat": 35
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    },
+    {
+     "stat": "accuracy",
      "flat": 20
     }
    ],
@@ -36001,7 +36437,7 @@
   {
    "id": "pack_leaders_coat",
    "name": "Pack leader's coat",
-   "text": "Attack +1. When the wearer lands a killing blow, every ally's next basic attack comes at once.",
+   "text": "Attack +1, Evasion high, Accuracy medium. When the wearer lands a killing blow, every ally's next basic attack comes at once.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
@@ -36010,6 +36446,14 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "evasion",
+     "flat": 35
+    },
+    {
+     "stat": "accuracy",
+     "flat": 20
     }
    ],
    "rarity": "legendary",
@@ -36020,7 +36464,7 @@
   {
    "id": "frostwalkers_furs",
    "name": "Frostwalker's furs",
-   "text": "Evasion 20. When a foe's Chill shatters, the wearer is Hasted, and its next hit adds a Chill to every foe.",
+   "text": "Evasion high, Attack +1, Attack speed medium. When a foe's Chill shatters, the wearer is Hasted, and its next hit adds a Chill to every foe.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
@@ -36028,7 +36472,15 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 35
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "attack_speed",
+     "flat": 15
     }
    ],
    "rarity": "legendary",
@@ -36039,7 +36491,7 @@
   {
    "id": "magisters_robe",
    "name": "Magister's robe",
-   "text": "Attack +2.",
+   "text": "Attack +1.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -36047,7 +36499,7 @@
    "stats": [
     {
      "stat": "attack",
-     "flat": 2000
+     "flat": 1000
     }
    ],
    "rarity": "common"
@@ -36055,7 +36507,7 @@
   {
    "id": "wayfarers_habit",
    "name": "Wayfarer's habit",
-   "text": "MP +1, MP regen +1.",
+   "text": "MP +1.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -36064,10 +36516,6 @@
     {
      "stat": "max_mp",
      "flat": 1000
-    },
-    {
-     "stat": "mp_regen",
-     "flat": 3000
     }
    ],
    "rarity": "common"
@@ -36075,16 +36523,12 @@
   {
    "id": "hermits_cowl",
    "name": "Hermit's cowl",
-   "text": "Attack +1, Aggro −1.",
+   "text": "Aggro −1.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
    "armor": "robes",
    "stats": [
-    {
-     "stat": "attack",
-     "flat": 1000
-    },
     {
      "stat": "aggro",
      "flat": -10
@@ -36095,7 +36539,7 @@
   {
    "id": "matins_robe",
    "name": "Matins robe",
-   "text": "Attack +1. The first ability the wearer casts each fight costs no MP.",
+   "text": "Attack +1, MP +1. The first ability the wearer casts each fight costs no MP.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -36103,6 +36547,10 @@
    "stats": [
     {
      "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "max_mp",
      "flat": 1000
     }
    ],
@@ -36114,7 +36562,7 @@
   {
    "id": "wallflowers_robe",
    "name": "Wallflower's robe",
-   "text": "HP +1. Draws far less (Aggro −20) until the first hit lands on it each fight.",
+   "text": "HP +1, MP +1. Draws far less (Aggro −20) until the first hit lands on it each fight.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -36123,6 +36571,10 @@
     {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "max_mp",
+     "flat": 1000
     }
    ],
    "rarity": "uncommon",
@@ -36133,7 +36585,7 @@
   {
    "id": "glyphed_robe",
    "name": "Glyphed robe",
-   "text": "MP regen +1. Each ability the wearer finishes casting gives it a Shield of a tenth of its Attack.",
+   "text": "MP regen +1, MP +1. Each ability the wearer finishes casting gives it a Shield of a tenth of its Attack.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -36142,6 +36594,10 @@
     {
      "stat": "mp_regen",
      "flat": 3000
+    },
+    {
+     "stat": "max_mp",
+     "flat": 1000
     }
    ],
    "rarity": "uncommon",
@@ -36152,7 +36608,7 @@
   {
    "id": "kindled_robes",
    "name": "Kindled robes",
-   "text": "Attack +1. While any foe has Burn, the wearer gains 1 Heat every 4 ticks (+3% damage a stack, up to 15) for the rest of the fight.",
+   "text": "Attack +1, MP +1, MP regen +1. While any foe has Burn, the wearer gains 1 Heat every 4 ticks (+3% damage a stack, up to 15) for the rest of the fight.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -36161,6 +36617,14 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "max_mp",
+     "flat": 1000
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
     }
    ],
    "rarity": "rare",
@@ -36171,7 +36635,7 @@
   {
    "id": "quiet_robes",
    "name": "Quiet robes",
-   "text": "Aggro −10. Can't be Silenced.",
+   "text": "Aggro −1, MP +1, Attack +1. Can't be Silenced.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -36184,6 +36648,14 @@
     {
      "stat": "immune:status:silence",
      "flat": 1
+    },
+    {
+     "stat": "max_mp",
+     "flat": 1000
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
     }
    ],
    "rarity": "rare"
@@ -36191,7 +36663,7 @@
   {
    "id": "weavers_robes",
    "name": "Weaver's robes",
-   "text": "MP regen +1. When an ally finishes casting an ability, the wearer's next ability costs a fifth less MP.",
+   "text": "MP regen +1, MP +1, Aggro −1. When an ally finishes casting an ability, the wearer's next ability costs a fifth less MP.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -36200,6 +36672,14 @@
     {
      "stat": "mp_regen",
      "flat": 3000
+    },
+    {
+     "stat": "max_mp",
+     "flat": 1000
+    },
+    {
+     "stat": "aggro",
+     "flat": -10
     }
    ],
    "rarity": "rare",
@@ -36210,7 +36690,7 @@
   {
    "id": "archmages_mantle",
    "name": "Archmage's mantle",
-   "text": "MP +1. The wearer's abilities cost half again as much MP, deal half again as much damage, heal half again as much, and add half again as many stacks.",
+   "text": "MP +2, MP regen +1, Attack +1. The wearer's abilities cost half again as much MP, deal half again as much damage, heal half again as much, and add half again as many stacks.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
@@ -36218,6 +36698,14 @@
    "stats": [
     {
      "stat": "max_mp",
+     "flat": 2000
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
+    },
+    {
+     "stat": "attack",
      "flat": 1000
     }
    ],
@@ -36229,7 +36717,7 @@
   {
    "id": "stormweave",
    "name": "Stormweave",
-   "text": "Attack +1. Each of the wearer's actions that hits three or more foes adds 1 Surge (+5% damage a stack, up to 10) for the rest of the fight.",
+   "text": "Attack +1, MP +2, Aggro −1. Each of the wearer's actions that hits three or more foes adds 1 Surge (+5% damage a stack, up to 10) for the rest of the fight.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
@@ -36238,6 +36726,14 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "max_mp",
+     "flat": 2000
+    },
+    {
+     "stat": "aggro",
+     "flat": -10
     }
    ],
    "rarity": "legendary",
@@ -36248,7 +36744,7 @@
   {
    "id": "vestments_of_return",
    "name": "Vestments of return",
-   "text": "MP regen +1. While the wearer stands, every ally revived comes back behind a Shield of half its max HP.",
+   "text": "MP regen +1, MP +2, Aggro −1. While the wearer stands, every ally revived comes back behind a Shield of half its max HP.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
@@ -36257,6 +36753,14 @@
     {
      "stat": "mp_regen",
      "flat": 3000
+    },
+    {
+     "stat": "max_mp",
+     "flat": 2000
+    },
+    {
+     "stat": "aggro",
+     "flat": -10
     }
    ],
    "rarity": "legendary",
@@ -36267,7 +36771,7 @@
   {
    "id": "lodestone",
    "name": "Lodestone",
-   "text": "HP +1, Aggro +1.",
+   "text": "HP +1.",
    "slot": "amulet",
    "tier": "ordinary",
    "source": "drop",
@@ -36275,10 +36779,6 @@
     {
      "stat": "max_hp",
      "flat": 500
-    },
-    {
-     "stat": "aggro",
-     "flat": 10
     }
    ],
    "rarity": "common"
@@ -36286,7 +36786,7 @@
   {
    "id": "whetstone",
    "name": "Whetstone",
-   "text": "Attack +1, Crit chance +3%.",
+   "text": "Attack +1.",
    "slot": "amulet",
    "tier": "ordinary",
    "source": "drop",
@@ -36294,10 +36794,6 @@
     {
      "stat": "attack",
      "flat": 1000
-    },
-    {
-     "stat": "crit_chance",
-     "flat": 3
     }
    ],
    "rarity": "common"
@@ -36305,15 +36801,11 @@
   {
    "id": "moonstone",
    "name": "Moonstone",
-   "text": "Attack +1, Aggro −1.",
+   "text": "Aggro −1.",
    "slot": "amulet",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
-    {
-     "stat": "attack",
-     "flat": 1000
-    },
     {
      "stat": "aggro",
      "flat": -10
@@ -36324,7 +36816,52 @@
   {
    "id": "ironstone",
    "name": "Ironstone",
-   "text": "Defense +1, Attack +1.",
+   "text": "Defense +1.",
+   "slot": "amulet",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "defense",
+     "flat": 1000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "dewstone",
+   "name": "Dewstone",
+   "text": "MP regen +1.",
+   "slot": "amulet",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "mp_regen",
+     "flat": 3000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "quicksilver",
+   "name": "Quicksilver",
+   "text": "Evasion medium.",
+   "slot": "amulet",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "evasion",
+     "flat": 20
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "red_ribbon",
+   "name": "Red ribbon",
+   "text": "Defense +1, Attack +1. The first time an ally drops below half its HP each fight, the wearer Taunts.",
    "slot": "amulet",
    "tier": "ordinary",
    "source": "drop",
@@ -36335,59 +36872,6 @@
     },
     {
      "stat": "attack",
-     "flat": 1000
-    }
-   ],
-   "rarity": "common"
-  },
-  {
-   "id": "dewstone",
-   "name": "Dewstone",
-   "text": "MP regen +1, MP +1.",
-   "slot": "amulet",
-   "tier": "ordinary",
-   "source": "drop",
-   "stats": [
-    {
-     "stat": "mp_regen",
-     "flat": 3000
-    },
-    {
-     "stat": "max_mp",
-     "flat": 1000
-    }
-   ],
-   "rarity": "common"
-  },
-  {
-   "id": "quicksilver",
-   "name": "Quicksilver",
-   "text": "Evasion 20, HP +1.",
-   "slot": "amulet",
-   "tier": "ordinary",
-   "source": "drop",
-   "stats": [
-    {
-     "stat": "evasion",
-     "flat": 20
-    },
-    {
-     "stat": "max_hp",
-     "flat": 500
-    }
-   ],
-   "rarity": "common"
-  },
-  {
-   "id": "red_ribbon",
-   "name": "Red ribbon",
-   "text": "Defense +1. The first time an ally drops below half its HP each fight, the wearer Taunts.",
-   "slot": "amulet",
-   "tier": "ordinary",
-   "source": "drop",
-   "stats": [
-    {
-     "stat": "defense",
      "flat": 1000
     }
    ],
@@ -36399,7 +36883,7 @@
   {
    "id": "carapace_charm",
    "name": "Carapace charm",
-   "text": "HP +1. Starts every fight behind a Shield of 15% of its max HP.",
+   "text": "HP +1, Attack +1. Starts every fight behind a Shield of 15% of its max HP.",
    "slot": "amulet",
    "tier": "ordinary",
    "source": "drop",
@@ -36407,6 +36891,10 @@
     {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
     }
    ],
    "rarity": "uncommon",
@@ -36417,7 +36905,7 @@
   {
    "id": "hares_foot",
    "name": "Hare's foot",
-   "text": "Attack +1. Starts every fight Hasted.",
+   "text": "Attack +1, MP regen +1. Starts every fight Hasted.",
    "slot": "amulet",
    "tier": "ordinary",
    "source": "drop",
@@ -36425,6 +36913,10 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
     }
    ],
    "rarity": "uncommon",
@@ -36435,7 +36927,7 @@
   {
    "id": "batwing_charm",
    "name": "Batwing charm",
-   "text": "Attack +1. Hits from the wearer's abilities heal it for 10% of their damage.",
+   "text": "Attack +1, Evasion medium. Hits from the wearer's abilities heal it for 10% of their damage.",
    "slot": "amulet",
    "tier": "ordinary",
    "source": "drop",
@@ -36443,6 +36935,10 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "evasion",
+     "flat": 20
     }
    ],
    "rarity": "uncommon",
@@ -36453,7 +36949,7 @@
   {
    "id": "urchin_shell",
    "name": "Urchin shell",
-   "text": "Aggro +1. While the wearer holds a Shield, it has Thorns 150.",
+   "text": "Aggro +1, Attack +1. While the wearer holds a Shield, it has Thorns 150.",
    "slot": "amulet",
    "tier": "ordinary",
    "source": "drop",
@@ -36461,6 +36957,10 @@
     {
      "stat": "aggro",
      "flat": 10
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
     }
    ],
    "rarity": "uncommon",
@@ -36471,7 +36971,7 @@
   {
    "id": "wasp_charm",
    "name": "Wasp charm",
-   "text": "Crit chance +3%. While the wearer is Hasted, it has Double strike 25%.",
+   "text": "Crit chance +1, Attack +1. While the wearer is Hasted, it has Double strike 25%.",
    "slot": "amulet",
    "tier": "ordinary",
    "source": "drop",
@@ -36479,6 +36979,10 @@
     {
      "stat": "crit_chance",
      "flat": 3
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
     }
    ],
    "rarity": "uncommon",
@@ -36489,7 +36993,7 @@
   {
    "id": "millstone",
    "name": "Millstone",
-   "text": "Attack +1. Basic attacks come half as often and deal two and a quarter times as much.",
+   "text": "Attack +1, HP +1, Defense +1. Basic attacks come half as often and deal two and a quarter times as much.",
    "slot": "amulet",
    "tier": "ordinary",
    "source": "drop",
@@ -36501,6 +37005,14 @@
     {
      "stat": "attack_speed",
      "flat": -100
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
     }
    ],
    "rarity": "rare",
@@ -36511,7 +37023,7 @@
   {
    "id": "hummingbird_charm",
    "name": "Hummingbird charm",
-   "text": "Evasion 20. Basic attacks come twice as often and deal 45% as much.",
+   "text": "Evasion medium, Attack +1, Defense +1. Basic attacks come twice as often and deal 45% as much.",
    "slot": "amulet",
    "tier": "ordinary",
    "source": "drop",
@@ -36523,6 +37035,14 @@
     {
      "stat": "attack_speed",
      "flat": 100
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
     }
    ],
    "rarity": "rare",
@@ -36533,7 +37053,7 @@
   {
    "id": "echo_charm",
    "name": "Echo charm",
-   "text": "Attack +1. The wearer's extra strikes apply what its basic attacks apply: statuses and on-hit effects. Not damage boosts or Lifesteal.",
+   "text": "Attack +1, MP regen +1, Evasion medium. The wearer's extra strikes apply what its basic attacks apply: statuses and on-hit effects. Not damage boosts or Lifesteal.",
    "slot": "amulet",
    "tier": "ordinary",
    "source": "drop",
@@ -36541,6 +37061,14 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
+    },
+    {
+     "stat": "evasion",
+     "flat": 20
     }
    ],
    "rarity": "rare",
@@ -36551,7 +37079,7 @@
   {
    "id": "opportunists_charm",
    "name": "Opportunist's charm",
-   "text": "Crit chance +3%. Hits on a Stunned or Silenced foe deal a third more.",
+   "text": "Crit chance +1, Attack +1, Evasion medium. Hits on a Stunned or Silenced foe deal a third more.",
    "slot": "amulet",
    "tier": "ordinary",
    "source": "drop",
@@ -36559,6 +37087,14 @@
     {
      "stat": "crit_chance",
      "flat": 3
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "evasion",
+     "flat": 20
     }
    ],
    "rarity": "rare",
@@ -36569,13 +37105,21 @@
   {
    "id": "bounty_charm",
    "name": "Bounty charm",
-   "text": "Attack +1. When the wearer lands a killing blow, it gains 2 Might and its next basic attack comes at once.",
+   "text": "Attack +1, Crit chance +1, MP +1. When the wearer lands a killing blow, it gains 2 Might and its next basic attack comes at once.",
    "slot": "amulet",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
      "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    },
+    {
+     "stat": "max_mp",
      "flat": 1000
     }
    ],
@@ -36587,7 +37131,7 @@
   {
    "id": "martyrs_locket",
    "name": "Martyr's locket",
-   "text": "HP +1. When the wearer falls, every other ally heals a fifth of its max HP and is Hasted.",
+   "text": "HP +1, Attack +1, MP +1. When the wearer falls, every other ally heals a fifth of its max HP and is Hasted.",
    "slot": "amulet",
    "tier": "ordinary",
    "source": "drop",
@@ -36595,6 +37139,14 @@
     {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "max_mp",
+     "flat": 1000
     }
    ],
    "rarity": "rare",
@@ -36605,13 +37157,21 @@
   {
    "id": "heart_of_winter",
    "name": "Heart of winter",
-   "text": "Attack +1. Every hit the wearer lands adds a Chill.",
+   "text": "Attack +2, HP +1, Defense +1. Every hit the wearer lands adds a Chill.",
    "slot": "amulet",
    "tier": "powerful",
    "source": "unlock",
    "stats": [
     {
      "stat": "attack",
+     "flat": 2000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    },
+    {
+     "stat": "defense",
      "flat": 1000
     }
    ],
@@ -36623,14 +37183,22 @@
   {
    "id": "ember_heart",
    "name": "Ember heart",
-   "text": "Attack +1. When a burning foe falls, every other foe gains a third of its Burn.",
+   "text": "Attack +2, Defense +1, MP regen +1. When a burning foe falls, every other foe gains a third of its Burn.",
    "slot": "amulet",
    "tier": "powerful",
    "source": "unlock",
    "stats": [
     {
      "stat": "attack",
+     "flat": 2000
+    },
+    {
+     "stat": "defense",
      "flat": 1000
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
     }
    ],
    "rarity": "legendary",
@@ -36641,18 +37209,26 @@
   {
    "id": "phoenix_ember",
    "name": "Phoenix ember",
-   "text": "Attack +1, HP −1. Once a fight, when the wearer falls, it stands up 4 ticks later with a fifth of its HP.",
+   "text": "Attack +2, HP −1, MP regen +1, Evasion medium. Once a fight, when the wearer falls, it stands up 4 ticks later with a fifth of its HP.",
    "slot": "amulet",
    "tier": "powerful",
    "source": "unlock",
    "stats": [
     {
      "stat": "attack",
-     "flat": 1000
+     "flat": 2000
     },
     {
      "stat": "max_hp",
      "flat": -500
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
+    },
+    {
+     "stat": "evasion",
+     "flat": 20
     }
    ],
    "rarity": "legendary",
@@ -36663,18 +37239,26 @@
   {
    "id": "ready_stance",
    "name": "Ready stance",
-   "text": "Attack +1. The wearer's abilities start every fight at least half charged. Its cooldowns are a fifth longer.",
+   "text": "Attack +2, Evasion medium, Crit chance +1. The wearer's abilities start every fight at least half charged. Its cooldowns are a fifth longer.",
    "slot": "amulet",
    "tier": "powerful",
    "source": "unlock",
    "stats": [
     {
      "stat": "attack",
-     "flat": 1000
+     "flat": 2000
     },
     {
      "stat": "cooldown_reduction",
      "flat": -16.7
+    },
+    {
+     "stat": "evasion",
+     "flat": 20
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "note": "Cooldown reduction −16.7 makes cooldowns ×1.2, a fifth longer, as the card says; −20 would make them ×1.25.",
@@ -36686,7 +37270,7 @@
   {
    "id": "blood_covenant",
    "name": "Blood covenant",
-   "text": "HP +1. The wearer's abilities cost HP in place of MP: the same share of its max HP as they'd cost of its max MP. It won't cast one that would leave it below a tenth of its HP.",
+   "text": "HP +1, Attack +2, Crit chance +1. The wearer's abilities cost HP in place of MP: the same share of its max HP as they'd cost of its max MP. It won't cast one that would leave it below a tenth of its HP.",
    "slot": "amulet",
    "tier": "powerful",
    "source": "unlock",
@@ -36694,6 +37278,14 @@
     {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "attack",
+     "flat": 2000
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "rarity": "legendary",
@@ -36704,14 +37296,22 @@
   {
    "id": "gamblers_coin",
    "name": "Gambler's coin",
-   "text": "Attack +1. The wearer's crit chance is about 50%. Its hits that don't crit deal half; its crits deal what a crit always does. Hits that always crit still do.",
+   "text": "Attack +2, MP +1, HP +1. The wearer's crit chance is about 50%. Its hits that don't crit deal half; its crits deal what a crit always does. Hits that always crit still do.",
    "slot": "amulet",
    "tier": "powerful",
    "source": "unlock",
    "stats": [
     {
      "stat": "attack",
+     "flat": 2000
+    },
+    {
+     "stat": "max_mp",
      "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "rarity": "legendary",
@@ -36722,7 +37322,7 @@
   {
    "id": "pavise",
    "name": "Pavise",
-   "text": "Defense +2.",
+   "text": "Defense +1.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -36730,7 +37330,7 @@
    "stats": [
     {
      "stat": "defense",
-     "flat": 2000
+     "flat": 1000
     }
    ],
    "rarity": "common"
@@ -36738,7 +37338,46 @@
   {
    "id": "banner_kite",
    "name": "Banner kite",
-   "text": "HP +1, Aggro +1.",
+   "text": "HP +1.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "kite_shield",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "gatekeepers_kite",
+   "name": "Gatekeeper's kite",
+   "text": "Defense +1, HP +1. While its holder Taunts, it takes a tenth less damage.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "kite_shield",
+   "stats": [
+    {
+     "stat": "defense",
+     "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
+   "statuses": [
+    "gatekeepers_kite"
+   ],
+   "rarity": "uncommon"
+  },
+  {
+   "id": "sheltering_kite",
+   "name": "Sheltering kite",
+   "text": "HP +1, Aggro +1. At the start of every fight, the ally with the lowest share of its HP is Guarded.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -36753,41 +37392,6 @@
      "flat": 10
     }
    ],
-   "rarity": "common"
-  },
-  {
-   "id": "gatekeepers_kite",
-   "name": "Gatekeeper's kite",
-   "text": "Defense +1. While its holder Taunts, it takes a tenth less damage.",
-   "slot": "offhand",
-   "tier": "ordinary",
-   "source": "drop",
-   "offhand": "kite_shield",
-   "stats": [
-    {
-     "stat": "defense",
-     "flat": 1000
-    }
-   ],
-   "statuses": [
-    "gatekeepers_kite"
-   ],
-   "rarity": "uncommon"
-  },
-  {
-   "id": "sheltering_kite",
-   "name": "Sheltering kite",
-   "text": "HP +1. At the start of every fight, the ally with the lowest share of its HP is Guarded.",
-   "slot": "offhand",
-   "tier": "ordinary",
-   "source": "drop",
-   "offhand": "kite_shield",
-   "stats": [
-    {
-     "stat": "max_hp",
-     "flat": 500
-    }
-   ],
    "statuses": [
     "sheltering_kite"
    ],
@@ -36796,7 +37400,7 @@
   {
    "id": "rubble_shield",
    "name": "Rubble shield",
-   "text": "Defense +1. When its holder's Shield breaks, the foe whose blow broke it is Stunned.",
+   "text": "Defense +1, HP +1, Aggro +1. When its holder's Shield breaks, the foe whose blow broke it is Stunned.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -36805,6 +37409,14 @@
     {
      "stat": "defense",
      "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    },
+    {
+     "stat": "aggro",
+     "flat": 10
     }
    ],
    "statuses": [
@@ -36815,7 +37427,7 @@
   {
    "id": "humbling_shield",
    "name": "Humbling shield",
-   "text": "HP +1. The first time each foe hits its holder, that foe is Weakened.",
+   "text": "HP +1, Defense +1, Thorns medium. The first time each foe hits its holder, that foe is Weakened.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -36824,6 +37436,14 @@
     {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
+    },
+    {
+     "stat": "thorns",
+     "flat": 150
     }
    ],
    "statuses": [
@@ -36834,7 +37454,7 @@
   {
    "id": "spiked_bulwark",
    "name": "Spiked bulwark",
-   "text": "Defense +1. Thorns from its holder's Defense: each foe that hits it takes a twentieth of its Defense back.",
+   "text": "Defense +2, HP +1, Aggro +1. Thorns from its holder's Defense: each foe that hits it takes a twentieth of its Defense back.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -36842,7 +37462,15 @@
    "stats": [
     {
      "stat": "defense",
-     "flat": 1000
+     "flat": 2000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    },
+    {
+     "stat": "aggro",
+     "flat": 10
     }
    ],
    "statuses": [
@@ -36853,7 +37481,7 @@
   {
    "id": "oathbound_shield",
    "name": "Oathbound shield",
-   "text": "HP +1. When a hit would deal an ally more than a quarter of its max HP, its holder takes the hit instead.",
+   "text": "HP +1, Defense +2, Thorns medium. When a hit would deal an ally more than a quarter of its max HP, its holder takes the hit instead.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -36862,6 +37490,14 @@
     {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "defense",
+     "flat": 2000
+    },
+    {
+     "stat": "thorns",
+     "flat": 150
     }
    ],
    "statuses": [
@@ -36872,7 +37508,39 @@
   {
    "id": "bronze_buckler",
    "name": "Bronze buckler",
-   "text": "Defense +1, Attack +1.",
+   "text": "Defense +1.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "round_shield",
+   "stats": [
+    {
+     "stat": "defense",
+     "flat": 1000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "linden_shield",
+   "name": "Linden shield",
+   "text": "HP +1.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "round_shield",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "comrades_targe",
+   "name": "Comrade's targe",
+   "text": "Defense +1, HP +1. At the start of every fight, the other ally with the highest Aggro is Guarded.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -36883,40 +37551,8 @@
      "flat": 1000
     },
     {
-     "stat": "attack",
-     "flat": 1000
-    }
-   ],
-   "rarity": "common"
-  },
-  {
-   "id": "linden_shield",
-   "name": "Linden shield",
-   "text": "HP +2.",
-   "slot": "offhand",
-   "tier": "ordinary",
-   "source": "drop",
-   "offhand": "round_shield",
-   "stats": [
-    {
      "stat": "max_hp",
-     "flat": 1000
-    }
-   ],
-   "rarity": "common"
-  },
-  {
-   "id": "comrades_targe",
-   "name": "Comrade's targe",
-   "text": "Defense +1. At the start of every fight, the other ally with the highest Aggro is Guarded.",
-   "slot": "offhand",
-   "tier": "ordinary",
-   "source": "drop",
-   "offhand": "round_shield",
-   "stats": [
-    {
-     "stat": "defense",
-     "flat": 1000
+     "flat": 500
     }
    ],
    "statuses": [
@@ -36927,7 +37563,7 @@
   {
    "id": "linebreaker",
    "name": "Linebreaker",
-   "text": "Attack +1. Its holder's hits on a Taunting foe deal a fifth more.",
+   "text": "Attack +1, HP +1. Its holder's hits on a Taunting foe deal a fifth more.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -36936,6 +37572,10 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -36946,7 +37586,7 @@
   {
    "id": "paired_shields",
    "name": "Paired shields",
-   "text": "Defense +1. Whenever its holder is Guarded, so is the other ally lowest in HP share that isn't Guarded yet.",
+   "text": "Defense +1, HP +1, Attack +1. Whenever its holder is Guarded, so is the other ally lowest in HP share that isn't Guarded yet.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -36954,6 +37594,14 @@
    "stats": [
     {
      "stat": "defense",
+     "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    },
+    {
+     "stat": "attack",
      "flat": 1000
     }
    ],
@@ -36965,7 +37613,7 @@
   {
    "id": "hunters_buckler",
    "name": "Hunter's buckler",
-   "text": "Attack +1. When its holder's hit fells a foe, it gains Haste and a Shield.",
+   "text": "Attack +1, HP +1, Aggro +1. When its holder's hit fells a foe, it gains Haste and a Shield.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -36974,6 +37622,14 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    },
+    {
+     "stat": "aggro",
+     "flat": 10
     }
    ],
    "statuses": [
@@ -36984,7 +37640,7 @@
   {
    "id": "phalanx_shield",
    "name": "Phalanx shield",
-   "text": "HP +1. While its holder stands, allies with less Defense than it take a fifth less damage. Its holder deals a fifth less.",
+   "text": "HP +2, Defense +1, Attack +1. While its holder stands, allies with less Defense than it take a fifth less damage. Its holder deals a fifth less.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -36992,7 +37648,15 @@
    "stats": [
     {
      "stat": "max_hp",
-     "flat": 500
+     "flat": 1000
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -37003,7 +37667,7 @@
   {
    "id": "shield_of_the_chosen",
    "name": "Shield of the chosen",
-   "text": "HP +1. Once a fight, when another ally falls, its holder raises it at once with a tenth of its HP.",
+   "text": "HP +2, Attack +1, Aggro +1. Once a fight, when another ally falls, its holder raises it at once with a tenth of its HP.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -37011,7 +37675,15 @@
    "stats": [
     {
      "stat": "max_hp",
-     "flat": 500
+     "flat": 1000
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "aggro",
+     "flat": 10
     }
    ],
    "statuses": [
@@ -37022,7 +37694,7 @@
   {
    "id": "rams_horn",
    "name": "Ram's horn",
-   "text": "Aggro +1, Attack +1.",
+   "text": "Aggro +1.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37031,10 +37703,6 @@
     {
      "stat": "aggro",
      "flat": 10
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
     }
    ],
    "rarity": "common"
@@ -37042,7 +37710,7 @@
   {
    "id": "ivory_horn",
    "name": "Ivory horn",
-   "text": "MP regen +1, Attack +1.",
+   "text": "MP regen +1.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37051,10 +37719,6 @@
     {
      "stat": "mp_regen",
      "flat": 3000
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
     }
    ],
    "rarity": "common"
@@ -37062,7 +37726,7 @@
   {
    "id": "reveille",
    "name": "Reveille",
-   "text": "Attack +1. At the start of every fight, the ally with the least MP gains Clarity.",
+   "text": "Attack +1, Aggro +1. At the start of every fight, the ally with the least MP gains Clarity.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37071,6 +37735,10 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "aggro",
+     "flat": 10
     }
    ],
    "statuses": [
@@ -37081,7 +37749,7 @@
   {
    "id": "bulls_horn",
    "name": "Bull's horn",
-   "text": "Attack +1. The first time in a fight that a foe falls, every ally is Hasted.",
+   "text": "Attack +1, Defense +1. The first time in a fight that a foe falls, every ally is Hasted.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37089,6 +37757,10 @@
    "stats": [
     {
      "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "defense",
      "flat": 1000
     }
    ],
@@ -37100,7 +37772,7 @@
   {
    "id": "war_horn",
    "name": "War horn",
-   "text": "Aggro +1. At the start of every fight, the ally with the slowest basic attack gains many Might.",
+   "text": "Aggro +1, HP +1, Defense +1. At the start of every fight, the ally with the slowest basic attack gains many Might.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37109,6 +37781,14 @@
     {
      "stat": "aggro",
      "flat": 10
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -37119,7 +37799,7 @@
   {
    "id": "echo_horn",
    "name": "Echo horn",
-   "text": "MP regen +1. Each time an ally finishes casting an ability, the ally with the least MP gains a little MP.",
+   "text": "MP regen +1, Aggro +1, Defense +1. Each time an ally finishes casting an ability, the ally with the least MP gains a little MP.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37128,6 +37808,14 @@
     {
      "stat": "mp_regen",
      "flat": 3000
+    },
+    {
+     "stat": "aggro",
+     "flat": 10
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -37138,7 +37826,7 @@
   {
    "id": "horn_of_the_charge",
    "name": "Horn of the charge",
-   "text": "HP +1. At the start of every fight, every ally is Hasted and its first action comes at once. Its holder starts every fight with every ability on cooldown.",
+   "text": "HP +1, Aggro +2, Defense +1. At the start of every fight, every ally is Hasted and its first action comes at once. Its holder starts every fight with every ability on cooldown.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -37147,6 +37835,14 @@
     {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "aggro",
+     "flat": 20
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -37157,7 +37853,7 @@
   {
    "id": "rallying_horn",
    "name": "Rallying horn",
-   "text": "Defense +1. When an ally falls (its holder too), every ally still standing gains Haste and a Shield. When an ally is revived, it gains many Might.",
+   "text": "Defense +1, Aggro +2, Attack +1. When an ally falls (its holder too), every ally still standing gains Haste and a Shield. When an ally is revived, it gains many Might.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -37165,6 +37861,14 @@
    "stats": [
     {
      "stat": "defense",
+     "flat": 1000
+    },
+    {
+     "stat": "aggro",
+     "flat": 20
+    },
+    {
+     "stat": "attack",
      "flat": 1000
     }
    ],
@@ -37176,43 +37880,7 @@
   {
    "id": "scholars_codex",
    "name": "Scholar's codex",
-   "text": "Attack +2.",
-   "slot": "offhand",
-   "tier": "ordinary",
-   "source": "drop",
-   "offhand": "tome",
-   "stats": [
-    {
-     "stat": "attack",
-     "flat": 2000
-    }
-   ],
-   "rarity": "common"
-  },
-  {
-   "id": "hymnal",
-   "name": "Hymnal",
-   "text": "Cooldown medium, MP regen +1.",
-   "slot": "offhand",
-   "tier": "ordinary",
-   "source": "drop",
-   "offhand": "tome",
-   "stats": [
-    {
-     "stat": "cooldown_reduction",
-     "flat": 15
-    },
-    {
-     "stat": "mp_regen",
-     "flat": 3000
-    }
-   ],
-   "rarity": "common"
-  },
-  {
-   "id": "snowbound_folio",
-   "name": "Snowbound folio",
-   "text": "Attack +1. At the start of every fight, every foe gains a few Chill.",
+   "text": "Attack +1.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37221,6 +37889,42 @@
     {
      "stat": "attack",
      "flat": 1000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "hymnal",
+   "name": "Hymnal",
+   "text": "Cooldown medium.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "tome",
+   "stats": [
+    {
+     "stat": "cooldown_reduction",
+     "flat": 15
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "snowbound_folio",
+   "name": "Snowbound folio",
+   "text": "Attack +1, Cooldown medium. At the start of every fight, every foe gains a few Chill.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "tome",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -37231,7 +37935,7 @@
   {
    "id": "abridged_lexicon",
    "name": "Abridged lexicon",
-   "text": "MP +1. Its holder's abilities cost a tenth less MP.",
+   "text": "MP +1, Cooldown medium. Its holder's abilities cost a tenth less MP.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37240,6 +37944,10 @@
     {
      "stat": "max_mp",
      "flat": 1000
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -37250,7 +37958,7 @@
   {
    "id": "primer_of_frost",
    "name": "Primer of frost",
-   "text": "Cooldown medium. Each time its holder adds Chill to a foe, it adds a quarter more for every four stacks the foe already holds.",
+   "text": "Cooldown medium, Attack +1, MP +1. Each time its holder adds Chill to a foe, it adds a quarter more for every four stacks the foe already holds.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37259,6 +37967,14 @@
     {
      "stat": "cooldown_reduction",
      "flat": 15
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "max_mp",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -37269,7 +37985,7 @@
   {
    "id": "treatise_on_the_field",
    "name": "Treatise on the field",
-   "text": "Attack +1. Its holder's abilities that hit every foe deal half again as much to each foe above half its HP.",
+   "text": "Attack +1, Cooldown medium, MP regen +1. Its holder's abilities that hit every foe deal half again as much to each foe above half its HP.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37278,6 +37994,14 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": 15
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
     }
    ],
    "statuses": [
@@ -37288,7 +38012,7 @@
   {
    "id": "last_page",
    "name": "Last page",
-   "text": "Attack +1. When a foe falls, every foe below a tenth of its HP falls too.",
+   "text": "Attack +1, Cooldown high, MP +1. When a foe falls, every foe below a tenth of its HP falls too.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -37296,6 +38020,14 @@
    "stats": [
     {
      "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": 30
+    },
+    {
+     "stat": "max_mp",
      "flat": 1000
     }
    ],
@@ -37307,7 +38039,7 @@
   {
    "id": "annotated_grimoire",
    "name": "Annotated grimoire",
-   "text": "Cooldown medium. Each ability its holder pays for makes the next ability any ally casts free.",
+   "text": "Cooldown high, MP +1, MP regen +1. Each ability its holder pays for makes the next ability any ally casts free.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -37315,7 +38047,15 @@
    "stats": [
     {
      "stat": "cooldown_reduction",
-     "flat": 15
+     "flat": 30
+    },
+    {
+     "stat": "max_mp",
+     "flat": 1000
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
     }
    ],
    "statuses": [
@@ -37326,7 +38066,7 @@
   {
    "id": "brass_lantern",
    "name": "Brass lantern",
-   "text": "Attack +1, HP +1.",
+   "text": "Attack +1.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37335,10 +38075,6 @@
     {
      "stat": "attack",
      "flat": 1000
-    },
-    {
-     "stat": "max_hp",
-     "flat": 500
     }
    ],
    "rarity": "common"
@@ -37346,7 +38082,7 @@
   {
    "id": "hooded_lantern",
    "name": "Hooded lantern",
-   "text": "MP +1, Cast speed medium.",
+   "text": "MP +1.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37355,10 +38091,6 @@
     {
      "stat": "max_mp",
      "flat": 1000
-    },
-    {
-     "stat": "cast_time_reduction",
-     "flat": 15
     }
    ],
    "rarity": "common"
@@ -37366,7 +38098,7 @@
   {
    "id": "pitch_lantern",
    "name": "Pitch lantern",
-   "text": "Attack +1. At the start of every fight, every foe gains a few Burn.",
+   "text": "Attack +1, Cast speed medium. At the start of every fight, every foe gains a few Burn.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37375,6 +38107,10 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "cast_time_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -37385,7 +38121,7 @@
   {
    "id": "dazzling_lantern",
    "name": "Dazzling lantern",
-   "text": "HP +1. At the start of every fight, the foe with the highest Attack is Weakened.",
+   "text": "HP +1, Cast speed medium. At the start of every fight, the foe with the highest Attack is Weakened.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37394,6 +38130,10 @@
     {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "cast_time_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -37404,7 +38144,7 @@
   {
    "id": "bellows_lantern",
    "name": "Bellows lantern",
-   "text": "Cast speed medium. Each hit its holder lands on a burning foe adds Burn: a tenth of what the foe holds.",
+   "text": "Cast speed medium, Attack +1, MP +1. Each hit its holder lands on a burning foe adds Burn: a tenth of what the foe holds.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37413,6 +38153,14 @@
     {
      "stat": "cast_time_reduction",
      "flat": 15
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "max_mp",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -37423,7 +38171,7 @@
   {
    "id": "signal_lantern",
    "name": "Signal lantern",
-   "text": "Attack +1. A foe its holder hits with an ability is Marked. Abilities that hit every foe don't Mark.",
+   "text": "Attack +1, Cast speed medium, HP +1. A foe its holder hits with an ability is Marked. Abilities that hit every foe don't Mark.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37432,6 +38180,14 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "cast_time_reduction",
+     "flat": 15
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -37442,7 +38198,7 @@
   {
    "id": "wick",
    "name": "Wick",
-   "text": "Cast speed medium. When a burning foe falls, all its Burn passes to the foe with the most HP, and its holder gains Heat.",
+   "text": "Cast speed high, Attack +1, MP +1. When a burning foe falls, all its Burn passes to the foe with the most HP, and its holder gains Heat.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -37450,7 +38206,15 @@
    "stats": [
     {
      "stat": "cast_time_reduction",
-     "flat": 15
+     "flat": 30
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "max_mp",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -37461,7 +38225,7 @@
   {
    "id": "lamp_of_vigil",
    "name": "Lamp of vigil",
-   "text": "HP +1. After each won fight, one fallen ally stands up with a quarter of its HP.",
+   "text": "HP +1, Cast speed high, MP +1. After each won fight, one fallen ally stands up with a quarter of its HP.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -37470,6 +38234,14 @@
     {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "cast_time_reduction",
+     "flat": 30
+    },
+    {
+     "stat": "max_mp",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -37480,7 +38252,7 @@
   {
    "id": "shrine_token",
    "name": "Shrine token",
-   "text": "MP regen +2.",
+   "text": "MP regen +1.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37488,7 +38260,7 @@
    "stats": [
     {
      "stat": "mp_regen",
-     "flat": 6000
+     "flat": 3000
     }
    ],
    "rarity": "common"
@@ -37496,7 +38268,23 @@
   {
    "id": "blessed_knot",
    "name": "Blessed knot",
-   "text": "Attack +1, HP +1.",
+   "text": "Attack +1.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "relic",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 1000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "holy_water",
+   "name": "Holy water",
+   "text": "Attack +1, MP regen +1. Each time one of its holder's abilities heals an ally, it also lifts one debuff from that ally.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37507,24 +38295,8 @@
      "flat": 1000
     },
     {
-     "stat": "max_hp",
-     "flat": 500
-    }
-   ],
-   "rarity": "common"
-  },
-  {
-   "id": "holy_water",
-   "name": "Holy water",
-   "text": "Attack +1. Each time one of its holder's abilities heals an ally, it also lifts one debuff from that ally.",
-   "slot": "offhand",
-   "tier": "ordinary",
-   "source": "drop",
-   "offhand": "relic",
-   "stats": [
-    {
-     "stat": "attack",
-     "flat": 1000
+     "stat": "mp_regen",
+     "flat": 3000
     }
    ],
    "statuses": [
@@ -37535,7 +38307,7 @@
   {
    "id": "charnel_icon",
    "name": "Charnel icon",
-   "text": "MP regen +1. Each time a foe falls, the ally with the lowest share of its HP is healed a little.",
+   "text": "MP regen +1, Cast speed medium. Each time a foe falls, the ally with the lowest share of its HP is healed a little.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37544,6 +38316,10 @@
     {
      "stat": "mp_regen",
      "flat": 3000
+    },
+    {
+     "stat": "cast_time_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -37554,7 +38330,7 @@
   {
    "id": "saints_knucklebone",
    "name": "Saint's knucklebone",
-   "text": "MP regen +1. Each time one of its holder's abilities heals an ally, that ally gains a few Might.",
+   "text": "MP regen +1, HP +1, Attack +1. Each time one of its holder's abilities heals an ally, that ally gains a few Might.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37563,6 +38339,14 @@
     {
      "stat": "mp_regen",
      "flat": 3000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -37573,7 +38357,7 @@
   {
    "id": "reliquary_of_mercy",
    "name": "Reliquary of mercy",
-   "text": "Cast speed medium. Its holder's revives cost half their MP and wind up in a moment.",
+   "text": "Cast speed medium, MP regen +1, Attack +1. Its holder's revives cost half their MP and wind up in a moment.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37582,6 +38366,14 @@
     {
      "stat": "cast_time_reduction",
      "flat": 15
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -37592,7 +38384,7 @@
   {
    "id": "phylactery",
    "name": "Phylactery",
-   "text": "HP +1. The part of its holder's heals that would go past full becomes a Shield on the healed ally.",
+   "text": "HP +1, MP regen +2, Attack +1. The part of its holder's heals that would go past full becomes a Shield on the healed ally.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -37601,6 +38393,14 @@
     {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 6000
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -37611,7 +38411,7 @@
   {
    "id": "bones_of_the_returned",
    "name": "Bones of the returned",
-   "text": "MP regen +1. Allies its holder revives come back with all their HP, and with every ability on full cooldown.",
+   "text": "MP regen +2, Attack +1, Cast speed medium. Allies its holder revives come back with all their HP, and with every ability on full cooldown.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -37619,7 +38419,15 @@
    "stats": [
     {
      "stat": "mp_regen",
-     "flat": 3000
+     "flat": 6000
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "cast_time_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -37630,7 +38438,7 @@
   {
    "id": "temple_bell",
    "name": "Temple bell",
-   "text": "Evasion medium, Attack +1.",
+   "text": "Evasion medium.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37639,10 +38447,6 @@
     {
      "stat": "evasion",
      "flat": 20
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
     }
    ],
    "rarity": "common"
@@ -37650,7 +38454,7 @@
   {
    "id": "prayer_bell",
    "name": "Prayer bell",
-   "text": "Attack speed medium, Attack +1.",
+   "text": "Attack speed medium.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37659,10 +38463,6 @@
     {
      "stat": "attack_speed",
      "flat": 15
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
     }
    ],
    "rarity": "common"
@@ -37670,7 +38470,7 @@
   {
    "id": "quickening_chime",
    "name": "Quickening chime",
-   "text": "Evasion medium. Each time its holder dodges a hit, its next basic attack comes a little sooner.",
+   "text": "Evasion medium, Attack speed medium. Each time its holder dodges a hit, its next basic attack comes a little sooner.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37679,6 +38479,10 @@
     {
      "stat": "evasion",
      "flat": 20
+    },
+    {
+     "stat": "attack_speed",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -37689,7 +38493,7 @@
   {
    "id": "waking_bell",
    "name": "Waking bell",
-   "text": "MP regen +1. The first time in a fight that an ally is Silenced, the Silence is lifted at once. A cast it broke is still lost.",
+   "text": "MP regen +1, Attack speed medium. The first time in a fight that an ally is Silenced, the Silence is lifted at once. A cast it broke is still lost.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37698,6 +38502,10 @@
     {
      "stat": "mp_regen",
      "flat": 3000
+    },
+    {
+     "stat": "attack_speed",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -37708,7 +38516,7 @@
   {
    "id": "tempo_bell",
    "name": "Tempo bell",
-   "text": "Attack speed medium. Each time its holder gains Haste, the other ally with the slowest basic attack that isn't Hasted gains it too.",
+   "text": "Attack speed medium, Attack +1, Evasion medium. Each time its holder gains Haste, the other ally with the slowest basic attack that isn't Hasted gains it too.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37717,6 +38525,14 @@
     {
      "stat": "attack_speed",
      "flat": 15
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "evasion",
+     "flat": 20
     }
    ],
    "statuses": [
@@ -37727,7 +38543,7 @@
   {
    "id": "warding_bell",
    "name": "Warding bell",
-   "text": "MP regen +1. Every so often, it lifts one debuff from the ally holding the most.",
+   "text": "MP regen +1, Attack speed medium, Evasion medium. Every so often, it lifts one debuff from the ally holding the most.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37736,6 +38552,14 @@
     {
      "stat": "mp_regen",
      "flat": 3000
+    },
+    {
+     "stat": "attack_speed",
+     "flat": 15
+    },
+    {
+     "stat": "evasion",
+     "flat": 20
     }
    ],
    "statuses": [
@@ -37746,7 +38570,7 @@
   {
    "id": "bell_of_the_hour",
    "name": "Bell of the hour",
-   "text": "Attack speed medium. Every so often, its holder's ability with the longest cooldown left comes a few ticks closer.",
+   "text": "Attack speed high, Attack +1, Evasion medium. Every so often, its holder's ability with the longest cooldown left comes a few ticks closer.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -37754,7 +38578,15 @@
    "stats": [
     {
      "stat": "attack_speed",
-     "flat": 15
+     "flat": 30
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "evasion",
+     "flat": 20
     }
    ],
    "statuses": [
@@ -37765,7 +38597,7 @@
   {
    "id": "funeral_bell",
    "name": "Funeral bell",
-   "text": "Attack +1. When any unit falls, friend or foe, every ally still standing gains Fervor. It rings for its holder's own fall too.",
+   "text": "Attack +1, Attack speed high, Double strike medium. When any unit falls, friend or foe, every ally still standing gains Fervor. It rings for its holder's own fall too.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -37774,6 +38606,14 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "attack_speed",
+     "flat": 30
+    },
+    {
+     "stat": "double_strike",
+     "flat": 25
     }
    ],
    "statuses": [
@@ -37784,7 +38624,7 @@
   {
    "id": "standing_stone",
    "name": "Standing stone",
-   "text": "Defense +2.",
+   "text": "Defense +1.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37792,7 +38632,7 @@
    "stats": [
     {
      "stat": "defense",
-     "flat": 2000
+     "flat": 1000
     }
    ],
    "rarity": "common"
@@ -37800,7 +38640,7 @@
   {
    "id": "hawthorn_fetish",
    "name": "Hawthorn fetish",
-   "text": "Attack +1, Thorns medium.",
+   "text": "Attack +1.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37809,10 +38649,6 @@
     {
      "stat": "attack",
      "flat": 1000
-    },
-    {
-     "stat": "thorns",
-     "flat": 150
     }
    ],
    "rarity": "common"
@@ -37820,7 +38656,7 @@
   {
    "id": "spinebark_pole",
    "name": "Spinebark pole",
-   "text": "Defense +1. At the start of every fight, the ally with the highest Aggro gains Thorns for the fight.",
+   "text": "Defense +1, Thorns medium. At the start of every fight, the ally with the highest Aggro gains Thorns for the fight.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37829,6 +38665,10 @@
     {
      "stat": "defense",
      "flat": 1000
+    },
+    {
+     "stat": "thorns",
+     "flat": 150
     }
    ],
    "statuses": [
@@ -37839,7 +38679,7 @@
   {
    "id": "bear_fetish",
    "name": "Bear fetish",
-   "text": "Attack +1. The first ally to drop below half its HP each fight is Guarded.",
+   "text": "Attack +1, Thorns medium. The first ally to drop below half its HP each fight is Guarded.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37848,6 +38688,10 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "thorns",
+     "flat": 150
     }
    ],
    "statuses": [
@@ -37858,7 +38702,7 @@
   {
    "id": "briar_totem",
    "name": "Briar totem",
-   "text": "Thorns medium. Foes that hit its holder gain a few Bleed.",
+   "text": "Thorns medium, Defense +1, Aggro +1. Foes that hit its holder gain a few Bleed.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37867,6 +38711,14 @@
     {
      "stat": "thorns",
      "flat": 150
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
+    },
+    {
+     "stat": "aggro",
+     "flat": 10
     }
    ],
    "statuses": [
@@ -37877,7 +38729,7 @@
   {
    "id": "stone_totem",
    "name": "Stone totem",
-   "text": "Defense +1. Its holder starts every fight behind a Shield from its Defense.",
+   "text": "Defense +1, Thorns medium, HP +1. Its holder starts every fight behind a Shield from its Defense.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37886,6 +38738,14 @@
     {
      "stat": "defense",
      "flat": 1000
+    },
+    {
+     "stat": "thorns",
+     "flat": 150
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -37896,7 +38756,7 @@
   {
    "id": "earthmother_totem",
    "name": "Earthmother totem",
-   "text": "HP +1. While its holder stands, every Shield an ally gains is a third larger. When an ally's Shield breaks, that ally gains a few Might.",
+   "text": "HP +1, Thorns high, Defense +1. While its holder stands, every Shield an ally gains is a third larger. When an ally's Shield breaks, that ally gains a few Might.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -37905,6 +38765,14 @@
     {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "thorns",
+     "flat": 300
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -37915,7 +38783,7 @@
   {
    "id": "thunderhead_totem",
    "name": "Thunderhead totem",
-   "text": "Aggro +1. Each hit its holder takes adds a Shock to every foe.",
+   "text": "Aggro +1, Thorns high, HP +1. Each hit its holder takes adds a Shock to every foe.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -37924,6 +38792,14 @@
     {
      "stat": "aggro",
      "flat": 10
+    },
+    {
+     "stat": "thorns",
+     "flat": 300
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -37934,7 +38810,7 @@
   {
    "id": "red_tincture",
    "name": "Red tincture",
-   "text": "Lifesteal medium, Attack +1.",
+   "text": "Lifesteal medium.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37943,10 +38819,6 @@
     {
      "stat": "lifesteal",
      "flat": 10
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
     }
    ],
    "rarity": "common"
@@ -37954,7 +38826,23 @@
   {
    "id": "hemlock_phial",
    "name": "Hemlock phial",
-   "text": "Crit +1, Attack +1.",
+   "text": "Crit chance +1.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "vial",
+   "stats": [
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "clotting_salve",
+   "name": "Clotting salve",
+   "text": "Crit chance +1, Lifesteal medium. Its holder's crits heal it for a fifth of the damage they deal.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -37965,24 +38853,8 @@
      "flat": 3
     },
     {
-     "stat": "attack",
-     "flat": 1000
-    }
-   ],
-   "rarity": "common"
-  },
-  {
-   "id": "clotting_salve",
-   "name": "Clotting salve",
-   "text": "Crit +1. Its holder's crits heal it for a fifth of the damage they deal.",
-   "slot": "offhand",
-   "tier": "ordinary",
-   "source": "drop",
-   "offhand": "vial",
-   "stats": [
-    {
-     "stat": "crit_chance",
-     "flat": 3
+     "stat": "lifesteal",
+     "flat": 10
     }
    ],
    "statuses": [
@@ -37993,7 +38865,7 @@
   {
    "id": "crimson_dregs",
    "name": "Crimson dregs",
-   "text": "Attack +1. Its holder's hits on a bleeding foe heal it for a share of their damage.",
+   "text": "Attack +1, Lifesteal medium. Its holder's hits on a bleeding foe heal it for a share of their damage.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -38002,6 +38874,10 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "lifesteal",
+     "flat": 10
     }
    ],
    "statuses": [
@@ -38012,7 +38888,7 @@
   {
    "id": "blood_vial",
    "name": "Blood vial",
-   "text": "HP +1. Its holder's abilities cost half their MP, plus HP equal to their full cost. The HP price never takes it below 1 HP.",
+   "text": "HP +1, Lifesteal medium, Attack +1. Its holder's abilities cost half their MP, plus HP equal to their full cost. The HP price never takes it below 1 HP.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -38021,6 +38897,14 @@
     {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "lifesteal",
+     "flat": 10
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -38031,7 +38915,7 @@
   {
    "id": "venom_vial",
    "name": "Venom vial",
-   "text": "Crit damage medium. Its holder's crits add several Bleed, and it crits more often on a bleeding foe.",
+   "text": "Crit damage medium, Lifesteal medium, Crit chance +1. Its holder's crits add several Bleed, and it crits more often on a bleeding foe.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -38040,6 +38924,14 @@
     {
      "stat": "crit_multiplier",
      "flat": 25
+    },
+    {
+     "stat": "lifesteal",
+     "flat": 10
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "statuses": [
@@ -38050,7 +38942,7 @@
   {
    "id": "vial_of_the_last_breath",
    "name": "Vial of the last breath",
-   "text": "HP +1. Once a fight, when its holder falls, it stands up a few ticks later with a third of its HP.",
+   "text": "HP +1, Lifesteal high, Attack +1. Once a fight, when its holder falls, it stands up a few ticks later with a third of its HP.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -38059,6 +38951,14 @@
     {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "lifesteal",
+     "flat": 20
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -38069,7 +38969,7 @@
   {
    "id": "bloodlust_draught",
    "name": "Bloodlust draught",
-   "text": "Lifesteal medium. Its holder starts every fight at half its HP (it pays), and its Lifesteal is doubled until it's full.",
+   "text": "Lifesteal high, Crit chance +1, Crit damage medium. Its holder starts every fight at half its HP (it pays), and its Lifesteal is doubled until it's full.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -38077,7 +38977,15 @@
    "stats": [
     {
      "stat": "lifesteal",
-     "flat": 10
+     "flat": 20
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    },
+    {
+     "stat": "crit_multiplier",
+     "flat": 25
     }
    ],
    "statuses": [
@@ -38088,7 +38996,7 @@
   {
    "id": "night_mask",
    "name": "Night mask",
-   "text": "Siphon medium, Attack +1.",
+   "text": "Siphon medium.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -38097,10 +39005,6 @@
     {
      "stat": "siphon",
      "flat": 10
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
     }
    ],
    "rarity": "common"
@@ -38108,7 +39012,7 @@
   {
    "id": "carved_effigy",
    "name": "Carved effigy",
-   "text": "HP +2.",
+   "text": "HP +1.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -38116,7 +39020,7 @@
    "stats": [
     {
      "stat": "max_hp",
-     "flat": 1000
+     "flat": 500
     }
    ],
    "rarity": "common"
@@ -38124,7 +39028,7 @@
   {
    "id": "carrion_idol",
    "name": "Carrion idol",
-   "text": "Attack +1. When its holder's hit fells a foe, it regains MP.",
+   "text": "Attack +1, Siphon medium. When its holder's hit fells a foe, it regains MP.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -38133,6 +39037,10 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "siphon",
+     "flat": 10
     }
    ],
    "statuses": [
@@ -38143,7 +39051,7 @@
   {
    "id": "fanged_idol",
    "name": "Fanged idol",
-   "text": "Lifesteal medium. Its holder's crits Rot their target.",
+   "text": "Lifesteal medium, Siphon medium. Its holder's crits Rot their target.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -38151,6 +39059,10 @@
    "stats": [
     {
      "stat": "lifesteal",
+     "flat": 10
+    },
+    {
+     "stat": "siphon",
      "flat": 10
     }
    ],
@@ -38162,7 +39074,7 @@
   {
    "id": "withering_idol",
    "name": "Withering idol",
-   "text": "Attack +1. Its holder's hits on a Weakened foe deal a third more.",
+   "text": "Attack +1, Siphon medium, HP +1. Its holder's hits on a Weakened foe deal a third more.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -38171,6 +39083,14 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "siphon",
+     "flat": 10
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -38181,7 +39101,7 @@
   {
    "id": "leech_idol",
    "name": "Leech idol",
-   "text": "Siphon medium. MP it drains past its holder's full pool goes to the ally with the least MP.",
+   "text": "Siphon medium, HP +1, MP +1. MP it drains past its holder's full pool goes to the ally with the least MP.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -38190,6 +39110,14 @@
     {
      "stat": "siphon",
      "flat": 10
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    },
+    {
+     "stat": "max_mp",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -38200,7 +39128,7 @@
   {
    "id": "idol_of_binding",
    "name": "Idol of binding",
-   "text": "Siphon medium. Foes its holder Weakens are also Slowed, and its hits on a foe that's both deal double.",
+   "text": "Siphon high, Attack +1, HP +1. Foes its holder Weakens are also Slowed, and its hits on a foe that's both deal double.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -38208,7 +39136,15 @@
    "stats": [
     {
      "stat": "siphon",
-     "flat": 10
+     "flat": 20
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -38219,7 +39155,7 @@
   {
    "id": "idol_of_the_hungry_dark",
    "name": "Idol of the hungry dark",
-   "text": "MP +1. Every so often, it takes one buff from a foe and gives it to its holder.",
+   "text": "MP +1, Siphon high, HP +1. Every so often, it takes one buff from a foe and gives it to its holder.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -38228,6 +39164,14 @@
     {
      "stat": "max_mp",
      "flat": 1000
+    },
+    {
+     "stat": "siphon",
+     "flat": 20
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -38238,7 +39182,7 @@
   {
    "id": "glass_orb",
    "name": "Glass orb",
-   "text": "MP +2.",
+   "text": "MP +1.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -38246,7 +39190,7 @@
    "stats": [
     {
      "stat": "max_mp",
-     "flat": 2000
+     "flat": 1000
     }
    ],
    "rarity": "common"
@@ -38254,7 +39198,7 @@
   {
    "id": "ember_orb",
    "name": "Ember orb",
-   "text": "Attack +1, Cast speed medium.",
+   "text": "Attack +1.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -38263,10 +39207,6 @@
     {
      "stat": "attack",
      "flat": 1000
-    },
-    {
-     "stat": "cast_time_reduction",
-     "flat": 15
     }
    ],
    "rarity": "common"
@@ -38274,7 +39214,7 @@
   {
    "id": "scrying_orb",
    "name": "Scrying orb",
-   "text": "MP +1. At the start of every fight, its holder's ability nearest to ready comes at once.",
+   "text": "MP +1, Attack +1. At the start of every fight, its holder's ability nearest to ready comes at once.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -38282,6 +39222,10 @@
    "stats": [
     {
      "stat": "max_mp",
+     "flat": 1000
+    },
+    {
+     "stat": "attack",
      "flat": 1000
     }
    ],
@@ -38293,7 +39237,7 @@
   {
    "id": "mana_pearl",
    "name": "Mana pearl",
-   "text": "MP regen +1. Each time a foe falls, its holder regains 8% of its max MP.",
+   "text": "MP regen +1, MP +1. Each time a foe falls, its holder regains 8% of its max MP.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -38302,6 +39246,10 @@
     {
      "stat": "mp_regen",
      "flat": 3000
+    },
+    {
+     "stat": "max_mp",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -38312,7 +39260,7 @@
   {
    "id": "orb_of_the_long_winter",
    "name": "Orb of the long winter",
-   "text": "Cooldown medium. When a foe's Chill shatters, its holder's ability with the longest cooldown left comes 8 ticks closer.",
+   "text": "Cooldown medium, MP +1, Attack +1. When a foe's Chill shatters, its holder's ability with the longest cooldown left comes 8 ticks closer.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -38321,6 +39269,14 @@
     {
      "stat": "cooldown_reduction",
      "flat": 15
+    },
+    {
+     "stat": "max_mp",
+     "flat": 1000
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -38331,7 +39287,7 @@
   {
    "id": "smouldering_orb",
    "name": "Smouldering orb",
-   "text": "Attack +1. When a burning foe falls, every other foe gains a few Burn (from its holder's Attack).",
+   "text": "Attack +1, MP +1, MP regen +1. When a burning foe falls, every other foe gains a few Burn (from its holder's Attack).",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -38340,6 +39296,14 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "max_mp",
+     "flat": 1000
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
     }
    ],
    "statuses": [
@@ -38350,7 +39314,7 @@
   {
    "id": "the_deep_well",
    "name": "The deep well",
-   "text": "MP +1. While its holder holds Clarity, its abilities cost no MP.",
+   "text": "MP +2, Attack +1, MP regen +1. While its holder holds Clarity, its abilities cost no MP.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -38358,7 +39322,15 @@
    "stats": [
     {
      "stat": "max_mp",
+     "flat": 2000
+    },
+    {
+     "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
     }
    ],
    "statuses": [
@@ -38369,7 +39341,7 @@
   {
    "id": "orb_of_the_second_sun",
    "name": "Orb of the second sun",
-   "text": "Cast speed medium. The first ability its holder casts each fight is cast twice; the second cast is free.",
+   "text": "Cast speed medium, MP +2, MP regen +1. The first ability its holder casts each fight is cast twice; the second cast is free.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -38378,6 +39350,14 @@
     {
      "stat": "cast_time_reduction",
      "flat": 15
+    },
+    {
+     "stat": "max_mp",
+     "flat": 2000
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
     }
    ],
    "statuses": [
@@ -38388,7 +39368,7 @@
   {
    "id": "wolf_pelt",
    "name": "Wolf pelt",
-   "text": "Crit damage medium, Crit chance +1.",
+   "text": "Crit damage medium.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -38397,10 +39377,6 @@
     {
      "stat": "crit_multiplier",
      "flat": 25
-    },
-    {
-     "stat": "crit_chance",
-     "flat": 3
     }
    ],
    "rarity": "common"
@@ -38408,7 +39384,7 @@
   {
    "id": "geode",
    "name": "Geode",
-   "text": "Defense +1, Attack +1.",
+   "text": "Defense +1.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -38417,10 +39393,6 @@
     {
      "stat": "defense",
      "flat": 1000
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
     }
    ],
    "rarity": "common"
@@ -38428,7 +39400,7 @@
   {
    "id": "hunters_skull",
    "name": "Hunter's skull",
-   "text": "Crit chance +1. Each killing blow its holder lands adds a Heat (+3% damage a stack, up to 15) for the rest of the fight.",
+   "text": "Crit chance +1, Crit damage medium. Each killing blow its holder lands adds a Heat (+3% damage a stack, up to 15) for the rest of the fight.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -38437,6 +39409,10 @@
     {
      "stat": "crit_chance",
      "flat": 3
+    },
+    {
+     "stat": "crit_multiplier",
+     "flat": 25
     }
    ],
    "statuses": [
@@ -38447,7 +39423,7 @@
   {
    "id": "eagle_feather",
    "name": "Eagle feather",
-   "text": "Accuracy medium. Its holder's crits Slow their target.",
+   "text": "Accuracy medium, Crit damage medium. Its holder's crits Slow their target.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -38456,6 +39432,10 @@
     {
      "stat": "accuracy",
      "flat": 20
+    },
+    {
+     "stat": "crit_multiplier",
+     "flat": 25
     }
    ],
    "statuses": [
@@ -38466,7 +39446,7 @@
   {
    "id": "ogres_tusk",
    "name": "Ogre's tusk",
-   "text": "Crit damage medium. Its holder's hits on a foe above half its HP deal a third more.",
+   "text": "Crit damage medium, Crit chance +1, Attack +1. Its holder's hits on a foe above half its HP deal a third more.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -38475,6 +39455,14 @@
     {
      "stat": "crit_multiplier",
      "flat": 25
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -38485,7 +39473,7 @@
   {
    "id": "giants_knucklebone",
    "name": "Giant's knucklebone",
-   "text": "Defense +1. Its holder's crits Guard it.",
+   "text": "Defense +1, Crit damage medium, Attack +1. Its holder's crits Guard it.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -38493,6 +39481,14 @@
    "stats": [
     {
      "stat": "defense",
+     "flat": 1000
+    },
+    {
+     "stat": "crit_multiplier",
+     "flat": 25
+    },
+    {
+     "stat": "attack",
      "flat": 1000
     }
    ],
@@ -38504,7 +39500,7 @@
   {
    "id": "dragons_tooth",
    "name": "Dragon's tooth",
-   "text": "Crit damage medium. Its holder's crits strike again for a third of their damage, past Defense.",
+   "text": "Crit damage high, Crit chance +1, Attack +1. Its holder's crits strike again for a third of their damage, past Defense.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -38512,7 +39508,15 @@
    "stats": [
     {
      "stat": "crit_multiplier",
-     "flat": 25
+     "flat": 50
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -38523,7 +39527,7 @@
   {
    "id": "the_kings_head",
    "name": "The king's head",
-   "text": "Crit chance +1. When its holder lands a killing blow, every ally's crit chance is doubled for a while.",
+   "text": "Crit chance +1, Crit damage high, Accuracy medium. When its holder lands a killing blow, every ally's crit chance is doubled for a while.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -38532,6 +39536,14 @@
     {
      "stat": "crit_chance",
      "flat": 3
+    },
+    {
+     "stat": "crit_multiplier",
+     "flat": 50
+    },
+    {
+     "stat": "accuracy",
+     "flat": 20
     }
    ],
    "statuses": [
@@ -38542,7 +39554,7 @@
   {
    "id": "travellers_cloak",
    "name": "Traveller's cloak",
-   "text": "Evasion medium, Attack +1.",
+   "text": "Evasion medium.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -38551,10 +39563,6 @@
     {
      "stat": "evasion",
      "flat": 20
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
     }
    ],
    "rarity": "common"
@@ -38562,16 +39570,12 @@
   {
    "id": "swan_feather_cloak",
    "name": "Swan-feather cloak",
-   "text": "Evasion medium, Defense +1.",
+   "text": "Defense +1.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
    "offhand": "cloak",
    "stats": [
-    {
-     "stat": "evasion",
-     "flat": 20
-    },
     {
      "stat": "defense",
      "flat": 1000
@@ -38582,7 +39586,7 @@
   {
    "id": "hooded_cloak",
    "name": "Hooded cloak",
-   "text": "Attack speed medium. Each time its holder dodges a hit, it gains a few Might (from Attack).",
+   "text": "Attack speed medium, Evasion medium. Each time its holder dodges a hit, it gains a few Might (from Attack).",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -38591,6 +39595,10 @@
     {
      "stat": "attack_speed",
      "flat": 15
+    },
+    {
+     "stat": "evasion",
+     "flat": 20
     }
    ],
    "statuses": [
@@ -38601,7 +39609,7 @@
   {
    "id": "feathered_cloak",
    "name": "Feathered cloak",
-   "text": "Evasion medium. The first time each fight its holder drops below half its HP, it's Hidden.",
+   "text": "Evasion medium, Crit chance +1. The first time each fight its holder drops below half its HP, it's Hidden.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -38610,6 +39618,10 @@
     {
      "stat": "evasion",
      "flat": 20
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "statuses": [
@@ -38620,7 +39632,7 @@
   {
    "id": "dancers_cloak",
    "name": "Dancer's cloak",
-   "text": "Attack +1. Each time its holder dodges a hit, its ability nearest to ready comes 3 ticks closer.",
+   "text": "Attack +1, Evasion medium, Crit chance +1. Each time its holder dodges a hit, its ability nearest to ready comes 3 ticks closer.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -38629,6 +39641,14 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "evasion",
+     "flat": 20
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "statuses": [
@@ -38639,7 +39659,7 @@
   {
    "id": "cloak_of_leaves",
    "name": "Cloak of leaves",
-   "text": "Evasion medium. While its holder is above three quarters of its HP, its Evasion is 15 higher.",
+   "text": "Evasion medium, Crit chance +1, Attack speed medium. While its holder is above three quarters of its HP, its Evasion is 15 higher.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -38648,6 +39668,14 @@
     {
      "stat": "evasion",
      "flat": 20
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    },
+    {
+     "stat": "attack_speed",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -38658,7 +39686,7 @@
   {
    "id": "swans_grace",
    "name": "Swan's grace",
-   "text": "Evasion medium. Once a fight, the blow that would knock its holder out leaves it at 1 HP and Hidden.",
+   "text": "Evasion high, Attack +1, Crit chance +1. Once a fight, the blow that would knock its holder out leaves it at 1 HP and Hidden.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -38666,7 +39694,15 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 35
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "statuses": [
@@ -38677,7 +39713,7 @@
   {
    "id": "tempest_cloak",
    "name": "Tempest cloak",
-   "text": "Attack speed medium. Each time its holder dodges a hit, its next basic attack comes at once and strikes twice.",
+   "text": "Attack speed medium, Evasion high, Crit chance +1. Each time its holder dodges a hit, its next basic attack comes at once and strikes twice.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -38686,6 +39722,14 @@
     {
      "stat": "attack_speed",
      "flat": 15
+    },
+    {
+     "stat": "evasion",
+     "flat": 35
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "statuses": [

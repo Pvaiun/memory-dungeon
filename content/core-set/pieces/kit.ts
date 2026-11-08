@@ -1,5 +1,5 @@
 /**
- * The helpers every content file writes its items with, so the 240 pieces, 32 formations, 64 upgrades
+ * The helpers every content file writes its items with, so the 272 pieces, 32 formations, 64 upgrades
  * and 16 mythics read alike. Numbers come from scale.ts's words; nothing here decides a value.
  */
 import type { GearT, NumT, StatusT, WeaponT } from "../../../src/schema.js";
@@ -35,14 +35,15 @@ export const budgetOf = (kind: string, rarity: Rarity, trade?: Trade): number =>
   rarity === "mythic" ? 0 : Math.max(0, KIND_BUDGET[KIND_WORDS[kind].budget][rarity] + (trade === "heavy" ? -1 : trade === "light" ? 1 : 0));
 /**
  * How many steps a piece's stats are: an amount stat's steps (HP's half points, Aggro's tens, MP regen's own), Crit chance's
- * table, a special stat at medium one and at high two. A stat that shapes a piece (the Worldbreaker's slow swing) or a price
- * (the Phoenix ember's HP) counts none; Aggro down counts, since the casters want it.
+ * table, a special stat at its medium word one and at its high word two. A stat that shapes a piece (the Worldbreaker's slow
+ * swing, the Hummingbird charm's fast one: a special at any other value) or a price (the Phoenix ember's HP) counts none; Aggro
+ * down counts, since the casters want it.
  */
 export function stepsOf(stats: readonly Change[] = []): number {
   let n = 0;
   for (const c of stats) {
     if (c.stat === "crit_chance") n += c.flat >= crit(2) ? 2 : c.flat > 0 ? 1 : 0;
-    else if (c.stat in SPECIAL_LEVELS) n += c.flat >= SPECIAL_LEVELS[c.stat].high ? 2 : c.flat >= SPECIAL_LEVELS[c.stat].medium ? 1 : 0;
+    else if (c.stat in SPECIAL_LEVELS) n += c.flat === SPECIAL_LEVELS[c.stat].high ? 2 : c.flat === SPECIAL_LEVELS[c.stat].medium ? 1 : 0;
     else if (c.stat === "aggro") n += Math.round(Math.abs(c.flat) / stepFor(c.stat)); // Aggro down is a step the casters want.
     else if (["max_hp", "max_mp", "mp_regen", "attack", "defense"].includes(c.stat) && c.flat > 0) n += Math.round(c.flat / stepFor(c.stat));
   }
@@ -60,10 +61,27 @@ export type BuildTag = { build: Build; rung?: 1 | 2 | 3; worth: 1 | 2 | 3 };
 export type Builds = Record<string, BuildTag[]>;
 
 export type Rarity = "common" | "uncommon" | "rare" | "legendary" | "mythic";
+/** A stat step in the card's words: "Attack +1", "HP +1", "Crit chance +2", "Evasion medium", "Aggro −1". A stat that shapes a piece (a slow swing) has no word: its effect says it. A price (HP −1) has. */
+export function statWord(c: Change): string | null {
+  if (c.stat === "crit_chance") return c.flat > 0 ? `Crit chance +${c.flat >= crit(2) ? 2 : 1}` : null;
+  if (c.stat in SPECIAL_LEVELS) return c.flat === SPECIAL_LEVELS[c.stat].high ? `${SPECIAL_NAME[c.stat]} high` : c.flat === SPECIAL_LEVELS[c.stat].medium ? `${SPECIAL_NAME[c.stat]} medium` : null;
+  if (["max_hp", "max_mp", "mp_regen", "attack", "defense", "aggro"].includes(c.stat)) {
+    const n = Math.round(c.flat / stepFor(c.stat));
+    return n ? `${STAT_NAME[c.stat]} ${n > 0 ? "+" : "−"}${Math.abs(n)}` : null;
+  }
+  return null;
+}
+const STAT_NAME: Record<string, string> = { max_hp: "HP", max_mp: "MP", mp_regen: "MP regen", attack: "Attack", defense: "Defense", aggro: "Aggro" };
+const SPECIAL_NAME: Record<string, string> = { evasion: "Evasion", accuracy: "Accuracy", crit_multiplier: "Crit damage", double_strike: "Double strike", thorns: "Thorns", lifesteal: "Lifesteal", siphon: "Siphon", attack_speed: "Attack speed", cooldown_reduction: "Cooldown", cast_time_reduction: "Cast speed" };
+/** A piece's stats as its card's first sentence: "Attack +1, Evasion medium." Empty with no stats worth a word. */
+export const statWords = (stats: readonly Change[] = []): string => { const w = stats.map(statWord).filter((x): x is string => !!x); return w.length ? `${w.join(", ")}.` : ""; };
+
 type PieceOpts = {
   name: string;
-  /** The card's effect, as the player reads it. Not the kind and not the wearers: the interface shows both. */
-  text: string;
+  /** The card's effect, as the player reads it: what the piece does beyond its stats, or nothing for a common. The card is the stats' words, then this. */
+  effect?: string;
+  /** The whole card, in place of the stats' words and `effect` (a mythic's, or a piece whose words don't start with its stats). */
+  text?: string;
   slot: GearT["slot"];
   rarity: Rarity;
   /** A weapon's kind, an armor's type or an offhand's kind. A mythic weapon may leave it out and state its own speed, type and hands. */
@@ -81,8 +99,11 @@ type PieceOpts = {
 };
 /** One piece of gear, fixed: its rarity is its own (no affixes at any rarity). */
 export function piece(o: PieceOpts): GearT {
+  const trade = o.trade === "heavy" ? "A heavier swing." : o.trade === "light" ? "A lighter swing." : "";
+  const text = o.text ?? [trade, statWords(o.stats), o.effect ?? ""].filter(Boolean).join(" ");
+  if (!text) throw new Error(`${o.name}: a card with nothing on it`);
   const g: GearT = {
-    id: idOf(o.name), name: o.name, text: o.text, slot: o.slot,
+    id: idOf(o.name), name: o.name, text, slot: o.slot,
     // The validator's tiers: an ordinary piece drops, a powerful one (legendary, mythic) is an unlock. Neither changes play in the rogue.
     ...(o.rarity === "legendary" || o.rarity === "mythic" ? { tier: "powerful" as const, source: "unlock" as const } : { tier: "ordinary" as const, source: "drop" as const }),
     ...(o.slot === "armor" && o.kind ? { armor: o.kind } : {}),
@@ -105,6 +126,11 @@ export function piece(o: PieceOpts): GearT {
     const want = KIND_BUDGET.standard[o.rarity], have = stepsOf(o.stats);
     const exact = o.slot === "offhand" || o.rarity === "common" || o.rarity === "uncommon";
     if (exact ? have !== want : have < want) throw new Error(`${o.name}: a ${o.rarity} ${o.slot} carries ${exact ? "" : "at least "}${want} stat steps, not ${have}`);
+  }
+  // A special stat on gear is medium, or high on a legendary (the loot's rule).
+  if (o.rarity !== "legendary" && o.rarity !== "mythic") {
+    const high = o.stats?.find((c) => c.stat in SPECIAL_LEVELS && c.flat === SPECIAL_LEVELS[c.stat].high);
+    if (high) throw new Error(`${o.name}: a ${o.rarity} with ${SPECIAL_NAME[high.stat]} high; high is a legendary's`);
   }
   (g as GearT & { rarity?: Rarity }).rarity = o.rarity;
   return g;

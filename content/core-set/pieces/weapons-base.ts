@@ -23,10 +23,9 @@ const atStart = (...effects: EffectT[]) => ({ on: { event: "fight_start" as cons
 /** A share of a stat read off the holder. */
 const ofHolder = (ratio: number, stat: string): NumT => ({ scale: [{ ratio, stat, of: "holder" }] });
 
-/** One weapon of a kind, through `piece()`. A powerful piece says source unlock, as the validator asks. */
-function weapon(name: string, kind: string, rarity: Rarity, text: string, rest: { stats?: Change[]; statuses?: string[]; trade?: Trade; weapon?: GearT["weapon"]; note?: string } = {}): GearT {
-  const g = piece({ name, kind, rarity, text, slot: "weapon", ...(rest.stats ? { stats: rest.stats } : {}), ...(rest.statuses ? { statuses: rest.statuses } : {}), ...(rest.trade ? { trade: rest.trade } : {}), ...(rest.weapon ? { weapon: rest.weapon } : {}), ...(rest.note ? { note: rest.note } : {}) });
-  return g.tier === "powerful" ? { ...g, source: "unlock" } : g;
+/** One weapon of a kind, through `piece()`: its effect (the card after the stats' words), stats, statuses and the rest. */
+function weapon(name: string, kind: string, rarity: Rarity, rest: { effect?: string; stats?: Change[]; statuses?: string[]; trade?: Trade; weapon?: GearT["weapon"]; note?: string }): GearT {
+  return piece({ name, kind, rarity, slot: "weapon", ...rest });
 }
 
 const lowestShareAlly: TargetRuleT = { side: "allies", pick: "lowest", by: "hp_share" };
@@ -179,68 +178,62 @@ function cistern(): EffectT[] {
 
 export const gear: GearT[] = [
   // Wand (Bard, Hexer, Pyromancer): fast, one hand; light, base-heavy, rich. Cooldown; Cast speed, MP regen, Attack, Attack speed.
-  weapon("Whipcrack wand", "wand", "common", "Cooldown medium, Attack +1, Attack speed medium.", { stats: [sp("cooldown", "medium"), st("attack", 1), sp("attack_speed", "medium")] }),
-  weapon("Birch wand", "wand", "common", "Attack +1, MP regen +1, Cast speed medium.", { stats: [st("attack", 1), st("mp_regen", 1), sp("cast_speed", "medium")] }),
-  weapon("Jolt wand", "wand", "uncommon", "Attack +1, Cooldown medium. The wearer's basic attacks add one Shock.", { stats: [st("attack", 1), sp("cooldown", "medium")], statuses: ["jolt_wand"] }),
-  weapon("Glint wand", "wand", "uncommon", "Cast speed medium, MP regen +1. When one of the wearer's hits crits, the wearer regains 6% of its max MP.", { stats: [sp("cast_speed", "medium"), st("mp_regen", 1)], statuses: ["glint_wand"] }),
-  weapon("Spark wand", "wand", "rare", "Attack +1, Attack speed medium. The wearer's basic attacks add a few Burn.", { stats: [st("attack", 1), sp("attack_speed", "medium")], statuses: ["spark_wand"] }),
-  weapon("Chain wand", "wand", "rare", "Cooldown medium, Attack +1. The wearer's basic attacks also strike two other foes, each for half.", { stats: [sp("cooldown", "medium"), st("attack", 1)], statuses: ["chain_wand"] }),
-  weapon("Flicker wand", "wand", "legendary", "Double strike high. The wearer's extra strikes add a few Shock.", { stats: [sp("double_strike", "high")], statuses: ["flicker_wand"] }),
-  weapon("Wildmagic wand", "wand", "legendary", "Cooldown medium, Cast speed medium. Each of the wearer's basic attacks adds a few stacks of a random one of Burn, Chill, Shock, Bleed and Sunder.", { stats: [sp("cooldown", "medium"), sp("cast_speed", "medium")], statuses: ["wildmagic_wand"] }),
+  weapon("Whipcrack wand", "wand", "common", { stats: [sp("cooldown", "medium"), st("attack", 1)] }),
+  weapon("Birch wand", "wand", "common", { stats: [st("attack", 1), st("mp_regen", 1)] }),
+  weapon("Jolt wand", "wand", "uncommon", { effect: "The wearer's basic attacks add one Shock.", stats: [st("attack", 1), sp("cooldown", "medium"), sp("cast_speed", "medium")], statuses: ["jolt_wand"] }),
+  weapon("Glint wand", "wand", "uncommon", { effect: "When one of the wearer's hits crits, the wearer regains 6% of its max MP.", stats: [sp("cast_speed", "medium"), st("mp_regen", 1), sp("cooldown", "medium")], statuses: ["glint_wand"] }),
+  weapon("Spark wand", "wand", "rare", { effect: "The wearer's basic attacks add a few Burn.", stats: [st("attack", 1), sp("attack_speed", "medium"), sp("cooldown", "medium"), sp("cast_speed", "medium")], statuses: ["spark_wand"] }),
+  weapon("Chain wand", "wand", "rare", { effect: "The wearer's basic attacks also strike two other foes, each for half.", stats: [sp("cooldown", "medium"), st("attack", 1), st("mp_regen", 1), sp("cast_speed", "medium")], statuses: ["chain_wand"] }),
+  weapon("Flicker wand", "wand", "legendary", { effect: "The wearer's extra strikes add a few Shock.", stats: [sp("double_strike", "high"), sp("cooldown", "high"), sp("cast_speed", "medium")], statuses: ["flicker_wand"] }),
+  weapon("Wildmagic wand", "wand", "legendary", { effect: "Each of the wearer's basic attacks adds a few stacks of a random one of Burn, Chill, Shock, Bleed and Sunder.", stats: [sp("cooldown", "high"), sp("cast_speed", "medium"), st("mp_regen", 2)], statuses: ["wildmagic_wand"] }),
 
   // Rune sword (Frostweaver, Stormcaller): slow, one hand; full, base-heavy, standard. MP regen; Cooldown, MP, HP, Siphon.
-  weapon("Runed saber", "rune_sword", "common", "MP regen +1, HP +1.", { stats: [st("mp_regen", 1), st("max_hp", 1)] }),
-  weapon("Cairn blade", "rune_sword", "common", "MP +1, Cooldown medium.", { stats: [st("max_mp", 1), sp("cooldown", "medium")] }),
-  weapon("Sleet blade", "rune_sword", "uncommon", "MP regen +1. The wearer's basic attacks add one Chill.", { stats: [st("mp_regen", 1)], statuses: ["sleet_blade"] }),
-  weapon("Sigil blade", "rune_sword", "uncommon", "HP +1. At the start of each fight, the wearer gains a Shield of a fifth of its max MP.", { stats: [st("max_hp", 1)], statuses: ["sigil_blade"] }),
-  weapon("Spellbinder", "rune_sword", "rare", "MP regen +1. After each ability the wearer casts, its next basic attack deals double damage.", { stats: [st("mp_regen", 1)], statuses: ["spellbinder"] }),
-  weapon("Conductor's blade", "rune_sword", "rare", "Cooldown medium. When one of the wearer's abilities hits several foes at once, each of those hits lands again on its foe for a quarter of the damage.",
-    { stats: [sp("cooldown", "medium")], statuses: ["conductors_blade"], note: "Echoes `area` hits (a damage effect aimed at two or more units): Chain lightning's bounces, not its first strike; Blizzard throughout." }),
-  weapon("Winter's chain", "rune_sword", "legendary", "MP regen +1. When a foe's Chill shatters, every other foe gains a few Chill.", { stats: [st("mp_regen", 1)], statuses: ["winters_chain"] }),
+  weapon("Runed saber", "rune_sword", "common", { stats: [st("mp_regen", 1)] }),
+  weapon("Cairn blade", "rune_sword", "common", { stats: [st("max_mp", 1)] }),
+  weapon("Sleet blade", "rune_sword", "uncommon", { effect: "The wearer's basic attacks add one Chill.", stats: [st("mp_regen", 1), sp("cooldown", "medium")], statuses: ["sleet_blade"] }),
+  weapon("Sigil blade", "rune_sword", "uncommon", { effect: "At the start of each fight, the wearer gains a Shield of a fifth of its max MP.", stats: [st("max_hp", 1), st("mp_regen", 1)], statuses: ["sigil_blade"] }),
+  weapon("Spellbinder", "rune_sword", "rare", { effect: "After each ability the wearer casts, its next basic attack deals double damage.", stats: [st("mp_regen", 1), sp("cooldown", "medium"), st("max_mp", 1)], statuses: ["spellbinder"] }),
+  weapon("Conductor's blade", "rune_sword", "rare", { effect: "When one of the wearer's abilities hits several foes at once, each of those hits lands again on its foe for a quarter of the damage.", stats: [sp("cooldown", "medium"), st("mp_regen", 1), st("max_hp", 1)], statuses: ["conductors_blade"], note: "Echoes `area` hits (a damage effect aimed at two or more units): Chain lightning's bounces, not its first strike; Blizzard throughout." }),
+  weapon("Winter's chain", "rune_sword", "legendary", { effect: "When a foe's Chill shatters, every other foe gains a few Chill.", stats: [st("mp_regen", 2), sp("cooldown", "medium"), st("max_mp", 1)], statuses: ["winters_chain"] }),
   weapon("Brimming blade", "rune_sword", "legendary",
-    "MP +1. Each ability the wearer casts gives the ally with the least MP a tenth of that ability's cost in MP. While the wearer has more than half its MP, its abilities cost a quarter less.",
-    { stats: [st("max_mp", 1)], statuses: ["brimming_blade"], note: "The gift is a tenth of the MP the cast paid (action_resolve's amount), so 7.5% of the listed cost while the quarter off holds." }),
+    { effect: "Each ability the wearer casts gives the ally with the least MP a tenth of that ability's cost in MP. While the wearer has more than half its MP, its abilities cost a quarter less.", stats: [st("max_mp", 1), st("mp_regen", 2), st("max_hp", 1)], statuses: ["brimming_blade"], note: "The gift is a tenth of the MP the cast paid (action_resolve's amount), so 7.5% of the listed cost while the quarter off holds." }),
 
   // Hammer (Knight, Bramble knight, Geomancer): slow, one hand; heavy, base-heavy, lean. Defense; HP, Aggro, Crit damage, Thorns.
   // The wall's weapon: big slow blows that don't need the Attack the walls lack, and little carried.
-  weapon("War hammer", "hammer", "common", "Defense +1.", { stats: [st("defense", 1)] }),
-  weapon("Horseman's hammer", "hammer", "common", "A lighter hammer. HP +1, Aggro +1.", { trade: "light", stats: [st("max_hp", 1), st("aggro", 1)] }),
-  weapon("Warden's hammer", "hammer", "uncommon", "Defense +1. The wearer's basic attacks deal extra damage from its Defense.", {
+  weapon("War hammer", "hammer", "common", { stats: [st("defense", 1)] }),
+  weapon("Horseman's hammer", "hammer", "common", { trade: "light", stats: [st("max_hp", 1), st("aggro", 1)] }),
+  weapon("Warden's hammer", "hammer", "uncommon", { effect: "The wearer's basic attacks deal extra damage from its Defense.",
     stats: [st("defense", 1)], weapon: { amount: { ...(weaponHit("hammer") as Exclude<NumT, number>), scale: [...(weaponHit("hammer") as Exclude<NumT, number>).scale, { ratio: WARDEN, stat: "defense", of: "self" }] } },
   }),
-  weapon("Mason's hammer", "hammer", "uncommon", "HP +1. Each hit the wearer lands gives it a Shield of a tenth of its Defense.", { stats: [st("max_hp", 1)], statuses: ["masons_hammer"] }),
-  weapon("Bellringer", "hammer", "rare", "The wearer's basic attacks on a foe in a wind-up Stun it.", { statuses: ["bellringer"] }),
-  weapon("Rootstone hammer", "hammer", "rare", "The wearer's basic attacks add a few Sunder, from its Defense.", { statuses: ["rootstone_hammer"] }),
-  weapon("Mountainfall", "hammer", "legendary", "The wearer's basic attacks deal extra damage equal to a fifth of its max HP.", {
+  weapon("Mason's hammer", "hammer", "uncommon", { effect: "Each hit the wearer lands gives it a Shield of a tenth of its Defense.", stats: [st("max_hp", 1)], statuses: ["masons_hammer"] }),
+  weapon("Bellringer", "hammer", "rare", { effect: "The wearer's basic attacks on a foe in a wind-up Stun it.", stats: [st("defense", 1), st("max_hp", 1)], statuses: ["bellringer"] }),
+  weapon("Rootstone hammer", "hammer", "rare", { effect: "The wearer's basic attacks add a few Sunder, from its Defense.", stats: [st("defense", 1), st("aggro", 1)], statuses: ["rootstone_hammer"] }),
+  weapon("Mountainfall", "hammer", "legendary", { effect: "The wearer's basic attacks deal extra damage equal to a fifth of its max HP.", stats: [st("defense", 1), st("max_hp", 1), st("aggro", 1)],
     weapon: { amount: { ...(weaponHit("hammer") as Exclude<NumT, number>), scale: [...(weaponHit("hammer") as Exclude<NumT, number>).scale, { ratio: 0.2, stat: "max_hp", of: "self" }] } },
   }),
-  weapon("Grudgebearer", "hammer", "legendary", "Each hit the wearer takes adds a Charge, up to 10. Its basic attacks deal a tenth more for each Charge, and spend them.", { statuses: ["grudgebearer"] }),
+  weapon("Grudgebearer", "hammer", "legendary", { effect: "Each hit the wearer takes adds a Charge, up to 10. Its basic attacks deal a tenth more for each Charge, and spend them.", stats: [st("defense", 1), st("aggro", 1), sp("crit_damage", "medium")], statuses: ["grudgebearer"] }),
 
   // Mace (Cleric, Paladin, Bramble knight): slow, one hand; light, base-heavy, rich. HP; Defense, MP regen, Cooldown, Thorns.
-  weapon("Morningstar", "mace", "common", "HP +1, Defense +1, MP regen +1.", { stats: [st("max_hp", 1), st("defense", 1), st("mp_regen", 1)] }),
-  weapon("Friar's mace", "mace", "common", "HP +1, MP regen +1, Cooldown medium.", { stats: [st("max_hp", 1), st("mp_regen", 1), sp("cooldown", "medium")] }),
-  weapon("Mender's mace", "mace", "uncommon", "HP +1, MP regen +1. At the start of each fight, the ally with the lowest share of max HP gains Regen.", { stats: [st("max_hp", 1), st("mp_regen", 1)], statuses: ["menders_mace"] }),
-  weapon("Prior's mace", "mace", "uncommon", "HP +1, Cooldown medium. Each ability the wearer casts heals it for 3% of its max HP.", { stats: [st("max_hp", 1), sp("cooldown", "medium")], statuses: ["priors_mace"] }),
-  weapon("Penitent's mace", "mace", "rare", "Thorns medium, HP +1. Each hit the wearer takes heals the ally with the lowest share of max HP for a tenth of the damage.", { stats: [sp("thorns", "medium"), st("max_hp", 1)], statuses: ["penitents_mace"] }),
-  weapon("Censer mace", "mace", "rare", "HP +1, MP regen +1. Each of the wearer's basic attacks that lands heals the ally with the lowest share of max HP for a third of the damage it dealt.", { stats: [st("max_hp", 1), st("mp_regen", 1)], statuses: ["censer_mace"] }),
+  weapon("Morningstar", "mace", "common", { stats: [st("max_hp", 1), st("defense", 1)] }),
+  weapon("Friar's mace", "mace", "common", { stats: [st("max_hp", 1), st("mp_regen", 1)] }),
+  weapon("Mender's mace", "mace", "uncommon", { effect: "At the start of each fight, the ally with the lowest share of max HP gains Regen.", stats: [st("max_hp", 1), st("mp_regen", 1), st("defense", 1)], statuses: ["menders_mace"] }),
+  weapon("Prior's mace", "mace", "uncommon", { effect: "Each ability the wearer casts heals it for 3% of its max HP.", stats: [st("max_hp", 1), sp("cooldown", "medium"), st("mp_regen", 1)], statuses: ["priors_mace"] }),
+  weapon("Penitent's mace", "mace", "rare", { effect: "Each hit the wearer takes heals the ally with the lowest share of max HP for a tenth of the damage.", stats: [sp("thorns", "medium"), st("max_hp", 2), st("defense", 1)], statuses: ["penitents_mace"] }),
+  weapon("Censer mace", "mace", "rare", { effect: "Each of the wearer's basic attacks that lands heals the ally with the lowest share of max HP for a third of the damage it dealt.", stats: [st("max_hp", 2), st("mp_regen", 1), sp("cooldown", "medium")], statuses: ["censer_mace"] }),
   weapon("Sunhammer", "mace", "legendary",
-    "HP +1, MP regen +1. The wearer's basic attacks add several Burn. When a burning foe falls, the wearer's next basic attack also strikes every other foe, and those strikes add several Burn too.",
-    { stats: [st("max_hp", 1), st("mp_regen", 1)], statuses: ["sunhammer"] }),
+    { effect: "The wearer's basic attacks add several Burn. When a burning foe falls, the wearer's next basic attack also strikes every other foe, and those strikes add several Burn too.", stats: [st("max_hp", 2), st("mp_regen", 1), st("defense", 2)], statuses: ["sunhammer"] }),
   weapon("Martyr's mace", "mace", "legendary",
-    "HP +1, Defense +1. The wearer's basic attacks deal more the lower its HP: half again as much below 70%, double below 50%, two and a half times below 30%, and triple below 10%. Below 30% HP, each basic attack also heals the wearer for the damage it dealt.",
-    { stats: [st("max_hp", 1), st("defense", 1)], statuses: ["martyrs_mace"] }),
+    { effect: "The wearer's basic attacks deal more the lower its HP: half again as much below 70%, double below 50%, two and a half times below 30%, and triple below 10%. Below 30% HP, each basic attack also heals the wearer for the damage it dealt.", stats: [st("max_hp", 2), st("defense", 1), st("mp_regen", 2)], statuses: ["martyrs_mace"] }),
 
   // Staff (Cleric, Pyromancer, Frostweaver): slow, two hands; light, base-heavy, rich. Cast speed; Cooldown, MP, MP regen, HP.
-  weapon("Ashwood staff", "staff", "common", "Cast speed medium, HP +1, MP regen +1.", { stats: [sp("cast_speed", "medium"), st("max_hp", 1), st("mp_regen", 1)] }),
-  weapon("Moonwater staff", "staff", "common", "MP +2, Cooldown medium.", { stats: [st("max_mp", 2), sp("cooldown", "medium")] }),
-  weapon("Shepherd's staff", "staff", "uncommon", "Cast speed medium, HP +1. At the start of each fight, the ally with the least MP gains Clarity.", { stats: [sp("cast_speed", "medium"), st("max_hp", 1)], statuses: ["shepherds_staff"] }),
-  weapon("Canopy staff", "staff", "uncommon", "HP +1, MP regen +1. At the start of each fight, the wearer and the other ally with the least max HP each gain a Shield from the wearer's Attack.",
-    { stats: [st("max_hp", 1), st("mp_regen", 1)], statuses: ["canopy_staff"] }),
-  weapon("Banked staff", "staff", "rare", "Cast speed medium, Cooldown medium. The wearer's abilities add half again as many Burn, Chill and Shock stacks.", { stats: [sp("cast_speed", "medium"), sp("cooldown", "medium")], statuses: ["banked_staff"] }),
-  weapon("Cistern staff", "staff", "rare", "MP +1, HP +1. Once a fight, when the wearer has less than a third of its MP (at the fight's start, or after it casts), it gains Clarity.", { stats: [st("max_mp", 1), st("max_hp", 1)], statuses: ["cistern_staff"] }),
-  weapon("Cataclysm staff", "staff", "legendary", "Cast speed medium, MP +1. Every third ability the wearer casts is cast twice. The second cast is free.", { stats: [sp("cast_speed", "medium"), st("max_mp", 1)], statuses: ["cataclysm_staff"] }),
-  weapon("Cinderheart staff", "staff", "legendary", "Cast speed medium, MP regen +1. The wearer's basic attacks consume their target's Burn and deal at once all the damage it would have dealt.",
-    { stats: [sp("cast_speed", "medium"), st("mp_regen", 1)], statuses: ["cinderheart_staff"], note: `The flare is ${BURN_LIFE} a stack: Burn's damage a stack × the sum of its decay at 20 stacks, read from scale.ts.` }),
+  weapon("Ashwood staff", "staff", "common", { stats: [sp("cast_speed", "medium"), st("max_hp", 1)] }),
+  weapon("Moonwater staff", "staff", "common", { stats: [st("max_mp", 2)] }),
+  weapon("Shepherd's staff", "staff", "uncommon", { effect: "At the start of each fight, the ally with the least MP gains Clarity.", stats: [sp("cast_speed", "medium"), st("max_hp", 1), sp("cooldown", "medium")], statuses: ["shepherds_staff"] }),
+  weapon("Canopy staff", "staff", "uncommon", { effect: "At the start of each fight, the wearer and the other ally with the least max HP each gain a Shield from the wearer's Attack.", stats: [st("max_hp", 1), st("mp_regen", 1), sp("cast_speed", "medium")], statuses: ["canopy_staff"] }),
+  weapon("Banked staff", "staff", "rare", { effect: "The wearer's abilities add half again as many Burn, Chill and Shock stacks.", stats: [sp("cast_speed", "medium"), sp("cooldown", "medium"), st("max_mp", 1), st("mp_regen", 1)], statuses: ["banked_staff"] }),
+  weapon("Cistern staff", "staff", "rare", { effect: "Once a fight, when the wearer has less than a third of its MP (at the fight's start, or after it casts), it gains Clarity.", stats: [st("max_mp", 1), st("max_hp", 1), sp("cast_speed", "medium"), sp("cooldown", "medium")], statuses: ["cistern_staff"] }),
+  weapon("Cataclysm staff", "staff", "legendary", { effect: "Every third ability the wearer casts is cast twice. The second cast is free.", stats: [sp("cast_speed", "high"), st("max_mp", 1), sp("cooldown", "high")], statuses: ["cataclysm_staff"] }),
+  weapon("Cinderheart staff", "staff", "legendary", { effect: "The wearer's basic attacks consume their target's Burn and deal at once all the damage it would have dealt.", stats: [sp("cast_speed", "high"), st("mp_regen", 1), st("max_mp", 2)], statuses: ["cinderheart_staff"], note: `The flare is ${BURN_LIFE} a stack: Burn's damage a stack × the sum of its decay at 20 stacks, read from scale.ts.` }),
 ];
 
 // ─── Designer data: the builds each piece serves ─────────────────────────────

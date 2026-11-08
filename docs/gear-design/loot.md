@@ -10,13 +10,13 @@ Rarity is specificity, not size: how far a piece bends the game. A rare can be b
 
 | Rarity | What it is | Stats | Effect |
 | --- | --- | --- | --- |
-| **Common** | Fills a slot and carries a build's first stats. | Its kind's budget at common: two steps as the standard, one on a lean kind, three on a rich one (`KIND_BUDGET`). A special stat at medium is a step, at high two. | None. |
-| **Uncommon** | A build's first rung: a small effect most runs find. | Its kind's budget: one step, two on a rich kind. | One small, general effect on a thread (a rider, a start-of-fight status, a small reaction), with no condition on a class. Each one helps two to four builds a little. |
-| **Rare** | A build's second rung: specific, often conditional. | Its kind's budget, beside the effect: one step, two on a rich kind, none on a lean one. | One designed effect, worth a lot to one or two builds and little elsewhere. |
-| **Legendary** | A build's far end, or an exotic: it bends a rule. | Its kind's budget, beside the effect, as a rare's. | A rule change, a new trigger or a payoff that grows. Strong where it fits; where it's strong in many places, it gives something up. |
+| **Common** | Fills a slot and carries a build's first stats. | One step as the standard, two on a rich kind (`KIND_BUDGET`). A special stat at medium is a step, at high two. | None. |
+| **Uncommon** | A build's first rung: a small effect most runs find. | Two steps as the standard, one on a lean kind, three on a rich one. | One small, general effect on a thread (a rider, a start-of-fight status, a small reaction), with no condition on a class. Each one helps two to four builds a little. |
+| **Rare** | A build's second rung: specific, often conditional. | Three steps as the standard, two on a lean kind, four on a rich one, beside the effect. | One designed effect, worth a lot to one or two builds and little elsewhere. |
+| **Legendary** | A build's far end, or an exotic: it bends a rule. | Four steps as the standard, three on a lean kind, five on a rich one, beside the effect. The only rarity where a special stat is high. | A rule change, a new trigger or a payoff that grows. Strong where it fits; where it's strong in many places, it gives something up. |
 | **Mythic** | Rewrites one class, past any one ability. | As its shape needs. | One per class (see Mythics). |
 
-Every piece carries stats at every rarity, and higher rarity is generally better: a rare or legendary carries its steps beside its effect, not instead of it. A weapon kind's budget is one of its three words (*Core set: rules and vocabulary*, Weapons); armor, offhands and amulets carry the standard budget. The content checks every piece against its budget as the pack is built.
+Every piece carries stats at every rarity, each rarity carries a step more than the last, and higher rarity is generally better: a rare or legendary carries its steps beside its effect, not instead of it. A weapon kind's budget word moves the ladder a step down or up (*Core set: rules and vocabulary*, Weapons); armor, offhands and amulets take the standard ladder. A piece's stats lean to its kind's profile, the signature first. The content checks every piece against its budget as the pack is built, and a card's first sentence is its stats in words, written from them.
 
 - **No random affixes,** at any rarity: every piece is fixed. Tempering turns a piece into one of the next rarity, in the same kind, that fits the same wearer.
 - **No piece says what it's for.** Which builds a piece serves is the designer's (`PIECE_BUILDS`), used to aim drops, and never on a card.
@@ -95,7 +95,7 @@ Commons and uncommons are written from a rule per kind, not designed one by one:
 Rules that hold for every piece, version and mythic, kept from the rulings on the fill. None of them is about balance.
 - **Every uncommon carries an effect.** A special stat alone is a common's step.
 - **One uncommon effect per wearer group:** two kinds worn by the same classes don't share an uncommon effect.
-- **Every piece carries its kind's budget of steps** at its rarity, a rare's or legendary's beside its effect; a piece that steps along the swing trade says so on its card ("a heavy bardiche").
+- **Every piece carries its kind's budget of steps** at its rarity, a rare's or legendary's beside its effect; a piece that steps along the swing trade says so on its card ("a heavier swing").
 - **Mythics carry no stat steps** unless the line's shape needs one.
 - **A revive** brings its ally back with every ability on full cooldown, whoever revives, unless the Valkyrie's Einherjar version or a piece says otherwise.
 - **Paying HP** means losing that much HP at once. It isn't damage, so no Shield soaks it and nothing reacts to it, and it can't take the payer below 1 HP.

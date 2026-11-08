@@ -4,7 +4,7 @@ import type { DungeonT, GearT, Party } from "../../src/schema.js";
 import { foesFor, knobFor, refFloors, registerGear, rogue, type RogueRun } from "../../src/rogue.js";
 import { combos, makeBuild, ORDERS, seat, slotted, STYLES } from "../../src/sim/kits.js";
 import { next, rngFor } from "../../src/engine/rng.js";
-import { canEquip } from "../../src/validate.js";
+import { canEquip, handsOf } from "../../src/validate.js";
 
 /** The rogue has no pieces of its own (its stock is the pack's pieces, in pack.gear), so its legendary probes are empty. */
 export const rogueGear = (_c: Content): GearT[] => [];
@@ -84,8 +84,9 @@ export function partySpread(c: Content, trios: number, seed = 5): { parties: { p
   }
   const forms = c.pack.formations.map((f) => f.id);
   const out: { party: Party; kind: "spread" | "kit" }[] = [];
-  // The rotation: for each class, every piece of every slot comes round in turn (an empty armor or amulet slot too, as a kit may leave it).
+  // The rotation: for each class, every piece of every slot comes round in turn (an empty armor, offhand or amulet slot too, as a kit may leave it).
   // Each class starts its turn at its own offset, so the union over classes covers every piece even when a class appears in fewer parties than there are pieces.
+  // A two-handed weapon leaves no hand for an offhand, so that turn's offhand is skipped (the offhand's turn doesn't advance).
   const turn = new Map<string, number>();
   const nextPiece = (cls: string, slot: string): string | undefined => {
     const xs = wearable(c, cls, slot);
@@ -101,7 +102,8 @@ export function partySpread(c: Content, trios: number, seed = 5): { parties: { p
     const abOrder = ORDERS[i % ORDERS.length];
     const units = order.map((cls, j) => {
       const gear: Record<string, string> = {};
-      for (const slot of ["weapon", "armor", "amulet"]) {
+      for (const slot of ["weapon", "armor", "offhand", "amulet"]) {
+        if (slot === "offhand" && handsOf(c.pack, c.gear.get(gear.weapon ?? "")) === 2) continue;
         const pick = nextPiece(cls, slot);
         if (pick) gear[slot] = pick;
       }
@@ -117,16 +119,17 @@ export function partySpread(c: Content, trios: number, seed = 5): { parties: { p
 const wearable = (c: Content, cls: string, slot: string) => c.pack.gear.filter((g) => g.slot === slot && canEquip(c.classes.get(cls)!, g)).map((g) => g.id);
 
 /**
- * The gear probe: for one class, each piece it can wear, alone on an otherwise bare unit (its plain weapon, no armor, no amulet),
- * beside fixed kitted companions in Neutral. The same companions and seeds for every piece, so a piece's number is its own.
- * The baseline is the bare unit; `none` names it.
+ * The gear probe: for one class, each piece it can wear, alone on an otherwise bare unit (the plain weapon of its one-handed kind,
+ * so an offhand can be held; no armor, no offhand, no amulet), beside fixed kitted companions in Neutral. The same companions and
+ * seeds for every piece, so a piece's number is its own. The baseline is the bare unit; `none` names it.
  */
 export function gearProbe(c: Content, cls: string, trios: string[][], refs = 4): { piece: string; party: Party }[] {
   registerGear(c);
-  const plain = c.pack.gear.find((g) => g.slot === "weapon" && g.source === "starter" && g.weapon?.kind === c.classes.get(cls)!.weapons[0])!.id;
+  const plains = c.pack.gear.filter((g) => g.slot === "weapon" && g.source === "starter" && c.classes.get(cls)!.weapons.includes(g.weapon!.kind!));
+  const plain = (plains.find((g) => handsOf(c.pack, g) === 1) ?? plains[0]).id;
   const mine = trios.filter((t) => t.includes(cls)).slice(0, refs);
   const f = c.formations.get("neutral")!;
-  const pieces = ["none", ...["weapon", "armor", "amulet"].flatMap((slot) => wearable(c, cls, slot)), ...rogueGear(c).filter((g) => canEquip(c.classes.get(cls)!, g)).map((g) => g.id)];
+  const pieces = ["none", ...["weapon", "armor", "offhand", "amulet"].flatMap((slot) => wearable(c, cls, slot)), ...rogueGear(c).filter((g) => canEquip(c.classes.get(cls)!, g)).map((g) => g.id)];
   const out: { piece: string; party: Party }[] = [];
   for (const piece of pieces) for (const trio of mine) {
     const kit = makeBuild(c, trio, "neutral", "plain");

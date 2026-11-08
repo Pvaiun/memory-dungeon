@@ -33,8 +33,8 @@ export const T = {
   otherLowestShareAlly: { side: "others", pick: "lowest", by: "hp_share" } satisfies TargetRuleT,
   highestAMAlly: { side: "allies", pick: "highest", by: { stats: ["attack"] } } satisfies TargetRuleT,
   otherHighestAMAlly: { side: "others", pick: "highest", by: { stats: ["attack"] } } satisfies TargetRuleT,
-  /** A foe in a wind-up, else the foe with the highest Attack (Unmake, which waits for a cast or a buff). */
-  castingElseHighestAMFoe: { side: "foes", where: { casting: true }, ifNone: "any", pick: "highest", by: { stats: ["attack"] } } satisfies TargetRuleT,
+  /** A fallen ally, else the ally with the lowest share of max HP (Choosing: one target, the slain first). */
+  fallenElseLowestShareAlly: { side: "allies", where: { ko: true }, ifNone: "any", pick: "lowest", by: "hp_share" } satisfies TargetRuleT,
   /** The ally with the least MP, for the Clarity givers. */
   lowestMpAlly: { side: "allies", pick: "lowest", by: "mp_share" } satisfies TargetRuleT,
   /** The ally with the least MP among those under half; with nobody under half, the least all the same (a preference, never a skip). */
@@ -208,10 +208,11 @@ export const abilities: A[] = [
   a("valkyrie", "gale_spear", "Gale spear", "Three quick hits on a foe that isn't Taunting, each adding a few Shock.", {
     ...timing("quick", "quick"), mp: 200, seek: true, target: T.notTauntingFoe, do: [phys(from("attack", 0.09), { hits: 3, apply: [{ status: "shock", stacks: stacks("few", "attack", 0.5) }] })],
   }),
-  // Choosing: the heal and the revive in one. Each part has its own target, so with an ally down and another hurt it does both.
-  a("valkyrie", "choosing", "Choosing", "Heals the lowest ally; the amount scales from Attack. If an ally is down, raises it with a tenth of its HP.", {
-    ...timing("medium", "normal"), mp: 650, if: { any: [{ side: "allies", where: { hpBelow: 80 } }, { side: "allies", where: { ko: true } }] }, target: T.lowestShareAlly,
-    do: [{ op: "heal", amount: from("attack", KIT.choosing) }, { op: "revive", hp: { scale: [{ ratio: REVIVE.tenth, stat: "max_hp", of: "target" }] }, to: T.koAlly }],
+  // Choosing: one target, a fallen ally first, else the lowest; a revive lands only on the fallen and a heal only on the living, so it does one or the other.
+  a("valkyrie", "choosing", "Choosing", "Chooses one ally: a fallen one, raised with a tenth of its HP; else the lowest, healed from Attack.", {
+    ...timing("medium", "normal"), mp: 650, if: { any: [{ side: "allies", where: { hpBelow: 80 } }, { side: "allies", where: { ko: true } }] }, target: T.fallenElseLowestShareAlly,
+    // The heal first: a heal skips a fallen target and a revive skips a living one, so the one target gets the one outcome its state calls for.
+    do: [{ op: "heal", amount: from("attack", KIT.choosing) }, { op: "revive", hp: { scale: [{ ratio: REVIVE.tenth, stat: "max_hp", of: "target" }] } }],
   }),
   // Gale spear stacks the Shock, Skyfall cashes it and leaves it: the storm spear's beat.
   a("valkyrie", "skyfall", "Skyfall", "A heavy blow from above on the foe with the most Shock, rising with each Shock stack on it. The Shock stays.", {
@@ -227,9 +228,8 @@ export const abilities: A[] = [
   a("hexer", "malison", "Malison", "Deepens every affliction each foe holds: one more stack of each of Burn, Chill, Shock and Sunder it already has, and a few Bleed.", {
     ...timing("short", "normal"), mp: 450, target: T.everyFoe, do: [...DEEPENED.map((st) => apply(st, { stacks: ifHeld(st) })), apply("bleed", { stacks: stacks("few", "attack") })],
   }),
-  // It waits for a cast or a buff. A caster is the pick; with none casting, the foe with the highest Attack (usually the buffed one).
-  a("hexer", "unmake", "Unmake", "Silences the casting foe with the highest Attack and strips its buffs. Waits for a foe to cast or to hold a buff.", {
-    ...timing("medium", "quick"), mp: 650, if: { any: [{ side: "foes", where: { casting: true } }, { side: "foes", where: { buffs: true } }] }, target: T.castingElseHighestAMFoe, do: [apply("silence"), { op: "remove", label: "buff" }],
+  a("hexer", "unmake", "Unmake", "Silences the casting foe with the highest Attack and strips its buffs. Waits for a foe to cast.", {
+    ...timing("medium", "quick"), mp: 650, ...waitsFor("foes", { casting: true }), target: T.castingFoe, do: [apply("silence"), { op: "remove", label: "buff" }],
   }),
   a("hexer", "enfeeble", "Enfeeble", "Weakens the foe with the highest Attack and adds a few Sunder.", { ...timing("quick", "normal"), mp: 450, target: T.highestAMFoe, do: [apply("weaken"), apply("sunder", { stacks: stacks("few", "attack") })] }),
   // Monk
@@ -321,7 +321,7 @@ export const classes: ClassDefT[] = [
   cls("bard", "Bard", "Party tempo. A caster at the back whose every note mends an ally a little and gives another mana, with a ballad that steadies the party, an allegro that quickens it, and an encore that makes an ally's next spell sound twice.", {
     stats: { ...stat(3, 4, 3, 3, 2, 2, 1), ...special("cooldown", "medium") }, weapons: ["bow", "wand"], armor: ["leather", "robes"], offhands: ["tome", "bell"], passive: p("refrain", "Refrain", "Each of its basic attacks that lands heals a random ally and gives a random ally MP, each a share of the damage dealt."),
   }),
-  cls("hexer", "Hexer", "The spellblade. A blade that carries curses: its swing chills, its curses deepen every affliction a foe already holds, it weakens and sunders the most dangerous one, and it silences a foe mid-cast and strips what it holds.", {
+  cls("hexer", "Hexer", "The spellblade. A blade that carries curses: its swing chills, its curses deepen every affliction a foe already holds, it weakens and sunders the most dangerous one, and it silences a foe mid-cast and strips its buffs.", {
     stats: { ...stat(3, 4, 3, 4, 2, 2, 1), ...special("siphon", "medium") }, weapons: ["wand", "sword"], armor: ["mail"], offhands: ["tome", "idol"], passive: p("cold_hex", "Cold hex", "Its basic attacks add a few Chill, whatever weapon it carries; stacks scale from Attack."),
   }),
   cls("monk", "Monk", "Sunders with a blur of blows. Every blow leaves the foe a little more open, Flow keeps it fast, burning fists pile onto the hottest foe, and a pressure point drops the most dangerous one for a moment.", {

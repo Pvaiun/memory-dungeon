@@ -45,11 +45,11 @@ const MANA_BURN = 0.2;
 abilityUp({
   id: "unmake", cls: "hexer",
   power: "A shorter cooldown.",
-  a: { name: "Silence all", text: "Silences every foe in a wind-up and strips their buffs. Waits until a foe is in a wind-up or holds a buff.", builds: ["lockdown"] },
-  b: { name: "Mana burn", text: "Silences the casting foe with the highest Attack and strips its buffs, and drains a fifth of its MP, which the Hexer gains. Waits until a foe is in a wind-up or holds a buff.", builds: ["overflow", "lockdown"] },
+  a: { name: "Silence all", text: "Silences every foe in a wind-up and strips their buffs. Waits until a foe is in a wind-up.", builds: ["lockdown"] },
+  b: { name: "Mana burn", text: "Silences the casting foe with the highest Attack and strips its buffs, and drains a fifth of its MP, which the Hexer gains. Waits until a foe is in a wind-up.", builds: ["overflow", "lockdown"] },
   form: (v, _k, plus) => ({
     ...(plus ? { cooldown: cd("short", "unmake") } : {}),
-    ...(v === "a" ? { target: { side: "foes", where: { casting: true }, ifNone: "any", pick: "all" } as TargetRuleT } : {}), // An all-pick: the Taunt and Hidden rules don't apply; with none casting, every foe.
+    ...(v === "a" ? { target: { side: "foes", where: { casting: true }, pick: "all" } as TargetRuleT } : {}), // An all-pick: the Taunt and Hidden rules don't apply.
     ...(v === "b"
       ? { do: [{ op: "mp", amount: { scale: [{ ratio: -MANA_BURN, stat: "max_mp", of: "target" }] } } as EffectT, apply("mana_burn"), apply("silence"), { op: "remove", label: "buff" } as EffectT] }
       : {}),

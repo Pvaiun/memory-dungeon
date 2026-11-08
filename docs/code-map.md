@@ -153,7 +153,7 @@ content/
     pack.ts                  assembles the pack
     build.ts                 npm run content: validates and writes the pack
     pieces/                  the 272 pieces
-      kit.ts                 the helpers pieces, formations and upgrades are written with; the swing trade and the budget check
+      kit.ts                 the helpers pieces, formations and upgrades are written with; the swing trade, the budget check and the stat words a card opens with
       shared.ts              statuses several files use (the counters; Marked is the vocabulary's)
       weapons-scaling.ts     the seven kinds whose swing grows with Attack (dagger, claws, sword, spear, axe, bow, great weapon): 56 pieces
       weapons-base.ts        the five base-heavy kinds' 40 pieces (wand, rune sword, hammer, mace, staff): a swing for any wearer

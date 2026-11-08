@@ -35,24 +35,25 @@ import { abilityUp, apply, both, helper, kit, passiveUp, phys } from "./kit.js";
 }
 
 {
-  const heal = (ratio: number): EffectT => ({ op: "heal", amount: from("attack", ratio) });
-  const raise = (ratio: number): EffectT => ({ op: "revive", hp: { scale: [{ ratio, stat: "max_hp", of: "target" }] }, to: T.koAlly });
+  /** The one target's two outcomes: a revive lands only on the fallen, a heal only on the living (the base's shape). */
+  /** Choosing's one outcome on its one target: the heal first (skipped on a fallen ally), then the raise (skipped on a living one). */
+  const choose = (heal: number, raise: number): EffectT[] => [{ op: "heal", amount: from("attack", heal) }, { op: "revive", hp: { scale: [{ ratio: raise, stat: "max_hp", of: "target" }] } }];
   /** Einherjar: the old passive, now a choice. The ability brings a listener whose rule readies every action of an ally it raises. */
   helper(kit("einherjar", "EINHERJAR", "Allies it raises come back with every action ready.", { show: "sheet", unremovable: true, revives: { ready: true } }));
   /** Over the fallen: she stands over the one she chose; the Taunt and Guard are the kit's one Aggro read. */
   const over = (k: number): Partial<AbilityT> => ({
     if: { any: [{ side: "allies", where: { hpBelow: 30 } }, { side: "allies", where: { ko: true } }] },
-    do: [heal(2 * KIT.choosing * k), raise(REVIVE.tenth * k), apply("taunt", { to: "self" }), apply("guard", { to: "self" })],
+    do: [...choose(2 * KIT.choosing * k, REVIVE.tenth * k), apply("taunt", { to: "self" }), apply("guard", { to: "self" })],
   });
   abilityUp({
     id: "choosing", cls: "valkyrie",
     power: "Heals, or raises with, two fifths more.",
-    a: { name: "Einherjar", text: "Heals the lowest ally, or raises a fallen one with a tenth of its HP. An ally it raises comes back with every action ready.", builds: ["phoenix", "ambush"] },
-    b: { name: "Over the fallen", text: "Waits until an ally is below 30% of its HP or down. Heals it for double, or raises it; the Valkyrie Taunts and is Guarded, standing over the one she chose.", builds: ["toll", "phoenix"] },
+    a: { name: "Einherjar", text: "Chooses one ally: a fallen one, raised with a tenth of its HP and every action ready; else the lowest, healed.", builds: ["phoenix", "ambush"] },
+    b: { name: "Over the fallen", text: "Waits until an ally is below 30% of its HP or down. Chooses one: a fallen one, raised; else the lowest, healed for double. The Valkyrie Taunts and is Guarded, standing over the one she chose.", builds: ["toll", "phoenix"] },
     form: (v, k) =>
-      v === "a" ? { statuses: ["einherjar"], do: [heal(KIT.choosing * k), raise(REVIVE.tenth * k)] }
+      v === "a" ? { statuses: ["einherjar"], do: choose(KIT.choosing * k, REVIVE.tenth * k) }
         : v === "b" ? over(k)
-          : { do: [heal(KIT.choosing * k), raise(REVIVE.tenth * k)] },
+          : { do: choose(KIT.choosing * k, REVIVE.tenth * k) },
   });
 }
 

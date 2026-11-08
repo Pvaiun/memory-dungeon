@@ -325,7 +325,7 @@ An action's `target` is `foe` (default targeting: a foe by Aggro, under the Hidd
 | Field | Meaning |
 | --- | --- |
 | `where` |  |
-| `ifNone` | When `where` leaves nobody, use the whole side instead ("if every foe is Taunting, any foe"). |
+| `ifNone` | When `where` leaves nobody, use the whole side instead ("if every foe is Taunting, any foe"). With `ko: true`, nobody fallen means the living side, by the rule's other tests ("a fallen ally, else the lowest"). |
 | `exclude` | targets: skip the action's chosen targets ("a second, random foe", "up to three other foes"). Reactions only: other or owner, skip the event's other unit or the unit it's about ("every other foe", "a random foe other than the one it hit"). |
 | `seat` | The unit in this seat of the party's formation (a position id), or `next` / `previous`: the seat after or before the reading unit's, by slot order, wrapping round and skipping empty seats. |
 | `by` | Required for lowest and highest. |

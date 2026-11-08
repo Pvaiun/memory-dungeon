@@ -150,7 +150,7 @@ Six classes that win through the party: a tank that punishes, a bruiser that hel
 
 - **Passive – Shieldmaiden.** Each hit she lands gives her a Shield of a share of the damage dealt (`KIT.shieldmaiden`). Survivable by attacking: her Shield bar grows as she fights and is spent as she's hit, and it soaks a status's damage too. It reads Attack (bigger hits, bigger Shield) and max HP (the Shield's cap).
 - **Gale spear.** Has Seek. Three quick hits on a random foe that isn't Taunting; each deals damage that scales from Attack and adds a few Shock, with stacks that scale from Attack.
-- **Choosing.** Heals the ally with the lowest share of max HP; the amount scales from Attack (`KIT.choosing`, under the Cleric's Cure). If an ally is knocked out, it raises that ally with a tenth of its HP as well. Waits until an ally is below 80% of its max HP or down. A medium cooldown: slightly worse at healing than a healer, and it revives.
+- **Choosing.** Chooses one ally: a fallen one first, raised with a tenth of its HP; else the ally with the lowest share of max HP, healed for an amount that scales from Attack (`KIT.choosing`, under the Cleric's Cure). One target, one outcome a cast. Waits until an ally is below 80% of its max HP or down. A medium cooldown: slightly worse at healing than a healer, and it revives.
 - **Skyfall.** A heavy blow from above on the foe with the most Shock; the damage scales from Attack and rises with each Shock stack on that foe (`KIT.skyfallPerShock`). The Shock stays. Gale spear stacks the Shock, Skyfall cashes it: the storm spear's beat.
 
 **Identities.** The storm spear (spear, Leather, cloak): Spear of the hunt, Valkyrie's descent (Skyfall past any guard on the lowest foe, double below a quarter), Chooser of the slain (no Shield; a fifth more to foes below half). The shield-sister (sword, Mail, round shield): Shield-sister (the Shield goes to the lowest ally), **Over the fallen** (waits until an ally is below 30% or down, heals for double or raises, and the Valkyrie Taunts and is Guarded: Aggro), Gale storm. The thunderhead (spear): Gale storm, Thunderclap (Skyfall on every shocked foe, half as hard). The reviver is a build a run can go for, not the class: Einherjar (an ally Choosing raises comes back with every action ready) and Over the fallen.
@@ -180,12 +180,12 @@ Six classes that win through the party: a tank that punishes, a bruiser that hel
 
 - **Passive – Cold hex.** Its basic attacks add a few Chill, whatever weapon it carries; stacks scale from Attack.
 - **Malison.** Deepens every affliction each foe holds: one more stack of each of Burn, Chill, Shock and Sunder it already has, and a few Bleed, from Attack. The Hexer is the status amplifier where the mages are the sources; the Bleed means it does something alone.
-- **Unmake.** Applies Silence to the casting foe with the highest Attack and strips its buffs; with nobody casting, the foe with the highest Attack. Waits until a foe is in a wind-up or holds a buff.
+- **Unmake.** Applies Silence to the casting foe with the highest Attack and strips its buffs. Waits until a foe is in a wind-up; a buff alone doesn't draw it.
 - **Enfeeble.** Applies Weaken and adds a few Sunder to the foe with the highest Attack; stacks scale from Attack.
 
 **Identities.** The spellbreaker (sword, idol): Silence all, Mana burn (Silences the casting foe and drains a fifth of its MP, which the Hexer gains), Focused curse. The curser (sword, Mail): Wither, Withering hex (its basic attacks Weaken in place of Chill), Culmination. The elemental blade (wand, tome): Hex of flames, Plague (deepens, and adds a few Burn, Shock and Bleed of its own to every foe), Focused curse.
 
-*Test, Buffer:* Unmake waits for the Buffer's wind-up or its buff, silences it and strips what it has already given. Malison deepens whatever the party's statuses have laid on the Buffer's allies. Enfeeble's Weaken and Sunder go to the foe with the highest Attack, which may be the Buffer's guard rather than the Buffer.
+*Test, Buffer:* Unmake waits for the Buffer's wind-up, silences it and strips what it has already given. Malison deepens whatever the party's statuses have laid on the Buffer's allies. Enfeeble's Weaken and Sunder go to the foe with the highest Attack, which may be the Buffer's guard rather than the Buffer.
 
 ## Fighters
 
@@ -334,10 +334,10 @@ Every piece of the vocabulary is used by a class or an enemy (`classes.ts`, `ene
 
 - **Stun.** A long-cooldown Stun with no timing condition may rarely catch a wind-up. The fallback is a shorter Stun on a shorter cooldown (`STUN_COOLDOWN`).
 - **Pyre** may fire on a foe with very little Burn.
-- **Unmake** may strip buffs the moment they land, which could feel like constant reversals; with nobody casting, it picks the foe with the highest Attack, which may not be the buffed one.
+- **Unmake** waits for a cast, so a buff laid without a wind-up stands until the next one; check how often a buffed foe never casts again.
 - **Stand fast.** The Knight's Taunt lasts less than its cooldown, so check it holds bosses on Aggro alone in the gaps.
 - **Aspis** goes to the lowest ally, who isn't always the one about to take the big hit. Check how often Aegis catches anything without a Knight drawing the boss.
 - **Bedrock** depends on how long the Geomancer's Shield lasts. Check its crit uptime with and without a protector beside it.
-- **Choosing** is a revive on a medium cooldown where the documents give revives the very long word; it brings a tenth, and the balance pass may lengthen it. With an ally down and another hurt it does both.
+- **Choosing** is a revive on a medium cooldown where the documents give revives the very long word; it brings a tenth, and the balance pass may lengthen it. With an ally down and another hurt it raises, and the hurt one waits for the next cast.
 - **The Frostweaver's shatters:** a Frostweaver working alone on one foe should shatter it within a few casts, and more than once in a regular fight. Its Chill counts are the balance pass's first job.
 - **Cadenza** is esoteric, and worth trying by the director's word.

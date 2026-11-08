@@ -37,7 +37,7 @@ The philosophy behind these lines, and the director's intent in their words, are
 - **Gear has four slots** (weapon, armor, offhand, amulet), and slots have no job. Only weapons carry inherent behaviour (a speed, a swing and hands). Every class has an offhand and a one-handed weapon. The amulet fits everyone. A mythic fits one class.
 - **Weapon and offhand kinds follow one set of rules:** at most three classes a kind, two kinds a class, two classes share at most one kind of a slot, and every wearer reads the kind's signature stat, so every piece of a kind is relevant to every class that can wear it. Armor types stay the four weight classes. Accuracy is never a signature stat; Attack is never the signature of an Attack-heavy kind.
 - **A weapon kind is its words:** how hard it swings per tick, how much of that is the wearer's Attack, and how many stats its pieces carry; a kind pays for its swing in stats or the other way round, a two-hander takes both sides, and a piece may step along the trade. The interface shows a weapon's damage per tick.
-- **Every piece carries stats at every rarity,** and higher rarity is generally better.
+- **Every piece carries stats at every rarity,** each rarity carries more than the last on average, and higher rarity is generally better.
 - **A card says what a piece does and who can wear it** (FITS), never what it's "for": signposting ruins discovery. Every effect is phrased so the player knows what will happen.
 - **Rarity is mostly specificity:** how far a piece bends the game. Power grows by act but stays narrow. Rare and legendary pieces have no random affixes, and lower tiers carry effects too.
 - **Plenty of loot:** better too much than not enough.
