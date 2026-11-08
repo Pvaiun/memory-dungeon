@@ -8,11 +8,11 @@ import { add, type Job, T, type Tally } from "./plays.js";
 
 // ─── Playing and reading ────────────────────────────────────────────────────
 
-/** The classes document's roles, for the bands: the two walls draw (Aggro 4 and 5); the Hoplite (a bodyguard) and the Paladin (a shelter) stand at Aggro 3 beside the party, so they're judged as supports. */
+/** The classes document's roles, for the bands: the two walls draw (Aggro 5); the Paladin (the judge) stands at Aggro 3 beside the party and heals, so it's judged as a support; the Hoplite (the bruiser) and the Valkyrie (the shieldmaiden) are dealers by design. */
 export const ROLE: Record<string, "wall" | "support" | "dealer"> = {
-  knight: "wall", bramble_knight: "wall", hoplite: "support", paladin: "support",
-  cleric: "support", bard: "support", hexer: "support", valkyrie: "support",
-  ranger: "dealer", monk: "dealer", assassin: "dealer", vampire: "dealer", pyromancer: "dealer", frostweaver: "dealer", stormcaller: "dealer", geomancer: "dealer",
+  knight: "wall", bramble_knight: "wall", paladin: "support",
+  cleric: "support", bard: "support", hexer: "support",
+  hoplite: "dealer", valkyrie: "dealer", ranger: "dealer", monk: "dealer", assassin: "dealer", vampire: "dealer", pyromancer: "dealer", frostweaver: "dealer", stormcaller: "dealer", geomancer: "dealer",
 };
 export const CASTERS = new Set(["cleric", "paladin", "hexer", "frostweaver", "stormcaller", "geomancer", "pyromancer", "bard", "valkyrie"]);
 

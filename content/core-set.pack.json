@@ -19899,7 +19899,7 @@
    "text": "A shove with the whole shield: damage scaling from Defense to every foe, adding a few Sunder to each.",
    "cooldown": 28.8,
    "cast": 6,
-   "mp": 500,
+   "mp": 325,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -24078,7 +24078,7 @@
    "text": "A shove with the whole shield: damage scaling from Defense to every foe, adding a few Sunder to each. Adds two fifths more Sunder.",
    "cooldown": 28.8,
    "cast": 6,
-   "mp": 500,
+   "mp": 325,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -24118,7 +24118,7 @@
    "text": "The shove, and the Hoplite and the ally with the lowest share of HP are Guarded.",
    "cooldown": 28.8,
    "cast": 6,
-   "mp": 500,
+   "mp": 325,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -24172,7 +24172,7 @@
    "text": "One foe only, the one with the most Defense, for triple, adding several Sunder.",
    "cooldown": 28.8,
    "cast": 6,
-   "mp": 500,
+   "mp": 325,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -24215,7 +24215,7 @@
    "text": "The shove, and the Hoplite and the ally with the lowest share of HP are Guarded. Adds two fifths more Sunder.",
    "cooldown": 28.8,
    "cast": 6,
-   "mp": 500,
+   "mp": 325,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -24269,7 +24269,7 @@
    "text": "One foe only, the one with the most Defense, for triple, adding several Sunder. Adds two fifths more Sunder.",
    "cooldown": 28.8,
    "cast": 6,
-   "mp": 500,
+   "mp": 325,
    "target": {
     "side": "foes",
     "pick": "highest",

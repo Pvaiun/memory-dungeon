@@ -116,6 +116,7 @@ tools/                       the Node command lines; each header says how to run
   rogue-tune.ts              npm run rogue:tune: run-level tuning on top of the calibration
   rogue-parties.ts           the hand-built rosters the calibration measures against
   rogue-legendaries.ts       npm run rogue:legendaries: what each legendary piece's rule is worth
+  swing-rate.ts              a stat step against a swing step, class by class: the weapon kinds' exchange rate
   rogue-bosses.ts            how bosses fight in runs: casts, interrupts, held wind-ups
   rogue-acts.ts              the act road and the MP economy, on the rosters
   rogue-feel.ts              fight logs for a feel read (the reader's brief: docs/feel-reader.md)

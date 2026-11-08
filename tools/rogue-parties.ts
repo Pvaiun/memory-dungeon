@@ -37,7 +37,7 @@ export const ORDER: Record<string, string[]> = {
   ranger: ["barbed_arrow", "rending_arrow", "frost_arrow"],
   bramble_knight: ["thicket", "bramble_lash", "regrowth"],
   hoplite: ["othismos", "spear_thrust", "aspis"],
-  paladin: ["absolve", "smite", "condemn"],
+  paladin: ["condemn", "smite", "absolve"],
   valkyrie: ["gale_spear", "choosing", "skyfall"],
   bard: ["war_ballad", "allegro", "encore"],
   hexer: ["enfeeble", "malison", "unmake"],

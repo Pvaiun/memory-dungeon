@@ -188,7 +188,7 @@ export const abilities: A[] = [
   a("hoplite", "aspis", "Aspis", "Aegis on the lowest ally.", { ...timing("long", "quick"), mp: 500, ...waitsFor("allies", { lacks: "aegis" }), target: lacking(T.lowestShareAlly, "aegis"), do: [apply("aegis")] }),
   // The shove: the bruiser's Defense as damage on every foe, with Sunder from the same stat. No Taunt anywhere in the kit.
   a("hoplite", "othismos", "Othismos", "A shove with the whole shield: damage scaling from Defense to every foe, adding a few Sunder to each.", {
-    ...timing("medium", "long"), mp: 500, target: T.everyFoe, do: [phys(hit("defense", "light"), { apply: [{ status: "sunder", stacks: stacks("few", "defense") }] })],
+    ...timing("medium", "long"), mp: 325, target: T.everyFoe, do: [phys(hit("defense", "light"), { apply: [{ status: "sunder", stacks: stacks("few", "defense") }] })],
   }),
   // Bigger than a normal hit: Phalanx boosts the Hoplite's swing, not the thrust.
   a("hoplite", "spear_thrust", "Spear thrust", "A thrust at a random foe that adds a few Sunder.", { ...timing("medium", "long"), mp: 325, do: [phys(from("attack", 1.1), { apply: [{ status: "sunder", stacks: stacks("few", "attack") }] })] }),
