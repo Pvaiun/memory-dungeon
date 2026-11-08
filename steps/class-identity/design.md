@@ -14,7 +14,7 @@ The fifth draft: the approved design, reworked on the director's feedback from a
 
 **New rules this design proposes** (for `docs/rules.md` if kept):
 - **A class has three identities, and each is viable.** Its versions split toward them, every identity has at least two, and no identity is the class.
-- **Slow is the foes'.** No class applies Slow: Chill is the party's slow, and the two never stack from one side.
+- **The Chill class doesn't Slow.** Slow is a player status like any other, but no Frostweaver ability applies it: Chill is its slow, and the two never stack from one kit.
 - **A status runs its own course.** No ability spends, shortens or sets off a status early; a payoff reads the stacks and leaves them (Pyre, Skyfall, Culmination, Rupture).
 - **The mages share no template.** Each class's abilities have shapes of their own; where two classes held the same shape, one changed.
 - **Offhand kinds follow the weapon rules.** Every piece of a kind is relevant to every class that can wear it: at most three wearers a kind, every wearer reads the kind's signature stat, two classes share at most one offhand kind, and every class has two. Slots still have no job: the kind says what stats a piece leans to, never what it's for. **Armor types stay loot groups** (the weight classes) until the director says otherwise.
@@ -184,7 +184,7 @@ Each sheet: the trunk in a line; the identities, each with what you watch, what 
 - **The skirmisher** (Thousand Cuts). Every crit another shot, every shot a wound. Dagger with the cloak. Versions: Quick draw (**reads** Crit chance), Barbed quiver.
 - **The trapper** (Cold Snap, Lockdown). The field held: Chill where it hurts, Sunder on the armored, Bleed deepest on one. Bow. Versions: Pinning arrow, Hail, Armor breaker, Deep barbs.
 
-**Kit:** Hunter's eye: **its basic attacks ignore Taunt and crit more often** (two crit steps on basic attacks). Nothing in the kit touched crit, which was the Ranger's gap in the findings' rule. **Upgrades:** Hunter's eye: Quarry kept; Overwatch becomes **Quick draw:** each crit makes its next basic attack come at once. Barbed arrow: Deep barbs kept; Scatter barbs becomes **Barbed quiver:** no arrow; for a while its basic attacks add a few Bleed (from Attack). Frost arrow: Pinning arrow changes to **several Chill on the foe with the highest Attack, no Slow** (Slow is the foes'); Hail kept. Rending arrow kept (Armor breaker, Gutting arrow). The skirmisher had no version before; now it has two.
+**Kit:** Hunter's eye: **its basic attacks ignore Taunt and crit more often** (two crit steps on basic attacks). Nothing in the kit touched crit, which was the Ranger's gap in the findings' rule. **Upgrades:** Hunter's eye: Quarry kept; Overwatch becomes **Quick draw:** each crit makes its next basic attack come at once. Barbed arrow: Deep barbs kept; Scatter barbs becomes **Barbed quiver:** no arrow; for a while its basic attacks add a few Bleed (from Attack). Frost arrow kept (Pinning arrow, Hail). Rending arrow kept (Armor breaker, Gutting arrow). The skirmisher had no version before; now it has two.
 
 ### Bramble knight
 
@@ -251,18 +251,18 @@ The sword replaces the mace. A damage dealer reads Attack in everything she does
 
 **Trunk.** Every note mends and refuels; a ballad steadies the party, an allegro quickens it, and an encore makes an ally's next spell sound twice. Pure support: it deals no damage of its own, as the Cleric deals none. Its Cooldown is its tempo, in its line. Kinds: bow (Crit damage), wand (Cooldown) · Leather, Robes · tome, bell.
 
-- **The conductor** (Overflow, Landslide). The party's casts and blows arranged. Wand, tome, Robes. Versions: Rubato, Rousing chorus, Second wind.
-- **The troubadour** (Overflow, Blood Pact). Mends and refuels whoever is lowest. Wand, tome. Versions: Harmony, Second wind, Lament.
+- **The conductor** (Overflow, Landslide). The party's casts and blows arranged. Wand, tome, Robes. Versions: Rubato, Rousing chorus, Reprise.
+- **The troubadour** (Overflow, Blood Pact). Mends and refuels whoever is lowest. Wand, tome. Versions: Harmony, Lament, Reprise.
 - **The skald** (Thousand Cuts, Landslide). Might and Haste on the hitters, and its own three notes in a breath. Bow, or the wand with the bell; Leather. Versions: Battle song, Accelerando, Cadenza.
 
-**Kit:** **Thunder chord is replaced by Encore:** the other ally with the highest Attack casts its next ability twice; the second cast is free. Medium cooldown. Thunder chord was the Bard's one offensive spell and the Stormcaller's Thunderstorm in another key; Encore is the conductor's own verb and Overflow's. Resonance and Lullaby go with it (Lullaby was a Slow). Power step: comes round sooner. A **Second wind:** on the ally with the least MP, whose free repeat saves the most. B **Cadenza:** no Encore for an ally; the Bard's own next three basic attacks come at once, three Refrains in a breath.
+**Kit:** **Thunder chord is replaced by Encore:** the other ally with the highest Attack casts its next ability twice; the second cast is free. Medium cooldown. Thunder chord was the Bard's one offensive spell and the Stormcaller's Thunderstorm in another key; Encore is the conductor's own verb and Overflow's. Resonance and Lullaby go with it. Power step: comes round sooner. A **Reprise:** in place of the repeat, that ally's ability with the longest cooldown left is ready at once (the director's idea; a version aimed at the ally with the least MP would fire on an empty pool, and isn't a fork worth having). B **Cadenza:** no Encore for an ally; the Bard's own next three basic attacks come at once, three Refrains in a breath. Esoteric, and worth trying.
 **Upgrades:** Refrain and Allegro kept. War ballad: Lament kept; Marching song becomes **Rousing chorus:** a few Might on every ally, twice as many on the ally with the slowest basic attack. Landslide's Might on the slow hitter, and the party volley now belongs to the Paladin's Condemn.
 
 ### Hexer
 
-**Trunk.** A blade that carries curses: its swing chills, its curses deepen every affliction a foe already holds, it weakens and sunders the most dangerous one, and it silences a foe mid-cast and takes what it was given. Re-themed as a spellblade; the director names it. Kinds: wand (Cooldown), sword (Attack) · Mail · tome, idol. Three identities, by the director's word; none felt viable before, and each has a structural add.
+**Trunk.** A blade that carries curses: its swing chills, its curses deepen every affliction a foe already holds, it weakens and sunders the most dangerous one, and it silences a foe mid-cast and drinks the spell's mana. Re-themed as a spellblade; the director names it. Kinds: wand (Cooldown), sword (Attack) · Mail · tome, idol. Three identities, by the director's word; none felt viable before, and each has a structural add.
 
-- **The spellbreaker** (Lockdown). Shuts casters and buffers down and takes their buffs for itself. Sword, idol (Siphon). Versions: Silence all, Spellsteal, Focused curse.
+- **The spellbreaker** (Lockdown, Overflow). Shuts casters down and drinks their mana. Sword, idol (Siphon). Versions: Silence all, Mana burn, Focused curse.
 - **The curser** (the Toll, Lockdown). Weaken on everything, and the curses come due. Sword, Mail. Versions: Wither, Withering hex, Culmination.
 - **The elemental blade** (Harvest, Bonfire, Cold Snap). Burn, Shock and Chill on everything, a little each, deepened by every Malison. Wand, tome. Versions: Hex of flames, Plague, Focused curse.
 
@@ -270,7 +270,7 @@ The sword replaces the mace. A damage dealer reads Attack in everything she does
 - **Malison deepens:** adds one more stack of each of Burn, Chill, Shock and Sunder every foe already holds, and a few Bleed (from Attack). The Hexer is the status amplifier where the mages are the sources, and the Bleed means it does something alone. The Hexblade (a legendary rune sword) does this on swings today; the loot pass changes it.
 - **Unmake waits until a foe is in a wind-up or holds a buff** (approved in the third draft).
 
-**Upgrades:** Cold hex: Hex of flames kept; Deep cold becomes **Withering hex:** its basic attacks Weaken in place of Chill. (The Humbling mace does this on a rare; the loot pass changes the mace, whose wearers changed anyway.) Malison: **Plague** changes to add a few Burn and Shock of its own to every foe as well as deepening; Focused curse kept (one foe, three times as much). Unmake: Silence all kept; Broken spell becomes **Spellsteal:** Silences the casting foe and takes its buffs for itself. The spellbreaker's verb; least sure, since a boss's buffs could swing a fight, and Might's own cap holds. Enfeeble: Wither kept; Culmination kept (approved).
+**Upgrades:** Cold hex: Hex of flames kept; Deep cold becomes **Withering hex:** its basic attacks Weaken in place of Chill. (The Humbling mace does this on a rare; the loot pass changes the mace, whose wearers changed anyway.) Malison: **Plague** changes to add a few Burn and Shock of its own to every foe as well as deepening; Focused curse kept (one foe, three times as much). Unmake: Silence all kept; Broken spell becomes **Mana burn:** Silences the casting foe, and drains a share of its MP, which the Hexer gains. Siphon's shape in one burst, and it works whenever a foe casts: the director ruled out Spellsteal (bosses' own buffs would need exceptions, and foes almost never buff), and Broken spell paid per buff stripped, which is the same emptiness. Enfeeble: Wither kept; Culmination kept (approved).
 
 ### Monk
 
@@ -280,7 +280,7 @@ The sword replaces the mace. A damage dealer reads Attack in everything she does
 - **The dancer** (the Toll). Taunts and dodges, and the attackers pay. Spear (Aggro), cloak (Evasion), Leather. Versions: Stillness of mind (**reads** Aggro), Drinking palm.
 - **The point-striker** (Lockdown, the Hunt, Cold Snap). Spear. Versions: Lingering point, Vital strike, Frost fist.
 
-**Kit:** unchanged; Flow keeps Haste, and the Stormcaller's duplicate changes. **Upgrades:** all kept but one word: Lingering point's Slow becomes **several Chill when the Stun ends** (Slow is the foes').
+**Kit:** unchanged; Flow keeps Haste, and the Stormcaller's duplicate changes. **Upgrades:** all kept.
 
 ### Assassin
 
@@ -315,30 +315,28 @@ The sword replaces the mace. A damage dealer reads Attack in everything she does
 
 ### Frostweaver
 
-**Trunk.** The ice wall: a chunky supporting mage. It lays the field's Chill, pulls the trigger on a shatter when a foe holds enough, leaves the shattered foe sundered, and keeps an ally's mana flowing. HP 3, Defense 3, Robes or Mail. Kinds: staff (Cast speed), rune sword (MP regen) · Robes, Mail · tome, orb.
+**Trunk.** The ice wall: a chunky supporting mage, and the Chill applier. It lays Chill on the field and on the most-chilled foe until the Chill itself shatters, leaves the shattered foe sundered, and keeps an ally's mana flowing while the frost builds. HP 3, Defense 3, Robes or Mail. Kinds: staff (Cast speed), rune sword (MP regen) · Robes, Mail · tome, orb.
 
-- **The ice wall** (the Toll, Landslide as support). Shelter from the shatter and Guard for everyone. Rune sword, Mail, orb. Versions: Rime shield (**reads** Defense), Frost armor, Deep calm.
-- **The disabler** (Lockdown). Chill on the one winding up, and a Stun when it shatters. Rune sword, tome. Versions: Ice spear, Frozen moment.
+- **The ice wall** (the Toll, Landslide as support). Shelter from each shatter and Guard for everyone. Rune sword, Mail, orb. Versions: Rime shield (**reads** HP), Frost armor, Deep calm.
+- **The disabler** (Lockdown). Chill on the dangerous one past any guard, and a Stun when it shatters. Rune sword, tome. Versions: Ice spear, Frozen moment.
 - **The shatter killer** (Cold Snap). Shatters on a beat you can count. Staff. Versions: Splinters, Icicles, Avalanche.
 
-**Kit:** three changes, for the director's two calls: the mages separate by kit, and the Frostweaver shatters reliably by design.
-- **Frost lance is the trigger:** damage that scales from Attack to the foe with the most Chill, adding several Chill; a foe that already holds half the cap or more shatters. Blizzard and the rest lay the Chill; the lance decides when it bursts. The stacks it adds read the target's Chill (a condition's scaling, as Pyre's does), which the engine has.
-- **Blizzard is the field's slow:** damage and a few Chill on every foe, as now; the trigger makes it the setup.
-- **Stillness gives Clarity alone:** its Chill on every foe goes, since Blizzard is the field's Chill and one kit needn't hold it twice.
-- Shatterpoint kept: several Sunder on the shattered foe.
+**Kit:** unchanged. Shatterpoint (several Sunder on the shattered foe), Frost lance (damage and several Chill on the most-chilled foe), Blizzard (damage and a few Chill on every foe) and Stillness (Clarity on the ally who needs it, and a few Chill on every foe) stand as they are. By the director's word, nothing in the kit triggers a shatter: Chill detonates itself at its cap, and the Frostweaver's identity is applying it. **Shattering reliably is a matter of stacks,** set at build: the words "several" on the lance and "a few" on Blizzard and Stillness (`LANCE_CHILL`, `BLIZZARD_CHILL`, `STILLNESS_CHILL`, against `STATUS.chill.cap` and its thaw) are sized so that a Frostweaver working alone on one foe shatters it within a few casts, and more than once in a regular fight; the balance pass holds them there.
 
-**Upgrades:** Shatterpoint: Brittle becomes **Rime shield:** when a foe shatters, the ally with the lowest share of HP gains a Shield from the Frostweaver's Defense, in place of the Sunder; Frost armor's Guard raises that Defense, so the wall's two versions feed each other. Splinters kept. Frost lance: Ice spear changes to **the foe with the highest Attack, no Slow**; Icicles kept. Blizzard: Whiteout becomes **Frost armor:** Guards every ally, and a few Chill on every foe; Avalanche kept. Stillness: Deep calm kept; Frozen moment kept, and it's where Stillness's Chill lives on (three times as much, on casting foes).
+**Upgrades:** Shatterpoint: Brittle becomes **Rime shield:** when a foe shatters, the ally with the lowest share of HP gains a Shield from the Frostweaver's max HP, in place of the Sunder. It reads the wall's body, which Mail and the rune sword carry, rather than Defense, which nothing of its wears. Splinters kept. Frost lance: Ice spear changes to **a lance past any guard at the foe with the highest Attack, adding several Chill; no Slow** (the Chill class doesn't Slow); Icicles kept. Blizzard: Whiteout becomes **Frost armor:** Guards every ally, and a few Chill on every foe; Avalanche kept. Stillness: Deep calm and Frozen moment kept.
+
+**Watch:** the weakest dealer in the prototype. Its line is sturdier and two versions make it the wall; its Chill counts are the balance pass's first job.
 
 ### Stormcaller
 
 **Trunk.** Everything it does is quick and spreads: each swing arcs to a second foe, lightning chains, a storm puts Shock on every ally's swings, and it charges itself to swing faster. The striker among the mages. Kinds: claws (Double strike), rune sword (MP regen) · Robes, Leather · totem, bell.
 
 - **The tempest** (Harvest, Overflow). Rune sword, Robes. Versions: Forked arc, Recharge, Overcharge.
-- **The storm fist** (Thousand Cuts, the Hunt). Claws, Leather, bell. Versions: Static grip, Ball lightning, Ride the lightning.
+- **The storm fist** (Thousand Cuts, the Hunt). Claws, Leather, bell. Versions: Static grip, Ball lightning, Storm's eye.
 - **The lightning rod** (the Toll). Struck, it and its allies strike back. Either kind, totem. Versions: Static field, Storm shield.
 
 **Kit:** two changes.
-- **Thunderstorm is the party's storm:** for a while, every ally's basic attacks add a few Shock; stacks scale from the Stormcaller's Attack. The old Thunderstorm was Fireball in another colour. Power step: two fifths more Shock. A **Static field:** in place of the swings, every foe that hits an ally gains a few Shock while it lasts. B **Ride the lightning:** in place of the Shock, each ally's basic attack that lands brings the Stormcaller's next basic attack a little sooner. Least sure, as the director says: it ties the party's swings to the Stormcaller's speed, which is the storm fist's whole idea.
+- **Thunderstorm is the party's storm:** for a while, every ally's basic attacks add a few Shock; stacks scale from the Stormcaller's Attack. The old Thunderstorm was Fireball in another colour. Power step: two fifths more Shock. A **Static field:** in place of the swings, every foe that hits an ally gains a few Shock while it lasts. B **Storm's eye:** the swings' Shock goes to the foe with the most Shock, wherever they land, three times as much. The storm fist's Hunt: the whole party's swings pile Shock on one foe, and Ball lightning finishes it. (Ride the lightning, which sped the Stormcaller from the party's swings, was too esoteric; this is the focus pattern Searing and Deep cold used.)
 - **Static charge: its basic attacks come faster for a while** (Attack speed, not Haste: the Monk's Flow is Haste). Overcharge keeps its idea on the new base (its next three abilities cost no MP while it lasts); Storm shield kept.
 
 **Upgrades:** Arc and Chain lightning kept. Supercell goes with the old Thunderstorm.
@@ -360,8 +358,8 @@ The findings' list, after this design. Every signature of every weapon and offha
 | Stat | Read by |
 | --- | --- |
 | Attack | nearly every hit and stack; the Cleric's Cure, the Paladin's heals and Smite, the Vampire's Frenzy, the Hexer's Culmination, the Valkyrie's Shieldmaiden, Choosing and Skyfall, the Knight's Valor, the Pyromancer's Stoke. The Geomancer reads it in the swing. |
-| HP | Knight (Vanguard, Shield bash), Vampire (Blood drain, Savage drain, Blood gift), Cleric (Martyr's raise, Triage, Ward of life), Paladin (Penance), Bramble knight (Regen, Bloodroot), Valkyrie (the Shield's cap), Frostweaver's body, Hoplite and the walls' survival. |
-| Defense | Geomancer (Earthen shell, Rockfall, Tremor), Bramble knight (Briar), Hoplite (Othismos, Shieldbearer), Knight (Stone guard), Frostweaver (Rime shield), Paladin and the walls' survival. |
+| HP | Knight (Vanguard, Shield bash), Vampire (Blood drain, Savage drain, Blood gift), Cleric (Martyr's raise, Triage, Ward of life), Paladin (Penance), Bramble knight (Regen, Bloodroot), Valkyrie (the Shield's cap), Frostweaver (Rime shield, its body), Hoplite and the walls' survival. |
+| Defense | Geomancer (Earthen shell, Rockfall, Tremor), Bramble knight (Briar), Hoplite (Othismos, Shieldbearer), Knight (Stone guard), Paladin, Frostweaver and the walls' survival. |
 | Crit chance | Assassin (Backstab, Lacerate), Geomancer (Bedrock), Ranger (Hunter's eye, Quick draw), Paladin (Verdict). |
 | Crit damage | Assassin, Geomancer, Ranger (Hunter's eye), Bard (Refrain). |
 | Double strike | Monk (Iron palm), Stormcaller (Arc), Vampire (more drinking). |
@@ -384,12 +382,12 @@ Settled by the director across the drafts: a class has three identities and the 
 From the parallel thread's feedback, taken into this draft, with what they reverse:
 1. **Condemn in place of Sanctuary** (the Paladin Marks and the party strikes). This reverses the Shield-on-every-ally Sanctuary approved in the second draft, and its versions Bulwark of faith and Consecration go. The Paladin stops being a party-Shield source; the Knight, Hoplite, Bramble knight, Geomancer and Cleric are. I think the reversal is right: Condemn is a verb nobody else has, and Marked being a debuff makes Judgement and Condemn one idea.
 2. **The Pyromancer has Cast speed in its line and Stoke as its passive;** Kindling becomes the wand's version. This reverses "no speed stat on purpose".
-3. **The Frostweaver is the ice wall:** HP 3, Defense 3, Robes or Mail, no speed stat; Frost lance is the shatter's trigger, Stillness is Clarity alone, Rime shield and Frost armor are new. This reverses the squishy controller line.
+3. **The Frostweaver is the ice wall:** HP 3, Defense 3, Robes or Mail, no speed stat; Rime shield (from its max HP) and Frost armor are new; the kit is otherwise unchanged, and nothing triggers a shatter. This reverses the squishy controller line.
 4. **Othismos from Defense** in place of Phalanx charge from Attack, with Locked shields and Breach; Disarm in place of Hunter's thrust.
-5. **Encore** in place of Thunder chord, with Second wind and Cadenza; Rousing chorus in place of Marching song.
-6. **Malison deepens;** Plague, Withering hex and Spellsteal; three Hexer identities.
-7. **Thunderstorm is the party's storm,** with Static field and Ride the lightning; Supercell goes.
-8. **Slow is the foes':** Pinning arrow, Lingering point and Ice spear use Chill; Lullaby goes.
+5. **Encore** in place of Thunder chord, with Reprise and Cadenza; Rousing chorus in place of Marching song.
+6. **Malison deepens;** Plague, Withering hex and Mana burn; three Hexer identities.
+7. **Thunderstorm is the party's storm,** with Static field and Storm's eye; Supercell goes.
+8. **The Chill class doesn't Slow:** Ice spear uses Chill and Seek. Slow stays a player status everywhere else.
 9. **Rupture reads the Bleed and leaves it;** Savage drain and Bloodthirst; Valor; Quick draw and Barbed quiver; Rock shelter; Over the fallen.
 
 Where I pushed back, or didn't take the other thread's version:
@@ -397,10 +395,10 @@ Where I pushed back, or didn't take the other thread's version:
 - **Culmination stays** over Expose: the director agreed the Hexer lacked a payoff of its own.
 - **Bleed them dry stays** over Garrote wire: the axe's Lifesteal needs a reader in the Assassin's kit.
 - **The Valkyrie stays as approved here** (Shieldmaiden, Choosing, Skyfall), not the other thread's Einherjar kit; its Over the fallen is taken as a Choosing version.
-- **Blizzard keeps its damage.** Making it Chill alone would have made it Whiteout, and the field's slow is what Chill already does.
+- **Blizzard keeps its damage,** and Stillness its Chill. The Frostweaver's kit stands as it was; the director's three objections to the fifth draft (the Defense read, the trigger lance, Clarity alone) are all withdrawn.
 - **Locked shields Guards two,** not every ally, so it doesn't repeat the Bramble knight's Grove.
 
-Least sure, flagged for the build and the balance pass: Spellsteal (a boss's buffs taken), Ride the lightning (the party's swings speeding one unit), Encore's two versions, and the Frostweaver's Defense read with no Defense gear of its own beyond its line and Frost armor.
+Least sure, flagged for the build and the balance pass: Cadenza (esoteric, and worth trying by the director's word), Mana burn's size, and the Frostweaver's Chill counts.
 
 Designer's calls still open to being overruled:
 - **Hunter's eye crits more often** on basic attacks.
@@ -416,20 +414,19 @@ Not this step's work, listed so the design is honest about its cost.
 - **Kinds:** the vocabulary's weapon table (twelve kinds; rod gone, fist renamed claws, axe and hammer added; rune sword and mace slow), `KIND_SPEED` for the new kinds, the classes' kinds, the gear-slots tool's tables.
 - **Pieces:** eight rod pieces rehomed; sixteen axe and hammer pieces written to the kinds' profiles; twenty-four offhand pieces written for the orb, trophy and cloak, and the eighty existing offhands re-read against their kinds' new profiles and wearers (the bell's Cleric pieces, the horn's Bard pieces, the totem's Ranger and Geomancer pieces move or change); the loot stock table (twelve weapon kinds, thirteen offhand kinds); the commons-and-uncommons lean table rewritten from both profile tables. Wearer lists change on many cards, and the Shadow cloak (a leather rare) wants a new name.
 - **Ward retired:** Sigil blade and Prior's mace (new uncommon effects), the Lich's Dark ward and the Fire Giant's Kindle (Guard or Shield in its place), the Buffer's list, and every challenge whose answers name Ward.
-- **Slow is the foes':** the Snaring bow and the Idol of binding apply Slow and need new effects; the Glacial rod goes with the rod.
-- **Pieces the kit now does:** the Hexblade (Malison deepens), the Humbling mace (Withering hex), the Idol of the hungry dark (Spellsteal), the Notched knife beside Barbed quiver and Static mail beside Static field (same thread, different shape: a check, not a change).
-- **Mythics touched:** Stormspear (the Valkyrie's) still fits the storm spear. The last wall (the Hoplite's) reads Aspis, which stays. Mountain's crown (the Geomancer's) shares a thread with Shieldmaiden; the loot step decides. Two offhand mythics sit in kinds their class no longer wears: Metronome (a horn, the Bard's; it also readies Thunder chord, now Encore) and Chains of light (a lantern, the Paladin's) take a kind their class wears, or none, as a mythic may. None depends on Einherjar, Rally, Valhalla or Paired guard; the build parties and routes in `tools/build-parties/` and `docs/gear-design/builds.md` need rewriting: the Valkyrie's everywhere, Harvest without the Bard, Rockslide and Supercell, the Hunt with Condemn and without Hunter's thrust, Cold Snap with the trigger lance.
+- **Pieces the kit now does:** the Hexblade (Malison deepens) and the Humbling mace (Withering hex); the Notched knife beside Barbed quiver and Static mail beside Static field share a thread in a different shape, a check and not a change.
+- **Mythics touched:** Stormspear (the Valkyrie's) still fits the storm spear. The last wall (the Hoplite's) reads Aspis, which stays. Mountain's crown (the Geomancer's) shares a thread with Shieldmaiden; the loot step decides. Two offhand mythics sit in kinds their class no longer wears: Metronome (a horn, the Bard's; it also readies Thunder chord, now Encore) and Chains of light (a lantern, the Paladin's) take a kind their class wears, or none, as a mythic may. None depends on Einherjar, Rally, Valhalla or Paired guard; the build parties and routes in `tools/build-parties/` and `docs/gear-design/builds.md` need rewriting: the Valkyrie's everywhere, Harvest without the Bard, Rockslide and Supercell, the Hunt with Condemn and without Hunter's thrust.
 - **Scaling from the user, on pieces:** several pieces heal or shield from the receiving ally's max HP (Rallying horn, Charnel icon, Martyr's locket, Mantle of the fallen, Vestments of return). The director's rule is for classes here; whether it reaches pieces is their call, flagged.
-- **Engine:** a class line carrying a speed stat (a `SPECIAL` entry and the sheet showing it); a heal-or-revive ability (two effects, each with its own target, as Ward of life already does); Encore's marker (an ally's next ability resolves twice, the second free: the Cataclysm staff's recast on a given marker); Ride the lightning (an ally's landed basic attack shortens the holder's basic cooldown); Frost lance's trigger (stacks that read the target's Chill against the cap, a condition's scaling). The rest exists: crit steps on basic attacks, Attack speed self-buffs, Lifesteal doubling, Shield from a hit's damage, Marked and the party volley (Marching song's effect), buff stealing (the idol's `move`), "or" conditions and per-stack and per-debuff scaling.
+- **Engine:** a class line carrying a speed stat (a `SPECIAL` entry and the sheet showing it); a heal-or-revive ability (two effects, each with its own target, as Ward of life already does); Encore's marker (an ally's next ability resolves twice, the second free: the Cataclysm staff's recast on a given marker). The rest exists: an MP drain on a hit's target and a cooldown readied on an ally (Mana burn, Reprise), crit steps on basic attacks, Attack speed self-buffs, Lifesteal doubling, Shield from a hit's damage, Marked and the party volley (Marching song's effect), buff stealing (the idol's `move`), "or" conditions and per-stack and per-debuff scaling.
 - **Documents at close:** `classes.md` (every changed line), `rules-and-vocabulary.md` (the weapon table, Ward, the speed stats), `loot.md` (stock, leans), `builds.md` (the Valkyrie's routes and border abilities), `philosophy.md` (slots), `rules.md` (the frame's rules, the findings' weapon rules), the code map if files split.
-- **Then measure:** `npm run balance`, the build test on every route that changed, and feel reads of a Frostweaver's trigger lance on a chilled pack, a Paladin's Condemn and the volley that follows, a Hoplite's shove, a Valkyrie's Shield bar through a fight, and a Skyfall after three Gale spears.
+- **Then measure:** `npm run balance`, the build test on every route that changed, and feel reads of a Frostweaver building a shatter alone, a Paladin's Condemn and the volley that follows, a Hoplite's shove, a Valkyrie's Shield bar through a fight, and a Skyfall after three Gale spears.
 
 ## Checks
 
 - **The four weapon rules hold with no exception.** Wearers a kind: 2 to 3. No two classes share more than one weapon kind (checked pair by pair; the sword's three wearers each share it alone). Every class has a one-handed kind. No class has three.
 - **The offhand rules hold:** thirteen kinds of two or three wearers, two a class, no pair sharing more than one, checked by script.
 - **Every signature is read by every wearer,** per *Who reads what*. The thinnest reads are the Knight's and Geomancer's Attack (the swing), the Vampire's Siphon and the Ranger's Evasion, all flagged.
-- **No two classes share a base ability** once Static charge changes, **every passive works in every fight** once Einherjar goes, and **the mages share no template:** Fireball is the nuke, Blizzard the field's Chill with the lance as its trigger, Thunderstorm the party's swings.
-- **No class applies Slow,** and **no ability sets a status off early** once Rupture changes.
+- **No two classes share a base ability** once Static charge changes, **every passive works in every fight** once Einherjar goes, and **the mages share no template:** Fireball is the nuke, Blizzard the field's Chill, Thunderstorm the party's swings.
+- **No Frostweaver ability applies Slow, and none triggers a shatter;** **no ability sets a status off early** once Rupture changes.
 - **Every class has three identities,** each with a kind that leans to it and at least two versions that make it; the skirmisher, the frenzy and the ice wall had none before.
-- **The three mages differ in kinds, armor, line and kit:** staff and wand in robes at Attack 5 with Cast speed, stoking a fire with every cast; staff and rune sword in robes or mail at HP 3 and Defense 3, laying Chill and pulling the trigger; claws and rune sword in robes or leather with Attack speed, putting the storm on everyone's swings.
+- **The three mages differ in kinds, armor, line and kit:** staff and wand in robes at Attack 5 with Cast speed, stoking a fire with every cast; staff and rune sword in robes or mail at HP 3 and Defense 3, laying Chill until it bursts; claws and rune sword in robes or leather with Attack speed, putting the storm on everyone's swings.
