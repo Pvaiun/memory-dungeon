@@ -67,6 +67,38 @@ Corrections to the findings:
 
 **Retired kinds:** rod (its eight pieces rehomed in the build step, mostly onto the rune sword and staff) and fist weapons (renamed claws, pieces kept). **New kinds:** axe and hammer, sixteen pieces to write.
 
+## Swings and budgets
+
+Today every kind deals about the same per tick: a swing's size follows its interval (`SWING_REF`), its base is about half of a swing at the reference Attack (`WEAPON`), and every common carries the same two steps (three on a two-hander). The director's read is right: the kinds differ in speed, hands and stats, and in nothing else, so a weapon is a stat profile with a rhythm, and the choice between two kinds is only the choice between two stat lists. Three more levers make a kind a weapon.
+
+**The levers.** Speed and hands stay the kind's fixed part, as the findings set them. Each kind now also has three words, in the scale's way (first values in `scale.ts`, named below):
+- **Swing:** how hard it hits per tick at the reference Attack. Light, full or heavy (`SWING_POWER`).
+- **Scaling:** what share of that swing comes from Attack. Base-heavy, even or Attack-heavy (`SWING_SCALING`). A base-heavy swing works for any wearer; an Attack-heavy one turns the wearer's own Attack into damage and rewards stacking it.
+- **Budget:** how many stat steps its pieces carry. Lean, standard or rich: a step fewer or a step more than today's at every rarity where stats appear (`KIND_BUDGET`).
+
+**The trade.** A kind pays for its swing in budget, or the other way round: heavy swings on lean kinds, light swings on rich ones, and a two-hander takes both sides, since it's worth a weapon and an offhand. The scaling word follows the wearers and the signature: a kind whose signature is Attack swings base-heavy or even, so the Attack it carries feeds abilities rather than cancelling against its own swing (the findings' warning); the Attack-heavy kinds are the ones worn by high-Attack fighters whose signature is something else. **Attack-heavy kinds drop Attack from their common list** (the dagger, axe and bow in the findings' table), or the two halves cancel and the pair choice collapses: that's the one correction to the settled profiles this section asks for.
+
+| Kind | Speed, hands | Swing | Scaling | Budget | Why |
+| --- | --- | --- | --- | --- | --- |
+| Dagger | fast, one | light | Attack-heavy | standard | the Assassin's Attack 5 makes a knife of it; the Ranger's crits land often |
+| Claws | fast, one | light | even | standard | many hits for Double strike, Arc and Iron palm to ride |
+| Wand | fast, one | light | base-heavy | rich | the caster's stat stick that still swings often for Cold hex and Refrain |
+| Rune sword | slow, one | full | base-heavy | standard | a sword a mage can swing: solid for Attack 3, and its stats |
+| Sword | medium, one | full | even | standard | the plain blade, the reference |
+| Spear | medium, one | full | even | standard | the Hoplite doubles it, the Valkyrie shields from it, the Monk rides it |
+| Axe | medium, one | heavy | Attack-heavy | lean | the brute's blade: hits hardest of the one-handers and carries least |
+| Hammer | slow, one | heavy | base-heavy | lean | the wall's weapon: big slow blows that don't need the Attack the walls lack |
+| Mace | slow, one | light | base-heavy | rich | the priest's weapon: carried for what's on it |
+| Bow | medium, two | heavy | Attack-heavy | standard | the marksman's scaling swing; the Bard at Attack 3 chooses it for Refrain's hit size, and pays |
+| Great weapon | slow, two | heavy | even | rich | worth a weapon and an offhand: the heaviest swing and the stats |
+| Staff | slow, two | light | base-heavy | rich | two hands for a caster: the lightest swing and the most stats |
+
+**Within a kind.** The swing is the kind's, but a piece may take one step along the trade: a heavy piece swings harder for a step fewer, a light piece swings lighter for a step more, and a piece may swap the swing's stat (the Heartsplitter's max HP). The loot pass uses it so a kind's eight pieces aren't one weapon with eight stat lists, and a card says it plainly ("a heavy blade", "scales from Defense"). Rarity still buys stats and effects, never the swing.
+
+**What this does for the pairs.** The Knight's hammer hits like a falling hill without Attack and its sword grows with the Attack it carries; the Hoplite's great weapon and spear are both full-or-heavy but one is rich and two-handed; the Cleric's mace and staff are both light stat sticks, one with an offhand; the Assassin's dagger scales where its axe hits; the Pyromancer's wand and staff are both light, rich and base-heavy, and differ in speed and hands alone, which is right for the one class that never swings for a living.
+
+**What must be measured, not reasoned.** The exchange rate: how many win points a stat step is worth against a tenth of swing damage, class by class on the build parties, since a step of a stat a class reads is worth far more to it than to one that doesn't. That rate sets what "a step fewer" buys in swing, and it's the build session's first measurement, before any kind's words are sized.
+
 ## Offhand kinds
 
 **Thirteen kinds, two a class, by the weapon rules.** The director's read of the game as built: the bell's wearers (Monk, Cleric, Stormcaller) never want the same stats, so a bell with Evasion is a Monk tool and a bell with MP regen a Cleric tool, and ten classes had one offhand kind and no other. The weapon method fixes both: a kind is two or three classes that all read its signature stat, two classes share at most one offhand kind, and every class has two kinds, so the offhand is a choice the way the weapon is. An offhand has no swing, so a kind's whole identity is its stat profile, its flavour and who shares it. Classes with a two-hander give the slot up on that side; their offhand pairs with their one-hander.
@@ -400,6 +432,8 @@ Where I pushed back, or didn't take the other thread's version:
 
 Least sure, flagged for the build and the balance pass: Cadenza (esoteric, and worth trying by the director's word), Mana burn's size, and the Frostweaver's Chill counts.
 
+Added on the director's last note, open to their word: **the swing, scaling and budget words per kind** (*Swings and budgets*), the within-kind step along the trade, and the one correction they force: the dagger, axe and bow drop Attack from their common lists.
+
 Designer's calls still open to being overruled:
 - **Hunter's eye crits more often** on basic attacks.
 - **The speed stats in four lines:** Bard and Valkyrie Cooldown, Pyromancer Cast speed, Stormcaller Attack speed.
@@ -412,6 +446,7 @@ Designer's calls still open to being overruled:
 Not this step's work, listed so the design is honest about its cost.
 
 - **Kinds:** the vocabulary's weapon table (twelve kinds; rod gone, fist renamed claws, axe and hammer added; rune sword and mace slow), `KIND_SPEED` for the new kinds, the classes' kinds, the gear-slots tool's tables.
+- **Swings:** `WEAPON` grows per-kind words (`SWING_POWER`, `SWING_SCALING`, `KIND_BUDGET`), `weaponHit` reads them, the plain weapons follow, and the exchange rate is measured first (`npx tsx tools/build-test.ts` with a stat step against a swing step, class by class).
 - **Pieces:** eight rod pieces rehomed; sixteen axe and hammer pieces written to the kinds' profiles; twenty-four offhand pieces written for the orb, trophy and cloak, and the eighty existing offhands re-read against their kinds' new profiles and wearers (the bell's Cleric pieces, the horn's Bard pieces, the totem's Ranger and Geomancer pieces move or change); the loot stock table (twelve weapon kinds, thirteen offhand kinds); the commons-and-uncommons lean table rewritten from both profile tables. Wearer lists change on many cards, and the Shadow cloak (a leather rare) wants a new name.
 - **Ward retired:** Sigil blade and Prior's mace (new uncommon effects), the Lich's Dark ward and the Fire Giant's Kindle (Guard or Shield in its place), the Buffer's list, and every challenge whose answers name Ward.
 - **Pieces the kit now does:** the Hexblade (Malison deepens) and the Humbling mace (Withering hex); the Notched knife beside Barbed quiver and Static mail beside Static field share a thread in a different shape, a check and not a change.
@@ -423,6 +458,7 @@ Not this step's work, listed so the design is honest about its cost.
 
 ## Checks
 
+- **No two kinds share a profile:** every pair of kinds differs in at least two of speed, hands, swing, scaling and budget, checked against the table.
 - **The four weapon rules hold with no exception.** Wearers a kind: 2 to 3. No two classes share more than one weapon kind (checked pair by pair; the sword's three wearers each share it alone). Every class has a one-handed kind. No class has three.
 - **The offhand rules hold:** thirteen kinds of two or three wearers, two a class, no pair sharing more than one, checked by script.
 - **Every signature is read by every wearer,** per *Who reads what*. The thinnest reads are the Knight's and Geomancer's Attack (the swing), the Vampire's Siphon and the Ranger's Evasion, all flagged.
