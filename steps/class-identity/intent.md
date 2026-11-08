@@ -37,3 +37,7 @@ The director, Nov 8, on the prototype that removed Magic and Magic resist (`step
 - **The offhand kinds as tabled** (thirteen kinds, two a class, by the weapon rules). Approved.
 - **Armor stays as the four weight classes.** No pass on armor.
 - With these, **the design is approved at its gate.** The next stage is build and tune.
+
+## The director's feedback from a parallel thread (Nov 8)
+
+They ran the same exercise with another agent and list the calls they liked better there, as feedback rather than a task list: push back where warranted, keep the design coherent. Their direct calls: no class applies both Chill and Slow; the Frostweaver is tankier, "a chunky supporting ice wall, a disabler or a shatter killer, never a squishy pure lockdown", and the mages separate by kit, not stat line; the Frostweaver must shatter reliably by design; the Pyromancer is the long cast, Cast speed is its stat and Burn is stoked by its casts ("the current pyromancer design is one of the least functional classes"); the Hexer has three identities (Spellbreaker, Curser, elemental blade); the Paladin is the judge, "helper of the righteous, killer of the wicked"; upgrades carry most of the change. Designs they liked: the Hoplite's Othismos (a shove from Defense with Sunder on every foe); the Paladin's Condemn (a Mark and the party's volley); Malison that deepens what foes hold and adds Bleed; Encore in place of Thunder chord; Fireball, Blizzard and Thunderstorm as three different abilities; Thunderstorm as Shock on the party's swings.
