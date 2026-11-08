@@ -56,18 +56,18 @@ const ROMAN = ["", "I", "II", "III"];
 const STAT_WORDS: [string, string][] = [
   ["max_hp, max_mp", "HP and MP. Gear that raises the max raises current HP or MP with it, and takes it away when it comes off: what's missing stays missing."],
   ["mp_regen", "MP regained over a fight."],
-  ["attack, magic", "What physical and magical hits and heals scale from (ability sizes in party are worked out from them)."],
-  ["armor", "Shrinks physical hits: small hits a lot, big hits little."],
+  ["attack", "What hits, heals and the rest scale from (ability sizes in party are worked out from it)."],
+  ["defense", "Shrinks every hit: small hits a lot, big hits little. A status's own damage (Burn, Bleed) gets past it."],
   ["aggro", "How likely foes are to aim at this member, centred on 100: a foe's move without a target rule picks one of the party by draw, which comes from aggro through a curve (an ordinary member draws 100, nobody more than 300 or less than 33), when it starts. Taunt draws every such move to the taunter."],
   ["crit_chance, crit_damage", "How often a hit crits, and how much more a crit deals."],
-  ["evasion, accuracy", "Evasion: a share of physical hits missed. Accuracy cancels a foe's evasion."],
+  ["evasion, accuracy", "Evasion: a share of hits missed. Accuracy cancels a foe's evasion."],
   ["thorns", "Damage dealt back to whoever hits this member."],
   ["lifesteal", "A share of damage dealt comes back as HP."],
   ["siphon", "A share of damage dealt comes back as MP."],
   ["double_strike", "A chance for a basic attack to hit twice."],
   ["healing_received", "More or less from every heal."],
   ["resist:<element>", "Less damage of that element; past 100%, the damage heals it instead (\"absorbs\")."],
-  ["weapon kinds", "A weapon kind sets which classes can use it and how its basic attack swings (how often, and physical or an element)."],
+  ["weapon kinds", "A weapon kind sets which classes can use it and how its basic attack swings (how often, and with one hand or two)."],
 ];
 const pts = (n: number) => Math.round(n / 100) / 10;
 const statWord = (stat: string, v: number) => {
@@ -90,7 +90,7 @@ function sizeOf(a: AbilityT, st: Record<string, number>, mult = 1): string {
   };
   for (const e of a.do) {
     if (e.op === "damage") {
-      const kind = e.type === "none" ? "untyped" : e.type;
+      const kind = e.type === "none" ? "untyped damage" : "damage";
       const v = Math.round(val(e.amount, st) * mult);
       out.push(`${v ? `about ${v} ` : ""}${kind}${e.hits && e.hits > 1 ? ` x${e.hits}` : ""}${(e.apply ?? []).map((x) => ` + ${x.status === "shield" ? `${Math.round(val(x.stacks, st))} shield` : stacks(x.status, x.stacks)}`).join("")}`);
     } else if (e.op === "heal") out.push(`heals about ${Math.round(val(e.amount, st))}`);
@@ -271,7 +271,7 @@ function look(run: RogueRun): string {
   if (canManage(run)) out.push("", "Between rooms you can change gear (equip), the formation, seats and ability order, and use supplies.");
   return out.join("\n");
 }
-/** An enemy as the bestiary describes it: what it does, its abilities, its resistances. Never its stats. */
+/** An enemy as the bestiary describes it: what it does, its abilities, its passives. Never its stats. */
 /** Who a foe's move aims at, from the party's side. */
 function atWords(ab: AbilityT): string {
   const t = ab.target;
@@ -286,12 +286,11 @@ function atWords(ab: AbilityT): string {
 }
 function bestiary(id: string, power = 0): string {
   const en = c.enemies.get(id)!;
-  // An ability's size from the foe's stats and this fight's knob, before Armor and resistances.
-  const acts = (en.abilities ?? []).map((a) => { const ab = c.abilities.get(a)!; const sz = sizeOf(ab, en.stats as Record<string, number>, 1 + power / 100); return `${ab.name} (${ab.text} Aims at ${atWords(ab)}.${sz ? ` ${sz}${/about/.test(sz) ? ", before Armor, crits and statuses" : ""}.` : ""})`; });
+  // An ability's size from the foe's stats and this fight's knob, before Defense.
+  const acts = (en.abilities ?? []).map((a) => { const ab = c.abilities.get(a)!; const sz = sizeOf(ab, en.stats as Record<string, number>, 1 + power / 100); return `${ab.name} (${ab.text} Aims at ${atWords(ab)}.${sz ? ` ${sz}${/about/.test(sz) ? ", before Defense, crits and statuses" : ""}.` : ""})`; });
   const pas = (en.statuses ?? []).map((st) => `${c.statuses.get(st)!.name}: ${c.statuses.get(st)!.text ?? ""}`);
   const res: string[] = [];
-  const kind = en.weapon?.kind ? c.weaponKinds.get(en.weapon.kind)?.type ?? "physical" : en.weapon?.type ?? "physical";
-  return `${en.name}${en.rank !== "minion" ? ` (${en.rank})` : ""}: ${en.text} Attacks: ${kind}.${acts.length ? ` Abilities: ${acts.join("; ")}.` : ""}${pas.length ? ` ${pas.join(" ")}` : ""}${res.length ? ` ${res.join(", ")}.` : ""}`;
+  return `${en.name}${en.rank !== "minion" ? ` (${en.rank})` : ""}: ${en.text}${acts.length ? ` Abilities: ${acts.join("; ")}.` : ""}${pas.length ? ` ${pas.join(" ")}` : ""}${res.length ? ` ${res.join(", ")}.` : ""}`;
 }
 /** What a training does, in the content's words: an ability to learn, or a power step's or a version's card. */
 function upText(opt: string): string {
@@ -329,7 +328,7 @@ function partyWords(run: RogueRun): string {
     const k = c.classes.get(m.cls)!;
     const seatNo = run.party.indexOf(m.cls);
     const s = fighterOf(run, m.cls).stats;
-    out.push(`${m.cls} (${k.name})${seatNo >= 0 ? `, slot ${seatNo + 1} ${f.positions[seatNo].name}` : ", at camp"}: ${vit(run, m.cls)}. Attack ${pts(s.attack)}, Magic ${pts(s.magic)}, Armor ${pts(s.armor)}, Crit ${s.crit_chance}%, Aggro ${Math.round(s.aggro)}, MP regen ${pts(s.mp_regen)}.`);
+    out.push(`${m.cls} (${k.name})${seatNo >= 0 ? `, slot ${seatNo + 1} ${f.positions[seatNo].name}` : ", at camp"}: ${vit(run, m.cls)}. Attack ${pts(s.attack)}, Defense ${pts(s.defense)}, Crit ${s.crit_chance}%, Aggro ${Math.round(s.aggro)}, MP regen ${pts(s.mp_regen)}.`);
     for (const slot of ["weapon", "armor", "offhand", "amulet"] as Slot[]) out.push(`  ${slot}: ${m.gear[slot] ? itemWords(itemOf(run, m.gear[slot]!)!) : "nothing"}`);
     // A trained ability plays as its form.
     const ab = (a: string) => c.abilities.get(formOf(m, a)) ?? c.abilities.get(a)!;
@@ -349,7 +348,7 @@ function classWords(id: string): string {
   const st = k.stats;
   return [
     `${k.name}: ${k.text}`,
-    `Stats: HP ${st.max_hp}, MP ${st.max_mp ?? 0}, Attack ${pts(st.attack ?? 0)}, Magic ${pts(st.magic ?? 0)}, Armor ${pts(st.armor ?? 0)}, Crit ${st.crit_chance ?? 0}%, Aggro ${Math.round(st.aggro ?? 0)}.`,
+    `Stats: HP ${st.max_hp}, MP ${st.max_mp ?? 0}, Attack ${pts(st.attack ?? 0)}, Defense ${pts(st.defense ?? 0)}, Crit ${st.crit_chance ?? 0}%, Aggro ${Math.round(st.aggro ?? 0)}.`,
     `Weapons: ${k.weapons.join(", ")}. Heaviest armor: ${k.armor}. Passive: ${k.passive?.name ?? "Einherjar"}: ${(k.passive?.text ?? "allies it revives come back with every action ready").replace(/\.$/, "")}.`,
     ...k.abilities.map((a) => { const ab = c.abilities.get(a)!; return `  ${a}: ${ab.name}, MP ${ab.mp ?? 0}, every ${Math.round(ab.cooldown)} ticks: ${ab.text}`; }),
   ].join("\n");

@@ -53,12 +53,12 @@ import { abilityUp, apply, DRAWN, helper, kit, ofHolder, passiveUp, removeMine }
 }
 
 {
-  const heal = (ratio: number): EffectT => ({ op: "heal", amount: from("magic", ratio) });
+  const heal = (ratio: number): EffectT => ({ op: "heal", amount: from("attack", ratio) });
   const triage = (ratio: number): Partial<AbilityT> => ({ if: { side: "allies", where: { hpBelow: 40 } }, do: [heal(ratio)] });
-  /** Battle prayer: the next basic attack carries the heal's amount again as magical damage, once (Refresh: a second Cure doesn't add a second). */
+  /** Battle prayer: the next basic attack carries the heal's amount again as damage, once (Refresh: a second Cure doesn't add a second). */
   const prayer = (id: string, ratio: number) =>
-    kit(id, "BATTLE PRAYER", "Its next basic attack deals extra magical damage.", {
-      riders: [{ on: "basic", add: { type: "magical", amount: ofHolder(ratio, "magic") } }],
+    kit(id, "BATTLE PRAYER", "Its next basic attack deals extra damage.", {
+      riders: [{ on: "basic", add: { type: "physical", amount: ofHolder(ratio, "attack") } }],
       reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [removeMine(id)] }],
     });
   helper(prayer("battle_prayer", 0.35));
@@ -67,7 +67,7 @@ import { abilityUp, apply, DRAWN, helper, kit, ofHolder, passiveUp, removeMine }
     id: "cure", cls: "cleric",
     power: "Heals two fifths more.",
     a: { name: "Triage", text: "Waits until an ally is below 40% of its max HP, then heals it for twice as much.", builds: ["pact", "phoenix"] },
-    b: { name: "Battle prayer", text: "Heals the ally with the lowest share of HP. Its next basic attack deals the same amount again as extra magical damage.", builds: ["pact", "landslide"] },
+    b: { name: "Battle prayer", text: "Heals the ally with the lowest share of HP. Its next basic attack deals the same amount again as extra damage.", builds: ["pact", "landslide"] },
     form: (v, k, plus) =>
       v === "a" ? triage(0.7 * k)
         : v === "b" ? { do: [heal(0.35 * k), apply(plus ? "battle_prayer_plus" : "battle_prayer", { to: "self" })] }

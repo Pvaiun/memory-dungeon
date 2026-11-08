@@ -56,7 +56,7 @@ export type CUnit = Unit & {
  * (a reaction's strike of a hit, the cooldown effect's `which: event`, a recast) and read by event filters.
  */
 export type Carried = {
-  /** Hits: the raw amount, after boosts, damage taken and crit, before Armor or Magic resist. */
+  /** Hits: the raw amount, after boosts, damage taken and crit, before Defense. */
   raw: number;
   /** Hits: the damage type. */
   dtype: S.InstanceT["type"] | null;

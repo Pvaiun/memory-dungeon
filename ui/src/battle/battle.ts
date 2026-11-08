@@ -10,19 +10,19 @@
  * dead time before it but letting a wind-up fill at the speed set; >> plays
  * the rest at once.
  */
-import { SUBTICKS } from "../../../src/schema.js";
+import { SUBTICKS, type AbilityT } from "../../../src/schema.js";
 import type { CUnit } from "../../../src/engine/combat/fight.js";
-import { resolveWeapon, weaponOf } from "../../../src/engine/combat/fight.js";
+import { weaponOf } from "../../../src/engine/combat/fight.js";
 import { c, className, disp, fightName, runName, shortName, shownAsIcon } from "../content.js";
-import { enemyName, statusStyle, TYPE_COLOR, type Pose } from "../art.js";
+import { enemyName, statusStyle, type Pose } from "../art.js";
 import { bar, button, clear, h, nav, win, type Child } from "../dom.js";
 import { nextSeed, party as partyLoadout, save, setup, SPEEDS } from "../state.js";
-import { damageTypeOf, statusText } from "../describe.js";
+import { dealsDamage, isSpell, statusText } from "../describe.js";
 import { actionIconEl, actionIconOf, drawDigits, enemyThumb, OUTLINE, statusEl } from "../pixel.js";
 import { classHead, classSheet, enemySheet, portraitEl } from "../sheet.js";
 import type { Member } from "../../../src/engine/combat/rules.js";
 import { Driver, type Ev } from "./driver.js";
-import { COUNTS, Narrator, resisted, type Beat, type Line, type Tone } from "./narrate.js";
+import { COUNTS, Narrator, type Beat, type Line, type Tone } from "./narrate.js";
 import { Scene, shieldOf, themeOf, W, H } from "./scene.js";
 import { setMusic, setSound, sfx } from "./audio.js";
 import { go } from "../screens.js";
@@ -256,12 +256,6 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   const lastStatusFx = new Map<string, number>();
   /** Statuses that landed RESISTED (control resistance), by unit, status and moment, until their "status" event shows. */
   const resistedNow = new Set<string>();
-  /** An action's damage type: its weapon's for a basic attack, its first damage effect's for an ability (null: none). */
-  const actType = (unit: CUnit | undefined, act: string): "physical" | "magical" | null => {
-    if (act === "basic") return unit ? resolveWeapon(c, weaponOf(c, unit.weapon)).type : null;
-    const ab = c.abilities.get(act);
-    return ab ? damageTypeOf(ab) : null;
-  };
   function show(ev: Ev) {
     const at = ev.at as number | undefined;
     switch (ev.t) {
@@ -291,12 +285,12 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         const tag = narrator.tagOf(by, String(ev.act));
         const unit = driver.unit(by);
         const kind = unit ? c.gear.get(unit.weapon)?.weapon?.kind : undefined;
-        const type = actType(unit, String(ev.act));
-        if (v?.side === "party") scene.pose(by, poseFor(isBasic, type, kind), 520);
+        const ab = isBasic ? undefined : c.abilities.get(String(ev.act));
+        if (v?.side === "party") scene.pose(by, poseFor(ab, kind), 520);
         scene.lunge(by);
         const fxTag = isBasic && tag === "pierce" && kind === "bow" ? "arrow" : tag;
         for (const t of targets) scene.effectFor(t, fxTag, targets.length <= 2);
-        if (!isBasic && type === "magical") sfx.magic();
+        if (ab && isSpell(ab)) sfx.magic();
         break;
       }
       case "fail":
@@ -409,18 +403,19 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   }
 
   /**
-   * A party member's pose for an action: a basic attack by its weapon's kind (a bow draws, a dagger or a spear thrusts, a
-   * wand, rod or staff casts, the rest swing); a physical ability is a skill (drawn from a bow), anything else a spell.
+   * A party member's pose for an action (`ab` absent: a basic attack): a basic attack by its weapon's kind (a bow draws, a
+   * dagger or a spear thrusts, a wand, rod or staff casts, the rest swing); a damaging ability drawn from a bow, a weapon
+   * skill (a motion's look) a skill, anything else a spell (a theme's look, or no damage).
    */
-  function poseFor(isBasic: boolean, type: "physical" | "magical" | null, kind: string | undefined): Pose {
-    if (isBasic) {
+  function poseFor(ab: AbilityT | undefined, kind: string | undefined): Pose {
+    if (!ab) {
       if (kind === "bow") return "missile";
       if (kind === "dagger" || kind === "spear") return "thrust";
       if (kind === "wand" || kind === "rod" || kind === "staff") return "spell";
-      return kind || type === "physical" ? "swing" : "spell";
+      return "swing";
     }
-    if (type === "physical") return kind === "bow" ? "missile" : "skill";
-    return "spell";
+    if (dealsDamage(ab) && kind === "bow") return "missile";
+    return dealsDamage(ab) && !isSpell(ab) ? "skill" : "spell";
   }
 
   function showDamage(ev: Ev) {
@@ -444,12 +439,11 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     const crit = !!ev.crit;
     const shown = disp(amount + soaked);
     if (isStatus && shown <= 0) return;
-    // A hit's number in its damage type's colour (physical white, magical violet); a status's in its own.
+    // A hit's number in white, big; a status's small, in its own colour with its icon.
     const style = isStatus && c.statuses.has(src) ? statusStyle(src) : null;
-    const color = crit ? "#ffd54a" : style ? style.color : TYPE_COLOR[String(ev.kind)] ?? "#ffffff";
-    const resist = resisted(ev);
-    const sub = crit ? "CRITICAL" : resist ? "RESIST" : soaked && amount ? "SHIELD" : soaked ? "SOAKED" : undefined;
-    scene.number(target, `${shown}${crit ? "!" : ""}`, { color, big: !isStatus, sub, subColor: crit ? "#ffd54a" : resist ? "#8e99b8" : "#a8e8ff", icon: isStatus && c.statuses.has(src) ? src : undefined });
+    const color = crit ? "#ffd54a" : style ? style.color : "#ffffff";
+    const sub = crit ? "CRITICAL" : soaked && amount ? "SHIELD" : soaked ? "SOAKED" : undefined;
+    scene.number(target, `${shown}${crit ? "!" : ""}`, { color, big: !isStatus, sub, subColor: crit ? "#ffd54a" : "#a8e8ff", icon: isStatus && c.statuses.has(src) ? src : undefined });
     if (!isStatus || amount >= 100) scene.hit(target);
     if (!isStatus) (crit ? sfx.crit : sfx.hit)();
     else sfx.status();

@@ -6,7 +6,7 @@
  * ability as a card: its icon (shaded until it first comes round, as the
  * battle's rows draw it), its cost and cooldown as icons and numbers, the
  * documents' sentence, and its size for this unit with what it grows with
- * ("150 MAGICAL (125% MAG)"). Enemies get the same parts plus their Magic resist.
+ * ("150 DMG (125% ATK)"). Enemies get the same parts.
  * Designer view adds the worked-out numbers from describe.ts.
  */
 import { headStart } from "../../src/engine/combat/stats.js";
@@ -14,7 +14,7 @@ import type { AbilityT, EnemyT, FormationT, GearT, WeaponT } from "../../src/sch
 import { combat, type Member } from "../../src/engine/combat/rules.js";
 import { drawOf, resolveWeapon, weaponOf } from "../../src/engine/combat/fight.js";
 import { armorName, c, cls, disp, immuneTo, kindOf, offhandName, SHEET_STATS, shortName, SPECIAL_STATS, showStat, statCode, status, tagline } from "./content.js";
-import { abilityInfo, abilityTag, damageTypeOf, evalNum, scalesOf, sizeParts, statusText, TYPE_TONE, TYPE_WORD, type Scale, type SizePart, type Stats } from "./describe.js";
+import { abilityInfo, abilityTag, evalNum, scalesOf, sizeParts, statusText, TYPE_TONE, TYPE_WORD, type Scale, type SizePart, type Stats } from "./describe.js";
 import { gearIcon, SLOT_ICON, TAG_ICON, weaponLook } from "./art.js";
 import { canEquip, handsOf } from "../../src/validate.js";
 import { h, type Child } from "./dom.js";
@@ -62,8 +62,8 @@ export function classHead(id: string, right?: Child, weapon: string | undefined 
 
 
 /**
- * The stat grid: label over number, four to a row (five for a foe's line); a coloured change when gear or the formation
- * moved a stat off the class's base; then Magic resist where it isn't in the keys and isn't zero ("RES 40%").
+ * The stat grid: label over number, four to a row; a coloured change when gear or the formation
+ * moved a stat off the class's base; then, for a foe or in designer view, the special stats it has ("EVA 35%").
  */
 export function statGrid(stats: Stats, base: Stats | null, designer: boolean, keys: readonly string[] = SHEET_STATS): HTMLElement {
   const cell = (label: Child, value: Child, delta?: Child, cls = "") => h("div", { class: `cell${cls ? ` ${cls}` : ""}` }, h("span", { class: "lbl" }, label), h("span", { class: "val" }, value, delta ?? null));
@@ -82,12 +82,7 @@ export function statGrid(stats: Stats, base: Stats | null, designer: boolean, ke
       cells.push(cell(statCode(key), showStat(key, v)));
     }
   }
-  // A class's sheet: Magic resist only once something gives it (gear, a seat, Ward); a foe's sheets name it in their keys.
-  if (base && !keys.includes("magic_resist") && stats.magic_resist) {
-    const d = stats.magic_resist - (base.magic_resist ?? 0);
-    cells.push(cell(statCode("magic_resist"), showStat("magic_resist", stats.magic_resist), d ? h("i", { class: d > 0 ? "good" : "bad" }, `${d > 0 ? "+" : ""}${Math.round(d)}%`) : undefined));
-  }
-  return h("div", { class: `stats${keys.length === 5 ? " five" : ""}` }, ...cells);
+  return h("div", { class: "stats" }, ...cells);
 }
 /** The special stats a unit has above default, as "EVA 35%" lines. */
 export function specialLines(stats: Stats): Child[] {
@@ -100,7 +95,7 @@ export function specialLines(stats: Stats): Child[] {
   return out;
 }
 
-/** Stat changes as coloured codes: "ARM+30 HP+60", green up, red down, on the stat sheet's scale. */
+/** Stat changes as coloured codes: "DEF+30 HP+60", green up, red down, on the stat sheet's scale. */
 export function codeSpans(stats: { stat: string; flat?: number; pct?: number }[] | undefined): Child[] {
   if (!stats?.length) return [];
   return stats.flatMap((s, i) => {
@@ -156,12 +151,12 @@ export function seatNotes(f: FormationT): string {
 
 // ─── Amounts and timings ───
 
-/** "(125% MAG)". */
+/** "(125% ATK)". */
 export function scaleEl(scales: Scale[]): Child {
   if (!scales.length) return null;
   return h("span", { class: "scale" }, `(${scales.map((s) => s.text).join(", ")})`);
 }
-/** An ability's size: "150 MAGICAL (125% MAG) + 10 BURN (MAG)". */
+/** An ability's size: "150 DMG (125% ATK) + 10 BURN (ATK)". */
 export function sizeEl(parts: SizePart[]): HTMLElement | null {
   if (!parts.length) return null;
   return h("div", { class: "size" }, ...parts.flatMap((p, i) => [
@@ -179,14 +174,14 @@ const ICON_SCALE = 1.5;
 
 /**
  * What a weapon's basic attack is, worked out for a unit: its look (`ref`, the weapon's gear id or "enemy:<id>", picks
- * its icon), its damage type, how often, whether it takes both hands, what it hits for and what it grows with.
+ * its icon), its damage, how often, whether it takes both hands, what it hits for and what it grows with.
  */
 export function weaponParts(wp: WeaponT, stats: Stats | null, ref?: string): { tag: string; word: string; tone: string; cooldown: number; hands: 1 | 2; value: string | null; scales: Scale[] } {
   const r = resolveWeapon(c, wp);
   const value = stats ? `${wp.hits && wp.hits > 1 ? `${wp.hits}×` : ""}${disp(evalNum(wp.amount, stats).value)}` : null;
   return { tag: ref ? weaponLook(ref) : r.type, word: TYPE_WORD[r.type], tone: TYPE_TONE[r.type], cooldown: r.cooldown, hands: r.hands, value, scales: scalesOf(wp.amount) };
 }
-/** A weapon's hit and type, what the hit grows with, how often, and 2H when it takes both hands: "33 PHYSICAL", "(23% ATK)", "CD 8", "2H"; each part kept whole when the line wraps. */
+/** A weapon's hit, what it grows with, how often, and 2H when it takes both hands: "33 DMG", "(23% ATK)", "CD 8", "2H"; each part kept whole when the line wraps. */
 export function weaponCode(g: GearT, stats: Stats | null): Child[] {
   if (!g.weapon) return [];
   const w = weaponParts(g.weapon, stats, g.id);
@@ -264,7 +259,7 @@ export function gearRow(g: GearT | null, slot: string, stats: Stats | null, onCl
 
 /**
  * An ability card: the slot number to tap, the icon (shaded until it first comes round, the ticks in its corner), the
- * name in its damage type's colour (magical violet, heals green), the MP, cooldown and wind-up ("CAST") in words and whole numbers; the documents' sentence; and
+ * name (heals green), the MP, cooldown and wind-up ("CAST") in words and whole numbers; the documents' sentence; and
  * its size for this unit with what it grows with. In designer view, the target and every effect in words.
  */
 export function abilityBlock(a: AbilityT, stats: Stats | null, designer: boolean, opts: { n?: number; onN?: () => void; cur?: boolean; target?: boolean; dmgMult?: number; opening?: boolean } = {}): HTMLElement {
@@ -278,7 +273,7 @@ export function abilityBlock(a: AbilityT, stats: Stats | null, designer: boolean
     opts.n !== undefined ? h("span", { class: `n${opts.target ? " target" : ""}`, onClick: opts.onN }, String(opts.n)) : null,
     h("span", { class: "pip" }, pipEl(actionIconOf(tag, a.id), first, i.cooldown, ICON_SCALE)),
     h("div", { class: "grow" },
-      h("div", { class: `trunc ${damageTypeOf(a) === "magical" ? "magic" : tag === "heal" || tag === "revive" || tag === "cleanse" ? "good" : ""}` }, i.name.toUpperCase()),
+      h("div", { class: `trunc ${tag === "heal" || tag === "revive" || tag === "cleanse" ? "good" : ""}` }, i.name.toUpperCase()),
       h("div", { class: "cost" },
         i.mp ? h("span", { class: "mp" }, `MP ${disp(i.mp)}`) : null,
         timing("CD", tk(i.cooldown)),
@@ -357,19 +352,12 @@ export function classSheet(id: string, designer: boolean, member: Member = membe
 /** An enemy's stats with the defaults filled in. */
 export const enemyStats = (e: EnemyT): Stats => ({ ...Object.fromEntries(c.pack.stats.map((s) => [s.id, s.default])), ...e.stats });
 
-/** What a foe hits with: its attack's damage type and every type its abilities deal, in words and their colours ("PHYSICAL · MAGICAL"). */
-export function hitsWith(e: EnemyT): Child[] {
-  const types = new Set<"physical" | "magical">([resolveWeapon(c, e.weapon ?? c.pack.ruleset.unarmed).type]);
-  for (const a of e.abilities ?? []) for (const d of c.abilities.get(a)!.do) if (d.op === "damage" && d.type !== "none") types.add(d.type);
-  const order = (["physical", "magical"] as const).filter((t) => types.has(t));
-  return order.flatMap((t, i) => [i ? h("span", { class: "dim" }, "·") : null, h("span", { class: `nowrap ${TYPE_TONE[t]}` }, TYPE_WORD[t])]);
-}
-/** The enemy stats a player reads: how much HP, how hard it hits each way, how much Armor and Magic resist. */
-export const ENEMY_STATS = ["max_hp", "attack", "magic", "armor", "magic_resist"] as const;
+/** The enemy stats a player reads: how much HP, how hard it hits, how much Defense (Evasion shows with the special stats). */
+export const ENEMY_STATS = ["max_hp", "attack", "defense"] as const;
 
 /**
  * Everything about an enemy, for the bestiary and a fight's inspect window: its line, its stats (`live` for a fight's
- * unit, with the run's changes) with its Magic resist, what it hits with, what it can't be given, its passives and
+ * unit, with the run's changes), what it can't be given, its passives and
  * its actions with their sizes. `power` is a fight's damage change, in percent.
  */
 export function enemySheet(e: EnemyT, designer: boolean, live?: Stats, power = 0): Child[] {
@@ -379,7 +367,6 @@ export function enemySheet(e: EnemyT, designer: boolean, live?: Stats, power = 0
   if (e.text) out.push(h("div", { class: "text dim wrap small", style: "margin-bottom:.375rem" }, e.text));
   // A fight's foe has its HP just above, live: the grid leaves it out.
   out.push(statGrid(stats, null, designer, live ? ENEMY_STATS.slice(1) : ENEMY_STATS));
-  out.push(h("div", { class: "line wrap small" }, h("span", { class: "dim" }, "HITS WITH"), ...hitsWith(e)));
   const immune = Object.entries(stats).filter(([k, v]) => k.startsWith("immune:") && v).map(([k]) => immuneTo(k));
   if (immune.length) out.push(h("div", { class: "line wrap small" }, h("span", { class: "dim" }, "IMMUNE TO"), ...immune.map((s) => h("span", { class: "nowrap" }, c.statuses.has(s) ? statusEl(s) : null, ` ${(c.statuses.get(s)?.name ?? s).toUpperCase()}`))));
   if (e.statuses?.length) {

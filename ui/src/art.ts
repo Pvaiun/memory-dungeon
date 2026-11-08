@@ -8,7 +8,6 @@
  */
 import { BUILD } from "./update.js";
 import type { GearT, WeaponT } from "../../src/schema.js";
-import { resolveWeapon } from "../../src/engine/combat/fight.js";
 import { baseGearId, c } from "./content.js";
 
 export type Manifest = {
@@ -100,7 +99,7 @@ export type Pose = keyof typeof POSE;
 
 /** Which VFX strip a look or effect plays on its target. A look is art only (see LOOKS below): a theme or a weapon's motion. */
 export const VFX_FOR: Record<string, string> = {
-  fire: "fire2", ice: "ice2", lightning: "lightning3", wind: "wind2", earth: "earth4", light: "holy1", dark: "darkness2", magical: "impact4",
+  fire: "fire2", ice: "ice2", lightning: "lightning3", wind: "wind2", earth: "earth4", light: "holy1", dark: "darkness2", arcane: "impact4",
   slash: "sword1", pierce: "weapon4", blunt: "impact1", bite: "bite1", arrow: "arrow1",
   heal: "heal2", revive: "holy3", buff: "status1", debuff: "status7", cleanse: "heal4", dispel: "status6", shield: "diamond1",
   summon: "smoke2", split: "smoke3", explosion: "explosion1", miss: "dust2", burn: "fire1", bleed: "claw", shock: "lightning1", chill: "ice3", regen: "heal5",
@@ -108,10 +107,10 @@ export const VFX_FOR: Record<string, string> = {
 
 // ─── Looks: themes, art only ───
 /*
- * Two kinds of damage, and no elements or physical subtypes as mechanics. An element is only a theme: the battle's fire,
- * ice and lightning effects and icons, and the hits' slash, thrust and impact, are set by id here, in the art, since the
- * data doesn't say. A look picks an action's icon, its effect on the target and nothing else; what defends against it is
- * its damage type, which the sheets and the numbers show.
+ * One kind of hit, and no elements or subtypes as mechanics. An element is only a theme: the battle's fire, ice and
+ * lightning effects and icons, and the hits' slash, thrust and impact, are set by id here, in the art, since the data
+ * doesn't say. A look picks an action's icon, its effect on the target, and whether a damaging ability reads as a spell
+ * (a theme) or a weapon skill (a motion): its pose, its sound and its verb. Nothing else: every hit meets the same defenses.
  */
 const ABILITY_LOOK: Record<string, string> = {
   shield_bash: "blunt", barbed_arrow: "pierce", frost_arrow: "ice", rending_arrow: "pierce", bramble_lash: "pierce", spear_thrust: "pierce",
@@ -128,7 +127,7 @@ const ENEMY_LOOK: Record<string, string> = {
   fire_imp: "fire", fire_giant: "fire", ice_spirit: "ice", wisp: "lightning", drone: "lightning", soldier: "lightning", storm_queen: "lightning", storm_king: "lightning",
   lava_slime: "blunt", mini_slime: "blunt", bomb_bug: "blunt",
 };
-/** A piece's own look: a magic weapon's theme, by piece (a rogue run's item takes its base piece's). */
+/** A piece's own look: a caster's weapon's theme, by piece (a rogue run's item takes its base piece's). */
 const PIECE_LOOK: Record<string, string> = {
   plain_staff: "fire", plain_wand: "lightning", plain_rod: "ice", plain_mace: "light",
   brand_staff: "fire", ember_staff: "fire", storm_rod: "lightning", grounding_rod: "lightning", zephyr_staff: "wind", tailwind_staff: "wind",
@@ -139,11 +138,14 @@ const PIECE_LOOK: Record<string, string> = {
 /** A weapon kind's look: how its swing lands. */
 const KIND_LOOK: Record<string, string> = {
   dagger: "pierce", fist: "blunt", sword: "slash", spear: "pierce", bow: "pierce", great_weapon: "blunt",
-  rune_sword: "slash", mace: "blunt", wand: "magical", rod: "magical", staff: "magical",
+  rune_sword: "slash", mace: "blunt", wand: "arcane", rod: "arcane", staff: "arcane",
 };
-const weaponKindLook = (wp: WeaponT | undefined): string => (wp?.kind && KIND_LOOK[wp.kind]) || (wp && resolveWeapon(c, wp).type === "magical" ? "magical" : "blunt");
-/** An ability's look, when it deals damage: its theme or motion, else its damage type. */
-export const abilityLook = (id: string, type: "physical" | "magical"): string => ABILITY_LOOK[id.replace(/__\w+$/, "")] ?? type;
+const weaponKindLook = (wp: WeaponT | undefined): string => (wp?.kind && KIND_LOOK[wp.kind]) || "blunt";
+/** An ability's look, when it deals damage: its theme or motion, else a plain hit's. */
+export const abilityLook = (id: string): string => ABILITY_LOOK[id.replace(/__\w+$/, "")] ?? "physical";
+/** The looks that are a theme, not a weapon's motion: a damaging ability with one is a spell (cast, with the spell's pose and sound). */
+const THEMES = new Set(["fire", "ice", "lightning", "wind", "earth", "light", "dark", "arcane"]);
+export const isTheme = (look: string): boolean => THEMES.has(look);
 /** A basic attack's look, from its weapon's ref (a gear id, "enemy:<id>" or "unarmed"), or a foe's own. */
 export function weaponLook(ref: string, enemy?: string): string {
   if (enemy && ENEMY_LOOK[enemy]) return ENEMY_LOOK[enemy];
@@ -151,9 +153,6 @@ export function weaponLook(ref: string, enemy?: string): string {
   if (ref === "unarmed") return "blunt";
   return PIECE_LOOK[ref] ?? PIECE_LOOK[baseGearId(ref)] ?? weaponKindLook(c.gear.get(ref)?.weapon);
 }
-
-// ─── Colour: the two kinds of damage (the stylesheet's --phys and --magic), and the rarities ───
-export const TYPE_COLOR: Record<string, string> = { physical: "#ffffff", magical: "#c8a0ff" };
 
 // ─── The iconset: [row, col] of a 16-column sheet of 32×32 cells (16×16 art pixels) ───
 export type Cell = readonly [number, number];
@@ -176,7 +175,7 @@ const OFFHAND_CELL: Record<string, [Cell, Shade]> = {
 const AMULET_CELL: Cell = [20, 4];
 const shade = (cell: Cell, s: Shade): Cell => [cell[0] + SHADE[s], cell[1]];
 
-/** The iconset cell for a piece of gear: its kind's or type's icon, physical weapons blue and magical ones purple, gold for legendary and mythic pieces. */
+/** The iconset cell for a piece of gear: its kind's or type's icon, the casters' weapons purple and the rest blue, gold for legendary and mythic pieces. */
 export function gearIcon(g: GearT): Cell {
   const gold = g.tier === "powerful";
   if (g.slot === "weapon") return kindIcon(g.weapon?.kind ?? "sword", gold);
@@ -190,17 +189,18 @@ export function gearIcon(g: GearT): Cell {
   }
   return shade(AMULET_CELL, gold ? "yellow" : "blue");
 }
-/** A weapon kind's cell: physical blue, magical purple (gold for a powerful piece). */
+/** The casters' weapon kinds, drawn purple by kind (art only: their hits are everyone's). */
+const CASTER_KINDS = new Set(["rune_sword", "mace", "wand", "rod", "staff"]);
+/** A weapon kind's cell: a caster's purple, the rest blue (gold for a powerful piece). */
 export function kindIcon(kind: string, gold = false): Cell {
-  const def = c.weaponKinds.get(kind);
-  return shade(KIND_CELL[kind] ?? KIND_CELL.sword, gold ? "yellow" : def?.type === "magical" ? "purple" : "blue");
+  return shade(KIND_CELL[kind] ?? KIND_CELL.sword, gold ? "yellow" : CASTER_KINDS.has(kind) ? "purple" : "blue");
 }
 /** An empty slot's cell: the plain grey set. */
 export const SLOT_ICON: Record<string, Cell> = { weapon: [5, 1], armor: [7, 5], offhand: [7, 0], amulet: [6, 9] };
 
-/** Cells for what an ability or hit looks like (a theme, a weapon's motion, its damage type) or does. */
+/** Cells for what an ability or hit looks like (a theme, a weapon's motion, a plain hit) or does. */
 export const TAG_ICON: Record<string, Cell> = {
-  fire: [9, 7], ice: [9, 15], lightning: [9, 9], wind: [9, 12], earth: [9, 11], light: [9, 13], dark: [9, 14], magical: [9, 6],
+  fire: [9, 7], ice: [9, 15], lightning: [9, 9], wind: [9, 12], earth: [9, 11], light: [9, 13], dark: [9, 14], arcane: [9, 6],
   slash: [5, 1], pierce: [5, 14], blunt: [5, 11], physical: [5, 1],
   heal: [10, 6], revive: [13, 8], cleanse: [13, 9], dispel: [10, 10], buff: [13, 14], debuff: [13, 15], shield: [20, 6], summon: [13, 8], split: [13, 8],
 };

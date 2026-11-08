@@ -43,11 +43,11 @@ The twelve come in pairs from opposite sides of the space:
 
 **Identity.** A party in stone that swings rarely and hits like a falling hill. The front wears Shield bars, and foes chip at the stone. Long stretches pass with small numbers. Then a slow swing or a long cast lands far bigger than anything else, and an elite loses a large share of its HP. The stone is rebuilt, and it happens again. It's waiting for its big blow to come round, with the stone holding until then. Fights run long.
 
-- **Loves:** bosses and armored foes (big hits lose little to Armor, and crits land before it), and Lava Slimes (one blow takes a slime from above half to nothing, so it never splits).
+- **Loves:** bosses and armored foes (big hits lose little to Defense, and crits land before it), and Lava Slimes (one blow takes a slime from above half to nothing, so it never splits).
 - **Fears:** swarms (blows wasted on wolves), dodgers (a missed blow is a long wait wasted), and anything that breaks Shields fast.
 - **Threads:**
   - the Shield as a second health bar, and the moment it breaks;
-  - Armor as a damage stat;
+  - Defense as a damage stat;
   - slow, heavy actions;
   - Might on the slowest hitter, since it's spent one stack per action (a thread nobody would look for);
   - crits and crit damage;
@@ -56,11 +56,11 @@ The twelve come in pairs from opposite sides of the space:
 - **Routes:** Geomancer, Knight, Hoplite · Geomancer on a great weapon, Paladin, Cleric · no earth at all: Knight on a great weapon, Hoplite, Bard.
 - **Seats it likes:** a bulwark that wears the stone and draws the blows; a hammer whose actions come less often and land bigger; a mason that builds stone for the other two.
 - **Rungs:**
-  1. Any slow weapon and one Shield source: steadier boss fights, and Armor that stops mattering.
-  2. Pieces that turn a Shield or Armor into hit size, Guard that reaches the Armor-scalers, Might for the hammer. Elites lose chunks, and most bosses take three or four blows.
+  1. Any slow weapon and one Shield source: steadier boss fights, and Defense that stops mattering.
+  2. Pieces that turn a Shield or Defense into hit size, Guard that reaches the Defense-scalers, Might for the hammer. Elites lose chunks, and most bosses take three or four blows.
   3. The stone itself becomes the weapon. A boss fight is a handful of blows the party lives through comfortably.
 - **Needs:**
-  - **Pieces:** something that uses the Shield pool or its breaking as damage; Guard or Armor that reaches the units whose kit scales from Armor; a way for any unit's basic attacks to come slower and bigger; Might that suits one slow unit rather than everyone.
+  - **Pieces:** something that uses the Shield pool or its breaking as damage; Guard or Defense that reaches the units whose kit scales from Defense; a way for any unit's basic attacks to come slower and bigger; Might that suits one slow unit rather than everyone.
   - **Formations:** the hammer seat, and formations that trade the party's speed for size.
   - **Upgrades:** versions of Shield bash, Rockfall, Tremor, Smite, Phalanx, Earthen shell and Vanguard that trade speed for size, or aim the blow (at the foe in a wind-up, at the healthiest).
 - **Far end:** the stone becoming the blow, and the heaviest swing.
@@ -71,7 +71,7 @@ The twelve come in pairs from opposite sides of the space:
 **Identity.** A blur. A stream of tiny numbers, several a tick. Units act constantly, and foes' Bleed counters open with every hit. The party is hard to hit: MISS, MISS. It isn't waiting for anything; it never stops. Most of its damage is basic attacks, and the light bodies pay when the dodges fail.
 
 - **Loves:** Bleed, and Lifesteal, since many hits heal many times.
-- **Fears:** Armor (small hits lose most to it), the Ice Golems' crust, Wisps' Shock (fast units pay), and the Lava Slimes' split.
+- **Fears:** Defense (small hits lose most to it), the Ice Golems' crust, Wisps' Shock (fast units pay), and the Lava Slimes' split.
 - **Threads:**
   - speed: fast weapons and Haste;
   - many hits: Double strike, multi-hit abilities, extra strikes;
@@ -79,15 +79,15 @@ The twelve come in pairs from opposite sides of the space:
   - riders on every hit, extra strikes included (without them, Double strike is a trap);
   - Evasion as defence, and the dodge as a trigger;
   - Lifesteal on every hit;
-  - the magical torrent: fast magic slips past Armor but meets Magic resist, the same rhythm with another answer to Armor (a second route, not a second build).
-- **Routes:** Bard, Monk, Assassin · Valkyrie, Ranger, Vampire · the magical torrent: Stormcaller and Pyromancer on wands, Hexer on a dagger.
+  - the status torrent: fast hits that each leave Burn, Shock or Chill, whose own damage never meets Defense; the same rhythm with another answer to Defense (a second route, not a second build).
+- **Routes:** Bard, Monk, Assassin · Valkyrie, Ranger, Vampire · the status torrent: Stormcaller and Pyromancer on wands, Hexer on a dagger.
 - **Seats it likes:** a pacer that speeds the others; two blades that act more often and hit smaller.
 - **Rungs:**
   1. Fast weapons and a little Double strike: steady chip, and little else.
   2. Riders on every hit, extra strikes included, and a Bleed source. Every hit opens a wound, and armored foes stop being walls.
   3. A payoff that grows with how many hits the party has landed this fight. Late in a fight, every tiny hit is worth a big one.
 - **Needs:**
-  - **Pieces:** riders and multi-hits that count every hit; something that grows with the hits landed; a dodge that pays; an answer to Armor for small hits that isn't simply more Sunder.
+  - **Pieces:** riders and multi-hits that count every hit; something that grows with the hits landed; a dodge that pays; an answer to Defense for small hits that isn't simply more Sunder.
   - **Formations:** the pacer seat, and formations that make the whole party faster at a cost.
   - **Upgrades:** versions of Flow, Iron palm, Gale spear, Barbed arrow and Burning fist that add hits or spread them.
 - **Far end:** a count of hits that turns into something big, and the fastest blur.
@@ -178,20 +178,20 @@ The twelve come in pairs from opposite sides of the space:
   - Area;
   - spread: strikes that jump (Arc, Chain lightning), with Shock optional;
   - evening out: aiming at the healthiest foe so the field sinks together;
-  - a physical sweep: a blow that carries through to a second foe;
+  - a sweep: a blow that carries through to a second foe;
   - the draw: one unit takes the field's attention so the others can spread;
   - a finisher that ends every foe below a line at once.
-- **Routes:** Bramble knight, Stormcaller, Bard · Paladin, Pyromancer, Frostweaver · physical: Knight, Valkyrie, Hoplite.
+- **Routes:** Bramble knight, Stormcaller, Bard · Paladin, Pyromancer, Frostweaver · no mages: Knight, Valkyrie, Hoplite.
 - **Seats it likes:** a lightning rod that draws everything; two scythes whose hits spread.
 - **Rungs:**
   1. Any Area mage: swarms die faster.
   2. Strikes that jump or sweep on units that aren't mages, and the evening-out targeting. The field falls together.
-  3. A finisher, and a sweep for physical units. Swarms are erased in a beat, and Ghouls are beaten clean.
+  3. A finisher, and a sweep for units that aren't mages. Swarms are erased in a beat, and Ghouls are beaten clean.
 - **Needs:**
-  - **Pieces:** physical blows that reach a second foe or every foe; aiming at the healthiest foe; a finisher for every foe below a line; a payoff that grows with how many foes one action hit.
+  - **Pieces:** blows that reach a second foe or every foe; aiming at the healthiest foe; a finisher for every foe below a line; a payoff that grows with how many foes one action hit.
   - **Formations:** the lightning rod, and formations that reward hitting many foes at once.
   - **Upgrades:** versions of Arc, Chain lightning, Thunderstorm, Fireball, Blizzard, Thunder chord and Malison that even the field rather than pile on one.
-- **Far end:** a sweep for physical units, and a finisher for the whole field.
+- **Far end:** a sweep for units that aren't mages, and a finisher for the whole field.
 
 ## Ambush
 
@@ -285,7 +285,7 @@ The twelve come in pairs from opposite sides of the space:
   - Thorns and retaliation as one idea: being hit and dodging a hit both strike back;
   - what an attacker carries away: Bleed, Chill (slowing the next blow), Shock (paid when it acts again);
   - Weaken, the Toll's best friend: blows land as often but hurt less, so the anchor survives and every blow still pays (the director's "Weaken in some sort of stall comp");
-  - Guard and Armor against many small hits;
+  - Guard and Defense against many small hits;
   - healing on the anchor;
   - Evasion as the other anchor: a dancer who dodges and answers.
 - **Routes:** Bramble knight, Cleric, Stormcaller · a Knight wearing thorns, Hexer, Hoplite · the dancer: a Monk carrying a Taunt, Bard, Assassin.
@@ -295,7 +295,7 @@ The twelve come in pairs from opposite sides of the space:
   2. What attackers carry away, and Weaken on them. Swarms die on the wall.
   3. Retaliation that counts dodges too, and Thorns that grow with the beating. A wall that even a boss's slow blows feed.
 - **Needs:**
-  - **Pieces:** Taunt on gear, for more anchors; retaliation on a dodge; Thorns that grow per hit taken or from Armor; pieces that make Weaken an advantage rather than a defence.
+  - **Pieces:** Taunt on gear, for more anchors; retaliation on a dodge; Thorns that grow per hit taken or from Defense; pieces that make Weaken an advantage rather than a defence.
   - **Formations:** the anchor seat, and formations built around one unit being hit.
   - **Upgrades:** versions of Thicket, Briar, Bramble lash, Stand fast and Fortify that change who the anchor is and what it returns.
 - **Far end:** thorns that grow with the beating, and a dodge that strikes back.
@@ -363,7 +363,7 @@ The builds share threads, so a piece made on a thread reaches every build in its
 | --- | --- | --- |
 | The draw (Taunt, Aggro) | the Toll | Landslide, Harvest, Bonfire, Lockdown, Phoenix (the martyr) |
 | Shield | Landslide | Phoenix, Ambush, the Toll |
-| Armor and Guard | Landslide, the Toll | Lockdown |
+| Defense and Guard | Landslide, the Toll | Lockdown |
 | Might | Landslide (the slow hitter) | Ambush (the first blow), Phoenix (on a fall), Bonfire |
 | Haste | Thousand Cuts | Bonfire, Overflow, Ambush |
 | Riders on basic attacks | Thousand Cuts, Cold Snap | Bonfire, the Toll |
@@ -381,10 +381,10 @@ The builds share threads, so a piece made on a thread reaches every build in its
 | Focus and targeting | the Hunt | Cold Snap, Harvest (evening out), Landslide (aiming the blow) |
 | Seek and reach | the Hunt | Ambush, Lockdown |
 | Bleed | Thousand Cuts | the Toll, the Hunt |
-| Burn | Bonfire | Thousand Cuts' magical route (Kindling) |
+| Burn | Bonfire | Thousand Cuts' status torrent (Kindling) |
 | Chill | Cold Snap | Lockdown (the slow), the Toll (the attacker slowed) |
 | Shock | the Toll (the attacker pays) | Harvest, Overflow |
-| Sunder | Cold Snap | Thousand Cuts (against Armor), the Hunt |
+| Sunder | Cold Snap | Thousand Cuts (against Defense), the Hunt |
 | Weaken | the Toll | Lockdown, Blood Pact |
 | Evasion and dodges | Thousand Cuts, the Toll (the dancer) | |
 | Lifesteal | Blood Pact | Thousand Cuts |
@@ -399,9 +399,9 @@ Elements are themes, not mechanics, and a theme shapes builds far beyond its sta
 | Theme | Its builds | Its status |
 | --- | --- | --- |
 | Earth: weight, Shields | Landslide; the Toll (thorns) | none |
-| Fire: ramp, big casts | Bonfire; Harvest (Fireball as one of the field's sweeps) | Burn: Bonfire's, and a little in the magical torrent |
+| Fire: ramp, big casts | Bonfire; Harvest (Fireball as one of the field's sweeps) | Burn: Bonfire's, and a little in the status torrent |
 | Ice: control and shatter | Cold Snap (the shatter); Lockdown (the slow, no shatter needed) | Chill: a payoff in one, a lock on the way up in the other |
-| Lightning: spread, quick strikes | Harvest; Thousand Cuts' magical route; the Toll's spark | Shock: optional in Harvest, central to none |
+| Lightning: spread, quick strikes | Harvest; Thousand Cuts' status torrent; the Toll's spark | Shock: optional in Harvest, central to none |
 | Wind: reach, Seek | the Hunt; Thousand Cuts | none |
 | Light: restore, the costly blow | Phoenix; Landslide (Smite) | none |
 | Dark: drain | Blood Pact; Lockdown and the Toll (Weaken) | none |
@@ -448,7 +448,7 @@ Where a run drifts from one build to another: each door has at least two pieces 
 - **Thousand Cuts into Cold Snap, through riders.** A blur party picks up a Chill rider, and the shatters start; it's the door the director walked through. Rime knuckles, Echo charm, Hummingbird charm, Heart of winter, Flurry wraps.
 - **The Hunt into Bonfire, through kills.** A hunt that finds fire passing from the dead: its steady beat starts to speed up. Signal lantern, Wick, Bounty charm.
 - **The Hunt into Ambush, through Hidden and reach.** A hunter that opens from hiding. Shadow cloak, Tracker's coat, Quietus, Night's edge.
-- **Landslide into the Toll, through Armor.** Thorns that grow from Armor turn the stone wall into a thorn wall. Spiked bulwark, Thorn hedge, Bastion plate.
+- **Landslide into the Toll, through Defense.** Thorns that grow from Defense turn the stone wall into a thorn wall. Spiked bulwark, Thorn hedge, Bastion plate.
 - **Landslide into Ambush, through the stone at the start.** Shields and Might at the first tick, on the slowest hitter: the one huge blow, struck first. Stone totem, War horn, Drawn steel, Phalanx's version A.
 - **Landslide into Lockdown:** Worldbreaker, Rubble shield.
 - **Blood Pact into Phoenix, through low HP.** A pact party that falls and comes back. Last bastion, Bloodsworn mail, Martyr's maul, Bloodlust's version B.
@@ -474,7 +474,7 @@ These abilities sit on a border, so their two versions have somewhere to go.
 | Shield bash | Landslide (the blow) and Lockdown (the lock) |
 | Earthen shell | Landslide and Phoenix (the survivors) |
 | Thicket | the Toll and Landslide |
-| Fortify | Landslide (Guard on the Armor-scaler) and the Toll (Guard on the anchor) |
+| Fortify | Landslide (Guard on the Defense-scaler) and the Toll (Guard on the anchor) |
 | Aspis, Paired guard | the Toll (over the anchor) and Bonfire (holding the early fight) |
 | Frost lance | Cold Snap and Lockdown |
 | Pyre | Bonfire (on the hottest foe) and Harvest (on every foe, half as hard) |
@@ -507,7 +507,7 @@ These abilities sit on a border, so their two versions have somewhere to go.
   - Kills: the Hunt's steady beat, Bonfire's speeding one, Harvest's all at once, Ambush's spike.
   - HP: Blood Pact's see-saw, Phoenix's deaths.
   - Shield: Landslide's stone, Phoenix's survivors.
-- **No two builds differ only by the damage type on the numbers.** Thousand Cuts has a physical and a magical route, but that's one build with two answers to Armor.
+- **No two builds differ only by the damage type on the numbers.** Thousand Cuts has a route of plain hits and a status torrent, but that's one build with two answers to Defense.
 
 **Set aside:**
 - **A wither build** (attrition: foes weaken, slow and drain while the party sits full). It shared Lockdown's danger shape and the Toll's long fights; its threads (Weaken, Siphon, Slow) are spread across the Toll, Lockdown and Blood Pact.

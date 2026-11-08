@@ -4,7 +4,7 @@
  * row of the 8px font. The frame is 270 logical pixels wide. Windows are the
  * Dragon Quest kind: a dark fill, a light double border, light text; the "day"
  * theme flips them. Colour carries meaning: HP green to red, MP blue, buffs
- * cool, debuffs warm, physical damage pale and magical violet, legendary gold
+ * cool, debuffs warm, a hit's damage pale, legendary gold
  * and mythic crimson.
  */
 :root {
@@ -12,13 +12,13 @@
   --bg: #0c1020; --win: #151b2e; --win2: #1f2740; --line: #f2f0e4; --ink: #f2f0e4; --dim: #8e99b8; --hi: #ffd54a; --sel: #222a46; --edge: #0c1020;
   --hp: #58d858; --hpmid: #f0d050; --hplow: #f05858; --mp: #5aa0f5; --sh: #a8e8ff;
   --good: #7ee07e; --bad: #ff7b6b; --buff: #86cfff; --debuff: #ffa062; --gold: #ffd54a;
-  --phys: #e8e2d0; --magic: #c8a0ff; --mythic: #e8284e;
+  --phys: #e8e2d0; --mythic: #e8284e;
 }
 :root[data-theme="day"] {
   --bg: #cfd8bf; --win: #f7f4e6; --win2: #e9e5d2; --line: #1f2433; --ink: #1f2433; --dim: #68708a; --hi: #b85400; --sel: #ebe5cd; --edge: #cfd8bf;
   --hp: #2fae2f; --hpmid: #c9a300; --hplow: #d33a3a; --mp: #2f6fd0; --sh: #4aa8d8;
   --good: #238a23; --bad: #c43a2c; --buff: #1f6fb8; --debuff: #c45a10; --gold: #a66a00;
-  --phys: #2a2e3a; --magic: #7a3ac8; --mythic: #b0102e;
+  --phys: #2a2e3a; --mythic: #b0102e;
 }
 @font-face { font-family: 'Press Start 2P'; src: url(/fonts/PressStart2P-Regular.ttf) format('truetype'); font-display: block; }
 html { font-size: calc(var(--u) * 8); }
@@ -44,7 +44,7 @@ canvas.field { display: block; width: 33.75rem; image-rendering: pixelated; bord
 .gold { color: var(--gold); }
 .mp { color: var(--mp); }
 .sh { color: var(--sh); }
-.phys { color: var(--phys); } .magic { color: var(--magic); } .ink { color: var(--ink); }
+.phys { color: var(--phys); } .ink { color: var(--ink); }
 .mythic { color: var(--mythic); }
 .center { text-align: center; }
 .grow { flex: 1; min-width: 0; }
@@ -140,7 +140,6 @@ button.mid { padding: .625rem .5rem; }
 .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: .375rem .25rem; text-transform: uppercase; }
 .stats .cell { align-items: flex-start; padding: 0; gap: 0; cursor: default; }
 .stats .cell.wide { grid-column: span 2; }
-.stats.five { grid-template-columns: repeat(5, 1fr); }
 .stats .lbl { color: var(--ink); line-height: 1.25rem; }
 .stats .val { line-height: 1.5rem; white-space: nowrap; }
 .stats .val i { font-style: normal; margin-left: .25rem; }

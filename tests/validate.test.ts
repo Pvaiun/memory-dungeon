@@ -82,20 +82,12 @@ test("schema: no elements or physical subtypes", () => {
 
 // ─── Ability cards ───────────────────────────────────────────────────────────
 
-test("cards: Shield Bash (physical, scales with Armor) is valid", () => card(hit({ type: "physical", amount: scale("armor") })));
-test("cards: Fire Bolt (magical, scales with Magic) is valid: a fire theme lives in its name only", () => card(hit({ type: "magical", amount: scale("magic") })));
-test("cards: Storm Ward (magical, scales with Armor) is valid: no stat is tied to a damage type", () => card(hit({ type: "magical", amount: scale("armor") })));
+test("cards: Shield Bash (physical, scales with Defense) is valid: any stat can scale a hit", () => card(hit({ type: "physical", amount: scale("defense") })));
+test("cards: Fire Bolt (physical, scales with Attack) is valid: a fire theme lives in its name only", () => card(hit({ type: "physical", amount: scale("attack") })));
 test("cards: Fire Slash (physical with an element) is invalid: there are no elements", () => card(hit({ type: "physical", element: "fire" }), "schema"));
-test("cards: Strike (physical) and Bolt (magical) need nothing else: no subtype, no element", () => {
-  card(hit({ type: "physical" }));
-  card(hit({ type: "magical" }));
-});
-test("cards: no stat is tied to a damage type: Ember Strike (magical, from Attack) and a physical hit from Magic are valid", () => {
-  card(hit({ type: "magical", amount: scale("attack") }));
-  card(hit({ type: "physical", amount: scale("magic") }));
-});
-test("cards: a hit can scale from several stats: a Shield Bash from 0.7 × Armor + 0.3 × Attack", () =>
-  card(hit({ type: "physical", amount: { scale: [{ ratio: 0.7, stat: "armor" }, { ratio: 0.3, stat: "attack" }] } })));
+test("cards: Strike (physical) needs nothing else: no subtype, no element", () => card(hit({ type: "physical" })));
+test("cards: a hit can scale from several stats: a Shield Bash from 0.7 × Defense + 0.3 × Attack", () =>
+  card(hit({ type: "physical", amount: { scale: [{ ratio: 0.7, stat: "defense" }, { ratio: 0.3, stat: "attack" }] } })));
 test("cards: a weapon states its own damage; nothing scales it by default", () => expectIssue("schema", (p) => delete find(p.gear, "ash_staff").weapon.amount));
 test("cards: an action can't produce untyped damage: only pulses and reactions can", () => card(hit({ type: "none" }), "instance.untyped"));
 test("cards: riders follow the same rules as hits", () => card(hit({ type: "physical", riders: [{ type: "none", amount: 5 }] }), "instance.untyped"));
@@ -119,7 +111,7 @@ test("targeting: ifNone needs a where; exclude belongs to extra targets, not an 
   card({ target: { side: "foes", ifNone: "any" }, ...hit({ type: "physical" }) }, "target.ifNone");
   card({ target: { side: "foes", exclude: "targets" }, ...hit({ type: "physical" }) }, "target.exclude");
   card({ do: [{ op: "damage", type: "physical", amount: 1 }, { op: "damage", type: "physical", amount: 1, to: { side: "foes", exclude: "targets", count: 3 } }] });
-  card({ target: { side: "foes", pick: "highest", by: { stats: ["attack", "magic"] } }, ...hit({ type: "physical" }) });
+  card({ target: { side: "foes", pick: "highest", by: { stats: ["attack", "defense"] } }, ...hit({ type: "physical" }) });
   card({ target: { side: "foes", pick: "highest", by: { stats: ["attack", "luck"] } }, ...hit({ type: "physical" }) }, "ref.missing");
 });
 test("revive: targets knocked-out units, through the ability's rule or its own", () => {
@@ -150,7 +142,7 @@ test("events: tags filter hit events only, and a damage event can name the statu
   const status = (x: object) => (p: any) => p.statuses.push({ id: "probe", name: "PROBE", label: "buff", show: "sheet", stacking: "refresh", ...x });
   expectIssue("event.tags", status({ reactions: [{ on: { event: "ko", tags: ["physical"] }, do: [{ op: "heal", amount: 1, to: "holder" }] }] }));
   const p = clone(PACK) as any;
-  status({ reactions: [{ on: { event: "damage_dealt", status: "thorns" }, do: [{ op: "apply", status: "bleed", to: "other" }] }, { on: { event: "hit_taken", tags: ["physical", "magical"] }, do: [{ op: "heal", amount: 1, to: "holder" }] }] })(p);
+  status({ reactions: [{ on: { event: "damage_dealt", status: "thorns" }, do: [{ op: "apply", status: "bleed", to: "other" }] }, { on: { event: "hit_taken", tags: ["physical"] }, do: [{ op: "heal", amount: 1, to: "holder" }] }] })(p);
   assert.deepEqual(codes(validatePack(p).issues, "error"), []);
 });
 test("weapons: a piece names a kind, or an enemy's weapon states type and cooldown itself", () => {
@@ -175,7 +167,7 @@ test("stats: '+20 Crit chance' is a valid flat change; '+20% Crit chance' isn't,
 test("stats: family members such as immune:status:<status> take flat changes only", () => expectIssue("stat.pct", (p) => (find(p.gear, "bone_charm").stats = [{ stat: "immune:status:bleed", pct: 20 }])));
 test("stats: Aggro's floor must be above 0, since weighted picks fail when every candidate is at 0", () => expectIssue("stat.aggroFloor", (p) => (find(p.stats, "aggro").floor = 0)));
 test("stats: the engine's stats are in the registry, with the right kind", () => {
-  expectIssue("stat.engine", (p) => (p.stats = p.stats.filter((s: any) => s.id !== "armor")));
+  expectIssue("stat.engine", (p) => (p.stats = p.stats.filter((s: any) => s.id !== "defense")));
   expectIssue("stat.engine", (p) => (find(p.stats, "evasion").kind = "amount"));
 });
 test("stats: a family member must name something real", () => {
@@ -195,7 +187,7 @@ test("statuses: absorbs, caps, triggers and drops belong to Intensity statuses",
   expectIssue("status.intensity", status({ drop: "all", trigger: { on: { event: "hit_taken" } } }));
 });
 test("statuses: an Intensity drop needs a trigger, and an Intensity status has one trigger", () => {
-  expectIssue("status.drop", status({ stacking: "intensity", drop: "all", stats: [{ stat: "armor", flat: 1 }] }));
+  expectIssue("status.drop", status({ stacking: "intensity", drop: "all", stats: [{ stat: "defense", flat: 1 }] }));
   expectIssue("status.trigger", status({ stacking: "intensity", drop: "all", pulse: { every: 2, do: [{ op: "heal", amount: 1 }] }, trigger: { on: { event: "hit_taken" } } }));
 });
 test("statuses: a status with one applier at a time knows its source; a shared Intensity total doesn't", () => {
@@ -203,7 +195,7 @@ test("statuses: a status with one applier at a time knows its source; a shared I
   const shared = { stacking: "intensity", ...react };
   expectIssue("status.source", status(shared));
   expectIssue("effect.to", status({ stacking: "intensity", reactions: [{ on: { event: "hit_taken" }, do: [{ op: "heal", amount: 1, to: "source" }] }] }));
-  expectIssue("scale.of", status({ stacking: "intensity", pulse: { every: 2, do: [{ op: "heal", amount: { scale: [{ ratio: 1, stat: "magic", of: "source" }] } }] } }));
+  expectIssue("scale.of", status({ stacking: "intensity", pulse: { every: 2, do: [{ op: "heal", amount: { scale: [{ ratio: 1, stat: "attack", of: "source" }] } }] } }));
   for (const x of [react, { stacking: "fizzle", ...react }, { ...shared, perSource: { endsWithSource: true } }]) {
     const p = clone(PACK) as any;
     status(x)(p);
@@ -217,8 +209,8 @@ test("statuses: 'target' belongs to actions, and holder, source and other to sta
   expectIssue("effect.to", status({ pulse: { every: 2, do: [{ op: "heal", amount: 1, to: "other" }] } }));
 });
 test("statuses: inside a status, a stat scale says whose stat it reads: source or holder", () => {
-  expectIssue("scale.of", status({ pulse: { every: 2, do: [{ op: "heal", amount: { scale: [{ ratio: 1, stat: "magic" }] } }] } }));
-  expectIssue("scale.of", (p) => (find(p.abilities, "mend").do[0].amount = { scale: [{ ratio: 1, stat: "magic", of: "holder" }] }));
+  expectIssue("scale.of", status({ pulse: { every: 2, do: [{ op: "heal", amount: { scale: [{ ratio: 1, stat: "attack" }] } }] } }));
+  expectIssue("scale.of", (p) => (find(p.abilities, "mend").do[0].amount = { scale: [{ ratio: 1, stat: "attack", of: "holder" }] }));
 });
 test("statuses: only a reaction has an event amount to scale from", () =>
   expectIssue("scale.amount", status({ pulse: { every: 2, do: [{ op: "heal", amount: { scale: [{ ratio: 1, amount: true }] } }] } })));
@@ -235,21 +227,21 @@ test("statuses: event filters fit their events", () => {
 test("status damage is untyped by convention, but a pulse can be typed, and any stat can scale it", () => {
   const p = clone(PACK) as any;
   find(p.statuses, "bleed").pulse.do[0] = { op: "damage", type: "physical", amount: { scale: [{ ratio: 0.3, stat: "attack", of: "source" }] } };
-  find(p.statuses, "rot").pulse.do[0].amount = { scale: [{ ratio: 0.3, stat: "magic", of: "source" }] };
+  find(p.statuses, "rot").pulse.do[0].amount = { scale: [{ ratio: 0.3, stat: "defense", of: "source" }] };
   assert.deepEqual(codes(validatePack(p).issues, "error"), []);
 });
-test("status damage: an application's stacks scale from whatever it states, Magic included", () => {
+test("status damage: an application's stacks scale from whatever it states, Defense included", () => {
   const p = clone(PACK) as any;
   p.statuses.push({ id: "burn", name: "BURN", label: "debuff", show: "icon", stacking: "intensity", pulse: { every: 2, do: [{ op: "damage", type: "none", amount: 1 }] }, drop: { fraction: 0.5 } });
-  find(p.abilities, "radiance").do.push({ op: "apply", status: "burn", stacks: { scale: [{ ratio: 0.3, stat: "magic" }] } });
+  find(p.abilities, "radiance").do.push({ op: "apply", status: "burn", stacks: { scale: [{ ratio: 0.3, stat: "defense" }] } });
   assert.deepEqual(codes(validatePack(p).issues, "error"), []);
 });
 test("status numbers can read stats; heals, shields and typed counterattacks scale as stated", () => {
   const p = clone(PACK) as any;
-  find(p.statuses, "bleed").pulse.do[0].amount = { scale: [{ ratio: 0.5, stat: "armor", of: "source" }] };
-  p.statuses.push({ id: "regen", name: "REGEN", label: "buff", show: "icon", stacking: "refresh", duration: 10, pulse: { every: 2, do: [{ op: "heal", amount: { scale: [{ ratio: 0.2, stat: "magic", of: "source" }] } }] } });
+  find(p.statuses, "bleed").pulse.do[0].amount = { scale: [{ ratio: 0.5, stat: "defense", of: "source" }] };
+  p.statuses.push({ id: "regen", name: "REGEN", label: "buff", show: "icon", stacking: "refresh", duration: 10, pulse: { every: 2, do: [{ op: "heal", amount: { scale: [{ ratio: 0.2, stat: "attack", of: "source" }] } }] } });
   find(p.abilities, "mend").do.push({ op: "apply", status: "regen" });
-  assert.deepEqual(codes(validatePack(p).issues, "error"), [], "the worked example's Blessed Ward (shield stacks from Magic) and Riposte (a physical counter from Attack) stay valid too");
+  assert.deepEqual(codes(validatePack(p).issues, "error"), [], "the worked example's Blessed Ward (shield stacks from Attack) and Riposte (a physical counter from Attack) stay valid too");
 });
 test("statuses: a tag nothing carries is reported", () => expectIssue("tag.unknown", status({ boosts: [{ tag: "thunder", pct: 10 }] }), { level: "warning" }));
 test("targeting: picking the lowest or highest needs 'by'", () => expectIssue("target.by", (p) => delete find(p.abilities, "lunge").target.by));
@@ -376,7 +368,7 @@ const FORMS = ["p", "a", "b", "ap", "bp"];
 function withUpgrades(p: any, skip: string[] = []) {
   const cleave = find(p.abilities, "cleave");
   for (const f of FORMS) if (!skip.includes(`cleave__${f}`)) p.abilities.push({ ...clone(cleave), id: `cleave__${f}`, name: `Cleave ${f}` });
-  const steady = { id: "steady", name: "Steady", label: "buff", show: "sheet", stacking: "refresh", stats: [{ stat: "armor", flat: 1 }] };
+  const steady = { id: "steady", name: "Steady", label: "buff", show: "sheet", stacking: "refresh", stats: [{ stat: "defense", flat: 1 }] };
   p.statuses.push(steady);
   for (const f of FORMS) if (!skip.includes(`steady__${f}`)) p.statuses.push({ ...steady, id: `steady__${f}` });
   find(p.classes, "warrior").passive = { name: "Steady", text: "-", statuses: ["steady"] };

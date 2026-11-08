@@ -1,6 +1,6 @@
 # Engine primitives
 
-Generated from `src/schema.ts` (schema 0.9) by `npm run docs`. Do not edit by hand.
+Generated from `src/schema.ts` (schema 0.10) by `npm run docs`. Do not edit by hand.
 
 The engine runs the core set's combat system (`docs/core-set/rules-and-vocabulary.md`); where that document is silent, what the engine does stands. This is the closed set of building blocks it runs on. Each needs engine code, so adding one is a schema version bump plus an engine change. Stats, weapon kinds, armor types, offhand kinds, statuses, abilities and everything else are registries in the pack, and grow without touching the schema. The numbers in the content are first values, placeholders until the balance pass.
 
@@ -35,8 +35,8 @@ A weapon belongs to a kind (a registry: speed, damage type and hands), a piece o
 | `remove` | `label`, `status`, `kind`, `tag`, `count`, `order`, `move`, `to` | Removes buffs or debuffs, optionally narrowed to a named status or an effect kind. Unremovable statuses stay, and so do the buffs of a unit with immune:dispel. |
 | `revive` | `hp`, `ready`, `after`, `to` | Raises a knocked-out unit, one knocked out in an earlier fight included. Its targets must ask for `ko: true`. |
 | `cooldown` | `which`, `set`, `to` | Changes the cooldown left on a unit's basic attack or abilities: ready now, a full cooldown, some ticks closer, a share of what's left, or at most a share of its full one. A wind-up already under way carries on. |
-| `pay` | `hp`, `to` | A price in HP: lost at once, not damage, so no Shield soaks it, no Armor cuts it and nothing reacts to it; it never takes the payer below 1 HP. An ability's HP price is this effect on itself, after whatever reads its HP first. |
-| `strike` | `share`, `of`, `to` | Reactions only: a hit of kind extra by the actor at each target (the dodge's riposte, the blow returned for an ally). It can crit and be dodged, meets Armor or Magic resist, and fires hit events; it never brings extra strikes of its own. |
+| `pay` | `hp`, `to` | A price in HP: lost at once, not damage, so no Shield soaks it, no Defense cuts it and nothing reacts to it; it never takes the payer below 1 HP. An ability's HP price is this effect on itself, after whatever reads its HP first. |
+| `strike` | `share`, `of`, `to` | Reactions only: a hit of kind extra by the actor at each target (the dodge's riposte, the blow returned for an ally). It can crit and be dodged, meets Defense, and fires hit events; it never brings extra strikes of its own. |
 | `one` | `of`, `to` | Applies one of these statuses, picked at random on the actor's dice. |
 | `recast` |  | Reactions to the holder's own action_resolve only: the action that set it off resolves again at once, with no wind-up and no MP, choosing its targets afresh by its own rule, its cooldown untouched. The repeat fires its own action events, which `repeat: false` filters skip. |
 | `summon` | `enemy`, `count` | Brings new units into the fight on the actor's side, up to ruleset.maxEnemies living units on that side. They enter with every action on cooldown. |
@@ -79,9 +79,8 @@ Or a targeting rule. Extra targets after an action's first ignore Taunt.
 
 | Type | Meaning |
 | --- | --- |
-| `physical` | Meets Evasion and Armor. |
-| `magical` | Meets Magic resist, a percentage: above 0 RESIST, 100 IMMUNE. Never dodged. |
-| `none` | Untyped: never dodged, never reduced by Armor or Magic resist. Not allowed in actions; the type of a status's own damage. |
+| `physical` | A hit: meets Evasion and Defense. Every hit is physical. |
+| `none` | Untyped: never dodged, never reduced by Defense. Not allowed in actions; the type of a status's own damage. |
 
 There are no elements and no physical subtypes: an element is a theme in a name, never a mechanic.
 
@@ -210,7 +209,7 @@ Its `of`:
 
 | Field | Meaning |
 | --- | --- |
-| `tag` | Only hits carrying this tag (basic, ability, extra, physical, magical, area). |
+| `tag` | Only hits carrying this tag (basic, ability, extra, physical, area). |
 | `when` | Only hits on a unit that passes this, read as the hit lands. |
 | `chance` | Points added to the hit's crit chance, after every stat change (100: it always crits, whatever else holds, Gambler's coin included). |
 | `bonus` | Percent more crit bonus, the part of the crit multiplier above ×1: 100 makes ×1.5 into ×2. |
@@ -236,8 +235,7 @@ Its `of`:
 | `basic` | Hits from basic attacks; for lockouts and Seek, basic attacks. |
 | `ability` | Hits from abilities; for lockouts and Seek, abilities. |
 | `extra` | Hits from extra strikes (Double strike's second strike, Arc's second hit): hits, but not basic attacks. |
-| `physical` | Physical hits (and actions with one). |
-| `magical` | Magical hits (and actions with one). |
+| `physical` | Every hit (and actions with one): not a status's own damage. |
 | `area` | Hits from a damage effect aimed at two or more units at once (an Area spell, a basic attack aimed at every foe). A hit without it is a single-target hit. |
 | `<status>` | A status's id: reaches that status's pulses ("+20% Burn damage"). |
 | `<status tag>` | A tag a status carries, which reaches its pulses. |
@@ -363,9 +361,9 @@ Basic attacks pick in this order: an `aim` with `first` the attacker holds; a fo
 | `casting` | true: in an action's wind-up right now (what Unmake waits for). false: not. |
 | `ko` | true: knocked out, still in the fight. Sides list living units unless a rule asks for this. Default: living. |
 | `hasAny` | Has at least one of these statuses (Stunned or Silenced). |
-| `lower` | This stat is lower than the reading unit's: the acting unit in an action, a reaction's actor, a pulse's holder (an ally with less Armor than the wearer). |
+| `lower` | This stat is lower than the reading unit's: the acting unit in an action, a reaction's actor, a pulse's holder (an ally with less Defense than the wearer). |
 | `acted` | true once one of its actions has resolved this fight; false until then (a unit summoned mid-fight starts false). |
-| `top` | No living unit on its side has more of the highest of these stats ("the foe with the highest Attack or Magic"); ties pass. |
+| `top` | No living unit on its side has more of the highest of these stats ("the foe with the highest Attack"); ties pass. |
 | `weapon` | Wields a weapon of one of these kinds (an enemy's weapon by its kind, if it names one). |
 
 ## Stats the engine reads
@@ -374,17 +372,15 @@ Basic attacks pick in this order: an `aim` with `first` the attacker holds; a fo
 | --- | --- | --- |
 | `max_hp` | amount | Max HP. A unit is KO'd at 0 HP. |
 | `max_mp` | amount | Max MP. Abilities cost MP, paid when they resolve. |
-| `attack` | amount | Scales only what states it. By convention, physical things do. |
-| `magic` | amount | Scales only what states it. By convention, magical things do. |
-| `armor` | amount | Reduces each physical hit: to hit² ÷ (hit + ruleset.armorK × Armor) when armorK is set; else a flat ruleset.armorRatio × Armor, down to 0 (BLOCKED). |
+| `attack` | amount | Scales only what states it. |
+| `defense` | amount | Reduces each hit: to hit² ÷ (hit + ruleset.armorK × Defense) when armorK is set; else a flat ruleset.armorRatio × Defense, down to 0 (BLOCKED). |
 | `aggro` | amount | Default targeting picks foes weighted by draw: a party unit's Aggro through ruleset.partyDraw (doubling), an enemy's through ruleset.draw's curve, or Aggro itself without either. Its floor must be above 0. |
-| `magic_resist` | points | Magic resist, in percent: cuts each magical hit or pulse by that share. Positive shows RESIST, 100 IMMUNE. |
 | `attack_speed` | points | Basic attack cooldown ÷ (1 + stat/100), down to its recovery. Haste, Slow and Chill act through it. |
 | `cooldown_reduction` | points | Ability cooldowns ÷ (1 + stat/100). |
 | `cast_time_reduction` | points | Cast times ÷ (1 + stat/100). |
 | `crit_chance` | points | Percent chance that an action's damage or heal crits. |
 | `crit_multiplier` | points | A crit multiplies by this percent (150 is ×1.5). Crit damage raises it. |
-| `evasion` | points | Percent chance to evade a physical hit, after Accuracy, under its cap. |
+| `evasion` | points | Percent chance to evade a hit, after Accuracy, under its cap. |
 | `accuracy` | points | Reduces the target's Evasion, down to 0. Negative adds to it. |
 | `healing_received` | points | Heals received × (1 + stat/100). Rot lowers it. |
 | `forced` | points | Above 0: Taunting. A foe's first pick must go to a Taunting unit unless its action has Seek. |

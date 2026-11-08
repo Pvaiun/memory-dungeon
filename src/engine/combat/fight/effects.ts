@@ -170,7 +170,7 @@ function cooldowns(w: W, ctx: Ctx, t: CUnit, e: Extract<S.EffectT, { op: "cooldo
   }
 }
 
-/** HP as a price: lost at once, but not damage, so no Shield soaks it, no Armor cuts it and nothing reacts. Never below 1 HP. */
+/** HP as a price: lost at once, but not damage, so no Shield soaks it, no Defense cuts it and nothing reacts. Never below 1 HP. */
 export function pay(w: W, t: CUnit, amount: number) {
   const v = Math.min(Math.floor(amount), t.hp - 1);
   if (v <= 0 || t.ko) return;
@@ -182,7 +182,7 @@ export function pay(w: W, t: CUnit, amount: number) {
  * Reactions only: a hit of kind extra by the actor, sized `share` % of its basic attack's damage against the
  * target (`of: weapon`, the weapon's riders and statuses with it, as an extra strike's), or of the raw amount of the hit that
  * set the reaction off, in that hit's damage type, with nothing of that hit's (`of: hit`). It can crit and be dodged, meets
- * Armor or Magic resist and fires hit events; it never brings extra strikes. A fallen actor strikes nothing.
+ * Defense and fires hit events; it never brings extra strikes. A fallen actor strikes nothing.
  */
 function reactionStrike(w: W, ctx: Ctx, t: CUnit, e: Extract<S.EffectT, { op: "strike" }>, area: boolean) {
   const st = ctx.st, a = ctx.actor;

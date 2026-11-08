@@ -93,7 +93,7 @@ export function compute(c: Content, t: Tally, setName: string): Sheet {
       fights: f, runs: r, win: 100 * (withRate - without), winWith: 100 * withRate,
       dmgIdx: div(perFight(k, "dmg"), meanDmg), dmgPerFight: perFight(k, "dmg"), swing,
       basicShare: div(get(t, `cls|${k}|dmg|basic`), dmg), abilityShare: div(abDmg, dmg), statusShare: div(stDmg, dmg), reactionShare: div(reDmg, dmg),
-      physShare: div(get(t, `cls|${k}|dmgk|physical`), dmg), magShare: div(get(t, `cls|${k}|dmgk|magical`), dmg), untypedShare: div(get(t, `cls|${k}|dmgk|untyped`), dmg),
+      hitShare: div(get(t, `cls|${k}|dmgk|physical`), dmg), untypedShare: div(get(t, `cls|${k}|dmgk|untyped`), dmg),
       takenIdx: div(perTick(k, "taken"), meanTaken), hitsIdx: div(perTick(k, "hitsTaken"), meanHits), takenPerFight: perFight(k, "taken"), alivePerFight: div(get(t, `cls|${k}|alive`), f),
       mitigated: 1 - div(get(t, `cls|${k}|taken`), get(t, `cls|${k}|takenRaw`)), dodge: div(get(t, `cls|${k}|dodged`), get(t, `cls|${k}|hitsTaken`)),
       soakedShare: div(get(t, `cls|${k}|soaked`), get(t, `cls|${k}|taken`) + get(t, `cls|${k}|soaked`)),
@@ -199,7 +199,7 @@ export function compute(c: Content, t: Tally, setName: string): Sheet {
       dmg: dmgPer(e), dmgIdx: div(dmgPer(e), medDmg[e.rank]), dmgPerTick: div(get(t, `en|${e.id}|dmg`), get(t, `en|${e.id}|life`)), kos: div(get(t, `en|${e.id}|kos`), fts),
       basics: div(get(t, `en|${e.id}|act|basic`), n), casts: div(get(t, `en|${e.id}|act|ability`), n), signature: sig.length ? Math.max(...sig) : NaN,
       mitigated: 1 - div(get(t, `en|${e.id}|taken`), get(t, `en|${e.id}|takenRaw`)), dodge: div(get(t, `en|${e.id}|dodged`), get(t, `en|${e.id}|hitsTaken`)),
-      takenPhys: div(get(t, `en|${e.id}|taken|physical`), get(t, `en|${e.id}|taken`)), takenUntyped: div(get(t, `en|${e.id}|taken|untyped`), get(t, `en|${e.id}|taken`)),
+      takenHits: div(get(t, `en|${e.id}|taken|physical`), get(t, `en|${e.id}|taken`)), takenUntyped: div(get(t, `en|${e.id}|taken|untyped`), get(t, `en|${e.id}|taken`)),
       healGot: div(get(t, `en|${e.id}|healGot`), n), interrupted: div(get(t, `en|${e.id}|interrupted`), fts), held: div(get(t, `en|${e.id}|held`), fts),
     };
     enemies[e.id] = line;
@@ -277,23 +277,19 @@ export function compute(c: Content, t: Tally, setName: string): Sheet {
   // Every stat a unit carries, with what it did.
   const sumCls = (m: string) => cls.reduce((a, k) => a + get(t, `cls|${k}|${m}`), 0);
   const sumEn = (m: string) => ens.reduce((a, e) => a + get(t, `en|${e.id}|${m}`), 0);
-  // Magic is one damage kind, with no elements.
-  const magTaken = (side: "cls" | "en") => (side === "cls" ? sumCls("taken|magical") : sumEn("taken|magical"));
-  const magRaw = (side: "cls" | "en") => (side === "cls" ? sumCls("takenRaw|magical") : sumEn("takenRaw|magical"));
   const stats = {
     "HP: party HP lost a fight, share of max": div(sumCls("taken") - sumCls("soaked"), get(t, "partyHp|mob") + get(t, "partyHp|boss")),
     "MP: spent a fight as a share of the party's pools": div(sumCls("mpSpent"), fights * 3 * mean(cls.map((k) => c.classes.get(k)!.stats.max_mp))),
     "MP regen: regained as a share of spent": div(sumCls("mpGot"), sumCls("mpSpent")),
-    "Attack / Magic: physical share of the party's damage": div(sumCls("dmgk|physical"), sumCls("dmg")), "Attack / Magic: magical share of the party's damage": div(sumCls("dmgk|magical"), sumCls("dmg")), "untyped (statuses, Thorns) share of the party's damage": div(sumCls("dmgk|untyped"), sumCls("dmg")),
-    "Armor: share of physical damage the party's Armor took off": 1 - div(sumCls("taken|physical"), sumCls("takenRaw|physical")), "Armor: share of physical damage the foes' Armor took off": 1 - div(sumEn("taken|physical"), sumEn("takenRaw|physical")),
-    "Magic resist: share of magical damage the party's Magic resist took off": 1 - div(magTaken("cls"), magRaw("cls")), "Magic resist: share the foes' Magic resist took off": 1 - div(magTaken("en"), magRaw("en")),
+    "Attack: hits' share of the party's damage": div(sumCls("dmgk|physical"), sumCls("dmg")), "untyped (statuses, Thorns) share of the party's damage": div(sumCls("dmgk|untyped"), sumCls("dmg")),
+    "Defense: share of hit damage the party's Defense took off": 1 - div(sumCls("taken|physical"), sumCls("takenRaw|physical")), "Defense: share of hit damage the foes' Defense took off": 1 - div(sumEn("taken|physical"), sumEn("takenRaw|physical")),
     "Crit chance: share of the party's hits that crit": div(sumCls("crit"), sumCls("hits")), "Crit damage: crits' share of the party's damage": div(sumCls("critDmg"), sumCls("dmg")),
     "Evasion: share of hits on the party dodged": div(sumCls("dodged"), sumCls("hitsTaken")), "Evasion: share of the party's hits dodged by foes": div(sumEn("dodged"), sumEn("hitsTaken")),
     "Accuracy: the Ranger's and Hawk's eye wearers' miss rate": div(get(t, "cls|ranger|miss"), get(t, "cls|ranger|hits") + get(t, "cls|ranger|miss")),
     "Aggro: hits taken by the walls, share of hits on the party": div(["knight", "bramble_knight", "hoplite", "paladin"].reduce((a, k) => a + get(t, `cls|${k}|hitsTaken`), 0), sumCls("hitsTaken")),
     "Double strike: extra strikes per basic attack (Monk)": div(get(t, "cls|monk|extra"), get(t, "cls|monk|act|basic")),
     "Thorns: share of the party's damage": div(get(t, "st|thorns|dmg"), sumCls("dmg")), "Lifesteal: share of the party's healing": div(cls.reduce((a, k) => a + get(t, `cls|${k}|heal|lifesteal`), 0), sumCls("healGiven")),
-    "Siphon: MP the Hexer regains a fight, against the Frostweaver (both Magic 4, MP regen 3)": div(div(get(t, "cls|hexer|mpGot"), get(t, "cls|hexer|fights|mob") + get(t, "cls|hexer|fights|boss")), div(get(t, "cls|frostweaver|mpGot"), get(t, "cls|frostweaver|fights|mob") + get(t, "cls|frostweaver|fights|boss"))),
+    "Siphon: MP the Hexer regains a fight, against the Frostweaver (both MP regen 3)": div(div(get(t, "cls|hexer|mpGot"), get(t, "cls|hexer|fights|mob") + get(t, "cls|hexer|fights|boss")), div(get(t, "cls|frostweaver|mpGot"), get(t, "cls|frostweaver|fights|mob") + get(t, "cls|frostweaver|fights|boss"))),
     "Attack speed, cooldowns, cast time (Haste/Slow/Chill): Haste uptime a fight (ticks)": div(get(t, "st|haste|uptime|party"), fights), "Slow uptime on the party a fight (ticks)": div(get(t, "st|slow|uptime|party"), fights), "Chill uptime on foes a fight (ticks)": div(get(t, "st|chill|uptime|enemy"), fights),
     "Taunting: hits drawn onto a taunting unit a fight": div(get(t, "st|taunt|tauntHits"), fights), "Hidden: uptime a fight (ticks)": div(get(t, "st|hidden|uptime|party"), fights),
     "Healing received (Rot): Rot uptime on foes a fight": div(get(t, "st|rot|uptime|enemy"), fights),

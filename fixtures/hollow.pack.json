@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "0.9",
+  "schemaVersion": "0.10",
   "id": "worked_example",
   "title": "Placeholder fixture: Hollow of the Grey Mother",
   "note": "PLACEHOLDER. Not game design. The step 1 worked example, kept as the machinery's test fixture (runs, decisions, replay, the harness): it's the one pack with perk picks. Real content is the core set (content/). Migrated to schema 0.6 with armorRatio 1, so its numbers behave as they did.",
@@ -92,15 +92,8 @@
       "floor": 0
     },
     {
-      "id": "magic",
-      "name": "Magic",
-      "kind": "amount",
-      "default": 0,
-      "floor": 0
-    },
-    {
-      "id": "armor",
-      "name": "Armor",
+      "id": "defense",
+      "name": "Defense",
       "kind": "amount",
       "default": 0,
       "floor": 0
@@ -112,14 +105,6 @@
       "default": 10,
       "floor": 1,
       "note": "Default targeting picks foes weighted by it. Warriors start at 20."
-    },
-    {
-      "id": "magic_resist",
-      "name": "Magic resist",
-      "kind": "points",
-      "default": 0,
-      "floor": 0,
-      "cap": 100
     },
     {
       "id": "attack_speed",
@@ -230,7 +215,7 @@
     {
       "id": "holy_staff",
       "name": "Holy staff",
-      "type": "magical",
+      "type": "physical",
       "cooldown": 14,
       "hands": 1
     }
@@ -330,7 +315,7 @@
           }
         ]
       },
-      "note": "No element, so Armor and Resistance never touch it."
+      "note": "Untyped, so Defense never touches it."
     },
     {
       "id": "rot",
@@ -350,7 +335,7 @@
           }
         ]
       },
-      "note": "Typeless: Attack and Magic never scale status damage."
+      "note": "Typeless: Attack never scales status damage."
     },
     {
       "id": "stun",
@@ -561,10 +546,6 @@
         {
           "tag": "physical",
           "pct": 50
-        },
-        {
-          "tag": "magical",
-          "pct": 50
         }
       ]
     },
@@ -698,7 +679,7 @@
         "max_mp": 30,
         "mp_regen": 1,
         "attack": 14,
-        "armor": 5,
+        "defense": 5,
         "aggro": 20
       },
       "weapons": [
@@ -730,7 +711,7 @@
         "max_mp": 30,
         "mp_regen": 1,
         "attack": 15,
-        "armor": 2,
+        "defense": 2,
         "evasion": 10,
         "accuracy": 5,
         "crit_chance": 10,
@@ -764,7 +745,7 @@
         "max_mp": 30,
         "mp_regen": 1,
         "attack": 15,
-        "armor": 2,
+        "defense": 2,
         "evasion": 25,
         "accuracy": 5,
         "crit_chance": 10,
@@ -797,10 +778,8 @@
         "max_hp": 105,
         "max_mp": 60,
         "mp_regen": 2,
-        "attack": 4,
-        "magic": 14,
-        "armor": 2,
-        "magic_resist": 10
+        "attack": 14,
+        "defense": 2
       },
       "weapons": [
         "holy_staff"
@@ -887,7 +866,7 @@
             "scale": [
               {
                 "ratio": 1.5,
-                "stat": "armor"
+                "stat": "defense"
               }
             ]
           },
@@ -899,7 +878,7 @@
           ]
         }
       ],
-      "note": "Scales with Armor: only Attack and Magic are type-locked."
+      "note": "Scales with Defense: any stat can scale a hit."
     },
     {
       "id": "second_wind",
@@ -1225,7 +1204,7 @@
             "scale": [
               {
                 "ratio": 1,
-                "stat": "magic"
+                "stat": "attack"
               }
             ]
           }
@@ -1280,7 +1259,7 @@
             "scale": [
               {
                 "ratio": 1,
-                "stat": "magic"
+                "stat": "attack"
               }
             ]
           }
@@ -1302,12 +1281,12 @@
       "do": [
         {
           "op": "damage",
-          "type": "magical",
+          "type": "physical",
           "amount": {
             "scale": [
               {
                 "ratio": 0.7,
-                "stat": "magic"
+                "stat": "attack"
               }
             ]
           }
@@ -1340,7 +1319,7 @@
             "scale": [
               {
                 "ratio": 0.5,
-                "stat": "magic"
+                "stat": "attack"
               }
             ]
           }
@@ -1526,14 +1505,14 @@
           "scale": [
             {
               "ratio": 1,
-              "stat": "magic"
+              "stat": "attack"
             }
           ]
         }
       },
       "stats": [
         {
-          "stat": "magic",
+          "stat": "attack",
           "flat": 3
         }
       ]
@@ -1548,7 +1527,7 @@
       "armor": "medium",
       "stats": [
         {
-          "stat": "armor",
+          "stat": "defense",
           "flat": 3
         },
         {
@@ -1567,7 +1546,7 @@
       "armor": "light",
       "stats": [
         {
-          "stat": "armor",
+          "stat": "defense",
           "flat": 2
         },
         {
@@ -1713,7 +1692,7 @@
               "flat": 30
             },
             {
-              "stat": "armor",
+              "stat": "defense",
               "pct": 30
             }
           ]
@@ -1788,7 +1767,7 @@
           },
           "stats": [
             {
-              "stat": "armor",
+              "stat": "defense",
               "flat": 3
             }
           ]
@@ -1807,7 +1786,7 @@
               "flat": 40
             },
             {
-              "stat": "armor",
+              "stat": "defense",
               "pct": 50
             }
           ]
@@ -1822,7 +1801,7 @@
           },
           "stats": [
             {
-              "stat": "armor",
+              "stat": "defense",
               "flat": 3
             }
           ]
@@ -2018,7 +1997,7 @@
       "stats": {
         "max_hp": 55,
         "attack": 11,
-        "armor": 1,
+        "defense": 1,
         "evasion": 20
       },
       "weapon": {
@@ -2044,19 +2023,18 @@
       "rank": "minion",
       "stats": {
         "max_hp": 50,
-        "attack": 3,
-        "magic": 11,
-        "armor": 2,
+        "attack": 11,
+        "defense": 2,
         "aggro": 6
       },
       "weapon": {
-        "type": "magical",
+        "type": "physical",
         "cooldown": 12,
         "amount": {
           "scale": [
             {
               "ratio": 0.7,
-              "stat": "magic"
+              "stat": "attack"
             }
           ]
         }
@@ -2073,7 +2051,7 @@
       "stats": {
         "max_hp": 650,
         "attack": 20,
-        "armor": 7,
+        "defense": 7,
         "evasion": 5,
         "immune:kind:lockout:all": 1
       },
@@ -2238,7 +2216,7 @@
       "rarity": "regular",
       "stats": [
         {
-          "stat": "armor",
+          "stat": "defense",
           "flat": 3
         }
       ]
@@ -2256,7 +2234,7 @@
       },
       "stats": [
         {
-          "stat": "armor",
+          "stat": "defense",
           "pct": 25
         }
       ]
@@ -2277,18 +2255,14 @@
     {
       "id": "stand_fast",
       "name": "Stand Fast",
-      "text": "Your party shrugs off blows, and magic too.",
+      "text": "Your party shrugs off heavier blows.",
       "family": "iron",
       "rarity": "premium",
       "upgradeOf": "iron_skin",
       "stats": [
         {
-          "stat": "armor",
+          "stat": "defense",
           "flat": 5
-        },
-        {
-          "stat": "magic_resist",
-          "flat": 10
         }
       ]
     }

@@ -10,7 +10,7 @@ import { abilityUp, apply, cd, helper, kit, marker, ofHolder, passiveUp, phys, r
    * Briar's Bleed on each blow its Thorns deal. Every form also hears Heartwood mail's strikes (the mythic's Thorns on the attackers of allies), which
    * Briar follows; the base Briar is classes.ts's, so the mythic itself bleeds for it (see Heartwood mail).
    */
-  const bleedOn = (status: string, k: number, more: EffectT[] = []): ReactionT => ({ on: { event: "damage_dealt", status }, do: [apply("bleed", { stacks: own("few", "armor", k), to: "other" }), ...more] });
+  const bleedOn = (status: string, k: number, more: EffectT[] = []): ReactionT => ({ on: { event: "damage_dealt", status }, do: [apply("bleed", { stacks: own("few", "defense", k), to: "other" }), ...more] });
   const THORNS = ["thorns", "heartwood_mail"];
   const plain = (k: number) => THORNS.map((s) => bleedOn(s, k));
   /** Bloodroot: a debuff that knows its source; each action its holder takes heals the Bramble knight 1.5% of its max HP, until the Bleed ends. */

@@ -65,7 +65,7 @@ abilityUp({
 abilityUp({
   id: "pressure_point", cls: "monk",
   power: "40% more damage.",
-  a: { name: "Lingering point", text: "Has Seek. Deals physical damage that scales from Attack to the foe with the highest Attack or Magic, and applies Stun. When that Stun ends, the foe is Slowed.", builds: ["lockdown"] },
+  a: { name: "Lingering point", text: "Has Seek. Deals physical damage that scales from Attack to the foe with the highest Attack, and applies Stun. When that Stun ends, the foe is Slowed.", builds: ["lockdown"] },
   b: { name: "Vital strike", text: "Has Seek. Deals triple physical damage that scales from Attack to the foe with the lowest HP. No Stun.", builds: ["hunt"] },
   form: (v, k) =>
     v === "b" ? { target: T.lowestHpFoe, do: [phys(from("attack", HIT.normal * 3 * k))] }

@@ -4,7 +4,7 @@
  */
 import type { GearT, NumT, StatusT, WeaponT } from "../../../src/schema.js";
 import { weaponKinds } from "../vocabulary.js";
-import { KIND_SPEED, P, PER_PERCENT, SPECIAL, SPECIAL_KEY, STACKS, SWING_REF, WEAPON, crit, stepFor, type Level, type SpecialLevel, type SpecialStat, type StackWord } from "../scale.js";
+import { FOCUS, KIND_SPEED, P, PER_PERCENT, SPECIAL, SPECIAL_KEY, STACKS, SWING_REF, WEAPON, crit, isFocus, stepFor, type Level, type SpecialLevel, type SpecialStat, type StackWord } from "../scale.js";
 
 /** An item's id from its name: lower case, apostrophes dropped, every other run of non-letters and non-digits an underscore. */
 export const idOf = (name: string): string =>
@@ -18,10 +18,8 @@ export const sp = (s: SpecialStat, level: SpecialLevel): Change => ({ stat: SPEC
 /** Crit chance in steps: +1 is 3 points, +2 is 5. */
 export const critStep = (n: number): Change => ({ stat: "crit_chance", flat: crit(n) });
 
-/** A kind's usual stat: Magic for the magical kinds, Attack for the physical. */
-export const usual = (kind: string) => (weaponKinds.find((k) => k.id === kind)?.type === "magical" ? "magic" : "attack");
-/** A weapon's hit: its kind's speed factor × (base + ratio × stat), the same rule as the plain weapons. */
-export function weaponHit(kind: string, base: Level = "medium", ratio: Level = "medium", stat = usual(kind)): NumT {
+/** A weapon's hit: its kind's speed factor × (base + ratio × stat), the same rule as the plain weapons. A focus kind swings lighter (scale.ts FOCUS). */
+export function weaponHit(kind: string, base: Level = isFocus(kind) ? FOCUS.base : "medium", ratio: Level = isFocus(kind) ? FOCUS.ratio : "medium", stat = "attack"): NumT {
   const f = KIND_SPEED[kind] / SWING_REF;
   return { base: Math.round(f * WEAPON.base[base]), scale: [{ ratio: f * WEAPON.ratio[ratio] * (PER_PERCENT[stat] ?? 1), stat }] };
 }
@@ -47,7 +45,7 @@ type PieceOpts = {
   stats?: Change[];
   /** The piece's statuses, given at every fight's start (piece statuses: buffs on the sheet, unremovable). */
   statuses?: string[];
-  /** Weapons: the hit (default medium, medium, from the kind's usual stat), and anything else the weapon states (riders, apply, a mythic's own cooldown). */
+  /** Weapons: the hit (default medium, medium from Attack, lighter for a focus kind), and anything else the weapon states (riders, apply, a mythic's own cooldown). */
   weapon?: Partial<WeaponT>;
   /** A mythic: the one class it fits. */
   mythic?: string;

@@ -226,7 +226,7 @@ function readLog(c: Content, run: Run, job: Job, t: Tally) {
           break;
         }
         if (dside === "party" && oref) {
-          add(t, `cls|${oref}|dmg`, amt); add(t, `cls|${oref}|dmg|${srcKey}`, amt); add(t, `cls|${oref}|dmgk|${dk === "physical" || dk === "untyped" ? dk : "magical"}`, amt);
+          add(t, `cls|${oref}|dmg`, amt); add(t, `cls|${oref}|dmg|${srcKey}`, amt); add(t, `cls|${oref}|dmgk|${dk}`, amt);
           if (isHit) { add(t, `cls|${oref}|hits`); if (e.crit) { add(t, `cls|${oref}|crit`); add(t, `cls|${oref}|critDmg`, amt); } }
           if (srcKey === "basic" && owner) { const g = member(owner).gear.weapon ?? "none:weapon"; add(t, `gear|${g}|swingDmg`, amt); }
           if (srcKey.startsWith("ab:")) { add(t, `ab|${src}|dmg`, amt); if (isHit) { add(t, `ab|${src}|hits`); if (e.crit) add(t, `ab|${src}|crit`); } }

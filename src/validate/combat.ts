@@ -16,7 +16,7 @@ const ACTION_EVENTS = ["action_start", "action_resolve", "action_interrupted"];
 const HIT_EVENTS = ["hit_lands", "hit_taken", "hit_evaded", "hit_missed"];
 const STATUS_EVENTS = ["status_gained", "status_triggered", "status_ended", "status_capped"];
 const DAMAGE_EVENTS = ["damage_dealt", "damage_taken"];
-const RESERVED_TAGS = ["basic", "ability", "extra", "physical", "magical", "none", "healing", "all", "crit", "area"];
+const RESERVED_TAGS = ["basic", "ability", "extra", "physical", "none", "healing", "all", "crit", "area"];
 /** Events with a kind besides action and hit events (the killing hit's, the healing action's). */
 const KIND_EVENTS = [...ACTION_EVENTS, ...HIT_EVENTS, "ko", "healed", "overhealed"];
 /** Events that carry an amount. */
@@ -89,7 +89,7 @@ export class Combat {
   /** The rules for a damage instance. */
   instance(i: { type: string; amount: S.NumT }, path: string, where: Where, inStatus: boolean) {
     if (i.type === "none" && where === "action") {
-      this.r.error("instance.untyped", `${path}.type`, `every damage instance an action produces is physical or magical`);
+      this.r.error("instance.untyped", `${path}.type`, `every damage instance an action produces is physical`);
     }
     this.num(i.amount, `${path}.amount`, where, inStatus);
   }
@@ -148,7 +148,7 @@ export class Combat {
     const st = this.ix.get<S.StatusT>("statuses", a.status)!;
     if (a.stacks !== undefined) {
       if (st.stacking !== "intensity") this.r.error("apply.stacks", `${path}.stacks`, `'${a.status}' isn't an Intensity status, so it has no stacks to add`);
-      // Stacks scale from whatever the applier states, Attack and Magic included; nothing scales them by default.
+      // Stacks scale from whatever the applier states, Attack included; nothing scales them by default.
       this.num(a.stacks, `${path}.stacks`, where, inStatus);
     }
     if (a.duration === 0 && !st.lockout?.interrupt) {

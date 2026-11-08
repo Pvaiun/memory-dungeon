@@ -14,7 +14,7 @@ export const WeaponKind = z
   .strictObject({
     id: Id,
     name: Text,
-    type: z.enum(["physical", "magical"]),
+    type: z.enum(["physical"]),
     cooldown: z.number().positive().describe("The kind's speed: the base cooldown of its basic attack, in ticks."),
     hands: Hands.describe("2: a two-handed weapon, which empties the offhand."),
     note: Note.optional(),
@@ -31,7 +31,7 @@ export type GearKindT = z.infer<typeof GearKind>;
 export const Weapon = z
   .strictObject({
     kind: Id.optional().describe("A weapon kind: sets type, cooldown and hands. Any field stated here overrides the kind's."),
-    type: z.enum(["physical", "magical"]).optional(),
+    type: z.enum(["physical"]).optional(),
     hands: Hands.optional(),
     hits: PosInt.optional(),
     cooldown: z.number().positive().optional().describe("The base cooldown, in ticks. Required without a kind."),

@@ -23,9 +23,9 @@ export const UnitCond = z.strictObject({
   casting: z.boolean().optional().describe("true: in an action's wind-up right now (what Unmake waits for). false: not."),
   ko: z.boolean().optional().describe("true: knocked out, still in the fight. Sides list living units unless a rule asks for this. Default: living."),
   hasAny: z.array(Id).min(1).optional().describe("Has at least one of these statuses (Stunned or Silenced)."),
-  lower: z.strictObject({ stat: StatKey }).optional().describe("This stat is lower than the reading unit's: the acting unit in an action, a reaction's actor, a pulse's holder (an ally with less Armor than the wearer)."),
+  lower: z.strictObject({ stat: StatKey }).optional().describe("This stat is lower than the reading unit's: the acting unit in an action, a reaction's actor, a pulse's holder (an ally with less Defense than the wearer)."),
   acted: z.boolean().optional().describe("true once one of its actions has resolved this fight; false until then (a unit summoned mid-fight starts false)."),
-  top: z.strictObject({ stats: z.array(StatKey).min(1) }).optional().describe("No living unit on its side has more of the highest of these stats (\"the foe with the highest Attack or Magic\"); ties pass."),
+  top: z.strictObject({ stats: z.array(StatKey).min(1) }).optional().describe("No living unit on its side has more of the highest of these stats (\"the foe with the highest Attack\"); ties pass."),
   weapon: z.array(Id).min(1).optional().describe("Wields a weapon of one of these kinds (an enemy's weapon by its kind, if it names one)."),
 }).meta({ id: "UnitCond" });
 export type UnitCondT = z.infer<typeof UnitCond>;
@@ -57,7 +57,7 @@ export type NumT = z.infer<typeof Num>;
 export const Value = z.union([
   z.enum(["hp", "hp_share", "mp_share", "buffs", "debuffs", "swing"]).describe("swing: the basic attack's interval now, its cooldown after Attack speed; highest is the slowest."),
   z.strictObject({ stat: StatKey }),
-  z.strictObject({ stats: z.array(StatKey).min(1) }).describe("The highest of these stats (\"the foe with the highest Attack or Magic\")."),
+  z.strictObject({ stats: z.array(StatKey).min(1) }).describe("The highest of these stats (\"the foe with the highest Attack\")."),
   z.strictObject({ stacks: Id }),
 ]);
 

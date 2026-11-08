@@ -10,41 +10,41 @@ import { canEquip } from "../validate.js";
 /**
  * What each class's kit multiplies, per gear step (an amount stat's +1, Crit chance's 5%, a special stat at medium).
  * `basic` is how much its basic attack is worth (Refrain, Phalanx, Kindling, Arc and Iron palm ride on it). Casters
- * weigh MP regen as much as Magic, the Magic-1 classes not at all.
+ * weigh MP regen as much as Attack.
  * Aggro is negative for the fragile, who want fewer hits, and positive for the walls.
  */
 export const PROFILES: Record<string, { w: Record<string, number>; basic: number }> = {
-  knight: { w: { max_hp: 3, armor: 3, aggro: 1, attack: 0.5 }, basic: 0.5 },
-  cleric: { w: { magic: 2.5, mp_regen: 3, max_mp: 1.5, max_hp: 1.5, crit_chance: 0.5, armor: 0.5, aggro: -1 }, basic: 1 },
-  ranger: { w: { attack: 3, crit_multiplier: 1, crit_chance: 1, accuracy: 0.5, max_hp: 1.2, double_strike: 1, armor: 0.5, aggro: -0.5 }, basic: 2 },
-  bramble_knight: { w: { thorns: 3, max_hp: 2.5, armor: 1.5, aggro: 1, attack: 0.5 }, basic: 0.5 },
-  hoplite: { w: { attack: 2, armor: 2, max_hp: 2, crit_multiplier: 1, aggro: 0.5, crit_chance: 0.5 }, basic: 2.5 },
-  paladin: { w: { magic: 2.5, attack: 1.5, armor: 1.5, max_hp: 1.5, max_mp: 1, mp_regen: 2 }, basic: 1 },
-  valkyrie: { w: { attack: 2.5, magic: 1.5, max_hp: 1.5, armor: 0.8, mp_regen: 1 }, basic: 1 },
-  bard: { w: { magic: 2, mp_regen: 2, max_hp: 1.5, attack: 1, armor: 0.5, aggro: -1 }, basic: 1 },
-  hexer: { w: { magic: 2, mp_regen: 3, max_mp: 1, siphon: 1.5, max_hp: 1.5, aggro: -1 }, basic: 1.5 },
-  monk: { w: { attack: 3, double_strike: 2, evasion: 1.5, crit_chance: 1, max_hp: 1, armor: 0.5 }, basic: 2.5 },
+  knight: { w: { max_hp: 3, defense: 3, aggro: 1, attack: 0.5 }, basic: 0.5 },
+  cleric: { w: { attack: 2.5, mp_regen: 3, max_mp: 1.5, max_hp: 1.5, crit_chance: 0.5, defense: 0.5, aggro: -1 }, basic: 1 },
+  ranger: { w: { attack: 3, crit_multiplier: 1, crit_chance: 1, accuracy: 0.5, max_hp: 1.2, double_strike: 1, defense: 0.5, aggro: -0.5 }, basic: 2 },
+  bramble_knight: { w: { thorns: 3, max_hp: 2.5, defense: 1.5, aggro: 1, attack: 0.5 }, basic: 0.5 },
+  hoplite: { w: { attack: 2, defense: 2, max_hp: 2, crit_multiplier: 1, aggro: 0.5, crit_chance: 0.5 }, basic: 2.5 },
+  paladin: { w: { attack: 2.5, defense: 1.5, max_hp: 1.5, max_mp: 1, mp_regen: 2 }, basic: 1 },
+  valkyrie: { w: { attack: 2.5, max_hp: 1.5, defense: 0.8, mp_regen: 1 }, basic: 1 },
+  bard: { w: { attack: 2, mp_regen: 2, max_hp: 1.5, defense: 0.5, aggro: -1 }, basic: 1 },
+  hexer: { w: { attack: 2, mp_regen: 3, max_mp: 1, siphon: 1.5, max_hp: 1.5, aggro: -1 }, basic: 1.5 },
+  monk: { w: { attack: 3, double_strike: 2, evasion: 1.5, crit_chance: 1, max_hp: 1, defense: 0.5 }, basic: 2.5 },
   assassin: { w: { crit_chance: 3, crit_multiplier: 2, attack: 2, evasion: 1, max_hp: 1, aggro: -0.5 }, basic: 1.5 },
-  vampire: { w: { max_hp: 2.5, attack: 2, lifesteal: 2, armor: 0.8 }, basic: 1.5 },
-  pyromancer: { w: { magic: 3, mp_regen: 3, max_mp: 1.5, max_hp: 1.5, aggro: -1, armor: 0.3 }, basic: 1.5 },
-  frostweaver: { w: { magic: 3, mp_regen: 2.5, max_mp: 1, max_hp: 1.5, aggro: -0.7, armor: 0.3 }, basic: 1 },
-  stormcaller: { w: { magic: 3, max_hp: 1.5, mp_regen: 2.5, max_mp: 1, aggro: -1, armor: 0.3 }, basic: 2 },
-  geomancer: { w: { armor: 3, magic: 1.5, crit_chance: 2, crit_multiplier: 1.5, max_hp: 1.5, mp_regen: 2 }, basic: 1 },
+  vampire: { w: { max_hp: 2.5, attack: 2, lifesteal: 2, defense: 0.8 }, basic: 1.5 },
+  pyromancer: { w: { attack: 3, mp_regen: 3, max_mp: 1.5, max_hp: 1.5, aggro: -1, defense: 0.3 }, basic: 1.5 },
+  frostweaver: { w: { attack: 3, mp_regen: 2.5, max_mp: 1, max_hp: 1.5, aggro: -0.7, defense: 0.3 }, basic: 1 },
+  stormcaller: { w: { attack: 3, max_hp: 1.5, mp_regen: 2.5, max_mp: 1, aggro: -1, defense: 0.3 }, basic: 2 },
+  geomancer: { w: { defense: 3, attack: 1.5, crit_chance: 2, crit_multiplier: 1.5, max_hp: 1.5, mp_regen: 2 }, basic: 1 },
 };
 
 /** One gear step of each stat. */
 const STEP: Record<string, number> = { crit_chance: 5, evasion: 20, accuracy: 20, double_strike: 25, lifesteal: 15, siphon: 10, crit_multiplier: 50, thorns: 150, aggro: 10 };
 const stepOf = (stat: string) => STEP[stat] ?? (stat.startsWith("resist") ? 30 : stat === "max_hp" ? 500 : 1000);
 
-/** A style shifts the weights: sturdy doubles HP and Armor, sharp the damage stats. */
+/** A style shifts the weights: sturdy doubles HP and Defense, sharp the damage stats. */
 export type Style = "plain" | "sturdy" | "sharp";
 export const STYLES: Style[] = ["plain", "sturdy", "sharp"];
-const DAMAGE = new Set(["attack", "magic", "crit_chance", "crit_multiplier", "double_strike", "thorns"]);
+const DAMAGE = new Set(["attack", "crit_chance", "crit_multiplier", "double_strike", "thorns"]);
 
 function weight(cls: string, stat: string, style: Style): number {
   const p = PROFILES[cls];
   const base = p?.w[stat] ?? (stat.startsWith("resist") ? 0.15 : 0);
-  if (style === "sturdy" && (stat === "max_hp" || stat === "armor" || stat === "evasion")) return base * 2 + (base ? 0 : 0.5);
+  if (style === "sturdy" && (stat === "max_hp" || stat === "defense" || stat === "evasion")) return base * 2 + (base ? 0 : 0.5);
   if (style === "sharp" && DAMAGE.has(stat)) return base * 1.6;
   return base;
 }

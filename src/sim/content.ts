@@ -39,7 +39,7 @@ export function patch(raw: unknown, changes: readonly Patch[]): unknown {
 export function ladder(raw: unknown, scales: readonly number[]): unknown {
   const pack = structuredClone(raw) as { enemies: EnemyT[]; dungeons: DungeonT[]; progression: { dungeonOrder: string[] } };
   const base = pack.dungeons[0];
-  const SCALED = ["max_hp", "attack", "magic"];
+  const SCALED = ["max_hp", "attack"];
   const enemies: EnemyT[] = [];
   const dungeons = scales.map((scale, i) => {
     const n = i + 1;

@@ -2,7 +2,7 @@
  * The core set's gear: the 11 plain weapons, one per weapon kind, each class's starter. The other pieces are in pieces/.
  */
 import type { GearT, NumT } from "../../src/schema.js";
-import { KIND_SPEED, PER_PERCENT, SWING_REF, WEAPON, type Level } from "./scale.js";
+import { FOCUS, KIND_SPEED, PER_PERCENT, SWING_REF, WEAPON, isFocus, type Level } from "./scale.js";
 import { weaponKinds } from "./vocabulary.js";
 
 /** A weapon's hit: its kind's speed factor × (base + ratio × stat). */
@@ -11,12 +11,14 @@ export function weaponHit(kind: string, base: Level, ratio: Level, stat: string)
   const f = KIND_SPEED[kind] / SWING_REF;
   return { base: Math.round(f * WEAPON.base[base]), scale: [{ ratio: f * WEAPON.ratio[ratio] * (PER_PERCENT[stat] ?? 1), stat }] };
 }
-const usual = (kind: string) => (weaponKinds.find((k) => k.id === kind)!.type === "magical" ? "magic" : "attack");
-
-/** One plain weapon per kind: medium damage and ratio, the kind's usual stat, nothing carried. Each class arrives with its first kind's. */
+/**
+ * One plain weapon per kind: medium damage and ratio from Attack, nothing carried; a focus kind swings lighter (scale.ts FOCUS). Each
+ * class arrives with its first kind's.
+ */
 const plain: GearT[] = weaponKinds.map((k) => ({
-  id: `plain_${k.id}`, name: k.name, text: `A plain ${k.name.toLowerCase()}.`, slot: "weapon", tier: "ordinary", source: "starter",
-  weapon: { kind: k.id, amount: weaponHit(k.id, "medium", "medium", usual(k.id)) },
+  id: `plain_${k.id}`, name: k.name, slot: "weapon", tier: "ordinary", source: "starter",
+  text: `A plain ${k.name.toLowerCase()}.`,
+  weapon: { kind: k.id, amount: isFocus(k.id) ? weaponHit(k.id, FOCUS.base, FOCUS.ratio, "attack") : weaponHit(k.id, "medium", "medium", "attack") },
 }));
 
 export const gear: GearT[] = [...plain];

@@ -20,11 +20,11 @@ const WEAPONS: Record<string, Kind> = {
   spear: { cell: "medium one-hand physical", classes: ["hoplite", "valkyrie", "monk"] },
   bow: { cell: "medium two-hand physical", classes: ["ranger", "bard"] },
   great_weapon: { cell: "slow two-hand physical", classes: ["knight", "hoplite", "geomancer", "vampire"] },
-  rune_sword: { cell: "medium one-hand magical", classes: ["paladin", "valkyrie", "hexer", "geomancer"] },
-  mace: { cell: "slow one-hand magical", classes: ["cleric", "paladin"] },
-  wand: { cell: "fast one-hand magical", classes: ["pyromancer", "stormcaller", "bard"] },
-  rod: { cell: "medium one-hand magical", classes: ["frostweaver", "stormcaller"] },
-  staff: { cell: "slow two-hand magical", classes: ["cleric", "frostweaver", "pyromancer", "bramble_knight"] },
+  rune_sword: { cell: "medium one-hand focus", classes: ["paladin", "valkyrie", "hexer", "geomancer"] },
+  mace: { cell: "slow one-hand focus", classes: ["cleric", "paladin"] },
+  wand: { cell: "fast one-hand focus", classes: ["pyromancer", "stormcaller", "bard"] },
+  rod: { cell: "medium one-hand focus", classes: ["frostweaver", "stormcaller"] },
+  staff: { cell: "slow two-hand focus", classes: ["cleric", "frostweaver", "pyromancer", "bramble_knight"] },
 };
 const ARMOR: Record<string, Kind> = {
   plate: { classes: ["knight", "hoplite", "geomancer", "bramble_knight", "paladin"] },

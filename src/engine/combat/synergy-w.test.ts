@@ -58,7 +58,7 @@ test("a foe knocked out with 7 Burn ends its Burn with amount 7 (cause ko)", () 
     party: [{ name: "Pyro", abilities: ["kindle", "kill"], statuses: ["wick"] }],
     enemies: [{ name: "Weak", stats: { max_hp: 10 } }, BAG],
     statuses: [burn, wick, TALLY],
-    abilities: [giver("kindle", "burn", { stacks: 7 }, lowestHp), now("kill", { target: lowestHp, do: [{ op: "damage", type: "magical", amount: 1000 }] })],
+    abilities: [giver("kindle", "burn", { stacks: 7 }, lowestHp), now("kill", { target: lowestHp, do: [{ op: "damage", type: "physical", amount: 1000 }] })],
   });
   readyAt(a, "Pyro", "kindle", 1);
   readyAt(a, "Pyro", "kill", 2);
@@ -147,10 +147,10 @@ test("event filters: other: foe and any; source: holder on status events; notTag
   assert.equal(a.entries("status", (e) => e.status === "ward").length, 2);
   assert.equal(tally(a, "A"), 2, "A's ward on C landing and ending; B's on D is heard by nobody");
 
-  // notTags and amountAtLeast: physical swings of 100 and a magical spell of 300.
+  // notTags and amountAtLeast: basic swings of 100 and a spell of 300.
   const ears = buff("ears", {
     reactions: [
-      { on: { event: "hit_lands", notTags: ["magical"] }, do: [count()] },
+      { on: { event: "hit_lands", notTags: ["ability"] }, do: [count()] },
       { on: { event: "hit_lands", amountAtLeast: 200 }, do: [count("self", "tally2")] },
       { on: { event: "hit_lands", other: "foe" }, do: [count("self", "tally3")] },
       { on: { event: "hit_lands", other: "ally" }, do: [count("self", "tally3")] },
@@ -160,13 +160,13 @@ test("event filters: other: foe and any; source: holder on status events; notTag
   const b = arena({
     party: [{ name: "Striker", weapon: rapid(), abilities: ["zap"], statuses: ["ears"] }],
     enemies: [BAG], statuses: [ears, TALLY, TALLY2, TALLY3],
-    abilities: [{ id: "zap", cast: 0, recovery: 0, cooldown: 5, do: [{ op: "damage", type: "magical", amount: 300 }] }],
+    abilities: [{ id: "zap", cast: 0, recovery: 0, cooldown: 5, do: [{ op: "damage", type: "physical", amount: 300 }] }],
   }).to(30.5);
-  const physical = b.hits("Bag").filter((e) => e.kind === "physical").length, magical = b.hits("Bag").filter((e) => e.kind === "magical").length;
-  assert.ok(physical > 5 && magical > 3);
-  assert.equal(tally(b, "Striker"), physical);
-  assert.equal(tally(b, "Striker", "tally2"), magical, "the 300s only");
-  assert.equal(tally(b, "Striker", "tally3"), 2 * (physical + magical), "every hit landed on a foe, and every hit the foe took from anyone; none on an ally");
+  const swings = b.hits("Bag").filter((e) => e.src === "basic").length, spells = b.hits("Bag").filter((e) => e.src === "zap").length;
+  assert.ok(swings > 5 && spells > 3);
+  assert.equal(tally(b, "Striker"), swings);
+  assert.equal(tally(b, "Striker", "tally2"), spells, "the 300s only");
+  assert.equal(tally(b, "Striker", "tally3"), 2 * (swings + spells), "every hit landed on a foe, and every hit the foe took from anyone; none on an ally");
 });
 
 // ─── Tests on reactions and pulses ───────────────────────────────────────────
@@ -226,8 +226,8 @@ test("a pulse with a condition adds Heat only while a foe burns; an Intensity pu
 
 test("Condition.atMost: an ability that waits while no foe is Marked (atMost 0), and atMost without atLeast", () => {
   const mark = debuff("mark");
-  const solo = { id: "solo", cast: 0, recovery: 0, cooldown: 5, if: { side: "foes", where: { has: "mark" }, atMost: 0 }, do: [{ op: "damage", type: "magical", amount: 1 }] };
-  const few = { id: "few", cast: 0, recovery: 0, cooldown: 5, if: { side: "foes", where: { has: "mark" }, atMost: 1 }, do: [{ op: "damage", type: "magical", amount: 1 }] };
+  const solo = { id: "solo", cast: 0, recovery: 0, cooldown: 5, if: { side: "foes", where: { has: "mark" }, atMost: 0 }, do: [{ op: "damage", type: "physical", amount: 1 }] };
+  const few = { id: "few", cast: 0, recovery: 0, cooldown: 5, if: { side: "foes", where: { has: "mark" }, atMost: 1 }, do: [{ op: "damage", type: "physical", amount: 1 }] };
   const run = (ability: string, marked: number) =>
     arena({
       party: [{ name: "Hunter", abilities: [ability] }],
@@ -256,12 +256,12 @@ test("a boost when the target has any of Stun or Silence reaches a Silenced foe 
   }
 });
 
-test("a rule for allies with less Armor than the actor picks the ally with Armor 2 and skips the one with 6 when the actor has 5", () => {
+test("a rule for allies with less Defense than the actor picks the ally with Defense 2 and skips the one with 6 when the actor has 5", () => {
   const aura = buff("aura");
   const a = arena({
-    party: [{ name: "Phalanx", stats: { armor: 5 }, abilities: ["cover"] }, { name: "Light", stats: { armor: 2 } }, { name: "Heavy", stats: { armor: 6 } }],
+    party: [{ name: "Phalanx", stats: { defense: 5 }, abilities: ["cover"] }, { name: "Light", stats: { defense: 2 } }, { name: "Heavy", stats: { defense: 6 } }],
     enemies: [BAG], statuses: [aura],
-    abilities: [giver("cover", "aura", {}, { side: "others", pick: "all", where: { lower: { stat: "armor" } } })],
+    abilities: [giver("cover", "aura", {}, { side: "others", pick: "all", where: { lower: { stat: "defense" } } })],
   });
   readyAt(a, "Phalanx", "cover", 1);
   a.to(2);
@@ -292,7 +292,7 @@ test("of foes with Attack 3, 5 and 5, the two at 5 are the top of their side and
   const a = arena({
     party: [{ name: "Judge", abilities: ["judge"] }],
     enemies: [3, 5, 5].map((attack, i) => ({ name: `F${i}`, stats: { max_hp: 1e6, attack } })),
-    statuses: [sentence], abilities: [giver("judge", "sentence", {}, { side: "foes", pick: "all", where: { top: { stats: ["attack", "magic"] } } })],
+    statuses: [sentence], abilities: [giver("judge", "sentence", {}, { side: "foes", pick: "all", where: { top: { stats: ["attack", "defense"] } } })],
   });
   readyAt(a, "Judge", "judge", 1);
   a.to(2);
@@ -326,7 +326,7 @@ test("a boost of 10% a debuff on the target deals +30% to a foe with three debuf
 
 test("an action counts its targets, and the units on a side that pass a test (from the actor's side by default)", () => {
   const burn = debuff("burn");
-  const surge = now("surge", { target: { side: "foes", pick: "all" }, do: [{ op: "damage", type: "magical", amount: 1 }, { op: "mp", amount: { scale: [{ ratio: 120, count: "targets" }] }, to: "self" }] });
+  const surge = now("surge", { target: { side: "foes", pick: "all" }, do: [{ op: "damage", type: "physical", amount: 1 }, { op: "mp", amount: { scale: [{ ratio: 120, count: "targets" }] }, to: "self" }] });
   const tally_ = now("reckon", { target: "self", do: [{ op: "mp", amount: { scale: [{ ratio: 100, count: { side: "foes", where: { has: "burn" } } }] } }] });
   const a = arena({
     party: [{ name: "Mage", stats: { max_mp: 5000 }, mp: 0, abilities: ["surge", "reckon"] }],
@@ -404,7 +404,7 @@ test("with B Marked a sword's swings all go to B; with A Taunting they go to A, 
   const spells = arena({
     party: [{ name: "Mage", abilities: ["bolt"] }],
     enemies: [{ ...BAG, name: "A" }, { ...BAG, name: "B", statuses: ["marked"] }],
-    statuses: [MARKED], abilities: [{ id: "bolt", cast: 0, recovery: 0, cooldown: 1, do: [{ op: "damage", type: "magical", amount: 1 }] }],
+    statuses: [MARKED], abilities: [{ id: "bolt", cast: 0, recovery: 0, cooldown: 1, do: [{ op: "damage", type: "physical", amount: 1 }] }],
   }).to(80);
   assert.ok(spells.hits("A").length > 20 && spells.hits("B").length > 20);
 });
@@ -606,13 +606,13 @@ test("a unit with crit chance 20 and a `set` of 50 reads 50; a doubling leaves i
 
 // ─── A stat read live from another ───────────────────────────────────────────
 
-test("Thorns from 5% of Armor read 200 at Armor 4,000 and 350 the moment Guard lands; read once, they stay at 200", () => {
-  const scale = { scale: [{ ratio: 0.05, stat: "armor", of: "holder" }] };
+test("Thorns from 5% of Defense read 200 at Defense 4,000 and 350 the moment Guard lands; read once, they stay at 200", () => {
+  const scale = { scale: [{ ratio: 0.05, stat: "defense", of: "holder" }] };
   const spiked = buff("spiked", { stats: [{ stat: "thorns", flat: scale, live: true }] });
   const fixed = buff("fixed", { stats: [{ stat: "thorns", flat: scale }] });
-  const guard = buff("guard", { duration: 5, stats: [{ stat: "armor", flat: 3000 }] });
+  const guard = buff("guard", { duration: 5, stats: [{ stat: "defense", flat: 3000 }] });
   const run = (s: string) => {
-    const a = arena({ party: [{ name: "Wall", stats: { armor: 4000 }, abilities: ["guard_up"], statuses: [s] }], enemies: [BAG], statuses: [spiked, fixed, guard], abilities: [giver("guard_up", "guard", {}, "self")] });
+    const a = arena({ party: [{ name: "Wall", stats: { defense: 4000 }, abilities: ["guard_up"], statuses: [s] }], enemies: [BAG], statuses: [spiked, fixed, guard], abilities: [giver("guard_up", "guard", {}, "self")] });
     readyAt(a, "Wall", "guard_up", 1);
     const before = a.unit("Wall").stats.thorns;
     a.to(1);
@@ -717,7 +717,7 @@ test("a Shield emptied names the foe whose hit emptied it; an Aegis that stops a
 
 test("a ko reaction with other: holder fires on the holder's own kills, not an ally's; with kind on the killing hit", () => {
   const trophy = buff("trophy", { reactions: [{ on: { event: "ko", whose: "foe", other: "holder" }, do: [count()] }, { on: { event: "ko", whose: "foe", kind: "ability" }, do: [count("self", "tally2")] }] });
-  const kill = now("kill", { target: lowestHp, do: [{ op: "damage", type: "magical", amount: 1000 }] });
+  const kill = now("kill", { target: lowestHp, do: [{ op: "damage", type: "physical", amount: 1000 }] });
   const a = arena({
     party: [{ name: "Hunter", abilities: ["kill"], statuses: ["trophy"] }, { name: "Ally", abilities: ["kill"] }],
     enemies: [{ name: "W1", stats: { max_hp: 10 } }, { name: "W2", stats: { max_hp: 20 } }, BAG],
@@ -733,8 +733,8 @@ test("a ko reaction with other: holder fires on the holder's own kills, not an a
 
 test("action_resolve carries the MP paid and the foes hit, for amountAtLeast and countAtLeast", () => {
   const weave = buff("weave", { reactions: [{ on: { event: "action_resolve", amountAtLeast: 1 }, do: [count()] }, { on: { event: "action_resolve", countAtLeast: 3 }, do: [count("self", "tally2")] }] });
-  const storm = now("storm", { mp: 400, target: { side: "foes", pick: "all" }, do: [{ op: "damage", type: "magical", amount: 1 }] });
-  const poke = now("poke", { do: [{ op: "damage", type: "magical", amount: 1 }] });
+  const storm = now("storm", { mp: 400, target: { side: "foes", pick: "all" }, do: [{ op: "damage", type: "physical", amount: 1 }] });
+  const poke = now("poke", { do: [{ op: "damage", type: "physical", amount: 1 }] });
   const a = arena({
     party: [{ name: "Mage", stats: { max_mp: 1000 }, abilities: ["storm", "poke"], statuses: ["weave"] }],
     enemies: ["A", "B", "C"].map((name) => ({ ...BAG, name })), statuses: [weave, TALLY, TALLY2], abilities: [storm, poke],
@@ -748,7 +748,7 @@ test("action_resolve carries the MP paid and the foes hit, for amountAtLeast and
 test("a final mp effect of 120 a foe hit after a four-foe chain gives 480 (count: hit)", () => {
   const chain = now("chain", {
     target: { side: "foes", pick: "random" },
-    do: [{ op: "damage", type: "magical", amount: 1 }, { op: "damage", type: "magical", amount: 1, to: { side: "foes", pick: "random", count: 3, exclude: "targets" } }, { op: "mp", amount: { scale: [{ ratio: 120, count: "hit" }] }, to: "self" }],
+    do: [{ op: "damage", type: "physical", amount: 1 }, { op: "damage", type: "physical", amount: 1, to: { side: "foes", pick: "random", count: 3, exclude: "targets" } }, { op: "mp", amount: { scale: [{ ratio: 120, count: "hit" }] }, to: "self" }],
   });
   const a = arena({
     party: [{ name: "Mage", stats: { max_mp: 5000 }, mp: 0, abilities: ["chain"] }],

@@ -38,8 +38,8 @@ function fixturePack(o: { drop?: (g: GearT) => boolean } = {}): ContentPack {
     const plain = pack.gear.find((g) => g.id === `plain_${k.id}`)!;
     RARS.forEach((rarity, r) => { for (const n of [1, 2]) add({ ...structuredClone(plain), id: `fx_${k.id}_${rarity}_${n}`, name: `${rarity} ${k.id} ${n}`, rarity, stats: [{ stat: "attack", flat: 500 * (r + 1) }] }); });
   }
-  for (const t of pack.armorTypes) RARS.forEach((rarity, r) => { for (const n of [1, 2, 3]) add({ id: `fx_${t.id}_${rarity}_${n}`, name: `${rarity} ${t.id} ${n}`, slot: "armor", armor: t.id, rarity, stats: [{ stat: "armor", flat: 500 * (r + 1) }] }); });
-  for (const k of pack.offhandKinds) RARS.forEach((rarity, r) => { for (const n of [1, 2]) add({ id: `fx_${k.id}_${rarity}_${n}`, name: `${rarity} ${k.id} ${n}`, slot: "offhand", offhand: k.id, rarity, stats: [{ stat: "armor", flat: 500 * (r + 1) }] }); });
+  for (const t of pack.armorTypes) RARS.forEach((rarity, r) => { for (const n of [1, 2, 3]) add({ id: `fx_${t.id}_${rarity}_${n}`, name: `${rarity} ${t.id} ${n}`, slot: "armor", armor: t.id, rarity, stats: [{ stat: "defense", flat: 500 * (r + 1) }] }); });
+  for (const k of pack.offhandKinds) RARS.forEach((rarity, r) => { for (const n of [1, 2]) add({ id: `fx_${k.id}_${rarity}_${n}`, name: `${rarity} ${k.id} ${n}`, slot: "offhand", offhand: k.id, rarity, stats: [{ stat: "defense", flat: 500 * (r + 1) }] }); });
   RARS.forEach((rarity, r) => { for (const n of [1, 2, 3, 4, 5]) add({ id: `fx_amulet_${rarity}_${n}`, name: `${rarity} amulet ${n}`, slot: "amulet", rarity, stats: [{ stat: "max_hp", flat: 500 * (r + 1) }] }); });
   add({ id: "fx_heart", name: "Heart", text: "More HP.", slot: "amulet", rarity: "common", stats: [{ stat: "max_hp", flat: HEART }] });
   for (const rarity of RARS.slice(1)) add({ id: `fx_amulet_${rarity}_6`, name: `${rarity} amulet 6`, slot: "amulet", rarity, stats: [{ stat: "max_hp", flat: 600 }] });
@@ -500,7 +500,8 @@ test("rogue (5h): a wipe ends the run, whoever is at camp; after a won fight, th
     choose(c, run, reachable(run)[0].id);
     const p = run.pending as Extract<RogueRun["pending"], { kind: "fight" }>;
     if (boss) (p.fight = { ...run.boss }), (p.tier = "boss");
-    for (const cls of run.party) member(run, cls).missHp = 99999;
+    // Every member down before the fight: a sure wipe, whatever the fight's numbers.
+    for (const cls of run.party) (member(run, cls).missHp = 99999), (member(run, cls).ko = true);
     autoFight(c, run);
     assert.equal(run.pending.kind, "over");
   }

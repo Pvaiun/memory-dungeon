@@ -15,7 +15,7 @@ import { critStep, own, piece, pieceStatus, sp, st, type Build, type BuildTag, t
 /** "Half its HP", the line every below-half and above-half piece reads. */
 const HALF = 50;
 /** Boosts on both kinds of hit. */
-const both = (pct: NumT) => [{ tag: "physical", pct }, { tag: "magical", pct }];
+const both = (pct: NumT) => [{ tag: "physical", pct }];
 
 type To = Extract<EffectT, { op: "apply" }>["to"];
 const give = (status: string, to: To, stacks?: NumT): EffectT => ({ op: "apply", status, to, ...(stacks !== undefined ? { stacks } : {}) });
@@ -98,9 +98,9 @@ const amulet = (it: Item) => add("amulet", undefined, it);
 
 // ─── Plate (Knight, Hoplite, Geomancer, Bramble knight, Paladin) ─────────────
 
-plate({ name: "Ironclad", rarity: "common", text: "Armor +2.", stats: [st("armor", 2)], tags: first("landslide", "toll") });
+plate({ name: "Ironclad", rarity: "common", text: "Defense +2.", stats: [st("defense", 2)], tags: first("landslide", "toll") });
 plate({ name: "Crested plate", rarity: "common", text: "HP +1, Aggro +1.", stats: [st("max_hp", 1), st("aggro", 1)], tags: first("toll", "bonfire", "phoenix") });
-plate({ name: "Bristled plate", rarity: "common", text: "Thorns 150, Armor +1.", stats: [sp("thorns", "medium"), st("armor", 1)], tags: first("toll", "landslide") });
+plate({ name: "Bristled plate", rarity: "common", text: "Thorns 150, Defense +1.", stats: [sp("thorns", "medium"), st("defense", 1)], tags: first("toll", "landslide") });
 
 plate({
   name: "Portcullis", rarity: "uncommon", text: "Thorns 150. While the wearer is above half its HP, it draws far more (Aggro +20).",
@@ -110,9 +110,9 @@ plate({
   tags: first("toll", "landslide", "bonfire"),
 });
 plate({
-  name: "Keystone cuirass", rarity: "uncommon", text: "Armor +1. Its basic attacks deal 2% more for every 1,000 Armor it has.",
-  stats: [st("armor", 1)],
-  rule: { text: "Its basic attacks deal 2% more for every 1,000 Armor it has.", body: { boosts: [{ tag: "basic", pct: share(0.002, "armor") }] } },
+  name: "Keystone cuirass", rarity: "uncommon", text: "Defense +1. Its basic attacks deal 2% more for every 1,000 Defense it has.",
+  stats: [st("defense", 1)],
+  rule: { text: "Its basic attacks deal 2% more for every 1,000 Defense it has.", body: { boosts: [{ tag: "basic", pct: share(0.002, "defense") }] } },
   tags: first("landslide", "toll"),
 });
 plate({
@@ -185,7 +185,7 @@ plate({
 
 // ─── Mail (Paladin, Valkyrie, Vampire, Hexer, Bramble knight) ─────────────────
 
-mail({ name: "Inscribed hauberk", rarity: "common", text: "Attack +1, Magic +1.", stats: [st("attack", 1), st("magic", 1)], tags: first("lockdown", "bonfire", "cuts") });
+mail({ name: "Inscribed hauberk", rarity: "common", text: "Attack +1, HP +1.", stats: [st("attack", 1), st("max_hp", 1)], tags: first("lockdown", "bonfire", "cuts") });
 mail({ name: "Lamprey mail", rarity: "common", text: "HP +1, Lifesteal 10%.", stats: [st("max_hp", 1), sp("lifesteal", "medium")], tags: first("pact", "cuts") });
 mail({ name: "Thick byrnie", rarity: "common", text: "HP +2.", stats: [st("max_hp", 2)], tags: first("pact", "toll", "phoenix") });
 
@@ -210,13 +210,13 @@ mail({
   tags: first("toll", "harvest"),
 });
 mail({
-  name: "Silvered hauberk", rarity: "uncommon", text: "Magic +1. The first magical hit the wearer takes each fight deals half.",
-  stats: [st("magic", 1)],
-  rule: { text: "The first magical hit the wearer takes each fight deals half.", body: { reactions: [when({ event: "fight_start" }, give("silvered_hauberk_on", "holder"))] } },
+  name: "Silvered hauberk", rarity: "uncommon", text: "Attack +1. The first hit the wearer takes each fight deals half.",
+  stats: [st("attack", 1)],
+  rule: { text: "The first hit the wearer takes each fight deals half.", body: { reactions: [when({ event: "fight_start" }, give("silvered_hauberk_on", "holder"))] } },
   more: [
-    state("silvered_hauberk_on", "SILVERED", "The next magical hit it takes deals half.", {
-      taken: [{ tag: "magical", pct: -50 }],
-      reactions: [when({ event: "hit_taken", tags: ["magical"] }, lift("silvered_hauberk_on", "holder"))],
+    state("silvered_hauberk_on", "SILVERED", "The next hit it takes deals half.", {
+      taken: [{ tag: "physical", pct: -50 }],
+      reactions: [when({ event: "hit_taken", tags: ["physical"] }, lift("silvered_hauberk_on", "holder"))],
     }),
   ],
   tags: first("lockdown", "bonfire", "toll"),
@@ -355,13 +355,13 @@ leather({
 
 // ─── Robes (Cleric, Pyromancer, Frostweaver, Stormcaller, Bard) ───────────────
 
-robes({ name: "Magister's robe", rarity: "common", text: "Magic +2.", stats: [st("magic", 2)], tags: first("harvest", "bonfire", "snap") });
+robes({ name: "Magister's robe", rarity: "common", text: "Attack +2.", stats: [st("attack", 2)], tags: first("harvest", "bonfire", "snap") });
 robes({ name: "Wayfarer's habit", rarity: "common", text: "MP +1, MP regen +1.", stats: [st("max_mp", 1), st("mp_regen", 1)], tags: first("overflow", "bonfire", "phoenix") });
-robes({ name: "Hermit's cowl", rarity: "common", text: "Magic +1, Aggro −1.", stats: [st("magic", 1), st("aggro", -1)], tags: first("harvest", "bonfire", "overflow") });
+robes({ name: "Hermit's cowl", rarity: "common", text: "Attack +1, Aggro −1.", stats: [st("attack", 1), st("aggro", -1)], tags: first("harvest", "bonfire", "overflow") });
 
 robes({
-  name: "Matins robe", rarity: "uncommon", text: "Magic +1. The first ability the wearer casts each fight costs no MP.",
-  stats: [st("magic", 1)],
+  name: "Matins robe", rarity: "uncommon", text: "Attack +1. The first ability the wearer casts each fight costs no MP.",
+  stats: [st("attack", 1)],
   rule: { text: "The first ability the wearer casts each fight costs no MP.", body: { reactions: [when({ event: "fight_start" }, give("matins_robe_on", "holder"))] } },
   more: [
     // An MP cost change: free while held; lifted once a cast has resolved (and paid nothing).
@@ -385,11 +385,11 @@ robes({
   tags: first("overflow", "harvest", "phoenix"),
 });
 robes({
-  name: "Glyphed robe", rarity: "uncommon", text: "MP regen +1. Each ability the wearer finishes casting gives it a Shield of a tenth of its Magic.",
+  name: "Glyphed robe", rarity: "uncommon", text: "MP regen +1. Each ability the wearer finishes casting gives it a Shield of a tenth of its Attack.",
   stats: [st("mp_regen", 1)],
   rule: {
-    text: "Each ability the wearer finishes casting gives it a Shield of a tenth of its Magic.",
-    body: { reactions: [when({ event: "action_resolve", kind: "ability" }, give("shield", "holder", share(0.1, "magic")))] },
+    text: "Each ability the wearer finishes casting gives it a Shield of a tenth of its Attack.",
+    body: { reactions: [when({ event: "action_resolve", kind: "ability" }, give("shield", "holder", share(0.1, "attack")))] },
   },
   tags: first("overflow", "bonfire", "harvest"),
 });
@@ -457,14 +457,14 @@ robes({
 
 amulet({ name: "Lodestone", rarity: "common", text: "HP +1, Aggro +1.", stats: [st("max_hp", 1), st("aggro", 1)], tags: first("toll", "phoenix", "bonfire") });
 amulet({ name: "Whetstone", rarity: "common", text: "Attack +1, Crit chance +3%.", stats: [st("attack", 1), critStep(1)], tags: first("ambush", "hunt", "landslide") });
-amulet({ name: "Moonstone", rarity: "common", text: "Magic +1, Aggro −1.", stats: [st("magic", 1), st("aggro", -1)], tags: first("harvest", "bonfire", "snap") });
-amulet({ name: "Ironstone", rarity: "common", text: "Armor +1, Attack +1.", stats: [st("armor", 1), st("attack", 1)], tags: first("landslide", "toll") });
+amulet({ name: "Moonstone", rarity: "common", text: "Attack +1, Aggro −1.", stats: [st("attack", 1), st("aggro", -1)], tags: first("harvest", "bonfire", "snap") });
+amulet({ name: "Ironstone", rarity: "common", text: "Defense +1, Attack +1.", stats: [st("defense", 1), st("attack", 1)], tags: first("landslide", "toll") });
 amulet({ name: "Dewstone", rarity: "common", text: "MP regen +1, MP +1.", stats: [st("mp_regen", 1), st("max_mp", 1)], tags: first("overflow", "lockdown", "phoenix") });
 amulet({ name: "Quicksilver", rarity: "common", text: "Evasion 20, HP +1.", stats: [sp("evasion", "medium"), st("max_hp", 1)], tags: first("cuts", "toll") });
 
 amulet({
-  name: "Red ribbon", rarity: "uncommon", text: "Armor +1. The first time an ally drops below half its HP each fight, the wearer Taunts.",
-  stats: [st("armor", 1)],
+  name: "Red ribbon", rarity: "uncommon", text: "Defense +1. The first time an ally drops below half its HP each fight, the wearer Taunts.",
+  stats: [st("defense", 1)],
   rule: {
     text: "The first time an ally drops below half its HP each fight, the wearer Taunts.",
     // A reaction's `if`: the ally that lost HP (the event's owner) is below half, and the wearer hasn't Taunted for it this fight.
@@ -486,8 +486,8 @@ amulet({
   tags: first("landslide", "ambush", "phoenix"),
 });
 amulet({
-  name: "Hare's foot", rarity: "uncommon", text: "Magic +1. Starts every fight Hasted.",
-  stats: [st("magic", 1)],
+  name: "Hare's foot", rarity: "uncommon", text: "Attack +1. Starts every fight Hasted.",
+  stats: [st("attack", 1)],
   rule: { text: "Starts every fight Hasted.", body: { reactions: [when({ event: "fight_start" }, give("haste", "holder"))] } },
   tags: first("ambush", "bonfire", "overflow", "cuts"),
 });

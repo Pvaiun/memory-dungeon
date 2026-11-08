@@ -52,29 +52,29 @@ Commons and uncommons are written from a rule per kind, not designed one by one:
 | Dagger | Crit chance, Attack, Accuracy, Evasion | a crit that opens a little Bleed; basic attacks that ignore Taunt |
 | Fist weapons | Double strike, Attack, Evasion, Lifesteal | a short Haste at the fight's start; extra strikes that carry a little Sunder |
 | Sword | Attack, HP, Aggro | a short Taunt at the start; Thorns |
-| Spear | Attack, Armor, Crit chance | a little Sunder on crits; a Guard after a killing blow |
+| Spear | Attack, Defense, Crit chance | a little Sunder on crits; a Guard after a killing blow |
 | Bow | Attack, Accuracy, Crit damage | abilities with Seek; a little Bleed on crits |
 | Great weapon | Attack, HP, Crit damage | a few Might at the start; a Shield at the start from Attack |
-| Rune sword | Magic, Attack, Armor | basic attacks that ignore Taunt; a Ward at the start |
-| Mace | Magic, HP, MP regen | a Regen on the lowest ally at the start; a Ward at the start |
-| Wand | Magic, MP, Double strike | a little Shock on basic attacks; a little MP back on a crit |
-| Rod | Magic, MP regen, HP | a little Chill on basic attacks; a Clarity once a fight below a third of MP |
-| Staff | Magic, MP, HP | a Clarity at the start; a Shield at the start from Magic |
-| Plate | Armor, HP, Aggro, Thorns | Thorns with Aggro up; a Shield at the start from Armor; a Guard once a fight below half HP |
-| Mail | HP, Attack, Magic, Lifesteal | Lifesteal; Thorns; a Ward at the start |
+| Rune sword | Attack, Defense, Crit chance | basic attacks that ignore Taunt; a Ward at the start |
+| Mace | Attack, HP, MP regen | a Regen on the lowest ally at the start; a Ward at the start |
+| Wand | Attack, MP, Double strike | a little Shock on basic attacks; a little MP back on a crit |
+| Rod | Attack, MP regen, HP | a little Chill on basic attacks; a Clarity once a fight below a third of MP |
+| Staff | Attack, MP, HP | a Clarity at the start; a Shield at the start from Attack |
+| Plate | Defense, HP, Aggro, Thorns | Thorns with Aggro up; a Shield at the start from Defense; a Guard once a fight below half HP |
+| Mail | HP, Attack, Lifesteal | Lifesteal; Thorns; a Ward at the start |
 | Leather | Evasion, Crit chance, Accuracy, Attack | a short Haste at the start; Evasion with Aggro down; a few Might at the start |
-| Robes | MP, MP regen, Magic, Aggro down | a Clarity at the start; HP with Aggro down; a Shield at the start from Magic |
-| Kite shield | Armor, HP, Aggro | a Shield at the start from max HP; a Guard on the lowest ally at the start |
-| Round shield | Armor, Attack, HP | a Guard at the start; a short Taunt when an ally drops below half |
-| Horn | Aggro, MP regen, Attack or Magic | a Clarity on the least-MP ally at the start; a short Taunt at the start |
-| Tome | Magic, MP, MP regen | a few Chill on every foe at the start; abilities that cost a little less |
-| Lantern | Magic, HP, MP | a few Burn on every foe at the start; a Ward at the start |
-| Relic | Magic, MP regen, HP | heals that also cleanse one debuff; a Regen on the lowest ally at the start |
-| Bell | MP regen, Evasion, Magic or Attack | a short Haste at the start; one cleanse of Silence a fight |
-| Totem | Armor, Attack, Thorns | Thorns; a Guard once a fight when its holder drops below half |
+| Robes | MP, MP regen, Attack, Aggro down | a Clarity at the start; HP with Aggro down; a Shield at the start from Attack |
+| Kite shield | Defense, HP, Aggro | a Shield at the start from max HP; a Guard on the lowest ally at the start |
+| Round shield | Defense, Attack, HP | a Guard at the start; a short Taunt when an ally drops below half |
+| Horn | Aggro, MP regen, Attack | a Clarity on the least-MP ally at the start; a short Taunt at the start |
+| Tome | Attack, MP, MP regen | a few Chill on every foe at the start; abilities that cost a little less |
+| Lantern | Attack, HP, MP | a few Burn on every foe at the start; a Ward at the start |
+| Relic | Attack, MP regen, HP | heals that also cleanse one debuff; a Regen on the lowest ally at the start |
+| Bell | MP regen, Evasion, Attack | a short Haste at the start; one cleanse of Silence a fight |
+| Totem | Defense, Attack, Thorns | Thorns; a Guard once a fight when its holder drops below half |
 | Vial | Lifesteal, Crit chance, Attack | crits that heal a little; Lifesteal below half HP |
-| Idol | Siphon, Magic, HP | MP on a kill; a little Siphon on crits |
-| Amulet | one each: HP, Attack, Magic, Armor, MP regen, Evasion (two steps of mixed stats) | one each: Taunt at the start, a Shield at the start, Haste at the start, Lifesteal, Thorns, Double strike (a step and a small version) |
+| Idol | Siphon, Attack, HP | MP on a kill; a little Siphon on crits |
+| Amulet | one each: HP, Defense, MP regen, Evasion, and two with Attack (two steps of mixed stats) | one each: Taunt at the start, a Shield at the start, Haste at the start, Lifesteal, Thorns, Double strike (a step and a small version) |
 
 ## New words, and the rules the pieces bend
 

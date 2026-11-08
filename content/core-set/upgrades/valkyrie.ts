@@ -1,8 +1,8 @@
 /** The Valkyrie's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit.ts. */
 import type { AbilityT, EffectT, ReactionT, StatusT, ToT } from "../../../src/schema.js";
-import { T } from "../classes.js";
+import { RALLY, T } from "../classes.js";
 import { from, jitter, stacks } from "../scale.js";
-import { abilityUp, apply, both, helper, kit, magic, marker, passiveUp } from "./kit.js";
+import { abilityUp, apply, both, helper, kit, marker, passiveUp, phys } from "./kit.js";
 
 {
   const READY = { revives: { ready: true } } as const;
@@ -33,21 +33,21 @@ import { abilityUp, apply, both, helper, kit, magic, marker, passiveUp } from ".
 
 {
   const shock = { status: "shock", stacks: stacks("few", "attack", 0.5) };
-  const spear = (ratio: number, extra: object = {}) => magic(from("attack", ratio), { apply: [shock], ...extra });
+  const spear = (ratio: number, extra: object = {}) => phys(from("attack", ratio), { apply: [shock], ...extra });
   /** Gale storm: one hit past any guard, then one each on two other random foes; fewer foes, fewer hits. */
   const storm = (ratio: number): Partial<AbilityT> => ({ do: [spear(ratio), spear(ratio, { to: { side: "foes", pick: "random", count: 2, exclude: "targets" } })] });
   const hunt = (ratio: number): Partial<AbilityT> => ({ target: T.lowestHpFoe, do: [spear(ratio, { hits: 3 })] });
   abilityUp({
     id: "gale_spear", cls: "valkyrie",
     power: "Deals two fifths more damage.",
-    a: { name: "Gale storm", text: "Three quick magical hits on three different foes, the first past any guard, each adding a few Shock.", builds: ["harvest", "cuts"] },
-    b: { name: "Spear of the hunt", text: "Three quick magical hits past any guard on the foe with the lowest HP, each adding a few Shock.", builds: ["hunt"] },
+    a: { name: "Gale storm", text: "Three quick hits on three different foes, the first past any guard, each adding a few Shock.", builds: ["harvest", "cuts"] },
+    b: { name: "Spear of the hunt", text: "Three quick hits past any guard on the foe with the lowest HP, each adding a few Shock.", builds: ["hunt"] },
     form: (v, k) => (v === "a" ? storm(0.09 * k) : v === "b" ? hunt(0.09 * k) : { do: [spear(0.09 * k, { hits: 3 })] }),
   });
 }
 
 {
-  const heal = (ratio: number): EffectT => ({ op: "heal", amount: from("magic", ratio) });
+  const heal = (ratio: number): EffectT => ({ op: "heal", amount: from("attack", ratio) });
   const hymn = (ratio: number): Partial<AbilityT> => ({ do: [heal(ratio), apply("haste")] });
   const stand = (ratio: number): Partial<AbilityT> => ({ if: { side: "allies", where: { hpBelow: 30 } }, do: [heal(ratio), apply("taunt", { to: "self" })] });
   abilityUp({
@@ -55,7 +55,7 @@ import { abilityUp, apply, both, helper, kit, magic, marker, passiveUp } from ".
     power: "Heals two fifths more.",
     a: { name: "Battle hymn", text: "Heals the ally with the lowest share of HP, and Hastes it.", builds: ["cuts", "pact"] },
     b: { name: "Last stand", text: "Waits until an ally is below 30% of its max HP, then heals it for double, and the Valkyrie Taunts.", builds: ["phoenix", "pact"] },
-    form: (v, k) => (v === "a" ? hymn(0.45 * k) : v === "b" ? stand(0.9 * k) : { do: [heal(0.45 * k)] }),
+    form: (v, k) => (v === "a" ? hymn(RALLY * k) : v === "b" ? stand(2 * RALLY * k) : { do: [heal(RALLY * k)] }),
   });
 }
 

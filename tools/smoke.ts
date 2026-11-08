@@ -8,7 +8,7 @@
  *   npm run smoke [-- --seeds N] [--runs-only] [--encounters-only] [--only <stage or dungeon>] [--kit best]
  *
  * --kit best dresses every unit in a generic best kit instead of the starting kit: for each slot, the piece
- * whose stats score highest for the class (its main damage stat first, then HP, Armor and the rest), with the
+ * whose stats score highest for the class (Attack first, then HP, Defense and the rest), with the
  * weapon's own hit counted. A ceiling to set beside the starting kit's floor, not a build anyone would choose.
  */
 import { readFileSync, mkdirSync, writeFileSync } from "node:fs";
@@ -47,8 +47,7 @@ function dress(party: Party): Party {
   for (const u of party.units) {
     const cls = c.classes.get(u.class)!;
     const base: Record<string, number> = cls.stats;
-    const main = (base.magic ?? 0) > (base.attack ?? 0) ? "magic" : "attack";
-    const weight = (stat: string) => (stat === main ? 3 : stat === "max_hp" ? 2 : stat === "armor" ? 1.5 : stat.startsWith("resist:") ? 0.2 : 1);
+    const weight = (stat: string) => (stat === "attack" ? 3 : stat === "max_hp" ? 2 : stat === "defense" ? 1.5 : stat.startsWith("resist:") ? 0.2 : 1);
     const score = (id: string) => {
       const g = c.pack.gear.find((x) => x.id === id)!;
       let n = 0;

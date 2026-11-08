@@ -73,7 +73,7 @@ helper(kit("coup_de_grace", "COUP DE GRÂCE", "A kill with an ability makes Back
 abilityUp({
   id: "garrote", cls: "assassin",
   power: "It costs less MP.",
-  a: { name: "Choke", text: "Has Seek. Waits until a foe is in a wind-up. Deals physical damage that scales from Attack to the casting foe with the highest Attack or Magic, and applies Silence.", builds: ["lockdown"] },
+  a: { name: "Choke", text: "Has Seek. Waits until a foe is in a wind-up. Deals physical damage that scales from Attack to the casting foe with the highest Attack, and applies Silence.", builds: ["lockdown"] },
   b: { name: "Garrote wire", text: "Has Seek. Deals physical damage that scales from Attack to a random foe that isn't Taunting, applies Rot, and adds many Bleed; stacks scale from Attack. No Silence.", builds: ["hunt"] },
   form: (v, _k, plus) => ({
     ...(plus ? { mp: 200 } : {}),

@@ -8,7 +8,7 @@
  */
 import type { CUnit } from "../../../src/engine/combat/fight.js";
 import { c, disp, shownAsIcon } from "../content.js";
-import { abilityTag, damageTypeOf } from "../describe.js";
+import { abilityTag, isSpell } from "../describe.js";
 import { enemyDisplayName, weaponLook } from "../art.js";
 import type { Ev } from "./driver.js";
 
@@ -22,17 +22,6 @@ export type Beat = { at: number; kind: BeatKind; lines: Line[]; actor?: string; 
 export type Lookup = { unit: (id: string) => CUnit | undefined; name: (id: string) => string };
 
 const MAX_LINES = 4;
-
-/**
- * Every foe carries some Magic resist (10% a regular one, 15% an elite, 25% a boss, the ghosts 75%), and the
- * engine words every magical hit it cuts RESIST. Said on every spell at a bandit, the word stops meaning anything, so a
- * hit reads RESIST only when Magic resist took a quarter of it or more (a boss, a ghost, a unit under Ward).
- */
-export function resisted(ev: Ev): boolean {
-  if (ev.word !== "RESIST") return false;
-  const raw = ev.raw as number | undefined, amount = (ev.amount as number) || 0;
-  return !raw || amount * 4 <= raw * 3;
-}
 
 /**
  * Counts, which a unit gains a stack of on every hit or every few ticks (the seven counters, the Hurricane's wind,
@@ -211,8 +200,8 @@ export class Narrator {
     const by = String(ev.by), name = this.n(by);
     if (ev.kind === "basic") return `${name} attacks!`;
     const ab = c.abilities.get(String(ev.act));
-    // A spell is cast, anything else used: the verb follows the damage type, not the look.
-    const verb = ab && damageTypeOf(ab) === "magical" ? "casts" : "uses";
+    // A spell (a damaging ability with a theme's look, art.ts) is cast, anything else used.
+    const verb = ab && isSpell(ab) ? "casts" : "uses";
     const targets = ev.targets as string[];
     const first = ab?.do[0];
     const on = targets.length === 1 && targets[0] !== by && first && first.op !== "damage" && first.op !== "summon" ? ` on ${this.n(targets[0])}` : "";
@@ -235,8 +224,7 @@ export class Narrator {
     else if (n <= 0 && s > 0) text = `${t}'s Shield soaks ${s}.`;
     else {
       const soak = s > 0 ? ` Shield soaks ${s}.` : "";
-      if (resisted(ev)) text = `${t} resists: takes ${n}.${soak}`;
-      else text = `${crit ? "Critical! " : ""}${t} takes ${n}${crit ? "!" : "."}${soak}`;
+      text = `${crit ? "Critical! " : ""}${t} takes ${n}${crit ? "!" : "."}${soak}`;
     }
     this.add(ev, { text, tone: crit ? "crit" : isStatus ? "debuff" : "hit" }, kind);
   }

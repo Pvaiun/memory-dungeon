@@ -86,8 +86,8 @@ What the slot structure has to give:
 - **choices that aren't throwing a favourite toy away.**
 
 How the four slots do it:
-- **Slots have no job.** Any effect can sit on any slot. Stats lean softly by slot (Armor more often on armor, damage on weapons), and nothing says what a slot, a kind or a piece is for.
-- **Only weapons carry behaviour of their own:** a speed, a damage type and hands. A two-hander empties the offhand, so its pieces are worth a weapon and an offhand.
+- **Slots have no job.** Any effect can sit on any slot. Stats lean softly by slot (Defense more often on armor, damage on weapons), and nothing says what a slot, a kind or a piece is for.
+- **Only weapons carry behaviour of their own:** a speed, a swing (striking or focus) and hands. A two-hander empties the offhand, so its pieces are worth a weapon and an offhand.
 - **Every piece fits exactly its kind's classes,** and every class has a kind in every slot, including a one-handed weapon, so it can always use an offhand.
 - **Two classes share at most two kinds,** so every class's loot is mostly its own. Armor groups classes by weight, and weapons and offhands cut across those groups.
 - **Apart where it counts:** most pairs of kinds from different slots never meet on one unit, so pieces in them can be strong together without ever stacking. `npx tsx tools/gear-slots.ts` counts the widths and overlaps after any change.

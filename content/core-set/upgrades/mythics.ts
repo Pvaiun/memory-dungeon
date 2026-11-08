@@ -64,7 +64,7 @@ mythic({ name: "Heartwood mail", slot: "armor", rarity: "mythic", kind: "mail", 
 helper(pieceStatus("heartwood_mail", "Heartwood mail", "Its Thorns strike whoever hits an ally.", {
     reactions: [
       { on: { event: "hit_taken", whose: "ally" }, do: [{ op: "damage", type: "none", amount: ofHolder(1, "thorns"), to: "other" }] },
-      { on: { event: "damage_dealt", status: "heartwood_mail" }, if: { side: "self", where: { has: "briar" } }, do: [apply("bleed", { stacks: own("few", "armor"), to: "other" })] },
+      { on: { event: "damage_dealt", status: "heartwood_mail" }, if: { side: "self", where: { has: "briar" } }, do: [apply("bleed", { stacks: own("few", "defense"), to: "other" })] },
     ],
   }));
 
@@ -86,10 +86,10 @@ helper(pieceStatus("chains_of_light", "Chains of light", "Smite Silences; hits o
     reactions: [{ on: { event: "hit_lands" }, if: { unit: "other", where: { hasAny: ["stun", "silence"] } }, do: [{ op: "heal", amount: { scale: [{ ratio: 0.5, amount: true }] }, to: T.lowestShareAlly }] }],
   }));
 
-// Valkyrie: Stormspear. A weapon of its own: the rune sword's speed, magical, one hand; damage at medium from Attack; a Gale spear hit's Shock; Seek on basic attacks.
+// Valkyrie: Stormspear. A weapon of its own: the rune sword's speed, one hand; damage at medium from Attack; a Gale spear hit's Shock; Seek on basic attacks.
 mythic({ name: "Stormspear", slot: "weapon", rarity: "mythic", mythic: "valkyrie", statuses: ["stormspear"],
-    text: "A medium, magical, one-handed spear. Its basic attacks scale from Attack, ignore Taunt, and add a few Shock.",
-    weapon: { type: "magical", hands: 1, cooldown: KIND_SPEED.rune_sword, amount: weaponHit("rune_sword", "medium", "medium", "attack"), apply: [{ status: "shock", stacks: stacks("few", "attack", 0.5) }] } }, [pull("cuts", 2, 3), pull("hunt", 2, 3)]);
+    text: "A medium, one-handed spear. Its basic attacks scale from Attack, ignore Taunt, and add a few Shock.",
+    weapon: { type: "physical", hands: 1, cooldown: KIND_SPEED.rune_sword, amount: weaponHit("rune_sword", "medium", "medium", "attack"), apply: [{ status: "shock", stacks: stacks("few", "attack", 0.5) }] } }, [pull("cuts", 2, 3), pull("hunt", 2, 3)]);
 helper(pieceStatus("stormspear", "Stormspear", "Basic attacks ignore Taunt.", { seek: "basic" }));
 
 // Bard: Metronome. A count of the party's hits (extra strikes and each hit of a multi-hit ability included); at 20 the three songs are ready (by name) and the count is spent.
@@ -111,7 +111,7 @@ const WITCH_SWINGS = 3;
 mythic({
   name: "The witch-blade", slot: "weapon", rarity: "mythic", mythic: "hexer",
   text: "After each ability the Hexer casts, its next three basic attacks hit every foe that holds a debuff.",
-  weapon: { type: "magical", hands: 1, cooldown: 5.8, amount: ownHit(5.8, "magic") },
+  weapon: { type: "physical", hands: 1, cooldown: 5.8, amount: ownHit(5.8, "attack") },
   statuses: ["the_witch_blade"],
 }, [pull("snap", 3, 3), pull("harvest", 2)]);
 helper(pieceStatus("the_witch_blade", "The witch-blade", "After each ability it casts, its next three basic attacks hit every foe that holds a debuff.", {
@@ -207,7 +207,7 @@ helper(pieceStatus("glaciers_heart", "Glacier's heart", "Whenever a foe's Chill 
 mythic({
   name: "Eye of the tempest", slot: "weapon", rarity: "mythic", mythic: "stormcaller",
   text: "Every hit the Stormcaller lands jumps to one more random foe for half its damage. When a foe falls holding Shock, every other foe gains half of it.",
-  weapon: { type: "magical", hands: 1, cooldown: 6.6, amount: ownHit(6.6, "magic") },
+  weapon: { type: "physical", hands: 1, cooldown: 6.6, amount: ownHit(6.6, "attack") },
   statuses: ["eye_of_the_tempest"],
   note: "Only basic attacks' and abilities' hits jump. A jump is an extra hit, and a reaction to extra hits would hear its own jumps and loop, so Arc's and Double strike's extra strikes don't jump either.",
 }, [pull("harvest", 3, 3)]);

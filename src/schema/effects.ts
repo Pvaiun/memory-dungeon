@@ -77,15 +77,15 @@ export const Effect = z
       .describe("Changes the cooldown left on a unit's basic attack or abilities: ready now, a full cooldown, some ticks closer, a share of what's left, or at most a share of its full one. A wind-up already under way carries on."),
     z
       .strictObject({ op: z.literal("pay"), hp: Num.describe("HP paid. Negative pays nothing."), to: To })
-      .describe("A price in HP: lost at once, not damage, so no Shield soaks it, no Armor cuts it and nothing reacts to it; it never takes the payer below 1 HP. An ability's HP price is this effect on itself, after whatever reads its HP first."),
+      .describe("A price in HP: lost at once, not damage, so no Shield soaks it, no Defense cuts it and nothing reacts to it; it never takes the payer below 1 HP. An ability's HP price is this effect on itself, after whatever reads its HP first."),
     z
       .strictObject({
         op: z.literal("strike"),
         share: z.number().positive().optional().describe("Percent of the damage it's sized from. Default 100."),
-        of: z.enum(["weapon", "hit"]).optional().describe("weapon (the default): the actor's basic attack against each target, its damage with the weapon's riders and statuses, as an extra strike's. hit: the raw amount of the hit that set the reaction off (before Armor or Magic resist), in that hit's damage type."),
+        of: z.enum(["weapon", "hit"]).optional().describe("weapon (the default): the actor's basic attack against each target, its damage with the weapon's riders and statuses, as an extra strike's. hit: the raw amount of the hit that set the reaction off (before Defense), in that hit's damage type."),
         to: To.optional(),
       })
-      .describe("Reactions only: a hit of kind extra by the actor at each target (the dodge's riposte, the blow returned for an ally). It can crit and be dodged, meets Armor or Magic resist, and fires hit events; it never brings extra strikes of its own."),
+      .describe("Reactions only: a hit of kind extra by the actor at each target (the dodge's riposte, the blow returned for an ally). It can crit and be dodged, meets Defense, and fires hit events; it never brings extra strikes of its own."),
     z
       .strictObject({ op: z.literal("one"), of: z.array(HitApply).min(2).describe("The statuses to pick from, each with its own stacks."), to: To.optional() })
       .describe("Applies one of these statuses, picked at random on the actor's dice."),

@@ -10,8 +10,8 @@ A party-based dungeon crawler in the style of classic JRPGs, with fully automati
 
 - **Every unit is a class.** A party holds at most one of each, three to a party; the tech keeps room for five. Units don't level up. The Knight, Cleric and Ranger are the starters.
 - **A class has** a passive only it has, abilities, and the kinds of gear it can wear: weapon kinds, armor types and offhand kinds (see Gear). Each class is a skeleton: two weapon kinds, a passive, three abilities and a plan. Classes may get more later.
-- **A unit's weapon sets its basic attack.** The weapon's kind sets its speed and its damage type. A basic attack is plain damage of that type; only passives and statuses add anything to it.
-- **An ability can be physical or magical,** as its description says. A class whose weapon kinds are all physical, or all magical, deals that type with its abilities too; a class with one of each can mix them.
+- **A unit's weapon sets its basic attack.** The weapon's kind sets its speed and its swing, striking or focus (see Weapons). A basic attack is a plain hit; only passives and statuses add anything to it.
+- **An ability's damage is a hit like any other,** and its description says what it scales from.
 - **Passives and abilities change how a unit behaves,** rather than just adding numbers. They're mostly bespoke, but built from the core set's pieces. A passive can keep its own hidden state, with no icon, as long as its effect shows in the numbers.
 
 ### Formations and gear
@@ -36,8 +36,8 @@ A party-based dungeon crawler in the style of classic JRPGs, with fully automati
 
 ### Design rules
 
-- **Nothing has an element as a mechanic** (see Elements). Damage is physical or magical, and every unit has one Magic resist against the magical kind.
-- **Every foe carries Magic resist by rank** (`RANK_RESIST`; the Ghost far more, `RESIST.high`), so spells meet something, as swings meet Armor. Nothing is weak to magic, and nothing absorbs it. Every foe also carries some Armor, more by rank (a floor in `enemies.ts`).
+- **Nothing has an element as a mechanic** (see Elements). There's one kind of hit, and every unit meets it with its Evasion and Defense.
+- **Every foe carries some Defense,** more by rank (a floor in `enemies.ts`), so every hit meets something.
 - **There's no battlefield geometry and no positioning.**
 - **This is an auto-battler.** Abilities can have targeting rules, but no mechanic can need very smart targeting or timing.
 
@@ -52,7 +52,7 @@ Fights run in real time, in ticks, with no orders: each unit acts on its own, fr
 - **When an ability is ready.** It's off cooldown, its condition (if it has one) holds, and the unit has the MP to pay for it.
   - An ability can have a trigger condition, or several that must all hold, as well as a targeting rule. Both can read HP or MP as a share of max.
   - **MP is paid when the action resolves,** at the end of its wind-up. If the unit no longer has enough MP then, the ability fizzles: it does nothing and spends no MP, but still goes on cooldown. This has nothing to do with the Fizzle way of stacking.
-- **MP costs are set by hand on each ability,** on one ladder in two tiers (`classes.ts`). Skills (the physical classes' and the Valkyrie's spear) are cheap. Spells (the healers', the Bard's, Hexer's and Paladin's, the four mages', the Vampire's dark arts) cost several times more. The rungs mostly climb with the cooldown word.
+- **MP costs are set by hand on each ability,** on one ladder in two tiers (`classes.ts`). Skills (the walls', the fighters' and the Valkyrie's spear) are cheap. Spells (the healers', the Bard's, Hexer's and Paladin's, the four mages', the Vampire's dark arts) cost several times more. The rungs mostly climb with the cooldown word.
 - **No class regains MP in a fight by itself.** MP regen comes from gear and a formation seat (`MP_REGEN`, `MP_REGEN_STEP`), and Clarity, Refrain and Siphon give MP. Each class's MP pool is set by how many regular fights it lasts from full (`MP_POOL` in `classes.ts`).
 - **Cooldowns carry between fights.** A party unit's abilities start a fight with the cooldown they had left when its last fight ended, or their full cooldown in its first fight. Nothing resets them: not between fights, not at a campfire, not between acts.
   - There's no head start by slot (`RULES.opening.slots`), but the slot order still decides which ability goes first when several are ready, so it stays part of a build.
@@ -97,7 +97,7 @@ The target phrases in ability descriptions each mean exactly this, and are used 
 | A random foe | Any foe, weighted by draw. |
 | A random foe that isn't Taunting | Any foe without Taunt, weighted by draw. If every foe is Taunting, any foe. Only abilities with Seek use it. |
 | The foe with the lowest current HP | The foe whose HP is lowest right now. Ties are broken at random. |
-| The foe with the highest Attack or Magic | For each foe, take its Attack or its Magic, whichever is higher, and pick the foe whose number is highest. Ties are broken at random. |
+| The foe with the highest Attack | The foe whose Attack is highest. Ties are broken at random. |
 | The foe with the most Burn (or Chill, or Sunder) | The foe holding the most stacks of that status. If no foe has any, a random foe. |
 | A random foe with a buff | Any foe holding at least one buff, weighted by draw. |
 | A second, random foe (Arc) | A random foe other than the first target. The Taunt rule doesn't apply. |
@@ -106,7 +106,7 @@ The target phrases in ability descriptions each mean exactly this, and are used 
 | The foe with the highest current HP that isn't Taunting (Skips the tank) | Enemy-only, with Seek. The foe without Taunt whose HP is highest right now; if every foe is Taunting, the highest among them. Ties are broken at random. |
 | The ally with the lowest share of max HP | The ally whose current HP divided by max HP is lowest, the caster included. Ties are broken at random, so at full HP it's any ally. |
 | The other ally with the lowest share of max HP | The ally other than the caster whose current HP divided by max HP is lowest. Used by abilities that give something to the caster and one other ally. Ties are broken at random. |
-| The ally with the highest Attack or Magic | As for foes, the caster included. |
+| The ally with the highest Attack | As for foes, the caster included. |
 | A random ally | Any living ally, the caster included, all equally likely. |
 | A random ally with a debuff | Any ally with a debuff, the caster included, all equally likely. |
 | One random other ally with a debuff | Any ally other than the caster that has a debuff, all equally likely. |
@@ -116,16 +116,15 @@ The target phrases in ability descriptions each mean exactly this, and are used 
 
 ### Damage
 
-- **Two kinds of damage:** physical and magical. There are no elements and no physical subtypes.
-- **Physical** damage meets Evasion and Armor.
+- **One kind of hit.** Damage is a hit or a status's own; there are no elements and no subtypes of hit.
+- **Every hit** meets Evasion and Defense.
   - **Evasion** is a chance to dodge it, from a basic attack or an ability alike.
-  - **Armor** reduces each hit to hit² ÷ (hit + k × Armor) (`RULES.armorK`), the Path of Exile formula. That's nearly linear against big hits, takes a bigger share off small ones, and never blanks a hit. Every point of Armor helps, and many small hits do poorly against heavy armor.
-- **Magical** damage meets Magic resist, one percentage stat every unit has. Magic resist 30 cuts a magical hit by 30%, and 100 is immunity (IMMUNE). Magical damage can't be dodged. Magic resist never goes below 0 or past 100, so there are no weaknesses and no absorption.
-- **Untyped** damage is a status's own (Burn, Shock, Chill's shatter, Bleed, Doom), and Thorns. It can't be dodged, and neither Armor nor Magic resist reduces it. A foe's status can be given physical or magical damage instead (see How statuses stack and end).
-- **A damage type is also a tag** that gear, passives and statuses can hook into: a boost, a damage-taken modifier or a lockout can name physical or magical.
+  - **Defense** reduces each hit to hit² ÷ (hit + k × Defense) (`RULES.armorK`), the Path of Exile formula. That's nearly linear against big hits, takes a bigger share off small ones, and never blanks a hit. Every point of Defense helps, and many small hits do poorly against high Defense.
+- **Untyped** damage is a status's own (Burn, Shock, Chill's shatter, Bleed, Doom), and Thorns. It can't be dodged, and Defense doesn't reduce it. A foe's status can be given a hit's damage instead (see How statuses stack and end).
+- **Hits are also a tag** that gear, passives and statuses can hook into: a boost or a damage-taken modifier can name hits alone and leave a status's own damage out, as Ward does.
 - **Crits.** Hits can crit. A crit deals half again as much as the hit, and the Crit damage special stat adds to that (`SPECIAL.crit_damage`). A class's Crit chance word reads a table (`CRIT_TABLE`), and Crit chance on gear reads the same table.
-- **Scaling.** Every amount states what it scales from, and any stat can be a scaling source, weapons included. Physical things scaling from Attack, and magical things from Magic, is only a convention.
-- **Statuses on hits.** A status carried by a hit lands in full, whatever Magic resist takes off the hit. A dodged hit applies nothing. Magic resist never stops a status.
+- **Scaling.** Every amount states what it scales from, and any stat can be a scaling source, weapons included. Attack is the one offensive stat and the usual source, but that's only a convention.
+- **Statuses on hits.** A status carried by a hit lands in full, whatever Defense or Ward takes off the hit. A dodged hit applies nothing.
 
 **Hits.** A hit is damage from an ability or a basic attack. Damage from anything else, such as Thorns or a status tick, isn't a hit.
 
@@ -141,34 +140,34 @@ Damage resolves in this order:
 3. The attacker's boosts
 4. The target's damage-taken modifiers
 5. Crit
-6. Mitigation (Armor or Magic resist)
+6. Mitigation (Defense)
 7. Aegis: blocks the damage if it's above a set share of the holder's max HP
 8. Shields
 9. HP
 
 ### Weapons
 
-Eleven kinds, each a speed, a damage type and hands. Every class uses two kinds, which differ in speed, damage type or hands, and every kind is used by two to four classes. There's no melee or ranged: the kinds are there for different attack speeds, the two damage types and the fantasy. Magical damage belongs to the kind, like speed: the rune sword and the mace are magic in a fighter's hand, and the wand, rod and staff are the casters'. Each kind's interval is in `KIND_SPEED`: fast is under 7.5 ticks, slow over 10.5.
+Eleven kinds, each a speed, a swing (striking or focus) and hands. Every class uses two kinds, which differ in speed, swing or hands, and every kind is used by two to four classes. There's no melee or ranged: the kinds are there for different attack speeds, the two swings and the fantasy. The six striking kinds swing in full. The five focus kinds swing lighter, and every piece of a focus kind carries Attack on top of its own stats (`FOCUS`): a striking kind hits harder, and a focus makes everything that scales from Attack bigger (abilities, heals, stacks). Each kind's interval is in `KIND_SPEED`: fast is under 7.5 ticks, slow over 10.5.
 
-| Weapon | Speed | Damage | Hands | Classes |
+| Weapon | Speed | Swing | Hands | Classes |
 | --- | --- | --- | --- | --- |
-| Dagger | Fast | Physical | One | Ranger, Assassin, Hexer |
-| Fist weapons (knuckles, claws, cestus) | Fast | Physical | One | Monk, Vampire |
-| Sword | Medium | Physical | One | Knight, Bramble knight, Assassin |
-| Spear | Medium | Physical | One | Hoplite, Valkyrie, Monk |
-| Bow | Medium | Physical | Two | Ranger, Bard |
-| Great weapon (axe, hammer, pike, scythe) | Slow | Physical | Two | Knight, Hoplite, Geomancer, Vampire |
-| Rune sword | Medium | Magical | One | Paladin, Valkyrie, Hexer, Geomancer |
-| Mace | Slow | Magical | One | Cleric, Paladin |
-| Wand | Fast | Magical | One | Pyromancer, Stormcaller, Bard |
-| Rod | Medium | Magical | One | Frostweaver, Stormcaller |
-| Staff | Slow | Magical | Two | Cleric, Frostweaver, Pyromancer, Bramble knight |
+| Dagger | Fast | Striking | One | Ranger, Assassin, Hexer |
+| Fist weapons (knuckles, claws, cestus) | Fast | Striking | One | Monk, Vampire |
+| Sword | Medium | Striking | One | Knight, Bramble knight, Assassin |
+| Spear | Medium | Striking | One | Hoplite, Valkyrie, Monk |
+| Bow | Medium | Striking | Two | Ranger, Bard |
+| Great weapon (axe, hammer, pike, scythe) | Slow | Striking | Two | Knight, Hoplite, Geomancer, Vampire |
+| Rune sword | Medium | Focus | One | Paladin, Valkyrie, Hexer, Geomancer |
+| Mace | Slow | Focus | One | Cleric, Paladin |
+| Wand | Fast | Focus | One | Pyromancer, Stormcaller, Bard |
+| Rod | Medium | Focus | One | Frostweaver, Stormcaller |
+| Staff | Slow | Focus | Two | Cleric, Frostweaver, Pyromancer, Bramble knight |
 
-A second kind changes basic attacks only, and passives that work on basic attacks keep working. A Pyromancer with the fast wand adds Burn more often than with its slow staff, but each hit is weaker.
+A second kind changes basic attacks: a focus kind swings lighter, from a smaller base at the same scaling (`FOCUS`), so Defense takes more of each blow. Passives that work on basic attacks keep working. A Pyromancer with the fast wand adds Burn more often than with its slow staff, but each hit is weaker.
 
 ### Stats every unit has
 
-HP, MP, MP regeneration, Attack, Magic, Armor, Magic resist, Crit chance and Aggro.
+HP, MP, MP regeneration, Attack, Defense, Crit chance and Aggro.
 
 ### Statuses and special stats
 
@@ -178,7 +177,7 @@ HP, MP, MP regeneration, Attack, Magic, Armor, Magic resist, Crit chance and Agg
 A status can:
 
 - change stats, up or down;
-- raise the damage or healing a unit deals, by kind: basic attacks, abilities, physical, magical, or one status's damage;
+- raise the damage or healing a unit deals, by kind: basic attacks, abilities, hits, or one status's damage;
 - change how much damage a unit takes, of every kind or one kind;
 - soak a pool of damage before HP (a shield);
 - lock out some of a unit's actions (all, basic attacks only, or abilities only), optionally cancelling a wind-up;
@@ -200,8 +199,8 @@ How statuses end, and what they can't do:
 
 - **Length.** A status has a duration or lasts the whole fight, and every status ends when the fight does. It can be unremovable, or survive its holder being knocked out.
 - **Removal and immunity.** Effects can remove buffs or debuffs, and units can be immune to particular statuses or kinds of effect. Every status is either a buff or a debuff, and every status that deals damage over time is a debuff (the lists are under Vocabulary: statuses).
-- **A status's own damage is untyped:** it isn't dodged, and neither Armor nor Magic resist reduces it. A status can still be given physical or magical damage, which meets what a hit of its type meets; only foes use that (the Bomb Bug's death blast is magical, as every enemy attack with an elemental theme is).
-- **Status damage and defences.** Damage-taken modifiers and shields reduce all status damage. Status damage isn't a hit: it can't crit, never triggers anything that reacts to hits, and doesn't count toward anything that counts hits.
+- **A status's own damage is untyped:** it isn't dodged, and Defense doesn't reduce it. A status can still be given a hit's damage, which meets what a hit meets (Evasion, Defense, Ward); only foes use that (the Bomb Bug's death blast).
+- **Status damage and defences.** Shields soak status damage, and damage-taken modifiers reach it, except one that names hits alone (Ward, Incorporeal). Status damage isn't a hit: it can't crit, never triggers anything that reacts to hits, and doesn't count toward anything that counts hits.
 - **A status is fixed when it's applied.** The applier's stats can set how many stacks an application adds, and nothing else: its damage boosts don't raise the status's damage. A stacking status scales only by the stacks applied, and a single one by nothing.
 - **A hit's own statuses land after the hit,** so a status set off by being hit (Bleed) waits for the next one.
 - **Lengths are universal:** nothing applies a status for less or more than its own length. The one exception is bosses' control resistance (`RULES.control`). Each Stun, Silence or Slow that lands on a boss, Chill's stun included, adds a hidden stack. The stacks first halve the next control and then make the boss immune (RESISTED, IMMUNE), and they drain over time.
@@ -238,10 +237,10 @@ Ten staples make the Fundamental base, each useful from a single application. Th
 | --- | --- | --- |
 | Bleed | Fundamental | Stacks, with no duration, and does nothing on its own. Each hit its holder takes deals untyped damage per stack (not a hit itself), then a share of the stacks close. An inverse Shock: it pays a party that keeps the hits coming. |
 | Regen | Fundamental | Heals a share of its holder's max HP on a pulse, for a set time, big enough to see. Refresh. |
-| Shield | Fundamental | Soaks a pool of damage before HP, status damage included: a second health bar, shown over HP. One pool per unit. Each application adds to the pool, up to a cap of a share of the holder's max HP. How much an application adds scales from a stat the ability or effect names (Vanguard from max HP, Earthen shell from Armor). The pool has no timer, and Dispel removes the whole pool. If the pool proves too strong, a slow drain is the knob. |
+| Shield | Fundamental | Soaks a pool of damage before HP, status damage included: a second health bar, shown over HP. One pool per unit. Each application adds to the pool, up to a cap of a share of the holder's max HP. How much an application adds scales from a stat the ability or effect names (Vanguard from max HP, Earthen shell from Defense). The pool has no timer, and Dispel removes the whole pool. If the pool proves too strong, a slow drain is the knob. |
 | Might | Fundamental | More damage per stack, up to a cap. Stacks; each action its holder takes spends one stack. |
 | Weaken | Fundamental | Deals less damage. Refresh. |
-| Guard | Fundamental | Raises Armor for a while. Refresh. Best against many small hits. |
+| Guard | Fundamental | Raises Defense for a while. Refresh. Best against many small hits. |
 | Stun | Fundamental | Can't act. A wind-up under way waits it out, then carries on (Silence is the interrupt). Fizzle. |
 | Slow | Fundamental | Longer cooldowns, wind-ups and time between attacks. Refresh. |
 | Haste | Fundamental | Shorter cooldowns, wind-ups and time between attacks. Refresh. |
@@ -249,7 +248,7 @@ Ten staples make the Fundamental base, each useful from a single application. Th
 | Burn | Specialist | Stacks, with no cap. On a short pulse it deals damage per stack, then loses a share of its stacks, so it stays high only while someone keeps applying it. Each application is small against the ceiling that upkeep reaches. |
 | Chill | Specialist | Stacks up to a cap, each stack slowing its holder a little. It thaws a stack at a time, slowly, so it builds over a fight. At the cap it shatters: its holder takes damage for each stack and a Stun, and the Chill is spent. Near the cap it slows as much as Slow, and the two add. |
 | Shock | Specialist | Stacks up to a cap. Each time its holder acts (when an action resolves: at the end of its wind-up, or at once for a basic attack), it takes damage per stack and loses half its stacks, so it hurts fast units most. |
-| Ward | Specialist | Raises Magic resist for a while. Refresh. |
+| Ward | Specialist | Takes less damage from hits for a while: a cut to every hit alike, where Guard's Defense lets big hits punch through. A status's own damage still lands in full. Refresh. |
 | Sunder | Specialist | Stacks up to a cap; each stack makes its holder take a little more damage of every kind. Loses a stack on a pulse. |
 | Silence | Specialist | Can't use abilities, only basic attacks; loses an ability's wind-up. Fizzle. |
 | Hidden | Specialist | Foes can't pick it as a target, Seek included; only their Area reaches it. Its allies can still pick it. Lasts a set time and can't be removed. Refresh. |
@@ -274,10 +273,10 @@ Evasion is the one Fundamental special stat. The other six act through hits, bas
 
 | Special stat | Tier | What it does |
 | --- | --- | --- |
-| Evasion | Fundamental | Chance to dodge a physical hit. Magical hits can't be dodged. |
-| Accuracy | Specialist | Cancels that much of the target's Evasion: the physical answer to Evasion. |
-| Crit damage | Specialist | Its crits hit harder. Crits land before Armor, so big crits get through it: the physical answer to Armor. |
-| Double strike | Specialist | Chance a basic attack hits twice. Many small hits: good for breaking, bad against Armor, Thorns and hit counts. |
+| Evasion | Fundamental | Chance to dodge a hit. |
+| Accuracy | Specialist | Cancels that much of the target's Evasion: the answer to Evasion. |
+| Crit damage | Specialist | Its crits hit harder. Crits land before Defense, so big crits get through it: an answer to Defense. |
+| Double strike | Specialist | Chance a basic attack hits twice. Many small hits: good for breaking, bad against Defense, Thorns and hit counts. |
 | Thorns | Specialist | Each time a hit lands on its holder, the attacker takes this much untyped damage. Thorns damage isn't a hit. Free: the holder spends nothing. |
 | Lifesteal | Specialist | Each hit heals the holder for a share of its damage. |
 | Siphon | Specialist | Each hit takes MP from its target, a share of its damage, and gives it to the holder. |
@@ -307,7 +306,7 @@ Most Fundamentals have a partner that opposes or undoes them, and two have a bui
 | --- | --- |
 | Might, Weaken | Opposite sides of damage dealt. Dispel strips Might from a foe; Cleanse lifts Weaken from an ally. |
 | Haste, Slow | Opposite sides of tempo. Haste also feeds every built-up status, since a faster unit applies more stacks. |
-| Guard, Sunder | Guard raises Armor against physical hits; Sunder raises all the damage its holder takes. |
+| Guard, Sunder | Guard raises Defense against hits; Sunder raises all the damage its holder takes. |
 | Evasion, Accuracy | A chance to dodge, and the stat that cancels it. |
 | Bleed, Regen, Cleanse | Bleed bursts with every hit, Regen heals over time, Cleanse lifts Bleed outright. |
 | Shield, Heal, Rot | Shield prevents and Heal mends; under Rot, only Shield still works. |
@@ -319,12 +318,12 @@ Built up and kept up: Burn and Bleed for damage, Chill for control (its once-app
 
 The four slots and who wears what. What each rarity carries, and the rules for pieces, formations, upgrades and mythics, are in *Gear design: the loot*; the philosophy behind them, in *Gear design: philosophy*.
 
-- **Slots.** Each unit wears a weapon, armor, an offhand and an amulet. Gear is fixed, never generated, and any number of units can wear copies of the same piece. A class arrives with the plain weapon of its first kind, and its other slots start empty. Slots have no job: any kind of effect can sit in any slot, and only weapons carry behaviour of their own (a speed, a damage type and hands).
+- **Slots.** Each unit wears a weapon, armor, an offhand and an amulet. Gear is fixed, never generated, and any number of units can wear copies of the same piece. A class arrives with the plain weapon of its first kind, and its other slots start empty. Slots have no job: any kind of effect can sit in any slot, and only weapons carry behaviour of their own (a speed, a swing and hands).
 - **Who wears what.** A class wears only its own kinds: two weapon kinds, one or two armor types (Plate, Mail, Leather, Robes) and one or two of the ten offhand kinds. Amulets fit everyone. Every class has a one-handed weapon kind, so it can always hold an offhand, and no two classes share more than two kinds. A kind's name says who can hold it, not what its pieces do. *Core set: classes* gives each class's kinds.
 - **Two-handers.** The bow, the great weapon and the staff take both hands, so the offhand stays empty under one: a unit can't hold both, and in the rogue mode a two-hander going on sends the offhand to the bag. A two-hander's pieces are meant to be worth a weapon and an offhand.
-- **Weapons.** A weapon's kind sets its attack speed, damage type and hands, as in the weapon table; recovery is the same for every weapon. Each weapon has a damage, a scaling ratio and a scaling stat: usually Attack for physical kinds and Magic for magical ones, another stat on a few pieces. Damage is per hit and relative within the kind: a fast kind hits for less per swing, a slow kind for more. Weapon damage feeds basic attacks only; abilities scale as written.
-- **Rarity:** common, uncommon, rare, legendary and mythic. A **mythic** fits one class, in any slot and whatever its kind (a mythic weapon can have its own speed, damage type and hands), and a unit wears one at most.
-- **What gear carries.** The stats every unit has, the seven special stats, and effects. Stat steps are +1 or +2 (`STEP`, `HP_STEP`, `AGGRO_STEP`, `MP_REGEN_STEP`), with no half-steps. Special stats on gear are medium, or high on a legendary, never low. No piece carries Magic resist. A stat that matches a weapon's scaling stat counts twice, since it raises the weapon's own damage too.
+- **Weapons.** A weapon's kind sets its attack speed, swing and hands, as in the weapon table; recovery is the same for every weapon. Each weapon has a damage, a scaling ratio and a scaling stat: usually Attack, another stat on a few pieces. A focus kind's damage and ratio are lighter, and its pieces carry Attack besides (`FOCUS`). Damage is per hit and relative within the kind: a fast kind hits for less per swing, a slow kind for more. Weapon damage feeds basic attacks only; abilities scale as written.
+- **Rarity:** common, uncommon, rare, legendary and mythic. A **mythic** fits one class, in any slot and whatever its kind (a mythic weapon can have its own speed, swing and hands), and a unit wears one at most.
+- **What gear carries.** The stats every unit has, the seven special stats, and effects. Stat steps are +1 or +2 (`STEP`, `HP_STEP`, `AGGRO_STEP`, `MP_REGEN_STEP`), with no half-steps. Special stats on gear are medium, or high on a legendary, never low. A stat that matches a weapon's scaling stat counts twice, since it raises the weapon's own damage too.
 
 ## Formations
 
@@ -339,7 +338,6 @@ The four slots and who wears what. What each rarity carries, and the rules for p
 - **Draw.** Aggro never goes below 1, and draw keeps every party unit between an eighth and 16 times an ordinary unit's pull, and every foe between a third and three times. So no unit becomes unpickable, or the only pick, by numbers alone: that's Hidden's and Taunt's job.
 - **Floors.** Every other stat floors at zero, and HP at one. Max HP floors at half a point.
 - **Caps.** Evasion and Crit chance have caps, set in balancing and meant to sit far out of reach (`vocabulary.ts`).
-- **Magic resist** floors at 0, so nothing is weak to magic, and caps at 100, immunity, so nothing absorbs. Magic resist from gear and formations stops short of 100: immunity is for a foe's own line to name, and none does today.
 
 ## Known gaps
 

@@ -25,7 +25,7 @@ const ofAmount = (ratio: number): NumT => ({ scale: [{ ratio, amount: true }] })
 /** Hits on a unit that passes `when` deal pct % more, both damage types. */
 const vs = (pct: number, when: NonNullable<TargetRuleT["where"]>) => {
   const n: NumT = { scale: [{ ratio: pct, when, of: "target" }] };
-  return [{ tag: "physical", pct: n }, { tag: "magical", pct: n }];
+  return [{ tag: "physical", pct: n }];
 };
 /** The holder hasn't spent its once-a-fight marker (dead or alive: a fallen holder reacting to its own fall asks with ko). */
 const notYet = (marker: string, ko = false): ConditionT => ({ side: "self", where: { lacks: marker, ...(ko ? { ko: true } : {}) } });
@@ -38,7 +38,7 @@ const R = {
   foes: { side: "foes", pick: "all" },
   lowestShare: { side: "allies", pick: "lowest", by: "hp_share" },
   leastMp: { side: "allies", pick: "lowest", by: "mp_share" },
-  mostDangerous: { side: "foes", pick: "highest", by: { stats: ["attack", "magic"] } },
+  mostDangerous: { side: "foes", pick: "highest", by: { stats: ["attack"] } },
   mostAggro: { side: "allies", pick: "highest", by: { stat: "aggro" } },
   fallen: { side: "allies", where: { ko: true }, pick: "random" },
 } satisfies Record<string, TargetRuleT>;
@@ -102,11 +102,11 @@ function offhand(kind: string, rarity: Rarity, name: string, o: { stats?: Change
 
 // ─── Kite shield (Knight, Paladin) ──────────────────────────────────────────
 
-offhand("kite_shield", "common", "Pavise", { stats: [st("armor", 2)], says: "Armor +2.", builds: "Landslide 1 ●, Toll 1 ●" });
+offhand("kite_shield", "common", "Pavise", { stats: [st("defense", 2)], says: "Defense +2.", builds: "Landslide 1 ●, Toll 1 ●" });
 offhand("kite_shield", "common", "Banner kite", { stats: [st("max_hp", 1), st("aggro", 1)], says: "HP +1, Aggro +1.", builds: "Toll 1 ●, Landslide 1 ●" });
 // A tenth less damage while Taunting, not a Shield at the start (Carapace charm's). Read live on each hit.
 offhand("kite_shield", "uncommon", "Gatekeeper's kite", {
-  stats: [st("armor", 1)], says: "Armor +1.", does: "While its holder Taunts, it takes a tenth less damage.",
+  stats: [st("defense", 1)], says: "Defense +1.", does: "While its holder Taunts, it takes a tenth less damage.",
   status: { taken: [{ pct: { scale: [{ ratio: -10, when: { has: "taunt" }, of: "holder" }] } }] },
   builds: "Toll 1 ●, Landslide 1 ●, Bonfire 1 ●",
 });
@@ -117,7 +117,7 @@ offhand("kite_shield", "uncommon", "Sheltering kite", {
 });
 // A Shield emptied by a foe's damage ends (cause stacks) naming that foe as its other.
 offhand("kite_shield", "rare", "Rubble shield", {
-  stats: [st("armor", 1)], says: "Armor +1.", does: "When its holder's Shield breaks, the foe whose blow broke it is Stunned.",
+  stats: [st("defense", 1)], says: "Defense +1.", does: "When its holder's Shield breaks, the foe whose blow broke it is Stunned.",
   status: { reactions: [{ on: on("status_ended", { status: "shield", cause: ["stacks"], other: "foe" }), do: [apply("stun", "other")] }] },
   builds: "Lockdown 2 ●●●, Landslide 2 ●●, Toll ●",
 });
@@ -127,10 +127,10 @@ offhand("kite_shield", "rare", "Humbling shield", {
   more: [marker("humbling_shield_humbled", "Humbled", "Already Weakened by a Humbling shield this fight.")],
   builds: "Toll 2 ●●●, Lockdown ●●, Pact ●",
 });
-// Thorns read live from Armor (a `live` stat change), so Guard counts the moment it lands.
+// Thorns read live from Defense (a `live` stat change), so Guard counts the moment it lands.
 offhand("kite_shield", "legendary", "Spiked bulwark", {
-  does: "Thorns from its holder's Armor: each foe that hits it takes a twentieth of its Armor back.",
-  status: { stats: [{ stat: "thorns", flat: { scale: [{ ratio: 0.05, stat: "armor", of: "holder" }] }, live: true }] },
+  does: "Thorns from its holder's Defense: each foe that hits it takes a twentieth of its Defense back.",
+  status: { stats: [{ stat: "thorns", flat: { scale: [{ ratio: 0.05, stat: "defense", of: "holder" }] }, live: true }] },
   builds: "Toll 3 ●●●, Landslide 3 ●●●",
 });
 offhand("kite_shield", "legendary", "Oathbound shield", {
@@ -141,10 +141,10 @@ offhand("kite_shield", "legendary", "Oathbound shield", {
 
 // ─── Round shield (Hoplite, Valkyrie) ───────────────────────────────────────
 
-offhand("round_shield", "common", "Bronze buckler", { stats: [st("armor", 1), st("attack", 1)], says: "Armor +1, Attack +1.", builds: "Landslide 1 ●, Hunt 1 ●" });
+offhand("round_shield", "common", "Bronze buckler", { stats: [st("defense", 1), st("attack", 1)], says: "Defense +1, Attack +1.", builds: "Landslide 1 ●, Hunt 1 ●" });
 offhand("round_shield", "common", "Linden shield", { stats: [st("max_hp", 2)], says: "HP +2.", builds: "Toll 1 ●, Pact 1 ●" });
 offhand("round_shield", "uncommon", "Comrade's targe", {
-  stats: [st("armor", 1)], says: "Armor +1.", does: "At the start of every fight, the other ally with the highest Aggro is Guarded.",
+  stats: [st("defense", 1)], says: "Defense +1.", does: "At the start of every fight, the other ally with the highest Aggro is Guarded.",
   status: { reactions: [{ on: on("fight_start"), do: [apply("guard", { side: "others", pick: "highest", by: { stat: "aggro" } })] }] },
   builds: "Toll 1 ●, Landslide 1 ●, Bonfire 1 ●",
 });
@@ -155,7 +155,7 @@ offhand("round_shield", "uncommon", "Linebreaker", {
 });
 // No ifNone: once everyone is Guarded nothing fires, so two holders can't pass a Guard back and forth.
 offhand("round_shield", "rare", "Paired shields", {
-  stats: [st("armor", 1)], says: "Armor +1.", does: "Whenever its holder is Guarded, so is the other ally lowest in HP share that isn't Guarded yet.",
+  stats: [st("defense", 1)], says: "Defense +1.", does: "Whenever its holder is Guarded, so is the other ally lowest in HP share that isn't Guarded yet.",
   status: { reactions: [{ on: on("status_gained", { status: "guard" }), do: [apply("guard", { side: "others", where: { lacks: "guard" }, pick: "lowest", by: "hp_share" })] }] },
   builds: "Toll 2 ●●, Bonfire ●●, Landslide ●",
 });
@@ -164,13 +164,13 @@ offhand("round_shield", "rare", "Hunter's buckler", {
   status: { reactions: killsByHit({ do: [apply("haste", "holder"), apply("shield", "holder", share(0.15, "max_hp", "holder"))] }) },
   builds: "Hunt 2 ●●, Ambush ●",
 });
-// A `lower` test: the aura goes to allies with less Armor than the holder when the fight starts and whenever one of them (or the
+// A `lower` test: the aura goes to allies with less Defense than the holder when the fight starts and whenever one of them (or the
 // holder) is revived; it ends with the holder.
-const phalanxAura: ReactionT["do"] = [apply("phalanx_shield_aura", { side: "others", where: { lower: { stat: "armor" } }, pick: "all" })];
+const phalanxAura: ReactionT["do"] = [apply("phalanx_shield_aura", { side: "others", where: { lower: { stat: "defense" } }, pick: "all" })];
 offhand("round_shield", "legendary", "Phalanx shield", {
-  does: "While its holder stands, allies with less Armor than it take a fifth less damage. Its holder deals a fifth less.",
+  does: "While its holder stands, allies with less Defense than it take a fifth less damage. Its holder deals a fifth less.",
   status: {
-    boosts: [{ tag: "physical", pct: -20 }, { tag: "magical", pct: -20 }],
+    boosts: [{ tag: "physical", pct: -20 }],
     reactions: [
       { on: on("fight_start"), do: phalanxAura },
       { on: on("revived"), do: phalanxAura },
@@ -197,9 +197,9 @@ offhand("round_shield", "legendary", "Shield of the chosen", {
 // ─── Horn (Knight, Bard) ────────────────────────────────────────────────────
 
 offhand("horn", "common", "Ram's horn", { stats: [st("aggro", 1), st("attack", 1)], says: "Aggro +1, Attack +1.", builds: "Toll 1 ●, Landslide 1 ●" });
-offhand("horn", "common", "Ivory horn", { stats: [st("mp_regen", 1), st("magic", 1)], says: "MP regen +1, Magic +1.", builds: "Overflow 1 ●, Harvest 1 ●" });
+offhand("horn", "common", "Ivory horn", { stats: [st("mp_regen", 1), st("attack", 1)], says: "MP regen +1, Attack +1.", builds: "Overflow 1 ●, Harvest 1 ●" });
 offhand("horn", "uncommon", "Reveille", {
-  stats: [st("magic", 1)], says: "Magic +1.", does: "At the start of every fight, the ally with the least MP gains Clarity.",
+  stats: [st("attack", 1)], says: "Attack +1.", does: "At the start of every fight, the ally with the least MP gains Clarity.",
   status: { reactions: [{ on: on("fight_start"), do: [apply("clarity", R.leastMp)] }] },
   builds: "Overflow 1 ●, Lockdown 1 ●, Bonfire 1 ●",
 });
@@ -251,11 +251,11 @@ offhand("horn", "legendary", "Rallying horn", {
 
 // ─── Tome (Frostweaver, Bard) ───────────────────────────────────────────────
 
-offhand("tome", "common", "Scholar's codex", { stats: [st("magic", 2)], says: "Magic +2.", builds: "Snap 1 ●, Harvest 1 ●" });
+offhand("tome", "common", "Scholar's codex", { stats: [st("attack", 2)], says: "Attack +2.", builds: "Snap 1 ●, Harvest 1 ●" });
 offhand("tome", "common", "Hymnal", { stats: [st("max_mp", 1), st("mp_regen", 1)], says: "MP +1, MP regen +1.", builds: "Overflow 1 ●" });
 offhand("tome", "uncommon", "Snowbound folio", {
-  stats: [st("magic", 1)], says: "Magic +1.", does: "At the start of every fight, every foe gains a few Chill.",
-  status: { reactions: [{ on: on("fight_start"), do: [apply("chill", R.foes, own("few", "magic"))] }] },
+  stats: [st("attack", 1)], says: "Attack +1.", does: "At the start of every fight, every foe gains a few Chill.",
+  status: { reactions: [{ on: on("fight_start"), do: [apply("chill", R.foes, own("few", "attack"))] }] },
   builds: "Snap 1 ●, Lockdown 1 ●, Ambush 1 ●",
 });
 offhand("tome", "uncommon", "Abridged lexicon", {
@@ -273,7 +273,7 @@ offhand("tome", "rare", "Primer of frost", {
 // The `area` tag: hits of a damage effect aimed at every foe. A boost names one tag, so this reaches every area hit the holder
 // lands; among tome holders those are abilities (an area basic attack only comes from a formation's seat).
 offhand("tome", "rare", "Treatise on the field", {
-  stats: [st("magic", 1)], says: "Magic +1.", does: "Its holder's abilities that hit every foe deal half again as much to each foe above half its HP.",
+  stats: [st("attack", 1)], says: "Attack +1.", does: "Its holder's abilities that hit every foe deal half again as much to each foe above half its HP.",
   status: { boosts: [{ tag: "area", pct: { scale: [{ ratio: 50, when: { hpAtLeast: 50 }, of: "target" }] } }] },
   builds: "Harvest 2 ●●●",
 });
@@ -302,16 +302,16 @@ offhand("tome", "legendary", "Annotated grimoire", {
 
 // ─── Lantern (Paladin, Pyromancer) ──────────────────────────────────────────
 
-offhand("lantern", "common", "Brass lantern", { stats: [st("magic", 1), st("max_hp", 1)], says: "Magic +1, HP +1.", builds: "Bonfire 1 ●, Harvest 1 ●" });
+offhand("lantern", "common", "Brass lantern", { stats: [st("attack", 1), st("max_hp", 1)], says: "Attack +1, HP +1.", builds: "Bonfire 1 ●, Harvest 1 ●" });
 offhand("lantern", "common", "Hooded lantern", { stats: [st("max_mp", 2)], says: "MP +2.", builds: "Overflow 1 ●, Bonfire 1 ●" });
 offhand("lantern", "uncommon", "Pitch lantern", {
-  stats: [st("magic", 1)], says: "Magic +1.", does: "At the start of every fight, every foe gains a few Burn.",
-  status: { reactions: [{ on: on("fight_start"), do: [apply("burn", R.foes, own("few", "magic"))] }] },
+  stats: [st("attack", 1)], says: "Attack +1.", does: "At the start of every fight, every foe gains a few Burn.",
+  status: { reactions: [{ on: on("fight_start"), do: [apply("burn", R.foes, own("few", "attack"))] }] },
   builds: "Bonfire 1 ●, Harvest 1 ●, Ambush 1 ●",
 });
 // A Weaken at the start, not a Ward at the start (the rune sword's and the mace's).
 offhand("lantern", "uncommon", "Dazzling lantern", {
-  stats: [st("max_hp", 1)], says: "HP +1.", does: "At the start of every fight, the foe with the highest Attack or Magic is Weakened.",
+  stats: [st("max_hp", 1)], says: "HP +1.", does: "At the start of every fight, the foe with the highest Attack is Weakened.",
   status: { reactions: [{ on: on("fight_start"), do: [apply("weaken", R.mostDangerous)] }] },
   builds: "Bonfire 1 ●, Toll 1 ●, Lockdown 1 ●",
 });
@@ -348,11 +348,11 @@ offhand("lantern", "legendary", "Lamp of vigil", {
 // ─── Relic (Cleric, Valkyrie) ───────────────────────────────────────────────
 
 offhand("relic", "common", "Shrine token", { stats: [st("mp_regen", 2)], says: "MP regen +2.", builds: "Overflow 1 ●, Phoenix 1 ●" });
-offhand("relic", "common", "Blessed knot", { stats: [st("magic", 1), st("max_hp", 1)], says: "Magic +1, HP +1.", builds: "Pact 1 ●, Phoenix 1 ●" });
+offhand("relic", "common", "Blessed knot", { stats: [st("attack", 1), st("max_hp", 1)], says: "Attack +1, HP +1.", builds: "Pact 1 ●, Phoenix 1 ●" });
 // A heal given: `healed` with the holder as its other; the healed ally is the owner.
 const healGiven = (extra: Omit<EventSpecT, "event"> = {}) => on("healed", { whose: "any", other: "holder", ...extra });
 offhand("relic", "uncommon", "Holy water", {
-  stats: [st("magic", 1)], says: "Magic +1.", does: "Each time one of its holder's abilities heals an ally, it also lifts one debuff from that ally.",
+  stats: [st("attack", 1)], says: "Attack +1.", does: "Each time one of its holder's abilities heals an ally, it also lifts one debuff from that ally.",
   status: { reactions: [{ on: healGiven({ kind: "ability" }), do: [{ op: "remove", label: "debuff", count: 1, to: "owner" }] }] },
   builds: "Pact 1 ●, Toll 1 ●, Phoenix 1 ●",
 });
@@ -364,7 +364,7 @@ offhand("relic", "uncommon", "Charnel icon", {
 });
 offhand("relic", "rare", "Saint's knucklebone", {
   does: "Each time one of its holder's abilities heals an ally, that ally gains a few Might.",
-  status: { reactions: [{ on: healGiven({ kind: "ability" }), do: [apply("might", "owner", own("few", "magic"))] }] },
+  status: { reactions: [{ on: healGiven({ kind: "ability" }), do: [apply("might", "owner", own("few", "attack"))] }] },
   builds: "Pact 2 ●●●, Phoenix ●, Toll ●",
 });
 // An MP and wind-up change on its abilities that revive.
@@ -389,7 +389,7 @@ offhand("relic", "legendary", "Bones of the returned", {
 // ─── Bell (Monk, Cleric, Stormcaller) ───────────────────────────────────────
 
 offhand("bell", "common", "Temple bell", { stats: [sp("evasion", "medium"), st("attack", 1)], says: "Evasion medium, Attack +1.", builds: "Cuts 1 ●, Toll 1 ●" });
-offhand("bell", "common", "Prayer bell", { stats: [st("mp_regen", 1), st("magic", 1)], says: "MP regen +1, Magic +1.", builds: "Overflow 1 ●, Harvest 1 ●" });
+offhand("bell", "common", "Prayer bell", { stats: [st("mp_regen", 1), st("attack", 1)], says: "MP regen +1, Attack +1.", builds: "Overflow 1 ●, Harvest 1 ●" });
 // A dodge that pays, not a Haste at the start (the fist weapons').
 offhand("bell", "uncommon", "Quickening chime", {
   stats: [sp("evasion", "medium")], says: "Evasion medium.", does: "Each time its holder dodges a hit, its next basic attack comes a little sooner.",
@@ -436,11 +436,11 @@ offhand("bell", "legendary", "Funeral bell", {
 
 // ─── Totem (Bramble knight, Ranger, Geomancer) ──────────────────────────────
 
-offhand("totem", "common", "Standing stone", { stats: [st("armor", 2)], says: "Armor +2.", builds: "Landslide 1 ●, Toll 1 ●" });
+offhand("totem", "common", "Standing stone", { stats: [st("defense", 2)], says: "Defense +2.", builds: "Landslide 1 ●, Toll 1 ●" });
 offhand("totem", "common", "Hawthorn fetish", { stats: [st("attack", 1), sp("thorns", "medium")], says: "Attack +1, Thorns medium.", builds: "Toll 1 ●, Hunt 1 ●" });
 // The Thorns are the fight's: they survive the ally's fall, so a revived ally still has them.
 offhand("totem", "uncommon", "Spinebark pole", {
-  stats: [st("armor", 1)], says: "Armor +1.", does: "At the start of every fight, the ally with the highest Aggro gains Thorns for the fight.",
+  stats: [st("defense", 1)], says: "Defense +1.", does: "At the start of every fight, the ally with the highest Aggro gains Thorns for the fight.",
   status: { reactions: [{ on: on("fight_start"), do: [apply("spinebark_pole_thorns", R.mostAggro)] }] },
   more: [given("spinebark_pole_thorns", "Spinebark", "Thorns up for the fight.", { survivesKO: true, stats: [{ stat: "thorns", flat: sp("thorns", "medium").flat }] })],
   builds: "Toll 1 ●, Landslide 1 ●, Harvest 1 ●",
@@ -455,12 +455,12 @@ offhand("totem", "uncommon", "Bear fetish", {
 });
 offhand("totem", "rare", "Briar totem", {
   does: "Foes that hit its holder gain a few Bleed.",
-  status: { reactions: [{ on: on("hit_taken"), do: [apply("bleed", "other", own("few", "armor"))] }] },
+  status: { reactions: [{ on: on("hit_taken"), do: [apply("bleed", "other", own("few", "defense"))] }] },
   builds: "Toll 2 ●●●, Cuts ●",
 });
 offhand("totem", "rare", "Stone totem", {
-  does: "Its holder starts every fight behind a Shield from its Armor.",
-  status: { reactions: [{ on: on("fight_start"), do: [apply("shield", "holder", { scale: [{ ratio: 0.5, stat: "armor", of: "holder" }] })] }] },
+  does: "Its holder starts every fight behind a Shield from its Defense.",
+  status: { reactions: [{ on: on("fight_start"), do: [apply("shield", "holder", { scale: [{ ratio: 0.5, stat: "defense", of: "holder" }] })] }] },
   builds: "Landslide 2 ●●●, Ambush ●●",
 });
 /**
@@ -558,10 +558,10 @@ offhand("vial", "legendary", "Bloodlust draught", {
 
 // ─── Idol (Hexer, Vampire) ──────────────────────────────────────────────────
 
-offhand("idol", "common", "Night mask", { stats: [sp("siphon", "medium"), st("magic", 1)], says: "Siphon medium, Magic +1.", builds: "Overflow 1 ●, Pact 1 ●" });
+offhand("idol", "common", "Night mask", { stats: [sp("siphon", "medium"), st("attack", 1)], says: "Siphon medium, Attack +1.", builds: "Overflow 1 ●, Pact 1 ●" });
 offhand("idol", "common", "Carved effigy", { stats: [st("max_hp", 2)], says: "HP +2.", builds: "Pact 1 ●, Toll 1 ●" });
 offhand("idol", "uncommon", "Carrion idol", {
-  stats: [st("magic", 1)], says: "Magic +1.", does: "When its holder's hit fells a foe, it regains MP.",
+  stats: [st("attack", 1)], says: "Attack +1.", does: "When its holder's hit fells a foe, it regains MP.",
   status: { reactions: killsByHit({ do: [{ op: "mp", amount: share(0.15, "max_mp", "holder"), to: "holder" }] }) },
   builds: "Hunt 1 ●, Overflow 1 ●",
 });

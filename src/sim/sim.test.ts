@@ -100,7 +100,7 @@ test("shared seeds: copies of a party match exactly; a tweak needs far fewer run
   const owned = everything(c);
   const d = "hollow_of_the_grey_mother";
   const A = make(c, owned, ["warrior", "ranger", "duelist"], "open_order");
-  const B = make(c, owned, ["warrior", "ranger"], "open_order");
+  const B = make(c, owned, ["warrior", "ranger", "cleric"], "open_order");
   const runs = (cc: typeof c, p: typeof A, offset: number) => Array.from({ length: 300 }, (_, i) => measure(cc, pr, { dungeon: d, party: p, seed: i + 1 + offset }, randomPicker(i + 1 + offset)).progress);
   const a = runs(c, A, 0);
   assert.equal(compare(a, runs(c, structuredClone(A), 0)).verdict, "identical");
@@ -128,7 +128,7 @@ test("feel: reading packs show what a player sees, never enemy HP or stats", () 
   for (const [i, p] of picks.entries()) {
     const text = readingPack(c, rules, p, i + 1);
     assert.doesNotMatch(text, /(Ash Wolf|Bog Wight|Grey Mother)[A-Z ]* (takes|is healed)[^\n]*HP/, "enemy HP is hidden");
-    assert.doesNotMatch(text, /\b(max_hp|max_mp|resist:|immune:|crit_chance)|\b(armor|accuracy|evasion|attack|magic|aggro) \d/i, "no stat values");
+    assert.doesNotMatch(text, /\b(max_hp|max_mp|resist:|immune:|crit_chance)|\b(defense|accuracy|evasion|attack|aggro) \d/i, "no stat values");
     assert.match(text, /Ash Wolf: A lean grey wolf\. Agile, and strong in numbers/, "each enemy is described in the game's own words");
   }
   assert.ok(combatDigest(results, 1000, "0.1", null).split("\n").length <= 40);

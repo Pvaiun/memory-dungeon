@@ -21,7 +21,7 @@ Design work for a party-based JRPG dungeon crawler with automatic combat, where 
 - `src/`: the game, pure TypeScript that also runs in the browser: the engine, the rogue mode, the schema, the validator and the simulation library. `tools/`: the Node command lines that measure it.
 - `content/core-set/`: the core set as content. `scale.ts` holds every first value by name; the other files hold the classes, gear, formations, upgrades, enemies, dungeons and the rogue mode, with each item's card text. `npm run content` writes `content/core-set.pack.json`, which the engine, tests and studies read.
 - `ui/`: the interface (Vite, plain TypeScript), a retro JRPG screen that runs on a phone. `ui/README.md` has the details; `npm run ui` serves it, and GitHub Pages hosts it.
-- `steps/`: working folders for open work only, one per step (none is open today). A closed step's history is in git, not here.
+- `steps/`: working folders for open work only, one per step. A closed step's history is in git, not here.
 - `PRIMITIVES.md`: the engine's building blocks (what content can express), generated from the schema.
 
 ## How to work
@@ -43,7 +43,9 @@ Design work for a party-based JRPG dungeon crawler with automatic combat, where 
 
 What's true now (Nov 4, 2026). Replace what's done rather than adding to it; history is in git.
 
-- **The game is built and approved as it stands:** the rogue mode (`docs/core-set/rogue-mode.md`; the interface's Settings → MODE → ROGUE) with 16 classes, 240 gear pieces, 16 mythics, 32 formations and Neutral, and 64 ability upgrades. Engine 0.18, schema 0.9. Free play stays as the sandbox.
+- **The game is built and approved as it stands:** the rogue mode (`docs/core-set/rogue-mode.md`; the interface's Settings → MODE → ROGUE) with 16 classes, 240 gear pieces, 16 mythics, 32 formations and Neutral, and 64 ability upgrades. Engine 0.19, schema 0.10. Free play stays as the sandbox.
+- **Open: the one-kind-of-damage prototype** (`steps/no-magic/`, on its own branch). Magic and Magic resist are gone; Armor is Defense; the focus weapon kinds swing lighter. Built, tested and given a first balance pass; at the gate with the director (`report.md`).
+- **Open: class identity after Magic** (`steps/class-identity/`, on the prototype's branch). The design is approved: a trunk and two or three identities a class; twelve weapon kinds and thirteen offhand kinds by the same rules (every wearer reads the kind's signature), the Valkyrie on spear and sword; armor unchanged; new stat lines with the speed stats in four of them; and the kit and version changes (Paladin, Hoplite, Valkyrie, Hexer, Ranger, Stormcaller). Next: build and tune on the current gear, costed in `design.md`; then the builds are redesigned on the new classes, then the loot. Nothing built yet.
 - **Nothing is balanced yet.**
 - **The tools** (each file's header says how to run it):
   - `npm run balance`: the balance sheet. Run it after any numbers change, before the knobs.

@@ -28,7 +28,7 @@
  *
  *   npx tsx tools/piece-check.ts [--only <ids or a share>] [--seeds 3] [--quick] [--workers 4] [--out out/piece-check] [--show]
  *
- * --only takes a share (physical, magical, armor, offhands, formations, upgrades) or ids: a piece, a mythic, a
+ * --only takes a share (physical, focus, armor, offhands, formations, upgrades) or ids: a piece, a mythic, a
  * formation, an upgrade (its five forms) or one form, comma-separated. --quick: one seed, and one regular fight, the elite
  * and the boss of each act. --show prints each item's fielded party and control as JSON, and plays nothing. Output:
  * out/piece-check/report.md and report.json. Child processes do the playing (worker threads don't get tsx's loader).
@@ -44,7 +44,7 @@ import { SUBTICKS, type EffectT, type FormationT, type GearT, type Party, type P
 import { canEquip, checkParty, handsOf } from "../src/validate.js";
 import { BUILD_PARTIES } from "./build-parties.js";
 import * as physical from "../content/core-set/pieces/weapons-physical.js";
-import * as magical from "../content/core-set/pieces/weapons-magical.js";
+import * as focus from "../content/core-set/pieces/weapons-focus.js";
 import * as armor from "../content/core-set/pieces/armor-amulets.js";
 import * as offhands from "../content/core-set/pieces/offhands.js";
 import * as ups from "../content/core-set/upgrades/index.js";
@@ -263,7 +263,7 @@ function playArm(c: Content, fights: Fight[], seeds: number[], party: Party): Su
 
 const SHARES = {
   physical: "Physical weapons",
-  magical: "Magical weapons",
+  focus: "Focus weapons",
   armor: "Armor and amulets",
   offhands: "Offhands",
   formations: "Formations",
@@ -453,7 +453,7 @@ function allItems(c: Content): Item[] {
   const pieces = (share: Share, gear: GearT[]) => gear.map((g) => c.gear.get(g.id)).filter((g): g is GearT => !!g).map((g) => gearItem(c, g, share));
   return [
     ...pieces("physical", physical.gear),
-    ...pieces("magical", magical.gear),
+    ...pieces("focus", focus.gear),
     ...pieces("armor", armor.gear),
     ...pieces("offhands", offhands.gear),
     ...c.pack.formations.filter((f) => f.id !== "neutral").map((f) => formationItem(c, f)),
