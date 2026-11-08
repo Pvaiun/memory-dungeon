@@ -31,3 +31,9 @@ The director, Nov 8, on the prototype that removed Magic and Magic resist (`step
 ## The director on the committed design (Nov 8)
 
 - **The design is approved** ("very good work"), with one doubt: **the offhands.** A few offhand kinds are the only one their wearers have, and a kind's wearers don't want the same stats: "the monk and the cleric basically never want the same stats on a bell", so a bell reads as a Monk tool or a Cleric tool, never both. They ask for more options and "a similar rationalization to what we did with primary weapons" for offhand kinds. This supersedes the earlier note that the weapon method shouldn't reach offhands: what stays rejected is a job per slot; what's asked for is that every piece of a kind be relevant to every class that can wear it.
+
+## The director's answers on the fourth draft (Nov 8)
+
+- **The offhand kinds as tabled** (thirteen kinds, two a class, by the weapon rules). Approved.
+- **Armor stays as the four weight classes.** No pass on armor.
+- With these, **the design is approved at its gate.** The next stage is build and tune.

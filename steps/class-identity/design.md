@@ -1,6 +1,6 @@
 # Design: class identity after Magic
 
-The fourth draft, carrying the director's answers on the first three (`intent.md`): the offhands now get the weapon method. It reads with the director's findings document (the weapon rules, the twelve kinds, their stat profiles). Nothing here is built, and no number is final: sizes belong to `content/core-set/scale.ts` when the build step comes.
+The design as approved by the director at its gate (`intent.md` has their answers on each draft). The next stage is build and tune, costed under *What the build step has to do*. It reads with the director's findings document (the weapon rules, the twelve kinds, their stat profiles). Nothing here is built, and no number is final: sizes belong to `content/core-set/scale.ts` when the build step comes.
 
 ## The frame
 
@@ -359,7 +359,7 @@ The findings' list, after this design. Every signature of every weapon and offha
 
 Settled by the director across the three drafts: a class has several identities and the design serves each; Sanctuary as a Shield from Attack; Judgement on debuffed foes, with Zeal and Verdict; the Hoplite's second guard replaced by Phalanx charge, with Shield advance and Breaking charge, no Taunt in its kit; Einherjar retired and the Valkyrie rebuilt as the offensive shieldmaiden (Shieldmaiden, Gale spear, Choosing, Skyfall) on spear and sword; the Hexer's two structural adds.
 
-New in this draft and wanting a word: **the offhand kinds by the weapon rules,** thirteen kinds, two a class, with the orb, the trophy and the cloak new; the profiles and wearers are tabled under *Offhand kinds*, and the pairings with the thinnest fantasy are the Geomancer's trophy (a geode) and the Monk's cloak.
+Also settled: the offhand kinds by the weapon rules (thirteen kinds, two a class, the orb, trophy and cloak new), and armor left as the four weight classes.
 
 Designer's calls, open to being overruled at the gate:
 - **Hunter's eye crits more often** on basic attacks (the Ranger's crit read in the base).
