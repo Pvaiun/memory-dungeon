@@ -90,7 +90,7 @@ export const statuses: StatusT[] = [];
 export const builds: Builds = {};
 
 /**
- * One offhand. `does` is its effect; the card is its stats' words, then that (its kind and wearers are the interface's).
+ * One offhand. `does` is its effect and its card (its stats, kind and wearers are the interface's).
  * `status` is the piece's own status (given at every fight's start), under the piece's id; `more` the statuses it hands out.
  */
 function offhand(kind: string, rarity: Rarity, name: string, o: { stats?: Change[]; does?: string; status?: Partial<StatusT>; more?: StatusT[]; builds: string }) {

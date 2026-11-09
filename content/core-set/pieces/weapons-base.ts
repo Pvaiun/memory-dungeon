@@ -23,7 +23,7 @@ const atStart = (...effects: EffectT[]) => ({ on: { event: "fight_start" as cons
 /** A share of a stat read off the holder. */
 const ofHolder = (ratio: number, stat: string): NumT => ({ scale: [{ ratio, stat, of: "holder" }] });
 
-/** One weapon of a kind, through `piece()`: its effect (the card after the stats' words), stats, statuses and the rest. */
+/** One weapon of a kind, through `piece()`: its effect (the card, after any swing trade), stats, statuses and the rest. */
 function weapon(name: string, kind: string, rarity: Rarity, rest: { effect?: string; stats?: Change[]; statuses?: string[]; trade?: Trade; weapon?: GearT["weapon"]; note?: string }): GearT {
   return piece({ name, kind, rarity, slot: "weapon", ...rest });
 }

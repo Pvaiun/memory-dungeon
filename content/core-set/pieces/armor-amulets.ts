@@ -73,7 +73,7 @@ type Item = {
   name: string;
   rarity: Rarity;
   stats?: ReturnType<typeof st>[];
-  /** The card after the stats' words, when it says more than the rule's sentence (a shape stat's words, a price). */
+  /** The card, when it says more than the rule's sentence. */
   effect?: string;
   /** The piece's own status, given at every fight's start: its effect's sentence (the card's, unless `effect` says more) and what it does. */
   rule?: { text: string; body: Partial<StatusT> };
