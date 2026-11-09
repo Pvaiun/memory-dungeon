@@ -41,11 +41,12 @@ Design work for a party-based JRPG dungeon crawler with automatic combat, where 
 
 ## Status
 
-What's true now (Nov 8, 2026). Replace what's done rather than adding to it; history is in git.
+What's true now (Nov 9, 2026). Replace what's done rather than adding to it; history is in git.
 
 - **The game is built and approved as it stands:** the rogue mode (`docs/core-set/rogue-mode.md`; the interface's Settings → MODE → ROGUE) with 16 classes, 272 gear pieces, 16 mythics, 32 formations and Neutral, and 64 ability upgrades. Engine 0.20, schema 0.11. Free play stays as the sandbox.
 - **Open: the one-kind-of-damage prototype** (`steps/no-magic/`, on its own branch). Magic and Magic resist are gone; Armor is Defense; the focus weapon kinds swing lighter. At the gate with the director (`report.md`).
 - **Open: class identity after Magic** (`steps/class-identity/`, on the prototype's branch). The approved design is built on the current gear: twelve weapon kinds and thirteen offhand kinds by one set of rules, each kind's swing in three words (`KIND_WORDS` in `scale.ts`), stats on every piece at every rarity on a ladder that rises by rarity (`KIND_BUDGET`; the cards' stat words come from the stats), the new stat lines with the speed stats in four of them, the kit changes (Hoplite, Paladin, Valkyrie, Bard, Hexer, Pyromancer, Stormcaller, Ranger) and the versions; Ward retired, Marked in the vocabulary. The director's answers from the first gate are in (the ladder, Choosing on one target, Unmake on a cast alone); the second report is at the gate (`report.md`). Next, by their word: the builds redesigned on the new classes, then the loot; the knobs, the Frostweaver and sample parties against sample fights wait for the balance pass.
+- **Open: the builds redesigned** (`steps/builds/`). The director's read of the twelve after about fifty rogue runs is recorded (`intent.md`): one worked (Landslide), two were carried by classes too squishy to play them (Bonfire, Cold Snap), two work at one unit but aren't party builds (Lockdown, the Toll), two keep their fantasy and lose their implementation (Overflow, the Hunt), and five never happened (Thousand Cuts, Harvest, Ambush, Blood Pact, Phoenix; Ambush and Phoenix as concepts). The questions it leaves (the count and the pairs, Lockdown and the Toll, Blood Pact, an Evasion tank, the Pyromancer's body) are at the gate; the design waits on them.
 - **Nothing is balanced yet.**
 - **The tools** (each file's header says how to run it):
   - `npm run balance`: the balance sheet. Run it after any numbers change, before the knobs.
