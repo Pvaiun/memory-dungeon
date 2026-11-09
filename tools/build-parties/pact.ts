@@ -2,7 +2,7 @@
 import { g, p, route, v, vp, type Route } from "./kit.js";
 
 export const routes: Route[] = [
-  route("pact", "vampire-monk-cleric", "The Vampire pays and drinks, the Monk drinks fast with Lifesteal on its claws, and Cure and Renew catch the drop.", {
+  route("pact", "vampire-monk-cleric", "The Vampire pays and drinks, the Monk drinks fast with Lifesteal on its fists, and Cure and Renew catch the drop.", {
     vampire: ["blood_drain", "frenzy", "blood_gift"], monk: ["burning_fist", "flow", "pressure_point"], cleric: ["cure", "renew", "raise"],
   }, [
     ["long_march", [

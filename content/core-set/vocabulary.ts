@@ -36,7 +36,7 @@ export const stats: StatDefT[] = [
 /** Twelve weapon kinds, each a speed, a damage type and hands (rules-and-vocabulary.md, Weapons); their swing words are scale.ts's KIND_WORDS. */
 export const weaponKinds: WeaponKindT[] = [
   { id: "dagger", name: "Dagger", type: "physical", cooldown: KIND_SPEED.dagger, hands: 1 },
-  { id: "claws", name: "Claws", type: "physical", cooldown: KIND_SPEED.claws, hands: 1, note: "Knuckles, claws, cestus." },
+  { id: "fist", name: "Fist weapons", type: "physical", cooldown: KIND_SPEED.fist, hands: 1, note: "Knuckles, claws, cestus." },
   { id: "wand", name: "Wand", type: "physical", cooldown: KIND_SPEED.wand, hands: 1 },
   { id: "sword", name: "Sword", type: "physical", cooldown: KIND_SPEED.sword, hands: 1 },
   { id: "spear", name: "Spear", type: "physical", cooldown: KIND_SPEED.spear, hands: 1 },

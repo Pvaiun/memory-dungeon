@@ -1,7 +1,7 @@
 /**
  * The five base-heavy kinds' 40 pieces (scale.ts KIND_WORDS): wand, rune sword, hammer, mace and staff, whose swing works for any
  * wearer and grows little with Attack. Each kind's pieces carry its budget of stat steps at every rarity (kit.ts budgetOf), leaning
- * to the kind's profile: its signature stat and its commons (steps/class-identity: Weapon kinds). The rich kinds (wand, mace, staff)
+ * to the kind's profile: its signature stat and its commons (docs/gear-design/loot.md, the leans by kind). The rich kinds (wand, mace, staff)
  * are carried for what's on them; the lean hammer for its blow.
  *
  * `gear` joins the pack's gear and the rogue's stock; `statuses` the pack's statuses; `builds` is designer data, never in the pack.

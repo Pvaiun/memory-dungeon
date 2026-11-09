@@ -80,7 +80,7 @@ The twelve come in pairs from opposite sides of the space:
   - Evasion as defence, and the dodge as a trigger;
   - Lifesteal on every hit;
   - the status torrent: fast hits that each leave Burn, Shock or Chill, whose own damage never meets Defense; the same rhythm with another answer to Defense (a second route, not a second build).
-- **Routes:** Bard, Monk, Assassin · Valkyrie, Ranger, Vampire · the status torrent: Stormcaller on claws, Pyromancer and Hexer on wands.
+- **Routes:** Bard, Monk, Assassin · Valkyrie, Ranger, Vampire · the status torrent: Stormcaller on fist weapons, Pyromancer and Hexer on wands.
 - **Seats it likes:** a pacer that speeds the others; two blades that act more often and hit smaller.
 - **Rungs:**
   1. Fast weapons and a little Double strike: steady chip, and little else.

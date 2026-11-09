@@ -23,12 +23,12 @@ The Knight, Cleric and Ranger are the starters: a party that clears Fundamental 
 | Valkyrie | The shieldmaiden | spear, sword | round shield, cloak | Mail, Leather |
 | Bard | Party tempo | bow, wand | tome, bell | Leather, Robes |
 | Hexer | The spellblade | wand, sword | tome, idol | Mail |
-| Monk | Sunders with a blur of blows | claws, spear | bell, cloak | Leather |
+| Monk | Sunders with a blur of blows | fist weapons, spear | bell, cloak | Leather |
 | Assassin | Burst killer | dagger, axe | vial, trophy | Leather |
-| Vampire | Drains to outlast | claws, axe | vial, idol | Mail |
+| Vampire | Drains to outlast | fist weapons, axe | vial, idol | Mail |
 | Pyromancer | The glass cannon of long casts | staff, wand | lantern, orb | Robes |
 | Frostweaver | The ice wall | staff, rune sword | tome, orb | Robes, Mail |
-| Stormcaller | The striker among the mages | claws, rune sword | totem, bell | Robes, Leather |
+| Stormcaller | The striker among the mages | fist weapons, rune sword | totem, bell | Robes, Leather |
 | Geomancer | Hits hardest behind stone | hammer, great weapon | kite shield, trophy | Plate |
 
 A class arrives with the plain weapon of its first kind. Every kind's swing, scaling and budget words are under Weapons in *Core set: rules and vocabulary*.
@@ -195,14 +195,14 @@ Three damage dealers, each beating Defense its own way: the Monk with Sunder, th
 
 **Role:** sunders with a blur of blows. **Trunk:** every blow leaves the foe a little more open, Flow keeps it fast, burning fists pile onto the hottest foe, and a pressure point drops the most dangerous one for a moment.
 
-**Weapons:** claws, spear. **Armor:** Leather. **Offhands:** bell, cloak. **Special stats:** Evasion high, Double strike medium. **The line:** Attack high, Defense at the bottom: it dodges, it doesn't absorb.
+**Weapons:** fist weapons, spear. **Armor:** Leather. **Offhands:** bell, cloak. **Special stats:** Evasion high, Double strike medium. **The line:** Attack high, Defense at the bottom: it dodges, it doesn't absorb.
 
 - **Passive – Iron palm.** Its basic attacks, and the second strike of its Double strike, add a few Sunder; stacks scale from Attack.
 - **Flow.** Applies Haste to itself.
 - **Burning fist.** Three quick hits on the foe with the most Burn; each deals damage that scales from Attack and adds a few Burn at three fifths of the word, so the Monk feeds a Pyromancer's fire rather than out-burning it; stacks scale from Attack.
 - **Pressure point.** Has Seek. Deals damage that scales from Attack to the foe with the highest Attack, and applies Stun.
 
-**Identities.** The blur (claws, bell): Hundred hands, Flow state, Fanned flames. The dancer (spear, cloak, Leather): **Stillness of mind** (Taunts and raises its Evasion: Aggro), Drinking palm. The point-striker (spear): Lingering point, Vital strike, Frost fist.
+**Identities.** The blur (fist weapons, bell): Hundred hands, Flow state, Fanned flames. The dancer (spear, cloak, Leather): **Stillness of mind** (Taunts and raises its Evasion: Aggro), Drinking palm. The point-striker (spear): Lingering point, Vital strike, Frost fist.
 
 *Test, Armored shell:* its first double strikes barely scratch the shell, but each adds Sunder, so every hit after lands harder, and Flow speeds them up. Every strike chips Bulwark too.
 
@@ -225,14 +225,14 @@ Three damage dealers, each beating Defense its own way: the Monk with Sunder, th
 
 **Role:** drains to outlast. **Trunk:** feeds on everything it hits: the harder it hits, the more it heals, its prey is left weakened, and it bleeds its own life into an ally's wounds and mana. An exotic class, at the director's word. Its identity is healing back from the brink, not sustain all fight.
 
-**Weapons:** claws, axe. **Armor:** Mail. **Offhands:** vial, idol. **Special stats:** Lifesteal high. **The line:** body as fuel: HP and Attack high.
+**Weapons:** fist weapons, axe. **Armor:** Mail. **Offhands:** vial, idol. **Special stats:** Lifesteal high. **The line:** body as fuel: HP and Attack high.
 
 - **Passive – Bloodlust.** While it's below half of its max HP, its Lifesteal is doubled.
 - **Blood drain.** Deals damage that scales from max HP to a random foe, and applies Weaken. The one MP cost off the ladder: very cheap.
 - **Blood gift.** Spends a fifth of its max HP to heal the other ally with the lowest share of max HP for as much, and gives it Clarity. Waits until another ally is below 80% of its max HP and the Vampire itself is at 35% of its max HP or more, so the price never kills it.
 - **Frenzy.** Adds several Might to itself; stacks scale from Attack.
 
-**Identities.** The drinker (claws for more hits, the axe for the drinking): Shared feast, Undying thirst, Feeding frenzy. The blood-well (idol): Drain the well, Blood for mana, Lifeblood. The frenzy (claws, vial): Savage drain (three quick hits from max HP, a third each, each drinking; the foe is Weakened), Bloodthirst (while it holds Might, its basic attacks come a third faster), Feeding frenzy.
+**Identities.** The drinker (fist weapons for more hits, the axe for the drinking): Shared feast, Undying thirst, Feeding frenzy. The blood-well (idol): Drain the well, Blood for mana, Lifeblood. The frenzy (fist weapons, vial): Savage drain (three quick hits from max HP, a third each, each drinking; the foe is Weakened), Bloodthirst (while it holds Might, its basic attacks come a third faster), Feeding frenzy.
 
 *Test, Regenerator:* the Vampire out-heals the boss by hitting it. Blood drain's share of max HP and every basic attack feed its Lifesteal, Frenzy raises both, and Blood gift turns the surplus into an ally's HP and mana. Against Anti-heal it falters: Rot cuts its own Lifesteal, and Blood gift's price is still paid.
 
@@ -274,14 +274,14 @@ Four mages, and they share no template: fire is the long cast, ice the wall that
 
 **Role:** the striker among the mages. **Trunk:** everything it does is quick and spreads: each swing arcs to a second foe, lightning chains, a storm puts Shock on every ally's swings, and it charges itself to swing faster.
 
-**Weapons:** claws, rune sword. **Armor:** Robes, Leather. **Offhands:** totem, bell. **Special stats:** Attack speed medium. **The line:** Attack high, HP and Defense at the bottom: it swings often and takes hits badly.
+**Weapons:** fist weapons, rune sword. **Armor:** Robes, Leather. **Offhands:** totem, bell. **Special stats:** Attack speed medium. **The line:** Attack high, HP and Defense at the bottom: it swings often and takes hits badly.
 
 - **Passive – Arc.** Each of its basic attacks also hits a second, random foe, and adds a few Shock to both; stacks scale from Attack.
 - **Chain lightning.** Deals damage that scales from Attack to a random foe, then to up to three other random foes, and adds a few Shock to each; stacks scale from Attack.
 - **Thunderstorm.** For a while (`KIT.storm`), every ally's basic attacks add a few Shock; stacks scale from the Stormcaller's Attack. The party's storm, not a nuke.
 - **Static charge.** Its basic attacks come faster for a while (`KIT.staticCharge`): Attack speed, not Haste.
 
-**Identities.** The tempest (rune sword, Robes): Forked arc, Recharge, Overcharge (while the charge lasts, its next three abilities cost no MP). The storm fist (claws, Leather, bell): Static grip, Ball lightning, Storm's eye (the party's swings' Shock goes to the foe with the most Shock, three times as much). The lightning rod (either kind, totem): Static field (every foe that hits an ally gains a few Shock while the storm lasts), Storm shield.
+**Identities.** The tempest (rune sword, Robes): Forked arc, Recharge, Overcharge (while the charge lasts, its next three abilities cost no MP). The storm fist (fist weapons, Leather, bell): Static grip, Ball lightning, Storm's eye (the party's swings' Shock goes to the foe with the most Shock, three times as much). The lightning rod (either kind, totem): Static field (every foe that hits an ally gains a few Shock while the storm lasts), Storm shield.
 
 *Test, Swarm:* Arc and Chain lightning Shock all eight foes, Thunderstorm puts Shock on every ally's swings too, and every time a foe acts, Shock hurts it. Against a lone Nuker it's weak: one slow caster barely sets off Shock, and Arc has no second foe.
 
@@ -334,7 +334,7 @@ Every piece of the vocabulary is used by a class or an enemy (`classes.ts`, `ene
 
 - **Stun.** A long-cooldown Stun with no timing condition may rarely catch a wind-up. The fallback is a shorter Stun on a shorter cooldown (`STUN_COOLDOWN`).
 - **Pyre** may fire on a foe with very little Burn.
-- **Unmake** waits for a cast, so a buff laid without a wind-up stands until the next one; check how often a buffed foe never casts again.
+- **Unmake** waits for a cast, so a buff laid without a wind-up stands until the next one; check how often a buffed foe never casts again. On the balance sheet it fizzles 14% of its casts for want of a target: the foe's wind-up ends before Unmake's own quick one does.
 - **Stand fast.** The Knight's Taunt lasts less than its cooldown, so check it holds bosses on Aggro alone in the gaps.
 - **Aspis** goes to the lowest ally, who isn't always the one about to take the big hit. Check how often Aegis catches anything without a Knight drawing the boss.
 - **Bedrock** depends on how long the Geomancer's Shield lasts. Check its crit uptime with and without a protector beside it.

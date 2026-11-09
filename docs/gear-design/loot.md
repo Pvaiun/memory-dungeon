@@ -33,7 +33,7 @@ Every piece carries stats at every rarity, each rarity carries a step more than 
 | Amulet | 24 | 6 | 6 | 6 | 6 | 24 |
 | **All** | | **68** | **68** | **68** | **68** | **272** |
 
-Plus the 12 plain weapons (the starters, and the cheapest drops) and the 16 mythics. The axe, hammer, orb, trophy and cloak are the newest kinds: their commons and uncommons are written to their profiles, and their rares and legendaries are a first fill for the builds pass to redo. The stock is even quarters because offers already weight rarity; the split decides how often the same piece comes back. A run sees under half of the legendaries, so two runs toward one build get there through different pieces.
+Plus the 12 plain weapons (the starters, and the cheapest drops) and the 16 mythics. The axe, hammer, orb, trophy and cloak are the newest kinds: their commons and uncommons are written to their profiles, and their rares and legendaries are a first fill for the builds pass to redo. The rod's pieces that didn't fit a new kind (Wayfinder, Bane of the bound, Hexblade, Dawnblade, Nettle blade, Rootstaff, Dowsing rod, Ironbark rod, Glacial rod, Wild hunt totem) are retired for the loot pass to replace rather than keep; the stats on every piece are a first assignment by rule, for the loot pass to redo piece by piece. The stock is even quarters because offers already weight rarity; the split decides how often the same piece comes back. A run sees under half of the legendaries, so two runs toward one build get there through different pieces.
 
 ## Sizes, for new pieces
 
@@ -52,7 +52,7 @@ Commons and uncommons are written from a rule per kind, not designed one by one:
 | Kind | Signature | Commons lean | Uncommons' small effects |
 | --- | --- | --- | --- |
 | Dagger | Crit chance | Attack speed, Evasion, Crit damage, Attack | a crit that opens a little Bleed; basic attacks that ignore Taunt |
-| Claws | Double strike | Attack speed, Lifesteal, Evasion | a short Haste at the fight's start; extra strikes that carry a little Sunder |
+| Fist weapons | Double strike | Attack speed, Lifesteal, Evasion | a short Haste at the fight's start; extra strikes that carry a little Sunder |
 | Wand | Cooldown | Cast speed, MP regen, Attack, Attack speed | a little Shock on basic attacks; a little MP back on a crit |
 | Sword | Attack | HP, Defense, Crit chance, Aggro | a short Taunt at the start; half again on a foe in a wind-up |
 | Spear | Aggro | Defense, Attack, Crit chance, HP | a little Sunder on crits; a Guard after a killing blow |

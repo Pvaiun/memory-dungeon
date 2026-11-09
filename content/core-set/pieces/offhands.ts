@@ -1,5 +1,5 @@
 /**
- * The thirteen offhand kinds' 104 pieces, by the weapon rules (steps/class-identity: Offhand kinds): each kind two or three
+ * The thirteen offhand kinds' 104 pieces, by the weapon rules (docs/core-set/rules-and-vocabulary.md, Gear): each kind two or three
  * classes that all read its signature stat, every class two kinds. An offhand has no swing, so a kind is its stat profile, its
  * flavour and who shares it; every piece carries the standard budget of steps at its rarity (kit.ts), leaning to the profile.
  * `gear` joins the pack's gear and the rogue's stock; `statuses` the pack's statuses; `builds` is designer data, never in the pack.

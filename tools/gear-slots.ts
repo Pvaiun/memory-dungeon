@@ -15,7 +15,7 @@ type Kind = { classes: string[]; cell?: string };
 
 const WEAPONS: Record<string, Kind> = {
   dagger: { cell: "fast one-hand light attack-heavy", classes: ["ranger", "assassin"] },
-  claws: { cell: "fast one-hand light even", classes: ["monk", "vampire", "stormcaller"] },
+  fist: { cell: "fast one-hand light even", classes: ["monk", "vampire", "stormcaller"] },
   wand: { cell: "fast one-hand light base-heavy", classes: ["bard", "hexer", "pyromancer"] },
   sword: { cell: "medium one-hand full even", classes: ["knight", "hexer", "valkyrie"] },
   spear: { cell: "medium one-hand full even", classes: ["hoplite", "valkyrie", "monk"] },
@@ -93,7 +93,7 @@ for (const c of CLASSES) {
     `${`${near.o} ${Math.round(share * 100)}%`.padEnd(24)}${share > 0.5 ? "!" : " "} ${pattern}`);
 }
 
-// The weapon and offhand rules (steps/class-identity): two or three wearers a kind, two kinds a class, one in hand, no pair sharing two kinds of a slot.
+// The weapon and offhand rules (docs/core-set/rules-and-vocabulary.md, Gear): two or three wearers a kind, two kinds a class, one in hand, no pair sharing two kinds of a slot.
 for (const [slot, kinds] of [["weapon", WEAPONS], ["offhand", OFFHANDS]] as const) {
   const bad: string[] = [];
   for (const [id, k] of Object.entries(kinds)) if (k.classes.length < 2 || k.classes.length > 3) bad.push(`${id} has ${k.classes.length} wearers`);

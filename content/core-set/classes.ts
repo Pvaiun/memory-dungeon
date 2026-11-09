@@ -325,7 +325,7 @@ export const classes: ClassDefT[] = [
     stats: { ...stat(3, 4, 3, 4, 2, 2, 1), ...special("siphon", "medium") }, weapons: ["wand", "sword"], armor: ["mail"], offhands: ["tome", "idol"], passive: p("cold_hex", "Cold hex", "Its basic attacks add a few Chill, whatever weapon it carries; stacks scale from Attack."),
   }),
   cls("monk", "Monk", "Sunders with a blur of blows. Every blow leaves the foe a little more open, Flow keeps it fast, burning fists pile onto the hottest foe, and a pressure point drops the most dangerous one for a moment.", {
-    stats: { ...stat(3, 2, 3, 4, 1, 2, 2), ...special("evasion", "high"), ...special("double_strike", "medium") }, weapons: ["claws", "spear"], armor: ["leather"], offhands: ["bell", "cloak"],
+    stats: { ...stat(3, 2, 3, 4, 1, 2, 2), ...special("evasion", "high"), ...special("double_strike", "medium") }, weapons: ["fist", "spear"], armor: ["leather"], offhands: ["bell", "cloak"],
     passive: p("iron_palm", "Iron palm", "Its basic attacks, and the second strike of its Double strike, add a few Sunder; stacks scale from Attack."),
   }),
   cls("assassin", "Assassin", "Burst killer. Slips out of sight, picks off the weakest foe past any guard, leaves every crit a bleeding wound, and silences the back line.", {
@@ -333,7 +333,7 @@ export const classes: ClassDefT[] = [
     passive: p("lacerate", "Lacerate", "Each of its crits adds several Bleed to the foe; stacks scale from Attack."),
   }),
   cls("vampire", "Vampire", "Drains to outlast. Feeds on everything it hits: the harder it hits, the more it heals, its prey is left weakened, and it bleeds its own life into an ally's wounds and mana.", {
-    stats: { ...stat(4, 2, 2, 4, 2, 2, 3), ...special("lifesteal", "high") }, weapons: ["claws", "axe"], armor: ["mail"], offhands: ["vial", "idol"],
+    stats: { ...stat(4, 2, 2, 4, 2, 2, 3), ...special("lifesteal", "high") }, weapons: ["fist", "axe"], armor: ["mail"], offhands: ["vial", "idol"],
     passive: p("bloodlust", "Bloodlust", "While it's below half of its max HP, its Lifesteal is doubled."),
   }),
   cls("pyromancer", "Pyromancer", "The glass cannon of long casts. Every spell it casts stokes the fire on the hottest foe, bolts pile more onto it, a fireball spreads it, and a pyre lands.", {
@@ -343,7 +343,7 @@ export const classes: ClassDefT[] = [
     stats: { ...stat(3, 4, 3, 3, 3, 2, 2) }, weapons: ["staff", "rune_sword"], armor: ["robes", "mail"], offhands: ["tome", "orb"], passive: p("shatterpoint", "Shatterpoint", "When a foe's Chill shatters, that foe takes several Sunder; stacks scale from Attack."),
   }),
   cls("stormcaller", "Stormcaller", "The striker among the mages. Each swing arcs to a second foe, lightning chains, a storm puts Shock on every ally's swings, and it charges itself to swing faster.", {
-    stats: { ...stat(2, 3, 3, 4, 1, 2, 1), ...special("attack_speed", "medium") }, weapons: ["claws", "rune_sword"], armor: ["robes", "leather"], offhands: ["totem", "bell"], passive: p("arc", "Arc", "Each of its basic attacks also hits a second, random foe, and adds a few Shock to both; stacks scale from Attack."),
+    stats: { ...stat(2, 3, 3, 4, 1, 2, 1), ...special("attack_speed", "medium") }, weapons: ["fist", "rune_sword"], armor: ["robes", "leather"], offhands: ["totem", "bell"], passive: p("arc", "Arc", "Each of its basic attacks also hits a second, random foe, and adds a few Shock to both; stacks scale from Attack."),
   }),
   cls("geomancer", "Geomancer", "Hits hardest behind stone. Wraps itself and an ally in stone; while its own Shield holds, its rocks crit far more often and far harder, and a tremor drops a foe now and then.", {
     stats: { ...stat(3, 3, 3, 3, 5, 4, 3), ...special("crit_damage", "high") }, weapons: ["hammer", "great_weapon"], armor: ["plate"], offhands: ["kite_shield", "trophy"], passive: p("bedrock", "Bedrock", "While its Shield pool is above zero, its crit chance is doubled."),
