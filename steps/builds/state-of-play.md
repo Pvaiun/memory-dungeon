@@ -2,6 +2,8 @@
 
 Where the twelve builds of `docs/gear-design/builds.md` stand after real play, for the designer who picks up the builds pass. It says what happened, how it looked from the player's chair, and where the two differ, why. It's the state of things, not proposals: the director's intent for the pass is recorded separately, and the questions it has to answer are at the end.
 
+**How to read it.** Seventeen of the 23 runs ended in act I, at a tuning where a tank was absolute and taking a build's pieces over defence tended to end the run. So the sample measures that survivability economy well and the builds poorly: a build that never formed under it is untried, not refuted, and what read on screen in these runs is not a rule for what a build must be. The director's reading of it, and the lens the pass uses instead, are in `intent.md`.
+
 **Where it comes from.** The director's 23 saved runs (150 fights, Oct 31 to Nov 4, engine 0.17 and 0.18, heat 0), each replayed fight by fight at the commit it was played on, with the log on; all 150 replayed to the same outcome and HP. Every offer and pick, tagged with the designer's build data; what each party wore and sat in at each fight; where every fight's damage came from. And the director's own account of about 30 sessions, which is how those fights were seen, and which also covers sessions that weren't saved. Where the account and the fights differ, this page says what happened and where the impression came from.
 
 ## In brief
@@ -142,7 +144,7 @@ Each is a saved run and a fight, replayable from the record.
 
 ## Questions for the intent
 
-The director's answers are the intent the pass starts from.
+The director's answers are recorded in `intent.md`.
 - **Should a build be reachable from one unit's kit plus one piece, in act I?** The two that happened early did it that way. The ones that didn't all need two or three pieces to meet on one unit, which act I doesn't supply.
 - **Should the kit carry the build, with loot steering it, and should kits arrive whole sooner?** Units fought with one ability known in 59% of unit-fights and with everything on cooldown in 43%. Either abilities arrive sooner and cooldowns don't carry so far, or the builds are written for basic attacks and one ability.
 - **Is a fall allowed to be anything but the end?** Phoenix needs falls that aren't losses; in play they were. Either the martyr's fall comes early and cheaply, or the build is about standing back up between fights.
