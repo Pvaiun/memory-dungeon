@@ -61,26 +61,15 @@ export type BuildTag = { build: Build; rung?: 1 | 2 | 3; worth: 1 | 2 | 3 };
 export type Builds = Record<string, BuildTag[]>;
 
 export type Rarity = "common" | "uncommon" | "rare" | "legendary" | "mythic";
-/** A stat step in the card's words: "Attack +1", "HP +1", "Crit chance +2", "Evasion medium", "Aggro −1". A stat that shapes a piece (a slow swing) has no word: its effect says it. A price (HP −1) has. */
-export function statWord(c: Change): string | null {
-  if (c.stat === "crit_chance") return c.flat > 0 ? `Crit chance +${c.flat >= crit(2) ? 2 : 1}` : null;
-  if (c.stat in SPECIAL_LEVELS) return c.flat === SPECIAL_LEVELS[c.stat].high ? `${SPECIAL_NAME[c.stat]} high` : c.flat === SPECIAL_LEVELS[c.stat].medium ? `${SPECIAL_NAME[c.stat]} medium` : null;
-  if (["max_hp", "max_mp", "mp_regen", "attack", "defense", "aggro"].includes(c.stat)) {
-    const n = Math.round(c.flat / stepFor(c.stat));
-    return n ? `${STAT_NAME[c.stat]} ${n > 0 ? "+" : "−"}${Math.abs(n)}` : null;
-  }
-  return null;
-}
-const STAT_NAME: Record<string, string> = { max_hp: "HP", max_mp: "MP", mp_regen: "MP regen", attack: "Attack", defense: "Defense", aggro: "Aggro" };
 const SPECIAL_NAME: Record<string, string> = { evasion: "Evasion", accuracy: "Accuracy", crit_multiplier: "Crit damage", double_strike: "Double strike", thorns: "Thorns", lifesteal: "Lifesteal", siphon: "Siphon", attack_speed: "Attack speed", cooldown_reduction: "Cooldown", cast_time_reduction: "Cast speed" };
-/** A piece's stats as its card's first sentence: "Attack +1, Evasion medium." Empty with no stats worth a word. */
-export const statWords = (stats: readonly Change[] = []): string => { const w = stats.map(statWord).filter((x): x is string => !!x); return w.length ? `${w.join(", ")}.` : ""; };
+/** The card of a piece that is only its stats (a common): the interface shows the stats, so the card says only that there's nothing more. */
+export const PLAIN_CARD = "Nothing beyond its stats.";
 
 type PieceOpts = {
   name: string;
-  /** The card's effect, as the player reads it: what the piece does beyond its stats, or nothing for a common. The card is the stats' words, then this. */
+  /** The card's effect, as the player reads it: what the piece does beyond its stats, or nothing for a common. The card is the swing trade, then this. */
   effect?: string;
-  /** The whole card, in place of the stats' words and `effect` (a mythic's, or a piece whose words don't start with its stats). */
+  /** The whole card, in place of the trade and `effect` (a mythic's). */
   text?: string;
   slot: GearT["slot"];
   rarity: Rarity;
@@ -100,8 +89,8 @@ type PieceOpts = {
 /** One piece of gear, fixed: its rarity is its own (no affixes at any rarity). */
 export function piece(o: PieceOpts): GearT {
   const trade = o.trade === "heavy" ? "A heavier swing." : o.trade === "light" ? "A lighter swing." : "";
-  const text = o.text ?? [trade, statWords(o.stats), o.effect ?? ""].filter(Boolean).join(" ");
-  if (!text) throw new Error(`${o.name}: a card with nothing on it`);
+  // The card is the swing trade and the effect. The stats are the interface's (shown as values beside the name), never words on the card.
+  const text = o.text ?? ([trade, o.effect ?? ""].filter(Boolean).join(" ") || PLAIN_CARD);
   const g: GearT = {
     id: idOf(o.name), name: o.name, text, slot: o.slot,
     // The validator's tiers: an ordinary piece drops, a powerful one (legendary, mythic) is an unlock. Neither changes play in the rogue.
