@@ -149,5 +149,3 @@ The director's answers are the intent the pass starts from.
 - **Can HP be a currency while it's the scarce resource?** Blood Pact as written depends on yes; play says no.
 - **Formations: chosen for the party, or the party for the formation?** They were fitted to the party afterwards by stat words, or left at Neutral. If a formation is to make you rethink your party, its promise has to be one the party can't refuse, and the party has to hold still long enough to build toward it.
 - **Which rhythm, if any, has to be on screen?** The statuses were the watchable damage, and the builds built on them happened. The pass, the beat, the volley and the window didn't show. Is the rhythm space of `builds.md` still the frame, or is "a status the whole party stacks, plus one turn" the frame the game can show?
-- **Is there a build in stone apart from the Toll?** Landslide's front is the Toll's party and its blow never came. If there is one, what is it waiting for?
-- **What is the Hunt without its marker?** Its kill threads worked on one unit; its focus never reached the player. Is focus a build, a tool every build uses, or neither?
