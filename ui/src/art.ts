@@ -76,12 +76,12 @@ export function enemyName(ref: string, unitName: string): string {
 export const enemyDisplayName = (ref: string): string => manifest?.enemies[ref]?.name ?? c.enemies.get(ref)?.name ?? ref;
 /**
  * Stand-in strips for the plain pieces of kinds with no art of their own, from the strips the packs give: the great weapon and
- * the axe hold the axe; the hammer the Earthshaker's maul; the rune sword the Oathblade's glowing blade; the claws the dagger's
+ * the axe hold the axe; the hammer the Earthshaker's maul; the rune sword the Oathblade's glowing blade; the fist weapons the dagger's
  * strip; the mace, the wand and the staff the plain staffs whose look fits who carries them first (the Light staff for the mace;
  * the Bard's and Hexer's lightning wand, the Pyromancer's fire staff).
  */
 const WEAPON_STAND_INS: Record<string, string> = {
-  plain_great_weapon: "plain_axe", plain_axe: "plain_axe", plain_hammer: "earthshaker", plain_rune_sword: "oathblade", plain_claws: "plain_dagger", plain_mace: "plain_light_staff",
+  plain_great_weapon: "plain_axe", plain_axe: "plain_axe", plain_hammer: "earthshaker", plain_rune_sword: "oathblade", plain_fist: "plain_dagger", plain_mace: "plain_light_staff",
   plain_wand: "plain_lightning_staff", plain_staff: "plain_fire_staff",
 };
 /** A weapon's strip: its own, or for a rogue run's item, its base piece's, or else its kind's plain piece's. */
@@ -137,7 +137,7 @@ const PIECE_LOOK: Record<string, string> = {
 };
 /** A weapon kind's look: how its swing lands. */
 const KIND_LOOK: Record<string, string> = {
-  dagger: "pierce", claws: "slash", sword: "slash", spear: "pierce", axe: "slash", bow: "pierce", great_weapon: "blunt",
+  dagger: "pierce", fist: "slash", sword: "slash", spear: "pierce", axe: "slash", bow: "pierce", great_weapon: "blunt",
   rune_sword: "slash", hammer: "blunt", mace: "blunt", wand: "arcane", staff: "arcane",
 };
 const weaponKindLook = (wp: WeaponT | undefined): string => (wp?.kind && KIND_LOOK[wp.kind]) || "blunt";
@@ -161,7 +161,7 @@ const SHADE = { blue: 0, orange: 1, purple: 2, yellow: 3, brown: 4 } as const;
 type Shade = keyof typeof SHADE;
 /** Weapon kinds: a cell in the blue row of weapon set A (row 25) or B (row 30); some are stand-ins until a kind has its own art. */
 const KIND_CELL: Record<string, Cell> = {
-  dagger: [25, 0], claws: [25, 2], sword: [25, 7], spear: [25, 14], axe: [30, 0], bow: [25, 3], great_weapon: [30, 0],
+  dagger: [25, 0], fist: [25, 2], sword: [25, 7], spear: [25, 14], axe: [30, 0], bow: [25, 3], great_weapon: [30, 0],
   rune_sword: [25, 12], hammer: [30, 7], mace: [30, 7], wand: [25, 5], staff: [25, 10],
 };
 /** Armor types: a cell in the blue row of the armour set (row 15), and its shade. */

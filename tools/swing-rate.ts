@@ -1,5 +1,5 @@
 /**
- * The exchange rate between a stat step and a swing step, class by class (steps/class-identity: Swings and budgets): what
+ * The exchange rate between a stat step and a swing step, class by class (docs/core-set/rules-and-vocabulary.md, Weapons): what
  * "a step fewer" buys in swing. For each class, its plain weapon alone against the same weapon carrying one stat step (Attack,
  * HP, Defense, and its first kind's signature stat where that's a special stat), and against the same weapon swinging a step
  * harder (scale.ts SWING_TRADE) or a tenth harder, on the balance sheet's probe fights (free play's runs and the rogue's bosses
@@ -24,7 +24,7 @@ const SEEDS = Array.from({ length: Number(opt("--seeds") ?? 1) }, (_, i) => 31 +
 
 /** The signature stat of each kind, as a gear step (an amount stat's step, Crit chance's, or a special stat at medium). */
 const SIGNATURE: Record<string, () => GearT["stats"]> = {
-  dagger: () => [critStep(1)], claws: () => [sp("double_strike", "medium")], wand: () => [sp("cooldown", "medium")], sword: () => [st("attack", 1)],
+  dagger: () => [critStep(1)], fist: () => [sp("double_strike", "medium")], wand: () => [sp("cooldown", "medium")], sword: () => [st("attack", 1)],
   spear: () => [st("aggro", 1)], axe: () => [sp("lifesteal", "medium")], bow: () => [sp("crit_damage", "medium")], rune_sword: () => [st("mp_regen", 1)],
   hammer: () => [st("defense", 1)], mace: () => [st("max_hp", 1)], staff: () => [sp("cast_speed", "medium")], great_weapon: () => [st("attack", 1)],
 };

@@ -33,7 +33,7 @@ export const crit = (n: number): number => {
  * is its wearer's Attack. Fast is under 7.5 ticks, slow over 10.5 (vocabulary.ts speedOf).
  */
 export const KIND_SPEED: Record<string, number> = {
-  dagger: 5.6, claws: 6.0, wand: 6.6, sword: 8.2, bow: 8.8, axe: 9.0, spear: 9.4, rune_sword: 10.7, mace: 11.0, staff: 11.6, hammer: 11.9, great_weapon: 12.8,
+  dagger: 5.6, fist: 6.0, wand: 6.6, sword: 8.2, bow: 8.8, axe: 9.0, spear: 9.4, rune_sword: 10.7, mace: 11.0, staff: 11.6, hammer: 11.9, great_weapon: 12.8,
 };
 /** A swing's size is its per-SWING_REF-ticks amount × its cooldown ÷ this. */
 export const SWING_REF = 16;
@@ -130,7 +130,7 @@ export const MP_REGEN = { every: 4, share: 0.007 };
 // ─── Damage ──────────────────────────────────────────────────────────────────
 
 /**
- * A kind's swing, in three words (steps/class-identity: Swings and budgets). SWING.full is what a full swing deals per SWING_REF ticks
+ * A kind's swing, in three words (docs/core-set/rules-and-vocabulary.md, Weapons). SWING.full is what a full swing deals per SWING_REF ticks
  * at the reference Attack; the swing word scales it (SWING_POWER), the scaling word says what share of it is the wearer's Attack at
  * that reference (SWING_SCALING: a base-heavy swing works for any wearer, an Attack-heavy one rewards stacking Attack), and the
  * budget word says how many stat steps the kind's pieces carry at each rarity (KIND_BUDGET). A kind pays for its swing in budget
@@ -158,7 +158,7 @@ export type BudgetWord = keyof typeof KIND_BUDGET;
 export type KindWords = { swing: SwingWordK; scaling: ScalingWord; budget: BudgetWord };
 export const KIND_WORDS: Record<string, KindWords> = {
   dagger: { swing: "light", scaling: "attack_heavy", budget: "standard" },
-  claws: { swing: "light", scaling: "even", budget: "standard" },
+  fist: { swing: "light", scaling: "even", budget: "standard" },
   wand: { swing: "light", scaling: "base_heavy", budget: "rich" },
   rune_sword: { swing: "full", scaling: "base_heavy", budget: "standard" },
   sword: { swing: "full", scaling: "even", budget: "standard" },

@@ -158,7 +158,7 @@ Twelve kinds, each a speed, hands and three words: a swing, a scaling and a budg
 | Weapon | Speed | Hands | Swing | Scaling | Budget | Signature | Classes |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Dagger | Fast | One | Light | Attack-heavy | Standard | Crit chance | Ranger, Assassin |
-| Claws (knuckles, claws, cestus) | Fast | One | Light | Even | Standard | Double strike | Monk, Vampire, Stormcaller |
+| Fist weapons (knuckles, claws, cestus) | Fast | One | Light | Even | Standard | Double strike | Monk, Vampire, Stormcaller |
 | Wand | Fast | One | Light | Base-heavy | Rich | Cooldown | Bard, Hexer, Pyromancer |
 | Sword | Medium | One | Full | Even | Standard | Attack | Knight, Hexer, Valkyrie |
 | Spear | Medium | One | Full | Even | Standard | Aggro | Hoplite, Valkyrie, Monk |

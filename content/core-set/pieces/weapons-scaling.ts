@@ -1,8 +1,8 @@
 /**
- * The seven kinds whose swing grows with Attack (even or Attack-heavy, scale.ts KIND_WORDS): dagger, claws, sword, spear, axe, bow and
+ * The seven kinds whose swing grows with Attack (even or Attack-heavy, scale.ts KIND_WORDS): dagger, fist weapons, sword, spear, axe, bow and
  * great weapon, 56 pieces. No balancing rules, statuses at their own length. Hooks are the engine's primitives (PRIMITIVES.md).
  * Each kind's pieces carry its budget of stat steps at every rarity (kit.ts budgetOf), leaning to the kind's profile: its signature
- * stat and its commons (steps/class-identity: Weapon kinds). A piece that steps along the trade says so on its card ("a heavy...").
+ * stat and its commons (docs/gear-design/loot.md, the leans by kind). A piece that steps along the trade says so on its card ("a heavy...").
  *
  * `gear` joins the pack's gear and the rogue's stock; `statuses` the pack's statuses; `builds` is designer data, never in the pack.
  */
@@ -103,26 +103,26 @@ add(
   "Ambush 3 ●●●, Hunt ●●",
 );
 
-// ─── Claws (Monk, Vampire, Stormcaller): fast, one hand; light, even, standard. Double strike; Attack speed, Lifesteal, Evasion ──
+// ─── Fist weapons (Monk, Vampire, Stormcaller): fast, one hand; light, even, standard. Double strike; Attack speed, Lifesteal, Evasion ──
 
-add(piece({ name: "Mantis claws", kind: "claws", slot: "weapon", rarity: "common", stats: [sp("double_strike", "medium")] }), [], "Cuts 1, Toll ●");
+add(piece({ name: "Mantis claws", kind: "fist", slot: "weapon", rarity: "common", stats: [sp("double_strike", "medium")] }), [], "Cuts 1, Toll ●");
 
-add(piece({ name: "Red talons", kind: "claws", slot: "weapon", rarity: "common", stats: [sp("lifesteal", "medium")] }), [], "Pact 1, Cuts ●");
+add(piece({ name: "Red talons", kind: "fist", slot: "weapon", rarity: "common", stats: [sp("lifesteal", "medium")] }), [], "Pact 1, Cuts ●");
 
 add(
-  piece({ name: "Wildcat claws", kind: "claws", slot: "weapon", rarity: "uncommon", effect: "Hasted when each fight starts.", stats: [sp("evasion", "medium"), sp("double_strike", "medium")], statuses: ["wildcat_claws"] }),
+  piece({ name: "Wildcat claws", kind: "fist", slot: "weapon", rarity: "uncommon", effect: "Hasted when each fight starts.", stats: [sp("evasion", "medium"), sp("double_strike", "medium")], statuses: ["wildcat_claws"] }),
   [pieceStatus("wildcat_claws", "Wildcat claws", "Hasted when each fight starts.", { reactions: [onStart(apply("haste", "holder"))] })],
   "Cuts 1, Ambush 1, Bonfire ●, Snap ●",
 );
 
 add(
-  piece({ name: "Brass knuckles", kind: "claws", slot: "weapon", rarity: "uncommon", effect: "Its extra strikes add a few Sunder (from Attack).", stats: [sp("double_strike", "medium"), sp("lifesteal", "medium")], statuses: ["brass_knuckles"] }),
+  piece({ name: "Brass knuckles", kind: "fist", slot: "weapon", rarity: "uncommon", effect: "Its extra strikes add a few Sunder (from Attack).", stats: [sp("double_strike", "medium"), sp("lifesteal", "medium")], statuses: ["brass_knuckles"] }),
   [pieceStatus("brass_knuckles", "Brass knuckles", "Its extra strikes add a few Sunder.", { reactions: [{ on: { event: "hit_lands", kind: "extra" }, do: [apply("sunder", "other", own("few", "attack"))] }] })],
   "Cuts 1, Hunt ●, Landslide ●",
 );
 
 add(
-  piece({ name: "Rime knuckles", kind: "claws", slot: "weapon", rarity: "rare", effect: "Its basic attacks and extra strikes add a few Chill (from Attack).", stats: [sp("attack_speed", "medium"), sp("double_strike", "medium"), sp("lifesteal", "medium")], weapon: { apply: [{ status: "chill", stacks: swingStacks("few") }] } }),
+  piece({ name: "Rime knuckles", kind: "fist", slot: "weapon", rarity: "rare", effect: "Its basic attacks and extra strikes add a few Chill (from Attack).", stats: [sp("attack_speed", "medium"), sp("double_strike", "medium"), sp("lifesteal", "medium")], weapon: { apply: [{ status: "chill", stacks: swingStacks("few") }] } }),
   [],
   "Snap 2 ●●●, Cuts ●, Lockdown ●",
 );
@@ -131,7 +131,7 @@ add(
   // Bloodlust's pattern: switched on by losing HP below half, off by healing to half or more.
   const id = "gorged_claws", on = `${id}_on`;
   add(
-    piece({ name: "Gorged claws", kind: "claws", slot: "weapon", rarity: "rare", effect: "Below half HP, its basic attacks come a third faster.", stats: [sp("lifesteal", "medium"), sp("double_strike", "medium"), sp("evasion", "medium")], statuses: [id] }),
+    piece({ name: "Gorged claws", kind: "fist", slot: "weapon", rarity: "rare", effect: "Below half HP, its basic attacks come a third faster.", stats: [sp("lifesteal", "medium"), sp("double_strike", "medium"), sp("evasion", "medium")], statuses: [id] }),
     [
       pieceStatus(id, "Gorged claws", "Below half HP, its basic attacks come a third faster.", {
         reactions: [
@@ -146,7 +146,7 @@ add(
 }
 
 add(
-  piece({ name: "Flurry wraps", kind: "claws", slot: "weapon", rarity: "legendary", effect: "Its extra strikes can strike again: each one rolls Double strike for one more, at most two more after the first, and each is a fifth weaker than the strike before it.", stats: [sp("double_strike", "high"), sp("attack_speed", "medium"), sp("lifesteal", "medium")], statuses: ["flurry_wraps"] }),
+  piece({ name: "Flurry wraps", kind: "fist", slot: "weapon", rarity: "legendary", effect: "Its extra strikes can strike again: each one rolls Double strike for one more, at most two more after the first, and each is a fifth weaker than the strike before it.", stats: [sp("double_strike", "high"), sp("attack_speed", "medium"), sp("lifesteal", "medium")], statuses: ["flurry_wraps"] }),
   // A chain: its strike rolls Double strike as the stat's own does, and takes the place of the plain Double strike's on
   // its holder, so a swing rolls Double strike once.
   [pieceStatus("flurry_wraps", "Flurry wraps", "Its extra strikes can strike again, up to twice, each a fifth weaker.", { strike: { scale: "double_strike", to: "target", chain: { times: 2, share: 80 } } })],
@@ -154,7 +154,7 @@ add(
 );
 
 add(
-  piece({ name: "Still hand", kind: "claws", slot: "weapon", rarity: "legendary", effect: "Its hits on a Stunned or Silenced foe always crit and add several Sunder (from Attack). When it Stuns a foe, its ability with the longest cooldown left is ready at once.", stats: [sp("evasion", "medium"), sp("double_strike", "high"), sp("lifesteal", "medium")], statuses: ["still_hand"] }),
+  piece({ name: "Still hand", kind: "fist", slot: "weapon", rarity: "legendary", effect: "Its hits on a Stunned or Silenced foe always crit and add several Sunder (from Attack). When it Stuns a foe, its ability with the longest cooldown left is ready at once.", stats: [sp("evasion", "medium"), sp("double_strike", "high"), sp("lifesteal", "medium")], statuses: ["still_hand"] }),
   [
     pieceStatus("still_hand", "Still hand", "Its hits on a Stunned or Silenced foe always crit and add several Sunder. When it Stuns a foe, its ability with the longest cooldown left is ready.", {
       crits: [{ when: { hasAny: ["stun", "silence"] }, chance: 100 }],

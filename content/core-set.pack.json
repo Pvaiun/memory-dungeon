@@ -282,8 +282,8 @@
    "hands": 1
   },
   {
-   "id": "claws",
-   "name": "Claws",
+   "id": "fist",
+   "name": "Fist weapons",
    "type": "physical",
    "cooldown": 6,
    "hands": 1,
@@ -19237,7 +19237,7 @@
     "double_strike": 25
    },
    "weapons": [
-    "claws",
+    "fist",
     "spear"
    ],
    "armor": [
@@ -19316,7 +19316,7 @@
     "lifesteal": 20
    },
    "weapons": [
-    "claws",
+    "fist",
     "axe"
    ],
    "armor": [
@@ -19433,7 +19433,7 @@
     "attack_speed": 15
    },
    "weapons": [
-    "claws",
+    "fist",
     "rune_sword"
    ],
    "armor": [
@@ -32024,14 +32024,14 @@
    }
   },
   {
-   "id": "plain_claws",
-   "name": "Claws",
+   "id": "plain_fist",
+   "name": "Fist weapons",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "starter",
-   "text": "A plain claws.",
+   "text": "A plain fist weapons.",
    "weapon": {
-    "kind": "claws",
+    "kind": "fist",
     "amount": {
      "base": 225,
      "scale": [
@@ -32544,7 +32544,7 @@
     }
    ],
    "weapon": {
-    "kind": "claws",
+    "kind": "fist",
     "amount": {
      "base": 225,
      "scale": [
@@ -32571,7 +32571,7 @@
     }
    ],
    "weapon": {
-    "kind": "claws",
+    "kind": "fist",
     "amount": {
      "base": 225,
      "scale": [
@@ -32605,7 +32605,7 @@
     "wildcat_claws"
    ],
    "weapon": {
-    "kind": "claws",
+    "kind": "fist",
     "amount": {
      "base": 225,
      "scale": [
@@ -32639,7 +32639,7 @@
     "brass_knuckles"
    ],
    "weapon": {
-    "kind": "claws",
+    "kind": "fist",
     "amount": {
      "base": 225,
      "scale": [
@@ -32674,7 +32674,7 @@
     }
    ],
    "weapon": {
-    "kind": "claws",
+    "kind": "fist",
     "amount": {
      "base": 225,
      "scale": [
@@ -32726,7 +32726,7 @@
     "gorged_claws"
    ],
    "weapon": {
-    "kind": "claws",
+    "kind": "fist",
     "amount": {
      "base": 225,
      "scale": [
@@ -32764,7 +32764,7 @@
     "flurry_wraps"
    ],
    "weapon": {
-    "kind": "claws",
+    "kind": "fist",
     "amount": {
      "base": 225,
      "scale": [
@@ -32802,7 +32802,7 @@
     "still_hand"
    ],
    "weapon": {
-    "kind": "claws",
+    "kind": "fist",
     "amount": {
      "base": 225,
      "scale": [
@@ -42924,7 +42924,7 @@
   ],
   "gear": [
    "plain_dagger",
-   "plain_claws",
+   "plain_fist",
    "plain_wand",
    "plain_sword",
    "plain_spear",
