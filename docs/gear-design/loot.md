@@ -2,7 +2,7 @@
 
 The rules the loot is made by: what each rarity is, how much there is, how commons and uncommons are written, and what formations, upgrades and mythics may do. The philosophy behind them is in *Gear design: philosophy*, and the builds they serve in *Gear design: the builds*. The slots, the kinds and who wears what are under Gear in *Core set: rules and vocabulary*; how loot is offered in a run is in *Core set: the rogue mode*.
 
-Every piece, formation, upgrade and mythic is data with its card text: `content/core-set/pieces/`, `formations.ts` and `upgrades/` (the mythics are in `upgrades/`, beside their class's upgrades). `npx tsx tools/gear-slots.ts` counts who shares which kinds, `npx tsx tools/piece-check.ts` checks that every item does what its card says, and `npx tsx tools/loot-list.ts` lists every item as one line with its card.
+Today's loot was made for an earlier set of twelve builds, and the build names on this page are theirs; the loot pass remakes it from the nine in *Gear design: the builds*. Every piece, formation, upgrade and mythic is data with its card text: `content/core-set/pieces/`, `formations.ts` and `upgrades/` (the mythics are in `upgrades/`, beside their class's upgrades). `npx tsx tools/gear-slots.ts` counts who shares which kinds, `npx tsx tools/piece-check.ts` checks that every item does what its card says, and `npx tsx tools/loot-list.ts` lists every item as one line with its card.
 
 ## Rarity
 
@@ -33,7 +33,7 @@ Every piece carries stats at every rarity, each rarity carries a step more than 
 | Amulet | 24 | 6 | 6 | 6 | 6 | 24 |
 | **All** | | **68** | **68** | **68** | **68** | **272** |
 
-Plus the 12 plain weapons (the starters, and the cheapest drops) and the 16 mythics. The axe, hammer, orb, trophy and cloak are the newest kinds: their commons and uncommons are written to their profiles, and their rares and legendaries are a first fill for the builds pass to redo. The rod's pieces that didn't fit a new kind (Wayfinder, Bane of the bound, Hexblade, Dawnblade, Nettle blade, Rootstaff, Dowsing rod, Ironbark rod, Glacial rod, Wild hunt totem) are retired for the loot pass to replace rather than keep; the stats on every piece are a first assignment by rule, for the loot pass to redo piece by piece. The stock is even quarters because offers already weight rarity; the split decides how often the same piece comes back. A run sees under half of the legendaries, so two runs toward one build get there through different pieces.
+Plus the 12 plain weapons (the starters, and the cheapest drops) and the 16 mythics. The axe, hammer, orb, trophy and cloak are the newest kinds: their commons and uncommons are written to their profiles, and their rares and legendaries are a first fill for the loot pass to redo. The rod's pieces that didn't fit a new kind (Wayfinder, Bane of the bound, Hexblade, Dawnblade, Nettle blade, Rootstaff, Dowsing rod, Ironbark rod, Glacial rod, Wild hunt totem) are retired for the loot pass to replace rather than keep; the stats on every piece are a first assignment by rule, for the loot pass to redo piece by piece. The stock is even quarters because offers already weight rarity; the split decides how often the same piece comes back. A run sees under half of the legendaries, so two runs toward one build get there through different pieces.
 
 ## Sizes, for new pieces
 

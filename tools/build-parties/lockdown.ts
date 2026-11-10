@@ -1,4 +1,4 @@
-/** Lockdown: hold them, then hit them; damage in windows while a foe is disabled. Its three routes, each at three rungs (docs/gear-design/builds.md). */
+/** Lockdown: hold them, then hit them; damage in windows while a foe is disabled. Its three routes, each at three rungs (the twelve builds today's loot was made for). */
 import { g, p, route, v, vp, type Route } from "./kit.js";
 
 export const routes: Route[] = [

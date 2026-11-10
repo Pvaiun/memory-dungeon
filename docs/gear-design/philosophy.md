@@ -4,7 +4,7 @@ The philosophy behind the game's gear, formations, ability upgrades and mythics,
 
 This folder has three documents:
 - **This page:** the director's intent, the philosophy, and how loot gets made.
-- ***Gear design: the builds*** (`builds.md`): the twelve builds the loot was designed backwards from, their rhythms, what each asks of the loot, and the web between them.
+- ***Gear design: the builds*** (`builds.md`): the nine builds the loot is designed from, their rhythms, what each asks of the loot, and the web between them: roads, doors and engines.
 - ***Gear design: the loot*** (`loot.md`): what each rarity is, the stock, the rules for writing pieces, formations, upgrades and mythics, and what's open.
 
 The game's combat rules are in *Core set: rules and vocabulary* (its Gear section has the slots and who wears what), and how loot is offered in a run is in *Core set: the rogue mode*.
@@ -29,6 +29,11 @@ What the director wants from the loot, distilled, with their words quoted where 
 - **Upgrades:** one plain power step and a choice of two versions for each ability and passive. "The importance is the difference, not that they're not better." Triggers and targeting are undervalued: "I like things that play on triggering conditions or targeting conditions." A training opportunity offers three choices: "For now I would start by just making training opportunities give 3 choices, and we can decide what else to do later."
 - **Elements are themes only.** A build is never one keyword turned up ("red fire or blue fire or gray fire").
 - **MP is fuel.** No build is made better at lasting many fights; what differs is whether it spends more HP or more MP.
+- **Signposting and power at each phase of a run** are among the things a build is judged by. At its first rung the content lets a player see the direction to push in, not the whole build. Each phase's step is worth taking, and the path to a build never leaves the team unable to beat the content.
+- **Every build manages survivability:** a constraint, not a design. How each build does it is the build's to say.
+- **Kits may change** where a build needs it.
+- **Formations are important,** enough that a build pivots to match a good one, and they have to work however they arrive in a run.
+- **Engines:** many happy accidents designed in advance, which work with a small number of pieces, so that a build doesn't only come online when all of its pieces are there, and so that builds cross and a player isn't just picking a build and doing only that. A design pattern, not a concept the player has to understand. They're picked as a game designer would, for being worth finding, not from a formula or a grid of build pairs, and the count is whatever comes out.
 - **Working with the director:** don't ask for coverage of every mechanic; pick what's interesting, as a game designer would. They review a representative sample at a gate, not every piece. Test with hand-built parties, not a simulated player.
 
 ## A build is a way to play
@@ -47,7 +52,7 @@ A build's rhythm is how a fight unfolds over time for it. It's read four ways:
 - **Turns:** how often the fight visibly changes, and how big each change is.
 - **What it spends:** HP or MP, within a fight. This is never how many fights it lasts: every run has the same fights, so a build that lasted longer would simply be better. It's which fuel the build burns, which decides its gear and whether it reaches for a potion or a tonic after a fight. Power follows fuel: a build that spends little has to do less with it.
 
-Every point in that space is open. The builds spread across it, and two builds rarely share a rhythm unless something else sets them clearly apart. The twelve sit in pairs on opposite sides of it (*Gear design: the builds*).
+Every point in that space is open. The builds spread across it, and two builds rarely share a rhythm unless something else sets them clearly apart. The builds sit in pairs on opposite sides of it, with the Toll alone (*Gear design: the builds*).
 
 **The pieces make the rhythms.** Before the loot was designed, a read of the builds' nearest parties with plain kits found every party playing nearly the same fight: the same share of damage in each quarter, the same lumpiness, the same first kill. The kits alone don't make rhythms, so the loot has to.
 
@@ -65,6 +70,7 @@ Averages can hide a rhythm: a surge after a fall or a lock's window can vanish i
 - **What a build asks of a run is a range.** At one end it starts from what most runs find and gives back a little. At the other it needs specific pieces that may come late, and gives back far more. What it gives back rises with what it asks, and it should rarely be all or nothing: it pays something before it's complete. A build's three rungs are this range.
 - **More than one route.** The same build can be reached through different classes, pieces and formations.
 - **A web, not bundles.** Most pieces matter to more than one build, by different amounts and for different reasons, some of them not obvious. Builds connect through the pieces they share, and a run drifts from one build to its neighbour through them.
+- **Engines.** A few parts that turn out to work together into something specific, on one road or more: found synergies, designed in advance. Each part earns its slot alone, the common half sits in the kits, commons and uncommons, and the keystone comes from more than one place. The set, and the test each engine passed, are in *Gear design: the builds*.
 - **Exotics.** Some pieces exist for their own sake: a strange effect worth seeing that belongs to no build.
 - **Chaos.** A run finds its build in what it's given. Two runs toward the same build should get there differently, and a run should be able to land on a build nobody planned.
 
@@ -123,7 +129,7 @@ How the four slots do it:
 
 The method, round by round:
 1. **Intent.** The director's intent for the round, recorded short (as above).
-2. **Builds first.** About a dozen builds as ways to play: each one's rhythm, threads, routes, rungs and needs, and the web between them. No pieces, no numbers.
+2. **Builds first.** Builds as ways to play, as many as the design needs: each one's rhythm, threads, routes, rungs and needs, and the web between them, its doors and engines. No pieces, no numbers.
 3. **The spine.** One line for every rare, legendary, formation, upgrade and mythic, built backwards from the builds and written all together, so the web is designed rather than found.
    - Its rules come first: the stock it chose and why, new words, the rules the pieces bend, and the code support they need.
    - Commons get a rule per kind. Each uncommon's effect is named, since the uncommons carry the builds' first steps.

@@ -1,5 +1,7 @@
 /**
  * The build test: all twelve builds on one set of the rogue's own fights, side by side. It measures; it doesn't balance.
+ * They're the twelve today's loot was made for; `docs/gear-design/builds.md` holds the nine that replace them, and the loot
+ * pass's build rewrites this test for the nine.
  *
  * - **The parties:** the hand-built parties of `tools/build-parties.ts` (12 builds, 3 routes each, 3 rungs, each in its formation
  *   and in Neutral), fielded as the engine's `Party`: abilities in slot order, each trained ability as its form, a trained
@@ -321,7 +323,7 @@ function strengthOf(recs: Rec[]): Strength {
   };
 }
 
-/** Each build's row of the rhythm table (`docs/gear-design/builds.md`, "The rhythm space"): damage over a fight, danger, what it spends. */
+/** Each of the twelve builds' row of their rhythm table: damage over a fight, danger, what it spends. */
 const RHYTHM_TABLE: Record<BuildId, [string, string, string]> = {
   landslide: ["a few huge blows at uneven moments", "steady, soaked by stone; spikes when it breaks", "MP, on stone that saves its HP"],
   cuts: ["a dense, even stream from the first tick", "even; dodges decide it", "HP: little casting, light bodies"],
@@ -527,7 +529,7 @@ async function main() {
     const r = rhythm.get(b)!;
     L.push(`| ${name(b)} | ${r.q.map(pct).join(" / ")} | ${pct(r.top10)} | ${pct(r.firstKill)} | ${pct(r.spread)} | ${r.taken.map(pct).join(" / ")} | ${pct(r.low)} | ${srcLine(r)} | ${pct(r.mp)} | ${pct(r.paid)} | ${Math.round(r.T)} |`);
   }
-  L.push("", "Beside the rhythm table (`docs/gear-design/builds.md`, \"The rhythm space\"):", "");
+  L.push("", "Beside the twelve builds' rhythm table:", "");
   L.push("| Build | Damage over a fight (the table) | Damage by quarter | Danger (the table) | Taken by quarter | Spends (the table) | MP / paid |", "| --- | --- | --- | --- | --- | --- | --- |");
   for (const b of buildIds) {
     const r = rhythm.get(b)!, [dmg, danger, spends] = RHYTHM_TABLE[b as BuildId];

@@ -49,7 +49,7 @@ const OFFHANDS: Record<string, Kind> = {
   cloak: { classes: ["valkyrie", "monk", "ranger"] },
 };
 
-/** builds.md's routes: three parties per build. */
+/** The twelve builds' routes: three parties per build. */
 const ROUTES: Record<string, string[][]> = {
   landslide: [["geomancer", "knight", "hoplite"], ["geomancer", "paladin", "cleric"], ["hoplite", "knight", "bard"]],
   cuts: [["monk", "assassin", "bard"], ["valkyrie", "ranger", "vampire"], ["stormcaller", "hexer", "pyromancer"]],

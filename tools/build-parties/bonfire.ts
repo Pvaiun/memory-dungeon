@@ -1,4 +1,4 @@
-/** Bonfire: damage that rises the whole fight; each kill comes sooner than the last. Its three routes, each at three rungs (docs/gear-design/builds.md). */
+/** Bonfire: damage that rises the whole fight; each kill comes sooner than the last. Its three routes, each at three rungs (the twelve builds today's loot was made for). */
 import { g, p, route, v, vp, type Route } from "./kit.js";
 
 export const routes: Route[] = [

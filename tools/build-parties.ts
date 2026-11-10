@@ -2,7 +2,10 @@
  * The build test's hand-built parties for every route of every one of the twelve builds, at each of its
  * three rungs, so the twelve can be played side by side on one set of the rogue's fights. Data only: no engine, no Node.
  *
- * Where it comes from: each build's routes and rungs are the three that `docs/gear-design/builds.md` names for it; each piece,
+ * They're the twelve builds today's loot was made for. `docs/gear-design/builds.md` holds the nine that replace them, and the
+ * loot pass's build rewrites these parties for the nine.
+ *
+ * Where it comes from: each build's routes and rungs are the three its document named for it; each piece,
  * formation, version and mythic goes by the id the content derives from its name. Nothing here is balanced: a route is what
  * the documents name, not what wins.
  *
