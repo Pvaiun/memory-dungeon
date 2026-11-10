@@ -1,6 +1,8 @@
 # Gate 1: the loot spine
 
-The spine is `spine.md` in this folder. Part 1 is its rules (the stock, new words and counters, the rules bent, the code support); Part 4 is the web. This page is what you need to judge it.
+The spine is `spine.md` in this folder. Part 1 is its rules (the stock, new words and counters, the rules bent, the code support); Part 4 is the web. This page is what you need to judge it. The spine itself is shorthand for the agents who write the cards next; this page and its sample are in plain words.
+
+**Words used here:** an engine's *keystone* is the piece that makes it work; a *version* is one of the two choices when a unit trains an ability; a *seat* is a slot in a formation; a road's *first step* is the first piece that pushes a run toward it, and its *rungs* are its three levels (the first step, the build, the far end).
 
 ## Decisions for you
 
@@ -40,16 +42,15 @@ Formations: 12 common, 14 rare, 11 legendary, and Neutral (today 11, 12, 9). Sev
 
 ## What changed after the fresh read
 
-A fresh reader read the spine against `builds.md`, the brief and the rules, and found real problems. Every one was ruled on:
-- **The same card in two places**, the biggest. To give keystones a second home I had copied cards: about twenty pairs read alike for a class that wears both kinds, or a version or mythic repeated a piece. Each home now has its own trigger, target or cost (Heat by time, by casting and by swinging; the avalanche chained or split; the riposte answered by the dancer or by the ally beside it), or the copy went: three of my version changes (Gutting arrow's reset, Goading thorns, Flashfire), and Fletcher's bow, Winter's chain, Crescendo staff, Twin shield, Orb of the second sun and Dancer's bell were replaced.
-- **Enemy-only statuses** could be passed on (Doom) or taken (Bulwark); the cards now exclude them.
-- **Three loops** got their brakes: Chains of light's strikes don't strike again, The choir counts only casts paid for, and the arrow-chaining bow is gone.
-- **Dragon's tooth** no longer strikes "past Defense", which only a status's damage does.
-- **Lines of `builds.md`** the spine had dropped: stone-only pieces no longer carry a Landslide tag (its pieces promise a blow); Leather has a Shield from its swings; a fast kind's uncommon lays Chill; the goad has a home in Mail.
-- **A wrong wearer:** the Mark-on-a-spell uncommon moved from the lantern (no Hunt class wears it) to the relic, which gives the Paladin's judge a Mark piece of its own.
-- **Uncommons that were a smaller rare of their kind,** and rares a smaller legendary, were moved to other threads (Hailbow, Notched knife, Pavise of the keeper, Annotated score, Shield of the sister).
-- **Unclear words:** what "start-of-fight effects happen again" covers (never a price), Hidden's own length, which stacks a carried status lands at, and that Marked steers only an ability's first pick. Three code-support lines were added (C15–C17).
-- **Claims corrected:** a reason for the weapon count that wasn't true (act I's full weapon slot is the plain weapon every class arrives with), armor's legendaries "falling" (they stay at three), and the third offhand rare's reason.
+A second agent, which took no part in writing the spine, read it against `builds.md`, the brief and the rules. It found real problems, and each one was fixed:
+- **Items that read the same.** Most engines need their key piece in more than one place, so a run can find it. I had done that by writing the same card twice, on two items a class could wear together, which the rules for writing pieces forbid. Each copy now works differently (it fires on a different moment, lands on a different target, or costs something else), or it was replaced: nine items and three of my ability-upgrade changes went.
+- **Doom and Bulwark,** which only enemies may use, could have reached the party through two items that pass statuses on and one that steals buffs. Those cards now leave them out.
+- **Three combinations could repeat without end.** Each now has something that stops it, or the item is gone.
+- **One item hit "past Defense",** which only a status's own damage (Burn, Bleed and the rest) is allowed to do. It no longer says that.
+- **Some things `builds.md` asks for were missing:** Landslide's pieces have to promise a big hit on their card, so items that only give a Shield are no longer counted as Landslide's; the Toll's goading now has a piece in Mail, which the anchors wear; and the fast weapons have an uncommon that lays Chill, as Cold Snap asks.
+- **One piece sat in a kind its build's classes can't wear.** It moved to the relic, which also gives the Paladin a marking piece of its own.
+- **Some cheap pieces were smaller copies of a dearer piece of the same kind.** Each moved to a different effect.
+- **Some wording was unclear,** and some of my reasons for the counts weren't true. Both are corrected in the spine.
 
 ## What the numbers say, and how sure
 
@@ -68,14 +69,59 @@ From the offer roll and the offer volumes of 40 simulated runs (about 34 pieces 
 
 ## The sample
 
-Ten lines across the range, with the ones I'm least sure of; the fresh reader's picks are among them.
-1. **K1, Marked takes the party's random picks,** with **Hunting party** (common formation): whether the Hunt becomes too easy to fall into.
-2. **K2, Malison,** for the two readings in decision 2.
-3. **Bell charm** (rare amulet) beside **Bellbreaker** (rare great weapon): a keystone and its neighbour after the same-card fix.
-4. **Parrying spear** (rare spear): a second home made different (the ally beside the dancer answers its dodge).
-5. **Spellshield robe** (legendary robes) and **Orb of the still mind** (legendary orb): a new rule, damage from MP, in two forms.
-6. **Plague fists** (legendary fist weapons, an exotic): the carrier.
-7. **Chains of light** (the Paladin's mythic, rewritten): a loop and its brake.
-8. **Swift justice** (the Paladin's version): the judge's drum, made again on every kill.
-9. **Brinkstone** (legendary amulet): a unit held low by giving its healing away.
-10. **Hearth** (rare formation): the formation that worked in play, now with the fuse as its party effect.
+Ten items, picked across the kinds of thing the spine designs, with the ones I'm least sure of. Each says what it is, who can use it, what it does, what you'd see in a fight, and why it's here. The wording is mine; the card text you'd read in the game is written in the next stage.
+
+**1. Marked steers the party's spells, not only its swings.** *A change to a rule, which you approved in the builds; the spine calls it K1.*
+- **Today:** when the Paladin's Condemn marks a foe, the party's basic attacks turn to it, but any ability that picks "a random foe" still picks at random.
+- **Changed:** those abilities follow the mark too: the Knight's Shield bash, the Ranger's Barbed arrow, the Geomancer's Rockfall and Tremor, the first bolt of Chain lightning, and more. An ability with an aim of its own (the lowest foe, the one burning most) keeps it.
+- **Shown with Hunting party,** a common formation, so one a run can meet early: the unit in its Marker seat marks whatever it hits, the Chaser's attacks get past Taunt, and the Warden Taunts when each fight starts.
+- **In a fight:** one foe carries the mark and nearly everything the party throws lands on it. It dies, the next hit marks the next foe, and the foes go down one at a time.
+- **Least sure:** in play nobody noticed the mark at all. This may fix that too well, and make the Hunt the build every party falls into from act I.
+
+**2. Malison, the Hexer's curse.** *A change to the Hexer's ability, which you approved; the spine calls it K2.*
+- **Today:** it adds one more stack of each status a foe already has.
+- **Changed:** it hits every foe, harder for each different debuff (each harmful status: burning, chilled, shocked, bleeding, weakened, sundered, marked…) that foe carries. Then it adds a little Bleed, as today.
+- **In a fight:** the foes with the longest row of status icons take the biggest numbers.
+- **Two decisions:** whether the little Bleed stays (the approved change didn't say), and whether every debuff counts or only the statuses that build up (Burn, Chill, Shock, Bleed, Sunder). If only those, the Hexer's own Weaken adds nothing.
+
+**3. Bell charm, beside Bellbreaker.** *Two rare pieces.*
+- **Bell charm,** an amulet anyone can wear: when a foe's Chill reaches its cap and shatters, the wearer's ability with the most cooldown left is ready at once.
+- **In a fight:** in a party with a Frostweaver, a Geomancer wearing it throws its big rock every time a foe shatters, onto a foe the shatter has just stunned. A long cooldown stops mattering; the frost sets the beat.
+- **Bellbreaker,** a two-handed great weapon (Hoplite, Paladin, Geomancer): when a foe shatters, the wearer's next weapon swing comes at once, at that foe.
+- **Why both:** I had first written them as nearly the same card, and the fresh reader caught it. They show how two items about the same moment now do different things: one fires your big ability, the other your weapon.
+
+**4. Parrying spear.** *A rare spear (Hoplite, Valkyrie, Monk).*
+- **What it does:** each time the wearer dodges a hit, the ally with the highest Attack strikes the attacker.
+- **In a fight:** a Monk built to dodge calls the foes onto itself. MISS, and the party's hardest hitter strikes the foe that swung.
+- **Why it's here:** a dodger striking back is one of the engines. Its first home is a leather armor where the dodger strikes back itself; this is the second home, and it works differently. **Least sure:** whether an ally's answer reads clearly in the fight log.
+
+**5. Spellshield robe and Orb of the still mind.** *Two legendary pieces for casters.*
+- **The robe** (Cleric, Bard, Pyromancer, Frostweaver, Stormcaller): while the wearer has more than a quarter of its MP, the damage it takes comes out of its MP first.
+- **The orb** (Pyromancer, Frostweaver): while its holder has any MP, half of each blow comes out of its MP.
+- **In a fight:** the caster is hit and its blue bar drops while its red bar holds. Every bit of mana an ally gives it (the Knight's Stand fast, the Bard's swings) is now also healing. When the mana runs out, it stops casting and starts dying in the same moment.
+- **Least sure:** it's a new rule. MP is meant to be the fuel a fight burns, and this makes it armour as well.
+
+**6. Plague fists.** *A legendary fist weapon (Monk, Vampire, Stormcaller); an exotic that belongs to no build.*
+- **What it does:** each hit it lands gives the target one stack of every harmful status the wearer itself is carrying.
+- **In a fight:** in the Fire Mine a hellhound sets the Monk alight, and from then on every punch sets a foe alight; in the Ice Pass it spreads frost instead. The party's Cleric cleansing the Monk puts the fire out, which is part of the joke.
+- **Least sure:** whether it pays enough in fights this short to be worth a slot.
+
+**7. Chains of light.** *The Paladin's mythic, rewritten. A mythic is a one-per-class piece offered when an act's boss falls.*
+- **What it does:** while a foe is marked, every hit the party lands on it also strikes each other foe that carries a harmful status, for a fifth of the damage. Those extra strikes don't strike again.
+- **In a fight:** the party piles onto the marked foe, and small numbers ripple across every afflicted foe, each one setting off that foe's Bleed.
+- **Why it's here:** the old one served Lockdown, a build that was set aside. **Least sure:** with Bleed spread across a pack it may be very strong. The fresh reader found it could repeat without end, and the last sentence is the stop.
+
+**8. Swift justice.** *An upgrade: one of the two choices when the Paladin trains Condemn.*
+- **Today:** it marks the foe with the lowest share of its health, and every ally's next basic attack comes at once.
+- **Changed:** when that foe dies, it marks the next lowest and the volley comes again.
+- **In a fight:** a foe falls, the mark jumps, and three weapons land together on the next. A slow, heavy hitter beside it, such as the Hoplite's double swing, gets a free swing on every kill.
+
+**9. Brinkstone.** *A legendary amulet, anyone.*
+- **What it does:** healing that would take the wearer above half its health goes to the most hurt ally instead. While the wearer is below half, its hits deal a third more. When the fight is won, it heals a third of its health.
+- **In a fight:** a Vampire sits at half health all fight, hitting harder; whatever its drinking would heal past half goes to whoever is hurt; and the shields and guards the party gives "the most hurt ally" land on it.
+- **Why it's here:** it's Blood Pact's far end, a unit kept low on purpose. My first version copied another item, and this is the rewrite.
+
+**10. Hearth.** *A rare formation, the one that worked in your Bonfire run.*
+- **Kept:** the Keeper Taunts and is Guarded when each fight starts; the Stoker is Hasted and swings faster; each of the Torch's hits adds a Burn to every foe already burning.
+- **Added:** when a burning foe dies, its Burn jumps to the foe burning most.
+- **Why it's here:** in that run the fire never passed on when a foe died. **Least sure:** whether to change the one formation that proved itself, rather than leave it alone and put the jump elsewhere.
