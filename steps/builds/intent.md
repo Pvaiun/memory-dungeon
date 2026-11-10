@@ -11,7 +11,7 @@ The director, Nov 9. Their words are quoted where the wording matters.
 
 ## How to read the state of play
 
-- The observations stand, and the sample measures the builds, not only the game beneath them. Some failed for reasons of their own: Cold Snap never detonating past its first shatter; Phoenix having no choices; Lockdown "being based on conditions that were too rare to have happen"; Ambush not triggering; Overflow "relying on something that happens too infrequently in fights." Reducing all of it to a survivability gate "is a massive oversimplification."
+- The observations stand, and the sample measures the builds, not only the game beneath them: some builds were seen not to work for reasons of their own, and reducing all of it to a survivability gate "is a massive oversimplification." Which builds those are is the state of play's job to say from the fights and the read, not this record's (the director named a few on the spot as illustrations; the checked list is the table *Each build: what the sample can say*).
 - The data also does not reach far: most runs ended in act I, at a tuning where a tank was absolute, so "any attempt to take items of that type led to the run not continuing, and therefore the build being non-viable." A build that never formed under that is untried, not refuted. "Basically never getting past act I is pretty problematic."
 - The director could accept that the design can't be finished without data from a version tuned easier. The pass happens now anyway, because there is no version to gather it from.
 - Much of what failed is balance, not build design: the Toll formed every time and lost to the same foe at the same point, which is "game balancing not working and not allowing that build to continue to be played."
