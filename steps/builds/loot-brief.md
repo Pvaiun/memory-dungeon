@@ -26,8 +26,6 @@ It's all designed at once, so every item is judged by the roads and engines it s
 - **The class frame:** a trunk and three identities, each viable, with at least two versions toward it; no two classes share a base ability; a passive works in every fight; no class gains an ability.
 - **`design.md`'s rulings** (*Where it stands*). Its own unconfirmed choices (the nine builds, the Storm's hook, the Hunt led by the Mark, the far ends, the engines) are the base. Build on them. If the spine shows one doesn't hold, raise it at gate 1 with the evidence rather than working around it.
 
-**Out of this pass:** staying alive without a tank (the balance pass's); how formations arrive in a run (the formations have to work regardless); kits arriving one ability at a time, and cooldowns carrying; balance (synergies may be overpowered).
-
 ## What the design asks of the loot
 
 The spine answers these, and `design.md` says each in full:
@@ -40,9 +38,7 @@ The spine answers these, and `design.md` says each in full:
 
 ## The amounts
 
-- **Gear:** `loot.md`'s stock is the start: eight pieces a weapon kind and an offhand kind, twelve an armor type, twenty-four amulets, the plain weapons and a mythic a class. The spine can grow it where the roads and engines need more. Too much is better than too little.
-- **Formations:** the spine settles the count. Every road has a common, a rare and a legendary that serve it, and more are shared between roads.
-- **Upgrades and kits:** as many changes as the design needs, and no more.
+Every amount is chosen by what the roads and engines need, not by a quota: how many pieces a kind holds, how many formations there are, how many versions and kits change. Too much is better than too little.
 
 ## How to work
 
@@ -63,7 +59,7 @@ The spine answers these, and `design.md` says each in full:
 - **The agents:** the lead gives agents bounded shares: a slot's kinds, the formations, or a group of classes' versions and mythics. Brief each from the spine with intent and ranges, never examples: an agent copies any example it's given.
 - **What each item gets:** its card text, its numbers within `loot.md`'s sizes, the engine support it needs, and the roads and engines it serves (designer data, never on a card).
 - **What each agent returns:** its challenges, and what it's least sure of.
-- **Bringing it together:** the lead reads the whole fill as one design, checks it against the spine and the web, counts the stock, and has a fresh reader read it.
+- **Bringing it together:** the lead reads the whole fill as one design, checks it against the spine and the web, and has a fresh reader read it.
 - **Gate 2:** the director reviews by sample. Update `intent.md` where the standing intent changes and `CLAUDE.md`'s Status, commit, push and stop.
 
 ## Read first
