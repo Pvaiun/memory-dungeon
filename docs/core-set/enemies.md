@@ -81,7 +81,7 @@ The original design gave Poison as the Fundamental answer to Armored shell, Dodg
 | Damage race | Specialist | Gains a stack of Might every few seconds. | Might, Haste; Burn, Crit damage, Double strike, Dispel | – |
 | Escalating attack | Specialist | One ability grows per cast; tempo answers it, Dispel doesn't. | Stun, Slow, Shield; Silence, Chill | – |
 | Interrupt check | Specialist | A long cast that nearly wipes the party. | Stun, Shield; Silence | Fire Giant |
-| Break shield | Signature | Has Bulwark: every hit chips it. | Haste, many hits; Double strike | Ice Titan |
+| Break shield | Specialist | Has Bulwark: every hit chips it. | Haste, many hits; Double strike | Ice Titan |
 | Shield check | Specialist | A large self-Shield plus a very long cast; the cast cancels if the Shield breaks first. | Stun, Shield; Dispel, Crit damage, heavy single hits | – |
 | Two states | Specialist | Swaps between very high Defense and Incorporeal. | Burn, Sunder, Bleed | – |
 | Buff stacker | Specialist | Keeps buffing itself on short cooldowns. | Weaken; Dispel, Judgement, Sunder vs Guard, Accuracy vs Evasion | – |
@@ -97,7 +97,7 @@ The original design gave Poison as the Fundamental answer to Armored shell, Dodg
 | Anti-heal | Specialist | Puts Rot on the party. | Shield, Cleanse, Weaken, Guard, Evasion | – |
 | Silence field | Specialist | After a visible wind-up, Silences every ally; Cleanse abilities are Silenced too. | Stun on the wind-up; basic-attack passives | Silent One |
 | Buff stripper | Specialist | Every so often Dispels every buff on every ally. | Short-cooldown reapplication, Evasion; Hidden, special stats, passives | – |
-| Executioner | Signature | Puts Doom on a unit; an execute variant hits the lowest ally instead. | Cleanse, Shield; Aegis, Revive | Reaper |
+| Executioner | Specialist | Puts Doom on a unit; an execute variant hits the lowest ally instead. | Cleanse, Shield; Aegis, Revive | Reaper |
 | Adds shield | Specialist | Takes no damage while any add lives; calls waves. | Area, Stun on the summon; Silence, lowest-HP targeting, burst between waves | – |
 | Feeding adds | Specialist | After a wind-up, consumes its living adds to heal or gain Might. | Area, Stun on the wind-up; Silence, spread Burn, Dispel | – |
 | Avenger | Specialist | Gains several Might when an add is knocked out; its adds are tough and Taunt. Area is the wrong pick. | Weaken, Shield; Seek that reaches the boss (Gale spear, Garrote, Pressure point), Hunter's eye, Dispel. Abilities without Seek are forced onto the adds by the Taunt rule. | Storm King |
@@ -123,7 +123,7 @@ The original design gave Poison as the Fundamental answer to Armored shell, Dodg
 | Mixed gauntlet | Fundamental | Each fight wants a different answer. | Heal, Regen; status damage, Sunder, Accuracy, Area | Old Road, Crypt |
 | Elite mid-run | Specialist | A boss-strength fight before the boss. | Heal, Regen; Revive, Lifesteal, Siphon, Clarity | Tower Top |
 | Echo | Fundamental | Every fight asks the same question, harder each time; the run fails you at the door, not the boss. | The question's own answers, brought in depth | Ice Pass |
-| Lock | Signature | The run is a key-check: a narrow build family clears it, on purpose. | The named key family | Deep Crypt, Tower Top |
+| Lock | Specialist | The run is a key-check: a narrow build family clears it, on purpose. | The named key family | Deep Crypt, Tower Top |
 
 ## The enemies
 

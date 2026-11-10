@@ -88,7 +88,7 @@ Commons and uncommons are written from a rule per kind, not designed one by one:
 - **Counters,** shown as an icon with a number on the holder and kept for the fight: Cuts (hits landed), Heat (power that builds), Spite (Thorns that grow), Tempo (speed that builds), Surge (many-foe hits), Fervor (falls and returns) and Charge (hits saved for one blow, then spent). Each is a status of its own with one fixed meaning, so they don't stack into each other. They're in `pieces/shared.ts`.
 - **Three rules are bent, each by one or two pieces:** extra strikes that chain (Flurry wraps), a hit taken for an ally (Oathbound shield), and effects after a won fight, before statuses end (Lamp of vigil, Last bastion, The undying).
 - **One rule is added:** Taunt ends Hidden. A unit that gains Taunt stops being Hidden, and Hidden doesn't land on a Taunting unit.
-- **What no piece does:** grant an ability, give Aegis (it stays the Hoplite's), or apply a status for less or more than its own length.
+- **What no piece does:** grant an ability, or apply a status for less or more than its own length.
 
 ## Rules for writing pieces
 

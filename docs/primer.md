@@ -54,7 +54,7 @@ The least you need to know to work on the game. Read it first, then open a detai
   - **The staples:** Regen, Shield, Might, Weaken, Guard, Stun, Slow, Haste, Taunt, Bleed.
   - **Built up over a fight, and draining away:** Burn, Chill (it shatters at its cap), Shock, Sunder.
   - **The rest:** Marked, Silence, Hidden, Rot, Clarity, Aegis, and Doom and Bulwark, which only enemies use.
-- **Tiers** say how widely a piece appears. A Fundamental is in many classes and the first fights, a Specialist in a few, and a Signature belongs to one class or boss and bends a rule.
+- **Tiers** say how widely a piece appears. A Fundamental is in many classes and the first fights, and a Specialist in a few. Nothing is locked to one class: what one class uses today can appear on other classes, gear and formations. Doom and Bulwark are a tier of their own, enemy-only.
 
 ## Gear, formations and training
 

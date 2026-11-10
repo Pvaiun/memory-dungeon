@@ -218,13 +218,13 @@ Only a few statuses show as icons on a unit; everything else is behind the scene
 
 ## Tiers
 
-Every status, special stat, effect and challenge has a tier, set by its role. Tiers count across the whole set, every class and enemy together: they say how widely a piece appears, not what each class should hold.
+Every status, special stat, effect and challenge has a tier, set by its role. Tiers count across the whole set, every class and enemy together: they say how widely a piece appears, not what each class should hold. Outside the enemy-only tier, nothing is locked to one class: a piece that one class uses today can appear on other classes, on gear and on formations.
 
 | Tier | Role |
 | --- | --- |
 | Fundamental | The learnable base. Many classes and enemies use it, and players meet it in the first fights. Its variety comes from how differently it's used, not from adding more pieces. |
-| Specialist | A few classes make use of it or are built around it, and a few challenges lean on it. |
-| Signature | One class or one boss owns it, and it bends a rule. |
+| Specialist | A few classes or foes make use of it or are built around it, and a few challenges lean on it. Some are one class's in the core set as built, and bend a rule. |
+| Enemy-only | Only enemies use it. The party can't, until the director says so. |
 
 The Fundamental pieces were chosen for how they interact: pieces that answer, undo, feed or play against one another.
 
@@ -232,9 +232,9 @@ The Fundamental pieces were chosen for how they interact: pieces that answer, un
 
 The vocabulary is 22 statuses, 10 special stats and 6 effects. The pieces add seven counters (*Gear design: the loot*).
 
-| Kind | Fundamental | Specialist | Signature | Total |
+| Kind | Fundamental | Specialist | Enemy-only | Total |
 | --- | --- | --- | --- | --- |
-| Statuses | 10 | 9 | 3 | 22 |
+| Statuses | 10 | 10 | 2 | 22 |
 | Special stats | 1 | 9 | 0 | 10 |
 | Effects | 3 | 3 | 0 | 6 |
 
@@ -261,9 +261,9 @@ Ten staples make the Fundamental base, each useful from a single application. Th
 | Hidden | Specialist | Foes can't pick it as a target, Seek included; only their Area reaches it. Its allies can still pick it. Lasts a set time and can't be removed. Refresh. |
 | Rot | Specialist | Receives less healing; Shields are unaffected. Refresh. |
 | Clarity | Specialist | Regen for mana: restores a share of its holder's max MP on a pulse, for a set time. Refresh. Cast on oneself or an ally. |
-| Aegis | Signature | Blocks the next damage above a set share of max HP, from any source, then ends. Checked after mitigation, before Shields. Fizzle. Small hits pass; one big one doesn't. |
-| Doom | Signature (boss) | A visible countdown; at zero its holder takes untyped damage of a large share of its max HP, so a unit at full HP survives it and a hurt one doesn't. Fizzle. Cleanse removes it; Shield and Aegis soak it. |
-| Bulwark | Signature (boss) | Starts with a stack count, and every hit its holder takes removes one. At zero its holder is Stunned and takes double damage for a while, then Bulwark refills. |
+| Aegis | Specialist | Blocks the next damage above a set share of max HP, from any source, then ends. Checked after mitigation, before Shields. Fizzle. Small hits pass; one big one doesn't. |
+| Doom | Enemy-only | A visible countdown; at zero its holder takes untyped damage of a large share of its max HP, so a unit at full HP survives it and a hurt one doesn't. Fizzle. Cleanse removes it; Shield and Aegis soak it. |
+| Bulwark | Enemy-only | Starts with a stack count, and every hit its holder takes removes one. At zero its holder is Stunned and takes double damage for a while, then Bulwark refills. |
 
 **Buffs and debuffs.** Every status is either a buff or a debuff. Cleanse removes debuffs, Dispel removes buffs, and "with a buff" or "with a debuff" in a target phrase means these lists. Hidden is a buff, but it can't be removed. Taunt and Bulwark are ordinary buffs that Dispel can remove.
 

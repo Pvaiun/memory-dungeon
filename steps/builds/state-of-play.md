@@ -2,6 +2,8 @@
 
 Where the twelve builds of `docs/gear-design/builds.md` stand after real play, for the designer who picks up the builds pass. It says what happened, how it looked from the player's chair, and where the two differ, why. It's the state of things, not proposals: the director's intent for the pass is recorded separately, and the questions it has to answer are at the end.
 
+**How to read it.** The sample measures the builds and the game beneath them, and the two have to be kept apart. Some builds were fielded enough to show their own mechanism failing; some were barely fielded, so the case against them is reasoning, not observation; and the tuning that ended most runs in act I, where a party that took a build's pieces over defence tended to die, runs under all of it. The table under *Each build: what the sample can say* keeps the three apart. What read on screen in these runs is not a rule for what a build must be. The director's reading, and the lens the pass uses, are in `intent.md`.
+
 **Where it comes from.** The director's 23 saved runs (150 fights, Oct 31 to Nov 4, engine 0.17 and 0.18, heat 0), each replayed fight by fight at the commit it was played on, with the log on; all 150 replayed to the same outcome and HP. Every offer and pick, tagged with the designer's build data; what each party wore and sat in at each fight; where every fight's damage came from. And the director's own account of about 30 sessions, which is how those fights were seen, and which also covers sessions that weren't saved. Where the account and the fights differ, this page says what happened and where the impression came from.
 
 ## In brief
@@ -58,6 +60,26 @@ The hand is consistent: defence first, because the tank falls first; spread and 
 
 ### Classes
 The Frostweaver is weak and was played that way: dismissed from one roster, benched in two others, 61% of its damage from its weapon. The Pyromancer is not: it ended 4 of 28 fights knocked out, fewer than any other caster, and carried two of the five deepest runs; the impression that it dies in most fights isn't in the saved runs. The Stormcaller had the highest damage share of any class (39%) in its 11 fights and was knocked out in 3. The Bard was seated in five fights across two runs and traded or benched otherwise, so nothing can be said of it from the fights; from the chair it was a dead unit. The Hexer, as above, is the status amplifier the player can't see. Evasion can't be judged from the fights: no evasion party lived long enough. From the chair it is not a defence as a probability, only near its cap, where one or two misses still kill; Skirmish line was fought once and lost, Duelist's leathers worn twice by units that drew nothing, Windrunner's garb once (Tempo climbed to 11, then the Monk fell).
+
+## Each build: what the sample can say
+
+Kept apart, build by build: whether it was fielded enough to see its mechanism, what the fights show of the build itself, and what they show of the run around it. The numbers are from the sections below.
+
+| Build | Fielded | About the build itself | About the run around it |
+| --- | --- | --- | --- |
+| **Bonfire** | Yes, to rung 3 | Works: Burn climbed and the whole party stoked it. Its rhythm didn't show (kills evenly spaced, the fire never passed on), and its far-end pieces were offered and skipped. | Good in a tank party because tanks add Burn too. |
+| **Thousand Cuts and the Hunt** | Yes, as one crit-Bleed build on one unit, to rung 3 | The kill reset and the execute carried. Marked steered basic attacks only and was never seen to matter in about twenty fights. Thousand Cuts as a party never formed. | The party version wanted the Bard and casters that fell first. |
+| **The Toll** | Yes, rung 1 everywhere, rung 2 once | Works from the kit alone. Whether its pieces add anything past rung 1 is untested. | Died at bosses and two-foe elites, where every run died: balance. |
+| **Phoenix** | Yes: 26 fights in its formations, its pieces worn | Fails on its own mechanism: nobody chooses who falls; each in-fight revive was followed by a second fall; the return with everything ready never happened in a fight. | Knockouts carry and can't be potioned, so a fall is also the run's problem. |
+| **Cold Snap** | Yes, four attempts, 16 Frostweaver fights | Fails on its own mechanism: Chill reaches its cap, shatters once, and the second shatter never comes, since the cap spends the stacks and the next application is a cooldown away. | The Frost seats fell to Plate units; no tank or healer Chills. |
+| **Lockdown** | Pieces taken, never assembled | Fails on its own mechanism: a wind-up was caught five times in 150 fights, Stuns came once or twice a fight, and the player can't make a window happen. | None needed; the window is the problem. |
+| **Landslide** | Pieces worn heavily, the build never done | Its rung 1 reads as plain defence, indistinguishable from the Toll's party; the blow pieces weren't taken (Millstone offered four times, the Geomancer never in a Hammer seat), so the blow is untested. One seed by accident: the Shield break as damage. | Defence was the scarce thing, so its pieces were taken as defence. |
+| **Blood Pact** | On one unit, partly | HP as a cost was paid in one fight; its pieces read and were used as healing. The party version never formed. | HP is what the game drains, so paying it was never considered. |
+| **Harvest** | Rung 1 by accident | Spread lost on slot cost to focus, and the spread pieces landed on units with nothing to spread. Never recognized as a build. | Slots are scarce in act I, where spread pays least. |
+| **Overflow** | Barely: Wellspring seven fights, for its mana | Its links are sized below perception and its engine seats are the squishies who fall first. That nobody cast all fight is tangled with units knowing one ability. | The one-ability, long-cooldown substrate, which the intent says not to judge yet. |
+| **Ambush** | Barely: First light once, its openers skipped or unworn | Untried. The case against it (nothing marks the opening, first-X effects run out in long fights, no tail, roster churn) is reasoning, not observation. | Picking for it lost the run. |
+
+So three failed on their own mechanism with the fights behind it (Phoenix, Cold Snap, Lockdown); three worked or partly worked, each with a specific gap (Bonfire's rhythm, the Hunt's marking, the Toll's boss wall); four showed a design problem tangled with the run (Landslide, Blood Pact, Harvest, Overflow); and one is untried (Ambush).
 
 ## The builds, one by one
 
@@ -142,7 +164,7 @@ Each is a saved run and a fight, replayable from the record.
 
 ## Questions for the intent
 
-The director's answers are the intent the pass starts from.
+The director's answers are recorded in `intent.md`.
 - **Should a build be reachable from one unit's kit plus one piece, in act I?** The two that happened early did it that way. The ones that didn't all need two or three pieces to meet on one unit, which act I doesn't supply.
 - **Should the kit carry the build, with loot steering it, and should kits arrive whole sooner?** Units fought with one ability known in 59% of unit-fights and with everything on cooldown in 43%. Either abilities arrive sooner and cooldowns don't carry so far, or the builds are written for basic attacks and one ability.
 - **Is a fall allowed to be anything but the end?** Phoenix needs falls that aren't losses; in play they were. Either the martyr's fall comes early and cheaply, or the build is about standing back up between fights.

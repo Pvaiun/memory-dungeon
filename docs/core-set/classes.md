@@ -40,7 +40,7 @@ A class arrives with the plain weapon of its first kind. Every kind's swing, sca
 - **Stats** run from 1 to 5: 1 is very low, 3 average, 5 very high. Special stats, the three speed stats included (Attack speed, Cooldown, Cast speed), are zero unless a class lists them. No class regains MP in a fight by itself, and a class's MP pool is set by how many regular fights it lasts from full: two or three for every class, erring scarce.
 - **Gear.** Each class below lists its weapon kinds (it arrives with the plain weapon of the first), its armor types and its offhand kinds; any amulet fits. The rules are under Gear in *Core set: rules and vocabulary*.
 - **Timing and MP.** Every ability has a cooldown word, a wind-up word and an MP cost, all in `classes.ts`. The word follows the job: abilities that repeat (stack applicators, top-up heals) are quick, a self-buff's cooldown is longer than the buff lasts, the big nukes are long and the revives very long. Casters' spells cost several times the walls' and fighters' skills, so casters run short of MP and wear MP gear, and walls rarely do.
-- **Damage and stacks.** Every ability that deals damage says what it scales from. Every ability that adds a stacking status says how many stacks (a few, several or many) and which stat sets the number. Statuses that don't stack have one fixed size. Everything scales from the user, never the target; revives excepted.
+- **Damage and stacks.** Every ability that deals damage says what it scales from. Every ability that adds a stacking status says how many stacks (a few, several or many) and which stat sets the number. Statuses that don't stack have one fixed size.
 - **Identities.** Each class lists its identities with the versions that make them (named as in `upgrades/`); a version in bold **reads** a kind's signature stat that nothing else in the kit does.
 - **Tests.** Each class ends with a test: one fight against a challenge it should answer, traced through its kit.
 
@@ -321,7 +321,7 @@ Different trios win different fights, and Burn, Chill and Shock each have more t
 
 ## How the kits fit together
 
-Every piece of the vocabulary is used by a class or an enemy (`classes.ts`, `enemies.ts`), except that Slow and Rot appear only on enemies and the pieces. Aegis is the Hoplite's alone; Marked is the Paladin's in the kits, and the Hunt's pieces apply it too.
+Every piece of the vocabulary is used by a class or an enemy (`classes.ts`, `enemies.ts`), except that Slow and Rot appear only on enemies and the pieces. In the kits, Aegis is the Hoplite's and Marked the Paladin's; neither is locked to them, and the Hunt's pieces apply Marked too.
 
 - **No two classes share a base ability, and every passive works in every fight.**
 - **Built-up statuses on basic attacks.** Each has a basic-attack source: Chill (Hexer), Shock (Stormcaller, and the party under its Thunderstorm) and Sunder (Monk). Burn is stoked by the Pyromancer's casts, and its Kindling version puts it back on swings.
