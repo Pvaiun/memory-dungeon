@@ -15,6 +15,8 @@ The design stage of the builds pass. The director's intent is `intent.md`; the e
 - **Debuffs don't carry a build.** Stranglehold, a build on afflictions, is set aside.
 - **A wall is not every build's start,** and neither is a front seat. Staying alive without a tank is an open problem (*Open problem*).
 - **No engine rests on a number the player can't see,** such as a foe's MP.
+- **A mythic may be an engine on its own.** No other single piece is.
+- **A knockout keeps carrying.** The fallen don't stand up after a won fight.
 
 **The design's own choices, for the director to confirm:**
 - **Nine builds.** The director left it to the design whether Shock and Bleed have builds. All four damaging statuses have one, each set off by a different clock (*The rhythm space*).
@@ -348,6 +350,7 @@ The design stage of the builds pass. The director's intent is `intent.md`; the e
 - **An engine sits on one road or more.** Some belong to a single road; some span two, three or more. Several can play on the same mechanic without touching another build.
 - **They're designed as a game designer picks them, for being worth finding, not from a formula.** Two frames were tried and are too narrow: that every engine must cross two mechanics, which reads as pattern matching, and that every engine gives a verb to a moment that does nothing today.
 - **No engine rests on a number the player can't see,** such as a foe's MP.
+- **A mythic may be an engine on its own,** since it rewrites one class. Anything else takes two parts or more.
 - **A status's own behaviour stays as it is.** An engine is one of the places a build can make a status do more: fire that passes on, a shatter that leaves cold behind.
 
 **The first, from the director's play: the shield detonation.** One piece made a Shield deal damage, by its original size, when it broke. Another effect brought a broken Shield back at about half its size. The party was laying Shields on its units from several sources. Together, most of the party's damage came from Shields detonating. Nothing else that party was doing belonged to any build in the set: it was a shield party that hadn't fully come online, and those pieces twisted it into one specific gimmick. It was one of the strongest and clearest rhythms the director met in play. It sits on Landslide, in its stone.
@@ -365,7 +368,7 @@ Twenty-one more, for twenty-two. They're the design's own, and the director hasn
 
 **Left out, and why:**
 - **Plain multipliers:** Sunder under a fire, Guard on a unit that hits from Defense. They're real, and a player will be glad to find them, but they're threads.
-- **One piece doing it alone:** a crit that rebuilds its caster's Shield is a mythic's work.
+- **One piece doing it alone,** unless it's a mythic. The mythics that already do it alone (the Geomancer's, whose crits rebuild the stone its crits need; the Assassin's, which hides it after each kill) are engines as they stand, and aren't repeated here.
 - **A route through two kits:** a blow that reads a status, cast twice by the Bard. That's a door.
 - **Fill-ins by symmetry:** fire on whatever strikes the anchor, beside the frozen gate; a charge that spreads when its foe falls, beside the running fire.
 - **Mana as power on a unit that never casts.** It breaks the rule that power follows fuel.
@@ -565,6 +568,7 @@ Where a run drifts from one road to its neighbour, through something both want. 
 **What isn't the answer** (the director's rulings):
 - **A wall in every build's first route.** Every run would start the same, which is what the pass is meant to correct.
 - **A front seat that lets more classes be the frontline.** It keeps the constraint that every party needs a frontline fighter, and that constraint is the uninteresting part.
+- **The fallen standing up after a won fight.** A knockout keeps carrying.
 
 **Where the builds stand on it:**
 - **Revolve around a tank by nature:** the Toll (its anchor), Landslide (stone on heavy bodies).
@@ -584,7 +588,7 @@ Where a run drifts from one road to its neighbour, through something both want. 
 
 Things the twelve treated as builds, or as a build's whole identity, that are better as things any party can have.
 
-- **Falls and returns: the net.** Nobody chooses who falls, so nothing is built on it. A revive, and whatever softens a fall, serves every build. What the net has to do: the returned stay up (each of the five revives inside a fight in the sample was followed by a second fall), the survivors get cover in the moment after, and a knockout needn't be carried into the next fight. It's sized as protection. No piece wants a fall.
+- **Falls and returns: the net.** Nobody chooses who falls, so nothing is built on it. A revive, and whatever softens a fall, serves every build. What the net has to do: the returned stay up (each of the five revives inside a fight in the sample was followed by a second fall), the survivors get cover in the moment after, and since a knockout carries, the net can bring the fallen back between fights. It's sized as protection. No piece wants a fall.
 - **The first move.** The fight's start is the one trigger nothing gates. It's the Hunt's first Mark, and a thread several others use: stone at the start, cold at the start, a Taunt at the start, a first cast free.
 - **Spread.** Reaching more foes is each build's pack game, not a build. The Storm is the one road whose nature is spread.
 - **Stopping a cast.** A Stun or a Silence timed to a wind-up is an answer to a boss's great cast, as *Core set: enemies* asks, and the act's boss is shown from the start. The versions that wait for a wind-up are that answer. A wind-up was caught five times in 150 fights, so no build waits for one.
