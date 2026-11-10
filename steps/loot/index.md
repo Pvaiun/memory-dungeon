@@ -10,9 +10,9 @@ It's what every fill agent reads before writing: the shares, every item in one l
 | --- | --- | --- |
 | Weapons, the first six kinds | `fill/weapons-1.md` | 60 pieces: 12 commons, 19 uncommons, 19 rares, 10 legendaries |
 | Weapons, the other six kinds | `fill/weapons-2.md` | 53 pieces: 12 commons, 18 uncommons, 14 rares, 9 legendaries |
-| Armor | `fill/armor.md` | 54 pieces: 12 commons, 16 uncommons, 16 rares, 10 legendaries |
+| Armor | `fill/armor.md` | 55 pieces: 12 commons, 16 uncommons, 17 rares, 10 legendaries |
 | Offhands, the first six kinds | `fill/offhands-1.md` | 54 pieces: 12 commons, 17 uncommons, 16 rares, 9 legendaries |
-| Offhands, the other seven kinds | `fill/offhands-2.md` | 64 pieces: 14 commons, 16 uncommons, 22 rares, 12 legendaries |
+| Offhands, the other seven kinds | `fill/offhands-2.md` | 63 pieces: 14 commons, 16 uncommons, 21 rares, 12 legendaries |
 | Amulets | `fill/amulets.md` | 37 pieces: 10 commons, 7 uncommons, 10 rares, 10 legendaries |
 | Formations | `fill/formations.md` | 35 formations: 13 common, 12 rare, 10 legendary |
 | Versions and mythics | `fill/versions-mythics.md` | 9 versions and 5 mythics that change, written new; 33 versions and 11 mythics that stay, each checked against today's card |
@@ -33,7 +33,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Second thrust** · uncommon · When it lands a killing blow, its next basic attack comes at once and always crits.
 - **Marking knife** · rare · While no foe is Marked, its crits Mark their target.
 - **Bloodscent knife** · rare · Its hits on a bleeding foe crit far more often.
-- **Ambush knife** · rare · Its hits on a foe that hasn't acted yet this fight always crit.
+- **Ambush knife** · rare · Its hits on a foe that hasn't acted yet this fight nearly always crit.
 - **Thousandth cut** · legendary · Each hit it lands adds a Cut, kept for the fight. Its hits deal more for each Cut.
 - **Quietus** · legendary · When each fight starts, it strikes every foe once, at once.
 
@@ -48,9 +48,9 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Lamprey claws** · uncommon · Each extra strike it lands heals its wearer (from max HP).
 - **Gorged claws** · rare · While its wearer is below half its HP, its basic attacks come a third faster.
 - **Bellows wraps** · rare · Each hit it lands on a burning foe raises that foe's Burn by a tenth of what it holds.
-- **Still hand** · rare · Its hits on a Stunned foe strike twice.
+- **Still hand** · rare · Its hits on a Stunned foe strike twice; the second strike doesn't strike again.
 - **Forked knuckles** · rare · Its basic attacks leap to one more foe for half, carrying what the swing carries, and each foe they hit after the first gives its wearer some MP.
-- **Flurry wraps** · legendary · Its extra strikes can strike again: each rolls Double strike for one more, each a little weaker than the last.
+- **Flurry wraps** · legendary · Its extra strikes can strike again: each rolls Double strike for one more, at most two more after the first, each a little weaker than the last.
 - **Answering thunder** · legendary · Each time a foe that holds Shock acts, the wearer strikes it with a basic attack, if it's free to.
 
 ### Wand
@@ -62,7 +62,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Jolt wand** · uncommon · Its basic attacks add a few Shock.
 - **Tithe wand** · uncommon · Each basic attack it lands gives the ally with the least MP some MP.
 - **Chain wand** · rare · Its basic attacks also strike two other foes for half, carrying what the swing carries.
-- **Mimic wand** · rare · Its basic attacks carry whatever the basic attacks of the ally with the highest Attack carry.
+- **Mimic wand** · rare · Its basic attacks carry whatever the basic attacks of the other ally with the highest Attack carry.
 - **Wildmagic wand** · legendary · Each of its basic attacks adds a few stacks of one of Burn, Chill, Shock, Bleed and Sunder, at random.
 - **Baton** · legendary · Each basic attack it lands brings its wearer's first-slotted ability round sooner: a fifth of the wait that's left.
 
@@ -72,11 +72,11 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 
 - *Commons (2):* one leans to Attack and Crit chance, one to Attack and HP or Aggro.
 - **Rimed blade** · uncommon · Its basic attacks add a few Chill.
-- **Drawn steel** · uncommon · Its first basic attack of each fight comes at once and deals double.
+- **Drawn steel** · uncommon · Its first hit on each foe deals double.
 - **Mercy's edge** · uncommon · Each basic attack it lands heals the ally with the lowest share of HP for a share of the damage.
-- **Gravemark** · rare · Its hits on a Marked foe deal half again as much. When a Marked foe falls, it Marks the foe with the lowest HP.
+- **Gravemark** · rare · Its hits on a Marked foe deal half again as much. When a Marked foe falls and leaves none Marked, it Marks the foe with the lowest HP.
 - **Provoking blade** · rare · The foe its basic attack lands on makes its own next basic attack at once, at whoever it would have picked.
-- **Oathkeeper** · rare · While its wearer Taunts, its basic attacks also hit every other foe.
+- **Oathkeeper** · rare · While its wearer Taunts, its basic attacks also hit every other foe, carrying what the swing carries.
 - **Bloodletter** · rare · Each of its swings costs its wearer a little HP, and deals extra damage equal to several times the price.
 - **Stormbrand** · legendary · Its hits deal extra damage for each Shock held anywhere on the field. The Shock stays.
 
@@ -90,7 +90,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Long spear** · uncommon · Its basic attacks ignore Taunt.
 - **Hunting spear** · rare · Its hits on a foe below half its HP land twice.
 - **Parrying spear** · rare · Each time its wearer dodges a hit, the other ally with the highest Attack strikes the attacker with its weapon.
-- **Storm pike** · rare · Every fifth hit it lands also strikes every other foe (a light hit, from Attack), carrying what its swings carry.
+- **Storm pike** · rare · Every fifth hit its basic attacks and extra strikes land also strikes every other foe (a light hit, from Attack), carrying what the swing carries. The flash's own hits aren't counted.
 - **Sarissa** · legendary · Its basic attacks hit every foe that has hit its wearer since its last swing.
 
 ### Axe
@@ -103,7 +103,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Ragged axe** · uncommon · Its hits add a few Bleed.
 - **Executioner's axe** · rare · Its hits on a foe below a quarter of its HP deal double.
 - **Thirsting axe** · rare · Each killing blow it lands heals its wearer for a fifth of its max HP.
-- **Overkill axe** · rare · What its wearer's killing blows have left over lands on the foe with the lowest HP.
+- **Overkill axe** · rare · What its wearer's killing blows have left over lands on the foe with the lowest HP, once.
 - **The Red Feast** · legendary · While its wearer is below half its HP, its hits deal double and its Lifesteal is doubled. When a fight is won, its wearer is healed up to half its HP.
 - **Headsman's axe** · legendary · Its basic attacks come half as often and deal double. A killing blow it lands readies its next basic attack at once.
 
@@ -120,7 +120,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Opening shot** · uncommon · Its first basic attack of each fight comes at once and always crits.
 - **Frostbite bow** · uncommon · Its basic attacks add several Chill.
 - **Huntsman's bow** · rare · While no foe is Marked, its basic attacks Mark their target. Its hits on a Marked foe deal a third more.
-- **Volley bow** · rare · Every fourth basic attack is a volley: it also looses an arrow at every other foe.
+- **Volley bow** · rare · Every fourth basic attack is a volley: it also looses an arrow at every other foe, carrying what the swing carries.
 - **Executioner's longbow** · legendary · Its basic attacks ignore Taunt, and deal more the less HP their target has.
 
 ### Rune sword
@@ -131,7 +131,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Sleet blade** · uncommon · Its basic attacks add several Chill.
 - **Sigil blade** · uncommon · When each fight starts, its wearer gains a Shield from its max MP.
 - **Wellblade** · uncommon · Each basic attack it lands restores some of its wearer's MP.
-- **Winter's chain** · rare · When a foe's Chill shatters, the foe with the most Chill left gains half the cold it held.
+- **Winter's chain** · rare · When a foe's Chill shatters, the other foe with the most Chill gains half the cold it held.
 - **Frostward blade** · rare · Foes that hit the ally with the highest Aggro gain a few Chill.
 - **Spellbinder** · rare · After each ability its wearer casts, its next basic attack deals double and gives back half the ability's cost.
 - **Brimming blade** · legendary · Its wearer's abilities deal extra damage from the MP they cost.
@@ -172,7 +172,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Vesper staff** · uncommon · Each ability its wearer casts heals the ally with the lowest share of HP a little (from Attack).
 - **Ritual staff** · rare · Its wearer's abilities wind up half again as long, deal half again as much and add twice the stacks.
 - **Evensong staff** · rare · Each ability its wearer casts makes its next one cast in a moment, with no wind-up.
-- **Staff of echoes** · legendary · Every ability its wearer casts is cast twice. Both are paid for.
+- **Staff of echoes** · legendary · Every ability its wearer casts is cast twice. Both are paid for, and the second isn't cast again.
 
 ### Great weapon
 
@@ -190,7 +190,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 
 ## Armor
 
-*Engines it's part of:* detonation, frozen gate, mirror, goad, reckoning, judge's drum, riposte, every colour, blood mage, resonance, crescendo, mana as armour, firecracker, brink, two in the dark, red stone, carrier.
+*Engines it's part of:* detonation, frozen gate, mirror, goad, reckoning, judge's drum, opening again, riposte, every colour, blood mage, resonance, crescendo, mana as armour, firecracker, brink, two in the dark, red stone, carrier.
 
 ### Plate
 
@@ -205,8 +205,8 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Hoarfrost plate** · rare · Foes that hit its wearer gain a few Chill.
 - **Rubble plate** · rare · When its wearer's Shield breaks, every foe takes damage equal to the most that Shield held.
 - **Thornheart plate** · legendary · A foe that hits its wearer takes a share of the blow as it was struck, and a larger share for each blow the wearer has lived through this fight (Spite).
-- **Last bastion** · legendary · Once a fight, a blow that would knock its wearer out leaves it at 1 HP and Guarded. Until it's healed back above half its HP, its hits deal double.
-- **The anvil** · legendary · Each hit its wearer takes adds a Wrath to the ally with the slowest basic attack. That ally's next basic attack deals more for each Wrath, and spends them.
+- **Last bastion** · legendary · Once a fight, a blow that would knock its wearer out leaves it at 1 HP and Guarded. Until it's next healed, its hits deal double.
+- **The anvil** · legendary · Each hit its wearer takes adds a Wrath to the other ally with the slowest basic attack. That ally's next basic attack deals more for each Wrath, and spends them.
 
 ### Mail
 
@@ -237,6 +237,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Shadow mantle** · rare · While its wearer is Hidden, its hits deal double.
 - **Pack leader's coat** · rare · When its wearer lands a killing blow, every ally's next basic attack comes at once.
 - **Frostwalker's furs** · rare · When a foe's Chill shatters, its wearer is Hasted, and its next hit adds a few Chill to every foe.
+- **Tally coat** · rare · Each time its wearer lands a killing blow, the start-of-fight effects of its gear and its seat happen again.
 - **Windrunner's garb** · legendary · Each dodge adds a Heat (its wearer acts faster in everything, a stack) for the rest of the fight. Each hit it takes spends half its Heat.
 - **Carrier's coat** · legendary · Each hit its wearer lands gives its target one stack of every affliction the wearer itself holds. The wearer keeps its own.
 
@@ -297,8 +298,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Reveille** · uncommon · When each fight starts, the ally with the highest Attack has its ability with the longest cooldown ready.
 - **Bull's horn** · uncommon · The first time a foe falls in a fight, every ally is Hasted.
 - **Watch horn** · uncommon · Whenever an ally drops below half its HP, its holder Taunts.
-- **War horn** · rare · Every so often, the ally with the slowest basic attack gains several Might.
-- **Goading horn** · rare · Each time its holder Taunts, every foe's next basic attack comes at once.
+- **War horn** · rare · When each fight starts, the ally with the slowest basic attack gains many Might.
 - **Hunting horn** · rare · When a Marked foe falls, every ally's next basic attack comes at once.
 - **Horn of the charge** · legendary · When each fight starts, every ally is Hasted and its first action comes at once. Its holder starts every fight with every ability on cooldown.
 
@@ -313,6 +313,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Briar totem** · rare · Foes that hit its holder gain a few Bleed.
 - **Spite totem** · rare · Each hit its holder takes adds a Spite: its Thorns grow for the rest of the fight.
 - **Thunderhead totem** · rare · Each hit its holder takes adds a Shock to every foe.
+- **Goading totem** · rare · Each time its holder Taunts, every foe's next basic attack comes at once.
 - **Earthmother totem** · legendary · While its holder stands, every Shield an ally gains is a third larger. When an ally's Shield breaks, that ally gains many Might.
 
 ### Relic
@@ -326,7 +327,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Phylactery** · rare · The part of its holder's heals that would go past full becomes a Shield on the healed ally.
 - **Accuser's relic** · rare · While no foe is Marked, each heal its holder gives Marks the foe that last hit the healed ally.
 - **Heart of the saint** · legendary · Its holder's heals are paid in its own HP in place of MP, and are twice as big.
-- **Bloodstone reliquary** · legendary · Each time an ally pays HP, the other ally with the lowest share of HP is healed for as much.
+- **Bloodstone reliquary** · legendary · Each time an ally pays HP, the ally with the lowest share of HP, the payer aside, is healed for as much.
 
 ### Lantern
 
@@ -355,7 +356,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Primer of frost** · rare · Each time its holder adds Chill to a foe, it adds more the more Chill that foe already holds.
 - **Twice-told tome** · rare · Every third ability its holder casts is cast twice. The second cast is free.
 - **Grimoire of plagues** · rare · When each fight starts, every foe gains a few stacks each of two of Burn, Chill, Shock and Bleed, at random.
-- **Annotated score** · rare · Each time the ally with the highest Attack casts an ability, its holder's next ability costs no MP.
+- **Annotated score** · rare · Each time the other ally with the highest Attack casts an ability, its holder's next ability costs no MP.
 - **Last page** · legendary · When a foe falls, every foe below a tenth of its HP falls too.
 - **Annotated grimoire** · legendary · Each ability its holder pays for makes the next ability any ally casts free.
 - **Frozen tome** · legendary · Each time a foe's Chill shatters, every ally's ability with the longest cooldown comes half its wait closer.
@@ -370,7 +371,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Orb of the long winter** · rare · When a foe's Chill shatters, its holder regains MP: about a cast's worth.
 - **Smouldering orb** · rare · When a burning foe falls, every other foe gains a third of its Burn.
 - **Orb of the deep** · rare · Damage its holder takes comes out of its MP first, while it has any.
-- **Orb of the rising sun** · legendary · Each time its holder casts the same ability again in a fight, it does more than the time before (Crescendo), and costs no more for it.
+- **Orb of the rising sun** · legendary · Each time its holder casts the same ability again in a fight, it does more than the time before (Crescendo), and nothing makes it cost more for it.
 - **The deep well** · legendary · While its holder holds Clarity, its abilities cost no MP.
 
 ### Idol
@@ -395,7 +396,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Crimson dregs** · uncommon · Its holder's hits on a bleeding foe heal it for a share of their damage.
 - **Bloodletter's phial** · uncommon · When each fight starts, every foe gains a few Bleed.
 - **Blood vial** · rare · Its holder's abilities cost half their MP, plus HP equal to their full cost. The price never takes it below 1 HP.
-- **Venom vial** · rare · Its holder's hits on a bleeding foe add a few Bleed.
+- **Venom vial** · rare · Each hit its holder lands on a bleeding foe raises that foe's Bleed by a share of what it holds.
 - **Bloodlust draught** · rare · Its holder starts every fight at half its HP (it pays), and its Lifesteal is doubled until it's full.
 - **Heartsblood** · legendary · Whatever its holder heals through Lifesteal, every other ally is healed for too.
 
@@ -406,10 +407,9 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - *Commons (2):* one leans to Crit damage and Crit chance, one to Crit damage and Defense.
 - **Hunter's skull** · uncommon · Each killing blow its holder lands adds a Heat (it acts faster, a stack) for the rest of the fight.
 - **Eagle feather** · uncommon · Its holder's crits Slow their target.
-- **Vulture's skull** · rare · Its holder's hits on a Stunned foe always crit.
+- **Vulture's skull** · rare · Its holder's hits on a Stunned foe nearly always crit.
 - **Ogre's tusk** · rare · Its holder's hits on the foe with the most HP deal half again as much.
 - **Dragon's tooth** · rare · Its holder's crits strike again for a third of their damage.
-- **Hunter's tally** · rare · Each time its holder lands a killing blow, the start-of-fight effects of its gear and its seat happen again.
 - **The king's head** · legendary · When its holder lands a killing blow, every ally's crit chance is doubled for a while.
 
 ### Bell
@@ -418,7 +418,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 
 - *Commons (2):* one leans to Attack speed and Evasion, one to Attack speed and MP regen.
 - **Ringing bell** · uncommon · Every fourth basic attack its holder lands rings: a light hit on every foe (from Attack), carrying what the swing carries.
-- **Pacer's bell** · uncommon · Every so often, the ally with the fastest basic attack is Hasted.
+- **Pacer's bell** · uncommon · Each time its holder casts an ability, it's Hasted.
 - **Bell of the hour** · rare · Every eighth basic attack its holder lands casts its first-slotted ability off its cooldown.
 - **Warding bell** · rare · Every so often, it lifts one debuff from the ally holding the most, a Silence first.
 - **Tireless bell** · legendary · Its holder keeps making basic attacks while it winds up an ability.
@@ -454,19 +454,19 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Clear-headed charm** · uncommon · Whenever its wearer drops below half its MP, it gains Clarity, every so often.
 - **Shatterstone charm** · rare · When its wearer's Shield breaks, the foe that broke it takes damage equal to twice the most that Shield held.
 - **Bounty charm** · rare · When its wearer lands a killing blow, its ability with the longest cooldown left is ready at once.
-- **Echo charm** · rare · Its wearer's extra strikes carry what its basic attacks carry: statuses and on-hit effects.
+- **Echo charm** · rare · Its wearer's extra strikes carry what the swing carries.
 - **Icebreaker charm** · rare · When a foe's Chill shatters, its wearer's ability with the longest cooldown is ready.
 - **Lightning-glass** · rare · Its wearer's abilities deal more for each Shock on their target. The Shock stays.
-- **Halved heart** · rare · Its wearer starts every fight at half its HP and can't be healed above it. It deals half again as much.
+- **Halved heart** · rare · Its wearer starts every fight at half its HP and can't be healed above it; healing past that counts as healing past full. It deals half again as much.
 - **Crescendo charm** · rare · Each time its wearer casts the same ability again in a fight, it does more and costs more than the time before (Crescendo).
-- **Ember heart** · rare · When a burning foe falls, all its Burn passes to the foe its wearer last hit.
+- **Ember heart** · rare · When a burning foe falls, all its Burn passes to the next foe its wearer hits.
 - **Hunter's mark** · rare · While no foe is Marked, its wearer Marks the foe with the lowest HP.
 - **Shroud charm** · rare · Whenever an ally drops below a third of its HP, that ally is Hidden.
-- **Heart of winter** · legendary · Chill its wearer adds to one foe is added to every foe.
+- **Heart of winter** · legendary · Chill its wearer adds to one foe is added to every other foe too. The Chill it adds isn't added again.
 - **Second dawn** · legendary · Each time a foe falls, the start-of-fight effects of every ally's gear and seat happen again.
-- **Downhill charm** · legendary · When its wearer's hit knocks a foe out, what the blow had left over is split evenly among the other foes.
+- **Downhill charm** · legendary · When its wearer's hit knocks a foe out, what the blow had left over is split evenly among the other foes, once.
 - **Twin-knot** · legendary · Whatever status its wearer gives itself, the other ally with the lowest share of HP gains too.
-- **Scapegoat charm** · legendary · When its wearer is given a debuff, its next hit gives that debuff, whole, to its target, and the wearer is rid of it. Doom can't be passed on.
+- **Scapegoat charm** · legendary · When its wearer is given a debuff, its next hit gives that debuff, with all its stacks, to its target, and the wearer is rid of it. Doom can't be passed on.
 - **Burning heart** · legendary · Every few ticks its wearer sets itself alight: a few Burn on itself. While it burns, it deals half again as much.
 - **Phoenix ember** · legendary · Once a fight, when its wearer falls, it stands up a few ticks later with a third of its HP, Hidden.
 - **Ready stance** · legendary · Its wearer's abilities start every fight at least half charged. Its cooldowns are a fifth longer.
@@ -481,7 +481,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 
 - **Heavy line** · One strikes like a falling hill, one takes the blows, one loads the strike. Seats: Hammer: basic attacks come half as often and land more than twice as hard. / Anvil: draws far more; Defense up. / Loader: when each fight starts, the Hammer gains many Might.
 - **Spur** · One opens the wound; two pour into it. Seats: Opener: crits far more often. / Blade: basic attacks a fifth faster. / Blade: the same.
-- **Hearth** · One holds the door, one feeds the fire, one carries it to every burning foe. Seats: Keeper: Taunts and is Guarded when each fight starts. / Stoker: Hasted when each fight starts. / Torch: each of its hits adds a Burn to every foe that's already burning.
+- **Hearth** · One holds the door, one feeds the fire, one carries it to every burning foe. Seats: Keeper: Taunts and is Guarded when each fight starts. / Stoker: Hasted when each fight starts; basic attacks a fifth faster. / Torch: each of its hits adds a Burn to every foe that's already burning.
 - **Hoarfrost line** · Two lay frost with every blow; the third breaks what freezes. Seats: Frost: basic attacks add a few Chill. / Frost: the same. / Breaker: its hits on a Stunned foe deal double.
 - **Squall line** · Two charge the field; one stands where the foes look. Seats: Squall: its basic attacks add a few Shock, and also hit a second, random foe for half, carrying it. / Squall: the same. / Rod: draws far more; Defense up.
 - **Hunting party** · One picks the quarry, one runs it down past any guard, one holds the line. Seats: Marker: while no foe is Marked, its basic attacks Mark their target. / Chaser: everything it does has Seek. / Warden: draws far more; Defense up.
@@ -504,7 +504,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Toll gate** · Whatever strikes the gate pays the other two's toll. Seats: Gate: draws far more; Guarded when each fight starts. / Collector: a foe that hits the Gate gains whatever this seat's basic attacks carry. / Collector: the same.
 - **The stage** · Everything the other two cast brings the Soloist's spells round. Seats: Soloist: each ability another ally casts takes a fifth off the cooldowns it has left. / Conductor: its abilities come round a third faster. / Well: draws far more; whenever the Soloist finishes a cast, the Well gains a Shield.
 - **Blood oath** · One bleeds for power, one drinks, one pours life into the bleeder. Seats: Bleeder: loses a little HP every tick; its hits deal half again as much. / Drinker: Lifesteal, high; what its Lifesteal would heal past full becomes a Shield on it. / Donor: its heals and Shields on the Bleeder are doubled.
-- **Decoy** · Two lurk in the dark; one stands in the light. Seats: Light: Taunts and is Guarded when each fight starts. / Shadow: Hidden when each fight starts. / Shadow: the same.
+- **Decoy** · Two lurk in the dark; one stands in the light. Seats: Light: Taunts and is Guarded when each fight starts. / Shadow: Hidden when each fight starts, and again each time a foe falls. / Shadow: the same.
 - **Vigil** · Nobody falls alone. Seats: Sentinel: when an ally falls, it Taunts and is Guarded. / Chaplain: an ally it revives comes back Guarded and behind a Shield. / Watcher: when an ally falls, it gains a Shield.
 - **The wheel** · Every so often the wheel turns, and each unit takes the next seat's part. Seats: Wall: draws more; Defense up. / Blade: basic attacks a fifth faster; crits more. / Well: regains MP in fights; heals on it are stronger.
 
@@ -515,7 +515,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **The forge** · The longer the fire is kept, the faster the party feeds it. While any foe burns, every ally gains a Heat every few ticks (each acts faster, a stack). Whenever an ally is Stunned or Silenced, the foe with the most Burn gains many Burn. Seats: three Forgehands, nothing of their own.
 - **The long winter** · Every shatter sends its cold down the line, and each sends more than the last. When a foe's Chill shatters, every other foe gains a few Chill, and a few more for each shatter before it this fight (Cascade). Seats: three Winterers, nothing of their own.
 - **Eye of the storm** · The storm doesn't lift. Every ally's basic attacks add a few Shock, all fight. Seats: Bolt: its abilities deal more for each Shock held anywhere on the field; the Shock stays. / Squall: nothing of its own. / Squall: nothing of its own.
-- **Open season** · Every kill calls the volley again. A foe is always Marked: the one with the lowest HP. When each fight starts, and whenever a Marked foe falls, every ally's next basic attack comes at once. Seats: three Hunters, nothing of their own.
+- **Open season** · Every kill calls the volley again. While no foe is Marked, the foe with the lowest HP is Marked. When each fight starts, and whenever a Marked foe falls, every ally's next basic attack comes at once. Seats: three Hunters, nothing of their own.
 - **The long wall** · One is struck, two profit, more with every blow. Seats: Wall: Taunts all fight; each blow it takes adds a Spite. / Reaper: its hits deal more for each Spite the Wall holds. / Reaper: the same.
 - **The cathedral** · Two voices give all their mana to one, and it never stops singing. Seats: Soloist: its first-slotted ability has no cooldown: it's cast whenever there's the mana for it. / Voice: all MP it would regain goes to the Soloist; each cast the Soloist finishes gives this seat a Shield. / Voice: the same.
 - **The covenant** · Life is the party's one currency. Every ally's abilities cost HP in place of MP, the same share, and every ally has Lifesteal. Seats: three Sworn, nothing of their own.
@@ -616,7 +616,7 @@ What the two sides make and read, and what the link is sized to do, is under *Ea
 
 ### goad
 
-- *Keystone:* Provoking blade (weapons-1: sword, rare); Goading horn (offhands-1: horn, rare)
+- *Keystone:* Provoking blade (weapons-1: sword, rare); Goading totem (offhands-1: totem, rare)
 - *Common half:* Urchin plate (armor: plate, uncommon); Challenger's plate (armor: plate, rare); Static mail (armor: mail, rare); Emberguard (offhands-1: kite shield, uncommon); Spiked targe (offhands-1: round shield, uncommon); Watch horn (offhands-1: horn, uncommon); Spinebark pole (offhands-1: totem, uncommon); Thunderhead totem (offhands-1: totem, rare); Dazzling lantern (offhands-1: lantern, uncommon); Challenger's token (amulets: amulet, uncommon); Storm front (formations: formation, rare); Toll gate (formations: formation, rare); Static field (versions-mythics: version: Stormcaller, Thunderstorm A); Hold the line (versions-mythics: version: Knight, Stand fast B); Overgrowth (versions-mythics: version: Bramble knight, Thicket A)
 
 ### held charge
@@ -637,12 +637,12 @@ What the two sides make and read, and what the link is sized to do, is under *Ea
 ### judge's drum
 
 - *Keystone:* Pack leader's coat (armor: leather, rare); Hunting horn (offhands-1: horn, rare); Open season (formations: formation, legendary); Swift justice (versions-mythics: version: Paladin, Condemn B)
-- *Common half:* Roaring greataxe (weapons-2: great weapon, uncommon); Monolith shield (offhands-1: kite shield, rare); War horn (offhands-1: horn, rare); Millstone (amulets: amulet, uncommon); Hunter's mark (amulets: amulet, rare); Heavy line (formations: formation, common); The pack (formations: formation, rare)
+- *Common half:* Roaring greataxe (weapons-2: great weapon, uncommon); War horn (offhands-1: horn, rare); Millstone (amulets: amulet, uncommon); Hunter's mark (amulets: amulet, rare); Heavy line (formations: formation, common); The pack (formations: formation, rare)
 
 ### opening again
 
-- *Keystone:* Hunter's tally (offhands-2: trophy, rare); Second dawn (amulets: amulet, legendary)
-- *Common half:* Sigil blade (weapons-2: rune sword, uncommon); Canopy staff (weapons-2: staff, uncommon); Roaring greataxe (weapons-2: great weapon, uncommon); Sheltering kite (offhands-1: kite shield, uncommon); Reveille (offhands-1: horn, uncommon); Horn of the charge (offhands-1: horn, legendary); Spinebark pole (offhands-1: totem, uncommon); Stormglass totem (offhands-1: totem, uncommon); Pitch lantern (offhands-1: lantern, uncommon); Dazzling lantern (offhands-1: lantern, uncommon); Snowbound folio (offhands-2: tome, uncommon); Grimoire of plagues (offhands-2: tome, rare); Scrying orb (offhands-2: orb, uncommon); Bloodletter's phial (offhands-2: vial, uncommon); Challenger's token (amulets: amulet, uncommon); Carapace charm (amulets: amulet, uncommon); Hare's foot (amulets: amulet, uncommon)
+- *Keystone:* Tally coat (armor: leather, rare); Second dawn (amulets: amulet, legendary)
+- *Common half:* Sigil blade (weapons-2: rune sword, uncommon); Canopy staff (weapons-2: staff, uncommon); Roaring greataxe (weapons-2: great weapon, uncommon); Sheltering kite (offhands-1: kite shield, uncommon); Reveille (offhands-1: horn, uncommon); War horn (offhands-1: horn, rare); Horn of the charge (offhands-1: horn, legendary); Spinebark pole (offhands-1: totem, uncommon); Stormglass totem (offhands-1: totem, uncommon); Pitch lantern (offhands-1: lantern, uncommon); Dazzling lantern (offhands-1: lantern, uncommon); Snowbound folio (offhands-2: tome, uncommon); Grimoire of plagues (offhands-2: tome, rare); Scrying orb (offhands-2: orb, uncommon); Bloodletter's phial (offhands-2: vial, uncommon); Challenger's token (amulets: amulet, uncommon); Carapace charm (amulets: amulet, uncommon); Hare's foot (amulets: amulet, uncommon)
 
 ### fuse
 
@@ -686,13 +686,13 @@ What the two sides make and read, and what the link is sized to do, is under *Ea
 
 ### blood mage
 
-- *Keystone:* Sanguine vestments (armor: robes, rare); Blood vial (offhands-2: vial, rare); The covenant (formations: formation, legendary)
-- *Common half:* Bloodsworn mail (armor: mail, uncommon); Tithing leathers (armor: leather, uncommon); Bloodstone reliquary (offhands-1: relic, legendary); Idol of the blood-well (offhands-2: idol, legendary); The chalice (versions-mythics: mythic: Vampire)
+- *Keystone:* Sanguine vestments (armor: robes, rare); The covenant (formations: formation, legendary)
+- *Common half:* Bloodsworn mail (armor: mail, uncommon); Tithing leathers (armor: leather, uncommon); Bloodstone reliquary (offhands-1: relic, legendary); Idol of the blood-well (offhands-2: idol, legendary); Blood vial (offhands-2: vial, rare); The chalice (versions-mythics: mythic: Vampire)
 
 ### resonance
 
 - *Keystone:* Resonant robes (armor: robes, rare); Storm front (formations: formation, rare)
-- *Common half:* Forked knuckles (weapons-1: fist, rare); Mana pearl (offhands-2: orb, uncommon); Orb of the long winter (offhands-2: orb, rare); Ringing bell (offhands-2: bell, uncommon); Recharge (versions-mythics: version: Stormcaller, Chain lightning B)
+- *Common half:* Forked knuckles (weapons-1: fist, rare); Mana pearl (offhands-2: orb, uncommon); Orb of the long winter (offhands-2: orb, rare); Recharge (versions-mythics: version: Stormcaller, Chain lightning B)
 
 ### crescendo
 

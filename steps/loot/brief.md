@@ -46,6 +46,7 @@ The spine answers these, the fill has to keep answering them, and `builds.md` sa
 - **Its tables are generated.** `npx tsx steps/loot/web-check.ts --write` reads the lines' tags and rewrites the tables between the spine's markers; `--index` writes `index.md`. Run both after any change to a line. It fails on a tag it doesn't know or a name used twice.
 - **Offer volumes are counted,** not estimated: `npx tsx steps/loot/offer-count.ts` plays 40 simulated runs and prints what a run is offered in each act. Its figures are in `web-check.ts` (`RUN`).
 - **Open for the director:** the list at the end of `spine.md`. None of it stops the fill. Ask at gate 2, or sooner if a ruling would change a share.
+- **Where the lead's first round starts:** *Least sure* in the spine lists the loops known and the pairs the second fresh read found alike and the spine left, by its reading of the director's ruling.
 - **`fill-brief.md` and `index.md` are drafted** by the spine's lead, for the fill's lead to check and change before any agent reads them.
 
 ## How to work
@@ -66,7 +67,7 @@ The spine answers these, the fill has to keep answering them, and `builds.md` sa
 - **Rulings, in rounds.**
   - The lead reads the whole fill as one design, checks it against the spine and the web, and rules on every challenge.
   - A ruling is about loops, overlaps, broken rules, wrong wearers or unclear cards, never strength. Synergies may be overpowered, and the balance pass has its own levers.
-  - **Loops get their own check.** Each agent reports any chain in its share that can set itself off again, and what stops it. The lead checks across shares, since most loops span two. The two known ones are under *Least sure* in the spine.
+  - **Loops get their own check.** Each agent reports any chain in its share that can set itself off again, and what stops it. The lead checks across shares, since most loops span two. The ones known, with what stops each, are under *Least sure* in the spine, and the spine's rules under *Chains end* are what the cards say.
   - **Alike cards follow the director's ruling** (*What's settled*). The index is where two shares see they're about to write the same card.
   - A ruling that changes what a line does changes the line in `spine.md`, and the tables are regenerated.
   - The agent that wrote a file applies its rulings, so its context is kept.
