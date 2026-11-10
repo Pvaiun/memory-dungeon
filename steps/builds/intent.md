@@ -5,12 +5,14 @@ The director, Nov 9. Their words are quoted where the wording matters.
 ## The pass
 
 - A second iteration on the builds, so that the loot, formations and upgrades can be redesigned after it. The philosophy of what a build is (a way to play you can watch, with a rhythm, woven from threads; `docs/gear-design/philosophy.md`) is not changing. No current build is sacred: "we can add, we can remove, we can keep, we can trim, we can multiply, whatever we need to do."
+- **A restart, not a tweaking phase.** Not "something that's kind of working and we're just trying to get it to be perfect." Rather: "a little bit of this worked, the rest of it just didn't. Let's restart. Let's do better now that we have more knowledge."
 - The count is not a thing to look at. Twelve "was pretty fine" for replayability; the set is "however many builds we can come up with."
 - Kits may be adjusted where a build needs it.
 
 ## How to read the state of play
 
-- The observations stand. The data does not reach far: most runs ended in act I, at a tuning where a tank was absolute, so "any attempt to take items of that type led to the run not continuing, and therefore the build being non-viable." A build that never formed under that is untried, not refuted. "Basically never getting past act I is pretty problematic."
+- The observations stand, and the sample measures the builds, not only the game beneath them. Some failed for reasons of their own: Cold Snap never detonating past its first shatter; Phoenix having no choices; Lockdown "being based on conditions that were too rare to have happen"; Ambush not triggering; Overflow "relying on something that happens too infrequently in fights." Reducing all of it to a survivability gate "is a massive oversimplification."
+- The data also does not reach far: most runs ended in act I, at a tuning where a tank was absolute, so "any attempt to take items of that type led to the run not continuing, and therefore the build being non-viable." A build that never formed under that is untried, not refuted. "Basically never getting past act I is pretty problematic."
 - The director could accept that the design can't be finished without data from a version tuned easier. The pass happens now anyway, because there is no version to gather it from.
 - Much of what failed is balance, not build design: the Toll formed every time and lost to the same foe at the same point, which is "game balancing not working and not allowing that build to continue to be played."
 - Kits arriving one ability at a time and cooldowns carrying are not shown to be the problem. Don't conclude they are until the game is balanced after this pass and we see whether builds emerge. The first fights, where a unit knows one ability, are not what the game is balanced around.
@@ -25,10 +27,11 @@ Rules an agent might derive from the state of play, and which the director rejec
 
 - **Signposting and power level at each phase of the game.** At rung 1 the content has to let a player "understand the direction they can start to push in," not the whole build. Each phase's step has to be worth taking.
 - **The path to a build never leaves the team non-viable** against the content, at any phase. Part of that is design; a lot of it is balance.
+- **Every build manages survivability.** Most builds that weren't the Toll died at once, and that can't be hand-waved away. This is a constraint, not a design: how each build does it is the design's to say. It's flagged as a constraint that may prove problematic, to be brought up if it does: "maybe we'll learn that every build needs to have a tank in it."
 
 ## Rulings on the questions
 
 - **Falls.** A fall is allowed to be something other than a loss; today it guarantees a wipe, and it doesn't have to. Reviving is "a parameter of the game, and it's a cool part of the game": an element, not a build. A whole build about dying doesn't work, "because you can't control who dies."
 - **HP as a currency** stays as a concept; a class is themed on it. Its failure here means its elements weren't powerful enough and too few classes beyond the Vampire could make it work, not that it can't: "I'm not convinced that that has to be the case forever."
-- **Formations: both.** A party isn't rebuilt for every formation, but a formation "should be one of the pivotal elements that determine which build you choose to do." It's "almost like a legendary piece of gear that everyone on your team is wearing," so it should matter a lot, and a build can and should pivot to match a good one. That may mean formations come earlier in a run.
+- **Formations: both.** A party isn't rebuilt for every formation, but a formation "should be one of the pivotal elements that determine which build you choose to do." It's "almost like a legendary piece of gear that everyone on your team is wearing," so it should matter a lot, and a build can and should pivot to match a good one. The director has an idea for making them easier to use (most likely a pick of one of three commons at a run's start, as classes are drafted); it's a separate thing and not part of this design. "The formations need to work regardless."
 - **Lockdown** doesn't work because the situation that triggers it is too narrow. **Phoenix** doesn't work because dying is too punishing and uncontrollable. The others may have worked had the phases of their construction been clearer and the run survived long enough to try.
