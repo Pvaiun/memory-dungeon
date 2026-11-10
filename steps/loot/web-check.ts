@@ -4,6 +4,7 @@
  *
  *   npx tsx steps/loot/web-check.ts            prints the tables
  *   npx tsx steps/loot/web-check.ts --write    also rewrites the generated tables inside spine.md (between its markers)
+ *   npx tsx steps/loot/web-check.ts --index    also writes index.md: the fill's shares, each item in a line, each engine's parts by share
  *
  * It reads `spine.md`'s item lines:
  *
@@ -112,7 +113,7 @@ const RUN = {
 };
 
 // ─── Reading the spine ───────────────────────────────────────────────────────
-type Item = { name: string; kind: string; type: "gear" | "formation" | "version" | "mythic"; rarity: string; who?: string; text: string; sees?: string; roads: { road: string; rung?: number; worth: number }[]; engines: { engine: string; role: "key" | "half" }[]; parts: string[] };
+type Item = { name: string; kind: string; type: "gear" | "formation" | "version" | "mythic"; rarity: string; who?: string; kept?: boolean; slot?: string; text: string; sees?: string; roads: { road: string; rung?: number; worth: number }[]; engines: { engine: string; role: "key" | "half" }[]; parts: string[] };
 type KindInfo = { name: string; kind: string; signature: string; commons: number; commonsRule: string; leans: string };
 const items: Item[] = [];
 const kinds: KindInfo[] = [];
@@ -154,7 +155,8 @@ const md = readFileSync(SPINE, "utf8");
       return { engine: e[1], role: e[2] as "key" | "half" };
     });
     const [text, sees] = body.split(" *Sees:* ");
-    items.push({ name, kind: type === "gear" ? f2 : type, type, rarity: type === "gear" || type === "formation" ? f3 : type, who: type === "version" || type === "mythic" ? f2 : undefined, text: text.trim(), sees: sees?.trim(), roads, engines, parts: partStr.split(", ").map((s) => s.trim()).filter(Boolean) });
+    const kept = type === "version" ? f3.includes("(kept)") : type === "mythic" ? /(^|\. )Kept\.$/.test(text.trim()) : undefined;
+    items.push({ name, kind: type === "gear" ? f2 : type, type, rarity: type === "gear" || type === "formation" ? f3 : type, who: type === "version" || type === "mythic" ? f2 : undefined, kept, slot: type === "mythic" ? /\((.+)\)/.exec(f3)?.[1] : undefined, text: text.trim(), sees: sees?.trim(), roads, engines, parts: partStr.split(", ").map((s) => s.trim()).filter(Boolean) });
   }
 }
 const gear = items.filter((i) => i.type === "gear");
@@ -407,6 +409,78 @@ function whatIfSteps(): string {
   return rows.join("\n");
 }
 
+// ─── The fill's index ────────────────────────────────────────────────────────
+/** The fill's shares: each a bounded part of the spine one agent writes, in the spine's order. A proposal; the fill's lead may cut them otherwise. */
+const SHARES: { slug: string; title: string; kinds?: string[]; type?: Item["type"][] }[] = [
+  { slug: "weapons-1", title: "Weapons, the first six kinds", kinds: ["dagger", "fist", "wand", "sword", "spear", "axe"] },
+  { slug: "weapons-2", title: "Weapons, the other six kinds", kinds: ["bow", "rune sword", "hammer", "mace", "staff", "great weapon"] },
+  { slug: "armor", title: "Armor", kinds: ["plate", "mail", "leather", "robes"] },
+  { slug: "offhands-1", title: "Offhands, the first six kinds", kinds: ["kite shield", "round shield", "horn", "totem", "relic", "lantern"] },
+  { slug: "offhands-2", title: "Offhands, the other seven kinds", kinds: ["tome", "orb", "idol", "vial", "trophy", "bell", "cloak"] },
+  { slug: "amulets", title: "Amulets", kinds: ["amulet"] },
+  { slug: "formations", title: "Formations", type: ["formation"] },
+  { slug: "versions-mythics", title: "Versions and mythics", type: ["version", "mythic"] },
+];
+const shareOf = (i: Item) => SHARES.find((s) => (s.kinds ? i.type === "gear" && s.kinds.includes(i.kind) : s.type!.includes(i.type)))!;
+function indexDoc(): string {
+  const out: string[] = [
+    "# The fill's index",
+    "",
+    "Written by `npx tsx steps/loot/web-check.ts --index` from the lines of `spine.md`. Don't edit it: change the line in the spine and run it again.",
+    "",
+    "It's what every fill agent reads before writing: the shares, every item in one line, and each engine's parts with the share that holds each. It's here so two shares don't write the same card, and so an agent writing one half of an engine knows where the other half is. An item's full line, with what the player sees and its tags, is in the spine; write from that, not from this.",
+    "",
+    "## The shares",
+    "",
+    "| Share | Its file | What it holds |",
+    "| --- | --- | --- |",
+  ];
+  const itemsOf = (s: (typeof SHARES)[number]) => items.filter((i) => shareOf(i) === s);
+  for (const s of SHARES) {
+    const its = itemsOf(s);
+    let holds: string;
+    if (s.kinds) {
+      const commons = kinds.filter((k) => s.kinds!.includes(k.kind)).reduce((a, k) => a + k.commons, 0);
+      holds = `${its.length + commons} pieces: ${commons} commons, ${RARITIES.slice(1).map((r) => `${its.filter((i) => i.rarity === r).length} ${r === "legendary" ? "legendaries" : `${r}s`}`).join(", ")}`;
+    } else if (s.slug === "formations") holds = `${its.length} formations: ${["common", "rare", "legendary"].map((r) => `${its.filter((i) => i.rarity === r).length} ${r}`).join(", ")}`;
+    else {
+      const c = (t: Item["type"], kept: boolean) => its.filter((i) => i.type === t && !!i.kept === kept).length;
+      holds = `${c("version", false)} versions and ${c("mythic", false)} mythics that change, written new; ${c("version", true)} versions and ${c("mythic", true)} mythics that stay, each checked against today's card`;
+    }
+    out.push(`| ${s.title} | \`fill/${s.slug}.md\` | ${holds} |`);
+  }
+  out.push("", "A version or mythic the spine doesn't list stays as it is today, and isn't part of the fill.");
+  for (const s of SHARES) {
+    const its = itemsOf(s);
+    out.push("", `## ${s.title}`, "");
+    const engs = ENGINES.filter((e) => its.some((i) => i.engines.some((x) => x.engine === e)));
+    out.push(`*Engines it's part of:* ${engs.join(", ") || "none"}.`);
+    if (s.kinds) {
+      for (const k of kinds.filter((x) => s.kinds!.includes(x.kind))) {
+        out.push("", `### ${k.name}`, "", `*Wears:* ${k.kind === "amulet" ? "everyone" : KINDS[k.kind].wears.join(", ")}.`, "", `- *Commons (${k.commons}):* ${k.commonsRule}`);
+        for (const i of its.filter((x) => x.kind === k.kind)) out.push(`- **${i.name}** · ${i.rarity} · ${i.text}`);
+      }
+    } else if (s.slug === "formations") {
+      for (const r of ["common", "rare", "legendary"]) {
+        out.push("", `### ${r[0].toUpperCase()}${r.slice(1)}`, "");
+        for (const i of its.filter((x) => x.rarity === r)) out.push(`- **${i.name}** · ${i.text}`);
+      }
+    } else {
+      const groups: [string, (i: Item) => boolean][] = [["Versions that change", (i) => i.type === "version" && !i.kept], ["Versions that stay", (i) => i.type === "version" && !!i.kept], ["Mythics that change", (i) => i.type === "mythic" && !i.kept], ["Mythics that stay", (i) => i.type === "mythic" && !!i.kept]];
+      for (const [title, pick] of groups) {
+        out.push("", `### ${title}`, "");
+        for (const i of its.filter(pick)) out.push(`- **${i.name}** · ${i.who}${i.slot ? ` (${i.slot})` : ""} · ${i.text}`);
+      }
+    }
+  }
+  out.push("", "## Each engine's parts, and the share that holds each", "", "What the two sides make and read, and what the link is sized to do, is under *Each engine's link* in the spine. A part that's in a base kit isn't listed here: the link names it.");
+  for (const e of ENGINES) {
+    const part = (role: "key" | "half") => items.filter((i) => i.engines.some((x) => x.engine === e && x.role === role)).map((i) => `${i.name} (${shareOf(i).slug}: ${where(i)})`).join("; ") || "in the kits";
+    out.push("", `### ${e}`, "", `- *Keystone:* ${part("key")}`, `- *Common half:* ${part("half")}`);
+  }
+  return out.join("\n") + "\n";
+}
+
 const tables: Record<string, string> = { stock: stockTable(), kinds: kindTable(), parts: partsTable(), roads: roadTable(), signs: signTable(), engines: engineTable(), classes: classTable() };
 const exotics = items.filter((i) => i.roads.some((r) => r.road === "exotic"));
 const rl = gear.filter((g) => g.rarity === "rare" || g.rarity === "legendary").length;
@@ -425,4 +499,8 @@ if (process.argv.includes("--write")) {
   }
   writeFileSync(SPINE, out);
   console.log(`\nWrote the generated tables into ${SPINE}.`);
+}
+if (process.argv.includes("--index")) {
+  writeFileSync("steps/loot/index.md", indexDoc());
+  console.log(`\nWrote steps/loot/index.md.`);
 }
