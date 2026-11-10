@@ -41,7 +41,7 @@ The design stage of the builds pass. The director's intent is `intent.md`; the e
 **The web has three things:**
 - **A road** is a build: broad, easy to see, with a shape and a rhythm.
 - **A door** is where a run drifts from one road to its neighbour, through something both want.
-- **An engine** is a found synergy, designed in advance for a player to find, on one road or between two (*Engines*).
+- **An engine** is a found synergy, designed in advance for a player to find, on one road or more (*Engines*).
 
 **What a run gives a build.** The rungs are written against the three phases of a run:
 - **Act I:** three units knowing an ability or two each, a weapon each and a piece or two more by the boss, mostly in Neutral. A build can show its direction here. It can't be assembled.
@@ -322,11 +322,11 @@ The design stage of the builds pass. The director's intent is `intent.md`; the e
 
 ## Engines
 
-**An engine is a found synergy, designed in advance for a player to find:** a few pieces that turn out to work together into something specific, on a single road or between two. A happy accident, made on purpose, and there should be many of them.
+**An engine is a found synergy, designed in advance for a player to find:** a few pieces that turn out to work together into something specific, on one road or more. A happy accident, made on purpose, and there should be many of them.
 
 **What they're for:**
 - **A build pays before it's complete.** An engine works with a small number of pieces, so a build doesn't only come online when all of its pieces are there.
-- **Builds cross.** An engine between two roads gives a party on one a reason to reach into the other, so a player isn't picking a build and then doing only that.
+- **Builds cross.** An engine that spans more than one road gives a party on one of them a reason to reach into the others, so a player isn't picking a build and then doing only that.
 - **The web has many interesting points along the way,** on its roads and at its doors.
 
 **What they aren't:**
@@ -336,7 +336,7 @@ The design stage of the builds pass. The director's intent is `intent.md`; the e
 **The one found so far: the shield detonation.** In the director's play, one piece made a Shield deal damage, by its original size, when it broke. Another effect brought a broken Shield back at about half its size. The party was laying Shields on its units from several sources. Together, most of the party's damage came from Shields detonating. Nothing else that party was doing belonged to any build in the set: it was a shield party that hadn't fully come online, and those pieces twisted it into one specific gimmick. It was one of the strongest and clearest rhythms the director met in play.
 
 **Still to design: the engines themselves.** What's ruled about them so far:
-- **Both kinds are wanted:** engines on a single road, and engines between roads. Several can play on the same mechanic without touching another build.
+- **An engine sits on one road or more.** Some belong to a single road; some span two, three or more. Several can play on the same mechanic without touching another build.
 - **They're designed as a game designer picks them, for being worth finding, not from a formula.** Two frames were tried and are too narrow: that every engine must cross two mechanics, which reads as pattern matching, and that every engine gives a verb to a moment that does nothing today.
 - **No engine rests on a number the player can't see,** such as a foe's MP.
 - **A status's own behaviour stays as it is.** An engine is one of the places a build can make a status do more: fire that passes on, a shatter that leaves cold behind.
@@ -499,7 +499,7 @@ Three things for the upgrades pass to know:
 
 ## What comes next
 
-1. **Design the engines:** many, on single roads and between them, each worth finding (*Engines*).
+1. **Design the engines:** many, each on one road or more, each worth finding (*Engines*).
 2. **Work on the open problem** of staying alive without a tank, in the builds and outside them (*Open problem*).
 3. **Take the design's own choices to the director** (*Where it stands*).
 4. **Then, on the director's approval:** the two approved changes (Marked, Malison) go in, each measured against today's game with both versions' numbers; the spine is written from the roads and the engines; and when the step closes this replaces `docs/gear-design/builds.md`, `docs/gear-design/philosophy.md` gains the engines, `docs/rules.md` stops saying the twelve stand, and the primer's list, the mythics' table in `docs/gear-design/loot.md` and the test parties in `tools/build-parties.ts` follow.
