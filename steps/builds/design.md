@@ -2,7 +2,7 @@
 
 The design stage of the builds pass. The director's intent is `intent.md`; the evidence from play is `state-of-play.md`. It follows the method `docs/gear-design/philosophy.md` gives for a builds stage: each build as a way to play, with its rhythm, threads, routes, rungs and needs, and the web between them. No pieces, and no numbers but the measurements under *Open problem*. Each build also says what the intent asks of it: how a player finds it at each phase of a run, how it stays alive, and what it asks of the kits.
 
-**This is a working design, not an approved one, and nothing in it is built.** The builds, the doors and the idea of engines are the base to continue from. Two things are open before the loot's spine can be written from it: the engines themselves, and how a build stays alive without a tank.
+**This is a working design, not an approved one, and nothing in it is built.** The builds, the doors and the engines are the base to continue from. Two things wait on the director before the loot's spine can be written from it: the engines, to be judged on a sample, and a ruling on how a build stays alive without a tank, which is measured here with the ways to solve it and a pick.
 
 ## Where it stands
 
@@ -17,16 +17,30 @@ The design stage of the builds pass. The director's intent is `intent.md`; the e
 - **No engine rests on a number the player can't see,** such as a foe's MP.
 
 **The design's own choices, for the director to confirm:**
+- **The engines** (*Engines*): thirty-two designed, beside the one found in play. A sample to judge them by, one or two of each kind: the avalanche, the fuse, the capacitor, the lead's colour, mana as armour, the favourite, the goad, the carrier.
+- **The open problem's pick** (*Open problem*): act I sized for a party without a wall, the fallen standing up after a won fight, and each road's own way to live left to its threads and its engines.
 - **Nine builds.** The director left it to the design whether Shock and Bleed have builds. All four damaging statuses have one, each set off by a different clock (*The rhythm space*).
 - **The Storm's hook:** it runs on the foes' own actions, so it taxes the ones that never touch the party.
 - **The Hunt is led by the Mark,** with hiding as the Assassin's opener and no more.
 - **Each build's far end,** which the director hasn't read in this form.
 
+**Reopened by the engines, and left as written for the director to rule:**
+- **Two far ends are now engines.** Landslide's stone as a weapon is the detonation, and Cold Snap's shatter that seeds the next is the firecracker string. An engine is found early from few parts; a far end should be what only a whole build reaches.
+- **Hiding comes back to the Hunt as something found.** The vanishing blade hides the killer after each kill, and the borrowed gift shares a Vanish. The road is still led by the Mark.
+
 **Open, and next:**
-1. **The engines.** One has been found. The rest are to be designed (*Engines*).
-2. **Staying alive without a tank** (*Open problem*).
+1. **The director's read of the engines,** on the sample.
+2. **The director's ruling on staying alive without a tank** (*Open problem*): the pick, or another of the ways.
 
 **Least sure:**
+- **Among the engines:**
+  - **The goad** speeds the foes up, which a player may never choose. It also sets Shock off on the party's clock, by moving the foe where the rules forbid moving the status.
+  - **The carrier** may read as clever and pay too little in fights this short.
+  - **The capacitor** needs no piece, so it may be a door and not an engine. Shock's cap bounds it.
+  - **The one swing** may be Landslide's road and not an engine, and it's the lever the loot holds back as "one swing shape per unit".
+  - **The warmth** sits close to healing from a status's damage, which the rules rule out. It reads the fire's height and leaves it.
+  - **The favourite,** with an Aegis that lands on it every time, may be a unit that can't fall.
+- **The open problem's measurement** is this branch's game on parties built by rule, in Neutral. It ranks the ways, and its sizes are pointers.
 - **The Storm.** Its hook is real against packs and busy back rows. Against a lone, slow boss it pays on the boss's schedule.
 - **Bonfire.** Upkeep is a rhythm only if the fire visibly leaps and sags. If it settles to a level, it reads as a status again.
 - **Four of the nine are a status's road.** It's the cheap way in. Whether it's the right one is open.
@@ -333,13 +347,115 @@ The design stage of the builds pass. The director's intent is `intent.md`; the e
 - **Not a concept the player is taught.** An engine is a design pattern. Nothing in the game names one, and no card says what a piece combines with.
 - **Not builds.** An engine is too narrow and too specific to carry routes and rungs.
 
-**The one found so far: the shield detonation.** In the director's play, one piece made a Shield deal damage, by its original size, when it broke. Another effect brought a broken Shield back at about half its size. The party was laying Shields on its units from several sources. Together, most of the party's damage came from Shields detonating. Nothing else that party was doing belonged to any build in the set: it was a shield party that hadn't fully come online, and those pieces twisted it into one specific gimmick. It was one of the strongest and clearest rhythms the director met in play.
+**The one found in play: the shield detonation.** In the director's play, one piece made a Shield deal damage, by its original size, when it broke. Another effect brought a broken Shield back at about half its size. The party was laying Shields on its units from several sources. Together, most of the party's damage came from Shields detonating. Nothing else that party was doing belonged to any build in the set: it was a shield party that hadn't fully come online, and those pieces twisted it into one specific gimmick. It was one of the strongest and clearest rhythms the director met in play. It sets the size and the feel for the rest, and none of them is a variation of it.
 
-**Still to design: the engines themselves.** What's ruled about them so far:
+**What's ruled about them:**
 - **An engine sits on one road or more.** Some belong to a single road; some span two, three or more. Several can play on the same mechanic without touching another build.
 - **They're designed as a game designer picks them, for being worth finding, not from a formula.** Two frames were tried and are too narrow: that every engine must cross two mechanics, which reads as pattern matching, and that every engine gives a verb to a moment that does nothing today.
 - **No engine rests on a number the player can't see,** such as a foe's MP.
 - **A status's own behaviour stays as it is.** An engine is one of the places a build can make a status do more: fire that passes on, a shatter that leaves cold behind.
+
+**What each one below was picked for.** These are the design's own tests, not rulings:
+- **It changes what a fight looks like.** Something the party has plenty of turns into something else, or an event starts causing itself again. A bigger number isn't enough.
+- **Each part is worth holding without the other.** That's what makes the meeting an accident: the parts are taken for their own sake, by parties that aren't looking for the engine.
+- **Mostly one piece meeting something a party already does.** The director's was two pieces meeting a party that was already laying Shields. A run sees a fraction of the loot, so an engine made of two rare pieces would almost never be found. The other part is a kit's passive, a status several classes lay, a small effect several kinds carry, or a formation.
+- **It runs without waiting for a second cooldown.** The parts ride swings, passives, statuses, kills and the fight's start. The only chains that closed in play rode a swing or a reset.
+- **It shows the first time it fires,** in what the screen already has: stacks, bars, wind-ups, kills, crits, dodges, casts.
+- **Its parts turn up in more than one engine,** so a run holding one part has more than one partner to meet (*Parts that recur*, below).
+
+Each engine says what combines, what the player sees, and which roads it sits on. The names are the design's handles and never reach the game. There are thirty-two designed here, beside the one found.
+
+### A road's missing game
+
+Engines that give a road the fight it's worst at, or a moment it never had in play.
+
+- **The avalanche.** *Combines:* a piece that carries what a killing blow had left over into another foe, and any blow far bigger than what it lands on. *The player sees:* the hammer comes down on a wolf, the wolf is gone, and the rest of the number lands on the next wolf, then the next: one swing, a falling row of numbers. Aimed at the weakest, it runs furthest. *On:* Landslide (its pack game), the Hunt (an execute that spills over).
+- **The fuse.** *Combines:* a piece that passes a burning foe's fire to another foe when it falls, and a party that kills the weakest first, or a pack of small foes. *The player sees:* the smallest foe goes up, and its whole fire jumps to the next, which starts already roaring. Each kill comes sooner than the last, and what reaches the big foe at the back is the whole pack's fire. *On:* Bonfire (its pack game), the Hunt.
+- **The whole field alight.** *Combines:* something that feeds every foe already burning (the Pyromancer's Wildfire, a torch's seat), and anything that lights every foe at once (an ember on each as the fight starts, a Fireball, the Hexer's Plague). *The player sees:* the fight opens with every foe smouldering, and from then on each cast lifts every fire together. Apart, the ember dies in a few ticks and the feeding reaches one foe. *On:* Bonfire (its pack game).
+- **The firecracker string.** *Combines:* a piece that sends a shattered foe's cold on to the others, or leaves some of it where it was, and a field already cold. *The player sees:* one foe bursts and the burst runs down the line, each one a Stun. On a lone foe the second shatter comes in half the time of the first. *On:* Cold Snap. It's the second shatter that play never saw.
+- **The goad.** *Combines:* an effect that makes foes swing at once (when its wearer Taunts, or on the foe its blow lands on), and anything that makes a foe's own action cost it: a charge it holds, thorns on what it strikes, frost or a wound it picks up there. *The player sees:* the anchor shouts, every foe swings out of turn, and sparks and thorns fly off each one as it does. The anchor's bar dips, and the pack's drops further. Against a slow boss, the party sets the pace the boss pays at. The blow taken is real, and that's its price. *On:* the Storm and the Toll: the boss game both lack.
+- **The resonance.** *Combines:* a piece that brings an ability back sooner for each foe it just hit, and a spell that hits many (Chain lightning, Blizzard, Fireball, the Hoplite's shove). *The player sees:* against six wolves the same spell's name scrolls again and again, and it slows as the pack thins. Mana is what stops it. *On:* Barrage (its pack game), the Storm, and the wide casts of Bonfire and Cold Snap.
+- **The open tap.** *Combines:* a piece that makes its wearer's abilities cost nothing while it holds Clarity, and anyone who gives Clarity on a short clock (the Knight, the Frostweaver, the Vampire). *The player sees:* the Clarity icon goes up and the blue bar stops falling while the spells keep coming. The well's gift stops being a refill and becomes a window. *On:* Barrage.
+- **The heckler.** *Combines:* a weapon whose swings stun a foe that's winding up, and many swings pointed at the caster (a fast kind, Haste, the Mark). *The player sees:* the Lich's bar starts to fill, three swings land, and it stops. Nobody waited for it: the swings were going there anyway. A boss shrugs it off after the first few. *On:* Thousand Cuts and the Hunt, as their answer to a great cast.
+
+### Ways to live that are found
+
+Engines that keep a party standing by what its road already does. None of them is a wall, and each stops when the road's own clock stops.
+
+- **The warmth.** *Combines:* a piece that mends the party while a foe burns high, and a fire kept up. It reads the fire's height and leaves it. *The player sees:* while the fire stands tall, green numbers tick on the party; when a feeder is stunned and the fire sags, they stop. Feeding the fire is staying alive. *On:* Bonfire.
+- **The cage.** *Combines:* a piece that gives a Shield to whoever a shocked foe strikes, as the foe pays its Shock, and a charged field. *The player sees:* a wolf bites, sparks leap off the wolf, and the bitten ally's Shield bar grows. The faster the pack attacks, the thicker the Shields. A slow boss gives it little. *On:* the Storm. It's also one more source of Shields for the detonation.
+- **Mana as armour.** *Combines:* a piece that takes the damage its wearer suffers out of its MP while it has any, and the party's mana-givers (Clarity from the Knight, the Frostweaver or the Vampire; the Bard's Refrain). *The player sees:* the caster's blue bar takes the blow and the red one doesn't. Every note of the Bard's that reaches it is a heal. When the blue runs out, the caster stops casting and starts dying in the same moment: a cliff, which is Barrage's danger already. *On:* Barrage. It's Blood Pact turned round: mana spent as life.
+- **The vanishing blade.** *Combines:* a piece that leaves its wearer Hidden after a killing blow, and a reason to strike from hiding (the Assassin's ambusher versions), or none. *The player sees:* a kill, and the killer is gone. It comes back with a crit, kills, and is gone again. In a pack it's never there to be hit. Against a lone boss there are no kills and no hiding. *On:* the Hunt, and Thousand Cuts' opener.
+- **The dancer's shell.** *Combines:* a Taunt on a unit that dodges (the Monk's dancer version, a Taunt from gear), a dodge that builds a Shield, and a dodge that strikes back. *The player sees:* MISS, the Shield bar ticks up, a blow answers. Then one gets through, and the Shield takes it. The dodges that came before pay for the hit that lands, which a chance to dodge never did alone. *On:* the Toll (its other anchor), Thousand Cuts.
+- **The opening freeze.** *Combines:* cold on every foe as the fight starts (a small effect at the start, a wide spell carried in ready, a first cast that lands twice), and frost on the party's swings. *The player sees:* the foes' first swings come late, and the first shatter lands before most of them have acted. The cold protects from the first tick, not from the middle of the fight. *On:* Cold Snap.
+- **The red stone.** *Combines:* a piece that turns healing past full into a Shield, and a unit that's often healed while full (a drinker with a fast weapon, whoever the Bard's Refrain lands on, a Cleric with nothing to mend). *The player sees:* once a unit is full, its green numbers turn into a grey bar. A party with no healer finds it's building stone by hitting. *On:* Thousand Cuts, Blood Pact. The stone feeds the detonation.
+- **The favourite.** *Combines:* something that keeps one unit the lowest in the party by share (half its HP locked away, a payer that rides low, a fight begun at half), and everything the party aims at the ally with the lowest share: the Knight's Guard, the Hoplite's Aegis, the Geomancer's Shield, Regrowth, Cure, Choosing. *The player sees:* every Guard, Aegis, Regen and Shield the party casts lands on the same unit, all fight. It stands at a third of its HP under four icons. *On:* Blood Pact (the net), the Toll (an anchor made by aim, not by body), Landslide (the stone).
+
+### Two roads in one party
+
+Engines that are a reason to reach from one road into another.
+
+- **The capacitor.** *Combines:* anything that holds a foe still (a shatter, a Tremor, a bash), and Shock on the party's swings. It needs no piece: Shock is paid when its holder acts, and a held foe doesn't act. *The player sees:* the charge on the held foe climbs with nothing draining it. The heavy blow that reads it (the Valkyrie's Skyfall) lands for the fight's biggest number. Then the foe wakes, moves, and pays the lot. *On:* the Storm and Cold Snap.
+- **The breaker's wait.** *Combines:* a heavy blow that waits for a stunned foe (a version of Smite, Rockfall or Skyfall), and shatters. *The player sees:* the wind-up bar fills and holds. A shatter. The blow falls on a frozen, sundered foe. The party makes the moment it waits for, which it never could with a foe's wind-up. *On:* Cold Snap (its breaker), Landslide.
+- **The reckoning.** *Combines:* a link from one unit's beating to another's blow, where each hit the first takes adds to the second's next swing (a formation's two seats, or a piece worn by a unit that does both); a draw on the one that's struck; and a slow swing, so the count has time to climb. *The player sees:* a counter on the hammer climbs with every bite the anchor takes. Then the swing lands for all of it. The Toll's damage arrives in Landslide's rhythm. *On:* the Toll and Landslide.
+- **The frozen gate.** *Combines:* frost on whatever strikes its wearer, and a draw. *The player sees:* the wolves on the anchor slow bite by bite, burst, and stand stunned. The anchor is hit less the longer the fight runs. With the firecracker string's piece, one burst sets off the rest. *On:* the Toll and Cold Snap.
+- **The draught.** *Combines:* a piece that brings its wearer's abilities round sooner while a foe burns high, and a caster whose casts feed that fire. *The player sees:* the hotter the fire, the faster the spell names scroll, which feeds the fire. A Stun on the feeder costs twice: the fire sags, and the casting slows with it. *On:* Bonfire and Barrage.
+- **The opening curse.** *Combines:* two different afflictions laid on every foe as the fight starts (an ember, a frost: each a small thing alone), and something that pays for breadth (the Hexer's Malison, the Paladin's Judgement). *The player sees:* every foe begins smouldering and frosted, and the first curse lands on all of them for more than anything else the party has. *On:* any two status roads. It's what a mixed party finds first.
+- **The lead's colour.** *Combines:* a formation whose other two seats carry on their swings whatever the lead's swing carries, and one unit whose swing carries a status (the Hexer's frost and the Monk's Sunder are there from floor one; fire, shock or a wound is one piece or one version). *The player sees:* three weapons laying the same status. The counter climbs three times as fast, and what one unit could only start, the party finishes: the second shatter, the fire that stays up. *On:* every status road. It's the formation about one thing that play found, for any colour.
+- **The live wire.** *Combines:* a piece that makes extra strikes carry what the swing carries, and a unit with extra strikes (the Stormcaller's Arc, the Monk's and the Vampire's Double strike) whose swing carries anything. *The player sees:* every swing lays its status on two foes. A fire or a frost spreads without a spell. *On:* the Storm (spread that comes with something else), Thousand Cuts, and whichever status the swing carries.
+- **The pulse.** *Combines:* a piece that makes its wearer's next swing come at once each time an ally heals it, and many small heals (the Bard's Refrain, Regen's ticks, Cure on its quick clock). *The player sees:* every green number on the unit is followed by a blow. The healer sets the hitter's pace. *On:* Blood Pact (life passed on), Thousand Cuts.
+
+### One unit's own
+
+Engines a player builds in one unit's slots, where play showed building happens.
+
+- **The one swing.** *Combines:* shapes that each make a unit's swing rarer and heavier (the Hoplite's Phalanx, a piece, a seat), and Might. *The player sees:* a unit that swings three times in a fight, each for a large share of an elite. Might is spent by acting, so on this unit a few stacks last the whole fight, and a ballad meant for three is worth most here. *On:* Landslide.
+- **The stonecutter.** *Combines:* the Geomancer's Bedrock (it crits far more often while its Shield holds), and a Shield built by its own hits. *The player sees:* every rock that lands thickens the stone, and while the stone stands the rocks crit. It no longer needs someone to keep the foes off it. *On:* Landslide, without a protector.
+- **First blood.** *Combines:* a first swing that comes at once, power handed out at the fight's start that the first action spends, and the heaviest swing in the party. *The player sees:* at the first tick, one number, and the most dangerous foe is gone before it acts. Then an ordinary fight, one foe short. All of it is within act I's reach. *On:* the Hunt (its first strike), Landslide.
+- **The emptied quiver.** *Combines:* a crit that brings the next swing at once (the Ranger's Quick draw), and crits made near certain for a while (on a bleeding foe, a stunned one, one that hasn't acted yet). *The player sees:* three, four, five arrows in one tick, then a pause. The burst lasts as long as the crits do. *On:* Thousand Cuts, the Hunt.
+- **The hollow.** *Combines:* a piece that locks away half its wearer's HP, power that switches on below half (the Vampire's Bloodlust, and what Blood Pact finds), and a Shield, which the lock doesn't touch. *The player sees:* an HP bar that never rises past the middle, a below-half icon that never goes out, and a Shield bar doing the living. *On:* Blood Pact, Landslide (stone as health). Its wearer is the favourite too.
+
+### Exotics
+
+Engines that belong to no road, for the chaos.
+
+- **The borrowed gift.** *Combines:* a piece that gives another ally whatever its wearer gives itself, and a kit with something it gives itself on a short clock. *The player sees:* something different for each class. The Assassin vanishes, and the most hurt ally vanishes with it. The Vampire's Frenzy lands on the hammer too. The Monk's Flow quickens the slowest. *On:* whichever road the gift belongs to.
+- **The carrier.** *Combines:* a piece that passes a stack of each affliction its wearer holds on to whatever it hits, and a way to be afflicted: the act's own foes (a hound's fire, a spirit's frost, a wisp's spark, a snake's venom, the Witch's curse), or a piece that sets its wearer alight for power. *The player sees:* the Monk is bitten by a hellhound and catches fire, and from then on everything it touches burns. In the Ice Pass the same unit spreads frost. A Cleanse puts it out. *On:* no road. It turns the region into the build.
+
+### Parts that recur
+
+One part, several engines: what a run holds has more than one partner to meet. The spine should write these parts first.
+
+| A part | The engines it's in |
+| --- | --- |
+| A Shield made by what a road already does (hits, dodges, a foe's Shock paid, healing past full) | the detonation, the stonecutter, the dancer's shell, the cage, the red stone, the hollow |
+| Something on every foe as the fight starts | the whole field alight, the opening freeze, the opening curse |
+| A draw on one unit | the goad, the reckoning, the frozen gate, the dancer's shell |
+| A status on a swing | the lead's colour, the live wire, the opening freeze, the capacitor |
+| The weakest dies first | the avalanche, the fuse, the vanishing blade |
+| A foe held still | the capacitor, the breaker's wait, the emptied quiver |
+| One unit kept the lowest | the favourite, the hollow |
+| A fire kept high | the warmth, the draught |
+
+### Checks on the engines
+
+- **Every road has several,** and the three roads with no way of their own to live each have one that rides their own clock: the warmth (Bonfire), the cage (the Storm), mana as armour (Barrage). The two exotics sit on no road.
+
+| Road | Its engines |
+| --- | --- |
+| Landslide | the detonation, the avalanche, the one swing, the stonecutter, first blood, the breaker's wait, the reckoning, the hollow, the favourite |
+| Thousand Cuts | the heckler, the vanishing blade, the dancer's shell, the red stone, the live wire, the pulse, the emptied quiver |
+| Bonfire | the fuse, the whole field alight, the warmth, the draught, the resonance, the opening curse, the lead's colour |
+| Cold Snap | the firecracker string, the opening freeze, the capacitor, the breaker's wait, the frozen gate, the resonance, the opening curse, the lead's colour |
+| The Storm | the goad, the resonance, the cage, the capacitor, the live wire, the lead's colour |
+| The Hunt | the avalanche, the fuse, the heckler, the vanishing blade, first blood, the emptied quiver |
+| The Toll | the goad, the dancer's shell, the favourite, the reckoning, the frozen gate |
+| Barrage | the resonance, the open tap, mana as armour, the draught |
+| Blood Pact | the red stone, the favourite, the pulse, the hollow, mana as armour (its mirror) |
+
+- **A quarter can start in act I.** Eight need nothing rarer than a version, a formation or a small effect: the whole field alight, the opening freeze, the opening curse, the lead's colour, the capacitor, the breaker's wait, the stonecutter, the dancer's shell. Most of the rest are one piece away from a party that's already on the road.
+- **Several need the game's rules to grow:** damage carried past a kill, a foe's swing called early, damage paid in mana, HP locked away, an ability brought back by the foes it hit, a reaction to a foe paying its Shock. The intent allows it, and the spine lists each.
+- **Three are loops,** and synergies may be overpowered until the balance pass: the emptied quiver, the resonance, the draught. Each has its own brake (a crit that fails, a pack that thins, mana, Burn's drain). Whether the brake is enough is a number.
 
 ## The doors
 
@@ -361,28 +477,72 @@ Where a run drifts from one road to its neighbour, through something both want.
 
 ## Open problem: staying alive without a tank
 
-**Not solved: how a build that doesn't revolve around a tank stays alive.** It's an open problem of this design. The answer may not lie in the builds alone, and it still has to be thought about at this stage, because the builds can't be judged without it.
+**Not solved, and no longer unknown.** A measurement on hand-built parties says where the problem sits, and it isn't mostly in the builds. Below: what's known, the ways it could be solved with what each would change in the game, and the design's pick. None of it is decided.
 
-**What's known:**
+**What play showed:**
 - **A wall was needed in every run.** Every run in the sample that reached act II had a Knight, Paladin or Bramble knight seated. From the director's chair the wall comes up at once, nothing else is whole before the first fights that need it, and the wall gets the gear first: a party with another way to live has either taken a wall by the time that way comes online, or lost.
-- **Somebody is always being hit.** Foes pick whom to hit by draw (`RULES.partyDraw`), so in a party of three one unit takes most of the blows, and today the party lives when that unit is built for it.
 - **When the tank falls, the rest follow.** The first to fall was the unit drawing the most in 31 of the 49 fights where anyone fell, and the others, near full, fell after it.
-- **Late in a run, something else can hold.** On today's hand-built test parties with whole kits (`npx tsx tools/build-test.ts --quick --no-ablate`; two seeds, today's knobs, a pointer and no more), Valkyrie, Ranger, Vampire lost 6% of its HP per won fight, where parties with a Knight or a Bramble knight lost 3% to 29% (the middle one 11%) and parties of three light casters 30% to 37%. Half-built, the parties without a tank fall further behind.
 - **Debuffs don't do it at their sizes today.** Weaken and Slow on every foe, all fight, take about three fifths off what the foes deal (`STATUS.weaken`, `STATUS.slow`), reached late and paid for in MP.
+
+**What the measurement adds.** The design's 27 routes, each as a run would hold it at eight points from floor one to act II's boss, against the rogue's own fights, with every knob raised in steps of 25 until the parties break. Thirteen routes have a wall (a Knight, Bramble knight or Paladin), five have a heavy body and no wall (a Hoplite or Geomancer), and nine have neither. The parties are built by the calibration's own rule (`tools/rogue-parties.ts`: abilities known, gear and legendaries by act, in Neutral), three builds of each and three seeds a fight, about 15,000 fights a step (`npx tsx steps/builds/tankless.ts`, the step's scratch; `--variant` plays each of the ways below that has a number). It's this branch's game, not the one the director played, and it ranks; it doesn't balance.
+
+- **At today's knobs nothing separates them.** Every group wins nearly every fight. A party without a wall pays a little more: 22% of its HP a won fight in the middle of act I against a walled party's 18%, and 14% against 12% in act II.
+- **The wall's edge is in act I, and mostly in its fights and elites.** The knob, above today's, at which a group stops winning three fights in four:
+
+  | | A wall | A heavy body, no wall | Neither |
+  | --- | --- | --- | --- |
+  | Act I's fights and elites | +117 | +133 | +90 |
+  | Act I's boss | +76 | +65 | +65 |
+  | Act II's fights and elites | past +200 | past +200 | past +200 |
+  | Act II's bosses | +109 | +112 | +136 |
+
+  In act I's fights and elites a wall is worth about 27 points of knob: foes with a quarter more HP that hit a tenth harder, or about one of act I's early floors (`knobs[0].early`). At act I's boss it's worth 11. In act II's fights it's worth nothing. At act II's bosses, which are races, it costs about as much as it was worth.
+- **It's a body more than a draw.** With foes' picks ignoring Aggro, a walled party gives up 10 points and still leads by 19: that's the wall's HP, Defense and Shield being in the party at all. A Hoplite or a Geomancer, who never Taunt, do better in act I than a wall.
+- **It isn't the frail lines, and it isn't kits arriving one at a time.** A point of HP and Defense on the frailest classes is worth 12 points to a party without a wall, and whole kits from floor one are worth 22. Both lift a walled party as much, so the gap stays.
+- **It's in particular fights:** the wolf packs (many small bites, where Defense does the most) and the archers behind a Shieldman (blows that delete a light body). At +100, a few rooms into act I, the walled routes win 65% of Night Wolves and 75% of Bandit Camp, and the routes with neither win 31% and 40%. Against snakes, bandits and the boss the groups are close.
+- **Without a wall, a party wins with someone down.** At the same knob it does so half again to twice as often: 32% of its act I wins at +75, against 18%. A knockout carries, so each of those wins leaves two to fight the next room.
+- **Somebody is always being hit, and without a wall the hits spread.** Foes pick by draw (`RULES.partyDraw`). The most-struck member takes about half the party's damage without a wall and about two thirds with one. The first to fall is most often a Stormcaller or a Pyromancer, then the Knight.
+- **Late, the parties of robes still fall.** In act II the routes without a wall hold with the walled ones, and better at the bosses (71% of them won at +150, against 49%), but not evenly. The routes built on fighters win 63% to 98% of those bosses. The routes of casters win under half: Frostweaver, Hexer, Ranger 44%; Bonfire's and Barrage's first routes with the wall swapped for a third light unit, 33% and 25%; Frostweaver, Bard, Stormcaller none.
+
+**What that says.** There's a band of difficulty, about 27 points wide, in which act I kills a party without a wall and spares one with. The game the director played sat in that band or above it: 17 of 23 runs ended in act I. Today's knobs sit under it, which is why nothing separates: a party without a wall stops winning 19 fights in 20 about 45 points up, a walled one about 60. So the wall is required whenever act I is tuned into the band, and what decides that is the difficulty pass, which aims harder than today. The builds don't decide it.
+
+**The director's three questions, as far as the numbers go:**
+- **Do classes need to be able to live without a tank by default?** By act II they can, the parties of robes apart. In act I they're about a floor behind.
+- **Can other ways of staying alive come online as quickly as a tank does?** Not by handing them out sooner. A wall's way is its line, there before it knows anything, and whole kits help it as much as anyone.
+- **Is the start of a run simply too hard?** For a party without a wall it was, and that's the whole of the constraint.
 
 **What isn't the answer** (the director's rulings):
 - **A wall in every build's first route.** Every run would start the same, which is what the pass is meant to correct.
 - **A front seat that lets more classes be the frontline.** It keeps the constraint that every party needs a frontline fighter, and that constraint is the uninteresting part.
 
+**The ways it could be solved.** The points are of knob, for a party with neither a wall nor a heavy body, in act I's fights and elites, where it breaks at +90 today.
+
+| The way | What it changes in the game | What the numbers say |
+| --- | --- | --- |
+| **1. Act I is sized for a party without a wall** | No rule. A line of direction for the balance pass: act I's regular fights are set against parties without a wall, and the pass's hardness goes to bosses, elites and the later acts. The calibration's act I rosters change with it: seven of the twelve field a wall. | The band is 27 points wide, and bosses don't favour a wall. A walled start gets a comfortable act I and pays for it at act II's bosses: a safe start against a strong finish. |
+| **2. The fallen stand up after a won fight** | What carries: a knockout ends with its fight, at little HP. The phoenix feather, the campfire's raise and the pieces that do this today change their job. | Not measured: it's a rule of the run. It's aimed at the 32% against 18%. |
+| **3. A hurt unit draws less** | The Aggro rule: foes still pick by draw, and a unit's draw falls as its HP does. The player never sees it, and it reaches every fight. | +10 points, and wins with someone down fall from 32% to 18%. A walled party gains 6. |
+| **4. Foes strike the healthiest** | The Aggro rule, replaced for foes' swings: each goes where the largest share of HP is left. Aggro on gear and seats stops meaning anything outside Taunt. | +20 points, and wins with someone down fall to 10%. A walled party gains 14: its wall still takes most of the hits, because each one costs it least. |
+| **5. Sturdier frail lines** | Five class lines: no class under HP 3 and Defense 2. | +12 points, and as much for a walled party. |
+| **6. Whole kits from floor one** | What a unit knows at the start. The intent leaves this unjudged until the game is balanced. | +22 points, and as much for a walled party. |
+| **7. A second road out of town** | Content. Act I is one region, and its hard fights are the ones a wall answers. Two or three first regions that ask different things, each shown with its boss before the draft, as acts II and III are. | Not measured. It's the only way here that makes starts differ, where the others make one start survivable. |
+| **8. A way to live in every party from floor one** | The start: a choice of first formation in Neutral's place, each a way to live that isn't a front line. | Not measured. It's how formations arrive in a run, which the intent puts outside this pass. |
+| **9. The engines** | The loot: each road's own way to live, as something found (*Engines*, Ways to live that are found). | They arrive in act II, where the gap has already closed, except for the parties of robes, which three of them are for. |
+
+One more was tried and dropped: a knob for each pool in place of one for each fight leaves the gap at 27.
+
+**The design's pick: the first two, and the engines for the rest.**
+- **Size act I for a party without a wall** (1). The constraint is a tuning stance, and the cheapest way to lift it is to take the other stance on purpose. It asks nothing of the rules, the kits or the foes. It turns the wall from a requirement into a trade the numbers already hold: safer early, slower at the bosses. It's a challenge to `docs/rules.md`, "the coming difficulty pass aims harder than today": harder at the bosses and elites, not in act I's regular fights.
+- **Let the fallen stand after a won fight** (2). A party without a wall wins with someone down. While a knockout carries, one such win is the run; when it doesn't, it's HP to mend. *Elements, not builds* already asks that a knockout needn't be carried.
+- **Leave each road's own way to its threads and its engines** (9), from act II, where there's something to build with. That's the interesting part of staying alive, and act I isn't where it can live.
+- **Held back: how foes choose** (3 and 4). It works, and it's the strongest thing here against falls. It also helps a walled party nearly as much, so it doesn't change who needs a wall, and it rewrites a standing rule that every fight runs on. If runs still end on one fall after 1 and 2, a hurt unit drawing less (3) is the next thing to reach for.
+- **Not picked:** sturdier lines and whole kits lift everyone alike (5, 6); a first formation waits on a question outside this pass (8).
+- **For the director to weigh apart from the rest: a second road out of town** (7). It costs the most, and it's the only one that answers the worry as it was put: that every run starts the same.
+
 **Where the builds stand on it:**
 - **Revolve around a tank by nature:** the Toll (its anchor), Landslide (stone on heavy bodies).
 - **Have something of their own that isn't a tank:** Thousand Cuts and Blood Pact (living by what they hit and drink), Cold Snap (the cold slows and stuns, too little alone today), the Hunt (kill order, and nothing against a lone boss).
-- **Lean on a tank and have nothing of their own:** Bonfire, the Storm, Barrage.
-
-**Questions the director has put, none answered:**
-- Do classes need to be able to live without a tank by default?
-- Can other ways of staying alive come online as quickly as a tank does?
-- Is the start of a run simply too hard, so that survivability shouldn't be that big a pressure so early?
+- **Lean on a tank, with a way of their own only as something found:** Bonfire (the warmth), the Storm (the cage), Barrage (mana as armour). Until it's found, these are the parties of robes that fall late.
 
 ## Elements, not builds
 
@@ -499,7 +659,6 @@ Three things for the upgrades pass to know:
 
 ## What comes next
 
-1. **Design the engines:** many, each on one road or more, each worth finding (*Engines*).
-2. **Work on the open problem** of staying alive without a tank, in the builds and outside them (*Open problem*).
-3. **Take the design's own choices to the director** (*Where it stands*).
-4. **Then, on the director's approval:** the two approved changes (Marked, Malison) go in, each measured against today's game with both versions' numbers; the spine is written from the roads and the engines; and when the step closes this replaces `docs/gear-design/builds.md`, `docs/gear-design/philosophy.md` gains the engines, `docs/rules.md` stops saying the twelve stand, and the primer's list, the mythics' table in `docs/gear-design/loot.md` and the test parties in `tools/build-parties.ts` follow.
+1. **The director reads the engines** on the sample, and rules on the open problem (*Where it stands*).
+2. **Take the design's other choices to the director** (*Where it stands*).
+3. **Then, on the director's approval:** the two approved changes (Marked, Malison) go in, each measured against today's game with both versions' numbers; if the open problem's pick is taken, its line of direction goes into `docs/rules.md` for the balance pass and the change to what carries is measured the same way; the spine is written from the roads and the engines, the parts that recur first; and when the step closes this replaces `docs/gear-design/builds.md`, `docs/gear-design/philosophy.md` gains the engines, `docs/rules.md` stops saying the twelve stand, and the primer's list, the mythics' table in `docs/gear-design/loot.md` and the test parties in `tools/build-parties.ts` follow.

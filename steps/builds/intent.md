@@ -1,6 +1,6 @@
 # Intent: the builds pass
 
-The director, Nov 9 and 10. The last four lines are from the design's gate.
+The director, Nov 9 and 10. The last six lines are from the design's gates.
 
 - **A restart of the builds design,** so that the loot, formations and upgrades can be redesigned after it. A little of the current set worked and the rest didn't; design the set again with what's now known, rather than tweaking what's there. No build is kept for being there: add, remove, keep, trim or multiply as the design needs. The count is whatever comes out; twelve was fine for replayability.
 - **What a build is doesn't change:** a way to play you can watch, with a rhythm, woven from threads, reached by more than one route, in rungs (`docs/gear-design/philosophy.md`).
@@ -15,3 +15,5 @@ The director, Nov 9 and 10. The last four lines are from the design's gate.
 - **Staying alive without a tank is an open problem,** to be thought about at this stage, and the answer may not lie in the builds alone. A wall at the start of every build would make the game feel the same every run, and so would needing a frontline fighter in a front seat: that constraint is the uninteresting part.
 - **A status's base behaviour doesn't take on a build's identity** (`docs/rules.md`). No engine rests on a number the player can't see.
 - **Whether Shock and Bleed have builds** is the design's to decide.
+- **The engines, as a set:** many, across the whole web, and the count is whatever comes out of the design. Picked as a game designer would, for being worth finding, not from a formula or a grid of build pairs. The one recorded from play shows the size and the feel, and none is a variation of it. Each is said in words, as what combines and what the player sees happen, with no card text and no numbers. They come to the gate as a sample, with the ones least sure of named.
+- **Staying alive without a tank, at the gate:** the ways it could be solved, what each would change in the game, and which the design would pick and why. Look at the classes, the start of a run, how foes choose whom to hit, anything else.
