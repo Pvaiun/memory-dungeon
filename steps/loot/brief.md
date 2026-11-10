@@ -28,7 +28,7 @@ It's all designed at once, so every item is judged by the roads and engines it s
 - **`docs/gear-design/builds.md`, all of it:** the nine builds, their far ends, the doors and the engines.
 - **Nothing rests on a foe's MP.**
 - **The spine** (`spine.md`): what each item does, its kind and rarity, and the stock. The fill writes to it. A line changes only by a ruling.
-- **The director's rulings at gate 1** (`intent.md`): one Mark from gear; Malison counts five statuses; Hearth stays as it is, as a common; an upgrade never copies a piece, two pieces one unit could wear together never read the same, and a piece and a formation seat may share a rule.
+- **The director's rulings at gate 1** (`intent.md`): one Mark from gear; Malison counts five statuses; Hearth stays as it is, as a common; an upgrade never copies a piece, two pieces one unit could wear together never read the same, and a piece and a formation seat may share a rule. "The same" means the same sentence: a keystone's second home and a far end grown from its keystone aren't copies.
 
 ## What the builds ask of the loot
 
@@ -46,7 +46,7 @@ The spine answers these, the fill has to keep answering them, and `builds.md` sa
 - **Its tables are generated.** `npx tsx steps/loot/web-check.ts --write` reads the lines' tags and rewrites the tables between the spine's markers; `--index` writes `index.md`. Run both after any change to a line. It fails on a tag it doesn't know or a name used twice.
 - **Offer volumes are counted,** not estimated: `npx tsx steps/loot/offer-count.ts` plays 40 simulated runs and prints what a run is offered in each act. Its figures are in `web-check.ts` (`RUN`).
 - **Open for the director:** the list at the end of `spine.md`. None of it stops the fill. Ask at gate 2, or sooner if a ruling would change a share.
-- **Where the lead's first round starts:** *Least sure* in the spine lists the loops known and the pairs the second fresh read found alike and the spine left, by its reading of the director's ruling.
+- **Where the lead's first round starts:** *Least sure* in the spine lists the loops known and the pairs the second fresh read found alike, left as they are by the director's ruling.
 - **`fill-brief.md` and `index.md` are drafted** by the spine's lead, for the fill's lead to check and change before any agent reads them.
 
 ## How to work
