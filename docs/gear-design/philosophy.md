@@ -121,11 +121,18 @@ How the four slots do it:
 
 ## How the loot is made
 
-The method that made the current loot, for the next round:
+The method, round by round:
 1. **Intent.** The director's intent for the round, recorded short (as above).
 2. **Builds first.** About a dozen builds as ways to play: each one's rhythm, threads, routes, rungs and needs, and the web between them. No pieces, no numbers.
-3. **The spine.** One line for every rare, legendary, formation, upgrade and mythic, built backwards from the builds and written all together, so the web is designed rather than found. Commons and uncommons get a rule per kind, not lines. The director approves it on a sample.
-4. **The fill.** Parallel agents write the numbers, card text and engine needs for their share, briefed with intent and ranges, never examples (an agent copies any example it's given). Each ends with its challenges and what it's least sure of.
-5. **Rulings.** The lead reads the whole fill together and rules on every challenge. Rules about balance are left out, held back as levers for the balance pass.
+3. **The spine.** One line for every rare, legendary, formation, upgrade and mythic, built backwards from the builds and written all together, so the web is designed rather than found.
+   - Its rules come first: the stock it chose and why, new words, the rules the pieces bend, and the code support they need.
+   - Commons get a rule per kind. Each uncommon's effect is named, since the uncommons carry the builds' first steps.
+   - The web is checked for how often a run is offered what a build starts from, not only that a route exists: the offer roll and the stock decide that.
+   - A fresh reader reads it before the director, who approves it on a sample.
+4. **The fill.** Parallel agents write the stats, numbers, card text and code support for their share. They all work from one brief, with intent and ranges and never examples (an agent copies any example it's given). The brief points at the rules rather than restating them, since a brief's paraphrase of a rule is where a fill goes wrong. Before anyone writes, each agent gets a shared index of every share's items, so no two write the same card. Each ends with its challenges and what it's least sure of.
+5. **Rulings.** The lead reads the whole fill together and rules on every challenge, in rounds.
+   - The agent that wrote a file applies its rulings.
+   - A fresh reader reads the whole fill between rounds, and picks the director's sample.
+   - A ruling is about loops, overlaps, broken rules, wrong wearers or unclear cards. Rules about balance are left out, held back as levers for the balance pass.
 6. **Build and measure.** The content goes in, and every build is played on hand-built test parties (`tools/build-parties.ts`): `npx tsx tools/build-test.ts` for rhythm, strength by rung and what carries each build, and `npx tsx tools/piece-check.ts` for whether every item does what its card says.
 7. **The director plays it,** and their read is the gate.

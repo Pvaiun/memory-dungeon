@@ -57,6 +57,7 @@ What's true now (Nov 10, 2026). Replace what's done rather than adding to it; hi
   - `npx tsx tools/build-test.ts`: the twelve builds side by side, on the parties of `tools/build-parties.ts` (stand-in pieces where a class's kinds changed; the builds pass rewrites them).
   - `npx tsx tools/piece-check.ts`: every item does what its card says.
   - `npx tsx tools/gear-slots.ts`: who wears which kinds, and whether the weapon and offhand rules hold.
+  - `npx tsx tools/loot-list.ts`: today's loot as one line per item, with its cards (`out/loot-list.md`).
   - `npx tsx tools/rogue-feel.ts`: fight logs for a feel read; the reader's brief is `docs/feel-reader.md`.
   - `npx tsx tools/rogue-acts.ts`: the act road.
   - `npx tsx tools/rogue-play.ts`: the AI playtester's game.

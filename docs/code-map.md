@@ -131,6 +131,7 @@ tools/                       the Node command lines; each header says how to run
   rhythm-read.ts             does a party play the fight its build says it does?
   piece-check.ts             does every item do what its card says?
   gear-slots.ts              the gear slots' counts: who wears which kinds
+  loot-list.ts               today's loot as one line per item: its cards, and the builds it was tagged for
   smoke.ts                   npm run smoke: the documents' own test trios
   dungeon.ts                 npm run dungeon: print one run
   study.ts                   npm run study: run a combat study

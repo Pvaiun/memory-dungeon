@@ -2,7 +2,7 @@
 
 The rules the loot is made by: what each rarity is, how much there is, how commons and uncommons are written, and what formations, upgrades and mythics may do. The philosophy behind them is in *Gear design: philosophy*, and the builds they serve in *Gear design: the builds*. The slots, the kinds and who wears what are under Gear in *Core set: rules and vocabulary*; how loot is offered in a run is in *Core set: the rogue mode*.
 
-Every piece, formation, upgrade and mythic is data with its card text: `content/core-set/pieces/`, `formations.ts` and `upgrades/` (the mythics are in `upgrades/`, beside their class's upgrades). `npx tsx tools/gear-slots.ts` counts who shares which kinds, and `npx tsx tools/piece-check.ts` checks that every item does what its card says.
+Every piece, formation, upgrade and mythic is data with its card text: `content/core-set/pieces/`, `formations.ts` and `upgrades/` (the mythics are in `upgrades/`, beside their class's upgrades). `npx tsx tools/gear-slots.ts` counts who shares which kinds, `npx tsx tools/piece-check.ts` checks that every item does what its card says, and `npx tsx tools/loot-list.ts` lists every item as one line with its card.
 
 ## Rarity
 
@@ -11,7 +11,7 @@ Rarity is specificity, not size: how far a piece bends the game. A rare can be b
 | Rarity | What it is | Stats | Effect |
 | --- | --- | --- | --- |
 | **Common** | Fills a slot and carries a build's first stats. | One step as the standard, two on a rich kind (`KIND_BUDGET`). A special stat at medium is a step, at high two. | None. |
-| **Uncommon** | A build's first rung: a small effect most runs find. | Two steps as the standard, one on a lean kind, three on a rich one. | One small, general effect on a thread (a rider, a start-of-fight status, a small reaction), with no condition on a class. Each one helps two to four builds a little. |
+| **Uncommon** | A build's first rung: a simple effect most runs find. | Two steps as the standard, one on a lean kind, three on a rich one. | One simple, general effect on a thread (a rider, a start-of-fight status, a reaction), with no condition on a class, sized so it's seen the first time it fires. Each one helps two to four builds a little. |
 | **Rare** | A build's second rung: specific, often conditional. | Three steps as the standard, two on a lean kind, four on a rich one, beside the effect. | One designed effect, worth a lot to one or two builds and little elsewhere. |
 | **Legendary** | A build's far end, or an exotic: it bends a rule. | Four steps as the standard, three on a lean kind, five on a rich one, beside the effect. The only rarity where a special stat is high. | A rule change, a new trigger or a payoff that grows. Strong where it fits; where it's strong in many places, it gives something up. |
 | **Mythic** | Rewrites one class, past any one ability. | As its shape needs. | One per class (see Mythics). |
@@ -37,7 +37,7 @@ Plus the 12 plain weapons (the starters, and the cheapest drops) and the 16 myth
 
 ## Sizes, for new pieces
 
-The ranges a new piece is written in, so balance mostly holds:
+The first values a new piece is written in. They aren't limits: no balancing rules are made while making content (`docs/rules.md`), and synergies may be overpowered. A build's first step is sized so it's seen the first time it fires, whatever its first value; in play, the small end of these was never seen to happen.
 - **Stat steps** as gear has them (`STEP`, `HP_STEP`, `AGGRO_STEP`, `MP_REGEN_STEP`). Special stats are medium, high only on a legendary.
 - **Stacks** in the classes' words, a few, several or many, read off the applier's stat the way a kit's are. A rider on every hit is "a few" or less.
 - **Damage boosts:** a small one 10% to 20%, a narrow one 30% to 50%, and "double" only on a condition a fight meets a few times.
