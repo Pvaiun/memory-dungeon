@@ -26,8 +26,7 @@ It's all designed at once, so every item is judged by the roads and engines it s
 - **The slots and kinds:** who wears what, two-handers, and each kind's budget, signature and common stats (*Core set: rules and vocabulary*, Gear and Weapons).
 - **The class frame:** a trunk and three identities, each viable, with at least two versions toward it; no two classes share a base ability; a passive works in every fight; no class gains an ability.
 - **`docs/gear-design/builds.md`, all of it:** the nine builds, their far ends, the doors and the engines. If the spine shows something in it doesn't hold, raise it at gate 1 with the evidence rather than working around it.
-
-**Open, for gate 1:** whether a version may rest on a number the player can't see, such as a foe's MP. No engine may; two versions do today (`builds.md`, *Every class in the set*).
+- **Nothing rests on a foe's MP:** the two versions that drain it (`builds.md`, *Every class in the set*) are mana gain for their user, and stay as that.
 
 ## What the builds ask of the loot
 
@@ -73,7 +72,7 @@ The spine states the counts it chose, kind by kind and rarity by rarity, and why
 
     The offer roll is in `docs/core-set/rogue-mode.md` (Loot), its weights in `content/core-set/rogue.ts` (`slots`, `spoils.fight.rarity`). An engine's two halves have to meet, so its common half should be the one most runs see. Flag the ones a run would rarely be offered. Count by hand, or with a small script over the spine's tags.
 - **A fresh reader** reads the spine before the gate, against `builds.md` and this brief. It takes no part in writing the spine.
-- **Gate 1:** the director reads the spine's rules, the web and a sample, with what you're least sure of. The report leads with the decisions: the counts chosen, the open question above, and anything in `builds.md` the spine shows doesn't hold. Commit and push the spine, update `CLAUDE.md`'s Status, and stop.
+- **Gate 1:** the director reads the spine's rules, the web and a sample, with what you're least sure of. The report leads with the decisions: the counts chosen and anything in `builds.md` the spine shows doesn't hold. Commit and push the spine, update `CLAUDE.md`'s Status, and stop.
 
 **2. The fill, in parallel,** after gate 1.
 - **One brief for every agent,** `fill-brief.md` in this folder, written from the spine with intent and ranges, never examples: an agent copies any example it's given. It points at `docs/rules.md`, `philosophy.md` and `loot.md` rather than restating them. A brief's own paraphrase of a rule is where a fill goes wrong.

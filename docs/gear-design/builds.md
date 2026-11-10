@@ -675,7 +675,7 @@ Four things for the upgrades to know:
 - **The Hexer's spellbreaker and the Frostweaver's disabler serve an answer (stopping a cast), not a road.** The class frame wants each identity viable.
 - **The Assassin's ambusher and hunter both serve the Hunt.** The hunter also opens the wounds for Thousand Cuts.
 - **The Pyromancer is in two roads;** the Cleric, Ranger, Assassin, Vampire and Frostweaver are in three; every other class is in four or more.
-- **Two versions rest on a foe's MP,** which the player can't see: the Hexer's Mana burn and the Vampire's Drain the well. No engine rests on such a number; whether that holds for versions is open, for the director.
+- **Two versions drain a foe's MP:** the Hexer's Mana burn and the Vampire's Drain the well. The player can't see a foe's MP, so they're mana gain for their user, and the drain counts for nothing in a build (`docs/rules.md`).
 
 ## Checks on the whole set
 

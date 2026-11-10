@@ -50,6 +50,7 @@ The philosophy behind these lines, and the director's intent in their words, are
 - **Plenty of loot:** better too much than not enough.
 - **A formation is a shape with its own identity.** Seats can differ as much as the shape needs. It's chosen for what the party is, not the next foe (no lock-and-key fishing), and a new one should make you rethink your party. Formations come in common, rare and legendary; there are no mythic formations.
 - **Upgrades:** each ability and passive has one plain power step and a choice of two versions, designed for that ability, with no formula across abilities. What matters is how the two differ, and either can change whom an ability aims at and when it fires, not only its numbers. A training opportunity offers three choices.
+- **Nothing the player has to understand rests on a number they can't see,** such as a foe's MP: no engine and no version. A version that drains a foe's MP is a mana gain for its user, and the drain counts for nothing in a build.
 
 ## Balance and testing
 
