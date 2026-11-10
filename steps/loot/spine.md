@@ -1,17 +1,16 @@
 # The loot pass: the spine
 
-The lead's design for the loot the nine builds need (`docs/gear-design/builds.md`), one line an item, for gate 1. Nothing here is built, and the fill sets every number. The director's intent is in `intent.md`; the brief this follows is `brief.md`; the report for the gate is `report.md`.
+The design for the loot the nine builds need (`docs/gear-design/builds.md`), one line an item: what the fill writes from. Nothing here is built, and the fill sets every number. It's two leads' spines merged after gate 1. The director's rulings at that gate are in `intent.md`; what's still theirs to rule is under *Open for the director*, at the end.
 
 **How to read it.**
 - **The rules** come first: the stock, the new words, the rules the pieces bend, and the code support, each named once.
-- **The lines** follow, in the order they were written: the two kit changes, the parts that recur, then the gear kind by kind, the formations, the versions and the mythics.
-- **A fresh reader** read the draft against builds.md and the brief, as the brief asks. Its findings are applied here; the ones that are the director's to rule are in `report.md`.
+- **The lines** follow: the two kit changes, the parts that recur, then the gear kind by kind, the formations, the versions and the mythics.
 - **A line** reads: name · kind · rarity · what it does, in plain words. *Sees:* is what the player sees when it fires, on a road's first step and an engine's keystone.
   - After **→**, the roads it serves: a rung (1, 2 or 3) where it's that road's step, and its worth there (● a little, ●● some, ●●● a lot). `Cuts` is Thousand Cuts, `Snap` Cold Snap, `Pact` Blood Pact. A piece can also be `net` (falls and returns), `first move`, `foes do less`, `stops a cast` or `exotic`: builds.md's elements, and the pieces that belong to no road.
   - After **⚙**, the engines it's part of: `key` for a keystone, `half` for the common half.
   - After **◆**, the recurring parts it is.
   - None of this is ever on a card. Names are working names; a name of today's means today's piece, changed as its line says.
-- **The tables** between `<!-- markers -->` are written by `npx tsx steps/loot/web-check.ts --write` from the lines, so they can't drift from them.
+- **The tables** between `<!-- markers -->` are written by `npx tsx steps/loot/web-check.ts --write` from the lines, so they can't drift from them. Run it after any change to a line.
 
 ## The rules
 
@@ -19,8 +18,8 @@ The lead's design for the loot the nine builds need (`docs/gear-design/builds.md
 
 **A cell is one kind at one rarity, and an offer picks one piece from a cell.** So a cell's size doesn't change how often its kind is offered. It changes how often each piece in it is met. Three things follow, and they set every count below:
 - **A cell holds what its wearers' roads ask of it, and no more.** Uncommons and rares follow the wearers: a kind worn by three classes on seven roads gets more than one worn by two on three.
-- **A first step is a thread, not a piece.** No single uncommon is met often (about one act in six for a class that can wear it), so each road's first step sits in seven to fifteen pieces across as many kinds.
-- **Legendaries follow the far ends, not the wearers.** A lone legendary is offered every time its cell is rolled, and a second one halves both, so a cell has two only where two roads' far ends belong on that kind.
+- **A first step is a thread, not a piece.** No single uncommon is met often (about one act in ten for a unit that can wear it), so each road's first step sits in seven to fifteen pieces across as many kinds.
+- **Legendaries follow the far ends, not the wearers.** A lone legendary is offered every time its cell is rolled, and a second one halves both, so a cell has two or three only where that many far ends or exotics belong on the kind.
 
 **The amulet is the exception, and it costs.** It's the one slot every class wears, so it holds the any-class copy of the first steps and keystones that would otherwise be fenced into a few kinds. That makes its cells the biggest in the stock, and each of its pieces the least often met for a roll of its slot. Every one of those rolls can be worn, which is what it buys.
 
@@ -34,33 +33,33 @@ The lead's design for the loot the nine builds need (`docs/gear-design/builds.md
 | Spear | 3 | 2 | 3 | 3 | 1 | 9 |
 | Axe | 2 | 2 | 3 | 3 | 2 | 10 |
 | Bow | 2 | 2 | 3 | 2 | 1 | 8 |
-| Rune sword | 2 | 2 | 3 | 2 | 2 | 9 |
+| Rune sword | 2 | 2 | 3 | 3 | 2 | 10 |
 | Hammer | 3 | 2 | 3 | 2 | 1 | 8 |
-| Mace | 3 | 2 | 3 | 3 | 2 | 10 |
+| Mace | 3 | 2 | 3 | 2 | 2 | 9 |
 | Staff | 3 | 2 | 3 | 2 | 1 | 8 |
 | Great weapon | 3 | 2 | 3 | 3 | 2 | 10 |
 | **Weapons** | | **24** | **37** | **33** | **19** | **113** |
-| Plate | 5 | 3 | 4 | 3 | 2 | 12 |
+| Plate | 5 | 3 | 4 | 3 | 3 | 13 |
 | Mail | 6 | 3 | 4 | 4 | 2 | 13 |
-| Leather | 6 | 3 | 4 | 5 | 2 | 14 |
-| Robes | 5 | 3 | 4 | 4 | 3 | 14 |
-| **Armors** | | **12** | **16** | **16** | **9** | **53** |
+| Leather | 6 | 3 | 4 | 4 | 2 | 13 |
+| Robes | 5 | 3 | 4 | 5 | 3 | 15 |
+| **Armors** | | **12** | **16** | **16** | **10** | **54** |
 | Kite shield | 3 | 2 | 3 | 3 | 1 | 9 |
 | Round shield | 3 | 2 | 3 | 3 | 2 | 10 |
 | Horn | 2 | 2 | 3 | 3 | 1 | 9 |
 | Totem | 2 | 2 | 3 | 3 | 1 | 9 |
-| Relic | 2 | 2 | 3 | 2 | 1 | 8 |
+| Relic | 2 | 2 | 3 | 2 | 2 | 9 |
 | Lantern | 2 | 2 | 2 | 2 | 2 | 8 |
-| Tome | 3 | 2 | 3 | 3 | 2 | 10 |
+| Tome | 3 | 2 | 3 | 4 | 3 | 12 |
 | Orb | 2 | 2 | 2 | 3 | 2 | 9 |
-| Idol | 2 | 2 | 2 | 3 | 2 | 9 |
+| Idol | 2 | 2 | 2 | 3 | 3 | 10 |
 | Vial | 2 | 2 | 2 | 3 | 1 | 8 |
-| Trophy | 3 | 2 | 2 | 3 | 1 | 8 |
+| Trophy | 3 | 2 | 2 | 4 | 1 | 9 |
 | Bell | 3 | 2 | 2 | 2 | 1 | 7 |
-| Cloak | 3 | 2 | 2 | 3 | 1 | 8 |
-| **Offhands** | | **26** | **32** | **36** | **18** | **112** |
-| Amulet | everyone | 10 | 7 | 10 | 9 | 36 |
-| **All** | | **72** | **92** | **95** | **55** | **314** |
+| Cloak | 3 | 2 | 3 | 3 | 1 | 9 |
+| **Offhands** | | **26** | **33** | **38** | **21** | **118** |
+| Amulet | everyone | 10 | 7 | 10 | 10 | 37 |
+| **All** | | **72** | **93** | **97** | **60** | **322** |
 <!-- stock:end -->
 
 Plus the 12 plain weapons and the 16 mythics. Today's stock is 272, in even quarters of 68.
@@ -73,32 +72,32 @@ Plus the 12 plain weapons and the 16 mythics. Today's stock is 272, in even quar
 - **Spear, 9.** Charge, reach and a kill's Shield. One legendary.
 - **Axe, 10.** The executes, the avalanche and the last drink: two wearers, but two roads' far ends are an axe's.
 - **Bow, 8.** An opener for each of its three roads. One legendary.
-- **Rune sword, 9.** Two casters: cold on the ice mage's own swing, mana on a swing. Two legendaries, for Barrage's mana as damage and for the cascade's payoff.
+- **Rune sword, 10.** Two casters: cold on the ice mage's own swing, mana on a swing; a rare that gives frost from beside the wall. Two legendaries, for Barrage's mana as damage and for the cascade's payoff.
 - **Hammer, 8.** A lean kind: three plain promises of a blow, two rares, and the party's stone in the blow as its one legendary.
-- **Mace, 10.** Three wearers who keep and mend: fire on a slow swing and two keeper's gifts; a legendary each for Blood Pact and for Bonfire's keeper.
+- **Mace, 9.** Three wearers who keep and mend: fire on a slow swing and two keeper's gifts; a legendary each for Blood Pact and for Bonfire's keeper.
 - **Staff, 8.** Mana given, a mender's gift, stone at the start; two rares; the cast twice as its one legendary.
 - **Great weapon, 10.** Landslide's kind: three promises of a blow, three rares that read what the party set up (a Stun, a charge, a kill), two legendaries for the far end.
-- **Plate, 12.** The draw, and stone turned into a blow. Rares for the frozen gate, the detonation and the Taunt that holds.
+- **Plate, 13.** The draw, and stone turned into a blow. Rares for the frozen gate, the detonation and the Taunt that holds. Three legendaries: the Toll's far end, the reckoning across two units, and the net.
 - **Mail, 13.** Six wearers on eight roads: a Shield by hitting, two nets, the first drink. Rares for the red stone, the rod, the brink's healing and breadth.
-- **Leather, 14.** Five rares, the biggest cell outside the amulet, because five engines' keystones belong on light units: the riposte, the blow from hiding, the kill that calls the volley, the cold thrown on, the opening again.
-- **Robes, 14.** Five casters: four ways to mana or cover. Rares for the resonance, the price in life, Heat and Silence. Three legendaries, one an exotic.
+- **Leather, 13.** Four rares, each an engine's keystone that belongs on a light unit: the dodge answered, the blow from hiding, the kill that calls the volley, the cold thrown on.
+- **Robes, 15.** Five casters: four ways to mana or cover, and five rares, the biggest cell outside the amulet: the resonance, the price in life, Heat, Silence, and the soloist's reward for being fed. Three legendaries, one an exotic.
 - **Kite shield, 9; round shield, 10; horn, 9; totem, 9.** The walls' offhands: three uncommons and three rares each, since the Toll's doors all open here. The round shield's second legendary is an exotic.
-- **Relic, 8; lantern, 8; orb, 9; idol, 9; vial, 8.** Two wearers each: two or three first steps, two or three rares. The lantern, the orb and the idol hold two legendaries, where a far end and the net or an exotic share the kind.
-- **Tome, 10.** Three wearers across Barrage, Cold Snap and the Hexer's curses.
-- **Trophy, 8; bell, 7; cloak, 8.** Two first steps each.
-- **Amulet, 36.** Ten commons, one for each stat a road starts from; seven uncommons, ten rares and nine legendaries, all any-class.
+- **Relic, 9; lantern, 8; orb, 9; idol, 10; vial, 8.** Two wearers each: two or three first steps, two or three rares. Their second and third legendaries are Blood Pact's and Barrage's links (a price paid becomes a heal, or mana), the net, or an exotic.
+- **Tome, 12.** Three wearers across Barrage, Cold Snap and the Hexer's curses: four rares and three legendaries, the biggest offhand.
+- **Trophy, 9; bell, 7; cloak, 9.** Two or three first steps each.
+- **Amulet, 37.** Ten commons, one for each stat a road starts from; seven uncommons, ten rares and ten legendaries, all any-class.
 
 **Why each rarity moved:**
 - **Commons, 72 (from 68).** Two a weapon and offhand kind, three an armor type, as today. The amulet goes from six to ten: today's amulet uncommons that were a special stat with a small rider (Lifesteal, Thorns, Double strike) become commons, since a special stat alone is a common's step, and Lifesteal on an amulet is Blood Pact's sign for any class.
-- **Uncommons, 92 (from 68).** They carry nine roads' first steps and the engines' common halves, and two a kind couldn't hold them. Three a kind as the standard; four on the fist weapons and on each armor type; two on seven offhand kinds; seven on the amulet.
-- **Rares, 95 (from 68).** An engine's keystone is a rare wherever it's a road's second rung: about two dozen of today's legendary effects move down to rare, because a keystone has to be met while its other half is still close at hand. Its grown form stays legendary.
-- **Legendaries, 55 (from 68).** The far ends and the exotics. Fewer, so each is met more often: a full run is offered about twenty legendaries, which is three in ten of today's and nearer four in ten of these.
+- **Uncommons, 93 (from 68).** They carry nine roads' first steps and the engines' common halves, and two a kind couldn't hold them.
+- **Rares, 97 (from 68).** An engine's keystone is a rare wherever it's a road's second rung, and about two dozen of today's legendary effects move down. The reason is timing and the pick, not how often a piece is offered: counting elites, a given legendary is offered about as often as a given rare. But rares come one a fight from floor one, and a run keeps one of the three it's shown; legendaries mostly arrive three at a time from an elite, later in the act, and a run keeps one of those. A keystone has to arrive while its other half is still close at hand. Its grown form stays legendary.
+- **Legendaries, 60 (from 68).** The far ends, the links that reach across classes, and the exotics.
 
 **What stays of today's loot.** A piece stays where it serves a road or an engine: about half the rares and legendaries keep a card of today's, many at a new rarity or a new size, and a few keep only the name. The pieces made for the builds that were set aside go: the falls (Phoenix), the wait for a wind-up (Lockdown), spread for its own sake (Harvest), the mana relay (Overflow) and the opening with no tail (Ambush). What they had that the nine use is kept under its new road: the kill rewards and openers in the Hunt, the wide hits in each road's pack game, the mana links in Barrage.
 
-**Formations: 36 and Neutral** (13 common, 12 rare, 11 legendary; today 32). Every road has one at each rarity; four commons are shared ground; four more carry an engine, the net or an exotic.
+**Formations: 35 and Neutral** (13 common, 12 rare, 10 legendary; today 32). Every road has one at each rarity; four commons are shared ground; four more carry an engine, the net or an exotic.
 
-**Versions: 10 of 128 change. Mythics: 5 of 16 change. Kits: the two approved changes, and no other.**
+**Versions: 9 of 128 change. Mythics: 5 of 16 change. Kits: the two approved changes, and no other.**
 
 ### New words
 
@@ -108,31 +107,33 @@ Plus the 12 plain weapons and the 16 mythics. Today's stock is 272, in even quar
   - **Cuts:** hits landed. Thousand Cuts' far end.
   - **Heat:** speed that builds: its holder acts faster in everything, a stack. Bonfire's far end, the kill that speeds up the next, and the dancer's dodge. It takes over what Tempo did; what it did before (damage a stack) goes.
   - **Spite:** blows lived through. The Toll's far end.
-  - **Charge:** hits saved for one blow, then spent. The reckoning.
+  - **Wrath:** hits saved for one blow, then spent. The reckoning. Today's Charge, renamed: "charge" is the Storm's word for Shock in every document.
   - **Crescendo:** times the same ability has been cast this fight, counted ability by ability.
   - **Cascade:** shatters this fight.
   - Tempo, Surge and Fervor go, with the pieces that used them.
 - **Phrases a card needs once, each with one meaning:**
   - **"Carrying what the swing carries":** an extra hit that applies the statuses its wearer's basic attack applies to its target, from gear, a seat or a passive (Cold hex's Chill, Iron palm's Sunder, Arc's Shock). It carries no second target, no damage boost and no Refrain.
-  - **"As it was struck":** a blow's size before Defense, Guard, Aegis and Shields took their share.
-  - **"What a killing blow has left over":** its damage past the HP its foe had left.
-  - **"Start-of-fight effects":** everything on a unit that says "when each fight starts" and gives a status or readies something, from its gear, its seat and its kit. A price or a drawback paid at the start isn't paid again.
+  - **"As it was struck":** a blow's size after its attacker's boosts and before Defense, Guard, Aegis and Shields took their share.
+  - **"What a killing blow has left over":** its damage past the HP its foe had left. It lands as the same hit, so it meets the next foe's Defense.
+  - **"Start-of-fight effects":** everything on a unit's gear and seat that happens when a fight starts and gives a status or readies something, however its card words it. A kit's own effects don't happen again, and neither does a price or a drawback paid at the start.
+  - **"Its first-slotted ability":** the ability first in the order the player set, ready or not.
+  - **"Cast off its cooldown":** the ability resolves now, with no wind-up and its cooldown left as it was, and its MP is paid. With too little MP it doesn't fire.
   - **"Every so often"** stays the short cooldown word.
 
 ### The rules the pieces bend or add
 
-**Flagged for the gate.** These are the ones the director might not expect; each is a line to change.
-- **A status on a swing is an uncommon's effect.** Today's plain riders are rares. They move down, sized to be seen (a few a swing on a fast kind, several or many on a slow one), because they're the four status roads' first step. No rare is a rider made bigger.
-- **The same effect sits in more than one place.** `loot.md` says that where two items would read the same, one changes. builds.md asks for fire on swings "for many kinds", and for every keystone to come "from more than one place: a piece in more than one kind, a version, a seat". The spine holds both by this reading:
-  - a plain rider may sit in more than one kind when no unit could hold both, sized to each kind's swing;
-  - a keystone's second place is a different form of it wherever one exists (the fuse's four places each send the fire somewhere else);
-  - where no second form exists, a piece and a seat carry the same rule: Second dawn and Daybreak, Twin-knot and Twins, the Bleeder seat beside Halved heart.
-- **"All fight" means renewed as it runs out.** Challenger's plate and The long wall's Wall Taunt all fight, as two of today's seats do: the status is laid again each time it ends, and keeps its own length. It makes that length matter less than the rules mean it to.
-- **Two swing shapes are uncommons.** Millstone and Hummingbird charm reshape a unit's basic attacks, and were rares. They're the simplest statement of Landslide's and Thousand Cuts' first steps, and Millstone is the common half of five engines.
-- **The last drink.** The Red Feast heals its wearer up to half its HP when a fight is won. builds.md asks for power below half that doesn't leave a unit low when the fight ends; `docs/rules.md` says no build is made better at lasting many fights. It's on one legendary, sized to put back what the piece asked the unit to spend.
-- **Aegis and Hidden appear on gear and seats,** as `docs/rules.md` now allows: Aegis on one legendary, Hidden on five pieces and one formation.
+**Ruled at gate 1** (`intent.md`):
+- **One Mark from gear.** A piece or a seat never adds a second Mark. Each lays one "while no foe is Marked", or moves one when its foe falls, so a second marker in a party keeps a Mark up for longer and never splits the party's blows. The Paladin's Condemn still lays its own, as the vocabulary has it. With two Marks up, a random pick goes by draw among the Marked, and only an ability's first pick follows a Mark.
+- **Malison counts the five afflictions.**
+- **Alike cards.** An upgrade never copies a piece. Two pieces one unit could wear together never read the same. A piece and a formation seat may share a rule: a run finds one or the other, and a party-wide formation is a different commitment from an amulet.
+- **A plain rider may sit in more than one kind** when no unit could hold both, sized to each kind's swing.
 
-**Marks.** A piece or a seat never adds a second Mark. Each lays one "while no foe is Marked", or moves one when its foe falls, so a second marker in a party keeps a Mark up for longer and never splits the party's blows. The Paladin's Condemn still lays its own, as the vocabulary has it.
+**Bent by the spine, and still the director's to cut** (*Open for the director*):
+- **A status on a swing is an uncommon's effect.** Today's plain riders are rares. They move down, sized to be seen (a few a swing on a fast kind, several or many on a slow one), because they're the four status roads' first step. No rare is a rider made bigger.
+- **Two swing shapes are uncommons.** Millstone and Hummingbird charm reshape a unit's basic attacks, and were rares. They're the simplest statement of Landslide's and Thousand Cuts' first steps, and Millstone is the common half of five engines.
+- **"All fight" means renewed as it runs out.** Challenger's plate and The long wall's Wall Taunt all fight, as two of today's seats do: the status is laid again each time it ends, and keeps its own length. It makes that length matter less than the rules mean it to.
+- **The last drink.** The Red Feast heals its wearer up to half its HP when a fight is won. builds.md asks for power below half that doesn't leave a unit low when the fight ends; `docs/rules.md` says no build is made better at lasting many fights. It's on one legendary.
+- **Aegis and Hidden appear on gear and seats,** as `docs/rules.md` now allows: Aegis on one legendary, Hidden on five pieces and one formation.
 
 **Healing past full goes one place:** the healed unit's own piece first (Red stone mail), then the healer's (Phylactery), then the formation's (Shared cup).
 
@@ -144,28 +145,28 @@ Plus the 12 plain weapons and the 16 mythics. Today's stock is 272, in even quar
 
 ### Code support
 
-Named once, so the fill can name it. "New" means no item does it today.
+Named once, so the fill can name it by its number. "New" means no item does it today, judged from today's cards; the build confirms each against `PRIMITIVES.md` before writing it.
 
-1. **Marked steers abilities** aimed at a random foe, inside the Taunt rule. New (a rule).
+1. **Marked steers abilities** aimed at a random foe, inside the Taunt rule; with several Marks, by draw among them. New (a rule).
 2. **A count of different afflictions or debuffs on a target** as a size: Malison, Hexweave mail. As today's Hexweave mail.
-3. **A foe's next basic attack called at once:** the goad's three places. New.
+3. **A foe's next basic attack called at once:** the goad's two pieces. New.
 4. **A reaction that reads a blow before mitigation,** and one that reads what the cover stopped: the mirror's places. New; today's The last wall reads what an Aegis blocked.
-5. **Damage carried past a kill** into another foe: the avalanche's two pieces. New.
+5. **Damage carried past a kill** into another foe, as the same hit: the avalanche's three pieces. New.
 6. **Damage taken from MP first** (Orb of the deep, Idol of the deep), and MP past full made a Shield (Idol of the deep). New. MP past full sent to an ally is today's Leech idol.
-7. **An ability cast by a count of basic attacks,** off its cooldown, the mana paid (Bell of the hour); a swing that cuts a named ability's cooldown (Baton). New; today's Metronome counts hits to ready abilities.
-8. **Start-of-fight effects fired again** on a foe's fall: the opening, again. New.
+7. **An ability cast off its cooldown by a count of basic attacks** (Bell of the hour); a swing that cuts a named ability's cooldown (Baton). New; today's Metronome counts hits to ready abilities.
+8. **Start-of-fight effects of gear and seats fired again** on a kill or a fall, prices left out: the opening, again. New.
 9. **A status moved or laid elsewhere:** a fallen foe's Burn to another foe, as today's Wick; a share of a shattered foe's cold laid on other foes, where today's Winter's chain lays a fixed few; the wearer's own afflictions onto what it hits, and a whole debuff handed on (Carrier's coat, Scapegoat charm); Chill added to one foe added to all (Heart of winter). The last three are new.
 10. **An ability's cooldown cut by the foes it hit:** the resonance. New.
 11. **A per-ability cast count that raises what it does, and its cost:** Crescendo. New.
 12. **Riders copied between units:** a seat or a wand that carries another unit's basic-attack riders (The standard, Mimic wand); a seat that lays its riders on whatever strikes another seat (Toll gate); an extra hit "carrying what the swing carries"; a rider that reads which status its target holds most of (Tinder charm). Today's Echo charm does the third on one unit; the rest are new.
 13. **A status a unit gives itself, copied to an ally:** the borrowed gift's two places. New.
 14. **Healing capped at half HP** (Halved heart), and healing past full sent to an ally (Shared cup). New. Healing past full into a Shield is today's Phylactery.
-15. **A counter one unit fills and another reads or spends** (Hammer and anvil, The long wall), and counters the party shares (The whetstone's Cuts, Cascade). Today's Metronome is a party count; the rest is new.
-16. **A blow landed a second time** (Twinfall, The mountain, Hunting spear), as today's Dragon's tooth does for crits.
-17. **Strikes on new triggers:** when a foe holding Shock acts (Answering thunder); at every foe that has hit the wearer since its last swing (Sarissa); at a foe that starts a wind-up (Hushing idol); basic attacks made during a wind-up (Tireless bell). Strikes on a hit taken and on a dodge are today's Pike wall and Duelist's leathers.
+15. **A counter one unit fills and another reads or spends** (Hammer and anvil, The anvil, The long wall), and counters the party shares (The whetstone's Cuts, Cascade). Today's Metronome is a party count; the rest is new.
+16. **A blow landed a second time** (Twinfall, The mountain, Hunting spear), as today's Dragon's tooth does for crits. The second landing never lands again.
+17. **Strikes on new triggers:** when a foe holding Shock acts (Answering thunder); at every foe that has hit the wearer since its last swing (Sarissa); at a foe that starts a wind-up (Hushing idol); by an ally when the wearer dodges (Parrying spear); basic attacks made during a wind-up (Tireless bell). Strikes on a hit taken and on a dodge are today's Pike wall and Duelist's leathers.
 18. **Reading the party's whole Shield** (Cornerstone hammer) and the field's whole Shock (Stormbrand, the Bolt seat). New; today's Cornerstone maul reads its wearer's own Shield.
 19. **Marks from new events:** on a crit, on a heal (at the foe that last hit the healed ally), standing on the lowest foe. Moving a Mark at a fall is today's Gravemark, and "the foe its wearer last hit" is as today's The pack follows its Lead. "The foe that last hit an ally" is a memory the engine doesn't keep yet.
-20. **Costs in HP** for a whole party (The covenant), for heals alone (Heart of the saint), and paid by one unit for another (The chalice), beside today's Blood covenant; damage from the MP an ability cost (Brimming blade); a heal as a fight is won, beside today's stand-ups.
+20. **Costs in HP** for a whole party (The covenant), for heals alone (Heart of the saint), and paid by one unit for another (The chalice), beside today's Blood covenant; a reaction to an ally paying HP (Bloodstone reliquary, Idol of the blood-well); damage from the MP an ability cost (Brimming blade); a reaction to MP given by an ally (Glimmer robe); a heal as a fight is won, beside today's stand-ups.
 21. **Changes to how an ability is cast:** no cooldown, mana its only brake (The cathedral); every other cast with no wind-up (Evensong staff); a random order (Motley robe); abilities that aim at a foe in a wind-up (Marginalia). New.
 22. **Small ones:** two stats swapped (Turncoat charm); every Shield an ally would gain sent to one unit (Lodestone shield); a status the wearer lays on itself (Burning heart).
 
@@ -177,7 +178,7 @@ Everything after these reads them.
 
 - **Marked** · vocabulary · kit change · A Marked foe takes the party's random picks: basic attacks, as today, and every ability aimed at "a random foe" (Shield bash, Barbed arrow, Bramble lash, Spear thrust, Gale spear, Garrote, Blood drain, Chain lightning's first strike, Rockfall, Tremor), inside the Taunt rule, with Seek following the Mark past a Taunting foe. An ability with a target phrase of its own keeps it. *Sees:* a Mark lands, and everything the party was going to throw anywhere lands on one foe.
 - **Malison** · Hexer · kit change · Curses every foe: a hit, from Attack, that deals more for each different affliction the foe holds, and adds a few Bleed. It no longer adds a stack of each affliction. *Sees:* the curse's number is biggest on the foe with the longest row of icons.
-  - **An assumption, to confirm:** it counts the five afflictions (Burn, Chill, Shock, Bleed and Sunder), each once: the list the old Malison deepened. So the Hexer's own kit reaches three alone (its Chill, its Bleed, Enfeeble's Sunder), and the other two have to come from a breadth-layer or an ally, which is what keeps the engine worth finding. Counting every debuff would let its own Weaken and a Mark stand in for the colours.
+  - **Ruled:** it counts the five afflictions (Burn, Chill, Shock, Bleed and Sunder), each once. The Hexer's own kit reaches three alone (its Chill, its Bleed, Enfeeble's Sunder), and the other two have to come from an ally or a piece. Its few Bleed stay, which keeps builds.md's "four base kits open wounds" true.
 
 ### The parts that recur
 
@@ -187,21 +188,21 @@ builds.md's nine parts, each in several engines. They were written first, so a r
 | A part | Where it sits |
 | --- | --- |
 | A Shield made by what a unit already does | *Uncommon:* Trophy spear (spear), Mason's hammer (hammer), Scabbed mail (mail), Glyphed robe (robes), Hooded cloak (cloak)<br>*Rare:* Red stone mail (mail), Phylactery (relic) |
-| A draw on one unit | *Uncommon:* Portcullis (plate), Watch horn (horn), Challenger's token (amulet)<br>*Rare:* Challenger's plate (plate) |
+| A draw on one unit | *Uncommon:* Portcullis (plate), Watch horn (horn), Matador's cape (cloak), Challenger's token (amulet)<br>*Rare:* Challenger's plate (plate) |
 | A status on a swing | *Uncommon:* Weeping kris (dagger), Sleet dirk (dagger), Live-wire knuckles (fist), Cinder wraps (fist), Rime knuckles (fist), Spark wand (wand), Jolt wand (wand), Rimed blade (sword), Jolt spear (spear), Ragged axe (axe), Broadhead bow (bow), Frostbite bow (bow), Sleet blade (rune sword), Censer mace (mace), Tinder charm (amulet) |
 | A hit on many foes | *Uncommon:* Ringing bell (bell)<br>*Rare:* Forked knuckles (fist), Chain wand (wand), Oathkeeper (sword), Storm pike (spear), Volley bow (bow) |
 | A foe held still | *Uncommon:* Bellringer (hammer)<br>*Rare:* Still hand (fist), Icebreaker (great weapon), Rubble shield (kite shield), Vulture's skull (trophy)<br>*Legendary:* Worldbreaker (great weapon) |
-| A kill that pays | *Uncommon:* Second thrust (dagger), Trophy spear (spear), Reaver's axe (axe), Harvest scythe (great weapon), Hunter's buckler (round shield), Bull's horn (horn), Charnel icon (relic), Mana pearl (orb), Hunter's skull (trophy)<br>*Rare:* Thirsting axe (axe), Pack leader's coat (leather), Dawn runner's coat (leather), Hunting horn (horn), Shadow cloak (cloak), Bounty charm (amulet)<br>*Legendary:* Headsman's axe (axe), The king's head (trophy) |
+| A kill that pays | *Uncommon:* Second thrust (dagger), Trophy spear (spear), Reaver's axe (axe), Harvest scythe (great weapon), Hunter's buckler (round shield), Bull's horn (horn), Charnel icon (relic), Mana pearl (orb), Hunter's skull (trophy)<br>*Rare:* Thirsting axe (axe), Pack leader's coat (leather), Hunting horn (horn), Hunter's tally (trophy), Shadow cloak (cloak), Bounty charm (amulet)<br>*Legendary:* Headsman's axe (axe), The king's head (trophy) |
 | The slowest, heaviest blow | *Uncommon:* Warden's hammer (hammer), Roaring greataxe (great weapon), Giantsbane (great weapon), Harvest scythe (great weapon), Spiked kite (kite shield), Millstone (amulet)<br>*Rare:* Grudgebearer (hammer), Mountainfall (hammer), Overrun (great weapon), Thunderhead maul (great weapon), Monolith shield (kite shield), War horn (horn)<br>*Legendary:* Headsman's axe (axe), Worldbreaker (great weapon), Twinfall (great weapon) |
 | The ally with the lowest share of HP | *Uncommon:* Mercy's edge (sword), Mender's mace (mace), Vesper staff (staff), Comrade's targe (round shield), Bear fetish (totem), Charnel icon (relic) |
-| A cast that's free, or mana given | *Uncommon:* Tithe wand (wand), Wellblade (rune sword), Shepherd's staff (staff), Matins robe (robes), Acolyte's robe (robes), Font relic (relic), Mana pearl (orb), Leech idol (idol), Clear-headed charm (amulet)<br>*Rare:* Forked knuckles (fist), Spellbinder (rune sword), Twice-told tome (tome), Orb of the long winter (orb)<br>*Legendary:* Annotated grimoire (tome), The deep well (orb) |
+| A cast that's free, or mana given | *Uncommon:* Tithe wand (wand), Wellblade (rune sword), Shepherd's staff (staff), Matins robe (robes), Acolyte's robe (robes), Font relic (relic), Mana pearl (orb), Leech idol (idol), Clear-headed charm (amulet)<br>*Rare:* Forked knuckles (fist), Spellbinder (rune sword), Twice-told tome (tome), Annotated score (tome), Orb of the long winter (orb)<br>*Legendary:* Annotated grimoire (tome), The deep well (orb) |
 <!-- parts:end -->
 
 What the nine come to, in this stock:
 - **A Shield made by what a unit already does** is five uncommons: by hits (Mail, the hammer), by dodges (the cloak), by casts (Robes), by kills (the spear). Healing past full is the red stone's two rares.
-- **A draw** is on the amulet (Taunt at the start, for any class), the horn (a Taunt whenever an ally is in trouble) and Plate (Aggro while healthy; a Taunt all fight as its rare).
+- **A draw** is four uncommons: a Taunt at the start on the amulet, for any class; a Taunt whenever an ally is in trouble on the horn; a Taunt on every dodge on the cloak; Aggro while healthy on Plate. A Taunt all fight is Plate's rare.
 - **A status on a swing** is fifteen uncommons: twelve riders in nine weapon kinds, Tinder charm on the amulet, which follows whatever colour the party has started, and two openers that wound by crit or first hit.
-- **A hit on many foes** is the bell's ring as the uncommon, and five rares that fan a swing out (a fist weapon, a wand, a sword, a spear, a bow). Each carries what the swing carries. builds.md warns that a slot whose whole promise was one more foe was never taken; these still promise more foes, and are flagged under *Least sure*.
+- **A hit on many foes** is the bell's ring as the uncommon, and five rares that fan a swing out (a fist weapon, a wand, a sword, a spear, a bow). Each carries what the swing carries. builds.md warns that a slot whose whole promise was one more foe was never taken; these still promise more foes, and are under *Least sure*.
 - **A foe held still** is the hammer's fourth swing as the uncommon. The pieces that read a held foe are rares.
 - **A kill that pays** is nine uncommons, each paying a whole action or a visible status: the next swing at once, a doubled hit, Haste, a Shield, a Heat, mana, a heal.
 - **The slowest, heaviest blow** is Millstone on the amulet, as an uncommon, so any class can be the hammer, and five more that make a heavy blow heavier. Monolith shield does for abilities what Millstone does for swings.
@@ -270,7 +271,7 @@ Every uncommon, rare and legendary piece has a line here. A kind's header says w
 - **Trophy spear** · spear · uncommon · When it lands a killing blow, its wearer gains a Shield (from Attack). *Sees:* a grey bar after each kill. → Hunt 1 ●●, Cuts ● ⚙ detonation (half) ◆ kill-pays, shield-by-doing
 - **Long spear** · spear · uncommon · Its basic attacks ignore Taunt. *Sees:* its swings land on the back row while a guard stands in front. → Hunt 1 ●●, Storm ●
 - **Hunting spear** · spear · rare · Its hits on a foe below half its HP land twice. → Hunt 2 ●●●, Cuts ●●
-- **Pike wall** · spear · rare · When a foe hits an ally with less Defense than the wearer, the wearer strikes that foe with its spear. *Sees:* whoever touches the back row is struck for it. → Toll 2 ●●●, Landslide ●●, Storm ●
+- **Parrying spear** · spear · rare · Each time its wearer dodges a hit, the other ally with the highest Attack strikes the attacker with its weapon. *Sees:* MISS, and the blow back comes from the ally beside it. → Toll 2 ●●●, Cuts ●● ⚙ riposte (key)
 - **Storm pike** · spear · rare · Every fifth hit it lands also strikes every other foe (a light hit, from Attack), carrying what its swings carry. *Sees:* a count, then a flash across the whole field. → Storm 2 ●●●, Cuts ●●, Bonfire ●, Hunt ● ⚙ red rain (half), reaping (half) ◆ wide-hit
 - **Sarissa** · spear · legendary · Its basic attacks hit every foe that has hit its wearer since its last swing. → Toll 3 ●●●, Storm ●●, Landslide ●●
 
@@ -303,6 +304,7 @@ Every uncommon, rare and legendary piece has a line here. A kind's header says w
 - **Sigil blade** · rune sword · uncommon · When each fight starts, its wearer gains a Shield from its max MP. *Sees:* a grey bar on the caster at the first tick. → Barrage ●, Landslide ● ⚙ detonation (half), opening again (half)
 - **Wellblade** · rune sword · uncommon · Each basic attack it lands restores some of its wearer's MP. *Sees:* the blue bar ticks up with each swing. → Barrage 1 ●●, Storm ● ◆ free-cast
 - **Winter's chain** · rune sword · rare · When a foe's Chill shatters, the foe with the most Chill left gains half the cold it held. *Sees:* one foe bursts, and the next one's counter leaps. → Snap 2 ●●● ⚙ firecracker (key)
+- **Frostward blade** · rune sword · rare · Foes that hit the ally with the highest Aggro gain a few Chill. *Sees:* the pack slows with every blow it lands on the wall, and the frost comes from the mage beside it. → Toll 2 ●●●, Snap 2 ●● ⚙ frozen gate (key)
 - **Spellbinder** · rune sword · rare · After each ability its wearer casts, its next basic attack deals double and gives back half the ability's cost. *Sees:* a cast, a heavy swing, and the blue bar partly refilled. → Barrage 2 ●●●, Storm ● ◆ free-cast
 - **Brimming blade** · rune sword · legendary · Its wearer's abilities deal extra damage from the MP they cost. → Barrage 3 ●●●
 - **Glacier blade** · rune sword · legendary · Each shatter this fight adds a Cascade. Its wearer's abilities deal more, and add more Chill and Shock, for each Cascade. → Snap 3 ●●●, Storm ●
@@ -313,7 +315,7 @@ Every uncommon, rare and legendary piece has a line here. A kind's header says w
 - **Warden's hammer** · hammer · uncommon · Its swings deal extra damage from its wearer's Defense. *Sees:* the wall's swing lands a number no sword of its would. → Landslide 1 ●●, Toll ● ◆ heavy-blow
 - **Mason's hammer** · hammer · uncommon · Each swing it lands gives its wearer a Shield of a share of the damage dealt. *Sees:* the blow lands and a grey bar grows by it. → Landslide 1 ●●, Toll ● ⚙ detonation (half) ◆ shield-by-doing
 - **Bellringer** · hammer · uncommon · Every fourth swing it lands Stuns its target. *Sees:* a count, and a foe held still. → Landslide ●, Snap ●, Storm ● ⚙ held charge (half), emptied quiver (half) ◆ held
-- **Grudgebearer** · hammer · rare · Each hit its wearer takes adds a Charge. Its next swing deals more for each Charge, and spends them. *Sees:* a counter climbs with every bite, and the swing lands for all of it. → Toll 2 ●●●, Landslide 2 ●●● ⚙ reckoning (key) ◆ heavy-blow
+- **Grudgebearer** · hammer · rare · Each hit its wearer takes adds a Wrath. Its next swing deals more for each Wrath, and spends them. *Sees:* a counter climbs with every bite, and the swing lands for all of it. → Toll 2 ●●●, Landslide 2 ●●● ⚙ reckoning (key) ◆ heavy-blow
 - **Mountainfall** · hammer · rare · Its swings deal extra damage equal to a share of its wearer's max HP. → Landslide 2 ●●●, Toll ●●, Pact ● ◆ heavy-blow
 - **Cornerstone hammer** · hammer · legendary · Its swings deal extra damage equal to a share of all the Shield its party holds. The Shields stay. → Landslide 3 ●●●, Pact ●
 
@@ -325,7 +327,6 @@ Every uncommon, rare and legendary piece has a line here. A kind's header says w
 - **Penitent's mace** · mace · uncommon · Each hit its wearer takes heals the ally with the lowest share of HP a little (from its max HP). *Sees:* the wall is struck and someone is mended. → Toll 1 ●●, Pact ●
 - **Saint's mace** · mace · rare · Each time its wearer heals an ally, that ally's next hit deals extra damage equal to half the heal. *Sees:* a heal, then a bigger number from the healed. → Pact 2 ●●●, Landslide ●●
 - **Shepherd's mace** · mace · rare · Its wearer's heals on the ally with the highest Aggro are doubled. → Toll 2 ●●●, Pact ●●
-- **Ashen mace** · mace · rare · Its swings deal extra damage for each Burn on their target. The Burn stays. *Sees:* the keeper's slow swing lands hardest when the fire is high. → Bonfire 2 ●●●, Landslide ●
 - **Martyr's mace** · mace · legendary · Its basic attacks deal more the lower its wearer's HP, up to triple. Below a third of its HP, each one also heals its wearer for the damage dealt. → Pact 3 ●●● ⚙ brink (half)
 - **Sunhammer** · mace · legendary · Each swing it lands on a burning foe gives every ally a Heat (each acts faster, a stack) for the rest of the fight. → Bonfire 3 ●●●, Toll ●
 
@@ -365,6 +366,7 @@ Every uncommon, rare and legendary piece has a line here. A kind's header says w
 - **Rubble plate** · plate · rare · When its wearer's Shield breaks, every foe takes damage equal to the most that Shield held. *Sees:* the grey bar goes, and a number lands on every foe. → Landslide 2 ●●●, Toll ●● ⚙ detonation (key)
 - **Thornheart plate** · plate · legendary · A foe that hits its wearer takes a share of the blow as it was struck, and a larger share for each blow the wearer has lived through this fight (Spite). *Sees:* a counter on the wall climbs with every blow, and each blow sends more of itself back. → Toll 3 ●●●, Landslide ●● ⚙ mirror (key)
 - **Last bastion** · plate · legendary · Once a fight, a blow that would knock its wearer out leaves it at 1 HP and Guarded. Until it's healed back above half its HP, its hits deal double. → net, Pact ●● ⚙ brink (half)
+- **The anvil** · plate · legendary · Each hit its wearer takes adds a Wrath to the ally with the slowest basic attack. That ally's next basic attack deals more for each Wrath, and spends them. *Sees:* the hammer's counter climbs with every bite on the anvil. → Toll 3 ●●●, Landslide ●●● ⚙ reckoning (key)
 
 ##### Mail
 *Wears:* Bramble knight, Paladin, Valkyrie, Hexer, Vampire, Frostweaver. *Stats lean:* Blood Pact to HP and Lifesteal; the Toll to HP and Thorns; Thousand Cuts to Attack and Lifesteal; the status roads to Attack.
@@ -391,7 +393,6 @@ Every uncommon, rare and legendary piece has a line here. A kind's header says w
 - **Shadow mantle** · leather · rare · While its wearer is Hidden, its hits deal double. → Hunt 2 ●●● ⚙ two in the dark (half)
 - **Pack leader's coat** · leather · rare · When its wearer lands a killing blow, every ally's next basic attack comes at once. *Sees:* a kill, and three weapons landing together. → Hunt 2 ●●●, Landslide ●●, Bonfire ●● ⚙ judge's drum (key) ◆ kill-pays
 - **Frostwalker's furs** · leather · rare · When a foe's Chill shatters, its wearer is Hasted, and its next hit adds a few Chill to every foe. *Sees:* SHATTER, and frost across the whole field on its next blow. → Snap 2 ●●●, Cuts ● ⚙ firecracker (key), frozen gate (half)
-- **Dawn runner's coat** · leather · rare · The first time a foe falls in each fight, its wearer's start-of-fight effects happen again. *Sees:* the first kill, and the opening once more: the Shield, the Haste, the frost. → Hunt 2 ●●, first move ⚙ opening again (key) ◆ kill-pays
 - **Windrunner's garb** · leather · legendary · Each dodge adds a Heat (its wearer acts faster in everything, a stack) for the rest of the fight. Each hit it takes spends half its Heat. → Cuts 3 ●●, Toll 3 ●● ⚙ riposte (half)
 - **Carrier's coat** · leather · legendary · Each hit its wearer lands gives its target one stack of every affliction the wearer itself holds. The wearer keeps its own. *Sees:* a unit bitten by a hellhound burns, and from then on everything it touches burns. → exotic ⚙ carrier (key)
 
@@ -406,6 +407,7 @@ Every uncommon, rare and legendary piece has a line here. A kind's header says w
 - **Quiet robes** · robes · rare · Its wearer can't be Silenced. → Barrage 2 ●●, Bonfire ●●, stops a cast
 - **Resonant robes** · robes · rare · Each ability its wearer casts comes round sooner for each foe it hit. *Sees:* against a pack the same spell's name scrolls again and again, and slows as the pack thins. → Barrage 2 ●●●, Storm 2 ●●●, Bonfire ●●, Snap ●● ⚙ resonance (key)
 - **Sanguine vestments** · robes · rare · Its wearer's abilities cost HP in place of MP: the same share of its max HP. It won't cast one that would leave it below a tenth of its HP. *Sees:* the red bar drops at every cast and the blue one never moves. → Pact 2 ●●●, Barrage 2 ●● ⚙ blood mage (key), brink (key)
+- **Glimmer robe** · robes · rare · Each time an ally gives its wearer MP, its next ability deals a third more. *Sees:* a note of mana lands, and the next spell's number is bigger. → Barrage 2 ●● ⚙ mana as armour (half)
 - **Archmage's mantle** · robes · legendary · Its wearer's abilities cost half again as much MP, and deal, heal and add half again as much. → Barrage 3 ●●●, Bonfire ●●, Snap ●●
 - **Vestments of return** · robes · legendary · While its wearer stands, every ally revived comes back behind a Shield of half its max HP. → net
 - **Motley robe** · robes · legendary · Its wearer casts its abilities in a random order, whatever order they're slotted in, and each costs half. → exotic
@@ -466,6 +468,7 @@ Every uncommon, rare and legendary piece has a line here. A kind's header says w
 - **Phylactery** · relic · rare · The part of its holder's heals that would go past full becomes a Shield on the healed ally. *Sees:* a healer with nothing to mend builds grey bars. → Pact 2 ●●●, Landslide ●●, Toll ●● ⚙ red stone (key), detonation (half) ◆ shield-by-doing
 - **Accuser's relic** · relic · rare · While no foe is Marked, each heal its holder gives Marks the foe that last hit the healed ally. *Sees:* the healer mends the wall and the party turns on whatever struck it. → Hunt 2 ●●●, Toll ●●
 - **Heart of the saint** · relic · legendary · Its holder's heals are paid in its own HP in place of MP, and are twice as big. *Sees:* the healer's own red bar drops with every heal, and the heals are huge. → Pact 3 ●●● ⚙ brink (key)
+- **Bloodstone reliquary** · relic · legendary · Each time an ally pays HP, the other ally with the lowest share of HP is healed for as much. → Pact 3 ●●● ⚙ brink (half), blood mage (half)
 
 ##### Lantern
 *Wears:* Cleric, Pyromancer. *Signature:* Cast speed. *Stats lean:* Bonfire to Cast speed and Attack; Barrage to Cast speed, MP and Cooldown.
@@ -486,8 +489,10 @@ Every uncommon, rare and legendary piece has a line here. A kind's header says w
 - **Primer of frost** · tome · rare · Each time its holder adds Chill to a foe, it adds more the more Chill that foe already holds. → Snap 2 ●●●
 - **Twice-told tome** · tome · rare · Every third ability its holder casts is cast twice. The second cast is free. *Sees:* the same name twice running in the log. → Barrage 2 ●●●, Snap ●●, Landslide ● ⚙ crescendo (half) ◆ free-cast
 - **Grimoire of plagues** · tome · rare · When each fight starts, every foe gains a few stacks each of two of Burn, Chill, Shock and Bleed, at random. *Sees:* two different icons on every foe at the first tick. → Bonfire ●●, Snap ●●, Storm ●●, Cuts ●● ⚙ every colour (key), opening again (half)
+- **Annotated score** · tome · rare · Each time the ally with the highest Attack casts an ability, its holder's next ability costs no MP. *Sees:* the soloist casts, and the next song leaves its singer's blue bar alone. → Barrage 2 ●● ⚙ crescendo (half) ◆ free-cast
 - **Last page** · tome · legendary · When a foe falls, every foe below a tenth of its HP falls too. → Hunt 3 ●●, Storm ● ⚙ reaping (half)
 - **Annotated grimoire** · tome · legendary · Each ability its holder pays for makes the next ability any ally casts free. → Barrage 3 ●●● ⚙ crescendo (half) ◆ free-cast
+- **Frozen tome** · tome · legendary · Each time a foe's Chill shatters, every ally's ability with the longest cooldown comes half its wait closer. *Sees:* SHATTER, and the whole party's great abilities come round. → Snap 3 ●●●, Landslide ●●, Barrage ●● ⚙ shatter bell (key)
 
 ##### Orb
 *Wears:* Pyromancer, Frostweaver. *Signature:* MP. *Stats lean:* Barrage to MP, MP regen and Cooldown; Bonfire and Cold Snap to MP and Attack.
@@ -510,6 +515,7 @@ Every uncommon, rare and legendary piece has a line here. A kind's header says w
 - **Idol of binding** · idol · rare · Foes its holder Weakens are also Slowed, and its hits on a foe that's both deal double. → Toll ●●, foes do less
 - **Idol of the hungry dark** · idol · legendary · Every so often, it takes one buff from a foe and gives it to its holder. Never Bulwark. → exotic
 - **Idol of the deep** · idol · legendary · Damage its holder takes comes out of its MP first. MP it gains past full becomes a Shield. *Sees:* the blue bar takes the blows, and whatever would overfill it turns grey. → Barrage 3 ●●, Pact ●● ⚙ mana as armour (key)
+- **Idol of the blood-well** · idol · legendary · Each time its holder pays HP, the ally with the least MP regains as much MP. → Barrage ●●●, Pact ●● ⚙ blood mage (half)
 
 ##### Vial
 *Wears:* Vampire, Assassin. *Signature:* Lifesteal. *Stats lean:* Blood Pact to Lifesteal and HP; Thousand Cuts and the Hunt to Crit chance and Crit damage.
@@ -529,6 +535,7 @@ Every uncommon, rare and legendary piece has a line here. A kind's header says w
 - **Vulture's skull** · trophy · rare · Its holder's hits on a Stunned foe always crit. *Sees:* a foe held still takes nothing but crits. → Landslide 2 ●●●, Snap 2 ●●●, Hunt ●● ⚙ emptied quiver (half) ◆ held
 - **Ogre's tusk** · trophy · rare · Its holder's hits on the foe with the most HP deal half again as much. → Landslide 2 ●●●
 - **Dragon's tooth** · trophy · rare · Its holder's crits strike again for a third of their damage. → Landslide ●●, Hunt ●●, Cuts ●●
+- **Hunter's tally** · trophy · rare · Each time its holder lands a killing blow, the start-of-fight effects of its gear and its seat happen again. *Sees:* a kill, and the opening once more: the Shield, the Haste, the frost. → Hunt 2 ●●● ⚙ opening again (key) ◆ kill-pays
 - **The king's head** · trophy · legendary · When its holder lands a killing blow, every ally's crit chance is doubled for a while. *Sees:* a kill, and a spell of crits from everyone. → Hunt 3 ●●●, Landslide ●● ⚙ emptied quiver (half) ◆ kill-pays
 
 ##### Bell
@@ -536,7 +543,7 @@ Every uncommon, rare and legendary piece has a line here. A kind's header says w
 - *Commons (2):* one leans to Attack speed and Evasion, one to Attack speed and MP regen.
 - **Ringing bell** · bell · uncommon · Every fourth basic attack its holder lands rings: a light hit on every foe (from Attack), carrying what the swing carries. *Sees:* a count, and a small number on every foe. → Storm 1 ●●, Cuts 1 ●● ⚙ red rain (half), reaping (half), resonance (half) ◆ wide-hit
 - **Pacer's bell** · bell · uncommon · Every so often, the ally with the fastest basic attack is Hasted. *Sees:* the Haste icon comes back on the party's quickest hitter. → Cuts 1 ●●, Storm ●, Bonfire ●
-- **Bell of the hour** · bell · rare · Every eighth basic attack its holder lands casts its first-slotted ability at once, whatever its cooldown. The mana is still paid. *Sees:* a count climbs with each swing, and at the top, the spell. → Cuts 2 ●●●, Barrage 2 ●●● ⚙ spell on the swing (key)
+- **Bell of the hour** · bell · rare · Every eighth basic attack its holder lands casts its first-slotted ability off its cooldown. *Sees:* a count climbs with each swing, and at the top, the spell. → Cuts 2 ●●●, Barrage 2 ●●● ⚙ spell on the swing (key)
 - **Warding bell** · bell · rare · Every so often, it lifts one debuff from the ally holding the most, a Silence first. → Barrage ●●, Toll ●
 - **Tireless bell** · bell · legendary · Its holder keeps making basic attacks while it winds up an ability. → exotic, Storm ●●, Cuts ●●, Barrage ●●
 
@@ -545,6 +552,7 @@ Every uncommon, rare and legendary piece has a line here. A kind's header says w
 - *Commons (2):* one leans to Evasion and Attack, one to Evasion and Attack speed.
 - **Hooded cloak** · cloak · uncommon · Each time its holder dodges a hit, it gains a Shield (from Attack). *Sees:* MISS, and the grey bar a little taller. → Toll 1 ●●, Cuts ● ⚙ riposte (half), detonation (half) ◆ shield-by-doing
 - **Feathered cloak** · cloak · uncommon · The first time each fight its holder drops below half its HP, it's Hidden. *Sees:* a hurt unit fades and the foes look elsewhere. → net, Hunt ● ⚙ two in the dark (half)
+- **Matador's cape** · cloak · uncommon · Each time its holder dodges a hit, it Taunts. *Sees:* MISS, and the dodger calls the next blows onto itself. → Toll 1 ●●, Cuts ● ⚙ riposte (half) ◆ draw
 - **Dancer's cloak** · cloak · rare · Each time its holder dodges a hit, its ability nearest to ready is ready. → Toll 2 ●●, Cuts 2 ●●, Barrage ●
 - **Tempest cloak** · cloak · rare · Each time its holder dodges a hit, its next basic attack comes at once and strikes twice. *Sees:* MISS, and two blows back. → Toll 2 ●●●, Cuts 2 ●●● ⚙ riposte (key)
 - **Shadow cloak** · cloak · rare · Its holder is Hidden when each fight starts, and again each time a foe falls. *Sees:* a name that fades at the first tick and after every kill. → exotic, Hunt ●● ⚙ two in the dark (key) ◆ kill-pays
@@ -571,7 +579,8 @@ Every uncommon, rare and legendary piece has a line here. A kind's header says w
 - **Hunter's mark** · amulet · rare · While no foe is Marked, its wearer Marks the foe with the lowest HP. *Sees:* there's always a Mark on the field, on the foe nearest its end. → Hunt 2 ●●● ⚙ judge's drum (half)
 - **Shroud charm** · amulet · rare · Whenever an ally drops below a third of its HP, that ally is Hidden. *Sees:* the most hurt ally fades, and the foes turn elsewhere. → Pact ●●, net ⚙ two in the dark (key), brink (half)
 - **Heart of winter** · amulet · legendary · Chill its wearer adds to one foe is added to every foe. → Snap 3 ●●● ⚙ firecracker (half)
-- **Second dawn** · amulet · legendary · Each time a foe falls, its wearer's start-of-fight effects happen again. *Sees:* a foe falls and the opening happens again, every time. → Hunt 3 ●●● ⚙ opening again (key)
+- **Second dawn** · amulet · legendary · Each time a foe falls, the start-of-fight effects of every ally's gear and seat happen again. *Sees:* a foe falls and the party's opening happens again: stone up, Haste on, frost across the field. → Hunt 3 ●●● ⚙ opening again (key)
+- **Downhill charm** · amulet · legendary · When its wearer's hit knocks a foe out, what the blow had left over is split evenly among the other foes. *Sees:* a kill, and a small number on every other foe. → Landslide ●●, Hunt ●● ⚙ avalanche (key)
 - **Twin-knot** · amulet · legendary · Whatever status its wearer gives itself, the other ally with the lowest share of HP gains too. *Sees:* something different for each class: the Assassin vanishes and the most hurt ally vanishes with it. → exotic ⚙ borrowed gift (key), brink (half), two in the dark (half)
 - **Scapegoat charm** · amulet · legendary · When its wearer is given a debuff, its next hit gives that debuff, whole, to its target, and the wearer is rid of it. Doom can't be passed on. *Sees:* the witch's curse lands on the unit, and its next blow hands it straight back. → exotic ⚙ carrier (half)
 - **Burning heart** · amulet · legendary · Every few ticks its wearer sets itself alight: a few Burn on itself. While it burns, it deals half again as much. → exotic, Pact ●, Bonfire ● ⚙ carrier (half)
@@ -602,7 +611,7 @@ Each line gives the promise, then the three seats.
 - **Skirmish line** · formation · common · Three who'd rather not be hit at all. Each dodge gives the dodger a small Shield. Seats: three Skirmishers: Evasion up; Defense down. → Toll ●●, Cuts ●● ⚙ riposte (half)
 
 #### Rare
-- **Hammer and anvil** · formation · rare · Every blow the Anvil takes is saved for the Hammer. Seats: Anvil: draws far more; each hit it takes adds a Charge to the Hammer. / Hammer: its next basic attack deals more for each Charge, and spends them. / Smith: its heals and Shields on the Anvil are a third bigger. *Sees:* a counter on the Hammer climbs with every bite the Anvil takes, then one swing lands for all of it. → Landslide 2 ●●●, Toll 2 ●●● ⚙ reckoning (key)
+- **Hammer and anvil** · formation · rare · Every blow the Anvil takes is saved for the Hammer. Seats: Anvil: draws far more; each hit it takes adds a Wrath to the Hammer. / Hammer: its next basic attack deals more for each Wrath, and spends them. / Smith: its heals and Shields on the Anvil are a third bigger. *Sees:* a counter on the Hammer climbs with every bite the Anvil takes, then one swing lands for all of it. → Landslide 2 ●●●, Toll 2 ●●● ⚙ reckoning (key)
 - **Open wound** · formation · rare · One opens them up; two drink from the wound. Seats: Opener: its crits add many Bleed. / Blade: each hit it lands on a bleeding foe heals it a little. / Blade: the same. → Cuts 2 ●●●, Pact ●●
 - **Pyre line** · formation · rare · The fire outlives whatever it's burning. Seats: Keeper: Taunts and is Guarded when each fight starts; foes that hit it gain a few Burn. / Stoker: basic attacks a third faster. / Torch: when a burning foe falls, all its Burn passes to the foe with the most HP. *Sees:* the smallest foe goes up, and its whole fire lands on the biggest. → Bonfire 2 ●●●, Hunt ●● ⚙ fuse (key)
 - **Icefall** · formation · rare · Two lay frost, each its own way, and every shatter rings the third's great spell. Seats: Rime: whatever Chill its abilities add, they add half again as much. / Sleet: its basic attacks add a few Chill. / Breaker: when a foe's Chill shatters, its ability with the longest cooldown is ready. *Sees:* SHATTER, and the great spell's name right under it. → Snap 2 ●●●, Landslide ●●, Barrage ●●, Bonfire ● ⚙ shatter bell (key)
@@ -626,15 +635,13 @@ Each line gives the promise, then the three seats.
 - **The cathedral** · formation · legendary · Two voices give all their mana to one, and it never stops singing. Seats: Soloist: its first-slotted ability has no cooldown: it's cast whenever there's the mana for it. / Voice: all MP it would regain goes to the Soloist; each cast the Soloist finishes gives this seat a Shield. / Voice: the same. *Sees:* one spell's name down the whole log, until the blue bar is empty. → Barrage 3 ●●● ⚙ mana as armour (half), crescendo (half)
 - **The covenant** · formation · legendary · Life is the party's one currency. Every ally's abilities cost HP in place of MP, the same share, and every ally has Lifesteal. Seats: three Sworn, nothing of their own. *Sees:* three red bars swinging all fight, and no blue bar moving. → Pact 3 ●●●, Barrage ●● ⚙ blood mage (key), brink (half)
 - **Twins** · formation · legendary · Two are bound; what one gives itself, the other has too. Seats: Twin: whatever status it gives itself, the other Twin gains too. / Twin: the same. / Odd one out: Attack up two steps. *Sees:* one Twin vanishes, Taunts or quickens, and the other does it with it. → exotic ⚙ borrowed gift (key), two in the dark (half)
-- **Daybreak** · formation · legendary · Every kill is a new dawn. Whenever a foe falls, every ally's start-of-fight effects happen again. Seats: three Risers, nothing of their own. *Sees:* a foe falls, and every Shield, Haste and Taunt the party opened with comes back. → Hunt 3 ●● ⚙ opening again (key)
 
 ### The versions
 
-Every ability and passive keeps its power step. Of the 128 versions, ten change and the rest stay: the earlier twelve builds' versions already split each class toward identities the nine roads use. A version that changes says so here; a version that stays and is an engine's part, or a road's first step from a kit, is listed after, so the web can see it. Where the old size was one that play never saw (a few ticks closer, a few Might), the fill resizes it to be seen, and the line stays.
+Every ability and passive keeps its power step. Of the 128 versions, nine change and the rest stay: the earlier twelve builds' versions already split each class toward identities the nine roads use. A version that changes says so here; a version that stays and is an engine's part, or a road's first step from a kit, is listed after, so the web can see it. Where the old size was one that play never saw (a few ticks closer, a few Might), the fill resizes it to be seen, and the line stays.
 
 #### Changed
 - **Barbed volley** · Ranger, Barbed arrow B · version · An arrow at every foe, each a light hit that adds a few Bleed. In place of Barbed quiver. *Sees:* one cast, a wound on every foe. → Cuts 2 ●●●, Hunt ● ⚙ red rain (half), emptied quiver (half)
-- **Overgrowth** · Bramble knight, Thicket A · version · Taunts, and every foe's next basic attack comes at once, onto its thorns. No Guard. *Sees:* the shout, every foe swings out of turn, and thorns fly off each one. → Toll 2 ●●●, Storm ●● ⚙ goad (key)
 - **Swift justice** · Paladin, Condemn B · version · Marks the foe with the lowest share of HP, and every ally's next basic attack comes at once. When the judged foe falls, Condemn is ready again. *Sees:* a foe falls, the Mark jumps, and three weapons land together on the next. → Hunt 2 ●●●, Landslide ●●, Bonfire ● ⚙ judge's drum (key)
 - **Rousing chorus** · Bard, War ballad B · version · All its Might goes to the ally with the slowest basic attack: three times as many. → Landslide 2 ●●●, Hunt ●
 - **Rubato** · Bard, Allegro A · version · Haste on every ally, and every ally's ability nearest to ready is ready at once. → Barrage 2 ●●●, Landslide ●
@@ -670,6 +677,7 @@ Every ability and passive keeps its power step. Of the 128 versions, ten change 
 - **Aftershock** · Geomancer, Tremor A · version (kept) · Stuns every foe. → Landslide ●●, Storm ●● ⚙ held charge (half)
 - **Thunderclap** · Valkyrie, Skyfall A · version (kept) · Skyfall on every foe that holds Shock, rising with each one's. → Storm 3 ●●● ⚙ held charge (key)
 - **Whipping vines** · Bramble knight, Bramble lash A · version (kept) · Lashes every foe for half. → Toll 2 ●●, Cuts ●● ⚙ red rain (half)
+- **Overgrowth** · Bramble knight, Thicket A · version (kept) · Taunts twice over, and its Thorns are doubled while the Taunts last. No Guard. → Toll 2 ●●● ⚙ goad (half)
 - **Frost fist** · Monk, Burning fist A · version (kept) · Three quick hits on the foe with the most Chill, each adding a little Chill. → Snap 1 ●●●
 - **Hail** · Ranger, Frost arrow B · version (kept) · A quick arrow at the foe with the most Chill, and a few Chill on every foe. → Snap 1 ●●● ⚙ firecracker (half)
 - **Opening thrust** · Hoplite, Phalanx A · version (kept) · Its first swing of each fight comes at once and deals triple. → Hunt 1 ●●●, Landslide ●●
@@ -701,7 +709,7 @@ One a class, as today. Eleven stay as they are; five change. Each line says whic
 
 ### Kit changes the gaps call for
 
-None. Every road's sign is in a base kit already, and the loot reaches every rung of every road without one. The Storm is the nearest to wanting one: its sign is in the fewest kits (the Stormcaller's passive, and the Valkyrie's one ability in three), so it's the road a run is least often shown (*The web*, below). The spine answers it from the loot: three riders and a totem put Shock in nine classes' hands, and a robe deepens it for a tenth. If the director would rather it came from a kit, that's a version on a third class, and it's theirs to ask for.
+None. Every road's sign is in a base kit already, and the loot reaches every rung of every road without one. The Storm is the nearest to wanting one: its sign is in the fewest kits (the Stormcaller's passive, and the Valkyrie's one ability in three), so it's the road a run is least often shown (*The web*, below). The spine answers it from the loot: three riders and a totem put Shock in nine classes' hands, and a robe deepens it for a tenth.
 
 ## Commons and uncommons by kind
 
@@ -738,59 +746,59 @@ Commons are written from the rule in their row. Every uncommon's effect is named
 | Vial | Lifesteal | 2: one leans to Lifesteal and HP, one to Lifesteal and Crit chance. | **Crimson dregs:** Its holder's hits on a bleeding foe heal it for a share of their damage.<br>**Bloodletter's phial:** When each fight starts, every foe gains a few Bleed. | Blood Pact to Lifesteal and HP; Thousand Cuts and the Hunt to Crit chance and Crit damage. |
 | Trophy | Crit damage | 2: one leans to Crit damage and Crit chance, one to Crit damage and Defense. | **Hunter's skull:** Each killing blow its holder lands adds a Heat (it acts faster, a stack) for the rest of the fight.<br>**Eagle feather:** Its holder's crits Slow their target. | the Hunt to Crit damage and Crit chance; Landslide to Crit damage and Defense. |
 | Bell | Attack speed | 2: one leans to Attack speed and Evasion, one to Attack speed and MP regen. | **Ringing bell:** Every fourth basic attack its holder lands rings: a light hit on every foe (from Attack), carrying what the swing carries.<br>**Pacer's bell:** Every so often, the ally with the fastest basic attack is Hasted. | Thousand Cuts and the Storm to Attack speed and Double strike; Barrage to MP regen. |
-| Cloak | Evasion | 2: one leans to Evasion and Attack, one to Evasion and Attack speed. | **Hooded cloak:** Each time its holder dodges a hit, it gains a Shield (from Attack).<br>**Feathered cloak:** The first time each fight its holder drops below half its HP, it's Hidden. | the Toll's dancer to Evasion and Defense; Thousand Cuts to Evasion and Attack speed; the Hunt to Evasion and Crit chance. |
+| Cloak | Evasion | 2: one leans to Evasion and Attack, one to Evasion and Attack speed. | **Hooded cloak:** Each time its holder dodges a hit, it gains a Shield (from Attack).<br>**Feathered cloak:** The first time each fight its holder drops below half its HP, it's Hidden.<br>**Matador's cape:** Each time its holder dodges a hit, it Taunts. | the Toll's dancer to Evasion and Defense; Thousand Cuts to Evasion and Attack speed; the Hunt to Evasion and Crit chance. |
 | Amulet | (everyone) | 10: one each of HP, Defense, Attack, Crit chance, MP regen, Evasion, Lifesteal, Thorns, Double strike and Cooldown. | **Tinder charm:** Its wearer's basic attacks add a few stacks to whichever of Burn, Chill, Shock or Bleed their target holds the most of.<br>**Challenger's token:** Its wearer Taunts when each fight starts.<br>**Carapace charm:** Its wearer starts every fight behind a Shield (from max HP).<br>**Hare's foot:** Its wearer starts every fight Hasted.<br>**Millstone:** Its wearer's basic attacks come half as often and land more than twice as hard.<br>**Hummingbird charm:** Its wearer's basic attacks come twice as often and deal half as much.<br>**Clear-headed charm:** Whenever its wearer drops below half its MP, it gains Clarity, every so often. | each common is one road's first stat. |
 <!-- kinds:end -->
 
 ## Each engine's link
 
-For each engine, in plain words: what one part makes and what the other reads. The fill sets the numbers on both sides of the link, and no card names its partner.
+For each engine: what one part makes, what the other reads, and what the fill sizes the link to do. The fill sets the numbers on both sides so the two meet. No card names its partner.
 
 **The foes do it to themselves**
-- **The shield detonation.** *Makes:* any Shield on a unit, from the kits and the Shield-makers. *Reads:* the most that Shield held, when it breaks: Rubble plate deals it to every foe, Shatterstone charm twice over to the foe that broke it. The return reads the same size: Second skin puts half back, Rampart all of it, once. The link is a Shield's size against a foe's HP: a Shield has to be worth breaking.
-- **The frozen gate.** *Makes:* a few Chill on each foe that strikes the anchor (Hoarfrost plate), any Guarded ally (Frost armor), or the Gate seat with a Chill swing behind it (Toll gate). Chill's own cap makes the shatter. *Reads:* the shatter: Rime shield, Frostwalker's furs, Orb of the long winter, the shatter bell. The link is Chill per blow taken against Chill's cap: how many blows a foe lands before it bursts.
-- **The mirror.** *Makes:* a blow on the wall, and the cover that stops most of it (Defense, Guard, a Shield, an Aegis). *Reads:* the blow before the cover, in one of two ways. Mirror shield and Thornheart plate send back a share of the whole blow, whatever the cover. Hoplon and The last wall send back exactly what the cover stopped, so better stone sends more. builds.md's entry reads both ways; the fill keeps both, and the gate can pick one.
-- **The goad.** *Makes:* a foe's next basic attack, now: every foe's when the wearer Taunts (Goading horn, Overgrowth), one foe's when a blow lands on it (Provoking blade). *Reads:* nothing of its own: whatever a foe's action already costs it, the Shock it holds, the Thorns and on-struck pieces of whoever it hits. The link is how often the call comes against what one swing costs a foe.
-- **The held charge.** *Makes:* Shock on the swings, up to its cap, and a foe that can't act to pay it off (a Stun, a shatter, a boss between its moves). *Reads:* the stacks on the target (Skyfall, Thunderhead maul, Lightning-glass, Stormspear) or on the whole field (Stormbrand, Thunderclap, the Bolt seat), and leaves them.
-- **The reckoning.** *Makes:* one Charge for each hit the anvil takes: on itself (Grudgebearer) or on the Hammer seat. *Reads:* the count, on the next swing, and spends it. The link is hits taken between two slow swings.
+- **The shield detonation.** *Makes:* any Shield on a unit, from the kits and the Shield-makers. *Reads:* the most that Shield held, when it breaks: Rubble plate deals it to every foe, Shatterstone charm twice over to the foe that broke it. The return reads the same size: Second skin puts half back, Rampart all of it, once. *Sized so:* a start-of-fight Shield's break is seen as a blow on its own, and a party laying stone from three sources out-damages its swings.
+- **The frozen gate.** *Makes:* a few Chill on each foe that strikes the anchor (Hoarfrost plate on the anchor, Frostward blade from the mage beside it), any Guarded ally (Frost armor), or the Gate seat with a Chill swing behind it (Toll gate). Chill's own cap makes the shatter. *Reads:* the shatter: Rime shield, Frostwalker's furs, Orb of the long winter, the shatter bell. *Sized so:* a pack shatters on the wall within a few of its swings, and a boss within a fight.
+- **The mirror.** *Makes:* a blow on the wall, and the cover that stops most of it (Defense, Guard, a Shield, an Aegis). *Reads:* the blow before the cover, in one of two ways. Mirror shield and Thornheart plate send back a share of the whole blow, whatever the cover. Hoplon and The last wall send back exactly what the cover stopped, so better stone sends more. *Sized so:* what's sent back is seen against a boss's heaviest blow, on a wall that took a small number or none.
+- **The goad.** *Makes:* a foe's next basic attack, now: every foe's when the wearer Taunts (Goading horn), one foe's when a blow lands on it (Provoking blade). *Reads:* nothing of its own: whatever a foe's action already costs it, the Shock it holds, the Thorns and on-struck pieces of whoever it hits. *Sized so:* each call costs the pack more than the blows cost the anchor, when the anchor wears its toll.
+- **The held charge.** *Makes:* Shock on the swings, up to its cap, and a foe that can't act to pay it off (a Stun, a shatter, a boss between its moves). *Reads:* the stacks on the target (Skyfall, Thunderhead maul, Lightning-glass, Stormspear) or on the whole field (Stormbrand, Thunderclap, the Bolt seat), and leaves them. *Sized so:* a charge at its cap doubles the reader's blow or more.
+- **The reckoning.** *Makes:* one Wrath for each hit the anvil takes: on itself (Grudgebearer), on the party's slowest swinger (The anvil), or on the Hammer seat. *Reads:* the count, on the next swing, and spends it. *Sized so:* a swarm's bites between two slow swings make that swing the fight's biggest number.
 
 **Kills turn them over**
-- **The reaping.** *Makes:* a field whose HP bars sink together (any wide hit, thorns on a swarm, fire laid thin). *Reads:* the lowest HP: an execute that's ready again at its own kill (Coup de grâce), or any kill that readies the wearer's longest cooldown, which is the execute it just used (Bounty charm).
-- **The judge's drum.** *Makes:* every ally's next basic attack at once, made again when a Marked foe falls (Swift justice, Hunting horn, Open season) or when the wearer kills (Pack leader's coat). *Reads:* each ally's swing as it stands: its size, its Might, what it carries. The link is the slowest swing's size against how often something falls.
-- **The opening, again.** *Makes:* a fall. *Reads:* every start-of-fight effect on the wearer, from its other slots, its seat and its kit, and fires them again: on the first fall (Dawn runner's coat), on every fall (Second dawn), for the whole party (Daybreak). The amulet holds four of the start-of-fight uncommons, so Second dawn reads the weapon's, the offhand's and the kit's.
-- **The fuse.** *Makes:* a foe that falls while it burns. *Reads:* the Burn it held at that moment, and moves it: all of it to the hottest foe left (Wick), to the foe the wearer last hit (Ember heart), to the foe with the most HP (the Torch seat), or a third of it to every other foe (Smouldering orb).
-- **The avalanche.** *Makes:* a blow bigger than what it lands on. *Reads:* the damage past the foe's last HP, and deals it to the foe with the lowest HP (Overkill axe) or to any other foe, and on again while it kills (Overrun).
+- **The reaping.** *Makes:* a field whose HP bars sink together (any wide hit, thorns on a swarm, fire laid thin). *Reads:* the lowest HP: an execute that's ready again at its own kill (Coup de grâce), or any kill that readies the wearer's longest cooldown, which is the execute it just used (Bounty charm). *Sized so:* the execute kills a sunk foe in one, so it chains down the field.
+- **The judge's drum.** *Makes:* every ally's next basic attack at once, made again when a Marked foe falls (Swift justice, Hunting horn, Open season) or when the wearer kills (Pack leader's coat). *Reads:* each ally's swing as it stands: its size, its Might, what it carries. *Sized so:* nothing to size: "at once" on a slow weapon is a whole swing.
+- **The opening, again.** *Makes:* a kill or a fall. *Reads:* the start-of-fight effects of gear and seats, and fires them again: its holder's on its own kills (Hunter's tally), the whole party's on every fall (Second dawn). Hunter's tally sits in the offhand, so it reads the amulet's start-of-fight uncommons too. *Sized so:* each start-of-fight uncommon is worth seeing twice in a fight.
+- **The fuse.** *Makes:* a foe that falls while it burns. *Reads:* the Burn it held at that moment, and moves it: all of it to the hottest foe left (Wick), to the foe the wearer last hit (Ember heart), to the foe with the most HP (the Torch seat), or a third of it to every other foe (Smouldering orb). *Sized so:* the fire that jumps is most of the next foe's fire.
+- **The avalanche.** *Makes:* a blow bigger than what it lands on. *Reads:* the damage past the foe's last HP, and deals it to the foe with the lowest HP (Overkill axe), to any other foe and on again while it kills (Overrun), or split among all the others (Downhill charm). *Sized so:* a heavy blow on a wolf runs through two or three more.
 
 **The party's swings and hits turn them over**
-- **The spell on the swing.** *Makes:* basic attacks landed. *Reads:* the count: every eighth casts the first-slotted ability, mana paid (Bell of the hour); each takes a fifth off the wait that's left (Baton), which is the door's "swings that bring a spell round"; the party's count readies the Bard's songs (Metronome).
-- **The red rain.** *Makes:* Bleed on the whole field (Briar, Bloodletter's phial, Barbed volley, Curse-book, Plague, Briar totem). *Reads:* nothing: Bleed pays each hit, so any hit on many foes pays every wound at once.
-- **The riposte.** *Makes:* a dodge, on a unit the foes are aiming at. *Reads:* the dodge, as a swing: a strike at the attacker (Duelist's leathers), or the next basic attack at once, twice (Tempest cloak). That swing builds cover the way the unit already does: a Shield from hits, a heal from them.
-- **Every colour.** *Makes:* several different afflictions on one foe, a stack or two of each: a random one a swing (Wildmagic wand), two on every foe at the start (Grimoire of plagues), three a cast (Plague), a rider beside the Hexer's own Chill. *Reads:* how many different ones the foe holds: Malison. Idol of the deepening keeps each one topped up, and Hexweave mail reads every debuff the same way.
-- **The lead's colour.** *Makes:* a status on one unit's basic attack, from its kit, a piece or a storm. *Reads:* that swing's riders, and puts them on another unit's basic attacks, added as its own weapon would add them: the two Followers behind the Lead (The standard), or the wand that follows the ally with the highest Attack (Mimic wand).
-- **The emptied quiver.** *Makes:* crits that are near certain for a while: on a bleeding foe, one that hasn't acted, a Stunned one, after a kill, or by the coin. Five pieces make them. *Reads:* each crit, as the next basic attack at once: Quick draw, the Ranger's version, and nothing else. Its brake is the crit that fails.
+- **The spell on the swing.** *Makes:* basic attacks landed. *Reads:* the count: every eighth casts the first-slotted ability off its cooldown (Bell of the hour); each takes a fifth off the wait that's left (Baton), which is the door's "swings that bring a spell round"; the party's count readies the Bard's songs (Metronome). *Sized so:* the count comes round several times a fight on a fast unit, and mana is what stops it.
+- **The red rain.** *Makes:* Bleed on the whole field (Briar, Bloodletter's phial, Barbed volley, Curse-book, Plague, Briar totem). *Reads:* nothing: Bleed pays each hit, so any hit on many foes pays every wound at once. *Sized so:* on a pack, what Bleed pays for one wide hit beats the wide hit's own damage.
+- **The riposte.** *Makes:* a dodge, on a unit the foes are aiming at (Matador's cape makes a dodger Taunt). *Reads:* the dodge, as a swing: a strike at the attacker from the dodger (Duelist's leathers) or from the ally beside it (Parrying spear), or the dodger's next basic attack at once, twice (Tempest cloak). That swing builds cover the way the unit already does. *Sized so:* a dodger who draws answers often enough to bank cover for the blow that lands.
+- **Every colour.** *Makes:* several different afflictions on one foe, a stack or two of each: a random one a swing (Wildmagic wand), two on every foe at the start (Grimoire of plagues), three a cast (Plague), a rider beside the Hexer's own Chill. *Reads:* how many different ones the foe holds: Malison. Idol of the deepening keeps each one topped up, and Hexweave mail reads every debuff the same way. *Sized so:* all five roughly double the curse.
+- **The lead's colour.** *Makes:* a status on one unit's basic attack, from its kit, a piece or a storm. *Reads:* that swing's riders, and puts them on another unit's basic attacks, added as its own weapon would add them: the two Followers behind the Lead (The standard), or the wand that follows the ally with the highest Attack (Mimic wand). *Sized so:* three weapons bring the second shatter, or hold a fire up, where one could only start it.
+- **The emptied quiver.** *Makes:* crits that are near certain for a while: on a bleeding foe, one that hasn't acted, a Stunned one, after a kill, or by the coin. Five pieces make them. *Reads:* each crit, as the next basic attack at once: Quick draw, the Ranger's version, and nothing else. *Sized so:* the burst runs three or four arrows and stops on the crit that fails.
 
 **Casts and mana turn them over**
-- **The blood mage.** *Makes:* a price in HP at each cast (Sanguine vestments on a caster's robes, Blood vial, The covenant). *Reads:* the damage the cast deals, through Lifesteal, foe by foe: a common on the amulet is enough. The link is the price against what one foe gives back: it should lose life on one foe and gain it on three.
-- **The resonance.** *Makes:* a cast that hits several foes. *Reads:* how many it hit, and brings that ability round sooner for each. Mana and a thinning pack are its brakes.
-- **The crescendo.** *Makes:* a Crescendo each time the same ability is cast again: more of what it does, at more cost (Crescendo charm), or at none (Orb of the rising sun). *Reads:* nothing else: a cast that's free for another reason skips the price and still adds the stack.
-- **Mana as armour.** *Makes:* MP given to the wearer: Clarity, Refrain, a heal that gives mana, a wand that tithes. *Reads:* the damage it takes, and takes it from MP first, so every giver heals.
+- **The blood mage.** *Makes:* a price in HP at each cast (Sanguine vestments on a caster's robes, Blood vial, The covenant). *Reads:* the damage the cast deals, through Lifesteal, foe by foe: a common on the amulet is enough. Bloodstone reliquary and Idol of the blood-well read the price itself, as a heal or as mana for someone else. *Sized so:* a cast loses life on one foe and gains it on three.
+- **The resonance.** *Makes:* a cast that hits several foes. *Reads:* how many it hit, and brings that ability round sooner for each. *Sized so:* against a full pack the spell comes back two or three times as fast, and mana is what stops it.
+- **The crescendo.** *Makes:* a Crescendo each time the same ability is cast again: more of what it does, at more cost (Crescendo charm), or at none (Orb of the rising sun). *Reads:* nothing else: a cast that's free for another reason skips the price and still adds the stack. *Sized so:* the price empties a pool within a fight unless the free casts skip it.
+- **Mana as armour.** *Makes:* MP given to the wearer: Clarity, Refrain, a heal that gives mana, a wand that tithes. *Reads:* the damage it takes, and takes it from MP first, so every giver heals. *Sized so:* each note of mana that reaches it is seen as a blow not taken.
 
 **A shatter turns them over**
-- **The shatter bell.** *Makes:* a shatter, anyone's. *Reads:* it, as the longest cooldown ready: on the wearer of Icebreaker charm, any class, or in the Breaker seat.
-- **The firecracker string.** *Makes:* a shatter, which spends a foe's Chill. *Reads:* the cold it held, and lays part of it again: on that foe (Glacier's heart), on the coldest foe left (Winter's chain), on every other foe (Splinters, Frostwalker's furs), and more with each shatter before it (The long winter).
+- **The shatter bell.** *Makes:* a shatter, anyone's. *Reads:* it, as the longest cooldown ready: on the wearer of Icebreaker charm, any class, or in the Breaker seat; or as half the wait gone for the whole party (Frozen tome). *Sized so:* the slowest ability rings once a shatter.
+- **The firecracker string.** *Makes:* a shatter, which spends a foe's Chill. *Reads:* the cold it held, and lays part of it again: on that foe (Glacier's heart), on the coldest foe left (Winter's chain), on every other foe (Splinters, Frostwalker's furs), and more with each shatter before it (The long winter). *Sized so:* the cold sent on takes a cold neighbour to its cap, and a warm one nowhere near.
 
 **Who gets picked, and who's healed, turns them over**
-- **The brink.** *Makes:* a unit that's always the one with the lowest share of HP: by a cap at half (Halved heart), a drain (the Bleeder seat) or a price (Sanguine vestments, Blood vial, Bloodletter, Heart of the saint, The chalice). *Reads:* nothing new: every kit gift and every uncommon aimed at "the ally with the lowest share of HP" now lands on a unit the player chose.
-- **Two in the dark.** *Makes:* Hidden on two of the party. *Reads:* nothing: foes can't pick a Hidden unit, so every single-target pick goes to the third. The link is Hidden's length against how often it's laid again.
-- **The red stone.** *Makes:* healing on a unit that's already full. *Reads:* the part past full, as a Shield on it (Red stone mail, the Drinker seat) or on whoever was healed (Phylactery).
+- **The brink.** *Makes:* a unit that's always the one with the lowest share of HP: by a cap at half (Halved heart), a drain (the Bleeder seat) or a price (Sanguine vestments, Blood vial, Bloodletter, Heart of the saint, The chalice). *Reads:* nothing new: every kit gift and every uncommon aimed at "the ally with the lowest share of HP" now lands on a unit the player chose. *Sized so:* the givers' cover outlasts what reaches the low unit.
+- **Two in the dark.** *Makes:* Hidden on two of the party. *Reads:* nothing: foes can't pick a Hidden unit, so every single-target pick goes to the third. *Sized so:* the hiding covers most of a fight's picks, by being laid again.
+- **The red stone.** *Makes:* healing on a unit that's already full. *Reads:* the part past full, as a Shield on it (Red stone mail, the Drinker seat) or on whoever was healed (Phylactery). *Sized so:* a full drinker's swings build a Shield bar the player can watch grow.
 
 **Exotics**
-- **The borrowed gift.** *Makes:* any status a unit gives itself. *Reads:* it, and gives the same to the other ally with the lowest share of HP (Twin-knot) or to the other Twin.
-- **The carrier.** *Makes:* an affliction on the wearer, from a foe or from Burning heart. *Reads:* it: a stack of each onto whatever it hits (Carrier's coat). Scapegoat charm is its cousin: it hands on a whole debuff, of any kind.
+- **The borrowed gift.** *Makes:* any status a unit gives itself. *Reads:* it, and gives the same to the other ally with the lowest share of HP (Twin-knot) or to the other Twin. *Sized so:* the copy is the same size, so the joke reads.
+- **The carrier.** *Makes:* an affliction on the wearer, from a foe or from Burning heart. *Reads:* it: a stack of each onto whatever it hits (Carrier's coat). Scapegoat charm is its cousin: it hands on a whole debuff, of any kind. *Sized so:* one stack a hit adds up on a fast unit.
 
 ## The web
 
-Checked across all nine roads. The tables are the script's; the estimates behind them are in its header.
+Checked across all nine roads. The tables are the script's, on offer volumes counted over 40 simulated runs (`offer-count.ts`): about 35 pieces offered an act, a roster of four, five, then six.
 
 ### Every rung, by more than one route
 
@@ -799,62 +807,62 @@ Checked across all nine roads. The tables are the script's; the estimates behind
 | --- | --- | --- | --- | --- | --- |
 | Landslide | 8 pieces, 6 kinds | 13 pieces, 8 kinds | 4 pieces, 3 kinds | 2, 2, 2 | 11 |
 | Thousand Cuts | 15 pieces, 10 kinds | 10 pieces, 9 kinds | 4 pieces, 4 kinds | 4, 2, 1 | 8 |
-| Bonfire | 7 pieces, 7 kinds | 10 pieces, 9 kinds | 2 pieces, 2 kinds | 3, 1, 1 | 9 |
-| Cold Snap | 8 pieces, 8 kinds | 13 pieces, 12 kinds | 2 pieces, 2 kinds | 2, 2, 1 | 7 |
-| The Storm | 7 pieces, 7 kinds | 11 pieces, 11 kinds | 2 pieces, 2 kinds | 3, 2, 2 | 9 |
-| The Hunt | 13 pieces, 11 kinds | 15 pieces, 9 kinds | 7 pieces, 7 kinds | 2, 3, 2 | 9 |
-| The Toll | 10 pieces, 8 kinds | 17 pieces, 12 kinds | 4 pieces, 4 kinds | 3, 4, 1 | 14 |
-| Barrage | 12 pieces, 9 kinds | 11 pieces, 8 kinds | 8 pieces, 7 kinds | 3, 3, 2 | 10 |
-| Blood Pact | 11 pieces, 10 kinds | 11 pieces, 9 kinds | 5 pieces, 5 kinds | 1, 2, 1 | 9 |
+| Bonfire | 7 pieces, 7 kinds | 9 pieces, 8 kinds | 2 pieces, 2 kinds | 3, 1, 1 | 9 |
+| Cold Snap | 8 pieces, 8 kinds | 14 pieces, 12 kinds | 3 pieces, 3 kinds | 2, 2, 1 | 7 |
+| The Storm | 7 pieces, 7 kinds | 11 pieces, 11 kinds | 2 pieces, 2 kinds | 3, 2, 2 | 8 |
+| The Hunt | 13 pieces, 11 kinds | 15 pieces, 10 kinds | 7 pieces, 7 kinds | 2, 3, 1 | 9 |
+| The Toll | 11 pieces, 8 kinds | 18 pieces, 13 kinds | 5 pieces, 4 kinds | 3, 4, 1 | 14 |
+| Barrage | 12 pieces, 9 kinds | 13 pieces, 8 kinds | 8 pieces, 7 kinds | 3, 3, 2 | 10 |
+| Blood Pact | 11 pieces, 10 kinds | 11 pieces, 9 kinds | 6 pieces, 5 kinds | 1, 2, 1 | 9 |
 <!-- roads:end -->
 
-A formation or a version counts for a road here where it's worth ●● or more to it. Every road has first steps and second rungs in six kinds or more, a far end in two to eight pieces, a formation at each rarity, and versions in several classes. Bonfire, Cold Snap and the Storm have the thinnest far ends in pieces: two each, beside a legendary formation and two mythics.
+A formation or a version counts for a road here where it's worth ●● or more to it. Every road has first steps and second rungs in six kinds or more, a far end in two to eight pieces, a formation at each rarity, and versions in several classes. Bonfire and the Storm have the thinnest far ends in pieces: two each, beside a legendary formation and two mythics.
 
 **Every class can wear its roads' steps.** Each cell is first steps / second rungs / far ends that the class can wear:
 
 <!-- classes:start -->
 | Class | Pieces it can wear, by road (rung 1 / rung 2 / rung 3) |
 | --- | --- |
-| Knight | Landslide 6/8/1 · Cuts 3/1/0 · Bonfire 2/1/0 · Snap 2/2/1 · Storm 1/3/1 · Hunt 2/4/2 · Toll 4/7/2 · Barrage 2/1/0 · Pact 1/2/0 |
-| Cleric | Landslide 1/1/0 · Cuts 3/1/0 · Bonfire 4/5/2 · Snap 2/2/1 · Storm 2/2/0 · Hunt 0/3/1 · Toll 3/1/0 · Barrage 6/6/2 · Pact 3/4/2 |
-| Ranger | Landslide 1/3/0 · Cuts 7/6/2 · Bonfire 1/1/0 · Snap 3/3/1 · Storm 1/1/0 · Hunt 4/8/4 · Toll 2/3/1 · Barrage 1/1/0 · Pact 1/1/0 |
-| Bramble knight | Landslide 4/5/2 · Cuts 4/3/1 · Bonfire 2/2/1 · Snap 1/2/1 · Storm 2/3/0 · Hunt 1/2/1 · Toll 8/9/1 · Barrage 1/1/0 · Pact 4/4/2 |
-| Hoplite | Landslide 5/6/2 · Cuts 3/1/0 · Bonfire 1/1/0 · Snap 1/3/1 · Storm 2/4/0 · Hunt 6/4/2 · Toll 5/5/2 · Barrage 2/1/0 · Pact 1/1/0 |
-| Paladin | Landslide 5/7/2 · Cuts 4/2/1 · Bonfire 3/2/1 · Snap 1/3/1 · Storm 1/3/0 · Hunt 2/3/1 · Toll 6/5/2 · Barrage 2/1/0 · Pact 4/5/3 |
-| Valkyrie | Landslide 1/2/0 · Cuts 6/5/2 · Bonfire 1/1/0 · Snap 2/2/1 · Storm 2/4/1 · Hunt 5/7/1 · Toll 4/8/2 · Barrage 1/1/0 · Pact 5/4/1 |
-| Bard | Landslide 1/1/0 · Cuts 9/4/1 · Bonfire 3/4/0 · Snap 4/5/1 · Storm 4/3/0 · Hunt 2/6/3 · Toll 1/1/1 · Barrage 5/6/3 · Pact 1/2/0 |
-| Hexer | Landslide 1/1/0 · Cuts 5/2/1 · Bonfire 2/4/0 · Snap 3/5/1 · Storm 2/5/1 · Hunt 1/3/2 · Toll 2/3/0 · Barrage 3/2/3 · Pact 3/4/1 |
-| Monk | Landslide 1/1/0 · Cuts 8/5/2 · Bonfire 2/2/0 · Snap 2/3/1 · Storm 4/3/1 · Hunt 3/6/1 · Toll 2/4/2 · Barrage 1/2/0 · Pact 2/2/0 |
+| Knight | Landslide 6/8/1 · Cuts 3/1/0 · Bonfire 2/1/0 · Snap 2/2/1 · Storm 1/3/1 · Hunt 2/4/2 · Toll 4/7/3 · Barrage 2/1/0 · Pact 1/2/0 |
+| Cleric | Landslide 1/1/0 · Cuts 3/1/0 · Bonfire 4/4/2 · Snap 2/2/1 · Storm 2/2/0 · Hunt 0/3/1 · Toll 3/1/0 · Barrage 6/7/2 · Pact 3/4/3 |
+| Ranger | Landslide 1/3/0 · Cuts 7/6/2 · Bonfire 1/1/0 · Snap 3/3/1 · Storm 1/1/0 · Hunt 4/8/4 · Toll 3/3/1 · Barrage 1/1/0 · Pact 1/1/0 |
+| Bramble knight | Landslide 4/5/2 · Cuts 4/3/1 · Bonfire 2/1/1 · Snap 1/2/1 · Storm 2/3/0 · Hunt 1/2/1 · Toll 8/9/2 · Barrage 1/1/0 · Pact 4/4/2 |
+| Hoplite | Landslide 5/6/2 · Cuts 3/1/0 · Bonfire 1/1/0 · Snap 1/3/1 · Storm 2/4/0 · Hunt 6/4/2 · Toll 5/5/3 · Barrage 2/1/0 · Pact 1/1/0 |
+| Paladin | Landslide 5/7/2 · Cuts 4/2/1 · Bonfire 3/1/1 · Snap 1/3/1 · Storm 1/3/0 · Hunt 2/3/1 · Toll 6/5/3 · Barrage 2/1/0 · Pact 4/5/4 |
+| Valkyrie | Landslide 1/2/0 · Cuts 6/5/2 · Bonfire 1/1/0 · Snap 2/2/1 · Storm 2/4/1 · Hunt 5/6/1 · Toll 5/8/2 · Barrage 1/1/0 · Pact 5/4/1 |
+| Bard | Landslide 1/1/0 · Cuts 9/4/1 · Bonfire 3/4/0 · Snap 4/5/2 · Storm 4/3/0 · Hunt 2/5/3 · Toll 1/1/1 · Barrage 5/8/3 · Pact 1/2/0 |
+| Hexer | Landslide 1/1/0 · Cuts 5/2/1 · Bonfire 2/4/0 · Snap 3/5/2 · Storm 2/5/1 · Hunt 1/3/2 · Toll 2/3/0 · Barrage 3/3/3 · Pact 3/4/1 |
+| Monk | Landslide 1/1/0 · Cuts 8/5/2 · Bonfire 2/2/0 · Snap 2/3/1 · Storm 4/3/1 · Hunt 3/5/1 · Toll 3/4/2 · Barrage 1/2/0 · Pact 2/2/0 |
 | Assassin | Landslide 1/3/0 · Cuts 9/4/2 · Bonfire 1/1/0 · Snap 2/3/1 · Storm 1/1/0 · Hunt 4/10/4 · Toll 1/1/1 · Barrage 1/1/0 · Pact 3/4/2 |
 | Vampire | Landslide 1/1/0 · Cuts 8/3/2 · Bonfire 2/3/0 · Snap 2/3/1 · Storm 2/4/1 · Hunt 1/5/2 · Toll 2/1/0 · Barrage 2/1/1 · Pact 5/7/3 |
-| Pyromancer | Landslide 1/1/0 · Cuts 3/1/0 · Bonfire 4/7/1 · Snap 2/5/1 · Storm 3/3/0 · Hunt 1/2/1 · Toll 1/0/0 · Barrage 8/8/5 · Pact 1/2/0 |
-| Frostweaver | Landslide 1/1/0 · Cuts 5/2/1 · Bonfire 2/4/0 · Snap 4/5/2 · Storm 2/3/0 · Hunt 1/2/2 · Toll 2/1/0 · Barrage 8/9/6 · Pact 3/4/1 |
-| Stormcaller | Landslide 1/1/1 · Cuts 8/4/2 · Bonfire 3/3/0 · Snap 4/4/2 · Storm 5/4/1 · Hunt 1/5/1 · Toll 2/4/1 · Barrage 5/6/2 · Pact 2/3/0 |
-| Geomancer | Landslide 7/11/3 · Cuts 3/1/0 · Bonfire 2/1/0 · Snap 1/4/1 · Storm 1/2/0 · Hunt 3/2/2 · Toll 3/4/2 · Barrage 1/1/0 · Pact 0/1/0 |
+| Pyromancer | Landslide 1/1/0 · Cuts 3/1/0 · Bonfire 4/7/1 · Snap 2/5/1 · Storm 3/3/0 · Hunt 1/2/1 · Toll 1/0/0 · Barrage 8/9/5 · Pact 1/2/0 |
+| Frostweaver | Landslide 1/1/0 · Cuts 5/2/1 · Bonfire 2/4/0 · Snap 4/6/3 · Storm 2/3/0 · Hunt 1/2/2 · Toll 2/2/0 · Barrage 8/11/6 · Pact 3/4/1 |
+| Stormcaller | Landslide 1/1/1 · Cuts 8/4/2 · Bonfire 3/3/0 · Snap 4/5/2 · Storm 5/4/1 · Hunt 1/4/1 · Toll 2/5/1 · Barrage 5/7/2 · Pact 2/3/0 |
+| Geomancer | Landslide 7/11/3 · Cuts 3/1/0 · Bonfire 2/1/0 · Snap 1/4/1 · Storm 1/2/0 · Hunt 3/3/2 · Toll 3/4/3 · Barrage 1/1/0 · Pact 0/1/0 |
 <!-- classes:end -->
 
-Every class has a first step and a second rung to wear on every road builds.md puts it on. No road's rung sits in one class's kinds alone, so nothing is fenced off: each route of each road reaches its second rung through pieces at least two of its three classes can wear.
+Every class has a first step and a second rung to wear on every road builds.md puts it on. No road's rung sits in one class's kinds alone, so nothing is fenced off.
 
 ### How often a run is offered a road's first step
 
 <!-- signs:start -->
 | Road | Its sign in the starting three | A first-step piece offered, act I | By act II's end | With its versions and common formations, act I | First steps in the stock | Thinnest route in act I, pieces alone |
 | --- | --- | --- | --- | --- | --- | --- |
-| Landslide | 67% | 73% | 91% | 89% | 8 pieces in 6 kinds, 1 versions, 1 common formations | Knight, Hoplite, Bard: 68% |
-| Thousand Cuts | 77% | 87% | 98% | 94% | 15 pieces in 10 kinds, 1 versions, 2 common formations | Valkyrie, Ranger, Vampire: 84% |
-| Bonfire | 57% | 53% | 77% | 96% | 7 pieces in 7 kinds, 3 versions, 2 common formations | Paladin, Monk, Hexer: 47% |
-| Cold Snap | 73% | 52% | 76% | 80% | 8 pieces in 8 kinds, 2 versions, 2 common formations | Hexer, Ranger, Geomancer: 48% |
-| The Storm | 49% | 57% | 80% | 75% | 7 pieces in 7 kinds, 0 versions, 2 common formations | Valkyrie, Hexer, Bard: 52% |
-| The Hunt | 83% | 73% | 91% | 90% | 13 pieces in 11 kinds, 2 versions, 1 common formations | Paladin, Assassin, Stormcaller: 60% |
-| The Toll | 54% | 65% | 87% | 76% | 10 pieces in 8 kinds, 1 versions, 1 common formations | Monk, Valkyrie, Bard: 54% |
-| Barrage | 94% | 73% | 92% | 81% | 12 pieces in 9 kinds, 1 versions, 1 common formations | Cleric, Vampire, Geomancer: 64% |
-| Blood Pact | 39% | 66% | 88% | 74% | 11 pieces in 10 kinds, 0 versions, 1 common formations | Vampire, Bard, Hoplite: 60% |
+| Landslide | 67% | 67% | 87% | 90% | 8 pieces in 6 kinds, 1 versions, 1 common formations | Knight, Hoplite, Bard: 62% |
+| Thousand Cuts | 77% | 82% | 96% | 92% | 15 pieces in 10 kinds, 1 versions, 2 common formations | Valkyrie, Ranger, Vampire: 78% |
+| Bonfire | 57% | 47% | 70% | 99% | 7 pieces in 7 kinds, 3 versions, 2 common formations | Paladin, Monk, Hexer: 41% |
+| Cold Snap | 73% | 46% | 69% | 81% | 8 pieces in 8 kinds, 2 versions, 2 common formations | Hexer, Ranger, Geomancer: 42% |
+| The Storm | 49% | 51% | 74% | 69% | 7 pieces in 7 kinds, 0 versions, 2 common formations | Valkyrie, Hexer, Bard: 46% |
+| The Hunt | 83% | 67% | 87% | 90% | 13 pieces in 11 kinds, 2 versions, 1 common formations | Paladin, Assassin, Stormcaller: 54% |
+| The Toll | 54% | 60% | 83% | 73% | 11 pieces in 8 kinds, 1 versions, 1 common formations | Monk, Valkyrie, Bard: 52% |
+| Barrage | 94% | 67% | 87% | 78% | 12 pieces in 9 kinds, 1 versions, 1 common formations | Cleric, Vampire, Geomancer: 58% |
+| Blood Pact | 39% | 60% | 83% | 68% | 11 pieces in 10 kinds, 0 versions, 1 common formations | Vampire, Bard, Hoplite: 54% |
 <!-- signs:end -->
 
 - **The sign** is builds.md's: a passive counts as always there, an ability as known one time in three at the start.
 - **A first-step piece** is one tagged rung 1 for the road that someone on the roster can wear, for a party on one of the road's three routes.
 - **Act I gives enough to read every sign:** a first step sits on a weapon in every road (the slot act I always fills), in a version for seven roads (a passive's, always trainable, for three), and in a common formation for all nine.
-- **Flagged: the three status roads that aren't Bleed's.** Bonfire, Cold Snap and the Storm are offered a first-step piece in a little over half of act I's, against two in three or more for the others. Their riders are spread over many kinds, but each party can wear only a few of them. With their versions and formations every road reaches three in four or better.
+- **Flagged: the three status roads that aren't Bleed's.** Bonfire, Cold Snap and the Storm are offered a first-step piece in about half of act I's, against six in ten or more for the others. Their riders are spread over many kinds, but each party can wear only a few of them. With their versions and formations every road reaches two in three or better.
 - **Flagged: the Storm** is shown least. Its sign is in half of starting parties, and it has no first step in a version.
 - **Flagged: Blood Pact's sign** is in two starting parties in five as a kit (the Vampire). The loot covers it: Lifesteal is a common on the amulet and in five kinds.
 
@@ -863,43 +871,42 @@ Every class has a first step and a second rung to wear on every road builds.md p
 <!-- engines:start -->
 | Engine | Its keystone, and where | A keystone piece offered to a roster that can wear it: act I, by II, by III | Its common half |
 | --- | --- | --- | --- |
-| detonation | Rubble plate (plate, rare); Second skin (round shield, rare); Shatterstone charm (amulet, rare); Rampart (version: Geomancer, Earthen shell B) | 26%, 45%, 59% | 18 parts, 9 of them uncommons or common formations |
-| frozen gate | Hoarfrost plate (plate, rare); Toll gate (formation, rare: 26% by II); Frost armor (version: Frostweaver, Blizzard A) | 13%, 24%, 33% | 7 parts, 3 of them uncommons or common formations |
-| mirror | Thornheart plate (plate, legendary); Mirror shield (kite shield, rare); Hoplon (round shield, rare); The last wall (mythic: Hoplite) | 24%, 41%, 54% | 11 parts, 7 of them uncommons or common formations |
-| goad | Provoking blade (sword, rare); Goading horn (horn, rare); Overgrowth (version: Bramble knight, Thicket A) | 9%, 17%, 25% | 14 parts, 7 of them uncommons or common formations |
-| held charge | Stormbrand (sword, legendary); Thunderhead maul (great weapon, rare); Lightning-glass (amulet, rare); Eye of the storm (formation, legendary: 5% by II); Thunderclap (version: Valkyrie, Skyfall A); Stormspear (mythic: Valkyrie) | 27%, 46%, 60% | 9 parts, 5 of them uncommons or common formations |
-| reckoning | Grudgebearer (hammer, rare); Hammer and anvil (formation, rare: 26% by II) | 9%, 16%, 23% | 4 parts, 3 of them uncommons or common formations |
-| reaping | Bounty charm (amulet, rare); Coup de grâce (version: Assassin, Backstab A) | 10%, 19%, 27% | 7 parts, 2 of them uncommons or common formations |
-| judge's drum | Pack leader's coat (leather, rare); Hunting horn (horn, rare); Open season (formation, legendary: 5% by II); Swift justice (version: Paladin, Condemn B) | 13%, 24%, 34% | 7 parts, 3 of them uncommons or common formations |
-| opening again | Dawn runner's coat (leather, rare); Second dawn (amulet, legendary); Daybreak (formation, legendary: 5% by II) | 16%, 31%, 42% | 17 parts, 15 of them uncommons or common formations |
-| fuse | Wick (lantern, rare); Smouldering orb (orb, rare); Ember heart (amulet, rare); Pyre line (formation, rare: 26% by II) | 20%, 35%, 47% | 0 parts, 0 of them uncommons or common formations |
-| avalanche | Overkill axe (axe, rare); Overrun (great weapon, rare) | 10%, 18%, 26% | 2 parts, 2 of them uncommons or common formations |
-| spell on the swing | Baton (wand, legendary); Bell of the hour (bell, rare); Metronome (mythic: Bard) | 14%, 27%, 37% | 2 parts, 2 of them uncommons or common formations |
+| detonation | Rubble plate (plate, rare); Second skin (round shield, rare); Shatterstone charm (amulet, rare); Rampart (version: Geomancer, Earthen shell B) | 22%, 41%, 54% | 18 parts, 9 of them uncommons or common formations |
+| frozen gate | Frostward blade (rune sword, rare); Hoarfrost plate (plate, rare); Toll gate (formation, rare: 36% by II); Frost armor (version: Frostweaver, Blizzard A) | 14%, 28%, 38% | 7 parts, 3 of them uncommons or common formations |
+| mirror | Thornheart plate (plate, legendary); Mirror shield (kite shield, rare); Hoplon (round shield, rare); The last wall (mythic: Hoplite) | 19%, 37%, 49% | 11 parts, 7 of them uncommons or common formations |
+| goad | Provoking blade (sword, rare); Goading horn (horn, rare) | 8%, 16%, 22% | 15 parts, 7 of them uncommons or common formations |
+| held charge | Stormbrand (sword, legendary); Thunderhead maul (great weapon, rare); Lightning-glass (amulet, rare); Eye of the storm (formation, legendary: 9% by II); Thunderclap (version: Valkyrie, Skyfall A); Stormspear (mythic: Valkyrie) | 26%, 47%, 60% | 9 parts, 5 of them uncommons or common formations |
+| reckoning | Grudgebearer (hammer, rare); The anvil (plate, legendary); Hammer and anvil (formation, rare: 36% by II) | 17%, 31%, 43% | 4 parts, 3 of them uncommons or common formations |
+| reaping | Bounty charm (amulet, rare); Coup de grâce (version: Assassin, Backstab A) | 8%, 17%, 24% | 7 parts, 2 of them uncommons or common formations |
+| judge's drum | Pack leader's coat (leather, rare); Hunting horn (horn, rare); Open season (formation, legendary: 9% by II); Swift justice (version: Paladin, Condemn B) | 13%, 25%, 34% | 7 parts, 3 of them uncommons or common formations |
+| opening again | Hunter's tally (trophy, rare); Second dawn (amulet, legendary) | 12%, 24%, 34% | 17 parts, 15 of them uncommons or common formations |
+| fuse | Wick (lantern, rare); Smouldering orb (orb, rare); Ember heart (amulet, rare); Pyre line (formation, rare: 36% by II) | 17%, 32%, 43% | 0 parts, 0 of them uncommons or common formations |
+| avalanche | Overkill axe (axe, rare); Overrun (great weapon, rare); Downhill charm (amulet, legendary) | 16%, 31%, 43% | 2 parts, 2 of them uncommons or common formations |
+| spell on the swing | Baton (wand, legendary); Bell of the hour (bell, rare); Metronome (mythic: Bard) | 14%, 27%, 38% | 2 parts, 2 of them uncommons or common formations |
 | red rain | in the kits | no piece | 19 parts, 5 of them uncommons or common formations |
-| riposte | Duelist's leathers (leather, rare); Tempest cloak (cloak, rare) | 15%, 27%, 37% | 11 parts, 6 of them uncommons or common formations |
-| every colour | Wildmagic wand (wand, legendary); Grimoire of plagues (tome, rare); Plague (version: Hexer, Malison A) | 12%, 22%, 31% | 13 parts, 8 of them uncommons or common formations |
-| lead's colour | Mimic wand (wand, rare); The standard (formation, common: 35% by II) | 9%, 17%, 24% | 18 parts, 14 of them uncommons or common formations |
+| riposte | Parrying spear (spear, rare); Duelist's leathers (leather, rare); Tempest cloak (cloak, rare) | 19%, 35%, 46% | 12 parts, 7 of them uncommons or common formations |
+| every colour | Wildmagic wand (wand, legendary); Grimoire of plagues (tome, rare); Plague (version: Hexer, Malison A) | 11%, 21%, 30% | 13 parts, 8 of them uncommons or common formations |
+| lead's colour | Mimic wand (wand, rare); The standard (formation, common: 32% by II) | 8%, 15%, 21% | 18 parts, 14 of them uncommons or common formations |
 | emptied quiver | Quick draw (version: Ranger, Hunter's eye B) | no piece | 7 parts, 1 of them uncommons or common formations |
-| blood mage | Sanguine vestments (robes, rare); Blood vial (vial, rare); The covenant (formation, legendary: 5% by II) | 12%, 23%, 32% | 3 parts, 2 of them uncommons or common formations |
-| resonance | Resonant robes (robes, rare); Storm front (formation, rare: 26% by II) | 9%, 17%, 24% | 5 parts, 2 of them uncommons or common formations |
-| crescendo | Orb of the rising sun (orb, legendary); Crescendo charm (amulet, rare) | 14%, 26%, 36% | 7 parts, 1 of them uncommons or common formations |
-| mana as armour | Orb of the deep (orb, rare); Idol of the deep (idol, legendary) | 9%, 16%, 23% | 13 parts, 7 of them uncommons or common formations |
-| shatter bell | Icebreaker charm (amulet, rare); Icefall (formation, rare: 26% by II) | 10%, 19%, 27% | 1 parts, 0 of them uncommons or common formations |
-| firecracker | Winter's chain (rune sword, rare); Frostwalker's furs (leather, rare); The long winter (formation, legendary: 5% by II); Splinters (version: Frostweaver, Shatterpoint B); Glacier's heart (mythic: Frostweaver) | 15%, 28%, 38% | 3 parts, 1 of them uncommons or common formations |
-| brink | Bloodletter (sword, rare); Sanguine vestments (robes, rare); Heart of the saint (relic, legendary); Blood vial (vial, rare); Bloodlust draught (vial, rare); Halved heart (amulet, rare); Blood oath (formation, rare: 26% by II); The chalice (mythic: Vampire) | 34%, 56%, 70% | 25 parts, 10 of them uncommons or common formations |
-| two in the dark | Shadow cloak (cloak, rare); Shroud charm (amulet, rare); Decoy (formation, rare: 26% by II); Smoke screen (version: Assassin, Vanish A) | 16%, 30%, 41% | 9 parts, 3 of them uncommons or common formations |
-| red stone | Red stone mail (mail, rare); Phylactery (relic, rare); Blood oath (formation, rare: 26% by II) | 16%, 28%, 39% | 4 parts, 2 of them uncommons or common formations |
-| borrowed gift | Twin-knot (amulet, legendary); Twins (formation, legendary: 5% by II) | 8%, 16%, 23% | 0 parts, 0 of them uncommons or common formations |
-| carrier | Carrier's coat (leather, legendary) | 15%, 29%, 40% | 2 parts, 0 of them uncommons or common formations |
+| blood mage | Sanguine vestments (robes, rare); Blood vial (vial, rare); The covenant (formation, legendary: 9% by II) | 9%, 18%, 26% | 5 parts, 2 of them uncommons or common formations |
+| resonance | Resonant robes (robes, rare); Storm front (formation, rare: 36% by II) | 6%, 13%, 18% | 5 parts, 2 of them uncommons or common formations |
+| crescendo | Orb of the rising sun (orb, legendary); Crescendo charm (amulet, rare) | 13%, 25%, 35% | 8 parts, 1 of them uncommons or common formations |
+| mana as armour | Orb of the deep (orb, rare); Idol of the deep (idol, legendary) | 7%, 14%, 20% | 14 parts, 7 of them uncommons or common formations |
+| shatter bell | Frozen tome (tome, legendary); Icebreaker charm (amulet, rare); Icefall (formation, rare: 36% by II) | 13%, 26%, 36% | 1 parts, 0 of them uncommons or common formations |
+| firecracker | Winter's chain (rune sword, rare); Frostwalker's furs (leather, rare); The long winter (formation, legendary: 9% by II); Splinters (version: Frostweaver, Shatterpoint B); Glacier's heart (mythic: Frostweaver) | 13%, 25%, 35% | 3 parts, 1 of them uncommons or common formations |
+| brink | Bloodletter (sword, rare); Sanguine vestments (robes, rare); Heart of the saint (relic, legendary); Blood vial (vial, rare); Bloodlust draught (vial, rare); Halved heart (amulet, rare); Blood oath (formation, rare: 36% by II); The chalice (mythic: Vampire) | 26%, 48%, 62% | 26 parts, 10 of them uncommons or common formations |
+| two in the dark | Shadow cloak (cloak, rare); Shroud charm (amulet, rare); Decoy (formation, rare: 36% by II); Smoke screen (version: Assassin, Vanish A) | 14%, 27%, 37% | 9 parts, 3 of them uncommons or common formations |
+| red stone | Red stone mail (mail, rare); Phylactery (relic, rare); Blood oath (formation, rare: 36% by II) | 13%, 26%, 35% | 4 parts, 2 of them uncommons or common formations |
+| borrowed gift | Twin-knot (amulet, legendary); Twins (formation, legendary: 9% by II) | 8%, 17%, 25% | 0 parts, 0 of them uncommons or common formations |
+| carrier | Carrier's coat (leather, legendary) | 17%, 33%, 46% | 2 parts, 0 of them uncommons or common formations |
 <!-- engines:end -->
 
 - **Keystones in more than one place:** twenty-five of the twenty-eight, counting pieces, seats, versions and mythics. The red rain's is in the kits.
-- **Flagged, one place:** the emptied quiver's keystone is Quick draw, one version on one class, as builds.md wrote it; a second would copy the version. The carrier's is one legendary.
+- **One place:** the emptied quiver's keystone is Quick draw, one version on one class, as builds.md wrote it; a second would copy the version. The carrier's is one legendary.
 - **Every common half is close at hand,** in uncommons, common formations or the kits. The fuse's, the shatter bell's and the borrowed gift's are in the kits alone, as builds.md has them.
-- **Flagged: a keystone piece is rarely offered.** To a roster that can wear it, some keystone piece of a given engine is offered in about one act I in seven, and in about a third of full runs. That's the offer roll, not the stock: a roll picks a slot, a class, a kind and then one piece of two to five. More places help little; fewer pieces a cell would cost the roads their steps.
-- **The places that are met are the versions and the common formations.** A version is on offer every time its class trains, once its ability is known: the code offers every open training, where `docs/rules.md` says a training offers three choices. So an engine with a keystone in a version (ten have one) is met by nearly every run that fields that class and trains it. At three choices it would be about three trainings in eight.
-- **Flagged, met least:** the reckoning, the avalanche, the resonance, mana as armour and the shatter bell, with two places each and no version; and the borrowed gift, whose two places are both legendary.
-- **This is the gate's first decision** (`report.md`): leave the offer roll as it is, or aim it.
+- **A keystone piece is rarely offered.** To a roster that can wear it, some keystone piece of a given engine is offered in about one act I in seven, and in about a third of full runs. To a party on the engine's own road it's a fifth of act I's and under half of full runs. That's the offer roll, not the stock: a roll picks a slot, a class, a kind and then one piece of two to five.
+- **The places that are met are the versions and the common formations.** A version is on offer every time its class trains, once its ability is known: the code offers every open training, where `docs/rules.md` says a training offers three choices. Nine engines have a keystone in a version, and are met by nearly every run that fields that class and trains it. At three choices it would be about three trainings in eight.
+- **Met least:** the resonance, mana as armour, the goad and the blood mage, with two or three places and no version; and the borrowed gift, whose two places are both legendary.
 
 ### Every door has pieces both sides want
 
@@ -909,44 +916,54 @@ Every class has a first step and a second rung to wear on every road builds.md p
 | Thousand Cuts into the Hunt | Marking knife, Bloodscent knife, Weeping kris, Second thrust, Hunting spear, Dragon's tooth |
 | Thousand Cuts into Blood Pact | Red stone mail, Crimson dregs, Lamprey claws, Tithing leathers, Gorged claws, Tallymail, Heartsblood, Open wound |
 | Thousand Cuts into Barrage | Bell of the hour, Baton, Tireless bell, Forked knuckles, Dancer's cloak |
-| The Toll into Thousand Cuts | Briar totem, Oathkeeper, Duelist's leathers, Tempest cloak, Toll gate |
-| The Toll into Cold Snap | Hoarfrost plate, Frost armor, Provoking blade, Toll gate |
-| The Toll into Landslide | Mirror shield, Hoplon, Grudgebearer, Mountainfall, Thornheart plate, Hammer and anvil |
-| The Toll into the Storm | Goading horn, Provoking blade, Static mail, Thunderhead totem, Overgrowth, Storm front |
+| The Toll into Thousand Cuts | Briar totem, Oathkeeper, Duelist's leathers, Parrying spear, Tempest cloak, Matador's cape, Toll gate |
+| The Toll into Cold Snap | Hoarfrost plate, Frostward blade, Frost armor, Provoking blade, Toll gate |
+| The Toll into Landslide | Mirror shield, Hoplon, Grudgebearer, The anvil, Mountainfall, Thornheart plate, Hammer and anvil |
+| The Toll into the Storm | Goading horn, Provoking blade, Static mail, Thunderhead totem, Storm front |
 | The Toll into Blood Pact | Halved heart, Mender's mace, Penitent's mace, Watch horn, Aegis mail, Oathbound shield, Thorn hedge |
 | The Storm into Cold Snap | Bellringer, Chain wand, Lightning-glass, Thunderhead maul, Glacier blade, Banked robe |
 | The Storm into the Hunt | Long spear, Storm pike, Oathkeeper, Last page, Stormspear |
 | The Hunt into Bonfire | Wick, Ember heart, Pack leader's coat, Hunting horn, Writ of judgement, Pyre line |
-| Landslide into Cold Snap | Icebreaker, Icebreaker charm, Vulture's skull, Still hand, Worldbreaker, Icefall |
-| Landslide into Barrage | Reveille, Twice-told tome, Icebreaker charm, Rubato, Reprise |
-| Landslide into the Hunt | Roaring greataxe, Giantsbane, Overrun, Hunting horn, Harvest scythe, Headsman's axe, Heavy line |
+| Landslide into Cold Snap | Icebreaker, Icebreaker charm, Frozen tome, Vulture's skull, Still hand, Worldbreaker, Icefall |
+| Landslide into Barrage | Reveille, Twice-told tome, Icebreaker charm, Frozen tome, Rubato, Reprise |
+| Landslide into the Hunt | Roaring greataxe, Giantsbane, Overrun, Downhill charm, Hunting horn, Harvest scythe, Headsman's axe, Heavy line |
 | Barrage into Bonfire, the Storm or Cold Snap | Resonant robes, Staff of echoes, Evensong staff, Orb of the long winter, Kindled robes, Storm front |
-| Blood Pact into Barrage | Sanguine vestments, The chalice, Orb of the deep, Idol of the deep, The covenant |
+| Blood Pact into Barrage | Sanguine vestments, Idol of the blood-well, The chalice, Orb of the deep, Idol of the deep, The covenant |
 | Blood Pact into Landslide | Mountainfall, Bloodletter, Saint's mace, Cornerstone hammer, Blood oath |
 
 ### Exotics, and the elements
 
-- **Exotics that belong to no road:** fourteen, about one in thirteen of the rares, legendaries and formations: Wildmagic wand, Carrier's coat, Motley robe, Lodestone shield, Idol of the hungry dark, Tireless bell, Shadow cloak, Twin-knot, Scapegoat charm, Burning heart, Gambler's coin, Turncoat charm, The wheel, Twins. Under the one in ten `loot.md` wished for; the amount follows what was worth seeing.
+- **Exotics that belong to no road:** fourteen, about one in thirteen of the rares, legendaries and formations: Wildmagic wand, Carrier's coat, Motley robe, Lodestone shield, Idol of the hungry dark, Tireless bell, Shadow cloak, Twin-knot, Scapegoat charm, Burning heart, Gambler's coin, Turncoat charm, The wheel, Twins.
 - **The net** (falls and returns) is about a dozen pieces and one formation, sized as protection, and none wants a fall: a unit that stands back up under cover (Phoenix ember, Swan's grace, Last bastion), the fallen brought back between fights (Lamp of vigil), the returned kept up (Vestments of return, Shield of the chosen, Vigil), and cover for whoever drops low (Holdfast, Warded mail, Feathered cloak, Mottled hide, Shroud charm, Aegis mail).
 - **The first move:** First light, Reveille, Scrying orb, Horn of the charge, Ready stance, and each road's own opener.
 - **Stopping a cast** is an answer, and two identities live on it (the Hexer's spellbreaker, the Frostweaver's disabler). Their versions wait for a wind-up; the loot gives them pieces that don't wait: Marginalia aims a caster's abilities at whoever is casting, Hushing idol answers each cast begun with a strike, and Quiet robes and Warding bell are the party's own answer to a Silence.
 - **Foes that do less** is five pieces, none of them a road's step.
 
+## Open for the director
+
+Not ruled at gate 1. None of these stops the fill, which writes to the spine as it stands; each is a line or two to change if the director rules the other way.
+
+- **How loot is offered.** `loot.md` says the designer's tags aim drops; the offer roll doesn't use them. Aiming one offer of each fight's three at what the party already does would take a keystone, for a party on its road, from a fifth of act I's to nearly three in ten and from under half of full runs to nearly six in ten, and a road's first-step piece to about nine in ten in act I. It's the rogue mode's rule: a line for the build's brief.
+- **The counts.** 322 pieces against today's 272, and 35 formations against 32. The place to cut, if it's too much, is the uncommons, and the status roads' first steps pay for it.
+- **The four bends** under *The rules the pieces bend or add*: riders as uncommons, two swing shapes as uncommons, "all fight", and the last drink.
+- **The mirror reads two ways in builds.md:** a share of the whole blow, or exactly what the wall's cover stopped. The spine has pieces of each.
+- **Swift justice and Hunting horn** both bring the party's weapons down together when a Marked foe falls: the version by readying Condemn again, the horn by calling the swings. Kept as different enough; worth the director's eye.
+- **Three places where the documents and the game differ:** `docs/rules.md` says a training offers three choices and the code offers everything; `loot.md` says later acts roll more rares and every act's fights roll on one table; `classes.md` names a Hexer version, Culmination, that the content calls Expose.
+- **Marked's length** (`STATUS.marked`) is under half the time a Mark's foe takes to fall. The balance pass's.
+
 ## Least sure
 
-- **The stock's shape.** 314 pieces is a sixth more to write, build and tune than today. The count follows the roads, kind by kind; whether a run can tell 92 uncommons apart is a question for play.
+- **The stock's shape.** 322 pieces is nearly a fifth more to write, build and tune than today. Whether a run can tell 93 uncommons apart is a question for play.
 - **Riders as uncommons.** It makes a status road's first step an easy find, which is the point, and it means a third of the weapon uncommons read alike. Three plain riders on the fist weapons is the plainest case.
 - **Tinder charm and The standard** make any party's second feeder without a second source. They may make the four status roads feel like one. Tinder charm is also the hardest uncommon to read.
-- **The same rule in a piece and a seat.** Where an engine has no second form, its two places read alike. builds.md asks for the places and `loot.md` for the difference.
 - **Keystones at rare.** About two dozen legendary effects moved down. If rares come to feel like the legendaries did, the far ends have less room above them.
 - **The wide hits.** Five rares fan a swing out and carry what it carries. Their promise is still more foes, the promise play never took.
-- **The Hunt's Mark.** Marked lasts as long as `STATUS.marked` says, which is under half the time a Mark's foe takes to fall. The marker pieces lay it again; whether the party's blows stay together between Marks is a number, the balance pass's. Condemn can still put a second Mark beside a piece's.
 - **Heat as speed.** Speed feeds every status road at once. The Bonfire far end, the Hunt's kill counter and the dancer's dodge all build it.
-- **The Toll is over-served.** It sits on the most doors, so it has the most second rungs (seventeen pieces), and builds.md calls it the road that least needs them.
-- **The party-rule formations.** Six legendary formations and First light are a rule for the party with three plain seats. Play fought in formations whose seats had roles.
-- **The cathedral and The chalice** are the boldest new lines: a spell with no cooldown, and one unit paying for the party's casts.
+- **The Toll is over-served.** It sits on the most doors, so it has the most second rungs, and builds.md calls it the road that least needs them.
+- **The party-rule formations.** Five legendary formations and First light are a rule for the party with three plain seats. Play fought in formations whose seats had roles.
+- **The cathedral and The chalice** are the boldest lines: a spell with no cooldown, and one unit paying for the party's casts. Bloodstone reliquary beside The chalice gives much of that price back.
 - **Aegis mail** on the brink may be a unit that can't fall, as builds.md already fears.
 - **The goad** is still a piece that speeds the foes up, and Provoking blade does it with every swing.
 - **Goading horn on a Hoplite** does nothing without a Taunt from its amulet. **The standard's Followers and Toll gate's Collectors** do nothing behind a unit whose swing carries nothing.
-- **Loops aren't checked yet.** The brief leaves loops to the fill's rulings, and the fresh reader wasn't asked for them. One is visible already: Provoking blade makes a foe swing, and Duelist's leathers or Tempest cloak answers a dodged swing with a strike that provokes again; its brake is the dodge that fails. And the lines that land a blow twice (Twinfall, The mountain, Hunting spear, Dragon's tooth) don't yet say the second landing can't land again.
-- **The versions barely change:** ten of 128. The earlier versions were split toward identities the nine roads use, and each was checked against its road. It may also mean the lead read them too kindly.
+- **Loops.** The fill checks every share for them. Two are known: Provoking blade makes a foe swing, and a dodge-answer (Duelist's leathers, Tempest cloak, Parrying spear) strikes it again, with the dodge that fails as its brake; and the emptied quiver and the resonance, which builds.md wrote as loops with brakes of their own.
+- **The versions barely change:** nine of 128. The earlier versions were split toward identities the nine roads use, and each was checked against its road. It may also mean they were read too kindly.

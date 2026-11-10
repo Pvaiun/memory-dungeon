@@ -13,8 +13,9 @@
  * stock, lists where each recurring part and each engine's parts sit, and works out roughly how often a run is offered each
  * road's first step and each engine's keystone, from the offer roll in `src/rogue/offers.ts` and the weights in
  * `content/core-set/rogue.ts` (a slot, then a class, then one of its kinds there, then a piece of that kind at the rarity).
- * The run's shape (fights an act, the roster's size) is an estimate, stated in `RUN` below: the numbers are for comparing
- * threads and finding the ones a run rarely meets, not for quoting to a decimal.
+ * The offers an act makes are counted, not estimated: `RUN` below holds the averages of 40 runs of the simulated player
+ * (`npx tsx steps/loot/offer-count.ts`). Its path and roster differ from a person's, so the numbers are for comparing threads
+ * and finding the ones a run rarely meets, not for quoting to a decimal.
  */
 import { readFileSync, writeFileSync } from "node:fs";
 import { ROGUE_CONFIG } from "../../content/core-set/rogue.js";
@@ -93,13 +94,21 @@ const cfg = ROGUE_CONFIG as unknown as {
   treasure: { rarity: Record<Rarity, number>; cage: number };
   shop: { gear: Record<Rarity, number>; legendaryByAct: number[] };
 };
+/**
+ * What a run is offered in each act, from `offer-count.ts` over 40 simulated runs (the acts a run played through): pieces by
+ * rarity and by who the offer is rolled for (open: a third for classes off the roster; party: an elite's first legendary;
+ * roster: the shop), formation offers by rarity, regular fights, and the roster's size.
+ */
 const RUN = {
-  /** Regular fights won an act (floor 1, and half of the nine rolled floors), elites, shops and chests met on one way up. */
-  fights: 6, elites: 1.2, shops: 0.7, chests: 1,
-  /** Roster size by act (three in the party, the bench filling as the act goes): a mid-act value. */
+  gear: [
+    { "common|open": 8.22, "common|roster": 1.62, "uncommon|open": 8, "uncommon|roster": 1.08, "rare|open": 7.16, "rare|roster": 1.08, "legendary|open": 5.08, "legendary|party": 1.65, "legendary|roster": 0.54 },
+    { "common|open": 7.51, "common|roster": 2.76, "uncommon|open": 6.62, "uncommon|roster": 1.84, "rare|open": 7.03, "rare|roster": 1.89, "legendary|open": 4.97, "legendary|party": 1.78, "legendary|roster": 1.78 },
+    { "common|open": 7.24, "common|roster": 2.84, "uncommon|open": 7, "uncommon|roster": 1.89, "rare|open": 5.97, "rare|roster": 1.95, "legendary|open": 5.03, "legendary|party": 1.7, "legendary|roster": 1.84 },
+  ] as Record<string, number>[],
+  formations: [{ common: 2.89, rare: 1.95, legendary: 0.11 }, { common: 1.84, rare: 3.19, legendary: 0.76 }, { common: 0.95, rare: 2.76, legendary: 0.89 }] as Record<string, number>[],
+  fights: [4.97, 4.43, 4.3],
+  /** Roster size by act: 3.8, 5.2 and 6.4 when counted, rounded for the sampled rosters. */
   roster: [4, 5, 6],
-  /** Formation offers an act: an elite's pick of two, the boon, a shop, mixed spoils and events. */
-  formations: 4.7,
 };
 
 // ─── Reading the spine ───────────────────────────────────────────────────────
@@ -211,15 +220,7 @@ const perRoll = (g: Item, pool: Cls[]) => {
 };
 /** Rolls of each rarity in one act, by who they're rolled for: the roster, the party (an elite's aimed offer), or open (a third off the roster). */
 function rollsInAct(act: number): { rarity: Rarity; n: number; pool: "open" | "roster" | "party" }[] {
-  const f = cfg.spoils.fight, sum = (o: Record<string, number>) => Object.values(o).reduce((a, b) => a + b, 0);
-  // A mixed pick swaps about one and a half of its three offers for something that isn't a piece.
-  const spoilRolls = RUN.fights * (f.count * (1 + f.extra / 100) - (f.mixed / 100) * 1.5);
-  const out: { rarity: Rarity; n: number; pool: "open" | "roster" | "party" }[] = RARITIES.map((r) => ({ rarity: r, n: (spoilRolls * f.rarity[r]) / sum(f.rarity), pool: "open" as const }));
-  out.push({ rarity: "legendary", n: RUN.elites * cfg.spoils.elite.aimed, pool: "party" }, { rarity: "legendary", n: RUN.elites * (cfg.spoils.elite.count - cfg.spoils.elite.aimed), pool: "open" });
-  const t = cfg.treasure;
-  for (const r of ["rare", "legendary"] as Rarity[]) out.push({ rarity: r, n: (RUN.chests * (1 - t.cage / 100) * t.rarity[r]) / (t.rarity.rare + t.rarity.legendary), pool: "open" });
-  for (const r of RARITIES) out.push({ rarity: r, n: RUN.shops * (r === "legendary" ? cfg.shop.legendaryByAct[act] : cfg.shop.gear[r]), pool: "roster" });
-  return out;
+  return Object.entries(RUN.gear[act]).map(([k, n]) => { const [rarity, pool] = k.split("|"); return { rarity: rarity as Rarity, n, pool: pool as "open" | "roster" | "party" }; });
 }
 /** Expected offers, in one act, of any of `set` that someone on the roster can wear. */
 function expected(set: Item[], roster: Cls[], party: Cls[], act: number): number {
@@ -260,14 +261,14 @@ const PASSIVES = ["Vanguard", "Last rites", "Hunter's eye", "Briar", "Phalanx", 
 /**
  * A version offered to its class. A training offers every open training its member has (`trainOptions` in
  * src/rogue/decisions.ts), not three as docs/rules.md says, so a version is on offer whenever its member trains at all, once its
- * ability is known (a passive always is). A member trains at least once in about seven act I's in ten, and nearly always by act
- * II; an ability is known four times in ten in act I, seven in ten by act II. At three choices of a member's eight, a given
- * version would be in about three trainings in eight.
+ * ability is known (a passive always is). Counted over simulated runs: a roster takes about nine trainings in act I, so nearly
+ * every member trains; a unit in a fight knows half its abilities in act I and nearly all by act II. At three choices of a
+ * member's eight, a given version would be in about three trainings in eight.
  */
 function versionMet(v: Item, act: number): number {
   const passive = PASSIVES.some((p) => (v.who ?? "").includes(p));
-  const known = passive ? 1 : [0.4, 0.7, 0.9][act];
-  return known * [0.7, 0.95, 1][act];
+  const known = passive ? 1 : [0.5, 0.95, 1][act];
+  return known * [0.9, 1, 1][act];
 }
 function signTable(): string {
   const rows = ["| Road | Its sign in the starting three | A first-step piece offered, act I | By act II's end | With its versions and common formations, act I | First steps in the stock | Thinnest route in act I, pieces alone |", "| --- | --- | --- | --- | --- | --- | --- |"];
@@ -301,7 +302,7 @@ if (unknownEngines.length) throw new Error(`unknown engines: ${unknownEngines.jo
 function formationMet(rarity: "common" | "rare" | "legendary"): number[] {
   const pool = items.filter((i) => i.type === "formation" && i.rarity === rarity).length;
   let miss = 1;
-  return [0, 1, 2].map((act) => { const o = cfg.formationOdds[act]; miss *= Math.pow(1 - 1 / pool, (RUN.formations * o[rarity]) / (o.common + o.rare + o.legendary)); return 1 - miss; });
+  return [0, 1, 2].map((act) => { miss *= Math.pow(1 - 1 / pool, RUN.formations[act][rarity]); return 1 - miss; });
 }
 function engineTable(): string {
   const rows = ["| Engine | Its keystone, and where | A keystone piece offered to a roster that can wear it: act I, by II, by III | Its common half |", "| --- | --- | --- | --- |"];
@@ -365,12 +366,11 @@ function whatIf(): string {
       for (let act = 0; act < 3; act++) {
         const roster = [...core, ...others].slice(0, RUN.roster[act]);
         // The unaimed rolls: today's, less one a fight.
-        const spoilRolls = RUN.fights * (f.count * (1 + f.extra / 100) - (f.mixed / 100) * 1.5);
-        ex += expected(keys, roster, core, act) - (RUN.fights / spoilRolls) * keys.reduce((a, g) => a + ((spoilRolls * f.rarity[g.rarity as Rarity]) / tot) * (1 - cfg.spoils.offRoster / 100) * perRoll(g, roster), 0);
+        ex += expected(keys, roster, core, act) - keys.reduce((a, g) => a + ((RUN.fights[act] * f.rarity[g.rarity as Rarity]) / tot) * (1 - cfg.spoils.offRoster / 100) * perRoll(g, roster), 0);
         for (const q of RARITIES) {
           const pool = gear.filter((g) => g.rarity === q && core.some((c) => KINDS[g.kind].wears.includes(c)) && g.roads.some((r) => r.road === road && r.worth >= 2));
           const hit = pool.filter((g) => keys.includes(g)).length;
-          if (pool.length) ex += ((RUN.fights * f.rarity[q]) / tot) * (hit / pool.length);
+          if (pool.length) ex += ((RUN.fights[act] * f.rarity[q]) / tot) * (hit / pool.length);
         }
         acc[act] += 1 - Math.exp(-ex);
       }
@@ -387,7 +387,6 @@ function whatIf(): string {
 function whatIfSteps(): string {
   const rows = ["| Road | Today, act I | One offer in three aimed, act I |", "| --- | --- | --- |"];
   const f = cfg.spoils.fight, tot = Object.values(f.rarity).reduce((a, b) => a + b, 0);
-  const spoilRolls = RUN.fights * (f.count * (1 + f.extra / 100) - (f.mixed / 100) * 1.5);
   for (const road of ROADS) {
     const steps = gear.filter((g) => g.roads.some((r) => r.road === road && r.rung === 1));
     let a = 0, b = 0;
@@ -396,10 +395,10 @@ function whatIfSteps(): string {
       const core = ROUTES[road][s % 3];
       const roster = [...core, ...shuffled(CLASSES.filter((c) => !core.includes(c)))].slice(0, RUN.roster[0]);
       const e0 = expected(steps, roster, core, 0);
-      let e1 = e0 - (RUN.fights / spoilRolls) * steps.reduce((x, g) => x + ((spoilRolls * f.rarity[g.rarity as Rarity]) / tot) * (1 - cfg.spoils.offRoster / 100) * perRoll(g, roster), 0);
+      let e1 = e0 - steps.reduce((x, g) => x + ((RUN.fights[0] * f.rarity[g.rarity as Rarity]) / tot) * (1 - cfg.spoils.offRoster / 100) * perRoll(g, roster), 0);
       for (const q of RARITIES) {
         const pool = gear.filter((g) => g.rarity === q && core.some((c) => KINDS[g.kind].wears.includes(c)) && g.roads.some((r) => r.road === road && r.worth >= 2));
-        if (pool.length) e1 += ((RUN.fights * f.rarity[q]) / tot) * (pool.filter((g) => steps.includes(g)).length / pool.length);
+        if (pool.length) e1 += ((RUN.fights[0] * f.rarity[q]) / tot) * (pool.filter((g) => steps.includes(g)).length / pool.length);
       }
       a += 1 - Math.exp(-e0); b += 1 - Math.exp(-e1);
     }
