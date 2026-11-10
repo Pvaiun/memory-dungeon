@@ -2,7 +2,7 @@
 
 The design stage of the builds pass. The director's intent is `intent.md`; the evidence from play is `state-of-play.md`. It follows the method `docs/gear-design/philosophy.md` gives for a builds stage: each build as a way to play, with its rhythm, threads, routes, rungs and needs, and the web between them. No pieces, and no numbers but the measurements under *Open problem*. Each build also says what the intent asks of it: how a player finds it at each phase of a run, how it stays alive, and what it asks of the kits.
 
-**This is a working design, not an approved one, and nothing in it is built.** The builds, the doors and the idea of engines are the base to continue from. Two things are open before the loot's spine can be written from it: the engines themselves, and how a build stays alive without a tank.
+**This is a working design, not an approved one, and nothing in it is built.** The builds, the doors and the engines are the base to continue from. Two things are open before the loot's spine can be written from it: the director's read of the engines, and how a build stays alive without a tank.
 
 ## Where it stands
 
@@ -21,12 +21,23 @@ The design stage of the builds pass. The director's intent is `intent.md`; the e
 - **The Storm's hook:** it runs on the foes' own actions, so it taxes the ones that never touch the party.
 - **The Hunt is led by the Mark,** with hiding as the Assassin's opener and no more.
 - **Each build's far end,** which the director hasn't read in this form.
+- **The engines:** twenty-two, the director's shield detonation and twenty-one designed since (*Engines*). The director hasn't read them.
+  - **To judge first, for the range:** the frozen gate, the brink, the reaping, the spell on the swing, and the opening, again.
+  - **To judge first, as the least sure:** the goad, the running fire, and two in the dark.
+
+**What the engines change in those choices:**
+- **Hiding left to the Assassin is reopened.** Two in the dark needs Hidden from one more hand than the Assassin's. Either a little hiding goes out to the loot, or that engine goes.
+- **The Storm's worst fight looks better.** A boss that rarely acts holds its charge at the cap between its moves, so a blow that reads the charge is at its best there (the held charge). It asks for that blow from more classes than the Valkyrie, which the Storm's needs already list.
 
 **Open, and next:**
-1. **The engines.** One has been found. The rest are to be designed (*Engines*).
+1. **The director's read of the engines,** on the sample.
 2. **Staying alive without a tank** (*Open problem*).
 
 **Least sure:**
+- **The engines that span units.** In play one unit's slots made a synergy and three units' rarely did. Eight of the twenty-two live on one unit; the rest need two units or the whole party, and may meet as seldom as the old web did.
+- **The engines held in versions.** The cull, the dynamo and the quake are whole only when the right abilities are known and trained, which is late.
+- **The Toll gets the most engines** (eight). The anchor is where the foes' own doing lands, so it's the easiest place to find one, and it's the build this pass least needs to make stronger.
+- **Three engines one by one:** the goad asks a player to quicken the foes in a game where staying alive is the scarce thing; the running fire buys less the faster Burn drains, and Bonfire runs on a fast drain; the crescendo may be a ramp and no more.
 - **The Storm.** Its hook is real against packs and busy back rows. Against a lone, slow boss it pays on the boss's schedule.
 - **Bonfire.** Upkeep is a rhythm only if the fire visibly leaps and sags. If it settles to a level, it reads as a status again.
 - **Four of the nine are a status's road.** It's the cheap way in. Whether it's the right one is open.
@@ -333,30 +344,211 @@ The design stage of the builds pass. The director's intent is `intent.md`; the e
 - **Not a concept the player is taught.** An engine is a design pattern. Nothing in the game names one, and no card says what a piece combines with.
 - **Not builds.** An engine is too narrow and too specific to carry routes and rungs.
 
-**The one found so far: the shield detonation.** In the director's play, one piece made a Shield deal damage, by its original size, when it broke. Another effect brought a broken Shield back at about half its size. The party was laying Shields on its units from several sources. Together, most of the party's damage came from Shields detonating. Nothing else that party was doing belonged to any build in the set: it was a shield party that hadn't fully come online, and those pieces twisted it into one specific gimmick. It was one of the strongest and clearest rhythms the director met in play.
-
-**Still to design: the engines themselves.** What's ruled about them so far:
+**What's ruled about them:**
 - **An engine sits on one road or more.** Some belong to a single road; some span two, three or more. Several can play on the same mechanic without touching another build.
 - **They're designed as a game designer picks them, for being worth finding, not from a formula.** Two frames were tried and are too narrow: that every engine must cross two mechanics, which reads as pattern matching, and that every engine gives a verb to a moment that does nothing today.
 - **No engine rests on a number the player can't see,** such as a foe's MP.
 - **A status's own behaviour stays as it is.** An engine is one of the places a build can make a status do more: fire that passes on, a shatter that leaves cold behind.
 
+**The first, from the director's play: the shield detonation.** One piece made a Shield deal damage, by its original size, when it broke. Another effect brought a broken Shield back at about half its size. The party was laying Shields on its units from several sources. Together, most of the party's damage came from Shields detonating. Nothing else that party was doing belonged to any build in the set: it was a shield party that hadn't fully come online, and those pieces twisted it into one specific gimmick. It was one of the strongest and clearest rhythms the director met in play. It sits on Landslide, in its stone.
+
+### The set
+
+Twenty-one more, for twenty-two. They're the design's own, and the director hasn't read them (*Where it stands* names the sample to judge first).
+
+**The test each one passed.** It's a test for being worth finding, not a mould: the engines share no shape.
+- **Each part earns its slot alone,** for a plain reason. A happy accident needs its parts to be in the party already.
+- **Together they change where something comes from:** the party's damage, its safety or its aim. A bigger number isn't an engine.
+- **It's seen the first time it fires,** and told in one sentence.
+- **It turns over on something a fight is full of:** swings, blows taken, kills, shatters. In play a chain whose second link waited on a cooldown never closed (`state-of-play.md`).
+- **It's small:** two parts and something common, and one part is often in a kit already.
+
+**Left out, and why:**
+- **Plain multipliers:** Sunder under a fire, Guard on a unit that hits from Defense. They're real, and a player will be glad to find them, but they're threads.
+- **One piece doing it alone:** a crit that rebuilds its caster's Shield is a mythic's work.
+- **A route through two kits:** a blow that reads a status, cast twice by the Bard. That's a door.
+- **Fill-ins by symmetry:** fire on whatever strikes the anchor, beside the frozen gate; a charge that spreads when its foe falls, beside the running fire.
+- **Mana as power on a unit that never casts.** It breaks the rule that power follows fuel.
+- **Anything that wants a fall,** ends a status early, or reads a number the player can't see.
+
+**How to read an entry.** *What combines* is the parts: a piece, a version, a seat or a class's own passive, and where a kit holds one today the entry names it. *What the player sees* is the fight. *Enough to see it* is the least a run needs before the thing shows, which is how a build pays before it's whole. They're laid out by what turns each one over. That's only a way to lay them out.
+
+#### The foes do it to themselves
+
+**The frozen gate.** *The Toll and Cold Snap.*
+- **What combines:** Chill left on whatever strikes the anchor · a draw · the Frostweaver's Rime shield, which turns each shatter into a Shield on the lowest ally, or anything else that pays on a shatter.
+- **What the player sees:** foes swing slower with every blow they land on the wall. Then one bursts and stands stunned, and the wall's Shield bar refills. Nobody cast anything: the pack freezes itself, faster the harder it attacks.
+- **Enough to see it:** the anchor's piece alone. It's how a second shatter comes without waiting on a cooldown.
+
+**The mirror.** *The Toll and Landslide.*
+- **What combines:** retaliation sized by the blow as it was struck, before the wall took its share · the cover that takes that share: Guard, stone, the Hoplite's Aegis kept on the anchor · a draw that holds through the wind-up.
+- **What the player sees:** the Ogre Chief's Crush comes down. On the wall, a small number or BLOCKED. On the Chief, the Crush's own number.
+- **Enough to see it:** the retaliation on any Guarded anchor. The better the stone, the more goes back, so it's the Toll's game against the bosses that barely swing, where it died in play. Weaken works against it: a weakened blow sends less back.
+
+**The goad.** *The Storm and the Toll.*
+- **What combines:** something that makes every foe act more often, which any other party reads as a curse: a formation's rule that cuts both ways, or the drawback on a strong piece · charge kept on the whole field, or thorns on an anchor · Weaken across the field, so the extra blows are small ones.
+- **What the player sees:** the foes swing faster and die of it. Every extra bite is another spark paid and another thorn taken.
+- **Enough to see it:** the curse beside a Bramble knight, or under a Stormcaller's storm. Two roads run on the foes' clock, and this winds the clock.
+
+**The held charge.** *The Storm, with Cold Snap or Landslide.*
+- **What combines:** charge on the party's swings (the Stormcaller's Thunderstorm) · anything that holds a foe still: a shatter's Stun, the Geomancer's Aftershock on every foe, a bash · a blow that reads the charge and leaves it: the Valkyrie's Skyfall, or her Thunderclap on everything charged.
+- **What the player sees:** a stunned foe can't act, so it can't pay its charge off, and the counter climbs to its cap. The blow from above lands for its biggest number. Then the foe wakes, and its first move costs it the lot.
+- **Enough to see it:** a storm and one Stun. A boss that rarely acts is a held foe too: its charge sits at the cap between its moves, so the blow that reads it is strongest where the Storm is weakest.
+
+#### Kills turn them over
+
+**The reaping.** *The Hunt, with the Storm, Bonfire or the Toll.*
+- **What combines:** an execute at the lowest foe that's ready again when it kills (the Assassin's Coup de grâce, and a kill reward of that size for other hunters) · anything that sinks a whole field together: a storm, fire laid thin, thorns on a swarm, a wide spell.
+- **What the player sees:** for a long while nothing dies, and every bar sinks in step. Then one name scrolls five times running and the field is empty.
+- **Enough to see it:** the Assassin's version and one wide spell. The staircase becomes a cliff. It's the answer to Ghouls, who have to fall inside one window, and exactly wrong for Bomb Bugs, who all go off at once.
+
+**The cull.** *The Hunt and Thousand Cuts, on one unit. Found in play.*
+- **What combines:** a first hit on each foe that always crits · crits that open a wound · an execute that's ready again on a kill. All three are the Assassin's today (Opening wound, Lacerate, Coup de grâce).
+- **What the player sees:** every strike on a fresh foe is a crit and a wound, the execute finishes it, and it's ready for the next. The foes' numbers drop like a staircase.
+- **Enough to see it:** one Assassin with two versions. It carried a run of the director's to act II, where it was known as the crit-Bleed build.
+
+**The judge's drum.** *The Hunt, with Landslide or Bonfire.*
+- **What combines:** the Paladin's Condemn: a Mark, and every ally's next swing lands at once · the call made again whenever the judged foe falls · swings worth calling: the slowest and heaviest in the party (the Hoplite's doubled swing, a maul with Might on it), or swings that carry fire.
+- **What the player sees:** a foe falls, the Mark jumps, and three weapons land together on the next. The maul that swings once in a long while swings on every kill. Where the swings carry fire, each call is three stacks at once and the fire leaps.
+- **Enough to see it:** a Paladin's Condemn beside a Hoplite. The call alone hands the slow swing a free one. "At once" is worth most on whatever comes least often.
+
+**The opening, again.** *The Hunt, with whatever the run holds.*
+- **What combines:** something that makes its wearer's start-of-fight effects happen again each time a foe falls · the start-of-fight uncommons every run is full of: a Shield, Haste, a few Might, a Taunt, a little frost or fire on every foe · kills.
+- **What the player sees:** a foe falls and the opening happens again: stone up, Haste on, frost across the field.
+- **Enough to see it:** the piece, and two of those uncommons on its wearer. The cheapest pieces in the bag become the engine, and which ones a run happens to hold decides what it is.
+
+**The running fire.** *Bonfire in a pack, with the Hunt.*
+- **What combines:** something that hands a dying foe's fire to another foe: a piece or a seat, never Burn itself · the feeders' own aim at the hottest foe (the Pyromancer's bolts and pyre, the Monk's fists) · kills that come quickly.
+- **What the player sees:** the burning foe falls, its number hops to the next, and every feeder turns to it without being told. A fire built on something big runs through the small ones.
+- **Enough to see it:** the piece and one feeder that aims at the hottest. It's Bonfire's pack game: a kill no longer throws the fire away.
+
+#### The party's swings and hits turn them over
+
+**The spell on the swing.** *Thousand Cuts and Barrage.*
+- **What combines:** something that casts its wearer's first-slotted ability on every few swings, whatever its cooldown, with the mana still paid · speed: a fast kind, Haste, a second strike · the order of its abilities, which now decides what the unit is.
+- **What the player sees:** a count climbs on the unit with each swing, and at the top, the spell. A Monk's every few blows is a Stun. A Bard's wand calls an Encore on a beat.
+- **Enough to see it:** the piece on any fast unit that knows one ability. Its limit is mana, so it wants a well, and speed gets a payoff of its own.
+
+**The red rain.** *Thousand Cuts in a pack, with the Storm or the Toll.*
+- **What combines:** wounds open on the whole field: the Bramble knight's attackers leave bleeding, the Hexer's Plague, an opener that strikes each foe once · any hit that lands on many foes at once, however weak: Chain lightning, an arc, a Blizzard, the Hoplite's shove, a lash of vines.
+- **What the player sees:** one cast, and a red number on every foe.
+- **Enough to see it:** a Bramble knight and any wide hit. Bleed pays by the hit and not by its size, so the weakest wide spell in the party is its best pourer, and a mage has a place in the blur.
+
+**The riposte.** *The Toll's dancer and Thousand Cuts.*
+- **What combines:** a dodge answered with a real swing · something that builds cover by hitting: the Valkyrie's Shield from every hit, the Monk's Drinking palm, Lifesteal · a draw on a dodger: the Monk's Stillness of mind, the Valkyrie's Over the fallen.
+- **What the player sees:** MISS. The answering strike. The dancer's Shield bar a little taller. The one blow in three that lands takes only Shield.
+- **Enough to see it:** the dodge's piece on a Valkyrie. From the director's chair a dodge wasn't a defence, because the hit that landed still killed. Here every miss banks cover for it.
+
+**Every colour.** *The four statuses' roads, through the Hexer.*
+- **What combines:** something that lays a different affliction each time: the chaos wand, which is worth a little to every status party and a lot to none; the Hexer's Plague; or one swing carrying riders from a kit, a piece and a storm · the Hexer's Malison as approved, which pays for each kind a foe holds · the Paladin, whose hits want any affliction at all.
+- **What the player sees:** a row of every icon on each foe, a stack or two of each, and the curse landing for its biggest number.
+- **Enough to see it:** a Hexer holding the wand. Scattered stacks are worthless to a pile and exactly what breadth wants.
+
+#### Casts turn them over
+
+**The blood mage.** *Blood Pact and Barrage.*
+- **What combines:** spells paid in life in place of mana · Lifesteal on the caster · a spell that lands on many foes.
+- **What the player sees:** the caster's HP bar drops at every cast and leaps back when the spell lands on a crowd. Its mana never moves.
+- **Enough to see it:** the price and Lifesteal on a caster with one wide spell. Against a pack it never stops. Against one boss each cast costs more than it drinks back, and it needs the party's net.
+
+**The dynamo.** *Barrage and the Storm. In the kits today.*
+- **What combines:** the Stormcaller's Recharge, which gives mana back for each foe the chain strikes · the Bard's Encore, whose second cast is free · a pack.
+- **What the player sees:** the chain lands twice, and the Stormcaller's mana bar ends higher than it began.
+- **Enough to see it:** a Stormcaller with that version beside a Bard. It's small, and all of it is there now.
+
+**The crescendo.** *Barrage.*
+- **What combines:** a spell that lands harder and costs more each time it's cast in a fight · mana poured in by the other two · the casts that are free for some other reason: the Bard's repeat, the Stormcaller's Overcharge, the Frostweaver's Deep calm, a first cast free. Each one skips a price that keeps climbing.
+- **What the player sees:** the same name up the log, a bigger number each time, and the mana bar emptying faster each time, except on the casts that cost nothing.
+- **Enough to see it:** the growing spell and one well. It's what "the same spell again and again" grows into.
+
+#### A shatter turns them over
+
+**The shatter bell.** *Cold Snap, with Landslide, Bonfire or Barrage.*
+- **What combines:** something that makes its wearer's slowest ability ready whenever a foe shatters · a party that shatters on a beat · an ability worth ringing for: the Geomancer's Boulder, the Paladin's Smite, the Pyromancer's Pyre, the Hoplite's shove.
+- **What the player sees:** SHATTER, and the great spell's name right under it, every time.
+- **Enough to see it:** the piece beside one Frostweaver. The frost becomes another unit's clock, so a long cooldown stops mattering, and the foe that just shattered is stunned and sundered when the blow arrives.
+
+**The firecrackers.** *Cold Snap in a pack.*
+- **What combines:** a shatter that throws cold onto the other foes: a piece or a version, never Chill itself · cold laid wide, so the pack nears the cap together: Blizzard, Stillness, the Ranger's Hail.
+- **What the player sees:** one foe bursts, the others' counters jump, and the ones nearest the cap go off in turn.
+- **Enough to see it:** the throw and one wide source of cold.
+
+**The quake.** *Landslide, with Cold Snap or the Storm. In the kits today.*
+- **What combines:** the Geomancer's Stunning crits: behind its Shield its crits come twice as often, and Stun · its Fissure, which lands triple on a Stunned foe · any other Stun to start it, and a shatter's is the commonest.
+- **What the player sees:** a rock crits and the foe is stunned. The next rock lands triple on it, and crits again.
+- **Enough to see it:** one Geomancer with both versions. A boss shrugs off the Stuns after the first few.
+
+#### Who gets picked turns them over
+
+**The brink.** *Blood Pact, with Landslide's stone and the Toll's keepers.*
+- **What combines:** a unit that holds itself low on purpose: by paying, since a price isn't damage and never spends a Shield, or by a piece that trades away the top half of its health bar · the kits' gifts to "the ally with the lowest share of HP": Shields from the Geomancer, the Valkyrie and the Frostweaver, the Knight's Guard, the Hoplite's Aegis, the Assassin's smoke · the versions that wake while an ally is low: the Cleric's cooldowns halved, the Bard's Might doubled, the Valkyrie standing over it.
+- **What the player sees:** one unit sits at a third of its health all fight, hitting at its strongest. Every Shield, Guard and Aegis in the party lands on it, and the healer works at twice the pace.
+- **Enough to see it:** a Vampire beside any one giver. The lowest ally is a place a player can choose to put someone, and eleven kits give to it. An anchor can sit there too.
+
+**Two in the dark.** *The Toll, Blood Pact and the Hunt.*
+- **What combines:** Hidden on two of the party: the Assassin's Vanish, its Smoke screen over the lowest ally, a cloak, a killing blow that hides the killer · a third who wants every blow: a thorn wall, a dancer, a shieldmaiden.
+- **What the player sees:** two names fade, and every blow the foes aim goes to the one left in the light.
+- **Enough to see it:** an Assassin, one more hiding and an anchor. It's a front line with no Taunt and no Aggro, for as long as the hiding lasts, and only what strikes everyone gets past it.
+
+### Across the web
+
+| Engine | Sits on | Lives on | In the game today |
+| --- | --- | --- | --- |
+| The shield detonation | Landslide | the party | the break and the return, on one legendary |
+| The frozen gate | the Toll, Cold Snap | two units | the anchor's piece; Rime shield |
+| The mirror | the Toll, Landslide | two units | the cover; the Hoplite's mythic does it alone |
+| The goad | the Storm, the Toll | the party | nothing |
+| The held charge | the Storm, Cold Snap, Landslide | the party | all of it, across three kits |
+| The reaping | the Hunt, the Storm, Bonfire, the Toll | two units | the Assassin's version |
+| The cull | the Hunt, Thousand Cuts | one unit | all of it, in one kit |
+| The judge's drum | the Hunt, Landslide, Bonfire | two units | Condemn; a killing blow that calls the volley |
+| The opening, again | the Hunt, and any other | one unit | the uncommons |
+| The running fire | Bonfire, the Hunt | the party | a piece that spreads a fallen foe's fire |
+| The spell on the swing | Thousand Cuts, Barrage | one unit | the Bard's mythic, which counts hits for its own songs |
+| The red rain | Thousand Cuts, the Storm, the Toll | two units | all of it, in the kits |
+| The riposte | the Toll, Thousand Cuts | one unit | the dodge's piece; the Valkyrie's passive |
+| Every colour | Bonfire, Cold Snap, the Storm, Thousand Cuts | one unit | the wand; Malison is approved, not built |
+| The blood mage | Blood Pact, Barrage | one unit | the price's piece; Lifesteal |
+| The dynamo | Barrage, the Storm | two units | all of it, in two kits |
+| The crescendo | Barrage | one unit | the free casts |
+| The shatter bell | Cold Snap, Landslide, Bonfire, Barrage | two units | a seat that answers a shatter with a heavier hit |
+| The firecrackers | Cold Snap | the party | the throw's piece |
+| The quake | Landslide, Cold Snap, the Storm | one unit | all of it, in one kit |
+| The brink | Blood Pact, Landslide, the Toll | two units | the gifts, in eleven kits; a seat that drains its unit |
+| Two in the dark | the Toll, Blood Pact, the Hunt | the party | the Assassin's hiding |
+
+- **Every road has engines, and none has only its own.** The Toll touches eight; Landslide and the Storm seven; Cold Snap and the Hunt six; Thousand Cuts, Bonfire and Barrage five; Blood Pact three.
+- **Three sit on one road, nine on two, ten on three or more.**
+- **Eight live on one unit,** where play showed a player builds; eight need two units; six need the party.
+
+### What the set asks of the loot
+
+- **The common half comes first.** The shield party was laying Shields long before it found the piece that broke them. So an engine's supply sits in the kits, the commons and the uncommons, and its keystone in a rare, a legendary, a version or a seat.
+- **A keystone met alone does nothing, and play showed it.** Eight keystones are in today's loot. The dodge that strikes back was worn by units that drew nothing, the shatter that throws cold by a party that shattered once a fight, and the price in life for two fights. What was missing each time was the other half, close at hand.
+- **Every keystone comes from more than one place:** a piece in more than one kind, a version, a seat. A run sees under half the legendaries, so twenty-two engines with one keystone each would mostly never be met.
+- **Each part is worth wearing alone on its road,** and no card names its partner.
+- **Parts overlap on purpose.** The execute that's ready again on a kill is in the reaping and the cull; a Stun is in the held charge, the quake and the shatter bell. That's how pieces meet in ways nobody wrote down.
+
 ## The doors
 
-Where a run drifts from one road to its neighbour, through something both want.
-- **Any status road into another, through a second colour on a swing.** A fire party picks up frost. The Hexer's Malison, which pays for each different affliction a foe holds, is what makes a mixed party worth being.
-- **Thousand Cuts into the Hunt, through the opener's crits.** The crit that opens a wound finishes the weakest. Play found these two as one.
+Where a run drifts from one road to its neighbour, through something both want. Where an engine sits on a door, the door names it.
+- **Any status road into another, through a second colour on a swing.** A fire party picks up frost. The Hexer's Malison, which pays for each different affliction a foe holds, is what makes a mixed party worth being. *Every colour.*
+- **Thousand Cuts into the Hunt, through the opener's crits.** The crit that opens a wound finishes the weakest. Play found these two as one. *The cull.*
 - **Thousand Cuts into Blood Pact, through the drink.** A party that lives on Lifesteal starts paying with it.
-- **The Toll into Thousand Cuts, through briars.** Foes leave the anchor already bleeding.
-- **The Toll into Cold Snap, through frost on the anchor.** What strikes it slows.
-- **The Toll into Landslide, through Defense and stone.**
-- **The Storm into Cold Snap, through a held foe:** a frozen foe keeps its charge until it moves.
-- **The Storm into the Hunt, through the back row:** taxed, or reached.
-- **Landslide into Cold Snap, through the heavy blow on a frozen foe.**
+- **Thousand Cuts into Barrage, through speed.** Swings that bring a spell round. *The spell on the swing.*
+- **The Toll into Thousand Cuts, through briars.** Foes leave the anchor already bleeding. *The red rain.*
+- **The Toll into Cold Snap, through frost on the anchor.** What strikes it slows. *The frozen gate.*
+- **The Toll into Landslide, through Defense and stone.** *The mirror.*
+- **The Toll into the Storm, through the foes' own clock:** one waits for them to strike, the other for them to move. *The goad.*
+- **The Toll into Blood Pact, through the lowest ally:** an anchor held low takes all the party's cover. *The brink.*
+- **The Storm into Cold Snap, through a held foe:** a frozen foe keeps its charge until it moves. *The held charge.*
+- **The Storm into the Hunt, through the back row:** taxed, or reached. And through a field sunk together, finished in one beat. *The reaping.*
+- **The Hunt into Bonfire, through kills:** a fire that outlives its foe. *The running fire.*
+- **Landslide into Cold Snap, through the heavy blow on a frozen foe.** *The shatter bell, the quake.*
 - **Landslide into Barrage, through the conductor:** the blow twice.
-- **Landslide into the Hunt, through the first strike:** Might at the start on the slowest hitter.
-- **Barrage into Bonfire, the Storm or Cold Snap, through the soloist:** the spell worth repeating is the one that feeds the fire, spreads the charge or lays the frost.
-- **Blood Pact into Barrage, through life for mana.**
+- **Landslide into the Hunt, through the first strike:** Might at the start on the slowest hitter. *The judge's drum.*
+- **Barrage into Bonfire, the Storm or Cold Snap, through the soloist:** the spell worth repeating is the one that feeds the fire, spreads the charge or lays the frost. *The dynamo,* for the Storm.
+- **Blood Pact into Barrage, through life for mana.** *The blood mage.*
 - **Blood Pact into Landslide, through max HP in the blow.**
 
 ## Open problem: staying alive without a tank
@@ -378,6 +570,10 @@ Where a run drifts from one road to its neighbour, through something both want.
 - **Revolve around a tank by nature:** the Toll (its anchor), Landslide (stone on heavy bodies).
 - **Have something of their own that isn't a tank:** Thousand Cuts and Blood Pact (living by what they hit and drink), Cold Snap (the cold slows and stuns, too little alone today), the Hunt (kill order, and nothing against a lone boss).
 - **Lean on a tank and have nothing of their own:** Bonfire, the Storm, Barrage.
+
+**What the engines add, which isn't an answer:**
+- **Six of them are ways to live that don't start from a wall:** the riposte (cover banked from dodges), the brink (the party's cover aimed at one low unit), two in the dark (a front made by hiding the others), the blood mage (a caster that drinks from a crowd), and the held charge and the quake (foes that can't act).
+- **Each needs a keystone a run finds in act II or later,** and the problem is act I. They widen what can hold once a run is built, and leave the first fights as they are.
 
 **Questions the director has put, none answered:**
 - Do classes need to be able to live without a tank by default?
@@ -470,10 +666,11 @@ Each class's three identities (`docs/core-set/classes.md`), and the roads each o
 | Stormcaller | tempest: the Storm, Barrage · storm fist: the Storm, the Hunt · lightning rod: the Toll, the Storm |
 | Geomancer | landslide: Landslide · quake: Landslide, Cold Snap (the breaker) · stone warden: Landslide, Blood Pact, Barrage |
 
-Three things for the upgrades pass to know:
+Four things for the upgrades pass to know:
 - **The Hexer's spellbreaker and the Frostweaver's disabler serve an answer (stopping a cast), not a road.** The class frame wants each identity viable.
 - **The Assassin's ambusher and hunter both serve the Hunt.** The hunter also opens the wounds for Thousand Cuts.
 - **The Pyromancer is in two roads;** the Cleric, Ranger, Assassin, Vampire and Frostweaver are in three; every other class is in four or more.
+- **Two versions rest on a foe's MP,** which the player can't see: the Hexer's Mana burn and the Vampire's Drain the well. The director ruled that out for engines; whether it holds for versions is theirs to say.
 
 ## Checks on the whole set
 
@@ -482,6 +679,7 @@ Three things for the upgrades pass to know:
 - **Every build's sign is in a base kit.** At least one class shows each build's direction with a passive or one ability, before any piece, and most builds have two or three. It's a check on this set, not a rule for what a build is: a sign can as well come from a piece or a formation.
 - **Every build has a route with a starter** (the Knight, Cleric or Ranger).
 - **Every build has a pack game and a boss game,** and says which is worse.
+- **Every build has engines, and shares most of them** (*Engines*, Across the web). Blood Pact has the fewest and the Toll the most.
 - **Builds that share a mechanic feel nothing alike.**
   - Being hit: the Toll's return, Blood Pact's brink.
   - Big numbers: Landslide's loaded blow, the Hunt's chosen strike, Barrage's repeated spell.
@@ -499,7 +697,7 @@ Three things for the upgrades pass to know:
 
 ## What comes next
 
-1. **Design the engines:** many, each on one road or more, each worth finding (*Engines*).
+1. **The director's read of the engines,** on the sample (*Where it stands*). The set grows, shrinks or changes from that read.
 2. **Work on the open problem** of staying alive without a tank, in the builds and outside them (*Open problem*).
-3. **Take the design's own choices to the director** (*Where it stands*).
+3. **Take the design's own choices to the director** (*Where it stands*), with the one the engines reopen: hiding left to the Assassin.
 4. **Then, on the director's approval:** the two approved changes (Marked, Malison) go in, each measured against today's game with both versions' numbers; the spine is written from the roads and the engines; and when the step closes this replaces `docs/gear-design/builds.md`, `docs/gear-design/philosophy.md` gains the engines, `docs/rules.md` stops saying the twelve stand, and the primer's list, the mythics' table in `docs/gear-design/loot.md` and the test parties in `tools/build-parties.ts` follow.
