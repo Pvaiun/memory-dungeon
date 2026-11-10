@@ -18,21 +18,22 @@ The design stage of the builds pass. The director's intent is `intent.md`; the e
 - **No engine rests on a number the player can't see,** such as a foe's MP.
 - **A mythic may be an engine on its own.** No other single piece is.
 - **A knockout keeps carrying.** The fallen don't stand up after a won fight.
+- **No status is locked to one unit.** It's enough for a signature status to be exotic. Hidden can come from loot, a formation, or another class's ability or version.
+- **Calling a foe's action is allowed,** even when the action is what sets off a status it holds. That's the status's own trigger, not the status set off early.
+- **Where an engine sits on a road's far end,** the far end goes past it, or is the engine's much stronger form that only the whole build reaches. Which, road by road, is the design's (*The builds*).
 
 **The design's own choices, for the director to confirm:**
 - **Nine builds.** The director left it to the design whether Shock and Bleed have builds. All four damaging statuses have one, each set off by a different clock (*The rhythm space*).
 - **The Storm's hook:** it runs on the foes' own actions, so it taxes the ones that never touch the party.
-- **The Hunt is led by the Mark,** with hiding as the Assassin's opener and no more.
-- **Each build's far end,** which the director hasn't read in this form.
+- **The Hunt is led by the Mark.** Hiding is the Assassin's opener in the kit, and something exotic beyond it.
+- **Each build's far end,** which the director hasn't read in this form. Of the three an engine sat on, Landslide's goes past its engine, and Cold Snap's and the Toll's are their engines' whole-build forms.
 - **The engines** (*Engines*): twenty-seven designed, beside the one found in play and four the game already holds. The director hasn't read them all in this form.
 
 **What the engines change in those choices:**
-- **Hiding left to the Assassin is reopened.** Two in the dark and the borrowed gift need Hidden from one more hand than the Assassin's. Either a little hiding goes out to the loot, or the two engines lose it.
 - **The Storm's worst fight looks better.** A boss that rarely acts holds its charge at the cap between its moves, so a blow that reads the charge is at its best there (the held charge). It asks for that blow from more classes than the Valkyrie, which the Storm's needs already list.
-- **Three far ends are now engines.** Landslide's stone as a weapon is the shield detonation, Cold Snap's shatter that seeds the next is the firecracker string, and the Toll's retaliation sized by the blow is the mirror. An engine is found early from few parts; a far end should be what only a whole build reaches. They're left as written for the director to rule. The design's lean: rewrite those three far ends past their engines, so the engine is the first taste and the far end what the whole build makes of it.
 
 **Open, and next:**
-1. **The design's own choices,** and what the engines reopen, for the director to confirm.
+1. **The design's own choices,** for the director to confirm.
 2. **The next pass,** on the director's word: the formations, the upgrades, the base kits and the gear, redesigned from the roads and the engines.
 
 **Least sure:**
@@ -40,11 +41,12 @@ The design stage of the builds pass. The director's intent is `intent.md`; the e
 - **The engines held in versions.** The reaping and the emptied quiver, and the cull and the quake already in the kits, are whole only when the right abilities are known and trained, which is late.
 - **The Toll and Landslide touch the most engines** (nine each). The anchor is where the foes' own doing lands, so it's the easiest place to find one, and the Toll is the build this pass least needs to make stronger.
 - **Engines one by one:**
-  - **the goad** speeds the foes up, which a player may never choose. Calling a foe's swing also sets its Shock off on the party's clock. The rules forbid setting a status off early, and whether moving the foe counts is the director's to say;
+  - **the goad** speeds the foes up, which a player may never choose;
   - **the fuse** buys less the faster Burn drains, and Bonfire runs on a fast drain;
   - **the crescendo** may be a ramp and no more;
   - **the brink,** with an Aegis landing on it every time, may be a unit that can't fall;
   - **the carrier** may read as clever and pay too little in fights this short.
+- **Landslide's far end** reads the hammer's own stone, not the whole party's. Reading the allies' Shields would scale from someone other than the user, which `docs/rules.md` may rule out; the masons keeping the hammer's stone full is the way round it.
 - **The Storm.** Its hook is real against packs and busy back rows. Against a lone, slow boss it pays on the boss's schedule.
 - **Bonfire.** Upkeep is a rhythm only if the fire visibly leaps and sags. If it settles to a level, it reads as a status again.
 - **Four of the nine are a status's road.** It's the cheap way in. Whether it's the right one is open.
@@ -126,11 +128,11 @@ The design stage of the builds pass. The director's intent is `intent.md`; the e
 - **Through a run:**
   1. *The sign.* One unit whose heavy thing already out-sizes everything round it: rocks that crit from behind a Shield, a double swing, a bash from max HP. The sign is the number, and that Defense or HP on a piece makes it bigger: here the careful pick and the build's pick are the same piece. The step is the first piece that says so on its card, heavier and rarer.
   2. *The build.* A loading crew: Might aimed at the hammer, the target opened first, stone on everyone, the blow aimed at something worth it. Elites lose a large share at a time, and a boss takes a handful of blows.
-  3. *The far end.* The stone is a weapon as well as cover: the Shield pool and its breaking are damage. The blow lands twice.
+  3. *The far end.* The stone loads the blow. Every blow the hammer lands reads the stone it holds and leaves it, and the masons keep that stone full, so what keeps the party standing is also the size of the blow. The blow lands twice. The shield detonation pays when stone breaks; this pays while it holds.
 - **Stays alive:** stone on everyone: Shields, Guard and an Aegis across three heavy bodies. Fights run long, so the stone has to be rebuilt, and that's where its MP goes.
 - **Packs and bosses:** bosses and armored foes are its best fights: a huge hit loses little to Defense. A pack is its worst: a blow spent on a wolf is a long wait wasted. Its pack game is the shove that hits every foe and the aim that saves the blow for the biggest. It fears dodgers, and anything that strips Shields.
 - **Needs:**
-  - **Pieces:** heavier and rarer, for swings and for abilities; Might for one unit, not three; damage from Defense, max HP and the Shield pool; a Shield's breaking as a blow. Every Landslide piece promises a blow on its card: the ones that promised stone alone were worn as plain defence, by everyone.
+  - **Pieces:** heavier and rarer, for swings and for abilities; Might for one unit, not three; damage from Defense, max HP and the Shield pool; a Shield's breaking as a blow, and a blow that reads the stone it stands behind. Every Landslide piece promises a blow on its card: the ones that promised stone alone were worn as plain defence, by everyone.
   - **Formations:** hammer, anvil, loader; formations that trade the party's speed for size.
   - **Upgrades:** slower and heavier versions; versions that aim the blow.
 - **Asks of the game:** none. Its miss was the loot's signposting, not the kits.
@@ -202,11 +204,11 @@ The design stage of the builds pass. The director's intent is `intent.md`; the e
 - **Through a run:**
   1. *The sign.* One Chill source (three base kits have one): the foes slow as the counter climbs, and one shatters. The step is a second source. Every stack also slows a foe, so it's never a pick against the party's safety.
   2. *The build.* Sources enough that the same foe shatters again in the same fight, and a breaker for each one. The second shatter is the line between the sign and the build. It comes from the Chill counts, which *Core set: classes* already makes the balance pass's first job, and from what the build finds.
-  3. *The far end.* A shatter that seeds the next, and a field that never thaws.
+  3. *The far end.* The cascade. A shatter's cold runs on to the next foe, and each shatter in a run sends on more than the one before it, so a cold enough field falls in one long string. The firecracker string is its first taste: one piece, a shatter or two more a fight. The cascade needs the whole field cold.
 - **Stays alive:** the cold: a chilled field acts less, and every shatter is a Stun.
 - **Packs and bosses:** spread over a pack, the cold slows everything and the shatters come together, like a string of firecrackers. Piled on a boss, it's a slow all fight and a burst on a beat; a boss shrugs off the Stuns after the first few, not the slow or the burst. It fears fights too short to reach the cap.
 - **Needs:**
-  - **Pieces:** Chill on swings, for the fast kinds; Chill from being struck; payoffs on a frozen foe; a shatter that leaves cold behind or sends it to the next foe, as something the build finds.
+  - **Pieces:** Chill on swings, for the fast kinds; Chill from being struck; payoffs on a frozen foe; a shatter that leaves cold behind or sends it to the next foe, as something the build finds, and a run of shatters that gathers as it goes.
   - **Formations:** the frost seats and the breaker; formations where one seat's hits set up another's.
   - **Upgrades:** versions that aim at the foe nearest its shatter, or spread the cold wide.
 - **Asks of the game:** nothing of Chill's behaviour. The Chill counts, as above.
@@ -256,7 +258,7 @@ The design stage of the builds pass. The director's intent is `intent.md`; the e
 - **Stays alive:** kill order: the most dangerous foe dies first, and the dead don't hit. Against a lone boss kill order buys nothing.
 - **Packs and bosses:** mixed groups with a dangerous back row are its best fights. A lone boss is its worst until the executes come: one step, no staircase. It fears Ghouls raised behind the hunt, and a Taunting front if it has no reach.
 - **Needs:**
-  - **Pieces:** the Mark from more hands than the Paladin's; kill rewards sized to be seen (a whole action, not a few ticks of one); executes; openers in each class's own terms, with hiding left to the Assassin.
+  - **Pieces:** the Mark from more hands than the Paladin's; kill rewards sized to be seen (a whole action, not a few ticks of one); executes; openers in each class's own terms, and hiding beyond the Assassin's as something exotic.
   - **Formations:** marker, chaser and warden, all three serving the kill.
   - **Upgrades:** versions that change what an ability aims at, or make it ready again on a kill: the kind that carried a run.
 - **Asks of the game:** Marked takes the party's random picks (approved).
@@ -277,7 +279,7 @@ The design stage of the builds pass. The director's intent is `intent.md`; the e
 - **Through a run:**
   1. *The sign.* On floor one, from the kit: a Bramble knight, or a Knight that Taunts in thorns. Packs die on it. There's nothing to find, which is why it was in most parties.
   2. *The build.* The other two join the toll: blows on the anchor set off what they've laid (the attacker bleeds, sparks, slows, weakens), and the anchor has a keeper. Swarms die on the wall while the third seat does something else.
-  3. *The far end.* The toll follows the blow: retaliation sized by the hit taken, and growing with the beating. A boss's slow swings feed it.
+  3. *The far end.* The mirror grown. Retaliation sized by the blow as it was struck, and growing with every blow the anchor has lived through this fight. A boss's slow swings feed it, and it needs the keeper as much as the wall. The mirror is its first taste.
 - **Stays alive:** it is the tank. Its risk is the one play showed: when the anchor falls, the rest fall behind it. So the keeper is part of the build, not an extra.
 - **Packs and bosses:** swarms and fast foes are its best fights. A boss or a pair of elites that barely swing is where it died in play; its far end is written for that, and untested. It gets nothing from foes that don't strike (Bone Priests, Witches), which is the Storm's ground, or from Area, which ignores the draw.
 - **Needs:**
@@ -514,7 +516,7 @@ Twenty-seven more, for twenty-eight, and four that the kits and the mythics alre
 **Two in the dark.** *The Toll, Blood Pact and the Hunt.*
 - **What combines:** Hidden on two of the party: the Assassin's Vanish, its Smoke screen over the lowest ally, a cloak, a killing blow that hides the killer, the borrowed gift · a third who wants every blow: a thorn wall, a dancer, a shieldmaiden.
 - **What the player sees:** two names fade, and every blow the foes aim goes to the one left in the light.
-- **Enough to see it:** an Assassin, one more hiding and an anchor. It's a front line with no Taunt and no Aggro, for as long as the hiding lasts, and only what strikes everyone gets past it.
+- **Enough to see it:** two hidings, the Assassin's or anyone's, and an anchor. It's a front line with no Taunt and no Aggro, for as long as the hiding lasts, and only what strikes everyone gets past it.
 
 **The red stone.** *Thousand Cuts and Blood Pact, feeding Landslide's stone.*
 - **What combines:** a piece that turns healing past full into a Shield · a unit that's often healed while full: a drinker with a fast weapon, whoever the Bard's Refrain lands on, a Cleric with nothing to mend.
@@ -569,7 +571,7 @@ Four engines the kits and the mythics make today, with nothing new. They're name
 | The shatter bell | Cold Snap, Landslide, Bonfire, Barrage | two units | a seat that answers a shatter with a heavier hit |
 | The firecracker string | Cold Snap | the party | the throw's piece; the Frostweaver's mythic leaves cold behind |
 | The brink | Blood Pact, Landslide, the Toll | two units | the gifts, in eleven kits; a seat that drains its unit |
-| Two in the dark | the Toll, Blood Pact, the Hunt | the party | the Assassin's hiding |
+| Two in the dark | the Toll, Blood Pact, the Hunt | the party | the Assassin's hiding; more is allowed |
 | The red stone | Thousand Cuts, Blood Pact, Landslide | one unit | nothing |
 | The borrowed gift | none of its own | two units | nothing |
 | The carrier | none | one unit | the foes' afflictions |
@@ -745,7 +747,7 @@ Four things for the upgrades pass to know:
 
 ## What comes next
 
-1. **The design's own choices,** and what the engines reopen, for the director (*Where it stands*).
+1. **The design's own choices,** for the director (*Where it stands*).
 2. **The next pass, on the director's word:** the formations, the upgrades, the base kits and the gear, redesigned from the roads and the engines, the parts that recur first. The two approved changes (Marked, Malison) go in, each measured against today's game with both versions' numbers.
 3. **When it's tuned:** make sure a party without a wall gets through the start of a run. The builds don't fix that; act I's first gates are where it's decided.
-4. **When the step closes:** this replaces `docs/gear-design/builds.md`, `docs/gear-design/philosophy.md` gains the engines, `docs/rules.md` stops saying the twelve stand, and the primer's list, the mythics' table in `docs/gear-design/loot.md` and the test parties in `tools/build-parties.ts` follow.
+4. **When the step closes:** this replaces `docs/gear-design/builds.md`, `docs/gear-design/philosophy.md` gains the engines, `docs/rules.md` stops saying the twelve stand and gains the rulings on statuses (none locked to one unit; a foe's action may be called), `docs/gear-design/loot.md` loses "Aegis stays the Hoplite's" if the director confirms the ruling covers it, and the primer's list, the mythics' table in `docs/gear-design/loot.md` and the test parties in `tools/build-parties.ts` follow.
