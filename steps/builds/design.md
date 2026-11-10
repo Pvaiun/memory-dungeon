@@ -25,7 +25,7 @@ The design stage of the builds pass. The director's intent is `intent.md`; the e
 - **Nine builds.** The director left it to the design whether Shock and Bleed have builds. All four damaging statuses have one, each set off by a different clock (*The rhythm space*).
 - **The Storm's hook:** it runs on the foes' own actions, so it taxes the ones that never touch the party.
 - **The Hunt is led by the Mark.** Hiding is the Assassin's opener in the kit, and something exotic beyond it.
-- **Each build's far end,** which the director hasn't read in this form. Of the three an engine sat on, Landslide's goes past its engine, and Cold Snap's and the Toll's are their engines' whole-build forms.
+- **Each build's far end,** which the director hasn't read in this form. Where an engine covers a far end, Landslide's goes past it, and Cold Snap's and the Toll's are their engines' whole-build forms.
 - **The engines** (*Engines*): twenty-seven designed, beside the one found in play and four the game already holds. The director hasn't read them all in this form.
 
 **What the engines change in those choices:**
@@ -33,7 +33,7 @@ The design stage of the builds pass. The director's intent is `intent.md`; the e
 
 **Open, and next:**
 1. **The design's own choices,** for the director to confirm.
-2. **The next pass,** on the director's word: the formations, the upgrades, the base kits and the gear, redesigned from the roads and the engines.
+2. **The loot pass:** the formations, the gear, the upgrades and the kit changes the builds need, designed from the roads and the engines (`loot-brief.md`).
 
 **Least sure:**
 - **The engines that span units.** In play one unit's slots made a synergy and three units' rarely did. Eleven of the twenty-eight live on one unit; the rest need two units or the whole party, and may meet as seldom as the old web did.
@@ -48,7 +48,7 @@ The design stage of the builds pass. The director's intent is `intent.md`; the e
 - **The Storm.** Its hook is real against packs and busy back rows. Against a lone, slow boss it pays on the boss's schedule.
 - **Bonfire.** Upkeep is a rhythm only if the fire visibly leaps and sags. If it settles to a level, it reads as a status again.
 - **Four of the nine are a status's road.** It's the cheap way in. Whether it's the right one is open.
-- **Thousand Cuts,** centred on Bleed, no longer holds speed for its own sake. Speed is a thread every status road wants.
+- **Thousand Cuts,** centred on Bleed, doesn't hold speed for its own sake. Speed is a thread every status road wants.
 - **The Hunt** without hiding at its centre may be thin for a class whose kit is hiding.
 - **Blood Pact** asks the player to spend what the game drains.
 
@@ -353,7 +353,7 @@ The design stage of the builds pass. The director's intent is `intent.md`; the e
 
 **What's ruled about them:**
 - **An engine sits on one road or more.** Some belong to a single road; some span two, three or more. Several can play on the same mechanic without touching another build.
-- **They're designed as a game designer picks them, for being worth finding, not from a formula.** Two frames were tried and are too narrow: that every engine must cross two mechanics, which reads as pattern matching, and that every engine gives a verb to a moment that does nothing today.
+- **They're designed as a game designer picks them, for being worth finding, not from a formula.** Two frames are too narrow: that every engine must cross two mechanics, which reads as pattern matching, and that every engine gives a verb to a moment that does nothing today.
 - **No engine rests on a number the player can't see,** such as a foe's MP.
 - **A mythic may be an engine on its own,** since it rewrites one class. Anything else takes two parts or more.
 - **A status's own behaviour stays as it is.** An engine is one of the places a build can make a status do more: fire that passes on, a shatter that leaves cold behind.
@@ -746,6 +746,6 @@ Four things for the upgrades pass to know:
 ## What comes next
 
 1. **The design's own choices,** for the director (*Where it stands*).
-2. **The next pass, on the director's word:** the formations, the upgrades, the base kits and the gear, redesigned from the roads and the engines, the parts that recur first. The two approved changes (Marked, Malison) go in, each measured against today's game with both versions' numbers.
+2. **The loot pass** (`loot-brief.md`): the formations, the gear, the upgrades and the kit changes the builds need, designed from the roads and the engines, the parts that recur first. When it's built, the two approved changes (Marked, Malison) go in, each measured against today's game with both versions' numbers.
 3. **When it's tuned:** make sure a party without a wall gets through the start of a run. The builds don't fix that; act I's first gates are where it's decided.
 4. **When the step closes:** this replaces `docs/gear-design/builds.md`, `docs/gear-design/philosophy.md` gains the engines, `docs/rules.md` stops saying the twelve stand and gains the ruling that a foe's action may be called, and the primer's list, the mythics' table in `docs/gear-design/loot.md` and the test parties in `tools/build-parties.ts` follow.

@@ -4,7 +4,7 @@ The enemy side: the rules every enemy keeps, the challenges an enemy can pose, a
 
 ## Fixed rules and scale
 
-- **Enemies run on the class rules:** the same stats, statuses, effects and target phrases. Heal, Area, Cleanse, Seek, Dispel and Revive are all open to enemies, and Doom and Bulwark are the Reaper's and the Ice Titan's in this set.
+- **Enemies run on the class rules:** the same stats, statuses, effects and target phrases. Heal, Area, Cleanse, Seek, Dispel and Revive are all open to enemies, and Doom and Bulwark are enemy-only (the Reaper's and the Ice Titan's).
 - **The scale.** Stats mean what they mean for classes, which run 1 to 5 and reach at most 12 with gear.
   - **Regular enemies** sit at 1 to 8, with one standout up to 12 only where that stat is the challenge. Swarm bodies sit at 1 to 3, and large regulars at 10 to 20 HP.
   - **Bosses** run 8 to 14 in their standout stats, and 60 to 120 HP on the line; a boss has only a share of its line's HP (`BOSS_HP`).

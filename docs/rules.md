@@ -16,10 +16,10 @@ Where a rule and a design document disagree, this page wins and the document get
 ## Combat
 
 - **One kind of hit.** Every hit meets Evasion and Defense (the Path of Exile formula). A status's own damage (Burn, Shock, Bleed, Chill's shatter, Thorns) is untyped: Evasion and Defense never meet it, and it's the one way past them. There are no elements and no subtypes of hit as mechanics: an element is a theme only (names, art, a class's flavour).
-- **Every amount states its own scaling,** and nothing scales by default. Attack is the one offensive stat, and anything can scale from any stat, the user's or anyone else's.
+- **Every amount states its own scaling,** and nothing scales by default. Attack is the one offensive stat, and anything can scale from any stat.
 - **The three speed stats are stats like any other,** in class lines and on gear: Attack speed, Cooldown, Cast speed.
 - **The Chill class doesn't Slow:** Slow is a player status like any other, but no Frostweaver ability applies it, and no ability triggers a shatter: Chill is its slow and detonates itself.
-- **Nothing in the vocabulary is locked to one unit.** A status, stat or effect that one class or one boss uses today can appear on other classes, on gear and on formations (Aegis, Hidden, Doom and Bulwark included). Where it's rare, it's enough that it's exotic. There are two tiers, Fundamental and Specialist.
+- **Nothing in the vocabulary is locked to one class.** A status, stat or effect that one class uses today can appear on other classes, on gear and on formations (Aegis and Hidden included). Where it's rare, it's enough that it's exotic. The tiers are Fundamental and Specialist, and enemy-only is a tier of its own (Doom, Bulwark): the party can't use it until the director says so.
 - **A status runs its own course.** No ability spends, shortens or sets off a status early; a payoff reads the stacks and leaves them.
 - **A status's own behaviour carries no build's identity.** What a build wants from a status beyond its definition (fire that passes on when its foe falls, a shatter that leaves cold behind) comes from a class, a version, a piece or a formation, never from the status itself: every use of the status would take that identity on.
 - **A status scales by its stacks, never by its applier.** The applier sets only how many stacks it adds. A Burn stack is a Burn stack, whoever applied it, and a status's damage belongs to its holder (no lifesteal from it).
