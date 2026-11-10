@@ -8,7 +8,7 @@ For the director. The spine (`spine.md`) is the lead's design for the loot the n
 - **A road's first step is met.** A party on a road is offered one of its first-step pieces in a little over half of act I's for Bonfire, Cold Snap and the Storm, and two in three or more for the other six. With the versions and common formations that also carry a first step, every road reaches three in four or better.
 - **An engine's keystone isn't.** A party on an engine's road is offered a keystone piece it can wear in about a fifth of act I's, a third of runs by the end of act II, and under half of full runs. That's with nearly every keystone in two to eight places.
 - **Why.** An offer rolls a slot, then a class, then one of its kinds, then one piece of the two to five in that kind at that rarity. No stock gets a given piece in front of a run often, and more places help little.
-- **What is met.** A version is in about three of every eight trainings its class takes. Ten engines have a keystone in a version, and those are met by most runs that field the class.
+- **What is met.** A version is on offer every time its class trains, once its ability is known. Ten engines have a keystone in a version, and those are met by nearly every run that fields the class and trains it.
 - **`loot.md` says the designer's tags are "used to aim drops". The offer roll doesn't use them.**
 - **The choice:**
   - **Leave it.** Engines stay rare finds, and the ten with a version carry the idea.
@@ -58,6 +58,8 @@ For the director. The spine (`spine.md`) is the lead's design for the loot the n
 - **The red stone is in the game today.** builds.md's table says nothing does it. The Red Feast and Phylactery both turn healing past full into a Shield.
 - **The Hunt's Mark is short.** Marked lasts under half the time its foe takes to fall (`STATUS.marked`). How long it lasts is the balance pass's.
 - **`classes.md` names a Hexer version, Culmination, that isn't in the content.** Enfeeble's second version is Expose.
+- **A training offers every option, not three.** `docs/rules.md` says a training offers three choices; the code offers everything its member can train. The spine's count follows the code. At three choices, a given version would be in about three trainings in eight, and the ten engines that lean on a version would each want a second piece or seat.
+- **The offer's rarity doesn't rise by act.** `loot.md` says later acts roll more rares and legendaries; every act's fights roll on one table. Only the shop's legendaries and the formations rise. So act I offers as many rares as act II.
 
 ## What the spine holds
 
@@ -187,4 +189,5 @@ Twenty-one samples, picked across the range by the fresh reader and weighted to 
 - **Heat as speed.** Speed feeds every status road at once, and three roads build it.
 - **The Toll is over-served.** It sits on the most doors, so it has the most second rungs, and builds.md calls it the road that least needs them.
 - **Seven formations are a rule for the party with three plain seats** (six of them legendary). Play fought in formations whose seats had roles.
+- **Loops aren't checked yet.** One is visible: a sword that makes a foe swing, beside a piece that answers a dodged swing with a strike. Its brake is the dodge that fails. The fill's rulings are where the brief puts this.
 - **How few versions change.** Ten of 128. The earlier versions were split toward identities the nine roads use; it may also mean they were read too kindly.

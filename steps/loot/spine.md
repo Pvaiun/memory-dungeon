@@ -840,14 +840,14 @@ Every class has a first step and a second rung to wear on every road builds.md p
 <!-- signs:start -->
 | Road | Its sign in the starting three | A first-step piece offered, act I | By act II's end | With its versions and common formations, act I | First steps in the stock | Thinnest route in act I, pieces alone |
 | --- | --- | --- | --- | --- | --- | --- |
-| Landslide | 67% | 73% | 91% | 85% | 8 pieces in 6 kinds, 1 versions, 1 common formations | Knight, Hoplite, Bard: 68% |
-| Thousand Cuts | 77% | 87% | 98% | 93% | 15 pieces in 10 kinds, 1 versions, 2 common formations | Valkyrie, Ranger, Vampire: 84% |
-| Bonfire | 57% | 53% | 77% | 88% | 7 pieces in 7 kinds, 3 versions, 2 common formations | Paladin, Monk, Hexer: 47% |
-| Cold Snap | 73% | 52% | 76% | 76% | 8 pieces in 8 kinds, 2 versions, 2 common formations | Hexer, Ranger, Geomancer: 48% |
+| Landslide | 67% | 73% | 91% | 89% | 8 pieces in 6 kinds, 1 versions, 1 common formations | Knight, Hoplite, Bard: 68% |
+| Thousand Cuts | 77% | 87% | 98% | 94% | 15 pieces in 10 kinds, 1 versions, 2 common formations | Valkyrie, Ranger, Vampire: 84% |
+| Bonfire | 57% | 53% | 77% | 96% | 7 pieces in 7 kinds, 3 versions, 2 common formations | Paladin, Monk, Hexer: 47% |
+| Cold Snap | 73% | 52% | 76% | 80% | 8 pieces in 8 kinds, 2 versions, 2 common formations | Hexer, Ranger, Geomancer: 48% |
 | The Storm | 49% | 57% | 80% | 75% | 7 pieces in 7 kinds, 0 versions, 2 common formations | Valkyrie, Hexer, Bard: 52% |
-| The Hunt | 83% | 73% | 91% | 86% | 13 pieces in 11 kinds, 2 versions, 1 common formations | Paladin, Assassin, Stormcaller: 60% |
-| The Toll | 54% | 65% | 87% | 74% | 10 pieces in 8 kinds, 1 versions, 1 common formations | Monk, Valkyrie, Bard: 54% |
-| Barrage | 94% | 73% | 92% | 80% | 12 pieces in 9 kinds, 1 versions, 1 common formations | Cleric, Vampire, Geomancer: 64% |
+| The Hunt | 83% | 73% | 91% | 90% | 13 pieces in 11 kinds, 2 versions, 1 common formations | Paladin, Assassin, Stormcaller: 60% |
+| The Toll | 54% | 65% | 87% | 76% | 10 pieces in 8 kinds, 1 versions, 1 common formations | Monk, Valkyrie, Bard: 54% |
+| Barrage | 94% | 73% | 92% | 81% | 12 pieces in 9 kinds, 1 versions, 1 common formations | Cleric, Vampire, Geomancer: 64% |
 | Blood Pact | 39% | 66% | 88% | 74% | 11 pieces in 10 kinds, 0 versions, 1 common formations | Vampire, Bard, Hoplite: 60% |
 <!-- signs:end -->
 
@@ -897,7 +897,7 @@ Every class has a first step and a second rung to wear on every road builds.md p
 - **Flagged, one place:** the emptied quiver's keystone is Quick draw, one version on one class, as builds.md wrote it; a second would copy the version. The carrier's is one legendary.
 - **Every common half is close at hand,** in uncommons, common formations or the kits. The fuse's, the shatter bell's and the borrowed gift's are in the kits alone, as builds.md has them.
 - **Flagged: a keystone piece is rarely offered.** To a roster that can wear it, some keystone piece of a given engine is offered in about one act I in seven, and in about a third of full runs. That's the offer roll, not the stock: a roll picks a slot, a class, a kind and then one piece of two to five. More places help little; fewer pieces a cell would cost the roads their steps.
-- **The places that are met are the versions and the common formations.** A version is in about three of every eight trainings its class takes, so an engine with a keystone in a version (ten have one) is met by most runs that field that class.
+- **The places that are met are the versions and the common formations.** A version is on offer every time its class trains, once its ability is known: the code offers every open training, where `docs/rules.md` says a training offers three choices. So an engine with a keystone in a version (ten have one) is met by nearly every run that fields that class and trains it. At three choices it would be about three trainings in eight.
 - **Flagged, met least:** the reckoning, the avalanche, the resonance, mana as armour and the shatter bell, with two places each and no version; and the borrowed gift, whose two places are both legendary.
 - **This is the gate's first decision** (`report.md`): leave the offer roll as it is, or aim it.
 
@@ -948,4 +948,5 @@ Every class has a first step and a second rung to wear on every road builds.md p
 - **Aegis mail** on the brink may be a unit that can't fall, as builds.md already fears.
 - **The goad** is still a piece that speeds the foes up, and Provoking blade does it with every swing.
 - **Goading horn on a Hoplite** does nothing without a Taunt from its amulet. **The standard's Followers and Toll gate's Collectors** do nothing behind a unit whose swing carries nothing.
+- **Loops aren't checked yet.** The brief leaves loops to the fill's rulings, and the fresh reader wasn't asked for them. One is visible already: Provoking blade makes a foe swing, and Duelist's leathers or Tempest cloak answers a dodged swing with a strike that provokes again; its brake is the dodge that fails. And the lines that land a blow twice (Twinfall, The mountain, Hunting spear, Dragon's tooth) don't yet say the second landing can't land again.
 - **The versions barely change:** ten of 128. The earlier versions were split toward identities the nine roads use, and each was checked against its road. It may also mean the lead read them too kindly.

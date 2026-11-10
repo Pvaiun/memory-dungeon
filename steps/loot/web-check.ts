@@ -258,14 +258,16 @@ const randomCores = (k = 3) => Array.from({ length: 200 }, () => shuffled(CLASSE
 
 const PASSIVES = ["Vanguard", "Last rites", "Hunter's eye", "Briar", "Phalanx", "Judgement", "Shieldmaiden", "Refrain", "Cold hex", "Iron palm", "Lacerate", "Bloodlust", "Stoke", "Shatterpoint", "Arc", "Bedrock"];
 /**
- * A version offered to its class: a training shows three of a member's open trainings (eight, for a unit that knows one ability), so
- * a given version is in about three of eight, once its ability is known (a passive always is). About one training a member in
- * act I, three by act II's end; an ability is known four times in ten in act I, seven in ten by act II.
+ * A version offered to its class. A training offers every open training its member has (`trainOptions` in
+ * src/rogue/decisions.ts), not three as docs/rules.md says, so a version is on offer whenever its member trains at all, once its
+ * ability is known (a passive always is). A member trains at least once in about seven act I's in ten, and nearly always by act
+ * II; an ability is known four times in ten in act I, seven in ten by act II. At three choices of a member's eight, a given
+ * version would be in about three trainings in eight.
  */
 function versionMet(v: Item, act: number): number {
   const passive = PASSIVES.some((p) => (v.who ?? "").includes(p));
   const known = passive ? 1 : [0.4, 0.7, 0.9][act];
-  return known * (1 - Math.pow(1 - 3 / 8, [1, 3, 5][act]));
+  return known * [0.7, 0.95, 1][act];
 }
 function signTable(): string {
   const rows = ["| Road | Its sign in the starting three | A first-step piece offered, act I | By act II's end | With its versions and common formations, act I | First steps in the stock | Thinnest route in act I, pieces alone |", "| --- | --- | --- | --- | --- | --- | --- |"];
