@@ -53,8 +53,8 @@ The least you need to know to work on the game. Read it first, then open a detai
 - **Statuses.** Everything that happens on an event or a timer is a status (22 of them), and there are 10 special stats (the three speed stats among them) and 6 effects. A status does the same thing whoever applies it: the applier sets only how many stacks it adds. Its length is its own, with one exception: bosses resist repeated Stun, Silence and Slow. The families:
   - **The staples:** Regen, Shield, Might, Weaken, Guard, Stun, Slow, Haste, Taunt, Bleed.
   - **Built up over a fight, and draining away:** Burn, Chill (it shatters at its cap), Shock, Sunder.
-  - **The rest:** Marked, Silence, Hidden, Rot, Clarity, Aegis, and Doom and Bulwark, which only enemies use.
-- **Tiers** say how widely a piece appears. A Fundamental is in many classes and the first fights, a Specialist in a few, and a Signature belongs to one class or boss and bends a rule.
+  - **The rest:** Marked, Silence, Hidden, Rot, Clarity, Aegis, and Doom and Bulwark, which only enemies use today.
+- **Tiers** say how widely a piece appears. A Fundamental is in many classes and the first fights, and a Specialist in a few. Nothing is locked to one class or boss: what one unit uses today can appear on other classes, gear and formations.
 
 ## Gear, formations and training
 

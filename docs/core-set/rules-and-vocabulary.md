@@ -32,7 +32,7 @@ A party-based dungeon crawler in the style of classic JRPGs, with fully automati
 
 - **Encounters are designed as puzzles.** A party brings strengths, a boss has gimmicks that call for them, and raw power can partly make up for a missing strength.
 - **A fight holds at most 8 foes** (`RULES.maxEnemies`). **Summoning:** a unit can bring new foes into a fight, up to that cap, and they count toward it. **No unit leaves a fight alive:** nothing flees, fades or escapes.
-- **Enemies use the same rules and stats as the party,** and the same statuses and effects. Doom and Bulwark are enemy-only statuses.
+- **Enemies use the same rules and stats as the party,** and the same statuses and effects. Doom and Bulwark are only enemies' in the core set as built, and nothing keeps them there.
 
 ### Design rules
 
@@ -218,13 +218,12 @@ Only a few statuses show as icons on a unit; everything else is behind the scene
 
 ## Tiers
 
-Every status, special stat, effect and challenge has a tier, set by its role. Tiers count across the whole set, every class and enemy together: they say how widely a piece appears, not what each class should hold.
+Every status, special stat, effect and challenge has a tier, set by its role. Tiers count across the whole set, every class and enemy together: they say how widely a piece appears, not what each class should hold. Nothing is locked to one class or one boss: a piece that one unit uses today can appear on other classes, on gear and on formations.
 
 | Tier | Role |
 | --- | --- |
 | Fundamental | The learnable base. Many classes and enemies use it, and players meet it in the first fights. Its variety comes from how differently it's used, not from adding more pieces. |
-| Specialist | A few classes make use of it or are built around it, and a few challenges lean on it. |
-| Signature | One class or one boss owns it, and it bends a rule. |
+| Specialist | A few classes or foes make use of it or are built around it, and a few challenges lean on it. Some are one class's or one boss's in the core set as built, and bend a rule. |
 
 The Fundamental pieces were chosen for how they interact: pieces that answer, undo, feed or play against one another.
 
@@ -232,11 +231,11 @@ The Fundamental pieces were chosen for how they interact: pieces that answer, un
 
 The vocabulary is 22 statuses, 10 special stats and 6 effects. The pieces add seven counters (*Gear design: the loot*).
 
-| Kind | Fundamental | Specialist | Signature | Total |
-| --- | --- | --- | --- | --- |
-| Statuses | 10 | 9 | 3 | 22 |
-| Special stats | 1 | 9 | 0 | 10 |
-| Effects | 3 | 3 | 0 | 6 |
+| Kind | Fundamental | Specialist | Total |
+| --- | --- | --- | --- |
+| Statuses | 10 | 12 | 22 |
+| Special stats | 1 | 9 | 10 |
+| Effects | 3 | 3 | 6 |
 
 Ten staples make the Fundamental base, each useful from a single application. Three Specialist statuses (Burn, Chill, Shock) are built up instead: they stack and drain away, so they pay off only with upkeep. Each status's sizes and lengths are in `STATUS`, under its name.
 
@@ -261,9 +260,9 @@ Ten staples make the Fundamental base, each useful from a single application. Th
 | Hidden | Specialist | Foes can't pick it as a target, Seek included; only their Area reaches it. Its allies can still pick it. Lasts a set time and can't be removed. Refresh. |
 | Rot | Specialist | Receives less healing; Shields are unaffected. Refresh. |
 | Clarity | Specialist | Regen for mana: restores a share of its holder's max MP on a pulse, for a set time. Refresh. Cast on oneself or an ally. |
-| Aegis | Signature | Blocks the next damage above a set share of max HP, from any source, then ends. Checked after mitigation, before Shields. Fizzle. Small hits pass; one big one doesn't. |
-| Doom | Signature (boss) | A visible countdown; at zero its holder takes untyped damage of a large share of its max HP, so a unit at full HP survives it and a hurt one doesn't. Fizzle. Cleanse removes it; Shield and Aegis soak it. |
-| Bulwark | Signature (boss) | Starts with a stack count, and every hit its holder takes removes one. At zero its holder is Stunned and takes double damage for a while, then Bulwark refills. |
+| Aegis | Specialist | Blocks the next damage above a set share of max HP, from any source, then ends. Checked after mitigation, before Shields. Fizzle. Small hits pass; one big one doesn't. |
+| Doom | Specialist | A visible countdown; at zero its holder takes untyped damage of a large share of its max HP, so a unit at full HP survives it and a hurt one doesn't. Fizzle. Cleanse removes it; Shield and Aegis soak it. |
+| Bulwark | Specialist | Starts with a stack count, and every hit its holder takes removes one. At zero its holder is Stunned and takes double damage for a while, then Bulwark refills. |
 
 **Buffs and debuffs.** Every status is either a buff or a debuff. Cleanse removes debuffs, Dispel removes buffs, and "with a buff" or "with a debuff" in a target phrase means these lists. Hidden is a buff, but it can't be removed. Taunt and Bulwark are ordinary buffs that Dispel can remove.
 

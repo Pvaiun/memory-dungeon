@@ -18,7 +18,6 @@ The design stage of the builds pass. The director's intent is `intent.md`; the e
 - **No engine rests on a number the player can't see,** such as a foe's MP.
 - **A mythic may be an engine on its own.** No other single piece is.
 - **A knockout keeps carrying.** The fallen don't stand up after a won fight.
-- **No status is locked to one unit.** It's enough for a signature status to be exotic. Hidden can come from loot, a formation, or another class's ability or version.
 - **Calling a foe's action is allowed,** even when the action is what sets off a status it holds. That's the status's own trigger, not the status set off early.
 - **Where an engine sits on a road's far end,** the far end goes past it, or is the engine's much stronger form that only the whole build reaches. Which, road by road, is the design's (*The builds*).
 
@@ -46,7 +45,6 @@ The design stage of the builds pass. The director's intent is `intent.md`; the e
   - **the crescendo** may be a ramp and no more;
   - **the brink,** with an Aegis landing on it every time, may be a unit that can't fall;
   - **the carrier** may read as clever and pay too little in fights this short.
-- **Landslide's far end** reads the hammer's own stone, not the whole party's. Reading the allies' Shields would scale from someone other than the user, which `docs/rules.md` may rule out; the masons keeping the hammer's stone full is the way round it.
 - **The Storm.** Its hook is real against packs and busy back rows. Against a lone, slow boss it pays on the boss's schedule.
 - **Bonfire.** Upkeep is a rhythm only if the fire visibly leaps and sags. If it settles to a level, it reads as a status again.
 - **Four of the nine are a status's road.** It's the cheap way in. Whether it's the right one is open.
@@ -128,11 +126,11 @@ The design stage of the builds pass. The director's intent is `intent.md`; the e
 - **Through a run:**
   1. *The sign.* One unit whose heavy thing already out-sizes everything round it: rocks that crit from behind a Shield, a double swing, a bash from max HP. The sign is the number, and that Defense or HP on a piece makes it bigger: here the careful pick and the build's pick are the same piece. The step is the first piece that says so on its card, heavier and rarer.
   2. *The build.* A loading crew: Might aimed at the hammer, the target opened first, stone on everyone, the blow aimed at something worth it. Elites lose a large share at a time, and a boss takes a handful of blows.
-  3. *The far end.* The stone loads the blow. Every blow the hammer lands reads the stone it holds and leaves it, and the masons keep that stone full, so what keeps the party standing is also the size of the blow. The blow lands twice. The shield detonation pays when stone breaks; this pays while it holds.
+  3. *The far end.* The stone loads the blow. Every blow the hammer lands reads the stone the whole party holds and leaves it, so what keeps the party standing is also the size of the blow. The blow lands twice. The shield detonation pays when stone breaks; this pays while it holds.
 - **Stays alive:** stone on everyone: Shields, Guard and an Aegis across three heavy bodies. Fights run long, so the stone has to be rebuilt, and that's where its MP goes.
 - **Packs and bosses:** bosses and armored foes are its best fights: a huge hit loses little to Defense. A pack is its worst: a blow spent on a wolf is a long wait wasted. Its pack game is the shove that hits every foe and the aim that saves the blow for the biggest. It fears dodgers, and anything that strips Shields.
 - **Needs:**
-  - **Pieces:** heavier and rarer, for swings and for abilities; Might for one unit, not three; damage from Defense, max HP and the Shield pool; a Shield's breaking as a blow, and a blow that reads the stone it stands behind. Every Landslide piece promises a blow on its card: the ones that promised stone alone were worn as plain defence, by everyone.
+  - **Pieces:** heavier and rarer, for swings and for abilities; Might for one unit, not three; damage from Defense, max HP and the Shield pool; a Shield's breaking as a blow, and a blow that reads the whole party's stone. Every Landslide piece promises a blow on its card: the ones that promised stone alone were worn as plain defence, by everyone.
   - **Formations:** hammer, anvil, loader; formations that trade the party's speed for size.
   - **Upgrades:** slower and heavier versions; versions that aim the blow.
 - **Asks of the game:** none. Its miss was the loot's signposting, not the kits.
@@ -750,4 +748,4 @@ Four things for the upgrades pass to know:
 1. **The design's own choices,** for the director (*Where it stands*).
 2. **The next pass, on the director's word:** the formations, the upgrades, the base kits and the gear, redesigned from the roads and the engines, the parts that recur first. The two approved changes (Marked, Malison) go in, each measured against today's game with both versions' numbers.
 3. **When it's tuned:** make sure a party without a wall gets through the start of a run. The builds don't fix that; act I's first gates are where it's decided.
-4. **When the step closes:** this replaces `docs/gear-design/builds.md`, `docs/gear-design/philosophy.md` gains the engines, `docs/rules.md` stops saying the twelve stand and gains the rulings on statuses (none locked to one unit; a foe's action may be called), `docs/gear-design/loot.md` loses "Aegis stays the Hoplite's" if the director confirms the ruling covers it, and the primer's list, the mythics' table in `docs/gear-design/loot.md` and the test parties in `tools/build-parties.ts` follow.
+4. **When the step closes:** this replaces `docs/gear-design/builds.md`, `docs/gear-design/philosophy.md` gains the engines, `docs/rules.md` stops saying the twelve stand and gains the ruling that a foe's action may be called, and the primer's list, the mythics' table in `docs/gear-design/loot.md` and the test parties in `tools/build-parties.ts` follow.
