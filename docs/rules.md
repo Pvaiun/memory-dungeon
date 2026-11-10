@@ -20,6 +20,7 @@ Where a rule and a design document disagree, this page wins and the document get
 - **The three speed stats are stats like any other,** in class lines and on gear: Attack speed, Cooldown, Cast speed.
 - **The Chill class doesn't Slow:** Slow is a player status like any other, but no Frostweaver ability applies it, and no ability triggers a shatter: Chill is its slow and detonates itself.
 - **A status runs its own course.** No ability spends, shortens or sets off a status early; a payoff reads the stacks and leaves them.
+- **A status's own behaviour carries no build's identity.** What a build wants from a status beyond its definition (fire that passes on when its foe falls, a shatter that leaves cold behind) comes from a class, a version, a piece or a formation, never from the status itself: every use of the status would take that identity on.
 - **A status scales by its stacks, never by its applier.** The applier sets only how many stacks it adds. A Burn stack is a Burn stack, whoever applied it, and a status's damage belongs to its holder (no lifesteal from it).
 - **Statuses are universal:** nothing applies a status for less or more than its own length. The one exception is bosses' control resistance (Stun, Silence and Slow, Chill's stun included): hidden stacks shorten them and then make the boss immune, and the stacks fall over time.
 - **MP costs are set by hand on each ability,** with no rule from a stat to a cost.
