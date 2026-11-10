@@ -80,33 +80,104 @@ For the director. The spine (`spine.md`) is the lead's design for the loot the n
 
 ## A sample worth reading
 
-Picked across the range by the fresh reader, weighted to what it and I are least sure of. Each is a line in `spine.md`.
+Twenty-one samples, picked across the range by the fresh reader and weighted to what it and I are least sure of. Each says what the item is, what it does, and what to judge. Numbers aren't set yet, so "a few" and "half again" are the spine's words for sizes.
 
-| Read | Why |
-| --- | --- |
-| Malison (kit change) | The five afflictions, and what the Hexer can do alone. |
-| Cinder wraps, Rime knuckles, Live-wire knuckles | Riders as uncommons: three alike in one kind. |
-| Tinder charm | Any party's second feeder. It may make four roads one, and it's the hardest uncommon to read. |
-| Millstone | A swing reshaped, at uncommon. |
-| Challenger's plate | The "all fight" bend. |
-| Provoking blade | The goad on every swing. |
-| Mirror shield and Hoplon | The mirror's two readings. |
-| Halved heart, and Blood oath's Bleeder seat | Two ways to hold a unit low; HP carries between fights. |
-| Sanguine vestments | The price in life, on a caster's robes. |
-| Crescendo charm and Orb of the rising sun | The same ramp, with its price and without. |
-| Icebreaker charm | The shatter bell for any class. |
-| Second dawn and Daybreak | One rule in a piece and a formation; what counts as a start-of-fight effect. |
-| Hunter's mark and Marking knife | Marks that agree. |
-| The standard (common formation) | A keystone at common: three weapons, one colour. |
-| Thorn hedge and Toll gate | The Toll's common and its rare: two seats that add to the toll. |
-| The cathedral (legendary formation) | A spell with no cooldown. The boldest line here. |
-| Open season (legendary formation) | A rule for the party with three plain seats, the kind play never fought in. |
-| Swift justice and Overgrowth (versions) | A keystone in a version: the judge's drum, the goad. |
-| Stormspear and Ember palms (mythics) | Changed because their old card is an uncommon's now. |
-| The chalice and Writ of judgement (mythics) | New: the Vampire pays for the party's casts; every Mark is a hammer blow. |
-| The Red Feast | The last drink. |
-| Tireless bell, Motley robe, Lodestone shield | Three of the fourteen exotics. |
-| Marginalia and Hushing idol | Loot for the two identities that live on stopping a cast. |
+### The kit change
+
+**Malison** (the Hexer's ability; you approved that it should "pay for breadth").
+- **What it does:** it hits every foe, and the hit is bigger for each different one of Burn, Chill, Shock, Bleed and Sunder that foe holds. It also adds a few Bleed. It no longer adds a stack of everything the foe has.
+- **What to judge:** which statuses count. With these five, a Hexer alone reaches three (Chill from its own swings, the Bleed Malison adds, Sunder from Enfeeble) and needs an ally or a piece for the other two. If every debuff counted, its own Weaken and a Mark would do instead, and it would never need a mixed party.
+
+### First steps: uncommons a run should find in act I
+
+**Cinder wraps, Rime knuckles and Live-wire knuckles** (three uncommon fist weapons; Monk, Vampire, Stormcaller).
+- **What they do:** the wearer's basic attacks and extra strikes add a few Burn, a few Chill, or a few Shock.
+- **What to judge:** today a weapon that puts a status on every swing is a rare. The builds say a status build's first step is a second unit laying the same status, so I made these uncommons. The cost is three cards in one kind that differ by one word.
+
+**Tinder charm** (uncommon amulet; any class).
+- **What it does:** the wearer's basic attacks add a few stacks to whichever of Burn, Chill, Shock or Bleed their target already holds the most of.
+- **What to judge:** it's a second source for whatever status a party has started, so one piece serves four builds. It may make those four builds feel the same, and its sentence is harder to read than an uncommon's should be.
+
+**Millstone** (uncommon amulet; any class; a rare today).
+- **What it does:** the wearer's basic attacks come half as often and hit more than twice as hard.
+- **What to judge:** it's Landslide's first step, a slow heavy hitter, for any class. In your runs it was offered four times and never taken; the "more than twice" is there so it reads as a gain. The question is whether changing how a unit swings is too much for an uncommon.
+
+**Marginalia** (uncommon tome; Bard, Hexer, Frostweaver) and **Hushing idol** (rare idol; Hexer, Vampire).
+- **What they do:** Marginalia: while a foe is winding up an ability, its holder's abilities aim at that foe. Hushing idol: when a foe starts winding up, its holder's next basic attack comes at once, at that foe.
+- **What to judge:** two class identities, the Hexer's spellbreaker and the Frostweaver's disabler, are about stopping an enemy's cast, which isn't one of the nine builds. In your runs, abilities that waited for a wind-up almost never fired. These two don't wait. Are they enough for those identities?
+
+### Second steps: rares
+
+**Challenger's plate** (rare Plate; Knight, Bramble knight, Hoplite, Paladin, Geomancer).
+- **What it does:** its wearer Taunts for the whole fight.
+- **What to judge:** the Toll needs more classes able to be the one that's hit. The rules say nothing applies a status for longer than its own length. I've written this as the Taunt being put back each time it runs out, which two of today's formation seats already do. Is that allowed on a piece?
+
+**Provoking blade** (rare sword; Knight, Hexer, Valkyrie).
+- **What it does:** the foe its basic attack hits makes its own next basic attack straight away.
+- **What to judge:** making a foe act early is good when acting hurts it: when it holds Shock, or is about to hit a unit with Thorns. That's the synergy builds.md calls the goad. On its own the sword makes a foe attack more often, on every swing. builds.md already worries a player may never choose that.
+
+**Mirror shield** (rare kite shield; Knight, Paladin, Geomancer) and **Hoplon** (rare round shield; Hoplite, Bramble knight, Valkyrie).
+- **What they do:** Mirror shield: a foe that hits the holder takes back a share of the blow at its full size, before Defense, Guard and Shields reduced it. Hoplon: while the holder is Guarded or holds a Shield or an Aegis, a foe that hits it takes back exactly what that protection stopped.
+- **What to judge:** builds.md describes this synergy both ways, and they differ. Under the first, better protection changes nothing about what goes back. Under the second, better protection sends more back. Which did you mean, or should both stay?
+
+**Halved heart** (rare amulet; any class) and **the Bleeder seat** of the rare formation Blood oath.
+- **What they do:** Halved heart: its wearer starts every fight at half its HP, can't be healed above half, and deals half again as much damage. The Bleeder seat: the unit in it loses a little HP every tick and deals half again as much, while another seat's heals and Shields on it are doubled.
+- **What to judge:** Blood Pact wants one unit kept low on purpose, so every heal and Shield aimed at "the lowest ally" lands on a unit the player chose. HP carries between fights, so a Halved heart unit is never above half for the rest of the run. In your runs, paying HP was never chosen.
+
+**Sanguine vestments** (rare Robes; Cleric, Bard, Pyromancer, Frostweaver, Stormcaller).
+- **What it does:** its wearer's abilities cost HP in place of MP, the same share of the bar. It won't cast one that would leave it under a tenth of its HP.
+- **What to judge:** with any Lifesteal, a spell that hits several foes heals back more than it cost, and a spell on one boss costs more than it returns. Today this effect is a legendary amulet, worn for two fights in your runs. It's on Robes now so a caster can wear it with a Lifesteal amulet.
+
+**Hunter's mark** (rare amulet; any class) and **Marking knife** (rare dagger; Ranger, Assassin).
+- **What they do:** Hunter's mark: whenever no foe is Marked, its wearer Marks the foe with the lowest HP. Marking knife: whenever no foe is Marked, its crits Mark their target.
+- **What to judge:** Marked now pulls the party's random attacks and random-target abilities onto one foe, which is the Hunt. Two Marks would split the party between two foes, so every marking item only Marks when nothing is Marked. The Paladin's Condemn doesn't follow that rule (decision 6).
+
+### Legendaries
+
+**Second dawn** (legendary amulet; any class) and **Daybreak** (legendary formation).
+- **What they do:** Second dawn: each time a foe falls, everything on its wearer that says "when each fight starts" happens again. Daybreak does the same for all three units.
+- **What to judge:** this turns the cheap start-of-fight uncommons (a Shield, a Guard, a few Chill or Burn on every foe) into something that repeats on every kill. Two things: the piece and the formation are the same rule in two places (decision 3); and "what happens again" needs a line drawn. Mine is: anything that gives a status or makes something ready, and never a cost paid at the start.
+
+**The Red Feast** (legendary axe; Vampire, Assassin).
+- **What it does:** while its wearer is below half its HP, its hits deal double and its Lifesteal is doubled. When a fight is won, its wearer is healed up to half its HP.
+- **What to judge:** the heal after the fight. The rules say no build is made better at lasting many fights; builds.md asks that fighting low doesn't leave a unit low when the fight ends. This is the one item that does it (decision 5).
+
+**Tireless bell** (legendary bell; Bard, Monk, Stormcaller), **Motley robe** (legendary Robes) and **Lodestone shield** (legendary round shield; Hoplite, Bramble knight, Valkyrie).
+- **What they do:** Tireless bell: its holder keeps making basic attacks while it winds up an ability. Motley robe: its wearer casts its abilities in a random order, and each costs half. Lodestone shield: every Shield another ally would gain goes to its holder instead.
+- **What to judge:** these are three of the fourteen items that belong to no build and exist for their own sake. Are they the kind of oddity you want?
+
+### Formations
+
+**The standard** (common formation).
+- **What it does:** one Lead seat and two Follower seats. The Followers' basic attacks apply whatever statuses the Lead's basic attacks apply.
+- **What to judge:** in your runs, the one formation that made three units one build was Hearth, where every seat served the fire. This does that for any status: a Hexer in the Lead seat means three weapons adding Chill. It's a common so it can turn up in act I. It does nothing if the Lead's swing applies nothing.
+
+**Thorn hedge** (common formation) and **Toll gate** (rare formation).
+- **What they do:** Thorn hedge: the Anchor draws most of the foes' attacks and has Thorns; the second seat heals the Anchor a little each time it's hit; the third seat deals damage to any foe that hits the Anchor. Toll gate: the Gate draws most attacks and starts each fight Guarded; a foe that hits the Gate gains whatever statuses the other two seats' basic attacks apply.
+- **What to judge:** these are the Toll's formations: one unit is hit, and the other two seats add to what the attacker suffers. Toll gate depends entirely on who sits behind: a Hexer chills the attackers, a Stormcaller shocks them, and a class with nothing on its swing adds nothing. Is a seat that can do nothing acceptable in a rare?
+
+**The cathedral** (legendary formation).
+- **What it does:** the Soloist's first-slotted ability has no cooldown: it's cast whenever there's the mana. The other two seats give the Soloist all the MP they would regain, and each gains a Shield whenever the Soloist finishes a cast.
+- **What to judge:** it's Barrage at its furthest, and the most extreme rule in the spine. Only mana and wind-up time limit how often the spell is cast.
+
+**Open season** (legendary formation).
+- **What it does:** the foe with the lowest HP is always Marked. When each fight starts, and each time a Marked foe falls, every ally's next basic attack comes at once. The three seats have no roles of their own.
+- **What to judge:** it's the Hunt at its furthest. It's also one of seven formations that are a rule for the whole party with three identical seats, and in your runs the formations that got used were the ones whose seats had roles.
+
+### Changed versions and mythics
+
+**Swift justice** (a version of the Paladin's Condemn) and **Overgrowth** (a version of the Bramble knight's Thicket).
+- **What they do:** Swift justice: Marks the foe with the lowest share of HP, and every ally's next basic attack comes at once, as today; new, Condemn is ready again when that foe falls. Overgrowth: Taunts, and every foe's next basic attack comes at once, onto its Thorns, with no Guard; today it Taunts and doubles its Thorns.
+- **What to judge:** two of the ten versions that change. Each puts the central part of a synergy in a version, because a version is offered to its class far more reliably than a piece is found (decision 1).
+
+**Stormspear** (the Valkyrie's mythic) and **Ember palms** (the Monk's mythic).
+- **What they do today:** Stormspear's basic attacks add a few Shock; Ember palms adds a Burn with every hit. Those are uncommon weapons' effects now, so both had to change.
+- **What they do in the spine:** Stormspear: every fourth hit the Valkyrie lands calls a heavy blow on the foe with the most Shock, bigger for each stack it holds. Ember palms: each hit the Monk lands deals extra damage for each Burn on its target. Neither uses the status up.
+- **What to judge:** this is a cost of making status-on-swing weapons uncommon (decision 5). You may prefer the old mythics, and those weapons back at rare.
+
+**The chalice** (the Vampire's mythic) and **Writ of judgement** (the Paladin's mythic).
+- **What they do:** The chalice: whenever another ally would pay MP for an ability, the Vampire pays the same share of its own HP instead, as long as that leaves it above a tenth. Writ of judgement: whenever the Paladin Marks a foe, a heavy blow lands on that foe at once and adds several Burn.
+- **What to judge:** both are new. They replace mythics that only did something when an ally fell, or when a foe was Stunned or Silenced, which the nine builds no longer use. They're the least tested ideas among the mythics.
 
 ## Least sure
 
