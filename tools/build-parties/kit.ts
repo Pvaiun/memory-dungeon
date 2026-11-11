@@ -126,7 +126,7 @@ const SEAT_ROLES: Record<string, Role[]> = {
 const FIT: Record<string, Partial<Record<Role, number>>> = {
   knight: { wall: 3, hit: 1 }, cleric: { heal: 3, cast: 1 }, ranger: { hit: 3 }, bramble_knight: { wall: 3 }, hoplite: { wall: 2, hit: 2 },
   paladin: { wall: 2, heal: 2, hit: 1 }, valkyrie: { wall: 1, heal: 1, hit: 2 }, bard: { heal: 1, cast: 2 }, hexer: { cast: 3 }, monk: { hit: 3, wall: 1 },
-  assassin: { hit: 3 }, vampire: { hit: 2, wall: 1 }, pyromancer: { cast: 3 }, frostweaver: { cast: 3 }, stormcaller: { cast: 3, hit: 1 }, geomancer: { cast: 2, wall: 2, hit: 1 },
+  assassin: { hit: 3 }, vampire: { hit: 2, wall: 1 }, pyromancer: { cast: 3 }, frostweaver: { cast: 3, wall: 1 }, stormcaller: { cast: 3, hit: 1 }, geomancer: { cast: 2, wall: 2, hit: 1 },
 };
 const ORDER: Role[] = ["wall", "heal", "cast", "hit", "any"];
 /** Formations whose cast seat is the party's point (Barrage's Soloist): it's filled first, so the route's caster takes it, not the wall. */
@@ -140,7 +140,9 @@ function seated(formation: string, classIds: string[]): string[] {
   const order = CAST_FIRST.has(formation) ? (["cast", ...ORDER.filter((r) => r !== "cast")] as Role[]) : ORDER;
   const seats = [0, 1, 2].sort((a, b) => order.indexOf(roles[a]) - order.indexOf(roles[b]) || a - b);
   for (const s of seats) {
-    const best = left.reduce((b, c) => ((FIT[c]?.[roles[s]] ?? 0) > (FIT[b]?.[roles[s]] ?? 0) ? c : b), left[0]);
+    // Ties: the route's order; in a cast-first formation's cast seat, the caster less fit to stand in front, so the chunkier one is left for the wall.
+    const fit = (c: string) => (FIT[c]?.[roles[s]] ?? 0) * 10 - (CAST_FIRST.has(formation) && roles[s] === "cast" ? (FIT[c]?.wall ?? 0) : 0);
+    const best = left.reduce((b, c) => (fit(c) > fit(b) ? c : b), left[0]);
     out[s] = best;
     left.splice(left.indexOf(best), 1);
   }
