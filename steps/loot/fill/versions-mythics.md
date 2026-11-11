@@ -15,6 +15,8 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - Sizes worked out in the notes are for the class's own stat line with no gear.
 - No card here uses one of the six counters. Stormspear's and Metronome's counts are their own, each shown as an icon with a number.
 
+**Read against `fill/round-1.md`** as it stood when this was handed in (the lead's rulings, in progress). Where one of its rulings for every share touches an entry here, the entry follows it and says so: Rampart, Quick draw's link, Crown of embers, the brink, the frozen gate and the mirror. Nothing else of this file waits on it.
+
 ## Kit changes
 
 ### Marked
@@ -101,7 +103,7 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
   - **What it reads.** The heals and Regens of the Cleric's own abilities: Cure, Renew and their versions. Not a Cleanse, a Shield, a revive or Font's Clarity, and not the healing its gear does on a beat or a swing.
   - **Seen:** one Cure, a green number on every ally who's low. With three allies below half, each cast heals three.
   - **What the copies set off.** A copy is the ability's heal landing on one more ally, so a piece that reads "each time one of its holder's abilities heals an ally" reads each ally it lands on. The copy itself is never copied, cast or passed on again.
-  - **On the brink.** A unit under Halved heart sits at half, which isn't below it, until something scratches it. From then every heal the Cleric casts reaches it, and the part past its cap is healing past full for the red stone's pieces.
+  - **On the brink.** A unit under Halved heart counts as below half while it sits at half (round 1's ruling on that card). So every heal the Cleric casts reaches it, and the part past its cap is healing past full for the red stone's pieces.
   - Nothing of the old card is kept: no piece wants a fall.
 
 ## Ranger
@@ -170,7 +172,7 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - **Numbers:** Half of Bramble lash on every foe: 2.25 times its Thorns, as a hit. Short cooldown, quick wind-up, 325 MP.
 - **Code:** as today's Whipping vines
 - **Serves:** Toll 2 ●●, Cuts ●● ⚙ red rain (half)
-- **Notes:** *Stays.* A row of numbers on every foe is seen. It's the red rain's cheapest wide hit: after Defense it lands for about 490 on a minion, and one of Briar's wounds pays about as much again on top. Its lash at a random foe is gone, so a Mark has nothing of this ability to steer.
+- **Notes:** *Stays.* A row of numbers on every foe is seen. It's the red rain's cheapest wide hit: after Defense it lands for about 490 on a minion, and a foe that has struck the wall twice pays about as much again from Briar's wound. Its lash at a random foe is gone, so a Mark has nothing of this ability to steer.
 
 ### Overgrowth
 - **Is:** Bramble knight, Thicket A · version · kept
@@ -376,7 +378,7 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - **Is:** Hexer, Malison B · version · changed
 - **Today:** Deepens the afflictions of the foe with the highest Attack alone, three times over, and adds it a few Bleed, three times as many; stacks scale from Attack.
 - **Card:** Curses the foe with the highest Attack alone: three times Malison's damage, scaling from Attack, a fifth more for each different affliction it holds (Burn, Chill, Shock, Bleed, Sunder), then three times the Bleed; stacks scale from Attack.
-- **Numbers:** The hit is three times `HIT.light` of Attack, with Malison's fifth for each different affliction: about 3,500 on a bare Hexer, and twice that on a foe that holds all five. The Bleed is three times the ability's count of a few. Short cooldown, normal wind-up, 450 MP, as Malison. The power step is Malison's.
+- **Numbers:** The hit is three times `HIT.light` of Attack, with Malison's fifth for each different affliction: about 3,500 before Defense on a bare Hexer, and twice that on a foe that holds all five. The Bleed is three times the ability's count of a few. Short cooldown, normal wind-up, 450 MP, as Malison. The power step is Malison's.
 - **Code:** 2
 - **Serves:** Hunt ●● ⚙ every colour (half)
 - **Notes:** It has a target phrase of its own, so a Mark doesn't steer it, and without Seek a Taunting foe catches it first, as today. Enfeeble aims at the same foe, so the Hexer's own kit puts Sunder, Bleed and Chill under it: three of the five without help. At five it's the biggest single number a Hexer prints, on a short cooldown.
@@ -545,7 +547,7 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - **Numbers:** One Burn stack (`FLAT_STACKS.one`) for each hit any ally lands, the Pyromancer included. It ends when the Pyromancer falls and comes back when it's raised.
 - **Code:** as today's Crown of embers
 - **Serves:** Bonfire 3 ●●● ⚙ lead's colour (half)
-- **Notes:** *Stays.* One stack sounds small and isn't: a Burn stack deals about 370 over its life, and this adds one for every hit of three units, extra strikes and multi-hits included. Play's deepest run ended wearing it. For the lead's colour it's a rider on every ally already, so whether a Follower's swing carries the Lead's Crown-fire on top of its own is a question for The standard's card. See Links.
+- **Notes:** *Stays.* One stack sounds small and isn't: a Burn stack deals about 370 over its life, and this adds one for every hit of three units, extra strikes and multi-hits included. Play's deepest run ended wearing it. For the lead's colour it's a rider on every ally already, and round 1 rules that a carrier doesn't add a rider its own swing already holds from the same source, so a Follower under the Crown adds one Burn a hit, not two.
 
 ## Frostweaver
 
@@ -649,10 +651,10 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - **Is:** Geomancer, Earthen shell B · version · kept
 - **Today:** Applies Shield and Guard to itself. While that Guard lasts, the first time its Shield breaks it's rebuilt at once. No Shield for an ally.
 - **Card:** Applies Shield and Guard to itself. While that Guard lasts, the first time its Shield breaks it's rebuilt at once. No Shield for an ally.
-- **Numbers:** The Shield is Earthen shell's: its Defense, up to the Shield's cap. Guard at its own size and length. The rebuild is that same amount again, read from its Defense with the Guard on it, once a cast. Medium cooldown (short with the power step), normal wind-up, 650 MP.
-- **Code:** as today's Rampart
+- **Numbers:** The Shield is Earthen shell's: its Defense, up to the Shield's cap. Guard at its own size and length. The rebuild is the most that Shield held, once a cast. Medium cooldown (short with the power step), normal wind-up, 650 MP.
+- **Code:** as today's Rampart, with the rebuild reading the most the pool held (today's reads the shell's amount from Defense again)
 - **Serves:** Landslide 2 ●●● ⚙ detonation (key)
-- **Notes:** *Stays.* The grey bar goes and comes back whole: seen. The link reads Rampart as putting all of the broken Shield back. As built it rebuilds the shell's own amount, and a Geomancer's Defense is far over its Shield's cap, so the two are the same bar. It's once a cast, so with a break piece it's two detonations a shell and no more.
+- **Notes:** *Stays.* The grey bar goes and comes back whole: seen. The size of the rebuild follows round 1's ruling for every share: "the most that Shield held" is the pool's highest point since the unit last had none, and Rampart reads it. Today's build reads the shell's own amount again; a Geomancer's Defense is far over its Shield's cap, so on the card and on the bar the two are the same. It's once a cast, so with a break piece it's two detonations a shell and no more.
 
 ### Faultline
 - **Is:** Geomancer, Bedrock B · version · kept
@@ -730,13 +732,13 @@ For each engine this share touches: the size of my side, and what the other side
 
 - **The shield detonation.**
   - *My side:* Rampart rebuilds the shell's own amount, once a cast, which is a Geomancer's whole cap. Rime shield lays about 900 a shatter on the lowest ally. Faultline turns a break into a triple crit. Mountain's crown refills the bar on every crit.
-  - *The other side:* the break pieces should read the most the pool held, whatever filled it, since Rampart and the crown rebuild into the same pool. Mountain's crown keeps the stone from breaking at all, so a Geomancer wearing it feeds the detonation least.
+  - *The other side:* the break pieces read the most the pool held, whatever filled it, which round 1 rules for all of them and for Rampart. Mountain's crown keeps the stone from breaking at all, so a Geomancer wearing it feeds the detonation least.
 - **The frozen gate.**
   - *My side:* Frost armor lays about 3 Chill for each hit a foe lands on any ally, for Guard's length, so a foe bursts on its third or fourth blow. Rime shield answers each burst with about 900 of Shield on the lowest ally.
-  - *The other side:* Hoarfrost plate and Frostward blade need about three a blow too. Read off an anchor's own Attack, "a few" is under one and a half on a Knight, and nine blows to a shatter isn't the link. They want a multiplier of their own, or a stat an anchor has.
+  - *The other side:* Hoarfrost plate and Frostward blade need about three a blow too. Read off an anchor's own Attack, "a few" is under one and a half on a Knight, and nine blows to a shatter isn't the link. Round 1 has the on-struck pieces reading one stat, and the share that's in reads the holder's Defense: a few from a wall's Defense is about three, which meets it. Frost armor reads its caster's Attack, as Static field does; if the pieces settle on Defense, this version is the one home that doesn't, which is right for a spell.
 - **The mirror.**
   - *My side:* The last wall sends back all an Aegis stopped and readies Aspis, at 500 MP. Watch the anchor keeps the Aegis on whoever draws.
-  - *The other side:* a draw that holds through a wind-up, and blows big enough to clear Aegis's line after the wall's own Defense. On the best walls only a boss's great blows do. The link's sentence about better stone doesn't hold for this piece: see Challenges.
+  - *The other side:* a draw that holds through a wind-up, and blows big enough to clear Aegis's line after the wall's own Defense. On the best walls only a boss's great blows do. Round 1 rules Hoplon the same way, by the numbers the game prints, so the two pieces agree; the link's sentence about better stone is what's left to change. See Challenges.
 - **The goad.**
   - *My side:* the toll a called blow pays. Static field: about 4 Shock, some 340 at the foe's next move. Hold the line: 150 of Thorns. Overgrowth: 600, with Briar's Bleed.
   - *The other side:* the call has to cost the pack more than the blow costs the anchor. A bandit's swing takes about 290 from a Knight. So the goad pays on Overgrowth and under Static field, and on Hold the line alone only against light hitters.
@@ -802,14 +804,14 @@ Each with what's in it and what stops it.
 - **Writ of judgement with a marker that costs nothing** (Hunter's mark, a Marker or Lead seat): a Mark, a blow, a kill, the next Mark. *Brake:* a foe that survives the blow. Weak in a pack of small foes: the blow fells most minions.
 - **Swift justice with Writ of judgement:** the same chain through Condemn. *Brakes:* 650 MP a link, so five links, and a foe that survives the blow and the volley together.
 - **Huntmaster's quiver, resized, with Barbed volley:** a foe falls, by anyone's hand, and the volley is ready and wounds the whole field again. *Brakes:* 325 MP a volley, its wind-up and recovery, and the foes running out.
-- **Splinters with Glacier's heart** (and worse with Winter's chain in the Frostweaver's hand). The ruled damping ends a chain of Splinters alone: a foe that has burst needs twelve from cold that's halved and halved again. Glacier's heart puts six back undamped, so a foe needs only six more. Once the damping is down to one stack a pass, six other foes bursting supply it. In a pack of seven or eight every foe keeps bursting in turn; in a pack of four to six the string runs two or three rounds and dies. *Brake at seven or eight:* the shatter's own damage, about 3,000 a burst, which kills anything short of an elite in a round or two. The chain ends because the pack does. If that's not the fizzle the director ruled for, the floor of one stack is the number that decides it.
+- **Splinters with Glacier's heart** (and worse with Winter's chain in the Frostweaver's hand). The ruled damping ends a chain of Splinters alone: a foe that has burst needs twelve from cold that's halved and halved again. Glacier's heart puts six back undamped, so a foe needs only six more. Once the damping is down to one stack a pass, six other foes bursting supply it. In a pack of seven or eight every foe keeps bursting in turn; in a pack of four to six the string runs about two rounds and dies. *Brake at seven or eight:* the shatter's own damage, about 3,000 a burst, which fells most minions in a round or two. The chain ends because the pack does. If that's not the fizzle the director ruled for, the floor of one stack is the number that decides it.
 - **Quick draw:** the engine's own loop. *Brake:* the crit that fails, and a quarter-tick between arrows. How long it runs is set by the pieces that make crits near certain: see Links.
 - **Coup de grâce with Night's edge, or with Bounty charm:** the spine's kill chain. *Brakes:* 325 MP a stab, and the foes running out.
 - **Recharge under Overcharge:** a free chain still gives its mana back, so three casts make up to 1,440 MP where they'd have cost 1,950. It's a mana engine on one unit, not a loop. *Brake:* three casts a Static charge. With a resonance piece as well, mana no longer stops the chain at all while four foes stand; the pack thinning does.
 - **The last wall with mana that isn't the Hoplite's** (The chalice): every blow over Aegis's line is blocked, sent back, and the next Aegis is up within three ticks. *Brakes:* the Vampire's health, and the blows under the line, which pass.
 - **The chalice with anything whose brake was mana** (The cathedral's Soloist, a resonance, the Paladin's drum, the Bard's songs under Metronome). *Brake:* the Vampire's floor at a tenth, after which each caster pays its own mana again. It moves the brake; it doesn't remove it. Beside Bloodstone reliquary each price is also a heal on the lowest other ally, which is strong and doesn't loop.
 - **Metronome with Rubato:** hits ready the songs, Rubato readies abilities, their hits fill the count. *Brake:* the Bard's mana: a full round of songs is 1,750.
-- **Horn of the keep:** a Taunt laid again each time one runs out during an ally's wind-up, without limit. Beside a caster with long wind-ups that's a Taunt all fight, which is its purpose. Nothing else reads the Taunt in the Knight's own kinds.
+- **Horn of the keep:** a Taunt laid again each time one runs out during an ally's wind-up, without limit. Beside a caster with long wind-ups that's a Taunt all fight, which is its purpose. What reads a Taunt held in the Knight's kinds (Oathkeeper's sweep) only lasts longer for it; nothing the Knight can hold beside it is set off by a Taunt being laid.
 - **Closed on the card:** Halo of the saint's copies aren't copied; Stormspear's blow isn't counted; a jump of Eye of the tempest's doesn't jump.
 - **None found:** the other versions and mythics. Each reads a state and leaves it, or fires on its own cast.
 
@@ -833,7 +835,7 @@ Each with what's in it and what stops it.
 - **High pyre's two numbers,** 20 to open and 500 a stack. The count decides whether a lone Pyromancer ever casts it; the long wind-up decides what it lands on. If it lands on twelve most of the time, it reads as a slower Pyre.
 - **Plague's stacks.** At a few, its Burn and Shock barely outlast one cooldown, so "the next curse landing bigger" is half true on a lone Hexer. The line's word is a few, so it's a few.
 - **The chalice's "same share".** A Monk's Flow costs the Vampire more blood than a Pyromancer's Firebolt, because each is a share of its own caster's pool. It's the line, and it matches Sanguine vestments; a player may find it backwards. MP for HP, one for one, is the other way to say it.
-- **Hail at about 3 a foe.** It's seen, and it makes the Ranger a better field of cold than the Frostweaver's own two field spells, for a fifth of the mana. The Frostweaver's counts are the balance pass's first job; this may want to follow them.
+- **Hail at about 3 a foe.** It's seen, and it makes the Ranger a better field of cold than the Frostweaver's own two field spells, for a fraction of the mana. The Frostweaver's counts are the balance pass's first job; this may want to follow them.
 - **Frost armor's Chill,** at half again the passive's few. Sized to the link. If Hoarfrost plate and Frostward blade come in at the plain word, the version out-freezes both rares.
 - **Rousing chorus and Might's cap.** One cast nearly fills it, so the power step and a second cast add little. It may want fewer stacks more often, or it's simply a version that's done after one song.
 - **Drinking palm at a fifth,** and **Horn of the keep at a half.** Both were sizes play named as unseen. Both resizes are my reading of how far "seen" is, and either could sit a step lower.
@@ -841,4 +843,4 @@ Each with what's in it and what stops it.
 - **Stormspear's blow,** a normal hit on Skyfall's step, about every ten ticks. It may out-earn Skyfall itself, which is what a mythic does, or bury it.
 - **Ember palms at 25 a stack.** On a fire of fifty it adds more than the Monk's own blows three times over. It's a mythic on a far end, and it's a guess.
 - **Barbed volley's cooldown and cost,** moved a word and a rung as Whipping vines' were. It could as well keep the base's.
-- **The kept items I didn't doubt.** Twenty-nine versions and eight mythics are marked *Stays* with a line each. Several of those were never fielded in play, so "seen" is my reading of the card, not a fight.
+- **The kept items I didn't doubt.** Thirty-one versions and nine mythics are marked *Stays* with a line each. Several of those were never fielded in play, so "seen" is my reading of the card, not a fight.

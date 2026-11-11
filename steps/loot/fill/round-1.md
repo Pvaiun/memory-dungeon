@@ -20,12 +20,21 @@ To go into `fill/shared.md` once round 1 is ruled.
 - **Stacks from a seat are flat** (`FLAT_STACKS`), so a seat pays the same whoever sits in it.
 - **"On the field" means on the foes.** Stormbrand and the Bolt seat count the Shock the foes hold; cards say "for each Shock the foes hold".
 - **A strike a card aims at a named foe isn't a pick,** so a Taunt doesn't turn it: a strike at the attacker, at the foe that acted, at "that foe" (Duelist's leathers, Parrying spear, Answering thunder, Hushing idol). A rule that changes whom a unit's own swings or abilities pick is a pick, inside the Taunt rule unless it has Seek (Marginalia, Hoarfrost line's Breaker, a Mark).
-- **"Nearly always" is four times in five,** a set chance on those hits that nothing raises. A hit that always crits still does. A chance a card sets wins over Gambler's coin, as "always" does.
+- **"Nearly always" is four times in five,** a set chance on those hits that nothing raises (Ambush knife, Vulture's skull). A hit that always crits still does. A chance a card sets wins over Gambler's coin, as "always" does. The emptied quiver's link asks for a burst of three or four arrows, and at nine in ten it runs ten.
+- **"Far more often" gives its number on the card.** Bloodscent knife and Spur's Opener are different sizes, so each says its own.
+- **No card makes a crit certain for longer than one swing.** A card that raises Crit chance by a lot says "to four in five at most" (Bloodscent knife, The king's head). The emptied quiver's only brake is the crit that fails, and at a certain crit Quick draw never ends. Whether plain Crit chance should have a ceiling of its own is flagged for the director.
+- **"Its hits", on a weapon,** means every hit its wearer lands: a swing, an extra strike or an ability's hit. The card says "its wearer's hits".
+- **"Extra strike" is Double strike's second strike,** and what Flurry wraps chains from it. Arc's second hit, a leap, a ring and a volley are extra hits with their own names; each carries what its card says, and nothing that reads extra strikes reads them.
+- **A hit that lands a second time** is the same damage again on the same foe, at once, with no new dodge or crit roll. It's a hit: a wound pays, Lifesteal drinks, counters count. It carries none of the first hit's statuses, and nothing repeats it. Where two cards would each repeat one hit or one cast, each repeats the first once: three in all.
+- **A heal is HP an ability or a piece restores at once.** A Regen's pulses are the status's own: no card that reads its wearer's heals reads them, unless it names Regen.
+- **Borrowed riders aren't passed on.** What a unit's swing carries by copying another's is part of its own swing and its own extra hits, and no third unit copies it from there.
+- **The signature stat comes first unless it works against what the piece does.** Then the road's lean in the kind's header wins (Aggro on a chaser's spear).
+
 - **"Pays for" an ability** means its cost was paid, in MP or in HP. A free cast isn't paid for.
 - **"Carrying what the swing carries"** also carries what a status its wearer holds puts on its swings (a Thunderstorm). The spine's phrase gains it.
 - **Someone stays in the light.** Hidden doesn't land on a unit when it would leave the foes no ally to pick; where several would hide at once, the last in seat order stays. It's a rule of Hidden's own, for the vocabulary, flagged for the director: gear and seats can now hide a whole party, and the game has no answer for that.
 - **A start-of-fight status on every foe** reads its holder's Attack, at the card's word (Stormglass totem, Pitch lantern, Snowbound folio, the phial). As written in both offhands shares.
-- **New target phrases,** for the vocabulary when it's built: the other ally with the least Defense; the ally with the highest Aggro; the ally with the slowest basic attack; the two foes with the highest Attack; the foe that last hit the healed ally; the ally with the lowest share of max HP, the payer aside; the foe with the highest current HP; the ally with the lowest share of max HP that can be healed.
+- **New target phrases,** for the vocabulary when it's built: the other ally with the least Defense; the ally with the highest Aggro; the ally with the slowest basic attack; the two foes with the highest Attack; the foe that last hit the healed ally; the ally with the lowest share of max HP, the payer aside; the foe with the highest current HP; the ally with the lowest share of max HP that can be healed; the ally with the least MP (the lowest share of max MP, the holder included); the other ally with the least max HP; the other foe with the most Chill. "The ally with the highest Aggro" reads Aggro as it stands, gear and seat counted, a Taunt not; a tie goes to the earlier seat.
 ## Amulets
 
 - **Burning heart:** the agent's size stands (a few Burn each ten ticks, the slowest beat that never lets it go out). The spine's line changes from "every few ticks" to "every so often… so it never goes out".
@@ -76,6 +85,29 @@ To go into `fill/shared.md` once round 1 is ruled.
 - **Heartsblood** counts what its holder's Lifesteal would heal, full or not. Stands.
 - **Names:** Bloodletter's phial becomes Lancet phial; Idol of the deepening becomes Festering idol; Annotated score becomes Accompanist's score; Orb of the long winter becomes Meltwater orb.
 - **Alike, for the director's list:** Ringing bell and Storm pike on a Monk; Snowbound folio and Grimoire of plagues in one kind.
+
+## Weapons, the first six kinds
+
+- **Storm pike** counts every hit its wearer lands, abilities included, and flashes on every fifth. At swings alone the count doesn't come round in a regular fight. The spine's line changes. It becomes Squall lance: a pike is a great weapon.
+- **Reaver's axe changes.** Its sentence is the second half of Night's edge, and one Assassin can wear both. It becomes: when it lands a killing blow, its wearer gains many Might. The spine's line changes.
+- **Rimed blade** adds several Chill, not a few, so it's seen on a Knight. The spine's line changes.
+- **Sarissa's** extra hits carry nothing, as written. **Answering thunder** "strikes with its weapon", as written.
+- **Mimic wand:** the agent's reading stands (the ruling above on borrowed riders).
+- **Stormbrand** counts the Shock the foes hold. **Overkill axe** beside Downhill charm: the left-over is split evenly.
+- **The spear's Hunt and Storm pieces** (Long spear, Hunting spear, Jolt spear, Squall lance) drop Aggro for their road's stats.
+- **Quietus** gains the opening again's tag: it's a start-of-fight effect by the spine's definition, and Tally coat makes it strike every foe again at each kill.
+- **Gravemark** does nothing in a party with no marker. It stays; it goes to *Least sure*.
+- **Names:** Trophy spear becomes Victor's spear (a trophy is an offhand kind). Bloodletter keeps its name; the phial changes.
+
+## Weapons, the other six kinds
+
+- **Volley bow and Bellringer count to three,** not four: on a slow weapon the fourth swing misses half the regular fights. The spine's lines change. **Mender's mace** keeps "every so often".
+- **Opening shot** gains the opening again's tag, as Quietus does.
+- **Overrun** beside Downhill charm: the left-over is split evenly (the ruling for every share), not all to the weapon.
+- **Saint's mace, Shepherd's mace:** a Regen isn't a heal (the ruling above), so they give a Bramble knight only their stats. They stay; it goes to *Least sure*.
+- **Frostward blade's "a few"** stands: the fourth or fifth blow is within the link's "a few".
+- **The riders' sizes** against the kits' own casts are the balance pass's.
+- **Names:** Shepherd's mace becomes Anchorite's mace; Sunhammer becomes Noonday mace.
 
 ## To check across shares
 
