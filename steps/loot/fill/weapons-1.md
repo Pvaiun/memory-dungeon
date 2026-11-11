@@ -1,6 +1,6 @@
 # The fill: weapons, the first six kinds
 
-60 pieces: 12 commons, 19 uncommons, 19 rares, 10 legendaries. Dagger, fist weapons, wand, sword, spear, axe, in the spine's order. Every number is a first value. "Its wearer's hits" on these cards always means every hit the wearer lands: a swing, an extra strike or an ability's hit (*Challenges*, 1).
+60 pieces: 12 commons, 19 uncommons, 19 rares, 10 legendaries. Dagger, fist weapons, wand, sword, spear, axe, in the spine's order. Every number is a first value. Round 1's rulings are applied (`fill/shared.md`, *Rulings for every share*; `fill/round-1.md`). "Its wearer's hits" on these cards means every hit the wearer lands: a swing, an extra strike or an ability's hit. An extra strike is Double strike's second strike.
 
 ## Dagger
 
@@ -11,7 +11,7 @@
 - **Numbers:** none of its own: the step is `SPECIAL.attack_speed.medium`.
 - **Code:** none
 - **Serves:** Cuts, Snap
-- **Notes:** The spine's common that leans to Crit chance and Attack speed, on one step: Attack speed, so the two commons differ. It's Thousand Cuts' first stat (more hits). New name: today's Parrying dagger carried Evasion, which the dagger no longer leans to.
+- **Notes:** The spine's common that leans to Crit chance and Attack speed, on one step. Both rows name Crit chance first, so one common has to take its second stat to differ: this one takes Attack speed, and Keen dirk the signature. It's Thousand Cuts' first stat (more hits). New name: today's Parrying dagger carried Evasion, which the dagger no longer leans to.
 
 ### Keen dirk
 - **Is:** dagger · common
@@ -60,39 +60,39 @@
 
 ### Bloodscent knife
 - **Is:** dagger · rare
-- **Card:** Its wearer's hits on a bleeding foe crit far more often: 50 more Crit chance.
+- **Card:** Its wearer's hits on a bleeding foe crit far more often: 50 more Crit chance, to four in five at most.
 - **Stats:** Crit chance +1 · Attack speed medium · Crit damage medium (3 of 3)
-- **Numbers:** +50 Crit chance on a hit against a foe that holds Bleed when the hit lands. My value: the scale has no word for it.
-- **Code:** as today's Venom vial's crit rule on a foe that holds Bleed, at 50
+- **Numbers:** +50 Crit chance on a hit against a foe that holds Bleed when the hit lands, up to a chance of 80% on that hit. The 50 is my value; the ceiling is round 1's (no card makes a crit certain for longer than one swing).
+- **Code:** as today's Venom vial's crit rule on a foe that holds Bleed, at 50; the ceiling on what the rule lifts the chance to is new (see *Code support*)
 - **Serves:** Cuts 2 ●●●, Hunt ●● ⚙ emptied quiver (half)
-- **Notes:** Added to the wearer's own chance, so the dagger's signature still counts: a Ranger's swing goes from about one in four to three in four, an Assassin's the same. A hit's own Bleed lands after the hit, so the hit that opens a wound isn't lifted by it. The chance is certain once the wearer brings 50 of its own (*Loops*).
+- **Notes:** Added to the wearer's own chance, so the dagger's signature still counts: a Ranger's swing goes from about one in four to three in four, an Assassin's the same. The lift stops at four in five, so the wearer's own Crit chance counts up to 30 and no further on a wound, and one hit in five always fails. A hit that always crits still does. A hit's own Bleed lands after the hit, so the hit that opens a wound isn't lifted by it.
 
 ### Ambush knife
 - **Is:** dagger · rare
-- **Card:** Its wearer's hits on a foe that hasn't acted yet this fight crit nine times in ten, whatever its Crit chance.
+- **Card:** Its wearer's hits on a foe that hasn't acted yet this fight crit four times in five, whatever its Crit chance.
 - **Stats:** Crit chance +2 · Crit damage medium (3 of 3)
-- **Numbers:** a set chance of 90% in place of the wearer's own, on a foe none of whose actions has resolved this fight. My value for "nearly always".
+- **Numbers:** a set chance of 80% in place of the wearer's own, which nothing raises, on a foe none of whose actions has resolved this fight. Round 1's value for "nearly always".
 - **Code:** as today's Quietus's crit rule on a foe that hasn't acted; the chance is set, as Gambler's coin sets one, where today's rule adds (see *Code support*)
 - **Serves:** Hunt 2 ●●●, Cuts ● ⚙ emptied quiver (half)
-- **Notes:** A foe has acted once a basic attack or an ability of its own has resolved; a foe in its first wind-up, a foe Stunned since the start and a foe just summoned haven't. Set, not added, so it's never certain and the crit that fails stays. Its window is the first few ticks, so its steps are for after: its own Crit chance, and Crit damage for the crits the window gives.
+- **Notes:** A foe has acted once a basic attack or an ability of its own has resolved; a foe in its first wind-up, a foe Stunned since the start and a foe just summoned haven't. Set, not added, so it's never certain and the crit that fails stays. A hit that always crits still does (Opening wound's first hit), and the set chance wins over Gambler's coin. Its window is the first few ticks, so its steps are for after: its own Crit chance, and Crit damage for the crits the window gives.
 
 ### Thousandth cut
 - **Is:** dagger · legendary
-- **Card:** Each hit its wearer lands adds a Cut. Its wearer's hits deal 2% more for each Cut.
+- **Card:** Its wearer gathers Cuts (a Cut for each hit it lands, kept for the fight, up to 25). Its wearer's hits deal 2% more for each Cut.
 - **Stats:** Crit chance +2 · Attack speed high (4 of 4)
 - **Numbers:** 2% more a Cut, as today. Cuts climbs to 25 (`fill/shared.md`), so half again at the top.
 - **Code:** as today's Thousandth cut
 - **Serves:** Cuts 3 ●●●, Snap ●, Storm ●
-- **Notes:** Kept: today's card and size. "Kept for the fight, up to 25" left the card, since the counter's own line says it. Stats changed: Attack speed high is the legendary's step, since the count is hits. A dagger alone reaches 8 to 10 Cuts in a regular fight and the cap only in a long boss fight or with a second strike.
+- **Notes:** Kept: today's card and size, with the counter's bracket in `fill/shared.md`'s words, then what a Cut is worth here. Stats changed: Attack speed high is the legendary's step, since the count is hits. A dagger alone reaches 8 to 10 Cuts in a regular fight and the cap only in a long boss fight or with a second strike.
 
 ### Quietus
 - **Is:** dagger · legendary
 - **Card:** When each fight starts, its wearer strikes every foe with its weapon, once each.
 - **Stats:** Crit chance +2 · Crit damage high (4 of 4)
-- **Numbers:** each strike is a hit of its basic attack's size (about 420 a foe at Attack 4, 495 at Attack 5), able to crit.
+- **Numbers:** each strike is a hit of its basic attack's size (about 420 a foe at Attack 4, 495 at Attack 5), able to crit. It takes the shape its wearer's basic attacks have: more than twice as hard under Millstone, half under Hummingbird charm.
 - **Code:** today's strike (Pike wall's) on the fight's start, at every foe; 12 for what the strikes carry; 8 reads it as a start-of-fight effect
-- **Serves:** Hunt 3 ●●●, Cuts ●● ⚙ red rain (half)
-- **Notes:** Keeps the name only. "Strikes with its weapon" is the spine's phrase: hits, not basic attacks, carrying what the swing carries. So Hunter's eye adds nothing to them, and Lacerate, Opening wound and Quick draw answer their crits. With Opening wound every foe starts the fight wounded. It's a start-of-fight effect, so Tally coat and Second dawn land it again (*Loops*).
+- **Serves:** Hunt 3 ●●●, Cuts ●● ⚙ red rain (half), opening again (half)
+- **Notes:** Keeps the name only. "Strikes with its weapon" is the spine's phrase: hits, not basic attacks, carrying what the swing carries. So Hunter's eye adds nothing to them, and Lacerate, Opening wound and Quick draw answer their crits. With Opening wound every foe starts the fight wounded. It's a start-of-fight effect, so Overture coat and Second dawn land it again, once for each fall whoever calls for it, and a kill by a repeated strike is a kill (*Loops*).
 
 ## Fist weapons
 
@@ -121,7 +121,7 @@
 - **Numbers:** a few: `STACKS.few`, from Attack (about 3 at Attack 4), on every swing and every extra strike. Shock keeps its own numbers (`STATUS.shock`).
 - **Code:** as today's Rime knuckles, with Shock
 - **Serves:** Storm 1 ●●, Toll ● ⚙ lead's colour (half), held charge (half) ◆ swing-status
-- **Notes:** Seen: against one foe swinging at a medium pace, the charge it pays each time it acts comes to about what the knuckles' own blows deal. On a Stormcaller it lands beside Arc's Shock, on both foes. Under Echo charm an extra strike lays it once, not twice.
+- **Notes:** Seen: against one foe swinging at a medium pace, the charge it pays each time it acts comes to about what the knuckles' own blows deal. An extra strike is Double strike's second strike: on a Stormcaller the knuckles' Shock lands on the swing's target beside Arc's, and Arc's second hit carries only Arc's own. Under Echo charm an extra strike lays it once, not twice.
 
 ### Cinder wraps
 - **Is:** fist · uncommon
@@ -143,12 +143,12 @@
 
 ### Lamprey claws
 - **Is:** fist · uncommon
-- **Card:** Each extra strike its wearer lands heals it for a twentieth of its max HP.
+- **Card:** Each extra strike its wearer lands heals it for a tenth of its max HP.
 - **Stats:** Double strike medium · HP +1 (2 of 2)
-- **Numbers:** 5% of the wearer's max HP an extra strike: 100 for a Stormcaller, 150 for a Monk, 200 for a Vampire, before the piece's own HP step.
+- **Numbers:** 10% of the wearer's max HP an extra strike: 200 for a Stormcaller, 300 for a Monk, 400 for a Vampire, before the piece's own HP step. My value: a little over one pulse of Regen (`STATUS.regen`), the scale's own size for a heal that's seen.
 - **Code:** as today's Brass knuckles' trigger (an extra strike landing), with a heal from the holder's max HP as today's Prior's mace
 - **Serves:** Pact 1 ●●, Cuts 1 ●
-- **Notes:** An extra strike is any hit a basic attack makes past its first (*Challenges*, 1): Double strike's, and Arc's second hit, so a Stormcaller is healed on every swing and a Monk on about half. Bigger than Tithing leathers' "a little" a hit, since it fires less often; both can sit on a Monk. Both steps feed it: the chance of the strike, and the bar the heal is read from.
+- **Notes:** An extra strike is Double strike's second strike, by round 1's ruling, so the heal comes as often as its wearer's Double strike: on about half a Monk's swings with the claws' own step, and a quarter of a Vampire's or a Stormcaller's. Arc's second hit isn't one. Resized for that: the first hand-in had a twentieth, counted on every extra hit of a swing; at a quarter of the swings a twentieth wouldn't be seen (*Least sure*). Much bigger than Tithing leathers' "a little" a hit, since it fires far less often; both can sit on a Monk. Both steps feed it: the chance of the strike, and the bar the heal is read from.
 
 ### Gorged claws
 - **Is:** fist · rare
@@ -175,7 +175,7 @@
 - **Numbers:** the second strike deals what the first dealt. A Stun lasts `STATUS.stun`: one or two swings of a fist, or a whole Burning fist.
 - **Code:** 16
 - **Serves:** Snap 2 ●●, Cuts ●●, Landslide ● ◆ held
-- **Notes:** Today's legendary, changed as the line says and made a rare. The second strike is a hit (Bleed pays on it, Lifesteal drinks from it, a count of hits counts it), carries none of the first's statuses and isn't an extra strike (*Challenges*, 1). A Double strike on a Stunned foe is four hits. Attack speed gets more blows into the window, and every doubled blow drinks twice.
+- **Notes:** Today's legendary, changed as the line says and made a rare. The second strike is a hit that lands a second time, as `fill/shared.md` defines one: no new dodge or crit roll; Bleed pays on it, Lifesteal drinks from it, a count of hits counts it; it carries none of the first's statuses and isn't an extra strike. Where another card would repeat the same hit, each repeats the first once. A Double strike on a Stunned foe is four hits. Attack speed gets more blows into the window, and every doubled blow drinks twice.
 
 ### Forked knuckles
 - **Is:** fist · rare
@@ -184,7 +184,7 @@
 - **Numbers:** the leap: half the swing's damage. MP: 5% of the wearer's max MP for each other foe a basic attack hits (about 115 for a Stormcaller, 85 for a Vampire, 40 for a Monk).
 - **Code:** as today's Sweeping blade for the second foe; 12 for what it carries; the MP as today's Glint wand's gain, on an extra hit that lands on a foe other than the swing's target (see *Code support*)
 - **Serves:** Storm 2 ●●●, Barrage ●●, Cuts ● ⚙ red rain (half), resonance (half) ◆ wide-hit, free-cast
-- **Notes:** The MP counts every other foe a swing reaches, by this piece, by Arc or by a seat: a Stormcaller's swing reaches two and pays twice, about what Recharge pays a foe. Double strike's second strike lands on the target and pays nothing. Against one foe it does nothing at all, which is its shape. HP as the third step: the unit that fights a crowd is hit by one.
+- **Notes:** The leap is an extra hit of its own, not an extra strike: it carries what the swing carries because the card says so, and nothing that reads extra strikes reads it. The MP counts every other foe a swing reaches, by this piece, by Arc or by a seat: a Stormcaller's swing reaches two and pays twice, about what Recharge pays a foe (*Challenges*, 2). Double strike's second strike lands on the target and pays nothing. Against one foe it does nothing at all, which is its shape. HP as the third step: the unit that fights a crowd is hit by one.
 
 ### Flurry wraps
 - **Is:** fist · legendary
@@ -193,16 +193,16 @@
 - **Numbers:** each strike in the chain deals four fifths of the one before; at most three extra strikes a swing. "A little weaker" in the line is today's fifth.
 - **Code:** as today's Flurry wraps
 - **Serves:** Cuts 3 ●●●, Storm ●●, Pact ●
-- **Notes:** Kept: today's card, size and stats. The card gives its count, as *Chains end* asks. As built, the chain is Double strike's own: it starts from the second strike of a Double strike, and a swing rolls once. Arc's second hit or a leap doesn't start it (*Challenges*, 9). A Monk wearing it lands about one and a third extra strikes a swing.
+- **Notes:** Kept: today's card, size and stats. The card gives its count, as *Chains end* asks. An extra strike is Double strike's second strike, and what this chains from it: the card and the build agree, and a swing rolls once. Arc's second hit or a leap doesn't start it. A Monk wearing it lands about one and a third extra strikes a swing.
 
 ### Answering thunder
 - **Is:** fist · legendary
 - **Card:** Each time a foe that holds Shock acts, its wearer strikes that foe with its weapon, unless the wearer is Stunned or winding up an ability.
 - **Stats:** Double strike medium · Attack speed medium · Lifesteal medium · Evasion medium (4 of 4)
-- **Numbers:** each strike is a hit of its basic attack's size (about 450 at Attack 4). One strike for each action of each charged foe, with no limit.
+- **Numbers:** each strike is a hit of its basic attack's size (about 450 at Attack 4), in whatever shape its wearer's basic attacks have. One strike for each action of each charged foe, with no limit.
 - **Code:** 17; 12 for what the strike carries
 - **Serves:** Storm 3 ●●●, Cuts ●●, Toll ●
-- **Notes:** Written with the spine's "strikes with its weapon", where the line says "with a basic attack" (*Challenges*, 5): a hit, not a basic attack, so Arc's second hit and Double strike don't fire from it, and it leaves the wearer's own swing where it was. It carries what the swing carries, so a Stormcaller's answer charges the foe again, and a foe once charged is answered for the rest of the fight. "If it's free to" is written out: not Stunned, not in a wind-up. Its steps are spread across the kind's leans, since no stat speeds a strike that runs on the foes' clock.
+- **Notes:** Written with the spine's "strikes with its weapon", as round 1 rules: a hit, not a basic attack, so Arc's second hit and Double strike don't fire from it, and it leaves the wearer's own swing where it was. It's aimed at a named foe, so a Taunt doesn't turn it. It carries what the swing carries, so a Stormcaller's answer charges the foe again, and a foe once charged is answered for the rest of the fight. "If it's free to" is written out: not Stunned, not in a wind-up. Its steps are spread across the kind's leans, since no stat speeds a strike that runs on the foes' clock.
 
 ## Wand
 
@@ -258,7 +258,7 @@
 - **Numbers:** each extra hit: half the swing's damage (about 250 at Attack 4).
 - **Code:** as today's Chain wand; 12 for what it carries
 - **Serves:** Snap 2 ●●, Bonfire 2 ●●, Storm ●●, Cuts ●● ⚙ red rain (half) ◆ wide-hit
-- **Notes:** Kept: today's card and size, with "carrying what the swing carries" added as the line says. That clause is the piece: a Hexer's swing chills three foes. Its two extra hits are extra strikes.
+- **Notes:** Kept: today's card and size, with "carrying what the swing carries" added as the line says. That clause is the piece: a Hexer's swing chills three foes. Its two extra hits are the chain's own, not extra strikes: nothing that reads extra strikes reads them.
 
 ### Mimic wand
 - **Is:** wand · rare

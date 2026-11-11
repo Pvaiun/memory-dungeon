@@ -7,15 +7,15 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - **42 versions:** 9 changed, written new; 33 kept, each checked against today's card. Two of the kept are resized (Hail, Drinking palm).
 - **16 mythics:** 5 changed, written new; 11 kept. Two of the kept are resized (Horn of the keep, Huntmaster's quiver), and one gains a sentence (Eye of the tempest).
 
-**How it's laid out.** The kit changes come first, since everything after reads them. Then one heading a class, in the classes' own order. Under each class: its versions in the spine's order (the changed, then the kept), then its mythic. An entry's **Is** line says changed or kept, and a kept entry's **Notes** start with *Stays* or *Resized*.
+**Round 1's rulings are applied:** those for every share (`fill/shared.md`) and those for this share (`fill/round-1.md`).
+
+**How it's laid out.** The kit changes come first, since everything after reads them. Then one heading a class, in the classes' own order. Under each class: its versions in the spine's order (the changed, then the kept), then its mythic. An entry's **Is** line says changed or kept, and a kept entry's **Notes** start with *Stays* or *Resized*. A kept card whose only change is its wording (the vocabulary's target phrases in full, a stale word gone, as round 1 rules for every share) still *Stays*, and its note says what was reworded.
 
 **How to read the numbers.**
 - A word names its constant in `content/core-set/scale.ts`.
 - **"The ability's count"** of a stack word is `ABILITY_STACKS` × `STACKS.<word>` for each point of the stat named, as the kits' abilities have it. **"The passive's count"** is `STACKS.<word>` alone, as the kits' passives have it.
 - Sizes worked out in the notes are for the class's own stat line with no gear.
 - No card here uses one of the six counters. Stormspear's and Metronome's counts are their own, each shown as an icon with a number.
-
-**Read against `fill/round-1.md`** as it stood when this was handed in (the lead's rulings, in progress). Where one of its rulings for every share touches an entry here, the entry follows it and says so: Rampart, Quick draw's link, Crown of embers, the brink, the frozen gate and the mirror. Nothing else of this file waits on it.
 
 ## Kit changes
 
@@ -28,24 +28,25 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - **Serves:** no road or engine on its line. The Hunt asks for it (`builds.md`), and every piece, seat and version that Marks reads it.
 - **Notes:** The card is the status's own line, shown with its icon. The rule behind it, for the vocabulary:
   - **What follows a Mark:** a basic attack, as today, and the first pick of any ability whose target phrase is "a random foe" or "a random foe that isn't Taunting". In the base kits that's Shield bash, Barbed arrow, Bramble lash, Spear thrust, Gale spear, Garrote, Blood drain, Chain lightning's first strike, Rockfall and Tremor. The versions that keep the phrase follow too: Crushing bash, Rebuke, Skewer's first thrust, Gale storm's first hit, Bleed them dry, Savage drain, Drain the well, Recharge, Rock shelter and Aftershock.
-  - **What doesn't:** an ability with a target phrase of its own; every pick after an ability's first (Chain lightning's three others, Arc's second foe, Skewer's second thrust); anything aimed at every foe; a hit that a piece or a passive makes (a jump, a strike with its weapon).
-  - **The Taunt rule stands over it.** While a foe Taunts, an ability without Seek goes to a Taunting foe, Marked or not. With Seek it goes to the Marked foe.
+  - **A fallback follows it too.** A phrase that falls to a random foe when it finds nobody is a random pick then, and the Mark takes it: "the foe with the most Burn" with nothing burning, and the same for Chill, Sunder and Shock. So the first Firebolt of a fight lands on the Marked foe, and the pile forms there. That reaches Frost arrow, Rending arrow, Skyfall, Firebolt, Pyre, Burning fist and Frost lance, the versions with such a phrase, and Stormspear's blow.
+  - **What doesn't:** a phrase of its own that finds its foe (the most Burn, with something burning; the highest Attack; the lowest current HP); every pick after an ability's first (Chain lightning's three others, Arc's second foe, Skewer's second thrust); anything aimed at every foe; a strike a card aims at a named foe.
+  - **The Taunt rule stands over it.** While a foe Taunts, an ability without Seek goes to a Taunting foe, Marked or not. With Seek it goes to the Marked foe, and "a random foe that isn't Taunting" goes to a Marked foe even when that foe Taunts.
+  - **The Fizzle rule gives way to it.** An ability that would skip the Marked foe because it already holds the Stun or the Silence lands on it anyway, for its damage alone.
   - **Several Marks:** the pick goes by draw among the Marked.
-  - **Three readings the line leaves open** are under Challenges, with what this entry assumes for each.
   - It sizes nothing. What a player sees is every loose arrow, bolt and bash in the party landing on one foe while the Mark lasts, and how long it lasts is the balance pass's (the spine's note on `STATUS.marked`).
 
 ### Malison
 - **Is:** Hexer, Malison · kit change
 - **Today:** Deepens every affliction each foe holds: one more stack of each of Burn, Chill, Shock and Sunder it already has, and a few Bleed.
 - **Card:** Curses every foe: light damage that scales from Attack, a fifth more for each different affliction the foe holds (Burn, Chill, Shock, Bleed, Sunder), then a few Bleed; stacks scale from Attack.
-- **Numbers:** The hit is `HIT.light` of Attack, on every foe. Each different affliction the foe holds as the hit lands adds a fifth of that, counted once whatever its stacks: five at most, which doubles the hit. A few Bleed is the ability's count from Attack, and lands after the hit. Short cooldown, normal wind-up and 450 MP, as today.
+- **Numbers:** The hit is `HIT.light` of Attack, on every foe. Each different affliction the foe holds as the hit lands adds a fifth of that, counted once whatever its stacks: five at most, which doubles the hit. A few Bleed is the ability's count from Attack, and lands after the hit. Short cooldown, normal wind-up and 450 MP, as today. The power step is two fifths more damage and two fifths more Bleed.
 - **Code:** 2
 - **Serves:** no road or engine on its line. It's what every colour reads, and a hit on every foe for the red rain.
 - **Notes:**
   - **The size.** A touch is the scale's word for an ability whose point is its status, and the change makes the hit the point, so it's a light hit. On a bare Hexer that prints about 950 on a foe that holds nothing and about 2,100 on a foe that holds all five, after a minion's Defense: the curse's own number, on a class whose damage nobody saw in play. Light against touch is under Least sure.
   - **What it counts.** The afflictions on the foe as the hit lands. Its own Bleed lands after, so the first curse of a fight counts none of it and the second finds it there, if the party's hits haven't closed it.
   - **It's a wide hit.** Bleed pays on every hit its holder takes, so each curse cashes every wound on the field and then opens its own.
-  - **The power step** today reads "40% more of every status it adds", which now grows only the Bleed. See Challenges.
+  - **The power step** is the plain one on the new base, as ruled: two fifths more damage and Bleed. Today's read "40% more of every status it adds", which would have grown only the Bleed.
   - The Hexer's trunk line and *How the kits fit together* in `docs/core-set/classes.md` change with it, when it's built.
 
 ## Knight
@@ -62,11 +63,11 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 ### Rally the well
 - **Is:** Knight, Stand fast A · version · kept
 - **Today:** Gives Clarity to every ally under half its MP. Waits until one is. No Taunt.
-- **Card:** Gives Clarity to every ally under half its MP. Waits until one is. No Taunt.
+- **Card:** Gives Clarity to every ally under half its max MP. Waits until one is. No Taunt.
 - **Numbers:** Clarity at its own size and length (`STATUS.clarity`). Medium cooldown, quick wind-up, 200 MP.
 - **Code:** as today's Rally the well
 - **Serves:** Barrage 1 ●●● ⚙ mana as armour (half)
-- **Notes:** *Stays.* One Clarity is about a quarter of its holder's pool over its length, which for a mage is a whole cast, and this lays it on everyone who's short. What it's worth is Clarity's own size, which `builds.md` leaves to the balance pass. Clarity flows in over time, so by the spine's words it isn't MP "given": Glimmer robe doesn't read it, and mana as armour does.
+- **Notes:** *Stays.* Reworded: "max MP", in full. One Clarity is about a quarter of its holder's pool over its length, which for a mage is a whole cast, and this lays it on everyone who's short. What it's worth is Clarity's own size, which `builds.md` leaves to the balance pass. Clarity flows in over time, so by the spine's words it isn't MP "given": Glimmer robe doesn't read it, and mana as armour does.
 
 ### Horn of the keep
 - **Is:** Knight · mythic (offhand) · kept
@@ -77,7 +78,7 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - **Serves:** Barrage 3 ●●●, Toll ●● ⚙ mana as armour (half)
 - **Notes:** *Resized:* a tenth to a half.
   - **Why.** A Knight's Defense turns a wolf's bite into about 100 and a bandit's swing into about 290, so a tenth was 10 to 30 MP a hit, against pools of 1,000 to 3,800. That's the link sized below sight that play reported, and `builds.md` asks Barrage for a whole cast's mana, not a tenth. At half a pack gives its caster about a Fireball's worth over a regular fight, and one Crush from a boss refills most of a pool.
-  - **The card keeps "other",** as today's: the Knight never feeds itself. The spine's line drops the word.
+  - **The card keeps "other",** as today's: the Knight never feeds itself. The spine's line drops the word. "The ally with the least MP" is the new phrase round 1 adds to the vocabulary: the lowest share of max MP.
   - **It's MP given,** by the spine's words, hit by hit. So Glimmer robe on the caster is live nearly all fight beside it.
   - **The two halves pull apart.** The Barrage Knight takes Rally the well, which has no Taunt, so the second sentence does nothing for it unless a piece makes it Taunt. And the Taunt it lays again doesn't bring Hold the line's Thorns back: those ride the cast.
 
@@ -102,8 +103,9 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - **Notes:**
   - **What it reads.** The heals and Regens of the Cleric's own abilities: Cure, Renew and their versions. Not a Cleanse, a Shield, a revive or Font's Clarity, and not the healing its gear does on a beat or a swing.
   - **Seen:** one Cure, a green number on every ally who's low. With three allies below half, each cast heals three.
-  - **What the copies set off.** A copy is the ability's heal landing on one more ally, so a piece that reads "each time one of its holder's abilities heals an ally" reads each ally it lands on. The copy itself is never copied, cast or passed on again.
-  - **On the brink.** A unit under Halved heart counts as below half while it sits at half (round 1's ruling on that card). So every heal the Cleric casts reaches it, and the part past its cap is healing past full for the red stone's pieces.
+  - **What the copies set off.** A copy of a heal is the ability's heal landing on one more ally, so a piece that reads "each time one of its holder's abilities heals an ally" reads each ally it lands on. A copy of a Regen is a Regen, and a Regen isn't a heal: only a card that names Regen reads it. The copy itself is never copied, cast or passed on again.
+  - **A cast made twice** by another piece has both its heals widened: as ruled, widening a heal isn't casting it again.
+  - **On the brink.** A unit under Halved heart counts as below half while it sits at half, as that card now says. So every heal the Cleric casts reaches it, and the part past its cap is healing past full for the red stone's pieces.
   - Nothing of the old card is kept: no piece wants a fall.
 
 ## Ranger
@@ -129,7 +131,7 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - **Numbers:** Two crit steps on basic attacks (`KIT.hunterCrit`), three with the power step. Any crit the Ranger lands, an arrow's included, readies its next basic attack; the swing's recovery (`RULES.basicRecovery`) still passes between two.
 - **Code:** as today's Quick draw, and 23: "at once" doesn't stack
 - **Serves:** Cuts 2 ●●●, Hunt ●● ⚙ emptied quiver (key)
-- **Notes:** *Stays.* "At once" is a whole swing, so there's nothing to size on this side. On its own a bare Ranger crits about one swing in five, so the burst is one extra arrow now and then. How long the quiver's burst runs is the other half's number: see Links.
+- **Notes:** *Stays.* "At once" is a whole swing, so there's nothing to size on this side. On its own a bare Ranger crits about one swing in five, so the burst is one extra arrow now and then. How long the quiver's burst runs is the other half's number, and round 1 holds that number to four in five at most, so the burst always ends: see Links.
 
 ### Hail
 - **Is:** Ranger, Frost arrow B · version · kept
@@ -143,25 +145,26 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 ### Quarry
 - **Is:** Ranger, Hunter's eye A · version · kept
 - **Today:** Basic attacks ignore Taunt, crit more often, and go to the foe with the lowest share of its max HP.
-- **Card:** Basic attacks ignore Taunt, crit more often, and go to the foe with the lowest share of its max HP.
+- **Card:** Basic attacks ignore Taunt, crit more often, and go to the foe with the lowest share of max HP.
 - **Numbers:** Two crit steps on basic attacks (`KIT.hunterCrit`), three with the power step. No other size.
 - **Code:** as today's Quarry
 - **Serves:** Hunt 1 ●●●
-- **Notes:** *Stays.* It changes whom the Ranger shoots, which is the kind of version play took. While a foe is Marked, its arrows follow the Mark first, as basic attacks do today, and Quarry aims them when none is.
+- **Notes:** *Stays.* Reworded: the target phrase as round 1 adds it to the vocabulary. It changes whom the Ranger shoots, which is the kind of version play took. While a foe is Marked, its arrows follow the Mark first, as basic attacks do today, and Quarry aims them when none is.
 
 ### Huntmaster's quiver
 - **Is:** Ranger · mythic (armor) · kept
 - **Today:** All the Ranger's abilities aim past any guard at the foe with the lowest HP. When a foe one of them hit falls, the cooldowns left on its abilities are halved.
-- **Card:** All the Ranger's abilities aim past any guard at the foe with the lowest HP. When a foe one of them hit falls, its abilities are ready again.
-- **Numbers:** The aim is "the foe with the lowest current HP", with Seek. Ready is no cooldown left on any of its abilities, whoever landed the kill; each still needs its MP.
+- **Card:** All the Ranger's abilities aim past any guard at the foe with the lowest current HP. When a foe one of them hit falls, its abilities are ready again.
+- **Numbers:** The aim has Seek. Ready is no cooldown left on any of its abilities, whoever landed the kill; each still needs its MP.
 - **Code:** as today's Huntmaster's quiver, with ready in place of halved. One thing more, under *Code support beyond the spine's list*: the new aim leaves alone an ability aimed at every foe.
 - **Serves:** Hunt 3 ●●● ⚙ reaping (half)
 - **Notes:** *Resized:* halved to ready.
   - **Why.** The Ranger's arrows are on the quick and short words. Halving what's left of them saved three to five ticks an arrow: the cooldown a few ticks closer that play never saw, on a mythic. The Hunt asks for a kill reward that's a whole action. Ready again is the same reward at that size: a kill, and three arrows at the next lowest foe.
   - **What it costs.** A round of all three arrows is 725 MP, so a full pool pays for about three rounds, and their wind-ups and recoveries make a round about ten ticks.
-  - **It's the biggest resize in this share.** See Challenges.
-  - **With Marked.** The quiver gives every arrow a target phrase of its own, so its abilities no longer follow a Mark; its basic attacks still do. Most of the spine's markers Mark the lowest foe, so the two usually agree. Base Condemn, which Marks the highest Attack, doesn't.
-  - **With Barbed volley.** The volley stays an arrow at every foe. Every foe it hit counts for the second sentence, so each fall in a pack brings the volley back. See Loops.
+  - **It's the biggest resize in this share.** Round 1 lets it stand, as the Hunt's kill reward at a size that's seen, with mana as its brake, and puts it in the director's sample. The spine's line still reads "halved".
+  - **Reworded:** "the lowest current HP", the vocabulary's phrase in full.
+  - **With Marked.** The quiver gives every arrow a target phrase of its own that always finds a foe, so its abilities no longer follow a Mark; its basic attacks still do. Most of the spine's markers Mark the lowest foe, so the two usually agree. Base Condemn, which Marks the highest Attack, doesn't.
+  - **With Barbed volley.** The volley stays an arrow at every foe, as ruled. Every foe it hit counts for the second sentence, so each fall in a pack brings the volley back. See Loops.
 
 ## Bramble knight
 
@@ -197,11 +200,11 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 ### Watch the anchor
 - **Is:** Hoplite, Aspis A · version · kept
 - **Today:** Aegis on the ally with the most Aggro that holds none.
-- **Card:** Aegis on the ally with the most Aggro that holds none.
-- **Numbers:** Aegis as it stands (`STATUS.aegis`). Long cooldown (medium with the power step), quick wind-up, 500 MP.
+- **Card:** Aegis on the ally with the highest Aggro that holds none.
+- **Numbers:** Aegis as it stands (`STATUS.aegis`). "The highest Aggro" reads Aggro as it stands, gear and seat counted and a Taunt not, with a tie going to the earlier seat. Long cooldown (medium with the power step), quick wind-up, 500 MP.
 - **Code:** as today's Watch the anchor
 - **Serves:** Toll 2 ●●● ⚙ mirror (half)
-- **Notes:** *Stays.* BLOCKED on the wall is seen, and the version puts the Aegis where the blows go, not on whoever is lowest. Aegis blocks only a blow above its own line after the wall's Defense, so on a well-armoured anchor it catches a boss's great blows and little else. See Links, the mirror.
+- **Notes:** *Stays.* Reworded: "the highest Aggro", the phrase round 1 adds to the vocabulary, for today's "the most". BLOCKED on the wall is seen, and the version puts the Aegis where the blows go, not on whoever is lowest. Aegis blocks only a blow above its own line after the wall's Defense, so on a well-armoured anchor it catches a boss's great blows and little else. See Links, the mirror.
 
 ### Opening thrust
 - **Is:** Hoplite, Phalanx A · version · kept
@@ -210,7 +213,7 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - **Numbers:** Phalanx as it stands. The first swing of a fight is ready at once and deals triple, its first doubling included. With the power step the double is × 2.4.
 - **Code:** as today's Opening thrust
 - **Serves:** Hunt 1 ●●●, Landslide ●●
-- **Notes:** *Stays.* The fight's first number is its biggest swing, at the first tick: about 4,900 with a great weapon. It's a kit's own start-of-fight effect, so the opening's pieces (Tally coat, Second dawn) don't make it happen again.
+- **Notes:** *Stays.* The fight's first number is its biggest swing, at the first tick: about 4,900 with a great weapon. It's a kit's own start-of-fight effect, so the opening's pieces (Overture coat, Second dawn) don't make it happen again.
 
 ### Shieldbearer
 - **Is:** Hoplite, Phalanx B · version · kept
@@ -228,7 +231,7 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - **Numbers:** All of what the Aegis stopped, sent back: it isn't a hit, so Evasion and Defense don't touch it, as today. Aspis ready needs its 500 MP.
 - **Code:** as today's The last wall (4 names it)
 - **Serves:** Toll 3 ●●●, Landslide ●● ⚙ mirror (key)
-- **Notes:** *Stays.* A boss's great blow printed on the boss is the mirror at its clearest. What's sent back is the blow after the wall's Defense and Guard, which is what an Aegis stops. So better stone sends less here, not more, and enough of it takes a blow under Aegis's line, where nothing is blocked. See Links and Challenges.
+- **Notes:** *Stays.* A boss's great blow printed on the boss is the mirror at its clearest. What's sent back is the blow after the wall's Defense and Guard, which is what an Aegis stops. So better stone sends less here, not more, and enough of it takes a blow under Aegis's line, where nothing is blocked. Round 1 keeps it as today's, and the mirror's link in the spine no longer says better stone sends more.
 
 ## Paladin
 
@@ -240,8 +243,8 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - **Code:** none new: today's Swift justice, and a reaction to a status the Paladin gave ending in its holder's knockout (The last wall hears an Aegis it gave; Pyre of the fallen hears a Burn end in a fall). It leans on 1, and on 23 for "at once".
 - **Serves:** Hunt 2 ●●●, Landslide ●●, Bonfire ● ⚙ judge's drum (key)
 - **Notes:**
-  - **"The judged foe"** is written as a foe that falls with the Paladin's Mark still on it. The player can see that: the icon is on the foe as it drops. It means the kill has to come inside Marked's own length. The other reading is under Challenges.
-  - **Whose Mark.** A status knows who applied it, not which ability did, so a Mark the Paladin lays from a piece or a seat counts as well as Condemn's.
+  - **"The judged foe"** is written as a foe that falls with the Paladin's Mark still on it. The player can see that: the icon is on the foe as it drops. It means the kill has to come inside Marked's own length. Round 1 lets this reading stand.
+  - **Whose Mark.** A status knows who applied it, not which ability did, so a Mark the Paladin lays from a piece or a seat counts as well as Condemn's. That's this version's rule alone: the Paladin's mythic answers Condemn and nothing else.
   - **Seen:** a foe falls, the Mark jumps to the next lowest, and three weapons land together. Nothing to size: "at once" on a slow weapon is a whole swing.
   - **Its brake is mana.** Every call is a Condemn at 650 MP, so a full pool is five, and a pack of six ends the drum before the pack ends.
   - **Beside Hunting horn** a Marked foe's fall calls the swings twice: once from the horn at once, and again when Condemn lands a tick later. They don't stack into one, since the first has landed.
@@ -258,27 +261,28 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 ### Writ of judgement
 - **Is:** Paladin · mythic (offhand) · changed
 - **Today:** Smite also Silences its target. The Paladin's hits on a Stunned or Silenced foe heal the ally with the lowest share of HP for half the damage dealt. (Chains of light, which this replaces.)
-- **Card:** Whenever the Paladin Marks a foe, a heavy blow falls on that foe at once: heavy damage that scales from Attack, adding several Burn; stacks scale from Attack.
-- **Numbers:** The blow is `HIT.heavy` of Attack. Several Burn is the ability's count from Attack, as Smite's. No cooldown and no MP of its own: one blow for each Mark the Paladin lays, a Mark renewed on the same foe included.
-- **Code:** none from the spine's list: a reaction to a Mark the Paladin gave landing. See *Code support beyond the spine's list* for the blow as a hit of its own.
+- **Card:** Whenever the Paladin's Condemn Marks a foe, a heavy blow falls on that foe at once: heavy damage that scales from Attack, adding several Burn; stacks scale from Attack. A Mark from its gear or its seat doesn't call it.
+- **Numbers:** The blow is `HIT.heavy` of Attack. Several Burn is the ability's count from Attack, as Smite's. No cooldown and no MP of its own: one blow for each Condemn that lands its Mark, a Mark renewed on the same foe included.
+- **Code:** none from the spine's list: a change to Condemn by name, in every form of it, as today's Chains of light changes Smite. See *Code support beyond the spine's list* for the blow as a hit of its own.
 - **Serves:** Hunt 3 ●●●, Bonfire ●●, Landslide ●●
 - **Notes:**
-  - **The blow is a hit** of the Paladin's: it can be dodged and crit, it meets Defense, and a kill it lands is the Paladin's kill. It isn't a basic attack or a cast, so nothing that waits on a swing or a cast reads it.
+  - **The blow is a hit** of the Paladin's: it can be dodged and crit, it meets Defense, and a kill it lands is the Paladin's kill. It isn't a basic attack or a cast, so nothing that waits on a swing or a cast reads it. It falls on the foe just Marked, a named foe, so a Taunt doesn't turn it.
   - **It's bigger than it looks.** The Mark is a debuff and lands first, so Judgement is on: the blow is half again as hard. On a bare Paladin that's about 4,900 after a minion's Defense, with about ten Burn behind it, on every Condemn.
   - **Seen:** a Mark, and under it the fight's biggest number.
-  - **Whose Mark.** Any Mark the Paladin lays, from Condemn or from a piece or a seat it holds. With a marker that lays one "while no foe is Marked", the blow comes each time a Mark runs out or its foe falls, at no cost. That's the loop the spine names, and at these numbers its brake is weak. See Loops.
-  - Nothing of the old card is kept.
+  - **Condemn alone,** as round 1 rules and the spine's line now says: with a marker that costs nothing the chain ran through a pack for free, and no number braked it without shrinking the blow. "Condemn" is the ability in whichever version the Paladin has trained: Challenge and Swift justice call the blow too.
+  - **With Swift justice** each call is still a Condemn, paid for. See Loops.
+  - It goes in the director's sample. Nothing of the old card is kept.
 
 ## Valkyrie
 
 ### Over the fallen
 - **Is:** Valkyrie, Choosing B · version · kept
 - **Today:** Waits until an ally is below 30% of its HP or down. Chooses one: a fallen one, raised; else the lowest, healed for double. The Valkyrie Taunts and is Guarded, standing over the one she chose.
-- **Card:** Waits until an ally is below 30% of its HP or down. Chooses one: a fallen one, raised; else the lowest, healed for double. The Valkyrie Taunts and is Guarded, standing over the one she chose.
-- **Numbers:** The heal is twice `KIT.choosing` of Attack. A raise brings a tenth of the ally's HP (`REVIVE.tenth`). Taunt and Guard on herself at their own lengths. Medium cooldown, normal wind-up, 650 MP.
+- **Card:** Waits until an ally is below 30% of its max HP or down. Chooses one: a fallen one, raised; else the ally with the lowest share of max HP, healed for double. The Valkyrie Taunts and is Guarded, standing over the one she chose.
+- **Numbers:** The heal is twice `KIT.choosing` of Attack. A raise brings a tenth of the ally's max HP (`REVIVE.tenth`). Taunt and Guard on herself at their own lengths. Medium cooldown, normal wind-up, 650 MP.
 - **Code:** as today's Over the fallen
 - **Serves:** Toll 2 ●●●, Pact ●● ⚙ riposte (half), brink (half)
-- **Notes:** *Stays.* The heal is about 2,200, and the Taunt turns the fight onto her. It's the draw that makes a dodging Valkyrie the riposte's dancer. Like Shared rites it wakes at 30%, under Halved heart's line.
+- **Notes:** *Stays.* Reworded: "max HP", and "the ally with the lowest share of max HP" for "the lowest". The heal is about 2,200, and the Taunt turns the fight onto her. It's the draw that makes a dodging Valkyrie the riposte's dancer. Like Shared rites it wakes at 30%, under Halved heart's line.
 
 ### Thunderclap
 - **Is:** Valkyrie, Skyfall A · version · kept
@@ -302,7 +306,8 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - **Notes:**
   - **Seen:** a count on the Valkyrie, and at four a number from above on the most charged foe. On a bare Valkyrie the blow is about 2,000 with 150 more a stack, so a charge of 13 doubles it and Shock's cap makes it four times the size. With her kit alone a blow falls about every ten ticks.
   - **The blow is a hit** of hers: it meets Evasion and Defense, can crit and builds her Shield. It isn't a basic attack or a cast. It isn't counted, so it can't call the next.
-  - **Where it lands.** By its phrase alone: the foe with the most Shock, or a random foe when none holds any. It isn't an ability's or a basic attack's pick, so this entry assumes the Taunt rule doesn't hold it and a Mark doesn't steer it. See Challenges.
+  - **Where it lands.** A pick by a phrase is still a pick, as ruled: the blow is inside the Taunt rule. While a foe Taunts it lands on a Taunting foe, whatever charge that foe holds. A Mark doesn't steer it while any foe holds Shock, since it has a phrase of its own. With no Shock on any foe the phrase falls to a random foe, and that pick follows a Mark like any other.
+  - **What that costs it.** Gale spear has Seek and charges the back row; the blow that reads the charge doesn't have it, so behind a Taunting front it lands on the guard. Under Least sure.
   - **What went.** Shock on every swing and basic attacks that ignore Taunt are uncommons' effects now (Jolt spear, Long spear), and she can't hold either beside this. So the charge it reads has to come from Gale spear and from the party.
 
 ## Bard
@@ -323,13 +328,13 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 ### Rubato
 - **Is:** Bard, Allegro A · version · changed
 - **Today:** Haste on every ally, and each ally's ability with the longest cooldown left comes 4 ticks closer.
-- **Card:** Haste on every ally, and every ally's ability nearest to ready is ready at once.
-- **Numbers:** Haste at its own size and length (`STATUS.haste`). "Nearest to ready" is the ability with the least cooldown left that isn't ready yet; ready is no cooldown left, and it still needs its MP and whatever it waits for. Long cooldown (medium with the power step), quick wind-up, 650 MP, as Allegro.
-- **Code:** none: the cooldown effect already picks "its next ability" for every ally.
+- **Card:** Haste on every ally, and every ally's ability nearest to ready is ready at once. It never readies itself: for the Bard, another of its own.
+- **Numbers:** Haste at its own size and length (`STATUS.haste`). "Nearest to ready" is the least wait left among abilities still cooling; ready is no cooldown left, and it still needs its MP and whatever it waits for. For the Bard, Rubato isn't counted among them. Long cooldown (medium with the power step), quick wind-up, 650 MP, as Allegro.
+- **Code:** the cooldown effect already picks "its next ability" for every ally. For the caster it has to leave out the ability being cast: under *Code support beyond the spine's list*.
 - **Serves:** Barrage 2 ●●●, Landslide ●
 - **Notes:**
   - **Seen:** Rubato's name, then an ability from each ally right under it. Four ticks closer was the size play never saw; a whole cooldown is the one `builds.md` asks Barrage for. For a soloist with one spell, the nearest ability is the spell.
-  - **It can ready itself.** The Bard is one of "every ally", and Rubato has just gone on cooldown when its effect lands. If nothing else of the Bard's is cooling down (it knows only this song, or its other songs are ready and slotted after it), Rubato is the Bard's ability nearest to ready, and it's cast again, until the mana is gone. The card as the line has it allows this. See Loops and Challenges.
+  - **It never readies itself,** as round 1 rules and the spine's line now says. Rubato has just gone on cooldown when its effect lands, so without the clause a Bard with nothing else cooling cast it again until its mana was gone. A Bard that knows only this song gets the Haste and nothing more for itself.
   - **Beside Reprise** (Encore A): Reprise readies one ally's longest wait, this readies everyone's shortest.
 
 ### Reprise
@@ -339,22 +344,22 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - **Numbers:** No size: a whole cooldown. Medium cooldown (short with the power step), quick wind-up, 650 MP.
 - **Code:** as today's Reprise
 - **Serves:** Barrage 2 ●●●, Landslide 2 ●●
-- **Notes:** *Stays.* A whole cooldown is the size that's seen: the great spell's name twice in a few ticks. It names another ally, so it can't ready itself.
+- **Notes:** *Stays.* A whole cooldown is the size that's seen: the great spell's name twice in a few ticks. It names another ally, so it can't ready itself. The card says "the longest cooldown left", which by round 1's ruling is the ability with the most wait left, as today's build reads it. The spine's line for it drops "left", which would mean the slowest ability: see Challenges.
 
 ### Lament
 - **Is:** Bard, War ballad A · version · kept
 - **Today:** Might to every ally below half its HP, twice as many. Waits until an ally is below half.
-- **Card:** Might to every ally below half its HP, twice as many. Waits until an ally is below half.
+- **Card:** Might to every ally below half its max HP, twice as many. Waits until an ally is below half.
 - **Numbers:** Twice the ability's count of a few, from the Bard's Attack: 8 or 9 stacks a cast, up to Might's cap. Quick cooldown, quick wind-up, 450 MP.
 - **Code:** as today's Lament
 - **Serves:** Pact 2 ●●● ⚙ brink (half)
-- **Notes:** *Stays.* A few Might is on the list of sizes play never saw, and this isn't that: twice as many, on a quick cooldown, on a unit that stays low, reaches Might's cap by the second or third ballad, and every blow from the brink lands most of the way to double. On a unit that dips under half and is healed straight back it's one cast, and little.
+- **Notes:** *Stays.* Reworded: "max HP". A few Might is on the list of sizes play never saw, and this isn't that: twice as many, on a quick cooldown, on a unit that stays low, reaches Might's cap by the second or third ballad, and every blow from the brink lands most of the way to double. On a unit that dips under half and is healed straight back it's one cast, and little.
 
 ### Metronome
 - **Is:** Bard · mythic (offhand) · kept
 - **Today:** Counts every hit the party lands. At 20, War ballad, Allegro and Encore are ready at once, and the count starts again.
 - **Card:** Counts every hit the party lands. At 20, War ballad, Allegro and Encore are ready at once, and the count starts again.
-- **Numbers:** Twenty hits: every hit any ally lands, extra strikes and each hit of a multi-hit ability included. Damage sent back and a status's own damage aren't hits. All three songs ready is 1,750 MP if the Bard casts them all.
+- **Numbers:** Twenty hits: every hit any ally lands, of any kind: a swing, an extra strike, an extra hit a card names (a jump, a ring, a volley), each hit of a multi-hit ability. Damage sent back and a status's own damage aren't hits. All three songs ready is 1,750 MP if the Bard casts them all.
 - **Code:** as today's Metronome (7 and 15 name it)
 - **Serves:** Cuts 3 ●●●, Barrage ●●, Storm ● ⚙ spell on the swing (key)
 - **Notes:** *Stays.* It was never offered in play. A count on the Bard that climbs with the party's blur and rings three songs at the top is seen, and a fast party fills it every fifteen ticks or so. With the changed songs it readies Rousing chorus and Rubato, and Rubato readies the abilities whose hits fill it. Mana stops that: see Loops.
@@ -365,7 +370,7 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - **Is:** Hexer, Malison A · version · changed
 - **Today:** Deepens every affliction each foe holds, and adds a few Burn, a few Shock and a few Bleed of its own to every foe; stacks scale from Attack.
 - **Card:** Curses every foe for less than Malison does: touch damage that scales from Attack, a fifth more for each different affliction the foe holds (Burn, Chill, Shock, Bleed, Sunder), then a few Burn, a few Shock and a few Bleed; stacks scale from Attack.
-- **Numbers:** The hit is `HIT.touch` of Attack, about three fifths of Malison's, with Malison's fifth for each different affliction. A few of each of Burn, Shock and Bleed is the ability's count from Attack: five or six of each on a bare Hexer, landing after the hit. Short cooldown, normal wind-up, 650 MP: a rung over Malison, as today's Plague is. The power step is Malison's.
+- **Numbers:** The hit is `HIT.touch` of Attack, about three fifths of Malison's, with Malison's fifth for each different affliction. A few of each of Burn, Shock and Bleed is the ability's count from Attack: five or six of each on a bare Hexer, landing after the hit. Short cooldown, normal wind-up, 650 MP: a rung over Malison, as today's Plague is. The power step is Malison's: two fifths more damage and Bleed.
 - **Code:** 2
 - **Serves:** Bonfire ●●, Storm ●●, Cuts ●● ⚙ every colour (key), red rain (half)
 - **Notes:**

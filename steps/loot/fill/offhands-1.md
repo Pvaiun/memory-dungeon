@@ -5,8 +5,9 @@ Kite shield, round shield, horn, totem, relic and lantern: 54 pieces (12 commons
 How to read it:
 - **Every offhand takes the standard ladder:** 1, 2, 3 and 4 steps. The signature stat comes first on every piece of two steps or more.
 - **"When each fight starts"** is the wording of every start-of-fight effect here, today's cards included, so the eight that can happen again read alike.
-- **"Drops below half"** means one thing on the two cards that use it (Watch horn, Bear fetish): the first time a unit loses HP while under half its max HP, since it was last at half or more, or since the fight began. It's under *Challenges*, since other shares hold the same trigger.
-- **Five commons are named new,** for the lead's check across shares: Blazoned kite, Raider's shield, Blackthorn stake, Pilgrim's badge, Bullseye lantern. Seven keep today's name and step.
+- **"Drops below half"** is the crossing `fill/shared.md` defines, on the two cards that use it (Watch horn, Bear fetish): whatever took the unit under, a price included. A unit that starts a fight under half has dropped as the fight starts, and "whenever" fires again each time the unit is back at half or over and crosses again.
+- **Round 1's rulings are applied.** Bossed kite was Spiked kite and Tower shield was Phalanx shield. Each kind's first common takes the first stat its row names, and the second takes its other stat.
+- **Four commons are named new,** for the lead's check across shares: Blazoned kite, Blackthorn stake, Litany beads, Bullseye lantern. Eight keep today's name and step.
 
 ## Kite shield
 
@@ -44,9 +45,9 @@ How to read it:
 - **Numbers:** none of its own: Guard keeps `STATUS.guard`. Ties for the least Defense are broken at random.
 - **Code:** as today's Sheltering kite, with a second pick (the lowest Defense among the others).
 - **Serves:** Landslide ●, net ⚙ opening again (half), mirror (half)
-- **Notes:** Changed from today's as the line says: today's Guarded the ally with the lowest share of HP alone. I wrote "the other ally", so two icons always show (*Challenges*). Happening again, both Guards are refreshed.
+- **Notes:** Changed from today's as the line says: today's Guarded the ally with the lowest share of max HP alone. Happening again, both Guards are refreshed.
 
-### Spiked kite
+### Bossed kite
 - **Is:** kite shield · uncommon
 - **Card:** Each hit of its holder's abilities deals extra damage (from its Defense).
 - **Stats:** Defense +2 (2 of 2)
@@ -77,7 +78,7 @@ How to read it:
 - **Is:** kite shield · rare
 - **Card:** Its holder's abilities that deal damage take twice as long to come round, and their hits land two and a half times as hard. What they apply is unchanged.
 - **Stats:** Defense +2 · HP +1 (3 of 3)
-- **Numbers:** cooldown twice as long; hits two and a half times as hard. Stacks, statuses and MP costs stay as they are. Abilities that deal no damage are untouched.
+- **Numbers:** cooldown twice as long; hits two and a half times as hard. Stacks, statuses and MP costs stay as they are. Abilities that deal no damage are untouched. The doubled cooldown is that ability's whole cooldown, for whatever reads its holder's slowest ability.
 - **Code:** beyond the list: an ability change that lengthens the cooldown and multiplies the damage of abilities that deal damage.
 - **Serves:** Landslide 2 ●●●, Hunt ● ⚙ shatter bell (half) ◆ heavy-blow
 - **Notes:** Today's Millstone is two and a quarter for swings. An ability's doubled cooldown costs more than a swing's, since cooldowns carry and a fight is short, so this one pays a little more. Whatever readies an ability skips the doubled wait, and that's where it's worth most.
@@ -93,15 +94,6 @@ How to read it:
 
 ## Round shield
 
-### Raider's shield
-- **Is:** round shield · common
-- **Card:** Nothing beyond its stats.
-- **Stats:** Attack +1 (1 of 1)
-- **Numbers:** none.
-- **Code:** none.
-- **Serves:** the Hunt and the Storm: Attack is their first stat on this kind.
-- **Notes:** A new name. The row gives this common HP and Attack; it takes Attack, and the other common carries the signature. Today's Bronze buckler (Defense +1) goes.
-
 ### Linden shield
 - **Is:** round shield · common
 - **Card:** Nothing beyond its stats.
@@ -109,7 +101,16 @@ How to read it:
 - **Numbers:** none.
 - **Code:** none.
 - **Serves:** the Toll and Landslide: HP is their first stat on this kind.
-- **Notes:** Today's common, name and step kept.
+- **Notes:** Today's common, name and step kept. It's the row's first common, so it takes the signature.
+
+### Bronze buckler
+- **Is:** round shield · common
+- **Card:** Nothing beyond its stats.
+- **Stats:** Defense +1 (1 of 1)
+- **Numbers:** none.
+- **Code:** none.
+- **Serves:** the Toll and Landslide: Defense, beside the other common's HP.
+- **Notes:** Today's common, name and step kept. The row gives this one HP and Defense; HP is taken, so it carries Defense. Round 1's ruling on commons turned the pair round: the Attack common I had is gone, and the kind has no common for the Hunt or the Storm.
 
 ### Comrade's targe
 - **Is:** round shield · uncommon
@@ -136,34 +137,34 @@ How to read it:
 - **Numbers:** `SPECIAL.thorns.high`, added while the Guard lasts and gone when it ends.
 - **Code:** as today's Urchin shell, on Guard in place of a Shield.
 - **Serves:** Toll 1 ●● ⚙ goad (half)
-- **Notes:** High, where Spinebark pole gives medium for a whole fight: this one lasts only as long as a Guard and sits on its holder alone. Whether an effect may give a special stat at high below legendary is under *Challenges*.
+- **Notes:** High, where Spinebark pole gives medium for a whole fight: this one lasts only as long as a Guard and sits on its holder alone. Round 1 ruled that an effect may give the high word below legendary. It's a state held while its holder is Guarded, not a status laid at a moment, so nothing that shares what a unit gives itself shares it.
 
 ### Second skin
 - **Is:** round shield · rare
 - **Card:** When its holder's Shield breaks, half of the most it held is rebuilt at once, as a new Shield. This can happen every so often. The rebuilt Shield can break and be rebuilt in its turn.
 - **Stats:** HP +2 · Attack +1 (3 of 3)
-- **Numbers:** half of the most the Shield held since it was last empty. Every so often is `COOLDOWN.short`, counted from the last rebuild.
+- **Numbers:** half of the most that Shield held: the pool's highest point since its holder last had no Shield. Every so often is `COOLDOWN.short`, counted from the last rebuild.
 - **Code:** as today's Rubble plate's rebuild, at half, behind a wait.
 - **Serves:** Landslide ●●, Cuts ●●, Toll ● ⚙ detonation (key), riposte (half)
 - **Notes:** HP raises the Shield's cap, and Attack is for the shieldmaiden, whose hits build the Shield. The rebuilt Shield is a Shield like any other: it breaks as one, for whatever reads a break.
 
 ### Hoplon
 - **Is:** round shield · rare
-- **Card:** While its holder is Guarded or holds a Shield or an Aegis, each foe that hits it is sent back whatever that cover stopped: what the Guard turned aside, what the Shield soaked and what the Aegis blocked.
-- **Stats:** HP +1 · Defense +1 · Aggro +1 (3 of 3)
-- **Numbers:** all of what the three covers stopped: what the blow would have dealt against its holder's Defense without them, less what reached its HP. Its holder's own Defense isn't cover. It's sent back, so it isn't a hit.
+- **Card:** While its holder holds a Shield or an Aegis, each foe that hits it is sent back whatever the Shield soaked and the Aegis blocked of the blow.
+- **Stats:** HP +2 · Aggro +1 (3 of 3)
+- **Numbers:** all of what the Shield soaked and the Aegis blocked of that blow: both are counted after its holder's Defense and Guard, and both are numbers the game prints. It's sent back, so it isn't a hit.
 - **Code:** 4.
 - **Serves:** Toll 2 ●●●, Landslide 2 ●●● ⚙ mirror (key)
-- **Notes:** An Aegis sends back a boss's whole blow and a Shield sends back all it soaks, so both are seen. A Guard's part is small and is never printed anywhere else (*Challenges*).
+- **Notes:** Written to the line as round 1 changed it: Guard is out of the card. An Aegis sends back a boss's whole blow as it reached the wall, and a Shield sends back all it soaks. Its Defense step went with the Guard: Defense now shrinks what the cover has left to stop, so the steps are HP, which is the Shield's cap, and the draw.
 
-### Phalanx shield
+### Tower shield
 - **Is:** round shield · rare
 - **Card:** While its holder stands, allies with less Defense than it take a fifth less damage. Its holder deals a fifth less.
 - **Stats:** HP +2 · Defense +1 (3 of 3)
 - **Numbers:** a fifth (20%) less damage of every kind for those allies; a fifth (20%) less on its holder's hits. Who has less Defense is read when the fight starts and when an ally is revived, as today.
-- **Code:** as today's Phalanx shield.
+- **Code:** as today's Phalanx shield, which this is under its new name.
 - **Serves:** Barrage ●●, Bonfire ●●, Toll ●
-- **Notes:** Kept from today's and moved down from legendary: card and sizes stay, and the step that goes is its Attack.
+- **Notes:** Kept from today's Phalanx shield and moved down from legendary: card and sizes stay, and the step that goes is its Attack. Renamed in round 1, since Phalanx is the Hoplite's passive.
 
 ### Shield of the chosen
 - **Is:** round shield · legendary
@@ -205,12 +206,12 @@ How to read it:
 
 ### Reveille
 - **Is:** horn · uncommon
-- **Card:** When each fight starts, the ally with the highest Attack has its ability with the longest cooldown left ready at once.
+- **Card:** When each fight starts, the ally with the highest Attack has its ability with the longest cooldown ready at once.
 - **Stats:** Aggro +1 · MP regen +1 (2 of 2)
-- **Numbers:** a whole cooldown, whatever was left of it. The ability still needs its MP and its condition. If all that ally's abilities are ready, nothing happens.
-- **Code:** as today's Reprise does it, on the fight's start.
+- **Numbers:** "its ability with the longest cooldown" is its slowest ability, by its whole cooldown, cooling or not (`fill/shared.md`). Whatever wait that ability had left is gone; it still needs its MP and its condition. If it's already ready, nothing happens, whatever else is cooling.
+- **Code:** a cooldown made ready is today's; picking the ability by its whole cooldown isn't (*Code support beyond the spine's list*).
 - **Serves:** Landslide 1 ●●, Barrage 1 ●●, Hunt ●, first move ⚙ opening again (half)
-- **Notes:** Only the name is today's. Cooldowns carry, so most fights start with the party's biggest ability far from ready: this is a whole action in the first ticks. The ally can be its own holder. It reads close to the Bard's Reprise (*Challenges*).
+- **Notes:** Only the name is today's. Cooldowns carry, so most fights start with the party's biggest ability far from ready: this is a whole action in the first ticks. The ally can be its own holder. The Bard's Reprise readies the ability with the most wait left, so the two now differ in what they ready as well as when; the pair is on the director's list.
 
 ### Bull's horn
 - **Is:** horn · uncommon
@@ -225,10 +226,10 @@ How to read it:
 - **Is:** horn · uncommon
 - **Card:** Whenever an ally drops below half its max HP, its holder Taunts.
 - **Stats:** Aggro +1 · HP +1 (2 of 2)
-- **Numbers:** none of its own: Taunt keeps `STATUS.taunt`, and a second one refreshes it.
-- **Code:** none new: the Bloodlust pattern, kept on each ally (a marker set at its first loss of HP under half, lifted when it's healed to half or more).
+- **Numbers:** none of its own: Taunt keeps `STATUS.taunt`, and a second one refreshes it. The drop is a crossing, whatever caused it. An ally that starts a fight under half has dropped, so the horn sounds as the fight starts; it sounds again each time an ally is back at half or over and crosses again.
+- **Code:** a crossing of half HP that a price makes too, and one counted as the fight starts (*Code support beyond the spine's list*).
 - **Serves:** Toll 1 ●●, Pact ● ⚙ goad (half), mirror (half), two in the dark (half) ◆ draw
-- **Notes:** By the vocabulary "an ally" includes its holder, so a holder that drops below half Taunts too. A Taunt is a whole status with an icon, and the foes visibly turn.
+- **Notes:** "An ally" includes its holder, as ruled: a holder that drops below half Taunts too. A Taunt is a whole status with an icon, and the foes visibly turn. The Taunt is a status its holder gives itself.
 
 ### War horn
 - **Is:** horn · rare
@@ -237,7 +238,7 @@ How to read it:
 - **Numbers:** many as a fixed count (`FLAT_STACKS.many`), as today. Might keeps `STATUS.might`: the first blow lands about two fifths harder, and a slow hitter spends the stacks over a whole fight.
 - **Code:** as today's War horn.
 - **Serves:** Landslide 2 ●●● ⚙ judge's drum (half), opening again (half) ◆ heavy-blow
-- **Notes:** Kept from today's: card and size. The count stays fixed, since the gift is usually to another unit and the horn's two wearers hold the set's lowest and highest Attack. The ally can be its own holder.
+- **Notes:** Kept from today's: card and size. The count stays fixed, as ruled: the gift is usually to another unit, and the horn's two wearers hold the set's lowest and highest Attack. The ally can be its own holder.
 
 ### Hunting horn
 - **Is:** horn · rare
@@ -281,7 +282,7 @@ How to read it:
 - **Is:** totem · uncommon
 - **Card:** When each fight starts, the ally with the highest Aggro gains Thorns, medium, for the fight.
 - **Stats:** Thorns medium · Defense +1 (2 of 2)
-- **Numbers:** `SPECIAL.thorns.medium`, added to whatever Thorns that ally has, and kept through a fall.
+- **Numbers:** `SPECIAL.thorns.medium`, added to whatever Thorns that ally has, and kept through a fall. The highest Aggro is read as it stands, gear and seat counted and a Taunt not; a tie goes to the earlier seat.
 - **Code:** as today's Spinebark pole.
 - **Serves:** Toll 1 ●●, Landslide ● ⚙ goad (half), opening again (half)
 - **Notes:** Kept from today's: card, size and steps. On an anchor with no Thorns of its own, every blow it takes now prints a number on the attacker. Happening again, it changes nothing unless the highest Aggro has moved.
@@ -299,10 +300,10 @@ How to read it:
 - **Is:** totem · uncommon
 - **Card:** Whenever an ally drops below half its max HP, that ally is Guarded.
 - **Stats:** Thorns medium · HP +1 (2 of 2)
-- **Numbers:** none of its own: Guard keeps `STATUS.guard`, and a second one refreshes it.
-- **Code:** as today's Bear fetish without its once-a-fight marker; the crossing as Watch horn keeps it.
+- **Numbers:** none of its own: Guard keeps `STATUS.guard`, and a second one refreshes it. The drop is a crossing, whatever caused it. An ally that starts a fight under half has dropped, and is Guarded as the fight starts.
+- **Code:** as today's Bear fetish without its once-a-fight marker, on the crossing Watch horn uses (*Code support beyond the spine's list*).
 - **Serves:** Toll ●, Pact ●, net ⚙ brink (half), mirror (half) ◆ lowest-ally
-- **Notes:** Changed from today's as the line says: every time, where today's was the first ally each fight. "An ally" includes its holder. A unit that rides the line is Guarded again each time it's healed over half and hurt under it.
+- **Notes:** Changed from today's as the line says: every time, where today's was the first ally each fight. "An ally" includes its holder. A unit that rides the line is Guarded again each time it's back at half or over and crosses again, whether a blow, a status or a price took it across.
 
 ### Briar totem
 - **Is:** totem · rare
