@@ -1,41 +1,31 @@
-# The loot pass: handoff, partway through the fill
+# The loot pass: handoff, at gate 2
 
-Nov 11, 2026. The fill (step 2 of `brief.md`) was stopped here because it kept running through the usage budget. Nothing is running, and nothing is scheduled. A fresh session starts from this page.
+Nov 11, 2026. The fill is written, ruled and read fresh, and the pass is stopped for the director. Nothing is running, and nothing is scheduled. A fresh session starts from this page.
 
-## What's done
+## Where it stands
 
-- **All eight shares are written,** in `fill/`: `weapons-1.md`, `weapons-2.md`, `armor.md`, `offhands-1.md`, `offhands-2.md`, `amulets.md`, `formations.md`, `versions-mythics.md`. That's 417 entries: every item of the spine and the 72 commons, each with its card, stat steps, numbers, code support and tags, and each file ending with its designer's challenges, links, loops and doubts.
-- **`npx tsx steps/loot/fill-check.ts` is clean:** every item once, at its kind and rarity, every piece on exactly its budget, no name twice. Its one listing is Frostbite bow and Sleet blade, a bow and a rune sword that read the same and that no unit can hold together, which the director's ruling allows.
-- **Round 1 is ruled and applied.** The lead read every card together and ruled on every challenge: `fill/round-1.md`, share by share, and `fill/shared.md` for what reaches every share (the six counters, how steps count, about forty rulings on words). Every agent applied its rulings to its own file.
-- **Round 2 is applied,** by hand: `fill/round-2.md`, the rulings on what the agents raised while applying round 1. Its *For every share* list is at the end of `fill/shared.md`, and each file's *Challenges* marks what it ruled. Two sizes were set in the applying, and both are flagged: Frost fist's few is its base ability's (the whole word is a shatter with every cast), and Bellows wraps at a twentieth is hardly seen on a plain fist.
-- **The spine is up to date with both rounds:** about thirty-five lines, a few phrases under *New words*, code support 23, and fifteen names changed. Its tables and `index.md` are regenerated.
+- **`report.md` is what the director reads:** the decisions needed, what stands unless they say otherwise, what the two fresh reads found, and a sample of twenty-five items in full sentences.
+- **The fill** (`fill/`, eight shares, 417 entries) has every item's card, stat steps, numbers, code support and tags. `npx tsx steps/loot/fill-check.ts` is clean: every item once, at its kind and rarity, every piece on exactly its budget, no name twice. Its one listing is Frostbite bow and Sleet blade, which no unit can hold together.
+- **Three rounds of rulings are applied:** `fill/round-1.md`, `fill/round-2.md` and `fill/round-3.md`, share by share, and `fill/shared.md` for what reaches every share. Each share's *Challenges* marks what rounds 1 and 2 ruled. Rounds 2 and 3 were applied by hand.
+- **Two fresh reads are in:** `fill/fresh-read-items.md` (every card, 50 findings, ruled in round 3) and `fill/fresh-read-engines.md` (each engine's parts together: 25 of 28 meet; its last section is the sample).
+- **The spine carries every line a ruling changed,** and its tables and `index.md` are regenerated (`npx tsx steps/loot/web-check.ts --write --index`).
 
-## What's left
+## Once the director rules
 
-1. **The fresh read.** Not done: both readers stopped on the limit before writing anything. Their two briefs are in `fill/fresh-read-brief.md`: one reads every item, one reads each engine's parts together and picks the director's sample. Rule on what they find, change the spine where a ruling changes a line (`npx tsx steps/loot/web-check.ts --write --index`), and apply it.
-2. **Gate 2.** The report (`report.md`): the decisions needed first, then what was written and what changed from the spine, then the sample in full sentences. Update `CLAUDE.md`'s Status, commit, push and stop for the director.
+1. **Record their rulings** in `intent.md`, under a heading for gate 2, short, quoting them only where the wording matters.
+2. **Apply each ruling by hand** to the fill and the spine, then run both checks. None needs the fill's agents back. What each of the report's decisions touches:
+   - *The price of a spell paid in life:* the cards of Flagellant's vestments, The covenant, The chalice and Heart of the saint, the blood mage's link in the spine, and the sums in the armor and formations shares' *Links*.
+   - *Which ability the shatter bell rings:* Floe charm, Frozen tome and Icefall's Breaker, the phrase under *New words* in the spine, the bell's link, the Floe charm loop in the spine's *Least sure*, and one line of `docs/gear-design/builds.md`.
+   - *Hidden's rule:* the vocabulary when it's built; the notes of Decoy, Swan's grace and Feathered cloak.
+   - *The crescendo's price:* Crescendo charm's card and the link.
+   - *The riposte:* `builds.md`'s "enough to see it". The spine's link already says what the cards do.
+   - *Frost fist:* its numbers in the versions share.
+   - *Lightning-glass and Thunderhead maul:* the maul's card and its line.
+3. **Then the build's brief.** The build and test get a brief of their own (`brief.md` says so): the code support by number from the spine, the build test's parties rewritten for the nine builds, Marked and Malison each measured against today's game with both versions' numbers, and whether offers are aimed by the tags, if the director rules that they are.
+4. **When the step closes,** fold what lasts into `docs/gear-design/` and `docs/rules.md`, and delete this folder.
 
-## For the director at gate 2
+## What it cost, for whoever runs the next agents
 
-Collected so far; each is ruled in `round-1.md` or `round-2.md` and stands unless the director says otherwise.
-
-- **A new rule of Hidden's own: someone stays in the light.** Gear and seats can now hide a whole party, and the game had no answer for foes with nobody to pick. As written, Hidden doesn't land on the last ally the foes could pick, which also means Swan's grace doesn't hide the last one standing.
-- **Crit chance and Quick draw.** At a certain crit the Ranger's Quick draw never stops. Two cards that raise crit by a lot now say "to four in five at most" (Bloodscent knife, The king's head). Whether plain Crit chance needs a ceiling of its own is open.
-- **A chain of shatters is damped in fractions of a stack.** A floor of one whole stack didn't end the chain in a pack of seven beside Glacier's heart.
-- **Lines that changed what they do:** Reaver's axe (it read as half of Night's edge; now many Might on a kill); Writ of judgement (answers Condemn alone; a free marker ran it through a pack at no cost); Hoplon (no longer counts Guard, whose share the game never prints); Tireless bell (widened to recoveries; no wearer winds up long enough otherwise); Hoarfrost line's Breaker (gains an aim at a Stunned foe); Rubato (never readies itself); Accompanist's score (answers a paid cast, or two of them cast free without end); Bellows wraps (a twentieth, not a tenth, or the fire feeds itself); Rimed blade (reads max HP); Squall lance, Volley bow, Bellringer and Bell of the hour (counts that come round in a fight).
-- **A kept mythic that grew:** Huntmaster's quiver, from cooldowns halved to abilities ready again.
-- **Sums to see:** Flagellant's vestments and The covenant charge "the same share" of HP, a quarter to two fifths of a caster's bar for a wide spell. Aegis mail is set off by a price, so a payer that drinks back over a third gets an Aegis every cast or two.
-- **Where the documents and the game differ:** *Core set: rules and vocabulary* says a stat matching a weapon's scaling stat counts twice toward its budget, and the content's check counts it once (the fill follows the check). `classes.md` gives the Pyromancer's ritualist a staff and a lantern, which can't be held together.
-- **Pieces that do little for one wearer, left as they are:** Gravemark with no marker in the party; Marginalia and Curse-book on a Bard; Saint's mace and Anchorite's mace on a Bramble knight; Shuttered lantern on a Cleric.
-- **Alike, left as they are:** Quickstep leathers and Windrunner's garb; Banked robe and Archmage's mantle; Urchin plate and Spiked targe; Ringing bell and Squall lance on a Monk; Reveille and Reprise; the three plain riders on the fist weapons.
-- **Fifteen names changed,** listed at the end of `fill/shared.md`.
-
-## Why it cost so much, and how to finish for less
-
-- **Each fill agent used about half a million tokens,** and there were eight, each resumed once for its rulings: about four and a half million in all. Most of it is reading: every agent read the same rules, builds and spine before writing.
-- **The lead's own session grew very large** (it read every document, then every challenge and every card), and each of its turns sent all of that again.
-- **To finish:**
-  - Start a fresh session. Read this page, `fill/round-2.md` and `fill/shared.md`; search the spine and the fill files for a name rather than reading them whole.
-  - Run the two fresh readers one at a time, not together, and check the budget between them. If that's still too much, split the item read by share, or ask the director whether a smaller model may do it.
-  - Don't bring the eight fill agents back for small rulings. They can't be resumed from a new session anyway.
-  - Write the report from this page, the rulings files and the engine reader's sample.
+- **Each fresh reader used about half a million tokens** and took 20 to 25 minutes. They ran one at a time, each writing its file as it went.
+- **The engine reader looked parts up by name** in place of reading the shares whole, and that was enough. A reader that has to see every card can't avoid reading all eight files.
+- **Rulings were applied by hand** from the lead's session, a field at a time, searching for an entry by name. It's cheaper than bringing an agent back for a word.
