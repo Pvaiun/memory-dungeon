@@ -85,12 +85,12 @@ How the stack words are read here, once:
 
 ### Accompanist's score
 - **Is:** tome · rare
-- **Card:** Each time the other ally with the highest Attack pays for an ability, its holder's next ability costs no MP. It holds one free cast at a time.
+- **Card:** Each time the other ally with the highest Attack pays for an ability, its holder's next ability is free. It holds one free cast at a time.
 - **Stats:** Cooldown medium · Attack +1 · MP +1 (3 of 3)
-- **Numbers:** a whole cast's cost. "Pays for" is a cost paid, in MP or in HP; a free cast isn't paid for.
+- **Numbers:** a whole cast's cost, in MP or in HP. "Pays for" is a cost paid, in MP or in HP; a free cast isn't paid for.
 - **Code:** as today's Annotated grimoire's free-cast marker, set when a named ally pays for a cast.
 - **Serves:** Barrage 2 ●● ⚙ crescendo (half) ◆ free-cast
-- **Notes:** The free cast still gains a Crescendo. Two of these facing each other no longer run free: a free cast sets nothing off, so one of the two always pays. What "costs no MP" waives under an HP price is open (*Challenges*).
+- **Notes:** The free cast still gains a Crescendo. Two of these facing each other no longer run free: a free cast sets nothing off, so one of the two always pays. The card says "is free", as round 2 rules: a free cast costs nothing, so its holder under The covenant or Flagellant's vestments pays no HP for it either.
 
 ### Last page
 - **Is:** tome · legendary
@@ -197,12 +197,12 @@ How the stack words are read here, once:
 
 ### The deep well
 - **Is:** orb · legendary
-- **Card:** While its holder holds Clarity, its abilities cost no MP.
+- **Card:** While its holder holds Clarity, its abilities are free.
 - **Stats:** MP +2 · Attack +1 · MP regen +1 (4 of 4)
-- **Numbers:** a whole cost, for Clarity's own length (`STATUS.clarity`).
+- **Numbers:** a whole cost, in MP or in HP, for Clarity's own length (`STATUS.clarity`).
 - **Code:** as today's The deep well.
 - **Serves:** Barrage 3 ●●● ⚙ crescendo (half) ◆ free-cast
-- **Notes:** Kept: card, size and stats are today's. A cast under Clarity is free, so it isn't paid for. What "cost no MP" waives under an HP price is open (*Challenges*).
+- **Notes:** Kept: size and stats are today's. The card says "are free" for today's "cost no MP", as round 2 rules, so under an HP price its casts cost no HP either. A cast under Clarity is free, so it isn't paid for.
 
 ## Idol
 
@@ -604,13 +604,13 @@ How the stack words are read here, once:
 
 ## Challenges
 
-Round 1 ruled on the rest. These are still open.
+Round 1 ruled on the rest, and round 2 on the first, fourth and fifth of these, which are applied above. The second and third are for the director's list.
 
-1. **"Costs no MP" under an HP price.** Annotated grimoire makes a cast "free", which waives whatever it costs. Accompanist's score and The deep well say "costs no MP". Now that "pays for" is in MP or in HP, a soloist under Flagellant's vestments sets the score off, but by the letter the score's own holder under The covenant gets nothing from it, and The deep well does nothing beside the vestments. I left both cards on their lines' words. I'd read all three as free.
+1. *Ruled in round 2: all three are free, in MP or in HP, and the two cards say so.* **"Costs no MP" under an HP price.** Annotated grimoire makes a cast "free", which waives whatever it costs. Accompanist's score and The deep well say "costs no MP". Now that "pays for" is in MP or in HP, a soloist under Flagellant's vestments sets the score off, but by the letter the score's own holder under The covenant gets nothing from it, and The deep well does nothing beside the vestments. I left both cards on their lines' words. I'd read all three as free.
 2. **For the director's list: Ringing bell and Squall lance on a Monk.** Every fourth basic attack, or every fifth hit: a light hit on every foe, or every other foe, carrying what the swing carries. One unit can hold both.
 3. **For the director's list: Snowbound folio beside Grimoire of plagues, in one kind.** When the grimoire rolls Chill it's the folio and one more. They're the same size, so the choice is certainty against breadth.
-4. **Two second hits, written to the rule for a hit that lands a second time.** Tempest cloak's "strikes twice" and Dragon's tooth's "strike again" were extra strikes in my first draft. An extra strike is now Double strike's alone, so both are a second landing: no new roll, no riders, and nothing that reads extra strikes reads them. The tooth's is a third of the damage the crit dealt. Say so if either was meant to be an extra hit that carries the swing.
-5. **The tome's commons under the first-stat rule.** Both rows name Cooldown first, so one has to give way. I kept Hymnal on Cooldown and Scholar's codex on Attack, which keeps both of today's commons. Going down the rows in order would give Cooldown and MP regen, with a new name for the second.
+4. *Ruled in round 2: as written. Neither carries the swing.* **Two second hits, written to the rule for a hit that lands a second time.** Tempest cloak's "strikes twice" and Dragon's tooth's "strike again" were extra strikes in my first draft. An extra strike is now Double strike's alone, so both are a second landing: no new roll, no riders, and nothing that reads extra strikes reads them. The tooth's is a third of the damage the crit dealt. Say so if either was meant to be an extra hit that carries the swing.
+5. *Ruled in round 2: as written.* **The tome's commons under the first-stat rule.** Both rows name Cooldown first, so one has to give way. I kept Hymnal on Cooldown and Scholar's codex on Attack, which keeps both of today's commons. Going down the rows in order would give Cooldown and MP regen, with a new name for the second.
 
 ## Links
 

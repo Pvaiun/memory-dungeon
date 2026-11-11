@@ -399,12 +399,12 @@ How to read it:
 
 ### Phylactery
 - **Is:** relic · rare
-- **Card:** The part of its holder's heals that would go past full becomes a Shield on the healed ally.
+- **Card:** The part of its holder's heals, and of its Regen's pulses, that would go past full becomes a Shield on the healed ally.
 - **Stats:** MP regen +1 · HP +1 · Attack +1 (3 of 3)
-- **Numbers:** all of the part past full, from every heal its holder gives: HP its abilities and its pieces restore at once, and its own Lifesteal. A Regen's pulses aren't a heal, by round 1's ruling, so they make no Shield. The Shield keeps its own cap.
-- **Code:** as today's Phylactery, with the Regen it laid left out; 14 for where healing past full goes when more than one thing claims it.
+- **Numbers:** all of the part past full, from every heal its holder gives: HP its abilities and its pieces restore at once, its own Lifesteal, and each pulse of a Regen it laid. The Shield keeps its own cap.
+- **Code:** as today's Phylactery; 14 for where healing past full goes when more than one thing claims it.
 - **Serves:** Pact 2 ●●●, Landslide ●●, Toll ●● ⚙ red stone (key), detonation (half) ◆ shield-by-doing
-- **Notes:** Kept from today's and moved down from legendary: the card stays, with a step fewer of MP regen. Today's piece also read the Regen its holder laid, and that was its plainest sight; the ruling takes it away (*Challenges*). What's left to see: a Paladin's Absolve on itself at full, a heal on a beat from a mace, and any heal on a unit capped at half.
+- **Notes:** Kept from today's and moved down from legendary, with a step fewer of MP regen. The card names Regen, as round 2 rules: a Regen isn't a heal unless a card names it, and with nothing to mend a healer casts only Regen, so without the name the line's own sight never happened. It's what today's piece does. Seen: a Cleric's Renew on a full ally builds a grey bar pulse by pulse; so do a Paladin's Absolve on itself at full, a heal on a beat from a mace, and any heal on a unit capped at half.
 
 ### Accuser's relic
 - **Is:** relic · rare
@@ -509,12 +509,12 @@ How to read it:
 
 ## Challenges
 
-Round 1 ruled all fourteen of the first round's. These four are what its rulings open.
+Round 1 ruled all fourteen of the first round's, and round 2 these four, which its rulings opened. All are applied above, so none is open; each stays here with its ruling.
 
-1. **Phylactery has lost its plainest sight.** A Regen's pulses aren't a heal now, so the Regen its holder lays makes no Shield. The line's sight is a healer with nothing to mend building grey bars, and with nothing to mend a healer casts only Regen: Cure waits for a hurt ally and Absolve for one below full. On a Cleric the piece now turns only a heal's overshoot into stone. The ruling lets a card name Regen, and I'd have this one do it ("the part of its holder's heals, and of the Regen it lays, that would go past full"), which is what today's piece does. Written without it, by the ruling.
-2. **A watcher that fires as the fight starts: is that a start-of-fight effect?** By the ruling, Watch horn and Bear fetish fire as a fight starts when an ally starts it under half. The spine defines a start-of-fight effect as whatever a piece does as a fight starts, however its card words it. I read these two as a crossing counted at the start, not an opening, so nothing makes them happen again. Read the other way, the horn Taunts again at every fall while any ally is under half.
-3. **A unit capped at half sets the watchers off once a fight.** Halved heart's wearer counts as below half at half, so it has dropped as each fight starts and never gets back to the line. Watch horn then Taunts as every fight starts, and Bear fetish Guards that unit once. On the brink's plainest unit, "whenever" comes to "once a fight". Written to the ruling.
-4. **Charnel icon and Bloodstone reliquary heal the lowest share, capped or not.** Round 1 made Shared cup pass over an ally that can't be healed. These two keep the line's phrase, so beside a unit capped at half their heal lands on it and counts as healing past full: a Shield where a red stone piece is worn, and nothing where none is. The brink's link reads that as intended. It's one phrase on each card if it isn't.
+1. *Ruled in round 2: the card names Regen.* **Phylactery has lost its plainest sight.** A Regen's pulses aren't a heal now, so the Regen its holder lays makes no Shield. The line's sight is a healer with nothing to mend building grey bars, and with nothing to mend a healer casts only Regen: Cure waits for a hurt ally and Absolve for one below full. On a Cleric the piece now turns only a heal's overshoot into stone. The ruling lets a card name Regen, and I'd have this one do it ("the part of its holder's heals, and of the Regen it lays, that would go past full"), which is what today's piece does. Written without it, by the ruling.
+2. *Ruled in round 2: no. A crossing isn't a start-of-fight effect.* **A watcher that fires as the fight starts: is that a start-of-fight effect?** By the ruling, Watch horn and Bear fetish fire as a fight starts when an ally starts it under half. The spine defines a start-of-fight effect as whatever a piece does as a fight starts, however its card words it. I read these two as a crossing counted at the start, not an opening, so nothing makes them happen again. Read the other way, the horn Taunts again at every fall while any ally is under half.
+3. *Ruled in round 2: it stands. It's the brink doing what it's for.* **A unit capped at half sets the watchers off once a fight.** Halved heart's wearer counts as below half at half, so it has dropped as each fight starts and never gets back to the line. Watch horn then Taunts as every fight starts, and Bear fetish Guards that unit once. On the brink's plainest unit, "whenever" comes to "once a fight". Written to the ruling.
+4. *Ruled in round 2: it stands.* **Charnel icon and Bloodstone reliquary heal the lowest share, capped or not.** Round 1 made Shared cup pass over an ally that can't be healed. These two keep the line's phrase, so beside a unit capped at half their heal lands on it and counts as healing past full: a Shield where a red stone piece is worn, and nothing where none is. The brink's link reads that as intended. It's one phrase on each card if it isn't.
 
 ## Links
 
@@ -534,9 +534,9 @@ For each engine: the size on my side, and what the other side needs.
 - **The blood mage.** *Mine:* Bloodstone reliquary turns the whole price into a heal on the lowest ally who didn't pay. *The other side:* a price sized as a share of max HP, so the heal is a number worth seeing.
 - **Mana as armour.** *Mine:* Font relic gives a fifth of the healed ally's pool with each heal. On a Pyromancer that's about one ordinary swing's worth of mana. *The other side:* MP that soaks damage point for point.
 - **The shatter bell.** *Mine:* Monolith shield makes its holder's damaging abilities come half as often and land two and a half times as hard. *The other side:* the bell readies its wearer's slowest ability. On this holder that's the doubled one, since the doubled cooldown is the ability's whole cooldown.
-- **The brink.** *Mine:* Heart of the saint makes the healer the one who pays. Comrade's targe's Shield, Bear fetish's Guard and Charnel icon's heal all go to whoever is lowest; Bloodstone reliquary keeps everyone but the payer full. *The other side:* the kits' gifts to the lowest ally. On a unit capped at half, the fetish's Guard comes once a fight and the icon's heal counts as healing past full (*Challenges*).
+- **The brink.** *Mine:* Heart of the saint makes the healer the one who pays. Comrade's targe's Shield, Bear fetish's Guard and Charnel icon's heal all go to whoever is lowest; Bloodstone reliquary keeps everyone but the payer full. *The other side:* the kits' gifts to the lowest ally. On a unit capped at half, the fetish's Guard comes once a fight and the icon's heal counts as healing past full, which round 2 lets stand.
 - **Two in the dark.** *Mine:* Watch horn makes its holder the one in the light whenever an ally is hurt. *The other side:* two hidings.
-- **The red stone.** *Mine:* Phylactery turns all of a heal past full into a Shield on the healed ally, a Regen's pulses left out. *The other side:* the order for healing past full (the healed unit's own piece first), and a unit capped at half counting as full, which is now where a Cleric's Phylactery has most to turn into stone.
+- **The red stone.** *Mine:* Phylactery turns all of a heal past full into a Shield on the healed ally, the pulses of its holder's Regen included. *The other side:* the order for healing past full (the healed unit's own piece first), and a unit capped at half counting as full, which is now where a Cleric's Phylactery has most to turn into stone.
 
 ## Loops
 
@@ -567,7 +567,7 @@ For each engine: the size on my side, and what the other side needs.
 ## Least sure
 
 - **Hoplon.** With Guard out it needs a Shield or an Aegis on its own holder. Of its three wearers only the Valkyrie makes her own; the Hoplite's Aegis goes to the lowest ally, and the Bramble knight has neither.
-- **Phylactery.** With Regen out, a Cleric holding it has little to turn into a Shield outside a party built to cap a unit at half (*Challenges*).
+- **Phylactery names Regen,** the one card that reads its holder's heals and counts the pulses. A Cleric's Renew on a full ally is now a Shield every four ticks for Regen's length.
 - **Monolith shield.** With cooldowns carrying, a doubled medium cooldown may mean the blow doesn't come at all in many fights unless something readies it. The size is a guess at what makes the wait worth it.
 - **Everflame lantern.** The beat decides whether it's a legendary or a rare, and beside Bellows wraps whether the fire runs away. I picked the middle, and it's on the card.
 - **Heart of the saint.** On a Paladin it may never hold its wearer low, since Absolve heals the Paladin for more than it costs, so the brink it's the keystone of only forms on a Cleric.

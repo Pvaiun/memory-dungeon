@@ -1,13 +1,13 @@
 # The fresh read: two briefs
 
-For two readers who haven't seen the design. Each writes one file and changes nothing else. Run them one at a time.
+For two readers who haven't seen the design. Each writes one file and changes nothing else. Run them one at a time. Each writes its file as it goes, a part at a time, so a reader that's stopped early leaves what it has found.
 
 ## Both read first
 
 1. `CLAUDE.md`, `docs/primer.md`, `docs/rules.md`.
 2. `docs/gear-design/philosophy.md`: *What makes a piece good*, *Rarity*, *How it reads*. `docs/gear-design/loot.md`: the rarity table, *Sizes, for new pieces*, *Rules for writing pieces*.
 3. `docs/core-set/rules-and-vocabulary.md`: *Targeting*, *Damage*, the statuses and special stats, *Weapons*, *Gear*. The table of classes at the top of `docs/core-set/classes.md`.
-4. In `steps/loot/`: `intent.md`; `spine.md`: *How to read it* and all of *The rules*; `fill/shared.md`; `fill/round-2.md` if it isn't applied yet (don't report what it already rules).
+4. In `steps/loot/`: `intent.md`; `spine.md`: *How to read it* and all of *The rules*; `fill/shared.md`, which ends with both rounds' rulings. Rounds 1 and 2 are applied to every entry; each file's *Challenges* says what was ruled, so don't report what's ruled there.
 
 Neither judges strength: nothing is balanced, on purpose, and synergies may be overpowered. Neither proposes caps or redesigns an item. Neither commits, runs anything that writes, or hands its work to another agent.
 

@@ -4,7 +4,7 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 
 **What it holds:** 60 items.
 - **The two kit changes:** Marked, and the Hexer's Malison.
-- **42 versions:** 9 changed, written new; 33 kept, each checked against today's card. Two of the kept are resized (Hail, Drinking palm).
+- **42 versions:** 9 changed, written new; 33 kept, each checked against today's card. Three of the kept are resized (Hail, Drinking palm, Frost fist).
 - **16 mythics:** 5 changed, written new; 11 kept. Two of the kept are resized (Horn of the keep, Huntmaster's quiver), and one gains a sentence (Eye of the tempest).
 
 **Round 1's rulings are applied:** those for every share (`fill/shared.md`) and those for this share (`fill/round-1.md`).
@@ -39,14 +39,14 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - **Is:** Hexer, Malison · kit change
 - **Today:** Deepens every affliction each foe holds: one more stack of each of Burn, Chill, Shock and Sunder it already has, and a few Bleed.
 - **Card:** Curses every foe: light damage that scales from Attack, a fifth more for each different affliction the foe holds (Burn, Chill, Shock, Bleed, Sunder), then a few Bleed; stacks scale from Attack.
-- **Numbers:** The hit is `HIT.light` of Attack, on every foe. Each different affliction the foe holds as the hit lands adds a fifth of that, counted once whatever its stacks: five at most, which doubles the hit. A few Bleed is the ability's count from Attack, and lands after the hit. Short cooldown, normal wind-up and 450 MP, as today. The power step is two fifths more damage and two fifths more Bleed.
+- **Numbers:** The hit is `HIT.light` of Attack, on every foe. Each different affliction the foe holds as the hit lands adds a fifth of that, counted once whatever its stacks: five at most, which doubles the hit. A few Bleed is the ability's count from Attack, and lands after the hit. Short cooldown, normal wind-up and 450 MP, as today. The power step is two fifths more damage and two fifths more of every status the cast adds: on Malison, the Bleed.
 - **Code:** 2
 - **Serves:** no road or engine on its line. It's what every colour reads, and a hit on every foe for the red rain.
 - **Notes:**
   - **The size.** A touch is the scale's word for an ability whose point is its status, and the change makes the hit the point, so it's a light hit. On a bare Hexer that prints about 950 on a foe that holds nothing and about 2,100 on a foe that holds all five, after a minion's Defense: the curse's own number, on a class whose damage nobody saw in play. Light against touch is under Least sure.
   - **What it counts.** The afflictions on the foe as the hit lands. Its own Bleed lands after, so the first curse of a fight counts none of it and the second finds it there, if the party's hits haven't closed it.
   - **It's a wide hit.** Bleed pays on every hit its holder takes, so each curse cashes every wound on the field and then opens its own.
-  - **The power step** is the plain one on the new base, as ruled: two fifths more damage and Bleed. Today's read "40% more of every status it adds", which would have grown only the Bleed.
+  - **The power step** is the plain one on the new base, as round 2 rules: two fifths more damage and two fifths more of every status the cast adds. On Malison that's the Bleed; on Plague it's the Burn and the Shock too. Today's read "40% more of every status it adds", which would have left the hit alone.
   - The Hexer's trunk line and *How the kits fit together* in `docs/core-set/classes.md` change with it, when it's built.
 
 ## Knight
@@ -161,7 +161,7 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - **Notes:** *Resized:* halved to ready.
   - **Why.** The Ranger's arrows are on the quick and short words. Halving what's left of them saved three to five ticks an arrow: the cooldown a few ticks closer that play never saw, on a mythic. The Hunt asks for a kill reward that's a whole action. Ready again is the same reward at that size: a kill, and three arrows at the next lowest foe.
   - **What it costs.** A round of all three arrows is 725 MP, so a full pool pays for about three rounds, and their wind-ups and recoveries make a round about ten ticks.
-  - **It's the biggest resize in this share.** Round 1 lets it stand, as the Hunt's kill reward at a size that's seen, with mana as its brake, and puts it in the director's sample. The spine's line still reads "halved".
+  - **It's the biggest resize in this share.** Round 1 lets it stand, as the Hunt's kill reward at a size that's seen, with mana as its brake, and puts it in the director's sample. The spine's line reads "ready again" now.
   - **Reworded:** "the lowest current HP", the vocabulary's phrase in full.
   - **With Marked.** The quiver gives every arrow a target phrase of its own that always finds a foe, so its abilities no longer follow a Mark; its basic attacks still do. Most of the spine's markers Mark the lowest foe, so the two usually agree. Base Condemn, which Marks the highest Attack, doesn't.
   - **With Barbed volley.** The volley stays an arrow at every foe, as ruled. Every foe it hit counts for the second sentence, so each fall in a pack brings the volley back. See Loops.
@@ -296,18 +296,17 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 ### Stormspear
 - **Is:** Valkyrie · mythic (weapon) · changed
 - **Today:** A medium, one-handed spear with a spear's swing. Its basic attacks ignore Taunt and add a few Shock.
-- **Card:** A one-handed spear with a spear's swing. Every fourth hit the Valkyrie lands calls a blow from above on the foe with the most Shock: damage that scales from Attack, rising with each Shock stack on that foe. The Shock stays. The blow's own hit isn't counted.
+- **Card:** A one-handed spear with a spear's swing. Every fourth hit the Valkyrie lands calls a blow from above on the foe with the most Shock, past any Taunt: damage that scales from Attack, rising with each Shock stack on that foe. The Shock stays. The blow's own hit isn't counted.
 - **Numbers:**
   - **The swing:** a spear's (`KIND_SPEED.spear`, full, even), one hand, as today's. No stat steps.
   - **The count:** every hit she lands adds one: a swing, each hit of Gale spear, Skyfall, a strike with her weapon. At four the blow falls and the count starts again. It shows as an icon with a number.
-  - **The blow:** `HIT.normal` of Attack, and `KIT.skyfallPerShock` more for each Shock stack on its foe: Skyfall's own step, on a smaller hit.
+  - **The blow:** `HIT.normal` of Attack, and `KIT.skyfallPerShock` more for each Shock stack on its foe: Skyfall's own step, on a smaller hit. It has Seek.
 - **Code:** none from the spine's list: a count of its holder's hits, as today's Metronome keeps, and Skyfall's amount. See *Code support beyond the spine's list* for the blow as a hit of its own.
 - **Serves:** Storm 3 ●●●, Hunt ● ⚙ held charge (key)
 - **Notes:**
   - **Seen:** a count on the Valkyrie, and at four a number from above on the most charged foe. On a bare Valkyrie the blow is about 2,000 with 150 more a stack, so a charge of 13 doubles it and Shock's cap makes it four times the size. With her kit alone a blow falls about every ten ticks.
   - **The blow is a hit** of hers: it meets Evasion and Defense, can crit and builds her Shield. It isn't a basic attack or a cast. It isn't counted, so it can't call the next.
-  - **Where it lands.** A pick by a phrase is still a pick, as ruled: the blow is inside the Taunt rule. While a foe Taunts it lands on a Taunting foe, whatever charge that foe holds. A Mark doesn't steer it while any foe holds Shock, since it has a phrase of its own. With no Shock on any foe the phrase falls to a random foe, and that pick follows a Mark like any other.
-  - **What that costs it.** Gale spear has Seek and charges the back row; the blow that reads the charge doesn't have it, so behind a Taunting front it lands on the guard. Under Least sure.
+  - **Where it lands.** The blow has Seek, as round 2 rules: Gale spear has Seek and charges the back row past a Taunting front, and the blow that reads that charge shouldn't land on the guard. So it lands on the most charged foe, Taunting or not. A Mark doesn't steer it while any foe holds Shock, since it has a phrase of its own. With no Shock on any foe the phrase falls to a random foe, and that pick follows a Mark like any other.
   - **What went.** Shock on every swing and basic attacks that ignore Taunt are uncommons' effects now (Jolt spear, Long spear), and she can't hold either beside this. So the charge it reads has to come from Gale spear and from the party.
 
 ## Bard
@@ -344,7 +343,7 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - **Numbers:** No size: a whole cooldown. Medium cooldown (short with the power step), quick wind-up, 650 MP.
 - **Code:** as today's Reprise
 - **Serves:** Barrage 2 ●●●, Landslide 2 ●●
-- **Notes:** *Stays.* A whole cooldown is the size that's seen: the great spell's name twice in a few ticks. It names another ally, so it can't ready itself. The card says "the longest cooldown left", which by round 1's ruling is the ability with the most wait left, as today's build reads it. The spine's line for it drops "left", which would mean the slowest ability: see Challenges.
+- **Notes:** *Stays.* A whole cooldown is the size that's seen: the great spell's name twice in a few ticks. It names another ally, so it can't ready itself. The card says "the longest cooldown left", which by round 1's ruling is the ability with the most wait left, as today's build reads it. The spine's line carries the word now, as round 2 rules. Reveille means the slowest ability, so the two differ by more than their moment.
 
 ### Lament
 - **Is:** Bard, War ballad A · version · kept
@@ -370,7 +369,7 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - **Is:** Hexer, Malison A · version · changed
 - **Today:** Deepens every affliction each foe holds, and adds a few Burn, a few Shock and a few Bleed of its own to every foe; stacks scale from Attack.
 - **Card:** Curses every foe for less than Malison does: touch damage that scales from Attack, a fifth more for each different affliction the foe holds (Burn, Chill, Shock, Bleed, Sunder), then a few Burn, a few Shock and a few Bleed; stacks scale from Attack.
-- **Numbers:** The hit is `HIT.touch` of Attack, about three fifths of Malison's, with Malison's fifth for each different affliction. A few of each of Burn, Shock and Bleed is the ability's count from Attack: five or six of each on a bare Hexer, landing after the hit. Short cooldown, normal wind-up, 650 MP: a rung over Malison, as today's Plague is. The power step is Malison's: two fifths more damage and Bleed.
+- **Numbers:** The hit is `HIT.touch` of Attack, about three fifths of Malison's, with Malison's fifth for each different affliction. A few of each of Burn, Shock and Bleed is the ability's count from Attack: five or six of each on a bare Hexer, landing after the hit. Short cooldown, normal wind-up, 650 MP: a rung over Malison, as today's Plague is. The power step is Malison's: two fifths more damage and two fifths more of every status the cast adds, so of its Burn, its Shock and its Bleed.
 - **Code:** 2
 - **Serves:** Bonfire ●●, Storm ●●, Cuts ●● ⚙ every colour (key), red rain (half)
 - **Notes:**
@@ -378,7 +377,7 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
   - **"The next curse landing bigger"** depends on what's left a cooldown later, and a status keeps its own drain. Five or six Burn laid once are down to about one by the time Malison comes round again. Shock is gone after three of its holder's actions. Bleed lasts until the party's hits close it. So a lone Hexer's second Plague finds one or two of its three, more with Cooldown on its wand. The link expects a stack or two of each, and that's about what there is. Under Least sure.
   - **What holds them up** is the other half: a rider on a swing, Festering idol, a second caster. The Hexer's own Chill and Enfeeble's Sunder drain slowly and stay.
   - **Twice-told tome** makes the second cast land on the first one's three.
-  - **The power step** as ruled for Malison grows the damage and the Bleed. On this version it leaves the Burn and the Shock as they are, where today's step grew every status. See Challenges.
+  - **The power step** grows the damage and all three statuses, as round 2 rules: with it a bare Hexer lays seven or eight of each.
 
 ### Focused curse
 - **Is:** Hexer, Malison B · version · changed
@@ -424,19 +423,22 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - **Card:** Its basic attacks, and the second strike of its Double strike, add a few Sunder; stacks scale from Attack. Its hits on a Sundered foe heal it for a fifth of the damage.
 - **Numbers:** Sunder as Iron palm's. The heal is a fifth of each hit's damage: the size of Lifesteal's high word, in place of its medium.
 - **Code:** as today's Drinking palm, at a fifth
-- **Serves:** Pact ●●, Toll ●● ⚙ riposte (half), red stone (half)
+- **Serves:** Pact ●●, Toll ●● ⚙ riposte (half)
 - **Notes:** *Resized:* a tenth to a fifth.
-  - **Why.** A tenth of a fist's blow is about 45 HP, against blows of 500 and more on a unit with no Defense. It was a common's step of Lifesteal with a condition on it, and a trigger that small is on play's list of things never seen. Both its engines ask it for cover the player can watch build. At a fifth a Taunting dancer drinks back about a third of what gets through.
-  - **It isn't Lifesteal** as built: it's a heal the passive gives. The red stone's seat reads Lifesteal past full, and nothing a Monk can wear reads this heal as a Shield. See Challenges.
+  - **Why.** A tenth of a fist's blow is about 45 HP, against blows of 500 and more on a unit with no Defense. It was a common's step of Lifesteal with a condition on it, and a trigger that small is on play's list of things never seen. The riposte asks it for cover the player can watch build. At a fifth a Taunting dancer drinks back about a third of what gets through.
+  - **It isn't Lifesteal** as built: it's a heal the passive gives. The red stone's seat reads Lifesteal past full, and nothing a Monk can wear or sit in reads this heal as a Shield, so the red stone's tag is off its line, as round 2 rules.
 
 ### Frost fist
 - **Is:** Monk, Burning fist A · version · kept
 - **Today:** Three quick hits on the foe with the most Chill; each deals physical damage that scales from Attack and adds a little Chill; stacks scale from Attack.
 - **Card:** Three quick hits on the foe with the most Chill; each deals damage that scales from Attack and adds a few Chill; stacks scale from Attack.
-- **Numbers:** Each hit is 0.11 of Attack. A few Chill is three tenths of the ability's count of a few, the size today's "a little" was: under 2 a hit, about 5 a cast. Quick cooldown, quick wind-up, 200 MP.
-- **Code:** as today's Frost fist
+- **Numbers:** Each hit is 0.11 of Attack. A few Chill is the few its base adds: the ability's count of a few at Burning fist's own multiplier (`FIST_BURN`, three fifths of the word), in place of today's three tenths. About 3 a hit and 10 a cast on a bare Monk, against a cap of 12. Quick cooldown, quick wind-up, 200 MP.
+- **Code:** as today's Frost fist, at Burning fist's multiplier
 - **Serves:** Snap 1 ●●●
-- **Notes:** *Stays.* Reworded, as ruled for every share: "physical" goes, since there's one kind of hit, and "a little" becomes "a few", the scale's stack word, at the same size. Five Chill on the coldest foe every cast, against a cap of twelve, is a second source the counter shows at once. With no foe chilled its pick falls to a random foe, and follows a Mark.
+- **Notes:** *Resized:* three tenths of the word to three fifths, and reworded, as ruled for every share: "physical" goes, since there's one kind of hit, and "a little" becomes "a few".
+  - **Why.** Round 2 rules that its "a few" is the scale's few and not today's smaller size: it's Cold Snap's first step from a kit, and it has to be seen. Read as the few its own base ability adds, a cast takes the coldest foe most of the way to a shatter, and the second cast, or any other cold, bursts it.
+  - **Not the plain word.** At the whole of the ability's few, three hits are about 17 Chill: a shatter with every cast, on a quick cooldown, which is the lock round 2 took off Rimed blade. With the power step this size passes the cap in one cast too (*Least sure*).
+  - With no foe chilled its pick falls to a random foe, and follows a Mark.
 
 ### Ember palms
 - **Is:** Monk · mythic (weapon) · changed
@@ -585,7 +587,7 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
   - **Each hit counts.** A wolf's flurry adds for each bite, and a boss's blow on all three allies adds three times. A dodged hit adds nothing.
   - **"That Guard"** is the frost riding the cast for Guard's own length. A Guard laid on an ally by someone else afterwards doesn't lengthen it.
   - **It gives up** Blizzard's damage and its Chill on the whole field: nothing is cold until it strikes.
-  - **Beside Hoarfrost plate and Frostward blade** it's the gate's widest home: every ally, for a while, at a cast's price, with no anchor needed. Round 1 has the plate read its wall's Defense and the blade its mage's Attack, each at the plain few. See Links.
+  - **Beside Hoarfrost plate and Frostward blade** it's the gate's widest home: every ally, for a while, at a cast's price, with no anchor needed. The plate reads its wall's Defense at a few, and the blade its mage's Attack at several since round 2. See Links.
 
 ### Rime shield
 - **Is:** Frostweaver, Shatterpoint A · version · kept
@@ -695,14 +697,14 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 Round 1 ruled on everything this section held, and each ruling is applied in the entries above. What's left is what the rulings didn't reach, and what they opened.
 
 **Opened by the rulings:**
-- **Plague's power step.** As ruled, Malison's step is two fifths more damage and Bleed. On Plague that leaves its Burn and its Shock alone, where today's step ("40% more of every status it adds") grew them. Written as ruled. If the step is meant to stay plain on each version, Plague's would read "two fifths more damage, and of every status it adds".
-- **Stormspear's blow when no foe holds Shock.** Two rulings meet. Its phrase is a pick of its own, which a Mark doesn't steer; and a phrase's fallback to a random foe follows the Mark. Written as both: a Mark steers the blow only when no foe holds any Shock.
-- **Writ of judgement and Condemn's versions.** Written as: Challenge and Swift justice are Condemn, and each calls the blow. Under Challenge that's a Mark, a heavy blow and a Taunt from one cast.
-- **Reprise and "the longest cooldown".** The spine's line for it reads "its ability with the longest cooldown ready at once", which by the ruling means its slowest ability. Today's card says "the longest cooldown left", the most wait left. Kept as today's. Round 1 notes that Reveille reads as Reprise does; by the same ruling Reveille means the slowest, so the two now differ in which ability as well as when.
+- *Ruled in round 2: the step grows every status the cast adds, and it's applied.* **Plague's power step.** As ruled in round 1, Malison's step is two fifths more damage and Bleed. On Plague that leaves its Burn and its Shock alone, where today's step ("40% more of every status it adds") grew them. Written as ruled. If the step is meant to stay plain on each version, Plague's would read "two fifths more damage, and of every status it adds".
+- *Ruled in round 2: as written. The blow also has Seek now.* **Stormspear's blow when no foe holds Shock.** Two rulings meet. Its phrase is a pick of its own, which a Mark doesn't steer; and a phrase's fallback to a random foe follows the Mark. Written as both: a Mark steers the blow only when no foe holds any Shock.
+- *Ruled in round 2: as written.* **Writ of judgement and Condemn's versions.** Written as: Challenge and Swift justice are Condemn, and each calls the blow. Under Challenge that's a Mark, a heavy blow and a Taunt from one cast.
+- *Ruled in round 2: today's words stay, and the spine's line carries "left" now.* **Reprise and "the longest cooldown".** The spine's line for it read "its ability with the longest cooldown ready at once", which by the ruling means its slowest ability. Today's card says "the longest cooldown left", the most wait left. Kept as today's. Round 1 notes that Reveille reads as Reprise does; by the same ruling Reveille means the slowest, so the two now differ in which ability as well as when.
 
-**Not ruled:**
-- **Drinking palm's red stone tag.** On a Monk nothing reads its heal as a Shield. Red stone mail is Mail. Phylactery reads what its holder heals on others. Blood oath's Drinker seat reads Lifesteal, and this heal is a heal the passive gives, not Lifesteal. Round 1 took the same tag off Tithing leathers for the same reason. Either the tag comes off the spine's line, or the version's drink is written as Lifesteal on those hits, which would be a change to a kept version.
-- **Huntmaster's quiver in the spine.** Its line still reads "the cooldowns left on its abilities are halved". The card, as ruled, reads "ready again".
+**Not ruled in round 1:**
+- *Ruled in round 2: the tag is off.* **Drinking palm's red stone tag.** On a Monk nothing reads its heal as a Shield. Red stone mail is Mail. Phylactery reads what its holder heals on others. Blood oath's Drinker seat reads Lifesteal, and this heal is a heal the passive gives, not Lifesteal. Round 1 took the same tag off Tithing leathers for the same reason. Either the tag comes off the spine's line, or the version's drink is written as Lifesteal on those hits, which would be a change to a kept version.
+- *Done in round 2: the spine's line reads "ready again".* **Huntmaster's quiver in the spine.**
 - **"Crit more often"** on Quick draw and Quarry is the base passive's wording, with no number: it's two crit steps. Round 1 has "far more often" say its number on a piece. Left as today's, since it's the kit's own sentence on both versions.
 
 **Names.** None clashes. Two notes, neither ruled:
@@ -720,7 +722,7 @@ For each engine this share touches: the size of my side, and what the other side
   - *The other side:* the break pieces read the most the pool held, whatever filled it, as ruled for all of them. Mountain's crown keeps the stone from breaking at all, so a Geomancer wearing it feeds the detonation least.
 - **The frozen gate.**
   - *My side:* Frost armor lays about 3 Chill for each hit a foe lands on any ally, for Guard's length, so a foe bursts on its third or fourth blow. Rime shield answers each burst with about 900 of Shield.
-  - *The other side:* as ruled, Hoarfrost plate reads its wall's Defense and Frostward blade its mage's Attack, each at the plain few: about three a blow from a Knight's plate, two or three from the blade, so the fourth or fifth blow. Frost armor reads its caster's Attack at half again the few, since a spell that ends with its Guard has less time than a piece that's worn. The three homes are within a blow of each other.
+  - *The other side:* as ruled, Hoarfrost plate reads its wall's Defense at a few, and Frostward blade its mage's Attack at several since round 2: three or four a blow from a Knight's plate, four or five from the blade, so the third or fourth blow. Frost armor reads its caster's Attack at half again the few, since a spell that ends with its Guard has less time than a piece that's worn. The three homes are within a blow of each other.
 - **The mirror.**
   - *My side:* The last wall sends back all an Aegis stopped and readies Aspis, at 500 MP. Watch the anchor keeps the Aegis on whoever draws.
   - *The other side:* a draw that holds through a wind-up, and blows big enough to clear Aegis's line after the wall's own Defense. On the best walls only a boss's great blows do. Hoplon now reads the same printed numbers, and the link no longer says better stone sends more.
@@ -777,9 +779,7 @@ For each engine this share touches: the size of my side, and what the other side
 - **Two in the dark.**
   - *My side:* Smoke screen hides the ally with the lowest share of max HP that isn't Taunting or already Hidden, for Hidden's length, under half of its own cooldown. Night's edge hides the Assassin at each kill.
   - *The other side:* a second hiding that's laid again and again, and a third unit that wants every blow. With Smoke screen the Assassin no longer hides itself; its mythic gives that back. Hidden's new rule keeps someone in the light, so the pair can never hide the third.
-- **The red stone.**
-  - *My side:* Drinking palm heals the Monk a fifth of each hit on a Sundered foe.
-  - *The other side:* nothing a Monk can wear or sit in turns that healing into a Shield, as the cards stand. See Challenges.
+- **The red stone.** No part in this share now: Drinking palm's tag is off, as round 2 rules, since nothing a Monk can wear or sit in turns its healing into a Shield.
 
 ## Loops
 
@@ -809,7 +809,7 @@ Each with what's in it and what stops it.
 - **The chalice,** beyond 20's price paid by one unit for another: an ally's ability counts as affordable when the Vampire can pay for it, so a caster at no mana still casts.
 - **A blow dealt by a reaction as a hit of its own,** sized from Attack and not from the weapon: Writ of judgement's and Stormspear's. Today's reactions strike with the weapon or deal untyped damage.
   - Writ of judgement's is called by Condemn, by name, in every form of it. A status doesn't know which ability laid it, so the build can't hear "a Mark Condemn gave"; it changes Condemn, as today's Chains of light changes Smite.
-  - Stormspear's picks by a phrase, inside the Taunt rule, with the phrase's fallback following a Mark.
+  - Stormspear's picks by a phrase, with Seek, with the phrase's fallback following a Mark.
 - **A rider on every hit** its holder lands, sized by a status on the target: Ember palms. Today's riders sit on basic attacks, and per-stack terms sit on abilities.
 - **A wait on a foe's stacks at a number:** High pyre's 20 Burn. Today's waits read whether a status is held, or the caster's own count.
 - **Marked (1),** as ruled: a phrase's fallback to a random foe follows the Mark; the Fizzle rule and Seek's "isn't Taunting" give way to it.
@@ -824,18 +824,17 @@ Each with what's in it and what stops it.
 - **Huntmaster's quiver at "ready again".** It stands, and it's in the director's sample. The right kind of size, and possibly too much of it.
 - **Malison as a light hit.** It's the Hexer's own number at last, on a short cooldown, on every foe, for 450 MP: more per cast than Fireball's hit. A touch would keep it near today's worth and may not be seen. I chose seen.
 - **High pyre's two numbers,** 20 to open and 500 a stack. The count decides whether a lone Pyromancer ever casts it; the long wind-up decides what it lands on. If it lands on twelve most of the time, it reads as a slower Pyre.
-- **Plague's stacks.** At a few, its Burn and Shock barely outlast one cooldown, so "the next curse landing bigger" is half true on a lone Hexer. The line's word is a few, so it's a few. Its power step no longer grows them either.
+- **Plague's stacks.** At a few, its Burn and Shock barely outlast one cooldown, so "the next curse landing bigger" is half true on a lone Hexer. The line's word is a few, so it's a few. Its power step grows them again, by round 2.
 - **The chalice's "same share".** A Monk's Flow costs the Vampire more blood than a Pyromancer's Firebolt, because each is a share of its own caster's pool. It's the line, and it matches Flagellant's vestments and The covenant, whose sums round 1 sends to the director; a player may find it backwards. MP for HP, one for one, is the other way to say it.
-- **Stormspear's blow inside the Taunt rule.** Her Gale spear reaches past a guard and charges the back row; the blow that reads the charge now lands on the guard. Against a Taunting front the mythic's promise, the most charged foe, isn't kept. It's the ruling, and it's consistent; it may make the piece feel broken in exactly the fights the Storm likes.
 - **Stormspear's blow's size,** a normal hit on Skyfall's step, about every ten ticks. It may out-earn Skyfall itself, which is what a mythic does, or bury it.
 - **Eye of the tempest at "every hit".** With Arc's second hit and Double strike's second strike jumping, it's a good deal more than the build that was never offered. The card was always this; nobody has seen it.
 - **Writ of judgement, answering Condemn alone.** One blow a Condemn is the size of a second Smite on a medium cooldown. It may now be small for a mythic unless Swift justice is beside it.
 - **Hail at about 3 a foe.** It's seen, and it makes the Ranger a better field of cold than the Frostweaver's own two field spells, for a fraction of the mana. The Frostweaver's counts are the balance pass's first job; this may want to follow them.
-- **Frost armor's Chill,** at half again the few, where the gate's two pieces are at the plain few. Sized to the link and to a spell's shorter time; it may simply out-freeze both rares.
+- **Frost armor's Chill,** at half again the few, where the gate's plate is at the plain few and its blade at several. Sized to the link and to a spell's shorter time; it's now the smallest of the three a blow, and the widest.
 - **Rousing chorus and Might's cap.** One cast nearly fills it, so the power step and a second cast add little. It may want fewer stacks more often, or it's simply a version that's done after one song.
 - **Drinking palm at a fifth,** and **Horn of the keep at a half.** Both were sizes play named as unseen. Both resizes are my reading of how far "seen" is, and either could sit a step lower.
 - **Shieldbearer, left alone.** A quarter more on every blow is a first step that may read as a stat. Doubling it, so Defense counts as Attack does, is the resize I'd make if the lead wants one.
 - **Ember palms at 25 a stack.** On a fire of fifty it adds more than the Monk's own blows three times over. It's a mythic on a far end, and it's a guess.
 - **Barbed volley's cooldown and cost,** moved a word and a rung as Whipping vines' were. It could as well keep the base's.
-- **Frost fist's "a few".** The reworded card says a few for what's under two stacks a hit. It's the scale's word at the kit's own multiplier, as Blizzard's is, and the smallest "few" in the game.
+- **Frost fist at its base's few.** Round 2 asks for the scale's few; it's written at Burning fist's own three fifths of the word, about 10 Chill a cast, since the whole word is a shatter a cast. With the power step it's about 14 a cast: a shatter and a Stun on the coldest foe every cast, on a quick cooldown, for 200 MP. In a pack the pick moves on after each burst; a lone foe that isn't a boss is held for more than half of every cooldown.
 - **The kept items I didn't doubt.** Thirty-one versions and nine mythics are marked *Stays* with a line each. Several of those were never fielded in play, so "seen" is my reading of the card, not a fight.

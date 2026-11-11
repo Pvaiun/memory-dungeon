@@ -1,6 +1,6 @@
 # The fill: weapons, the first six kinds
 
-60 pieces: 12 commons, 19 uncommons, 19 rares, 10 legendaries. Dagger, fist weapons, wand, sword, spear, axe, in the spine's order. Every number is a first value. Round 1's rulings are applied (`fill/shared.md`, *Rulings for every share*; `fill/round-1.md`). "Its wearer's hits" on these cards means every hit the wearer lands: a swing, an extra strike or an ability's hit. An extra strike is Double strike's second strike.
+60 pieces: 12 commons, 19 uncommons, 19 rares, 10 legendaries. Dagger, fist weapons, wand, sword, spear, axe, in the spine's order. Every number is a first value. Round 1's and round 2's rulings are applied (`fill/shared.md`, *Rulings for every share*; `fill/round-1.md`; `fill/round-2.md`). "Its wearer's hits" on these cards means every hit the wearer lands: a swing, an extra strike or an ability's hit. An extra strike is Double strike's second strike.
 
 ## Dagger
 
@@ -161,12 +161,12 @@
 
 ### Bellows wraps
 - **Is:** fist · rare
-- **Card:** Each hit its wearer lands on a burning foe adds Burn to it: a tenth of what it holds.
+- **Card:** Each hit its wearer lands on a burning foe adds Burn to it: a twentieth of what it holds.
 - **Stats:** Double strike medium · Attack speed medium · Evasion medium (3 of 3)
-- **Numbers:** a tenth of the Burn stacks on the foe when the hit lands, the line's own size. Nothing scales it but the fire.
+- **Numbers:** a twentieth of the Burn stacks on the foe when the hit lands, the line's own size, in fractions of a stack. Nothing scales it but the fire.
 - **Code:** a rider whose stacks are read off its target's own Burn (see *Code support*); today's Cinderheart staff reads a target's Burn the same way, for damage
 - **Serves:** Bonfire 2 ●●●, Cuts ●
-- **Notes:** It reads the fire and leaves it; it lays none itself. Seen on a fire worth having: at 20 stacks each blow steps the counter up by 2, at 5 by half a stack. On a plain fist it holds a fed fire about a fifth higher; with a second strike, Haste or Hummingbird charm it can out-run Burn's drain (*Loops*). Evasion as the third step: a feeder that falls is the fire gone.
+- **Notes:** It reads the fire and leaves it; it lays none itself. A twentieth, as round 2 rules: at a tenth a fast Monk's hits out-ran Burn's drain and the fire fed itself (*Loops*). At 20 stacks each blow steps the counter up by 1, at 5 by a quarter of a stack. On a plain fist, a swing every six ticks against a pulse every two, it holds a fed fire about a tenth higher. With a second strike, Haste and Hummingbird charm, about seven hits in eight ticks, it holds one more than twice as high. So it's seen on a fast unit and a big fire, and hardly on a plain one (*Least sure*). Evasion as the third step: a feeder that falls is the fire gone.
 
 ### Still hand
 - **Is:** fist · rare
@@ -309,12 +309,12 @@
 
 ### Rimed blade
 - **Is:** sword · uncommon
-- **Card:** Its basic attacks add several Chill (from Attack).
+- **Card:** Its basic attacks add a few Chill (from max HP).
 - **Stats:** Attack +1 · Defense +1 (2 of 2)
-- **Numbers:** several: `STACKS.several`, from Attack, every swing (`KIND_SPEED.sword`): about 4 for a Knight with the blade's own step, 6 or 7 for a Valkyrie or a Hexer.
-- **Code:** as today's Spark wand, with Chill at several
+- **Numbers:** a few: `STACKS.few` through `own()`, from its wearer's max HP, every swing (`KIND_SPEED.sword`): 3 or 4 for a Knight at 5,000 HP, about 2 for a Valkyrie or a Hexer at 3,000.
+- **Code:** as today's Spark wand, with Chill, its stacks read off max HP
 - **Serves:** Snap 1 ●● ⚙ lead's colour (half), every colour (half) ◆ swing-status
-- **Notes:** Several, as round 1 rules and the line now says, so it's seen on a Knight: four stacks a swing take one foe to Chill's cap in three or four swings. The same sentence as Frostbite bow's and Sleet blade's, plain riders no unit can hold beside it. On a Hexer it lands beside Cold hex: about 11 stacks a swing, against a cap of 12 (*Least sure*). The blade's Attack step is the one the rider reads; Defense is the wall's.
+- **Notes:** A few, read off max HP, as round 2 rules and the line now says, so it's seen on the wearer the line names first: a Knight's three or four stacks a swing take one foe to Chill's cap in three or four swings. It no longer reads as Frostbite bow and Sleet blade do: those add several, from Attack. On a Hexer it adds about 2 beside Cold hex's few, about 6 a swing against a cap of 12: a shatter every third swing where Cold hex alone brings one every fourth, and no longer one every second. Neither step feeds the rider (*Least sure*): Attack is the swing's, and Defense is the wall's.
 
 ### Drawn steel
 - **Is:** sword · uncommon
@@ -534,7 +534,7 @@
 - **Numbers:** all of what's left over: the blow's damage past the HP its foe had left. It's a hit on the foe it reaches: it meets that foe's Evasion and Defense, and isn't boosted or crit again.
 - **Code:** 5
 - **Serves:** Hunt 2 ●●●, Landslide ●● ⚙ avalanche (key)
-- **Notes:** Written to round 1's ruling on left-over damage: a hit taken by the second foe (a wound pays, Thorns answer), carrying no riders. Any killing blow carries, swing or ability. The second fall is the wearer's killing blow too, so what pays on a kill pays again; only the carry stops. Beside Downhill charm on one unit the left-over is split evenly between the two. Its pick is a pick by a phrase, so it's inside the Taunt rule (*Challenges*, 1). Both steps are the blow's, and it's the one piece in the kind without its signature: on two steps there's no room for both, and the blow is what it reads.
+- **Notes:** Written to round 1's ruling on left-over damage: a hit taken by the second foe (a wound pays, Thorns answer), carrying no riders. Any killing blow carries, swing or ability. The second fall is the wearer's killing blow too, so what pays on a kill pays again; only the carry stops. Beside Downhill charm on one unit the left-over is split evenly between the two. Where the left-over lands is a target after the first, as round 2 rules, so a Taunt doesn't decide it: it lands on the foe with the lowest current HP, Taunting or not. Both steps are the blow's, and it's the one piece in the kind without its signature: on two steps there's no room for both, and the blow is what it reads.
 
 ### The Red Feast
 - **Is:** axe · legendary
@@ -556,14 +556,14 @@
 
 ## Challenges
 
-Still open after round 1, or opened by it. What round 1 ruled is applied above and taken out of this list.
+Round 2 ruled on the first five, and they're applied above: Overkill axe's left-over isn't turned by a Taunt; Rimed blade adds a few Chill, read off max HP; Forked knuckles counting Arc's second foe, Victor's spear's Aggro and Lamprey claws at a tenth stand as written. One is left, the sixth.
 
-1. **Overkill axe's left-over is a pick, so a Taunt turns it.** By the rulings, a blow a card calls onto a foe by a phrase is inside the Taunt rule, and left-over damage meets its new foe's Evasion. So while a foe Taunts, the left-over lands on a Taunting foe, the lowest of them, and not on the weakest foe on the field; and a dodge loses all of it. I wrote it so. The avalanche wants the opposite ("aimed at the weakest, it runs furthest"), and a Taunting front is a pack's healthiest body. If a left-over should fall where its phrase says, the ruling on picks needs "a left-over" beside "a named foe". Overrun has the same question.
-2. **Forked knuckles' MP and Arc's second hit.** The card pays for each foe other than its target that a basic attack hits, and I count Arc's second foe and a seat's as well as the knuckles' own leap. Round 1 gave extra hits their own names and says each carries what its card says. If the MP is for the knuckles' own leap alone, a Stormcaller's pay halves and the card says "each time the leap lands".
-3. **Victor's spear keeps Aggro.** Round 1 names four spears that drop it. This one is the Hunt's first step too, and I left Aggro +1 on it: a Shield on every kill is cover for the draw, so the signature doesn't work against the piece. If it should follow the other four, it becomes Attack +2.
-4. **Lamprey claws is resized, which no ruling asked for.** With an extra strike narrowed to Double strike's second strike, it fires on a quarter to a half of swings. A twentieth of the bar that seldom isn't seen, so I made it a tenth. If the first size should stand, it's one word.
-5. **Rimed blade at several, on a Hexer.** Applied as ruled. Beside Cold hex it lays about 11 Chill a swing against a cap of 12: a shatter every second swing, and every swing once the Hexer has one more step of Attack. A Stun lasts about as long as the sword's wait, so a lone foe that isn't a boss doesn't act again. That's a lock, not a size, which is why it's here. Reading the blade's stacks from max HP, at a few, would be seen on a Knight (three or four a swing) without it.
-6. **Names.** Tithe wand and Tithing leathers still tithe different things to different units; round 1 didn't rule on the pair.
+1. *Ruled in round 2 (a Taunt doesn't turn it).* **Overkill axe's left-over is a pick, so a Taunt turns it.** By the rulings, a blow a card calls onto a foe by a phrase is inside the Taunt rule, and left-over damage meets its new foe's Evasion. So while a foe Taunts, the left-over lands on a Taunting foe, the lowest of them, and not on the weakest foe on the field; and a dodge loses all of it. I wrote it so. The avalanche wants the opposite ("aimed at the weakest, it runs furthest"), and a Taunting front is a pack's healthiest body. If a left-over should fall where its phrase says, the ruling on picks needs "a left-over" beside "a named foe". Overrun has the same question.
+2. *Ruled in round 2 (as written).* **Forked knuckles' MP and Arc's second hit.** The card pays for each foe other than its target that a basic attack hits, and I count Arc's second foe and a seat's as well as the knuckles' own leap. Round 1 gave extra hits their own names and says each carries what its card says. If the MP is for the knuckles' own leap alone, a Stormcaller's pay halves and the card says "each time the leap lands".
+3. *Ruled in round 2 (as written).* **Victor's spear keeps Aggro.** Round 1 names four spears that drop it. This one is the Hunt's first step too, and I left Aggro +1 on it: a Shield on every kill is cover for the draw, so the signature doesn't work against the piece. If it should follow the other four, it becomes Attack +2.
+4. *Ruled in round 2 (as written).* **Lamprey claws is resized, which no ruling asked for.** With an extra strike narrowed to Double strike's second strike, it fires on a quarter to a half of swings. A twentieth of the bar that seldom isn't seen, so I made it a tenth. If the first size should stand, it's one word.
+5. *Ruled in round 2 (a few, from max HP).* **Rimed blade at several, on a Hexer.** Applied as ruled. Beside Cold hex it lays about 11 Chill a swing against a cap of 12: a shatter every second swing, and every swing once the Hexer has one more step of Attack. A Stun lasts about as long as the sword's wait, so a lone foe that isn't a boss doesn't act again. That's a lock, not a size, which is why it's here. Reading the blade's stacks from max HP, at a few, would be seen on a Knight (three or four a swing) without it.
+6. **Names.** Tithe wand and Tithing leathers still tithe different things to different units; neither round ruled on the pair.
 
 ## Links
 
@@ -572,14 +572,14 @@ Still open after round 1, or opened by it. What round 1 ruled is applied above a
 - **Held charge** (Stormbrand, key; Live-wire knuckles, Jolt wand and Jolt spear, halves). Stormbrand adds half a percent of Attack for each Shock the foes hold: a foe at Shock's cap doubles a sword swing, as the link asks, and it takes every hit, not one blow. The riders lay a few a hit. A Stun holds a foe for one or two fast swings, about six stacks from one rider, so the cap is reached on a boss between its moves or by the whole party's storm, not by one unit and one Stun.
 - **Reaping** (Oathkeeper and Squall lance, halves). Oathkeeper sinks every foe by a full swing each swing while its wearer Taunts. Squall lance sinks them by a light hit on every fifth hit of its wearer's, about twice a regular fight. The execute on the other side has to kill from the HP those leave.
 - **Opening again** (Quietus, half). One strike of its basic attack's size on every foe each time the opening happens again: at each kill of its wearer's under Overture coat, at each fall under Second dawn, once a fall whoever calls. Nothing to size on the other side. It's the one start-of-fight effect that can kill, so it's the one that calls itself (*Loops*).
-- **Avalanche** (Overkill axe, key). All of the left-over, once, as a hit on the foe with the lowest current HP: not boosted or crit again, met by that foe's Evasion and Defense, and inside the Taunt rule (*Challenges*, 1). It needs a blow far bigger than its foe, and its own kind's heaviest (Headsman's axe) can't be worn with it: the blow is an Assassin's crit or Backstab, or Millstone's.
+- **Avalanche** (Overkill axe, key). All of the left-over, once, as a hit on the foe with the lowest current HP: not boosted or crit again, met by that foe's Evasion and Defense, and not turned by a Taunt, as a target after the first. It needs a blow far bigger than its foe, and its own kind's heaviest (Headsman's axe) can't be worn with it: the blow is an Assassin's crit or Backstab, or Millstone's.
 - **Spell on the swing** (Baton, key). A fifth of the wait left for each swing landed: one more cast a fight on a wand's own pace, and nearly twice the casts with Hummingbird charm and Haste. The other side is speed and a well; a Bard can hold Bell of the hour beside it, and the two stack on the first slot.
 - **Red rain** (Weeping kris and Quietus open; Forked knuckles, Chain wand, Oathkeeper and Squall lance pour). The kris's wound pays about 620 on a hit. The fast kinds' wide hits are 225 to 250 a foe, so the wound pays more than twice the hit, as the link asks; Oathkeeper's and Squall lance's are bigger than the wound. For the link to hold on the kits' side, a few Bleed on every foe is enough for the fast kinds.
 - **Riposte** (Parrying spear, key). One strike of the ally's basic attack for each dodge, in that ally's shape. The cover that strike builds lands on the ally who struck, not on the dodger, so this home of the riposte moves damage and banks nothing for the blow that lands. For the two to meet, the striker's hits have to give to someone else (the Valkyrie's Shield-sister, a Vampire's Shared feast), or the dodger's cover comes from the dodge itself (Hooded cloak).
 - **Every colour** (Wildmagic wand, key; Spark wand, Jolt wand, Rimed blade and Mimic wand, halves). A few stacks of one kind in five each swing. A few Burn, Shock, Bleed or Sunder drains in a couple of swings, so the wand alone holds two or three kinds on a boss at once, and all five need the Hexer's own three and a top-up. Malison has to pay visibly at three and four kinds, not only at five.
-- **Lead's colour** (Mimic wand, key; nine riders, halves). The riders are a few a hit from Attack, and Rimed blade several. Mimic wand follows the other ally with the highest Attack, so beside a Hoplite whose swing lays nothing it's blank whatever the third unit carries. Three weapons reach a second shatter only when they land on one foe, which takes a Mark or a lone boss.
+- **Lead's colour** (Mimic wand, key; nine riders, halves). The riders are a few a hit from Attack, and Rimed blade a few from max HP. Mimic wand follows the other ally with the highest Attack, so beside a Hoplite whose swing lays nothing it's blank whatever the third unit carries. Three weapons reach a second shatter only when they land on one foe, which takes a Mark or a lone boss.
 - **Emptied quiver** (Bloodscent knife and Ambush knife, halves). Bloodscent takes a Ranger's swing to about three in four on a wound, four in five at most: a burst of about four arrows, as the link asks. Ambush knife is four in five until a foe has acted: three or four arrows in the first ticks, closed by the foes' first moves as much as by the crit that fails. The wound has to last the burst: each arrow closes a third, so it wants several stacks or more, which Barbed arrow lays.
-- **Resonance** (Forked knuckles, half). A twentieth of max MP for each other foe a swing reaches: 230 a swing for a Stormcaller, as I count it (*Challenges*, 2). With Recharge, Chain lightning against four foes pays for itself, so on this side mana no longer stops the loop; the pack thinning does.
+- **Resonance** (Forked knuckles, half). A twentieth of max MP for each other foe a swing reaches: 230 a swing for a Stormcaller, counting Arc's second foe, as round 2 lets stand. With Recharge, Chain lightning against four foes pays for itself, so on this side mana no longer stops the loop; the pack thinning does.
 - **Mana as armour** (Tithe wand, half). 90 to 150 MP a swing. A foe's plain blow is 500 to 1,600, so one tithe is a tenth to a quarter of a blow. For "each note is a blow not taken", the Orb has to trade a point of MP for several of damage, or the notes that read are Clarity's.
 - **Brink** (Bloodletter, key; Gorged claws, Mercy's edge and The Red Feast, halves). Bloodletter's price takes a quarter of the bar in a regular fight. That makes its wearer the lowest only while nobody else is being beaten and it isn't drinking. A price is a crossing like any other, so the watchers of a line answer it. The givers' Shields are never spent by the price, which is what the other side needs to keep true. Gorged claws and The Red Feast wake below half, which a unit under Halved heart always is, by that card.
 
@@ -587,7 +587,7 @@ Still open after round 1, or opened by it. What round 1 ruled is applied above a
 
 - **Bloodscent knife and Quick draw.** Ruled: the lift stops at four in five, so one arrow in five fails whatever the wearer brings, and each arrow closes a third of the wound. Sound now.
 - **Ambush knife and Quick draw.** One arrow in five fails, and the foes act. Sound.
-- **Bellows wraps past about seven hits in eight ticks on one foe.** Not ruled in round 1, and still open. Each hit adds a tenth and each pulse of Burn takes 15%, so two hits a pulse out-run the drain and the fire climbs with nobody feeding it; Burn has no cap. A Monk with Hummingbird charm, Haste and a second strike is at about that pace. What stops it: it needs a fire to start from, the hits have to stay on one foe, Haste lapses, and the foe dies of it. Weak brake against a boss.
+- **Bellows wraps.** Ruled in round 2: a twentieth a hit, not a tenth. Each pulse of Burn takes 15%, so it now takes more than three hits a pulse on one foe, thirteen in eight ticks, to out-run the drain. A Monk with Hummingbird charm, Haste and a second strike lands about seven. At a tenth that Monk's fire climbed with nobody feeding it, and Burn has no cap. Sound alone. With Everflame lantern in the party as well, that Monk's fire drains by about 1% a pulse in place of 15%: it nearly holds itself and doesn't grow, so it's a size and not a loop, by a narrow sum.
 - **Quietus with Overture coat or Second dawn.** Ruled: a kill is a kill. A kill by the opening strike lands the opening strike again on every foe, once for each fall whoever calls for it. It stops on a round that kills nobody, or when the foes run out; against a pack already sunk it clears the field in one tick.
 - **Provoking blade and Tempest cloak on a Valkyrie** (the spine's). The called foe has to pick her, she has to dodge, and her answering swing has to land on the same foe. Against a pack the third rarely happens. Against one boss with a Taunt on her it's her Evasion each turn, and each failure is a real blow taken.
 - **Answering thunder.** It turns over on the foes' own clock and calls nothing, so it isn't a loop. The goad feeds it: Goading totem on the same Stormcaller, or Provoking blade beside it, turns each call into a strike. The brake is the goad's own pace.
@@ -614,14 +614,15 @@ Still open after round 1, or opened by it. What round 1 ruled is applied above a
 
 - **Mimic wand.** The longest card in the share, and the one a player is most likely to misread. It's also blank beside a high-Attack ally that lays nothing.
 - **Gravemark** does nothing in a party with no marker, and none of its three wearers has a Mark in its kit. It stays, by round 1's ruling.
-- **Rimed blade on a Hexer** (*Challenges*, 5): a shatter every second swing from an uncommon and a passive.
+- **Rimed blade reads max HP,** the one swing rider in the fill that doesn't read Attack, and neither of its steps raises it. On a Valkyrie or a Hexer it's about 2 a swing, which is the small end of what's seen.
+- **Bellows wraps at a twentieth.** Sized by the loop, not by sight: on a plain fist it holds a fed fire about a tenth higher. It needs a fast unit and a big fire to show.
 - **Hunting spear.** Every hit lands twice on half of every bar. It's the line's size; it may be the strongest rare here.
 - **A strike takes the shape of its striker's swings, but not their wait.** Under Millstone, Answering thunder's answers, Quietus's opening and the blow Parrying spear calls from an ally all land more than twice as hard, on a clock Millstone doesn't slow. Answering thunder has no limit of its own either: eight charged wolves are eight strikes a round of swings.
 - **Provoking blade.** No number to tune, a price that's real, and a pay-off that's all in other slots. Whether a player ever picks a sword that makes foes swing is the spine's own doubt.
 - **Bloodscent knife's ceiling** makes the dagger's own Crit chance stop counting past 30 on a wound, on the kind whose signature it is.
 - **Reaver's axe.** Many Might on every kill, to Might's cap. On a Vampire it also keeps Bloodthirst or Feeding frenzy switched on, which read whether it holds Might.
 - **Bloodletter's size.** A twentieth for a fifth. On a Knight the extra is nearly twice his swing, and his Vanguard Shield sits untouched over a bar he's spending.
-- **Lamprey claws and Tithe wand.** Lamprey claws is resized (*Challenges*, 4); for a Vampire or a Stormcaller it still fires on one swing in four. Tithe wand's single note is a tenth of a caster's spell: it reads over a fight more than on the first swing.
+- **Lamprey claws and Tithe wand.** Lamprey claws is resized, and round 2 lets it stand; for a Vampire or a Stormcaller it still fires on one swing in four. Tithe wand's single note is a tenth of a caster's spell: it reads over a fight more than on the first swing.
 - **Wildmagic wand.** A few stacks at random still rarely makes a row by itself; the engine rests on the Hexer's own three kinds.
 - **Thousandth cut at 2%.** Kept, but a dagger reaches a third of its cap in a regular fight.
 - **The three fist riders** share a card shape and a stat line, on purpose: the colour is the choice. The spine already doubts three plain riders in one kind.

@@ -212,7 +212,7 @@ Plate, Mail, Leather and Robes: 55 pieces (12 commons, 16 uncommons, 17 rares, 1
 - **Numbers:** one for one, up to the Shield's own cap.
 - **Code:** as today's Phylactery, read on the unit that's healed. The order among the three places that take healing past full is in *Code support beyond the spine's list*.
 - **Serves:** Pact 2 ●●●, Cuts 2 ●●, Landslide ●● ⚙ red stone (key), detonation (half) ◆ shield-by-doing
-- **Notes:** New. All healing it receives counts: a heal, Lifesteal, a Refrain, and a Regen's pulses, which the card names because the lead's ruling leaves Regen out of "a heal" unless a card does. builds.md's red stone counts on it: a Cleric with nothing to mend lays Regen on a full ally. Its own Lifesteal step lets it work alone on anything that hits. It takes the healing past full before Phylactery or Shared cup sees any. Under Halved heart everything past half is past full, so it all turns to Shield.
+- **Notes:** New. All healing it receives counts: a heal, Lifesteal, a Refrain, and a Regen's pulses. Round 2 rules that healing received is all of it, and the card names Regen all the same, so nobody has to ask. builds.md's red stone counts on it: a Cleric with nothing to mend lays Regen on a full ally. Its own Lifesteal step lets it work alone on anything that hits. It takes the healing past full before Phylactery or Shared cup sees any. Under Halved heart everything past half is past full, so it all turns to Shield.
 
 ### Sanguine mail
 - **Is:** mail · rare
@@ -239,7 +239,7 @@ Plate, Mail, Leather and Robes: 55 pieces (12 commons, 16 uncommons, 17 rares, 1
 - **Numbers:** Aegis as it stands (`STATUS.aegis`). The line is a third of max HP.
 - **Code:** a watch on each ally's HP that sees a crossing whatever made it, a price and the fight's start included, with a marker on each ally that keeps it to once a crossing (*Code support beyond the spine's list*).
 - **Serves:** Pact 3 ●●●, Toll ●●, net ⚙ brink (half), mirror (half)
-- **Notes:** New. "An ally" includes its wearer. A crossing by any means: a blow, a status, a price. An ally that starts a fight under a third gains it as the fight starts. "Whenever": again each time the ally is back at a third or over and crosses again. An ally that already holds an Aegis gains nothing. The Lifesteal step is its wearer's own way back over the line, which is also what arms it again.
+- **Notes:** New. "An ally" includes its wearer. A crossing by any means: a blow, a status, a price. An ally that starts a fight under a third gains it as the fight starts. "Whenever": again each time the ally is back at a third or over and crosses again. An ally that already holds an Aegis gains nothing. The Lifesteal step is its wearer's own way back over the line, which is also what arms it again. Set off by a price it's an Aegis every cast or two on a payer that drinks back over a third, so round 2 puts it in the director's sample (*Loops*).
 
 ### Tallymail
 - **Is:** mail · legendary
@@ -364,12 +364,12 @@ Plate, Mail, Leather and Robes: 55 pieces (12 commons, 16 uncommons, 17 rares, 1
 
 ### Windrunner's garb
 - **Is:** leather · legendary
-- **Card:** Each time its wearer dodges a hit, it gains 3 Heat (it acts 5% faster in everything for each Heat, up to 10, for the rest of the fight). Each hit it takes spends half its Heat.
+- **Card:** Each time its wearer dodges a hit, it gains 3 Heat (it acts 5% faster in everything for each Heat it holds, up to 10). Each hit it takes spends half its Heat.
 - **Stats:** Evasion high · Attack +1 · Aggro +1 (4 of 4)
 - **Numbers:** 3 Heat a dodge; half of all the Heat it holds, rounded down, spent a hit taken. Heat is `fill/shared.md`'s, to ten.
 - **Code:** as today's Windrunner's garb with Heat in Tempo's place. The spending moves from the counter to this card.
 - **Serves:** Cuts 3 ●●, Toll 3 ●● ⚙ riposte (half)
-- **Notes:** Today's piece. Three a dodge, by the lead's ruling, as Hunter's skull gives three a kill: its third dodge passes Quickstep leathers' Haste, and a dodger hit one time in three holds six to ten Heat. The bracket is the counter's own wording; the sentence after it is the one card that spends Heat. The hit spends half of all its Heat, whichever card gave it. The Aggro step is the dancer's: it grows by being aimed at.
+- **Notes:** Today's piece. Three a dodge, by the lead's ruling, as Hunter's skull gives three a kill: its third dodge passes Quickstep leathers' Haste, and a dodger hit one time in three holds six to ten Heat. The bracket drops "for the rest of the fight", as round 2 allows where a card's own words need it: the sentence after it is the one card that spends Heat. The hit spends half of all its Heat, whichever card gave it. The Aggro step is the dancer's: it grows by being aimed at.
 
 ### Carrier's coat
 - **Is:** leather · legendary
@@ -413,9 +413,9 @@ Plate, Mail, Leather and Robes: 55 pieces (12 commons, 16 uncommons, 17 rares, 1
 
 ### Matins robe
 - **Is:** robes · uncommon
-- **Card:** Every third ability its wearer casts in a fight costs no MP.
+- **Card:** Every third ability its wearer casts in a fight is free.
 - **Stats:** MP +1 · Attack +1 (2 of 2)
-- **Numbers:** the third, sixth and ninth cast of each fight are free.
+- **Numbers:** the third, sixth and ninth cast of each fight are free: they cost nothing, in MP or in HP, as round 2 rules.
 - **Code:** as today's Matins robe, on a count of its wearer's casts.
 - **Serves:** Barrage 1 ●● ⚙ crescendo (half) ◆ free-cast
 - **Notes:** Today's piece, changed as its line says (today's: the first cast of each fight). The count starts again each fight. It counts the casts its wearer makes, free or paid; a second cast something else makes for it isn't counted, as Twice-told tome counts. In a fight with fewer than three casts it does nothing.
@@ -521,13 +521,13 @@ Plate, Mail, Leather and Robes: 55 pieces (12 commons, 16 uncommons, 17 rares, 1
 
 ## Challenges
 
-Round 1 ruled on twelve of the thirteen challenges handed in; the rulings are applied above. These are the one it left, and four the rulings open.
+Round 1 ruled on twelve of the thirteen challenges handed in, and round 2 on these five; all are applied above, so none is open. Each stays here with its ruling.
 
-1. **Bloodsworn mail and Tithing leathers can't sit under Flagellant's vestments,** which is the same slot. Their blood mage tags hold only under The covenant, which gives everyone Lifesteal already, or beside Blood vial. Not ruled in round 1.
-2. **"A heal", and healing received.** The ruling leaves a Regen's pulses out of "a heal" for cards that read their wearer's heals. Three of mine act on the healing their wearer receives, and I read the pulses as counting. Red stone mail's card now names Regen, since builds.md's red stone counts on a Cleric's Regen landing on a full ally. Sanguine mail doubles or halves whatever its wearer receives. Last bastion's "by anyone or anything" ends on a pulse. If the ruling was meant to reach them, Red stone mail loses a clause and the other two need one.
-3. **A piece that fires as the fight starts because its wearer is already under the line.** By the crossing ruling Holdfast, Warded mail and Aegis mail do. The spine's *start-of-fight effects* covers whatever a piece does as a fight starts, however its card words it. Read to the letter, Second dawn would then Guard, Shield or Aegis again at every fall. I read these as crossings, not openings: they don't happen again.
-4. **Mail's commons under "the first stat its row names".** The three rows name HP, Lifesteal and HP. I kept Attack, Lifesteal and HP under the names as ruled, so the first row gives way. Read row by row, the third gives way instead and Mail has a Defense common in place of the Attack one.
-5. **The Heat bracket on Windrunner's garb.** The counter's wording ends "for the rest of the fight", and the card's next sentence spends half of it at every hit. It's the one card where the two pull against each other. Written as ruled.
+1. *Ruled in round 2: the tags stand. Both sit under The covenant, where they add to its Lifesteal, and beside Blood vial; a half needn't fit beside every keystone.* **Bloodsworn mail and Tithing leathers can't sit under Flagellant's vestments,** which is the same slot. Their blood mage tags hold only under The covenant, which gives everyone Lifesteal already, or beside Blood vial. Not ruled in round 1.
+2. *Ruled in round 2: healing received is all of it, a Regen's pulse included. The three cards stand as written.* **"A heal", and healing received.** The ruling leaves a Regen's pulses out of "a heal" for cards that read their wearer's heals. Three of mine act on the healing their wearer receives, and I read the pulses as counting. Red stone mail's card now names Regen, since builds.md's red stone counts on a Cleric's Regen landing on a full ally. Sanguine mail doubles or halves whatever its wearer receives. Last bastion's "by anyone or anything" ends on a pulse. If the ruling was meant to reach them, Red stone mail loses a clause and the other two need one.
+3. *Ruled in round 2: a crossing isn't a start-of-fight effect, so it doesn't happen again.* **A piece that fires as the fight starts because its wearer is already under the line.** By the crossing ruling Holdfast, Warded mail and Aegis mail do. The spine's *start-of-fight effects* covers whatever a piece does as a fight starts, however its card words it. Read to the letter, Second dawn would then Guard, Shield or Aegis again at every fall. I read these as crossings, not openings: they don't happen again.
+4. *Ruled in round 2: as written.* **Mail's commons under "the first stat its row names".** The three rows name HP, Lifesteal and HP. I kept Attack, Lifesteal and HP under the names as ruled, so the first row gives way. Read row by row, the third gives way instead and Mail has a Defense common in place of the Attack one.
+5. *Ruled in round 2: a bracket may be worded to fit its card. The garb's drops "for the rest of the fight".* **The Heat bracket on Windrunner's garb.** The counter's wording ends "for the rest of the fight", and the card's next sentence spends half of it at every hit. It's the one card where the two pull against each other. Written as ruled.
 
 ## Links
 

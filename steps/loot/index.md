@@ -246,7 +246,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 *Wears:* Cleric, Bard, Pyromancer, Frostweaver, Stormcaller.
 
 - *Commons (3):* one leans to MP and Attack, one to MP regen and HP, one to MP with Aggro down.
-- **Matins robe** · uncommon · Every third ability its wearer casts costs no MP.
+- **Matins robe** · uncommon · Every third ability its wearer casts is free.
 - **Banked robe** · uncommon · Its wearer's abilities add half again as many stacks of Burn, Chill and Shock.
 - **Glyphed robe** · uncommon · Each ability its wearer casts gives it a Shield (from max MP).
 - **Acolyte's robe** · uncommon · Each time another ally casts an ability, its wearer regains a little MP.
@@ -324,7 +324,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Holy water** · uncommon · Each time one of its holder's abilities heals an ally, it also lifts one debuff from that ally.
 - **Charnel icon** · uncommon · Each time a foe falls, the ally with the lowest share of HP is healed (from its holder's Attack).
 - **Font relic** · uncommon · Each time one of its holder's abilities heals an ally, that ally also regains MP.
-- **Phylactery** · rare · The part of its holder's heals that would go past full becomes a Shield on the healed ally.
+- **Phylactery** · rare · The part of its holder's heals, and of its Regen's pulses, that would go past full becomes a Shield on the healed ally.
 - **Accuser's relic** · rare · While no foe is Marked, each heal its holder gives Marks the foe that last hit the healed ally.
 - **Heart of the saint** · legendary · Its holder's heals are paid in its own HP in place of MP, and are twice as big.
 - **Bloodstone reliquary** · legendary · Each time an ally pays HP, the ally with the lowest share of HP, the payer aside, is healed for as much.
@@ -356,7 +356,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Primer of frost** · rare · Each time its holder adds Chill to a foe, it adds more the more Chill that foe already holds.
 - **Twice-told tome** · rare · Every third ability its holder casts is cast twice. The second cast is free.
 - **Grimoire of plagues** · rare · When each fight starts, every foe gains a few stacks each of two of Burn, Chill, Shock and Bleed, at random.
-- **Accompanist's score** · rare · Each time the other ally with the highest Attack pays for an ability, its holder's next ability costs no MP.
+- **Accompanist's score** · rare · Each time the other ally with the highest Attack pays for an ability, its holder's next ability is free.
 - **Last page** · legendary · When a foe falls, every foe below a tenth of its HP falls too.
 - **Annotated grimoire** · legendary · Each ability its holder pays for makes the next ability any ally casts free.
 - **Frozen tome** · legendary · Each time a foe's Chill shatters, every ally's ability with the longest cooldown comes half its wait closer.
@@ -372,7 +372,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Smouldering orb** · rare · When a burning foe falls, every other foe gains a third of its Burn.
 - **Orb of the deep** · rare · Damage its holder takes comes out of its MP first, while it has any.
 - **Orb of the rising sun** · legendary · Each time its holder casts the same ability again in a fight, it does more than the time before (Crescendo), and nothing makes it cost more for it.
-- **The deep well** · legendary · While its holder holds Clarity, its abilities cost no MP.
+- **The deep well** · legendary · While its holder holds Clarity, its abilities are free.
 
 ### Idol
 
@@ -451,7 +451,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Hare's foot** · uncommon · Its wearer starts every fight Hasted.
 - **Millstone** · uncommon · Its wearer's basic attacks come half as often and land more than twice as hard.
 - **Hummingbird charm** · uncommon · Its wearer's basic attacks come twice as often and deal half as much.
-- **Clear-headed charm** · uncommon · Whenever its wearer drops below half its MP, it gains Clarity, every so often.
+- **Clear-headed charm** · uncommon · While its wearer is below half its MP, it gains Clarity every so often.
 - **Shatterstone charm** · rare · When its wearer's Shield breaks, the foe that broke it takes damage equal to twice the most that Shield held.
 - **Bounty charm** · rare · When its wearer lands a killing blow, its ability with the longest cooldown left is ready at once.
 - **Echo charm** · rare · Its wearer's extra strikes carry what the swing carries.
@@ -570,7 +570,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Thunderclap** · Valkyrie, Skyfall A · Skyfall on every foe that holds Shock, rising with each one's.
 - **Whipping vines** · Bramble knight, Bramble lash A · Lashes every foe for half.
 - **Overgrowth** · Bramble knight, Thicket A · Taunts twice over, and its Thorns are doubled while the Taunts last. No Guard.
-- **Frost fist** · Monk, Burning fist A · Three quick hits on the foe with the most Chill, each adding a little Chill.
+- **Frost fist** · Monk, Burning fist A · Three quick hits on the foe with the most Chill, each adding a few Chill.
 - **Hail** · Ranger, Frost arrow B · A quick arrow at the foe with the most Chill, and a few Chill on every foe.
 - **Opening thrust** · Hoplite, Phalanx A · Its first swing of each fight comes at once and deals triple.
 - **Quarry** · Ranger, Hunter's eye A · Its basic attacks go to the foe with the lowest share of HP, past any guard.

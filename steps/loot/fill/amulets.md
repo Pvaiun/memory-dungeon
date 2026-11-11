@@ -150,12 +150,12 @@
 
 ### Clear-headed charm
 - **Is:** amulet · uncommon
-- **Card:** Whenever its wearer drops below half its MP, it gains Clarity, at most once every so often.
+- **Card:** While its wearer is below half its MP, it gains Clarity every so often, the first at once.
 - **Stats:** MP +1 · Aggro −1 (2 of 2)
-- **Numbers:** half of max MP, as a crossing: it fires as the wearer's MP goes under half, or as a fight starts with it under, and again only after the wearer has been back at half or over. "Every so often" is `COOLDOWN.short` between two; a crossing inside the wait gives nothing. Clarity at its own size and length (`STATUS.clarity`): about a quarter of the pool, close to one spell's cost for a caster.
-- **Code:** none new: a watcher of MP with a wait of its own, as the other "every so often" pieces
+- **Numbers:** half of max MP, as a state: a Clarity as the wearer's MP goes under half, or as a fight starts with it under, and another each time the wait ends with it still under. "Every so often" is `COOLDOWN.short` between two, counted from the last one given, so going over half and back under inside the wait gives nothing. Clarity at its own size and length (`STATUS.clarity`): about a quarter of the pool, close to one spell's cost for a caster.
+- **Code:** none new: a state of its wearer's MP on a beat of its own, as the other "every so often" pieces
 - **Serves:** Barrage 1 ●● ⚙ mana as armour (half) ◆ free-cast
-- **Notes:** Round 1 ruled "drops below half" a crossing for the watchers of HP; I've read this line's same words the same way, which changes my first card (*Challenges*). Seen as the line says: the blue bar turns round, by about a cast's worth, each time it runs low. A wearer drained far under half gets one Clarity a fight, at its start. I read it as a watcher, not a start-of-fight effect. MP sizes the Clarity; Aggro down is the caster's careful step.
+- **Notes:** The first card, back by round 2's ruling: the crossing ruling is for HP, and a watcher of MP keeps its own card's words. Fired once a crossing, it was worth least to the driest caster, which is the one it's for. Seen as the line says: the blue bar turns round, by about a cast's worth, when it runs low, and again for as long as it stays low. Clarity lasts 16 ticks of each 22, so a dry caster holds it most of the time. It isn't a start-of-fight effect, so nothing makes it happen again. MP sizes the Clarity; Aggro down is the caster's careful step.
 
 ### Shatterstone charm
 - **Is:** amulet · rare
@@ -209,7 +209,7 @@
 - **Numbers:** half of max HP, as the start and as the cap on healing. Hits +50%.
 - **Code:** 14
 - **Serves:** Pact 2 ●●●, Toll ● ⚙ brink (key)
-- **Notes:** "At half it counts as below half" is the spine's line now. The drawback at the start isn't a start-of-fight effect that happens again. Shields aren't capped, so the cover the givers lay on it holds. A Regen's pulses stop at half too, and what they'd add past it isn't a heal for the pieces that read healing past full. Healing that Shared cup sends on passes over it at its cap. Its wearer starts every fight under the line, so by round 1's ruling on crossings every "drops below half" piece that watches it fires as the fight starts (*Challenges*). HP carries, so the wearer is at half or less when the charm comes off.
+- **Notes:** "At half it counts as below half" is the spine's line now. The drawback at the start isn't a start-of-fight effect that happens again. Shields aren't capped, so the cover the givers lay on it holds. A Regen's pulses stop at half too, and what they'd add past it counts as healing past full like any other: healing received is all of it, as round 2 rules. Healing that Shared cup sends on passes over it at its cap. Its wearer starts every fight under the line, so every "drops below half" piece that watches it fires as the fight starts, and a "whenever" one doesn't fire again. Round 2 rules that this stands: it's the brink doing what it's for, and nothing goes on the card. HP carries, so the wearer is at half or less when the charm comes off.
 
 ### Crescendo charm
 - **Is:** amulet · rare
@@ -339,15 +339,15 @@
 
 ## Challenges
 
-What round 1 didn't rule, and what its rulings open. The rest of my first list is ruled and applied.
+What round 1 didn't rule, and what its rulings opened. Round 2 ruled on five of these, marked below and applied above. Three are left: Halved heart between fights, Echo charm, and Moonstone.
 
-- **Clear-headed charm: I applied the crossing ruling to MP.** The ruling names the watchers of HP, but the line's words are the same ("whenever… drops below half"), so I read them the same way. My first card gave a Clarity every short wait for as long as the wearer stayed under half. Now it's one for each crossing, and a caster drained far under half gets one a fight, at its start. If the line was meant as a state, the first card comes back.
-- **Halved heart and the watchers of HP.** Its wearer starts every fight under the line, and at its cap it still counts as below half. So by the crossing ruling every "drops below half" piece that watches it fires as each fight starts (Holdfast, Warded mail, Bear fetish, Watch horn, Feathered cloak), and a "whenever" one never fires again, since the wearer is never back at the line. I've written nothing on the card for it. It needs a yes or a no.
-- **Do the watchers count as start-of-fight effects?** Shroud charm and Clear-headed charm now fire as a fight starts on a unit already under the line. I read them as watchers, which Second dawn and Overture coat don't fire again. The spine's phrase ("whatever a piece does as a fight starts, however its card words it") could be read the other way.
-- **Is a foe felled by damage sent back a kill for its wearer?** "A kill is a kill" covers effects that happen again, called swings and left-overs. Damage sent back isn't a hit, by the spine's phrase. I've assumed it calls nothing that waits on a killing blow (Shatterstone charm).
+- *Ruled in round 2: the crossing ruling is for HP, and the first card is back.* **Clear-headed charm: I applied the crossing ruling to MP.** The ruling names the watchers of HP, but the line's words are the same ("whenever… drops below half"), so I read them the same way. My first card gave a Clarity every short wait for as long as the wearer stayed under half. Now it's one for each crossing, and a caster drained far under half gets one a fight, at its start. If the line was meant as a state, the first card comes back.
+- *Ruled in round 2: yes, and nothing goes on the card.* **Halved heart and the watchers of HP.** Its wearer starts every fight under the line, and at its cap it still counts as below half. So by the crossing ruling every "drops below half" piece that watches it fires as each fight starts (Holdfast, Warded mail, Bear fetish, Watch horn, Feathered cloak), and a "whenever" one never fires again, since the wearer is never back at the line. I've written nothing on the card for it. It needs a yes or a no.
+- *Ruled in round 2: no. A crossing isn't a start-of-fight effect.* **Do the watchers count as start-of-fight effects?** Shroud charm and Clear-headed charm now fire as a fight starts on a unit already under the line. I read them as watchers, which Second dawn and Overture coat don't fire again. The spine's phrase ("whatever a piece does as a fight starts, however its card words it") could be read the other way.
+- *Ruled in round 2: no. A killing blow is a hit.* **Is a foe felled by damage sent back a kill for its wearer?** "A kill is a kill" covers effects that happen again, called swings and left-overs. Damage sent back isn't a hit, by the spine's phrase. I've assumed it calls nothing that waits on a killing blow (Shatterstone charm).
 - **Halved heart between fights.** HP carries, so a potion or a campfire above half is wasted on its wearer, and the unit is at half when the charm comes off. builds.md asks for power below half that doesn't leave a unit low when the fight ends. Written as the line stands.
 - **Echo charm is thinner than today's.** The fist weapons' riders already cover extra strikes, the Monk's passive does, and the phrase drops on-hit effects. It's left with Arc on a Stormcaller, a rider from a seat or a storm, and Double strike borrowed onto a rider unit. I put Double strike on the piece so it works alone.
-- **Gambler's coin and a raised chance.** A set chance wins over the coin, by the ruling. A card that raises Crit chance "to four in five at most" isn't a set chance; I've kept today's behaviour, where it adds to the coin's half. On a bleeding foe that puts a coin-holder with Bloodscent knife at four in five.
+- *Ruled in round 2: as written.* **Gambler's coin and a raised chance.** A set chance wins over the coin, by the ruling. A card that raises Crit chance "to four in five at most" isn't a set chance; I've kept today's behaviour, where it adds to the coin's half. On a bleeding foe that puts a coin-holder with Bloodscent knife at four in five.
 - **Moonstone has no line.** Today's Aggro-down common isn't among the ten. I put Aggro −1 on Clear-headed charm and Shroud charm.
 
 ## Links
@@ -370,7 +370,7 @@ For each engine, the size on my side and what the other side needs.
 - **The lead's colour.** Tinder charm on a Lead puts its rider on both Followers, each reading its own Attack, but it starts nothing. The other side is one real colour on a swing.
 - **The emptied quiver.** Gambler's coin: about half. Under Quick draw a swing averages two arrows. A chance a card sets on some hits (four in five) replaces the coin's there, and runs five.
 - **The crescendo.** Crescendo charm's price climbs a fifth a stack, the slope of the counter itself. The other side is casts that are free and still add a stack.
-- **Mana as armour.** Clear-headed charm: a Clarity, about a quarter of the pool, each time its wearer's MP crosses under half. On a unit whose MP takes its damage, the blows themselves make the crossings.
+- **Mana as armour.** Clear-headed charm: a Clarity, about a quarter of the pool, every 22 ticks while its wearer's MP is under half. On a unit whose MP takes its damage, the blows themselves hold it there.
 - **The shatter bell.** Floe charm: the slowest ability ready, once a shatter. The other side is a second and third shatter in the fight, and mana.
 - **The firecracker string.** Heart of winter makes one source's cold the whole field's, so a burst foe's neighbours stand at the same count. Its copies of a shatter's cold are damped as that cold is.
 - **The brink.** Halved heart: a cap at half that counts as below half, so the "below half" cards are on all fight, and the watchers of a drop below half fire on it as each fight starts. Shroud charm hides whoever crosses a third. Twin-knot sends its wearer's own gifts to the lowest ally. The other side is the kits' gifts.
@@ -392,7 +392,7 @@ Each with the items in it and what stops it.
 - **Floe charm on a unit whose slowest ability lays Chill.** A shatter, the spell again, more cold. It stops at the wind-up, the mana, and the cold each shatter spends. Meltwater orb takes the mana brake away.
 - **Second dawn with Reveille, Scrying orb, Ready stance, Quietus or Opening shot.** A fall brings an ability or a strike, which fells the next. Each effect happens once a fall, and the foes run out; summoners make it longer.
 - **Shatterstone charm with Second skin or Rampart.** A break, a rebuilt Shield, a break. Each break needs a foe's blow, Second skin waits "every so often", and Rampart rebuilds once.
-- **Clear-headed charm with The deep well.** Clarity makes casts free, free casts keep MP up. It stops by itself now: a new Clarity needs the wearer back at half and under it again, and the wait.
+- **Clear-headed charm with The deep well.** Below half the charm gives Clarity, and while Clarity lasts the well makes casts free. Clarity lasts 16 ticks of the charm's 22, so a wearer under half pays for about a quarter of its casts, and the Clarity itself lifts it back over the line. It settles near half a pool and doesn't run dry. *Brake:* over half there's no Clarity and every cast is paid; wind-ups and cooldowns. A size, not a loop: nothing is cast sooner.
 - **Gambler's coin with Quick draw.** builds.md's own. It stops at the crit that fails, about one in two; beside a card that sets or raises the chance on some hits, one in five.
 - **Shroud charm on a unit that pays or drains across a third.** Each crossing hides it again. Hidden refreshes and doesn't stack, and it has to be back at the line first.
 - **Ember heart.** The fire moves from kill to kill. The foes run out, and Burn drains once it's back on a foe.
@@ -405,7 +405,7 @@ Each with the items in it and what stops it.
 - **HP cut to half as a fight starts,** as a drawback that's neither damage nor a price paid, and a unit at its cap counted as below half: Halved heart. Number 14 covers the cap on healing.
 - **A stat swap taken before statuses:** Turncoat charm. Number 22 names the swap, not when.
 - **A copy that knows where its cold came from:** number 23, as ruled, damps Heart of winter's copies of a shatter's cold, so each copy has to carry that.
-- **A watcher of MP crossing a line,** with a wait between two firings: Clear-headed charm. The watchers of HP are today's.
+- **A state of MP under a line,** with a wait between two firings: Clear-headed charm. The watchers of HP are today's.
 - **Crescendo is counted ability by ability,** so its icon needs a number for each ability, or shows the highest.
 - **Hidden given on a timed return:** Phoenix ember.
 
@@ -414,7 +414,7 @@ Each with the items in it and what stops it.
 - **Burning heart.** The size is ruled, and it still costs about 1,600 HP a fight. It may be worn by nobody without Lifesteal and a healer, or it may be what Blood Pact wants.
 - **Heart of winter.** One Chill rider on its wearer chills the whole field at a single target's pace, and on an anchor with Hoarfrost plate every blow a pack lands chills all of it. It may be Cold Snap's far end in one piece.
 - **Halved heart.** Three sentences of rules before its payoff, and two things nobody wrote: every watcher of a drop below half fires on it at each fight's start, and Bloodlust draught's doubled Lifesteal, which lasts "until it's full", lasts all fight.
-- **Clear-headed charm as a crossing.** It's the ruled reading of its words, and it makes the piece worth least to the caster who's driest. Barrage's first step may want the other reading.
+- **Clear-headed charm beside The deep well.** As a state it's Barrage's first step at a size that's seen. With the well, a caster under half casts free three ticks in four.
 - **Downhill charm as a wide hit.** With each share a hit taken, one kill cashes every wound on the field and takes every Thorns back. That's more than its line's "a small number on every other foe" suggests, for Thousand Cuts and against thorned packs alike.
 - **Twin-knot.** Its boundary is ruled, and the second sentence of its card is still the hardest in my share to read. Vanguard's Shield, the Valkyrie's Shield from every hit and a counter a piece gives are all shared under it.
 - **Shroud charm and who stays in the light.** When all three drop together, the last in seat order is the one left for every pick, whoever that is. A player can't see that rule on the card.
