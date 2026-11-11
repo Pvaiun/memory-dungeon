@@ -57,11 +57,11 @@ What's true now (Nov 11, 2026). Replace what's done rather than adding to it; hi
   - `npm run balance`: the balance sheet. Run it after any numbers change, before the knobs.
   - `npm run rogue:calibrate`: each fight's knob against the hand-built rosters of `tools/rogue-parties.ts` (`--climb`); then `npm run rogue:tune`.
   - `npm run rogue`: whole runs with the simulated player (`src/sim/rogue-ai.ts`).
-  - `npx tsx tools/build-test.ts`: the nine builds side by side, on the 27 routes of `tools/build-parties.ts` (builds.md's classes, each build's formation a rung; gear, versions and mythics picked from the loot's tags).
+  - `npx tsx tools/build-test.ts`: the nine builds side by side, on the 27 routes of `tools/build-parties.ts` (builds.md's classes, each build's formation a rung; gear, versions and mythics picked from the loot's tags). Each fight starts rolled, as a good player arrives: HP mostly full, MP partly spent, cooldowns anywhere from ready to just used (`--fixed-start` for the old full start).
   - `npx tsx tools/piece-check.ts`: every item does what its card says.
   - `npx tsx tools/gear-slots.ts`: who wears which kinds, and whether the weapon and offhand rules hold.
   - `npx tsx tools/loot-list.ts`: today's loot as one line per item, with its cards (`out/loot-list.md`).
-  - `npx tsx tools/rogue-feel.ts`: fight logs for a feel read; the reader's brief is `docs/feel-reader.md`.
+  - `npx tsx tools/rogue-feel.ts`: fight logs for a feel read; the reader's brief is `docs/feel-reader.md`. `--builds landslide,storm` (or `all`) plays the build test's parties instead, on their rung's fights or `--fights`, with each build's card (`docs/build-cards.md`) beside the packs.
   - `npx tsx tools/rogue-acts.ts`: the act road.
   - `npx tsx tools/rogue-play.ts`: the AI playtester's game.
 - **Session pattern:** a piece of work can take one session or several; its `steps/` folder is the handoff. Each session ends at a gate by updating this Status section (what's true now, not a log), committing, and stopping for the director.

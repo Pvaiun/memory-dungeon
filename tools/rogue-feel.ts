@@ -16,6 +16,16 @@
  * drafter never takes the Frostweaver or the Hexer); --player plays it as the simulated player does, three leaders and its
  * own picks. --focus picks fights whose party holds those classes first. Seeds are fixed, so a round's packs can be compared
  * with the last's.
+ *
+ * --builds landslide,storm (or all) plays the build test's parties instead (`tools/build-parties.ts`, each in its formation),
+ * against the build test's fights for their rung, or against --fights (any region's easy, regular, elite or boss pool, each
+ * at its own act's knob). --rungs 1,2 and --routes <route id> narrow the parties; --seeds N plays each fight N times
+ * (default 1). The starts are rolled as the build test rolls them (`START` in tools/build-test.ts: HP mostly full, MP partly
+ * spent, each ability anywhere from ready to just used; --fixed-start for full HP and MP). Each pack is headed with its
+ * build, route and rung, --packs is then the packs per party (default 3: a regular fight, an elite and a boss, losses
+ * first), and `cards.md` beside the packs holds the cards (docs/build-cards.md) of the builds played.
+ *
+ *   npx tsx tools/rogue-feel.ts --builds landslide,bonfire [--rungs 1,2] [--routes geomancer-knight-hoplite] [--fights ogre_chief] [--seeds 2] [--packs 3] [--fixed-start]
  */
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { advance, loadContent, type Content } from "../src/engine/run.js";
@@ -29,6 +39,8 @@ import { parsePatches } from "./rogue-sim.js";
 import { patch } from "../src/sim/content.js";
 import { SUBTICKS, type AbilityT, type GearT, type NumT, type Party } from "../src/schema.js";
 import { headStart } from "../src/engine/combat/stats.js";
+import { cardsFor, pickBuildPacks, playBuilds, type BuildRec, type BuildTag } from "./rogue-feel/builds.js";
+import type { BuildId } from "./build-parties.js";
 
 const args = process.argv.slice(2);
 const opt = (k: string) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : undefined; };
@@ -37,7 +49,8 @@ const raw = patch(JSON.parse(readFileSync("content/core-set.pack.json", "utf8"))
 const c = loadContent(raw);
 const RUNS = Number(opt("--runs") ?? 48);
 const HEAT = Number(opt("--heat") ?? 0);
-const PACKS = Number(opt("--packs") ?? 10);
+const BUILDS_OPT = (opt("--builds") ?? "").split(",").filter(Boolean);
+const PACKS = Number(opt("--packs") ?? (BUILDS_OPT.length ? 3 : 10));
 const FOCUS = (opt("--focus") ?? "").split(",").filter(Boolean);
 const FIGHTS = (opt("--fights") ?? "").split(",").filter(Boolean);
 const OUT = opt("--out") ?? "out/feel";
@@ -48,6 +61,8 @@ type Rec = {
   seed: number; act: number; floor: number; tier: FightTier; region: string; fightId: string; fightName: string; won: boolean; ticks: number;
   party: Party; members: { cls: string; hp: number; maxHp: number; mp: number; maxMp: number; stats: Record<string, number>; cooldowns?: Record<string, number> }[]; foes: string[]; log: Entry[];
   knob: { hp?: number; power?: number };
+  /** Build mode: which build party played. */
+  build?: BuildTag;
 };
 
 // ─── Playing ─────────────────────────────────────────────────────────────────
@@ -89,7 +104,12 @@ if (args.includes("--rosters")) for (const act of [1, 2, 3]) for (const reg of r
   const end = (er.log as Entry[]).find((e) => e.t === "fight_end");
   recs.push({ seed: 9100 + ri, act, floor, tier, region: reg.id, fightId: p.fight.id, fightName: `${p.fight.name} (${ro.id})`, won: er.outcome === "won", ticks: Number(end?.rounds ?? 0), party, members, foes: p.fight.enemies, log: er.log as Entry[], knob: p.foes });
 });
-for (let s = 1; s <= (args.includes("--rosters") ? 0 : RUNS); s++) {
+// Build mode: the build test's parties on their rung's fights, or on the named ones.
+if (BUILDS_OPT.length) recs.push(...(playBuilds(c, {
+  builds: BUILDS_OPT, fights: FIGHTS, seeds: Number(opt("--seeds") ?? 1), rolled: !args.includes("--fixed-start"),
+  rungs: (opt("--rungs") ?? "1,2,3").split(",").map(Number), routes: (opt("--routes") ?? "").split(",").filter(Boolean),
+}) as Rec[]));
+for (let s = 1; s <= (args.includes("--rosters") || BUILDS_OPT.length ? 0 : RUNS); s++) {
   const seed = 9000 + s;
   const run = newRogue(c, { seed, leader: LEADERS[s % LEADERS.length], heat: HEAT });
   // Half the drafts at random (every class gets seen), half by the player's own scoring (a wall and a healer where it can), so the parties are
@@ -322,6 +342,7 @@ function pack(r: Rec, n: number): string {
   const out: string[] = [];
   out.push(`# Pack ${n}: ${r.fightName} (${r.tier}), act ${r.act} floor ${r.floor}, ${reg.name}`, "");
   out.push(`Run seed ${r.seed}. ${r.won ? "WON" : "LOST"} at t${r.ticks}. Foes' knob: HP ${r.knob.hp ? `${r.knob.hp > 0 ? "+" : ""}${r.knob.hp}%` : "±0"}, damage ${r.knob.power ? `${r.knob.power > 0 ? "+" : ""}${r.knob.power}%` : "±0"}.`, "");
+  if (r.build) out.push(`**Build: ${r.build.name}, rung ${r.build.rung}** (route ${r.build.route}: ${r.build.note}). Its card is in \`cards.md\`. Start: ${r.members.map((m) => `${c.classes.get(m.cls)!.name} HP ${pc(m.hp, m.maxHp)}, MP ${m.maxMp ? pc(m.mp, m.maxMp) : "–"}`).join("; ")}.`, "");
   out.push(`## The party (formation ${c.formations.get(r.party.formation)!.name})`);
   r.party.units.forEach((u, i) => {
     const m = r.members[i];
@@ -493,7 +514,7 @@ function pickPacks(): Rec[] {
 // ─── The summary: every fight played ─────────────────────────────────────────
 
 function summary(): string {
-  const out: string[] = [`# Feel summary: ${recs.length} rogue fights from ${RUNS} runs at heat ${HEAT}`, ""];
+  const out: string[] = [BUILDS_OPT.length ? `# Feel summary: ${recs.length} fights of ${new Set(recs.map((r) => r.build!.party)).size} build parties` : `# Feel summary: ${recs.length} rogue fights from ${RUNS} runs at heat ${HEAT}`, ""];
   const mean = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : NaN);
   const reads = recs.map((r) => ({ r, rd: readLog(r) }));
   // Fights by tier and act.
@@ -580,15 +601,16 @@ function summary(): string {
 // ─── Output ──────────────────────────────────────────────────────────────────
 
 mkdirSync(OUT, { recursive: true });
-const picked = pickPacks();
+const picked = BUILDS_OPT.length ? (pickBuildPacks(recs as BuildRec[], PACKS) as Rec[]) : pickPacks();
 const index: string[] = [`# Packs (${picked.length}) from ${recs.length} fights`, ""];
 picked.forEach((r, i) => {
   const text = pack(r, i + 1);
   writeFileSync(`${OUT}/pack-${String(i + 1).padStart(2, "0")}.md`, text);
-  index.push(`- pack-${String(i + 1).padStart(2, "0")}: ${r.fightName} (${r.tier}, act ${r.act} floor ${r.floor}), ${r.party.units.map((u) => c.classes.get(u.class)!.name).join(" / ")}, ${r.won ? "won" : "lost"} at t${r.ticks}, ${text.split("\n").length} lines`);
+  index.push(`- pack-${String(i + 1).padStart(2, "0")}: ${r.build ? `[${r.build.name}, rung ${r.build.rung}, ${r.build.route}] ` : ""}${r.fightName} (${r.tier}, act ${r.act} floor ${r.floor}), ${r.party.units.map((u) => c.classes.get(u.class)!.name).join(" / ")}, ${r.won ? "won" : "lost"} at t${r.ticks}, ${text.split("\n").length} lines`);
 });
 writeFileSync(`${OUT}/index.md`, index.join("\n") + "\n");
 writeFileSync(`${OUT}/summary.md`, summary());
+if (BUILDS_OPT.length) writeFileSync(`${OUT}/cards.md`, cardsFor([...new Set(recs.map((r) => r.build!.build))] as BuildId[]));
 // The rules a reader needs: what each status shown in a fight does, with its numbers.
 const gl: string[] = ["# Glossary: the statuses a fight shows", ""];
 for (const st of c.pack.statuses) if (st.show === "icon") {
@@ -604,4 +626,5 @@ for (const st of c.pack.statuses) if (st.show === "icon") {
 gl.push("", "Time: a tick is the unit; a regular fight is meant to run about 45 ticks and a boss fight about 80. Basic attacks swing every 8 to 16 ticks by weapon kind. Ability cooldown words: short 16, medium 28, long 44, very long 60 ticks; wind-ups 1, 3, 6 or 10 ticks. Abilities start a fight partly charged by slot (8, 4, 0 ticks of head start).", `Stats: HP, MP, Attack, Defense on a 1 to 5 scale (shown ×1,000 in the data: HP 2 is 2,000). Every hit scales from Attack, and Defense cuts it to hit² ÷ (hit + ${c.pack.ruleset.armorK ?? 0} × Defense); a status's own damage (Burn, Bleed, Shock) gets past Defense. Aggro: foes pick by draw; an ordinary unit draws 100, a Knight (Aggro 120) about 157, a caster (Aggro 80) about 64; Taunt forces the pick, Hidden forbids it.`);
 writeFileSync(`${OUT}/glossary.md`, gl.join("\n") + "\n");
 console.log(index.join("\n"));
-console.log(`\nWrote ${picked.length} packs and summary.md to ${OUT}/ (${recs.length} fights from ${RUNS} runs; ${recs.filter((r) => r.tier === "boss").length} boss fights; runs won: ${recs.filter((r) => r.tier === "boss" && r.act === 3 && r.won).length}).`);
+if (BUILDS_OPT.length) console.log(`\nWrote ${picked.length} packs, summary.md and cards.md to ${OUT}/ (${recs.length} fights of ${new Set(recs.map((r) => r.build!.party)).size} build parties; ${recs.filter((r) => r.won).length} won).`);
+else console.log(`\nWrote ${picked.length} packs and summary.md to ${OUT}/ (${recs.length} fights from ${RUNS} runs; ${recs.filter((r) => r.tier === "boss").length} boss fights; runs won: ${recs.filter((r) => r.tier === "boss" && r.act === 3 && r.won).length}).`);

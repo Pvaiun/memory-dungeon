@@ -7,8 +7,9 @@
  *   passive as `passive`, gear by slot; every one checked by `checkParty` before anything plays.
  * - **The fights:** for each act, a fixed sample of its regions' regular fights (the normal pool), elites and bosses, at their
  *   knobs as a run meets them at heat 0 (`knobFor` at the pool's reference floor; a boss at its own), on fixed seeds, the same
- *   for every party. Each fight from full HP and MP, every ability carried about 60% charged and a revive ready (as
- *   `buildRoster` sets it). Rung 1 plays act I's set, rung 2 act II's, rung 3 act III's; every rung also plays act II's, so the rungs
+ *   for every party. Each fight from a rolled start (`START`): HP mostly full, MP partly spent, each ability somewhere
+ *   between ready and just used, a revive ready, the same on the same seed for every party (`--fixed-start`: full HP and
+ *   MP, every ability about 60% charged, as `buildRoster` sets it). HP lost is counted from the start. Rung 1 plays act I's set, rung 2 act II's, rung 3 act III's; every rung also plays act II's, so the rungs
  *   compare on the same fights.
  * - **What it reads:** the rhythm read as `tools/rhythm-read.ts` reads it (damage by quarter, the biggest tenth of hits, the first
  *   kill and the spread of kills, damage taken by quarter, the lowest HP, damage by source, MP spent), the strength table (win
@@ -18,7 +19,7 @@
  *   the Neutral parties on the full seeds), scored by the calibration's cost (a loss 1, a win the share of HP lost).
  *
  *   npx tsx tools/build-test.ts [--quick] [--builds landslide,cuts] [--rungs 1,2] [--seeds 6] [--ablate-seeds 3] [--no-ablate]
- *                             [--workers 4] [--out out/build-test]
+ *                             [--workers 4] [--out out/build-test] [--fixed-start]
  *
  * Output: `out/build-test/report.md` and `out/build-test/report.json`.
  */
@@ -30,7 +31,7 @@ import { Worker, isMainThread, parentPort, workerData } from "node:worker_thread
 import { advanceOnce, ENGINE_VERSION, loadContent, newRun, type Content, type Run } from "../src/engine/run.js";
 import { combat, type Member as EngineMember } from "../src/engine/combat/rules.js";
 import type { Entry } from "../src/engine/log.js";
-import { rngFor, shuffle } from "../src/engine/rng.js";
+import { next, rngFor, shuffle } from "../src/engine/rng.js";
 import { FIGHT_DUNGEON, fightDungeon, foesFor, knobFor, passiveOf, plainWeapon, refFloors, rogue, type FightTier, type RogueRun, type Slot } from "../src/rogue.js";
 import { formId, type FoesT, type Party as EParty, type RogueFightT, type UpgradeFormT } from "../src/schema.js";
 import { checkParty } from "../src/validate.js";
@@ -96,7 +97,7 @@ export function itemsOf(c: Content, p: BParty): { key: string; label: string; dr
 
 // ─── The fights ─────────────────────────────────────────────────────────────
 
-type Pool = "normal" | "elite" | "bosses";
+type Pool = "easy" | "normal" | "elite" | "bosses";
 export type FightSpec = { key: string; act: number; region: string; pool: Pool; tier: FightTier; fight: RogueFightT; knob: number; foes: FoesT };
 
 /**
@@ -105,26 +106,40 @@ export type FightSpec = { key: string; act: number; region: string; pool: Pool; 
  */
 export function fightSet(c: Content, act: number): FightSpec[] {
   const regs = rogue(c).regions.filter((r) => r.act === act);
-  const per: Record<Pool, number> = regs.length === 1 ? { normal: 6, elite: 2, bosses: 2 } : { normal: 2, elite: 1, bosses: 1 };
-  const ref = refFloors(c);
+  const per: Record<Exclude<Pool, "easy">, number> = regs.length === 1 ? { normal: 6, elite: 2, bosses: 2 } : { normal: 2, elite: 1, bosses: 1 };
   const out: FightSpec[] = [];
   for (const reg of regs) {
-    for (const pool of ["normal", "elite", "bosses"] as Pool[]) {
-      const tier: FightTier = pool === "bosses" ? "boss" : pool === "elite" ? "elite" : "fight";
-      const floor = tier === "boss" ? rogue(c).config.map.floors + 1 : pool === "elite" ? ref.elite : ref.normal;
-      const fake = { act, region: reg.id, heat: 0 } as unknown as RogueRun;
-      for (const fight of shuffle(rngFor(1, `build-test:${reg.id}:${pool}`), reg[pool]).slice(0, per[pool])) {
-        const knob = knobFor(c, fake, tier, floor, fight);
-        out.push({ key: `${act}/${reg.id}/${fight.id}`, act, region: reg.id, pool, tier, fight, knob, foes: foesFor(c, tier, knob) });
-      }
+    for (const pool of ["normal", "elite", "bosses"] as const) {
+      for (const fight of shuffle(rngFor(1, `build-test:${reg.id}:${pool}`), reg[pool]).slice(0, per[pool])) out.push(specOf(c, act, reg.id, pool, fight));
     }
   }
   return out;
 }
 
+/** One fight as a run meets it at heat 0: at its pool's reference floor (a boss at its own) and that floor's knob. */
+function specOf(c: Content, act: number, region: string, pool: Pool, fight: RogueFightT): FightSpec {
+  const tier: FightTier = pool === "bosses" ? "boss" : pool === "elite" ? "elite" : "fight";
+  const floor = floorAt(c, tier, pool);
+  const knob = knobFor(c, { act, region, heat: 0 } as unknown as RogueRun, tier, floor, fight);
+  return { key: `${act}/${region}/${fight.id}`, act, region, pool, tier, fight, knob, foes: foesFor(c, tier, knob) };
+}
+
+/** Named fights, wherever a region's easy, regular, elite or boss pool holds them, each in its own act at its own knob. */
+export function fightsById(c: Content, ids: string[]): FightSpec[] {
+  const out: FightSpec[] = [];
+  for (const reg of rogue(c).regions) for (const pool of ["easy", "normal", "elite", "bosses"] as Pool[]) for (const fight of reg[pool]) if (ids.includes(fight.id)) out.push(specOf(c, reg.act, reg.id, pool, fight));
+  return out;
+}
+
+/** The floor a pool's fight is met at: its reference floor (the easy pool's first floors, the regular and elite pools' own), a boss at the top. */
+export function floorAt(c: Content, tier: FightTier, pool: Pool): number {
+  const ref = refFloors(c);
+  return tier === "boss" ? rogue(c).config.map.floors + 1 : pool === "elite" ? ref.elite : pool === "easy" ? ref.easy : ref.normal;
+}
+
 /** The acts' sets a rung plays: its own act's, then act II's (rung 2's own is act II's). */
-const setsOf = (rung: Rung): number[] => (rung === 2 ? [2] : [rung, 2]);
-const fightSeed = (key: string, i: number) => rngFor(9000 + i, `build-test:${key}`)[0];
+export const setsOf = (rung: Rung): number[] => (rung === 2 ? [2] : [rung, 2]);
+export const fightSeed = (key: string, i: number) => rngFor(9000 + i, `build-test:${key}`)[0];
 
 // ─── Playing and reading one fight ──────────────────────────────────────────
 
@@ -150,16 +165,38 @@ function sourceOf(c: Content, e: Entry): string {
   return c.statuses.get(src)?.name ?? src;
 }
 
-export function play(c: Content, party: EParty, f: FightSpec, seed: number, log: boolean): Rec {
+/**
+ * How a fight starts. Rolled (the default): a well-played party arrives mostly whole, but never with everything ready. Each
+ * member's HP somewhere from `START.hp` of its max to full, its MP from `START.mp` to full, and each ability's cooldown
+ * anywhere from ready to just used (a revive ready), all rolled from the fight's own seed, so every party meets the same
+ * starts on the same seeds. Fixed (`--fixed-start`): full HP and MP, every ability about 60% charged and a revive ready, as
+ * `buildRoster` sets a carried start.
+ */
+export const START = { hp: 0.75, mp: 0.5 };
+
+/** A build party's fight, set up and not yet played: the engine's run, with the start already laid on its members. */
+export function startRun(c: Content, party: EParty, f: FightSpec, seed: number, log: boolean, rolled = true): Run {
   fightDungeon(c, { node: "build-test", tier: f.tier, fight: f.fight, foes: f.foes, seed });
   const er: Run = newRun(c, combat, { dungeon: FIGHT_DUNGEON, party, seed }, { checked: true, log });
-  // Full HP and MP (the engine's start); every ability about 60% charged, a revive ready (as `buildRoster` sets it).
+  const rng = rngFor(seed, "build-test:start");
+  const share = (lo: number) => lo + next(rng) * (1 - lo);
   for (const em of er.party as EngineMember[]) {
+    if (rolled) {
+      em.hp = Math.max(1, Math.round(em.stats.max_hp * share(START.hp)));
+      em.mp = Math.round(em.stats.max_mp * share(START.mp));
+    }
     em.cooldowns = Object.fromEntries(em.abilities.map((a) => {
       const d = c.abilities.get(a)!;
-      return [a, d.do.some((op) => op.op === "revive") ? 0 : Math.round(d.cooldown * 40) / 100];
+      if (d.do.some((op) => op.op === "revive")) return [a, 0];
+      return [a, Math.round(d.cooldown * (rolled ? next(rng) * 100 : 40)) / 100];
     }));
   }
+  return er;
+}
+
+export function play(c: Content, party: EParty, f: FightSpec, seed: number, log: boolean, rolled = true): Rec {
+  const er = startRun(c, party, f, seed, log, rolled);
+  const hpStart = (er.party as EngineMember[]).reduce((s, m) => s + Math.max(0, m.hp), 0);
   let T = 0;
   for (let i = 0; !er.outcome; i++) {
     if (er.pending) throw new Error(`a fight asked for a decision (${f.key})`);
@@ -170,8 +207,9 @@ export function play(c: Content, party: EParty, f: FightSpec, seed: number, log:
   const ms = er.party as EngineMember[];
   const won = er.outcome === "won";
   const hpMax = ms.reduce((s, m) => s + m.stats.max_hp, 0);
-  const hpLost = 1 - ms.reduce((s, m) => s + Math.max(0, m.hp), 0) / Math.max(1, hpMax);
-  const rec: Rec = { won, T, cost: won ? hpLost : 1, hpLost, fallen: ms.filter((m) => m.hp <= 0).length, sig: `${won ? 1 : 0}:${T}:${ms.map((m) => m.hp).join(",")}` };
+  // HP lost from where the fight started, as a share of the party's max HP (a rolled start's missing HP isn't the fight's).
+  const hpLost = (hpStart - ms.reduce((s, m) => s + Math.max(0, m.hp), 0)) / Math.max(1, hpMax);
+  const rec: Rec = { won, T, cost: won ? Math.max(0, hpLost) : 1, hpLost, fallen: ms.filter((m) => m.hp <= 0).length, sig: `${won ? 1 : 0}:${T}:${ms.map((m) => m.hp).join(",")}` };
   if (log) rec.read = readLog(c, er.log as Entry[], T, ms.reduce((s, m) => s + m.stats.max_mp, 0));
   return rec;
 }
@@ -229,14 +267,14 @@ function readLog(c: Content, log: Entry[], T0: number, mpMax: number) {
 // ─── Jobs and workers ───────────────────────────────────────────────────────
 
 /** One job: a party (or an ablated copy) on one act's set, on the given seeds. */
-type Job = { id: number; party: EParty; act: number; seeds: number[]; log: boolean };
+type Job = { id: number; party: EParty; act: number; seeds: number[]; log: boolean; rolled: boolean };
 type JobOut = { id: number; recs: Record<string, Rec[]> };
 
 function runJob(c: Content, sets: Map<number, FightSpec[]>, j: Job): JobOut {
   const recs: Record<string, Rec[]> = {};
   for (const f of sets.get(j.act)!) recs[f.key] = j.seeds.map((i) => {
     try {
-      return play(c, j.party, f, fightSeed(f.key, i), j.log);
+      return play(c, j.party, f, fightSeed(f.key, i), j.log, j.rolled);
     } catch (e) {
       return { won: false, T: 0, cost: NaN, hpLost: NaN, fallen: 0, sig: "error", err: String((e as Error).message).slice(0, 200) };
     }
@@ -370,6 +408,7 @@ async function main() {
   const ASEEDS = Math.min(SEEDS, Number(opt("--ablate-seeds") ?? (quick ? 1 : 3)));
   const ABLATE = !args.includes("--no-ablate");
   const OUT = opt("--out") ?? "out/build-test";
+  const rolled = !args.includes("--fixed-start");
   const builds = opt("--builds")?.split(",") ?? Object.keys(BUILDS);
   const rungs = (opt("--rungs")?.split(",") ?? ["1", "2", "3"]).map(Number);
   const workers = Number(opt("--workers") ?? availableParallelism());
@@ -395,13 +434,13 @@ async function main() {
   // 3. The main pass: every party on its sets, with logs. Then the ablation: every formation party's items, on its own act's set.
   const jobs: Job[] = [];
   const mainOf: { party: string; act: number }[] = [];
-  for (const p of parties) for (const act of setsOf(p.rung)) { mainOf.push({ party: p.id, act }); jobs.push({ id: jobs.length, party: fielded.get(p.id)!, act, seeds, log: true }); }
+  for (const p of parties) for (const act of setsOf(p.rung)) { mainOf.push({ party: p.id, act }); jobs.push({ id: jobs.length, party: fielded.get(p.id)!, act, seeds, log: true, rolled }); }
   const ablOf: { party: string; key: string; label: string; act: number }[] = [];
   const ablJobs: Job[] = [];
   if (ABLATE) for (const p of parties.filter((x) => x.version === "formation")) {
     for (const it of itemsOf(c, p)) {
       ablOf.push({ party: p.id, key: it.key, label: it.label, act: p.rung });
-      ablJobs.push({ id: jobs.length + ablJobs.length, party: field(c, p, it.drop), act: p.rung, seeds: seeds.slice(0, ASEEDS), log: false });
+      ablJobs.push({ id: jobs.length + ablJobs.length, party: field(c, p, it.drop), act: p.rung, seeds: seeds.slice(0, ASEEDS), log: false, rolled });
     }
   }
   const fightsIn = (js: Job[]) => js.reduce((s, j) => s + sets.get(j.act)!.length * j.seeds.length, 0);
@@ -506,7 +545,7 @@ async function main() {
   const name = (b: string) => BUILDS[b as BuildId];
   L.push("# The build test", "");
   L.push(`Generated by \`npx tsx tools/build-test.ts${args.length ? " " + args.join(" ") : ""}\` (engine ${ENGINE_VERSION}, content ${c.fingerprint.slice(0, 12)}), ${new Date().toISOString().slice(0, 16)}, in ${Math.round(secs)} s on ${workers} workers.`, "");
-  L.push(`${parties.length} parties (${builds.length} builds, rungs ${rungs.join(", ")}, each in its formation and in Neutral), every one valid by \`checkParty\`. Main pass: ${fightsIn(jobs)} fights on ${SEEDS} seeds, logged. Ablation: ${ablJobs.length} items taken away one at a time, ${fightsIn(ablJobs)} fights on ${ASEEDS} seed${ASEEDS === 1 ? "" : "s"}${ABLATE ? "" : " (off)"}.`, "");
+  L.push(`${parties.length} parties (${builds.length} builds, rungs ${rungs.join(", ")}, each in its formation and in Neutral), every one valid by \`checkParty\`. Main pass: ${fightsIn(jobs)} fights on ${SEEDS} seeds, logged. Ablation: ${ablJobs.length} items taken away one at a time, ${fightsIn(ablJobs)} fights on ${ASEEDS} seed${ASEEDS === 1 ? "" : "s"}${ABLATE ? "" : " (off)"}. Starts: ${rolled ? `rolled (HP ${Math.round(START.hp * 100)}% to full, MP ${Math.round(START.mp * 100)}% to full, each cooldown from ready to just used)` : "fixed (full HP and MP, abilities 60% charged)"}.`, "");
   L.push("Each fight from full HP and MP, every ability about 60% charged, a revive ready. Rung 1 plays act I's set, rung 2 act II's, rung 3 act III's; every rung also plays act II's.", "");
   if (errors.size) {
     L.push(`**Fights the engine couldn't play:** ${errMain} of ${fightsIn(jobs)} in the main pass and ${errAbl} of ${fightsIn(ablJobs)} in the ablation, left out of every read and every pair:`, "");
