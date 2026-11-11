@@ -1,10 +1,8 @@
 # The fill, round 1: the lead's rulings
 
-Work in progress: written as each share comes in, and sent to the agents once the whole fill has been read as one design. A ruling is about loops, overlaps, broken rules, wrong wearers or unclear cards, never strength.
+Ruled on the eight shares as handed in, read as one design. The rulings for every share are also in `fill/shared.md`; each share applies them and its own section. A ruling is about loops, overlaps, broken rules, wrong wearers or unclear cards, never strength.
 
 ## For every share
-
-To go into `fill/shared.md` once round 1 is ruled.
 
 - **"Every few ticks" is four ticks** (Regen's and Clarity's own beat), on every card that says it, unless the card states a beat of its own.
 - **"The most that Shield held"** is the pool's highest point since the unit last had no Shield. Rubble plate, Second skin, Rampart and Shatterstone charm read it. A Shield rebuilt at half sends back half.
@@ -39,6 +37,10 @@ To go into `fill/shared.md` once round 1 is ruled.
 - **The chalice's payer is the Vampire.** "Pays HP" covers a price taken from one unit for another's ability; the spine's phrase gains it.
 - **Cards use the vocabulary's target phrases in full,** kept cards included: "the lowest share of max HP", "the lowest current HP". Kept cards also lose words the game no longer has ("physical damage", "a little" for a stack word, "for a moment" for a status's own length). That's wording, not a redesign.
 - **A chain of shatters is damped in fractions of a stack.** A floor of one whole stack doesn't end a chain in a pack of seven or more beside Glacier's heart. In fractions it's never none and it always dies down. Code support 23 changes.
+- **A card that gives or reads a counter says what a stack does,** in a bracket, in the counter's one wording. `fill/shared.md` said the opposite and was wrong: in an offer of three, a card that says only "gains a Heat" doesn't tell the player what will happen. The wordings are in `fill/shared.md`.
+- **A kill is a kill.** A kill landed by an effect that's happening again (a repeated opening, a called swing, a left-over) still counts as one, and calls whatever a kill calls. What isn't repeated is the effect for the same fall: each start-of-fight effect happens once a fall, whoever calls for it. The kill chains end when the foes run out.
+- **"It has Thorns" or "it has Lifesteal" as an effect** is sized as an effect, and may be the high word below legendary. "High only on a legendary" is a rule for stat steps.
+- **A common on one step takes the first stat its row names,** where that still leaves the kind's commons different from each other.
 - **New target phrases,** for the vocabulary when it's built: the other ally with the least Defense; the ally with the highest Aggro; the ally with the slowest basic attack; the two foes with the highest Attack; the foe that last hit the healed ally; the ally with the lowest share of max HP, the payer aside; the foe with the highest current HP; the ally with the lowest share of max HP that can be healed; the ally with the least MP (the lowest share of max MP, the holder included); the other ally with the least max HP; the other foe with the most Chill; the foe with the lowest share of max HP. "The ally with the highest Aggro" reads Aggro as it stands, gear and seat counted, a Taunt not; a tie goes to the earlier seat.
 ## Amulets
 
@@ -127,15 +129,24 @@ To go into `fill/shared.md` once round 1 is ruled.
 - **The last wall** stays as today's. The mirror's link in the spine loses "so better stone sends more".
 - **Eye of the tempest, Coup de grâce:** the card is the design, and the build follows it (every hit jumps; Backstab's own kill readies it). **Smoke screen's** card gains what the build does: it passes over an ally already Hidden.
 
-## To check across shares
+## Armor
 
-- Overkill axe (weapons-1) and Overrun (weapons-2) against the left-over ruling.
-- Twins (formations) against "gives itself".
-- Kindled robes (armor), Everflame lantern (offhands-1), The forge (formations): "every few ticks".
-- Rubble plate (armor), Second skin (offhands-1), Rampart (versions): "the most that Shield held".
-- Icefall's Breaker seat and Icebreaker charm: "longest cooldown" means the whole cooldown, not what's left.
-- On-struck stacks (Emberguard, Briar totem, Hoarfrost plate, Static mail, Thunderhead totem, Frostward blade): one scaling stat. Offhands-1 reads the holder's Defense.
-- Spiked targe and Urchin plate: the same level of Thorns, and whether the two read too alike on one unit.
-- Orb of the long winter (offhands-2): a new name.
-- Bloodscent knife (weapons-1): "crit far more often", against Spur's Opener.
-- Stormbrand (weapons-1): "the Shock the foes hold".
+- **Overture coat** (was Tally coat): a kill by a repeated opening calls the opening again (the ruling above). Its second sentence becomes: each happens once a kill, whatever else calls for it.
+- **Windrunner's garb** gives 3 Heat a dodge, as Hunter's skull gives 3 a kill, so it passes Quickstep leathers' Haste by its third dodge and keeps it. Both stay as their lines say; the pair goes to *Least sure*.
+- **Banked robe** beside Archmage's mantle: both stay; it goes to *Least sure*.
+- **Tithing leathers** loses its red stone tag: nothing reads its heal as a Shield.
+- **Acolyte's robe:** "another ally", as written. The spine's line gains the word.
+- **Urchin plate, Bloodsworn mail:** the high word stands (the ruling above).
+- **Hoarfrost plate, Static mail:** stacks from Defense stand, as Emberguard and Briar totem have them.
+- **Last bastion** leaves its wearer at 1 HP after the fight, as the line says. It goes to *Least sure*.
+- **The words added to seven lines** stand.
+- **Robes' commons:** MP, MP regen and Aggro down. The MP common replaces the Attack one (the first stat its row names).
+- **Counter cards** (The anvil, Windrunner's garb, Kindled robes, Tallymail, Thornheart plate) gain the bracket (the ruling above).
+- **Names:** Tally coat becomes Overture coat (beside Tallymail); Sanguine vestments becomes Flagellant's vestments (beside Sanguine mail); the Lifesteal common is Lamprey mail and the HP common Thick byrnie, as proposed.
+- **For the director:** Sanguine vestments' "same share" makes a wide spell a quarter to two fifths of a caster's HP; The covenant has the same sum.
+
+## Checked across shares
+
+- The same sentence in two places: only the plain riders (Sleet dirk and Rimed blade; Frostbite bow and Sleet blade), which no unit can hold together. Rimed blade's size changes anyway.
+- On-struck stacks read the wall's Defense in every share; Frostward blade reads its wearer's Attack, since the mage isn't the one struck.
+- Urchin plate and Spiked targe both give Thorns at high, on different conditions; a Hoplite or a Bramble knight can wear both. Left, on the director's list.
