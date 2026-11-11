@@ -6,23 +6,53 @@ Work in progress: written as each share comes in, and sent to the agents once th
 
 To go into `fill/shared.md` once round 1 is ruled.
 
-- **"Every few ticks" is four ticks** (Regen's and Clarity's own beat), on every card that says it: Kindled robes, Everflame lantern, The forge.
+- **"Every few ticks" is four ticks** (Regen's and Clarity's own beat), on every card that says it, unless the card states a beat of its own.
 - **"The most that Shield held"** is the pool's highest point since the unit last had no Shield. Rubble plate, Second skin, Rampart and Shatterstone charm read it. A Shield rebuilt at half sends back half.
 - **A Crescendo lands when a cast finishes,** so the first cast of an ability is plain.
-- **"Gives itself" is a status laid at a moment,** with a length or a pool of its own: Hidden, Taunt, Haste, Might, Guard, a Shield, Regen, Clarity, Aegis. A state held only while something is true of the unit (Bloodlust below half, a draw while healthy) isn't a gift, and neither is a counter. Twin-knot and Twins share the first kind only.
+- **"Gives itself" is a status laid at a moment:** Hidden, Taunt, Haste, Might, Guard, a Shield, Regen, Clarity, Aegis, and a counter a card gives. A state held only while something is true of the unit (Bloodlust below half, a draw while healthy) isn't a gift. Twin-knot and Twins share the first kind only.
 - **Left-over damage is a hit on the foe it reaches.** It meets that foe's Evasion and Defense, and it counts as a hit taken (a wound pays, Thorns answer). It isn't boosted or crit again, and it carries no riders. Where one unit holds two pieces that carry the same left-over, it's split evenly between them, as a fallen foe's fire is.
 - **A hit "of its basic attack's size"** (a strike with its weapon, an extra strike) takes whatever shape the unit's basic attacks have: Millstone's, Hummingbird charm's, a Hammer seat's.
-
+- **"Drops below half" (or a third) is a crossing,** whatever took the unit there: a blow, a status, a drain or a price. A watcher of HP isn't a reaction to the paying. A unit that starts a fight under the line has dropped, and the piece fires as the fight starts. "Whenever" fires again each time the unit is back at the line or over it and crosses again; "the first time each fight" fires once. (Watch horn, Bear fetish, Holdfast, Warded mail, Feathered cloak, Mottled hide's and Portcullis's states aside, Shroud charm, Aegis mail.)
+- **"Its ability with the longest cooldown"** is its slowest ability, by its whole cooldown, cooling or not. "The longest cooldown left" is the one with the most wait left. A card says which it means. The shatter bell's places (Icebreaker charm, Icefall's Breaker, Frozen tome) and Reveille mean the slowest.
+- **"Nearest to ready"** is the least wait left among abilities still cooling (First light, Scrying orb, Dancer's cloak, Rubato).
+- **A formation's rule for the whole party isn't an ally's gear or seat.** Tally coat and Second dawn don't make it happen again.
+- **Carrying another unit's riders** (The standard, Mimic wand, Toll gate). The carrier takes each rider whole, reads its own stat for the stacks, and meets any condition itself (its own crits, first hits, counts). Toll gate's Collectors pass only what every swing adds. A rider the carrier's own swing already holds from the same source (a storm on the whole party, Crown of embers) isn't added twice.
+- **Stacks from a seat are flat** (`FLAT_STACKS`), so a seat pays the same whoever sits in it.
+- **"On the field" means on the foes.** Stormbrand and the Bolt seat count the Shock the foes hold; cards say "for each Shock the foes hold".
+- **New target phrases,** for the vocabulary when it's built: the other ally with the least Defense; the ally with the highest Aggro; the ally with the slowest basic attack; the two foes with the highest Attack; the foe that last hit the healed ally; the ally with the lowest share of max HP, the payer aside; the foe with the highest current HP; the ally with the lowest share of max HP that can be healed.
 ## Amulets
 
 - **Burning heart:** the agent's size stands (a few Burn each ten ticks, the slowest beat that never lets it go out). The spine's line changes from "every few ticks" to "every so often… so it never goes out".
 - **Heart of winter:** the agent's reading stands. It copies Chill that lands on one foe; what already lands on every foe isn't copied. Its copies of cold a shatter passed on are damped as that cold is (code support 23).
 - **Halved heart:** "at half it counts as below half its HP" stays on the card, and goes into the spine's line.
-- **Twin-knot:** its boundary is the ruling above; the card's second sentence follows it.
+- **Twin-knot:** its boundary is the ruling above (a counter a card gives is shared; a state held while something is true isn't).
 - **Second dawn:** by the letter. A formation's rule for the whole party isn't an ally's gear or seat, so it doesn't happen again.
 - **Shatterstone charm:** a Shield worn through by a status sends nothing back. Stands.
 - **Hunter's mark:** stands as written. The Mark sits where it sits, and a party with no reach can't follow it past a Taunt.
 - **Names:** Icebreaker charm, Lodestone and Whetstone change (each clashes with another item). The rest keep the spine's name.
+
+## Offhands, the first six kinds
+
+- **Hoplon** counts what a Shield soaked and what an Aegis blocked of the blow: two numbers the game prints. What a Guard stopped is never shown, so Guard drops out of the card. The spine's line changes.
+- **Shuttered lantern:** pending a look at the Cleric's wind-ups. If no Cleric ability winds up long enough to be covered, it moves to the orb.
+- **Heart of the saint:** the agent's reading stands. Its holder's heals are abilities that heal directly; a Regen keeps its cost and its size.
+- **Spiked targe:** Thorns at high stands. "High only on a legendary" is a rule for stat steps. Urchin plate (armor) should give the same level.
+- **Sheltering kite:** "the other ally with the least Defense", as written. The spine's line gains the word.
+- **Watch horn:** as the line says: an ally includes its holder.
+- **War horn, Earthmother totem:** a fixed count of Might stands; a flat count says what it scales from by saying nothing does.
+- **Everflame lantern:** its beat, against "every few ticks" at four: read its notes before ruling.
+- **Names:** Spiked kite becomes Bossed kite (it gives no Thorns). Phalanx shield becomes Tower shield (Phalanx is the Hoplite's passive).
+- **For the director:** `classes.md` gives the Pyromancer's ritualist a staff and a lantern, which can't be held together. Reveille reads as the Bard's Reprise does, at a different moment.
+
+## Formations
+
+- **Hoarfrost line's Breaker gains an aim:** while a foe is Stunned, its basic attacks go to that foe, inside the Taunt rule; its hits on a Stunned foe deal double. Without it the line's promise holds against a lone foe only. The spine's line changes. The held-foe pieces (Icebreaker, Still hand, Vulture's skull) stay as they are: a piece pays when it happens, and the seat is the formation's identity.
+- **The standard, Toll gate:** the agent's reading of "carry" stands, with the one addition above (no rider twice from one source).
+- **Spur's Opener, "crits far more often":** one number with Bloodscent knife (weapons-1), or two different phrases. Pending weapons-1.
+- **Shared cup:** healing sent on goes to the ally with the lowest share of max HP that can be healed, so it isn't lost on an ally capped at half. The spine's line changes.
+- **The covenant:** the floor at a tenth goes on the card and into the spine's line, as Sanguine vestments has it. Lifesteal high stands: the link is sized to it. "The same share" stays the line's rule, and its sums go to the director's sample.
+- **Twins:** counters a card gives pass between Twins, as written.
+- **Names:** The long wall becomes The palisade (one word from The last wall). Open wound becomes Bloodied ground (one word from the version Opening wound). The long winter keeps its name; the orb changes (offhands-2). Spur keeps its name.
 
 ## To check across shares
 
@@ -31,3 +61,8 @@ To go into `fill/shared.md` once round 1 is ruled.
 - Kindled robes (armor), Everflame lantern (offhands-1), The forge (formations): "every few ticks".
 - Rubble plate (armor), Second skin (offhands-1), Rampart (versions): "the most that Shield held".
 - Icefall's Breaker seat and Icebreaker charm: "longest cooldown" means the whole cooldown, not what's left.
+- On-struck stacks (Emberguard, Briar totem, Hoarfrost plate, Static mail, Thunderhead totem, Frostward blade): one scaling stat. Offhands-1 reads the holder's Defense.
+- Spiked targe and Urchin plate: the same level of Thorns, and whether the two read too alike on one unit.
+- Orb of the long winter (offhands-2): a new name.
+- Bloodscent knife (weapons-1): "crit far more often", against Spur's Opener.
+- Stormbrand (weapons-1): "the Shock the foes hold".
