@@ -45,7 +45,7 @@ The spine answers these, the fill has to keep answering them, and `builds.md` sa
 - **`spine.md`** is the design, one line an item: its rules (the stock by kind and rarity with the why of each kind, the new words, the rules the pieces bend, the code support by number), the two kit changes, the parts that recur, every uncommon, rare and legendary piece, the formations, the versions that change, the mythics, a table of commons and uncommons by kind, each engine's link with what the fill sizes it to do, and the web's checks. It's two leads' spines merged on the director's rulings, and a fresh reader has read it twice.
 - **Its tables are generated.** `npx tsx steps/loot/web-check.ts --write` reads the lines' tags and rewrites the tables between the spine's markers; `--index` writes `index.md`. Run both after any change to a line. It fails on a tag it doesn't know or a name used twice.
 - **Offer volumes are counted,** not estimated: `npx tsx steps/loot/offer-count.ts` plays 40 simulated runs and prints what a run is offered in each act. Its figures are in `web-check.ts` (`RUN`).
-- **Open for the director:** the list at the end of `spine.md`. None of it stops the fill. Ask at gate 2, or sooner if a ruling would change a share.
+- **Ruled at gate 2:** `intent.md`, *Direction from gate 2*. What's left open is listed near the end of `spine.md`.
 - **Where the lead's first round starts:** *Least sure* in the spine lists the loops known and the pairs the second fresh read found alike, left as they are by the director's ruling.
 - **`fill-brief.md` and `index.md` are drafted** by the spine's lead, for the fill's lead to check and change before any agent reads them.
 

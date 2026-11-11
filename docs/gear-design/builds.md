@@ -408,9 +408,9 @@ Twenty-seven more, for twenty-eight, and four that the kits and the mythics alre
 - **Enough to see it:** a Bramble knight and any wide hit. Bleed pays by the hit and not by its size, so the weakest wide spell in the party is its best pourer, and a mage has a place in the blur.
 
 **The riposte.** *The Toll's dancer and Thousand Cuts.*
-- **What combines:** a dodge answered with a real swing · something that builds cover by hitting: the Valkyrie's Shield from every hit, the Monk's Drinking palm, Lifesteal · a draw on a dodger: the Monk's Stillness of mind, the Valkyrie's Over the fallen.
+- **What combines:** a dodge answered with a real swing · cover built by the dodge itself, a Shield on every miss, or by hitting: the Valkyrie's Shield from every hit, the Monk's Drinking palm, Lifesteal · a draw on a dodger: the Monk's Stillness of mind, the Valkyrie's Over the fallen.
 - **What the player sees:** MISS. The answering strike. The dancer's Shield bar a little taller. The one blow in three that lands takes only Shield.
-- **Enough to see it:** the dodge's piece on a Valkyrie. From the director's chair a dodge wasn't a defence, because the hit that landed still killed. Here every miss banks cover for it.
+- **Enough to see it:** the dodge's piece and a Shield on the dodge, on a Monk. The Valkyrie builds cover by hitting and has no Evasion of her own, so she needs two pieces to dodge with. From the director's chair a dodge wasn't a defence, because the hit that landed still killed. Here every miss banks cover for it.
 
 **Every colour.** *The four statuses' roads, through the Hexer.*
 - **What combines:** something that lays a different affliction each time: the chaos wand, which is worth a little to every status party and a lot to none; two small afflictions laid on every foe as the fight starts; or one swing carrying riders from a kit, a piece and a storm · the Hexer's Malison as approved, which pays for each kind a foe holds · the Paladin, whose hits want any affliction at all.
@@ -452,7 +452,7 @@ Twenty-seven more, for twenty-eight, and four that the kits and the mythics alre
 #### A shatter turns them over
 
 **The shatter bell.** *Cold Snap, with Landslide, Bonfire or Barrage.*
-- **What combines:** something that makes its wearer's slowest ability ready whenever a foe shatters · a party that shatters on a beat · an ability worth ringing for: the Geomancer's Boulder, the Paladin's Smite, the Pyromancer's Pyre, the Hoplite's shove.
+- **What combines:** something that makes its wearer's slowest ability that deals damage ready whenever a foe shatters · a party that shatters on a beat · an ability worth ringing for: the Geomancer's Tremor, the Paladin's Smite, the Pyromancer's Pyre, the Hoplite's Spear thrust.
 - **What the player sees:** SHATTER, and the great spell's name right under it, every time.
 - **Enough to see it:** the piece beside one Frostweaver. The frost becomes another unit's clock, so a long cooldown stops mattering, and the foe that just shattered is stunned and sundered when the blow arrives.
 

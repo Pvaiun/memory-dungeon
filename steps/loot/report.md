@@ -2,6 +2,8 @@
 
 Nov 11, 2026. A design on paper: nothing is built, and no number is balanced.
 
+**Ruled the same day.** The director took all seven recommendations below, approved the counts, the spine's rules and its four bends, and doesn't want offers aimed for the first playtest (`intent.md`, *Direction from gate 2*). The fill and the spine carry the rulings now, so this page is the gate as it was read: its sums for decisions 1, 2, 4 and 7, and the sample's cards for those items, are from before them.
+
 The fill is written, ruled three times and read fresh twice. It's 417 entries: 322 pieces, 35 formations, the 42 versions the spine lists, 16 mythics and the two kit changes. One reader went through every card as a player would. A second worked each of the twenty-eight engines from the cards' own numbers: 25 meet at the size their link names and 3 don't.
 
 What I need from you is below, in order of weight. Then what was written, what the two reads found, and the sample: twenty-five items in full sentences.

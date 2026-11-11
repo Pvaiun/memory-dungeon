@@ -509,14 +509,14 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 ### The chalice
 - **Is:** Vampire · mythic (offhand) · changed
 - **Today:** When an ally falls, the Vampire heals to full. The next time the Vampire lands a killing blow, a fallen ally rises with a quarter of its max HP. (Thrall's chalice, which this replaces.)
-- **Card:** Whenever another ally would pay MP for an ability, the Vampire pays HP instead: the same share of its max HP as the cost is of that ally's max MP. It doesn't pay when that would leave it at a tenth of its max HP or less; the ally pays its own MP then.
-- **Numbers:** The price is the ability's MP cost, divided by its caster's max MP, times the Vampire's max HP. It's paid as the cast resolves, where the MP would have been, and it's a price, not damage. The floor is a tenth of the Vampire's max HP: it pays the whole price or none. A cast that costs no MP costs no HP.
+- **Card:** Whenever another ally would pay MP for an ability, the Vampire pays HP instead: half the share of its max HP that the cost is of that ally's max MP. It doesn't pay when that would leave it at a tenth of its max HP or less; the ally pays its own MP then.
+- **Numbers:** The price is half of the ability's MP cost, divided by its caster's max MP, times the Vampire's max HP: a Monk's Flow costs the Vampire about 535 HP and a Pyromancer's Firebolt about 235. It's paid as the cast resolves, where the MP would have been, and it's a price, not damage. The floor is a tenth of the Vampire's max HP: it pays the whole price or none. A cast that costs no MP costs no HP.
 - **Code:** 20. Two things more, under *Code support beyond the spine's list*.
 - **Serves:** Pact 3 ●●●, Barrage ●●● ⚙ blood mage (half), brink (key)
 - **Notes:**
   - **Seen:** the Vampire's red bar steps down with every ability the other two cast, and their blue bars never move.
   - **What it does to the Vampire.** Two allies' casting is most of its health bar each fight, so it rides between a tenth and wherever its drinking takes it: the unit that's always lowest, which is the brink, and below half, where Bloodlust doubles its drink.
-  - **"The same share"** is the line's, and Flagellant's vestments words its price the same way. It means a cheap skill from a small pool costs as much blood as a great spell from a deep one. Round 1 keeps "the same share" as the rule for the vestments and The covenant and sends their sums to the director's sample; this card's sums belong beside them. See Least sure.
+  - **"Half the share"** is the director's ruling at gate 2, for this card, Flagellant's vestments, The covenant and Heart of the saint. It's still a share of the caster's own pool, so a cheap skill from a small pool costs as much blood as a great spell from a deep one. See Least sure.
   - **The Vampire is the payer,** as ruled: "pays HP" covers a price taken from it for an ally's ability. So a piece that answers an ally paying HP answers each of these, with the Vampire as the one who paid, and the cast counts as paid for.
   - **Only MP is taken over.** A caster whose abilities already cost HP, by its robe or the party's formation, pays its own.
   - **Who drinks it back.** The Vampire, by its own hits. The caster's Lifesteal heals the caster. See Links, the blood mage.
@@ -760,7 +760,7 @@ For each engine this share touches: the size of my side, and what the other side
   - *My side:* Quick draw: each crit is the next swing at once, with a quarter-tick of recovery between. Barbed volley makes every foe a bleeding one.
   - *The other side:* the crit chance its makers give. As ruled, "nearly always" is four times in five, nothing raises it, and a card that lifts Crit chance by a lot stops at four in five. That's five arrows on average where the link asks for three or four, and it always ends. What isn't held is plain Crit chance from stats, which the lead has flagged for the director: Quick draw's own two crit steps add to it.
 - **The blood mage.**
-  - *My side:* The chalice moves an ally's price onto the Vampire, the same share. The Vampire is the payer.
+  - *My side:* The chalice moves an ally's price onto the Vampire, at half the share. The Vampire is the payer.
   - *The other side:* the link reads the price back through the caster's Lifesteal, and here the caster isn't the one who paid. What repays the Vampire is its own drinking. Bloodstone reliquary reads each payment as a heal for the lowest ally other than the Vampire. The chalice is the blood mage with two bodies; the pieces written for one body don't close it.
 - **The resonance.**
   - *My side:* Recharge gives back 120 MP a foe, 480 of the chain's 650 on four.
@@ -827,7 +827,7 @@ Each with what's in it and what stops it.
 - **Malison as a light hit.** It's the Hexer's own number at last, on a short cooldown, on every foe, for 450 MP: more per cast than Fireball's hit. A touch would keep it near today's worth and may not be seen. I chose seen.
 - **High pyre's two numbers,** 20 to open and 500 a stack. The count decides whether a lone Pyromancer ever casts it; the long wind-up decides what it lands on. If it lands on twelve most of the time, it reads as a slower Pyre.
 - **Plague's stacks.** At a few, its Burn and Shock barely outlast one cooldown, so "the next curse landing bigger" is half true on a lone Hexer. The line's word is a few, so it's a few. Its power step grows them again, by round 2.
-- **The chalice's "same share".** A Monk's Flow costs the Vampire more blood than a Pyromancer's Firebolt, because each is a share of its own caster's pool. It's the line, and it matches Flagellant's vestments and The covenant, whose sums round 1 sends to the director; a player may find it backwards. MP for HP, one for one, is the other way to say it.
+- **The chalice's share.** A Monk's Flow costs the Vampire more blood than a Pyromancer's Firebolt (about 535 against 235), because each is a share of its own caster's pool. It's half the share since gate 2, as on Flagellant's vestments and The covenant; a player may still find it backwards. MP for HP at a set rate is the other way to say it.
 - **Stormspear's blow's size,** a normal hit on Skyfall's step, about every ten ticks. It may out-earn Skyfall itself, which is what a mythic does, or bury it.
 - **Eye of the tempest at "every hit".** With Arc's second hit and Double strike's second strike jumping, it's a good deal more than the build that was never offered. The card was always this; nobody has seen it.
 - **Writ of judgement, answering Condemn alone.** One blow a Condemn is the size of a second Smite on a medium cooldown. It may now be small for a mythic unless Swift justice is beside it.

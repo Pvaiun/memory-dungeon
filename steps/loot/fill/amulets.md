@@ -186,12 +186,12 @@
 
 ### Floe charm
 - **Is:** amulet · rare
-- **Card:** When a foe's Chill shatters, its wearer's ability with the longest cooldown is ready at once: its slowest ability, by its whole cooldown. If that one is ready already, nothing happens.
+- **Card:** When a foe's Chill shatters, its wearer's slowest ability that deals damage is ready at once: slowest by its whole cooldown, and its slowest of all if none deals damage. If that one is ready already, nothing happens.
 - **Stats:** Cast speed medium · MP +1 · HP +1 (3 of 3)
-- **Numbers:** ready: that ability's cooldown left is set to nothing. The slowest is read as the player sees it, in ticks, after any version or power step.
+- **Numbers:** ready: that ability's cooldown left is set to nothing. The slowest is read as the player sees it, in ticks, after any version or power step, among the abilities that deal damage: Smite for a Paladin, Skyfall for a Valkyrie, Blizzard for a Frostweaver, Spear thrust for a Hoplite. A Cleric and a Bard have none, so theirs is the slowest of all.
 - **Code:** a shatter is an event today, and readying is today's Hunting spear; choosing by the whole cooldown is under *Code support beyond the spine's list*
 - **Serves:** Snap 2 ●●●, Landslide ●●, Barrage ●●, Bonfire ●● ⚙ shatter bell (key)
-- **Notes:** Renamed in round 1 from Icebreaker charm. Seen as the line says: SHATTER, and the great spell's name under it. The other half is a party that shatters more than once a fight. Cast speed is there so a long wind-up lands while the shattered foe is still Stunned; MP because the slowest ability is usually the dearest.
+- **Notes:** Renamed in round 1 from Icebreaker charm. Seen as the line says: SHATTER, and the great spell's name under it. The other half is a party that shatters more than once a fight. Cast speed is there so a long wind-up lands while the shattered foe is still Stunned; MP because the slowest ability is usually the dearest. "That deals damage" is the director's ruling at gate 2: by whole cooldown alone the bell rang Condemn for a Paladin and an Aegis for a Hoplite, and a blow for four classes of sixteen. Now it's a blow for fourteen.
 
 ### Lightning-glass
 - **Is:** amulet · rare
@@ -200,7 +200,7 @@
 - **Numbers:** 4% a stack: two fifths more at 10 Shock, double at 25, about two and a half times at the cap (`STATUS.shock.cap`), which is close to what Skyfall gets from a full charge.
 - **Code:** none new: a boost sized by its target's stacks, as Skyfall and Pyre read them in the kits
 - **Serves:** Storm 2 ●●●, Landslide ●, Snap ● ⚙ held charge (key)
-- **Notes:** Sized to the link (a charge at its cap doubles the blow or more) and to be seen below it: a foe holding ten Shock takes two fifths more. The wearer's abilities don't aim at the most charged foe, so the other half is a field charged all over, or a foe held still while the charge climbs. One word from Thunderhead maul, which three classes wear beside it; both stay as they are and the pair goes to the director, first on the list of cards alike (round 3).
+- **Notes:** Sized to the link (a charge at its cap doubles the blow or more) and to be seen below it: a foe holding ten Shock takes two fifths more. The wearer's abilities don't aim at the most charged foe, so the other half is a field charged all over, or a foe held still while the charge climbs. It was one word from Thunderhead maul, which three classes wear beside it. At gate 2 the director set the maul to its basic attacks alone, so the glass is the spell's piece and the maul the swing's.
 
 ### Halved heart
 - **Is:** amulet · rare
@@ -213,12 +213,12 @@
 
 ### Crescendo charm
 - **Is:** amulet · rare
-- **Card:** Each time its wearer finishes casting an ability, that ability gains a Crescendo (that ability deals, heals and adds a fifth more for each Crescendo it holds, up to 10), kept for the fight. An ability costs a fifth more for each Crescendo it holds, in whatever it's paid in. A cast that costs nothing still gains one.
+- **Card:** Each time its wearer finishes casting an ability, that ability gains a Crescendo (that ability deals, heals and adds a fifth more for each Crescendo it holds, up to 10), kept for the fight. An ability costs two fifths more for each Crescendo it holds, in whatever it's paid in. A cast that costs nothing still gains one.
 - **Stats:** MP +1 · MP regen +1 · Cooldown medium (3 of 3)
-- **Numbers:** Crescendo as `fill/shared.md` defines it. The cost climbs on the same slope: a fifth of the ability's own cost for each, so triple at 10.
+- **Numbers:** Crescendo as `fill/shared.md` defines it. The cost climbs twice as fast as the power: two fifths of the ability's own cost for each, so five times at 10.
 - **Code:** 11
 - **Serves:** Barrage 2 ●●● ⚙ crescendo (key)
-- **Notes:** The stack lands when a cast finishes, so the first cast is plain and the second is the first bigger one. Seen from the third cast: two fifths more on the number and on the price. At this slope a Stormcaller's full pool pays for two Chain lightnings and not the third, which is the link's size; a free cast skips the price and keeps the stack. Beside Orb of the rising sun on one unit the count is one count and the price never rises, so the charm adds only its stats.
+- **Notes:** The stack lands when a cast finishes, so the first cast is plain and the second is the first bigger one. Seen from the third cast: two fifths more on the number, and four fifths more on the price. Two fifths a stack is the director's ruling at gate 2: at a fifth, a Pyromancer's four Firebolts in a fight cost 2,340 MP against 1,800 plain, a tenth of a pool, and skipping the price saved little. Now they cost 2,880, and the fourth alone is a fifth of the pool; a Stormcaller's pool pays for two Chain lightnings and not the third. A free cast skips the price and keeps the stack. Beside Orb of the rising sun on one unit the count is one count and the price never rises, so the charm adds only its stats.
 
 ### Ember heart
 - **Is:** amulet · rare
@@ -371,7 +371,7 @@ For each engine, the size on my side and what the other side needs.
 - **The emptied quiver.** Gambler's coin: about half. Under Quick draw a swing averages two arrows. A chance a card sets on some hits (four in five) replaces the coin's there, and runs five.
 - **The crescendo.** Crescendo charm's price climbs a fifth a stack, the slope of the counter itself. The other side is casts that are free and still add a stack.
 - **Mana as armour.** Clear-headed charm: a Clarity, about a quarter of the pool, every 22 ticks while its wearer's MP is under half. On a unit whose MP takes its damage, the blows themselves hold it there.
-- **The shatter bell.** Floe charm: the slowest ability ready, once a shatter. The other side is a second and third shatter in the fight, and mana.
+- **The shatter bell.** Floe charm: the slowest ability that deals damage ready, once a shatter. The other side is a second and third shatter in the fight, and mana.
 - **The firecracker string.** Heart of winter makes one source's cold the whole field's, so a burst foe's neighbours stand at the same count. Its copies of a shatter's cold are damped as that cold is.
 - **The brink.** Halved heart: a cap at half that counts as below half, so the "below half" cards are on all fight, and the watchers of a drop below half fire on it as each fight starts. Shroud charm hides whoever crosses a third. Twin-knot sends its wearer's own gifts to the lowest ally. The other side is the kits' gifts.
 - **Two in the dark.** Shroud charm: Hidden's own length at each crossing. Twin-knot doubles one hider's Hidden. The token is the third who wants the blows. Someone always stays in the light, so the engine can't hide all three.
@@ -389,7 +389,7 @@ Each with the items in it and what stops it.
 - **Downhill charm with a kill that calls the next swing** (Harvest scythe, Headsman's axe, Pack leader's coat). Opened by round 1: a share that fells a foe is a kill. A blow kills, its shares kill two more, each kill calls the next swing. It stops at a swing that doesn't kill; a share's own left-over goes no further, "at once" doesn't stack, and the foes run out.
 - **Twin-knot, Matador's cape and Goading totem.** A dodge, a Taunt, a copied Taunt on the totem's holder, every foe swings, a dodge. It stops at a round with no dodge, which is weak against a pack.
 - **Bounty charm.** A kill readies the ability that killed. It stops at a blow that doesn't kill, at the wind-up, and at the mana.
-- **Floe charm on a unit whose slowest ability lays Chill.** A shatter, the spell again, more cold. It stops at the wind-up, the mana, and the cold each shatter spends. Meltwater orb takes the mana brake away.
+- **Floe charm on a unit whose slowest damaging ability lays Chill** (a Frostweaver's Blizzard). A shatter, the spell again, more cold. It stops at the wind-up, the mana, and the cold each shatter spends. Meltwater orb takes the mana brake away.
 - **Second dawn with Reveille, Scrying orb, Ready stance, Quietus or Opening shot.** A fall brings an ability or a strike, which fells the next. Each effect happens once a fall, and the foes run out; summoners make it longer.
 - **Shatterstone charm with Second skin or Rampart.** A break, a rebuilt Shield, a break. Each break needs a foe's blow, Second skin waits "every so often", and Rampart rebuilds once.
 - **Clear-headed charm with The deep well.** Below half the charm gives Clarity, and while Clarity lasts the well makes casts free. Clarity lasts 16 ticks of the charm's 22, so a wearer under half pays for about a quarter of its casts, and the Clarity itself lifts it back over the line. It settles near half a pool and doesn't run dry. *Brake:* over half there's no Clarity and every cast is paid; wind-ups and cooldowns. A size, not a loop: nothing is cast sooner.
@@ -400,7 +400,7 @@ Each with the items in it and what stops it.
 ## Code support beyond the spine's list
 
 - **The foe that broke a Shield,** as the target of the break's reaction: Shatterstone charm, and Rubble shield needs it too.
-- **An ability chosen by its whole cooldown,** not the cooldown left: Floe charm, and the other places round 1 names (Icefall's Breaker, Frozen tome, Reveille).
+- **An ability chosen by its whole cooldown,** not the cooldown left, among those that deal damage: Floe charm, Icefall's Breaker and Frozen tome, as ruled at gate 2. Reveille keeps the slowest of all.
 - **A fallen foe's Burn held on a unit until its next hit,** shown as a number: Ember heart.
 - **HP cut to half as a fight starts,** as a drawback that's neither damage nor a price paid, and a unit at its cap counted as below half: Halved heart. Number 14 covers the cap on healing.
 - **A stat swap taken before statuses:** Turncoat charm. Number 22 names the swap, not when.
@@ -420,6 +420,6 @@ Each with the items in it and what stops it.
 - **Shroud charm and who stays in the light.** When all three drop together, the last in seat order is the one left for every pick, whoever that is. A player can't see that rule on the card.
 - **Carapace charm** is the thinnest size in my share, and reads as a smaller Vanguard. I kept today's 15% and can't show it's too small.
 - **Tinder charm.** The hardest uncommon to read, as the spine says, and blank on a clean foe. With Bleed it re-opens a wound on every swing, which may be more than its ● for Thousand Cuts.
-- **Lightning-glass beside Thunderhead maul.** One word apart, and both wearable by a Paladin, a Hoplite or a Geomancer. On their abilities the two add up.
+- **Lightning-glass beside Thunderhead maul.** Apart since gate 2: the maul reads its basic attacks and the glass its abilities, so on one unit each has its own blows.
 - **Second dawn with Ready stance or Reveille on an ally.** Every fall half-charges a kit or readies an ability. It may be most of the piece's power, and nothing on either card hints at it.
 - **The stats.** HP is on 16 of the 27 pieces above common, as the careful step. That may be too even a spread for a slot whose pieces are meant to pull apart.

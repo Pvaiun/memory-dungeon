@@ -472,12 +472,12 @@ How the cards here are worded, so the whole share reads one way:
 
 ### Thunderhead maul
 - **Is:** great weapon · rare
-- **Card:** Its wearer's hits deal 5% more for each Shock on their target. The Shock stays.
+- **Card:** Its basic attacks deal 5% more for each Shock on their target. The Shock stays.
 - **Stats:** Attack +1 · HP +1 · Crit damage medium · Aggro +1 (4 of 4)
-- **Numbers:** 5% a stack on its wearer's hits, basic attack or ability: half again as much at 10 Shock, double at 20, triple at the cap of 40 (`STATUS.shock.cap`). About what Skyfall adds a stack to its own blow.
+- **Numbers:** 5% a stack on its basic attacks: half again as much at 10 Shock, double at 20, triple at the cap of 40 (`STATUS.shock.cap`). About what Skyfall adds a stack to its own blow.
 - **Code:** beyond the list: a boost by the stacks of one status on the target, on every hit. Today's Skyfall reads its target's Shock for one ability.
 - **Serves:** Storm 2 ●●●, Landslide ●●, Snap ● ⚙ held charge (key) ◆ heavy-blow
-- **Notes:** New. Its hits go where its wearer's hits go, not to the most charged: 5% a stack is sized so a foe with a middling charge already shows it. Aggro is for the unit that holds the field's attention while the others charge it.
+- **Notes:** New. Its hits go where its wearer's hits go, not to the most charged: 5% a stack is sized so a foe with a middling charge already shows it. Aggro is for the unit that holds the field's attention while the others charge it. Its basic attacks alone, by the director's ruling at gate 2: as "its wearer's hits" it was one word from Lightning-glass, which reads abilities, and three classes wear both. Now one piece is the swing's and the other the spell's.
 
 ### Worldbreaker
 - **Is:** great weapon · legendary
@@ -566,4 +566,4 @@ Round 1's and round 2's rulings are applied above. Round 2 ruled on all four of 
 - **Saint's mace counts the part of a heal that went past full.** It's simpler to read off the green number, and it lets a healer load a full unit's blow.
 - **The lighter swing on Bellringer and the heavier on Overrun** are choices the lines didn't ask for.
 - **Executioner's longbow's first clause** is nothing to a Ranger, one of its two wearers.
-- **Near pairs, left as they are:** Opening shot and the Hoplite's Opening thrust version (a first swing at once: one always crits, one deals triple); Mason's hammer and the Valkyrie's passive (a Shield from the damage dealt); Thunderhead maul and Lightning-glass, which a unit can wear together and which differ by one word, hits against abilities.
+- **Near pairs, left as they are:** Opening shot and the Hoplite's Opening thrust version (a first swing at once: one always crits, one deals triple); Mason's hammer and the Valkyrie's passive (a Shield from the damage dealt). Thunderhead maul and Lightning-glass are apart since gate 2: the maul reads its basic attacks and the glass its abilities.

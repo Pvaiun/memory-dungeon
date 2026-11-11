@@ -417,12 +417,12 @@ How to read it:
 
 ### Heart of the saint
 - **Is:** relic · legendary
-- **Card:** Its holder's abilities that heal cost HP in place of MP: the same share of its max HP as they'd cost of its max MP. Their heals are twice as big. The price never takes it below 1 HP.
+- **Card:** Its holder's abilities that heal cost HP in place of MP: half the share of its max HP that they'd cost of its max MP. Their heals are twice as big. The price never takes it below 1 HP.
 - **Stats:** MP regen +1 · HP +2 · Attack +1 (4 of 4)
-- **Numbers:** the price is the share of its max HP that the ability's MP cost was of its max MP, and no MP is paid. Heals are doubled. A status the ability lays keeps its own numbers.
+- **Numbers:** the price is half the share of its max HP that the ability's MP cost was of its max MP, and no MP is paid. Heals are doubled. A status the ability lays keeps its own numbers.
 - **Code:** 20.
 - **Serves:** Pact 3 ●●● ⚙ brink (key)
-- **Notes:** Its holder's heals are abilities that heal directly, as ruled: an ability that only lays Regen keeps its MP cost and its size, and heals from gear cost nothing and aren't doubled. HP is its fuel now, so two steps of it. Beside another effect that makes abilities cost HP (Flagellant's vestments on the same Cleric, The covenant), there's still one price, and the stricter floor holds: it won't cast a heal that would leave it below a tenth of its max HP (round 3).
+- **Notes:** Its holder's heals are abilities that heal directly, as ruled: an ability that only lays Regen keeps its MP cost and its size, and heals from gear cost nothing and aren't doubled. HP is its fuel now, so two steps of it. Beside another effect that makes abilities cost HP (Flagellant's vestments on the same Cleric, The covenant), there's still one price, and the stricter floor holds: it won't cast a heal that would leave it below a tenth of its max HP (round 3). At half the share, as the director rules at gate 2, the price holds its healer less low than the brink's link pictures: a Cleric's Cure is about a tenth of its bar (*Least sure*).
 
 ### Bloodstone reliquary
 - **Is:** relic · legendary

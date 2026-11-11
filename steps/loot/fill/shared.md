@@ -118,3 +118,13 @@ Round 3. What the fresh read found.
 - **A formation's first sentence is its promise,** and stays: `builds.md` asks a formation for "a promise in plain words". The rule that a card doesn't say what a thing is for is for pieces.
 - **"Its ability with the longest cooldown" says which it means on the card** where it's the slowest (Reveille, Frozen tome, as Floe charm does).
 - **Names changed in round 3:** Tithing leathers is now Gleaner's leathers; Briar totem is now Nettle totem; Bloodlust draught is now Ravening draught. Thorn hedge's Thorn seat is now the Barb.
+
+Gate 2. The director's rulings, Nov 11, that reach more than one share.
+
+- **A spell paid in life costs half the share** of max HP that it would cost of max MP (Flagellant's vestments, The covenant, The chalice, Heart of the saint). At the whole share the blood mage lost life on every cast.
+- **The shatter bell rings "its slowest ability that deals damage",** by whole cooldown, and the slowest of all for a unit with none (Floe charm, Frozen tome, Icefall's Breaker). Reveille keeps the slowest of all.
+- **Someone always stands in the light.** Round 1's rule of Hidden's is approved, with its gap closed: when nobody is left in the light, the last in seat order steps out of hiding.
+- **A Crescendo's price is two fifths more cost a stack,** twice the slope of its power (Crescendo charm). The counter's own definition is unchanged.
+- **Thunderhead maul reads its basic attacks alone,** so it and Lightning-glass no longer read the same.
+- **The riposte is its keystone and a Shield on the dodge.** Nothing in the fill changes; `docs/gear-design/builds.md` says so now.
+- **Frost fist stays at its base ability's few.** Its power step is the balance pass's to watch.

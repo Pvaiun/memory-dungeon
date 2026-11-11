@@ -112,9 +112,9 @@ How the stack words are read here, once:
 
 ### Frozen tome
 - **Is:** tome · legendary
-- **Card:** Each time a foe's Chill shatters, every ally's ability with the longest cooldown comes half its wait closer: each one's slowest ability, by its whole cooldown.
+- **Card:** Each time a foe's Chill shatters, every ally's slowest ability that deals damage comes half its wait closer: slowest by its whole cooldown, and an ally's slowest of all if none of its abilities deals damage.
 - **Stats:** Cooldown medium · Attack +2 · Cast speed medium (4 of 4)
-- **Numbers:** half of the wait left, each shatter, anyone's. "The longest cooldown" is each ally's slowest ability, by its whole cooldown, cooling or not.
+- **Numbers:** half of the wait left, each shatter, anyone's. Each ally's slowest ability that deals damage, by its whole cooldown, cooling or not, as the director rules at gate 2 for the shatter bell's three places.
 - **Code:** the trigger as today's Orb of the long winter. Two things are new: a cut by a share of the wait in place of a count of ticks, and a pick by an ability's whole cooldown (*Code support*).
 - **Serves:** Snap 3 ●●●, Landslide ●●, Barrage ●● ⚙ shatter bell (key)
 - **Notes:** Half of a long wait is one or two cooldown words, so it's seen on the first shatter; a second shatter leaves a quarter. Cooldown stays medium because the piece is its own Cooldown.
@@ -628,7 +628,7 @@ Round 1 ruled on the rest, and round 2 on the first, fourth and fifth of these, 
 - **Resonance** (Mana pearl and Meltwater orb, halves). 15% of max MP a fall; a quarter a shatter. Between them a pack that's falling or shattering keeps the spell paid for, which takes away the link's mana brake.
 - **Crescendo** (Orb of the rising sun, key; Twice-told tome, Accompanist's score, Annotated grimoire and The deep well, halves). The orb can't sit with either tome. So the tomes' free casts skip Crescendo charm's price only, and the orb's holder never has a price to skip.
 - **Mana as armour** (Orb of the deep and Idol of the deep, keys; Leech idol, half). One MP for one damage. A giver has to give about a foe's swing at a time (500 or more) for a gift to read as a blow not taken. Clarity does. Leech idol's spill is a tenth of a hit and doesn't.
-- **Shatter bell** (Frozen tome, key). Half the wait on each ally's slowest ability. It needs shatters on a beat, and abilities worth ringing for on the other two.
+- **Shatter bell** (Frozen tome, key). Half the wait on each ally's slowest ability that deals damage. It needs shatters on a beat, and abilities worth ringing for on the other two.
 - **Firecracker** (Snowbound folio, half). Two or three Chill on every foe. That makes a field "already cold" only beside another wide source.
 - **Brink** (Blood vial and Ravening draught, keys). The draught puts its holder at half from the first tick. The vial keeps an Assassin low and a Vampire barely. The other side is the gifts to the ally with the lowest share of max HP.
 - **Two in the dark** (Shadow cloak, key; Feathered cloak and Swan's grace, halves). Hidden for its own length at the start and at each fall: most of a pack fight, and the first moments of a boss fight. It needs a second hider and an anchor that wants every blow; the third always stays in the light.
@@ -641,7 +641,7 @@ Found in this share, each with its brake:
 - **Vulture's skull with Quick draw.** A burst on a Stunned foe that takes no time. The one crit in five that fails, and nothing raises the chance.
 - **Venom vial.** At a half there's none. With a Bleed rider on the same unit (Ragged axe) the wound grows by the rider's stacks every hit. The other allies' hits close it.
 - **Three Shadow cloaks,** or cloaks under a Decoy. Someone stays in the light, so the foes always have a pick. Two stay hidden for Hidden's own length after every fall, which is the engine at its fullest, and the gap between kills is the brake.
-- **Frozen tome in a chain of shatters.** Each shatter halves every ally's slowest wait, so a chain of four leaves a sixteenth. The chain's own damping, wind-ups and mana.
+- **Frozen tome in a chain of shatters.** Each shatter halves the wait on every ally's slowest damaging ability, so a chain of four leaves a sixteenth. The chain's own damping, wind-ups and mana.
 - **The deep well beside Clear-headed charm.** Below half its MP it gains Clarity, and while that lasts it casts free. It settles round half a pool and never runs dry. Clarity's length against the charm's beat.
 - **Bell of the hour with Cadenza slotted first.** Three swings at once count toward the next five. Two real swings a round, and Cadenza's cost.
 - **Smouldering orb in a pack.** A fall flares the field, which fells the next, which flares it again. The foes run out.
