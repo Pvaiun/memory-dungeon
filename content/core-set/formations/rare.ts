@@ -116,7 +116,7 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
 }
 {
   const soloist = "Each ability another ally casts takes a fifth off the cooldowns it has left.";
-  const well = "Draws far more. Whenever the Soloist finishes a cast, the Well gains a Shield: a tenth of the Well's max HP.";
+  const well = "Draws far more, and Taunts when each fight starts. Whenever the Soloist finishes a cast, the Well gains a Shield: a tenth of the Well's max HP.";
   add(
     formation("The stage", "rare", "Everything the other two cast brings the Soloist's spells round.", [
       { name: "Soloist", text: soloist, statuses: ["the_stage_soloist"] },
@@ -125,7 +125,7 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
     ]),
     [
       held("the_stage_soloist", "Soloist", soloist, { reactions: [react(on("action_resolve", { kind: "ability", whose: "ally" }), { op: "cooldown", which: "abilities", set: { times: 80 }, to: "holder" })] }),
-      held("the_stage_well", "Well", "Whenever the Soloist finishes a cast, the Well gains a Shield.", { reactions: [react(on("action_resolve", { kind: "ability", whose: "team", seat: "soloist" }), give("shield", "holder", share(0.1, "max_hp")))] }),
+      held("the_stage_well", "Well", "Taunts when each fight starts. Whenever the Soloist finishes a cast, the Well gains a Shield.", { reactions: [atStart(give("taunt")), react(on("action_resolve", { kind: "ability", whose: "team", seat: "soloist" }), give("shield", "holder", share(0.1, "max_hp")))] }),
     ],
     "Barrage 2 ●●●, Toll ●",
   );

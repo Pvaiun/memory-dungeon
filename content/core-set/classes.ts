@@ -214,7 +214,9 @@ export const abilities: A[] = [
   }),
   // Choosing: one target, a fallen ally first, else the lowest; a revive lands only on the fallen and a heal only on the living, so it does one or the other.
   a("valkyrie", "choosing", "Choosing", "Chooses one ally: a fallen one, raised with a tenth of its HP; else the lowest, healed from Attack.", {
-    ...timing("medium", "normal"), mp: 650, if: { any: [{ side: "allies", where: { hpBelow: 80 } }, { side: "allies", where: { ko: true } }] }, target: T.fallenElseLowestShareAlly,
+    // Below half, not below 80%: a good player arrives with someone a little down, and the revive's cooldown spent on a top-up at
+    // the first tick leaves nothing for the fall.
+    ...timing("medium", "normal"), mp: 650, if: { any: [{ side: "allies", where: { hpBelow: 50 } }, { side: "allies", where: { ko: true } }] }, target: T.fallenElseLowestShareAlly,
     // The heal first: a heal skips a fallen target and a revive skips a living one, so the one target gets the one outcome its state calls for.
     do: [{ op: "heal", amount: from("attack", KIT.choosing) }, { op: "revive", hp: { scale: [{ ratio: REVIVE.tenth, stat: "max_hp", of: "target" }] } }],
   }),

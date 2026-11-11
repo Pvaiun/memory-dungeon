@@ -271,7 +271,8 @@ weapon("mace", "common", "Friar's mace", { stats: [st("max_hp", 1), st("mp_regen
   weapon("mace", "rare", name, {
     effect, stats: [st("max_hp", 1), st("mp_regen", 2), sp("cooldown", "medium")],
     statuses: [
-      own_(name, effect, { reactions: [react(on("healed", given), give(tally, "owner", ofAmount(0.5))), react(on("overhealed", given), give(tally, "owner", ofAmount(0.5)))] }),
+      // What lands, not what's cast: healing past full (or past a cap on healing) gives nothing.
+      own_(name, effect, { reactions: [react(on("healed", given), give(tally, "owner", ofAmount(0.5)))] }),
       { id: tally, name: "BLESSED", text: "Its next hit deals extra damage: half the heals it was given.", label: "buff", show: "icon", stacking: "intensity", adds: [{ on: "physical", amount: 1 }], trigger: { on: EV.hit }, drop: "all" },
     ],
     serves: "Pact 2 ●●●, Landslide ●●",
