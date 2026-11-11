@@ -17,6 +17,7 @@ Design work for a party-based JRPG dungeon crawler with automatic combat, where 
   - `philosophy.md`: the director's intent, rhythm, what makes a piece good, and how loot is made.
   - `builds.md`: the nine builds the loot is designed from: roads, doors and engines.
   - `loot.md`: the rules the loot is made by.
+- `docs/build-cards.md`: what each build should look like in a fight, card by card, for reading build parties against chosen fights; it points to the balance sheet's bands (`BANDS` in `tools/balance/sheet.ts`), the only standing targets for a fight's shape. `docs/feel-reader.md` is the fight reader's brief.
 - `docs/code-map.md`: where the code is, one line a file, and where to start for each kind of change. Read it before opening code, rather than listing folders.
 - `src/`: the game, pure TypeScript that also runs in the browser: the engine, the rogue mode, the schema, the validator and the simulation library. `tools/`: the Node command lines that measure it.
 - `content/core-set/`: the core set as content. `scale.ts` holds every first value by name (the weapon kinds' swing words and budgets among them); the other files hold the classes, gear, formations, upgrades, enemies, dungeons and the rogue mode, with each item's card text. `npm run content` writes `content/core-set.pack.json`, which the engine, tests and studies read.
