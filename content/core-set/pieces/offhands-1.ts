@@ -4,10 +4,10 @@
  *
  * `gear` joins the pack's gear and the rogue's stock; `statuses` the pack's statuses; `served` is designer data, never in the pack.
  */
-import type { EffectT, ReactionT, StatusT } from "../../../src/schema.js";
-import { COOLDOWN, FLAT_STACKS, HIT, SHOCK_STACKS, SPECIAL } from "../scale.js";
+import type { StatusT } from "../../../src/schema.js";
+import { FLAT_STACKS, HIT, SHOCK_STACKS, SPECIAL } from "../scale.js";
 import { COUNTER, OVERHEAL } from "./shared.js";
-import { EV, NO_MARK, SO_OFTEN, TO, atFirstStart, atStart, give, marker, ofAmount, on, own, piece, pieceStatus, react, reactIf, share, shelf, sp, st, stacksOf, state, swingNow, used, whileHolding, type Change, type Rarity } from "./kit.js";
+import { EV, NO_MARK, SO_OFTEN, TO, atFirstStart, beatHalfway, atStart, give, marker, ofAmount, on, own, piece, pieceStatus, react, reactIf, share, shelf, sp, st, stacksOf, state, swingNow, used, whileHolding, type Change, type Rarity } from "./kit.js";
 
 const S = shelf();
 
@@ -24,21 +24,6 @@ const given = (sid: string, name: string, text: string, body: Partial<StatusT>):
   ({ id: sid, name, text, label: "buff", show: "sheet", stacking: "refresh", unremovable: true, ...body }) as StatusT;
 /** A heal its holder gives an ally (itself included). */
 const healGiven = (more: Parameters<typeof on>[1] = {}) => on("healed", { whose: "team", other: "holder", ...more });
-/**
- * "Every so often", with the first beat halfway to it: a wait as the fight starts (and on a revive), then a beat on its own
- * marker every `COOLDOWN.short`.
- */
-function beat(pid: string, name: string, effects: EffectT[]): { reactions: ReactionT[]; statuses: StatusT[] } {
-  const wait = `${pid}_wait`, pulse = `${pid}_beat`;
-  return {
-    reactions: [atStart(give(wait)), react(on("revived"), give(wait)), react(on("status_ended", { status: wait, cause: ["expired"] }), ...effects, give(pulse))],
-    statuses: [
-      marker(wait, `${name} (waiting)`, "Its first beat comes when this runs out.", { duration: COOLDOWN.short / 2 }),
-      marker(pulse, `${name} (beating)`, "Its beat, every so often.", { pulse: { every: SO_OFTEN, do: effects } }),
-    ],
-  };
-}
-
 // ─── Kite shield ──
 
 offhand("kite_shield", "common", "Pavise", { stats: [st("defense", 1)], serves: "Landslide: Defense is its first stat." });
@@ -110,7 +95,7 @@ offhand("round_shield", "common", "Bronze buckler", { stats: [st("defense", 1)],
 
 {
   const name = "Comrade's targe", effect = "Every so often, the ally with the lowest share of max HP gains a Shield of a fifth of its holder's max HP.";
-  const b = beat(id(name), name, [give("shield", TO.lowestAlly, share(0.2, "max_hp"))]);
+  const b = beatHalfway(id(name), name, [give("shield", TO.lowestAlly, share(0.2, "max_hp"))]);
   offhand("round_shield", "uncommon", name, {
     effect, stats: [st("max_hp", 1), st("defense", 1)],
     statuses: [own_(name, effect, { reactions: b.reactions }), ...b.statuses],

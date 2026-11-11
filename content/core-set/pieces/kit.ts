@@ -310,6 +310,21 @@ export const TAUNTS_ALL_FIGHT: ReactionT[] = [
 /** "Its next basic attack comes at once": the basic attack's timer made ready (a second call before the swing adds nothing). */
 export const swingNow = (to: ToT = "holder"): EffectT => ({ op: "cooldown", which: "basic", set: "ready", to });
 
+/**
+ * "Every so often", with the first beat halfway to it: a wait as the fight starts (and on a revive), then a beat on its own
+ * marker every `SO_OFTEN`. The piece's status takes the reactions; the share adds the two markers.
+ */
+export function beatHalfway(pid: string, name: string, effects: EffectT[]): { reactions: ReactionT[]; statuses: StatusT[] } {
+  const wait = `${pid}_wait`, pulse = `${pid}_beat`;
+  return {
+    reactions: [atStart(give(wait)), react(on("revived"), give(wait)), react(on("status_ended", { status: wait, cause: ["expired"] }), ...effects, give(pulse))],
+    statuses: [
+      marker(wait, `${name} (waiting)`, "Its first beat comes when this runs out.", { duration: SO_OFTEN / 2 }),
+      marker(pulse, `${name} (beating)`, "Its beat, every so often.", { pulse: { every: SO_OFTEN, do: effects } }),
+    ],
+  };
+}
+
 // ─── A share: one content file's pieces ──────────────────────────────────────
 
 /**
