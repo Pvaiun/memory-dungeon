@@ -14,6 +14,21 @@ Work in progress: what the agents raised while applying round 1, and what the fr
 - **A killing blow is a hit.** A foe felled by damage sent back, by Thorns or by a status's own damage isn't anyone's killing blow. Cards that wait for a foe to fall, whoever felled it, still fire.
 - **The crossing ruling is for HP.** A watcher of MP keeps its own card's words.
 
+- **A free cast costs nothing, in MP or in HP.** "Costs no MP" on a card means the cast is free, so under an HP price it costs no HP either. New cards say "is free"; a kept card may keep today's words.
+
+## Offhands, the other seven kinds
+
+- **Tempest cloak and Dragon's tooth** as hits that land a second time: as written. Neither carries the swing.
+- **Accompanist's score, The deep well:** their casts are free (the ruling above); the cards say so.
+- **Swan's grace on the last ally standing** isn't Hidden, by "someone stays in the light". It goes to the director with that rule.
+- **The tome's commons, The king's head's reading:** as written.
+
+## Formations
+
+- **Shared cup counts a Regen's pulse past full:** it reads healing received (the ruling above on healing received).
+- **Toll gate's two added sentences, Twins passing a debuff a unit lays on itself, Decoy's card, Spur's Opener at 20 points with no ceiling:** as written.
+- **The covenant:** "Lifesteal, high" is the fill's size for the spine's "every ally has Lifesteal". No mismatch.
+
 ## Amulets
 
 - **Clear-headed charm:** the first card comes back. While its wearer is below half its MP it gains Clarity every so often, the first at once. Fired once a crossing, it's worth least to the driest caster, which is the one it's for.
