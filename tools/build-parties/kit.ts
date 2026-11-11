@@ -6,8 +6,8 @@
  * How a rung is filled, from the designer's tags (the Serves lines, content/core-set/pieces/index.ts SERVED):
  * - **Gear:** each member, slot by slot, wears the piece of a kind its class wears that's worth most to the build, at the
  *   rung's rarities (rung 1: commons and uncommons; rung 2: rares too; rung 3: legendaries too), never a piece a partner
- *   already wears; ties go to the rarer piece, then the id. A piece that draws the foes (its threads say draw) goes only to a
- *   class that can stand in front (a wall, or the Monk's and the Valkyrie's dance). A slot with nothing worth anything to the build holds a common of
+ *   already wears; ties go to the rarer piece, then the id. A piece that draws the foes (its threads say draw, or its stats
+ *   carry Aggro) goes only to a class that can stand in front, and not when it sits in a cast or heal seat. A slot with nothing worth anything to the build holds a common of
  *   the class's first kind. A two-handed weapon leaves the offhand empty.
  * - **Mythics:** at rung 3, the members whose class's mythic is worth most to this build of all the builds (at most two, the
  *   more worth first) wear it in its slot.
@@ -92,13 +92,15 @@ const kindOf = (g: GearT) => (g.slot === "weapon" ? g.weapon?.kind : g.slot === 
 const kindsFor = (c: ClassDefT, slot: Slot): string[] | null => (slot === "weapon" ? c.weapons : slot === "armor" ? c.armor : slot === "offhand" ? c.offhands : null);
 const TWO_HANDED = new Set(weaponKinds.filter((k) => k.hands === 2).map((k) => k.id));
 
-/** A piece whose threads say it draws the foes (Taunts, Aggro): a good player hangs it on a unit that can stand in front, never on a dealer. */
-const draws = (g: GearT) => !!SERVED[g.id]?.threads.includes("draw");
+/**
+ * A piece that draws the foes: its threads say draw (a Taunt), or its stat line carries Aggro. A good player hangs it on a
+ * unit that stands in front, never on a dealer or on the caster a formation's cast seat is for.
+ */
+const draws = (g: GearT) => !!SERVED[g.id]?.threads.includes("draw") || (g.stats ?? []).some((s) => s.stat === "aggro" && (s.flat ?? 0) > 0);
 
-function pick(c: ClassDefT, slot: Slot, build: BuildId, rung: Rung, used: Set<string>): GearT {
+function pick(c: ClassDefT, slot: Slot, build: BuildId, rung: Rung, used: Set<string>, front: boolean): GearT {
   const kinds = kindsFor(c, slot);
-  const wall = (FIT[c.id]?.wall ?? 0) >= 1;
-  const fits = pieceGear.filter((g) => g.slot === slot && (!kinds || kinds.includes(kindOf(g)!)) && RANK[rarityOf(g)] <= rung && !used.has(g.id) && (wall || !draws(g)));
+  const fits = pieceGear.filter((g) => g.slot === slot && (!kinds || kinds.includes(kindOf(g)!)) && RANK[rarityOf(g)] <= rung && !used.has(g.id) && (front || !draws(g)));
   const scored = fits.map((g) => ({ g, w: worth(g.id, build) })).sort((x, y) => y.w - x.w || RANK[rarityOf(y.g)] - RANK[rarityOf(x.g)] || x.g.id.localeCompare(y.g.id));
   if (scored[0]?.w) return scored[0].g;
   // Nothing for the build: a common of the class's first kind (any amulet for the amulet slot).
@@ -174,13 +176,14 @@ function knownOf(cls: string, build: BuildId, known: number): string[] {
 const KNOWN_AT_RUNG_1 = [2, 1, 2];
 
 /** A rung's member: what it knows (`knownOf`), its gear by the tags, its versions from rung 2, the power step on them at rung 3. */
-function member(cls: string, seat: string, build: BuildId, rung: Rung, used: Set<string>, known: number, mythic?: GearT): Member {
+function member(cls: string, seat: string, build: BuildId, rung: Rung, used: Set<string>, known: number, role: Role, mythic?: GearT): Member {
   const c = classOf(cls);
   const gear: Partial<Gear> = {};
   for (const slot of ["weapon", "armor", "offhand", "amulet"] as Slot[]) {
     if (slot === "offhand" && gear.weapon && TWO_HANDED.has(pieceGear.find((g) => g.id === gear.weapon)?.weapon?.kind ?? "")) continue;
     if (mythic && mythic.slot === slot) { gear[slot] = mythic.id; continue; }
-    const g = pick(c, slot, build, rung, used);
+    // In front: a class that can stand there (a wall, or the Monk's, the Valkyrie's and the Vampire's dance), not seated to cast or heal.
+    const g = pick(c, slot, build, rung, used, (FIT[cls]?.wall ?? 0) >= 1 && role !== "cast" && role !== "heal");
     used.add(g.id);
     gear[slot] = g.id;
   }
@@ -206,7 +209,7 @@ export function route(build: BuildId, classIds: [string, string, string], note: 
     if (!seats) throw new Error(`build parties: no formation '${formation}'`);
     const order = seated(formation, classIds);
     const used = new Set<string>(), myth = rung === 3 ? mythicsFor(build, classIds) : new Map<string, GearT>();
-    const members = order.map((cls, s) => member(cls, seats[s], build, rung, used, rung === 1 ? KNOWN_AT_RUNG_1[classIds.indexOf(cls)] : 3, myth.get(cls))) as [Member, Member, Member];
+    const members = order.map((cls, s) => member(cls, seats[s], build, rung, used, rung === 1 ? KNOWN_AT_RUNG_1[classIds.indexOf(cls)] : 3, SEAT_ROLES[formation][s], myth.get(cls))) as [Member, Member, Member];
     return { id: `${build}/${id}/${rung}`, build, route: id, rung, act: ACT[rung], version: "formation", formation, members };
   }) as [Party, Party, Party];
   return { build, id, classes: classIds, note, rungs };

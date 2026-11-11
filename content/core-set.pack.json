@@ -20944,7 +20944,7 @@
    "source": "starter",
    "stats": {
     "max_hp": 5000,
-    "max_mp": 1000,
+    "max_mp": 1600,
     "mp_regen": 0,
     "attack": 2000,
     "defense": 4000,
@@ -21099,7 +21099,7 @@
    "source": "unlock",
    "stats": {
     "max_hp": 4000,
-    "max_mp": 1300,
+    "max_mp": 2100,
     "mp_regen": 0,
     "attack": 5000,
     "defense": 5000,
@@ -21176,7 +21176,7 @@
    "source": "unlock",
    "stats": {
     "max_hp": 3000,
-    "max_mp": 1500,
+    "max_mp": 2400,
     "mp_regen": 0,
     "attack": 4000,
     "defense": 3000,
@@ -21295,7 +21295,7 @@
    "source": "unlock",
    "stats": {
     "max_hp": 3000,
-    "max_mp": 750,
+    "max_mp": 1200,
     "mp_regen": 0,
     "attack": 4000,
     "defense": 1000,
@@ -21375,7 +21375,7 @@
    "source": "unlock",
    "stats": {
     "max_hp": 4000,
-    "max_mp": 1700,
+    "max_mp": 2400,
     "mp_regen": 0,
     "attack": 4000,
     "defense": 2000,
@@ -22989,7 +22989,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.29,
+        "ratio": 0.5,
         "stat": "attack"
        }
       ]
@@ -23029,7 +23029,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.17,
+        "ratio": 0.29,
         "stat": "attack"
        }
       ]
@@ -31582,7 +31582,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.29,
+        "ratio": 0.5,
         "stat": "attack"
        }
       ]
@@ -31627,7 +31627,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.29,
+        "ratio": 0.5,
         "stat": "attack"
        }
       ]
@@ -31672,7 +31672,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.17,
+        "ratio": 0.29,
         "stat": "attack"
        }
       ]
@@ -31717,7 +31717,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.29,
+        "ratio": 0.5,
         "stat": "attack"
        }
       ]
@@ -31762,7 +31762,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.17,
+        "ratio": 0.29,
         "stat": "attack"
        }
       ]
@@ -31802,7 +31802,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.238,
+        "ratio": 0.406,
         "stat": "attack"
        }
       ]

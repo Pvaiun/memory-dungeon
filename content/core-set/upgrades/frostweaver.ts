@@ -34,9 +34,9 @@ abilityUp({
   a: { name: "Ice spear", text: "Has Seek. Deals damage that scales from Attack to the foe with the highest Attack, adding several Chill; stacks scale from Attack.", builds: [] },
   b: { name: "Icicles", text: "Three lances at the three foes with the most Chill: each deals smaller damage that scales from Attack and adds a few Chill; stacks scale from Attack.", builds: ["snap"] },
   form: (v, k) =>
-    v === "a" ? { seek: true, target: T.highestAMFoe, do: [phys(hitOf("attack", "light"), { apply: lanceChill("several", LANCE_CHILL * k) })] } // The Chill class doesn't Slow: Chill is its slow.
-      : v === "b" ? { target: { side: "foes", pick: "highest", by: { stacks: "chill" }, count: 3 }, do: [phys(hitOf("attack", "touch"), { apply: lanceChill("few", LANCE_CHILL * k) })] }
-        : { do: [phys(hitOf("attack", "light"), { apply: lanceChill("several", LANCE_CHILL * k) })] },
+    v === "a" ? { seek: true, target: T.highestAMFoe, do: [phys(hitOf("attack", "normal"), { apply: lanceChill("several", LANCE_CHILL * k) })] } // The Chill class doesn't Slow: Chill is its slow.
+      : v === "b" ? { target: { side: "foes", pick: "highest", by: { stacks: "chill" }, count: 3 }, do: [phys(hitOf("attack", "light"), { apply: lanceChill("few", LANCE_CHILL * k) })] }
+        : { do: [phys(hitOf("attack", "normal"), { apply: lanceChill("several", LANCE_CHILL * k) })] },
 });
 
 /** Frost armor: for the Guard's length, a foe that hits its holder gains a few Chill, half again the passive's count, from the Frostweaver's Attack. */
@@ -55,7 +55,7 @@ abilityUp({
   form: (v, k) =>
     v === "a" ? { do: [apply("guard", { to: T.everyAlly }), apply(k > 1 ? "frost_armor_plus" : "frost_armor", { to: T.everyAlly })] }
       : v === "b" ? { do: [phys({ scale: [{ ratio: HIT.touch * k, stat: "attack" }, { ratio: 150 * k, stacks: "chill", of: "target" }] })] }
-        : { do: [phys(hitOf("attack", "touch", k), { apply: [{ status: "chill", stacks: stacks("few", "attack", BLIZZARD_CHILL) }] })] },
+        : { do: [phys(hitOf("attack", "light", k), { apply: [{ status: "chill", stacks: stacks("few", "attack", BLIZZARD_CHILL) }] })] },
 });
 
 abilityUp({

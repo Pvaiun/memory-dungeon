@@ -269,8 +269,8 @@ export const abilities: A[] = [
   }),
   // Frostweaver
   // About 6 Chill a lance at Attack 4, so a shatter takes more than one cast.
-  a("frostweaver", "frost_lance", "Frost lance", "A lance of ice at the foe with the most Chill, adding several.", { ...timing("quick", "normal"), mp: 450, target: T.mostFoe("chill"), do: [phys(hit("attack", "light"), { apply: [{ status: "chill", stacks: stacks("several", "attack", 0.6) }] })] }),
-  a("frostweaver", "blizzard", "Blizzard", "A blizzard on every foe, adding a few Chill to each.", { ...timing("medium", "long"), mp: 1000, target: T.everyFoe, do: [phys(hit("attack", "touch"), { apply: [{ status: "chill", stacks: stacks("few", "attack", 0.45) }] })] }),
+  a("frostweaver", "frost_lance", "Frost lance", "A lance of ice at the foe with the most Chill, adding several.", { ...timing("quick", "normal"), mp: 450, target: T.mostFoe("chill"), do: [phys(hit("attack", "normal"), { apply: [{ status: "chill", stacks: stacks("several", "attack", 0.6) }] })] }),
+  a("frostweaver", "blizzard", "Blizzard", "A blizzard on every foe, adding a few Chill to each.", { ...timing("medium", "long"), mp: 1000, target: T.everyFoe, do: [phys(hit("attack", "light"), { apply: [{ status: "chill", stacks: stacks("few", "attack", 0.45) }] })] }),
   a("frostweaver", "stillness", "Stillness", "Clarity on the ally with the least MP, if one is under half, and a few Chill on every foe.", { ...timing("medium", "quick"), mp: 650, target: T.everyFoe, do: [apply("chill", { stacks: stacks("few", "attack", 0.5) }), apply("clarity", { to: T.needsMpAlly })] }),
   // Stormcaller
   a("stormcaller", "chain_lightning", "Chain lightning", "Lightning at a random foe, then up to three others, adding a few Shock to each.", {
@@ -356,11 +356,14 @@ export const classes: ClassDefT[] = [
 /**
  * Each class's MP pool, in points, set by how many regular fights it lasts from full (`npx tsx tools/rogue-acts.ts`, the
  * endurance line): every class runs dry in about two or three fights, casters and walls close together, erring scarce. MP
- * comes back on the bench, never in a fight by itself. The pool, not the cost ladder, is the class's MP identity.
+ * comes back on the bench, never in a fight by itself. The pool, not the cost ladder, is the class's MP identity. The walls'
+ * and fighters' pools (the Knight, Hoplite, Valkyrie, Monk and Vampire) are half again bigger and more since the balance
+ * pass's knobs made fights two or three times longer: they had run dry inside one (short of MP a sixth to a quarter of their
+ * time, against the balance sheet's band of 8%), while the casters' regen gear kept theirs.
  */
 export const MP_POOL: Record<string, number> = {
-  knight: 1, cleric: 2.2, ranger: 2.1, bramble_knight: 1.7, hoplite: 1.3, paladin: 3.3,
-  valkyrie: 1.5, bard: 2.4, hexer: 1.7, monk: 0.75, assassin: 1.45, vampire: 1.7,
+  knight: 1.6, cleric: 2.2, ranger: 2.1, bramble_knight: 1.7, hoplite: 2.1, paladin: 3.3,
+  valkyrie: 2.4, bard: 2.4, hexer: 1.7, monk: 1.2, assassin: 1.45, vampire: 2.4,
   pyromancer: 3.8, frostweaver: 2.3, stormcaller: 2.3, geomancer: 2.3,
 };
 for (const k of classes) if (MP_POOL[k.id] !== undefined) k.stats.max_mp = pts(MP_POOL[k.id]);
