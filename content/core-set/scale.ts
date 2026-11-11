@@ -261,6 +261,15 @@ export const stacks = (word: StackWord, stat: string, mult = 1): NumT => ({ scal
 /** The Pyromancer's Burn and the Stormcaller's Shock, on their abilities and passives, are this many times the word's. */
 export const BURN_STACKS = 1;
 export const SHOCK_STACKS = 1.5;
+/**
+ * The party's applications of a damage status, against the stack words: every application whose stacks are drawn from a
+ * stat (a rider's "a few Chill (from Attack)", an ability's "several Burn") adds this share of what its word gives, on the
+ * party's side only (classes, abilities, versions, pieces, mythics, seats; never a foe's). Applied when the pack is built
+ * (pack.ts); flat counts and shares of a status passed on are left as written. The words are one scale for every status,
+ * and a stack is worth very different amounts: a Burn or Bleed stack deals about three swings' worth over its life, and Chill
+ * caps at 12, so "a few Chill" on every swing shatters a foe each couple of hits. Statuses not named here add their words'.
+ */
+export const APPLIED: Record<string, number> = { chill: 0.35, burn: 0.5 };
 /** A flat stack count, for enemies that apply "a stack" or statuses that start with "many". */
 export const FLAT_STACKS = { one: 1, few: 2, several: 4, many: 7 } as const;
 

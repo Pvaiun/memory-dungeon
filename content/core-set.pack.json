@@ -1412,7 +1412,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0009099999999999999,
+          "ratio": 0.0003185,
           "stat": "attack",
           "of": "holder"
          }
@@ -1603,7 +1603,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00035,
           "stat": "attack",
           "of": "holder"
          }
@@ -4502,7 +4502,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.000245,
           "stat": "attack",
           "of": "holder"
          }
@@ -4778,7 +4778,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00035,
           "stat": "attack",
           "of": "holder"
          }
@@ -4800,7 +4800,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00035,
           "stat": "attack",
           "of": "holder"
          }
@@ -4833,7 +4833,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.000245,
           "stat": "attack",
           "of": "holder"
          }
@@ -4855,7 +4855,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.000245,
           "stat": "attack",
           "of": "holder"
          }
@@ -5136,7 +5136,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00035,
           "stat": "attack",
           "of": "holder"
          }
@@ -5279,7 +5279,7 @@
          "stacks": {
           "scale": [
            {
-            "ratio": 0.0007,
+            "ratio": 0.00035,
             "stat": "attack",
             "of": "holder"
            }
@@ -5291,7 +5291,7 @@
          "stacks": {
           "scale": [
            {
-            "ratio": 0.0007,
+            "ratio": 0.000245,
             "stat": "attack",
             "of": "holder"
            }
@@ -5390,7 +5390,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.000245,
           "stat": "max_hp",
           "of": "holder"
          }
@@ -6404,7 +6404,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0013,
+          "ratio": 0.000455,
           "stat": "attack",
           "of": "holder"
          }
@@ -6589,7 +6589,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0013,
+          "ratio": 0.000455,
           "stat": "attack",
           "of": "holder"
          }
@@ -6737,7 +6737,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0013,
+          "ratio": 0.000455,
           "stat": "attack",
           "of": "holder"
          }
@@ -7117,7 +7117,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0023,
+          "ratio": 0.00115,
           "stat": "attack",
           "of": "holder"
          }
@@ -7540,7 +7540,7 @@
   {
    "id": "ritual_staff",
    "name": "Ritual staff",
-   "text": "Its wearer's abilities wind up half again as long, deal half again as much and add twice the stacks.",
+   "text": "Its wearer's abilities wind up half again as long, deal half again as much and add half again as many stacks.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7550,7 +7550,7 @@
      "wind": 50,
      "damage": 50,
      "stacks": {
-      "pct": 100
+      "pct": 50
      }
     }
    ]
@@ -8104,7 +8104,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.000245,
           "stat": "defense",
           "of": "holder"
          }
@@ -9010,7 +9010,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.000245,
           "stat": "attack",
           "of": "holder"
          }
@@ -9576,7 +9576,7 @@
          "stacks": {
           "scale": [
            {
-            "ratio": 0.0007,
+            "ratio": 0.00035,
             "stat": "attack",
             "of": "holder"
            }
@@ -9588,7 +9588,7 @@
          "stacks": {
           "scale": [
            {
-            "ratio": 0.0007,
+            "ratio": 0.000245,
             "stat": "attack",
             "of": "holder"
            }
@@ -10484,7 +10484,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00035,
           "stat": "defense",
           "of": "holder"
          }
@@ -10614,7 +10614,7 @@
   {
    "id": "monolith_shield",
    "name": "Monolith shield",
-   "text": "Its holder's abilities that deal damage take twice as long to come round, and their hits land two and a half times as hard. What they apply is unchanged.",
+   "text": "Its holder's abilities that deal damage take twice as long to come round, and their hits land twice as hard. What they apply is unchanged.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -10627,7 +10627,7 @@
       ]
      },
      "cooldown": 100,
-     "damage": 150
+     "damage": 100
     }
    ]
   },
@@ -11966,7 +11966,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0013,
+          "ratio": 0.00065,
           "stat": "attack",
           "of": "holder"
          }
@@ -12183,7 +12183,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.000245,
           "stat": "attack",
           "of": "holder"
          }
@@ -12360,7 +12360,7 @@
          "stacks": {
           "scale": [
            {
-            "ratio": 0.0007,
+            "ratio": 0.00035,
             "stat": "attack",
             "of": "holder"
            }
@@ -12372,7 +12372,7 @@
          "stacks": {
           "scale": [
            {
-            "ratio": 0.0007,
+            "ratio": 0.000245,
             "stat": "attack",
             "of": "holder"
            }
@@ -12667,7 +12667,7 @@
   {
    "id": "meltwater_orb",
    "name": "Meltwater orb",
-   "text": "When a foe's Chill shatters, its holder regains a quarter of its max MP.",
+   "text": "When a foe's Chill shatters, its holder regains a tenth of its max MP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -12685,7 +12685,7 @@
        "amount": {
         "scale": [
          {
-          "ratio": 0.25,
+          "ratio": 0.1,
           "stat": "max_mp",
           "of": "holder"
          }
@@ -13354,7 +13354,7 @@
   {
    "id": "venom_vial",
    "name": "Venom vial",
-   "text": "A foe's Bleed doesn't close under its holder's hits: the wound pays for the hit and stays as deep as it was. It still closes under everyone else's.",
+   "text": "A foe's Bleed closes only a fifth under its holder's hits, not a third. It still closes a third under everyone else's.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -13378,7 +13378,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.49999999999999994,
+          "ratio": 0.2,
           "stacks": "bleed",
           "of": "target"
          }
@@ -16186,7 +16186,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00035,
           "stat": "attack",
           "of": "holder"
          }
@@ -16215,7 +16215,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00035,
           "stat": "attack",
           "of": "holder"
          }
@@ -16326,7 +16326,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00035,
           "stat": "attack",
           "of": "holder"
          }
@@ -16355,7 +16355,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00035,
           "stat": "attack",
           "of": "holder"
          }
@@ -16945,7 +16945,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.001274,
+          "ratio": 0.0004459,
           "stat": "attack",
           "of": "holder"
          }
@@ -16978,7 +16978,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00035,
           "stat": "attack",
           "of": "holder"
          }
@@ -17035,7 +17035,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00098,
+          "ratio": 0.00049,
           "stat": "attack",
           "of": "holder"
          }
@@ -18537,7 +18537,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00098,
+          "ratio": 0.00049,
           "stat": "attack",
           "of": "holder"
          }
@@ -18576,7 +18576,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00035,
           "stat": "attack",
           "of": "holder"
          }
@@ -18609,7 +18609,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00035,
+          "ratio": 0.000175,
           "stat": "attack",
           "of": "holder"
          }
@@ -18648,7 +18648,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00098,
+          "ratio": 0.00049,
           "stat": "attack",
           "of": "holder"
          }
@@ -18681,7 +18681,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00049,
+          "ratio": 0.000245,
           "stat": "attack",
           "of": "holder"
          }
@@ -18933,7 +18933,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00105,
+          "ratio": 0.0003675,
           "stat": "attack",
           "of": "source"
          }
@@ -18965,7 +18965,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00147,
+          "ratio": 0.0005145,
           "stat": "attack",
           "of": "source"
          }
@@ -20339,7 +20339,7 @@
          "stacks": {
           "scale": [
            {
-            "ratio": 0.0013,
+            "ratio": 0.00065,
             "stat": "attack",
             "of": "self"
            }
@@ -21815,7 +21815,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.000245,
           "stat": "attack"
          }
         ]
@@ -22162,7 +22162,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0026,
+          "ratio": 0.0013,
           "stat": "attack"
          }
         ]
@@ -22598,7 +22598,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0008399999999999999,
+          "ratio": 0.00042,
           "stat": "attack"
          }
         ]
@@ -22882,7 +22882,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0026,
+          "ratio": 0.0013,
           "stat": "attack"
          }
         ]
@@ -22922,7 +22922,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0014,
+          "ratio": 0.0007,
           "stat": "attack"
          }
         ]
@@ -23000,7 +23000,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00156,
+          "ratio": 0.000546,
           "stat": "attack"
          }
         ]
@@ -23040,7 +23040,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00063,
+          "ratio": 0.0002205,
           "stat": "attack"
          }
         ]
@@ -23069,7 +23069,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 0.0007,
+        "ratio": 0.000245,
         "stat": "attack"
        }
       ]
@@ -25268,7 +25268,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00098,
+          "ratio": 0.000343,
           "stat": "attack"
          }
         ]
@@ -25349,7 +25349,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 0.0007,
+        "ratio": 0.000245,
         "stat": "attack"
        }
       ]
@@ -25432,7 +25432,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 0.00098,
+        "ratio": 0.000343,
         "stat": "attack"
        }
       ]
@@ -27115,7 +27115,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0026,
+          "ratio": 0.0013,
           "stat": "attack"
          }
         ]
@@ -27199,7 +27199,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0014,
+          "ratio": 0.0007,
           "stat": "attack"
          }
         ]
@@ -27289,7 +27289,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0014,
+          "ratio": 0.0007,
           "stat": "attack"
          }
         ]
@@ -28662,7 +28662,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 0.0014,
+        "ratio": 0.0007,
         "stat": "attack"
        }
       ]
@@ -28879,7 +28879,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 0.00196,
+        "ratio": 0.00098,
         "stat": "attack"
        }
       ]
@@ -29479,7 +29479,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.001176,
+          "ratio": 0.000588,
           "stat": "attack"
          }
         ]
@@ -29523,7 +29523,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00084,
+          "ratio": 0.000294,
           "stat": "attack"
          }
         ]
@@ -29567,7 +29567,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00056,
+          "ratio": 0.00028,
           "stat": "attack"
          }
         ]
@@ -29611,7 +29611,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.001176,
+          "ratio": 0.0004116,
           "stat": "attack"
          }
         ]
@@ -29655,7 +29655,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.000784,
+          "ratio": 0.000392,
           "stat": "attack"
          }
         ]
@@ -30991,7 +30991,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00364,
+          "ratio": 0.00182,
           "stat": "attack"
          }
         ]
@@ -31034,7 +31034,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0052,
+          "ratio": 0.0026,
           "stat": "attack"
          }
         ]
@@ -31077,7 +31077,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0013,
+          "ratio": 0.00065,
           "stat": "attack"
          }
         ]
@@ -31120,7 +31120,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00728,
+          "ratio": 0.00364,
           "stat": "attack"
          }
         ]
@@ -31163,7 +31163,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00182,
+          "ratio": 0.00091,
           "stat": "attack"
          }
         ]
@@ -31203,7 +31203,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0014,
+          "ratio": 0.0007,
           "stat": "attack"
          }
         ]
@@ -31243,7 +31243,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0046,
+          "ratio": 0.0023,
           "stat": "attack"
          }
         ]
@@ -31283,7 +31283,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00084,
+          "ratio": 0.00042,
           "stat": "attack"
          }
         ]
@@ -31323,7 +31323,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0046,
+          "ratio": 0.0023,
           "stat": "attack"
          }
         ]
@@ -31363,7 +31363,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00084,
+          "ratio": 0.00042,
           "stat": "attack"
          }
         ]
@@ -31593,7 +31593,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.002184,
+          "ratio": 0.0007644,
           "stat": "attack"
          }
         ]
@@ -31638,7 +31638,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00156,
+          "ratio": 0.000546,
           "stat": "attack"
          }
         ]
@@ -31683,7 +31683,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00084,
+          "ratio": 0.000294,
           "stat": "attack"
          }
         ]
@@ -31728,7 +31728,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.002184,
+          "ratio": 0.0007644,
           "stat": "attack"
          }
         ]
@@ -31773,7 +31773,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.001176,
+          "ratio": 0.0004116,
           "stat": "attack"
          }
         ]
@@ -31813,7 +31813,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00063,
+          "ratio": 0.0002205,
           "stat": "attack"
          }
         ]
@@ -31968,7 +31968,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 0.0007,
+        "ratio": 0.000245,
         "stat": "attack"
        }
       ]
@@ -32036,7 +32036,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 0.0021,
+        "ratio": 0.000735,
         "stat": "attack"
        }
       ]
@@ -32110,7 +32110,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 0.0021,
+        "ratio": 0.000735,
         "stat": "attack"
        }
       ]
@@ -37812,7 +37812,7 @@
   {
    "id": "ritual_staff",
    "name": "Ritual staff",
-   "text": "Its wearer's abilities wind up half again as long, deal half again as much and add twice the stacks.",
+   "text": "Its wearer's abilities wind up half again as long, deal half again as much and add half again as many stacks.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -40553,7 +40553,7 @@
   {
    "id": "monolith_shield",
    "name": "Monolith shield",
-   "text": "Its holder's abilities that deal damage take twice as long to come round, and their hits land two and a half times as hard. What they apply is unchanged.",
+   "text": "Its holder's abilities that deal damage take twice as long to come round, and their hits land twice as hard. What they apply is unchanged.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -41993,7 +41993,7 @@
   {
    "id": "meltwater_orb",
    "name": "Meltwater orb",
-   "text": "When a foe's Chill shatters, its holder regains a quarter of its max MP.",
+   "text": "When a foe's Chill shatters, its holder regains a tenth of its max MP.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -42457,7 +42457,7 @@
   {
    "id": "venom_vial",
    "name": "Venom vial",
-   "text": "A foe's Bleed doesn't close under its holder's hits: the wound pays for the hit and stays as deep as it was. It still closes under everyone else's.",
+   "text": "A foe's Bleed closes only a fifth under its holder's hits, not a third. It still closes a third under everyone else's.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",

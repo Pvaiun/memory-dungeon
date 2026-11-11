@@ -156,10 +156,10 @@ offhand("orb", "common", "Ember orb", { stats: [st("attack", 1)], serves: "Bonfi
   });
 }
 {
-  const name = "Meltwater orb", effect = "When a foe's Chill shatters, its holder regains a quarter of its max MP.";
+  const name = "Meltwater orb", effect = "When a foe's Chill shatters, its holder regains a tenth of its max MP.";
   offhand("orb", "rare", name, {
     effect, stats: [st("max_mp", 1), st("attack", 1), sp("cooldown", "medium")],
-    statuses: [own_(name, effect, { reactions: [react(EV.shatter, { op: "mp", amount: share(0.25, "max_mp"), to: "holder" })] })],
+    statuses: [own_(name, effect, { reactions: [react(EV.shatter, { op: "mp", amount: share(0.1, "max_mp"), to: "holder" })] })],
     serves: "Snap 2 ●●●, Barrage 2 ●● ⚙ frozen gate (half), resonance (half) ◆ free-cast",
   });
 }
@@ -324,8 +324,10 @@ offhand("vial", "common", "Hemlock phial", { stats: [critStep(1)], serves: "Thou
 {
   // What the wound closes under its holder's hit is put back: d/(1−d) of what the foe holds, the same whichever reads first.
   const name = "Venom vial";
-  const effect = "A foe's Bleed doesn't close under its holder's hits: the wound pays for the hit and stays as deep as it was. It still closes under everyone else's.";
-  const back = STATUS.bleed.drop / (1 - STATUS.bleed.drop);
+  // Each hit's third closes, then a fifth of what's left goes back on: 2/3 × 6/5 = 4/5 stays, so the wound closes a fifth. Fresh
+  // Bleed the hit itself lays is in what's left, so the share back stays well under a half (at a half the wound grows without end).
+  const effect = "A foe's Bleed closes only a fifth under its holder's hits, not a third. It still closes a third under everyone else's.";
+  const back = 0.2;
   offhand("vial", "rare", name, {
     effect, stats: [sp("lifesteal", "medium"), critStep(1), sp("crit_damage", "medium")],
     statuses: [own_(name, effect, { reactions: [reactIf(EV.hit, { unit: "other", where: { has: "bleed" } }, give("bleed", "other", stacksOf("bleed", back, "target"), { rider: false }))] })],

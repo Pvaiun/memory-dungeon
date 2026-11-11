@@ -337,10 +337,10 @@ weapon("staff", "common", "Willow staff", { stats: [sp("cast_speed", "medium"), 
   });
 }
 {
-  const name = "Ritual staff", effect = "Its wearer's abilities wind up half again as long, deal half again as much and add twice the stacks.";
+  const name = "Ritual staff", effect = "Its wearer's abilities wind up half again as long, deal half again as much and add half again as many stacks.";
   weapon("staff", "rare", name, {
     effect, stats: [sp("cast_speed", "medium"), st("attack", 2), st("max_mp", 1)],
-    statuses: [own_(name, effect, { mods: [{ wind: 50, damage: 50, stacks: { pct: 100 } }] })],
+    statuses: [own_(name, effect, { mods: [{ wind: 50, damage: 50, stacks: { pct: 50 } }] })],
     serves: "Bonfire 2 ●●●, Snap 2 ●●, Landslide ●, Barrage ●",
   });
 }

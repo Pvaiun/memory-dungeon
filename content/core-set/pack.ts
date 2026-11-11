@@ -11,6 +11,28 @@ import { gear } from "./gear.js";
 import { armorTypes, design, machinery, offhandKinds, ruleset, stats, vocabulary, weaponKinds } from "./vocabulary.js";
 import { mythicGear, pieceGear, pieceStatuses, upgradeAbilities, upgrades } from "./pieces/index.js";
 import { ROGUE_CONFIG, ROGUE_EVENTS, ROGUE_REGIONS } from "./rogue.js";
+import { APPLIED } from "./scale.js";
+
+/**
+ * The party's applications of a damage status at that status's own size (scale.ts APPLIED): each application, in any
+ * effect, reaction, hit or pick of one, whose stacks are drawn from a stat has its base and ratios multiplied. A flat count,
+ * and a share of an amount (Chill passed on from a shatter), stay as written. Only the party's content goes through.
+ */
+function sized<T>(xs: T[]): T[] {
+  const walk = (x: unknown): unknown => {
+    if (Array.isArray(x)) return x.map(walk);
+    if (!x || typeof x !== "object") return x;
+    const o = Object.fromEntries(Object.entries(x).map(([k, v]) => [k, walk(v)])) as Record<string, unknown>;
+    const f = typeof o.status === "string" ? APPLIED[o.status] : undefined;
+    const st = o.stacks as { base?: number; scale?: { ratio: number; stat?: string; amount?: boolean }[] } | undefined;
+    if (f !== undefined && o.op !== "spend" && st && typeof st === "object" && Array.isArray(st.scale) && st.scale.some((t) => t.stat) && !st.scale.some((t) => t.amount)) {
+      const r = (n: number) => Number((n * f).toPrecision(6));
+      o.stacks = { ...st, ...(st.base ? { base: r(st.base) } : {}), scale: st.scale.map((t) => ({ ...t, ratio: r(t.ratio) })) };
+    }
+    return o;
+  };
+  return xs.map((x) => walk(x) as T);
+}
 
 /**
  * The rogue mode's block. No loot of its own: its stock is the pack's pieces (each fixed at its rarity) and mythics, its
@@ -32,11 +54,11 @@ export function buildPack(): unknown {
     weaponKinds,
     armorTypes,
     offhandKinds,
-    statuses: [...vocabulary, ...machinery, ...passives, ...effects, ...enemyStatuses, ...pieceStatuses],
+    statuses: [...vocabulary, ...machinery, ...sized(passives), ...sized(effects), ...enemyStatuses, ...sized(pieceStatuses)],
     classes,
-    abilities: [...abilities, ...enemyAbilities, ...upgradeAbilities],
+    abilities: [...sized(abilities), ...enemyAbilities, ...sized(upgradeAbilities)],
     upgrades,
-    gear: [...gear, ...pieceGear, ...mythicGear],
+    gear: sized([...gear, ...pieceGear, ...mythicGear]),
     formations,
     enemies,
     perkFamilies: [],
