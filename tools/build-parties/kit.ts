@@ -37,7 +37,7 @@ export type Route = {
   build: BuildId;
   id: string;
   classes: [string, string, string];
-  /** What it's built around, in the words of `docs/gear-design/builds.md`. */
+  /** What it's built around, in the twelve builds' words. */
   note: string;
   rungs: [Party, Party, Party];
 };

@@ -1,4 +1,4 @@
-/** Cold Snap: Chill climbs until it shatters, in bursts on a beat you can count. Its three routes, each at three rungs (docs/gear-design/builds.md). */
+/** Cold Snap: Chill climbs until it shatters, in bursts on a beat you can count. Its three routes, each at three rungs (the twelve builds today's loot was made for). */
 import { g, p, route, v, vp, type Route } from "./kit.js";
 
 export const routes: Route[] = [

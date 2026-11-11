@@ -1,515 +1,719 @@
 # Gear design: the builds
 
-The twelve builds the gear, formations, upgrades and mythics were designed backwards from, and the web between them. They stand (`docs/rules.md`) until the builds pass redesigns them on the classes as they are now (`CLAUDE.md`, Status): the routes and rungs below are the ones the hand-built parties still test, with stand-in pieces where a class's kinds changed. What a build is, and what rhythm means, is in *Gear design: philosophy*; the rules the loot follows are in *Gear design: the loot*.
+The nine builds the gear, formations, upgrades and mythics are designed from, and the web between them: roads, the doors between them, and engines. What a build is, and what rhythm means, is in *Gear design: philosophy*; the rules the loot follows are in *Gear design: the loot*.
 
-Each build has three routes (trios of classes that carry it) at three rungs, as hand-built test parties in `tools/build-parties.ts`, and `npx tsx tools/build-test.ts` plays them side by side. Which builds each piece serves is designer data (`PIECE_BUILDS` in `content/core-set/pieces/index.ts`) and never reaches a card.
+Each build is a way to play, with its rhythm, threads, routes, rungs and needs. No pieces and no numbers. Each one also says how a player finds it at each phase of a run, how it stays alive, and what it asks of the kits. Two changes to the kits are approved and not built: **Marked takes the party's random picks** (abilities aimed at a random foe follow the Mark as basic attacks do, inside the Taunt rule, and an ability with a target phrase of its own keeps it), and **the Hexer's Malison pays for breadth** (it does more for each different affliction a foe holds, as its own damage, in place of adding one more stack of each).
+
+Today's loot and the build test's parties (`PIECE_BUILDS`, `tools/build-parties.ts`) still name the twelve builds these nine replace. The loot pass remakes both.
+
+## The frame
+
+**What a build is** (*Gear design: philosophy*): a way to play you can watch, with a rhythm, woven from several threads, reached by more than one route, in rungs.
+
+**The web has three things:**
+- **A road** is a build: broad, easy to see, with a shape and a rhythm.
+- **A door** is where a run drifts from one road to its neighbour, through something both want.
+- **An engine** is a found synergy, designed in advance for a player to find, on one road or more (*Engines*).
+
+**What a run gives a build.** The rungs are written against the three phases of a run:
+- **Act I:** three units knowing an ability or two each, a weapon each and a piece or two more by the boss, mostly in Neutral. A build can show its direction here. It can't be assembled.
+- **Act II:** most slots filled, a version or two a unit, formations, a mythic. This is where a build is built.
+- **Act III:** whole kits and legendaries. The far end.
+
+**Left unjudged until the balance pass:** kits arriving one ability at a time, and cooldowns carrying. The set is written to hold either way.
+
+**A wall is not every build's start,** and neither is a front seat: a wall at the start of every build would make every run feel the same. Staying alive without one isn't the builds' to solve. The balance pass makes sure a party without a wall gets through the start of a run.
+
+**What every build answers:**
+- **Through a run:** its three rungs as the sign, the build and the far end. Each says what the player sees, what the step is and what it pays if the run goes no further.
+- **Stays alive:** what the build itself brings to keeping the party standing.
+- **Packs and bosses:** it has a game for both, and says which is its worse fight. Bosses and pairs of elites are where most runs ended in play.
+- **Asks of the game:** kit or rule changes.
+
+**What every build asks of the loot,** so it isn't repeated nine times:
+- **A first step that's seen the first time it fires.** In play a few Might, a tenth off a cost and a cooldown a few ticks closer were never seen to happen.
+- **A first step that doesn't cost the party its safety.** In act I a careful party takes defence first, and it's right to.
+- **A formation about one thing:** three seats that all serve what the build does. The one formation that made three units one build in play was that.
 
 ## The rhythm space
 
-| Build | Damage over a fight | Danger | Turns | What it spends |
-| --- | --- | --- | --- | --- |
-| **Landslide** | a few huge blows at uneven moments | steady, soaked by stone; spikes when it breaks | few, big | MP, on stone that saves its HP |
-| **Thousand Cuts** | a dense, even stream from the first tick | even; dodges decide it | none | HP: little casting, light bodies |
-| **Bonfire** | rises the whole fight; each kill comes sooner than the last | early | one, slow: the catch | MP, on the casts that feed the fire |
-| **Cold Snap** | bursts on a beat you can count | falls with each burst | many, medium | both, evenly |
-| **The Hunt** | a staircase: a kill every few ticks | early, falling with each kill | regular, medium | both: HP early, MP on reach |
-| **Harvest** | nothing, then everything | full until the end | one, huge, late | MP on the sweeps; HP holding the full field |
-| **Ambush** | a spike at the start, then a thin tail | late, if the spike doesn't finish it | one, at the first tick | HP, in the exposed tail |
-| **Overflow** | in waves passing round the party, almost all casts | a cliff when the mana stops | many, small | MP, passed round the party |
-| **Lockdown** | in windows while a foe is disabled | held down; spikes when a lock slips | many: each lock and each window | MP on the locks, to save HP |
-| **The Toll** | follows how much the foes attack | all on one unit | few | HP: the anchor's |
-| **Blood Pact** | high and steady | swings and rights itself | many, medium | HP, in place of MP |
-| **Phoenix** | surges after each fall | embraced, swingy | irregular and big: the deaths | HP on the falls, MP on the returns |
+| Build | Shape | Damage over a fight | Danger | Turns | What it spends |
+| --- | --- | --- | --- | --- | --- |
+| **Landslide** | two load, one strikes | long quiet, then one huge number | steady, soaked by stone | few, big | MP on stone, to save HP |
+| **Thousand Cuts** | one opens, all pour | spikes when a wound opens, in a dense stream of small hits | even, and paid back hit by hit | each wound opened | HP: little casting |
+| **Bonfire** | three feed one fire | as high as the party is feeding it right now; it leaps when casts land together | early, and whenever the fire sags | each flare, and the blow that reads it | MP, on the feeding |
+| **Cold Snap** | two lay frost, one breaks | bursts on a beat you can count | falls as the field slows | many, medium: each shatter | MP |
+| **The Storm** | three charge the field | follows how much the foes act | spread, and highest while a pack still stands | whenever a foe moves | MP, on the spread |
+| **The Hunt** | three on one foe | a volley at the first Mark, then a staircase of kills | early, falling with each kill | regular: each kill | both: HP in the first moments, MP on reach |
+| **The Toll** | one is struck, two profit | follows how much the foes attack | all on one unit | few | HP: the anchor's |
+| **Barrage** | two serve one caster | in salvos from one unit | a cliff when the mana or the caster stops | each salvo | MP, more than any other |
+| **Blood Pact** | one pays, one drinks, one gives | high and steady | swings and rights itself | many, medium | HP, in place of MP |
 
-The twelve come in pairs from opposite sides of the space:
-- **Landslide and Thousand Cuts:** few huge blows, or many tiny ones.
-- **Bonfire and Cold Snap:** a smooth climb, or bursts on a beat.
-- **The Hunt and Harvest:** one at a time, or all at once.
-- **Ambush and Overflow:** everything at the start, or work that rolls on round the party.
-- **Lockdown and the Toll:** deny the foe its moment, or invite every blow.
-- **Blood Pact and Phoenix:** life spent and bought back, or death spent and bought back.
+**Four of the nine are a status's road.** A status is the sign a player can read on floor one, and play showed it carries a run. What keeps the four from being one build in four colours is that each status is set off by a different clock:
 
-## How each build is written
+| Road | Its status | The clock |
+| --- | --- | --- |
+| Bonfire | Burn | the party's feeding: it dies unless it's kept up |
+| Cold Snap | Chill | its own count: it builds until it breaks |
+| Thousand Cuts | Bleed | the party's hits: opened once, cashed by every hit after |
+| The Storm | Shock | the foes' actions: everything they do costs them |
 
-- **Identity:** what someone watching sees, and what the build is waiting for.
-- **Loves and fears:** among the rogue's fights.
-- **Threads:** what it's woven from.
-- **Routes:** the classes that carry it, in more than one combination. Any formation with the seats it likes helps it, and none is required.
-- **Rungs:** what it asks of a run, from what most runs find to its most specific version, with what each pays.
-- **Needs:** what it asks of pieces, formations and upgrades, as needs rather than designs.
-- **Far end:** what its most specific, most potent pieces do, whatever slot or rarity they're in.
+**Pairs on opposite sides of the space:**
+- **Landslide and Thousand Cuts:** one huge blow, or many tiny ones.
+- **Bonfire and Cold Snap:** a fire that dies unless it's fed, or a frost that builds until it breaks.
+- **The Hunt and the Storm:** go and kill the back row, or make its own work kill it.
+- **Barrage and Blood Pact:** mana poured out, or life.
+- **The Toll** stands alone: it's the only one that waits to be hit.
 
-## Landslide
+## The builds
 
-**Identity.** A party in stone that swings rarely and hits like a falling hill. The front wears Shield bars, and foes chip at the stone. Long stretches pass with small numbers. Then a slow swing or a long cast lands far bigger than anything else, and an elite loses a large share of its HP. The stone is rebuilt, and it happens again. It's waiting for its big blow to come round, with the stone holding until then. Fights run long.
+### Landslide
 
-- **Loves:** bosses and armored foes (big hits lose little to Defense, and crits land before it), and Lava Slimes (one blow takes a slime from above half to nothing, so it never splits).
-- **Fears:** swarms (blows wasted on wolves), dodgers (a missed blow is a long wait wasted), and anything that breaks Shields fast.
+**Identity.** A party that loads one blow. Long stretches of small numbers go by behind stone bars. A wind-up bar fills on the hammer while Might piles onto it and its target is opened up. Then one number lands far bigger than anything else in the fight, and an elite loses a large share of its HP. The stone is rebuilt, and it happens again. It's waiting for the blow to come round.
+
 - **Threads:**
-  - the Shield as a second health bar, and the moment it breaks;
-  - Defense as a damage stat;
-  - slow, heavy actions;
-  - Might on the slowest hitter, since it's spent one stack per action (a thread nobody would look for);
-  - crits and crit damage;
-  - weight: the biggest blows stagger;
-  - max HP feeding the stone and the blow.
-- **Routes:** Geomancer, Knight, Hoplite · Geomancer on a great weapon, Paladin, Cleric · no earth at all: Knight on a great weapon, Hoplite, Bard.
-- **Seats it likes:** a bulwark that wears the stone and draws the blows; a hammer whose actions come less often and land bigger; a mason that builds stone for the other two.
-- **Rungs:**
-  1. Any slow weapon and one Shield source: steadier boss fights, and Defense that stops mattering.
-  2. Pieces that turn a Shield or Defense into hit size, Guard that reaches the Defense-scalers, Might for the hammer. Elites lose chunks, and most bosses take three or four blows.
-  3. The stone itself becomes the weapon. A boss fight is a handful of blows the party lives through comfortably.
+  - the heavy action: slow swings, long wind-ups, long cooldowns;
+  - loading it: Might on the slowest hitter (it's spent an action at a time, so it lasts where actions are rare), crits and Crit damage, Sunder laid on the target before the blow lands;
+  - Defense, max HP and the Shield as damage stats, so the body is the weapon;
+  - stone on the whole party, as the time the blow needs;
+  - aim: at the healthiest foe, the most armored, the stunned.
+- **Routes:** Geomancer, Knight, Hoplite · Geomancer, Paladin, Bard · no earth: Knight, Hoplite, Bard.
+- **Seats it likes:** a hammer whose actions come less often and land bigger; an anvil that wears the stone and draws the blows; a loader that gives the hammer what the party has to give (stone, Might).
+- **Through a run:**
+  1. *The sign.* One unit whose heavy thing already out-sizes everything round it: rocks that crit from behind a Shield, a double swing, a bash from max HP. The sign is the number, and that Defense or HP on a piece makes it bigger: here the careful pick and the build's pick are the same piece. The step is the first piece that says so on its card, heavier and rarer.
+  2. *The build.* A loading crew: Might aimed at the hammer, the target opened first, stone on everyone, the blow aimed at something worth it. Elites lose a large share at a time, and a boss takes a handful of blows.
+  3. *The far end.* The stone loads the blow. Every blow the hammer lands reads the stone the whole party holds and leaves it, so what keeps the party standing is also the size of the blow. The blow lands twice. The shield detonation pays when stone breaks; this pays while it holds.
+- **Stays alive:** stone on everyone: Shields, Guard and an Aegis across three heavy bodies. Fights run long, so the stone has to be rebuilt, and that's where its MP goes.
+- **Packs and bosses:** bosses and armored foes are its best fights: a huge hit loses little to Defense. A pack is its worst: a blow spent on a wolf is a long wait wasted. Its pack game is the shove that hits every foe and the aim that saves the blow for the biggest. It fears dodgers, and anything that strips Shields.
 - **Needs:**
-  - **Pieces:** something that uses the Shield pool or its breaking as damage; Guard or Defense that reaches the units whose kit scales from Defense; a way for any unit's basic attacks to come slower and bigger; Might that suits one slow unit rather than everyone.
-  - **Formations:** the hammer seat, and formations that trade the party's speed for size.
-  - **Upgrades:** versions of Shield bash, Rockfall, Tremor, Smite, Phalanx, Earthen shell and Vanguard that trade speed for size, or aim the blow (at the foe in a wind-up, at the healthiest).
-- **Far end:** the stone becoming the blow, and the heaviest swing.
-- **Watch:** the quiet between blows may read as nothing happening; the stone bars have to be what you watch.
+  - **Pieces:** heavier and rarer, for swings and for abilities; Might for one unit, not three; damage from Defense, max HP and the Shield pool; a Shield's breaking as a blow, and a blow that reads the whole party's stone. Every Landslide piece promises a blow on its card: the ones that promised stone alone were worn as plain defence, by everyone.
+  - **Formations:** hammer, anvil, loader; formations that trade the party's speed for size.
+  - **Upgrades:** slower and heavier versions; versions that aim the blow.
+- **Asks of the game:** none. Its miss was the loot's signposting, not the kits.
 
-## Thousand Cuts
+### Thousand Cuts
 
-**Identity.** A blur. A stream of tiny numbers, several a tick. Units act constantly, and foes' Bleed counters open with every hit. The party is hard to hit: MISS, MISS. It isn't waiting for anything; it never stops. Most of its damage is basic attacks, and the light bodies pay when the dodges fail.
+**Identity.** A wound opens on a foe: a crit, a barb, a thorn. Then the party pours hits into it, tiny numbers, several a tick, and every one pays again in red beside its own white. The wound closes a little with each hit, until someone opens it wider. It's waiting for the next wound, and it never stops hitting.
 
-- **Loves:** Bleed, and Lifesteal, since many hits heal many times.
-- **Fears:** Defense (small hits lose most to it), the Ice Golems' crust, Wisps' Shock (fast units pay), and the Lava Slimes' split.
 - **Threads:**
-  - speed: fast weapons and Haste;
-  - many hits: Double strike, multi-hit abilities, extra strikes;
-  - Bleed bursting on each hit;
-  - riders on every hit, extra strikes included (without them, Double strike is a trap);
-  - Evasion as defence, and the dodge as a trigger;
-  - Lifesteal on every hit;
-  - the status torrent: fast hits that each leave Burn, Shock or Chill, whose own damage never meets Defense; the same rhythm with another answer to Defense (a second route, not a second build).
-- **Routes:** Bard, Monk, Assassin · Valkyrie, Ranger, Vampire · the status torrent: Stormcaller on fist weapons, Pyromancer and Hexer on wands.
-- **Seats it likes:** a pacer that speeds the others; two blades that act more often and hit smaller.
-- **Rungs:**
-  1. Fast weapons and a little Double strike: steady chip, and little else.
-  2. Riders on every hit, extra strikes included, and a Bleed source. Every hit opens a wound, and armored foes stop being walls.
-  3. A payoff that grows with how many hits the party has landed this fight. Late in a fight, every tiny hit is worth a big one.
+  - Bleed: opened wide in one stroke, cashed by every hit after, closing as it pays;
+  - the opener and the pourers: a few hits that open (crits, barbs, thorns) and many that cash;
+  - speed: fast weapons, Haste, Attack speed;
+  - extra strikes: Double strike, multi-hit abilities;
+  - staying alive by hitting: life drunk, a Shield built, an ally mended, hit by hit;
+  - Evasion, and the dodge as one more trigger;
+  - Sunder under it all, its answer to Defense.
+- **Routes:** Vampire, Assassin, Monk · behind briars: Bramble knight, Assassin, Ranger · Valkyrie, Ranger, Vampire.
+- **Seats it likes:** an opener whose crits come more often; two blades that act more often and hit smaller.
+- **Through a run:**
+  1. *The sign.* A unit that opens wounds (four base kits do): the party's hits on that foe print twice. Early units mostly swing, so the step is anything that makes more hits: the faster of a class's two weapon kinds, a second strike. It's worth taking on any unit.
+  2. *The build.* An opener and two who pour, a pacer's Haste, and units kept standing by their own hits. Armored foes stop being walls: Bleed goes past Defense, and the hits only have to land.
+  3. *The far end.* The count: every hit landed this fight makes the next worth more, and extra strikes chain.
+- **Stays alive:** by hitting. Each hit drinks, builds a Shield or mends an ally. The dodge alone didn't hold in play.
+- **Packs and bosses:** a lone boss suits it: every hit on one foe, the wound never closing. In a pack its swings scatter where Bleed wants them together; its pack game is the Mark, multi-hits that fan out, and wounds opened on every foe at once. It fears foes that harden under many hits (the Ice Golem's crust), dodgers, and the Wisps' Shock, which fast units pay for most.
 - **Needs:**
-  - **Pieces:** riders and multi-hits that count every hit; something that grows with the hits landed; a dodge that pays; an answer to Defense for small hits that isn't simply more Sunder.
-  - **Formations:** the pacer seat, and formations that make the whole party faster at a cost.
-  - **Upgrades:** versions of Flow, Iron palm, Gale spear, Barbed arrow and Burning fist that add hits or spread them.
-- **Far end:** a count of hits that turns into something big, and the fastest blur.
+  - **Pieces:** Bleed from more than crits; hits, however they come; a drink or a Shield per hit on Mail and Leather; a count of hits that grows into something.
+  - **Formations:** opener and blades; formations that make the whole party faster at a cost.
+  - **Upgrades:** versions that add hits, or open a wound on every foe.
+- **Asks of the game:** none.
 
-## Bonfire
+### Bonfire
 
-**Identity.** A fire that grows hotter the longer it burns. Burn climbs on the hottest foe, a bigger number every pulse. When that foe falls, its fire passes to the next, which starts already burning, so each kill comes sooner than the last. The party heats up too: the longer the fight, the harder it hits. Early on, the foes press hard and the party holds. By the end, they fall one after another, faster and faster. It's waiting for the fire to catch.
+**Identity.** A fire that dies if it isn't fed. Burn falls away fast, so the number on the hottest foe is the party's feeding, live: it leaps when two casts land together, and sags when a feeder is stunned or between spells. Everyone feeds it: casts, swings that carry fire, the keeper's own blows. While it's high the foe melts, and the blow that reads the fire lands for the fight's biggest number. It's waiting for the fire to roar, and working to keep it there.
 
-- **Loves:** long fights, packs (each death feeds the next), and bosses with helpers (the helpers' fire passes to the boss).
-- **Fears:** fights too short for the fire to catch, and losing its feeders early.
-- Unlike Cold Snap, its curve has no beat of bursts; unlike Landslide, no single blow matters. The Hunt's beat stays steady and Harvest's kills land at once, where Bonfire's speed up.
 - **Threads:**
-  - Burn on the hottest foe, which drains and needs upkeep;
-  - fire that passes on, from a dying foe to the next;
-  - Heat that builds in the party: power that grows over a fight, where Might is spent;
-  - long wind-ups and big casts, with the danger that a cast is lost;
-  - a keeper who holds the early fight (Taunt, Shield, Guard, Aegis);
-  - Haste on the stokers.
-- **Routes:** Knight, Pyromancer, Hexer · no mage: Paladin, Bard, Monk · Hoplite, Pyromancer on a wand, Cleric.
-- **Seats it likes:** a keeper that holds the early danger; a stoker that acts more often; a torch whose fire passes on when its target falls.
-- **Rungs:**
-  1. Any Burn source (four classes have one): steady damage over long fights.
-  2. Fire that passes from a dying foe, Burn on a fast unit's basic attacks, and a keeper. Each kill comes sooner than the last.
-  3. The party's own heat, and a Pyre on a fire passed down the line. The catch comes early, and the last foes fall in a rush.
+  - Burn as upkeep: it drains fast, so its height is how hard the party is feeding it right now;
+  - two kinds of feeder: swings that carry fire hold it steady, casts make it leap;
+  - the pile: every feeder aims at the hottest foe;
+  - a blow that reads the fire and leaves it, and that waits for a fire worth reading;
+  - tempo for the feeders: Haste, Cooldown, Cast speed, MP;
+  - a keeper who holds the early fight, keeps the feeders casting and burns what it holds.
+- **Routes:** Knight, Pyromancer, Monk · Paladin, Hexer, Pyromancer · no mage: Paladin, Monk, Hexer.
+- **Seats it likes:** a keeper that holds the early danger; a stoker that acts more often; a torch whose fire reaches every foe that's already burning.
+- **Through a run:**
+  1. *The sign.* One unit that leaves Burn: three base kits do, and a version or a piece puts it on a swing. The fire stands as high as it's fed, and it gets through Defense where hits don't. The step is a second feeder, and because the fire dies so fast the step shows at once: the number stands twice as high. It sits on a weapon or a version, so it takes nothing from the party's safety.
+  2. *The build.* Three feeders on one pile, some steady and some in bursts, a keeper who feeds too, and a reader that waits for the height. Elites and bosses burn for more than the party hits for.
+  3. *The far end.* Heat: the party feeds faster the longer the fight runs, and the fire holds through what used to put it out.
+- **Stays alive:** a keeper who holds the early fight and feeds the fire. A feeder stopped is the fire sagging, so the keeper guards the tempo as well as the HP.
+- **Packs and bosses:** a lone boss is its best fight: one pile, all fight. A pack is its worst: every kill throws a fire away. Its pack game is fire laid thin on the whole field. It fears fights too short to get a fire up, and anything that stops its casters (a Silence, a Stun on the wrong unit).
 - **Needs:**
-  - **Pieces:** something that passes Burn from a dying foe to the next; power that builds in the party as a fight goes on; a choice between a fire that lasts and a fire that flares.
-  - **Formations:** the keeper and the torch, and formations that pay more the longer a fight runs.
-  - **Upgrades:** versions of Firebolt, Fireball, Pyre, Stoke, Burning fist, Smite and Malison that hold the fire up, pass it on, or flare it.
-- **Far end:** fire that outlives its foe, and heat that never stops building.
+  - **Pieces:** fire on swings, for many kinds; a way for a keeper to feed (fire on its slow swing, or on what strikes it); a choice between a fire that lasts and one that flares; tempo where casters wear it; fire that passes on when its foe falls, as something the build finds.
+  - **Formations:** keeper, stoker and torch, all three serving the fire.
+  - **Upgrades:** versions that move fire from casts to swings, or make one cast a flare; a reader that waits for the fire to be high.
+- **Asks of the game:** nothing of Burn's behaviour. Its rhythm is Burn's drain, a number (`STATUS.burn`): fast enough that an unfed fire is gone in a few ticks. That's the balance pass's, and it holds for every use of Burn.
 
-## Cold Snap
+### Cold Snap
 
-**Identity.** Frost creeps up foes until they burst. Chill counters climb on every foe, and the foes visibly slow. Then a SHATTER: a burst of damage and a Stun on one foe, then another, like a string of firecrackers. It's waiting for the next foe to reach the cap. It's the director's Monk-and-Bard run, as a way to play. Damage between bursts is modest, and the danger falls through the fight, since every burst stuns and Chill slows everyone.
+**Identity.** Frost creeps up the foes and they visibly slow: each swing comes later than the last. Then a SHATTER: a burst, a Stun, and the party's heaviest hit lands on the frozen foe. Then the next one. It's waiting for the next foe to reach the cap, and the colder the field, the less the party is hit.
 
-- **Loves:** packs and elites.
-- **Fears:** fights too short to reach the cap.
 - **Threads:**
-  - Chill to its cap and the shatter (anyone's Chill pays);
-  - many small applications: basic attacks carrying Chill, fast weapons, multi-hits;
-  - the Stun every shatter brings, and what the party does to a stunned foe;
-  - Sunder after a shatter (Shatterpoint);
-  - a heavy blow on a frozen foe;
-  - staggering the bursts across a pack, or stacking them on one foe, which targeting decides.
-- **Routes:** Frostweaver, Hexer, Ranger · the Frostweaver between a Monk and a Bard carrying Chill on their weapons · no Frostweaver: Geomancer, Monk, Hexer.
-- **Seats it likes:** two frost seats that act often and carry Chill; a breaker that hits a frozen or stunned foe hardest.
-- **Rungs:**
-  1. A Frostweaver, or one Chill piece on any fast unit: a shatter or two a fight.
-  2. Chill on two units' basic attacks, and a payoff for hitting a stunned foe. Shatters every few ticks, across a pack.
-  3. A shatter that seeds the next: chain shatters through a pack.
+  - Chill to its cap and the shatter; anyone's Chill counts;
+  - the slow on the way up: a colder field hits less often;
+  - many small applications: swings that carry Chill, multi-hits;
+  - the pile or the spread: one foe shattered again and again, or a pack reaching the cap together;
+  - the opening a shatter makes: a stunned, sundered foe, and the heavy blow saved for it;
+  - cold that attackers carry away from whoever they strike.
+- **Routes:** Frostweaver, Hexer, Ranger · a Knight in frost: Knight, Frostweaver, Monk · no Frostweaver: Hexer, Ranger, Geomancer.
+- **Seats it likes:** two frost seats that act often and carry Chill; a breaker that hits a frozen foe hardest.
+- **Through a run:**
+  1. *The sign.* One Chill source (three base kits have one): the foes slow as the counter climbs, and one shatters. The step is a second source. Every stack also slows a foe, so it's never a pick against the party's safety.
+  2. *The build.* Sources enough that the same foe shatters again in the same fight, and a breaker for each one. The second shatter is the line between the sign and the build. It comes from the Chill counts, which *Core set: classes* already makes the balance pass's first job, and from what the build finds.
+  3. *The far end.* The cascade. A shatter's cold runs on to the next foe, and each shatter in a run sends on more than the one before it, so a cold enough field falls in one long string. The firecracker string is its first taste: one piece, a shatter or two more a fight. The cascade needs the whole field cold.
+- **Stays alive:** the cold: a chilled field acts less, and every shatter is a Stun.
+- **Packs and bosses:** spread over a pack, the cold slows everything and the shatters come together, like a string of firecrackers. Piled on a boss, it's a slow all fight and a burst on a beat; a boss shrugs off the Stuns after the first few, not the slow or the burst. It fears fights too short to reach the cap.
 - **Needs:**
-  - **Pieces:** Chill on basic attacks for classes with fast weapons; payoffs for hitting a stunned foe; something that makes one shatter the start of the next.
-  - **Formations:** the breaker seat, and formations where one seat's hits set up another's.
-  - **Upgrades:** versions of Frost lance, Blizzard, Stillness, Shatterpoint, Cold hex and Frost arrow that aim at the foe nearest its shatter or spread the cold wide. A frost version of Burning fist, which the director liked, belongs here.
-- **Far end:** a shatter that seeds the next, and frost on every hit.
+  - **Pieces:** Chill on swings, for the fast kinds; Chill from being struck; payoffs on a frozen foe; a shatter that leaves cold behind or sends it to the next foe, as something the build finds, and a run of shatters that gathers as it goes.
+  - **Formations:** the frost seats and the breaker; formations where one seat's hits set up another's.
+  - **Upgrades:** versions that aim at the foe nearest its shatter, or spread the cold wide.
+- **Asks of the game:** nothing of Chill's behaviour. The Chill counts, as above.
 
-## The Hunt
+### The Storm
 
-**Identity.** The pack singles one out. Every hit in the party goes to the same foe, often one in the back; it falls, and the next is marked. The number of foes drops one by one on a steady beat. It's waiting for the next kill. Harvest's opposite.
+**Identity.** Everything the foes do costs them. The party's strikes spread a charge across the whole field: an arc to the foe beside, a chain down the line. Then the foes move, and each one that swings, casts, heals or calls for help is hurt for it. A wolf pack fries in its own frenzy. A healer behind a shield wall pays for every heal. A heavy blow comes down on the most charged. It's waiting for them to move.
 
-- **Loves:** mixed groups with a dangerous back row (Archers, Liches, Bone Priests, Witches).
-- **Fears:** a lone boss (one step, no staircase), Ghouls raised behind the hunt, and Taunting fronts if it has no reach.
 - **Threads:**
-  - focus: the party's picks agreeing (Marked);
-  - reach: Seek past a Taunting front, quick, light and multi-hit;
-  - the weakest and the furthest back;
-  - a reward on each kill, so each step speeds the next;
-  - Silence on the back row's casters;
-  - an answer for bosses: damage that grows as the foe's HP falls, so a boss is a long staircase of its own.
-- **Routes:** Valkyrie, Ranger, Assassin · Assassin, Monk, Hoplite · Ranger, Stormcaller, Paladin.
-- **Seats it likes:** a marker whose pick sets the target the others follow; a chaser with reach; a warden that holds the front.
-- **Rungs:**
-  1. Any Seek ability, or the Ranger: the back row dies first.
-  2. Basic attacks that follow the marker, and a reward on each kill. Every kill speeds the next.
-  3. The whole party on one foe, and a kill that resets the hunt. Mixed groups fall in a drumbeat.
+  - Shock: paid whenever its holder acts, whatever the action, so the busiest foes pay most;
+  - spread: strikes that arc, chain or land on three, so the whole field is charged, back row included, with no need to reach it;
+  - quick, light strikes that keep the charge topped up, since half of it goes each time it pays;
+  - a storm on the whole party's swings for a while;
+  - a blow that reads the charge on its target and leaves it.
+- **Routes:** Hoplite, Stormcaller, Valkyrie · Knight, Stormcaller, Monk · no Stormcaller: Valkyrie, Hexer, Bard.
+- **Seats it likes:** two squalls whose strikes spread; a rod that holds the field's attention.
+- **Through a run:**
+  1. *The sign.* A unit whose strikes spread and shock: fast foes take damage every time they swing, and the foe behind the front line is charged without being aimed at. The step is charge from a second unit.
+  2. *The build.* The whole field charged all fight, the storm on everyone's swings, and a blow that reads the charge. Packs burn themselves down, and the back row pays for its own work.
+  3. *The far end.* A storm that doesn't lift, and a blow that reads the charge on everything charged.
+- **Stays alive:** Shock lands hardest on whatever is acting most, which is what's hurting the party most. It punishes a foe for acting and doesn't stop it, so in a pack the danger stays high until late.
+- **Packs and bosses:** fast packs are its best fights, and groups with a busy back row (healers, cursers, summoners) its next best. A lone, slow boss is its worst: the charge pays on the boss's schedule, and its boss game is the blow that reads the charge. It fears Bomb Bugs (every blast at once) and Lava Slimes (an even field splits every slime).
 - **Needs:**
-  - **Pieces:** a way to make the party's basic attacks follow one target; Seek on gear; kill rewards that speed the next kill; damage that grows as a foe weakens, for bosses.
-  - **Formations:** the marker seat, and formations that point the whole party at one foe.
-  - **Upgrades:** versions of Backstab, Gale spear, Garrote, Pressure point, Barbed arrow and Hunter's eye that change what they aim at.
-- **Far end:** the party's picks bound to one target, and a kill that sets up the next.
+  - **Pieces:** Shock on swings, for the fast kinds; a blow that reads the charge, for more classes than the Valkyrie; spread that comes with something else on the piece, since a slot whose whole promise was one more foe was never taken; something for a boss that rarely acts.
+  - **Formations:** squalls and a rod; formations that pay for how many foes one action touches.
+  - **Upgrades:** one foe or every foe; a longer storm or a harder one.
+- **Asks of the game:** none.
 
-## Harvest
+### The Hunt
 
-**Identity.** The whole field falls together. Hits land on every foe at once, and nobody dies for a long time. All the HP bars sink in step. Then, in a few ticks, the field is empty. It's waiting for the sweep that finishes them all. The danger stays full until the end, every foe alive and acting, so the party has to hold the whole field's pressure.
+**Identity.** The pack takes them one at a time. A foe is Marked, and everything the party has lands on it: swings, arrows, the bolt that was going to go anywhere. It falls, the Mark moves, and it happens again. Each kill pays for the next: a blow ready again, a volley. The foes' numbers drop like a staircase. It's waiting for the next kill.
 
-- **Loves:** swarms and summons, and Ghouls, which can't raise each other if they fall together.
-- **Fears:** Bomb Bugs (every blast at once), Lava Slimes (an even field sends every slime below half, so every one splits), and a lone boss, where spread damage is no different from single.
 - **Threads:**
-  - Area;
-  - spread: strikes that jump (Arc, Chain lightning), with Shock optional;
-  - evening out: aiming at the healthiest foe so the field sinks together;
-  - a sweep: a blow that carries through to a second foe;
-  - the draw: one unit takes the field's attention so the others can spread;
-  - a finisher that ends every foe below a line at once.
-- **Routes:** Bramble knight, Stormcaller, Bard · Paladin, Pyromancer, Frostweaver · no mages: Knight, Valkyrie, Hoplite.
-- **Seats it likes:** a lightning rod that draws everything; two scythes whose hits spread.
-- **Rungs:**
-  1. Any Area mage: swarms die faster.
-  2. Strikes that jump or sweep on units that aren't mages, and the evening-out targeting. The field falls together.
-  3. A finisher, and a sweep for units that aren't mages. Swarms are erased in a beat, and Ghouls are beaten clean.
+  - focus: the Mark, which takes every pick the party makes at random, and aim at the lowest HP;
+  - the first strike: the first Mark and its volley at the first tick, and each class's own opener (a first swing that lands bigger, a first hit that always crits, a strike from hiding);
+  - reach: Seek past a Taunting front;
+  - the kill as a trigger: a reset, a volley, the Mark moving;
+  - executes: damage that grows as the foe's HP falls, so a boss is one long staircase;
+  - crits and Crit damage on a few chosen hits;
+  - Silence on the back row's casters.
+- **Routes:** a judge who calls the target: Paladin, Assassin, Stormcaller · no Assassin: Hoplite, Valkyrie, Ranger · Assassin, Ranger, Valkyrie.
+- **Seats it likes:** a marker whose pick sets the target; a chaser with reach; a warden that holds what's left.
+- **Through a run:**
+  1. *The sign.* A unit that picks its prey (the lowest, the back row, past a guard): the dangerous foe dies first, or never acts. The step is a kill or a first strike that pays something seen on the very next hit.
+  2. *The build.* A Mark the whole party follows, hunters whose abilities aim where the Mark sits, and a kill that pays. Mixed groups fall in a drumbeat that speeds up.
+  3. *The far end.* An opening that clears the weak, and executes that carry the boss.
+- **Stays alive:** kill order: the most dangerous foe dies first, and the dead don't hit. Against a lone boss kill order buys nothing.
+- **Packs and bosses:** mixed groups with a dangerous back row are its best fights. A lone boss is its worst until the executes come: one step, no staircase. It fears Ghouls raised behind the hunt, and a Taunting front if it has no reach.
 - **Needs:**
-  - **Pieces:** blows that reach a second foe or every foe; aiming at the healthiest foe; a finisher for every foe below a line; a payoff that grows with how many foes one action hit.
-  - **Formations:** the lightning rod, and formations that reward hitting many foes at once.
-  - **Upgrades:** versions of Arc, Chain lightning, Thunderstorm, Fireball, Blizzard, Othismos and Malison that even the field rather than pile on one.
-- **Far end:** a sweep for units that aren't mages, and a finisher for the whole field.
+  - **Pieces:** the Mark from more hands than the Paladin's; kill rewards sized to be seen (a whole action, not a few ticks of one); executes; openers in each class's own terms, and hiding beyond the Assassin's as something exotic.
+  - **Formations:** marker, chaser and warden, all three serving the kill.
+  - **Upgrades:** versions that change what an ability aims at, or make it ready again on a kill: the kind that carried a run.
+- **Asks of the game:** Marked takes the party's random picks (approved).
 
-## Ambush
+### The Toll
 
-**Identity.** The opening volley. The fight starts, and the party's first moments land at once: a blade from hiding, a first swing that lands like three, Haste on everyone. The fragile back of the foes' line is gone before it acts. Then a short scramble against what's left. It's waiting for the next fight to begin. The volley comes from what happens when a fight starts, not from abilities, so it spends few cooldowns and little MP. It pays in HP in the exposed tail, and in slots. A run that rotates its members won't play it every fight, which makes it hard to reach. Unlike the Hunt, it hits everything it can reach in the first moments and has little left after.
+**Identity.** They hurt themselves. Foes crowd onto one unit, and every blow they land comes back: Thorns flash, the attacker leaves bleeding, charged or slowed, and it pays again when it next moves. The swarm that rushes the wall dies on it. It's waiting to be hit. The danger is all on the anchor, and the rest of the party is almost untouched.
 
-- **Loves:** regular fights with fragile back rows (Archers, Liches, Wisps).
-- **Fears:** long boss fights, Taunting fronts that catch the volley, and big lone foes with no back row.
-- **Threads:**
-  - the fight's start, a trigger that doesn't care about cooldowns;
-  - Hidden: unseen at the start, and hitting harder while unseen;
-  - the first swing landing bigger, and Might given at the start and spent by the first blow;
-  - Haste and Shields at the start;
-  - slot order: which ability goes first;
-  - carried cooldowns: an ability saved from the last fight joins the volley.
-- **Routes:** Assassin, Ranger, Geomancer · Monk, Bard, Bramble knight · Assassin, Cleric, Valkyrie.
-- **Seats it likes:** an opener whose first action lands bigger; a second seat hastened at the start; a rear guard shielded at the start, to hold after the volley.
-- **Rungs:**
-  1. The slot order and any start-of-fight piece: quicker first ticks.
-  2. A first swing that lands bigger, and Hidden and Haste at the start. The back row is gone before it acts.
-  3. An opening that clears most regular fights on its own. Bosses still need the tail.
-- **Needs:**
-  - **Pieces:** effects at the fight's start for more classes (Hidden, Haste, Might, Shields); a first action that lands bigger; something for the tail, so the build isn't all or nothing.
-  - **Formations:** the opener seat, and formations that put everything into the first moments.
-  - **Upgrades:** versions of Vanish, Backstab, Gale spear, Allegro and War ballad that favour the first moment.
-- **Far end:** an opening that clears a room, and a tail that isn't empty.
-- **Watch:** the tail. Its second rung is thin, and what keeps a spent volley from being all or nothing is mostly the rear-guard seat.
-
-## Overflow
-
-**Identity.** A party that never stops casting. Spell names scroll one after another, and basic attacks are rare. Mana passes from ally to ally, and the casting moves with it: one member flares, cast after cast, while the others gather; then the next. Each cast leaves the next caster a little more. It's waiting for the mana to reach the next caster, and those small moments are the payoff. The danger is a cliff: a Silence, a mana drain or an empty pool turns the party into staff-bonkers. Its power follows how much fuel it moves.
-
-- **Loves:** regular fights it can finish while the mana lasts.
-- **Fears:** Silence (the Wraiths, the Silent One), Leeches, and long boss fights.
-- Unlike Thousand Cuts, where every unit acts all the time and nothing passes between them, here the work moves from one member to the next, and you can watch it go.
-- **Threads:**
-  - MP that flows (Clarity, Refrain, Stand fast, Stillness, Blood gift);
-  - casting as a trigger;
-  - costs that change;
-  - cooldowns shortened or refunded;
-  - Haste on casters;
-  - "the ally with the least MP" as targeting;
-  - mana as a damage stat.
-- **Routes:** Bard, Frostweaver, Hexer · Knight, Pyromancer, Cleric · Vampire, Stormcaller, Bard.
-- **Seats it likes:** a wellspring that gives mana; two spenders whose casts are cheaper or come faster.
-- **Rungs:**
-  1. MP regen gear, and a Clarity giver: the casters last another fight.
-  2. Casts that give the next caster something (mana, a shorter cooldown). The party casts all fight.
-  3. Mana as damage, and costs that fall as the party casts. A party that ends fights with more mana than it started with.
-- **Needs:**
-  - **Pieces:** reactions to an ally's cast; things that change MP costs; cooldown refunds; Silence answers on gear; mana as a damage stat.
-  - **Formations:** the wellspring, and formations that move mana between seats.
-  - **Upgrades:** versions of Stand fast, Stillness, Refrain, Blood gift, Static charge and Chain lightning that pass on mana or tempo.
-- **Far end:** casts that pay for the next, and mana as damage.
-- **Watch:** it leans on the engine most. If a link reads as bookkeeping in the fight log, it fails the director's "relay is too complicated". It has no amulet of its own.
-
-## Lockdown
-
-**Identity.** Hold them, then hit them. A foe's wind-up bar is struck down, or a Weaken lands. The moment a foe is disabled, the whole party piles in, and the numbers on a stunned, silenced, frozen or weakened foe come out bigger than anywhere else in the fight. Then the foe breaks free, and the party waits for the next opening. It's about capitalizing on disabled foes, not a permanent lock: bosses' control resistance makes a lock a window, not the whole fight. The Toll's opposite.
-
-- **Loves:** bosses and elites with big casts (the Fire Giant, Liches, the Silent One, the Ogre Chief's Crush).
-- **Fears:** swarms (too many to lock), and the enrage, which catches long fights.
-- **Threads:**
-  - piling onto the disabled: hits on a foe that's stunned, silenced, frozen, slowed or weakened;
-  - Weaken, a disable of its own: what does land, lands small;
-  - interrupts: Silence loses a wind-up, Stun pauses it;
-  - waiting for a wind-up;
-  - a slow instead of a shatter;
-  - heavy blows that stagger;
-  - cooldowns: locks have to come round as often as the boss winds up;
-  - MP for the locks: Clarity and Siphon.
-- **Routes:** Monk, Knight, Hexer · Assassin, Geomancer, Frostweaver · the patient version: Paladin, Cleric, Hexer.
-- **Seats it likes:** a warden whose locks come round faster; a watcher that waits for the cast; a gaoler that keeps the foes' attention on the one built to take it.
-- **Rungs:**
-  1. Any one Stun or Silence: a boss's big move is sometimes stopped.
-  2. Locks that wait for a wind-up instead of firing at random, and a second lock on another clock. Big moves are stopped most of the time.
-  3. Hits that land hardest on a disabled foe, and locks that come round with every opening. Each window takes a large share of a foe's HP.
-- **Needs:**
-  - **Pieces:** payoffs for hitting a disabled foe, by whatever disabled it; Weaken on more classes; a slow that holds a foe without bursting it; MP and cooldowns for the locks.
-  - **Formations:** the watcher seat, and formations that turn a disabled foe into everyone's target.
-  - **Upgrades:** "waits for a foe winding up" as one version of many control abilities (the director's idea, for Shield bash first).
-- **Far end:** openings that land as the fight's biggest hits, and locks that come round with every opening.
-
-## The Toll
-
-**Identity.** They hurt themselves. Foes crowd onto one unit, and every blow it takes comes back: Thorns flash, the attacker bleeds, it sparks when it moves next. The swarm that rushes the wall dies against it. It's waiting to be hit. The danger is all on the anchor, and the rest of the party is almost untouched. Thorns cost nothing, so each one stays modest: the Toll's power comes from how often it's hit.
-
-- **Loves:** Wolves, Hellhounds, Wisps, summoned waves.
-- **Fears:** slow single hitters (the Ogre Chief, the Fire Giant's few big casts), Area attacks, which ignore the draw, and foes that don't hit (Bone Priests and Witches give the anchor nothing to return).
 - **Threads:**
   - the draw: Taunt and Aggro;
-  - Thorns and retaliation as one idea: being hit and dodging a hit both strike back;
-  - what an attacker carries away: Bleed, Chill (slowing the next blow), Shock (paid when it acts again);
-  - Weaken, the Toll's best friend: blows land as often but hurt less, so the anchor survives and every blow still pays (the director's "Weaken in some sort of stall comp");
-  - Guard and Defense against many small hits;
-  - healing on the anchor;
-  - Evasion as the other anchor: a dancer who dodges and answers.
-- **Routes:** Bramble knight, Cleric, Stormcaller · a Knight wearing thorns, Hexer, Hoplite · the dancer: a Monk carrying a Taunt, Bard, Assassin.
-- **Seats it likes:** an anchor that draws and returns; a warden that keeps the anchor standing; a free seat that finishes what the anchor started.
-- **Rungs:**
-  1. The Bramble knight, or Thorns on anyone who Taunts: swarms hurt themselves.
-  2. What attackers carry away, and Weaken on them. Swarms die on the wall.
-  3. Retaliation that counts dodges too, and Thorns that grow with the beating. A wall that even a boss's slow blows feed.
+  - Thorns and retaliation: being struck strikes back;
+  - what an attacker carries away (Bleed, Shock, Chill, Weaken): each ally adds its own toll to the blows on the anchor;
+  - a toll that follows the size of the blow, so a boss's few heavy swings pay as a swarm's many do;
+  - the anchor's keeper: Guard, Regen, heals, Weaken on what hits it;
+  - the dodge as the other anchor: a dancer who slips the blow and answers it.
+- **Routes:** Bramble knight, Cleric, Stormcaller · Knight, Hexer, Hoplite · the dancer: Monk, Valkyrie, Bard.
+- **Seats it likes:** an anchor that draws and returns; a warden that keeps it standing; a free seat that finishes what the anchor started.
+- **Through a run:**
+  1. *The sign.* On floor one, from the kit: a Bramble knight, or a Knight that Taunts in thorns. Packs die on it. There's nothing to find, which is why it was in most parties.
+  2. *The build.* The other two join the toll: blows on the anchor set off what they've laid (the attacker bleeds, sparks, slows, weakens), and the anchor has a keeper. Swarms die on the wall while the third seat does something else.
+  3. *The far end.* The mirror grown. Retaliation sized by the blow as it was struck, and growing with every blow the anchor has lived through this fight. A boss's slow swings feed it, and it needs the keeper as much as the wall. The mirror is its first taste.
+- **Stays alive:** it is the tank. Its risk is the one play showed: when the anchor falls, the rest fall behind it. So the keeper is part of the build, not an extra.
+- **Packs and bosses:** swarms and fast foes are its best fights. A boss or a pair of elites that barely swing is where it died in play; its far end is written for that, and untested. It gets nothing from foes that don't strike (Bone Priests, Witches), which is the Storm's ground, or from Area, which ignores the draw.
 - **Needs:**
-  - **Pieces:** Taunt on gear, for more anchors; retaliation on a dodge; Thorns that grow per hit taken or from Defense; pieces that make Weaken an advantage rather than a defence.
-  - **Formations:** the anchor seat, and formations built around one unit being hit.
-  - **Upgrades:** versions of Thicket, Briar, Bramble lash, Stand fast and Fortify that change who the anchor is and what it returns.
-- **Far end:** thorns that grow with the beating, and a dodge that strikes back.
+  - **Pieces:** Taunt on gear, for more anchors; what an attacker carries away, for the allies to give; retaliation sized by the blow, and Thorns that grow with the beating; a dodge that protects as well as strikes back.
+  - **Formations:** the anchor seat, with two seats that add to its toll.
+  - **Upgrades:** versions that change who the anchor is and what it returns.
+- **Asks of the game:** none.
 
-## Blood Pact
+### Barrage
 
-**Identity.** Life spent and bought back. The party's HP bars swing hard. A unit pays a chunk of its life for a big blow, then drinks it back from foes, and heals pass from the reckless to the careful. The party fights low and ends full. It's waiting to be low enough for its payoffs (Bloodlust's half). It pays in HP where others pay in MP, a choice of fuel and not more of it: its HP costs must buy what the MP would have, and it reaches for potions where others reach for tonics. HP carries between fights, so it has to end each fight topped up. Phoenix's sibling, with life instead of death.
+**Identity.** One caster, and the same great spell again and again. Its name scrolls up the log, twice running. Its MP bar is refilled by the other two, and the spell is ready before its cooldown should be done. The party's basic attacks are an afterthought. It's waiting for the spell to come back round. When the mana or the caster stops, so does the party.
 
-- **Loves:** long fights.
-- **Fears:** Bats (a dodged hit drinks nothing), the Witch's curses (a weakened hit drinks less), and burst that catches it low.
 - **Threads:**
-  - Lifesteal, and healing received;
-  - HP as a cost: abilities paid in HP instead of MP;
-  - below half as power (Bloodlust);
+  - one ability worth repeating: the soloist's;
+  - cooldowns: the Cooldown stat, Haste, an ability made ready at once;
+  - the cast twice;
+  - MP that flows to the soloist (Clarity, Refrain, Siphon, life for mana);
+  - Cast speed, and a wind-up that can be lost;
+  - costs that change;
+  - mana as a damage stat.
+- **Routes:** Knight, Bard, Pyromancer · Frostweaver, Bard, Stormcaller · no Bard: Cleric, Vampire, Geomancer.
+- **Seats it likes:** a soloist whose abilities come faster; a conductor who gives it tempo; a well that gives it mana.
+- **Through a run:**
+  1. *The sign.* A caster with one spell worth repeating, and anyone who gives mana. The sign is the caster not swinging its staff. Every caster party feels the shortage, so the step (mana in fights, however it comes) is one it wants anyway.
+  2. *The build.* A conductor: the spell twice, or ready again; Cooldown and Cast speed on the soloist. The spell lands several times in a fight where it used to land once.
+  3. *The far end.* A cast that pays for the next, and mana as damage.
+- **Stays alive:** the soloist draws little, and its danger is a cliff, not a slope. A well that also holds the foes' attention is worth most (the Knight's Taunt and Clarity are one ability), and mana as armour is the soloist's own, found (*Engines*).
+- **Packs and bosses:** whatever the soloist's spell is; choosing the soloist is choosing that. It fears Silence (the Wraiths, the Silent One), Leeches, and a fight longer than the mana.
+- **Needs:**
+  - **Pieces:** links sized to be seen: a whole cast's mana, a whole cooldown, not a tenth of either; Cooldown and Cast speed where casters wear them; an answer to Silence; something of their own for the two who serve, so they're more than batteries.
+  - **Formations:** soloist, conductor, well.
+  - **Upgrades:** versions that make an ability ready again on a cast or a kill, or pass mana on.
+- **Asks of the game:** none in the kits. Clarity's and Refrain's mana have to be big enough to change what the caster does: the balance pass's.
+
+### Blood Pact
+
+**Identity.** Life spent and bought back. The party's HP bars swing. A unit pays a chunk of its life for a blow, or rides low on purpose, and drinks it back off the foes; the healers work twice as fast while someone is at the brink; a Shield or an Aegis sits over whoever is lowest. The party fights at half and ends full. It's waiting to be low enough.
+
+- **Threads:**
+  - Lifesteal, and drinking more the lower it is;
+  - HP as a price, in place of MP;
+  - below half as power: for the one who's low, and for the allies who answer it;
+  - nets: a Shield or an Aegis over a low unit (a price paid isn't damage, so it doesn't spend the Shield);
+  - life passed on: a heal given as a trigger;
   - max HP as a damage stat;
-  - drain: Siphon (mana) and Weaken (strength);
-  - a heal given as a trigger: life passed on;
-  - Regen, refilling what the pact costs.
-- **Routes:** Vampire, Monk, Cleric · Vampire, Bramble knight, Valkyrie · no Vampire: Knight, Monk, Paladin.
+  - the last drink: ending the fight full.
+- **Routes:** Vampire, Valkyrie, Cleric · Vampire, Bard, Hoplite · no Vampire: Assassin, Paladin, Monk.
 - **Seats it likes:** a bleeder that pays HP for power; a drinker that feeds on hits; a donor that passes life on.
-- **Rungs:**
-  1. Lifesteal on any fast hitter: HP that carries better.
-  2. Pieces paid in HP, and payoffs below half. Fights where the mana never runs out.
-  3. Life as the party's one currency. The party ends every fight topped up, having spent half its HP twice.
+- **Through a run:**
+  1. *The sign.* A drinker: the Vampire, or Lifesteal on anything that hits hard. A unit that heals itself by hitting, and potions saved. It's taken as sustain, which is right: sustain is the build's floor.
+  2. *The build.* The price: abilities and pieces paid in HP that buy what mana can't, power below half for the payer and from its allies, and a net over whoever is low. Fights where the mana never runs out.
+  3. *The far end.* Life as the party's one currency: strongest at the brink, and full when the fight ends.
+- **Stays alive:** drink and nets. The lower it is the more it drinks; the healers quicken at the brink; a Shield or an Aegis takes the blow that would finish a low unit. It's the riskiest way to live in the set, on purpose.
+- **Packs and bosses:** long fights against things it can drink from. It fears Bats (a dodged hit drinks nothing), the Witch's curse (a weakened hit drinks less), Rot, and burst that catches it low.
 - **Needs:**
-  - **Pieces:** abilities and effects paid in HP; something that rewards a heal given; below-half payoffs that don't leave the unit low for the next fight; max-HP scalers.
-  - **Formations:** the bleeder seat, and formations where life moves between seats.
-  - **Upgrades:** versions of Blood drain, Blood gift, Frenzy, Bloodlust, Regrowth and Absolve that pay or pass life.
-- **Far end:** life as the only cost, and healing that turns into something more.
+  - **Pieces:** prices in HP that buy more than their mana would, repaid inside the same fight; power below half that doesn't leave a unit low when the fight ends; nets; a last drink.
+  - **Formations:** bleeder, drinker, donor; formations where life moves between seats.
+  - **Upgrades:** versions that pay life or pass it.
+- **Asks of the game:** none in the kits. Only the Vampire's base kit pays HP; the build widens through Lifesteal's kinds and versions other kits already hold, and the Berserker, when it's added, is its natural second home.
 
-## Phoenix
+## Engines
 
-**Identity.** The party that wins by falling. A member drops, and the party flares: the others harden and hit harder. Moments later the fallen stands up with everything ready and unloads. A death is a turn in the party's favour, and the fight's story is told in knockouts. It's waiting for someone to fall. A knockout carries into the next fight, so its pieces bring the fallen back between fights as well as during them.
+**An engine is a found synergy, designed in advance for a player to find:** a few pieces that turn out to work together into something specific, on one road or more. A happy accident, made on purpose, and there should be many of them.
 
-- **Shrugs at:** Doom. Against the Reaper, a Doomed unit is just the next turn.
-- **Fears:** burst that drops two at once, and a Silence on the reviver.
-- **Threads:**
-  - revives, and the Valkyrie's Einherjar version, a return with everything ready;
-  - an ally's fall as a trigger;
-  - a revive as a trigger;
-  - low HP as power (Last rites, Bloodlust): a unit near the end is at its best;
-  - sacrifice: a unit that falls on purpose and hands its power on;
-  - the long, costly spell that hits very hard on the return;
-  - Shields and Aegis on the survivors.
-- **Routes:** Assassin, Cleric, Valkyrie · Vampire, Valkyrie, Knight · Pyromancer, Cleric (Raise first in its order), Paladin.
-- **Seats it likes:** a martyr that falls first (it draws) and whose fall powers the others; a reviver whose revives come faster; a survivor that hardens when an ally falls.
-- **Rungs:**
-  1. A revive (two classes, phoenix feathers): a knockout isn't the end.
-  2. Reactions to a fall and to a return. Each death is a power spike.
-  3. A martyr who returns ready and stronger, and returns that cost less. A party that's strongest the second time round.
-- **Needs:**
-  - **Pieces:** reactions to an ally's fall and to a revive; returns that don't rest on a reviver's ability firing at the right moment, in a fight and between fights (with fights automatic, Raise and Choosing won't always fire when they're needed); a return with everything ready for more than the Valkyrie; something that makes coming back at low HP survivable into the next fight.
-  - **Formations:** the martyr and survivor seats, and formations that answer a fall.
-  - **Upgrades:** a revive for one more class, and versions of Raise, Choosing and Last rites.
-- **Far end:** a return stronger than the fall, and a fall that doesn't stay.
-- **Watch:** its far end is crowded and its second rung thin. Several returns stacked on one unit could make a party that can't lose its first member.
+**What they're for:**
+- **A build pays before it's complete.** An engine works with a small number of pieces, so a build doesn't only come online when all of its pieces are there.
+- **Builds cross.** An engine that spans more than one road gives a party on one of them a reason to reach into the others, so a player isn't picking a build and then doing only that.
+- **The web has many interesting points along the way,** on its roads and at its doors.
+
+**What they aren't:**
+- **Not a concept the player is taught.** An engine is a design pattern. Nothing in the game names one, and no card says what a piece combines with.
+- **Not builds.** An engine is too narrow and too specific to carry routes and rungs.
+
+**What's ruled about them:**
+- **An engine sits on one road or more.** Some belong to a single road; some span two, three or more. Several can play on the same mechanic without touching another build.
+- **They're designed as a game designer picks them, for being worth finding, not from a formula.** Two frames are too narrow: that every engine must cross two mechanics, which reads as pattern matching, and that every engine gives a verb to a moment that does nothing today.
+- **No engine rests on a number the player can't see,** such as a foe's MP.
+- **A mythic may be an engine on its own,** since it rewrites one class. Anything else takes two parts or more.
+- **A status's own behaviour stays as it is.** An engine is one of the places a build can make a status do more: fire that passes on, a shatter that leaves cold behind.
+- **Where an engine sits on a road's far end,** the far end goes past it, or is the engine's much stronger form that only the whole build reaches. Which it is, road by road, is in *The builds*.
+
+**The first, from the director's play: the shield detonation.** One piece made a Shield deal damage, by its original size, when it broke. Another effect brought a broken Shield back at about half its size. The party was laying Shields on its units from several sources. Together, most of the party's damage came from Shields detonating. Nothing else that party was doing belonged to any build in the set: it was a shield party that hadn't fully come online, and those pieces twisted it into one specific gimmick. It was one of the strongest and clearest rhythms the director met in play. It sits on Landslide, in its stone.
+
+### The set
+
+Twenty-seven more, for twenty-eight, and four that the kits and the mythics already make (*Already in the game*, below).
+
+**The test each one passed.** It's a test for being worth finding, not a mould: the engines share no shape.
+- **Each part earns its slot alone,** for a plain reason. A happy accident needs its parts to be in the party already.
+- **Together they change where something comes from:** the party's damage, its safety or its aim. A bigger number isn't an engine.
+- **It's seen the first time it fires,** and told in one sentence.
+- **It turns over on something a fight is full of:** swings, blows taken, kills, shatters. In play a chain whose second link waited on a cooldown never closed.
+- **It's small:** mostly one piece meeting something a party already does, and that something is often in a kit.
+- **It's understood from rules the player already knows,** or from one new rule on a card. The best come out of rules already in the game, and they're the ones a player can reason their way to.
+
+**Left out, and why:**
+- **Plain multipliers:** Sunder under a fire, Guard on a unit that hits from Defense. They're real, and a player will be glad to find them, but they're threads.
+- **A road's own payoff on the road's own state:** a piece that heals while the fire is high, or shields while the field is charged. Each is a good rare for its road, found as any of the road's pieces are found, and not an accident.
+- **More of the same, stacked:** cold at the fight's start and cold on the swings; Might at the start, a first swing at once and the heaviest swing.
+- **One piece doing it alone,** unless it's a mythic.
+- **A route through kits:** a blow that reads a status, cast twice by the Bard; the Stormcaller's chain that pays its mana back, repeated by the Bard. That's a door.
+- **Fill-ins by symmetry:** fire on whatever strikes the anchor, beside the frozen gate; a charge that spreads when its foe falls, beside the fuse.
+- **Mana as power on a unit that never casts.** It breaks the rule that power follows fuel.
+- **Anything that wants a fall,** ends a status early, or reads a number the player can't see.
+
+**How to read an entry.** *What combines* is the parts: a piece, a version, a seat or a class's own passive, and where a kit holds one today the entry names it. *What the player sees* is the fight. *Enough to see it* is the least a run needs before the thing shows, which is how a build pays before it's whole. They're laid out by what turns each one over. That's only a way to lay them out.
+
+#### The foes do it to themselves
+
+**The frozen gate.** *The Toll and Cold Snap.*
+- **What combines:** Chill left on whatever strikes the anchor · a draw · the Frostweaver's Rime shield, which turns each shatter into a Shield on the lowest ally, or anything else that pays on a shatter.
+- **What the player sees:** foes swing slower with every blow they land on the wall. Then one bursts and stands stunned, and the wall's Shield bar refills. Nobody cast anything: the pack freezes itself, faster the harder it attacks.
+- **Enough to see it:** the anchor's piece alone. It's how a second shatter comes without waiting on a cooldown.
+
+**The mirror.** *The Toll and Landslide.*
+- **What combines:** retaliation sized by the blow as it was struck, before the wall took its share · the cover that takes that share: Guard, stone, the Hoplite's Aegis kept on the anchor · a draw that holds through the wind-up.
+- **What the player sees:** the Ogre Chief's Crush comes down. On the wall, a small number or BLOCKED. On the Chief, the Crush's own number.
+- **Enough to see it:** the retaliation on any Guarded anchor. The better the stone, the more goes back, so it's the Toll's game against the bosses that barely swing, where it died in play. Weaken works against it: a weakened blow sends less back.
+
+**The goad.** *The Storm and the Toll.*
+- **What combines:** something that makes foes swing at once: when its wearer Taunts, or on the foe its blow lands on · anything that makes a foe's own action cost it: a charge it holds, thorns on what it strikes, frost or a wound it picks up there · Weaken on the field, so the blows called early are small ones.
+- **What the player sees:** the anchor shouts and every foe swings out of turn, sparks and thorns flying off each one as it does. The anchor's bar dips, and the pack's drops further. Against a slow boss, the party sets the pace the boss pays at.
+- **Enough to see it:** the piece on a Bramble knight, or on anyone under a Stormcaller's storm. The blow taken is real, and that's its price.
+
+**The held charge.** *The Storm, with Cold Snap or Landslide.*
+- **What combines:** charge on the party's swings (the Stormcaller's Arc and Thunderstorm) · anything that holds a foe still: a shatter's Stun, the Geomancer's Aftershock on every foe, a bash · a blow that reads the charge and leaves it: the Valkyrie's Skyfall in the kits, and a piece for the classes that lack one.
+- **What the player sees:** a stunned foe can't act, so it can't pay its charge off, and the counter climbs to its cap. The blow from above lands for its biggest number. Then the foe wakes, and its first move costs it the lot.
+- **Enough to see it:** a storm, one Stun and the reader. A boss that rarely acts is a held foe too: its charge sits at the cap between its moves, so the blow that reads it is strongest where the Storm is weakest.
+
+**The reckoning.** *The Toll and Landslide.*
+- **What combines:** a link from one unit's beating to another's blow, each hit the first takes adding to the second's next swing: two seats of a formation, or a piece on an anchor that swings heavy itself · a draw on the one that's struck · a slow, heavy swing, so the count has time to climb.
+- **What the player sees:** a counter on the hammer climbs with every bite the anchor takes. Then the swing lands for all of it. The Toll's damage arrives in Landslide's rhythm.
+- **Enough to see it:** the formation, with a Bramble knight in front and a Hoplite behind. A swarm's many bites become one blow, which gives Landslide a reason to like packs, and beside the avalanche the blow rolls on through them.
+
+#### Kills turn them over
+
+**The reaping.** *The Hunt, with the Storm, Bonfire or the Toll.*
+- **What combines:** an execute at the lowest foe that's ready again when it kills (the Assassin's Coup de grâce, and a kill reward of that size for other hunters) · anything that sinks a whole field together: a storm, fire laid thin, thorns on a swarm, a wide spell.
+- **What the player sees:** for a long while nothing dies, and every bar sinks in step. Then one name scrolls five times running and the field is empty.
+- **Enough to see it:** the Assassin's version and one wide spell. The staircase becomes a cliff. It's the answer to Ghouls, who have to fall inside one window, and exactly wrong for Bomb Bugs, who all go off at once.
+
+**The judge's drum.** *The Hunt, with Landslide or Bonfire.*
+- **What combines:** the Paladin's Condemn: a Mark, and every ally's next swing lands at once · the call made again whenever the judged foe falls · swings worth calling: the slowest and heaviest in the party (the Hoplite's doubled swing, a maul with Might on it), or swings that carry fire.
+- **What the player sees:** a foe falls, the Mark jumps, and three weapons land together on the next. The maul that swings once in a long while swings on every kill. Where the swings carry fire, each call is three stacks at once and the fire leaps.
+- **Enough to see it:** a Paladin's Condemn beside a Hoplite. The call alone hands the slow swing a free one. "At once" is worth most on whatever comes least often.
+
+**The opening, again.** *The Hunt, with whatever the run holds.*
+- **What combines:** something that makes its wearer's start-of-fight effects happen again each time a foe falls · the start-of-fight uncommons every run is full of: a Shield, Haste, a few Might, a Taunt, a little frost or fire on every foe · kills.
+- **What the player sees:** a foe falls and the opening happens again: stone up, Haste on, frost across the field.
+- **Enough to see it:** the piece, and two of those uncommons on its wearer. The cheapest pieces in the bag become the engine, and which ones a run happens to hold decides what it is.
+
+**The fuse.** *Bonfire in a pack, with the Hunt.*
+- **What combines:** something that hands a burning foe's whole fire to another foe when it falls: a piece or a seat, never Burn itself · a party that kills the weakest first, or a pack of small foes · the feeders' own aim at the hottest foe (the Pyromancer's bolts and pyre, the Monk's fists).
+- **What the player sees:** the smallest foe goes up, and its whole fire jumps to the next, which starts already roaring. Every feeder turns to it without being told. Each kill comes sooner than the last, and what reaches the big foe at the back is the whole pack's fire.
+- **Enough to see it:** the piece and one feeder that aims at the hottest. It's Bonfire's pack game: a kill no longer throws the fire away.
+
+**The avalanche.** *Landslide and the Hunt.*
+- **What combines:** a piece that carries what a killing blow had left over into another foe · any blow far bigger than what it lands on: the Hoplite's doubled swing, a maul, the Geomancer's Boulder, an execute.
+- **What the player sees:** the hammer comes down on a wolf, the wolf is gone, and the rest of the number lands on the next wolf, then the next: one swing, a falling row of numbers. Aimed at the weakest, it runs furthest.
+- **Enough to see it:** the piece on any slow, heavy hitter. It's Landslide's pack game: a blow spent on a wolf stops being a long wait wasted.
+
+#### The party's swings and hits turn them over
+
+**The spell on the swing.** *Thousand Cuts and Barrage.*
+- **What combines:** something that casts its wearer's first-slotted ability on every few swings, whatever its cooldown, with the mana still paid · speed: a fast kind, Haste, a second strike · the order of its abilities, which now decides what the unit is.
+- **What the player sees:** a count climbs on the unit with each swing, and at the top, the spell. A Monk's every few blows is a Stun. A Bard's wand calls an Encore on a beat.
+- **Enough to see it:** the piece on any fast unit that knows one ability. Its limit is mana, so it wants a well, and speed gets a payoff of its own.
+
+**The red rain.** *Thousand Cuts in a pack, with the Storm or the Toll.*
+- **What combines:** wounds open on the whole field: the Bramble knight's attackers leave bleeding, the Hexer's Plague, an opener that strikes each foe once · any hit that lands on many foes at once, however weak: Chain lightning, an arc, a Blizzard, the Hoplite's shove, a lash of vines.
+- **What the player sees:** one cast, and a red number on every foe.
+- **Enough to see it:** a Bramble knight and any wide hit. Bleed pays by the hit and not by its size, so the weakest wide spell in the party is its best pourer, and a mage has a place in the blur.
+
+**The riposte.** *The Toll's dancer and Thousand Cuts.*
+- **What combines:** a dodge answered with a real swing · something that builds cover by hitting: the Valkyrie's Shield from every hit, the Monk's Drinking palm, Lifesteal · a draw on a dodger: the Monk's Stillness of mind, the Valkyrie's Over the fallen.
+- **What the player sees:** MISS. The answering strike. The dancer's Shield bar a little taller. The one blow in three that lands takes only Shield.
+- **Enough to see it:** the dodge's piece on a Valkyrie. From the director's chair a dodge wasn't a defence, because the hit that landed still killed. Here every miss banks cover for it.
+
+**Every colour.** *The four statuses' roads, through the Hexer.*
+- **What combines:** something that lays a different affliction each time: the chaos wand, which is worth a little to every status party and a lot to none; two small afflictions laid on every foe as the fight starts; or one swing carrying riders from a kit, a piece and a storm · the Hexer's Malison as approved, which pays for each kind a foe holds · the Paladin, whose hits want any affliction at all.
+- **What the player sees:** a row of every icon on each foe, a stack or two of each, and the curse landing for its biggest number.
+- **Enough to see it:** a Hexer holding the wand. Scattered stacks are worthless to a pile and exactly what breadth wants.
+
+**The lead's colour.** *The four statuses' roads.*
+- **What combines:** a formation whose other two seats carry on their swings whatever the lead's swing carries · one unit whose swing carries a status: the Hexer's frost, the Monk's Sunder and the Stormcaller's charge are there from floor one, and fire or a wound is a piece or a version away.
+- **What the player sees:** three weapons laying the same status. The counter climbs three times as fast, and what one unit could only start, the party finishes: the second shatter, the fire that stays up.
+- **Enough to see it:** the formation and a Hexer. It's what the one formation that made three units one build in play did, for any colour.
+
+**The emptied quiver.** *Thousand Cuts and the Hunt.*
+- **What combines:** the Ranger's Quick draw, where each crit brings the next swing at once · crits made near certain for a while: on a bleeding foe, a stunned one, one that hasn't acted yet.
+- **What the player sees:** three, four, five arrows in one tick, then a pause. The burst lasts as long as the crits do, and on a wound every arrow pays it again.
+- **Enough to see it:** the version and one piece that lifts its crits on some foes. It's a loop, and its brake is the crit that fails.
+
+#### Casts and mana turn them over
+
+**The blood mage.** *Blood Pact and Barrage.*
+- **What combines:** spells paid in life in place of mana · Lifesteal on the caster · a spell that lands on many foes.
+- **What the player sees:** the caster's HP bar drops at every cast and leaps back when the spell lands on a crowd. Its mana never moves.
+- **Enough to see it:** the price and Lifesteal on a caster with one wide spell. Against a pack it never stops. Against one boss each cast costs more than it drinks back, and it needs the party's net.
+
+**The resonance.** *Barrage, with the Storm and every wide cast.*
+- **What combines:** a piece that brings an ability back sooner for each foe it just hit · a spell that hits many: Chain lightning, Blizzard, Fireball, the Hoplite's shove · mana for it, which the Stormcaller's Recharge pays back by the foe.
+- **What the player sees:** against six wolves the same spell's name scrolls again and again, and it slows as the pack thins. Mana is what stops it.
+- **Enough to see it:** the piece on any unit with one wide ability. It's Barrage's pack game, and a loop whose brakes are a thinning pack and an emptying pool.
+
+**The crescendo.** *Barrage.*
+- **What combines:** a spell that lands harder and costs more each time it's cast in a fight · mana poured in by the other two · the casts that are free for some other reason: the Bard's repeat, the Stormcaller's Overcharge, the Frostweaver's Deep calm, a first cast free. Each one skips a price that keeps climbing.
+- **What the player sees:** the same name up the log, a bigger number each time, and the mana bar emptying faster each time, except on the casts that cost nothing.
+- **Enough to see it:** the growing spell and one well. It's what "the same spell again and again" grows into.
+
+**Mana as armour.** *Barrage, and Blood Pact turned round.*
+- **What combines:** a piece that takes the damage its wearer suffers out of its MP while it has any · the party's mana-givers: Clarity from the Knight, the Frostweaver or the Vampire; the Bard's Refrain.
+- **What the player sees:** the caster's blue bar takes the blow and the red one doesn't. Every note of the Bard's that reaches it is a heal. When the blue runs out, the caster stops casting and starts dying in the same moment.
+- **Enough to see it:** the piece on a caster beside one Clarity giver. Its danger is a cliff, which is Barrage's already, and it's the soloist's own way to live.
+
+#### A shatter turns them over
+
+**The shatter bell.** *Cold Snap, with Landslide, Bonfire or Barrage.*
+- **What combines:** something that makes its wearer's slowest ability ready whenever a foe shatters · a party that shatters on a beat · an ability worth ringing for: the Geomancer's Boulder, the Paladin's Smite, the Pyromancer's Pyre, the Hoplite's shove.
+- **What the player sees:** SHATTER, and the great spell's name right under it, every time.
+- **Enough to see it:** the piece beside one Frostweaver. The frost becomes another unit's clock, so a long cooldown stops mattering, and the foe that just shattered is stunned and sundered when the blow arrives.
+
+**The firecracker string.** *Cold Snap.*
+- **What combines:** a piece that sends a shattered foe's cold on to the others, or leaves some of it where it was: never Chill itself · a field already cold: Blizzard, Stillness, the Ranger's Hail.
+- **What the player sees:** one foe bursts and the burst runs down the line, each one a Stun. On a lone foe the second shatter comes in half the time of the first.
+- **Enough to see it:** the piece and one wide source of cold. It's the second shatter play never saw.
+
+#### Who gets picked, and who's healed, turns them over
+
+**The brink.** *Blood Pact, with Landslide's stone and the Toll's keepers.*
+- **What combines:** a unit that holds itself low on purpose: by paying, since a price isn't damage and never spends a Shield, or by a piece that trades away the top half of its health bar, with its own power below half (the Vampire's Bloodlust) · the kits' gifts to "the ally with the lowest share of HP": Shields from the Geomancer, the Valkyrie and the Frostweaver, the Knight's Guard, the Hoplite's Aegis, the Assassin's smoke · the versions that wake while an ally is low: the Cleric's cooldowns halved, the Bard's Might doubled, the Valkyrie standing over it.
+- **What the player sees:** one unit sits at a third of its health all fight, hitting at its strongest. Every Shield, Guard and Aegis in the party lands on it, and the healer works at twice the pace.
+- **Enough to see it:** a Vampire beside any one giver. The lowest ally is a place a player can choose to put someone, and eleven kits give to it. An anchor can sit there too.
+
+**Two in the dark.** *The Toll, Blood Pact and the Hunt.*
+- **What combines:** Hidden on two of the party: the Assassin's Vanish, its Smoke screen over the lowest ally, a cloak, a killing blow that hides the killer, the borrowed gift · a third who wants every blow: a thorn wall, a dancer, a shieldmaiden.
+- **What the player sees:** two names fade, and every blow the foes aim goes to the one left in the light.
+- **Enough to see it:** two hidings, the Assassin's or anyone's, and an anchor. It's a front line with no Taunt and no Aggro, for as long as the hiding lasts, and only what strikes everyone gets past it.
+
+**The red stone.** *Thousand Cuts and Blood Pact, feeding Landslide's stone.*
+- **What combines:** a piece that turns healing past full into a Shield · a unit that's often healed while full: a drinker with a fast weapon, whoever the Bard's Refrain lands on, a Cleric with nothing to mend.
+- **What the player sees:** once a unit is full, its green numbers turn into a grey bar. A party with no healer finds it's building stone by hitting.
+- **Enough to see it:** the piece on a Vampire. The stone feeds the detonation, and whatever reads a Shield (the Geomancer's crits).
+
+#### Exotics
+
+**The borrowed gift.** *No road of its own: whichever the gift belongs to.*
+- **What combines:** a piece that gives the other ally with the lowest share of HP whatever its wearer gives itself · a kit with something it gives itself on a short clock.
+- **What the player sees:** something different for each class. The Assassin vanishes, and the most hurt ally vanishes with it. The Vampire's Frenzy rouses whoever is lowest, and the Monk's Flow quickens it. A Knight that Taunts makes the lowest ally Taunt too, which is a disaster unless the lowest is the one built to be.
+- **Enough to see it:** the piece on any class with a gift to itself. About half the kits have one.
+
+**The carrier.** *No road: the region is the build.*
+- **What combines:** a piece that passes a stack of each affliction its wearer holds on to whatever it hits · a way to be afflicted: the act's own foes (the Old Road's snakes, the Fire Mine's hounds, the Ice Pass's spirits, the Storm Tower's wisps, the Crypt's witches), or a piece that sets its wearer alight for power.
+- **What the player sees:** the Monk is bitten by a hellhound and catches fire, and from then on everything it touches burns. In the Ice Pass the same unit spreads frost. A Cleanse puts it out.
+- **Enough to see it:** the piece on a fast unit, in a region whose foes afflict. The healer's Cleanse turns against it, and that's part of the joke.
+
+#### Already in the game
+
+Four engines the kits and the mythics make today, with nothing new. They're named so the loot doesn't repeat them, and so the upgrades and mythics know what the kits already hold.
+- **The cull** (the Hunt, Thousand Cuts): the Assassin's Opening wound, Lacerate and Coup de grâce. Every strike on a fresh foe is a crit and a wound, the execute finishes it, and it's ready for the next. Found in play, where it carried a run to act II as the crit-Bleed build.
+- **The quake** (Landslide, Cold Snap, the Storm): the Geomancer's Stunning crits and Fissure. A rock crits and the foe is stunned; the next rock lands triple on it, and crits again.
+- **The vanishing blade** (the Hunt): the Assassin's mythic. A kill, and the killer is gone. It comes back with a doubled hit, kills, and is gone again; in a pack it's never there to be hit.
+- **The stonecutter** (Landslide): the Geomancer's mythic beside its own passive. Every crit rebuilds the stone, and while the stone stands it crits.
+
+### Across the web
+
+| Engine | Sits on | Lives on | In the game today |
+| --- | --- | --- | --- |
+| The shield detonation | Landslide | the party | the break and the return, on one legendary |
+| The frozen gate | the Toll, Cold Snap | two units | the anchor's piece; Rime shield |
+| The mirror | the Toll, Landslide | two units | the cover; the Hoplite's mythic does it for its own Aegis |
+| The goad | the Storm, the Toll | the party | nothing |
+| The held charge | the Storm, Cold Snap, Landslide | the party | all but the reader for more classes |
+| The reckoning | the Toll, Landslide | two units | nothing |
+| The reaping | the Hunt, the Storm, Bonfire, the Toll | two units | the Assassin's version |
+| The judge's drum | the Hunt, Landslide, Bonfire | two units | Condemn; a killing blow that calls the volley |
+| The opening, again | the Hunt | one unit | the uncommons |
+| The fuse | Bonfire, the Hunt | the party | a piece that spreads part of a fallen foe's fire |
+| The avalanche | Landslide, the Hunt | one unit | nothing |
+| The spell on the swing | Thousand Cuts, Barrage | one unit | the Bard's mythic, which counts hits for its own songs |
+| The red rain | Thousand Cuts, the Storm, the Toll | two units | all of it, in the kits |
+| The riposte | the Toll, Thousand Cuts | one unit | the dodge's piece; the Valkyrie's passive |
+| Every colour | Bonfire, Cold Snap, the Storm, Thousand Cuts | one unit | the wand; Malison is approved, not built |
+| The lead's colour | Bonfire, Cold Snap, the Storm, Thousand Cuts | the party | the colours, in three passives |
+| The emptied quiver | Thousand Cuts, the Hunt | one unit | Quick draw; a coin that makes about half of all hits crit |
+| The blood mage | Blood Pact, Barrage | one unit | the price's piece; Lifesteal |
+| The resonance | Barrage, the Storm, Bonfire, Cold Snap | one unit | Recharge, for the mana |
+| The crescendo | Barrage | one unit | the free casts |
+| Mana as armour | Barrage, Blood Pact | two units | the mana-givers |
+| The shatter bell | Cold Snap, Landslide, Bonfire, Barrage | two units | a seat that answers a shatter with a heavier hit |
+| The firecracker string | Cold Snap | the party | the throw's piece; the Frostweaver's mythic leaves cold behind |
+| The brink | Blood Pact, Landslide, the Toll | two units | the gifts, in eleven kits; a seat that drains its unit |
+| Two in the dark | the Toll, Blood Pact, the Hunt | the party | the Assassin's hiding; more is allowed |
+| The red stone | Thousand Cuts, Blood Pact, Landslide | one unit | nothing |
+| The borrowed gift | none of its own | two units | nothing |
+| The carrier | none | one unit | the foes' afflictions |
+
+- **Every road has engines, and none has only its own.** Landslide and the Toll touch nine; Thousand Cuts, Bonfire, Cold Snap, the Storm and the Hunt seven; Barrage six; Blood Pact five.
+- **Four sit on one road, eleven on two, eleven on three or more,** and the two exotics on none.
+- **Eleven live on one unit,** where play showed a player builds; ten need two units; seven need the party.
+- **Five can start in act I** from the kits, a version and a formation: the red rain, the held charge, the reaping, the lead's colour and the brink. The rest are one piece from a party already on a road.
+- **Several need the rules to grow:** damage carried past a kill, a foe's swing called early, damage taken from MP, retaliation sized by the blow before the wall's share, an ability cast by a count of swings, start-of-fight effects that happen again, a status passed on by its holder, an ability brought back by the foes it hit. The director's intent allows it (`docs/gear-design/philosophy.md`).
+- **Two are loops,** each with a brake of its own: the emptied quiver (a crit that fails) and the resonance (a pack that thins, a pool that empties). Synergies may be overpowered until the balance pass.
+
+### Parts that recur
+
+One part, several engines, so a run holding one part has more than one partner to meet. The spine writes these first.
+
+| A part | The engines it's in |
+| --- | --- |
+| A Shield made by what a unit already does (hits, dodges, a shatter, healing past full) | the detonation, the frozen gate, the riposte, the red stone, the brink |
+| A draw on one unit | the frozen gate, the mirror, the goad, the reckoning, the riposte, two in the dark |
+| A status on a swing | the lead's colour, every colour, the held charge, the carrier |
+| A hit on many foes | the red rain, the reaping, the resonance, the blood mage, the firecracker string |
+| A foe held still | the held charge, the shatter bell, the emptied quiver |
+| A kill that pays | the reaping, the judge's drum, the opening, again, the fuse, the avalanche |
+| The slowest, heaviest blow | the judge's drum, the avalanche, the reckoning, the shatter bell, the mirror |
+| The ally with the lowest share of HP | the brink, two in the dark, the borrowed gift |
+| A cast that's free, or mana given | the crescendo, mana as armour, the resonance, the spell on the swing |
+
+### What the set asks of the loot
+
+- **The common half comes first.** The shield party was laying Shields long before it found the piece that broke them. So an engine's supply sits in the kits, the commons and the uncommons, and its keystone in a rare, a legendary, a version or a seat.
+- **A keystone met alone does nothing, and play showed it.** About half the keystones have a piece or a seat in today's loot that does it or nearly does. The dodge that strikes back was worn by units that drew nothing, the shatter that throws cold by a party that shattered once a fight, and the price in life for two fights. What was missing each time was the other half, close at hand.
+- **Every keystone comes from more than one place:** a piece in more than one kind, a version, a seat. A run sees under half the legendaries, so twenty-eight engines with one keystone each would mostly never be met.
+- **Each part is worth wearing alone on its road,** and no card names its partner.
+- **Parts overlap on purpose** (*Parts that recur*). That's how pieces meet in ways nobody wrote down.
+- **A class's mythic may be an engine on its own,** and two already are.
+
+## The doors
+
+Where a run drifts from one road to its neighbour, through something both want. Where an engine sits on a door, the door names it.
+- **Any status road into another, through a second colour on a swing.** A fire party picks up frost. The Hexer's Malison, which pays for each different affliction a foe holds, is what makes a mixed party worth being. *Every colour.*
+- **Thousand Cuts into the Hunt, through the opener's crits.** The crit that opens a wound finishes the weakest. Play found these two as one. *The cull.*
+- **Thousand Cuts into Blood Pact, through the drink.** A party that lives on Lifesteal starts paying with it. *The red stone.*
+- **Thousand Cuts into Barrage, through speed.** Swings that bring a spell round. *The spell on the swing.*
+- **The Toll into Thousand Cuts, through briars.** Foes leave the anchor already bleeding. *The red rain.*
+- **The Toll into Cold Snap, through frost on the anchor.** What strikes it slows. *The frozen gate.*
+- **The Toll into Landslide, through Defense and stone.** *The mirror, the reckoning.*
+- **The Toll into the Storm, through the foes' own clock:** one waits for them to strike, the other for them to move. *The goad.*
+- **The Toll into Blood Pact, through the lowest ally:** an anchor held low takes all the party's cover. *The brink.*
+- **The Storm into Cold Snap, through a held foe:** a frozen foe keeps its charge until it moves. *The held charge.*
+- **The Storm into the Hunt, through the back row:** taxed, or reached. And through a field sunk together, finished in one beat. *The reaping.*
+- **The Hunt into Bonfire, through kills:** a fire that outlives its foe. *The fuse.*
+- **Landslide into Cold Snap, through the heavy blow on a frozen foe.** *The shatter bell, the quake.*
+- **Landslide into Barrage, through the conductor:** the blow twice.
+- **Landslide into the Hunt, through the first strike:** Might at the start on the slowest hitter. *The judge's drum, the avalanche.*
+- **Barrage into Bonfire, the Storm or Cold Snap, through the soloist:** the spell worth repeating is the one that feeds the fire, spreads the charge or lays the frost. *The resonance.*
+- **Blood Pact into Barrage, through life for mana.** *The blood mage,* and *mana as armour* the other way round.
+- **Blood Pact into Landslide, through max HP in the blow.**
+
+## Elements, not builds
+
+Things that could be taken for builds, or for a build's whole identity, and are better as things any party can have.
+
+- **Falls and returns: the net.** Nobody chooses who falls, so nothing is built on it. A revive, and whatever softens a fall, serves every build. What the net has to do: the returned stay up (in play, each revive inside a fight was followed by a second fall), the survivors get cover in the moment after, and since a knockout carries, the net can bring the fallen back between fights. It's sized as protection. No piece wants a fall.
+- **The first move.** The fight's start is the one trigger nothing gates. It's the Hunt's first Mark, and a thread several others use: stone at the start, cold at the start, a Taunt at the start, a first cast free.
+- **Spread.** Reaching more foes is each build's pack game, not a build. The Storm is the one road whose nature is spread.
+- **Stopping a cast.** A Stun or a Silence timed to a wind-up is an answer to a boss's great cast, as *Core set: enemies* asks, and the act's boss is shown from the start. The versions that wait for a wind-up are that answer. A wind-up was caught five times in 150 fights, so no build waits for one.
+- **Foes that do less.** Weaken, Slow and Silence make a party's fights cheaper. At their sizes today they don't keep one alive.
 
 ## The web
-
-The builds share threads, so a piece made on a thread reaches every build in its row, by different amounts and for different reasons. That's how a run drifts from one build to another.
 
 ### Threads the builds share
 
 | Thread | Matters most to | Matters some to |
 | --- | --- | --- |
-| The draw (Taunt, Aggro) | the Toll | Landslide, Harvest, Bonfire, Lockdown, Phoenix (the martyr) |
-| Shield | Landslide | Phoenix, Ambush, the Toll |
-| Defense and Guard | Landslide, the Toll | Lockdown |
-| Might | Landslide (the slow hitter) | Ambush (the first blow), Phoenix (on a fall), Bonfire |
-| Haste | Thousand Cuts | Bonfire, Overflow, Ambush |
-| Riders on basic attacks | Thousand Cuts, Cold Snap | Bonfire, the Toll |
-| Many hits, extra strikes | Thousand Cuts | Cold Snap, Harvest |
-| Crits | Landslide | Ambush, the Hunt, Thousand Cuts |
-| Stun | Lockdown, Cold Snap | Landslide (its heaviest blows) |
-| Silence | Lockdown | the Hunt (the back row) |
-| Wind-ups | Lockdown | Landslide, Bonfire |
-| Cooldowns | Overflow | Lockdown, the Hunt, Ambush (one saved for the volley) |
-| MP flow | Overflow | Lockdown, Bonfire, Phoenix, Blood Pact (by paying HP instead) |
-| HP spent, low HP | Blood Pact, Phoenix | Landslide (max HP into the stone and the blow) |
-| Heals | Blood Pact | Phoenix, the Toll |
-| Kills as triggers | the Hunt, Bonfire (the fire passing on) | Harvest (the finisher) |
-| Area and spread | Harvest | Cold Snap, Bonfire |
-| Focus and targeting | the Hunt | Cold Snap, Harvest (evening out), Landslide (aiming the blow) |
-| Seek and reach | the Hunt | Ambush, Lockdown |
+| The draw (Taunt, Aggro) | the Toll | Bonfire, the Storm, Barrage, Landslide, the Hunt (the warden) |
+| Shield | Landslide | Blood Pact (the net), Thousand Cuts (built by hits), the Toll |
+| Defense and Guard | Landslide, the Toll | |
+| Might | Landslide (the slow hitter) | the Hunt (the first strike), Blood Pact (roused at the brink) |
+| Haste and speed | Thousand Cuts, the Storm | Bonfire (the feeders' tempo), Cold Snap, Barrage |
+| Riders on basic attacks | Bonfire, Cold Snap, the Storm | Thousand Cuts |
+| Many hits, extra strikes | Thousand Cuts | the Storm, Cold Snap |
+| Crits | the Hunt, Landslide, Thousand Cuts (the opener) | |
+| Stun | Cold Snap (the shatter's) | Landslide (the blow on a held foe), the Storm (a held charge) |
+| Cooldowns | Barrage | Bonfire, the Hunt (ready again on a kill) |
+| MP flow | Barrage | Bonfire, the Storm, Blood Pact (by paying HP instead) |
+| HP spent, low HP | Blood Pact | Landslide (max HP into the blow) |
+| Heals | Blood Pact | the Toll (the keeper), Thousand Cuts (a mend per hit) |
+| Kills as triggers | the Hunt | Barrage (ready again on a kill) |
+| Spread | the Storm | each road's pack game |
+| Focus and targeting | the Hunt | Bonfire and Cold Snap (the pile), Thousand Cuts (hits on one wound), Landslide (aiming the blow) |
+| Seek and reach | the Hunt | |
+| The fight's start | the Hunt | Landslide, Cold Snap, the Toll, Barrage |
 | Bleed | Thousand Cuts | the Toll, the Hunt |
-| Burn | Bonfire | Thousand Cuts' status torrent (Kindling) |
-| Chill | Cold Snap | Lockdown (the slow), the Toll (the attacker slowed) |
-| Shock | the Toll (the attacker pays) | Harvest, Overflow |
-| Sunder | Cold Snap | Thousand Cuts (against Defense), the Hunt |
-| Weaken | the Toll | Lockdown, Blood Pact |
-| Evasion and dodges | Thousand Cuts, the Toll (the dancer) | |
+| Burn | Bonfire | |
+| Chill | Cold Snap | the Toll (the attacker slowed) |
+| Shock | the Storm | the Toll (the attacker pays) |
+| Sunder | Landslide (the target opened), Thousand Cuts | Cold Snap, the Storm |
+| Weaken | the Toll | Blood Pact |
+| Evasion and dodges | Thousand Cuts | the Toll (the dancer) |
 | Lifesteal | Blood Pact | Thousand Cuts |
-| Falls and revives | Phoenix | Ambush (a revive in the first slot) |
-| The fight's start | Ambush | Landslide, Phoenix |
-| Knockouts and cooldowns carried into the next fight | Phoenix | Ambush (a cooldown saved for the volley), Overflow |
-
-### Themes
-
-Elements are themes, not mechanics, and a theme shapes builds far beyond its status. Builds that share a theme should feel nothing alike.
-
-| Theme | Its builds | Its status |
-| --- | --- | --- |
-| Earth: weight, Shields | Landslide; the Toll (thorns) | none |
-| Fire: ramp, big casts | Bonfire; Harvest (Fireball as one of the field's sweeps) | Burn: Bonfire's, and a little in the status torrent |
-| Ice: control and shatter | Cold Snap (the shatter); Lockdown (the slow, no shatter needed) | Chill: a payoff in one, a lock on the way up in the other |
-| Lightning: spread, quick strikes | Harvest; Thousand Cuts' status torrent; the Toll's spark | Shock: optional in Harvest, central to none |
-| Wind: reach, Seek | the Hunt; Thousand Cuts | none |
-| Light: restore, the costly blow | Phoenix; Landslide (Smite) | none |
-| Dark: drain | Blood Pact; Lockdown and the Toll (Weaken) | none |
-
-### Shared needs
-
-Needs met once and paid off in several builds. Each build wants the same need for its own reason, which is what makes a shared piece worth a different amount in each.
-
-| Need | Who wants it, and why | Met by |
-| --- | --- | --- |
-| Taunt on gear | the Toll, to return the blows; Landslide, to keep them on the stone; Phoenix, to choose who falls; Harvest, to hold the whole field; Bonfire, to hold the early fight | Challenger's plate, Mocking mail, sword, Plate and amulet uncommons, Thorn hedge, Reaping line |
-| Payoffs on a stunned or silenced foe | Cold Snap, after each shatter; Lockdown, to turn its locks into damage; Landslide, after its heaviest blows stagger | Icebreaker, Opportunist's charm, Still hand, Bane of the bound, Hoarfrost line, The vise, Gaol |
-| A dodge that pays | Thousand Cuts, as one more hit; the Toll, as the dancer's riposte | Duelist's leathers, Windrunner's garb |
-| Riders on every hit, extra strikes included | Thousand Cuts, for the count; Cold Snap, for the Chill; Bonfire, for the Burn | Notched knife, Rime knuckles, Echo charm, Flurry wraps, Flicker wand, Heart of winter |
-| A unit's basic attacks reshaped | Landslide, slower and bigger; Thousand Cuts, faster and smaller: one lever pulled two ways, a choice between builds | Millstone and Hummingbird charm, Anvil, Worldbreaker |
-| Kills that give something back | the Hunt, to speed the next kill; Bonfire, to pass the fire; Harvest, to finish the field | Hunting spear, Bounty charm, Pack leader's coat, Gravemark, Wick, Ember heart, Last page |
-| Changing a cooldown | Overflow, to keep casting; Lockdown, to keep up with the boss; the Hunt, to reset on a kill | Hunting spear, Still hand, Bell of the hour, Relay, Ready stance |
-| Max HP that does something | Landslide, into the stone and the blow; Blood Pact, as the pool it spends | Heartsplitter, Cornerstone maul, and the kits |
-| Effects at the fight's start | Ambush, for the volley; Landslide, for the stone; Phoenix, for the survivors' cover | Bastion plate, Stone totem, War horn, Shadow cloak, Drawn steel, Horn of the charge, First light, and many uncommons |
-| Reactions to a fall or a return | Phoenix, as its turns; the Toll, when the anchor falls and someone must take its place | Challenger's plate, Mantle of the fallen, Rallying horn, Dawnblade, Martyr's locket, Funeral bell, Vigil, Pyre of heroes |
-| Seek on gear | the Hunt, for reach; Ambush, so the volley isn't caught by the front; Lockdown, to reach the caster behind a wall | Tracker's coat, Executioner's longbow, dagger and rune-sword uncommons, Hunting party |
-| Changing an MP cost | Overflow, as its engine; Phoenix, for cheaper returns; Lockdown, for more locks | Weaver's robes, Annotated grimoire, Archmage's mantle, Brimming blade, Reliquary of mercy, Wellspring, The choir |
 
 ### Seat roles the builds share
 
-How most formations reach several builds; a formation's own effects and custom roles are what make it itself.
-
 | Seat role | Builds that use it (their name for the seat) |
 | --- | --- |
-| Draws the blows | Landslide (bulwark), Bonfire (keeper), Harvest (lightning rod), Lockdown (gaoler), the Toll (anchor), Phoenix (martyr), Ambush (rear guard), the Hunt (warden) |
-| Gives to the others | Landslide (mason: stone), Thousand Cuts (pacer: speed), Overflow (wellspring: mana), Blood Pact (donor: life), Phoenix (reviver: returns) |
-| Acts often, hits small | Thousand Cuts (blades), Bonfire (stoker), Cold Snap (frost seats), Ambush (the hastened second) |
-| Acts rarely, hits big | Landslide (hammer), Cold Snap (breaker), Ambush (opener) |
-| Picks the target, or waits for one | the Hunt (marker, chaser), Lockdown (watcher, warden) |
-| Spreads what it does | Harvest (scythes), Bonfire (torch) |
-| Pays to give power | Blood Pact (bleeder), Phoenix (martyr) |
-| Is fed by the other two | the Hunt (marker), Landslide (hammer), Overflow (spender), Blood Pact (drinker) |
+| Draws the blows | the Toll (anchor), Bonfire (keeper), the Storm (rod), Landslide (anvil), the Hunt (warden) |
+| Gives to the others | Landslide (loader), Barrage (conductor, well), Blood Pact (donor), the Toll (warden) |
+| Acts often, hits small | Thousand Cuts (blades), Bonfire (stoker), Cold Snap (frost seats), the Storm (squalls) |
+| Acts rarely, hits big | Landslide (hammer), Cold Snap (breaker), Thousand Cuts (opener) |
+| Picks the target | the Hunt (marker, chaser) |
+| Is fed by the other two | Barrage (soloist), Landslide (hammer), Blood Pact (bleeder) |
+| Pays to give power | Blood Pact (bleeder) |
 
-### The doors
+**What a formation has to be** for a party to pivot to it, from what was and wasn't fought in:
+- **About one thing.** All three seats serve what the build does, and no seat is a tax.
+- **A promise in plain words,** big enough to see: a stat, a status by name, who it lands on.
+- **Seats many classes can fill.** A seat that reads who sits in it says so on the seat.
+- **One for each phase.** Every build has a common formation a run could start in, a rare that reads who sits where, and a legendary that changes how the party fights.
 
-Where a run drifts from one build to another: each door has at least two pieces that matter to both sides.
-- **Cold Snap into Lockdown, through Stun.** A Frostweaver run that finds payoffs for hitting stunned foes stops chasing bursts and starts holding foes. Icebreaker, Opportunist's charm, Still hand, The vise.
-- **Thousand Cuts into the Toll, through Evasion.** A dodgy Monk finds a Taunt and becomes the dancer anchor. Duelist's leathers, Windrunner's garb, Skirmish line, Flow's version B.
-- **Thousand Cuts into Cold Snap, through riders.** A blur party picks up a Chill rider, and the shatters start; it's the door the director walked through. Rime knuckles, Echo charm, Hummingbird charm, Heart of winter, Flurry wraps.
-- **The Hunt into Bonfire, through kills.** A hunt that finds fire passing from the dead: its steady beat starts to speed up. Signal lantern, Wick, Bounty charm.
-- **The Hunt into Ambush, through Hidden and reach.** A hunter that opens from hiding. Shadow cloak, Tracker's coat, Quietus, Night's edge.
-- **Landslide into the Toll, through Defense.** Thorns that grow from Defense turn the stone wall into a thorn wall. Spiked bulwark, Thorn hedge, Bastion plate.
-- **Landslide into Ambush, through the stone at the start.** Shields and Might at the first tick, on the slowest hitter: the one huge blow, struck first. Stone totem, War horn, Drawn steel, Phalanx's version A.
-- **Landslide into Lockdown:** Worldbreaker, Rubble shield.
-- **Blood Pact into Phoenix, through low HP.** A pact party that falls and comes back. Last bastion, Bloodsworn mail, Martyr's maul, Bloodlust's version B.
-- **Overflow into Lockdown, through MP and cooldowns.** Mana that feeds locks instead of damage. Annotated grimoire, Brimming blade, Bell of the hour, The choir.
-- **Overflow into Bonfire, through hungry casts.** Mana makes the fire catch sooner. Archmage's mantle, Cataclysm staff.
-- **Bonfire into Harvest:** Ember heart spreads the fire the Wick focuses.
-- **The Toll into Overflow:** the Knight's mythic, a beating that feeds the casters.
+A build still plays in Neutral, and no build needs one formation. How formations arrive in a run is the rogue mode's (*Core set: the rogue mode*), and the formations have to work however they arrive.
 
-### Builds nobody planned
+### Every class in the set
 
-They come from pieces meeting by chance; the loot makes them possible without designing them.
-- **The frozen gate (the Toll with Cold Snap):** an anchor whose attackers carry Chill away, beside anything that pays on a shatter, so the wall freezes its attackers until they burst. Hoarfrost plate beside any shatter payoff.
-- **The second volley (Phoenix with Ambush):** a unit that returns with everything ready opens the fight a second time, in the middle of it. Bones of the returned, Ready stance.
-- **The opening freeze (Ambush with Cold Snap):** Chill at the first tick, so the first shatters come before the foes have acted. Horn of the charge with Heart of winter or Frostbite bow.
-- **The thorned pact (the Toll with Blood Pact):** an anchor that lives below half on purpose, where the pact's payoffs switch on, while its Thorns do the killing. Last bastion with Thornheart plate.
+Each class's three identities (`docs/core-set/classes.md`), and the roads each one serves.
 
-### Abilities that sit between builds
-
-These abilities sit on a border, so their two versions have somewhere to go.
-
-| Ability | Between |
+| Class | Its identities' roads |
 | --- | --- |
-| Shield bash | Landslide (the blow) and Lockdown (the lock) |
-| Earthen shell | Landslide and Phoenix (the survivors) |
-| Thicket | the Toll and Landslide |
-| Fortify | Landslide (Guard on the Defense-scaler) and the Toll (Guard on the anchor) |
-| Aspis, Othismos | the Toll (over the anchor) and Harvest (the whole line sundered) |
-| Frost lance | Cold Snap and Lockdown |
-| Pyre | Bonfire (on the hottest foe) and Harvest (on every foe, half as hard) |
-| Smite | Landslide (the rare blow) and Bonfire (the fire) |
-| Condemn | the Hunt (the judged foe) and the Toll (Challenge: the wicked come to it) |
-| Malison | Bonfire and Harvest |
-| Arc | Harvest and Thousand Cuts |
-| Chain lightning | Harvest and Overflow |
-| Static charge | Overflow and Thousand Cuts |
-| Backstab | the Hunt and Ambush |
-| Gale spear | the Hunt and Thousand Cuts |
-| Refrain | Overflow and Thousand Cuts |
-| Blood gift | Blood Pact and Overflow |
-| Choosing, Renew | Blood Pact (the drop caught) and Phoenix (the return kept standing) |
-| Raise | Phoenix and Ambush |
-| Enfeeble | the Toll and Lockdown |
-| Flow | Thousand Cuts and the Toll (the dancer) |
+| Knight | stone wall: Landslide · anchor: the Toll, Bonfire (the keeper), the Storm (the rod) · champion: Barrage (the well), Landslide |
+| Cleric | mender: Blood Pact · anchor's priest: the Toll · font: Barrage |
+| Ranger | marksman: the Hunt · skirmisher: Thousand Cuts · trapper: Thousand Cuts, Cold Snap |
+| Bramble knight | anchor: the Toll · field of thorns: the Toll's pack game · grove-keeper: Landslide, Blood Pact · its briars: Thousand Cuts |
+| Hoplite | bruiser: Landslide, the Hunt · phalanx: Landslide, the Storm · bodyguard: the Toll, Blood Pact |
+| Paladin | judge: the Hunt · healer: Blood Pact · champion of the line: the Toll, Bonfire |
+| Valkyrie | storm spear: the Hunt, the Storm · shield-sister: Blood Pact, the Toll · thunderhead: the Storm · her Shield from hits: Thousand Cuts |
+| Bard | conductor: Barrage, Landslide · troubadour: Blood Pact · skald: Thousand Cuts, the Storm |
+| Hexer | spellbreaker: stopping a cast · curser: the Toll · elemental blade: Bonfire, Cold Snap, the Storm |
+| Monk | blur: Thousand Cuts, the Storm · dancer: the Toll · point-striker: the Hunt, Cold Snap · its burning fists: Bonfire |
+| Assassin | ambusher: the Hunt · hunter: the Hunt, Thousand Cuts · drinker: Blood Pact |
+| Vampire | drinker: Blood Pact · blood-well: Barrage · frenzy: Thousand Cuts |
+| Pyromancer | ritualist: Bonfire, Barrage (the soloist) · kindler: Bonfire · conflagration: Bonfire's pack game |
+| Frostweaver | ice wall: Cold Snap, the Toll (the warden) · disabler: stopping a cast · shatter killer: Cold Snap, Barrage |
+| Stormcaller | tempest: the Storm, Barrage · storm fist: the Storm, the Hunt · lightning rod: the Toll, the Storm |
+| Geomancer | landslide: Landslide · quake: Landslide, Cold Snap (the breaker) · stone warden: Landslide, Blood Pact, Barrage |
 
-### Exotics, and nothing fenced off
-
-- **Exotics** belong to no build: the Wildmagic wand, the Cinderheart staff (a flare that undoes Bonfire's ramp), the Idol of the hungry dark, Gambler's coin and The wheel. The Hexblade and Hexweave mail sit near them, worth something to every status party and a lot to none.
-- **Nothing is fenced off.** Every build has pieces in every slot and a formation, with pieces worth something to it that 10 to 16 classes can wear. The narrowest are Ambush (its openers sit on the fast and the hidden) and Landslide (its stone on Plate and great weapons), and each has an amulet anyone can wear. Most rares and legendaries matter to two builds or more, by different amounts.
+Four things for the upgrades to know:
+- **The Hexer's spellbreaker and the Frostweaver's disabler serve an answer (stopping a cast), not a road.** The class frame wants each identity viable.
+- **The Assassin's ambusher and hunter both serve the Hunt.** The hunter also opens the wounds for Thousand Cuts.
+- **The Pyromancer is in two roads;** the Cleric, Ranger, Assassin, Vampire and Frostweaver are in three; every other class is in four or more.
+- **Two versions drain a foe's MP:** the Hexer's Mana burn and the Vampire's Drain the well. The player can't see a foe's MP, so they're mana gain for their user, and the drain counts for nothing in a build (`docs/rules.md`).
 
 ## Checks on the whole set
 
-- **The rhythms spread across the space.** Damage at the start (Ambush), even (Thousand Cuts), in waves round the party (Overflow), rising (Bonfire), in bursts (Cold Snap), in steady steps (the Hunt), all at the end (Harvest), rare and huge (Landslide), following the foe (the Toll), surging after a fall (Phoenix), see-sawing (Blood Pact), in windows on disabled foes (Lockdown).
-- **Every class is in some builds,** four to eight each, with routes into more than one.
+- **The rhythms and shapes spread across the space:** rare and huge (Landslide), spikes in a dense stream (Thousand Cuts), a fire that leaps and sags (Bonfire), bursts on a beat (Cold Snap), following the foes' actions (the Storm), a volley and then a staircase (the Hunt), following the foes' attacks (the Toll), in salvos from one unit (Barrage), see-sawing (Blood Pact).
+- **Four roads are a status's, each on its own clock,** and five aren't a status's at all. A status the party stacks read as a build in play; it isn't what a build has to be.
+- **Every build's sign is in a base kit.** At least one class shows each build's direction with a passive or one ability, before any piece, and most builds have two or three. It's a check on this set, not a rule for what a build is: a sign can as well come from a piece or a formation.
+- **Every build has a route with a starter** (the Knight, Cleric or Ranger).
+- **Every build has a pack game and a boss game,** and says which is worse.
+- **Every build has engines, and shares most of them** (*Engines*, Across the web). Blood Pact has the fewest, and Landslide and the Toll the most.
 - **Builds that share a mechanic feel nothing alike.**
-  - Chill: Cold Snap's bursts, Lockdown's slow, the Toll's slowed attacker.
-  - Kills: the Hunt's steady beat, Bonfire's speeding one, Harvest's all at once, Ambush's spike.
-  - HP: Blood Pact's see-saw, Phoenix's deaths.
-  - Shield: Landslide's stone, Phoenix's survivors.
-- **No two builds differ only by the damage type on the numbers.** Thousand Cuts has a route of plain hits and a status torrent, but that's one build with two answers to Defense.
+  - Being hit: the Toll's return, Blood Pact's brink.
+  - Big numbers: Landslide's loaded blow, the Hunt's chosen strike, Barrage's repeated spell.
+  - The foes' own doing: the Toll's attackers, the Storm's every action.
 
 **Set aside:**
-- **A wither build** (attrition: foes weaken, slow and drain while the party sits full). It shared Lockdown's danger shape and the Toll's long fights; its threads (Weaken, Siphon, Slow) are spread across the Toll, Lockdown and Blood Pact.
-- **A radiance build** (healing stored and released as one blow). Its rhythm, quiet then huge, is Landslide's; light shapes Phoenix instead.
-- **A gambler** (crits on everything, fights won in ten ticks or lost). Landslide's and Ambush's crits cover it, and it may come back as exotics.
+- **Stranglehold:** a build on debuffs. They can't keep a party alive at today's sizes, and may not neuter a foe team at any number. It could come back if the balance pass makes debuffs big enough to stand on.
+- **Phoenix:** a build on falls. Nobody chooses who falls; revives are the net.
+- **Ambush alone:** an opening with no tail. Its rhythm is the most distinct of any opening, which is why the first strike is kept in the Hunt.
+- **Harvest alone:** spread as a build. It's each build's pack game, and the Storm's nature.
+- **Lockdown:** waiting for the foe's wind-up. Stopping a cast is an answer, not a build.
+- **Overflow's relay:** mana passed round three casters. Its links can't be made big enough to see without being a build's whole power.
+- **The chorus:** the party's own buffs as the thing stacked. Today a buff helps every build about equally, which is what a piece shouldn't do.
+- **The gambler:** crits on everything. The Hunt's and Landslide's crits cover it, and it may come back as exotics.
+
+## Least sure
+
+- **The engines that span units.** In play one unit's slots made a synergy and three units' rarely did. Eleven of the twenty-eight live on one unit; the rest need two units or the whole party, and may meet as seldom as cross-unit synergies did in play.
+- **The engines held in versions.** The reaping and the emptied quiver, and the cull and the quake already in the kits, are whole only when the right abilities are known and trained, which is late.
+- **The Toll and Landslide touch the most engines** (nine each). The anchor is where the foes' own doing lands, so it's the easiest place to find one, and the Toll is the road that least needs making stronger.
+- **Engines one by one:**
+  - **the goad** speeds the foes up, which a player may never choose;
+  - **the fuse** buys less the faster Burn drains, and Bonfire runs on a fast drain;
+  - **the crescendo** may be a ramp and no more;
+  - **the brink,** with an Aegis landing on it every time, may be a unit that can't fall;
+  - **the carrier** may read as clever and pay too little in fights this short.
+- **The Storm.** Its hook is real against packs and busy back rows. Against a lone, slow boss it pays on the boss's schedule.
+- **Bonfire.** Upkeep is a rhythm only if the fire visibly leaps and sags. If it settles to a level, it reads as a status again.
+- **Four of the nine are a status's road.** It's the cheap way in. Whether it's the right one is open.
+- **Thousand Cuts,** centred on Bleed, doesn't hold speed for its own sake. Speed is a thread every status road wants.
+- **The Hunt** without hiding at its centre may be thin for a class whose kit is hiding.
+- **Blood Pact** asks the player to spend what the game drains.

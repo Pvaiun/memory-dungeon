@@ -1,4 +1,4 @@
-/** The Toll: they hurt themselves; damage follows how much the foes attack, all the danger on one anchor. Its three routes, each at three rungs (docs/gear-design/builds.md). */
+/** The Toll: they hurt themselves; damage follows how much the foes attack, all the danger on one anchor. Its three routes, each at three rungs (the twelve builds today's loot was made for). */
 import { g, p, route, v, vp, type Route } from "./kit.js";
 
 export const routes: Route[] = [

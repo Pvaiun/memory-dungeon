@@ -1,4 +1,4 @@
-/** Blood Pact: life spent and bought back; HP bars see-saw, and HP pays where others pay MP. Its three routes, each at three rungs (docs/gear-design/builds.md). */
+/** Blood Pact: life spent and bought back; HP bars see-saw, and HP pays where others pay MP. Its three routes, each at three rungs (the twelve builds today's loot was made for). */
 import { g, p, route, v, vp, type Route } from "./kit.js";
 
 export const routes: Route[] = [

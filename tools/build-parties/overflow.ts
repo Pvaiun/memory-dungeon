@@ -1,4 +1,4 @@
-/** Overflow: casting that never stops, in waves passing round the party as the mana moves. Its three routes, each at three rungs (docs/gear-design/builds.md). */
+/** Overflow: casting that never stops, in waves passing round the party as the mana moves. Its three routes, each at three rungs (the twelve builds today's loot was made for). */
 import { g, route, v, vp, type Route } from "./kit.js";
 
 export const routes: Route[] = [
