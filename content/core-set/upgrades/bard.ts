@@ -42,13 +42,14 @@ import { abilityUp, apply, cd, helper, kit, passiveUp, r6 } from "./kit.js";
   const accelerando: Partial<AbilityT> = { cooldown: cd("short", "allegro"), mp: 450, target: { side: "allies", pick: "lowest", by: "swing" } };
   abilityUp({
     id: "allegro", cls: "bard",
-    power: "Comes round sooner.",
+    // Cheaper too: sooner at the base's 650, the Bard spent its mana on Haste and War ballad went quiet (the party dealt 7% less).
+    power: "Comes round sooner, and costs less.",
     a: { name: "Rubato", text: "Haste on every ally, and every ally's ability nearest to ready is ready at once. It never readies itself: for the Bard, another of its own.", serves: "Barrage 2 ●●●, Landslide ●" },
     b: { name: "Accelerando", text: "Haste on the ally that attacks fastest.", builds: ["cuts"] },
     form: (v, _k, plus) =>
       v === "a" ? { ...rubato, ...(plus ? { cooldown: cd("medium", "allegro") } : {}) }
         : v === "b" ? { ...accelerando, ...(plus ? { cooldown: cd("quick", "allegro") } : {}) }
-          : { cooldown: cd("medium", "allegro") },
+          : { cooldown: cd("medium", "allegro"), mp: 450 },
   });
 }
 

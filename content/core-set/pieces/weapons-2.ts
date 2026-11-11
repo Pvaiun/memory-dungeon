@@ -322,10 +322,10 @@ weapon("staff", "common", "Willow staff", { stats: [sp("cast_speed", "medium"), 
   });
 }
 {
-  const name = "Canopy staff", effect = "When each fight starts, its wearer and the other ally with the least max HP each gain a Shield of a quarter of its wearer's Attack.";
+  const name = "Canopy staff", effect = "When each fight starts, its wearer and the other ally with the least max HP each gain a Shield of a sixth of its wearer's Attack.";
   weapon("staff", "uncommon", name, {
     effect, stats: [sp("cast_speed", "medium"), st("mp_regen", 1), st("max_hp", 1)],
-    statuses: [own_(name, effect, { reactions: [atStart(give("shield", "holder", share(0.25, "attack")), give("shield", { side: "others", pick: "lowest", by: { stat: "max_hp" } }, share(0.25, "attack")))] })],
+    statuses: [own_(name, effect, { reactions: [atStart(give("shield", "holder", share(1 / 6, "attack")), give("shield", { side: "others", pick: "lowest", by: { stat: "max_hp" } }, share(1 / 6, "attack")))] })],
     serves: "net, Barrage ●, Landslide ● ⚙ opening again (half), detonation (half)",
   });
 }
@@ -433,10 +433,11 @@ weapon("great_weapon", "common", "Halberd", { stats: [st("attack", 1), st("max_h
 }
 {
   const name = "Twinfall";
-  const effect = "Each hit its wearer lands, a basic attack's or an ability's, lands a second time a tick later: the same damage again, on the same foe. The second carries none of the first's statuses, and nothing repeats it.";
+  // Half again, not double: the second landing is half the first (the held-back lever: half again where the condition holds all fight).
+  const effect = "Each hit its wearer lands, a basic attack's or an ability's, lands a second time a tick later: half the damage again, on the same foe. The second carries none of the first's statuses, and nothing repeats it.";
   weapon("great_weapon", "legendary", name, {
     effect, stats: [st("attack", 2), st("max_hp", 2), sp("crit_damage", "medium")],
-    statuses: [own_(name, effect, { reactions: [react(on("hit_lands", { notTags: ["bare"] }), { op: "strike", of: "dealt", after: 1, to: "other" })] })],
+    statuses: [own_(name, effect, { reactions: [react(on("hit_lands", { notTags: ["bare"] }), { op: "strike", of: "dealt", share: 50, after: 1, to: "other" })] })],
     serves: "Landslide 3 ●●●, Hunt ●●, Cuts ● ◆ heavy-blow",
   });
 }

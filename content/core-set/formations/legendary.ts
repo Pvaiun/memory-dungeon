@@ -126,9 +126,10 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
   );
 }
 {
-  const party = "Every ally's abilities cost HP in place of MP: half the share of its max HP that they'd cost of its max MP. No ally casts one that would leave it below a tenth of its max HP. Every ally has Lifesteal, high.";
+  // Lifesteal at the medium step: high, on every ally and every swing, besides casting free of MP, put it 20 points over Neutral.
+  const party = "Every ally's abilities cost HP in place of MP: half the share of its max HP that they'd cost of its max MP. No ally casts one that would leave it below a tenth of its max HP. Every ally has Lifesteal.";
   add(
-    formation("The covenant", "legendary", "Life is the party's one currency.", thrice({ name: "Sworn", text: NOTHING }), { text: party, stats: [LIFESTEAL_HIGH], statuses: ["the_covenant"] }),
+    formation("The covenant", "legendary", "Life is the party's one currency.", thrice({ name: "Sworn", text: NOTHING }), { text: party, stats: [LIFESTEAL], statuses: ["the_covenant"] }),
     [held("the_covenant", "The covenant", "Its abilities cost HP in place of MP: half the share, never below a tenth.", { mods: [{ hp: { pct: 50, share: true, floor: 10, instead: true } }] })],
     "Pact 3 ●●●, Barrage ●● ⚙ blood mage (key), brink (half)",
   );

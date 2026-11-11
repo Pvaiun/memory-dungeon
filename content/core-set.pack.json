@@ -7451,7 +7451,7 @@
   {
    "id": "canopy_staff",
    "name": "Canopy staff",
-   "text": "When each fight starts, its wearer and the other ally with the least max HP each gain a Shield of a quarter of its wearer's Attack.",
+   "text": "When each fight starts, its wearer and the other ally with the least max HP each gain a Shield of a sixth of its wearer's Attack.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7469,7 +7469,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.25,
+          "ratio": 0.16666666666666666,
           "stat": "attack",
           "of": "holder"
          }
@@ -7489,7 +7489,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.25,
+          "ratio": 0.16666666666666666,
           "stat": "attack",
           "of": "holder"
          }
@@ -7831,7 +7831,7 @@
   {
    "id": "twinfall",
    "name": "Twinfall",
-   "text": "Each hit its wearer lands, a basic attack's or an ability's, lands a second time a tick later: the same damage again, on the same foe. The second carries none of the first's statuses, and nothing repeats it.",
+   "text": "Each hit its wearer lands, a basic attack's or an ability's, lands a second time a tick later: half the damage again, on the same foe. The second carries none of the first's statuses, and nothing repeats it.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7848,6 +7848,7 @@
       {
        "op": "strike",
        "of": "dealt",
+       "share": 50,
        "after": 1,
        "to": "other"
       }
@@ -23098,7 +23099,7 @@
    "text": "Lightning at a random foe, then up to three others, adding a few Shock to each.",
    "cooldown": 14.2,
    "cast": 1,
-   "mp": 650,
+   "mp": 450,
    "do": [
     {
      "op": "damage",
@@ -28272,10 +28273,10 @@
    "id": "allegro__p",
    "class": "bard",
    "name": "Allegro+",
-   "text": "Haste on every ally. Comes round sooner.",
+   "text": "Haste on every ally. Comes round sooner, and costs less.",
    "cooldown": 31.9,
    "cast": 1,
-   "mp": 650,
+   "mp": 450,
    "target": {
     "side": "allies",
     "pick": "all"
@@ -28335,7 +28336,7 @@
    "id": "allegro__ap",
    "class": "bard",
    "name": "Rubato+",
-   "text": "Haste on every ally, and every ally's ability nearest to ready is ready at once. It never readies itself: for the Bard, another of its own. Comes round sooner.",
+   "text": "Haste on every ally, and every ally's ability nearest to ready is ready at once. It never readies itself: for the Bard, another of its own. Comes round sooner, and costs less.",
    "cooldown": 31.9,
    "cast": 1,
    "mp": 650,
@@ -28359,7 +28360,7 @@
    "id": "allegro__bp",
    "class": "bard",
    "name": "Accelerando+",
-   "text": "Haste on the ally that attacks fastest. Comes round sooner.",
+   "text": "Haste on the ally that attacks fastest. Comes round sooner, and costs less.",
    "cooldown": 14.9,
    "cast": 1,
    "mp": 450,
@@ -32145,7 +32146,7 @@
    "text": "Lightning at a random foe, then up to three others, adding a few Shock to each. 40% more damage on every strike.",
    "cooldown": 14.2,
    "cast": 1,
-   "mp": 650,
+   "mp": 450,
    "do": [
     {
      "op": "damage",
@@ -32212,7 +32213,7 @@
    "text": "Lightning strikes the foe with the lowest HP four times: once hard, adding a few Shock, then three smaller strikes. If it falls, the strikes left go to the next lowest; stacks scale from Attack.",
    "cooldown": 14.2,
    "cast": 1,
-   "mp": 650,
+   "mp": 450,
    "do": [
     {
      "op": "damage",
@@ -32304,7 +32305,7 @@
    "text": "Deals damage that scales from Attack to a random foe, then to up to three other random foes, and adds a few Shock to each; stacks scale from Attack. The Stormcaller regains 120 MP for each foe it hits.",
    "cooldown": 14.2,
    "cast": 1,
-   "mp": 650,
+   "mp": 450,
    "do": [
     {
      "op": "damage",
@@ -32383,7 +32384,7 @@
    "text": "Lightning strikes the foe with the lowest HP four times: once hard, adding a few Shock, then three smaller strikes. If it falls, the strikes left go to the next lowest; stacks scale from Attack. 40% more damage on every strike.",
    "cooldown": 14.2,
    "cast": 1,
-   "mp": 650,
+   "mp": 450,
    "do": [
     {
      "op": "damage",
@@ -32475,7 +32476,7 @@
    "text": "Deals damage that scales from Attack to a random foe, then to up to three other random foes, and adds a few Shock to each; stacks scale from Attack. The Stormcaller regains 120 MP for each foe it hits. 40% more damage on every strike.",
    "cooldown": 14.2,
    "cast": 1,
-   "mp": 650,
+   "mp": 450,
    "do": [
     {
      "op": "damage",
@@ -33688,7 +33689,7 @@
    "id": "allegro",
    "class": "bard",
    "kind": "ability",
-   "power": "Comes round sooner.",
+   "power": "Comes round sooner, and costs less.",
    "a": {
     "name": "Rubato",
     "text": "Haste on every ally, and every ally's ability nearest to ready is ready at once. It never readies itself: for the Bard, another of its own."
@@ -37737,7 +37738,7 @@
   {
    "id": "canopy_staff",
    "name": "Canopy staff",
-   "text": "When each fight starts, its wearer and the other ally with the least max HP each gain a Shield of a quarter of its wearer's Attack.",
+   "text": "When each fight starts, its wearer and the other ally with the least max HP each gain a Shield of a sixth of its wearer's Attack.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -38251,7 +38252,7 @@
   {
    "id": "twinfall",
    "name": "Twinfall",
-   "text": "Each hit its wearer lands, a basic attack's or an ability's, lands a second time a tick later: the same damage again, on the same foe. The second carries none of the first's statuses, and nothing repeats it.",
+   "text": "Each hit its wearer lands, a basic attack's or an ability's, lands a second time a tick later: half the damage again, on the same foe. The second carries none of the first's statuses, and nothing repeats it.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -44988,7 +44989,7 @@
   {
    "id": "the_covenant",
    "name": "The covenant",
-   "text": "Life is the party's one currency. The party: Every ally's abilities cost HP in place of MP: half the share of its max HP that they'd cost of its max MP. No ally casts one that would leave it below a tenth of its max HP. Every ally has Lifesteal, high.",
+   "text": "Life is the party's one currency. The party: Every ally's abilities cost HP in place of MP: half the share of its max HP that they'd cost of its max MP. No ally casts one that would leave it below a tenth of its max HP. Every ally has Lifesteal.",
    "rarity": "legendary",
    "source": "unlock",
    "positions": [
@@ -45023,7 +45024,7 @@
    "stats": [
     {
      "stat": "lifesteal",
-     "flat": 20
+     "flat": 10
     }
    ],
    "statuses": [

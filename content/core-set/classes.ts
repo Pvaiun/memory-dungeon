@@ -277,8 +277,10 @@ export const abilities: A[] = [
   a("frostweaver", "blizzard", "Blizzard", "A blizzard on every foe, adding a few Chill to each.", { ...timing("medium", "long"), mp: 1000, target: T.everyFoe, do: [phys(hit("attack", "light"), { apply: [{ status: "chill", stacks: stacks("few", "attack", 0.45) }] })] }),
   a("frostweaver", "stillness", "Stillness", "Clarity on the ally with the least MP, if one is under half, and a few Chill on every foe.", { ...timing("medium", "quick"), mp: 650, target: T.everyFoe, do: [apply("chill", { stacks: stacks("few", "attack", 0.5) }), apply("clarity", { to: T.needsMpAlly })] }),
   // Stormcaller
+  // 450, as the other casters' quick spells: at 650 on the quick cooldown it was the dearest spell a tick in the set, and a
+  // Stormcaller with no regen cast it once a fight.
   a("stormcaller", "chain_lightning", "Chain lightning", "Lightning at a random foe, then up to three others, adding a few Shock to each.", {
-    ...timing("quick", "quick"), mp: 650,
+    ...timing("quick", "quick"), mp: 450,
     do: [
       phys(hit("attack", "light"), { apply: [{ status: "shock", stacks: stacks("few", "attack", SHOCK_STACKS) }] }),
       phys(hit("attack", "touch"), { apply: [{ status: "shock", stacks: stacks("few", "attack", SHOCK_STACKS) }], to: T.threeOtherFoes }),
