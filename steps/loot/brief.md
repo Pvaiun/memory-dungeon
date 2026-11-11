@@ -1,6 +1,6 @@
 # The loot pass: a brief for a fresh session
 
-Nov 10, 2026. The builds (`docs/gear-design/builds.md`, approved) hand off to the loot. This pass designs; nothing is built, and it ends at its gates. **Gate 1 is passed: the spine is written and the director has ruled on it. This session starts at step 2, the fill.** The build and test get a brief of their own after gate 2. When it's built, Marked and Malison go in, each measured against today's game with both versions' numbers.
+Nov 10, 2026. The builds (`docs/gear-design/builds.md`, approved) hand off to the loot. This pass designs; nothing is built, and it ends at its gates. **Gate 1 is passed: the spine is written and the director has ruled on it. This session starts at step 2, the fill.** **Since then the fill has been written and ruled once (Nov 11), and stopped short of its fresh read: a fresh session starts from `handoff.md` in this folder, which says what's done and what's left.** The build and test get a brief of their own after gate 2. When it's built, Marked and Malison go in, each measured against today's game with both versions' numbers.
 
 In this brief an **engine** is always one of `builds.md`'s found synergies. What the game's code needs for an item is its **code support**.
 
