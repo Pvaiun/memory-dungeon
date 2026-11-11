@@ -14,8 +14,9 @@ import { ROGUE_CONFIG, ROGUE_EVENTS, ROGUE_REGIONS } from "./rogue.js";
 import { APPLIED } from "./scale.js";
 
 /**
- * The party's applications of a damage status at that status's own size (scale.ts APPLIED): each application, in any
- * effect, reaction, hit or pick of one, whose stacks are drawn from a stat has its base and ratios multiplied. A flat count,
+ * The party's riders of a damage status at that status's own size (scale.ts APPLIED): each application a status makes (a
+ * passive's, a piece's, a seat's, a mythic's), in any reaction or pick of one, whose stacks are drawn from a stat has its
+ * base and ratios multiplied. Abilities keep what they're written with, sized by hand against each status; a flat count,
  * and a share of an amount (Chill passed on from a shatter), stay as written. Only the party's content goes through.
  */
 function sized<T>(xs: T[]): T[] {
@@ -56,7 +57,7 @@ export function buildPack(): unknown {
     offhandKinds,
     statuses: [...vocabulary, ...machinery, ...sized(passives), ...sized(effects), ...enemyStatuses, ...sized(pieceStatuses)],
     classes,
-    abilities: [...sized(abilities), ...enemyAbilities, ...sized(upgradeAbilities)],
+    abilities: [...abilities, ...enemyAbilities, ...upgradeAbilities],
     upgrades,
     gear: sized([...gear, ...pieceGear, ...mythicGear]),
     formations,

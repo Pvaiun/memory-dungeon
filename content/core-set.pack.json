@@ -1412,7 +1412,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0003185,
+          "ratio": 0.000182,
           "stat": "attack",
           "of": "holder"
          }
@@ -1603,7 +1603,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00035,
+          "ratio": 0.000175,
           "stat": "attack",
           "of": "holder"
          }
@@ -2242,7 +2242,7 @@
        "amount": {
         "scale": [
          {
-          "ratio": 0.05,
+          "ratio": 0.01,
           "stat": "max_mp",
           "of": "target"
          }
@@ -4502,7 +4502,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.000245,
+          "ratio": 0.00014,
           "stat": "attack",
           "of": "holder"
          }
@@ -4778,7 +4778,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00035,
+          "ratio": 0.000175,
           "stat": "attack",
           "of": "holder"
          }
@@ -4800,7 +4800,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00035,
+          "ratio": 0.000175,
           "stat": "attack",
           "of": "holder"
          }
@@ -4833,7 +4833,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.000245,
+          "ratio": 0.00014,
           "stat": "attack",
           "of": "holder"
          }
@@ -4855,7 +4855,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.000245,
+          "ratio": 0.00014,
           "stat": "attack",
           "of": "holder"
          }
@@ -5136,7 +5136,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00035,
+          "ratio": 0.000175,
           "stat": "attack",
           "of": "holder"
          }
@@ -5279,7 +5279,7 @@
          "stacks": {
           "scale": [
            {
-            "ratio": 0.00035,
+            "ratio": 0.000175,
             "stat": "attack",
             "of": "holder"
            }
@@ -5291,7 +5291,7 @@
          "stacks": {
           "scale": [
            {
-            "ratio": 0.000245,
+            "ratio": 0.00014,
             "stat": "attack",
             "of": "holder"
            }
@@ -5390,7 +5390,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.000245,
+          "ratio": 0.00014,
           "stat": "max_hp",
           "of": "holder"
          }
@@ -6404,7 +6404,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.000455,
+          "ratio": 0.00026,
           "stat": "attack",
           "of": "holder"
          }
@@ -6589,7 +6589,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.000455,
+          "ratio": 0.00026,
           "stat": "attack",
           "of": "holder"
          }
@@ -6737,7 +6737,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.000455,
+          "ratio": 0.00026,
           "stat": "attack",
           "of": "holder"
          }
@@ -7117,7 +7117,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00115,
+          "ratio": 0.000575,
           "stat": "attack",
           "of": "holder"
          }
@@ -8104,7 +8104,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.000245,
+          "ratio": 0.00014,
           "stat": "defense",
           "of": "holder"
          }
@@ -9010,7 +9010,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.000245,
+          "ratio": 0.00014,
           "stat": "attack",
           "of": "holder"
          }
@@ -9576,7 +9576,7 @@
          "stacks": {
           "scale": [
            {
-            "ratio": 0.00035,
+            "ratio": 0.000175,
             "stat": "attack",
             "of": "holder"
            }
@@ -9588,7 +9588,7 @@
          "stacks": {
           "scale": [
            {
-            "ratio": 0.000245,
+            "ratio": 0.00014,
             "stat": "attack",
             "of": "holder"
            }
@@ -10484,7 +10484,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00035,
+          "ratio": 0.000175,
           "stat": "defense",
           "of": "holder"
          }
@@ -11966,7 +11966,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00065,
+          "ratio": 0.000325,
           "stat": "attack",
           "of": "holder"
          }
@@ -12183,7 +12183,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.000245,
+          "ratio": 0.00014,
           "stat": "attack",
           "of": "holder"
          }
@@ -12360,7 +12360,7 @@
          "stacks": {
           "scale": [
            {
-            "ratio": 0.00035,
+            "ratio": 0.000175,
             "stat": "attack",
             "of": "holder"
            }
@@ -12372,7 +12372,7 @@
          "stacks": {
           "scale": [
            {
-            "ratio": 0.000245,
+            "ratio": 0.00014,
             "stat": "attack",
             "of": "holder"
            }
@@ -16186,7 +16186,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00035,
+          "ratio": 0.000175,
           "stat": "attack",
           "of": "holder"
          }
@@ -16215,7 +16215,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00035,
+          "ratio": 0.000175,
           "stat": "attack",
           "of": "holder"
          }
@@ -16326,7 +16326,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00035,
+          "ratio": 0.000175,
           "stat": "attack",
           "of": "holder"
          }
@@ -16355,7 +16355,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00035,
+          "ratio": 0.000175,
           "stat": "attack",
           "of": "holder"
          }
@@ -16945,7 +16945,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0004459,
+          "ratio": 0.0002548,
           "stat": "attack",
           "of": "holder"
          }
@@ -16978,7 +16978,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00035,
+          "ratio": 0.000175,
           "stat": "attack",
           "of": "holder"
          }
@@ -17035,7 +17035,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00049,
+          "ratio": 0.000245,
           "stat": "attack",
           "of": "holder"
          }
@@ -18537,7 +18537,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00049,
+          "ratio": 0.000245,
           "stat": "attack",
           "of": "holder"
          }
@@ -18576,7 +18576,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00035,
+          "ratio": 0.000175,
           "stat": "attack",
           "of": "holder"
          }
@@ -18609,7 +18609,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.000175,
+          "ratio": 0.0000875,
           "stat": "attack",
           "of": "holder"
          }
@@ -18648,7 +18648,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00049,
+          "ratio": 0.000245,
           "stat": "attack",
           "of": "holder"
          }
@@ -18681,7 +18681,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.000245,
+          "ratio": 0.0001225,
           "stat": "attack",
           "of": "holder"
          }
@@ -18933,7 +18933,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0003675,
+          "ratio": 0.00021,
           "stat": "attack",
           "of": "source"
          }
@@ -18965,7 +18965,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0005145,
+          "ratio": 0.000294,
           "stat": "attack",
           "of": "source"
          }
@@ -20339,7 +20339,7 @@
          "stacks": {
           "scale": [
            {
-            "ratio": 0.00065,
+            "ratio": 0.000325,
             "stat": "attack",
             "of": "self"
            }
@@ -21815,7 +21815,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.000245,
+          "ratio": 0.0007,
           "stat": "attack"
          }
         ]
@@ -22162,7 +22162,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0013,
+          "ratio": 0.0026,
           "stat": "attack"
          }
         ]
@@ -22598,7 +22598,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00042,
+          "ratio": 0.0008399999999999999,
           "stat": "attack"
          }
         ]
@@ -22882,7 +22882,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0013,
+          "ratio": 0.0026,
           "stat": "attack"
          }
         ]
@@ -22922,7 +22922,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.0014,
           "stat": "attack"
          }
         ]
@@ -23000,7 +23000,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.000546,
+          "ratio": 0.00156,
           "stat": "attack"
          }
         ]
@@ -23040,7 +23040,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0002205,
+          "ratio": 0.00063,
           "stat": "attack"
          }
         ]
@@ -23069,7 +23069,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 0.000245,
+        "ratio": 0.0007,
         "stat": "attack"
        }
       ]
@@ -25268,7 +25268,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.000343,
+          "ratio": 0.00098,
           "stat": "attack"
          }
         ]
@@ -25349,7 +25349,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 0.000245,
+        "ratio": 0.0007,
         "stat": "attack"
        }
       ]
@@ -25432,7 +25432,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 0.000343,
+        "ratio": 0.00098,
         "stat": "attack"
        }
       ]
@@ -27115,7 +27115,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0013,
+          "ratio": 0.0026,
           "stat": "attack"
          }
         ]
@@ -27199,7 +27199,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.0014,
           "stat": "attack"
          }
         ]
@@ -27289,7 +27289,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.0014,
           "stat": "attack"
          }
         ]
@@ -28662,7 +28662,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 0.0007,
+        "ratio": 0.0014,
         "stat": "attack"
        }
       ]
@@ -28879,7 +28879,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 0.00098,
+        "ratio": 0.00196,
         "stat": "attack"
        }
       ]
@@ -29479,7 +29479,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.000588,
+          "ratio": 0.001176,
           "stat": "attack"
          }
         ]
@@ -29523,7 +29523,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.000294,
+          "ratio": 0.00084,
           "stat": "attack"
          }
         ]
@@ -29567,7 +29567,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00028,
+          "ratio": 0.00056,
           "stat": "attack"
          }
         ]
@@ -29611,7 +29611,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0004116,
+          "ratio": 0.001176,
           "stat": "attack"
          }
         ]
@@ -29655,7 +29655,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.000392,
+          "ratio": 0.000784,
           "stat": "attack"
          }
         ]
@@ -30991,7 +30991,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00182,
+          "ratio": 0.00364,
           "stat": "attack"
          }
         ]
@@ -31034,7 +31034,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0026,
+          "ratio": 0.0052,
           "stat": "attack"
          }
         ]
@@ -31077,7 +31077,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00065,
+          "ratio": 0.0013,
           "stat": "attack"
          }
         ]
@@ -31120,7 +31120,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00364,
+          "ratio": 0.00728,
           "stat": "attack"
          }
         ]
@@ -31163,7 +31163,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00091,
+          "ratio": 0.00182,
           "stat": "attack"
          }
         ]
@@ -31203,7 +31203,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.0014,
           "stat": "attack"
          }
         ]
@@ -31243,7 +31243,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0023,
+          "ratio": 0.0046,
           "stat": "attack"
          }
         ]
@@ -31283,7 +31283,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00042,
+          "ratio": 0.00084,
           "stat": "attack"
          }
         ]
@@ -31323,7 +31323,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0023,
+          "ratio": 0.0046,
           "stat": "attack"
          }
         ]
@@ -31363,7 +31363,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00042,
+          "ratio": 0.00084,
           "stat": "attack"
          }
         ]
@@ -31593,7 +31593,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007644,
+          "ratio": 0.002184,
           "stat": "attack"
          }
         ]
@@ -31638,7 +31638,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.000546,
+          "ratio": 0.00156,
           "stat": "attack"
          }
         ]
@@ -31683,7 +31683,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.000294,
+          "ratio": 0.00084,
           "stat": "attack"
          }
         ]
@@ -31728,7 +31728,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007644,
+          "ratio": 0.002184,
           "stat": "attack"
          }
         ]
@@ -31773,7 +31773,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0004116,
+          "ratio": 0.001176,
           "stat": "attack"
          }
         ]
@@ -31813,7 +31813,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0002205,
+          "ratio": 0.00063,
           "stat": "attack"
          }
         ]
@@ -31968,7 +31968,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 0.000245,
+        "ratio": 0.0007,
         "stat": "attack"
        }
       ]
@@ -32036,7 +32036,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 0.000735,
+        "ratio": 0.0021,
         "stat": "attack"
        }
       ]
@@ -32110,7 +32110,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 0.000735,
+        "ratio": 0.0021,
         "stat": "attack"
        }
       ]
@@ -43795,7 +43795,7 @@
     {
      "id": "well",
      "name": "Well",
-     "text": "Draws more. Each hit it takes gives the Soloist MP: a twentieth of the Soloist's max MP.",
+     "text": "Draws more. Each hit it takes gives the Soloist MP: a hundredth of the Soloist's max MP.",
      "layout": {
       "line": "back",
       "column": 2

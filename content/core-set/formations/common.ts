@@ -117,11 +117,11 @@ add(
     formation("Wellspring", "common", "Two keep one caster casting.", [
       { name: "Soloist", text: "Its abilities come round a fifth faster. Draws far less.", stats: [FIFTH_SOONER, st("aggro", -2)] },
       { name: "Conductor", text: conductor, statuses: ["wellspring_conductor"] },
-      { name: "Well", text: "Draws more. Each hit it takes gives the Soloist MP: a twentieth of the Soloist's max MP.", stats: [st("aggro", 1)], statuses: ["wellspring_well"] },
+      { name: "Well", text: "Draws more. Each hit it takes gives the Soloist MP: a hundredth of the Soloist's max MP.", stats: [st("aggro", 1)], statuses: ["wellspring_well"] },
     ]),
     [
       held("wellspring_conductor", "Conductor", conductor, { reactions: [react(EV.cast, { op: "mp", amount: share(0.1, "max_mp", "target"), to: TO.seat("soloist") })] }),
-      held("wellspring_well", "Well", "Each hit it takes gives the Soloist MP.", { reactions: [react(EV.struck, { op: "mp", amount: share(0.05, "max_mp", "target"), to: TO.seat("soloist") })] }),
+      held("wellspring_well", "Well", "Each hit it takes gives the Soloist MP.", { reactions: [react(EV.struck, { op: "mp", amount: share(0.01, "max_mp", "target"), to: TO.seat("soloist") })] }),
     ],
     "Barrage 1 ●●●, Toll ● ⚙ mana as armour (half)",
   );
