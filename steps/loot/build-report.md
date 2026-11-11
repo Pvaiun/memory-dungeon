@@ -34,7 +34,7 @@ The cards are the spec. Where a card left something open, I made the natural cal
 - **What carries each build** reads as the design hoped in most places. The stage is the single biggest item anywhere (13 points); then Staff of echoes, The cathedral, Hearth, Open season, the Snap swing-Chill pieces, Heartsblood and Bloodstone reliquary on the Pact. 246 of 414 items never move a fight past noise at these knobs. That's expected while every fight is won, and it's the knobs, not the items.
 - **Worse to have:** Halved heart costs a party 15 points (half the HP, as its card says, and the hits don't make it back here). Then Absolve A, Tithe wand and Blood vial. These are balance-pass questions.
 - **The piece check** fires every item except a few whose condition never comes up in its nine fights with its stock party: Gravemark, Hunting horn (no Mark), Noonday mace, Everflame lantern (no Burn), Floe charm, Frozen tome, The long winter (no shatter), Banked robe and Glimmer robe. Spotter's coat (Accuracy) changes nothing against foes that don't dodge. Smite B and Encore A's quirks are older than this pass.
-- The balance sheet was run after the build, at the old knobs; it's in `out/balance/sheet.md`.
+- **The balance sheet** ran after the build, at the old knobs (`out/balance/sheet.md`, 234 flags). Its 48 trios never wear 76 of the 322 pieces, among them every dagger and axe and most staffs and horns, though its probes play every piece on every class that can wear it. The sheet's own parties will need the new loot in their kits before its gear rows mean much.
 
 ## What to play first
 
