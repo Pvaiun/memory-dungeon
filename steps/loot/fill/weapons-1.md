@@ -309,12 +309,12 @@
 
 ### Rimed blade
 - **Is:** sword · uncommon
-- **Card:** Its basic attacks add a few Chill (from Attack).
+- **Card:** Its basic attacks add several Chill (from Attack).
 - **Stats:** Attack +1 · Defense +1 (2 of 2)
-- **Numbers:** a few: `STACKS.few`, from Attack, every swing (`KIND_SPEED.sword`): about 3 for a Valkyrie or a Hexer, 2 for a Knight with the blade's own step.
-- **Code:** as today's Spark wand, with Chill
+- **Numbers:** several: `STACKS.several`, from Attack, every swing (`KIND_SPEED.sword`): about 4 for a Knight with the blade's own step, 6 or 7 for a Valkyrie or a Hexer.
+- **Code:** as today's Spark wand, with Chill at several
 - **Serves:** Snap 1 ●● ⚙ lead's colour (half), every colour (half) ◆ swing-status
-- **Notes:** The same sentence as Sleet dirk's, which no unit can hold beside it. On a Hexer it lands beside Cold hex, and the two reach Chill's cap in two swings on one foe. On a Knight it's small (*Challenges*, 8). The blade's Attack step is the one the rider reads; Defense is the wall's.
+- **Notes:** Several, as round 1 rules and the line now says, so it's seen on a Knight: four stacks a swing take one foe to Chill's cap in three or four swings. The same sentence as Frostbite bow's and Sleet blade's, plain riders no unit can hold beside it. On a Hexer it lands beside Cold hex: about 11 stacks a swing, against a cap of 12 (*Least sure*). The blade's Attack step is the one the rider reads; Defense is the wall's.
 
 ### Drawn steel
 - **Is:** sword · uncommon
@@ -341,7 +341,7 @@
 - **Numbers:** half again as much (+50%), as today. The Mark it moves is its wearer's, at Marked's own length.
 - **Code:** as today's Gravemark, without the Mark its basic attacks laid
 - **Serves:** Hunt 2 ●●●
-- **Notes:** Today's legendary made a rare, less its own first Mark, as the line says: it pays on a Mark and moves one, and never starts one (*Challenges*, 7). One step fewer than today (Defense goes).
+- **Notes:** Today's legendary made a rare, less its own first Mark, as the line says: it pays on a Mark and moves one, and never starts one, so it does nothing in a party with no marker (*Least sure*). The Mark it moves sits on the lowest foe whatever Taunts; the party's swings follow it only inside the Taunt rule. One step fewer than today (Defense goes).
 
 ### Provoking blade
 - **Is:** sword · rare
@@ -359,7 +359,7 @@
 - **Numbers:** each extra hit is the swing's full damage, as today (about 580 a foe from a Knight).
 - **Code:** as today's Oathkeeper; 12 for what it carries
 - **Serves:** Toll 2 ●●●, Storm ●●, Cuts ●●, Hunt ● ⚙ red rain (half), reaping (half) ◆ wide-hit
-- **Notes:** Today's legendary made a rare, with "carrying what the swing carries" added, as the line says. The Knight's Stand fast keeps it on about two thirds of a fight; the Hexer and the Valkyrie need a Taunt from a piece or a version. Its extra hits are extra strikes.
+- **Notes:** Today's legendary made a rare, with "carrying what the swing carries" added, as the line says. The Knight's Stand fast keeps it on about two thirds of a fight; the Hexer and the Valkyrie need a Taunt from a piece or a version. Its extra hits are the sweep's own, not extra strikes.
 
 ### Bloodletter
 - **Is:** sword · rare

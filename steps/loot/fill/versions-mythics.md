@@ -458,11 +458,11 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 ### Coup de grâce
 - **Is:** Assassin, Backstab A · version · kept
 - **Today:** Has Seek. Deals physical damage that scales from Crit chance to the foe with the lowest current HP. When it knocks that foe out, Backstab is ready again.
-- **Card:** Has Seek. Deals physical damage that scales from Crit chance to the foe with the lowest current HP. When it knocks that foe out, Backstab is ready again.
+- **Card:** Has Seek. Deals damage that scales from Crit chance to the foe with the lowest current HP. When it knocks that foe out, Backstab is ready again.
 - **Numbers:** `HIT.normal` of Crit chance (through `PER_PERCENT.crit_chance`): about 2,000 on a bare Assassin, and twice that on a crit. Medium cooldown, normal wind-up, 325 MP. Ready again has no limit but its MP.
-- **Code:** as today's Coup de grâce
+- **Code:** as today's Coup de grâce, narrowed to Backstab's own kill: under *Code support beyond the spine's list*
 - **Serves:** Hunt 2 ●●● ⚙ reaping (key)
-- **Notes:** *Stays.* It carried a run: up to 83% of an Assassin's damage. A full pool pays for four stabs, so the reaping's cliff is four foes long before mana ends it. As built, a kill the Assassin lands with any ability readies Backstab, Garrote's too, where the card says "it": a small gap between card and build, for the build to close either way.
+- **Notes:** *Stays.* Reworded: "physical" goes. It carried a run: up to 83% of an Assassin's damage. A full pool pays for four stabs, so the reaping's cliff is four foes long before mana ends it. Today's build readies Backstab on a kill by any of the Assassin's abilities, Garrote's too. Round 1 rules the card is the design: only Backstab's own kill readies it, and the build follows.
 
 ### Smoke screen
 - **Is:** Assassin, Vanish A · version · kept

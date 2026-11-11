@@ -392,7 +392,7 @@ How to read it:
 - **Is:** relic · uncommon
 - **Card:** Each time one of its holder's abilities heals an ally, it also gives that ally MP: a fifth of that ally's max MP.
 - **Stats:** MP regen +1 · Cast speed medium (2 of 2)
-- **Numbers:** a fifth (20%) of the healed ally's max MP, for each ally an ability heals.
+- **Numbers:** a fifth (20%) of the healed ally's max MP, for each ally an ability heals at once. A Regen's pulses give none.
 - **Code:** none new: Holy water's trigger, with MP to the healed ally.
 - **Serves:** Barrage 1 ●●, Pact ● ⚙ mana as armour (half) ◆ free-cast
 - **Notes:** A fifth of a pool is about one cast for most classes, and it shows as a step on the blue bar. The card says "gives", the spine's word, so whatever answers MP given answers this. A holder that heals itself regains the MP too, though that isn't MP given (*Loops*).
@@ -401,10 +401,10 @@ How to read it:
 - **Is:** relic · rare
 - **Card:** The part of its holder's heals that would go past full becomes a Shield on the healed ally.
 - **Stats:** MP regen +1 · HP +1 · Attack +1 (3 of 3)
-- **Numbers:** all of the part past full, from every heal its holder gives: its abilities, the Regen it laid, its Lifesteal. The Shield keeps its own cap.
-- **Code:** as today's Phylactery; 14 for where healing past full goes when more than one thing claims it.
+- **Numbers:** all of the part past full, from every heal its holder gives: HP its abilities and its pieces restore at once, and its own Lifesteal. A Regen's pulses aren't a heal, by round 1's ruling, so they make no Shield. The Shield keeps its own cap.
+- **Code:** as today's Phylactery, with the Regen it laid left out; 14 for where healing past full goes when more than one thing claims it.
 - **Serves:** Pact 2 ●●●, Landslide ●●, Toll ●● ⚙ red stone (key), detonation (half) ◆ shield-by-doing
-- **Notes:** Kept from today's and moved down from legendary: card and size stay, with a step fewer of MP regen. A Regen on a full ally is its plainest sight: a grey bar that grows a pulse at a time.
+- **Notes:** Kept from today's and moved down from legendary: the card stays, with a step fewer of MP regen. Today's piece also read the Regen its holder laid, and that was its plainest sight; the ruling takes it away (*Challenges*). What's left to see: a Paladin's Absolve on itself at full, a heal on a beat from a mace, and any heal on a unit capped at half.
 
 ### Accuser's relic
 - **Is:** relic · rare
