@@ -161,8 +161,10 @@ function gained(w: W, to: CUnit, d: S.StatusT, s: SInst, by?: CUnit, added = 0, 
   if (d.lockout?.pause && s.end !== -1) hold(w, to, d.lockout.covers, s.end - w.f.now);
   // Other is the applier, and an Intensity application says how many stacks it added. A copy is a repeat.
   fire(w, ev("status_gained", to, by ?? null, { status: d.id, amount: added / SUBTICKS, src: by?.id ?? null, tags: o.area ? ["area"] : [], repeat: o.copy ? 1 : 0, passed: !!o.passed }));
-  // An Intensity status that stands at its cap after an application has capped (Chill shatters). Other: the applier.
-  if (isIntensity(d) && compile(d).cap >= 0 && s.stacks >= capOf(w, d, s.nums, to) && to.statuses.includes(s)) {
+  // An Intensity status that an application brings to its cap has capped (Chill shatters). Other: the applier. One that
+  // added nothing, to a status already standing at its cap while what its capping does waits for the next sub-tick (the
+  // Chill not yet spent), hasn't capped again: a chain of shatters can't go round on stacks that were never added.
+  if (isIntensity(d) && added > 0 && compile(d).cap >= 0 && s.stacks >= capOf(w, d, s.nums, to) && to.statuses.includes(s)) {
     // A status whose chains die down remembers the capping for a while.
     if (d.damp) {
       const c = (to.capped ??= {})[d.id];
