@@ -55,7 +55,7 @@ type Entry = { name: string; share: string; is: string; card: string; stats: str
 const entries: Entry[] = [];
 const ends: Record<string, string[]> = {};
 const END = ["Challenges", "Links", "Loops", "Code support beyond the spine's list", "Least sure"];
-const files = existsSync(DIR) ? readdirSync(DIR).filter((f) => f.endsWith(".md") && f !== "shared.md") : [];
+const files = existsSync(DIR) ? readdirSync(DIR).filter((f) => f.endsWith(".md") && f !== "shared.md" && !f.startsWith("round-")) : [];
 for (const f of files) {
   const share = f.replace(/\.md$/, "");
   let cur: Entry | undefined;
