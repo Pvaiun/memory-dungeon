@@ -57,7 +57,7 @@ function stats(line: string): { code: string[]; trade?: string } {
   }
   return { code, trade };
 }
-const KIND = (k: string) => k.replace(/ weapons?$/, "").replace(/ /g, "_");
+const KIND = (k: string) => k.replace(/ /g, "_");
 let last = "";
 for (const e of entries.filter(plain)) {
   if (e.section !== last) console.log(`\n// ${(last = e.section)}`);
