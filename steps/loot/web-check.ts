@@ -445,7 +445,7 @@ function indexDoc(): string {
     } else if (s.slug === "formations") holds = `${its.length} formations: ${["common", "rare", "legendary"].map((r) => `${its.filter((i) => i.rarity === r).length} ${r}`).join(", ")}`;
     else {
       const c = (t: Item["type"], kept: boolean) => its.filter((i) => i.type === t && !!i.kept === kept).length;
-      holds = `${c("version", false)} versions and ${c("mythic", false)} mythics that change, written new; ${c("version", true)} versions and ${c("mythic", true)} mythics that stay, each checked against today's card`;
+      holds = `the two kit changes (Marked, Malison); ${c("version", false)} versions and ${c("mythic", false)} mythics that change, written new; ${c("version", true)} versions and ${c("mythic", true)} mythics that stay, each checked against today's card`;
     }
     out.push(`| ${s.title} | \`fill/${s.slug}.md\` | ${holds} |`);
   }
@@ -466,6 +466,12 @@ function indexDoc(): string {
         for (const i of its.filter((x) => x.rarity === r)) out.push(`- **${i.name}** · ${i.text}`);
       }
     } else {
+      // The two approved kit changes are lines for the reader, not items; this share writes them, so the index lists them.
+      out.push("", "### The two kit changes", "");
+      for (const l of md.split("\n")) {
+        const m = l.match(/^- \*\*(.+?)\*\* · (.+?) · kit change · (.+?)(?: \*Sees:\*.*)?$/);
+        if (m) out.push(`- **${m[1]}** · ${m[2]} · ${m[3].trim()}`);
+      }
       const groups: [string, (i: Item) => boolean][] = [["Versions that change", (i) => i.type === "version" && !i.kept], ["Versions that stay", (i) => i.type === "version" && !!i.kept], ["Mythics that change", (i) => i.type === "mythic" && !i.kept], ["Mythics that stay", (i) => i.type === "mythic" && !!i.kept]];
       for (const [title, pick] of groups) {
         out.push("", `### ${title}`, "");

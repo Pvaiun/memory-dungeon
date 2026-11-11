@@ -15,7 +15,7 @@ It's what every fill agent reads before writing: the shares, every item in one l
 | Offhands, the other seven kinds | `fill/offhands-2.md` | 63 pieces: 14 commons, 16 uncommons, 21 rares, 12 legendaries |
 | Amulets | `fill/amulets.md` | 37 pieces: 10 commons, 7 uncommons, 10 rares, 10 legendaries |
 | Formations | `fill/formations.md` | 35 formations: 13 common, 12 rare, 10 legendary |
-| Versions and mythics | `fill/versions-mythics.md` | 9 versions and 5 mythics that change, written new; 33 versions and 11 mythics that stay, each checked against today's card |
+| Versions and mythics | `fill/versions-mythics.md` | the two kit changes (Marked, Malison); 9 versions and 5 mythics that change, written new; 33 versions and 11 mythics that stay, each checked against today's card |
 
 A version or mythic the spine doesn't list stays as it is today, and isn't part of the fill.
 
@@ -524,6 +524,11 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 ## Versions and mythics
 
 *Engines it's part of:* detonation, frozen gate, mirror, goad, held charge, reaping, judge's drum, spell on the swing, red rain, riposte, every colour, lead's colour, emptied quiver, blood mage, resonance, crescendo, mana as armour, firecracker, brink, two in the dark, red stone.
+
+### The two kit changes
+
+- **Marked** · vocabulary · A Marked foe takes the party's random picks: basic attacks, as today, and every ability aimed at "a random foe" (Shield bash, Barbed arrow, Bramble lash, Spear thrust, Gale spear, Garrote, Blood drain, Chain lightning's first strike, Rockfall, Tremor), inside the Taunt rule, with Seek following the Mark past a Taunting foe. An ability with a target phrase of its own keeps it.
+- **Malison** · Hexer · Curses every foe: a hit, from Attack, that deals more for each different affliction the foe holds, and adds a few Bleed. It no longer adds a stack of each affliction.
 
 ### Versions that change
 
