@@ -41,7 +41,7 @@ Plate, Mail, Leather and Robes: 55 pieces (12 commons, 16 uncommons, 17 rares, 1
 
 ### Portcullis
 - **Is:** plate · uncommon
-- **Card:** While its wearer is above half its HP, it draws far more (Aggro +25).
+- **Card:** While its wearer is above half its max HP, it draws far more (Aggro +25).
 - **Stats:** Thorns medium · HP +1 (2 of 2)
 - **Numbers:** "draws far more" is the seat word's number: two seat steps of Aggro, +25, which doubles its draw (`formations.ts`, `RULES.partyDraw`).
 - **Code:** as today's Portcullis.
@@ -55,11 +55,11 @@ Plate, Mail, Leather and Robes: 55 pieces (12 commons, 16 uncommons, 17 rares, 1
 - **Numbers:** a third more on every hit, swing or ability: a narrow boost on a condition (`loot.md`, *Sizes*).
 - **Code:** none: a boost that reads a status its wearer holds, as today's Shadow mantle reads Hidden.
 - **Serves:** Landslide 1 ●●
-- **Notes:** Keeps today's name only; today's card raised basic attacks by Defense. The steps are the two stats that keep the grey bar standing: Defense takes less out of it each blow, HP raises its cap. The Knight and the Geomancer bring their own Shield. The Hoplite, the Paladin and the Bramble knight need one from another slot or an ally.
+- **Notes:** Keeps today's name only; today's card raised basic attacks by Defense. The steps are the two stats that keep the grey bar standing: Defense takes less out of it each blow, HP raises its cap. The Knight and the Geomancer bring their own Shield. The Hoplite, the Paladin and the Bramble knight need one from another slot or an ally. Beside Urchin plate, that's half of Plate's uncommons blank for three of its five wearers without another piece (*Least sure*).
 
 ### Holdfast
 - **Is:** plate · uncommon
-- **Card:** The first time each fight its wearer drops below half its HP, it's Guarded.
+- **Card:** The first time each fight its wearer drops below half its max HP, it's Guarded.
 - **Stats:** Defense +2 (2 of 2)
 - **Numbers:** Guard at its own size and length (`STATUS.guard`).
 - **Code:** as today's Holdfast.
@@ -73,7 +73,7 @@ Plate, Mail, Leather and Robes: 55 pieces (12 commons, 16 uncommons, 17 rares, 1
 - **Numbers:** Thorns at the high word's value (`SPECIAL.thorns.high`) for as long as its Shield pool is above zero.
 - **Code:** none: a state switched on when its wearer gains a Shield and off when the Shield ends.
 - **Serves:** Toll 1 ●●, Landslide ● ⚙ goad (half)
-- **Notes:** The effect of today's Urchin shell (an amulet, at the medium word). Raised to the high word, as an effect's size and not a stat step, which the lead's ruling allows: Bristled plate carries the medium word all fight for one step, so a medium that comes and goes wouldn't be seen as a card. It's worded as Spiked targe is, and a Hoplite or a Bramble knight can wear both. The draw brings the blows onto the stone, and Defense keeps the stone up. It's Portcullis turned round: this draws always and has thorns behind stone; Portcullis has thorns always and draws while healthy.
+- **Notes:** The effect of today's Urchin shell (an amulet, at the medium word). Raised to the high word, as an effect's size and not a stat step, which the lead's ruling allows: Bristled plate carries the medium word all fight for one step, so a medium that comes and goes wouldn't be seen as a card. It's worded as Spiked targe is, and a Hoplite or a Bramble knight can wear both. The draw brings the blows onto the stone, and Defense keeps the stone up. It's Portcullis turned round: this draws always and has thorns behind stone; Portcullis has thorns always and draws while healthy. "Thorns, high" stays a word on this card: Thorns is an amount of damage, which the interface scales, so the build prints the amount (round 3). It does nothing for a Hoplite, a Paladin or a Bramble knight without a Shield from elsewhere: three of Plate's five wearers.
 
 ### Challenger's plate
 - **Is:** plate · rare
@@ -91,7 +91,7 @@ Plate, Mail, Leather and Robes: 55 pieces (12 commons, 16 uncommons, 17 rares, 1
 - **Numbers:** a few, from Defense: `STACKS.few` through `own()`. A Knight in this piece lays about four a blow, five while Guarded.
 - **Code:** as today's Hoarfrost plate, with the stacks read from the wearer's Defense.
 - **Serves:** Toll 2 ●●●, Snap 2 ●●● ⚙ frozen gate (key)
-- **Notes:** Today's piece, card kept. The size changes because today's flat 2 a blow never reached Chill's cap on the wall inside a fight (`STATUS.chill`: twelve stacks, one thawing every 14 ticks). At about four, a foe that keeps striking the wall bursts on its third or fourth blow. It reads Defense as Emberguard and Briar totem do in their share. Both steps of Defense feed the frost, and the Aggro brings the blows. Portcullis and Challenger's plate are the same slot, so its draw comes from a kit, a horn, the token or a seat.
+- **Notes:** Today's piece, card kept. The size changes because today's flat 2 a blow never reached Chill's cap on the wall inside a fight (`STATUS.chill`: twelve stacks, one thawing every 14 ticks). At about four, a foe that keeps striking the wall bursts on its third or fourth blow. It reads Defense as Emberguard and Nettle totem do in their share. Both steps of Defense feed the frost, and the Aggro brings the blows. Portcullis and Challenger's plate are the same slot, so its draw comes from a kit, a horn, the token or a seat.
 
 ### Rubble plate
 - **Is:** plate · rare
@@ -113,12 +113,12 @@ Plate, Mail, Leather and Robes: 55 pieces (12 commons, 16 uncommons, 17 rares, 1
 
 ### Last bastion
 - **Is:** plate · legendary
-- **Card:** Once a fight, a blow that would knock its wearer out leaves it at 1 HP and Guarded. From then until it's next healed, by anyone or anything, its hits deal double.
+- **Card:** Once a fight, damage that would knock its wearer out leaves it at 1 HP and Guarded. From then until it's next healed, by anyone or anything, its hits deal double.
 - **Stats:** Defense +2 · HP +2 (4 of 4)
 - **Numbers:** Guard at its own size and length; double is on every hit.
 - **Code:** as today's Last bastion, with the doubling lifted by any heal and no heal after the fight.
 - **Serves:** net, Pact ●● ⚙ brink (half)
-- **Notes:** Today's piece, changed as its line says: the doubling ends at the next heal of any size (today's: when healed back above half), and the fifth of its HP after a won fight goes. "By anyone or anything" is added so the card says that its own Lifesteal or a Regen pulse ends it. A Shield isn't healing, so cover keeps it doubled. After the save everything rests on its cover: Defense makes each point of Shield last, and HP sets the Shield's cap.
+- **Notes:** Today's piece, changed as its line says: the doubling ends at the next heal of any size (today's: when healed back above half), and the fifth of its HP after a won fight goes. "By anyone or anything" is added so the card says that its own Lifesteal or a Regen pulse ends it. A Shield isn't healing, so cover keeps it doubled. After the save everything rests on its cover: Defense makes each point of Shield last, and HP sets the Shield's cap. "Damage", not "a blow" (round 3): it saves its wearer from a status's damage too, as Swan's grace does, and "a blow" is a hit in this share's own words.
 
 ### The anvil
 - **Is:** plate · legendary
@@ -180,16 +180,16 @@ Plate, Mail, Leather and Robes: 55 pieces (12 commons, 16 uncommons, 17 rares, 1
 
 ### Bloodsworn mail
 - **Is:** mail · uncommon
-- **Card:** While its wearer is below half its HP, it has Lifesteal, high, on top of its own.
+- **Card:** While its wearer is below half its max HP, it has 20% Lifesteal on top of its own.
 - **Stats:** HP +1 · Attack +1 (2 of 2)
 - **Numbers:** Lifesteal at the high word's value (`SPECIAL.lifesteal.high`) while below half.
 - **Code:** as today's Bloodsworn mail, with Lifesteal alone.
 - **Serves:** Pact 1 ●●, Cuts ● ⚙ brink (half), blood mage (half)
-- **Notes:** Today's rare as an uncommon, changed as its line says: the quarter more damage goes. Its Lifesteal rises from today's medium to the high word, as an effect's size, which the lead's ruling allows: Lamprey mail carries the medium word all fight for one step. No Lifesteal in its steps, so above half it doesn't drink and the switch is what's seen. On a Vampire it adds before Bloodlust doubles.
+- **Notes:** Today's rare as an uncommon, changed as its line says: the quarter more damage goes. Its Lifesteal rises from today's medium to the high word, as an effect's size, which the lead's ruling allows: Lamprey mail carries the medium word all fight for one step. No Lifesteal in its steps, so above half it doesn't drink and the switch is what's seen. On a Vampire it adds before Bloodlust doubles. The card gives the figure the sheet shows (round 3): the high word's 20%.
 
 ### Warded mail
 - **Is:** mail · uncommon
-- **Card:** The first time each fight its wearer drops below half its HP, it gains a Shield of a quarter of its max HP.
+- **Card:** The first time each fight its wearer drops below half its max HP, it gains a Shield of a quarter of its max HP.
 - **Stats:** HP +2 (2 of 2)
 - **Numbers:** a quarter of max HP, a value of its own: half the Shield's cap.
 - **Code:** as today's Holdfast, giving a Shield.
@@ -203,7 +203,7 @@ Plate, Mail, Leather and Robes: 55 pieces (12 commons, 16 uncommons, 17 rares, 1
 - **Numbers:** a few, from Defense: `STACKS.few` through `own()`. Two to three and a half a blow on Mail's wearers in this piece, five while Guarded.
 - **Code:** as today's Static mail, with the stacks read from the wearer's Defense.
 - **Serves:** Toll 2 ●●●, Storm 2 ●●● ⚙ goad (half)
-- **Notes:** Today's piece, card kept. The stacks are read from a stat in place of today's flat 2, and from Defense so the four pieces of this sentence agree (Emberguard, Briar totem, Hoarfrost plate). A foe that keeps striking it holds twice a blow's stacks when it next acts, so each of its swings costs it more than high Thorns would. Mail's wearers have less Defense than Plate's, so one step is Defense.
+- **Notes:** Today's piece, card kept. The stacks are read from a stat in place of today's flat 2, and from Defense so the four pieces of this sentence agree (Emberguard, Nettle totem, Hoarfrost plate). A foe that keeps striking it holds twice a blow's stacks when it next acts, so each of its swings costs it more than high Thorns would. Mail's wearers have less Defense than Plate's, so one step is Defense.
 
 ### Red stone mail
 - **Is:** mail · rare
@@ -212,11 +212,11 @@ Plate, Mail, Leather and Robes: 55 pieces (12 commons, 16 uncommons, 17 rares, 1
 - **Numbers:** one for one, up to the Shield's own cap.
 - **Code:** as today's Phylactery, read on the unit that's healed. The order among the three places that take healing past full is in *Code support beyond the spine's list*.
 - **Serves:** Pact 2 ●●●, Cuts 2 ●●, Landslide ●● ⚙ red stone (key), detonation (half) ◆ shield-by-doing
-- **Notes:** New. All healing it receives counts: a heal, Lifesteal, a Refrain, and a Regen's pulses, which the card names because the lead's ruling leaves Regen out of "a heal" unless a card does. builds.md's red stone counts on it: a Cleric with nothing to mend lays Regen on a full ally. Its own Lifesteal step lets it work alone on anything that hits. It takes the healing past full before Phylactery or Shared cup sees any. Under Halved heart everything past half is past full, so it all turns to Shield.
+- **Notes:** New. All healing it receives counts: a heal, Lifesteal, a Refrain, and a Regen's pulses. Round 2 rules that healing received is all of it, and the card names Regen all the same, so nobody has to ask. builds.md's red stone counts on it: a Cleric with nothing to mend lays Regen on a full ally. Its own Lifesteal step lets it work alone on anything that hits. It takes the healing past full before Phylactery or Shared cup sees any. Under Halved heart everything past half is past full, so it all turns to Shield.
 
 ### Sanguine mail
 - **Is:** mail · rare
-- **Card:** While its wearer is below half its HP, healing it receives is doubled. At half or more, it's halved.
+- **Card:** While its wearer is below half its max HP, healing it receives is doubled. At half or more, it's halved.
 - **Stats:** HP +2 · Lifesteal medium (3 of 3)
 - **Numbers:** doubled and halved, on all healing it receives: heals, its own Lifesteal, and a Regen's pulses (it changes what its wearer receives; it doesn't read a heal).
 - **Code:** as today's Sanguine mail.
@@ -234,12 +234,12 @@ Plate, Mail, Leather and Robes: 55 pieces (12 commons, 16 uncommons, 17 rares, 1
 
 ### Aegis mail
 - **Is:** mail · legendary
-- **Card:** Whenever an ally drops below a third of its HP, that ally gains Aegis.
+- **Card:** Whenever an ally drops below a third of its max HP, that ally gains Aegis.
 - **Stats:** HP +2 · Defense +1 · Lifesteal medium (4 of 4)
 - **Numbers:** Aegis as it stands (`STATUS.aegis`). The line is a third of max HP.
 - **Code:** a watch on each ally's HP that sees a crossing whatever made it, a price and the fight's start included, with a marker on each ally that keeps it to once a crossing (*Code support beyond the spine's list*).
 - **Serves:** Pact 3 ●●●, Toll ●●, net ⚙ brink (half), mirror (half)
-- **Notes:** New. "An ally" includes its wearer. A crossing by any means: a blow, a status, a price. An ally that starts a fight under a third gains it as the fight starts. "Whenever": again each time the ally is back at a third or over and crosses again. An ally that already holds an Aegis gains nothing. The Lifesteal step is its wearer's own way back over the line, which is also what arms it again.
+- **Notes:** New. "An ally" includes its wearer. A crossing by any means: a blow, a status, a price. An ally that starts a fight under a third gains it as the fight starts. "Whenever": again each time the ally is back at a third or over and crosses again. An ally that already holds an Aegis gains nothing. The Lifesteal step is its wearer's own way back over the line, which is also what arms it again. Set off by a price it's an Aegis every cast or two on a payer that drinks back over a third, so round 2 puts it in the director's sample (*Loops*).
 
 ### Tallymail
 - **Is:** mail · legendary
@@ -281,7 +281,7 @@ Plate, Mail, Leather and Robes: 55 pieces (12 commons, 16 uncommons, 17 rares, 1
 - **Serves:** the Hunt.
 - **Notes:** Today's name and step.
 
-### Tithing leathers
+### Gleaner's leathers
 - **Is:** leather · uncommon
 - **Card:** Each hit its wearer lands heals it for 3% of its max HP.
 - **Stats:** Evasion medium · HP +1 (2 of 2)
@@ -301,7 +301,7 @@ Plate, Mail, Leather and Robes: 55 pieces (12 commons, 16 uncommons, 17 rares, 1
 
 ### Mottled hide
 - **Is:** leather · uncommon
-- **Card:** While its wearer is below half its HP, it draws far less (Aggro −25).
+- **Card:** While its wearer is below half its max HP, it draws far less (Aggro −25).
 - **Stats:** Evasion medium · Crit chance +1 (2 of 2)
 - **Numbers:** "draws far less" is the seat word's number: two seat steps down, −25, which halves its draw.
 - **Code:** as today's Mottled hide.
@@ -355,21 +355,21 @@ Plate, Mail, Leather and Robes: 55 pieces (12 commons, 16 uncommons, 17 rares, 1
 
 ### Overture coat
 - **Is:** leather · rare
-- **Card:** Each time its wearer lands a killing blow, the start-of-fight effects of its gear and its seat happen again. Each happens once a kill, whatever else calls for it.
+- **Card:** Each time its wearer lands a killing blow, the start-of-fight effects of its gear and its seat happen again, once for each kill.
 - **Stats:** Attack +2 · Crit chance +1 (3 of 3)
-- **Numbers:** none of its own: each effect does again what it did, at its own size, prices and drawbacks left out.
+- **Numbers:** none of its own: each effect does again what it did, at its own size, prices and drawbacks left out. Each happens once a kill, whatever else calls for it.
 - **Code:** 8; 23.
 - **Serves:** Hunt 2 ●●● ⚙ opening again (key) ◆ kill-pays
-- **Notes:** New. The second sentence is Second dawn's "once a fall" for this card: beside Second dawn, one kill fires its wearer's opening once. A kill landed by the opening as it happens again is a kill, and calls it again (the lead's ruling), so an opening that strikes runs on until a round fells nobody. Its seat is its own seat: a formation's rule for the whole party doesn't happen again.
+- **Notes:** New. The second sentence is Second dawn's "once a fall" for this card: beside Second dawn, one kill fires its wearer's opening once. A kill landed by the opening as it happens again is a kill, and calls it again (the lead's ruling), so an opening that strikes runs on until a round fells nobody. Its seat is its own seat: a formation's rule for the whole party doesn't happen again. "Once for each kill" is all the card says of the ruling (round 3): that nothing else makes the same kill's opening happen twice is in the numbers.
 
 ### Windrunner's garb
 - **Is:** leather · legendary
-- **Card:** Each time its wearer dodges a hit, it gains 3 Heat (it acts 5% faster in everything for each Heat, up to 10, for the rest of the fight). Each hit it takes spends half its Heat.
+- **Card:** Each time its wearer dodges a hit, it gains 3 Heat (it acts 5% faster in everything for each Heat it holds, up to 10). Each hit it takes spends half its Heat.
 - **Stats:** Evasion high · Attack +1 · Aggro +1 (4 of 4)
 - **Numbers:** 3 Heat a dodge; half of all the Heat it holds, rounded down, spent a hit taken. Heat is `fill/shared.md`'s, to ten.
 - **Code:** as today's Windrunner's garb with Heat in Tempo's place. The spending moves from the counter to this card.
 - **Serves:** Cuts 3 ●●, Toll 3 ●● ⚙ riposte (half)
-- **Notes:** Today's piece. Three a dodge, by the lead's ruling, as Hunter's skull gives three a kill: its third dodge passes Quickstep leathers' Haste, and a dodger hit one time in three holds six to ten Heat. The bracket is the counter's own wording; the sentence after it is the one card that spends Heat. The hit spends half of all its Heat, whichever card gave it. The Aggro step is the dancer's: it grows by being aimed at.
+- **Notes:** Today's piece. Three a dodge, by the lead's ruling, as Hunter's skull gives three a kill: its third dodge passes Quickstep leathers' Haste, and a dodger hit one time in three holds six to ten Heat. The bracket drops "for the rest of the fight", as round 2 allows where a card's own words need it: the sentence after it is the one card that spends Heat. The hit spends half of all its Heat, whichever card gave it. The Aggro step is the dancer's: it grows by being aimed at.
 
 ### Carrier's coat
 - **Is:** leather · legendary
@@ -413,9 +413,9 @@ Plate, Mail, Leather and Robes: 55 pieces (12 commons, 16 uncommons, 17 rares, 1
 
 ### Matins robe
 - **Is:** robes · uncommon
-- **Card:** Every third ability its wearer casts in a fight costs no MP.
+- **Card:** Every third ability its wearer casts in a fight is free.
 - **Stats:** MP +1 · Attack +1 (2 of 2)
-- **Numbers:** the third, sixth and ninth cast of each fight are free.
+- **Numbers:** the third, sixth and ninth cast of each fight are free: they cost nothing, in MP or in HP, as round 2 rules.
 - **Code:** as today's Matins robe, on a count of its wearer's casts.
 - **Serves:** Barrage 1 ●● ⚙ crescendo (half) ◆ free-cast
 - **Notes:** Today's piece, changed as its line says (today's: the first cast of each fight). The count starts again each fight. It counts the casts its wearer makes, free or paid; a second cast something else makes for it isn't counted, as Twice-told tome counts. In a fight with fewer than three casts it does nothing.
@@ -427,7 +427,7 @@ Plate, Mail, Leather and Robes: 55 pieces (12 commons, 16 uncommons, 17 rares, 1
 - **Numbers:** half again, on the stacks its abilities themselves add.
 - **Code:** none: today's Archmage's mantle changes stacks the same way, for every status.
 - **Serves:** Bonfire 1 ●●, Snap 1 ●●, Storm 1 ●●
-- **Notes:** New. It doesn't reach what a passive or a piece adds beside a cast (Stoke), or what allies' swings add under Thunderstorm. It sits beside Archmage's mantle in the same kind (*Least sure*).
+- **Notes:** New. It doesn't reach what a passive or a piece adds beside a cast (Stoke), or what allies' swings add under Thunderstorm. It sits beside Archmage's mantle in the same kind (*Least sure*). It does nothing for a Cleric or a Bard, whose kits add none of the three.
 
 ### Glyphed robe
 - **Is:** robes · uncommon
@@ -476,12 +476,12 @@ Plate, Mail, Leather and Robes: 55 pieces (12 commons, 16 uncommons, 17 rares, 1
 
 ### Flagellant's vestments
 - **Is:** robes · rare
-- **Card:** Its wearer's abilities cost HP in place of MP: the same share of its max HP as they'd cost of its max MP. It won't cast one that would leave it below a tenth of its HP.
+- **Card:** Its wearer's abilities cost HP in place of MP: half the share of its max HP that they'd cost of its max MP. It won't cast one that would leave it below a tenth of its max HP.
 - **Stats:** MP +2 · Aggro −1 (3 of 3)
-- **Numbers:** the line's size. In this robe a wide spell costs a sixth to a quarter of its wearer's max HP (a quarter to two fifths before the robe's own MP steps). The floor is a tenth of max HP.
+- **Numbers:** half the share, as the director rules at gate 2. In this robe a wide spell costs a twelfth to an eighth of its wearer's max HP: a Stormcaller's Chain lightning about 150 HP, a Pyromancer's Fireball about 170, a Frostweaver's Blizzard about 350. The floor is a tenth of max HP.
 - **Code:** 20 (as today's Blood covenant).
 - **Serves:** Pact 2 ●●●, Barrage 2 ●● ⚙ blood mage (key), brink (key)
-- **Notes:** Today's Blood covenant, an amulet and a legendary, as a robe and a rare; today's card kept. Each cast is HP paid, in the spine's sense, and an ability paid in HP is paid for. A price that takes its wearer under a line is a crossing, so the party's nets answer its casts. The price is a share of the pool, so a bigger pool makes every cast cheaper in life: that's what the MP steps are for. No Lifesteal on it: the engine takes two parts. It draws less because its wearer lives low.
+- **Notes:** Today's Blood covenant, an amulet and a legendary, as a robe and a rare; today's card kept. Each cast is HP paid, in the spine's sense, and an ability paid in HP is paid for. A price that takes its wearer under a line is a crossing, so the party's nets answer its casts. The price is a share of the pool, so a bigger pool makes every cast cheaper in life: that's what the MP steps are for. No Lifesteal on it: the engine takes two parts. It draws less because its wearer lives low. At the whole share the engine didn't close: a Chain lightning cost about 300 HP and drank back 245 from four foes at a common's Lifesteal. At half it costs about 150 and gains from three foes, which is `builds.md`'s size.
 
 ### Glimmer robe
 - **Is:** robes · rare
@@ -490,7 +490,7 @@ Plate, Mail, Leather and Robes: 55 pieces (12 commons, 16 uncommons, 17 rares, 1
 - **Numbers:** a third more, on every hit of that one ability.
 - **Code:** 20.
 - **Serves:** Barrage 2 ●● ⚙ mana as armour (half)
-- **Notes:** New. "That deals damage" is added so a heal or a buff cast in between doesn't spend it. Gifts before the cast don't add up. Clarity and its own regen aren't gifts.
+- **Notes:** New. "That deals damage" is added so a heal or a buff cast in between doesn't spend it. Gifts before the cast don't add up. Clarity and its own regen aren't gifts. It does nothing for a Cleric or a Bard, whose kits deal no damage by an ability.
 
 ### Archmage's mantle
 - **Is:** robes · legendary
@@ -521,13 +521,13 @@ Plate, Mail, Leather and Robes: 55 pieces (12 commons, 16 uncommons, 17 rares, 1
 
 ## Challenges
 
-Round 1 ruled on twelve of the thirteen challenges handed in; the rulings are applied above. These are the one it left, and four the rulings open.
+Round 1 ruled on twelve of the thirteen challenges handed in, and round 2 on these five; all are applied above, so none is open. Each stays here with its ruling.
 
-1. **Bloodsworn mail and Tithing leathers can't sit under Flagellant's vestments,** which is the same slot. Their blood mage tags hold only under The covenant, which gives everyone Lifesteal already, or beside Blood vial. Not ruled in round 1.
-2. **"A heal", and healing received.** The ruling leaves a Regen's pulses out of "a heal" for cards that read their wearer's heals. Three of mine act on the healing their wearer receives, and I read the pulses as counting. Red stone mail's card now names Regen, since builds.md's red stone counts on a Cleric's Regen landing on a full ally. Sanguine mail doubles or halves whatever its wearer receives. Last bastion's "by anyone or anything" ends on a pulse. If the ruling was meant to reach them, Red stone mail loses a clause and the other two need one.
-3. **A piece that fires as the fight starts because its wearer is already under the line.** By the crossing ruling Holdfast, Warded mail and Aegis mail do. The spine's *start-of-fight effects* covers whatever a piece does as a fight starts, however its card words it. Read to the letter, Second dawn would then Guard, Shield or Aegis again at every fall. I read these as crossings, not openings: they don't happen again.
-4. **Mail's commons under "the first stat its row names".** The three rows name HP, Lifesteal and HP. I kept Attack, Lifesteal and HP under the names as ruled, so the first row gives way. Read row by row, the third gives way instead and Mail has a Defense common in place of the Attack one.
-5. **The Heat bracket on Windrunner's garb.** The counter's wording ends "for the rest of the fight", and the card's next sentence spends half of it at every hit. It's the one card where the two pull against each other. Written as ruled.
+1. *Ruled in round 2: the tags stand. Both sit under The covenant, where they add to its Lifesteal, and beside Blood vial; a half needn't fit beside every keystone.* **Bloodsworn mail and Gleaner's leathers can't sit under Flagellant's vestments,** which is the same slot. Their blood mage tags hold only under The covenant, which gives everyone Lifesteal already, or beside Blood vial. Not ruled in round 1.
+2. *Ruled in round 2: healing received is all of it, a Regen's pulse included. The three cards stand as written.* **"A heal", and healing received.** The ruling leaves a Regen's pulses out of "a heal" for cards that read their wearer's heals. Three of mine act on the healing their wearer receives, and I read the pulses as counting. Red stone mail's card now names Regen, since builds.md's red stone counts on a Cleric's Regen landing on a full ally. Sanguine mail doubles or halves whatever its wearer receives. Last bastion's "by anyone or anything" ends on a pulse. If the ruling was meant to reach them, Red stone mail loses a clause and the other two need one.
+3. *Ruled in round 2: a crossing isn't a start-of-fight effect, so it doesn't happen again.* **A piece that fires as the fight starts because its wearer is already under the line.** By the crossing ruling Holdfast, Warded mail and Aegis mail do. The spine's *start-of-fight effects* covers whatever a piece does as a fight starts, however its card words it. Read to the letter, Second dawn would then Guard, Shield or Aegis again at every fall. I read these as crossings, not openings: they don't happen again.
+4. *Ruled in round 2: as written.* **Mail's commons under "the first stat its row names".** The three rows name HP, Lifesteal and HP. I kept Attack, Lifesteal and HP under the names as ruled, so the first row gives way. Read row by row, the third gives way instead and Mail has a Defense common in place of the Attack one.
+5. *Ruled in round 2: a bracket may be worded to fit its card. The garb's drops "for the rest of the fight".* **The Heat bracket on Windrunner's garb.** The counter's wording ends "for the rest of the fight", and the card's next sentence spends half of it at every hit. It's the one card where the two pull against each other. Written as ruled.
 
 ## Links
 
@@ -538,9 +538,9 @@ Round 1 ruled on twelve of the thirteen challenges handed in; the rulings are ap
 - **Reckoning** (The anvil, key; Portcullis, Challenger's plate, halves). *Mine:* one Wrath a hit taken, to the slowest other swing. *The other side:* a swing slow enough for ten bites to land between two of them, and the party's slowest basic attack being its hammer and not a caster's staff.
 - **Judge's drum** (Pack leader's coat, key). Nothing to size. *The other side:* a slow, heavy swing somewhere in the party.
 - **Opening again** (Overture coat, key). *Mine:* each effect in full at each of its wearer's killing blows, once a kill; a kill by the opening as it happens again calls it again. *The other side:* start-of-fight pieces a Leather wearer can hold. The other shares count them: a phial on an Assassin, a tome on a Bard, a totem on a Stormcaller, an opening bow or dagger, the amulets, a seat.
-- **Riposte** (Duelist's leathers, key; Scabbed mail, Tithing leathers, Quickstep leathers, Windrunner's garb, halves). *Mine:* a whole weapon strike a dodge, with a draw in its own steps. The halves: 3% of max HP a hit as Shield or as healing; Haste a dodge; three Heat a dodge. *The other side:* about two dodges in three, or a second cover-maker such as Shieldmaiden, for the banked cover to equal the blow that lands. The three Leather halves can't sit under Duelist's leathers; they pair with Parrying spear and Tempest cloak.
+- **Riposte** (Duelist's leathers, key; Scabbed mail, Gleaner's leathers, Quickstep leathers, Windrunner's garb, halves). *Mine:* a whole weapon strike a dodge, with a draw in its own steps. The halves: 3% of max HP a hit as Shield or as healing; Haste a dodge; three Heat a dodge. *The other side:* about two dodges in three, or a second cover-maker such as Shieldmaiden, for the banked cover to equal the blow that lands. The three Leather halves can't sit under Duelist's leathers; they pair with Parrying spear and Tempest cloak.
 - **Every colour** (Hexweave mail, half). *Mine:* 10% a different debuff. *The other side:* nothing needed; it rises beside Malison on the same foe.
-- **Blood mage** (Flagellant's vestments, key; Bloodsworn mail, Tithing leathers, halves). *Mine:* the price is the line's: a sixth to a quarter of max HP for a wide spell, with the robe's MP steps. *The other side:* "loses on one, gains on three" needs Lifesteal of about a fifth for a Stormcaller and more for a Pyromancer. A common's tenth breaks even at four or five foes for those two, and never for a Frostweaver, whose Blizzard is a touch a foe. To meet the size at a common, the price would have to be about half the share. The lead has taken the price's size to the director.
+- **Blood mage** (Flagellant's vestments, key; Bloodsworn mail, Gleaner's leathers, halves). *Mine:* the price is half the share, as the director rules at gate 2: a twelfth to an eighth of max HP for a wide spell, with the robe's MP steps. *The other side:* "loses on one, gains on three" is met at a common's tenth of Lifesteal for a Stormcaller (a Chain lightning costs about 150 and drinks back about 195 from three foes) and a little later for a Pyromancer, whose Fireball is even at about three. A Frostweaver's Blizzard, a touch a foe, still never pays. At the whole share it took Lifesteal of a fifth.
 - **Resonance** (Resonant robes, key). *Mine:* a tenth of the cooldown a foe. *The other side:* Storm front's seat is the same size and adds. The mana comes from Recharge, Mana pearl and Meltwater orb, which between them take the mana brake away.
 - **Crescendo** (Matins robe, half). *Mine:* the third, sixth and ninth cast free. *The other side:* Crescendo charm's fifth more a stack. The first cast of an ability is plain, so its third cast costs two fifths more and is the one worth skipping.
 - **Mana as armour** (Glyphed robe, Glimmer robe, halves). *Mine:* a tenth of max MP as Shield a cast; a third more on the next damaging cast after a gift. *The other side:* gifts that arrive in one piece and often: Refrain, Tithe wand, Shepherd's staff, a Wellspring seat.
@@ -581,7 +581,7 @@ Round 1 ruled on twelve of the thirteen challenges handed in; the rulings are ap
 - **Flagellant's vestments.** A caster in it pays a quarter of its bar for a wide spell and drinks back a third of that at a Lifesteal common; the price's size is with the director. In play the price in life was worn for two fights. Beside Orb of the deep the bars swap jobs: casts come out of HP and blows out of a pool it no longer spends. That may be the best thing the piece does, and nobody designed it.
 - **Counters as gifts.** A counter a card gives is now something a unit gives itself, so Twin-knot or Twins copies Windrunner's Heat, Kindled robes' Heat, Thornheart plate's Spite and Tallymail's Cuts. The copied Heat is real, and on the ally nothing spends it: Windrunner's halving is its wearer's alone. The copied Spite and Cuts do nothing without a reader.
 - **Thornheart plate's numbers.** A third and a twentieth a Spite passes the whole blow at fourteen Spite. Against a swarm that's reached in one fight; against a boss it ends near three quarters. With Mirror shield or Hoplon on the same wall, more than the blow comes back from the first hit.
-- **The 3% pieces** (Scabbed mail, Tithing leathers). Twice today's size, and still numbers under 150 a hit. They're seen as a bar that grows and a bar that doesn't fall, not as a number.
+- **The 3% pieces** (Scabbed mail, Gleaner's leathers). Twice today's size, and still numbers under 150 a hit. They're seen as a bar that grows and a bar that doesn't fall, not as a number.
 - **Quiet robes.** Silence comes from two enemies. In every other fight it's three stat steps and no effect.
 - **Motley robe.** On a unit that knows one ability, which was most units in play, the random order costs nothing and the card is half-price spells.
 - **The anvil.** Its Wrath goes to whoever swings slowest, which the party has to arrange. Beside two fast units it loads a wand.

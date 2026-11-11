@@ -88,3 +88,43 @@ Round 1. Each is about a word, a loop, an overlap or a card that didn't say what
 - **A common on one step takes the first stat its row names,** where that still leaves the kind's commons different from each other.
 - **New target phrases,** for the vocabulary when it's built: the other ally with the least Defense; the ally with the highest Aggro; the ally with the slowest basic attack; the two foes with the highest Attack; the foe that last hit the healed ally; the ally with the lowest share of max HP, the payer aside; the foe with the highest current HP; the ally with the lowest share of max HP that can be healed; the ally with the least MP (the lowest share of max MP, the holder included); the other ally with the least max HP; the other foe with the most Chill; the foe with the lowest share of max HP. "The ally with the highest Aggro" reads Aggro as it stands, gear and seat counted, a Taunt not; a tie goes to the earlier seat.
 - **Names changed in round 1,** in the spine, the index and every card that mentions one: Icebreaker charm is now Floe charm; Spiked kite is now Bossed kite; Phalanx shield is now Tower shield; The long wall is now The palisade; Open wound is now Bloodied ground; Bloodletter's phial is now Lancet phial; Idol of the deepening is now Festering idol; Annotated score is now Accompanist's score; Orb of the long winter is now Meltwater orb; Trophy spear is now Victor's spear; Shepherd's mace is now Anchorite's mace; Sunhammer is now Noonday mace; Sanguine vestments is now Flagellant's vestments; Tally coat is now Overture coat; Storm pike is now Squall lance. Two amulet commons: Lodestone is now Bezoar, Whetstone is now Flint. Two mail commons: the Lifesteal one is Lamprey mail, the HP one Thick byrnie.
+
+Round 2. What the shares raised while applying round 1.
+
+- **A hit that lands a second time lands at once, unless its card says otherwise.** Twinfall's lands a moment later (one tick), as its line says.
+- **A Mark steers blows, not what a piece sends.** A phrase's fallback to a random foe follows the Mark for a basic attack or an ability. Where a piece sends a status or left-over damage to a random foe (Winter's chain with nothing chilled, Overrun's carry), it goes by draw and a Mark doesn't take it.
+- **A counter's bracket may be worded to fit the card** ("each acts 5% faster…" where every ally gains the Heat), as long as the numbers are the counter's.
+- **Healing received is all of it:** a heal, a Regen's pulse, a drink. Round 1's ruling that a Regen isn't a heal is about the heals a unit *gives* ("its wearer's heals"). A card that reads healing its wearer *receives* (Red stone mail, Sanguine mail, Last bastion, Halved heart, Shared cup) counts Regen.
+- **Firing as a fight starts isn't a start-of-fight effect** when it's a crossing: a piece that fires because a unit began under the line (Holdfast, Warded mail, Aegis mail, Watch horn, Bear fetish, Shroud charm) doesn't happen again under Second dawn or Overture coat.
+- **A killing blow is a hit.** A foe felled by damage sent back, by Thorns or by a status's own damage isn't anyone's killing blow. Cards that wait for a foe to fall, whoever felled it, still fire.
+- **The crossing ruling is for HP.** A watcher of MP keeps its own card's words.
+- **Where left-over damage lands is a target after the first,** so a Taunt doesn't decide it, as it doesn't decide a chain's later foes. Round 1's ruling stands otherwise: it's a hit on the foe it reaches, and that foe can dodge it.
+- **A free cast costs nothing, in MP or in HP.** "Costs no MP" on a card means the cast is free, so under an HP price it costs no HP either. New cards say "is free"; a kept card may keep today's words.
+
+Round 3. What the fresh read found.
+
+- **A card gives a percent as the sheet shows it.** Crit chance is a percent on a card: "+50% Crit chance, up to 80%", "crit 80% of the time", "+20% Crit chance". A percent stat an effect gives is its percent (Bloodsworn mail's 20% Lifesteal). Thorns is an amount of damage, which the interface scales, so in the fill its card keeps the scale's word and the build prints the amount (Urchin plate, Spiked targe, Spinebark pole).
+- **A share of HP is a share of max HP,** and the card says "max HP" (thirteen cards changed).
+- **A hit that lands a second time is never called a strike.** Cards say "lands twice" or "a second landing" (Still hand, Tempest cloak, Dragon's tooth, as Hunting spear and Twinfall already do). "Extra strike" is Double strike's, and "strikes with its weapon" is a swing-sized hit out of turn.
+- **A kill is "lands a killing blow",** and a swing it calls "comes at once" (Hunter's buckler, Headsman's axe).
+- **"Damage that would knock it out" is any damage,** a status's included (Last bastion, Swan's grace). "A blow" is a hit.
+- **"Every so often" is 22 ticks,** the short cooldown word. A card on any other beat prints its ticks (Everflame lantern's 3, Kindled robes' and The forge's 4, Burning heart's 10). Where a first beat comes early it's in the numbers, and on the card only where the player has to know (Clear-headed charm's "the first at once").
+- **A piece's stack word is the piece's count,** through `own()`, whatever hit carries it. Curse-book's "a few" was twice Jolt spear's on the same kind of hit, so its card says "several".
+- **A Mark doesn't take what a piece or a seat sends.** Round 2's ruling for pieces holds for a formation's rule too (The forge), and Wick's numbers now follow it.
+- **A fallen foe's fire moves once, in one wording** on its four cards (Wick, Smouldering orb, Ember heart, Pyre line's Torch): "if something else in the party moves it too, it's split evenly between them."
+- **A status that's moved or copied keeps its stacks and the time it has left.** That isn't applying it, so "nothing applies a status for less than its own length" doesn't reach it (Idol of the hungry dark, Scapegoat charm, the copies). A line for the vocabulary.
+- **A piece on one step may take the stat its effect reads, or its road's lean,** in place of its kind's signature (Ragged axe's Attack, Reaver's axe's Crit damage). The kind's commons carry the signature plain.
+- **A card doesn't carry a ruling's sentence.** Where a card said what another card couldn't do to it ("whatever else calls for it", "it carries no riders"), the card now says what happens and the numbers keep the rest (Overture coat, Second dawn, Downhill charm, The standard, Toll gate). "A rider" is the design's word and is off every card.
+- **A formation's first sentence is its promise,** and stays: `builds.md` asks a formation for "a promise in plain words". The rule that a card doesn't say what a thing is for is for pieces.
+- **"Its ability with the longest cooldown" says which it means on the card** where it's the slowest (Reveille, Frozen tome, as Floe charm does).
+- **Names changed in round 3:** Tithing leathers is now Gleaner's leathers; Briar totem is now Nettle totem; Bloodlust draught is now Ravening draught. Thorn hedge's Thorn seat is now the Barb.
+
+Gate 2. The director's rulings, Nov 11, that reach more than one share.
+
+- **A spell paid in life costs half the share** of max HP that it would cost of max MP (Flagellant's vestments, The covenant, The chalice, Heart of the saint). At the whole share the blood mage lost life on every cast.
+- **The shatter bell rings the first-slotted ability** (Floe charm, Frozen tome, Icefall's Breaker), so the player chooses what rings by slot order. Ruled after gate 2, in place of "the slowest ability that deals damage". Reveille keeps the slowest ability by whole cooldown.
+- **Someone always stands in the light.** Round 1's rule of Hidden's is approved, with its gap closed: when nobody is left in the light, the last in seat order steps out of hiding.
+- **A Crescendo's price is two fifths more cost a stack,** twice the slope of its power (Crescendo charm). The counter's own definition is unchanged.
+- **Thunderhead maul reads its basic attacks alone,** so it and Lightning-glass no longer read the same.
+- **The riposte is its keystone and a Shield on the dodge.** Nothing in the fill changes; `docs/gear-design/builds.md` says so now.
+- **Frost fist stays at its base ability's few.** Its power step is the balance pass's to watch.

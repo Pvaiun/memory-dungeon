@@ -34,7 +34,7 @@ How to read it:
 - **Card:** Foes that hit its holder gain a few Burn (from its holder's Defense).
 - **Stats:** Defense +1 · Aggro +1 (2 of 2)
 - **Numbers:** a few (`STACKS.few`, through `own()`), read off its holder's Defense: about three a blow on a Knight. Burn keeps `STATUS.burn`.
-- **Code:** as today's Briar totem, with Burn.
+- **Code:** as today's Nettle totem, with Burn.
 - **Serves:** Bonfire 1 ●●, Toll ● ⚙ goad (half)
 - **Notes:** It reads Defense, as Briar does, so the careful stat is also the fire's size. A foe that keeps striking the keeper holds five or six stacks, which is a number the player sees pulse. Aggro brings the blows that feed it.
 
@@ -49,9 +49,9 @@ How to read it:
 
 ### Bossed kite
 - **Is:** kite shield · uncommon
-- **Card:** Each hit of its holder's abilities deals extra damage (from its Defense).
+- **Card:** Each hit of its holder's abilities deals extra damage equal to a sixth of its Defense.
 - **Stats:** Defense +2 (2 of 2)
-- **Numbers:** a touch (`HIT.touch`) of its holder's Defense, added to the hit before boosts, crits and the foe's Defense.
+- **Numbers:** a sixth on the card is a touch (`HIT.touch`) of its holder's Defense, added to the hit before boosts, crits and the foe's Defense.
 - **Code:** none: a rider on its holder's ability hits, which a status's `riders` gives today.
 - **Serves:** Landslide 1 ●● ◆ heavy-blow
 - **Notes:** A touch of Defense is about half again on the Knight's bash and a third more on a Smite or a rock: the number is seen to grow, and it stays under the kind's rare. Both steps are Defense, so the piece's own stats make its blow bigger.
@@ -114,7 +114,7 @@ How to read it:
 
 ### Comrade's targe
 - **Is:** round shield · uncommon
-- **Card:** Every so often, the ally with the lowest share of max HP gains a Shield (from its holder's max HP).
+- **Card:** Every so often, the ally with the lowest share of max HP gains a Shield of a fifth of its holder's max HP.
 - **Stats:** HP +1 · Defense +1 (2 of 2)
 - **Numbers:** a fifth of its holder's max HP, the share Vanguard uses. Every so often is `COOLDOWN.short`, with the first beat halfway to it, as today's beats run.
 - **Code:** as today's Warding bell's beat, with a Shield.
@@ -123,7 +123,7 @@ How to read it:
 
 ### Hunter's buckler
 - **Is:** round shield · uncommon
-- **Card:** When its holder's hit fells a foe, its holder is Hasted.
+- **Card:** When its holder lands a killing blow, its holder is Hasted.
 - **Stats:** HP +1 · Attack +1 (2 of 2)
 - **Numbers:** none of its own: Haste keeps `STATUS.haste`.
 - **Code:** as today's Hunter's buckler, without its Shield.
@@ -137,7 +137,7 @@ How to read it:
 - **Numbers:** `SPECIAL.thorns.high`, added while the Guard lasts and gone when it ends.
 - **Code:** as today's Urchin shell, on Guard in place of a Shield.
 - **Serves:** Toll 1 ●● ⚙ goad (half)
-- **Notes:** High, where Spinebark pole gives medium for a whole fight: this one lasts only as long as a Guard and sits on its holder alone. Round 1 ruled that an effect may give the high word below legendary. It's a state held while its holder is Guarded, not a status laid at a moment, so nothing that shares what a unit gives itself shares it.
+- **Notes:** High, where Spinebark pole gives medium for a whole fight: this one lasts only as long as a Guard and sits on its holder alone. Round 1 ruled that an effect may give the high word below legendary. It's a state held while its holder is Guarded, not a status laid at a moment, so nothing that shares what a unit gives itself shares it. Of its three holders only the Bramble knight Guards itself in its base kit; the other two need a Guard from the party. "Thorns, high" stays a word on the card, as on Urchin plate: the build prints the amount (round 3).
 
 ### Second skin
 - **Is:** round shield · rare
@@ -168,7 +168,7 @@ How to read it:
 
 ### Shield of the chosen
 - **Is:** round shield · legendary
-- **Card:** Once a fight, when another ally falls, its holder raises it at once with a tenth of its max HP, behind a Shield (from its holder's max HP).
+- **Card:** Once a fight, when another ally falls, its holder raises it at once with a tenth of its max HP, behind a Shield of a third of its holder's max HP.
 - **Stats:** HP +2 · Aggro +1 · Attack +1 (4 of 4)
 - **Numbers:** `REVIVE.tenth` of the raised ally's max HP. The Shield is a third of its holder's max HP, under the raised ally's own cap.
 - **Code:** as today's Shield of the chosen, with a Shield on the ally it raised.
@@ -206,7 +206,7 @@ How to read it:
 
 ### Reveille
 - **Is:** horn · uncommon
-- **Card:** When each fight starts, the ally with the highest Attack has its ability with the longest cooldown ready at once.
+- **Card:** When each fight starts, the ally with the highest Attack has its ability with the longest cooldown ready at once: its slowest ability, by its whole cooldown.
 - **Stats:** Aggro +1 · MP regen +1 (2 of 2)
 - **Numbers:** "its ability with the longest cooldown" is its slowest ability, by its whole cooldown, cooling or not (`fill/shared.md`). Whatever wait that ability had left is gone; it still needs its MP and its condition. If it's already ready, nothing happens, whatever else is cooling.
 - **Code:** a cooldown made ready is today's; picking the ability by its whole cooldown isn't (*Code support beyond the spine's list*).
@@ -285,7 +285,7 @@ How to read it:
 - **Numbers:** `SPECIAL.thorns.medium`, added to whatever Thorns that ally has, and kept through a fall. The highest Aggro is read as it stands, gear and seat counted and a Taunt not; a tie goes to the earlier seat.
 - **Code:** as today's Spinebark pole.
 - **Serves:** Toll 1 ●●, Landslide ● ⚙ goad (half), opening again (half)
-- **Notes:** Kept from today's: card, size and steps. On an anchor with no Thorns of its own, every blow it takes now prints a number on the attacker. Happening again, it changes nothing unless the highest Aggro has moved.
+- **Notes:** Kept from today's: card, size and steps. On an anchor with no Thorns of its own, every blow it takes now prints a number on the attacker. Happening again, it changes nothing unless the highest Aggro has moved. "Thorns, medium" stays a word on the card: the build prints the amount (round 3).
 
 ### Stormglass totem
 - **Is:** totem · uncommon
@@ -305,14 +305,14 @@ How to read it:
 - **Serves:** Toll ●, Pact ●, net ⚙ brink (half), mirror (half) ◆ lowest-ally
 - **Notes:** Changed from today's as the line says: every time, where today's was the first ally each fight. "An ally" includes its holder. A unit that rides the line is Guarded again each time it's back at half or over and crosses again, whether a blow, a status or a price took it across.
 
-### Briar totem
+### Nettle totem
 - **Is:** totem · rare
 - **Card:** Foes that hit its holder gain a few Bleed (from its holder's Defense).
 - **Stats:** Thorns medium · Defense +1 · Aggro +1 (3 of 3)
 - **Numbers:** a few (`STACKS.few`, through `own()`), read off its holder's Defense: about two a blow on a Bramble knight. Bleed keeps `STATUS.bleed`.
-- **Code:** as today's Briar totem.
+- **Code:** as today's Nettle totem.
 - **Serves:** Toll 2 ●●●, Cuts 2 ●●● ⚙ red rain (half)
-- **Notes:** Kept from today's: card, size and steps; the card now names the stat. On a Bramble knight it adds to Briar's own, so an attacker leaves with twice the wound.
+- **Notes:** Kept from today's: card, size and steps; the card now names the stat. On a Bramble knight it adds to Briar's own, so an attacker leaves with twice the wound. Renamed from Briar totem in round 3: Briar is the Bramble knight's passive, which does nearly the same thing, and a Bramble knight holds this.
 
 ### Spite totem
 - **Is:** totem · rare
@@ -377,13 +377,13 @@ How to read it:
 - **Numbers:** one debuff for each ally healed, picked as today. An ability that only lays Regen heals nobody at once, so it lifts nothing.
 - **Code:** as today's Holy water.
 - **Serves:** Toll ●, Pact ●, foes do less
-- **Notes:** Kept from today's: card and steps, in the signature's order.
+- **Notes:** Kept from today's: card and steps, in the signature's order. It does nothing on a Paladin, one of its two holders: Absolve is its only heal, and it cleanses already.
 
 ### Charnel icon
 - **Is:** relic · uncommon
-- **Card:** Each time a foe falls, the ally with the lowest share of max HP is healed (from its holder's Attack).
+- **Card:** Each time a foe falls, the ally with the lowest share of max HP is healed for three tenths of its holder's Attack.
 - **Stats:** MP regen +1 · HP +1 (2 of 2)
-- **Numbers:** `HIT.light` of its holder's Attack, a little under a Cure.
+- **Numbers:** three tenths on the card is `HIT.light` of its holder's Attack, a little under a Cure.
 - **Code:** as today's Charnel icon, with the heal read off its holder's Attack.
 - **Serves:** Pact 1 ●●, Hunt ● ⚙ brink (half) ◆ kill-pays, lowest-ally
 - **Notes:** Kept from today's, resized: today's healed 6% of the healed ally's max HP, a number nobody saw. This is nearly a cast's worth for each kill. It's a heal its holder gives, for whatever reads one.
@@ -399,12 +399,12 @@ How to read it:
 
 ### Phylactery
 - **Is:** relic · rare
-- **Card:** The part of its holder's heals that would go past full becomes a Shield on the healed ally.
+- **Card:** The part of its holder's heals, and of its Regen's pulses, that would go past full becomes a Shield on the healed ally.
 - **Stats:** MP regen +1 · HP +1 · Attack +1 (3 of 3)
-- **Numbers:** all of the part past full, from every heal its holder gives: HP its abilities and its pieces restore at once, and its own Lifesteal. A Regen's pulses aren't a heal, by round 1's ruling, so they make no Shield. The Shield keeps its own cap.
-- **Code:** as today's Phylactery, with the Regen it laid left out; 14 for where healing past full goes when more than one thing claims it.
+- **Numbers:** all of the part past full, from every heal its holder gives: HP its abilities and its pieces restore at once, its own Lifesteal, and each pulse of a Regen it laid. The Shield keeps its own cap.
+- **Code:** as today's Phylactery; 14 for where healing past full goes when more than one thing claims it.
 - **Serves:** Pact 2 ●●●, Landslide ●●, Toll ●● ⚙ red stone (key), detonation (half) ◆ shield-by-doing
-- **Notes:** Kept from today's and moved down from legendary: the card stays, with a step fewer of MP regen. Today's piece also read the Regen its holder laid, and that was its plainest sight; the ruling takes it away (*Challenges*). What's left to see: a Paladin's Absolve on itself at full, a heal on a beat from a mace, and any heal on a unit capped at half.
+- **Notes:** Kept from today's and moved down from legendary, with a step fewer of MP regen. The card names Regen, as round 2 rules: a Regen isn't a heal unless a card names it, and with nothing to mend a healer casts only Regen, so without the name the line's own sight never happened. It's what today's piece does. Seen: a Cleric's Renew on a full ally builds a grey bar pulse by pulse; so do a Paladin's Absolve on itself at full, a heal on a beat from a mace, and any heal on a unit capped at half.
 
 ### Accuser's relic
 - **Is:** relic · rare
@@ -417,12 +417,12 @@ How to read it:
 
 ### Heart of the saint
 - **Is:** relic · legendary
-- **Card:** Its holder's abilities that heal cost HP in place of MP: the same share of its max HP. Their heals are twice as big. The price never takes it below 1 HP.
+- **Card:** Its holder's abilities that heal cost HP in place of MP: half the share of its max HP that they'd cost of its max MP. Their heals are twice as big. The price never takes it below 1 HP.
 - **Stats:** MP regen +1 · HP +2 · Attack +1 (4 of 4)
-- **Numbers:** the price is the share of its max HP that the ability's MP cost was of its max MP, and no MP is paid. Heals are doubled. A status the ability lays keeps its own numbers.
+- **Numbers:** the price is half the share of its max HP that the ability's MP cost was of its max MP, and no MP is paid. Heals are doubled. A status the ability lays keeps its own numbers.
 - **Code:** 20.
 - **Serves:** Pact 3 ●●● ⚙ brink (key)
-- **Notes:** Its holder's heals are abilities that heal directly, as ruled: an ability that only lays Regen keeps its MP cost and its size, and heals from gear cost nothing and aren't doubled. HP is its fuel now, so two steps of it. Beside another effect that makes abilities cost HP, there's still one price.
+- **Notes:** Its holder's heals are abilities that heal directly, as ruled: an ability that only lays Regen keeps its MP cost and its size, and heals from gear cost nothing and aren't doubled. HP is its fuel now, so two steps of it. Beside another effect that makes abilities cost HP (Flagellant's vestments on the same Cleric, The covenant), there's still one price, and the stricter floor holds: it won't cast a heal that would leave it below a tenth of its max HP (round 3). At half the share, as the director rules at gate 2, the price holds its healer less low than the brink's link pictures: a Cleric's Cure is about a tenth of its bar (*Least sure*).
 
 ### Bloodstone reliquary
 - **Is:** relic · legendary
@@ -473,9 +473,9 @@ How to read it:
 
 ### Wick
 - **Is:** lantern · rare
-- **Card:** When a burning foe falls, all its Burn passes to the foe with the most Burn. A fallen foe's fire moves once: where something else would move it too, it's split evenly between the places they send it.
+- **Card:** When a burning foe falls, all its Burn passes to the foe with the most Burn. A fallen foe's fire moves once: if something else in the party moves it too, it's split evenly between them.
 - **Stats:** Cast speed medium · Attack +1 · MP +1 (3 of 3)
-- **Numbers:** all the Burn the foe held as it fell. With no other foe burning, it goes to a random foe, as the target phrase has it, and that random pick follows a Mark.
+- **Numbers:** all the Burn the foe held as it fell. With no other foe burning, it goes to a foe picked by draw: it's fire a piece sends, not a blow, so a Mark doesn't take it, as round 2 rules.
 - **Code:** 9 (today's Wick, aimed anew); 23 for the even split.
 - **Serves:** Bonfire 2 ●●●, Hunt ●● ⚙ fuse (key)
 - **Notes:** Kept from today's and moved down from legendary: the fire now goes to the hottest foe left, not the healthiest, and the Heat goes, as the line says. The feeders' own aim is at that same foe.
@@ -509,12 +509,12 @@ How to read it:
 
 ## Challenges
 
-Round 1 ruled all fourteen of the first round's. These four are what its rulings open.
+Round 1 ruled all fourteen of the first round's, and round 2 these four, which its rulings opened. All are applied above, so none is open; each stays here with its ruling.
 
-1. **Phylactery has lost its plainest sight.** A Regen's pulses aren't a heal now, so the Regen its holder lays makes no Shield. The line's sight is a healer with nothing to mend building grey bars, and with nothing to mend a healer casts only Regen: Cure waits for a hurt ally and Absolve for one below full. On a Cleric the piece now turns only a heal's overshoot into stone. The ruling lets a card name Regen, and I'd have this one do it ("the part of its holder's heals, and of the Regen it lays, that would go past full"), which is what today's piece does. Written without it, by the ruling.
-2. **A watcher that fires as the fight starts: is that a start-of-fight effect?** By the ruling, Watch horn and Bear fetish fire as a fight starts when an ally starts it under half. The spine defines a start-of-fight effect as whatever a piece does as a fight starts, however its card words it. I read these two as a crossing counted at the start, not an opening, so nothing makes them happen again. Read the other way, the horn Taunts again at every fall while any ally is under half.
-3. **A unit capped at half sets the watchers off once a fight.** Halved heart's wearer counts as below half at half, so it has dropped as each fight starts and never gets back to the line. Watch horn then Taunts as every fight starts, and Bear fetish Guards that unit once. On the brink's plainest unit, "whenever" comes to "once a fight". Written to the ruling.
-4. **Charnel icon and Bloodstone reliquary heal the lowest share, capped or not.** Round 1 made Shared cup pass over an ally that can't be healed. These two keep the line's phrase, so beside a unit capped at half their heal lands on it and counts as healing past full: a Shield where a red stone piece is worn, and nothing where none is. The brink's link reads that as intended. It's one phrase on each card if it isn't.
+1. *Ruled in round 2: the card names Regen.* **Phylactery has lost its plainest sight.** A Regen's pulses aren't a heal now, so the Regen its holder lays makes no Shield. The line's sight is a healer with nothing to mend building grey bars, and with nothing to mend a healer casts only Regen: Cure waits for a hurt ally and Absolve for one below full. On a Cleric the piece now turns only a heal's overshoot into stone. The ruling lets a card name Regen, and I'd have this one do it ("the part of its holder's heals, and of the Regen it lays, that would go past full"), which is what today's piece does. Written without it, by the ruling.
+2. *Ruled in round 2: no. A crossing isn't a start-of-fight effect.* **A watcher that fires as the fight starts: is that a start-of-fight effect?** By the ruling, Watch horn and Bear fetish fire as a fight starts when an ally starts it under half. The spine defines a start-of-fight effect as whatever a piece does as a fight starts, however its card words it. I read these two as a crossing counted at the start, not an opening, so nothing makes them happen again. Read the other way, the horn Taunts again at every fall while any ally is under half.
+3. *Ruled in round 2: it stands. It's the brink doing what it's for.* **A unit capped at half sets the watchers off once a fight.** Halved heart's wearer counts as below half at half, so it has dropped as each fight starts and never gets back to the line. Watch horn then Taunts as every fight starts, and Bear fetish Guards that unit once. On the brink's plainest unit, "whenever" comes to "once a fight". Written to the ruling.
+4. *Ruled in round 2: it stands.* **Charnel icon and Bloodstone reliquary heal the lowest share, capped or not.** Round 1 made Shared cup pass over an ally that can't be healed. These two keep the line's phrase, so beside a unit capped at half their heal lands on it and counts as healing past full: a Shield where a red stone piece is worn, and nothing where none is. The brink's link reads that as intended. It's one phrase on each card if it isn't.
 
 ## Links
 
@@ -528,19 +528,19 @@ For each engine: the size on my side, and what the other side needs.
 - **The judge's drum.** *Mine:* Hunting horn calls every ally's swing when a foe falls Marked; War horn puts many Might on the slowest of them. *The other side:* a Mark that's still up when its foe falls. `STATUS.marked` runs out well before most Marked foes die, so the horn fires only where something keeps or renews the Mark, and a Mark that moves at the fall (Gravemark, Hunter's mark, Swift justice, Open season) is what lands the three swings on one foe.
 - **The opening, again.** *Mine:* eight start-of-fight pieces. Happening again, once a fall: two Guards refreshed (Sheltering kite); the slowest ability ready (Reveille); many Might, to Might's cap (War horn); Haste and a swing for every ally, the drawback left out (Horn of the charge); Thorns on whoever now draws most (Spinebark pole); a few Shock on every foe (Stormglass totem); several Burn on every foe (Pitch lantern); Weaken on the two strongest (Dazzling lantern). *The other side:* Overture coat is Leather. The eight sit on the kite shield, the horn, the totem and the lantern, and of those kinds' wearers only the Stormcaller wears Leather. So Overture coat can reach two of the eight, the totem's, and the other six happen again only under Second dawn.
 - **The fuse.** *Mine:* Wick moves all of a fallen foe's Burn to the foe with the most Burn. *The other side:* the kits' aim at that same foe; a second mover splits the fire evenly.
-- **The red rain.** *Mine:* Briar totem's few Bleed on each foe that strikes its holder, about two on a Bramble knight, beside Briar's own two. *The other side:* any wide hit. A foe that has struck the wall twice pays more to the wound than a light wide hit deals.
+- **The red rain.** *Mine:* Nettle totem's few Bleed on each foe that strikes its holder, about two on a Bramble knight, beside Briar's own two. *The other side:* any wide hit. A foe that has struck the wall twice pays more to the wound than a light wide hit deals.
 - **The riposte.** *Mine:* Second skin gives a dancer back half its broken cover, once every so often. *The other side:* the dodge's answering swings, which build the Shield in the first place.
 - **Every colour.** *Mine:* Stormglass totem's Shock and Pitch lantern's Burn, a colour each on every foe as the fight starts. *The other side:* Malison has to land early. A few Shock is gone after three of a foe's actions, and unfed Burn within about twenty ticks.
 - **The blood mage.** *Mine:* Bloodstone reliquary turns the whole price into a heal on the lowest ally who didn't pay. *The other side:* a price sized as a share of max HP, so the heal is a number worth seeing.
 - **Mana as armour.** *Mine:* Font relic gives a fifth of the healed ally's pool with each heal. On a Pyromancer that's about one ordinary swing's worth of mana. *The other side:* MP that soaks damage point for point.
 - **The shatter bell.** *Mine:* Monolith shield makes its holder's damaging abilities come half as often and land two and a half times as hard. *The other side:* the bell readies its wearer's slowest ability. On this holder that's the doubled one, since the doubled cooldown is the ability's whole cooldown.
-- **The brink.** *Mine:* Heart of the saint makes the healer the one who pays. Comrade's targe's Shield, Bear fetish's Guard and Charnel icon's heal all go to whoever is lowest; Bloodstone reliquary keeps everyone but the payer full. *The other side:* the kits' gifts to the lowest ally. On a unit capped at half, the fetish's Guard comes once a fight and the icon's heal counts as healing past full (*Challenges*).
+- **The brink.** *Mine:* Heart of the saint makes the healer the one who pays. Comrade's targe's Shield, Bear fetish's Guard and Charnel icon's heal all go to whoever is lowest; Bloodstone reliquary keeps everyone but the payer full. *The other side:* the kits' gifts to the lowest ally. On a unit capped at half, the fetish's Guard comes once a fight and the icon's heal counts as healing past full, which round 2 lets stand.
 - **Two in the dark.** *Mine:* Watch horn makes its holder the one in the light whenever an ally is hurt. *The other side:* two hidings.
-- **The red stone.** *Mine:* Phylactery turns all of a heal past full into a Shield on the healed ally, a Regen's pulses left out. *The other side:* the order for healing past full (the healed unit's own piece first), and a unit capped at half counting as full, which is now where a Cleric's Phylactery has most to turn into stone.
+- **The red stone.** *Mine:* Phylactery turns all of a heal past full into a Shield on the healed ally, the pulses of its holder's Regen included. *The other side:* the order for healing past full (the healed unit's own piece first), and a unit capped at half counting as full, which is now where a Cleric's Phylactery has most to turn into stone.
 
 ## Loops
 
-- **Everflame lantern beside Bellows wraps.** Each adds a tenth of the hottest foe's Burn, one on a beat and one on every hit. Burn has no cap. With the lantern's beat at 3 ticks, about one hit every two ticks on that foe adds more than Burn's own drain takes away, and the fire then grows without limit. A Hasted Monk with Burning fist is at that line; without the lantern it takes nearly twice the hits. *Brake:* only the foe's death, and Wick hands the fire on. It's weak. At a beat of 2 ticks, two thirds as many hits do it; at 4, a fifth more.
+- **Everflame lantern beside Bellows wraps.** The lantern adds a tenth of the hottest foe's Burn on its beat, and the wraps a twentieth on every hit, since round 2. Burn has no cap. With the lantern's beat at 3 ticks, it takes about a hit a tick on that foe to add more than Burn's own drain takes away. A Hasted Monk with Hummingbird charm and a second strike lands about seven in eight ticks, and about eight with Burning fist's hits: at the line, where the fire stops draining. With The forge's Heat or Tireless bell on that Monk it's over the line, and the fire grows by 1% to 3% a pulse with nobody feeding it. *Brake:* a lone boss taking every hit, 40 ticks for the Heat to fill, the Monk's mana for the fist's share, and the fight ending, which a fire that size brings. Left as the Bonfire's far end; the lantern is in the director's sample for it. At a beat of 2 ticks it would run away from a plain Monk.
 - **Second dawn over the start-of-fight pieces.** Each fall brings Pitch lantern's fire back on every foe, which fells the next. Reveille readies the party's slowest ability at every fall, and Horn of the charge calls a volley and a Haste. A kill by any of these is a kill, as ruled, and each effect happens once a fall. *Brake:* the foes run out; Reveille's also stops at the mana.
 - **Hunting horn with a Mark that moves at the fall.** A Marked foe falls, three swings land on the next Mark, it falls, and so on. *Brake:* a foe that survives the volley.
 - **Goading totem.** The spine's loop (a dodge, a copied Taunt, every foe swings, a dodge) stands. A second one: Watch horn on a holder wearing Twin-knot, beside a Goading totem's holder who is the lowest ally. An ally drops below half, the horn Taunts, the Taunt is copied, every foe swings, and another ally drops below half. *Brake:* each ally sets it off once until it's back at half or over. A price is a crossing now, so a unit that pays its way under half and is healed back over, cast after cast, turns it once a cast: the brake there is that unit's cooldowns. Under Challenger's plate I read each renewal of the Taunt as a Taunt gained, so the field swings out of turn on a beat; that's a rhythm, not a loop.
@@ -567,7 +567,7 @@ For each engine: the size on my side, and what the other side needs.
 ## Least sure
 
 - **Hoplon.** With Guard out it needs a Shield or an Aegis on its own holder. Of its three wearers only the Valkyrie makes her own; the Hoplite's Aegis goes to the lowest ally, and the Bramble knight has neither.
-- **Phylactery.** With Regen out, a Cleric holding it has little to turn into a Shield outside a party built to cap a unit at half (*Challenges*).
+- **Phylactery names Regen,** the one card that reads its holder's heals and counts the pulses. A Cleric's Renew on a full ally is now a Shield every four ticks for Regen's length.
 - **Monolith shield.** With cooldowns carrying, a doubled medium cooldown may mean the blow doesn't come at all in many fights unless something readies it. The size is a guess at what makes the wait worth it.
 - **Everflame lantern.** The beat decides whether it's a legendary or a rare, and beside Bellows wraps whether the fire runs away. I picked the middle, and it's on the card.
 - **Heart of the saint.** On a Paladin it may never hold its wearer low, since Absolve heals the Paladin for more than it costs, so the brink it's the keystone of only forms on a Cleric.

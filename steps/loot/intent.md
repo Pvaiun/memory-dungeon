@@ -18,4 +18,22 @@ The director, Nov 10, on reading two leads' spines.
 - **Alike cards.** An upgrade never copies a piece. Two pieces one unit could wear together never read the same. A piece and a formation seat may share a rule.
   - **"The same" means the same sentence** (agreed after the second fresh read). An engine's keystone in a second place isn't a copy, and neither is a far end grown from its keystone. A plain status on a swing may be shared by a kit and a piece.
 - **A chain of shatters fizzles out, and the player learns no rule** (Nov 11). In a chain reaction, a foe that has already shattered resists the Chill passed to it, more each time it shatters, "in whatever numbers make it so that it doesn't chain infinitely", and "it never goes to full immunity". The player "doesn't need to see it": they see the chain fizzle out.
-- **Not ruled yet:** the list under *Open for the director* in `spine.md`. The fill doesn't wait on it.
+- **Left for gate 2:** how loot is offered, the counts, the four rules the spine bends, the loop rules and the mirror's two readings. Ruled below.
+
+## Direction from gate 2
+
+The director, Nov 11, on reading `report.md`: "I'm happy with all of your suggestions."
+
+- **The fill is approved,** with the report's seven recommendations taken:
+  - a spell paid in life costs half the share of max HP that it would cost of max MP;
+  - the shatter bell rings its wearer's first-slotted ability (changed after the gate from "slowest that deals damage": "a good chance to give players agency");
+  - Hidden's rule that someone stays in the light, with its gap closed: when nobody is left in the light, the last in seat order steps out;
+  - a Crescendo's price is two fifths more cost a stack;
+  - the riposte is its keystone and a Shield on the dodge, mostly on a Monk, and `builds.md` says so;
+  - Frost fist stays at about ten Chill a cast, its power step watched in the balance pass;
+  - Thunderhead maul reads its basic attacks alone.
+- **What stood unless they said otherwise stands:** the rulings of the three rounds.
+- **From gate 1:** the spine's rules and the counts are approved (322 pieces, 35 formations), and so are the four rules it bends.
+- **Offers aren't aimed for the first playtest.** "I do not want to aim offers for the first playtest."
+- **Not named by the director,** and read by the lead as covered by "ok with your rules": the mirror keeps pieces of both readings. Say so if that's wrong.
+

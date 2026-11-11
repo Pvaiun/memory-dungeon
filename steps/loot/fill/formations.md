@@ -41,7 +41,7 @@ Thirty-five formations, in the spine's order: 13 common, 12 rare, 10 legendary. 
 
 ### Spur
 - **Is:** formation · common
-- **Card:** One opens the wound; two pour into it. **Opener:** Crits far more often: 20 points more Crit chance. **Blade** (two seats): Basic attacks a fifth faster.
+- **Card:** One opens the wound; two pour into it. **Opener:** Crits far more often: +20% Crit chance. **Blade** (two seats): Basic attacks a fifth faster.
 - **Numbers:** Opener: Crit chance +20 points, the table's top word (`CRIT_TABLE[5]`). Blade: Attack speed +20 (`FIFTH_FASTER`).
 - **Code:** none: stats on seats.
 - **Serves:** Cuts 1 ●●●, Bonfire ●, Storm ●, Snap ●
@@ -81,11 +81,11 @@ Thirty-five formations, in the spine's order: 13 common, 12 rare, 10 legendary. 
 
 ### Thorn hedge
 - **Is:** formation · common
-- **Card:** A thorned wall that draws the blows, and two who make every blow on it cost. **Anchor:** Draws far more. Thorns. **Warden:** Each hit the Anchor takes heals the Anchor for 3% of the Warden's max HP. **Thorn:** A foe that hits the Anchor has damage sent back at it: a twentieth of the Thorn's Attack.
+- **Card:** A thorned wall that draws the blows, and two who make every blow on it cost. **Anchor:** Draws far more. Thorns. **Warden:** Each hit the Anchor takes heals the Anchor for 3% of the Warden's max HP. **Barb:** A foe that hits the Anchor has damage sent back at it: a twentieth of the Barb's Attack.
 - **Numbers:** Anchor: Aggro +25; Thorns medium (150 a hit taken). Warden: 3% of the Warden's own max HP a hit (60 from a Cleric's 2,000, 120 from a Paladin's 4,000). Thorn: 5% of the Thorn's Attack a hit (200 at Attack 4), sent back: a reaction as Thorns is, untyped, not a hit. The scale has no word this small (`HIT.touch` is 17%), so both values are mine.
 - **Code:** reactions to a hit on a named seat, as today's Thorn hedge's two seats, with a heal and a damage in place of their Weaken.
 - **Serves:** Toll 1 ●●●, Pact ●
-- **Notes:** Today's Thorn hedge (Thorns high on the Anchor, two seats that Weaken its attackers) goes; the name and the Anchor stay, the Anchor's Thorns at medium as the line has it. Seen: a wolf's bite on a Plate wall lands for 100 to 130 and a bandit's swing for about 300, so the mend is a number the size of the bite, and the attacker reads two numbers where it read one. The Thorn's size is near Thorns' own on purpose: at `HIT.touch` it would be four Thorns a bite, on the road that least needs it.
+- **Notes:** Today's Thorn hedge (Thorns high on the Anchor, two seats that Weaken its attackers) goes; the name and the Anchor stay, the Anchor's Thorns at medium as the line has it. Seen: a wolf's bite on a Plate wall lands for 100 to 130 and a bandit's swing for about 300, so the mend is a number the size of the bite, and the attacker reads two numbers where it read one. The Thorn's size is near Thorns' own on purpose: at `HIT.touch` it would be four Thorns a bite, on the road that least needs it. The third seat is the Barb, renamed from Thorn in round 3: what it sends back isn't Thorns, so nothing that reads Thorns reads it, and the name said otherwise.
 
 ### Wellspring
 - **Is:** formation · common
@@ -98,10 +98,10 @@ Thirty-five formations, in the spine's order: 13 common, 12 rare, 10 legendary. 
 ### Shared cup
 - **Is:** formation · common
 - **Card:** Nobody's healing is wasted. **Drinker** (two seats): Lifesteal. **Donor:** Its heals are a third bigger. **The party:** Healing any ally receives past full goes to the ally with the lowest share of max HP that can be healed. Healing sent on this way isn't sent on again.
-- **Numbers:** Drinker: Lifesteal medium (10%). Donor: +33% on its heals: the HP its abilities and pieces restore at once, not a Regen's pulses. The party: the whole part past full of a heal or of Lifesteal's healing. An ally at full, or at a cap it can't be healed over, is passed by for the next lowest; if nobody can be healed, it's lost.
+- **Numbers:** Drinker: Lifesteal medium (10%). Donor: +33% on its heals: the HP its abilities and pieces restore at once, not a Regen's pulses. The party: the whole part past full of any healing an ally receives: a heal, Lifesteal's healing, a Regen's pulse. An ally at full, or at a cap it can't be healed over, is passed by for the next lowest; if nobody can be healed, it's lost.
 - **Code:** 14, with a pick that passes by an ally that can't be healed.
 - **Serves:** Pact 1 ●●●, Cuts ●● ⚙ brink (half)
-- **Notes:** New. The order the spine gives holds: healing past full goes to the healed unit's own piece first, then the healer's, then here. Seen: a full Drinker's green numbers appear on someone else. "That can be healed" is round 1's: an ally capped at half is passed by, so the cup no longer pours onto the unit that can't take it. A Regen's pulses are the status's own by round 1's ruling, so a pulse past full isn't sent on: under *Challenges*, since the cup reads healing received and the ruling speaks of a wearer's heals.
+- **Notes:** New. The order the spine gives holds: healing past full goes to the healed unit's own piece first, then the healer's, then here. Seen: a full Drinker's green numbers appear on someone else. "That can be healed" is round 1's: an ally capped at half is passed by, so the cup no longer pours onto the unit that can't take it. A Regen's pulse past full is sent on too: the cup reads healing received, which is all of it, as round 2 rules. The Donor's third is on the heals it gives, so its Regen's pulses aren't bigger.
 
 ### Shieldwall
 - **Is:** formation · common
@@ -113,11 +113,11 @@ Thirty-five formations, in the spine's order: 13 common, 12 rare, 10 legendary. 
 
 ### The standard
 - **Is:** formation · common
-- **Card:** Two follow the lead's colour. **Lead:** Nothing of its own. **Follower** (two seats): Its basic attacks carry whatever the Lead's basic attacks carry: every status the Lead's swing adds to its target, from the Lead's passive, its gear or a buff it holds, the Follower's swing adds too, in the Follower's own stacks. A rider that waits for a crit, a first hit or a count waits for the Follower's own. A rider the Follower's swing already holds from the same source is added once, not twice. Nothing else of the Lead's swing passes, and what a Follower carries this way is never carried again.
-- **Numbers:** none of its own. Each rider keeps its word (a few, several, many) and reads the Follower's stat where the Lead's reads the Lead's.
+- **Card:** Two follow the lead's colour. **Lead:** Nothing of its own. **Follower** (two seats): Its basic attacks add whatever statuses the Lead's basic attacks add to their target. They're added as its own would be: on the same condition, with stacks from the Follower's own stats, and never twice from one source. What it borrows isn't borrowed on by anyone else.
+- **Numbers:** none of its own. What's borrowed is every status the Lead's swing adds to its target, from the Lead's passive, its gear or a buff it holds. One that waits for a crit, a first hit or a count waits for the Follower's own. One the Follower's swing already holds from the same source is added once, not twice. Nothing else of the Lead's swing passes. Each rider keeps its word (a few, several, many) and reads the Follower's stat where the Lead's reads the Lead's.
 - **Code:** 12.
 - **Serves:** Bonfire 1 ●●●, Snap 1 ●●●, Storm 1 ●●●, Cuts 1 ●● ⚙ lead's colour (key)
-- **Notes:** New. The card says more than the line, as round 1 settled "carry": the Follower takes each rider whole, reads its own stat and meets any condition itself. "Nothing else" is the spine's phrase for a carried swing: no second target, no damage boost, no heal, no MP. "The same source" is a storm on the whole party or Crown of embers: the Follower has that rider already and doesn't take the Lead's copy. A rider the Lead's own swing borrows from someone else isn't the Lead's to pass. Behind a Lead whose swing adds nothing the Followers do nothing, and with the Lead down they carry nothing.
+- **Notes:** New. The card says more than the line, as round 1 settled "carry": the Follower takes each rider whole, reads its own stat and meets any condition itself. "Nothing else" is the spine's phrase for a carried swing: no second target, no damage boost, no heal, no MP. "The same source" is a storm on the whole party or Crown of embers: the Follower has that rider already and doesn't take the Lead's copy. A rider the Lead's own swing borrows from someone else isn't the Lead's to pass. Behind a Lead whose swing adds nothing the Followers do nothing, and with the Lead down they carry nothing. The card is in Mimic wand's words (round 3): "a rider" is the design's word and no player has been given it, and this is a common. The ruling on carrying is whole in the numbers.
 
 ### First light
 - **Is:** formation · common
@@ -147,7 +147,7 @@ Thirty-five formations, in the spine's order: 13 common, 12 rare, 10 legendary. 
 
 ### Bloodied ground
 - **Is:** formation · rare
-- **Card:** One opens them up; two drink from the wound. **Opener:** Its crits add many Bleed. **Blade** (two seats): Each hit it lands on a bleeding foe heals it for 3% of its max HP.
+- **Card:** One opens them up; two drink from the wound. **Opener:** Its crits add many Bleed. **Blade** (two seats): Each hit it lands on a bleeding foe heals the Blade for 3% of its max HP.
 - **Numbers:** Opener: many Bleed, flat (7), on each crit, swing or ability. Blade: 3% of its own max HP a hit (90 at 3,000 HP); every hit counts, extra strikes and each hit of an ability.
 - **Code:** the Opener as Lacerate answers a crit; the Blade as today's Crimson dregs (a hit on a bleeding foe heals), read off max HP.
 - **Serves:** Cuts 2 ●●●, Pact ●●
@@ -155,7 +155,7 @@ Thirty-five formations, in the spine's order: 13 common, 12 rare, 10 legendary. 
 
 ### Pyre line
 - **Is:** formation · rare
-- **Card:** The fire outlives whatever it's burning. **Keeper:** Taunts and is Guarded when each fight starts. Foes that hit it gain a few Burn. **Stoker:** Basic attacks a third faster. **Torch:** When a burning foe falls, all its Burn passes to the foe with the highest current HP. A fallen foe's fire moves once: if something else in the party moves it too, it's split evenly between the places they send it.
+- **Card:** The fire outlives whatever it's burning. **Keeper:** Taunts and is Guarded when each fight starts. Foes that hit it gain a few Burn. **Stoker:** Basic attacks a third faster. **Torch:** When a burning foe falls, all its Burn passes to the foe with the highest current HP. A fallen foe's fire moves once: if something else in the party moves it too, it's split evenly between them.
 - **Numbers:** Keeper: Taunt and Guard, at their own lengths; a few Burn, flat (2), on a foe for each hit it lands on the Keeper. Stoker: Attack speed +33. Torch: every stack the foe held as it fell.
 - **Code:** 9, as today's Wick, which sends the fire to the foe with the most HP. The Keeper's Burn is a reaction to a hit taken, as Thorn hedge's seats react today.
 - **Serves:** Bonfire 2 ●●●, Hunt ●● ⚙ fuse (key)
@@ -163,11 +163,11 @@ Thirty-five formations, in the spine's order: 13 common, 12 rare, 10 legendary. 
 
 ### Icefall
 - **Is:** formation · rare
-- **Card:** Two lay frost, each its own way, and every shatter rings the third's great spell. **Rime:** Whatever Chill its abilities add, they add half again as much. **Sleet:** Its basic attacks add a few Chill. **Breaker:** When a foe's Chill shatters, its ability with the longest cooldown is ready: its slowest ability, by its whole cooldown, cooling or not.
-- **Numbers:** Rime: +50% on the Chill stacks its abilities add. Sleet: a few Chill, flat (2). Breaker: a whole cooldown, on the ability whose whole cooldown is longest (ties to the earlier slot). Anyone's shatter rings it; if that ability is already ready, nothing more happens.
+- **Card:** Two lay frost, each its own way, and every shatter rings the third's great spell. **Rime:** Whatever Chill its abilities add, they add half again as much. **Sleet:** Its basic attacks add a few Chill. **Breaker:** When a foe's Chill shatters, its first-slotted ability is ready.
+- **Numbers:** Rime: +50% on the Chill stacks its abilities add. Sleet: a few Chill, flat (2). Breaker: a whole cooldown, on its first-slotted ability. Anyone's shatter rings it; if that ability is already ready, nothing more happens.
 - **Code:** Rime as today's Archmage's mantle's stacks, for Chill alone. Sleet as Hoarfrost line's Frost. The Breaker hears a shatter as today's Hoarfrost line's does; its pick by whole cooldown is beyond the list (end of file).
 - **Serves:** Snap 2 ●●●, Landslide ●●, Barrage ●●, Bonfire ● ⚙ shatter bell (key)
-- **Notes:** New. Rime reads who sits in it: a unit whose abilities add Chill (a Frostweaver, a Ranger's frost arrows, a Monk's Frost fist). Sleet suits anyone who swings. The Breaker suits anyone with one ability worth ringing for. "The longest cooldown" is the slowest ability, by round 1's ruling, the same in every place the shatter bell sits. A Frostweaver in the Breaker seat rings its own Blizzard: under *Loops*.
+- **Notes:** New. Rime reads who sits in it: a unit whose abilities add Chill (a Frostweaver, a Ranger's frost arrows, a Monk's Frost fist). Sleet suits anyone who swings. The Breaker suits anyone with one ability worth ringing for. It's the first-slotted ability, by the director's ruling after gate 2: the player picks what rings by the order they slot abilities in, the same in every place the shatter bell sits. A Frostweaver in the Breaker seat rings its own Blizzard: under *Loops*.
 
 ### Storm front
 - **Is:** formation · rare
@@ -187,7 +187,7 @@ Thirty-five formations, in the spine's order: 13 common, 12 rare, 10 legendary. 
 
 ### Toll gate
 - **Is:** formation · rare
-- **Card:** Whatever strikes the gate pays the other two's toll. **Gate:** Draws far more. Guarded when each fight starts. **Collector** (two seats): A foe that hits the Gate gains whatever this seat's basic attacks carry: every status its swing adds to its target with each swing, in the stacks one swing adds. A rider that waits for a crit, a first hit or a count doesn't pass, and neither does one its swing borrows from another unit. A rider both Collectors hold from one source is laid once. What's laid this way is never carried or spread again.
+- **Card:** Whatever strikes the gate pays the other two's toll. **Gate:** Draws far more. Guarded when each fight starts. **Collector** (two seats): A foe that hits the Gate gains whatever statuses this seat's basic attacks add to their target with every swing, in the stacks one swing adds. One that waits for a crit, a first hit or a count doesn't pass, and neither does one its swing borrows from another unit. Where both Collectors would add a status from one source, it's added once. What's added this way is never carried or spread again.
 - **Numbers:** Gate: Aggro +25; Guard, at its own length. Collector: each rider's own word, read off the Collector's stat, once from each Collector for each hit the Gate takes.
 - **Code:** 12.
 - **Serves:** Toll 2 ●●●, Snap ●●, Storm ●●, Cuts ●●, Bonfire ● ⚙ frozen gate (key), goad (half), red rain (half)
@@ -211,11 +211,11 @@ Thirty-five formations, in the spine's order: 13 common, 12 rare, 10 legendary. 
 
 ### Decoy
 - **Is:** formation · rare
-- **Card:** Two lurk in the dark; one stands in the light. **Light:** Taunts and is Guarded when each fight starts. **Shadow** (two seats): Hidden when each fight starts, and again each time a foe falls. Hidden never lands where it would leave the foes no ally to pick: with the Light down, the later Shadow stays out.
+- **Card:** Two lurk in the dark; one stands in the light. **Light:** Taunts and is Guarded when each fight starts. **Shadow** (two seats): Hidden when each fight starts, and again each time a foe falls. Someone always stands in the light: Hidden never lands where it would leave the foes no ally to pick, and if the Light falls while both Shadows are hidden, the later Shadow steps out.
 - **Numbers:** Taunt, Guard and Hidden, each at its own length (`STATUS.hidden` is 10 ticks). "The later Shadow" is the last in seat order, as Hidden's own rule has it.
 - **Code:** none new: the Light as Hearth's Keeper; Hidden on a foe's fall as today's Night's edge hides its wearer on a kill. "Someone stays in the light" is Hidden's rule, for the vocabulary.
 - **Serves:** Toll ●●, Hunt ●●, Pact ● ⚙ two in the dark (key)
-- **Notes:** New. Seen: two names fade on the first tick and every blow goes to the third. Against a pack the falls come often enough to cover most of a fight; against a lone boss it's ten ticks and then nothing, so the hidings that don't wait for a fall are what it needs there. Round 1's rule is on the card because this formation is where a player meets it. It governs Hidden landing; a Light that falls while both Shadows are already hidden is under *Challenges*.
+- **Notes:** New. Seen: two names fade on the first tick and every blow goes to the third. Against a pack the falls come often enough to cover most of a fight; against a lone boss it's ten ticks and then nothing, so the hidings that don't wait for a fall are what it needs there. Round 1's rule is on the card because this formation is where a player meets it. At gate 2 the director closed its gap: when nobody is left in the light, the last in seat order steps out of hiding.
 
 ### Vigil
 - **Is:** formation · rare
@@ -253,11 +253,11 @@ Thirty-five formations, in the spine's order: 13 common, 12 rare, 10 legendary. 
 
 ### The forge
 - **Is:** formation · legendary
-- **Card:** The longer the fire is kept, the faster the party feeds it. **Forgehand** (all three seats): Nothing of its own. **The party:** While any foe burns, every ally gains a Heat every few ticks (it acts 5% faster in everything for each Heat, up to 10, for the rest of the fight). Whenever an ally is Stunned or Silenced, the foe with the most Burn gains many Burn.
+- **Card:** The longer the fire is kept, the faster the party feeds it. **Forgehand** (all three seats): Nothing of its own. **The party:** While any foe burns, every ally gains a Heat every 4 ticks (each acts 5% faster in everything for each Heat, up to 10, for the rest of the fight). Whenever an ally is Stunned or Silenced, the foe with the most Burn gains many Burn.
 - **Numbers:** one Heat an ally every 4 ticks while any foe holds Burn ("every few ticks", by round 1), to Heat's own 10: the full count after 40 burning ticks. Many Burn, flat (7), each time an ally gains Stun or Silence.
 - **Code:** the Heat as today's Kindled robes' pulse, on every ally. The Burn is a reaction to an ally gaining Stun or Silence, as today's Gaol's Turnkey hears a foe's.
 - **Serves:** Bonfire 3 ●●●
-- **Notes:** Today's The forge (Heat as damage, a Slow at the start) goes; the name stays, and Heat is speed now. A regular fight ends near the full count and a short one at half. Heat is given, not counted, so a unit that also wears the robes gains two a beat. Against a Silence that falls on all three, the second rule fires three times at once. With nothing burning, "the foe with the most Burn" is a random foe, and that pick follows a Mark.
+- **Notes:** Today's The forge (Heat as damage, a Slow at the start) goes; the name stays, and Heat is speed now. A regular fight ends near the full count and a short one at half. Heat is given, not counted, so a unit that also wears the robes gains two a beat. Against a Silence that falls on all three, the second rule fires three times at once. With nothing burning, "the foe with the most Burn" is a foe picked by draw: it's fire a seat sends, not a blow, so a Mark doesn't take it (round 3, as round 2 rules for a piece). The card's bracket says "each acts", since every ally gains the Heat, and "every 4 ticks", as Kindled robes does.
 
 ### The long winter
 - **Is:** formation · legendary
@@ -277,7 +277,7 @@ Thirty-five formations, in the spine's order: 13 common, 12 rare, 10 legendary. 
 
 ### Open season
 - **Is:** formation · legendary
-- **Card:** Every kill calls the volley again. **Hunter** (all three seats): Nothing of its own. **The party:** While no foe is Marked, the foe with the lowest current HP is Marked. When each fight starts, and whenever a Marked foe falls, every ally's next basic attack comes at once. A swing already called gains nothing from a second call.
+- **Card:** Every kill calls the party's weapons down again. **Hunter** (all three seats): Nothing of its own. **The party:** While no foe is Marked, the foe with the lowest current HP is Marked. When each fight starts, and whenever a Marked foe falls, every ally's next basic attack comes at once. A swing already called gains nothing from a second call.
 - **Numbers:** Marked, at its own length, and laid again the moment no foe holds one. "At once": each ally's basic attack is made ready.
 - **Code:** 19, 1, 23. The volley as today's Pack leader's coat.
 - **Serves:** Hunt 3 ●●●, Landslide ●●, Bonfire ● ⚙ judge's drum (key)
@@ -301,11 +301,11 @@ Thirty-five formations, in the spine's order: 13 common, 12 rare, 10 legendary. 
 
 ### The covenant
 - **Is:** formation · legendary
-- **Card:** Life is the party's one currency. **Sworn** (all three seats): Nothing of its own. **The party:** Every ally's abilities cost HP in place of MP: the same share of its max HP as they'd cost of its max MP. No ally casts one that would leave it below a tenth of its HP. Every ally has Lifesteal, high.
-- **Numbers:** the price is (the ability's MP cost ÷ the unit's max MP) × its max HP: a Pyromancer's Fireball is 26% of its bar, a Knight's Fortify 33%. The floor at a tenth is today's Blood covenant's. Lifesteal high (20%).
+- **Card:** Life is the party's one currency. **Sworn** (all three seats): Nothing of its own. **The party:** Every ally's abilities cost HP in place of MP: half the share of its max HP that they'd cost of its max MP. No ally casts one that would leave it below a tenth of its max HP. Every ally has Lifesteal, high.
+- **Numbers:** the price is half of (the ability's MP cost ÷ the unit's max MP) × its max HP: a Pyromancer's Fireball is 13% of its bar, a Knight's Fortify a sixth, a Monk's Pressure point or a Frostweaver's Blizzard about a fifth. The floor at a tenth is today's Blood covenant's. Lifesteal high (20%).
 - **Code:** 20, as today's Blood covenant, on every ally.
 - **Serves:** Pact 3 ●●●, Barrage ●● ⚙ blood mage (key), brink (half)
-- **Notes:** New: today's amulet as the party's rule, with Lifesteal for all. The price is "pays HP" in the spine's sense, so whatever answers an ally paying answers every cast, and a cast paid in HP is paid for. The floor is in the line now. The Lifesteal is high, as round 1 rules: it's the level at which the link meets (a Fireball pays for itself on three foes; at medium it takes six). "The same share" is the line's rule, and its sums are under *Least sure* for the director's sample.
+- **Notes:** New: today's amulet as the party's rule, with Lifesteal for all. The price is "pays HP" in the spine's sense, so whatever answers an ally paying answers every cast, and a cast paid in HP is paid for. The floor is in the line now. The Lifesteal is high, as round 1 rules. The price is half the share, as the director rules at gate 2: after Defense a Fireball costs about 263 and drinks back about 130 a foe, so it's even on two foes and ahead on three, and a Chain lightning costs about 283 and drinks back about 390 from three.
 
 ### Twins
 - **Is:** formation · legendary
@@ -317,15 +317,15 @@ Thirty-five formations, in the spine's order: 13 common, 12 rare, 10 legendary. 
 
 ## Challenges
 
-Round 1 ruled on the rest. These are what it left, or opened.
+Round 1 ruled on the rest. Round 2 ruled on five of these, marked below and applied above. One is left, the seat names, which goes to the director's list.
 
-- **Toll gate: two sentences that go a step past the ruling on carrying.** Both are on the card, and both are mine.
+- *Ruled in round 2: both sentences stand.* **Toll gate: two sentences that go a step past the ruling on carrying.** Both are on the card, and both are mine.
   - *One source, laid once.* The ruling says a carrier doesn't add a rider its own swing already holds from the same source. On the Gate there are two carriers and one foe: under a storm on the whole party each Collector's swing holds the storm's Shock, and by the card's first sentence each would lay it. I wrote that it's laid once a hit.
   - *No borrowed rider through the Gate.* The ruling says borrowed riders aren't passed on, and names a third unit copying them. A Collector holding Mimic wand isn't a third unit; it's the borrower. I wrote that what its swing borrows doesn't pass, by the ruling's first sentence. Read the other way, the Gate lays a whole second unit's riders.
-- **Shared cup and a Regen.** Round 1 says a Regen's pulses aren't a heal, and that no card reading its wearer's heals reads them unless it names Regen. The cup reads healing an ally receives, which the ruling doesn't quite reach. I applied the ruling: a pulse past full isn't sent on. If "nobody's healing is wasted" should cover it, the card names Regen. Red stone mail, in armor, meets the same question.
-- **Decoy when the Light falls after the Shadows have hidden.** "Someone stays in the light" stops Hidden landing. It doesn't lift a hiding already held, and Hidden can't be removed. So if the Light falls with both Shadows hidden, the foes have no ally to pick for up to ten ticks. It's Hidden's own rule to settle; the same is true of any party that hides two beside one who can fall.
-- **Twins and a debuff a unit lays on itself.** The ruling's list of what "gives itself" covers is all buffs and counters. Burning heart's fire is a status its wearer's gear lays on it at a moment, which fits the ruling's first words and isn't in its list. The card's sentence follows the first words, so by the card it passes. If it shouldn't, the card says "a buff or a counter".
-- **The spine's line for The covenant** still reads "Every ally has Lifesteal", and round 1 rules that high stands. My card says "Lifesteal, high". One of the two needs the word.
+- *Ruled in round 2: the cup counts a Regen's pulse past full.* **Shared cup and a Regen.** Round 1 says a Regen's pulses aren't a heal, and that no card reading its wearer's heals reads them unless it names Regen. The cup reads healing an ally receives, which the ruling doesn't quite reach. I applied the ruling: a pulse past full isn't sent on. If "nobody's healing is wasted" should cover it, the card names Regen. Red stone mail, in armor, meets the same question.
+- *Ruled at gate 2: when nobody is left in the light, the last in seat order steps out of hiding. Decoy's card says so.* **Decoy when the Light falls after the Shadows have hidden.** "Someone stays in the light" stops Hidden landing. It doesn't lift a hiding already held, and Hidden can't be removed. So if the Light falls with both Shadows hidden, the foes have no ally to pick for up to ten ticks. It's Hidden's own rule to settle; the same is true of any party that hides two beside one who can fall.
+- *Ruled in round 2: as written, so it passes.* **Twins and a debuff a unit lays on itself.** The ruling's list of what "gives itself" covers is all buffs and counters. Burning heart's fire is a status its wearer's gear lays on it at a moment, which fits the ruling's first words and isn't in its list. The card's sentence follows the first words, so by the card it passes. If it shouldn't, the card says "a buff or a counter".
+- *Ruled in round 2: no mismatch. "Lifesteal, high" is the fill's size for the line's words.* **The spine's line for The covenant** still reads "Every ally has Lifesteal", and round 1 rules that high stands. My card says "Lifesteal, high". One of the two needs the word.
 - **The same seat name is a different rule in each formation:** Soloist in three, Well in four, Breaker, Hammer, Anvil, Squall, Blade, Opener, Lead, Warden and Wall in two or three. They're builds.md's role names, and each card says what its own seat does; a player who learns "Soloist" from Wellspring will still have to read The cathedral's. Not ruled in round 1.
 
 ## Links
@@ -344,11 +344,11 @@ For each engine this share touches: the size on my side, and what the other side
 - **The red rain** (Squall line, Storm front and Toll gate, halves). Squall line's swing lands on two foes; Storm front's Squall on every charged foe for a third of a swing, about 250, which three Bleed already out-pay. Toll gate passes Bleed only from a rider that every swing adds. The other side is wounds on the whole field.
 - **The riposte** (Skirmish line, half). Evasion medium on all three, and a Shield of a tenth of max HP a dodge. The formation gives no draw, so the dodger needs one from elsewhere, and the answering swing is the other share's.
 - **The lead's colour** (The standard, key; Hoarfrost line and Eye of the storm, halves). The Followers add the Lead's riders at the riders' own words, off their own stats, so three weapons lay three times the status. The other side is one rider on the Lead, sized by its kind's swing. Hoarfrost line's and the Eye's riders are a status on a swing that the wand can copy.
-- **The blood mage** (The covenant, key). The price is the cost's share of the pool, in HP; Lifesteal is high, which is what the link takes. A Pyromancer's Fireball pays 526 and drinks back about 170 a foe, so it's even at three; a Stormcaller's Chain lightning pays 565 and drinks back about 640 from four. A Frostweaver's Blizzard never pays. The other side is one wide spell on a hard hitter; a Lifesteal step on the caster's own gear moves it from even to ahead.
+- **The blood mage** (The covenant, key). The price is half the cost's share of the pool, in HP, as the director rules at gate 2; Lifesteal is high. After Defense, a Pyromancer's Fireball pays about 263 and drinks back about 130 a foe, so it's even on two and ahead on three; a Stormcaller's Chain lightning pays about 283 and drinks back about 390 from three. A Frostweaver's Blizzard pays about 650 and drinks back about 70 a foe, so it never pays. The other side is one wide spell on a hard hitter.
 - **The resonance** (Storm front, key). A tenth of the cooldown a foe: twice as fast at five foes, five times at eight. Resonant robes should be the same size, since one unit can hold both and they add to a fifth.
 - **The crescendo** (The cathedral, half). The formation gives the repetition: ten casts of one spell in under a minute of ticks, so a Crescendo count fills in one fight, the first cast plain. It gives no free casts, so with the charm the price climbs unbroken and the Voices' mana is all that pays it.
 - **Mana as armour** (Wellspring and The cathedral, halves). Wellspring's gifts are a tenth and a twentieth of the Soloist's pool, 115 to 380 at a time, each about a blow where damage comes out of MP one for one. In The cathedral the same mana is the spell's fuel, so the armour and the song spend one pool.
-- **The shatter bell** (Icefall, key). The Breaker's slowest ability, whole, at every shatter. The other side is shatters on a beat: the formation's own Rime and Sleet give half again from one unit's spells and two a swing from another.
+- **The shatter bell** (Icefall, key). The Breaker's first-slotted ability, whole, at every shatter. The other side is shatters on a beat: the formation's own Rime and Sleet.
 - **The firecracker string** (The long winter, key). Two Chill to every other foe, and two more for each shatter before it. It needs the first shatters from elsewhere, and a field already cold; its damping is code 23's, in fractions.
 - **The brink** (Blood oath, key; Shared cup and The covenant, halves). The Bleeder is the lowest by share from the first tick, and the Donor doubles what it gives it; a doubled Cure is a hundred ticks of the drain, so the cover outlasts what reaches it. Shared cup sends full allies' healing to the lowest ally that can be healed, all of it, and passes by a unit capped at half. The covenant holds units low by its prices.
 - **Two in the dark** (Decoy, key; Twins, half). Hidden for ten ticks at the start and at each fall: most of a pack fight, a sixth of a boss fight. The hidings that don't wait for a fall are the other side. A Twin's hiding hides both Twins, at the same length, while the Odd one out stands to be picked.
@@ -357,8 +357,9 @@ For each engine this share touches: the size on my side, and what the other side
 
 ## Loops
 
-- **Icefall's Breaker on a Frostweaver.** A shatter readies its slowest ability, which is Blizzard or Stillness, and both lay Chill on every foe; with Meltwater orb the shatter pays for the cast. It's the spine's known loop (Floe charm, the orb, a Frostweaver) in a second home. Brake: the cold running short. One Blizzard adds about two Chill a foe and a shatter takes twelve; even with Glacier's heart (six back on the foe that burst) and Banked robe (half again), a foe needs two or three more Blizzards and a shatter readies one. What wears the brake away is the rest of the party's cold: the Sleet seat's two a swing, Splinters' third, a second frost unit. With enough of it the cast itself, about 8 ticks a turn, is all that's left.
+- **Icefall's Breaker on a Frostweaver with Blizzard slotted first.** A shatter readies Blizzard, which lays Chill on every foe; with Meltwater orb the shatter pays for the cast. The spine's known loop. Brakes: the wind-up, and the cold each shatter spends.
 - **The resonance twice on one unit:** Storm front's Thunderhead in Resonant robes. A fifth off a foe, so five foes make the spell ready as it lands. Brakes: its wind-up and recovery, the pool (which Recharge refills by the foe), and the pack thinning.
+- **The covenant with Bloodstone reliquary in the party:** every price one unit pays is healed onto another, so the party's casts cost it nothing in sum. Brakes: cooldowns and wind-ups, which nothing here shortens. A size.
 - **The cathedral with the mana price gone:** The deep well while the Soloist holds Clarity, Flagellant's vestments with Lifesteal, The chalice. The spine's known loop. Brakes: wind-up and recovery, 3 to 10 ticks a cast, and the floor at a tenth of HP where the price is life.
 - **The long winter's string.** Each shatter passes cold on, and at five Cascades what it passes is a cap on its own. Its brake is the damping, which the card never states. Round 1 closed the hole I reported: damped in fractions of a stack, the string dies down in any pack, beside Glacier's heart too. Before it does, each foe bursts several times, at 3,000 a burst.
 - **Open season's kills.** A Marked foe falls, three swings land at once, and the next falls; a kill by a called swing is a kill. Brake: a foe that survives the volley, and the foes running out. "At once" doesn't stack, so the horn and the coat add no second volley at the same moment; Swift justice's Condemn, once it's cast again, calls a later one.
@@ -371,18 +372,18 @@ For each engine this share touches: the size on my side, and what the other side
 ## Code support beyond the spine's list
 
 - **A rule the party holds once.** Today a formation's party effect is a status on each ally, so "when a foe's Chill shatters" or "when a Marked foe falls" would fire three times. The long winter, Open season, The forge's second rule, Shared cup and The whetstone's count each need a rule that fires once for the party. Open season's Mark needs one applier for the party, so it's one Mark.
-- **A pick by whole cooldown:** "its slowest ability", for Icefall's Breaker, as round 1 rules the phrase. Today's `longest` picks by cooldown left.
+- **The first-slotted ability** for Icefall's Breaker, as Bell of the hour reads it: no new support.
 - **Every MP gain of one unit sent to a seat** (The cathedral's Voices). Today's Leech idol sends on only what's past full.
 - **Healing past full, told apart by its source** (Blood oath's Drinker: its Lifesteal's alone). The `overhealed` event names a kind only when an action healed.
 - **A pick that passes by an ally that can't be healed** (Shared cup): at full, or at a cap on its healing.
-- **Amounts read off another seat's unit:** the Warden's max HP for a heal on the Anchor, the Thorn's Attack for damage on the Anchor's attacker, the Soloist's max MP for a gift to it, the Wall's Spite for a Reaper's boost. The last is in 15; I haven't checked the others against `PRIMITIVES.md`.
+- **Amounts read off another seat's unit:** the Warden's max HP for a heal on the Anchor, the Barb's Attack for damage on the Anchor's attacker, the Soloist's max MP for a gift to it, the Wall's Spite for a Reaper's boost. The last is in 15; I haven't checked the others against `PRIMITIVES.md`.
 - **A test that every ally holds a Shield,** read each time the Peak lands a blow (The mountain).
 
 ## Least sure
 
 - **Hoarfrost line in a pack.** Two Frost seats at two Chill a swing shatter a lone foe and not a spread pack. With its aim the Breaker now pays on every Stun, so the seat is sound; the frost seats are still the road's first step, and may still read as they did in play: frost that climbs and never breaks.
 - **Spur's Opener is plain Crit chance.** Twenty points on a seat is a stat, so it has no "four in five at most" of its own, where round 1 gives one to the cards that raise a crit by a lot. A unit that multiplies its own chance passes four in five with it and one crit piece: a Geomancer behind stone doubles 41 points to 82, a Paladin's Verdict triples 30 to 90. None of them is the Ranger, whose loop the ceiling guards, and the Ranger in the seat stands near 41. It's the question the lead has already flagged for the director: whether plain Crit chance has a ceiling.
-- **The covenant's sums, for the director's sample.** Pools are sized to last two or three fights, so one cast is 7% to 43% of a pool, and the same share of HP: a Knight's Fortify is a third of its bar, a Monk's Pressure point 43%, a Valkyrie's Choosing 43%. At Lifesteal high a Fireball is even on three foes; a Frostweaver's Blizzard (1,300 paid, about 100 back a foe) never pays for itself, and a wall's skills drink back almost nothing. As written, most units can pay for two or three casts a fight.
+- **The covenant's sums.** Ruled at gate 2: half the share. Pools are sized to last two or three fights, so one cast is 7% to 43% of a pool and half that of the bar: a Knight's Fortify is a sixth of its bar, a Monk's Pressure point and a Valkyrie's Choosing about a fifth. The price still falls hardest on the units whose skills are cheapest in mana, because their pools are small, and a wall's skills drink back almost nothing. Most units can pay for four to six casts a fight.
 - **A slow kind's rider, carried.** Round 1 rules the carrier takes each rider whole. A mace's many Burn is sized to a swing every 11 ticks; behind The standard a dagger lays it every 5.6, and on the Gate it's laid as often as the pack bites. A player would be glad to find it. It's also two or three times what the rider was sized to do, which is the balance pass's.
 - **Two fifths that may be under what's seen.** Spur's Blades (the line's number) and Wellspring's Soloist (mine, for a line that says only "faster"). A fifth off a 30-tick cooldown is 5 ticks, and play never saw a few ticks. Both formations rest on their other seat.
 - **Blood oath's Bleeder doesn't "ride low" on its own.** Today's drain takes a fifth of a bar in a regular fight. It's the lowest by share at once, which the gifts need, and it gets to half only over two fights unhealed or under fire. A drain twice the size would show the line's picture; I kept today's because the line didn't change it.

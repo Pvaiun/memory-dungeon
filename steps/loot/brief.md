@@ -1,6 +1,6 @@
 # The loot pass: a brief for a fresh session
 
-Nov 10, 2026. The builds (`docs/gear-design/builds.md`, approved) hand off to the loot. This pass designs; nothing is built, and it ends at its gates. **Gate 1 is passed: the spine is written and the director has ruled on it. This session starts at step 2, the fill.** **Since then the fill has been written and ruled once (Nov 11), and stopped short of its fresh read: a fresh session starts from `handoff.md` in this folder, which says what's done and what's left.** The build and test get a brief of their own after gate 2. When it's built, Marked and Malison go in, each measured against today's game with both versions' numbers.
+Nov 10, 2026. The builds (`docs/gear-design/builds.md`, approved) hand off to the loot. This pass designs; nothing is built, and it ends at its gates. **Gate 1 is passed: the spine is written and the director has ruled on it. This session starts at step 2, the fill.** **Since then the fill has been written, ruled in three rounds and read fresh twice, and gate 2 is passed (Nov 11): a fresh session starts from `handoff.md` in this folder, and the build's brief is `build-brief.md`.** The build and test get a brief of their own after gate 2. When it's built, Marked and Malison go in, each measured against today's game with both versions' numbers.
 
 In this brief an **engine** is always one of `builds.md`'s found synergies. What the game's code needs for an item is its **code support**.
 
@@ -45,7 +45,7 @@ The spine answers these, the fill has to keep answering them, and `builds.md` sa
 - **`spine.md`** is the design, one line an item: its rules (the stock by kind and rarity with the why of each kind, the new words, the rules the pieces bend, the code support by number), the two kit changes, the parts that recur, every uncommon, rare and legendary piece, the formations, the versions that change, the mythics, a table of commons and uncommons by kind, each engine's link with what the fill sizes it to do, and the web's checks. It's two leads' spines merged on the director's rulings, and a fresh reader has read it twice.
 - **Its tables are generated.** `npx tsx steps/loot/web-check.ts --write` reads the lines' tags and rewrites the tables between the spine's markers; `--index` writes `index.md`. Run both after any change to a line. It fails on a tag it doesn't know or a name used twice.
 - **Offer volumes are counted,** not estimated: `npx tsx steps/loot/offer-count.ts` plays 40 simulated runs and prints what a run is offered in each act. Its figures are in `web-check.ts` (`RUN`).
-- **Open for the director:** the list at the end of `spine.md`. None of it stops the fill. Ask at gate 2, or sooner if a ruling would change a share.
+- **Ruled at gate 2:** `intent.md`, *Direction from gate 2*. What's left open is listed near the end of `spine.md`.
 - **Where the lead's first round starts:** *Least sure* in the spine lists the loops known and the pairs the second fresh read found alike, left as they are by the director's ruling.
 - **`fill-brief.md` and `index.md` are drafted** by the spine's lead, for the fill's lead to check and change before any agent reads them.
 

@@ -39,12 +39,12 @@ How the cards here are worded, so the whole share reads one way:
 
 ### Opening shot
 - **Is:** bow · uncommon
-- **Card:** Its first basic attack of each fight comes at once and always crits.
+- **Card:** When each fight starts, its wearer's first basic attack comes at once and always crits.
 - **Stats:** Crit damage medium · Attack +1 (2 of 2)
 - **Numbers:** no amount of its own. "At once": its first basic attack is ready as the fight starts. The crit is a crit's own size: half again, plus Crit damage.
 - **Code:** as today's Drawn steel.
 - **Serves:** Hunt 1 ●●, Barrage ● ⚙ opening again (half)
-- **Notes:** Today's Drawn steel's card, on a bow. Both steps make the one arrow bigger: about 2,000 on the first tick for a Ranger, nearly twice its usual arrow. It's a start-of-fight effect, so the opening again's pieces make it happen again: the next arrow comes at once and always crits, one arrow each time.
+- **Notes:** Today's Drawn steel's card, on a bow. Both steps make the one arrow bigger: about 2,000 on the first tick for a Ranger, nearly twice its usual arrow. It's a start-of-fight effect, so the opening again's pieces make it happen again: the next arrow comes at once and always crits, one arrow each time. The card opens "when each fight starts" (round 3), as every start-of-fight effect's does, so a player can tell what Overture coat and Second dawn make happen again.
 
 ### Frostbite bow
 - **Is:** bow · uncommon
@@ -75,7 +75,7 @@ How the cards here are worded, so the whole share reads one way:
 
 ### Executioner's longbow
 - **Is:** bow · legendary
-- **Card:** Its basic attacks ignore Taunt, and deal more the less HP their target has: a quarter more below three quarters of its HP, half again as much below half, three quarters more below a quarter, and double below a tenth.
+- **Card:** Its basic attacks ignore Taunt, and deal more the less HP their target has: a quarter more below three quarters of its max HP, half again as much below half, three quarters more below a quarter, and double below a tenth.
 - **Stats:** Crit damage high · Crit chance +1 · Attack +1 (4 of 4)
 - **Numbers:** +25%, +50%, +75% and +100% below 75%, 50%, 25% and 10% of the target's max HP, on basic attacks only.
 - **Code:** as today's Executioner's longbow.
@@ -133,19 +133,19 @@ How the cards here are worded, so the whole share reads one way:
 - **Is:** rune sword · rare
 - **Card:** When a foe's Chill shatters, the other foe with the most Chill gains half the Chill the shattered foe held.
 - **Stats:** MP regen +1 · HP +1 · Cooldown medium (3 of 3)
-- **Numbers:** half of what the foe held as it shattered, which is the cap (`STATUS.chill.cap`): 6 today. Any foe's shatter counts, whoever laid the Chill. With no other foe chilled it goes to a random other foe, and to a Marked one first, as a phrase's fallback to a random foe goes; with no other foe, nothing happens.
+- **Numbers:** half of what the foe held as it shattered, which is the cap (`STATUS.chill.cap`): 6 today. Any foe's shatter counts, whoever laid the Chill. With no other foe chilled it goes to a random other foe, by draw: it's cold a piece sends, not a blow, so a Mark doesn't take it, as round 2 rules. With no other foe, nothing happens.
 - **Code:** 9 (a share of a shattered foe's cold laid on another foe); 23 (the chain's damping, in fractions of a stack).
 - **Serves:** Snap 2 ●●● ⚙ firecracker (key)
 - **Notes:** Today's legendary laid a few on every other foe; the line makes it half the cold on one foe, as a rare. The damping of a chain is Chill's own rule and isn't on the card. Half is the link's size exactly: a neighbour already halfway shatters at once, a warm one doesn't.
 
 ### Frostward blade
 - **Is:** rune sword · rare
-- **Card:** Foes that hit the ally with the highest Aggro gain a few Chill (from its wearer's Attack).
+- **Card:** Foes that hit the ally with the highest Aggro gain several Chill (from its wearer's Attack).
 - **Stats:** MP regen +1 · HP +2 (3 of 3)
-- **Numbers:** a few: `STACKS.few` through `own()`, from its wearer's Attack: about 2 at Attack 3, 3 at Attack 4, for each hit that lands on that ally: each hit of a multi-hit, and an Area's hit on it. A dodged hit gives nothing.
+- **Numbers:** several: `STACKS.several` through `own()`, from its wearer's Attack: about 4 at Attack 3, 5 at Attack 4, for each hit that lands on that ally: each hit of a multi-hit, and an Area's hit on it. A dodged hit gives nothing.
 - **Code:** as today's Hoarfrost plate, answering hits on another unit as today's Heartwood mail does. Picking "the ally with the highest Aggro" is new (*Code support beyond the spine's list*).
 - **Serves:** Toll 2 ●●●, Snap 2 ●● ⚙ frozen gate (key)
-- **Notes:** New. The ally can be its own wearer. A Taunting ally with less Aggro than another gets nothing from it: the line reads Aggro, not who is being struck. The size against the link is under *Links*.
+- **Notes:** New. Several, as round 2 rules and the line now says: at a few a foe shattered on its fifth or sixth blow, and the frozen gate's link asks for "within a few". The ally can be its own wearer. A Taunting ally with less Aggro than another gets nothing from it: the line reads Aggro, not who is being struck. The size against the link is under *Links*.
 
 ### Spellbinder
 - **Is:** rune sword · rare
@@ -315,7 +315,7 @@ How the cards here are worded, so the whole share reads one way:
 
 ### Martyr's mace
 - **Is:** mace · legendary
-- **Card:** Its basic attacks deal more the lower its wearer's HP: half again as much below 70% of its HP, double below half, two and a half times below a third, and triple below a tenth. Below a third of its HP, each one that lands also heals its wearer for the damage dealt.
+- **Card:** Its basic attacks deal more the lower its wearer's HP: half again as much below seven tenths of its max HP, double below half, two and a half times below a third, and triple below a tenth. Below a third of its max HP, each one that lands also heals its wearer for the damage dealt.
 - **Stats:** HP +2 · Defense +1 · MP regen +2 (5 of 5)
 - **Numbers:** +50% at each of four lines: below 70%, 50%, 33% and 10% of its wearer's max HP. The heal is the damage the basic attack dealt, after Defense, while its wearer is below a third.
 - **Code:** as today's Martyr's mace, with its 30% lines at a third.
@@ -324,7 +324,7 @@ How the cards here are worded, so the whole share reads one way:
 
 ### Noonday mace
 - **Is:** mace · legendary
-- **Card:** Each basic attack it lands on a burning foe gives every ally a Heat (it acts 5% faster in everything for each Heat, up to 10, for the rest of the fight).
+- **Card:** Each basic attack it lands on a burning foe gives every ally a Heat (each acts 5% faster in everything for each Heat, up to 10, for the rest of the fight).
 - **Stats:** HP +2 · Defense +2 · Cooldown medium (5 of 5)
 - **Numbers:** one Heat to each ally, its wearer included, for each basic attack that lands on a foe holding Burn. Heat as `fill/shared.md` has it: 5 in each of Attack speed, Cooldown and Cast speed a stack, to 10.
 - **Code:** Heat as `fill/shared.md` redefines it (today's is damage a stack); a counter given to every ally on a hit against a foe that holds a status is as today's Hunter's skull gives Heat, on a new trigger.
@@ -389,7 +389,7 @@ How the cards here are worded, so the whole share reads one way:
 
 ### Evensong staff
 - **Is:** staff · rare
-- **Card:** Each ability its wearer casts makes the next one cast in a moment, with no wind-up. An ability cast that way doesn't do the same for the one after it.
+- **Card:** Each ability its wearer casts makes the next one cast at once, with no wind-up. An ability cast that way doesn't do the same for the one after it.
 - **Stats:** Cast speed medium · Cooldown medium · MP +1 · MP regen +1 (4 of 4)
 - **Numbers:** no amount: every other cast has no wind-up. Its cost, cooldown and recovery are as usual. It's kept until used, within the fight. A cast repeated by another effect neither uses it nor grants it.
 - **Code:** 21 (every other cast with no wind-up).
@@ -398,12 +398,12 @@ How the cards here are worded, so the whole share reads one way:
 
 ### Staff of echoes
 - **Is:** staff · legendary
-- **Card:** Every ability its wearer casts is cast twice: the second follows at once with no wind-up, and is paid for as a cast of its own. If it can't be paid for, there's no second. The second is never cast again, by this or by anything else.
+- **Card:** Every ability its wearer casts is cast twice: the second follows at once with no wind-up, and is paid for as a cast of its own. If it can't be paid for, there's no second. The second picks its target anew, by the ability's own words. It's never cast again, by this or by anything else.
 - **Stats:** Cast speed high · MP +2 · Cooldown medium (5 of 5)
 - **Numbers:** no amount: one more cast for each cast, at its own full cost, paid in MP, or in HP where its wearer's abilities cost HP. Whatever made the first one free is used up by the first. Beside another repeater (the Bard's Encore), each repeats the first cast once: three in all. The second is a cast in every other way: what answers a cast answers it (Stoke, a robe's Shield), and what counts casts counts it (Crescendo, Matins robe).
 - **Code:** 16 (a cast made twice). The second being paid for is new: today's repeats are free.
 - **Serves:** Barrage 3 ●●●, Bonfire ●●, Snap ●●
-- **Notes:** Today's Cataclysm staff repeated every third cast for free; the line makes it every cast, both paid. It empties a pool twice as fast, which is the build's cliff. Two MP steps are there for that.
+- **Notes:** Today's Cataclysm staff repeated every third cast for free; the line makes it every cast, both paid. It empties a pool twice as fast, which is the build's cliff. Two MP steps are there for that. The second cast picks anew (round 3): a Cure goes to whoever is lowest then, and a Firebolt whose first cast felled its foe finds another.
 
 ## Great weapon
 
@@ -436,7 +436,7 @@ How the cards here are worded, so the whole share reads one way:
 
 ### Giantsbane
 - **Is:** great weapon · uncommon
-- **Card:** Its basic attacks deal half again as much to a foe above half its HP.
+- **Card:** Its basic attacks deal half again as much to a foe above half its max HP.
 - **Stats:** Attack +1 · HP +2 (3 of 3)
 - **Numbers:** +50% on basic attacks against a foe above 50% of its max HP.
 - **Code:** a boost by its target's HP, as today's Executioner's axe, turned round.
@@ -463,21 +463,21 @@ How the cards here are worded, so the whole share reads one way:
 
 ### Overrun
 - **Is:** great weapon · rare
-- **Card:** A heavier swing. What its wearer's killing blows have left over carries into a random foe, and on again each time it kills.
+- **Card:** A heavier swing. What its wearer's killing blows have left over carries into another foe, picked by draw, and on again each time it kills.
 - **Stats:** a heavier swing · Attack +2 · Crit damage medium (3 of 3)
-- **Numbers:** all of what the blow had left over. It's a hit on the foe it reaches: it meets that foe's Evasion and Defense and counts as a hit taken (a wound pays, Thorns answer); it isn't boosted or crit again, and it carries no riders. Each kill it makes carries what's left on, until a foe lives, a foe dodges or none is left. Beside Downhill charm on one unit, the left-over is split evenly between the two. The foe is picked as a target after the first is: by draw among the other foes, outside the Taunt rule, and I read a Mark as not taking it (*Challenges*).
+- **Numbers:** all of what the blow had left over. It's a hit on the foe it reaches: it meets that foe's Evasion and Defense and counts as a hit taken (a wound pays, Thorns answer); it isn't boosted or crit again, and it carries no riders. Each kill it makes carries what's left on, until a foe lives, a foe dodges or none is left. Beside Downhill charm on one unit, the left-over is split evenly between the two. The foe is picked as a target after the first is: by draw among the other foes, outside the Taunt rule, and a Mark doesn't take it, as round 2 rules.
 - **Code:** 5 (damage carried past a kill).
 - **Serves:** Landslide 2 ●●●, Hunt ●● ⚙ avalanche (key) ◆ heavy-blow
-- **Notes:** New. Any of its wearer's hits can be the killing blow. The heavier swing is my choice: the piece wants a blow far bigger than what it lands on, and pays a step for it. The foe it carries into is picked at random, so how far a run goes is partly luck (*Links*).
+- **Notes:** New. Any of its wearer's hits can be the killing blow. The heavier swing is my choice: the piece wants a blow far bigger than what it lands on, and pays a step for it. The foe it carries into is picked at random, so how far a run goes is partly luck (*Links*). The card says "another foe, picked by draw" (round 3): "a random foe" is the vocabulary's phrase for a pick a Taunt decides and a Mark takes, and this is neither.
 
 ### Thunderhead maul
 - **Is:** great weapon · rare
-- **Card:** Its wearer's hits deal 5% more for each Shock on their target. The Shock stays.
+- **Card:** Its basic attacks deal 5% more for each Shock on their target. The Shock stays.
 - **Stats:** Attack +1 · HP +1 · Crit damage medium · Aggro +1 (4 of 4)
-- **Numbers:** 5% a stack on its wearer's hits, basic attack or ability: half again as much at 10 Shock, double at 20, triple at the cap of 40 (`STATUS.shock.cap`). About what Skyfall adds a stack to its own blow.
+- **Numbers:** 5% a stack on its basic attacks: half again as much at 10 Shock, double at 20, triple at the cap of 40 (`STATUS.shock.cap`). About what Skyfall adds a stack to its own blow.
 - **Code:** beyond the list: a boost by the stacks of one status on the target, on every hit. Today's Skyfall reads its target's Shock for one ability.
 - **Serves:** Storm 2 ●●●, Landslide ●●, Snap ● ⚙ held charge (key) ◆ heavy-blow
-- **Notes:** New. Its hits go where its wearer's hits go, not to the most charged: 5% a stack is sized so a foe with a middling charge already shows it. Aggro is for the unit that holds the field's attention while the others charge it.
+- **Notes:** New. Its hits go where its wearer's hits go, not to the most charged: 5% a stack is sized so a foe with a middling charge already shows it. Aggro is for the unit that holds the field's attention while the others charge it. Its basic attacks alone, by the director's ruling at gate 2: as "its wearer's hits" it was one word from Lightning-glass, which reads abilities, and three classes wear both. Now one piece is the swing's and the other the spell's.
 
 ### Worldbreaker
 - **Is:** great weapon · legendary
@@ -490,32 +490,32 @@ How the cards here are worded, so the whole share reads one way:
 
 ### Twinfall
 - **Is:** great weapon · legendary
-- **Card:** Each hit its wearer lands, a basic attack's or an ability's, lands a second time a moment later: the same damage again, on the same foe. The second carries none of the first's statuses, and nothing repeats it.
+- **Card:** Each hit its wearer lands, a basic attack's or an ability's, lands a second time a tick later: the same damage again, on the same foe. The second carries none of the first's statuses, and nothing repeats it.
 - **Stats:** Attack +2 · HP +2 · Crit damage medium (5 of 5)
-- **Numbers:** a moment is one tick, the line's own (*Challenges*). In all else it's the ruling's hit that lands a second time: the same damage again on the same foe, with no new dodge or crit roll. It's a hit: a wound pays, Lifesteal drinks, counters count. If the foe has fallen, it's lost. An extra strike is a hit too, and lands twice. Beside another repeater (the Peak seat of The mountain), each repeats the first hit once: three in all.
+- **Numbers:** one tick between the two, which round 2 lets stand; the card says "a tick" (round 3), since "a moment" has no size. In all else it's the ruling's hit that lands a second time: the same damage again on the same foe, with no new dodge or crit roll. It's a hit: a wound pays, Lifesteal drinks, counters count. If the foe has fallen, it's lost. An extra strike is a hit too, and lands twice. Beside another repeater (the Peak seat of The mountain), each repeats the first hit once: three in all.
 - **Code:** 16 (a blow landed a second time). The tick between the two is new.
 - **Serves:** Landslide 3 ●●●, Hunt ●●, Cuts ● ◆ heavy-blow
 - **Notes:** New. The tick matters: a hit's own statuses land after it, so the second landing pays the wound the first one opened.
 
 ## Challenges
 
-Round 1's rulings are applied above. These are what's left, or what the rulings opened.
+Round 1's and round 2's rulings are applied above. Round 2 ruled on all four of these, so none is open; each stays here with its ruling.
 
-1. **Twinfall's line says "a moment later"; the ruling on a hit that lands a second time says "at once".** The card keeps the line's moment, at one tick, and takes everything else from the ruling. If "at once" is meant for Twinfall too, the card loses three words and the code loses the tick.
-2. **Whether a Mark takes Overrun's carry.** The ruling makes the left-over a hit on the foe it reaches. It doesn't say how "a random foe" is reached. It's written as a target after the first: by draw among the other foes, outside the Taunt rule, and not taken by a Mark, as Arc's second hit is picked. If a Mark should take it, builds.md's "aimed at the weakest, it runs furthest" has a way to come true.
-3. **Winter's chain's fallback follows the Mark,** by the letter of the ruling on a phrase's fallback. It's cold passed on, not a blow: flagged in case that ruling meant blows only.
-4. **Heat's bracket says "it acts".** On Noonday mace the holders are every ally. The card uses the wording as given; "each acts" would read truer there.
+1. *Ruled in round 2: the moment stands, at one tick.* **Twinfall's line says "a moment later"; the ruling on a hit that lands a second time says "at once".** The card keeps the line's moment, at one tick, and takes everything else from the ruling. If "at once" is meant for Twinfall too, the card loses three words and the code loses the tick.
+2. *Ruled in round 2: as written, by draw, and a Mark doesn't take it.* **Whether a Mark takes Overrun's carry.** The ruling makes the left-over a hit on the foe it reaches. It doesn't say how "a random foe" is reached. It's written as a target after the first: by draw among the other foes, outside the Taunt rule, and not taken by a Mark, as Arc's second hit is picked. If a Mark should take it, builds.md's "aimed at the weakest, it runs furthest" has a way to come true.
+3. *Ruled in round 2: it doesn't; a Mark steers blows, not what a piece sends. The card's numbers say so now.* **Winter's chain's fallback follows the Mark,** by the letter of the ruling on a phrase's fallback. It's cold passed on, not a blow: flagged in case that ruling meant blows only.
+4. *Ruled in round 2: a bracket may be worded to fit its card. Noonday mace's now reads "each acts".* **Heat's bracket says "it acts".** On Noonday mace the holders are every ally. The card uses the wording as given; "each acts" would read truer there.
 
 ## Links
 
 - **The shield detonation** (common half). Sigil blade: a third of max MP at the start, 770 to 1,100. Canopy staff: a quarter of Attack on two units, 750 to 1,250 each. Mason's hammer: half of each swing's damage, about 450 to 600 a swing, up to the cap. The other side reads "the most that Shield held", ruled as the pool's highest point since the unit last had none: a bar that Mason's hammer builds swing by swing breaks for its full height. At these sizes Rubble plate's blow on every foe is seen with no multiplier.
-- **The frozen gate** (keystone). Frostward blade: a few a hit, from the mage's Attack: about 3 from a Stormcaller, 2 from a Frostweaver. "A few" stands, as ruled. Alone, a foe that only strikes the wall shatters on about its fifth blow beside a Stormcaller's blade and its sixth beside a Frostweaver's; any other cold on the field brings it sooner. Hoarfrost plate, on the wall itself, reads the wall's Defense; both in one party stack.
+- **The frozen gate** (keystone). Frostward blade: several a hit, from the mage's Attack: about 5 from a Stormcaller, 4 from a Frostweaver, as round 2 rules. Alone, a foe that only strikes the wall shatters on its third blow; any other cold on the field brings it sooner. That's the link's "within a few". Hoarfrost plate, on the wall itself, reads the wall's Defense; both in one party stack.
 - **The held charge** (keystone and common half). Thunderhead maul: 5% a Shock, double at 20, triple at the cap. The link's "doubles at the cap or more" is met early, on purpose, since the maul doesn't aim at the most charged. The other side has to put about 20 Shock on a foe inside a Stun's 8 ticks, which is three units charging. Bellringer holds a foe at about tick 30, and again in a long fight; Worldbreaker holds one with every swing.
 - **The reckoning** (keystone). Grudgebearer: Wrath at `fill/shared.md`'s size. A pack on its wearer fills all ten between two swings; a lone boss gives one or two. Beside a swing that comes half as often (Millstone, the Hammer seat), bites past the tenth are lost: the counter's ceiling is what binds, not the piece.
 - **The reaping** (common half). Volley bow sinks every other foe by one arrow at about tick 20, and again every 23 ticks. That's still thin for a field "whose bars sink together": the execute's side needs foes an arrow or two from falling. It's the weakest of the engine's sinkers.
 - **The judge's drum** (common half). Roaring greataxe: 9 to 14 Might. Each called swing spends one, so every call in a fight lands with half again or more. Nothing for the other side to size.
 - **The opening, again** (common half). Sigil blade's Shield tops up to the cap each time; Roaring greataxe's Might refills to its cap; Canopy staff shields two; Opening shot's next arrow comes at once and always crits. No wearer of a staff or a great weapon wears Leather, so Overture coat never reaches Canopy staff or Roaring greataxe: only Second dawn does. Overture coat reaches Sigil blade on a Stormcaller, and Opening shot on a Ranger or a Bard.
-- **The avalanche** (keystone). Overrun: all of the left-over, on while it kills, on a heavier swing. The link's "two or three more" needs a blow three times a small foe's HP, which the other side supplies (Phalanx, Millstone, Might). As ruled, the carry is a hit on the foe it reaches, so a dodge ends a run, and beside Downhill charm the left-over is split evenly. The carry picks by draw where builds.md says "aimed at the weakest, it runs furthest" (*Challenges* 2).
+- **The avalanche** (keystone). Overrun: all of the left-over, on while it kills, on a heavier swing. The link's "two or three more" needs a blow three times a small foe's HP, which the other side supplies (Phalanx, Millstone, Might). As ruled, the carry is a hit on the foe it reaches, so a dodge ends a run, and beside Downhill charm the left-over is split evenly. The carry picks by draw where builds.md says "aimed at the weakest, it runs furthest", and round 2 lets the draw stand.
 - **The red rain** (common half). Volley bow's arrows are full swings, about 990 each. For Bleed to out-pay the arrow, as the link sizes it, each foe needs 9 stacks or more: a few on every foe won't do it, and many will.
 - **The lead's colour** (common half). Frostbite bow and Sleet blade add several Chill, Censer mace many Burn, each sized to a swing that comes every 9 to 11 ticks. As ruled, the carrier takes each rider whole and reads its own Attack. So a Follower's dagger behind a Censer mace adds many Burn at a dagger's pace, and behind either frost piece several Chill. The link's "three weapons bring the second shatter" is met several times over (*Least sure*).
 - **The emptied quiver** (common half). Bellringer makes one 8-tick window on one foe at about tick 30. The reading side (a Stunned foe's crits, Quick draw) needs its arrows on that foe, and a Ranger's arrows pick at random: it needs a Mark, or another holder of foes.
@@ -547,7 +547,7 @@ Round 1's rulings are applied above. These are what's left, or what the rulings 
 - **A boost by the stacks of one status on the target, on every hit** (Thunderhead maul). Today Skyfall reads it for one ability.
 - **A boost by a counter's stacks on an ability's damage and on the stacks it adds** (Glacier blade).
 - **A repeat that's paid for** (Staff of echoes). Today's repeats are free.
-- **A second landing a tick after the first** (Twinfall): a delayed hit of a recorded size. It goes if Twinfall lands "at once".
+- **A second landing a tick after the first** (Twinfall): a delayed hit of a recorded size.
 - **A count of basic attacks shown as a number on the unit** (Volley bow, Bellringer). Today's Volley count sits on the sheet.
 - **Heat as speed, given to every ally by one unit's trigger** (Noonday mace). The counter's new meaning is `fill/shared.md`'s; giving it to the whole party from a piece is new.
 - **A wind-up multiplier taken before Cast speed** (Ritual staff), if item 21 doesn't already cover it.
@@ -566,4 +566,4 @@ Round 1's rulings are applied above. These are what's left, or what the rulings 
 - **Saint's mace counts the part of a heal that went past full.** It's simpler to read off the green number, and it lets a healer load a full unit's blow.
 - **The lighter swing on Bellringer and the heavier on Overrun** are choices the lines didn't ask for.
 - **Executioner's longbow's first clause** is nothing to a Ranger, one of its two wearers.
-- **Near pairs, left as they are:** Opening shot and the Hoplite's Opening thrust version (a first swing at once: one always crits, one deals triple); Mason's hammer and the Valkyrie's passive (a Shield from the damage dealt); Thunderhead maul and Lightning-glass, which a unit can wear together and which differ by one word, hits against abilities.
+- **Near pairs, left as they are:** Opening shot and the Hoplite's Opening thrust version (a first swing at once: one always crits, one deals triple); Mason's hammer and the Valkyrie's passive (a Shield from the damage dealt). Thunderhead maul and Lightning-glass are apart since gate 2: the maul reads its basic attacks and the glass its abilities.
