@@ -44,13 +44,13 @@ src/
       stats.ts               stat and timing maths: final values, speeds, rescaling
       fight.ts               the fight's public face, and its order of play
       fight/                 the fight, one file a part
-        state.ts             the fight's data, the world (W), shared helpers, stats after statuses, numbers
-        actions.ts           abilities as actions: their changes, costs, availability, start, resolution, extra strikes
+        state.ts             the fight's data, the world (W), shared helpers, stats after statuses, HP lines, numbers
+        actions.ts           abilities as actions: their changes, costs and HP prices, availability, start, resolution, casts made again, extra strikes
         targeting.ts         picks: draw, Taunt, Hidden, Seek, focus, target rules, conditions, seats
-        effects.ts           every effect op but damage and healing: targets, numbers, cooldowns, HP prices, revives
-        damage.ts            damage and healing: the resolution order, evasion, crits, Shield, Aegis, floors, cover
-        statuses.ts          applying, ending, removing, moving and pulsing statuses; control resistance; lockouts
-        events.ts            events, their filters, reactions and Intensity triggers
+        effects.ts           every effect op but damage and healing: targets, numbers, MP, cooldowns, HP prices, strikes out of turn, riders laid, the opening again, revives
+        damage.ts            damage and healing: the resolution order, evasion, crits, Shield, Aegis, MP as armour, floors, cover, healing caps
+        statuses.ts          applying, ending, removing, moving, spending and pulsing statuses; diverts, damping; control resistance; lockouts
+        events.ts            events, their filters, reactions and Intensity triggers; riders, carried and borrowed; shared amounts
         units.ts             knockouts, the fight's end, revives, summons and splits
         clock.ts             the next moment, the enrage, the fight's start, each step
       arena.ts               test helper: one fight from units and statuses written inline
@@ -59,6 +59,8 @@ src/
       statuses.test.ts       tests: statuses, reactions, what the player sees
       synergy-h.test.ts      tests: the building blocks for what happens (PRIMITIVES.md)
       synergy-w.test.ts      tests: the building blocks for who and when
+      loot-h.test.ts         tests: the loot pass's building blocks for what happens (hits out of turn, riders, HP lines, MP, healing caps)
+      loot-w.test.ts         tests: the loot pass's building blocks for who and when (party rules, ability changes, casts again, sight)
       coreset.test.ts        tests: the core set's own rules (Taunt and Hidden, Seek, revive, summons)
       dungeon.test.ts        tests: a run's rules (foes modifier, lost casts, stagger, enrage, Stun, campfires)
   rogue.ts                   the rogue mode's public face; lists its parts
@@ -122,12 +124,10 @@ tools/                       the Node command lines; each header says how to run
   rogue-feel.ts              fight logs for a feel read (the reader's brief: docs/feel-reader.md)
   rogue-play.ts              the rogue mode as a command line, for an AI playtester
   play-summary.ts            a fight as a player remembers it, for rogue-play
-  build-test.ts              the twelve builds side by side
-  build-parties.ts           the builds' hand-built parties, gathered (ROUTES, BUILD_PARTIES, ALL_PARTIES)
+  build-test.ts              the nine builds side by side
+  build-parties.ts           the nine builds' 27 routes (builds.md's classes, a formation a rung), gathered (ROUTES, BUILD_PARTIES, ALL_PARTIES)
   build-parties/
-    kit.ts                   their types, the builds' names, formation seats, mythics, and the helpers routes are written with
-    landslide.ts, cuts.ts, bonfire.ts, snap.ts, hunt.ts, harvest.ts   one build each: its three routes at three rungs
-    ambush.ts, overflow.ts, lockdown.ts, toll.ts, pact.ts, phoenix.ts   one build each
+    kit.ts                   their types, the builds' names, formation seats, mythics, and route(): each rung's gear, versions, mythics and seats from the loot's tags
   rhythm-read.ts             does a party play the fight its build says it does?
   piece-check.ts             does every item do what its card says?
   gear-slots.ts              the gear slots' counts: who wears which kinds
@@ -146,20 +146,25 @@ content/
     classes.ts               the 16 classes: stats, passives, abilities
     enemies.ts               the 29 enemies, their adds and reskins
     dungeons.ts              the encounters, and free play's 7 dungeons
-    formations.ts            Neutral and the 32 formations
+    formations.ts            Neutral and the 35 formations, gathered from formations/
+    formations/
+      kit.ts                 a seat's stat steps, the formation builder and the lists the rarities add to
+      common.ts, rare.ts, legendary.ts   the 13 common, 12 rare and 10 legendary formations
     gear.ts                  the 12 plain weapons
     rogue.ts                 the rogue mode's numbers, regions and events
     rogue-knobs.json         each rogue fight's knob (written by npm run rogue:calibrate)
     tests.ts                 the documents' own test trios, for npm run smoke
     pack.ts                  assembles the pack
     build.ts                 npm run content: validates and writes the pack
-    pieces/                  the 272 pieces
-      kit.ts                 the helpers pieces, formations and upgrades are written with; the swing trade, the budget check and the plain card of a piece that is only its stats
-      shared.ts              statuses several files use (the counters; Marked is the vocabulary's)
-      weapons-scaling.ts     the seven kinds whose swing grows with Attack (dagger, fist weapons, sword, spear, axe, bow, great weapon): 56 pieces
-      weapons-base.ts        the five base-heavy kinds' 40 pieces (wand, rune sword, hammer, mace, staff): a swing for any wearer
-      armor-amulets.ts       the four armor types' 48 pieces and the 24 amulets
-      offhands.ts            the thirteen offhand kinds' 104 pieces
+    pieces/                  the 322 pieces, in six shares
+      kit.ts                 the helpers pieces, formations and upgrades are written with; the swing trade, the budget check, the plain card of a piece that is only its stats, and the Serves line's reader
+      shared.ts              statuses several files use: the six counters and the order of healing past full (Marked is the vocabulary's)
+      weapons-1.ts           dagger, fist weapons, wand, sword, spear and axe: 60 pieces
+      weapons-2.ts           bow, rune sword, hammer, mace, staff and great weapon: 53 pieces
+      armor.ts               plate, mail, leather and robes: 55 pieces
+      amulets.ts             the 37 amulets
+      offhands-1.ts          kite shield, round shield, horn, totem, relic and lantern: 54 pieces
+      offhands-2.ts          tome, orb, idol, vial, trophy, bell and cloak: 63 pieces
       index.ts               every item gathered, for the pack and the tools
     upgrades/                each ability's and passive's power step and two versions, and the mythics
       index.ts               gathers them, in order

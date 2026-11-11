@@ -400,13 +400,17 @@ test("with B Marked a sword's swings all go to B; with A Taunting they go to A, 
   assert.deepEqual([plain.hits("A").length, plain.hits("B").length], [0, 5]);
   assert.deepEqual([taunted.hits("A").length, taunted.hits("B").length], [5, 0]);
   assert.deepEqual([seeking.hits("A").length, seeking.hits("B").length], [0, 5]);
-  // Abilities keep their own targeting: draw by Aggro, Marked or not.
-  const spells = arena({
+  // An ability aimed at a random foe goes to the Marked one too; one whose phrase finds its foe keeps its own targeting.
+  const spells = (bolt: object) => arena({
     party: [{ name: "Mage", abilities: ["bolt"] }],
-    enemies: [{ ...BAG, name: "A" }, { ...BAG, name: "B", statuses: ["marked"] }],
-    statuses: [MARKED], abilities: [{ id: "bolt", cast: 0, recovery: 0, cooldown: 1, do: [{ op: "damage", type: "physical", amount: 1 }] }],
+    enemies: [{ ...BAG, name: "A", stats: { ...BAG.stats, attack: 99 } }, { ...BAG, name: "B", statuses: ["marked"] }],
+    statuses: [MARKED, debuff("stun"), debuff("burn", { stacking: "intensity" })], abilities: [{ id: "bolt", cast: 0, recovery: 0, cooldown: 1, do: [{ op: "damage", type: "physical", amount: 1 }], ...bolt }],
   }).to(80);
-  assert.ok(spells.hits("A").length > 20 && spells.hits("B").length > 20);
+  const aimed = (a: ReturnType<typeof spells>) => [a.hits("A").length > 0, a.hits("B").length > 0];
+  assert.deepEqual(aimed(spells({})), [false, true], "a random foe: the Marked one");
+  assert.deepEqual(aimed(spells({ target: { side: "foes", where: { lacks: "stun" }, ifNone: "any" } })), [false, true], "the Fizzle rule gives way to the Mark");
+  assert.deepEqual(aimed(spells({ target: { side: "foes", pick: "highest", by: { stacks: "burn" } } })), [false, true], "a phrase that finds nobody falls back to a random foe: the Marked one");
+  assert.deepEqual(aimed(spells({ target: { side: "foes", pick: "highest", by: { stats: ["attack"] } } })), [true, false], "a phrase that finds its foe ignores the Mark");
 });
 
 test("each applier keeps one copy of a single status: marking A ends the Mark it gave B", () => {
@@ -545,7 +549,7 @@ test("no immunity to debuffs stops a marker, and its pulses resolve in its holde
 test("a Hidden unit that gains Taunt loses Hidden at once; Hidden applied to a Taunting unit doesn't land", () => {
   const hidden = buff("hidden", { unremovable: true, stats: [{ stat: "forbidden", flat: 1 }] });
   const a = arena({
-    party: [{ name: "Rogue", abilities: ["taunt_me"], statuses: ["hidden"] }],
+    party: [{ name: "Rogue", abilities: ["taunt_me"], statuses: ["hidden"] }, { name: "Friend" }],
     enemies: [BAG], statuses: [hidden, TAUNT], abilities: [giver("taunt_me", "taunt", {}, "self")],
   });
   readyAt(a, "Rogue", "taunt_me", 1);
@@ -565,7 +569,7 @@ test("a Hidden unit that gains Taunt loses Hidden at once; Hidden applied to a T
 
 // ─── Extra strikes heard as basic attacks ────────────────────────────────────
 
-test("with echo a Double strike's second hit sets off a basic hit_lands rider, and a basic boost doesn't reach it", () => {
+test("with echo a Double strike's second hit carries a basic hit_lands rider; it takes the swing's shape, a basic boost included", () => {
   const burn = debuff("burn", { stacking: "intensity" });
   const double = buff("double", { strike: { to: "target" } });
   const echo = buff("echo", { echo: true });
@@ -577,7 +581,7 @@ test("with echo a Double strike's second hit sets off a basic hit_lands rider, a
       enemies: [BAG], statuses: [burn, double, echo, rider, boost, TALLY],
     }).to(11);
   const on = run(["echo", "rider"]), off = run(["rider"]);
-  assert.deepEqual(on.hits("Bag").map((e) => [e.part, e.amount]), [["hit", 200], ["extra", 100]]);
+  assert.deepEqual(on.hits("Bag").map((e) => [e.part, e.amount]), [["hit", 200], ["extra", 200]]);
   assert.equal(tally(on, "Bag", "burn"), 2);
   assert.equal(tally(off, "Bag", "burn"), 1);
 

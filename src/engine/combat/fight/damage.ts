@@ -5,7 +5,7 @@
 import * as S from "../../../schema.js";
 import { next } from "../../rng.js";
 import { compile } from "../stats.js";
-import { aval, boostOf, type CUnit, def, feats, perOf, refresh, type SInst, stat, SUBTICKS, sval, takenOf, unit, type W } from "./state.js";
+import { addsOf, aval, boostOf, type CUnit, def, feats, healTop, hpMoved, hpRead, perOf, refresh, type SInst, stat, SUBTICKS, sval, takenOf, unit, type W } from "./state.js";
 import { applyStatus, endStatus } from "./statuses.js";
 import { type Ctx, num } from "./effects.js";
 import { ev, fire } from "./events.js";
@@ -71,16 +71,18 @@ function calc(w: W, t: CUnit, p: Part, raw: number, tags: readonly string[], boo
 }
 
 /**
- * After mitigation, a block (Aegis) stops damage above its share outright; absorbs soak in the order they were first applied; the rest comes off HP.
- * `by` is the unit whose damage this is, for the statuses it ends; an HP floor holds a blow that would knock the unit out.
+ * After mitigation, a block (Aegis) stops damage above its share outright; absorbs soak in the order they were first applied;
+ * a holder of `soak: mp` then pays from its MP, point for point; the rest comes off HP. `by` is the unit whose damage this is,
+ * for the statuses it ends; an HP floor holds a blow that would knock the unit out. `over`: what the blow had left past the HP
+ * its target had.
  */
-function take(w: W, t: CUnit, amount: number, by: CUnit | null = null): { soaked: number; lost: number; blocked: boolean } {
+function take(w: W, t: CUnit, amount: number, by: CUnit | null = null): { soaked: number; lost: number; blocked: boolean; over: number } {
   if (amount > 0) {
     for (const s of t.statuses) {
       const b = def(w, s.id).block;
       if (b && amount * 100 > b.share * t.stats.max_hp) {
         endStatus(w, t, s, "spent", { other: by, amount });
-        return { soaked: 0, lost: 0, blocked: true };
+        return { soaked: 0, lost: 0, blocked: true, over: 0 };
       }
     }
   }
@@ -95,7 +97,15 @@ function take(w: W, t: CUnit, amount: number, by: CUnit | null = null): { soaked
     soaked += n;
     if (s.stacks < SUBTICKS) broken.push(s);
   }
+  // Damage that would reach HP comes out of MP first, for a holder of `soak: mp`.
+  if (left > 0 && t.mp > 0 && feats(w.c).soak && t.statuses.some((s) => def(w, s.id).soak === "mp")) {
+    const n = Math.min(left, t.mp);
+    t.mp -= n;
+    left -= n;
+    w.log?.({ t: "mp", vis: "hidden", at: w.f.now, target: t.id, amount: -n, mp: t.mp, part: "soak" });
+  }
   let lost = Math.min(left, t.hp);
+  let over = left - lost;
   // While it holds an HP floor, a blow that would knock it out leaves it at 1, and nothing falls. A floor that spends
   // ends (cause spent) with the blow it held; one that doesn't is used first.
   let held: SInst | null = null, stopped = 0;
@@ -104,6 +114,7 @@ function take(w: W, t: CUnit, amount: number, by: CUnit | null = null): { soaked
     if (fl) {
       stopped = lost - (t.hp - 1);
       lost = t.hp - 1;
+      over = 0;
       if (def(w, fl.id).floor!.spend) held = fl;
     }
   }
@@ -111,7 +122,8 @@ function take(w: W, t: CUnit, amount: number, by: CUnit | null = null): { soaked
   if (soaked && t.statuses.some((s) => def(w, s.id).absorb && def(w, s.id).stats)) refresh(w, t);
   for (const s of broken) endStatus(w, t, s, "stacks", { other: by });
   if (held) endStatus(w, t, held, "spent", { other: by, amount: stopped });
-  return { soaked, lost, blocked: false };
+  if (lost > 0 && t.hp > 0) hpMoved(w, t);
+  return { soaked, lost, blocked: false, over };
 }
 
 /** The floor that holds a blow: one that never spends, else the oldest that does. */
@@ -137,25 +149,33 @@ function logDamage(w: W, by: CUnit | null, t: CUnit, src: string, part: string, 
   });
 }
 
-/** How a hit is sized and aimed. `share`: percent of its own damage (default 100); `area`: its effect is aimed at two or more units; `moved`: a cover already took it. */
-type HitOpts = { share?: number; area?: boolean; moved?: boolean };
-const AREA = ["area"], NONE: string[] = [];
+/**
+ * How a hit is sized and aimed. `share`: percent of its own damage (default 100); `area`: its effect is aimed at two or more
+ * units; `moved`: a cover already took it; `shape`: a weapon-sized hit out of turn, which takes what the unit's basic attacks
+ * take (their boosts and additions); `tags`: more tags for its events; `carry`: it carries what the swing carries; `bare`: it
+ * carries nothing; `fixed`: this amount lands as it is, with no dodge, crit, boost or Defense (a second landing); `plain`: no
+ * boost and no crit (a left-over).
+ */
+export type HitOpts = { share?: number; area?: boolean; moved?: boolean; shape?: boolean; tags?: readonly string[]; carry?: boolean; bare?: boolean; fixed?: number; plain?: boolean };
 
 /**
- * A hit from an action or an extra strike, with its riders and attached statuses. Returns whether it landed (wasn't
- * evaded). Crits can depend on a condition; a cover takes a big hit for an ally; the hit's raw amount and type ride on its
- * events; an ability's changes add statuses and stacks.
+ * A hit from an action, an extra strike or a strike out of turn, with its riders and attached statuses. Returns whether it
+ * landed (wasn't evaded). Crits can depend on a condition; a cover takes a big hit for an ally; the hit's raw amount and type
+ * ride on its events; an ability's changes add damage, statuses and stacks; the attacker's statuses add to its amount.
  */
 export function hit(w: W, ctx: Ctx, t0: CUnit, e: S.DamageEffectT, o: HitOpts = {}): boolean {
   const a = ctx.actor, kind = ctx.kind!;
   const f = o.share === undefined || o.share === 100 ? 1 : o.share / 100;
-  const extra = o.area ? AREA : NONE;
+  const extra = [...(o.area ? ["area"] : []), ...(o.tags ?? []), ...(o.bare ? ["bare"] : [])];
   const main: Part = { type: e.type };
   const tags = partTags(kind, main, extra);
+  // A weapon-sized hit out of turn takes the shape the unit's basic attacks have.
+  const shaped = (ts: string[]) => (o.shape && kind !== "basic" ? [...ts, "basic"] : ts);
   const partsOn = (x: CUnit) => {
-    const ps: { p: Part; raw: number; rider: boolean }[] = [{ p: main, raw: aval(w, e.amount, a, x, ctx) * f, rider: false }];
+    const more = o.bare ? 0 : addsOf(w, a, shaped(tags), x, ctx);
+    const ps: { p: Part; raw: number; rider: boolean }[] = [{ p: main, raw: (aval(w, e.amount, a, x, ctx) + more) * f, rider: false }];
     for (const r of e.riders ?? []) ps.push({ p: { type: r.type }, raw: aval(w, r.amount, a, x, ctx) * f, rider: true });
-    for (const s of a.statuses) {
+    for (const s of o.bare ? [] : a.statuses) {
       const d = def(w, s.id);
       for (const r of d.riders ?? []) {
         if (!tags.includes(r.on)) continue;
@@ -166,24 +186,27 @@ export function hit(w: W, ctx: Ctx, t0: CUnit, e: S.DamageEffectT, o: HitOpts = 
     return ps;
   };
   let t = t0;
-  let parts = partsOn(t);
-  if (main.type === "physical" && evaded(w, a, t)) {
+  const fixed = o.fixed !== undefined;
+  let parts = fixed ? [{ p: main, raw: o.fixed!, rider: false }] : partsOn(t);
+  if (!fixed && main.type === "physical" && evaded(w, a, t)) {
     w.log?.({ t: "dmg", vis: "player", at: w.f.now, by: a.id, target: t.id, src: ctx.id, part: "hit", amount: 0, soaked: 0, word: "MISS", crit: false, hp: t.hp, shield: shield(w, t) });
     fire(w, ev("hit_evaded", t, a, { kind, tags }));
     fire(w, ev("hit_missed", a, t, { kind, tags }));
     return false;
   }
   // The hit and its riders read the same state, and share one crit roll.
-  const [chance, multiplier] = critOf(w, a, t, tags);
+  const [chance, multiplier] = fixed || o.plain ? [0, 0] : critOf(w, a, t, tags);
   const crit = critRoll(w, a, chance, multiplier);
-  const power = stat(w, a, "power") + enrage(w);
-  const resultsOn = (x: CUnit, ps: typeof parts, dodge: boolean) => ps.map(({ p, raw, rider }) =>
-    rider && dodge && p.type === "physical" && evaded(w, a, x) ? null : calc(w, x, p, raw, partTags(kind, p, extra), boostOf(w, a, partTags(kind, p, extra), x) + power, crit),
-  );
+  const power = o.plain ? 0 : stat(w, a, "power") + enrage(w) + (ctx.mod?.damage ?? 0);
+  const boosted = (p: Part, x: CUnit) => (o.plain ? 0 : boostOf(w, a, shaped(partTags(kind, p, extra)), x) + power);
+  const resultsOn = (x: CUnit, ps: typeof parts, dodge: boolean): (Calc | null)[] =>
+    fixed
+      ? [{ amount: Math.max(0, Math.floor(o.fixed!)), word: null, crit: false, raw: Math.max(0, Math.floor(o.fixed!)) }]
+      : ps.map(({ p, raw, rider }) => (rider && dodge && p.type === "physical" && evaded(w, a, x) ? null : calc(w, x, p, raw, partTags(kind, p, extra), boosted(p, x), crit)));
   let results = resultsOn(t, parts, true);
   // A big hit on an ally moves, once, to a unit that covers it, and resolves again against that unit (its own mitigation, block,
   // absorbs and HP; the hit's riders and statuses with it), keeping its crit and without a second dodge.
-  if (!o.moved && feats(w.c).cover) {
+  if (!o.moved && !fixed && feats(w.c).cover) {
     const c = coverOf(w, t, results);
     if (c) {
       w.log?.({ t: "cover", vis: "player", at: w.f.now, by: c.id, unit: t.id });
@@ -193,10 +216,14 @@ export function hit(w: W, ctx: Ctx, t0: CUnit, e: S.DamageEffectT, o: HitOpts = 
     }
   }
   if (ctx.landed && t.side !== a.side && !ctx.landed.includes(t)) ctx.landed.push(t);
-  let dealt = 0, lost = 0;
+  // The hit's events carry "crit" when it crits, for reactions to crits (the Assassin's), and its raw amount and type.
+  const evTags = crit ? [...tags, "crit"] : tags;
+  // How much HP the unit had as the hit landed, in percent of its max, before its damage.
+  const was = t.stats.max_hp > 0 ? (hpRead(w, t) * 100) / t.stats.max_hp : 0;
+  let dealt = 0, lost = 0, stopped = 0, over = 0;
   for (let i = 0; i < parts.length && !t.ko; i++) {
     const r = results[i];
-    const part = parts[i].rider ? "rider" : kind === "extra" ? "extra" : "hit";
+    const part = parts[i].rider ? "rider" : kind === "extra" || kind === "bonus" ? "extra" : "hit";
     if (!r) {
       w.log?.({ t: "dmg", vis: "player", at: w.f.now, by: a.id, target: t.id, src: ctx.id, part, amount: 0, soaked: 0, word: "MISS", crit: false, hp: t.hp, shield: shield(w, t) });
       continue;
@@ -205,20 +232,23 @@ export function hit(w: W, ctx: Ctx, t0: CUnit, e: S.DamageEffectT, o: HitOpts = 
     logDamage(w, a, t, ctx.id, part, r, tk, null, dmgKind(parts[i].p));
     if (!tk.blocked) dealt += r.amount;
     lost += tk.lost;
-    if (t.hp <= 0) ko(w, t, a, kind);
+    stopped += tk.soaked + (tk.blocked ? r.amount : 0);
+    over += tk.over;
+    // A killing blow: the knockout carries the hit's kind and tags, its action, and what it had left over.
+    if (t.hp <= 0) ko(w, t, a, kind, { tags: evTags, amount: over, ability: ctx.id });
   }
   if (w.f.result) return true;
-  // The hit's events carry "crit" when it crits, for reactions to crits (the Assassin's), and its raw amount and type.
-  const evTags = crit ? [...tags, "crit"] : tags;
+  if (t.side !== a.side) t.hitBy = a.id;
   const raw = results[0]?.raw ?? 0;
-  fire(w, ev("hit_lands", a, t, { kind, tags: evTags, amount: dealt, raw, dtype: main.type }));
-  fire(w, ev("hit_taken", t, a, { kind, tags: evTags, amount: dealt, raw, dtype: main.type }));
+  const x = { kind, tags: evTags, amount: dealt, raw, dtype: main.type, stopped, bare: !!o.bare, carry: !!o.carry, was };
+  fire(w, ev("hit_lands", a, t, x));
+  fire(w, ev("hit_taken", t, a, x));
   damageEvents(w, a, t, dealt, lost, null);
   // The hit's statuses land after its events, so a status set off by being hit (Bleed) waits for the next hit.
-  // An ability's changes add statuses after its own, and stacks to each.
-  if (!t.ko && !w.f.result) {
+  // An ability's changes add statuses after its own, and stacks to each. A bare hit carries none.
+  if (!t.ko && !w.f.result && !o.bare) {
     for (const ap of [...(e.apply ?? []), ...(ctx.mod?.apply ?? [])]) {
-      applyStatus(w, a, t, def(w, ap.status), { stacks: aval(w, ap.stacks ?? 1, a, t, ctx) * stackMult(w, ctx.mod, ap.status), duration: ap.duration, chance: ap.chance, rng: a });
+      applyStatus(w, a, t, def(w, ap.status), { stacks: aval(w, ap.stacks ?? 1, a, t, ctx) * stackMult(w, ctx.mod, ap.status), duration: ap.duration, chance: ap.chance, rng: a, area: !!o.area });
     }
   }
   return true;
@@ -226,23 +256,30 @@ export function hit(w: W, ctx: Ctx, t0: CUnit, e: S.DamageEffectT, o: HitOpts = 
 
 /**
  * A hit's crit chance and multiplier. The attacker's crit rules that match the hit's tags and the unit hit multiply the
- * chance after every stat change (`times`, all of them together), then add their points (100 always crits), and make the
- * crit bonus, the part above ×1, `bonus` % larger.
+ * chance after every stat change (`times`, all of them together), then add their points (100 always crits), each held under
+ * its own `cap`; a rule that sets the chance has the last word, but for one that always crits. They make the crit bonus, the
+ * part above ×1, `bonus` % larger.
  */
 function critOf(w: W, a: CUnit, t: CUnit, tags: readonly string[]): [number, number] {
   let chance = stat(w, a, "crit_chance");
   const mult = stat(w, a, "crit_multiplier");
   if (!feats(w.c).crits) return [chance, mult];
-  let bonus = 0, add = 0, times = 1;
-  for (const s of a.statuses) {
-    for (const r of def(w, s.id).crits ?? []) {
-      if ((r.tag && !tags.includes(r.tag)) || (r.when && !passes(w, t, r.when, a))) continue;
-      add += r.chance ?? 0;
-      times *= r.times ?? 1;
-      bonus += r.bonus ?? 0;
+  const rules: S.CritRuleT[] = [];
+  for (const s of a.statuses) for (const r of def(w, s.id).crits ?? []) if (!(r.tag && !tags.includes(r.tag)) && !(r.when && !passes(w, t, r.when, a))) rules.push(r);
+  // A capped rule never lifts the chance past its cap, and leaves a chance already higher as it is.
+  const under = (now: number, next: number, cap: number | undefined) => (cap === undefined ? next : Math.max(now, Math.min(next, cap)));
+  let bonus = 0, set = -1, always = false;
+  for (const r of rules) if (r.times !== undefined) chance = under(chance, chance * r.times, r.cap);
+  for (const r of rules) {
+    if (r.chance !== undefined) {
+      if (r.chance >= 100 && r.cap === undefined) always = true;
+      chance = under(chance, chance + r.chance, r.cap);
     }
+    if (r.set !== undefined) set = Math.max(set, r.set);
+    bonus += r.bonus ?? 0;
   }
-  chance = chance * times + add;
+  if (set >= 0) chance = set;
+  if (always) chance = 100;
   return [chance, bonus ? 100 + ((mult - 100) * (100 + bonus)) / 100 : mult];
 }
 
@@ -302,10 +339,11 @@ export function strike(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
 /**
  * Heals have no type and are never mitigated; they take healing boosts, Healing received, and crit from actions.
  * The healer is the actor, or for a pulse or trigger the unit that applied its status (a Regen another gave), when
- * known. A holder of `heals: own` takes only its own heals. An ability's changes heal more. The part past full
- * fires overhealed. Both events carry an action's kind.
+ * known. A holder of `heals: own` takes only its own heals. An ability's changes heal more. A cap on the unit's healing
+ * stands in for its max HP. The part past full fires overhealed, unless the heal is `final` or answers an overheal
+ * itself: healing passed on isn't passed on again. Both events carry an action's kind, or the status that healed.
  */
-export function heal(w: W, ctx: Ctx, t: CUnit, raw: number) {
+export function heal(w: W, ctx: Ctx, t: CUnit, raw: number, final = false) {
   const st = ctx.st;
   const healer = st?.fixedBoost ? unit(w, st.src) : ctx.actor;
   if (feats(w.c).heals && healer !== t && t.statuses.some((s) => def(w, s.id).heals === "own")) return;
@@ -317,10 +355,12 @@ export function heal(w: W, ctx: Ctx, t: CUnit, raw: number) {
   else if (st.fixedBoost && st.d.crit) crit = critRoll(w, st.holder, st.d.crit.chance, st.d.crit.multiplier ?? stat(w, st.holder, "crit_multiplier"));
   if (crit) x = (x * crit) / 100;
   const amount = Math.max(0, Math.floor(x));
-  const restored = Math.min(amount, t.stats.max_hp - t.hp);
+  const restored = Math.max(0, Math.min(amount, healTop(w, t) - t.hp));
   t.hp += restored;
   const kind = st ? null : ctx.kind;
+  const more = { kind, status: st ? st.d.id : null, tags: st?.fixedBoost ? ["pulse"] : [] };
   if (restored > 0) w.log?.({ t: "heal", vis: "player", at: w.f.now, by: ctx.actor.id, target: t.id, src: ctx.id, amount: restored, crit: crit > 0, hp: t.hp });
-  if (restored > 0) fire(w, ev("healed", t, healer, { amount: restored, kind }));
-  if (amount > restored) fire(w, ev("overhealed", t, healer, { amount: amount - restored, kind }));
+  if (restored > 0) fire(w, ev("healed", t, healer, { amount: restored, ...more }));
+  if (amount > restored && !final && st?.on !== "overhealed") fire(w, ev("overhealed", t, healer, { amount: amount - restored, ...more }));
+  if (restored > 0) hpMoved(w, t);
 }

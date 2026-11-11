@@ -31,7 +31,7 @@ passiveUp({
   id: "bloodlust", cls: "vampire",
   power: "Below half of its max HP, its Lifesteal is two and a half times its own, not doubled.",
   a: { name: "Shared feast", text: "While it's below half of its max HP, its Lifesteal is doubled, and each hit it lands heals the other ally with the lowest share of HP as much as it drank.", builds: ["pact"] },
-  b: { name: "Undying thirst", text: "While it's below half of its max HP, its Lifesteal is doubled. Once a fight, when it falls below a tenth of its max HP, for 5 ticks it can't fall below 1 HP and its Lifesteal is tripled.", builds: ["phoenix", "pact"] },
+  b: { name: "Undying thirst", text: "While it's below half of its max HP, its Lifesteal is doubled. Once a fight, when it falls below a tenth of its max HP, for 5 ticks it can't fall below 1 HP and its Lifesteal is tripled.", builds: ["pact"] },
   form: (v, _k, plus) => {
     const on = v === "a" ? (plus ? "shared_feast_on_plus" : "shared_feast_on") : plus ? "bloodlust_on_plus" : "bloodlust_on";
     return {
@@ -50,8 +50,8 @@ passiveUp({
 abilityUp({
   id: "blood_drain", cls: "vampire",
   power: "40% more damage.",
-  a: { name: "Savage drain", text: "Three quick hits on a random foe, each a third of the damage, scaling from max HP, each drinking; the foe is Weakened.", builds: ["cuts", "pact"] },
-  b: { name: "Drain the well", text: "Deals physical damage that scales from max HP to a random foe, and drains MP from it: a quarter of the damage dealt, given to the ally with the least MP. No Weaken.", builds: ["overflow"] },
+  a: { name: "Savage drain", text: "Three quick hits on a random foe, each a third of the damage, scaling from max HP, each drinking; the foe is Weakened.", serves: "Cuts 1 ●●●, Pact ●●" },
+  b: { name: "Drain the well", text: "Deals physical damage that scales from max HP to a random foe, and drains MP from it: a quarter of the damage dealt, given to the ally with the least MP. No Weaken.", builds: ["barrage"] },
   form: (v, k) =>
     v === "a" ? { do: [phys(from("max_hp", r6((0.4 * k) / 3)), { hits: 3, apply: [{ status: "weaken" }] })] }
       // A one-tick marker on the Vampire hears the cast's own hit and drains as Siphon does.
@@ -75,8 +75,8 @@ const price: EffectT = { op: "pay", hp: from("max_hp", PRICE), to: "self" };
 abilityUp({
   id: "blood_gift", cls: "vampire",
   power: "It gives 40% more than it pays.",
-  a: { name: "Blood for mana", text: "Spends a fifth of its max HP to give the other ally with the least MP as much MP, and gives it Clarity. Waits until another ally is under half its MP and the Vampire is at 35% of its max HP or more.", builds: ["overflow", "pact"] },
-  b: { name: "Lifeblood", text: "Waits until an ally is knocked out. Spends a fifth of its max HP to revive it with as much HP. Waits too until the Vampire is at 35% of its max HP or more.", builds: ["phoenix"] },
+  a: { name: "Blood for mana", text: "Spends a fifth of its max HP to give the other ally with the least MP as much MP, and gives it Clarity. Waits until another ally is under half its max MP and the Vampire is at 35% of its max HP or more.", serves: "Barrage 2 ●●●, Pact ●● ⚙ mana as armour (half)" },
+  b: { name: "Lifeblood", text: "Waits until an ally is knocked out. Spends a fifth of its max HP to revive it with as much HP. Waits too until the Vampire is at 35% of its max HP or more.", builds: [] },
   form: (v, k) =>
     v === "a" ? {
       if: [{ side: "others", where: { mpBelow: 50 } }, { side: "self", where: { hpAtLeast: 35 } }],

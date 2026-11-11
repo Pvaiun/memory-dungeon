@@ -16,11 +16,17 @@ const ACTION_EVENTS = ["action_start", "action_resolve", "action_interrupted"];
 const HIT_EVENTS = ["hit_lands", "hit_taken", "hit_evaded", "hit_missed"];
 const STATUS_EVENTS = ["status_gained", "status_triggered", "status_ended", "status_capped"];
 const DAMAGE_EVENTS = ["damage_dealt", "damage_taken"];
-const RESERVED_TAGS = ["basic", "ability", "extra", "physical", "none", "healing", "all", "crit", "area"];
+const RESERVED_TAGS = ["basic", "ability", "extra", "bonus", "wide", "bare", "pulse", "physical", "none", "healing", "all", "crit", "area"];
 /** Events with a kind besides action and hit events (the killing hit's, the healing action's). */
 const KIND_EVENTS = [...ACTION_EVENTS, ...HIT_EVENTS, "ko", "healed", "overhealed"];
+/** Events that carry tags: a hit's, the killing hit's, a heal's `pulse`, a status gained's `area`. */
+const TAG_EVENTS = [...HIT_EVENTS, "ko", "healed", "overhealed", "status_gained"];
 /** Events that carry an amount. */
-const AMOUNT_EVENTS = ["action_resolve", "hit_lands", "hit_taken", ...DAMAGE_EVENTS, "hp_lost", "healed", "overhealed", "status_gained", "status_ended"];
+const AMOUNT_EVENTS = ["action_resolve", "hit_lands", "hit_taken", ...DAMAGE_EVENTS, "hp_lost", "hp_paid", "mp_gained", "mp_over", "healed", "overhealed", "status_gained", "status_ended", "status_capped", "ko"];
+/** Events that can be a repeat: a recast's action, the opening made to happen again, a copy of a status. */
+const REPEAT_EVENTS = [...ACTION_EVENTS, "fight_start", "status_gained"];
+/** The HP line events, which name their line. */
+const LINE_EVENTS = ["hp_low", "hp_high"];
 /** The relative seats a seat field can name; no formation's position may take these ids. */
 export const RELATIVE_SEATS = ["next", "previous"];
 /** What an ability filter's `does` can name besides a status. */
@@ -67,19 +73,27 @@ export class Combat {
       if (s.stacks) this.w.ref("statuses", s.stacks, `${p}.stacks`, "status");
       if (s.when) this.unitCond(s.when, `${p}.when`);
       if (s.count !== undefined) {
-        if ((s.count === "targets" || s.count === "hit") && where !== "action") this.r.error("scale.count", `${p}.count`, `'${s.count}' counts an action's targets or the units its hits landed on: only an action has them`);
+        if (s.count === "targets" && where !== "action") this.r.error("scale.count", `${p}.count`, `'targets' counts an action's targets: only an action has them`);
+        if (s.count === "hit" && where === "pulse") this.r.error("scale.count", `${p}.count`, `'hit' counts the units an action's hits landed on: an action has them, and a reaction to action_resolve`);
         if (typeof s.count === "object") {
           if (s.count.where) this.unitCond(s.count.where, `${p}.count.where`);
           if (s.count.seat) this.seat(s.count.seat, `${p}.count.seat`);
+          if (s.count.stacks) this.w.ref("statuses", s.count.stacks, `${p}.count.stacks`, "status");
         }
+      }
+      if (s.event && where !== "reaction") this.r.error("scale.event", p, `only a reaction to a hit has its raw amount, or what was stopped of it, to scale from`);
+      if (s.seat !== undefined) {
+        if (!inStatus) this.r.error("scale.seat", `${p}.seat`, `a seat is read from a status's holder: it only means something inside a status`);
+        this.seat(s.seat, `${p}.seat`);
       }
       if (s.amount && where !== "reaction") this.r.error("scale.amount", p, `only a reaction has an event amount to scale from`);
       if (!inStatus && (s.of === "holder" || s.of === "source")) this.r.error("scale.of", `${p}.of`, `'${s.of}' only means something inside a status; in an action, use self or target`);
-      if (inStatus && s.stat && !s.of) this.r.error("scale.of", p, `in a status, say whose stat this is: source (fixed at application) or holder (read when used)`);
+      if (inStatus && s.stat && !s.of && s.seat === undefined) this.r.error("scale.of", p, `in a status, say whose stat this is: source (fixed at application) or holder (read when used)`);
       if (inStatus && s.of === "source" && this.shared) this.r.error("scale.of", `${p}.of`, `a shared Intensity total has no single source; make the status Per source, or scale the stacks its applications add`);
       if (s.times) {
-        this.statKey(s.times.stat, `${p}.times.stat`);
-        if (s.amount && !s.times.of) this.r.error("scale.times", `${p}.times`, `an event amount has no unit of its own: say whose stat multiplies it (holder or self)`);
+        if (s.times.stat !== undefined) this.statKey(s.times.stat, `${p}.times.stat`);
+        if (s.times.stacks !== undefined) this.w.ref("statuses", s.times.stacks, `${p}.times.stacks`, "status");
+        if ((s.amount || s.event || s.cost) && !s.times.of) this.r.error("scale.times", `${p}.times`, `an event amount has no unit of its own: say whose stat multiplies it (holder or self)`);
         if (!inStatus && (s.times.of === "holder" || s.times.of === "source")) this.r.error("scale.of", `${p}.times.of`, `'${s.times.of}' only means something inside a status`);
         if (inStatus && s.times.of === "source") this.r.error("scale.times", `${p}.times.of`, `a live multiplier can't read the source, which is only known at application; use holder or self`);
       }
@@ -167,6 +181,7 @@ export class Combat {
       if (where === "pulse" && to === "other") this.r.error("effect.to", `${path}.to`, `a pulse has no event, so no 'other' unit`);
       if (to === "source" && (!st || shared(st))) this.r.error("effect.to", `${path}.to`, `only statuses with one applier at a time (Refresh, Fizzle, Per source) know their source`);
     }
+    if (where === "action" && to === "assailant") this.r.error("effect.to", `${path}.to`, `'assailant' is the unit that last hit a reaction's event's owner: it only means something in a reaction`);
     if (where === "reaction" && to === undefined && e.op !== "summon" && e.op !== "recast") this.r.error("reaction.to", path, `a reaction's effects state their target (holder, self, other, source or a rule)`);
     switch (e.op) {
       case "damage":
@@ -189,23 +204,55 @@ export class Combat {
         }
         if (e.label === "marker" && !e.status) this.r.error("remove.label", `${path}.label`, `a marker is lifted only by name: give its status`);
         if (e.tag && !e.kind) this.r.error("remove.tag", `${path}.tag`, `a tag narrows an effect kind; give the kind too`);
+        e.except?.forEach((id, i) => this.w.ref("statuses", id, `${path}.except[${i}]`, "status"));
         break;
       case "cooldown":
         if (typeof e.which === "object") e.which.ability.forEach((id, i) => this.w.ref("abilities", id, `${path}.which.ability[${i}]`, "ability"));
         if (e.which === "event" && where !== "reaction") this.r.error("cooldown.event", `${path}.which`, `only a reaction to an action event knows the ability that set it off`);
         if (e.which === "basic" && typeof e.set === "object" && "atMost" in e.set) this.r.warn("cooldown.basic", `${path}.set`, `atMost reads an ability's full cooldown; the basic attack's is its swing`);
+        if (typeof e.set === "object" && "lessPct" in e.set) this.num(e.set.lessPct, `${path}.set.lessPct`, where, inStatus);
         break;
       case "pay":
         this.num(e.hp, `${path}.hp`, where, inStatus);
         break;
       case "strike":
         if (where !== "reaction") this.r.error("strike.where", path, `a strike effect is a reaction's (an action's own hits are its damage effects)`);
+        if (e.amount !== undefined) this.num(e.amount, `${path}.amount`, where, inStatus);
+        if (e.amount !== undefined && e.of) this.r.error("strike.size", path, `a strike is sized by 'of' or by an 'amount' of its own, not both`);
+        if (e.apply && e.amount === undefined) this.r.error("strike.apply", `${path}.apply`, `only a strike with an 'amount' of its own applies statuses of its own`);
+        e.apply?.forEach((x, i) => this.apply(x, `${path}.apply[${i}]`, where, inStatus));
+        if (e.by) this.rule(e.by, `${path}.by`, { where });
+        if (e.after !== undefined && e.of !== "dealt") this.r.error("strike.after", `${path}.after`, `only a second landing ('of: dealt') can come later`);
+        if (e.of === "over" && on?.event !== "ko") this.r.error("strike.over", `${path}.of`, `only a reaction to ko has a killing blow's left-over`);
+        if ((e.of === "hit" || e.of === "dealt") && on && !["hit_lands", "hit_taken"].includes(on.event)) this.r.error("strike.hit", `${path}.of`, `only a reaction to a hit has that hit to size a strike from`);
+        this.ticks(e.after, `${path}.after`);
         break;
       case "one":
         e.of.forEach((x, i) => this.apply(x, `${path}.of[${i}]`, where, inStatus));
+        if (e.count !== undefined && e.count > e.of.length) this.r.error("one.count", `${path}.count`, `it can't pick ${e.count} different statuses of ${e.of.length}`);
+        if (e.pick === "most" && e.count !== undefined) this.r.error("one.count", `${path}.count`, `'most' picks one`);
         break;
       case "recast":
-        if (where !== "reaction") this.r.error("recast.where", path, `recast answers the holder's own action_resolve: it belongs in a reaction`);
+        if (where !== "reaction") this.r.error("recast.where", path, `recast answers an event: it belongs in a reaction`);
+        break;
+      case "spend": {
+        if (this.w.ref("statuses", e.status, `${path}.status`, "status") && this.ix.get<S.StatusT>("statuses", e.status)!.stacking !== "intensity") {
+          this.r.error("spend.stacks", `${path}.status`, `'${e.status}' isn't an Intensity status, so it has no stacks to spend`);
+        }
+        if (e.share !== undefined && e.count !== undefined) this.r.error("spend.amount", path, `spend takes a share or a count, not both`);
+        break;
+      }
+      case "pass":
+        e.except?.forEach((id, i) => this.w.ref("statuses", id, `${path}.except[${i}]`, "status"));
+        break;
+      case "share":
+        if (where !== "reaction" || on?.event !== "status_gained") this.r.error("share.where", path, `share copies the status a reaction to status_gained answers`);
+        break;
+      case "riders":
+        if (where !== "reaction") this.r.error("riders.where", path, `riders are laid by a reaction`);
+        break;
+      case "restart":
+      case "fell":
         break;
       case "revive": {
         this.num(e.hp, `${path}.hp`, where, inStatus);
@@ -228,18 +275,30 @@ export class Combat {
 
   event(spec: S.EventSpecT, path: string) {
     if (spec.kind && !KIND_EVENTS.includes(spec.event)) this.r.error("event.kind", `${path}.kind`, `only action and hit events, ko, healed and overhealed have a kind`);
-    for (const k of ["tags", "notTags"] as const) if (spec[k] && !HIT_EVENTS.includes(spec.event)) this.r.error("event.tags", `${path}.${k}`, `only hit events carry tags`);
+    for (const k of ["tags", "notTags"] as const) if (spec[k] && !TAG_EVENTS.includes(spec.event)) this.r.error("event.tags", `${path}.${k}`, `only hit events, ko, heals and status_gained carry tags`);
     if (spec.status) {
-      if (!STATUS_EVENTS.includes(spec.event) && !DAMAGE_EVENTS.includes(spec.event)) this.r.error("event.status", `${path}.status`, `only status and damage events name a status`);
+      if (!STATUS_EVENTS.includes(spec.event) && !DAMAGE_EVENTS.includes(spec.event) && !["healed", "overhealed"].includes(spec.event)) this.r.error("event.status", `${path}.status`, `only status events, damage events and heals name a status`);
       this.w.ref("statuses", spec.status, `${path}.status`, "status");
     }
+    if (LINE_EVENTS.includes(spec.event) !== (spec.line !== undefined)) this.r.error("event.line", path, `hp_low and hp_high name their line, and only they do`);
+    if (spec.ability) {
+      if (!ACTION_EVENTS.includes(spec.event) && spec.event !== "ko") this.r.error("event.ability", `${path}.ability`, `only action events and ko name the ability behind them`);
+      spec.ability.forEach((id, i) => this.w.ref("abilities", id, `${path}.ability[${i}]`, "ability"));
+    }
+    if (spec.does) {
+      if (!ACTION_EVENTS.includes(spec.event)) this.r.error("event.does", `${path}.does`, `only action events say what their action does`);
+      spec.does.forEach((id, i) => DOES.includes(id) || this.w.ref("statuses", id, `${path}.does[${i}]`, `status (or ${DOES.join(", ")})`));
+    }
+    if (spec.paid && spec.event !== "action_resolve") this.r.error("event.paid", `${path}.paid`, `only action_resolve says what was paid`);
+    if (spec.counted && !ACTION_EVENTS.includes(spec.event)) this.r.error("event.counted", `${path}.counted`, `only action events can be a free repeat`);
+    if (spec.wasBelow !== undefined && !HIT_EVENTS.includes(spec.event)) this.r.error("event.wasBelow", `${path}.wasBelow`, `only hit events know the HP their target had`);
     if (spec.cause && spec.event !== "status_ended") this.r.error("event.cause", `${path}.cause`, `only status_ended has a cause`);
     // The filters that read who did it, where it sits, and the event's numbers.
     if (spec.source && !STATUS_EVENTS.includes(spec.event)) this.r.error("event.source", `${path}.source`, `only status events have a status whose source can be read`);
-    if (spec.other && ["fight_start", "fight_won", "action_start", "action_resolve", "action_interrupted", "hp_lost", "status_triggered"].includes(spec.event)) this.r.error("event.other", `${path}.other`, `'${spec.event}' has no other unit`);
+    if (spec.other && ["fight_start", "fight_won", "action_start", "action_interrupted", "hp_lost", "hp_paid", "hp_low", "hp_high", "status_triggered"].includes(spec.event)) this.r.error("event.other", `${path}.other`, `'${spec.event}' has no other unit`);
     if (spec.amountAtLeast !== undefined && !AMOUNT_EVENTS.includes(spec.event)) this.r.error("event.amount", `${path}.amountAtLeast`, `'${spec.event}' carries no amount`);
     if (spec.countAtLeast !== undefined && spec.event !== "action_resolve") this.r.error("event.count", `${path}.countAtLeast`, `only action_resolve counts the units its hits landed on`);
-    if (spec.repeat !== undefined && !ACTION_EVENTS.includes(spec.event)) this.r.error("event.repeat", `${path}.repeat`, `only action events can be a recast's repeat`);
+    if (spec.repeat !== undefined && !REPEAT_EVENTS.includes(spec.event)) this.r.error("event.repeat", `${path}.repeat`, `only an action event, fight_start or status_gained can be a repeat`);
     if (spec.seat) this.seat(spec.seat, `${path}.seat`);
   }
 
@@ -256,8 +315,14 @@ export class Combat {
     if (m.target) this.rule(m.target, `${path}.target`, { main: true });
     if (m.wait) [m.wait].flat().forEach((c, i) => this.condition(c, `${path}.wait${Array.isArray(m.wait) ? `[${i}]` : ""}`));
     m.apply?.forEach((x, i) => this.apply(x, `${path}.apply[${i}]`, "action", false));
-    const changes = [m.mp, m.hp, m.cast, m.stacks, m.heal, m.target, m.seek, m.wait, m.apply].filter((x) => x !== undefined).length;
-    if (!changes) this.r.error("mod.empty", path, `an ability change changes something: mp, hp, cast, stacks, heal, target, seek, wait or apply`);
+    if (m.pay !== undefined) this.num(m.pay, `${path}.pay`, "action", false);
+    if (m.times && "stacks" in m.times) this.w.ref("statuses", m.times.stacks, `${path}.times.stacks`, "status");
+    if (m.times && "casts" in m.times && m.times.show) this.w.ref("statuses", m.times.show, `${path}.times.show`, "status");
+    if (m.of?.basic && [m.mp, m.hp, m.cast, m.wind, m.cooldown, m.damage, m.stacks, m.heal, m.target, m.seek, m.apply, m.times].some((x) => x !== undefined)) {
+      this.r.error("mod.basic", path, `on the basic attack an ability change can only add a price (pay) or a wait`);
+    }
+    const changes = [m.mp, m.hp, m.pay, m.cast, m.wind, m.cooldown, m.damage, m.stacks, m.heal, m.target, m.seek, m.wait, m.apply].filter((x) => x !== undefined).length;
+    if (!changes) this.r.error("mod.empty", path, `an ability change changes something: mp, hp, pay, cast, wind, cooldown, damage, stacks, heal, target, seek, wait or apply`);
   }
 
   /** Tags that boosts, modifiers, lockouts, riders and event filters can name. */
@@ -369,6 +434,9 @@ export class Combat {
       if (st.strike) {
         if (st.strike.scale) this.statKey(st.strike.scale, `${p}.strike.scale`);
         if (typeof st.strike.to === "object") this.rule(st.strike.to, `${p}.strike.to`);
+        st.strike.apply?.forEach((x, j) => this.apply(x, `${p}.strike.apply[${j}]`, "action", false));
+        if (st.strike.when) this.unitCond(st.strike.when, `${p}.strike.when`);
+        if (st.strike.carry && (st.strike.kind ?? "extra") === "extra") this.r.warn("strike.carry", `${p}.strike.carry`, `an extra strike carries the riders under echo; 'carry' is a bonus strike's`);
         if (st.strike.chain && st.strike.chance === undefined && !st.strike.scale) this.r.warn("strike.chain", `${p}.strike.chain`, `a strike that always lands would always chain to its most`);
       }
       // Marked, aims, ability changes, crits, stats set, revives.
@@ -379,7 +447,7 @@ export class Combat {
       st.crits?.forEach((x, j) => {
         tag(x.tag, `${p}.crits[${j}].tag`);
         if (x.when) this.unitCond(x.when, `${p}.crits[${j}].when`);
-        if (x.chance === undefined && x.bonus === undefined && x.times === undefined) this.r.error("crit.empty", `${p}.crits[${j}]`, `a crit rule adds chance, multiplies it, adds bonus, or several of these`);
+        if (x.chance === undefined && x.bonus === undefined && x.times === undefined && x.set === undefined) this.r.error("crit.empty", `${p}.crits[${j}]`, `a crit rule adds chance, multiplies it, sets it, adds bonus, or several of these`);
       });
       st.set?.forEach((x, j) => this.statKey(x.stat, `${p}.set[${j}].stat`));
       if (st.revives?.hp !== undefined) this.num(st.revives.hp, `${p}.revives.hp`, "action", false);
@@ -399,6 +467,19 @@ export class Combat {
         tag(x.on, `${p}.riders[${j}].on`);
         this.instance(x.add, `${p}.riders[${j}].add`, "action", true);
       });
+      st.adds?.forEach((x, j) => {
+        tag(x.on, `${p}.adds[${j}].on`);
+        this.num(x.amount, `${p}.adds[${j}].amount`, "action", true);
+      });
+      if (st.divert) {
+        if (st.divert.what !== "mp") this.w.ref("statuses", st.divert.what, `${p}.divert.what`, "status (or mp)");
+        if (typeof st.divert.to === "object") this.rule(st.divert.to, `${p}.divert.to`);
+        else if (shared(st)) this.r.error("status.source", `${p}.divert.to`, `a shared Intensity total has no single source to send to`);
+      }
+      if (st.borrow) this.rule(st.borrow.from, `${p}.borrow.from`);
+      if (st.damp && (!intensity || st.cap === undefined)) this.r.error("status.damp", `${p}.damp`, `damp belongs to an Intensity status with a cap`);
+      st.swap?.forEach((k, j) => this.statKey(k, `${p}.swap[${j}]`));
+      if (st.mods?.some((m) => m.hp?.payer) && shared(st)) this.r.error("status.source", `${p}.mods`, `a shared Intensity total has no single source to pay`);
       if (st.pulse) {
         this.ticks(st.pulse.every, `${p}.pulse.every`);
         st.pulse.do?.forEach((e, j) => this.effect(e, `${p}.pulse.do[${j}]`, "pulse", st));
@@ -416,7 +497,8 @@ export class Combat {
         x.do.forEach((e, k) => this.effect(e, `${p}.reactions[${j}].do[${k}]`, "reaction", st, undefined, x.on));
       });
       const empty = !st.stats && !st.boosts && !st.taken && !st.absorb && !st.block && !st.lockout && !st.riders && !st.seek && !st.strike && !st.pulse && !st.trigger && !st.reactions
-        && !st.focus && !st.aim && !st.mods && !st.crits && !st.echo && !st.set && !st.cover && !st.floor && !st.heals && !st.revives;
+        && !st.focus && !st.aim && !st.mods && !st.crits && !st.echo && !st.set && !st.cover && !st.floor && !st.heals && !st.revives
+        && !st.adds && !st.healCap && !st.soak && !st.divert && !st.swap && !st.tireless && !st.order && !st.borrow;
       // A marker is bookkeeping, read by name, so it may have no effects of its own.
       if (empty && st.label !== "marker") this.r.warn("status.empty", p, `status '${st.id}' has no effects`);
     });

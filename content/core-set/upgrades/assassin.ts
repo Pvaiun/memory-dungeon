@@ -12,7 +12,7 @@ const RUPTURE = 0.5;
 passiveUp({
   id: "lacerate", cls: "assassin",
   power: "Its crits add 40% more Bleed.",
-  a: { name: "Opening wound", text: "Its first hit on each foe always crits. Each of its crits adds several Bleed to the foe; stacks scale from Attack.", builds: ["ambush"] },
+  a: { name: "Opening wound", text: "Its first hit on each foe always crits. Each of its crits adds several Bleed to the foe; stacks scale from Attack.", builds: ["hunt"] },
   b: { name: "Rupture", text: "Each of its crits deals extra damage for each Bleed the foe holds, and the Bleed stays; then it adds several Bleed; stacks scale from Attack.", builds: ["hunt"] },
   form: (v, k) => ({
     // Opening wound: hits on a foe it hasn't yet landed a hit on always crit (a crit rule: chance after every stat change, so Gambler's coin too).
@@ -36,8 +36,8 @@ helper(marker("opening_wound", "OPENING WOUND", "The Assassin's first hit on it 
 abilityUp({
   id: "vanish", cls: "assassin",
   power: "A shorter cooldown.",
-  a: { name: "Smoke screen", text: "Hides the ally with the lowest share of HP that isn't Taunting. Waits until an ally is below 80% of its HP.", builds: ["phoenix", "toll"] },
-  b: { name: "Shadow step", text: "Applies Hidden to itself. Waits until it isn't Hidden. Its first hit after that Hidden ends deals triple damage.", builds: ["ambush"] },
+  a: { name: "Smoke screen", text: "Hides the ally with the lowest share of max HP that isn't Taunting or already Hidden. Waits until an ally is below 80% of its max HP.", serves: "Pact ●●, Toll ●● ⚙ two in the dark (key), brink (half)" },
+  b: { name: "Shadow step", text: "Applies Hidden to itself. Waits until it isn't Hidden. Its first hit after that Hidden ends deals triple damage.", builds: ["hunt"] },
   form: (v, _k, plus) => ({
     // A quarter off (22 → 16): one word down would hide it about 70% of a fight.
     ...(plus ? { cooldown: Math.round(baseAbility("vanish").cooldown * 0.75 * 10) / 10 } : {}),
@@ -56,8 +56,8 @@ helper(kit("shadow_step_strike", "SHADOW STEP", "Its next hit deals triple damag
 abilityUp({
   id: "backstab", cls: "assassin",
   power: "40% more damage.",
-  a: { name: "Coup de grâce", text: "Has Seek. Deals physical damage that scales from Crit chance to the foe with the lowest current HP. When it knocks that foe out, Backstab is ready again.", builds: ["hunt"] },
-  b: { name: "From the shadows", text: "Has Seek. Waits until the Assassin is Hidden. Deals double physical damage that scales from Crit chance to the foe with the lowest current HP.", builds: ["ambush"] },
+  a: { name: "Coup de grâce", text: "Has Seek. Deals damage that scales from Crit chance to the foe with the lowest current HP. When it knocks that foe out, Backstab is ready again.", serves: "Hunt 2 ●●● ⚙ reaping (key)" },
+  b: { name: "From the shadows", text: "Has Seek. Waits until the Assassin is Hidden. Deals double physical damage that scales from Crit chance to the foe with the lowest current HP.", builds: ["hunt"] },
   form: (v, k) => ({
     ...(v === "a" ? { statuses: ["coup_de_grace"], note: "A kill the Assassin lands with any ability readies Backstab (Garrote's too): the ko event names the killer and the hit's kind, not which ability." } : {}),
     ...(v === "b" ? { if: { side: "self", where: { has: "hidden" } }, do: [phys(from("crit_chance", HIT.normal * 2 * k))] } : { do: [phys(hitOf("crit_chance", "normal", k))] }),
@@ -75,7 +75,7 @@ helper(kit("bleed_them_dry", "BLED DRY", "Lifesteal doubled.", { duration: DRY, 
 abilityUp({
   id: "garrote", cls: "assassin",
   power: "It costs less MP.",
-  a: { name: "Choke", text: "Has Seek. Waits until a foe is in a wind-up. Deals physical damage that scales from Attack to the casting foe with the highest Attack, and applies Silence.", builds: ["lockdown"] },
+  a: { name: "Choke", text: "Has Seek. Waits until a foe is in a wind-up. Deals physical damage that scales from Attack to the casting foe with the highest Attack, and applies Silence.", builds: [] },
   b: { name: "Bleed them dry", text: "Has Seek. Deals physical damage that scales from Attack to a random foe that isn't Taunting, applies Rot and adds many Bleed; stacks scale from Attack. The Assassin's Lifesteal is doubled for a while. No Silence.", builds: ["pact", "hunt"] },
   form: (v, _k, plus) => ({
     ...(plus ? { mp: 200 } : {}),

@@ -26,10 +26,10 @@
  * wins; of the upgrade forms only power steps are read so, a version being a trade against its base); a power step weaker
  * than its base per cast; untested (a form, or a passive form's hooks, whose base never fired in these fights either).
  *
- *   npx tsx tools/piece-check.ts [--only <ids or a share>] [--seeds 3] [--quick] [--workers 4] [--out out/piece-check] [--show]
+ *   npx tsx tools/piece-check.ts [--only <ids or a share>] [--seeds 3] [--quick] [--workers 4] [--out out/piece-check] [--show] [--pack <file>]
  *
- * --only takes a share (scaling, base, armor, offhands, formations, upgrades) or ids: a piece, a mythic, a
- * formation, an upgrade (its five forms) or one form, comma-separated. --quick: one seed, and one regular fight, the elite
+ * --only takes a share (weapons, armor, offhands, amulets, formations, upgrades, mythics) or ids: a piece, a mythic, a
+ * formation, an upgrade (its five forms) or one form, comma-separated. --pack plays another pack than the core set's. --quick: one seed, and one regular fight, the elite
  * and the boss of each act. --show prints each item's fielded party and control as JSON, and plays nothing. Output:
  * out/piece-check/report.md and report.json. Child processes do the playing (worker threads don't get tsx's loader).
  */
@@ -43,13 +43,10 @@ import { fightDungeon, foesFor, knobFor, refFloors, rogue, type FightTier, type 
 import { SUBTICKS, type EffectT, type FormationT, type GearT, type Party, type PartyUnitT, type RogueFightT, type StatusT, type UpgradeT } from "../src/schema.js";
 import { canEquip, checkParty, handsOf } from "../src/validate.js";
 import { BUILD_PARTIES } from "./build-parties.js";
-import * as scaling from "../content/core-set/pieces/weapons-scaling.js";
-import * as base from "../content/core-set/pieces/weapons-base.js";
-import * as armor from "../content/core-set/pieces/armor-amulets.js";
-import * as offhands from "../content/core-set/pieces/offhands.js";
-import * as ups from "../content/core-set/upgrades/index.js";
 
-const PACK = "content/core-set.pack.json";
+/** The pack it plays: the core set's, or another one built for a check (--pack). */
+const packArg = process.argv.indexOf("--pack");
+const PACK = packArg >= 0 ? process.argv[packArg + 1] : "content/core-set.pack.json";
 
 // ─── The fights ─────────────────────────────────────────────────────────────
 
@@ -262,12 +259,13 @@ function playArm(c: Content, fights: Fight[], seeds: number[], party: Party): Su
 // ─── The items ──────────────────────────────────────────────────────────────
 
 const SHARES = {
-  scaling: "Weapons that scale with Attack",
-  base: "Base-heavy weapons",
-  armor: "Armor and amulets",
+  weapons: "Weapons",
+  armor: "Armor",
   offhands: "Offhands",
+  amulets: "Amulets",
   formations: "Formations",
-  upgrades: "Upgrades (and mythics)",
+  upgrades: "Upgrades",
+  mythics: "Mythics",
 } as const;
 type Share = keyof typeof SHARES;
 const FORMS = ["p", "a", "b", "ap", "bp"] as const;
@@ -336,6 +334,7 @@ function closureOf(c: Content, roots: unknown[], grants: string[]): string[] {
  */
 function statusExpect(d: StatusT, applied: boolean): "loud" | "silent" | "none" {
   if (applied || d.reactions?.length || d.trigger?.do || d.pulse?.do || d.strike || d.absorb || d.block || d.riders || d.cover) return "loud";
+  if (d.adds || d.divert || d.soak || d.borrow || d.healCap || d.tireless || d.order || d.swap || d.mods || d.crits) return "silent";
   if (d.floor || d.revives) return "silent";
   return "none";
 }
@@ -449,16 +448,15 @@ function formItems(c: Content, u: UpgradeT, share: Share): Item[] {
   });
 }
 
+/** Every item in the pack: its pieces by slot (a plain weapon has no rarity and isn't one), its formations, its upgrades' forms, its mythics. */
 function allItems(c: Content): Item[] {
-  const pieces = (share: Share, gear: GearT[]) => gear.map((g) => c.gear.get(g.id)).filter((g): g is GearT => !!g).map((g) => gearItem(c, g, share));
+  const SLOT: Record<string, Share> = { weapon: "weapons", armor: "armor", offhand: "offhands", amulet: "amulets" };
+  const pieces = c.pack.gear.filter((g) => (g as GearT & { rarity?: string }).rarity && !g.mythic);
   return [
-    ...pieces("scaling", scaling.gear),
-    ...pieces("base", base.gear),
-    ...pieces("armor", armor.gear),
-    ...pieces("offhands", offhands.gear),
+    ...pieces.map((g) => gearItem(c, g, SLOT[g.slot])),
     ...c.pack.formations.filter((f) => f.id !== "neutral").map((f) => formationItem(c, f)),
-    ...ups.upgrades.flatMap((u) => formItems(c, u, "upgrades")),
-    ...pieces("upgrades", ups.mythics),
+    ...(c.pack.upgrades ?? []).flatMap((u) => formItems(c, u, "upgrades")),
+    ...c.pack.gear.filter((g) => g.mythic).map((g) => gearItem(c, g, "mythics")),
   ];
 }
 
@@ -601,7 +599,7 @@ class Pool {
     this.local = local;
     if (local) return;
     for (let i = 0; i < n; i++) {
-      const w = fork(process.argv[1], [CHILD, JSON.stringify(data)], { execArgv: process.execArgv });
+      const w = fork(process.argv[1], [CHILD, JSON.stringify(data), "--pack", PACK], { execArgv: process.execArgv });
       w.on("message", (d: Done) => { const done = this.waiting.get(w)!; this.waiting.delete(w); this.idle.push(w); this.pump(); done(d); });
       w.on("exit", (code) => { if (code && this.waiting.has(w)) throw new Error(`piece-check: a child process died (exit ${code})`); });
       this.idle.push(w); this.all.push(w);

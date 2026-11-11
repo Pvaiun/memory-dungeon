@@ -129,11 +129,11 @@ test("arc: each basic attack also hits a second, random foe, excluding the first
   assert.equal(b.hits("A").length, 1);
 });
 
-test("extra strikes don't get boosts on basic attacks (Phalanx's triple damage doesn't reach a Double strike's second hit)", () => {
+test("an extra strike takes the shape the unit's basic attacks have (Phalanx's triple damage reaches a Double strike's second hit)", () => {
   const phalanx = { id: "phalanx", name: "Phalanx", label: "buff", show: "sheet", stacking: "refresh", unremovable: true, boosts: [{ tag: "basic", pct: 200 }] };
   const ds = { id: "ds", name: "DS", label: "buff", show: "sheet", stacking: "refresh", unremovable: true, strike: { to: "target" } };
   const a = arena({ party: [{ name: "Hoplite", stats: { attack: 10 }, weapon: weapons.dagger, statuses: ["phalanx", "ds"] }], enemies: [BAG], statuses: [phalanx, ds] }).to(8);
-  assert.deepEqual(a.hits("Bag").map((e) => [e.part, e.amount]), [["hit", 30], ["extra", 10]]);
+  assert.deepEqual(a.hits("Bag").map((e) => [e.part, e.amount]), [["hit", 30], ["extra", 30]]);
 });
 
 // ─── Revive ──────────────────────────────────────────────────────────────────

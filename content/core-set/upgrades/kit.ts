@@ -11,7 +11,7 @@
 import type { AbilityT, EffectT, GearT, NumT, StatusT, TargetRuleT, ToT, UpgradeT } from "../../../src/schema.js";
 import { COOLDOWN, from, HIT, type HitWord, jitter } from "../scale.js";
 import { abilities as baseAbilities, classes, passives } from "../classes.js";
-import type { Build, Builds, BuildTag } from "../pieces/kit.js";
+import { serves as servesOf, type Build, type BuildTag, type Served } from "../pieces/kit.js";
 
 // ─── Words and helpers ───────────────────────────────────────────────────────
 
@@ -71,8 +71,10 @@ type Ver = {
   name: string;
   /** Its card. */
   text: string;
-  /** The builds it serves, in order: the first is worth 2 to it, the rest 1. */
-  builds: Build[];
+  /** Its Serves line, as the loot pass's catalog writes it (builds, rungs, worth, engines, threads). */
+  serves?: string;
+  /** A version the loot pass didn't tag: the builds it serves, in order: the first is worth 2 to it, the rest 1. */
+  builds?: Build[];
   /** What the power step adds to this version's card, where it differs from the upgrade's own power card. */
   plus?: string;
 };
@@ -92,12 +94,16 @@ export const upgrades: UpgradeT[] = [];
 export const abilities: AbilityT[] = [];
 export const statuses: StatusT[] = [];
 export const mythics: GearT[] = [];
-export const builds: Builds = {};
+/** Designer data, never in the pack: what each version form and mythic serves. */
+export const served: Served = {};
 
 const tags = (bs: Build[], rung: 2 | 3): BuildTag[] => bs.map((build, i) => ({ build, rung, worth: i === 0 ? 2 : 1 }));
 function record(kind: "ability" | "passive", u: Up<unknown>) {
   upgrades.push(tidy({ id: u.id, class: u.cls, kind, power: u.power, a: { name: u.a.name, text: u.a.text }, b: { name: u.b.name, text: u.b.text }, ...(u.note ? { note: u.note } : {}) }));
-  for (const [f, v] of [["a", "a"], ["b", "b"], ["ap", "a"], ["bp", "b"]] as const) builds[formId(u.id, f)] = tags(u[v].builds, f.length === 1 ? 2 : 3);
+  for (const [f, v] of [["a", "a"], ["b", "b"], ["ap", "a"], ["bp", "b"]] as const) {
+    const ver = u[v];
+    served[formId(u.id, f)] = ver.serves ? servesOf(ver.serves) : { builds: tags(ver.builds ?? [], f.length === 1 ? 2 : 3), engines: [], threads: [], other: [] };
+  }
 }
 const formName = (baseName: string, u: Up<unknown>, v: V, plus: boolean) => `${v ? u[v].name : baseName}${plus ? "+" : ""}`;
 const formText = (baseText: string, u: Up<unknown>, v: V, plus: boolean) => (v ? u[v].text : baseText) + (plus ? ` ${(v && u[v].plus) || u.power}` : "");

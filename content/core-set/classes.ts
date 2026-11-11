@@ -49,9 +49,13 @@ export const T = {
   everyAlly: { side: "allies", pick: "all" } satisfies TargetRuleT,
 };
 /** Of a hit's or application's target: 1 if it holds the status, else 0 (Malison deepens what a foe already holds). */
-const ifHeld = (status: string): NumT => ({ scale: [{ ratio: 1, when: { has: status }, of: "target" }] });
 /** The afflictions Malison deepens: the built-up statuses, one more stack of each a foe holds. */
-export const DEEPENED = ["burn", "chill", "shock", "sunder"] as const;
+/** The five afflictions Malison counts. */
+export const AFFLICTIONS = ["burn", "chill", "shock", "bleed", "sunder"] as const;
+/** Malison's curse: a hit of `ratio` of Attack, a fifth more for each different affliction its target holds, counted once whatever its stacks. */
+export const curse = (ratio: number): NumT => ({
+  scale: [{ ratio, stat: "attack" }, ...AFFLICTIONS.map((status) => ({ ratio: ratio / 5, when: { has: status }, of: "target" as const, times: { stat: "attack", of: "self" as const } }))],
+});
 /** The Fizzle rule: skip targets that already hold the status; `ifNone: any` for abilities that also deal damage. */
 const lacking = (rule: TargetRuleT, status: string | string[], fallback = false): TargetRuleT => ({ ...rule, where: { ...(rule.where ?? {}), lacks: status }, ...(fallback ? { ifNone: "any" as const } : {}) });
 const waitsFor = (side: TargetRuleT["side"], where: NonNullable<TargetRuleT["where"]>) => ({ if: { side, where } });
@@ -224,9 +228,9 @@ export const abilities: A[] = [
   // The conductor's verb: an ally's next spell sounds twice.
   a("bard", "encore", "Encore", "The other ally with the highest Attack casts its next ability twice; the second cast is free.", { ...timing("medium", "quick"), mp: 650, target: T.otherHighestAMAlly, do: [apply("encore")] }),
   // Hexer
-  // The status amplifier: one more stack of each affliction a foe holds (nothing lands on a foe that holds none), and Bleed of its own.
-  a("hexer", "malison", "Malison", "Deepens every affliction each foe holds: one more stack of each of Burn, Chill, Shock and Sunder it already has, and a few Bleed.", {
-    ...timing("short", "normal"), mp: 450, target: T.everyFoe, do: [...DEEPENED.map((st) => apply(st, { stacks: ifHeld(st) })), apply("bleed", { stacks: stacks("few", "attack") })],
+  // The curse every colour reads: a light hit on every foe, a fifth more for each different affliction it holds, then Bleed of its own.
+  a("hexer", "malison", "Malison", "Curses every foe: light damage that scales from Attack, a fifth more for each different affliction the foe holds (Burn, Chill, Shock, Bleed, Sunder), then a few Bleed; stacks scale from Attack.", {
+    ...timing("short", "normal"), mp: 450, target: T.everyFoe, do: [phys(curse(HIT.light)), apply("bleed", { stacks: stacks("few", "attack") })],
   }),
   a("hexer", "unmake", "Unmake", "Silences the casting foe with the highest Attack and strips its buffs. Waits for a foe to cast.", {
     ...timing("medium", "quick"), mp: 650, ...waitsFor("foes", { casting: true }), target: T.castingFoe, do: [apply("silence"), { op: "remove", label: "buff" }],

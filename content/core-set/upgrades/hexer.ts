@@ -1,7 +1,7 @@
 /** The Hexer's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit.ts. */
 import { own } from "../pieces/kit.js";
-import { BURN_STACKS, stacks } from "../scale.js";
-import { DEEPENED, T } from "../classes.js";
+import { BURN_STACKS, HIT, stacks } from "../scale.js";
+import { curse, T } from "../classes.js";
 import type { EffectT, TargetRuleT } from "../../../src/schema.js";
 import { abilityUp, apply, cd, COLD_HEX, helper, marker, passiveUp, phys } from "./kit.js";
 
@@ -10,8 +10,8 @@ import { abilityUp, apply, cd, COLD_HEX, helper, marker, passiveUp, phys } from 
 passiveUp({
   id: "cold_hex", cls: "hexer",
   power: "Its basic attacks add 40% more.",
-  a: { name: "Hex of flames", text: "Its basic attacks add a few Burn, whatever weapon it carries; stacks scale from Attack.", builds: ["bonfire"] },
-  b: { name: "Withering hex", text: "Its basic attacks Weaken their target in place of the Chill.", builds: ["toll", "lockdown"], plus: "" },
+  a: { name: "Hex of flames", text: "Its basic attacks add a few Burn, whatever weapon it carries; stacks scale from Attack.", serves: "Bonfire 1 ●●● ⚙ lead's colour (half)" },
+  b: { name: "Withering hex", text: "Its basic attacks Weaken their target in place of the Chill.", builds: ["toll"], plus: "" },
   form: (v, k) => ({
     reactions: [{
       on: { event: "hit_lands", kind: "basic" },
@@ -24,19 +24,19 @@ passiveUp({
   }),
 });
 
-/** Malison deepens: one more stack of each affliction a foe holds (0 on a foe without it), and a few Bleed of its own. */
-const deepen = (k: number, to?: TargetRuleT) => DEEPENED.map((st) => apply(st, { stacks: { scale: [{ ratio: k, when: { has: st }, of: "target" }] }, ...(to ? { to } : {}) }));
+/** Malison curses: a hit, a fifth more for each different affliction its foe holds, then the statuses of its own, after the hit. */
+const cursed = (ratio: number) => phys(curse(ratio));
 abilityUp({
   id: "malison", cls: "hexer",
-  power: "40% more of every status it adds.",
-  a: { name: "Plague", text: "Deepens every affliction each foe holds, and adds a few Burn, a few Shock and a few Bleed of its own to every foe; stacks scale from Attack.", builds: ["bonfire", "harvest", "cuts"] },
-  b: { name: "Focused curse", text: "Deepens the afflictions of the foe with the highest Attack alone, three times over, and adds it a few Bleed, three times as many; stacks scale from Attack.", builds: ["lockdown", "hunt"] },
+  power: "40% more damage, and 40% more of every status it adds.",
+  a: { name: "Plague", text: "Curses every foe for three fifths of Malison's damage, scaling from Attack, a fifth more for each different affliction the foe holds (Burn, Chill, Shock, Bleed, Sunder), then a few Burn, a few Shock and a few Bleed; stacks scale from Attack.", serves: "Bonfire ●●, Storm ●●, Cuts ●● ⚙ every colour (key), red rain (half)" },
+  b: { name: "Focused curse", text: "Curses the foe with the highest Attack alone: three times Malison's damage, scaling from Attack, a fifth more for each different affliction it holds (Burn, Chill, Shock, Bleed, Sunder), then three times the Bleed; stacks scale from Attack.", serves: "Hunt ●● ⚙ every colour (half)" },
   form: (v, k) =>
     v === "b"
-      ? { target: T.highestAMFoe, do: [...deepen(3 * k), apply("bleed", { stacks: stacks("few", "attack", 3 * k) })] } // No Seek: a Taunting foe catches it first.
+      ? { target: T.highestAMFoe, do: [cursed(3 * HIT.light * k), apply("bleed", { stacks: stacks("few", "attack", 3 * k) })] } // No Seek: a Taunting foe catches it first.
       : {
         ...(v === "a" ? { mp: 650 } : {}), // A rung up, for the statuses of its own.
-        do: [...deepen(k), apply("bleed", { stacks: stacks("few", "attack", k) }), ...(v === "a" ? [apply("burn", { stacks: stacks("few", "attack", k) }), apply("shock", { stacks: stacks("few", "attack", k) })] : [])],
+        do: [cursed((v === "a" ? HIT.touch : HIT.light) * k), ...(v === "a" ? [apply("burn", { stacks: stacks("few", "attack", k) }), apply("shock", { stacks: stacks("few", "attack", k) })] : []), apply("bleed", { stacks: stacks("few", "attack", k) })],
       },
 });
 
@@ -45,8 +45,8 @@ const MANA_BURN = 0.2;
 abilityUp({
   id: "unmake", cls: "hexer",
   power: "A shorter cooldown.",
-  a: { name: "Silence all", text: "Silences every foe in a wind-up and strips their buffs. Waits until a foe is in a wind-up.", builds: ["lockdown"] },
-  b: { name: "Mana burn", text: "Silences the casting foe with the highest Attack and strips its buffs, and drains a fifth of its MP, which the Hexer gains. Waits until a foe is in a wind-up.", builds: ["overflow", "lockdown"] },
+  a: { name: "Silence all", text: "Silences every foe in a wind-up and strips their buffs. Waits until a foe is in a wind-up.", builds: [] },
+  b: { name: "Mana burn", text: "Silences the casting foe with the highest Attack and strips its buffs, and drains a fifth of its MP, which the Hexer gains. Waits until a foe is in a wind-up.", builds: ["barrage"] },
   form: (v, _k, plus) => ({
     ...(plus ? { cooldown: cd("short", "unmake") } : {}),
     ...(v === "a" ? { target: { side: "foes", where: { casting: true }, pick: "all" } as TargetRuleT } : {}), // An all-pick: the Taunt and Hidden rules don't apply.
@@ -63,7 +63,7 @@ helper(marker("mana_burn", "MANA BURN", "The Hexer that burned its mana gains a 
 abilityUp({
   id: "enfeeble", cls: "hexer",
   power: "40% more Sunder; if it adds none, it costs less MP.",
-  a: { name: "Wither", text: "Weakens every foe.", builds: ["toll", "lockdown"], plus: "It costs less MP." },
+  a: { name: "Wither", text: "Weakens every foe.", builds: ["toll"], plus: "It costs less MP." },
   b: { name: "Expose", text: "Adds many Sunder to the foe with the lowest HP; stacks scale from Attack.", builds: ["hunt", "cuts"], plus: "40% more Sunder." },
   form: (v, k, plus) =>
     v === "a" ? { target: T.everyFoe, cooldown: cd("medium", "enfeeble"), mp: plus ? 450 : 650, do: [apply("weaken")] }

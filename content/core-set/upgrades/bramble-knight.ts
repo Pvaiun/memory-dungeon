@@ -32,7 +32,7 @@ import { abilityUp, apply, cd, helper, kit, marker, ofHolder, passiveUp, phys, r
     id: "briar", cls: "bramble_knight",
     power: "Two fifths more Bleed.",
     a: { name: "Bloodroot", text: "Foes its Thorns wound start to bleed. While a foe bleeds, each action it takes heals the Bramble knight a little.", builds: ["pact", "toll"] },
-    b: { name: "Spreading thorns", text: "When its Thorns strike, they strike a second, random foe too, and both start to bleed.", builds: ["harvest"] },
+    b: { name: "Spreading thorns", text: "When its Thorns strike, they strike a second, random foe too, and both start to bleed.", builds: ["storm"] },
     form: (v, k, plus) => ({ reactions: v === "a" ? bloodroot(k) : v === "b" ? spreading(plus ? "briar__bp" : "briar__b", k) : plain(k) }),
   });
 }
@@ -52,8 +52,8 @@ import { abilityUp, apply, cd, helper, kit, marker, ofHolder, passiveUp, phys, r
   abilityUp({
     id: "thicket", cls: "bramble_knight",
     power: "Comes round sooner.",
-    a: { name: "Overgrowth", text: "Taunts itself twice over, and doubles its Thorns while the Taunts last. No Guard.", builds: ["toll"] },
-    b: { name: "Grove", text: "Guards every ally. No Taunt.", builds: ["landslide", "bonfire", "harvest"] },
+    a: { name: "Overgrowth", text: "Taunts itself twice over, and doubles its Thorns while the Taunts last. No Guard.", serves: "Toll 2 ●●● ⚙ goad (half)" },
+    b: { name: "Grove", text: "Guards every ally. No Taunt.", builds: ["landslide", "bonfire", "storm"] },
     form: (v, _k, plus) =>
       v === "a" ? { ...overgrowth, ...(plus ? { cooldown: cd("long", "thicket") } : {}) }
         : v === "b" ? { ...grove, ...(plus ? { cooldown: cd("medium", "thicket") } : {}) }
@@ -70,7 +70,7 @@ import { abilityUp, apply, cd, helper, kit, marker, ofHolder, passiveUp, phys, r
     id: "regrowth", cls: "bramble_knight",
     power: "Costs less MP.",
     a: { name: "Deep roots", text: "Regen on itself, and Thorns up while it heals.", builds: ["toll"] },
-    b: { name: "Blossom", text: "Regen on every ally.", builds: ["pact", "harvest"] },
+    b: { name: "Blossom", text: "Regen on every ally.", builds: ["pact", "storm"] },
     form: (v, _k, plus) =>
       v === "a" ? { ...deepRoots, ...(plus ? { mp: 200 } : {}) }
         : v === "b" ? { ...blossom, ...(plus ? { mp: 325 } : {}) }
@@ -92,7 +92,7 @@ import { abilityUp, apply, cd, helper, kit, marker, ofHolder, passiveUp, phys, r
   abilityUp({
     id: "bramble_lash", cls: "bramble_knight",
     power: "Deals two fifths more damage.",
-    a: { name: "Whipping vines", text: "Lashes every foe with its thorns, for half.", builds: ["harvest"] },
+    a: { name: "Whipping vines", text: "Lashes every foe with its thorns, for half.", serves: "Toll 2 ●●, Cuts ●● ⚙ red rain (half)" },
     b: { name: "Rebuke", text: "Waits until it's been hit five times since its last lash, then lashes a random foe for double.", builds: ["toll"] },
     form: (v, k) => (v === "a" ? vines(2.25 * k) : v === "b" ? rebuke(9 * k) : { do: [lash(4.5 * k)] }),
   });

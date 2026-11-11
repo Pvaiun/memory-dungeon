@@ -68,7 +68,7 @@ The least you need to know to work on the game. Read it first, then open a detai
   - **Legendary:** bends a rule.
   - **Mythic:** rewrites one class. Each class has one, and a unit wears one at most.
 
-  Every piece carries stats at every rarity. There are 272 pieces, 16 mythics and a plain weapon of each kind. Every piece is fixed, with no random affixes. A card says what the piece does and who can wear it, never what it's for.
+  Every piece carries stats at every rarity. There are 322 pieces, 16 mythics and a plain weapon of each kind. Every piece is fixed, with no random affixes. A card says what the piece does and who can wear it, never what it's for.
 - **A formation** is three seats and maybe a party effect. A seat changes the stats of whoever sits in it, or gives it statuses. There's no battlefield geometry: Aggro on the seats is what makes a front line. A run starts with Neutral (three empty seats), and there are 32 more: common, rare and legendary.
 - **Training** is learning an ability, or taking an ability's or passive's power step, or one of its two versions (A or B). Every ability and passive has a power step and two versions: 64 upgrades in all.
 - **Builds.** A build is a way to play you can watch: someone watching can tell which build is playing and what it's waiting for. There are nine, as roads, with doors where a run drifts from one to the next, and engines: small synergies designed in advance for a player to find (*Gear design: the builds*). The gear, formations and upgrades are designed from them. Today's were made for an earlier twelve, and the loot pass remakes them. The gear design isn't finished: its philosophy is in `docs/gear-design/`.

@@ -2,9 +2,9 @@
 
 The nine builds the gear, formations, upgrades and mythics are designed from, and the web between them: roads, the doors between them, and engines. What a build is, and what rhythm means, is in *Gear design: philosophy*; the rules the loot follows are in *Gear design: the loot*.
 
-Each build is a way to play, with its rhythm, threads, routes, rungs and needs. No pieces and no numbers. Each one also says how a player finds it at each phase of a run, how it stays alive, and what it asks of the kits. Two changes to the kits are approved and not built: **Marked takes the party's random picks** (abilities aimed at a random foe follow the Mark as basic attacks do, inside the Taunt rule, and an ability with a target phrase of its own keeps it), and **the Hexer's Malison pays for breadth** (it does more for each different affliction a foe holds, as its own damage, in place of adding one more stack of each).
+Each build is a way to play, with its rhythm, threads, routes, rungs and needs. No pieces and no numbers. Each one also says how a player finds it at each phase of a run, how it stays alive, and what it asks of the kits. Two changes to the kits come with them: **Marked takes the party's random picks** (abilities aimed at a random foe follow the Mark as basic attacks do, inside the Taunt rule, and an ability with a target phrase of its own keeps it), and **the Hexer's Malison pays for breadth** (it does more for each different affliction a foe holds, as its own damage, in place of adding one more stack of each).
 
-Today's loot and the build test's parties (`PIECE_BUILDS`, `tools/build-parties.ts`) still name the twelve builds these nine replace. The loot pass remakes both.
+The loot is made from these nine: each item's designer tags (`SERVED`, from its Serves line) name the roads, rungs and engines it serves, and the build test's parties (`tools/build-parties.ts`) play each road's three routes.
 
 ## The frame
 
@@ -500,36 +500,36 @@ Four engines the kits and the mythics make today, with nothing new. They're name
 
 ### Across the web
 
-| Engine | Sits on | Lives on | In the game today |
+| Engine | Sits on | Lives on | Its keystones in the loot |
 | --- | --- | --- | --- |
-| The shield detonation | Landslide | the party | the break and the return, on one legendary |
-| The frozen gate | the Toll, Cold Snap | two units | the anchor's piece; Rime shield |
-| The mirror | the Toll, Landslide | two units | the cover; the Hoplite's mythic does it for its own Aegis |
-| The goad | the Storm, the Toll | the party | nothing |
-| The held charge | the Storm, Cold Snap, Landslide | the party | all but the reader for more classes |
-| The reckoning | the Toll, Landslide | two units | nothing |
-| The reaping | the Hunt, the Storm, Bonfire, the Toll | two units | the Assassin's version |
-| The judge's drum | the Hunt, Landslide, Bonfire | two units | Condemn; a killing blow that calls the volley |
-| The opening, again | the Hunt | one unit | the uncommons |
-| The fuse | Bonfire, the Hunt | the party | a piece that spreads part of a fallen foe's fire |
-| The avalanche | Landslide, the Hunt | one unit | nothing |
-| The spell on the swing | Thousand Cuts, Barrage | one unit | the Bard's mythic, which counts hits for its own songs |
-| The red rain | Thousand Cuts, the Storm, the Toll | two units | all of it, in the kits |
-| The riposte | the Toll, Thousand Cuts | one unit | the dodge's piece; the Valkyrie's passive |
-| Every colour | Bonfire, Cold Snap, the Storm, Thousand Cuts | one unit | the wand; Malison is approved, not built |
-| The lead's colour | Bonfire, Cold Snap, the Storm, Thousand Cuts | the party | the colours, in three passives |
-| The emptied quiver | Thousand Cuts, the Hunt | one unit | Quick draw; a coin that makes about half of all hits crit |
-| The blood mage | Blood Pact, Barrage | one unit | the price's piece; Lifesteal |
-| The resonance | Barrage, the Storm, Bonfire, Cold Snap | one unit | Recharge, for the mana |
-| The crescendo | Barrage | one unit | the free casts |
-| Mana as armour | Barrage, Blood Pact | two units | the mana-givers |
-| The shatter bell | Cold Snap, Landslide, Bonfire, Barrage | two units | a seat that answers a shatter with a heavier hit |
-| The firecracker string | Cold Snap | the party | the throw's piece; the Frostweaver's mythic leaves cold behind |
-| The brink | Blood Pact, Landslide, the Toll | two units | the gifts, in eleven kits; a seat that drains its unit |
-| Two in the dark | the Toll, Blood Pact, the Hunt | the party | the Assassin's hiding; more is allowed |
-| The red stone | Thousand Cuts, Blood Pact, Landslide | one unit | nothing |
-| The borrowed gift | none of its own | two units | nothing |
-| The carrier | none | one unit | the foes' afflictions |
+| The shield detonation | Landslide | the party | Rubble plate, Shatterstone charm, Second skin, Rampart |
+| The frozen gate | the Toll, Cold Snap | two units | Frostward blade, Hoarfrost plate, Frost armor, Toll gate |
+| The mirror | the Toll, Landslide | two units | Thornheart plate, Mirror shield, Hoplon, The last wall |
+| The goad | the Storm, the Toll | the party | Provoking blade, Goading totem |
+| The held charge | the Storm, Cold Snap, Landslide | the party | Stormbrand, Thunderhead maul, Lightning-glass, Thunderclap, Stormspear, Eye of the storm |
+| The reckoning | the Toll, Landslide | two units | Grudgebearer, The anvil, Hammer and anvil |
+| The reaping | the Hunt, the Storm, Bonfire, the Toll | two units | Bounty charm, Coup de grâce |
+| The judge's drum | the Hunt, Landslide, Bonfire | two units | Pack leader's coat, Hunting horn, Swift justice, Open season |
+| The opening, again | the Hunt | one unit | Overture coat, Second dawn |
+| The fuse | Bonfire, the Hunt | the party | Ember heart, Wick, Smouldering orb, Pyre line |
+| The avalanche | Landslide, the Hunt | one unit | Overkill axe, Overrun, Downhill charm |
+| The spell on the swing | Thousand Cuts, Barrage | one unit | Baton, Bell of the hour, Metronome |
+| The red rain | Thousand Cuts, the Storm, the Toll | two units | none of its own: every hit that lands on many foes, with the kits' wide hits |
+| The riposte | the Toll, Thousand Cuts | one unit | Parrying spear, Duelist's leathers, Tempest cloak |
+| Every colour | Bonfire, Cold Snap, the Storm, Thousand Cuts | one unit | Wildmagic wand, Grimoire of plagues, Plague |
+| The lead's colour | Bonfire, Cold Snap, the Storm, Thousand Cuts | the party | Mimic wand, The standard |
+| The emptied quiver | Thousand Cuts, the Hunt | one unit | Quick draw |
+| The blood mage | Blood Pact, Barrage | one unit | Flagellant's vestments, The covenant |
+| The resonance | Barrage, the Storm, Bonfire, Cold Snap | one unit | Resonant robes, Storm front |
+| The crescendo | Barrage | one unit | Crescendo charm, Orb of the rising sun |
+| Mana as armour | Barrage, Blood Pact | two units | Orb of the deep, Idol of the deep |
+| The shatter bell | Cold Snap, Landslide, Bonfire, Barrage | two units | Floe charm, Frozen tome, Icefall |
+| The firecracker string | Cold Snap | the party | Winter's chain, Frostwalker's furs, Splinters, Glacier's heart, The long winter |
+| The brink | Blood Pact, Landslide, the Toll | two units | Bloodletter, Flagellant's vestments, Halved heart, Heart of the saint, Blood vial, Ravening draught, The chalice, Blood oath |
+| Two in the dark | the Toll, Blood Pact, the Hunt | the party | Shroud charm, Shadow cloak, Smoke screen, Decoy |
+| The red stone | Thousand Cuts, Blood Pact, Landslide | one unit | Red stone mail, Phylactery, Blood oath |
+| The borrowed gift | none of its own | two units | Twin-knot, Twins |
+| The carrier | none | one unit | Carrier's coat |
 
 - **Every road has engines, and none has only its own.** Landslide and the Toll touch nine; Thousand Cuts, Bonfire, Cold Snap, the Storm and the Hunt seven; Barrage six; Blood Pact five.
 - **Four sit on one road, eleven on two, eleven on three or more,** and the two exotics on none.
@@ -557,7 +557,7 @@ One part, several engines, so a run holding one part has more than one partner t
 ### What the set asks of the loot
 
 - **The common half comes first.** The shield party was laying Shields long before it found the piece that broke them. So an engine's supply sits in the kits, the commons and the uncommons, and its keystone in a rare, a legendary, a version or a seat.
-- **A keystone met alone does nothing, and play showed it.** About half the keystones have a piece or a seat in today's loot that does it or nearly does. The dodge that strikes back was worn by units that drew nothing, the shatter that throws cold by a party that shattered once a fight, and the price in life for two fights. What was missing each time was the other half, close at hand.
+- **A keystone met alone does nothing, and play showed it.** The dodge that strikes back was worn by units that drew nothing, the shatter that throws cold by a party that shattered once a fight, and the price in life for two fights. What was missing each time was the other half, close at hand.
 - **Every keystone comes from more than one place:** a piece in more than one kind, a version, a seat. A run sees under half the legendaries, so twenty-eight engines with one keystone each would mostly never be met.
 - **Each part is worth wearing alone on its road,** and no card names its partner.
 - **Parts overlap on purpose** (*Parts that recur*). That's how pieces meet in ways nobody wrote down.

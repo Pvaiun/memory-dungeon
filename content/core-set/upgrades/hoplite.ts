@@ -18,8 +18,8 @@ import { abilityUp, apply, cd, helper, kit, passiveUp, phys, r6, removeMine } fr
   passiveUp({
     id: "phalanx", cls: "hoplite",
     power: "Its basic attacks deal a little more than double: × 2.4.",
-    a: { name: "Opening thrust", text: "Basic attacks come half as often and deal double. The first of each fight comes at once and deals triple.", builds: ["ambush", "landslide"] },
-    b: { name: "Shieldbearer", text: "Basic attacks come half as often and deal double. Defense adds to them half as much as Attack does.", builds: ["landslide"] },
+    a: { name: "Opening thrust", text: "Basic attacks come half as often and deal double. The first of each fight comes at once and deals triple.", serves: "Hunt 1 ●●●, Landslide ●●" },
+    b: { name: "Shieldbearer", text: "Basic attacks come half as often and deal double. Defense adds to them half as much as Attack does.", serves: "Landslide 1 ●●●" },
     form: (v, _k, plus) => ({ ...phalanx(plus ? 140 : 100), ...(v === "a" ? { reactions: [opening] } : v === "b" ? { riders: bearer } : {}) }),
   });
 }
@@ -34,8 +34,8 @@ import { abilityUp, apply, cd, helper, kit, passiveUp, phys, r6, removeMine } fr
   abilityUp({
     id: "aspis", cls: "hoplite",
     power: "Comes round sooner.",
-    a: { name: "Watch the anchor", text: "Aegis on the ally with the most Aggro that holds none.", builds: ["toll"] },
-    b: { name: "Shield wall", text: "Aegis on every ally.", builds: ["bonfire", "harvest"] },
+    a: { name: "Watch the anchor", text: "Aegis on the ally with the highest Aggro that holds none.", serves: "Toll 2 ●●● ⚙ mirror (half)" },
+    b: { name: "Shield wall", text: "Aegis on every ally.", builds: ["bonfire", "storm"] },
     form: (v, _k, plus) =>
       v === "a" ? { ...anchor, ...(plus ? { cooldown: cd("medium", "aspis") } : {}) }
         : v === "b" ? { ...wall, ...(plus ? { cooldown: cd("long", "aspis") } : {}) }
@@ -49,7 +49,7 @@ import { abilityUp, apply, cd, helper, kit, passiveUp, phys, r6, removeMine } fr
   abilityUp({
     id: "othismos", cls: "hoplite",
     power: "Adds two fifths more Sunder.",
-    a: { name: "Locked shields", text: "The shove, and the Hoplite and the ally with the lowest share of HP are Guarded.", builds: ["toll", "harvest"] },
+    a: { name: "Locked shields", text: "The shove, and the Hoplite and the ally with the lowest share of HP are Guarded.", builds: ["toll", "storm"] },
     b: { name: "Breach", text: "One foe only, the one with the most Defense, for triple, adding several Sunder.", builds: ["landslide", "hunt"] },
     form: (v, k) =>
       v === "a" ? { do: [shove(HIT.light, "few", k), apply("guard", { to: "self" }), apply("guard", { to: T.lowestShareAlly })] }
@@ -66,8 +66,8 @@ import { abilityUp, apply, cd, helper, kit, passiveUp, phys, r6, removeMine } fr
   abilityUp({
     id: "spear_thrust", cls: "hoplite",
     power: "Deals two fifths more damage.",
-    a: { name: "Skewer", text: "A thrust through a random foe and on into the foe with the most HP, each for three quarters, each adding a few Sunder.", builds: ["harvest"] },
-    b: { name: "Disarm", text: "A thrust at the foe with the highest Attack, which is Weakened. No Sunder.", builds: ["lockdown", "hunt"] },
+    a: { name: "Skewer", text: "A thrust through a random foe and on into the foe with the most HP, each for three quarters, each adding a few Sunder.", builds: ["storm"] },
+    b: { name: "Disarm", text: "A thrust at the foe with the highest Attack, which is Weakened. No Sunder.", builds: ["hunt"] },
     form: (v, k) => (v === "a" ? skewer(0.8 * k) : v === "b" ? disarm(1.1 * k) : { do: [thrust(1.1 * k)] }),
   });
 }

@@ -374,8 +374,10 @@ export const STATUS = {
   /**
    * Chill slows its holder a little for each stack and thaws a stack every `every` ticks, slowly enough to be stacked up over a
    * fight. At its cap it shatters: untyped damage for each stack, a Stun, and the Chill is spent. A lock that ends in a payoff.
+   * `chain`: a chain of shatters dies down. Chill that a shatter passes on to a foe that has shattered in the last `window`
+   * ticks is cut to `pct` % for each time it has, in fractions of a stack (a rule of Chill's own, on no card).
    */
-  chill: { cap: 12, perStack: -4, every: 14, shatter: 250 },
+  chill: { cap: 12, perStack: -4, every: 14, shatter: 250, chain: { pct: 50, window: 10 } },
   /** The cap is a safety: uncapped, a slow foe gathers enough Shock to pay a fight's worth of damage for one action. */
   shock: { perStack: 80, drop: 0.5, cap: 40 },
   sunder: { perStack: 1.5, every: 4, cap: 20 }, // +1.5% damage taken a stack, +30% at the cap.

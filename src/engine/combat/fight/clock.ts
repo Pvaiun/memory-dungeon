@@ -1,11 +1,13 @@
 /** The clock: the next moment anything happens, the enrage, the fight's start and each step. */
 import { sub } from "../stats.js";
 import { next } from "../../rng.js";
-import { def, LIMITS, NEVER, refresh, SUBTICKS, unit, type W } from "./state.js";
+import { type CUnit, def, feats, hpMoved, LIMITS, NEVER, refresh, SUBTICKS, unit, type W } from "./state.js";
 import { actDef, available, cooldownOf, resolve, start } from "./actions.js";
 import { applyStatus, drain, endStatus, pulse } from "./statuses.js";
 import { ev, fire, react } from "./events.js";
 import { revive } from "./units.js";
+import { again } from "./effects.js";
+import { randomIndex } from "./targeting.js";
 
 // ─── The clock ──────────────────────────────────────────────────────────────
 
@@ -15,7 +17,13 @@ export function nextTime(w: W): number {
   let t = f.queue.length ? f.queue[0].at : NEVER;
   for (const u of f.units) {
     for (const s of u.statuses) if (s.end !== -1 && s.end < t) t = s.end;
-    if (u.ko || u.cast) continue;
+    if (u.ko) continue;
+    // A tireless unit's basic attack keeps its own clock through its abilities' wind-ups and recoveries.
+    if ((u.cast || u.busy > f.now) && tireless(w, u)) {
+      const b = swingOf(u);
+      if (b >= 0 && through(w, u)) t = Math.min(t, available(w, u, b) ? f.now + 1 : Math.max(f.now + 1, u.acts[b].ready));
+    }
+    if (u.cast) continue;
     if (u.busy > f.now) {
       t = Math.min(t, u.busy);
       continue;
@@ -25,6 +33,11 @@ export function nextTime(w: W): number {
   }
   return t;
 }
+
+const tireless = (w: W, u: CUnit) => feats(w.c).tireless && u.statuses.some((s) => def(w, s.id).tireless);
+const swingOf = (u: CUnit) => u.acts.findIndex((a) => a.id === "basic");
+/** What a tireless swing goes through: an ability's wind-up, or the recovery after one (not its own swing's recovery). */
+const through = (w: W, u: CUnit) => (u.cast ? actDef(w, u, u.cast.act).kind === "ability" : u.busy > w.f.now && u.rest === "ability");
 
 /** ruleset.enrage: the extra damage, in percent, every unit deals once a fight has run long. */
 export function enrage(w: W): number {
@@ -65,7 +78,20 @@ function begin(w: W) {
     }
   }
   for (const u of f.units) if (!u.ko) fire(w, ev("fight_start", u, null));
+  // A unit that starts a fight under a line, or over it, has crossed it.
+  for (const u of f.units) hpMoved(w, u, true);
   f.begun = true;
+}
+
+/**
+ * The action a free unit starts: its first available one in slot order; under `order: random`, one of its available
+ * abilities picked on its own dice, whatever order they're slotted in.
+ */
+function firstAction(w: W, u: CUnit): number {
+  const i = u.acts.findIndex((_, j) => available(w, u, j));
+  if (i < 0 || u.acts[i].id === "basic" || !feats(w.c).order || !u.statuses.some((s) => def(w, s.id).order === "random")) return i;
+  const ready = u.acts.map((_, j) => j).filter((j) => u.acts[j].id !== "basic" && available(w, u, j));
+  return ready.length > 1 ? ready[randomIndex(w, u, ready.length, "order")] : i;
 }
 
 /** Play one moment. The first call sets the fight up. */
@@ -88,8 +114,15 @@ export function step(w: W) {
     w.log?.({ t: "enrage", vis: "player", at: t });
   }
   for (const u of f.units) {
-    if (u.ko || u.cast || u.busy > t) continue;
-    const i = u.acts.findIndex((_, j) => available(w, u, j));
+    if (u.ko) continue;
+    if (u.cast || u.busy > t) {
+      // A tireless unit swings through its abilities' wind-ups and recoveries, on its basic attack's own clock.
+      const b = tireless(w, u) && through(w, u) ? swingOf(u) : -1;
+      if (b >= 0 && available(w, u, b)) resolve(w, u, b, true);
+      if (f.result) return;
+      continue;
+    }
+    const i = firstAction(w, u);
     if (i >= 0) start(w, u, i);
     if (f.result) return;
   }
@@ -105,6 +138,10 @@ export function step(w: W) {
       // A revive on a timer stands its unit up, if nothing has raised it meanwhile.
       const t = unit(w, it.unit)!;
       if (t.ko && !t.gone) revive(w, unit(w, it.by) ?? t, t, it.hp, it.ready);
+    } else if (it.k === "hit") {
+      // A second landing on a timer, if both still stand.
+      const a = unit(w, it.unit), t = unit(w, it.target);
+      if (a && t) again(w, a, t, it.amount, it.src, it.tag);
     }
   }
   if (!f.result) {

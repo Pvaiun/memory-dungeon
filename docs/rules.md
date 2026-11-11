@@ -50,6 +50,10 @@ The philosophy behind these lines, and the director's intent in their words, are
 - **Plenty of loot:** better too much than not enough.
 - **A formation is a shape with its own identity.** Seats can differ as much as the shape needs. It's chosen for what the party is, not the next foe (no lock-and-key fishing), and a new one should make you rethink your party. Formations come in common, rare and legendary; there are no mythic formations.
 - **Upgrades:** each ability and passive has one plain power step and a choice of two versions, designed for that ability, with no formula across abilities. What matters is how the two differ, and either can change whom an ability aims at and when it fires, not only its numbers. A training opportunity offers three choices.
+- **Alike cards:** an upgrade never copies a piece, and two pieces one unit could wear together never read the same (the same sentence). A piece and a formation seat may share a rule.
+- **One Mark from gear:** a piece or a seat Marks only while no foe is Marked. Marked takes the party's basic attacks and its abilities aimed at a random foe.
+- **A spell paid in life** costs half the share of max HP that it would cost of max MP.
+- **Offers aren't aimed** by the designer's tags for the first playtest.
 - **Nothing the player has to understand rests on a number they can't see,** such as a foe's MP: no engine and no version. A version that drains a foe's MP is a mana gain for its user, and the drain counts for nothing in a build.
 
 ## Balance and testing

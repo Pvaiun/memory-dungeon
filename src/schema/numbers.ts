@@ -25,7 +25,12 @@ export const UnitCond = z.strictObject({
   hasAny: z.array(Id).min(1).optional().describe("Has at least one of these statuses (Stunned or Silenced)."),
   lower: z.strictObject({ stat: StatKey }).optional().describe("This stat is lower than the reading unit's: the acting unit in an action, a reaction's actor, a pulse's holder (an ally with less Defense than the wearer)."),
   acted: z.boolean().optional().describe("true once one of its actions has resolved this fight; false until then (a unit summoned mid-fight starts false)."),
-  top: z.strictObject({ stats: z.array(StatKey).min(1) }).optional().describe("No living unit on its side has more of the highest of these stats (\"the foe with the highest Attack\"); ties pass."),
+  top: z
+    .strictObject({ stats: z.array(StatKey).min(1), others: z.literal(true).optional().describe("Leave the reading unit out of the comparison (\"the other ally with the highest Attack\"); the reading unit itself never passes.") })
+    .optional()
+    .describe("No living unit on its side has more of the highest of these stats (\"the foe with the highest Attack\"); ties pass."),
+  topHp: z.literal(true).optional().describe("No living unit on its side has more current HP; ties pass."),
+  canHeal: z.boolean().optional().describe("true: can be healed: below its max HP, and under any cap on its healing. false: can't."),
   weapon: z.array(Id).min(1).optional().describe("Wields a weapon of one of these kinds (an enemy's weapon by its kind, if it names one)."),
 }).meta({ id: "UnitCond" });
 export type UnitCondT = z.infer<typeof UnitCond>;
@@ -38,15 +43,22 @@ export const Scale = z
     stacks: Id.optional().describe("A status's Intensity total, in stacks."),
     amount: z.literal(true).optional().describe("Reactions only: the event's amount."),
     when: UnitCond.optional().describe("1 if the condition holds for the unit read (`of`), else 0: scaling from a condition instead of a stat."),
+    event: z.enum(["raw", "stopped"]).optional().describe("Reactions to hit events only: `raw`, the hit's amount before Defense (after boosts and crit); `stopped`, what the unit's Shield soaked and its Aegis blocked of it."),
+    cost: z.enum(["mp", "hp"]).optional().describe("Actions, and the amounts statuses add to their hits: what this action paid, in MP or as an HP price."),
     count: z
-      .union([z.enum(["buffs", "debuffs", "targets", "hit"]), z.strictObject({ side: Side, where: UnitCond.optional(), seat: Id.optional() })])
+      .union([z.enum(["buffs", "debuffs", "targets", "hit"]), z.strictObject({ side: Side, where: UnitCond.optional(), seat: Id.optional(), stacks: Id.optional().describe("The total of this status's stacks across those units, in place of their number.") })])
       .optional()
       .describe("A count, as COUNTS says: the unit's buffs or debuffs, an action's targets or the units its hits landed on, or the units on a side that pass a test."),
-    times: z.strictObject({ stat: StatKey, of: Of.optional() }).optional().describe("Multiplies the term by a stat, read live: \"X% per point of Y\" (Lifesteal, Siphon)."),
+    times: z
+      .strictObject({ stat: StatKey.optional(), stacks: Id.optional(), of: Of.optional() })
+      .refine((t) => (t.stat === undefined) !== (t.stacks === undefined), { message: "times names a stat or a status's stacks" })
+      .optional()
+      .describe("Multiplies the term by a stat, or by a status's stacks, read live: \"X% per point of Y\" (Lifesteal, Siphon), \"a twentieth more of the blow for each Spite\"."),
     of: Of.optional(),
+    seat: Id.optional().describe("Statuses only: read from the unit in this seat of the holder's party, in place of `of` (\"for each Spite the Wall holds\"). Nothing if nobody sits there."),
   })
-  .refine((s) => [s.stat, s.hp, s.stacks, s.amount, s.when, s.count].filter((x) => x !== undefined).length === 1, {
-    message: "a scale names exactly one of stat, hp, stacks, amount, when or count",
+  .refine((s) => [s.stat, s.hp, s.stacks, s.amount, s.when, s.count, s.event, s.cost].filter((x) => x !== undefined).length === 1, {
+    message: "a scale names exactly one of stat, hp, stacks, amount, when, count, event or cost",
   });
 export type ScaleT = z.infer<typeof Scale>;
 
@@ -92,7 +104,11 @@ export type ConditionT = z.infer<typeof Condition>;
 
 /** A test of one of a reaction's event units. */
 export const EventUnitTest = z
-  .strictObject({ unit: z.enum(["other", "owner"]).describe("other: the event's other unit (as `to: other`); owner: the unit the event is about (as `to: owner`)."), where: UnitCond.describe("What it must pass.") })
+  .strictObject({
+    unit: z.enum(["other", "owner"]).describe("other: the event's other unit (as `to: other`); owner: the unit the event is about (as `to: owner`)."),
+    where: UnitCond.describe("What it must pass."),
+    absent: z.literal(true).optional().describe("The test also holds when the event has no such unit (a heal whose healer isn't known)."),
+  })
   .describe("Reactions only: the event's other unit, or the unit it's about, passes `where` (\"the foe it hit is Sundered\", \"the ally that took the hit is below half\").");
 export const Test = z.union([Condition, EventUnitTest]);
 export type TestT = z.infer<typeof Test>;

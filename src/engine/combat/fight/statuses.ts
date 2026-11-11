@@ -5,11 +5,11 @@
 import * as S from "../../../schema.js";
 import { compile, sub } from "../stats.js";
 import { next } from "../../rng.js";
-import { batch, boostOf, CARRIED_NONE, type CUnit, def, fixed, foeSide, isIntensity, type Item, perOf, push, refresh, type SInst, stat, SUBTICKS, sval, taunting, unit, type W } from "./state.js";
+import { batch, boostOf, CARRIED_NONE, type CUnit, def, feats, fixed, foeSide, healTop, hpMoved, isIntensity, type Item, perOf, push, refresh, type SInst, stat, SUBTICKS, sval, taunting, unit, type W } from "./state.js";
 import { ev, fire } from "./events.js";
 import { actDef, cooldownOf, covers } from "./actions.js";
-import { hasKind, holds, randomIndex } from "./targeting.js";
-import { type Ctx, run } from "./effects.js";
+import { hasKind, holds, lastInSight, randomIndex } from "./targeting.js";
+import { type Ctx, divertOf, firstFor, run } from "./effects.js";
 
 // ─── Statuses ───────────────────────────────────────────────────────────────
 
@@ -22,11 +22,23 @@ function immune(w: W, u: CUnit, d: S.StatusT): boolean {
   return cp.harms && on("immune:damage");
 }
 
-type ApplyOpts = { stacks: number; duration?: number | "permanent"; chance?: number; rng: CUnit };
+/**
+ * How a status is applied. `area`: its effect was aimed at two or more units; `copy`: a copy, whose status_gained is a
+ * repeat; `passed`: stacks passed on from a capping, which the status's `damp` cuts; `sent`: already sent on by a
+ * `divert`, so it isn't sent on again.
+ */
+type ApplyOpts = { stacks: number; duration?: number | "permanent"; chance?: number; rng: CUnit; area?: boolean; copy?: boolean; passed?: boolean; sent?: boolean };
 
 export function applyStatus(w: W, by: CUnit, to: CUnit, d: S.StatusT, o: ApplyOpts) {
   const f = w.f;
   if (to.ko || f.result) return;
+  // What a unit would gain goes to another instead, once (every Shield an ally would gain, sent to one holder).
+  if (!o.sent && feats(w.c).divert) {
+    const other = divertOf(w, to, d.id);
+    if (other) return applyStatus(w, by, other, d, { ...o, sent: true });
+  }
+  // A counter takes one stack from one event, however many of its holder's cards count it.
+  if (d.oncePerEvent && !firstFor(w, `count:${to.id}:${d.id}`)) return;
   if (o.chance !== undefined && o.chance < 100) {
     const roll = next(o.rng.rng) * 100;
     w.log?.({ t: "roll", vis: "hidden", at: f.now, by: o.rng.id, what: "apply", status: d.id, chance: o.chance, roll });
@@ -38,8 +50,9 @@ export function applyStatus(w: W, by: CUnit, to: CUnit, d: S.StatusT, o: ApplyOp
     w.log?.({ t: "immune", vis: "player", at: f.now, unit: to.id, status: d.id, name: d.name });
     return;
   }
-  // A status that hides its holder doesn't land on a Taunting unit (no IMMUNE: it just doesn't land).
-  if (forbids(d) && taunting(w, to)) return;
+  // A status that hides its holder doesn't land on a Taunting unit (no IMMUNE: it just doesn't land), nor where it would
+  // leave its side with nobody in sight: someone stays in the light.
+  if (forbids(d) && (taunting(w, to) || lastInSight(w, to))) return;
   // A boss's control resistance, the one exception to universal statuses: at its cap the control doesn't
   // land at all, and from `resist.at` stacks it lands for a share of its own length.
   const ctl = controlOf(w, to, d);
@@ -60,7 +73,13 @@ export function applyStatus(w: W, by: CUnit, to: CUnit, d: S.StatusT, o: ApplyOp
   // Only the stacks an application adds can scale: from the applier's stated scaling, and its boosts that name
   // the status or one of its tags. The applier's boosts never reach the status's own numbers, but they can read
   // the unit receiving the stacks.
-  const add = isIntensity(d) ? Math.floor(o.stacks * (1 + boostOf(w, by, [d.id, ...(d.tags ?? [])], to) / 100) * SUBTICKS) : 0;
+  let add = isIntensity(d) ? Math.floor(o.stacks * (1 + boostOf(w, by, [d.id, ...(d.tags ?? [])], to) / 100) * SUBTICKS) : 0;
+  // A chain of cappings dies down: stacks passed on to a unit that has capped lately are cut for each time it has, in
+  // fractions of a stack, so it's never nothing.
+  if (d.damp && o.passed && add > 0) {
+    const c = to.capped?.[d.id];
+    if (c && c.until >= f.now) for (let n = c.n; n > 0 && add > 1; n--) add = Math.max(1, Math.floor((add * d.damp.pct) / 100));
+  }
   const cur = to.statuses.find((s) => s.id === d.id && (!d.perSource || s.src === by.id));
   if (cur && d.stacking === "fizzle") return;
   // An Intensity status exists only at 1 stack or more, and an application that adds no stacks does nothing at
@@ -81,7 +100,7 @@ export function applyStatus(w: W, by: CUnit, to: CUnit, d: S.StatusT, o: ApplyOp
       cur.stacks = Math.min(capOf(w, d, cur.nums, to), cur.stacks + add);
       if (dur !== "permanent") cur.end = end;
     }
-    gained(w, to, d, cur, by, cur.stacks - before);
+    gained(w, to, d, cur, by, cur.stacks - before, o);
     return;
   }
   // A status with one applier at a time knows it; a shared Intensity total has no single source.
@@ -89,7 +108,7 @@ export function applyStatus(w: W, by: CUnit, to: CUnit, d: S.StatusT, o: ApplyOp
   inst.stacks = isIntensity(d) ? Math.min(capOf(w, d, nums, to), add) : 0;
   to.statuses.push(inst);
   if (d.pulse) push(w, { k: "pulse", at: f.now + sub(d.pulse.every), b: pulseBatch(to, d), g: 0, slot: to.slot, seq: f.seq++, unit: to.id, uid: inst.uid });
-  gained(w, to, d, inst, by, inst.stacks);
+  gained(w, to, d, inst, by, inst.stacks, o);
 }
 
 /** The status makes its holder unpickable (Hidden). */
@@ -122,20 +141,35 @@ export function drain(w: W, it: Extract<Item, { k: "drain" }>) {
   if (u && c && u.ctrl) setControl(w, u, c, u.ctrl - 1);
 }
 
+/** Whether a unit's stats read its statuses' stacks live (a stat for each Cut, Thorns for each Spite), so a change of stacks reworks them. */
+const readsStacks = (w: W, u: CUnit) => feats(w.c).live && u.statuses.some((s) => def(w, s.id).stats?.some((ch) => ch.live));
+
 /** An application landed. `added`: the stacks it added, in thousandths (Intensity only), which the event reports. */
-function gained(w: W, to: CUnit, d: S.StatusT, s: SInst, by?: CUnit, added = 0) {
+function gained(w: W, to: CUnit, d: S.StatusT, s: SInst, by?: CUnit, added = 0, o: Partial<ApplyOpts> = {}) {
   if (d.absorb) s.peak = Math.max(s.peak ?? 0, s.stacks);
   w.log?.({
     t: "status", vis: d.show === "icon" ? "player" : "hidden", at: w.f.now, unit: to.id, status: d.id, name: d.name, ...(by ? { by: by.id } : {}),
     total: isIntensity(d) ? s.stacks / SUBTICKS : null, end: s.end,
   });
-  if (d.stats) refresh(w, to);
+  if (d.stats || d.swap || (isIntensity(d) && readsStacks(w, to))) refresh(w, to);
+  // A cap on healing takes what the unit has above it as it lands: not damage, and not a price.
+  if (d.healCap !== undefined && to.hp > healTop(w, to)) {
+    to.hp = Math.max(1, healTop(w, to));
+    hpMoved(w, to);
+  }
   if (d.lockout?.interrupt) interrupt(w, to, d.lockout.covers);
   if (d.lockout?.pause && s.end !== -1) hold(w, to, d.lockout.covers, s.end - w.f.now);
-  // Other is the applier, and an Intensity application says how many stacks it added.
-  fire(w, ev("status_gained", to, by ?? null, { status: d.id, amount: added / SUBTICKS, src: by?.id ?? null }));
+  // Other is the applier, and an Intensity application says how many stacks it added. A copy is a repeat.
+  fire(w, ev("status_gained", to, by ?? null, { status: d.id, amount: added / SUBTICKS, src: by?.id ?? null, tags: o.area ? ["area"] : [], repeat: o.copy ? 1 : 0, passed: !!o.passed }));
   // An Intensity status that stands at its cap after an application has capped (Chill shatters). Other: the applier.
-  if (isIntensity(d) && compile(d).cap >= 0 && s.stacks >= capOf(w, d, s.nums, to) && to.statuses.includes(s)) fire(w, ev("status_capped", to, by ?? null, { status: d.id, src: by?.id ?? null }));
+  if (isIntensity(d) && compile(d).cap >= 0 && s.stacks >= capOf(w, d, s.nums, to) && to.statuses.includes(s)) {
+    // A status whose chains die down remembers the capping for a while.
+    if (d.damp) {
+      const c = (to.capped ??= {})[d.id];
+      to.capped[d.id] = { n: c && c.until >= w.f.now ? c.n + 1 : 1, until: w.f.now + sub(d.damp.window) };
+    }
+    fire(w, ev("status_capped", to, by ?? null, { status: d.id, amount: s.stacks / SUBTICKS, src: by?.id ?? null }));
+  }
 }
 
 export const capOf = (w: W, d: S.StatusT, nums: number[], holder: CUnit) =>
@@ -159,7 +193,7 @@ export function endStatus(w: W, u: CUnit, s: SInst, cause: S.CauseT, by: Ending 
   const d = def(w, s.id);
   w.log?.({ t: "status_end", vis: d.show === "icon" ? "player" : "hidden", at: w.f.now, unit: u.id, status: d.id, name: d.name, cause });
   // A stat that brings this status puts it straight back while the stat is above 0.
-  if (d.stats || w.c.pack.stats.some((x) => x.brings === d.id)) refresh(w, u);
+  if (d.stats || d.swap || (isIntensity(d) && readsStacks(w, u)) || w.c.pack.stats.some((x) => x.brings === d.id)) refresh(w, u);
   const amount = by.amount ?? (cause === "stacks" && d.absorb ? (s.peak ?? s.stacks) : s.stacks) / SUBTICKS;
   fire(w, ev("status_ended", u, by.other ?? null, { status: d.id, cause, ending: s, amount, src: s.src }));
 }
@@ -200,7 +234,7 @@ export function remove(w: W, by: CUnit, t: CUnit, e: Extract<S.EffectT, { op: "r
   }
   let pool = t.statuses.filter((s) => {
     const d = def(w, s.id);
-    return d.label === e.label && !d.unremovable && (!e.status || d.id === e.status) && (!e.kind || hasKind(d, e.kind, e.tag));
+    return d.label === e.label && !d.unremovable && (!e.status || d.id === e.status) && (!e.kind || hasKind(d, e.kind, e.tag)) && !e.except?.includes(d.id);
   });
   const hit: SInst[] = [];
   if ((e.order ?? "newest") === "newest") hit.push(...pool.sort((a, b) => b.uid - a.uid).slice(0, e.count ?? Number.MAX_SAFE_INTEGER));
@@ -252,8 +286,23 @@ function give(w: W, to: CUnit, s: SInst) {
 export function drop(w: W, u: CUnit, s: SInst, d: S.StatusT) {
   if (!d.drop) return;
   s.stacks = d.drop === "all" ? 0 : "fraction" in d.drop ? Math.floor(s.stacks * (1 - d.drop.fraction)) : Math.max(0, s.stacks - sub(d.drop.count));
-  if (d.stats) refresh(w, u);
+  if (d.stats || readsStacks(w, u)) refresh(w, u);
   if (s.stacks < SUBTICKS) endStatus(w, u, s, "stacks");
+}
+
+/** Takes stacks off an Intensity status a unit holds: a share of them in whole stacks, a count, or all; under one stack it ends. */
+export function spend(w: W, u: CUnit, id: string, share?: number, count?: number) {
+  const d = def(w, id);
+  for (const s of u.statuses.slice()) {
+    if (s.id !== id) continue;
+    const whole = Math.floor(s.stacks / SUBTICKS);
+    const n = share !== undefined ? Math.floor((whole * share) / 100) : count !== undefined ? sub(count) / SUBTICKS : whole + 1;
+    if (n <= 0) continue;
+    s.stacks = Math.max(0, s.stacks - Math.round(n * SUBTICKS));
+    w.log?.({ t: "status", vis: d.show === "icon" ? "player" : "hidden", at: w.f.now, unit: u.id, status: d.id, name: d.name, total: s.stacks / SUBTICKS, end: s.end });
+    if (d.stats || readsStacks(w, u)) refresh(w, u);
+    if (s.stacks < SUBTICKS) endStatus(w, u, s, "removed");
+  }
 }
 
 export function pulse(w: W, it: Extract<Item, { k: "pulse" }>) {

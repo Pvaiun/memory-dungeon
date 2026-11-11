@@ -8,8 +8,9 @@ import * as S from "../../../schema.js";
 import type { Entry } from "../../log.js";
 import { baseOf, basicSpeed, finalValue, rescale, role, sameSpeed, scalesOf, slotOf, speedOf, statDefault } from "../stats.js";
 import { applyStatus, endStatus, forbids } from "./statuses.js";
-import { actDef } from "./actions.js";
+import { actDef, type HitKind } from "./actions.js";
 import { inSeat, passes, sideOf } from "./targeting.js";
+import { ev, fire } from "./events.js";
 
 // ─── State ──────────────────────────────────────────────────────────────────
 
@@ -18,8 +19,8 @@ import { inSeat, passes, sideOf } from "./targeting.js";
  * `peak`: an absorb's most stacks since it was applied, in thousandths, which its ending reports.
  */
 export type SInst = { uid: number; id: string; src: string | null; at: number; end: number; stacks: number; nums: number[]; peak?: number };
-/** An action a unit can take: its equipped abilities in slot order, then "basic". `ready` is when its cooldown ends. */
-export type Act = { id: string; ready: number };
+/** An action a unit can take: its equipped abilities in slot order, then "basic". `ready` is when its cooldown ends; `casts`, its counted casts this fight. */
+export type Act = { id: string; ready: number; casts?: number };
 
 export type CUnit = Unit & {
   slot: number;
@@ -42,6 +43,8 @@ export type CUnit = Unit & {
   cast: { act: number; end: number } | null;
   /** When recovery ends. */
   busy: number;
+  /** What it's recovering from: its basic attack, or an ability. */
+  rest?: "basic" | "ability";
   statuses: SInst[];
   /** Its seat, the id of its position in the party's formation. Enemies and summoned units sit in none. */
   seat?: string;
@@ -49,6 +52,14 @@ export type CUnit = Unit & {
   ctrl?: number;
   /** One of its actions has resolved this fight. */
   acted?: boolean;
+  /** Of `start`, the statuses its gear and its seat give: what a `restart` makes happen again. */
+  opening?: string[];
+  /** Which HP lines (percent of max HP, as content's hp_low and hp_high name them) it stands under; unset until the fight starts or it stands up. */
+  under?: Record<number, boolean>;
+  /** The unit that last hit it, this fight. */
+  hitBy?: string;
+  /** For a status with `damp`: how many times it has capped lately, and until when that counts. */
+  capped?: Record<string, { n: number; until: number }>;
 };
 
 /**
@@ -64,10 +75,26 @@ export type Carried = {
   count: number;
   /** Action events: the action's id (an ability's, or "basic"). */
   ability: string | null;
-  /** Action events: a recast's repeat. */
-  repeat: boolean;
+  /** A repeat: an action event of a recast (2: a paid second cast, which still counts as a cast), a fight_start made to happen again, a status_gained of a copy. */
+  repeat: number;
+  /** The event's name, and its number in the fight (one event, one number: what answers it once reads this). */
+  on: string;
+  evt: number;
+  /** Hits: the kind; status events: the status the event is about. */
+  kind: HitKind | null;
+  about: string | null;
+  /** Hits: what the target's Shield soaked and its Aegis blocked. */
+  stopped: number;
+  /** Hits: a bare hit carries nothing, so the riders that answer it are skipped. */
+  bare: boolean;
+  /** The reaction answers a hit that only carries what the swing carries, or lends its riders to another unit: only its riders run. */
+  ridersOnly: boolean;
+  /** status_gained: the application was passed on from a capping (a shatter's cold). */
+  passed: boolean;
+  /** action_resolve: what the action paid as an HP price. */
+  price: number;
 };
-export const CARRIED_NONE: Carried = { raw: 0, dtype: null, count: 0, ability: null, repeat: false };
+export const CARRIED_NONE: Carried = { raw: 0, dtype: null, count: 0, ability: null, repeat: 0, on: "", evt: 0, kind: null, about: null, stopped: 0, bare: false, ridersOnly: false, passed: false, price: 0 };
 
 type ItemBase = { at: number; b: number; g: number; slot: number; seq: number; unit: string };
 export type Item =
@@ -91,7 +118,9 @@ export type Item =
   /** One control-resistance stack drains from `unit`. */
   | (ItemBase & { k: "drain" })
   /** A revive on a timer: `unit` stands at `at`, if it's still down and the fight goes on. */
-  | (ItemBase & { k: "revive"; by: string; hp: number; ready: boolean });
+  | (ItemBase & { k: "revive"; by: string; hp: number; ready: boolean })
+  /** A second landing on a timer: `unit` lands `amount` on `target` again, if both still stand. */
+  | (ItemBase & { k: "hit"; target: string; amount: number; src: string; tag: string | null });
 
 export type CFight = Omit<Fight, "units"> & {
   units: CUnit[]; now: number; seq: number; queue: Item[]; moments: number; begun: boolean; seed: number;
@@ -99,6 +128,8 @@ export type CFight = Omit<Fight, "units"> & {
   foes?: S.FoesT;
   /** The enrage has been announced (ruleset.enrage). */
   enraged?: boolean;
+  /** What one event has already done once, by a key: a counter's stack on a holder, a unit's restart, a rider two units would both lay. The value is the event's number. */
+  once?: Record<string, number>;
 };
 
 /** Not design rules: safety stops in case content makes a fight that can't end. Either counts as a loss. */
@@ -106,22 +137,67 @@ export const LIMITS = { ticks: 5000, moments: 200_000 };
 export const NEVER = Number.MAX_SAFE_INTEGER;
 export const SUBTICKS = S.SUBTICKS;
 
-/** `after`: the fight_won reactions are resolving, so a knockout among them doesn't start them again. */
-export type W = { f: CFight; c: Content; log?: (e: Entry) => void; depth: number; after?: boolean };
+/** `after`: the fight_won reactions are resolving, so a knockout among them doesn't start them again. `evt`: the number of the event the reaction now resolving answers. */
+export type W = { f: CFight; c: Content; log?: (e: Entry) => void; depth: number; after?: boolean; evt?: number };
 export const world = (c: Content, f: CFight, log?: (e: Entry) => void): W => ({ f, c, log, depth: 0 });
 
 /** Which of these status fields any status in the content uses, so fights without them skip their checks. */
-type Feats = { mods: boolean; crits: boolean; cover: boolean; floor: boolean; heals: boolean; revives: boolean };
+type Feats = {
+  mods: boolean; crits: boolean; cover: boolean; floor: boolean; heals: boolean; revives: boolean; adds: boolean; soak: boolean; healCap: boolean; divert: boolean;
+  party: boolean; borrow: boolean; tireless: boolean; order: boolean; swap: boolean; live: boolean;
+  /** The HP lines content watches (hp_low, hp_high), in percent of max HP. */
+  lines: number[];
+};
 const featCache = new WeakMap<Content, Feats>();
 export function feats(c: Content): Feats {
   let x = featCache.get(c);
   if (!x) {
     const ss = [...c.statuses.values()];
     const any = (k: keyof S.StatusT) => ss.some((s) => s[k] !== undefined);
-    x = { mods: any("mods"), crits: any("crits"), cover: any("cover"), floor: any("floor"), heals: any("heals"), revives: any("revives") };
+    const lines = new Set<number>();
+    for (const s of ss) for (const on of [...(s.reactions ?? []).map((r) => r.on), ...(s.trigger ? [s.trigger.on] : [])]) if ((on.event === "hp_low" || on.event === "hp_high") && on.line !== undefined) lines.add(on.line);
+    x = {
+      mods: any("mods"), crits: any("crits"), cover: any("cover"), floor: any("floor"), heals: any("heals"), revives: any("revives"), adds: any("adds"), soak: any("soak"),
+      healCap: any("healCap"), divert: any("divert"), party: any("party"), borrow: any("borrow"), tireless: any("tireless"), order: any("order"), swap: any("swap"),
+      live: ss.some((s) => s.stats?.some((ch) => ch.live)), lines: [...lines].sort((a, b) => a - b),
+    };
     featCache.set(c, x);
   }
   return x;
+}
+
+/** The cap on a unit's healing, in percent of its max HP (the lowest of its statuses'), or 100. */
+export function healCapOf(w: W, u: CUnit): number {
+  if (!feats(w.c).healCap) return 100;
+  let cap = 100;
+  for (const s of u.statuses) cap = Math.min(cap, def(w, s.id).healCap ?? 100);
+  return cap;
+}
+/** The most HP healing can bring a unit to. */
+export const healTop = (w: W, u: CUnit) => Math.floor((u.stats.max_hp * healCapOf(w, u)) / 100);
+/** A unit's HP as its lines and tests read it: at a cap on its healing it reads as just under it ("at half it counts as below half"). */
+export function hpRead(w: W, u: CUnit): number {
+  const cap = healCapOf(w, u);
+  return cap < 100 && u.hp * 100 >= cap * u.stats.max_hp ? u.hp - 1 : u.hp;
+}
+/** Below `pct` percent of its max HP. */
+export const hpBelow = (w: W, u: CUnit, pct: number) => hpRead(w, u) * 100 < pct * u.stats.max_hp;
+
+/**
+ * A unit's HP has moved, or it starts a fight or stands up (`init`): each line content watches that it has crossed fires
+ * hp_low or hp_high, whatever moved it. A line fires again only after the unit has been on its other side.
+ */
+export function hpMoved(w: W, u: CUnit, init = false) {
+  const lines = feats(w.c).lines;
+  if (!lines.length || u.ko || w.f.result) return;
+  if (init) u.under = {};
+  else if (!u.under) return;
+  for (const line of lines) {
+    const now = hpBelow(w, u, line);
+    if (!init && u.under![line] === now) continue;
+    u.under![line] = now;
+    fire(w, ev(now ? "hp_low" : "hp_high", u, null, { amount: line }));
+  }
 }
 
 export const def = (w: W, id: string) => w.c.statuses.get(id)!;
@@ -192,6 +268,15 @@ export function derive(c: Content, u: Pick<CUnit, "base" | "flat" | "pct">, stat
     out = finals(c, u.base, flat, pct);
   }
   for (const s of statuses) for (const x of c.statuses.get(s.id)!.set ?? []) out[x.stat] = x.value;
+  // Two stats swapped as they stand from class, gear and seat; the statuses' changes then apply to each as usual.
+  for (const s of statuses) {
+    const sw = c.statuses.get(s.id)!.swap;
+    if (!sw) continue;
+    const [a, b] = sw;
+    const still = (k: string) => finalValue(c, k, u.base[k] ?? statDefault(c, k), u.flat[k] ?? 0, u.pct[k] ?? 0);
+    const moved = (to: string, from: string) => finalValue(c, to, still(from), (flat[to] ?? 0) - (u.flat[to] ?? 0), (pct[to] ?? 0) - (u.pct[to] ?? 0));
+    [out[a], out[b]] = [moved(a, b), moved(b, a)];
+  }
   return out;
 }
 
@@ -218,6 +303,7 @@ export function refresh(w: W, u: CUnit) {
     const dm = now.max_mp - old.max_mp;
     u.mp = dm > 0 ? u.mp + dm : Math.min(u.mp, now.max_mp);
     retime(w, u, old, now);
+    if (dh) hpMoved(w, u);
   }
   for (const sd of w.c.pack.stats) {
     if (!sd.brings) continue;
@@ -259,17 +345,32 @@ type Who = (of: OfT) => CUnit | null;
  * What an action's number can count beyond units' state: its targets, and the units on the other side
  * its hits have landed on so far (the action's Ctx keeps `landed`). Ctx fits this shape.
  */
-type Reading = { targets: readonly CUnit[]; landed?: readonly CUnit[] };
+export type Reading = {
+  targets: readonly CUnit[]; landed?: readonly CUnit[];
+  /** A reaction to action_resolve: the units that action's hits landed on. */
+  count?: number;
+  /** A reaction to a hit: its amount before Defense, and what the target's Shield and Aegis stopped of it. */
+  raw?: number; stopped?: number;
+  /** An action: what it paid. */
+  paid?: { mp: number; hp: number };
+};
 
 /**
- * One term of a number: the source read from `u` (or the event amount), times a live stat if the scale says so, times the ratio.
- * A condition (`when`) is read against the reading unit (for `lower`): the acting unit, or a status's holder.
+ * One term of a number: the source read from `u` (or the event amount), times a live stat or a status's stacks if the scale
+ * says so, times the ratio. A condition (`when`) is read against the reading unit (for `lower`): the acting unit, or a status's
+ * holder. A `seat` reads the unit sitting there, in the reading unit's party.
  */
 function term(w: W, s: S.ScaleT, u: CUnit | null, amount: number, who: Who, act?: Reading): number {
   let v: number;
+  if (s.seat !== undefined) {
+    const reader = who("holder") ?? who("self");
+    u = reader ? (w.f.units.find((x) => x.side === reader.side && !x.ko && inSeat(w, reader, x, s.seat!)) ?? null) : null;
+  }
   if (s.amount) v = amount;
+  else if (s.event) v = (s.event === "raw" ? act?.raw : act?.stopped) ?? 0;
+  else if (s.cost) v = act?.paid?.[s.cost] ?? 0;
   else if (s.count === "targets") v = act?.targets.length ?? 0;
-  else if (s.count === "hit") v = act?.landed?.length ?? 0;
+  else if (s.count === "hit") v = act?.landed?.length ?? act?.count ?? 0;
   else if (!u) return 0;
   else if (s.stat) v = stat(w, u, s.stat);
   else if (s.hp) v = s.hp === "current" ? u.hp : u.stats.max_hp - u.hp;
@@ -279,16 +380,17 @@ function term(w: W, s: S.ScaleT, u: CUnit | null, amount: number, who: Who, act?
   if (s.times) {
     const t = s.times.of ? who(s.times.of) : u;
     if (!t) return 0;
-    v *= stat(w, t, s.times.stat);
+    v *= s.times.stat !== undefined ? stat(w, t, s.times.stat) : total(t, s.times.stacks!) / SUBTICKS;
   }
   return v * s.ratio;
 }
 
-/** A unit's buffs or debuffs (markers never count), or the units on its side (or its foes') that pass a test. */
+/** A unit's buffs or debuffs (markers never count), or the units on its side (or its foes') that pass a test, or their stacks of a status. */
 function countOf(w: W, u: CUnit, c: Exclude<NonNullable<S.ScaleT["count"]>, "targets" | "hit">): number {
   if (c === "buffs" || c === "debuffs") return u.statuses.filter((s) => def(w, s.id).label === c.slice(0, -1)).length;
   const seat = c.seat;
-  return sideOf(w, u, c.side, c.where?.ko === true).filter((x) => (seat === undefined || inSeat(w, u, x, seat)) && (!c.where || passes(w, x, c.where, u))).length;
+  const units = sideOf(w, u, c.side, c.where?.ko === true).filter((x) => (seat === undefined || inSeat(w, u, x, seat)) && (!c.where || passes(w, x, c.where, u)));
+  return c.stacks === undefined ? units.length : units.reduce((n, x) => n + total(x, c.stacks!), 0) / SUBTICKS;
 }
 
 /** A number in an action: `self` is the acting unit, `target` the unit the effect lands on, `act` the action (for counts). */
@@ -304,6 +406,8 @@ export function fixed(w: W, n: S.NumT, source: CUnit, holder: CUnit, isStat: boo
   const who: Who = (of) => (of === "source" ? source : of === "holder" ? holder : null);
   let v = baseOf(n);
   for (const s of scalesOf(n)) {
+    // A seat's unit is read each time the number is used, never fixed.
+    if (s.seat !== undefined) continue;
     const r = role(s, true);
     if (r === "source") v += term(w, s, source, 0, who);
     else if (isStat && r !== "amount") v += term(w, s, holder, 0, who);
@@ -311,17 +415,29 @@ export function fixed(w: W, n: S.NumT, source: CUnit, holder: CUnit, isStat: boo
   return v;
 }
 
-type StatusNums = { d: S.StatusT; nums: number[]; holder: CUnit | null; actor: CUnit | null; amount: number };
+type StatusNums = { d: S.StatusT; nums: number[]; holder: CUnit | null; actor: CUnit | null; amount: number; read?: Reading };
 /** At use: the fixed part, plus the holder's side read now. */
 export function sval(w: W, x: StatusNums, owner: object, n: S.NumT, target: CUnit | null): number {
   const who: Who = (of) => (of === "holder" ? x.holder : of === "self" ? x.actor : of === "target" ? target : null);
   let v = x.nums[slotOf(x.d, owner)];
   for (const s of scalesOf(n)) {
     const r = role(s, true);
-    if (r === "source") continue;
-    v += term(w, s, r === "amount" ? null : who(r), x.amount, who);
+    if (r === "source" && s.seat === undefined) continue;
+    v += term(w, s, r === "amount" ? null : who(r === "source" ? "holder" : r), x.amount, who, x.read);
   }
   return v;
+}
+
+/** What the unit's statuses add to the amount of a hit carrying any of `tags`, before boosts: an Intensity status for each stack. */
+export function addsOf(w: W, u: CUnit, tags: readonly string[], target: CUnit | null, read?: Reading): number {
+  if (!feats(w.c).adds) return 0;
+  let a = 0;
+  for (const s of u.statuses) {
+    const d = def(w, s.id);
+    if (!d.adds) continue;
+    for (const x of d.adds) if (tags.includes(x.on)) a += sval(w, { d, nums: s.nums, holder: u, actor: u, amount: 0, read }, x, x.amount, target) * perOf(d, s);
+  }
+  return a;
 }
 
 /** The unit's boosts that match any of `tags`, added together. A boost can read the unit being hit. */
