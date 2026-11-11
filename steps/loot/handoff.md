@@ -1,6 +1,6 @@
 # The loot pass: handoff, gate 2 passed
 
-Nov 11, 2026. The design is approved and nothing is built. Nothing is running, and nothing is scheduled. A fresh session starts from this page, then reads `build-brief.md`.
+Nov 11, 2026. The design is approved and nothing is built. Nothing is running, and nothing is scheduled. A fresh session starts from this page, then reads `build-brief.md`, which points at `build/`: the catalog and one page of rules.
 
 ## Where it stands
 
@@ -18,14 +18,12 @@ Nov 11, 2026. The design is approved and nothing is built. Nothing is running, a
 
 ## What's next
 
-**The build:** `build-brief.md`. It starts with the two kit changes, measured on today's game before today's loot goes; then the code support by one lead; then the content a file at a time; then tags, parties, tools and documents; then the measuring and the report. It ends when the director plays it.
+**The build:** `build-brief.md`. It reads `build/` (the catalog, generated from the fill by `catalog.ts`, and `build/rules.md`), not the fill. Run `npx tsx steps/loot/catalog.ts` after any change to the fill.
 
 ## One thing read, not ruled
 
 The director didn't name the mirror's two readings. The lead took "ok with your rules" to cover it, so the fill keeps pieces of each. `intent.md` says so, and the director can say otherwise.
 
-## What it cost, for whoever runs the next agents
+## What it cost
 
-- **Each fresh reader used about half a million tokens** and took 20 to 25 minutes. They ran one at a time, each writing its file as it went.
-- **Rulings were applied by hand** from the lead's session, a field at a time, searching for an entry by name. It's cheaper than bringing an agent back for a word.
-- **The build is bigger than the fill.** `build-brief.md` says how to split it into sessions.
+The fill's agents and the fresh readers each read the whole design (100k to 270k tokens) before doing anything, and the design had grown into edge-case notes. The build reads the catalog instead: about 56k tokens in all, under 8k a file.
