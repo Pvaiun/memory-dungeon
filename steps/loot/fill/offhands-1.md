@@ -410,7 +410,7 @@ How to read it:
 - **Is:** relic · rare
 - **Card:** While no foe is Marked, each heal its holder gives Marks the foe that last hit the healed ally.
 - **Stats:** MP regen +1 · Attack +1 · Defense +1 (3 of 3)
-- **Numbers:** none of its own: Marked keeps `STATUS.marked`. "Each heal" is any healing its holder gives, as Phylactery reads it. If no foe has hit that ally this fight, or the one that did has fallen, nothing is Marked.
+- **Numbers:** none of its own: Marked keeps `STATUS.marked`. "Each heal" is HP its holder's abilities or pieces restore at once; a Regen's pulses aren't heals. If no foe has hit that ally this fight, or the one that did has fallen, nothing is Marked.
 - **Code:** 19, with its memory of who last hit each ally.
 - **Serves:** Hunt 2 ●●●, Toll ●●
 - **Notes:** It lays a Mark only while none is up, by the gate's ruling. An ability that heals two allies Marks for the first one.
@@ -422,13 +422,13 @@ How to read it:
 - **Numbers:** the price is the share of its max HP that the ability's MP cost was of its max MP, and no MP is paid. Heals are doubled. A status the ability lays keeps its own numbers.
 - **Code:** 20.
 - **Serves:** Pact 3 ●●● ⚙ brink (key)
-- **Notes:** I read "heals" as abilities that heal directly, so an ability that only lays Regen keeps its MP cost and its size (*Challenges*). HP is its fuel now, so two steps of it. Beside another effect that makes abilities cost HP, there's still one price.
+- **Notes:** Its holder's heals are abilities that heal directly, as ruled: an ability that only lays Regen keeps its MP cost and its size, and heals from gear cost nothing and aren't doubled. HP is its fuel now, so two steps of it. Beside another effect that makes abilities cost HP, there's still one price.
 
 ### Bloodstone reliquary
 - **Is:** relic · legendary
 - **Card:** Each time an ally pays HP, the ally with the lowest share of max HP, the payer aside, is healed for as much.
 - **Stats:** MP regen +2 · HP +2 (4 of 4)
-- **Numbers:** as much as the price paid. "An ally" includes its holder. With nobody but the payer standing, nothing happens.
+- **Numbers:** as much as the price paid. "An ally" includes its holder. Where one unit pays for another's ability, the one whose HP goes is the payer. With nobody but the payer standing, nothing happens.
 - **Code:** 20.
 - **Serves:** Pact 3 ●●● ⚙ brink (half), blood mage (half)
 - **Notes:** With the payer left out, the one who pays stays the lowest while the others are kept full. The heal is its holder's, for whatever reads one.
@@ -475,7 +475,7 @@ How to read it:
 - **Is:** lantern · rare
 - **Card:** When a burning foe falls, all its Burn passes to the foe with the most Burn. A fallen foe's fire moves once: where something else would move it too, it's split evenly between the places they send it.
 - **Stats:** Cast speed medium · Attack +1 · MP +1 (3 of 3)
-- **Numbers:** all the Burn the foe held as it fell. With no other foe burning, it goes to a random foe, as the target phrase has it.
+- **Numbers:** all the Burn the foe held as it fell. With no other foe burning, it goes to a random foe, as the target phrase has it, and that random pick follows a Mark.
 - **Code:** 9 (today's Wick, aimed anew); 23 for the even split.
 - **Serves:** Bonfire 2 ●●●, Hunt ●● ⚙ fuse (key)
 - **Notes:** Kept from today's and moved down from legendary: the fire now goes to the hottest foe left, not the healthiest, and the Heat goes, as the line says. The feeders' own aim is at that same foe.
@@ -483,20 +483,20 @@ How to read it:
 ### Shuttered lantern
 - **Is:** lantern · rare
 - **Card:** While its holder is winding up an ability, it takes half damage.
-- **Stats:** Cast speed medium · Cooldown medium · HP +1 (3 of 3)
+- **Stats:** Cooldown medium · MP +1 · HP +1 (3 of 3)
 - **Numbers:** half (50%) less damage of every kind, from the start of a wind-up to its end.
 - **Code:** as today's Gatekeeper's kite reads a Taunt, reading a wind-up.
 - **Serves:** Barrage 2 ●●, Bonfire ●●, Pact ●
-- **Notes:** The kind's signature shortens the wind-ups this protects, so the second step is Cooldown: more casts, more time under the shutter (*Challenges*).
+- **Notes:** It carries no Cast speed. The kind's signature shortens the wind-ups this protects, and by round 1's ruling a signature that works against its piece gives way to the road's lean: Barrage's Cooldown and MP, which are more casts and more time under the shutter. It stays a lantern, as ruled: it covers a Pyromancer's long casts, and a Cleric's Renew and Raise.
 
 ### Everflame lantern
 - **Is:** lantern · legendary
-- **Card:** Every few ticks, the foe with the most Burn gains Burn: a tenth of what it holds.
+- **Card:** Every 3 ticks, the foe with the most Burn gains Burn: a tenth of what it holds.
 - **Stats:** Cast speed high · Attack +2 (4 of 4)
-- **Numbers:** a tenth (10%) of the stacks that foe holds, every 3 ticks. With no foe burning, nothing.
+- **Numbers:** a tenth (10%) of the stacks that foe holds, every 3 ticks: a beat of its own, stated on the card. With no foe burning, nothing.
 - **Code:** as today's Bellows lantern sizes its Burn, on a beat of its holder's.
 - **Serves:** Bonfire 3 ●●●
-- **Notes:** The beat is mine to set and has no word in the scale. At 3 ticks a fed fire stands about three fifths higher, and a fire nobody feeds for a Stun's length keeps two thirds of itself where it kept half. At Burn's own pulse it would more than double the fire; at 4 it adds a third. See *Loops*.
+- **Notes:** "Every few ticks" is four by round 1's ruling, so the card gives its own beat in place of the line's words. At 3 ticks a fed fire stands about three fifths higher, and a fire nobody feeds for a Stun's length keeps two thirds of itself where it kept half. At four it would add a third; at Burn's own pulse it would more than double the fire. See *Loops*.
 
 ### Lamp of vigil
 - **Is:** lantern · legendary

@@ -467,31 +467,31 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 ### Smoke screen
 - **Is:** Assassin, Vanish A · version · kept
 - **Today:** Hides the ally with the lowest share of HP that isn't Taunting. Waits until an ally is below 80% of its HP.
-- **Card:** Hides the ally with the lowest share of HP that isn't Taunting. Waits until an ally is below 80% of its HP.
+- **Card:** Hides the ally with the lowest share of max HP that isn't Taunting or already Hidden. Waits until an ally is below 80% of its max HP.
 - **Numbers:** Hidden at its own length (`STATUS.hidden`). Short cooldown (a quarter off with the power step), quick wind-up, 200 MP.
 - **Code:** as today's Smoke screen
 - **Serves:** Pact ●●, Toll ●● ⚙ two in the dark (key), brink (half)
-- **Notes:** *Stays.* A name fading and the foes turning elsewhere is seen. One cast covers under half of its own cooldown, so on its own it's one unit in the dark about half the time. Two in the dark needs a second hiding that's laid again; Night's edge is one, on the same Assassin. As built it also passes over an ally that's already Hidden, which the card doesn't say.
+- **Notes:** *Stays.* Reworded: "max HP" in full, and the card gains what the build already does, as ruled: it passes over an ally already Hidden. A name fading and the foes turning elsewhere is seen. One cast covers under half of its own cooldown, so on its own it's one unit in the dark about half the time. Two in the dark needs a second hiding that's laid again; Night's edge is one, on the same Assassin. By Hidden's new rule someone stays in the light: it doesn't land on the last ally the foes could pick.
 
 ### Night's edge
 - **Is:** Assassin · mythic (armor) · kept
 - **Today:** When the Assassin lands a killing blow, it's Hidden for a moment, and its next hit deals double damage.
-- **Card:** When the Assassin lands a killing blow, it's Hidden for a moment, and its next hit deals double damage.
+- **Card:** When the Assassin lands a killing blow, it's Hidden, and its next hit deals double damage.
 - **Numbers:** Hidden at its own length, if it isn't Hidden already. The next hit it lands deals double, once.
 - **Code:** as today's Night's edge
 - **Serves:** Hunt 3 ●●● ⚙ two in the dark (half)
-- **Notes:** *Stays.* It was part of the one full set play saw work. "For a moment" is Hidden's own length; no status is laid for less. With Coup de grâce the doubled hit is the next stab, so a kill makes the next kill likelier, and the foes running out is what ends it.
+- **Notes:** *Stays.* Reworded: "for a moment" goes, since Hidden is laid at its own length and no status is laid for less. It was part of the one full set play saw work. Hidden doesn't land on it when it's the last ally the foes could pick; the doubled hit still does. With Coup de grâce the doubled hit is the next stab, so a kill makes the next kill likelier, and the foes running out is what ends it.
 
 ## Vampire
 
 ### Blood for mana
 - **Is:** Vampire, Blood gift A · version · kept
 - **Today:** Spends a fifth of its max HP to give the other ally with the least MP as much MP, and gives it Clarity. Waits until another ally is under half its MP and the Vampire is at 35% of its max HP or more.
-- **Card:** Spends a fifth of its max HP to give the other ally with the least MP as much MP, and gives it Clarity. Waits until another ally is under half its MP and the Vampire is at 35% of its max HP or more.
+- **Card:** Spends a fifth of its max HP to give the other ally with the least MP as much MP, and gives it Clarity. Waits until another ally is under half its max MP and the Vampire is at 35% of its max HP or more.
 - **Numbers:** The price is a fifth of its max HP, paid, not damage. The gift is as much MP in one piece (two fifths more with the power step), and Clarity at its own size. Medium cooldown, normal wind-up, 450 MP.
 - **Code:** as today's Blood for mana
 - **Serves:** Barrage 2 ●●●, Pact ●● ⚙ mana as armour (half)
-- **Notes:** *Stays.* About 800 MP at once and a Clarity behind it is more than a mage's cast: the link at the size `builds.md` asks for. It pays HP, so pieces that read a price read it, and its lump is MP given, so Glimmer robe reads that. Under The chalice the Vampire's own abilities still cost it MP.
+- **Notes:** *Stays.* Reworded: "max MP". About 800 MP at once and a Clarity behind it is more than a mage's cast: the link at the size `builds.md` asks for. It pays HP, so pieces that read a price read it, and its lump is MP given, so Glimmer robe reads that. Under The chalice the Vampire's own abilities still cost it MP.
 
 ### Savage drain
 - **Is:** Vampire, Blood drain A · version · kept
@@ -512,7 +512,8 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - **Notes:**
   - **Seen:** the Vampire's red bar steps down with every ability the other two cast, and their blue bars never move.
   - **What it does to the Vampire.** Two allies' casting is most of its health bar each fight, so it rides between a tenth and wherever its drinking takes it: the unit that's always lowest, which is the brink, and below half, where Bloodlust doubles its drink.
-  - **"The same share"** is the line's, and Sanguine vestments words its price the same way. It means a cheap skill from a small pool costs as much blood as a great spell from a deep one. See Least sure.
+  - **"The same share"** is the line's, and Flagellant's vestments words its price the same way. It means a cheap skill from a small pool costs as much blood as a great spell from a deep one. Round 1 keeps "the same share" as the rule for the vestments and The covenant and sends their sums to the director's sample; this card's sums belong beside them. See Least sure.
+  - **The Vampire is the payer,** as ruled: "pays HP" covers a price taken from it for an ally's ability. So a piece that answers an ally paying HP answers each of these, with the Vampire as the one who paid, and the cast counts as paid for.
   - **Only MP is taken over.** A caster whose abilities already cost HP, by its robe or the party's formation, pays its own.
   - **Who drinks it back.** The Vampire, by its own hits. The caster's Lifesteal heals the caster. See Links, the blood mage.
   - **It takes mana away as a brake** for everything the other two do. See Loops.
@@ -553,7 +554,7 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - **Numbers:** One Burn stack (`FLAT_STACKS.one`) for each hit any ally lands, the Pyromancer included. It ends when the Pyromancer falls and comes back when it's raised.
 - **Code:** as today's Crown of embers
 - **Serves:** Bonfire 3 ●●● ⚙ lead's colour (half)
-- **Notes:** *Stays.* One stack sounds small and isn't: a Burn stack deals about 370 over its life, and this adds one for every hit of three units, extra strikes and multi-hits included. Play's deepest run ended wearing it. For the lead's colour it's a rider on every ally already, and round 1 rules that a carrier doesn't add a rider its own swing already holds from the same source, so a Follower under the Crown adds one Burn a hit, not two.
+- **Notes:** *Stays.* One stack sounds small and isn't: a Burn stack deals about 370 over its life, and this adds one for every hit of three units, whatever kind of hit it is. Play's deepest run ended wearing it. For the lead's colour it's a rider on every ally already, and round 1 rules that a carrier doesn't add a rider its own swing already holds from the same source, so a Follower under the Crown adds one Burn a hit, not two.
 
 ## Frostweaver
 
@@ -561,15 +562,15 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - **Is:** Frostweaver, Shatterpoint B · version · changed
 - **Today:** When a foe's Chill shatters, that foe takes several Sunder, and every other foe takes a third of the shatter's damage; stacks scale from Attack.
 - **Card:** When a foe's Chill shatters, that foe takes several Sunder (stacks scale from Attack), and every other foe gains a third of the Chill it held.
-- **Numbers:** Several Sunder is the passive's count from Attack, as Shatterpoint's, with its power step. The cold sent on is a third of what the foe held as it shattered: 4 stacks at Chill's cap (`STATUS.chill.cap`), in whole stacks. It's read from the foe, not from anyone's Attack.
+- **Numbers:** Several Sunder is the passive's count from Attack, as Shatterpoint's, with its power step. The cold sent on is a third of what the foe held as it shattered: 4 stacks at Chill's cap (`STATUS.chill.cap`). It's read from the foe, not from anyone's Attack.
 - **Code:** 9, 23
 - **Serves:** Snap 2 ●●● ⚙ firecracker (key)
 - **Notes:**
   - **Seen:** one foe bursts and every other counter steps up by four.
   - **The link's size.** Four takes a neighbour at eight or more to its cap, so it bursts too and sends four on; a neighbour at three goes to seven and waits. It's the cold field that makes the string, and the Frostweaver that makes the field.
-  - **The chain's damping** is Chill's own rule and on no card, as ruled. This card says nothing of it.
+  - **The chain's damping** is Chill's own rule and on no card, as ruled. This card says nothing of it. Round 1 sets it in fractions of a stack: a foe that has already burst in the chain takes half of what's passed to it, then a quarter, and so on, never none.
   - **The third of the shatter's damage** on the other foes is gone: the cold replaces it.
-  - **With Glacier's heart, and with Winter's chain,** the string runs much further. See Loops.
+  - **With Glacier's heart, and with Winter's chain,** the string runs further, and now always dies down. See Loops.
 
 ### Frost armor
 - **Is:** Frostweaver, Blizzard A · version · changed
@@ -584,16 +585,16 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
   - **Each hit counts.** A wolf's flurry adds for each bite, and a boss's blow on all three allies adds three times. A dodged hit adds nothing.
   - **"That Guard"** is the frost riding the cast for Guard's own length. A Guard laid on an ally by someone else afterwards doesn't lengthen it.
   - **It gives up** Blizzard's damage and its Chill on the whole field: nothing is cold until it strikes.
-  - **Beside Hoarfrost plate and Frostward blade** it's the gate's widest home: every ally, for a while, at a cast's price, with no anchor needed. Its link wants theirs at the same three a blow. See Links.
+  - **Beside Hoarfrost plate and Frostward blade** it's the gate's widest home: every ally, for a while, at a cast's price, with no anchor needed. Round 1 has the plate read its wall's Defense and the blade its mage's Attack, each at the plain few. See Links.
 
 ### Rime shield
 - **Is:** Frostweaver, Shatterpoint A · version · kept
 - **Today:** When a foe's Chill shatters, the ally with the lowest share of HP gains a Shield from the Frostweaver's max HP, in place of the Sunder.
-- **Card:** When a foe's Chill shatters, the ally with the lowest share of HP gains a Shield from the Frostweaver's max HP, in place of the Sunder.
+- **Card:** When a foe's Chill shatters, the ally with the lowest share of max HP gains a Shield from the Frostweaver's max HP, in place of the Sunder.
 - **Numbers:** A Shield of three tenths of the Frostweaver's max HP, two fifths bigger with the power step, up to the Shield's own cap on whoever gets it.
 - **Code:** as today's Rime shield
 - **Serves:** Snap 2 ●●, Toll ●● ⚙ frozen gate (half), detonation (half), brink (half)
-- **Notes:** *Stays.* About 900 of grey bar on a unit of 2,000 to 5,000 HP is seen. It pays once a shatter, so it's worth what the party's shatters are worth: little where the second shatter never comes, a great deal on a frozen gate.
+- **Notes:** *Stays.* Reworded: the target phrase in full. About 900 of grey bar on a unit of 2,000 to 5,000 HP is seen. It pays once a shatter, so it's worth what the party's shatters are worth: little where the second shatter never comes, a great deal on a frozen gate.
 
 ### Deep calm
 - **Is:** Frostweaver, Stillness A · version · kept
@@ -611,7 +612,7 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - **Numbers:** Half of Chill's cap (`STATUS.chill.cap`), on the foe that shattered, whoever's Chill it was.
 - **Code:** as today's Glacier's heart. By the spine's reading, what it puts back isn't damped (23).
 - **Serves:** Snap 3 ●●● ⚙ firecracker (key)
-- **Notes:** *Stays.* It was never offered in play. It's the second shatter play never saw, in half the time of the first, on a boss as on a wolf. Six can't reach the cap by itself, so alone it never loops. Beside Splinters it nearly can: see Loops.
+- **Notes:** *Stays.* It was never offered in play. It's the second shatter play never saw, in half the time of the first, on a boss as on a wolf. Six can't reach the cap by itself, so alone it never loops. Beside Splinters the string runs longest, and with the damping in fractions it ends: see Loops.
 
 ## Stormcaller
 
@@ -646,10 +647,10 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - **Is:** Stormcaller · mythic (weapon) · kept
 - **Today:** Every hit the Stormcaller lands jumps to one more random foe for half its damage. When a foe falls holding Shock, every other foe gains half of it.
 - **Card:** Every hit the Stormcaller lands jumps to one more random foe for half its damage. A jump doesn't jump again. When a foe falls holding Shock, every other foe gains half of it.
-- **Numbers:** The swing is its own, as today's: one hand, 6.6 ticks, a full, even swing. No stat steps. A jump is half the hit's damage on one other random foe. Half a fallen foe's Shock, in whole stacks, goes to every other foe.
-- **Code:** as today's Eye of the tempest
+- **Numbers:** The swing is its own, as today's: one hand, 6.6 ticks, a full, even swing. No stat steps. Every hit jumps: a swing, Arc's second hit, Double strike's second strike, each hit of an ability. A jump is half the hit's damage on one other random foe, and it's an extra hit of its own name: nothing that reads extra strikes reads it. Half a fallen foe's Shock, in whole stacks, goes to every other foe.
+- **Code:** as today's Eye of the tempest, with every hit jumping and the jump marked so it doesn't jump (23): under *Code support beyond the spine's list*
 - **Serves:** Storm 3 ●●●
-- **Notes:** *Stays,* with one sentence added: the brief asks a card that lands a blow again to say whether the second can repeat, and today's build already stops it. It was never offered in play. As built, only the hits of basic attacks and abilities jump: Arc's second hit and Double strike's don't, where the card says "every hit". See Challenges. A jump's foe is a second pick, so a Mark doesn't steer it.
+- **Notes:** *Stays,* with one sentence added: the brief asks a card that lands a blow again to say whether the second can repeat. It was never offered in play. Today's build leaves Arc's second hit and Double strike's second strike out of the jumping, so that a jump couldn't hear itself. Round 1 rules the card is the design: every hit jumps, and the build follows. That's more lightning than today's, on every swing. A jump's foe is a second pick, so a Mark doesn't steer it.
 
 ## Geomancer
 
@@ -660,7 +661,7 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - **Numbers:** The Shield is Earthen shell's: its Defense, up to the Shield's cap. Guard at its own size and length. The rebuild is the most that Shield held, once a cast. Medium cooldown (short with the power step), normal wind-up, 650 MP.
 - **Code:** as today's Rampart, with the rebuild reading the most the pool held (today's reads the shell's amount from Defense again)
 - **Serves:** Landslide 2 ●●● ⚙ detonation (key)
-- **Notes:** *Stays.* The grey bar goes and comes back whole: seen. The size of the rebuild follows round 1's ruling for every share: "the most that Shield held" is the pool's highest point since the unit last had none, and Rampart reads it. Today's build reads the shell's own amount again; a Geomancer's Defense is far over its Shield's cap, so on the card and on the bar the two are the same. It's once a cast, so with a break piece it's two detonations a shell and no more.
+- **Notes:** *Stays.* The grey bar goes and comes back whole: seen. The size of the rebuild is as ruled for every share: "the most that Shield held" is the pool's highest point since the unit last had none, and Rampart reads it. Today's build reads the shell's own amount again; a Geomancer's Defense is far over its Shield's cap, so on the card and on the bar the two are the same. It's once a cast, so with a break piece it's two detonations a shell and no more.
 
 ### Faultline
 - **Is:** Geomancer, Bedrock B · version · kept

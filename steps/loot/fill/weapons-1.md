@@ -372,12 +372,12 @@
 
 ### Stormbrand
 - **Is:** sword · legendary
-- **Card:** Each hit its wearer lands deals extra damage for each Shock stack on the field, whoever holds it (from Attack). The Shock stays.
+- **Card:** Each hit its wearer lands deals extra damage for each Shock the foes hold (from Attack). The Shock stays.
 - **Stats:** Attack +2 · Crit chance +2 (4 of 4)
-- **Numbers:** 0.5% of the wearer's Attack for each stack on any unit: 20 a stack at Attack 4, 30 at Attack 6. One foe at Shock's cap (`STATUS.shock.cap`) adds 800 to 1,200 to every hit, which is the sword's own swing again or more. My value.
+- **Numbers:** 0.5% of the wearer's Attack for each stack on any foe: 20 a stack at Attack 4, 30 at Attack 6. One foe at Shock's cap (`STATUS.shock.cap`) adds 800 to 1,200 to every hit, which is the sword's own swing again or more. My value.
 - **Code:** 18 (the field's whole Shock)
 - **Serves:** Storm 3 ●●●, Toll ● ⚙ held charge (key)
-- **Notes:** The extra is part of each hit: it meets Defense and can crit. Every hit takes it, so the three hits of a Gale spear each do, and a Malison does on every foe. "Anywhere on the field" is read as written: Shock on an ally counts too (*Challenges*, 10). Attack +2 is the stat its extra reads.
+- **Notes:** The extra is part of each hit: it meets Defense and can crit. Every hit takes it, so the three hits of a Gale spear each do, and a Malison does on every foe. It counts the Shock the foes hold, as round 1 rules and the line now says: Shock on an ally counts for nothing. Attack +2 is the stat its extra reads.
 
 ## Spear
 
@@ -402,38 +402,38 @@
 ### Jolt spear
 - **Is:** spear · uncommon
 - **Card:** Every hit its wearer lands adds a few Shock (from Attack): swings, extra strikes and abilities alike.
-- **Stats:** Aggro +1 · Attack speed medium (2 of 2)
-- **Numbers:** a few: `STACKS.few`, from Attack, on every hit (about 3 at Attack 4, 3 or 4 for a Hoplite). A plain few on an ability's hit too, not an ability's doubled count.
+- **Stats:** Attack speed medium · Attack +1 (2 of 2)
+- **Numbers:** a few: `STACKS.few`, from Attack, on every hit (3 or 4 at Attack 5 with the spear's own step, 4 for a Hoplite). A plain few on an ability's hit too, not an ability's doubled count.
 - **Code:** a reaction to any hit landing, as today's Thousandth cut's, applying Shock as today's Spark wand applies Burn
 - **Serves:** Storm 1 ●●, Toll ● ⚙ lead's colour (half), held charge (half) ◆ swing-status
-- **Notes:** Seen where its wearer hits many: a Hoplite's shove charges every foe at once, a Gale spear adds three charges to its own three. What a copy of its swing carries is the part on the basic attack.
+- **Notes:** Seen where its wearer hits many: a Hoplite's shove charges every foe at once, a Gale spear adds three charges to its own three. What a copy of its swing carries is the part on the basic attack. No Aggro, by round 1's ruling: a squall's spear takes the Storm's lean, Attack speed, and the Attack its stacks read.
 
-### Trophy spear
+### Victor's spear
 - **Is:** spear · uncommon
 - **Card:** When its wearer lands a killing blow, it gains a Shield equal to a quarter of its Attack.
 - **Stats:** Aggro +1 · Attack +1 (2 of 2)
 - **Numbers:** 25% of the wearer's Attack a kill: 1,000 at Attack 4, 1,250 at Attack 5, up to the Shield's cap (`STATUS.shield.capShare`). My value.
 - **Code:** as today's Trophy spear, with a Shield from Attack (as today's Ironbound maul's) in place of the Guard
 - **Serves:** Hunt 1 ●●, Cuts ● ⚙ detonation (half) ◆ kill-pays, shield-by-doing
-- **Notes:** Today's piece, its Guard made a Shield as the line says. Sized to be seen as a kill's pay: a grey bar a third or more of a Valkyrie's or a Monk's health. Same steps as today.
+- **Notes:** Today's Trophy spear under its new name (a trophy is an offhand kind), its Guard made a Shield as the line says. Sized to be seen as a kill's pay: a grey bar a third or more of a Valkyrie's or a Monk's health. Same steps as today: it keeps Aggro, which round 1 took off four other spears, because its Shield is cover for the draw (*Challenges*, 3).
 
 ### Long spear
 - **Is:** spear · uncommon
 - **Card:** Its basic attacks ignore Taunt: they pick among every foe, Taunting or not.
-- **Stats:** Aggro +1 · Crit chance +1 (2 of 2)
+- **Stats:** Crit chance +1 · Attack +1 (2 of 2)
 - **Numbers:** none.
 - **Code:** as today's Misericorde
 - **Serves:** Hunt 1 ●●, Storm ●
-- **Notes:** Today's Misericorde's effect, on a spear. A Mark is followed past a Taunting foe. It shows only where a foe Taunts.
+- **Notes:** Today's Misericorde's effect, on a spear. A Mark is followed past a Taunting foe. It shows only where a foe Taunts. No Aggro, by round 1's ruling: a chaser's spear takes the Hunt's lean, Crit chance and Attack.
 
 ### Hunting spear
 - **Is:** spear · rare
 - **Card:** Each hit its wearer lands on a foe below half its max HP lands twice. The second landing is the same damage again, and is never repeated: not by this, and not by anything else.
-- **Stats:** Aggro +1 · Attack +1 · Crit chance +1 (3 of 3)
+- **Stats:** Crit chance +1 · Attack +2 (3 of 3)
 - **Numbers:** the second landing deals what the first dealt. The foe is below half when the hit lands, before its damage.
 - **Code:** 16
 - **Serves:** Hunt 2 ●●●, Cuts ●●
-- **Notes:** Keeps the name only. The second landing is a hit (a Valkyrie's Shield grows from it, Bleed pays on it), carries none of the first's statuses and isn't an extra strike (*Challenges*, 1). If it fells the foe, that's its wearer's killing blow.
+- **Notes:** Keeps the name only. The second landing is a hit that lands a second time, as `fill/shared.md` defines one: no new dodge or crit roll; a Valkyrie's Shield grows from it and Bleed pays on it; it carries none of the first's statuses and isn't an extra strike. If it fells the foe, that's its wearer's killing blow. No Aggro, by round 1's ruling: the Hunt's lean, with Attack twice since the same number lands twice.
 
 ### Parrying spear
 - **Is:** spear · rare
@@ -442,16 +442,16 @@
 - **Numbers:** none of its own: one strike for each dodge, a hit of that ally's basic attack's size, with no limit.
 - **Code:** 17 (a strike by an ally when the wearer dodges)
 - **Serves:** Toll 2 ●●●, Cuts ●● ⚙ riposte (key)
-- **Notes:** The strike is the ally's: it carries what that ally's swing carries, its Lifesteal drinks, and it isn't a basic attack. Read with the size of the ally's basic attack as it stands, so beside a Hoplite each dodge is a doubled blow. It does nothing for a wearer that can't dodge, which is the Hoplite without an Evasion piece. Aggro +2 so the dodger is the one aimed at; HP for the blow that lands.
+- **Notes:** The strike is the ally's: it carries what that ally's swing carries, its Lifesteal drinks, and it isn't a basic attack. It's aimed at the attacker, so a Taunt doesn't turn it. It takes the shape that ally's basic attacks have, as round 1 rules, so beside a Hoplite each dodge is a doubled blow. It does nothing for a wearer that can't dodge, which is the Hoplite without an Evasion piece. Aggro +2 so the dodger is the one aimed at; HP for the blow that lands.
 
-### Storm pike
+### Squall lance
 - **Is:** spear · rare
-- **Card:** Every fifth hit its basic attacks and extra strikes land also hits every other foe: a light hit (from Attack), carrying what the swing carries. The flash's own hits aren't counted.
-- **Stats:** Aggro +1 · Attack speed medium · Attack +1 (3 of 3)
-- **Numbers:** the count: five landed basic attacks and extra strikes. The flash: light (`HIT.light`), from the wearer's Attack, on every foe but the one just hit: about 1,160 a foe at Attack 4.
-- **Code:** today's Volley bow's count of swings, to five and counting extra strikes; today's Storm pike's flash, on every other foe; 12 for what it carries
+- **Card:** Every fifth hit its wearer lands, swing or ability, also hits every other foe: a light hit (from Attack), carrying what the swing carries. The flash's own hits aren't counted.
+- **Stats:** Attack speed medium · Attack +2 (3 of 3)
+- **Numbers:** the count: five hits landed by its wearer, of any kind. The flash: light (`HIT.light`), from the wearer's Attack, on every foe but the one just hit: about 1,160 a foe at Attack 4, 1,740 at Attack 6.
+- **Code:** today's Storm pike's count of every hit, to five in place of ten, and its flash, on every other foe; 12 for what it carries
 - **Serves:** Storm 2 ●●●, Cuts ●●, Bonfire ●, Hunt ● ⚙ red rain (half), reaping (half) ◆ wide-hit
-- **Notes:** Today's legendary made a rare and reworked as the line says: its own count in place of Charges, swings and extra strikes in place of every hit. Written as the line stands, but the count is too slow on a spear to be seen (*Challenges*, 2). Attack speed brings the count round; Attack is what the flash is read from.
+- **Notes:** Today's Storm pike under its new name (a pike is a great weapon), a legendary made a rare: its own count in place of Charges, and five for ten. It counts every hit, as round 1 rules and the line now says: an extra strike, each hit of a Gale spear or a Burning fist, a strike with its weapon, a hit that lands a second time. A Valkyrie or a Monk that knows its quick ability flashes about twice in a regular fight; a Hoplite's shove at five foes is a flash by itself. The flash carries the swing's riders whatever kind of hit set it off. No Aggro, by round 1's ruling: Attack speed brings the count round, and Attack is what the flash is read from.
 
 ### Sarissa
 - **Is:** spear · legendary
@@ -460,7 +460,7 @@
 - **Numbers:** each extra hit is the swing's full damage (about 880 at Attack 4; a Hoplite's is doubled by Phalanx).
 - **Code:** 17 (at every foe that has hit the wearer since its last swing), with the memory it names
 - **Serves:** Toll 3 ●●●, Storm ●●, Landslide ●●
-- **Notes:** A foe has hit the wearer when a hit of its own landed on it; a dodged blow and Thorns don't count. The memory is emptied each time the wearer's basic attack resolves. The foe the swing was aimed at is hit once. The extra hits are extra strikes, and as the line stands they don't carry what the swing carries (*Challenges*, 4). The slower the swing, the more foes each one answers: it's a Hoplite's piece first.
+- **Notes:** A foe has hit the wearer when a hit of its own landed on it; a dodged blow and Thorns don't count. The memory is emptied each time the wearer's basic attack resolves. The foe the swing was aimed at is hit once. The extra hits are the sarissa's own, not extra strikes, and they carry nothing of the swing's, as round 1 rules. The slower the swing, the more foes each one answers: it's a Hoplite's piece first.
 
 ## Axe
 
@@ -484,12 +484,12 @@
 
 ### Reaver's axe
 - **Is:** axe · uncommon
-- **Card:** When its wearer lands a killing blow, the next hit it lands deals double.
+- **Card:** When its wearer lands a killing blow, it gains many Might (from Attack).
 - **Stats:** Crit damage medium (1 of 1)
-- **Numbers:** double, on one hit, swing or ability. A second kill before that hit lands adds nothing.
-- **Code:** today's kill trigger (Trophy spear's), setting a next-hit buff as today's Spellbinder's, read by any hit
+- **Numbers:** many: `STACKS.many` through `own()`, from the wearer's Attack: about 9 stacks at Attack 4, 11 or 12 at Attack 5, up to Might's cap. Might keeps its own numbers (`STATUS.might`): each action spends a stack.
+- **Code:** as today's Reaver's axe, with many in place of a few
 - **Serves:** Hunt 1 ●●, Landslide ● ◆ kill-pays
-- **Notes:** Today's piece, its few Might made a doubled hit as the line says: a few Might was never seen. Its one step is the Hunt's, Crit damage, so the kind's three uncommons carry three different stats. It reads as half of Night's edge, which the same Assassin can wear (*Challenges*, 3).
+- **Notes:** Today's card, one word bigger, as round 1 rules and the line now says (the doubled hit of the first hand-in was Night's edge's own sentence). A few Might was never seen; at many, the blow after a kill lands half again as hard or more, and the Might runs down over the next ten actions. A second kill tops it up to the cap. It's a status its wearer gives itself. Its one step is the Hunt's, Crit damage, so the kind's three uncommons carry three different stats.
 
 ### Hungry axe
 - **Is:** axe · uncommon
@@ -529,12 +529,12 @@
 
 ### Overkill axe
 - **Is:** axe · rare
-- **Card:** When its wearer lands a killing blow, what the blow has left over lands on the foe with the lowest current HP. It carries once: if that fells the second foe too, nothing carries on.
+- **Card:** When its wearer lands a killing blow, what the blow has left over lands on the foe with the lowest current HP, as a hit. It carries once: if that fells the second foe too, nothing carries on.
 - **Stats:** Attack +1 · Crit damage medium (2 of 2)
-- **Numbers:** all of what's left over: the blow's damage past the HP its foe had left. It lands as the same hit, so it meets the second foe's Defense.
+- **Numbers:** all of what's left over: the blow's damage past the HP its foe had left. It's a hit on the foe it reaches: it meets that foe's Evasion and Defense, and isn't boosted or crit again.
 - **Code:** 5
 - **Serves:** Hunt 2 ●●●, Landslide ●● ⚙ avalanche (key)
-- **Notes:** Any killing blow carries, swing or ability. The second fall is the wearer's killing blow too, so what pays on a kill pays again; only the carry stops. Both steps are the blow's, and it's the one piece in the kind without its signature: on two steps there's no room for both, and the blow is what it reads.
+- **Notes:** Written to round 1's ruling on left-over damage: a hit taken by the second foe (a wound pays, Thorns answer), carrying no riders. Any killing blow carries, swing or ability. The second fall is the wearer's killing blow too, so what pays on a kill pays again; only the carry stops. Beside Downhill charm on one unit the left-over is split evenly between the two. Its pick is a pick by a phrase, so it's inside the Taunt rule (*Challenges*, 1). Both steps are the blow's, and it's the one piece in the kind without its signature: on two steps there's no room for both, and the blow is what it reads.
 
 ### The Red Feast
 - **Is:** axe · legendary
@@ -543,7 +543,7 @@
 - **Numbers:** double, and double, below 50% of max HP; healed to 50% of max HP at a won fight's end if it's below that. The line's own sizes.
 - **Code:** boosts and a Lifesteal change switched as today's Bloodlust is; 20 (a heal as a fight is won)
 - **Serves:** Pact 3 ●●●, Cuts ● ⚙ brink (half)
-- **Notes:** Keeps the name only. Its own Lifesteal step is high so it works on an Assassin alone: a fifth, two fifths below half. With Bloodlust the doublings add: three times. Its own drinking lifts it back over half and switches it off, which is the build's see-saw. A fallen wearer isn't healed. The last drink is one of the spine's four bends.
+- **Notes:** Keeps the name only. Its own Lifesteal step is high so it works on an Assassin alone: a fifth, two fifths below half. With Bloodlust the doublings add: three times. Its own drinking lifts it back over half and switches it off, which is the build's see-saw. Under Halved heart, whose card counts a unit at half as below half, it's on all fight. A fallen wearer isn't healed. The last drink is one of the spine's four bends.
 
 ### Headsman's axe
 - **Is:** axe · legendary
