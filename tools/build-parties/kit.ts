@@ -6,7 +6,8 @@
  * How a rung is filled, from the designer's tags (the Serves lines, content/core-set/pieces/index.ts SERVED):
  * - **Gear:** each member, slot by slot, wears the piece of a kind its class wears that's worth most to the build, at the
  *   rung's rarities (rung 1: commons and uncommons; rung 2: rares too; rung 3: legendaries too), never a piece a partner
- *   already wears; ties go to the rarer piece, then the id. A slot with nothing worth anything to the build holds a common of
+ *   already wears; ties go to the rarer piece, then the id. A piece that draws the foes (its threads say draw) goes only to a
+ *   class that can stand in front (a wall, or the Monk's and the Valkyrie's dance). A slot with nothing worth anything to the build holds a common of
  *   the class's first kind. A two-handed weapon leaves the offhand empty.
  * - **Mythics:** at rung 3, the members whose class's mythic is worth most to this build of all the builds (at most two, the
  *   more worth first) wear it in its slot.
@@ -91,9 +92,13 @@ const kindOf = (g: GearT) => (g.slot === "weapon" ? g.weapon?.kind : g.slot === 
 const kindsFor = (c: ClassDefT, slot: Slot): string[] | null => (slot === "weapon" ? c.weapons : slot === "armor" ? c.armor : slot === "offhand" ? c.offhands : null);
 const TWO_HANDED = new Set(weaponKinds.filter((k) => k.hands === 2).map((k) => k.id));
 
+/** A piece whose threads say it draws the foes (Taunts, Aggro): a good player hangs it on a unit that can stand in front, never on a dealer. */
+const draws = (g: GearT) => !!SERVED[g.id]?.threads.includes("draw");
+
 function pick(c: ClassDefT, slot: Slot, build: BuildId, rung: Rung, used: Set<string>): GearT {
   const kinds = kindsFor(c, slot);
-  const fits = pieceGear.filter((g) => g.slot === slot && (!kinds || kinds.includes(kindOf(g)!)) && RANK[rarityOf(g)] <= rung && !used.has(g.id));
+  const wall = (FIT[c.id]?.wall ?? 0) >= 1;
+  const fits = pieceGear.filter((g) => g.slot === slot && (!kinds || kinds.includes(kindOf(g)!)) && RANK[rarityOf(g)] <= rung && !used.has(g.id) && (wall || !draws(g)));
   const scored = fits.map((g) => ({ g, w: worth(g.id, build) })).sort((x, y) => y.w - x.w || RANK[rarityOf(y.g)] - RANK[rarityOf(x.g)] || x.g.id.localeCompare(y.g.id));
   if (scored[0]?.w) return scored[0].g;
   // Nothing for the build: a common of the class's first kind (any amulet for the amulet slot).
