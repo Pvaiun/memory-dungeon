@@ -14,7 +14,15 @@ Work in progress: what the agents raised while applying round 1, and what the fr
 - **A killing blow is a hit.** A foe felled by damage sent back, by Thorns or by a status's own damage isn't anyone's killing blow. Cards that wait for a foe to fall, whoever felled it, still fire.
 - **The crossing ruling is for HP.** A watcher of MP keeps its own card's words.
 
+- **Where left-over damage lands is a target after the first,** so a Taunt doesn't decide it, as it doesn't decide a chain's later foes. Round 1's ruling stands otherwise: it's a hit on the foe it reaches, and that foe can dodge it.
 - **A free cast costs nothing, in MP or in HP.** "Costs no MP" on a card means the cast is free, so under an HP price it costs no HP either. New cards say "is free"; a kept card may keep today's words.
+
+## Weapons, the first six kinds
+
+- **Rimed blade adds a few Chill, read off its wearer's max HP.** At several from Attack it laid a shatter every second swing on a Hexer, beside Cold hex, and held a lone foe still all fight. From max HP it's seen on a Knight, which is the wearer its line names first, and a Hexer's stays a few. The spine's line changes.
+- **Bellows wraps adds a twentieth of the fire a hit,** not a tenth. At a tenth, about seven hits in eight ticks on one foe made the fire grow with nobody feeding it, and Burn has no cap: a loop whose only brake was the foe's death. At a twentieth no build reaches it, Everflame lantern beside it included. The spine's line changes.
+- **Overkill axe's left-over** isn't turned by a Taunt (the ruling above).
+- **Lamprey claws at a tenth, Victor's spear's Aggro, the four spears' new steps, Forked knuckles counting Arc's second foe, Reaver's axe's Might from Attack, the dagger's commons:** as written.
 
 ## Offhands, the other seven kinds
 

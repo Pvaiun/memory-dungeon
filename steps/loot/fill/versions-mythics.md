@@ -692,44 +692,20 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 
 ## Challenges
 
-**The ones that most need a ruling:**
+Round 1 ruled on everything this section held, and each ruling is applied in the entries above. What's left is what the rulings didn't reach, and what they opened.
 
-1. **Huntmaster's quiver is resized from "halved" to "ready again".** Halving the cooldowns left on quick and short arrows saved three to five ticks each: the size play never saw, on a mythic. Ready again is the same reward at a size that's seen, and it's a big step: every fall of a foe the Ranger's arrows touched brings all three back, at 725 MP a round. If that's too far for a kept item, the alternative that's still seen is "the arrow that hit it is ready again". The same entry needs the quiver to leave Barbed volley aimed at every foe; today's build would turn the volley into one arrow.
-2. **Rubato can ready itself.** As the line has it, "every ally" includes the Bard, and when nothing else of the Bard's is cooling down, Rubato is its ability nearest to ready. It then casts again until its mana is gone: three casts from a full pool, each one readying an ability for both allies. A Bard that knows only this song does it every time. The brief says to report a loop, not fix it, so the card is written to the line. The fix is one clause: "for the Bard, another of its own."
-3. **Writ of judgement with a free marker.** The spine lists this loop with "a foe that survives the blow" as its brake. At first values the blow is about 4,900 after a minion's Defense, more than most act I foes hold, so with Hunter's mark on the Paladin the chain runs through a pack at no cost. The numbers can't brake it without making the mythic's blow small. It's the lead's to leave or rule.
-4. **Swift justice: what "the judged foe falls" means.** Written as "falls holding the Paladin's Mark", which the player can see and the engine can hear. Marked lasts 14 ticks, so the reset needs the kill inside that. The other reading remembers the last foe Condemn Marked after the Mark has gone, which fires more often and rests on something with no icon.
+**Opened by the rulings:**
+- **Plague's power step.** As ruled, Malison's step is two fifths more damage and Bleed. On Plague that leaves its Burn and its Shock alone, where today's step ("40% more of every status it adds") grew them. Written as ruled. If the step is meant to stay plain on each version, Plague's would read "two fifths more damage, and of every status it adds".
+- **Stormspear's blow when no foe holds Shock.** Two rulings meet. Its phrase is a pick of its own, which a Mark doesn't steer; and a phrase's fallback to a random foe follows the Mark. Written as both: a Mark steers the blow only when no foe holds any Shock.
+- **Writ of judgement and Condemn's versions.** Written as: Challenge and Swift justice are Condemn, and each calls the blow. Under Challenge that's a Mark, a heavy blow and a Taunt from one cast.
+- **Reprise and "the longest cooldown".** The spine's line for it reads "its ability with the longest cooldown ready at once", which by the ruling means its slowest ability. Today's card says "the longest cooldown left", the most wait left. Kept as today's. Round 1 notes that Reveille reads as Reprise does; by the same ruling Reveille means the slowest, so the two now differ in which ability as well as when.
 
-**Marked: three readings the line leaves open.** What the entry assumes is first each time.
-- **A phrase's fallback.** "The foe with the most Burn" falls to a random foe when none burns. Written as not following the Mark, since the line says an ability with a phrase of its own keeps it. I'd rule the other way: the first Firebolt of a fight would land on the Marked foe and the pile would form there, which is a Mark the player can see working.
-- **The Fizzle rule.** Shield bash, Tremor and Garrote skip a foe that already holds their status. Written as: the Mark holds, and they land on the Marked foe for their damage alone when every Marked foe already holds it. The other reading sends them off the Mark to a fresh foe.
-- **"A random foe that isn't Taunting"** (Gale spear, Garrote), when the Marked foe is the one Taunting. Written as: the Mark takes it.
+**Not ruled:**
+- **Drinking palm's red stone tag.** On a Monk nothing reads its heal as a Shield. Red stone mail is Mail. Phylactery reads what its holder heals on others. Blood oath's Drinker seat reads Lifesteal, and this heal is a heal the passive gives, not Lifesteal. Round 1 took the same tag off Tithing leathers for the same reason. Either the tag comes off the spine's line, or the version's drink is written as Lifesteal on those hits, which would be a change to a kept version.
+- **Huntmaster's quiver in the spine.** Its line still reads "the cooldowns left on its abilities are halved". The card, as ruled, reads "ready again".
+- **"Crit more often"** on Quick draw and Quarry is the base passive's wording, with no number: it's two crit steps. Round 1 has "far more often" say its number on a piece. Left as today's, since it's the kit's own sentence on both versions.
 
-**Lines and words:**
-- **Malison's power step.** "40% more of every status it adds" now grows only the Bleed, which isn't what the curse is for any more. The plain step for a hit is two fifths more damage. The spine says every ability keeps its power step, so it isn't changed here.
-- **The chalice and "pays HP".** The spine defines the phrase as a price taken "from its user's own HP". The chalice's price is taken from the Vampire for someone else's ability. The spine's own note has Bloodstone reliquary reading it, so the Vampire is the payer; the definition needs that said.
-- **Halo of the saint and "a repeat isn't repeated".** Written as: a cast made twice by another piece has both its heals widened, since widening isn't casting again, and the Halo's own copies are never copied. If the rule is read strictly, the second cast's heal isn't widened.
-- **Stormspear and the Taunt rule.** Round 1 rules that a strike a card aims at a named foe isn't a pick, and a Taunt doesn't turn it. Writ of judgement's blow is that: it falls on the foe just Marked. Stormspear's blow picks by a phrase (the most Shock), which the ruling doesn't cover: it isn't a named foe, and it isn't the unit's own swing or ability. Written as: it lands by its phrase, Taunt or not, and a Mark doesn't steer it. Stormspear also loses "ignore Taunt" on its swings, which the spine's line drops without saying so.
-- **The last wall and the mirror's link.** The link says Hoplon and The last wall both send back what the cover stopped, "so better stone sends more". For the Aegis that isn't so: it's checked after Defense, so better stone sends less, and can take the blow under Aegis's line. Round 1 now reads Hoplon by the printed numbers too, so the pieces agree with each other and the link's sentence is the odd one out. The mythic is kept as today's.
-- **Eye of the tempest.** The card says every hit jumps; the build leaves out extra strikes. One of the two should move. "A jump doesn't jump again" is added, by the brief's rule for repeats.
-
-**Target phrases today's cards use that the vocabulary's table doesn't have.** The brief asks for the table's phrases word for word. These have no entry, so each is written as today's cards have it:
-- "the foe with the lowest share of max HP" (Swift justice, Quarry);
-- "the ally with the least MP", by share of max MP, and its "other" form (Deep calm, Blood for mana, Rally the well, Horn of the keep);
-- "the ally with the slowest basic attack" (Rousing chorus);
-- "the ally with the most Aggro" (Watch the anchor).
-
-Round 1's list of new phrases already has the last two, the second as "the ally with the highest Aggro"; Watch the anchor's card keeps today's "most" until that's sent. The first two aren't on it.
-
-Today's cards also shorten two that the table does have: "the lowest share of HP" for "the lowest share of max HP", and "the lowest HP" for "the lowest current HP". The kept cards here repeat today's wording and the changed ones use the table's. One ruling for the whole fill would settle it.
-
-**Stale words on kept cards,** left as they are for a ruling:
-- **"Physical damage"** on Coup de grâce and Frost fist. There's one kind of hit now.
-- **"A little"** Chill on Frost fist, which isn't one of the scale's stack words.
-- **Night's edge's "for a moment"** is Hidden's whole length.
-
-**Cards that say less than the build does:** Coup de grâce (any ability's kill readies Backstab), Smoke screen (it also passes over an ally already Hidden).
-
-**Names.** None clashes. Two notes:
+**Names.** None clashes. Two notes, neither ruled:
 - **Halo of the saint and Heart of the saint** can sit on one Cleric, with Saint's mace in its hand. The Halo's name is today's; the others are another share's.
 - **Three pyres** now sit in one fire party: High pyre, Pyre of judgement and Pyre line.
 
@@ -740,22 +716,22 @@ Today's cards also shorten two that the table does have: "the lowest share of HP
 For each engine this share touches: the size of my side, and what the other side needs for the two to meet.
 
 - **The shield detonation.**
-  - *My side:* Rampart rebuilds the shell's own amount, once a cast, which is a Geomancer's whole cap. Rime shield lays about 900 a shatter on the lowest ally. Faultline turns a break into a triple crit. Mountain's crown refills the bar on every crit.
-  - *The other side:* the break pieces read the most the pool held, whatever filled it, which round 1 rules for all of them and for Rampart. Mountain's crown keeps the stone from breaking at all, so a Geomancer wearing it feeds the detonation least.
+  - *My side:* Rampart rebuilds the most its Shield held, once a cast, which is a Geomancer's whole cap. Rime shield lays about 900 a shatter on the ally with the lowest share of max HP. Faultline turns a break into a triple crit. Mountain's crown refills the bar on every crit.
+  - *The other side:* the break pieces read the most the pool held, whatever filled it, as ruled for all of them. Mountain's crown keeps the stone from breaking at all, so a Geomancer wearing it feeds the detonation least.
 - **The frozen gate.**
-  - *My side:* Frost armor lays about 3 Chill for each hit a foe lands on any ally, for Guard's length, so a foe bursts on its third or fourth blow. Rime shield answers each burst with about 900 of Shield on the lowest ally.
-  - *The other side:* Hoarfrost plate and Frostward blade need about three a blow too. Read off an anchor's own Attack, "a few" is under one and a half on a Knight, and nine blows to a shatter isn't the link. Round 1 has the on-struck pieces reading one stat, and the share that's in reads the holder's Defense: a few from a wall's Defense is about three, which meets it. Frost armor reads its caster's Attack, as Static field does; if the pieces settle on Defense, this version is the one home that doesn't, which is right for a spell.
+  - *My side:* Frost armor lays about 3 Chill for each hit a foe lands on any ally, for Guard's length, so a foe bursts on its third or fourth blow. Rime shield answers each burst with about 900 of Shield.
+  - *The other side:* as ruled, Hoarfrost plate reads its wall's Defense and Frostward blade its mage's Attack, each at the plain few: about three a blow from a Knight's plate, two or three from the blade, so the fourth or fifth blow. Frost armor reads its caster's Attack at half again the few, since a spell that ends with its Guard has less time than a piece that's worn. The three homes are within a blow of each other.
 - **The mirror.**
   - *My side:* The last wall sends back all an Aegis stopped and readies Aspis, at 500 MP. Watch the anchor keeps the Aegis on whoever draws.
-  - *The other side:* a draw that holds through a wind-up, and blows big enough to clear Aegis's line after the wall's own Defense. On the best walls only a boss's great blows do. Round 1 rules Hoplon the same way, by the numbers the game prints, so the two pieces agree; the link's sentence about better stone is what's left to change. See Challenges.
+  - *The other side:* a draw that holds through a wind-up, and blows big enough to clear Aegis's line after the wall's own Defense. On the best walls only a boss's great blows do. Hoplon now reads the same printed numbers, and the link no longer says better stone sends more.
 - **The goad.**
   - *My side:* the toll a called blow pays. Static field: about 4 Shock, some 340 at the foe's next move. Hold the line: 150 of Thorns. Overgrowth: 600, with Briar's Bleed.
   - *The other side:* the call has to cost the pack more than the blow costs the anchor. A bandit's swing takes about 290 from a Knight. So the goad pays on Overgrowth and under Static field, and on Hold the line alone only against light hitters.
 - **The held charge.**
   - *My side:* Thunderclap is doubled by a charge of about 23 on a foe and nearly tripled at the cap. Stormspear's blow is doubled at 13 and four times the size at the cap. Aftershock holds the whole field for a Stun's length.
-  - *The other side:* charge enough to matter. A party's riders hold a field at 5 to 15 stacks while it acts, so the readers pay mostly on a held foe or a slow boss, which is the engine. With Stormspear in hand the Valkyrie has no rider of her own: the charge is Gale spear's and the party's.
+  - *The other side:* charge enough to matter, on a foe the blow can reach. A party's riders hold a field at 5 to 15 stacks while it acts, so the readers pay mostly on a held foe or a slow boss, which is the engine. With Stormspear in hand the Valkyrie has no rider of her own, and her blow is inside the Taunt rule: behind a Taunting front it lands on the guard, so the charge has to be on the guard too.
 - **The reaping.**
-  - *My side:* Coup de grâce lands for about 2,000 and is ready again at its kill, at 325 MP: four from a full pool. Huntmaster's quiver, resized, readies all three arrows at each fall, at 725 MP a round.
+  - *My side:* Coup de grâce lands for about 2,000 and is ready again at Backstab's own kill, at 325 MP: four from a full pool. Huntmaster's quiver, resized, readies all three arrows at each fall, at 725 MP a round.
   - *The other side:* a field sunk under about 1,800 HP together, and mana for the reaper. Without mana the cliff is four foes long.
 - **The judge's drum.**
   - *My side:* Swift justice's call, made again when a foe falls under the Paladin's Mark, at 650 MP a call. Nothing to size.
@@ -768,88 +744,98 @@ For each engine this share touches: the size of my side, and what the other side
   - *My side, the wide hits:* Whipping vines (about 490 a foe after Defense), Malison and its versions, and the witch-blade's three swings. The link's size holds for all but Malison itself, whose own hit is bigger than the wound it cashes.
   - *The other side:* nothing: any wide hit in the party pays.
 - **The riposte.**
-  - *My side:* the draw on a dodger: Stillness of mind (a Taunt with seven blows in ten missed) and Over the fallen (a Taunt and a Guard when an ally is at 30% or down). And cover by hitting: Drinking palm, resized to a fifth of each hit.
-  - *The other side:* the answering strike has to be a real swing. On a Valkyrie it banks Shield through her passive. On a Monk, Drinking palm only heals: it banks nothing above full unless something turns healing past full into a Shield, and the Monk's Leather can't hold Red stone mail. For the Monk, "banks cover" needs the cloak that Shields on a dodge.
+  - *My side:* the draw on a dodger: Stillness of mind (a Taunt with seven blows in ten missed) and Over the fallen (a Taunt and a Guard when an ally is under 30% or down). And cover by hitting: Drinking palm, resized to a fifth of each hit.
+  - *The other side:* the answering strike has to be a real swing. On a Valkyrie it banks Shield through her passive. On a Monk, Drinking palm only heals: it banks nothing above full. For the Monk, "banks cover" needs the cloak that Shields on a dodge.
 - **Every colour.**
   - *My side:* Malison pays a fifth for each of the five, double at all five. Plague lays three of them, five or six stacks each, which last about one Malison cooldown. Focused curse triples it on one foe. The witch-blade carries the Hexer's own colour to every cursed foe.
-  - *The other side:* afflictions that are still there when the curse comes round: a rider on a swing, the idol that tops each up, the wand that scatters them. Chill and Sunder hold longest; a single lot of Burn or Shock is gone in about a cooldown.
+  - *The other side:* afflictions that are still there when the curse comes round: a rider on a swing, Festering idol topping each up, the wand that scatters them. Chill and Sunder hold longest; a single lot of Burn or Shock is gone in about a cooldown.
 - **The lead's colour.**
   - *My side:* a colour on a swing from the kit: Hex of flames (about 3 Burn a swing), Kindling (3 or 4), and Crown of embers (one Burn for every hit of every ally).
-  - *The other side:* The standard and Mimic wand carry what the Lead's swing carries. Under Crown of embers every swing already carries the Crown's Burn, and round 1 rules it isn't added twice: it's one aura, not two riders.
+  - *The other side:* The standard and Mimic wand carry what the Lead's swing carries. Under Crown of embers every swing already carries the Crown's Burn, and as ruled it isn't added twice: it's one aura, not two riders.
 - **The emptied quiver.**
   - *My side:* Quick draw: each crit is the next swing at once, with a quarter-tick of recovery between. Barbed volley makes every foe a bleeding one.
-  - *The other side:* the crit chance its makers give. The burst runs three or four arrows when a swing crits about seven times in ten. At nine in ten it's ten arrows, in under three ticks. Round 1 sets "nearly always" at four times in five, with nothing raising it, and holds The king's head to the same ceiling: that's five arrows on average, a little over the link's size, and it always ends. "Far more often" on Bloodscent knife is the number still open.
+  - *The other side:* the crit chance its makers give. As ruled, "nearly always" is four times in five, nothing raises it, and a card that lifts Crit chance by a lot stops at four in five. That's five arrows on average where the link asks for three or four, and it always ends. What isn't held is plain Crit chance from stats, which the lead has flagged for the director: Quick draw's own two crit steps add to it.
 - **The blood mage.**
-  - *My side:* The chalice moves an ally's price onto the Vampire, the same share.
-  - *The other side:* the link reads the price back through the caster's Lifesteal, and here the caster isn't the one who paid. What repays the Vampire is its own drinking, or a piece that turns a price into a heal for someone else. The chalice is the blood mage with two bodies; the pieces written for one body don't close it.
+  - *My side:* The chalice moves an ally's price onto the Vampire, the same share. The Vampire is the payer.
+  - *The other side:* the link reads the price back through the caster's Lifesteal, and here the caster isn't the one who paid. What repays the Vampire is its own drinking. Bloodstone reliquary reads each payment as a heal for the lowest ally other than the Vampire. The chalice is the blood mage with two bodies; the pieces written for one body don't close it.
 - **The resonance.**
   - *My side:* Recharge gives back 120 MP a foe, 480 of the chain's 650 on four.
   - *The other side:* the link says mana stops it. With Recharge, a chain on four foes costs 170, so a full pool is thirteen casts, and at two or three times the pace that's the whole fight. Beside this version the thinning pack is the only brake.
 - **The crescendo.**
-  - *My side:* the free casts: three for each Overcharge, one for each Deep calm. Each skips the price and still adds a stack.
+  - *My side:* the free casts: three for each Overcharge, one for each Deep calm. Each skips the price and still adds a stack when the cast finishes.
   - *The other side:* a price that climbs fast enough for the skips to matter.
 - **Mana as armour.**
   - *My side:* Horn of the keep, resized, gives half of every blow on the Knight. Blood for mana gives about 800 at once and a Clarity. Rally the well and Deep calm give Clarity, about a quarter of a pool over its length.
   - *The other side:* a piece that takes damage from MP. By the spine's words the Horn's and Blood for mana's are MP given and Clarity's isn't, which matters to Glimmer robe and not to the orb.
 - **The firecracker string.**
   - *My side:* Splinters sends 4 to every other foe. Glacier's heart puts 6 back on the foe that burst. Hail, resized, lays about 3 on every foe a cast.
-  - *The other side:* a field already at eight or more, which Hail and the Frostweaver's own casts reach by the middle of a regular fight. The other homes send 6 to the coldest foe, or a few to all; any two of them together run long. See Loops.
+  - *The other side:* a field already at eight or more, which Hail and the Frostweaver's own casts reach by the middle of a regular fight. The other homes send 6 to the coldest other foe, or a few to all; any two of them together run long, and with the damping in fractions they end. See Loops.
 - **The brink.**
   - *My side, the unit held low:* The chalice keeps the Vampire between a tenth and wherever it drinks to.
-  - *My side, the answers:* Halo of the saint (every heal and Regen, on everyone below half), Lament (below half), Rime shield and Smoke screen (the lowest ally, whatever its HP), Shared rites and Over the fallen (below 30%).
-  - *The other side:* how low the unit is held. Halved heart's unit counts as below half at half (round 1), so it wakes Halo of the saint and Lament from the first tick, and never the two at 30%. A price or a drain goes lower. The engine is fullest with a payer, not a cap.
+  - *My side, the answers:* Halo of the saint (every heal and Regen, on everyone below half), Lament (below half), Rime shield and Smoke screen (the ally with the lowest share of max HP, whatever that share is), Shared rites and Over the fallen (below 30%).
+  - *The other side:* how low the unit is held. Halved heart's unit counts as below half at half, so it wakes Halo of the saint and Lament from the first tick, and never the two at 30%. A price or a drain goes lower. The engine is fullest with a payer, not a cap.
 - **Two in the dark.**
-  - *My side:* Smoke screen hides the lowest ally that isn't Taunting for Hidden's length, under half of its own cooldown. Night's edge hides the Assassin at each kill.
-  - *The other side:* a second hiding that's laid again and again, and a third unit that wants every blow. With Smoke screen the Assassin no longer hides itself; its mythic gives that back.
+  - *My side:* Smoke screen hides the ally with the lowest share of max HP that isn't Taunting or already Hidden, for Hidden's length, under half of its own cooldown. Night's edge hides the Assassin at each kill.
+  - *The other side:* a second hiding that's laid again and again, and a third unit that wants every blow. With Smoke screen the Assassin no longer hides itself; its mythic gives that back. Hidden's new rule keeps someone in the light, so the pair can never hide the third.
 - **The red stone.**
   - *My side:* Drinking palm heals the Monk a fifth of each hit on a Sundered foe.
-  - *The other side:* something that turns that healing into a Shield once the Monk is full. Red stone mail is Mail, and the Drinker seat reads Lifesteal. As built, Drinking palm's heal is a heal and not Lifesteal, so the seat's card has to read any healing its unit gives itself by hitting, or this half meets nothing.
+  - *The other side:* nothing a Monk can wear or sit in turns that healing into a Shield, as the cards stand. See Challenges.
 
 ## Loops
 
 Each with what's in it and what stops it.
 
-- **Rubato, alone.** A Bard with nothing else cooling down readies Rubato with Rubato. *Brake:* mana, 650 a cast: three casts. Weak, and it happens on a one-song Bard every time. Challenge 2.
-- **Writ of judgement with a marker that costs nothing** (Hunter's mark, a Marker or Lead seat): a Mark, a blow, a kill, the next Mark. *Brake:* a foe that survives the blow. Weak in a pack of small foes: the blow fells most minions.
-- **Swift justice with Writ of judgement:** the same chain through Condemn. *Brakes:* 650 MP a link, so five links, and a foe that survives the blow and the volley together.
+- **Closed by round 1:**
+  - **Rubato alone** never readies itself: it's on the card.
+  - **Writ of judgement with a marker that costs nothing** no longer chains: the blow answers Condemn alone.
+  - **Splinters with Glacier's heart.** With the damping in fractions of a stack, a foe that has burst takes 2, then 1, then half a stack from each pass, and needs six more than the heart puts back. That's three other foes bursting, then six, then twelve, which no pack holds. So the string runs two rounds in a pack of four to six and three in a pack of seven or eight, and dies down. Winter's chain in the same hand adds about one round. Each burst still deals about 3,000, so most packs end before the string does.
+- **Swift justice with Writ of judgement:** each Condemn is a Mark, a heavy blow and a volley, and a foe that falls under the Mark readies the next. *Brakes:* 650 MP a link, so five links; Condemn's wind-up and recovery; a foe that survives the blow and the volley together.
+- **Swift justice with a marker on the Paladin** (Hunter's mark, a Marker seat): the Mark it keeps on the field is the Paladin's, so any fall under it readies Condemn. More calls, each one still a paid Condemn. *Brake:* mana.
 - **Huntmaster's quiver, resized, with Barbed volley:** a foe falls, by anyone's hand, and the volley is ready and wounds the whole field again. *Brakes:* 325 MP a volley, its wind-up and recovery, and the foes running out.
-- **Splinters with Glacier's heart** (and worse with Winter's chain in the Frostweaver's hand). The ruled damping ends a chain of Splinters alone: a foe that has burst needs twelve from cold that's halved and halved again. Glacier's heart puts six back undamped, so a foe needs only six more. Once the damping is down to one stack a pass, six other foes bursting supply it. In a pack of seven or eight every foe keeps bursting in turn; in a pack of four to six the string runs about two rounds and dies. *Brake at seven or eight:* the shatter's own damage, about 3,000 a burst, which fells most minions in a round or two. The chain ends because the pack does. If that's not the fizzle the director ruled for, the floor of one stack is the number that decides it.
-- **Quick draw:** the engine's own loop. *Brake:* the crit that fails, and a quarter-tick between arrows. How long it runs is set by the pieces that make crits near certain: see Links.
-- **Coup de grâce with Night's edge, or with Bounty charm:** the spine's kill chain. *Brakes:* 325 MP a stab, and the foes running out.
+- **Quick draw:** the engine's own loop. *Brake:* the crit that fails, and a quarter-tick between arrows. As ruled, no card makes a crit certain for longer than one swing, so it always ends. A Ranger whose plain Crit chance is stacked high from stats is the case left, and it's with the director.
+- **Coup de grâce with Night's edge, or with Bounty charm:** the spine's kill chain. *Brakes:* 325 MP a stab, and the foes running out. Only Backstab's own kill readies it now, which takes Garrote's kills out of the chain.
 - **Recharge under Overcharge:** a free chain still gives its mana back, so three casts make up to 1,440 MP where they'd have cost 1,950. It's a mana engine on one unit, not a loop. *Brake:* three casts a Static charge. With a resonance piece as well, mana no longer stops the chain at all while four foes stand; the pack thinning does.
 - **The last wall with mana that isn't the Hoplite's** (The chalice): every blow over Aegis's line is blocked, sent back, and the next Aegis is up within three ticks. *Brakes:* the Vampire's health, and the blows under the line, which pass.
-- **The chalice with anything whose brake was mana** (The cathedral's Soloist, a resonance, the Paladin's drum, the Bard's songs under Metronome). *Brake:* the Vampire's floor at a tenth, after which each caster pays its own mana again. It moves the brake; it doesn't remove it. Beside Bloodstone reliquary each price is also a heal on the lowest other ally, which is strong and doesn't loop.
-- **Metronome with Rubato:** hits ready the songs, Rubato readies abilities, their hits fill the count. *Brake:* the Bard's mana: a full round of songs is 1,750.
+- **The chalice with anything whose brake was mana** (The cathedral's Soloist, a resonance, the Paladin's drum, the Bard's songs under Metronome). *Brake:* the Vampire's floor at a tenth, after which each caster pays its own mana again. It moves the brake; it doesn't remove it. Beside Bloodstone reliquary each price is also a heal on the lowest ally other than the Vampire, which is strong and doesn't loop.
+- **Metronome with Rubato:** hits ready the songs, Rubato readies abilities, their hits fill the count. Metronome readying Rubato isn't Rubato readying itself. *Brake:* the Bard's mana: a full round of songs is 1,750.
 - **Horn of the keep:** a Taunt laid again each time one runs out during an ally's wind-up, without limit. Beside a caster with long wind-ups that's a Taunt all fight, which is its purpose. What reads a Taunt held in the Knight's kinds (Oathkeeper's sweep) only lasts longer for it; nothing the Knight can hold beside it is set off by a Taunt being laid.
-- **Closed on the card:** Halo of the saint's copies aren't copied; Stormspear's blow isn't counted; a jump of Eye of the tempest's doesn't jump.
+- **Eye of the tempest, with every hit jumping:** more jumps than today's build, and on a wide hit one for each foe it lands on. A jump doesn't jump, so it's wide and never a loop.
+- **Closed on the card:** Halo of the saint's copies aren't copied; Stormspear's blow isn't counted; a jump of Eye of the tempest's doesn't jump; Rubato doesn't ready itself.
 - **None found:** the other versions and mythics. Each reads a state and leaves it, or fires on its own cast.
 
 ## Code support beyond the spine's list
 
 - **Halo of the saint:** a heal or a Regen that an ability gives, given again whole to every other ally that passes a test, with the copies marked so nothing copies them (23). The list has a cast made twice (16) and nothing that widens one.
-- **The chalice,** beyond 20's price paid by one unit for another:
-  - an ally's ability counts as affordable when the Vampire can pay for it, so a caster at no mana still casts;
-  - the Vampire counts as the one who paid, for the pieces that read a price.
-- **A blow dealt by a reaction as a hit of its own,** sized from Attack and not from the weapon: Writ of judgement's and Stormspear's. Today's reactions strike with the weapon or deal untyped damage. With it, whether the Taunt rule holds such a blow.
+- **The chalice,** beyond 20's price paid by one unit for another: an ally's ability counts as affordable when the Vampire can pay for it, so a caster at no mana still casts.
+- **A blow dealt by a reaction as a hit of its own,** sized from Attack and not from the weapon: Writ of judgement's and Stormspear's. Today's reactions strike with the weapon or deal untyped damage.
+  - Writ of judgement's is called by Condemn, by name, in every form of it. A status doesn't know which ability laid it, so the build can't hear "a Mark Condemn gave"; it changes Condemn, as today's Chains of light changes Smite.
+  - Stormspear's picks by a phrase, inside the Taunt rule, with the phrase's fallback following a Mark.
 - **A rider on every hit** its holder lands, sized by a status on the target: Ember palms. Today's riders sit on basic attacks, and per-stack terms sit on abilities.
 - **A wait on a foe's stacks at a number:** High pyre's 20 Burn. Today's waits read whether a status is held, or the caster's own count.
-- **Marked (1):** the Fizzle rule read among the Marked foes; and a phrase's fallback, if it's ruled to follow.
+- **Marked (1),** as ruled: a phrase's fallback to a random foe follows the Mark; the Fizzle rule and Seek's "isn't Taunting" give way to it.
 - **Huntmaster's quiver:** its new aim has to leave alone an ability aimed at every foe.
-- **Nothing new** for Swift justice, Rubato, Rousing chorus, Barbed volley, Frost armor, Plague, Focused curse or the resizes: each is today's shape with other numbers, or a primitive that exists.
+- **Rubato:** the cooldown effect's "next ability" pick has to leave out, for the caster, the ability being cast.
+- **Coup de grâce:** a kill has to say which ability landed it. Today's kill event names the killer and the hit's kind, which is why any ability's kill readies Backstab.
+- **Eye of the tempest:** every hit jumps, extra hits included, with the jump itself marked (23) so it isn't heard as a hit to jump from. Today's build avoids that by not listening to extra hits at all.
+- **Nothing new** for Swift justice, Rousing chorus, Barbed volley, Frost armor, Plague, Focused curse, Rampart or the resizes: each is today's shape with other numbers, or a primitive that exists.
 
 ## Least sure
 
-- **Huntmaster's quiver at "ready again".** The right kind of size, and possibly too much of it. Challenge 1.
+- **Huntmaster's quiver at "ready again".** It stands, and it's in the director's sample. The right kind of size, and possibly too much of it.
 - **Malison as a light hit.** It's the Hexer's own number at last, on a short cooldown, on every foe, for 450 MP: more per cast than Fireball's hit. A touch would keep it near today's worth and may not be seen. I chose seen.
 - **High pyre's two numbers,** 20 to open and 500 a stack. The count decides whether a lone Pyromancer ever casts it; the long wind-up decides what it lands on. If it lands on twelve most of the time, it reads as a slower Pyre.
-- **Plague's stacks.** At a few, its Burn and Shock barely outlast one cooldown, so "the next curse landing bigger" is half true on a lone Hexer. The line's word is a few, so it's a few.
-- **The chalice's "same share".** A Monk's Flow costs the Vampire more blood than a Pyromancer's Firebolt, because each is a share of its own caster's pool. It's the line, and it matches Sanguine vestments; a player may find it backwards. MP for HP, one for one, is the other way to say it.
+- **Plague's stacks.** At a few, its Burn and Shock barely outlast one cooldown, so "the next curse landing bigger" is half true on a lone Hexer. The line's word is a few, so it's a few. Its power step no longer grows them either.
+- **The chalice's "same share".** A Monk's Flow costs the Vampire more blood than a Pyromancer's Firebolt, because each is a share of its own caster's pool. It's the line, and it matches Flagellant's vestments and The covenant, whose sums round 1 sends to the director; a player may find it backwards. MP for HP, one for one, is the other way to say it.
+- **Stormspear's blow inside the Taunt rule.** Her Gale spear reaches past a guard and charges the back row; the blow that reads the charge now lands on the guard. Against a Taunting front the mythic's promise, the most charged foe, isn't kept. It's the ruling, and it's consistent; it may make the piece feel broken in exactly the fights the Storm likes.
+- **Stormspear's blow's size,** a normal hit on Skyfall's step, about every ten ticks. It may out-earn Skyfall itself, which is what a mythic does, or bury it.
+- **Eye of the tempest at "every hit".** With Arc's second hit and Double strike's second strike jumping, it's a good deal more than the build that was never offered. The card was always this; nobody has seen it.
+- **Writ of judgement, answering Condemn alone.** One blow a Condemn is the size of a second Smite on a medium cooldown. It may now be small for a mythic unless Swift justice is beside it.
 - **Hail at about 3 a foe.** It's seen, and it makes the Ranger a better field of cold than the Frostweaver's own two field spells, for a fraction of the mana. The Frostweaver's counts are the balance pass's first job; this may want to follow them.
-- **Frost armor's Chill,** at half again the passive's few. Sized to the link. If Hoarfrost plate and Frostward blade come in at the plain word, the version out-freezes both rares.
+- **Frost armor's Chill,** at half again the few, where the gate's two pieces are at the plain few. Sized to the link and to a spell's shorter time; it may simply out-freeze both rares.
 - **Rousing chorus and Might's cap.** One cast nearly fills it, so the power step and a second cast add little. It may want fewer stacks more often, or it's simply a version that's done after one song.
 - **Drinking palm at a fifth,** and **Horn of the keep at a half.** Both were sizes play named as unseen. Both resizes are my reading of how far "seen" is, and either could sit a step lower.
 - **Shieldbearer, left alone.** A quarter more on every blow is a first step that may read as a stat. Doubling it, so Defense counts as Attack does, is the resize I'd make if the lead wants one.
-- **Stormspear's blow,** a normal hit on Skyfall's step, about every ten ticks. It may out-earn Skyfall itself, which is what a mythic does, or bury it.
 - **Ember palms at 25 a stack.** On a fire of fifty it adds more than the Monk's own blows three times over. It's a mythic on a far end, and it's a guess.
 - **Barbed volley's cooldown and cost,** moved a word and a rung as Whipping vines' were. It could as well keep the base's.
+- **Frost fist's "a few".** The reworded card says a few for what's under two stacks a hit. It's the scale's word at the kit's own multiplier, as Blizzard's is, and the smallest "few" in the game.
 - **The kept items I didn't doubt.** Thirty-one versions and nine mythics are marked *Stays* with a line each. Several of those were never fielded in play, so "seen" is my reading of the card, not a fight.

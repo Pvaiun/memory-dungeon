@@ -47,7 +47,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Rime knuckles** · uncommon · Its basic attacks and extra strikes add a few Chill.
 - **Lamprey claws** · uncommon · Each extra strike it lands heals its wearer (from max HP).
 - **Gorged claws** · rare · While its wearer is below half its HP, its basic attacks come a third faster.
-- **Bellows wraps** · rare · Each hit it lands on a burning foe raises that foe's Burn by a tenth of what it holds.
+- **Bellows wraps** · rare · Each hit it lands on a burning foe raises that foe's Burn by a twentieth of what it holds.
 - **Still hand** · rare · Its hits on a Stunned foe strike twice; the second strike doesn't strike again.
 - **Forked knuckles** · rare · Its basic attacks leap to one more foe for half, carrying what the swing carries, and each foe they hit after the first gives its wearer some MP.
 - **Flurry wraps** · legendary · Its extra strikes can strike again: each rolls Double strike for one more, at most two more after the first, each a little weaker than the last.
@@ -71,7 +71,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 *Wears:* Knight, Hexer, Valkyrie.
 
 - *Commons (2):* one leans to Attack and Crit chance, one to Attack and HP or Aggro.
-- **Rimed blade** · uncommon · Its basic attacks add several Chill.
+- **Rimed blade** · uncommon · Its basic attacks add a few Chill, read off its wearer's max HP.
 - **Drawn steel** · uncommon · Its first hit on each foe deals double.
 - **Mercy's edge** · uncommon · Each basic attack it lands heals the ally with the lowest share of HP for a share of the damage.
 - **Gravemark** · rare · Its hits on a Marked foe deal half again as much. When a Marked foe falls and leaves none Marked, it Marks the foe with the lowest HP.
@@ -132,7 +132,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Sigil blade** · uncommon · When each fight starts, its wearer gains a Shield from its max MP.
 - **Wellblade** · uncommon · Each basic attack it lands restores some of its wearer's MP.
 - **Winter's chain** · rare · When a foe's Chill shatters, the other foe with the most Chill gains half the cold it held.
-- **Frostward blade** · rare · Foes that hit the ally with the highest Aggro gain a few Chill.
+- **Frostward blade** · rare · Foes that hit the ally with the highest Aggro gain several Chill.
 - **Spellbinder** · rare · After each ability its wearer casts, its next basic attack deals double and gives back half the ability's cost.
 - **Brimming blade** · legendary · Its wearer's abilities deal extra damage from the MP they cost.
 - **Glacier blade** · legendary · Each shatter this fight adds a Cascade. Its wearer's abilities deal more, and add more Chill and Shock, for each Cascade.
