@@ -75,11 +75,13 @@ export function compile(s: StatusT): Compiled {
   for (const b of s.boosts ?? []) add(b, b.pct);
   for (const t of s.taken ?? []) add(t, t.pct);
   for (const r of s.riders ?? []) add(r, r.add.amount);
+  for (const x of s.adds ?? []) add(x, x.amount);
   const effects = [...(s.pulse?.do ?? []), ...(s.trigger?.do ?? []), ...(s.reactions ?? []).flatMap((r) => r.do)];
   for (const e of effects) {
     add(e, numOf(e));
-    // Each status a `one` can pick carries its own stacks.
+    // Each status a `one` can pick, or a strike's hit applies, carries its own stacks.
     if (e.op === "one") for (const x of e.of) add(x, x.stacks ?? 1);
+    if (e.op === "strike") for (const x of e.apply ?? []) add(x, x.stacks ?? 1);
   }
   // A reviver's rule's HP.
   if (s.revives?.hp !== undefined) add(s.revives, s.revives.hp);
@@ -99,7 +101,7 @@ export function compile(s: StatusT): Compiled {
   if (s.absorb) kinds.push(["absorb", null]);
   if (s.block || s.floor || s.cover) kinds.push(["block", null]);
   if (s.lockout) kinds.push(["lockout", s.lockout.covers]);
-  if (s.riders?.length || s.seek || s.strike || s.aim || s.mods || s.crits || s.echo || s.revives) kinds.push(["action_change", null]);
+  if (s.riders?.length || s.adds || s.seek || s.strike || s.aim || s.mods || s.crits || s.echo || s.revives || s.borrow || s.tireless || s.order) kinds.push(["action_change", null]);
   if (s.pulse) kinds.push(["pulse", null]);
   if (s.reactions?.length || s.trigger) kinds.push(["reaction", null]);
   const harms = (s.pulse?.do ?? []).some((e) => e.op === "damage" && (e.to ?? "holder") === "holder");
@@ -121,6 +123,12 @@ function numOf(e: { op: string } & Record<string, unknown>): NumT {
     case "revive":
     case "pay":
       return e.hp as NumT;
+    case "strike":
+      return (e.amount as NumT | undefined) ?? 0;
+    case "cooldown": {
+      const set = e.set as { lessPct?: NumT } | string;
+      return typeof set === "object" && set.lessPct !== undefined ? set.lessPct : 0;
+    }
     default:
       return 0;
   }
@@ -136,7 +144,7 @@ export function slotOf(s: StatusT, owner: object): number {
 
 /** Whose value a scale reads, in an action or in a status. */
 export function role(s: ScaleT, inStatus: boolean): "self" | "target" | "holder" | "source" | "amount" {
-  if (s.amount) return "amount";
+  if (s.amount || s.event || s.cost) return "amount";
   if (s.of) return s.of;
   if (s.stat) return inStatus ? "source" : "self";
   // A count of a side's units, an action's targets or the units it hit reads from the acting unit's side.

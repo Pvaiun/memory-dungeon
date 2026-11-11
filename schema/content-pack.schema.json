@@ -4,7 +4,7 @@
   "properties": {
     "schemaVersion": {
       "type": "string",
-      "const": "0.11"
+      "const": "0.12"
     },
     "id": {
       "type": "string",
@@ -984,6 +984,28 @@
               "additionalProperties": false
             }
           },
+          "adds": {
+            "description": "Adds to the amount of the holder's hits that carry `on`, before boosts, crit and Defense (\"extra damage equal to a sixth of its Defense\"). `target` is the unit hit; an Intensity status adds it for each stack. A bare hit takes none.",
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "on": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]*(:[a-z0-9_]+)*$"
+                },
+                "amount": {
+                  "$ref": "#/$defs/Num"
+                }
+              },
+              "required": [
+                "on",
+                "amount"
+              ],
+              "additionalProperties": false
+            }
+          },
           "seek": {
             "description": "The holder's actions carrying this tag (basic, ability or all) have Seek: their first pick ignores Taunt.",
             "type": "string",
@@ -1020,6 +1042,68 @@
                 "description": "Percent of the weapon's damage each strike deals. Default 100.",
                 "type": "number",
                 "exclusiveMinimum": 0
+              },
+              "kind": {
+                "description": "Default extra: an extra strike (Double strike's). bonus: a hit with its own name (Arc's second hit, a leap, a volley's arrow), which nothing that waits on extra strikes answers; on a unit other than the target it's `wide`.",
+                "type": "string",
+                "enum": [
+                  "extra",
+                  "bonus"
+                ]
+              },
+              "carry": {
+                "description": "A bonus strike carries what the swing carries: the weapon's attached statuses, and the statuses the holder's basic attacks apply through its statuses' riders. Without it a bonus strike carries neither. (An extra strike carries the weapon's attached statuses, and the riders under `echo`.)",
+                "type": "boolean",
+                "const": true
+              },
+              "apply": {
+                "description": "Statuses each strike applies itself, as a weapon's attached ones (the acting unit is `self`).",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_]*$"
+                    },
+                    "stacks": {
+                      "description": "Intensity: stacks added, scaled only as stated here, plus the applier's boosts that name the status or its tags. Default 1.",
+                      "$ref": "#/$defs/Num"
+                    },
+                    "duration": {
+                      "description": "Default: the status's own. 0 only for an instant lockout.",
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        {
+                          "type": "string",
+                          "const": "permanent"
+                        }
+                      ]
+                    },
+                    "chance": {
+                      "description": "Percent, rolled on the applier's dice. Default: guaranteed.",
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "when": {
+                "description": "Only while the holder passes this, read as the basic attack resolves (\"every third basic attack\": a count at two).",
+                "$ref": "#/$defs/UnitCond"
+              },
+              "tag": {
+                "description": "A tag its hit events carry.",
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*(:[a-z0-9_]+)*$"
               },
               "chain": {
                 "description": "Each strike that lands rolls `chance` again for one more, at most `times` more after the first, each share % of the one before. It takes the place of a plain strike on the unit that reads the same `scale` stat (Flurry wraps over Double strike), so a swing rolls that chance once. The one bend of \"extra strikes don't chain\".",
@@ -1105,6 +1189,11 @@
                       "damage_dealt",
                       "damage_taken",
                       "hp_lost",
+                      "hp_paid",
+                      "hp_low",
+                      "hp_high",
+                      "mp_gained",
+                      "mp_over",
                       "healed",
                       "overhealed",
                       "status_gained",
@@ -1121,6 +1210,7 @@
                     "enum": [
                       "holder",
                       "ally",
+                      "team",
                       "foe",
                       "any"
                     ]
@@ -1131,11 +1221,12 @@
                     "enum": [
                       "basic",
                       "ability",
-                      "extra"
+                      "extra",
+                      "bonus"
                     ]
                   },
                   "tags": {
-                    "description": "Hit events only: the hit carries at least one of these tags (its kind and type, \"crit\" when it crits, \"area\" when its effect is aimed at several units).",
+                    "description": "The event carries at least one of these tags. A hit's: its kind and type, `crit` when it crits, `area` when its effect is aimed at several units, `wide`, `bare`, and any tag its strike names. ko: the killing hit's (`physical`: a killing blow). healed and overhealed: `pulse`. status_gained: `area`.",
                     "minItems": 1,
                     "type": "array",
                     "items": {
@@ -1144,7 +1235,7 @@
                     }
                   },
                   "notTags": {
-                    "description": "Hit events only: the hit carries none of these (`area`: a single-target hit).",
+                    "description": "The event carries none of these (`area`: a single-target hit; `bare`: not a second landing or a left-over).",
                     "minItems": 1,
                     "type": "array",
                     "items": {
@@ -1153,9 +1244,49 @@
                     }
                   },
                   "status": {
-                    "description": "Status events, and damage events: the status whose pulse or reaction dealt the damage.",
+                    "description": "Status events; damage events and heals: the status whose pulse or reaction dealt the damage or healed.",
                     "type": "string",
                     "pattern": "^[a-z][a-z0-9_]*$"
+                  },
+                  "line": {
+                    "description": "hp_low and hp_high only, and required there: the line, in percent of max HP.",
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 100
+                  },
+                  "ability": {
+                    "description": "Action events and ko: the action was one of these abilities, each with its trained forms (\"when Backstab knocks a foe out\").",
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_]*$"
+                    }
+                  },
+                  "does": {
+                    "description": "Action events: the action does one of these, as an ability filter's `does` (\"the next ability that deals damage\").",
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_]*$"
+                    }
+                  },
+                  "paid": {
+                    "description": "action_resolve only: the action was paid for, in MP or as an HP price (a free cast isn't).",
+                    "type": "boolean",
+                    "const": true
+                  },
+                  "counted": {
+                    "description": "Action events only: an ordinary action or a paid second cast, which count as casts; not a free repeat.",
+                    "type": "boolean",
+                    "const": true
+                  },
+                  "wasBelow": {
+                    "description": "Hit events only: the unit hit was below this percent of its max HP as the hit landed, before its damage.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
                   },
                   "cause": {
                     "description": "status_ended only. Default: every cause.",
@@ -1179,6 +1310,7 @@
                     "enum": [
                       "holder",
                       "ally",
+                      "team",
                       "foe",
                       "any"
                     ]
@@ -1204,7 +1336,7 @@
                     "maximum": 9007199254740991
                   },
                   "repeat": {
-                    "description": "Action events only: true matches only a recast's repeat, false only ordinary actions. Default: both.",
+                    "description": "true matches only a repeat, false only the first: an action event of a recast; a fight_start a `restart` made happen again; a status_gained of an application marked as a copy. Default: both.",
                     "type": "boolean"
                   }
                 },
@@ -1305,6 +1437,11 @@
                         "damage_dealt",
                         "damage_taken",
                         "hp_lost",
+                        "hp_paid",
+                        "hp_low",
+                        "hp_high",
+                        "mp_gained",
+                        "mp_over",
                         "healed",
                         "overhealed",
                         "status_gained",
@@ -1321,6 +1458,7 @@
                       "enum": [
                         "holder",
                         "ally",
+                        "team",
                         "foe",
                         "any"
                       ]
@@ -1331,11 +1469,12 @@
                       "enum": [
                         "basic",
                         "ability",
-                        "extra"
+                        "extra",
+                        "bonus"
                       ]
                     },
                     "tags": {
-                      "description": "Hit events only: the hit carries at least one of these tags (its kind and type, \"crit\" when it crits, \"area\" when its effect is aimed at several units).",
+                      "description": "The event carries at least one of these tags. A hit's: its kind and type, `crit` when it crits, `area` when its effect is aimed at several units, `wide`, `bare`, and any tag its strike names. ko: the killing hit's (`physical`: a killing blow). healed and overhealed: `pulse`. status_gained: `area`.",
                       "minItems": 1,
                       "type": "array",
                       "items": {
@@ -1344,7 +1483,7 @@
                       }
                     },
                     "notTags": {
-                      "description": "Hit events only: the hit carries none of these (`area`: a single-target hit).",
+                      "description": "The event carries none of these (`area`: a single-target hit; `bare`: not a second landing or a left-over).",
                       "minItems": 1,
                       "type": "array",
                       "items": {
@@ -1353,9 +1492,49 @@
                       }
                     },
                     "status": {
-                      "description": "Status events, and damage events: the status whose pulse or reaction dealt the damage.",
+                      "description": "Status events; damage events and heals: the status whose pulse or reaction dealt the damage or healed.",
                       "type": "string",
                       "pattern": "^[a-z][a-z0-9_]*$"
+                    },
+                    "line": {
+                      "description": "hp_low and hp_high only, and required there: the line, in percent of max HP.",
+                      "type": "number",
+                      "exclusiveMinimum": 0,
+                      "maximum": 100
+                    },
+                    "ability": {
+                      "description": "Action events and ko: the action was one of these abilities, each with its trained forms (\"when Backstab knocks a foe out\").",
+                      "minItems": 1,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-z0-9_]*$"
+                      }
+                    },
+                    "does": {
+                      "description": "Action events: the action does one of these, as an ability filter's `does` (\"the next ability that deals damage\").",
+                      "minItems": 1,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-z0-9_]*$"
+                      }
+                    },
+                    "paid": {
+                      "description": "action_resolve only: the action was paid for, in MP or as an HP price (a free cast isn't).",
+                      "type": "boolean",
+                      "const": true
+                    },
+                    "counted": {
+                      "description": "Action events only: an ordinary action or a paid second cast, which count as casts; not a free repeat.",
+                      "type": "boolean",
+                      "const": true
+                    },
+                    "wasBelow": {
+                      "description": "Hit events only: the unit hit was below this percent of its max HP as the hit landed, before its damage.",
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100
                     },
                     "cause": {
                       "description": "status_ended only. Default: every cause.",
@@ -1379,6 +1558,7 @@
                       "enum": [
                         "holder",
                         "ally",
+                        "team",
                         "foe",
                         "any"
                       ]
@@ -1404,7 +1584,7 @@
                       "maximum": 9007199254740991
                     },
                     "repeat": {
-                      "description": "Action events only: true matches only a recast's repeat, false only ordinary actions. Default: both.",
+                      "description": "true matches only a repeat, false only the first: an action event of a recast; a fight_start a `restart` made happen again; a status_gained of an application marked as a copy. Default: both.",
                       "type": "boolean"
                     }
                   },
@@ -1490,6 +1670,11 @@
                     }
                   ]
                 },
+                "split": {
+                  "description": "Reactions that share this word and answer one event share its amount evenly (two pieces that move one fallen foe's fire, or carry one blow's left-over).",
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]*$"
+                },
                 "do": {
                   "minItems": 1,
                   "type": "array",
@@ -1563,6 +1748,21 @@
                         "type": "string",
                         "pattern": "^[a-z][a-z0-9_]*$"
                       }
+                    },
+                    "single": {
+                      "description": "Abilities that aim at one foe: default targeting, or a rule that picks one foe first (not one aimed at every foe).",
+                      "type": "boolean",
+                      "const": true
+                    },
+                    "first": {
+                      "description": "The first-slotted ability: the one the player put first.",
+                      "type": "boolean",
+                      "const": true
+                    },
+                    "basic": {
+                      "description": "The basic attack, in place of the abilities: only `pay` and `wait` mean anything on it.",
+                      "type": "boolean",
+                      "const": true
                     }
                   },
                   "additionalProperties": false
@@ -1577,24 +1777,34 @@
                   "minimum": -100
                 },
                 "hp": {
-                  "description": "An HP price on top, paid when the ability resolves, with its MP.",
+                  "description": "An HP price, paid when the ability resolves: on top of its MP, or in its place.",
                   "type": "object",
                   "properties": {
                     "pct": {
                       "type": "number",
                       "exclusiveMinimum": 0,
-                      "description": "Percent of the ability's own MP cost (before `mp` changes), paid in HP as the pay effect pays."
+                      "description": "Percent of the ability's MP cost, as it stands after every other change's `mp` (a free cast costs no HP either), paid in HP as the pay effect pays."
                     },
                     "share": {
-                      "description": "Paid as the same share of max HP as the cost is of max MP, not point for point.",
+                      "description": "Paid as the same share of the payer's max HP as the cost is of the caster's max MP, not point for point.",
                       "type": "boolean",
                       "const": true
                     },
                     "floor": {
-                      "description": "The ability waits rather than leave the holder below this percent of its max HP.",
+                      "description": "The ability waits rather than leave the holder below this percent of its max HP. With a `payer`: the payer pays only if it's left above this, and otherwise the change doesn't apply.",
                       "type": "number",
                       "minimum": 0,
                       "maximum": 100
+                    },
+                    "instead": {
+                      "description": "In place of the MP: the ability then costs no MP.",
+                      "type": "boolean",
+                      "const": true
+                    },
+                    "payer": {
+                      "description": "The unit that gave the status pays, not the caster, while it stands and can (a status that knows its source). An ability it can pay for needs no MP.",
+                      "type": "string",
+                      "const": "source"
                     }
                   },
                   "required": [
@@ -1602,10 +1812,72 @@
                   ],
                   "additionalProperties": false
                 },
+                "pay": {
+                  "description": "An HP price of its own size, paid as the action resolves (a basic attack's: `of: { basic: true }`), never below 1 HP. The action's amounts can read it (`cost: hp`).",
+                  "$ref": "#/$defs/Num"
+                },
                 "cast": {
                   "description": "Its wind-up, in ticks, before cast-time reduction, in place of its own (\"winds up in a moment\": 1).",
                   "type": "number",
                   "minimum": 0
+                },
+                "wind": {
+                  "description": "Percent change to its wind-up, before cast-time reduction: +50 half again as long.",
+                  "type": "number",
+                  "minimum": -100
+                },
+                "cooldown": {
+                  "description": "Percent change to its cooldown: +100 twice as long, −100 none (it's cast again whenever it can be).",
+                  "type": "number",
+                  "minimum": -100
+                },
+                "damage": {
+                  "description": "Its hits deal this percent more, with the holder's boosts.",
+                  "type": "number"
+                },
+                "times": {
+                  "description": "Every percentage of this change (mp, damage, heal, stacks, wind, cooldown) is multiplied by this count.",
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "stacks": {
+                          "type": "string",
+                          "pattern": "^[a-z][a-z0-9_]*$"
+                        }
+                      },
+                      "required": [
+                        "stacks"
+                      ],
+                      "additionalProperties": false,
+                      "description": "The holder's stacks of this status (Cascade)."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "casts": {
+                          "type": "boolean",
+                          "const": true
+                        },
+                        "cap": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 9007199254740991
+                        },
+                        "show": {
+                          "description": "An Intensity status the engine keeps on the holder at its highest count, for the player to see.",
+                          "type": "string",
+                          "pattern": "^[a-z][a-z0-9_]*$"
+                        }
+                      },
+                      "required": [
+                        "casts",
+                        "cap"
+                      ],
+                      "additionalProperties": false,
+                      "description": "The times this ability has been cast this fight (counted casts, as the cast finishes), up to cap: a count kept ability by ability (Crescendo)."
+                    }
+                  ]
                 },
                 "stacks": {
                   "description": "Its applications of these statuses (absent: every Intensity status) add pct % more stacks, on top of the applier's boosts.",
@@ -1726,6 +1998,18 @@
                   "type": "number",
                   "minimum": 0
                 },
+                "cap": {
+                  "description": "What this rule adds or multiplies never lifts the chance past this; a chance already higher stays as it is.",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "set": {
+                  "description": "The hit's crit chance is this, whatever the stat and the other rules say: nothing raises it, and it wins over a stat set to a value (Gambler's coin). A rule that always crits still does.",
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                },
                 "bonus": {
                   "description": "Percent more crit bonus, the part of the crit multiplier above ×1: 100 makes ×1.5 into ×2.",
                   "type": "number"
@@ -1792,6 +2076,116 @@
             "description": "Only its own heals land on the holder (its abilities, its Lifesteal, its statuses' reactions); heals from others, a Regen they gave included, restore nothing.",
             "type": "string",
             "const": "own"
+          },
+          "healCap": {
+            "description": "The holder can't be healed above this percent of its max HP, and loses what it has above it as the status lands (not damage, not a price). Healing past it is healing past full; at the cap it reads as just under it (\"at half it counts as below half\").",
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 100
+          },
+          "soak": {
+            "description": "Damage that would reach the holder's HP comes out of its MP instead, point for point, while it has any: after a block and absorbs, before HP.",
+            "type": "string",
+            "const": "mp"
+          },
+          "divert": {
+            "description": "What the holder would gain goes to another unit instead, once: what's sent on isn't sent on again.",
+            "type": "object",
+            "properties": {
+              "what": {
+                "type": "string",
+                "minLength": 1,
+                "description": "`mp`: every MP the holder would gain. Or a status's id: every application of it the holder would gain (a Shield)."
+              },
+              "to": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "const": "source"
+                  },
+                  {
+                    "$ref": "#/$defs/TargetRule"
+                  }
+                ],
+                "description": "Who gets it instead: the unit that gave this status, or a rule read from the holder. With nobody there, the holder keeps it."
+              }
+            },
+            "required": [
+              "what",
+              "to"
+            ],
+            "additionalProperties": false
+          },
+          "party": {
+            "description": "A rule its side holds once: of the units on a side that hold this status, only the first standing, in slot order, answers an event with its reactions and trigger.",
+            "type": "boolean",
+            "const": true
+          },
+          "oncePerEvent": {
+            "description": "A counter: one event adds one application to a holder, however many of its reactions count it.",
+            "type": "boolean",
+            "const": true
+          },
+          "damp": {
+            "description": "Intensity with a cap: a chain of cappings dies down. Stacks an application marked `passed` adds to a unit are cut to pct % for each time that unit has capped this status in the last `window` ticks, in fractions of a stack.",
+            "type": "object",
+            "properties": {
+              "pct": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "maximum": 100
+              },
+              "window": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              }
+            },
+            "required": [
+              "pct",
+              "window"
+            ],
+            "additionalProperties": false
+          },
+          "swap": {
+            "description": "The holder's two stats are swapped as they stand from its class, gear and seat; statuses change them as usual after that.",
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*(:[a-z0-9_]+)*$"
+              },
+              {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*(:[a-z0-9_]+)*$"
+              }
+            ],
+            "items": false,
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "tireless": {
+            "description": "The holder's basic attacks never wait on its abilities: it keeps swinging on its own clock through their wind-ups and recoveries.",
+            "type": "boolean",
+            "const": true
+          },
+          "order": {
+            "description": "Each time the holder is free to act, it uses one of its available abilities picked at random, whatever order they're slotted in.",
+            "type": "string",
+            "const": "random"
+          },
+          "borrow": {
+            "description": "The holder's basic attacks also carry the riders of another unit's: the statuses that unit's basic attacks apply through its statuses' reactions, on the same conditions, with stacks read off the holder, and never twice from a status both hold. What's borrowed isn't borrowed on.",
+            "type": "object",
+            "properties": {
+              "from": {
+                "description": "Read from the holder (\"the other ally with the highest Attack\", the unit in a seat).",
+                "$ref": "#/$defs/TargetRule"
+              }
+            },
+            "required": [
+              "from"
+            ],
+            "additionalProperties": false
           },
           "revives": {
             "description": "Every revive the holder makes, from its abilities and its statuses' reactions alike (Einherjar).",
@@ -5211,12 +5605,26 @@
                 "type": "string",
                 "pattern": "^[a-z][a-z0-9_]*(:[a-z0-9_]+)*$"
               }
+            },
+            "others": {
+              "description": "Leave the reading unit out of the comparison (\"the other ally with the highest Attack\"); the reading unit itself never passes.",
+              "type": "boolean",
+              "const": true
             }
           },
           "required": [
             "stats"
           ],
           "additionalProperties": false
+        },
+        "topHp": {
+          "description": "No living unit on its side has more current HP; ties pass.",
+          "type": "boolean",
+          "const": true
+        },
+        "canHeal": {
+          "description": "true: can be healed: below its max HP, and under any cap on its healing. false: can't.",
+          "type": "boolean"
         },
         "weapon": {
           "description": "Wields a weapon of one of these kinds (an enemy's weapon by its kind, if it names one).",
@@ -5277,6 +5685,22 @@
                     "description": "1 if the condition holds for the unit read (`of`), else 0: scaling from a condition instead of a stat.",
                     "$ref": "#/$defs/UnitCond"
                   },
+                  "event": {
+                    "description": "Reactions to hit events only: `raw`, the hit's amount before Defense (after boosts and crit); `stopped`, what the unit's Shield soaked and its Aegis blocked of it.",
+                    "type": "string",
+                    "enum": [
+                      "raw",
+                      "stopped"
+                    ]
+                  },
+                  "cost": {
+                    "description": "Actions, and the amounts statuses add to their hits: what this action paid, in MP or as an HP price.",
+                    "type": "string",
+                    "enum": [
+                      "mp",
+                      "hp"
+                    ]
+                  },
                   "count": {
                     "description": "A count, as COUNTS says: the unit's buffs or debuffs, an action's targets or the units its hits landed on, or the units on a side that pass a test.",
                     "anyOf": [
@@ -5307,6 +5731,11 @@
                           "seat": {
                             "type": "string",
                             "pattern": "^[a-z][a-z0-9_]*$"
+                          },
+                          "stacks": {
+                            "description": "The total of this status's stacks across those units, in place of their number.",
+                            "type": "string",
+                            "pattern": "^[a-z][a-z0-9_]*$"
                           }
                         },
                         "required": [
@@ -5317,12 +5746,16 @@
                     ]
                   },
                   "times": {
-                    "description": "Multiplies the term by a stat, read live: \"X% per point of Y\" (Lifesteal, Siphon).",
+                    "description": "Multiplies the term by a stat, or by a status's stacks, read live: \"X% per point of Y\" (Lifesteal, Siphon), \"a twentieth more of the blow for each Spite\".",
                     "type": "object",
                     "properties": {
                       "stat": {
                         "type": "string",
                         "pattern": "^[a-z][a-z0-9_]*(:[a-z0-9_]+)*$"
+                      },
+                      "stacks": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-z0-9_]*$"
                       },
                       "of": {
                         "type": "string",
@@ -5334,9 +5767,6 @@
                         ]
                       }
                     },
-                    "required": [
-                      "stat"
-                    ],
                     "additionalProperties": false
                   },
                   "of": {
@@ -5347,6 +5777,11 @@
                       "source",
                       "holder"
                     ]
+                  },
+                  "seat": {
+                    "description": "Statuses only: read from the unit in this seat of the holder's party, in place of `of` (\"for each Spite the Wall holds\"). Nothing if nobody sits there.",
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_]*$"
                   }
                 },
                 "required": [
@@ -5579,7 +6014,8 @@
                     "holder",
                     "source",
                     "other",
-                    "owner"
+                    "owner",
+                    "assailant"
                   ]
                 },
                 {
@@ -5606,6 +6042,11 @@
             "amount": {
               "$ref": "#/$defs/Num"
             },
+            "final": {
+              "description": "What it would restore past full is lost: it fires no overhealed (healing passed on isn't passed on again).",
+              "type": "boolean",
+              "const": true
+            },
             "to": {
               "anyOf": [
                 {
@@ -5616,7 +6057,8 @@
                     "holder",
                     "source",
                     "other",
-                    "owner"
+                    "owner",
+                    "assailant"
                   ]
                 },
                 {
@@ -5642,6 +6084,11 @@
             "amount": {
               "$ref": "#/$defs/Num"
             },
+            "final": {
+              "description": "What it would restore past the pool is lost: it fires no mp_over, and nothing diverts it (MP sent on isn't sent on again).",
+              "type": "boolean",
+              "const": true
+            },
             "to": {
               "anyOf": [
                 {
@@ -5652,7 +6099,8 @@
                     "holder",
                     "source",
                     "other",
-                    "owner"
+                    "owner",
+                    "assailant"
                   ]
                 },
                 {
@@ -5702,6 +6150,21 @@
               "minimum": 0,
               "maximum": 100
             },
+            "passed": {
+              "description": "Stacks passed on from a status that capped (a shatter's cold): cut by the status's own `damp` for each time the receiver has capped lately. An application made in answer to a passed one is passed too.",
+              "type": "boolean",
+              "const": true
+            },
+            "copy": {
+              "description": "A copy: its status_gained is a repeat, which `repeat: false` filters skip, so what copies a status never copies its own copies.",
+              "type": "boolean",
+              "const": true
+            },
+            "rider": {
+              "description": "In a reaction to the holder's own hit_lands, an application to `other` is a rider: part of what the swing carries. false: this one isn't (it isn't borrowed or carried, and a bare hit doesn't skip it).",
+              "type": "boolean",
+              "const": false
+            },
             "to": {
               "anyOf": [
                 {
@@ -5712,7 +6175,8 @@
                     "holder",
                     "source",
                     "other",
-                    "owner"
+                    "owner",
+                    "assailant"
                   ]
                 },
                 {
@@ -5785,6 +6249,15 @@
               "type": "boolean",
               "const": true
             },
+            "except": {
+              "description": "Statuses it never removes (the enemy-only ones a theft leaves alone).",
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*$"
+              }
+            },
             "to": {
               "anyOf": [
                 {
@@ -5795,7 +6268,8 @@
                     "holder",
                     "source",
                     "other",
-                    "owner"
+                    "owner",
+                    "assailant"
                   ]
                 },
                 {
@@ -5841,7 +6315,8 @@
                     "holder",
                     "source",
                     "other",
-                    "owner"
+                    "owner",
+                    "assailant"
                   ]
                 },
                 {
@@ -5873,7 +6348,9 @@
                     "abilities",
                     "longest",
                     "soonest",
-                    "event"
+                    "event",
+                    "first",
+                    "slowest"
                   ]
                 },
                 {
@@ -5894,7 +6371,7 @@
                   "additionalProperties": false
                 }
               ],
-              "description": "Which timers, as COOLDOWN_WHICH says."
+              "description": "Which timers, as COOLDOWN_WHICH says. In an ability's own effect, longest and soonest never pick that ability on its caster."
             },
             "set": {
               "anyOf": [
@@ -5945,6 +6422,18 @@
                     "atMost"
                   ],
                   "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "lessPct": {
+                      "$ref": "#/$defs/Num"
+                    }
+                  },
+                  "required": [
+                    "lessPct"
+                  ],
+                  "additionalProperties": false
                 }
               ],
               "description": "What happens to them, as COOLDOWN_SET says."
@@ -5959,7 +6448,8 @@
                     "holder",
                     "source",
                     "other",
-                    "owner"
+                    "owner",
+                    "assailant"
                   ]
                 },
                 {
@@ -5987,6 +6477,11 @@
               "description": "HP paid. Negative pays nothing.",
               "$ref": "#/$defs/Num"
             },
+            "drain": {
+              "description": "Lost, not paid: a drain or a drawback, which fires no hp_paid.",
+              "type": "boolean",
+              "const": true
+            },
             "to": {
               "anyOf": [
                 {
@@ -5997,7 +6492,8 @@
                     "holder",
                     "source",
                     "other",
-                    "owner"
+                    "owner",
+                    "assailant"
                   ]
                 },
                 {
@@ -6012,7 +6508,7 @@
             "to"
           ],
           "additionalProperties": false,
-          "description": "A price in HP: lost at once, not damage, so no Shield soaks it, no Defense cuts it and nothing reacts to it; it never takes the payer below 1 HP. An ability's HP price is this effect on itself, after whatever reads its HP first."
+          "description": "A price in HP: lost at once, not damage, so no Shield soaks it, no Defense cuts it and nothing reacts to it as damage; it never takes the payer below 1 HP. It fires hp_paid. An ability's HP price is this effect on itself, after whatever reads its HP first."
         },
         {
           "type": "object",
@@ -6027,12 +6523,95 @@
               "exclusiveMinimum": 0
             },
             "of": {
-              "description": "weapon (the default): the actor's basic attack against each target, its damage with the weapon's riders and statuses, as an extra strike's. hit: the raw amount of the hit that set the reaction off (before Defense), in that hit's damage type.",
+              "description": "weapon (the default): the actor's basic attack against each target, its damage with the weapon's riders and statuses, in whatever shape its basic attacks have (their boosts). hit: the raw amount of the hit that set the reaction off (before Defense), resolved afresh. dealt: what that hit dealt, again, as it is: no dodge, no crit, no boost and no Defense (a second landing); it's bare. over: what a killing blow had left over (a reaction to ko), which meets Evasion and Defense but isn't boosted or crit again; it's bare.",
               "type": "string",
               "enum": [
                 "weapon",
-                "hit"
+                "hit",
+                "dealt",
+                "over"
               ]
+            },
+            "amount": {
+              "description": "A hit of its own size, in place of `of` (a blow from Attack, not from the weapon).",
+              "$ref": "#/$defs/Num"
+            },
+            "apply": {
+              "description": "With `amount`: statuses the hit applies.",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_]*$"
+                  },
+                  "stacks": {
+                    "description": "Intensity: stacks added, scaled only as stated here, plus the applier's boosts that name the status or its tags. Default 1.",
+                    "$ref": "#/$defs/Num"
+                  },
+                  "duration": {
+                    "description": "Default: the status's own. 0 only for an instant lockout.",
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      {
+                        "type": "string",
+                        "const": "permanent"
+                      }
+                    ]
+                  },
+                  "chance": {
+                    "description": "Percent, rolled on the applier's dice. Default: guaranteed.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                  }
+                },
+                "required": [
+                  "status"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "kind": {
+              "description": "The hit's kind. Default bonus: a hit with its own name, which nothing that waits on basic attacks or extra strikes answers.",
+              "type": "string",
+              "enum": [
+                "extra",
+                "bonus"
+              ]
+            },
+            "carry": {
+              "description": "The hit carries what the swing carries: the statuses the actor's basic attacks apply, from its statuses' riders (as an extra strike's does under `echo`).",
+              "type": "boolean",
+              "const": true
+            },
+            "by": {
+              "description": "Who strikes, in place of the actor: a rule read from the actor (\"the other ally with the highest Attack strikes the attacker\").",
+              "$ref": "#/$defs/TargetRule"
+            },
+            "tag": {
+              "description": "A tag its hit events carry, for filters (`notTags`: a jump that doesn't jump again).",
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*(:[a-z0-9_]+)*$"
+            },
+            "split": {
+              "description": "The amount is divided evenly among the targets.",
+              "type": "boolean",
+              "const": true
+            },
+            "seek": {
+              "description": "`to` is a rule that picks as an action's own would, past any Taunt: a Mark takes its fallback to a random foe.",
+              "type": "boolean",
+              "const": true
+            },
+            "after": {
+              "description": "With `of: dealt`: the hit lands this many ticks later, if its target still stands.",
+              "type": "number",
+              "exclusiveMinimum": 0
             },
             "to": {
               "anyOf": [
@@ -6044,7 +6623,8 @@
                     "holder",
                     "source",
                     "other",
-                    "owner"
+                    "owner",
+                    "assailant"
                   ]
                 },
                 {
@@ -6057,7 +6637,7 @@
             "op"
           ],
           "additionalProperties": false,
-          "description": "Reactions only: a hit of kind extra by the actor at each target (the dodge's riposte, the blow returned for an ally). It can crit and be dodged, meets Defense, and fires hit events; it never brings extra strikes of its own."
+          "description": "Reactions only: a hit out of turn by the actor at each target (the dodge's riposte, a second landing, a blow carried past a kill). It fires hit events and never brings extra strikes of its own."
         },
         {
           "type": "object",
@@ -6107,6 +6687,22 @@
               },
               "description": "The statuses to pick from, each with its own stacks."
             },
+            "count": {
+              "description": "How many different ones. Default 1.",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "same": {
+              "description": "One pick for every target, not one each.",
+              "type": "boolean",
+              "const": true
+            },
+            "pick": {
+              "description": "Not at random: the one its target holds the most stacks of (level ones at random); nothing on a target that holds none.",
+              "type": "string",
+              "const": "most"
+            },
             "to": {
               "anyOf": [
                 {
@@ -6117,7 +6713,8 @@
                     "holder",
                     "source",
                     "other",
-                    "owner"
+                    "owner",
+                    "assailant"
                   ]
                 },
                 {
@@ -6131,7 +6728,7 @@
             "of"
           ],
           "additionalProperties": false,
-          "description": "Applies one of these statuses, picked at random on the actor's dice."
+          "description": "Applies one of these statuses (or `count` of them), picked at random on the actor's dice."
         },
         {
           "type": "object",
@@ -6139,13 +6736,268 @@
             "op": {
               "type": "string",
               "const": "recast"
+            },
+            "which": {
+              "description": "event (the default): the action that set the reaction off. first: the actor's first-slotted ability, whatever its cooldown, if its conditions hold and nothing locks it out.",
+              "type": "string",
+              "enum": [
+                "event",
+                "first"
+              ]
+            },
+            "paid": {
+              "description": "The cast is paid for as a cast of its own, in MP and any HP price; if it can't be, there is none. Such a cast counts as a cast (`counted`), where a free repeat doesn't.",
+              "type": "boolean",
+              "const": true
             }
           },
           "required": [
             "op"
           ],
           "additionalProperties": false,
-          "description": "Reactions to the holder's own action_resolve only: the action that set it off resolves again at once, with no wind-up and no MP, choosing its targets afresh by its own rule, its cooldown untouched. The repeat fires its own action events, which `repeat: false` filters skip."
+          "description": "Reactions only: an ability resolves again at once, with no wind-up, choosing its targets afresh by its own rule, its cooldown untouched; free unless `paid`. By default, in a reaction to the holder's own action_resolve, the action that set it off. The repeat fires its own action events, which `repeat: false` filters skip."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "spend"
+            },
+            "status": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            },
+            "share": {
+              "description": "Percent of the stacks held, in whole stacks, rounded down.",
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 100
+            },
+            "count": {
+              "description": "This many stacks.",
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "to": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "target",
+                    "self",
+                    "holder",
+                    "source",
+                    "other",
+                    "owner",
+                    "assailant"
+                  ]
+                },
+                {
+                  "$ref": "#/$defs/TargetRule"
+                }
+              ]
+            }
+          },
+          "required": [
+            "op",
+            "status",
+            "to"
+          ],
+          "additionalProperties": false,
+          "description": "Takes stacks off an Intensity status the target holds (all of them, without share or count); under one stack it ends."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "pass"
+            },
+            "label": {
+              "type": "string",
+              "enum": [
+                "buff",
+                "debuff",
+                "marker"
+              ]
+            },
+            "except": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*$"
+              }
+            },
+            "to": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "target",
+                    "self",
+                    "holder",
+                    "source",
+                    "other",
+                    "owner",
+                    "assailant"
+                  ]
+                },
+                {
+                  "$ref": "#/$defs/TargetRule"
+                }
+              ]
+            }
+          },
+          "required": [
+            "op",
+            "label",
+            "to"
+          ],
+          "additionalProperties": false,
+          "description": "Every status of this label the actor holds passes to each target: the actor is rid of it, and it lands as a fresh application at its own length, with the stacks the actor held. Unremovable statuses stay."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "share"
+            },
+            "to": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "target",
+                    "self",
+                    "holder",
+                    "source",
+                    "other",
+                    "owner",
+                    "assailant"
+                  ]
+                },
+                {
+                  "$ref": "#/$defs/TargetRule"
+                }
+              ]
+            }
+          },
+          "required": [
+            "op",
+            "to"
+          ],
+          "additionalProperties": false,
+          "description": "Reactions to status_gained only: each target gains the same status in the same stacks, as a copy. Only a status laid at a moment is shared: one with an icon that has a duration, stacks or a block; not a state its holder keeps while something is true of it."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "riders"
+            },
+            "plain": {
+              "description": "Only the riders every swing adds: none that waits for a crit, a tag or a test, and none borrowed.",
+              "type": "boolean",
+              "const": true
+            },
+            "to": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "target",
+                    "self",
+                    "holder",
+                    "source",
+                    "other",
+                    "owner",
+                    "assailant"
+                  ]
+                },
+                {
+                  "$ref": "#/$defs/TargetRule"
+                }
+              ]
+            }
+          },
+          "required": [
+            "op",
+            "to"
+          ],
+          "additionalProperties": false,
+          "description": "Reactions only: each target gains what the actor's basic attacks carry, in the stacks one swing adds. Two units answering one event add a status from one source once."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "restart"
+            },
+            "to": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "target",
+                    "self",
+                    "holder",
+                    "source",
+                    "other",
+                    "owner",
+                    "assailant"
+                  ]
+                },
+                {
+                  "$ref": "#/$defs/TargetRule"
+                }
+              ]
+            }
+          },
+          "required": [
+            "op",
+            "to"
+          ],
+          "additionalProperties": false,
+          "description": "The start-of-fight effects of each target's gear and seat happen again: their reactions to fight_start, as a repeat (`repeat: false` keeps a price or a drawback out). One event restarts a unit once."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "fell"
+            },
+            "to": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "target",
+                    "self",
+                    "holder",
+                    "source",
+                    "other",
+                    "owner",
+                    "assailant"
+                  ]
+                },
+                {
+                  "$ref": "#/$defs/TargetRule"
+                }
+              ]
+            }
+          },
+          "required": [
+            "op",
+            "to"
+          ],
+          "additionalProperties": false,
+          "description": "Each target is knocked out at once: not damage, so no Shield, Aegis or floor stands in the way. The actor's kill, but no hit's."
         },
         {
           "type": "object",
@@ -6199,7 +7051,8 @@
                     "holder",
                     "source",
                     "other",
-                    "owner"
+                    "owner",
+                    "assailant"
                   ]
                 },
                 {

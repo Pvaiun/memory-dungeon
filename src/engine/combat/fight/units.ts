@@ -4,8 +4,8 @@
  */
 import type { Content } from "../../run.js";
 import { rngFor } from "../../rng.js";
-import { batch, CARRIED_NONE, type CFight, type CUnit, def, derive, type Item, letter, living, refresh, unit, type W } from "./state.js";
-import { applyStatus, endStatus } from "./statuses.js";
+import { batch, CARRIED_NONE, type CFight, type CUnit, def, derive, hidden, hpMoved, type Item, letter, living, refresh, unit, type W } from "./state.js";
+import { applyStatus, endStatus, forbids } from "./statuses.js";
 import { actDef, cooldownOf, type HitKind } from "./actions.js";
 import { ev, fire, listeners, matches, react } from "./events.js";
 
@@ -17,8 +17,11 @@ function strip(w: W, u: CUnit, all: boolean) {
   for (const o of w.f.units) for (const s of o.statuses.slice()) if (s.src === u.id && def(w, s.id).perSource?.endsWithSource) endStatus(w, o, s, "ko");
 }
 
-/** `by` is the unit whose damage knocked it out, when known, and `kind` the hit's kind, both on the ko event. */
-export function ko(w: W, u: CUnit, by: CUnit | null = null, kind: HitKind | null = null) {
+/**
+ * `by` is the unit whose damage knocked it out, when known, and `kind` the hit's kind, both on the ko event; a killing
+ * blow's event also carries the hit's tags, its action, and what the blow had left over.
+ */
+export function ko(w: W, u: CUnit, by: CUnit | null = null, kind: HitKind | null = null, blow: { tags?: string[]; amount?: number; ability?: string } = {}) {
   if (u.ko) return;
   u.ko = true;
   u.hp = 0;
@@ -30,7 +33,16 @@ export function ko(w: W, u: CUnit, by: CUnit | null = null, kind: HitKind | null
   else if (!living(w, "party").length) w.f.result = "lost";
   if (w.f.result) return void (w.f.result === "won" && won(w));
   strip(w, u, false);
-  fire(w, ev("ko", u, by, { kind }));
+  stepOut(w, u.side);
+  fire(w, ev("ko", u, by, { kind, tags: blow.tags ?? [], amount: blow.amount ?? 0, ability: blow.ability ?? null }));
+}
+
+/** Someone stays in the light: when a side is left with nobody its foes can pick, the last in slot order steps out of hiding. */
+function stepOut(w: W, side: CUnit["side"]) {
+  const own = living(w, side);
+  if (!own.length || own.some((x) => !hidden(w, x))) return;
+  const last = own.sort((a, b) => b.slot - a.slot)[0];
+  for (const s of last.statuses.slice()) if (forbids(def(w, s.id))) endStatus(w, last, s, "removed");
 }
 
 /**
@@ -50,7 +62,7 @@ function won(w: W) {
       for (const s of h.statuses) {
         if (!ids.has(s.id)) continue;
         def(w, s.id).reactions?.forEach((r, k) => {
-          if (!matches(w, r.on, e, h, def(w, s.id))) return;
+          if (!matches(w, r.on, e, h)) return;
           const actor = unit(w, r.actor === "source" ? s.src : h.id);
           if (!actor || (actor.ko && actor !== h)) return;
           items.push({
@@ -85,6 +97,8 @@ export function revive(w: W, by: CUnit, t: CUnit, hp: number, ready: boolean) {
   t.acts.forEach((a, i) => (a.ready = ready ? w.f.now : w.f.now + cooldownOf(w, t, actDef(w, t, i))));
   w.log?.({ t: "revive", vis: "player", at: w.f.now, by: by.id, unit: t.id, hp: t.hp, ready });
   fire(w, ev("revived", t, by));
+  // Standing up under a line, or over it, is a crossing.
+  hpMoved(w, t, true);
 }
 
 /** A unit for the enemy side, from an enemy definition: at fight start or when summoned. */

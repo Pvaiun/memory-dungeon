@@ -6,15 +6,17 @@ import * as S from "../../../schema.js";
 import type { Content } from "../../run.js";
 import { basicSpeed, scaled, speedOf, sub } from "../stats.js";
 import { next } from "../../rng.js";
-import { batch, type CUnit, def, feats, isIntensity, push, stat, type W } from "./state.js";
+import { aval, batch, type CUnit, def, feats, isIntensity, push, stat, SUBTICKS, total, unit, type W } from "./state.js";
 import { byRule, choose, holds, passes } from "./targeting.js";
 import { ev, fire } from "./events.js";
 import { type Ctx, pay, run } from "./effects.js";
 import { hit } from "./damage.js";
+import { applyStatus } from "./statuses.js";
 
 // ─── Actions ────────────────────────────────────────────────────────────────
 
-export type HitKind = "basic" | "ability" | "extra";
+/** A hit's kind: a basic attack's, an ability's, an extra strike's (Double strike), or a bonus hit a card names. */
+export type HitKind = "basic" | "ability" | "extra" | "bonus";
 export type ActDef = {
   id: string;
   kind: "basic" | "ability";
@@ -32,6 +34,8 @@ export type ActDef = {
   tags: string[];
   /** What its effects do, for ability changes by `does`: damage, heal, revive, and each status it applies. */
   does: ReadonlySet<string>;
+  /** It aims at one foe: default targeting, or a rule that picks one foe first. */
+  single: boolean;
 };
 const NOTHING: ReadonlySet<string> = new Set();
 export type Target = "foe" | "ally" | "self" | S.TargetRuleT;
@@ -67,20 +71,23 @@ export function actDef(w: W, u: CUnit, i: number): ActDef {
     d = {
       id, kind: "basic", name: "attack", mp: 0, cast: sub(wp.cast ?? 0), cooldown,
       recovery: wp.recovery !== undefined ? sub(wp.recovery) : Math.round(w.c.pack.ruleset.basicRecovery * cooldown),
-      if: null, any: false, target: "foe", seek: false, effects: [hit], tags: actTags("basic", [hit]), does: NOTHING,
+      if: null, any: false, target: "foe", seek: false, effects: [hit], tags: actTags("basic", [hit]), does: NOTHING, single: true,
     };
   } else {
     const a = src as S.AbilityT;
     const cond = allOf(a.if);
+    const target = a.target ?? "foe";
     d = {
       id, kind: "ability", name: a.name, mp: a.mp ?? 0, cast: sub(a.cast ?? w.c.pack.ruleset.abilityCast), cooldown: sub(a.cooldown),
-      recovery: sub(a.recovery ?? w.c.pack.ruleset.abilityRecovery), if: cond.list, any: cond.any, target: a.target ?? "foe", seek: a.seek ?? false, effects: a.do,
-      tags: actTags("ability", a.do), does: doesOf(a.do),
+      recovery: sub(a.recovery ?? w.c.pack.ruleset.abilityRecovery), if: cond.list, any: cond.any, target, seek: a.seek ?? false, effects: a.do,
+      tags: actTags("ability", a.do), does: doesOf(a.do), single: target === "foe" || (typeof target === "object" && target.side === "foes" && target.pick !== "all"),
     };
   }
   acts.set(src, d);
   return d;
 }
+/** The unit's basic attack. */
+export const basicOf = (w: W, u: CUnit) => actDef(w, u, u.acts.findIndex((a) => a.id === "basic"));
 
 /** An ability's `if`: conditions that must all hold, or (`{ any }`) at least one. */
 function allOf(c: S.AbilityT["if"]): { list: S.ConditionT[] | null; any: boolean } {
@@ -105,67 +112,118 @@ function doesOf(effects: readonly S.EffectT[]): Set<string> {
 
 // ─── Ability changes ────────────────────────────────────────────────────────
 
-/** An ability's changes from its unit's statuses, gathered for one use. Costs, stacks and heals add; the newest status's cast or target wins. */
+type HpMod = NonNullable<S.AbilityModT["hp"]>;
+/** An HP price as one change states it: who pays, and the other changes' MP percent it's sized after. */
+type Price = { h: HpMod; payer: CUnit; mpOthers: number };
+/** An ability's changes from its unit's statuses, gathered for one use. Costs, stacks, heals and damage add; the newest status's cast or target wins. */
 export type Mods = {
   mp: number;
-  hp: NonNullable<S.AbilityModT["hp"]>[];
+  hp: Price[];
+  /** HP prices of their own size. */
+  pay: number;
   cast: number | null;
+  wind: number;
+  cooldown: number;
+  damage: number;
   stacks: NonNullable<S.AbilityModT["stacks"]>[];
   heal: number;
   target: S.TargetRuleT | null;
   seek: boolean;
   wait: S.ConditionT[];
   apply: S.ApplyT[];
+  /** A count of casts kept for it, and the status that shows it. */
+  casts: { cap: number; show?: string } | null;
 };
 
-/** Which abilities a change reaches: absent, all; by id (each with its trained forms); by what they do. Both given: both must hold. */
-const reaches = (of: S.AbilityFilterT | undefined, d: ActDef) =>
-  !of || ((!of.ability || of.ability.includes(d.id) || of.ability.includes(S.formBase(d.id))) && (!of.does || of.does.some((x) => d.does.has(x))));
+/** Which abilities a change reaches: absent, all; by id (each with its trained forms); by what they do; one-foe abilities; the first-slotted. Every field given must hold. */
+const reaches = (of: S.AbilityFilterT | undefined, u: CUnit, d: ActDef) =>
+  d.kind === "basic"
+    ? !!of?.basic
+    : !of || (!of.basic && (!of.ability || of.ability.includes(d.id) || of.ability.includes(S.formBase(d.id))) && (!of.does || of.does.some((x) => d.does.has(x)))
+      && (!of.single || d.single) && (!of.first || u.acts[0]?.id === d.id));
+
+/** A share of the payer's max HP for a cost that is a share of the caster's max MP, or point for point. */
+const hpFor = (h: HpMod, cost: number, caster: CUnit, payer: CUnit) =>
+  Math.floor(h.share && caster.stats.max_mp > 0 ? (cost * h.pct * payer.stats.max_hp) / (100 * caster.stats.max_mp) : (cost * h.pct) / 100);
 
 /**
- * The changes reaching this ability now, read each time it's checked, started, paid for or resolved (actDef stays cached).
- * A change whose `if` the unit fails doesn't apply. Statuses are in the order they were applied, so a later one is newer.
- * An Intensity status's changes don't grow with its stacks. Null for a basic attack, and when nothing reaches it.
+ * The changes reaching this action now, read each time it's checked, started, paid for or resolved (actDef stays cached).
+ * A change whose `if` the unit fails doesn't apply, and neither does a price another unit pays while that unit can't.
+ * Statuses are in the order they were applied, so a later one is newer. An Intensity status's changes don't grow with its
+ * stacks, unless the change counts something (`times`). Null when nothing reaches it.
  */
-function modsOf(w: W, u: CUnit, d: ActDef): Mods | null {
-  if (d.kind !== "ability" || !feats(w.c).mods) return null;
+export function modsOf(w: W, u: CUnit, d: ActDef): Mods | null {
+  if (!feats(w.c).mods) return null;
   let m: Mods | null = null;
+  const prices: { h: HpMod; payer: CUnit; own: number }[] = [];
   for (const s of u.statuses) {
     for (const x of def(w, s.id).mods ?? []) {
-      if (!reaches(x.of, d) || (x.if && !passes(w, u, x.if, u))) continue;
-      m ??= { mp: 0, hp: [], cast: null, stacks: [], heal: 0, target: null, seek: false, wait: [], apply: [] };
-      if (x.mp) m.mp += x.mp;
-      if (x.hp) m.hp.push(x.hp);
+      if (!reaches(x.of, u, d) || (x.if && !passes(w, u, x.if, u))) continue;
+      m ??= { mp: 0, hp: [], pay: 0, cast: null, wind: 0, cooldown: 0, damage: 0, stacks: [], heal: 0, target: null, seek: false, wait: [], apply: [], casts: null };
+      // What the change counts: a status's stacks, or this ability's own casts this fight.
+      let k = 1;
+      if (x.times) {
+        if ("stacks" in x.times) k = total(u, x.times.stacks) / SUBTICKS;
+        else {
+          k = Math.min(x.times.cap, u.acts.find((a) => a.id === d.id)?.casts ?? 0);
+          m.casts = { cap: Math.max(m.casts?.cap ?? 0, x.times.cap), show: x.times.show ?? m.casts?.show };
+        }
+      }
+      const mp = (x.mp ?? 0) * k;
+      m.mp += mp;
+      if (x.hp) prices.push({ h: x.hp, payer: (x.hp.payer ? unit(w, s.src) : u) ?? u, own: mp });
+      if (x.pay !== undefined) m.pay += Math.max(0, Math.floor(aval(w, x.pay, u, null)));
       if (x.cast !== undefined) m.cast = x.cast;
-      if (x.stacks) m.stacks.push(x.stacks);
-      if (x.heal) m.heal += x.heal;
+      if (x.wind) m.wind += x.wind * k;
+      if (x.cooldown) m.cooldown += x.cooldown * k;
+      if (x.damage) m.damage += x.damage * k;
+      if (x.stacks) m.stacks.push(k === 1 ? x.stacks : { ...x.stacks, pct: x.stacks.pct * k });
+      if (x.heal) m.heal += x.heal * k;
       if (x.target) m.target = x.target;
       if (x.seek) m.seek = true;
       if (x.wait) m.wait.push(...[x.wait].flat());
       if (x.apply) m.apply.push(...x.apply);
     }
   }
+  if (!m) return null;
+  // A price is sized from the cost as every other change leaves it, so a free cast costs no HP either. One another unit
+  // pays counts only while that unit stands and would be left above its floor.
+  for (const p of prices) {
+    const price: Price = { h: p.h, payer: p.payer, mpOthers: m.mp - p.own };
+    if (p.h.payer) {
+      const amount = hpFor(p.h, costAfter(d, price.mpOthers), u, p.payer);
+      if (p.payer === u || p.payer.ko || (p.payer.hp - amount) * 100 <= (p.h.floor ?? 0) * p.payer.stats.max_hp) continue;
+    }
+    m.hp.push(price);
+  }
   return m;
 }
 
-/** The MP cost after its changes, which add up: −100 is free, and it never falls below 0. */
-const mpCost = (d: ActDef, m: Mods | null) => (m?.mp ? Math.max(0, Math.floor((d.mp * (100 + m.mp)) / 100)) : d.mp);
+/** A cost after percent changes, which add up: −100 is free, and it never falls below 0. */
+const costAfter = (d: ActDef, pct: number) => (pct ? Math.max(0, Math.floor((d.mp * (100 + pct)) / 100)) : d.mp);
+/** The MP it costs: none where an HP price takes its place. */
+const mpCost = (d: ActDef, m: Mods | null) => (m?.hp.some((p) => p.h.instead) ? 0 : costAfter(d, m?.mp ?? 0));
 
-/** An HP price on top of the MP: pct % of its own MP cost (before MP changes), point for point, or as the same share of max HP. */
-function hpPrice(u: CUnit, d: ActDef, m: Mods | null): number {
-  if (!m?.hp.length) return 0;
-  let p = 0;
-  for (const h of m.hp) {
-    const base = (d.mp * h.pct) / 100;
-    p += h.share && u.stats.max_mp > 0 ? (base * u.stats.max_hp) / u.stats.max_mp : base;
-  }
-  return Math.floor(p);
+/** The HP prices to pay, payer by payer: each change's price, and the prices of their own size (the caster's). */
+function hpPrices(u: CUnit, d: ActDef, m: Mods | null): { payer: CUnit; amount: number }[] {
+  if (!m) return [];
+  const out: { payer: CUnit; amount: number }[] = [];
+  const add = (payer: CUnit, amount: number) => {
+    const o = out.find((x) => x.payer === payer);
+    if (o) o.amount += amount;
+    else if (amount > 0) out.push({ payer, amount });
+  };
+  for (const p of m.hp) add(p.payer, hpFor(p.h, costAfter(d, p.mpOthers), u, p.payer));
+  add(u, m.pay);
+  return out;
 }
 
-/** The HP price's floor: the ability waits rather than leave its unit below the highest floor its HP prices set. */
+/** The HP price's floor: the ability waits rather than leave its unit below the highest floor its own HP prices set. */
 function priceFits(u: CUnit, d: ActDef, m: Mods): boolean {
-  const floor = m.hp.reduce((f, h) => Math.max(f, h.floor ?? 0), 0);
-  return floor <= 0 || (u.hp - hpPrice(u, d, m)) * 100 >= floor * u.stats.max_hp;
+  const floor = m.hp.reduce((f, p) => (p.payer === u ? Math.max(f, p.h.floor ?? 0) : f), 0);
+  if (floor <= 0) return true;
+  const own = hpPrices(u, d, m).find((x) => x.payer === u)?.amount ?? 0;
+  return (u.hp - own) * 100 >= floor * u.stats.max_hp;
 }
 
 /** How many more stacks an application adds, from the ability's changes, on top of the applier's boosts. */
@@ -198,39 +256,57 @@ function seeks(w: W, u: CUnit, d: ActDef) {
   });
 }
 
-/** Off cooldown, affordable, its condition holds, and no lockout covers it; its changes' cost, waits and HP floor count too. */
-export function available(w: W, u: CUnit, i: number): boolean {
-  if (u.acts[i].ready > w.f.now) return false;
-  const d = actDef(w, u, i);
-  const m = modsOf(w, u, d);
-  if (u.mp < mpCost(d, m)) return false;
+/** Its conditions hold (all, or any one), its changes' waits too, its HP price fits, and no lockout covers it. */
+function allowed(w: W, u: CUnit, d: ActDef, m: Mods | null): boolean {
   // An ability may wait for several conditions at once (Blood gift: an ally hurt, and itself above the price), or for any one.
   if (d.if && !(d.any ? d.if.some((cnd) => holds(w, u, cnd)) : d.if.every((cnd) => holds(w, u, cnd)))) return false;
   if (m && !(m.wait.every((cnd) => holds(w, u, cnd)) && priceFits(u, d, m))) return false;
   return !lockedOut(w, u, d);
 }
 
+/** Off cooldown, affordable, its condition holds, and no lockout covers it; its changes' cost, waits and HP floor count too. */
+export function available(w: W, u: CUnit, i: number): boolean {
+  if (u.acts[i].ready > w.f.now) return false;
+  const d = actDef(w, u, i);
+  const m = modsOf(w, u, d);
+  if (u.mp < mpCost(d, m)) return false;
+  return allowed(w, u, d, m);
+}
+
 export function start(w: W, u: CUnit, i: number) {
   const d = actDef(w, u, i);
-  // A change can set its wind-up, before cast-time reduction.
-  const cast = modsOf(w, u, d)?.cast;
-  const t = scaled(cast != null ? sub(cast) : d.cast, speedOf(stat(w, u, "cast_time_reduction")));
+  // A change can set its wind-up, or stretch it, before cast-time reduction.
+  const m = modsOf(w, u, d);
+  const cast = m?.cast != null ? sub(m.cast) : d.cast;
+  const t = scaled(m?.wind ? Math.max(0, Math.floor((cast * (100 + m.wind)) / 100)) : cast, speedOf(stat(w, u, "cast_time_reduction")));
   u.cast = { act: i, end: w.f.now + t };
   push(w, { k: "act", at: u.cast.end, b: batch(u.side), g: 2, slot: u.slot, seq: w.f.seq++, unit: u.id, act: i });
   if (t > 0) w.log?.({ t: "cast", vis: "player", at: w.f.now, by: u.id, act: d.id, name: d.name, ends: u.cast.end });
-  fire(w, ev("action_start", u, null, { kind: d.kind, ability: d.id }));
+  fire(w, ev("action_start", u, null, { kind: d.kind, ability: d.id, does: d.does }));
 }
 
+/** An action's cooldown now: the basic attack's after Attack speed, an ability's after its changes and Cooldown. */
 export function cooldownOf(w: W, u: CUnit, d: ActDef) {
-  return d.kind === "basic"
-    ? scaled(d.cooldown, basicSpeed(stat(w, u, "attack_speed"), d.cooldown, d.recovery))
-    : scaled(d.cooldown, speedOf(stat(w, u, "cooldown_reduction")));
+  if (d.kind === "basic") return scaled(d.cooldown, basicSpeed(stat(w, u, "attack_speed"), d.cooldown, d.recovery));
+  const pct = modsOf(w, u, d)?.cooldown ?? 0;
+  return scaled(pct ? Math.max(0, Math.floor((d.cooldown * (100 + pct)) / 100)) : d.cooldown, speedOf(stat(w, u, "cooldown_reduction")));
 }
 
-/** Targets are chosen, and MP is paid, when the action resolves. */
-export function resolve(w: W, u: CUnit, i: number) {
+/** Pays an action's MP and HP prices, and says what was paid. */
+function payFor(w: W, u: CUnit, d: ActDef, m: Mods | null, mp: number): { mp: number; hp: number } {
+  if (mp) {
+    u.mp -= mp;
+    w.log?.({ t: "mp", vis: "hidden", at: w.f.now, target: u.id, amount: -mp, mp: u.mp });
+  }
+  let hp = 0;
+  for (const p of hpPrices(u, d, m)) hp += pay(w, p.payer, p.amount);
+  return { mp, hp };
+}
+
+/** Targets are chosen, and MP is paid, when the action resolves. `swing`: a basic attack made through an ability's wind-up or recovery, which leaves the unit's own timing alone. */
+export function resolve(w: W, u: CUnit, i: number, swing = false) {
   const d = actDef(w, u, i);
-  u.cast = null;
+  if (!swing) u.cast = null;
   const fail = (why: string) => w.log?.({ t: "fail", vis: "player", at: w.f.now, by: u.id, act: d.id, name: d.name, why });
   // Its changes, read as it resolves: the cost it pays, its target rule, Seek, and what its hits and heals carry.
   const m = modsOf(w, u, d);
@@ -239,61 +315,89 @@ export function resolve(w: W, u: CUnit, i: number) {
     // The core set's fizzle: nothing happens and no MP is spent, but the ability still goes on cooldown.
     fail("mp");
     u.acts[i].ready = w.f.now + cooldownOf(w, u, d);
-    u.busy = w.f.now + d.recovery;
+    if (!swing) (u.busy = w.f.now + d.recovery), (u.rest = d.kind);
     return;
   }
-  const targets = choose(w, u, m?.target ?? d.target, !!m?.seek || seeks(w, u, d), d.kind);
+  const targets = pick(w, u, d, m);
   // A stated rule that finds nobody when the action resolves: no MP spent and no cooldown. Under
   // ruleset.lostCast "cooldown" the unit spends the action's recovery, so two Ghouls reaching for one corpse don't
   // loop, but a Purify whose Stun ended mid-cast isn't locked out for a whole cooldown.
   if (!targets.length) {
     fail("target");
-    if (w.c.pack.ruleset.lostCast === "cooldown") u.busy = w.f.now + d.recovery;
+    if (w.c.pack.ruleset.lostCast === "cooldown" && !swing) (u.busy = w.f.now + d.recovery), (u.rest = d.kind);
     return;
   }
-  if (mp) {
-    u.mp -= mp;
-    w.log?.({ t: "mp", vis: "hidden", at: w.f.now, target: u.id, amount: -mp, mp: u.mp });
-  }
-  // An HP price on top of the MP, paid with it.
-  const price = hpPrice(u, d, m);
-  if (price > 0) pay(w, u, price);
+  // The MP, and any HP price, paid with it.
+  const paid = payFor(w, u, d, m, mp);
   w.log?.({ t: "act", vis: "player", at: w.f.now, by: u.id, act: d.id, name: d.name, kind: d.kind, targets: targets.map((x) => x.id) });
   u.acted = true;
   u.acts[i].ready = w.f.now + cooldownOf(w, u, d);
-  u.busy = w.f.now + d.recovery;
-  perform(w, u, d, targets, m, mp, false);
+  if (!swing) (u.busy = w.f.now + d.recovery), (u.rest = d.kind);
+  perform(w, u, d, targets, m, paid, 0);
 }
 
-/** An action's effects, its extra strikes and its action_resolve: as it resolves, or again for a recast's repeat. */
-function perform(w: W, u: CUnit, d: ActDef, targets: CUnit[], m: Mods | null, paid: number, repeat: boolean) {
-  const ctx: Ctx = { actor: u, kind: d.kind, targets, id: d.id, st: null, dead: false, landed: [], repeat, mod: m };
+/** An action's targets: a change's rule in place of its own, which takes over again when the change's finds nobody. */
+function pick(w: W, u: CUnit, d: ActDef, m: Mods | null): CUnit[] {
+  const seek = !!m?.seek || seeks(w, u, d);
+  if (m?.target) {
+    const out = choose(w, u, m.target, seek, d.kind);
+    if (out.length) return out;
+  }
+  return choose(w, u, d.target, seek, d.kind);
+}
+
+/** An action's effects, its extra strikes and its action_resolve: as it resolves, or again for a recast's repeat (1 free, 2 paid). */
+function perform(w: W, u: CUnit, d: ActDef, targets: CUnit[], m: Mods | null, paid: { mp: number; hp: number }, repeat: number) {
+  const ctx: Ctx = { actor: u, kind: d.kind, targets, id: d.id, st: null, dead: false, landed: [], repeat: repeat > 0, mod: m, paid };
   for (const e of d.effects) {
     run(w, ctx, e);
     if (w.f.result || u.ko) return;
   }
   if (d.kind === "basic") strikes(w, u, d, targets, ctx);
   if (w.f.result || u.ko) return;
+  // A cast that counts (not a free repeat) is counted for its ability, as it finishes.
+  if (d.kind === "ability" && repeat !== 1) counted(w, u, d, m);
   // What it did: the MP it paid, the units on the other side its hits landed on, which action, and whether it's a repeat.
-  fire(w, ev("action_resolve", u, null, { kind: d.kind, amount: paid, count: ctx.landed!.length, ability: d.id, repeat }));
+  fire(w, ev("action_resolve", u, targets[0] ?? null, { kind: d.kind, amount: paid.mp, price: paid.hp, count: ctx.landed!.length, ability: d.id, repeat, does: d.does }));
+}
+
+/** One more counted cast of an ability; a change that counts casts shows the unit's highest count as a status. */
+function counted(w: W, u: CUnit, d: ActDef, m: Mods | null) {
+  const a = u.acts.find((x) => x.id === d.id);
+  if (!a) return;
+  a.casts = (a.casts ?? 0) + 1;
+  const show = m?.casts?.show;
+  if (!show) return;
+  const top = Math.min(m!.casts!.cap, Math.max(...u.acts.map((x) => x.casts ?? 0)));
+  const held = total(u, show) / SUBTICKS;
+  if (top > held) applyStatus(w, u, u, def(w, show), { stacks: top - held, rng: u });
 }
 
 /**
- * In a reaction to its holder's own action_resolve, the action that set it off resolves again at once:
- * no wind-up, no MP or HP price, its cooldown and recovery untouched, its targets chosen afresh by its own rule (its
- * changes included). The repeat fires its own action_resolve, marked as a repeat.
+ * An ability resolves again at once: no wind-up, its cooldown and recovery untouched, its targets chosen afresh by its own
+ * rule (its changes included). By default the action that set the reaction off, free; `which: first`, the unit's
+ * first-slotted ability, whatever its cooldown, if its conditions hold; `paid`, at its cost in MP and HP, or not at all.
+ * The repeat fires its own action_resolve, marked as a repeat.
  */
-export function recast(w: W, ctx: Ctx) {
-  const u = ctx.actor, id = ctx.st?.ability;
-  if (!id || u.ko || w.f.result) return;
+export function recast(w: W, ctx: Ctx, e: Extract<S.EffectT, { op: "recast" }>) {
+  const u = ctx.actor;
+  if (u.ko || w.f.result) return;
+  const first = e.which === "first";
+  const id = first ? u.acts[0]?.id : ctx.st?.ability;
+  if (!id || id === "basic") return;
   const i = u.acts.findIndex((a) => a.id === id);
   if (i < 0) return;
   const d = actDef(w, u, i);
   const m = modsOf(w, u, d);
-  const targets = choose(w, u, m?.target ?? d.target, !!m?.seek || seeks(w, u, d), d.kind);
+  if (first && !allowed(w, u, d, m)) return;
+  const mp = e.paid ? mpCost(d, m) : 0;
+  if (e.paid && (u.mp < mp || (m && !priceFits(u, d, m)))) return;
+  const targets = pick(w, u, d, m);
   if (!targets.length) return void w.log?.({ t: "fail", vis: "player", at: w.f.now, by: u.id, act: d.id, name: d.name, why: "target" });
+  const paid = e.paid ? payFor(w, u, d, m, mp) : { mp: 0, hp: 0 };
   w.log?.({ t: "act", vis: "player", at: w.f.now, by: u.id, act: d.id, name: d.name, kind: d.kind, targets: targets.map((x) => x.id), repeat: true });
-  perform(w, u, d, targets, m, 0, true);
+  // A cast of its own (the first-slotted one, called by a count) is an ordinary cast; one that repeats a cast is a repeat.
+  perform(w, u, d, targets, m, paid, first ? 0 : e.paid ? 2 : 1);
 }
 
 /** Whether a strike's chance comes up: at 100 or more it always does, without a roll. */
@@ -305,10 +409,14 @@ function strikeRoll(w: W, u: CUnit, chance: number): boolean {
 }
 
 /**
- * Extra strikes after a basic attack (Double strike, Arc): one more hit with the weapon's damage, of kind extra, which never chains.
- * Each strike deals `share` % of the weapon's damage; a rule that picks several units strikes each, in its order, and
- * those strikes are `area`; a `chain` rolls the chance again after each strike that lands, at most `times` more, each `share` %
- * of the one before, in place of a plain strike reading the same stat. Their hits count among the action's landed units.
+ * Extra strikes after a basic attack (Double strike, Arc): one more hit with the weapon's damage, which never chains. An
+ * extra strike is Double strike's; a strike of kind bonus is a hit with its own name (Arc's second hit, a leap, a volley's
+ * arrow), `wide` on a unit other than the swing's target. Each strike deals `share` % of the weapon's damage, in the shape
+ * the unit's basic attacks have; a rule that picks several units strikes each, in its order, and those strikes are `area`;
+ * a `chain` rolls the chance again after each strike that lands, at most `times` more, each `share` % of the one before, in
+ * place of a plain strike reading the same stat. An extra strike brings the weapon's attached statuses, and under `echo`
+ * the riders too; a bonus strike brings both only with `carry`; either may apply statuses of its own. Their hits count
+ * among the action's landed units.
  */
 function strikes(w: W, u: CUnit, d: ActDef, targets: CUnit[], ctx: Ctx) {
   const e = d.effects[0] as S.DamageEffectT;
@@ -319,21 +427,29 @@ function strikes(w: W, u: CUnit, d: ActDef, targets: CUnit[], ctx: Ctx) {
     const k = def(w, s.id).strike;
     if (k?.chain && k.scale) (chained ??= new Set()).add(k.scale);
   }
+  const echo = u.statuses.some((s) => def(w, s.id).echo);
   for (const s of u.statuses.slice()) {
     const st = def(w, s.id);
     const k = st.strike;
     if (!k || !u.statuses.includes(s)) continue;
     if (chained && !k.chain && k.scale && chained.has(k.scale)) continue;
+    if (k.when && !passes(w, u, k.when, u)) continue;
     if (w.f.result || u.ko) return;
     const chance = (k.chance ?? (k.scale ? 0 : 100)) + (k.scale ? stat(w, u, k.scale) : 0);
     if (!strikeRoll(w, u, chance)) continue;
     const to = k.to === "target" ? targets.slice(0, 1) : byRule(w, u, k.to, { seek: true, main: false, targets });
     const area = to.length >= 2;
+    const kind: HitKind = k.kind ?? "extra";
+    // An extra strike, and a bonus strike that carries, bring the weapon's attached statuses; any strike adds its own.
+    const carry = kind === "extra" ? echo : !!k.carry;
+    const eff: S.DamageEffectT = { ...e, apply: [...(kind === "extra" || k.carry ? (e.apply ?? []) : []), ...(k.apply ?? [])] };
     for (const t of to) {
       let share = k.share ?? 100;
+      const tags = [...(kind === "bonus" && !targets.includes(t) ? ["wide"] : []), ...(k.tag ? [k.tag] : [])];
       for (let n = 0; !t.ko && !u.ko && !w.f.result; n++) {
         w.log?.({ t: "strike", vis: "player", at: w.f.now, by: u.id, status: st.id, name: st.name, target: t.id });
-        const landed = hit(w, { actor: u, kind: "extra", targets: [t], id: d.id, st: null, dead: false, landed: ctx.landed }, t, e, { share, area });
+        const sctx: Ctx = { actor: u, kind, targets: [t], id: d.id, st: null, dead: false, landed: ctx.landed };
+        const landed = hit(w, sctx, t, eff, { share, area, shape: true, tags, carry });
         if (!landed || !k.chain || n >= k.chain.times || !strikeRoll(w, u, chance)) break;
         share = (share * k.chain.share) / 100;
       }

@@ -30,6 +30,8 @@ export type Member = Unit & {
   flat: Record<string, number>;
   pct: Record<string, number>;
   start: string[];
+  /** Of `start`, the statuses its gear and its seat give (what a restart makes happen again). */
+  opening?: string[];
   weapon: string;
   abilities: string[];
   /** Ticks of cooldown each ability had left when the last fight ended; the next fight starts from there. */
@@ -80,13 +82,15 @@ export const combat: Rules = {
       const gear = Object.keys(SLOTS).flatMap((s) => (pu.gear[s] && !(s === "offhand" && twoHanded) ? [c.gear.get(pu.gear[s])!] : []));
       for (const g of gear) grant(m, g);
       grant(m, f.positions[slot]);
+      // What its gear and its seat give is the unit's opening; the formation's own statuses are the whole party's rule.
+      const opening = [...gear.flatMap((g) => g.statuses ?? []), ...(f.positions[slot]?.statuses ?? [])];
       grant(m, f);
       // Each equipped ability (a trained form included) brings its statuses, applied at fight start and on a revive.
       for (const a of pu.abilities) m.start.push(...(c.abilities.get(a)?.statuses ?? []));
       const base = { ...cls.stats };
       const stats = derive(c, { base, ...m });
       return {
-        id: `p${i + 1}`, ref: cls.id, name: cls.name, side: "party", stats, hp: stats.max_hp, mp: stats.max_mp, slot, seat: pu.position, base, ...m,
+        id: `p${i + 1}`, ref: cls.id, name: cls.name, side: "party", stats, hp: stats.max_hp, mp: stats.max_mp, slot, seat: pu.position, base, ...m, opening,
         weapon: gear.find((g) => g.weapon)?.id ?? "unarmed", abilities: [...pu.abilities],
       };
     });
@@ -96,7 +100,7 @@ export const combat: Rules = {
     const seed = x.run.record.seed;
     const party = (x.run.party as Member[])
       .map(({ abilities, ...m }) => {
-        const copy = { ...m, stats: { ...m.stats }, base: { ...m.base }, flat: { ...m.flat }, pct: { ...m.pct }, start: [...m.start] };
+        const copy = { ...m, stats: { ...m.stats }, base: { ...m.base }, flat: { ...m.flat }, pct: { ...m.pct }, start: [...m.start], opening: [...(m.opening ?? [])] };
         return fighter(copy, abilities, rngFor(seed, `fight:${stage.id}:${m.ref}`));
       })
       .sort((a, b) => a.slot - b.slot);

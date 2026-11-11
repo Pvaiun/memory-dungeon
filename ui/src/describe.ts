@@ -24,7 +24,7 @@ export function evalNum(n: NumT, stats: Stats | null, target: Stats | null = nul
       else extra.push(`${fmtRatio(s.ratio)} × ${statWord(s.stat)}${s.of === "target" ? " of the target" : ""}`);
     } else if (s.stacks) extra.push(`+${disp(s.ratio)} per ${status(s.stacks).name} stack on the target`);
     else if (s.hp) extra.push(`${fmtRatio(s.ratio)} × ${s.hp} HP`);
-    else if (s.amount) extra.push(`${Math.round(s.ratio * 100)}% of the amount${s.times ? ` × ${statWord(s.times.stat)}` : ""}`);
+    else if (s.amount) extra.push(`${Math.round(s.ratio * 100)}% of the amount${s.times ? ` × ${s.times.stat ? statWord(s.times.stat) : status(s.times.stacks!).name}` : ""}`);
     else if (s.when) extra.push("doubled when the condition holds");
   }
   return { value: v, extra };

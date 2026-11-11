@@ -138,11 +138,22 @@ test("statuses: seek covers basic, ability or all; a strike's rule and stat are 
   p.statuses.push({ id: "might", name: "MIGHT", label: "buff", show: "icon", stacking: "intensity", boosts: [{ tag: "physical", pct: 10 }], pulse: { every: 3 }, drop: { count: 1 } });
   assert.deepEqual(codes(validatePack(p).issues, "error"), []);
 });
-test("events: tags filter hit events only, and a damage event can name the status that dealt it", () => {
+test("events: tags filter the events that carry them (hits, a ko, heals, a status gained), a damage event can name the status that dealt it, and an HP line names its line", () => {
   const status = (x: object) => (p: any) => p.statuses.push({ id: "probe", name: "PROBE", label: "buff", show: "sheet", stacking: "refresh", ...x });
-  expectIssue("event.tags", status({ reactions: [{ on: { event: "ko", tags: ["physical"] }, do: [{ op: "heal", amount: 1, to: "holder" }] }] }));
+  expectIssue("event.tags", status({ reactions: [{ on: { event: "revived", tags: ["physical"] }, do: [{ op: "heal", amount: 1, to: "holder" }] }] }));
+  expectIssue("event.line", status({ reactions: [{ on: { event: "hp_low" }, do: [{ op: "heal", amount: 1, to: "holder" }] }] }));
+  expectIssue("event.line", status({ reactions: [{ on: { event: "hp_lost", line: 50 }, do: [{ op: "heal", amount: 1, to: "holder" }] }] }));
+  expectIssue("event.repeat", status({ reactions: [{ on: { event: "hit_lands", repeat: false }, do: [{ op: "heal", amount: 1, to: "holder" }] }] }));
   const p = clone(PACK) as any;
-  status({ reactions: [{ on: { event: "damage_dealt", status: "thorns" }, do: [{ op: "apply", status: "bleed", to: "other" }] }, { on: { event: "hit_taken", tags: ["physical"] }, do: [{ op: "heal", amount: 1, to: "holder" }] }] })(p);
+  status({
+    reactions: [
+      { on: { event: "damage_dealt", status: "thorns" }, do: [{ op: "apply", status: "bleed", to: "other" }] },
+      { on: { event: "hit_taken", tags: ["physical"] }, do: [{ op: "heal", amount: 1, to: "holder" }] },
+      { on: { event: "ko", whose: "foe", other: "holder", tags: ["physical"], notTags: ["bare"] }, do: [{ op: "strike", of: "over", to: { side: "foes" } }] },
+      { on: { event: "hp_low", whose: "team", line: 50 }, do: [{ op: "heal", amount: 1, to: "owner" }] },
+      { on: { event: "fight_start", repeat: false }, do: [{ op: "pay", hp: 1, drain: true, to: "holder" }] },
+    ],
+  })(p);
   assert.deepEqual(codes(validatePack(p).issues, "error"), []);
 });
 test("weapons: a piece names a kind, or an enemy's weapon states type and cooldown itself", () => {
@@ -430,11 +441,14 @@ test("reaction words: seats exist, other and owner exclusions and strikes belong
   expectIssue("seat.unknown", probe({ reactions: [{ on: { event: "hit_taken", whose: "ally", seat: "nowhere" }, do: [{ op: "apply", status: "probe", to: "self" }] }] }));
   card({ target: { side: "foes", pick: "random" }, do: [{ op: "damage", type: "physical", amount: 1, to: { side: "foes", exclude: "other" } }] }, "target.exclude");
   card({ do: [{ op: "strike", to: "self" }] }, "strike.where");
+  expectIssue("strike.hit", probe({ reactions: [{ on: { event: "ko", whose: "foe" }, do: [{ op: "strike", of: "dealt", to: "other" }] }] }));
+  expectIssue("strike.over", probe({ reactions: [{ on: { event: "hit_lands" }, do: [{ op: "strike", of: "over", to: "other" }] }] }));
+  expectIssue("share.where", probe({ reactions: [{ on: { event: "hit_lands" }, do: [{ op: "share", to: "other" }] }] }));
   card({ do: [{ op: "remove", label: "marker", to: "self" }] }, "remove.label");
   const p = clone(PACK) as any;
   probe({
     reactions: [{
-      on: { event: "ko", whose: "foe", other: "holder", kind: "basic" },
+      on: { event: "hit_lands", kind: "basic" },
       if: [{ unit: "other", where: { hasAny: ["probe"] } }, { side: "foes", where: { has: "probe" }, atMost: 0 }],
       do: [{ op: "cooldown", which: "longest", set: "ready", to: "self" }, { op: "strike", share: 25, of: "hit", to: { side: "foes", exclude: "other" } }],
     }],

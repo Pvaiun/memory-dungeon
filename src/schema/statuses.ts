@@ -21,17 +21,30 @@ export type FixedStatT = z.infer<typeof FixedStat>;
 export const EventSpec = z.strictObject({
   event: EventName,
   whose: Whose.optional(),
-  kind: z.enum(["basic", "ability", "extra"]).optional().describe("Action and hit events, and ko, healed and overhealed: the kind of the action or hit behind it."),
-  tags: z.array(Tag).min(1).optional().describe("Hit events only: the hit carries at least one of these tags (its kind and type, \"crit\" when it crits, \"area\" when its effect is aimed at several units)."),
-  notTags: z.array(Tag).min(1).optional().describe("Hit events only: the hit carries none of these (`area`: a single-target hit)."),
-  status: Id.optional().describe("Status events, and damage events: the status whose pulse or reaction dealt the damage."),
+  kind: z.enum(["basic", "ability", "extra", "bonus"]).optional().describe("Action and hit events, and ko, healed and overhealed: the kind of the action or hit behind it."),
+  tags: z
+    .array(Tag)
+    .min(1)
+    .optional()
+    .describe("The event carries at least one of these tags. A hit's: its kind and type, `crit` when it crits, `area` when its effect is aimed at several units, `wide`, `bare`, and any tag its strike names. ko: the killing hit's (`physical`: a killing blow). healed and overhealed: `pulse`. status_gained: `area`."),
+  notTags: z.array(Tag).min(1).optional().describe("The event carries none of these (`area`: a single-target hit; `bare`: not a second landing or a left-over)."),
+  status: Id.optional().describe("Status events; damage events and heals: the status whose pulse or reaction dealt the damage or healed."),
+  line: z.number().gt(0).max(100).optional().describe("hp_low and hp_high only, and required there: the line, in percent of max HP."),
+  ability: z.array(Id).min(1).optional().describe("Action events and ko: the action was one of these abilities, each with its trained forms (\"when Backstab knocks a foe out\")."),
+  does: z.array(Id).min(1).optional().describe("Action events: the action does one of these, as an ability filter's `does` (\"the next ability that deals damage\")."),
+  paid: z.literal(true).optional().describe("action_resolve only: the action was paid for, in MP or as an HP price (a free cast isn't)."),
+  counted: z.literal(true).optional().describe("Action events only: an ordinary action or a paid second cast, which count as casts; not a free repeat."),
+  wasBelow: z.number().min(0).max(100).optional().describe("Hit events only: the unit hit was below this percent of its max HP as the hit landed, before its damage."),
   cause: z.array(Cause).min(1).optional().describe("status_ended only. Default: every cause."),
   other: Whose.optional().describe("Who the event's other unit is, from the holder's side: holder (a kill it landed, a status it applied, a heal or revive it gave), ally, foe, or any (there is one)."),
   source: z.literal("holder").optional().describe("Status events only: the status was applied by the holder (a Mark it gave, an Aegis it gave)."),
   seat: Seat.optional().describe("The unit the event is about sits in this seat of the party's formation (a position id, or next / previous from the holder's)."),
   amountAtLeast: z.number().optional().describe("The event's amount is at least this (\"a cast that paid MP\": 1)."),
   countAtLeast: PosInt.optional().describe("action_resolve only: its hits landed on at least this many units of the other side."),
-  repeat: z.boolean().optional().describe("Action events only: true matches only a recast's repeat, false only ordinary actions. Default: both."),
+  repeat: z
+    .boolean()
+    .optional()
+    .describe("true matches only a repeat, false only the first: an action event of a recast; a fight_start a `restart` made happen again; a status_gained of an application marked as a copy. Default: both."),
 });
 export type EventSpecT = z.infer<typeof EventSpec>;
 
@@ -39,6 +52,7 @@ export const Reaction = z.strictObject({
   on: EventSpec,
   actor: z.enum(["holder", "source"]).optional().describe("Who acts. source only for statuses that know their source. Default holder."),
   if: z.union([Test, z.array(Test).min(1)]).optional().describe("Checked when the reaction resolves, every one must hold: a side's state (as an ability's `if`, read from the actor's side) or a test of the event's other unit or owner. When one fails, the reaction does nothing."),
+  split: Id.optional().describe("Reactions that share this word and answer one event share its amount evenly (two pieces that move one fallen foe's fire, or carry one blow's left-over)."),
   do: z.array(Effect).min(1).describe("Each effect states its target (`to`)."),
 });
 
@@ -46,6 +60,9 @@ export const Reaction = z.strictObject({
 export const AbilityFilter = z.strictObject({
   ability: z.array(Id).min(1).optional().describe("These abilities by id, each with its trained forms (a mythic naming its class's ability)."),
   does: z.array(Id).min(1).optional().describe("Abilities whose effects do one of these: revive, heal or damage, or apply this status (stun, silence, shield, guard...)."),
+  single: z.literal(true).optional().describe("Abilities that aim at one foe: default targeting, or a rule that picks one foe first (not one aimed at every foe)."),
+  first: z.literal(true).optional().describe("The first-slotted ability: the one the player put first."),
+  basic: z.literal(true).optional().describe("The basic attack, in place of the abilities: only `pay` and `wait` mean anything on it."),
 });
 export type AbilityFilterT = z.infer<typeof AbilityFilter>;
 
@@ -56,13 +73,30 @@ export const AbilityMod = z.strictObject({
   mp: z.number().min(-100).optional().describe("Percent change to its MP cost: −20 a fifth less, −100 free, +50 half again. Changes add up; the cost never falls below 0."),
   hp: z
     .strictObject({
-      pct: z.number().positive().describe("Percent of the ability's own MP cost (before `mp` changes), paid in HP as the pay effect pays."),
-      share: z.literal(true).optional().describe("Paid as the same share of max HP as the cost is of max MP, not point for point."),
-      floor: z.number().min(0).max(100).optional().describe("The ability waits rather than leave the holder below this percent of its max HP."),
+      pct: z.number().positive().describe("Percent of the ability's MP cost, as it stands after every other change's `mp` (a free cast costs no HP either), paid in HP as the pay effect pays."),
+      share: z.literal(true).optional().describe("Paid as the same share of the payer's max HP as the cost is of the caster's max MP, not point for point."),
+      floor: z.number().min(0).max(100).optional().describe("The ability waits rather than leave the holder below this percent of its max HP. With a `payer`: the payer pays only if it's left above this, and otherwise the change doesn't apply."),
+      instead: z.literal(true).optional().describe("In place of the MP: the ability then costs no MP."),
+      payer: z.literal("source").optional().describe("The unit that gave the status pays, not the caster, while it stands and can (a status that knows its source). An ability it can pay for needs no MP."),
     })
     .optional()
-    .describe("An HP price on top, paid when the ability resolves, with its MP."),
+    .describe("An HP price, paid when the ability resolves: on top of its MP, or in its place."),
+  pay: Num.optional().describe("An HP price of its own size, paid as the action resolves (a basic attack's: `of: { basic: true }`), never below 1 HP. The action's amounts can read it (`cost: hp`)."),
   cast: z.number().min(0).optional().describe("Its wind-up, in ticks, before cast-time reduction, in place of its own (\"winds up in a moment\": 1)."),
+  wind: z.number().min(-100).optional().describe("Percent change to its wind-up, before cast-time reduction: +50 half again as long."),
+  cooldown: z.number().min(-100).optional().describe("Percent change to its cooldown: +100 twice as long, −100 none (it's cast again whenever it can be)."),
+  damage: z.number().optional().describe("Its hits deal this percent more, with the holder's boosts."),
+  times: z
+    .union([
+      z.strictObject({ stacks: Id }).describe("The holder's stacks of this status (Cascade)."),
+      z.strictObject({
+        casts: z.literal(true),
+        cap: PosInt,
+        show: Id.optional().describe("An Intensity status the engine keeps on the holder at its highest count, for the player to see."),
+      }).describe("The times this ability has been cast this fight (counted casts, as the cast finishes), up to cap: a count kept ability by ability (Crescendo)."),
+    ])
+    .optional()
+    .describe("Every percentage of this change (mp, damage, heal, stacks, wind, cooldown) is multiplied by this count."),
   stacks: z
     .strictObject({ pct: z.number(), statuses: z.array(Id).min(1).optional() })
     .optional()
@@ -81,6 +115,8 @@ export const CritRule = z.strictObject({
   when: UnitCond.optional().describe("Only hits on a unit that passes this, read as the hit lands."),
   chance: z.number().optional().describe("Points added to the hit's crit chance, after every stat change (100: it always crits, whatever else holds, Gambler's coin included)."),
   times: z.number().min(0).optional().describe("The hit's crit chance, after every stat change, is multiplied by this before any `chance` is added (3: tripled against the foes `when` names)."),
+  cap: z.number().min(0).max(100).optional().describe("What this rule adds or multiplies never lifts the chance past this; a chance already higher stays as it is."),
+  set: z.number().min(0).max(100).optional().describe("The hit's crit chance is this, whatever the stat and the other rules say: nothing raises it, and it wins over a stat set to a value (Gambler's coin). A rule that always crits still does."),
   bonus: z.number().optional().describe("Percent more crit bonus, the part of the crit multiplier above ×1: 100 makes ×1.5 into ×2."),
 });
 export type CritRuleT = z.infer<typeof CritRule>;
@@ -120,6 +156,11 @@ export const Status = z.strictObject({
     })
     .optional(),
   riders: z.array(z.strictObject({ on: Tag, add: Instance })).optional().describe("Adds a rider to the holder's hits that carry `on`."),
+  adds: z
+    .array(z.strictObject({ on: Tag, amount: Num }))
+    .min(1)
+    .optional()
+    .describe("Adds to the amount of the holder's hits that carry `on`, before boosts, crit and Defense (\"extra damage equal to a sixth of its Defense\"). `target` is the unit hit; an Intensity status adds it for each stack. A bare hit takes none."),
   seek: Tag.optional().describe("The holder's actions carrying this tag (basic, ability or all) have Seek: their first pick ignores Taunt."),
   strike: z
     .strictObject({
@@ -127,6 +168,11 @@ export const Status = z.strictObject({
       scale: StatKey.optional().describe("A stat read live whose value is added to `chance` (Double strike)."),
       to: z.union([z.literal("target"), TargetRule]).describe("The same target, or a rule (Arc: a second, random foe, excluding the target). A rule that picks several units strikes each of them (every other foe)."),
       share: z.number().positive().optional().describe("Percent of the weapon's damage each strike deals. Default 100."),
+      kind: z.enum(["extra", "bonus"]).optional().describe("Default extra: an extra strike (Double strike's). bonus: a hit with its own name (Arc's second hit, a leap, a volley's arrow), which nothing that waits on extra strikes answers; on a unit other than the target it's `wide`."),
+      carry: z.literal(true).optional().describe("A bonus strike carries what the swing carries: the weapon's attached statuses, and the statuses the holder's basic attacks apply through its statuses' riders. Without it a bonus strike carries neither. (An extra strike carries the weapon's attached statuses, and the riders under `echo`.)"),
+      apply: z.array(HitApply).optional().describe("Statuses each strike applies itself, as a weapon's attached ones (the acting unit is `self`)."),
+      when: UnitCond.optional().describe("Only while the holder passes this, read as the basic attack resolves (\"every third basic attack\": a count at two)."),
+      tag: Tag.optional().describe("A tag its hit events carry."),
       chain: z
         .strictObject({ times: PosInt, share: z.number().positive().max(100) })
         .optional()
@@ -187,6 +233,33 @@ export const Status = z.strictObject({
     .optional()
     .describe("The holder's HP can't fall below 1 while it holds this: a blow that would knock it out leaves it at 1, and nothing falls."),
   heals: z.literal("own").optional().describe("Only its own heals land on the holder (its abilities, its Lifesteal, its statuses' reactions); heals from others, a Regen they gave included, restore nothing."),
+  healCap: z
+    .number()
+    .gt(0)
+    .max(100)
+    .optional()
+    .describe("The holder can't be healed above this percent of its max HP, and loses what it has above it as the status lands (not damage, not a price). Healing past it is healing past full; at the cap it reads as just under it (\"at half it counts as below half\")."),
+  soak: z.literal("mp").optional().describe("Damage that would reach the holder's HP comes out of its MP instead, point for point, while it has any: after a block and absorbs, before HP."),
+  divert: z
+    .strictObject({
+      what: z.string().min(1).describe("`mp`: every MP the holder would gain. Or a status's id: every application of it the holder would gain (a Shield)."),
+      to: z.union([z.literal("source"), TargetRule]).describe("Who gets it instead: the unit that gave this status, or a rule read from the holder. With nobody there, the holder keeps it."),
+    })
+    .optional()
+    .describe("What the holder would gain goes to another unit instead, once: what's sent on isn't sent on again."),
+  party: z.literal(true).optional().describe("A rule its side holds once: of the units on a side that hold this status, only the first standing, in slot order, answers an event with its reactions and trigger."),
+  oncePerEvent: z.literal(true).optional().describe("A counter: one event adds one application to a holder, however many of its reactions count it."),
+  damp: z
+    .strictObject({ pct: z.number().gt(0).max(100), window: z.number().positive() })
+    .optional()
+    .describe("Intensity with a cap: a chain of cappings dies down. Stacks an application marked `passed` adds to a unit are cut to pct % for each time that unit has capped this status in the last `window` ticks, in fractions of a stack."),
+  swap: z.tuple([StatKey, StatKey]).optional().describe("The holder's two stats are swapped as they stand from its class, gear and seat; statuses change them as usual after that."),
+  tireless: z.literal(true).optional().describe("The holder's basic attacks never wait on its abilities: it keeps swinging on its own clock through their wind-ups and recoveries."),
+  order: z.literal("random").optional().describe("Each time the holder is free to act, it uses one of its available abilities picked at random, whatever order they're slotted in."),
+  borrow: z
+    .strictObject({ from: TargetRule.describe("Read from the holder (\"the other ally with the highest Attack\", the unit in a seat).") })
+    .optional()
+    .describe("The holder's basic attacks also carry the riders of another unit's: the statuses that unit's basic attacks apply through its statuses' reactions, on the same conditions, with stacks read off the holder, and never twice from a status both hold. What's borrowed isn't borrowed on."),
   revives: z
     .strictObject({
       ready: z.boolean().optional().describe("true: every action ready; false: every action on cooldown. It wins over the revive's own `ready`, and false wins over true."),

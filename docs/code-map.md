@@ -44,13 +44,13 @@ src/
       stats.ts               stat and timing maths: final values, speeds, rescaling
       fight.ts               the fight's public face, and its order of play
       fight/                 the fight, one file a part
-        state.ts             the fight's data, the world (W), shared helpers, stats after statuses, numbers
-        actions.ts           abilities as actions: their changes, costs, availability, start, resolution, extra strikes
+        state.ts             the fight's data, the world (W), shared helpers, stats after statuses, HP lines, numbers
+        actions.ts           abilities as actions: their changes, costs and HP prices, availability, start, resolution, casts made again, extra strikes
         targeting.ts         picks: draw, Taunt, Hidden, Seek, focus, target rules, conditions, seats
-        effects.ts           every effect op but damage and healing: targets, numbers, cooldowns, HP prices, revives
-        damage.ts            damage and healing: the resolution order, evasion, crits, Shield, Aegis, floors, cover
-        statuses.ts          applying, ending, removing, moving and pulsing statuses; control resistance; lockouts
-        events.ts            events, their filters, reactions and Intensity triggers
+        effects.ts           every effect op but damage and healing: targets, numbers, MP, cooldowns, HP prices, strikes out of turn, riders laid, the opening again, revives
+        damage.ts            damage and healing: the resolution order, evasion, crits, Shield, Aegis, MP as armour, floors, cover, healing caps
+        statuses.ts          applying, ending, removing, moving, spending and pulsing statuses; diverts, damping; control resistance; lockouts
+        events.ts            events, their filters, reactions and Intensity triggers; riders, carried and borrowed; shared amounts
         units.ts             knockouts, the fight's end, revives, summons and splits
         clock.ts             the next moment, the enrage, the fight's start, each step
       arena.ts               test helper: one fight from units and statuses written inline
@@ -59,6 +59,8 @@ src/
       statuses.test.ts       tests: statuses, reactions, what the player sees
       synergy-h.test.ts      tests: the building blocks for what happens (PRIMITIVES.md)
       synergy-w.test.ts      tests: the building blocks for who and when
+      loot-h.test.ts         tests: the loot pass's building blocks for what happens (hits out of turn, riders, HP lines, MP, healing caps)
+      loot-w.test.ts         tests: the loot pass's building blocks for who and when (party rules, ability changes, casts again, sight)
       coreset.test.ts        tests: the core set's own rules (Taunt and Hidden, Seek, revive, summons)
       dungeon.test.ts        tests: a run's rules (foes modifier, lost casts, stagger, enrage, Stun, campfires)
   rogue.ts                   the rogue mode's public face; lists its parts

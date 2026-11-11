@@ -5,7 +5,7 @@
 import * as S from "../../../schema.js";
 import { compile } from "../stats.js";
 import { next } from "../../rng.js";
-import { type CUnit, def, hidden, isIntensity, living, stat, SUBTICKS, taunting, total, type W } from "./state.js";
+import { type CUnit, def, healTop, hidden, hpBelow, isIntensity, living, stat, SUBTICKS, taunting, total, type W } from "./state.js";
 import { actDef, type ActDef, cooldownOf, type Target, weaponOf } from "./actions.js";
 import { capOf } from "./statuses.js";
 
@@ -18,10 +18,13 @@ export function passes(w: W, x: CUnit, c: S.UnitCondT, ref?: CUnit | null): bool
   if (c.hasAny !== undefined && !c.hasAny.some((id) => x.statuses.some((s) => s.id === id))) return false;
   if (c.lower !== undefined && !(ref && stat(w, x, c.lower.stat) < stat(w, ref, c.lower.stat))) return false;
   if (c.acted !== undefined && !!x.acted !== c.acted) return false;
-  if (c.top !== undefined && !onTop(w, x, c.top.stats)) return false;
+  if (c.top !== undefined && !onTop(w, x, c.top.stats, c.top.others ? (ref ?? null) : undefined)) return false;
+  if (c.topHp !== undefined && w.f.units.some((u) => u.side === x.side && !u.ko && u.hp > x.hp)) return false;
+  if (c.canHeal !== undefined && (!x.ko && x.hp < healTop(w, x)) !== c.canHeal) return false;
   if (c.weapon !== undefined && !c.weapon.includes(weaponOf(w.c, x.weapon).kind ?? "")) return false;
-  if (c.hpBelow !== undefined && !(x.hp * 100 < c.hpBelow * x.stats.max_hp)) return false;
-  if (c.hpAtLeast !== undefined && !(x.hp * 100 >= c.hpAtLeast * x.stats.max_hp)) return false;
+  // HP against a line reads a unit at a cap on its healing as just under it.
+  if (c.hpBelow !== undefined && !hpBelow(w, x, c.hpBelow)) return false;
+  if (c.hpAtLeast !== undefined && hpBelow(w, x, c.hpAtLeast)) return false;
   // MP as a share of max MP (Clarity waits for an ally who needs it). A unit with no MP pool is never "below".
   if (c.mpBelow !== undefined && !(x.stats.max_mp > 0 && x.mp * 100 < c.mpBelow * x.stats.max_mp)) return false;
   if (c.mpAtLeast !== undefined && !(x.stats.max_mp <= 0 || x.mp * 100 >= c.mpAtLeast * x.stats.max_mp)) return false;
@@ -37,11 +40,12 @@ export function passes(w: W, x: CUnit, c: S.UnitCondT, ref?: CUnit | null): bool
   return true;
 }
 
-/** No living unit on its side has more of the highest of these stats; ties pass. */
-function onTop(w: W, x: CUnit, stats: readonly string[]): boolean {
+/** No living unit on its side has more of the highest of these stats; ties pass. `but`: a unit left out of the comparison, which never passes itself. */
+function onTop(w: W, x: CUnit, stats: readonly string[], but?: CUnit | null): boolean {
+  if (but && x === but) return false;
   const best = (u: CUnit) => Math.max(...stats.map((k) => stat(w, u, k)));
   const v = best(x);
-  return !w.f.units.some((u) => u.side === x.side && !u.ko && best(u) > v);
+  return !w.f.units.some((u) => u.side === x.side && !u.ko && u !== but && best(u) > v);
 }
 
 /**
@@ -168,6 +172,8 @@ type PickOpts = {
   seek: boolean;
   /** An action's own target rule: the Taunt rule applies. */
   main: boolean;
+  /** An ability's own pick: a foe holding a focus (Marked) takes a pick aimed at a random foe, and a phrase's fallback to one. */
+  mark?: boolean;
   /** The action's chosen targets, for `exclude`. */
   targets: readonly CUnit[];
   /** Reactions: the event's other unit and the unit it's about, for `exclude`. */
@@ -197,6 +203,17 @@ export function byRule(w: W, u: CUnit, r: S.TargetRuleT, o: PickOpts): CUnit[] {
   }
   let pick = r.pick ?? (r.side === "foes" ? "aggro" : "random");
   if (pick === "all") return pool;
+  // Marked steers an ability aimed at a random foe: a rule with no test but what its foe must lack (the Fizzle rule, "isn't
+  // Taunting"), which gives way to the Mark; and a phrase that found nobody and fell back to the whole side. A phrase that
+  // finds its foe ignores the Mark.
+  const randomly = pick === "aggro" || pick === "random";
+  let marked: CUnit | null = null;
+  if (o.mark && r.side === "foes" && !ko) {
+    const lacksOnly = !r.where || Object.keys(r.where).every((k) => k === "lacks");
+    const fellBack = !!r.where && r.ifNone === "any" && !sideOf(w, u, "foes").some((x) => passes(w, x, r.where!, u));
+    const nobody = !randomly && typeof r.by === "object" && "stacks" in r.by && !pool.some((x) => total(x, (r.by as { stacks: string }).stacks) > 0);
+    if ((randomly && (lacksOnly || fellBack)) || nobody) marked = focused(w, u, o.seek)?.[0] ?? null;
+  }
   // The Taunt rule: an action's first pick, without Seek, can only go to a Taunting foe, whatever the phrase asks for.
   if (r.side === "foes" && o.main && !o.seek) {
     const forced = visibleFoes(w, u).filter((x) => taunting(w, x));
@@ -206,7 +223,11 @@ export function byRule(w: W, u: CUnit, r: S.TargetRuleT, o: PickOpts): CUnit[] {
     }
   }
   const out: CUnit[] = [];
-  for (let n = r.count ?? 1; n > 0 && pool.length; n--) {
+  if (marked) {
+    out.push(marked);
+    pool = pool.filter((p) => p !== marked);
+  }
+  for (let n = (r.count ?? 1) - out.length; n > 0 && pool.length; n--) {
     let x: CUnit;
     if (pick === "aggro") x = weightedPick(w, u, pool, "target");
     else if (pick === "random") x = randomPick(w, u, pool, "target");
@@ -229,9 +250,16 @@ export function choose(w: W, u: CUnit, t: Target, seek: boolean, kind?: ActDef["
     const own = living(w, u.side);
     return own.length ? [randomPick(w, u, own, "target")] : [];
   }
-  if (t === "foe") return kind === "basic" ? basicPick(w, u, seek) : defaultFoe(w, u, seek);
-  return byRule(w, u, t, { seek, main: true, targets: [] });
+  // An ability aimed at a random foe goes to a Marked one, as a basic attack does.
+  if (t === "foe") return kind === "basic" ? basicPick(w, u, seek) : (focused(w, u, seek) ?? defaultFoe(w, u, seek));
+  return byRule(w, u, t, { seek, main: true, mark: kind === "ability", targets: [] });
 }
+
+/**
+ * Someone stays in the light: a side is never left with nobody its foes can pick. True when hiding `x` would leave no
+ * other living unit on its side in sight.
+ */
+export const lastInSight = (w: W, x: CUnit) => !w.f.units.some((u) => u !== x && u.side === x.side && !u.ko && !hidden(w, u));
 
 /**
  * A basic attack picks, in order, by an aim the attacker holds that comes first; a foe holding a
@@ -251,7 +279,7 @@ function basicPick(w: W, u: CUnit, seek: boolean): CUnit[] {
 }
 
 /** A foe holding a focus status that can be picked, by draw among several; a Taunting foe still takes the pick unless the attack has Seek. */
-function focused(w: W, u: CUnit, seek: boolean): CUnit[] | null {
+export function focused(w: W, u: CUnit, seek: boolean): CUnit[] | null {
   const seen = visibleFoes(w, u);
   let pool = seen.filter((x) => x.statuses.some((s) => def(w, s.id).focus));
   if (!pool.length) return null;
