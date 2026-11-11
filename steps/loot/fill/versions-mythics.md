@@ -376,17 +376,18 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - **Notes:**
   - **Seen** the first time: three icons on every foe from one cast.
   - **"The next curse landing bigger"** depends on what's left a cooldown later, and a status keeps its own drain. Five or six Burn laid once are down to about one by the time Malison comes round again. Shock is gone after three of its holder's actions. Bleed lasts until the party's hits close it. So a lone Hexer's second Plague finds one or two of its three, more with Cooldown on its wand. The link expects a stack or two of each, and that's about what there is. Under Least sure.
-  - **What holds them up** is the other half: a rider on a swing, Idol of the deepening, a second caster. The Hexer's own Chill and Enfeeble's Sunder drain slowly and stay.
+  - **What holds them up** is the other half: a rider on a swing, Festering idol, a second caster. The Hexer's own Chill and Enfeeble's Sunder drain slowly and stay.
   - **Twice-told tome** makes the second cast land on the first one's three.
+  - **The power step** as ruled for Malison grows the damage and the Bleed. On this version it leaves the Burn and the Shock as they are, where today's step grew every status. See Challenges.
 
 ### Focused curse
 - **Is:** Hexer, Malison B · version · changed
 - **Today:** Deepens the afflictions of the foe with the highest Attack alone, three times over, and adds it a few Bleed, three times as many; stacks scale from Attack.
 - **Card:** Curses the foe with the highest Attack alone: three times Malison's damage, scaling from Attack, a fifth more for each different affliction it holds (Burn, Chill, Shock, Bleed, Sunder), then three times the Bleed; stacks scale from Attack.
-- **Numbers:** The hit is three times `HIT.light` of Attack, with Malison's fifth for each different affliction: about 3,500 before Defense on a bare Hexer, and twice that on a foe that holds all five. The Bleed is three times the ability's count of a few. Short cooldown, normal wind-up, 450 MP, as Malison. The power step is Malison's.
+- **Numbers:** The hit is three times `HIT.light` of Attack, with Malison's fifth for each different affliction: about 3,500 before Defense on a bare Hexer, and twice that on a foe that holds all five. The Bleed is three times the ability's count of a few. Short cooldown, normal wind-up, 450 MP, as Malison. The power step is Malison's: two fifths more damage and Bleed.
 - **Code:** 2
 - **Serves:** Hunt ●● ⚙ every colour (half)
-- **Notes:** It has a target phrase of its own, so a Mark doesn't steer it, and without Seek a Taunting foe catches it first, as today. Enfeeble aims at the same foe, so the Hexer's own kit puts Sunder, Bleed and Chill under it: three of the five without help. At five it's the biggest single number a Hexer prints, on a short cooldown.
+- **Notes:** It has a target phrase of its own that always finds a foe, so a Mark doesn't steer it, and without Seek a Taunting foe catches it first, as today. Enfeeble aims at the same foe, so the Hexer's own kit puts Sunder, Bleed and Chill under it: three of the five without help. At five it's the biggest single number a Hexer prints, on a short cooldown.
 
 ### Hex of flames
 - **Is:** Hexer, Cold hex A · version · kept
@@ -426,16 +427,16 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - **Serves:** Pact ●●, Toll ●● ⚙ riposte (half), red stone (half)
 - **Notes:** *Resized:* a tenth to a fifth.
   - **Why.** A tenth of a fist's blow is about 45 HP, against blows of 500 and more on a unit with no Defense. It was a common's step of Lifesteal with a condition on it, and a trigger that small is on play's list of things never seen. Both its engines ask it for cover the player can watch build. At a fifth a Taunting dancer drinks back about a third of what gets through.
-  - **It isn't Lifesteal** as built: it's a heal the passive gives. The red stone's seat reads Lifesteal past full. See Links.
+  - **It isn't Lifesteal** as built: it's a heal the passive gives. The red stone's seat reads Lifesteal past full, and nothing a Monk can wear reads this heal as a Shield. See Challenges.
 
 ### Frost fist
 - **Is:** Monk, Burning fist A · version · kept
 - **Today:** Three quick hits on the foe with the most Chill; each deals physical damage that scales from Attack and adds a little Chill; stacks scale from Attack.
-- **Card:** Three quick hits on the foe with the most Chill; each deals physical damage that scales from Attack and adds a little Chill; stacks scale from Attack.
-- **Numbers:** Each hit is 0.11 of Attack. "A little" is three tenths of the ability's count of a few: under 2 a hit, about 5 a cast. Quick cooldown, quick wind-up, 200 MP.
+- **Card:** Three quick hits on the foe with the most Chill; each deals damage that scales from Attack and adds a few Chill; stacks scale from Attack.
+- **Numbers:** Each hit is 0.11 of Attack. A few Chill is three tenths of the ability's count of a few, the size today's "a little" was: under 2 a hit, about 5 a cast. Quick cooldown, quick wind-up, 200 MP.
 - **Code:** as today's Frost fist
 - **Serves:** Snap 1 ●●●
-- **Notes:** *Stays.* Five Chill on the coldest foe every cast, against a cap of twelve, is a second source the counter shows at once. "A little" isn't one of the scale's three stack words, and "physical" is a word from before there was one kind of hit: both are today's, kept, and under Challenges.
+- **Notes:** *Stays.* Reworded, as ruled for every share: "physical" goes, since there's one kind of hit, and "a little" becomes "a few", the scale's stack word, at the same size. Five Chill on the coldest foe every cast, against a cap of twelve, is a second source the counter shows at once. With no foe chilled its pick falls to a random foe, and follows a Mark.
 
 ### Ember palms
 - **Is:** Monk · mythic (weapon) · changed

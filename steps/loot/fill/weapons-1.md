@@ -262,12 +262,12 @@
 
 ### Mimic wand
 - **Is:** wand · rare
-- **Card:** Its basic attacks carry whatever statuses the basic attacks of the other ally with the highest Attack add to their target. They're added as this wand's own would be: on the same condition, with stacks from its own wearer's stats. What it borrows isn't borrowed on by anyone else.
+- **Card:** Its basic attacks carry whatever statuses the basic attacks of the other ally with the highest Attack add to their target. They're added as this wand's own would be: on the same condition, with stacks from its own wearer's stats, and never twice from one source. What it borrows isn't borrowed on by anyone else.
 - **Stats:** Cooldown medium · Attack speed medium · Attack +2 (4 of 4)
 - **Numbers:** none of its own: each borrowed status keeps its word (a few, several) and is read off the wand's wearer.
-- **Code:** 12 (a wand that carries another unit's basic-attack riders); a borrowed rider keeps its condition (see *Code support*)
+- **Code:** 12 (a wand that carries another unit's basic-attack riders), as round 1 rules it: each rider whole, with its condition
 - **Serves:** Bonfire 2 ●●, Snap 2 ●●, Storm 2 ●●, Cuts ● ⚙ lead's colour (key), every colour (half)
-- **Notes:** What it borrows is what "carrying what the swing carries" covers: the statuses that ally's basic attack lays on its target, from its passive, its gear, its seat or a storm, and no second target, boost or Refrain. A rider with a condition comes with it: Lacerate's Bleed on the wand's own crits, Zeal's Burn on a judged foe. Its own extra hits carry the borrowed riders as part of its swing; another unit that copies its swing (a Follower, a second Mimic wand) gets only what's the wearer's own (*Challenges*, 6). It does nothing beside an ally whose swing lays nothing, and the ally is picked by Attack. Attack +2, since the borrowed stacks are read off its wearer.
+- **Notes:** Written to round 1's ruling on carrying another unit's riders. What it borrows is what "carrying what the swing carries" covers: the statuses that ally's basic attack lays on its target, from its passive, its gear, its seat or a status it holds, and no second target, boost or Refrain. The wand takes each rider whole and meets any condition itself: Lacerate's Bleed on the wand's own crits, Zeal's Burn on a judged foe. A rider its own swing already has from the same source (a Thunderstorm on the whole party, Crown of embers) isn't added twice. Its own extra hits carry the borrowed riders as part of its swing; no third unit copies them from there. It does nothing beside an ally whose swing lays nothing, and the ally is picked by Attack. Attack +2, since the borrowed stacks are read off its wearer.
 
 ### Wildmagic wand
 - **Is:** wand · legendary

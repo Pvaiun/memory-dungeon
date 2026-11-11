@@ -316,9 +316,9 @@ How to read it:
 
 ### Spite totem
 - **Is:** totem · rare
-- **Card:** Each hit its holder takes adds a Spite, kept for the fight. Its Thorns rise by a fixed step with each Spite: twenty Spite add as much as Thorns, high.
+- **Card:** Its holder gathers Spite (a Spite for each hit it takes, kept for the fight, up to 20). Each Spite adds 15 to its Thorns.
 - **Stats:** Thorns medium · Aggro +2 (3 of 3)
-- **Numbers:** `COUNTER.spite.thorns` of Thorns for each Spite, today's step. Spite climbs to its own ceiling (`fill/shared.md`).
+- **Numbers:** 15 Thorns for each Spite (`COUNTER.spite.thorns`, today's step), so twenty Spite add as much as `SPECIAL.thorns.high`. Spite's own numbers are the bracket's (`fill/shared.md`).
 - **Code:** as today's Thornheart plate adds Spite; the Thorns are the totem's own now, a stat read off its holder's Spite.
 - **Serves:** Toll 2 ●●●
 - **Notes:** A swarm fills the count in its first few swings and a boss barely moves it. Both Aggro steps are there because every blow it draws is a Spite. With another card on the same unit that reads Spite, one count serves both.
@@ -348,18 +348,9 @@ How to read it:
 - **Numbers:** a third (33%) larger, under each Shield's own cap. Many as a fixed count (`FLAT_STACKS.many`). Might keeps `STATUS.might`.
 - **Code:** as today's Earthmother totem.
 - **Serves:** Landslide 3 ●●●, Pact ● ⚙ detonation (half)
-- **Notes:** Kept from today's but for the Might: a few became many, as the line says. A few Might was never seen to fire in play.
+- **Notes:** Kept from today's but for the Might: a few became many, as the line says. A few Might was never seen to fire in play. The count is fixed, as ruled.
 
 ## Relic
-
-### Pilgrim's badge
-- **Is:** relic · common
-- **Card:** Nothing beyond its stats.
-- **Stats:** HP +1 (1 of 1)
-- **Numbers:** none.
-- **Code:** none.
-- **Serves:** Blood Pact and the Toll's keepers: HP is their first stat.
-- **Notes:** A new name. The row gives this common MP regen and HP; it takes HP, and the other common carries the signature. Today's Blessed knot (Attack +1) goes.
 
 ### Shrine token
 - **Is:** relic · common
@@ -367,14 +358,23 @@ How to read it:
 - **Stats:** MP regen +1 (1 of 1)
 - **Numbers:** none.
 - **Code:** none.
-- **Serves:** Barrage: the font's mana.
-- **Notes:** Today's common, name and step kept.
+- **Serves:** Blood Pact, the Toll's keepers and Barrage's font: MP regen is every healer's first stat.
+- **Notes:** Today's common, name and step kept. It's the row's first common, so it takes the signature.
+
+### Litany beads
+- **Is:** relic · common
+- **Card:** Nothing beyond its stats.
+- **Stats:** Cast speed medium (1 of 1)
+- **Numbers:** none.
+- **Code:** none.
+- **Serves:** Barrage: the font's casts land sooner.
+- **Notes:** A new name. The row gives this common MP regen and Cast speed; MP regen is taken, so it carries Cast speed. Round 1's ruling on commons turned the pair round: the HP common I had is gone, and today's Blessed knot (Attack +1) goes too.
 
 ### Holy water
 - **Is:** relic · uncommon
 - **Card:** Each time one of its holder's abilities heals an ally, it also lifts one debuff from that ally.
 - **Stats:** MP regen +1 · Attack +1 (2 of 2)
-- **Numbers:** one debuff for each ally healed, picked as today.
+- **Numbers:** one debuff for each ally healed, picked as today. An ability that only lays Regen heals nobody at once, so it lifts nothing.
 - **Code:** as today's Holy water.
 - **Serves:** Toll ●, Pact ●, foes do less
 - **Notes:** Kept from today's: card and steps, in the signature's order.
