@@ -680,13 +680,13 @@ Every ability and passive keeps its power step. Of the 128 versions, nine change
 - **Recharge** · Stormcaller, Chain lightning B · version (kept) · The chain gives back MP for each foe it hits. → Barrage 2 ●●●, Storm ●● ⚙ resonance (half)
 - **Overcharge** · Stormcaller, Static charge A · version (kept) · Its next three abilities cost no MP. → Barrage 2 ●●● ⚙ crescendo (half)
 - **Deep calm** · Frostweaver, Stillness A · version (kept) · Clarity for the ally with the least MP, and its own next ability is free. → Barrage 2 ●●● ⚙ crescendo (half), mana as armour (half)
-- **Reprise** · Bard, Encore A · version (kept) · The ally with the highest Attack has its ability with the longest cooldown ready at once. → Barrage 2 ●●●, Landslide 2 ●●
+- **Reprise** · Bard, Encore A · version (kept) · The ally with the highest Attack has its ability with the longest cooldown left ready at once. → Barrage 2 ●●●, Landslide 2 ●●
 - **Smoke screen** · Assassin, Vanish A · version (kept) · Hides the ally with the lowest share of HP that isn't Taunting. → Pact ●●, Toll ●● ⚙ two in the dark (key), brink (half)
 - **Shared rites** · Cleric, Last rites A · version (kept) · While any ally is below 30% of its HP, the Cleric's cooldowns are halved. → Pact 2 ●●● ⚙ brink (half)
 - **Lament** · Bard, War ballad A · version (kept) · Twice the Might, for every ally below half its HP. → Pact 2 ●●● ⚙ brink (half)
 - **Over the fallen** · Valkyrie, Choosing B · version (kept) · Heals for double or raises, and the Valkyrie Taunts and is Guarded. → Toll 2 ●●●, Pact ●● ⚙ riposte (half), brink (half)
 - **Stillness of mind** · Monk, Flow B · version (kept) · Taunts, and its Evasion rises for as long as the Taunt. → Toll 2 ●●● ⚙ riposte (half)
-- **Drinking palm** · Monk, Iron palm B · version (kept) · Its hits on a Sundered foe heal it. → Pact ●●, Toll ●● ⚙ riposte (half), red stone (half)
+- **Drinking palm** · Monk, Iron palm B · version (kept) · Its hits on a Sundered foe heal it. → Pact ●●, Toll ●● ⚙ riposte (half)
 - **Watch the anchor** · Hoplite, Aspis A · version (kept) · Aegis on the ally with the most Aggro that holds none. → Toll 2 ●●● ⚙ mirror (half)
 - **Blood for mana** · Vampire, Blood gift A · version (kept) · Spends its HP to give the ally with the least MP as much MP, and Clarity. → Barrage 2 ●●●, Pact ●● ⚙ mana as armour (half)
 - **Hex of flames** · Hexer, Cold hex A · version (kept) · Its basic attacks add a few Burn in place of the Chill. → Bonfire 1 ●●● ⚙ lead's colour (half)
@@ -711,11 +711,11 @@ One a class, as today. Eleven stay as they are; five change. Each line says whic
 
 - **Horn of the keep** · Knight · mythic (offhand) · Every hit the Knight takes gives the ally with the least MP a share of the hit as MP. When its Taunt runs out while another ally is in a wind-up, it Taunts again. Kept. → Barrage 3 ●●●, Toll ●● ⚙ mana as armour (half)
 - **Halo of the saint** · Cleric · mythic (amulet) · Each heal and Regen the Cleric casts also lands on every other ally below half its HP. Changed: the old one waited for a fall. → Pact 3 ●●● ⚙ brink (half)
-- **Huntmaster's quiver** · Ranger · mythic (armor) · All the Ranger's abilities aim past any guard at the foe with the lowest HP. When a foe one of them hit falls, the cooldowns left on its abilities are halved. Kept. → Hunt 3 ●●● ⚙ reaping (half)
+- **Huntmaster's quiver** · Ranger · mythic (armor) · All the Ranger's abilities aim past any guard at the foe with the lowest HP. When a foe one of them hit falls, its abilities are ready again. Kept, at a size that's seen. → Hunt 3 ●●● ⚙ reaping (half)
 - **Heartwood mail** · Bramble knight · mythic (armor) · Whenever a hit lands on any ally, the Bramble knight's Thorns strike the attacker too. Kept. → Toll 3 ●●●, Cuts ●● ⚙ red rain (half)
 - **The last wall** · Hoplite · mythic (offhand) · When an Aegis the Hoplite gave blocks a blow, the attacker takes the blocked damage, and Aspis is ready again. Kept. → Toll 3 ●●●, Landslide ●● ⚙ mirror (key)
 - **Writ of judgement** · Paladin · mythic (offhand) · Whenever the Paladin's Condemn Marks a foe, a heavy blow falls on it at once (from Attack), adding several Burn. A Mark from its gear or its seat doesn't call it. Changed: the old one waited for a Stun or a Silence. → Hunt 3 ●●●, Bonfire ●●, Landslide ●●
-- **Stormspear** · Valkyrie · mythic (weapon) · A one-handed spear. Every fourth hit the Valkyrie lands calls a blow from above on the foe with the most Shock, rising with each stack it holds. The Shock stays. Changed: its Shock on every swing is an uncommon's effect now. → Storm 3 ●●●, Hunt ● ⚙ held charge (key)
+- **Stormspear** · Valkyrie · mythic (weapon) · A one-handed spear. Every fourth hit the Valkyrie lands calls a blow from above on the foe with the most Shock, past any Taunt, rising with each stack it holds. The Shock stays. Changed: its Shock on every swing is an uncommon's effect now. → Storm 3 ●●●, Hunt ● ⚙ held charge (key)
 - **Metronome** · Bard · mythic (offhand) · Counts every hit the party lands. At a set count, War ballad, Allegro and Encore are ready at once, and the count starts again. Kept. → Cuts 3 ●●●, Barrage ●●, Storm ● ⚙ spell on the swing (key)
 - **The witch-blade** · Hexer · mythic (weapon) · After each ability the Hexer casts, its next three basic attacks hit every foe that holds a debuff. Kept. → Snap 3 ●●●, Bonfire ●●, Storm ●● ⚙ every colour (half), red rain (half)
 - **Ember palms** · Monk · mythic (weapon) · Each hit the Monk lands deals extra damage for each Burn on its target. The Burn stays. Changed: its Burn on every hit is an uncommon's effect now. → Bonfire 3 ●●●, Cuts ●●
@@ -914,7 +914,7 @@ Every class has a first step and a second rung to wear on every road builds.md p
 | firecracker | Winter's chain (rune sword, rare); Frostwalker's furs (leather, rare); The long winter (formation, legendary: 9% by II); Splinters (version: Frostweaver, Shatterpoint B); Glacier's heart (mythic: Frostweaver) | 11%, 22%, 31% | 3 parts, 1 of them uncommons or common formations |
 | brink | Bloodletter (sword, rare); Flagellant's vestments (robes, rare); Heart of the saint (relic, legendary); Blood vial (vial, rare); Bloodlust draught (vial, rare); Halved heart (amulet, rare); Blood oath (formation, rare: 36% by II); The chalice (mythic: Vampire) | 26%, 48%, 62% | 26 parts, 10 of them uncommons or common formations |
 | two in the dark | Shadow cloak (cloak, rare); Shroud charm (amulet, rare); Decoy (formation, rare: 36% by II); Smoke screen (version: Assassin, Vanish A) | 14%, 27%, 37% | 9 parts, 3 of them uncommons or common formations |
-| red stone | Red stone mail (mail, rare); Phylactery (relic, rare); Blood oath (formation, rare: 36% by II) | 13%, 26%, 35% | 3 parts, 1 of them uncommons or common formations |
+| red stone | Red stone mail (mail, rare); Phylactery (relic, rare); Blood oath (formation, rare: 36% by II) | 13%, 26%, 35% | 2 parts, 1 of them uncommons or common formations |
 | borrowed gift | Twin-knot (amulet, legendary); Twins (formation, legendary: 9% by II) | 8%, 17%, 25% | 0 parts, 0 of them uncommons or common formations |
 | carrier | Carrier's coat (leather, legendary) | 17%, 33%, 46% | 2 parts, 0 of them uncommons or common formations |
 <!-- engines:end -->

@@ -24,6 +24,16 @@ Work in progress: what the agents raised while applying round 1, and what the fr
 - **Overkill axe's left-over** isn't turned by a Taunt (the ruling above).
 - **Lamprey claws at a tenth, Victor's spear's Aggro, the four spears' new steps, Forked knuckles counting Arc's second foe, Reaver's axe's Might from Attack, the dagger's commons:** as written.
 
+## Versions and mythics
+
+- **Malison's power step grows the damage and every status the cast adds** by two fifths: the Bleed, and on Plague its Burn and Shock too.
+- **Stormspear's blow has Seek.** Gale spear charges the back row past a Taunting front, and the blow that reads that charge shouldn't land on the guard. The spine's line changes.
+- **Frost fist's "a few"** is the scale's few, not today's smaller size: it's Cold Snap's first step from a kit, and it has to be seen.
+- **Reprise keeps today's "the longest cooldown left".** The spine's line gains the word. Reveille means the slowest ability, so the two differ by more than their moment.
+- **Drinking palm loses its red stone tag:** nothing a Monk can wear or sit in reads its heal as a Shield.
+- **Huntmaster's quiver:** the spine's line now reads "ready again", as the card does.
+- **Writ of judgement answering Condemn in any trained version, Stormspear with no Shock on the field, Splinters' sums:** as written.
+
 ## Offhands, the other seven kinds
 
 - **Tempest cloak and Dragon's tooth** as hits that land a second time: as written. Neither carries the swing.

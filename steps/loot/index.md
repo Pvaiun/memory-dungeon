@@ -15,7 +15,7 @@ It's what every fill agent reads before writing: the shares, every item in one l
 | Offhands, the other seven kinds | `fill/offhands-2.md` | 63 pieces: 14 commons, 16 uncommons, 21 rares, 12 legendaries |
 | Amulets | `fill/amulets.md` | 37 pieces: 10 commons, 7 uncommons, 10 rares, 10 legendaries |
 | Formations | `fill/formations.md` | 35 formations: 13 common, 12 rare, 10 legendary |
-| Versions and mythics | `fill/versions-mythics.md` | the two kit changes (Marked, Malison); 9 versions and 5 mythics that change, written new; 33 versions and 11 mythics that stay, each checked against today's card |
+| Versions and mythics | `fill/versions-mythics.md` | the two kit changes (Marked, Malison); 9 versions and 6 mythics that change, written new; 33 versions and 10 mythics that stay, each checked against today's card |
 
 A version or mythic the spine doesn't list stays as it is today, and isn't part of the fill.
 
@@ -523,7 +523,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 
 ## Versions and mythics
 
-*Engines it's part of:* detonation, frozen gate, mirror, goad, held charge, reaping, judge's drum, spell on the swing, red rain, riposte, every colour, lead's colour, emptied quiver, blood mage, resonance, crescendo, mana as armour, firecracker, brink, two in the dark, red stone.
+*Engines it's part of:* detonation, frozen gate, mirror, goad, held charge, reaping, judge's drum, spell on the swing, red rain, riposte, every colour, lead's colour, emptied quiver, blood mage, resonance, crescendo, mana as armour, firecracker, brink, two in the dark.
 
 ### The two kit changes
 
@@ -553,7 +553,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Recharge** · Stormcaller, Chain lightning B · The chain gives back MP for each foe it hits.
 - **Overcharge** · Stormcaller, Static charge A · Its next three abilities cost no MP.
 - **Deep calm** · Frostweaver, Stillness A · Clarity for the ally with the least MP, and its own next ability is free.
-- **Reprise** · Bard, Encore A · The ally with the highest Attack has its ability with the longest cooldown ready at once.
+- **Reprise** · Bard, Encore A · The ally with the highest Attack has its ability with the longest cooldown left ready at once.
 - **Smoke screen** · Assassin, Vanish A · Hides the ally with the lowest share of HP that isn't Taunting.
 - **Shared rites** · Cleric, Last rites A · While any ally is below 30% of its HP, the Cleric's cooldowns are halved.
 - **Lament** · Bard, War ballad A · Twice the Might, for every ally below half its HP.
@@ -581,15 +581,15 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 ### Mythics that change
 
 - **Halo of the saint** · Cleric (amulet) · Each heal and Regen the Cleric casts also lands on every other ally below half its HP. Changed: the old one waited for a fall.
+- **Huntmaster's quiver** · Ranger (armor) · All the Ranger's abilities aim past any guard at the foe with the lowest HP. When a foe one of them hit falls, its abilities are ready again. Kept, at a size that's seen.
 - **Writ of judgement** · Paladin (offhand) · Whenever the Paladin's Condemn Marks a foe, a heavy blow falls on it at once (from Attack), adding several Burn. A Mark from its gear or its seat doesn't call it. Changed: the old one waited for a Stun or a Silence.
-- **Stormspear** · Valkyrie (weapon) · A one-handed spear. Every fourth hit the Valkyrie lands calls a blow from above on the foe with the most Shock, rising with each stack it holds. The Shock stays. Changed: its Shock on every swing is an uncommon's effect now.
+- **Stormspear** · Valkyrie (weapon) · A one-handed spear. Every fourth hit the Valkyrie lands calls a blow from above on the foe with the most Shock, past any Taunt, rising with each stack it holds. The Shock stays. Changed: its Shock on every swing is an uncommon's effect now.
 - **Ember palms** · Monk (weapon) · Each hit the Monk lands deals extra damage for each Burn on its target. The Burn stays. Changed: its Burn on every hit is an uncommon's effect now.
 - **The chalice** · Vampire (offhand) · Whenever another ally would pay MP for an ability, the Vampire pays the same share in HP instead, while that leaves it above a tenth of its HP. Changed: the old one waited for a fall.
 
 ### Mythics that stay
 
 - **Horn of the keep** · Knight (offhand) · Every hit the Knight takes gives the ally with the least MP a share of the hit as MP. When its Taunt runs out while another ally is in a wind-up, it Taunts again. Kept.
-- **Huntmaster's quiver** · Ranger (armor) · All the Ranger's abilities aim past any guard at the foe with the lowest HP. When a foe one of them hit falls, the cooldowns left on its abilities are halved. Kept.
 - **Heartwood mail** · Bramble knight (armor) · Whenever a hit lands on any ally, the Bramble knight's Thorns strike the attacker too. Kept.
 - **The last wall** · Hoplite (offhand) · When an Aegis the Hoplite gave blocks a blow, the attacker takes the blocked damage, and Aspis is ready again. Kept.
 - **Metronome** · Bard (offhand) · Counts every hit the party lands. At a set count, War ballad, Allegro and Encore are ready at once, and the count starts again. Kept.
@@ -732,7 +732,7 @@ What the two sides make and read, and what the link is sized to do, is under *Ea
 ### red stone
 
 - *Keystone:* Red stone mail (armor: mail, rare); Phylactery (offhands-1: relic, rare); Blood oath (formations: formation, rare)
-- *Common half:* Crimson dregs (offhands-2: vial, uncommon); Heartsblood (offhands-2: vial, legendary); Drinking palm (versions-mythics: version: Monk, Iron palm B)
+- *Common half:* Crimson dregs (offhands-2: vial, uncommon); Heartsblood (offhands-2: vial, legendary)
 
 ### borrowed gift
 
