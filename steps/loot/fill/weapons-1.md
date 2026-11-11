@@ -372,7 +372,7 @@
 
 ### Stormbrand
 - **Is:** sword · legendary
-- **Card:** Each hit its wearer lands deals extra damage for each Shock the foes hold (from Attack). The Shock stays.
+- **Card:** Each hit its wearer lands deals extra damage for each Shock the foes hold: half a percent of its wearer's Attack a stack. The Shock stays.
 - **Stats:** Attack +2 · Crit chance +2 (4 of 4)
 - **Numbers:** 0.5% of the wearer's Attack for each stack on any foe: 20 a stack at Attack 4, 30 at Attack 6. One foe at Shock's cap (`STATUS.shock.cap`) adds 800 to 1,200 to every hit, which is the sword's own swing again or more. My value.
 - **Code:** 18 (the field's whole Shock)
@@ -587,7 +587,7 @@ Round 2 ruled on the first five, and they're applied above: Overkill axe's left-
 
 - **Bloodscent knife and Quick draw.** Ruled: the lift stops at four in five, so one arrow in five fails whatever the wearer brings, and each arrow closes a third of the wound. Sound now.
 - **Ambush knife and Quick draw.** One arrow in five fails, and the foes act. Sound.
-- **Bellows wraps.** Ruled in round 2: a twentieth a hit, not a tenth. Each pulse of Burn takes 15%, so it now takes more than three hits a pulse on one foe, thirteen in eight ticks, to out-run the drain. A Monk with Hummingbird charm, Haste and a second strike lands about seven. At a tenth that Monk's fire climbed with nobody feeding it, and Burn has no cap. Sound alone. With Everflame lantern in the party as well, that Monk's fire drains by about 1% a pulse in place of 15%: it nearly holds itself and doesn't grow, so it's a size and not a loop, by a narrow sum.
+- **Bellows wraps.** Ruled in round 2: a twentieth a hit, not a tenth. Each pulse of Burn takes 15%, so it now takes more than three hits a pulse on one foe, thirteen in eight ticks, to out-run the drain. A Monk with Hummingbird charm, Haste and a second strike lands about seven. At a tenth that Monk's fire climbed with nobody feeding it, and Burn has no cap. Sound alone. With Everflame lantern in the party as well, the line is about eight hits in eight ticks, and that Monk is at it once Burning fist's hits are counted: the fire stops draining. More speed takes it over: The forge's Heat or Tireless bell, and with both the swings alone are past it. Then the fire grows by 1% to 3% a pulse with nobody feeding it, and Burn has no cap. *Brake:* it needs one foe taking every hit, so a lone boss; Heat takes 40 ticks to fill; the fist's share stops with the Monk's mana; and a fire that size ends the fight. It's left as the Bonfire's far end, and Everflame lantern is in the director's sample for it.
 - **Quietus with Overture coat or Second dawn.** Ruled: a kill is a kill. A kill by the opening strike lands the opening strike again on every foe, once for each fall whoever calls for it. It stops on a round that kills nobody, or when the foes run out; against a pack already sunk it clears the field in one tick.
 - **Provoking blade and Tempest cloak on a Valkyrie** (the spine's). The called foe has to pick her, she has to dodge, and her answering swing has to land on the same foe. Against a pack the third rarely happens. Against one boss with a Taunt on her it's her Evasion each turn, and each failure is a real blow taken.
 - **Answering thunder.** It turns over on the foes' own clock and calls nothing, so it isn't a loop. The goad feeds it: Goading totem on the same Stormcaller, or Provoking blade beside it, turns each call into a strike. The brake is the goad's own pace.

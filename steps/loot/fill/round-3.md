@@ -85,3 +85,18 @@ Ruled on `fill/fresh-read-items.md` (one reader, every entry, 50 findings) and o
 ## The spine
 
 Lines changed by this round: Venom vial (what it does); Still hand, Tempest cloak, Dragon's tooth, Twinfall, Answering thunder, Everflame lantern, Burning heart, Bell of the hour, The king's head, Reveille, Frozen tome, Curse-book, Crimson dregs, Headsman's axe, Hunter's buckler, Thorn hedge, Open season, Huntmaster's quiver, Horn of the keep, Night's edge and Watch the anchor (words); the three renames.
+
+## The engines
+
+The engine reader worked each of the twenty-eight from the fill's numbers: 25 meet, 3 don't. Nine of the 25 meet in one kind of fight or with one more part, and its file says which.
+
+- **The riposte doesn't meet from its keystone alone.** The class that dodges (the Monk) builds no cover by hitting, and the class that builds cover by hitting (the Valkyrie) has no Evasion: in Duelist's leathers she dodges one blow in five. Hooded cloak, a Shield on every dodge, is what banks the cover. The spine's link says so now. `builds.md`'s "enough to see it: the dodge's piece on a Valkyrie" isn't true as built, and goes to the director.
+- **The blood mage doesn't meet at a common's Lifesteal,** which the spine's link says is enough. At "the same share" a wide spell loses life on four foes at a tenth of Lifesteal, and gains on three at a fifth. The price's size is the director's (round 1 sent it), so nothing is changed: it's the report's first decision, with half the share as the other version.
+- **The crescendo's price is small at an ordinary pace:** about one cast's worth in a fight, where the link says it empties a pool. Left as written for the director, with two fifths more a stack as the other version.
+- **The shatter bell rings the wrong ability for two of the four classes `builds.md` names.** "Slowest" is Condemn for a Paladin, by two ticks, and the Aegis for a Hoplite; for nine more classes it's a buff, a heal or a revive. `builds.md` says "slowest" and names Smite and the shove, so the document disagrees with itself. Left as written for the director, with "its slowest ability that deals damage" as the other version.
+- **The mirror:** what's sent back is seen, but a Guarded wall still takes most of a boss's great blow. The wall's own number is small only under an Aegis or a Shield. Nothing changes; the report says so.
+- **Stormbrand's card gives its size,** as Thunderhead maul's and Lightning-glass's do.
+- **Every start-of-fight effect's card opens "when each fight starts"** (Opening shot), so a player can tell what Overture coat and Second dawn make happen again.
+- **Everflame lantern with Bellows wraps is over its line once the Monk is faster** (The forge's Heat, Tireless bell). It's left: it takes five parts and a lone boss, it grows by 1% to 3% a pulse, and a fire that size ends the fight. Both shares' *Loops* and the spine's list say so, and the lantern is in the director's sample.
+- **Three listed loops are corrected:** Hunter's mark with Writ of judgement is closed by Writ's card; Floe charm with Meltwater orb on a Frostweaver rings Stillness, not Blizzard; The covenant with Bloodstone reliquary joins the casts whose price is gone.
+- **The covenant's sum in the formations share was taken before Defense,** and is corrected: a Fireball is even on four foes and a Chain lightning never quite pays.

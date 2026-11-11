@@ -39,12 +39,12 @@ How the cards here are worded, so the whole share reads one way:
 
 ### Opening shot
 - **Is:** bow · uncommon
-- **Card:** Its first basic attack of each fight comes at once and always crits.
+- **Card:** When each fight starts, its wearer's first basic attack comes at once and always crits.
 - **Stats:** Crit damage medium · Attack +1 (2 of 2)
 - **Numbers:** no amount of its own. "At once": its first basic attack is ready as the fight starts. The crit is a crit's own size: half again, plus Crit damage.
 - **Code:** as today's Drawn steel.
 - **Serves:** Hunt 1 ●●, Barrage ● ⚙ opening again (half)
-- **Notes:** Today's Drawn steel's card, on a bow. Both steps make the one arrow bigger: about 2,000 on the first tick for a Ranger, nearly twice its usual arrow. It's a start-of-fight effect, so the opening again's pieces make it happen again: the next arrow comes at once and always crits, one arrow each time.
+- **Notes:** Today's Drawn steel's card, on a bow. Both steps make the one arrow bigger: about 2,000 on the first tick for a Ranger, nearly twice its usual arrow. It's a start-of-fight effect, so the opening again's pieces make it happen again: the next arrow comes at once and always crits, one arrow each time. The card opens "when each fight starts" (round 3), as every start-of-fight effect's does, so a player can tell what Overture coat and Second dawn make happen again.
 
 ### Frostbite bow
 - **Is:** bow · uncommon

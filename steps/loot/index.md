@@ -117,7 +117,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 
 - *Commons (2):* one leans to Crit damage and Crit chance, one to Crit damage and Attack speed.
 - **Broadhead bow** · uncommon · Its crits add many Bleed.
-- **Opening shot** · uncommon · Its first basic attack of each fight comes at once and always crits.
+- **Opening shot** · uncommon · When each fight starts, its first basic attack comes at once and always crits.
 - **Frostbite bow** · uncommon · Its basic attacks add several Chill.
 - **Huntsman's bow** · rare · While no foe is Marked, its basic attacks Mark their target. Its hits on a Marked foe deal a third more.
 - **Volley bow** · rare · Every third basic attack is a volley: it also looses an arrow at every other foe, carrying what the swing carries.
