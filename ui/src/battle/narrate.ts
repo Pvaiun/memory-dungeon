@@ -24,11 +24,11 @@ export type Lookup = { unit: (id: string) => CUnit | undefined; name: (id: strin
 const MAX_LINES = 4;
 
 /**
- * Counts, which a unit gains a stack of on every hit or every few ticks (the seven counters, the Hurricane's wind,
- * Flow state's hits). Said once, when the first stack lands; after that only the number under the icon moves, or the window
- * would fill with them.
+ * Counts, which a unit gains a stack of on every hit or every few ticks: the six counters, and a piece's own count (every
+ * third basic attack, Flow state's hits). Said once, when the first stack lands; after that only the number under the icon
+ * moves, or the window would fill with them. A count is a buff that stacks and that nothing removes.
  */
-export const COUNTS = new Set(["cuts", "heat", "spite", "tempo", "surge", "fervor", "charge", "the_hurricane_count", "flow_state_count"]);
+export const isCount = (d: { label: string; stacking: string; unremovable?: boolean; absorb?: boolean }) => d.label === "buff" && d.stacking === "intensity" && !!d.unremovable && !d.absorb;
 
 export class Narrator {
   private open: Beat | null = null;
@@ -266,7 +266,7 @@ export class Narrator {
     const evs = res ? [res, ev] : [ev];
     // A count builds quietly: its first stack is a line, the rest only its number on the field.
     const key = `${unit}:${d.id}`;
-    if (COUNTS.has(d.id)) {
+    if (isCount(d)) {
       if (this.counting.has(key)) return this.silent(ev);
       this.counting.add(key);
     }

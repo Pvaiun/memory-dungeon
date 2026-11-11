@@ -251,8 +251,9 @@ export function choose(w: W, u: CUnit, t: Target, seek: boolean, kind?: ActDef["
     return own.length ? [randomPick(w, u, own, "target")] : [];
   }
   // An ability aimed at a random foe goes to a Marked one, as a basic attack does.
-  if (t === "foe") return kind === "basic" ? basicPick(w, u, seek) : (focused(w, u, seek) ?? defaultFoe(w, u, seek));
-  return byRule(w, u, t, { seek, main: true, mark: kind === "ability", targets: [] });
+  const marks = kind === "ability" && w.c.pack.ruleset.focusAbilities !== false;
+  if (t === "foe") return kind === "basic" ? basicPick(w, u, seek) : ((marks ? focused(w, u, seek) : null) ?? defaultFoe(w, u, seek));
+  return byRule(w, u, t, { seek, main: true, mark: marks, targets: [] });
 }
 
 /**

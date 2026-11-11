@@ -216,8 +216,8 @@ export const STATUS_STYLE: Record<string, { color: string; light?: string }> = {
   doom: { color: "#ff4a6a", light: "#ffd0d8" }, bulwark: { color: "#c9d3e0" }, bulwark_broken: { color: "#ff7b6b" }, ice_crust: { color: "#8ae6ff", light: "#ffffff" },
   bloodlust_on: { color: "#ff4a6a", light: "#ffb0b8" }, bedrock_on: { color: "#dcae6e", light: "#f8e0b0" }, generic: { color: "#c8c8d8" },
   // Marked and the counters, in their stand-in icons' colours.
-  marked: { color: "#f05a4a" }, cuts: { color: "#c8d2e0" }, heat: { color: "#f05a4a" }, spite: { color: "#e8284e" }, tempo: { color: "#6ea0f0" },
-  surge: { color: "#c46ef0" }, fervor: { color: "#fad040" }, charge: { color: "#8ae6ff" },
+  marked: { color: "#f05a4a" }, cuts: { color: "#c8d2e0" }, heat: { color: "#f05a4a" }, spite: { color: "#e8284e" }, wrath: { color: "#fad040" },
+  crescendo: { color: "#c46ef0" }, cascade: { color: "#8ae6ff" },
 };
 /** A status's colour: its own, else a buff's cool or a debuff's warm. */
 export function statusStyle(id: string): { color: string; light?: string } {

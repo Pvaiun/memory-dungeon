@@ -84,6 +84,7 @@ export const Ruleset = z.strictObject({
     .optional()
     .describe("How strongly a party unit draws foes' picks, in place of `draw`'s curve, which flattens at a few times an ordinary unit's. Aggro held between `floor` and `cap`; draw = centre × 2^n × (1 + f), with n whole doublings from `centre` and f the share of the next one. An Aggro-stacked unit can take most of the picks on its own. Absent: party units use `draw` too."),
   stagger: Ticks.optional().describe("Copies of the same enemy start a fight this many ticks apart, one after another, so identical foes don't act in lockstep. Absent or 0: they start together."),
+  focusAbilities: z.boolean().optional().describe("Default true: a focus (Marked) also takes the first pick of an ability aimed at a random foe. false: only basic attacks follow it (a switch for measuring the rule)."),
   lostCast: z
     .enum(["retry", "cooldown"])
     .optional()

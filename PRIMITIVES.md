@@ -158,7 +158,7 @@ A scale's `count`:
 | `drop` | Intensity only: how far the total drops on each trigger. |
 | `crit` | Turns crits on for its pulses, a rare exception. fromSource: statuses that know their source only, the source's crit stats and dice. |
 | `reactions` |  |
-| `focus` | Marked: the holder's foes' basic attacks pick a holder while one can be picked, by draw among several, under the Taunt rule (Seek follows it past a Taunting foe). Abilities keep their own targeting. |
+| `focus` | Marked: the holder's foes' basic attacks pick a holder while one can be picked, by draw among several, under the Taunt rule (Seek follows it past a Taunting foe). So do their abilities aimed at a random foe: default targeting, a rule with no test but what its foe must lack, and a phrase that finds nobody and falls back to a random foe. An ability whose phrase finds its foe keeps its own targeting. |
 | `single` | Marked: each applier keeps one copy: applying it to a unit ends the copy that applier gave anywhere else. Statuses that know their source only. |
 | `aim` | The holder's basic attacks pick by this rule. When it finds nobody, the next in line picks: a Marked foe, then the default. |
 | `mods` | Changes to the holder's own abilities, read each time one is used. An Intensity status's changes don't grow with its stacks. |
@@ -204,6 +204,7 @@ A reaction's `if` is a condition (below), or a test of one of its event's units:
 | --- | --- |
 | `unit` | other: the event's other unit (as `to: other`); owner: the unit the event is about (as `to: owner`). |
 | `where` | What it must pass. |
+| `absent` | The test also holds when the event has no such unit (a heal whose healer isn't known). |
 
 ## Ability changes (a status's `mods`)
 

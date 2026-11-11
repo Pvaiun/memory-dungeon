@@ -22,7 +22,7 @@ import { actionIconEl, actionIconOf, drawDigits, enemyThumb, OUTLINE, statusEl }
 import { classHead, classSheet, enemySheet, portraitEl } from "../sheet.js";
 import type { Member } from "../../../src/engine/combat/rules.js";
 import { Driver, type Ev } from "./driver.js";
-import { COUNTS, Narrator, type Beat, type Line, type Tone } from "./narrate.js";
+import { isCount, Narrator, type Beat, type Line, type Tone } from "./narrate.js";
 import { Scene, shieldOf, themeOf, W, H } from "./scene.js";
 import { setMusic, setSound, sfx } from "./audio.js";
 import { go } from "../screens.js";
@@ -327,7 +327,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         if (!shownAsIcon(d.id)) break;
         const unit = String(ev.unit);
         // A count's later stacks move only the number under its icon.
-        if (COUNTS.has(d.id) && scene.showsIcon(unit, d.id)) break;
+        if (isCount(d) && scene.showsIcon(unit, d.id)) break;
         const style = statusStyle(d.id);
         const resist = resistedNow.delete(`${unit}:${d.id}:${String(at)}`);
         scene.number(unit, d.name.toUpperCase(), { color: style.color, icon: d.id, ...(resist ? { sub: "RESISTED", subColor: "#8e99b8" } : {}) });

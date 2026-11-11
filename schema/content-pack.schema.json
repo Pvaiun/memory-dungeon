@@ -443,6 +443,10 @@
           "type": "number",
           "minimum": 0
         },
+        "focusAbilities": {
+          "description": "Default true: a focus (Marked) also takes the first pick of an ability aimed at a random foe. false: only basic attacks follow it (a switch for measuring the rule).",
+          "type": "boolean"
+        },
         "lostCast": {
           "description": "An action interrupted in its wind-up, or whose targets are gone when it resolves. retry (the default): no MP, no cooldown, so it can start again at once. cooldown: no MP, but an interrupted action goes on cooldown, as a cast that fizzles for MP does, and one that found no target costs the unit its recovery.",
           "type": "string",
@@ -1623,6 +1627,11 @@
                             "where": {
                               "description": "What it must pass.",
                               "$ref": "#/$defs/UnitCond"
+                            },
+                            "absent": {
+                              "description": "The test also holds when the event has no such unit (a heal whose healer isn't known).",
+                              "type": "boolean",
+                              "const": true
                             }
                           },
                           "required": [
@@ -1656,6 +1665,11 @@
                               "where": {
                                 "description": "What it must pass.",
                                 "$ref": "#/$defs/UnitCond"
+                              },
+                              "absent": {
+                                "description": "The test also holds when the event has no such unit (a heal whose healer isn't known).",
+                                "type": "boolean",
+                                "const": true
                               }
                             },
                             "required": [
@@ -1692,7 +1706,7 @@
             }
           },
           "focus": {
-            "description": "Marked: the holder's foes' basic attacks pick a holder while one can be picked, by draw among several, under the Taunt rule (Seek follows it past a Taunting foe). Abilities keep their own targeting.",
+            "description": "Marked: the holder's foes' basic attacks pick a holder while one can be picked, by draw among several, under the Taunt rule (Seek follows it past a Taunting foe). So do their abilities aimed at a random foe: default targeting, a rule with no test but what its foe must lack, and a phrase that finds nobody and falls back to a random foe. An ability whose phrase finds its foe keeps its own targeting.",
             "type": "boolean",
             "const": true
           },
