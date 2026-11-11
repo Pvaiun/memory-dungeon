@@ -17,4 +17,5 @@ The director, Nov 10, on reading two leads' spines.
 - **Hearth stays as it is, and becomes a common.**
 - **Alike cards.** An upgrade never copies a piece. Two pieces one unit could wear together never read the same. A piece and a formation seat may share a rule.
   - **"The same" means the same sentence** (agreed after the second fresh read). An engine's keystone in a second place isn't a copy, and neither is a far end grown from its keystone. A plain status on a swing may be shared by a kit and a piece.
+- **A chain of shatters fizzles out, and the player learns no rule** (Nov 11). In a chain reaction, a foe that has already shattered resists the Chill passed to it, more each time it shatters, "in whatever numbers make it so that it doesn't chain infinitely", and "it never goes to full immunity". The player "doesn't need to see it": they see the chain fizzle out.
 - **Not ruled yet:** the list under *Open for the director* in `spine.md`. The fill doesn't wait on it.

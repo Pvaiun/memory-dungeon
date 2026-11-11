@@ -28,7 +28,7 @@ It's all designed at once, so every item is judged by the roads and engines it s
 - **`docs/gear-design/builds.md`, all of it:** the nine builds, their far ends, the doors and the engines.
 - **Nothing rests on a foe's MP.**
 - **The spine** (`spine.md`): what each item does, its kind and rarity, and the stock. The fill writes to it. A line changes only by a ruling.
-- **The director's rulings at gate 1** (`intent.md`): one Mark from gear; Malison counts five statuses; Hearth stays as it is, as a common; an upgrade never copies a piece, two pieces one unit could wear together never read the same, and a piece and a formation seat may share a rule. "The same" means the same sentence: a keystone's second home and a far end grown from its keystone aren't copies.
+- **The director's rulings at gate 1** (`intent.md`): one Mark from gear; Malison counts five statuses; Hearth stays as it is, as a common; an upgrade never copies a piece, two pieces one unit could wear together never read the same, and a piece and a formation seat may share a rule. "The same" means the same sentence: a keystone's second home and a far end grown from its keystone aren't copies. A chain of shatters fizzles out by a rule of Chill's own that's never on a card.
 
 ## What the builds ask of the loot
 

@@ -47,7 +47,7 @@ Read the engine's link in the spine. It says what one part makes, what the other
 
 ## Loops
 
-For every item, ask what could set it off again: its own effect, something else its wearer could hold, or something an ally does. If a chain can turn over without end, or its only brake is weak, report it with the items in it and what stops it. Don't fix it by a new rule; report it. An effect that repeats something (a blow that lands again, an ability cast again, an effect that happens again) says on its card whether the repeat can itself repeat: the spine's rules under *Chains end*, and its string of shatters, are what the card says.
+For every item, ask what could set it off again: its own effect, something else its wearer could hold, or something an ally does. If a chain can turn over without end, or its only brake is weak, report it with the items in it and what stops it. Don't fix it by a new rule; report it. An effect that repeats something (a blow that lands again, an ability cast again, an effect that happens again) says on its card whether the repeat can itself repeat: the spine's rules under *Chains end* are what the card says. The damping of a chain of shatters is never on a card.
 
 ## What you return
 
