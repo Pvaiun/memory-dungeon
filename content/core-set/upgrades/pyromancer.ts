@@ -12,8 +12,8 @@ const stoke = (to: ToT, mult: number): EffectT => apply("burn", { stacks: own("f
 passiveUp({
   id: "stoke", cls: "pyromancer",
   power: "Each cast stokes two fifths more Burn.",
-  a: { name: "Kindling", text: "Its basic attacks add a few Burn to their target, in place of its casts; stacks scale from Attack.", builds: ["cuts", "overflow"] },
-  b: { name: "Wildfire", text: "Each ability it casts adds a few Burn to every burning foe, half as much to each; stacks scale from Attack.", builds: ["harvest"] },
+  a: { name: "Kindling", text: "Its basic attacks add a few Burn to their target, in place of its casts; stacks scale from Attack.", serves: "Bonfire 1 ●●● ⚙ lead's colour (half)" },
+  b: { name: "Wildfire", text: "Each ability it casts adds a few Burn to every burning foe, half as much to each; stacks scale from Attack.", builds: ["storm"] },
   form: (v, k) => ({
     reactions: [
       v === "a" ? { on: { event: "hit_lands", kind: "basic" }, do: [stoke("other", k)] }
@@ -28,7 +28,7 @@ abilityUp({
   id: "firebolt", cls: "pyromancer",
   power: "40% more Burn.",
   a: { name: "Slow burn", text: "Deals half the damage, scaling from Attack, to the foe with the most Burn, and adds twice the Burn; stacks scale from Attack.", builds: ["bonfire"] },
-  b: { name: "Flash bolt", text: "A quick bolt: deals damage that scales from Attack to the foe with the most Burn, and adds a few Burn; stacks scale from Attack.", builds: ["overflow", "cuts"] },
+  b: { name: "Flash bolt", text: "A quick bolt: deals damage that scales from Attack to the foe with the most Burn, and adds a few Burn; stacks scale from Attack.", builds: ["barrage", "cuts"] },
   form: (v, k) =>
     v === "a" ? { do: [phys(from("attack", HIT.light / 2), { apply: fireboltBurn(2 * k) })] }
       // Half the cost, off the ladder (as Blood drain's 125), and half the Burn; the hit is the base's.
@@ -39,8 +39,8 @@ abilityUp({
 abilityUp({
   id: "fireball", cls: "pyromancer",
   power: "40% more damage.",
-  a: { name: "Conflagration", text: "A very long wind-up: deals damage that scales from Attack to every foe, and adds many Burn to each; stacks scale from Attack.", builds: ["bonfire", "harvest"] },
-  b: { name: "Flashfire", text: "A quick blast: deals damage that scales from Attack to every foe, smaller, and adds a little Burn to each; stacks scale from Attack.", builds: ["cuts", "overflow"] },
+  a: { name: "Conflagration", text: "A very long wind-up: deals damage that scales from Attack to every foe, and adds many Burn to each; stacks scale from Attack.", builds: ["bonfire", "storm"] },
+  b: { name: "Flashfire", text: "A quick blast: deals damage that scales from Attack to every foe, smaller, and adds a little Burn to each; stacks scale from Attack.", builds: ["cuts", "barrage"] },
   form: (v, k) =>
     // The ritualist's cast: the long wind-up is the cost, which Cast speed pays down.
     v === "a" ? { cast: WINDUP.very_long, do: [phys(hitOf("attack", "touch", k), { apply: [{ status: "burn", stacks: stacks("many", "attack", BURN_STACKS) }] })] }
@@ -50,18 +50,17 @@ abilityUp({
 
 /** Pyre: a heavy hit plus 200 a Burn stack on its target; Funeral pyre half of both on every foe, each by its own Burn. */
 const PYRE_PER_STACK = 200;
+/** High pyre: it waits for a deep fire, then cashes it: 500 a Burn stack, on the foe that holds the most. */
+const HIGH_PYRE = { waits: 20, perStack: 500 };
 const pyreHit = (share: number, k: number): NumT => ({ scale: [{ ratio: HIT.heavy * share * k, stat: "attack" }, { ratio: PYRE_PER_STACK * share * k, stacks: "burn", of: "target" }] });
 abilityUp({
   id: "pyre", cls: "pyromancer",
   power: "40% more damage.",
-  a: { name: "Funeral pyre", text: "Deals damage to every foe; the damage scales from Attack and rises by 100 with each Burn stack on that foe. The Burn stays.", builds: ["harvest"] },
-  b: { name: "Pyre of the fallen", text: "Deals heavy damage to the foe with the most Burn; the damage scales from Attack and rises by 200 with each Burn stack on that foe. The Burn stays. Whenever a burning foe falls, Pyre comes 4 ticks closer.", builds: ["bonfire"] },
+  a: { name: "Funeral pyre", text: "Deals damage to every foe; the damage scales from Attack and rises by 100 with each Burn stack on that foe. The Burn stays.", builds: ["storm"] },
+  b: { name: "High pyre", text: "Waits until a foe holds 20 Burn or more. Deals heavy damage that scales from Attack to the foe with the most Burn, rising by 500 with each Burn stack on that foe as it lands. The Burn stays.", serves: "Bonfire 2 ●●●, Barrage ●" },
   form: (v, k) =>
     v === "a" ? { target: T.everyFoe, do: [phys(pyreHit(0.5, k))] }
-      : { ...(v === "b" ? { statuses: ["pyre_of_the_fallen"] } : {}), do: [phys(pyreHit(1, k))] },
+      : v === "b" ? { if: { side: "foes", where: { stacks: { status: "burn", atLeast: HIGH_PYRE.waits } } }, target: T.mostFoe("burn"), do: [phys({ scale: [{ ratio: HIT.heavy * k, stat: "attack" }, { ratio: HIGH_PYRE.perStack * k, stacks: "burn", of: "target" }] })] }
+        : { do: [phys(pyreHit(1, k))] },
 });
-// Brought by the ability: a foe's Burn ending with its holder's knockout (status_ended, cause ko), whoever killed it, brings Pyre 4 ticks closer.
-helper(kit("pyre_of_the_fallen", "PYRE OF THE FALLEN", "Whenever a burning foe falls, Pyre comes closer.", {
-  show: "sheet", unremovable: true,
-  reactions: [{ on: { event: "status_ended", status: "burn", cause: ["ko"], whose: "foe" }, do: [{ op: "cooldown", which: { ability: ["pyre"] }, set: { less: 4 }, to: "self" }] }],
-}));
+

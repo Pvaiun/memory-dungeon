@@ -17,8 +17,8 @@ helper(kit("faultline", "FAULTLINE", "Its next hit crits for triple damage.", {
 passiveUp({
   id: "bedrock", cls: "geomancer",
   power: "While its Shield pool is above zero, its Crit damage rises by 25.",
-  a: { name: "Stunning crits", text: "While its Shield pool is above zero, its crit chance is doubled and its crits Stun.", builds: ["lockdown"] },
-  b: { name: "Faultline", text: "While its Shield pool is above zero, its crit chance is doubled. When its Shield breaks, its next hit crits for triple damage.", builds: ["landslide"] },
+  a: { name: "Stunning crits", text: "While its Shield pool is above zero, its crit chance is doubled and its crits Stun.", builds: [] },
+  b: { name: "Faultline", text: "While its Shield pool is above zero, its crit chance is doubled. When its Shield breaks, its next hit crits for triple damage.", serves: "Landslide 2 ●●● ⚙ detonation (half)" },
   form: (v, _k, plus) => {
     const on = plus ? "bedrock_on_plus" : "bedrock_on";
     return {
@@ -35,8 +35,8 @@ passiveUp({
 abilityUp({
   id: "earthen_shell", cls: "geomancer",
   power: "A shorter cooldown.",
-  a: { name: "Stone skin", text: "Applies a smaller Shield to every ally; the amount scales from Defense.", builds: ["landslide", "phoenix"] },
-  b: { name: "Rampart", text: "Applies Shield and Guard to itself. While that Guard lasts, the first time its Shield breaks it's rebuilt at once. No Shield for an ally.", builds: ["landslide", "toll"] },
+  a: { name: "Stone skin", text: "Applies a smaller Shield to every ally; the amount scales from Defense.", builds: ["landslide"] },
+  b: { name: "Rampart", text: "Applies Shield and Guard to itself. While that Guard lasts, the first time its Shield breaks it's rebuilt at once. No Shield for an ally.", serves: "Landslide 2 ●●● ⚙ detonation (key)" },
   form: (v, _k, plus) => ({
     ...(plus ? { cooldown: cd("short", "earthen_shell") } : {}),
     ...(v === "a" ? { target: { side: "allies", where: { belowCap: "shield" }, pick: "all" } as TargetRuleT, do: [apply("shield", { stacks: from("defense", 0.35) })] } : {}),
@@ -53,7 +53,7 @@ abilityUp({
   id: "rockfall", cls: "geomancer",
   power: "40% more damage.",
   a: { name: "Boulder", text: "Deals double damage that scales from Defense to the foe with the most HP, with a longer wind-up.", builds: ["landslide"] },
-  b: { name: "Rock shelter", text: "Deals damage that scales from Defense to a random foe, and the ally with the lowest share of HP gains a Shield as large as the damage dealt.", builds: ["landslide", "phoenix"] },
+  b: { name: "Rock shelter", text: "Deals damage that scales from Defense to a random foe, and the ally with the lowest share of HP gains a Shield as large as the damage dealt.", builds: ["landslide"] },
   form: (v, k) =>
     // Boulder takes the medium cooldown and 650 MP, so a double hit doesn't double the spell's output.
     v === "a" ? { cast: WINDUP.very_long, cooldown: cd("medium", "rockfall"), mp: 650, target: { side: "foes", pick: "highest", by: "hp" }, do: [phys(from("defense", HIT.normal * 2 * k))] }
@@ -69,7 +69,7 @@ helper(marker("rock_shelter", "ROCK SHELTER", "Its ability's hit shelters the lo
 abilityUp({
   id: "tremor", cls: "geomancer",
   power: "40% more damage.",
-  a: { name: "Aftershock", text: "Deals damage that scales from Defense to a random foe, and Stuns every foe.", builds: ["lockdown", "snap"] },
+  a: { name: "Aftershock", text: "Deals damage that scales from Defense to a random foe, and Stuns every foe.", serves: "Landslide ●●, Storm ●● ⚙ held charge (half)" },
   b: { name: "Fissure", text: "Deals damage that scales from Defense to a Stunned foe, triple; with no foe Stunned, to a random foe. A shorter wind-up. No Stun.", builds: ["landslide", "snap"] },
   form: (v, k) =>
     // Statuses are universal: the Stun at its own 8 ticks on every foe (Fizzle skips those already Stunned).

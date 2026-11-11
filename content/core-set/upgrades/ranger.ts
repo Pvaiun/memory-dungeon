@@ -3,7 +3,7 @@ import type { AbilityT, StatusT } from "../../../src/schema.js";
 import { own } from "../pieces/kit.js";
 import { crit, from, KIT, stacks } from "../scale.js";
 import { T } from "../classes.js";
-import { abilityUp, apply, helper, kit, passiveUp, phys, POWER, r6 } from "./kit.js";
+import { abilityUp, apply, cd, helper, hitOf, kit, passiveUp, phys, POWER, r6 } from "./kit.js";
 
 {
   const crits = (n: number): Partial<StatusT> => ({ crits: [{ tag: "basic", chance: crit(n) }] });
@@ -13,8 +13,8 @@ import { abilityUp, apply, helper, kit, passiveUp, phys, POWER, r6 } from "./kit
   passiveUp({
     id: "hunters_eye", cls: "ranger",
     power: "Its basic attacks crit more often still: three steps, not two.",
-    a: { name: "Quarry", text: "Basic attacks ignore Taunt, crit more often, and go to the foe with the lowest share of its max HP.", builds: ["hunt"] },
-    b: { name: "Quick draw", text: "Basic attacks ignore Taunt and crit more often. Each crit makes its next basic attack come at once.", builds: ["cuts", "hunt"] },
+    a: { name: "Quarry", text: "Basic attacks ignore Taunt, crit more often, and go to the foe with the lowest share of max HP.", serves: "Hunt 1 ●●●" },
+    b: { name: "Quick draw", text: "Basic attacks ignore Taunt and crit more often. Each crit makes its next basic attack come at once.", serves: "Cuts 2 ●●●, Hunt ●● ⚙ emptied quiver (key)" },
     form: (v, _k, plus) => ({ seek: "basic", ...crits(plus ? KIT.hunterCrit + 1 : KIT.hunterCrit), ...(v === "a" ? quarry : v === "b" ? quickDraw : {}) }),
   });
 }
@@ -22,28 +22,26 @@ import { abilityUp, apply, helper, kit, passiveUp, phys, POWER, r6 } from "./kit
 {
   const arrow = (word: "several" | "many", k: number) => phys(from("attack", 0.29), { apply: [{ status: "bleed", stacks: stacks(word, "attack", k) }] });
   const deep = (k: number): Partial<AbilityT> => ({ target: T.mostFoe("bleed"), do: [arrow("many", k)] });
-  /** Barbed quiver: no arrow; for a while its basic attacks add a few Bleed (from Attack). The skirmisher's version. */
-  const QUIVER = 20;
-  helper(kit("barbed_quiver", "BARBED QUIVER", "Its basic attacks add a few Bleed.", { duration: QUIVER, reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("bleed", { stacks: own("few", "attack"), to: "other" })] }] }));
-  helper(kit("barbed_quiver_plus", "BARBED QUIVER", "Its basic attacks add a few Bleed.", { duration: QUIVER, reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("bleed", { stacks: own("few", "attack", POWER), to: "other" })] }] }));
+  /** Barbed volley: a light arrow at every foe, each adding a few Bleed, at a rung up (the step Whipping vines took going wide). */
+  const volley = (k: number): Partial<AbilityT> => ({ target: T.everyFoe, cooldown: cd("short", "barbed_arrow"), mp: 325, do: [phys(hitOf("attack", "light"), { apply: [{ status: "bleed", stacks: stacks("few", "attack", k) }] })] });
   abilityUp({
     id: "barbed_arrow", cls: "ranger",
     power: "Adds two fifths more Bleed.",
     a: { name: "Deep barbs", text: "A barbed arrow at the foe with the most Bleed, adding many.", builds: ["hunt", "cuts"] },
-    b: { name: "Barbed quiver", text: "No arrow: for a while, its basic attacks add a few Bleed.", builds: ["cuts", "toll"] },
-    form: (v, k, plus) => (v === "a" ? deep(k) : v === "b" ? { target: "self", do: [apply(plus ? "barbed_quiver_plus" : "barbed_quiver")] } : { do: [arrow("several", k)] }),
+    b: { name: "Barbed volley", text: "An arrow at every foe: each deals light damage that scales from Attack and adds a few Bleed; stacks scale from Attack.", serves: "Cuts 2 ●●●, Hunt ● ⚙ red rain (half), emptied quiver (half)" },
+    form: (v, k) => (v === "a" ? deep(k) : v === "b" ? volley(k) : { do: [arrow("several", k)] }),
   });
 }
 
 {
   const pinning = (ratio: number): Partial<AbilityT> => ({ target: T.highestAMFoe, do: [phys(from("attack", ratio), { apply: [{ status: "slow" }] })] });
-  /** Hail: the arrow carries no Chill; one Chill (flat) lands on every foe. */
-  const hail = (n: number): Partial<AbilityT> => ({ do: [phys(from("attack", 0.29)), apply("chill", { stacks: n, to: T.everyFoe })] });
+  /** Hail: the arrow carries no Chill; a few Chill (half the word, as Frost arrow's own) lands on every foe. */
+  const hail = (k: number): Partial<AbilityT> => ({ do: [phys(from("attack", 0.29)), apply("chill", { stacks: stacks("few", "attack", 0.5 * k), to: T.everyFoe })] });
   abilityUp({
     id: "frost_arrow", cls: "ranger",
     power: "Adds two fifths more Chill; if it adds none, it deals two fifths more damage.",
-    a: { name: "Pinning arrow", text: "A quick arrow at the foe with the highest Attack, which is Slowed. No Chill.", builds: ["lockdown"], plus: "Deals two fifths more damage." },
-    b: { name: "Hail", text: "A quick arrow at the foe with the most Chill, and one Chill on every foe.", builds: ["snap"], plus: "Adds two fifths more Chill." },
+    a: { name: "Pinning arrow", text: "A quick arrow at the foe with the highest Attack, which is Slowed. No Chill.", builds: [], plus: "Deals two fifths more damage." },
+    b: { name: "Hail", text: "A quick arrow at the foe with the most Chill, and a few Chill on every foe; stacks scale from Attack.", serves: "Snap 1 ●●● ⚙ firecracker (half)", plus: "Adds two fifths more Chill." },
     form: (v, k) =>
       v === "a" ? pinning(0.29 * k)
         : v === "b" ? hail(k)

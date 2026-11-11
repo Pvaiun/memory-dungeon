@@ -4,7 +4,7 @@
  * imported here, in order, for that; the mythics come last.
  *
  * `upgrades` joins the pack's upgrades, `abilities` (the ability forms) its abilities, `statuses` (passive forms and helpers,
- * and the mythics' statuses) its statuses, `mythics` its gear and the rogue's stock; `builds` is designer data, never in the pack.
+ * and the mythics' statuses) its statuses, `mythics` its gear and the rogue's stock; `served` is designer data, never in the pack.
  */
 import "./knight.js";
 import "./cleric.js";
@@ -23,4 +23,4 @@ import "./frostweaver.js";
 import "./stormcaller.js";
 import "./geomancer.js";
 import "./mythics.js";
-export { abilities, builds, mythics, statuses, upgrades } from "./kit.js";
+export { abilities, mythics, served, statuses, upgrades } from "./kit.js";

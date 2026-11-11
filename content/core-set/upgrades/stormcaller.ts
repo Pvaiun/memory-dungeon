@@ -11,7 +11,7 @@ const shockOn = (kind: "basic" | "extra", k: number): ReactionT => ({ on: { even
 passiveUp({
   id: "arc", cls: "stormcaller",
   power: "40% more Shock.",
-  a: { name: "Forked arc", text: "Each of its basic attacks also hits two other random foes, and adds a few Shock to all three; stacks scale from Attack.", builds: ["harvest"] },
+  a: { name: "Forked arc", text: "Each of its basic attacks also hits two other random foes, and adds a few Shock to all three; stacks scale from Attack.", builds: ["storm"] },
   b: { name: "Static grip", text: "Each of its basic attacks strikes its target twice, and adds a few Shock with each; stacks scale from Attack.", builds: ["cuts", "hunt"] },
   form: (v, k) => ({
     // A strike rule that picks several foes strikes each of them.
@@ -25,7 +25,7 @@ abilityUp({
   id: "chain_lightning", cls: "stormcaller",
   power: "40% more damage on every strike.",
   a: { name: "Ball lightning", text: "Lightning strikes the foe with the lowest HP four times: once hard, adding a few Shock, then three smaller strikes. If it falls, the strikes left go to the next lowest; stacks scale from Attack.", builds: ["hunt"] },
-  b: { name: "Recharge", text: "Deals damage that scales from Attack to a random foe, then to up to three other random foes, and adds a few Shock to each; stacks scale from Attack. The Stormcaller regains 120 MP for each foe it hits.", builds: ["overflow"] },
+  b: { name: "Recharge", text: "Deals damage that scales from Attack to a random foe, then to up to three other random foes, and adds a few Shock to each; stacks scale from Attack. The Stormcaller regains 120 MP for each foe it hits.", serves: "Barrage 2 ●●●, Storm ●● ⚙ resonance (half)" },
   form: (v, k) => {
     const first = phys(hitOf("attack", "light", k), { apply: chainShock });
     if (v === "a") {
@@ -54,7 +54,7 @@ for (const [suffix, k] of [["", 1], ["_plus", POWER]] as const) {
 abilityUp({
   id: "thunderstorm", cls: "stormcaller",
   power: "40% more Shock.",
-  a: { name: "Static field", text: "For a while, every foe that lands a hit on an ally gains a few Shock; stacks scale from the Stormcaller's Attack. Nothing on the swings.", builds: ["toll"] },
+  a: { name: "Static field", text: "For a while, every foe that lands a hit on an ally gains a few Shock; stacks scale from the Stormcaller's Attack. Nothing on the swings.", serves: "Toll 2 ●●●, Storm 2 ●● ⚙ goad (half)" },
   b: { name: "Storm's eye", text: "For a while, every ally's basic attacks add Shock to the foe with the most Shock, wherever they land, three times as much; stacks scale from the Stormcaller's Attack.", builds: ["hunt", "cuts"] },
   form: (v, _k, plus) => ({ do: [apply(`${v === "a" ? "static_field" : v === "b" ? "storms_eye" : "thunderstorm_storm"}${plus ? "_plus" : ""}`)] }),
 });
@@ -62,8 +62,8 @@ abilityUp({
 abilityUp({
   id: "static_charge", cls: "stormcaller",
   power: "A shorter cooldown.",
-  a: { name: "Overcharge", text: "Its basic attacks come faster for a while. While that lasts, its next three abilities cost no MP.", builds: ["overflow"] },
-  b: { name: "Storm shield", text: "Raises its Thorns by 150 and its Aggro by 40 for 20 ticks. No speed.", builds: ["toll", "harvest"] },
+  a: { name: "Overcharge", text: "Its basic attacks come faster for a while. While that lasts, its next three abilities cost no MP.", serves: "Barrage 2 ●●● ⚙ crescendo (half)" },
+  b: { name: "Storm shield", text: "Raises its Thorns by 150 and its Aggro by 40 for 20 ticks. No speed.", builds: ["toll", "storm"] },
   form: (v, _k, plus) => ({
     ...(plus ? { cooldown: cd("medium", "static_charge") } : {}),
     ...(v === "a" ? { do: [apply("static_charge_on"), apply("overcharge")] } : {}),

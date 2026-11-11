@@ -3,7 +3,7 @@ import type { AbilityT, EffectT, ReactionT, StatusT, TargetRuleT } from "../../.
 import { own } from "../pieces/kit.js";
 import { BURN_STACKS, from, stacks } from "../scale.js";
 import { T } from "../classes.js";
-import { abilityUp, apply, both, cd, passiveUp, phys, r6 } from "./kit.js";
+import { abilityUp, apply, both, cd, helper, kit, passiveUp, phys, r6 } from "./kit.js";
 
 {
   /** The judge's bonus: half again (the power step +70%) on a foe with a debuff, or with a buff and no debuff, so one holding both isn't doubled. */
@@ -18,8 +18,8 @@ import { abilityUp, apply, both, cd, passiveUp, phys, r6 } from "./kit.js";
   passiveUp({
     id: "judgement", cls: "paladin",
     power: "The bonus is +70%, not half again.",
-    a: { name: "Zeal", text: "Its hits deal half again as much to foes with a buff or a debuff, and its basic attacks add a few Burn to such a foe; stacks scale from Attack.", builds: ["bonfire", "toll"] },
-    b: { name: "Verdict", text: "Its hits deal half again as much to foes with a buff or a debuff, and its crit chance is tripled against such a foe.", builds: ["hunt", "lockdown"] },
+    a: { name: "Zeal", text: "Its hits deal half again as much to foes with a buff or a debuff, and its basic attacks add a few Burn to such a foe; stacks scale from Attack.", serves: "Bonfire 1 ●●●" },
+    b: { name: "Verdict", text: "Its hits deal half again as much to foes with a buff or a debuff, and its crit chance is tripled against such a foe.", builds: ["hunt"] },
     form: (v, _k, plus) => ({
       boosts: judged(plus ? 70 : 50),
       ...(v === "a" ? { reactions: zeal } : {}),
@@ -31,12 +31,17 @@ import { abilityUp, apply, both, cd, passiveUp, phys, r6 } from "./kit.js";
 {
   const volley: EffectT = { op: "cooldown", which: "basic", set: "ready", to: T.everyAlly };
   const challenge: Partial<AbilityT> = { do: [apply("marked"), apply("taunt", { to: "self" })] };
-  const swift: Partial<AbilityT> = { target: { side: "foes", pick: "lowest", by: "hp_share" } as TargetRuleT, do: [apply("marked"), volley] };
+  const swift: Partial<AbilityT> = { target: { side: "foes", pick: "lowest", by: "hp_share" } as TargetRuleT, do: [apply("marked"), volley, apply("swift_justice", { to: "self" })] };
+  // Brought by the ability: a Mark the Paladin gave ending with its holder's fall readies Condemn (it still needs its MP).
+  helper(kit("swift_justice", "SWIFT JUSTICE", "When a foe falls holding its Mark, Condemn is ready again.", {
+    show: "sheet", unremovable: true,
+    reactions: [{ on: { event: "status_ended", status: "marked", cause: ["ko"], whose: "foe", source: "holder" }, do: [{ op: "cooldown", which: { ability: ["condemn"] }, set: "ready", to: "self" }] }],
+  }));
   abilityUp({
     id: "condemn", cls: "paladin",
     power: "Comes round sooner.",
     a: { name: "Challenge", text: "Marks the foe with the highest Attack, and the Paladin Taunts. No volley.", builds: ["toll", "landslide"] },
-    b: { name: "Swift justice", text: "Marks the foe with the lowest share of its HP, and every ally's next basic attack comes at once.", builds: ["hunt", "harvest"] },
+    b: { name: "Swift justice", text: "Marks the foe with the lowest share of max HP, and every ally's next basic attack comes at once. When a foe falls holding the Paladin's Mark, Condemn is ready again.", serves: "Hunt 2 ●●●, Landslide ●●, Bonfire ● ⚙ judge's drum (key)" },
     form: (v, _k, plus) => ({ ...(v === "a" ? challenge : v === "b" ? swift : {}), ...(plus ? { cooldown: cd("short", "condemn") } : {}) }),
   });
 }
@@ -58,7 +63,7 @@ import { abilityUp, apply, both, cd, passiveUp, phys, r6 } from "./kit.js";
     id: "absolve", cls: "paladin",
     power: "Heals two fifths more; if it raises, the raised ally comes back with two fifths more HP.",
     a: { name: "Penance", text: "Cleanses and heals both other allies for twice as much, and pays a fifth of each heal in its own HP. Not itself.", builds: ["pact"], plus: "Heals two fifths more." },
-    b: { name: "Absolution", text: "Waits until an ally falls, then revives a random knocked-out ally with a fifth of its HP.", builds: ["phoenix"], plus: "Raises with two fifths more HP." },
+    b: { name: "Absolution", text: "Waits until an ally falls, then revives a random knocked-out ally with a fifth of its HP.", builds: [], plus: "Raises with two fifths more HP." },
     form: (v, k) => (v === "a" ? penance(0.8 * k) : v === "b" ? absolution(0.2 * k) : absolve(0.4 * k)),
   });
 }
@@ -72,8 +77,8 @@ import { abilityUp, apply, both, cd, passiveUp, phys, r6 } from "./kit.js";
   abilityUp({
     id: "smite", cls: "paladin",
     power: "Deals two fifths more damage.",
-    a: { name: "Hammer of dawn", text: "Damage to the foe with the highest Attack, which is Stunned. No Burn.", builds: ["lockdown", "landslide"] },
-    b: { name: "Pyre of judgement", text: "Damage to every burning foe, half as hard, adding a few Burn to each. Waits until a foe burns.", builds: ["bonfire", "harvest"] },
+    a: { name: "Hammer of dawn", text: "Damage to the foe with the highest Attack, which is Stunned. No Burn.", builds: ["landslide"] },
+    b: { name: "Pyre of judgement", text: "Damage to every burning foe, half as hard, adding a few Burn to each. Waits until a foe burns.", builds: ["bonfire", "storm"] },
     form: (v, k) =>
       v === "a" ? hammer(0.5 * k)
         : v === "b" ? pyre(0.25 * k)
