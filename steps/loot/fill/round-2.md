@@ -11,6 +11,16 @@ Work in progress: what the agents raised while applying round 1, and what the fr
 - **Healing received is all of it:** a heal, a Regen's pulse, a drink. Round 1's ruling that a Regen isn't a heal is about the heals a unit *gives* ("its wearer's heals"). A card that reads healing its wearer *receives* (Red stone mail, Sanguine mail, Last bastion, Halved heart, Shared cup) counts Regen.
 - **Firing as a fight starts isn't a start-of-fight effect** when it's a crossing: a piece that fires because its wearer began under the line (Holdfast, Warded mail, Aegis mail) doesn't happen again under Second dawn or Overture coat.
 
+- **A killing blow is a hit.** A foe felled by damage sent back, by Thorns or by a status's own damage isn't anyone's killing blow. Cards that wait for a foe to fall, whoever felled it, still fire.
+- **The crossing ruling is for HP.** A watcher of MP keeps its own card's words.
+
+## Amulets
+
+- **Clear-headed charm:** the first card comes back. While its wearer is below half its MP it gains Clarity every so often, the first at once. Fired once a crossing, it's worth least to the driest caster, which is the one it's for.
+- **Halved heart under the crossing ruling:** yes. Its wearer starts every fight under the line, so the pieces that watch for a drop fire on it as the fight starts, and a "whenever" one doesn't fire again. It's the brink doing what it's for; nothing goes on the card.
+- **Gambler's coin** beside a card that raises Crit chance "to four in five at most": as written. The raise adds to the coin's half and stops at four in five.
+- **Burning heart, Downhill charm, Shatterstone charm:** as written.
+
 ## Armor
 
 - **Mail's commons** stand as written: Attack, Lifesteal and HP.
