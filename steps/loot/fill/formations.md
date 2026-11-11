@@ -163,11 +163,11 @@ Thirty-five formations, in the spine's order: 13 common, 12 rare, 10 legendary. 
 
 ### Icefall
 - **Is:** formation · rare
-- **Card:** Two lay frost, each its own way, and every shatter rings the third's great spell. **Rime:** Whatever Chill its abilities add, they add half again as much. **Sleet:** Its basic attacks add a few Chill. **Breaker:** When a foe's Chill shatters, its slowest ability that deals damage is ready: slowest by its whole cooldown, cooling or not, and its slowest of all if none deals damage.
-- **Numbers:** Rime: +50% on the Chill stacks its abilities add. Sleet: a few Chill, flat (2). Breaker: a whole cooldown, on the ability that deals damage whose whole cooldown is longest (ties to the earlier slot). Anyone's shatter rings it; if that ability is already ready, nothing more happens.
+- **Card:** Two lay frost, each its own way, and every shatter rings the third's great spell. **Rime:** Whatever Chill its abilities add, they add half again as much. **Sleet:** Its basic attacks add a few Chill. **Breaker:** When a foe's Chill shatters, its first-slotted ability is ready.
+- **Numbers:** Rime: +50% on the Chill stacks its abilities add. Sleet: a few Chill, flat (2). Breaker: a whole cooldown, on its first-slotted ability. Anyone's shatter rings it; if that ability is already ready, nothing more happens.
 - **Code:** Rime as today's Archmage's mantle's stacks, for Chill alone. Sleet as Hoarfrost line's Frost. The Breaker hears a shatter as today's Hoarfrost line's does; its pick by whole cooldown is beyond the list (end of file).
 - **Serves:** Snap 2 ●●●, Landslide ●●, Barrage ●●, Bonfire ● ⚙ shatter bell (key)
-- **Notes:** New. Rime reads who sits in it: a unit whose abilities add Chill (a Frostweaver, a Ranger's frost arrows, a Monk's Frost fist). Sleet suits anyone who swings. The Breaker suits anyone with one ability worth ringing for. It's the slowest ability that deals damage, by the director's ruling at gate 2, the same in every place the shatter bell sits. A Frostweaver in the Breaker seat rings its own Blizzard: under *Loops*.
+- **Notes:** New. Rime reads who sits in it: a unit whose abilities add Chill (a Frostweaver, a Ranger's frost arrows, a Monk's Frost fist). Sleet suits anyone who swings. The Breaker suits anyone with one ability worth ringing for. It's the first-slotted ability, by the director's ruling after gate 2: the player picks what rings by the order they slot abilities in, the same in every place the shatter bell sits. A Frostweaver in the Breaker seat rings its own Blizzard: under *Loops*.
 
 ### Storm front
 - **Is:** formation · rare
@@ -348,7 +348,7 @@ For each engine this share touches: the size on my side, and what the other side
 - **The resonance** (Storm front, key). A tenth of the cooldown a foe: twice as fast at five foes, five times at eight. Resonant robes should be the same size, since one unit can hold both and they add to a fifth.
 - **The crescendo** (The cathedral, half). The formation gives the repetition: ten casts of one spell in under a minute of ticks, so a Crescendo count fills in one fight, the first cast plain. It gives no free casts, so with the charm the price climbs unbroken and the Voices' mana is all that pays it.
 - **Mana as armour** (Wellspring and The cathedral, halves). Wellspring's gifts are a tenth and a twentieth of the Soloist's pool, 115 to 380 at a time, each about a blow where damage comes out of MP one for one. In The cathedral the same mana is the spell's fuel, so the armour and the song spend one pool.
-- **The shatter bell** (Icefall, key). The Breaker's slowest ability that deals damage, whole, at every shatter. The other side is shatters on a beat: the formation's own Rime and Sleet give half again from one unit's spells and two a swing from another.
+- **The shatter bell** (Icefall, key). The Breaker's first-slotted ability, whole, at every shatter. The other side is shatters on a beat: the formation's own Rime and Sleet.
 - **The firecracker string** (The long winter, key). Two Chill to every other foe, and two more for each shatter before it. It needs the first shatters from elsewhere, and a field already cold; its damping is code 23's, in fractions.
 - **The brink** (Blood oath, key; Shared cup and The covenant, halves). The Bleeder is the lowest by share from the first tick, and the Donor doubles what it gives it; a doubled Cure is a hundred ticks of the drain, so the cover outlasts what reaches it. Shared cup sends full allies' healing to the lowest ally that can be healed, all of it, and passes by a unit capped at half. The covenant holds units low by its prices.
 - **Two in the dark** (Decoy, key; Twins, half). Hidden for ten ticks at the start and at each fall: most of a pack fight, a sixth of a boss fight. The hidings that don't wait for a fall are the other side. A Twin's hiding hides both Twins, at the same length, while the Odd one out stands to be picked.
@@ -357,7 +357,7 @@ For each engine this share touches: the size on my side, and what the other side
 
 ## Loops
 
-- **Icefall's Breaker on a Frostweaver.** A shatter readies its slowest ability that deals damage, which is Blizzard, and it lays Chill on every foe; with Meltwater orb the shatter pays for the cast. It's the spine's known loop (Floe charm, the orb, a Frostweaver) in a second home. Brake: the cold running short. One Blizzard adds about two Chill a foe and a shatter takes twelve; even with Glacier's heart (six back on the foe that burst) and Banked robe (half again), a foe needs two or three more Blizzards and a shatter readies one. What wears the brake away is the rest of the party's cold: the Sleet seat's two a swing, Splinters' third, a second frost unit. With enough of it the cast itself, about 8 ticks a turn, is all that's left.
+- **Icefall's Breaker on a Frostweaver with Blizzard slotted first.** A shatter readies Blizzard, which lays Chill on every foe; with Meltwater orb the shatter pays for the cast. The spine's known loop. Brakes: the wind-up, and the cold each shatter spends.
 - **The resonance twice on one unit:** Storm front's Thunderhead in Resonant robes. A fifth off a foe, so five foes make the spell ready as it lands. Brakes: its wind-up and recovery, the pool (which Recharge refills by the foe), and the pack thinning.
 - **The covenant with Bloodstone reliquary in the party:** every price one unit pays is healed onto another, so the party's casts cost it nothing in sum. Brakes: cooldowns and wind-ups, which nothing here shortens. A size.
 - **The cathedral with the mana price gone:** The deep well while the Soloist holds Clarity, Flagellant's vestments with Lifesteal, The chalice. The spine's known loop. Brakes: wind-up and recovery, 3 to 10 ticks a cast, and the floor at a tenth of HP where the price is life.
@@ -372,7 +372,7 @@ For each engine this share touches: the size on my side, and what the other side
 ## Code support beyond the spine's list
 
 - **A rule the party holds once.** Today a formation's party effect is a status on each ally, so "when a foe's Chill shatters" or "when a Marked foe falls" would fire three times. The long winter, Open season, The forge's second rule, Shared cup and The whetstone's count each need a rule that fires once for the party. Open season's Mark needs one applier for the party, so it's one Mark.
-- **A pick by whole cooldown, among the abilities that deal damage:** "its slowest ability that deals damage", for Icefall's Breaker, as ruled at gate 2. Today's `longest` picks by cooldown left.
+- **The first-slotted ability** for Icefall's Breaker, as Bell of the hour reads it: no new support.
 - **Every MP gain of one unit sent to a seat** (The cathedral's Voices). Today's Leech idol sends on only what's past full.
 - **Healing past full, told apart by its source** (Blood oath's Drinker: its Lifesteal's alone). The `overhealed` event names a kind only when an action healed.
 - **A pick that passes by an ally that can't be healed** (Shared cup): at full, or at a cap on its healing.

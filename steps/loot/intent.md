@@ -26,7 +26,7 @@ The director, Nov 11, on reading `report.md`: "I'm happy with all of your sugges
 
 - **The fill is approved,** with the report's seven recommendations taken:
   - a spell paid in life costs half the share of max HP that it would cost of max MP;
-  - the shatter bell rings its wearer's slowest ability that deals damage;
+  - the shatter bell rings its wearer's first-slotted ability (changed after the gate from "slowest that deals damage": "a good chance to give players agency");
   - Hidden's rule that someone stays in the light, with its gap closed: when nobody is left in the light, the last in seat order steps out;
   - a Crescendo's price is two fifths more cost a stack;
   - the riposte is its keystone and a Shield on the dodge, mostly on a Monk, and `builds.md` says so;

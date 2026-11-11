@@ -452,7 +452,7 @@ Twenty-seven more, for twenty-eight, and four that the kits and the mythics alre
 #### A shatter turns them over
 
 **The shatter bell.** *Cold Snap, with Landslide, Bonfire or Barrage.*
-- **What combines:** something that makes its wearer's slowest ability that deals damage ready whenever a foe shatters · a party that shatters on a beat · an ability worth ringing for: the Geomancer's Tremor, the Paladin's Smite, the Pyromancer's Pyre, the Hoplite's Spear thrust.
+- **What combines:** something that makes its wearer's first-slotted ability ready whenever a foe shatters · a party that shatters on a beat · an ability worth slotting first for it: the Geomancer's Tremor, the Paladin's Smite, the Pyromancer's Pyre, the Hoplite's shove.
 - **What the player sees:** SHATTER, and the great spell's name right under it, every time.
 - **Enough to see it:** the piece beside one Frostweaver. The frost becomes another unit's clock, so a long cooldown stops mattering, and the foe that just shattered is stunned and sundered when the blow arrives.
 

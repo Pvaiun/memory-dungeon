@@ -122,7 +122,7 @@ Round 3. What the fresh read found.
 Gate 2. The director's rulings, Nov 11, that reach more than one share.
 
 - **A spell paid in life costs half the share** of max HP that it would cost of max MP (Flagellant's vestments, The covenant, The chalice, Heart of the saint). At the whole share the blood mage lost life on every cast.
-- **The shatter bell rings "its slowest ability that deals damage",** by whole cooldown, and the slowest of all for a unit with none (Floe charm, Frozen tome, Icefall's Breaker). Reveille keeps the slowest of all.
+- **The shatter bell rings the first-slotted ability** (Floe charm, Frozen tome, Icefall's Breaker), so the player chooses what rings by slot order. Ruled after gate 2, in place of "the slowest ability that deals damage". Reveille keeps the slowest ability by whole cooldown.
 - **Someone always stands in the light.** Round 1's rule of Hidden's is approved, with its gap closed: when nobody is left in the light, the last in seat order steps out of hiding.
 - **A Crescendo's price is two fifths more cost a stack,** twice the slope of its power (Crescendo charm). The counter's own definition is unchanged.
 - **Thunderhead maul reads its basic attacks alone,** so it and Lightning-glass no longer read the same.

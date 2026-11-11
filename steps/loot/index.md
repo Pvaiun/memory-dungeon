@@ -359,7 +359,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Accompanist's score** · rare · Each time the other ally with the highest Attack pays for an ability, its holder's next ability is free.
 - **Last page** · legendary · When a foe falls, every foe below a tenth of its HP falls too.
 - **Annotated grimoire** · legendary · Each ability its holder pays for makes the next ability any ally casts free.
-- **Frozen tome** · legendary · Each time a foe's Chill shatters, every ally's slowest ability that deals damage comes half its wait closer.
+- **Frozen tome** · legendary · Each time a foe's Chill shatters, every ally's first-slotted ability comes half its wait closer.
 
 ### Orb
 
@@ -455,7 +455,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Shatterstone charm** · rare · When its wearer's Shield breaks, the foe that broke it takes damage equal to twice the most that Shield held.
 - **Bounty charm** · rare · When its wearer lands a killing blow, its ability with the longest cooldown left is ready at once.
 - **Echo charm** · rare · Its wearer's extra strikes carry what the swing carries.
-- **Floe charm** · rare · When a foe's Chill shatters, its wearer's slowest ability that deals damage is ready.
+- **Floe charm** · rare · When a foe's Chill shatters, its wearer's first-slotted ability is ready.
 - **Lightning-glass** · rare · Its wearer's abilities deal more for each Shock on their target. The Shock stays.
 - **Halved heart** · rare · Its wearer starts every fight at half its HP and can't be healed above it; healing past that counts as healing past full. At half it counts as below half its HP. It deals half again as much.
 - **Crescendo charm** · rare · Each time its wearer casts the same ability again in a fight, it does more and costs more than the time before (Crescendo).
@@ -498,7 +498,7 @@ A version or mythic the spine doesn't list stays as it is today, and isn't part 
 - **Hammer and anvil** · Every blow the Anvil takes is saved for the Hammer. Seats: Anvil: draws far more; each hit it takes adds a Wrath to the Hammer. / Hammer: its next basic attack deals more for each Wrath, and spends them. / Smith: its heals and Shields on the Anvil are a third bigger.
 - **Bloodied ground** · One opens them up; two drink from the wound. Seats: Opener: its crits add many Bleed. / Blade: each hit it lands on a bleeding foe heals it a little. / Blade: the same.
 - **Pyre line** · The fire outlives whatever it's burning. Seats: Keeper: Taunts and is Guarded when each fight starts; foes that hit it gain a few Burn. / Stoker: basic attacks a third faster. / Torch: when a burning foe falls, all its Burn passes to the foe with the most HP.
-- **Icefall** · Two lay frost, each its own way, and every shatter rings the third's great spell. Seats: Rime: whatever Chill its abilities add, they add half again as much. / Sleet: its basic attacks add a few Chill. / Breaker: when a foe's Chill shatters, its slowest ability that deals damage is ready.
+- **Icefall** · Two lay frost, each its own way, and every shatter rings the third's great spell. Seats: Rime: whatever Chill its abilities add, they add half again as much. / Sleet: its basic attacks add a few Chill. / Breaker: when a foe's Chill shatters, its first-slotted ability is ready.
 - **Storm front** · The more foes one action touches, the more it pays. Seats: Thunderhead: its abilities come round sooner for each foe they hit. / Squall: its basic attacks also hit every foe that holds Shock, for a third. / Rod: draws far more; foes that hit it gain a few Shock.
 - **The pack** · The pack takes them one at a time. Seats: Lead: while no foe is Marked, its hits Mark their target. / Packmate: its hits on a Marked foe deal half again as much. / Packmate: the same.
 - **Toll gate** · Whatever strikes the gate pays the other two's toll. Seats: Gate: draws far more; Guarded when each fight starts. / Collector: a foe that hits the Gate gains whatever this seat's basic attacks carry. / Collector: the same.

@@ -7,7 +7,7 @@ Nov 11, 2026. The design is approved and nothing is built. Nothing is running, a
 - **Gate 2 is passed.** The director took all seven of the report's recommendations, approved the counts, the spine's rules and its four bends, and doesn't want offers aimed for the first playtest. It's recorded in `intent.md` (*Direction from gate 2*).
 - **Their rulings are applied,** by hand, to the cards, the spine, `fill/shared.md` and two lines of `docs/gear-design/builds.md`:
   - a spell paid in life costs half the share (Flagellant's vestments, The covenant, The chalice, Heart of the saint);
-  - the shatter bell rings the slowest ability that deals damage (Floe charm, Frozen tome, Icefall's Breaker);
+  - the shatter bell rings the first-slotted ability (Floe charm, Frozen tome, Icefall's Breaker), so the player picks what rings;
   - someone always stands in the light, with the gap closed (Decoy's card says it);
   - a Crescendo's price is two fifths more cost a stack (Crescendo charm);
   - Thunderhead maul reads its basic attacks alone;
