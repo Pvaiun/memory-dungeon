@@ -121,10 +121,12 @@ tools/                       the Node command lines; each header says how to run
   swing-rate.ts              a stat step against a swing step, class by class: the weapon kinds' exchange rate
   rogue-bosses.ts            how bosses fight in runs: casts, interrupts, held wind-ups
   rogue-acts.ts              the act road and the MP economy, on the rosters
-  rogue-feel.ts              fight logs for a feel read (the reader's brief: docs/feel-reader.md)
+  rogue-feel.ts              fight logs for a feel read (the reader's brief: docs/feel-reader.md); --builds for the build parties
+  rogue-feel/
+    builds.ts                its build mode: the build test's parties on their fights or named ones, the packs picked, the cards gathered
   rogue-play.ts              the rogue mode as a command line, for an AI playtester
   play-summary.ts            a fight as a player remembers it, for rogue-play
-  build-test.ts              the nine builds side by side
+  build-test.ts              the nine builds side by side, from rolled starts (START); its fights and starts serve rogue-feel's build mode
   build-parties.ts           the nine builds' 27 routes (builds.md's classes, a formation a rung), gathered (ROUTES, BUILD_PARTIES, ALL_PARTIES)
   build-parties/
     kit.ts                   their types, the builds' names, formation seats, mythics, and route(): each rung's gear, versions, mythics and seats from the loot's tags

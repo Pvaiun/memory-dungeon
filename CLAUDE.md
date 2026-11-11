@@ -17,6 +17,7 @@ Design work for a party-based JRPG dungeon crawler with automatic combat, where 
   - `philosophy.md`: the director's intent, rhythm, what makes a piece good, and how loot is made.
   - `builds.md`: the nine builds the loot is designed from: roads, doors and engines.
   - `loot.md`: the rules the loot is made by.
+- `docs/build-cards.md`: what each build should look like in a fight, card by card, for reading build parties against chosen fights; it points to the balance sheet's bands (`BANDS` in `tools/balance/sheet.ts`), the only standing targets for a fight's shape. `docs/feel-reader.md` is the fight reader's brief.
 - `docs/code-map.md`: where the code is, one line a file, and where to start for each kind of change. Read it before opening code, rather than listing folders.
 - `src/`: the game, pure TypeScript that also runs in the browser: the engine, the rogue mode, the schema, the validator and the simulation library. `tools/`: the Node command lines that measure it.
 - `content/core-set/`: the core set as content. `scale.ts` holds every first value by name (the weapon kinds' swing words and budgets among them); the other files hold the classes, gear, formations, upgrades, enemies, dungeons and the rogue mode, with each item's card text. `npm run content` writes `content/core-set.pack.json`, which the engine, tests and studies read.
@@ -56,11 +57,11 @@ What's true now (Nov 11, 2026). Replace what's done rather than adding to it; hi
   - `npm run balance`: the balance sheet. Run it after any numbers change, before the knobs.
   - `npm run rogue:calibrate`: each fight's knob against the hand-built rosters of `tools/rogue-parties.ts` (`--climb`); then `npm run rogue:tune`.
   - `npm run rogue`: whole runs with the simulated player (`src/sim/rogue-ai.ts`).
-  - `npx tsx tools/build-test.ts`: the nine builds side by side, on the 27 routes of `tools/build-parties.ts` (builds.md's classes, each build's formation a rung; gear, versions and mythics picked from the loot's tags).
+  - `npx tsx tools/build-test.ts`: the nine builds side by side, on the 27 routes of `tools/build-parties.ts` (builds.md's classes, each build's formation a rung; gear, versions and mythics picked from the loot's tags; one or two abilities a unit at rung 1, all three after). Each fight starts rolled, as a good player arrives: HP mostly full, MP partly spent, cooldowns anywhere from ready to just used (`--fixed-start` for the old full start).
   - `npx tsx tools/piece-check.ts`: every item does what its card says.
   - `npx tsx tools/gear-slots.ts`: who wears which kinds, and whether the weapon and offhand rules hold.
   - `npx tsx tools/loot-list.ts`: today's loot as one line per item, with its cards (`out/loot-list.md`).
-  - `npx tsx tools/rogue-feel.ts`: fight logs for a feel read; the reader's brief is `docs/feel-reader.md`.
+  - `npx tsx tools/rogue-feel.ts`: fight logs for a feel read; the reader's brief is `docs/feel-reader.md`. `--builds landslide,storm` (or `all`) plays the build test's parties instead, on their rung's fights or `--fights`, with each build's card (`docs/build-cards.md`) beside the packs.
   - `npx tsx tools/rogue-acts.ts`: the act road.
   - `npx tsx tools/rogue-play.ts`: the AI playtester's game.
 - **Session pattern:** a piece of work can take one session or several; its `steps/` folder is the handoff. Each session ends at a gate by updating this Status section (what's true now, not a log), committing, and stopping for the director.

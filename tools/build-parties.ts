@@ -9,11 +9,12 @@
  * gear is what the tags say serves it.
  *
  * The rungs:
- * - **Rung 1, act I:** commons and uncommons; the build's common formation; no trainings.
+ * - **Rung 1, act I:** commons and uncommons; the build's common formation; no trainings; one or two abilities a unit (the
+ *   route's first and third classes two, its second one), as a run's first act has them.
  * - **Rung 2, act II:** rares too; its rare formation; a version on each ability and passive where one serves the build.
  * - **Rung 3, act III:** legendaries too; its legendary formation; the power step on every version it took; the mythics of the
  *   members whose class's mythic pulls first toward the build (at most two).
- * Every member knows its class's three abilities at every rung, so the rungs differ only by what the build asks. Each rung
+ * From rung 2 every member knows its class's three abilities. Each rung
  * also has a Neutral version (`neutralOf`): the same members and gear in the Neutral formation.
  */
 import { type Party, type Route, neutralOf, route } from "./build-parties/kit.js";

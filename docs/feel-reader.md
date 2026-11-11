@@ -11,6 +11,17 @@ Read every pack tick by tick. Then write one document, plain and honest, with pa
 3. Statuses: which were visible and mattered, which read as nothing?
 4. Anything that looked wrong, absurd or flat, with the tick.
 
+## When the packs are a build's
+
+When the packs come from `npx tsx tools/rogue-feel.ts --builds ...`, each is headed with its build, route and rung and its starting HP and MP, and `cards.md` beside them holds the cards of the builds played (from `docs/build-cards.md`): what each should look like; *Gear design: the builds* (`docs/gear-design/builds.md`) is the design behind it. Read the card before the packs. For each build, add to the per-pack lines and write one short section:
+
+- **Could you tell which build it was** from the fight alone, before reading its name? What gave it away, or what made it look like another build?
+- **Its card, line by line:** did its picture show (*Watch for*)? Did its damage come from where the card says, in about that order (use the pack's tally)? Did its rhythm match the card's row: when the damage fell, when it was in danger, how often the fight turned, what it spent?
+- **Its rung:** did it show what its rung should add, or only bigger numbers than the rung below?
+- **Its fights:** was its best fight better than its worst, and in the way the card says?
+- **Engines:** they're reference, not a checklist (the cards' *Engines are reference*). Say so if you saw one fire. Judge one only where the party held every part of it; an engine that didn't show is never a miss.
+- **Wrong:** anything from the card's *Wrong looks like* and the list every card shares: a passenger, a loop that doesn't stop, a stall to the enrage, a trigger that always loses the fight.
+
 ## Across all packs
 
 5. **Rhythm.** Does a fight breathe? Where are the dead stretches and the pile-ups? Do wind-ups read (does a "begins X" line pay off visibly)? Is the opening a volley or a build? Do regular fights, elites and bosses feel like different lengths and shapes?

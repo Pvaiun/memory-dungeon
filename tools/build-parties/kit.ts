@@ -14,8 +14,9 @@
  *   is worth anything; at rung 3 the same versions with the power step.
  * - **Seats:** each formation's seats have a role (wall, heal, cast, hit, any); the most particular seats are filled first,
  *   each with the member whose class fits that role best (ties: the route's order).
- * Every member knows its class's three abilities, in the kit's order, at every rung. Nothing here is balanced: a route is
- * what the documents name, and the gear is what the tags say serves it.
+ * - **Abilities:** at rung 1 a member knows one or two (the route's first and third classes two, its second one), the ones
+ *   whose versions are worth most to the build; from rung 2 all three. Always in the kit's order.
+ * Nothing here is balanced: a route is what the documents name, and the gear is what the tags say serves it.
  */
 import type { ClassDefT, GearT } from "../../src/schema.js";
 import { abilities as kitAbilities, classes } from "../../content/core-set/classes.js";
@@ -36,8 +37,8 @@ export type Member = {
   cls: string;
   /** The formation seat it sits in, by the content's position id (twin seats `_a`, `_b`, `_c`). Neutral's are `a`, `b`, `c`. */
   seat: string;
-  /** Its three abilities, in slot order: the first is cast first when several are ready. */
-  abilities: [string, string, string];
+  /** The abilities it knows, in slot order (the first is cast first when several are ready): one or two at rung 1, all three after. */
+  abilities: string[];
   trained: Training[];
   gear: Gear;
 };
@@ -147,10 +148,25 @@ function mythicsFor(build: BuildId, classIds: string[]): Map<string, GearT> {
 }
 
 /** The class's three abilities, in the kit's order. */
-const abilitiesOf = (cls: string) => kitAbilities.filter((a) => a.class === cls).map((a) => a.id) as [string, string, string];
+const abilitiesOf = (cls: string) => kitAbilities.filter((a) => a.class === cls).map((a) => a.id);
 
-/** A rung's member: its gear by the tags, its versions from rung 2, the power step on them at rung 3. */
-function member(cls: string, seat: string, build: BuildId, rung: Rung, used: Set<string>, mythic?: GearT): Member {
+/**
+ * What a member knows: all three abilities, or at rung 1 the `known` worth most to the build (by its versions' tags; ties
+ * go to the kit's order), kept in the kit's order.
+ */
+function knownOf(cls: string, build: BuildId, known: number): string[] {
+  const all = abilitiesOf(cls);
+  if (known >= all.length) return all;
+  const w = (id: string) => Math.max(worth(`${id}__a`, build), worth(`${id}__b`, build));
+  const keep = new Set([...all].sort((x, y) => w(y) - w(x) || all.indexOf(x) - all.indexOf(y)).slice(0, known));
+  return all.filter((a) => keep.has(a));
+}
+
+/** At rung 1 a unit knows one or two abilities, as a run's first act has them: the route's first and third classes two, its second one. */
+const KNOWN_AT_RUNG_1 = [2, 1, 2];
+
+/** A rung's member: what it knows (`knownOf`), its gear by the tags, its versions from rung 2, the power step on them at rung 3. */
+function member(cls: string, seat: string, build: BuildId, rung: Rung, used: Set<string>, known: number, mythic?: GearT): Member {
   const c = classOf(cls);
   const gear: Partial<Gear> = {};
   for (const slot of ["weapon", "armor", "offhand", "amulet"] as Slot[]) {
@@ -167,7 +183,7 @@ function member(cls: string, seat: string, build: BuildId, rung: Rung, used: Set
       if (a || b) trained.push({ ability: u.id, power: rung === 3, version: a >= b ? "a" : "b" });
     }
   }
-  return { cls, seat, abilities: abilitiesOf(cls), trained, gear: gear as Gear };
+  return { cls, seat, abilities: knownOf(cls, build, known), trained, gear: gear as Gear };
 }
 
 /**
@@ -182,7 +198,7 @@ export function route(build: BuildId, classIds: [string, string, string], note: 
     if (!seats) throw new Error(`build parties: no formation '${formation}'`);
     const order = seated(formation, classIds);
     const used = new Set<string>(), myth = rung === 3 ? mythicsFor(build, classIds) : new Map<string, GearT>();
-    const members = order.map((cls, s) => member(cls, seats[s], build, rung, used, myth.get(cls))) as [Member, Member, Member];
+    const members = order.map((cls, s) => member(cls, seats[s], build, rung, used, rung === 1 ? KNOWN_AT_RUNG_1[classIds.indexOf(cls)] : 3, myth.get(cls))) as [Member, Member, Member];
     return { id: `${build}/${id}/${rung}`, build, route: id, rung, act: ACT[rung], version: "formation", formation, members };
   }) as [Party, Party, Party];
   return { build, id, classes: classIds, note, rungs };

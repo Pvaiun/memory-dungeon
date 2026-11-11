@@ -71,7 +71,7 @@ The least you need to know to work on the game. Read it first, then open a detai
   Every piece carries stats at every rarity. There are 322 pieces, 16 mythics and a plain weapon of each kind. Every piece is fixed, with no random affixes. A card says what the piece does and who can wear it, never what it's for.
 - **A formation** is three seats and maybe a party effect. A seat changes the stats of whoever sits in it, or gives it statuses. There's no battlefield geometry: Aggro on the seats is what makes a front line. A run starts with Neutral (three empty seats), and there are 32 more: common, rare and legendary.
 - **Training** is learning an ability, or taking an ability's or passive's power step, or one of its two versions (A or B). Every ability and passive has a power step and two versions: 64 upgrades in all.
-- **Builds.** A build is a way to play you can watch: someone watching can tell which build is playing and what it's waiting for. There are nine, as roads, with doors where a run drifts from one to the next, and engines: small synergies designed in advance for a player to find (*Gear design: the builds*). The gear, formations and upgrades are designed from them. Today's were made for an earlier twelve, and the loot pass remakes them. The gear design isn't finished: its philosophy is in `docs/gear-design/`.
+- **Builds.** A build is a way to play you can watch: someone watching can tell which build is playing and what it's waiting for. There are nine, as roads, with doors where a run drifts from one to the next, and engines: small synergies designed in advance for a player to find (*Gear design: the builds*). The gear, formations and upgrades are designed from them. The gear design isn't finished: its philosophy is in `docs/gear-design/`.
   - **Landslide:** two load, one strikes: a long quiet, then one huge blow.
   - **Thousand Cuts:** a wound opened, then cashed by a dense stream of small hits.
   - **Bonfire:** a fire that dies unless the party keeps feeding it.
@@ -120,7 +120,8 @@ The least you need to know to work on the game. Read it first, then open a detai
 | An enemy's design, and the list of challenges | `docs/core-set/enemies.md`; numbers in `content/core-set/enemies.ts`; free play's encounters and dungeons in `dungeons.ts`; their test trios in `tests.ts` |
 | How a run works | `docs/core-set/rogue-mode.md`; numbers in `content/core-set/rogue.ts` and `rogue-knobs.json` |
 | Designing or changing gear, formations, upgrades or mythics | `docs/gear-design/philosophy.md` first: the director's intent, rhythm, what makes a piece good, and how loot is made |
-| The nine builds: rhythm, threads, routes, rungs, needs, and the web between them (doors, engines) | `docs/gear-design/builds.md`; the build test's parties in `tools/build-parties.ts` are still the earlier twelve's |
+| The nine builds: rhythm, threads, routes, rungs, needs, and the web between them (doors, engines) | `docs/gear-design/builds.md`; the build test's parties in `tools/build-parties.ts` |
+| What each build should look like in a fight, for reading or checking one; the standing targets for a fight's shape | `docs/build-cards.md`; the bands in `tools/balance/sheet.ts` (`BANDS`); the feel reader's brief in `docs/feel-reader.md` |
 | The loot's rules: each rarity, the stock, writing pieces, formations, upgrades, mythics, levers held back | `docs/gear-design/loot.md`; each item and its card text in `content/core-set/pieces/`, `formations.ts` and `upgrades/`, or as one line each from `npx tsx tools/loot-list.ts` |
 | Any number | `content/core-set/scale.ts` |
 | What content can express | `PRIMITIVES.md` (generated from `src/schema.ts`) |
