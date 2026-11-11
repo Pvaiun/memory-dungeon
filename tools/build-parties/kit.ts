@@ -1,8 +1,29 @@
 /**
- * What the build parties are made of: their types, the builds' names, each formation's seats, the mythics, and the
- * helpers a build's file writes its routes with (route, v, vp, p, g). Data only: no engine, no Node.
+ * What the build parties are made of: their types, the nine builds' names, each formation's seats, the mythics, and the
+ * one helper a route is written with (`route`), which fills each rung from the loot's own tags. Pure TypeScript: it reads
+ * the content's modules, no engine and no Node.
+ *
+ * How a rung is filled, from the designer's tags (the Serves lines, content/core-set/pieces/index.ts SERVED):
+ * - **Gear:** each member, slot by slot, wears the piece of a kind its class wears that's worth most to the build, at the
+ *   rung's rarities (rung 1: commons and uncommons; rung 2: rares too; rung 3: legendaries too), never a piece a partner
+ *   already wears; ties go to the rarer piece, then the id. A slot with nothing worth anything to the build holds a common of
+ *   the class's first kind. A two-handed weapon leaves the offhand empty.
+ * - **Mythics:** at rung 3, the members whose class's mythic is worth most to this build of all the builds (at most two, the
+ *   more worth first) wear it in its slot.
+ * - **Versions:** none at rung 1; at rung 2, on each ability and the passive, the version worth more to the build, where one
+ *   is worth anything; at rung 3 the same versions with the power step.
+ * - **Seats:** each formation's seats have a role (wall, heal, cast, hit, any); the most particular seats are filled first,
+ *   each with the member whose class fits that role best (ties: the route's order).
+ * Every member knows its class's three abilities, in the kit's order, at every rung. Nothing here is balanced: a route is
+ * what the documents name, and the gear is what the tags say serves it.
  */
-export type BuildId = "landslide" | "cuts" | "bonfire" | "snap" | "hunt" | "harvest" | "ambush" | "overflow" | "lockdown" | "toll" | "pact" | "phoenix";
+import type { ClassDefT, GearT } from "../../src/schema.js";
+import { abilities as kitAbilities, classes } from "../../content/core-set/classes.js";
+import { formations } from "../../content/core-set/formations.js";
+import { mythicGear, pieceGear, SERVED, upgrades } from "../../content/core-set/pieces/index.js";
+import { weaponKinds } from "../../content/core-set/vocabulary.js";
+
+export type BuildId = "landslide" | "cuts" | "bonfire" | "snap" | "storm" | "hunt" | "toll" | "barrage" | "pact";
 export type Rung = 1 | 2 | 3;
 export type Act = "I" | "II" | "III";
 export type Slot = "weapon" | "armor" | "offhand" | "amulet";
@@ -37,96 +58,134 @@ export type Route = {
   build: BuildId;
   id: string;
   classes: [string, string, string];
-  /** What it's built around, in the twelve builds' words. */
+  /** What it's built around, in the builds' words. */
   note: string;
   rungs: [Party, Party, Party];
 };
 
 export const BUILDS: Record<BuildId, string> = {
-  landslide: "Landslide", cuts: "Thousand Cuts", bonfire: "Bonfire", snap: "Cold Snap", hunt: "The Hunt", harvest: "Harvest",
-  ambush: "Ambush", overflow: "Overflow", lockdown: "Lockdown", toll: "The Toll", pact: "Blood Pact", phoenix: "Phoenix",
+  landslide: "Landslide", cuts: "Thousand Cuts", bonfire: "Bonfire", snap: "Cold Snap", storm: "The Storm", hunt: "The Hunt",
+  toll: "The Toll", barrage: "Barrage", pact: "Blood Pact",
 };
 
 /** Each formation's seats in order, by the content's position ids (twin seats `_a`, `_b`, `_c`), and its rarity. */
-export const FORMATION_SEATS: Record<string, { rarity: "common" | "rare" | "legendary"; seats: [string, string, string] }> = {
-  neutral: { rarity: "common", seats: ["a", "b", "c"] },
-  shieldwall: { rarity: "common", seats: ["wall", "behind_a", "behind_b"] },
-  heavy_line: { rarity: "common", seats: ["bruiser", "holder", "free"] },
-  skirmish_line: { rarity: "common", seats: ["skirmisher_a", "skirmisher_b", "skirmisher_c"] },
-  spur: { rarity: "common", seats: ["pacer", "blade_a", "blade_b"] },
-  wellspring: { rarity: "common", seats: ["source", "spender_a", "spender_b"] },
-  long_march: { rarity: "common", seats: ["marcher_a", "marcher_b", "marcher_c"] },
-  first_light: { rarity: "common", seats: ["riser_a", "riser_b", "riser_c"] },
-  arrowhead: { rarity: "common", seats: ["point", "flank_a", "flank_b"] },
-  ring_of_steel: { rarity: "common", seats: ["beacon", "reaper_a", "reaper_b"] },
-  vigil: { rarity: "common", seats: ["martyr", "mourner_a", "mourner_b"] },
-  watchtower: { rarity: "common", seats: ["lookout", "sentry_a", "sentry_b"] },
-  hammer_and_anvil: { rarity: "rare", seats: ["anvil", "hammer", "mason"] },
-  hunting_party: { rarity: "rare", seats: ["marker", "chaser", "warden"] },
-  hearth: { rarity: "rare", seats: ["keeper", "stoker", "torch"] },
-  hoarfrost_line: { rarity: "rare", seats: ["frost_a", "frost_b", "breaker"] },
-  reaping_line: { rarity: "rare", seats: ["beacon", "scythe_a", "scythe_b"] },
-  relay: { rarity: "rare", seats: ["well", "spender_a", "spender_b"] },
-  gaol: { rarity: "rare", seats: ["watcher", "gaoler", "turnkey"] },
-  thorn_hedge: { rarity: "rare", seats: ["anchor", "thorns_a", "thorns_b"] },
-  blood_oath: { rarity: "rare", seats: ["bleeder", "drinker", "donor"] },
-  pyre_of_heroes: { rarity: "rare", seats: ["martyr", "reviver", "survivor"] },
-  knives_drawn: { rarity: "rare", seats: ["opener", "second", "rear_guard"] },
-  the_wheel: { rarity: "rare", seats: ["wall", "blade", "well"] },
-  the_pack: { rarity: "legendary", seats: ["lead", "packmate_a", "packmate_b"] },
-  the_forge: { rarity: "legendary", seats: ["forgehand_a", "forgehand_b", "forgehand_c"] },
-  the_ambuscade: { rarity: "legendary", seats: ["lurker_a", "lurker_b", "lurker_c"] },
-  the_choir: { rarity: "legendary", seats: ["first_voice", "second_voice", "third_voice"] },
-  the_undying: { rarity: "legendary", seats: ["martyr", "spared_a", "spared_b"] },
-  the_hurricane: { rarity: "legendary", seats: ["squall_a", "squall_b", "squall_c"] },
-  the_mountain: { rarity: "legendary", seats: ["peak", "foothill_a", "foothill_b"] },
-  the_storm_front: { rarity: "legendary", seats: ["thunderhead_a", "thunderhead_b", "thunderhead_c"] },
-  the_vise: { rarity: "legendary", seats: ["jaw_a", "screw", "jaw_b"] },
+export const FORMATION_SEATS: Record<string, { rarity: "common" | "rare" | "legendary"; seats: [string, string, string] }> = Object.fromEntries(
+  formations.map((f) => [f.id, { rarity: (f.rarity ?? "common") as "common" | "rare" | "legendary", seats: f.positions.map((p) => p.id) as [string, string, string] }]),
+);
+
+/** The 16 mythics: the class each fits and the slot it sits in. */
+export const MYTHICS: Record<string, { cls: string; slot: Slot }> = Object.fromEntries(mythicGear.map((g) => [g.id, { cls: g.mythic!, slot: g.slot as Slot }]));
+
+// ─── Picking from the tags ───────────────────────────────────────────────────
+
+const RANK: Record<string, number> = { common: 0, uncommon: 1, rare: 2, legendary: 3, mythic: 4 };
+const rarityOf = (g: GearT) => (g as GearT & { rarity?: string }).rarity ?? "common";
+const worth = (id: string, build: BuildId) => Math.max(0, ...(SERVED[id]?.builds ?? []).filter((t) => t.build === build).map((t) => t.worth));
+const classOf = (cls: string): ClassDefT => {
+  const c = classes.find((x) => x.id === cls);
+  if (!c) throw new Error(`build parties: no class '${cls}'`);
+  return c;
 };
+const kindOf = (g: GearT) => (g.slot === "weapon" ? g.weapon?.kind : g.slot === "armor" ? g.armor : g.slot === "offhand" ? g.offhand : undefined);
+const kindsFor = (c: ClassDefT, slot: Slot): string[] | null => (slot === "weapon" ? c.weapons : slot === "armor" ? c.armor : slot === "offhand" ? c.offhands : null);
+const TWO_HANDED = new Set(weaponKinds.filter((k) => k.hands === 2).map((k) => k.id));
 
-/** The 16 mythics (`docs/gear-design/loot.md`, Mythics): the class each fits and the slot it sits in. */
-export const MYTHICS: Record<string, { cls: string; slot: Slot }> = {
-  horn_of_the_keep: { cls: "knight", slot: "offhand" },
-  halo_of_the_saint: { cls: "cleric", slot: "amulet" },
-  huntmasters_quiver: { cls: "ranger", slot: "armor" },
-  heartwood_mail: { cls: "bramble_knight", slot: "armor" },
-  the_last_wall: { cls: "hoplite", slot: "offhand" },
-  chains_of_light: { cls: "paladin", slot: "offhand" },
-  stormspear: { cls: "valkyrie", slot: "weapon" },
-  metronome: { cls: "bard", slot: "offhand" },
-  the_witch_blade: { cls: "hexer", slot: "weapon" },
-  ember_palms: { cls: "monk", slot: "weapon" },
-  nights_edge: { cls: "assassin", slot: "armor" },
-  thralls_chalice: { cls: "vampire", slot: "offhand" },
-  crown_of_embers: { cls: "pyromancer", slot: "amulet" },
-  glaciers_heart: { cls: "frostweaver", slot: "armor" },
-  eye_of_the_tempest: { cls: "stormcaller", slot: "weapon" },
-  mountains_crown: { cls: "geomancer", slot: "amulet" },
+function pick(c: ClassDefT, slot: Slot, build: BuildId, rung: Rung, used: Set<string>): GearT {
+  const kinds = kindsFor(c, slot);
+  const fits = pieceGear.filter((g) => g.slot === slot && (!kinds || kinds.includes(kindOf(g)!)) && RANK[rarityOf(g)] <= rung && !used.has(g.id));
+  const scored = fits.map((g) => ({ g, w: worth(g.id, build) })).sort((x, y) => y.w - x.w || RANK[rarityOf(y.g)] - RANK[rarityOf(x.g)] || x.g.id.localeCompare(y.g.id));
+  if (scored[0]?.w) return scored[0].g;
+  // Nothing for the build: a common of the class's first kind (any amulet for the amulet slot).
+  const plain = fits.filter((g) => rarityOf(g) === "common").sort((x, y) => (kinds ? kinds.indexOf(kindOf(x)!) - kinds.indexOf(kindOf(y)!) : 0) || x.id.localeCompare(y.id))[0];
+  if (!plain) throw new Error(`build parties: nothing for a ${c.id}'s ${slot}`);
+  return plain;
+}
+
+/** A seat's role, formation by formation, in seat order. */
+type Role = "wall" | "heal" | "cast" | "hit" | "any";
+const ANY: Role[] = ["any", "any", "any"];
+const SEAT_ROLES: Record<string, Role[]> = {
+  neutral: ANY, heavy_line: ["hit", "wall", "any"], spur: ["hit", "hit", "hit"], hearth: ["wall", "hit", "any"], hoarfrost_line: ["hit", "hit", "any"],
+  squall_line: ["hit", "hit", "wall"], hunting_party: ["hit", "hit", "wall"], thorn_hedge: ["wall", "heal", "hit"], wellspring: ["cast", "any", "wall"],
+  shared_cup: ["hit", "hit", "heal"], shieldwall: ["wall", "any", "any"], the_standard: ["hit", "any", "any"], first_light: ANY, skirmish_line: ANY,
+  hammer_and_anvil: ["wall", "hit", "heal"], bloodied_ground: ["hit", "hit", "hit"], pyre_line: ["wall", "hit", "cast"], icefall: ["cast", "hit", "cast"],
+  storm_front: ["cast", "hit", "wall"], the_pack: ["hit", "hit", "hit"], toll_gate: ["wall", "hit", "hit"], the_stage: ["cast", "any", "wall"],
+  blood_oath: ["hit", "hit", "heal"], decoy: ["wall", "any", "any"], vigil: ["wall", "heal", "any"], the_wheel: ANY, the_mountain: ["hit", "wall", "any"],
+  the_whetstone: ANY, the_forge: ANY, the_long_winter: ANY, eye_of_the_storm: ["cast", "any", "any"], open_season: ANY, the_palisade: ["wall", "hit", "hit"],
+  the_cathedral: ["cast", "any", "any"], the_covenant: ANY, twins: ["any", "any", "hit"],
 };
+/** How well each class fits a role (none named: 0). */
+const FIT: Record<string, Partial<Record<Role, number>>> = {
+  knight: { wall: 3, hit: 1 }, cleric: { heal: 3, cast: 1 }, ranger: { hit: 3 }, bramble_knight: { wall: 3 }, hoplite: { wall: 2, hit: 2 },
+  paladin: { wall: 2, heal: 2, hit: 1 }, valkyrie: { wall: 1, heal: 1, hit: 2 }, bard: { heal: 1, cast: 2 }, hexer: { cast: 3 }, monk: { hit: 3, wall: 1 },
+  assassin: { hit: 3 }, vampire: { hit: 2 }, pyromancer: { cast: 3 }, frostweaver: { cast: 3 }, stormcaller: { cast: 3, hit: 1 }, geomancer: { cast: 2, wall: 2, hit: 1 },
+};
+const ORDER: Role[] = ["wall", "heal", "cast", "hit", "any"];
 
-// ─── Writing helpers (pure) ──────────────────────────────────────────────────
+/** The route's classes in the formation's seat order. */
+function seated(formation: string, classIds: string[]): string[] {
+  const roles = SEAT_ROLES[formation];
+  if (!roles) throw new Error(`build parties: no seat roles for '${formation}'`);
+  const out: string[] = new Array(3), left = [...classIds];
+  const seats = [0, 1, 2].sort((a, b) => ORDER.indexOf(roles[a]) - ORDER.indexOf(roles[b]) || a - b);
+  for (const s of seats) {
+    const best = left.reduce((b, c) => ((FIT[c]?.[roles[s]] ?? 0) > (FIT[b]?.[roles[s]] ?? 0) ? c : b), left[0]);
+    out[s] = best;
+    left.splice(left.indexOf(best), 1);
+  }
+  return out;
+}
 
-/** A version, without the power step. */
-export const v = (ability: string, version: "a" | "b"): Training => ({ ability, power: false, version });
-/** A version with the power step. */
-export const vp = (ability: string, version: "a" | "b"): Training => ({ ability, power: true, version });
-/** The power step alone. */
-export const p = (ability: string): Training => ({ ability, power: true });
-/** Gear by slot; `null` for the offhand under a two-hander. */
-export const g = (weapon: string, armor: string, offhand: string | null, amulet: string): Gear => (offhand ? { weapon, armor, offhand, amulet } : { weapon, armor, amulet });
-
-type Seated = [cls: string, seat: string, trained: Training[], gear: Gear];
-type RungSpec = [formation: string, members: [Seated, Seated, Seated]];
 const ACT: Record<Rung, Act> = { 1: "I", 2: "II", 3: "III" };
+/** Mythics a rung-3 party wears: the members whose class's mythic is worth most to this build, at most two. */
+function mythicsFor(build: BuildId, classIds: string[]): Map<string, GearT> {
+  const BUILD_IDS = Object.keys(BUILDS) as BuildId[];
+  const fit = classIds.map((cls) => mythicGear.find((g) => g.mythic === cls)).filter((g): g is GearT => !!g)
+    .map((g) => ({ g, w: worth(g.id, build), top: Math.max(...BUILD_IDS.map((b) => worth(g.id, b))) }))
+    .filter((x) => x.w > 0 && x.w === x.top).sort((x, y) => y.w - x.w).slice(0, 2);
+  return new Map(fit.map((x) => [x.g.mythic!, x.g]));
+}
 
-export function route(build: BuildId, id: string, note: string, abilities: Record<string, [string, string, string]>, rungs: [RungSpec, RungSpec, RungSpec]): Route {
-  const classes = Object.keys(abilities) as [string, string, string];
-  const party = ([formation, seated]: RungSpec, i: number): Party => {
+/** The class's three abilities, in the kit's order. */
+const abilitiesOf = (cls: string) => kitAbilities.filter((a) => a.class === cls).map((a) => a.id) as [string, string, string];
+
+/** A rung's member: its gear by the tags, its versions from rung 2, the power step on them at rung 3. */
+function member(cls: string, seat: string, build: BuildId, rung: Rung, used: Set<string>, mythic?: GearT): Member {
+  const c = classOf(cls);
+  const gear: Partial<Gear> = {};
+  for (const slot of ["weapon", "armor", "offhand", "amulet"] as Slot[]) {
+    if (slot === "offhand" && gear.weapon && TWO_HANDED.has(pieceGear.find((g) => g.id === gear.weapon)?.weapon?.kind ?? "")) continue;
+    if (mythic && mythic.slot === slot) { gear[slot] = mythic.id; continue; }
+    const g = pick(c, slot, build, rung, used);
+    used.add(g.id);
+    gear[slot] = g.id;
+  }
+  const trained: Training[] = [];
+  if (rung > 1) {
+    for (const u of upgrades.filter((x) => x.class === cls)) {
+      const a = worth(`${u.id}__a`, build), b = worth(`${u.id}__b`, build);
+      if (a || b) trained.push({ ability: u.id, power: rung === 3, version: a >= b ? "a" : "b" });
+    }
+  }
+  return { cls, seat, abilities: abilitiesOf(cls), trained, gear: gear as Gear };
+}
+
+/**
+ * A route: its build, its three classes (builds.md's routes), what it's built around, and its formation at each rung. Each
+ * rung is filled from the tags (the file's header says how).
+ */
+export function route(build: BuildId, classIds: [string, string, string], note: string, forms: [string, string, string]): Route {
+  const id = classIds.map((c) => c.replace(/_/g, "-")).join("-");
+  const rungs = forms.map((formation, i): Party => {
     const rung = (i + 1) as Rung;
-    const members = seated.map(([cls, seat, trained, gear]) => ({ cls, seat, abilities: abilities[cls], trained, gear })) as [Member, Member, Member];
+    const seats = FORMATION_SEATS[formation]?.seats;
+    if (!seats) throw new Error(`build parties: no formation '${formation}'`);
+    const order = seated(formation, classIds);
+    const used = new Set<string>(), myth = rung === 3 ? mythicsFor(build, classIds) : new Map<string, GearT>();
+    const members = order.map((cls, s) => member(cls, seats[s], build, rung, used, myth.get(cls))) as [Member, Member, Member];
     return { id: `${build}/${id}/${rung}`, build, route: id, rung, act: ACT[rung], version: "formation", formation, members };
-  };
-  return { build, id, classes, note, rungs: rungs.map(party) as [Party, Party, Party] };
+  }) as [Party, Party, Party];
+  return { build, id, classes: classIds, note, rungs };
 }
 
 /** The same party in the Neutral formation: the same members, in the same order, with the same gear and trainings. */

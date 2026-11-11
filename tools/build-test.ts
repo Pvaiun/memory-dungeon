@@ -1,9 +1,8 @@
 /**
- * The build test: all twelve builds on one set of the rogue's own fights, side by side. It measures; it doesn't balance.
- * They're the twelve today's loot was made for; `docs/gear-design/builds.md` holds the nine that replace them, and the loot
- * pass's build rewrites this test for the nine.
+ * The build test: the nine builds (`docs/gear-design/builds.md`) on one set of the rogue's own fights, side by side. It
+ * measures; it doesn't balance.
  *
- * - **The parties:** the hand-built parties of `tools/build-parties.ts` (12 builds, 3 routes each, 3 rungs, each in its formation
+ * - **The parties:** the parties of `tools/build-parties.ts` (9 builds, 3 routes each, 3 rungs, each in its formation
  *   and in Neutral), fielded as the engine's `Party`: abilities in slot order, each trained ability as its form, a trained
  *   passive as `passive`, gear by slot; every one checked by `checkParty` before anything plays.
  * - **The fights:** for each act, a fixed sample of its regions' regular fights (the normal pool), elites and bosses, at their
@@ -323,20 +322,17 @@ function strengthOf(recs: Rec[]): Strength {
   };
 }
 
-/** Each of the twelve builds' row of their rhythm table: damage over a fight, danger, what it spends. */
+/** Each of the nine builds' row of their rhythm table: damage over a fight, danger, what it spends. */
 const RHYTHM_TABLE: Record<BuildId, [string, string, string]> = {
   landslide: ["a few huge blows at uneven moments", "steady, soaked by stone; spikes when it breaks", "MP, on stone that saves its HP"],
   cuts: ["a dense, even stream from the first tick", "even; dodges decide it", "HP: little casting, light bodies"],
   bonfire: ["rises the whole fight; each kill comes sooner than the last", "early", "MP, on the casts that feed the fire"],
   snap: ["bursts on a beat you can count", "falls with each burst", "both, evenly"],
+  storm: ["follows how busy the foes are: each one that acts pays", "even, spread over the field", "MP on the arcs and chains"],
   hunt: ["a staircase: a kill every few ticks", "early, falling with each kill", "both: HP early, MP on reach"],
-  harvest: ["nothing, then everything", "full until the end", "MP on the sweeps; HP holding the full field"],
-  ambush: ["a spike at the start, then a thin tail", "late, if the spike doesn't finish it", "HP, in the exposed tail"],
-  overflow: ["in waves passing round the party, almost all casts", "a cliff when the mana stops", "MP, passed round the party"],
-  lockdown: ["in windows while a foe is disabled", "held down; spikes when a lock slips", "MP on the locks, to save HP"],
   toll: ["follows how much the foes attack", "all on one unit", "HP: the anchor's"],
+  barrage: ["the same great spell again and again, on its cooldown", "a cliff when the mana or the caster stops", "MP, flowing to one caster"],
   pact: ["high and steady", "swings and rights itself", "HP, in place of MP"],
-  phoenix: ["surges after each fall", "embraced, swingy", "HP on the falls, MP on the returns"],
 };
 
 /** The rhythm as a vector, for how far builds sit from each other: damage by quarter, lumpiness, kills, danger by quarter, low HP, sources, spending. */
@@ -529,7 +525,7 @@ async function main() {
     const r = rhythm.get(b)!;
     L.push(`| ${name(b)} | ${r.q.map(pct).join(" / ")} | ${pct(r.top10)} | ${pct(r.firstKill)} | ${pct(r.spread)} | ${r.taken.map(pct).join(" / ")} | ${pct(r.low)} | ${srcLine(r)} | ${pct(r.mp)} | ${pct(r.paid)} | ${Math.round(r.T)} |`);
   }
-  L.push("", "Beside the twelve builds' rhythm table:", "");
+  L.push("", "Beside the nine builds' rhythm table:", "");
   L.push("| Build | Damage over a fight (the table) | Damage by quarter | Danger (the table) | Taken by quarter | Spends (the table) | MP / paid |", "| --- | --- | --- | --- | --- | --- | --- |");
   for (const b of buildIds) {
     const r = rhythm.get(b)!, [dmg, danger, spends] = RHYTHM_TABLE[b as BuildId];
