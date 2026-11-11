@@ -1216,7 +1216,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00042,
           "stat": "defense",
           "of": "holder"
          }
@@ -1502,7 +1502,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0013,
+          "ratio": 0.00078,
           "stat": "attack",
           "of": "holder"
          }
@@ -4454,7 +4454,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0013,
+          "ratio": 0.00078,
           "stat": "attack",
           "of": "holder"
          }
@@ -5315,7 +5315,7 @@
          "stacks": {
           "scale": [
            {
-            "ratio": 0.0007,
+            "ratio": 0.00042,
             "stat": "attack",
             "of": "holder"
            }
@@ -6054,7 +6054,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00042,
           "stat": "attack",
           "of": "holder"
          }
@@ -6320,7 +6320,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0023,
+          "ratio": 0.00138,
           "stat": "attack",
           "of": "holder"
          }
@@ -8723,7 +8723,7 @@
   {
    "id": "tallymail",
    "name": "Tallymail",
-   "text": "Its wearer counts Cuts (a Cut for each hit it lands, kept for the fight, up to 25), and has Lifesteal +2% for each Cut.",
+   "text": "Its wearer counts Cuts (a Cut for each hit it lands, kept for the fight, up to 25), and has Lifesteal +1% for each Cut.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -8749,7 +8749,7 @@
      "flat": {
       "scale": [
        {
-        "ratio": 2,
+        "ratio": 1,
         "stacks": "cuts",
         "of": "holder"
        }
@@ -8762,7 +8762,7 @@
   {
    "id": "gleaners_leathers",
    "name": "Gleaner's leathers",
-   "text": "Each hit its wearer lands heals it for 3% of its max HP.",
+   "text": "Each hit its wearer lands heals it for 2% of its max HP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -8778,7 +8778,7 @@
        "amount": {
         "scale": [
          {
-          "ratio": 0.03,
+          "ratio": 0.02,
           "stat": "max_hp",
           "of": "holder"
          }
@@ -9612,7 +9612,7 @@
          "stacks": {
           "scale": [
            {
-            "ratio": 0.0007,
+            "ratio": 0.00042,
             "stat": "attack",
             "of": "holder"
            }
@@ -9723,7 +9723,7 @@
   {
    "id": "hummingbird_charm",
    "name": "Hummingbird charm",
-   "text": "Its wearer's basic attacks come twice as often and deal half as much.",
+   "text": "Its wearer's basic attacks come half again as often and deal two thirds as much.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -9731,7 +9731,7 @@
    "boosts": [
     {
      "tag": "basic",
-     "pct": -50
+     "pct": -33
     }
    ]
   },
@@ -11510,7 +11510,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00042,
           "stat": "defense",
           "of": "holder"
          }
@@ -12238,7 +12238,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0013,
+          "ratio": 0.00078,
           "stat": "attack",
           "of": "self"
          }
@@ -12396,7 +12396,7 @@
          "stacks": {
           "scale": [
            {
-            "ratio": 0.0007,
+            "ratio": 0.00042,
             "stat": "attack",
             "of": "holder"
            }
@@ -13323,7 +13323,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00042,
           "stat": "attack",
           "of": "holder"
          }
@@ -15314,7 +15314,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00098,
+          "ratio": 0.000588,
           "stat": "defense",
           "of": "holder"
          }
@@ -15336,7 +15336,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00098,
+          "ratio": 0.000588,
           "stat": "defense",
           "of": "holder"
          }
@@ -15369,7 +15369,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00042,
           "stat": "defense",
           "of": "holder"
          }
@@ -15396,7 +15396,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00042,
           "stat": "defense",
           "of": "holder"
          }
@@ -15434,7 +15434,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00042,
           "stat": "defense",
           "of": "holder"
          }
@@ -15456,7 +15456,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00042,
           "stat": "defense",
           "of": "holder"
          }
@@ -15478,7 +15478,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00042,
           "stat": "defense",
           "of": "holder"
          }
@@ -15563,7 +15563,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00098,
+          "ratio": 0.000588,
           "stat": "defense",
           "of": "holder"
          }
@@ -15590,7 +15590,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00098,
+          "ratio": 0.000588,
           "stat": "defense",
           "of": "holder"
          }
@@ -15628,7 +15628,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00098,
+          "ratio": 0.000588,
           "stat": "defense",
           "of": "holder"
          }
@@ -15650,7 +15650,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00098,
+          "ratio": 0.000588,
           "stat": "defense",
           "of": "holder"
          }
@@ -15672,7 +15672,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00098,
+          "ratio": 0.000588,
           "stat": "defense",
           "of": "holder"
          }
@@ -17607,7 +17607,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00182,
+          "ratio": 0.001092,
           "stat": "attack",
           "of": "holder"
          }
@@ -17642,7 +17642,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0013,
+          "ratio": 0.00078,
           "stat": "attack",
           "of": "holder"
          }
@@ -17711,7 +17711,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0013,
+          "ratio": 0.00078,
           "stat": "attack",
           "of": "holder"
          }
@@ -17746,7 +17746,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00182,
+          "ratio": 0.001092,
           "stat": "attack",
           "of": "holder"
          }
@@ -17815,7 +17815,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00182,
+          "ratio": 0.001092,
           "stat": "attack",
           "of": "holder"
          }
@@ -20245,7 +20245,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00042,
           "stat": "defense",
           "of": "holder"
          }
@@ -34977,7 +34977,7 @@
     },
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     }
    ],
    "statuses": [
@@ -35133,7 +35133,7 @@
     },
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     }
    ],
    "statuses": [
@@ -36035,7 +36035,7 @@
     },
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     }
    ],
    "statuses": [
@@ -38842,7 +38842,7 @@
   {
    "id": "tallymail",
    "name": "Tallymail",
-   "text": "Its wearer counts Cuts (a Cut for each hit it lands, kept for the fight, up to 25), and has Lifesteal +2% for each Cut.",
+   "text": "Its wearer counts Cuts (a Cut for each hit it lands, kept for the fight, up to 25), and has Lifesteal +1% for each Cut.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
@@ -38877,7 +38877,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     }
    ],
    "rarity": "common"
@@ -38917,7 +38917,7 @@
   {
    "id": "gleaners_leathers",
    "name": "Gleaner's leathers",
-   "text": "Each hit its wearer lands heals it for 3% of its max HP.",
+   "text": "Each hit its wearer lands heals it for 2% of its max HP.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -38925,7 +38925,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "max_hp",
@@ -38971,7 +38971,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "crit_chance",
@@ -38994,7 +38994,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "attack",
@@ -39017,7 +39017,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "aggro",
@@ -39094,7 +39094,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "attack",
@@ -39144,7 +39144,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 35
+     "flat": 20
     },
     {
      "stat": "attack",
@@ -39620,7 +39620,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     }
    ],
    "rarity": "common"
@@ -39802,7 +39802,7 @@
   {
    "id": "hummingbird_charm",
    "name": "Hummingbird charm",
-   "text": "Its wearer's basic attacks come twice as often and deal half as much.",
+   "text": "Its wearer's basic attacks come half again as often and deal two thirds as much.",
    "slot": "amulet",
    "tier": "ordinary",
    "source": "drop",
@@ -39813,11 +39813,11 @@
     },
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "attack_speed",
-     "flat": 100
+     "flat": 50
     }
    ],
    "statuses": [
@@ -39917,7 +39917,7 @@
     },
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     }
    ],
    "statuses": [
@@ -40091,7 +40091,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "aggro",
@@ -40297,7 +40297,7 @@
     },
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "mp_regen",
@@ -40331,7 +40331,7 @@
     },
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "cooldown_reduction",
@@ -40391,7 +40391,7 @@
     },
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     }
    ],
    "statuses": [
@@ -42841,7 +42841,7 @@
     },
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     }
    ],
    "statuses": [
@@ -42887,7 +42887,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     }
    ],
    "rarity": "common"
@@ -42919,7 +42919,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "attack",
@@ -42942,7 +42942,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "crit_chance",
@@ -42965,7 +42965,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "defense",
@@ -42988,7 +42988,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "defense",
@@ -43015,7 +43015,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "attack_speed",
@@ -43042,7 +43042,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "crit_chance",
@@ -43069,7 +43069,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 35
+     "flat": 20
     },
     {
      "stat": "attack",

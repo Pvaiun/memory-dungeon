@@ -227,10 +227,10 @@ armor("mail", "common", "Thick byrnie", { stats: [st("max_hp", 1)], serves: "Blo
   });
 }
 {
-  const name = "Tallymail", effect = "Its wearer counts Cuts (a Cut for each hit it lands, kept for the fight, up to 25), and has Lifesteal +2% for each Cut.";
+  const name = "Tallymail", effect = "Its wearer counts Cuts (a Cut for each hit it lands, kept for the fight, up to 25), and has Lifesteal +1% for each Cut.";
   armor("mail", "legendary", name, {
     effect, stats: [st("max_hp", 1), st("attack", 2), sp("lifesteal", "medium")],
-    statuses: [own_(name, effect, { reactions: [react(EV.hit, give("cuts", "self", 1))], stats: [{ stat: "lifesteal", flat: stacksOf("cuts", 2), live: true }] })],
+    statuses: [own_(name, effect, { reactions: [react(EV.hit, give("cuts", "self", 1))], stats: [{ stat: "lifesteal", flat: stacksOf("cuts", 1), live: true }] })],
     serves: "Cuts 3 ●●●, Pact ●●",
   });
 }
@@ -242,10 +242,10 @@ armor("leather", "common", "Footpad's jerkin", { stats: [critStep(1)], serves: "
 armor("leather", "common", "Spotter's coat", { stats: [sp("accuracy", "medium")], serves: "the Hunt." });
 
 {
-  const name = "Gleaner's leathers", effect = "Each hit its wearer lands heals it for 3% of its max HP.";
+  const name = "Gleaner's leathers", effect = "Each hit its wearer lands heals it for 2% of its max HP.";
   armor("leather", "uncommon", name, {
     effect, stats: [sp("evasion", "medium"), st("max_hp", 1)],
-    statuses: [own_(name, effect, { reactions: [react(EV.hit, { op: "heal", amount: share(0.03, "max_hp"), to: "holder" })] })],
+    statuses: [own_(name, effect, { reactions: [react(EV.hit, { op: "heal", amount: share(0.02, "max_hp"), to: "holder" })] })],
     serves: "Cuts 1 ●●, Pact 1 ● ⚙ riposte (half), blood mage (half)",
   });
 }

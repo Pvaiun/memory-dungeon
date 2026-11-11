@@ -267,10 +267,10 @@ export const SHOCK_STACKS = 1.5;
  * this share of what its word gives, on the party's side only (never a foe's). Abilities keep their own sizes, set by hand
  * against each status (Frost lance's Chill, a shatter in more than one cast). Applied when the pack is built (pack.ts); flat
  * counts and shares of a status passed on are left as written. The words are one scale for every status, and a stack is
- * worth very different amounts: a Burn stack deals about three swings' worth over its life, and Chill caps at 12, so a few
- * Chill on every swing from three pieces shatters a foe each couple of hits. Statuses not named here add their words'.
+ * worth very different amounts: a Burn or Bleed stack deals about three swings' worth over its life, and Chill caps at 12, so
+ * a few Chill on every swing from three pieces shatters a foe each couple of hits. Statuses not named here add their words'.
  */
-export const APPLIED: Record<string, number> = { chill: 0.2, burn: 0.25 };
+export const APPLIED: Record<string, number> = { chill: 0.2, burn: 0.25, bleed: 0.6 };
 /** A flat stack count, for enemies that apply "a stack" or statuses that start with "many". */
 export const FLAT_STACKS = { one: 1, few: 2, several: 4, many: 7 } as const;
 
@@ -302,6 +302,12 @@ export const SPECIAL_KEY: Record<SpecialStat, string> = {
   evasion: "evasion", accuracy: "accuracy", crit_damage: "crit_multiplier", double_strike: "double_strike", thorns: "thorns", lifesteal: "lifesteal", siphon: "siphon",
   attack_speed: "attack_speed", cooldown: "cooldown_reduction", cast_speed: "cast_time_reduction",
 };
+/**
+ * A piece's own step of a special stat where it differs from the class lines' (SPECIAL). Evasion: its worth grows as
+ * 1 / (1 − Evasion), so pieces stacked on a class that has it climbed to the cap (a Monk at 75, an Assassin at 60, every hit
+ * on them one in three or four), and two pieces' 20 each were worth far more than their budget counted.
+ */
+export const PIECE_SPECIAL: Partial<Record<keyof typeof SPECIAL, { medium: number; high: number }>> = { evasion: { medium: 12, high: 20 } };
 
 // ─── The kits' own words ─────────────────────────────────────────────────────
 
