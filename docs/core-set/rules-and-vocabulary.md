@@ -81,6 +81,7 @@ Fights run in real time, in ticks, with no orders: each unit acts on its own, fr
   - Targets after the first (Arc's second hit, Chain lightning's other foes) ignore Taunt.
   - When several units Taunt, foes pick among them weighted by draw.
 - **The Hidden rule.** Foes can't pick a Hidden unit as a target by any targeting, Seek included; only their all-foes effects (Area) reach it. Its allies can still pick it.
+- **Someone stays in the light.** Hidden never lands where it would leave the foes no ally to pick; where several would hide at once, the last in seat order stays out. If the foes are left with nobody to pick, the last in seat order steps out of hiding.
 - **Taunt ends Hidden.** A unit that gains Taunt stops being Hidden, and Hidden doesn't land on a Taunting unit.
 
 **Aggro and draw.** Aggro is centred on 100. A class's or enemy's Aggro word sets it, and gear and seats move it in steps (`aggroOf`, `AGGRO_STEP`). Aggro is never below 1. A unit's chance to be picked is its draw over the total draw of the units that can be picked, and an ordinary unit (Aggro 100) draws 100.
@@ -230,7 +231,7 @@ The Fundamental pieces were chosen for how they interact: pieces that answer, un
 
 ## Vocabulary: statuses
 
-The vocabulary is 22 statuses, 10 special stats and 6 effects. The pieces add seven counters (*Gear design: the loot*).
+The vocabulary is 22 statuses, 10 special stats and 6 effects. The pieces add six counters (*Gear design: the loot*).
 
 | Kind | Fundamental | Specialist | Enemy-only | Total |
 | --- | --- | --- | --- | --- |
@@ -253,9 +254,9 @@ Ten staples make the Fundamental base, each useful from a single application. Th
 | Haste | Fundamental | Shorter cooldowns, wind-ups and time between attacks. Refresh. |
 | Taunt | Fundamental | Foes' single-target picks must go to a Taunting unit; with several, draw weights the pick. Refresh. Seek gets past it. |
 | Burn | Specialist | Stacks, with no cap. On a short pulse it deals damage per stack, then loses a share of its stacks, so it stays high only while someone keeps applying it. Each application is small against the ceiling that upkeep reaches. |
-| Chill | Specialist | Stacks up to a cap, each stack slowing its holder a little. It thaws a stack at a time, slowly, so it builds over a fight. At the cap it shatters: its holder takes damage for each stack and a Stun, and the Chill is spent. Near the cap it slows as much as Slow, and the two add. |
+| Chill | Specialist | Stacks up to a cap, each stack slowing its holder a little. It thaws a stack at a time, slowly, so it builds over a fight. At the cap it shatters: its holder takes damage for each stack and a Stun, and the Chill is spent. Near the cap it slows as much as Slow, and the two add. A chain of shatters dies down: Chill that one foe's shatter passes to another foe that has shattered lately is cut by about half for each time it has, never to nothing (Chill from swings and spells is untouched). |
 | Shock | Specialist | Stacks up to a cap. Each time its holder acts (when an action resolves: at the end of its wind-up, or at once for a basic attack), it takes damage per stack and loses half its stacks, so it hurts fast units most. |
-| Marked | Specialist | A debuff on a foe: the party's basic attacks pick a Marked foe while it lasts, inside the Taunt rule (Seek follows it past a Taunting foe); abilities keep their own targeting. Each applier keeps one Mark, so a new one it applies moves its old one. Refresh. The Paladin's Condemn applies it; so do the Hunt's pieces. |
+| Marked | Specialist | A debuff on a foe: the party's basic attacks, and its abilities aimed at a random foe (a phrase's fallback to a random foe included), pick a Marked foe while it lasts, inside the Taunt rule (Seek follows it past a Taunting foe); an ability whose phrase finds its foe keeps its own targeting. With several Marks, the pick is by draw among them. Each applier keeps one Mark, so a new one it applies moves its old one. Refresh. The Paladin's Condemn applies it; so do the Hunt's pieces and seats, each only while no foe is Marked. |
 | Sunder | Specialist | Stacks up to a cap; each stack makes its holder take a little more damage of every kind. Loses a stack on a pulse. |
 | Silence | Specialist | Can't use abilities, only basic attacks; loses an ability's wind-up. Fizzle. |
 | Hidden | Specialist | Foes can't pick it as a target, Seek included; only their Area reaches it. Its allies can still pick it. Lasts a set time and can't be removed. Refresh. |

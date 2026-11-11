@@ -89,7 +89,7 @@ The starters cover every Fundamental challenge between them: a wall, a healer an
 - **Frost arrow.** Deals light damage that scales from Attack to the foe with the most Chill, and adds a few Chill; stacks scale from Attack. A second source of Chill, so the Frostweaver and the Hexer reach a shatter sooner.
 - **Rending arrow.** Deals damage that scales from Attack to the foe with the most Sunder, and adds a few Sunder; stacks scale from Attack.
 
-**Identities.** The marksman (dagger, trophy): Quarry, Gutting arrow. The skirmisher (dagger, cloak): **Quick draw** (each crit makes its next basic attack come at once), Barbed quiver (no arrow; for a while its basic attacks add a few Bleed). The trapper (bow): Pinning arrow, Hail, Armor breaker, Deep barbs.
+**Identities.** The marksman (dagger, trophy): Quarry, Gutting arrow. The skirmisher (dagger, cloak): **Quick draw** (each crit makes its next basic attack come at once), Barbed volley (a light arrow at every foe, each adding a few Bleed). The trapper (bow): Pinning arrow, Hail (a quick arrow, and a few Chill on every foe), Armor breaker, Deep barbs.
 
 *Test, Shield wall:* its arrows have no Seek, so they go to the Taunting, Guarded foe, which gets Bleed, Chill and Sunder, and the Sunder raises the damage it takes, offsetting some of its Guard. Its basic attacks ignore Taunt and land, often critting, on the fragile dealers behind. Against a lone boss, everything stacks on one target.
 
@@ -138,7 +138,7 @@ Six classes that win through the party: a tank that punishes, a bruiser that hel
 - **Absolve.** Cleanses and heals itself and the other ally with the lowest share of max HP; the heal scales from Attack. Waits until an ally is below max HP.
 - **Smite.** Deals heavy damage that scales from Attack to the foe with the highest Attack, and adds several Burn; stacks scale from Attack. A long wind-up.
 
-**Identities.** The judge (great weapon, Mail): Swift justice (Marks the foe with the lowest share of HP, then the volley), **Verdict** (its crit chance is tripled against a judged foe: Crit chance), Hammer of dawn, Pyre of judgement. The healer (mace, relic): Absolution, **Penance** (HP). The champion of the line (mace, kite shield, Plate): Challenge (Marks the foe with the highest Attack and the Paladin Taunts; no volley), Zeal (its basic attacks add a few Burn to a judged foe), Penance.
+**Identities.** The judge (great weapon, Mail): Swift justice (Marks the foe with the lowest share of max HP, then the volley; a foe that falls holding the Mark makes Condemn ready again), **Verdict** (its crit chance is tripled against a judged foe: Crit chance), Hammer of dawn, Pyre of judgement. The healer (mace, relic): Absolution, **Penance** (HP). The champion of the line (mace, kite shield, Plate): Challenge (Marks the foe with the highest Attack and the Paladin Taunts; no volley), Zeal (its basic attacks add a few Burn to a judged foe), Penance.
 
 *Test, Buffer:* the Fire Imp's Cheer buffs its strongest ally, and every hit on it lands half again as hard; Condemn Marks the most dangerous foe and the party's swings pile onto it. Against a Nuker, Smite's long wind-up is its weakness: a fast fight may end before it lands.
 
@@ -168,7 +168,7 @@ Six classes that win through the party: a tank that punishes, a bruiser that hel
 - **Allegro.** Applies Haste to every ally.
 - **Encore.** The other ally with the highest Attack casts its next ability twice; the second cast is free. A medium cooldown.
 
-**Identities.** The conductor (wand, tome, Robes): Rubato, Rousing chorus (a few Might on every ally, twice as many on the ally with the slowest basic attack), Reprise (in place of the repeat, that ally's ability with the longest cooldown left is ready at once). The troubadour (wand, tome): Harmony, Lament, Reprise. The skald (bow, or the wand with the bell; Leather): Battle song, Accelerando, Cadenza (no Encore for an ally: the Bard's own next three basic attacks come at once).
+**Identities.** The conductor (wand, tome, Robes): Rubato (Haste on every ally, and each ally's ability nearest to ready is ready at once), Rousing chorus (all its Might, three times as many, on the ally with the slowest basic attack), Reprise (in place of the repeat, that ally's ability with the longest cooldown left is ready at once). The troubadour (wand, tome): Harmony, Lament, Reprise. The skald (bow, or the wand with the bell; Leather): Battle song, Accelerando, Cadenza (no Encore for an ally: the Bard's own next three basic attacks come at once).
 
 *Test, Curser:* the Curser Weakens and Slows the party. War ballad's Might, every few ticks on every ally, and Allegro's Haste outweigh both, and Refrain mends the chip damage. It lifts neither debuff, so a Cleric's Renew still helps. Encore makes the party's best spell land twice.
 
@@ -179,13 +179,13 @@ Six classes that win through the party: a tank that punishes, a bruiser that hel
 **Weapons:** wand, sword. **Armor:** Mail. **Offhands:** tome, idol. **Special stats:** Siphon medium. **The line:** Attack high, a spellblade's body (HP and Defense average), Aggro at the bottom.
 
 - **Passive – Cold hex.** Its basic attacks add a few Chill, whatever weapon it carries; stacks scale from Attack.
-- **Malison.** Deepens every affliction each foe holds: one more stack of each of Burn, Chill, Shock and Sunder it already has, and a few Bleed, from Attack. The Hexer is the status amplifier where the mages are the sources; the Bleed means it does something alone.
+- **Malison.** Curses every foe: a light hit from Attack, a fifth more for each different affliction the foe holds (Burn, Chill, Shock, Bleed, Sunder), then a few Bleed. The Hexer pays for breadth where the mages are the sources: a mixed party is what makes it big, and the hit and the Bleed mean it does something alone.
 - **Unmake.** Applies Silence to the casting foe with the highest Attack and strips its buffs. Waits until a foe is in a wind-up; a buff alone doesn't draw it.
 - **Enfeeble.** Applies Weaken and adds a few Sunder to the foe with the highest Attack; stacks scale from Attack.
 
-**Identities.** The spellbreaker (sword, idol): Silence all, Mana burn (Silences the casting foe and drains a fifth of its MP, which the Hexer gains), Focused curse. The curser (sword, Mail): Wither, Withering hex (its basic attacks Weaken in place of Chill), Culmination. The elemental blade (wand, tome): Hex of flames, Plague (deepens, and adds a few Burn, Shock and Bleed of its own to every foe), Focused curse.
+**Identities.** The spellbreaker (sword, idol): Silence all, Mana burn (Silences the casting foe and drains a fifth of its MP, which the Hexer gains), Focused curse. The curser (sword, Mail): Wither, Withering hex (its basic attacks Weaken in place of Chill), Culmination. The elemental blade (wand, tome): Hex of flames, Plague (a lighter curse on every foe, then a few Burn, Shock and Bleed), Focused curse (three times the curse and the Bleed, on the foe with the highest Attack alone).
 
-*Test, Buffer:* Unmake waits for the Buffer's wind-up, silences it and strips what it has already given. Malison deepens whatever the party's statuses have laid on the Buffer's allies. Enfeeble's Weaken and Sunder go to the foe with the highest Attack, which may be the Buffer's guard rather than the Buffer.
+*Test, Buffer:* Unmake waits for the Buffer's wind-up, silences it and strips what it has already given. Malison's curse grows with every affliction the party has laid on the Buffer's allies. Enfeeble's Weaken and Sunder go to the foe with the highest Attack, which may be the Buffer's guard rather than the Buffer.
 
 ## Fighters
 
@@ -251,7 +251,7 @@ Four mages, and they share no template: fire is the long cast, ice the wall that
 - **Fireball.** Deals damage that scales from Attack to every foe, and adds a few Burn to each; stacks scale from Attack.
 - **Pyre.** Deals heavy damage to the foe with the most Burn; the damage scales from Attack and rises with each Burn stack on that foe. The Burn stays. The dearest ability in the set.
 
-**Identities.** The ritualist (staff, lantern): Slow burn, Conflagration (many Burn on each foe, with a very long wind-up: Cast speed pays), Pyre of the fallen. The kindler (wand, orb): Kindling (its basic attacks add a few Burn, in place of its casts), Flash bolt, Flashfire. The conflagration (staff or wand, orb): Wildfire (each cast adds Burn to every burning foe, half as much each), Funeral pyre.
+**Identities.** The ritualist (staff, lantern): Slow burn, Conflagration (many Burn on each foe, with a very long wind-up: Cast speed pays), High pyre (waits for a foe holding a deep fire, then a heavy blow that cashes each stack). The kindler (wand, orb): Kindling (its basic attacks add a few Burn, in place of its casts), Flash bolt, Flashfire. The conflagration (staff or wand, orb): Wildfire (each cast adds Burn to every burning foe, half as much each), Funeral pyre.
 
 *Test, Two states:* in both phases its hits do little, against very high Defense or Incorporeal, but Burn, untyped, still lands and ticks in full. With a Monk or Hexer adding Burn too, it stays high through both phases.
 
@@ -266,7 +266,7 @@ Four mages, and they share no template: fire is the long cast, ice the wall that
 - **Blizzard.** Deals damage that scales from Attack to every foe, and adds a few Chill to each; stacks scale from Attack.
 - **Stillness.** Applies Clarity to the ally with the least MP among those under half their max MP (with nobody under half, the ally with the least), and adds a few Chill to every foe; stacks scale from Attack.
 
-**Identities.** The ice wall (rune sword, Mail, orb): **Rime shield** (when a foe shatters, the lowest ally gains a Shield from the Frostweaver's max HP, in place of the Sunder: HP), Frost armor (Guards every ally, and a few Chill on every foe), Deep calm. The disabler (rune sword, tome): Ice spear (past any guard at the foe with the highest Attack, several Chill), Frozen moment. The shatter killer (staff): Splinters, Icicles, Avalanche.
+**Identities.** The ice wall (rune sword, Mail, orb): **Rime shield** (when a foe shatters, the lowest ally gains a Shield from the Frostweaver's max HP, in place of the Sunder: HP), Frost armor (Guards every ally; while the Guard lasts, a foe that hits one gains a few Chill), Deep calm. The disabler (rune sword, tome): Ice spear (past any guard at the foe with the highest Attack, several Chill), Frozen moment. The shatter killer (staff): Splinters (a shatter passes a third of its cold to every other foe), Icicles, Avalanche.
 
 *Test, Skirmisher:* Blizzard, Frost lance and Stillness build Chill on the fast foes, slowing them, until it shatters for damage and a Stun, and Shatterpoint leaves the foe sundered for the party. Its own basic attacks add no Chill, but Chill thaws slowly, so it builds between casts. With a Hexer or Ranger adding Chill too, the shatters come sooner.
 
