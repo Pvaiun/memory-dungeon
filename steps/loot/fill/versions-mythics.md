@@ -711,6 +711,8 @@ One share of the loot pass's fill, written from `spine.md` by `fill-brief.md`. N
 - "the ally with the slowest basic attack" (Rousing chorus);
 - "the ally with the most Aggro" (Watch the anchor).
 
+Round 1's list of new phrases already has the last two, the second as "the ally with the highest Aggro"; Watch the anchor's card keeps today's "most" until that's sent. The first two aren't on it.
+
 Today's cards also shorten two that the table does have: "the lowest share of HP" for "the lowest share of max HP", and "the lowest HP" for "the lowest current HP". The kept cards here repeat today's wording and the changed ones use the table's. One ruling for the whole fill would settle it.
 
 **Stale words on kept cards,** left as they are for a ruling:
