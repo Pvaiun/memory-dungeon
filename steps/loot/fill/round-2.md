@@ -21,6 +21,12 @@ Work in progress: what the agents raised while applying round 1, and what the fr
 - **Gambler's coin** beside a card that raises Crit chance "to four in five at most": as written. The raise adds to the coin's half and stops at four in five.
 - **Burning heart, Downhill charm, Shatterstone charm:** as written.
 
+## Offhands, the first six kinds
+
+- **Phylactery names Regen:** the part of its holder's heals and of its Regen's pulses that would go past full becomes a Shield on the healed ally. With nothing to mend a healer casts only Regen, so without it the piece's own sight never happens. It's what today's piece does.
+- **Charnel icon, Bloodstone reliquary** heal the lowest share, capped or not: healing past a cap counts as healing past full, which the red stone's pieces read. Stands.
+- **The changed commons, Hoplon's steps, Shuttered lantern's steps, Everflame lantern's "every 3 ticks":** as written.
+
 ## Armor
 
 - **Mail's commons** stand as written: Attack, Lifesteal and HP.
