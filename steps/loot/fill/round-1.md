@@ -34,7 +34,12 @@ To go into `fill/shared.md` once round 1 is ruled.
 - **"Carrying what the swing carries"** also carries what a status its wearer holds puts on its swings (a Thunderstorm). The spine's phrase gains it.
 - **Someone stays in the light.** Hidden doesn't land on a unit when it would leave the foes no ally to pick; where several would hide at once, the last in seat order stays. It's a rule of Hidden's own, for the vocabulary, flagged for the director: gear and seats can now hide a whole party, and the game has no answer for that.
 - **A start-of-fight status on every foe** reads its holder's Attack, at the card's word (Stormglass totem, Pitch lantern, Snowbound folio, the phial). As written in both offhands shares.
-- **New target phrases,** for the vocabulary when it's built: the other ally with the least Defense; the ally with the highest Aggro; the ally with the slowest basic attack; the two foes with the highest Attack; the foe that last hit the healed ally; the ally with the lowest share of max HP, the payer aside; the foe with the highest current HP; the ally with the lowest share of max HP that can be healed; the ally with the least MP (the lowest share of max MP, the holder included); the other ally with the least max HP; the other foe with the most Chill. "The ally with the highest Aggro" reads Aggro as it stands, gear and seat counted, a Taunt not; a tie goes to the earlier seat.
+- **A pick by a phrase is still a pick.** A blow a card calls onto "the foe with the most Shock" (Stormspear) is inside the Taunt rule, and a Mark doesn't steer it, since it has a phrase of its own. Only a named foe is outside it: the attacker, the foe that acted, the foe just Marked.
+- **A phrase's fallback to a random foe follows the Mark.** "The foe with the most Burn" with nothing burning is a random pick, and Marked takes the party's random picks.
+- **The chalice's payer is the Vampire.** "Pays HP" covers a price taken from one unit for another's ability; the spine's phrase gains it.
+- **Cards use the vocabulary's target phrases in full,** kept cards included: "the lowest share of max HP", "the lowest current HP". Kept cards also lose words the game no longer has ("physical damage", "a little" for a stack word, "for a moment" for a status's own length). That's wording, not a redesign.
+- **A chain of shatters is damped in fractions of a stack.** A floor of one whole stack doesn't end a chain in a pack of seven or more beside Glacier's heart. In fractions it's never none and it always dies down. Code support 23 changes.
+- **New target phrases,** for the vocabulary when it's built: the other ally with the least Defense; the ally with the highest Aggro; the ally with the slowest basic attack; the two foes with the highest Attack; the foe that last hit the healed ally; the ally with the lowest share of max HP, the payer aside; the foe with the highest current HP; the ally with the lowest share of max HP that can be healed; the ally with the least MP (the lowest share of max MP, the holder included); the other ally with the least max HP; the other foe with the most Chill; the foe with the lowest share of max HP. "The ally with the highest Aggro" reads Aggro as it stands, gear and seat counted, a Taunt not; a tie goes to the earlier seat.
 ## Amulets
 
 - **Burning heart:** the agent's size stands (a few Burn each ten ticks, the slowest beat that never lets it go out). The spine's line changes from "every few ticks" to "every so often… so it never goes out".
@@ -108,6 +113,19 @@ To go into `fill/shared.md` once round 1 is ruled.
 - **Frostward blade's "a few"** stands: the fourth or fifth blow is within the link's "a few".
 - **The riders' sizes** against the kits' own casts are the balance pass's.
 - **Names:** Shepherd's mace becomes Anchorite's mace; Sunhammer becomes Noonday mace.
+
+## Versions and mythics
+
+- **Huntmaster's quiver:** "ready again" stands, as the Hunt's kill reward at a size that's seen, with mana as its brake. It's a kept mythic that grew a lot, so it goes in the director's sample. It leaves Barbed volley aimed at every foe.
+- **Rubato never readies itself:** for the Bard, it readies another of its own abilities. The spine's line changes.
+- **Writ of judgement answers Condemn:** "whenever the Paladin's Condemn Marks a foe". A Mark from its gear or its seat doesn't call the blow. With a free marker the chain ran through a pack at no cost, and no number brakes it without shrinking the blow. The spine's line and its loop note change; it goes in the director's sample.
+- **Swift justice:** "falls holding the Paladin's Mark" stands: it's what the player can see.
+- **Marked:** a fallback to a random foe follows the Mark (the ruling above). The other two readings stand: an ability that would fizzle on the Marked foe lands on it for its damage alone, and Seek's "a random foe that isn't Taunting" goes to a Marked foe that Taunts.
+- **Malison's power step** is two fifths more damage and Bleed: the plain step, on the new base.
+- **Halo of the saint:** stands. Widening a heal isn't casting it again.
+- **Stormspear's blow** is inside the Taunt rule (the ruling above). Its swings no longer ignore Taunt, as the spine's line has it.
+- **The last wall** stays as today's. The mirror's link in the spine loses "so better stone sends more".
+- **Eye of the tempest, Coup de grâce:** the card is the design, and the build follows it (every hit jumps; Backstab's own kill readies it). **Smoke screen's** card gains what the build does: it passes over an ally already Hidden.
 
 ## To check across shares
 
