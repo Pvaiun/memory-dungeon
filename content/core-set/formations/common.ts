@@ -50,14 +50,15 @@ add(
 }
 {
   // The Breaker's aim: a Stunned foe, by draw among several, inside the Taunt rule and ahead of a Mark.
-  const frost = "Basic attacks add a few Chill.", breaker = "While a foe is Stunned, its basic attacks go to that foe. Its hits on a Stunned foe deal double.";
+  // A Chill a swing, not a few: two Frost seats at a few each, beside the riders, filled the counter in a couple of swings.
+  const frost = "Basic attacks add a Chill.", breaker = "While a foe is Stunned, its basic attacks go to that foe. Its hits on a Stunned foe deal double.";
   add(
     formation("Hoarfrost line", "common", "Two lay frost with every blow; the third breaks what freezes.", [
       ...twice({ name: "Frost", text: frost, statuses: ["hoarfrost_line_frost"] }),
       { name: "Breaker", text: breaker, statuses: ["hoarfrost_line_breaker"] },
     ]),
     [
-      held("hoarfrost_line_frost", "Frost", frost, { reactions: [react(EV.basic, give("chill", "other", FLAT_STACKS.few))] }),
+      held("hoarfrost_line_frost", "Frost", frost, { reactions: [react(EV.basic, give("chill", "other", FLAT_STACKS.one))] }),
       held("hoarfrost_line_breaker", "Breaker", breaker, { aim: { rule: { side: "foes", where: { has: "stun" }, pick: "random" }, first: true }, boosts: hits(against(100, { has: "stun" })) }),
     ],
     "Snap 1 ●●●, Landslide ● ⚙ lead's colour (half)",

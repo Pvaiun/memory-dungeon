@@ -47,13 +47,13 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
 }
 {
   // Held once by the side: the cold reads the Cascades before this shatter's, then every ally counts it. Passed, so a chain dies down.
-  const party = "When a foe's Chill shatters, every other foe gains a few Chill, and a few more for each Cascade the party held before it (a Cascade for each shatter this fight, up to 10).";
+  const party = "When a foe's Chill shatters, every other foe gains a Chill, and one more for every two Cascades the party held before it (a Cascade for each shatter this fight, up to 10).";
   add(
     formation("The long winter", "legendary", "Every shatter sends its cold down the line, and each sends more than the last.", thrice({ name: "Winterer", text: NOTHING }), { text: party, statuses: ["the_long_winter"] }),
     [held("the_long_winter", "The long winter", party, {
       party: true,
       reactions: [
-        react(EV.shatter, give("chill", TO.otherFoes("owner"), { base: FLAT_STACKS.few, scale: [{ ratio: FLAT_STACKS.few, stacks: "cascade", of: "holder" }] }, { passed: true })),
+        react(EV.shatter, give("chill", TO.otherFoes("owner"), { base: FLAT_STACKS.one, scale: [{ ratio: FLAT_STACKS.one / 2, stacks: "cascade", of: "holder" }] }, { passed: true })),
         react(EV.shatter, give("cascade", TO.everyAlly, 1)),
       ],
     })],

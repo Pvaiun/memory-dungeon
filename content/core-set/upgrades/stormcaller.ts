@@ -65,7 +65,7 @@ abilityUp({
   a: { name: "Overcharge", text: "Its basic attacks come faster for a while. While that lasts, its next three abilities cost no MP.", serves: "Barrage 2 ●●● ⚙ crescendo (half)" },
   b: { name: "Storm shield", text: "Raises its Thorns by 150 and its Aggro by 40 for 20 ticks. No speed.", builds: ["toll", "storm"] },
   form: (v, _k, plus) => ({
-    ...(plus ? { cooldown: cd("medium", "static_charge") } : {}),
+    ...(plus ? { cooldown: cd("short", "static_charge") } : {}),
     ...(v === "a" ? { do: [apply("static_charge_on"), apply("overcharge")] } : {}),
     ...(v === "b" ? { do: [apply("storm_shield")] } : {}),
   }),

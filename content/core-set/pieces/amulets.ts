@@ -129,10 +129,11 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
   });
 }
 {
-  const name = "Floe charm", effect = "When a foe's Chill shatters, its wearer's first-slotted ability is ready at once. If it's ready already, nothing happens.";
+  // Half the wait, not ready at once: with a shatter every few ticks, at once it fired its first ability on every shatter.
+  const name = "Floe charm", effect = "When a foe's Chill shatters, its wearer's first-slotted ability comes half its wait closer.";
   amulet("rare", name, {
     effect, stats: [sp("cast_speed", "medium"), st("max_mp", 1), st("max_hp", 1)],
-    statuses: [own_(name, effect, { reactions: [react(EV.shatter, { op: "cooldown", which: "first", set: "ready", to: "holder" })] })],
+    statuses: [own_(name, effect, { reactions: [react(EV.shatter, { op: "cooldown", which: "first", set: { times: 50 }, to: "holder" })] })],
     serves: "Snap 2 ●●●, Landslide ●●, Barrage ●●, Bonfire ●● ⚙ shatter bell (key)",
   });
 }

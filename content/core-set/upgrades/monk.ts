@@ -32,7 +32,7 @@ abilityUp({
   a: { name: "Flow state", text: "Applies Haste to itself. While that Haste lasts, every fifth hit it lands renews it, at most twice a cast.", builds: ["cuts"] },
   b: { name: "Stillness of mind", text: "Taunts, and raises its Evasion by 35 for as long as the Taunt. No Haste.", serves: "Toll 2 ●●● ⚙ riposte (half)" },
   form: (v, _k, plus) => ({
-    ...(plus ? { cooldown: cd("medium", "flow") } : {}),
+    ...(plus ? { cooldown: cd("short", "flow") } : {}),
     ...(v === "a" ? { do: [apply("haste"), apply("flow_state", { stacks: FLOW_RENEWALS })] } : {}),
     ...(v === "b" ? { do: [apply("taunt"), apply("stillness_of_mind")] } : {}),
   }),

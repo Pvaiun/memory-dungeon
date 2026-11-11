@@ -189,13 +189,13 @@ export const abilities: A[] = [
   a("bramble_knight", "regrowth", "Regrowth", "Regen on the lowest ally.", { ...timing("medium", "normal"), mp: 325, target: T.lowestShareAlly, do: [apply("regen")] }),
   a("bramble_knight", "bramble_lash", "Bramble lash", "Lashes a random foe with its thorns.", { ...timing("quick", "quick"), mp: 200, do: [phys({ scale: [{ ratio: 4.5, stat: "thorns" }] })] }),
   // Hoplite
-  a("hoplite", "aspis", "Aspis", "Aegis on the lowest ally.", { ...timing("long", "quick"), mp: 500, ...waitsFor("allies", { lacks: "aegis" }), target: lacking(T.lowestShareAlly, "aegis"), do: [apply("aegis")] }),
+  a("hoplite", "aspis", "Aspis", "Aegis on the lowest ally.", { ...timing("long", "quick"), mp: 325, ...waitsFor("allies", { lacks: "aegis" }), target: lacking(T.lowestShareAlly, "aegis"), do: [apply("aegis")] }),
   // The shove: the bruiser's Defense as damage on every foe, with Sunder from the same stat. No Taunt anywhere in the kit.
   a("hoplite", "othismos", "Othismos", "A shove with the whole shield: damage scaling from Defense to every foe, adding a few Sunder to each.", {
     ...timing("medium", "long"), mp: 325, target: T.everyFoe, do: [phys(hit("defense", "light"), { apply: [{ status: "sunder", stacks: stacks("few", "defense") }] })],
   }),
   // Bigger than a normal hit: Phalanx boosts the Hoplite's swing, not the thrust.
-  a("hoplite", "spear_thrust", "Spear thrust", "A thrust at a random foe that adds a few Sunder.", { ...timing("medium", "long"), mp: 325, do: [phys(from("attack", 1.1), { apply: [{ status: "sunder", stacks: stacks("few", "attack") }] })] }),
+  a("hoplite", "spear_thrust", "Spear thrust", "A thrust at a random foe that adds a few Sunder.", { ...timing("medium", "normal"), mp: 325, do: [phys(from("attack", 1.1), { apply: [{ status: "sunder", stacks: stacks("few", "attack") }] })] }),
   // Paladin
   // Condemn: Marked is a debuff, so the Mark turns Judgement on, and the party's volley lands on the judged.
   a("paladin", "condemn", "Condemn", "Marks the foe with the highest Attack, and every ally's next basic attack comes at once.", {
@@ -239,7 +239,7 @@ export const abilities: A[] = [
   }),
   a("hexer", "enfeeble", "Enfeeble", "Weakens the foe with the highest Attack and adds a few Sunder.", { ...timing("quick", "normal"), mp: 450, target: T.highestAMFoe, do: [apply("weaken"), apply("sunder", { stacks: stacks("few", "attack") })] }),
   // Monk
-  a("monk", "flow", "Flow", "Haste on itself.", { ...timing("long", "quick"), mp: 200, target: "self", do: [apply("haste")] }),
+  a("monk", "flow", "Flow", "Haste on itself.", { ...timing("medium", "quick"), mp: 200, target: "self", do: [apply("haste")] }),
   a("monk", "burning_fist", "Burning fist", "Three quick burning blows on the foe with the most Burn, each adding a few.", {
     // About 3 Burn a hit, 9 a cast at base, so the Monk stays a smaller Burn engine than the Pyromancer.
     ...timing("quick", "quick"), mp: 200, target: T.mostFoe("burn"), do: [phys(from("attack", 0.11), { hits: 3, apply: [{ status: "burn", stacks: stacks("few", "attack", 0.6) }] })],
@@ -267,7 +267,9 @@ export const abilities: A[] = [
   a("pyromancer", "fireball", "Fireball", "A ball of fire on every foe, adding a few Burn to each.", { ...timing("medium", "long"), mp: 1000, target: T.everyFoe, do: [phys(hit("attack", "touch"), { apply: [{ status: "burn", stacks: stacks("few", "attack", BURN_STACKS) }] })] }),
   a("pyromancer", "pyre", "Pyre", "Heavy damage on the foe with the most Burn, rising with each stack. The Burn stays.", {
     // 200 a stack of Burn: the ramp's payoff, not a second ramp.
-    ...timing("long", "very_long"), mp: 1500, target: T.mostFoe("burn"), do: [phys({ scale: [{ ratio: HIT.heavy, stat: "attack" }, { ratio: 200, stacks: "burn", of: "target" }] })],
+    // On the medium cooldown with a long wind-up, at 1,000 MP: on the long one with a very long wind-up it came 0.15 times a
+    // regular fight and a third of a boss fight, the reader of the fire that the fire never saw.
+    ...timing("medium", "long"), mp: 1000, target: T.mostFoe("burn"), do: [phys({ scale: [{ ratio: HIT.heavy, stat: "attack" }, { ratio: 200, stacks: "burn", of: "target" }] })],
   }),
   // Frostweaver
   // About 6 Chill a lance at Attack 4, so a shatter takes more than one cast.
@@ -284,14 +286,14 @@ export const abilities: A[] = [
   }),
   // The party's storm: Shock on every ally's swings for a while, not a nuke (Fireball is the nuke, Blizzard the field's Chill).
   a("stormcaller", "thunderstorm", "Thunderstorm", "For a while, every ally's basic attacks add a few Shock; stacks scale from the Stormcaller's Attack.", { ...timing("medium", "normal"), mp: 650, target: T.everyAlly, do: [apply("thunderstorm_storm")] }),
-  a("stormcaller", "static_charge", "Static charge", "Its basic attacks come faster for a while.", { ...timing("long", "quick"), mp: 650, target: "self", do: [apply("static_charge_on")] }),
+  a("stormcaller", "static_charge", "Static charge", "Its basic attacks come faster for a while.", { ...timing("medium", "quick"), mp: 650, target: "self", do: [apply("static_charge_on")] }),
   // Geomancer
   a("geomancer", "earthen_shell", "Earthen shell", "Shields itself and the other lowest ally; the amount scales from Defense.", {
     ...timing("medium", "normal"), mp: 650, ...waitsFor("allies", { belowCap: "shield" }), target: "self",
     do: [apply("shield", { stacks: from("defense", 1.0), to: { side: "self", where: { belowCap: "shield" } } }), apply("shield", { stacks: from("defense", 1.0), to: { ...T.otherLowestShareAlly, where: { belowCap: "shield" } } })],
   }),
   a("geomancer", "rockfall", "Rockfall", "Damage scaling from Defense on a random foe.", { ...timing("short", "long"), mp: 450, do: [phys(hit("defense", "normal"))] }),
-  a("geomancer", "tremor", "Tremor", "Damage scaling from Defense on a random foe, which is Stunned.", { ...timing("long", "very_long"), mp: 1000, target: lacking({ side: "foes" }, "stun", true), do: [phys(hit("defense", "normal"), { apply: [{ status: "stun" }] })] }),
+  a("geomancer", "tremor", "Tremor", "Damage scaling from Defense on a random foe, which is Stunned.", { ...timing("long", "long"), mp: 650, target: lacking({ side: "foes" }, "stun", true), do: [phys(hit("defense", "normal"), { apply: [{ status: "stun" }] })] }),
 ];
 
 // ─── Classes ─────────────────────────────────────────────────────────────────

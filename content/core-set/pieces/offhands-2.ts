@@ -349,10 +349,11 @@ offhand("vial", "common", "Hemlock phial", { stats: [critStep(1)], serves: "Thou
   });
 }
 {
-  // Its own Lifesteal, healed and past full, given to every other ally as healing that goes no further.
+  // Half its own Lifesteal, healed and past full, given to every other ally as healing that goes no further. At the same amount,
+  // one drinker kept a whole party full.
   const name = "Heartsblood";
-  const effect = "Whatever its holder's Lifesteal would heal it for, full or not, every other ally is healed for the same. Healing given this way isn't passed on again.";
-  const pass = { op: "heal" as const, amount: ofAmount(1), final: true as const, to: TO.otherAllies };
+  const effect = "Whatever its holder's Lifesteal would heal it for, full or not, every other ally is healed for half as much. Healing given this way isn't passed on again.";
+  const pass = { op: "heal" as const, amount: ofAmount(0.5), final: true as const, to: TO.otherAllies };
   offhand("vial", "legendary", name, {
     effect, stats: [sp("lifesteal", "high"), st("max_hp", 1), st("attack", 1)],
     statuses: [own_(name, effect, { reactions: [react(on("healed", { status: "lifesteal" }), pass), react(on("overhealed", { status: "lifesteal" }), pass)] })],

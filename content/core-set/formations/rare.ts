@@ -25,15 +25,16 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
   );
 }
 {
-  const opener = "Its crits add many Bleed.", blade = "Each hit it lands on a bleeding foe heals the Blade for 3% of its max HP.";
+  // Several, not many, in one application; 2% a hit, as Gleaner's leathers.
+  const opener = "Its crits add several Bleed.", blade = "Each hit it lands on a bleeding foe heals the Blade for 2% of its max HP.";
   add(
     formation("Bloodied ground", "rare", "One opens them up; two drink from the wound.", [
       { name: "Opener", text: opener, statuses: ["bloodied_ground_opener"] },
       ...twice({ name: "Blade", text: blade, statuses: ["bloodied_ground_blade"] }),
     ]),
     [
-      held("bloodied_ground_opener", "Opener", opener, { reactions: [react(EV.crit, give("bleed", "other", FLAT_STACKS.many))] }),
-      held("bloodied_ground_blade", "Blade", blade, { reactions: [reactIf(EV.hit, { unit: "other", where: { has: "bleed" } }, { op: "heal", amount: share(0.03, "max_hp"), to: "holder" })] }),
+      held("bloodied_ground_opener", "Opener", opener, { reactions: [react(EV.crit, give("bleed", "other", FLAT_STACKS.several))] }),
+      held("bloodied_ground_blade", "Blade", blade, { reactions: [reactIf(EV.hit, { unit: "other", where: { has: "bleed" } }, { op: "heal", amount: share(0.02, "max_hp"), to: "holder" })] }),
     ],
     "Cuts 2 ●●●, Pact ●●",
   );
@@ -58,12 +59,12 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
   add(
     formation("Icefall", "rare", "Two lay frost, each its own way, and every shatter rings the third's great spell.", [
       { name: "Rime", text: rime, statuses: ["icefall_rime"] },
-      { name: "Sleet", text: "Its basic attacks add a few Chill.", statuses: ["icefall_sleet"] },
+      { name: "Sleet", text: "Its basic attacks add a Chill.", statuses: ["icefall_sleet"] },
       { name: "Breaker", text: breaker, statuses: ["icefall_breaker"] },
     ]),
     [
       held("icefall_rime", "Rime", rime, { mods: [{ stacks: { pct: 50, statuses: ["chill"] } }] }),
-      held("icefall_sleet", "Sleet", "Its basic attacks add a few Chill.", { reactions: [react(EV.basic, give("chill", "other", FLAT_STACKS.few))] }),
+      held("icefall_sleet", "Sleet", "Its basic attacks add a Chill.", { reactions: [react(EV.basic, give("chill", "other", FLAT_STACKS.one))] }),
       held("icefall_breaker", "Breaker", breaker, { reactions: [react(EV.shatter, { op: "cooldown", which: "first", set: "ready", to: "holder" })] }),
     ],
     "Snap 2 ●●●, Landslide ●●, Barrage ●●, Bonfire ● ⚙ shatter bell (key)",

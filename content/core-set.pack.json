@@ -1980,7 +1980,7 @@
   {
    "id": "hoarfrost_line_frost",
    "name": "Frost",
-   "text": "Basic attacks add a few Chill.",
+   "text": "Basic attacks add a Chill.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -1996,7 +1996,7 @@
        "op": "apply",
        "status": "chill",
        "to": "other",
-       "stacks": 2
+       "stacks": 1
       }
      ]
     }
@@ -2479,7 +2479,7 @@
   {
    "id": "bloodied_ground_opener",
    "name": "Opener",
-   "text": "Its crits add many Bleed.",
+   "text": "Its crits add several Bleed.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2497,7 +2497,7 @@
        "op": "apply",
        "status": "bleed",
        "to": "other",
-       "stacks": 7
+       "stacks": 4
       }
      ]
     }
@@ -2506,7 +2506,7 @@
   {
    "id": "bloodied_ground_blade",
    "name": "Blade",
-   "text": "Each hit it lands on a bleeding foe heals the Blade for 3% of its max HP.",
+   "text": "Each hit it lands on a bleeding foe heals the Blade for 2% of its max HP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2528,7 +2528,7 @@
        "amount": {
         "scale": [
          {
-          "ratio": 0.03,
+          "ratio": 0.02,
           "stat": "max_hp",
           "of": "holder"
          }
@@ -2644,7 +2644,7 @@
   {
    "id": "icefall_sleet",
    "name": "Sleet",
-   "text": "Its basic attacks add a few Chill.",
+   "text": "Its basic attacks add a Chill.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2660,7 +2660,7 @@
        "op": "apply",
        "status": "chill",
        "to": "other",
-       "stacks": 2
+       "stacks": 1
       }
      ]
     }
@@ -3668,7 +3668,7 @@
   {
    "id": "the_long_winter",
    "name": "The long winter",
-   "text": "When a foe's Chill shatters, every other foe gains a few Chill, and a few more for each Cascade the party held before it (a Cascade for each shatter this fight, up to 10).",
+   "text": "When a foe's Chill shatters, every other foe gains a Chill, and one more for every two Cascades the party held before it (a Cascade for each shatter this fight, up to 10).",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -3691,10 +3691,10 @@
         "exclude": "owner"
        },
        "stacks": {
-        "base": 2,
+        "base": 1,
         "scale": [
          {
-          "ratio": 2,
+          "ratio": 0.5,
           "stacks": "cascade",
           "of": "holder"
          }
@@ -4629,7 +4629,7 @@
   {
    "id": "bloodscent_knife",
    "name": "Bloodscent knife",
-   "text": "Its wearer's hits on a bleeding foe crit far more often: +50% Crit chance, up to 80%.",
+   "text": "Its wearer's hits on a bleeding foe crit far more often: +30% Crit chance, up to 60%.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -4639,8 +4639,8 @@
      "when": {
       "has": "bleed"
      },
-     "chance": 50,
-     "cap": 80
+     "chance": 30,
+     "cap": 60
     }
    ]
   },
@@ -6189,7 +6189,7 @@
   {
    "id": "the_red_feast",
    "name": "The Red Feast",
-   "text": "While its wearer is below half its max HP, its hits deal double and its Lifesteal is doubled. When a fight is won, its wearer, if it's standing, is healed back to half its max HP, if it's below that.",
+   "text": "While its wearer is below half its max HP, its hits deal half again as much and its Lifesteal is doubled. When a fight is won, its wearer, if it's standing, is healed back to half its max HP, if it's below that.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -6258,7 +6258,7 @@
   {
    "id": "the_red_feast_on",
    "name": "FEAST",
-   "text": "Its hits deal double and its Lifesteal is doubled.",
+   "text": "Its hits deal half again as much and its Lifesteal is doubled.",
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
@@ -6266,7 +6266,7 @@
    "boosts": [
     {
      "tag": "physical",
-     "pct": 100
+     "pct": 50
     }
    ],
    "stats": [
@@ -9878,7 +9878,7 @@
   {
    "id": "floe_charm",
    "name": "Floe charm",
-   "text": "When a foe's Chill shatters, its wearer's first-slotted ability is ready at once. If it's ready already, nothing happens.",
+   "text": "When a foe's Chill shatters, its wearer's first-slotted ability comes half its wait closer.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -9894,7 +9894,9 @@
       {
        "op": "cooldown",
        "which": "first",
-       "set": "ready",
+       "set": {
+        "times": 50
+       },
        "to": "holder"
       }
      ]
@@ -13479,7 +13481,7 @@
   {
    "id": "heartsblood",
    "name": "Heartsblood",
-   "text": "Whatever its holder's Lifesteal would heal it for, full or not, every other ally is healed for the same. Healing given this way isn't passed on again.",
+   "text": "Whatever its holder's Lifesteal would heal it for, full or not, every other ally is healed for half as much. Healing given this way isn't passed on again.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -13496,7 +13498,7 @@
        "amount": {
         "scale": [
          {
-          "ratio": 1,
+          "ratio": 0.5,
           "amount": true
          }
         ]
@@ -13520,7 +13522,7 @@
        "amount": {
         "scale": [
          {
-          "ratio": 1,
+          "ratio": 0.5,
           "amount": true
          }
         ]
@@ -20813,7 +20815,7 @@
   {
    "id": "glaciers_heart",
    "name": "Glacier's heart",
-   "text": "Whenever a foe's Chill shatters, 6 Chill go back on that foe.",
+   "text": "Whenever a foe's Chill shatters, 3 Chill go back on that foe.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -20832,7 +20834,7 @@
       {
        "op": "apply",
        "status": "chill",
-       "stacks": 6,
+       "stacks": 3,
        "to": "owner"
       }
      ]
@@ -21937,7 +21939,7 @@
    "text": "Aegis on the lowest ally.",
    "cooldown": 42.4,
    "cast": 1,
-   "mp": 500,
+   "mp": 325,
    "if": {
     "side": "allies",
     "where": {
@@ -22005,7 +22007,7 @@
    "name": "Spear thrust",
    "text": "A thrust at a random foe that adds a few Sunder.",
    "cooldown": 34,
-   "cast": 6,
+   "cast": 3,
    "mp": 325,
    "do": [
     {
@@ -22552,7 +22554,7 @@
    "class": "monk",
    "name": "Flow",
    "text": "Haste on itself.",
-   "cooldown": 40,
+   "cooldown": 30,
    "cast": 1,
    "mp": 200,
    "target": "self",
@@ -22936,9 +22938,9 @@
    "class": "pyromancer",
    "name": "Pyre",
    "text": "Heavy damage on the foe with the most Burn, rising with each stack. The Burn stays.",
-   "cooldown": 44.9,
-   "cast": 8,
-   "mp": 1500,
+   "cooldown": 33.7,
+   "cast": 6,
+   "mp": 1000,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -23180,7 +23182,7 @@
    "class": "stormcaller",
    "name": "Static charge",
    "text": "Its basic attacks come faster for a while.",
-   "cooldown": 41.4,
+   "cooldown": 31.1,
    "cast": 1,
    "mp": 650,
    "target": "self",
@@ -23276,8 +23278,8 @@
    "name": "Tremor",
    "text": "Damage scaling from Defense on a random foe, which is Stunned.",
    "cooldown": 36.4,
-   "cast": 8,
-   "mp": 1000,
+   "cast": 6,
+   "mp": 650,
    "target": {
     "side": "foes",
     "where": {
@@ -26054,7 +26056,7 @@
    "text": "Aegis on the lowest ally. Comes round sooner.",
    "cooldown": 31.8,
    "cast": 1,
-   "mp": 500,
+   "mp": 325,
    "if": {
     "side": "allies",
     "where": {
@@ -26083,7 +26085,7 @@
    "text": "Aegis on the ally with the highest Aggro that holds none.",
    "cooldown": 42.4,
    "cast": 1,
-   "mp": 500,
+   "mp": 325,
    "if": {
     "side": "allies",
     "where": {
@@ -26142,7 +26144,7 @@
    "text": "Aegis on the ally with the highest Aggro that holds none. Comes round sooner.",
    "cooldown": 31.8,
    "cast": 1,
-   "mp": 500,
+   "mp": 325,
    "if": {
     "side": "allies",
     "where": {
@@ -26434,7 +26436,7 @@
    "name": "Spear thrust+",
    "text": "A thrust at a random foe that adds a few Sunder. Deals two fifths more damage.",
    "cooldown": 34,
-   "cast": 6,
+   "cast": 3,
    "mp": 325,
    "do": [
     {
@@ -26470,7 +26472,7 @@
    "name": "Skewer",
    "text": "A thrust through a random foe and on into the foe with the most HP, each for three quarters, each adding a few Sunder.",
    "cooldown": 34,
-   "cast": 6,
+   "cast": 3,
    "mp": 325,
    "do": [
     {
@@ -26537,7 +26539,7 @@
    "name": "Disarm",
    "text": "A thrust at the foe with the highest Attack, which is Weakened. No Sunder.",
    "cooldown": 34,
-   "cast": 6,
+   "cast": 3,
    "mp": 325,
    "do": [
     {
@@ -26574,7 +26576,7 @@
    "name": "Skewer+",
    "text": "A thrust through a random foe and on into the foe with the most HP, each for three quarters, each adding a few Sunder. Deals two fifths more damage.",
    "cooldown": 34,
-   "cast": 6,
+   "cast": 3,
    "mp": 325,
    "do": [
     {
@@ -26641,7 +26643,7 @@
    "name": "Disarm+",
    "text": "A thrust at the foe with the highest Attack, which is Weakened. No Sunder. Deals two fifths more damage.",
    "cooldown": 34,
-   "cast": 6,
+   "cast": 3,
    "mp": 325,
    "do": [
     {
@@ -29351,7 +29353,7 @@
    "class": "monk",
    "name": "Flow+",
    "text": "Haste on itself. A shorter cooldown.",
-   "cooldown": 30,
+   "cooldown": 22,
    "cast": 1,
    "mp": 200,
    "target": "self",
@@ -29367,7 +29369,7 @@
    "class": "monk",
    "name": "Flow state",
    "text": "Applies Haste to itself. While that Haste lasts, every fifth hit it lands renews it, at most twice a cast.",
-   "cooldown": 40,
+   "cooldown": 30,
    "cast": 1,
    "mp": 200,
    "target": "self",
@@ -29388,7 +29390,7 @@
    "class": "monk",
    "name": "Stillness of mind",
    "text": "Taunts, and raises its Evasion by 35 for as long as the Taunt. No Haste.",
-   "cooldown": 40,
+   "cooldown": 30,
    "cast": 1,
    "mp": 200,
    "target": "self",
@@ -29408,7 +29410,7 @@
    "class": "monk",
    "name": "Flow state+",
    "text": "Applies Haste to itself. While that Haste lasts, every fifth hit it lands renews it, at most twice a cast. A shorter cooldown.",
-   "cooldown": 30,
+   "cooldown": 22,
    "cast": 1,
    "mp": 200,
    "target": "self",
@@ -29429,7 +29431,7 @@
    "class": "monk",
    "name": "Stillness of mind+",
    "text": "Taunts, and raises its Evasion by 35 for as long as the Taunt. No Haste. A shorter cooldown.",
-   "cooldown": 30,
+   "cooldown": 22,
    "cast": 1,
    "mp": 200,
    "target": "self",
@@ -31377,9 +31379,9 @@
    "class": "pyromancer",
    "name": "Pyre+",
    "text": "Heavy damage on the foe with the most Burn, rising with each stack. The Burn stays. 40% more damage.",
-   "cooldown": 44.9,
-   "cast": 8,
-   "mp": 1500,
+   "cooldown": 33.7,
+   "cast": 6,
+   "mp": 1000,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -31412,9 +31414,9 @@
    "class": "pyromancer",
    "name": "Funeral pyre",
    "text": "Deals damage to every foe; the damage scales from Attack and rises by 100 with each Burn stack on that foe. The Burn stays.",
-   "cooldown": 44.9,
-   "cast": 8,
-   "mp": 1500,
+   "cooldown": 33.7,
+   "cast": 6,
+   "mp": 1000,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -31444,9 +31446,9 @@
    "class": "pyromancer",
    "name": "High pyre",
    "text": "Waits until a foe holds 20 Burn or more. Deals heavy damage that scales from Attack to the foe with the most Burn, rising by 500 with each Burn stack on that foe as it lands. The Burn stays.",
-   "cooldown": 44.9,
-   "cast": 8,
-   "mp": 1500,
+   "cooldown": 33.7,
+   "cast": 6,
+   "mp": 1000,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -31488,9 +31490,9 @@
    "class": "pyromancer",
    "name": "Funeral pyre+",
    "text": "Deals damage to every foe; the damage scales from Attack and rises by 100 with each Burn stack on that foe. The Burn stays. 40% more damage.",
-   "cooldown": 44.9,
-   "cast": 8,
-   "mp": 1500,
+   "cooldown": 33.7,
+   "cast": 6,
+   "mp": 1000,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -31520,9 +31522,9 @@
    "class": "pyromancer",
    "name": "High pyre+",
    "text": "Waits until a foe holds 20 Burn or more. Deals heavy damage that scales from Attack to the foe with the most Burn, rising by 500 with each Burn stack on that foe as it lands. The Burn stays. 40% more damage.",
-   "cooldown": 44.9,
-   "cast": 8,
-   "mp": 1500,
+   "cooldown": 33.7,
+   "cast": 6,
+   "mp": 1000,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -32645,7 +32647,7 @@
    "class": "stormcaller",
    "name": "Static charge+",
    "text": "Its basic attacks come faster for a while. A shorter cooldown.",
-   "cooldown": 31.1,
+   "cooldown": 22.8,
    "cast": 1,
    "mp": 650,
    "target": "self",
@@ -32661,7 +32663,7 @@
    "class": "stormcaller",
    "name": "Overcharge",
    "text": "Its basic attacks come faster for a while. While that lasts, its next three abilities cost no MP.",
-   "cooldown": 41.4,
+   "cooldown": 31.1,
    "cast": 1,
    "mp": 650,
    "target": "self",
@@ -32681,7 +32683,7 @@
    "class": "stormcaller",
    "name": "Storm shield",
    "text": "Raises its Thorns by 150 and its Aggro by 40 for 20 ticks. No speed.",
-   "cooldown": 41.4,
+   "cooldown": 31.1,
    "cast": 1,
    "mp": 650,
    "target": "self",
@@ -32697,7 +32699,7 @@
    "class": "stormcaller",
    "name": "Overcharge+",
    "text": "Its basic attacks come faster for a while. While that lasts, its next three abilities cost no MP. A shorter cooldown.",
-   "cooldown": 31.1,
+   "cooldown": 22.8,
    "cast": 1,
    "mp": 650,
    "target": "self",
@@ -32717,7 +32719,7 @@
    "class": "stormcaller",
    "name": "Storm shield+",
    "text": "Raises its Thorns by 150 and its Aggro by 40 for 20 ticks. No speed. A shorter cooldown.",
-   "cooldown": 31.1,
+   "cooldown": 22.8,
    "cast": 1,
    "mp": 650,
    "target": "self",
@@ -33073,8 +33075,8 @@
    "name": "Tremor+",
    "text": "Damage scaling from Defense on a random foe, which is Stunned. 40% more damage.",
    "cooldown": 36.4,
-   "cast": 8,
-   "mp": 1000,
+   "cast": 6,
+   "mp": 650,
    "target": {
     "side": "foes",
     "where": {
@@ -33108,8 +33110,8 @@
    "name": "Aftershock",
    "text": "Deals damage that scales from Defense to a random foe, and Stuns every foe.",
    "cooldown": 36.4,
-   "cast": 8,
-   "mp": 1000,
+   "cast": 6,
+   "mp": 650,
    "target": {
     "side": "foes",
     "where": {
@@ -33147,7 +33149,7 @@
    "text": "Deals damage that scales from Defense to a Stunned foe, triple; with no foe Stunned, to a random foe. A shorter wind-up. No Stun.",
    "cooldown": 36.4,
    "cast": 3,
-   "mp": 1000,
+   "mp": 650,
    "target": {
     "side": "foes",
     "where": {
@@ -33187,8 +33189,8 @@
    "name": "Aftershock+",
    "text": "Deals damage that scales from Defense to a random foe, and Stuns every foe. 40% more damage.",
    "cooldown": 36.4,
-   "cast": 8,
-   "mp": 1000,
+   "cast": 6,
+   "mp": 650,
    "target": {
     "side": "foes",
     "where": {
@@ -33226,7 +33228,7 @@
    "text": "Deals damage that scales from Defense to a Stunned foe, triple; with no foe Stunned, to a random foe. A shorter wind-up. No Stun. 40% more damage.",
    "cooldown": 36.4,
    "cast": 3,
-   "mp": 1000,
+   "mp": 650,
    "target": {
     "side": "foes",
     "where": {
@@ -34593,7 +34595,7 @@
   {
    "id": "bloodscent_knife",
    "name": "Bloodscent knife",
-   "text": "Its wearer's hits on a bleeding foe crit far more often: +50% Crit chance, up to 80%.",
+   "text": "Its wearer's hits on a bleeding foe crit far more often: +30% Crit chance, up to 60%.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -36375,7 +36377,7 @@
   {
    "id": "the_red_feast",
    "name": "The Red Feast",
-   "text": "While its wearer is below half its max HP, its hits deal double and its Lifesteal is doubled. When a fight is won, its wearer, if it's standing, is healed back to half its max HP, if it's below that.",
+   "text": "While its wearer is below half its max HP, its hits deal half again as much and its Lifesteal is doubled. When a fight is won, its wearer, if it's standing, is healed back to half its max HP, if it's below that.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -39927,7 +39929,7 @@
   {
    "id": "floe_charm",
    "name": "Floe charm",
-   "text": "When a foe's Chill shatters, its wearer's first-slotted ability is ready at once. If it's ready already, nothing happens.",
+   "text": "When a foe's Chill shatters, its wearer's first-slotted ability comes half its wait closer.",
    "slot": "amulet",
    "tier": "ordinary",
    "source": "drop",
@@ -42510,7 +42512,7 @@
   {
    "id": "heartsblood",
    "name": "Heartsblood",
-   "text": "Whatever its holder's Lifesteal would heal it for, full or not, every other ally is healed for the same. Healing given this way isn't passed on again.",
+   "text": "Whatever its holder's Lifesteal would heal it for, full or not, every other ally is healed for half as much. Healing given this way isn't passed on again.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -43304,7 +43306,7 @@
   {
    "id": "glaciers_heart",
    "name": "Glacier's heart",
-   "text": "Whenever a foe's Chill shatters, the Frostweaver puts half of it back: 6 Chill on that foe.",
+   "text": "Whenever a foe's Chill shatters, the Frostweaver puts a quarter of it back: 3 Chill on that foe.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
@@ -43562,7 +43564,7 @@
     {
      "id": "frost_a",
      "name": "Frost",
-     "text": "Basic attacks add a few Chill.",
+     "text": "Basic attacks add a Chill.",
      "layout": {
       "line": "front",
       "column": 0
@@ -43574,7 +43576,7 @@
     {
      "id": "frost_b",
      "name": "Frost",
-     "text": "Basic attacks add a few Chill.",
+     "text": "Basic attacks add a Chill.",
      "layout": {
       "line": "middle",
       "column": 1
@@ -44131,7 +44133,7 @@
     {
      "id": "opener",
      "name": "Opener",
-     "text": "Its crits add many Bleed.",
+     "text": "Its crits add several Bleed.",
      "layout": {
       "line": "front",
       "column": 0
@@ -44143,7 +44145,7 @@
     {
      "id": "blade_a",
      "name": "Blade",
-     "text": "Each hit it lands on a bleeding foe heals the Blade for 3% of its max HP.",
+     "text": "Each hit it lands on a bleeding foe heals the Blade for 2% of its max HP.",
      "layout": {
       "line": "middle",
       "column": 1
@@ -44155,7 +44157,7 @@
     {
      "id": "blade_b",
      "name": "Blade",
-     "text": "Each hit it lands on a bleeding foe heals the Blade for 3% of its max HP.",
+     "text": "Each hit it lands on a bleeding foe heals the Blade for 2% of its max HP.",
      "layout": {
       "line": "back",
       "column": 2
@@ -44236,7 +44238,7 @@
     {
      "id": "sleet",
      "name": "Sleet",
-     "text": "Its basic attacks add a few Chill.",
+     "text": "Its basic attacks add a Chill.",
      "layout": {
       "line": "middle",
       "column": 1
@@ -44776,7 +44778,7 @@
   {
    "id": "the_long_winter",
    "name": "The long winter",
-   "text": "Every shatter sends its cold down the line, and each sends more than the last. The party: When a foe's Chill shatters, every other foe gains a few Chill, and a few more for each Cascade the party held before it (a Cascade for each shatter this fight, up to 10).",
+   "text": "Every shatter sends its cold down the line, and each sends more than the last. The party: When a foe's Chill shatters, every other foe gains a Chill, and one more for every two Cascades the party held before it (a Cascade for each shatter this fight, up to 10).",
    "rarity": "legendary",
    "source": "unlock",
    "positions": [
