@@ -294,7 +294,7 @@ async function workerScript(): Promise<URL> {
 
 async function runAll(raw: unknown, jobs: Job[], workers: number, onDone: (o: JobOut) => void): Promise<void> {
   const script = await workerScript();
-  const ws = Array.from({ length: Math.max(1, Math.min(workers, jobs.length)) }, () => new Worker(script, { workerData: { raw } }));
+  const ws = Array.from({ length: Math.max(1, Math.min(workers, jobs.length)) }, () => new Worker(script, { workerData: { raw, tool: "build-test" } }));
   let next = 0, done = 0;
   const t0 = Date.now();
   await Promise.all(ws.map((w) => new Promise<void>((resolve, reject) => {
@@ -653,7 +653,8 @@ async function main() {
 
 if (isMainThread) {
   if (/build-test\.(ts|mjs)$/.test(process.argv[1] ?? "")) main().catch((e) => { console.error(e); process.exit(1); });
-} else {
+} else if ((workerData as { tool?: string }).tool === "build-test") {
+  // Only the build test's own workers: a tool that imports this file runs its own.
   const c = loadContent((workerData as { raw: unknown }).raw);
   const sets = new Map([1, 2, 3].map((a) => [a, fightSet(c, a)]));
   parentPort!.on("message", (j: Job) => parentPort!.postMessage(runJob(c, sets, j)));
