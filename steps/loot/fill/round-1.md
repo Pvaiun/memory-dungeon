@@ -19,6 +19,12 @@ To go into `fill/shared.md` once round 1 is ruled.
 - **Carrying another unit's riders** (The standard, Mimic wand, Toll gate). The carrier takes each rider whole, reads its own stat for the stacks, and meets any condition itself (its own crits, first hits, counts). Toll gate's Collectors pass only what every swing adds. A rider the carrier's own swing already holds from the same source (a storm on the whole party, Crown of embers) isn't added twice.
 - **Stacks from a seat are flat** (`FLAT_STACKS`), so a seat pays the same whoever sits in it.
 - **"On the field" means on the foes.** Stormbrand and the Bolt seat count the Shock the foes hold; cards say "for each Shock the foes hold".
+- **A strike a card aims at a named foe isn't a pick,** so a Taunt doesn't turn it: a strike at the attacker, at the foe that acted, at "that foe" (Duelist's leathers, Parrying spear, Answering thunder, Hushing idol). A rule that changes whom a unit's own swings or abilities pick is a pick, inside the Taunt rule unless it has Seek (Marginalia, Hoarfrost line's Breaker, a Mark).
+- **"Nearly always" is four times in five,** a set chance on those hits that nothing raises. A hit that always crits still does. A chance a card sets wins over Gambler's coin, as "always" does.
+- **"Pays for" an ability** means its cost was paid, in MP or in HP. A free cast isn't paid for.
+- **"Carrying what the swing carries"** also carries what a status its wearer holds puts on its swings (a Thunderstorm). The spine's phrase gains it.
+- **Someone stays in the light.** Hidden doesn't land on a unit when it would leave the foes no ally to pick; where several would hide at once, the last in seat order stays. It's a rule of Hidden's own, for the vocabulary, flagged for the director: gear and seats can now hide a whole party, and the game has no answer for that.
+- **A start-of-fight status on every foe** reads its holder's Attack, at the card's word (Stormglass totem, Pitch lantern, Snowbound folio, the phial). As written in both offhands shares.
 - **New target phrases,** for the vocabulary when it's built: the other ally with the least Defense; the ally with the highest Aggro; the ally with the slowest basic attack; the two foes with the highest Attack; the foe that last hit the healed ally; the ally with the lowest share of max HP, the payer aside; the foe with the highest current HP; the ally with the lowest share of max HP that can be healed.
 ## Amulets
 
@@ -53,6 +59,23 @@ To go into `fill/shared.md` once round 1 is ruled.
 - **The covenant:** the floor at a tenth goes on the card and into the spine's line, as Sanguine vestments has it. Lifesteal high stands: the link is sized to it. "The same share" stays the line's rule, and its sums go to the director's sample.
 - **Twins:** counters a card gives pass between Twins, as written.
 - **Names:** The long wall becomes The palisade (one word from The last wall). Open wound becomes Bloodied ground (one word from the version Opening wound). The long winter keeps its name; the orb changes (offhands-2). Spur keeps its name.
+
+## Offhands, the other seven kinds
+
+- **Tireless bell** has no wearer who winds up long enough to use it. It stays a bell, and its rule widens: its holder's basic attacks never wait on its abilities, through their wind-ups and their recoveries. The spine's line changes.
+- **Shuttered lantern** stays a lantern: a Cleric's Renew and Raise wind up, and a piece may be worth little to one wearer.
+- **Bell of the hour:** every fifth basic attack stands. The count is the fill's to size, and the link asks for several times a fight. The spine's line and link change.
+- **Marginalia and Curse-book** do nothing on a Bard. They stay; it goes to *Least sure*.
+- **Hushing idol** goes at that foe whatever Taunts; **Marginalia** is inside the Taunt rule (the ruling above).
+- **Bloodlust draught:** the card follows the definition: the HP it starts without isn't a price paid. The spine's line loses "(it pays)".
+- **Annotated grimoire:** "pays for", in MP or in HP (the ruling above), so it works under an HP price.
+- **Annotated score** fires when the other ally *pays for* an ability, not when it casts one. Two scores facing each other otherwise cast free without end. The spine's line changes.
+- **The king's head:** every ally's crit chance is doubled for a while, to four in five at most. Without the ceiling a doubled coin makes Quick draw's crit certain, and its burst has no end. The spine's line changes.
+- **Venom vial** at a half stands.
+- **The deep well** loses its mana as armour tag: it can't be held with either keystone and gives no mana.
+- **Heartsblood** counts what its holder's Lifesteal would heal, full or not. Stands.
+- **Names:** Bloodletter's phial becomes Lancet phial; Idol of the deepening becomes Festering idol; Annotated score becomes Accompanist's score; Orb of the long winter becomes Meltwater orb.
+- **Alike, for the director's list:** Ringing bell and Storm pike on a Monk; Snowbound folio and Grimoire of plagues in one kind.
 
 ## To check across shares
 

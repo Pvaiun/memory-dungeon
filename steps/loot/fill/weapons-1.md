@@ -215,7 +215,7 @@
 - **Serves:** Bonfire, Snap, Storm, Cuts
 - **Notes:** The spine's common that leans to Cooldown and Attack speed. Attack speed is the first stat of a status on a swing (the Hexer's Chill, Kindling's fire), on a wand as anywhere. New name: today's Whipcrack wand carried Attack, not Attack speed.
 
-### Willow wand
+### Hazel wand
 - **Is:** wand · common
 - **Card:** Nothing beyond its stats.
 - **Stats:** Cooldown medium · MP regen +1 (2 of 2)
@@ -415,7 +415,7 @@
 - **Numbers:** 25% of the wearer's Attack a kill: 1,000 at Attack 4, 1,250 at Attack 5, up to the Shield's cap (`STATUS.shield.capShare`). My value.
 - **Code:** as today's Trophy spear, with a Shield from Attack (as today's Ironbound maul's) in place of the Guard
 - **Serves:** Hunt 1 ●●, Cuts ● ⚙ detonation (half) ◆ kill-pays, shield-by-doing
-- **Notes:** Today's piece, its Guard made a Shield as the line says. Sized to be seen as a kill's pay: a grey bar a quarter to a third of a Valkyrie's or a Monk's health. Same steps as today.
+- **Notes:** Today's piece, its Guard made a Shield as the line says. Sized to be seen as a kill's pay: a grey bar a third or more of a Valkyrie's or a Monk's health. Same steps as today.
 
 ### Long spear
 - **Is:** spear · uncommon
@@ -507,7 +507,7 @@
 - **Numbers:** a few: `STACKS.few`, from Attack, on every hit (about 3 at Attack 4, 4 at Attack 5 with the axe's own step).
 - **Code:** as Jolt spear: a reaction to any hit landing, applying Bleed
 - **Serves:** Cuts 1 ●● ⚙ lead's colour (half) ◆ swing-status
-- **Notes:** Seen: the next hit on that foe, anyone's, pays 340 to 480 in red. A slow kind that opens for the fast ones to cash. What a copy of its swing carries is the part on the basic attack. Attack is the stat its Bleed reads.
+- **Notes:** Seen: the next hit on that foe, anyone's, pays 420 to 500 in red. A slow kind that opens for the fast ones to cash. What a copy of its swing carries is the part on the basic attack. Attack is the stat its Bleed reads.
 
 ### Executioner's axe
 - **Is:** axe · rare
@@ -562,7 +562,7 @@
    - **A hit that lands a second time** (Still hand, Hunting spear; Twinfall, The mountain and Dragon's tooth elsewhere). I wrote: the same damage again on the same foe, at once, with no new dodge or crit roll; a hit, so Bleed pays, Lifesteal drinks and counters count; it carries none of the first hit's statuses; it isn't an extra strike; nothing repeats it. Where two things would each repeat one hit (Still hand in The mountain's Peak seat), I read that each repeats the first once: three landings.
    - **"Nearly always crit"** (Ambush knife; Vulture's skull elsewhere): nine times in ten, set, whatever the wearer's Crit chance. **"Crit far more often"** (Bloodscent knife; Spur's Opener elsewhere): 50 more Crit chance, added.
    - **"The ally with the least MP"** (Tithe wand, and a dozen lines elsewhere) isn't in the vocabulary's table of target phrases. Today's data reads it as the lowest share of max MP, the wearer included.
-2. **Storm pike's count doesn't come round.** Five landed swings on a spear is about 47 ticks: once in a regular fight for a Valkyrie, and never for a Hoplite, whose Phalanx halves its swings (94 ticks). Only a Monk's second strikes, Hummingbird charm or a Squall seat bring it under 30. As a rare it can't be the Storm's second rung at that pace. Either count every hit its wearer lands, as today's does (a Gale spear is three, a shove is one a foe), or make it every third. I wrote the line as it stands.
+2. **Storm pike's count doesn't come round.** Five landed swings on a spear is 40 to 47 ticks: once in a regular fight for a Valkyrie, and never for a Hoplite, whose Phalanx halves its swings (80 to 94 ticks). Only a Monk's second strikes, Hummingbird charm or a Squall seat bring it under 30. As a rare it can't be the Storm's second rung at that pace. Either count every hit its wearer lands, as today's does (a Gale spear is three, a shove is one a foe), or make it every third. I wrote the line as it stands.
 3. **Reaver's axe reads as half of Night's edge.** "When its wearer lands a killing blow, the next hit it lands deals double" is the mythic's second clause, and the Assassin can wear both. By "the same sentence" it passes, since the mythic also hides. Together the two doubles add: triple. Worth a ruling.
 4. **Sarissa's extra hits: do they carry?** The five rares that fan a swing out all say "carrying what the swing carries"; Sarissa's line doesn't. I wrote it as not carrying, at the swing's full damage. If it should carry, one clause is added.
 5. **Answering thunder: "strikes it with a basic attack".** I wrote the spine's defined "strikes with its weapon", so it isn't a basic attack: no Arc, no Double strike, nothing that counts swings. If a true basic attack out of turn was meant, the card changes, and Baton, Bell of the hour and Forked knuckles' MP would all answer it. It has no limit: eight charged wolves are eight strikes a round of swings.
@@ -579,7 +579,7 @@
     - **Bloodletter** (sword) and **Bloodletter's phial** (vial) read as a pair and aren't one.
     - **Trophy spear** uses the name of an offhand kind.
     - **Tithe wand** and **Tithing leathers** tithe different things to different units.
-    - The four new commons: Stiletto, Quickbeam wand, Willow wand, Pennon spear, Boar spear (five), for the lead to check across shares.
+    - The five new commons (Stiletto, Quickbeam wand, Hazel wand, Pennon spear, Boar spear), for the lead to check across shares. Hazel wand was Willow wand in the first hand-in: weapons-2 has a Willow staff, and a Pyromancer wears both kinds.
 
 ## Links
 
