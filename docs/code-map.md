@@ -148,20 +148,25 @@ content/
     classes.ts               the 16 classes: stats, passives, abilities
     enemies.ts               the 29 enemies, their adds and reskins
     dungeons.ts              the encounters, and free play's 7 dungeons
-    formations.ts            Neutral and the 32 formations
+    formations.ts            Neutral and the 35 formations, gathered from formations/
+    formations/
+      kit.ts                 a seat's stat steps, the formation builder and the lists the rarities add to
+      common.ts, rare.ts, legendary.ts   the 13 common, 12 rare and 10 legendary formations
     gear.ts                  the 12 plain weapons
     rogue.ts                 the rogue mode's numbers, regions and events
     rogue-knobs.json         each rogue fight's knob (written by npm run rogue:calibrate)
     tests.ts                 the documents' own test trios, for npm run smoke
     pack.ts                  assembles the pack
     build.ts                 npm run content: validates and writes the pack
-    pieces/                  the 272 pieces
-      kit.ts                 the helpers pieces, formations and upgrades are written with; the swing trade, the budget check and the plain card of a piece that is only its stats
-      shared.ts              statuses several files use (the counters; Marked is the vocabulary's)
-      weapons-scaling.ts     the seven kinds whose swing grows with Attack (dagger, fist weapons, sword, spear, axe, bow, great weapon): 56 pieces
-      weapons-base.ts        the five base-heavy kinds' 40 pieces (wand, rune sword, hammer, mace, staff): a swing for any wearer
-      armor-amulets.ts       the four armor types' 48 pieces and the 24 amulets
-      offhands.ts            the thirteen offhand kinds' 104 pieces
+    pieces/                  the 322 pieces, in six shares
+      kit.ts                 the helpers pieces, formations and upgrades are written with; the swing trade, the budget check, the plain card of a piece that is only its stats, and the Serves line's reader
+      shared.ts              statuses several files use: the six counters and the order of healing past full (Marked is the vocabulary's)
+      weapons-1.ts           dagger, fist weapons, wand, sword, spear and axe: 60 pieces
+      weapons-2.ts           bow, rune sword, hammer, mace, staff and great weapon: 53 pieces
+      armor.ts               plate, mail, leather and robes: 55 pieces
+      amulets.ts             the 37 amulets
+      offhands-1.ts          kite shield, round shield, horn, totem, relic and lantern: 54 pieces
+      offhands-2.ts          tome, orb, idol, vial, trophy, bell and cloak: 63 pieces
       index.ts               every item gathered, for the pack and the tools
     upgrades/                each ability's and passive's power step and two versions, and the mythics
       index.ts               gathers them, in order
