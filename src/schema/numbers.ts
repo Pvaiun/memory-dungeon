@@ -104,7 +104,11 @@ export type ConditionT = z.infer<typeof Condition>;
 
 /** A test of one of a reaction's event units. */
 export const EventUnitTest = z
-  .strictObject({ unit: z.enum(["other", "owner"]).describe("other: the event's other unit (as `to: other`); owner: the unit the event is about (as `to: owner`)."), where: UnitCond.describe("What it must pass.") })
+  .strictObject({
+    unit: z.enum(["other", "owner"]).describe("other: the event's other unit (as `to: other`); owner: the unit the event is about (as `to: owner`)."),
+    where: UnitCond.describe("What it must pass."),
+    absent: z.literal(true).optional().describe("The test also holds when the event has no such unit (a heal whose healer isn't known)."),
+  })
   .describe("Reactions only: the event's other unit, or the unit it's about, passes `where` (\"the foe it hit is Sundered\", \"the ally that took the hit is below half\").");
 export const Test = z.union([Condition, EventUnitTest]);
 export type TestT = z.infer<typeof Test>;

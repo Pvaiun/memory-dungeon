@@ -255,7 +255,7 @@ export function react(w: W, it: Extract<Item, { k: "react" }>) {
 function passesTest(w: W, actor: CUnit, t: S.TestT, st: NonNullable<Ctx["st"]>): boolean {
   if ("unit" in t) {
     const x = t.unit === "other" ? st.other : st.owner;
-    return !!x && passes(w, x, t.where, actor);
+    return x ? passes(w, x, t.where, actor) : !!t.absent;
   }
   return holds(w, actor, t);
 }

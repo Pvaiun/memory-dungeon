@@ -201,7 +201,7 @@ export const Status = z.strictObject({
   focus: z
     .literal(true)
     .optional()
-    .describe("Marked: the holder's foes' basic attacks pick a holder while one can be picked, by draw among several, under the Taunt rule (Seek follows it past a Taunting foe). Abilities keep their own targeting."),
+    .describe("Marked: the holder's foes' basic attacks pick a holder while one can be picked, by draw among several, under the Taunt rule (Seek follows it past a Taunting foe). So do their abilities aimed at a random foe: default targeting, a rule with no test but what its foe must lack, and a phrase that finds nobody and falls back to a random foe. An ability whose phrase finds its foe keeps its own targeting."),
   single: z
     .literal(true)
     .optional()

@@ -105,7 +105,7 @@ export const vocabulary: StatusT[] = [
   { id: "burn", name: "BURN", text: "Burns for each stack, then dies down.", label: "debuff", show: "icon", stacking: "intensity", pulse: { every: STATUS.burn.every, do: [{ op: "damage", type: "none", amount: STATUS.burn.perStack }] }, drop: { fraction: STATUS.burn.drop } },
   {
     id: "chill", name: "CHILL", text: "Slower for each stack; thaws one stack at a time. At 12 it shatters: damage for each stack, a Stun, and the Chill is spent.", label: "debuff", show: "icon", stacking: "intensity",
-    cap: STATUS.chill.cap, stats: timing(STATUS.chill.perStack), pulse: { every: STATUS.chill.every }, drop: { count: 1 },
+    cap: STATUS.chill.cap, stats: timing(STATUS.chill.perStack), pulse: { every: STATUS.chill.every }, drop: { count: 1 }, damp: STATUS.chill.chain,
     // The shatter.
     reactions: [{ on: { event: "status_capped", status: "chill" }, do: [{ op: "damage", type: "none", amount: { scale: [{ ratio: STATUS.chill.shatter, stacks: "chill", of: "holder" }] }, to: "holder" }, { op: "apply", status: "stun", to: "holder" }, { op: "remove", label: "debuff", status: "chill", to: "holder" }] }],
   },
@@ -116,10 +116,10 @@ export const vocabulary: StatusT[] = [
   { id: "silence", name: "SILENCE", text: "Can't use abilities.", label: "debuff", show: "icon", stacking: "fizzle", duration: STATUS.silence.duration, lockout: { covers: "ability", interrupt: true } },
   { id: "hidden", name: "HIDDEN", text: "Foes can't pick it.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.hidden.duration, unremovable: true, stats: [{ stat: "forbidden", flat: 1 }] },
   /**
-   * Marked: a debuff on a foe. The party's basic attacks pick a Marked foe (by draw among several) inside the Taunt rule; each
-   * unit keeps one Mark, so a new one it applies moves its old one (`focus` and `single`).
+   * Marked: a debuff on a foe. The party's basic attacks, and its abilities aimed at a random foe, pick a Marked foe (by draw
+   * among several) inside the Taunt rule; each unit keeps one Mark, so a new one it applies moves its old one (`focus` and `single`).
    */
-  { id: "marked", name: "MARKED", text: "The party's basic attacks go to it.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.marked.duration, focus: true, single: true },
+  { id: "marked", name: "MARKED", text: "The party's basic attacks, and its abilities aimed at a random foe, go to it.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.marked.duration, focus: true, single: true },
   { id: "rot", name: "ROT", text: "Heals less.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.rot.duration, stats: [{ stat: "healing_received", flat: STATUS.rot.healing }] },
   { id: "clarity", name: "CLARITY", text: "Recovers MP over time.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.clarity.duration, pulse: { every: STATUS.clarity.every, do: [{ op: "mp", amount: { scale: [{ ratio: STATUS.clarity.share, stat: "max_mp", of: "holder" }] } }] } },
   // Signature
